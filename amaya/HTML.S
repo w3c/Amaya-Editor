@@ -20,7 +20,11 @@ STRUCT
   HTML = BEGIN
 	HEAD;
 	BODY;
+#ifdef R_HTML
+	END + (Invalid_element, Comment\240, Entity);
+#else
 	END + (Invalid_element, Comment\240);
+#endif
 
   BODY (ATTR background_ = Text; BackgroundColor = Text; TextColor = Text;
 	LinkColor = Text; VisitedLinkColor = Text; ActiveLinkColor = Text)
@@ -47,6 +51,10 @@ STRUCT
   StyleRule (ATTR Selector = TEXT) = TEXT;
 
   BASE (ATTR !HREF_) = CONSTANT C_Empty;
+
+#ifdef R_HTML
+  Entity (ATTR entity_name = TEXT; HREF_) = CONSTANT C_Empty;
+#endif
 
   Element = CASE OF
 	Paragraph;
@@ -395,6 +403,9 @@ EXCEPT
 	Table_cell_ghost: Hidden, NoCreate, NoCut, NoMove, NoResize, NoSelect;
 #ifdef COUGAR
 	Object_Content: Hidden, NoCreate, NoCut, NoMove, NoResize, NoSelect;
+#endif
+#ifdef R_HTML
+	Entity: Hidden, NoCreate, NoCut, NoMove, NoResize;
 #endif
 	Ghost_restruct:	Invisible;
 END

@@ -934,20 +934,15 @@ int                 data;
 		     /* non charge' */
 		     if (!DocIdentIsNull (pExtCurrDoc->EdDocIdent))
 		       {
-			  /* acquiert et initialise un descripteur de document */
-			  CreateDocument (&pDoc);
-			  if (pDoc != NULL)
-			    {
-			       /* charge le document */
-			       LoadDocument (&pDoc, pExtCurrDoc->EdDocIdent);
-			       if (pDoc != NULL)
-				 {
-				    /* efface le label "References dans le document X" */
-				    TtaNewLabel (NumLabelReferenceNotFound,
-					       NumFormSearchReference, " ");
-				    SearchAReference (FALSE);
-				 }
-			    }
+			 /* charge le document */
+			 LoadDocument (&pDoc, pExtCurrDoc->EdDocIdent);
+			 if (pDoc != NULL)
+			   {
+			     /* efface le label */
+			     TtaNewLabel (NumLabelReferenceNotFound,
+					  NumFormSearchReference, " ");
+			     SearchAReference (FALSE);
+			   }
 		       }
 		  break;
 	       default:

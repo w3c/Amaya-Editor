@@ -41,42 +41,40 @@
 #include "frame_tv.h"
 #include "appdialogue_tv.h"
 
+#include "absboxes_f.h"
 #include "appli_f.h"
+#include "appdialogue_f.h"
 #include "applicationapi_f.h"
-#include "tree_f.h"
 #include "attributes_f.h"
-#include "search_f.h"
-#include "searchref_f.h"
+#include "boxselection_f.h"
+#include "buildboxes_f.h"
+#include "callback_f.h"
+#include "changeabsbox_f.h"
 #include "config_f.h"
-#include "structcreation_f.h"
 #include "createabsbox_f.h"
 #include "createpages_f.h"
-#include "views_f.h"
-#include "viewapi_f.h"
+#include "docs_f.h"
 #include "draw_f.h"
-
-#include "callback_f.h"
-#include "viewcommands_f.h"
+#include "fileaccess_f.h"
+#include "memory_f.h"
+#include "paginate_f.h"
 #include "platform_f.h"
-#include "absboxes_f.h"
-#include "buildboxes_f.h"
+#include "presvariables_f.h"
+#include "readpivot_f.h"
+#include "references_f.h"
+#include "search_f.h"
+#include "searchref_f.h"
+#include "structschema_f.h"
 #include "structmodif_f.h"
 #include "structcommands_f.h"
-#include "memory_f.h"
-#include "changeabsbox_f.h"
-
-#include "paginate_f.h"
-#include "writepivot_f.h"
-#include "schemas_f.h"
-#include "boxselection_f.h"
+#include "structcreation_f.h"
 #include "structselect_f.h"
-#include "fileaccess_f.h"
-#include "references_f.h"
-#include "structschema_f.h"
-#include "presvariables_f.h"
-#include "appdialogue_f.h"
-#include "docs_f.h"
-#include "readpivot_f.h"
+#include "tree_f.h"
+#include "views_f.h"
+#include "viewapi_f.h"
+#include "viewcommands_f.h"
+#include "schemas_f.h"
+#include "writepivot_f.h"
 
 /*----------------------------------------------------------------------
    RedisplayExternalRefs cherche, pour tous les elements du document	
@@ -85,16 +83,12 @@
    fait reafficher ces references si elles sont deja       
    affichees.                                              
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 static void         RedisplayExternalRefs (PtrDocument pDoc)
-
 #else  /* __STDC__ */
 static void         RedisplayExternalRefs (pDoc)
 PtrDocument         pDoc;
-
 #endif /* __STDC__ */
-
 {
    PtrReferredDescr    pDescElRef;
    PtrReference        pRef;
@@ -163,91 +157,91 @@ char               *fileName;
 #endif /* __STDC__ */
 {
    PathBuffer          directoryBuffer;
-
 #ifdef __COLPAGE__
    FILE               *list;
    PtrPSchema          pPagePsch;
-
 #endif /* __COLPAGE__ */
    int                 i, j, len;
    boolean             ok;
 
-   directoryBuffer[0] = '\0';
-   if (fileName != NULL)
-      /* nom de document fourni a l'appel, on le recopie dans DefaultDocumentName */
+   CreateDocument (pDoc);
+   if (pDoc != NULL)
      {
-	len = strlen (fileName);
-	if (len > 4)
-	   if (strcmp (fileName + len - 4, ".PIV") == 0)
-	      fileName[len - 4] = '\0';
-	if (fileName[0] != DIR_SEP)
-	  {
-	     if (fileName != DefaultDocumentName)
-		strncpy (DefaultDocumentName, fileName, MAX_NAME_LENGTH);
-	     /* nom de document relatif */
-	     strncpy ((*pDoc)->DocDName, DefaultDocumentName, MAX_NAME_LENGTH);
-	     strncpy ((*pDoc)->DocIdent, DefaultDocumentName, MAX_DOC_IDENT_LEN);
-	     if ((*pDoc)->DocDirectory[0] == '\0')
-		strncpy ((*pDoc)->DocDirectory, DocumentPath, MAX_PATH);
-	  }
-	else
-	  {
-	     /* nom absolu */
-	     i = 0;
-	     j = 0;
-	     while (fileName[i] != '\0' && i < MAX_PATH - 1)
-	       {
-		  (*pDoc)->DocDirectory[i] = fileName[i];
-		  if ((*pDoc)->DocDirectory[i] == DIR_SEP)
+       directoryBuffer[0] = '\0';
+       if (fileName != NULL)
+	 /* nom de document fourni a l'appel, on le recopie dans DefaultDocumentName */
+	 {
+	   len = strlen (fileName);
+	   if (len > 4)
+	     if (strcmp (fileName + len - 4, ".PIV") == 0)
+	       fileName[len - 4] = '\0';
+	   if (fileName[0] != DIR_SEP)
+	     {
+	       if (fileName != DefaultDocumentName)
+		 strncpy (DefaultDocumentName, fileName, MAX_NAME_LENGTH);
+	       /* nom de document relatif */
+	       strncpy ((*pDoc)->DocDName, DefaultDocumentName, MAX_NAME_LENGTH);
+	       strncpy ((*pDoc)->DocIdent, DefaultDocumentName, MAX_DOC_IDENT_LEN);
+	       if ((*pDoc)->DocDirectory[0] == '\0')
+		 strncpy ((*pDoc)->DocDirectory, DocumentPath, MAX_PATH);
+	     }
+	   else
+	     {
+	       /* nom absolu */
+	       i = 0;
+	       j = 0;
+	       while (fileName[i] != '\0' && i < MAX_PATH - 1)
+		 {
+		   (*pDoc)->DocDirectory[i] = fileName[i];
+		   if ((*pDoc)->DocDirectory[i] == DIR_SEP)
 		     j = i;
-		  i++;
-	       }
-	     (*pDoc)->DocDirectory[j + 1] = '\0';
-	     i = 0;
-	     while (fileName[i] != '\0' && i < MAX_NAME_LENGTH - 1)
-	       {
-		  DefaultDocumentName[i] = fileName[j + 1];
-		  i++;
-		  j++;
-	       }
-	     DefaultDocumentName[i] = '\0';
-	     strncpy ((*pDoc)->DocDName, DefaultDocumentName, MAX_NAME_LENGTH);
-	     strncpy ((*pDoc)->DocIdent, DefaultDocumentName, MAX_DOC_IDENT_LEN);
-	     /* sauve le path des documents avant de l'ecraser */
-	     strncpy (directoryBuffer, DocumentPath, MAX_PATH);
-	     strncpy (DocumentPath, (*pDoc)->DocDirectory, MAX_PATH);
-	  }
+		   i++;
+		 }
+	       (*pDoc)->DocDirectory[j + 1] = '\0';
+	       i = 0;
+	       while (fileName[i] != '\0' && i < MAX_NAME_LENGTH - 1)
+		 {
+		   DefaultDocumentName[i] = fileName[j + 1];
+		   i++;
+		   j++;
+		 }
+	       DefaultDocumentName[i] = '\0';
+	       strncpy ((*pDoc)->DocDName, DefaultDocumentName, MAX_NAME_LENGTH);
+	       strncpy ((*pDoc)->DocIdent, DefaultDocumentName, MAX_DOC_IDENT_LEN);
+	       /* sauve le path des documents avant de l'ecraser */
+	       strncpy (directoryBuffer, DocumentPath, MAX_PATH);
+	       strncpy (DocumentPath, (*pDoc)->DocDirectory, MAX_PATH);
+	     }
+	 }
+
+       /* on ouvre le document en chargeant temporairement les documents */
+       /* externes qui contiennent les elements inclus dans notre document */
+       TtaDisplaySimpleMessage (INFO, LIB, TMSG_READING_DOC);
+       ok = OpenDocument (DefaultDocumentName, *pDoc, TRUE, FALSE, NULL, TRUE);
+       /* restaure le path des documents s'il a ete ecrase */
+       if (directoryBuffer[0] != '\0')
+	 strncpy (DocumentPath, directoryBuffer, MAX_PATH);
+       if (!ok)
+	 {
+	   TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_OPEN_DOC_IMP), DefaultDocumentName);
+	   UnloadDocument (pDoc);
+	   *pDoc = NULL;
+	 }
      }
 
    if (*pDoc != NULL)
      {
-	/* on ouvre le document en chargeant temporairement les documents */
-	/* externes qui contiennent les elements inclus dans notre document */
-	TtaDisplaySimpleMessage (INFO, LIB, TMSG_READING_DOC);
-	ok = OpenDocument (DefaultDocumentName, *pDoc, TRUE, FALSE, NULL, TRUE);
-	/* restaure le path des documents s'il a ete ecrase */
-	if (directoryBuffer[0] != '\0')
-	   strncpy (DocumentPath, directoryBuffer, MAX_PATH);
-	if (!ok)
-	  {
-	     TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_OPEN_DOC_IMP), DefaultDocumentName);
-	     UnloadDocument (pDoc);
-	     *pDoc = NULL;
-	  }
-     }
-   if (*pDoc != NULL)
-     {
-	/* conserve le path actuel des schemas dans le contexte du document */
-	strncpy ((*pDoc)->DocSchemasPath, SchemaPath, MAX_PATH);
-	/* ouvre les vues a ouvrir */
-	OpenDefaultViews (*pDoc);
-	if ((*pDoc)->DocRootElement != NULL)
-	   /* Pour tous les elements du document que l'on vient de */
-	   /* charger qui sont designe's par des references, cherche */
-	   /* toutes les references appartenant a d'autres documents */
-	   /* charges et fait reafficher ces references si elles sont */
-	   /* deja affichees */
-	   RedisplayExternalRefs (*pDoc);
+       /* conserve le path actuel des schemas dans le contexte du document */
+       strncpy ((*pDoc)->DocSchemasPath, SchemaPath, MAX_PATH);
+       /* ouvre les vues a ouvrir */
+       OpenDefaultViews (*pDoc);
+       if ((*pDoc)->DocRootElement != NULL)
+	 /* Pour tous les elements du document que l'on vient de */
+	 /* charger qui sont designe's par des references, cherche */
+	 /* toutes les references appartenant a d'autres documents */
+	 /* charges et fait reafficher ces references si elles sont */
+	 /* deja affichees */
+	 RedisplayExternalRefs (*pDoc);
      }
 }
 
@@ -496,6 +490,32 @@ int                 accessMode;
 
 
 /*----------------------------------------------------------------------
+   UnloadTree frees the document tree of pDoc				
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                UnloadTree (Document document)
+#else  /* __STDC__ */
+void                UnloadTree (document)
+Document            document;
+#endif /* __STDC__ */
+{
+  PtrDocument      pDoc;
+
+  pDoc = LoadedDocument[document - 1];
+   if (pDoc != NULL)
+     {
+       /* enleve la selection de ce document */
+       ResetSelection (pDoc);
+       /* libere le contenu du buffer s'il s'agit d'une partie de ce docum. */
+       if (DocOfSavedElements == pDoc)
+	 FreeSavedElements ();
+       /* libere tous les arbres abstraits */
+       DeleteAllTrees (pDoc);
+     }
+}
+
+
+/*----------------------------------------------------------------------
    UnloadDocument libere le document pDoc				
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -503,7 +523,6 @@ void                UnloadDocument (PtrDocument * pDoc)
 #else  /* __STDC__ */
 void                UnloadDocument (pDoc)
 PtrDocument        *pDoc;
-
 #endif /* __STDC__ */
 {
    int                 d;
@@ -516,13 +535,6 @@ PtrDocument        *pDoc;
 	   d++;
 	if (LoadedDocument[d] == *pDoc)
 	  {
-	     /* enleve la selection de ce document */
-	     ResetSelection (*pDoc);
-	     /* libere le contenu du buffer s'il s'agit d'une partie de ce docum. */
-	     if (DocOfSavedElements == *pDoc)
-		FreeSavedElements ();
-	     /* libere tous les arbres abstraits */
-	     DeleteAllTrees (*pDoc);
 	     /* libere les schemas */
 	     FreeDocumentSchemas (*pDoc);
 	     FreeDocument (LoadedDocument[d]);
@@ -536,16 +548,12 @@ PtrDocument        *pDoc;
 /*----------------------------------------------------------------------
    PaginateDocument	pagine toutes les vues du document pDoc		
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 void                PaginateDocument (PtrDocument pDoc)
-
 #else  /* __STDC__ */
 void                PaginateDocument (pDoc)
 PtrDocument         pDoc;
-
 #endif /* __STDC__ */
-
 {
    AvailableView       viewList;
    int                 i, nViews, docView;

@@ -438,14 +438,10 @@ char               *data;
 	       if (TtaFileExist (docName) != 0)
 		  /* le fichier PIV existe, on ouvre le document */
 		 {
-		    /* acquiert et initialise un descripteur de document */
-		    CreateDocument (&pDoc);
-		    if (pDoc != NULL)
-		      {
-			 strcpy (pDoc->DocDirectory, DirectoryName);
-			 /* charge le document */
-			 LoadDocument (&pDoc, DefaultDocumentName);
-		      }
+		   /* charge le document */
+		   LoadDocument (&pDoc, DefaultDocumentName);
+		   if (pDoc != NULL)
+		     strcpy (pDoc->DocDirectory, DirectoryName);
 		 }
 	       else
 		  /* Le fichier PIV n'existe pas */

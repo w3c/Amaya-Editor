@@ -1805,38 +1805,46 @@ Document            document;
    link = el;
    RelAttr = NULL;
    while (link != NULL && RelAttr == NULL)
-      {
-      TtaSearchAttribute (attrType, SearchForward, link, &link, &RelAttr);
-      if (link != NULL && RelAttr != NULL)
-	{
-        length = TtaGetTextAttributeLength (RelAttr);
-        text = TtaGetMemory (length + 1);
-        TtaGiveTextAttributeValue (RelAttr, text, &length);
-        if (strcasecmp (text, "chapter"))
-	  RelAttr = NULL;
-        TtaFreeMemory (text);
-	}
-      }
+     {
+       TtaSearchAttribute (attrType, SearchForward, link, &link, &RelAttr);
+       if (link != NULL && RelAttr != NULL)
+	 {
+	   length = TtaGetTextAttributeLength (RelAttr);
+	   text = TtaGetMemory (length + 1);
+	   TtaGiveTextAttributeValue (RelAttr, text, &length);
+	   if (strcasecmp (text, "chapter"))
+	     RelAttr = NULL;
+	   TtaFreeMemory (text);
+	 }
+     }
+
    if (RelAttr != NULL && link != NULL)
-      {
-      next = link;
-      attrType.AttrTypeNum = HTML_ATTR_HREF_;
-      HrefAttr = TtaGetAttribute (link, attrType);
-      if (HrefAttr != NULL)
-	{
-	length = TtaGetTextAttributeLength (HrefAttr);
-	text = TtaGetMemory (length + 1);
-	TtaGiveTextAttributeValue (HrefAttr, text, &length);
-	includedDocument = TtaNewDocument ("HTML", "tmp");
-	includedDocument = GetHTMLDocument (text, NULL, includedDocument, document, DC_TRUE);
-	TtaFreeMemory (text);
-	if (includedDocument != 0)
-	   MoveDocumentBody (&next, document, includedDocument);
-	FreeDocumentResource (includedDocument);
-	TtaCloseDocument (includedDocument);
-	}
-      GetIncludedDocuments (next, document);
-      }
+     {
+       next = link;
+       attrType.AttrTypeNum = HTML_ATTR_HREF_;
+       HrefAttr = TtaGetAttribute (link, attrType);
+       if (HrefAttr != NULL)
+	 {
+	   length = TtaGetTextAttributeLength (HrefAttr);
+	   text = TtaGetMemory (length + 1);
+	   TtaGiveTextAttributeValue (HrefAttr, text, &length);
+	   if (text[0] != '#')
+	     {
+	       /* its a remote document */
+	       includedDocument = TtaNewDocument ("HTML", "tmp");
+	       includedDocument = GetHTMLDocument (text, NULL, includedDocument, document, DC_TRUE);
+	       TtaFreeMemory (text);
+	       if (includedDocument != 0)
+		 {
+		   FetchAndDisplayImages (includedDocument);
+		   MoveDocumentBody (&next, document, includedDocument);
+		 }
+	       FreeDocumentResource (includedDocument);
+	       TtaCloseDocument (includedDocument);
+	     }
+	 }
+       GetIncludedDocuments (next, document);
+     }
 }
 #endif /* PRINTBOOK */
 
@@ -1860,12 +1868,71 @@ View                view;
    elType.ElTypeNum = HTML_EL_BODY;
    body = TtaSearchTypedElement (elType, SearchForward, root);
    if (body != NULL)
-      GetIncludedDocuments (body, document);
+     {
+       GetIncludedDocuments (body, document);
+     }
    /********
    TtaPrint (document, "Formatted_view Table_of_contents ");
    *********/
 #endif /* PRINTBOOK */
 }
+
+
+#ifdef R_HTML
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void         LoadEntity (Document document, char *text)
+#else
+static void         LoadEntity (document, text)
+Document            document;
+char               *text;
+#endif
+{
+  Document          includedDocument;
+  Attribute	    attr;
+  AttributeType	    attrType;
+  Element           el, includedEl;
+  ElementType	    elType;
+  int               length;
+
+  /* create the temporary document */
+  includedDocument = TtaNewDocument ("HTML", "tmp");
+  /* read the temporary document */
+  includedDocument = GetHTMLDocument (text, NULL, includedDocument, document, DC_TRUE);
+  
+  if (includedDocument != 0)
+    {
+      /* To do: Seach entity in the table */
+      /* locate the entity in the document */
+      el = TtaGetMainRoot (document);
+      elType = TtaGetElementType (el);
+      elType.ElTypeNum = HTML_EL_Entity;
+      /* TtaSearchElementByLabel (label, el); */
+      el = TtaSearchTypedElement (elType, SearchForward, el);
+      /* keep the entity name to know where to insert the sub-tree */
+      attrType.AttrSSchema = TtaGetDocumentSSchema (document);
+      attrType.AttrTypeNum = HTML_ATTR_entity_name;
+      attr = TtaGetAttribute (el, attrType);
+      if (attr != NULL)
+	{
+	  length = TtaGetTextAttributeLength (attr);
+	  text = TtaGetMemory (length + 1);
+	  TtaGiveTextAttributeValue (attr, text, &length);
+	}
+      /* To do: translate the entity name into element type
+	 and search this first element type in included document */
+      includedEl = TtaGetMainRoot (includedDocument);
+      elType = TtaGetElementType (includedEl);
+      elType.ElTypeNum = HTML_EL_TEXT_UNIT;
+      includedEl = TtaSearchTypedElement (elType, SearchForward, includedEl);
+      /* remove Entity */
+      /* To do: insert sub-trees */
+      FreeDocumentResource (includedDocument);
+      TtaCloseDocument (includedDocument);
+    }
+}
+#endif /* R_HTML */
 
 
 /*----------------------------------------------------------------------
@@ -1879,18 +1946,22 @@ View                view;
 #endif
 {
 #ifdef R_HTML
-   Element	    root, body;
-   ElementType	    elType;
+  Element	    root, el;
+  ElementType	    elType;
 
-   root = TtaGetMainRoot (document);
-   elType = TtaGetElementType (root);
-   elType.ElTypeNum = HTML_EL_BODY;
-   body = TtaSearchTypedElement (elType, SearchForward, root);
-   if (body != NULL)
-      GetIncludedDocuments (body, document);
-   /********
-   TtaPrint (document, "Formatted_view Table_of_contents ");
-   *********/
+  root = TtaGetMainRoot (document);
+  elType = TtaGetElementType (root);
+  elType.ElTypeNum = HTML_EL_Entity;
+  el = TtaSearchTypedElement (elType, SearchForward, root);
+  if (el != NULL)
+    {
+      /* document contains entities */
+      /* To do -> build table of entities */
+
+      /* simulate reception of different entities */
+      LoadEntity (document, "0/0");
+      LoadEntity (document, "0/1");
+    }
 #endif /* R_HTML */
 }
 

@@ -3337,6 +3337,14 @@ BOXES
 		END;
 	END;
 
+#ifdef R_HTML
+ Entity_flag: BEGIN
+	Content : Picture 'rcopy.xpm';
+	VertPos : Top = Enclosing . Top + 0.2;
+	Depth : 1;
+	END;
+#endif
+
 { ---- Pages ---- }
 
 #ifdef PAGE
@@ -3405,7 +3413,7 @@ BOXES
 	Height: 25.9 cm;
 	VertPos: Top = Enclosing . Top + 1.7 cm;
 	HorizPos: Left = Enclosing . Left + 2.7 cm;
-#endif
+#endif /* US_PAPER */
 	if NOT One(CptPage)
 	   CreateAfter (TitleHead);
 	CreateAfter (URLhead);
@@ -3424,7 +3432,7 @@ BOXES
 	   Content: (Value (PageNumber(Formatted_view), Arabic));
 	   END;
 	END;
-#endif
+#endif /* PAGE */
 
 RULES
 
@@ -3562,7 +3570,7 @@ RULES
  Document_URL:	BEGIN
 #ifndef PAGE
 	Visibility: 0;
-#else PAGE
+#else /* PAGE */
 	IN Structure_view
 		Visibility: 0;
 	IN Anchors_view
@@ -3571,7 +3579,7 @@ RULES
 		Visibility: 0;
 	IN Alternate_view
 		Visibility: 0;
-#endif PAGE
+#endif /* PAGE */
 	END;
 
  TITLE:	BEGIN
@@ -3693,6 +3701,17 @@ RULES
 		Visibility: 5;
 		END;
 	END;
+#ifdef R_HTML
+ Entity: BEGIN
+	CreateFirst(Entity_flag);
+	Height: Enclosed . Height;
+	Width: Enclosed . Width;
+	IN Structure_view
+	   Visibility: 0;
+	IN Anchors_view
+	   Visibility: 0;
+	END;
+#endif
 
  H1:	BEGIN
 	Line;

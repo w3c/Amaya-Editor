@@ -53,6 +53,7 @@
 #include "createpages_f.h"
 #include "views_f.h"
 #include "viewapi_f.h"
+#include "viewcommands_f.h"
 #include "draw_f.h"
 
 #include "callback_f.h"
@@ -529,38 +530,24 @@ boolean             closeDoc;
 
 #endif /* __STDC__ */
 {
-   NotifyDialog        notifyDoc;
+  NotifyDialog        notifyDoc;
 
-   if (pDoc != NULL)
-      /* on detruit la vue */
-     {
-	if (!assoc)
-	   FreeView (pDoc, view);
-	else
-	  {
-	     LibAbbView (pDoc->DocAssocRoot[view - 1]->ElAbstractBox[0]);
-	     pDoc->DocAssocFrame[view - 1] = 0;
-	  }
-	if (closeDoc)
-	   /* verifie qu'il reste au moins une vue pour ce document */
-	   if (NumberOfOpenViews (pDoc) < 1)
-	      /* il ne reste plus de vue, on libere le document */
-	     {
-		notifyDoc.event = TteDocClose;
-		notifyDoc.document = (Document) IdentDocument (pDoc);
-		notifyDoc.view = 0;
-		if (!CallEventType ((NotifyEvent *) & notifyDoc, TRUE))
-		  {
-		     if (ThotLocalActions[T_corrector] != NULL)
-			(*ThotLocalActions[T_rscorrector]) (-1, 0, (char *) pDoc);
-		     notifyDoc.event = TteDocClose;
-		     notifyDoc.document = (Document) IdentDocument (pDoc);
-		     notifyDoc.view = 0;
-		     CallEventType ((NotifyEvent *) & notifyDoc, FALSE);
-		     UnloadDocument (&pDoc);
-		  }
-	     }
-     }
+  if (pDoc != NULL)
+    /* on detruit la vue */
+    {
+      if (!assoc)
+	FreeView (pDoc, view);
+      else
+	{
+	  LibAbbView (pDoc->DocAssocRoot[view - 1]->ElAbstractBox[0]);
+	  pDoc->DocAssocFrame[view - 1] = 0;
+	}
+      if (closeDoc)
+	/* verifie qu'il reste au moins une vue pour ce document */
+	if (NumberOfOpenViews (pDoc) < 1)
+	  /* il ne reste plus de vue, on libere le document */
+	  CloseDocument (pDoc);
+    }
 }
 
 
@@ -664,95 +651,95 @@ int                 nFrame;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                OpenDefaultViews (PtrDocument pDoc)
-
 #else  /* __STDC__ */
 void                OpenDefaultViews (pDoc)
 PtrDocument         pDoc;
-
 #endif /* __STDC__ */
-
 {
-   PtrPSchema          pPSchema;
-   NotifyDialog        notifyDoc;
-   int                 view, i, X, Y, width, height, schView;
-   boolean             bool, skeleton;
+  Document          document;
+  PtrPSchema        pPSchema;
+  NotifyDialog      notifyDoc;
+  int               view, i, X, Y, width, height, schView;
+  boolean           bool, skeleton;
 
-   /* si le document a ete charge' sous le forme de ses seuls elements 
-      exporte's, on ouvre la vue THOT_EXPORT, sinon, on ouvre la premiere vue. */
-   skeleton = FALSE;
-   if (pDoc->DocExportStructure)
-     {
-	pPSchema = pDoc->DocSSchema->SsPSchema;
-	view = 0;
-	do
-	   view++;
-	while (view != pPSchema->PsNViews && !pPSchema->PsExportView[view - 1]);
-	if (!pPSchema->PsExportView[view - 1])
-	   view = 1;
-	else
-	   skeleton = TRUE;
-     }
-   else
-      view = 1;
-   /* demande la creation d'une fenetre pour la vue a ouvrir */
-   /* chercher la geometrie de la fenetre dans le fichier .conf */
-   ConfigGetViewGeometry (pDoc, pDoc->DocSSchema->SsPSchema->PsView[view - 1],
-			  &X, &Y, &width, &height);
-   notifyDoc.event = TteViewOpen;
-   notifyDoc.document = (Document) IdentDocument (pDoc);
-   notifyDoc.view = 0;
-   if (!CallEventType ((NotifyEvent *) & notifyDoc, TRUE))
-     {
-	schView = pDoc->DocView[view - 1].DvPSchemaView;
-	pDoc->DocViewFrame[0] = CreateWindowWithTitle (pDoc, schView,
-			      pDoc->DocSSchema->SsPSchema->PsView[view - 1],
-			      &pDoc->DocViewVolume[0], X, Y, width, height);
-     }
-   if (pDoc->DocViewFrame[0] == 0)
-      /* echec creation fenetre */
-     {
-	UnloadDocument (&pDoc);
-	TtaDisplaySimpleMessage (INFO, LIB, TMSG_OPENING_NEW_FRAME_IMP);
-     }
-   else
-     {
-	pDoc->DocView[0].DvSSchema = pDoc->DocSSchema;
-	pDoc->DocView[0].DvPSchemaView = view;
-	pDoc->DocView[0].DvSync = TRUE;
-	pDoc->DocViewFreeVolume[0] = pDoc->DocViewVolume[0];
-	/* met a jour les menus variables de la fenetre */
-	if (ThotLocalActions[T_chselect] != NULL)
-	   (*ThotLocalActions[T_chselect]) (pDoc);
-	if (ThotLocalActions[T_chattr] != NULL)
-	   (*ThotLocalActions[T_chattr]) (pDoc);
-	if (pDoc->DocRootElement != NULL)
-	  {
+  /* si le document a ete charge' sous le forme de ses seuls elements 
+     exporte's, on ouvre la vue export sinon, on ouvre la premiere vue. */
+  skeleton = FALSE;
+  if (pDoc->DocExportStructure)
+    {
+      pPSchema = pDoc->DocSSchema->SsPSchema;
+      view = 0;
+      do
+	view++;
+      while (view != pPSchema->PsNViews && !pPSchema->PsExportView[view - 1]);
+      if (!pPSchema->PsExportView[view - 1])
+	view = 1;
+      else
+	skeleton = TRUE;
+    }
+  else
+    view = 1;
+  /* demande la creation d'une fenetre pour la vue a ouvrir */
+  /* chercher la geometrie de la fenetre dans le fichier .conf */
+  ConfigGetViewGeometry (pDoc, pDoc->DocSSchema->SsPSchema->PsView[view - 1],
+			 &X, &Y, &width, &height);
+  document = (Document) IdentDocument (pDoc);
+  notifyDoc.event = TteViewOpen;
+  notifyDoc.document = document;
+  notifyDoc.view = 0;
+  if (!CallEventType ((NotifyEvent *) & notifyDoc, TRUE))
+    {
+      schView = pDoc->DocView[view - 1].DvPSchemaView;
+      pDoc->DocViewFrame[0] = CreateWindowWithTitle (pDoc, schView,
+						     pDoc->DocSSchema->SsPSchema->PsView[view - 1],
+						     &pDoc->DocViewVolume[0], X, Y, width, height);
+    }
+  if (pDoc->DocViewFrame[0] == 0)
+    /* echec creation fenetre */
+    {
+      UnloadTree (document);
+      UnloadDocument (&pDoc);
+      TtaDisplaySimpleMessage (INFO, LIB, TMSG_OPENING_NEW_FRAME_IMP);
+    }
+  else
+    {
+      pDoc->DocView[0].DvSSchema = pDoc->DocSSchema;
+      pDoc->DocView[0].DvPSchemaView = view;
+      pDoc->DocView[0].DvSync = TRUE;
+      pDoc->DocViewFreeVolume[0] = pDoc->DocViewVolume[0];
+      /* met a jour les menus variables de la fenetre */
+      if (ThotLocalActions[T_chselect] != NULL)
+	(*ThotLocalActions[T_chselect]) (pDoc);
+      if (ThotLocalActions[T_chattr] != NULL)
+	(*ThotLocalActions[T_chattr]) (pDoc);
+      if (pDoc->DocRootElement != NULL)
+	{
 #ifdef __COLPAGE__
-	     /* test si pagine */
-	     if (GetPageBoxType (pDoc->DocRootElement->ElFirstChild, view, &pSchPage) != 0)
-		/* document pagine, on initialise NbPages et VolLibre */
-	       {
-		  pDoc->DocViewNPages[0] = 0;
-		  pDoc->DocViewFreeVolume[0] = THOT_MAXINT;
-	       }
+	  /* test si pagine */
+	  if (GetPageBoxType (pDoc->DocRootElement->ElFirstChild, view, &pSchPage) != 0)
+	    /* document pagine, on initialise NbPages et VolLibre */
+	    {
+	      pDoc->DocViewNPages[0] = 0;
+	      pDoc->DocViewFreeVolume[0] = THOT_MAXINT;
+	    }
 #endif /* __COLPAGE__ */
-	     pDoc->DocViewRootAb[0] = AbsBoxesCreate (pDoc->DocRootElement,
-						pDoc, 1, TRUE, TRUE, &bool);
-	     i = 0;
-	     /* on ne s'occupe pas de la hauteur de page */
-	     ChangeConcreteImage (pDoc->DocViewFrame[0], &i, pDoc->DocViewRootAb[0]);
-	     DisplayFrame (pDoc->DocViewFrame[0]);
-	     notifyDoc.event = TteViewOpen;
-	     notifyDoc.document = (Document) IdentDocument (pDoc);
-	     notifyDoc.view = 1;
-	     CallEventType ((NotifyEvent *) & notifyDoc, FALSE);
-	     /* Ouvre les vues specifiees dans la section open */
-	     /* du fichier .config, sauf s'il s'agit d'un document */
-	     /* charge' sous forme de squelette. */
-	     if (!skeleton)
-		ConfigOpenFirstViews (pDoc);
-	  }
-     }
+	  pDoc->DocViewRootAb[0] = AbsBoxesCreate (pDoc->DocRootElement,
+						   pDoc, 1, TRUE, TRUE, &bool);
+	  i = 0;
+	  /* on ne s'occupe pas de la hauteur de page */
+	  ChangeConcreteImage (pDoc->DocViewFrame[0], &i, pDoc->DocViewRootAb[0]);
+	  DisplayFrame (pDoc->DocViewFrame[0]);
+	  notifyDoc.event = TteViewOpen;
+	  notifyDoc.document = document;
+	  notifyDoc.view = 1;
+	  CallEventType ((NotifyEvent *) & notifyDoc, FALSE);
+	  /* Ouvre les vues specifiees dans la section open */
+	  /* du fichier .config, sauf s'il s'agit d'un document */
+	  /* charge' sous forme de squelette. */
+	  if (!skeleton)
+	    ConfigOpenFirstViews (pDoc);
+	}
+    }
 }
 
 /*----------------------------------------------------------------------

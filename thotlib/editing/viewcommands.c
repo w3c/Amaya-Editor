@@ -84,34 +84,35 @@
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                CloseDocument (PtrDocument pDoc)
-
 #else  /* __STDC__ */
 void                CloseDocument (pDoc)
 PtrDocument         pDoc;
-
 #endif /* __STDC__ */
-
 {
-   NotifyDialog        notifyDoc;
+  NotifyDialog      notifyDoc;
+  Document          document;
 
-   if (pDoc != NULL)
-     {
-	notifyDoc.event = TteDocClose;
-	notifyDoc.document = (Document) IdentDocument (pDoc);
-	notifyDoc.view = 0;
-	if (!CallEventType ((NotifyEvent *) & notifyDoc, TRUE))
-	  {
-	     /* detruit toutes les vues ouvertes du document */
-	     if (ThotLocalActions[T_corrector] != NULL)
-		(*ThotLocalActions[T_rscorrector]) (-1, 0, (char *) pDoc);
-	     CloseAllViewsDoc (pDoc);
-	     notifyDoc.event = TteDocClose;
-	     notifyDoc.document = (Document) IdentDocument (pDoc);
-	     notifyDoc.view = 0;
-	     CallEventType ((NotifyEvent *) & notifyDoc, FALSE);
-	     UnloadDocument (&pDoc);
-	  }
-     }
+  if (pDoc != NULL)
+    {
+      document = (Document) IdentDocument (pDoc);
+      notifyDoc.event = TteDocClose;
+      notifyDoc.document = document;
+      notifyDoc.view = 0;
+      if (!CallEventType ((NotifyEvent *) & notifyDoc, TRUE))
+	{
+	  /* detruit toutes les vues ouvertes du document */
+	  if (ThotLocalActions[T_corrector] != NULL)
+	    (*ThotLocalActions[T_rscorrector]) (-1, 0, (char *) pDoc);
+	  CloseAllViewsDoc (pDoc);
+	  /* free document contents */
+	  UnloadTree (document);
+	  notifyDoc.event = TteDocClose;
+	  notifyDoc.document = document;
+	  notifyDoc.view = 0;
+	  CallEventType ((NotifyEvent *) & notifyDoc, FALSE);
+	  UnloadDocument (&pDoc);
+	}
+    }
 }
 
 

@@ -375,33 +375,27 @@ void                FindReferredEl ()
 		   /* on proposera ce nom comme nom par defaut lorsque */
 		   /* l'utilisateur demandera a ouvrir un document */
 		  {
-		     CreateDocument (&pDoc);
-		     if (pDoc != NULL)
-		       {
-			  CopyDocIdent (&pDoc->DocIdent, docIdent);
-			  /* annule la selection */
-			  TtaClearViewSelections ();
-			  LoadDocument (&pDoc, NULL);
-		       }
-		     if (pDoc != NULL)
+		    LoadDocument (&pDoc, docIdent);
+		    if (pDoc != NULL)
+		      {
+			/* annule la selection */
+			TtaClearViewSelections ();
 			/* le chargement du document a reussi */
-		       {
-			  pEl = ReferredElement (pRef, &docIdent, &pDoc);
-			  /* s'il s'agit d'une inclusion de */
-			  /* document, applique les regles Transmit */
-			  ApplyTransmitRules (pRef->RdElement, pSelDoc);
-
-		       }
+			pEl = ReferredElement (pRef, &docIdent, &pDoc);
+			/* s'il s'agit d'une inclusion de */
+			/* document, applique les regles Transmit */
+			ApplyTransmitRules (pRef->RdElement, pSelDoc);
+		      }
 		  }
-	     else
-		/* l'element reference est-il dans le buffer de sauvegarde ? */
-	     if (IsASavedElement (pEl))
+	     else if (IsASavedElement (pEl))
 	       {
-		  pEl = NULL;
-		  /* message 'CsReference vide' */
-		  TtaDisplaySimpleMessage (INFO, LIB, TMSG_EMPTY_REF);
+		 /* l'element reference est-il dans le buffer de sauvegarde ? */
+		 pEl = NULL;
+		 /* message 'CsReference vide' */
+		 TtaDisplaySimpleMessage (INFO, LIB, TMSG_EMPTY_REF);
 	       }
 	  }
+
 	if (pEl != NULL)
 	  {
 	     if (!DocIdentIsNull (docIdent))

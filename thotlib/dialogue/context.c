@@ -44,10 +44,10 @@ static ThotColorStruct cwhite;
 #include "registry_f.h"
 
 #ifdef _WINDOWS
-/**
+/*----------------------------------------------------------------------
  *      WinCreateGC is an emulation of the XWindows XCreateGC under
  *         MS-Windows.
- **/
+ ----------------------------------------------------------------------*/
 #ifdef __STDC__
 ThotGC              WinCreateGC (void)
 #else  /* __STDC__ */
@@ -59,11 +59,11 @@ ThotGC              WinCreateGC (void)
    return (gc);
 }
 
-/**
+/*----------------------------------------------------------------------
  *      WinLoadGC has to be called before using an GC X-Windows
  *         emulation under MS-Windows.
  *   Full description of Device Context Attributes : Petzolt p 102
- **/
+ ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                WinLoadGC (HDC hdc, ThotGC gc)
 #else  /* __STDC__ */
@@ -77,11 +77,6 @@ ThotGC              gc;
      {
 	SelectObject (hdc, gc->pen);
      }
-    /*----------------------------------------------------------------------
-   if (gc->capabilities & THOT_GC_BRUSH) {
-   SelectObject(hdc, gc->brush);
-   }
-  ----------------------------------------------------------------------*/
    if (gc->capabilities & THOT_GC_FOREGROUND)
      {
 	SetTextColor (hdc, gc->foreground);
@@ -99,17 +94,12 @@ ThotGC              gc;
      {
 	SetROP2 (hdc, gc->mode);
      }
-    /*----------------------------------------------------------------------
-   if (gc->capabilities & THOT_GC_FONT) {
-   SelectObject(hdc, gc->font);
-   }
-  ----------------------------------------------------------------------*/
 }
 
-/**
+/*----------------------------------------------------------------------
  *      WinUnloadGC has to be called after using an GC X-Windows
  *         emulation under MS-Windows.
- **/
+ ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                WinUnloadGC (HDC hdc, ThotGC gc)
 #else  /* __STDC__ */
@@ -121,10 +111,10 @@ ThotGC              gc;
 {
 }
 
-/**
+/*----------------------------------------------------------------------
  *      WinInitColors initialize the color table depending on the
  *         device capabilities under MS-Windows.
- **/
+ ----------------------------------------------------------------------*/
 void                WinInitColors (void)
 {
    int                 i;
@@ -181,14 +171,12 @@ void                WinInitColors (void)
       Pix_Color[i] = PALETTERGB (RGB_Table[i].red,
 				 RGB_Table[i].green,
 				 RGB_Table[i].blue);
-    /*----------------------------------------------------------------------
-   Pix_Color[i] = GetNearestColor(WIN_curHdc,
-   RGB(RGB_Table[i].red, RGB_Table[i].green, RGB_Table[i].blue));
-  ----------------------------------------------------------------------*/
+    /*
+      Pix_Color[i] = GetNearestColor(WIN_curHdc,
+      RGB(RGB_Table[i].red, RGB_Table[i].green, RGB_Table[i].blue));
+      */
 
-   /*
-    * initialize some standard colors.
-    */
+   /* initialize some standard colors. */
    Black_Color = GetNearestColor (WIN_curHdc, PALETTERGB (0, 0, 0));
    White_Color = GetNearestColor (WIN_curHdc, PALETTERGB (255, 255, 255));
    Scroll_Color = GetNearestColor (WIN_curHdc, PALETTERGB (190, 190, 190));
@@ -199,9 +187,7 @@ void                WinInitColors (void)
    RO_Color = GetNearestColor (WIN_curHdc, PALETTERGB (0, 0, 205));
    InactiveB_Color = GetNearestColor (WIN_curHdc, PALETTERGB (255, 0, 0));
 
-   /*
-    * set up the default background colors for all views.
-    */
+   /* set up the default background colors for all views. */
    for (i = 0;
 	i < (sizeof (BackgroundColor) / sizeof (BackgroundColor[0]));
 	i++)
@@ -214,11 +200,10 @@ void                WinInitColors (void)
 
 #endif /* _WINDOWS */
 
-#ifdef WWW_XWINDOWS
-/*
+#ifndef _WINDOWS
+/*----------------------------------------------------------------------
  * XWindowError is the X-Windows non-fatal errors handler.
- */
-
+ ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static int          XWindowError (Display * dpy, XErrorEvent * err)
 #else  /* __STDC__ */
@@ -234,16 +219,14 @@ XErrorEvent        *err;
    return (0);
 }
 
-/*
+/*----------------------------------------------------------------------
  * XWindowFatalError is the X-Windows fatal errors handler.
- */
-
+ ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static int          XWindowFatalError (Display * dpy)
 #else  /* __STDC__ */
 static int          XWindowFatalError (dpy)
 Display            *dpy;
-
 #endif /* __STDC__ */
 {
    extern int          errno;
@@ -255,12 +238,12 @@ Display            *dpy;
       TtaDisplayMessage (FATAL, TtaGetMessage (LIB, TMSG_LIB_X11_ERR), DisplayString (dpy));
    return (0);
 }
-#endif /* WWW_XWINDOWS */
+#endif /* _WINDOWS */
 
-/*
+/*----------------------------------------------------------------------
  * TtaGetThotColor returns the Thot Color.
  *            red, green, blue express the color RGB in 8 bits values
- */
+ ----------------------------------------------------------------------*/
 #ifdef __STDC__
 int                 TtaGetThotColor (unsigned short red, unsigned short green, unsigned short blue)
 #else  /* __STDC__ */
@@ -268,7 +251,6 @@ int                 TtaGetThotColor (red, green, blue)
 unsigned short      red;
 unsigned short      green;
 unsigned short      blue;
-
 #endif /* __STDC__ */
 {
    short               delred, delgreen, delblue;
@@ -304,9 +286,9 @@ unsigned short      blue;
 }
 
 
-/**
+/*----------------------------------------------------------------------
  *   TtaGiveRGB returns the RGB of the color.
- **/
+ ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TtaGiveRGB (char *colname, unsigned short *red, unsigned short *green, unsigned short *blue)
 #else  /* __STDC__ */
@@ -330,9 +312,7 @@ unsigned short     *blue;
 	 TtaGiveThotRGB (i, red, green, blue);
 
 #ifndef _WINDOWS
-   /*
-    * Lookup the color name in the X color name database
-    */
+   /* Lookup the color name in the X color name database */
    if (XParseColor (TtDisplay, TtCmap, colname, &color))
      {
 	/* normalize RGB color values to 8 bits values */
@@ -347,10 +327,10 @@ unsigned short     *blue;
 }
 
 
-/**
+/*----------------------------------------------------------------------
  *      FindColor looks for the named color ressource.
  *         The result is the closest color found the Thot color table.
- **/
+ ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static boolean      FindColor (int disp, char *name, char *colorplace, char *defaultcolor, unsigned long *colorpixel)
 #else  /* __STDC__ */
@@ -388,9 +368,9 @@ unsigned long      *colorpixel;
       return (FALSE);
 }
 
-/**
+/*----------------------------------------------------------------------
  *      InitCurs load the cursors used by the graphic interface.
- **/
+ ----------------------------------------------------------------------*/
 static void         InitCurs ()
 {
 #ifndef _WINDOWS
@@ -402,9 +382,9 @@ static void         InitCurs ()
 #endif /* _WINDOWS */
 }
 
-/**
+/*----------------------------------------------------------------------
  *      InitColors initialize the Thot predefined X-Window colors.
- **/
+ ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         InitColors (char *name)
 #else  /* __STDC__ */
@@ -482,9 +462,9 @@ char               *name;
 }
 
 
-/**
+/*----------------------------------------------------------------------
  *  ShowReference returns True if there exists a color for active boxes.
- **/
+ ----------------------------------------------------------------------*/
 boolean             ShowReference ()
 {
 #ifndef _WINDOWS
@@ -496,9 +476,9 @@ boolean             ShowReference ()
 }
 
 
-/**
+/*----------------------------------------------------------------------
  *  ShowReference returns True if there exists a color for read-only parts.
- **/
+ ----------------------------------------------------------------------*/
 boolean             ShowReadOnly ()
 {
 #ifndef _WINDOWS
@@ -510,10 +490,10 @@ boolean             ShowReadOnly ()
 }
 /*fin */
 
-/**
+/*----------------------------------------------------------------------
  *      InitGraphicContexts initialize the X-Windows graphic contexts and their Windows
  *	counterpart in Microsoft environment.
- **/
+ ----------------------------------------------------------------------*/
 static void         InitGraphicContexts ()
 {
 #ifndef _WINDOWS
@@ -655,9 +635,9 @@ static void         InitGraphicContexts ()
 }
 
 
-/**
+/*----------------------------------------------------------------------
  *      ThotInitDisplay initialize all the output settings.
- **/
+ ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                ThotInitDisplay (char *name, int dx, int dy)
 #else  /* __STDC__ */
@@ -698,9 +678,9 @@ int                 dy;
    InitPictureHandlers (FALSE);
 }
 
-/**
+/*----------------------------------------------------------------------
  *      InitDocContexts initialize the frames' contexts
- **/
+ ----------------------------------------------------------------------*/
 void                InitDocContexts ()
 {
    int                 i;
@@ -717,9 +697,9 @@ void                InitDocContexts ()
 }
 
 #ifndef _WINDOWS
-/**
+/*----------------------------------------------------------------------
  *      SelectionEvents handle the X-Windows selection events.
- **/
+ ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                SelectionEvents (void *ev)
 #else  /* __STDC__ */

@@ -209,6 +209,9 @@ static GIMapping    GIMappingTable[] =
    {"DL", SPACE, HTML_EL_Definition_List, NULL},
    {"DT", SPACE, HTML_EL_Term, NULL},
    {"EM", SPACE, HTML_EL_Emphasis, NULL},
+#ifdef R_HTML
+   {"ENTITY", 'E', HTML_EL_Entity, NULL},
+#endif
    {"FONT", SPACE, HTML_EL_Font_, NULL},
    {"FORM", SPACE, HTML_EL_Form, NULL},
    {"H1", SPACE, HTML_EL_H1, NULL},
@@ -444,6 +447,9 @@ static AttributeMapping AttributeMappingTable[] =
    {"MULTIPLE", "", 'A', HTML_ATTR_Multiple},
    {"N", "", 'C', 0},
    {"NAME", "APPLET", 'A', HTML_ATTR_applet_name},
+#ifdef R_HTML
+   {"NAME", "ENTITY", 'A', HTML_ATTR_entity_name},
+#endif
    {"NAME", "META", 'A', HTML_ATTR_meta_name},
    {"NAME", "PARAM", 'A', HTML_ATTR_Param_name},
    {"NAME", "", 'A', HTML_ATTR_NAME},
