@@ -1145,6 +1145,9 @@ static void RestartParser (Document doc, char *localFile,
   else
     StartParser (doc, localFile, documentname, tempdir, localFile, FALSE);
 
+  /* Activate the section numbering */
+  if (DocumentTypes[doc] == docHTML && SNumbering[doc])
+    ChangeAttrOnRoot (doc, HTML_ATTR_SectionNumbering);
   /* fetch and display all images referred by the document */
   ActiveTransfer (doc);
   FetchAndDisplayImages (doc, AMAYA_LOAD_IMAGE, NULL);

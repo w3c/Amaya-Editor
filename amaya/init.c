@@ -1813,7 +1813,7 @@ Document InitDocView (Document doc, char *docname, DocumentType docType,
 	  DocumentTypes[doc] == docMath)
 	{
 	  TtaSetToggleItem (doc, 1, Views, TShowMapAreas, FALSE);
-	  TtaSetToggleItem (doc, 1, Special, TSectionNumber, FALSE);
+	  TtaSetToggleItem (doc, 1, Special, TSectionNumber, SNumbering[doc]);
 	  /* close the Alternate view if it is open */
 	  altView = TtaGetViewFromName (doc, "Alternate_view");
 	  if (altView != 0 && TtaIsViewOpen (doc, altView))
@@ -2912,6 +2912,9 @@ static Document LoadDocument (Document doc, char *pathname,
       /* Set the document read-only when needed */
       if (ReadOnlyDocument[newdoc])
 	SetDocumentReadOnly (newdoc);
+      /* Activate the section numbering */
+      if (docType == docHTML && SNumbering[newdoc])
+	ChangeAttrOnRoot (newdoc, HTML_ATTR_SectionNumbering);
 
       if (InNewWindow || newdoc != doc)
 	/* the document is displayed in a different window */
@@ -5320,7 +5323,7 @@ void                InitAmaya (NotifyEvent * event)
    char               *s;
    char               *tempname;
    int                 i;
-   ThotBool            restoredDoc;
+   ThotBool            restoredDoc, numbering;
 
    if (AmayaInitialized)
       return;
@@ -5460,6 +5463,7 @@ void                InitAmaya (NotifyEvent * event)
 
    /* Create and intialize resources needed for each document */
    /* Style sheets are strored in directory .amaya/0 */
+   TtaGetEnvBoolean ("SECTION_NUMBERING", &numbering);
    for (i = 0; i < DocumentTableLength; i++)
      {
        /* initialize document table */
@@ -5468,6 +5472,7 @@ void                InitAmaya (NotifyEvent * event)
        DocumentSource[i] = 0;
        DocumentMeta[i] = NULL;
        ReadOnlyDocument[i] = FALSE;
+       SNumbering[i] = numbering;
        /* initialize history */
        InitDocHistory (i);
        /* Create a temporary sub-directory for storing the HTML and

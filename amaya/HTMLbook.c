@@ -801,9 +801,10 @@ void                SetupAndPrint (Document doc, View view)
   SectionNumbering
   Execute the "Section Numbering" command
   ----------------------------------------------------------------------*/
-void                SectionNumbering (Document doc, View view)
+void SectionNumbering (Document doc, View view)
 {
-   ChangeAttrOnRoot (doc, HTML_ATTR_SectionNumbering);
+  SNumbering[doc] = !SNumbering[doc];
+  ChangeAttrOnRoot (doc, HTML_ATTR_SectionNumbering);
 }
 
 /*----------------------------------------------------------------------
@@ -815,7 +816,7 @@ void                SectionNumbering (Document doc, View view)
   Transform the HREF and SRC attribute to make them independent from their
   former base.
   ----------------------------------------------------------------------*/
-static void         UpdateURLsInSubtree (NotifyElement *event, Element el)
+static void UpdateURLsInSubtree (NotifyElement *event, Element el)
 {
   Element             nextEl, child;
   ElementType         elType;

@@ -54,7 +54,7 @@ void                NewXHTML (Document document, View view)
 /*----------------------------------------------------------------------
   NewMathML: Create a new MathML document
   ----------------------------------------------------------------------*/
-void                NewMathML (Document document, View view)
+void NewMathML (Document document, View view)
 {
   OpenNew (document, view, docMath);
 }
@@ -62,7 +62,7 @@ void                NewMathML (Document document, View view)
 /*----------------------------------------------------------------------
   NewSVG: Create a new XHTML document
   ----------------------------------------------------------------------*/
-void                NewSVG (Document document, View view)
+void NewSVG (Document document, View view)
 {
   OpenNew (document, view, docSVG);
 }
@@ -70,7 +70,7 @@ void                NewSVG (Document document, View view)
 /*----------------------------------------------------------------------
    NewCss: Create a new CSS stylesheet
   ----------------------------------------------------------------------*/
-void               NewCss (Document document, View view)
+void NewCss (Document document, View view)
 {
   OpenNew (document, view, docCSS);
 }
@@ -225,6 +225,9 @@ void InitializeNewDoc (char *url, int docType, Document doc)
 	UpdateContextSensitiveMenus (SelectionDoc);
       SelectionDoc = doc;
       UpdateContextSensitiveMenus (doc);
+      /* Activate the section numbering */
+      if (SNumbering[doc])
+	ChangeAttrOnRoot (doc, HTML_ATTR_SectionNumbering);
     }
   else if (docType == docMath)
     {
