@@ -475,20 +475,15 @@ void*       r_value ;
 /*----------------------------------------------------------------------
   InitializeTable
   ----------------------------------------------------------------------*/
+
 #ifdef __STDC__
-void Ap_InitializeTable (void)
+void Ap_InitializeAmayaTable (void)
 #else  /* __STDC__ */
-void Ap_InitializeTable ()
+void Ap_InitializeAmayaTable ()
 #endif /* __STDC__ */
 {
-    char* message ;
-    int   ret ;
-
-
     amayaFunctionsTable  = (NPNetscapeFuncs*) malloc (sizeof (NPNetscapeFuncs));
-    pluginTable [currentPlugin]->pluginFunctionsTable = (NPPluginFuncs*) malloc (sizeof (NPPluginFuncs));
-    printf ("Size of NPNetscapeFuncs = %d\n", (int) sizeof (NPNetscapeFuncs));
-    printf ("Size of NPPluginFuncs = %d\n", (int) sizeof (NPPluginFuncs));
+    printf ("Size of NPAmayaFuncs = %d\n", (int) sizeof (NPNetscapeFuncs));
 
     amayaFunctionsTable->version       = ((uint16) (0));
     amayaFunctionsTable->size          = ((uint16) (sizeof       (NPNetscapeFuncs)));
@@ -507,7 +502,41 @@ void Ap_InitializeTable ()
     amayaFunctionsTable->getJavaEnv    = ((NPN_GetJavaEnvUPP)    (Ap_GetJavaEnv));
     amayaFunctionsTable->getJavaPeer   = ((NPN_GetJavaPeerUPP)   (Ap_GetJavaPeer));
     amayaFunctionsTable->getvalue      = ((NPN_GetValueUPP)      (Ap_GetValue));
+}
 
+#ifdef __STDC__
+void Ap_InitializePluginTable (void)
+#else  /* __STDC__ */
+void Ap_InitializePluginTable ()
+#endif /* __STDC__ */
+{
+    char* message ;
+    int   ret ;
+
+
+    /*    amayaFunctionsTable  = (NPNetscapeFuncs*) malloc (sizeof (NPNetscapeFuncs)); */
+    pluginTable [currentPlugin]->pluginFunctionsTable = (NPPluginFuncs*) malloc (sizeof (NPPluginFuncs));
+    /* printf ("Size of NPNetscapeFuncs = %d\n", (int) sizeof (NPNetscapeFuncs)); */
+    printf ("Size of NPPluginFuncs = %d\n", (int) sizeof (NPPluginFuncs));
+    /*
+    amayaFunctionsTable->version       = ((uint16) (0));
+    amayaFunctionsTable->size          = ((uint16) (sizeof       (NPNetscapeFuncs)));
+    amayaFunctionsTable->posturl       = ((NPN_PostURLUPP)       (Ap_PostURL));
+    amayaFunctionsTable->geturl        = ((NPN_GetURLUPP)        (Ap_GetURL));
+    amayaFunctionsTable->requestread   = ((NPN_RequestReadUPP)   (Ap_RequestRead));
+    amayaFunctionsTable->newstream     = ((NPN_NewStreamUPP)     (Ap_NewStream));
+    amayaFunctionsTable->write         = ((NPN_WriteUPP)         (Ap_Write));
+    amayaFunctionsTable->destroystream = ((NPN_DestroyStreamUPP) (Ap_DestroyStream));
+    amayaFunctionsTable->status        = ((NPN_StatusUPP)        (Ap_Status));
+    amayaFunctionsTable->uagent        = ((NPN_UserAgentUPP)     (Ap_UserAgent));
+    amayaFunctionsTable->memalloc      = ((NPN_MemAllocUPP)      (Ap_MemAlloc));
+    amayaFunctionsTable->memfree       = ((NPN_MemFreeUPP)       (Ap_MemFree));
+    amayaFunctionsTable->memflush      = ((NPN_MemFlushUPP)      (Ap_MemFlush));
+    amayaFunctionsTable->reloadplugins = ((NPN_ReloadPluginsUPP) (Ap_ReloadPlugins));
+    amayaFunctionsTable->getJavaEnv    = ((NPN_GetJavaEnvUPP)    (Ap_GetJavaEnv));
+    amayaFunctionsTable->getJavaPeer   = ((NPN_GetJavaPeerUPP)   (Ap_GetJavaPeer));
+    amayaFunctionsTable->getvalue      = ((NPN_GetValueUPP)      (Ap_GetValue));
+    */
     pluginTable [currentPlugin]->pluginFunctionsTable->size         = ((uint16) (sizeof (NPPluginFuncs)));
 
     ptr_NP_Initialize = (int (*) (NPNetscapeFuncs*, NPPluginFuncs*)) dlsym (handle, "NP_Initialize");
@@ -568,7 +597,7 @@ int   indexHandler;
     
     strncpy (PictureHandlerTable[indexHandler].GUI_Name, GUI_Name, MAX_FORMAT_NAMELENGHT);
     /* Initializing the pointers to the netscape functions */
-    Ap_InitializeTable ();
+    Ap_InitializePluginTable ();
 
 }
 

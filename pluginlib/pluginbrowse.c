@@ -13,6 +13,8 @@
 
 #include "pluginbrowse.h"
 #include "pluginbrowse_f.h"
+#include "npapi.h"
+#include "npupp.h"
 
 static char  ls_unixFiles[MAX_NAME * NAME_LENGTH];
 static int   ls_fileNbr;
@@ -43,6 +45,7 @@ void TtaBrowsePluginDirectory ()
    sprintf (amayaPluginDir, "%s/.amaya/plugins", homeDir);
 
    if (TtaCheckDirectory (amayaPluginDir)) {
+      Ap_InitializeAmayaTable ();
       ls_unixFiles[0] = '\0';
       ls_fileNbr = 0;
       ls_currentfile = 0;
