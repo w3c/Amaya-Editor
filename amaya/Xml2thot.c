@@ -2535,9 +2535,9 @@ static void      UnknownXmlAttribute (char *xmlAttr, char *ns_uri)
 {
    AttributeType attrType;
    Attribute     attr;
-   char         *buffer, *ns_prefix = NULL;
+   char         *buffer, *bufattr, *ns_prefix = NULL;
    ThotBool      level = TRUE;
-   int           length;
+   int           length, buflen;
 
    if (currentParserCtxt != NULL)
      {
@@ -2585,12 +2585,16 @@ static void      UnknownXmlAttribute (char *xmlAttr, char *ns_uri)
 	     {
 	       /* Copy the name of the attribute as the content */
 	       /* of the Invalid_attribute attribute. */
-	       length = strlen (xmlAttr);
-	       length += TtaGetTextAttributeLength (attr);
+	       buflen = TtaGetTextAttributeLength (attr);
+	       bufattr = TtaGetMemory (buflen + 1);
+	       TtaGiveTextAttributeValue (attr, bufattr, &buflen);
+	       length = strlen (bufattr);
+	       length += strlen (xmlAttr);
 	       if (ns_prefix != NULL)
 		 {
 		   length += strlen (ns_prefix);
-		   buffer = TtaGetMemory (length + 4);
+		   buffer = TtaGetMemory (length + 3);
+		   strcpy (buffer, bufattr);
 		   strcat (buffer, " ");
 		   strcat (buffer, ns_prefix);
 		   strcat (buffer, ":");
@@ -2598,8 +2602,8 @@ static void      UnknownXmlAttribute (char *xmlAttr, char *ns_uri)
 		 }
 	       else
 		 {
-		   buffer = TtaGetMemory (length + 3);
-		   TtaGiveTextAttributeValue (attr, buffer, &length);
+		   buffer = TtaGetMemory (length + 2);
+		   strcpy (buffer, bufattr);
 		   strcat (buffer, " ");
 		   strcat (buffer, xmlAttr);
 		 }
@@ -2607,6 +2611,7 @@ static void      UnknownXmlAttribute (char *xmlAttr, char *ns_uri)
 				    XMLcontext.lastElement,
 				    XMLcontext.doc);
 	       TtaFreeMemory (buffer);
+	       TtaFreeMemory (bufattr);
 	     }
 	   currentAttribute = attr;
 	 }
