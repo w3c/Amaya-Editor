@@ -60,6 +60,7 @@ char *ANNOTATION_CLASSNAME = NULL;
 RDFPropertyP PROP_name = NULL;
 RDFPropertyP PROP_firstName = NULL;
 RDFPropertyP PROP_Email = NULL;
+RDFPropertyP PROP_usesIcon = NULL;
 RDFClassP ANNOTATION_CLASS;
 RDFClassP DEFAULT_ANNOTATION_TYPE;
 
@@ -732,6 +733,7 @@ void SCHEMA_FreeAnnotSchema()
   PROP_name = NULL;
   PROP_firstName = NULL;
   PROP_Email = NULL;
+  PROP_usesIcon = NULL;
   ANNOTATION_CLASS = NULL;
   DEFAULT_ANNOTATION_TYPE = NULL;
   FreeAnnotNS();

@@ -40,6 +40,8 @@
 #define NAME_PROPNAME  ID_NS "name"
 #define FIRSTNAME_PROPNAME  ID_NS "firstName"
 
+#define USESICON_PROPNAME "http://www.w3.org/2001/10/typeIcon#usesIcon"
+
 /* Structures and global variables */
 
 /* basic linked list structure */
@@ -203,6 +205,7 @@ extern RDFClassP DEFAULT_ANNOTATION_TYPE;
 extern RDFPropertyP PROP_Email;
 extern RDFPropertyP PROP_name;
 extern RDFPropertyP PROP_firstName;
+extern RDFPropertyP PROP_usesIcon;
 
 typedef struct _RDFStatement
 {

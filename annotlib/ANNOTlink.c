@@ -182,11 +182,28 @@ void LINK_AddAnnotIcon (Document source_doc, Element anchor, AnnotMeta *annot)
 {
   Element el;
   char s[MAX_LENGTH];
+  char *iconName;
+  RDFStatementP iconS;
 
   el = TtaGetFirstChild (anchor);
-  sprintf (s, "%s%camaya%cannot.gif",
-	   TtaGetEnvString ("THOTDIR"), DIR_SEP, DIR_SEP);
-  TtaSetPictureContent (el, s, SPACE, source_doc, "image/gif");
+  
+  if (!PROP_usesIcon)
+    PROP_usesIcon = ANNOT_FindRDFResource (&annot_schema_list,
+					   USESICON_PROPNAME,
+					   TRUE);
+
+  iconS = ANNOT_FindRDFStatement (annot->type->statements, PROP_usesIcon);
+
+  if (iconS)
+    iconName = iconS->object->name;
+  else
+    {
+      sprintf (s, "%s%camaya%cannot.gif",
+	       TtaGetEnvString ("THOTDIR"), DIR_SEP, DIR_SEP);
+      iconName = s;
+    }
+
+  TtaSetPictureContent (el, iconName, SPACE, source_doc, "image/gif");
 }
 
 /*-----------------------------------------------------------------------
