@@ -10,7 +10,6 @@ export
 
 translation
 
-Block: MROW
 TEXT_UNIT: \0
 GRAPHICS_UNIT: \0
 SYMBOL_UNIT: \0

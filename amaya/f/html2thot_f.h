@@ -24,6 +24,11 @@ extern boolean IsCharacterLevelElement ( Element el );
 extern void OnlyOneOptionSelected ( Element el,
                                     Document doc,
                                     boolean parsing );
+extern boolean ElementContainsText ( Element el );
+extern void SetFontslantAttr ( Element el,
+                               Document doc );
+extern void SetAddspaceAttr ( Element el,
+                              Document doc );
 extern void SetAttrIntItemStyle ( Element el,
                                   Document doc );
 extern void CreateAttrWidthPercentPxl ( char *buffer,
@@ -66,6 +71,11 @@ extern boolean IsCharacterLevelElement (/* Element el */);
 extern void OnlyOneOptionSelected (/* Element el,
                                       Document doc,
                                       boolean parsing */);
+extern boolean ElementContainsText (/* Element el */);
+extern void SetFontslantAttr (/* Element el,
+                                 Document doc */);
+extern void SetAddspaceAttr (/* Element el,
+                                Document doc */);
 extern void SetAttrIntItemStyle (/* Element el,
                                     Document doc */);
 extern void CreateAttrWidthPercentPxl (/* char *buffer,

@@ -11,33 +11,29 @@ STRUCT
 
    MathML =	MROW;
 
-   MROW = LIST OF (Construction);
+   MROW = LIST OF (Construct);
 
-   Component = CASE OF
-		  Construction;
-		  MROW;
-		  END;
-
-   Construction = CASE OF
+   Construct = CASE OF
 		  MTEXT = TEXT;
+		  MROW;
 		  MROOT = BEGIN
-			RootBase = Component;
-		  	Index = Component;
+			RootBase = Construct;
+		  	Index = Construct;
 			END;
 		  MSQRT = BEGIN
 			RootBase;
 			END;
 		  MFRAC = BEGIN
-			Numerator = Component;
-			Denominator = Component;
+			Numerator = Construct;
+			Denominator = Construct;
 			END;
 		  MSUBSUP = BEGIN
 			Base = CASE OF
 				    SYMBOL;
-				    Component;
+				    Construct;
 				    END;
-		  	Subscript = Component;
-		  	Superscript = Component;
+		  	Subscript = Construct;
+		  	Superscript = Construct;
 			END;
 		  MSUB = BEGIN
 			Base;
@@ -50,36 +46,32 @@ STRUCT
 		  MUNDER = BEGIN
 			UnderOverBase = CASE OF
 				    SYMBOL;
-				    Component;
+				    Construct;
 				    END;
-			Underscript = Component;
+			Underscript = Construct;
 			END;
 		  MOVER = BEGIN
 			UnderOverBase;
-			Overscript = Component;
+			Overscript = Construct;
 			END;
 		  MUNDEROVER = BEGIN
 			UnderOverBase;
 			Underscript;
 			Overscript;
 			END;
-		  Block = BEGIN
-		  	MF = SYMBOL;
-			Block_exp = Component;
-			MF;
-			END;
-		  MN = BEGIN TEXT; END;
-		  MI (ATTR fontslant = plain, italic) = BEGIN TEXT; END;
-		  MO (ATTR addspace = nospace, spacebefore, spaceafter, both) =
-			BEGIN TEXT; END;
-		  MS = BEGIN TEXT; END;
+		  MN = TEXT;
+		  MI (ATTR fontslant = plain, italic) = TEXT;
+		  MO (ATTR addspace = nospace, spacebefore, spaceafter, both;
+		           entity = TEXT) =
+			TEXT;
+		  MS = TEXT;
+		  MF = SYMBOL;
 		  END;
 
 EXCEPT
 
    MathML:	  Hidden;
-   Component:     Hidden;
-   Construction:  Hidden;
+   Construct:	  Hidden;
    Index:	  Hidden;
    RootBase:	  Hidden;
    Numerator:	  Hidden;
@@ -87,7 +79,7 @@ EXCEPT
    Base:	  Hidden;
    Subscript:	  Hidden;
    Superscript:	  Hidden;
-   Block_exp:	  Hidden;
 
    addspace:	  Invisible;
+   entity:	  Invisible;
 END

@@ -31,10 +31,10 @@ MENUS
 	view:1 File button:BClose -> TtcCloseDocument;
 	view:1 File button:BExit -> AmayaClose;
 
-	view:2 File2 button:BCloseView -> ShowStructure;
-	view:4 File4 button:BCloseView -> ShowAlternate;
-	view:3 File3 button:BCloseView -> ShowLinks;
-	view:5 File5 button:BCloseView -> ShowToC;
+	view:2 File2 button:BCloseView -> TtcCloseView;
+	view:3 File3 button:BCloseView -> TtcCloseView;
+	view:4 File4 button:BCloseView -> TtcCloseView;
+	view:5 File5 button:BCloseView -> TtcCloseView;
 
 	Edit_ button:BCut -> TtcCutSelection;
 	Edit_ button:BCopy -> TtcCopySelection;

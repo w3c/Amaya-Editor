@@ -1,7 +1,7 @@
 0  File
 1  File2
-2  File4
-3  File3
+2  File3
+3  File4
 4  File5
 5  Edit_
 6  StructTypes
@@ -87,11 +87,11 @@
 86  BDeleteAnchor
 87  TShowButtonbar
 88  TShowTextZone
-89  TShowStructure
-90  TShowAlternate
-91  TShowLinks
-92  TShowToC
-93  TShowMapAreas
+89  TShowMapAreas
+90  BShowStructure
+91  BShowAlternate
+92  BShowLinks
+93  BShowToC
 94  BCharacterStyle
 95  BColors
 96  BFormat

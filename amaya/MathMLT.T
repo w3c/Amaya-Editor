@@ -93,14 +93,6 @@ RULES
 	create '</munderover>\12' after;
 	end;
 
-   Block :
-	begin
-	create '<mrow>\12';
-	indent +2;
-	indent -2 after;
-	create '</mrow>\12' after;
-	end;
-	
    MF :
 	begin
 	create '<mf>';
@@ -150,6 +142,11 @@ RULES
 		create '</mo>\12' after;
 		end;
 	end;
+
+ATTRIBUTES
+
+   entity:
+	create entity;
 
 #include "Text_SGML.inc"
 #include "greek.sgml"

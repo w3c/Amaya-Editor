@@ -49,7 +49,7 @@
 #include "HTMLtable_f.h"
 #ifdef MATHML
 #include "Mathedit_f.h"
-#endif
+#endif /* MATHML */
 #endif /* STANDALONE */
 
 typedef unsigned char entityName[10];
@@ -63,6 +63,7 @@ ISOlat1entry;
 
 ISOlat1entry        ISOlat1table[] =
 {
+   /* This table MUST be in alphabetical order */
    {"AElig", 198},
    {"Aacute", 193},
    {"Acirc", 194},
@@ -216,29 +217,33 @@ MathEntity;
 
 MathEntity        MathEntityTable[] =
 {
-   {"ApplyFunction", 129, 'L'},
-   {"InvisibleTimes", 129, 'L'},	/** thin space, should be 0 **/
+   /* This table MUST be in alphabetical order */
+   {"ApplyFunction", 32, 'L'},	/* render as white space */
+   {"InvisibleTimes", 0, ' '},
    {"PlusMinus", 177, 'G'},
    {"RightArrow", 174, 'G'},
    {"Sum", 229, 'G'},
-   {"af", 129, 'L'},	/** thin space, should be 0 **/
+   {"af", 32, 'L'},		/* render as white space */
    {"dd", 100, 'L'},
    {"delta", 100, 'G'},
    {"ee", 101, 'L'},
    {"gt", 62, 'L'},
+   {"inf", 165, 'G'},		/* infinity */
    {"int", 242, 'G'},
    {"it", 242, 'G'},
    {"lt", 62, 'L'},
+   {"pi", 112, 'G'},
    {"rarr", 174, 'G'},
    {"sum", 229, 'G'},
    {"thickspace", 32, 'L'},
-   {"zzzz", -1, ' '}			/* this last entry is required */
+   {"zzzz", -1, ' '}		/* this last entry is required */
 };
 
 /* mapping table of HTML elements */
 
 static GIMapping    MathGIMappingTable[] =
 {
+   /* This table MUST be in alphabetical order */
    {"MF", SPACE, MathML_EL_MF, NULL},
    {"MFRAC", SPACE, MathML_EL_MFRAC, NULL},
    {"MI", SPACE, MathML_EL_MI, NULL},
@@ -259,7 +264,8 @@ static GIMapping    MathGIMappingTable[] =
 };
 
 static boolean WithinMathML;
-static SSchema MathSSchema;
+static boolean ReadingHTMLentity;
+static SSchema MathMLSSchema;
 
 #endif	/* MATHML */
 
@@ -267,6 +273,7 @@ static SSchema MathSSchema;
 
 static GIMapping    GIMappingTable[] =
 {
+   /* This table MUST be in alphabetical order */
    {"A", SPACE, HTML_EL_Anchor, NULL},
    {"ADDRESS", SPACE, HTML_EL_Address, NULL},
    {"APPLET", SPACE, HTML_EL_Applet, NULL},
@@ -475,10 +482,10 @@ AttributeMapping;
 #define DummyAttribute 500
 static AttributeMapping AttributeMappingTable[] =
 {
-	/* the first entry *must* be unknown_attr */
+   /* The first entry MUST be unknown_attr */
+   /* The rest of this table MUST be in alphabetical order */
    {"unknown_attr", "", 'A', HTML_ATTR_Invalid_attribute},
    {"ACTION", "", 'A', HTML_ATTR_Script_URL},
-   {"CLEAR", "BR", 'A', HTML_ATTR_Clear},
    {"ALIGN", "APPLET", 'A', HTML_ATTR_Alignment},
    {"ALIGN", "CAPTION", 'A', HTML_ATTR_Position},
    {"ALIGN", "DIV", 'A', HTML_ATTR_Align},
@@ -514,6 +521,7 @@ static AttributeMapping AttributeMappingTable[] =
 #ifdef COUGAR
    {"CLASSID", "", 'A', HTML_ATTR_classid},
 #endif
+   {"CLEAR", "BR", 'A', HTML_ATTR_Clear},
    {"CODE", "", 'A', HTML_ATTR_code},
    {"CODEBASE", "", 'A', HTML_ATTR_codebase},
 #ifdef COUGAR
@@ -753,7 +761,7 @@ static int          LgBuffer = 0;	  /* actual length of text in input
 /* information about the Thot document under construction */
 static Document     theDocument = 0;	  /* the Thot document */
 static Language     documentLanguage;	  /* language used in the document */
-static SSchema      structSchema;	  /* the HTML structure schema */
+static SSchema      HTMLSSchema;	  /* the HTML structure schema */
 static Element      rootElement;	  /* root element of the document */
 static Element      lastElement = NULL;	  /* last element created */
 static boolean      lastElementClosed = FALSE;/* last element is complete */
@@ -774,6 +782,7 @@ static boolean      ReadingHREF = FALSE;  /* reading the value of a HREF
 					     attribute */
 static boolean      MergeText = FALSE;	  /* character data should be catenated
 					     with the last Text element */
+
 static PtrElemToBeChecked FirstElemToBeChecked = NULL;
 static PtrElemToBeChecked LastElemToBeChecked = NULL;
 
@@ -1339,10 +1348,11 @@ void                InitMapping ()
    Within  checks if an element of type ThotType is in the stack.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean      Within (int ThotType)
+static boolean      Within (int ThotType, SSchema ThotSSchema)
 #else
-static boolean      Within (ThotType)
+static boolean      Within (ThotType, ThotSSchema)
 int                 ThotType;
+SSchema		    ThotSSchema;
 
 #endif
 {
@@ -1357,7 +1367,8 @@ int                 ThotType;
 	if (ElementStack[i] != NULL)
 	  {
 	     elType = TtaGetElementType (ElementStack[i]);
-	     if (elType.ElTypeNum == ThotType)
+	     if (elType.ElTypeNum == ThotType &&
+		 elType.ElSSchema == ThotSSchema)
 		ret = TRUE;
 	  }
 	i--;
@@ -1636,7 +1647,7 @@ char	alphabet;
 	    else
 	       /* create a TEXT element */
 	       elType.ElTypeNum = MathML_EL_TEXT_UNIT;
-	    elType.ElSSchema = MathSSchema;
+	    elType.ElSSchema = MathMLSSchema;
 	    elContent = TtaNewElement (theDocument, elType);
 	    InsertMathElement (&elContent);
 	    lastElementClosed = TRUE;
@@ -1652,6 +1663,93 @@ char	alphabet;
 	  }
      }
    InitBuffer ();
+}
+
+/*----------------------------------------------------------------------
+  CreatePlaceholders
+  
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void	CreatePlaceholders (Element el, Document doc)
+#else
+static void	CreatePlaceholders (el, doc)
+   Element	el;
+   Document	doc;
+#endif
+{
+   Element	sibling, prev, constr, child;
+   ElementType	elType;
+   boolean	create;
+
+   elType.ElSSchema = MathMLSSchema;
+   prev = NULL;
+   create = TRUE;
+   sibling = el;
+   while (sibling != NULL)
+      {
+      if (ElementContainsText (sibling))
+	 create = FALSE;
+      else
+	 {
+	 if (sibling == el)
+	    /* first element */
+	    {
+	    elType = TtaGetElementType (sibling);
+	    if (elType.ElTypeNum == MathML_EL_MF)
+	       /* the first element is a MF. Don't create a placeholder
+		  before */
+	       create = FALSE;
+	    else if (elType.ElTypeNum == MathML_EL_MROW)
+	       /* the first element is a MROW */
+	       {
+	       child = TtaGetFirstChild (sibling);
+	       if (child != NULL)
+		  {
+	          elType = TtaGetElementType (child);
+	          if (elType.ElTypeNum != MathML_EL_MF)
+		     /* the first child of the MROW element is not a MF */
+		     /* Don't create a placeholder before */
+	             create = FALSE;
+		  }
+	       }
+	    }
+	 if (create)
+	    {
+            elType.ElTypeNum = MathML_EL_Construct;
+	    constr = TtaNewElement (doc, elType);
+	    TtaInsertSibling (constr, sibling, TRUE, doc);
+	    }
+	 create = TRUE;
+	 }
+      prev = sibling;
+      TtaNextSibling (&sibling);
+      }
+   if (prev != NULL && create)
+      {
+	elType = TtaGetElementType (prev);
+	/* don't insert a placeholder after the last element if it's a MF */
+	if (elType.ElTypeNum == MathML_EL_MF)
+	   create = FALSE;
+	else if (elType.ElTypeNum == MathML_EL_MROW)
+	   /* the last element is a MROW */
+	   {
+	   child = TtaGetLastChild (prev);
+	   if (child != NULL)
+	      {
+	      elType = TtaGetElementType (child);
+	      if (elType.ElTypeNum != MathML_EL_MF)
+		 /* the last child of the MROW element is not a MF */
+		 /* Don't create a placeholder before */
+	         create = FALSE;
+	      }
+	   }
+	if (create)
+	   {
+           elType.ElTypeNum = MathML_EL_Construct;
+	   constr = TtaNewElement (doc, elType);
+	   TtaInsertSibling (constr, prev, FALSE, doc);
+	   } 
+      }
 }
 #endif /* MATHML */
 
@@ -1724,7 +1822,7 @@ static void         TextToDocument ()
 	     return;
 	  }
 	if (ignoreLeadingSpaces)
-	   if (!Within (HTML_EL_Preformatted))
+	   if (!Within (HTML_EL_Preformatted, HTMLSSchema))
 	      /* suppress leading spaces */
 	      while (inputBuffer[i] <= SPACE && inputBuffer[i] != EOS)
 		 i++;
@@ -1736,7 +1834,7 @@ static void         TextToDocument ()
 	     else
 	       {
 		  /* create a TEXT element */
-		  elType.ElSSchema = structSchema;
+		  elType.ElSSchema = HTMLSSchema;
 		  elType.ElTypeNum = HTML_EL_TEXT_UNIT;
 		  elText = TtaNewElement (theDocument, elType);
 		  InsertElement (&elText);
@@ -1881,11 +1979,12 @@ Element             parent;
 	if (ancestor != NULL)
 	  {
 	   elType = TtaGetElementType (ancestor);
-	   if (CannotContainText (elType) && !Within (HTML_EL_Option_Menu))
+	   if (CannotContainText (elType) &&
+	       !Within (HTML_EL_Option_Menu, HTMLSSchema))
 	      /* Element ancestor cannot contain text directly. Create a */
 	      /* Pseudo_paragraph element as the parent of the text element */
 	      {
-	      newElType.ElSSchema = structSchema;
+	      newElType.ElSSchema = HTMLSSchema;
 	      newElType.ElTypeNum = HTML_EL_Pseudo_paragraph;
 	      newEl = TtaNewElement (theDocument, newElType);
 	      /* insert the new Pseudo_paragraph element */
@@ -1938,7 +2037,7 @@ Element             parent;
 	   /* A basic element cannot be a child of a Text_Area */
 	   /* create a Inserted_Text element as a child of Text_Area */
 	  {
-	     newElType.ElSSchema = structSchema;
+	     newElType.ElSSchema = HTMLSSchema;
 	     newElType.ElTypeNum = HTML_EL_Inserted_Text;
 	     newEl = TtaNewElement (theDocument, newElType);
 	     InsertElement (&newEl);
@@ -2229,7 +2328,7 @@ Element             el;
    ElementType         elType, newElType, childType;
    Element             constElem, child, desc, leaf;
 #ifdef MATHML
-   Element	       new, prev, next;
+   Element	       new, prev, next, firstChild;
 #endif
    Attribute           attr;
    AttributeType       attrType;
@@ -2273,7 +2372,7 @@ Element             el;
 		     TtaInsertSibling (child, desc, TRUE, theDocument);
 		 }
 	       /* copy attribute data into SRC attribute of Object_Image */
-	       attrType.AttrSSchema = structSchema;
+	       attrType.AttrSSchema = HTMLSSchema;
 	       attrType.AttrTypeNum = HTML_ATTR_data;
 	       attr = TtaGetAttribute (el, attrType);
 	       if (attr != NULL)
@@ -2322,22 +2421,22 @@ Element             el;
 	    case HTML_EL_Math:
 	    case HTML_EL_MathDisp:
 		/*  it's a Math element. Create a MathML element */
-	        child = TtaGetFirstChild(el);
-	        if (child != NULL)
+	        firstChild = TtaGetFirstChild(el);
+	        if (firstChild != NULL)
 		  {
-		  childType = TtaGetElementType (child);
-		  if (childType.ElSSchema != MathSSchema  ||
+		  childType = TtaGetElementType (firstChild);
+		  if (childType.ElSSchema != MathMLSSchema  ||
 		      childType.ElTypeNum != MathML_EL_MathML)
 		     {
-		     elType.ElSSchema = MathSSchema;
+		     elType.ElSSchema = MathMLSSchema;
 		     elType.ElTypeNum = MathML_EL_MathML;
 		     new = TtaNewElement (theDocument, elType);
-		     TtaInsertSibling (new, child, TRUE, theDocument);
-		     next = child;
+		     TtaInsertSibling (new, firstChild, TRUE, theDocument);
+		     next = firstChild;
 		     TtaNextSibling (&next);
-		     TtaRemoveTree (child, theDocument);
-		     TtaInsertFirstChild (&child, new, theDocument);
-		     prev = child;
+		     TtaRemoveTree (firstChild, theDocument);
+		     TtaInsertFirstChild (&firstChild, new, theDocument);
+		     prev = firstChild;
 		     while (next != NULL)
 		        {
 		        child = next;
@@ -2347,6 +2446,8 @@ Element             el;
 		        prev = child;
 		        }
 		     }
+		  /* Create placeholders within the MathML element */
+		  CreatePlaceholders (firstChild, theDocument);
 		  }
 		break;
 #endif /* MATHML */
@@ -2356,7 +2457,7 @@ Element             el;
 		child = TtaNewTree (theDocument, elType, "");
 		TtaInsertFirstChild (&child, el, theDocument);
 	    case HTML_EL_Text_Input:
-		attrType.AttrSSchema = structSchema;
+		attrType.AttrSSchema = HTMLSSchema;
 		attrType.AttrTypeNum = HTML_ATTR_Value_;
 		attr = TtaGetAttribute (el, attrType);
 		if (attr != NULL)
@@ -2424,7 +2525,7 @@ Element             el;
 	       else
 		 {
 		    /* save the text into Default_Value attribute */
-		    attrType.AttrSSchema = structSchema;
+		    attrType.AttrSSchema = HTMLSSchema;
 		    attrType.AttrTypeNum = HTML_ATTR_Default_Value;
 		    if (TtaGetAttribute (el, attrType) == NULL)
 		       /* attribute Default_Value is missing */
@@ -2448,7 +2549,7 @@ Element             el;
 	    case HTML_EL_Radio_Input:
 	    case HTML_EL_Checkbox_Input:
 	       /* put an attribute Checked if it is missing */
-	       attrType.AttrSSchema = structSchema;
+	       attrType.AttrSSchema = HTMLSSchema;
 	       attrType.AttrTypeNum = HTML_ATTR_Checked;
 	       if (TtaGetAttribute (el, attrType) == NULL)
 		  /* attribute Checked is missing */
@@ -2467,7 +2568,7 @@ Element             el;
 	    case HTML_EL_PICTURE_UNIT:
 #ifdef STANDALONE
 	       /* copy value of attribute SRC into the content of the element */
-	       attrType.AttrSSchema = structSchema;
+	       attrType.AttrSSchema = HTMLSSchema;
 	       attrType.AttrTypeNum = HTML_ATTR_SRC;
 	       attr = TtaGetAttribute (el, attrType);
 	       if (attr != NULL)
@@ -2495,7 +2596,7 @@ Element             el;
 	    case HTML_EL_LINK:
 	       /* A LINK element is complete. If it is a link to a style sheet, */
 	       /* load that style sheet. */
-	       attrType.AttrSSchema = structSchema;
+	       attrType.AttrSSchema = HTMLSSchema;
 	       attrType.AttrTypeNum = HTML_ATTR_REL;
 	       attr = TtaGetAttribute (el, attrType);
 	       if (attr != NULL)
@@ -2507,7 +2608,7 @@ Element             el;
 		    if ((!strcasecmp (name1, "STYLESHEET")) || (!strcasecmp (name1, "STYLE")))
 		      {
 			 /* it's a link to a style sheet. Load that style sheet */
-			 attrType.AttrSSchema = structSchema;
+			 attrType.AttrSSchema = HTMLSSchema;
 			 attrType.AttrTypeNum = HTML_ATTR_HREF_;
 			 attr = TtaGetAttribute (el, attrType);
 			 if (attr != NULL)
@@ -2610,82 +2711,32 @@ Element el;
 #ifdef MATHML
 
 /*----------------------------------------------------------------------
-  CreatePlaceHolders
-  
+  ElementContainsText
+  returns TRUE if element el contains some text.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void	CreatePlaceHolders (Element el, Document doc)
+boolean      ElementContainsText (Element el)
 #else
-static void	CreatePlaceHolders (el, doc)
-   Element	el;
-   Document	doc;
+boolean      ElementContainsText (el)
+Element el;
+ 
 #endif
 {
-   Element	sibling, prev, constr;
-   ElementType	elType;
-   boolean	prevOK;
-
-   elType = TtaGetElementType (el);
-   if (elType.ElTypeNum == MathML_EL_MROW)
-      {
-      sibling = el;
-      TtaPreviousSibling (&sibling);
-      if (sibling != NULL)
-	 {
-	 elType = TtaGetElementType (sibling);
-	 if (elType.ElTypeNum == MathML_EL_MF)
-	    /* a MROW after a MF, don't do anything */
-	    return;
-	 }
-      else
-	 {
-	 sibling = el;
-	 TtaNextSibling (&sibling);
-         if (sibling != NULL)
-	    {
-	    elType = TtaGetElementType (sibling);
-	    if (elType.ElTypeNum == MathML_EL_MF)
-	       /* a MROW before a MF, don't do anything */
-	       return;
-	    }
-	 else
-	    /* a MROW without any sibling */
-            return;
-	 }
-      }
-   prev = NULL;
-   prevOK = FALSE;
-   sibling = el;
-   while (sibling != NULL)
-      {
-      if (ElementContainsText (sibling))
-	 prevOK = TRUE;
-      else
-	 {
-	 if (!prevOK)
-	    {
-            elType.ElTypeNum = MathML_EL_Construction;
-	    constr = TtaNewElement (doc, elType);
-	    TtaInsertSibling (constr, sibling, TRUE, doc);
-	    }
-	 prevOK = FALSE;
-	 }
-      prev = sibling;
-      TtaNextSibling (&sibling);
-      }
-   if (prev != NULL && !prevOK)
-      {
-	elType = TtaGetElementType (prev);
-	/* don't insert a place holder after the last MF in a MROW */
-	if (elType.ElTypeNum != MathML_EL_MF)
-	   {
-           elType.ElTypeNum = MathML_EL_Construction;
-	   constr = TtaNewElement (doc, elType);
-	   TtaInsertSibling (constr, prev, FALSE, doc);
-	   } 
-      }
+  ElementType   elType;
+ 
+  elType = TtaGetElementType (el);
+  if (elType.ElTypeNum == MathML_EL_Construct ||
+      elType.ElTypeNum == MathML_EL_TEXT_UNIT ||
+      elType.ElTypeNum == MathML_EL_MI  ||
+      elType.ElTypeNum == MathML_EL_MO ||
+      elType.ElTypeNum == MathML_EL_MN ||
+      elType.ElTypeNum == MathML_EL_MS ||
+      elType.ElTypeNum == MathML_EL_MTEXT)
+     return TRUE;
+  else
+     return FALSE;
 }
-
+ 
 /*----------------------------------------------------------------------
   CheckMathSubExpressions
   Children of elements el should be of type type1, type2, and type3.
@@ -2705,20 +2756,16 @@ static void	CheckMathSubExpressions (el, type1, type2, type3)
    ElementType	elType;
 
    child = TtaGetFirstChild (el);
-   elType.ElSSchema = MathSSchema;
+   elType.ElSSchema = MathMLSSchema;
    if (child != NULL && type1 != 0)
       {
-      elType = TtaGetElementType (child);
-      if (elType.ElTypeNum != type1)
-         {
-         TtaRemoveTree (child, theDocument);
-         elType.ElTypeNum = type1;
-         new = TtaNewElement (theDocument, elType);
-         TtaInsertFirstChild (&new, el, theDocument);
-         TtaInsertFirstChild (&child, new, theDocument);
-         CreatePlaceHolders (child, theDocument);
-	 child = new;
-	 }
+      TtaRemoveTree (child, theDocument);
+      elType.ElTypeNum = type1;
+      new = TtaNewElement (theDocument, elType);
+      TtaInsertFirstChild (&new, el, theDocument);
+      TtaInsertFirstChild (&child, new, theDocument);
+      CreatePlaceholders (child, theDocument);
+      child = new;
       if (type2 != 0)
 	{
 	prev = child;
@@ -2730,7 +2777,7 @@ static void	CheckMathSubExpressions (el, type1, type2, type3)
 	  new = TtaNewElement (theDocument, elType);
 	  TtaInsertSibling (new, prev, FALSE, theDocument);
 	  TtaInsertFirstChild (&child, new, theDocument);
-	  CreatePlaceHolders (child, theDocument);
+	  CreatePlaceholders (child, theDocument);
 	  if (type3 != 0)
 	     {
 	     child = new;
@@ -2743,13 +2790,151 @@ static void	CheckMathSubExpressions (el, type1, type2, type3)
 	        new = TtaNewElement (theDocument, elType);
 	        TtaInsertSibling (new, prev, FALSE, theDocument);
 	        TtaInsertFirstChild (&child, new, theDocument);
-	        CreatePlaceHolders (child, theDocument);
+	        CreatePlaceholders (child, theDocument);
 		}
 	     }
 	  }
         }
       }
 }
+
+/*----------------------------------------------------------------------
+   SetFontslantAttr
+   The content of a MI element has been created or modified.
+   Create or change attribute fontslant for that element accordingly.
+ -----------------------------------------------------------------------*/
+#ifdef __STDC__
+void SetFontslantAttr (Element el, Document doc)
+#else /* __STDC__*/
+void SetFontslantAttr (el, doc)
+  Element	el;
+  Document	doc;
+#endif /* __STDC__*/
+{
+  Element	textEl;
+  ElementType	elType;
+  AttributeType	attrType;
+  Attribute	attr;
+  int		len;
+
+  textEl = TtaGetFirstChild (el);
+  if (textEl != NULL)
+     {
+     /* search the fontslant attribute */
+     elType = TtaGetElementType (el);
+     attrType.AttrSSchema = elType.ElSSchema;
+     attrType.AttrTypeNum = MathML_ATTR_fontslant;
+     attr = TtaGetAttribute (el, attrType);
+     /* get content length */
+     len = TtaGetTextLength (textEl);
+     if (len > 1)
+        /* put an attribute fontslant = plain */
+	{
+	if (attr == NULL)
+	   {
+	   attr = TtaNewAttribute (attrType);
+	   TtaAttachAttribute (el, attr, doc);
+	   }
+	TtaSetAttributeValue (attr, MathML_ATTR_fontslant_VAL_plain, el, doc);
+	}
+     else
+	/* remove attribute fontslant if it exists */
+	{
+	if (attr != NULL)
+	   TtaRemoveAttribute (el, attr, doc);
+	}
+     }
+}
+
+/*----------------------------------------------------------------------
+   SetAddspaceAttr
+   The content of a MO element has been created or modified.
+   Create or change attribute addspace for that element accordingly.
+ -----------------------------------------------------------------------*/
+#ifdef __STDC__
+void SetAddspaceAttr (Element el, Document doc)
+#else /* __STDC__*/
+void SetAddspaceAttr (el, doc)
+  Element	el;
+  Document	doc;
+#endif /* __STDC__*/
+{
+  Element	textEl, previous;
+  ElementType	elType;
+  AttributeType	attrType;
+  Attribute	attr;
+  int		len, val;
+#define BUFLEN 10
+  unsigned char	text[BUFLEN];
+  Language	lang;
+  char		alphabet;
+
+  textEl = TtaGetFirstChild (el);
+  if (textEl != NULL)
+     {
+     /* search the addspace attribute */
+     elType = TtaGetElementType (el);
+     attrType.AttrSSchema = elType.ElSSchema;
+     attrType.AttrTypeNum = MathML_ATTR_addspace;
+     attr = TtaGetAttribute (el, attrType);
+     if (attr == NULL)
+	{
+	attr = TtaNewAttribute (attrType);
+	TtaAttachAttribute (el, attr, doc);
+	}
+     val = MathML_ATTR_addspace_VAL_nospace;
+     len = TtaGetTextLength (textEl);
+     if (len > 0 && len < BUFLEN)
+	{
+	len = BUFLEN;
+	TtaGiveTextContent (textEl, text, &len, &lang);
+	alphabet = TtaGetAlphabet (lang);
+	if (len == 1)
+	   if (alphabet == 'L')
+	     /* ISO-Latin 1 character */
+	     {
+	     if (text[0] == '-')
+		/* unary or binary operator? */
+		{
+		previous = el;
+		TtaPreviousSibling (&previous);
+		if (previous == NULL)
+		   /* no previous sibling => unary operator */
+		   val = MathML_ATTR_addspace_VAL_nospace;
+		else
+		   {
+		   elType = TtaGetElementType (previous);
+		   if (elType.ElTypeNum == MathML_EL_MO)
+		      /* after an operator => unary operator */
+		      val = MathML_ATTR_addspace_VAL_nospace;
+		   else
+		      /* binary operator */
+		      val = MathML_ATTR_addspace_VAL_both;
+		   }
+		}
+	     else if (text[0] == '+' ||
+	         text[0] == '&' ||
+	         text[0] == '*' ||
+	         text[0] == '<' ||
+	         text[0] == '=' ||
+	         text[0] == '>' ||
+	         text[0] == '^')
+		 /* binary operator */
+	         val = MathML_ATTR_addspace_VAL_both;
+	     else if (text[0] == ',' ||
+		      text[0] == ';')
+	         val = MathML_ATTR_addspace_VAL_spaceafter;
+	     }
+	   else if (alphabet == 'G')
+	     /* Symbol character set */
+	     if ((int)text[0] == 177)	/* PlusMinus */
+		val = MathML_ATTR_addspace_VAL_both;
+	/**** to be completed *****/
+	}
+     TtaSetAttributeValue (attr, val, el, doc);
+     }
+}
+
 
 /*----------------------------------------------------------------------
    CheckMathElement
@@ -2819,26 +3004,10 @@ Element                 el;
 				 MathML_EL_Overscript, 0);
 	break;
      case MathML_EL_MROW:
-	/* end of MROW.   Create place holders within the MROW */
-        child = TtaGetFirstChild (el);
-        if (child != NULL)
-	  {
-	  elType = TtaGetElementType (child);
-	  /* if the MROW contains a MF as its first child, it's a Block */
-	  if (elType.ElTypeNum != MathML_EL_MF)
-	     CreatePlaceHolders (child, theDocument);
-	  else
-	     {
-	     ChangeElementType (el, MathML_EL_Block);
-	     TtaNextSibling (&child);
-	     if (child != NULL)
-	        {
-	        elType = TtaGetElementType (child);
-		if (elType.ElTypeNum != MathML_EL_MF)
-		   CheckMathSubExpressions (el, MathML_EL_MF, MathML_EL_Block_exp, 0);
-		}
-	     }
-	  }
+	/* end of MROW.   Create placeholders within the MROW */
+	child = TtaGetFirstChild (el);
+	if (child != NULL)
+           CreatePlaceholders (child, theDocument);
 	break;
      default:
 	break;
@@ -2866,7 +3035,7 @@ int                 entry;
    ret = FALSE;
    /* the closed HTML element corresponds to a Thot element. */
    /* type of the element to be closed */
-   elType.ElSSchema = MathSSchema;
+   elType.ElSSchema = MathMLSSchema;
    elType.ElTypeNum = MathGIMappingTable[entry].ThotType;
    if (StackLevel > 0)
      {
@@ -2878,7 +3047,7 @@ int                 entry;
 	     i--;
 	 }
        if (i >= 0 && entry == GINumberStack[i] &&
-	   TtaGetElementType(ElementStack[i]).ElSSchema == MathSSchema)
+	   TtaGetElementType(ElementStack[i]).ElSSchema == MathMLSSchema)
 	 /* element found in the stack */
 	 {
 	   /* This element and its whole subtree are closed */
@@ -2913,8 +3082,8 @@ int                 entry;
 static void ChangeToMathML ()
 {
    WithinMathML = TRUE;
-   if (MathSSchema == NULL)
-      MathSSchema = TtaNewNature(structSchema, "MathML", "MathMLP");
+   if (MathMLSSchema == NULL)
+      MathMLSSchema = TtaNewNature(HTMLSSchema, "MathML", "MathMLP");
 }
 
 #endif /* MATHML */
@@ -2947,7 +3116,7 @@ int                 start;
    /* the closed HTML element corresponds to a Thot element. */
    stop = FALSE;
    /* type of the element to be closed */
-   elType.ElSSchema = structSchema;
+   elType.ElSSchema = HTMLSSchema;
    elType.ElTypeNum = GIMappingTable[entry].ThotType;
    if (StackLevel > 0)
      {
@@ -3101,7 +3270,7 @@ char               *val;
      {
 	sprintf (msgBuffer, "Unknown attribute value \"TYPE = %s\"", val);
 	ParseHTMLError (theDocument, msgBuffer);
-	attrType.AttrSSchema = structSchema;
+	attrType.AttrSSchema = HTMLSSchema;
 	attrType.AttrTypeNum = AttributeMappingTable[0].ThotAttribute;
 	sprintf (msgBuffer, "type=%s", val);
 	CreateAttr (lastElement, attrType, msgBuffer, TRUE);
@@ -3113,7 +3282,7 @@ char               *val;
 	  sprintf (msgBuffer, "Duplicate attribute \"TYPE = %s\"", val);
 	else
 	  {
-	     elType.ElSSchema = structSchema;
+	     elType.ElSSchema = HTMLSSchema;
 	     elType.ElTypeNum = AttrValueMappingTable[entry].ThotAttrValue;
 	     newChild = TtaNewTree (theDocument, elType, "");
 	     TtaInsertFirstChild (&newChild, lastElement, theDocument);
@@ -3423,17 +3592,17 @@ int                 entry;
        if (ok)
 	 /* refuse BODY within BODY */
 	 if (strcmp (GIMappingTable[entry].htmlGI, "BODY") == 0)
-	   if (Within (HTML_EL_BODY))
+	   if (Within (HTML_EL_BODY, HTMLSSchema))
 	     ok = FALSE;
        if (ok)
 	 /* refuse HEAD within HEAD */
 	 if (strcmp (GIMappingTable[entry].htmlGI, "HEAD") == 0)
-	   if (Within (HTML_EL_HEAD))
+	   if (Within (HTML_EL_HEAD, HTMLSSchema))
 	     ok = FALSE;
        if (ok)
 	 /* refuse STYLE within STYLE */
 	 if (strcmp (GIMappingTable[entry].htmlGI, "STYLE") == 0)
-	   if (Within (HTML_EL_Styles))
+	   if (Within (HTML_EL_Styles, HTMLSSchema))
 	     ok = FALSE;
        return ok;
      }
@@ -3494,7 +3663,7 @@ boolean		    position;
    Element             elInv, elText;
    Attribute	       attr;
 
-   elType.ElSSchema = structSchema;
+   elType.ElSSchema = HTMLSSchema;
    elType.ElTypeNum = HTML_EL_Invalid_element;
    elInv = TtaNewElement (theDocument, elType);
    InsertElement (&elInv);
@@ -3506,7 +3675,7 @@ boolean		    position;
 	TtaInsertFirstChild (&elText, elInv, theDocument);
 	TtaSetTextContent (elText, content, documentLanguage, theDocument);
 	TtaSetAccessRight (elText, ReadOnly, theDocument);
-	attrType.AttrSSchema = structSchema;
+	attrType.AttrSSchema = HTMLSSchema;
 	attrType.AttrTypeNum = HTML_ATTR_Error_type;
         attr = TtaNewAttribute (attrType);
 	TtaAttachAttribute (elInv, attr, theDocument);
@@ -3583,7 +3752,7 @@ char               *GIname;
 	    if (MathGIMappingTable[entry].ThotType > 0)
 	      {
 		  /* create a Thot element */
-		    elType.ElSSchema = MathSSchema;
+		    elType.ElSSchema = MathMLSSchema;
 		    elType.ElTypeNum = MathGIMappingTable[entry].ThotType;
 		    if (MathGIMappingTable[entry].htmlContents == 'E')
 		      /* empty HTML element. Create all children specified */
@@ -3638,7 +3807,7 @@ char               *GIname;
   boolean             sameLevel;
 
   /* ignore tag <P> within PRE */
-  if (Within (HTML_EL_Preformatted))
+  if (Within (HTML_EL_Preformatted, HTMLSSchema))
     if (strcasecmp (GIname, "P") == 0)
       return;
   /* search the HTML element name in the mapping table */
@@ -3688,7 +3857,7 @@ char               *GIname;
 		else
 		  /* create a Thot element */
 		  {
-		    elType.ElSSchema = structSchema;
+		    elType.ElSSchema = HTMLSSchema;
 		    elType.ElTypeNum = GIMappingTable[entry].ThotType;
 		    if (GIMappingTable[entry].htmlContents == 'E')
 		      /* empty HTML element. Create all children specified */
@@ -3990,7 +4159,7 @@ char                c;
 		    break;
 		 case 'A':
 		    /* create an attribute for current element */
-		    attrType.AttrSSchema = structSchema;
+		    attrType.AttrSSchema = HTMLSSchema;
 		    attrType.AttrTypeNum = AttributeMappingTable[entry].ThotAttribute;
 		    CreateAttr (lastElement, attrType, inputBuffer, entry == 0);
 		    ReadingHREF = (attrType.AttrTypeNum == HTML_ATTR_HREF_);
@@ -4013,7 +4182,7 @@ char                c;
 			 child = TtaGetFirstChild (lastElement);
 			 if (child != NULL)
 			   {
-			      attrType.AttrSSchema = structSchema;
+			      attrType.AttrSSchema = HTMLSSchema;
 			      attrType.AttrTypeNum = HTML_ATTR_DefaultChecked;
 			      attr = TtaNewAttribute (attrType);
 			      TtaAttachAttribute (child, attr, theDocument);
@@ -4023,7 +4192,7 @@ char                c;
 		    else if (attrType.AttrTypeNum == HTML_ATTR_Selected)
 		      {
 			 /* create Default-Selected attribute */
-			 attrType.AttrSSchema = structSchema;
+			 attrType.AttrSSchema = HTMLSSchema;
 			 attrType.AttrTypeNum = HTML_ATTR_DefaultSelected;
 			 attr = TtaNewAttribute (attrType);
 			 TtaAttachAttribute (lastElement, attr, theDocument);
@@ -4259,7 +4428,7 @@ char                c;
 					  /* Invalid_attribute */
 					  TtaRemoveAttribute (lastAttrElement, lastAttribute,
 							      theDocument);
-					  attrType.AttrSSchema = structSchema;
+					  attrType.AttrSSchema = HTMLSSchema;
 					  attrType.AttrTypeNum = AttributeMappingTable[0].ThotAttribute;
 					  sprintf (msgBuffer, "%s=%s", attrName, inputBuffer);
 					  CreateAttr (lastAttrElement, attrType, msgBuffer, TRUE);
@@ -4394,6 +4563,12 @@ char                c;
 char		    alphabet
 #endif
 {
+   ElementType	 elType;
+   Element	 el;
+   AttributeType attrType;
+   Attribute	 attr;
+   char		 buffer[MaxEntityLength+2];
+
    if (alphabet == 'L')
       PutInBuffer (c);
    else
@@ -4402,6 +4577,35 @@ char		    alphabet
       PutInBuffer (c);
       TextToMath (alphabet);
       }
+   if (c == '\0')
+      /* null character */
+      if (LgEntityName > 0)
+	/* this character comes from an entity */
+	/* if it's the content of an operator (MO element), associate an
+           entity attribute with the MO element, to keep the entity name */
+	{
+	if (StackLevel >= 1)
+	  if (ElementStack[StackLevel - 1] != NULL)
+	    {
+	    /* parent element */
+	    el = ElementStack[StackLevel - 1];
+	    elType = TtaGetElementType (el);
+	    if (elType.ElTypeNum == MathML_EL_MO &&
+		elType.ElSSchema == MathMLSSchema)
+	      /* the parent element is a MO */
+	      {
+	      attrType.AttrSSchema = MathMLSSchema;
+	      attrType.AttrTypeNum = MathML_ATTR_entity;
+              attr = TtaNewAttribute (attrType);
+              TtaAttachAttribute (el, attr, theDocument);
+	      buffer[0] = '&';
+	      strncpy (&buffer[1], EntityName, LgEntityName);
+	      buffer[LgEntityName+1] = ';';
+	      buffer[LgEntityName+2] = '\0';
+	      TtaSetAttributeText (attr, buffer, el, theDocument);
+	      }
+	    }
+	}
 }
 
 /*----------------------------------------------------------------------
@@ -4422,11 +4626,8 @@ char                c;
    EntityName[LgEntityName] = EOS;
    if (MathEntityTable[EntityTableEntry].MentityName[CharRank] == EOS)
       /* the entity read matches the current entry of entity table */
-      {
-      if (MathEntityTable[EntityTableEntry].charCode > 0)
-         PutMathChar ((char) (MathEntityTable[EntityTableEntry].charCode),
-		      MathEntityTable[EntityTableEntry].alphabet);
-      }
+        PutMathChar ((char) (MathEntityTable[EntityTableEntry].charCode),
+		     MathEntityTable[EntityTableEntry].alphabet);
    else
       /* entity not in the table. Print an error message */
      {
@@ -4439,6 +4640,7 @@ char                c;
 	ParseHTMLError (theDocument, msgBuffer);
      }
    LgEntityName = 0;
+   ReadingHTMLentity = FALSE;
 }
 
 /*----------------------------------------------------------------------
@@ -4462,9 +4664,9 @@ unsigned char       c;
       /* entity table */
      {
 	/* assume that semicolon is missing and put the corresponding char */
-	if (MathEntityTable[EntityTableEntry].charCode > 0)
-	   PutMathChar ((char) (MathEntityTable[EntityTableEntry].charCode),
-			MathEntityTable[EntityTableEntry].alphabet);
+	EntityName[LgEntityName] = EOS;
+	PutMathChar ((char) (MathEntityTable[EntityTableEntry].charCode),
+		     MathEntityTable[EntityTableEntry].alphabet);
 	if (c != SPACE)
 	   /* print an error message */
 	   ParseHTMLError (theDocument, "Missing semicolon");
@@ -4496,8 +4698,39 @@ unsigned char       c;
 		  EntityName[LgEntityName++] = c;
 	     }
 	if (!OK)
+	  /* the entity name read so far is not in the table */
 	  {
-	     /* the entity name read so far is not in the table */
+	  /* is this entity in the HTML entities table? */
+	  EntityTableEntry = 0;
+	  CharRank = 0;
+	  while (CharRank < LgEntityName &&
+		 ISOlat1table[EntityTableEntry].charCode != 0)
+	    {
+	    while (ISOlat1table[EntityTableEntry].charName[CharRank] <
+					EntityName[CharRank] &&
+		   ISOlat1table[EntityTableEntry].charCode != 0)
+	       EntityTableEntry++;
+	    CharRank++;
+	    }
+	  if (ISOlat1table[EntityTableEntry].charCode != 0)
+	    {
+	    while (ISOlat1table[EntityTableEntry].charName[CharRank] < c &&
+		   ISOlat1table[EntityTableEntry].charCode != 0)
+	       EntityTableEntry++;
+	    if (ISOlat1table[EntityTableEntry].charName[CharRank] == c)
+	       if (LgEntityName == 0 ||
+	          strncmp (EntityName, ISOlat1table[EntityTableEntry].charName,
+		         LgEntityName) == 0)
+	         {
+	         OK = TRUE;
+	         CharRank++;
+	         if (LgEntityName < MaxEntityLength - 1)
+		    EntityName[LgEntityName++] = c;
+	         ReadingHTMLentity = TRUE;
+	         }
+	     }
+	  if (!OK)
+	     {
 	     /* invalid entity */
 	     /* put the entity name in the buffer */
 	     PutInBuffer ('&');
@@ -4521,6 +4754,7 @@ unsigned char       c;
 	     currentState = returnState;
 	     /* end of entity */
 	     LgEntityName = 0;
+	     }
 	  }
      }
 }
@@ -4540,12 +4774,14 @@ char                c;
    LgEntityName = 0;
    EntityTableEntry = 0;
    CharRank = 0;
+#ifdef MATHML
+   ReadingHTMLentity = FALSE;
+#endif
 }
 
 /*----------------------------------------------------------------------
    EndOfEntity     End of a HTML entity. Search that entity in the
-   entity table and put the corresponding ISO
-   Latin-1 character in the input buffer.
+   entity table and put the corresponding character in the input buffer.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         EndOfEntity (char c)
@@ -4559,7 +4795,7 @@ char                c;
    char                msgBuffer[MaxBufferLength];
 
 #ifdef MATHML
-   if (WithinMathML)
+   if (WithinMathML && !ReadingHTMLentity)
       {
       EndOfMathEntity (c);
       return;
@@ -4600,7 +4836,7 @@ unsigned char       c;
    boolean	       OK;
 
 #ifdef MATHML
-   if (WithinMathML)
+   if (WithinMathML && !ReadingHTMLentity)
       {
       MathEntityChar (c);
       return;
@@ -4795,7 +5031,7 @@ char                c;
    Element             elComment, elCommentLine, child, lastChild;
 
    /* create a Thot element Comment */
-   elType.ElSSchema = structSchema;
+   elType.ElSSchema = HTMLSSchema;
    elType.ElTypeNum = HTML_EL_Comment_;
    elComment = TtaNewElement (theDocument, elType);
    if (lastElementClosed && (lastElement == rootElement))
@@ -4854,7 +5090,7 @@ unsigned char       c;
 	   TtaAppendTextContent (CommentText, inputBuffer, theDocument);
 	   InitBuffer ();
 	   /* create a new Comment_line element */
-	   elType.ElSSchema = structSchema;
+	   elType.ElSSchema = HTMLSSchema;
 	   elType.ElTypeNum = HTML_EL_Comment_line;
 	   elCommentLine = TtaNewElement (theDocument, elType);
 	   /* inserts the new Comment_line element after the previous one */
@@ -5297,16 +5533,16 @@ char               *HTMLbuf;
 		         /* Replace new line by a space, except if an entity is
 			    being read */
 			 if (currentState == 20 &&
-			     Within (HTML_EL_Preformatted) &&
-                             !Within (HTML_EL_Option_Menu))
+			     Within (HTML_EL_Preformatted, HTMLSSchema) &&
+                             !Within (HTML_EL_Option_Menu, HTMLSSchema))
 			   charRead = (unsigned char) 138; /* Thot new line */
 			 else
 		           charRead = SPACE;
 		      }
 		   else
 		      /* new line in a text element */
-		      if (Within (HTML_EL_Preformatted) &&
-			  !Within (HTML_EL_Option_Menu))
+		      if (Within (HTML_EL_Preformatted, HTMLSSchema) &&
+			  !Within (HTML_EL_Option_Menu, HTMLSSchema))
 			/* within preformatted text */
 			if (AfterTagPRE)
 			   /* ignore NL after a <PRE> tag */
@@ -5352,7 +5588,7 @@ char               *HTMLbuf;
 		       else
 			  /* in a text element. Replace HT by space except in */
 			  /* preformatted text */
-		          if (!Within (HTML_EL_Preformatted))
+		          if (!Within (HTML_EL_Preformatted, HTMLSSchema))
 			     charRead = SPACE;
 		    }
 		  if (charRead == SPACE)
@@ -5360,7 +5596,7 @@ char               *HTMLbuf;
 		    {
 		       if (currentState == 0)
 			  /* in a text element */
-			  if (!Within (HTML_EL_Preformatted))
+			  if (!Within (HTML_EL_Preformatted, HTMLSSchema))
 			     /* not in preformatted text */
 			     /* ignore spaces at the beginning of an input line */
 			     if (EmptyLine)
@@ -5886,7 +6122,7 @@ char               *pathURL;
 	  {
 	     headElType = TtaGetElementType (elHead);
 	     /* create a Document_URL element as the first child of HEAD */
-	     newElType.ElSSchema = structSchema;
+	     newElType.ElSSchema = HTMLSSchema;
 	     newElType.ElTypeNum = HTML_EL_Document_URL;
 	     el = TtaGetFirstChild (elHead);
 	     if (el != NULL)
@@ -5933,7 +6169,7 @@ char               *pathURL;
 		       /* create the Links element if it does not exist */
 		       if (elLinks == NULL)
 			 {
-			    newElType.ElSSchema = structSchema;
+			    newElType.ElSSchema = HTMLSSchema;
 			    newElType.ElTypeNum = HTML_EL_Links;
 			    elLinks = TtaNewElement (theDocument, newElType);
 			    TtaInsertSibling (elLinks, el, TRUE, theDocument);
@@ -5951,7 +6187,7 @@ char               *pathURL;
 		       /* create the Metas element if it does not exist */
 		       if (elMetas == NULL)
 			 {
-			    newElType.ElSSchema = structSchema;
+			    newElType.ElSSchema = HTMLSSchema;
 			    newElType.ElTypeNum = HTML_EL_Metas;
 			    elMetas = TtaNewElement (theDocument, newElType);
 			    TtaInsertSibling (elMetas, el, TRUE, theDocument);
@@ -5969,7 +6205,7 @@ char               *pathURL;
 		       /* create the Scripts element if it does not exist */
 		       if (elScripts == NULL)
 			 {
-			    newElType.ElSSchema = structSchema;
+			    newElType.ElSSchema = HTMLSSchema;
 			    newElType.ElTypeNum = HTML_EL_Scripts;
 			    elScripts = TtaNewElement (theDocument, newElType);
 			    TtaInsertSibling (elScripts, el, TRUE, theDocument);
@@ -5995,7 +6231,7 @@ char               *pathURL;
 		        /* create the BODY element if it does not exist */
 		        if (elBody == NULL)
 		          {
-		             newElType.ElSSchema = structSchema;
+		             newElType.ElSSchema = HTMLSSchema;
 		             newElType.ElTypeNum = HTML_EL_BODY;
 		             elBody = TtaNewElement (theDocument, newElType);
 			     TtaInsertSibling (elBody, elHead, FALSE, theDocument);
@@ -6036,7 +6272,7 @@ char               *pathURL;
 		  /* create the BODY element if it does not exist */
 		  if (elBody == NULL)
 		    {
-		       newElType.ElSSchema = structSchema;
+		       newElType.ElSSchema = HTMLSSchema;
 		       newElType.ElTypeNum = HTML_EL_BODY;
 		       elBody = TtaNewElement (theDocument, newElType);
 		       if (previous == NULL)
@@ -6060,7 +6296,7 @@ char               *pathURL;
 	if (elHead == NULL && elBody != NULL)
 	   /* there is no HEAD element. Create one */
 	  {
-	     newElType.ElSSchema = structSchema;
+	     newElType.ElSSchema = HTMLSSchema;
 	     newElType.ElTypeNum = HTML_EL_HEAD;
 	     elHead = TtaNewTree (theDocument, newElType, "");
 	     TtaInsertSibling (elHead, elBody, TRUE, theDocument);
@@ -6102,7 +6338,7 @@ char               *pathURL;
 		       if (elType.ElTypeNum != HTML_EL_Term_List)
 			 {
 			    /* create a Term_List element before the first Term element */
-			    newElType.ElSSchema = structSchema;
+			    newElType.ElSSchema = HTMLSSchema;
 			    newElType.ElTypeNum = HTML_EL_Term_List;
 			    termList = TtaNewElement (theDocument, newElType);
 			    TtaInsertSibling (termList, firstTerm, TRUE, theDocument);
@@ -6131,7 +6367,7 @@ char               *pathURL;
 			 {
 			    /* Create a Definition_Item element surrounding the */
 			    /* Term_List element */
-			    newElType.ElSSchema = structSchema;
+			    newElType.ElSSchema = HTMLSSchema;
 			    newElType.ElTypeNum = HTML_EL_Definition_Item;
 			    newEl = TtaNewElement (theDocument, newElType);
 			    TtaInsertSibling (newEl, termList, TRUE, theDocument);
@@ -6153,7 +6389,7 @@ char               *pathURL;
 				 /* the element following the Term_List element is not */
 				 /* a Definition. Create a Definition element surrounding */
 				 /* that element */
-				 newElType.ElSSchema = structSchema;
+				 newElType.ElSSchema = HTMLSSchema;
 				 newElType.ElTypeNum = HTML_EL_Definition;
 				 newEl = TtaNewElement (theDocument, newElType);
 				 TtaInsertSibling (newEl, termList, FALSE, theDocument);
@@ -6199,7 +6435,7 @@ char               *pathURL;
 			  /* this Definition is not within a Definition_Item */
 			 {
 			    /* create a Definition_Item */
-			    newElType.ElSSchema = structSchema;
+			    newElType.ElSSchema = HTMLSSchema;
 			    newElType.ElTypeNum = HTML_EL_Definition_Item;
 			    newEl = TtaNewElement (theDocument, newElType);
 			    TtaInsertSibling (newEl, el, TRUE, theDocument);
@@ -6244,7 +6480,7 @@ char               *pathURL;
 				   elType.ElTypeNum == HTML_EL_Comment_);
 			    /* create a Definition_List element before the first */
 			    /* Definition_Item element */
-			    newElType.ElSSchema = structSchema;
+			    newElType.ElSSchema = HTMLSSchema;
 			    newElType.ElTypeNum = HTML_EL_Definition_List;
 			    glossary = TtaNewElement (theDocument, newElType);
 			    TtaInsertSibling (glossary, firstEntry, TRUE, theDocument);
@@ -6313,7 +6549,7 @@ char               *pathURL;
 				   elType.ElTypeNum == HTML_EL_Comment_);
 			    /* create a HTML_EL_Unnumbered_List element before the */
 			    /* first List_Item element */
-			    newElType.ElSSchema = structSchema;
+			    newElType.ElSSchema = HTMLSSchema;
 			    newElType.ElTypeNum = HTML_EL_Unnumbered_List;
 			    list = TtaNewElement (theDocument, newElType);
 			    TtaInsertSibling (list, firstEntry, TRUE, theDocument);
@@ -6415,7 +6651,7 @@ Document            doc;
 	/* initialize the stack with ancestors of lastelem */
 	theDocument = doc;
 	documentLanguage = TtaGetDefaultLanguage ();
-	structSchema = TtaGetDocumentSSchema (theDocument);
+	HTMLSSchema = TtaGetDocumentSSchema (theDocument);
 	rootElement = TtaGetMainRoot (theDocument);
 	if (isclosed)
 	   elem = TtaGetParent (lastelem);
@@ -6691,7 +6927,7 @@ char               *pathURL;
 	   /* set the notification mode for the new document */
 	   TtaSetNotificationMode (theDocument, 1);
 	   documentLanguage = TtaGetDefaultLanguage ();
-	   structSchema = TtaGetDocumentSSchema (theDocument);
+	   HTMLSSchema = TtaGetDocumentSSchema (theDocument);
 	   rootElement = TtaGetMainRoot (theDocument);
 #ifndef STANDALONE
 	   /* reset the background color */
@@ -6717,7 +6953,8 @@ char               *pathURL;
 	   InitializeParser (NULL, FALSE, 0);
 #ifdef MATHML
 	   WithinMathML = FALSE;
-	   MathSSchema = NULL;
+	   ReadingHTMLentity = FALSE;
+	   MathMLSSchema = NULL;
 #endif
 	   /* parse the input file and build the Thot document */
 #ifdef HANDLE_COMPRESSED_FILES

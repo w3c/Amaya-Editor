@@ -1143,41 +1143,27 @@ View                view;
    int                 x, y, w, h;
 
    structView = TtaGetViewFromName (document, "Structure_view");
-#ifdef MATHML
-   mathView = TtaGetViewFromName (document, "Math_Structure_view");
-#endif /* MATHML */
-   if (view == structView)
-     {
-	TtaRaiseView (document, view);
-     }
-#ifdef MATHML
-   else if (view == mathView)
-     TtaRaiseView (document, mathView);
-#endif /* MATHML */
-   else if (structView != 0 && TtaIsViewOpened (document, structView))
-     {
+   if (structView != 0 && TtaIsViewOpened (document, structView))
         TtaRaiseView (document, structView);
-#ifdef MATHML
-	if (mathView != 0 && TtaIsViewOpened (document, mathView))
-	   TtaRaiseView (document, mathView);
-#endif /* MATHML */
-     }
    else
-     {
+	{
 	TtaGetViewGeometry (document, "Structure_view", &x, &y, &w, &h);
 	structView = TtaOpenView (document, "Structure_view", x, y, w, h);
 	TtcSwitchButtonBar (document, structView);
 	TtcSwitchCommands (document, structView);
+	}
 #ifdef MATHML
+   mathView = TtaGetViewFromName (document, "Math_Structure_view");
+   if (mathView != 0 && TtaIsViewOpened (document, mathView))
+	TtaRaiseView (document, mathView);
+   else
+	{
 	TtaGetViewGeometry (document, "Math_Structure_view", &x, &y, &w, &h);
 	mathView = TtaOpenView (document, "Math_Structure_view", x, y, w, h);
-	if (mathView > 0)
-	  {
-	    TtcSwitchButtonBar (document, mathView);
-	    TtcSwitchCommands (document, mathView);
-	  }
+	TtcSwitchButtonBar (document, mathView);
+	TtcSwitchCommands (document, mathView);
+	}
 #endif /* MATHML */
-     }
 }
 
 /*----------------------------------------------------------------------
@@ -1196,14 +1182,11 @@ View                view;
 
    altView = TtaGetViewFromName (document, "Alternate_view");
    if (view == altView)
-     {
-	TtaRaiseView (document, view);
-     }
+      TtaRaiseView (document, view);
    else if (altView != 0 && TtaIsViewOpened (document, altView))
       TtaRaiseView (document, altView);
    else
      {
-
 	TtaGetViewGeometry (document, "Alternate_view", &x, &y, &w, &h);
 	altView = TtaOpenView (document, "Alternate_view", x, y, w, h);
 	TtcSwitchButtonBar (document, altView);
@@ -1228,14 +1211,11 @@ View                view;
 
    linksView = TtaGetViewFromName (document, "Links_view");
    if (view == linksView)
-     {
-	TtaRaiseView (document, view);
-     }
+      TtaRaiseView (document, view);
    else if (linksView != 0 && TtaIsViewOpened (document, linksView))
       TtaRaiseView (document, linksView);
    else
      {
-
 	TtaGetViewGeometry (document, "Links_view", &x, &y, &w, &h);
 	linksView = TtaOpenView (document, "Links_view", x, y, w, h);
 	TtcSwitchButtonBar (document, linksView);
@@ -1260,14 +1240,11 @@ View                view;
 
    tocView = TtaGetViewFromName (document, "Table_of_contents");
    if (view == tocView)
-     {
-	TtaRaiseView (document, view);
-     }
+      TtaRaiseView (document, view);
    else if (tocView != 0 && TtaIsViewOpened (document, tocView))
       TtaRaiseView (document, tocView);
    else
      {
-
 	TtaGetViewGeometry (document, "Table_of_contents", &x, &y, &w, &h);
 	tocView = TtaOpenView (document, "Table_of_contents", x, y, w, h);
 	TtcSwitchButtonBar (document, tocView);

@@ -8,6 +8,7 @@ VIEWS
    Formatted_view, Math_Structure_view;
 
 #define OPERATOR_SPACE 0.2
+#define ROOT_OFFSET 0.6
 #define STRUCT_INDENT 1.5
 #define TAG_FONTSIZE 10 pt
 #define DOC_FONTSIZE 12 pt
@@ -273,9 +274,9 @@ BOXES
  RadicalSymbol:
 	BEGIN
 	Height: Enclosing . Height;
-	Width: Enclosing . Width;
+	Width: RootBase . Width + ROOT_OFFSET;
 	VertPos: Top = Enclosing . Top;
-	HorizPos: Left = Enclosing . Left;
+	HorizPos: Left = RootBase . Left - ROOT_OFFSET;
 	Content: Symbol 'r';		{ root symbol }
 	Depth: Enclosing + 1;
 	Background: Creator =;
@@ -291,6 +292,19 @@ BOXES
 	HorizPos: Left = Previous . Right;
 	IN Math_Structure_view
 		Visibility: 0;
+	END;
+
+ ATTR_entity: BEGIN
+	Visibility:0;
+	Content: (entity);
+	IN Math_Structure_view
+		BEGIN
+		Visibility: Enclosing =;
+		Size: DOC_FONTSIZE;
+		Height: Enclosed . Height;
+		HorizPos: Left = Previous . Right + 0.5;
+		VertPos: HRef = Previous . HRef;
+		END;
 	END;
 
  HR_Graph: BEGIN
@@ -338,17 +352,7 @@ RULES
 		END;
   	END;
 
-   Component:
-	BEGIN
-	VertPos: HRef = Previous not MF . HRef;
-	IN Math_Structure_view BEGIN
-		Width: Enclosing . Width - STRUCT_INDENT;
-		Height: Enclosed . Height;
-		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
-		END;
-  	END;
-
-   Construction:
+   Construct:
 	BEGIN
 	VertPos: HRef = Previous not MF . HRef;
 	IN Math_Structure_view BEGIN
@@ -395,8 +399,9 @@ RULES
    Index:
    	BEGIN
 	HorizRef: * . Top;
-   	HorizPos: Left = Enclosing.Left;
-   	VertPos: Top = Enclosing.Top;
+   	HorizPos: Left = Enclosing . Left;
+   	VertPos: Top = Enclosing . Top;
+	Width: ROOT_OFFSET min;
    	Size: Enclosing -2 min 1;
 	IN Math_Structure_view BEGIN
 		Width: Enclosing . Width;
@@ -406,8 +411,11 @@ RULES
 	
    RootBase:	
         BEGIN
-	HorizPos: Left = Enclosing . Left + 0.7;
 	VertPos: Top = Enclosing . Top + 0.1;
+	if within MROOT
+	    HorizPos: Left = Index . Right;
+	if within MSQRT
+	    HorizPos: Left = Enclosing . Left + ROOT_OFFSET;
 	IN Math_Structure_view BEGIN
 		Width: Enclosing . Width;
 		Height: Enclosed . Height;
@@ -513,7 +521,7 @@ RULES
 	Size: Enclosing -2 min 1;
 	HorizRef: * . Top;
 	HorizPos: Left = Base . Right;
-	VertPos: Bottom = Base . Top + 0.5;
+	VertPos: Bottom = Base . Top + 0.6;
 	IN Math_Structure_view BEGIN
 		Width: Enclosing . Width;
 		Height: Enclosed . Height;
@@ -525,7 +533,7 @@ RULES
 	Size: Enclosing -2 min 1;
 	HorizRef: * . Top;
 	HorizPos: Left = Base . Right;
-	VertPos: Top = Base . Bottom - 0.5;
+	VertPos: Top = Base . Bottom - 0.6;
 	IN Math_Structure_view BEGIN
 		Width: Enclosing . Width;
 		Height: Enclosed . Height;
@@ -607,31 +615,6 @@ RULES
 	VertPos: Bottom = UnderOverBase . Top;
 	IN Math_Structure_view BEGIN
 		Width: Enclosing . Width;
-		Height: Enclosed . Height;
-		END;
-	END;
-
-   Block:
-	BEGIN
-	CreateBefore(MROW_S);
-	CreateWith(VerticalLine);
-	Gather: Yes;
-        HorizRef: Enclosed not MF . HRef;
-	VertPos: HRef = Previous not MF . HRef;
-	IN Math_Structure_view BEGIN
-		Size: DOC_FONTSIZE;
-		Width: Enclosing . Width - STRUCT_INDENT;
-		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
-		END;
-	END;
-
-   Block_exp:
-	BEGIN
-	HorizPos: Left = Previous . Right + 0.1;
-	VertPos: Top =  Enclosing . Top;
-	IN Math_Structure_view BEGIN
-		Size: DOC_FONTSIZE;
-		Width: Enclosing . Width - STRUCT_INDENT;
 		Height: Enclosed . Height;
 		END;
 	END;
@@ -769,4 +752,14 @@ ATTRIBUTES
 	IN Math_Structure_view
 		HorizPos: Left = Enclosing . Left;
 	END;
+
+  entity:
+	BEGIN
+	CreateFirst (ATTR_entity);
+	END;
+
+  entity (TEXT_UNIT):
+	IN Math_Structure_view
+	    Visibility: 0;
+
 END

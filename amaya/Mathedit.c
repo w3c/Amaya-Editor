@@ -18,6 +18,7 @@
 #include "css.h"
 #include "trans.h"
 
+#include "html2thot_f.h"
 
 #include "MathML.h"
 #include "Math.xpm"
@@ -99,34 +100,6 @@ int                 index;
   return (el);
 }
 
-
-/*----------------------------------------------------------------------
-  ElementContainsText
-  returns TRUE if element el contains some text.
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-boolean      ElementContainsText (Element el)
-#else
-boolean      ElementContainsText (el)
-Element el;
-
-#endif
-{
-  ElementType	elType;
-
-  elType = TtaGetElementType (el);
-  if (elType.ElTypeNum == MathML_EL_Construction ||
-      elType.ElTypeNum == MathML_EL_TEXT_UNIT ||
-      elType.ElTypeNum == MathML_EL_MI  ||
-      elType.ElTypeNum == MathML_EL_MO ||
-      elType.ElTypeNum == MathML_EL_MN ||
-      elType.ElTypeNum == MathML_EL_MS ||
-      elType.ElTypeNum == MathML_EL_MTEXT)
-     return TRUE;
-  else
-     return FALSE;
-}
-
 /*----------------------------------------------------------------------
    InsertPlaceHolder
   ----------------------------------------------------------------------*/
@@ -142,7 +115,7 @@ Document doc;
 {
 ElementType	elType;
 Element		sibling;
-boolean		createConstruction;
+boolean		createConstruct;
 
      elType = TtaGetElementType (el);
      if (elType.ElTypeNum == MathML_EL_MROW ||
@@ -154,20 +127,20 @@ boolean		createConstruction;
 	 elType.ElTypeNum == MathML_EL_MSUP ||
 	 elType.ElTypeNum == MathML_EL_MUNDER ||
 	 elType.ElTypeNum == MathML_EL_MUNDEROVER)
-        /* this element accepts a Construction as its neighbour */
+        /* this element accepts a Construct as its neighbour */
 	{
 	sibling = el;
 	if (before)
 	   TtaPreviousSibling (&sibling);
 	else
 	TtaNextSibling (&sibling);
-	createConstruction = TRUE;
+	createConstruct = TRUE;
 	if (sibling != NULL)
 	if (ElementContainsText (sibling))
-	   createConstruction = FALSE;
-	if (createConstruction)
+	   createConstruct = FALSE;
+	if (createConstruct)
 	   {
-	   elType.ElTypeNum = MathML_EL_Construction;
+	   elType.ElTypeNum = MathML_EL_Construct;
 	   sibling = TtaNewElement (doc, elType);
 	   TtaInsertSibling (sibling, el, before, doc);
 	   }
@@ -176,8 +149,8 @@ boolean		createConstruction;
 
 /*----------------------------------------------------------------------
   CreateParentMROW
-  If element el id not a child of a MROW and if it has at least one
-  sibling that is not a Construction, create an enclosing MROW.
+  If element el is not a child of a MROW and if it has at least one
+  sibling that is not a Construct, create an enclosing MROW.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void	   CreateParentMROW (Element el, Document doc)
@@ -197,8 +170,7 @@ Document doc;
   if (parent == NULL)
      return;
   elType = TtaGetElementType (parent);
-  if (elType.ElTypeNum != MathML_EL_MROW &&
-      elType.ElTypeNum != MathML_EL_Block)
+  if (elType.ElTypeNum != MathML_EL_MROW)
 	 {
 	 sibling = TtaGetFirstChild (parent);
 	 nChildren = 0;
@@ -206,8 +178,7 @@ Document doc;
 	 while (sibling != NULL)
 	    {
 	    elType = TtaGetElementType (sibling);
-	    if (elType.ElTypeNum != MathML_EL_Component &&
-		elType.ElTypeNum != MathML_EL_Construction)
+	    if (elType.ElTypeNum != MathML_EL_Construct)
 	       nChildren++;
 	    TtaNextSibling (&sibling);
 	    }
@@ -250,13 +221,14 @@ char               *data;
 #endif
 {
   Document           doc;
-  Element            sibling, el, row;
+  Element            sibling, el, row, fence, child;
   ElementType        newType, elType;
   SSchema            docSchema, mathSchema;
   int                val, c1, i, len;
-  boolean	     before;
+  boolean	     before, ParBlock;
 
   val = (int) data;
+  ParBlock = FALSE;
   switch (ref - MathsDialogue)
     {
     case FormMaths:
@@ -405,7 +377,8 @@ char               *data;
 	  newType.ElTypeNum = MathML_EL_MUNDER;
 	  break;
 	case 9:
-	  newType.ElTypeNum = MathML_EL_Block;
+	  newType.ElTypeNum = MathML_EL_MROW;
+	  ParBlock = TRUE;
 	  break;
 	case 10:
 	  newType.ElTypeNum = MathML_EL_MN;
@@ -445,15 +418,13 @@ char               *data;
 	    {
 	      /* check whether the element is a construction */
 	      elType = TtaGetElementType (sibling);
-	      if (elType.ElTypeNum == MathML_EL_Component ||
-		  elType.ElTypeNum == MathML_EL_Construction)
+	      if (elType.ElTypeNum == MathML_EL_Construct)
 		TtaInsertFirstChild (&el, sibling, doc);
 	      else
 		TtaInsertSibling (el, sibling, before, doc);
 	    }
 	}
-      else if (elType.ElTypeNum == MathML_EL_Component ||
-	       elType.ElTypeNum == MathML_EL_Construction)
+      else if (elType.ElTypeNum == MathML_EL_Construct)
 	{
 	  /* replace the construction choice */
 	  TtaInsertFirstChild (&el, sibling, doc);
@@ -467,6 +438,22 @@ char               *data;
 	  /* insert the new element */
 	  TtaInsertSibling (el, sibling, before, doc);
 	}
+
+      if (ParBlock)
+	 /* user wants to create a parenthesized block */
+	 /* create two MF elements, as the first and last child of the new
+	    MROW */
+	 {
+	 child = TtaGetFirstChild (el);
+	 if (child != NULL)
+	    {
+	    newType.ElTypeNum = MathML_EL_MF;
+	    fence = TtaNewTree (doc, newType, "");
+	    TtaInsertSibling (fence, child, TRUE, doc);
+	    fence = TtaNewTree (doc, newType, "");
+	    TtaInsertSibling (fence, child, FALSE, doc);
+	    }
+	 }
 
       CreateParentMROW (el, doc);
 
@@ -559,162 +546,45 @@ void                InitMathML ()
    mIcons[13] = TtaCreatePixmapLogo (txt_xpm);
 }
 
-/*----------------------------------------------------------------------
-   SetFontslantAttr
-   The content of a MI element has been created or modified.
-   Create or change attribute fontslant for that element accordingly.
- -----------------------------------------------------------------------*/
-#ifdef __STDC__
-void SetFontslantAttr (Element el, Document doc)
-#else /* __STDC__*/
-void SetFontslantAttr (el, doc)
-  Element	el;
-  Document	doc;
-#endif /* __STDC__*/
-{
-  Element	textEl;
-  ElementType	elType;
-  AttributeType	attrType;
-  Attribute	attr;
-  int		len;
-
-  textEl = TtaGetFirstChild (el);
-  if (textEl != NULL)
-     {
-     /* search the fontslant attribute */
-     elType = TtaGetElementType (el);
-     attrType.AttrSSchema = elType.ElSSchema;
-     attrType.AttrTypeNum = MathML_ATTR_fontslant;
-     attr = TtaGetAttribute (el, attrType);
-     /* get content length */
-     len = TtaGetTextLength (textEl);
-     if (len > 1)
-        /* put an attribute fontslant = plain */
-	{
-	if (attr == NULL)
-	   {
-	   attr = TtaNewAttribute (attrType);
-	   TtaAttachAttribute (el, attr, doc);
-	   }
-	TtaSetAttributeValue (attr, MathML_ATTR_fontslant_VAL_plain, el, doc);
-	}
-     else
-	/* remove attribute fontslant if it exists */
-	{
-	if (attr != NULL)
-	   TtaRemoveAttribute (el, attr, doc);
-	}
-     }
-}
-
-/*----------------------------------------------------------------------
-   SetAddspaceAttr
-   The content of a MO element has been created or modified.
-   Create or change attribute addspace for that element accordingly.
- -----------------------------------------------------------------------*/
-#ifdef __STDC__
-void SetAddspaceAttr (Element el, Document doc)
-#else /* __STDC__*/
-void SetAddspaceAttr (el, doc)
-  Element	el;
-  Document	doc;
-#endif /* __STDC__*/
-{
-  Element	textEl, previous;
-  ElementType	elType;
-  AttributeType	attrType;
-  Attribute	attr;
-  int		len, val;
-#define BUFLEN 10
-  unsigned char	text[BUFLEN];
-  Language	lang;
-  char		alphabet;
-
-  textEl = TtaGetFirstChild (el);
-  if (textEl != NULL)
-     {
-     /* search the addspace attribute */
-     elType = TtaGetElementType (el);
-     attrType.AttrSSchema = elType.ElSSchema;
-     attrType.AttrTypeNum = MathML_ATTR_addspace;
-     attr = TtaGetAttribute (el, attrType);
-     if (attr == NULL)
-	{
-	attr = TtaNewAttribute (attrType);
-	TtaAttachAttribute (el, attr, doc);
-	}
-     val = MathML_ATTR_addspace_VAL_nospace;
-     len = TtaGetTextLength (textEl);
-     if (len > 0 && len < BUFLEN)
-	{
-	len = BUFLEN;
-	TtaGiveTextContent (textEl, text, &len, &lang);
-	alphabet = TtaGetAlphabet (lang);
-	if (len == 1)
-	   if (alphabet == 'L')
-	     /* ISO-Latin 1 character */
-	     {
-	     if (text[0] == '-')
-		/* unary or binary operator? */
-		{
-		previous = el;
-		TtaPreviousSibling (&previous);
-		if (previous == NULL)
-		   /* no previous sibling => unary operator */
-		   val = MathML_ATTR_addspace_VAL_nospace;
-		else
-		   {
-		   elType = TtaGetElementType (previous);
-		   if (elType.ElTypeNum == MathML_EL_MO)
-		      /* after an operator => unary operator */
-		      val = MathML_ATTR_addspace_VAL_nospace;
-		   else
-		      /* binary operator */
-		      val = MathML_ATTR_addspace_VAL_both;
-		   }
-		}
-	     else if (text[0] == '+' ||
-	         text[0] == '&' ||
-	         text[0] == '*' ||
-	         text[0] == '<' ||
-	         text[0] == '=' ||
-	         text[0] == '>' ||
-	         text[0] == '^')
-		 /* binary operator */
-	         val = MathML_ATTR_addspace_VAL_both;
-	     else if (text[0] == ',' ||
-		      text[0] == ';')
-	         val = MathML_ATTR_addspace_VAL_spaceafter;
-	     }
-	   else if (alphabet == 'G')
-	     /* Symbol character set */
-	     if ((int)text[0] == 177)	/* PlusMinus */
-		val = MathML_ATTR_addspace_VAL_both;
-	/**** to be completed *****/
-	}
-     TtaSetAttributeValue (attr, val, el, doc);
-     }
-}
 
 /*----------------------------------------------------------------------
    GetCharType
    returns the type of character c (MN, MI or MO).
  -----------------------------------------------------------------------*/
 #ifdef __STDC__
-static int GetCharType (unsigned char c)
+static int GetCharType (unsigned char c, char alphabet)
 #else /* __STDC__*/
-static int GetCharType (c)
+static int GetCharType (c, alphabet)
      unsigned char c;
+     char	   alphabet;
 #endif /* __STDC__*/
 {
   int	ret;
 
-  if (c >= '0' && c <= '9')
-     ret = MathML_EL_MN;
-  else if ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z'))
-     ret = MathML_EL_MI;
-  else
-     ret = MathML_EL_MO;
+  ret = MathML_EL_MO;
+  if (alphabet == 'L')
+     /* ISO-Latin 1 */
+     {
+     if (c >= '0' && c <= '9')
+        ret = MathML_EL_MN;
+     else if ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z'))
+        ret = MathML_EL_MI;
+     else if (((int) c) >= 192 && ((int) c) <= 255 &&
+	      ((int) c) != 215 && ((int) c) != 247)
+	ret = MathML_EL_MI;
+     else
+        ret = MathML_EL_MO;
+     }
+  else if (alphabet == 'G')
+     /* Symbol character set */
+     {
+     if (c >= '0' && c <= '9')
+        ret = MathML_EL_MN;
+     else if ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z'))
+        ret = MathML_EL_MI;
+     else
+        ret = MathML_EL_MO;
+     }
   return ret;
 }
 
@@ -807,7 +677,7 @@ void ParseMathString (event)
 	    spaceBefore = TRUE;
 	  else
 	    {
-	    charType = GetCharType (text[i]);
+	    charType = GetCharType (text[i], alphabet);
 	    if (firstEl == NULL || charType != curElType)
 	      /* create a new element */
 	      {
