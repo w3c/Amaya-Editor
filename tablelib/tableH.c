@@ -1490,8 +1490,9 @@ static ThotBool SetCellWidths (PtrAbstractBox cell, PtrAbstractBox table, int fr
   reformat = (box->BxWidth < min ||
 	      (box->BxRuleWidth != width && box->BxWidth == box->BxRuleWidth) ||
 	      (box->BxMinWidth != min && box->BxWidth == box->BxMinWidth) ||
-	      (box->BxMaxWidth != max && box->BxWidth != box->BxRuleWidth &&
-	       box->BxWidth != box->BxMinWidth));
+	      (box->BxMaxWidth != max && (box->BxWidth == box->BxMaxWidth ||
+					  (box->BxWidth != box->BxRuleWidth &&
+					   box->BxWidth != box->BxMinWidth))));
   box->BxMinWidth = min;
   box->BxMaxWidth = max;
   box->BxRuleWidth = width;
