@@ -2783,6 +2783,42 @@ char               *content;
 }
 
 /*----------------------------------------------------------------------
+   CreatePreLine creates a PRE_LINE element.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void         CreatePreLine ()
+#else
+static void         CreatePreLine ()
+#endif
+{
+   ElementType         elType;
+   Element             el, preLine;
+
+  /* create pre-line */
+  elType.ElSSchema = structSchema;
+  elType.ElTypeNum = HTML_EL_Pre_Line;
+  el = TtaNewElement (theDocument, elType);
+  elType = TtaGetElementType (lastElement);
+  if (elType.ElTypeNum == HTML_EL_Preformatted)
+    TtaInsertFirstChild (&el, lastElement, theDocument);
+  else
+    {
+      if (elType.ElTypeNum == HTML_EL_Pre_Line)
+	preLine = lastElement;
+      else
+	{
+	  elType.ElTypeNum = HTML_EL_Pre_Line;
+	  preLine = TtaGetTypedAncestor (lastElement, elType);
+	  if (preLine == NULL)
+	    preLine = lastElement;
+	}
+      TtaInsertSibling (el, preLine, FALSE, theDocument);
+    }
+  lastElement = el;
+  lastElementClosed = FALSE;
+}
+
+/*----------------------------------------------------------------------
    ProcessStartGI  An HTML GI has been read in a start tag.
    Create the corresponding Thot thing (element, attribute,
    or character), according to the mapping table.
@@ -2795,157 +2831,113 @@ char               *GIname;
 
 #endif
 {
-   ElementType         elType;
-   Element             el, preLine;
-   int                 entry;
-   unsigned char       cBuf[2];
-   char                msgBuffer[MaxBufferLength];
-   PtrClosedElement    pClose;
-   boolean             sameLevel;
-   boolean             done;
+  ElementType         elType;
+  Element             el;
+  int                 entry;
+  char                msgBuffer[MaxBufferLength];
+  PtrClosedElement    pClose;
+  boolean             sameLevel;
 
-   /* ignore tag <P> within PRE */
-   if (Within (HTML_EL_Preformatted))
-      if (strcasecmp (GIname, "P") == 0)
-	 return;
-   /* search the HTML element name in the mapping table */
-   entry = MapGI (GIname);
-   lastElemEntry = entry;
-   if (entry < 0)
-      /* not found */
-     {
-	sprintf (msgBuffer, "Unknown tag <%s>", GIname);
-	ParseHTMLError (theDocument, msgBuffer);
-	UnknownTag = TRUE;
-	/* create an Invalid_element */
-	sprintf (msgBuffer, "<%s", GIname);
-	InsertInvalidEl (msgBuffer);
-     }
-   else
-     {
-	/* does this start tag also imply the end tag of some current elements? */
-	pClose = GIMappingTable[entry].firstClosedElem;
-	while (pClose != NULL)
+  /* ignore tag <P> within PRE */
+  if (Within (HTML_EL_Preformatted))
+    if (strcasecmp (GIname, "P") == 0)
+      return;
+  /* search the HTML element name in the mapping table */
+  entry = MapGI (GIname);
+  lastElemEntry = entry;
+  if (entry < 0)
+    /* not found */
+    {
+      sprintf (msgBuffer, "Unknown tag <%s>", GIname);
+      ParseHTMLError (theDocument, msgBuffer);
+      UnknownTag = TRUE;
+      /* create an Invalid_element */
+      sprintf (msgBuffer, "<%s", GIname);
+      InsertInvalidEl (msgBuffer);
+    }
+  else
+    {
+      /* does this start tag also imply the end tag of some current elements? */
+      pClose = GIMappingTable[entry].firstClosedElem;
+      while (pClose != NULL)
+	{
+	  CloseElement (pClose->tagNum, entry);
+	  pClose = pClose->nextClosedElem;
+	}
+      /* process some special cases... */
+      SpecialImplicitEnd (entry);
+      if (!ContextOK (entry))
+	/* element not allowed in the current structural context */
+	{
+	  sprintf (msgBuffer, "Tag <%s> is not allowed here", GIname);
+	  ParseHTMLError (theDocument, msgBuffer);
+	  UnknownTag = TRUE;
+	  /* create an Invalid_element */
+	  sprintf (msgBuffer, "<%s", GIname);
+	  InsertInvalidEl (msgBuffer);
+	}
+      else
+	switch (GIMappingTable[entry].CharOrElem)
 	  {
-	     CloseElement (pClose->tagNum, entry);
-	     pClose = pClose->nextClosedElem;
-	  }
-	/* process some special cases... */
-	SpecialImplicitEnd (entry);
-	if (!ContextOK (entry))
-	   /* element not allowed in the current structural context */
-	  {
-	     sprintf (msgBuffer, "Tag <%s> is not allowed here", GIname);
-	     ParseHTMLError (theDocument, msgBuffer);
-	     UnknownTag = TRUE;
-	     /* create an Invalid_element */
-	     sprintf (msgBuffer, "<%s", GIname);
-	     InsertInvalidEl (msgBuffer);
-	  }
-	else
-	   switch (GIMappingTable[entry].CharOrElem)
-		 {
-		    case 'E':	/* create a Thot element */
-		       el = NULL;
-		       sameLevel = TRUE;
-		       if (GIMappingTable[entry].ThotType > 0)
-			 {
-			    if (GIMappingTable[entry].ThotType == HTML_EL_HTML)
-			       /* the corresponding Thot element is the root of the
-			          abstract tree, which has been created at initialization */
-			       el = rootElement;
-			    else
-			       /* create a Thot element */
-			      {
-				 elType.ElSSchema = structSchema;
-				 elType.ElTypeNum = GIMappingTable[entry].ThotType;
-				 if (GIMappingTable[entry].htmlContents == 'E')
-				    /* empty HTML element. Create all children specified */
-				    /* in the Thot structure schema */
-				    el = TtaNewTree (theDocument, elType, "");
-				 else
-				    /* the HTML element may have children. Create only */
-				    /* the corresponding Thot element, without any child */
-				    el = TtaNewElement (theDocument, elType);
-				 if (GIMappingTable[entry].ThotType == HTML_EL_Horizontal_Rule)
-				    sameLevel = InsertHR (&el);
-				 else
-				    sameLevel = InsertElement (&el);
-				 if (el != NULL)
-				   {
-				      if (GIMappingTable[entry].htmlContents == 'E')
-					 lastElementClosed = TRUE;
-				      if (elType.ElTypeNum == HTML_EL_TEXT_UNIT)
-					 /* an empty Text element has been created. The */
-					 /* following character data must go to that elem. */
-					 MergeText = TRUE;
-				   }
-			      }
-			 }
-		       if (GIMappingTable[entry].htmlContents != 'E')
-			 {
-			    ElementStack[StackLevel] = el;
-			    if (sameLevel)
-			       ThotLevel[StackLevel] = ThotLevel[StackLevel - 1];
-			    else
-			       ThotLevel[StackLevel] = ThotLevel[StackLevel - 1] + 1;
-			    GINumberStack[StackLevel++] = entry;
-			 }
-		       break;
+	  case 'E':	/* create a Thot element */
+	    el = NULL;
+	    sameLevel = TRUE;
+	    if (GIMappingTable[entry].ThotType > 0)
+	      {
+		if (GIMappingTable[entry].ThotType == HTML_EL_HTML)
+		  /* the corresponding Thot element is the root of the
+		     abstract tree, which has been created at initialization */
+		  el = rootElement;
+		else
+		  /* create a Thot element */
+		  {
+		    elType.ElSSchema = structSchema;
+		    elType.ElTypeNum = GIMappingTable[entry].ThotType;
+		    if (GIMappingTable[entry].htmlContents == 'E')
+		      /* empty HTML element. Create all children specified */
+		      /* in the Thot structure schema */
+		      el = TtaNewTree (theDocument, elType, "");
+		    else
+		      /* the HTML element may have children. Create only */
+		      /* the corresponding Thot element, without any child */
+		      el = TtaNewElement (theDocument, elType);
+		    if (GIMappingTable[entry].ThotType == HTML_EL_Horizontal_Rule)
+		      sameLevel = InsertHR (&el);
+		    else
+		      sameLevel = InsertElement (&el);
+		    if (el != NULL)
+		      {
+			if (GIMappingTable[entry].htmlContents == 'E')
+			  lastElementClosed = TRUE;
+			if (elType.ElTypeNum == HTML_EL_TEXT_UNIT)
+			  /* an empty Text element has been created. The */
+			  /* following character data must go to that elem. */
+			  MergeText = TRUE;
+		      }
+		  }
+	      }
+	    if (GIMappingTable[entry].htmlContents != 'E')
+	      {
+		ElementStack[StackLevel] = el;
+		if (sameLevel)
+		  ThotLevel[StackLevel] = ThotLevel[StackLevel - 1];
+		else
+		  ThotLevel[StackLevel] = ThotLevel[StackLevel - 1] + 1;
+		GINumberStack[StackLevel++] = entry;
+	      }
 
-		    case 'C':	/* create a Thot character */
-		       done = FALSE;
-		       if (strcmp (GIMappingTable[entry].htmlGI, "BR") == 0)
-			 {
-			    if (Within (HTML_EL_Preformatted))
-			       /* new line within a PRE. Create a Thot element Pre_Line */
-			      {
-				/* create pre-line */
-				 elType.ElSSchema = structSchema;
-				 elType.ElTypeNum = HTML_EL_Pre_Line;
-				 el = TtaNewElement (theDocument, elType);
-				 elType = TtaGetElementType (lastElement);
-				 if (elType.ElTypeNum == HTML_EL_Preformatted)
-				    TtaInsertFirstChild (&el, lastElement, theDocument);
-				 else
-				   {
-				      if (elType.ElTypeNum == HTML_EL_Pre_Line)
-					 preLine = lastElement;
-				      else
-					{
-					   elType.ElTypeNum = HTML_EL_Pre_Line;
-					   preLine = TtaGetTypedAncestor (lastElement, elType);
-					   if (preLine == NULL)
-					      preLine = lastElement;
-					}
-				      TtaInsertSibling (el, preLine, FALSE, theDocument);
-				   }
-				 lastElement = el;
-				 lastElementClosed = FALSE;
-				 /**********************/
-				 done = TRUE;
-			      }
-			    LastTagIsBR = TRUE;
-			 }
-		       if (!done)
-			 {
-			    cBuf[0] = (unsigned char) GIMappingTable[entry].ThotType;
-			    cBuf[1] = EOS;
-			    elType.ElSSchema = structSchema;
-			    elType.ElTypeNum = HTML_EL_TEXT_UNIT;
-			    el = TtaNewElement (theDocument, elType);
-			    InsertElement (&el);
-			    if (el != NULL)
-			      {
-				 TtaSetTextContent (el, cBuf, documentLanguage, theDocument);
-				 lastElementClosed = TRUE;
-			      }
-			 }
-		       break;
-
-		    default:
-		       break;
-		 }
+	    if (strcmp (GIMappingTable[entry].htmlGI, "BR") == 0)
+	      {
+		if (Within (HTML_EL_Preformatted))
+		  /* new line within a PRE. Create a Thot element Pre_Line */
+		  CreatePreLine();
+		LastTagIsBR = TRUE;
+	      }
+	    break;
+	    
+	  default:
+	    break;
+	  }
      }
 }
 
@@ -2958,7 +2950,6 @@ static void         EndOfStartGI (char c)
 #else
 static void         EndOfStartGI (c)
 char                c;
-
 #endif
 {
    char                theGI[MaxBufferLength];
@@ -4216,7 +4207,7 @@ char               *HTMLbuf;
 			/* consider "new line" as a <BR> tag */
 		       {
 			  StartOfTag (SPACE);
-			  ProcessStartGI ("BR");
+			  CreatePreLine ();
 			  /* ignore character */
 			  charRead = EOS;
 		       }

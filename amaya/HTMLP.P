@@ -3302,10 +3302,10 @@ BOXES
 	VertPos: Top = Enclosing . Top + 1.7 cm;
 	HorizPos: Left = Enclosing . Left + 2.7 cm;
 #endif
-	IF Not One(CptPage)
+	if NOT One(CptPage)
 	   CreateAfter (TitleHead);
 	CreateAfter (URLhead);
-	IF Not One(CptPage) CreateBefore (PageNum);
+	if NOT One(CptPage) CreateBefore (PageNum);
 	IF Not One(CptPage) CreateBefore (BottomSpace);
 	END;
 #endif
@@ -3588,14 +3588,17 @@ RULES
 #endif
 	Width: Enclosing . Width;
 	Height: 1.5 min;
-	VertPos: Top = Previous not MAP . Bottom + VSpaceBeforeH1;
+	VertPos: Top = Previous NOT MAP . Bottom + VSpaceBeforeH1;
 	Size: Enclosing + 6;
 	Style: Bold;
 	Hyphenate: No;
 	CreateBefore(H1_S);
 	CreateWith(VerticalLine);
 	IN Structure_view BEGIN
-		Width: Enclosing . Width - STRUCT_INDENT;
+		if within Pre_Line
+		   Width: Enclosed . Width;
+		if NOT within Pre_Line
+		   Width: Enclosing . Width - STRUCT_INDENT;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		VertPos: Top = Previous . Bottom;
 		Height: Enclosed . Height;
@@ -3627,9 +3630,12 @@ RULES
 	Style: Bold;
 	CreateBefore(H2_S);
 	CreateWith(VerticalLine);
-	VertPos: Top = Previous not MAP . Bottom + VSpaceBeforeH2;
+	VertPos: Top = Previous NOT MAP . Bottom + VSpaceBeforeH2;
 	IN Structure_view BEGIN
-		Width: Enclosing . Width - STRUCT_INDENT;
+		if within Pre_Line
+		   Width: Enclosed . Width;
+		if NOT within Pre_Line
+		   Width: Enclosing . Width - STRUCT_INDENT;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		VertPos: Top = Previous . Bottom;
 		Size: Enclosing =;
@@ -3654,14 +3660,17 @@ RULES
 	NoBreak1 : 2;
 	NoBreak2 : 2;
 #endif
-	VertPos: Top = Previous not MAP . Bottom + VSpaceBeforeH3;
+	VertPos: Top = Previous NOT MAP . Bottom + VSpaceBeforeH3;
 	Width: Enclosing . Width;
 	Size: Enclosing + 2;
 	Style: Bold;
 	CreateBefore(H3_S);
 	CreateWith(VerticalLine);
 	IN Structure_view BEGIN
-		Width: Enclosing . Width - STRUCT_INDENT;
+		if within Pre_Line
+		   Width: Enclosed . Width;
+		if NOT within Pre_Line
+		   Width: Enclosing . Width - STRUCT_INDENT;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		VertPos: Top = Previous . Bottom;
 		Size: Enclosing =;
@@ -3686,14 +3695,17 @@ RULES
 	NoBreak1 : 2;
 	NoBreak2 : 2;
 #endif
-	VertPos: Top = Previous not MAP . Bottom + VSpaceBeforeH4;
+	VertPos: Top = Previous NOT MAP . Bottom + VSpaceBeforeH4;
 	Width: Enclosing . Width;
 	Size: Enclosing =;
 	Style: Bold;
 	CreateBefore(H4_S);
 	CreateWith(VerticalLine);
 	IN Structure_view BEGIN
-		Width: Enclosing . Width - STRUCT_INDENT;
+		if within Pre_Line
+		   Width: Enclosed . Width;
+		if NOT within Pre_Line
+		   Width: Enclosing . Width - STRUCT_INDENT;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		VertPos: Top = Previous . Bottom;
 		Size: Enclosing =;
@@ -3718,13 +3730,16 @@ RULES
 	NoBreak1 : 2;
 	NoBreak2 : 2;
 #endif
-	VertPos: Top = Previous not MAP . Bottom + VSpaceBeforeH5;
+	VertPos: Top = Previous NOT MAP . Bottom + VSpaceBeforeH5;
 	Width: Enclosing . Width;
 	Size: Enclosing - 2;
 	CreateBefore(H5_S);
 	CreateWith(VerticalLine);
 	IN Structure_view BEGIN
-		Width: Enclosing . Width - STRUCT_INDENT;
+		if within Pre_Line
+		   Width: Enclosed . Width;
+		if NOT within Pre_Line
+		   Width: Enclosing . Width - STRUCT_INDENT;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		VertPos: Top = Previous . Bottom;
 		Size: Enclosing =;
@@ -3747,7 +3762,7 @@ RULES
 	NoBreak2 : 2;
 #endif
 	Width: Enclosing . Width;
-	VertPos: Top = Previous not MAP . Bottom + VSpaceBeforeH6;
+	VertPos: Top = Previous NOT MAP . Bottom + VSpaceBeforeH6;
 	Size: Enclosing - 4;
 	CreateBefore(H6_S);
 	CreateWith(VerticalLine);
@@ -4066,7 +4081,7 @@ RULES
 	CreateBefore(APPLET_S);
 	CreateWith(VerticalLine);
 	Width: Enclosing . Width;
-	VertPos: Top = Previous not MAP . Bottom + 0.4;
+	VertPos: Top = Previous NOT MAP . Bottom + 0.4;
 	IN Structure_view BEGIN
 		Width: Enclosing . Width - STRUCT_INDENT;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
@@ -4091,7 +4106,7 @@ RULES
 	CreateBefore(OBJECT_S);
 	CreateWith(VerticalLine);
 	Width: Enclosing . Width;
-	VertPos: Top = Previous not MAP . Bottom + 0.4;
+	VertPos: Top = Previous NOT MAP . Bottom + 0.4;
 	IN Structure_view BEGIN
 		Width: Enclosing . Width - STRUCT_INDENT;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
@@ -4108,15 +4123,15 @@ RULES
 #ifdef PAGE
 	NoBreak1 : 2;
 	NoBreak2 : 2;
-	if not within Table
+	if NOT within Table
 	   Justify: Yes;
 #endif
 	Adjust: Enclosing =;
 	Width: Enclosing . Width;
-	if not within Definition and not within List_Item
-	    VertPos: Top = Previous not MAP . Bottom + 0.4;
+	if NOT within Definition and NOT within List_Item
+	    VertPos: Top = Previous NOT MAP . Bottom + 0.4;
 	otherwise
-	    VertPos: Top = Previous not MAP . Bottom;
+	    VertPos: Top = Previous NOT MAP . Bottom;
 	IN Structure_view BEGIN
 		Width: Enclosing . Width - STRUCT_INDENT;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
@@ -4130,7 +4145,7 @@ RULES
 	CreateWith(VerticalLine);
 	LineBreak: No;
 	Width: Enclosing . Width;
-	VertPos: Top = Previous not MAP . Bottom + 0.4;
+	VertPos: Top = Previous NOT MAP . Bottom + 0.4;
 	IN Structure_view BEGIN
 		Width: Enclosing . Width - STRUCT_INDENT;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
@@ -4183,18 +4198,18 @@ RULES
 	CreateWith(VerticalLine);
 	LineBreak: No;
 #ifdef PAGE
-	if not within Table
+	if NOT within Table
 	   Justify: Yes;
 #endif
-	if not within Definition and not within List_Item
+	if NOT within Definition and NOT within List_Item
 	   BEGIN
-	   VertPos: Top = Previous not MAP . Bottom + 0.5;
+	   VertPos: Top = Previous NOT MAP . Bottom + 0.5;
 	   Width: Enclosing . Width - 1;
 	   HorizPos: Left = Enclosing . Left + 1;
 	   END;
 	otherwise
 	   BEGIN
-	   VertPos: Top = Previous not MAP . Bottom;
+	   VertPos: Top = Previous NOT MAP . Bottom;
 	   Width: Enclosing . Width;
 	   HorizPos: Left = Enclosing . Left;
 	   END;
@@ -4211,18 +4226,18 @@ RULES
 	CreateWith(VerticalLine);
 	LineBreak: No;
 #ifdef PAGE
-	if not within Table
+	if NOT within Table
 	   Justify: Yes;
 #endif
-	if not within Definition and not within List_Item
+	if NOT within Definition and NOT within List_Item
 	   BEGIN
-	   VertPos: Top = Previous not MAP . Bottom + 0.5;
+	   VertPos: Top = Previous NOT MAP . Bottom + 0.5;
 	   Width: Enclosing . Width - 1;
 	   HorizPos: Left = Enclosing . Left + 1;
 	   END;
 	otherwise
 	   BEGIN
-	   VertPos: Top = Previous not MAP . Bottom;
+	   VertPos: Top = Previous NOT MAP . Bottom;
 	   Width: Enclosing . Width;
 	   HorizPos: Left = Enclosing . Left;
 	   END;
@@ -4239,7 +4254,7 @@ RULES
 	Line;
 	Style: Italics;
 	Width: Enclosing . Width;
-	VertPos: Top = Previous not MAP . Bottom + 0.5;
+	VertPos: Top = Previous NOT MAP . Bottom + 0.5;
 	HorizPos: Left = Enclosing . Left;
 	IN Structure_view BEGIN
 		Width: Enclosing . Width - STRUCT_INDENT;
@@ -4253,7 +4268,7 @@ RULES
  Menu:	BEGIN
 	LineBreak: No;
 	Width: Enclosing . Width - 1;
-	VertPos: Top = Previous not MAP . Bottom + 0.5;
+	VertPos: Top = Previous NOT MAP . Bottom + 0.5;
 	HorizPos: Left = Enclosing . Left + 1;
 	CreateBefore(MENU_S);
 	CreateWith(VerticalLine);
@@ -4267,7 +4282,7 @@ RULES
  Directory: BEGIN
 	LineBreak: No;
 	Width: Enclosing . Width - 1;
-	VertPos: Top = Previous not MAP . Bottom + 0.5;
+	VertPos: Top = Previous NOT MAP . Bottom + 0.5;
 	HorizPos: Left = Enclosing . Left + 1;
 	CreateBefore(DIR_S);
 	CreateWith(VerticalLine);
@@ -4294,7 +4309,7 @@ RULES
 	END;
 
  Preformatted: BEGIN
-	VertPos: Top = Previous not MAP . Bottom + 0.4;
+	VertPos: Top = Previous NOT MAP . Bottom + 0.4;
 	Width: Enclosing . Width;
 	CreateBefore(PRE_S);
 	CreateWith(VerticalLine);
@@ -4334,7 +4349,7 @@ RULES
 	CreateBefore(FORM_S);
 	CreateWith(VerticalLine);
 	Width: Enclosing . Width;
-	VertPos: Top = Previous not MAP . Bottom;
+	VertPos: Top = Previous NOT MAP . Bottom;
 	Gather: Yes;
 	IN Structure_view BEGIN
 		Width: Enclosing . Width - STRUCT_INDENT;
@@ -4378,7 +4393,7 @@ RULES
  Toggle_Menu: BEGIN
 	LineBreak: No;
 	Width: Enclosing . Width;
-	VertPos: Top = Previous not MAP . Bottom + 0.4;
+	VertPos: Top = Previous NOT MAP . Bottom + 0.4;
 	CreateBefore(PRE_S);
 	CreateWith(VerticalLine);
 	IN Structure_view BEGIN
@@ -4403,7 +4418,7 @@ RULES
  Radio_Menu: BEGIN
 	LineBreak: No;
 	Width: Enclosing . Width;
-	VertPos: Top = Previous not MAP . Bottom + 0.4;
+	VertPos: Top = Previous NOT MAP . Bottom + 0.4;
 	CreateBefore(PRE_S);
 	CreateWith(VerticalLine);
 	IN Structure_view
@@ -4426,7 +4441,7 @@ RULES
 	Line;
 	LineBreak: No;
 	Width: Enclosing . Width;
-	VertPos: Top = Previous not MAP . Bottom + 0.4;
+	VertPos: Top = Previous NOT MAP . Bottom + 0.4;
 	CreateBefore(P_S);
 	CreateWith(VerticalLine);
 	IN Structure_view BEGIN
@@ -4441,7 +4456,7 @@ RULES
 	Line;
 	LineBreak: No;
 	Width: Enclosing . Width;
-	VertPos: Top = Previous not MAP . Bottom + 0.4;
+	VertPos: Top = Previous NOT MAP . Bottom + 0.4;
 	CreateBefore(P_S);
 	CreateWith(VerticalLine);
 	IN Structure_view BEGIN
@@ -4652,12 +4667,12 @@ RULES
 	if within Inserted_Text
 		Depth: 0;
 	IN Structure_view BEGIN
-		if not within Comment_line
+		if NOT within Comment_line
 		   BEGIN
 		   HorizPos: Left = Enclosing . Left;
 		   VertPos: Top = Previous . Bottom;
 		   END;
-		if not within Invalid_element
+		if NOT within Invalid_element
 		   Style: Enclosing =;
 		if within Text_Input
 		   Visibility: 0;
@@ -4721,7 +4736,7 @@ RULES
 	PageBreak: Yes;
 #endif
 	Justify: No;
-	VertPos: Top = Previous not MAP . Bottom + 0.5;
+	VertPos: Top = Previous NOT MAP . Bottom + 0.5;
 	Width: Enclosing . Width;
 	Adjust: Left;
 	CreateBefore(TABLE_S);
@@ -4856,7 +4871,7 @@ RULES
 	Width: 2 cm;
 	Adjust: Enclosing =;
 	CreateBefore(TD_S);
-	if not RowExt
+	if NOT RowExt
 	   CreateAfter (CellFooter);
 	CreateWith(VerticalLine);
 	IN Structure_view BEGIN
@@ -4916,16 +4931,16 @@ RULES
 	CreateBefore(DIV_S);
 	CreateWith(VerticalLine);
 	Width: Enclosing . Width;
-	IF not within Division
-	   VertPos: Top = Previous not MAP . Bottom + VSpaceBeforeH2;
+	IF NOT within Division
+	   VertPos: Top = Previous NOT MAP . Bottom + VSpaceBeforeH2;
 	IF within 1 Division
-	   VertPos: Top = Previous not MAP . Bottom + VSpaceBeforeH3;
+	   VertPos: Top = Previous NOT MAP . Bottom + VSpaceBeforeH3;
 	IF within 2 Division
-	   VertPos: Top = Previous not MAP . Bottom + VSpaceBeforeH4;
+	   VertPos: Top = Previous NOT MAP . Bottom + VSpaceBeforeH4;
 	IF within 3 Division
-	   VertPos: Top = Previous not MAP . Bottom + VSpaceBeforeH5;
+	   VertPos: Top = Previous NOT MAP . Bottom + VSpaceBeforeH5;
 	IF within >3 Division
-	   VertPos: Top = Previous not MAP . Bottom + VSpaceBeforeH6;
+	   VertPos: Top = Previous NOT MAP . Bottom + VSpaceBeforeH6;
 	IN Structure_view BEGIN
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		Width: Enclosing . Width - STRUCT_INDENT;
@@ -4938,7 +4953,7 @@ RULES
 	CreateBefore(CENTER_S);
 	CreateWith(VerticalLine);
 	Width: Enclosing . Width;
-	VertPos: Top = Previous not MAP . Bottom + 0.4;
+	VertPos: Top = Previous NOT MAP . Bottom + 0.4;
 	Adjust: VMiddle;
 	IN Structure_view BEGIN
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
@@ -4951,7 +4966,7 @@ RULES
   Invalid_element:
 	BEGIN
 	Visibility: 0;
-	if not AnyAttributes
+	if NOT AnyAttributes
 	  CreateAfter(INVALID_E);
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
@@ -4994,7 +5009,7 @@ ATTRIBUTES
 	CreateAfter(ATTR_HREF_ANCH);
 	IF LINK
 	   CreateAfter(VALUE_HREF_LINK_ANCH);
-	IF not LINK
+	IF NOT LINK
 	   CreateAfter(VALUE_HREF_ANCH);
 #ifdef PAGE
 	IF Anchor
@@ -5734,7 +5749,7 @@ dans des paragraphes s affichent a cote de leur cadre...
 	BEGIN
 	Height: Bottom = Referred Table_row . Bottom - TableSimpleVSpace;
 	VertOverflow: Yes;
-	if not last
+	if NOT last
 	  CreateAfter(ExtCellRightBorder);
 	if last
 	  CreateAfter(LastExtCellRBorder);
@@ -6117,7 +6132,7 @@ dans des paragraphes s affichent a cote de leur cadre...
 	   CreateAfter(INVALID_E);
 	if Anchor
 	   CreateAfter(VALUE_Invalid_attribute);
-	if not TEXT_UNIT and not PICTURE_UNIT and not Invalid_element and not Anchor
+	if NOT TEXT_UNIT and NOT PICTURE_UNIT and NOT Invalid_element and NOT Anchor
 	   CreateBefore(VALUE_Invalid_attribute);
 	END;
 
