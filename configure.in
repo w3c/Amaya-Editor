@@ -460,7 +460,7 @@ dnl  ***************************************************************
 echo "with gtk is ${with_gtk}, with gl is ${with_gl}\n"
 
 if test "${with_gtk}" != "yes" -o "${with_gl}" = "yes" ; then
-  AC_ARG_WITH(graphic-libs, [  --without-graphic-libs    doesn't use provided libjpeg, libpng.])
+  AC_ARG_WITH(graphic-libs, [  --with-graphic-libs    use static libjpeg, libpng.])
   if test "$withval" = "no" ; then
     no_graphic=yes
   fi
@@ -477,10 +477,12 @@ dnl
          x JPEG_LIB_VERSION x],
 dnl
         AC_MSG_RESULT([yes])
+	JPEGINCL=''
         LIBJPEG='-ljpeg'
         MAKEJPEG=['#'],
 dnl
         AC_MSG_RESULT([no])
+	JPEGINCL='-I$(THOTDIR)/libjpeg'
         LIBJPEG='../libjpeg.a'      dnl LIBJPEG goes into amaya/Makefile.in
         )
 dnl    
@@ -491,16 +493,20 @@ dnl
 	x PNG_LIBPNG_VER_STRING x],
 dnl
         AC_MSG_RESULT([yes])
+	PNGINCL=''
         LIBPNG='-lpng'
         LIBZ=''
 	MAKEPNG=['#'],
 dnl
         AC_MSG_RESULT([no])
+  	PNGINCL='-I$(THOTDIR)/libpng -I$(THOTDIR)/libpng/zlib'
         LIBPNG='../libpng.a'
         LIBZ='../libz.a'
         )
 else
+    JPEGINCL='-I$(THOTDIR)/libjpeg'
     LIBJPEG='../libjpeg.a'
+    PNGINCL='-I$(THOTDIR)/libpng -I$(THOTDIR)/libpng/zlib'
     LIBPNG='../libpng.a'
     LIBZ='../libz.a'
 fi
@@ -511,7 +517,7 @@ AC_SUBST(LIBZ)
 AC_SUBST(MAKEJPEG)
 AC_SUBST(MAKEPNG)
 
-AMAYA_VER="6.0"
+AMAYA_VER="7.0"
 
 dnl
 dnl We use a special versoin of cextract patched for alignment
@@ -957,14 +963,6 @@ API="\$(THOTDIR)/thotlib/include"
 VAR="\$(THOTDIR)/thotlib/internals/var"
 INCL="\$(THOTDIR)/thotlib/internals/h"
 FUNC="\$(THOTDIR)/thotlib/internals/f"
-if test "${LIBPNG}" = "../libpng.a" ; then
-#there is a modified header file we need
-PNGINCL="-I\$(THOTDIR)/libpng -I\$(THOTDIR)/libpng/zlib"
-fi
-if test "${LIBJPEG}" = "../libjpeg.a" ; then
-#there is a modified header file we need
-JPEGINCL="-I\$(THOTDIR)/libjpeg"
-fi
 
 dnl
 dnl Set up the include variables.
@@ -1152,25 +1150,29 @@ if test "$no_motif" = yes ; then
     echo "Amaya configured with GTK"
     echo "Amaya configured without static graphic libraries (libjpeg, libpng)"
 else
-if test "$no_motif" = yes ; then
+  if test "$no_motif" = yes ; then
     echo "Amaya configured without static graphic libraries (libjpeg, libpng)"
-fi
-if test "$no_motif" = yes ; then
+  else
+    if test "$no_graphic" = "no"; then
+      echo "Amaya configured with static graphic libraries (libjpeg, libpng)"
+    fi
+  fi
+  if test "$no_motif" = yes ; then
     echo "Motif seems not installed on this machine"
     echo "Amaya need Motif 1.2 or 2.0"
-else
-if test "$motif_includes" = "" ; then
-    echo "Motif includes were not found"
-    echo "Amaya might not compile"
-    echo "Edit your Option file"
-else
-if test "$motif_libraries" = "" ; then
-    echo "Motif libraries were not found"
-    echo "Amaya might not compile"
-    echo "Edit your Option file"
-fi
-fi
-fi
+  else
+    if test "$motif_includes" = "" ; then
+      echo "Motif includes were not found"
+      echo "Amaya might not compile"
+      echo "Edit your Option file"
+    else
+      if test "$motif_libraries" = "" ; then
+        echo "Motif libraries were not found"
+        echo "Amaya might not compile"
+        echo "Edit your Option file"
+      fi
+    fi
+  fi
 fi
 
 echo "Now type \"make\" (GNU make preferably) to build the binaries"

@@ -6,15 +6,15 @@
 
 @VPATHOPT@= @srcdir@
 THOTDIR = @top_srcdir@
+THOTINCLUDES = @THOTINCLUDES@
+LIBZ = @LIBZ@
 
 include Options
 
 LIBWWW	   = libwww
 LIBRAPTOR  = libraptor
-KAFFE	   = kaffe-$(KAFFE_VER)
 LIBJPEG	   = libjpeg
 LIBPNG	   = libpng
-LIBZ	   = libz
 
 #MKP: adding davlib
 SUBDIRS	= @SUBDIRS@ tools thotlib tablelib batch drawlib indexlib annotlib amaya thot @DAVDIR@
@@ -70,6 +70,7 @@ all : rebuild
 	  cd .. ; fi ;done )
 
 clean : rebuild
+	$(RM) libpng.a libz.a libjpeg.a
 	@(for dir in $(SUBDIRS) $(EXTRA_SUBDIRS) ;\
 	  do if test -d $$dir ; then cd $$dir ; \
 	  $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" clean ; \
@@ -191,17 +192,16 @@ libwww_config :
 	  	$$libwwwdir/configure \
 			--disable-shared \
 			@WITHDAV@ \
-			--with-zlib="$$localdir/libz.a"; \
+			--with-zlib; \
 		$(ECHO) "libwww is configured" ; \
 	  fi)
 
 libwww_make_module_md5 \
 libmd5 : force
 		@(localdir=`pwd`; \
-		 zlibsrcdir="$$localdir/../libpng/zlib"; \
 		 cd $(LIBWWW)/modules/md5 ; \
 		 $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS) $(EXPAT_OPTIONS)" \
-		 CPPFLAGS="$(CPPFLAGS) -I$$zlibsrcdir" \
+		 CPPFLAGS="$(CPPFLAGS) $(THOTINCLUDE)" \
 	        	    libmd5.la)
 
 libwww_install_module_md5 : force
@@ -238,14 +238,13 @@ libwww_install_module_expat : force
 libwww_make_standard_libs \
 $(AMAYA_LIBWWW_STANDARD_LIBS) : force
 		@(localdir=`pwd`; \
-		  zlibsrcdir="$$localdir/../libpng/zlib"; \
 		  all_libs="" ; \
 		  for lib in $(AMAYA_LIBWWW_STANDARD_LIBS) ; do \
 		      all_libs="$$all_libs $$lib.la" ; \
 		   done ; \
 		  cd $(LIBWWW)/Library/src ; \
 		  $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS) $(EXPAT_OPTIONS)" \
-		  CPPFLAGS="$(CPPFLAGS) -I$$zlibsrcdir" \
+		  CPPFLAGS="$(CPPFLAGS) $(THOTINCLUDE)" \
 			     $$all_libs)
 
 libwww_install_standard : force
@@ -329,73 +328,6 @@ libz libz.a : force
 	@($(RM) $(THOTDIR)/libpng/libz/*.o)
 	@(cd libpng/zlib ; $(MAKE) CC="$(CC)" CFLAGS="-O")
 
-#
-# Rules to rebuild the Kaffe package
-#
-
-kaffe_get :
-	@(if [ ! -d $(THOTDIR)/$(KAFFE) ] ; \
-	  then \
-	      if [ -f $(THOTDIR)/$(KAFFE).tar.gz ] ; \
-	      then \
-	          cd $(THOTDIR) ; gunzip -c $(KAFFE).tar.gz | tar xvf - ; \
-	      else \
-		  cd $(THOTDIR) ; cvs get $(KAFFE) ; \
-	      fi \
-	  fi)
-	@(if [ ! -d $(THOTDIR)/classes ] ; \
-	  then \
-	      cd $(THOTDIR) ; cvs get classes ; \
-	  fi)
-	@(if [ ! -d $(THOTDIR)/javalib ] ; \
-	  then \
-	      cd $(THOTDIR) ; cvs get javalib ; \
-	  fi)
-	@(if [ ! -d $(KAFFE) ] ; \
-	  then \
-	      mkdir $(KAFFE) ; \
-	  fi)
-
-kaffe_clean :
-	@($(RM) -f libkaffe*)
-
-kaffe_config :
-	@(localdir=`pwd` ; kaffedir="$(THOTDIR)/$(KAFFE)" ; cd $(KAFFE) ; \
-	  unset LANG; unset CC; unset CFLAGS; \
-	  if [ -x $$kaffedir/configure ] ; then \
-	      $$kaffedir/configure --prefix=$$localdir --libdir=$$localdir \
-	      --bindir=$$localdir/bin --with-staticlib \
-	      --with-threads=unix-internal \
-	      @KAFFE_ENGINE@ ; \
-	  else \
-	      ../$$kaffedir/configure --prefix=$$localdir --libdir=$$localdir \
-	      --bindir=$$localdir/bin --with-staticlib \
-	      --with-threads=unix-internal \
-	      @KAFFE_ENGINE@ ; \
-	  fi)
-
-kaffe_make :
-	@(cd $(KAFFE) ; unset CC ; unset CFLAGS; $(MAKE))
-
-kaffe_install:
-	@(cd $(KAFFE) ; $(MAKE) install)
-	@(if [ ! -d $(THOTDIR)/classes ] ; \
-	  then \
-	      $(MKDIR) $(THOTDIR)/classes ; \
-	  fi)
-	@(if [ ! -d $(THOTDIR)/classes/lib ] ; \
-	  then \
-	      $(MKDIR) $(THOTDIR)/classes/lib ; \
-	  fi)
-	@($(CP) -R share/kaffe/. $(THOTDIR)/classes)
-	@$(ECHO) Cleaning temp $(KAFFE) files
-	@($(RM) -r man )
-
-#	@($(CP) libagent* libkaffevm* libnative* libnet* libzip* bin)
-#	@($(RM) libagent* libkaffevm* libnative* libnet* libzip*)
-
-kaffe : kaffe_get kaffe_clean kaffe_config kaffe_make kaffe_install
-	@(echo $(KAFFE) reinstalled)
 
 #
 # This section try to maintain the Makefile(s) up-to-date in

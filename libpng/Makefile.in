@@ -24,7 +24,7 @@ libdir = @libdir@
 all : ../libpng.a
 
 clean :
-	$(RM) libpng.a
+	$(RM) ../libpng.a
 	$(RM) *.o
 
 install :

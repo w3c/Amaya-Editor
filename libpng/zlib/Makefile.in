@@ -24,7 +24,7 @@ libdir = @libdir@
 all : ../../libz.a
 
 clean :
-	$(RM) libz.a
+	$(RM) ../../libz.a
 	$(RM) *.o
 
 install :

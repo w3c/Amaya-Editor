@@ -19,6 +19,8 @@ Group:        X11/Applications/Networking
 URL:          http://www.w3.org/Amaya/
 Autoreqprov:  on
 Packager:     Irene.Vatton@w3.org
+BuildRoot:    /var/tmp/%{name}-buildroot
+#BuildRoot:     /usr/src/redhat/BUILD/ 
 
 Summary:      Web Browser/Editor from the World Wide Web Consortium
 Version:      %{version}
@@ -69,11 +71,13 @@ Authors:
 export CFLAGS=-O2
 # rm -R libjpeg
 # rm -R libpng
+mkdir -p $RPM_BUILD_ROOT/usr/share/
 autoconf
 mkdir linux
 cd linux
+#ln -s /usr/lib/libpng.a
 export HOME=`pwd`
-../configure --with-gtk --prefix=/usr/share --exec-prefix=/usr 
+.../configure --with-gtk --prefix=/usr/share --exec=/usr/share
 #cp Options.orig Options
 make all
 %install
@@ -81,11 +85,16 @@ if [ -e /usr/bin/amaya ] ; then
   rm -f /usr/bin/amaya
 fi
 cd linux
-make install
+make install prefix=$RPM_BUILD_ROOT/usr/share
 #cd ..
 #cp -a amaya/AmayaPage.html /usr/share/Amaya/amaya
 %files
-%doc COPYRIGHT README.amaya
-/usr/bin/amaya
-/usr/share/Amaya
+#/usr/bin/amaya
+#/usr/share/Amaya/
+%doc README.amaya
+/usr/share/Amaya/
+%post 
+/bin/ln -s /usr/share/Amaya/applis/bin/amaya /usr/bin/amaya
+%postun
+rm -f /usr/bin/amaya
 
