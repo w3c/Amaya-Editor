@@ -155,7 +155,7 @@ char               *path;
    int                 i;
 
    if (!path)
-      return FALSE;
+     return (FALSE);
 
    strcpy (temppath, path);
    ExtractSuffix (temppath, suffix);
@@ -163,13 +163,37 @@ char               *path;
    /* Normalize the suffix */
    i = 0;
    while (suffix[i] != EOS)
-      nsuffix[i] = TOLOWER (suffix[i++]);
+     {
+       nsuffix[i] = TOLOWER (suffix[i]);
+       i++;
+     }
    nsuffix[i] = EOS;
    if ((strcmp (nsuffix, "html")) &&
        (strcmp (nsuffix, "htm")) &&
        (strcmp (nsuffix, "shtml")))
-      return FALSE;
-   return TRUE;
+     return (FALSE);
+   else if ((!strcmp (nsuffix, "gz")) ||
+	    (!strcmp (nsuffix, "Z")))
+     {
+       /* take in account compressed files */
+       ExtractSuffix (temppath, suffix);       
+       /* Normalize the suffix */
+       i = 0;
+       while (suffix[i] != EOS)
+	 {
+	   nsuffix[i] = TOLOWER (suffix[i]);
+	   i++;
+	 }
+       nsuffix[i] = EOS;
+       if ((strcmp (nsuffix, "html")) &&
+	   (strcmp (nsuffix, "htm")) &&
+	   (strcmp (nsuffix, "shtml")))
+	 return (FALSE);
+       else
+	 return (TRUE);
+     }
+   else
+     return (TRUE);
 }
 
 /*----------------------------------------------------------------------
@@ -189,7 +213,7 @@ char               *path;
    int                 i;
 
    if (!path)
-      return FALSE;
+      return (FALSE);
 
    strcpy (temppath, path);
    ExtractSuffix (temppath, suffix);
@@ -197,13 +221,16 @@ char               *path;
    /* Normalize the suffix */
    i = 0;
    while (suffix[i] != EOS)
-      nsuffix[i] = TOLOWER (suffix[i++]);
+     {
+       nsuffix[i] = TOLOWER (suffix[i]);
+       i++;
+     }
    nsuffix[i] = EOS;
    if ((strcmp (nsuffix, "gif")) && (strcmp (nsuffix, "xbm")) &&
        (strcmp (nsuffix, "xpm")) && (strcmp (nsuffix, "jpg")) &&
        (strcmp (nsuffix, "png")) && (strcmp (nsuffix, "au")))
-      return FALSE;
-   return TRUE;
+      return (FALSE);
+   return (TRUE);
 }
 
 /*----------------------------------------------------------------------
@@ -223,7 +250,7 @@ char               *path;
    int                 i;
 
    if (!path)
-      return FALSE;
+     return (FALSE);
 
    strcpy (temppath, path);
    ExtractSuffix (temppath, suffix);
@@ -240,12 +267,31 @@ char               *path;
    if ((strcmp (nsuffix, "gif")) && (strcmp (nsuffix, "xbm")) &&
        (strcmp (nsuffix, "xpm")) && (strcmp (nsuffix, "jpg")) &&
        (strcmp (nsuffix, "pdf")) && (strcmp (nsuffix, "png")) &&
-       (strcmp (nsuffix, "Z")) && (strcmp (nsuffix, "gz")) &&
        (strcmp (nsuffix, "tgz")) && (strcmp (nsuffix, "xpg")) &&
        (strcmp (nsuffix, "xpd")) && (strcmp (nsuffix, "ps")) &&
        (strcmp (nsuffix, "au")))
-      return TRUE;
-   return FALSE;
+      return (TRUE);
+   else if ((!strcmp (nsuffix, "gz")) || (!strcmp (nsuffix, "Z")))
+     {
+       /* take in account compressed files */
+       ExtractSuffix (temppath, suffix);       
+       /* Normalize the suffix */
+       i = 0;
+       while (suffix[i] != EOS)
+	 {
+	   nsuffix[i] = TOLOWER (suffix[i]);
+	   i++;
+	 }
+       nsuffix[i] = EOS;
+       if ((!strcmp (nsuffix, "html")) ||
+	   (!strcmp (nsuffix, "htm")) ||
+	   (!strcmp (nsuffix, "shtml")))
+	 return (TRUE);
+       else
+	 return (FALSE);
+     }
+   else
+     return (FALSE);
 }
 
 /*----------------------------------------------------------------------
@@ -404,12 +450,19 @@ char               *docName;
 		     ** length > TtaGetTextAttributeLength (attrHREF) + strlen (orgName) 
 		   */
 		  TtaGiveTextAttributeValue (attrHREF, basename, &length);
-
-		  /* 
-		     ** base and orgName have to be separated by a DIR_SEP 
-		   */
-		  if (basename[strlen (basename) - 1] != DIR_SEP && tempname[0] != DIR_SEP)
-		     strcat (basename, DIR_STR);
+		  /* base and orgName have to be separated by a DIR_SEP */
+		  if (basename[strlen (basename) - 1] != DIR_SEP)
+		    {
+		      if (IsHTMLName (basename))
+			{
+			  /* remove the document name from basename */
+			  length = strlen (basename) - 1;
+			  while (basename[length] != DIR_SEP)
+			    basename[length--] = EOS;
+			}
+		      else if (tempname[0] != DIR_SEP)
+			strcat (basename, DIR_STR);
+		    }
 	       }
 	     else
 	       basename[0] = EOS;
