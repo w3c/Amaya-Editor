@@ -12,6 +12,7 @@ DEFAULT
 	PRuleDelete.Post -> GraphicsPRuleDeleted;
         ElemSelect.Post -> GraphicsSelectionChanged;
 	ElemExtendSelect.Pre -> ExtendSelectSVGElement;
+	ElemExtendSelect.Post -> SelectionChanged;
    END;
 
 ELEMENTS

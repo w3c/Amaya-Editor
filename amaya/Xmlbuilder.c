@@ -92,8 +92,7 @@ void XmlAttributeComplete (Attribute attr, Element el, Document doc)
   ----------------------------------------------------------------------*/
 void XmlSelectionChanged (NotifyElement *event)
 {
-  UpdateContextSensitiveMenus (event->document);
-  SynchronizeSourceView (event);
+  CheckSynchronize (event);
   /* update the displayed style information */
   SynchronizeAppliedStyle (event);
 }

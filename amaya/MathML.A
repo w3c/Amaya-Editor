@@ -10,6 +10,7 @@ DEFAULT
 	ElemDelete.Pre -> MathElementWillBeDeleted;
 	ElemDelete.Post -> MathElementDeleted;
 	ElemSelect.Post -> MathSelectionChanged;
+	ElemExtendSelect.Post -> MathSelectionChanged;
 	AttrMenu.Pre -> GlobalMathAttrInMenu;
 	PRuleCreate.Pre -> ChangePRule;
 	PRuleModify.Pre -> ChangePRule;

@@ -2123,8 +2123,7 @@ void CreateMSPACE (Document document, View view)
   ----------------------------------------------------------------------*/
 void MathSelectionChanged (NotifyElement *event)
 {
-  UpdateContextSensitiveMenus (event->document);
-  SynchronizeSourceView (event);
+  CheckSynchronize (event);
   /* update the displayed style information */
   SynchronizeAppliedStyle (event);
 }
