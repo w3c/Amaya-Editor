@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT MIT and INRIA, 1996-2001
+ *  (c) COPYRIGHT MIT and INRIA, 1996-2002
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -254,7 +254,8 @@ void                AttrMediaChanged (NotifyAttribute *event)
 	   /* something changed and we are not printing */
 	   if ((media == CSS_ALL || media == CSS_SCREEN) &&
 	       (css->media[doc] == CSS_PRINT || css->media[doc] == CSS_OTHER))
-	     LoadStyleSheet (completeURL, doc, el, NULL, media);
+	     LoadStyleSheet (completeURL, doc, el, NULL, media,
+			     css->category == CSS_USER_STYLE);
 	   else
 	     {
 	       if ((media == CSS_PRINT || media == CSS_OTHER) &&
@@ -277,8 +278,10 @@ void                AttrMediaChanged (NotifyAttribute *event)
   directory.
   Return the list of temporary file names. That list includes:
   - first the User style sheet
-  - after external style sheets
-  - the Document style sheet
+  - the external style sheets linked to the document
+  - the style sheet embedded in a style element within the document
+  Each filename is preceded by "u" and a space if it's a user style sheet,
+  by "a" and a space if it's an author style sheet.
   The returned string should be freed by the caller.
   ----------------------------------------------------------------------*/
 char *CssToPrint (Document doc, char *printdir)
@@ -307,6 +310,8 @@ char *CssToPrint (Document doc, char *printdir)
 	    else
 	      /* that external or user style sheet concerns the document */
 	      length += strlen (css->localName) + 1;
+	    /* add room for "a " or "u " in front of each filename */
+	    length += 2;
 	    }
 	  css = css->NextCSS;
 	}
@@ -323,6 +328,8 @@ char *CssToPrint (Document doc, char *printdir)
 		  css->category == CSS_USER_STYLE)
 		{
 		  /* add that file name to the list */
+		  strcpy (&ptr[length], "u ");
+		  length += 2;
 		  strcpy (&ptr[length], css->localName);
 		  length += strlen (css->localName);
 		  ptr[length++] = SPACE;
@@ -338,6 +345,8 @@ char *CssToPrint (Document doc, char *printdir)
 		  css->category == CSS_EXTERNAL_STYLE)
 		{
 		  /* add that file name to the list */
+		  strcpy (&ptr[length], "a ");
+		  length += 2;
 		  strcpy (&ptr[length], css->localName);
 		  length += strlen (css->localName);
 		  ptr[length++] = SPACE;
@@ -384,6 +393,8 @@ char *CssToPrint (Document doc, char *printdir)
 		      if (file)
 			{
 			  /* add that file name to the list */
+			  strcpy (&ptr[length], "a ");
+			  length += 2;
 			  strcpy (&ptr[length], tempfile);
 			  length += strlen (tempfile);
 			  ptr[length++] = SPACE;
@@ -455,13 +466,14 @@ static void         CallbackCSS (int ref, int typedata, char *data)
 	      else
 		{
 		  css = SearchCSS (0, CSSpath);
-		  css ->enabled[CSSdocument] = TRUE;
+		  css->enabled[CSSdocument] = TRUE;
 		  /* apply CSS rules */
 		  if (UserCSS && !strcmp (CSSpath, UserCSS))
 		    LoadUserStyleSheet (CSSdocument);
 		  else
 		    LoadStyleSheet (CSSpath, CSSdocument, NULL, NULL,
-				    css->media[CSSdocument]);
+				    css->media[CSSdocument],
+				    css->category == CSS_USER_STYLE);
 		}
       	      break;
 	    case 4:

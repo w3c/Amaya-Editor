@@ -3444,7 +3444,7 @@ static void      XmlStyleSheetPi (char *PiData)
 		   strcpy (css_href, &ptr[1]);
 		   css_info = NULL;
 		   LoadStyleSheet (css_href, XMLcontext.doc, NULL,
-				   css_info, css_media);
+				   css_info, css_media, FALSE);
 		   if (css_href != NULL)
 		     TtaFreeMemory (css_href);
 		 }

@@ -493,54 +493,53 @@ static void Print (char *name, char *dir, char *thotSch, char *thotDoc,
    if (cssToPrint != NULL && cssToPrint[0] != EOS)
      {
        i = 0;
-       /* skip leading spaces */ 
-       while (cssToPrint[i] == SPACE)
-	 i++;
-       /* insert the first flag */
-       if (cssToPrint[i] != EOS)
+       while (cssToPrint[i] != EOS)
 	 {
-	   /* insert the flag -css before each stylesheet name */
-#ifdef _WINDOWS
-	   printArgv[printArgc] = TtaStrdup ("-css");
-	   printArgc++;
-	   printArgv[printArgc] = TtaGetMemory (50);
-	   j = 0;
-#else  /* _WINDOWS */
-	   j = strlen (cmd);
-           sprintf (&cmd[j], " -css ");
-	   j = strlen (cmd);
-#endif /* _WINDOWS */
-
-	   while (cssToPrint[i] != EOS)
+	   /* skip leading spaces */ 
+	   while (cssToPrint[i] == SPACE)
+	     i++;
+	   if (cssToPrint[i] != 'a' && cssToPrint[i] != 'u')
+	     /* ERROR */
+	     cssToPrint[i] = EOS;
+	   else
 	     {
-	       /* is it a space? */
-	       if (cssToPrint[i] == SPACE)
-		 {
-		   i++;
-		   /* skip multiple spaces */
-		   while (cssToPrint[i] == SPACE)
-		     i++;
-		   if (cssToPrint[i] != EOS)
-		     {
+	       /* insert the flag -cssa or -cssu before each stylesheet name */
 #ifdef _WINDOWS
-		       printArgv[printArgc][j++] = EOS;
-		       printArgc++;
-		       printArgv[printArgc] = TtaStrdup ("-css");
-		       printArgc++;
-		       printArgv[printArgc] = TtaGetMemory (50);
-		       j = 0;
+	       if (cssToPrint[i] == 'a')
+		 /* it's an author stylesheet */
+		 printArgv[printArgc] = TtaStrdup ("-cssa");
+	       else if (cssToPrint[i] == 'u')
+		 /* it's an user stylesheet */
+		 printArgv[printArgc] = TtaStrdup ("-cssu");
+	       printArgc++;
 #else  /* _WINDOWS */
-		       j = strlen (cmd);
-		       sprintf (&cmd[j], " -css ");
-		       j = strlen (cmd);
-#endif /* _WINDOWS */
-		     }
-		 }
+	       j = strlen (cmd);
+	       if (cssToPrint[i] == 'a')
+		 sprintf (&cmd[j], " -cssa ");
 	       else
+		 sprintf (&cmd[j], " -cssu ");
+	       j = strlen (cmd);
+#endif /* _WINDOWS */
+	       /* skip the flag "a" or "u" */
+	       i++;
+	     }
+	   /* skip spaces after the flag */
+	   while (cssToPrint[i] == SPACE && cssToPrint[i] != EOS)
+	     i++;
+           if (cssToPrint[i] != EOS)
+	     /* there is a file name after the flag */
+	     {
+#ifdef _WINDOWS
+	       printArgv[printArgc] = TtaGetMemory (50);
+	       printArgc++;
+	       j = 0;
+#endif /* _WINDOWS */
+	       while (cssToPrint[i] != SPACE && cssToPrint[i] != EOS)
 		 {
 		   /* copy the character */
 #ifdef _WINDOWS
 		   printArgv[printArgc][j++] = cssToPrint[i];
+		   printArgv[printArgc][j] = EOS;
 #else /* _WINDOWS */
 		   cmd[j++] = cssToPrint[i];
 		   cmd[j] = EOS;
@@ -550,11 +549,7 @@ static void Print (char *name, char *dir, char *thotSch, char *thotDoc,
 		 }
 	     }
 	 }
-#ifdef _WINDOWS
-       printArgv[printArgc][j] = EOS;
-       printArgc++;
-#endif /* _WINDOWS */
-   }
+     }
    /* transmit the path or source file */
 #ifdef _WINDOWS 
    printArgv[printArgc] = TtaStrdup ("-removedir");

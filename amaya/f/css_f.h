@@ -26,7 +26,8 @@ extern void LoadStyleSheet ( char *url,
                              Document doc,
                              Element el,
                              CSSInfoPtr css,
-                             CSSmedia media );
+                             CSSmedia media,
+                             ThotBool user );
 
 #else /* __STDC__ */
 
@@ -50,7 +51,8 @@ extern void LoadStyleSheet (/* char *url,
                                Document doc,
                                Element el,
                                CSSInfoPtr css,
-                               CSSmedia media */);
+                               CSSmedia media,
+                               ThotBool user */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

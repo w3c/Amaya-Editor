@@ -1597,7 +1597,7 @@ void CheckCSSLink (Element el, Document doc, SSchema schema)
 	  buff = TtaGetMemory (length + 1);
 	  TtaGiveTextAttributeValue (attr, buff, &length);
 	  /* load the stylesheet file found here ! */
-	  LoadStyleSheet (buff, doc, el, NULL, media);
+	  LoadStyleSheet (buff, doc, el, NULL, media, FALSE);
 	  TtaFreeMemory (buff);
 	}
     }

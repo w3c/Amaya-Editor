@@ -574,9 +574,11 @@ char *GetStyleContents (Element el)
   The parameter el gives the element which links the CSS or NULL.
   The parameter css gives the CSS context which imports this CSS file.
   The parameter media gives the application limits of the CSS.
+  The parameter user is true when it's a User style sheet. It's false
+  when it's an authr style sheet
   ----------------------------------------------------------------------*/
 void LoadStyleSheet (char *url, Document doc, Element el, CSSInfoPtr css,
-		     CSSmedia media)
+		     CSSmedia media, ThotBool user)
 {
   CSSInfoPtr          oldcss;
   PInfoPtr            pInfo;
@@ -599,7 +601,12 @@ void LoadStyleSheet (char *url, Document doc, Element el, CSSInfoPtr css,
 	  /* It could be a @import CSS */
 	  if (css == NULL)
 	    /* It's a new CSS file: allocate a new Presentation structure */
-	    css = AddCSS (0, doc, CSS_EXTERNAL_STYLE, tempURL, tempfile);
+	    {
+	    if (user)
+	      css = AddCSS (0, doc, CSS_USER_STYLE, tempURL, tempfile);
+	    else
+	      css = AddCSS (0, doc, CSS_EXTERNAL_STYLE, tempURL, tempfile);
+	    }
 	  oldcss = css;
 	  oldcss->media[doc] = media;
 	}

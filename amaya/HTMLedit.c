@@ -332,7 +332,7 @@ void SetREFattribute (Element element, Document doc, char *targetURL,
 	  (LinkAsCSS || IsCSSName (targetURL)))
 	 {
 	   LinkAsCSS = FALSE;
-	   LoadStyleSheet (targetURL, doc, element, NULL, CSS_ALL);
+	   LoadStyleSheet (targetURL, doc, element, NULL, CSS_ALL, FALSE);
 	   attrType.AttrTypeNum = HTML_ATTR_REL;
 	   attr = TtaGetAttribute (element, attrType);
 	   if (attr == 0)

@@ -4571,7 +4571,9 @@ char ReadCSSRules (Document docRef, CSSInfoPtr css, char *buffer,
 			    cssRule--;
 			  *cssRule = EOS;
 			  if (!ignoreImport)
-			    LoadStyleSheet (base, docRef, NULL, css, css->media[docRef]);
+			    LoadStyleSheet (base, docRef, NULL, css,
+					    css->media[docRef],
+					    css->category == CSS_USER_STYLE);
 			}
 		    }
 		  else if (*cssRule == '"')
@@ -4588,7 +4590,9 @@ char ReadCSSRules (Document docRef, CSSInfoPtr css, char *buffer,
 			cssRule++;
 		      *cssRule = EOS;
 		      if (!ignoreImport)
-			LoadStyleSheet (base, docRef, NULL, css, css->media[docRef]);
+			LoadStyleSheet (base, docRef, NULL, css,
+					css->media[docRef],
+					css->category == CSS_USER_STYLE);
 		    }
 		  /* restore the number of lines */
 		  LineNumber = newlines;

@@ -74,6 +74,7 @@ static ThotBool     removeDirectory;
 #define MAX_CSS           10
 static Name         PrintViewName[MAX_PRINTED_VIEWS];
 static Name         CSSName[MAX_CSS];
+static char         CSSOrigin[MAX_CSS];
 static int          TopMargin;
 static int          LeftMargin;
 static ThotBool     CleanTopOfPageElement; /* premiere page imprimee pour le
@@ -2457,11 +2458,19 @@ int main (int argc, char **argv)
 	      argCounter++;
 	      strcpy (PrintViewName [viewsCounter++], argv[argCounter++]);
 	    }
-	  else if (!strcmp (argv[argCounter], "-css"))
+	  else if (!strcmp (argv[argCounter], "-cssa"))
 	    {
 	      /* CSS files given in the command line */
 	      argCounter++;
-	      strcpy (CSSName [cssCounter++], argv[argCounter++]);
+	      CSSOrigin[cssCounter] = 'a';
+	      strcpy (CSSName[cssCounter++], argv[argCounter++]);
+	    }
+	  else if (!strcmp (argv[argCounter], "-cssu"))
+	    {
+	      /* CSS files given in the command line */
+	      argCounter++;
+	      CSSOrigin[cssCounter] = 'u';
+	      strcpy (CSSName[cssCounter++], argv[argCounter++]);
 	    }
 	  else if (!strcmp (argv[argCounter], "-npps"))
 	    {
@@ -2657,7 +2666,8 @@ int main (int argc, char **argv)
        /* the document is loaded */
        /* load CSS files and apply CSS rules */
        for (i = 0; i < cssCounter; i++)
-	 LoadStyleSheet (CSSName[i], 1, NULL, NULL, 0/*CSS_ALL*/);  
+	 LoadStyleSheet (CSSName[i], 1, NULL, NULL, 0/*CSS_ALL*/,
+			 CSSOrigin[i] == 'u');
        
        /* load all referred document before printing */
        LoadReferedDocuments (TheDoc);
