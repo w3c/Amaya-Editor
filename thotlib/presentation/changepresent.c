@@ -1932,7 +1932,8 @@ boolean             Background;
 	       (*ThotLocalActions[T_selectsiblings]) (&pElFirstSel, &pElLastSel, &firstChar, &lastChar);
 	     if (firstChar == 0 && lastChar == 0)
 	       if (pElFirstSel->ElPrevious == NULL && pElLastSel->ElNext == NULL)
-		 if (pElFirstSel->ElParent == pElLastSel->ElParent)
+		 if (pElFirstSel->ElParent != NULL &&
+		     pElFirstSel->ElParent == pElLastSel->ElParent)
 	           {
 		     pElFirstSel = pElFirstSel->ElParent;
 		     while (pElFirstSel->ElPrevious == NULL &&
