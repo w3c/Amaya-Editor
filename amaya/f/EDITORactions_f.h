@@ -207,6 +207,16 @@ extern void ReplyToAnnotation ( Document document,
                                 View view );
 extern void CustomQuery ( Document document,
                           View view );
+extern void LockDocument ( Document document,
+                           View view );
+extern void UnlockDocument ( Document document,
+                             View view );
+extern void PropDocument ( Document document,
+                           View view );
+extern void CopyLockInformation ( Document document,
+                                  View view );
+extern void LockIndicator ( Document document,
+                            View view );
 
 #else /* __STDC__ */
 
@@ -411,6 +421,16 @@ extern void ReplyToAnnotation (/* Document document,
                                   View view */);
 extern void CustomQuery (/* Document document,
                             View view */);
+extern void LockDocument (/* Document document,
+                             View view */);
+extern void UnlockDocument (/* Document document,
+                               View view */);
+extern void PropDocument (/* Document document,
+                             View view */);
+extern void CopyLockInformation (/* Document document,
+                                    View view */);
+extern void LockIndicator (/* Document document,
+                              View view */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

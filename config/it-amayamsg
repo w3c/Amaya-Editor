@@ -267,3 +267,25 @@
 265 Creare o cambiare il doctype fa riparsificare il documento.
 266 Le modifiche non potranno venire annullate.
 267 Per un documento XHTML, usa il MIME type application/xhtml+xml
+268 **Lock succeed!
+269 **Lock failed!
+270 **Locking %s...
+271 **Document %s is locked!
+272 **Document %s is locked by %s (timeout %s)
+273 **Overwrite lock information?
+274 **Try to unlock the document before...
+275 **Unlock succeed!
+276 **Unlock failed!
+277 **Unlocking %s...
+278 **Document %s is unlocked!
+279 **Document properties
+280 **Document properties are not available
+281 **Document properties are temporarily unavailable. Try again later...
+282 **Looking for document properties...
+283 **Sorry, no WebDAV support for URLs of this type %s
+284 **Failed to save lock info in the local base
+285 **Failed to remove lok info from local base
+286 **Sorry, this operation is not allowed for %s
+287 **Request failed! Reason: Failed Dependency
+288 **Request failed! Reason: %s
+289 **Try again? 

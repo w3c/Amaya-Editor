@@ -281,6 +281,13 @@ MENUS
 	Annotations_ Separator;
 	view:1 Annotations_ button:BConfigAnnotations -> ConfigAnnot;
 
+	view:1 Cooperation_ button:BLock -> LockDocument;
+	view:1 Cooperation_ button:BUnlock -> UnlockDocument;
+	view:1 Cooperation_ button:BProp -> PropDocument;
+	view:1 Cooperation_ button:BCopyLock -> CopyLockInformation;
+	view:1 Cooperation_ Separator;
+        view:1 Cooperation_ toggle:BLockIndicator -> LockIndicator;
+
 	view:1 Help_ button:BInformation -> HelpAmaya;
 	view:1 Help_ button:BAtW3C -> HelpAtW3C;
 	view:1 Help_ button:BHelpIndex -> HelpIndex;

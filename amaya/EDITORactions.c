@@ -44,6 +44,10 @@
 #include "styleparser_f.h"
 #include "UIcss_f.h"
 
+#ifdef DAV
+#include "davlib_f.h"
+#endif
+
 
 /*----------------------------------------------------------------------
   NewXHTMLBasic: Create a new Basic XHTML document
@@ -2748,3 +2752,74 @@ void CustomQuery (Document document, View view)
   CustomQueryMenuInit (document, view);
 #endif /* ANNOTATIONS */
 }
+
+/*------------ Begin: WebDAV Modifications by Manuele Kirsch -----------*/
+/* Note: There is no #include "davlib_f.h" in this file to prevent
+ *       circular references between the header files.
+ */        
+
+
+/*----------------------------------------------------------------------
+   LockDocument
+   Lock document using WebDAV protocol
+  ----------------------------------------------------------------------*/
+void LockDocument (Document document, View view)
+{
+#ifdef DAV
+    DAVLockDocument (document,view);
+#endif /* DAV */
+}
+
+
+/*----------------------------------------------------------------------
+   UnlockDocument
+   Unlock document using WebDAV protocol
+  ----------------------------------------------------------------------*/
+void UnlockDocument (Document document, View view)
+{
+#ifdef DAV 
+     DAVUnlockDocument (document,view);
+#endif /* DAV */
+}
+
+
+/*----------------------------------------------------------------------
+   PropDocument
+   Get the document properties using WebDAV protocol
+  ----------------------------------------------------------------------*/
+void PropDocument (Document document, View view)
+{
+#ifdef DAV
+    DAVProfindDocument (document,view);
+#endif /* DAV */
+}
+
+
+/*----------------------------------------------------------------------
+   CopyLockInformation
+   Get the lock information of the document 
+  ----------------------------------------------------------------------*/
+void CopyLockInformation (Document document, View view)
+{
+#ifdef DAV
+    DAVCopyLockInfo (document,view);
+#endif /* DAV */
+}
+
+
+
+
+/*----------------------------------------------------------------------
+   LockIndicator
+   A toggle that indicates whether the document is locked.
+  ----------------------------------------------------------------------*/
+void LockIndicator (Document document, View view) 
+{
+#ifdef DAV
+    DAVLockIndicator (document,view);
+#endif /* DAV */
+
+}
+
+
+/*------------ End: WebDAV Modifications by Manuele Kirsch -----------*/

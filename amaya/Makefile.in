@@ -11,7 +11,7 @@ include ../Options
 
 INCLUDES= -DHAVE_CONFIG_H $(AMAYA_INCLUDES) $(EXPAT_INCLUDES) $(X_FLAGS)
 XMLIB   = @MOTIF_LIBRARIES@
-LIBS	=  $(AMAYA_PLUGIN_LIBS) $(AMAYA_ANNOT_LIBS) \
+LIBS	=  $(AMAYA_PLUGIN_LIBS) $(AMAYA_ANNOT_LIBS) $(AMAYA_DAV_LIBS) \
 	   $(AMAYA_LIBWWW_LIBS) $(AMAYA_MATH_LIBS) $(AMAYA_GRAPH_LIBS) \
           -L../tablelib -L../thotlib -L.. -lThotTable -lThotEditor \
           $(AMAYA_OPTION_EXTRA_LIBS) $(IMGLIBS) $(EXPAT_LIBRARIES) \
@@ -121,6 +121,10 @@ force :
 #include the fragment "amaya/Makefile.annot" for annotations if configured in
 @annot_frag@
 
+#include the fragment "amaya/Makefile.dav" for webdav if configured in
+@dav_frag@
+
+
 
 #########################################################################
 #									#
@@ -131,23 +135,24 @@ force :
 ALL_AMAYA_OPTIONS= $(AMAYA_OPTIONS) \
 	 $(AMAYA_PLUGIN_OPTIONS) $(AMAYA_LIBWWW_OPTIONS) \
 	 $(AMAYA_MATH_OPTIONS) $(AMAYA_SVG_OPTIONS) $(AMAYA_ANNOT_OPTIONS) \
-	 $(EXPAT_OPTIONS)
+	 $(AMAYA_DAV_OPTIONS) $(EXPAT_OPTIONS)
 
 AMAYA_OPTION_INCLUDES= $(AMAYA_PLUGIN_INCLUDES) \
          $(AMAYA_LIBWWW_INCLUDES) $(AMAYA_MATH_INCLUDES) \
-	 $(AMAYA_SVG_INCLUDES) $(AMAYA_ANNOT_INCLUDES) 
+	 $(AMAYA_SVG_INCLUDES) $(AMAYA_ANNOT_INCLUDES) \
+	 $(AMAYA_DAV_INCLUDES)
 
 AMAYA_OPTION_OBJ= $(AMAYA_PLUGIN_OBJ) \
          $(AMAYA_LIBWWW_OBJ) $(AMAYA_SVG_OBJ) $(AMAYA_MATH_OBJ) \
-         $(AMAYA_ANNOT_OBJ) 
+         $(AMAYA_ANNOT_OBJ) $(AMAYA_DAV_OBJ)
 
 AMAYA_SRC= $(AMAYA_PLUGIN_SRC) \
          $(AMAYA_LIBWWW_SRC) $(AMAYA_MATH_SRC) $(AMAYA_SVG_SRC) \
-         $(AMAYA_ANNOT_SRC) 
+         $(AMAYA_ANNOT_SRC) $(AMAYA_DAV_SRC)
 
 AMAYA_OPTION_LIBS= $(AMAYA_PLUGIN_LIBS) \
          $(AMAYA_LIBWWW_OPTION_LIBS) $(AMAYA_MATH_LIBS) $(AMAYA_GRAPH_LIBS) \
-         $(AMAYA_ANNOT_LIBS)
+         $(AMAYA_ANNOT_LIBS) $(AMAYA_DAV_LIBS)
 
 AMAYA_OPTION_EXTRA_LIBS= $(AMAYA_PLUGIN_EXTRA_LIBS) \
          $(AMAYA_LIBWWW_EXTRA_LIBS) $(AMAYA_MATH_EXTRA_LIBS) \
@@ -482,6 +487,7 @@ install : all ../bin/print
 	@(if test ! -d $(prefix)/Amaya/doc ; then $(MKDIR) $(prefix)/Amaya/doc ; fi)
 	@(if test ! -d $(prefix)/Amaya/applis ; then $(MKDIR) $(prefix)/Amaya/applis ; fi)
 	@(if test ! -d $(prefix)/Amaya/applis/bin ; then $(MKDIR) $(prefix)/Amaya/applis/bin ; fi)
+	@(if test ! -d $(prefix)/Amaya/davlib ; then $(MKDIR) $(prefix)/Amaya/davlib ; fi)
 	@(if test ! -d $(bindir) ; then $(MKDIR) $(bindir) ; fi)
 	$(INSTALL_BIN) ../bin/amaya $(prefix)/Amaya/applis/bin
 	$(INSTALL_BIN) ../bin/print $(prefix)/Amaya/applis/bin

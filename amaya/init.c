@@ -240,6 +240,15 @@ extern char      LostPicturePath [512];
 #include "wininclude.h"
 #endif /* _WINDOWS */
 
+
+#ifdef DAV
+#include "davlib.h"
+#include "davlib_f.h"
+#include "davlibRequests_f.h"
+#include "davlibUI_f.h"
+#endif /* DAV */
+
+
 extern void InitMathML ();
 
 #ifdef AMAYA_PLUGIN
@@ -2713,6 +2722,18 @@ Document InitDocAndView (Document doc, char *docname, DocumentType docType,
 	   UpdateEditorMenus (doc);
        }
      }
+
+
+#ifdef DAV    /* after all, we active the WebDAV menu in the main view */
+     TtaSetMenuOn (doc,DAV_VIEW,Cooperation_);     
+/*     DAVLockIndicatorState = FALSE;
+       DAVSetLockIndicator (doc);
+*/       
+#else
+     TtaSetMenuOff (doc,1,Cooperation_);
+#endif   
+
+   
    return (doc);
 }
 
@@ -3629,6 +3650,16 @@ void Reload_callback (int doc, int status, char *urlName,
   CheckParsingErrors (newdoc);
 
 
+#ifdef DAV
+   /* MKP: if document has been loaded, do a   *
+    * lock discovery, set LockIndicator button */
+   if (W3Loading == 0 && res>0) {
+      DAVLockDiscovery (newdoc);
+      DAVSetLockIndicator(newdoc);
+   }
+
+#endif 
+
   TtaFreeMemory (pathname);
   TtaFreeMemory (documentname);
   if (form_data)
@@ -4327,6 +4358,17 @@ void GetHTMLDocument_callback (int newdoc, int status, char *urlName,
    /*** if stopped_flag == true, how to deal with cbf? */
    if (cbf)
      (*cbf) (newdoc, status, pathname, tempfile, NULL, ctx_cbf);
+
+
+#ifdef DAV
+   /* MKP: if document has been loaded, do a   *
+    * lock discovery, set LockIndicator button */
+   if (W3Loading == 0) {
+      DAVLockDiscovery (newdoc);
+      DAVSetLockIndicator(newdoc);
+   }
+
+#endif       
 
    TtaFreeMemory (target);
    TtaFreeMemory (documentname);
@@ -6360,6 +6402,15 @@ void InitAmaya (NotifyEvent * event)
    /* initialize the libwww */
    QueryInit ();
 
+/* MKP: disable "Cooperation" menu if DAV is not defined or
+ *      initialize davlib module otherwise */
+#ifdef DAV
+    InitDAV();
+#else
+    TtaSetMenuOff(0,0,Cooperation_); /*it didn't work... :( */
+#endif /* DAV */
+
+   
    CurrentDocument = 0;
    DocBook = 0;
    InNewWindow = FALSE;

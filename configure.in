@@ -745,15 +745,35 @@ fi
 dnl
 dnl Annotation thread support enabled by default
 dnl
-dnl if test "$with_annot_threads" = "" ; then
-dnl     if test "$enable_annot_threads" = "no" ; then
-dnl 	with_annot_threads="no"
-dnl 	ANNOT_THREAD_OPTIONS=
-dnl  else
-dnl 	with_annot_threads="yes"
-dnl 	ANNOT_THREAD_OPTIONS=-DANNOT_ON_ANNOT 
-dnl  fi
-dnl fi
+if test "$with_annot_threads" = "" ; then
+    if test "$enable_annot_threads" = "no" ; then
+	with_annot_threads="no"
+	ANNOT_THREAD_OPTIONS=
+    else
+	with_annot_threads="yes"
+	ANNOT_THREAD_OPTIONS=-DANNOT_ON_ANNOT 
+    fi
+fi
+
+AC_ARG_WITH(dav,            [  --with-dav             enable WebDAV support (experimental) ])
+dnl
+dnl DAV support disabled by default
+dnl
+if test "$with_dav" = "" ; then
+  if test "$enable_dav" = "yes" ; then
+    with_dav="yes"
+  else
+    with_dav="no"
+  fi
+fi  
+
+if test "$with_dav" = "yes" ; then
+   DAV_OPTIONS=-DDAV
+else
+   with_dav="no"
+   DAV_OPTIONS=""
+fi
+
 
 if test "$build_amaya" = "yes" ; then
     if test ! -f $srcdir/../libwww/Makefile.in ; then
@@ -800,6 +820,16 @@ dnl  fi
 	AC_MSG_WARN(Disabling plugin build !)
 	with_plugin="no"
     fi
+
+
+    if test ! -f $srcdir/davlib/Makefile.in ; then
+	if test "$with_dav" = "yes" ; then
+	    AC_MSG_WARN(WebDAV makefile not found !!)
+	    AC_MSG_WARN(Disabling WebDAV build !)
+	    with_dav="no"
+	fi
+    fi
+   
 
 fi
 
@@ -901,6 +931,10 @@ else
     annot_frag=/dev/null
 fi
 
+if test "$with_dav" = "yes" ; then
+    AC_SUBST_FILE(dav_frag)
+    dav_frag=$srcdir/davlib/Makefile.dav
+fi
 
 dnl  ***************************************************************
 dnl
@@ -931,6 +965,12 @@ $srcdir/pluginlib/Makefile.plugin"
        make_output="$make_output annotlib/Makefile"
        EXTRA_MAKEFILE_IN="$srcdir/annotlib/Makefile.in"
     fi
+
+    if test "$with_dav" = "yes" ; then
+       make_output="$make_output davlib/Makefile"
+       EXTRA_MAKEFILE_IN="$srcdir/davlib/Makefile.in"
+    fi
+
 fi
 
 AC_SUBST(EXTRA_MAKEFILE_IN)
@@ -983,6 +1023,9 @@ dnl fi
     fi 
     if test "$with_gl" = "yes" ; then
 	echo Amaya configured with Opengl Canvas Rendering \(experimental\)
+    fi
+    if test "$with_dav" = "yes" ; then
+	echo Amaya configured with WebDAV support \(experimental\)
     fi
 fi
 

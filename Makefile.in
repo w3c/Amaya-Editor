@@ -15,7 +15,8 @@ LIBJPEG	= libjpeg
 LIBPNG	= libpng
 LIBZ	= libz
 
-SUBDIRS	= tools thotlib tablelib batch drawlib indexlib annotlib amaya thot
+#MKP: adding davlib
+SUBDIRS	= tools thotlib tablelib batch drawlib indexlib annotlib amaya thot davlib
 EXTRA_SUBDIRS= misc pluginlib
 
 prefix = @prefix@
@@ -158,6 +159,7 @@ schemas : rebuild bin/str
 # Rules to rebuild the libWWW package
 #
 
+# MKP: adding libwwwdav
 AMAYA_LIBWWW_STANDARD_LIBS = \
 	libwwwapp \
 	libwwwhttp \
@@ -172,6 +174,7 @@ AMAYA_LIBWWW_STANDARD_LIBS = \
 	libwwwutils \
 	libwwwftp \
 	libwwwxml \
+	libwwwdav \
 	libwwwzip
 
 libwww_config : force
@@ -181,10 +184,12 @@ libwww_config : force
 	@(if [ ! -d $(LIBWWW) ] ; then \
 		$(MKDIR) $(LIBWWW) ; \
           fi)
+#MKP: adding --with-dav
 	@(localdir=`pwd` ; libwwwdir="$$localdir/../../$(LIBWWW)" ; \
 	  cd $(LIBWWW) ; unset LANG; \
 	  if [ ! -f Makefile -o ! -f wwwconf.h ] ; then \
 	  	$$libwwwdir/configure \
+			--with-dav \
 			--disable-shared \
 			--with-zlib="$$localdir/libz.a"; \
 		$(ECHO) "libwww is configured" ; \

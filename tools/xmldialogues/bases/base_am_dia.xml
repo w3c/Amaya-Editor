@@ -135,6 +135,11 @@
 	<message xml:lang="es">Anotaciones</message>
 	<message xml:lang="pt">Anotações</message>
 </label>
+<label define="Cooperation_">
+	<message xml:lang="en">Cooperation</message>
+	<message xml:lang="fr">Coopération</message>
+	<message xml:lang="pt">Cooperação</message>
+</label>
 <label define="Help_">
 	<message xml:lang="en">Help</message>
 	<message xml:lang="fr">Aide</message>
@@ -292,6 +297,7 @@
 	<message xml:lang="it">Modifica doctype</message>
 	<message xml:lang="de">DTD ändern</message>
 	<message xml:lang="es">Modificar doctype</message>
+	<message xml:lang="pt">Modificar doctype</message>
 </label>
 <label define="BRemoveDoctype">
 	<message xml:lang="en">Remove doctype</message>
@@ -299,6 +305,7 @@
 	<message xml:lang="it">Elimina doctype</message>
 	<message xml:lang="de">DTD entfernen</message>
 	<message xml:lang="es">Eliminar doctype</message>
+	<message xml:lang="pt">Remover doctype</message>
 </label>
 <label define="BDoctypeXhtml11">
 	<message xml:lang="en">Set doctype to XHTML 1.1</message>
@@ -306,6 +313,7 @@
 	<message xml:lang="it">Cambia/Crea doctype XHTML 1.1</message>
 	<message xml:lang="de">XHTML 1.1</message>
 	<message xml:lang="es">Cambiar/Crear doctype XHTML 1.1</message>
+	<message xml:lang="pt">Alterar doctype para XHTML 1.1</message>
 </label>
 <label define="BBDoctypeXhtmlTransitional">
 	<message xml:lang="en">Set doctype to XHTML 1.0 Transitional</message>
@@ -313,6 +321,7 @@
 	<message xml:lang="it">Cambia/Crea doctype XHTML 1.0 Transitional</message>
 	<message xml:lang="de">Dokumenttyp XHTML 1.0 Transitional zuweisen</message>
 	<message xml:lang="es">Cambiar/Crear doctype XHTML 1.0 Transicional</message>
+	<message xml:lang="pt">Modificar/Criar doctype XHTML 1.0</message>
 </label>
 <label define="BDoctypeXhtmlStrict">
 	<message xml:lang="en">Set doctype to XHTML 1.0 Strict</message>
@@ -320,6 +329,7 @@
 	<message xml:lang="it">Cambia/Crea doctype XHTML 1.0 Strict</message>
 	<message xml:lang="de">XHTML 1.0 Strict</message>
 	<message xml:lang="es">Cambiar/Crear doctype XHTML 1.0 Estricto</message>
+	<message xml:lang="pt">Alterar doctype para XHTML 1.0 Strict</message>
 </label>
 <label define="BDoctypeXhtmlBasic">
 	<message xml:lang="en">Set doctype to XHTML 1.0 Basic</message>
@@ -327,6 +337,7 @@
 	<message xml:lang="it">Cambia/Crea doctype XHTML 1.0 Basic</message>
 	<message xml:lang="de">XHTML 1.0 Basic</message>
 	<message xml:lang="es">Cambiar/Crear doctype XHTML 1.0 Básico</message>
+	<message xml:lang="pt">Alterar doctype para XHTML 1.0 Basic</message>
 </label>
 <label define="BBDoctypeHtmlTransitional">
 	<message xml:lang="en">Set doctype to HTML 4.01 Transitional</message>
@@ -334,6 +345,7 @@
 	<message xml:lang="it">Cambia/Crea doctype HTML 4.01 Transitional</message>
 	<message xml:lang="de">Dokumenttyp HTML 4.01 Transitional zuweisen</message>
 	<message xml:lang="es">Cambiar/Crear doctype HTML 4.01 Transicional</message>
+	<message xml:lang="pt">Modificar/Criar doctype HTML 4.01 Transitional</message>
 </label>
 <label define="BDoctypeHtmlStrict">
 	<message xml:lang="en">Set doctype to HTML 4.01 Strict</message>
@@ -341,6 +353,7 @@
 	<message xml:lang="it">Cambia/Crea doctype HTML 4.01 Strict</message>
 	<message xml:lang="de">HTML Strict</message>
 	<message xml:lang="es">Cambiar/Crear doctype HTML 4.01 Estricto</message>
+	<message xml:lang="pt">Alterar doctype para HTML 4.01 Strict</message>
 </label>
 <label define="BDoctypeXhtmlPlusMath">
 	<message xml:lang="en">Set doctype to XHTML 1.1 + MathML 2.0</message>
@@ -348,6 +361,7 @@
 	<message xml:lang="it">Cambia/Crea doctype XHTML 1.1 + MathML 2.0</message>
 	<message xml:lang="de">XHTML 1.1 + MathML</message>
 	<message xml:lang="es">Cambiar/Crear doctype XHTML 1.1 + MathML 2.0</message>
+	<message xml:lang="pt">Alterar doctype para XHTML 1.1 + MathML 2.0</message>
 </label>
 <label define="BDoctypeMathML">
 	<message xml:lang="en">Set doctype to MathML 2.0</message>
@@ -355,6 +369,7 @@
 	<message xml:lang="it">Cambia/Crea doctype MathML 2.0</message>
 	<message xml:lang="de">MathML</message>
 	<message xml:lang="es">Cambiar/Crear doctype MathML 2.0</message>
+	<message xml:lang="pt">Alterar doctype para XHTML 1.1 + MathML 2.0</message>
 </label>
 <label define="BDoctypeSVG">
 	<message xml:lang="en">Set doctype to SVG 1.0</message>
@@ -362,6 +377,7 @@
 	<message xml:lang="it">Cambia/Crea doctype SVG 1.0</message>
 	<message xml:lang="de">SVG</message>
 	<message xml:lang="es">Cambiar/Crear doctype SVG 1.0</message>
+	<message xml:lang="pt">Alterar doctype para SVG</message>
 </label>
 <label define="BDocInfo">
 	<message xml:lang="en">Document Information</message>
@@ -369,7 +385,7 @@
 	<message xml:lang="de">Kurzinfo</message>
 	<message xml:lang="it">Informazioni sul documento</message>
 	<message xml:lang="es">Información de documento</message>
-	<message xml:lang="pt">Informação sobre o document</message>
+	<message xml:lang="pt">Informação sobre o documento</message>
 </label>
 <label define="BSetUpandPrint">
 	<message xml:lang="en">Setup and Print...</message>
@@ -1947,6 +1963,32 @@
 	<message xml:lang="de">Konfigurieren...</message>
 	<message xml:lang="it">Configurazione...</message>
 	<message xml:lang="es">Configurar...</message>
+	<message xml:lang="pt">Configurar...</message>
+</label>
+<label define="BLock">
+	<message xml:lang="en">Lock resource...</message>
+	<message xml:lang="fr">Verrouiller la ressource...</message>
+	<message xml:lang="pt">Travar o recurso</message>
+</label>
+<label define="BUnlock">
+	<message xml:lang="en">Unlock resource...</message>
+	<message xml:lang="fr">Déverrouiller la ressource...</message>
+	<message xml:lang="pt">Destravar o recurso</message>
+</label>
+<label define="BProp">
+	<message xml:lang="en">View resource properties...</message>
+	<message xml:lang="fr">Visualiser les propriétés de la ressource...</message>
+	<message xml:lang="pt">Exibir as propriedades do recurso</message>
+</label>
+<label define="BCopyLock">
+	<message xml:lang="en">Copy lock information...</message>
+	<message xml:lang="fr">Copier les informations du verrou...</message>
+	<message xml:lang="pt">Copiar a informação da trava...</message>
+</label>
+<label define="BLockIndicator">
+	<message xml:lang="en">Locked?</message>
+	<message xml:lang="fr">Verrouillé ?</message>
+	<message xml:lang="pt">Travado?</message>
 </label>
 <label define="BInformation">
 	<message xml:lang="en">About Amaya</message>
@@ -2005,6 +2047,7 @@
 	<message xml:lang="de">Dokument</message>
 	<message xml:lang="it">Documento</message>
 	<message xml:lang="es">Documento</message>
+	<message xml:lang="pt">Documento</message>
 </label>
 <label define="BHelpCreating">
 	<message xml:lang="en">Creating elements</message>
@@ -2030,6 +2073,7 @@
 	<message xml:lang="de">Zeichen</message>
 	<message xml:lang="it">Caratteri</message>
 	<message xml:lang="es">Caracteres</message>
+	<message xml:lang="pt">Caracteres</message>
 </label>
 <label define="BHelpChanging">
 	<message xml:lang="en">Restructuring</message>
@@ -2090,6 +2134,7 @@
 	<message xml:lang="de">XML</message>
 	<message xml:lang="it">Supporto XML</message>
 	<message xml:lang="es">Soporte Xml</message>
+	<message xml:lang="pt">Suporte à XML</message>
 </label>
 <label define="BHelpStyleSheets">
 	<message xml:lang="en">Style sheets</message>
@@ -2107,6 +2152,7 @@
 	<message xml:lang="it">Ricerca</message>
 	<message xml:lang="tr">Seçme</message>
 	<message xml:lang="es">Buscar</message>
+	<message xml:lang="pt">Achar...</message>
 </label>
 <label define="BHelpSpellChecking">
 	<message xml:lang="en">Spell Checking</message>

@@ -266,4 +266,26 @@
 264 Sauver cette instance peut provoquer des problèmes de mise à jour.
 265 Le document sera réanalysé pour prendre en compte le doctype.
 266 Les modifications en cours ne pourront être défaites.
-267 Utiliser le type MIME application/xhtml+xml pour	les documents XHTML
+267 Utiliser le type MIME application/xthml+xml pour	les documents XHTML
+268 Verrou réussit!
+269 Verrou a échué!
+270 En attente d'un verrou sur %s...
+271 Document %s est verrouillé!
+272 Document %s a été verrouillé par %s (temps d'expiration %s)
+273 Surpasser le verrou?
+274 Essayez déverrouillé le document...
+275 Déverrouillage a réussit!
+276 Dérrouillage a échué!
+277 En attente d'une libération du verrou...
+278 Document %s est déverrouillé!
+279 Propriétes du document
+280 Propriétes du document ne sont pas disponibles
+281 Propriétes du document ne sont pas disponibles pour l'instant. Essayez de nouveau plus tard...
+282 En attente des propriétes du document...
+283 Désolé, WebDAV ne support pas URLs comme %s
+284 Sauvegarde du verrou dans la base local a échué
+285 Impossible éffacer verrou de la base local
+286 Désolé, cette opération est interdit pour %s
+287 Opération a échué! Cause: Faute de dépendence
+288 Opération a échué! Cause: %s
+289 Ressayez? 

@@ -264,6 +264,28 @@
 262 Estilos ignorados -veja Vistas/Exibir erros de gramática (parsing)
 263 Este documento já está carregado em outra Janela
 264 Salvar esta instância pode causar um problema de perda de atualização
-265 **Creating or Changing the doctype causes the document to be reparsed.
-266 **Pending modifications won't be undone.
-267 **Use the application/xhtml+xml MIME type for XHTML documents
+265 Criar ou alterar o doctype pode fazer com que o documento seja reprocessado.
+266 Modificações pendentes nção podem ser refeitas.
+267 Utilise o tipo MIME application/xhtml+xml para documentos XHTML
+268 Documento foi travado com sucesso!
+269 Documento não pode ser travado com sucesso!
+270 Travando %s...
+271 Documento %s está travado!
+272 Documento %s foi travado por %s (tempo restante %s)
+273 Sobrepor trava?
+274 Tente destravar o documento...
+275 Documento foi destravado com sucesso!
+276 Documento não pode ser destravado com sucesso!
+277 Destravando %s...
+278 Documento %s está destravado!
+279 Propriedades do documento
+280 Propriedades do documento não estão disponíveis
+281 Propriedades do documento estão temporariamente indisponíveis. Tente de novo mais tarde...
+282 Buscando as propriedades do documento...
+283 Lamento, WebDAV não supporta URLs como %s
+284 Impossível salvar informação de trava localmente
+285 Impossível remover informação de trava local
+286 Lamento, esta operação não é permitida para %s
+287 Operação falhou! Causa: Falha de dependência
+288 Operaçã falhou! Causa: %s
+289 Tentar de novo? 

@@ -14,6 +14,7 @@ extern void HTTP_headers_set ( HTRequest * request,
                                int status );
 extern char *HTTP_headers ( AHTHeaders *me,
                             AHTHeaderName param );
+extern AHTReqContext *AHTReqContext_new ( int docid );
 extern ThotBool AHTReqContext_delete ( AHTReqContext * me );
 extern int AHTOpen_file ( HTRequest * request );
 extern int AHTLoadTerminate_handler ( HTRequest *request,
@@ -68,6 +69,7 @@ extern void HTTP_headers_set (/* HTRequest * request,
                                  int status */);
 extern char *HTTP_headers (/* AHTHeaders *me,
                               AHTHeaderName param */);
+extern AHTReqContext *AHTReqContext_new (/* int docid */);
 extern ThotBool AHTReqContext_delete (/* AHTReqContext * me */);
 extern int AHTOpen_file (/* HTRequest * request */);
 extern int AHTLoadTerminate_handler (/* HTRequest *request,

@@ -1,0 +1,28 @@
+#
+# Makefile.dav
+# Autoconf Fragment when using webdav functions
+# Manuele Kirsch, Apr 2002
+#
+
+AMAYA_DAV_OPTIONS=-DDAV -DHT_DAV
+
+AMAYA_DAV_INCLUDES=-I$(THOTDIR)/davlib/h -I$(THOTDIR)/davlib/tree/h -I$(THOTDIR)/davlib/f
+
+AMAYA_DAV_OBJ= ../libwww/Library/src/HTHome.o 
+
+AMAYA_DAV_SRC= ../davlib/davlib.a 
+
+AMAYA_DAV_LIBS= ../davlib/davlib.a 
+
+AMAYA_DAV_EXTRA_LIBS=
+
+AMAYA_DAV_INSTALL=
+
+AMAYA_DAV_UNINSTALL=
+
+dav_force :
+
+amaya_comp_dav : ../davlib/davlib.a
+../davlib/davlib.a : dav_force
+	@(cd ../davlib ; $(MAKE) davlib.a)
+

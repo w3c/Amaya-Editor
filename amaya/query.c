@@ -126,6 +126,12 @@ int WIN_Activate_Request (HTRequest* , HTAlertOpcode, int, const char*, void*, H
 #endif /* _WINDOWS */
 
 
+#ifdef DAV
+#include "davlib.h"
+#include "davlib_f.h"
+#include "davlibCommon_f.h"
+#endif
+
 #ifdef AMAYA_WWW_CACHE
 /***************************************************************
  lock functions, used to avoid concurrent use of the cache
@@ -468,8 +474,12 @@ char   *HTTP_headers (AHTHeaders *me, AHTHeaderName param)
   AHTReqContext_new
   create a new Amaya Context Object and update the global Amaya
   request status.
-  ----------------------------------------------------------------------*/
-static AHTReqContext *AHTReqContext_new (int docid)
+  
+  ----------------------------------------------------------------------
+  MKP: this function is now used in davlib.c file for the WebDAV requests 
+       ** static AHTReqContext *AHTReqContext_new (int docid) **
+  ---------------------------------------------------------------------- */
+AHTReqContext *AHTReqContext_new (int docid)
 {
    AHTReqContext      *me;
    AHTDocId_Status    *docid_status;
@@ -514,6 +524,10 @@ static AHTReqContext *AHTReqContext_new (int docid)
    else
       docid_status->counter++;
 
+#ifdef DAV                /* clean the DAV request context */
+   me->dav_context = NULL; /* it should be create only when doing a DAV request */
+#endif   
+
    Amaya->open_requests++;
 
 #ifdef DEBUG_LIBWWW
@@ -537,6 +551,11 @@ ThotBool  AHTReqContext_delete (AHTReqContext * me)
 #ifdef DEBUG_LIBWWW
        fprintf (stderr, "AHTReqContext_delete: Deleting object %p\n", me);
 #endif   
+
+#ifdef DAV /* if there is a DAV context object, delete it */
+       if (me->dav_context) AHTDAVContext_delete(me->dav_context);
+#endif /* DAV */
+
        if (Amaya->reqlist)
 	 HTList_removeObject (Amaya->reqlist, (void *) me);
        
@@ -972,6 +991,15 @@ static int redirection_handler (HTRequest *request, HTResponse *response,
        HTRequest_setError (request, NULL);
        /* clear the authentication credentials, as they get regenerated  */
        HTRequest_deleteCredentialsAll (request);
+
+#ifdef DAV
+       /* remove the old If header */
+       DAVRemoveIfHeader (me);
+       
+       /* search lock information for the new url */
+       if (me->method == METHOD_POST || me->method == METHOD_PUT) 
+           DAVAddIfHeader (me,me->urlName);
+#endif       
        
        if (me->method == METHOD_POST || me->method == METHOD_PUT)
 	 {
@@ -1026,6 +1054,21 @@ static int precondition_handler (HTRequest *request, HTResponse *response,
   
   if (force_put)
     {
+#ifdef DAV
+      BOOL noIf = NO;
+
+      /* MKP: if the old request has preconditions, *
+       * then, we supose that these preconditions   *
+       * caused the 412 Precondition Failed status  *
+       * code, otherwise we supose that the cause   *
+       * was an eventual If header.                 */
+      if (HTRequest_preconditions(me->request)!=HT_NO_MATCH)
+          noIf = NO;
+      else
+          noIf = YES;      
+#endif	  /* DAV */
+      
+      
       /* start a new PUT request without preconditions */
       /* @@ do we need to kill the request? */
       if (me->output && me->output != stdout)
@@ -1057,6 +1100,14 @@ static int precondition_handler (HTRequest *request, HTResponse *response,
       /* turn off preconditions */
       HTRequest_setPreconditions(me->request, HT_NO_MATCH);
       me->reqStatus = HT_NEW; 
+
+      
+#ifdef DAV
+      /* MKP: add an If header only if there wasn't preconditions */
+      if (noIf!=YES) DAVAddIfHeader (me,HTAnchor_address(me->dest));
+#endif /* DAV */
+      
+      
       /* make the request */      
       status = HTPutDocumentAnchor (HTAnchor_parent (me->source), 
 				    me->dest, me->request);
@@ -1130,6 +1181,12 @@ static int check_handler (HTRequest * request, HTResponse * response,
       */
       if (me->mode & AMAYA_FLUSH_REQUEST)
 	HTRequest_setFlush(me->request, YES);
+   
+#ifdef DAV
+      /* MKP: try to add an if header */
+      DAVAddIfHeader (me,me->urlName);   
+#endif
+
 
       /* turn on the special preconditions, to avoid having this
 	 ressource appear before we do the PUT */
@@ -1162,6 +1219,12 @@ static int check_handler (HTRequest * request, HTResponse * response,
 	  HTRequest_setOutputFormat (me->request, WWW_SOURCE);
 	  HTRequest_setContext (me->request, me);
 	  HTRequest_setPreemptive (me->request, NO);
+   
+#ifdef DAV
+          /* MKP: try to add an if header */
+          DAVAddIfHeader (me,HTAnchor_address(me->dest));   
+#endif
+	  
 	  /*
 	  ** Make sure that the first request is flushed immediately and not
 	  ** buffered in the output buffer
@@ -1231,6 +1294,17 @@ static int terminate_handler (HTRequest *request, HTResponse *response,
 #endif /* AMAYA_WWW_CACHE */
        || me->reqStatus == HT_ABORT)
      error_flag = FALSE;
+#ifdef DAV
+   else if (status == HT_LOCKED 
+	    || status ==  HT_FAILED_DEPENDENCY 
+	    || status == HT_MULTI_STATUS) {
+     /* WebDAV return codes - they are handled in
+      * specific filters. We don't need to deal
+      * with them anymore
+      */
+     error_flag = FALSE;  	   
+   }
+#endif   
    else
      error_flag = TRUE;
 
@@ -1383,7 +1457,16 @@ int AHTLoadTerminate_handler (HTRequest *request, HTResponse *response,
        if (PROT_TRACE)
 	 HTTrace ("Load End.... OK BUT NO DATA: `%s\'\n", 
 		  me->status_urlName);
-       TtaSetStatus (me->docid, 1, 
+#ifdef DAV      
+       if (me->method==METHOD_UNLOCK) {
+           /* MKP: NEED set a good status message */
+	   TtaSetStatus (me->docid, 1, 
+		     TtaGetMessage (AMAYA, AM_UNLOCK_SUCCEED),
+		     NULL);
+       }
+       else
+#endif
+           TtaSetStatus (me->docid, 1, 
 		     TtaGetMessage (AMAYA, AM_LOADED_NO_DATA),
 		     me->status_urlName);
        break;
@@ -2952,6 +3035,15 @@ int GetObjectWWW (int docid, char *urlName, char *formdata,
    if (formdata && ! (mode & AMAYA_FILE_POST))
       me->formdata = PrepareFormdata (formdata);
 
+       
+#ifdef DAV 
+   /* try to add an If header for POST requests and for GET forms */
+   if (HTRequest_method(me->request) == METHOD_POST ||
+          (HTRequest_method(me->request) == METHOD_GET && me->formdata))	   
+       DAVAddIfHeader (me,HTAnchor_address((HTAnchor*)me->anchor));
+#endif
+       
+   
    /* do the request */
    if (mode & AMAYA_FORM_POST)
      {
@@ -3357,6 +3449,15 @@ int PutObjectWWW (int docid, char *fileName, char *urlName,
    ChopURL (me->status_urlName, me->urlName);
    TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_REMOTE_SAVING), me->status_urlName);
 
+   
+#ifdef DAV
+   /* MKP: for a PUT request, try to add an if header 
+    * for a HEAD request, leave this for check_handler */
+   if ( !(lost_update_check && (!UsePreconditions || !etag)) )
+       DAVAddIfHeader (me,HTAnchor_address(me->dest));   
+#endif
+
+   
    /* make the request */
    if (lost_update_check && (!UsePreconditions || !etag))
      status = HTHeadAnchor (me->dest, me->request);

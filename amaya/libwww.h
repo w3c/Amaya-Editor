@@ -141,6 +141,13 @@ typedef struct _AHTReqContext
 					      error_stream. If false, error_stream is not 
 					      displayed at all */
     char               *document;
+
+#ifdef DAV
+    /* WebDAV request context object - it will be a AHTDAVContext object */
+    /* MKP: I declared was a void * to avoid circular references between
+     *      libwww.h and davlib.h */
+    void      *dav_context;
+#endif /* DAV */    
   }
 AHTReqContext;
 
