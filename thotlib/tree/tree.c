@@ -191,6 +191,36 @@ PtrElement          pEl;
 }
 
 /*----------------------------------------------------------------------
+   ElementIsHidden
+   returns TRUE if the element pointed by pEl is hidden to the user, or 
+   if it belongs to a hidden tree.
+  ----------------------------------------------------------------------*/
+
+#ifdef __STDC__
+boolean             ElementIsHidden (PtrElement pEl)
+
+#else  /* __STDC__ */
+boolean             ElementIsHidden (pEl)
+PtrElement          pEl;
+
+#endif /* __STDC__ */
+
+{
+register Proc HiFunction;
+
+   if ((HiFunction = ThotLocalActions[T_checkHiddenElement]) == NULL)
+     return FALSE; /* No function => Element not hidden! */
+   else
+     {
+boolean isHI;
+
+       (*HiFunction) (pEl, &isHI);
+       return isHI;
+     }
+
+}
+
+/*----------------------------------------------------------------------
    ElementIsReadOnly
    returns TRUE if the element pointed by pEl is protected against user
    modifications, or if it belongs to a protected tree.
@@ -221,31 +251,39 @@ boolean isRO;
 }
 
 /*----------------------------------------------------------------------
-   ElementIsHidden
-   returns TRUE if the element pointed by pEl is hidden to the user, or 
+   CanInsertNearElement
+   returns TRUE if a new element may be inserted near the element
+   pointed by pEl.
+   If beforeElement = TRUE, it is an insertion before the element.
+   Id FALSE,  it is an insertion after the element.
    if it belongs to a hidden tree.
+   Rules to authorize or not such insertion depends of the
+   application criteria.
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-boolean             ElementIsHidden (PtrElement pEl)
+boolean             CanInsertNearElement (PtrElement pEl,
+                                          boolean beforeElement)
 
 #else  /* __STDC__ */
-boolean             ElementIsHidden (pEl)
+boolean             CanInsertNearElement (pEl,
+                                          beforeElement)
 PtrElement          pEl;
+boolean beforeElement;
 
 #endif /* __STDC__ */
 
 {
-register Proc HiFunction;
+register Proc InsertNearFunction;
 
-   if ((HiFunction = ThotLocalActions[T_checkHiddenElement]) == NULL)
-     return FALSE; /* No function => Element not hidden! */
+   if ((InsertNearFunction = ThotLocalActions[T_checkInsertNearElement]) == NULL)
+     return FALSE; /* No function => Insertion is authorized! */
    else
      {
-boolean isHI;
+boolean isOK;
 
-       (*HiFunction) (pEl, &isHI);
-       return isHI;
+       (*InsertNearFunction) (pEl, beforeElement, &isOK);
+       return isOK;
      }
 
 }

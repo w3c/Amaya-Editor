@@ -1134,7 +1134,7 @@ void                StructReturnKey ()
 	     if (ok)
 	       {
 		  TtaClearViewSelections ();
-		  /* cree un element du meme typoe que le dernier element
+		  /* cree un element du meme type que le dernier element
 		     de la selection */
 		  pNewEl = NewSubtree (lastSel->ElTypeNumber,
 				       lastSel->ElStructSchema, pDoc,

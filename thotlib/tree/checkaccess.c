@@ -45,18 +45,18 @@
     HierarchicalCheckHiddenAccess
     returns TRUE in the isHidden variable if the element is
     hidden to the user, or if it belongs to a hidden tree.
+    This is the Thot default.
 --------------------------------------------------------------*/
 
 #ifdef __STDC__
 void      HierarchicalCheckHiddenAccess (PtrElement pEl,
 					           boolean * isHidden)
-#else			     /* __STDC__ */
+#else  /* __STDC__ */
 void      HierarchicalCheckHiddenAccess (pEl,
 					           isHidden)
 PtrElement pEl;
 boolean  *isHidden;
-
-#endif			     /* __STDC__ */
+#endif /* __STDC__ */
 
 {
 PtrElement pAsc;
@@ -79,18 +79,18 @@ PtrElement pAsc;
     returns TRUE in the isReadOnly variable if the element is
     protected against user modifications, or if it belongs to
     a protected tree.
+    This is the Thot default.
 --------------------------------------------------------------*/
 
 #ifdef __STDC__
 void      HierarchicalCheckReadOnlyAccess (PtrElement pEl,
 					             boolean * isReadOnly)
-#else			     /* __STDC__ */
+#else  /* __STDC__ */
 void      HierarchicalCheckReadOnlyAccess (pEl,
 					             isReadOnly)
 PtrElement pEl;
 boolean  *isReadOnly;
-
-#endif			     /* __STDC__ */
+#endif /* __STDC__ */
 
 {
 PtrElement pAsc;
@@ -117,6 +117,38 @@ boolean   testRO;
 }
 
 /*--------------------------------------------------------------
+    HierarchicalCheckInsertNearElement
+    returns TRUE in the mayInsert variable if a new element may
+    be inserted before or after the element.
+    If TRUE, the variable beforeElement indicates if insertion is
+    planned before the element, FALSE for an insertion after the
+    element.
+    Rules by with this procedure decides to authorize or not such
+    insertion are Thot default ones.
+--------------------------------------------------------------*/
+
+#ifdef __STDC__
+void      HierarchicalCheckInsertNearElement (PtrElement pEl,
+                                              boolean beforeElement,
+					      boolean * mayInsert)
+#else  /* __STDC__ */
+void      HierarchicalCheckInsertNearElement (pEl,
+                                              beforeElement,
+					      mayInsert)
+PtrElement pEl;
+boolean   beforeElement;
+boolean  *mayInsert;
+#endif /* __STDC__ */
+
+{
+
+   *mayInsert = FALSE;
+   if (pEl != NULL)
+     HierarchicalCheckReadOnlyAccess (pEl->ElParent, mayInsert);
+
+}
+
+/*--------------------------------------------------------------
     TtaSetCheckAccessFunctions
     overload default procedures to check if an element is hidden
     or in read-only mode.
@@ -124,14 +156,16 @@ boolean   testRO;
 
 #ifdef __STDC__
 void      TtaSetCheckAccessFunctions (Proc checkHiddenProc,
-				                Proc checkReadOnlyProc)
-#else			     /* __STDC__ */
+                                      Proc checkReadOnlyProc,
+				      Proc checkInsertProc)
+#else  /* __STDC__ */
 void      TtaSetCheckAccessFunctions (checkHiddenProc,
-				                checkReadOnlyProc)
+				      checkReadOnlyProc,
+				      checkInsertProc)
 Proc      checkHiddenProc;
 Proc      checkReadOnlyProc;
-
-#endif			     /* __STDC__ */
+Proc      checkInsertProc;
+#endif /* __STDC__ */
 
 {
 
@@ -149,6 +183,13 @@ Proc      checkReadOnlyProc;
      TteConnectAction (T_checkReadOnlyElement,
 		       checkReadOnlyProc);
 
+   if (checkInsertProc == NULL)
+     TteConnectAction (T_checkInsertNearElement,
+		       (Proc) HierarchicalCheckInsertNearElement);
+   else
+     TteConnectAction (T_checkInsertNearElement,
+		       checkInsertProc);
+
 }
 
 /*--------------------------------------------------------------
@@ -160,9 +201,9 @@ Proc      checkReadOnlyProc;
 
 #ifdef __STDC__
 void      CheckAccessLoadResources ()
-#else			     /* __STDC__ */
+#else  /* __STDC__ */
 void      CheckAccessLoadResources ()
-#endif			     /* __STDC__ */
+#endif /* __STDC__ */
 
 {
 
@@ -172,6 +213,8 @@ void      CheckAccessLoadResources ()
 			 (Proc) HierarchicalCheckHiddenAccess);
        TteConnectAction (T_checkReadOnlyElement,
 			 (Proc) HierarchicalCheckReadOnlyAccess);
+       TteConnectAction (T_checkInsertNearElement,
+			 (Proc) HierarchicalCheckInsertNearElement);
      }
 
 }
