@@ -30,11 +30,11 @@ int PointToPixel (int value)
 {
   int         val;
 
-  if (DOT_PER_INCHE == 0)
+  if (DOT_PER_INCH == 0)
     return (value);
   else
     {
-      val = (value * DOT_PER_INCHE + 36) / 72;
+      val = (value * DOT_PER_INCH + 36) / 72;
       if (val == 0 && value > 0)
 	return (1);
       else
@@ -50,11 +50,11 @@ int PixelToPoint (int value)
 {
   int         val;
 
-  if (DOT_PER_INCHE == 0)
+  if (DOT_PER_INCH == 0)
     return (value);
   else
     {
-      val = (value * 72 + DOT_PER_INCHE / 2) / DOT_PER_INCHE;
+      val = (value * 72 + DOT_PER_INCH / 2) / DOT_PER_INCH;
       if (val == 0 && value > 0)
 	return (1);
       else

@@ -279,12 +279,9 @@ void TtaInitialize (char *applicationName)
 #ifndef NODISPLAY
 #ifdef _WINDOWS
    TtPrinterDC = NULL;
-   DOT_PER_INCHE = GetDeviceCaps(TtDisplay, LOGPIXELSY);
    WIN_Main_Wd = NULL;
-#else  /* !_WINDOWS */
-   DOT_PER_INCHE = 72;
 #endif /* _WINDOWS */
-
+   DOT_PER_INCH = 72;
    numOfJobs = 0;
    /* Initializes patterns */
    NbPatterns = sizeof (Name_patterns) / sizeof (char *);

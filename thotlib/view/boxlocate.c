@@ -905,7 +905,7 @@ static ThotBool     IsInShape (PtrAbstractBox pAb, int x, int y)
       break;
     case 'C':
     case 'P':		/* rectangles with rounded corners */
-      arc = (int) ((3 * DOT_PER_INCHE) / 25.4 + 0.5);
+      arc = (int) ((3 * DOT_PER_INCH) / 25.4 + 0.5);
       point[0][0] = 0;
       point[0][1] = arc;
       point[1][0] = 0;
@@ -1115,7 +1115,7 @@ static PtrBox       IsOnShape (PtrAbstractBox pAb, int x, int y, int *selpoint)
     case 'C':
     case 'P':
       /* rectangle with rounded corners */
-      arc = (int) ((3 * DOT_PER_INCHE) / 25.4 + 0.5);
+      arc = (int) ((3 * DOT_PER_INCH) / 25.4 + 0.5);
       if (IsOnSegment (x, y, arc, 0, pBox->BxWidth - arc, 0) ||
 	  IsOnSegment (x, y, 0, arc, 0, pBox->BxHeight - arc) ||
 	  IsOnSegment (x, y, arc, pBox->BxHeight, pBox->BxWidth - arc,

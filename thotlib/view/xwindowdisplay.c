@@ -2170,7 +2170,7 @@ void DrawRectangleFrame (int frame, int thick, int style, int x, int y,
    x += thick / 2;
    y = y + FrameTable[frame].FrTopMargin + thick / 2;
    /* radius of arcs is 3mm */
-   arc = (3 * DOT_PER_INCHE) / 25.4 + 0.5;
+   arc = (3 * DOT_PER_INCH) / 25.4 + 0.5;
    arc2 = 2 * arc;
 
    xf = x + width;
@@ -2383,7 +2383,7 @@ void DrawEllipsFrame (int frame, int thick, int style, int x, int y,
 		  x, y, width, height, 0, 360 * 64);
 #endif /* _GTK */
 
-	px7mm = (7 * DOT_PER_INCHE) / 25.4 + 0.5;
+	px7mm = (7 * DOT_PER_INCH) / 25.4 + 0.5;
 	if (height > 2 * px7mm)
 	  {
 	     A = ((double) height - 2 * px7mm) / height;

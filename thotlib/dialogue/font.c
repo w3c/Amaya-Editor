@@ -147,8 +147,7 @@ static HFONT WIN_LoadFont (char alphabet, char family, int highlight,
        return NULL;
      }
 
-   nHeight = size;
-   nHeight = -MulDiv (size, DOT_PER_INCHE, 83);
+   nHeight = -MulDiv (size, DOT_PER_INCH, 72);
    hFont = CreateFont (nHeight, nWidth, 0, 0, fnWeight,
                        fdwItalic, fdwUnderline, fdwStrikeOut,
                        DEFAULT_CHARSET, OUT_TT_ONLY_PRECIS, CLIP_DEFAULT_PRECIS,
@@ -858,15 +857,16 @@ static ptrfont LoadNearestFont (char alphabet, char family, int highlight,
   ptfont = NULL;
   while (ptfont == NULL && i < MAX_FONT && TtFonts[i] != NULL)
     {
-      j = strcmp (&TtFontName[deb], text);
-      if (j == 0)
-	{
+      if (strcmp (&TtFontName[deb], text) == 0)
+	  {
 	  /* Font cache lookup succeeded */
 	  ptfont = TtFonts[i];
-	}
+	  }
       else
-	i++;
+	  {
+      i++;
       deb += MAX_FONTNAME;
+	  }
     }
    
   /* Load a new font */
@@ -877,7 +877,7 @@ static ptrfont LoadNearestFont (char alphabet, char family, int highlight,
 	TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_NO_MEMORY), textX);
       else
 	{
-	  strcpy (&TtFontName[i * MAX_FONTNAME], text);
+	  strcpy (&TtFontName[deb], text);
 	  strcpy (&TtPsFontName[i * 8], PsName);
 	   
 #ifdef _WINDOWS
@@ -1055,7 +1055,7 @@ ptrfont ThotLoadFont (char alphabet, char family, int highlight, int size,
 #ifndef _WIN_PRINT
    if (Printing && unit == UnPoint)
      /* adjust the font size to the printer definition */
-     size = (size * 72 + DOT_PER_INCHE / 2) / DOT_PER_INCHE;
+     size = (size * 72 + DOT_PER_INCH / 2) / DOT_PER_INCH;
 #endif /* _WIN_PRINT */
 
    /* the minimum size is 6 points */

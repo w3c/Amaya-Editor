@@ -1731,6 +1731,7 @@ LRESULT CALLBACK ClientWndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lPar
 	  wParam == VK_F15    ||
 	  wParam == VK_F16    ||
 	  (wParam >= 48 && wParam <= 57)      ||
+      wParam == VK_RETURN ||
 	  wParam == VK_INSERT ||
 	  wParam == VK_DELETE ||
 	  wParam == VK_HOME   ||
@@ -1748,13 +1749,25 @@ LRESULT CALLBACK ClientWndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lPar
 	      key = GetKeyState (VK_CONTROL);
 	      if (HIBYTE (key))
 		isSpecial = FALSE;
+		  else
+		  {
 	      key = GetKeyState (VK_MENU);
 	      if (HIBYTE (key))
-		isSpecial = FALSE;
+            isSpecial = FALSE;
 	      else
-		/* don't handle a simple 0-9 */
-		return 0;
+            /* don't handle a simple 0-9 */
+            return 0;
+		  }
 	    }
+	  else if (wParam == VK_RETURN)
+	  {
+	  key = GetKeyState (VK_MENU);
+	  if (HIBYTE (key))
+        isSpecial = TRUE;
+	  else
+        /* don't handle a simple 0-9 */
+        return 0;
+	  }
 	  else
 	    isSpecial = TRUE;
 	  key = (int) wParam;
