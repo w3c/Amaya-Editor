@@ -1,44 +1,44 @@
 0 Erreur X11 : %s\n
-1 Vue non trouv\351e.
+1 Vue non trouvée.
 2 Erreur au cours du chargement du dictionnaire: %s\n 
 3 Fichier inaccessible : %s\n
-4 Ecriture impossible : %s
-5 Sch\351ma inaccessible : %s
+4 Écriture impossible : %s
+5 Schéma inaccessible : %s
 6 Confirmer
 7 Absence de fichier alphabet
 8 Impossible d\'ouvrir le document %s
 9 Erreur de format pivot : %s
 10 La nouvelle vue ne peut remplacer l\'ancienne.
-11 Sch\351mas incompatibles. Recompiler %s
-12 Le num\351ro de fen\352tre est incorrect.
-13 Erreur fatale : Fontes Thot inaccessibles
+11 Schémas incompatibles. Recompiler %s
+12 Le numéro de fenêtre est incorrect.
+13 Erreur fatale : fontes Thot inaccessibles
 14 Document avec des colonnes. Repaginer.
-15 Manque de m\351moire
-16 Erreur fatale : Connexion au serveur X impossible
-17 La vue est modifi\351e avant cr\351ation.
-18 S\351lectionner avant.
+15 Manque de mémoire
+16 Erreur fatale : connexion au serveur X impossible
+17 La vue est modifiée avant création.
+18 Sélectionner avant.
 19 Il n\'y a plus de place pour la police %s
 20 La structure du document %s est invalide
-21 Le document %s ne peut \352tre ni sauv\351 ni modifi\351
-22 Table des r\350gles satur\351e.
-23 Le sch\351ma de structure %s a \351t\351 modifi\351
+21 Le document %s ne peut être ni sauvé ni modifié
+22 Table des règles saturée.
+23 Le schéma de structure %s a été modifié
 24 Fichier incorrect : %s.STR
 25 Fichier incorrect : %s.PRS
-26 R\351pertoire inaccessible : %s
+26 Répertoire inaccessible : %s
 27 Impression impossible
-28 Changement de pr\351sentation impossible
+28 Changement de présentation impossible
 29 Sauvegarde du PostScript impossible
 30 Importation du fichier impossible
 31 La vue est vide
-32 Commande interdite, \351l\351ment en lecture seule.
+32 Commande interdite, élément en lecture seule.
 33 Ne copiez pas des marques seules
-34 Creation du dictionnaire du document : %s
+34 Création du dictionnaire du document : %s
 35 Type d'image
-36 Pr\351sentation
+36 Présentation
 37 Fichier image
-38 Impression termin\351e: %s
+38 Impression terminée: %s
 39 Depuis la page...
-40 ...jusqu'\340 la page
+40 ...jusqu'à la page
 41 Nombre d'exemplaires
 42 Taux de reproduction (%)
 43 1 page/feuille
@@ -46,36 +46,36 @@
 45 4 pages/feuille
 46 Pages par feuille
 47 Repaginer
-48 Vues \340 imprimer
-49 Impression avec la pr\351sentation %s
-50 D\351signer l\'original, pas une copie.
+48 Vues à imprimer
+49 Impression avec la présentation %s
+50 Désigner l\'original, pas une copie.
 51 Chargement impossible de "%s"
-52 Variable d\'environnement %s non d\351finie
-53 L\'\351l\351ment ne peut pas \352tre li\351 \340 lui-m\352me
-54 Attribut obligatoire, non supprim\351
+52 Variable d\'environnement %s non définie
+53 L\'élément ne peut pas être lié à lui-même
+54 Attribut obligatoire, non supprimé
 55 Nature interdite ici
-56 %s : \351l\351ment obligatoire
-57 Ne s\351lectionnez qu\'un composant
-58 L\'\351l\351ment %s ne peut \352tre coll\351 ici
-59 Il n\'y a pas de bo\356te modifiable ici
+56 %s : élément obligatoire
+57 Ne sélectionnez qu\'un composant
+58 L\'élément %s ne peut être collé ici
+59 Il n\'y a pas de boîte modifiable ici
 60 %s
 61 Aucune vue n\'est choisie pour l\'impression.
-62 Entrer la pr\351sentation de %s
+62 Entrer la présentation de %s
 63 Lecture du document...
-64 S\351lectionner un \351l\351ment 
-65 Fichier thot.keyboard non trouv\351.
-66 Presse-papiers X inchang\351
+64 Sélectionner un élément 
+65 Fichier thot.keyboard non trouvé.
+66 Presse-papiers X inchangé
 67 Impossible de copier plusieurs composants. Englober.
 68 Commande interdite, document en lecture seule.
-69 Le document ne peut pas s\'inclure lui-m\352me
-70 Modification de la bo\356te %s
-71 D\351placement de la bo\356te %s
-72 Document sauv\351 dans %s
+69 Le document ne peut pas s\'inclure lui-même
+70 Modification de la boîte %s
+71 Déplacement de la boîte %s
+72 Document sauvé dans %s
 73 Sauvegarde en cours...
-74 R\351f\351rence vide.
+74 Référence vide.
 75 Ne copiez pas de saut de page.
-76 Il fallait s\351lectionner un \351l\351ment %s
-77 Modification de la liste des r\351pertoires
+76 Il fallait sélectionner un élément %s
+77 Modification de la liste des répertoires
 78 Impression
 79 Exportation du document %s en cours...
 80 Chargement du dictionnaire : %s
@@ -83,62 +83,62 @@
 82 Importation du fichier en cours
 83 Quelle forme du document voulez-vous charger ?
 84 Une polyline doit contenir au moins deux points
-85 Donner une valeur \340 l\'attribut %s
-86 Format pivot obsolete. Sauver le document avec Thot.
-87 Cr\351ation de la bo\356te %s
-88 Pas assez de m\351moire
-89 S\351lectionner un \351l\351ment %s
-90 Cet \351l\351ment ne peut \352tre contract\351
-91 D\351signer l\'\351l\351ment \340 r\351f\351rencer
+85 Donner une valeur à l\'attribut %s
+86 Format pivot obsolète. Sauver le document avec Thot.
+87 Création de la boîte %s
+88 Pas assez de mémoire
+89 Sélectionner un élément %s
+90 Cet élément ne peut être contracté
+91 Désigner l\'élément à référencer
 92 Nombre maximum de documents atteint.
-93 Document vide, non sauv\351.
-94 Impossible d\'ins\351rer ici
-95 Rien \340 d\351truire
-96 Attribut impos\351 par le sch\351ma.
-97 Toutes les vues sont d\351j\340 cr\351\351es.
+93 Document vide, non sauvé.
+94 Impossible d\'insérer ici
+95 Rien à détruire
+96 Attribut imposé par le schéma.
+97 Toutes les vues sont déjà créées.
 98 Document vide.
 99 Ne changez pas de document !
 100 Nombre maximum de vues atteint.
-101 Il n\'y a rien \340 coller.
-102 Impossible d'ouvrir une nouvelle fen\352tre. Fermer une autre fen\352tre.
-103 *** Thot: erreur irr\351cup\351rable ***\n
-104 les documents modifi\351s vont \352tre sauv\351s \n
+101 Il n\'y a rien à coller.
+102 Impossible d'ouvrir une nouvelle fenêtre. Fermer une autre fenêtre.
+103 *** Thot: erreur irrécupérable ***\n
+104 les documents modifiés vont être sauvés \n
 105 Sans modification
-106 Zoom\351e
-107 R\351p\351t\351e
-108 R\351p\351t\351e en X
-109 R\351p\351t\351e en Y
-110 Fin de fichier pr\351matur\351e
+106 Zoomée
+107 Répétée
+108 Répétée en X
+109 Répétée en Y
+110 Fin de fichier prématurée
 111 Pas de bounding-box dans le fichier ps %s
-112 Impossible d'ouvrir les motifs de c\351sure : %s
-113 Lecture des motifs de c\351sure : %s
-114 Mot trop long pour la c\351sure : %s
-115 Pixmap : Erreur d'allocation de couleur 
-116 Pixmap : Erreur d'ouverture de fichier
-117 Pixmap : Erreur Fichier Invalide
-118 Pixmap : Memoire insuffisante
-119 Pixmap : Erreur d'allocation couleur
-120 Fichier a inclure inaccessible : %s
-121 Impossible de cr\351er le fichier %s
-122 Pas de sch\351ma de traduction pour %s
+112 Impossible d'ouvrir les motifs de césure : %s
+113 Lecture des motifs de césure : %s
+114 Mot trop long pour la césure : %s
+115 Pixmap : erreur d'allocation de couleur 
+116 Pixmap : erreur d'ouverture de fichier
+117 Pixmap : erreur fichier invalide
+118 Pixmap : mémoire insuffisante
+119 Pixmap : erreur d'allocation couleur
+120 Fichier à inclure inaccessible : %s
+121 Impossible de créer le fichier %s
+122 Pas de schéma de traduction pour %s
 123 Fichier .TRA incorrect : %s
 124 Trop de fichiers de sortie
 125 Pas de dimensions pour la vue %s
-126 %s est un fr\350re invalide pour %s (%s)
+126 %s est un frère invalide pour %s (%s)
 127 %s est un fils invalide pour %s (%s%)
-128 Attribut requis %s pour l\'\351l\351ment %s
+128 Attribut requis %s pour l\'élément %s
 129 %s, page %d
 130 %s : type inconnu.
 131 Langue
 132 Attributs
-133 Recherche r\351f\351rence
-134 Pr\351sentation standard
+133 Recherche référence
+134 Présentation standard
 135 Appliquer
-136 Caract\350res
-137 Soulign\351
+136 Caractères
+137 Souligné
 138 Graphiques
 139 Format
-140 D\351faut
+140 Défaut
 141 Alignement
 142 Renfoncement
 143 Imprimer
@@ -148,9 +148,9 @@
 147 US
 148 Format du papier
 149 Terminer
-150 R\351pertoires
+150 Répertoires
 151 Nom du document
-152 Le document %s existe d\351j\340. Voulez-vous l'\351craser ?
+152 Le document %s existe déjà. Voulez-vous l'écraser ?
 153 Bouton gauche change la couleur du texte
 154 Bouton milieu ou droit change la couleur du fond
 155 Police
@@ -160,9 +160,9 @@
 159 Oblique
 160 Normal
 161 Graisse
-162 Non soulign\351
-163 Soulign\351
-164 Biff\351
+162 Non souligné
+163 Souligné
+164 Biffé
 165 Corps (pt)
 166 Renfoncement (pt)
 167 Interligne (pt)
@@ -172,47 +172,47 @@
 171 Non
 172 Sauver le document
 173 Fermer sans sauver
-174 Style des caract\350res
+174 Style des caractères
 175 Couleurs
 176 Supprimer
 177 Destination
 178 Fichier PostScript
 179 Imprimante
-180 Texte \340 chercher
+180 Texte à chercher
 182 MAJUSCULES = minuscules
 183 Texte de remplacement
 184 Remplacement
 185 Sans remplacement
-186 Remplacement \340 la demande
+186 Remplacement à la demande
 187 Remplacement automatique
-188 O\371 rechercher
-189 Avant la s\351lection
-190 Dans la s\351lection
-191 Apr\350s la s\351lection
+188 Où rechercher
+189 Avant la sélection
+190 Dans la sélection
+191 Après la sélection
 192 Dans tout le document
 193 Sauter
 194 Couleurs par défaut
 195 avant de le fermer
 196 Fermer un document
 197 Sans_nom
-198 Cr\351er un document
+198 Créer un document
 199 Type de document
 200 Renommer
-201 Symboles math\351matiques
+201 Symboles mathématiques
 202 Graphiques
 203 Alphabet latin
 204 Alphabet grec
-205 Pr\351sentation
+205 Présentation
 206 Fichiers
 207 Ouvrir un document
 208 Type du document
 209 Vues
 210 Changer le filtre sur la vue
-211 Valeur inchang\351e
+211 Valeur inchangée
 212 Augmenter
 213 Diminuer
-214 Visibilit\351
-215 Ecart sur la taille des caract\350res
+214 Visibilité
+215 Ecart sur la taille des caractères
 216 Zoom
 217 Sauver comme
 218 Sauver
@@ -223,62 +223,62 @@
 223 Graphique
 224 Symbole
 225 Image
-226 Type d'\351l\351ment
-227 apr\350s
+226 Type d'élément
+227 après
 228 avant
 229 autour
 230 Inclure
 231 Coller
-232 \340 cr\351er
-233 Ins\351rer
+232 à créer
+233 Insérer
 234 Saut de page
 235 (Lecture seule)
 236 Englober dans
 237 Changer en
-238 Langue de l'\351l\351ment
-239 Langue h\351rit\351e : 
+238 Langue de l'élément
+239 Langue héritée : 
 240 Ne changez pas de document !
-241 Pas trouv\351
+241 Pas trouvé
 242 Recherche dans 
-243 Recherche \351l\351ment vide
-244 Recherche r\351f\351rence vide
-245 Recherche les r\351f\351rences \340 l'\351l\351ment
+243 Recherche élément vide
+244 Recherche référence vide
+245 Recherche les références à l'élément
 246 Lien
-247 R\351f\351rence dans le document\240
+247 Référence dans le document\240
 248 Recherche
-249 El\351ment en lecture seule
+249 Elément en lecture seule
 250 Plus de remplacements
 251 Ouvrir
-252 Caract\350res standard
+252 Caractères standard
 253 Graphiques standard
 254 Format standard
-255 G\351om\351trie standard
+255 Géométrie standard
 256 pt
 257 Style des traits
 258 Epaisseur des traits
 259 Motif de remplissage
 260 Diviser
 261 Type d'objet
-262 Aller page num\351ro : 
+262 Aller page numéro : 
 263 any
-264 Attribut \340 chercher
-265 Type \340 chercher
+264 Attribut à chercher
+265 Type à chercher
 266 Natures
 267 Valeur de l'attribut :
 268 Attribut inconnu
-269 Cr\351er l\'\351l\351ment \340 r\351f\351rencer
-270 Le d\351signer
+269 Créer l\'élément à référencer
+270 Le désigner
 271 Mode d\'insertion
 272 Annuler
 273 Erreur dans la traduction en PostScript
-274 Commande refus\351e par le spooler : %s
+274 Commande refusée par le spooler : %s
 275 Creation impossible : %s
-276 Pr\351sentation g\351n\351rale
-277 Impossible de lier le nouvel element
+276 Présentation générale
+277 Impossible de lier le nouvel élément
 278 Alphabet
 279 Aucun
-280 Surlign\351
+280 Surligné
 281 Format de document
-282 Ev\351nements
+282 Evénements
 283 Retire l'attribut
 

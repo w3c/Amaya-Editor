@@ -3,41 +3,41 @@
 2 Fichier
 3 Fichier
 4 Fichier
-5 Edition
+5 Édition
 6 Structure
-7 El\351ments
+7 Éléments
 8 Liens
 9 Vues
 10 Style
-11 Sp\351cial
+11 Spécial
 12 Attributs
 13 Aide
 14 Nouveau
 15 Nouveau document HTML...
-16 Mod\350le
+16 Modèle
 17 Nouvelle feuille de style...
 18 Ouvrir...
-19 Ouvrir dans nouvelle fen\352tre...
+19 Ouvrir dans nouvelle fenêtre...
 20 Recharger le document
-21 Pr\351c\351dent
+21 Précédent
 22 Suivant
 23 Sauver
 24 Sauver comme...
 25 Synchroniser
-26 Param\351trer et imprimer...
+26 Paramétrer et imprimer...
 27 Imprimer
 28 Fermer
 29 Quitter
 30 Fermer la vue
-31 D\351faire
+31 Défaire
 32 Refaire
 33 Couper
 34 Copier
 35 Coller
-36 D\351truire
-37 Mode \351diteur
+36 Détruire
+37 Mode éditeur
 38 Rechercher...
-39 V\351rifier orthographe...
+39 Vérifier orthographe...
 40 Transformer...
 41 Ajouter annotation
 42 Charger les annotations
@@ -53,26 +53,26 @@
 52 Polygone
 53 Rectangle
 54 Citation (BLOCKQUOTE)
-55 Break (BR)
+55 Bris de ligne (BR)
 56 Division (DIV)
 57 Formulaire
 58 FORM
 59 Bouton (INPUT)
 60 Bouton bascule (INPUT)
-61 S\351lecteur fichier (INPUT)
-62 Controle cach\351 (INPUT)
+61 Sélecteur fichier (INPUT)
+62 Contrôle caché (INPUT)
 63 Image (INPUT)...
 64 Mot de passe (INPUT)
 65 Bouton radio (INPUT)
-66 R\351initialisation (INPUT)
+66 Réinitialisation (INPUT)
 67 Soumission (INPUT)
 68 Saisie de texte (INPUT)
 69 Groupe de champs (FIELDSET)
-70 Etiquette (LABEL)
+70 Étiquette (LABEL)
 71 Menu (OPTION)
 72 Sous-menu (OPTGROUP)
 73 Zone de texte (TEXTAREA)
-74 Heading
+74 En-tête
 75 H1
 76 H2
 77 H3
@@ -83,15 +83,15 @@
 82 Cadre en ligne (IFRAME)
 83 Image (IMG)...
 84 Liste
-85 Simple liste (UL)
-86 Liste numerot\351e (OL)
-87 Liste de d\351finitions (DL)
+85 Liste à puces (UL)
+86 Liste numérotée (OL)
+87 Liste de définitions (DL)
 88 Terme (DT)
-89 D\351finition (DD)
+89 Définition (DD)
 90 Math
 91 MATH
 92 Racine (mroot)
-93 Racine carr\351e (msqrt)
+93 Racine carrée (msqrt)
 94 Fraction (mfrac)
 95 Indice et exposant (msubsup)
 96 Indice (msub)
@@ -99,98 +99,98 @@
 98 Dessous et dessus (munderover)
 99 Dessous (munder)
 100 Dessus (mover)
-101 Parenth\350ses (mf)
+101 Parenthèses (mf)
 102 Multiscripts (mmultiscripts)
 103 Matrice (mtable)
-104 D\351truire colonne de matrice
+104 Détruire colonne de matrice
 105 NOSCRIPT
 106 Objet
 107 OBJECT
-108 Param\350tre (PARAM)
+108 Paramètre (PARAM)
 109 Paragraphe (P)
-110 Pr\351format\351 (PRE)
+110 Préformaté (PRE)
 111 Table
 112 TABLE
-113 L\351gende (CAPTION)
+113 Légende (CAPTION)
 114 COLGROUP
 115 COL
-116 T\352ti\350re (THEAD)
+116 Têtière (THEAD)
 117 Corps (TBODY)
 118 Pied (TFOOT)
 119 Ligne (TR)
 120 Cellule (TD)
-121 Cellule de t\352te (TH)
-122 D\351truire colonne de table
-123 Lier la cible cr\351\351e
-124 Cr\351er/changer lien...
-125 Cr\351er cible
-126 D\351truire ancre
+121 Cellule de tête (TH)
+122 Détruire colonne de table
+123 Lier la cible créée
+124 Créer/changer lien...
+125 Créer cible
+126 Détruire ancre
 127 Montrer boutons
 128 Montrer adresse et titre
 129 Montrer les zones actives
 130 Montrer les cibles
 131 Grossir
-132 R\351duire
+132 Réduire
 133 Montrer la structure
-134 Montrer la vue altern\351e
+134 Montrer la vue alternée
 135 Montrer les liens
-136 Montrer la table des mati\350res
+136 Montrer la table des matières
 137 Montrer le source
-138 Style de caract\350res...
+138 Style de caractères...
 139 Couleurs...
 140 Format...
 141 Image de fond...
-142 Cr\351er une r\350gle...
+142 Créer une règle...
 143 Appliquer une classe...
 144 Feuilles de style
 145 Ajouter...
 146 Ouvrir...
-147 D\351sactiver...
-148 R\351activer...
+147 Désactiver...
+148 Réactiver...
 149 Retirer...
 150 Types information
-151 Emphase
-152 Strong
-153 Cite
-154 D\351finition
+151 Accent (EM)
+152 Force (STRONG)
+153 Citation (CITE)
+154 Définition (DFN)
 155 Code
-156 Variable
-157 Sample
-158 Keyboard
-159 Abr\351viation
-160 Acronyme
+156 Variable (VAR)
+157 Exemple (SAMP)
+158 Clavier (KBD)
+159 Abréviation (ABBR)
+160 Acronyme (ACRONYM)
 161 Insertion
 162 Suppression
-163 El\351ments caract\350res
+163 Eléments caractères
 164 Italique
 165 Gras
-166 T\351l\351type
+166 Télétype (TTY)
 167 Gros
 168 Petit
 169 Indice
 170 Exposant
 171 Citation (Q)
 172 BiDi (BDO)
-173 Num\351roter les sections
+173 Numéroter les sections
 174 Construire un livre
 175 Ouvrir fichier log
-176 Pr\351ferences
-177 G\351n\351rale...
+176 Préférences
+177 Générales...
 178 Publication...
 179 Cache...
 180 Proxy...
 181 Couleurs...
-182 G\351om\351trie...
-183 N\351gotiation de Langues...
+182 Géométrie...
+183 Négotiation de Langues...
 184 Profiles...
 185 Modèles de page
-186 A propos de Amaya
-187 A propos de Amaya au W3C
+186 À propos de Amaya
+187 À propos de Amaya au W3C
 188 Navigation
-189 S\351lection
+189 Sélection
 190 Chercher
 191 Vues
-192 Cr\351ation
+192 Création
 193 Liens
 194 Transformer
 195 Tables
@@ -201,7 +201,7 @@
 200 Corriger
 201 Publier
 202 Imprimer
-203 Num\351roter
+203 Numéroter
 204 Construire un livre
 205 Configurer Amaya
-206 Accessibilit\351 d'Amaya
+206 Accessibilité d'Amaya
