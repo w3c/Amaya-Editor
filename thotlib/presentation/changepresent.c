@@ -82,7 +82,7 @@ static void ApplyRuleSubTree(pE, ruleType, pDoc, pPRule, view)
       if (pAbb == NULL)
 	/* cet element n'a pas de pave, mais ses descendants en */
 	/* ont peut etre... */
-	ApplyRuleSubTree(pE, ruleType, pDoc, pPRule, view);
+	ApplyRuleSubTree(pE, ruleType, pDoc, pPRule,view);
       else
 	{
 	  /* il y a un element descendant dont les paves peuvent heriter de pAb. 
@@ -1479,104 +1479,6 @@ void NouvDimension(pAb, deltaX, deltaY, frame, display)
 
 
 
-/* ---------------------------------------------------------------------- */
-/* |	PaveMisEnLigne	cherche si le pave englobant de pAbb1 et pAbb2	| */
-/* |		ou l'un des descendants de pAbb1 est mis en lignes.	| */
-/* |		Si oui, retourne un pointeur sur le pave mis en lignes.	| */
-/* ---------------------------------------------------------------------- */
-
-#ifdef __STDC__
-PtrAbstractBox PaveMisEnLigne(PtrAbstractBox *pAbb1, PtrAbstractBox *pAbb2)
-
-#else /* __STDC__ */
-PtrAbstractBox PaveMisEnLigne(pAbb1, pAbb2)
-	PtrAbstractBox *pAbb1;
-	PtrAbstractBox *pAbb2;
-#endif /* __STDC__ */
-
-{
-  PtrAbstractBox         pAbbGroupLines, pAbbCur;
-  boolean         ok, found, stop;
-  PtrAbstractBox         pAbbCura1;
-  PtrAbstractBox         pAbbLine;
-
-  pAbbGroupLines = *pAbb1;
-  pAbbCura1 = pAbbGroupLines;
-  if (pAbbCura1->AbLeafType == LtCompound && pAbbCura1->AbInLine)
-    found = TRUE;
-  else
-    found = FALSE;
-  if (!found && (*pAbb1)->AbEnclosing == (*pAbb2)->AbEnclosing)
-    {
-      /* on considere l'element englobant s'il n'englobe que les elements */
-      /* selectionne's et d'eventuels paves de presentation */
-      pAbbGroupLines = (*pAbb1)->AbEnclosing;
-      if (pAbbGroupLines != NULL)
-	{
-	  ok = TRUE;
-	  pAbbCur = *pAbb1;
-	  while (ok && pAbbCur->AbPrevious != NULL)
-	    {
-	      pAbbCur = pAbbCur->AbPrevious;
-	      ok = pAbbCur->AbPresentationBox;
-	    }
-	  pAbbCur = *pAbb2;
-	  while (ok && pAbbCur->AbNext != NULL)
-	    {
-	      pAbbCur = pAbbCur->AbNext;
-	      ok = pAbbCur->AbPresentationBox;
-	    }
-	  if (ok)
-	    {
-	      pAbbCura1 = pAbbGroupLines;
-	      if (pAbbCura1->AbLeafType == LtCompound &&
-		  pAbbCura1->AbInLine)
-		{
-		  found = TRUE;
-		  *pAbb1 = pAbbGroupLines;
-		  *pAbb2 = pAbbGroupLines;
-		} 
-	      else
-		found = FALSE;
-	    }
-	}
-    }
-  if (!found)
-    /* on n'a pas found' d'element mis en lignes */
-    {
-      pAbbGroupLines = *pAbb1;
-      /* on considere les elements englobe's du premier pave */
-      while (!found && pAbbGroupLines->AbFirstEnclosed != NULL)
-	{
-	  pAbbGroupLines = pAbbGroupLines->AbFirstEnclosed;
-	  /* saute les paves de presentation */
-	  stop = FALSE;
-	  do
-	    if (pAbbGroupLines == NULL)
-	      stop = TRUE;
-	    else if (!pAbbGroupLines->AbPresentationBox)
-	      stop = TRUE;
-	    else
-	      pAbbGroupLines = pAbbGroupLines->AbNext;
-	  while (!stop);
-	  if (pAbbGroupLines != NULL)
-	    {
-	      pAbbCura1 = pAbbGroupLines;
-	      if (pAbbCura1->AbLeafType == LtCompound && pAbbCura1->AbInLine)
-		found = TRUE;
-	      else
-		found = FALSE;
-	    }
-	}
-    }
-  if (found)
-    pAbbLine = pAbbGroupLines;
-  else
-    pAbbLine = NULL;
-  return pAbbLine;
-}
-
-
 
 /* ---------------------------------------------------------------------- */
 /* |	ApplNouvRegle applique au pave courant la regle de		| */
@@ -1679,24 +1581,24 @@ void ApplNouvRegle(pDoc, pPRule, pEl)
 /* |		les graphiques demandes par l'utilisateur.		| */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void ModifGraphiques(PtrElement pEl, PtrDocument pDoc, int viewToApply, boolean ChngStyleTrait, char StyleTrait, boolean ChngEpaisTrait, int EpaisTrait, TypeUnit EpaisTraitUnit, boolean ChngTrame, int Trame, boolean ChngCoulFond, int CoulFond, boolean ChngCoulTrace, int CoulTrace)
+void ModifGraphiques(PtrElement pEl, PtrDocument pDoc, int viewToApply, boolean modifLineStyle, char LineStyle, boolean modifLineWeight, int LineWeight, TypeUnit LineWeightUnit, boolean modifFillPattern, int FillPattern, boolean modifColorBackground, int ColorBackground, boolean modifLineColor, int LineColor)
 
 #else /* __STDC__ */
-void ModifGraphiques(pEl, pDoc, viewToApply, ChngStyleTrait, StyleTrait, ChngEpaisTrait, EpaisTrait, EpaisTraitUnit, ChngTrame, Trame, ChngCoulFond, CoulFond, ChngCoulTrace, CoulTrace)
+void ModifGraphiques(pEl, pDoc, viewToApply, modifLineStyle, LineStyle, modifLineWeight, LineWeight, LineWeightUnit, modifFillPattern, FillPattern, modifColorBackground, ColorBackground, modifLineColor, LineColor)
 	PtrElement pEl;
 	PtrDocument pDoc;
 	int viewToApply;
-	boolean ChngStyleTrait;
-	char StyleTrait;
-	boolean ChngEpaisTrait;
-	int EpaisTrait;
-	TypeUnit EpaisTraitUnit;
-	boolean ChngTrame;
-	int Trame;
-	boolean ChngCoulFond;
-	int CoulFond;
-	boolean ChngCoulTrace;
-	int CoulTrace;
+	boolean modifLineStyle;
+	char LineStyle;
+	boolean modifLineWeight;
+	int LineWeight;
+	TypeUnit LineWeightUnit;
+	boolean modifFillPattern;
+	int FillPattern;
+	boolean modifColorBackground;
+	int ColorBackground;
+	boolean modifLineColor;
+	int LineColor;
 #endif /* __STDC__ */
 
 {
@@ -1706,9 +1608,9 @@ void ModifGraphiques(pEl, pDoc, viewToApply, ChngStyleTrait, StyleTrait, ChngEpa
   
   viewSch = AppliedView(pEl, NULL, pDoc, viewToApply); /* numero de cette view */
   /* style des traits dans le graphique */
-  if (ChngStyleTrait)
+  if (modifLineStyle)
     {
-      /*cherche la regle de presentation specifique 'StyleTrait' de l'element*/
+      /*cherche la regle de presentation specifique 'LineStyle' de l'element*/
       /* ou en cree une nouvelle */
       pPRule = SearchPresRule(pEl, PtLineStyle, &isNew, pDoc, viewToApply);
       if (!PRuleMessagePre(pEl, pPRule, pDoc, isNew))
@@ -1717,7 +1619,7 @@ void ModifGraphiques(pEl, pDoc, viewToApply, ChngStyleTrait, StyleTrait, ChngEpa
         pPRule->PrType = PtLineStyle;
         pPRule->PrViewNum = viewSch;
         pPRule->PrPresMode = PresImmediate;
-        pPRule->PrChrValue = StyleTrait;
+        pPRule->PrChrValue = LineStyle;
         pDoc->DocModified = TRUE;	/* le document est modifie' */
         /* si le pave existe, applique la nouvelle regle au pave */
         ApplNouvRegle(pDoc, pPRule, pEl);
@@ -1725,7 +1627,7 @@ void ModifGraphiques(pEl, pDoc, viewToApply, ChngStyleTrait, StyleTrait, ChngEpa
 	}
     }
   /* epaisseur des traits dans le graphique */
-  if (ChngEpaisTrait)
+  if (modifLineWeight)
     {
       /* cherche la regle de presentation specifique 'Epaisseur Trait' de */
       /* l'element ou en cree une nouvelle */
@@ -1736,9 +1638,9 @@ void ModifGraphiques(pEl, pDoc, viewToApply, ChngStyleTrait, StyleTrait, ChngEpa
         pPRule->PrType = PtLineWeight;
         pPRule->PrViewNum = viewSch;
         pPRule->PrPresMode = PresImmediate;
-        pPRule->PrMinUnit = EpaisTraitUnit;
+        pPRule->PrMinUnit = LineWeightUnit;
         pPRule->PrMinAttr = FALSE;
-        pPRule->PrMinValue = EpaisTrait;
+        pPRule->PrMinValue = LineWeight;
         pDoc->DocModified = TRUE;	/* le document est modifie' */
         /* si le pave existe, applique la nouvelle regle au pave */
         ApplNouvRegle(pDoc, pPRule, pEl);
@@ -1746,9 +1648,9 @@ void ModifGraphiques(pEl, pDoc, viewToApply, ChngStyleTrait, StyleTrait, ChngEpa
 	}
     }
   /* trame de remplissage */
-  if (ChngTrame)
+  if (modifFillPattern)
     {
-      /* cherche la regle de presentation specifique 'Trame' de l'element */
+      /* cherche la regle de presentation specifique 'FillPattern' de l'element */
       /* ou en cree une nouvelle */
       pPRule = SearchPresRule(pEl, PtFillPattern, &isNew, pDoc, viewToApply);
       if (!PRuleMessagePre(pEl, pPRule, pDoc, isNew))
@@ -1757,7 +1659,7 @@ void ModifGraphiques(pEl, pDoc, viewToApply, ChngStyleTrait, StyleTrait, ChngEpa
         pPRule->PrType = PtFillPattern;
         pPRule->PrViewNum = viewSch;
         pPRule->PrPresMode = PresImmediate;
-        pPRule->PrIntValue = Trame;
+        pPRule->PrIntValue = FillPattern;
         pPRule->PrAttrValue = FALSE;
         pDoc->DocModified = TRUE; /* le document est modifie' */
         /* si le pave existe, applique la nouvelle regle au pave */
@@ -1766,9 +1668,9 @@ void ModifGraphiques(pEl, pDoc, viewToApply, ChngStyleTrait, StyleTrait, ChngEpa
 	}
     }
   /* couleur de fond */
-  if (ChngCoulFond)
+  if (modifColorBackground)
     {
-      /* cherche la regle de presentation specifique 'CouleurFond' de */
+      /* cherche la regle de presentation specifique 'ColoreurFond' de */
       /* l'element ou en cree une nouvelle */
       pPRule = SearchPresRule(pEl, PtBackground, &isNew, pDoc, viewToApply);
       if (!PRuleMessagePre(pEl, pPRule, pDoc, isNew))
@@ -1777,7 +1679,7 @@ void ModifGraphiques(pEl, pDoc, viewToApply, ChngStyleTrait, StyleTrait, ChngEpa
         pPRule->PrType = PtBackground;
         pPRule->PrViewNum = viewSch;
         pPRule->PrPresMode = PresImmediate;
-        pPRule->PrIntValue = CoulFond;
+        pPRule->PrIntValue = ColorBackground;
         pPRule->PrAttrValue = FALSE;
         pDoc->DocModified = TRUE; /* le document est modifie' */
         /* si le pave existe, applique la nouvelle regle au pave */
@@ -1786,7 +1688,7 @@ void ModifGraphiques(pEl, pDoc, viewToApply, ChngStyleTrait, StyleTrait, ChngEpa
 	}
     }
   /* couleur du trace' */
-  if (ChngCoulTrace)
+  if (modifLineColor)
     {
       /* cherche la regle de presentation specifique 'CouleurTrace' de */
       /* l'element ou en cree une nouvelle */
@@ -1797,7 +1699,7 @@ void ModifGraphiques(pEl, pDoc, viewToApply, ChngStyleTrait, StyleTrait, ChngEpa
         pPRule->PrType = PtForeground;
         pPRule->PrViewNum = viewSch;
         pPRule->PrPresMode = PresImmediate;
-        pPRule->PrIntValue = CoulTrace;
+        pPRule->PrIntValue = LineColor;
         pPRule->PrAttrValue = FALSE;
         pDoc->DocModified = TRUE; /* le document est modifie' */
         /* si le pave existe, applique la nouvelle regle au pave */
@@ -1809,13 +1711,13 @@ void ModifGraphiques(pEl, pDoc, viewToApply, ChngStyleTrait, StyleTrait, ChngEpa
 
 
 /* ---------------------------------------------------------------------- */
-/* |	SupprPres supprime toutes les regles de presentation specifiques| */
+/* |	RemoveSpecifPres supprime toutes les regles de presentation specifiques| */
 /* |		associees a l'element pEl.				| */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-static void SupprPres(PtrElement pEl, PtrDocument pDoc, RuleSet rules, int viewToApply)
+static void RemoveSpecifPres(PtrElement pEl, PtrDocument pDoc, RuleSet rules, int viewToApply)
 #else /* __STDC__ */
-static void SupprPres(pEl, pDoc, rules, viewToApply)
+static void RemoveSpecifPres(pEl, pDoc, rules, viewToApply)
 	PtrElement pEl;
 	PtrDocument pDoc;
 	RuleSet rules;
@@ -1877,17 +1779,17 @@ static void SupprPres(pEl, pDoc, rules, viewToApply)
 
 /* ---------------------------------------------------------------------- */
 /* |	ChangeCouleur change la presentation specifique de la couleur	| */
-/* |	de fond ou de trace' (selon Fond) pour tous les elements de la	| */
+/* |	de fond ou de trace' (selon Background) pour tous les elements de la	| */
 /* |	selection courante.						| */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-void ChangeCouleur(int colorNum, boolean Fond)
+void ChangeCouleur(int colorNum, boolean Background)
 
 #else /* __STDC__ */
-void ChangeCouleur(colorNum, Fond)
+void ChangeCouleur(colorNum, Background)
 	int colorNum;
-	boolean Fond;
+	boolean Background;
 #endif /* __STDC__ */
 
 {
@@ -1895,8 +1797,8 @@ void ChangeCouleur(colorNum, Fond)
   PtrElement	pElFirstSel, pElLastSel, pEl;
   PtrAbstractBox	pAb;
   int		firstChar, lastChar;
-  boolean	selok, modifFrame;
-  int		frameNum;
+  boolean	selok, modifFillPattern;
+  int		fillPatternNum;
   RuleSet       rulesS;
 
   /* demande quelle est la selection courante */
@@ -1924,9 +1826,9 @@ void ChangeCouleur(colorNum, Fond)
 	      /* on saute les marques de page */
 	      if (!pEl->ElTerminal || pEl->ElLeafType != LtPageColBreak)
 		{
-		  modifFrame = FALSE;
-		  frameNum = 0;
-		  if (Fond)
+		  modifFillPattern = FALSE;
+		  fillPatternNum = 0;
+		  if (Background)
 		    /* on change la couleur de fond avec la souris */
 		    {
 		      pAb = PaveDeElem(pEl, SelectedView);
@@ -1935,26 +1837,26 @@ void ChangeCouleur(colorNum, Fond)
 			  /* on force la trame backgroundcolor si la trame du pave */
 			  /* est nopattern ou foregroundcolor */
 			  {
-			    modifFrame = TRUE;
-			    frameNum = 2;
+			    modifFillPattern = TRUE;
+			    fillPatternNum = 2;
 			  }
 		    }
 		  if (colorNum == -1)
 		    {
 		      /* Couleur standard */
 		      RuleSetClr(rulesS);
-		      if (Fond)
+		      if (Background)
 			{
 			  RuleSetPut(rulesS, PtFillPattern);
 			  RuleSetPut(rulesS, PtBackground);
 			}
 		      else
 			RuleSetPut(rulesS, PtForeground);
-		      SupprPres(pEl, SelDoc, rulesS, SelectedView);
+		      RemoveSpecifPres(pEl, SelDoc, rulesS, SelectedView);
 		    }
 		  else
 		    ModifGraphiques(pEl, SelDoc, SelectedView, FALSE, ' ', FALSE, 0, FALSE,
-				  modifFrame, frameNum, Fond, colorNum, !Fond, colorNum);
+				  modifFillPattern, fillPatternNum, Background, colorNum, !Background, colorNum);
 		  /* si on est dans un element copie' par inclusion,   */
 		  /* on met a jour les copies de cet element. */
 		  RedisplayCopies(pEl, SelDoc, TRUE);
@@ -1974,10 +1876,10 @@ void ChangeCouleur(colorNum, Fond)
 /* |		les caracteres demandes par l'utilisateur.		| */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void ModifCaracteres(PtrElement pEl, PtrDocument pDoc, int viewToApply, boolean modifFamily, char family, boolean modifStyle, int charStyle, boolean ChngCorps, int Corps, boolean modifUnderline, int underline, boolean modifThick, int thickUnderline)
+void ModifCaracteres(PtrElement pEl, PtrDocument pDoc, int viewToApply, boolean modifFamily, char family, boolean modifStyle, int charStyle, boolean modifsize, int size, boolean modifUnderline, int underline, boolean modifWeight, int weightUnderline)
 
 #else /* __STDC__ */
-void ModifCaracteres(pEl, pDoc, viewToApply, modifFamily, family, modifStyle, charStyle, ChngCorps, Corps, modifUnderline, underline, modifThick, thickUnderline)
+void ModifCaracteres(pEl, pDoc, viewToApply, modifFamily, family, modifStyle, charStyle, modifsize, size, modifUnderline, underline, modifWeight, weightUnderline)
 	PtrElement pEl;
 	PtrDocument pDoc;
 	int viewToApply;
@@ -1985,12 +1887,12 @@ void ModifCaracteres(pEl, pDoc, viewToApply, modifFamily, family, modifStyle, ch
 	char family;
 	boolean modifStyle;
 	int charStyle;
-	boolean ChngCorps;
-	int Corps;
+	boolean modifsize;
+	int size;
 	boolean modifUnderline;
 	int underline;
-	boolean modifThick;
-	int thickUnderline;
+	boolean modifWeight;
+	int weightUnderline;
 #endif /* __STDC__ */
 
 {
@@ -2062,7 +1964,7 @@ void ModifCaracteres(pEl, pDoc, viewToApply, modifFamily, family, modifStyle, ch
 	}
     }
   /* Corps des caracteres */
-  if (ChngCorps)
+  if (modifsize)
     {
       /* cherche la regle de presentation specifique 'Corps' de l'element */
       /* ou en cree une nouvelle */
@@ -2075,7 +1977,7 @@ void ModifCaracteres(pEl, pDoc, viewToApply, modifFamily, family, modifStyle, ch
         pPRule->PrPresMode = PresImmediate;
         pPRule->PrMinUnit = UnPoint;
         pPRule->PrMinAttr = FALSE;
-        pPRule->PrMinValue = Corps;
+        pPRule->PrMinValue = size;
         pDoc->DocModified = TRUE; /* le document est modifie' */
         /* si le pave existe, applique la nouvelle regle au pave */
         ApplNouvRegle(pDoc, pPRule, pEl);
@@ -2120,9 +2022,9 @@ void ModifCaracteres(pEl, pDoc, viewToApply, modifFamily, family, modifStyle, ch
 	}
     }
   /* Epaisseur du souligne */
-  if (modifThick)
+  if (modifWeight)
     {
-      /* cherche la regle de presentation specifique thickUnderline de l'element */
+      /* cherche la regle de presentation specifique weightUnderline de l'element */
       /* ou en cree une nouvelle */
       pPRule = SearchPresRule(pEl, PtThickness, &isNew, pDoc, viewToApply);
       if (!PRuleMessagePre(pEl, pPRule, pDoc, isNew))
@@ -2131,7 +2033,7 @@ void ModifCaracteres(pEl, pDoc, viewToApply, modifFamily, family, modifStyle, ch
         pPRule->PrType = PtThickness;
         pPRule->PrViewNum = viewSch;
         pPRule->PrPresMode = PresImmediate;
-        switch (thickUnderline)
+        switch (weightUnderline)
 	  {
 	case 0:
 	  pPRule->PrChrValue = 'N'; /* souligne mince */
@@ -2157,21 +2059,21 @@ void ModifCaracteres(pEl, pDoc, viewToApply, modifFamily, family, modifStyle, ch
 /* |		sur la mise en ligne demandes par l'utilisateur.	| */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void ModifLignes(PtrElement pEl, PtrDocument pDoc, int viewToApply, boolean ChngCadr, int Cadr, boolean ChngJustif, boolean Justif, boolean ChngIndent, int ValIndent, boolean ChngInterL, int InterLigne, boolean ChngHyphen, boolean Hyphenate)
+void ModifLignes(PtrElement pEl, PtrDocument pDoc, int viewToApply, boolean modifAdjust, int Adjust, boolean modifJustif, boolean Justif, boolean modifIndent, int ValIndent, boolean modifLineSpacing, int LineSpacing, boolean modifHyphen, boolean Hyphenate)
 #else /* __STDC__ */
-void ModifLignes(pEl, pDoc, viewToApply, ChngCadr, Cadr, ChngJustif, Justif, ChngIndent, ValIndent, ChngInterL, InterLigne, ChngHyphen, Hyphenate)
+void ModifLignes(pEl, pDoc, viewToApply, modifAdjust, Adjust, modifJustif, Justif, modifIndent, ValIndent, modifLineSpacing, LineSpacing, modifHyphen, Hyphenate)
 	PtrElement pEl;
 	PtrDocument pDoc;
 	int viewToApply;
-	boolean ChngCadr;
-	int Cadr;
-	boolean ChngJustif;
+	boolean modifAdjust;
+	int Adjust;
+	boolean modifJustif;
 	boolean Justif;
-	boolean ChngIndent;
+	boolean modifIndent;
 	int ValIndent;
-	boolean ChngInterL;
-	int InterLigne;
-	boolean ChngHyphen;
+	boolean modifLineSpacing;
+	int LineSpacing;
+	boolean modifHyphen;
 	boolean Hyphenate;
 #endif /* __STDC__ */
 {
@@ -2181,7 +2083,7 @@ void ModifLignes(pEl, pDoc, viewToApply, ChngCadr, Cadr, ChngJustif, Justif, Chn
   
   viewSch = AppliedView(pEl, NULL, pDoc, viewToApply); /* Le type de cette view */
   /* applique les choix de l'utilisateur */
-  if (ChngCadr && Cadr > 0)
+  if (modifAdjust && Adjust > 0)
     {
       pPRule = SearchPresRule(pEl, PtAdjust, &isNew, pDoc, viewToApply);
       if (!PRuleMessagePre(pEl, pPRule, pDoc, isNew))
@@ -2189,7 +2091,7 @@ void ModifLignes(pEl, pDoc, viewToApply, ChngCadr, Cadr, ChngJustif, Justif, Chn
         pPRule->PrType = PtAdjust;
         pPRule->PrViewNum = viewSch;
         pPRule->PrPresMode = PresImmediate;
-        switch (Cadr)
+        switch (Adjust)
 	  {
 	case 1:
 	  pPRule->PrAdjust = AlignLeft;
@@ -2213,7 +2115,7 @@ void ModifLignes(pEl, pDoc, viewToApply, ChngCadr, Cadr, ChngJustif, Justif, Chn
 	}
     }
   /* Justification */
-  if (ChngJustif)
+  if (modifJustif)
     {
       pPRule = SearchPresRule(pEl, PtJustify, &isNew, pDoc, viewToApply);
       if (!PRuleMessagePre(pEl, pPRule, pDoc, isNew))
@@ -2228,7 +2130,7 @@ void ModifLignes(pEl, pDoc, viewToApply, ChngCadr, Cadr, ChngJustif, Justif, Chn
 	}
     }
   /* Coupure des mots */
-  if (ChngHyphen)
+  if (modifHyphen)
     {
       pPRule = SearchPresRule(pEl, PtHyphenate, &isNew, pDoc,viewToApply);
       if (!PRuleMessagePre(pEl, pPRule, pDoc, isNew))
@@ -2243,7 +2145,7 @@ void ModifLignes(pEl, pDoc, viewToApply, ChngCadr, Cadr, ChngJustif, Justif, Chn
         }
     }
   /* Renfoncement de la 1ere ligne */
-  if (ChngIndent)
+  if (modifIndent)
     {
       pPRule = SearchPresRule(pEl, PtIndent, &isNew, pDoc, viewToApply);
       if (!PRuleMessagePre(pEl, pPRule, pDoc, isNew))
@@ -2261,7 +2163,7 @@ void ModifLignes(pEl, pDoc, viewToApply, ChngCadr, Cadr, ChngJustif, Justif, Chn
 	}
     }
   /* Interligne */
-  if (ChngInterL)
+  if (modifLineSpacing)
     {
       pPRule = SearchPresRule(pEl, PtLineSpacing, &isNew, pDoc, viewToApply);
       if (!PRuleMessagePre(pEl, pPRule, pDoc, isNew))
@@ -2271,7 +2173,7 @@ void ModifLignes(pEl, pDoc, viewToApply, ChngCadr, Cadr, ChngJustif, Justif, Chn
         pPRule->PrPresMode = PresImmediate;
         pPRule->PrMinUnit = UnPoint;
         pPRule->PrMinAttr = FALSE;
-        pPRule->PrMinValue = InterLigne;
+        pPRule->PrMinValue = LineSpacing;
         pDoc->DocModified = TRUE;	/* le document est modifie' */
         ApplNouvRegle(pDoc, pPRule, pEl);
 	PRuleMessagePost(pEl, pPRule, pDoc, isNew);
@@ -2300,7 +2202,6 @@ void AppliqueRegleStandard(pEl, pDoc, ruleType, viewSch)
 	PtrPSchema      pSPR;
 	PtrAttribute     pAttr;
 	boolean         stop;
-	PtrAbstractBox         pPa1;
 	int             view;
 #ifdef __COLPAGE__
  boolean bool;
@@ -2345,29 +2246,28 @@ void AppliqueRegleStandard(pEl, pDoc, ruleType, viewSch)
 	              ApplyRule(pRP, pSPR, pAb, pDoc, pAttr);
 #endif /* __COLPAGE__ */
 			/* marque que le pave a change' et doit etre reaffiche' */
-			  pPa1 = pAb;
 			  switch (ruleType)
 			    {
 		      case PtVertRef:
-			      pPa1->AbVertRefChange = TRUE;
+			      pAb->AbVertRefChange = TRUE;
 			      break;
 		      case PtHorizRef:
-			      pPa1->AbHorizRefChange = TRUE;
+			      pAb->AbHorizRefChange = TRUE;
 			      break;
 		      case PtHeight:
-			      pPa1->AbHeightChange = TRUE;
+			      pAb->AbHeightChange = TRUE;
 			      break;
 		      case PtWidth:
-			      pPa1->AbWidthChange = TRUE;
+			      pAb->AbWidthChange = TRUE;
 			      break;
 		      case PtVertPos:
-			      pPa1->AbVertPosChange = TRUE;
+			      pAb->AbVertPosChange = TRUE;
 			      break;
 		      case PtHorizPos:
-			      pPa1->AbHorizPosChange = TRUE;
+			      pAb->AbHorizPosChange = TRUE;
 			      break;
 		      case PtSize:
-			      pPa1->AbSizeChange = TRUE;
+			      pAb->AbSizeChange = TRUE;
 			      break;
 		      case PtDepth:
 		      case PtLineStyle:
@@ -2375,10 +2275,10 @@ void AppliqueRegleStandard(pEl, pDoc, ruleType, viewSch)
 		      case PtFillPattern:
 		      case PtBackground:
 		      case PtForeground:
-			      pPa1->AbAspectChange = TRUE;
+			      pAb->AbAspectChange = TRUE;
 			      break;
 		      default:
-			      pPa1->AbChange = TRUE;
+			      pAb->AbChange = TRUE;
 			      break;
 			    }
 			  
@@ -2392,33 +2292,32 @@ void AppliqueRegleStandard(pEl, pDoc, ruleType, viewSch)
 
 /* ---------------------------------------------------------------------- */
 /* |	SupprPresSpec supprime les regles de presentation specifiques	| */
-/* |		contenues dans 'Regles' attachees aux elements du	| */
-/* |		sous-arbre de racine pSA				| */
+/* |		contenues dans 'RulesS' attachees aux elements du	| */
+/* |		sous-arbre de racine pElRoot				| */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void SupprPresSpec(PtrElement pSA, PtrDocument pDoc, RuleSet Regles, int viewToApply)
+void SupprPresSpec(PtrElement pElRoot, PtrDocument pDoc, RuleSet RulesS, int viewToApply)
 #else /* __STDC__ */
-void SupprPresSpec(pSA, pDoc, Regles, viewToApply)
-	PtrElement pSA;
+void SupprPresSpec(pElRoot, pDoc, RulesS, viewToApply)
+	PtrElement pElRoot;
 	PtrDocument pDoc;
-	RuleSet Regles;
+	RuleSet RulesS;
 	int viewToApply;
 #endif /* __STDC__ */
 {
   PtrElement      pEl;	/* traite la racine du sous-arbre */
   
-  SupprPres(pSA, pDoc, Regles, viewToApply);
-  if (!pSA->ElTerminal)
+  RemoveSpecifPres(pElRoot, pDoc, RulesS, viewToApply);
+  if (!pElRoot->ElTerminal)
     {
       /* passe au premier fils */
-      pEl = pSA->ElFirstChild;
+      pEl = pElRoot->ElFirstChild;
       while (pEl != NULL)
 	{
 	  /* traite le sous-arbre de ce fils */
-	  SupprPresSpec(pEl, pDoc, Regles, viewToApply);
+	  SupprPresSpec(pEl, pDoc, RulesS, viewToApply);
 	  /* passe au fils suivant */
 	  pEl = pEl->ElNext;
 	}
     }
 }
-/* End Of Module modpres */
