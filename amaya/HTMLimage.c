@@ -255,7 +255,6 @@ void *context;
    TtaFreeMemory (tempfile);
 }
 
-#if !defined(AMAYA_JAVA) && !defined(AMAYA_ILU)
 /*----------------------------------------------------------------------
    libWWWImageLoaded is the libWWW callback procedure when the image
                 is loaded from the web.
@@ -280,8 +279,10 @@ void *context;
     {
       /* an image of the document is now loaded */
 
+#if !defined(AMAYA_JAVA) && !defined(AMAYA_ILU)
       /* update the stop button status */
       ResetStop (doc);
+#endif /* AMAYA_JAVA */
 
       /* the image could not be loaded */
       if (status != 0)
@@ -292,7 +293,6 @@ void *context;
 			 outputfile, context);
      }
 }
-#endif /* AMAYA_JAVA */
 
 /*----------------------------------------------------------------------
    FetchImage loads an IMG from local file or from the web. The flags
@@ -373,7 +373,7 @@ void               *extra;
 	      FilesLoading[doc]++;
 	      i = GetObjectWWW (doc, pathname, NULL, tempfile,
 		                AMAYA_ASYNC | flags, NULL, NULL,
-				(void *) HandleImageLoaded,
+				(void *) libWWWImageLoaded,
 				(void *) desc, NO, NULL);
 #else /* !AMAYA_JAVA && !AMAYA_ILU */
 	      UpdateTransfer(doc);

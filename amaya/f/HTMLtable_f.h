@@ -8,8 +8,8 @@
 
 extern void CheckTable ( Element table,
                          Document doc );
-extern void NewCell (Element cell,
-		     Document doc);
+extern void NewCell ( Element cell,
+                      Document doc );
 extern void CellCreated ( NotifyElement * event );
 extern void CellPasted ( NotifyElement * event );
 extern boolean DeleteRow ( NotifyElement * event );
@@ -33,7 +33,7 @@ extern boolean RowspanDelete ( NotifyAttribute * event );
 extern void CheckTable (/* Element table,
                            Document doc */);
 extern void NewCell (/* Element cell,
-			Document doc*/);
+                        Document doc */);
 extern void CellCreated (/* NotifyElement * event */);
 extern void CellPasted (/* NotifyElement * event */);
 extern boolean DeleteRow (/* NotifyElement * event */);

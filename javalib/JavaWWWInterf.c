@@ -5,10 +5,14 @@
  */
 
 #include "thot_sys.h"
-#include "content.h"
 #include "JavaTypes.h"
 #include "JavaTypes_f.h"
 #include "w3c_amaya_HTTPRequest.h"
+#include "content.h"
+
+#define AMAYA_JAVA
+#define THOT_EXPORT extern
+#include "../amaya/libjava.h"
 
 #include "JavaVMaccesses.h"
 
@@ -29,7 +33,8 @@ extern char TempFileDirectory[];
   ----------------------------------------------------------------------*/
 
 typedef void (*GetObjectWWWCCallback) (int doc, int status,
-              char *urlName, char *outputfile, void *context);
+              char *urlName, char *outputfile, char *content_type,
+	      void *context);
 
 /*
  * Callback for amaya/HTTPRequest
@@ -44,6 +49,7 @@ w3c_amaya_HTTPRequest_Callback(struct Hw3c_amaya_HTTPRequest* request,
     void *context = NULL;
     char urlName[1024];
     char outputfile[1024];
+    char content_type[1024];
 
     callback = (GetObjectWWWCCallback) 
                JavaLong2CPtr(callback_f);
@@ -55,12 +61,15 @@ w3c_amaya_HTTPRequest_Callback(struct Hw3c_amaya_HTTPRequest* request,
                        urlName, sizeof(urlName));
     javaString2CString(Get_HTTPRequest_Str_filename(request),
                        outputfile, sizeof(outputfile));
+    javaString2CString(Get_HTTPRequest_Str_mimeType(request),
+                       content_type, sizeof(content_type));
+    if ((status / 100) == 2) status = 0;
 
 /* fprintf(stderr,"HTTPRequest_Callback : %s : %d\n", urlName, status); */
 
     if (callback != NULL) {
 	JavaThotlibLock();
-        callback(doc, status, &urlName[0], &outputfile[0], context);
+        callback(doc, status, &urlName[0], &outputfile[0], content_type, context);
 	JavaThotlibRelease();
     }
 }

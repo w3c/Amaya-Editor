@@ -12,6 +12,11 @@ extern boolean AHTReqContext_delete ( AHTReqContext * me );
 extern int AHTOpen_file ( HTRequest * request );
 extern void QueryInit ( void );
 extern void QueryClose ( void );
+extern void InvokeGetObjectWWW_callback ( int docid,
+                                          char *urlName,
+                                          char *outputfile,
+                                          TTcbf *terminate_cbf,
+                                          void *context_tcbf );
 extern int GetObjectWWW ( int docid,
                           char* urlName,
                           char* postString,
@@ -50,6 +55,11 @@ extern boolean AHTReqContext_delete (/* AHTReqContext * me */);
 extern int AHTOpen_file (/* HTRequest * request */);
 extern void QueryInit (/* void */);
 extern void QueryClose (/* void */);
+extern void InvokeGetObjectWWW_callback (/* int docid,
+                                            char *urlName,
+                                            char *outputfile,
+                                            TTcbf *terminate_cbf,
+                                            void *context_tcbf */);
 extern int GetObjectWWW (/* int docid,
                             char* urlName,
                             char* postString,

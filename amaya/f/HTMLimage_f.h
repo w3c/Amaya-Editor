@@ -20,8 +20,12 @@ extern void HandleImageLoaded ( int doc,
                                 char *urlName,
                                 char *outputfile,
                                 void * context );
-extern void libWWWImageLoaded ( void *ctxt,
-                                int status );
+extern void libWWWImageLoaded ( int doc,
+                                int status,
+                                char *urlName,
+                                char *outputfile,
+                                char *content_type,
+                                void * context );
 extern void FetchImage ( Document doc,
                          Element el,
                          char *URL,
@@ -47,8 +51,12 @@ extern void HandleImageLoaded (/* int doc,
                                   char *urlName,
                                   char *outputfile,
                                   void * context */);
-extern void libWWWImageLoaded (/* void *ctxt,
-                                  int status */);
+extern void libWWWImageLoaded (/* int doc,
+                                  int status,
+                                  char *urlName,
+                                  char *outputfile,
+                                  char *content_type,
+                                  void * context */);
 extern void FetchImage (/* Document doc,
                            Element el,
                            char *URL,

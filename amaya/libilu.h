@@ -32,7 +32,6 @@ extern int PutObjectWWW ( int doc,
                           PicType contentType,
                           void *terminate_cbf,
                           void *context_tcbf );
-
 #endif /* __LIBILU_H__ */
 
 

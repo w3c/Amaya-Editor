@@ -37,6 +37,12 @@ extern void OpenDocInNewWindow ( Document document,
                                  View view );
 extern void OpenDoc ( Document document,
                       View view );
+extern void Reload_callback ( int doc,
+                              int status,
+                              char *urlName,
+                              char *outputfile,
+                              char *content_type,
+                              void * context );
 extern void Reload ( Document document,
                      View view );
 extern void ShowStructure ( Document document,
@@ -49,6 +55,12 @@ extern void ShowToC ( Document document,
                       View view );
 extern boolean ViewToOpen ( NotifyDialog * event );
 extern boolean ViewToClose ( NotifyDialog * event );
+extern void GetHTMLDocument_callback ( int newdoc,
+                                       int status,
+                                       char *urlName,
+                                       char *outputfile,
+                                       char *content_type,
+                                       void * context );
 extern Document GetHTMLDocument ( const char *documentPath,
                                   char *form_data,
                                   Document doc,
@@ -133,6 +145,12 @@ extern void OpenDocInNewWindow (/* Document document,
                                    View view */);
 extern void OpenDoc (/* Document document,
                         View view */);
+extern void Reload_callback (/* int doc,
+                                int status,
+                                char *urlName,
+                                char *outputfile,
+                                char *content_type,
+                                void * context */);
 extern void Reload (/* Document document,
                        View view */);
 extern void ShowStructure (/* Document document,
@@ -145,6 +163,12 @@ extern void ShowToC (/* Document document,
                         View view */);
 extern boolean ViewToOpen (/* NotifyDialog * event */);
 extern boolean ViewToClose (/* NotifyDialog * event */);
+extern void GetHTMLDocument_callback (/* int newdoc,
+                                         int status,
+                                         char *urlName,
+                                         char *outputfile,
+                                         char *content_type,
+                                         void * context */);
 extern Document GetHTMLDocument (/* const char *documentPath,
                                     char *form_data,
                                     Document doc,
