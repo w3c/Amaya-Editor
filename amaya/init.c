@@ -69,7 +69,9 @@
 
 #ifdef AMAYA_PLUGIN
 #include "plugin.h"
+#ifndef _WINDOWS
 #include "Plugin.xpm"
+#endif /* !_WINDOWS */
 #endif /* AMAYA_PLUGIN */
 
 #ifdef AMAYA_JAVA
@@ -1672,9 +1674,11 @@ ThotBool     logFile;
 			 TBSTYLE_BUTTON, TRUE);
 	   
 #        ifdef AMAYA_PLUGIN 
+#        ifndef _WINDOWS
 	   TtaAddButton (doc, 1, iconPlugin, TtaCreateFormPlugin, "TtaCreateFormPlugin",
 			 TtaGetMessage (AMAYA, AM_BUTTON_PLUGIN),
 			 TBSTYLE_BUTTON, TRUE);
+#        endif /* !_WINDOWS */
 #        endif /* AMAYA_PLUGIN */
 
 #ifdef AMAYA_JAVA

@@ -2496,7 +2496,7 @@ LPARAM lParam;
       OpenFileName.lpstrTitle        = TEXT ("Select");
       OpenFileName.nFileOffset       = 0;
       OpenFileName.nFileExtension    = 0;
-      OpenFileName.lpstrDefExt       = TEXT ("*.html");
+      OpenFileName.lpstrDefExt       = TEXT ("html");
       OpenFileName.lCustData         = 0;
       OpenFileName.Flags             = OFN_SHOWHELP | OFN_HIDEREADONLY;
       
