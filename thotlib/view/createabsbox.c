@@ -2587,7 +2587,7 @@ PtrAbstractBox TruncateOrCompleteAbsBox (PtrAbstractBox pAb, ThotBool truncate,
 		       if ((*inheritTable)[l - 1])
 			 /* pEl herite de l'attribut l */
 			 /* cherche si l existe au dessus */
-			 if ((pAttr = GetTypedAttrAncestor (pEl, l,
+			 if ((pAttr = GetTypedAttrAncestor (pEl->ElParent, l,
 			               pEl->ElStructSchema, &pElAttr)) != NULL)
 			   {
 			     /* on cherchera d'abord dans le schema de */
@@ -3200,7 +3200,8 @@ static void ComputeVisib (PtrElement pEl, PtrDocument pDoc,
 	  }
 	for (l = 1; l <= pEl->ElStructSchema->SsNAttributes; l++)
 	   if ((*inheritTable)[l - 1])	/* pEl herite de l'attribut l */
-	      if ((pAttr = GetTypedAttrAncestor (pEl, l, pEl->ElStructSchema,
+	      if ((pAttr = GetTypedAttrAncestor (pEl->ElParent, l,
+						 pEl->ElStructSchema,
 						 &pElAttr)) != NULL)
 		 /* cherche si l existe au dessus */
 		 ApplyVisibRuleAttr (pEl, pAttr, pElAttr, pDoc, vis, viewNb,
@@ -3598,7 +3599,7 @@ static void  ApplyPresRules (PtrElement pEl, PtrDocument pDoc,
 	      for (l = 1; l <= pEl->ElStructSchema->SsNAttributes; l++)
 		if ((*inheritTable)[l - 1]  /* pEl inherit attribute l */ &&
 		    /* is this attribute present on an ancestor? */
-		    (pAttr = GetTypedAttrAncestor (pEl, l, pEl->ElStructSchema,
+		    (pAttr = GetTypedAttrAncestor (pEl->ElParent, l, pEl->ElStructSchema,
 						   &pElAttr)) != NULL)
 		  {
 		    apply = TRUE;
