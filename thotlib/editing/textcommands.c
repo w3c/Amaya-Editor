@@ -1167,7 +1167,7 @@ static int CopyXClipboard (unsigned char **buffer, View view)
       else
 	{
 	  if (pFirstEl->ElTerminal)
-	    maxLength = pFirstEl->ElVolume - firstChar + 2;    /* volume 1er element */
+	    maxLength = pFirstEl->ElVolume - firstChar;    /* volume 1er element */
 	  pEl = pFirstEl;
 	  while (pEl)
 	    {
@@ -1224,7 +1224,7 @@ static int CopyXClipboard (unsigned char **buffer, View view)
 	  clipboard = clipboard->BuNext;
 	}
     }
-  
+
   /* copy the text of following elements */
   pOldBlock = NULL;
   pEl = pFirstEl;
@@ -1239,7 +1239,7 @@ static int CopyXClipboard (unsigned char **buffer, View view)
 	  if (pEl)
 	    {
 	      pBlock = SearchEnclosingType (pEl->ElAbstractBox[v], BoBlock, BoFloatBlock);
-	      if (i && pBlock != pOldBlock)
+	      if (pOldBlock && pBlock != pOldBlock)
 		{
 		  /* Add new lines */
 		  text[i++] = EOL;
