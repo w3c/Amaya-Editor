@@ -14,6 +14,7 @@
  *                  for the byzance collaborative work application
  */
 
+#define BROKEN_SERVER 0		/* 1 if server URIs require munging */
 #include "annotlib.h"
 #include "AHTURLTools_f.h"
 
@@ -150,14 +151,19 @@ char* AnnotURI (givenURI)
     char* givenURI;
 #endif /* __STDC__*/
 {
+#if BROKEN_SERVER
   char *realURI  = TtaGetMemory (ustrlen (GetAnnotServer ()) 
 				 + ustrlen (givenURI) 
 				 + sizeof ("?w3c_annotation=")
 				 + 20);
+
   usprintf (realURI,
 	    TEXT("%s?w3c_annotation=%s"),
 	    GetAnnotServer (),
 	    givenURI);
+#else /* BROKEN_SERVER */
+  char *realURI = TtaStrdup (givenURI);
+#endif /* BROKEN_SERVER */
 
   return realURI;
 }
@@ -677,6 +683,12 @@ Document            doc_annot;
     return TRUE; /* prevent Thot from performing normal save operation */
 
   annot = GetMetaData (DocumentMeta[doc_annot]->source_doc, doc_annot);
+  if (!annot)
+    {
+      fprintf (stderr, "?oops! missing annot struct for document\n");
+      return TRUE;
+    }
+
   /* update the modified date */
   if (annot->mdate)
     TtaFreeMemory (annot->mdate);
