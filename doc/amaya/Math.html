@@ -67,139 +67,139 @@ create new constructs within a formula. If the caret is not in a formula, a
 version of Amaya, the available constructs are, from top to bottom:</p>
 <ul>
 <li>
-Root with index, <code>MROOT</code> in MathML:  <math>
-  <MROOT>
-    <MROW>
-      <MI>x</MI>
-      <MO>+</MO>
-      <MN>1</MN>
-    </MROW>
-    <MN>3</MN>
-  </MROOT>
+Root with index, <code>mroot</code> in MathML:  <math>
+  <mroot>
+    <mrow>
+      <mi>x</mi>
+      <mo>+</mo>
+      <mn>1</mn>
+    </mrow>
+    <mn>3</mn>
+  </mroot>
 </math>
 
 <li>
-Square root, <code>MSQRT</code>: <math>
-  <MSQRT>
-    <MROW>
-      <MI>x</MI>
-      <MO>+</MO>
-      <MN>1</MN>
-    </MROW>
-  </MSQRT>
+Square root, <code>msqrt</code>: <math>
+  <msqrt>
+    <mrow>
+      <mi>x</mi>
+      <mo>+</mo>
+      <mn>1</mn>
+    </mrow>
+  </msqrt>
 </math>
 
 <li>
-Fraction, <code>MFRAC</code>: <math>
-  <MFRAC>
-    <MN>1</MN>
-    <MROW>
-      <MI>x</MI>
-      <MO>+</MO>
-      <MN>1</MN>
-    </MROW>
-  </MFRAC>
+Fraction, <code>mfrac</code>: <math>
+  <mfrac>
+    <mn>1</mn>
+    <mrow>
+      <mi>x</mi>
+      <mo>+</mo>
+      <mn>1</mn>
+    </mrow>
+  </mfrac>
 </math>
 
 <li>
-Expression with subscript and superscript, <code>MSUBSUP</code>: <math>
-  <MSUBSUP>
-    <MI>x</MI>
-    <MROW>
-      <MI>i</MI>
-      <MO>+</MO>
-      <MN>1</MN>
-    </MROW>
-    <MI>n</MI>
-  </MSUBSUP>
+Expression with subscript and superscript, <code>msubsup</code>: <math>
+  <msubsup>
+    <mi>x</mi>
+    <mrow>
+      <mi>i</mi>
+      <mo>+</mo>
+      <mn>1</mn>
+    </mrow>
+    <mi>n</mi>
+  </msubsup>
 </math>
 or <math>
-  <MSUBSUP>
-    <MO>&int;</MO>
-    <MN>0</MN>
-    <MO>&infin;</MO>
-  </MSUBSUP>
+  <msubsup>
+    <mo>&int;</mo>
+    <mn>0</mn>
+    <mo>&infin;</mo>
+  </msubsup>
 </math>
 
 <li>
-Expression with a subscript, <code>MSUB</code>: <math>
-  <MSUB>
-    <MI>x</MI>
-    <MI>i</MI>
-  </MSUB>
+Expression with a subscript, <code>msub</code>: <math>
+  <msub>
+    <mi>x</mi>
+    <mi>i</mi>
+  </msub>
 </math>
 
 <li>
-Expression with a superscript, <code>MSUP</code>: <math>
-  <MSUP>
-    <MI>x</MI>
-    <MI>n</MI>
-  </MSUP>
+Expression with a superscript, <code>msup</code>: <math>
+  <msup>
+    <mi>x</mi>
+    <mi>n</mi>
+  </msup>
 </math>
 
 <li>
-Expression with under- and overscript, <code>MUNDEROVER</code>: <math>
-  <MUNDEROVER>
-    <MO>&sum;</MO>
-    <MROW>
-      <MI>i</MI>
-      <MO>=</MO>
-      <MN>1</MN>
-    </MROW>
-    <MI>n</MI>
-  </MUNDEROVER>
+Expression with under- and overscript, <code>munderover</code>: <math>
+  <munderover>
+    <mo>&sum;</mo>
+    <mrow>
+      <mi>i</mi>
+      <mo>=</mo>
+      <mn>1</mn>
+    </mrow>
+    <mi>n</mi>
+  </munderover>
 </math>
 
 <li>
-Expression with underscript, <code>MUNDER</code>: <math>
-  <MUNDER>
-    <MI>x</MI>
-    <MO>-</MO>
-  </MUNDER>
+Expression with underscript, <code>munder</code>: <math>
+  <munder>
+    <mi>x</mi>
+    <mo>-</mo>
+  </munder>
 </math>
 
 <li>
-Expression with overscript, <code>MOVER</code>: <math>
-  <MROW>
-    <MI>x</MI>
-    <MOVER>
-      <MO>&rarr;</MO>
-      <MTEXT>maps to</MTEXT>
-    </MOVER>
-    <MI>y</MI>
-  </MROW>
+Expression with overscript, <code>mover</code>: <math>
+  <mrow>
+    <mi>x</mi>
+    <mover>
+      <mo>&rarr;</mo>
+      <mtext>maps to</mtext>
+    </mover>
+    <mi>y</mi>
+  </mrow>
 </math>
 
 <li>
-Expression within parentheses, <code>MF</code>: <math>
-  <MROW>
-    <MF>(</MF>
-    <MROW>
-      <MI>a</MI>
-      <MO>+</MO>
-      <MI>b</MI>
-    </MROW>
-    <MF>)</MF>
-  </MROW>
+Expression within parentheses, <code>mrow</code>: <math>
+  <mrow>
+    <mo fence="true">(</mo>
+    <mrow>
+      <mi>a</mi>
+      <mo>+</mo>
+      <mi>b</mi>
+    </mrow>
+    <mo fence="true">)</mo>
+  </mrow>
 </math>
 
 <li>
-Expression with prescripts and tensor indices, <code>MMULTISCRIPTS</code>:
+Expression with prescripts and tensor indices, <code>mmultiscripts</code>:
 <math>
-  <MMULTISCRIPTS>
-    <MI>X</MI>
-    <MI>i</MI>
-    <MI>j</MI>
-    <MPRESCRIPTS/>
-    <MI>k</MI>
-    <MI>l</MI>
-  </MMULTISCRIPTS>
+  <mmultiscripts>
+    <mi>X</mi>
+    <mi>i</mi>
+    <mi>j</mi>
+    <mprescripts/>
+    <mi>k</mi>
+    <mi>l</mi>
+  </mmultiscripts>
 </math>
 
 </ul>
 <p>
 The last item of the <strong>Math</strong> palette (<math>
-  <MI>&alpha;&beta;&gamma;</MI>
+  <mi>&alpha;&beta;&gamma;</mi>
 </math>
 ) displays another palette from which you can insert symbols and greek
 characters in mathematical expressions.</p>
@@ -216,19 +216,19 @@ arrow keys.</p>
 <h3>Entering characters</h3>
 <p>
 When you type a character string in a MathML element, Amaya parses that string
-and generates the <code>MO</code> (operator), <code>MN</code> (number),
-<code>MI</code> (identifier), <code>MTEXT</code> elements automatically. For
+and generates the <code>mo</code> (operator), <code>mn</code> (number),
+<code>mi</code> (identifier), <code>mtext</code> elements automatically. For
 instance, to enter</p>
 <p>
 <math>
-  <MROW>
-    <MI>x</MI>
-    <MO>=</MO>
-    <MN>2</MN>
-    <MI>a</MI>
-    <MO>+</MO>
-    <MI>b</MI>
-  </MROW>
+  <mrow>
+    <mi>x</mi>
+    <mo>=</mo>
+    <mn>2</mn>
+    <mi>a</mi>
+    <mo>+</mo>
+    <mi>b</mi>
+  </mrow>
 </math>
 </p>
 <p>
@@ -236,7 +236,7 @@ just type <code>x=2a+b</code>, (don't forget to first click on the Math or
 MathDisp item of the <strong>Math</strong> menu, if you are not in a
 mathematical expression) and you will get the following structure (you can
 check in the Math_Structure view):</p>
-<pre>&lt;MI>x&lt;/MI>&lt;MO>=&lt;/MO>&lt;MN>2&lt;/MN>&lt;MI>a&lt;/MI>&lt;MO>+&lt;/MO>&lt;MI>b&lt;/MI></pre>
+<pre>&lt;mi>x&lt;/mi>&lt;mo>=&lt;/mo>&lt;mn>2&lt;/mn>&lt;mi>a&lt;/mi>&lt;mo>+&lt;/mo>&lt;mi>b&lt;/mi></pre>
 
 <h3>Structure editing</h3>
 <p>
@@ -258,8 +258,8 @@ href="Views.html#Structure">Show Structure</a> item from the
 <ul>
 <li>
 the Structure view shows the main structure of the HTML document. In this
-view, MathML elements are only represented by a <code>MATH</code> or
-<code>MATHDISP</code> tag; their actual contents is not shown.
+view, MathML elements are only represented by a <code>math</code> tag;
+their actual contents is not shown.
 <li>
 the Math_Structure view shows only MathML elements, but here, all their
 components are visible.
@@ -269,19 +269,19 @@ You can edit math expressions either in the main view or in the Math_Structure
 view. The Math_Structure view is especially helpful to avoid ambiguity.
 Consider the following example:</p>
 <mathdisp>
-  <MROW>
-    <MI>x</MI>
-    <MO>=</MO>
-    <MSQRT>
-      <MROW>
-        <MI>a</MI>
-        <MO>+</MO>
-        <MI>b</MI>
-      </MROW>
-    </MSQRT>
-    <MO>+</MO>
-    <MN>1</MN>
-  </MROW>
+  <mrow>
+    <mi>x</mi>
+    <mo>=</mo>
+    <msqrt>
+      <mrow>
+        <mi>a</mi>
+        <mo>+</mo>
+        <mi>b</mi>
+      </mrow>
+    </msqrt>
+    <mo>+</mo>
+    <mn>1</mn>
+  </mrow>
 </mathdisp>
 <p>
 When moving the caret after character <em>b</em>, it is not clear whether you
@@ -292,10 +292,10 @@ Selecting (or checking) in the Math_Structure view avoids any ambiguity.</p>
 <p>
 The current version of Amaya only implements the <em>Presentation Tags</em>
 from MathML, not the <em>Content Markup</em>. All presentation elements are
-available, except tables and matrices (<code>MTABLE</code>, <code>MTR</code>,
-<code>MTD</code>). MathML attributes are not implemented (except
+available, except tables and matrices (<code>mtable</code>, <code>mtr</code>,
+<code>mtd</code>). MathML attributes are not implemented (except
 <code>fontslant</code> which is available in the <strong>Attributes</strong>
-menu when a <code>MI</code> element is selected), but the <code>class</code>
+menu when a <code>mi</code> element is selected), but the <code>class</code>
 and <code>style</code> attributes from HTML are available: you can <a
 href="StyleSheets.html">associate CSS style</a> with MathML elements.</p>
 <p>
