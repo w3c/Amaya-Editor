@@ -274,7 +274,7 @@ static void RedrawPolyLine (int frame, int x, int y, PtrTextBuffer buffer,
 	 *y3 = points[0].y;
        }
 #ifdef _GL
-	GL_DrawPolygon (points, nb);
+     GL_DrawPolygon (points, nb);
 #else /*_GL*/
 #ifdef _WINDOWS
      DrawOutpolygon (w, points, nb);
@@ -282,22 +282,22 @@ static void RedrawPolyLine (int frame, int x, int y, PtrTextBuffer buffer,
 #ifndef _GTK
      XDrawLines (TtDisplay, w, TtInvertGC, points, nb, CoordModeOrigin);
 #else /* _GTK */
-	 gdk_draw_polygon (FrRef[frame], TtInvertGC, FALSE, points, nb);
+     gdk_draw_polygon (FrRef[frame], TtInvertGC, FALSE, points, nb);
 #endif
 #endif /* _WINDOWS */
 #endif /*_GL*/
     }
   else 
 #ifdef _GL
-	GL_DrawPolygon (points, nb - 1);
+    GL_DrawPolygon (points, nb - 1);
 #else /*_GL*/
 #ifdef _WINDOWS 
-    DrawOutpolygon (w, points, nb - 1);
+  DrawOutpolygon (w, points, nb - 1);
 #else  /* _WINDOWS */
 #ifndef _GTK
-    XDrawLines (TtDisplay, w, TtInvertGC, points, nb - 1, CoordModeOrigin);
+  XDrawLines (TtDisplay, w, TtInvertGC, points, nb - 1, CoordModeOrigin);
 #else /* _GTK */
-	gdk_draw_polygon (FrRef[frame], TtInvertGC, FALSE, points, nb - 1);
+  gdk_draw_lines(FrRef[frame], TtInvertGC, points, nb - 1);
 #endif /* !_GTK */
 #endif /* _WINDOWS */
 #endif /*_GL*/
