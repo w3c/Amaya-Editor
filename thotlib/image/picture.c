@@ -1202,8 +1202,10 @@ static void LayoutPicture (Pixmap pixmap, Drawable drawable, int picXOrg,
 	      GetObject (pixmap, sizeof (BITMAP), (LPVOID) &bm);
 	      /*DPtoLP (TtDisplay, &ptSize, 1);*/
 		  /* shift in the source image */
-	      ptOrg.x = pFrame->FrClipXBegin - box->BxXOrg;
-	      ptOrg.y = pFrame->FrClipYBegin - box->BxYOrg;
+	      ptOrg.x = pFrame->FrClipXBegin - (box->BxXOrg + box->BxTMargin + box->BxLBorder +
+           box->BxLPadding);
+	      ptOrg.y = pFrame->FrClipYBegin - (box->BxYOrg + box->BxTMargin + box->BxTBorder +
+           box->BxTPadding);
 		  /* size of the copied zone */
 	      ptSize.x = pFrame->FrClipXEnd - pFrame->FrClipXBegin;
 	      ptSize.y = pFrame->FrClipYEnd - pFrame->FrClipYBegin;
