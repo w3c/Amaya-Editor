@@ -2226,7 +2226,7 @@ static unsigned char *HandleXMLstring (unsigned char *data, int *length,
 		  found = MapXMLEntity (currentParserCtxt->XMLtype,
 					&entityName[1], &entityValue);
 #ifdef _I18N_
-		  if (found && entityValue < 1023)
+		  if (found && entityValue < 0x3FF)
 		    {
 		      /* get the UTF-8 string of the unicode character */
 		      ptr = &buffer[j];
@@ -4061,12 +4061,8 @@ static void  InitializeExpatParser (CHARSET charset)
 	   charset == ISO_8859_4   || charset == ISO_8859_5   ||
 	   charset == ISO_8859_6   || charset == ISO_8859_7   ||
 	   charset == ISO_8859_8   || charset == ISO_8859_9)
-#ifdef _I18N_
     /* buffers will be converted to UTF-8 by Amaya */
     Parser = XML_ParserCreateNS ("UTF-8", NS_SEP);
-#else /* _I18N */
-    Parser = XML_ParserCreateNS ("ISO-8859-1", NS_SEP);
-#endif /* _I18N */
   else if (charset == ISO_8859_6_E || charset == ISO_8859_6_I ||
 	   charset == ISO_8859_8_E || charset == ISO_8859_8_I ||
 	   charset == ISO_8859_10  || charset == ISO_8859_15  ||
@@ -4764,9 +4760,7 @@ static void   XmlParse (FILE     *infile, CHARSET charset,
 {
 #define	 COPY_BUFFER_SIZE	1024
    char         bufferRead[COPY_BUFFER_SIZE + 1];
-#ifdef _I18N_
    char        *buffer;
-#endif /* _I18N_ */
    int          i;
    int          res;
    int          tmpLineRead = 0;
@@ -4833,7 +4827,6 @@ static void   XmlParse (FILE     *infile, CHARSET charset,
        /* Standard EXPAT processing */
        if (!XMLNotWellFormed)
 	 {
-#ifdef _I18N_
 	   if (charset == ISO_8859_2   || charset == ISO_8859_3   ||
 	       charset == ISO_8859_4   || charset == ISO_8859_5   ||
 	       charset == ISO_8859_6   || charset == ISO_8859_7   ||
@@ -4848,7 +4841,6 @@ static void   XmlParse (FILE     *infile, CHARSET charset,
 		 }
 	     }
 	   else
-#endif /* _I18N */
 	     okay = XML_Parse (Parser, &bufferRead[i], res, endOfFile);
 	   if (!okay)
 	     XmlParseError (errorNotWellFormed,

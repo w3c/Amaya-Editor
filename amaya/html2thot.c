@@ -3333,7 +3333,9 @@ void GetFallbackCharacter (int code, unsigned char *fallback, Language *lang)
       fallback[0]= '?';
     }
 #ifdef _I18N_
-  else if (code < 0x3FF)
+  else if (code < 0x3FF ||
+	   code == 0x200E /* lrm */ ||
+	   code == 0x200F /* rlm */)
     {
       /* get the UTF-8 string of the unicode character */
       ptr = fallback;
@@ -4431,7 +4433,7 @@ static char GetNextChar (FILE *infile, char* buffer, int *index,
 	  charRead = buffer[(*index)++];
 	  if (HTMLcontext.encoding != UTF_8)
 	    {
-	      /* translate the ISO-latin-1 character into a UTF-8 string */
+	      /* translate ISO-latin characters into a UTF-8 string */
 	      ptr = fallback;
 	      wcharRead = TtaGetWCFromChar (charRead, HTMLcontext.encoding);
 	      res = TtaWCToMBstring (wcharRead, &ptr);
