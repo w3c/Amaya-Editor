@@ -70,7 +70,7 @@ char*    ThotPath;
 char*    currentFile;
 char*    currentDestFile;
 char*    BinFiles [100];
-char*    TbStrings [2] = {"Open (Ctrl+O)", "Build (F7)"};
+char*    TbStrings [2] = {"Open a specif file (Ctrl+O)", "Build (F7)"};
 
 DWORD    dwStatusBarStyles = WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | CCS_BOTTOM | SBARS_SIZEGRIP;
 
@@ -1062,6 +1062,8 @@ int Makefile (HWND hwnd, char *fileName)
   ----------------------------------------------------------------------*/
 LRESULT CALLBACK CompilersWndProc (HWND hwnd, UINT iMsg, WPARAM wParam, LPARAM lParam)
 {
+  char         *s;
+  int           l;
   int           result = COMP_SUCCESS; 
   int           status, cx, cy;
   int           cyStatus, cyTB;
@@ -1074,13 +1076,13 @@ LRESULT CALLBACK CompilersWndProc (HWND hwnd, UINT iMsg, WPARAM wParam, LPARAM l
     case WM_CREATE:
       menuBar = CreateMenu ();
       popupMenu = CreateMenu ();
-      AppendMenu (popupMenu, MF_STRING, OPEN, "&Open\tCtrl+O");
+      AppendMenu (popupMenu, MF_STRING, OPEN, "&Open a specific file\tCtrl+O");
       AppendMenu (popupMenu, MF_STRING, COMPILE, "&Build\tF7");
       AppendMenu (popupMenu, MF_SEPARATOR, 0, NULL);
       AppendMenu (popupMenu, MF_STRING, QUIT, "&Quit\tAlt+F4");
       AppendMenu (menuBar, MF_POPUP, (UINT)popupMenu, "&File");
       SetMenu (hwnd, menuBar);
-      EnableMenuItem (popupMenu, COMPILE, MFS_GRAYED);
+      EnableMenuItem (popupMenu, COMPILE, MFS_ENABLED);
       
       hWndToolBar = CreateToolbarEx (hwnd, WS_CHILD | WS_BORDER | WS_VISIBLE | TBSTYLE_TOOLTIPS | CCS_ADJUSTABLE,
 				     ID_TOOLBAR, 2, g_hInstance, COMP_TOOLBAR, (LPCTBBUTTON)&tbButtons,
@@ -1152,10 +1154,30 @@ LRESULT CALLBACK CompilersWndProc (HWND hwnd, UINT iMsg, WPARAM wParam, LPARAM l
       return 0;
 
     case WM_KEYDOWN:
-      if ((wParam == VK_F7) && fileToOpen && (fileToOpen[0] != 0))
+      if ((wParam == VK_F7))
 	{
 	  SetCursor(LoadCursor(NULL, IDC_WAIT));
 	  SetWindowText (hEdit, "");
+	  if (fileToOpen[0] == EOS)
+	  {
+		s = TtaGetEnvString ("PWD");
+		if (s)
+		{
+			strcpy (fileToOpen, s);
+			l = strlen (fileToOpen) - 1;
+			while (l > 0 && fileToOpen[l] != '\\')
+              l--;
+			if (l > 0)
+			{
+			  while (l > 0 && fileToOpen[l] != '\\')
+				l--;
+			}
+			fileToOpen[l] = EOS;
+			strcat (fileToOpen, "\\amaya");
+			_chdir (fileToOpen);
+		}
+		strcat (fileToOpen, "\\amaya.mkf");
+	  }
 	  result = Makefile (hEdit, fileToOpen);
 	  SetCursor(LoadCursor(NULL, IDC_ARROW));
 	  if (result == FATAL_EXIT_CODE)
@@ -1251,6 +1273,26 @@ LRESULT CALLBACK CompilersWndProc (HWND hwnd, UINT iMsg, WPARAM wParam, LPARAM l
 	case COMPILE: 
 	  SetCursor(LoadCursor(NULL, IDC_WAIT));
 	  SetWindowText (hEdit, "");
+	  if (fileToOpen[0] == EOS)
+	  {
+		s = TtaGetEnvString ("PWD");
+		if (s)
+		{
+			strcpy (fileToOpen, s);
+			l = strlen (fileToOpen) - 1;
+			while (l > 0 && fileToOpen[l] != '\\')
+              l--;
+			if (l > 0)
+			{
+			  while (l > 0 && fileToOpen[l] != '\\')
+				l--;
+			}
+			fileToOpen[l] = EOS;
+			strcat (fileToOpen, "\\amaya");
+			_chdir (fileToOpen);
+		}
+		strcat (fileToOpen, "\\amaya.mkf");
+	  }
 	  result = Makefile (hEdit, fileToOpen);
 	  SetCursor(LoadCursor(NULL, IDC_ARROW));
 	  if (result == FATAL_EXIT_CODE)
