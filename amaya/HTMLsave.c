@@ -1054,7 +1054,7 @@ void SetNamespacesAndDTD (Document doc)
 void RestartParser (Document doc, char *localFile,
 		    char *tempdir, char *documentname)
 {
-  CHARSET       charset;
+  CHARSET       charset, doc_charset;
   char          charsetname[MAX_LENGTH];
   int           profile, parsingLevel;
   int           i;
@@ -1085,8 +1085,28 @@ void RestartParser (Document doc, char *localFile,
 	}
 
   /* check if there is an XML declaration with a charset declaration */
+  charsetname[0] = EOS;
   CheckDocHeader (localFile, &xmlDec, &withDoctype, &isXML, &isKnown,
 		  &parsingLevel, &charset, charsetname, &thotType);
+
+  /* Check charset information in a meta */
+  if (charset == UNDEFINED_CHARSET)
+    CheckCharsetInMeta (localFile, &charset, charsetname);
+
+  doc_charset = TtaGetDocumentCharset (doc);
+  if (charset != doc_charset)
+    {
+      /* Update the charset info */
+      TtaSetDocumentCharset (doc, charset, FALSE);
+      if (DocumentMeta[doc]->charset)
+	{
+	  TtaFreeMemory (DocumentMeta[doc]->charset);
+	  DocumentMeta[doc]->charset = NULL;
+	}
+      if (charsetname[0] != EOS)
+	DocumentMeta[doc]->charset = TtaStrdup (charsetname);
+    }
+  
   if (isXML || IsMathMLName (localFile) ||
       IsSVGName (localFile) || IsXMLName (localFile))
     DocumentMeta[doc]->xmlformat = TRUE;
