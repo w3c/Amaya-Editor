@@ -1674,7 +1674,7 @@ LPARAM lParam;
                  UINT i, nNumFiles = DragQueryFile ((HDROP)wParam, 0xFFFFFFFF, NULL, 0);
                  int document, view;
                  FrameToView (frame, &document, &view);
-                 if (*FrameTable[frame].Call_Text[0])
+                 if (FrameTable[frame].Call_Text[0] != NULL)
                    for (i = 0; i < nNumFiles; i++) {
                      DragQueryFile ((HDROP)wParam, i, DroppedFileName, MAX_PATH + 1);
 		     /* call the first text-zone entry with the current text */
