@@ -1139,7 +1139,7 @@ void BackupAll()
 {
   int             doc;
 
-  fprintf (stderr, TtaGetMessage (LIB, TMSG_DEBUG_SAV_FILES));
+  ufprintf (stderr, TtaGetMessage (LIB, TMSG_DEBUG_SAV_FILES));
   /* parcourt la table des documents */
   for (doc = 0; doc < MAX_DOCUMENTS; doc++)
     if (LoadedDocument[doc] != NULL)

@@ -186,7 +186,7 @@ typedef struct _PresentationBox
     } s2;
     struct			/* PbContent = FreeContent */
     {
-      char	_PbContFree_; /* to make the compiler happy */
+      CHAR_T	_PbContFree_; /* to make the compiler happy */
     } s3;
   } u;
 } PresentationBox;
@@ -443,7 +443,7 @@ typedef struct _PresRule
 	struct	/* PRuleType = PtFont, PtStyle, PtUnderline, PtThickness,*/
 	        /* PtLineStyle */
 	{
-	  char     _PrChrValue_;
+	  CHAR_T     _PrChrValue_;
 	}  s1;
 	struct	/* PRuleType = PtBreak1, PtBreak2, */
 		/* PtIndent, PtSize, PtLineSpacing, PtLineWeight */
@@ -566,8 +566,8 @@ typedef struct _Counter
 typedef struct _PresConstant
 {
   BasicType     PdType;				/* type of the constant */
-  char           PdAlphabet;			/* alphabet of the constant */
-  char           PdString[MAX_PRES_CONST_LEN];	/* constant presentation string,
+  CHAR_T           PdAlphabet;			/* alphabet of the constant */
+  CHAR_T           PdString[MAX_PRES_CONST_LEN];	/* constant presentation string,
 				   		terminated by a NUL character */
 } PresConstant;
 

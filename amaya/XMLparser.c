@@ -903,7 +903,7 @@ CHAR_T                c;
 	   TtaSetAttributeText (currentAttribute, inputBuffer, currentElement,
 				currentDocument);
 	   if (HTMLStyleAttribute)
-	      ParseHTMLSpecificStyle (currentElement, (STRING) inputBuffer,
+	      ParseHTMLSpecificStyle (currentElement, inputBuffer,
 				      currentDocument, FALSE);
 	   break;
 	case 3:       /* reference */

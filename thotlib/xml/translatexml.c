@@ -118,7 +118,7 @@ char *XmlName;
   if (CurrentTypeNum < MaxTypeNum)
     {
       elType.ElTypeNum = CurrentTypeNum;
-      strcpy (tempName, TtaGetElementTypeOriginalName (elType));
+      ustrcpy (tempName, TtaGetElementTypeOriginalName (elType));
       while ((CurrentTypeNum < MaxTypeNum-1) && 
 	     (strcmp (ThotName, tempName) != 0))
 	{
@@ -135,7 +135,7 @@ char *XmlName;
 	  TSchema->XmlReverseTable[index] = CurrentTypeNum;
 	  CurrentTypeNum++;
 	  elType.ElTypeNum = CurrentTypeNum;
-	  strcpy (tempName, TtaGetElementTypeOriginalName (elType));
+	  ustrcpy (tempName, TtaGetElementTypeOriginalName (elType));
 	}
     }
   if (CurrentTypeNum < MaxTypeNum)
@@ -174,7 +174,7 @@ char *XmlName;
 	  if (CurrentAttrNum < MaxAttrNum)
 	    {
 	      atType.AttrTypeNum = CurrentAttrNum;
-	      strcpy (tempName, TtaGetAttributeOriginalName (atType));
+	      ustrcpy (tempName, TtaGetAttributeOriginalName (atType));
 	    }
 	  while ((CurrentAttrNum < MaxAttrNum) && 
 		 (strcmp (ThotName, tempName) != 0))
@@ -196,7 +196,7 @@ char *XmlName;
 	      TSchema->XmlReverseTable[index] = CurrentAttrNum;
 	      CurrentAttrNum ++;
 	      atType.AttrTypeNum = CurrentAttrNum;
-	      strcpy (tempName, TtaGetAttributeOriginalName (atType));
+	      ustrcpy (tempName, TtaGetAttributeOriginalName (atType));
 	    }
 	  if (CurrentAttrNum < MaxAttrNum)
 	    if (theName!=NULL)
@@ -245,7 +245,7 @@ char *XmlName;
 		  n = 0;
 		  while (!found && n < CURRENT_ATTR_DEF.AttrNEnumValues)
 		    {
-		      found = !strcmp (CURRENT_ATTR_DEF.AttrEnumOrigValue[n], ThotName);
+		      found = !ustrcmp (CURRENT_ATTR_DEF.AttrEnumOrigValue[n], ThotName);
 		      if (!found) n++;
 		    }
 		}
@@ -271,7 +271,7 @@ char *XmlName;
 	      /* inserts the attribute value name */
 	      n = n + TSchema->XmlAttrNameTable[CurrentAttrNum].AttrFirstValue;
 	      TSchema->XmlNameTable[n] = TtaGetMemory (32);
-	      strcpy ( TSchema->XmlNameTable[n], theName);
+	      ustrcpy ( TSchema->XmlNameTable[n], theName);
 	    }
 	}
     }
@@ -355,8 +355,8 @@ SSchema sSchema;
 	  /* Tries to open the file or go to next path */
 	  filename[f++]='/';
 	  filename[f++]='\0';
-	  strcat(filename,TtaGetSSchemaName(sSchema));
-	  strcat(filename,".X");
+	  ustrcat(filename,TtaGetSSchemaName(sSchema));
+	  ustrcat(filename, ".X");
 	  if (TtaFileExist(filename))
 	    {
 	      file = TtaReadOpen (filename);
@@ -462,7 +462,7 @@ int attrTypeNum;
   attrType.AttrTypeNum = attrTypeNum;
   /* searches the translation schema */
   curTS = TranslationSchemas;
-  while (curTS != NULL && strcmp (curTS->SchemaName, TtaGetSSchemaName(schema)))
+  while (curTS != NULL && ustrcmp (curTS->SchemaName, TtaGetSSchemaName(schema)))
     curTS = curTS->Next;
   if (curTS == NULL)
     curTS = LoadTable (schema);
@@ -508,7 +508,7 @@ int attrTypeNum;
 	  while (result == 0 && index < end)
 	    {
 	      if (curTS->XmlNameTable[index] == NULL || 
-		  strcmp (curTS->XmlNameTable[index], xmlName) != 0)
+		  ustrcmp (curTS->XmlNameTable[index], xmlName) != 0)
 		index++;
 	      else
 		result = index;
@@ -536,7 +536,7 @@ int attrTypeNum;
 		/* Checking if it is a local or global attribute */
 		if (((PtrSSchema)schema)->SsAttribute[result - 1].AttrGlobal)
 		  /* Global attribute */
-		  found = (!strcmp (xmlName, ((PtrSSchema)schema)->SsAttribute[result - 1].AttrOrigName));
+		  found = (!ustrcmp (xmlName, ((PtrSSchema)schema)->SsAttribute[result - 1].AttrOrigName));
 
 		else
 		  {/* Local Attribute */
@@ -544,7 +544,7 @@ int attrTypeNum;
 		    for (j = 0; j < pRule->SrNLocalAttrs && pRule->SrLocalAttr[j]!=result; j++);
 		    if (j < pRule->SrNLocalAttrs)
 		      /* the attribute is legal : checking the name */
-		      found = (!strcmp (xmlName, ((PtrSSchema)schema)->SsAttribute[result - 1].AttrOrigName));
+		      found = (!ustrcmp (xmlName, ((PtrSSchema)schema)->SsAttribute[result - 1].AttrOrigName));
 		    
 		  }
 	      }
@@ -594,7 +594,7 @@ int attrVal;
   res = NULL;
   /* searches the translation schema */
   curTS = TranslationSchemas;
-  while (curTS != NULL && strcmp (curTS->SchemaName, TtaGetSSchemaName(schema)))
+  while (curTS != NULL && ustrcmp (curTS->SchemaName, TtaGetSSchemaName(schema)))
     curTS = curTS->Next;
  
   if (curTS == NULL)

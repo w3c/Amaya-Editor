@@ -3,6 +3,11 @@
 
 #include <string.h>
 
+#ifdef _WINDOWS
+#include <windows.h>
+#include <wchar.h>
+#endif /* _WINDOWS */
+
 #ifdef _I18N_
 
 typedef unsigned short  CHAR_T;

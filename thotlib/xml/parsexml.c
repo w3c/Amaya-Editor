@@ -77,7 +77,7 @@ static boolean      immAfterTag = FALSE;  /* A tag has just been read */
 /* input buffer */
 #define MAX_BUFFER_LENGTH 1000
 #define ALMOST_FULL_BUFFER 700
-static unsigned char inputBuffer[MAX_BUFFER_LENGTH];
+static UCHAR_T      inputBuffer[MAX_BUFFER_LENGTH];
 static int          bufferLength = 0;	  /* actual length of text in input
 					     buffer */
 static int          nbLineRead;            /* number of line read */
@@ -105,11 +105,11 @@ static boolean      DoCreateElement = TRUE;       /* flag for NotifyElement */
 static boolean      DoCreateAttribute = TRUE;     /* flag for NotifyAttribute*/
 static int          IgnoreElemLevel;              /* stack level from where */
                                                   /* elements are ignored (events) */
-static unsigned char currentGI[64];               /* the GI of the last elem read */
+static UCHAR_T      currentGI[64];               /* the GI of the last elem read */
 static int          nbAssocRoot = 0;              /* number of assoc trees read */
 /* parser stack */
 #define MAX_STACK_HEIGHT 200		  /* maximum stack height */
-static unsigned char* GIStack[MAX_STACK_HEIGHT]; /* Xml element name */
+static USTRING      GIStack[MAX_STACK_HEIGHT]; /* Xml element name */
 static Element      elementStack[MAX_STACK_HEIGHT];  /* element in the Thot abstract tree */
 static Language     languageStack[MAX_STACK_HEIGHT]; /* element language */
 static int          stackLevel = 0;       /* first free element on the stack */
@@ -167,7 +167,7 @@ char *schemaName;
   int attrKind;
   
   /* Creating Document and Initializing document */
-  currentDocument = TtaNewDocument(schemaName,currentDocumentName);
+  currentDocument = TtaNewDocument(schemaName, currentDocumentName);
   TtaSetMandatoryInsertion (FALSE, currentDocument);
   currentDocSSchema = TtaGetDocumentSSchema (currentDocument);
   /* deleting skeleton and root attributes (execpt Lang) */

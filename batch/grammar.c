@@ -881,7 +881,7 @@ char              **argv;
 		  /* marque la fin reelle de la ligne */
 		  inputLine[i - 1] = '\0';
 		  /* garde une copie de la ligne avant traduction */
-		  ustrncpy ((STRING) sourceLine, (STRING) inputLine, LINE_LENGTH);
+		  ustrncpy (sourceLine, inputLine, LINE_LENGTH);
 		  LineNum++;
 		  /* traduit les caracteres de la ligne */
 		  OctalToChar ();

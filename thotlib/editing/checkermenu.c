@@ -52,11 +52,10 @@ static int          OldNC;
 static int          SpellingBase;
 static boolean      FirstStep;
 static boolean      ToReplace;
-static CHAR_T         CorrectWord[MAX_WORD_LEN];
-static CHAR_T         CurrentWord[MAX_WORD_LEN];
+static CHAR_T       CorrectWord[MAX_WORD_LEN];
+static CHAR_T       CurrentWord[MAX_WORD_LEN];
 static PtrDocument  pDocSel;
-static CHAR_T         SpecialChars[] =
-{"@#$&+~"};
+static STRING       SpecialChars;
 
 /* les variables importees de l'editeur */
 
@@ -161,7 +160,7 @@ void WIN_DisplayWords ()
        SetWindowText (hwndCurrentWord, "");
 	   SendMessage (hwnListWords, LB_ADDSTRING, 0, (LPARAM) ((LPCTSTR)""));  
     } else {
-         sprintf (currentWord, "%s", ChkrCorrection[1]);
+         usprintf (currentWord, "%s", ChkrCorrection[1]);
          SetWindowText (hwndCurrentWord, ChkrCorrection[1]);
 	     for (i = 1; (i <= NC && ustrcmp (ChkrCorrection[i], "$") != 0); i++) {
 	         SendMessage (hwnListWords, LB_INSERTSTRING, i - 1, (LPARAM) ((LPCTSTR)ChkrCorrection[i]));  
@@ -193,6 +192,7 @@ view                view;
    boolean             ok;
 #  endif /* !_WINDOWS */
 
+   SpecialChars = "@#$&+~";
 
    /* Document concerne */
    document = LoadedDocument[doc - 1];
@@ -357,7 +357,7 @@ Language            language;
       CorrectWord[0] = EOS;
 
    /* afficher la langue de correction courante */
-   sprintf (Lab, "%s: %s", TtaGetMessage (LIB, TMSG_LANGUAGE), TtaGetLanguageName (ChkrLanguage));
+   usprintf (Lab, "%s: %s", TtaGetMessage (LIB, TMSG_LANGUAGE), TtaGetLanguageName (ChkrLanguage));
 #  ifdef _WINDOWS
    SetWindowText (hwndLanguage, Lab);
 #  else  /* !_WINDOWS */

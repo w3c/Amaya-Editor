@@ -281,9 +281,9 @@ View                view;
 
    /* sous menu options */
    i = 0;
-   sprintf (&BufMenu[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_MANUAL_FEED));
+   usprintf (&BufMenu[i], "B%s", TtaGetMessage (LIB, TMSG_MANUAL_FEED));
    i = ustrlen(BufMenu) +1;
-   sprintf (&BufMenu[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_PAGINATE));
+   usprintf (&BufMenu[i], "B%s", TtaGetMessage (LIB, TMSG_PAGINATE));
    TtaNewToggleMenu (NumMenuOptions, NumFormPrint,
 		TtaGetMessage (LIB, TMSG_OPTIONS), 2, BufMenu, NULL, FALSE);
    if (ManualFeed)
@@ -310,7 +310,7 @@ View                view;
        TtaSetToggleMenu (NumMenuViewsToPrint, i, 1);
 
    /* label vide */
-   TtaNewLabel(NumEmptyLabel1,NumFormPrint," ");
+   TtaNewLabel(NumEmptyLabel1,NumFormPrint, " ");
 
    /* troisieme colonne */
 
@@ -321,11 +321,11 @@ View                view;
 
    /* sous-menu nombre de pages par feuille */
    i = 0;
-   sprintf (&BufMenu[i],"%s%s","B", TtaGetMessage (LIB, TMSG_1_PAGE_SHEET));
+   usprintf (&BufMenu[i], "B%s", TtaGetMessage (LIB, TMSG_1_PAGE_SHEET));
    i += ustrlen(&BufMenu[i]) + 1;
-   sprintf (&BufMenu[i],"%s%s","B", TtaGetMessage (LIB, TMSG_2_PAGE_SHEET));
+   usprintf (&BufMenu[i], "B%s", TtaGetMessage (LIB, TMSG_2_PAGE_SHEET));
    i += ustrlen(&BufMenu[i]) + 1;
-   sprintf (&BufMenu[i],"%s%s","B", TtaGetMessage (LIB, TMSG_4_PAGE_SHEET));
+   usprintf (&BufMenu[i], "B%s", TtaGetMessage (LIB, TMSG_4_PAGE_SHEET));
    TtaNewSubmenu (NumMenuNbPagesPerSheet, NumFormPrint, 0,
 		 TtaGetMessage (LIB, TMSG_NB_PAGE_SHEET), 
 		 3, BufMenu, NULL, False);
@@ -337,15 +337,15 @@ View                view;
      TtaSetMenuForm (NumMenuNbPagesPerSheet, 2);
 
    /* label vide */
-   TtaNewLabel (NumEmptyLabel2,NumFormPrint," ");
+   TtaNewLabel (NumEmptyLabel2,NumFormPrint, " ");
 
    /* quatrieme colonne */
  
    /* sous-menu imprimer papier / sauver PostScript */
    i = 0;
-   sprintf (&BufMenu[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_PRINTER));
+   usprintf (&BufMenu[i], "B%s", TtaGetMessage (LIB, TMSG_PRINTER));
    i += ustrlen (&BufMenu[i]) + 1;
-   sprintf (&BufMenu[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_PS_FILE));
+   usprintf (&BufMenu[i], "B%s", TtaGetMessage (LIB, TMSG_PS_FILE));
    TtaNewSubmenu (NumMenuSupport, NumFormPrint, 0,
 		  TtaGetMessage (LIB, TMSG_OUTPUT), 2, BufMenu, NULL, TRUE);
 
@@ -367,9 +367,9 @@ View                view;
 
    /* sous-menu format papier */
    i = 0;
-   sprintf (&BufMenu[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_A4));
+   usprintf (&BufMenu[i], "B%s", TtaGetMessage (LIB, TMSG_A4));
    i += ustrlen (&BufMenu[i]) + 1;
-   sprintf (&BufMenu[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_US));
+   usprintf (&BufMenu[i], "%s", TtaGetMessage (LIB, TMSG_US));
    TtaNewSubmenu (NumMenuPaperFormat, NumFormPrint, 0,
 	     TtaGetMessage (LIB, TMSG_PAPER_SIZE), 2, BufMenu, NULL, FALSE);
    if (!ustrcmp (PageSize, "US"))

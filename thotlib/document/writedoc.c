@@ -249,11 +249,11 @@ boolean             move;
 	     if (!copy)
 	       {
 		  FindCompleteName (pDoc->DocDName, "OLD", oldDir, backName, &i);
-		  i = rename (pivName, backName);
+		  i = urename (pivName, backName);
 	       }
 	     /* 2- faire mv du .Tmp sur le .PIV */
 	     FindCompleteName (docName, "PIV", dirName, pivName, &i);
-	     i = rename (tempName, pivName);
+	     i = urename (tempName, pivName);
 	     if (i >= 0)
 		/* >> tout s'est bien passe' << */
 		/* detruit l'ancienne sauvegarde */
@@ -288,7 +288,7 @@ boolean             move;
 			       /* deplacer le fichier .EXT dans le nouveau directory */
 			       FindCompleteName (pDoc->DocDName, "EXT", oldDir, buf, &i);
 			       FindCompleteName (pDoc->DocDName, "EXT", dirName, pivName, &i);
-			       rename (buf, pivName);
+			       urename (buf, pivName);
 			       /* detruire l'ancien fichier PIV */
 			       FindCompleteName (pDoc->DocDName, "PIV", oldDir, buf, &i);
 			       TtaFileUnlink (buf);
@@ -317,7 +317,7 @@ boolean             move;
 						   &i);
 				 FindCompleteName (docName, "EXT", dirName,
 						   pivName, &i);
-				 rename (buf, pivName);
+				 urename (buf, pivName);
 				 /* detruit l'ancien fichier .PIV */
 				 FindCompleteName (pDoc->DocDName, "PIV", oldDir, buf,
 						   &i);

@@ -346,7 +346,7 @@ STRING              txt;
 			       if (TtaFileExist (ptTranslatedName))
 				 {
 				    /* demande confirmation */
-				    sprintf (BufDir, TtaGetMessage (LIB, TMSG_FILE_EXIST), ptTranslatedName);
+				    usprintf (BufDir, TtaGetMessage (LIB, TMSG_FILE_EXIST), ptTranslatedName);
 				    TtaNewLabel (NumLabelConfirm, NumFormConfirm, BufDir);
 				    TtaShowDialogue (NumFormConfirm, FALSE);
 				 }
@@ -447,9 +447,9 @@ PtrDocument         pDoc;
 	      TtaSetMenuForm (NumMenuFormatDocToSave, 0);
 	      /* sous-menu copier/renommer un document */
 	      Indx = 0;
-	      sprintf (&BufMenu[Indx], "%s%s", "B", TtaGetMessage (LIB, TMSG_COPY));
+	      usprintf (&BufMenu[Indx], "B%s", TtaGetMessage (LIB, TMSG_COPY));
 	      Indx += ustrlen (&BufMenu[Indx]) + 1;
-	      sprintf (&BufMenu[Indx], "%s%s", "B", TtaGetMessage (LIB, TMSG_RENAME));
+	      usprintf (&BufMenu[Indx], "B%s", TtaGetMessage (LIB, TMSG_RENAME));
 	      TtaNewSubmenu (NumMenuCopyOrRename, NumFormSaveAs, 0,
 		   TtaGetMessage (LIB, TMSG_SAVE), 2, BufMenu, NULL, FALSE);
 	      TtaSetMenuForm (NumMenuCopyOrRename, 0);

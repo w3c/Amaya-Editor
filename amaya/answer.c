@@ -84,10 +84,10 @@ HTAlertPar         *reply;
 		*/
 	      break;
 	    case HT_PROG_DNS:
-	       TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_LOOKING_HOST), (char *) input);
+	       TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_LOOKING_HOST), input);
 	       break;
 	    case HT_PROG_CONNECT:
-	       TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_CONTACTING_HOST), (char *) input);
+	       TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_CONTACTING_HOST), input);
 	       break;
 	    case HT_PROG_ACCEPT:
 	       TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_WAITING_FOR_CONNECTION), NULL);

@@ -95,7 +95,7 @@ boolean             ToCreate;
   /* dictionary name = document name */
   *pDictionary = (int) NULL;
   
-  extenddic = (STRING) TtaGetEnvString ("EXTENDDICT");
+  extenddic = TtaGetEnvString ("EXTENDDICT");
   if (extenddic != NULL)
     {
       TtaExtractName (extenddic, path, dictname);
@@ -721,7 +721,7 @@ PtrDict             docDict;
    FindCompleteName (docDict->DictName, "", docDict->DictDirectory, tempbuffer, &i);
    if (docDict->DictNbWords >= 0)
      {
-	f = fopen (tempbuffer, "w");
+	f = ufopen (tempbuffer, "w");
 	if (f != NULL)
 	  {
 	    /* enregistrer d'abord nb words and nb chars effectifs */
@@ -927,9 +927,9 @@ FILE               *ftsub;
 	int                 coeff;
 	UCHAR_T       x, y, valeur;
 
-	sscanf (ch1, "%c", &x);
-	sscanf (ch2, "%c", &y);
-	sscanf (ch3, "%c", &valeur);
+	usscanf (ch1, "%c", &x);
+	usscanf (ch2, "%c", &y);
+	usscanf (ch3, "%c", &valeur);
 	switch (valeur)
 	      {
 		 case 'b':
@@ -1048,7 +1048,7 @@ int                 ParametrizeChecker ()
 	     /* Lecture du fichier parametres */
 	     ustrcpy (paramnom, corrpath);
 	     ustrcat (paramnom, "/param");
-	     if ((fparam = fopen (paramnom, "r")) != NULL)
+	     if ((fparam = ufopen (paramnom, "r")) != NULL)
 	       /* Existence du fichier */
 		init_param (fparam);
 	     else
@@ -1060,7 +1060,7 @@ int                 ParametrizeChecker ()
 	     /* Lecture du  fichier clavier */
 	     ustrcpy (clavnom, corrpath);
 	     ustrcat (clavnom, "/clavier");
-	     if ((ftsub = fopen (clavnom, "r")) != NULL)
+	     if ((ftsub = ufopen (clavnom, "r")) != NULL)
 	       /* Existence du fichier */
 	       {
 		  init_Tsub (ftsub);

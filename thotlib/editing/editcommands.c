@@ -828,7 +828,7 @@ int                *nChars;
 	     target = NULL;
 	  }
 	else
-	   target = (STRING) &((*pTargetBuffer)->BuContent);
+	   target = &((*pTargetBuffer)->BuContent);
 
 	if (pBuffer == pEndBuffer)
 	  {
@@ -3705,7 +3705,7 @@ View                view;
 {
 #  ifdef _WINDOWS
    HANDLE hMem;
-   LPSTR  lpData;
+   STRING lpData;
    int    lpDatalength;
    int    frame = GetWindowNumber (document, view);
    

@@ -135,13 +135,13 @@ int                 ref;
    CHAR_T                string[200];
 
    i = 0;
-   sprintf (&string[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_BEFORE_SEL));
+   usprintf (&string[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_BEFORE_SEL));
    i += ustrlen (&string[i]) + 1;
-   sprintf (&string[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_WITHIN_SEL));
+   usprintf (&string[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_WITHIN_SEL));
    i += ustrlen (&string[i]) + 1;
-   sprintf (&string[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_AFTER_SEL));
+   usprintf (&string[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_AFTER_SEL));
    i += ustrlen (&string[i]) + 1;
-   sprintf (&string[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_IN_WHOLE_DOC));
+   usprintf (&string[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_IN_WHOLE_DOC));
    /* sous-menu Ou` rechercher element vide */
    TtaNewSubmenu (NumMenuOrSearchText, ref, 0,
 	    TtaGetMessage (LIB, TMSG_SEARCH_WHERE), 4, string, NULL, FALSE);
@@ -856,8 +856,7 @@ PtrDocument         pDoc;
 	     ustrcat (bufText, pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrName);
 	     TtaNewLabel (NumLabelSearchReference, NumFormSearchReference,
 			  bufText);
-	     TtaNewLabel (NumLabelReferenceNotFound, NumFormSearchReference,
-			  " ");
+	     TtaNewLabel (NumLabelReferenceNotFound, NumFormSearchReference, " ");
 	     /* active le formulaire de recherche */
 	     TtaShowDialogue (NumFormSearchReference, FALSE);
 	  }
@@ -945,8 +944,7 @@ int                 data;
 			 if (pDoc != NULL)
 			   {
 			     /* efface le label */
-			     TtaNewLabel (NumLabelReferenceNotFound,
-					  NumFormSearchReference, " ");
+			     TtaNewLabel (NumLabelReferenceNotFound, NumFormSearchReference, " ");
 			     SearchAReference (FALSE);
 			   }
 		       }

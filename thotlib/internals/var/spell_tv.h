@@ -11,14 +11,14 @@
 
 THOT_EXPORT int	CORR;	/* identifier for messages issued by the checker  */
 THOT_EXPORT int	NC;	/* maximum number of corrections */
-THOT_EXPORT char	ChkrCorrection[MAX_PROPOSAL_CHKR+1][MAX_WORD_LEN];  /* corrections */
-THOT_EXPORT char	ChkrErrWord[MAX_WORD_LEN];               /* erroneous words */
+THOT_EXPORT CHAR_T	ChkrCorrection[MAX_PROPOSAL_CHKR+1][MAX_WORD_LEN];  /* corrections */
+THOT_EXPORT CHAR_T	ChkrErrWord[MAX_WORD_LEN];               /* erroneous words */
 THOT_EXPORT PtrElement ChkrElement;	     /* Element to be corrected */
 THOT_EXPORT int	ChkrIndChar;	/* index of erroneous word */
 THOT_EXPORT Language ChkrLanguage;     /* current language */
 THOT_EXPORT PtrSearchContext ChkrRange;      /* range to be checked */
 THOT_EXPORT PtrDict   ChkrFileDict;     /* dictionary for current document */
-THOT_EXPORT char      RejectedChar[MAX_REJECTED_CHARS];
+THOT_EXPORT CHAR_T    RejectedChar[MAX_REJECTED_CHARS];
 THOT_EXPORT boolean   IgnoreUppercase;  /* ignore words containing an uppercase char. */
 THOT_EXPORT boolean   IgnoreArabic;  /* ignore words containing arabic digits */
 THOT_EXPORT boolean   IgnoreRoman;  /* ignore words containing roman digits */

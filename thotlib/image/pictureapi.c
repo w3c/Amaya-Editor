@@ -24,7 +24,7 @@
 #define THOT_EXPORT extern
 #include "frame_tv.h"
 #include "platform_tv.h"
-static CHAR_T         NoneTxt[] = "None";
+static STRING         NoneTxt = "None";
 
 #include "memory_f.h"
 

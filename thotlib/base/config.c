@@ -1599,8 +1599,8 @@ int                *height;
 #endif /* __STDC__ */
 {
    FILE               *file;
-   CHAR_T                line[MAX_TXT_LEN];
-   CHAR_T                nameview[MAX_TXT_LEN];
+   CHAR_T              line[MAX_TXT_LEN];
+   CHAR_T              nameview[MAX_TXT_LEN];
    boolean             found;
 
    *x = 0;

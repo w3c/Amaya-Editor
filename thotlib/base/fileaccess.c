@@ -45,15 +45,15 @@
    TtaReadByte reads a character (or byte) value.                  
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             TtaReadByte (BinFile file, PCHAR_T bval)
+boolean             TtaReadByte (BinFile file, char* bval)
 #else  /* __STDC__ */
 boolean             TtaReadByte (file, bval)
 BinFile             file;
-PCHAR_T               bval;
+char*               bval;
 
 #endif /* __STDC__ */
 {
-   if (fread (bval, sizeof (CHAR_T), 1, file) == 0)
+   if (fread (bval, sizeof (char), 1, file) == 0)
      {
 	*bval = EOS;
 	return (FALSE);
@@ -258,9 +258,9 @@ CONST STRING        filename;
 {
    if (filename && filename [0] != EOS)
 #     ifdef _WINDOWS
-      return fopen (filename, "rb");
+      return ufopen (filename, "rb");
 #     else
-      return fopen (filename, "r");
+      return ufopen (filename, "r");
 #     endif
    else
 	   return (BinFile) NULL;
@@ -295,9 +295,9 @@ CONST STRING        filename;
 #endif /* __STDC__ */
 {
 #ifdef _WINDOWS
-   return fopen (filename, "wb+");
+   return ufopen (filename, "wb+");
 #else
-   return fopen (filename, "w+");
+   return ufopen (filename, "w+");
 #endif
 }
 
@@ -806,9 +806,9 @@ STRING              fileName;
 	   URL_DIR_SEP = DIR_SEP;
 
 #  ifdef _WINDOWS
-   ret = _access (fileName, 0);
+   ret = uaccess (fileName, 0);
 #  else  /* _WINDOWS */
-   ret = access (fileName, F_OK);
+   ret = uaccess (fileName, F_OK);
 #  endif /* _WINDOWS */
    if (ret == -1)
       /* file does not exist */
@@ -826,13 +826,13 @@ STRING              fileName;
 	     c = fileName[i];
 	     fileName[i] = EOS;
 	     /* get access right for the directory */
-	     ret = access (fileName, R_OK | W_OK | X_OK);
+	     ret = uaccess (fileName, R_OK | W_OK | X_OK);
 	     fileName[i] = c;
 	  }
      }
    else
       /* file exists */
-      ret = access (fileName, W_OK);
+      ret = uaccess (fileName, W_OK);
    return (ret);
 }
 

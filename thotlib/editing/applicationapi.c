@@ -121,7 +121,7 @@ static void         ErrorHandler ()
 #else
    signal (SIGIOT, SIG_DFL);
 #endif
-   fprintf (stderr, TtaGetMessage (LIB, TMSG_DEBUG_ERROR));
+   ufprintf (stderr, TtaGetMessage (LIB, TMSG_DEBUG_ERROR));
 
    if (ThotLocalActions [T_backuponfatal] != NULL)
      {
@@ -196,7 +196,7 @@ STRING              applicationName;
    int                 i;
 
    UserErrorCode = 0;
-   ustrcpy (DefaultDocumentName, (STRING) "");
+   ustrcpy (DefaultDocumentName, "");
    InitEditorMemory ();		/* Initializes the memory managment of the editor */
    InitNatures ();		/* Initializes the table of Natures */
 

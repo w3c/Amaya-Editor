@@ -84,7 +84,7 @@ extern void TtaFileCopy ( CONST STRING sourceFileName,
                           CONST STRING targetFileName );
 
 extern boolean TtaReadByte ( BinFile file,
-                             STRING bval );
+                             char* bval );
 extern boolean TtaReadBool ( BinFile file,
                              boolean * bval );
 extern boolean TtaReadShort ( BinFile file,

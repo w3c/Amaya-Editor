@@ -35,7 +35,7 @@ LRESULT CALLBACK GetSaveDlgProc (HWND, UINT, WPARAM, LPARAM);
 
 
 static STRING       DefaultName;
-static CHAR_T         StdDefaultName[] = "Overview.html";
+static CHAR_T         StdDefaultName;
 static CHAR_T         tempSavedObject[MAX_LENGTH];
 static int          URL_attr_tab[] = {
    HTML_ATTR_HREF_,
@@ -581,6 +581,8 @@ View                view;
    CHAR_T             tempname[MAX_LENGTH];
    int              i;
 
+   StdDefaultName = "Overview.html";
+
    if ((SavingDocument != 0 && SavingDocument != doc) ||
        SavingObject != 0)
       return;
@@ -601,13 +603,13 @@ View                view;
 	 {
 	   tempname[i-2] = EOS;
 	   TtaFreeMemory (DocumentURLs[doc]);
-	   DocumentURLs[doc] = (STRING) TtaStrdup (tempname);
+	   DocumentURLs[doc] = TtaStrdup (tempname);
 	 }
        else if (i > 1 && !ustrcmp (&tempname[i-1], ".Z"))
 	 {
 	   tempname[i-1] = EOS;
 	   TtaFreeMemory (DocumentURLs[doc]);
-	   DocumentURLs[doc] = (STRING) TtaStrdup (tempname);
+	   DocumentURLs[doc] = TtaStrdup (tempname);
 	 }
 
        /* if it is a Web document use the current SavePath */
@@ -819,6 +821,7 @@ boolean           *ok;
    CHAR_T            documentname[MAX_LENGTH];
    int             len;
 
+   StdDefaultName = "Overview.html";
   len = ustrlen (url);
   TtaExtractName (url, msg, documentname);
   *ok = (documentname[0] != EOS);
@@ -1299,13 +1302,13 @@ View                view;
     {
       tempname[i-2] = EOS;
       TtaFreeMemory (DocumentURLs[doc]);
-      DocumentURLs[doc] = (STRING) TtaStrdup (tempname);
+      DocumentURLs[doc] = TtaStrdup (tempname);
     }
   else if (i > 1 && !ustrcmp (&tempname[i-1], ".Z"))
     {
       tempname[i-1] = EOS;
       TtaFreeMemory (DocumentURLs[doc]);
-      DocumentURLs[doc] = (STRING) TtaStrdup (tempname);
+      DocumentURLs[doc] = TtaStrdup (tempname);
     }
 
 #ifdef AMAYA_DEBUG
@@ -1325,7 +1328,7 @@ View                view;
 	    ustrcat (tempname, URL_STR);
 	  ustrcat (tempname, DefaultName);
 	  TtaFreeMemory (DocumentURLs[doc]);
-	  DocumentURLs[doc] = (STRING) TtaStrdup (tempname);
+	  DocumentURLs[doc] = TtaStrdup (tempname);
 	}
 
       /* it's a complete name: save it */
@@ -1622,7 +1625,7 @@ STRING                 newURL;
 				       /* image was already loaded */
 				       if (pImage->originalName != NULL)
 					 TtaFreeMemory (pImage->originalName);
-				       pImage->originalName = (STRING) TtaStrdup (tempname);
+				       pImage->originalName = TtaStrdup (tempname);
 				       if (TtaFileExist(pImage->localName))
 					 pImage->status = IMAGE_MODIFIED;
 				       else
@@ -1780,7 +1783,7 @@ STRING                 newURL;
 				       /* image was already loaded */
 				       if (pImage->originalName != NULL)
 					 TtaFreeMemory (pImage->originalName);
-				       pImage->originalName = (STRING) TtaStrdup (tempname);
+				       pImage->originalName = TtaStrdup (tempname);
 				       if (TtaFileExist(pImage->localName))
 					 pImage->status = IMAGE_MODIFIED;
 				       else
@@ -2061,7 +2064,7 @@ void                DoSaveAs ()
 	  if (TextFormat || !SaveAsText)
 	    {
 	      TtaFreeMemory (DocumentURLs[doc]);
-	      DocumentURLs[doc] = (STRING) TtaStrdup (documentFile);
+	      DocumentURLs[doc] = TtaStrdup (documentFile);
 	      TtaSetTextZone (doc, 1, 1, DocumentURLs[doc]);
 	      TtaSetDocumentUnmodified (doc);
 	    }

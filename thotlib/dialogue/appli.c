@@ -213,7 +213,7 @@ LPTOOLTIPTEXT lpttt;
 
    /* Check for valid parameter */
    if (iButton > cMax)
-      pString = "Invalid Button Index" ;
+      pString = "Invalid Button Index";
    else {
        /* Cycle through to requested string */
        pString = &szTbStrings [0] ;
@@ -1196,7 +1196,7 @@ CONST STRING        name;
 	     if (name != NULL)
 	       {
 		  /* text est un format */
-		  sprintf (s, text, name);
+		  usprintf (s, text, name);
 #                 ifndef _WINDOWS
 		  title_string = XmStringCreateSimple (s);
 #                 endif /* !_WINDOWS */
@@ -1301,12 +1301,12 @@ LPARAM      lParam;
                    InitToolTip (ToolBar) ;	
 
                 /* Create status bar  */
-                StatusBar = CreateStatusWindow (dwStatusBarStyles, (STRING) "", hwnd, 2) ;
+                StatusBar = CreateStatusWindow (dwStatusBarStyles, "", hwnd, 2) ;
                 ShowWindow (StatusBar, SW_SHOWNORMAL);
                 UpdateWindow (StatusBar);
 
                 /* Create client window */
-                hwndClient = CreateWindowEx (WS_EX_CLIENTEDGE, (STRING) "ClientWndProc", NULL,
+                hwndClient = CreateWindowEx (WS_EX_CLIENTEDGE, "ClientWndProc", NULL,
                                              WS_CHILD | WS_VISIBLE | WS_BORDER, 0, 0, 0, 0,
                                              hwnd, (HMENU) 2, hInstance, NULL) ;
                 ShowWindow (hwndClient, SW_SHOWNORMAL);
@@ -1377,7 +1377,7 @@ LPARAM      lParam;
                 if (!viewClosed) {
                    FrameToView (frame, &doc, &view);
                    viewName = TtaGetViewName (doc, view);
-                   if (!ustrcmp (viewName, (STRING) "Formatted_view"))
+                   if (!ustrcmp (viewName, "Formatted_view"))
                       TtcCloseDocument (doc, view);
                    else
                        TtcCloseView (doc, view);
@@ -1581,7 +1581,7 @@ LPARAM lParam;
             case WM_CHAR:
                  TtaAbortShowDialogue ();
 				 key = (int) wParam;
-                 if (WIN_TtaHandleMultiKeyEvent (mMsg, wParam, lParam, (STRING)&key))
+                 if (WIN_TtaHandleMultiKeyEvent (mMsg, wParam, lParam, (STRING) &key))
                     /* WIN_CharTranslation (FrRef[frame], frame, mMsg, wParam, lParam); */
                     WIN_CharTranslation (FrRef[frame], frame, mMsg, (WPARAM) key, lParam);
                  return 0;

@@ -46,9 +46,9 @@
 
 typedef struct _item
   {
-     CHAR_T                name;
-     UCHAR_T       value;
-     STRING              legend;
+     char          name;
+     unsigned char value;
+     char*         legend;
   }
 ITEM;
 

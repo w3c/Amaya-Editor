@@ -363,7 +363,7 @@ PtrDocument         pDoc;
 		  pTextEl = NULL;
 		  ok = TRUE;
 		  /* lit tout le fichier d'entree, ligne par ligne */
-		  while (ok && fgets (line, MAX_TXT_LEN - 1, file) != NULL)
+		  while (ok && ufgets (line, MAX_TXT_LEN - 1, file) != NULL)
 		    {
 		       /* une ligne a ete lue dans line */
 		       /* traite le caractere '\n' en fin de ligne */
@@ -479,7 +479,7 @@ Name                fileName;
 	MakeCompleteName (fileName, "", directory, fullName, &i);
 	TtaDisplaySimpleMessage (INFO, LIB, TMSG_IMPORTING_FILE);
 	/* ouvre le fichier a importer */
-	file = fopen (fullName, "r");
+	file = ufopen (fullName, "r");
 	if (file != NULL)
 	   /* le fichier a importer est ouvert */
 	  {

@@ -210,7 +210,7 @@ STRING* buffer;
 	    {
 	     if (GraphMLElemMappingTable[i].ThotType == elType.ElTypeNum)
 		{
-		*buffer = (STRING) GraphMLElemMappingTable[i].XMLname;
+		*buffer = GraphMLElemMappingTable[i].XMLname;
 		return;
 		}
 	     i++;

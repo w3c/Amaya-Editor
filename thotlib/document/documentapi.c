@@ -625,12 +625,12 @@ STRING              directory;
 
    /* Verify if this directory is already in the list  */
    ptr = ustrstr (DocumentPath, directory);
-   i = strlen (directory);
+   i = ustrlen (directory);
    while (ptr != NULL && ptr[i] != PATH_SEP && ptr[i] != EOS)
      {
-	ptr = strstr (ptr, PATH_STR);
+	ptr = ustrstr (ptr, PATH_STR);
 	if (ptr != NULL)
-	   ptr = strstr (ptr, directory);
+	   ptr = ustrstr (ptr, directory);
      }
    return (ptr != NULL);
 }
@@ -661,7 +661,7 @@ STRING              directory;
    int                 lg;
 
    UserErrorCode = 0;
-   lg = strlen (directory);
+   lg = ustrlen (directory);
 
    if (lg >= MAX_PATH)
       TtaError (ERR_string_too_long);
@@ -670,14 +670,14 @@ STRING              directory;
    else if (!TtaIsInDocumentPath (directory))
      {
 	/* add the directory in the path */
-	i = strlen (DocumentPath);
+	i = ustrlen (DocumentPath);
 	if (i + lg + 2 >= MAX_PATH)
 	   TtaError (ERR_string_too_long);
 	else
 	  {
 	     if (i > 0)
-		strcat (DocumentPath, PATH_STR);
-	     strcat (DocumentPath, directory);
+		ustrcat (DocumentPath, PATH_STR);
+	     ustrcat (DocumentPath, directory);
 	  }
      }
 }
@@ -705,10 +705,10 @@ STRING              path;
 
 {
    UserErrorCode = 0;
-   if (strlen (path) >= MAX_PATH)
+   if (ustrlen (path) >= MAX_PATH)
       TtaError (ERR_string_too_long);
    else
-      strcpy (SchemaPath, path);
+      ustrcpy (SchemaPath, path);
 }
 
 /*----------------------------------------------------------------------
@@ -1046,7 +1046,7 @@ STRING              presentationName;
 	  {
 	     Name pschemaName;
 
-	     strncpy(pschemaName, presentationName, MAX_NAME_LENGTH);
+	     ustrncpy(pschemaName, presentationName, MAX_NAME_LENGTH);
 	     if (pDoc->DocSSchema->SsPSchema != NULL)
 		/* a presentation schema already exist. One release it */
 	       {
@@ -1096,9 +1096,9 @@ STRING              directory;
    else
       /* parameter document is correct */
      {
-	if (strlen (directory) >= MAX_PATH)
+	if (ustrlen (directory) >= MAX_PATH)
 	   TtaError (ERR_buffer_too_small);
-	strcpy (LoadedDocument[document - 1]->DocDirectory, directory);
+	ustrcpy (LoadedDocument[document - 1]->DocDirectory, directory);
      }
 }
 
@@ -1132,7 +1132,7 @@ STRING              documentName;
    else if (LoadedDocument[document - 1] == NULL)
      TtaError (ERR_invalid_document_parameter);
    /* parameter document is correct */
-   else if (strlen (documentName) >= MAX_NAME_LENGTH)
+   else if (ustrlen (documentName) >= MAX_NAME_LENGTH)
      TtaError (ERR_buffer_too_small);
    else
      {
@@ -1396,7 +1396,7 @@ Document            document;
    else
       /* parameter document is correct */
      {
-	strcpy (nameBuffer, LoadedDocument[document - 1]->DocDName);
+	ustrcpy (nameBuffer, LoadedDocument[document - 1]->DocDName);
      }
    return nameBuffer;
 }
@@ -1434,7 +1434,7 @@ STRING              documentName;
    while (!found && document < MAX_DOCUMENTS)
      {
 	if (LoadedDocument[document - 1] != NULL)
-	   if (strcmp (documentName, LoadedDocument[document - 1]->DocDName) == 0)
+	   if (ustrcmp (documentName, LoadedDocument[document - 1]->DocDName) == 0)
 	      found = TRUE;
 	if (!found)
 	   document++;
@@ -1486,9 +1486,9 @@ int                 bufferLength;
    else
       /* parameter document is correct */
      {
-	if (strlen (LoadedDocument[document - 1]->DocDirectory) >= (size_t) bufferLength)
+	if (ustrlen (LoadedDocument[document - 1]->DocDirectory) >= bufferLength)
 	   TtaError (ERR_buffer_too_small);
-	strncpy (buffer, LoadedDocument[document - 1]->DocDirectory, bufferLength - 1);
+	ustrncpy (buffer, LoadedDocument[document - 1]->DocDirectory, bufferLength - 1);
      }
 }
 
@@ -1567,7 +1567,7 @@ SSchema             schema;
      }
    else
      {
-	strcpy (nameBuffer, ((PtrSSchema) schema)->SsName);
+	ustrcpy (nameBuffer, ((PtrSSchema) schema)->SsName);
      }
    return nameBuffer;
 }
@@ -1604,7 +1604,7 @@ SSchema             schema;
      }
    else
      {
-	strcpy (nameBuffer, ((PtrSSchema) schema)->SsDefaultPSchema);
+	ustrcpy (nameBuffer, ((PtrSSchema) schema)->SsDefaultPSchema);
      }
    return nameBuffer;
 }
@@ -1628,7 +1628,7 @@ STRING              name;
 
    retour = NULL;
    if (pSS != NULL)
-      if (strcmp (name, pSS->SsName) == 0)
+      if (ustrcmp (name, pSS->SsName) == 0)
 	 /* The schema itself */
 	 retour = (SSchema) pSS;
       else
@@ -1761,7 +1761,7 @@ STRING              presentationName;
    structureName[0] = EOS;
    presentationName[0] = EOS;
    /* Arrange the name of the file to be opened with the documents directory name */
-   strncpy (DirBuffer, DocumentPath, MAX_PATH);
+   ustrncpy (DirBuffer, DocumentPath, MAX_PATH);
    MakeCompleteName (documentName, "PIV", DirBuffer, text, &i);
    /* Verify if the file exists */
    file = TtaReadOpen (text);
@@ -2189,9 +2189,9 @@ int                 bufferLength;
 {
 
    UserErrorCode = 0;
-   if (strlen (DocumentPath) >= (size_t)bufferLength)
+   if (ustrlen (DocumentPath) >= bufferLength)
       TtaError (ERR_buffer_too_small);
-   strncpy (buffer, DocumentPath, bufferLength - 1);
+   ustrncpy (buffer, DocumentPath, bufferLength - 1);
 }
 
 /*----------------------------------------------------------------------
@@ -2222,9 +2222,9 @@ int                 bufferLength;
 {
 
    UserErrorCode = 0;
-   if (strlen (SchemaPath) >= (size_t)bufferLength)
+   if (ustrlen (SchemaPath) >= bufferLength)
       TtaError (ERR_buffer_too_small);
-   strncpy (buffer, SchemaPath, bufferLength - 1);
+   ustrncpy (buffer, SchemaPath, bufferLength - 1);
 }
 
 #ifndef NODISPLAY

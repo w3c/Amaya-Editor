@@ -660,9 +660,10 @@ int                 y;
    WNDCLASSEX  wndThotPaletteClass ;
    HWND  HwndColorPal;
    int   frame;
-   static CHAR_T szAppName[] = "ThotColorPalette" ;
+   static STRING szAppName;
    MSG         msg;
 
+   szAppName = "ThotColorPalette" ;
    WIN_LastBg = -1;
    WIN_LastFg = -1;
 

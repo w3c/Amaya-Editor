@@ -135,7 +135,7 @@ boolean		    open;
      }
    else
      {
-	OutputFile[NOutputFiles].OfFileDesc = fopen (fName, "w");
+	OutputFile[NOutputFiles].OfFileDesc = ufopen (fName, "w");
 	if (OutputFile[NOutputFiles].OfFileDesc == NULL)
 	  {
 	     if (!OutputFile[NOutputFiles].OfCannotOpen)
@@ -216,7 +216,7 @@ boolean             lineBreak;
 	       {
 		  for (i = 0; i < OutputFile[fileNum].OfBufferLen; i++)
 		     putc (OutputFile[fileNum].OfBuffer[i], fileDesc);
-		  fprintf (fileDesc, pTSch->TsEOL);
+		  ufprintf (fileDesc, pTSch->TsEOL);
 		  /* le buffer de sortie est vide maintenant */
 		  OutputFile[fileNum].OfBufferLen = 0;
 		  OutputFile[fileNum].OfStartOfLine = TRUE;
@@ -267,7 +267,7 @@ boolean             lineBreak;
 			       for (j = 0; j < i; j++)
 				  putc (OutputFile[fileNum].OfBuffer[j], fileDesc);
 			       /* on ecrit un saut de ligne */
-			       fprintf (fileDesc, pTSch->TsTranslEOL);
+			       ufprintf (fileDesc, pTSch->TsTranslEOL);
 			       /* on traite l'indentation */
 			       if (OutputFile[fileNum].OfIndent > pTSch->TsLineLength - 10)
 				  indent = pTSch->TsLineLength - 10;
@@ -374,7 +374,7 @@ boolean             lineBreak;
    CHAR_T                buffer[20];
    int                 i;
 
-   sprintf (buffer, "%d", n);
+   usprintf (buffer, "%d", n);
    i = 0;
    while (buffer[i] != EOS)
       PutChar (buffer[i++], fileNum, outBuffer, pDoc, lineBreak);
@@ -2907,7 +2907,7 @@ boolean            *removeEl;
 	       PutVariable (pEl, pAttr, pTSch, pSSch, pTRule->TrNewFileVar, FALSE, currentFileName, 0, pDoc, *lineBreak);
 	       if (currentFileName[0] != EOS)
 		 {
-		    newFile = fopen (currentFileName, "w");
+		    newFile = ufopen (currentFileName, "w");
 		    if (newFile == NULL)
 		       TtaDisplayMessage (CONFIRM, TtaGetMessage (LIB, TMSG_CREATE_FILE_IMP), currentFileName);
 		    else
@@ -2934,7 +2934,7 @@ boolean            *removeEl;
 	       if (currentFileName[0] != EOS)
 		 {
 #           ifdef _WINDOWS
-            _unlink (currentFileName);
+            uunlink (currentFileName);
 #           else  /* !_WINDOWS */
 		    sprintf (cmd, "/bin/rm %s\n", currentFileName);
 		    system (cmd);
@@ -3486,7 +3486,7 @@ STRING              TSchemaName;
    boolean             ok = TRUE;
 
    /* cree le fichier de sortie principal */
-   outputFile = fopen (fName, "w");
+   outputFile = ufopen (fName, "w");
    if (outputFile == NULL)
      ok = FALSE;
    else
@@ -3579,7 +3579,7 @@ STRING              TSchemaName;
 
  
   /* cree le fichier de sortie principal */
-  outputFile = fopen (fName, "w");
+  outputFile = ufopen (fName, "w");
   
   if (outputFile == NULL)
     TtaDisplayMessage (CONFIRM, TtaGetMessage (LIB, TMSG_CREATE_FILE_IMP), fName);

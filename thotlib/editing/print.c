@@ -833,7 +833,7 @@ int                *volume;
 	MakeCompleteName (pDoc->DocDName, "PIV", tmp, fileName, &len);
 	/* On construit le nom complet avec ce directory */
 	FindCompleteName (pDoc->DocDName, "ps", tmp, fileName, &len);	/* ps au lieu de PIV */
-	if ((PSfile = fopen (fileName, "w")) == NULL)
+	if ((PSfile = ufopen (fileName, "w")) == NULL)
 	  TtaDisplayMessage (FATAL, TtaGetMessage (PRINT, PRINT_UNABLE_TO_CREATE_FILE), fileName);
 	fflush (PSfile);
 	FrRef[i] = (ThotWindow) PSfile;
@@ -1962,7 +1962,7 @@ int                viewsCounter;
   int                 schView, rule, v, assocNum, firstFrame;
   boolean             present, found, withPages;
 #  ifdef _WINDOWS
-  static DOCINFO docInfo = {sizeof (DOCINFO), "Amaya", NULL};
+  static DOCINFO docInfo = {sizeof (DOCINFO), L"Amaya", NULL};
   int    i;
   int    xRes, yRes, xSize, ySize;
   RECT   Rect;
@@ -2444,7 +2444,7 @@ int                 msgType;
       if (removeDirectory)
 	{
 #     ifdef _WINDOWS
-      if ((_unlink (tempDir)) == -1)
+      if ((uunlink (tempDir)) == -1)
          fprintf (stderr, "Cannot remove directory %s\n", tempDir);
 #     else  /* !_WINDOWS */
 	  sprintf (cmd, "/bin/rm -rf %s\n", tempDir);
@@ -2671,7 +2671,7 @@ char              **argv;
                   ustrcpy (PrintViewName [viewsCounter++], argv [argCounter++]);
            } else if (!ustrcmp (argv [argCounter], "-npps")) {
                   argCounter++;
-                  NPagesPerSheet = atoi (argv[argCounter++]);
+                  NPagesPerSheet = uctoi (argv[argCounter++]);
            } else if (!ustrcmp (argv [argCounter], "-bw")) {
                   argCounter++;
                   BlackAndWhite = 1;
@@ -2706,28 +2706,28 @@ char              **argv;
                 while ((option[index++] = *pChar++));
                 option [index] = EOS;
                 switch (argv [argCounter] [1]) {
-                       case 'F': FirstPrinted = atoi (option);
+                       case 'F': FirstPrinted = uctoi (option);
                                  argCounter++;
                                  break;
-                       case 'L': LastPrinted = atoi (option);
+                       case 'L': LastPrinted = uctoi (option);
                                  argCounter++;
                                  break;
                        case 'P': ustrcpy (pageSize, option);
                                  argCounter++;
                                  break;
-                       case '#': NCopies = atoi (option);
+                       case '#': NCopies = uctoi (option);
                                  argCounter++;
                                  break;
-                       case 'H': HorizShift = atoi (option);
+                       case 'H': HorizShift = uctoi (option);
                                  argCounter++;
                                  break;
-                       case 'V': VertShift = atoi (option);
+                       case 'V': VertShift = uctoi (option);
                                  argCounter++;
                                  break;
-                       case '%': Zoom = atoi (option);
+                       case '%': Zoom = uctoi (option);
                                  argCounter++;
                                  break;
-                       case 'w': thotWindow = (ThotWindow) atoi (option);
+                       case 'w': thotWindow = (ThotWindow) uctoi (option);
                                  argCounter++;
                                  break;
                        default:
@@ -2807,7 +2807,7 @@ char              **argv;
        if (l == 0)
 	 ustrcpy (DocumentPath, tempDir);
        else
-	 sprintf (DocumentPath, "%s%c%s", tempDir, PATH_SEP, DocumentDir);
+	 usprintf (DocumentPath, "%s%c%s", tempDir, PATH_SEP, DocumentDir);
        
        if (!OpenDocument (name, TheDoc, TRUE, FALSE, NULL, FALSE, FALSE))
 	 TheDoc = NULL;
@@ -2832,7 +2832,7 @@ char              **argv;
            {
 #            ifdef _WINDOWS 
              /* sprintf (cmd, "copy %s\\%s.ps %s\n", tempDir, name, printer); */
-             sprintf (cmd, "%s\\%s.ps", tempDir, name);
+             usprintf (cmd, "%s\\%s.ps", tempDir, name);
              CopyFile (cmd, printer, FALSE);
 #            else  /* !_WINDOWS */
              sprintf (cmd, "/bin/mv %s/%s.ps %s\n", tempDir, name, printer);
@@ -2863,7 +2863,7 @@ char              **argv;
        }
      else
        {
-           sprintf(tempFile, "%s/%s.ps", tempDir, name);
+           usprintf(tempFile, "%s/%s.ps", tempDir, name);
 	   TtaDisplayMessage (FATAL, TtaGetMessage (PRINT, PRINT_UNABLE_TO_CREATE_FILE), tempFile);
        }
    
@@ -2876,10 +2876,10 @@ char              **argv;
           WinErrorBox (NULL);
 	   else {
              STRING pivDoc = (STRING) TtaGetMemory (ustrlen (tmpDocName) + ustrlen (tmpDir) + 6);
-             sprintf (pivDoc, "%s\\%s.PIV", tmpDir, tmpDocName); 
+             usprintf (pivDoc, "%s\\%s.PIV", tmpDir, tmpDocName); 
 			 if (!DeleteFile (pivDoc))
                 WinErrorBox (NULL);
-	         else if (_rmdir (tempDir))
+	         else if (urmdir (tempDir))
                   WinErrorBox (NULL);
 	   }
 #      else  /* _WINDOWS */

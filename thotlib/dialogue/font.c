@@ -35,7 +35,7 @@
 
 /* that table for the character glyphs */
 static int          FirstRemovableFont = 1;
-static CHAR_T         StylesTable[MAX_HIGHLIGHT] = "rbiogq";
+static char         StylesTable[MAX_HIGHLIGHT] = "rbiogq";
 
 /* Maximum number of font size handled */
 static int          MaxNumberOfSizes;
@@ -139,22 +139,22 @@ TypeUnit unit;
    switch (family) {
           case 'T':
           case 't':
-               sprintf (&WIN_lpszFace[0], "Times New Roman");
+               usprintf (&WIN_lpszFace[0], "Times New Roman");
                break;
 
           case 'H':
           case 'h':
-               sprintf (&WIN_lpszFace[0], "Arial");
+               usprintf (&WIN_lpszFace[0], "Arial");
                break;
 
           case 'C':
           case 'c':
-               sprintf (&WIN_lpszFace[0], "Courier New");
+               usprintf (&WIN_lpszFace[0], "Courier New");
                break;
 
           case 'S':
           case 's':
-               sprintf (&WIN_lpszFace[0], "Symbol");
+               usprintf (&WIN_lpszFace[0], "Symbol");
                break;
 
           default:
@@ -704,16 +704,16 @@ CHAR_T                r_nameX[100];
    if ((CHAR_T) TOLOWER (family) == 's')
      {
 	if (UseBitStreamFamily)
-	   sprintf (r_nameX, "%s-*-*-%d-83-83-p-*-*-fontspecific", r_nameX, size * 10);
+	   usprintf (r_nameX, "%s-*-*-%d-83-83-p-*-*-fontspecific", r_nameX, size * 10);
 	else
-	   sprintf (r_nameX, "%s-*-%d-*-75-75-p-*-*-fontspecific", r_nameX, size);
+	   usprintf (r_nameX, "%s-*-%d-*-75-75-p-*-*-fontspecific", r_nameX, size);
      }
    else
      {
 	if (UseBitStreamFamily)
-	   sprintf (r_nameX, "%s-*-*-%d-83-83", r_nameX, size * 10);
+	   usprintf (r_nameX, "%s-*-*-%d-83-83", r_nameX, size * 10);
 	else
-	   sprintf (r_nameX, "%s-*-%d-*-75-75", r_nameX, size);
+	   usprintf (r_nameX, "%s-*-%d-*-75-75", r_nameX, size);
 	if ((CHAR_T) TOLOWER (family) == 'c')
 	   ustrcat (r_nameX, "-m-*");
 	else
@@ -733,8 +733,7 @@ CHAR_T                r_nameX[100];
 	  }
      }
 
-   sprintf (r_name, "%c%c%c%d",
-	    TOLOWER (alphabet), TOLOWER (family),
+   usprintf (r_name, "%c%c%c%d", TOLOWER (alphabet), TOLOWER (family),
 	    StylesTable[highlight], size);
 }
 
@@ -871,7 +870,7 @@ boolean             increase;
 		while (isdigit (*pText))
 		  *pFontSize++ = *pText++;
 	      *pFontSize = 0;
-	      size = atoi (fontSize);
+	      size = uctoi (fontSize);
 	    }
 	  /* Allocate the font structure */
 	  ptfont = TtaGetMemory (sizeof (FontInfo));
@@ -1081,7 +1080,7 @@ STRING              name;
    /* Is there any predefined size for menu fonts ? */
    value = TtaGetEnvString ("FontMenuSize");
    if (value != NULL)
-      sscanf (value, "%d", &MenuSize);
+      usscanf (value, "%d", &MenuSize);
    f3 = MenuSize + 2;
 
 #  ifndef _WINDOWS

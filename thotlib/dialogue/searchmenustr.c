@@ -950,7 +950,7 @@ void                ValAttrSearch ()
 	   if (pAttrTrouve->AeAttrType == AtReferenceAttr)
 	      ustrcpy (LabelBuffer, pAttrTrouve->AeAttrSSchema->SsAttribute[pAttrTrouve->AeAttrNum - 1].AttrName);
 	   else
-	      sprintf (NomAtt, "%s = ", pAttrTrouve->AeAttrSSchema->SsAttribute[pAttrTrouve->AeAttrNum - 1].AttrName);
+	      usprintf (NomAtt, "%s = ", pAttrTrouve->AeAttrSSchema->SsAttribute[pAttrTrouve->AeAttrNum - 1].AttrName);
 	else
 	   ustrcpy (NomAtt, TtaGetMessage (LIB, TMSG_VALUE_OF_ATTR));
 	switch (pAttrTrouve->AeAttrType)
@@ -958,11 +958,10 @@ void                ValAttrSearch ()
 		 case AtReferenceAttr:
 		    break;
 		 case AtNumAttr:
-		    sprintf (LabelBuffer, "%s %d", NomAtt,
-			     pAttrTrouve->AeAttrValue);
+		    usprintf (LabelBuffer, "%s %d", NomAtt, pAttrTrouve->AeAttrValue);
 		    break;
 		 case AtEnumAttr:
-		    sprintf (LabelBuffer, "%s %s", NomAtt,
+		    usprintf (LabelBuffer, "%s %s", NomAtt,
 			     pAttrTrouve->AeAttrSSchema->SsAttribute
 			     [pAttrTrouve->AeAttrNum - 1].AttrEnumValue
 			     [pAttrTrouve->AeAttrValue - 1]);

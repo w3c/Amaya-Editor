@@ -55,8 +55,8 @@ extern STRING       FileExtension[];
 
 static int          IndexTypeImage, IndexPresImage, BaseDlgImage;
 static boolean      RedisplayPicture;
-static CHAR_T         ImageName[100] = "";
-static CHAR_T         DirectoryImage[MAX_PATH] = "";
+static CHAR_T         ImageName[100];
+static CHAR_T         DirectoryImage[MAX_PATH];
 
 #include "browser_f.h"
 #include "fileaccess_f.h"
@@ -319,10 +319,10 @@ PtrBox              pBox;
 #endif /* __STDC__ */
 {
    int                 i, indx;
-   CHAR_T                bufTypeImage[MAX_TXT_LEN];
+   CHAR_T              bufTypeImage[MAX_TXT_LEN];
    STRING              source;
    int                 imageTypeCount, length;
-   CHAR_T                bufMenu[MAX_TXT_LEN];
+   CHAR_T              bufMenu[MAX_TXT_LEN];
    PictInfo           *image;
 
    IndexTypeImage = GetPictTypeIndex (*typim);
@@ -359,15 +359,15 @@ PtrBox              pBox;
 
    /* sous-menu cadrage du formulaire Picture */
    indx = 0;
-   sprintf (&bufMenu[indx], "%s%s", "B", TtaGetMessage (LIB, TMSG_REALSIZE));
+   usprintf (&bufMenu[indx], "B%s", TtaGetMessage (LIB, TMSG_REALSIZE));
    indx += ustrlen (&bufMenu[indx]) + 1;
-   sprintf (&bufMenu[indx], "%s%s", "B", TtaGetMessage (LIB, TMSG_RESCALE));
+   usprintf (&bufMenu[indx], "B%s", TtaGetMessage (LIB, TMSG_RESCALE));
    indx += ustrlen (&bufMenu[indx]) + 1;
-   sprintf (&bufMenu[indx], "%s%s", "B", TtaGetMessage (LIB, TMSG_FILLFRAME));
+   usprintf (&bufMenu[indx], "B%s", TtaGetMessage (LIB, TMSG_FILLFRAME));
    indx += ustrlen (&bufMenu[indx]) + 1;
-   sprintf (&bufMenu[indx], "%s%s", "B", TtaGetMessage (LIB, TMSG_XREPEAT));
+   usprintf (&bufMenu[indx], "B%s", TtaGetMessage (LIB, TMSG_XREPEAT));
    indx += ustrlen (&bufMenu[indx]) + 1;
-   sprintf (&bufMenu[indx], "%s%s", "B", TtaGetMessage (LIB, TMSG_YREPEAT));
+   usprintf (&bufMenu[indx], "B%s", TtaGetMessage (LIB, TMSG_YREPEAT));
    TtaNewSubmenu (BaseDlgImage + _MENU_IMAGE_FRAME, BaseDlgImage + _IMAGE_FORM, 0,
 		  TtaGetMessage (LIB, TMSG_PICT_PRES), 5, bufMenu, NULL, FALSE);
 

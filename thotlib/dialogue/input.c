@@ -497,6 +497,7 @@ LPARAM lParam;
        (wParam == VK_RIGHT)  ||
        (wParam == VK_DOWN)   ||
        (wParam == VK_INSERT) ||
+       (wParam == VK_F2) ||
        (wParam == VK_DELETE))
       len = 0;
    else
@@ -518,6 +519,7 @@ LPARAM lParam;
 			  (wParam == VK_RIGHT)   ||
 			  (wParam == VK_DOWN)    ||
 			  (wParam == VK_INSERT)  ||
+			  (wParam == VK_F2)  ||
 			  (wParam == VK_DELETE))   
    {
 	  string[0] = (CHAR_T) wParam;
@@ -1003,16 +1005,16 @@ STRING              appliname;
 #endif /* __STDC__ */
 {
    STRING              text;	   /* fichier de translation transmis a motif */
-   CHAR_T                line[200];  /* ligne en construction pour motif */
-   CHAR_T                home[200], name[80], ch[80]; 
+   CHAR_T              line[200];  /* ligne en construction pour motif */
+   CHAR_T              home[200], name[80], ch[80]; 
    STRING              adr;
-   CHAR_T                equiv[MAX_EQUIV]; /* equivalents caracteres pour motif */
+   CHAR_T              equiv[MAX_EQUIV]; /* equivalents caracteres pour motif */
    unsigned int        key1, key2; /* 1ere & 2eme cles sous forme de keysym X */
    int                 e, i;
    int                 mod1, mod2; /* 1er/ 2eme modifieurs : voir THOT_MOD_xx */
    int                 len, max;
    FILE               *file;
-   ThotTranslations      table;
+   ThotTranslations    table;
 
    text = TtaGetEnvString ("APP_HOME");
    ustrcpy (name, appliname);
@@ -1028,7 +1030,7 @@ STRING              appliname;
    if (!SearchFile (home, 0, line))
      SearchFile (name, 2, line);
 
-   file = fopen (line, "r");
+   file = ufopen (line, "r");
    if (!file)
      {
 	/*Fichier inaccessible */
@@ -1111,7 +1113,7 @@ STRING              appliname;
 
 		  /* Extrait la valeur de la cle */
 		  name[0] = EOS;
-		  sscanf (ch, "<Key>%80s", name);
+		  usscanf (ch, "<Key>%80s", name);
 		  if (name[0] != EOS)
 		    {
 		      /* copie de la cle */
@@ -1145,7 +1147,7 @@ STRING              appliname;
 		    {
 		      /* copie du separateur */
 		      ustrcat (line, ", ");
-		      ustrcpy (ch, "");
+		      ch [0] = EOS;
 		      fscanf (file, "%80s", ch);
 		      
 		      if (!ustrcasecmp (ch, "shift"))
@@ -1196,9 +1198,9 @@ STRING              appliname;
 			}
 
 		       /* Extrait la valeur de la cle */
-		       ustrcpy (name, "");
-		       sscanf (ch, "<Key>%80s", name);
-		       if (name != "")
+		       name [0] = EOS ;
+		       usscanf (ch, "<Key>%80s", name);
+		       if (name [0] != EOS)
 			 {
 			    ustrcat (line, "<Key>");	/* copie de la cle */
 			    i = ustrlen (name);
@@ -1221,7 +1223,7 @@ STRING              appliname;
 		       ustrcat (equiv, name);
 
 		       /* Lecture de l'action */
-		       ustrcpy (name, "");
+		       name [0] = EOS;
 		       fscanf (file, "%80s", name);
 		    }
 

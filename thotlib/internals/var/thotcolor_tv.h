@@ -17,7 +17,7 @@
 THOT_EXPORT int              NColors;
 THOT_EXPORT ThotColor        Pix_Color[MAX_COLOR];
 THOT_EXPORT RGBstruct       *RGB_Table;
-THOT_EXPORT char           **Color_Table;
+THOT_EXPORT char**           Color_Table;
 
 /* extended set of colors */
 THOT_EXPORT int              NbExtColors;
@@ -26,7 +26,7 @@ THOT_EXPORT RGBstruct       *ExtRGB_Table;
 THOT_EXPORT int             *ExtCount_Table;
 
 THOT_EXPORT int              NbPatterns;
-THOT_EXPORT char           **Patterns;
+THOT_EXPORT char**           Patterns;
 
 #endif /* THOT_COLOR_VAR */
 

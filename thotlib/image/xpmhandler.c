@@ -322,7 +322,7 @@ STRING              fn;
    boolean                res;
 
    res = FALSE;
-   f = fopen (fn, "r");
+   f = ufopen (fn, "r");
    if (f != NULL)
      {
 	c = getc (f);

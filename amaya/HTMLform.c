@@ -145,8 +145,12 @@ USTRING             element;
 
 #endif
 {
-   CHAR_T                tmp[4] = "%";
-   CHAR_T                tmp2[2] = "a";
+   CHAR_T                tmp[4];
+   CHAR_T                tmp2[2];
+
+
+   sprintf (tmp, "%s", "%");
+   sprintf (tmp2, "%s", "a");
 
    if (buffer == (STRING) NULL)
      {

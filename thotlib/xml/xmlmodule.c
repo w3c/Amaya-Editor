@@ -81,7 +81,7 @@ static XmlReferenceType *ReferenceList = NULL;
        else
        {
          courPrefix = ParserPrefixs;
-         while (courPrefix != NULL && strcmp (courPrefix->Name, prefix))
+         while (courPrefix != NULL && ustrcmp (courPrefix->Name, prefix))
            courPrefix = courPrefix->Next;
          if (courPrefix != NULL)
            {
@@ -272,7 +272,7 @@ static void  XmlSetLabel (Document doc,Element el, unsigned char *value)
 {
   /* Warning: Needed API for setting label*/
   if (el !=NULL)
-    strcpy(((PtrElement)el)->ElLabel, value);
+    ustrcpy(((PtrElement)el)->ElLabel, value);
 }
 
 /*----------------------------------------------------------------------

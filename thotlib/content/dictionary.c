@@ -66,7 +66,7 @@ static void           LoadAlphabet ()
 # else  /* _WINDOWS */
   ustrcat (alphaName, "/alphabet");	/* iso alphabet */
 # endif /* _WINDOWS */
-  if ((falpha = fopen (alphaName, "r")) != NULL)
+  if ((falpha = ufopen (alphaName, "r")) != NULL)
     {
       for (i = 0; i < 256; i++)
 	Code[i] = (UCHAR_T) 100;
@@ -359,9 +359,9 @@ PtrDict             dict;
    plineGotten = &lineGotten[0];
 
    /* Loading the dictionary */
-   while (fgets (plineGotten, MAXLIGNE, dictFile) != NULL)
+   while (ufgets (plineGotten, MAXLIGNE, dictFile) != NULL)
      {
-	nbGotten = sscanf (plineGotten, "%s", wordGotten);
+	nbGotten = usscanf (plineGotten, "%s", wordGotten);
 	if ((nbGotten > 0)
 	    && (dict->DictNbWords < maxWord - 1)
 	    && ((length = ustrlen (wordGotten)) < MAX_WORD_LEN)
@@ -452,14 +452,14 @@ boolean             toTreat;
       /* Alterable dictionary */
       if (TtaFileExist (tempbuffer) != 0)
 	{
-	  dictFile = fopen (tempbuffer, "rw");
+	  dictFile = ufopen (tempbuffer, "rw");
 	  /* updating the dictionary */
 	  TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_DICO), dictName);
 	}
       else
 	{
 	  new = TRUE;
-	  dictFile = fopen (tempbuffer, "w+");
+	  dictFile = ufopen (tempbuffer, "w+");
 	  /* new dictionary */
 	  TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_NEW_DICO), dictName);
 	}
@@ -470,7 +470,7 @@ boolean             toTreat;
       if (treated == TRUE)
 	dictFile = TtaReadOpen (tempbuffer);
       else
-	dictFile = fopen (tempbuffer, "r");
+	dictFile = ufopen (tempbuffer, "r");
       TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_DICO), dictName);
     }
   
@@ -519,10 +519,10 @@ boolean             toTreat;
 	{
 	  /* Get the length of strings required at the begenning of the file. */
 	  tempbuffer[0] = EOS;
-	  fgets (tempbuffer, 100, dictFile);
+	  ufgets (tempbuffer, 100, dictFile);
 	  if (tempbuffer[0] != EOS)
 	    {
-	      if (sscanf (tempbuffer, "%d%d", &im, &ic) == 2)
+	      if (usscanf (tempbuffer, "%d%d", &im, &ic) == 2)
 		{
 		  pdict->DictMaxWords = im;
 		  pdict->DictMaxChars = ic;

@@ -78,8 +78,8 @@ STRING              s1, s2;
 static PathBuffer   DirectoryName;
 static Name         SchStrImport;
 static int          NbDocSuffix = 1;
-static CHAR_T         tabDocSuffix [10][10] = {".PIV", "\0", "\0", "\0", "\0", "\0", "\0", "\0", "\0", "\0"};
-static CHAR_T         docSuffix [5];
+static char         tabDocSuffix [10][10] = {".PIV", "\0", "\0", "\0", "\0", "\0", "\0", "\0", "\0", "\0"};
+static CHAR_T       docSuffix [5];
 /* static PathBuffer DirectoryDocImport; */
 static Name         NewSchemaName;
 
@@ -337,8 +337,8 @@ STRING              data;
    PathBuffer          docName;
    PtrDocument         pDoc;
    int                 i;
-   CHAR_T                bufDir[MAX_PATH];
-   CHAR_T                URL_DIR_SEP;
+   CHAR_T              bufDir[MAX_PATH];
+   CHAR_T              URL_DIR_SEP;
 
    if (typedata == STRING_DATA && data && ustrchr (data, '/'))
      URL_DIR_SEP = '/';
@@ -576,7 +576,7 @@ View                view;
    	length = 0;
    	for (entry=0; entry<NbDocSuffix; entry++)
      	  {
-            sprintf (&bufDir[length], "T%s", (STRING)(tabDocSuffix[entry]+1) );
+            usprintf (&bufDir[length], "T%s", tabDocSuffix[entry]+1);
             length += ustrlen (&bufDir[length])+1;
           }
         TtaNewSubmenu (NumToggleDocTypeToOpen, NumFormOpenDoc, 0, TtaGetMessage (LIB, TMSG_DOCUMENT_FORMAT),

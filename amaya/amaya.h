@@ -209,7 +209,7 @@ THOT_EXPORT Document     AttrHREFdocument;
 THOT_EXPORT Document     DocBook;
 THOT_EXPORT Document     IncludedDocument;
 THOT_EXPORT Element      AttrHREFelement;
-THOT_EXPORT char        *AttrHREFvalue;
+THOT_EXPORT STRING       AttrHREFvalue;
 THOT_EXPORT Document     SelectionDoc;
 THOT_EXPORT boolean	 SaveAsHTML;
 THOT_EXPORT boolean	 SaveAsXHTML;

@@ -499,9 +499,10 @@ PtrReference        pRef;
 {
    PtrReferredDescr    pRefD;
    LabelString         label;
-   LabelString         labelNul = "";
+   LabelString         labelNul;
    boolean             expansion;
 
+   labelNul [0] = 0;
    /* ecrit le type de la reference */
    expansion = FALSE;
    if (pRef->RdElement != NULL)

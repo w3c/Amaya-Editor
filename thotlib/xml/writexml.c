@@ -68,17 +68,17 @@ Element el;
 #endif /* __STDC__ */
 {
   buffer[0] = '\0';
-  strcpy (buffer, TtaGetElementLabel (el));
+  ustrcpy (buffer, TtaGetElementLabel (el));
   if (buffer[0] != '#')
     {
       buffer[0] = '#';
       buffer[1] = '\0';
-      strncat(buffer, NameThotToXml
+      ustrncat(buffer, NameThotToXml
 	      (TtaGetElementType(el).ElSSchema, 
 	       TtaGetElementType(el).ElTypeNum, 0, 0),3);
       
-      strcat(buffer,"_");
-      strcat(buffer,TtaGetElementLabel(el)+1);
+      ustrcat(buffer,"_");
+      ustrcat(buffer,TtaGetElementLabel(el)+1);
     } 
 }
 
@@ -446,7 +446,7 @@ Document        doc;
       /* write the extension's schema path  */
       /* Warning: signifying extension by strcating "_EXT" is not a 
 	          permanent solution. Waiting more of XML NameSpaces... */
-      strcpy (tempName, TtaGetSSchemaName (tempSchema));
+      ustrcpy (tempName, TtaGetSSchemaName (tempSchema));
       strcat (tempName, "_EXT");
       ok = ok && XmlWriteAttrStrValue (xmlFile, tempName);
       TtaNextSchemaExtension (doc, &tempSchema);
@@ -608,8 +608,8 @@ Attribute attr;
 	{
 	/* external reference */	  
 	  TtaGetDocumentDirectory(refDoc,tempName,100);
-	  strcat(tempName,"/");
-	  strcat(tempName,TtaGetDocumentName(refDoc));
+	  ustrcat(tempName, "/");
+	  ustrcat(tempName,TtaGetDocumentName(refDoc));
 	  l = strlen (tempName);
 	}
       XmlGetElementLabel (&tempName[l], refEl);

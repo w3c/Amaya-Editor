@@ -75,7 +75,7 @@ int                *hif;
    *yif = 0;
    *wif = 590;
    *hif = 840;
-   fin = fopen (fn, "r");
+   fin = ufopen (fn, "r");
    if (fin)
      {
 	pt = buff;
@@ -88,7 +88,7 @@ int                *hif;
 		  *(--pt) = EOS;
 		  pt = buff;
 		  if ((buff[0] == '%')
-		      && (sscanf (buff, "%%%%BoundingBox: %d %d %d %d", xif, yif, &X2, &Y2) == 4))
+		      && (usscanf (buff, "%%%%BoundingBox: %d %d %d %d", xif, yif, &X2, &Y2) == 4))
 		    {
 		       *wif = ABS (X2 - *xif) + 1;
 		       *hif = ABS (Y2 - *yif) + 1;
@@ -261,7 +261,7 @@ STRING              fn;
    boolean             res;
 
    res = FALSE;
-   fin = fopen (fn, "r");
+   fin = ufopen (fn, "r");
    if (fin)
      {
 	/* search for %! signature of the eps and ps files */

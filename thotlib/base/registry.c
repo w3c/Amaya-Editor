@@ -535,7 +535,7 @@ int *value;
    }
 
  /* make the convertion */
- *value = atoi (strptr);
+ *value = uctoi (strptr);
 
  return TRUE;
 }
@@ -595,7 +595,7 @@ STRING name;
   STRING value;
 
   if (AppRegistryInitialized == 0)
-    return (getenv (name));
+    return (ugetenv (name));
 
   /* appname allows to get the application name */
   if (!ustrcasecmp("appname", name))
@@ -603,11 +603,7 @@ STRING name;
 
   if ((!ustrcasecmp (name, "cwd")) || (!ustrcasecmp (name, "pwd")))
     {
-#      ifndef _WINDOWS
-      return(getcwd(&CurrentDir[0], sizeof(CurrentDir)));
-#      else  /* _WINDOWS */
-      return(_getcwd(&CurrentDir[0], sizeof(CurrentDir)));
-#      endif /* _WINDPWS */
+      return (ugetcwd (&CurrentDir[0], sizeof(CurrentDir)));
     }
 
   /* First lookup in the System defaults */
@@ -657,7 +653,7 @@ STRING name;
     * Hopefully this will be stored to the user registry
     * next time it will be saved.
     */
-  value = getenv (name);
+  value = ugetenv (name);
   if (value == NULL)
     TtaSetEnvString (name, "", FALSE);
   else
@@ -682,8 +678,7 @@ CONST STRING        value;
 int                 overwrite;
 #endif
 {
-   AddRegisterEntry (AppRegistryEntryAppli, name, "",
-		     REGISTRY_USER, TRUE);
+   AddRegisterEntry (AppRegistryEntryAppli, name, "", REGISTRY_USER, TRUE);
 }
 
 /*----------------------------------------------------------------------
@@ -705,7 +700,7 @@ int                 overwrite;
   int  r_val;
 
   r_val = value % 65537;
-    sprintf (ptr, "%d", r_val);
+    usprintf (ptr, "%d", r_val);
   AddRegisterEntry (AppRegistryEntryAppli, name, ptr,
 		    REGISTRY_USER, overwrite);
 }
@@ -809,7 +804,7 @@ int *value;
    }
 
  /* make the convertion */
- *value = atoi (strptr);
+ *value = uctoi (strptr);
 
  return TRUE;
 }
@@ -868,7 +863,7 @@ STRING name;
   STRING value;
 
   if (AppRegistryInitialized == 0)
-    return (getenv (name));
+    return (ugetenv (name));
 
   /* appname allows to get the application name */
   if (!ustrcasecmp("appname", name))
@@ -876,11 +871,7 @@ STRING name;
 
   if ((!ustrcasecmp (name, "cwd")) || (!ustrcasecmp (name, "pwd")))
     {
-#      ifndef _WINDOWS
-      return(getcwd(&CurrentDir[0], sizeof(CurrentDir)));
-#      else  /* _WINDOWS */
-      return(_getcwd(&CurrentDir[0], sizeof(CurrentDir)));
-#      endif /* _WINDPWS */
+      return (ugetcwd (&CurrentDir[0], sizeof(CurrentDir)));
     }
 
   /* First lookup in the System defaults */
@@ -935,7 +926,7 @@ STRING name;
     * Hopefully this will be stored to the user registry
     * next time it will be saved.
     */
-  value = getenv (name);
+  value = ugetenv (name);
   
 #ifdef DEBUG_REGISTRY
   fprintf (stderr, "TtaGetDefEnvString(\"%s\") = %s\n", name, value);
@@ -990,15 +981,17 @@ static int          IsThotDir (CONST STRING path)
    looks for <env> in                                                 
    HKEY_CURRENT_USER\Software\Amaya\<var>                                      
   ----------------------------------------------------------------------*/
-static STRING          WINReg_get (CONST STRING env)
+static STRING    WINReg_get (CONST STRING env)
 {
-  static CONST CHAR_T   userBase[] = "Software";
-  CHAR_T                textKey[MAX_PATH];
-  HKEY                hKey;
-  DWORD               type;
-  LONG                success;
-  static CHAR_T         ret[MAX_PATH];	/* thread unsafe! */
-  DWORD               retLen = sizeof (ret);
+  static STRING  userBase;
+  CHAR_T         textKey[MAX_PATH];
+  HKEY           hKey;
+  DWORD          type;
+  LONG           success;
+  static CHAR_T  ret[MAX_PATH];	/* thread unsafe! */
+  DWORD          retLen = sizeof (ret);
+
+  userBase = "Software";
   
   sprintf (textKey, "%s\\%s\\%s", userBase, AppRegistryEntryAppli, env);	                    
   success = RegOpenKeyEx (HKEY_CURRENT_USER, textKey, 0, KEY_ALL_ACCESS,
@@ -1019,20 +1012,22 @@ static STRING          WINReg_get (CONST STRING env)
   ----------------------------------------------------------------------*/
 static boolean WINReg_set (CONST STRING key, CONST STRING value)
 {
-  static CONST CHAR_T    userBase[] = "Software";
-   CHAR_T                textKey[MAX_PATH];
-   HKEY                hKey;
-   LONG                success;
-   CHAR_T                protValue[MAX_PATH];
-   DWORD               protValueLen = sizeof (protValue);
-   DWORD               dwDisposition;
+   static STRING    userBase;
+   CHAR_T           textKey[MAX_PATH];
+   HKEY             hKey;
+   LONG             success;
+   CHAR_T           protValue[MAX_PATH];
+   DWORD            protValueLen = sizeof (protValue);
+   DWORD            dwDisposition;
  
+   userBase = "Software";
+
    /* protect against values bigger than what we can write in
       the registry */
-   strncpy (protValue, value, protValueLen - 1);
+   ustrncpy (protValue, value, protValueLen - 1);
    protValue[protValueLen-1] = EOS;
 
-   sprintf (textKey, "%s\\%s\\%s", userBase, AppRegistryEntryAppli, key);	                    
+   usprintf (textKey, "%s\\%s\\%s", userBase, AppRegistryEntryAppli, key);	                    
    success = RegCreateKeyEx (HKEY_CURRENT_USER, textKey, 0, 
 	                         "", REG_OPTION_VOLATILE, KEY_ALL_ACCESS,
 		                     NULL, &hKey, &dwDisposition);  
@@ -1081,15 +1076,15 @@ void                TtaSaveAppRegistry ()
    if (!AppRegistryModified)
       return;
 
-   app_home = (STRING) TtaGetEnvString ("APP_HOME");
+   app_home = TtaGetEnvString ("APP_HOME");
    if (app_home != NULL)
-   	sprintf (filename, "%s%c%s", app_home, DIR_SEP, THOT_RC_FILENAME);
+   	usprintf (filename, "%s%c%s", app_home, DIR_SEP, THOT_RC_FILENAME);
    else
      {
 	fprintf (stderr, "Cannot save Registry no APP_HOME dir\n");
 	return;
      }
-   output = fopen (filename, "w");
+   output = ufopen (filename, "w");
    if (output == NULL)
      {
 	fprintf (stderr, "Cannot save Registry to %s :\n", filename);
@@ -1110,7 +1105,7 @@ void                TtaSaveAppRegistry ()
    else
 	   WINReg_set ("TmpDir", "");
 
-   sprintf (filename, "%s%c%s", WIN_DEF_TMPDIR, DIR_SEP, AppRegistryEntryAppli);
+   usprintf (filename, "%s%c%s", WIN_DEF_TMPDIR, DIR_SEP, AppRegistryEntryAppli);
    ptr = TtaGetEnvString ("APP_HOME");
    if (ptr && ustrcasecmp (filename, ptr))
       WINReg_set ("AppHome", TtaGetEnvString ("APP_HOME"));
@@ -1135,11 +1130,12 @@ RegistryLevel       level;
    FILE*  input;
    STRING str, base;
    CHAR_T   string[1000];
-   CHAR_T   appli[1000] = THOT_LIB_DEFAULTNAME;
+   CHAR_T   appli[1000];
    STRING name;
    STRING value;
 
-   input = fopen (filename, "r");
+   ustrcpy (appli, THOT_LIB_DEFAULTNAME);
+   input = ufopen (filename, "r");
    if (input == NULL)
      {
 	fprintf (stderr, "Cannot read Registry from %s :\n", filename);
@@ -1149,7 +1145,7 @@ RegistryLevel       level;
    while (1)
      {
 	/* read one line in string buffer */
-	if (fgets (&string[0], sizeof (string) - 1, input) == NULL)
+	if (ufgets (&string[0], sizeof (string) - 1, input) == NULL)
 	   break;
 
 	str = string;
@@ -1216,16 +1212,16 @@ static void         InitEnviron ()
    /* default values for various global variables */
    FirstCreation = FALSE;
    CurSaveInterval = 0;
-   pT = (STRING)TtaGetEnvString ("AUTOSAVE");
+   pT = TtaGetEnvString ("AUTOSAVE");
    if (pT != NULL)
-     CurSaveInterval = atoi(pT);
+     CurSaveInterval = uctoi(pT);
    if (CurSaveInterval <= 0)
      CurSaveInterval = DEF_SAVE_INTVL;
    HighlightBoxErrors = FALSE;
    InsertionLevels = 4;
 #ifndef _WINDOWS
    TtaSetDefEnvString ("DOUBLECLICKDELAY", "500", TRUE);
-   pT = (STRING)TtaGetEnvString ("DOUBLECLICKDELAY");
+   pT = TtaGetEnvString ("DOUBLECLICKDELAY");
    if (pT != NULL)
      DoubleClickDelay = atoi(pT);
    else 
@@ -1233,20 +1229,20 @@ static void         InitEnviron ()
 #endif /* _WINDOWS */
 
    /* The base of the Thot directory */
-   Thot_Dir = (STRING) TtaGetEnvString ("THOTDIR");
+   Thot_Dir = TtaGetEnvString ("THOTDIR");
    if (Thot_Dir == NULL)
       fprintf (stderr, "missing environment variable THOTDIR\n");
 
    /* The predefined path to documents */
-   pT = (STRING) TtaGetEnvString ("THOTDOC");
+   pT = TtaGetEnvString ("THOTDOC");
    if (pT == NULL)
       DocumentPath[0] = EOS;
    else
       ustrncpy (DocumentPath, pT, MAX_PATH);
 
    /* Read the schemas Paths */
-   Thot_Sch = (STRING) TtaGetEnvString ("THOTSCH");
-   Thot_Sys_Sch = (STRING) TtaGetEnvString ("THOTSYSSCH");
+   Thot_Sch = TtaGetEnvString ("THOTSCH");
+   Thot_Sys_Sch = TtaGetEnvString ("THOTSYSSCH");
 
    /* set up SchemaPath accordingly */
    if ((Thot_Sch != NULL) && (Thot_Sys_Sch != NULL))
@@ -1271,7 +1267,7 @@ static void         InitEnviron ()
 
 #ifndef _WINDOWS
    TtaSetDefEnvString ("BackgroundColor", "gainsboro", FALSE);
-   pT = (STRING) TtaGetEnvString ("TMPDIR");
+   pT = TtaGetEnvString ("TMPDIR");
    if (!pT || *pT == EOS)
      {
        pT = "/tmp";
@@ -1290,9 +1286,9 @@ static void         InitEnviron ()
    if (!TtaCheckDirectory (pT))
      {
 #ifdef _WINDOWS
-       i = _mkdir (pT);
+       i = umkdir (pT);
 #else /* _WINDOWS */
-       i = mkdir (pT, S_IRWXU);
+       i = umkdir (pT, S_IRWXU);
 #endif /* _WINDOWS */
        if (i != 0 && errno != EEXIST)
 	 {
@@ -1312,19 +1308,19 @@ static void         InitEnviron ()
   the specific user values from the user HOME dir.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                TtaInitializeAppRegistry (STRING appArgv0)
+void                TtaInitializeAppRegistry (char* appArgv0)
 #else  /* __STDC__ */
 void                TtaInitializeAppRegistry (appArgv0)
-STRING appArgv0;
+char* appArgv0;
 #endif
 {
   PathBuffer execname;
   PathBuffer path;
-  CHAR_T       app_home[MAX_PATH];
-  CHAR_T       filename[MAX_PATH];
+  CHAR_T     app_home[MAX_PATH];
+  CHAR_T     filename[MAX_PATH];
   STRING     my_path;
   STRING     dir_end = NULL;
-  STRING appName;
+  STRING     appName;
   CHAR_T      *ptr;
 #  ifdef _WINDOWS
 #  ifndef __CYGWIN32__
@@ -1378,11 +1374,7 @@ STRING appArgv0;
    */
   else if (TtaFileExist (appArgv0))
     {
-#     ifndef _WINDOWS
-      getcwd (&execname[0], sizeof (execname));
-#     else  /* _WINDOWS */
-      _getcwd (&execname[0], sizeof (execname));
-#     endif /* _WINDOWS */
+      ugetcwd (&execname[0], sizeof (execname));
       ustrcat (execname, DIR_STR);
       ustrcat (execname, appArgv0);
     }
@@ -1571,7 +1563,7 @@ STRING appArgv0;
 #endif
 
    /* load the system settings, stored in THOTDIR/config/thot.ini */
-   sprintf (filename, "%s%c%s%c%s", execname, DIR_SEP, THOT_CONFIG_FILENAME,
+   usprintf (filename, "%s%c%s%c%s", execname, DIR_SEP, THOT_CONFIG_FILENAME,
 	                  DIR_SEP, THOT_INI_FILENAME);
    if (TtaFileExist (filename))
      {
@@ -1593,7 +1585,7 @@ STRING appArgv0;
       computed from the tmpdir and the appname */
    ptr = WINReg_get ("AppHome");
    if (!ptr || *ptr == EOS)
-       sprintf (app_home, "%s%c%s", WIN_DEF_TMPDIR, DIR_SEP, AppRegistryEntryAppli);
+       usprintf (app_home, "%s%c%s", WIN_DEF_TMPDIR, DIR_SEP, AppRegistryEntryAppli);
    else
      ustrcpy (app_home, ptr);
 # else /* !_WINDOWS */
@@ -1679,7 +1671,7 @@ STRING fullName;
 		    tmpbuf[j] = EOS;
 		    i++;
 		    j = 0;
-		    sprintf (fullName, "%s%s%s", tmpbuf, DIR_STR, fileName);
+		    usprintf (fullName, "%s%s%s", tmpbuf, DIR_STR, fileName);
 		    ret = TtaFileExist (fullName);
 		 }
 
@@ -1695,7 +1687,7 @@ STRING fullName;
 		    tmpbuf[j] = EOS;
 		    i++;
 		    j = 0;
-		    sprintf (fullName, "%s%s%s", tmpbuf, DIR_STR, fileName);
+		    usprintf (fullName, "%s%s%s", tmpbuf, DIR_STR, fileName);
 		    ret = TtaFileExist (fullName);
 		 }
 	       break;

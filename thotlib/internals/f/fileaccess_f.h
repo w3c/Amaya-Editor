@@ -7,7 +7,7 @@
 #ifdef __STDC__
 
 extern boolean TtaReadByte ( BinFile file,
-                             PCHAR_T bval );
+                             char* bval );
 extern boolean TtaReadBool ( BinFile file,
                              boolean * bval );
 extern boolean TtaReadShort ( BinFile file,

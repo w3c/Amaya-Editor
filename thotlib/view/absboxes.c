@@ -72,7 +72,7 @@ boolean		    origName;
    PtrElement          pEl;
 
    if (pAb == NULL)
-      ustrcpy (text, (STRING)" ");
+      ustrcpy (text, " ");
    else
      {
 	pEl = pAb->AbElement;
@@ -84,7 +84,7 @@ boolean		    origName;
 	if (pAb->AbPresentationBox)
 	  /* Ajoute le nom du type de boite de presentation */
 	  {
-	     ustrcat (text, (STRING)".");
+	     ustrcat (text, ".");
 	     ustrcat (text, pAb->AbPSchema->PsPresentBox[pAb->AbTypeNum - 1].PbName);
 	  }
      }

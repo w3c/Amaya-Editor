@@ -1059,7 +1059,7 @@ PtrSSchema          pSS;
    error = FALSE;
    pTSch = NULL;
    /* compose le nom du fichier a ouvrir */
-   ustrncpy (dirBuffer, (STRING) SchemaPath, MAX_PATH);
+   ustrncpy (dirBuffer, SchemaPath, MAX_PATH);
    MakeCompleteName (fileName, "TRA", dirBuffer, buf, &i);
 
    /* ouvre le fichier */

@@ -20,7 +20,7 @@
 #include "typecorr.h"
 #include "typetra.h"
 
-typedef unsigned char RuleSet[32];
+typedef UCHAR_T RuleSet[32];
 
 /* List of pointers used */
 typedef struct _Box *PtrBox;
@@ -346,11 +346,11 @@ typedef struct _AbstractBox
   int	          AbTypeNum;	/* Type number/presentation box */
   int	          AbNum;	/* Abstract box number for debug */
   int	          AbVisibility; /* Abstract box visibility degree */
-  char            AbFont;	/* Characteristics of the font used */
+  CHAR_T          AbFont;	/* Characteristics of the font used */
   int		  AbHighlight;	/* Highlighting of the abstract box */
   int		  AbSize;	/* Character logical/real size */
   TypeUnit        AbSizeUnit;   /* Unit for the size */
-  char		  AbLineStyle;  /* Line style */
+  CHAR_T	  AbLineStyle;  /* Line style */
   int             AbLineWeight; /* Line thickness */
   TypeUnit	  AbLineWeightUnit; 	/* Unit of thickness */
   int		  AbFillPattern;/* Fill pattern */	
@@ -406,9 +406,9 @@ typedef struct _AbstractBox
     } s1;
     struct /* AbLeafType = LtGraphics or LtSymbol */
     {
-      char       _AbShape_;         /* Drawing code */
-      char       _AbGraphAlphabet_; /* Alphabet used*/
-      char       _AbRealShape_;     /* Effective drawing code */
+      CHAR_T     _AbShape_;         /* Drawing code */
+      CHAR_T     _AbGraphAlphabet_; /* Alphabet used*/
+      CHAR_T     _AbRealShape_;     /* Effective drawing code */
     } s2;
     struct /* AbLeafType = LtPicture */
     {
@@ -417,7 +417,7 @@ typedef struct _AbstractBox
     struct /* AbLeafType = LtPolyline  */
     {
       PtrTextBuffer _AbPolyLineBuffer_; /* First buffer */
-      char          _AbPolyLineShape_;  /* Drawing type */
+      CHAR_T        _AbPolyLineShape_;  /* Drawing type */
     } s4;
   } u;
 } AbstractBox;
@@ -489,6 +489,6 @@ typedef SearchContext *PtrSearchContext;
 /* Declaration for dialogue */
 
 /* List of the pointers used */
-typedef char    FontName[30];
+typedef CHAR_T    FontName[30];
 
 #endif

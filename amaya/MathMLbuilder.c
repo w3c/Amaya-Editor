@@ -393,7 +393,7 @@ STRING buffer;
 	    {
 	     if (MathMLElemMappingTable[i].ThotType == elType.ElTypeNum)
 		{
-		*buffer = (STRING) MathMLElemMappingTable[i].XMLname;
+		*buffer = MathMLElemMappingTable[i].XMLname;
 		return;
 		}
 	     i++;

@@ -365,7 +365,7 @@ PtrSSchema          pSS;
 #endif /* __STDC__ */
 
 {
-   CHAR_T                c;
+   CHAR_T              c;
    int                 i;
 
    i = 0;

@@ -126,7 +126,7 @@ PtrSSchema          pSS;
    do
      {
 	if (LoadedTSchema[i].pTransSchema != NULL)
-	   found = (strcmp (schName, LoadedTSchema[i].TransSchemaName) == 0);
+	   found = (ustrcmp (schName, LoadedTSchema[i].TransSchemaName) == 0);
 	if (!found)
 	   i++;
      }
@@ -151,7 +151,7 @@ PtrSSchema          pSS;
 	       {
 		  LoadedTSchema[i].pStructSchema = pSS;
 		  LoadedTSchema[i].pTransSchema = pTSch;
-		  strcpy (LoadedTSchema[i].TransSchemaName, schName);
+		  ustrcpy (LoadedTSchema[i].TransSchemaName, schName);
 	       }
 	  }
      }
@@ -190,10 +190,10 @@ Name                schName;
 		{
 		   if (pTRule->TrType == TUse)
 		      /* c'est une regle USE */
-		      if (strcmp (schName, pTRule->TrNature) == 0)
+		      if (ustrcmp (schName, pTRule->TrNature) == 0)
 			{
 			   found = TRUE;
-			   strncpy (schName, pTRule->TrTranslSchemaName,
+			   ustrncpy (schName, pTRule->TrTranslSchemaName,
 				    MAX_NAME_LENGTH);
 			}
 		   pTRule = pTRule->TrNextTRule;
@@ -242,7 +242,7 @@ Name                schName;
 	  {
 	     pSRule = &pSS->SsRule[i++];
 	     if (pSRule->SrConstruct == CsNatureSchema)
-		natureOK = strcmp (schName, pSRule->SrName) == 0;
+		natureOK = ustrcmp (schName, pSRule->SrName) == 0;
 	  }
 	while (i < pSS->SsNRules && !natureOK);
 	if (natureOK)
@@ -301,7 +301,7 @@ PtrSSchema          pSS;
       pTSchema = LoadedTSchema[i].pTransSchema;
    else
      {
-	strcpy (schemaName, pSS->SsName);
+	ustrcpy (schemaName, pSS->SsName);
 	GetTransSchName (schemaName);
 	if (schemaName[0] != EOS)
 	   /* cree un nouveau schema de traduction et le charge */

@@ -44,9 +44,9 @@
 #include "platform_tv.h"
 int                 CurrentDialog;
 
-static CHAR_T         NameDocToCreate[100] = "";
-static CHAR_T         ClassDocToCreate[100] = "";
-static CHAR_T         DirectoryDocToCreate[MAX_PATH] = "";
+static CHAR_T         NameDocToCreate[100];
+static CHAR_T         ClassDocToCreate[100];
+static CHAR_T         DirectoryDocToCreate[MAX_PATH];
 
 #include "structschema_f.h"
 #include "browser_f.h"
@@ -153,7 +153,7 @@ STRING              data;
 			 if (TtaFileExist (docName))
 			   {
 			      /* demande confirmation */
-			      sprintf (BufDir, TtaGetMessage (LIB, TMSG_FILE_EXIST), docName);
+			      usprintf (BufDir, TtaGetMessage (LIB, TMSG_FILE_EXIST), docName);
 			      TtaNewLabel (NumLabelConfirm, NumFormConfirm, BufDir);
 /*           ClassDocToCreate[0] = EOS; */
 			      TtaSetDialoguePosition ();

@@ -7,7 +7,7 @@
  
 
 
-THOT_EXPORT char DefaultDocumentName[MAX_PATH]; /* Name of default document to be loaded*/
+THOT_EXPORT CHAR_T DefaultDocumentName[MAX_PATH]; /* Name of default document to be loaded*/
 
 /* Documents currently loaded */
 THOT_EXPORT PtrDocument 	LoadedDocument[MAX_DOCUMENTS];

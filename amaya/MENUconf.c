@@ -259,7 +259,7 @@ void InitAmayaDefEnv ()
   STRING s;
 
   /* browsing editing options */
-  s = (STRING) TtaGetEnvString ("THOTDIR");
+  s = TtaGetEnvString ("THOTDIR");
   if (s != NULL)
     {
       ustrcpy (HomePage, s);

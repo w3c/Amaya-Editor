@@ -194,11 +194,11 @@ Document            document;
 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-PRule               TtaNewPRuleForNamedView (int presentationType, char *viewName, Document document)
+PRule               TtaNewPRuleForNamedView (int presentationType, STRING viewName, Document document)
 #else  /* __STDC__ */
 PRule               TtaNewPRuleForNamedView (presentationType, viewName, document)
 int                 presentationType;
-char               *viewName;
+STRING              viewName;
 Document            document;
 #endif /* __STDC__ */
 {
@@ -226,7 +226,7 @@ Document            document;
        /* Searching into the main tree views */
        if (pDoc->DocSSchema->SsPSchema != NULL)
 	 for (v = 1; v <= MAX_VIEW && vue == 0; v++)
-	   if (strcmp (pDoc->DocSSchema->SsPSchema->PsView[v - 1], viewName) == 0)
+	   if (ustrcmp (pDoc->DocSSchema->SsPSchema->PsView[v - 1], viewName) == 0)
 	     vue = v;
        /* If not found one search into associated elements */
        if (vue == 0)
@@ -234,7 +234,7 @@ Document            document;
 	   {
 	     pEl = pDoc->DocAssocRoot[v - 1];
 	     if (pEl != NULL)
-	       if (strcmp (viewName, pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrName) == 0)
+	       if (ustrcmp (viewName, pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrName) == 0)
 		 vue = 1;
 	   }
        if (vue == 0)

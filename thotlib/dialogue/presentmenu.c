@@ -768,15 +768,15 @@ View                view;
 
    /* choix multiple presentation standard */
    i = 0;
-   sprintf (&string[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_STD_CHAR));
+   usprintf (&string[i], "B%s", TtaGetMessage (LIB, TMSG_STD_CHAR));
    i += ustrlen (&string[i]) + 1;
-   sprintf (&string[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_STD_GRAPHICS));
+   usprintf (&string[i], "B%s", TtaGetMessage (LIB, TMSG_STD_GRAPHICS));
    i += ustrlen (&string[i]) + 1;
-   sprintf (&string[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_STD_COLORS));
+   usprintf (&string[i], "B%s", TtaGetMessage (LIB, TMSG_STD_COLORS));
    i += ustrlen (&string[i]) + 1;
-   sprintf (&string[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_STD_FORMAT));
+   usprintf (&string[i], "B%s", TtaGetMessage (LIB, TMSG_STD_FORMAT));
    i += ustrlen (&string[i]) + 1;
-   sprintf (&string[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_STD_GEOMETRY));
+   usprintf (&string[i], "B%s", TtaGetMessage (LIB, TMSG_STD_GEOMETRY));
    TtaNewToggleMenu (NumMenuPresentStandard, NumFormPresentStandard,
 		TtaGetMessage (LIB, TMSG_STD_PRES), 5, string, NULL, TRUE);
    /* annule toutes les options du choix multiple Presentation standard */
@@ -1472,13 +1472,13 @@ View                view;
 
 	     /* sous-menu style des traits */
 	     i = 0;
-	     sprintf (&string[i], "%s", "Bsssss");	/* Traits_continu */
+	     usprintf (&string[i], "%s", "Bsssss");	/* Traits_continu */
 	     i += ustrlen (&string[i]) + 1;
-	     sprintf (&string[i], "%s", "Bttttt");	/* Traits_tirete */
+	     usprintf (&string[i], "%s", "Bttttt");	/* Traits_tirete */
 	     i += ustrlen (&string[i]) + 1;
-	     sprintf (&string[i], "%s", "Buuuuu");	/* Traits_pointilles */
+	     usprintf (&string[i], "%s", "Buuuuu");	/* Traits_pointilles */
 	     i += ustrlen (&string[i]) + 1;
-	     sprintf (&string[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_UNCHANGED));
+	     usprintf (&string[i], "B%s", TtaGetMessage (LIB, TMSG_UNCHANGED));
 	     TtaNewSubmenu (NumMenuStrokeStyle, NumFormPresGraphics, 0,
 	      TtaGetMessage (LIB, TMSG_LINE_STYLE), 4, string, NULL, TRUE);
 	     /* change la police des 3 premieres entrees du style des traits */
@@ -1512,7 +1512,7 @@ View                view;
 	     StdLineWeight = FALSE;
 	     LineWeight = pAb->AbLineWeight;
 	     /* Toggle button Epaisseur des traits standard */
-	     sprintf (string, "%s%s", "B", TtaGetMessage (LIB, TMSG_UNCHANGED));
+	     usprintf (string, "B%s", TtaGetMessage (LIB, TMSG_UNCHANGED));
 	     TtaNewToggleMenu (NumToggleWidthUnchanged, NumFormPresGraphics,
 			       NULL, 1, string, NULL, TRUE);
 	     /* initialise la zone de saisie epaisseur des traits */
@@ -1546,7 +1546,7 @@ View                view;
 	       }
 	     /* Toggle button Motif de remplissage standard */
 	     i = 0;
-	     sprintf (&string[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_UNCHANGED));
+	     usprintf (&string[i], "B%s", TtaGetMessage (LIB, TMSG_UNCHANGED));
 	     TtaNewToggleMenu (NumTogglePatternUnchanged, NumFormPresGraphics,
 			       NULL, 1, string, NULL, TRUE);
 	     DocModPresent = pDoc;

@@ -290,7 +290,7 @@ PtrAttribute        currAttr;
 	if (length > 0)
 	  {
 	    nbItem++;
-	    sprintf(ptr, "T%s", string);
+	    usprintf(ptr, "T%s", string);
 	    ptr += length + 2;
 	  }
      }
@@ -300,7 +300,7 @@ PtrAttribute        currAttr;
    /* affiche le formulaire */
    TtaShowDialogue (NumFormLanguage, TRUE);
 #  else  /* _WINDOWS */
-   sprintf (WIN_Lab, "%s", Lab);
+   usprintf (WIN_Lab, "%s", Lab);
    WIN_nbItem = nbItem; 
    WIN_Language = language;
 #  endif /* _WINDOWS */
@@ -319,11 +319,12 @@ STRING title	;
 #endif /* __STDC__ */
 {
    WNDCLASS    wndFormClass ;
-   static CHAR_T szAppName[] = "FormClass" ;
+   static STRING szAppName; 
    HWND        hwnFromDialog;
    MSG         msg;
    int         frame;
 
+   szAppName = "FormClass" ;
    if (!wndRegistered) {
 	  wndRegistered = TRUE;
       wndFormClass.style         = CS_HREDRAW | CS_VREDRAW ;
@@ -388,12 +389,12 @@ LRESULT CALLBACK InitFormDialogWndProc (HWND hwnd, UINT iMsg, WPARAM wParam, LPA
 	STRING       pBuffer;
 	/* CHAR_T        attr_text [500]; */
 	int         i, index;
-	static PSTR pWinBuffer;
-	static int  txtLength;
-	static HWND hwnEdit ;
+	static STRING pWinBuffer;
+	static int    txtLength;
+	static HWND   hwnEdit ;
 
 	if (WIN_currAttr)
-	   sprintf (attr_text, WIN_currAttr->AeAttrText->BuContent);
+	   usprintf (attr_text, WIN_currAttr->AeAttrText->BuContent);
 	else
 		attr_text [0] = EOS ;
 
@@ -433,7 +434,7 @@ LRESULT CALLBACK InitFormDialogWndProc (HWND hwnd, UINT iMsg, WPARAM wParam, LPA
 			    switch (LOWORD (wParam)) {
 				       case ID_CONFIRM:
 						    txtLength = GetWindowTextLength (hwnEdit);
-							if ((pWinBuffer = (PSTR) TtaGetMemory (txtLength + 1))) {
+							if ((pWinBuffer = (STRING) TtaGetMemory (txtLength + 1))) {
 							   GetWindowText (hwnEdit, pWinBuffer, txtLength + 1);
 							   index = 0;
 							   pBuffer = (STRING) TtaGetMemory (txtLength + 1);
@@ -476,11 +477,12 @@ STRING title	;
 #endif /* __STDC__ */
 {
    WNDCLASSEX    wndSheetClass ;
-   static CHAR_T szAppName[] = "SheetClass" ;
-   HWND        hwnSheetDialog;
-   MSG         msg;
-   int         frame;
+   static STRING szAppName;
+   HWND          hwnSheetDialog;
+   MSG           msg;
+   int           frame;
 
+   szAppName = "SheetClass" ;
    if (!wndSheetRegistered) {
 	  wndSheetRegistered = TRUE;
       wndSheetClass.style         = CS_HREDRAW | CS_VREDRAW ;
@@ -538,19 +540,19 @@ LRESULT CALLBACK InitSheetDialogWndProc (HWND hwnd, UINT iMsg, WPARAM wParam, LP
 LRESULT CALLBACK InitSheetDialogWndProc (HWND hwnd, UINT iMsg, WPARAM wParam, LPARAM lParam)
 #endif /* __STDC__ */
 {
-	HWND        hwnTitle;
-	HWND        applyButton;
-	HWND        deleteButton;
-	HWND        doneButton;
-	STRING       pBuffer;
-	int         i, index;
-	static PSTR pWinBuffer;
-	static int  txtLength;
-	static HWND hwnEdit ;
+	HWND          hwnTitle;
+	HWND          applyButton;
+	HWND          deleteButton;
+	HWND          doneButton;
+	STRING        pBuffer;
+	int           i, index;
+	static STRING pWinBuffer;
+	static int    txtLength;
+	static HWND   hwnEdit ;
 
 	if (!dlgInitialized) {
        if (WIN_currAttr) 
-          sprintf (attr_text, "%s", WIN_currAttr->AeAttrText->BuContent);
+          usprintf (attr_text, "%s", WIN_currAttr->AeAttrText->BuContent);
        else
           attr_text [0] = EOS ;
        dlgInitialized = TRUE;
@@ -597,7 +599,7 @@ LRESULT CALLBACK InitSheetDialogWndProc (HWND hwnd, UINT iMsg, WPARAM wParam, LP
 			    switch (LOWORD (wParam)) {
 				       case ID_APPLY:
 						    txtLength = GetWindowTextLength (hwnEdit);
-							if ((pWinBuffer = (PSTR) TtaGetMemory (txtLength + 1))) {
+							if ((pWinBuffer = (STRING) TtaGetMemory (txtLength + 1))) {
 							   GetWindowText (hwnEdit, pWinBuffer, txtLength + 1);
 							   index = 0;
 							   pBuffer = (STRING) TtaGetMemory (txtLength + 1);
@@ -618,7 +620,7 @@ LRESULT CALLBACK InitSheetDialogWndProc (HWND hwnd, UINT iMsg, WPARAM wParam, LP
 
 					   case ID_DELETE:
 						    txtLength = GetWindowTextLength (hwnEdit);
-							if ((pWinBuffer = (PSTR) TtaGetMemory (txtLength + 1))) {
+							if ((pWinBuffer = (STRING) TtaGetMemory (txtLength + 1))) {
 							   GetWindowText (hwnEdit, pWinBuffer, txtLength + 1);
 							   index = 0;
 							   pBuffer = (STRING) TtaGetMemory (txtLength + 1);
@@ -661,11 +663,12 @@ STRING title	;
 #endif /* __STDC__ */
 {
    WNDCLASSEX    wndNumAttrClass ;
-   static CHAR_T szAppName[] = "NumAttrClass" ;
-   HWND        hwnNumAttrDialog;
-   MSG         msg;
-   int         frame;
+   static STRING szAppName;
+   HWND          hwnNumAttrDialog;
+   MSG           msg;
+   int           frame;
 
+   szAppName = "NumAttrClass" ;
    if (!wndNumAttrRegistered) {
 	  wndNumAttrRegistered = TRUE;
       wndNumAttrClass.style         = CS_HREDRAW | CS_VREDRAW ;
@@ -902,7 +905,7 @@ int                 view;
        WIN_AtNumAttr  = TRUE;
        WIN_AtTextAttr = FALSE;
        WIN_AtEnumAttr = FALSE;
-       sprintf (formRange, "%d .. %d", -MAX_INT_ATTR_VAL, MAX_INT_ATTR_VAL); 
+       usprintf (formRange, "%d .. %d", -MAX_INT_ATTR_VAL, MAX_INT_ATTR_VAL); 
        formValue = i;
 #endif /* _WINDOWS */
        break;
@@ -1251,9 +1254,9 @@ STRING        bufEventAttr;
 	      pAttrNew->AeDefAttr = FALSE;
 	      if (pAttr->AttrType == AtEnumAttr && pAttr->AttrNEnumValues == 1)
 		/* attribut enumere' a une seule valeur (attribut booleen) */
-		sprintf (tempBuffer, "T%s", pAttr->AttrName);
+		usprintf (tempBuffer, "T%s", pAttr->AttrName);
 	      else
-		sprintf (tempBuffer, "T%s...", pAttr->AttrName);
+		usprintf (tempBuffer, "T%s...", pAttr->AttrName);
 	      i = ustrlen (tempBuffer) + 1;
 	      if (AttrEvent[att])
 		{
@@ -1286,7 +1289,7 @@ STRING        bufEventAttr;
       if (*nbEvent > 0)
 	{
 	  /* add the event entry if needed */
-	  sprintf (tempBuffer, "M%s", TtaGetMessage (LIB, TMSG_EVENTS));
+	  usprintf (tempBuffer, "M%s", TtaGetMessage (LIB, TMSG_EVENTS));
 	  i = ustrlen (tempBuffer) + 1;
 	  if (lgmenu + i < MAX_TXT_LEN)
 	    {

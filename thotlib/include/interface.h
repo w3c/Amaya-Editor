@@ -274,7 +274,7 @@ extern void         TtaHandlePendingEvents ();
 
   ----------------------------------------------------------------------*/
 extern void         TtaClickElement (/*OUT*/ Document *document, /*OUT*/ Element *element);
-extern Pixmap       TtaCreatePixmapLogo (STRING *data);
+extern Pixmap       TtaCreatePixmapLogo (char** data);
 
 /*----------------------------------------------------------------------
    TtaCreateBitmapLogo
@@ -290,7 +290,7 @@ extern Pixmap       TtaCreatePixmapLogo (STRING *data);
    The created pixmap for the logo.
 
   ----------------------------------------------------------------------*/
-extern Pixmap       TtaCreateBitmapLogo (int width, int height, STRING bits);
+extern Pixmap       TtaCreateBitmapLogo (int width, int height, char* bits);
 extern void         TtaSetCursorWatch (Document document, View view);
 extern void         TtaResetCursor (Document document, View view);
 

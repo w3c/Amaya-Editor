@@ -45,7 +45,7 @@
 #define EmptyPixmap (Pixmap)(-2)
 #define HL 4
 
-static STRING       Patterns_PS[] =
+static char*       Patterns_PS[] =
 {
    "2222222222222222",		/*horiz1 */
    "6666666666666666",

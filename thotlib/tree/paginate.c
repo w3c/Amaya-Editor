@@ -401,12 +401,12 @@ boolean            *firstPage;
    if (*firstPage)
      {
 	/* Affiche un message normal pour la 1ere fois */
-	TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_PAGE), name, (STRING) pEl->ElPageNumber);
+	TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_PAGE), name, pEl->ElPageNumber);
 	*firstPage = FALSE;
      }
    else
       /* Sinon ecrase le message precedent */
-      TtaDisplayMessage (OVERHEAD, TtaGetMessage (LIB, TMSG_PAGE), name, (STRING) pEl->ElPageNumber);
+      TtaDisplayMessage (OVERHEAD, TtaGetMessage (LIB, TMSG_PAGE), name, pEl->ElPageNumber);
 }
 #endif /* PAGINEETIMPRIME */
 

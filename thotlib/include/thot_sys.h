@@ -22,6 +22,9 @@
 #define THOT_SYS_H
 
 #include "ustring.h"
+#include "uconvert.h"
+#include "uio.h"
+
 #define EOS     '\0'
 #define EOL     '\n'
 #define TAB     '\t'

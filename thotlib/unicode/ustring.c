@@ -183,7 +183,7 @@ unsigned int  count;
 #endif /* __STDC__ */
 {
 #   ifdef _WINDOWS 
-    return (STRING) wcsncat ((wcahr_t*)dest, (wchar_t*)src, (size_t)count);
+    return (STRING) wcsncat (dest, src, (size_t)count);
 #   else  /* !_WINDOWS */
 #   endif /* !_WINDOWS */
 }
@@ -409,7 +409,7 @@ int ustrlen (str)
 const STRING str;
 #endif /* __STDC__ */
 {
-    return (unsigned int) strlen ((char*)str);
+    return (int) strlen ((char*)str);
 }
 
 /*-------------------------------------------------------------

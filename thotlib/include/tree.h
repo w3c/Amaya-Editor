@@ -102,7 +102,7 @@ extern Element      TtaNewElement (Document document, ElementType elementType);
    the root element of the created tree.
 
    ---------------------------------------------------------------------- */
-extern Element      TtaNewTree (Document document, ElementType elementType, char *label);
+extern Element      TtaNewTree (Document document, ElementType elementType, STRING label);
 
 /* ----------------------------------------------------------------------
    TtaCopyTree
@@ -204,7 +204,7 @@ extern void         TtaAttachNewTree (Element tree, Document document);
    function TtaSetSchemaPath.
  
   ----------------------------------------------------------------------*/
-extern void         TtaExportTree (Element element, Document document, char *fileName, char *TSchemaName);
+extern void         TtaExportTree (Element element, Document document, STRING fileName, STRING TSchemaName);
  
 /* ----------------------------------------------------------------------
    TtaInsertSibling
@@ -609,7 +609,7 @@ extern boolean      TtaIsExtensionElement (Element element);
    name of that type.
 
    ---------------------------------------------------------------------- */
-extern char        *TtaGetElementTypeName (ElementType elementType);
+extern STRING      TtaGetElementTypeName (ElementType elementType);
 
 /* ----------------------------------------------------------------------
    TtaGetElementTypeOriginalName
@@ -624,7 +624,7 @@ extern char        *TtaGetElementTypeName (ElementType elementType);
    original name of that type.
 
    ---------------------------------------------------------------------- */
-extern char        *TtaGetElementTypeOriginalName (ElementType elementType);
+extern STRING       TtaGetElementTypeOriginalName (ElementType elementType);
 
 /* ----------------------------------------------------------------------
    TtaGiveTypeFromName
@@ -644,7 +644,7 @@ extern char        *TtaGetElementTypeOriginalName (ElementType elementType);
    if the type is not found.
 
    ---------------------------------------------------------------------- */
-extern void         TtaGiveTypeFromName (/*OUT*/ ElementType * elementType, char *name);
+extern void         TtaGiveTypeFromName (/*OUT*/ ElementType * elementType, STRING name);
 
 /* ----------------------------------------------------------------------
    TtaGiveTypeFromOriginalName
@@ -665,7 +665,7 @@ extern void         TtaGiveTypeFromName (/*OUT*/ ElementType * elementType, char
    if the type is not found.
 
    ---------------------------------------------------------------------- */
-extern void        TtaGiveTypeFromOriginalName (/*OUT*/ ElementType * elementType, char *name);
+extern void        TtaGiveTypeFromOriginalName (/*OUT*/ ElementType * elementType, STRING name);
 
 /* ----------------------------------------------------------------------
    TtaSameTypes
@@ -694,7 +694,7 @@ extern int          TtaSameTypes (ElementType type1, ElementType type2);
    label of the element.
 
    ---------------------------------------------------------------------- */
-extern char        *TtaGetElementLabel (Element element);
+extern STRING        TtaGetElementLabel (Element element);
 
 /* ----------------------------------------------------------------------
    TtaGetElementVolume
@@ -1101,7 +1101,7 @@ extern Element      TtaSearchTypedElementInTree (ElementType searchedType, Searc
    the element found, or NULL if no element has been found.
 
    ---------------------------------------------------------------------- */
-extern Element      TtaSearchElementByLabel (char *searchedLabel, Element element);
+extern Element      TtaSearchElementByLabel (STRING searchedLabel, Element element);
 
 /* ----------------------------------------------------------------------
    TtaSearchEmptyElement
@@ -1211,10 +1211,10 @@ extern Element      TtaGetCommonAncestor ( /* Element element1, Element element2
 extern Element      TtaGetTypedAncestor ( /* Element element, ElementType ancestorType */ );
 extern ElementType  TtaGetElementType ( /* Element element */ );
 extern boolean      TtaIsExtensionElement ( /* Element element */ );
-extern char        *TtaGetElementTypeName ( /* ElementType elementType */ );
+extern STRING       TtaGetElementTypeName ( /* ElementType elementType */ );
 extern void         TtaGiveTypeFromName ( /* ElementType *elementType, char *name */ );
 extern int          TtaSameTypes ( /* ElementType type1, ElementType type2 */ );
-extern char        *TtaGetElementLabel ( /* Element element */ );
+extern STRING       TtaGetElementLabel ( /* Element element */ );
 extern int          TtaGetElementVolume ( /* Element element */ );
 extern int          TtaIsConstant ( /* ElementType elementType */ );
 extern int          TtaIsLeaf ( /* ElementType elementType */ );

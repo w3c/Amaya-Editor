@@ -39,8 +39,8 @@ typedef struct _PatternList *PtrPattern;
 
 struct Pattern
 {
-	unsigned char	CarPattern[MAX_LET_PATTERN];
-	char	PoidsPattern[MAX_LET_PATTERN];
+	UCHAR_T	CarPattern[MAX_LET_PATTERN];
+	CHAR_T	PoidsPattern[MAX_LET_PATTERN];
 };
 
 struct PatternList
@@ -55,13 +55,13 @@ struct PatternList
 
 struct Langue_Ctl
 {
-  char		LangNom[MAX_NAME_LENGTH];	/* Nom de la langue */
-  char		LangCode[MAX_NAME_LENGTH];	/* Code de la langue (RFC1766) */
-  char		LangAlphabet;		/* Alphabet associe a la langue */
-  char		LangPrincipal[MAX_NAME_LENGTH];	/* Name du dictionnaire principal */
-  char		LangSecondary[MAX_NAME_LENGTH];	/* Name du dictionnaire secondaire */
+  CHAR_T	LangNom[MAX_NAME_LENGTH];	/* Nom de la langue */
+  CHAR_T	LangCode[MAX_NAME_LENGTH];	/* Code de la langue (RFC1766) */
+  CHAR_T	LangAlphabet;		/* Alphabet associe a la langue */
+  CHAR_T	LangPrincipal[MAX_NAME_LENGTH];	/* Name du dictionnaire principal */
+  CHAR_T	LangSecondary[MAX_NAME_LENGTH];	/* Name du dictionnaire secondaire */
   Dictionary    LangDict[MAX_DICTS];    /* Pointeurs vers les dictionnaires */
-  char		LangPattern[MAX_NAME_LENGTH];	/* Name de la liste de patterns d'hyphenation */
+  CHAR_T	LangPattern[MAX_NAME_LENGTH];	/* Name de la liste de patterns d'hyphenation */
   struct PatternList	LangTabPattern;		/* Pointeur sur la liste de patterns */
 };
 
@@ -69,14 +69,14 @@ struct Langue_Ctl
 #ifdef __STDC__
 
 extern boolean TtaLoadDocumentDictionary ( PtrDocument document, int *pDict, boolean ToCreate );
-extern char *TtaGetHyphenList ( char word[30], Language languageId );
-extern int *TtaGetPatternHyphenList( char word[100], Language languageId );
+extern STRING TtaGetHyphenList ( CHAR_T word[30], Language languageId );
+extern int *TtaGetPatternHyphenList( CHAR_T word[100], Language languageId );
 extern boolean TtaExistPatternList ( Language languageId );
 
 #else /* __STDC__ */
 
 extern boolean TtaLoadDocumentDictionary (/* PtrDocument document, int *pDict, boolean ToCreate */);
-extern char *TtaGetHyphenList (/* char word[30], Language languageId */);
+extern STRING  TtaGetHyphenList (/* char word[30], Language languageId */);
 extern int *TtaGetPatternHyphenList(/* char word[100], Language languageId */);
 extern boolean TtaExistPatternList (/* Language languageId */);
 

@@ -1561,7 +1561,7 @@ ElementType elType;
 	  {
 	    if (HTMLGIMappingTable[i].ThotType == elType.ElTypeNum &&
 		ustrcmp (HTMLGIMappingTable[i].htmlGI, "LISTING"))	/* use PRE */
-	      return (STRING) HTMLGIMappingTable[i].htmlGI;
+	      return HTMLGIMappingTable[i].htmlGI;
 	    i++;
 	  }
 	while (HTMLGIMappingTable[i].htmlGI[0] != EOS);
@@ -4631,17 +4631,17 @@ CHAR_T                c;
 #ifndef STANDALONE
 	TtaSetAttributeText (lastAttribute, inputBuffer, lastAttrElement,
 			     theDocument);
-	ParseHTMLSpecificStyle (lastElement, (STRING) inputBuffer, theDocument, FALSE);
+	ParseHTMLSpecificStyle (lastElement, inputBuffer, theDocument, FALSE);
 #endif
 	done = TRUE;
      }
 #ifndef STANDALONE
    else if (!ustrcmp (lastAttrEntry->XMLattribute, "LINK"))
-      HTMLSetAlinkColor (theDocument, (STRING) inputBuffer);
+      HTMLSetAlinkColor (theDocument, inputBuffer);
    else if (!ustrcmp (lastAttrEntry->XMLattribute, "ALINK"))
-      HTMLSetAactiveColor (theDocument, (STRING) inputBuffer);
+      HTMLSetAactiveColor (theDocument, inputBuffer);
    else if (!ustrcmp (lastAttrEntry->XMLattribute, "VLINK"))
-      HTMLSetAvisitedColor (theDocument, (STRING) inputBuffer);
+      HTMLSetAvisitedColor (theDocument, inputBuffer);
 #endif
 
    if (!done)
@@ -7431,7 +7431,7 @@ boolean	            plainText;
 	{
 	  ustrcpy (documentName, documentDirectory);
 	  documentDirectory[0] = EOS;
-	  s = (STRING) TtaGetEnvString ("PWD");
+	  s = TtaGetEnvString ("PWD");
 	  /* set path on current directory */
 	  if (s != NULL)
 	    ustrcpy (documentDirectory, s);

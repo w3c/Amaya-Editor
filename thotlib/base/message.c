@@ -45,8 +45,8 @@ TabMsg;
 
  /* Identification des messages Thot */
 static PtrTabMsg    FirstTableMsg = NULL;
-static CHAR_T         EmptyMsg[] = "";
-static CHAR_T         result[MAX_TXT_LEN];
+static CHAR_T       EmptyMsg [1];
+static CHAR_T       result[MAX_TXT_LEN];
 
 #include "dialogapi_f.h"
 #include "memory_f.h"
@@ -166,7 +166,7 @@ int                 msgNumber;
    fileName[2] = '-';
    ustrcpy (&fileName[3], msgName);
    SearchFile (fileName, 2, pBuffer);
-   file = fopen (pBuffer, "r");
+   file = ufopen (pBuffer, "r");
    if (file == NULL)
      {
 	printf ("WARNING: cannot open file %s\n", pBuffer);
@@ -249,6 +249,8 @@ int                 num;
    int                 i;
    PtrTabMsg           currenttable;
 
+   EmptyMsg [0] = EOS;
+
    /* recherche la table de messages */
    if (origin == -1)
       /* la table de messages n'est pas chargee */
@@ -315,7 +317,7 @@ STRING              fmt;
                            vald = va_arg (pa, int);
 
                            if (i + 10 < MAX_PATH) {
-                              sprintf (&pBuffer[i], "%d", vald);
+                              usprintf (&pBuffer[i], "%d", vald);
                               i += ustrlen (&pBuffer[i]);
 						   } else
                                   i = MAX_PATH;

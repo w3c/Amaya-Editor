@@ -192,9 +192,9 @@ PtrDocument         pDoc;
 		   /* 1- faire mv .xml sur .xml.old */
 		   FindCompleteName (SaveFileName, "xml.old", 
 				     SaveDirectoryName, buf2, &i);
-		   i = rename (docname, buf2);
+		   i = urename (docname, buf2);
 		   /* 2- faire mv du .Tmp sur le .xml */
-		   i = rename (buf, docname);
+		   i = urename (buf, docname);
 		   if (i >= 0)
 		     /* >> tout s'est bien passe' << */
 		     /* detruit l'ancienne sauvegarde */

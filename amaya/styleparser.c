@@ -597,7 +597,7 @@ int                  len
       break;
     case PRBackgroundPicture:
       if (settings->value.pointer != NULL)
-	sprintf (buffer, "background-image: url(%s)", (STRING)settings->value.pointer);
+	sprintf (buffer, "background-image: url(%s)", settings->value.pointer);
       else
 	sprintf (buffer, "background-image: none");
       break;
@@ -666,11 +666,11 @@ void                *param;
   if (settings->type == PRBackgroundPicture)
     {
       /* transform absolute URL into relative URL */
-      imgInfo = SearchLoadedImage((STRING)settings->value.pointer, 0);
+      imgInfo = SearchLoadedImage(settings->value.pointer, 0);
       if (imgInfo != NULL)
 	ptr = MakeRelativeURL (imgInfo->originalName, DocumentURLs[doc]);
       else
-	ptr = MakeRelativeURL ((STRING)settings->value.pointer, DocumentURLs[doc]);
+	ptr = MakeRelativeURL (settings->value.pointer, DocumentURLs[doc]);
       settings->value.pointer = ptr;
       PToCss (settings, string, sizeof(string));
       TtaFreeMemory (ptr);

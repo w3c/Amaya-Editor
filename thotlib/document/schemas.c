@@ -68,7 +68,7 @@ PtrSSchema          pSS;
 
 #endif /* __STDC__ */
 {
-   char                schemaName[MAX_NAME_LENGTH];
+   CHAR_T              schemaName[MAX_NAME_LENGTH];
    PtrEventsSet        schemaActions;
 
    ustrcpy (schemaName, pSS->SsName);

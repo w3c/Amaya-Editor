@@ -21,10 +21,10 @@
 #include "language.h"
 
 /* document internal identifier: unique identifier for the storage system */
-typedef char	DocumentIdentifier[MAX_DOC_IDENT_LEN];
+typedef CHAR_T	DocumentIdentifier[MAX_DOC_IDENT_LEN];
 
 /* document external identifier: document name for the user */
-typedef char	ADocumentName[MAX_NAME_LENGTH];
+typedef CHAR_T	ADocumentName[MAX_NAME_LENGTH];
 
 /* element access mode */
 typedef enum {
@@ -73,7 +73,7 @@ typedef struct _CopyDescriptor
 
 /* an element Label: an identifier that is unique in the document to which the
    element belongs */
-typedef char	LabelString[MAX_LABEL_LEN];
+typedef CHAR_T	LabelString[MAX_LABEL_LEN];
 
 /* Descriptor of a referenced element and the string of all of its references.
    All the references to a same element constitute a string on the beginning of
@@ -206,7 +206,7 @@ typedef struct _PolyLinePoint
 #define MAX_POINT_POLY	THOT_MAX_CHAR / sizeof(PolyLinePoint)
 
 #ifndef AMAYA_H__	
-typedef char    PathBuffer[MAX_PATH];
+typedef CHAR_T    PathBuffer[MAX_PATH];
 #endif 
 
 /* Description of a text buffer */
@@ -331,7 +331,7 @@ typedef struct _ElementDescr
 		} s0;
 		struct			/*ElLeafType = LtGraphics or LtSymbol*/
 		{
-		    char          _ElGraph_;	/* code of element */
+		    CHAR_T          _ElGraph_;	/* code of element */
 		} s1;
 		struct			/* ElLeafType = LtPageColBreak */
 		{
@@ -360,7 +360,7 @@ typedef struct _ElementDescr
 		    PtrTextBuffer _ElPolyLineBuffer_; /* buffer containing the
 						     points defining the line*/
 		    int		  _ElNPoints_;	     /* number of points */
-		    char	  _ElPolyLineType_;  /* type of line */
+		    CHAR_T	  _ElPolyLineType_;  /* type of line */
 		} s5;
 		struct			/* TypeImage = LtPicture */
 		{
@@ -647,7 +647,7 @@ typedef struct _DocumentDescr
 	/* information used while reading the pivot file */
 	int		DocPivotVersion;/* pivot version number */
         PtrReferredDescr DocLabels;	/* external labels */
-	unsigned char	DocCheckingMode; /* check document structure against
+	UCHAR_T	DocCheckingMode; /* check document structure against
 					    the structure schemas */
 	boolean		DocPivotError;  /* an format error has been detected */
 

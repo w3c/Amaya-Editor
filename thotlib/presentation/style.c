@@ -57,13 +57,13 @@ Name               *boxname;
       if (ctxt->ancestors[i] == 0)
 	break;
       if (ctxt->ancestors_nb[i] > 1)
-	sprintf (&buffer[len], "%d:%d/", ctxt->ancestors[i], ctxt->ancestors_nb[i]);
+	usprintf (&buffer[len], "%d:%d/", ctxt->ancestors[i], ctxt->ancestors_nb[i]);
       else
-	sprintf (&buffer[len], "%d/", ctxt->ancestors[i]);
+	usprintf (&buffer[len], "%d/", ctxt->ancestors[i]);
       len = ustrlen (buffer);
     }
   if (ctxt->type)
-    sprintf (&buffer[len], "%d,", ctxt->type);
+    usprintf (&buffer[len], "%d,", ctxt->type);
   len = ustrlen (buffer);
   if (ctxt->attr)
     sprintf (&buffer[len], "%d:%d,", ctxt->attr, ctxt->attrval);
@@ -414,7 +414,7 @@ char               *value;
   for (i = 0; i < pSchemaPrs->PsNConstants; i++)
     {
       if (pSchemaPrs->PsConstant[i].PdType == CharString &&
-	  !strncmp (value, pSchemaPrs->PsConstant[i].PdString, MAX_PRES_CONST_LEN))
+	  !ustrncmp (value, pSchemaPrs->PsConstant[i].PdString, MAX_PRES_CONST_LEN))
 	return (i+1);
     }
 
@@ -424,7 +424,7 @@ char               *value;
   i = pSchemaPrs->PsNConstants;
   pSchemaPrs->PsConstant[i].PdType = CharString;
   pSchemaPrs->PsConstant[i].PdAlphabet = 'L';
-  strncpy (&pSchemaPrs->PsConstant[i].PdString[0], value, MAX_PRES_CONST_LEN);
+  ustrncpy (&pSchemaPrs->PsConstant[i].PdString[0], value, MAX_PRES_CONST_LEN);
   pSchemaPrs->PsNConstants++;
   return(i+1);
 }
@@ -495,6 +495,39 @@ PtrCondition        c2;
       return (+1);
     }
   return (+1);
+}
+
+/*----------------------------------------------------------------------
+  CompareCondLists : Compare lists of conditions, we expect these
+  lists to be sorted.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static int          CompareCondLists (PtrCondition c1, PtrCondition c2)
+#else  /* __STDC__ */
+static int          CompareCondLists (c1, c2)
+PtrCondition        c1;
+PtrCondition        c2;
+#endif /* !__STDC__ */
+{
+  int                 res;
+
+  do
+    {
+      if (c1 == c2)
+	return (0);
+      if (c1 == NULL)
+	return (-1);
+      if (c2 == NULL)
+	return (+1);
+      res = CompareCond (c1, c2);
+      if (res != 0)
+	return (res);
+      c1 = c1->CoNextCondition;
+      c2 = c2->CoNextCondition;
+    }
+  while (1);
+  /* NOTREACHED */
+  return (0);
 }
 
 

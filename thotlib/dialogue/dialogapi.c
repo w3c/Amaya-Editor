@@ -142,7 +142,7 @@ static ThotWidget          MainShell, PopShell;
 
 #ifdef _WINDOWS
 static HFONT        formFONT;
-LPCTSTR iconID = "IDI_APPICON";
+STRING iconID;
 static  OPENFILENAME OpenFileName;
 static  int cyValue = 10;
 
@@ -164,7 +164,7 @@ static Display*       GDp;
 
 typedef struct struct_winerror {
         WORD  errNo;
-        STRING errstr;
+        char* errstr;
 };
 
 struct struct_winerror win_errtab[] = {
@@ -269,9 +269,9 @@ HWND hWnd;
 	  break;
 
    if (msg >= NB_WIN_ERROR)
-      sprintf (str, "Error %d : not registered\n", WinLastError);
+      usprintf (str, "Error %d : not registered\n", WinLastError);
    else
-       sprintf (str, "Error %d : %s\n", WinLastError, win_errtab[msg].errstr);
+       usprintf (str, "Error %d : %s\n", WinLastError, win_errtab[msg].errstr);
 
    MessageBox (hWnd, str, tszAppName, MB_OK);
 }
@@ -864,7 +864,7 @@ int        ref;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-int makeArgcArgv (HINSTANCE hInst, STRING** pArgv, STRING commandLine)
+int makeArgcArgv (HINSTANCE hInst, char*** pArgv, LPSTR commandLine)
 #else  /* __STDC__ */
 int makeArgcArgv (hInst, pArgv, commandLine)
 HINSTANCE hInst; 
@@ -873,10 +873,10 @@ STRING     commandLine;
 #endif /* __STDC__ */
 {
     int          argc;
-    static STRING argv[20];
-    static CHAR_T  argv0[256];
-    STRING        ptr     = commandLine;
-    CHAR_T         lookFor = 0;
+    static char* argv[20];
+    static char  argv0[256];
+    char*        ptr     = commandLine;
+    char         lookFor = 0;
 
     enum {
 	nowAt_start, 
@@ -885,7 +885,7 @@ STRING     commandLine;
 
     *pArgv = argv;
     argc   = 0;
-    GetModuleFileName (hInst, argv0, sizeof (argv0));
+    GetModuleFileName (hInst, (LPTSTR) argv0, sizeof (argv0));
     argv[argc++] = argv0;
     for (nowAt = nowAt_start;;) {
         if (!*ptr) 
@@ -932,12 +932,12 @@ BOOL PASCAL WinMain (HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR lpCommand, int 
 BOOL PASCAL WinMain (hInst, hPrevInst, lpCommand, nShow)
 HINSTANCE hInst; 
 HINSTANCE hPrevInst; 
-LPSTR     lpCommand; 
+STRING    lpCommand; 
 int       nShow;
 #endif /* __STDC__ */
 { 
    int    argc ;
-   STRING* argv;
+   char** argv;
 
    hInstance  = hInst;
    nAmayaShow = nShow;
@@ -1630,7 +1630,7 @@ caddr_t             call_d;
 		/* Est-ce qu'il faut changer le contenu du widget ? */
 		if (val != val1)
 		  {
-		     sprintf (text, "%d", val1);
+		     usprintf (text, "%d", val1);
 		     /* Desactive la procedure de Callback */
 		     XtRemoveCallback (wtext, XmNvalueChangedCallback, (XtCallbackProc) CallValueSet, catalogue);
 
@@ -1822,6 +1822,8 @@ Display           **Dp;
 #  endif /* !_WINDOWS */
 
 #  ifdef _WINDOWS
+   iconID = "IDI_APPICON";
+
    RootShell.style         = 0;
    RootShell.lpfnWndProc   = WndProc ;
    RootShell.cbClsExtra    = 0 ;
@@ -2607,17 +2609,19 @@ STRING fileName;
 #endif /* __STDC__ */
 {
 
- 	CHAR_T szFilter[] = APPFILENAMEFILTER;
+ 	STRING szFilter;
 	CHAR_T szFileName[256];
+
+    szFilter = APPFILENAMEFILTER;
 
     OpenFileName.lStructSize       = sizeof (OPENFILENAME); 
     OpenFileName.hwndOwner         = parent; 
     OpenFileName.hInstance         = hInstance ; 
-    OpenFileName.lpstrFilter       = (LPSTR) szFilter; 
-    OpenFileName.lpstrCustomFilter = (LPTSTR) NULL; 
+    OpenFileName.lpstrFilter       = szFilter; 
+    OpenFileName.lpstrCustomFilter = NULL; 
     OpenFileName.nMaxCustFilter    = 0L; 
     OpenFileName.nFilterIndex      = 1L; 
-    OpenFileName.lpstrFile         = (LPSTR) szFileName; 
+    OpenFileName.lpstrFile         = szFileName; 
     OpenFileName.nMaxFile          = 256; 
     OpenFileName.lpstrInitialDir   = NULL; 
     OpenFileName.lpstrTitle        = TEXT ("Open a File"); 
@@ -2646,19 +2650,20 @@ STRING fileName;
 {
 
     struct Cat_Context* parentCatalogue = CatEntry (parentRef);
- 	CHAR_T               szFilter[] = APPFILENAMEFILTER;
+ 	STRING               szFilter;
 	CHAR_T               szFileName[256];
 	CHAR_T               szFileTitle[256];
 
+    szFilter = APPFILENAMEFILTER;
 	szFileName[0] = EOS;
 
     OpenFileName.lStructSize       = sizeof (OPENFILENAME); 
     OpenFileName.hwndOwner         = parentCatalogue->Cat_Widget; 
-    OpenFileName.lpstrFilter       = (LPSTR) szFilter;
-    OpenFileName.lpstrFile         = (LPSTR) szFileName; 
+    OpenFileName.lpstrFilter       = szFilter;
+    OpenFileName.lpstrFile         = szFileName; 
     OpenFileName.nMaxFile          = sizeof (szFileName); 
     OpenFileName.lpstrFileTitle    = szFileTitle; 
-	OpenFileName.lpstrTitle        = TEXT ("Save File as"); 
+	OpenFileName.lpstrTitle        = "Save File as"; 
     OpenFileName.nMaxFileTitle     = sizeof (szFileTitle); 
     OpenFileName.lpstrInitialDir   = NULL; 
     OpenFileName.Flags             = OFN_SHOWHELP | OFN_OVERWRITEPROMPT | OFN_HIDEREADONLY ;
@@ -3009,7 +3014,7 @@ STRING              equiv;
                           if (&equiv[eindex] != EOS) {
                              if (parseAccelerator (&equiv[eindex]))
                                 addAccelerator (currentFrame, fVirt, key, ref + i);
-                             sprintf (equiv_item, "%s", &equiv[eindex]); 
+                             usprintf (equiv_item, "%s", &equiv[eindex]); 
                           }
                           eindex += ustrlen (&equiv[eindex]) + 1;
 #                         else  /* !_WINDOWS */
@@ -3024,7 +3029,7 @@ STRING              equiv;
 		       {
 #                         ifdef _WINDOWS
               if (equiv_item && equiv_item [0] != 0) {
-                 sprintf (menu_item, "%s\t%s", &text[index + 1], equiv_item); 
+                 usprintf (menu_item, "%s\t%s", &text[index + 1], equiv_item); 
                  AppendMenu (menu, MF_STRING | MF_UNCHECKED, ref + i, menu_item);
                  /* InsertMenu (menu, i, MF_STRING | MF_UNCHECKED, ref + i, menu_item); */
                  equiv_item[0] = 0;
@@ -3047,10 +3052,10 @@ STRING              equiv;
 			  /* un toggle a faux */
 #                         ifdef _WINDOWS
               if (equiv_item && equiv_item [0] != 0) {
-                 sprintf (menu_item, "%s\t%s", &text[index + 1], equiv_item);
+                 usprintf (menu_item, "%s\t%s", &text[index + 1], equiv_item);
                  equiv_item [0] = 0;
               } else
-                   sprintf (menu_item, "%s", &text[index + 1]);
+                   usprintf (menu_item, "%s", &text[index + 1]);
 
               /* InsertMenu (menu, i, MF_STRING | MF_UNCHECKED, ref + i, menu_item); */
               AppendMenu (menu, MF_STRING | MF_UNCHECKED, ref + i, menu_item);
@@ -3075,7 +3080,7 @@ STRING              equiv;
                           w = (HMENU) CreatePopupMenu ();
                           subMenuID [currentFrame] = (UINT) w;
                           if (equiv_item && equiv_item [0] != 0) {
-                             sprintf (menu_item, "%s\t%s", &text[index + 1], equiv_item); 
+                             usprintf (menu_item, "%s\t%s", &text[index + 1], equiv_item); 
                              /* InsertMenu (menu, i, MF_POPUP, (UINT) w, menu_item); */
                              AppendMenu (menu, MF_POPUP, (UINT) w, menu_item);
                              equiv_item [0] = 0;
@@ -4431,7 +4436,7 @@ boolean             react;
                             if (&equiv[eindex] != EOS) {
                                if (parseAccelerator (&equiv[eindex]))
                                   addAccelerator (currentFrame, fVirt, key, ref + i);
-                               sprintf (equiv_item, "%s", &equiv[eindex]);
+                               usprintf (equiv_item, "%s", &equiv[eindex]);
                             }
                             eindex += ustrlen (&equiv[eindex]) + 1;
 #                           else  /* !_WINDOWS */
@@ -4446,7 +4451,7 @@ boolean             react;
 			 {
 #                           ifdef _WINDOWS
                             if (equiv_item && equiv_item[0] != 0) {
-                               sprintf (menu_item, "%s\t%s", &text[index + 1], equiv_item);
+                               usprintf (menu_item, "%s\t%s", &text[index + 1], equiv_item);
                                AppendMenu (w, MF_STRING, ref + i, menu_item);
                                equiv_item [0] = 0;
                             } else 
@@ -4467,7 +4472,7 @@ boolean             react;
 			 {
 #                           ifdef _WINDOWS
                             if (equiv_item && equiv_item[0] != 0) {
-                               sprintf (menu_item, "%s\t%s", &text[index + 1], equiv_item);
+                               usprintf (menu_item, "%s\t%s", &text[index + 1], equiv_item);
                                AppendMenu (w, MF_STRING | MF_UNCHECKED, ref + i, menu_item);
                                equiv_item [0] = 0;
                             } else 
@@ -7397,9 +7402,9 @@ boolean             react;
 	     if (min < max)
 	       {
 		  /* Note les bornes de l'echelle */
-		  sprintf (bounds, "%d", min);
+		  usprintf (bounds, "%d", min);
 		  ustrcat (&bounds[ustrlen (bounds)], "..");
-		  sprintf (&bounds[ustrlen (bounds)], "%d", max);
+		  usprintf (&bounds[ustrlen (bounds)], "%d", max);
 		  catalogue->Cat_Entries->E_ThotWidget[2] = (ThotWidget) min;
 		  catalogue->Cat_Entries->E_ThotWidget[3] = (ThotWidget) max;
 		  ent = max;
@@ -7407,9 +7412,9 @@ boolean             react;
 	     else
 	       {
 		  /* Note les bornes de l'echelle */
-		  sprintf (bounds, "%d", max);
+		  usprintf (bounds, "%d", max);
 		  ustrcat (&bounds[ustrlen (bounds)], "..");
-		  sprintf (&bounds[ustrlen (bounds)], "%d", min);
+		  usprintf (&bounds[ustrlen (bounds)], "%d", min);
 		  catalogue->Cat_Entries->E_ThotWidget[2] = (ThotWidget) max;
 		  catalogue->Cat_Entries->E_ThotWidget[3] = (ThotWidget) min;
 		  ent = min;
@@ -7433,7 +7438,7 @@ boolean             react;
 	     n++;
 	     XtSetArg (args[n], XmNbackground, BgMenu_Color);
 	     n++;
-	     sprintf (bounds, "%d", min);
+	     usprintf (bounds, "%d", min);
 	     XtSetArg (args[n], XmNvalue, bounds);
 	     n++;
 	     if (min < 0)
@@ -7510,7 +7515,7 @@ int                 val;
 #       ifndef _WINDOWS
 	XtRemoveCallback (wtext, XmNvalueChangedCallback, (XtCallbackProc) CallValueSet, catalogue);
 
-	sprintf (text, "%d", val);
+	usprintf (text, "%d", val);
 	XmTextSetString (wtext, text);
 	lg = ustrlen (text);
 	XmTextSetSelection (wtext, lg, lg, 500);

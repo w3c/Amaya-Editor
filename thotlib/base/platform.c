@@ -89,11 +89,7 @@ CONST STRING        filename;
 
 #endif /* __STDC__ */
 {
-#if defined(_WINDOWS) && !defined(__GNUC__)
-   return (_unlink (filename));
-#else /* _WINDOWS && !__GNUC__ */
-   return (unlink (filename));
-#endif /* _WINDOWS && !__GNUC__ */
+   return (uunlink (filename));
 }
 
 /*----------------------------------------------------------------------
@@ -111,9 +107,9 @@ ThotDirBrowse      *me;
 #if defined(_WINDOWS) && !defined(__GNUC__)
    DWORD               attr;
 
-   if (strlen (me->data.cFileName) + me->dirLen > me->bufLen)
+   if (ustrlen (me->data.cFileName) + me->dirLen > me->bufLen)
       return -2;
-   strcpy (me->buf + me->dirLen, me->data.cFileName);
+   ustrcpy (me->buf + me->dirLen, me->data.cFileName);
    if ((attr = GetFileAttributes (me->buf)) == 0xFFFFFFFF)
       return -1;
    if (attr & FILE_ATTRIBUTE_DIRECTORY && !(me->PicMask & ThotDirBrowse_DIRECTORIES))
@@ -183,15 +179,14 @@ STRING              ext;
 
 #endif /* __STDC__ */
 {
-   CHAR_T                space[MAX_PATH];
+   CHAR_T              space[MAX_PATH];
    int                 ret;
 
-   me->dirLen = strlen (dir);
-   strcpy (me->buf, dir);
-   strcpy (me->buf + (me->dirLen++), DIR_STR);
+   me->dirLen = ustrlen (dir);
+   ustrcpy (me->buf, dir);
+   ustrcpy (me->buf + (me->dirLen++), DIR_STR);
 #if defined(_WINDOWS) && !defined(__GNUC__)
-   sprintf (space, "%s\\%s%s", dir ? dir : "", name ? name : "",
-	    ext ? ext : "");
+   usprintf (space, "%s\\%s%s", dir ? dir : "", name ? name : "", ext ? ext : "");
    me->handle = INVALID_HANDLE_VALUE;
    if ((me->handle = FindFirstFile (space, &me->data)) ==
        INVALID_HANDLE_VALUE)
@@ -286,7 +281,7 @@ void                ThotFile_test (STRING name)
    ThotFileInfo        info;
    int                 i;
    CHAR_T              space[16];
-   CONST STRING        format = (STRING) "%15d\0";
+   CONST STRING        format = "%15d\0";
 
    space[sizeof (space) - 1] = 0;
    printf ("ThotFile_test: opening %s for CREATE/READ/WRITE\n", name);
@@ -573,26 +568,26 @@ CONST STRING        targetFileName;
    int                 size;
    CHAR_T                buffer[8192];
 
-   if (strcmp (sourceFileName, targetFileName) != 0)
+   if (ustrcmp (sourceFileName, targetFileName) != 0)
      {
 #ifdef _WINDOWS
-	if ((targetf = fopen (targetFileName, "wb")) == NULL)
+	if ((targetf = ufopen (targetFileName, "wb")) == NULL)
 #else
-	if ((targetf = fopen (targetFileName, "w")) == NULL)
+	if ((targetf = ufopen (targetFileName, "w")) == NULL)
 #endif
 	   /* cannot write into the target file */
 	   return;
 	else
 	  {
 #ifdef _WINDOWS
-	     if ((sourcef = fopen (sourceFileName, "rb")) == NULL)
+	     if ((sourcef = ufopen (sourceFileName, "rb")) == NULL)
 #else
-	     if ((sourcef = fopen (sourceFileName, "r")) == NULL)
+	     if ((sourcef = ufopen (sourceFileName, "r")) == NULL)
 #endif
 	       {
 		  /* cannot read the source file */
 		  fclose (targetf);
-		  unlink (targetFileName);
+		  uunlink (targetFileName);
 		  return;
 	       }
 	     else
@@ -633,13 +628,13 @@ CONST STRING        file2;
     if (file1 == NULL) return(FALSE);
     if (file2 == NULL) return(FALSE);
 #ifdef _WINDOWS
-    f1 = fopen(file1,"rb");
+    f1 = ufopen(file1,"rb");
 #else
-    f1 = fopen(file1,"r");
+    f1 = ufopen(file1,"r");
 #endif
     if (f1 == NULL) return(FALSE);
 #ifdef _WINDOWS
-    f2 = fopen(file2,"rb");
+    f2 = ufopen(file2,"rb");
 #else
     f2 = fopen(file2,"r");
 #endif

@@ -201,8 +201,9 @@ unsigned short     *blue;
 
 #endif /* __STDC__ */
 {
-   int                 i, maxcolor;
+   int                 i;
 #ifndef _WINDOWS 
+   int                 maxcolor;
    ThotColorStruct     color;
 
    /* Lookup the color name in the X color name database */
@@ -255,7 +256,7 @@ ThotColor* colorpixel;
    unsigned short      green;
    unsigned short      blue;
 
-   value = (STRING) TtaGetEnvString (colorplace);
+   value = TtaGetEnvString (colorplace);
    /* do you need to take the default color? */
    if (value == NULL && defaultcolor != NULL)
        value = defaultcolor;
@@ -431,7 +432,6 @@ STRING              name;
    WinInitColors ();
 #  endif /* _WINDOWS */
 }
-
 
 /*----------------------------------------------------------------------
  *  ShowReference returns True if there exists a color for active boxes.

@@ -2494,7 +2494,7 @@ strTransSet        **resTrSet;
 	   if (next == NULL)
 	      cour = NULL;
 	   else
-	      cour = (STRING)(next+1);
+	      cour = next+1;
      }
    
    /* check if the file is newer than last read */

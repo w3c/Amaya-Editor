@@ -134,7 +134,7 @@ int Magic64[256] =    /* for 4 levels of red and blue */
 
 };
 
-STRING typecouleur[] = {"grayscale", "undefined type", "RGB",
+char* typecouleur[] = {"grayscale", "undefined type", "RGB",
 		       "colormap", "grayscale+alpha",
 		       "undefined type", "RGB+alpha"};
 
@@ -856,9 +856,9 @@ int*            bg;
      FILE*          fp;
       
 #    ifndef _WINDOWS  
-     fp = fopen (datafile, "r");
+     fp = ufopen (datafile, "r");
 #    else  /* _WINDOWS */
-     fp = fopen (datafile, "rb");
+     fp = ufopen (datafile, "rb");
 #    endif /* _WINDOWS */
      if (fp != NULL) {
 	bit_data = ReadPng (fp, w, h, ncolors, cpp, colrs, bg);
@@ -1107,10 +1107,10 @@ STRING  fn;
 {
   
    FILE *fp;
-   CHAR_T buf[8];
+   char buf[8];
    int ret;
 
-   fp = fopen(fn , "rb");
+   fp = ufopen(fn , "rb");
    if (!fp)
       return 0;
    ret = fread(buf, 1, 8, fp);

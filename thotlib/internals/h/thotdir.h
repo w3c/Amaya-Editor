@@ -21,7 +21,7 @@ typedef struct {
   FILE		*ls_stream;
 #endif /* !WWW_MSWINDOWS */
   ThotDirBrowse_mask	PicMask;
-  char * buf;
+  STRING buf;
   size_t bufLen;
   int dirLen;
 } ThotDirBrowse;
@@ -29,6 +29,6 @@ typedef struct {
 
 int ThotDirBrowse_close(ThotDirBrowse * me);
 int ThotDirBrowse_next(ThotDirBrowse * me);
-int ThotDirBrowse_first(ThotDirBrowse * me, char * dir, char * name, char * ext);
+int ThotDirBrowse_first(ThotDirBrowse * me, STRING dir, STRING name, STRING ext);
 
 #endif /* _THOT_DIR_H__ */

@@ -64,9 +64,9 @@ Name                typeName;
 
    /* creates and activates the menu */
    i = 0;
-   sprintf (&bufMenu[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_CREATE_EL_REF));
+   usprintf (&bufMenu[i], "B%s", TtaGetMessage (LIB, TMSG_CREATE_EL_REF));
    i += ustrlen (&bufMenu[i]) + 1;
-   sprintf (&bufMenu[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_SHOW_EL_REF));
+   usprintf (&bufMenu[i], "B%s", TtaGetMessage (LIB, TMSG_SHOW_EL_REF));
    TtaNewPopup (NumMenuCreateReferenceElem, 0,
 	      TtaGetMessage (LIB, TMSG_MODE_INSERT), 2, bufMenu, NULL, 'L');
    TtaShowDialogue (NumMenuCreateReferenceElem, FALSE);

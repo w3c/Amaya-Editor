@@ -75,7 +75,7 @@ STRING               data;
      {
 	/* Augmente le zoom */
 	valzoom++;
-	sprintf (chaine, "%s : %d", TtaGetMessage (LIB, TMSG_CHANGE_ZOOM), valzoom);
+	usprintf (chaine, "%s : %d", TtaGetMessage (LIB, TMSG_CHANGE_ZOOM), valzoom);
 	TtaNewLabel (NumTextZoom, NumMenuZoom, chaine);
 	SetFrameParams (Fenzoomview, valvisib, valzoom);
      }
@@ -83,7 +83,7 @@ STRING               data;
      {
 	/* Diminue le zoom */
 	valzoom--;
-	sprintf (chaine, "%s : %d", TtaGetMessage (LIB, TMSG_CHANGE_ZOOM), valzoom);
+	usprintf (chaine, "%s : %d", TtaGetMessage (LIB, TMSG_CHANGE_ZOOM), valzoom);
 	TtaNewLabel (NumTextZoom, NumMenuZoom, chaine);
 	SetFrameParams (Fenzoomview, valvisib, valzoom);
      }
@@ -154,7 +154,7 @@ View                view;
 		2, chaine, FALSE, 4, 'L', D_DONE);
 
    /* Affiche le nom du document concerne */
-   sprintf (chaine, "%s %s", TtaGetDocumentName (document),
+   usprintf (chaine, "%s %s", TtaGetDocumentName (document),
 	    TtaGetViewName (document, view));
    Fenzoomview = GetWindowNumber (document, view);
    TtaNewLabel (NumDocZoom, NumMenuZoom, chaine);

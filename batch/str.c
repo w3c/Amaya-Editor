@@ -2561,7 +2561,7 @@ static void         ChkRecurs ()
      {
 	pRule = &pSSchema->SsRule[i];
 	if (pRule->SrRecursive)
-	   TtaDisplayMessage (INFO, TtaGetMessage (STR, STR_RECURSIVE_ELEM), (STRING) pRule->SrName);
+	   TtaDisplayMessage (INFO, TtaGetMessage (STR, STR_RECURSIVE_ELEM), pRule->SrName);
      }
 }
 
@@ -2583,7 +2583,7 @@ static void         ListAssocElem ()
      {
 	if (pSSchema->SsRule[i].SrParamElem)
 	   /* display a message */
-	   TtaDisplayMessage (INFO, TtaGetMessage (STR, STR_PARAMETER), (STRING) pSSchema->SsRule[i].SrName);
+	   TtaDisplayMessage (INFO, TtaGetMessage (STR, STR_PARAMETER), pSSchema->SsRule[i].SrName);
 	if (pSSchema->SsRule[i].SrAssocElem)
 	   if (!pSSchema->SsRule[i].SrRecursDone)
 	      /* the associated element associe is used within another rule */
@@ -2622,7 +2622,7 @@ static void         ListAssocElem ()
 		pRule->SrMinItems = 0;
 		pRule->SrMaxItems = 32000;
 		/* write a message */
-		TtaDisplayMessage (INFO, TtaGetMessage (STR, STR_ASSOC_ELEMS), (STRING) pRule->SrName);
+		TtaDisplayMessage (INFO, TtaGetMessage (STR, STR_ASSOC_ELEMS), pRule->SrName);
 		if (RuleNameExist ())
 		   TtaDisplaySimpleMessage (FATAL, STR, STR_NAME_ALREADY_DECLARED);
 	     }
@@ -2637,14 +2637,14 @@ static void         ListAssocElem ()
 		  {
 		     NAlias++;
 		     Alias[NAlias - 1] = i + 1;
-		     TtaDisplayMessage (INFO, TtaGetMessage (STR, STR_ALIAS), (STRING) pSSchema->SsRule[i].SrName);
+		     TtaDisplayMessage (INFO, TtaGetMessage (STR, STR_ALIAS), pSSchema->SsRule[i].SrName);
 		  }
 		else
 		   /* the second elements of a CsPairedElement are never referenced */
 		   if (pSSchema->SsRule[i].SrConstruct != CsPairedElement ||
 		       pSSchema->SsRule[i].SrFirstOfPair)
 		   /* unnecessary definition */
-		   TtaDisplayMessage (INFO, TtaGetMessage (STR, STR_UNUSED), (STRING) pSSchema->SsRule[i].SrName);
+		   TtaDisplayMessage (INFO, TtaGetMessage (STR, STR_UNUSED), pSSchema->SsRule[i].SrName);
 	     }
      }
 }
@@ -2772,13 +2772,13 @@ static void         ListNotCreated ()
 		      /* element found, don't create */
 		      temp = False;
 	     if (temp)
-		TtaDisplayMessage (INFO, TtaGetMessage (STR, STR_IS_A_TEMPORARY_ELEM), (STRING) pRule->SrName);
+		TtaDisplayMessage (INFO, TtaGetMessage (STR, STR_IS_A_TEMPORARY_ELEM), pRule->SrName);
 	  }
 	else if (!pRule->SrRecursDone)
 	   /* units cannot used in the schema */
 	   if (!pRule->SrUnitElem)
 	     {
-		TtaDisplayMessage (INFO, TtaGetMessage (STR, STR_WON_T_BE_CREATED), (STRING) pRule->SrName);
+		TtaDisplayMessage (INFO, TtaGetMessage (STR, STR_WON_T_BE_CREATED), pRule->SrName);
 		/* search if there are REFERENCES to this element type */
 		for (rr = 0; rr < pSSchema->SsNRules; rr++)
 		  {
@@ -2786,7 +2786,7 @@ static void         ListNotCreated ()
 		     if (pRule2->SrConstruct == CsReference)
 			if (pRule2->SrRefTypeNat[0] == '\0')
 			   if (pRule2->SrReferredType == r + 1)
-			      TtaDisplayMessage (INFO, TtaGetMessage (STR, STR_WON_T_BE_CREATED_AND_IS_REFD), (STRING) pRule->SrName);
+			      TtaDisplayMessage (INFO, TtaGetMessage (STR, STR_WON_T_BE_CREATED_AND_IS_REFD), pRule->SrName);
 		  }
 	     }
      }

@@ -34,19 +34,19 @@
 #define SELECTOR_NB_ITEMS 5
 static FILE        *ls_stream;
 static int          ls_car;
-static char         ls_unixFiles[MAX_NAME * NAME_LENGTH];
+static CHAR_T       ls_unixFiles[MAX_NAME * NAME_LENGTH];
 static int          ls_fileNbr;
-static char         EmptyMsg[] = "";
+static STRING       EmptyMsg = "";
 
 /*----------------------------------------------------------------------
    ExtractFileName
    extracts a filename from the ls_stream.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                ExtractFileName (char *word)
+void                ExtractFileName (STRING word)
 #else  /* __STDC__ */
 void                ExtractFileName (word)
-char               *word;
+STRING              word;
 
 #endif /* __STDC__ */
 {
@@ -54,17 +54,17 @@ char               *word;
    boolean             notEof;
 
    i = 0;
-   while (((char) ls_car == ' ') || ((char) ls_car == '\t') || ((char) ls_car == '\n'))
+   while (((CHAR_T) ls_car == ' ') || ((CHAR_T) ls_car == '\t') || ((CHAR_T) ls_car == '\n'))
       ls_car = fgetc (ls_stream);
 
    notEof = TRUE;
-   while (((char) ls_car != ' ') && ((char) ls_car != '\t') && ((char) ls_car != '\n') && (notEof))
+   while (((CHAR_T) ls_car != ' ') && ((CHAR_T) ls_car != '\t') && ((CHAR_T) ls_car != '\n') && (notEof))
      {
 	if (ls_car == EOF)
 	   notEof = FALSE;
 	else
 	  {
-	     word[i] = (char) ls_car;
+	     word[i] = (CHAR_T) ls_car;
 	     i++;
 	     ls_car = fgetc (ls_stream);
 	  }
@@ -80,16 +80,16 @@ char               *word;
    suffix.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             TtaIsSuffixFileIn (char *aDirectory, char *suffix)
+boolean             TtaIsSuffixFileIn (STRING aDirectory, STRING suffix)
 #else  /* __STDC__ */
 boolean             TtaIsSuffixFileIn (aDirectory, suffix)
-char               *aDirectory;
-char               *suffix;
+STRING              aDirectory;
+STRING              suffix;
 
 #endif /* __STDC__ */
 {
    boolean             ret;
-   char                command[200];
+   CHAR_T              command[200];
    ThotDirBrowse       thotDir;
 
    ret = FALSE;
@@ -147,23 +147,23 @@ char               *suffix;
    If aDirectory doesn't exist, the selectors will be empty.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                TtaListDirectory (char *aDirectory, int formRef, char *dirTitle, int dirRef, char *suffix, char *fileTitle, int fileRef)
+void                TtaListDirectory (STRING aDirectory, int formRef, STRING dirTitle, int dirRef, STRING suffix, STRING fileTitle, int fileRef)
 #else  /* __STDC__ */
 void                TtaListDirectory (aDirectory, formRef, dirTitle, dirRef, suffix, fileTitle, fileRef)
-char               *aDirectory;
+STRING              aDirectory;
 int                 formRef;
-char               *dirTitle;
+STRING              dirTitle;
 int                 dirRef;
-char               *suffix;
-char               *fileTitle;
+STRING              suffix;
+STRING              fileTitle;
 int                 fileRef;
 
 #endif /* __STDC__ */
 {
 #  ifndef _WINDOWS
    struct stat;
-   char               *addr1;
-   char                word[4 * NAME_LENGTH];
+   STRING              addr1;
+   CHAR_T              word[4 * NAME_LENGTH];
    int                 ls_currentfile;
    int                 length;
    boolean             stop;

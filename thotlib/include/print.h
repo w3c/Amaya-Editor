@@ -39,16 +39,16 @@ typedef int PrintParameter;
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 extern void TtaPrint (Document document,
-		      char *viewName);
+		      STRING viewName);
 extern void TtaSetPrintExportFunc (Func exportFunc);
 extern void TtaSetPrintParameter (PrintParameter parameter,
 				  int value);
 extern int TtaGetPrintParameter (PrintParameter parameter);
-extern void TtaSetPrintCommand (char *command);
-extern void TtaGetPrintCommand (char *command);
-extern void TtaSetPsFile (char *path);
-extern void TtaGetPsFile (char *path);
-extern void TtaSetPrintSchema (char *name);
+extern void TtaSetPrintCommand (STRING command);
+extern void TtaGetPrintCommand (STRING command);
+extern void TtaSetPsFile (STRING path);
+extern void TtaGetPsFile (STRING path);
+extern void TtaSetPrintSchema (STRING name);
 
 #else /* __STDC__ */
 extern void TtaPrint(/*Document document, char *viewName*/);
