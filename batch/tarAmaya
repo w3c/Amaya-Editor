@@ -7,7 +7,7 @@
 AMAYAVERSION=v.r
 THOTDIR=$PWD/../..
 DEST=$HOME
-PLATFORMS="solaris8 LINUX-ELF"
+PLATFORMS="solaris8 LINUX-ELF GTK"
 
 TAR="tar cvzfh "
 COMPRESS="gzip -9"
@@ -94,10 +94,13 @@ echo "Plarform ------->" $MACH
    Amaya/amaya/MathML.STR \
    Amaya/amaya/MathML*.PRS \
    Amaya/amaya/MathML*.TRA \
-   Amaya/amaya/MathML.trans \
-   Amaya/amaya/GraphML.STR \
-   Amaya/amaya/GraphML*.PRS \
-   Amaya/amaya/GraphML*.TRA \
+    Amaya/amaya/MathML.trans \
+   Amaya/amaya/SVG.STR \
+   Amaya/amaya/SVG*.PRS \
+   Amaya/amaya/SVG*.TRA \
+    Amaya/amaya/XML.STR \
+    Amaya/amaya/XML*.PRS \
+    Amaya/amaya/XML*.TRA \
    Amaya/amaya/TextFile.STR \
    Amaya/amaya/TextFile*.PRS \
    Amaya/amaya/TextFile*.TRA \
