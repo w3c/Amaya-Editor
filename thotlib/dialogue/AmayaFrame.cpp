@@ -73,7 +73,8 @@ AmayaFrame::AmayaFrame(
 
   m_pHSizer = new wxBoxSizer ( wxHORIZONTAL );
   m_pVSizer = new wxBoxSizer ( wxVERTICAL );
-  m_pHSizer->Add( m_pCanvas, 1, wxEXPAND );
+  if (m_pCanvas)
+	m_pHSizer->Add( m_pCanvas, 1, wxEXPAND );
   m_pVSizer->Add( m_pHSizer, 1, wxEXPAND );
   
   // The scrollbars are added when ShowScrollbar is called
@@ -109,7 +110,8 @@ AmayaFrame::~AmayaFrame()
 
   /* destroy the canvas (it should be automaticaly destroyed by 
      wxwidgets but due to a strange behaviour, I must explicitly delete it)*/
-  m_pCanvas->Destroy();
+  if (m_pCanvas)
+	m_pCanvas->Destroy();
   m_pCanvas = NULL;
 
   // the FrameTable array must be freed because WdFrame field is
@@ -157,7 +159,6 @@ AmayaCanvas * AmayaFrame::CreateDrawingArea()
 void AmayaFrame::ReplaceDrawingArea( AmayaCanvas * p_new_canvas )
 {
   wxASSERT( p_new_canvas );
-
   // detach scrollbar and canvas (delete canvas)
   m_pCanvas->Hide();
   m_pHSizer->Remove(0);
