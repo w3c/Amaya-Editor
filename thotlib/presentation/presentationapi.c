@@ -2252,7 +2252,7 @@ void TtaGiveBoxAbsPosition (Element element, Document document, View view,
 #ifndef _GL
 	      *xCoord = pBox->BxXOrg - pFrame->FrXOrg;
 	      *yCoord = pBox->BxYOrg - pFrame->FrYOrg;
-#else _GL
+#else /* _GL */
 	      *xCoord = pBox->BxClipX;
 	      *yCoord = pBox->BxClipY;
 #endif /* _GL */
