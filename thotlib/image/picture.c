@@ -433,13 +433,15 @@ static void GL_TextureBind (PictInfo *Image)
 		       Image->PicWidth, Image->PicHeight, 
 		       Mode, GL_UNSIGNED_BYTE,
 		       (GLvoid *) Image->PicPixmap);    
+      if (Image->PicPixmap != PictureLogo)
+	TtaFreeMemory (Image->PicPixmap);
 #else/*  POWER2TEXSUBIMAGE */
       GL_MakeTextureSize (Image, p2_w, p2_h);
       glTexImage2D (GL_TEXTURE_2D, 0, Mode, p2_w, p2_h,
 		    0, Mode, GL_UNSIGNED_BYTE,
 		    (GLvoid *) Image->PicPixmap);
-#endif /* POWER2TEXSUBIMAGE */
       TtaFreeMemory (Image->PicPixmap);
+#endif /* POWER2TEXSUBIMAGE */ 
       Image->PicPixmap = None;
       Image->TexCoordW = GL_w;
       Image->TexCoordH = GL_h;
