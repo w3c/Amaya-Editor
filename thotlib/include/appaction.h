@@ -119,6 +119,17 @@ typedef struct
   }
 NotifyElement;
 
+/*** Special value of "position" field for the ***/
+/*** TteElemDelete.Pre event.                  ***/
+/*** January 9th, 1997. Dominique              ***/
+
+#define TTE_STANDARD_DELETE_FIRST_ITEMS		0
+#define TTE_STANDARD_DELETE_LAST_ITEM		1
+
+#define TTE_MERGE_DELETE_LAST_ITEM		2
+
+#define TTE_TOOLKIT_DELETE			3
+
 typedef struct
   {
      APPevent            event;
