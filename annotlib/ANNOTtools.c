@@ -2316,7 +2316,9 @@ void ANNOT_SetType (Document doc, RDFResourceP type)
     WWWToLocal (url);
   for (i = 1; i <= DocumentTableLength; i++)
     {
-      if (DocumentURLs[i] && !strcmp (url, DocumentURLs[i]))
+      if (DocumentURLs[i] && (!strcmp (url, DocumentURLs[i]) 
+			      || AnnotMetaData[i].annot_url 
+			      && !strcmp(url, AnnotMetaData[i].annot_url)))
 	{
 	  /* we found the source document, we now search and update
 	     the annotation meta data */
