@@ -76,7 +76,8 @@ AmayaWindow::AmayaWindow (  int            window_id
   // Create a splitted vertical window
   m_pSplitterWindow = new wxSplitterWindow( this, -1,
                       		            wxDefaultPosition, wxDefaultSize,
-                     		            wxSP_3D | wxSP_NOBORDER | wxSP_PERMIT_UNSPLIT );
+                     		            wxSP_3DBORDER | wxSP_PERMIT_UNSPLIT );
+  m_pSplitterWindow->SetBackgroundColour( wxColour(_T("red")) );
   m_pSplitterWindow->SetMinimumPaneSize( 50 );
   
   // Create a background panel to contains the notebook
@@ -152,6 +153,7 @@ void AmayaWindow::SetupURLBar()
     {
       // Create the url entry and add it to the toolbar
       m_pURLBar = new AmayaURLBar( m_pToolBar, this );
+      m_pToolBar->AddSpacer();
       m_pToolBar->AddTool( m_pURLBar, TRUE );
     }
 }
