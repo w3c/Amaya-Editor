@@ -1177,6 +1177,8 @@ static ThotBool     StartOfFile = TRUE;	  /* no printable character encountered
 static ThotBool     AfterTagPRE = FALSE;  /* <PRE> has just been read */
 static ThotBool     ParsingCSS = FALSE;	  /* reading the content of a STYLE
 					     element */
+static ThotBool     ParsingTextArea = FALSE; /* reading the content of a text area
+					     element */
 static int          WithinTable = 0;      /* <TABLE> has been read */
 static CHAR_T	    prevChar = EOS;	  /* last character read */
 static STRING       docURL = NULL;	  /* path or URL of the document */
@@ -3059,6 +3061,7 @@ Element             el;
        break;
 
     case HTML_EL_Text_Area:	/* it's a Text_Area */
+      ParsingTextArea = FALSE;
        child = TtaGetFirstChild (el);
        if (child == NULL)
 	  /* it's an empty Text_Area */
@@ -3769,6 +3772,12 @@ CHAR_T                c;
 		  TtaFreeMemory (text);
 	       }
 	  }
+	else if (elType.ElTypeNum == HTML_EL_Text_Area)
+	  {
+	    /* we have to read the content as a simple text unit */
+	    ParsingTextArea = TRUE;
+	  }
+
      }
 }
 

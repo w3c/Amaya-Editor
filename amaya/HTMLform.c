@@ -650,18 +650,21 @@ int                 mode;
 				  /* search the value in the Text_With_Frame element */
 				  elType.ElTypeNum = HTML_EL_TEXT_UNIT;
 				  elForm = TtaSearchTypedElement (elType, SearchInTree, el);
-				  if (elForm)
+				  /* save the NAME attribute of the element el */
+				  length = MAX_LENGTH - 1;
+				  TtaGiveTextAttributeValue (attr, name, &length);
+				  AddElement (name);
+				  AddToBuffer ("=");
+				  while (elForm)
 				     {
-					/* save the NAME attribute of the element el */
-				       length = MAX_LENGTH - 1;
-				       TtaGiveTextAttributeValue (attr, name, &length);
-				       /* save the VALUE attribute of the element el */
 				       length = TtaGetTextLength (elForm) + 1;
 				       text = TtaGetMemory (length);
 				       TtaGiveTextContent (elForm, text, &length, &lang);
-				       AddNameValue (name, text);
+				       AddElement (text);
 				       TtaFreeMemory (text);
+				       elForm = TtaSearchTypedElementInTree (elType, SearchForward, el, elForm);
 				     }
+				  AddToBuffer ("&");
 				}
 			      else if (mode == HTML_EL_Reset_Input)
 				{
