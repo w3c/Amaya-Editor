@@ -668,6 +668,7 @@ int                 construct;
   ElementType        newType, elType;
   SSchema            docSchema, mathSchema;
   STRING             name;
+  DisplayMode        dispMode;
   int                c1, i, len, oldStructureChecking, col;
   ThotBool	     before, ParBlock, emptySel, ok, insertSibling,
 		     selectFirstChild, displayTableForm, registered;
@@ -705,7 +706,10 @@ int                 construct;
     }
 
   emptySel = TtaIsSelectionEmpty ();
-  TtaSetDisplayMode (doc, DeferredDisplay);
+  dispMode = TtaGetDisplayMode (doc);
+  /* ask Thot to stop displaying changes made in the document */
+  if (dispMode == DisplayImmediately)
+    TtaSetDisplayMode (doc, DeferredDisplay);
   
   /* By default, the new element will be inserted before the selected
      element */
@@ -905,6 +909,8 @@ int                 construct;
 		  if (sibling)
 		    {
 		      /* create a foreigObject element and insert it */
+		      if (dispMode == DisplayImmediately)
+			TtaSetDisplayMode (doc, dispMode);
 		      TtaAskFirstCreation ();
 		      el = TtaNewElement (doc, elType);
 		      TtaInsertSibling (el, sibling, FALSE, doc);
@@ -928,7 +934,7 @@ int                 construct;
 	  if (sibling == NULL)
 	    /* cannot insert a math element here */
 	    {
-	      TtaSetDisplayMode (doc, DisplayImmediately);
+	      TtaSetDisplayMode (doc, dispMode);
 	      TtaCloseUndoSequence (doc);
 	      return;
 	    }
@@ -956,7 +962,7 @@ int                 construct;
 		/* The <math> element requested is created. Return */
 		{
 		  TtaSetDocumentModified (doc);
-		  TtaSetDisplayMode (doc, DisplayImmediately);
+		  TtaSetDisplayMode (doc, dispMode);
 		  TtaSelectElement (doc, sibling);
 		  TtaCloseUndoSequence (doc);
 		  return;
@@ -1228,7 +1234,7 @@ int                 construct;
       placeholderEl = InsertPlaceholder (el, TRUE, doc, !registered);
       placeholderEl = InsertPlaceholder (el, FALSE, doc, !registered);
 
-      TtaSetDisplayMode (doc, DisplayImmediately);
+      TtaSetDisplayMode (doc, dispMode);
       /* check the Thot abstract tree against the structure schema. */
       TtaSetStructureChecking ((ThotBool)oldStructureChecking, doc);
 	  
