@@ -35,7 +35,8 @@
 #include "openglfont.h"
 #include "openglfonts.h"
 #include "registry_f.h"
-
+#include "logdebug.h"
+#include "message_wx.h"
 #include "units_tv.h"
 
 #ifdef _SUPERS
@@ -112,9 +113,9 @@ static GL_font* FontAlreadyLoaded (const char *font_filename, int size)
       if (FontTab[i].ref > 0 && size == FontTab[i].size &&
 	  strcasecmp (font_filename, FontTab[i].name) == 0)			
 	{
-#ifdef _TRACE_GLFONT
-	  printf( "%s %s %d\n", "FontAlreadyLoaded", font_filename, size);
-#endif /* _TRACE_GLFONT */
+#ifdef _WX
+	  TTALOGDEBUG_1( TTA_LOG_FONT, _T("FontAlreadyLoaded ")+TtaConvMessageToWX(font_filename)+_T(" %d"), size );
+#endif /* _WX */
 	  FontTab[i].ref++;
 	  return FontTab[i].font;
 	}
@@ -164,9 +165,9 @@ static void FontCache (GL_font *font, const char *font_filename, int size)
   strcpy (FontTab[i].name, font_filename);
   FontTab[i].ref = 1;
 
-#ifdef _TRACE_GLFONT
-  printf( "%s %s %d : Cache_index=%d\n", "FontCache", font_filename, size, i );
-#endif /* _TRACE_GLFONT */
+#ifdef _WX
+  TTALOGDEBUG_2( TTA_LOG_FONT, _T("FontCache ")+TtaConvMessageToWX(font_filename)+_T(" %d : Cache_index=%d"), size, i );
+#endif /* _WX */
 }
 
 /*----------------------------------------------------------------------
@@ -202,9 +203,9 @@ static void FreeFontEntry (GL_font* font)
   i = font->Cache_index;
   if (FontTab[i].ref == 1)
     {
-#ifdef _TRACE_GLFONT
-      printf( "%s %s %d : Cache_index=%d\n", "FreeFontEntry", FontTab[i].name, FontTab[i].size, i );
-#endif /* _TRACE_GLFONT */
+#ifdef _WX
+      TTALOGDEBUG_2( TTA_LOG_FONT, _T("FreeFontEntry ")+TtaConvMessageToWX(FontTab[i].name)+_T("%d : Cache_index=%d"), FontTab[i].size, i );
+#endif /* _WX */
       FontClose (FontTab[i].font);
       TtaFreeMemory (FontTab[i].name);
       FontTab[i].name = NULL;
@@ -263,6 +264,10 @@ Char_Cache_index *Char_index_lookup_cache (GL_font *font, unsigned int idx,
 	  cache = cache->next;      
 	else break;      
       }
+
+#ifdef _WX
+  TTALOGDEBUG_3( TTA_LOG_FONT, _T("new cache entry font=%x idx=%d datatype=%d"), font, idx, data_type );
+#endif /* _WX */
 
   /* nothing has been found : now create a new cache entry */
   newcache = (Char_Cache_index*)TtaGetMemory (sizeof (Char_Cache_index));
@@ -386,10 +391,9 @@ static GL_font *FontOpen (const char* fontname)
       TtaFreeMemory (font);
       return NULL;
     }
-
-#ifdef _TRACE_GLFONT
-  printf( "%s %s\n", "FontOpen", fontname);
-#endif /* _TRACE_GLFONT */
+#ifdef _WX
+  TTALOGDEBUG_0( TTA_LOG_FONT, _T("FontOpen ")+TtaConvMessageToWX(fontname) );
+#endif /* _WX */
 
   return font; 
 }
@@ -799,9 +803,9 @@ static void MakeBitmapGlyph (GL_font *font, unsigned int g,
 		}
 	      else
 		{
-#ifdef _TRACE_GLGLYPH
-		  printf("MakeBitmapGlyph(Warning): the bitmap glyph is empty (g = %d)\n", g);
-#endif /* #ifdef _TRACE_GLGLYPH */
+#ifdef _WX
+		  TTALOGDEBUG_1( TTA_LOG_FONT, _T("MakeBitmapGlyph(Warning): the bitmap glyph is empty (g = %d)"), g );
+#endif /* _WX */
 		  /* the bitmap glyph is empty -> generate a rectangle */
 		  w = 7;     
 		  h = font->height;
@@ -838,9 +842,9 @@ static void MakeBitmapGlyph (GL_font *font, unsigned int g,
       }
       else
       {
-#ifdef _TRACE_GLGLYPH
-	printf( "MakeBitmapGlyph(Error): FT_Load_Glyph error\n" );
-#endif /* #ifdef _TRACE_GLGLYPH */
+#ifdef _WX
+	TTALOGDEBUG_0( TTA_LOG_FONT, _T("MakeBitmapGlyph(Error): FT_Load_Glyph error") );
+#endif /* _WX */
       }    
     }
   BitmapGlyph->data_type = GL_GLYPH_DATATYPE_NONE;
@@ -865,11 +869,32 @@ static void BitmapAppend (unsigned char *data, unsigned char *append_data,
   data += y*Width + x;
   append_data += height*width;
   if (data && append_data)
+    /* copy each line one by one */
     while (height)
       {      
 	append_data -= width;
 	while (i < width)
 	  {
+	    /* copy each pixels one by one
+	     * it's not possible to copy directly the whole line because
+	     * sometime characteres overlap on other characteres
+	     * it's the case when an italic word is displayed,
+	     * for example : "lp"
+	     *  **********                                                       
+	     *  *      ..*                                                       
+	     *  *     .. *                                                       
+	     *  *    ..  ******                                                  
+	     *  *   ..  .!... *                                                  
+	     *  *  ..   .!....*                                                  
+	     *  * ..   ..!  ..*                                                  
+	     *  *....  ..!... *                                                  
+	     *  *.... ...!.   *                                                  
+	     *  ****-----     *                                                  
+	     *     * ..       *                                                  
+	     *     *..        *                                                  
+	     *     *..        *                                                  
+	     *     ************                                                  
+	     * */
 	    if (*(append_data + i) > ANTIALIASINGDEPTH)
 	      *(data + i) = *(append_data + i);
 #ifdef AALIASTEST
@@ -917,21 +942,28 @@ static int ceil_pow2_minus_1(unsigned int x)
 /* a unique identifier is used to bind font texture into opengl memory
  * it's not possible to reuse the same fontbind for other textures because 
  * a texture is a word and there is not a lot of word repetition */
-static int FontBind;
+
+/* do not use anymore this global variable because it causes gl memory leak
+ * when 2 SetTextureScale was called with 2 StopTextureScale after :
+ * when the second SetTextureScale the first FontBind was lost so never deleted !
+ */
+//static int FontBind;
 
 /*----------------------------------------------------------------------
+  returns a texture identifier (0 if no texture to generate)
   ----------------------------------------------------------------------*/
-void SetTextureScale (ThotBool Scaled)
-{   
+int SetTextureScale (ThotBool Scaled)
+{
   if (GL_NotInFeedbackMode () && !GL_TransText ())
     {
+      int texture_id;
       glEnable (GL_TEXTURE_2D);
       
       /* get a new identifier for the following font texture */
-      glGenTextures (1, (GLuint*)&(FontBind));
+      glGenTextures (1, (GLuint*)&(texture_id));
       /* set the allocated texture id to the current used texture (setup opengl state machine to use this texture) */
       glBindTexture (GL_TEXTURE_2D, 
-		     FontBind);
+		     texture_id);
 
       glTexParameteri (GL_TEXTURE_2D,
 		       GL_TEXTURE_MIN_FILTER,
@@ -951,16 +983,25 @@ void SetTextureScale (ThotBool Scaled)
       glTexEnvi (GL_TEXTURE_ENV,
 		 GL_TEXTURE_ENV_MODE,
 		 GL_MODULATE);
+#ifdef _WX
+      wxASSERT_MSG( glIsTexture(texture_id), _T("created texture invalid") );
+#endif /* _WX */
+      return texture_id;
     }
+  return 0; /* 0 is a invalid texture identifier */
 }
 
 /*----------------------------------------------------------------------
+  param: texture_id the texture identifier given by SetTextureScale
   ----------------------------------------------------------------------*/
-void StopTextureScale ()
+void StopTextureScale ( int texture_id )
 {   
   if (GL_NotInFeedbackMode () && !GL_TransText ())
     {
-      glDeleteTextures (1, (GLuint*)&(FontBind));
+#ifdef _WX
+      wxASSERT_MSG( glIsTexture(texture_id), _T("try to delete invalid texture") );
+#endif /* _WX */
+      glDeleteTextures (1, (GLuint*)&(texture_id));
       glDisable (GL_TEXTURE_2D);
     }
 }
@@ -1002,6 +1043,7 @@ static void GL_TextMap (float x, float y, int width, int height,
 
 #define MAX_STRING 64
 #define MAX_BITMAP_ALLOC 4096
+static unsigned char g_gl_bitmap_buffer[MAX_BITMAP_ALLOC];
 /*----------------------------------------------------------------------
   UnicodeFontRender : Render an unicode string (no more than a word)
   in a Bitmap.
@@ -1020,7 +1062,6 @@ int UnicodeFontRender (void *gl_font, wchar_t *text, float x, float y, int size)
   GL_glyph           *glyph;
   Char_Cache_index   *cache;
   unsigned char      *data;
-  unsigned char       m_data[MAX_BITMAP_ALLOC];
   float		      maxy, miny, shift;
   int                 Width, Height, width, bitmap_alloc;
   register int        pen_x, n;
@@ -1112,18 +1153,20 @@ int UnicodeFontRender (void *gl_font, wchar_t *text, float x, float y, int size)
 	return 0;
     }
   else
-    data = m_data;
+    data = g_gl_bitmap_buffer;
   memset (data, 0, bitmap_alloc);
   /* Load glyph image into the texture */
   for (n = 0; n < size; n++)
     {
       if (bitmaps[n] && bitmaps[n]->data)
-	BitmapAppend (data, (unsigned char *)bitmaps[n]->data,
-		      (int) (bitmap_pos[n].x + shift), 
-		      (int) (bitmap_pos[n].y - miny),
-		      (int) bitmaps[n]->dimension.x, 
-		      (int) bitmaps[n]->dimension.y, 
-		      Width);
+	{
+	  BitmapAppend (data, (unsigned char *)bitmaps[n]->data,
+			(int) (bitmap_pos[n].x + shift), 
+			(int) (bitmap_pos[n].y - miny),
+			(int) bitmaps[n]->dimension.x, 
+			(int) bitmaps[n]->dimension.y, 
+			Width);
+	}
      }
   
   /* SG: I think there is an optimisation to to here because 

@@ -20,7 +20,8 @@ enum {
   TTA_LOG_DRAW      = 1 << 6,
   TTA_LOG_SOCKET    = 1 << 7,
   TTA_LOG_CLIPBOARD = 1 << 8,
-  TTA_LOG_MAX       = 1 << 9,
+  TTA_LOG_FONT      = 1 << 9,
+  TTA_LOG_MAX       = 1 << 10,
 };
 
 #if !defined(__WXDEBUG__)

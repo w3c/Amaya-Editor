@@ -27,8 +27,8 @@ int   GetFontFilename     (char script, int family,
 			   int highlight, int size, 
 			   char *filename);
 void  FTLibraryFree ();
-void SetTextureScale (ThotBool Scaled);
-void StopTextureScale ();
+int SetTextureScale (ThotBool Scaled);
+void StopTextureScale (int texture_id);
 void MakePolygonGlyph (GL_font *font,
 		       unsigned int g,
 		       GL_glyph *BitmapGlyph);

@@ -20,5 +20,6 @@ tta_logdebug_filter_names g_logdebug_filter_names[] = {
   {"Draw",      "LOGDEBUG_DRAW"},      /* TTA_LOG_DRAW */
   {"Socket",    "LOGDEBUG_SOCKET"},    /* TTA_LOG_SOCKET */
   {"Clipboard", "LOGDEBUG_CLIPBOARD"}, /* TTA_LOG_CLIPBOARD */
+  {"Font",      "LOGDEBUG_FONT"},      /* TTA_LOG_FONT */
   {"",          ""}                    /* dont remove this entry */
 };

@@ -290,6 +290,9 @@ static void DisplaySymbol (PtrBox pBox, int frame, ThotBool selected,
   int                 width, height, baseline, size;
   PtrBox              ancestor;
   ThotBool            useStix;
+#ifdef _GL
+  int                 texture_id;
+#endif /* _GL */
 
   pFrame = &ViewFrameTable[frame - 1];
   if (pBox->BxAbstractBox->AbVisibility >= pFrame->FrVisibility)
@@ -380,7 +383,7 @@ static void DisplaySymbol (PtrBox pBox, int frame, ThotBool selected,
 	  /* Line thickness */
 	  i = GetLineWeight (pBox->BxAbstractBox, frame);
 #ifdef _GL
-	  SetTextureScale (IsBoxDeformed(pBox));
+	  texture_id = SetTextureScale (IsBoxDeformed(pBox));
 #endif /* _GL */
 	  if (selected && !pFrame->FrSelectOnePosition)
 	    {
@@ -550,7 +553,7 @@ static void DisplaySymbol (PtrBox pBox, int frame, ThotBool selected,
 	      break;
 	    } 
 #ifdef _GL
-      StopTextureScale ();
+	  StopTextureScale (texture_id);
 #endif /* _GL */
 
 	  if (pBox->BxEndOfBloc > 0)
@@ -1279,9 +1282,12 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
   ThotBool            shadow;
   ThotBool            blockbegin, withinSel = FALSE;
   ThotBool            hyphen, rtl, showSpecial = FALSE;
+#ifdef _GL
+  int                 texture_id;
+#endif /* _GL */
 
 #ifdef _GL
-  SetTextureScale (IsBoxDeformed(pBox));
+  texture_id = SetTextureScale (IsBoxDeformed(pBox));
 #endif /* _GL */
   indmax = 0;
   buffleft = 0;
@@ -1859,19 +1865,19 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 	      if (pBox->BxUnderline != 0)
 		{
 #ifdef _GL
-		  SetTextureScale (IsBoxDeformed(pBox));
+		  int tex_underline_id = SetTextureScale (IsBoxDeformed(pBox));
 #endif /* _GL */
 		  DisplayUnderline (frame, x, y, nextfont,
 				    pBox->BxUnderline, width, fg);
 #ifdef _GL
-		  StopTextureScale ();
+		  StopTextureScale ( tex_underline_id );
 #endif /* _GL */
 		}
 	      nbcar = 0;
 	    }
 	} 
 #ifdef _GL
-      StopTextureScale ();
+      StopTextureScale (texture_id);
 #endif /* _GL */
 
       /* Should the end of the line be filled with dots */
