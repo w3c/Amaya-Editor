@@ -1033,7 +1033,7 @@ Element             el;
 	       {
 		  ReturnOption = -1;
 		  TtaNewPopup (BaseDialog + OptionMenu, TtaGetViewFrame (doc, 1),
-			       "", nbitems, buffmenu, "", 'L');
+			       "", nbitems, buffmenu, NULL, 'L');
 		  TtaSetDialoguePosition ();
 		  TtaShowDialogue (BaseDialog + OptionMenu, FALSE);
 		  /* wait for an answer */
