@@ -1,0 +1,142 @@
+0 Dosyalar
+1 Adrese git
+2 Temizle
+3 %s belgesi kaydedildi
+4 Özellik
+5 URL
+6 Metin
+7 Ýsim
+8 Parola
+9 Sýnýf olarak kullan
+10 Sýnýf uygula
+11 Sýnýf seçimi
+12 %s alýnýyor
+13 %s yüklenemiyor
+14 Bitti!
+15 Hedefi seçin
+16 Geçersiz hedef
+17 Adres
+18 Baþlýk
+19 Tüm deðiþiklikleri kaybedeceksiniz, devam etmek istiyor musunuz?
+20 Redirection fetching of %s
+21 Too many redirections detected
+22 Yerel dosya %s yaratýlamýyor
+23 Boþ bir soket bekleniyor
+24 %s okunuyor
+25 %s yazýlýyor
+26 Baðlantý bekleniyor
+27 %s: baðlanýlýyor
+28 %s: aranýyor
+29 Belirsiz durum
+30 Güvenlik istemi
+31 %s için yetkilendirme baþarýsýz
+32 %s yüklendi, ancak veri içermiyor
+33 Aktarým kesildi!
+34 %s: þu anda eriþilemiyor, baþka bir zaman deneyin
+35 %s yüklendi
+36 %s kaydediliyor
+37 %s kaydedilemedi
+38 Türkçe sistem hata mesajlarý
+39 <A> tanýmlamasý bu unsurlarý içeremez
+40 <A> tanýmlamasý içinde bir baþka <A> tanýmý yer alamaz.
+41 %s tipi URL\'ler için GET desteði henüz yok, üzgünüm
+42 %s tipi URL\'ler için PUT desteði henüz yok, üzgünüm
+43 Amaya\'nýn bu sürümü, bu özelliði desteklemiyor
+44 %s\'in yazýmý tamamlandý
+45 %s normale dönüþtürülemedi
+46 %s geçici dosya dizini yaratýlamadý
+47 Seçili bölge için hiç bir dönüþüm kullanýlamaz
+48 Dönüþüm baþarýsýz
+49 HTML.trans dosyasý, %s satýrýnda yazým hatasý
+50 Ekle
+51 Göster
+52 Tara
+53 Dýþ CSS
+54 CSS Sil
+55 Sil
+56 Kaydet
+57 Ýsimle kaydet
+58 Yeniden yükle
+59 Yeni
+60 CSS
+61 Kaydetmek þu URL\'lerin üzerine yazacaktýr:
+62 URL kaydedilemedi
+63 Diske kayýt?
+64 Görüntüleri kopyala
+65 URL\'leri dönüþtür
+66 Belgenin adresi
+67 Görüntü dizini
+68 Nesne konumu
+69 Belge tarzý
+70 Kullanýcý seçenekleri
+71 CSS dosyasý 1                                            
+72 1. dosya için kural dökümü                                   
+73 CSS dosyasý 2                                            
+74 2. dosya için kural dökümü                                   
+75 Dýþ \'Style Sheet\' seçimi
+76 \'Style Sheet\' sil
+77 <HTML><HEAD><TITLE>HATA: URL eriþilemiyor</TITLE></HEAD><BODY><H1>Belirtilen URL alýnamadý</H1><HR><P>Belirtilen URL alýnýrken:<A HREF=\"%s\">%s</A></P><P>Aþaðýdaki hata ile karþýlaþýldý:</P><UL><LI><STRONG>Baðlantý baþarýsýz</STRONG></UL><P>Sistem hata olarak:</P><PRE><I>(%d) %s</I></PRE>mesajýný verdi<P>Bunun anlamý:</P><PRE>Karþý sunucunun çalýþmýyor olmasý veya istenen belgenin sunucuda yer almamasý.</PRE><PRE>Lütfen bir süre sonra tekrar deneyin.</PRE><P></P><HR>\n</BODY></HTML>
+78 Kullanýcý ismini girin:
+79 %d istek sýrada
+80 Önbellek temizleniyor, lütfen bekleyiniz...
+81 Aktarýmý kes
+82 Önceki belge
+83 Sonraki belge
+84 Yeniden yükle
+85 Kaydet
+86 Yazdýr
+87 Ara
+88 Vurgu
+89 Kuvvetli
+90 Sabit geniþlikli yazýtipi
+91 Style sheet
+92 Görüntü ekle
+93 Baþlýk 1
+94 Baþlýk 2
+95 Baþlýk 3
+96 Noktalý liste
+97 Numaralý liste
+98 Taným listesi
+99 Baðlantý
+100 Tablo
+101 Belgenin bir ismi yok. Þu isimle kaydediyorum:
+102 Plugin\'ler
+103 %s URL\'ini kaydederken, belirsiz hata
+104 Sunucuya baðlantý yapýlamýyor
+105 %s eriþimi kural gereði engellenmiþ
+106 %s için iþlem baþarýlý
+107 %s yaratýldý
+108 %s güncellendi
+109 Ýþlem %s durum kodu ile tamamlandý
+110 Sunucu istem yazýmýný anlamadý
+111 Sunucunun gönderecek yeni bilgisi yok
+112 Bu yöntem %s için kullanýlamaz
+113 %s eriþimi için lütfen kendinizi tanýtýn
+114 Doðrulanýyor...
+115 %s\'e kaydedilemedi, Diske kaydedeyim mi?
+116 %s bozuk görünüyor, devam edeyim mi?
+117 URL %s %s e yönlendirilmiþ, devam edeyim mi?
+118 %s yeniden yüklenemedi, devam edeyim mi?
+119 Sunucu 501 hatasý veriyor: %s
+120 Sunucu 501 hatasý veriyor
+121 Sunucu bu istem yöntemini kabul etmiyor
+122 Süzgeç
+123 etkin aktarýmlar
+124 kuyruktaki aktarýmlar
+125 Ýçindekiler
+126 Numbered links
+127 Java Applet\'leri
+128 Tekrar Kipi
+129 tekrar
+130 x\'te tekrar
+131 y\'de tekrar
+132 tekrar yok
+133 Amaya - WWW için tarayýcý ve belge düzenleyici
+134 W3C tarafýndan deneme tarayýcýsý olarak geliþtirildi (http://www.w3.org/)
+135 Matematik
+136 %s karakterden uzun URL\'ler þimdilik iþlenemiyor
+137 CSS hatasý: %s
+138 Sadece öntanýmlý tip kullanýlabilir
+139 Baðlantý güncellemesi: %s%% tamamlandý
+140 Kaydedilecek bir þey yok
+141 ***matrix
