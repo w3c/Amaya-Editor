@@ -675,9 +675,12 @@ void  GL_DestroyFrame (int frame)
     return;
   for (i = 0 ; i <= MAX_FRAME; i++)
     {  
-#if defined(_MOTIF) || defined(_GTK) || defined(_WX)
+#ifdef _WX
+      if (i != GetSharedContext() && !TtaFrameIsClosed(i))
+#endif /* _WX */
+#if defined(_MOTIF) || defined(_GTK)
       if (i != GetSharedContext() && FrameTable[i].WdFrame)
-#endif /*#if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
+#endif /*#if defined(_MOTIF) || defined(_GTK) */
 #ifdef _WINGUI
       if (i != GetSharedContext() && GL_Context[i])
 #endif /* _WINGUI */
