@@ -3804,12 +3804,16 @@ RULES
  Block_Quote: BEGIN
 	CreateBefore(ElementName);
 	CreateWith(VerticalLine);
-	HorizPos: Left = Enclosing . Left + 2;	
+	HorizPos: Left = Enclosing . Left;	
 	VertPos: Top = Previous AnyElem . Bottom;
+	MarginLeft: 2;
+	MarginRight: 2;
 	MarginTop: H4Margin;
 	MarginBottom: H4Margin;
-	Width: Enclosing . Width - 4;
+	Width: auto {Enclosing . Width};
 	IN Structure_view BEGIN
+		MarginLeft: 0;
+		MarginRight: 0;
 		MarginTop: 0;
 		MarginBottom: 0;
 		Width: Enclosing . Width - STRUCT_INDENT;

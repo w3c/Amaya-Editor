@@ -3120,21 +3120,24 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
   extensibleBox = (pBox->BxContentWidth ||
 		   (!pAb->AbWidth.DimIsPosition && pAb->AbWidth.DimMinimum));
   /* what is the maximum width allowed */
-  if (pAb->AbWidth.DimUnit == UnAuto &&
-      pAb->AbWidth.DimAbRef == NULL &&
-      pAb->AbWidth.DimValue == -1 &&
-      pAb->AbEnclosing)
+  pParent = pAb->AbEnclosing;
+  if ((pAb->AbWidth.DimUnit == UnAuto || pBox->BxType == BoFloatBlock) &&
+      pParent &&
+      pAb->AbWidth.DimAbRef == NULL && pAb->AbWidth.DimValue == -1)
     {
       /* limit to the enclosing box */
-      pParent = pAb->AbEnclosing;
-      while (pParent &&
-	     pParent->AbWidth.DimAbRef == NULL &&
-	     pParent->AbWidth.DimValue == -1)
+       while (pParent && pParent->AbBox &&
+	     ((pParent->AbWidth.DimAbRef == NULL &&
+	       pParent->AbWidth.DimValue == -1) ||
+	      pParent->AbBox->BxType == BoGhost ||
+	      pParent->AbBox->BxType == BoFloatGhost))
 	pParent = pParent->AbEnclosing;
-      if (pParent && pParent->AbBox && pParent->AbBox->BxType != BoCell)
+      if (pParent && pParent->AbBox &&
+	  (pParent->AbBox->BxType != BoCell || pParent->AbBox->BxW != 20))
 	maxWidth = pParent->AbBox->BxW;
       else
 	maxWidth = 30 * DOT_PER_INCH;
+      pBox->BxRuleWidth = maxWidth;
     }
   else
     maxWidth = 30 * DOT_PER_INCH;
@@ -4087,12 +4090,20 @@ void UpdateLineBlock (PtrAbstractBox pAb, PtrLine pLine, PtrBox pBox,
       if (pParentBox->BxContentWidth)
 	{
 	  /* the line can be extended */
-	  if (!pDimAb->DimIsPosition && pDimAb->DimMinimum
-	       && pParentBox->BxW + xDelta < pParentBox->BxRuleWidth)
+	  if (!pDimAb->DimIsPosition && pDimAb->DimMinimum &&
+	       pParentBox->BxW + xDelta < pParentBox->BxRuleWidth)
 	    {
-	      /* The block  min width is larger than its inside width */
+	      /* The min width is larger than its inside width */
 	      /* use the min width */
 	      pParentBox->BxContentWidth = FALSE;
+	      pLine = NULL;
+	      RecomputeLines (pAb, NULL, NULL, frame);
+	    }
+	  else if ((pDimAb->DimUnit == UnAuto ||
+		    pParentBox->BxType == BoFloatBlock) &&
+		   pParentBox->BxW + xDelta < pParentBox->BxRuleWidth)
+	    {
+	      /* The block  width must be recomputed */
 	      pLine = NULL;
 	      RecomputeLines (pAb, NULL, NULL, frame);
 	    }
@@ -4246,6 +4257,11 @@ void UpdateLineBlock (PtrAbstractBox pAb, PtrLine pLine, PtrBox pBox,
 	    RecomputeLines (pAb, pLine, NULL, frame);
 	}
     }
+  else if (pParentBox &&
+	   (pParentBox->BxType == BoBlock ||
+	    pParentBox->BxType == BoFloatBlock))
+    /* it could be an empty block of lines */
+    RecomputeLines (pAb, pLine, NULL, frame);   
 }
 
 
