@@ -2374,10 +2374,11 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
 	      /* Positionnement de la ligne en respectant l'interligne */
 	      if (toLineSpace)
 		org -= pLine->LiHorizRef;
+#ifdef IV
 	      /* verifie que les lignes ne se chevauchent pas */
 	      if (org < *height + top)
 		org = *height + top;
-
+#endif
 	      pLine->LiYOrg = org;
 	      *height = org + pLine->LiHeight - top;
 	      org = org + pLine->LiHorizRef + lineSpacing;
@@ -3281,7 +3282,8 @@ void EncloseInLine (PtrBox pBox, int frame, PtrAbstractBox pAb)
 	  pNextLine = pLine->LiNext;
 	  ascent = 0;
 	  descent = 0;
-	  linespacing = PixelValue (pAb->AbLineSpacing, pAb->AbLineSpacingUnit, pAb, ViewFrameTable[frame - 1].FrMagnification);
+	  linespacing = PixelValue (pAb->AbLineSpacing, pAb->AbLineSpacingUnit,
+				    pAb, ViewFrameTable[frame - 1].FrMagnification);
 
 	  if (!pBox->BxAbstractBox->AbHorizEnclosing)
 	    {
@@ -3324,11 +3326,13 @@ void EncloseInLine (PtrBox pBox, int frame, PtrAbstractBox pAb)
 		     ibox1 != pLine->LiLastPiece);
 	      if (pLine->LiPrevious)
 		{
+#ifdef IV
 		  /* new position of the current line */
 		  if (linespacing < pLine->LiPrevious->LiHorizRef + ascent)
 		    /* we refuse to overlaps 2 lines */
 		    i = pLine->LiPrevious->LiHorizRef + ascent;
 		  else
+#endif
 		    i = linespacing;
 		  pos = pLine->LiPrevious->LiYOrg + pLine->LiPrevious->LiHorizRef
 		    + i - ascent;
