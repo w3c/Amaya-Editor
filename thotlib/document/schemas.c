@@ -2237,29 +2237,6 @@ void AppendXmlElement (char *xmlName, ElementType *elType,
       pRule->SrNExclusions = 0;
       pRule->SrRefImportedDoc = FALSE;
       pRule->SrSSchemaNat = NULL;
-
-#ifdef test
-      /* Search the first CsChoice rule */
-      /*
-      found = FALSE;
-      for (i = 0; i < rule && !found; i++)
-	{
-	  if (pSS->SsRule->SrElem[i]->SrConstruct == CsChoice)
-	    found = TRUE;
-	}
-      if (found)
-	{
-	  i--;
-	  pSS->SsRule->SrElem[i]->SrChoice[pSS->SsRule->SrElem[i]->SrNChoices] = rule - 1;
-	  pSS->SsRule->SrElem[i]->SrNChoices ++;
-	}
-      pRule->SrConstruct = CsChoice;
-      pRule->SrNChoices = 2;
-      pRule->SrChoice[0] = rule;
-      pRule->SrChoice[1] = i;
-      `*/
-#endif
-
       pRule->SrConstruct = CsAny;
 
       *mappedName = pRule->SrOrigName;
