@@ -12,7 +12,8 @@ extern int TtaMakeWindow ( int x,
                            int y,
                            int w,
                            int h,
-                           int kind );
+                           int kind,
+                           int parent_window_id );
 extern int TtaMakeFrame ( const char * schema_name,
                           int schView,
                           Document doc_id,
@@ -74,7 +75,8 @@ extern int TtaMakeWindow ( int x,
                              int y,
                              int w,
                              int h,
-                             int kind );
+                             int kind,
+                             int parent_window_id );
 extern int TtaMakeFrame ( const char * schema_name,
                             int schView,
                             Document doc_id,

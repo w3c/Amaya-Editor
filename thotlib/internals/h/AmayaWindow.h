@@ -79,6 +79,7 @@ class AmayaWindow : public wxFrame
 	        ,const wxPoint& pos  = wxDefaultPosition
 	        ,const wxSize&  size = wxDefaultSize
 		,int kind = WXAMAYAWINDOW_UNKNOWN
+		,long style = wxDEFAULT_FRAME_STYLE
 	      );
   virtual ~AmayaWindow();
 

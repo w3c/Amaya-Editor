@@ -57,9 +57,10 @@ AmayaWindow::AmayaWindow (  int            window_id
 			    ,const wxPoint& pos
 			    ,const wxSize&  size
 			    ,int kind
+			    ,long style
 		       ) : 
   wxFrame( wxDynamicCast(p_parent_window, wxWindow),
-	   -1, _T(""), pos, size ),
+	   -1, _T(""), pos, size, style ),
   m_WindowId( window_id ),
   m_IsClosing( FALSE ),
   m_Kind( kind )

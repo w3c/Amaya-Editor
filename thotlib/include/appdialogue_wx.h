@@ -23,7 +23,7 @@ typedef enum
 
 extern wxString      TtaGetResourcePathWX( wxResourceType type, const char * filename );
 
-extern int TtaMakeWindow(int x, int y, int w, int h, int kind );
+extern int TtaMakeWindow(int x, int y, int w, int h, int kind, int parent_window_id );
 extern int TtaMakeFrame( const char * schema_name,
 			 int schView,
 			 Document doc_id,

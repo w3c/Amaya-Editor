@@ -51,7 +51,7 @@ AmayaSimpleWindow::AmayaSimpleWindow (  int             window_id
 					,const wxPoint& pos
 					,const wxSize&  size
 					) : 
-  AmayaWindow( window_id, p_parent_window, pos, size, WXAMAYAWINDOW_SIMPLE ),
+  AmayaWindow( window_id, p_parent_window, pos, size, WXAMAYAWINDOW_SIMPLE, wxDEFAULT_FRAME_STYLE | wxFRAME_FLOAT_ON_PARENT ),
   m_pFrame( NULL )
 {
   // Creation of a close button
