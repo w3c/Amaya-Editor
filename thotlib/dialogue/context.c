@@ -218,7 +218,7 @@ ThotColor*  colorpixel;
 
    value = TtaGetEnvString (colorplace);
    /* do you need to take the default color? */
-   if (value != NULL)
+   if (value != NULL && value[0] != WC_EOS)
      TtaGiveRGB (value, &red, &green, &blue);
    else if (defaultcolor != NULL)
      TtaGiveRGB (defaultcolor, &red, &green, &blue);
@@ -393,6 +393,9 @@ CHAR_T*             name;
    Scroll_Color = BgMenu_Color = cwhite.pixel;
 #endif /* _GTK */
 #endif /* _WINDOWS */
+#ifdef _WINDOWS
+   WinInitColors ();
+#  endif /* _WINDOWS */
 
    if (TtWDepth > 1)
      {
@@ -402,9 +405,6 @@ CHAR_T*             name;
      /* at least allocate the selection color */
      found = FindColor (0, name, "DocSelectColor", TEXT("White"), &Select_Color);
 
-#ifdef _WINDOWS
-   WinInitColors ();
-#  endif /* _WINDOWS */
 }
 
 /*----------------------------------------------------------------------

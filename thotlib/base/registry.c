@@ -1394,11 +1394,7 @@ static void         InitEnviron ()
    TtaSetDefEnvString ("FontMenuSize", TEXT("12"), FALSE);
    TtaSetDefEnvString ("ForegroundColor", TEXT("Black"), FALSE);
 
-#ifndef _WINDOWS
-   TtaSetDefEnvString ("BackgroundColor", TEXT("gainsboro"), FALSE);
-#else
    TtaSetDefEnvString ("BackgroundColor", TEXT("LightGrey1"), FALSE);
-#endif /* _WINDOWS */
 
    /*
    ** set up the defaul TMPDIR 
