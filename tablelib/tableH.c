@@ -796,8 +796,8 @@ printf ("cref=%d: Min =%d, Max=%d, colWidth=%d, colPercent=%d\n", cRef, pBox->Bx
     }
   else
     {
-      table->AbBox->BxMinWidth = realMin;
-      table->AbBox->BxMaxWidth = realMax;
+      table->AbBox->BxMinWidth = realMin + sumPercent;
+      table->AbBox->BxMaxWidth = realMax + sumPercent;
     }
 
   /* remind that the table height has to be recomputed */
@@ -870,7 +870,7 @@ printf ("Width[%d]=%d\n", cRef, pBox->BxWidth);
 	  do
 	    {
 	      still = FALSE;
-	      j = width - var - sumPercent;
+	      j = width - var;
 	      delta = j / i;
 	      n = j - (delta * i);
 	      /* compare maximum width and computed width of each column  */
@@ -905,7 +905,7 @@ printf ("Width[%d]=%d\n", cRef, pBox->BxWidth);
 
       if (i > 0)
 	{
-	  j = width - var - sumPercent;
+	  j = width - var;
 	  delta = j / i;
 	  n =  j - (delta * i);
 	}
