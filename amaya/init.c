@@ -7810,8 +7810,8 @@ void RemoveDocFromSaveList (char *name, char *initial_url, int doctype)
 	  if (j == 0 && TtaFileExist (urlstring))
 	    {
 	      TtaFileUnlink (urlstring);
-	      AutoSave_list = NULL;
 	      TtaFreeMemory (AutoSave_list);
+	      AutoSave_list = NULL;
 	      AutoSave_list_len = 0;
 	    }
 	}

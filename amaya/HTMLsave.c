@@ -2684,8 +2684,7 @@ void GenerateAutoSavedDoc (Document doc)
   if (c == URL_SEP)
     url[l] = EOS; /* remove the last / */
   TtaExtractName (url, pathname, docname);
-  if (c == URL_SEP)
-    url[l] = c; /* restore the last / */
+  TtaFreeMemory (url);
   sprintf (pathname, "%s%c%s%d.bak", TempFileDirectory, DIR_SEP, docname, doc);
   sprintf (tmpname, "%s%c%s.tmp", TempFileDirectory, DIR_SEP, docname);
   /* Write the autosaved file */
