@@ -111,9 +111,6 @@ Document doc;
   List *ptr;
   AnnotMeta *annot = NULL;
 
-  if (DocumentTypes[doc] == docAnnot)
-    return (NULL);
-
   /* get a pointer to the annot list */
   ptr = AnnotMetaData[doc].annotations;
   if (!ptr)

@@ -1329,7 +1329,9 @@ Document doc;
    case docSource:
    case docCSS:
    case docLog:
+#ifndef ANNOT_ON_ANNOT
    case docAnnot:
+#endif
      result = FALSE;
      break;
 
