@@ -328,9 +328,9 @@ static void PutChar (wchar_t c, int fileNum, STRING outBuffer,
   ----------------------------------------------------------------------*/
 static void PutColor (int n, int fileNum, PtrDocument pDoc, ThotBool lineBreak)
 {
-  CHAR_T             *ptr;
-  CHAR_T              c;
-  int                 i;
+  UCHAR_T             *ptr;
+  UCHAR_T              c;
+  int                  i;
 
   if (n < NColors && n >= 0)
     {
@@ -350,9 +350,9 @@ static void PutColor (int n, int fileNum, PtrDocument pDoc, ThotBool lineBreak)
   ----------------------------------------------------------------------*/
 static void PutPattern (int n, int fileNum, PtrDocument pDoc, ThotBool lineBreak)
 {
-  CHAR_T             *ptr;
-  CHAR_T              c;
-  int                 i;
+  UCHAR_T             *ptr;
+  UCHAR_T              c;
+  int                  i;
 
   if (n < NbPatterns && n >= 0)
     {
@@ -373,7 +373,7 @@ static void PutPattern (int n, int fileNum, PtrDocument pDoc, ThotBool lineBreak
 static void PutInt (int n, int fileNum, STRING outBuffer, PtrDocument pDoc,
 		    ThotBool lineBreak)
 {
-  CHAR_T              buffer[20];
+  UCHAR_T             buffer[20];
   int                 i;
 
   usprintf (buffer, TEXT("%d"), n);
@@ -464,7 +464,7 @@ static void TranslateText (PtrTextBuffer pBufT, PtrTSchema pTSch,
 			   int fileNum, PtrDocument pDoc)
 {
   PtrTextBuffer        pNextBufT, pPrevBufT;
-  CHAR_T               c, cs;
+  UCHAR_T              c, cs;
   StringTransl        *pTrans;   
   int                  textTransBegin, textTransEnd;
   int                  i, j, k, b, ft, lt;
@@ -670,7 +670,7 @@ static void TranslateLeaf (PtrElement pEl, ThotBool transChar,
   PtrTextBuffer       pBufT;
   AlphabetTransl     *pTransAlph;
   StringTransl       *pTrans;
-  CHAR_T              c;
+  UCHAR_T             c;
   int                 i, j, b, ft, lt;
 
   pTransAlph = NULL;
@@ -697,8 +697,11 @@ static void TranslateLeaf (PtrElement pEl, ThotBool transChar,
 	      {
 		i = 0;
 		while (pBufT->BuContent[i] != EOS)
-		  PutChar ((wchar_t) (pBufT->BuContent[i++]), fileNum, NULL,
-			   pDoc, lineBreak, TRUE);
+		  {
+		    c = pBufT->BuContent[i++];
+		    PutChar ((wchar_t) c, fileNum, NULL,
+			     pDoc, lineBreak, TRUE);
+		  }
 		pBufT = pBufT->BuNext;
 	      }
 	  else if (pTSch != NULL)
@@ -714,9 +717,11 @@ static void TranslateLeaf (PtrElement pEl, ThotBool transChar,
       if (pEl->ElLeafType == LtSymbol && pEl->ElGraph == '?')
 	{
 	  if (pDoc->DocCharset == UTF_8)
-	    /* translate into UTF_8 the unicode value */
-	    PutChar ((wchar_t) pEl->ElWideChar, fileNum, NULL, pDoc,
-		     lineBreak, TRUE);
+	    {
+	      /* translate into UTF_8 the unicode value */
+	      PutChar ((wchar_t) pEl->ElWideChar, fileNum, NULL, pDoc,
+		       lineBreak, TRUE);
+	    }
 	  else
 	    {
 	      /* write a numeric entity */
@@ -2104,7 +2109,7 @@ static void PutVariable (PtrElement pEl, PtrAttribute pAttr,
   DocumentIdentifier  docIdent;
   PtrDocument         pExtDoc;
   PtrTextBuffer       pBuf;
-  CHAR_T              number[20], c;
+  UCHAR_T             number[20], c;
   int                 item, i, j, k;
   ThotBool            found;
 
@@ -2336,7 +2341,7 @@ static void ApplyTRule (PtrTRule pTRule, PtrTSchema pTSch, PtrSSchema pSSch,
   FILE               *newFile;
   CHAR_T              currentFileName[MAX_PATH]; /* nom du fichier principal*/
   ThotBool            found, possibleRef;
-  CHAR_T              c;
+  UCHAR_T             c;
 #ifndef _WINDOWS 
   char		       cmd[MAX_PATH];
   char                fileNameStr[MAX_PATH];
@@ -2376,7 +2381,8 @@ static void ApplyTRule (PtrTRule pTRule, PtrTSchema pTSch, PtrSSchema pSSch,
 	  i = pTSch->TsConstBegin[pTRule->TrObjectNum - 1];
 	  while (pTSch->TsConstant[i - 1] != WC_EOS)
 	    {
-	      PutChar ((wchar_t) (pTSch->TsConstant[i - 1]), fileNum, NULL, pDoc,
+	      c = pTSch->TsConstant[i - 1];
+	      PutChar ((wchar_t) c, fileNum, NULL, pDoc,
 		       *lineBreak, TRUE);
 	      i++;
 	    }
@@ -2386,8 +2392,11 @@ static void ApplyTRule (PtrTRule pTRule, PtrTSchema pTSch, PtrSSchema pSSch,
 	  /* ecriture du contenu d'un buffer */
 	  i = 0;
 	  while (pTSch->TsBuffer[pTRule->TrObjectNum - 1][i] != WC_EOS)
-	    PutChar ((wchar_t) (pTSch->TsBuffer[pTRule->TrObjectNum - 1][i++]), fileNum,
-		     NULL, pDoc, *lineBreak, TRUE);
+	    {
+	      c = pTSch->TsBuffer[pTRule->TrObjectNum - 1][i++];
+	      PutChar ((wchar_t) c, fileNum,
+		       NULL, pDoc, *lineBreak, TRUE);
+	    }
 	  break;
 
 	case ToVariable:	/* creation d'une variable */
@@ -2437,7 +2446,11 @@ static void ApplyTRule (PtrTRule pTRule, PtrTSchema pTSch, PtrSSchema pSSch,
 			{
 			  i = 0;
 			  while (i < pBuf->BuLength)
-			    PutChar ((wchar_t) (pBuf->BuContent[i++]), fileNum, NULL, pDoc, FALSE, TRUE);
+			    {
+			      c = pBuf->BuContent[i++];
+			      PutChar ((wchar_t) c, fileNum, NULL,
+				       pDoc, FALSE, TRUE);
+			    }
 			  pBuf = pBuf->BuNext;
 			}
 		    else
@@ -2455,8 +2468,11 @@ static void ApplyTRule (PtrTRule pTRule, PtrTSchema pTSch, PtrSSchema pSSch,
 		attrTrans = &pA->AeAttrSSchema->SsAttribute[pA->AeAttrNum-1];
 		i = 0;
 		while (attrTrans->AttrEnumValue[pA->AeAttrValue - 1][i] != WC_EOS)
-		  PutChar ((wchar_t) (attrTrans->AttrEnumValue[pA->AeAttrValue - 1][i++]),
-			   fileNum, NULL, pDoc, *lineBreak, TRUE);
+		  {
+		    c = attrTrans->AttrEnumValue[pA->AeAttrValue - 1][i++];
+		    PutChar ((wchar_t) c, fileNum,
+			     NULL, pDoc, *lineBreak, TRUE);
+		  }
 		break;
 	      default:
 		break;
