@@ -200,7 +200,11 @@ void AnnotList_writeIndex (CHAR_T *indexFile, List *annot_list)
 	  
 	  fprintf (fp,
 		   "<d:date>%s</d:date>\n",
-		   annot->date);
+		   annot->cdate);
+
+	  fprintf (fp,
+		   "<r:type>%s</r:type>\n",
+		   annot->type);
 	  
 	  fprintf (fp,
 		   "<a:body r:resource=\"%s\" />\n",
@@ -284,13 +288,15 @@ Document doc;
   fprintf (fp,
 	   "<d:creator>%s</d:creator>\n"
 	   "<d:date>%s</d:date>\n"
+	   "<r:type>%s</r:type>\n"
 	   "<a:body>\n"
 	   "<a:AnnotationBody>\n"
 	   "<http:ContentType>%s</http:ContentType>\n"
 	   "<http:ContentLength>%ld</http:ContentLength>\n"
 	   "<http:Body parseType=\"literal\">\n",
 	   annot->author,
-	   annot->date, 
+	   annot->cdate, 
+	   annot->type,
 	   "text/html",
 	   content_length);
 

@@ -258,8 +258,8 @@ AnnotMeta* LINK_CreateMeta (source_doc, annot_doc, labf, c1, labl, cl)
   curDate = time (&curDate);
   localDate = localtime (&curDate);
   /* @@ memory bug */
-  annot->date = TtaGetMemory (25);
-  sprintf (annot->date, "%02d/%02d/%04d %02d:%02d", localDate->tm_mday, 
+  annot->cdate = TtaGetMemory (25);
+  sprintf (annot->cdate, "%02d/%02d/%04d %02d:%02d", localDate->tm_mday, 
 	   localDate->tm_mon+1, localDate->tm_year+1900, localDate->tm_hour,
 	   localDate->tm_min);
 
@@ -692,7 +692,7 @@ void LINK_AddMetaToMemory (Document doc, CHAR_T *annotUser, CHAR_T *annotDate, C
   /* create a new element */
   me = TtaGetMemory (sizeof (AnnotMeta));
   me->author = TtaStrdup (annotUser);
-  me->date = TtaStrdup (annotDate);
+  me->cdate = TtaStrdup (annotDate);
   me->type = TtaStrdup (annotType);
   me->body_url = TtaStrdup (body_url);
 

@@ -110,9 +110,22 @@ BOXES
         Background: RDF_BgColor;
 	END;
 
- Date_Box:
+ CDate_Box:
 	BEGIN
-	Content: (Text 'Date: ');
+	Content: (Text 'Created: ');
+	HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+	VertPos: Top = Previous . Bottom + 0.2;
+	Font: Creator =;
+	Style: Creator =;
+	Weight: Creator =;
+	Size: RDF_FONTSIZE;
+        Foreground: RDF_FgColor;
+        Background: RDF_BgColor;
+	END;
+
+ MDate_Box:
+	BEGIN
+	Content: (Text 'Last modified: ');
 	Visibility: Creator =;
 	HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 	VertPos: Top = Previous . Bottom + 0.2;
@@ -187,9 +200,16 @@ RULES
 	Width: 1 px;
 	END;
 
- AnnotDate:
+ AnnotCDate:
 	BEGIN
-	CreateBefore (Date_Box);
+	CreateBefore (CDate_Box);
+	VertPos: HRef = Previous . HRef;
+	HorizPos: Left = Previous . Right;
+	END;
+
+ AnnotMDate:
+	BEGIN
+	CreateBefore (MDate_Box);
 	VertPos: HRef = Previous . HRef;
 	HorizPos: Left = Previous . Right;
 	END;

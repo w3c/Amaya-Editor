@@ -46,7 +46,8 @@ typedef struct _AnnotMeta {
   int     c1;
   CHAR_T labl[10];
   int     cl;
-  CHAR_T *date; /* date of the anntation */
+  CHAR_T *cdate; /* creation date of the annotation */
+  CHAR_T *mdate; /* last modified date of the annotation */
   CHAR_T *author; /* author of the annotation */
   CHAR_T *type; /* type of annotation */
   CHAR_T *content_type; /*content type of the body of the annotation,
@@ -78,6 +79,7 @@ AnnotFileType;
 #include "ANNOTlink_f.h"
 #include "ANNOTevent_f.h"
 #include "ANNOTfiles_f.h"
+#include "ANNOTmenu_f.h"
 #include "rdf2annot_f.h"
 
 /* linked list of all annotations related to a document */

@@ -118,7 +118,8 @@ AMAYA_ANNOT_OBJ= \
 	ANNOTfiles.o \
 	ANNOTlink.o \
 	ANNOTtools.o \
-	rdf2annot.o
+	rdf2annot.o \
+	ANNOTmenu.o
 
 # special case for generation Annot.h and AnnotAPP.c
 Annot.h : Annot.A
@@ -143,6 +144,9 @@ $(AMAYA_ANNOT_SCHEMA) : Annot.S $(THOTDIR)/amaya/HTML.S
 # recompile all the objects if the h files (generated or not) have changed
 $(AMAYA_ANNOT_OBJ) : Annot.h annotlib.h $(THOTDIR)/amaya/EDITOR.h
 
+# recompile ANNOTmenu if the menu definitions change
+ANNOTmenu.o : ANNOTmenu.h
+
 libAnnot : $(AMAYA_ANNOT_SCHEMA) libAnnot.a
 
 libAnnotSchemas : $(AMAYA_ANNOT_SCHEMA) 
@@ -150,6 +154,7 @@ libAnnotSchemas : $(AMAYA_ANNOT_SCHEMA)
 libAnnot.a : Annot.STR  $(AMAYA_ANNOT_OBJ)
 	$(AR) libAnnot.a $(AMAYA_ANNOT_OBJ)
 	$(RANLIB) libAnnot.a
+
 
 ##################################################
 # Other common compilation stuff

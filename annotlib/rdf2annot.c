@@ -143,7 +143,9 @@ static void start_hndl(void *data, const char *el, const char **attr)
   else if (!strcmp (el, "d:creator")) 
     cdata_buff = &(annot->author);
   else if (!strcmp (el, "d:date"))
-    cdata_buff = &(annot->date);
+    cdata_buff = &(annot->cdate);
+  else if (!strcmp (el, "r:type"))
+    cdata_buff = &(annot->type);
   else if (!strcmp (el, "http:ContentType"))
     cdata_buff = &(annot->content_type);
   else if (!strcmp (el, "http:ContentLength"))

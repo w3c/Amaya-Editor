@@ -178,13 +178,16 @@ void  ANNOT_InitDocumentMeta (doc, docAnnot, annot)
   STRING      user;
   STRING      doc_anchor;
   STRING      source_url;
-  CHAR_T     *date;
+  CHAR_T     *cdate;
+  CHAR_T     *mdate;
   CHAR_T     *type;
   CHAR_T      tempfile[MAX_LENGTH];
 
   user = annot->author;
   source_url = annot->source_url;
-  date = annot->date;
+  cdate = annot->cdate;
+  /* @@ not adding it until I know how to put it in the schema */
+  mdate = annot->cdate;
   type = annot->type;
 
   /* save the docid of the annotated document */
@@ -208,11 +211,17 @@ void  ANNOT_InitDocumentMeta (doc, docAnnot, annot)
   el = TtaGetFirstChild (el);
   TtaSetTextContent (el, user, TtaGetDefaultLanguage (), docAnnot); 
 
-  /* Date metadata */
-  elType.ElTypeNum = Annot_EL_AnnotDate;
+  /* Creation Date metadata */
+  elType.ElTypeNum = Annot_EL_AnnotCDate;
   el = TtaSearchTypedElement (elType, SearchInTree, head);
   el = TtaGetFirstChild (el);
-  TtaSetTextContent (el, date, TtaGetDefaultLanguage (), docAnnot); 
+  TtaSetTextContent (el, cdate, TtaGetDefaultLanguage (), docAnnot); 
+
+  /* Last modified date metadata */
+  elType.ElTypeNum = Annot_EL_AnnotMDate;
+  el = TtaSearchTypedElement (elType, SearchInTree, head);
+  el = TtaGetFirstChild (el);
+  TtaSetTextContent (el, mdate, TtaGetDefaultLanguage (), docAnnot); 
 
   /* Source doc metadata (add a link to the annoted paragraph itself) */
   elType.ElTypeNum = Annot_EL_SourceDoc;

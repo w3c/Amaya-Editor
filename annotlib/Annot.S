@@ -17,7 +17,8 @@ STRUCT
 		Author = Text;
 		SourceDoc = Text;
 		RDFtype (ATTR Resource=Text) =  CONSTANT  C_Empty;
-		AnnotDate = Text;
+		AnnotCDate =  CONSTANT  C_Empty;
+		AnnotMDate = Text;	
 	        END;
 
 EXCEPT
