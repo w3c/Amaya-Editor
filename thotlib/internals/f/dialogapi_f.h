@@ -6,7 +6,6 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern void DebugBreak ( void );
 extern int GetFrameNumber ( ThotWindow win );
 extern void MyWarningHandler ( void );
 extern void TtaInitDialogue ( char *server,
@@ -153,7 +152,6 @@ extern void TtaAbortShowDialogue ( void );
 
 #else /* __STDC__ */
 
-extern void DebugBreak (/* void */);
 extern int GetFrameNumber (/* ThotWindow win */);
 extern void MyWarningHandler (/* void */);
 extern void TtaInitDialogue (/* char *server,

@@ -935,7 +935,7 @@ static boolean      StartOfFile = TRUE;	  /* no printable character encountered
 static boolean      AfterTagPRE = FALSE;  /* <PRE> has just been read */
 static boolean      ParsingCSS = FALSE;	  /* reading the content of a STYLE
 					     element */
-static boolean      WithinTable = FALSE;  /* <TABLE> has been read */
+static int          WithinTable = 0;  /* <TABLE> has been read */
 static char	    prevChar = EOS;	  /* last character read */
 static char*	    docURL = NULL;	  /* path or URL of the document */
 
@@ -1079,11 +1079,29 @@ Document            document;
 	  }
 	if (shape == HTML_ATTR_shape_VAL_rectangle)
 	  {
-	     ptr3 = strchr (text, SPACE);
-	     if (ptr3 == NULL)
-		sscanf (text, "%d,%d,%d,%d", &x1, &y1, &x2, &y2);
-	     else
-		sscanf (text, "%d,%d %d,%d", &x1, &y1, &x2, &y2);
+	     x1 = x2 = y1 = y2 = 0;
+	     ptr3 = strchr (text, ',');
+	     if (ptr3 != NULL)
+	       {
+		 ptr3[0] = EOS;
+		 sscanf (text, "%d", &x1);
+		 ptr2 = &ptr3[1];
+		 ptr3 = strchr (ptr2, ',');
+		 if (ptr3 != NULL)
+		   {
+		     ptr3[0] = EOS;
+		     sscanf (ptr2, "%d", &y1);
+		     ptr2 = &ptr3[1];
+		     ptr3 = strchr (ptr2, ',');
+		     if (ptr3 != NULL)
+		       {
+			 ptr3[0] = EOS;
+			 sscanf (ptr2, "%d", &x2);
+			 ptr2 = &ptr3[1];
+			 sscanf (ptr2, "%d", &y2);
+		       }
+		   }
+	       }
 	     TtaSetAttributeValue (attrX, x1, element, document);
 	     TtaSetAttributeValue (attrY, y1, element, document);
 	     TtaSetAttributeValue (attrW, x2 - x1, element, document);
@@ -1091,11 +1109,24 @@ Document            document;
 	  }
 	else
 	  {
-	     ptr3 = strchr (text, SPACE);
-	     if (ptr3 == NULL)
-		sscanf (text, "%d,%d,%d", &x1, &y1, &r);
-	     else
-		sscanf (text, "%d,%d %d", &x1, &y1, &r);
+	     x1 = y1 = r = 0;
+	     ptr3 = strchr (text, ',');
+	     if (ptr3 != NULL)
+	       {
+		 ptr3[0] = EOS;
+		 sscanf (text, "%d", &x1);
+		 ptr2 = &ptr3[1];
+		 ptr3 = strchr (ptr2, ',');
+		 if (ptr3 != NULL)
+		   {
+		     ptr3[0] = EOS;
+		     sscanf (ptr2, "%d", &y1);
+		     ptr2 = &ptr3[1];
+		     sscanf (ptr2, "%d", &r);
+		   }
+		 else
+		   sscanf (ptr2, "%d %d", &y1, &r);
+	       }
 	     TtaSetAttributeValue (attrX, x1 - r, element, document);
 	     TtaSetAttributeValue (attrY, y1 - r, element, document);
 	     TtaSetAttributeValue (attrW, 2 * r, element, document);
@@ -3021,7 +3052,7 @@ Element             el;
 		 }
 
 #ifndef STANDALONE
-	       if (!WithinTable)
+	       if (WithinTable == 0)
 		 NewCell (el, theDocument);
 #endif /* STANDALONE */
 	       break;
@@ -3030,7 +3061,7 @@ Element             el;
 #ifndef STANDALONE
 	       CheckTable (el, theDocument);
 #endif
-	       WithinTable = FALSE;
+	       WithinTable--;
 	       break;
 
 #ifndef STANDALONE
@@ -4733,7 +4764,7 @@ char                c;
 	   AfterTagPRE = TRUE;
 	else if (!strcmp (HTMLGIMappingTable[lastElemEntry].htmlGI, "TABLE"))
 	   /* <TABLE> has been read */
-	   WithinTable = TRUE;
+	   WithinTable++;
 	else if (HTMLGIMappingTable[lastElemEntry].htmlContents == 'E' ||
 	    c == '/')
 	   /* this is an empty element. Do not expect an end tag */
@@ -8312,7 +8343,7 @@ boolean	            PlainText;
 #ifdef HANDLE_COMPRESSED_FILES
         cbuf = ReadCompressedFile(htmlFileName);
 #endif
-
+	WithinTable = 0;
 	if (documentName[0] == EOS && !TtaCheckDirectory (documentDirectory))
 	  {
 	     strcpy (documentName, documentDirectory);

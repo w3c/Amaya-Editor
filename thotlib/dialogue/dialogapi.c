@@ -162,11 +162,7 @@ static ThotWidget       MainShell;
 #include "memory_f.h"
 #include "thotmsg_f.h"
 
-#ifndef _WINDOWS
-void DebugBreak (void)
-{
-}
-#else
+#ifdef _WINDOWS
 
 typedef struct struct_winerror {
         WORD  errNo;

@@ -446,6 +446,7 @@ boolean         force;
   int                 width, i, cRef, minsize;
   int                 min, max, sum, remainder;
   int                 percent, sumPercent, n;
+  int                 realMin, realMax;
   boolean             constraint, still;
   boolean             useMax, checkEnclosing;
 
@@ -453,6 +454,9 @@ boolean         force;
   /* Now check the table size */
   if (cNumber == 0)
     return;
+  else if (table->AbBox->BxCycles != 0)
+    return;
+
   pCell = GetParentCell (table->AbBox);
   checkEnclosing = FALSE;
   constraint = GiveAttrWidth (table, &width, &percent);
@@ -481,6 +485,8 @@ boolean         force;
   i = 0;
   j = 0;
   var = 0;
+  realMin = 0;
+  realMax = 0;
 #ifdef TAB_DEBUG
 printf("<<<<<<<<<<<<<<<%d\n", table->AbBox->BxWidth);
 #endif
@@ -490,7 +496,9 @@ printf("<<<<<<<<<<<<<<<%d\n", table->AbBox->BxWidth);
       pBox = colBox[cRef]->AbBox;
       if (pBox->BxWidth > 0)
 	delta += pBox->BxWidth;
-      /* how many columns can be modified */
+      /* how many columns can be modified and what is current values */
+      realMin += pBox->BxMinWidth;
+      realMax += pBox->BxMaxWidth;
       if (colPercent[cRef] != 0)
 	sumPercent += colPercent[cRef];
       else if (colWidth[cRef] != 0)
@@ -526,15 +534,18 @@ printf ("cref=%d: Min =%d, Max=%d, colWidth=%d, colPercent=%d\n", cRef, pBox->Bx
       table->AbBox->BxRows->TaRTable[0]->AbFirstEnclosed != NULL &&
       table->AbBox->BxRows->TaRTable[0]->AbFirstEnclosed->AbPresentationBox)
     remainder = table->AbBox->BxRows->TaRTable[0]->AbFirstEnclosed->AbWidth.DimValue;
-    /*remainder = table->AbBox->BxRows->TaRTable[0]->AbBox->BxWidth - delta;*/
   else
     remainder = 0;
   if (min + sum > 0)
-    /* there is almost one column width not given by a % value */
-    sum += remainder;
+    {
+      /* there is almost one column width not given by a % value */
+      sum += remainder;
+      realMin += remainder;
+      realMax += remainder;
+    }
 
   /* check if percent values are ok */
-  if (width > 0)
+  if (width > 0 && percent == 0)
     delta = (min + sum) * 100 / width;
   else
     delta = 0;
@@ -566,7 +577,7 @@ printf ("cref=%d: Min =%d, Max=%d, colWidth=%d, colPercent=%d\n", cRef, pBox->Bx
       if (percent != 0)
 	{
 	  /* limit given by precent of available space */
-	  if (table->AbEnclosing->AbBox->BxWidth > 0)
+	  if (table->AbEnclosing->AbBox->BxWidth > 0 && pCell == NULL)
 	    {
 	      percent = min * 100 / table->AbEnclosing->AbBox->BxWidth;
 	      SetAttrWidthPercent (table, percent);
@@ -589,12 +600,13 @@ printf ("cref=%d: Min =%d, Max=%d, colWidth=%d, colPercent=%d\n", cRef, pBox->Bx
     }
   else
     {
-      table->AbBox->BxMinWidth = min;
-      table->AbBox->BxMaxWidth = max;
+      table->AbBox->BxMinWidth = realMin;
+      table->AbBox->BxMaxWidth = realMax;
     }
 
   /* remind that the table height has to be recomputed */
   pBox = table->AbBox;
+  pBox->BxCycles = 1;
   RecordEnclosing (pBox, FALSE);
   if (force && min <= width)
     /* it's not possible to change the table width */
@@ -603,9 +615,7 @@ printf ("cref=%d: Min =%d, Max=%d, colWidth=%d, colPercent=%d\n", cRef, pBox->Bx
   if (max <= width && !constraint)
     {
       /* assign the maximum width to each column */
-      pBox->BxCycles = 1;
       ResizeWidth (pBox, pBox, NULL, max - pBox->BxWidth, 0, frame);
-      pBox->BxCycles = 0;
       for (cRef = 0; cRef < cNumber; cRef++)
 	{
 	  pBox = colBox[cRef]->AbBox;
@@ -624,9 +634,7 @@ printf ("Width[%d]=%d\n", cRef, pBox->BxWidth);
   else if (min >= width || (!constraint && i == 0))
     {
       /* assign the minimum width to each column */
-      pBox->BxCycles = 1;
       ResizeWidth (pBox, pBox, NULL, min - pBox->BxWidth, 0, frame);
-      pBox->BxCycles = 0;
       for (cRef = 0; cRef < cNumber; cRef++)
 	{
 	  pBox = colBox[cRef]->AbBox;
@@ -647,9 +655,7 @@ printf ("Width[%d]=%d\n", cRef, pBox->BxWidth);
   else
     {
       /* assign a specific width to each column */
-      pBox->BxCycles = 1;
       ResizeWidth (pBox, pBox, NULL, width - pBox->BxWidth, 0, frame);
-      pBox->BxCycles = 0;
       useMax = FALSE;
       if (max < width)
 	{
@@ -714,9 +720,6 @@ printf ("Width[%d]=%d\n", cRef, pBox->BxWidth);
 	  n = 0;
 	}
 
-      if (force)
-	/* avoid to resize the current table */
-	table->AbBox->BxCycles = 1;
       /* assign column widths */
       for (cRef = 0; cRef < cNumber; cRef++)
 	{
@@ -748,10 +751,9 @@ printf ("Width[%d]=%d\n", cRef, pBox->BxWidth);
 printf ("Width[%d]=%d\n", cRef, pBox->BxWidth);
 #endif
 	}
-      if (force)
-	table->AbBox->BxCycles = 0;
     }
 
+  table->AbBox->BxCycles = 0;
 #ifdef TAB_DEBUG
 printf(">>>>>>>>>>>>>>>>>%d\n", table->AbBox->BxWidth);
 #endif
@@ -845,14 +847,14 @@ int             frame;
   int                *colSpan_First, *colSpan_Last;
   int                *colVSpan;
   int                *colSpan_MinWidth, *colSpan_MaxWidth;
-  /*int                *colSpan_Width, *colSpan_Percent;*/
+  int                *colSpan_Width, *colSpan_Percent;
   int                *colMinWidth, *colMaxWidth;
   int                *colWidth, *colPercent;
   int                 cNumber, spanNumber;
-  int                 span, delta;
+  int                 span, delta, j;
   int                 width, i, cRef;
   int                 min, max, percent;
-  int                 attrVSpan, attrHSpan;
+  int                 attrVSpan, attrHSpan, cellWidth;
   int                 tabWidth, tabPercent, minsize;
   boolean             skip;
   boolean             foundH, foundV;
@@ -892,12 +894,12 @@ int             frame;
 	     pTabRel->TaRTable[i]->AbBox != NULL;  i++)
 	{
 	  colBox[cRef] = pTabRel->TaRTable[i];
-	  if (colBox[cRef] == col)
+	  if (colBox[cRef] == col || col == NULL)
 	    {
 	      /* to recompute */
 	      colMinWidth[cRef] = 0;
 	      colMaxWidth[cRef] = 0;
-	      GiveAttrWidth (col, &width, &percent);
+	      GiveAttrWidth (colBox[cRef], &width, &percent);
 	      colWidth[cRef] = width;
 	      colPercent[cRef] = percent;
 	    }
@@ -916,8 +918,8 @@ int             frame;
 
   colSpan_MinWidth = TtaGetMemory (sizeof (int) * MAX_COLS);
   colSpan_MaxWidth = TtaGetMemory (sizeof (int) * MAX_COLS);
-  /*colSpan_Width = TtaGetMemory (sizeof (int) * MAX_COLS);
-  colSpan_Percent = TtaGetMemory (sizeof (int) * MAX_COLS);*/
+  colSpan_Width = TtaGetMemory (sizeof (int) * MAX_COLS);
+  colSpan_Percent = TtaGetMemory (sizeof (int) * MAX_COLS);
   colSpan_First = TtaGetMemory (sizeof (int) * MAX_COLS);
   colSpan_Last = TtaGetMemory (sizeof (int) * MAX_COLS);
   attrVSpan = GetAttrWithException (ExcRowSpan, pSS);
@@ -1002,7 +1004,7 @@ int             frame;
 			}
 		      else
 			{
-			  if (GiveAttrWidth (cell, &width, &percent))
+			  if (GiveAttrWidth (cell, &cellWidth, &percent))
 			    {
 			      /* there is a column width attribute */
 			      if (cell->AbPrevious != NULL &&
@@ -1011,11 +1013,11 @@ int             frame;
 				delta = cell->AbPrevious->AbWidth.DimValue;
 			      else
 				delta = 0;
-			      if (width > 0)
+			      if (cellWidth > 0)
 				{
-				  width += delta;
-				  if (width > colWidth[cRef] && span == 1)
-				    colWidth[cRef] = width;
+				  cellWidth += delta;
+				  if (cellWidth > colWidth[cRef] && span == 1)
+				    colWidth[cRef] = cellWidth;
 				}
 			      else
 				{
@@ -1064,7 +1066,9 @@ int             frame;
 					max = pAb->AbBox->BxMaxWidth + delta;
 				      skip = TRUE;
 				    }
-				  else if (!IsParentBox (pAb->AbWidth.DimAbRef, pAb->AbBox))
+				  else if (!pAb->AbWidth.DimIsPosition &&
+					   pAb->AbWidth.DimAbRef != NULL &&
+					   !IsParentBox (pAb->AbWidth.DimAbRef->AbBox, pAb->AbBox))
 				    {
 				      /* the box width doesn't depend on cell width */
 				      if (min < pAb->AbBox->BxWidth + delta)
@@ -1081,8 +1085,8 @@ int             frame;
 			    {
 			      colSpan_MinWidth[spanNumber] = min;
 			      colSpan_MaxWidth[spanNumber] = max;
-			      /*colSpan_Width[spanNumber] = width;
-			      colSpan_Percent[spanNumber] = percent;*/
+			      colSpan_Width[spanNumber] = cellWidth;
+			      colSpan_Percent[spanNumber] = percent;
 			      colSpan_First[spanNumber] = cRef;
 			      colSpan_Last[spanNumber] = cRef + span - 1;
 			      spanNumber ++;
@@ -1141,6 +1145,7 @@ int             frame;
       percent = 0;
       span = 0;
       width = 0;
+      j = 0;
       for (cRef = colSpan_First[i]; cRef <= colSpan_Last[i]; cRef++)
 	{
 	  if (colPercent[cRef] != 0)
@@ -1148,16 +1153,50 @@ int             frame;
 	  else if (colWidth[cRef] != 0)
 	    width += colWidth[cRef];
 	  else if (colMaxWidth[cRef] < minsize)
-	    width += colMaxWidth[cRef];
+	    {
+	      width += colMaxWidth[cRef];
+	      j++;
+	    }
 	  else
 	    {
 	      min += colMinWidth[cRef];
 	      max += colMaxWidth[cRef];
 	      span++;
+	      j++;
 	    }
 	}
-      
-      /* compare spanned widths with column widths */
+
+      /* compare percent values */
+      if (colSpan_Percent[i] > percent)
+	{
+	  delta = colSpan_Percent[i] - percent;
+	  if (j > 0)
+	    {
+	      delta = delta / j;
+	      for (cRef = colSpan_First[i]; cRef <= colSpan_Last[i]; cRef++)
+		if (colPercent[cRef] == 0 && colWidth[cRef] == 0)
+		  colPercent[cRef] = delta;
+	    }
+	  percent = colSpan_Percent[i];
+	}
+      /* compare width values */
+      if (colSpan_Width[i] > width + min)
+	{
+	  delta = colSpan_Width[i] - width - min;
+	  if (j > 0)
+	    {
+	      delta = delta / j;
+	      for (cRef = colSpan_First[i]; cRef <= colSpan_Last[i]; cRef++)
+		if (colPercent[cRef] == 0 && colWidth[cRef] == 0)
+		  if (delta > colMinWidth[cRef])
+		    colWidth[cRef] = delta;
+	          else
+		    colWidth[cRef] = colMinWidth[cRef];
+	    }
+	  width = colSpan_Width[i] - min;
+	}
+
+      /* compare min and max values */
       percent = percent * tabWidth / 100;
       min = min + width + percent;
       max = max + width + percent;
@@ -1166,7 +1205,12 @@ int             frame;
 	  /* change width of included columns */
 	  width = colSpan_MinWidth[i] - min;
 	  if (span > 0)
-	    width = (width + span - 1) / span;
+	    width = (delta + span - 1) / span;
+	  else
+	    {
+	      delta = colSpan_Last[i] - colSpan_First[i] + 1;
+	      width = (width + delta - 1) / delta;
+	    }
 	  for (cRef = colSpan_First[i]; cRef <= colSpan_Last[i]; cRef++)
 	    if (colPercent[cRef] == 0 && colWidth[cRef] == 0 && colMaxWidth[cRef] > minsize)
 	      colMinWidth[cRef] += width;
@@ -1212,8 +1256,8 @@ int             frame;
   TtaFreeMemory (colVSpan);
   TtaFreeMemory (colSpan_MinWidth);
   TtaFreeMemory (colSpan_MaxWidth);
-  /*TtaFreeMemory (colSpan_Width);
-  TtaFreeMemory (colSpan_Percent);*/
+  TtaFreeMemory (colSpan_Width);
+  TtaFreeMemory (colSpan_Percent);
   TtaFreeMemory (colSpan_First);
   TtaFreeMemory (colSpan_Last);
    /* Now check the table size */

@@ -1845,6 +1845,7 @@ int                *height;
     {
       /* reset the value of the width without wrapping */
       pBox->BxMaxWidth = 0;
+      pBox->BxMinWidth = 0;
       /* recherche la premiere boite mise en ligne */
       pChildAb = pAb->AbFirstEnclosed;
       still = (pChildAb != NULL);

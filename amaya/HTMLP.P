@@ -6613,8 +6613,8 @@ ATTRIBUTES
         Width: Referred . Width - TableDoubleHSpace;
 	HorizPos: Left = Referred . Left + TableSimpleHSpace;
 	IN Structure_view BEGIN
-		Width: Enclosing . Width - 2;
-		HorizPos: Left = Enclosing . Left + 2;
+		Width: Enclosing . Width - STRUCT_INDENT;
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		END;
 	END;
 
