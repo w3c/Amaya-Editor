@@ -98,6 +98,7 @@ int                 fg;
 #  ifdef _WINDOWS
    TtLineGC.capabilities |= THOT_GC_FOREGROUND;
    TtLineGC.foreground = Pix_Color[fg];
+   TtLineGC.pen = CreatePen (PS_SOLID, 1, RGB (RGB_colors[fg].red, RGB_colors[fg].green, RGB_colors[fg].blue));
 #  else  /* _WINDOWS */
    if (active && ShowReference ())
      {
@@ -1431,6 +1432,7 @@ int                 pattern;
 	XDrawRectangle (TtDisplay, FrRef[frame], TtLineGC, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, width, height);
 #       else  /* _WINDOWS */
         Rectangle (TtDisplay, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, x + FrameTable[frame].FrLeftMargin + width, y + FrameTable[frame].FrTopMargin + height);
+	WIN_ReleaseDeviceContext ();
 #       endif /* _WINDOWS */
 	FinishDrawing (0, RO, active);
      }
@@ -2422,7 +2424,6 @@ int                 fg;
 #endif /* __STDC__ */
 
 {
-#  ifndef _WINDOWS
    ThotPoint           point[3];
    int                 xf, yf;
 
@@ -2470,9 +2471,15 @@ int                 fg;
 	       point[2].y = y;
 	       break;
 	 }
+#  ifndef _WINDOWS
    XDrawLines (TtDisplay, FrRef[frame], TtLineGC,
 	       point, 3, CoordModeOrigin);
    FinishDrawing (0, RO, active);
+#  else /* _WINDOWS */
+   WIN_GetDeviceContext (frame);
+   WinLoadGC (TtDisplay, &TtLineGC);
+   Polyline (TtDisplay, point, 3);
+   WIN_ReleaseDeviceContext ();
 #  endif /* _WINDOWS */
 }
 
@@ -2878,6 +2885,7 @@ int yf;
       WIN_GetDeviceContext (frame);
       BitBlt (TtDisplay, xf + FrameTable[frame].FrLeftMargin, yf + FrameTable[frame].FrTopMargin, width, height,
 	      TtDisplay, xd + FrameTable[frame].FrLeftMargin, yd + FrameTable[frame].FrTopMargin, SRCCOPY);
+      WIN_ReleaseDeviceContext ();
 #     endif /* _WINDOWS */
    }
 }

@@ -720,7 +720,7 @@ int                 frame;
 
    if (hFont == NULL) {
       fprintf (stderr, "Not found ...\n");
-      WinErrorBox (WIN_Main_Wd);
+      WinErrorBox (FrRef[frame]);
    } else
          fprintf (stderr, "Loaded\n");
 

@@ -135,12 +135,11 @@ void WinInitColors ()
 
    if (!TtIsTrueColor) { /* NOT a true color device */
       /* Create a color palette for the Thot set of colors. */
-      /*
       ptrLogPal = HeapAlloc (GetProcessHeap (), HEAP_ZERO_MEMORY, 
                              sizeof (LOGPALETTE) + (MAX_COLOR * sizeof (PALETTEENTRY)));
-      */
-
+      /*
        ptrLogPal = (LPLOGPALETTE) malloc (sizeof (LOGPALETTE) + (MAX_COLOR * sizeof (PALETTEENTRY)));
+       */
 
       ptrLogPal->palVersion    = 0x300;
       ptrLogPal->palNumEntries = MAX_COLOR;
@@ -162,7 +161,7 @@ void WinInitColors ()
       }
    }
    /* HeapFree (GetProcessHeap (), 0, ptrLogPal); */
-   free (ptrLogPal);
+   /* free (ptrLogPal); */
 
    /* fill-in the Pix_Color table */
    for (i = 0; i < MAX_COLOR; i++) 
@@ -555,8 +554,8 @@ static void InitGraphicContexts ()
    XSetTile (TtDisplay, TtLineGC, pix);
 #  endif /* _WINDOWS */
 #  ifdef _WINDOWS
-   TtLineGC.capabilities = THOT_GC_FOREGROUND |
-   /* THOT_GC_BACKGROUND | THOT_GC_BRUSH | */ THOT_GC_PEN;
+   TtLineGC.capabilities = THOT_GC_FOREGROUND | THOT_GC_PEN;
+   /* THOT_GC_BACKGROUND | THOT_GC_BRUSH | */ 
    TtLineGC.pen = GetStockObject (BLACK_PEN);
    /* TtLineGC.background = White_Color; */
    TtLineGC.foreground = Black_Color;

@@ -136,11 +136,7 @@ int b;
     iMin = 0;
     dMin = INT_MAX;
 
-    r = r>>8;
-    g = g>>8;
-    b = b>>8;
-
-    for (i = 0; i < nbSysColors; i++) {
+    for (i = 0; i < 256; i++) {
 	ri = palEntries[i].peRed;
 	dr = r - ri;
 	d  = dr * dr;
@@ -1309,12 +1305,15 @@ ThotColorStruct     colrs[256];
 #  else /* _WINDOWS */
 
    /* static int     cbPlanes, cbBits; */
-   int            i, j, ret = 0, imageIndex, mapIndex;
-   int            Mapping [MAX_COLOR];
-   int            cbBits, cbPlanes;
-   char*          bmBits;
-   HDC            origMemDC, destMemDC, memDC;  
-   HBITMAP        bmpLine, bmp = 0;
+   int             i, j, ret = 0, colorIndex, mapIndex;
+   int             Mapping [MAX_COLOR];
+   int             cbBits, cbPlanes;
+   int             nbPalEntries ;
+   char*           bmBits;
+   HDC             origMemDC, destMemDC, memDC;  
+   HBITMAP         bmpLine, bmp = 0;
+   boolean         need_to_dither;
+   static HPALETTE origMemPal, destMemPal;
    
    /*
    memDC    = CreateCompatibleDC (NULL);
@@ -1323,6 +1322,11 @@ ThotColorStruct     colrs[256];
    DeleteDC (memDC);
    */
    
+   if (THOT_vInfo.depth == 1)
+      need_to_dither = TRUE;
+   else
+      need_to_dither = FALSE;
+
    if (TtIsTrueColor) 
       return WIN_MakeImage (TtDisplay, image_data, width, height, TtWDepth, colrs);
    else {
@@ -1347,21 +1351,38 @@ ThotColorStruct     colrs[256];
     
 	 origMemDC = CreateCompatibleDC (NULL);
 	 destMemDC = CreateCompatibleDC (NULL);
+	 /*
 
+         origMemPal = CreatePalette (ptrLogPal);
+         if (!origMemPal)
+	    WinErrorBox (NULL);
+
+	 destMemPal = CreatePalette (ptrLogPal);
+         if (!destMemPal)
+	    WinErrorBox (NULL);
+
+	 SelectPalette (origMemDC, origMemPal, FALSE);
+	 nbPalEntries = RealizePalette (origMemDC) ;
+	 printf ("Number of entries allocated to the origin memory palette : %d\n", nbPalEntries);
+         
+	 SelectPalette (destMemDC, destMemPal, FALSE);
+	 nbPalEntries = RealizePalette (destMemDC) ;
+	 printf ("Number of entries allocated to the destination memory palette : %d\n", nbPalEntries);
+         */
 	 SelectObject (destMemDC, bmp);
 	 SelectObject (origMemDC, bmpLine);
 	 
 	 for (j = 0; j < height; j++) {
 	     for (i = 0; i < width; i++) {
-		 imageIndex = image_data [i + j * width];
-		 if (Mapping [imageIndex] != -1)
-		    mapIndex = Mapping [imageIndex];
+		 colorIndex = image_data [i + j * width];
+		 if (Mapping [colorIndex] != -1)
+		    mapIndex = Mapping [colorIndex];
 		 else {
-		      mapIndex = TtaGetThotColor (colrs [imageIndex].red, colrs [imageIndex].green, colrs [imageIndex].blue);
 		     /*
-		      mapIndex = WIN_GetColorIndex (colrs [imageIndex].red, colrs [imageIndex].green, colrs [imageIndex].blue);
+		      mapIndex = TtaGetThotColor (colrs [colorIndex].red, colrs [colorIndex].green, colrs [colorIndex].blue);
 		      */
-		      Mapping [imageIndex] = mapIndex;  
+		      mapIndex = WIN_GetColorIndex (colrs [colorIndex].red, colrs [colorIndex].green, colrs [colorIndex].blue);
+		      Mapping [colorIndex] = mapIndex;  
 		 }    
 		 bmBits[i] = mapIndex;
 	     }    
@@ -1372,6 +1393,8 @@ ThotColorStruct     colrs[256];
 	 /* Cleanup */
 	 /*.........*/
 	 DeleteObject (bmpLine);
+	 DeleteObject (origMemPal);
+	 DeleteObject (destMemPal);
 	 DeleteDC(origMemDC); 
 	 DeleteDC(destMemDC);
 	 free (bmBits);
