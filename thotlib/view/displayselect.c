@@ -1,6 +1,9 @@
 /*
+ * Copyright (c) 1996 INRIA, All rights reserved
+ */
+
+/*
    visualisation of Selections.
-   I. Vatton
  */
 
 #include "thot_sys.h"
@@ -19,10 +22,10 @@
 #include "exceptions_f.h"
 
 
-/* ---------------------------------------------------------------------- */
-/* |    DisplayBoxSelection trace le contour de la boite pBox dans les   | */
-/* |            limites de la fenetre.                                   | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   DisplayBoxSelection trace le contour de la boite pBox dans les   
+   limites de la fenetre.                                   
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         DisplayBoxSelection (int frame, PtrBox pBox, int pointselect)
 #else  /* __STDC__ */
@@ -250,11 +253,11 @@ int                 pointselect;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |  SetNewSelectionStatus parcourt l'arborescence pour basculer la    | */
-/* |            mise en evidence de la selection et forcer le nouvel    | */
-/* |            etat de selection.                                      | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   SetNewSelectionStatus parcourt l'arborescence pour basculer la    
+   mise en evidence de la selection et forcer le nouvel    
+   etat de selection.                                      
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                SetNewSelectionStatus (int frame, PtrAbstractBox pAb, boolean status)
 #else  /* __STDC__ */
@@ -295,10 +298,10 @@ boolean             status;
      }
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    DisplayStringSelection trace le contour de la boite de texte    | */
-/* |         pBox dans les limitesde la fenetre entre leftX et rightX.  | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   DisplayStringSelection trace le contour de la boite de texte    
+   pBox dans les limitesde la fenetre entre leftX et rightX.  
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         DisplayStringSelection (int frame, int leftX, int rightX, PtrBox pBox)
 #else  /* __STDC__ */
@@ -364,10 +367,10 @@ PtrBox            pBox;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |  DisplayCurrentSelection visualise ou efface la selection courante | */
-/* |             dans le frame.                                         | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   DisplayCurrentSelection visualise ou efface la selection courante 
+   dans le frame.                                         
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                DisplayCurrentSelection (int frame, boolean status)
 #else  /* __STDC__ */

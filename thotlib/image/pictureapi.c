@@ -1,11 +1,15 @@
-/*=======================================================================*/
-/*|                                                                     | */
-/*|     Thot Toolkit: Application Program Interface                     | */
-/*|     --->logo and image managment                                    | */
-/*|                                                                     | */
-/*|                     I. Vatton       October 92                      | */
-/*|                                                                     | */
-/*=======================================================================*/
+/*
+ * Copyright (c) 1996 INRIA, All rights reserved
+ */
+
+/*----------------------------------------------------------------------
+   
+   Thot Toolkit: Application Program Interface                     
+   --->logo and image managment                                    
+   
+   I. Vatton       October 92                      
+   
+  ----------------------------------------------------------------------*/
 #include "thot_sys.h"
 #include "constmedia.h"
 #include "typemedia.h"
@@ -24,7 +28,7 @@ static char         NoneTxt[] = "None";
 
 #include "memory_f.h"
 
-/* ----------------------------------------------------------------------
+/*----------------------------------------------------------------------
    TtaCreateBitmapLogo
 
    Creates a logo pixmap from a bitmap description: width, height and bit array.
@@ -37,7 +41,7 @@ static char         NoneTxt[] = "None";
    Return value:
    The created pixmap for the logo.
 
-   ---------------------------------------------------------------------- */
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 Pixmap              TtaCreateBitmapLogo (int width, int height, char *bits)
 #else  /* __STDC__ */
@@ -57,9 +61,9 @@ char               *bits;
 #endif /* NEW_WILLOWS */
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    TtaCreatePixmapLogo create a pixmap from an XPM file.           | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   TtaCreatePixmapLogo create a pixmap from an XPM file.           
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 Pixmap              TtaCreatePixmapLogo (char **d)
 #else  /* __STDC__ */

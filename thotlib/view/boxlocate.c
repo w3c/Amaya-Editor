@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 1996 INRIA, All rights reserved
+ */
+
 /* 
    locate what is designated in Concret Image.
    I. Vatton
@@ -40,15 +44,15 @@
 #define ANCHOR_SIZE 3		/* taille des ancres */
 
 
-/* ---------------------------------------------------------------------- */
-/* |  LocateSelectionInView repe`re le pave' et e'ventuellement le      | */
-/* |    caracte`re se'lectionne'. La valeur de button, indique s'il     | */
-/* |    s'agit d'une marque initiale ou d'une extension de se'lection : | */
-/* |    - 0 s'il s'agit d'une extension de se'lection.                  | */
-/* |    - 1 s'il s'agit d'un drag.                                      | */
-/* |    - 2 s'il s'agit d'une marque initiale.                          | */
-/* |    - 3 s'il s'agit d'un double clic.                               | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   LocateSelectionInView repe`re le pave' et e'ventuellement le      
+   caracte`re se'lectionne'. La valeur de button, indique s'il     
+   s'agit d'une marque initiale ou d'une extension de se'lection : 
+   - 0 s'il s'agit d'une extension de se'lection.                  
+   - 1 s'il s'agit d'un drag.                                      
+   - 2 s'il s'agit d'une marque initiale.                          
+   - 3 s'il s'agit d'un double clic.                               
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                LocateSelectionInView (int frame, int x, int y, int button)
 #else  /* __STDC__ */
@@ -115,10 +119,10 @@ int                 button;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    GetDistance rend 0 si value dans l'intervalle de delta		| */
-/* |         sinon la  distance absloue - delta.       	       		| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   GetDistance rend 0 si value dans l'intervalle de delta		
+   sinon la  distance absloue - delta.       	       		
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static int          GetDistance (int value, int delta)
 #else  /* __STDC__ */
@@ -137,10 +141,10 @@ int                 delta;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* | GetBoxDistance calcule la distance d'un point xRef, yRef a` une    | */
-/* |            boite. On penalise favorise la distance verticale.      | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   GetBoxDistance calcule la distance d'un point xRef, yRef a` une    
+   boite. On penalise favorise la distance verticale.      
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 int                 GetBoxDistance (int xRef, int yRef, int x, int y, int width, int height)
 #else  /* __STDC__ */
@@ -165,14 +169,14 @@ int                 height;
    return (value);
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    IsOnPolyline teste qu'un point x,y est sur un segment P1(x1,y1)  | */
-/* |            P2(x2,y2) avec une certaine precision DELTA_SEL.         | */
-/* |            On teste l'appartenance du point a` un rectangle cree    | */
-/* |            par e'largissement de DELTA_SEL autour des deux points.  | */
-/* |            Le test est fait apres une rotation permettant de se     | */
-/* |            ramener a` un rectangle horizontal.                      | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   IsOnPolyline teste qu'un point x,y est sur un segment P1(x1,y1)  
+   P2(x2,y2) avec une certaine precision DELTA_SEL.         
+   On teste l'appartenance du point a` un rectangle cree    
+   par e'largissement de DELTA_SEL autour des deux points.  
+   Le test est fait apres une rotation permettant de se     
+   ramener a` un rectangle horizontal.                      
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static boolean      IsOnPolyline (int x, int y, int x1, int y1, int x2, int y2)
 #else  /* __STDC__ */
@@ -209,10 +213,10 @@ int                 y2;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    InPolyline indique si le point x,y se trouve a`                 | */
-/* |     l'inte'rieur de la polyline ou non.                            | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   InPolyline indique si le point x,y se trouve a`                 
+   l'inte'rieur de la polyline ou non.                            
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static boolean      InPolyline (PtrAbstractBox pAb, int x, int y)
 #else  /* __STDC__ */
@@ -332,13 +336,13 @@ int                 y;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    SurLaPolyLine teste qu'un point x,y est sur un segment de la    | */
-/* |            boi^te polyline.                                        | */
-/* |    Si oui, retourne l'adresse de la boi^te correspondante et le    | */
-/* |    point de contro^le se'lectionne' (0 pour toute la boi^te).      | */
-/* |    sinon, la valeur NULL.                                          | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   SurLaPolyLine teste qu'un point x,y est sur un segment de la    
+   boi^te polyline.                                        
+   Si oui, retourne l'adresse de la boi^te correspondante et le    
+   point de contro^le se'lectionne' (0 pour toute la boi^te).      
+   sinon, la valeur NULL.                                          
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static PtrBox     SurLaPolyLine (PtrAbstractBox pAb, int x, int y, int *pointselect)
 #else  /* __STDC__ */
@@ -420,10 +424,10 @@ int                *pointselect;
    return (NULL);
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    DansLeGraphique indique si le point x,y se trouve a`            | */
-/* |     l'inte'rieur du graphique ou non.                              | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   DansLeGraphique indique si le point x,y se trouve a`            
+   l'inte'rieur du graphique ou non.                              
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static boolean      DansLeGraphique (PtrAbstractBox pAb, int x, int y)
 #else  /* __STDC__ */
@@ -603,12 +607,12 @@ int                 y;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    IsOnShape teste si le point x,y appartient au pave'        | */
-/* |    graphique pAb.                                                  | */
-/* |    Si oui, retourne l'adresse de la boi^te correspondante          | */
-/* |    sinon, la valeur NULL.                                          | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   IsOnShape teste si le point x,y appartient au pave'        
+   graphique pAb.                                                  
+   Si oui, retourne l'adresse de la boi^te correspondante          
+   sinon, la valeur NULL.                                          
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static PtrBox     IsOnShape (PtrAbstractBox pAb, int x, int y)
 #else  /* __STDC__ */
@@ -788,12 +792,12 @@ int                 y;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* | GetClickedAbsBox recherche le pave englobant le point designe' par | */
-/* |            xRef,yRef de la fenetre frame.                          | */
-/* |            La fonction rend le pointeur sur le plus elementaire    | */
-/* |            des paves qui englobe le point designe ou NULL.         | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   GetClickedAbsBox recherche le pave englobant le point designe' par 
+   xRef,yRef de la fenetre frame.                          
+   La fonction rend le pointeur sur le plus elementaire    
+   des paves qui englobe le point designe ou NULL.         
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 PtrAbstractBox             GetClickedAbsBox (int frame, int xRef, int yRef)
 #else  /* __STDC__ */
@@ -821,12 +825,12 @@ int                 yRef;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |  GetEnclosingClickedBox teste si le point x, y appartient au pave' | */
-/* |    pAb.                                                            | */
-/* |    Si oui, retourne l'adresse du pave' correspondant               | */
-/* |    sinon, la valeur NULL.                                          | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   GetEnclosingClickedBox teste si le point x, y appartient au pave' 
+   pAb.                                                            
+   Si oui, retourne l'adresse du pave' correspondant               
+   sinon, la valeur NULL.                                          
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 PtrBox            GetEnclosingClickedBox (PtrAbstractBox pAb, int higherX, int lowerX, int y, int *pointselect)
 #else  /* __STDC__ */
@@ -902,10 +906,10 @@ int                *pointselect;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    SearchNextAbsBox retourne le premier pave fils ou le suivant ou le  | */
-/* |            suivant du pere.                                        | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   SearchNextAbsBox retourne le premier pave fils ou le suivant ou le  
+   suivant du pere.                                        
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 PtrAbstractBox             SearchNextAbsBox (PtrAbstractBox pAb)
 #else  /* __STDC__ */
@@ -935,11 +939,11 @@ PtrAbstractBox             pAb;
       return (NULL);
 }
 
-/* ---------------------------------------------------------------------- */
-/* |  GetGetMinimumDistance calcule la distance d'une ancre x,y au point| */
-/* |            xRef,yRef. La fonction rend la distance minimale        | */
-/* |            entre la distance calcule'e et dist.                    | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   GetGetMinimumDistance calcule la distance d'une ancre x,y au point
+   xRef,yRef. La fonction rend la distance minimale        
+   entre la distance calcule'e et dist.                    
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static int          GetGetMinimumDistance (int xRef, int yRef, int x, int y, int dist)
 #else  /* __STDC__ */
@@ -961,13 +965,13 @@ int                 dist;
       return (dist);
 }
 
-/* ---------------------------------------------------------------------- */
-/* |   GetShapeDistance calcule la distance d'un point xRef,yRef a`     | */
-/* |            un point de la boite graphique (min des distances aux   | */
-/* |            ancres).                                                | */
-/* |            Cette selection est limitee aux boites terminale.       | */
-/* |            Rend la distance de la boite au point.                  | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   GetShapeDistance calcule la distance d'un point xRef,yRef a`     
+   un point de la boite graphique (min des distances aux   
+   ancres).                                                
+   Cette selection est limitee aux boites terminale.       
+   Rend la distance de la boite au point.                  
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 int                 GetShapeDistance (int xRef, int yRef, PtrBox pBox, int value)
 #else  /* __STDC__ */
@@ -1089,10 +1093,10 @@ int                 value;
 
 
 
-/* ---------------------------------------------------------------------- */
-/* |  GetClickedLeafBox recherche la boite terminale situee au point    | */
-/* |    xRef,yRef dans l'image concrete.                                | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   GetClickedLeafBox recherche la boite terminale situee au point    
+   xRef,yRef dans l'image concrete.                                
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 PtrBox            GetClickedLeafBox (int frame, int xRef, int yRef)
 #else  /* __STDC__ */
@@ -1177,10 +1181,10 @@ int                 yRef;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |  GiveMovingArea de'termine les limites de de'placement de la boite | */
-/* |            horizontalement/verticalement.                          | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   GiveMovingArea de'termine les limites de de'placement de la boite 
+   horizontalement/verticalement.                          
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         GiveMovingArea (PtrAbstractBox pAb, int frame, boolean horizRef, int *min, int *max)
 #else  /* __STDC__ */
@@ -1277,11 +1281,11 @@ int                *max;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    CanBeTranslated teste si un pave est modifiable en position     | */
-/* |            (X ou Y), et si oui, rend les positions extremes        | */
-/* |            de la boite.                                            | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   CanBeTranslated teste si un pave est modifiable en position     
+   (X ou Y), et si oui, rend les positions extremes        
+   de la boite.                                            
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static boolean      CanBeTranslated (PtrAbstractBox pAb, int frame, boolean horizRef, int *min, int *max)
 #else  /* __STDC__ */
@@ -1392,10 +1396,10 @@ int                *max;
    return ok;
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    APPgraphicModify envoie un message qui notifie qu'un trace' est | */
-/* |            modifie'.                                               | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   APPgraphicModify envoie un message qui notifie qu'un trace' est 
+   modifie'.                                               
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 boolean             APPgraphicModify (PtrElement pEl, int value, int frame, boolean pre)
 
@@ -1435,12 +1439,12 @@ boolean             pre;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    ApplyDirectTranslate recherche la boite selectionnee pour un changement | */
-/* |            de position. Si la plus petite boite englobant le point | */
-/* |            xm,ym de la fenetre frame ne peut pas etre deplacee, la | */
-/* |            procedure prend la boite englobante et ainsi de suite.  | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ApplyDirectTranslate recherche la boite selectionnee pour un changement 
+   de position. Si la plus petite boite englobant le point 
+   xm,ym de la fenetre frame ne peut pas etre deplacee, la 
+   procedure prend la boite englobante et ainsi de suite.  
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                ApplyDirectTranslate (int frame, int xm, int ym)
 #else  /* __STDC__ */
@@ -1615,9 +1619,9 @@ int                 ym;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    CanBeResized teste si un pave est modifiable en Dimension.       | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   CanBeResized teste si un pave est modifiable en Dimension.       
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static boolean      CanBeResized (PtrAbstractBox pAb, int frame, boolean horizRef, int *min, int *max)
 #else  /* __STDC__ */
@@ -1715,13 +1719,13 @@ int                *max;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |  ApplyDirectResize recherche la boite candidate pour un changement | */
-/* |          de dimension. Si la plus petite boite englobant le point  | */
-/* |          x,y de la fenetre frame ne peut pas etre redimensionnee,  | */
-/* |          la procedure prend la boite englobante et ainsi de        | */
-/* |          suite.                                                    | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ApplyDirectResize recherche la boite candidate pour un changement 
+   de dimension. Si la plus petite boite englobant le point  
+   x,y de la fenetre frame ne peut pas etre redimensionnee,  
+   la procedure prend la boite englobante et ainsi de        
+   suite.                                                    
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                ApplyDirectResize (int frame, int xm, int ym)
 #else  /* __STDC__ */
@@ -1870,10 +1874,10 @@ int                 ym;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    DirectCreation re'alise les differents modes de cre'ation       | */
-/* |            interactive des boi^tes.                                | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   DirectCreation re'alise les differents modes de cre'ation       
+   interactive des boi^tes.                                
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                DirectCreation (PtrBox pBox, int frame)
 #else  /* __STDC__ */
@@ -2007,14 +2011,14 @@ int                 frame;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |  LocateClickedChar cherche le caractere affiche dans la boite pBox | */
-/* |            avec un decalage x. Rend le pointeur sur le buffer qui  | */
-/* |            contient le caractere designe', l'index du caractere    | */
-/* |            dans le buffer, l'index du caractere dans la boite et   | */
-/* |            le nombre de blancs qui le precedent dans la boite.     | */
-/* |            Met a jour la valeur x.                                 | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   LocateClickedChar cherche le caractere affiche dans la boite pBox 
+   avec un decalage x. Rend le pointeur sur le buffer qui  
+   contient le caractere designe', l'index du caractere    
+   dans le buffer, l'index du caractere dans la boite et   
+   le nombre de blancs qui le precedent dans la boite.     
+   Met a jour la valeur x.                                 
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                LocateClickedChar (PtrBox pBox, PtrTextBuffer * pBuffer, int *x, int *index, int *charsNumber, int *spacesNumber)
 #else  /* __STDC__ */

@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 1996 INRIA, All rights reserved
+ */
+
 
 /*
    Module de manipulations des images abstraites.
@@ -42,11 +46,11 @@ extern void         DisplayFrame ();
 
 #endif /* __STDC__ */
 
-/* ---------------------------------------------------------------------- */
-/* |    AbsBoxType  rend un pointeur sur un buffer qui contient           | */
-/* |            le type de l'element de structure auquel correspond le  | */
-/* |            pave pointe' par pAb.                                  | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   AbsBoxType  rend un pointeur sur un buffer qui contient           
+   le type de l'element de structure auquel correspond le  
+   pave pointe' par pAb.                                  
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 char               *AbsBoxType (PtrAbstractBox pAb)
 
@@ -87,10 +91,10 @@ PtrAbstractBox             pAb;
 
 
 
-/* ---------------------------------------------------------------------- */
-/* |    LibAbbView libere, pour une seule vue, tous les paves            | */
-/* |            englobes par le pave pointe par pAb, lui-meme compris. | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   LibAbbView libere, pour une seule vue, tous les paves            
+   englobes par le pave pointe par pAb, lui-meme compris. 
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                LibAbbView (PtrAbstractBox pAb)
@@ -304,10 +308,10 @@ PtrAbstractBox             pAb;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    LibAbbEl libere, dans toutes les vues, tous les paves de      | */
-/* |            l'element pointe par pEl.                               | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   LibAbbEl libere, dans toutes les vues, tous les paves de      
+   l'element pointe par pEl.                               
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                LibAbbEl (PtrElement pEl)
@@ -404,10 +408,10 @@ PtrElement          pEl;
 #endif /* __COLPAGE__ */
 
 
-/* ---------------------------------------------------------------------- */
-/* |    FreeDeadAbstractBoxes libere tous les paves marques Mort dans le           | */
-/* |            sous-arbre de racine pAb.                              | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   FreeDeadAbstractBoxes libere tous les paves marques Mort dans le           
+   sous-arbre de racine pAb.                              
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                FreeDeadAbstractBoxes (PtrAbstractBox pAb)
@@ -440,10 +444,10 @@ PtrAbstractBox             pAb;
 
 #ifdef __COLPAGE__
  /* procedure de reevaluation des regles recursives */
- /* ---------------------------------------------------------- */
- /* |     RecursEvalCP appelle ApplyRefAbsBoxNew pour tous les paves | */
- /* |                du sous-arbre pAb                     | */
- /* ---------------------------------------------------------- */
+ /*----------------------------------------------------------------------
+    RecursEvalCP appelle ApplyRefAbsBoxNew pour tous les paves 
+    du sous-arbre pAb                     
+   ----------------------------------------------------------------------*/
 
 
 #ifdef __STDC__
@@ -475,12 +479,12 @@ PtrDocument         pDoc;
 #endif /* __COLPAGE__ */
 
 
-/* ---------------------------------------------------------------------- */
-/* |    AddAbsBoxes complete la vue dont pAbbRoot est le pave racine   | */
-/* |            en ajoutant des paves, en tete si head est vrai,        | */
-/* |            en queue sinon.                                         | */
- /*        pAbbRoot est une vraie racine de paves               | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   AddAbsBoxes complete la vue dont pAbbRoot est le pave racine   
+   en ajoutant des paves, en tete si head est vrai,        
+   en queue sinon.                                         
+    pAbbRoot est une vraie racine de paves               
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                AddAbsBoxes (PtrAbstractBox pAbbRoot, PtrDocument pDoc, boolean head)
@@ -671,13 +675,13 @@ boolean             head;
 #endif /* __COLPAGE__ */
 
 
-/* ---------------------------------------------------------------------- */
-/* |    IsBreakable retourne vrai si le pave pointe par pAb est         | */
-/* |            englobe (a n'importe quel niveau) par un pave           | */
-/* |            non mis en ligne ou explicitement secable. Les marques  | */
-/* |            de page son traitees comme non-secables.                | */
-/* |**CP*       V4 : Les paves de page sont traites comme secables.     | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   IsBreakable retourne vrai si le pave pointe par pAb est         
+   englobe (a n'importe quel niveau) par un pave           
+   non mis en ligne ou explicitement secable. Les marques  
+   de page son traitees comme non-secables.                
+   V4 : Les paves de page sont traites comme secables.     
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 boolean              IsBreakable (PtrAbstractBox pAb)
@@ -725,11 +729,11 @@ PtrAbstractBox             pAb;
 
 #ifdef __COLPAGE__
 
-/*------------------------------------------------------------------------------*/
- /*KillPresRight tue tous les paves de presentation a droite de pAb     */
- /*              on ne considere que les paves a l'interieur d'une page */
- /*             sauf les REPEATED                                      */
-/*------------------------------------------------------------------------------*/
+/*----------------------------------------------------------------------
+    KillPresRight tue tous les paves de presentation a droite de pAb     
+    on ne considere que les paves a l'interieur d'une page 
+    sauf les REPEATED                                      
+  ----------------------------------------------------------------------*/
 
 
 
@@ -838,10 +842,10 @@ PtrDocument         pDoc;
 
 #ifdef __COLPAGE__
 
- /* -------------------------------------------------------- */
- /* |  DestrAbbNext detruit les paves a partir         | */
- /* |               de pAb                               | */
- /* -------------------------------------------------------- */
+ /*----------------------------------------------------------------------
+    DestrAbbNext detruit les paves a partir         
+    de pAb                               
+   ----------------------------------------------------------------------*/
 
 
 #ifdef __STDC__
@@ -930,13 +934,12 @@ PtrDocument         pDoc;
 
 
 #ifdef __COLPAGE__
-/* ---------------------------------------------------------------------- */
-/* |    Procedure differente dans V4 : booleen exceptRep a la place de    | */
-/* |    exceptCrWith                                                    | */
-/* ---------------------------------------------------------------------- */
-/* |    KillPresSibling detruit les paves de presentation crees par les   | */
-/* |    regles CreateBefore et CreateAfter de pAb.                     | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   Procedure differente dans V4 : booleen exceptRep a la place de    
+   exceptCrWith                                                    
+   KillPresSibling detruit les paves de presentation crees par les   
+   regles CreateBefore et CreateAfter de pAb.                     
+  ----------------------------------------------------------------------*/
 
 
 #ifdef __STDC__
@@ -986,10 +989,10 @@ boolean             exceptRep;
 
 #else  /* __COLPAGE__ */
 
-/* ---------------------------------------------------------------------- */
-/* |    KillPresSibling detruit les paves de presentation crees par les   | */
-/* |    regles CreateBefore et CreateAfter de pAb.                     | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   KillPresSibling detruit les paves de presentation crees par les   
+   regles CreateBefore et CreateAfter de pAb.                     
+  ----------------------------------------------------------------------*/
 
 
 #ifdef __STDC__
@@ -1039,18 +1042,17 @@ boolean             exceptCrWith;
 #endif /* __COLPAGE__ */
 
 #ifdef __COLPAGE__
-/* ---------------------------------------------------------------------- */
-/* |    Procedure differente dans V4 : booleen exceptRep a la place de    | */
-/* |    exceptCrWith                                                    | */
-/* ---------------------------------------------------------------------- */
-/* |    KillPresEnclosing supprime tous les paves de presentation           | */
-/* |            crees par pAb et les paves de presentation crees par   | */
-/* |            les paves englobants a l'aide de regles CreateFirst et  | */
-/* |            CreateBefore (si head est vrai) ou CreateAfter et       | */
-/* |            CreateLast (si head est faux).                          | */
-/* |            Au retour volsupp indique le volume des paves de        | */
-/* |            presentation tues et pAbbReDisp le pave a reafficher.     | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   Procedure differente dans V4 : booleen exceptRep a la place de    
+   exceptCrWith                                                    
+   KillPresEnclosing supprime tous les paves de presentation           
+   crees par pAb et les paves de presentation crees par   
+   les paves englobants a l'aide de regles CreateFirst et  
+   CreateBefore (si head est vrai) ou CreateAfter et       
+   CreateLast (si head est faux).                          
+   Au retour volsupp indique le volume des paves de        
+   presentation tues et pAbbReDisp le pave a reafficher.     
+  ----------------------------------------------------------------------*/
 
 
 #ifdef __STDC__
@@ -1255,15 +1257,15 @@ boolean             exceptRep;
 
 #else  /* __COLPAGE__ */
 
-/* ---------------------------------------------------------------------- */
-/* |    KillPresEnclosing supprime tous les paves de presentation           | */
-/* |            crees par pAb et les paves de presentation crees par   | */
-/* |            les paves englobants a l'aide de regles Create et       | */
-/* |            CreateBefore (si head est vrai) ou CreateAfter et       | */
-/* |            CreateLast (si head est faux).                          | */
-/* |            Au retour volsupp indique le volume des paves de        | */
-/* |            presentation tues et pAbbReDisp le pave a reafficher.     | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   KillPresEnclosing supprime tous les paves de presentation           
+   crees par pAb et les paves de presentation crees par   
+   les paves englobants a l'aide de regles Create et       
+   CreateBefore (si head est vrai) ou CreateAfter et       
+   CreateLast (si head est faux).                          
+   Au retour volsupp indique le volume des paves de        
+   presentation tues et pAbbReDisp le pave a reafficher.     
+  ----------------------------------------------------------------------*/
 
 
 #ifdef __STDC__
@@ -1424,15 +1426,15 @@ boolean             exceptCrWith;
 
 
 
-/* ---------------------------------------------------------------------- */
-/* |    SupprAbsBoxes reduit de dvol le volume du pave pAbbRoot en        | */
-/* |            supprimant des paves, en tete si head est vrai, en      | */
-/* |            queue sinon.                                            | */
-/* |            Au retour dvol contient le volume qui reste a supprimer.| */
-/* |            suppression page par page si vue avec pages             | */
-/* |            cette procedure est toujours appelee avec la racine de  | */
-/* |            la vue si le document est mis en pages.                 | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   SupprAbsBoxes reduit de dvol le volume du pave pAbbRoot en        
+   supprimant des paves, en tete si head est vrai, en      
+   queue sinon.                                            
+   Au retour dvol contient le volume qui reste a supprimer.
+   suppression page par page si vue avec pages             
+   cette procedure est toujours appelee avec la racine de  
+   la vue si le document est mis en pages.                 
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static void         SupprAbsBoxes (PtrAbstractBox pAbbRoot, PtrDocument pDoc, boolean head, int *dvol)
@@ -1624,14 +1626,14 @@ int                *dvol;
 
 
 
-/* ---------------------------------------------------------------------- */
-/* |    AddVolView ajuste le volume de la vue dont le pave pAbbRoot      | */
-/* |            est le pave racine.                                     | */
-/* |            VolOpt est le volume optimum de cette vue.              | */
-/* |            ElMilieu est l'element qui devrait etre au milieu       | */
-/* |            de la vue.                                              | */
-  /*     pAbbRoot est une vraie racine d'image abstraite        | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   AddVolView ajuste le volume de la vue dont le pave pAbbRoot      
+   est le pave racine.                                     
+   VolOpt est le volume optimum de cette vue.              
+   ElMilieu est l'element qui devrait etre au milieu       
+   de la vue.                                              
+     pAbbRoot est une vraie racine d'image abstraite        
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static void         AddVolView (int VolOpt, PtrAbstractBox pAbbRoot, PtrElement pElMiddle, PtrDocument pDoc)
@@ -1738,12 +1740,12 @@ PtrDocument         pDoc;
 
 
 
-/* ---------------------------------------------------------------------- */
-/* |    AdjustVolume pour toutes les vues du document pointe' par pDoc  | */
-/* |            ajuste (reduit ou augmente) le volume des images        | */
-/* |            abstraites en conservant l'element pointe par pEl au    | */
-/* |            milieu (ou a peu pres) de l'image abstraite.            | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   AdjustVolume pour toutes les vues du document pointe' par pDoc  
+   ajuste (reduit ou augmente) le volume des images        
+   abstraites en conservant l'element pointe par pEl au    
+   milieu (ou a peu pres) de l'image abstraite.            
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                AdjustVolume (PtrElement pEl, PtrDocument pDoc)
@@ -1829,15 +1831,15 @@ PtrDocument         pDoc;
 
 
 
-/* ---------------------------------------------------------------------- */
-/* |    IncreaseVolume Le Mediateur augmente de dVol le volume affichable  | */
-/* |            dans la fenetre ViewFrame. Met a jour la capacite de la   | */
-/* |            vue affichee dans cette frame et cree de nouveaux       | */
-/* |            paves en tete ou en queue, selon le booleen EnTete,     | */
-/* |            de l'image abstraite affichee dans ViewFrame.             | */
-/* |            On cree des paves, le Mediateur se charge du            | */
-/* |            reaffichage                                             | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   IncreaseVolume Le Mediateur augmente de dVol le volume affichable  
+   dans la fenetre ViewFrame. Met a jour la capacite de la   
+   vue affichee dans cette frame et cree de nouveaux       
+   paves en tete ou en queue, selon le booleen EnTete,     
+   de l'image abstraite affichee dans ViewFrame.             
+   On cree des paves, le Mediateur se charge du            
+   reaffichage                                             
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                IncreaseVolume (boolean inHead, int dVol, int frame)
@@ -1952,15 +1954,15 @@ int                 frame;
 
 
 
-/* ---------------------------------------------------------------------- */
-/* |    DecreaseVolume Le Mediateur reduit de dVol le volume affichable      | */
-/* |            dans la fenetre frame. Met a jour la capacite de la     | */
-/* |            vue affichee dans cette frame et supprime des paves     | */
-/* |            en tete ou en queue, selon le booleen inHead, de        | */
-/* |            l'image abstraite affichee dans frame.          | */
-/* |            On supprime des paves, le Mediateur se charge du        | */
-/* |            reaffichage                                             | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   DecreaseVolume Le Mediateur reduit de dVol le volume affichable      
+   dans la fenetre frame. Met a jour la capacite de la     
+   vue affichee dans cette frame et supprime des paves     
+   en tete ou en queue, selon le booleen inHead, de        
+   l'image abstraite affichee dans frame.          
+   On supprime des paves, le Mediateur se charge du        
+   reaffichage                                             
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                DecreaseVolume (boolean inHead, int dVol, int frame)
@@ -2049,15 +2051,15 @@ int                 frame;
 
 
 
-/* ---------------------------------------------------------------------- */
-/* |    CheckAbsBox verifie que l'element pointe' par pEl a au moins      | */
-/* |            un pave dans la vue Vue. S'il n'en a pas, essaie d'en   | */
-/* |            creer un en modifiant l'image abstraite de cette vue.   | */
-/* |            Si debut est vrai, on cree l'image de la vue en         | */
-/* |            commencant par l'element pointe' par pEl, sinon, on     | */
-/* |            place cet element au milieu de l'image creee.           | */
-/* |            Si affiche est Vrai, l'image est reaffichee.            | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   CheckAbsBox verifie que l'element pointe' par pEl a au moins      
+   un pave dans la vue Vue. S'il n'en a pas, essaie d'en   
+   creer un en modifiant l'image abstraite de cette vue.   
+   Si debut est vrai, on cree l'image de la vue en         
+   commencant par l'element pointe' par pEl, sinon, on     
+   place cet element au milieu de l'image creee.           
+   Si affiche est Vrai, l'image est reaffichee.            
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
    void                CheckAbsBox (PtrElement pEl, int Vue, PtrDocument pDoc, boolean begin, boolean display)
 #else  /* __STDC__ */
@@ -2772,16 +2774,16 @@ int                 frame;
     }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    VolumeTree    retourne                                        | */
-/* |       *volBefore: le volume total des elements de l'arbre abstrait   | */
-/* |                 qui precedent l'element auquel appartient le pave  | */
-/* |                 pAbbFirst.                                           | */
-/* |       *volAfter: le volume total des elements de l'arbre abstrait   | */
-/* |                 qui se trouvent apres l'element auquel appartient  | */
-/* |                 le pave pAbbLast.                                    | */
-/* |       volTree: le volume total de l'arbre abstrait.               | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   VolumeTree    retourne                                        
+   *volBefore: le volume total des elements de l'arbre abstrait   
+   qui precedent l'element auquel appartient le pave  
+   pAbbFirst.                                           
+   *volAfter: le volume total des elements de l'arbre abstrait   
+   qui se trouvent apres l'element auquel appartient  
+   le pave pAbbLast.                                    
+   volTree: le volume total de l'arbre abstrait.               
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
    void                VolumeTree (PtrAbstractBox pAbbRoot, PtrAbstractBox pAbbFirst, PtrAbstractBox pAbbLast, int *volBefore, int *volAfter, int *volTree)
 #else  /* __STDC__ */
@@ -2857,14 +2859,14 @@ int                 frame;
 	}
    }
 
-/* ---------------------------------------------------------------------- */
-/* |    JumpIntoView fait afficher dans la fenetre la partie de        | */
-/* |            document qui se trouve a la distance indiquee du debut  | */
-/* |            de l'arbre abstrait.                                    | */
-/* |            distance est un pourcentage : 0 <= distance <= 100      | */
-/* |            Si distance = 0, on fait afficher le debut de l'arbre.  | */
-/* |            Si distance = 100, on fait afficher la fin de l'arbre.  | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   JumpIntoView fait afficher dans la fenetre la partie de        
+   document qui se trouve a la distance indiquee du debut  
+   de l'arbre abstrait.                                    
+   distance est un pourcentage : 0 <= distance <= 100      
+   Si distance = 0, on fait afficher le debut de l'arbre.  
+   Si distance = 100, on fait afficher la fin de l'arbre.  
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
    void                JumpIntoView (int frame, int distance)
@@ -3054,17 +3056,17 @@ int                 frame;
 	}
    }
 
-   /* ------------------------------------------------------------------ */
-   /*  AbsBoxOk verifie les conditions d'invariance sur le pave pAb| */
-   /*            et affiche un message d'erreur si une condition       | */
-   /*            pas respectee. On verifie que :                       | */
-   /*            1. la suite des paves de l'element pAb               | */
-   /*               ne contienne pas que des paves de presentation,    | */
-   /*           2. si pAb->AbPreviousRepeated != NULL                    | */
-   /*               alors l'element ne pointe pas sur pAb             | */
-   /*            3. si pAb->AbNextRepeated(ou Prec)  != NULL           | */
-   /*               alors tous les ascendants doivent l'etre aussi     | */
-   /* ------------------------------------------------------------------ */
+   /*----------------------------------------------------------------------
+      AbsBoxOk verifie les conditions d'invariance sur le pave pAb
+      et affiche un message d'erreur si une condition       
+      pas respectee. On verifie que :                       
+      1. la suite des paves de l'element pAb               
+      ne contienne pas que des paves de presentation,    
+      2. si pAb->AbPreviousRepeated != NULL                    
+      alors l'element ne pointe pas sur pAb             
+      3. si pAb->AbNextRepeated(ou Prec)  != NULL           
+      alors tous les ascendants doivent l'etre aussi     
+     ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
    boolean             AbsBoxOk (PtrAbstractBox pAb)

@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 1996 INRIA, All rights reserved
+ */
+
 #include "thot_sys.h"
 #include "constmedia.h"
 #include "typemedia.h"
@@ -21,7 +25,7 @@
 extern int          UserErrorCode;
 
 
-/* ----------------------------------------------------------------------
+/*----------------------------------------------------------------------
    TtaNewPRule
 
    Creates a new presentation rule of a given type for a given view of a given
@@ -38,7 +42,7 @@ extern int          UserErrorCode;
    Return value:
    new presentation rule.
 
-   ---------------------------------------------------------------------- */
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 PRule               TtaNewPRule (int presentationType, View view, Document document)
 
@@ -103,7 +107,7 @@ Document            document;
    return ((PRule) pPres);
 }
 
-/* ----------------------------------------------------------------------
+/*----------------------------------------------------------------------
    TtaNewPRuleForView
 
    Creates a new presentation rule of a given type for a given view of a given
@@ -120,7 +124,7 @@ Document            document;
    Return value:
    new presentation rule.
 
-   ---------------------------------------------------------------------- */
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 PRule               TtaNewPRuleForView (int presentationType, int view, Document document)
@@ -167,7 +171,7 @@ Document            document;
    return ((PRule) pPres);
 }
 
-/* ----------------------------------------------------------------------
+/*----------------------------------------------------------------------
    TtaNewPRuleForNamedView
 
    Creates a new presentation rule of a given type for a given view of a given
@@ -184,7 +188,7 @@ Document            document;
    Return value:
    new presentation rule.
 
-   ---------------------------------------------------------------------- */
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 PRule               TtaNewPRuleForNamedView (int presentationType, char *viewName, Document document)
@@ -253,7 +257,7 @@ Document            document;
    return ((PRule) pPres);
 }
 
-/* ----------------------------------------------------------------------
+/*----------------------------------------------------------------------
    TtaCopyPRule
 
    Creates a new presentation rule and initializes it with a copy of an existing
@@ -265,7 +269,7 @@ Document            document;
    Return value:
    new presentation rule.
 
-   ---------------------------------------------------------------------- */
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 PRule               TtaCopyPRule (PRule pRule)
@@ -294,7 +298,7 @@ PRule               pRule;
    return ((PRule) copy);
 }
 
-/* ----------------------------------------------------------------------
+/*----------------------------------------------------------------------
    TtaAttachPRule
 
    Attaches a presentation rule to an element.
@@ -305,7 +309,7 @@ PRule               pRule;
    pRule: the presentation rule to be attached.
    document: the document to which the element belongs.
 
-   ---------------------------------------------------------------------- */
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                TtaAttachPRule (Element element, PRule pRule, Document document)
@@ -380,7 +384,7 @@ Document            document;
      }
 }
 
-/* ----------------------------------------------------------------------
+/*----------------------------------------------------------------------
    TtaRemovePRule
 
    Removes a presentation rule from an element and release that rule.
@@ -390,7 +394,7 @@ Document            document;
    pRule: the presentation rule to be removed.
    document: the document to which the element belongs.
 
-   ---------------------------------------------------------------------- */
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                TtaRemovePRule (Element element, PRule pRule, Document document)
@@ -452,7 +456,7 @@ Document            document;
 }
 
 
-/* ----------------------------------------------------------------------
+/*----------------------------------------------------------------------
    TtaSetPRuleValue
 
    Changes the value of a presentation rule. The presentation rule must
@@ -483,7 +487,7 @@ Document            document;
    RBackground: rank of the background color in the file thot.color.
    RForeground: rank of the foreground color in the file thot.color.
 
-   ---------------------------------------------------------------------- */
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                TtaSetPRuleValue (Element element, PRule pRule, int value, Document document)
@@ -761,7 +765,7 @@ Document            document;
 
 
 #ifndef NODISPLAY
-/* ----------------------------------------------------------------------
+/*----------------------------------------------------------------------
    TtaChangeBoxSize
 
    Changes the height and width of the box corresponding to an element in
@@ -775,7 +779,7 @@ Document            document;
    deltaY: height increment in points (positive, negative or zero).
    unit: the unit used for the values.
 
-   ---------------------------------------------------------------------- */
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TtaChangeBoxSize (Element element, Document document, View view, int deltaX, int deltaY, TypeUnit unit)
 #else  /* __STDC__ */
@@ -843,7 +847,7 @@ Document            document;
 }
 
 
-/* ----------------------------------------------------------------------
+/*----------------------------------------------------------------------
    TtaChangeBoxPosition
 
    Moves the box of an element in a given view.
@@ -856,7 +860,7 @@ Document            document;
    deltaY: vertical shift in points (positive, negative or zero).
    unit: the unit used for the values.
 
-   ---------------------------------------------------------------------- */
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TtaChangeBoxPosition (Element element, Document document, View view, int deltaX, int deltaY, TypeUnit unit)
 #else  /* __STDC__ */
@@ -925,7 +929,7 @@ TypeUnit            unit;
 }
 
 
-/* ----------------------------------------------------------------------
+/*----------------------------------------------------------------------
    TtaGiveBoxSize
 
    Returns the height and width of the box corresponding to an element in
@@ -940,7 +944,7 @@ TypeUnit            unit;
    width: box width in points.
    height: box height in points.
 
-   ---------------------------------------------------------------------- */
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TtaGiveBoxSize (Element element, Document document, View view, TypeUnit unit, int *width, int *height)
 #else  /* __STDC__ */
@@ -1011,7 +1015,7 @@ int                *height;
      }
 }
 
-/* ----------------------------------------------------------------------
+/*----------------------------------------------------------------------
    TtaGiveBoxPosition
 
    Returns the x and y coordinates of the box corresponding to an element in
@@ -1030,7 +1034,7 @@ int                *height;
    yCoord:  distance from the upper edge of the parent box to the upper
    edge of the box, in points.
 
-   ---------------------------------------------------------------------- */
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TtaGiveBoxPosition (Element element, Document document, View view, TypeUnit unit, int *xCoord, int *yCoord)
 #else  /* __STDC__ */
@@ -1102,7 +1106,7 @@ int                *yCoord;
 }
 #endif
 
-/* ----------------------------------------------------------------------
+/*----------------------------------------------------------------------
    TtaNextPRule
 
    Returns the first presentation rule associated with a given
@@ -1118,7 +1122,7 @@ int                *yCoord;
    pRule: the next presentation rule, or NULL if
    pRule is the last rule of the element.
 
-   ---------------------------------------------------------------------- */
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                TtaNextPRule (Element element, PRule * pRule)
@@ -1149,7 +1153,7 @@ PRule              *pRule;
    *pRule = (PRule) nextPRule;
 }
 
-/* ----------------------------------------------------------------------
+/*----------------------------------------------------------------------
    TtaGetPRule
 
    Returns a presentation rule of a given type associated with a given element.
@@ -1165,7 +1169,7 @@ PRule              *pRule;
    the presentation rule found, or NULL if the element
    does not have this type of presentation rule.
 
-   ---------------------------------------------------------------------- */
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 PRule               TtaGetPRule (Element element, int presentationType)
@@ -1204,7 +1208,7 @@ int                 presentationType;
    return ((PRule) pRule);
 }
 
-/* ----------------------------------------------------------------------
+/*----------------------------------------------------------------------
    TtaGetPRuleType
 
    Returns the type of a presentation rule.
@@ -1218,7 +1222,7 @@ int                 presentationType;
    RJustify, RLineStyle, RLineWeight, RFillPattern, RBackground,
    RForeground, RHyphenate.
 
-   ---------------------------------------------------------------------- */
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 int                 TtaGetPRuleType (PRule pRule)
@@ -1245,7 +1249,7 @@ PRule               pRule;
    return presentationType;
 }
 
-/* ----------------------------------------------------------------------
+/*----------------------------------------------------------------------
    TtaGetPRuleValue
 
    Returns the value of a presentation rule.
@@ -1272,7 +1276,7 @@ PRule               pRule;
    RBackground: rank of the background color in the file thot.color.
    RForeground: rank of the foreground color in the file thot.color.
 
-   ---------------------------------------------------------------------- */
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 int                 TtaGetPRuleValue (PRule pRule)
@@ -1450,7 +1454,7 @@ PRule               pRule;
    return value;
 }
 
-/* ----------------------------------------------------------------------
+/*----------------------------------------------------------------------
    TtaSamePRules
 
    Compares two presentation rules associated with the same element or with
@@ -1463,7 +1467,7 @@ PRule               pRule;
    Return value:
    0 if both rules are different, 1 if they are identical.
 
-   ---------------------------------------------------------------------- */
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 int                 TtaSamePRules (PRule pRule1, PRule pRule2)

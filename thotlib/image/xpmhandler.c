@@ -1,4 +1,8 @@
 /*
+ * Copyright (c) 1996 INRIA, All rights reserved
+ */
+
+/*
    xpmhandler.c  Pixmap V3.4.c 
  */
 
@@ -24,10 +28,10 @@
 #include "font_f.h"
 
 
-/* ---------------------------------------------------------------------- */
-/* |    XpmCreate reads and produces the bitmap read from the file      | */
-/* |            fn. updates the wif, hif, xif , yif                     | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   XpmCreate reads and produces the bitmap read from the file      
+   fn. updates the wif, hif, xif , yif                     
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 Drawable            XpmCreate (char *fn, PictureScaling pres, int *xif, int *yif, int *wif, int *hif, unsigned long BackGroundPixel, Drawable * mask1)
 #else  /* __STDC__ */
@@ -100,9 +104,9 @@ Drawable           *mask1;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    XpmPrint converts an xpm file to PostScript.                    | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   XpmPrint converts an xpm file to PostScript.                    
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                XpmPrint (char *fn, PictureScaling pres, int xif, int yif, int wif, int hif, int PicXArea, int PicYArea, int PicWArea, int PicHArea, int fd, unsigned long BackGroundPixel)
 #else  /* __STDC__ */
@@ -286,9 +290,9 @@ unsigned long       BackGroundPixel;
 #endif /* !NEW_WILLOWS */
 }			
 
-/* ---------------------------------------------------------------------- */
-/* | IsXpmFormat check if the file header is of a pixmap                | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   IsXpmFormat check if the file header is of a pixmap                
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 boolean                IsXpmFormat (char *fn)
 #else  /* __STDC__ */

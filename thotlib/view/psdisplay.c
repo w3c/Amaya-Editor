@@ -1,4 +1,8 @@
 /*
+ * Copyright (c) 1996 INRIA, All rights reserved
+ */
+
+/*
  * psdisplay.c : All the Postscript generation routines.
  */
 
@@ -70,9 +74,9 @@ static int          ColorPs = -1;
 
 
 
-/** ----------------------------------------------------------------------
- *      WriteCar writes s1 or s2 depending on encoding.
- *  ---------------------------------------------------------------------- **/
+/*----------------------------------------------------------------------
+   WriteCar writes s1 or s2 depending on encoding.
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         WriteCar (FILE * fout, int encoding, char *s1, char *s2)
 
@@ -92,9 +96,9 @@ char               *s2;
       fputs (s2, fout);
 }
 
-/** ----------------------------------------------------------------------
- *      Transcode emit the Poscript code for the given char.
- *  ---------------------------------------------------------------------- **/
+/*----------------------------------------------------------------------
+   Transcode emit the Poscript code for the given char.
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static void         Transcode (FILE * fout, int encoding, char car)
@@ -131,11 +135,11 @@ char                car;
 }				/*Transcode */
 
 
-/** ----------------------------------------------------------------------
- *      CurrentColor compares the last RGB Postscript color loaded
- *		and the one asked, and load it if needed.
- *		num is an index in the Thot internal color table.
- *  ---------------------------------------------------------------------- **/
+/*----------------------------------------------------------------------
+   CurrentColor compares the last RGB Postscript color loaded
+   and the one asked, and load it if needed.
+   num is an index in the Thot internal color table.
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static void         CurrentColor (FILE * fout, int num)
@@ -167,11 +171,11 @@ int                 num;
 }
 
 
-/** ----------------------------------------------------------------------
- *      FillWithPattern fills in the current stroke with a black and white
- *		pattern, or the drawing color, or the background color,
- *		or keep it transparent, depending on pattern value.
- *  ---------------------------------------------------------------------- **/
+/*----------------------------------------------------------------------
+   FillWithPattern fills in the current stroke with a black and white
+   pattern, or the drawing color, or the background color,
+   or keep it transparent, depending on pattern value.
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static void         FillWithPattern (FILE * fout, int fg, int bg, int pattern)
@@ -224,11 +228,11 @@ int                 pattern;
 }
 
 
-/** ----------------------------------------------------------------------
- *      CurrentFont compute the correct PostScript font needed,
- *		and emit the code to load it, if necessary.
- *              Returns 0 if it is a Latin font and 1 for a Greek one.
- *  ---------------------------------------------------------------------- **/
+/*----------------------------------------------------------------------
+   CurrentFont compute the correct PostScript font needed,
+   and emit the code to load it, if necessary.
+   Returns 0 if it is a Latin font and 1 for a Greek one.
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static int          CurrentFont (FILE * fout, ptrfont font)
 #else  /* __STDC__ */
@@ -281,9 +285,9 @@ ptrfont             font;
       return (0);
 }				/*CurrentFont */
 
-/** ----------------------------------------------------------------------
- *      DrawPage check whether a showpage is needed.
- *  ---------------------------------------------------------------------- **/
+/*----------------------------------------------------------------------
+   DrawPage check whether a showpage is needed.
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                DrawPage (FILE * fout)
@@ -306,21 +310,21 @@ FILE               *fout;
      }
 }
 
-/** ----------------------------------------------------------------------
- *      DrawString draw a char string of lg chars beginning at buff[i].
- *              Drawing starts at (x, y) in frame and using font.
- *              lgboite gives the width of the final box or zero,
- *              this is used only by the thot formmating engine.
- *              bl indicate taht there is a space before the string
- *              hyphen indicate whether an hyphen char has to be added.
- *              debutbloc is 1 if the text is at a paragraph beginning
- *              (no justification of first spaces).
- *              RO indicate whether it's a read-only box
- *              active indicate if the box is active
- *              parameter fg indicate the drawing color
- *
- *              Returns the lenght of the string drawn.
- *  ---------------------------------------------------------------------- **/
+/*----------------------------------------------------------------------
+   DrawString draw a char string of lg chars beginning at buff[i].
+   Drawing starts at (x, y) in frame and using font.
+   lgboite gives the width of the final box or zero,
+   this is used only by the thot formmating engine.
+   bl indicate taht there is a space before the string
+   hyphen indicate whether an hyphen char has to be added.
+   debutbloc is 1 if the text is at a paragraph beginning
+   (no justification of first spaces).
+   RO indicate whether it's a read-only box
+   active indicate if the box is active
+   parameter fg indicate the drawing color
+ 
+   Returns the lenght of the string drawn.
+  ----------------------------------------------------------------------*/
 
 
 #ifdef __STDC__
@@ -437,9 +441,9 @@ int                 fg;
 }				/*DrawString */
 
 
-/** ----------------------------------------------------------------------
- *      DisplayUnderline draw the underline, overline or cross line
- *  ---------------------------------------------------------------------- **/
+/*----------------------------------------------------------------------
+   DisplayUnderline draw the underline, overline or cross line
+  ----------------------------------------------------------------------*/
 
 
 #ifdef __STDC__
@@ -518,9 +522,9 @@ int                 fg;
 }				/*DisplayUnderline */
 
 
-/** ----------------------------------------------------------------------
- *      DrawRadical Draw a radical symbol.
- *  ---------------------------------------------------------------------- **/
+/*----------------------------------------------------------------------
+   DrawRadical Draw a radical symbol.
+  ----------------------------------------------------------------------*/
 
 
 #ifdef __STDC__
@@ -572,12 +576,12 @@ int                 fg;
 
 }				/*DrawRadical */
 
-/** ----------------------------------------------------------------------
- *      DrawIntegral draw an integral. depending on type :
- *              - simple if type = 0
- *              - contour if type = 1
- *              - double if type = 2.
- *  ---------------------------------------------------------------------- **/
+/*----------------------------------------------------------------------
+   DrawIntegral draw an integral. depending on type :
+   - simple if type = 0
+   - contour if type = 1
+   - double if type = 2.
+  ----------------------------------------------------------------------*/
 
 
 #ifdef __STDC__
@@ -658,9 +662,9 @@ int                 fg;
      }
 }				/*DrawIntegral */
 
-/** ----------------------------------------------------------------------
- *      DrawSigma draw a Sigma symbol.
- *  ---------------------------------------------------------------------- **/
+/*----------------------------------------------------------------------
+   DrawSigma draw a Sigma symbol.
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                DrawSigma (int frame, int x, int y, int l, int h, ptrfont font, int RO, int func, int fg)
 #else  /* __STDC__ */
@@ -695,9 +699,9 @@ int                 fg;
 }				/*DrawSigma */
 
 
-/** ----------------------------------------------------------------------
- *      DrawPi draw a PI symbol.
- *  ---------------------------------------------------------------------- **/
+/*----------------------------------------------------------------------
+   DrawPi draw a PI symbol.
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                DrawPi (int frame, int x, int y, int l, int h, ptrfont font, int RO, int func, int fg)
 #else  /* __STDC__ */
@@ -730,9 +734,9 @@ int                 fg;
    fprintf (fout, "-%d %d (\\325) c\n", y, x);
 }				/*DrawPi */
 
-/** ----------------------------------------------------------------------
- *      DrawUnion draw an Union symbol.
- *  ---------------------------------------------------------------------- **/
+/*----------------------------------------------------------------------
+   DrawUnion draw an Union symbol.
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                DrawUnion (int frame, int x, int y, int l, int h, ptrfont font, int RO, int func, int fg)
 #else  /* __STDC__ */
@@ -765,9 +769,9 @@ int                 fg;
    fprintf (fout, "-%d %d (\\310) c\n", y, x);
 }				/*DrawUnion */
 
-/** ----------------------------------------------------------------------
- *      DrawIntersection draw an intersection symbol.
- *  ---------------------------------------------------------------------- **/
+/*----------------------------------------------------------------------
+   DrawIntersection draw an intersection symbol.
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                DrawIntersection (int frame, int x, int y, int l, int h, ptrfont font, int RO, int func, int fg)
 #else  /* __STDC__ */
@@ -801,11 +805,11 @@ int                 fg;
 }				/*DrawIntersection */
 
 
-/** ----------------------------------------------------------------------
- *      DrawArrow draw an arrow following the indicated direction in degrees :
- *              0 (right arrow), 45, 90, 135, 180,
- *              225, 270 ou 315.
- *  ---------------------------------------------------------------------- **/
+/*----------------------------------------------------------------------
+   DrawArrow draw an arrow following the indicated direction in degrees :
+   0 (right arrow), 45, 90, 135, 180,
+   225, 270 ou 315.
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                DrawArrow (int frame, int thick, int style, int x, int y, int l, int h, int orientation, int RO, int func, int fg)
 #else  /* __STDC__ */
@@ -896,9 +900,9 @@ int                 fg;
      }
 }				/*DrawArrow */
 
-/** ----------------------------------------------------------------------
- *      DrawBracket draw an opening or closing bracket (depending on direction)
- *  ---------------------------------------------------------------------- **/
+/*----------------------------------------------------------------------
+   DrawBracket draw an opening or closing bracket (depending on direction)
+  ----------------------------------------------------------------------*/
 
 
 #ifdef __STDC__
@@ -961,9 +965,9 @@ int                 fg;
      }
 }				/*DrawBracket */
 
-/** ----------------------------------------------------------------------
- *      DrawParenthesis draw a closing or opening parenthesis (direction).
- *  ---------------------------------------------------------------------- **/
+/*----------------------------------------------------------------------
+   DrawParenthesis draw a closing or opening parenthesis (direction).
+  ----------------------------------------------------------------------*/
 
 
 #ifdef __STDC__
@@ -1026,9 +1030,9 @@ int                 fg;
      }
 }				/*DrawParenthesis */
 
-/** ----------------------------------------------------------------------
- *      DrawBrace draw an opening of closing brace (depending on direction).
- *  ---------------------------------------------------------------------- **/
+/*----------------------------------------------------------------------
+   DrawBrace draw an opening of closing brace (depending on direction).
+  ----------------------------------------------------------------------*/
 
 
 #ifdef __STDC__
@@ -1091,13 +1095,13 @@ int                 fg;
      }
 }				/*DrawBrace */
 
-/** ----------------------------------------------------------------------
- *      DrawRectangle draw a rectangle located at (x, y) in frame,
- *              of geometry width x height.
- *              thick indicate the thickness of the lines.
- *              Parameters fg, bg, and pattern are for drawing
- *              color, background color and fill pattern.
- *  ---------------------------------------------------------------------- **/
+/*----------------------------------------------------------------------
+   DrawRectangle draw a rectangle located at (x, y) in frame,
+   of geometry width x height.
+   thick indicate the thickness of the lines.
+   Parameters fg, bg, and pattern are for drawing
+   color, background color and fill pattern.
+  ----------------------------------------------------------------------*/
 
 
 #ifdef __STDC__
@@ -1141,20 +1145,20 @@ int                 pattern;
    fprintf (fout, "%d -%d %d -%d %d -%d  %d -%d %d %d %d Poly\n", x, y, x, yf, xf, yf, xf, y, style, thick, 4);
 }
 
-/** ----------------------------------------------------------------------
- *      DrawSegments draw a set of segments.
- *              Parameter buffer is a pointer to the list of control points.
- *              nb indicate the number of points.
- *              The first point is a fake one containing the geometry.
- *              RO indicate whether it's a read-only box
- *              active indicate if the box is active
- *              fg parameter gives the drawing color.
- *              arrow parameter indicate whether :
- *              - no arrow have to be drawn (0)
- *              - a forward arrow has to be drawn (1)
- *              - a backward arrow has to be drawn (2)
- *              - both backward and forward arrows have to be drawn (3)
- *  ---------------------------------------------------------------------- **/
+/*----------------------------------------------------------------------
+   DrawSegments draw a set of segments.
+   Parameter buffer is a pointer to the list of control points.
+   nb indicate the number of points.
+   The first point is a fake one containing the geometry.
+   RO indicate whether it's a read-only box
+   active indicate if the box is active
+   fg parameter gives the drawing color.
+   arrow parameter indicate whether :
+   - no arrow have to be drawn (0)
+   - a forward arrow has to be drawn (1)
+   - a backward arrow has to be drawn (2)
+   - both backward and forward arrows have to be drawn (3)
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                DrawSegments (int frame, int thick, int style, int x, int y, PtrTextBuffer buffer, int nb, int RO, int active, int fg, int arrow)
@@ -1240,16 +1244,16 @@ int                 arrow;
 	       FloatToInt (xp), FloatToInt (yp), thick, lg, lg);
 }
 
-/** ----------------------------------------------------------------------
- *      DrawPolygon draw a polygone.
- *              Parameter buffer is a pointer to the list of control points.
- *              nb indicate the number of points.
- *              The first point is a fake one containing the geometry.
- *              RO indicate whether it's a read-only box
- *              active indicate if the box is active
- *              Parameters fg, bg, and pattern are for drawing
- *              color, background color and fill pattern.
- *  ---------------------------------------------------------------------- **/
+/*----------------------------------------------------------------------
+   DrawPolygon draw a polygone.
+   Parameter buffer is a pointer to the list of control points.
+   nb indicate the number of points.
+   The first point is a fake one containing the geometry.
+   RO indicate whether it's a read-only box
+   active indicate if the box is active
+   Parameters fg, bg, and pattern are for drawing
+   color, background color and fill pattern.
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                DrawPolygon (int frame, int thick, int style, int x, int y, PtrTextBuffer buffer, int nb, int RO, int active, int fg, int bg, int pattern)
@@ -1311,19 +1315,19 @@ int                 pattern;
 }
 
 
-/** ----------------------------------------------------------------------
- *      DrawCurb draw an open curb.
- *              Parameter buffer is a pointer to the list of control points.
- *              nb indicate the number of points.
- *              The first point is a fake one containing the geometry.
- *              fg indicate the drawing color
- *              arrow parameter indicate whether :
- *              - no arrow have to be drawn (0)
- *              - a forward arrow has to be drawn (1)
- *              - a backward arrow has to be drawn (2)
- *              - both backward and forward arrows have to be drawn (3)
- *              Parameter control indicate the control points.
- *  ---------------------------------------------------------------------- **/
+/*----------------------------------------------------------------------
+   DrawCurb draw an open curb.
+   Parameter buffer is a pointer to the list of control points.
+   nb indicate the number of points.
+   The first point is a fake one containing the geometry.
+   fg indicate the drawing color
+   arrow parameter indicate whether :
+   - no arrow have to be drawn (0)
+   - a forward arrow has to be drawn (1)
+   - a backward arrow has to be drawn (2)
+   - both backward and forward arrows have to be drawn (3)
+   Parameter control indicate the control points.
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                DrawCurb (int frame, int thick, int style, int x, int y, PtrTextBuffer buffer, int nb, int RO, int active, int fg, int arrow, C_points * controls)
@@ -1429,17 +1433,17 @@ C_points           *controls;
 
 }
 
-/** ----------------------------------------------------------------------
- *      DrawSpline draw a closed curb.
- *              Parameter buffer is a pointer to the list of control points.
- *              nb indicate the number of points.
- *              The first point is a fake one containing the geometry.
- *              RO indicate whether it's a read-only box
- *              active indicate if the box is active
- *              Parameters fg, bg, and pattern are for drawing
- *              color, background color and fill pattern.
- *              Parameter controls contains the list of control points.
- *  ---------------------------------------------------------------------- **/
+/*----------------------------------------------------------------------
+   DrawSpline draw a closed curb.
+   Parameter buffer is a pointer to the list of control points.
+   nb indicate the number of points.
+   The first point is a fake one containing the geometry.
+   RO indicate whether it's a read-only box
+   active indicate if the box is active
+   Parameters fg, bg, and pattern are for drawing
+   color, background color and fill pattern.
+   Parameter controls contains the list of control points.
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                DrawSpline (int frame, int thick, int style, int x, int y, PtrTextBuffer buffer, int nb, int RO, int active, int fg, int bg, int pattern, C_points * controls)
@@ -1513,11 +1517,11 @@ C_points           *controls;
 
 }
 
-/** ----------------------------------------------------------------------
- *      DrawDiamond draw a diamond.
- *              Parameters fg, bg, and pattern are for drawing
- *              color, background color and fill pattern.
- *  ---------------------------------------------------------------------- **/
+/*----------------------------------------------------------------------
+   DrawDiamond draw a diamond.
+   Parameters fg, bg, and pattern are for drawing
+   color, background color and fill pattern.
+  ----------------------------------------------------------------------*/
 
 
 #ifdef __STDC__
@@ -1561,11 +1565,11 @@ int                 pattern;
    fprintf (fout, "%d -%d %d -%d %d -%d %d -%d %d %d %d Poly\n", xm, y, x, ym, xm, yf, xf, ym, style, thick, 4);
 }
 
-/** ----------------------------------------------------------------------
- *      DrawOval draw a rectangle with smoothed corners.
- *              Parameters fg, bg, and pattern are for drawing
- *              color, background color and fill pattern.
- *  ---------------------------------------------------------------------- **/
+/*----------------------------------------------------------------------
+   DrawOval draw a rectangle with smoothed corners.
+   Parameters fg, bg, and pattern are for drawing
+   color, background color and fill pattern.
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                DrawOval (int frame, int thick, int style, int x, int y, int larg, int height, int RO, int active, int fg, int bg, int pattern)
@@ -1612,11 +1616,11 @@ int                 pattern;
 	    arc);
 }
 
-/** ----------------------------------------------------------------------
- *      DrawEllips draw an ellips (or a circle).
- *              Parameters fg, bg, and pattern are for drawing
- *              color, background color and fill pattern.
- *  ---------------------------------------------------------------------- **/
+/*----------------------------------------------------------------------
+   DrawEllips draw an ellips (or a circle).
+   Parameters fg, bg, and pattern are for drawing
+   color, background color and fill pattern.
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                DrawEllips (int frame, int thick, int style, int x, int y, int larg, int height, int RO, int active, int fg, int bg, int pattern)
@@ -1669,9 +1673,9 @@ int                 pattern;
      }
 }
 
-/** ----------------------------------------------------------------------
- *      DrawCorner draw a corner.
- *  ---------------------------------------------------------------------- **/
+/*----------------------------------------------------------------------
+   DrawCorner draw a corner.
+  ----------------------------------------------------------------------*/
 
 
 #ifdef __STDC__
@@ -1727,12 +1731,12 @@ int                 fg;
 	 }
 }
 
-/** ----------------------------------------------------------------------
- *      DrawRectangleFrame draw a rectangle with smoothed corners (3mm radius)
- *              and with an horizontal line at 6mm from top.
- *              Parameters fg, bg, and pattern are for drawing
- *              color, background color and fill pattern.
- *  ---------------------------------------------------------------------- **/
+/*----------------------------------------------------------------------
+   DrawRectangleFrame draw a rectangle with smoothed corners (3mm radius)
+   and with an horizontal line at 6mm from top.
+   Parameters fg, bg, and pattern are for drawing
+   color, background color and fill pattern.
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                DrawRectangleFrame (int frame, int thick, int style, int x, int y, int larg, int height, int RO, int active, int fg, int bg, int pattern)
@@ -1779,11 +1783,11 @@ int                 pattern;
    fprintf (fout, "%d -%d %d -%d %d %d %d Seg\n", x, y, xf, y, style, thick, 2);
 }
 
-/** ----------------------------------------------------------------------
- *      DrawEllips draw an ellips (or a circle).
- *              Parameters fg, bg, and pattern are for drawing
- *              color, background color and fill pattern.
- *  ---------------------------------------------------------------------- **/
+/*----------------------------------------------------------------------
+   DrawEllips draw an ellips (or a circle).
+   Parameters fg, bg, and pattern are for drawing
+   color, background color and fill pattern.
+  ----------------------------------------------------------------------*/
 
 
 #ifdef __STDC__
@@ -1848,10 +1852,10 @@ int                 pattern;
      }
 }
 
-/** ----------------------------------------------------------------------
- *      DrawVerticalLine draw a vertical line aligned top center or bottom
- *              depending on align value.
- *  ---------------------------------------------------------------------- **/
+/*----------------------------------------------------------------------
+   DrawVerticalLine draw a vertical line aligned top center or bottom
+   depending on align value.
+  ----------------------------------------------------------------------*/
 
 
 #ifdef __STDC__
@@ -1903,10 +1907,10 @@ int                 fg;
       fprintf (fout, "%d -%d %d -%d %d %d %d Seg\n", xf, yf, x, yf, style, thick, 2);
 }				/*DrawHorizontalLine */
 
-/** ----------------------------------------------------------------------
- *      DrawVerticalLine draw a vertical line aligned left center or right
- *              depending on align value.
- *  ---------------------------------------------------------------------- **/
+/*----------------------------------------------------------------------
+   DrawVerticalLine draw a vertical line aligned left center or right
+   depending on align value.
+  ----------------------------------------------------------------------*/
 
 
 #ifdef __STDC__
@@ -1958,9 +1962,9 @@ int                 fg;
       fprintf (fout, "%d -%d %d -%d %d %d %d Seg\n", xf, yf, xf, y, style, thick, 2);
 }				/*DrawVerticalLine */
 
-/** ----------------------------------------------------------------------
- *      DrawPoints draw a line of dot.
- *  ---------------------------------------------------------------------- **/
+/*----------------------------------------------------------------------
+   DrawPoints draw a line of dot.
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                DrawPoints (int frame, int x, int y, int lgboite, int RO, int func, int fg)
 #else  /* __STDC__ */
@@ -1995,9 +1999,9 @@ int                 fg;
      }
 }				/*DrawPoints */
 
-/** ----------------------------------------------------------------------
- *      DrawSlash draw a slash or backslash depending on direction.
- *  ---------------------------------------------------------------------- **/
+/*----------------------------------------------------------------------
+   DrawSlash draw a slash or backslash depending on direction.
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                DrawSlash (int frame, int thick, int style, int x, int y, int l, int h, int direction, int RO, int func, int fg)
 #else  /* __STDC__ */
@@ -2042,10 +2046,10 @@ int                 fg;
       fprintf (fout, "%d -%d %d -%d %d %d %d Seg\n", x, y, xf, yf, style, thick, 2);
 }				/*DrawSlash */
 
-/** ----------------------------------------------------------------------
- *      PSPageInfo store the page number, width and height of the page,
- *		used later by DrawPage.
- *  ---------------------------------------------------------------------- **/
+/*----------------------------------------------------------------------
+   PSPageInfo store the page number, width and height of the page,
+   used later by DrawPage.
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                PSPageInfo (int pagenum, int width, int height)
 #else  /* __STDC__ */
@@ -2061,9 +2065,9 @@ int                 height;
    LastPageHeight = height;
 }
 
-/** ----------------------------------------------------------------------
- *      psBoundingBox output the %%BoundingBox macro for Postscript.
- *  ---------------------------------------------------------------------- **/
+/*----------------------------------------------------------------------
+   psBoundingBox output the %%BoundingBox macro for Postscript.
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                psBoundingBox (int frame, int width, int height)
 #else  /* __STDC__ */
@@ -2088,9 +2092,9 @@ int                 height;
 	    50 + PixelToPoint (width), 791);
 }
 
-/**
- *      EndOfString check wether string end by suffix.
- **/
+/*
+     EndOfString check wether string end by suffix.
+*/
 #ifdef __STDC__
 int                 EndOfString (char *string, char *suffix)
 #else  /* __STDC__ */
@@ -2110,13 +2114,13 @@ char               *suffix;
       return (strcmp (string + string_lenght - suffix_lenght, suffix) == 0);
 }
 
-/** ----------------------------------------------------------------------
- *      Trame fill the rectangle associated to a window w (or frame if w= 0)
- *              located on (x , y) and geometry width x height, using the
- *              given pattern.
- *              Parameters fg, bg, and pattern are for drawing
- *              color, background color and fill pattern.
- *  ---------------------------------------------------------------------- **/
+/*----------------------------------------------------------------------
+   Trame fill the rectangle associated to a window w (or frame if w= 0)
+   located on (x , y) and geometry width x height, using the
+   given pattern.
+   Parameters fg, bg, and pattern are for drawing
+   color, background color and fill pattern.
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                Trame (int frame, int x, int y, int width, int height, ThotWindow w, int RO, int active, int fg, int bg, int pattern)
 #else  /* __STDC__ */

@@ -1,6 +1,6 @@
-
-/* -- Copyright (c) 1996 Inria  --  All rights reserved  -- */
-
+/*
+ * Copyright (c) 1996 INRIA, All rights reserved
+ */
 
 /*
    Traitement des exceptions definies dans les schemas  
@@ -19,10 +19,10 @@
 #include "exceptions_f.h"
 #include "structschema_f.h"
 
-/* ---------------------------------------------------------------------- */
-/* |    TypeHasException retourne Vrai si le numero d'exception exceptNum | */
-/* |            est associe' au type typeNum du schema de structure pSS	| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   TypeHasException retourne Vrai si le numero d'exception exceptNum 
+   est associe' au type typeNum du schema de structure pSS	
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 boolean             TypeHasException (int exceptNum, int typeNum, PtrSSchema pSS)
 #else  /* __STDC__ */
@@ -85,11 +85,11 @@ PtrSSchema        pSS;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    AttrHasException retourne Vrai si le numero d'exception exceptNum est | */
-/* |            associe' a` l'attribut attr defini dans le schema de    | */
-/* |            structure pSS.						| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   AttrHasException retourne Vrai si le numero d'exception exceptNum est 
+   associe' a` l'attribut attr defini dans le schema de    
+   structure pSS.						
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 boolean             AttrHasException (int exceptNum, int attr, PtrSSchema pSS)
@@ -128,12 +128,12 @@ PtrSSchema        pSS;
    return ret;
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    GetAttrWithException recherche dans le schema de structure pSS		| */
-/* |            l'attribut auquel est associe' le numero d'exception	| */
-/* |            exceptNum et retourne son numero d'attribut.		| */
-/* |            Retourne 0 en cas d'echec.				| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   GetAttrWithException recherche dans le schema de structure pSS		
+   l'attribut auquel est associe' le numero d'exception	
+   exceptNum et retourne son numero d'attribut.		
+   Retourne 0 en cas d'echec.				
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 int                 GetAttrWithException (int exceptNum, PtrSSchema pSS)
@@ -162,12 +162,12 @@ PtrSSchema        pSS;
    return ret;
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    GetElemWithException recherche dans le schema de structure pSS	le	| */
-/* |            type d'element auquel est associe' le numero		| */
-/* |            d'exception exceptNum et retourne son numero de type.	| */
-/* |            Retourne 0 en cas d'echec.				| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   GetElemWithException recherche dans le schema de structure pSS	le	
+   type d'element auquel est associe' le numero		
+   d'exception exceptNum et retourne son numero de type.	
+   Retourne 0 en cas d'echec.				
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 int                 GetElemWithException (int exceptNum, PtrSSchema pSS)

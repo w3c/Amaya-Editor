@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 1996 INRIA, All rights reserved
+ */
+
 #include "thot_sys.h"
 #include "constmedia.h"
 #include "typemedia.h"
@@ -25,7 +29,7 @@
 extern int          UserErrorCode;
 
 
-/* ----------------------------------------------------------------------
+/*----------------------------------------------------------------------
    TtaSetReference
 
    Changes (or sets) the target of a reference element. The reference element
@@ -37,7 +41,7 @@ extern int          UserErrorCode;
    target : the target element (NULL for resetting the reference).
    targetDocument: the document containing the target element.
 
-   ---------------------------------------------------------------------- */
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TtaSetReference (Element element, Document document, Element target, Document targetDocument)
 
@@ -137,7 +141,7 @@ Document            targetDocument;
 }
 
 
-/* ----------------------------------------------------------------------
+/*----------------------------------------------------------------------
    TtaNewInclusion
 
    Creates an inclusion of a given element.
@@ -150,7 +154,7 @@ Document            targetDocument;
    Return value:
    the created inclusion.
 
-   ---------------------------------------------------------------------- */
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 Element             TtaNewInclusion (Document document, Element target, Document targetDocument)
@@ -230,7 +234,7 @@ Document            targetDocument;
 }
 
 
-/* ----------------------------------------------------------------------
+/*----------------------------------------------------------------------
    TtaCopyReference
 
    Copies a reference element into another reference element.
@@ -240,7 +244,7 @@ Document            targetDocument;
    element: the reference element to be set.
    source : the element to be copied.
 
-   ---------------------------------------------------------------------- */
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                TtaCopyReference (Element element, Element source)
@@ -283,7 +287,7 @@ Element             source;
 }
 
 
-/* ----------------------------------------------------------------------
+/*----------------------------------------------------------------------
    TtaSetAttributeReference
 
    Changes the value of an attribute of type reference
@@ -295,7 +299,7 @@ Element             source;
    target: the target element (NULL for resetting the reference).
    targetDocument: the document containing the target element.
 
-   ---------------------------------------------------------------------- */
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                TtaSetAttributeReference (Attribute attribute, Element element, Document document, Element target, Document targetDocument)
@@ -422,7 +426,7 @@ Document            targetDocument;
 }
 
 
-/* ----------------------------------------------------------------------
+/*----------------------------------------------------------------------
    TtaCopyAttributeReference
 
    Copies the reference attribute source into the reference attribute attribute.
@@ -433,7 +437,7 @@ Document            targetDocument;
    element: the element to which attribute is attached.
    source : the source attribute.
 
-   ---------------------------------------------------------------------- */
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                TtaCopyAttributeReference (Attribute attribute, Element element, Attribute source)
@@ -470,7 +474,7 @@ Attribute           source;
 }
 
 
-/* ----------------------------------------------------------------------
+/*----------------------------------------------------------------------
    TtaGiveReferredElement
 
    Returns the element referred by a given reference element.
@@ -489,7 +493,7 @@ Attribute           source;
    if the referred element is in the same document as the reference
    element.
 
-   ---------------------------------------------------------------------- */
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                TtaGiveReferredElement (Element element, Element * target, char *targetDocumentName, Document * targetDocument)
@@ -533,7 +537,7 @@ Document           *targetDocument;
 }
 
 
-/* ----------------------------------------------------------------------
+/*----------------------------------------------------------------------
    TtaIsElementTypeReference
 
    Indicates whether an element type is a reference.
@@ -544,7 +548,7 @@ Document           *targetDocument;
    Return value:
    1 = the type is a reference, 0 = the type is not a reference.
 
-   ---------------------------------------------------------------------- */
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 int                 TtaIsElementTypeReference (ElementType elementType)
@@ -577,7 +581,7 @@ ElementType         elementType;
    return result;
 }
 
-/* ----------------------------------------------------------------------
+/*----------------------------------------------------------------------
    TtaSameReferences
 
    Compares two reference elements.
@@ -589,7 +593,7 @@ ElementType         elementType;
    Return value:
    0 if both references are different, 1 if they are identical.
 
-   ---------------------------------------------------------------------- */
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 int                 TtaSameReferences (Element element1, Element element2)
@@ -649,7 +653,7 @@ Element             element2;
    return result;
 }
 
-/* ----------------------------------------------------------------------
+/*----------------------------------------------------------------------
    TtaGiveReferenceAttributeValue
 
    Returns the value of a given attribute of type reference
@@ -668,7 +672,7 @@ Element             element2;
    0 if the document containing the referred element is not loaded or
    if the referred element is in the same document as the attribute.
 
-   ---------------------------------------------------------------------- */
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                TtaGiveReferenceAttributeValue (Attribute attribute, Element * target, char *targetDocumentName, Document * targetDocument)
@@ -709,7 +713,7 @@ Document           *targetDocument;
      }
 }
 
-/* ----------------------------------------------------------------------
+/*----------------------------------------------------------------------
    TtaIsElementReferred
 
    Tells whether a given element is the target of a reference or not.
@@ -721,7 +725,7 @@ Document           *targetDocument;
    1 if the element is referred by another element or an
    attribute, 0 if not.
 
-   ---------------------------------------------------------------------- */
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 int                 TtaIsElementReferred (Element element)
@@ -753,7 +757,7 @@ Element             element;
    return result;
 }
 
-/* ----------------------------------------------------------------------
+/*----------------------------------------------------------------------
    TtaSameReferenceAttributes
 
    Compares two reference attributes.
@@ -765,7 +769,7 @@ Element             element;
    Return value:
    0 if both references are different, 1 if they are identical.
 
-   ---------------------------------------------------------------------- */
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 int                 TtaSameReferenceAttributes (Attribute attribute1, Attribute attribute2)
@@ -818,7 +822,7 @@ Attribute           attribute2;
    return result;
 }
 
-/* ----------------------------------------------------------------------
+/*----------------------------------------------------------------------
    TtaNextLoadedReference
 
    Searches a reference that has a given element as a target and that
@@ -846,7 +850,7 @@ Attribute           attribute2;
    referenceDocument: the document to which the reference found belongs.
    Zero if no reference has been found.
 
-   ---------------------------------------------------------------------- */
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                TtaNextLoadedReference (Element target, Document targetDocument, Element * referenceElement, Attribute * referenceAttribute, Document * referenceDocument)
@@ -995,7 +999,7 @@ Document           *referenceDocument;
 }
 
 
-/* ----------------------------------------------------------------------
+/*----------------------------------------------------------------------
    TtaNextUnloadedReferringDocument
 
    Returns the name of a document that is not currently loaded and that contains
@@ -1011,7 +1015,7 @@ Document           *referenceDocument;
    referringDocumentName: name of the document found. PcEmpty string if no
    referring document has been found.
 
-   ---------------------------------------------------------------------- */
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                TtaNextUnloadedReferringDocument (Element target, Document targetDocument, char *referringDocumentName)
@@ -1083,7 +1087,7 @@ char               *referringDocumentName;
 }
 
 
-/* ----------------------------------------------------------------------
+/*----------------------------------------------------------------------
    TtaSearchReferenceElement
 
    Searches the next reference element.
@@ -1099,7 +1103,7 @@ char               *referringDocumentName;
    Return value:
    the element found, or NULL if not found.
 
-   ---------------------------------------------------------------------- */
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 Element             TtaSearchReferenceElement (SearchDomain scope, Element element)

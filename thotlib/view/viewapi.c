@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 1996 INRIA, All rights reserved
+ */
+
 #include "thot_sys.h"
 #include "constmedia.h"
 #include "typemedia.h"
@@ -68,16 +72,16 @@ static SelectionDescriptor documentNewSelection[MAX_DOCUMENTS];
 static char         nameBuffer[MAX_NAME_LENGTH];
 
 
-/* ---------------------------------------------------------------------- */
-/* |    GetViewInfo returns wiew number and assoc state of the          | */
-/* |             corresponding to the view of the document.             | */
-/* |    Parameters:                                                     | */
-/* |            document: the document.                                 | */
-/* |            view: the view.                                         | */
-/* |    Return value:                                                   | */
-/* |            corresponding view number.                              | */
-/* |            corresponding assoc state.                              | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   GetViewInfo returns wiew number and assoc state of the          
+   corresponding to the view of the document.             
+   Parameters:                                                     
+   document: the document.                                 
+   view: the view.                                         
+   Return value:                                                   
+   corresponding view number.                              
+   corresponding assoc state.                              
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                GetViewInfo (Document document, View view, int *viewnumber, boolean * assoc)
 #else  /* __STDC__ */
@@ -103,15 +107,15 @@ boolean            *assoc;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    GetWindowNumber returns the window corresponding to the view of | */
-/* |            the document.                                           | */
-/* |    Parameters:                                                     | */
-/* |            document: the document.                                 | */
-/* |            view: the view.                                         | */
-/* |    Return value:                                                   | */
-/* |            corresponding window.                                   | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   GetWindowNumber returns the window corresponding to the view of 
+   the document.                                           
+   Parameters:                                                     
+   document: the document.                                 
+   view: the view.                                         
+   Return value:                                                   
+   corresponding window.                                   
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 int                 GetWindowNumber (Document document, View view)
 
@@ -148,7 +152,7 @@ View                view;
 }				/*GetWindowNumber */
 
 
-/* ----------------------------------------------------------------------
+/*----------------------------------------------------------------------
    TtaOpenMainView
 
    Opens the main view of a document. This document must have a PSchema
@@ -164,7 +168,7 @@ View                view;
    Return value:
    the view opened or 0 if the view cannot be opened.
 
-   ---------------------------------------------------------------------- */
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 View                TtaOpenMainView (Document document, int x, int y, int w, int h)
@@ -214,7 +218,7 @@ int                 h;
 }
 
 
-/* ----------------------------------------------------------------------
+/*----------------------------------------------------------------------
    OpenView
 
    Opens a view for a document.
@@ -229,7 +233,7 @@ int                 h;
 
    Return value:
    the view opened or 0 if the view cannot be opened.
-   ------------------------------------------------------------------------ */
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static View         OpenView (Document document, char *viewName, int x, int y, int w, int h, Element subtree)
 #else  /* __STDC__ */
@@ -326,7 +330,7 @@ Element             subtree;
 }
 
 
-/* ----------------------------------------------------------------------
+/*----------------------------------------------------------------------
    TtaOpenView
 
    Opens a view for a document. This document must have a PSchema
@@ -343,7 +347,7 @@ Element             subtree;
    Return value:
    the view opened or 0 if the view cannot be opened.
 
-   ---------------------------------------------------------------------- */
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 View                TtaOpenView (Document document, char *viewName, int x, int y, int w, int h)
@@ -363,7 +367,7 @@ int                 h;
    return OpenView (document, viewName, x, y, w, h, NULL);
 }
 
-/* ----------------------------------------------------------------------
+/*----------------------------------------------------------------------
    TtaOpenSubView
 
    Opens a view that shows only a subtree. This document must have a PSchema
@@ -381,7 +385,7 @@ int                 h;
    Return value:
    the view opened or 0 if the view cannot be opened.
 
-   ---------------------------------------------------------------------- */
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 View                TtaOpenSubView (Document document, char *viewName, int x, int y, int w, int h, Element subtree)
@@ -402,7 +406,7 @@ Element             subtree;
    return OpenView (document, viewName, x, y, w, h, subtree);
 }
 
-/* ----------------------------------------------------------------------
+/*----------------------------------------------------------------------
    TtaCloseView
 
    Closes a view.
@@ -411,7 +415,7 @@ Element             subtree;
    document: the document for which a view must be closed.
    view: the view to be closed.
 
-   ---------------------------------------------------------------------- */
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TtaCloseView (Document document, View view)
 #else  /* __STDC__ */
@@ -458,11 +462,11 @@ View                view;
      }
 }
 
-/* ---------------------------------------------------------------------- */
-/* |  CleanImageView cleans the abstract of View corresponding to pDoc. | */
-/* |     View = view number or assoc. elem. number if assoc. view.      | */
-/* |     complete = TRUE if the window is completely cleaned.           | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   CleanImageView cleans the abstract of View corresponding to pDoc. 
+   View = view number or assoc. elem. number if assoc. view.      
+   complete = TRUE if the window is completely cleaned.           
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         CleanImageView (int View, boolean Assoc, PtrDocument pDoc, boolean complete)
 #else  /* __STDC__ */
@@ -534,7 +538,7 @@ boolean             complete;
      }
 }				/* CleanImageView */
 
-/* ----------------------------------------------------------------------
+/*----------------------------------------------------------------------
    TtaFreeView
 
    frees the view of the document. The window continues to exist but the document
@@ -544,7 +548,7 @@ boolean             complete;
    document: the document for which a view must be closed.
    view: the view to be closed.
 
-   ---------------------------------------------------------------------- */
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TtaFreeView (Document document, View view)
 #else  /* __STDC__ */
@@ -585,7 +589,7 @@ View                view;
      }
 }
 
-/* ----------------------------------------------------------------------
+/*----------------------------------------------------------------------
    TtaChangeViewTitle
 
    Changes the title of a view.
@@ -595,7 +599,7 @@ View                view;
    view: the view.
    title: the new title.
 
-   ---------------------------------------------------------------------- */
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                TtaChangeViewTitle (Document document, View view, char *title)
@@ -641,7 +645,7 @@ char               *title;
 }
 
 
-/* ---------------------------------------------------------------------
+/*----------------------------------------------------------------------
    TtaSetSensibility
 
    Changes the current sensibility used to display a given view of a
@@ -652,7 +656,7 @@ char               *title;
    view: the view.
    value: new value of the sensibility.
 
-   ---------------------------------------------------------------------- */
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                TtaSetSensibility (Document document, View view, int value)
@@ -684,7 +688,7 @@ int                 value;
 }				/*TtaSetSensibility */
 
 
-/* ----------------------------------------------------------------------
+/*----------------------------------------------------------------------
    TtaSetZoom
 
    Changes the current zoom used to display a given
@@ -695,7 +699,7 @@ int                 value;
    view: the view.
    value: new value of the zoom.
 
-   ---------------------------------------------------------------------- */
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                TtaSetZoom (Document document, View view, int value)
@@ -727,7 +731,7 @@ int                 value;
 }				/*TtaSetZoom */
 
 
-/* ----------------------------------------------------------------------
+/*----------------------------------------------------------------------
    TtaShowElement
 
    Shows a given element in a given view of a given document.
@@ -743,7 +747,7 @@ int                 value;
    whatever the actual height of the window), position is the
    desired y coordinate of the top of the element.
 
-   ---------------------------------------------------------------------- */
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                TtaShowElement (Document document, View view, Element element, int position)
@@ -788,7 +792,7 @@ int                 position;
 }				/*TtaShowElement */
 
 
-/* ---------------------------------------------------------------------- 
+/*----------------------------------------------------------------------
    TtaGetSensibility
 
    Reads the current sensibility used to display
@@ -801,7 +805,7 @@ int                 position;
    Return value:
    current value of the sensibility.
 
-   ---------------------------------------------------------------------- */
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 int                 TtaGetSensibility (Document document, View view)
@@ -831,7 +835,7 @@ View                view;
 }				/*TtaGetSensibility */
 
 
-/* ---------------------------------------------------------------------- 
+/*----------------------------------------------------------------------
    TtaGetZoom
 
    Reads the current zoom used to display a given view
@@ -844,7 +848,7 @@ View                view;
    Return value:
    current value of the zoom.
 
-   ---------------------------------------------------------------------- */
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 int                 TtaGetZoom (Document document, View view)
@@ -871,7 +875,7 @@ View                view;
 }				/*TtaGetZoom */
 
 
-/* ----------------------------------------------------------------------
+/*----------------------------------------------------------------------
    TtaIsPSchemaValid
 
    Checks if a presentation schema can be applied to a document of a given
@@ -885,7 +889,7 @@ View                view;
    Return value:
    1 if the presentation schema can be applied, 0 if it can not.
 
-   ---------------------------------------------------------------------- */
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 int                 TtaIsPSchemaValid (char *structureName, char *presentationName)
 #else  /* __STDC__ */
@@ -924,7 +928,7 @@ char               *presentationName;
 }
 
 
-/* ----------------------------------------------------------------------
+/*----------------------------------------------------------------------
    TtaGiveViewsToOpen
 
    Returns the names of the views that can be opened for a document.
@@ -939,7 +943,7 @@ char               *presentationName;
    at the       end.
    nbViews: number of names in the list, 0 if not any view can be open.
 
-   ---------------------------------------------------------------------- */
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TtaGiveViewsToOpen (Document document, char *buffer, int *nbViews)
 #else  /* __STDC__ */
@@ -963,7 +967,7 @@ int                *nbViews;
 }
 
 
-/* ----------------------------------------------------------------------
+/*----------------------------------------------------------------------
    TtaGetViewName
 
    Returns the name of an open view.
@@ -975,7 +979,7 @@ int                *nbViews;
    Return value:
    Name of the view. The buffer must be provided by the caller.
 
-   ---------------------------------------------------------------------- */
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 char               *TtaGetViewName (Document document, View view)
 #else  /* __STDC__ */
@@ -1029,7 +1033,7 @@ View                view;
 }
 
 
-/* ----------------------------------------------------------------------
+/*----------------------------------------------------------------------
    TtaIsViewOpened
 
    Returns TRUE for a open view.
@@ -1041,7 +1045,7 @@ View                view;
    Return value:
    TRUE or FALSE.
 
-   ---------------------------------------------------------------------- */
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 boolean             TtaIsViewOpened (Document document, View view)
 #else  /* __STDC__ */
@@ -1095,7 +1099,7 @@ View                view;
    return opened;
 }
 
-/* ----------------------------------------------------------------------
+/*----------------------------------------------------------------------
    TtaGetViewFromName
 
    Returns the identifier of a view of a given document from its name.
@@ -1107,7 +1111,7 @@ View                view;
    Return value:
    the view. 0 if no view of that name is currently open for the document.
 
-   ---------------------------------------------------------------------- */
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 View                TtaGetViewFromName (Document document, char *viewName)
 #else  /* __STDC__ */
@@ -1160,7 +1164,7 @@ char               *viewName;
    return view;
 }
 
-/* ----------------------------------------------------------------------
+/*----------------------------------------------------------------------
    TtaGiveActiveView
 
    Returns the active view and the document to which that view belongs.
@@ -1174,7 +1178,7 @@ char               *viewName;
    document: the active document.
    view: the active view.
 
-   ---------------------------------------------------------------------- */
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                TtaGiveActiveView (Document * document, View * view)
@@ -1211,11 +1215,11 @@ View               *view;
 
 /* les fonctions suivantes servent au reaffichage */
 
-/* ---------------------------------------------------------------- 
+/*----------------------------------------------------------------------
    ElemIntoImage  checks if abstract boxes of the element pEl 
    Corresponding to view may be displayed within the abstract image
    part already builded.
-   ---------------------------------------------------------------- */
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static boolean      ElemIntoImage (PtrElement pEl, int view, PtrAbstractBox pAbbRoot, PtrDocument pDoc)
@@ -1346,10 +1350,10 @@ PtrDocument         pDoc;
    return result;
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    ExtinguishOrLightSelection bascule la selection courante dans      | */
-/* |    toutes les vues du document pDoc.                               | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ExtinguishOrLightSelection bascule la selection courante dans      
+   toutes les vues du document pDoc.                               
+  ----------------------------------------------------------------------*/
 
 
 #ifdef __STDC__
@@ -1375,10 +1379,10 @@ boolean             lighted;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* | DestroyImage detruit l'image abstraite de toutes les vues          | */
-/* |       ouvertes dudocument pDoc                                     | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   DestroyImage detruit l'image abstraite de toutes les vues          
+   ouvertes dudocument pDoc                                     
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         DestroyImage (PtrDocument pDoc)
 #else  /* __STDC__ */
@@ -1399,13 +1403,13 @@ PtrDocument         pDoc;
 }				/* DestroyImage */
 
 
-/* ---------------------------------------------------------------------- */
-/* | RebuildViewImage recree l'image abstraite de la vue Vue du|          | */
-/* |     document pDoc procedure partiellement reprise de               | */
-/* |     Aff_Select_Pages du module page.c                              | */
-/* |     Vue = numero d'elt assoc si vue associee sinon                 | */
-/* |     Vue = numero de vue si vue d'arbre principal                   | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   RebuildViewImage recree l'image abstraite de la vue Vue du
+   document pDoc procedure partiellement reprise de               
+   Aff_Select_Pages du module page.c                              
+   Vue = numero d'elt assoc si vue associee sinon                 
+   Vue = numero de vue si vue d'arbre principal                   
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         RebuildViewImage (int view, boolean Assoc, PtrDocument pDoc)
 #else  /* __STDC__ */
@@ -1453,10 +1457,10 @@ PtrDocument         pDoc;
      }
 }				/* RebuildViewImage */
 
-/* ---------------------------------------------------------------------- */
-/* | RebuildImage recree l'image abstraite de toutes les vues            | */
-/* |     ouvertes du document pDoc                                      | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   RebuildImage recree l'image abstraite de toutes les vues            
+   ouvertes du document pDoc                                      
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         RebuildImage (PtrDocument pDoc)
 #else  /* __STDC__ */
@@ -1480,10 +1484,10 @@ PtrDocument         pDoc;
 
 static void         RedisplayCommand ( /* document */ );
 
-/* ---------------------------------------------------------------------- */
-/* |    RedispNewElement affiche un element qui vient d'etre ajoute'    | */
-/* |    dans un arbre abstrait.                                         | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   RedispNewElement affiche un element qui vient d'etre ajoute'    
+   dans un arbre abstrait.                                         
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                RedispNewElement (Document document, PtrElement newElement, PtrElement sibling, boolean first, boolean creation)
 
@@ -1555,12 +1559,12 @@ boolean             creation;
      }
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    ChangeAbsBoxModifAttrIntoView change les booleens AbCanBeModified et AbReadOnly   | */
-/* |    dans tous les paves de l'element pEl qui appartiennent a la vue | */
-/* |    vue. newPavModif donne la nouvelle valeur de AbCanBeModified,          | */
-/* |    reaffiche indique si on veut reafficher.                        | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ChangeAbsBoxModifAttrIntoView change les booleens AbCanBeModified et AbReadOnly   
+   dans tous les paves de l'element pEl qui appartiennent a la vue 
+   vue. newPavModif donne la nouvelle valeur de AbCanBeModified,          
+   reaffiche indique si on veut reafficher.                        
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         ChangeAbsBoxModifAttrIntoView (PtrElement pEl, int view, boolean newPavModif, boolean redisplay)
 #else  /* __STDC__ */
@@ -1619,10 +1623,10 @@ boolean             redisplay;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    ChangePavModif change les booleens AbCanBeModified et AbReadOnly dans | */
-/* |    tous les paves existants de l'element pEl et de sa descendance. | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ChangePavModif change les booleens AbCanBeModified et AbReadOnly dans 
+   tous les paves existants de l'element pEl et de sa descendance. 
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                ChangePavModif (PtrElement pEl, Document document, boolean newPavModif)
 #else  /* __STDC__ */
@@ -1687,8 +1691,8 @@ boolean             newPavModif;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                NewSelection (Document document, Element element, int firstCharacter, int lastCharacter)
 #else  /* __STDC__ */
@@ -1711,8 +1715,8 @@ int                 lastCharacter;
    documentNewSelection[document - 1].SDDerCar = lastCharacter;
 }
 
-/* ---------------------------------------------------------------------- */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                NewSelectionExtension (Document document, Element element, int lastCharacter)
 #else  /* __STDC__ */
@@ -1731,8 +1735,8 @@ int                 lastCharacter;
 
 
 
-/* ---------------------------------------------------------------------- */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 boolean             DemandeSelEnregistree (Document document, boolean * abort)
 #else  /* __STDC__ */
@@ -1751,12 +1755,12 @@ boolean            *abort;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    CheckSelectedElement verifie si l'element pEl constitue    | */
-/* |    l'une des extremite's de la selection courante dans le document | */
-/* |    "document" et si oui definit une nouvelle selection, sans cet   | */
-/* |    element.                                                        | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   CheckSelectedElement verifie si l'element pEl constitue    
+   l'une des extremite's de la selection courante dans le document 
+   "document" et si oui definit une nouvelle selection, sans cet   
+   element.                                                        
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         CheckSelectedElement (PtrElement pEl, Document document)
 
@@ -1853,10 +1857,10 @@ Document            document;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    UndisplayElement "desaffiche" un element qui va etre retire'    | */
-/* |    de son arbre abstrait.                                          | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   UndisplayElement "desaffiche" un element qui va etre retire'    
+   de son arbre abstrait.                                          
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                UndisplayElement (PtrElement pEl, Document document)
 #else  /* __STDC__ */
@@ -2026,9 +2030,9 @@ Document            document;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    DisplayHolophrasted reaffiche un element sous forme holphrastee | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   DisplayHolophrasted reaffiche un element sous forme holphrastee 
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                DisplayHolophrasted (PtrElement pEl, Document document)
 #else  /* __STDC__ */
@@ -2089,10 +2093,10 @@ Document            document;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    HideElement "desaffiche" un element qui devient invisible       | */
-/* |    mais n'est pas detruit.                                         | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   HideElement "desaffiche" un element qui devient invisible       
+   mais n'est pas detruit.                                         
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                HideElement (PtrElement pEl, Document document)
 #else  /* __STDC__ */
@@ -2139,10 +2143,10 @@ Document            document;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    RedispReference reaffiche une reference qui vient d'etre        | */
-/* |    modifiee.                                                       | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   RedispReference reaffiche une reference qui vient d'etre        
+   modifiee.                                                       
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                RedispReference (PtrElement element, Document document)
 #else  /* __STDC__ */
@@ -2175,9 +2179,9 @@ Document            document;
    RedisplayCopies (element, pDoc, (documentDisplayMode[document - 1] == DisplayImmediately));
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    RedispLeaf reaffiche le contenu d'une feuille.                  | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   RedispLeaf reaffiche le contenu d'une feuille.                  
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                RedispLeaf (PtrElement element, Document document, int delta)
 #else  /* __STDC__ */
@@ -2301,9 +2305,9 @@ int                 delta;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    RedispSplittedText reaffiche le contenu d'un texte divise'.     | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   RedispSplittedText reaffiche le contenu d'un texte divise'.     
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                RedispSplittedText (PtrElement element, int position, Document document)
@@ -2373,9 +2377,9 @@ Document            document;
    RedisplayCommand (document);
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    RedispMergedText reaffiche le contenu d'un texte fusionne'.     | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   RedispMergedText reaffiche le contenu d'un texte fusionne'.     
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                RedispMergedText (PtrElement element, Document document)
@@ -2456,11 +2460,11 @@ Document            document;
    RedisplayCommand (document);
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    UndisplayHeritAttr      supprime sur l'element pEl et son       | */
-/* |    sous-arbre la presentation liee a l'attribut decrit par pAttr   | */
-/* |    ou a l'heritage d'un tel attribut.                              | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   UndisplayHeritAttr      supprime sur l'element pEl et son       
+   sous-arbre la presentation liee a l'attribut decrit par pAttr   
+   ou a l'heritage d'un tel attribut.                              
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                UndisplayHeritAttr (PtrElement pEl, PtrAttribute pAttr, Document document, boolean suppression)
@@ -2542,9 +2546,9 @@ boolean             suppression;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    DisplayAttribute                                                | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   DisplayAttribute                                                
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                DisplayAttribute (PtrElement pEl, PtrAttribute pAttr, Document document)
@@ -2602,9 +2606,9 @@ Document            document;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    UndisplayAttribute                                              | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   UndisplayAttribute                                              
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                UndisplayAttribute (PtrElement pEl, PtrAttribute pAttr, Document document)
@@ -2664,9 +2668,9 @@ Document            document;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    RedispNewPresSpec                                               | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   RedispNewPresSpec                                               
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                RedispNewPresSpec (Document document, PtrElement pEl, PtrPRule pRule)
@@ -2696,9 +2700,9 @@ PtrPRule            pRule;
    RedisplayCopies (pEl, LoadedDocument[document - 1], (documentDisplayMode[document - 1] == DisplayImmediately));
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    RedispPresStandard                                              | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   RedispPresStandard                                              
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                RedispPresStandard (Document document, PtrElement pEl, PRuleType typeRuleP, int view)
 
@@ -2729,9 +2733,9 @@ int                 view;
    RedisplayCopies (pEl, LoadedDocument[document - 1], (documentDisplayMode[document - 1] == DisplayImmediately));
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    RedispNewGeometry                                               | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   RedispNewGeometry                                               
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                RedispNewGeometry (Document document, PtrElement pEl)
@@ -2759,10 +2763,10 @@ PtrElement          pEl;
    RedisplayCopies (pEl, LoadedDocument[document - 1], (documentDisplayMode[document - 1] == DisplayImmediately));
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    RedisplayCommand        Selon le mode d'affichage, execute ou   | */
-/* |    met en attente une commande de reaffichage secondaire.          | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   RedisplayCommand        Selon le mode d'affichage, execute ou   
+   met en attente une commande de reaffichage secondaire.          
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         RedisplayCommand (Document document)
 #else  /* __STDC__ */
@@ -2783,7 +2787,7 @@ Document            document;
 }
 
 
-/* ----------------------------------------------------------------------
+/*----------------------------------------------------------------------
    TtaSetDisplayMode
 
    Changes display mode for a document. Three display modes are available.
@@ -2806,7 +2810,7 @@ Document            document;
    document: the document.
    NewDisplayMode: new display mode for that document.
 
-   ---------------------------------------------------------------------- */
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TtaSetDisplayMode (Document document, DisplayMode newDisplayMode)
 #else  /* __STDC__ */
@@ -2916,7 +2920,7 @@ DisplayMode         newDisplayMode;
      }
 }
 
-/* ----------------------------------------------------------------------
+/*----------------------------------------------------------------------
    TtaGetDisplayMode
 
    Returns the current display mode for a document.
@@ -2927,7 +2931,7 @@ DisplayMode         newDisplayMode;
    Return value:
    current display mode for that document.
 
-   ---------------------------------------------------------------------- */
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 DisplayMode         TtaGetDisplayMode (Document document)
 #else  /* __STDC__ */
@@ -2951,9 +2955,9 @@ Document            document;
    return result;
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    SetMainWindowBackgroundColor :                          | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   SetMainWindowBackgroundColor :                          
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         SetMainWindowBackgroundColor (int frame, int color)
 #else  /* __STDC__ */
@@ -2972,9 +2976,9 @@ int                 color;
 }				/*SetMainWindowBackgroundColor */
 
 
-/* ---------------------------------------------------------------------- */
-/* | TtaResetViewBackgroundColor : reset the background color for a view        | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   TtaResetViewBackgroundColor : reset the background color for a view        
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TtaResetViewBackgroundColor (Document doc, View view)
 #else  /* __STDC__ */
@@ -2999,9 +3003,9 @@ View                view;
      }
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    TtaSetViewBackgroundColor : set the background color for a view | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   TtaSetViewBackgroundColor : set the background color for a view 
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TtaSetViewBackgroundColor (Document doc, View view, int color)
 #else  /* __STDC__ */
@@ -3029,9 +3033,9 @@ int                 color;
      }
 }
 
-/* ---------------------------------------------------------------------- */
-/* | TtaGetViewBackgroundColor : returns the background color for a view        | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   TtaGetViewBackgroundColor : returns the background color for a view        
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 int                 TtaGetViewBackgroundColor (Document doc, View view)
 #else  /* __STDC__ */

@@ -1,7 +1,9 @@
 /*
+ * Copyright (c) 1996 INRIA, All rights reserved
+ */
+
+/*
    option.c : traitement des options du Mediateur.
-   Major Changes:
-   I. Vatton    Octobre 86
  */
 
 #include "thot_sys.h"
@@ -29,10 +31,10 @@ extern void         DisplayFrame ();
 
 #endif
 
-/* ---------------------------------------------------------------------- */
-/* |    InitializeFrameParams initialise le seuil de visibilite et le facteur de     | */
-/* |            zoom de la fenetre frame.                                       | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   InitializeFrameParams initialise le seuil de visibilite et le facteur de     
+   zoom de la fenetre frame.                                       
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                InitializeFrameParams (int frame, int Visibilite, int Zoom)
 
@@ -56,10 +58,10 @@ int                 Zoom;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    GetFrameParams retourne les valeurs courantes du seuil de visibilite et| */
-/* |            du facteur de zoom de la fenetre.                       | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   GetFrameParams retourne les valeurs courantes du seuil de visibilite et
+   du facteur de zoom de la fenetre.                       
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                GetFrameParams (int frame, int *Visibilite, int *Zoom)
@@ -84,10 +86,10 @@ int                *Zoom;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    SetFrameParams reevalue la vue designee apres decalage des tailles     | */
-/* |            ou/et modification du seuil de visibilite des boites.   | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   SetFrameParams reevalue la vue designee apres decalage des tailles     
+   ou/et modification du seuil de visibilite des boites.   
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                SetFrameParams (int frame, int Visibilite, int Zoom)

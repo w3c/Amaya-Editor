@@ -1,15 +1,19 @@
-/* ======================================================================= */
-/* |                                                                    | */
-/* |                           Projet THOT                              | */
-/* |                                                                    | */
-/* |            Traitements specifiques a la structure Draw             | */
-/* |                                                                    | */
-/* |                                                                    | */
-/* |            V. Quint        mars 1989                               | */
-/* |                                                                    | */
-/* |            France Logiciel no de depot 88-39-001-00                | */
-/* |                                                                    | */
-/* ======================================================================= */
+/*
+ * Copyright (c) 1996 INRIA, All rights reserved
+ */
+
+/*----------------------------------------------------------------------
+   
+   Projet THOT                              
+   
+   Traitements specifiques a la structure Draw             
+   
+   
+   V. Quint        mars 1989                               
+   
+   France Logiciel no de depot 88-39-001-00                
+   
+  ----------------------------------------------------------------------*/
 
 #include "thot_sys.h"
 #include "message.h"

@@ -1,7 +1,11 @@
-/**************************************************************************
+/*
+ * Copyright (c) 1996 INRIA, All rights reserved
+ */
+
+/*----------------------------------------------------------------------
  * genericdriver.c : presentation driver used to manipulate presentation  *
  *           using the generic presentation description of a document.	  *
- **************************************************************************
+ *                                                                        *
  *  This kind of routines are used to change presentation attributes of   *
  *  ALL ELEMENTS of a document type. Any document displayed using the     *
  *  Thot editing kernel is associated to one (or more) presentation       *
@@ -9,7 +13,7 @@
  *  depending on its type, its environment and specific rules.		  *
  *  This driver works by modifying directly the in-memory representation  *
  *  of these rules.							  *
- **************************************************************************
+ *                                                                        *
  *  In the case for HTML structure schema :				  *
  *  Here is the list of places where specific presentation rules are to   *
  *  be installed depending on the context of the rule :			  *
@@ -22,14 +26,13 @@
  *  H1 EM { ... }    |              |     X    |             |      X     *
  *  H1.pink { ... }  |              |          |      X      |      X     *
  *  EM.pink { ... }  |              |   ????   |    ????     |            *
- **************************************************************************
+ *                                                                        *
  *  NOTE : The driver need conditions applying to a presentation rule to  *
  *  be sorted. The function SortConds and AddCond apply the needed order  *
  *  PcElemType rule have to be first then all rules are sorted by the	  *
- *  value of the CoCondition field, and others fields available for rules  *
+ *  value of the CoCondition field, and others fields available for rules *
  *  of teh same kind. The function TstRuleContext rely on this order.	  *
- **************************************************************************
- */
+  ----------------------------------------------------------------------*/
 
 #include "thot_sys.h"
 #include "application.h"
@@ -55,11 +58,11 @@ extern void         FreePresentRule ();
 
 #endif /* __STDC__ */
 
-/************************************************************************
- *									*
- * GenericContext management functions.					*
- *									*
- ************************************************************************/
+/*----------------------------------------------------------------------
+   *									*
+   * GenericContext management functions.			       	*
+   *									*
+  ----------------------------------------------------------------------*/
 
 /*
  * CleanGenericContext : clean up Generic context by removing all context.
@@ -140,12 +143,12 @@ GenericContext      ctxt;
    TtaFreeMemory ((char *) ctxt);
 }
 
-/************************************************************************
- *									*
- * a few functions needed to help insert new rules in the presentation  *
- * structures                                                           *
- *									*
- ************************************************************************/
+/*----------------------------------------------------------------------
+   *									*
+   * a few functions needed to help insert new rules in the presentation  *
+   * structures                                                           *
+   *									*
+  ----------------------------------------------------------------------*/
 
 /*
  * BuildBoxName : generate an unique name encoding for the given context.
@@ -621,11 +624,11 @@ CmpRulesFunc        cmp;
 #define SortRulesForDisplay(rules) SortRules((rules), CmpRulesForDisplay)
 #define SortRulesForAccess(rules) SortRules((rules), CmpRulesForAccess)
 
-/************************************************************************
- *									*
- * Function actually doing conditions and rule search and insertion.	*
- *									*
- ************************************************************************/
+/*----------------------------------------------------------------------
+   *									*
+   * Function actually doing conditions and rule search and insertion.	*
+   *									*
+  ----------------------------------------------------------------------*/
 
 /*
  * TstRuleContext : test if a presentation rule correpond to the
@@ -1174,12 +1177,12 @@ PRuleType           pres;
    return (cur);
 }
 
-/************************************************************************
- *									*
- *	Function used to remove all generic presentation for a given	*
- *	context.							*
- *									*
- ************************************************************************/
+/*----------------------------------------------------------------------
+   *									*
+   *	Function used to remove all generic presentation for a given	*
+   *	context.							*
+   *									*
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 int                 GenericCleanPresentation (PresentationTarget t, PresentationContext c,
@@ -1308,14 +1311,14 @@ PresentationValue   v;
    return (0);
 }
 
-/************************************************************************
- *									*
- *	Function used to translate various parameters between external  *
- *	and internal representation of presentation attributes.		*
- *      These function also handle setting or fetching these values     *
- *      from the internal memory representation of presentation rules.  *
- *									*
- ************************************************************************/
+/*----------------------------------------------------------------------
+   *									*
+   *	Function used to translate various parameters between external  *
+   *	and internal representation of presentation attributes.		*
+   *      These function also handle setting or fetching these values     *
+   *      from the internal memory representation of presentation rules.  *
+   *									*
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static void         etoi_convert (PtrPRule rule, GenericValue val1,
@@ -1405,11 +1408,11 @@ GenericContext      ctxt;
    setting->value = PRuleToPresentationValue ((PRule) rule);
 }
 
-/************************************************************************
- *									*
- * Browsing functions.							*
- *									*
- ************************************************************************/
+/*----------------------------------------------------------------------
+   *									*
+   * Browsing functions.							*
+   *									*
+  ----------------------------------------------------------------------*/
 
 #define DRIVERG_CTXT_MAGIC1	((unsigned long) 0x23F45dA9L)
 
@@ -1727,20 +1730,20 @@ void               *param;
 
 }
 
-/************************************************************************
- *									*
- *	Macro's used to generate presentations routines			*
- *      These heavily rely on the token-pasting mechanism provided by   *
- *      the C preprocessor. The string a##b is replaced by the string   *
- *      "ab", but this is done after the macro is expanded.             *
- *      This mecanism allows to avoid a lot of typing, errors and keep  *
- *      the code compact at the price of a loss of readability.         *
- *      On old fashionned preprocessor (pre-Ansi) the token pasting was *
- *      a side effect of the preprocessor implementation on empty       *
- *      comments. In this case we use a+slash+star+star+slash+b to      *
- *      produce the same string "ab".					*
- *									*
- ************************************************************************/
+/*----------------------------------------------------------------------
+   *									*
+   *	Macro's used to generate presentations routines			*
+   *      These heavily rely on the token-pasting mechanism provided by   *
+   *      the C preprocessor. The string a##b is replaced by the string   *
+   *      "ab", but this is done after the macro is expanded.             *
+   *      This mecanism allows to avoid a lot of typing, errors and keep  *
+   *      the code compact at the price of a loss of readability.         *
+   *      On old fashionned preprocessor (pre-Ansi) the token pasting was *
+   *      a side effect of the preprocessor implementation on empty       *
+   *      comments. In this case we use a+slash+star+star+slash+b to      *
+   *      produce the same string "ab".					*
+   *									*
+  ----------------------------------------------------------------------*/
 
 #if (defined(__STDC__) && !defined(UNIXCPP)) || defined(ANSICPP) || defined(WWW_MSWINDOWS)
 
@@ -1888,11 +1891,11 @@ int GenericGet/**/name(t,c,v)						\
 
 #endif /* __STDC__ */
 
-/************************************************************************
- *									*
- *	generation of most common presentations routines		*
- *									*
- ************************************************************************/
+/*----------------------------------------------------------------------
+   *									*
+   *	generation of most common presentations routines		*
+   *									*
+  ----------------------------------------------------------------------*/
 
 GENERIC_FUNCS (Foreground, ForegroundColor)
 GENERIC_FUNCS (Background, BackgroundColor)
@@ -1908,11 +1911,11 @@ GENERIC_FUNCS (Font, FontFamily)
 GENERIC_FUNCS (LineSpacing, LineSpacing)
 GENERIC_FUNCS2 (Function, FnLine, InLine)
 
-/************************************************************************
- *									*
- *	a few presentations routines still need to be hand-coded	*
- *									*
- ************************************************************************/
+/*----------------------------------------------------------------------
+   *									*
+   *	a few presentations routines still need to be hand-coded	*
+   *									*
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 int                 GenericSetBox (PresentationTarget t, PresentationContext c,
@@ -2019,11 +2022,11 @@ int                 GenericSetHeight (PresentationTarget t, PresentationContext 
    return (0);
 }
 
-/************************************************************************
- *									*
- *	the strategy block for the generic presentation driver         *
- *									*
- ************************************************************************/
+/*----------------------------------------------------------------------
+   *									*
+   *	the strategy block for the generic presentation driver         *
+   *									*
+  ----------------------------------------------------------------------*/
 
 PresentationStrategy GenericStrategy =
 {
@@ -2071,28 +2074,28 @@ PresentationStrategy GenericStrategy =
    (PresentationGetFunction) GenericGetHPos,
    (PresentationSetFunction) GenericSetHPos,
 
-/******************
-    (PresentationGetFunction) GenericGetHeight,
-    (PresentationSetFunction) GenericSetHeight,
+/*----------------------------------------------------------------------
+   (PresentationGetFunction) GenericGetHeight,
+   (PresentationSetFunction) GenericSetHeight,
 
-    (PresentationGetFunction) GenericGetRelHeight,
-    (PresentationSetFunction) GenericSetRelHeight,
+   (PresentationGetFunction) GenericGetRelHeight,
+   (PresentationSetFunction) GenericSetRelHeight,
 
-    (PresentationGetFunction) GenericGetWidth,
-    (PresentationSetFunction) GenericSetWidth,
+   (PresentationGetFunction) GenericGetWidth,
+   (PresentationSetFunction) GenericSetWidth,
 
-    (PresentationGetFunction) GenericGetRelWidth,
-    (PresentationSetFunction) GenericSetRelWidth,
- *******************/
+   (PresentationGetFunction) GenericGetRelWidth,
+   (PresentationSetFunction) GenericSetRelWidth,
+  ----------------------------------------------------------------------*/
    NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
 
    (PresentationGetFunction) GenericGetInLine,
    (PresentationSetFunction) GenericSetInLine,
 
-/******************
-    (PresentationGetFunction) GenericGetShow,
-    (PresentationSetFunction) GenericSetShow,
- *******************/
+/*----------------------------------------------------------------------
+   (PresentationGetFunction) GenericGetShow,
+   (PresentationSetFunction) GenericSetShow,
+  ----------------------------------------------------------------------*/
    NULL, NULL,
 
    (PresentationGetFunction) GenericGetBox,

@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 1996 INRIA, All rights reserved
+ */
+
 
 /*
   
@@ -22,13 +26,13 @@
 #include "presvariables_f.h"
 
 
-/* ---------------------------------------------------------------------- */
-/* |    MakeAliasTypeCount cree un alias temporaire qui va servir a faire | */
-/* |            une recherche multiple sur les elements du compteur     | */
-/* |            on cree l'alias  MAX_RULES_SSCHEMA  pour les elements reset   | */
-/* |            du compteur.  On cree l'alias  MAX_RULES_SSCHEMA + 1 pour les | */
-/* |            elements add du compteur.                               | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   MakeAliasTypeCount cree un alias temporaire qui va servir a faire 
+   une recherche multiple sur les elements du compteur     
+   on cree l'alias  MAX_RULES_SSCHEMA  pour les elements reset   
+   du compteur.  On cree l'alias  MAX_RULES_SSCHEMA + 1 pour les 
+   elements add du compteur.                               
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static int  MakeAliasTypeCount (Counter * pCounter, CounterOp op, PtrSSchema pSchStr)
@@ -87,10 +91,10 @@ PtrSSchema        pSchStr;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    GetCounterValEl renvoie la valeur numerique de set ou d'increment | */
-/* |            associee a l'element pEl.                               | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   GetCounterValEl renvoie la valeur numerique de set ou d'increment 
+   associee a l'element pEl.                               
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static int          GetCounterValEl (Counter * pCounter, PtrElement pEl, CounterOp op, PtrSSchema pSchStr)
@@ -119,9 +123,9 @@ PtrSSchema        pSchStr;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    InitCounterByAttribute                                          | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   InitCounterByAttribute                                          
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static boolean      InitCounterByAttribute (int *valinit, Counter * pCo, PtrElement pElNum, PtrSSchema pSS)
 
@@ -176,16 +180,16 @@ PtrSSchema        pSS;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    CounterValMinMax retourne la valeur minimale ou maximale (selon   | */
-/* |            que Maximum est faux ou vrai) retourne la valeur du     | */
-/* |            compteur de numero NCompt (defini dans le schema de     | */
-/* |            presentation  pointe' par pSchP, qui s'applique au      | */
-/* |            schema de structure pointe' par pSS) pour l'element     | */
-/* |            pointe' par pElNum.                                     | */
-/* |            view indique la view concernee (uniquement pour les       | */
-/* |            compteurs de page).                                     | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   CounterValMinMax retourne la valeur minimale ou maximale (selon   
+   que Maximum est faux ou vrai) retourne la valeur du     
+   compteur de numero NCompt (defini dans le schema de     
+   presentation  pointe' par pSchP, qui s'applique au      
+   schema de structure pointe' par pSS) pour l'element     
+   pointe' par pElNum.                                     
+   view indique la view concernee (uniquement pour les       
+   compteurs de page).                                     
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 int                 CounterValMinMax (int counterNum, PtrSSchema pSS, PtrPSchema pSchP, PtrElement pElNum, int view, boolean Maximum)
@@ -429,14 +433,14 @@ boolean             Maximum;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    CounterVal retourne la valeur du compteur de numero counterNum (defini| */
-/* |            dans le schema de presentation  pointe' par pSchP, qui  | */
-/* |            s'applique au schema de structure pointe' par pSS) pour | */
-/* |            l'element pointe' par pElNum.                           | */
-/* |            view indique la view concernee (uniquement pour les       | */
-/* |            compteurs de page).                                     | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   CounterVal retourne la valeur du compteur de numero counterNum (defini
+   dans le schema de presentation  pointe' par pSchP, qui  
+   s'applique au schema de structure pointe' par pSS) pour 
+   l'element pointe' par pElNum.                           
+   view indique la view concernee (uniquement pour les       
+   compteurs de page).                                     
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 int                 CounterVal (int counterNum, PtrSSchema pSS, PtrPSchema pSchP, PtrElement pElNum, int view)
@@ -714,11 +718,11 @@ int                 view;
    return value;
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    PresAbsBoxUserEditable    retourne vrai si le pave pAb est un    | */
-/* |            pave de presentation dont le contenu peut etre modifie' | */
-/* |            par l'utilisateur.                                      | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   PresAbsBoxUserEditable    retourne vrai si le pave pAb est un    
+   pave de presentation dont le contenu peut etre modifie' 
+   par l'utilisateur.                                      
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 boolean             PresAbsBoxUserEditable (PtrAbstractBox pAb)
 #else  /* __STDC__ */
@@ -762,16 +766,16 @@ PtrAbstractBox             pAb;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    NewVariable met dans le pave pAb le texte correspondant a la  | */
-/* |            variable de numero varNum definie dans le schema de       | */
-/* |            presentation pSchP (et qui correspond au schema de      | */
-/* |            structure pSS). pDoc pointe sur le descripteur du       | */
-/* |            document pour lequel on travaille. Si le pave avait     | */
-/* |            deja un contenu et que ce contenu ne change pas la      | */
-/* |            fonction retourne 'faux'. S'il y a un isNew contenu,  | */
-/* |            elle retourne 'vrai'.                                   | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   NewVariable met dans le pave pAb le texte correspondant a la  
+   variable de numero varNum definie dans le schema de       
+   presentation pSchP (et qui correspond au schema de      
+   structure pSS). pDoc pointe sur le descripteur du       
+   document pour lequel on travaille. Si le pave avait     
+   deja un contenu et que ce contenu ne change pas la      
+   fonction retourne 'faux'. S'il y a un isNew contenu,  
+   elle retourne 'vrai'.                                   
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 boolean             NewVariable (int varNum, PtrSSchema pSS, PtrPSchema pSchP,

@@ -1,4 +1,8 @@
 /*
+ * Copyright (c) 1996 INRIA, All rights reserved
+ */
+
+/*
    Manage box selections
    I. Vatton
  */
@@ -32,10 +36,10 @@
 #include "displayselect_f.h"
 
 
-/* ---------------------------------------------------------------------- */
-/* |    ClearAbstractBoxSelection parcours l'arborescence pour annuler  | */
-/* |            toutes ls selections de pave.                           | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ClearAbstractBoxSelection parcours l'arborescence pour annuler  
+   toutes ls selections de pave.                           
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         ClearAbstractBoxSelection (PtrAbstractBox pAb)
 #else  /* __STDC__ */
@@ -65,12 +69,12 @@ PtrAbstractBox             pAb;
      }
 }
 
-/* ---------------------------------------------------------------------- */
-/* | SwitchSelection bascule la mise en e'vidence de la se'lection dans | */
-/* |            la fene^tre frame :                                     | */
-/* |            - si toShow est Vrai et que la se'lection est eteinte,  | */
-/* |            - ou si toShow est Faux et la se'lection allume'e.      | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   SwitchSelection bascule la mise en e'vidence de la se'lection dans 
+   la fene^tre frame :                                     
+   - si toShow est Vrai et que la se'lection est eteinte,  
+   - ou si toShow est Faux et la se'lection allume'e.      
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                SwitchSelection (int frame, boolean toShow)
 #else  /* __STDC__ */
@@ -94,9 +98,9 @@ boolean             toShow;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |  ClearViewSelMarks annule la selection courante dans la fenetre.   | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ClearViewSelMarks annule la selection courante dans la fenetre.   
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                ClearViewSelMarks (int frame)
 #else  /* __STDC__ */
@@ -118,10 +122,10 @@ int                 frame;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |   ClearViewSelection bascule et annule la mise en evidence de la   | */
-/* |            selection dans la fenetre.                              | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ClearViewSelection bascule et annule la mise en evidence de la   
+   selection dans la fenetre.                              
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                ClearViewSelection (int frame)
 #else  /* __STDC__ */
@@ -147,10 +151,10 @@ int                 frame;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |  ClearAllViewSelection annule et bascule toutes les selections     | */
-/* |            courantes visualisees.                                  | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ClearAllViewSelection annule et bascule toutes les selections     
+   courantes visualisees.                                  
+  ----------------------------------------------------------------------*/
 void                ClearAllViewSelection ()
 {
    int              frame;
@@ -162,10 +166,10 @@ void                ClearAllViewSelection ()
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |  UpdateViewSelMarks met a jour les marques de selection de frame   | */
-/* |            apres insertion ou destruction de caracteres.           | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   UpdateViewSelMarks met a jour les marques de selection de frame   
+   apres insertion ou destruction de caracteres.           
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                UpdateViewSelMarks (int frame, int xDelta, int spaceDelta, int charDelta)
 #else  /* __STDC__ */
@@ -194,10 +198,10 @@ int                 charDelta;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    Detruit le buffer donne en parametre, met a jour les marques de | */
-/* |    selection et rend le pointeur sur le buffer precedent.          | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   Detruit le buffer donne en parametre, met a jour les marques de 
+   selection et rend le pointeur sur le buffer precedent.          
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 PtrTextBuffer      DeleteBuffer (PtrTextBuffer pBuffer, int frame)
 #else  /* __STDC__ */
@@ -263,11 +267,11 @@ int                frame;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* | LocateBuffer parcours les buffers de la boite de texte pour trouver| */
-/* |            celui qui contient le caractere d'indice global index   | */
-/* |            ainsi que son indice dans ce buffer.                    | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   LocateBuffer parcours les buffers de la boite de texte pour trouver
+   celui qui contient le caractere d'indice global index   
+   ainsi que son indice dans ce buffer.                    
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         LocateBuffer (PtrTextBuffer *pBuffer, int *index)
 #else  /* __STDC__ */
@@ -302,14 +306,14 @@ int               *index;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |  ComputeViewSelMarks calcule la marque de selection connaissant la | */
-/* |            boite entiere VsBox, le buffer VsBuffer et l'index du   | */
-/* |            caractere VsIndBuf marque'.                             | */
-/* |            Deduit l'index caractere (VsIndBox), le nombre de blancs| */
-/* |            le precedant VsNSpaces, la position dans la boite VsXPos| */
-/* |            et la ligne contenant la boite VsLine.                  | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ComputeViewSelMarks calcule la marque de selection connaissant la 
+   boite entiere VsBox, le buffer VsBuffer et l'index du   
+   caractere VsIndBuf marque'.                             
+   Deduit l'index caractere (VsIndBox), le nombre de blancs
+   le precedant VsNSpaces, la position dans la boite VsXPos
+   et la ligne contenant la boite VsLine.                  
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                ComputeViewSelMarks (ViewSelection *selMark)
 #else  /* __STDC__ */
@@ -439,19 +443,19 @@ ViewSelection      *selMark;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |  InsertViewSelMarks pose la selection courante sur la portion de   | */
-/* |            document visualisee dans une frame du Mediateur. Le     | */
-/* |            pave pAb correspond soit au debut de la selection       | */
-/* |            (debut est Vrai), soit la fin de la selection (fin est  | */
-/* |            vrai), soit les deux. Le parametre firstChar donne      | */
-/* |            lindice du premier caractere selectionne ou 0 si tout   | */
-/* |            le pave est selectionne.                                | */
-/* |            Le parametre lastChar donne l'indice du caractere qui   | */
-/* |            suit le dernier selectionne'.                           | */
-/* |            Le parametre alone indique que la selection reelle     | */
-/* |            donc visualisee porte sur un seul et unique pave.       | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   InsertViewSelMarks pose la selection courante sur la portion de   
+   document visualisee dans une frame du Mediateur. Le     
+   pave pAb correspond soit au debut de la selection       
+   (debut est Vrai), soit la fin de la selection (fin est  
+   vrai), soit les deux. Le parametre firstChar donne      
+   lindice du premier caractere selectionne ou 0 si tout   
+   le pave est selectionne.                                
+   Le parametre lastChar donne l'indice du caractere qui   
+   suit le dernier selectionne'.                           
+   Le parametre alone indique que la selection reelle     
+   donc visualisee porte sur un seul et unique pave.       
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                InsertViewSelMarks (int frame, PtrAbstractBox pAb, int firstChar, int lastChar, boolean startSelection, boolean endSelection, boolean alone)
 #else  /* __STDC__ */
@@ -657,10 +661,10 @@ boolean             alone;
      }
 }
 
-/* ---------------------------------------------------------------------- */
-/* |  IsAbstractBoxDisplayed rend la valeur vrai si le pave est affiche'| */
-/* |            dans le frame.                                          | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   IsAbstractBoxDisplayed rend la valeur vrai si le pave est affiche'
+   dans le frame.                                          
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 boolean             IsAbstractBoxDisplayed (PtrAbstractBox pAb, int frame)
 #else  /* __STDC__ */

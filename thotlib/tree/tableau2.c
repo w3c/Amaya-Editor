@@ -1,4 +1,8 @@
 /*
+ * Copyright (c) 1996 INRIA, All rights reserved
+ */
+
+/*
    tableau2.c : Traitements specifiques a la structure Tableau.
 
  */
@@ -23,10 +27,10 @@
 #include "exc_tableau.h"
 
 
-/* ---------------------------------------------------------------------- */
-/* |    Tableau_ApplRegleAttribut retourne vrai dans ApplAttrsi on peut | */
-/* |            appliquer les regles de l'attribut a` l'element.        | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   Tableau_ApplRegleAttribut retourne vrai dans ApplAttrsi on peut 
+   appliquer les regles de l'attribut a` l'element.        
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void Tableau_ApplRegleAttribut(PtrElement pEl, PtrAttribute pAttr, PtrDocument pDoc, boolean *ApplAttr)
 
@@ -104,25 +108,25 @@ boolean             *ApplAttr;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    Tableau_PaveRef traite la regle de hauteur des filets verticaux.| */
-/* |            Cette procedure est appelee lors de l'application de    | */
-/* |            toute regle de hauteur ou de largeur elastique.         | */
-/* |            - pAb est le pave auquel on applique la regle.         | */
-/* |            - pRegle est la regle a` traiter.                       | */
-/* |            - Posit definit la position qui determine la hauteur    | */
-/* |            elastique                                               | */
-/* |            Le traitement particulier n'a lieu que s'il s'agit de   | */
-/* |            la regle de hauteur appliquee a` un pave de             | */
-/* |            presentation cree' par un element En\240T\352tes,       | */
-/* |            Les\240Colonnes, Colonne\240Simple ou                   | */
-/* |            Colonne\240Compos\351 et si la hauteur est definie par  | */
-/* |            un element Bas_tableau.                                 | */
-/* |            Dans ce cas, la procedure retourne un pointeur sur le   | */
-/* |            pave du premier element BasPageTableau qui suit         | */
-/* |            l'element de pAb. Dans les autres cas, ou si le pave   | */
-/* |            cherche' n'existe pas, elle retourne NULL.              | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   Tableau_PaveRef traite la regle de hauteur des filets verticaux.
+   Cette procedure est appelee lors de l'application de    
+   toute regle de hauteur ou de largeur elastique.         
+   - pAb est le pave auquel on applique la regle.         
+   - pRegle est la regle a` traiter.                       
+   - Posit definit la position qui determine la hauteur    
+   elastique                                               
+   Le traitement particulier n'a lieu que s'il s'agit de   
+   la regle de hauteur appliquee a` un pave de             
+   presentation cree' par un element En\240T\352tes,       
+   Les\240Colonnes, Colonne\240Simple ou                   
+   Colonne\240Compos\351 et si la hauteur est definie par  
+   un element Bas_tableau.                                 
+   Dans ce cas, la procedure retourne un pointeur sur le   
+   pave du premier element BasPageTableau qui suit         
+   l'element de pAb. Dans les autres cas, ou si le pave   
+   cherche' n'existe pas, elle retourne NULL.              
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void Tableau_PaveRef(PtrAbstractBox pAb, PosRule *Posit, PtrPRule pRegle, PtrAbstractBox *pPavBas)
@@ -175,13 +179,13 @@ PtrAbstractBox            *pPavBas;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    Tableau_Cond_Dernier modifie le booleen PcLast si l'element pEl| */
-/* |            est une ligne de tableau. PcLast est mis a` vrai si    | */
-/* |            l'element est suivi d'un element Bas_Tableau et a` Faux | */
-/* |            sinon. Si l'element pEl n'est pas une ligne de tableau, | */
-/* |            le booleen PcLast n'est pas modifie'.                  | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   Tableau_Cond_Dernier modifie le booleen PcLast si l'element pEl
+   est une ligne de tableau. PcLast est mis a` vrai si    
+   l'element est suivi d'un element Bas_Tableau et a` Faux 
+   sinon. Si l'element pEl n'est pas une ligne de tableau, 
+   le booleen PcLast n'est pas modifie'.                  
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                Tableau_Cond_Dernier (PtrElement pEl, boolean * PcLast)
@@ -217,9 +221,9 @@ boolean            *PcLast;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    TableauDebordeVertical                                          | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   TableauDebordeVertical                                          
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                TableauDebordeVertical (PtrPRule pRegle, PtrAbstractBox pAb)

@@ -1,7 +1,11 @@
-/**************************************************************************
+/*
+ * Copyright (c) 1996 INRIA, All rights reserved
+ */
+
+/*----------------------------------------------------------------------
  * specificdriver.c : presentation driver used to manipulate presentation *
  *           using presentation specific attributes.			  *
- **************************************************************************
+ *                                                                        *
  *  This kind of routines are used only when changing presentation        *
  *  attributes of A SINGLE ELEMENT. Each element correspond to a node     *
  *  in the tree composing a Thot document and these routine puts special  *
@@ -13,7 +17,7 @@
  *  the usual way of representing objects which consists of following the *
  *  presentation scheme associated to this kind of document and described *
  * in the P language.                                                     *
- **************************************************************************
+  ----------------------------------------------------------------------
  */
 
 #include "thot_sys.h"
@@ -70,12 +74,12 @@ SpecificContext     ctxt;
    TtaFreeMemory ((char *) ctxt);
 }
 
-/************************************************************************
- *									*
- *	Function used to remove all specific presentation for a given	*
- *	element.							*
- *									*
- ************************************************************************/
+/*----------------------------------------------------------------------
+   *									*
+   *	Function used to remove all specific presentation for a given	*
+   *	element.							*
+   *									*
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 int                 SpecificCleanPresentation (PresentationTarget t, PresentationContext c,
@@ -105,14 +109,14 @@ PresentationValue   v;
    return (0);
 }
 
-/************************************************************************
- *									*
- *	Function used to translate various parameters between external  *
- *	and internal representation of presentation attributes.		*
- *      These function also handle setting or fetching these values     *
- *      from the internal memory representation of presentation rules.  *
- *									*
- ************************************************************************/
+/*----------------------------------------------------------------------
+   *									*
+   *	Function used to translate various parameters between external  *
+   *	and internal representation of presentation attributes.		*
+   *      These function also handle setting or fetching these values     *
+   *      from the internal memory representation of presentation rules.  *
+   *									*
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static int          etoi_convert (SpecificTarget el, int type,
@@ -151,20 +155,20 @@ Document            doc;
    return (0);
 }
 
-/************************************************************************
- *									*
- *	Macro's used to generate presentations routines			*
- *      These heavily rely on the token-pasting mechanism provided by   *
- *      the C preprocessor. The string a##b is replaced by the string   *
- *      "ab", but this is done after the macro is expanded.             *
- *      This mecanism allows to avoid a lot of typing, errors and keep  *
- *      the code compact at the price of a loss of readability.         *
- *      On old fashionned preprocessor (pre-Ansi) the token pasting was *
- *      a side effect of the preprocessor implementation on empty       *
- *      comments. In this case we use a+slash+star+star+slash+b to      *
- *      produce the same string "ab".					*
- *									*
- ************************************************************************/
+/*----------------------------------------------------------------------
+   *									*
+   *	Macro's used to generate presentations routines			*
+   *      These heavily rely on the token-pasting mechanism provided by   *
+   *      the C preprocessor. The string a##b is replaced by the string   *
+   *      "ab", but this is done after the macro is expanded.             *
+   *      This mecanism allows to avoid a lot of typing, errors and keep  *
+   *      the code compact at the price of a loss of readability.         *
+   *      On old fashionned preprocessor (pre-Ansi) the token pasting was *
+   *      a side effect of the preprocessor implementation on empty       *
+   *      comments. In this case we use a+slash+star+star+slash+b to      *
+   *      produce the same string "ab".					*
+   *									*
+  ----------------------------------------------------------------------*/
 
 #if (defined(__STDC__) && !defined(UNIXCPP)) || defined(ANSICPP)
 
@@ -244,11 +248,11 @@ int SpecificGet/**/name(t,c,v)						\
 
 #endif /* __STDC__ */
 
-/************************************************************************
- *									*
- *	generation of most common presentations routines		*
- *									*
- ************************************************************************/
+/*----------------------------------------------------------------------
+   *									*
+   *	generation of most common presentations routines		*
+   *									*
+  ----------------------------------------------------------------------*/
 
 SPECIFIC_FUNCS (Foreground, ForegroundColor) \
 SPECIFIC_FUNCS (Background, BackgroundColor) \
@@ -263,11 +267,11 @@ SPECIFIC_FUNCS (FillPattern, FillPattern)
 SPECIFIC_FUNCS (Font, FontFamily)
 SPECIFIC_FUNCS (LineSpacing, LineSpacing)
 
-/************************************************************************
- *									*
- *	a few presentations routines still need to be hand-coded	*
- *									*
- ************************************************************************/
+/*----------------------------------------------------------------------
+   *									*
+   *	a few presentations routines still need to be hand-coded	*
+   *									*
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 int                 SpecificSetWidth (PresentationTarget t, PresentationContext c,
@@ -331,11 +335,11 @@ PresentationValue  *v;
    return (0);
 }
 
-/************************************************************************
- *									*
- *	the strategy block for the specific presentation driver         *
- *									*
- ************************************************************************/
+/*----------------------------------------------------------------------
+   *									*
+   *	the strategy block for the specific presentation driver         *
+   *									*
+  ----------------------------------------------------------------------*/
 
 PresentationStrategy SpecificStrategy =
 {
@@ -377,39 +381,39 @@ PresentationStrategy SpecificStrategy =
    (PresentationGetFunction) SpecificGetFillPattern,
    (PresentationSetFunction) SpecificSetFillPattern,
 
-/*************************************************************
-    (PresentationGetFunction) SpecificGetVPos,
-    (PresentationSetFunction) SpecificSetVPos,
+/*----------------------------------------------------------------------
+   (PresentationGetFunction) SpecificGetVPos,
+   (PresentationSetFunction) SpecificSetVPos,
 
-    (PresentationGetFunction) SpecificGetHPos,
-    (PresentationSetFunction) SpecificSetHPos,
+   (PresentationGetFunction) SpecificGetHPos,
+   (PresentationSetFunction) SpecificSetHPos,
 
-    (PresentationGetFunction) SpecificGetHeight,
-    (PresentationSetFunction) SpecificSetHeight,
+   (PresentationGetFunction) SpecificGetHeight,
+   (PresentationSetFunction) SpecificSetHeight,
 
-    (PresentationGetFunction) SpecificGetRelHeight,
-    (PresentationSetFunction) SpecificSetRelHeight,
- *************************************************************/
+   (PresentationGetFunction) SpecificGetRelHeight,
+   (PresentationSetFunction) SpecificSetRelHeight,
+  ----------------------------------------------------------------------*/
    NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
 
-/*************************************************************
-    (PresentationGetFunction) SpecificGetWidth,
-    (PresentationSetFunction) SpecificSetWidth,
- *************************************************************/
+/*----------------------------------------------------------------------
+   (PresentationGetFunction) SpecificGetWidth,
+   (PresentationSetFunction) SpecificSetWidth,
+  ----------------------------------------------------------------------*/
    NULL, NULL,
 
-/*************************************************************
-    (PresentationGetFunction) SpecificGetRelWidth,
-    (PresentationSetFunction) SpecificSetRelWidth,
+/*----------------------------------------------------------------------
+   (PresentationGetFunction) SpecificGetRelWidth,
+   (PresentationSetFunction) SpecificSetRelWidth,
 
-    (PresentationGetFunction) SpecificGetInLine,
-    (PresentationSetFunction) SpecificSetInLine,
+   (PresentationGetFunction) SpecificGetInLine,
+   (PresentationSetFunction) SpecificSetInLine,
 
-    (PresentationGetFunction) SpecificGetShow,
-    (PresentationSetFunction) SpecificSetShow,
+   (PresentationGetFunction) SpecificGetShow,
+   (PresentationSetFunction) SpecificSetShow,
 
-    (PresentationGetFunction) SpecificGetBox,
-    (PresentationSetFunction) SpecificSetBox,
- *************************************************************/
+   (PresentationGetFunction) SpecificGetBox,
+   (PresentationSetFunction) SpecificSetBox,
+  ----------------------------------------------------------------------*/
    NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
 };

@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 1996 INRIA, All rights reserved
+ */
+
 #define DRW_CR_ORIGIN		0
 #define DRW_CR_TARGET		1
 #define DRW_SELECT_GROUP_FIRST	2

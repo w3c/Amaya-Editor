@@ -1,4 +1,8 @@
 /*
+ * Copyright (c) 1996 INRIA, All rights reserved
+ */
+
+/*
    Module traitant les attributs
 */
 
@@ -46,11 +50,11 @@ extern void         DisplayFrame ();
 
 #endif /* __STDC__ */
 
-/* ---------------------------------------------------------------------- */
-/* |    SetAttrReference fait pointer l'attribut reference pAttr sur    | */
-/* |    l'element pEl.							| */
-/* |    UNIQUEMENT pour une reference *INTERNE*                         | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   SetAttrReference fait pointer l'attribut reference pAttr sur    
+   l'element pEl.							
+   UNIQUEMENT pour une reference *INTERNE*                         
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         SetAttrReference (PtrAttribute pAttr, PtrElement pEl)
 
@@ -78,19 +82,19 @@ PtrAttribute         pAttr;
      }
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    Met a l'element pEl l'attribut auquel est associe'              | */
-/* |    l'exception de numero ExceptNum et retourne un pointeur sur cet | */
-/* |    attribut. On ne met l'attribut que si l'element ne le possede   | */
-/* |    pas deja. Dans tous les cas, la fonction retourne un pointeur   | */
-/* |    sur l'attribut.                                                 | */
-/* |    S'il s'agit d'un attribut reference, pReferredEl designe	| */
-/* |    l'element sur lequel la reference doit pointer.			| */
-/* |    UNIQUEMENT pour une reference *INTERNE*                         | */
-/* |    Si pReferredEl est NULL, le lien de reference n'est pas etabli. | */
-/* |    Ce lien peut ensuite etre etabli par la procedure SetReference, | */
-/* |    en particulier pour un lien externe.                            | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   Met a l'element pEl l'attribut auquel est associe'              
+   l'exception de numero ExceptNum et retourne un pointeur sur cet 
+   attribut. On ne met l'attribut que si l'element ne le possede   
+   pas deja. Dans tous les cas, la fonction retourne un pointeur   
+   sur l'attribut.                                                 
+   S'il s'agit d'un attribut reference, pReferredEl designe	
+   l'element sur lequel la reference doit pointer.			
+   UNIQUEMENT pour une reference *INTERNE*                         
+   Si pReferredEl est NULL, le lien de reference n'est pas etabli. 
+   Ce lien peut ensuite etre etabli par la procedure SetReference, 
+   en particulier pour un lien externe.                            
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 PtrAttribute         AttachAttrByExceptNum (int ExceptNum, PtrElement pEl, PtrElement pReferredEl, PtrDocument pDoc)
@@ -212,9 +216,9 @@ PtrDocument         pDoc;
    return pAttr;
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    On reaffiche un pave modifie                                    | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   On reaffiche un pave modifie                                    
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static void         RedisplayAbsBox (PtrAbstractBox pAbsBox, int boxNum, PtrPSchema pPSchema, int view, PtrElement pEl, PtrDocument pDoc, PtrAttribute pAttr)
@@ -281,12 +285,12 @@ PtrAttribute         pAttr;
      }
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    L'attribut pointe' par pAttr portant sur l'element              | */
-/* |    pointe' par pEl, dans le document pDoc, a change' de valeur.    | */
-/* |    Reafficher toutes les boites de presentation qui utilisent      | */
-/* |    la valeur de cet attribut.					| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   L'attribut pointe' par pAttr portant sur l'element              
+   pointe' par pEl, dans le document pDoc, a change' de valeur.    
+   Reafficher toutes les boites de presentation qui utilisent      
+   la valeur de cet attribut.					
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                RedisplayAttribute (PtrAttribute pAttr, PtrElement pEl, PtrDocument pDoc)
@@ -351,11 +355,11 @@ PtrDocument         pDoc;
 	}
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    Si la selection passee en parametre commence ou finit sur des   | */
-/* |    elements partiellement selectionnes, ces elements sont coupes   | */
-/* |    en deux et leurs paves egalement.                               | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   Si la selection passee en parametre commence ou finit sur des   
+   elements partiellement selectionnes, ces elements sont coupes   
+   en deux et leurs paves egalement.                               
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                CutSelection (PtrDocument pDoc, PtrElement * pFirstSel, PtrElement * pLastSel, int *firstChar, int *lastChar)
@@ -401,11 +405,11 @@ int                *lastChar;
 	 SplitAfterSelection (*pLastSel, *lastChar, pDoc);
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    ApplyRule a l'element pointe' par pEl du document pDoc les       | */
-/* |    regles de presentation correspondant a l'attribut decrit dans   | */
-/* |    le bloc pointe' par pAttr.                                      | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ApplyRule a l'element pointe' par pEl du document pDoc les       
+   regles de presentation correspondant a l'attribut decrit dans   
+   le bloc pointe' par pAttr.                                      
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                ApplyAttrPRulesToElem (PtrElement pEl, PtrDocument pDoc, PtrAttribute pAttr, boolean inherit)
@@ -480,12 +484,12 @@ boolean             inherit;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    ApplyRule au sous arbre pointe' par pEl du document pDoc les     | */
-/* |    regles de presentation heritees de l'attribut pAttr		| */
-/* |    On arrete la recursion quand on rencontre un fils portant       | */
-/* |    lui-meme un attribut de meme type que pAttr			| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ApplyRule au sous arbre pointe' par pEl du document pDoc les     
+   regles de presentation heritees de l'attribut pAttr		
+   On arrete la recursion quand on rencontre un fils portant       
+   lui-meme un attribut de meme type que pAttr			
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                ApplyAttrPRulesToSubtree (PtrElement pEl, PtrDocument pDoc, PtrAttribute pAttr)
@@ -537,11 +541,11 @@ PtrAttribute         pAttr;
      }
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    ApplyRule au sous arbre pointe' par pEl du document pDoc les     | */
-/* |    regles de presentation des attributs dont les valeurs se	| */
-/* |	comparent a pAttr.						| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ApplyRule au sous arbre pointe' par pEl du document pDoc les     
+   regles de presentation des attributs dont les valeurs se	
+   	comparent a pAttr.						
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                ApplyAttrPRules (PtrElement pEl, PtrDocument pDoc, PtrAttribute pAttr)
@@ -595,9 +599,9 @@ PtrAttribute         pAttr;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    Chaine les elements liberes par les fusions de texte.           | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   Chaine les elements liberes par les fusions de texte.           
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                KeepFreeElements (PtrElement pEl, PtrElement * pFirstFree)
@@ -615,13 +619,13 @@ PtrElement         *pFirstFree;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    Change la langue de toutes les feuilles de texte dans le        | */
-/* |    sous-arbre de l'element pointe' par pEl, appartenant au         | */
-/* |    document dont le contexte est pointe' par pDoc                  | */
-/* |    Le parametre force est vrai quand on veut forcer le changement  | */
-/* |    de langue.                                                      | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   Change la langue de toutes les feuilles de texte dans le        
+   sous-arbre de l'element pointe' par pEl, appartenant au         
+   document dont le contexte est pointe' par pDoc                  
+   Le parametre force est vrai quand on veut forcer le changement  
+   de langue.                                                      
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                ChangeLanguage (PtrDocument pDoc, PtrElement pEl, Language lang, boolean force)
@@ -690,11 +694,11 @@ boolean             force;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    Verifie si l'attribut pointe' par pAttr et appartenant a pEl	| */
-/* |    contient un attribut qui initialise un (des) compteur(s).	| */
-/* |	Si oui, met a jour les valeurs de ce(s) compteur(s).		| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   Verifie si l'attribut pointe' par pAttr et appartenant a pEl	
+   contient un attribut qui initialise un (des) compteur(s).	
+   	Si oui, met a jour les valeurs de ce(s) compteur(s).		
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                UpdateCountersByAttr (PtrElement pEl, PtrAttribute pAttr, PtrDocument pDoc)
@@ -744,14 +748,14 @@ PtrDocument         pDoc;
    }
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    DeleteElement la presentation associee a l'attribut pAttr dans les	| */
-/* |    images de l'element pEl.					| */
-/* |    Si pCompAttr != NULL, les regles de presentation dependant	| */
-/* |    de la comparaison doivent prendre pCompAttr comme attribut de   | */
-/* |    comparaison et ne pas en chercher d'autre dans les ascendants	| */
-/* |    de pEl.                                                         | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   DeleteElement la presentation associee a l'attribut pAttr dans les	
+   images de l'element pEl.					
+   Si pCompAttr != NULL, les regles de presentation dependant	
+   de la comparaison doivent prendre pCompAttr comme attribut de   
+   comparaison et ne pas en chercher d'autre dans les ascendants	
+   de pEl.                                                         
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                RemoveAttrPresentation (PtrElement pEl, PtrDocument pDoc, PtrAttribute pAttr, boolean inherit, PtrAttribute pCompAttr)
@@ -781,11 +785,11 @@ PtrAttribute         pCompAttr;
      }
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    DeleteElement du sous arbre pEl du document pDoc les  regles de	| */
-/* |	presentation heritees de l'attribut pAttr.			| */
-/* |    Si pEl porte lui-meme un attribut de type pAttr, on arrete.	| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   DeleteElement du sous arbre pEl du document pDoc les  regles de	
+   	presentation heritees de l'attribut pAttr.			
+   Si pEl porte lui-meme un attribut de type pAttr, on arrete.	
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                RemoveInheritedAttrPresent (PtrElement pEl, PtrDocument pDoc, PtrAttribute pAttr)
@@ -832,13 +836,13 @@ PtrAttribute         pAttr;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    DeleteElement du sous arbre pointe' par pEl du document pDoc les     | */
-/* |    regles de presentation provenant de la comparaison avec		| */
-/* |    l'attribut pAttr.						| */
-/* |    On arrete la recursion quand on rencontre un fils portant       | */
-/* |    lui-meme un attribut de meme type que pAttr			| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   DeleteElement du sous arbre pointe' par pEl du document pDoc les     
+   regles de presentation provenant de la comparaison avec		
+   l'attribut pAttr.						
+   On arrete la recursion quand on rencontre un fils portant       
+   lui-meme un attribut de meme type que pAttr			
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                RemoveComparAttrPresent (PtrElement pEl, PtrDocument pDoc, PtrAttribute pAttr)
@@ -892,9 +896,9 @@ PtrAttribute         pAttr;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    Ajoute un attribut pNewAttr a l'element pEl                    | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   Ajoute un attribut pNewAttr a l'element pEl                    
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 PtrAttribute         AddAttrToElem (PtrElement pEl, PtrAttribute pNewAttr)
@@ -970,11 +974,11 @@ PtrAttribute         pNewAttr;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    Met dans l'element pEl la valeur de l'attribut pNewAttr		| */
-/* |    Les regles de presentation de cette nouvelle valeur sont	| */
-/* |    appliquees a l'element.						| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   Met dans l'element pEl la valeur de l'attribut pNewAttr		
+   Les regles de presentation de cette nouvelle valeur sont	
+   appliquees a l'element.						
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                AttachAttrWithValue (PtrElement pEl, PtrDocument pDoc, PtrAttribute pNewAttr)
 #else  /* __STDC__ */
@@ -1211,9 +1215,9 @@ PtrAttribute         pNewAttr;
      }
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    AttachAttrToRange applique l'attribut pAttr a une partie de document| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   AttachAttrToRange applique l'attribut pAttr a une partie de document
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                AttachAttrToRange (PtrAttribute pAttr, int lastChar, int firstChar, PtrElement pLastSel, PtrElement pFirstSel, PtrDocument pDoc)
 #else  /* __STDC__ */
@@ -1299,13 +1303,13 @@ PtrDocument         pDoc;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    AttachMandatoryAttrSRule verifie que l'element pEl possede les  | */
-/* |    attributs requis indique's dans la regle pSRule du schema de    | */
-/* |    structure pSS et, si certains attributs requis manquent, force  | */
-/* |    l'utilisateur a leur donner une valeur et met ces attributs sur | */
-/* |    l'element pEl.                                                  | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   AttachMandatoryAttrSRule verifie que l'element pEl possede les  
+   attributs requis indique's dans la regle pSRule du schema de    
+   structure pSS et, si certains attributs requis manquent, force  
+   l'utilisateur a leur donner une valeur et met ces attributs sur 
+   l'element pEl.                                                  
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         AttachMandatoryAttrSRule (PtrElement pEl, PtrDocument pDoc, SRule * pSRule, PtrSSchema pSS)
 #else  /* __STDC__ */
@@ -1469,12 +1473,12 @@ PtrSSchema        pSS;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    Verifie que tous les elements du sous-arbre de racine pEl       | */
-/* |    possedent les attributs requis et, si certains attributs requis | */
-/* |    manquent, force l'utilisateur a leur donner une valeur et met   | */
-/* |    ces attributs sur les elements qui les requierent.              | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   Verifie que tous les elements du sous-arbre de racine pEl       
+   possedent les attributs requis et, si certains attributs requis 
+   manquent, force l'utilisateur a leur donner une valeur et met   
+   ces attributs sur les elements qui les requierent.              
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                AttachMandatoryAttributes (PtrElement pEl, PtrDocument pDoc)
@@ -1539,11 +1543,11 @@ PtrDocument         pDoc;
      }
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    Retourne un pointeur sur l'attribut associe' a l'exception      | */
-/* |    ExceptNum et porte' par l'element pEl.				| */
-/* |	On retourne NULL si l'element n'a pas cet attribut.		| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   Retourne un pointeur sur l'attribut associe' a l'exception      
+   ExceptNum et porte' par l'element pEl.				
+   	On retourne NULL si l'element n'a pas cet attribut.		
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 PtrAttribute         GetAttrByExceptNum (PtrElement pEl, int ExceptNum)
@@ -1581,11 +1585,11 @@ int                 ExceptNum;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    Modifie la valeur d'un attribut a valeurs enumerees porte par	| */
-/* |    l'element pEl dans le document pDoc. L'attribut porte		| */
-/* |	l'exception de numero ExceptNum. La nouvelle valeur est attrVal	| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   Modifie la valeur d'un attribut a valeurs enumerees porte par	
+   l'element pEl dans le document pDoc. L'attribut porte		
+   	l'exception de numero ExceptNum. La nouvelle valeur est attrVal	
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                SetAttrValueByExceptNum (PtrElement pEl, PtrDocument pDoc, int attrVal, int ExceptNum)

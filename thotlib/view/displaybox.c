@@ -1,4 +1,8 @@
 /*
+ * Copyright (c) 1996 INRIA, All rights reserved
+ */
+
+/*
  * displaybox.c : all the stuff needed to display boxes in frames.
  */
 

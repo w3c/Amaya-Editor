@@ -1,7 +1,9 @@
 /*
+ * Copyright (c) 1996 INRIA, All rights reserved
+ */
+
+/*
  * Gestion de la presentation specifique des images
- * IV : Refonte du code des images Janv 1995
- *
  */
 #include "thot_sys.h"
 
@@ -13,9 +15,9 @@
 #include "picture_f.h"
 #include "memory_f.h"
 
-/* ---------------------------------------------------------------------- */
-/* |    Retourne un pointeur sur la regle de pres specifique de l'elt   | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   Retourne un pointeur sur la regle de pres specifique de l'elt   
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static PtrPRule FindImageDescriptor (PtrElement pEl)
@@ -84,9 +86,9 @@ PtrElement          pEl;
 }				/*FindImageDescriptor */
 
 
-/* ---------------------------------------------------------------------- */
-/* |                                                                    | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                SetImageRule (PtrElement pEl, int x, int y, int w, int h, int typeimage, PictureScaling presimage)
@@ -120,14 +122,14 @@ int                 typeimage;
 }				/*SetImageRule */
 
 
-/* ---------------------------------------------------------------------- */
-/* |    NewImageDescriptor cree un descripteur par element image.       | */
-/* |            Si le pointeur sur le descripteur existe deja (champ    | */
-/* |            ElPictInfo dans l'element), la procedure recopie | */
-/* |            le champ ElPictInfo dans le pave.                | */
-/* |            Si le pointeur sur le descripteur n'existe pas, la      | */
-/* |            procedure commence par creer le descripteur.            | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   NewImageDescriptor cree un descripteur par element image.       
+   Si le pointeur sur le descripteur existe deja (champ    
+   ElPictInfo dans l'element), la procedure recopie 
+   le champ ElPictInfo dans le pave.                
+   Si le pointeur sur le descripteur n'existe pas, la      
+   procedure commence par creer le descripteur.            
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                NewImageDescriptor (PtrAbstractBox ppav, char *filename, int imagetype)
@@ -195,9 +197,9 @@ int                 imagetype;
 }				/*NewImageDescriptor */
 
 
-/* ---------------------------------------------------------------------- */
-/* |    FreeImageDescriptor libere le descriteur d'image.               | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   FreeImageDescriptor libere le descriteur d'image.               
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                FreeImageDescriptor (int *desc)
@@ -222,9 +224,9 @@ int                *desc;
 
 
 
-/* ---------------------------------------------------------------------- */
-/* |    FnCopy d'un PictInfo                                      | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   FnCopy d'un PictInfo                                      
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                UpdateImageDescriptor (int *Imdcopie, int *Imdsource)
 

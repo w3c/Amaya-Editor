@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 1996 INRIA, All rights reserved
+ */
+
 
 #include "thot_sys.h"
 #include "constmedia.h"
@@ -12,10 +16,10 @@
 #include "picture_f.h"
 #include "font_f.h"
 
-/* ---------------------------------------------------------------------- */
-/* |    XbmCreate reads and produces the bitmap read from the file      | */
-/* |            fn. updates the wif, hif, xif , yif                     | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   XbmCreate reads and produces the bitmap read from the file      
+   fn. updates the wif, hif, xif , yif                     
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 Drawable            XbmCreate (char *fn, PictureScaling pres, int *xif, int *yif, int *wif, int *hif, unsigned long BackGroundPixel, Drawable * mask1)
 #else  /* __STDC__ */
@@ -61,9 +65,9 @@ Drawable           *mask1;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    XbmPrint produces postscript frome an xbm file                  | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   XbmPrint produces postscript frome an xbm file                  
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                XbmPrint (char *fn, PictureScaling pres, int xif, int yif, int wif, int hif, int PicXArea, int PicYArea, int PicWArea, int PicHArea, int fd, unsigned int BackGroundPixel)
 #else  /* __STDC__ */
@@ -175,9 +179,9 @@ unsigned int        BackGroundPixel;
 #endif /* !NEW_WILLOWS */
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    IsXbmFormat check if the file header is of an xbm format        | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   IsXbmFormat check if the file header is of an xbm format        
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 boolean             IsXbmFormat (char *fn)
 #else  /* __STDC__ */

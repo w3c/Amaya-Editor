@@ -1,4 +1,8 @@
 /*
+ * Copyright (c) 1996 INRIA, All rights reserved
+ */
+
+/*
  * inites.c : module handling colors and patterns in the context of
  *	      drawing on a Postscript page (inites is for screen output).
  *
@@ -21,10 +25,10 @@
 #include "thotcolor_tv.h"
 
 
-/** ----------------------------------------------------------------------
- *   FindOutColor finds the closest color by allocating it, or picking
- *              an already allocated color.
- *  ---------------------------------------------------------------------- **/
+/*----------------------------------------------------------------------
+   FindOutColor finds the closest color by allocating it, or picking
+   an already allocated color.
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                FindOutColor (Display * dsp, Colormap colormap, ThotColorStruct * colr)
 #else  /* __STDC__ */
@@ -37,9 +41,9 @@ ThotColorStruct    *colr;
 {
 }
 
-/** ----------------------------------------------------------------------
- *      InitDocColors initialize the Thot internal color table. (fake)
- *  ---------------------------------------------------------------------- **/
+/*----------------------------------------------------------------------
+   InitDocColors initialize the Thot internal color table. (fake)
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                InitDocColors (char *name)
 #else  /* __STDC__ */
@@ -50,9 +54,9 @@ char               *name;
 {
 }
 
-/** ----------------------------------------------------------------------
- *      ColorPixel      returns the value of a color in Thot color table.
- *  ---------------------------------------------------------------------- **/
+/*----------------------------------------------------------------------
+   ColorPixel      returns the value of a color in Thot color table.
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 unsigned long       ColorPixel (int num)
 #else  /* __STDC__ */
@@ -65,12 +69,12 @@ int                 num;
 }
 
 
-/** ----------------------------------------------------------------------
- *      ColorRGB        returns the Red Green and Blue values corresponding
- *		to color number num.
- *		If the color doesn't exist the function returns the values
- *		for the default color.
- *  ---------------------------------------------------------------------- **/
+/*----------------------------------------------------------------------
+   ColorRGB        returns the Red Green and Blue values corresponding
+   to color number num.
+   If the color doesn't exist the function returns the values
+   for the default color.
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                ColorRGB (int num, unsigned short *red, unsigned short *green, unsigned short *blue)
 #else  /* __STDC__ */
@@ -97,12 +101,12 @@ unsigned short     *blue;
 }
 
 
-/** ----------------------------------------------------------------------
- *      CreatePattern loads and return a pixmap pattern.
- *              active parameter indicate if the box is active.
- *              parameters fg, bg, and motif indicate respectively
- *              the drawing color, background color and the pattern.
- *  ---------------------------------------------------------------------- **/
+/*----------------------------------------------------------------------
+   CreatePattern loads and return a pixmap pattern.
+   active parameter indicate if the box is active.
+   parameters fg, bg, and motif indicate respectively
+   the drawing color, background color and the pattern.
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 unsigned long       CreatePattern (int disp, int RO, int active, int fg, int bg, int motif)
 #else  /* __STDC__ */

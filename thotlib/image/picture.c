@@ -1,4 +1,8 @@
 /*
+ * Copyright (c) 1996 INRIA, All rights reserved
+ */
+
+/*
          Picture Handling
  */
 
@@ -52,10 +56,10 @@ Visual                 *theVisual;
 char *FileExtension[] ={".xbm", ".eps", ".xpm", ".gif", ".jpg", ".png"};
 
 
-/* ---------------------------------------------------------------------- */
-/* |  Match_Format returns TRUE if the considered header file matches   | */
-/* |    the image file description, FALSE in the the other cases        | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   Match_Format returns TRUE if the considered header file matches   
+   the image file description, FALSE in the the other cases        
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static boolean      Match_Format (int typeImage, char *fileName)
 #else  /* __STDC__ */
@@ -71,10 +75,10 @@ char               *fileName;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |  FreePixmap frees the pixmap allocated in the X server if it is not| */
-/* |           empty and if it is not one of the internal images        | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   FreePixmap frees the pixmap allocated in the X server if it is not
+   empty and if it is not one of the internal images        
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         FreePixmap (Pixmap pix)
 #else  /* __STDC__ */
@@ -90,10 +94,10 @@ Pixmap              pix;
 #endif /* NEW_WILLOWS */
 }
 
-/* ---------------------------------------------------------------------- */
-/* |   UpdatePictInfo updates the picture information structure by      | */
-/* |          setting the picture and the mask                          | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   UpdatePictInfo updates the picture information structure by      
+   setting the picture and the mask                          
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         UpdatePictInfo (PictInfo * imdesc, Pixmap pix, Pixmap PicMask)
 #else  /* __STDC__ */
@@ -110,18 +114,18 @@ Pixmap       PicMask;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |  Picture_Center updates the parameters xtranslate, ytranslate,     | */
-/* |            pxorig, pyorig depending on the values of PicWArea,     | */
-/* |            PicHArea, wif, hif and pres.                            | */
-/* |            - If we use ReScale, the tranlation is performed        | */
-/* |            in one direction.                                       | */
-/* |            - If we use FillFrame, there's no translation           | */
-/* |            - if we use RealSize we translate to achieve            | */
-/* |            the centering               .                           | */
-/* |            if the picture size is greater than the frame then      | */
-/* |          pxorig or pyorig are positive.                            | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   Picture_Center updates the parameters xtranslate, ytranslate,     
+   pxorig, pyorig depending on the values of PicWArea,     
+   PicHArea, wif, hif and pres.                            
+   - If we use ReScale, the tranlation is performed        
+   in one direction.                                       
+   - If we use FillFrame, there's no translation           
+   - if we use RealSize we translate to achieve            
+   the centering               .                           
+   if the picture size is greater than the frame then      
+   pxorig or pyorig are positive.                            
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         Picture_Center (int wimage, int himage, int wbox, int hbox, PictureScaling pres, int *xtranslate, int *ytranslate, int *pxorig, int *pyorig)
 #else  /* __STDC__ */
@@ -180,9 +184,9 @@ int                *pyorig;
      }
 }
 
-/* ---------------------------------------------------------------------- */
-/* | SetPictureClipping clips the picture into boundaries.              | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   SetPictureClipping clips the picture into boundaries.              
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         SetPictureClipping (int *PicWArea, int *PicHArea, int wif, int hif, PictInfo * imageDesc)
 #else  /* __STDC__ */
@@ -208,11 +212,11 @@ PictInfo    *imageDesc;
      }
 }
 
-/* ----------------------------------------------------------------------- */
-/* | LayoutPicture performs the layout of SrcPix on the screen described | */
-/* | by Drawab.                                                          | */
-/* | if srcorx or srcory are postive, the copy operation is shifted      | */
-/* ----------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   LayoutPicture performs the layout of SrcPix on the screen described 
+   by Drawab.                                                          
+   if srcorx or srcory are postive, the copy operation is shifted      
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         LayoutPicture (Pixmap SrcPix, Drawable Drawab, int srcorx, int srcory, int w, int h, int desorx, int desory)
 #else  /* __STDC__ */
@@ -247,18 +251,18 @@ int                 desory;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |   IsValid retourne FALSE si le pixmap contenu dans imageDesc       | */
-/* |            est vide. On retourne TRUE s'il est egal aux images     | */
-/* |            predefinies BadPixmap.                                  | */
-/* |            - if we use RealSize, we  return TRUE.                  | */
-/* |            - if we use  ReScale, we return TRUE                    | */
-/* |            the box have one of the two  dimensions a least equals  | */
-/* |            to the one of the pixmap.                               | */
-/* |            - if we use  ReScale FillFrame, we return TRUE if the   | */
-/* |            frame box  has the same size than the pixmap in         | */
-/* |            both directions.                                        | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   IsValid retourne FALSE si le pixmap contenu dans imageDesc       
+   est vide. On retourne TRUE s'il est egal aux images     
+   predefinies BadPixmap.                                  
+   - if we use RealSize, we  return TRUE.                  
+   - if we use  ReScale, we return TRUE                    
+   the box have one of the two  dimensions a least equals  
+   to the one of the pixmap.                               
+   - if we use  ReScale FillFrame, we return TRUE if the   
+   frame box  has the same size than the pixmap in         
+   both directions.                                        
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static boolean      IsValid (PtrBox box, PictInfo * imageDesc)
 #else  /* __STDC__ */
@@ -302,10 +306,10 @@ PictInfo    *imageDesc;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    GetPictureFormat returns the format of a file picture           | */
-/* |    the file  fileName or UNKNOWN_FORMAT if not recognized          | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   GetPictureFormat returns the format of a file picture           
+   the file  fileName or UNKNOWN_FORMAT if not recognized          
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static int          GetPictureFormat (char *fileName)
 #else  /* __STDC__ */
@@ -361,14 +365,14 @@ char               *fileName;
 }	
 
 
-/* ---------------------------------------------------------------------- */
-/* | PictureFileOk returns Unsupported_Format if the file does not exist| */
-/* |       - if typeImage is defined it returns Supported_Format if the | */
-/* |         file is of type typeImage, else Corrupted_File.            | */
-/* |       - if typeImage is not defined, it is updated and we return   | */
-/* |         Supported_Format is of an known type                       | */
-/* |         and Corrupted_File in the other cases                      | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   PictureFileOk returns Unsupported_Format if the file does not exist
+   - if typeImage is defined it returns Supported_Format if the 
+   file is of type typeImage, else Corrupted_File.            
+   - if typeImage is not defined, it is updated and we return   
+   Supported_Format is of an known type                       
+   and Corrupted_File in the other cases                      
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static Picture_Report   PictureFileOk (char *fileName, int *typeImage)
 #else  /* __STDC__ */
@@ -410,9 +414,9 @@ int                *typeImage;
    return status;
 }
 
-/* ------------------------------------------------------------------- */
-/* | Private Initializations of picture handlers and the visual type | */
-/* ------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   Private Initializations of picture handlers and the visual type 
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void       InitPictureHandlers (boolean printing)
 #else  /* __STDC__ */
@@ -523,11 +527,11 @@ boolean    printing;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* | GetPictHandlersList creates in buffer the list of defined handlers | */
-/* |            This function is used to create the GUI Menu            | */
-/* |            We return in count the number of handlers               | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   GetPictHandlersList creates in buffer the list of defined handlers 
+   This function is used to create the GUI Menu            
+   We return in count the number of handlers               
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                GetPictHandlersList (int *count, char *buffer)
 #else  /* __STDC__ */
@@ -553,9 +557,9 @@ char               *buffer;
 }
 
 
-/* ------------------------------------------------------------------- */
-/* |  DrawEpsBox draws the eps logo into the picture box.            | */
-/* ------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   DrawEpsBox draws the eps logo into the picture box.            
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void       DrawEpsBox (PtrBox box, PictInfo *imageDesc, int frame, int wlogo, int hlogo)
 #else  /* __STDC__ */
@@ -693,9 +697,9 @@ int               hlogo;
 }
 
 
-/* ------------------------------------------------------------------------ */
-/* | DrawPicture draws the picture in the frame window.                   | */
-/* ------------------------------------------------------------------------ */
+/*----------------------------------------------------------------------
+   DrawPicture draws the picture in the frame window.                   
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                DrawPicture (PtrBox box, PictInfo * imageDesc, int frame)
 #else  /* __STDC__ */
@@ -782,9 +786,9 @@ int                 frame;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |  Requests the picture handlers to get the corresponding pixmaps    | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   Requests the picture handlers to get the corresponding pixmaps    
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                LoadPicture (int frame, PtrBox box, PictInfo * imageDesc)
 #else  /* __STDC__ */
@@ -912,9 +916,9 @@ PictInfo    *imageDesc;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |   FreePicture frees the Picture Info structure from pixmaps        | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   FreePicture frees the Picture Info structure from pixmaps        
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                FreePicture (PictInfo * imageDesc)
 #else  /* __STDC__ */
@@ -937,10 +941,10 @@ PictInfo    *imageDesc;
 
 
 
-/* ---------------------------------------------------------------------- */
-/* |    GetPictureType returns the type of the image based on the index | */
-/* |            in the GUI form.                                        | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   GetPictureType returns the type of the image based on the index 
+   in the GUI form.                                        
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 int                 GetPictureType (int GUIIndex)
 #else  /* __STDC__ */
@@ -956,10 +960,10 @@ int                 menuIndex;
 
 }			
 
-/* ---------------------------------------------------------------------- */
-/* |    GetPictTypeIndex returns the menu type index of the picture.    | */
-/* |		If the type is unkown we return 0.                      | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   GetPictTypeIndex returns the menu type index of the picture.    
+   		If the type is unkown we return 0.                      
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 int                 GetPictTypeIndex (int PicType)
 #else  /* __STDC__ */
@@ -982,10 +986,10 @@ int                 PicType;
      }
    return 0;
 }			
-/* ---------------------------------------------------------------------- */
-/* |    GetPictPresIndex returns the index of of the presentation.      | */
-/* |     	If the presentation is unknown we return RealSize.      | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   GetPictPresIndex returns the index of of the presentation.      
+   	If the presentation is unknown we return RealSize.      
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 int                 GetPictPresIndex (PictureScaling PicPresent)
 #else  /* __STDC__ */
@@ -1012,11 +1016,11 @@ PictureScaling      PicPresent;
 }		
 
 
-/* ---------------------------------------------------------------------- */
-/* |    GetPictureHandlersList creates the list of installed handlers.  | */
-/* |            This function is used to create the menu picture.       | */
-/* |            It returns the number of handlers in count.             | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   GetPictureHandlersList creates the list of installed handlers.  
+   This function is used to create the menu picture.       
+   It returns the number of handlers in count.             
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                GetPictureHandlersList (int *count, char *buffer)
 #else  /* __STDC__ */
@@ -1042,9 +1046,9 @@ char               *buffer;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |  LittleXBigEndian allows conversion between big and little endian  | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   LittleXBigEndian allows conversion between big and little endian  
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                LittleXBigEndian (register unsigned char *b, register long n)
 #else  /* __STDC__ */
@@ -1062,9 +1066,9 @@ register long           n;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    TtaSetMainThotWindowBackgroundImage :                           | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   TtaSetMainThotWindowBackgroundImage :                           
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 int                 TtaSetMainThotWindowBackgroundImage (ThotWindow w, char *imageFile)
 #else  /* __STDC__ */
@@ -1075,25 +1079,25 @@ char               *imageFile;
 #endif /* __STDC__ */
 
 {
-/*****************************************
-  char fileName[MAX_PATH];
-  int  typeImage;
-  Drawable   myDrawable = None;
-  Drawable   PicMask;
-  int xif,yif,wif,hif;
-  PictureScaling  pres;
-  unsigned long Bgcolor;
-  ThotWindow     frame;
-  int        vue;
+/*----------------------------------------------------------------------
+   char fileName[MAX_PATH];
+   int  typeImage;
+   Drawable   myDrawable = None;
+   Drawable   PicMask;
+   int xif,yif,wif,hif;
+   PictureScaling  pres;
+   unsigned long Bgcolor;
+   ThotWindow     frame;
+   int        vue;
 
-  GetPictureFileName(imageFile, fileName);
-  typeImage = GetPictureFormat(fileName);
-  myDrawable = (*(PictureHandlerTable[typeImage].
-		  Produce_Picture))(fileName, pres, &xif, &yif, &wif, &hif, Bgcolor,
-		  &PicMask );
-  XSetWindowBackgroundPixmap(TtDisplay,w,myDrawable);
-  FreePixmap(myDrawable);
-  FreePixmap(PicMask);
- ****************************************/
+   GetPictureFileName(imageFile, fileName);
+   typeImage = GetPictureFormat(fileName);
+   myDrawable = (*(PictureHandlerTable[typeImage].
+   Produce_Picture))(fileName, pres, &xif, &yif, &wif, &hif, Bgcolor,
+   &PicMask );
+   XSetWindowBackgroundPixmap(TtDisplay,w,myDrawable);
+   FreePixmap(myDrawable);
+   FreePixmap(PicMask);
+  ----------------------------------------------------------------------*/
    return (0);
 }			

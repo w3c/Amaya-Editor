@@ -1,4 +1,8 @@
 /*
+ * Copyright (c) 1996 INRIA, All rights reserved
+ */
+
+/*
     -- Modifications des images abstraites.
    Ce module effectue les modifications des images abstraites des documents
    et demande au Mediateur le reaffichage incremental. 
@@ -35,10 +39,10 @@
 static PtrAbstractBox      pAbbBegin[MAX_VIEW_DOC];
 
 
-/* ---------------------------------------------------------------------- */
-/* |    IsEnclosing retourne vrai si le pave pAbb1 englobe le pave pAbb2   | */
-/* |            ou si les deux pointeurs pointent le meme pave.         | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   IsEnclosing retourne vrai si le pave pAbb1 englobe le pave pAbb2   
+   ou si les deux pointeurs pointent le meme pave.         
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static boolean      IsEnclosing (PtrAbstractBox pAbb1, PtrAbstractBox pAbb2)
 
@@ -69,10 +73,10 @@ PtrAbstractBox             pAbb2;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    Enclosing retourne un pointeur sur le pave de plus bas niveau   | */
-/* |            qui englobe a la fois les deux paves pAbb1 et pAbb2.    | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   Enclosing retourne un pointeur sur le pave de plus bas niveau   
+   qui englobe a la fois les deux paves pAbb1 et pAbb2.    
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 PtrAbstractBox             Enclosing (PtrAbstractBox pAbb1, PtrAbstractBox pAbb2)
@@ -110,10 +114,10 @@ PtrAbstractBox             pAbb2;
 
 
 
-/* ---------------------------------------------------------------------- */
-/* |    SimpleSearchRulepEl cherche dans la chaine pRule la regle du       | */
-/* |            type typeRule a appliquer pour la vue view.                | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   SimpleSearchRulepEl cherche dans la chaine pRule la regle du       
+   type typeRule a appliquer pour la vue view.                
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                SimpleSearchRulepEl (PtrPRule * pRuleView1, PtrElement pEl, int view, PRuleType typeRule, PtrPRule * pRule)
@@ -175,31 +179,31 @@ PtrPRule       *pRule;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    GlobalSearchRulepEl retourne un pointeur sur la regle de type typeRule       | */
-/* |            a appliquer a l'element pointe' par pEl dans la vue de  | */
-/* |            numero view.                                             | */
-/* |            Retourne dans pSPR un pointeur sur le schema de         | */
-/* |            presentation auquel appartient la regle retournee.      | */
-/* |            Si presNum est nul, on cherche la regle a appliquer     | */
-/* |            a l'element lui-meme, sinon, on cherche de la regle a   | */
-/* |            appliquer a son pave de presentation de numero presNum. | */
-/* |            Dans ce dernier cas, si pSchP est NULL, le pave de      | */
-/* |            presentation est defini dans le schema de presentation  | */
-/* |            a appliquer a l'element, sinon ce pave est defini dans  | */
-/* |            le schema de presentation pointe' par pSchP.            | */
-/* |            Dans le cas ou pEl pointe une marque de page, si isElPage    | */
-/* |            est vrai, il s'agit de la regle a appliquer au filet de | */
-/* |            separation sinon il s'agit de la regle a appliquer au   | */
-/* |            bloc de separation de page.                             | */
-/* |            dans V4, le booleen isElPage n'a plus aucun sens             | */
-/* |            Si attr est vrai, on cherche parmi les regles de        | */
-/* |            presentation des attributs de l'element, sinon, on      | */
-/* |            ignore les regles de presentation des attributs.        | */
-/* |            Si on trouve la regle parmi celles qui sont associees   | */
-/* |            a un attribut, au retour pAttr pointe sur le bloc       | */
-/* |            attribut correspondant, sinon pAttr est NULL.           | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   GlobalSearchRulepEl retourne un pointeur sur la regle de type typeRule       
+   a appliquer a l'element pointe' par pEl dans la vue de  
+   numero view.                                             
+   Retourne dans pSPR un pointeur sur le schema de         
+   presentation auquel appartient la regle retournee.      
+   Si presNum est nul, on cherche la regle a appliquer     
+   a l'element lui-meme, sinon, on cherche de la regle a   
+   appliquer a son pave de presentation de numero presNum. 
+   Dans ce dernier cas, si pSchP est NULL, le pave de      
+   presentation est defini dans le schema de presentation  
+   a appliquer a l'element, sinon ce pave est defini dans  
+   le schema de presentation pointe' par pSchP.            
+   Dans le cas ou pEl pointe une marque de page, si isElPage    
+   est vrai, il s'agit de la regle a appliquer au filet de 
+   separation sinon il s'agit de la regle a appliquer au   
+   bloc de separation de page.                             
+   dans V4, le booleen isElPage n'a plus aucun sens             
+   Si attr est vrai, on cherche parmi les regles de        
+   presentation des attributs de l'element, sinon, on      
+   ignore les regles de presentation des attributs.        
+   Si on trouve la regle parmi celles qui sont associees   
+   a un attribut, au retour pAttr pointe sur le bloc       
+   attribut correspondant, sinon pAttr est NULL.           
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 PtrPRule        GlobalSearchRulepEl (PtrElement pEl, PtrPSchema * pSPR, PtrSSchema * pSSR, int presNum, PtrPSchema pSchP, int view, PRuleType typeRule, boolean isElPage, boolean attr, PtrAttribute * pAttr)
@@ -543,15 +547,15 @@ PtrAttribute        *pAttr;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    SearchRulepAb retourne un pointeur sur la regle de type typeRule        | */
-/* |            a appliquer au pave pAb.                               | */
-/* |            Selon que attr est vrai ou faux, on tient compte ou non | */
-/* |            des attributs porte's par l'element auquel correspond   | */
-/* |            pAb.                                                   | */
-/* |            Au retour, pSPR contient un pointeur sur le schema de   | */
-/* |            structure auquel appartient la regle.                   | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   SearchRulepAb retourne un pointeur sur la regle de type typeRule        
+   a appliquer au pave pAb.                               
+   Selon que attr est vrai ou faux, on tient compte ou non 
+   des attributs porte's par l'element auquel correspond   
+   pAb.                                                   
+   Au retour, pSPR contient un pointeur sur le schema de   
+   structure auquel appartient la regle.                   
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 PtrPRule        SearchRulepAb (PtrDocument pDoc, PtrAbstractBox pAb, PtrPSchema * pSPR, PRuleType typeRule, boolean attr, PtrAttribute * pAttr)
@@ -591,10 +595,10 @@ PtrAttribute        *pAttr;
 
 
 
-/* ---------------------------------------------------------------------- */
-/* |    IsDiffPosition retourne vrai si la position abPos est differente de | */
-/* |            la position Posit (variable de la fonction NouvRef).    | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   IsDiffPosition retourne vrai si la position abPos est differente de 
+   la position Posit (variable de la fonction NouvRef).    
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static boolean      IsDiffPosition (AbPosition abPos, AbPosition * abPosit, boolean isInverted)
 #else  /* __STDC__ */
@@ -637,11 +641,11 @@ boolean             isInverted;
 
 
 
-/* ---------------------------------------------------------------------- */
-/* |    IsDiffDimension retourne vrai si la dimension abDim est differente  | */
-/* |            de la dimension abDimens (variable de la fonction         | */
-/* |            NouvRef).                                               | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   IsDiffDimension retourne vrai si la dimension abDim est differente  
+   de la dimension abDimens (variable de la fonction         
+   NouvRef).                                               
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static boolean      IsDiffDimension (AbDimension abDim, AbDimension * abDimens)
@@ -673,17 +677,17 @@ AbDimension       *abDimens;
 
 
 
-/* ---------------------------------------------------------------------- */
-/* |    IsNewPosOrDim cherche si la regle pointee par pR (qui appartient au   | */
-/* |            schema de presentation pointe' par pSPR) en s'appliquant| */
-/* |            au pave pAb change de valeur.                          | */
-/* |            Si oui, la fonction retourne vrai et applique la regle  | */
-/* |            a pAb, sinon elle retourne faux.                       | */
-/* |            levelPos indique la position relative de pRef par rapport    | */
-/* |            pAb.                                                   | */
-/* |            pAttr pointe le bloc attribut auquel correspond la regle| */
-/* |             pR (NULL si la regle n'est pas une regle d'attribut).  | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   IsNewPosOrDim cherche si la regle pointee par pR (qui appartient au   
+   schema de presentation pointe' par pSPR) en s'appliquant
+   au pave pAb change de valeur.                          
+   Si oui, la fonction retourne vrai et applique la regle  
+   a pAb, sinon elle retourne faux.                       
+   levelPos indique la position relative de pRef par rapport    
+   pAb.                                                   
+   pAttr pointe le bloc attribut auquel correspond la regle
+   pR (NULL si la regle n'est pas une regle d'attribut).  
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static boolean      IsNewPosOrDim (PtrAbstractBox pAb, PtrPRule pR, PtrPSchema pSPR, Level levelPos, PtrDocument pDoc, PtrAttribute pAttr)
@@ -987,11 +991,11 @@ PtrAttribute         pAttr;
 
 
 
-/* ---------------------------------------------------------------------- */
-/* |    ReapplRef reapplique toutes les regles appliquees au pave pAb  | */
-/* |            et qui font reference au pave pRef.                     | */
-/* |            Retourne vrai si au moins une regle a ete reappliquee.  | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ReapplRef reapplique toutes les regles appliquees au pave pAb  
+   et qui font reference au pave pRef.                     
+   Retourne vrai si au moins une regle a ete reappliquee.  
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static boolean      ReapplRef (PtrAbstractBox pRef, PtrAbstractBox pAb, PtrDocument pDoc)
@@ -1187,14 +1191,14 @@ PtrDocument         pDoc;
 
 
 
-/* ---------------------------------------------------------------------- */
-/* |    FunctionRule retourne le pointeur sur la premiere regle        | */
-/* |            de fonction de presentation associee a l'element pEl.   | */
-/* |            Rend dans pSchP un pointeur sur le schema de            | */
-/* |            presentation auquel appartient la regle.                | */
-/* |            Retourne NULL s'il n'y a pas de regle de creation pour  | */
-/* |            cet element                                             | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   FunctionRule retourne le pointeur sur la premiere regle        
+   de fonction de presentation associee a l'element pEl.   
+   Rend dans pSchP un pointeur sur le schema de            
+   presentation auquel appartient la regle.                
+   Retourne NULL s'il n'y a pas de regle de creation pour  
+   cet element                                             
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 PtrPRule        FunctionRule (PtrElement pEl, PtrPSchema * pSchP)
@@ -1230,12 +1234,12 @@ PtrPSchema         *pSchP;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    SetDeadAbsBox marque Mort le pave pointe par pAb et met a jour       | */
-/* |            le volume des paves englobants. Le pave mort sera       | */
-/* |            detruit par la procedure AbstractImageUpdated, apres traitement     | */
-/* |            par le Mediateur.                                       | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   SetDeadAbsBox marque Mort le pave pointe par pAb et met a jour       
+   le volume des paves englobants. Le pave mort sera       
+   detruit par la procedure AbstractImageUpdated, apres traitement     
+   par le Mediateur.                                       
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                SetDeadAbsBox (PtrAbstractBox pAb)
@@ -1268,13 +1272,13 @@ PtrAbstractBox             pAb;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    ApplyRefAbsBoxSupp cherche tous les paves qui font reference a un pave a| */
-/* |            detruire pointe par pAb, et pour ces paves reapplique  | */
-/* |            les regles qui font reference au pave a detruire.       | */
-/* |            Retourne dans pAbbReDisp un pointeur sur le pave a        | */
-/* |            reafficher.                                             | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ApplyRefAbsBoxSupp cherche tous les paves qui font reference a un pave a
+   detruire pointe par pAb, et pour ces paves reapplique  
+   les regles qui font reference au pave a detruire.       
+   Retourne dans pAbbReDisp un pointeur sur le pave a        
+   reafficher.                                             
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                ApplyRefAbsBoxSupp (PtrAbstractBox pAb, PtrAbstractBox * pAbbReDisp, PtrDocument pDoc)
@@ -1318,14 +1322,14 @@ PtrDocument         pDoc;
 
 
 
-/* ---------------------------------------------------------------------- */
-/* |    ApplyRefAbsBoxNew La suite de paves comprise entre pAbbFirst et pAbbLast   | */
-/* |            vient d'etre creee, modifie les paves environnants qui  | */
-/* |            peuvent se referer aux nouveaux paves.                  | */
-/* |            Retourne dans pAbbReDisp un pointeur sur le pave qui      | */
-/* |            englobe tous les paves modifies, y compris les nouveaux | */
-/* |            paves.                                                  | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ApplyRefAbsBoxNew La suite de paves comprise entre pAbbFirst et pAbbLast   
+   vient d'etre creee, modifie les paves environnants qui  
+   peuvent se referer aux nouveaux paves.                  
+   Retourne dans pAbbReDisp un pointeur sur le pave qui      
+   englobe tous les paves modifies, y compris les nouveaux 
+   paves.                                                  
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                ApplyRefAbsBoxNew (PtrAbstractBox pAbbFirst, PtrAbstractBox pAbbLast, PtrAbstractBox * pAbbReDisp, PtrDocument pDoc)
@@ -1465,15 +1469,15 @@ PtrDocument         pDoc;
 
 
 
-/* ---------------------------------------------------------------------- */
-/* |    AbsBoxPresType     cherche le pave de presentation de type         | */
-/* |            BoxType (defini dans le schema de presentation pSchP) | */
-/* |            qui a ete cree dans la meme vue que le pave pAbb,         | */
-/* |            pour l'element de pAbb.                                   | */
-/* |            On considere le premier pave (pAbb) et le dernier pave    | */
-/* |            de la chaine des paves dupliques de l'element           | */
-/* |            Retourne un pointeur sur ce pave ou NULL si pas trouve'.| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   AbsBoxPresType     cherche le pave de presentation de type         
+   BoxType (defini dans le schema de presentation pSchP) 
+   qui a ete cree dans la meme vue que le pave pAbb,         
+   pour l'element de pAbb.                                   
+   On considere le premier pave (pAbb) et le dernier pave    
+   de la chaine des paves dupliques de l'element           
+   Retourne un pointeur sur ce pave ou NULL si pas trouve'.
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static PtrAbstractBox      AbsBoxPresType (PtrAbstractBox pAbb, PtrPRule pRPres, PtrPSchema pSchP)
@@ -1586,9 +1590,9 @@ PtrPSchema          pSchP;
 
 
 
-/* ---------------------------------------------------------------------- */
-/* |    ApplFunctionPresRules                                               | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ApplFunctionPresRules                                               
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static void         ApplFunctionPresRules (PtrPRule pRule, PtrPSchema pSchP, PtrAttribute pAttr, PtrDocument pDoc, PtrElement pEl, boolean change, boolean first)
@@ -1706,16 +1710,16 @@ boolean             first;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    ChangeFirstLast cree ou detruit les paves de presentation de        | */
-/* |            l'element pEl qui sont conditionnes au fait qu'il soit  | */
-/* |            le premier (si first est vrai) ou le dernier (si first est| */
-/* |            faux) descendant de son pere.                           | */
-/* |            change indique si l'element cesse d'etre premier ou       | */
-/* |            dernier (vrai) ou au contraire s'il le devient (faux).  | */
-/* |            pDoc pointe sur le descripteur du document ou on        | */
-/* |            travaille.                                              | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ChangeFirstLast cree ou detruit les paves de presentation de        
+   l'element pEl qui sont conditionnes au fait qu'il soit  
+   le premier (si first est vrai) ou le dernier (si first est
+   faux) descendant de son pere.                           
+   change indique si l'element cesse d'etre premier ou       
+   dernier (vrai) ou au contraire s'il le devient (faux).  
+   pDoc pointe sur le descripteur du document ou on        
+   travaille.                                              
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                ChangeFirstLast (PtrElement pEl, PtrDocument pDoc, boolean first, boolean change)
@@ -1792,16 +1796,16 @@ boolean             change;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    PageElAssoc  cherche si l'element associe pEl doit etre affiche | */
-/* |            dans une boite de haut ou de bas de page, pour la vue   | */
-/* |            viewNb.                                                  | */
-/* |            Si oui, retourne un pointeur sur l'element marque de    | */
-/* |            page ou l'element associe doit s'afficher et retourne   | */
-/* |            dans boxType le numero du type de boite de haut ou de | */
-/* |            bas de page qui doit contenir l'element associe.        | */
-/* |            Sinon, retourne Nil.                                    | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   PageElAssoc  cherche si l'element associe pEl doit etre affiche 
+   dans une boite de haut ou de bas de page, pour la vue   
+   viewNb.                                                  
+   Si oui, retourne un pointeur sur l'element marque de    
+   page ou l'element associe doit s'afficher et retourne   
+   dans boxType le numero du type de boite de haut ou de 
+   bas de page qui doit contenir l'element associe.        
+   Sinon, retourne Nil.                                    
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 PtrElement          PageElAssoc (PtrElement pEl, int viewNb, int *boxType)
@@ -2033,14 +2037,14 @@ int                *boxType;
 
 #ifndef __COLPAGE__
 
-/* ---------------------------------------------------------------------- */
-/* |    BoiteElAssoc verifie si l'element associe' pointe' par pEl doit | */
-/* |            etre affiche' dans une boite de haut ou de bas de page, | */
-/* |            pour la vue viewNb.                                      | */
-/* |            Si oui, cree la boite de haut ou bas de page si elle    | */
-/* |            n'existe pas et en cas de creation retourne l'adresse   | */
-/* |            de son pave dans pAbbReDisp.                              | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   BoiteElAssoc verifie si l'element associe' pointe' par pEl doit 
+   etre affiche' dans une boite de haut ou de bas de page, 
+   pour la vue viewNb.                                      
+   Si oui, cree la boite de haut ou bas de page si elle    
+   n'existe pas et en cas de creation retourne l'adresse   
+   de son pave dans pAbbReDisp.                              
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static void         BoiteElAssoc (PtrElement pEl, int viewNb, PtrDocument pDoc, PtrAbstractBox * pAbbReDisp)
@@ -2144,14 +2148,14 @@ PtrAbstractBox            *pAbbReDisp;
 
 
 
-/* ---------------------------------------------------------------------- */
-/* |    DestroyNewAbsBox dechaine et libere la suite des paves comprise      | */
-/* |            entre pAbbFirst et pAbbLast, ainsi que tous les paves       | */
-/* |            englobes. Ces paves n'ont pas encore ete vus par le     | */
-/* |            Mediateur, inutile de lui signaler leur disparition     | */
-/* |            si cette suite correspond a un element sur plusieurs    | */
-/* |            pages, on parcours la chaine des dupliques              | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   DestroyNewAbsBox dechaine et libere la suite des paves comprise      
+   entre pAbbFirst et pAbbLast, ainsi que tous les paves       
+   englobes. Ces paves n'ont pas encore ete vus par le     
+   Mediateur, inutile de lui signaler leur disparition     
+   si cette suite correspond a un element sur plusieurs    
+   pages, on parcours la chaine des dupliques              
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static void         DestroyNewAbsBox (PtrAbstractBox * pAbbFirst, PtrAbstractBox * pAbbLast)
@@ -2214,12 +2218,12 @@ PtrAbstractBox            *pAbbLast;
 
 #ifdef __COLPAGE__
 
-/* ------------------------------------------------------------ */
-/* | ContainEl recherche dans le sous-arbre de racine pEl      */
-/* |            si il y a un element de type typeEl.               */
-/* |            Si typeEl est une Marque Page, on verifie si       */
-/* |            l'element trouve appartient a la vue viewSch.    */
-/* ------------------------------------------------------------ */
+/*----------------------------------------------------------------------
+   ContainEl recherche dans le sous-arbre de racine pEl      
+   si il y a un element de type typeEl.               
+   Si typeEl est une Marque Page, on verifie si       
+   l'element trouve appartient a la vue viewSch.    
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 boolean             ContainEl (PtrElement pEl, int typeEl, PtrSSchema pStr, int viewSch, PtrElement * pElCont)
@@ -2266,15 +2270,14 @@ PtrElement         *pElCont;
 
 #ifdef __COLPAGE__
 
-/* ------------------------------------------------------------ */
-/* |        Nouvelle procedure  pour les colonnes               */
-/* ------------------------------------------------------------ */
-/* | ContainPageColRule recherche dans le sous-arbre de       */
-/* |            racine pEl si il y a une regle Page ou Column   */
-/* |            portee par un element pour la vue viewSch        */
-/* |            cette procedure s'inspire de ReglePage_HautPage */
-/* |            de page.c                                       */
-/* ------------------------------------------------------------ */
+/*----------------------------------------------------------------------
+   Nouvelle procedure  pour les colonnes               
+   ContainPageColRule recherche dans le sous-arbre de       
+   racine pEl si il y a une regle Page ou Column   
+   portee par un element pour la vue viewSch        
+   cette procedure s'inspire de ReglePage_HautPage 
+   de page.c                                       
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 boolean             ContainPageColRule (PtrElement pEl, int viewSch)
 
@@ -2331,11 +2334,11 @@ int                 viewSch;
 
 #endif /* __COLPAGE__ */
 
-/* ---------------------------------------------------------------------- */
-/* |    CreateAllAbsBoxesOfEl     Cree pour toutes les vues existantes tous les | */
-/* |    paves de l'element pointe par pE appartenant au document pointe | */
-/* |    par pDoc.                                                       | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   CreateAllAbsBoxesOfEl     Cree pour toutes les vues existantes tous les 
+   paves de l'element pointe par pE appartenant au document pointe 
+   par pDoc.                                                       
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                CreateAllAbsBoxesOfEl (PtrElement pE, PtrDocument pDoc)
 #else  /* __STDC__ */
@@ -2368,21 +2371,20 @@ PtrDocument         pDoc;
 
 
 #ifdef __COLPAGE__
-/* ---------------------------------------------------------------------- */
-/*      procedure completement remaniee dans la V4                        */
-/* ---------------------------------------------------------------------- */
-/* |    CreateNewAbsBoxes   cree les paves du sous-arbre dont la racine est    | */
-/* |            pointe par pEl, dans le document dont le contexte du    | */
-/* |            document pDoc.                                          | */
-/* |            Les paves sont crees dans toutes les vues si viewNb est  | */
-/* |            nul, ou seulement dans la vue de numero viewNb           | */
-/* |            si viewNb>0.                                             | */
-/* |            Les paves existants affectes par la creation des        | */
-/* |            nouveaux paves sont modifies. Les pointeurs sur les     | */
-/* |            paves a reafficher du document sont mis a jour.         | */
-/* |            si pEl est une PageBreak, l'image abstraite qui suit   | */
-/* |            est detruite et ensuite recreee                         | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   procedure completement remaniee dans la V4                        
+   CreateNewAbsBoxes   cree les paves du sous-arbre dont la racine est    
+   pointe par pEl, dans le document dont le contexte du    
+   document pDoc.                                          
+   Les paves sont crees dans toutes les vues si viewNb est  
+   nul, ou seulement dans la vue de numero viewNb           
+   si viewNb>0.                                             
+   Les paves existants affectes par la creation des        
+   nouveaux paves sont modifies. Les pointeurs sur les     
+   paves a reafficher du document sont mis a jour.         
+   si pEl est une PageBreak, l'image abstraite qui suit   
+   est detruite et ensuite recreee                         
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                CreateNewAbsBoxes (PtrElement pEl, PtrDocument pDoc, int viewNb)
@@ -2756,17 +2758,17 @@ int                 viewNb;
 
 #else  /* __COLPAGE__ */
 
-/* ---------------------------------------------------------------------- */
-/* |    CreateNewAbsBoxes   cree les paves du sous-arbre dont la racine est    | */
-/* |            pointe par pEl, dans le document dont le contexte du    | */
-/* |            document pDoc.                                          | */
-/* |            Les paves sont crees dans toutes les vues si viewNb est  | */
-/* |            nul, ou seulement dans la vue de numero viewNb           | */
-/* |            si viewNb>0.                                             | */
-/* |            Les paves existants affectes par la creation des        | */
-/* |            nouveaux paves sont modifies. Les pointeurs sur les     | */
-/* |            paves a reafficher du document sont mis a jour.         | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   CreateNewAbsBoxes   cree les paves du sous-arbre dont la racine est    
+   pointe par pEl, dans le document dont le contexte du    
+   document pDoc.                                          
+   Les paves sont crees dans toutes les vues si viewNb est  
+   nul, ou seulement dans la vue de numero viewNb           
+   si viewNb>0.                                             
+   Les paves existants affectes par la creation des        
+   nouveaux paves sont modifies. Les pointeurs sur les     
+   paves a reafficher du document sont mis a jour.         
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                CreateNewAbsBoxes (PtrElement pEl, PtrDocument pDoc, int viewNb)
@@ -3018,10 +3020,10 @@ int                 viewNb;
 
 
 #ifdef __COLPAGE__
-/* ---------------------------------------------------------------------- */
-/* |    PosBoolAbsBoxCh met a vrai les booleens de position verticale      | */
-/* |            et horizontale                                          | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   PosBoolAbsBoxCh met a vrai les booleens de position verticale      
+   et horizontale                                          
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static void         PosBoolAbsBoxCh (PtrAbstractBox pAb)
@@ -3051,23 +3053,22 @@ PtrAbstractBox             pAb;
 #endif /* __COLPAGE__ */
 
 #ifdef __COLPAGE__
-/* ---------------------------------------------------------------------- */
-/*      procedure completement remaniee dans la V4                        */
-/* ---------------------------------------------------------------------- */
-/* |    DestroyAbsBoxesView detruit pour la vue de numero view les paves du        | */
-/* |            sous-arbre dont la racine est pointee par pEl, dans le  | */
-/* |            document pDoc.                                          | */
-/* |            Destruction des paves suite a la destruction de pEl     | */
-/* |            Les paves existants affectes par la destruction sont    | */
-/* |            modifies. Les pointeurs de paves modifies du document   | */
-/* |            sont mis a jour                                         | */
-/* |            Si Verif est vrai, on verifie si les paves englobants   | */
-/* |            deviennent complets. En effet la suppression d'un pave  | */
-/* |            incomplet a une extremite' peut rendre le pave englobant| */
-/* |            complete a cette extremite.                              | */
-/* |            Attention : on peut detruire des paves de plusieurs     | */
-/* |            sous-arbres car pEl peut avoir des paves dupliques      | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   procedure completement remaniee dans la V4                        
+   DestroyAbsBoxesView detruit pour la vue de numero view les paves du        
+   sous-arbre dont la racine est pointee par pEl, dans le  
+   document pDoc.                                          
+   Destruction des paves suite a la destruction de pEl     
+   Les paves existants affectes par la destruction sont    
+   modifies. Les pointeurs de paves modifies du document   
+   sont mis a jour                                         
+   Si Verif est vrai, on verifie si les paves englobants   
+   deviennent complets. En effet la suppression d'un pave  
+   incomplet a une extremite' peut rendre le pave englobant
+   complete a cette extremite.                              
+   Attention : on peut detruire des paves de plusieurs     
+   sous-arbres car pEl peut avoir des paves dupliques      
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                DestroyAbsBoxesView (PtrElement pEl, PtrDocument pDoc, boolean verify, int view)
@@ -3281,18 +3282,18 @@ int                 view;
 
 
 #else  /* __COLPAGE__ */
-/* ---------------------------------------------------------------------- */
-/* |    DestroyAbsBoxesView detruit pour la vue de numero view les paves du        | */
-/* |            sous-arbre dont la racine est pointee par pEl, dans le  | */
-/* |            document pDoc.                                          | */
-/* |            Les paves existants affectes par la destruction sont    | */
-/* |            modifies. Les pointeurs de paves modifies du document   | */
-/* |            sont mis a jour                                         | */
-/* |            Si verify est vrai, on verifie si les paves englobants   | */
-/* |            deviennent complets. En effet la suppression d'un pave  | */
-/* |            incomplet a une extremite' peut rendre le pave englobant| */
-/* |            complete a cette extremite.                              | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   DestroyAbsBoxesView detruit pour la vue de numero view les paves du        
+   sous-arbre dont la racine est pointee par pEl, dans le  
+   document pDoc.                                          
+   Les paves existants affectes par la destruction sont    
+   modifies. Les pointeurs de paves modifies du document   
+   sont mis a jour                                         
+   Si verify est vrai, on verifie si les paves englobants   
+   deviennent complets. En effet la suppression d'un pave  
+   incomplet a une extremite' peut rendre le pave englobant
+   complete a cette extremite.                              
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                DestroyAbsBoxesView (PtrElement pEl, PtrDocument pDoc, boolean verify, int view)
@@ -3471,17 +3472,17 @@ int                 view;
 #endif /* __COLPAGE__ */
 
 
-/* ---------------------------------------------------------------------- */
-/* |    DestroyAbsBoxes detruit les paves du sous-arbre dont la racine est    | */
-/* |            pointee par pEl, dans le document pDoc.                 | */
-/* |            Les paves existants affectes par la destruction sont    | */
-/* |            modifies. Les pointeurs de paves modifies du document   | */
-/* |            sont mis a jour                                         | */
-/* |            Si verify est vrai, on verifie si les paves englobants   | */
-/* |            deviennent complets. En effet la suppression d'un pave  | */
-/* |            incomplet a une extremite' peut rendre le pave englobant| */
-/* |            complete a cette extremite.                              | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   DestroyAbsBoxes detruit les paves du sous-arbre dont la racine est    
+   pointee par pEl, dans le document pDoc.                 
+   Les paves existants affectes par la destruction sont    
+   modifies. Les pointeurs de paves modifies du document   
+   sont mis a jour                                         
+   Si verify est vrai, on verifie si les paves englobants   
+   deviennent complets. En effet la suppression d'un pave  
+   incomplet a une extremite' peut rendre le pave englobant
+   complete a cette extremite.                              
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                DestroyAbsBoxes (PtrElement pEl, PtrDocument pDoc, boolean verify)
@@ -3520,17 +3521,17 @@ boolean             verify;
 
 
 
-/* ---------------------------------------------------------------------- */
-/* |    ReafReference Reaffiche les paves de la reference pointee par   | */
-/* |            pRef appartenant au document pointe' par pDocRef.       | */
-/* |            Si pAb est NULL, tous les paves (sauf les paves de     | */
-/* |            presentation) de la reference, dans toutes les vues,    | */
-/* |            sont recalcules et reaffiches ; sinon, seuls les paves  | */
-/* |            qui copient le pave pointe' par pAb sont recalcules et | */
-/* |            reaffiches s'ils changent.                              | */
-/* |            Note: cette nouvelle procedure est extraite du code de  | */
-/* |            l'ancienne procedure ChngRef.                           | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ReafReference Reaffiche les paves de la reference pointee par   
+   pRef appartenant au document pointe' par pDocRef.       
+   Si pAb est NULL, tous les paves (sauf les paves de     
+   presentation) de la reference, dans toutes les vues,    
+   sont recalcules et reaffiches ; sinon, seuls les paves  
+   qui copient le pave pointe' par pAb sont recalcules et 
+   reaffiches s'ils changent.                              
+   Note: cette nouvelle procedure est extraite du code de  
+   l'ancienne procedure ChngRef.                           
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                ReafReference (PtrReference pRef, PtrAbstractBox pAb, PtrDocument pDocRef)
@@ -3731,12 +3732,12 @@ PtrDocument         pDocRef;
 
 
 
-/* ---------------------------------------------------------------------- */
-/* |    ChngRef Le pave de presentation pointe' par pAb a change'      | */
-/* |            de contenu. Cherche toutes les references a un element  | */
-/* |            englobant de l'element creant ce pave et qui copient    | */
-/* |            ce pave. Demande leur reaffichage                       | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ChngRef Le pave de presentation pointe' par pAb a change'      
+   de contenu. Cherche toutes les references a un element  
+   englobant de l'element creant ce pave et qui copient    
+   ce pave. Demande leur reaffichage                       
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                ChngRef (PtrAbstractBox pAb, PtrDocument pDoc)
@@ -3780,9 +3781,9 @@ PtrDocument         pDoc;
      }
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    SearchAbsBoxBackward                                                           | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   SearchAbsBoxBackward                                                           
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static PtrAbstractBox      SearchAbsBoxBackward (PtrAbstractBox pAbb1, boolean Test, PtrSSchema pSchStr, PtrPSchema pSchP, int Typ, boolean Pres)
@@ -3836,16 +3837,16 @@ boolean             Pres;
 
 
 
-/* ---------------------------------------------------------------------- */
-/* |    PavCherche cherche un pave en avant dans un arbre de paves, a   | */
-/* |            partir du pave pointe' par pAb. Si pres est vrai, on   | */
-/* |            cherche un pave de presentation du type typeElOrPres defini dans | */
-/* |            le schema de presentation pSchP. Si pres est faux, on   | */
-/* |            cherche un pave d'un element structure de type typeElOrPres      | */
-/* |            defini dans le schema de structure pointe' par pSchStr. | */
-/* |            Retourne un pointeur sur le pave trouve' ou             | */
-/* |            NULL si echec.                                          | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   PavCherche cherche un pave en avant dans un arbre de paves, a   
+   partir du pave pointe' par pAb. Si pres est vrai, on   
+   cherche un pave de presentation du type typeElOrPres defini dans 
+   le schema de presentation pSchP. Si pres est faux, on   
+   cherche un pave d'un element structure de type typeElOrPres      
+   defini dans le schema de structure pointe' par pSchStr. 
+   Retourne un pointeur sur le pave trouve' ou             
+   NULL si echec.                                          
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 PtrAbstractBox             PavCherche (PtrAbstractBox pAb, boolean pres, int typeElOrPres, PtrPSchema pSchP, PtrSSchema pSchStr)
 #else  /* __STDC__ */
@@ -3924,11 +3925,11 @@ PtrSSchema        pSchStr;
 
 
 
-/* ---------------------------------------------------------------------- */
-/* |    FindFirstAbsBox  Si pAbbBegin n'a pas de valeur pour la vue nv, met dans  | */
-/* |            pAbbBegin[nv] un pointeur sur le premier pave            | */
-/* |            correspondant a l'element pElBegin dans la vue nv.      | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   FindFirstAbsBox  Si pAbbBegin n'a pas de valeur pour la vue nv, met dans  
+   pAbbBegin[nv] un pointeur sur le premier pave            
+   correspondant a l'element pElBegin dans la vue nv.      
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         FindFirstAbsBox (PtrElement pElBegin, int nv)
 #else  /* __STDC__ */
@@ -3962,11 +3963,11 @@ int                 nv;
 
 
 
-/* ---------------------------------------------------------------------- */
-/* |    ReNumPages      renumerote toutes les pages qui concernent      | */
-/* |            la vue view a partir de l'element pointe' par pEl,       | */
-/* |            lui-meme compris.                                       | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ReNumPages      renumerote toutes les pages qui concernent      
+   la vue view a partir de l'element pointe' par pEl,       
+   lui-meme compris.                                       
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                ReNumPages (PtrElement pEl, int view)
 #else  /* __STDC__ */
@@ -4024,12 +4025,12 @@ int                 view;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    ComputeContent   recalcule le contenu de toutes les boites de    | */
-/* |            presentation du type boxType (dans le schema de       | */
-/* |            presentation pSchP) qui sont apres pElBegin, dans la    | */
-/* |            vue nv.                                                 | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ComputeContent   recalcule le contenu de toutes les boites de    
+   presentation du type boxType (dans le schema de       
+   presentation pSchP) qui sont apres pElBegin, dans la    
+   vue nv.                                                 
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         ComputeContent (int boxType, int nv, PtrDocument pDoc, PtrSSchema pSS, PtrPSchema pSchP, PtrElement pElBegin, boolean redisp)
 #else  /* __STDC__ */
@@ -4088,12 +4089,12 @@ boolean             redisp;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    ComputeCrPresBoxes reevalue les conditions de creation de toutes  | */
-/* |            les boites de presentation du type boxType (dans le   | */
-/* |            schema de presentation pSchP) qui sont apres pElBegin,  | */
-/* |            dans la vue nv.                                         | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ComputeCrPresBoxes reevalue les conditions de creation de toutes  
+   les boites de presentation du type boxType (dans le   
+   schema de presentation pSchP) qui sont apres pElBegin,  
+   dans la vue nv.                                         
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         ComputeCrPresBoxes (int boxType, int nv, PtrPSchema pSchP, PtrDocument pDoc, PtrElement pElBegin, boolean redisp)
 #else  /* __STDC__ */
@@ -4214,17 +4215,17 @@ boolean             redisp;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    ComputeCreation  pour toutes les boites du type boxType (dans  | */
-/* |            le schema de presentation pSchP) qui sont apres         | */
-/* |            pElBegin, dans la vue nv, reevalue les conditions de    | */
-/* |            creation de boites de presentation.                     | */
-/* |            presBox indique si boxType est un type de boite de       | */
-/* |            presentation ou de boite d'element structure'.          | */
-/* |            Pour toutes les conditions de creation qui dependent du | */
-/* |            compteur counter et qui sont satisfaites, la boite est      | */
-/* |            creee si elle n'existe pas deja.                        | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ComputeCreation  pour toutes les boites du type boxType (dans  
+   le schema de presentation pSchP) qui sont apres         
+   pElBegin, dans la vue nv, reevalue les conditions de    
+   creation de boites de presentation.                     
+   presBox indique si boxType est un type de boite de       
+   presentation ou de boite d'element structure'.          
+   Pour toutes les conditions de creation qui dependent du 
+   compteur counter et qui sont satisfaites, la boite est      
+   creee si elle n'existe pas deja.                        
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         ComputeCreation (int boxType, boolean presBox, int counter, int nv, PtrSSchema pSS, PtrPSchema pSchP, PtrDocument pDoc, PtrElement pElBegin, boolean redisp)
 #else  /* __STDC__ */
@@ -4548,14 +4549,14 @@ boolean             redisp;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    AttachCounterValue Transmet a l'attribut de nom NmAttr              | */
-/* |            la valeur du compteur counter defini dans pSchP associe' a  | */
-/* |            pSchS pour pEl. pEl peut est une reference a un document| */
-/* |            inclus pElIncluded peut etre soit le document inclus, soit| */
-/* |            le document inclus dans sa forme demi expansee: il est  | */
-/* |            alors dans le  document l'incluant.                     | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   AttachCounterValue Transmet a l'attribut de nom NmAttr              
+   la valeur du compteur counter defini dans pSchP associe' a  
+   pSchS pour pEl. pEl peut est une reference a un document
+   inclus pElIncluded peut etre soit le document inclus, soit
+   le document inclus dans sa forme demi expansee: il est  
+   alors dans le  document l'incluant.                     
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static void         AttachCounterValue (PtrElement pEl, PtrElement pElIncluded, PtrDocument pDocIncluded, Name NmAttr, int counter, PtrPSchema pSchP, PtrSSchema pSchS)
@@ -4611,13 +4612,13 @@ PtrSSchema        pSchS;
 
 
 
-/* ---------------------------------------------------------------------- */
-/* |    TransmetValCompt pEl (appartenant au document pDoc) est une     | */
-/* |            inclusion de document externe. Transmet a l'attribut de | */
-/* |            nom nameAttr du document inclus la valeur du compteur     | */
-/* |            counter defini dans le schema de presentation pSchP associe'| */
-/* |            au schema de structure pSchS.                           | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   TransmetValCompt pEl (appartenant au document pDoc) est une     
+   inclusion de document externe. Transmet a l'attribut de 
+   nom nameAttr du document inclus la valeur du compteur     
+   counter defini dans le schema de presentation pSchP associe'
+   au schema de structure pSchS.                           
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                TransmetValCompt (PtrElement pEl, PtrDocument pDoc, Name nameAttr, int counter, PtrPSchema pSchP, PtrSSchema pSchS)
@@ -4657,12 +4658,12 @@ PtrSSchema        pSchS;
 
 
 
-/* ---------------------------------------------------------------------- */
-/* |    ChangeBoxesCounter dans le document dont le contexte pDoc, change| */
-/* |            le contenu de toutes les boites de presentation qui sont| */
-/* |            affectees par le compteur counter du schema de presentation | */
-/* |            pSchP, apartir de l'element pElBegin.                   | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ChangeBoxesCounter dans le document dont le contexte pDoc, change
+   le contenu de toutes les boites de presentation qui sont
+   affectees par le compteur counter du schema de presentation 
+   pSchP, apartir de l'element pElBegin.                   
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static void         ChangeBoxesCounter (PtrElement pElBegin, PtrDocument pDoc, int counter, PtrPSchema pSchP, PtrSSchema pSS, boolean redisp)
@@ -4817,12 +4818,12 @@ boolean             redisp;
 
 
 
-/* ---------------------------------------------------------------------- */
-/* |    UpdateNum1Elem met a jour et fait reafficher les numeros qui       | */
-/* |            apparaissent a partir du sous-arbre pointe par pElBegin | */
-/* |            (lui-meme compris) et qui sont affectes par l'element   | */
-/* |            pElModif.                                               | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   UpdateNum1Elem met a jour et fait reafficher les numeros qui       
+   apparaissent a partir du sous-arbre pointe par pElBegin 
+   (lui-meme compris) et qui sont affectes par l'element   
+   pElModif.                                               
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static void         UpdateNum1Elem (PtrElement pElBegin, PtrElement pElModif, PtrDocument pDoc, boolean redisp)
@@ -4895,9 +4896,9 @@ boolean             redisp;
 
 
 
-/* ---------------------------------------------------------------------- */
-/* |    UpdateNum                                                          | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   UpdateNum                                                          
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static void         UpdateNum (PtrElement pElD, PtrElement pElM, PtrDocument pDoc, boolean redisp)
@@ -4932,13 +4933,13 @@ boolean             redisp;
 
 
 
-/* ---------------------------------------------------------------------- */
-/* |    UpdateNumbers pour le document dont le contexte pDoc, met a jour  | */
-/* |            et fait reafficher les numeros qui apparaissent a partir| */
-/* |            du sous-arbre pointe par pElBegin (lui-meme compris) et | */
-/* |            qui sont affectes par les elements du sous-arbre        | */
-/* |            (racine comprise) pointe par pElModif.                  | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   UpdateNumbers pour le document dont le contexte pDoc, met a jour  
+   et fait reafficher les numeros qui apparaissent a partir
+   du sous-arbre pointe par pElBegin (lui-meme compris) et 
+   qui sont affectes par les elements du sous-arbre        
+   (racine comprise) pointe par pElModif.                  
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                UpdateNumbers (PtrElement pElBegin, PtrElement pElModif, PtrDocument pDoc, boolean redisp)
@@ -4962,13 +4963,13 @@ boolean             redisp;
 
 
 
-/* ---------------------------------------------------------------------- */
-/* |    ChngBtCompt reaffiche toutes les boites de presentation de pDoc,| */
-/* |            qui se trouvent a l'interieur de et apres l'element     | */
-/* |            pointe' par pElBegin et dont le contenu depend du       | */
-/* |            compteur counter defini dans le schema de presentation      | */
-/* |            pSchP.                                                  | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ChngBtCompt reaffiche toutes les boites de presentation de pDoc,
+   qui se trouvent a l'interieur de et apres l'element     
+   pointe' par pElBegin et dont le contenu depend du       
+   compteur counter defini dans le schema de presentation      
+   pSchP.                                                  
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                ChngBtCompt (PtrElement pElBegin, PtrDocument pDoc, int counter, PtrPSchema pSchP, PtrSSchema pSS)
@@ -4993,10 +4994,10 @@ PtrSSchema        pSS;
 
 
 
-/* ---------------------------------------------------------------------- */
-/* |    SetChange marque dans le pave pAbb que la regle de type typeRule a | */
-/* |            change'.                                                | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   SetChange marque dans le pave pAbb que la regle de type typeRule a 
+   change'.                                                
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static void         SetChange (PtrAbstractBox pAbb, PRuleType typeRule)
@@ -5049,12 +5050,12 @@ PRuleType           typeRule;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    ApplyInheritPresRule si la regle de presentation de type typeRule        | */
-/* |            qui doit s'appliquer au pave pAb est une regle         | */
-/* |            d'heritage, on applique cette regle au pave' pointe'    | */
-/* |            par pAb, et on fait de meme sur son sous-arbre.        | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ApplyInheritPresRule si la regle de presentation de type typeRule        
+   qui doit s'appliquer au pave pAb est une regle         
+   d'heritage, on applique cette regle au pave' pointe'    
+   par pAb, et on fait de meme sur son sous-arbre.        
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static void         ApplyInheritPresRule (PtrAbstractBox pAb, PRuleType typeRule, PtrDocument pDoc)
@@ -5129,17 +5130,17 @@ PtrDocument         pDoc;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    ApplyPresRuleAb applique au pave pAb appartenant au document     | */
-/* |            pDoc la regle de presentation pRule appartenant au     | */
-/* |            schema de presentation pSchP.                           | */
-/* |            S'il s'agit d'une regle de position ou de dimension,    | */
-/* |            que le pave pAb est elastique et que sa boite a ete    | */
-/* |            inversee, on reapplique la regle complementaire         | */
-/* |            (regle de dimension pour une regle de position et       | */
-/* |            inversement).                                           | */
-/* |            Retourne Vrai si la regle a ete appliquee.              | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ApplyPresRuleAb applique au pave pAb appartenant au document     
+   pDoc la regle de presentation pRule appartenant au     
+   schema de presentation pSchP.                           
+   S'il s'agit d'une regle de position ou de dimension,    
+   que le pave pAb est elastique et que sa boite a ete    
+   inversee, on reapplique la regle complementaire         
+   (regle de dimension pour une regle de position et       
+   inversement).                                           
+   Retourne Vrai si la regle a ete appliquee.              
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static boolean      ApplyPresRuleAb (PtrPRule pRule, PtrPSchema pSchP, PtrAbstractBox pAb, PtrDocument pDoc, PtrAttribute pAttr)
@@ -5252,14 +5253,14 @@ PtrAttribute         pAttr;
 
 
 
-/* ---------------------------------------------------------------------- */
-/* |    ChngPresAttr Pour l'element pEl dans le document pDoc, supprime | */
-/* |            ou applique (selon remove) la presentation attachee a    | */
-/* |            l'attribut pointe par pAttr.                            | */
-/* |            Ce changement de la presentation a lieu egalement sur   | */
-/* |            le sous-arbre de l'element, si les parametres de        | */
-/* |            presentation associes a l'attribut sont herites.        | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ChngPresAttr Pour l'element pEl dans le document pDoc, supprime 
+   ou applique (selon remove) la presentation attachee a    
+   l'attribut pointe par pAttr.                            
+   Ce changement de la presentation a lieu egalement sur   
+   le sous-arbre de l'element, si les parametres de        
+   presentation associes a l'attribut sont herites.        
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                ChngPresAttr (PtrElement pEl, PtrAttribute pAttr, PtrDocument pDoc, boolean remove, boolean inherit, PtrAttribute pAttrComp)
@@ -5732,17 +5733,17 @@ PtrAttribute         pAttrComp;
  /* procedure deplacee pour la pagination dans le print */
  /* elle etait avant dans modif.c */
  /* procedure appelee par les procedures de modif.c et par page.c */
-/* ---------------------------------------------------------------------- */
-/* |    MemeTexte       retourne 'vrai' si l'element pointe par pEl     | */
-/* |    (appartenant au document pointe par pDoc) a un frere suivant et | */
-/* |    si les deux elements sont des feuilles de texte dans le meme    | */
-/* |    alphabet, avec les memes attributs et les memes regles de       | */
-/* |    presentation specifiques.                                       | */
-/* |    Dans ce cas, les deux elements sont fusionnes et l'image        | */
-/* |    abstraite est mise a jour. pLib contient au retour un pointeur  | */
-/* |    sur l'element libere par la fusion (cet element n'est pas rendu | */
-/* |    a la memoire libre).                                            | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   MemeTexte       retourne 'vrai' si l'element pointe par pEl     
+   (appartenant au document pointe par pDoc) a un frere suivant et 
+   si les deux elements sont des feuilles de texte dans le meme    
+   alphabet, avec les memes attributs et les memes regles de       
+   presentation specifiques.                                       
+   Dans ce cas, les deux elements sont fusionnes et l'image        
+   abstraite est mise a jour. pLib contient au retour un pointeur  
+   sur l'element libere par la fusion (cet element n'est pas rendu 
+   a la memoire libre).                                            
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 boolean             MemeTexte (PtrElement pEl, PtrDocument pDoc, PtrElement * pLib)

@@ -1,4 +1,8 @@
 /*
+ * Copyright (c) 1996 INRIA, All rights reserved
+ */
+
+/*
    Manage line constructions
  */
 
@@ -25,10 +29,10 @@
 #define MAX_SIBLING_HYPHENS 2
 
 
-/* ---------------------------------------------------------------------- */
-/* | GetNextBox rend l'adresse de la boite associee au pave vivant qui  | */
-/* |            suit pAb.                                               | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   GetNextBox rend l'adresse de la boite associee au pave vivant qui  
+   suit pAb.                                               
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 PtrBox            GetNextBox (PtrAbstractBox pAb)
 #else  /* __STDC__ */
@@ -87,10 +91,10 @@ PtrAbstractBox     pAb;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |  GetPreviousBox rend l'adresse de la boite associee au pave vivant | */
-/* |            qui precede pAb.                                        | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   GetPreviousBox rend l'adresse de la boite associee au pave vivant 
+   qui precede pAb.                                        
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static PtrBox     GetPreviousBox (PtrAbstractBox pAb)
 #else  /* __STDC__ */
@@ -143,11 +147,11 @@ PtrAbstractBox    pAb;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    Adjust calcule la largeur des blancs a` afficher dans la ligne  | */
-/* |            pour l'ajuster. La procedure met a` jour les positions  | */
-/* |            en x et la largeur des boites incluses.                 | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   Adjust calcule la largeur des blancs a` afficher dans la ligne  
+   pour l'ajuster. La procedure met a` jour les positions  
+   en x et la largeur des boites incluses.                 
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void    Adjust (PtrBox pParentBox, PtrLine pLine, int frame, boolean orgXComplete, boolean orgYComplete)
 #else  /* __STDC__ */
@@ -257,9 +261,9 @@ boolean           orgYComplete;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    FloatToInt fait un arrondi float -> int.                        | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   FloatToInt fait un arrondi float -> int.                        
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 int           FloatToInt (float e)
 #else  /* __STDC__ */
@@ -277,12 +281,12 @@ float         e;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    Align aligne les bases des boites contenues dans la ligne       | */
-/* |            designee. Decale de delta l'origine de chaque boite     | */
-/* |            dans la ligne et indique que les boites ne sont pas     | */
-/* |            justifiees.                                             | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   Align aligne les bases des boites contenues dans la ligne       
+   designee. Decale de delta l'origine de chaque boite     
+   dans la ligne et indique que les boites ne sont pas     
+   justifiees.                                             
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                Align (PtrBox pParentBox, PtrLine pLine, int delta, int frame, boolean orgXComplete, boolean orgYComplete)
 #else  /* __STDC__ */
@@ -330,26 +334,26 @@ boolean           orgYComplete;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* | SearchBreak calcule le nombre de caracte`res nChars a` placer dans | */
-/* |            la premie`re boi^te coupe'e pour la limiter a` une      | */
-/* |            longueur de length en pixels.                           | */
-/* |            Retourne le nombre de caracte`res a` sauter, soit 1 ou  | */
-/* |            plus si la coupure tombe sur un blanc, -1 si le dernier | */
-/* |            mot est coupe' et un tiret doit e^tre engendre', -2 si  | */
-/* |            le dernier mot est coupe' sans besoin de tiret, 0 si la | */
-/* |            coupure ne correspond pas a` un point de coupure.       | */
-/* |            Rend la position a` laquelle le point de coupure peut   | */
-/* |            e^tre inse're' :                                        | */
-/* |            - le nombre de caracteres : nChars (blancs compris sauf | */
-/* |            les derniers).                                          | */
-/* |            - la longueur de cette nouvelle sous-chaine :           | */
-/* |              boxWidth (avec les blancs).                           | */
-/* |            - le nombre de blancs qu'elle contient : nSpaces        | */
-/* |            (sauf les derniers).                                    | */
-/* |            - l'adresse du buffer du 1er caractere apres coupure.   | */
-/* |            - l'index dans ce buffer du 1er caractere apres coupure.| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   SearchBreak calcule le nombre de caracte`res nChars a` placer dans 
+   la premie`re boi^te coupe'e pour la limiter a` une      
+   longueur de length en pixels.                           
+   Retourne le nombre de caracte`res a` sauter, soit 1 ou  
+   plus si la coupure tombe sur un blanc, -1 si le dernier 
+   mot est coupe' et un tiret doit e^tre engendre', -2 si  
+   le dernier mot est coupe' sans besoin de tiret, 0 si la 
+   coupure ne correspond pas a` un point de coupure.       
+   Rend la position a` laquelle le point de coupure peut   
+   e^tre inse're' :                                        
+   - le nombre de caracteres : nChars (blancs compris sauf 
+   les derniers).                                          
+   - la longueur de cette nouvelle sous-chaine :           
+   boxWidth (avec les blancs).                           
+   - le nombre de blancs qu'elle contient : nSpaces        
+   (sauf les derniers).                                    
+   - l'adresse du buffer du 1er caractere apres coupure.   
+   - l'index dans ce buffer du 1er caractere apres coupure.
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static int   SearchBreak (PtrLine pLine, PtrBox pBox, int length, ptrfont font, int *nChars, int *boxWidth, int *nSpaces, int *newIndex, PtrTextBuffer *pNewBuff)
 #else  /* __STDC__ */
@@ -778,16 +782,16 @@ PtrTextBuffer     *pNewBuff;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* | Coupe la boite pBox sur un caractere de rupture de ligne.          | */
-/* | width = la largeur du de'but de la boite jusqu'au point de coupure | */
-/* | breakWidth = largeur du caracte`re qui force la coupure            | */
-/* | nCharssl = nombre de caracte`res avant la coupure                  | */
-/* | nSpaces = nombre d'espaces avant le point de coupure               | */
-/* | newIndex = indice du debut de texte apres le point de coupure      | */
-/* | pNewBuff = buffer du debut de texte apres le point de coupure      | */
-/* | pRootAb = pave racine de la vue (pour mise a jour des chainages)   | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   Coupe la boite pBox sur un caractere de rupture de ligne.          
+   width = la largeur du de'but de la boite jusqu'au point de coupure 
+   breakWidth = largeur du caracte`re qui force la coupure            
+   nCharssl = nombre de caracte`res avant la coupure                  
+   nSpaces = nombre d'espaces avant le point de coupure               
+   newIndex = indice du debut de texte apres le point de coupure      
+   pNewBuff = buffer du debut de texte apres le point de coupure      
+   pRootAb = pave racine de la vue (pour mise a jour des chainages)   
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void    ManageBreakLine (PtrBox pBox, int width, int breakWidth, int nCharssl, int nSpaces, int newIndex, PtrTextBuffer pNewBuff, PtrAbstractBox pRootAb)
 #else  /* __STDC__ */
@@ -915,16 +919,16 @@ PtrAbstractBox    pRootAb;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* | BreakMainBox coupe la boi^te entiere d'indice pBox correspondant   | */
-/* |            a` l'image abstraite pAb en deux boi^tes. Si force est  | */
-/* |            Vrai coupe meme sur un caracte`re, sinon on ne coupe que| */
-/* |            sur un blanc. La premie`re boi^te issue de la coupure   | */
-/* |            contiendra nChars caracte`res. Sa longueur sera         | */
-/* |            infe'rieure a` maxLength. Le blanc est perdu et le reste| */
-/* |            mis dans la boi^te de coupure suivante. Les chai^nages  | */
-/* |            sont mis a` jour.                                       | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   BreakMainBox coupe la boi^te entiere d'indice pBox correspondant   
+   a` l'image abstraite pAb en deux boi^tes. Si force est  
+   Vrai coupe meme sur un caracte`re, sinon on ne coupe que
+   sur un blanc. La premie`re boi^te issue de la coupure   
+   contiendra nChars caracte`res. Sa longueur sera         
+   infe'rieure a` maxLength. Le blanc est perdu et le reste
+   mis dans la boi^te de coupure suivante. Les chai^nages  
+   sont mis a` jour.                                       
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         BreakMainBox (PtrLine pLine, PtrBox pBox, int maxLength, PtrAbstractBox pRootAb, boolean force)
 #else  /* __STDC__ */
@@ -1059,18 +1063,18 @@ boolean             force;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* | Teste s'il y a un caractere de rupture de ligne dans la boite pBox | */
-/* | Si oui retourne la valeur Vrai, sinon la valeur FALSE.             | */
-/* | Au retour :                                                        | */
-/* | boxWidth = la largeur de la boite jusqu'au point de coupure        | */
-/* | breakWidth = largeur du caracte`re qui force la coupure            | */
-/* | boxLength = nombre de caracte`res avant la coupure                 | */
-/* | nSpaces = nombre d'espaces avant le point de coupure               | */
-/* | newIndex = indice du debut de texte apres le point de coupure      | */
-/* | pNewBuff = buffer du debut de texte apres le point de coupure      | */
-/* | pRootAb = pave racine de la vue (pour mise a jour des chainages)   | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   Teste s'il y a un caractere de rupture de ligne dans la boite pBox 
+   Si oui retourne la valeur Vrai, sinon la valeur FALSE.             
+   Au retour :                                                        
+   boxWidth = la largeur de la boite jusqu'au point de coupure        
+   breakWidth = largeur du caracte`re qui force la coupure            
+   boxLength = nombre de caracte`res avant la coupure                 
+   nSpaces = nombre d'espaces avant le point de coupure               
+   newIndex = indice du debut de texte apres le point de coupure      
+   pNewBuff = buffer du debut de texte apres le point de coupure      
+   pRootAb = pave racine de la vue (pour mise a jour des chainages)   
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 boolean             FindBreakLine (PtrBox pBox, int *boxWidth, int *breakWidth, int *boxLength, int *nSpaces, int *newIndex, PtrTextBuffer * pNewBuff)
 #else  /* __STDC__ */
@@ -1170,9 +1174,9 @@ PtrTextBuffer     *pNewBuff;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    AddBoxInLine ajout une boite dans la ligne.                     | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   AddBoxInLine ajout une boite dans la ligne.                     
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         AddBoxInLine (PtrBox pBox, int *descent, int *ascent, PtrLine pLine)
 #else  /* __STDC__ */
@@ -1192,12 +1196,12 @@ PtrLine            pLine;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |  BreakPieceOfBox recoupe la boite pBox deja coupee pour l'image    | */
-/* |            abstraite pAb. La coupure a lieu meme s'il n'y a pas de | */
-/* |            blanc (coupure forcee). La boite pBox contiendra nChars | */
-/* |            caracteres.                                             | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   BreakPieceOfBox recoupe la boite pBox deja coupee pour l'image    
+   abstraite pAb. La coupure a lieu meme s'il n'y a pas de 
+   blanc (coupure forcee). La boite pBox contiendra nChars 
+   caracteres.                                             
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void        BreakPieceOfBox (PtrLine pLine, PtrBox pBox, int maxLength, PtrAbstractBox pRootAb)
 #else  /* __STDC__ */
@@ -1311,19 +1315,19 @@ PtrAbstractBox     pRootAb;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    FillLine remplit la ligne dont l'adresse est passee en          | */
-/* |          parametre pour l'image abstraite pRootAb.                 | */
-/* |          Le parametre notComplete determine si la paragraphe a ou  | */
-/* |          n'a pas de suite dans une page suivante.                  | */
-/* |          suppose LiFirstBox et LiFirstPiece pre'alablement remplis | */
-/* |          calcule l'indice de la derniere boite qui peut            | */
-/* |          entrer dans la ligne et on met a` jour le descripteur     | */
-/* |          de ligne : LiLastBox et LiLastPiece (si coupee).          | */
-/* |          Les positions des boites mises en lignes sont calculees   | */
-/* |          par rapport a` la boite racine.                           | */
-/* |          Au retour : full indique si la ligne est pleine ou non.   | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   FillLine remplit la ligne dont l'adresse est passee en          
+   parametre pour l'image abstraite pRootAb.                 
+   Le parametre notComplete determine si la paragraphe a ou  
+   n'a pas de suite dans une page suivante.                  
+   suppose LiFirstBox et LiFirstPiece pre'alablement remplis 
+   calcule l'indice de la derniere boite qui peut            
+   entrer dans la ligne et on met a` jour le descripteur     
+   de ligne : LiLastBox et LiLastPiece (si coupee).          
+   Les positions des boites mises en lignes sont calculees   
+   par rapport a` la boite racine.                           
+   Au retour : full indique si la ligne est pleine ou non.   
+  ----------------------------------------------------------------------*/
 #ifdef __COLPAGE__
 #ifdef __STDC__
 void                FillLine (PtrLine pLine, PtrAbstractBox pRootAb, boolean notComplete, boolean * full, boolean * adjust)
@@ -1651,11 +1655,11 @@ boolean            *adjust;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* | RemoveAdjustement recalcule la largueur de boite apres suppression | */
-/* |            de la justification. Met a jour les marques de selection| */
-/* |            que la boite soit justifiee ou non.                     | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   RemoveAdjustement recalcule la largueur de boite apres suppression 
+   de la justification. Met a jour les marques de selection
+   que la boite soit justifiee ou non.                     
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         RemoveAdjustement (PtrBox pBox, int spaceWidth)
 #else  /* __STDC__ */
@@ -1680,16 +1684,16 @@ int                 spaceWidth;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |   ComputeLines cre'e les lignes ne'cessaires pour contenir les     | */
-/* |            boi^tes filles de'ja` cre'e'es. Le parame`tre frame     | */
-/* |            de'signe la fenetree^tre concerne'e. Les boi^tes filles | */
-/* |            sont positionne'es:                                     | */
-/* |            - par rapport a` la boi^te englobante si le             | */
-/* |              de'placement est relatif,                             | */
-/* |            - sinon par rapport a` la racine de l'image concrete.   | */
-/* |            Rend la hauteur calcule'e du bloc de lignes.            | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ComputeLines cre'e les lignes ne'cessaires pour contenir les     
+   boi^tes filles de'ja` cre'e'es. Le parame`tre frame     
+   de'signe la fenetree^tre concerne'e. Les boi^tes filles 
+   sont positionne'es:                                     
+   - par rapport a` la boi^te englobante si le             
+   de'placement est relatif,                             
+   - sinon par rapport a` la racine de l'image concrete.   
+   Rend la hauteur calcule'e du bloc de lignes.            
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                ComputeLines (PtrBox pBox, int frame, int *height)
 #else  /* __STDC__ */
@@ -1983,10 +1987,10 @@ int                *height;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    ShiftLine decale de x les boites de la ligne de pBox incluse    | */
-/* |            dans le boc de ligne pAb et la ligne pLine.             | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ShiftLine decale de x les boites de la ligne de pBox incluse    
+   dans le boc de ligne pAb et la ligne pLine.             
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void        ShiftLine (PtrLine pLine, PtrAbstractBox pAb, PtrBox pBox, int x, int frame)
 #else  /* __STDC__ */
@@ -2101,10 +2105,10 @@ int                frame;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    CompressLine compresse ou e'tend la ligne justifiee suite a`    | */
-/* |            l'ajout d'espaces et un ecart de xDelta pixels.         | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   CompressLine compresse ou e'tend la ligne justifiee suite a`    
+   l'ajout d'espaces et un ecart de xDelta pixels.         
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void        CompressLine (PtrLine pLine, int xDelta, int frame, int spaceDelta)
 #else  /* __STDC__ */
@@ -2219,13 +2223,13 @@ int                spaceDelta;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* | RemoveBreaks libere les boites de coupure qui ont pu etre creees a`| */
-/* |            partir de la boite mere pBox.                           | */
-/* |            L'indicateur chgDF ou changeSelectEnd est bascule si la boite     | */
-/* |            referencee par la marque Debut ou Fin de Selection est  | */
-/* |            liberee.                                                | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   RemoveBreaks libere les boites de coupure qui ont pu etre creees a`
+   partir de la boite mere pBox.                           
+   L'indicateur chgDF ou changeSelectEnd est bascule si la boite     
+   referencee par la marque Debut ou Fin de Selection est  
+   liberee.                                                
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         RemoveBreaks (PtrBox pBox, int frame, boolean *changeSelectBegin, boolean *changeSelectEnd)
 #else  /* __STDC__ */
@@ -2393,15 +2397,15 @@ boolean            *changeSelectEnd;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* | RemoveLines libere les lignes acquises pour l'affichage du bloc de | */
-/* |            lignes a` partir et y compris la ligne passee en        | */
-/* |            parametre. Libere toutes les boites coupees creees pour | */
-/* |            ces lignes.						| */
-/* |		changeSelectBegin et changeSelectEnd sont bascules si   | */
-/* |            la boite referencee par la marque Debut ou Fin de       | */
-/* |            Selection est liberee.                                  | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   RemoveLines libere les lignes acquises pour l'affichage du bloc de 
+   lignes a` partir et y compris la ligne passee en        
+   parametre. Libere toutes les boites coupees creees pour 
+   ces lignes.						
+   		changeSelectBegin et changeSelectEnd sont bascules si   
+   la boite referencee par la marque Debut ou Fin de       
+   Selection est liberee.                                  
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void              RemoveLines (PtrBox pBox, int frame, PtrLine pFirstLine, boolean * changeSelectBegin, boolean * changeSelectEnd)
 #else  /* __STDC__ */
@@ -2487,11 +2491,11 @@ boolean          *changeSelectEnd;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |  RecomputeLines reevalue le bloc de ligne pAb a` partir de la      | */
-/* |         ligne pFirstLine dans la fenetre frame suite au changement | */
-/* |         de largeur de la boite pFirstBox.                          | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   RecomputeLines reevalue le bloc de ligne pAb a` partir de la      
+   ligne pFirstLine dans la fenetre frame suite au changement 
+   de largeur de la boite pFirstBox.                          
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void              RecomputeLines (PtrAbstractBox pAb, PtrLine pFirstLine, PtrBox pFirstBox, int frame)
 #else  /* __STDC__ */
@@ -2640,10 +2644,10 @@ int               frame;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    MajBloc met a` jour le bloc de ligne (pAb) apres modification  | */
-/* |            de la largeur de la boite incluse pBox de xDelta.       | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   MajBloc met a` jour le bloc de ligne (pAb) apres modification  
+   de la largeur de la boite incluse pBox de xDelta.       
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void               MajBloc (PtrAbstractBox pAb, PtrLine pLine, PtrBox pBox, int xDelta, int spaceDelta, int frame)
 #else  /* __STDC__ */
@@ -2823,10 +2827,10 @@ int                frame;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |  EncloseInLine assure l'englobement de la boite pBox  dans la      | */
-/* |         ligne du pave pAb et propage les modifications necessaires.| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   EncloseInLine assure l'englobement de la boite pBox  dans la      
+   ligne du pave pAb et propage les modifications necessaires.
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                EncloseInLine (PtrBox pBox, int frame, PtrAbstractBox pAb)
 #else  /* __STDC__ */

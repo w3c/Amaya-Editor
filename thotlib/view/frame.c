@@ -1,4 +1,8 @@
 /*
+ * Copyright (c) 1996 INRIA, All rights reserved
+ */
+
+/*
  * frame.c : incremental display in frames.
  */
 
@@ -22,9 +26,9 @@
 #include "absboxes_f.h"
 #include "displayselect_f.h"
 
-/** ------------------------------------------------------------------- 
- *   GetXYOrg : do a coordinate shift related to current frame.
- *  ------------------------------------------------------------------- **/
+/*----------------------------------------------------------------------
+   GetXYOrg : do a coordinate shift related to current frame.
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                GetXYOrg (int frame, int *XOrg, int *YOrg)
@@ -45,9 +49,9 @@ int                *YOrg;
    *YOrg = pFrame->FrYOrg;
 }
 
-/** ----------------------------------------------------------------------
- *      DefClip defines the area of the frame which need to be redrawn.
- *  ---------------------------------------------------------------------- **/
+/*----------------------------------------------------------------------
+   DefClip defines the area of the frame which need to be redrawn.
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                DefClip (int frame, int xd, int yd, int xf, int yf)
@@ -127,9 +131,9 @@ int                 yf;
 }				/*DefClip */
 
 
-/** ----------------------------------------------------------------------
- *      DefRegion store the area of frame which need to be redrawn.
- *  ---------------------------------------------------------------------- **/
+/*----------------------------------------------------------------------
+   DefRegion store the area of frame which need to be redrawn.
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                DefRegion (int frame, int xd, int yd, int xf, int yf)
 
@@ -151,9 +155,9 @@ int                 yf;
    DefClip (frame, xd + pFrame->FrXOrg, yd + pFrame->FrYOrg, xf + pFrame->FrXOrg, yf + pFrame->FrYOrg);
 }
 
-/** ----------------------------------------------------------------------
- *      TtaRefresh redraw all the frame of all the loaded documents.
- *  ---------------------------------------------------------------------- **/
+/*----------------------------------------------------------------------
+   TtaRefresh redraw all the frame of all the loaded documents.
+  ----------------------------------------------------------------------*/
 void                TtaRefresh ()
 {
    int                 frame;
@@ -169,17 +173,17 @@ void                TtaRefresh ()
      }
 }
 
-/** ----------------------------------------------------------------------
- *      RedrawFrameTop redraw from bottom to top a frame.
- *		The delta parameter indicates the height of a scroll
- *		back which may take place before recomputing the abstract
- *		image.
- *              The area is cleaned before redrawing.
- *		The origin coordinates of the abstract boxes are expected
- *		to be already computed.
- *              Return non zero if new abstract boxes were added in order
- *		to build the corresponding abstract image.
- *  ---------------------------------------------------------------------- **/
+/*----------------------------------------------------------------------
+   RedrawFrameTop redraw from bottom to top a frame.
+   The delta parameter indicates the height of a scroll
+   back which may take place before recomputing the abstract
+   image.
+   The area is cleaned before redrawing.
+   The origin coordinates of the abstract boxes are expected
+   to be already computed.
+   Return non zero if new abstract boxes were added in order
+   to build the corresponding abstract image.
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 boolean             RedrawFrameTop (int frame, int delta)
 
@@ -477,11 +481,11 @@ int                 delta;
 }				/* function RedrawFrameTop */
 
 
-/** ----------------------------------------------------------------------
- *      AddBoxToCreate store in adbloc the list of child boxes to be created,
- *		from the most englobing box down to pBox itself.
- *		It ensure unicity of boxes referenced in adbloc.
- *  ---------------------------------------------------------------------- **/
+/*----------------------------------------------------------------------
+   AddBoxToCreate store in adbloc the list of child boxes to be created,
+   from the most englobing box down to pBox itself.
+   It ensure unicity of boxes referenced in adbloc.
+  ----------------------------------------------------------------------*/
 
 
 #ifdef __STDC__
@@ -530,17 +534,17 @@ int                 frame;
       *tocreate = pBox;
 }				/*function AddBoxToCreate */
 
-/** ----------------------------------------------------------------------
- *      RedrawFrameBottom redraw from top to bottom a frame.
- *		The delta parameter indicates the height of a scroll
- *		which may take place before recomputing the abstract
- *		image.
- *              The area is cleaned before redrawing.
- *		The origin coordinates of the abstract boxes are expected
- *		to be already computed.
- *              Return non zero if new abstract boxes were added in order
- *		to build the corresponding abstract image.
- *  ---------------------------------------------------------------------- **/
+/*----------------------------------------------------------------------
+   RedrawFrameBottom redraw from top to bottom a frame.
+   The delta parameter indicates the height of a scroll
+   which may take place before recomputing the abstract
+   image.
+   The area is cleaned before redrawing.
+   The origin coordinates of the abstract boxes are expected
+   to be already computed.
+   Return non zero if new abstract boxes were added in order
+   to build the corresponding abstract image.
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 boolean             RedrawFrameBottom (int frame, int delta)
@@ -674,7 +678,7 @@ int                 delta;
 		       else
 			  pAbbox1 = NULL;
 
-/*** skip box to create dynamically ***/
+/** skip box to create dynamically **/
 		       if (pAbbox1 != NULL)
 			  /* store the box to create */
 			  AddBoxToCreate (&ToCreate, pAbbox1->AbBox, frame);
@@ -891,11 +895,11 @@ int                 delta;
    return toadd;
 }				/* end of function RedrawFrameBottom */
 
-/** ----------------------------------------------------------------------
- *      DisplayFrame display one view of the document in frame.
- *		If a part of the abstract image is selected, the
- *		corresponding concrete image is centered in the frame.
- *  ---------------------------------------------------------------------- **/
+/*----------------------------------------------------------------------
+   DisplayFrame display one view of the document in frame.
+   If a part of the abstract image is selected, the
+   corresponding concrete image is centered in the frame.
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                DisplayFrame (int frame)

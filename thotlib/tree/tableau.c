@@ -1,12 +1,10 @@
-/* ======================================================================= */
-/* |                                                                    | */
-/* |                           Projet THOT                              | */
-/* |                                                                    | */
-/* |            Traitements specifiques a la structure Tableau          | */
-/* |                                                                    | */
-/* |                                                                    | */
-/* |                                                                    | */
-/* ======================================================================= */
+/*
+ * Copyright (c) 1996 INRIA, All rights reserved
+ */
+
+/*----------------------------------------------------------------------
+      Traitements specifiques a la structure Tableau             
+  ----------------------------------------------------------------------*/
 
 
 #include "thot_sys.h"
@@ -1866,10 +1864,10 @@ boolean             SupprimeAttr;
 }
 
 /** debut ajout */
-/* ---------------------------------------------------------------------- */
-/* |    Tableau_CanHolophrast   indique si on peut holophraster         | */
-/* |            l'element pointe' par pEl.                              | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   Tableau_CanHolophrast   indique si on peut holophraster         
+   l'element pointe' par pEl.                              
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static void Tableau_CanHolophrast(PtrElement pEl, boolean *ret)
@@ -1906,10 +1904,10 @@ boolean *ret;
 }
 /** fin ajout */
 
-/* ---------------------------------------------------------------------- */
-/* |	Tableau_Except	indique si l'element pEl porte une exception  	| */
-/* |		tableau EXC_ID_Tableau.			  	        | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   	Tableau_Except	indique si l'element pEl porte une exception  	
+   		tableau EXC_ID_Tableau.			  	        
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static void Tableau_Except(PtrElement pEl, boolean *ret)
@@ -1923,10 +1921,10 @@ static void Tableau_Except(pEl, ret)
 			  (pEl->ElStructSchema)));
 }
 
-/* ---------------------------------------------------------------------- */
-/* |	Tableau_Except_CR	indique si l'element pEl porte une exception  	| */
-/* |		tableau EXC_ID_Tableau_CREATION.	    	  	        | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   	Tableau_Except_CR	indique si l'element pEl porte une exception  	
+   		tableau EXC_ID_Tableau_CREATION.	    	  	        
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static void Tableau_Except_CR(PtrElement pEl, boolean *ret)
@@ -1940,10 +1938,10 @@ static void Tableau_Except_CR(pEl, ret)
 			  (pEl->ElStructSchema)));
 }
 
-/* ---------------------------------------------------------------------- */
-/* |  TableauLoadResources : connecte les ressources de traitement des  | */
-/* |  tableaux            	                                        | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   TableauLoadResources : connecte les ressources de traitement des  
+   tableaux            	                                        
+  ----------------------------------------------------------------------*/
 void TableauLoadResources()
 {
 

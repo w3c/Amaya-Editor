@@ -1,4 +1,8 @@
 /*
+ * Copyright (c) 1996 INRIA, All rights reserved
+ */
+
+/*
  * windowdisplay.c : handling of low level drawing routines, both for
  *	X-Window and MS-Windows (incomplete).
  */

@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 1996 INRIA, All rights reserved
+ */
+
 
 /*
    This module handles element labels.
@@ -8,10 +12,10 @@
 #include "constmedia.h"
 #include "typemedia.h"
 
-/* ---------------------------------------------------------------------- */
-/* |    NewLabel retourne la valeur entiere du prochain label a         | */
-/* |            affecter a un element du document pDoc.                 | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   NewLabel retourne la valeur entiere du prochain label a         
+   affecter a un element du document pDoc.                 
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 int                 NewLabel (PtrDocument pDoc)
@@ -27,10 +31,10 @@ PtrDocument         pDoc;
    return pDoc->DocLabelExpMax;
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    GetCurrentLabel retourne la valeur entiere du plus grand label  | */
-/* |            affecte' a un element du document pDoc.                 | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   GetCurrentLabel retourne la valeur entiere du plus grand label  
+   affecte' a un element du document pDoc.                 
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 int                 GetCurrentLabel (PtrDocument pDoc)
@@ -45,10 +49,10 @@ PtrDocument         pDoc;
    return pDoc->DocLabelExpMax;
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    SetCurrentLabel change la valeur entiere du plus grand label    | */
-/* |            affecte' a un element du document pDoc.                 | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   SetCurrentLabel change la valeur entiere du plus grand label    
+   affecte' a un element du document pDoc.                 
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                SetCurrentLabel (PtrDocument pDoc, int label)

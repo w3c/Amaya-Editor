@@ -1,4 +1,8 @@
 /*
+ * Copyright (c) 1996 INRIA, All rights reserved
+ */
+
+/*
  * Module dedicated to box positions managing.
  */
 
@@ -22,11 +26,11 @@
 #include "font_f.h"
 
 
-/* ---------------------------------------------------------------------- */
-/* |    SetYCompleteForOutOfStruct regarde si des boites ont des        | */
-/* |         relations hors-structure avec la boite passee en parametre | */
-/* |         et doivent etre placees en Y absolu.                       | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   SetYCompleteForOutOfStruct regarde si des boites ont des        
+   relations hors-structure avec la boite passee en parametre 
+   et doivent etre placees en Y absolu.                       
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         SetYCompleteForOutOfStruct (PtrBox pBox, int visibility, int frame)
 #else  /* __STDC__ */
@@ -71,11 +75,11 @@ int                 frame;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    SetXCompleteForOutOfStruct regarde si des boites ont des        | */
-/* |         relations hors-structure avec la boite passee en parametre | */
-/* |         et doivent etre placees en X absolu.                       | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   SetXCompleteForOutOfStruct regarde si des boites ont des        
+   relations hors-structure avec la boite passee en parametre 
+   et doivent etre placees en X absolu.                       
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         SetXCompleteForOutOfStruct (PtrBox pBox, int visibility, int frame)
 #else  /* __STDC__ */
@@ -120,10 +124,10 @@ int                 frame;
 
 
 #ifdef __COLPAGE__
-/* ---------------------------------------------------------------------- */
-/* |    ClearPageIndicators remet a faux les boolens AbOnPageBreak et   | */
-/* |            PageHorsPage dans tous les paves du sous-arbre pAb      | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ClearPageIndicators remet a faux les boolens AbOnPageBreak et   
+   PageHorsPage dans tous les paves du sous-arbre pAb      
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         ClearPageIndicators (PtrAbstractBox pAb)
 #else  /* __STDC__ */
@@ -147,22 +151,22 @@ PtrAbstractBox      pAb;
 #endif /* __COLPAGE__ */
 
 
-/* ---------------------------------------------------------------------- */
-/* |  SetPageIndicators teste la position d'un pave' par rapport a`  | */
-/* |            la limite de page. Positionne les indicateurs du pave': | */
-/* |            pave' sur la limite de page ou au dela` de la limite.   | */
-/* |            Le parame`tre height donne la position de la limite de  | */
-/* |            page exprime'e en pixels.                               | */
-/* |            Si un pave' de'borde verticalement de sa boi^te         | */
-/* |            englobante et que ce pave' n'est pas se'cable, alors    | */
-/* |            la boi^te englobante est conside're'e comme coupe'e par | */
-/* |            la limite de page.                                      | */
-/* |            Quand la limite de page coupe un pave' non se'cable la  | */
-/* |            limite de page est alors remonte'e pour rejeter hors    | */
-/* |            page le pave' et le processus est repris au de'but.     | */
-/* |            Dans ce cas, au retour de la fonction le parame`tre     | */
-/* |            height est modifie' et isPageBreakChanged est Vrai.     | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   SetPageIndicators teste la position d'un pave' par rapport a`  
+   la limite de page. Positionne les indicateurs du pave': 
+   pave' sur la limite de page ou au dela` de la limite.   
+   Le parame`tre height donne la position de la limite de  
+   page exprime'e en pixels.                               
+   Si un pave' de'borde verticalement de sa boi^te         
+   englobante et que ce pave' n'est pas se'cable, alors    
+   la boi^te englobante est conside're'e comme coupe'e par 
+   la limite de page.                                      
+   Quand la limite de page coupe un pave' non se'cable la  
+   limite de page est alors remonte'e pour rejeter hors    
+   page le pave' et le processus est repris au de'but.     
+   Dans ce cas, au retour de la fonction le parame`tre     
+   height est modifie' et isPageBreakChanged est Vrai.     
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         SetPageIndicators (PtrAbstractBox pAb, int *height, boolean *isPageBreakChanged)
 #else  /* __STDC__ */
@@ -318,15 +322,15 @@ boolean            *isPageBreakChanged;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |  SetPageBreakPosition teste la position d'un pave' par rapport a`  | */
-/* |            la limite de page. Elle rend Vrai si la boi^te du pave' | */
-/* |            est incluse dans la page. Sinon le pave' est coupe'     | */
-/* |            par la limite ou se situe au dela` de la limite et les  | */
-/* |            indicateurs correspondants du pave' sont positionne's.  | */
-/* |            Le parame`tre page donne la position de la limite de    | */
-/* |            page.                                                   | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   SetPageBreakPosition teste la position d'un pave' par rapport a`  
+   la limite de page. Elle rend Vrai si la boi^te du pave' 
+   est incluse dans la page. Sinon le pave' est coupe'     
+   par la limite ou se situe au dela` de la limite et les  
+   indicateurs correspondants du pave' sont positionne's.  
+   Le parame`tre page donne la position de la limite de    
+   page.                                                   
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 boolean             SetPageBreakPosition (PtrAbstractBox pAb, int *page)
 #else  /* __STDC__ */
@@ -356,15 +360,15 @@ int                *page;
    return result;
 }
 
-/* ---------------------------------------------------------------------- */
-/* |  AddBoxTranslations met a` jour toutes les origines des boi^tes    | */
-/* |            correpondant aux pave's inclus dans pAb.                | */
-/* |            A chaque niveau la proce'dure additionnne le de'calage  | */
-/* |            de la boi^te englobante aux origines des boi^tes        | */
-/* |            incluses, en X et en Y selon la valeur de l'indicateur  | */
-/* |            horizRef et vertRef et du status de la boi^te englobe'e | */
-/* |            Si ne'cessaire, la proce'dure ve'rifie l'englobement.   | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   AddBoxTranslations met a` jour toutes les origines des boi^tes    
+   correpondant aux pave's inclus dans pAb.                
+   A chaque niveau la proce'dure additionnne le de'calage  
+   de la boi^te englobante aux origines des boi^tes        
+   incluses, en X et en Y selon la valeur de l'indicateur  
+   horizRef et vertRef et du status de la boi^te englobe'e 
+   Si ne'cessaire, la proce'dure ve'rifie l'englobement.   
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                AddBoxTranslations (PtrAbstractBox pAb, int visibility, int frame, boolean horizRef, boolean vertRef)
 #else  /* __STDC__ */
@@ -739,15 +743,15 @@ boolean             vertRef;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    SurLaPage marque tous les paves ascendants comme coupe's par    | */
-/* |            la limite de page.                                      | */
-/* |            Quand la limite de page coupe un pave' non se'cable la  | */
-/* |            limite de page est alors remonte'e pour rejeter hors    | */
-/* |            page le pave' et le processus est repris au de'but.     | */
-/* |            Dans ce cas, au retour de la fonction le parame`tre     | */
-/* |            height est modifie' et isPageBreakChanged est Vrai.     | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   SurLaPage marque tous les paves ascendants comme coupe's par    
+   la limite de page.                                      
+   Quand la limite de page coupe un pave' non se'cable la  
+   limite de page est alors remonte'e pour rejeter hors    
+   page le pave' et le processus est repris au de'but.     
+   Dans ce cas, au retour de la fonction le parame`tre     
+   height est modifie' et isPageBreakChanged est Vrai.     
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         SurLaPage (PtrAbstractBox pAb, int *height, boolean * isPageBreakChanged)
 #else  /* __STDC__ */
@@ -778,12 +782,12 @@ boolean            *isPageBreakChanged;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    HorsDeLaPage marque tous les paves ascendants comme coupe's     | */
-/* |            par la limite de page s'ils ne sont pas de'ja`          | */
-/* |            marque's comme sur la page ou hors de la page et si     | */
-/* |            le pave' est englobe' verticalement.                    | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   HorsDeLaPage marque tous les paves ascendants comme coupe's     
+   par la limite de page s'ils ne sont pas de'ja`          
+   marque's comme sur la page ou hors de la page et si     
+   le pave' est englobe' verticalement.                    
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         HorsDeLaPage (PtrAbstractBox pAb, int *height, boolean * isPageBreakChanged)
 #else  /* __STDC__ */
@@ -813,18 +817,18 @@ boolean            *isPageBreakChanged;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    HautCoupure indique quelles sont les conditions de coupure du   | */
-/* |            pave' passe' en parame`tre :                            | */
-/* |            - ht = hauteur de la boi^te du pave'.                   | */
-/* |            - pos = position de la boite du pave dans la page.      | */
-/* |            - nbcar = nombre de caracte`res du pave' qui entrent    | */
-/* |            dans la page s'il est de type texte, sinon le volume du | */
-/* |            pave'.                                                  | */
-/* |            Les hauteurs sont exprime'es suivant la valeur du       | */
-/* |            parame`tre EnPt, en points typographiques (valeur Vrai) | */
-/* |            ou en unite's logiques (Valeur Faux).                   | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   HautCoupure indique quelles sont les conditions de coupure du   
+   pave' passe' en parame`tre :                            
+   - ht = hauteur de la boi^te du pave'.                   
+   - pos = position de la boite du pave dans la page.      
+   - nbcar = nombre de caracte`res du pave' qui entrent    
+   dans la page s'il est de type texte, sinon le volume du 
+   pave'.                                                  
+   Les hauteurs sont exprime'es suivant la valeur du       
+   parame`tre EnPt, en points typographiques (valeur Vrai) 
+   ou en unite's logiques (Valeur Faux).                   
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                HautCoupure (PtrAbstractBox pAb, boolean EnPt, int *ht, int *pos, int *nbcar)
 #else  /* __STDC__ */
@@ -961,11 +965,11 @@ int                *nbcar;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    PosPavePt rend la position en points typographiques du pave     | */
-/* |            passe' en parametre.                                    | */
-/* |            Cette position est relative au pave englobant.          | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   PosPavePt rend la position en points typographiques du pave     
+   passe' en parametre.                                    
+   Cette position est relative au pave englobant.          
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                PosPavePt (PtrAbstractBox pAb, int *xCoord, int *yCoord)
 #else  /* __STDC__ */
@@ -997,10 +1001,10 @@ int                *yCoord;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    SetBoxToTranslate marque le sous-arbre des paves en cours de    | */
-/* |            placement.                                              | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   SetBoxToTranslate marque le sous-arbre des paves en cours de    
+   placement.                                              
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                SetBoxToTranslate (PtrAbstractBox pAb, boolean horizRef, boolean vertRef)
 #else  /* __STDC__ */

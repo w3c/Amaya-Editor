@@ -1,7 +1,10 @@
+/*
+ * Copyright (c) 1996 INRIA, All rights reserved
+ */
+
 
 /* 
    locate what is designated in Concret Image in unstructured mode.
-   I. Vatton
  */
 
 #include "libmsg.h"
@@ -33,15 +36,15 @@
 #include "boxselection_f.h"
 
 
-/* ---------------------------------------------------------------------- */
-/* | GetClickedBox recherche recursivement le pave qui englobe le point | */
-/* |            designe' par x,y.                                       | */
-/* |            La fonction regarde toute l'arborescence des paves      | */
-/* |            pour trouver le premier pave de plus petite profondeur  | */
-/* |            couvrant le point designe.                              | */
-/* |            Si un pave et son fils repondent a la condition, c'est  | */
-/* |            le pave fils qui l'emporte.                             | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   GetClickedBox recherche recursivement le pave qui englobe le point 
+   designe' par x,y.                                       
+   La fonction regarde toute l'arborescence des paves      
+   pour trouver le premier pave de plus petite profondeur  
+   couvrant le point designe.                              
+   Si un pave et son fils repondent a la condition, c'est  
+   le pave fils qui l'emporte.                             
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                GetClickedBox (PtrBox * result, PtrAbstractBox pRootAb, int frame, int x, int y, int *pointselect)
 #else  /* __STDC__ */

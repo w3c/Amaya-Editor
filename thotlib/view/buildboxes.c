@@ -1,6 +1,9 @@
+/*
+ * Copyright (c) 1996 INRIA, All rights reserved
+ */
+
 /* 
-   img.c : gestion des Images abstraites
-   I. Vatton
+ gestion des Images abstraites
  */
 
 #include "thot_sys.h"
@@ -42,8 +45,8 @@
 #define		_1dSQR2		0.7071
 #define		_SQR2		1.4142
 
-/* ---------------------------------------------------------------------- */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         control_points (float x, float y, float l1, float l2, float theta1, float theta2, C_points * cp)
 #else  /* __STDC__ */
@@ -84,11 +87,11 @@ C_points           *cp;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    ComputeControlPoints calcule les points de controle de la courbe.     | */
-/* |            Le parametre nb contient le nombre de points + 1        | */
-/* |            definis dans la polyline.                               | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ComputeControlPoints calcule les points de controle de la courbe.     
+   Le parametre nb contient le nombre de points + 1        
+   definis dans la polyline.                               
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 C_points           *ComputeControlPoints (PtrTextBuffer buffer, int nb)
 #else  /* __STDC__ */
@@ -222,14 +225,14 @@ int                 nb;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    GiveTextParams calcule les dimensions : hauteur, base, largeur et     | */
-/* |            nombre de blancs contenus (nSpaces).                    | */
-/* |            nSpaces contient initialement 0 si la largeur           | */
-/* |            du blanc est celle de la fonte sinon la valeur imposee. | */
-/* |            width contient initialement l'index du premier          | */
-/* |            caractere du texte.                                     | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   GiveTextParams calcule les dimensions : hauteur, base, largeur et     
+   nombre de blancs contenus (nSpaces).                    
+   nSpaces contient initialement 0 si la largeur           
+   du blanc est celle de la fonte sinon la valeur imposee. 
+   width contient initialement l'index du premier          
+   caractere du texte.                                     
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                GiveTextParams (PtrTextBuffer pBuffer, int nChars, ptrfont font, int *width, int *nSpaces)
 #else  /* __STDC__ */
@@ -283,9 +286,9 @@ int                *nSpaces;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* | GivePictureSize evalue les dimensions de la boite du pave Picture. | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   GivePictureSize evalue les dimensions de la boite du pave Picture. 
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         GivePictureSize (PtrAbstractBox pAb, int *width, int *height)
 #else  /* __STDC__ */
@@ -316,9 +319,9 @@ int                *height;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |  GiveSymbolSize evalue les dimensions de la boite du pave Symbol.  | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   GiveSymbolSize evalue les dimensions de la boite du pave Symbol.  
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void       GiveSymbolSize (PtrAbstractBox pAb, int *width, int *height)
 #else  /* __STDC__ */
@@ -396,9 +399,9 @@ int                *height;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* | GiveGraphicSize evalue les dimensions de la boite du pave Graphique | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   GiveGraphicSize evalue les dimensions de la boite du pave Graphique 
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void      GiveGraphicSize (PtrAbstractBox pAb, int *width, int *height)
 #else  /* __STDC__ */
@@ -442,9 +445,9 @@ int                *height;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    GivePolylineSize evalue les dimensions de la boite du PolyLine.     | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   GivePolylineSize evalue les dimensions de la boite du PolyLine.     
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void       GivePolylineSize (PtrAbstractBox pAb, int *width, int *height)
 #else  /* __STDC__ */
@@ -476,10 +479,10 @@ int                *height;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    FreePolyline libe`re la liste des buffers attache's a` la       | */
-/* |            la boi^te Polyline.                                     | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   FreePolyline libe`re la liste des buffers attache's a` la       
+   la boi^te Polyline.                                     
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         FreePolyline (PtrBox pBox)
 #else  /* __STDC__ */
@@ -514,9 +517,9 @@ PtrBox            pBox;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    GiveTextSize evalue les dimensions de la boite du pave Texte.       | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   GiveTextSize evalue les dimensions de la boite du pave Texte.       
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void      GiveTextSize (PtrAbstractBox pAb, int *width, int *height, int *nSpaces)
 #else  /* __STDC__ */
@@ -550,10 +553,10 @@ int                *nSpaces;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    GiveEnclosureSize e'value les dimensions du contenu du pave' compose'    | */
-/* |            pAb dans la fenetree^tre frame.                         | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   GiveEnclosureSize e'value les dimensions du contenu du pave' compose'    
+   pAb dans la fenetree^tre frame.                         
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void       GiveEnclosureSize (PtrAbstractBox pAb, int frame, int *width, int *height)
 #else  /* __STDC__ */
@@ -829,9 +832,9 @@ int                *height;
      }
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    IsAbstractBoxEmpty retourne la valeur Vrai si pAb est vide.     | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   IsAbstractBoxEmpty retourne la valeur Vrai si pAb est vide.     
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static boolean      IsAbstractBoxEmpty (PtrAbstractBox pAb)
 #else  /* __STDC__ */
@@ -856,10 +859,10 @@ PtrAbstractBox         pAb;
    return (pChildAb == NULL);
 }
 
-/* ---------------------------------------------------------------------- */
-/* |  PreviousLeafAbstractBox recherche le dernier pave terminal vivant | */
-/* |            avant le pave designe'.                                 | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   PreviousLeafAbstractBox recherche le dernier pave terminal vivant 
+   avant le pave designe'.                                 
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static PtrAbstractBox      PreviousLeafAbstractBox (PtrAbstractBox pAb)
 #else  /* __STDC__ */
@@ -946,25 +949,25 @@ PtrAbstractBox             pAb;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    CreateBox cree la boite qui est associee au pave donne en       | */
-/* |            parametre et initialise son contenu :                   | */
-/* |            - Calcule sa place en caracteres dans le document tout  | */
-/* |            entier.                                                 | */
-/* |            - Calcule les dimensions contraintes (heritees).        | */
-/* |            - Cree les boites des paves englobes si le pave n'est   | */
-/* |            pas terminal.                                           | */
-/* |            - Calcule les dimensions reelles de la boite et choisit | */
-/* |            entre les dimensions reelles et contraintes.            | */
-/* |            - Calcule les axes de references de la boite.           | */
-/* |            - Positionnne l'origine (haut gauche) de la boite par   | */
-/* |            rapport a` la boite englobante si inLines est faux.     | */
-/* |            Les boites terminales sont doublement (avant et arriere)| */
-/* |            chainees a` partir des champs BxPrevious BxNext de la   | */
-/* |            boite du pave racine.                                   | */
-/* |            On met a jour l'adresse de la boite dans le pave.       | */
-/* |            La fonction rend l'adresse de la boite.                 | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   CreateBox cree la boite qui est associee au pave donne en       
+   parametre et initialise son contenu :                   
+   - Calcule sa place en caracteres dans le document tout  
+   entier.                                                 
+   - Calcule les dimensions contraintes (heritees).        
+   - Cree les boites des paves englobes si le pave n'est   
+   pas terminal.                                           
+   - Calcule les dimensions reelles de la boite et choisit 
+   entre les dimensions reelles et contraintes.            
+   - Calcule les axes de references de la boite.           
+   - Positionnne l'origine (haut gauche) de la boite par   
+   rapport a` la boite englobante si inLines est faux.     
+   Les boites terminales sont doublement (avant et arriere)
+   chainees a` partir des champs BxPrevious BxNext de la   
+   boite du pave racine.                                   
+   On met a jour l'adresse de la boite dans le pave.       
+   La fonction rend l'adresse de la boite.                 
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static PtrBox     CreateBox (PtrAbstractBox pAb, int frame, boolean inLines, int *carIndex)
 #else  /* __STDC__ */
@@ -1195,10 +1198,10 @@ int                *carIndex;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    SearchLine cherche l'adresse de la ligne englobant la boite       | */
-/* |            designee.                                               | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   SearchLine cherche l'adresse de la ligne englobant la boite       
+   designee.                                               
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 PtrLine            SearchLine (PtrBox pBox)
 #else  /* __STDC__ */
@@ -1319,15 +1322,15 @@ PtrBox            pBox;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    BoxUpdate met a jour les informations d'une boite terminale (nombre| */
-/* |            de caracteres, nombre de blancs, largeur).              | */
-/* |            La largeur ajoutee est wDelta pour la boite coupee ou   | */
-/* |            entiere, adjustDelta ou wDelta (si adjustDelta est 0)   | */
-/* |            pour la boite de piece.                                 | */
-/* |        Si splitBox est vrai la mise a jour modifie la coupure entre| */
-/* |            deux boites, donc seule la boite coupee est mise a jour.| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   BoxUpdate met a jour les informations d'une boite terminale (nombre
+   de caracteres, nombre de blancs, largeur).              
+   La largeur ajoutee est wDelta pour la boite coupee ou   
+   entiere, adjustDelta ou wDelta (si adjustDelta est 0)   
+   pour la boite de piece.                                 
+   Si splitBox est vrai la mise a jour modifie la coupure entre
+   deux boites, donc seule la boite coupee est mise a jour.
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void          BoxUpdate (PtrBox pBox, PtrLine pLine, int charDelta, int spaceDelta, int wDelta, int adjustDelta, int hDelta, int frame, boolean splitBox)
 #else  /* __STDC__ */
@@ -1448,12 +1451,12 @@ boolean           splitBox;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    RemoveBoxes libere toutes les boites correpondant aux paves inclus| */
-/* |            dans pAb y compris celle du pave passe' en parametre    | */
-/* |            toRemake est vrai si la boite doit etre recree          | */
-/* |            immediatement apres.                                    | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   RemoveBoxes libere toutes les boites correpondant aux paves inclus
+   dans pAb y compris celle du pave passe' en parametre    
+   toRemake est vrai si la boite doit etre recree          
+   immediatement apres.                                    
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                RemoveBoxes (PtrAbstractBox pAb, boolean toRemake, int frame)
 #else  /* __STDC__ */
@@ -1516,11 +1519,11 @@ int                 frame;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    CheckDefaultPositions reevalue les regles par defaut des paves  | */
-/* |             suivants si le pave cree ou detruit est positionne par | */
-/* |             une regle par defaut.                                  | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   CheckDefaultPositions reevalue les regles par defaut des paves  
+   suivants si le pave cree ou detruit est positionne par 
+   une regle par defaut.                                  
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         CheckDefaultPositions (PtrAbstractBox pAb, int frame)
 #else  /* __STDC__ */
@@ -1587,11 +1590,11 @@ int                 frame;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    ComputeUpdates traite les modifications d'un pave correspondant | */
-/* |            a` la fenetre frame. Rend la valeur vrai s'il y a       | */
-/* |            modification sur la boite du pave.                      | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ComputeUpdates traite les modifications d'un pave correspondant 
+   a` la fenetre frame. Rend la valeur vrai s'il y a       
+   modification sur la boite du pave.                      
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static boolean      ComputeUpdates (PtrAbstractBox pAb, int frame)
 #else  /* __STDC__ */
@@ -2264,9 +2267,9 @@ int                 frame;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* | RecordEnclosing  enregistre les englobements diffe're's.        | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   RecordEnclosing  enregistre les englobements diffe're's.        
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                RecordEnclosing (PtrBox pBox, boolean horizRef)
 #else  /* __STDC__ */
@@ -2321,9 +2324,9 @@ boolean             horizRef;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* | ComputeEnclosing traite les contraintes d'englobement diffe're'es | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ComputeEnclosing traite les contraintes d'englobement diffe're'es 
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                ComputeEnclosing (int frame)
 #else  /* __STDC__ */
@@ -2368,11 +2371,11 @@ int                 frame;
      }
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    RebuildConcreteImage reevalue une vue de document suite a` la modification| */
-/* |            du frame. Reaffiche la vue dans la fenetre supposee     | */
-/* |            nettoyee.                                               | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   RebuildConcreteImage reevalue une vue de document suite a` la modification
+   du frame. Reaffiche la vue dans la fenetre supposee     
+   nettoyee.                                               
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                RebuildConcreteImage (int frame)
 #else  /* __STDC__ */
@@ -2457,12 +2460,12 @@ int                 frame;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    ClearFlexibility annule l'e'lasticite' de la boite s'il s'agit     | */
-/* |            d'une boite elastique et les regles de position et de   | */
-/* |            dimension sont a` reevaluer. Traite recusivement        | */
-/* |            les paves fils.                                         | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ClearFlexibility annule l'e'lasticite' de la boite s'il s'agit     
+   d'une boite elastique et les regles de position et de   
+   dimension sont a` reevaluer. Traite recusivement        
+   les paves fils.                                         
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         ClearFlexibility (PtrAbstractBox pAb, int frame)
 #else  /* __STDC__ */
@@ -2526,10 +2529,10 @@ int                 frame;
      }
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    ClearConcreteImage libere toutes les boites de la vue dont on donne         | */
-/* |            le pave racine.                                         | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ClearConcreteImage libere toutes les boites de la vue dont on donne         
+   le pave racine.                                         
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                ClearConcreteImage (int frame)
 #else  /* __STDC__ */
@@ -2557,10 +2560,10 @@ int                 frame;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    IsAbstractBoxUpdated rend la valeur Vrai si les changements ont | */
-/* |            une re'percution sur le pave englobant.                 | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   IsAbstractBoxUpdated rend la valeur Vrai si les changements ont 
+   une re'percution sur le pave englobant.                 
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static boolean      IsAbstractBoxUpdated (PtrAbstractBox pAb, int frame)
 #else  /* __STDC__ */
@@ -2727,29 +2730,29 @@ int                 frame;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* | ChangeConcreteImage traite la mise a jour d'une hierachie de paves | */
-/* |            Pendant la creation d'une arborescence de boites on     | */
-/* |            place chaque boite a` l'interieur de son englobante     | */
-/* |            (Propagate=ToSiblings).                                   | */
-/* |            Quand tous les placements relatifs sont termine's on    | */
-/* |            place les boites dans la vue entiere du document en     | */
-/* |            cumulant les placements relatifs.                       | */
-/* |            Les autre modifications vont provoquer des mises a` jour| */
-/* |            sur la descendance (Propagate = ToChildren) puis en fin de| */
-/* |            traitement seulement, la mise a` jour des boites        | */
-/* |            englobantes.                                            | */
-/* |            En fonctionnement normal les modifications sont         | */
-/* |            immediatement propagees sur toutes les boites           | */
-/* |            (Propagate = ToAll).                                      | */
-/* |            Si le parametre pageHeight est non nul, il indique la hauteur | */
-/* |            maximum d'une page (ce parametre est eventuellement mis | */
-/* |            a` jour au retour).                                     | */
-/* |            La fonction ve'rifie que cette limite est respecte'e.   | */
-/* |            Elle rend la valeur Vrai si l'image n'est pas coupee.   | */
-/* |            Si le retour est Faux, tous les paves dont la boite     | */
-/* |            coupe la limite ou de'borde sont marque's.              | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ChangeConcreteImage traite la mise a jour d'une hierachie de paves 
+   Pendant la creation d'une arborescence de boites on     
+   place chaque boite a` l'interieur de son englobante     
+   (Propagate=ToSiblings).                                   
+   Quand tous les placements relatifs sont termine's on    
+   place les boites dans la vue entiere du document en     
+   cumulant les placements relatifs.                       
+   Les autre modifications vont provoquer des mises a` jour
+   sur la descendance (Propagate = ToChildren) puis en fin de
+   traitement seulement, la mise a` jour des boites        
+   englobantes.                                            
+   En fonctionnement normal les modifications sont         
+   immediatement propagees sur toutes les boites           
+   (Propagate = ToAll).                                      
+   Si le parametre pageHeight est non nul, il indique la hauteur 
+   maximum d'une page (ce parametre est eventuellement mis 
+   a` jour au retour).                                     
+   La fonction ve'rifie que cette limite est respecte'e.   
+   Elle rend la valeur Vrai si l'image n'est pas coupee.   
+   Si le retour est Faux, tous les paves dont la boite     
+   coupe la limite ou de'borde sont marque's.              
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 boolean             ChangeConcreteImage (int frame, int *pageHeight, PtrAbstractBox pAb)
 #else  /* __STDC__ */

@@ -1,9 +1,11 @@
 /*
+ * Copyright (c) 1996 INRIA, All rights reserved
+ */
+
+/*
    crpages : procedures liees a la creation des pages et des colonnes
    appelees par crimabs pour la creation des images abstraites
    contient quelques procedures du module crimabs
-
-   C. Roisin
  */
 
 
@@ -40,12 +42,12 @@
 
 
 #ifdef __COLPAGE__
-/* ---------------------------------------------------------------------- */
-/* |    CopyAbsBox retourne un pave qui est la duplication du pave pAb ;   */
-/* |         tous les champs sont recopies sauf ceux de chainage,         */
-/* |         de position, de dimension et de modification qui sont        */
-/* |         initialises par InitAbsBoxes.                                    */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   CopyAbsBox retourne un pave qui est la duplication du pave pAb ;   
+   tous les champs sont recopies sauf ceux de chainage,         
+   de position, de dimension et de modification qui sont        
+   initialises par InitAbsBoxes.                                    
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static PtrAbstractBox      CopyAbsBox (PtrAbstractBox pAb)
 #else  /* __STDC__ */
@@ -131,11 +133,11 @@ PtrAbstractBox             pAb;
 
 #ifdef __COLPAGE__
  /* nouvelle procedure du module crimabs, utilisee dans AbsBoxesCreate et Chaine */
-/* ---------------------------------------------------------------------- */
-/* |    RechPavPage retourne le premier pave corps de page qui          | */
-/* |            precede (si forward) ou suit (si non forward)           | */
-/* |            le pave corps de page cree pour pEl.                    | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   RechPavPage retourne le premier pave corps de page qui          
+   precede (si forward) ou suit (si non forward)           
+   le pave corps de page cree pour pEl.                    
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 PtrAbstractBox             RechPavPage (PtrElement pEl, DocViewNumber viewNb, int viewSch,
 				 boolean forward)
@@ -210,12 +212,12 @@ boolean             forward;
 
  /* nouvelle procedure du module crimabs, utilisee dans AbsBoxesCreate  */
  /* et ApplyRule                                                    */
-/* ---------------------------------------------------------------------- */
-/* |    RechPavPageCol retourne le premier pave corps de page ou colonne| */
-/* |            qui precede (si forward) ou suit (si non forward)       | */
-/* |            le pave corps de page cree pour pEl                     | */
-/* |            Si il y a des colonnes sans pave, on les saute          | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   RechPavPageCol retourne le premier pave corps de page ou colonne
+   qui precede (si forward) ou suit (si non forward)       
+   le pave corps de page cree pour pEl                     
+   Si il y a des colonnes sans pave, on les saute          
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static PtrAbstractBox      RechPavPageCol (PtrElement pEl, DocViewNumber viewNb, int viewSch,
@@ -293,18 +295,18 @@ boolean             forward;
 #endif /* __COLPAGE__ */
 
 
-/* ---------------------------------------------------------------------- */
-/* |    TypeBPage cherche le type de boite page qui correspond a`       | */
-/* |            l'element Marque Page pointe par pEl pour la vue viewNb. | */
- /* |    Rq : viewNb est un numero de vue de schema de pres       | */
-/* |            On cherche les regles Page des elements englobants      | */
-/* |            l'element Marque Page. Retourne le numero de boite      | */
-/* |            decrivant la page et le schema de presentation ou`      | */
-/* |            cette boite est definie.                                | */
- /*      Attention : maintenant on place les marques page AVANT  | */
- /*      l'element qui contient la regle page (sauf racine)      | */
- /*      la recherche de la regle est donc changee               | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   TypeBPage cherche le type de boite page qui correspond a`       
+   l'element Marque Page pointe par pEl pour la vue viewNb. 
+    Rq : viewNb est un numero de vue de schema de pres       
+   On cherche les regles Page des elements englobants      
+   l'element Marque Page. Retourne le numero de boite      
+   decrivant la page et le schema de presentation ou`      
+   cette boite est definie.                                
+    Attention : maintenant on place les marques page AVANT  
+    l'element qui contient la regle page (sauf racine)      
+    la recherche de la regle est donc changee               
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 int                 TypeBPage (PtrElement pEl, int viewNb, PtrPSchema * pSchPPage)
@@ -442,24 +444,24 @@ PtrPSchema         *pSchPPage;
 
 /**CL*//**CL*//**CL*//**CL*//**CL*//**CL*//**CL*//**CL*//**CL*//**CL*/
 /* nouvelle procedure pour les colonnes *//**CL*/
-/* ---------------------------------------------------------------------- */
-/* |    TypeBCol cherche le type de boite colonne qui correspond a`     | */
-/* |            l'element Marque Page (de type colonne) pointe par pEl  | */
-/* |            pour la vue viewNb.                                      | */
- /* |    Rq : viewNb est un numero de vue de schema de pres       | */
-/* |            On cherche les regles Colonnes des elements englobants  | */
-/* |            l'element Marque Page (de type colonne) ainsi que dans  | */
-/* |            les  elements Marque Page qui precedent pEl             | */
-/* |             Retourne le numero de boite                            | */
-/* |            decrivant la colonne et le schema de presentation ou`   | */
-/* |            cette boite est definie.                                | */
- /*      Attention :  on place les marques colonnes AVANT       | */
- /*      l'element qui contient la regle Column (sauf racine et MP)| */
-/* |            on parcourt l'arbre abstrait jusqu'a rencontrer une regle | */
-/* |            Column ou une regle Page contenant une regle Column.    | */
-/* |            retourne dans NbCol, le nombre de colonnes de la regle  | */
-/* |            Column */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   TypeBCol cherche le type de boite colonne qui correspond a`     
+   l'element Marque Page (de type colonne) pointe par pEl  
+   pour la vue viewNb.                                      
+    Rq : viewNb est un numero de vue de schema de pres       
+   On cherche les regles Colonnes des elements englobants  
+   l'element Marque Page (de type colonne) ainsi que dans  
+   les  elements Marque Page qui precedent pEl             
+   Retourne le numero de boite                            
+   decrivant la colonne et le schema de presentation ou`   
+   cette boite est definie.                                
+    Attention :  on place les marques colonnes AVANT       
+    l'element qui contient la regle Column (sauf racine et MP)
+   on parcourt l'arbre abstrait jusqu'a rencontrer une regle 
+   Column ou une regle Page contenant une regle Column.    
+   retourne dans NbCol, le nombre de colonnes de la regle  
+   Column 
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 int                 TypeBCol (PtrElement pEl, int viewNb, PtrPSchema * pSchPPage, int *NbCol)
@@ -705,14 +707,14 @@ int                *NbCol;
 /* fin TypeBCol */
 #endif /* __COLPAGE__ */
 
-/* ---------------------------------------------------------------------- */
-/* |    CptPage retourne le numero de compteur a` utiliser pour         | */
-/* |            numeroter la marque de page pointee par pEl, dans la    | */
-/* |            vue viewNb. Retourne egalement dans pSchPPage le schema  | */
-/* |            de presentation ou est defini ce compteur. Retourne 0 si| */
-/* |            cette page n'est pas numerotee.                         | */
-	 /* viewNb = Vue dans le schema de presentation          | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   CptPage retourne le numero de compteur a` utiliser pour         
+   numeroter la marque de page pointee par pEl, dans la    
+   vue viewNb. Retourne egalement dans pSchPPage le schema  
+   de presentation ou est defini ce compteur. Retourne 0 si
+   cette page n'est pas numerotee.                         
+	    viewNb = Vue dans le schema de presentation          
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 int                 CptPage (PtrElement pEl, int viewNb, PtrPSchema * pSchPPage)
@@ -740,9 +742,9 @@ PtrPSchema         *pSchPPage;
 
 #ifdef __COLPAGE__
 
- /* -------------------------------------------------------------- */
- /*  |    NbPages retourne le nombre de pages sous la racine pAb| */
- /* -------------------------------------------------------------- */
+ /*----------------------------------------------------------------------
+    NbPages retourne le nombre de pages sous la racine pAb
+   ----------------------------------------------------------------------*/
 
 
 #ifdef __STDC__
@@ -778,16 +780,16 @@ PtrAbstractBox             pAb;
 #endif /* _COLPAGE__ */
 
  #ifdef __COLPAGE__
-/* ---------------------------------------------------------------------- */
-/* |    PagePleine evalue si la page en cours de remplissage est pleine.| */
- /*     dans le cas ou le document est pagine.                  | */
- /*     si doc pagine, on s'arrete sur une page pleine : donc   | */
- /*     si pEl, qui est le prochain element a traiter,          | */
- /*     est une Marque Page: on positionne le volume            | */
- /*     libre de la vue a -1 (teste ensuite par IsViewFull)      | */
- /*     Cette procedure detruit les paves crees inutiles        | */
- /*     (aux frontieres de page)                                        | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   PagePleine evalue si la page en cours de remplissage est pleine.
+    dans le cas ou le document est pagine.                  
+    si doc pagine, on s'arrete sur une page pleine : donc   
+    si pEl, qui est le prochain element a traiter,          
+    est une Marque Page: on positionne le volume            
+    libre de la vue a -1 (teste ensuite par IsViewFull)      
+    Cette procedure detruit les paves crees inutiles        
+    (aux frontieres de page)                                        
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                PagePleine (DocViewNumber viewNb, PtrDocument pDoc, PtrElement pEl,
@@ -1005,12 +1007,12 @@ boolean             forward;
 
 #ifdef __COLPAGE__
 
-/* ---------------------------------------------------------------------- */
-/* |    TestElHB teste si l'element pEl est un element reference        | */
-/* |        vers un element associe place en haut ou bas de page        | */
-/* |        retourne un pointeur vers l'element reference               | */
-/* |        si il faut creer le pave de cet element.                    | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   TestElHB teste si l'element pEl est un element reference        
+   vers un element associe place en haut ou bas de page        
+   retourne un pointeur vers l'element reference               
+   si il faut creer le pave de cet element.                    
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 PtrElement          TestElHB (PtrElement pEl, DocViewNumber viewNb)
@@ -1078,14 +1080,14 @@ DocViewNumber           viewNb;
 
 #ifdef __COLPAGE__
 
-/* ---------------------------------------------------------------------- */
-/* |     CrPavHB  cree les paves de l'element associe pEl.              | */
-/* |             Ce pave doit etre place en haut ou bas de la           | */
-/* |             page courante pElPage.                                 | */
-/* |             Si l'element pere de pEl (c'est la racine de           | */
-/* |             l'arbre associe) n'a pas de pave dans la page,         | */
-/* |             il faut le  creer en meme temps.                       | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   CrPavHB  cree les paves de l'element associe pEl.              
+   Ce pave doit etre place en haut ou bas de la           
+   page courante pElPage.                                 
+   Si l'element pere de pEl (c'est la racine de           
+   l'arbre associe) n'a pas de pave dans la page,         
+   il faut le  creer en meme temps.                       
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                CrPavHB (PtrElement pEl, PtrDocument pDoc, DocViewNumber viewNb,
@@ -1613,11 +1615,11 @@ boolean             forward;
 
 #ifdef __COLPAGE__
 
-/* -------------------------------------------------------------- */
-/* | FeuilleSuiv rend l'element feuille qui suit                | */
-/* |           l'element pEl. Cet element peut etre             | */
-/* |           un element compose sans fils                     | */
-/* -------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   FeuilleSuiv rend l'element feuille qui suit                
+   l'element pEl. Cet element peut etre             
+   un element compose sans fils                     
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static PtrElement   FeuilleSuiv (PtrElement pEl)
@@ -1667,12 +1669,12 @@ PtrElement          pEl;
 #endif /* __COLPAGE__ */
 
 #ifdef __COLPAGE__
-/* ---------------------------------------------------------------------- */
-/* |    ArretCreationCol retourne vrai si il faut arreter la creation   | */
-/* |            pour creer une nouvelle colonne (cas ou on a une colonne| */
-/* |            et ou on doit changer de groupes de colonnes : il faut  | */
-/* |            couper cette colonne en jajoutant un nouvelle marque).  | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ArretCreationCol retourne vrai si il faut arreter la creation   
+   pour creer une nouvelle colonne (cas ou on a une colonne
+   et ou on doit changer de groupes de colonnes : il faut  
+   couper cette colonne en jajoutant un nouvelle marque).  
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static boolean      ArretCreationCol (PtrElement pEl, PtrDocument pDoc,
@@ -1741,13 +1743,13 @@ int                 viewSch;
 #endif /* __COLPAGE__ */
 
 #ifdef __COLPAGE__
-/*------------------------------------------------------------------------*/
-/* |     InitPageCol determine les conditions de creation               | */
-/* |             si l'element a creer est une colonne ou une page       | */
-/* |             Au retour, Creation, complete, et ApplRegles sont       | */
-/* |             positionnes. De plus pEl et pElSauv peuvent l'etre     | */
-/* |             aussi.                                                 | */
-/*------------------------------------------------------------------------*/
+/*----------------------------------------------------------------------
+   InitPageCol determine les conditions de creation               
+   si l'element a creer est une colonne ou une page       
+   Au retour, Creation, complete, et ApplRegles sont       
+   positionnes. De plus pEl et pElSauv peuvent l'etre     
+   aussi.                                                 
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                InitPageCol (PtrElement * ppEl, PtrDocument pDoc, DocViewNumber viewNb,
 			    int viewSch, boolean forward, boolean * Creation,
@@ -2033,11 +2035,11 @@ PtrElement         *pElSauv;
 
 
 #ifndef __COLPAGE__
-/* ---------------------------------------------------------------------- */
-/* | ApplPage    ApplyRule les regles de presentation au pave            | */
-/* |       cree quand c'est une marque de page TypeP                    | */
-/* |       et pSchPPage ont ete initialises dans ChercheVisib           | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ApplPage    ApplyRule les regles de presentation au pave            
+   cree quand c'est une marque de page TypeP                    
+   et pSchPPage ont ete initialises dans ChercheVisib           
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                ApplPage (PtrElement pEl, PtrDocument pDoc, DocViewNumber viewNb, int viewSch,
 			  int TypeP, PtrPSchema pSchPPage, PtrAbstractBox pNewAbbox)
@@ -2146,13 +2148,13 @@ PtrAbstractBox             pNewAbbox;
 
 #ifdef __COLPAGE__
 
-/* ------------------------------------------------------------------------ */
-/* |    CreePageCol     cree les paves de structure physique (page,       | */
-/* |                    colonne) sous le pave racine et duplique les paves| */
-/* |                    des elements peres de pEl.                        | */
-/* |                    pEl est une marque de page ou de colonne qui      | */
-/* |                    concerne la vue traitee                           | */
-/* ------------------------------------------------------------------------ */
+/*----------------------------------------------------------------------
+   CreePageCol     cree les paves de structure physique (page,       
+   colonne) sous le pave racine et duplique les paves
+   des elements peres de pEl.                        
+   pEl est une marque de page ou de colonne qui      
+   concerne la vue traitee                           
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                CreePageCol (PtrElement pEl, PtrAbstractBox * AdrNouvPave, PtrDocument pDoc,
 			       DocViewNumber viewNb, int viewSch, boolean forward,

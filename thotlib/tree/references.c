@@ -1,5 +1,6 @@
-
-/* -- Copyright (c) 1996 Inria  --  All rights reserved -- */
+/*
+ * Copyright (c) 1996 INRIA, All rights reserved
+ */
 
 /*
    traitement des references
@@ -23,11 +24,11 @@
 #include "content_f.h"
 #include "structschema_f.h"
 
-/* ---------------------------------------------------------------------- */
-/* |    SearchElemLabel    cherche dans tout le sous arbre de pEl	| */
-/* |    l'element portant un label donne'.                              | */
-/* |    Retourne un pointeur sur cet element ou NULL si pas trouve'.    | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   SearchElemLabel    cherche dans tout le sous arbre de pEl	
+   l'element portant un label donne'.                              
+   Retourne un pointeur sur cet element ou NULL si pas trouve'.    
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static PtrElement   SearchElemLabel (PtrElement pEl, LabelString label)
@@ -60,19 +61,19 @@ LabelString         label;
    return result;
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    ReferredElement retourne un pointeur sur l'element qui est reference' | */
-/* |            par la reference pRef. Retourne NULL si l'element       | */
-/* |            reference' n'est pas accessible.                        | */
-/* |            Si l'element reference' est dans un autre document,     | */
-/* |            retourne dans docIdent l'identificateur du document qui	| */
-/* |            contient l'element reference' et dans pDoc un pointeur  | */
-/* |            sur le contexte du document si ce document est charge'  | */
-/* |            (NULL si le document n'est pas charge').                | */
-/* |            Si l'element reference' est dans le meme document,      | */
-/* |            retourne dans docIdent une chaine vide et dans ce cas   | */
-/* |            pDoc est NULL.                                          | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ReferredElement retourne un pointeur sur l'element qui est reference' 
+   par la reference pRef. Retourne NULL si l'element       
+   reference' n'est pas accessible.                        
+   Si l'element reference' est dans un autre document,     
+   retourne dans docIdent l'identificateur du document qui	
+   contient l'element reference' et dans pDoc un pointeur  
+   sur le contexte du document si ce document est charge'  
+   (NULL si le document n'est pas charge').                
+   Si l'element reference' est dans le meme document,      
+   retourne dans docIdent une chaine vide et dans ce cas   
+   pDoc est NULL.                                          
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 PtrElement          ReferredElement (PtrReference pRef, DocumentIdentifier * docIdent, PtrDocument * pDoc)
@@ -190,36 +191,36 @@ PtrDocument        *pDoc;
    return pEl;
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    SearchExternalReferenceToElem cherche un document qui contient des references a`  | */
-/* |       l'element pEl et, dans ce document, s'il est charge',	| */
-/* |       cherche la premiere reference qui pointe sur pEl.       	| */
-/* |       - pDocEl est le document auquel appartient pEl.         	| */
-/* |       - processNotLoaded indique si on prend en compte les    	| */
-/* |         documents referencant non charge's (TRUE) ou si au    	| */
-/* |         contraire on les ignore (FALSE).                      	| */
-/* |       - pDocRef contient au retour un pointeur sur le         	| */
-/* |         contexte du document auquel appartient la reference   	| */
-/* |         trouvee. Seulement si la valeur de retour n'est pas   	| */
-/* |         NULL.                                                 	| */
-/* |       - pExtDoc est le document externe precedemment traite' (si	| */
-/* |         nextExtDoc est TRUE) ou celui qu'on veut traiter   	| */
-/* |         (si nextExtDoc est FALSE). pExtDoc doit etre NULL si	| */
-/* |         nextExtDoc est TRUE et qu'on n'a pas encore traite'	| */
-/* |         de references externes.                               	| */
-/* |       - nextExtDoc indique si on passe au document         	| */
-/* |         referencant suivant celui decrit par pExtDoc (TRUE) ou si 	| */
-/* |         on traite le document decrit par pExtDoc (FALSE).         	| */
-/* |       Retourne un pointeur sur la premiere reference trouvee  	| */
-/* |       dans le document externe et pExtDoc designe alors ce        	| */
-/* |       document externe.                                       	| */
-/* |       Si la valeur de retour est NULL et                      	| */
-/* |          si pExtDoc est NULL : on n'a rien trouve'.               	| */
-/* |          si pExtDoc n'est pas NULL : il y a des references a`     	| */
-/* |               l'element pEl dans le document designe' par pExtDoc 	| */
-/* |               mais ce document n'est pas charge' (cela ne se  	| */
-/* |               produit que si processNotLoaded est TRUE).      	| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   SearchExternalReferenceToElem cherche un document qui contient des references a`  
+   l'element pEl et, dans ce document, s'il est charge',	
+   cherche la premiere reference qui pointe sur pEl.       	
+   - pDocEl est le document auquel appartient pEl.         	
+   - processNotLoaded indique si on prend en compte les    	
+   documents referencant non charge's (TRUE) ou si au    	
+   contraire on les ignore (FALSE).                      	
+   - pDocRef contient au retour un pointeur sur le         	
+   contexte du document auquel appartient la reference   	
+   trouvee. Seulement si la valeur de retour n'est pas   	
+   NULL.                                                 	
+   - pExtDoc est le document externe precedemment traite' (si	
+   nextExtDoc est TRUE) ou celui qu'on veut traiter   	
+   (si nextExtDoc est FALSE). pExtDoc doit etre NULL si	
+   nextExtDoc est TRUE et qu'on n'a pas encore traite'	
+   de references externes.                               	
+   - nextExtDoc indique si on passe au document         	
+   referencant suivant celui decrit par pExtDoc (TRUE) ou si 	
+   on traite le document decrit par pExtDoc (FALSE).         	
+   Retourne un pointeur sur la premiere reference trouvee  	
+   dans le document externe et pExtDoc designe alors ce        	
+   document externe.                                       	
+   Si la valeur de retour est NULL et                      	
+   si pExtDoc est NULL : on n'a rien trouve'.               	
+   si pExtDoc n'est pas NULL : il y a des references a`     	
+   l'element pEl dans le document designe' par pExtDoc 	
+   mais ce document n'est pas charge' (cela ne se  	
+   produit que si processNotLoaded est TRUE).      	
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 PtrReference        SearchExternalReferenceToElem (PtrElement pEl, PtrDocument pDocEl, boolean processNotLoaded, PtrDocument * pDocRef, PtrExternalDoc * pExtDoc, boolean nextExtDoc)
@@ -314,10 +315,10 @@ boolean             nextExtDoc;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    NewReferredElDescr cree un descripteur d'element referenc'e et le met en    | */
-/* |            tete de la chaine pour le document pointe par pDoc.     | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   NewReferredElDescr cree un descripteur d'element referenc'e et le met en    
+   tete de la chaine pour le document pointe par pDoc.     
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 PtrReferredDescr    NewReferredElDescr (PtrDocument pDoc)
@@ -344,10 +345,10 @@ PtrDocument         pDoc;
    return pRefD;
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    DeleteReferredElDescr supprime le descripteur d'element reference' pointe'| */
-/* |            par pRefD.                                                | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   DeleteReferredElDescr supprime le descripteur d'element reference' pointe'
+   par pRefD.                                                
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                DeleteReferredElDescr (PtrReferredDescr pRefD)
@@ -381,12 +382,12 @@ PtrReferredDescr    pRefD;
      }
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    DeleteAllReferences annule toutes les references a` l'element pointe' par   | */
-/* |            pEl et, si ce n'est pas un element exportable, supprime | */
-/* |            le descripteur d'element reference' qui lui est         | */
-/* |            attache'.                                               | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   DeleteAllReferences annule toutes les references a` l'element pointe' par   
+   pEl et, si ce n'est pas un element exportable, supprime 
+   le descripteur d'element reference' qui lui est         
+   attache'.                                               
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                DeleteAllReferences (PtrElement pEl)
@@ -424,9 +425,9 @@ PtrElement          pEl;
      }
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    DeleteReference de'chaine la reference pointee par pRef.          | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   DeleteReference de'chaine la reference pointee par pRef.          
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                DeleteReference (PtrReference pRef)
@@ -464,10 +465,10 @@ PtrReference        pRef;
    pRef->RdInternalRef = TRUE;
 }
 
-/* ---------------------------------------------------------------------- */
-/* |     CancelReference annule la reference de l'element pEl			| */
-/* |            (pEl doit etre terminal et de nature Refer).            | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   CancelReference annule la reference de l'element pEl			
+   (pEl doit etre terminal et de nature Refer).            
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                CancelReference (PtrElement pEl)
@@ -575,9 +576,9 @@ PtrElement          pEl;
      }
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    CopyReference                                                        | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   CopyReference                                                        
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                CopyReference (PtrReference pCopyRef, PtrReference pSourceRef, PtrElement * pEl)
@@ -612,15 +613,15 @@ PtrElement         *pEl;
 	}
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    TransferReferences cherche dans le sous-arbre de racine pTarget tous| */
-/* |            les elements reference's et transfere sur eux les       | */
-/* |            references qui sont dans l'arbre copie'.                | */
-/* |            Dans tous les cas, coupe le lien d'inclusion de tous    | */
-/* |            les elements inclus du sous-arbre de pTarget.           | */
-/* |            Toutes les references externes contenues dans le        | */
-/* |            sous-arbre sont e'galement annule'es.                   | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   TransferReferences cherche dans le sous-arbre de racine pTarget tous
+   les elements reference's et transfere sur eux les       
+   references qui sont dans l'arbre copie'.                
+   Dans tous les cas, coupe le lien d'inclusion de tous    
+   les elements inclus du sous-arbre de pTarget.           
+   Toutes les references externes contenues dans le        
+   sous-arbre sont e'galement annule'es.                   
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                TransferReferences (PtrElement pTarget, PtrDocument pDoc, PtrElement pEl, PtrDocument pSourceDoc)
@@ -711,12 +712,12 @@ PtrDocument         pSourceDoc;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    RegisterAnExternalRef   note la reference externe pRef dans le  | */
-/* |    contexte du document pDoc. Cette reference sortante est         | */
-/* |    enregistree dans la liste des references nouvelles si new est   | */
-/* |    vrai, dans la liste des references detruites sinon.             | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   RegisterAnExternalRef   note la reference externe pRef dans le  
+   contexte du document pDoc. Cette reference sortante est         
+   enregistree dans la liste des references nouvelles si new est   
+   vrai, dans la liste des references detruites sinon.             
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static void         RegisterAnExternalRef (PtrReference pRef, PtrDocument pDoc, boolean new)
@@ -839,14 +840,14 @@ boolean             new;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    RegisterExternalRef        note dans le contexte du document pDoc  | */
-/* |    toutes les references sortantes qui sont dans le sous-arbre de  | */
-/* |    racine pEl, cet element compris. Ces references sortantes sont  | */
-/* |    enregistrees dans la liste des references nouvelles si new est  | */
-/* |    vrai, dans la liste des references detruites sinon.             | */
-/* |    On prend egalement en compte les attributs reference sortant.   | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   RegisterExternalRef        note dans le contexte du document pDoc  
+   toutes les references sortantes qui sont dans le sous-arbre de  
+   racine pEl, cet element compris. Ces references sortantes sont  
+   enregistrees dans la liste des references nouvelles si new est  
+   vrai, dans la liste des references detruites sinon.             
+   On prend egalement en compte les attributs reference sortant.   
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                RegisterExternalRef (PtrElement pEl, PtrDocument pDoc, boolean new)
@@ -901,11 +902,11 @@ boolean             new;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |	AddDocOfExternalRef   ajoute le document dont l'identificateur est	| */
-/* |	docIdent a la liste des documents contenant des references	| */
-/* |	externes a l'element pEl qui appartient au document pDoc2.	| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   	AddDocOfExternalRef   ajoute le document dont l'identificateur est	
+   	docIdent a la liste des documents contenant des references	
+   	externes a l'element pEl qui appartient au document pDoc2.	
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                AddDocOfExternalRef (PtrElement pEl, DocumentIdentifier docIdent, PtrDocument pDoc2)
@@ -961,20 +962,20 @@ PtrDocument         pDoc2;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |	SetReference cherche parmi les elements ascendants de l'element	| */
-/* |	pTargetEl un element du type des elements pointes par l'element	| */
-/* |	reference pRefEl ou par l'attribut reference pRefAttr (des deux	| */
-/* |	pointeurs, on choisit celui qui n'est pas NULL). Si ancestor	| */
-/* |	est Faux, on ne cherche pas parmi les ascendants: on prend	| */
-/* |	directement pTargetEl.						| */
-/* |	pDoc est document contenant la reference (element pRefEl ou	| */
-/* |	attribut pRefAttr).						| */
-/* |	pTargetDoc est le document contenant l'element pTargetEl.	| */
-/* |	Si trouve', fait pointer l'element reference pRefEl ou		| */
-/* |	l'attribut reference pRefAttr sur cet element et retourne	| */
-/* |	'Vrai'. Sinon retourne 'Faux'.					| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   	SetReference cherche parmi les elements ascendants de l'element	
+   	pTargetEl un element du type des elements pointes par l'element	
+   	reference pRefEl ou par l'attribut reference pRefAttr (des deux	
+   	pointeurs, on choisit celui qui n'est pas NULL). Si ancestor	
+   	est Faux, on ne cherche pas parmi les ascendants: on prend	
+   	directement pTargetEl.						
+   	pDoc est document contenant la reference (element pRefEl ou	
+   	attribut pRefAttr).						
+   	pTargetDoc est le document contenant l'element pTargetEl.	
+   	Si trouve', fait pointer l'element reference pRefEl ou		
+   	l'attribut reference pRefAttr sur cet element et retourne	
+   	'Vrai'. Sinon retourne 'Faux'.					
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 boolean             SetReference (PtrElement pRefEl, PtrAttribute pRefAttr, PtrElement pTargetEl, PtrDocument pDoc, PtrDocument pTargetDoc, boolean ancestor, boolean withAppEvent)
@@ -1187,11 +1188,11 @@ boolean             withAppEvent;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |     CopyDescrExtDoc    attache a un descripteur d'element detruit ou   | */
-/* |    deplace' une copie de la chaine des descripteurs de documents   | */
-/* |    externes referencant l'element pEl                              | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   CopyDescrExtDoc    attache a un descripteur d'element detruit ou   
+   deplace' une copie de la chaine des descripteurs de documents   
+   externes referencant l'element pEl                              
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                CopyDescrExtDoc (PtrElement pEl, PtrChangedReferredEl pChngRef)
@@ -1222,13 +1223,13 @@ PtrChangedReferredEl      pChngRef;
      }
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    RegisterDeletedReferredElem     note dans le contexte du document pDoc  | */
-/* |    tous les elements reference's par d'autres documents qui sont   | */
-/* |    dans le sous-arbre de racine pEl, cet element compris. Ces      | */
-/* |    elements reference's sont enregistre's dans la liste des        | */
-/* |    elements reference's detruits.                                  | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   RegisterDeletedReferredElem     note dans le contexte du document pDoc  
+   tous les elements reference's par d'autres documents qui sont   
+   dans le sous-arbre de racine pEl, cet element compris. Ces      
+   elements reference's sont enregistre's dans la liste des        
+   elements reference's detruits.                                  
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                RegisterDeletedReferredElem (PtrElement pEl, PtrDocument pDoc)

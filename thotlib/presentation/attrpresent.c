@@ -1,6 +1,10 @@
+/*
+ * Copyright (c) 1996 INRIA, All rights reserved
+ */
+
 
 /*
-   attrherit.c : gestion de l'heritage des attributs.
+  gestion de l'heritage des attributs.
 
  */
 
@@ -17,14 +21,14 @@
 #include "presrules_f.h"
 #include "changeabsbox_f.h"
 
-/* ---------------------------------------------------------------------- */
-/* |    CreateInheritedAttrTable alloue et remplit une table de type          | */
-/* |            InheritAttrTable. Un element de cette table indique pour  | */
-/* |            un element les attributs dont il herite des regles de   | */
-/* |            presentation. table[att] = TRUE si le schema de		| */
-/* |            presentation contient dans la section ATTRIBUTES des	| */
-/* |		regles du type ATTRIBUTES : "att(El) : ...".		| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   CreateInheritedAttrTable alloue et remplit une table de type          
+   InheritAttrTable. Un element de cette table indique pour  
+   un element les attributs dont il herite des regles de   
+   presentation. table[att] = TRUE si le schema de		
+   presentation contient dans la section ATTRIBUTES des	
+   		regles du type ATTRIBUTES : "att(El) : ...".		
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                CreateInheritedAttrTable (PtrElement pEl)
@@ -67,14 +71,14 @@ PtrElement          pEl;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    Alloue et remplit une table de type ComparAttrTable.		| */
-/* |	Un element de cette table indique pour chaque attribut les	| */
-/* |	autres attributs qui se comparent a cet attribut pour		| */
-/* |	l'application des regles de presentation a` cet attribut.	| */
-/* |	table[i] = TRUE si, dans la section ATTRIBUTES, le schema de	| */
-/* |	presentation contient des regles du type "GetAttributeOfElement > n : ...".	| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   Alloue et remplit une table de type ComparAttrTable.		
+   	Un element de cette table indique pour chaque attribut les	
+   	autres attributs qui se comparent a cet attribut pour		
+   	l'application des regles de presentation a` cet attribut.	
+   	table[i] = TRUE si, dans la section ATTRIBUTES, le schema de	
+   	presentation contient des regles du type "GetAttributeOfElement > n : ...".	
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                CreateComparAttrTable (PtrAttribute pAttr)
@@ -136,11 +140,11 @@ PtrAttribute         pAttr;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    TransmitElementContent transmet la valeur de l'element pEl a`		| */
-/* |    l'attribut de nom attrName des documents inclus dans le document| */
-/* |    pDoc par la regle inclRule du schema de structure pSchS	| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   TransmitElementContent transmet la valeur de l'element pEl a`		
+   l'attribut de nom attrName des documents inclus dans le document
+   pDoc par la regle inclRule du schema de structure pSchS	
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                TransmitElementContent (PtrElement pEl, PtrDocument pDoc, Name attrName, int inclRule, PtrSSchema pSS)
@@ -246,12 +250,12 @@ PtrSSchema        pSS;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |	Si l'element pEl (appartenant au document pDoc) est une		| */
-/* |	reference d'inclusion d'un document externe, applique toutes	| */
-/* |	les regles de transmission qui donnent leurs valeurs aux	| */
-/* |	attributs du document inclus.					| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   	Si l'element pEl (appartenant au document pDoc) est une		
+   	reference d'inclusion d'un document externe, applique toutes	
+   	les regles de transmission qui donnent leurs valeurs aux	
+   	attributs du document inclus.					
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                ApplyTransmitRules (PtrElement pEl, PtrDocument pDoc)
@@ -328,9 +332,9 @@ PtrDocument         pDoc;
 	}
 }
 
-/* ---------------------------------------------------------------------- */
-/* |									| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   									
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                RepApplyTransmitRules (PtrElement pTransmEl, PtrElement pEl, PtrDocument pDoc)
 

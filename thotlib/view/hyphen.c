@@ -1,8 +1,9 @@
 /*
+ * Copyright (c) 1996 INRIA, All rights reserved
+ */
+
+/*
    hyphen.c :  gestion de la coupure des mots
-   I. Vatton - Aout 92
-   France Logiciel numero de depot 88-39-001-00
-   Major changes:
  */
 
 #include "thot_sys.h"
@@ -21,15 +22,15 @@ static char         sepcar[] =
 
 #include "font_f.h"
 
-/* ---------------------------------------------------------------------- */
-/* |    PatternHyphen  cherche pour le mot word le premier point de     | */
-/* |            coupure qui pre'ce`de le caracte`re de rang length (le  | */
-/* |            rang du premier caracte`re est 0) et retourne 0 si      | */
-/* |            aucune coupure n'est possible ou le rang du caracte`re  | */
-/* |            devant lequel on peut couper.                           | */
-/* |            Si la coupure est possible, indique dans addHyphen s'il | */
-/* |            faut inse'rer un tiret a` la position de coupure ou non.| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   PatternHyphen  cherche pour le mot word le premier point de     
+   coupure qui pre'ce`de le caracte`re de rang length (le  
+   rang du premier caracte`re est 0) et retourne 0 si      
+   aucune coupure n'est possible ou le rang du caracte`re  
+   devant lequel on peut couper.                           
+   Si la coupure est possible, indique dans addHyphen s'il 
+   faut inse'rer un tiret a` la position de coupure ou non.
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static int          PatternHyphen (char *word, int length, Language language, boolean * addHyphen)
 #else  /* __STDC__ */
@@ -69,11 +70,11 @@ boolean            *addHyphen;
    return retour;
 }
 
-/* ---------------------------------------------------------------------- */
-/* | IsSeparatorChar teste si ce caractere est un separateur de mot       | */
-/* |                 retourne TRUE si c'est un separateur               | */
-/* |                          FALSE sinon                               | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   IsSeparatorChar teste si ce caractere est un separateur de mot       
+   retourne TRUE si c'est un separateur               
+   FALSE sinon                               
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 boolean             IsSeparatorChar (char car)
@@ -97,9 +98,9 @@ char                car;
 }				/*IsSeparatorChar */
 
 
-/* ---------------------------------------------------------------------- */
-/* |    SmallLettering convertit les caracte`res majuscules en minuscules.   | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   SmallLettering convertit les caracte`res majuscules en minuscules.   
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                SmallLettering (char *word)
@@ -127,10 +128,10 @@ char               *word;
 }
 
 #ifdef IV
-/* ---------------------------------------------------------------------- */
-/* |    Voyelle rend la valeur VRAI si le caracte`re est une voyelle.   | */
-/* |            La fonction ne prend pas en compte les majuscules.      | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   Voyelle rend la valeur VRAI si le caracte`re est une voyelle.   
+   La fonction ne prend pas en compte les majuscules.      
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static boolean      Voyelle (unsigned char c)
@@ -169,9 +170,9 @@ unsigned char       c;
       return FALSE;
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    Consonne rend la valeur VRAI si le caracte`re est une consonne. | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   Consonne rend la valeur VRAI si le caracte`re est une consonne. 
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static boolean      Consonne (unsigned char c)
@@ -191,18 +192,18 @@ static char        *tablePrefixes[] =
  "micro", "hyper", "super", "infra"}
                    ;
 
-/* ---------------------------------------------------------------------- */
-/* |    FrenchHyphen  cherche pour le mot word le premier point de      | */
-/* |            coupure qui pre'ce`de le caracte`re de rang length (le  | */
-/* |            rang du premier caracte`re est 0) et retourne 0 si      | */
-/* |            aucune coupure n'est possible ou le rang du caracte`re  | */
-/* |            devant lequel on peut couper.                           | */
-/* |            Si la coupure est possible, indique dans addHyphen s'il | */
-/* |            faut inse'rer un tiret a` la position de coupure ou non.| */
-/* |            Cette proce'dure effectue une coupure syllabique pour   | */
-/* |            la langue franc,aise uniquement, d'apre`s les re`gles   | */
-/* |            de Grevisse (le bon usage).                             | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   FrenchHyphen  cherche pour le mot word le premier point de      
+   coupure qui pre'ce`de le caracte`re de rang length (le  
+   rang du premier caracte`re est 0) et retourne 0 si      
+   aucune coupure n'est possible ou le rang du caracte`re  
+   devant lequel on peut couper.                           
+   Si la coupure est possible, indique dans addHyphen s'il 
+   faut inse'rer un tiret a` la position de coupure ou non.
+   Cette proce'dure effectue une coupure syllabique pour   
+   la langue franc,aise uniquement, d'apre`s les re`gles   
+   de Grevisse (le bon usage).                             
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static int          FrenchHyphen (char *word, int length, boolean * addHyphen)
 
@@ -356,18 +357,18 @@ boolean            *addHyphen;
 }
 #endif
 
-/* ---------------------------------------------------------------------- */
-/* |    NextWord isole le mot suivant dans la suite des buffers de      | */
-/* |            de texte. Ce mot peut e^tre vide.                       | */
-/* |            Retourne le nombre de se'parateurs qui pre'ce`dent le   | */
-/* |            de'but du mot.                                          | */
-/* |            Rend la position a` laquelle le mot de'bute :           | */
-/* |            - l'adresse du buffer du 1er caracte`re.                | */
-/* |            - l'index dans ce buffer du 1er caracte`re.             | */
-/* |            - le mot isole'.                                        | */
-/* |            - la longueur des se'parateurs qui pre'ce`dent le       | */
-/* |              de'but du mot.                                        | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   NextWord isole le mot suivant dans la suite des buffers de      
+   de texte. Ce mot peut e^tre vide.                       
+   Retourne le nombre de se'parateurs qui pre'ce`dent le   
+   de'but du mot.                                          
+   Rend la position a` laquelle le mot de'bute :           
+   - l'adresse du buffer du 1er caracte`re.                
+   - l'index dans ce buffer du 1er caracte`re.             
+   - le mot isole'.                                        
+   - la longueur des se'parateurs qui pre'ce`dent le       
+   de'but du mot.                                        
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static int          NextWord (ptrfont font, PtrTextBuffer * buffer, int *rank, char word[MAX_CHAR], int *width)
@@ -475,16 +476,16 @@ int                *width;
    return nbcar;
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    WordHyphen cherche un point de coupure du mot pour permettre    | */
-/* |            d'inse'rer une partie du mot dans la largeur donne'e.   | */
-/* |            Retourne le nombre de caracte`res qui pre'ce`dent le    | */
-/* |            point de coupure, 0 si le mot ne peut pas e^tre coupe'. | */
-/* |            Rend un indicateur qui vaut VRAI s'il faut engendrer un | */
-/* |            tiret d'hyphe'nation.                                   | */
-/* |            Le parame`tre language donne l'indice de la langue dans | */
-/* |            la table des langues courante.                          | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   WordHyphen cherche un point de coupure du mot pour permettre    
+   d'inse'rer une partie du mot dans la largeur donne'e.   
+   Retourne le nombre de caracte`res qui pre'ce`dent le    
+   point de coupure, 0 si le mot ne peut pas e^tre coupe'. 
+   Rend un indicateur qui vaut VRAI s'il faut engendrer un 
+   tiret d'hyphe'nation.                                   
+   Le parame`tre language donne l'indice de la langue dans 
+   la table des langues courante.                          
+  ----------------------------------------------------------------------*/
 
 
 #ifdef __STDC__
@@ -506,20 +507,20 @@ boolean            *hyphen;
    return PatternHyphen (word, length, language, hyphen);
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    CutLasWord essaie de couper le dernier mot de la ligne dans la  | */
-/* |            limite de lenght caracte`res et de la longueur width.   | */
-/* |            Retourne le nombre de caracte`res avant la coupure      | */
-/* |            ou 0 si le mot ne peut pas e^tre coupe'.                | */
-/* |            Rend la position a` laquelle le point de coupure peut   | */
-/* |            e^tre inse're' :                                        | */
-/* |            - l'adresse du buffer du 1er caracte`re apre`s coupure. | */
-/* |            - l'index dans ce buffer du 1er caracte`re.             | */
-/* |            - la longueur de la premie`re partie  du mot, le tiret  | */
-/* |              d'hyphe'nation compris.                               | */
-/* |            - un indicateur qui vaut VRAI s'il faut engendrer un    | */
-/* |              tiret d'hyphe'nation.                                 | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   CutLasWord essaie de couper le dernier mot de la ligne dans la  
+   limite de lenght caracte`res et de la longueur width.   
+   Retourne le nombre de caracte`res avant la coupure      
+   ou 0 si le mot ne peut pas e^tre coupe'.                
+   Rend la position a` laquelle le point de coupure peut   
+   e^tre inse're' :                                        
+   - l'adresse du buffer du 1er caracte`re apre`s coupure. 
+   - l'index dans ce buffer du 1er caracte`re.             
+   - la longueur de la premie`re partie  du mot, le tiret  
+   d'hyphe'nation compris.                               
+   - un indicateur qui vaut VRAI s'il faut engendrer un    
+   tiret d'hyphe'nation.                                 
+  ----------------------------------------------------------------------*/
 
 
 #ifdef __STDC__
@@ -636,11 +637,11 @@ boolean            *hyphen;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    CanHyphen rend de la valeur VRAI s'il existe un traitement de  | */
-/* |            coupure des mots et l'autorisation de coupure pour la   | */
-/* |            boi^te donne'e.                                         | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   CanHyphen rend de la valeur VRAI s'il existe un traitement de  
+   coupure des mots et l'autorisation de coupure pour la   
+   boi^te donne'e.                                         
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 boolean             CanHyphen (PtrBox pBox)

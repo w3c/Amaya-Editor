@@ -1,4 +1,8 @@
 /*
+ * Copyright (c) 1996 INRIA, All rights reserved
+ */
+
+/*
    rel.c : gestion des Relations entre boites
    I. Vatton
  */
@@ -22,13 +26,13 @@
 #include "font_f.h"
 
 
-/* ---------------------------------------------------------------------- */
-/* |  GetPosRelativeAb retourne le pointeur sur le pave de reference    | */
-/* |            pour le positionnement implicite, horizontal/vertical,  | */
-/* |            du pave pCurrentAb.                                     | */
-/* |            Si la valeur rendue est NULL, le pave se positionne par | */
-/* |            rapport au pave englobant.                              | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   GetPosRelativeAb retourne le pointeur sur le pave de reference    
+   pour le positionnement implicite, horizontal/vertical,  
+   du pave pCurrentAb.                                     
+   Si la valeur rendue est NULL, le pave se positionne par 
+   rapport au pave englobant.                              
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static PtrAbstractBox   GetPosRelativeAb (PtrAbstractBox pCurrentAb, boolean horizRef)
 #else  /* __STDC__ */
@@ -61,20 +65,20 @@ boolean             horizRef;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |  InsertPosRelation etablit les liens de dependance entre les deux  | */
-/* |            repers des boites :                                     | */
-/* |            - double sens dans le cas du positionnement entre deux  | */
-/* |            soeurs.                                                 | */
-/* |            - sens unique dans le cas du positionnement entre fille | */
-/* |            et mere.                                                | */
-/* |            - sens repere vers axe pour la definition des axes de   | */
-/* |            reference (un deplacement du repere de pTargetBox       | */
-/* |            modifie l'axe de reference de pOrginBox).               | */
-/* |            - sens inverse dans le cas d'une dimension elastique    | */
-/* |            (un deplacement du repere de pTargetBox modifie la      | */
-/* |            dimension de pOrginBox).                                | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   InsertPosRelation etablit les liens de dependance entre les deux  
+   repers des boites :                                     
+   - double sens dans le cas du positionnement entre deux  
+   soeurs.                                                 
+   - sens unique dans le cas du positionnement entre fille 
+   et mere.                                                
+   - sens repere vers axe pour la definition des axes de   
+   reference (un deplacement du repere de pTargetBox       
+   modifie l'axe de reference de pOrginBox).               
+   - sens inverse dans le cas d'une dimension elastique    
+   (un deplacement du repere de pTargetBox modifie la      
+   dimension de pOrginBox).                                
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void       InsertPosRelation (PtrBox pOrginBox, PtrBox pTargetBox, OpRelation op, BoxEdge originEdge, BoxEdge targetEdge)
 #else  /* __STDC__ */
@@ -178,11 +182,11 @@ BoxEdge           targetEdge;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* | InsertDimRelation etablit le lien entre les dimensions             | */
-/* |         horizontales ou verticales des deux boites (pOrginBox vers | */
-/* |         pTargetBox).                                               | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   InsertDimRelation etablit le lien entre les dimensions             
+   horizontales ou verticales des deux boites (pOrginBox vers 
+   pTargetBox).                                               
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void       InsertDimRelation (PtrBox pOrginBox, PtrBox pTargetBox, boolean sameDimension, boolean horizRef)
 #else  /* __STDC__ */
@@ -250,12 +254,12 @@ boolean           horizRef;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    NextAbToCheck recherche le prochain pave du pave pAb en         | */
-/* |            sautant le pave de reference pRefAb. Le parcours de     | */
-/* |            l'arborescence se fait de bas en haut et de gauche a`   | */
-/* |            droite.                                                 | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   NextAbToCheck recherche le prochain pave du pave pAb en         
+   sautant le pave de reference pRefAb. Le parcours de     
+   l'arborescence se fait de bas en haut et de gauche a`   
+   droite.                                                 
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static PtrAbstractBox      NextAbToCheck (PtrAbstractBox pAb, PtrAbstractBox pRefAb)
 #else  /* __STDC__ */
@@ -306,9 +310,9 @@ PtrAbstractBox             pRefAb;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |  PropagateXOutOfStruct propage l'indicateur hors-structure.        | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   PropagateXOutOfStruct propage l'indicateur hors-structure.        
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         PropagateXOutOfStruct (PtrAbstractBox pCurrentAb, boolean status, boolean enclosed)
 #else  /* __STDC__ */
@@ -356,9 +360,9 @@ boolean             enclosed;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    PropagateYOutOfStruct propage l'indicateur hors-structure.         | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   PropagateYOutOfStruct propage l'indicateur hors-structure.         
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         PropagateYOutOfStruct (PtrAbstractBox pCurrentAb, boolean status, boolean enclosed)
 #else  /* __STDC__ */
@@ -404,12 +408,12 @@ boolean             enclosed;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* | ComputePosRelation applique la regle de positionnement, horizontale| */
-/* |            ou verticale selon horizRef sur la boite d'indice pBox. | */
-/* |            Les origines de la boite BxXOrg ou BxYOrg sont mises a` | */
-/* |            jour et les relations de dependance sont enregistrees.  | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ComputePosRelation applique la regle de positionnement, horizontale
+   ou verticale selon horizRef sur la boite d'indice pBox. 
+   Les origines de la boite BxXOrg ou BxYOrg sont mises a` 
+   jour et les relations de dependance sont enregistrees.  
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void              ComputePosRelation (AbPosition rule, PtrBox pBox, int frame, boolean horizRef)
 #else  /* __STDC__ */
@@ -841,16 +845,16 @@ boolean           horizRef;
 
 
 
-/* ---------------------------------------------------------------------- */
-/* |  GetHPosRelativePos recherche la boite qui relie horizontalement   | */
-/* |            pBox a` son englobante :                                | */
-/* |            - Si on n'a pas modifie les relations, cette boite est  | */
-/* |            memorisee (BxHorizInc).                                 | */
-/* |            - Si la boite possede la relation OpHorizInc, c'est     | */
-/* |            elle-meme.                                              | */
-/* |            - Sinon on regarde la boite soeur dont elle depend.     | */
-/* |            Retourne son adresse sinon NULL.                        | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   GetHPosRelativePos recherche la boite qui relie horizontalement   
+   pBox a` son englobante :                                
+   - Si on n'a pas modifie les relations, cette boite est  
+   memorisee (BxHorizInc).                                 
+   - Si la boite possede la relation OpHorizInc, c'est     
+   elle-meme.                                              
+   - Sinon on regarde la boite soeur dont elle depend.     
+   Retourne son adresse sinon NULL.                        
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 PtrBox            GetHPosRelativePos (PtrBox pBox, PtrBox pPreviousBox)
 #else  /* __STDC__ */
@@ -971,16 +975,16 @@ PtrBox            pPreviousBox;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |  GetVPosRelativeBox recherche la boite qui relie verticalement     | */
-/* |            pBox a` son englobante :                                | */
-/* |            - Si on n'a pas modifie les relations, cette boite est  | */
-/* |            memorisee (BxVertInc).                                  | */
-/* |            - Si la boite possede la relation OpVertInc, c'est      | */
-/* |            elle-meme.                                              | */
-/* |            - Sinon on regarde la boite soeur dont elle depend.     | */
-/* |            Retourne son adresse sinon NULL.                        | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   GetVPosRelativeBox recherche la boite qui relie verticalement     
+   pBox a` son englobante :                                
+   - Si on n'a pas modifie les relations, cette boite est  
+   memorisee (BxVertInc).                                  
+   - Si la boite possede la relation OpVertInc, c'est      
+   elle-meme.                                              
+   - Sinon on regarde la boite soeur dont elle depend.     
+   Retourne son adresse sinon NULL.                        
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 PtrBox            GetVPosRelativeBox (PtrBox pBox, PtrBox pPreviousBox)
 #else  /* __STDC__ */
@@ -1100,15 +1104,15 @@ PtrBox            pPreviousBox;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* | ComputeDimRelation applique la regle de dimension, horizontale     | */
-/* |            ou verticale selon horizRef du pave pAb.                | */
-/* |            Si la dimension depend du contenu de la boite la        | */
-/* |            fonction rend la valeur Vrai.                           | */
-/* |            Si au contraire, elle depend de celle d'un autre pave,  | */
-/* |            elle est mise a` jour et la relation de dependance entre| */
-/* |            les boites est enregistree.                             | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ComputeDimRelation applique la regle de dimension, horizontale     
+   ou verticale selon horizRef du pave pAb.                
+   Si la dimension depend du contenu de la boite la        
+   fonction rend la valeur Vrai.                           
+   Si au contraire, elle depend de celle d'un autre pave,  
+   elle est mise a` jour et la relation de dependance entre
+   les boites est enregistree.                             
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 boolean             ComputeDimRelation (PtrAbstractBox pAb, int frame, boolean horizRef)
 #else  /* __STDC__ */
@@ -1744,12 +1748,12 @@ boolean             horizRef;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |  ComputeAxisRelation applique la regle de positionnement donnee en | */
-/* |            parametre a` la boite d'indice pBox. L'axe              | */
-/* |            horizontal ou vertical de la boite, selon que horizRef  | */
-/* |            est VRAI ou FAUX est mis a` jour.                       | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ComputeAxisRelation applique la regle de positionnement donnee en 
+   parametre a` la boite d'indice pBox. L'axe              
+   horizontal ou vertical de la boite, selon que horizRef  
+   est VRAI ou FAUX est mis a` jour.                       
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void              ComputeAxisRelation (AbPosition rule, PtrBox pBox, int frame, boolean horizRef)
 #else  /* __STDC__ */
@@ -1906,20 +1910,20 @@ boolean           horizRef;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    RemovePosRelation defait, s'il existe, le lien de position ou   | */
-/* |            d'axe horizontal ou vertical de la boite pOrginBox et   | */
-/* |            retasse la liste des liens.                             | */
-/* |            Le parametre pCurrentAb, quand il est non nul, indique  | */
-/* |            le pave dont on annule la regle de position et sert a`  | */
-/* |            retirer l'ambiguite des relations doubles entre boites  | */
-/* |            soeurs : si on trouve une relation associee a` une      | */
-/* |            regle de position qui reference pCurrentAb, elle        | */
-/* |            ne doit pas etre detruite. Quand pCurrentAb est nul, on | */
-/* |            connait la boite pTargetBox referencee dans le lien que | */
-/* |            l'on veut detruire (c'est alors une destruction de lien | */
-/* |            inverse).                                               | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   RemovePosRelation defait, s'il existe, le lien de position ou   
+   d'axe horizontal ou vertical de la boite pOrginBox et   
+   retasse la liste des liens.                             
+   Le parametre pCurrentAb, quand il est non nul, indique  
+   le pave dont on annule la regle de position et sert a`  
+   retirer l'ambiguite des relations doubles entre boites  
+   soeurs : si on trouve une relation associee a` une      
+   regle de position qui reference pCurrentAb, elle        
+   ne doit pas etre detruite. Quand pCurrentAb est nul, on 
+   connait la boite pTargetBox referencee dans le lien que 
+   l'on veut detruire (c'est alors une destruction de lien 
+   inverse).                                               
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static boolean      RemovePosRelation (PtrBox pOrginBox, PtrBox pTargetBox, PtrAbstractBox pCurrentAb, boolean Pos, boolean Axe, boolean horizRef)
 #else  /* __STDC__ */
@@ -2104,12 +2108,12 @@ boolean             horizRef;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    RemoveDimRelation defait, s'il existe, le lien de dimension     | */
-/* |        horizontale ou verticale de la boite pOrginBox vers la boite| */
-/* |        pTargetBox et retasse la liste des liens.                   | */
-/* |        Rend la valeur Vrai si l'operation a ete executee.          | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   RemoveDimRelation defait, s'il existe, le lien de dimension     
+   horizontale ou verticale de la boite pOrginBox vers la boite
+   pTargetBox et retasse la liste des liens.                   
+   Rend la valeur Vrai si l'operation a ete executee.          
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static boolean      RemoveDimRelation (PtrBox pOrginBox, PtrBox pTargetBox, boolean horizRef)
 #else  /* __STDC__ */
@@ -2203,10 +2207,10 @@ boolean             horizRef;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |   ClearXOutOfStructRelation detruit les relations hors hierarchie  | */
-/* |             de la boite pTargetBox.                                | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ClearXOutOfStructRelation detruit les relations hors hierarchie  
+   de la boite pTargetBox.                                
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                ClearXOutOfStructRelation (PtrBox pTargetBox)
 #else  /* __STDC__ */
@@ -2284,21 +2288,21 @@ PtrBox              pTargetBox;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    ClearPosRelation recherche la boite dont depend la position     | */
-/* |            horizontale (si horizRef est Vrai) sinon verticale de   | */
-/* |            pOrginBox :						| */
-/* |            - Elle peut dependre de son englobante                  | */
-/* |            (relation OpInclus chez elle).                          | */
-/* |            - Elle peut dependre d'une voisine (deux                | */
-/* |            relations OpLie).                                       | */
-/* |            - Elle peut avoir une relation hors-structure           | */
-/* |            (deux relations OpLie).                                 | */
-/* |            Si cette dependance existe encore, on detruit les       | */
-/* |            relations entre les deux boites. L'indicateur           | */
-/* |            BtX(Y)HorsStruct indique que la relation est            | */
-/* |            hors-structure.                                         | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ClearPosRelation recherche la boite dont depend la position     
+   horizontale (si horizRef est Vrai) sinon verticale de   
+   pOrginBox :						
+   - Elle peut dependre de son englobante                  
+   (relation OpInclus chez elle).                          
+   - Elle peut dependre d'une voisine (deux                
+   relations OpLie).                                       
+   - Elle peut avoir une relation hors-structure           
+   (deux relations OpLie).                                 
+   Si cette dependance existe encore, on detruit les       
+   relations entre les deux boites. L'indicateur           
+   BtX(Y)HorsStruct indique que la relation est            
+   hors-structure.                                         
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                ClearPosRelation (PtrBox pOrginBox, boolean horizRef)
 #else  /* __STDC__ */
@@ -2410,18 +2414,18 @@ boolean             horizRef;
      }
 }				/* ClearPosRelation */
 
-/* ---------------------------------------------------------------------- */
-/* | ClearAxisRelation recherche la boite dont depend l'axe de reference| */
-/* |            horizontal (si horizRef est Vrai) sinon vertical de     | */
-/* |            pOrginBox :  						| */
-/* |            - Il peut dependre d'elle meme (une relation chez elle).| */
-/* |            - Il peut dependre d'une englobee (une relation chez    | */
-/* |            l'englobee).                                            | */
-/* |            - Il peut dependre d'une voisine (une relation chez la  | */
-/* |            voisine).                                               | */
-/* |            Si cette dependance existe encore, on detruit la        | */
-/* |            relation.                                               | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ClearAxisRelation recherche la boite dont depend l'axe de reference
+   horizontal (si horizRef est Vrai) sinon vertical de     
+   pOrginBox :  						
+   - Il peut dependre d'elle meme (une relation chez elle).
+   - Il peut dependre d'une englobee (une relation chez    
+   l'englobee).                                            
+   - Il peut dependre d'une voisine (une relation chez la  
+   voisine).                                               
+   Si cette dependance existe encore, on detruit la        
+   relation.                                               
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void              ClearAxisRelation (PtrBox pOrginBox, boolean horizRef)
 #else  /* __STDC__ */
@@ -2466,16 +2470,16 @@ boolean           horizRef;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* | ClearAllRelations detruit toutes les relations avec pTargetBox     | */
-/* |            chez ses voisines, son englobante et les relations hors | */
-/* |            hierarchie :                                            | */
-/* |            -> la relation OpVertRef verticale.                     | */
-/* |            -> la relation OpHorizRef horizontale.                  | */
-/* |            -> les relations de Position.                           | */
-/* |            -> les relations de positions et de dimensions hors     | */
-/* |            hierarchie.                                             | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ClearAllRelations detruit toutes les relations avec pTargetBox     
+   chez ses voisines, son englobante et les relations hors 
+   hierarchie :                                            
+   -> la relation OpVertRef verticale.                     
+   -> la relation OpHorizRef horizontale.                  
+   -> les relations de Position.                           
+   -> les relations de positions et de dimensions hors     
+   hierarchie.                                             
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                ClearAllRelations (PtrBox pTargetBox)
 #else  /* __STDC__ */
@@ -2520,19 +2524,19 @@ PtrBox              pTargetBox;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |  ClearDimRelation recherche la boite dont depend la dimension      | */
-/* |             horizontale ou verticale de pOrginBox :                | */
-/* |            - Elle peut dependre de son englobante (une relation    | */
-/* |            chez l'englobante).                                     | */
-/* |            - Elle peut dependre d'une voisine (une relation chez   | */
-/* |            la voisine).                                            | */
-/* |            - Elle peut avoir une relation hors-structure           | */
-/* |            (relation chez l'autre).                                | */
-/* |            Si cette dependance existe encore, on detruit la        | */
-/* |            relation. L'indicateur BtLg(Ht)HorsStruct indique que   | */
-/* |            la relation est hors-structure.                         | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ClearDimRelation recherche la boite dont depend la dimension      
+   horizontale ou verticale de pOrginBox :                
+   - Elle peut dependre de son englobante (une relation    
+   chez l'englobante).                                     
+   - Elle peut dependre d'une voisine (une relation chez   
+   la voisine).                                            
+   - Elle peut avoir une relation hors-structure           
+   (relation chez l'autre).                                
+   Si cette dependance existe encore, on detruit la        
+   relation. L'indicateur BtLg(Ht)HorsStruct indique que   
+   la relation est hors-structure.                         
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                ClearDimRelation (PtrBox pOrginBox, boolean horizRef, int frame)
 #else  /* __STDC__ */

@@ -1,8 +1,11 @@
+/*
+ * Copyright (c) 1996 INRIA, All rights reserved
+ */
+
 
 
 /*
   Modifications de la presentation specifique.
-  V. Quint
  */
 
 #include "thot_sys.h"
@@ -44,9 +47,9 @@ static void ApplyInherit();
 #endif /* __STDC__ */
 			    
 
-/* ---------------------------------------------------------------------- */
-/* |	ApplyRuleSubTree							| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   	ApplyRuleSubTree							
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void ApplyRuleSubTree(PtrElement pE, PRuleType ruleType, PtrDocument pDoc, PtrPRule *pPRule, int view)
 #else /* __STDC__ */
@@ -165,12 +168,12 @@ static void ApplyRuleSubTree(pE, ruleType, pDoc, pPRule, view)
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |	ApplyInherit on vient d'appliquer la regle de presentation de type	| */
-/* |		ruleType au pave pAb. Verifie si les paves environnants	| */
-/* |		heritent de cette regle et si oui leur applique		| */
-/* |		l'heritage.						| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   	ApplyInherit on vient d'appliquer la regle de presentation de type	
+   		ruleType au pave pAb. Verifie si les paves environnants	
+   		heritent de cette regle et si oui leur applique		
+   		l'heritage.						
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void ApplyInherit(PRuleType ruleType, PtrAbstractBox pAb, PtrDocument pDoc)
 
@@ -408,8 +411,8 @@ static void ApplyInherit(ruleType, pAb, pDoc)
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static int NumTypePRuleAPI(PRuleType tr)
 #else /* __STDC__ */
@@ -504,12 +507,12 @@ static int NumTypePRuleAPI(tr)
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |	PRuleMessagePre	On veut ajouter ou modifier (selon isNew) la	| */
-/* |	regle de presentation specifique pPRule a l'element pEl du	| */
-/* |	document pDoc. On envoie le message APP correspondant a		| */
-/* |	l'application et on retourne la reponse de l'application.	| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   	PRuleMessagePre	On veut ajouter ou modifier (selon isNew) la	
+   	regle de presentation specifique pPRule a l'element pEl du	
+   	document pDoc. On envoie le message APP correspondant a		
+   	l'application et on retourne la reponse de l'application.	
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static boolean PRuleMessagePre(PtrElement pEl, PtrPRule pPRule, PtrDocument pDoc, boolean isNew)
 #else /* __STDC__ */
@@ -569,12 +572,12 @@ static boolean PRuleMessagePre(pEl, pPRule, pDoc, isNew)
 	return noApply;
 }
 
-/* ---------------------------------------------------------------------- */
-/* |	PRuleMessagePost      On vient d'ajouter ou de modifier (selon	| */
-/* |	isNew) la regle de presentation specifique pPRule pour	| */
-/* |	l'element pEl du document pDoc. On envoie le message APP	| */
-/* |	correspondant a l'application.					| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   	PRuleMessagePost      On vient d'ajouter ou de modifier (selon	
+   	isNew) la regle de presentation specifique pPRule pour	
+   	l'element pEl du document pDoc. On envoie le message APP	
+   	correspondant a l'application.					
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void PRuleMessagePost(PtrElement pEl, PtrPRule pPRule, PtrDocument pDoc, boolean isNew)
 
@@ -601,9 +604,9 @@ static void PRuleMessagePost(pEl, pPRule, pDoc, isNew)
 }
 
 #define SETSIZE 32
-/* ---------------------------------------------------------------------- */
-/* |	RuleSetIn teste l'appartenance d'un element a` un ensemble.	| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   	RuleSetIn teste l'appartenance d'un element a` un ensemble.	
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 int RuleSetIn(register int num, RuleSet RuleS1)
 #else /* __STDC__ */
@@ -619,9 +622,9 @@ int RuleSetIn(num, RuleS1)
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |	RuleSetPut ajoute un element a` un ensemble.			| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   	RuleSetPut ajoute un element a` un ensemble.			
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void RuleSetPut(RuleSet RuleS1, int num)
 #else /* __STDC__ */
@@ -635,9 +638,9 @@ void RuleSetPut(RuleS1, num)
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |	RuleSetClr met a` 0 l'ensemble RuleS1.				| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   	RuleSetClr met a` 0 l'ensemble RuleS1.				
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void RuleSetClr(RuleSet RuleS1)
 #else /* __STDC__ */
@@ -653,11 +656,11 @@ void RuleSetClr(RuleS1)
     *s1++ = 0;
 }
 
-/* ---------------------------------------------------------------------- */
-/* |	BothHaveNoSpecRules retourne Vrai si aucun des deux elements pointes par	| */
-/* |		pEl1 et pEl2 possedent des regles de presentation	| */
-/* |		specifique.						| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   	BothHaveNoSpecRules retourne Vrai si aucun des deux elements pointes par	
+   		pEl1 et pEl2 possedent des regles de presentation	
+   		specifique.						
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 boolean BothHaveNoSpecRules(PtrElement pEl1, PtrElement pEl2)
 #else /* __STDC__ */
@@ -677,11 +680,11 @@ boolean BothHaveNoSpecRules(pEl1, pEl2)
 
 
 
-/* ---------------------------------------------------------------------- */
-/* |	AbsBoxOfEl retourne un pointeur sur le pave de l'element pEl	| */
-/* |		qui appartient a la view view				| */
-/* |		et qui n'est pas un pave de presentation.		| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   	AbsBoxOfEl retourne un pointeur sur le pave de l'element pEl	
+   		qui appartient a la view view				
+   		et qui n'est pas un pave de presentation.		
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 PtrAbstractBox AbsBoxOfEl(PtrElement pEl, int view)
 #else /* __STDC__ */
@@ -714,15 +717,15 @@ PtrAbstractBox AbsBoxOfEl(pEl, view)
 
 
 
-/* ---------------------------------------------------------------------- */
-/* |	NewPosition est appele' par le Mediateur, lorsque		| */
-/* |		l'utilisateur deplace une boite a l'ecran.		| */
-/* |		pAb est le pave deplace' et deltaX et deltaY		| */
-/* |		representent l'amplitude du deplacement en pixels	| */
-/* |		frame indique la fenetre.				| */
-/* |		display indique s'il faut reafficher ou simplement		| */
-/* |		recalculer l'image.					| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   	NewPosition est appele' par le Mediateur, lorsque		
+   		l'utilisateur deplace une boite a l'ecran.		
+   		pAb est le pave deplace' et deltaX et deltaY		
+   		representent l'amplitude du deplacement en pixels	
+   		frame indique la fenetre.				
+   		display indique s'il faut reafficher ou simplement		
+   		recalculer l'image.					
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void NewPosition(PtrAbstractBox pAb, int deltaX, int deltaY, int frame, boolean display)
 #else /* __STDC__ */
@@ -1086,15 +1089,15 @@ void NewPosition(pAb, deltaX, deltaY, frame, display)
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |	NewDimension est appele par le Mediateur, lorsque l'utilisateur| */
-/* |		deforme une boite a l'ecran. pAb est le pave deforme'	| */
-/* |		et deltaX,deltaY representent l'amplitude de la		| */
-/* |		deformation en pixels.					| */
-/* |		frame indique la fenetre.				| */
-/* |		display indique s'il faut reafficher ou simplement		| */
-/* |		recalculer l'image.					| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   	NewDimension est appele par le Mediateur, lorsque l'utilisateur
+   		deforme une boite a l'ecran. pAb est le pave deforme'	
+   		et deltaX,deltaY representent l'amplitude de la		
+   		deformation en pixels.					
+   		frame indique la fenetre.				
+   		display indique s'il faut reafficher ou simplement		
+   		recalculer l'image.					
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void NewDimension(PtrAbstractBox pAb, int deltaX, int deltaY, int frame, boolean display)
 #else /* __STDC__ */
@@ -1477,10 +1480,10 @@ void NewDimension(pAb, deltaX, deltaY, frame, display)
 
 
 
-/* ---------------------------------------------------------------------- */
-/* |	ApplyNewRule applique au pave courant la regle de		| */
-/* |		presentation specifique qui vient d'etre creee.		| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   	ApplyNewRule applique au pave courant la regle de		
+   		presentation specifique qui vient d'etre creee.		
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void ApplyNewRule(PtrDocument pDoc, PtrPRule pPRule, PtrElement pEl)
 #else /* __STDC__ */
@@ -1573,10 +1576,10 @@ void ApplyNewRule(pDoc, pPRule, pEl)
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |	ModifyGraphics	applique a l'element pEl les modifications sur	| */
-/* |		les graphiques demandes par l'utilisateur.		| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   	ModifyGraphics	applique a l'element pEl les modifications sur	
+   		les graphiques demandes par l'utilisateur.		
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void ModifyGraphics(PtrElement pEl, PtrDocument pDoc, int viewToApply, boolean modifLineStyle, char LineStyle, boolean modifLineWeight, int LineWeight, TypeUnit LineWeightUnit, boolean modifFillPattern, int FillPattern, boolean modifColorBackground, int ColorBackground, boolean modifLineColor, int LineColor)
 
@@ -1707,10 +1710,10 @@ void ModifyGraphics(pEl, pDoc, viewToApply, modifLineStyle, LineStyle, modifLine
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |	RemoveSpecifPres supprime toutes les regles de presentation specifiques| */
-/* |		associees a l'element pEl.				| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   	RemoveSpecifPres supprime toutes les regles de presentation specifiques
+   		associees a l'element pEl.				
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void RemoveSpecifPres(PtrElement pEl, PtrDocument pDoc, RuleSet rules, int viewToApply)
 #else /* __STDC__ */
@@ -1774,11 +1777,11 @@ static void RemoveSpecifPres(pEl, pDoc, rules, viewToApply)
       }
 }
 
-/* ---------------------------------------------------------------------- */
-/* |	ModifyColor change la presentation specifique de la couleur	| */
-/* |	de fond ou de trace' (selon Background) pour tous les elements de la	| */
-/* |	selection courante.						| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   	ModifyColor change la presentation specifique de la couleur	
+   	de fond ou de trace' (selon Background) pour tous les elements de la	
+   	selection courante.						
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void ModifyColor(int colorNum, boolean Background)
@@ -1868,10 +1871,10 @@ void ModifyColor(colorNum, Background)
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |	ModifyChar	applique a l'element pEl les modifications sur	| */
-/* |		les caracteres demandes par l'utilisateur.		| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   	ModifyChar	applique a l'element pEl les modifications sur	
+   		les caracteres demandes par l'utilisateur.		
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void ModifyChar(PtrElement pEl, PtrDocument pDoc, int viewToApply, boolean modifFamily, char family, boolean modifStyle, int charStyle, boolean modifsize, int size, boolean modifUnderline, int underline, boolean modifWeight, int weightUnderline)
 
@@ -2051,10 +2054,10 @@ void ModifyChar(pEl, pDoc, viewToApply, modifFamily, family, modifStyle, charSty
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |	ModifyLining applique a l'element pEl les modifications		| */
-/* |		sur la mise en ligne demandes par l'utilisateur.	| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   	ModifyLining applique a l'element pEl les modifications		
+   		sur la mise en ligne demandes par l'utilisateur.	
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void ModifyLining(PtrElement pEl, PtrDocument pDoc, int viewToApply, boolean modifAdjust, int Adjust, boolean modifJustif, boolean Justif, boolean modifIndent, int ValIndent, boolean modifLineSpacing, int LineSpacing, boolean modifHyphen, boolean Hyphenate)
 #else /* __STDC__ */
@@ -2179,11 +2182,11 @@ void ModifyLining(pEl, pDoc, viewToApply, modifAdjust, Adjust, modifJustif, Just
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |	ApplyStandardRule	applique a l'element pEl du document	| */
-/* |	pDoc la regle de presentation standard de type ruleType	| */
-/* |	pour la view viewSch.						| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   	ApplyStandardRule	applique a l'element pEl du document	
+   	pDoc la regle de presentation standard de type ruleType	
+   	pour la view viewSch.						
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void ApplyStandardRule(PtrElement pEl, PtrDocument pDoc, PRuleType ruleType, int viewSch)
 #else /* __STDC__ */
@@ -2287,11 +2290,11 @@ void ApplyStandardRule(pEl, pDoc, ruleType, viewSch)
 		}
 }
 
-/* ---------------------------------------------------------------------- */
-/* |	RemoveSpecPresTree supprime les regles de presentation specifiques	| */
-/* |		contenues dans 'RulesS' attachees aux elements du	| */
-/* |		sous-arbre de racine pElRoot				| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   	RemoveSpecPresTree supprime les regles de presentation specifiques	
+   		contenues dans 'RulesS' attachees aux elements du	
+   		sous-arbre de racine pElRoot				
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void RemoveSpecPresTree(PtrElement pElRoot, PtrDocument pDoc, RuleSet RulesS, int viewToApply)
 #else /* __STDC__ */

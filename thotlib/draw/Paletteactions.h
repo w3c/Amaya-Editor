@@ -1,5 +1,6 @@
-
-/* -- Copyright (c) 1990 - 1994 Inria/Imag  All rights reserved. -- */
+/*
+ * Copyright (c) 1996 INRIA, All rights reserved
+ */
 
 #ifndef __CEXTRACT__
 #ifdef __STDC__

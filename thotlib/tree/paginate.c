@@ -1,12 +1,12 @@
 /*
+ * Copyright (c) 1996 INRIA, All rights reserved
+ */
+
+/*
   page.c :  gestion de la pagination d'un arbre abstrait. Insere les diverses
             marques de saut de page dans l'AA. Les effets de bord sont nombreux.
   Ce module insere les marques de saut de page dans la
   structure abstraite des documents.
-  V. Quint	Avril 1987
-  France Logiciel no de depot 88-39-001-00
-  Major changes:
-  
  */
 
 #include "thot_sys.h"
@@ -72,13 +72,13 @@ extern void DisplayFrame () ;
 #endif /* __STDC__ */
 
 #ifdef __COLPAGE__
- /* ----------------------------------------------------------------- */
- /* ChangeRHPage change la regle de dimension verticale de tous       */
- /*             les paves corps de page sous rootAbsBox.               */
- /*             On force la position du bas de page et du filet de    */
- /*             telle sorte qu'elle soit plus bas que la hauteur max  */
- /*             de la hauteur de coupure                              */
- /* ------------------------------------------------------------------*/
+ /*----------------------------------------------------------------------
+    ChangeRHPage change la regle de dimension verticale de tous       
+    les paves corps de page sous rootAbsBox.               
+    On force la position du bas de page et du filet de    
+    telle sorte qu'elle soit plus bas que la hauteur max  
+    de la hauteur de coupure                              
+   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void ChangeRHPage(PtrAbstractBox rootAbsBox, PtrDocument pDoc, int nbView)
 
@@ -186,13 +186,13 @@ static void ChangeRHPage(rootAbsBox, pDoc, nbView)
 
 #ifndef PAGINEETIMPRIME
 
-/* ---------------------------------------------------------------------- */
-/* | AbortPageSelection  Annule et deplace si besoin la selection	| */
-/* | 			  courante du document.				| */
-/* |			  Retourne les valeurs de cette selection 	| */
-/* | 			  dans firstSelection, lastSelection,           | */
-/* |                      FirstSelectedChar et LastSelectedChar	        | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   AbortPageSelection  Annule et deplace si besoin la selection	
+   			  courante du document.				
+   			  Retourne les valeurs de cette selection 	
+   			  dans firstSelection, lastSelection,           
+   FirstSelectedChar et LastSelectedChar	        
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static boolean AbortPageSelection (PtrDocument pDoc, int schView, PtrElement *firstSelection, PtrElement *lastSelection, int *FirstSelectedChar, int *LastSelectedChar)
@@ -376,13 +376,13 @@ static boolean AbortPageSelection(pDoc, schView, firstSelection, lastSelection, 
 #endif  /* PAGINEETIMPRIME */
 
 
-/* ---------------------------------------------------------------------- */
-/* | SuppressPageMark supprime la marque de page pointee par pPage et	| */
-/* |		essaie de fusionner l'element precedent avec l'element	| */
-/* |		suivant.						| */
-/* |		Retourne dans pLib un pointeur sur l'element a libere	| */
-/* |		resultant de la fusion, si elle a pu se faire.		| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   SuppressPageMark supprime la marque de page pointee par pPage et	
+   		essaie de fusionner l'element precedent avec l'element	
+   		suivant.						
+   		Retourne dans pLib un pointeur sur l'element a libere	
+   		resultant de la fusion, si elle a pu se faire.		
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static void SuppressPageMark(PtrElement pPage, PtrDocument pDoc, PtrElement *pLib)
@@ -441,11 +441,11 @@ static void SuppressPageMark(pPage, pDoc, pLib)
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |	DestroyPageMarks	detruit toutes les marques de page de la| */
-/* |		vue schView, sauf les marques placees par l'utilisateur	| */
-/* |		et celles de debut des elements portant une regle Page.	| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   	DestroyPageMarks	detruit toutes les marques de page de la
+   		vue schView, sauf les marques placees par l'utilisateur	
+   		et celles de debut des elements portant une regle Page.	
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static void DestroyPageMarks(PtrDocument pDoc, PtrElement pRootEl, int schView)
@@ -509,15 +509,15 @@ static void DestroyPageMarks(pDoc, pRootEl, schView)
 
 #ifndef PAGINEETIMPRIME
 
-/* ---------------------------------------------------------------------- */
-/* | 	DisplayPageMsg 	Affiche un message avec le nom de la vue 	| */
-/* | 			et le numero de page de l'element pEl		| */
-/* | 			firstPage indique si c'est la premiere page de 	| */
-/* |			la vue						| */
-/* |			procedure utilisee dans la pagination sous	| */
-/* |			l'editeur (version vide pour l'appel depuis	| */
-/* |			la commande d'impression)			| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   	DisplayPageMsg 	Affiche un message avec le nom de la vue 	
+   			et le numero de page de l'element pEl		
+   			firstPage indique si c'est la premiere page de 	
+   			la vue						
+   			procedure utilisee dans la pagination sous	
+   			l'editeur (version vide pour l'appel depuis	
+   			la commande d'impression)			
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static	void DisplayPageMsg (PtrDocument pDoc, PtrElement pRootEl,PtrElement pEl, int schView, boolean Assoc, boolean *firstPage)
 #else /* __STDC__ */
@@ -553,13 +553,13 @@ static	void DisplayPageMsg (pDoc, pRootEl, pEl, schView, Assoc, firstPage)
 
 #ifndef PAGINEETIMPRIME
 
-/* ---------------------------------------------------------------------- */
-/* | DisplaySelectPages Apres la pagination sous l'editeur, il faut	| */
-/* | 			recreer l'image et retablir la selection.	| */
-/* |			Procedure utilisee dans la pagination sous	| */
-/* |			l'editeur (version vide pour l'appel depuis	| */
-/* |			la commande d'impression)			| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   DisplaySelectPages Apres la pagination sous l'editeur, il faut	
+   			recreer l'image et retablir la selection.	
+   			Procedure utilisee dans la pagination sous	
+   			l'editeur (version vide pour l'appel depuis	
+   			la commande d'impression)			
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static	void DisplaySelectPages (PtrDocument pDoc, PtrElement firstPage, int view, boolean Assoc, boolean sel, PtrElement firstSelection, PtrElement lastSelection, int  FirstSelectedChar, int LastSelectedChar)
 #else /* __STDC__ */
@@ -647,11 +647,11 @@ static	void DisplaySelectPages (pDoc, firstPage, view, Assoc, sel, firstSelectio
 #endif /* PAGINEETIMPRIME */
 
 
-/* ---------------------------------------------------------------------- */
-/* |	Cut coupe l'element de texte pointe par pEl apres le		| */
-/* |		caractere de rang cuttedChar et met a jour les paves	| */
-/* |		correspondant.						| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   	Cut coupe l'element de texte pointe par pEl apres le		
+   		caractere de rang cuttedChar et met a jour les paves	
+   		correspondant.						
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static	void Cut(PtrElement pEl, int cuttedChar, PtrDocument pDoc, int nbView)
@@ -705,23 +705,23 @@ static	void Cut(pEl, cuttedChar, pDoc, nbView)
   ApplDelayedRule(pEl->ElNext, pDoc);
 }
 
-/* ---------------------------------------------------------------------- */
-/* |	Secable	retourne 'Vrai' si le pave pointe' par			| */
-/* |		pAb est secable et 'Faux' sinon.			| */
-/* |		Au retour, si la boite est secable, pR1 pointe sur la	| */
-/* |		regle NoBreak1 a appliquer a l'element			| */
-/* |		(pR1 est NULL s'il n'y a pas de regle NoBreak1 a		| */
-/* |		appliquer)						| */
-/* |		pAt1 pointe sur le bloc de l'attribut auquel correspond	| */
-/* |		la regle pR1, si c'est une regle d'attribut (pAt1=NULL	| */
-/* |		sinon),							| */
-/* |		pR2 pointe sur la regle NoBreak2 a appliquer a l'element| */
-/* |		(pR2 est NULL s'il n'y a pas de regle NoBreak2 a		| */
-/* |		appliquer),						| */
-/* |		pAt2 pointe sur le bloc de l'attribut auquel correspond	| */
-/* |		la regle pR2, si c'est une regle d'attribut		| */
-/* |		(pAt2=NULL sinon). 					| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   	Secable	retourne 'Vrai' si le pave pointe' par			
+   		pAb est secable et 'Faux' sinon.			
+   		Au retour, si la boite est secable, pR1 pointe sur la	
+   		regle NoBreak1 a appliquer a l'element			
+   		(pR1 est NULL s'il n'y a pas de regle NoBreak1 a		
+   		appliquer)						
+   		pAt1 pointe sur le bloc de l'attribut auquel correspond	
+   		la regle pR1, si c'est une regle d'attribut (pAt1=NULL	
+   		sinon),							
+   		pR2 pointe sur la regle NoBreak2 a appliquer a l'element
+   		(pR2 est NULL s'il n'y a pas de regle NoBreak2 a		
+   		appliquer),						
+   		pAt2 pointe sur le bloc de l'attribut auquel correspond	
+   		la regle pR2, si c'est une regle d'attribut		
+   		(pAt2=NULL sinon). 					
+  ----------------------------------------------------------------------*/
 
 
 #ifdef __STDC__
@@ -772,10 +772,10 @@ static boolean Divisible(pAb, pR1, pAt1, pR2, pAt2, schView)
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |	PageBrk Page	indique si l'element pEl debute par un saut de	| */
-/* |		page de la vue schView					| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   	PageBrk Page	indique si l'element pEl debute par un saut de	
+   		page de la vue schView					
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static PtrElement PageBrk(PtrElement pEl, int schView)
 #else /* __STDC__ */
@@ -815,16 +815,16 @@ static PtrElement PageBrk(pEl, schView)
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |	InsertMark insere une Marque de Page avant l'element auquel	| */
-/* |		correspond le pave pointe' par pP. Si la Marque doit	| */
-/* |		etre placee dans un element mis en lignes, en premiere	| */
-/* |		position, elle est placee avant cet element. 		| */
-/* |		Retourne un pointeur sur l'element Marque de Page	| */
-/* |		insere'.						| */
- /*      On detruit la partie de l'i.a. qui suit cette marque    | */
- /*      et on reconstruit l'i.a. (donc le pave pAb change ! )  | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   	InsertMark insere une Marque de Page avant l'element auquel	
+   		correspond le pave pointe' par pP. Si la Marque doit	
+   		etre placee dans un element mis en lignes, en premiere	
+   		position, elle est placee avant cet element. 		
+   		Retourne un pointeur sur l'element Marque de Page	
+   		insere'.						
+    On detruit la partie de l'i.a. qui suit cette marque    
+    et on reconstruit l'i.a. (donc le pave pAb change ! )  
+  ----------------------------------------------------------------------*/
 #ifdef __COLPAGE__
 #ifdef __STDC__
 static PtrElement InsertMark(PtrAbstractBox pAb, int frame, int nbView, PtrAbstractBox *origCutAbsBox, boolean *absBoxTooHigh, int schView, PtrDocument pDoc, PtrElement rootEl)
@@ -1375,15 +1375,15 @@ static PtrElement InsertMark(pAb, frame, nbView, origCutAbsBox, absBoxTooHigh, s
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |	MoveCut cherche dans les paves du sous-arbre de racine	| */
-/* |		pAb, en appliquant les regles de condition de coupure	| */
-/* |		NoBreak1 (ou NoBreak2, selon NoBr1), le premier pave qui| */
-/* |		necessite un deplacement (vers le haut) de la frontiere	| */
-/* |		de page. Retourne la nouvelle frontiere de page, en	| */
-/* |		points typographiques, ou 0 si la coupure de page	| */
-/* |		convient.						| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   	MoveCut cherche dans les paves du sous-arbre de racine	
+   		pAb, en appliquant les regles de condition de coupure	
+   		NoBreak1 (ou NoBreak2, selon NoBr1), le premier pave qui
+   		necessite un deplacement (vers le haut) de la frontiere	
+   		de page. Retourne la nouvelle frontiere de page, en	
+   		points typographiques, ou 0 si la coupure de page	
+   		convient.						
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static int MoveCut(PtrAbstractBox pAb, boolean NoBr1, int schView)
@@ -1514,13 +1514,13 @@ static int MoveCut(pAb, NoBr1, schView)
 #ifdef __COLPAGE__
  /* procedure SetMark changee : on ne traite plus le cas de */
  /* CreateWith */
-/* ---------------------------------------------------------------------- */
-/* |	SetMark place dans l'arbre de racine pAb les marques de	| */
-/* |		page en fonction de la position des paves relativement	| */
-/* |		a la limite de page					| */
- /*      cette procedure n'est appelee que sur un pave d'element | */
- /*      et elle saut les paves de presentation.                 | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   	SetMark place dans l'arbre de racine pAb les marques de	
+   		page en fonction de la position des paves relativement	
+   		a la limite de page					
+    cette procedure n'est appelee que sur un pave d'element 
+    et elle saut les paves de presentation.                 
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static void SetMark(PtrAbstractBox pAb, PtrElement rootEl, PtrDocument pDoc, int schView, boolean *absBoxTooHigh, PtrAbstractBox *origCutAbsBox, int nbView, int frame, PtrElement *pPage)
@@ -1638,11 +1638,11 @@ static void SetMark(pAb, rootEl, pDoc, schView, absBoxTooHigh, origCutAbsBox, nb
 
 #else /* __COLPAGE__ */
 
-/* ---------------------------------------------------------------------- */
-/* |	SetMark place dans l'arbre de racine pAb la marque de	| */
-/* |		page en fonction de la position des paves relativement	| */
-/* |		a la limite de page					| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   	SetMark place dans l'arbre de racine pAb la marque de	
+   		page en fonction de la position des paves relativement	
+   		a la limite de page					
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static void SetMark(PtrAbstractBox pAb, PtrElement rootEl, PtrDocument pDoc, int schView, boolean *absBoxTooHigh, PtrAbstractBox *origCutAbsBox, int nbView, int frame, PtrElement *pPage)
@@ -1753,11 +1753,11 @@ static void SetMark(pAb, rootEl, pDoc, schView, absBoxTooHigh, origCutAbsBox, nb
 }
 #endif /* __COLPAGE__ */
 
-/* ---------------------------------------------------------------------- */
-/* |	SetPage place la marque de page en respectant la		| */
-/* |		hauteur de page demandee et les conditions de		| */
-/* |		coupure des paves de la page.				| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   	SetPage place la marque de page en respectant la		
+   		hauteur de page demandee et les conditions de		
+   		coupure des paves de la page.				
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static void SetPage(PtrElement *pPage, int frame, PtrAbstractBox *origCutAbsBox, boolean *absBoxTooHigh, PtrDocument pDoc, int schView, int nbView, PtrElement rootEl)
@@ -1814,18 +1814,18 @@ static void SetPage(pPage, frame, origCutAbsBox, absBoxTooHigh, pDoc, schView, n
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |	PutMark pour la vue de numero nbView, dans le document pDoc,	| */
-/* |		insere dans l'arbre abstrait de racine rootEl un	| */
-/* |		element Marque de Page a la frontiere de page et detruit| */
-/* |		tous les paves qui precedent cet element.		| */
-/* |		Retourne 'vrai' si l'image restante est plus petite	| */
-/* |		qu'une page.						| */
- /* |    Met a jour les pointeurs pT:pPageTraitee et 	        | */
- /* | 	pAT:pPageATraiter qui sont deux parametres en plus     	| */
- /* | 	retourne l'element marque page creee et ne fait plus 	| */
- /* | 	appel a KillAbsBoxBeforePage					| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   	PutMark pour la vue de numero nbView, dans le document pDoc,	
+   		insere dans l'arbre abstrait de racine rootEl un	
+   		element Marque de Page a la frontiere de page et detruit
+   		tous les paves qui precedent cet element.		
+   		Retourne 'vrai' si l'image restante est plus petite	
+   		qu'une page.						
+    Met a jour les pointeurs pT:pPageTraitee et 	        
+    	pAT:pPageATraiter qui sont deux parametres en plus     	
+    	retourne l'element marque page creee et ne fait plus 	
+    	appel a KillAbsBoxBeforePage					
+  ----------------------------------------------------------------------*/
 #ifdef __COLPAGE__
 #ifdef __STDC__
 static void PutMark(PtrElement rootEl, int nbView, PtrDocument pDoc, int frame, PtrAbstractBox *pT, PtrAbstractBox *pAT)
@@ -2063,19 +2063,19 @@ static PtrElement PutMark(rootEl, nbView, pDoc, frame)
 
 
 #ifdef __COLPAGE__
-/* ---------------------------------------------------------------------- */
-/* | PageHeaderFooter met a jour les variables BreakPageHeight et PageFooterHeight| */
-/* |		selon le type de page auquel appartient l'element	| */
-/* |		Marque Page pointe par pElPage.				| */
-/* |		Vue indique le numero de la vue pour laquelle on	| */
-/* |		construit des pages.					| */
- /*      schView indique le numero de la vue dans le schema.      | */
- /*      BreakPageHeight : variable globale de thot (partagee    | */
- /*      entre page.c et crimabs.c).		     		| */
- /*      bottomPageHeightRef : variable globale du module page.	| */
- /*      Cette procedure ne fait rien si pElPage est une marque  | */
- /*      colonne.                                                | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   PageHeaderFooter met a jour les variables BreakPageHeight et PageFooterHeight
+   		selon le type de page auquel appartient l'element	
+   		Marque Page pointe par pElPage.				
+   		Vue indique le numero de la vue pour laquelle on	
+   		construit des pages.					
+    schView indique le numero de la vue dans le schema.      
+    BreakPageHeight : variable globale de thot (partagee    
+    entre page.c et crimabs.c).		     		
+    bottomPageHeightRef : variable globale du module page.	
+    Cette procedure ne fait rien si pElPage est une marque  
+    colonne.                                                
+  ----------------------------------------------------------------------*/
 
 
 #ifdef __STDC__
@@ -2264,12 +2264,12 @@ static void PageHeaderFooter(pElPage, view, schView, frame, pDoc)
 #endif /* __COLPAGE__ */
 
 
-/* ---------------------------------------------------------------------- */
-/* |	DetrImAbs detruit l'image abstraite de la vue concernee et	| */
-/* |		efface sa frame si la vue est une vue pour VusSch	| */
- /* Vue = numero d'elt assoc si vue associee sinon      */
- /* Vue = numero de vue si vue d'arbre principal        */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   	DetrImAbs detruit l'image abstraite de la vue concernee et	
+   		efface sa frame si la vue est une vue pour VusSch	
+    Vue = numero d'elt assoc si vue associee sinon      
+    Vue = numero de vue si vue d'arbre principal        
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static void DestroyImAbsPages(int view, boolean Assoc, PtrDocument pDoc, int schView)
@@ -2354,10 +2354,10 @@ static void DestroyImAbsPages(view, Assoc, pDoc, schView)
 	/*** AddLastPageBreak supprime' ***/
 #else /* __COLPAGE__ */
 
-/* ---------------------------------------------------------------------- */
-/* | AddLastPageBreak	ajoute une marque de page a la fin de la vue	| */
-/* |	schView de l'arbre de racine pRootEl s'il n'y en a pas deja une| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   AddLastPageBreak	ajoute une marque de page a la fin de la vue	
+   	schView de l'arbre de racine pRootEl s'il n'y en a pas deja une
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void AddLastPageBreak(PtrElement pRootEl, int schView, PtrDocument pDoc,
@@ -2479,10 +2479,10 @@ void AddLastPageBreak(pRootEl, schView, pDoc, withAPP)
 /**CL*//**CL*//**CL*//**CL*//**CL*//**CL*//**CL*//**CL*//**CL*//**CL*/
 /*      Nouvelle procedure pour les colonnes              */   /**CL*/
 /**CL*//**CL*//**CL*//**CL*//**CL*//**CL*//**CL*//**CL*//**CL*//**CL*/
-/* ---------------------------------------------------------------------- */
-/* |	BalanceColumn equilibre le groupe de colonnes contenues dans le| */
-/* |		dernier pave de groupe de colonnes de rootAbsBox         | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   	BalanceColumn equilibre le groupe de colonnes contenues dans le
+   		dernier pave de groupe de colonnes de rootAbsBox         
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void BalanceColumn (PtrDocument pDoc, PtrAbstractBox rootAbsBox, int nbView,  int schView)
 #else /* __STDC__ */
@@ -2529,21 +2529,21 @@ static void BalanceColumn (pDoc, rootAbsBox, nbView, schView)
  ChangeRHPage (rootAbsBox, pDoc, nbView);
       h = PosV + (High / 2);
       bool = ChangeConcreteImage(frame, &h, rootAbsBox);
-      /******
-	list = fopen("/perles/roisin/debug/equil","w");
-	if (list != NULL)
+      /*----------------------------------------------------------------------
+   list = fopen("/perles/roisin/debug/equil","w");
+   if (list != NULL)
 	{
-	NumberAbsBox(pDoc->DocViewRootAb[nbView-1]);
-	ListAbsBox(pDoc->DocViewRootAb[0], 2, list);
-	fclose(list);
-	list = fopen("/perles/roisin/debug/btequil","w");
-	if (list != NULL)
+   NumberAbsBox(pDoc->DocViewRootAb[nbView-1]);
+   ListAbsBox(pDoc->DocViewRootAb[0], 2, list);
+   fclose(list);
+   list = fopen("/perles/roisin/debug/btequil","w");
+   if (list != NULL)
 	{
-	ListAbsBoxes(rootAbsBox, 0, list);
-	fclose(list);
+   ListAbsBoxes(rootAbsBox, 0, list);
+   fclose(list);
 	}
 	}
-	*******************/
+  ----------------------------------------------------------------------*/
       if (!bool)
 	{
           /* on insere une marque colonne */
@@ -2564,12 +2564,12 @@ static void BalanceColumn (pDoc, rootAbsBox, nbView, schView)
 /**CL*//**CL*//**CL*//**CL*//**CL*//**CL*//**CL*//**CL*//**CL*//**CL*/
 #endif /* __COLPAGE__ */
 
-/* ---------------------------------------------------------------------- */
-/* |	PaginateView l'utilisateur demande le (re)decoupage en pages de la	| */
-/* |		vue de numero Vue pour le document pointe' par pDoc.	| */
-/* |		Si Assoc est vrai, c'est la vue d'elements associes de	| */
-/* |		numero Vue qui doit etre traitee			| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   	PaginateView l'utilisateur demande le (re)decoupage en pages de la	
+   		vue de numero Vue pour le document pointe' par pDoc.	
+   		Si Assoc est vrai, c'est la vue d'elements associes de	
+   		numero Vue qui doit etre traitee			
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void PaginateView(PtrDocument pDoc, int view, boolean Assoc)

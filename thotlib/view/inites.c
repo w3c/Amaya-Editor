@@ -1,4 +1,8 @@
 /*
+ * Copyright (c) 1996 INRIA, All rights reserved
+ */
+
+/*
  * inites.c : module handling colors and patterns in the context of
  *	      drawing on a computer screen (initpses is for Postcript).
  */
@@ -28,10 +32,10 @@ static int          allocation_index[256];
 static int          have_colors = 0;
 
 #ifndef NEW_WILLOWS
-/** ----------------------------------------------------------------------
- *   FindOutColor finds the closest color by allocating it, or picking
- *              an already allocated color.
- *  ---------------------------------------------------------------------- **/
+/*----------------------------------------------------------------------
+   FindOutColor finds the closest color by allocating it, or picking
+   an already allocated color.
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                FindOutColor (Display * dsp, Colormap colormap, ThotColorStruct * colr)
 #else  /* __STDC__ */
@@ -122,12 +126,12 @@ ThotColorStruct    *colr;
 }
 #endif /* !NEW_WILLOWS */
 
-/** ----------------------------------------------------------------------
- *      ColorRGB        returns the Red Green and Blue values corresponding
- *		to color number num.
- *		If the color doesn't exist the function returns the values
- *		for the default color.
- *  ---------------------------------------------------------------------- **/
+/*----------------------------------------------------------------------
+   ColorRGB        returns the Red Green and Blue values corresponding
+   to color number num.
+   If the color doesn't exist the function returns the values
+   for the default color.
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                ColorRGB (int num, unsigned short *red, unsigned short *green, unsigned short *blue)
 #else  /* __STDC__ */
@@ -153,9 +157,9 @@ unsigned short     *blue;
      }
 }
 
-/** ----------------------------------------------------------------------
- *      InstallColor try to install a color in the public colormap.
- *  ---------------------------------------------------------------------- **/
+/*----------------------------------------------------------------------
+   InstallColor try to install a color in the public colormap.
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         InstallColor (int i)
 #else  /* __STDC__ */
@@ -185,15 +189,15 @@ int                 i;
 #endif /* NEW_WILLOWS */
 }
 
-/** ----------------------------------------------------------------------
- *      ApproximateColors : this function is called when there is no
- *	more free slot in the colormap. It adjusts the colors allocated
- *	upon startup depending on the existing colormap to minimize
- *	the distances between the requested one and existing one.
- *	The algorithm is based on the order of the corlor in Thot
- *	color base and should be far less expensive than an optimal
- *	(e.g. closest in cube) algorithm.
- *  ---------------------------------------------------------------------- **/
+/*----------------------------------------------------------------------
+   ApproximateColors : this function is called when there is no
+   more free slot in the colormap. It adjusts the colors allocated
+   upon startup depending on the existing colormap to minimize
+   the distances between the requested one and existing one.
+   The algorithm is based on the order of the corlor in Thot
+   color base and should be far less expensive than an optimal
+   (e.g. closest in cube) algorithm.
+  ----------------------------------------------------------------------*/
 static void         ApproximateColors ()
 {
    unsigned long       white = Pix_Color[0];
@@ -224,11 +228,11 @@ static void         ApproximateColors ()
 }
 
 
-/** ----------------------------------------------------------------------
- *      InitDocColors initialize the Thot internal color table.
- *		If ReduceColor environment setting is set, less color
- *		are allocated.
- *  ---------------------------------------------------------------------- **/
+/*----------------------------------------------------------------------
+   InitDocColors initialize the Thot internal color table.
+   If ReduceColor environment setting is set, less color
+   are allocated.
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                InitDocColors (char *name)
 #else  /* __STDC__ */
@@ -323,18 +327,18 @@ char               *name;
 }
 
 
-/** ----------------------------------------------------------------------
- *      NumberOfColors  returns the number of colors in Thot color table.
- *  ---------------------------------------------------------------------- **/
+/*----------------------------------------------------------------------
+   NumberOfColors  returns the number of colors in Thot color table.
+  ----------------------------------------------------------------------*/
 int                 NumberOfColors ()
 {
    return NColors;
 }
 
 
-/** ----------------------------------------------------------------------
- *      ColorName       returns the name of a color in Thot color table.
- *  ---------------------------------------------------------------------- **/
+/*----------------------------------------------------------------------
+   ColorName       returns the name of a color in Thot color table.
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 char               *ColorName (int num)
 #else  /* __STDC__ */
@@ -350,9 +354,9 @@ int                 num;
 }
 
 
-/** ----------------------------------------------------------------------
- *      ColorPixel      returns the value of a color in Thot color table.
- *  ---------------------------------------------------------------------- **/
+/*----------------------------------------------------------------------
+   ColorPixel      returns the value of a color in Thot color table.
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 unsigned long       ColorPixel (int num)
 #else  /* __STDC__ */
@@ -368,10 +372,10 @@ int                 num;
 }
 
 
-/** ----------------------------------------------------------------------
- *      ColorNumber     lookup in Thot color table for an entry given it's
- *		name. Returns the index or -1 if not found.
- *  ---------------------------------------------------------------------- **/
+/*----------------------------------------------------------------------
+   ColorNumber     lookup in Thot color table for an entry given it's
+   name. Returns the index or -1 if not found.
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 int                 ColorNumber (char *name)
 #else  /* __STDC__ */
@@ -400,18 +404,18 @@ char               *name;
 }
 
 
-/** ----------------------------------------------------------------------
- *      NumberOfPatterns        returns the number of pattern available.
- *  ---------------------------------------------------------------------- **/
+/*----------------------------------------------------------------------
+   NumberOfPatterns        returns the number of pattern available.
+  ----------------------------------------------------------------------*/
 int                 NumberOfPatterns ()
 {
    return NbPatterns;
 }
 
 
-/** ----------------------------------------------------------------------
- *      PatternName     returns the name of a pattern available.
- *  ---------------------------------------------------------------------- **/
+/*----------------------------------------------------------------------
+   PatternName     returns the name of a pattern available.
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 char               *PatternName (int num)
 #else  /* __STDC__ */
@@ -427,10 +431,10 @@ int                 num;
 }
 
 
-/** ----------------------------------------------------------------------
- *      PatternNumber   lookup fo a pattern given it's name. Returns the
- *		index or -1 if not found.
- *  ---------------------------------------------------------------------- **/
+/*----------------------------------------------------------------------
+   PatternNumber   lookup fo a pattern given it's name. Returns the
+   index or -1 if not found.
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 int                 PatternNumber (char *name)
 #else  /* __STDC__ */
@@ -459,12 +463,12 @@ char               *name;
 }
 
 
-/** ----------------------------------------------------------------------
- *      CreatePattern loads and return a pixmap pattern.
- *              active parameter indicate if the box is active.
- *              parameters fg, bg, and motif indicate respectively
- *              the drawing color, background color and the pattern.
- *  ---------------------------------------------------------------------- **/
+/*----------------------------------------------------------------------
+   CreatePattern loads and return a pixmap pattern.
+   active parameter indicate if the box is active.
+   parameters fg, bg, and motif indicate respectively
+   the drawing color, background color and the pattern.
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 unsigned long       CreatePattern (int disp, int RO, int active, int fg, int bg, int motif)
 #else  /* __STDC__ */

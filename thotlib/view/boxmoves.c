@@ -1,4 +1,8 @@
 /*
+ * Copyright (c) 1996 INRIA, All rights reserved
+ */
+
+/*
    gestion des deplacements des boites
    I. Vatton
  */
@@ -20,14 +24,14 @@
 #include "boxrelations_f.h"
 
 
-/* ---------------------------------------------------------------------- */
-/* |   IsXYPosComplete retourne les indicateurs de placement absolu     | */
-/* |            horizRef et vertRef pour la boi^te pBox.                | */
-/* |            L'indicateur est vrai si on est pas dans une cre'ation  | */
-/* |            initiale ou si une boi^te englobante de la boi^te pBox  | */
-/* |            est e'lastique horizontalement (verticalement) ou si    | */
-/* |            une boi^te englobante a une relation hors-structure.    | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   IsXYPosComplete retourne les indicateurs de placement absolu     
+   horizRef et vertRef pour la boi^te pBox.                
+   L'indicateur est vrai si on est pas dans une cre'ation  
+   initiale ou si une boi^te englobante de la boi^te pBox  
+   est e'lastique horizontalement (verticalement) ou si    
+   une boi^te englobante a une relation hors-structure.    
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                IsXYPosComplete (PtrBox pBox, boolean *horizRef, boolean *vertRef)
 #else  /* __STDC__ */
@@ -62,12 +66,12 @@ boolean            *vertRef;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |   IsXPosComplete retourne vrai si on est pas dans une cre'ation    | */
-/* |            initiale ou si une boi^te englobante de la boi^te pBox  | */
-/* |            est e'lastique horizontalement ou si elle a un          | */
-/* |            positionnement horizontal hors-structure.               | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   IsXPosComplete retourne vrai si on est pas dans une cre'ation    
+   initiale ou si une boi^te englobante de la boi^te pBox  
+   est e'lastique horizontalement ou si elle a un          
+   positionnement horizontal hors-structure.               
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 boolean             IsXPosComplete (PtrBox pBox)
 #else  /* __STDC__ */
@@ -93,12 +97,12 @@ PtrBox              pBox;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |   IsYPosComplete retourne vrai si on est pas dans une cre'ation    | */
-/* |            initiale ou si une boi^te englobante de la boi^te pBox  | */
-/* |            est e'lastique verticalement ou si elle a un            | */
-/* |            positionnement vertical hors-structure.                 | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   IsYPosComplete retourne vrai si on est pas dans une cre'ation    
+   initiale ou si une boi^te englobante de la boi^te pBox  
+   est e'lastique verticalement ou si elle a un            
+   positionnement vertical hors-structure.                 
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 boolean             IsYPosComplete (PtrBox pBox)
 #else  /* __STDC__ */
@@ -125,10 +129,10 @@ PtrBox              pBox;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |   IsParentBox retourne vrai si pBox est une englobante de la boite | */
-/* |                pRefBox.                                            | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   IsParentBox retourne vrai si pBox est une englobante de la boite 
+   pRefBox.                                            
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 boolean           IsParentBox (PtrBox pBox, PtrBox pRefBox)
 #else  /* __STDC__ */
@@ -157,10 +161,10 @@ PtrBox            pRefBox;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |   IsSiblingBox retourne vrai si pBox a le meme pave pere que la    | */
-/* |                boite pRefBox et n'est pas la boite pBox.           | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   IsSiblingBox retourne vrai si pBox a le meme pave pere que la    
+   boite pRefBox et n'est pas la boite pBox.           
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static boolean    IsSiblingBox (PtrBox pBox, PtrBox pRefBox)
 #else  /* __STDC__ */
@@ -182,14 +186,14 @@ PtrBox            pRefBox;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    MirrorPolyline inverse les points de la polyline.               | */
-/* |            Les parame`tres horizRef et vertRef                     | */
-/* |            indiquent si la boi^te e'lastique a` l'origine du       | */
-/* |            traitement est inverse'e dans chacun des sens.          | */
-/* |            inAbtractBox est Vrai quand l'inversion doit            | */
-/* |            s'appliquer aux repe`res du pave et non de la boite.    | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   MirrorPolyline inverse les points de la polyline.               
+   Les parame`tres horizRef et vertRef                     
+   indiquent si la boi^te e'lastique a` l'origine du       
+   traitement est inverse'e dans chacun des sens.          
+   inAbtractBox est Vrai quand l'inversion doit            
+   s'appliquer aux repe`res du pave et non de la boite.    
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         MirrorPolyline (PtrAbstractBox pAb, boolean horizRef, boolean vertRef, boolean inAbtractBox)
 #else  /* __STDC__ */
@@ -274,17 +278,17 @@ boolean             inAbtractBox;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    MirrorShape ajuste les trace's graphiques en fonction des       | */
-/* |            inversions des boi^tes e'lastiques.                     | */
-/* |            Si le pave' passe' en parame`tre est un pave' compose'  | */
-/* |            la demande de conversion est transmise aux pave's fils. | */
-/* |            Les parame`tres horizRef et vertRef                     | */
-/* |            indiquent si la boi^te e'lastique a` l'origine du       | */
-/* |            traitement est inverse'e dans chacun des sens.          | */
-/* |            inAbtractBox est Vrai quand le caracte`re de            | */
-/* |            re'fe'rence correspond au caracte`re saisi (TraceReel)  | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   MirrorShape ajuste les trace's graphiques en fonction des       
+   inversions des boi^tes e'lastiques.                     
+   Si le pave' passe' en parame`tre est un pave' compose'  
+   la demande de conversion est transmise aux pave's fils. 
+   Les parame`tres horizRef et vertRef                     
+   indiquent si la boi^te e'lastique a` l'origine du       
+   traitement est inverse'e dans chacun des sens.          
+   inAbtractBox est Vrai quand le caracte`re de            
+   re'fe'rence correspond au caracte`re saisi (TraceReel)  
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                MirrorShape (PtrAbstractBox pAb, boolean horizRef, boolean vertRef, boolean inAbtractBox)
 #else  /* __STDC__ */
@@ -433,11 +437,11 @@ boolean             inAbtractBox;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |      XEdgesExchange inverse les reperes horizontaux position et    | */
-/* |            dimension de la boite elastique pBox. Si la boite est   | */
-/* |            une boite graphique les dessins sont modifies.          | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   XEdgesExchange inverse les reperes horizontaux position et    
+   dimension de la boite elastique pBox. Si la boite est   
+   une boite graphique les dessins sont modifies.          
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                XEdgesExchange (PtrBox pBox, OpRelation op)
 #else  /* __STDC__ */
@@ -522,11 +526,11 @@ OpRelation          op;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* | YEdgesExchange inverse les reperes verticaux position et dimension | */
-/* |            de la boite elastique pBox. Si la boite est une boite   | */
-/* |            graphique, les dessins sont modifies.                   | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   YEdgesExchange inverse les reperes verticaux position et dimension 
+   de la boite elastique pBox. Si la boite est une boite   
+   graphique, les dessins sont modifies.                   
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                YEdgesExchange (PtrBox pBox, OpRelation op)
 #else  /* __STDC__ */
@@ -610,12 +614,12 @@ OpRelation          op;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* | ChangeDefaultHeight met a` jour la largeur du contenu de la boi^te | */
-/* |            Cette proce'dure ve'rifie que la re`gle du minimum est  | */
-/* |            respecte'e. Eventuellement e'change hauteur re'elle et  | */
-/* |            autre hauteur.                                          | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ChangeDefaultHeight met a` jour la largeur du contenu de la boi^te 
+   Cette proce'dure ve'rifie que la re`gle du minimum est  
+   respecte'e. Eventuellement e'change hauteur re'elle et  
+   autre hauteur.                                          
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void              ChangeDefaultHeight (PtrBox pBox, PtrBox pSourceBox, int height, int frame)
 #else  /* __STDC__ */
@@ -665,12 +669,12 @@ int               frame;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |  ChangeDefaultWidth met a` jour la largeur du contenu de la boi^te | */
-/* |            Cette proce'dure ve'rifie que la re`gle du minimum est  | */
-/* |            respecte'e. Eventuellement e'change largeur re'elle et  | */
-/* |            autre largeur.                                          | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ChangeDefaultWidth met a` jour la largeur du contenu de la boi^te 
+   Cette proce'dure ve'rifie que la re`gle du minimum est  
+   respecte'e. Eventuellement e'change largeur re'elle et  
+   autre largeur.                                          
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void              ChangeDefaultWidth (PtrBox pBox, PtrBox pSourceBox, int width, int spaceDelta, int frame)
 #else  /* __STDC__ */
@@ -721,12 +725,12 @@ int               frame;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |        ChangeWidth propage la modification sur la largeur de la    | */
-/* |            boi^te pBox. Cette proce'dure ve'rifie la re`gle du     | */
-/* |            minimum. La largeur re'elle ou l'autre largeur de la    | */
-/* |            boi^te sera modifie'e.                                  | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ChangeWidth propage la modification sur la largeur de la    
+   boi^te pBox. Cette proce'dure ve'rifie la re`gle du     
+   minimum. La largeur re'elle ou l'autre largeur de la    
+   boi^te sera modifie'e.                                  
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void              ChangeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox, int delta, int spaceDelta, int frame)
 #else  /* __STDC__ */
@@ -782,12 +786,12 @@ int               frame;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |     ChangeHeight propage la modification sur la hauteur de la      | */
-/* |            boi^te pBox. Cette proce'dure ve'rifie la re`gle du     | */
-/* |            minimum. La hauteur re'elle ou l'autre hauteur de la    | */
-/* |            boi^te sera modifie'e.                                  | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ChangeHeight propage la modification sur la hauteur de la      
+   boi^te pBox. Cette proce'dure ve'rifie la re`gle du     
+   minimum. La hauteur re'elle ou l'autre hauteur de la    
+   boi^te sera modifie'e.                                  
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void              ChangeHeight (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox, int delta, int frame)
 #else  /* __STDC__ */
@@ -840,11 +844,11 @@ int               frame;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |   MoveBoxEdge inverse les reperes et eventuellement le dessin de   | */
-/* |            la boite elastique pBox quand la dimension devient      | */
-/* |            negative.                                               | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   MoveBoxEdge inverse les reperes et eventuellement le dessin de   
+   la boite elastique pBox quand la dimension devient      
+   negative.                                               
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                MoveBoxEdge (PtrBox pBox, PtrBox pSourceBox, OpRelation op, int delta, int frame, boolean horizRef)
 #else  /* __STDC__ */
@@ -975,10 +979,10 @@ boolean             horizRef;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |  XMoveAllEnclosed deplace horizontalement le contenu englobe de la | */
-/* |            boite pBox.                                             | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   XMoveAllEnclosed deplace horizontalement le contenu englobe de la 
+   boite pBox.                                             
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                XMoveAllEnclosed (PtrBox pBox, int delta, int frame)
 #else  /* __STDC__ */
@@ -1127,10 +1131,10 @@ int                 frame;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |   YMoveAllEnclosed deplace verticalement tout le contenu englobe   | */
-/* |               de la boite pBox.                                    | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   YMoveAllEnclosed deplace verticalement tout le contenu englobe   
+   de la boite pBox.                                    
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                YMoveAllEnclosed (PtrBox pBox, int delta, int frame)
 #else  /* __STDC__ */
@@ -1281,10 +1285,10 @@ int                 frame;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |   MoveVertRef deplace l'axe de reference de la boite pBox dans la  | */
-/* |                frametre frame et les boites qui en dependent.      | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   MoveVertRef deplace l'axe de reference de la boite pBox dans la  
+   frametre frame et les boites qui en dependent.      
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void              MoveVertRef (PtrBox pBox, PtrBox pFromBox, int delta, int frame)
 #else  /* __STDC__ */
@@ -1487,10 +1491,10 @@ int               frame;
      }
 }
 
-/* ---------------------------------------------------------------------- */
-/* |   MoveHorizRef deplace l'axe de reference de la boite pBox dans la | */
-/* |                frame frame et les boites qui en dependent.         | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   MoveHorizRef deplace l'axe de reference de la boite pBox dans la 
+   frame frame et les boites qui en dependent.         
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void              MoveHorizRef (PtrBox pBox, PtrBox pFromBox, int delta, int frame)
 #else  /* __STDC__ */
@@ -1697,21 +1701,21 @@ int               frame;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |  ResizeWidth modifie la largeur de la boite pBox correspondant au  | */
-/* |        frame suite au changement de largeur de la boite            | */
-/* |        origine pSourceBox.                                         | */
-/* |        respecte les contraintes de position :                      | */
-/* |        - Toute boite liee a` un des cotes deplaces est             | */
-/* |          deplacee.                                                 | */
-/* |        - On met a` jour la base de la boite pBox si necessaire.    | */
-/* |        On respecte les contraintes de dimension :                  | */
-/* |        - On met a` jour les largeurs de boites qui en              | */
-/* |          dependent.                                                | */
-/* |        Le parametre spaceDelta correspond au nombre de caracteres  | */
-/* |        blanc ajoutes (>0) ou retires (<0). Il n'a de sens que      | */
-/* |        quand la boite texte appartient a` une ligne justifiee.     | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ResizeWidth modifie la largeur de la boite pBox correspondant au  
+   frame suite au changement de largeur de la boite            
+   origine pSourceBox.                                         
+   respecte les contraintes de position :                      
+   - Toute boite liee a` un des cotes deplaces est             
+   deplacee.                                                 
+   - On met a` jour la base de la boite pBox si necessaire.    
+   On respecte les contraintes de dimension :                  
+   - On met a` jour les largeurs de boites qui en              
+   dependent.                                                
+   Le parametre spaceDelta correspond au nombre de caracteres  
+   blanc ajoutes (>0) ou retires (<0). Il n'a de sens que      
+   quand la boite texte appartient a` une ligne justifiee.     
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void              ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox, int delta, int spaceDelta, int frame)
 #else  /* __STDC__ */
@@ -2124,17 +2128,17 @@ int               frame;
      }
 }
 
-/* ---------------------------------------------------------------------- */
-/* |  ResizeHeight modifie la hauteur de la boite pBox correspondant au | */
-/* |         frame suite au changement de hauteur de la boite origine   | */
-/* |         pSourceBox. On respecte les contraintes de position :      | */
-/* |         - Toute boite liee a` un des cotes deplaces est            | */
-/* |           deplacee.                                                | */
-/* |         - met a` jour la base de la boite pBox si necessaire.      | */
-/* |         On respecte les contraintes de dimension :                 | */
-/* |         - On met a` jour les hauteurs des boites qui en            | */
-/* |           dependent.                                               | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ResizeHeight modifie la hauteur de la boite pBox correspondant au 
+   frame suite au changement de hauteur de la boite origine   
+   pSourceBox. On respecte les contraintes de position :      
+   - Toute boite liee a` un des cotes deplaces est            
+   deplacee.                                                
+   - met a` jour la base de la boite pBox si necessaire.      
+   On respecte les contraintes de dimension :                 
+   - On met a` jour les hauteurs des boites qui en            
+   dependent.                                               
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void              ResizeHeight (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox, int delta, int frame)
 #else  /* __STDC__ */
@@ -2588,10 +2592,10 @@ int               frame;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    XMove deplace l'origine de la boite pBox, donnee en parametre,  | */
-/* |            de delta. On respecte les contraintes de position.      | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   XMove deplace l'origine de la boite pBox, donnee en parametre,  
+   de delta. On respecte les contraintes de position.      
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void              XMove (PtrBox pBox, PtrBox pFromBox, int delta, int frame)
 #else  /* __STDC__ */
@@ -2786,10 +2790,10 @@ int               frame;
      }
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    YMove deplace l'origine de la boite pBox, donnee en parametre,| */
-/* |            de delta. On respecte les contraintes de position.      | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   YMove deplace l'origine de la boite pBox, donnee en parametre,
+   de delta. On respecte les contraintes de position.      
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                YMove (PtrBox pBox, PtrBox pFromBox, int delta, int frame)
 #else  /* __STDC__ */
@@ -2985,11 +2989,11 @@ int                 frame;
      }
 }
 
-/* ---------------------------------------------------------------------- */
-/* |  WidthPack verifie l'inclusion en largeur des boites englobees dans| */
-/* |            le pave pAb suite au changement de largeur de la        | */
-/* |            boite origine pSourceBox.                               | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   WidthPack verifie l'inclusion en largeur des boites englobees dans
+   le pave pAb suite au changement de largeur de la        
+   boite origine pSourceBox.                               
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                WidthPack (PtrAbstractBox pAb, PtrBox pSourceBox, int frame)
 #else  /* __STDC__ */
@@ -3203,11 +3207,11 @@ int                 frame;
      }
 }
 
-/* ---------------------------------------------------------------------- */
-/* |        HeightPack  verifie l'inclusion en hauteur des boites englobees| */
-/* |           dans le pave pAb suite au changement de hauteur de la    | */
-/* |           boite origine pSourceBox.                                | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   HeightPack  verifie l'inclusion en hauteur des boites englobees
+   dans le pave pAb suite au changement de hauteur de la    
+   boite origine pSourceBox.                                
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                HeightPack (PtrAbstractBox pAb, PtrBox pSourceBox, int frame)
 #else  /* __STDC__ */

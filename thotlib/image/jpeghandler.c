@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 1996 INRIA, All rights reserved
+ */
+
 
 #include "thot_gui.h"
 #include "thot_sys.h"
@@ -52,8 +56,8 @@ extern int          PixelEnPt ();
 
 #endif /* __STDC__ */
 
-/* ---------------------------------------------------------------------- */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 unsigned char      *ReadJPEG (FILE * infile, int *width, int *height, ThotColorStruct colrs[256])
 {
    unsigned char      *retBuffer = 0;	/* Output image buffer */
@@ -157,9 +161,9 @@ unsigned char      *ReadJPEG (FILE * infile, int *width, int *height, ThotColorS
    return retBuffer;
 }
 
-/* ---------------------------------------------------------------------- */
-/* | ReadJpegToData  Just open the file and pass it to the ReadJpeg     | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ReadJpegToData  Just open the file and pass it to the ReadJpeg     
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 unsigned char      *ReadJpegToData (char *datafile, int *w, int *h, ThotColorStruct colrs[256])
 
@@ -193,8 +197,8 @@ ThotColorStruct     colrs[256];
    return ((unsigned char *) NULL);
 }
 
-/* ---------------------------------------------------------------------- */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                JpegPrintErrorMsg (int ErrorNumber)
 #else  /* __STDC__ */
@@ -205,8 +209,8 @@ int                 ErrorNumber;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 ThotBitmap          JpegCreate (char *fn, PictureScaling pres, int *xif, int *yif, int *wif, int *hif, unsigned long BackGroundPixel, Drawable * mask1)
 #else  /* __STDC__ */
@@ -253,9 +257,9 @@ ThotBitmap         *mask1;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    JpegPrint produces postscript from a jpeg picture file          | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   JpegPrint produces postscript from a jpeg picture file          
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                JpegPrint (char *fn, PictureScaling pres, int xif, int yif, int wif, int hif, int PicXArea, int PicYArea, int PicWArea, int PicHArea, int fd, unsigned long BackGroundPixel)
 #else  /* __STDC__ */
@@ -385,9 +389,9 @@ unsigned long       BackGroundPixel;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    IsJpegFormat checks if the file header conforms the jpeg one    | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   IsJpegFormat checks if the file header conforms the jpeg one    
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 boolean             IsJpegFormat (char *fn)
 #else  /* __STDC__ */

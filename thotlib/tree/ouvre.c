@@ -1,5 +1,9 @@
 /*
-   ouvre.c : gestion de l'ouverture et de la fermeture d'un document.
+ * Copyright (c) 1996 INRIA, All rights reserved
+ */
+
+/*
+  gestion de l'ouverture et de la fermeture d'un document.
  */
 
 #include "thot_sys.h"
@@ -19,9 +23,9 @@
 #include "readpivot_f.h"
 #include "externalref_f.h"
 
-/* ---------------------------------------------------------------------- */
-/* |	FreeUnusedReferredElemDesc					| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   	FreeUnusedReferredElemDesc					
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         FreeUnusedReferredElemDesc (PtrDocument pDoc)
 
@@ -58,12 +62,12 @@ PtrDocument         pDoc;
    while (pRefD != NULL);
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    GetPtrDocument cherche si le document d'identificateur docIdent est	| */
-/* |	charge'.							| */
-/* |            Retourne un pointeur sur son contexte, ou NULL s'il	| */
-/* |            n'est pas charge'.                                      | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   GetPtrDocument cherche si le document d'identificateur docIdent est	
+   	charge'.							
+   Retourne un pointeur sur son contexte, ou NULL s'il	
+   n'est pas charge'.                                      
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 PtrDocument         GetPtrDocument (DocumentIdentifier docIdent)
@@ -86,15 +90,15 @@ DocumentIdentifier     docIdent;
    return pDoc;
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    OpenDocument ouvre le fichier document de nom docName et le charge  | */
-/* |            dans pDoc. loadIncludedDoc indique s'il faut charger ou | */
-/* |            non les documents externes dont des parties sont        | */
-/* |            incluses dans le document a` ouvrir. Retourne faux si   | */
-/* |            le document n'a pas pu etre charge'. Charge le          | */
-/* |            squelette si skeleton est TRUE. Ne pas charger de       | */
-/* |            schema de structure et utiliser pSS si pSS <> NULL.     | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   OpenDocument ouvre le fichier document de nom docName et le charge  
+   dans pDoc. loadIncludedDoc indique s'il faut charger ou 
+   non les documents externes dont des parties sont        
+   incluses dans le document a` ouvrir. Retourne faux si   
+   le document n'a pas pu etre charge'. Charge le          
+   squelette si skeleton est TRUE. Ne pas charger de       
+   schema de structure et utiliser pSS si pSS <> NULL.     
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 boolean             OpenDocument (Name docName, PtrDocument pDoc, boolean loadIncludedDoc, boolean skeleton, PtrSSchema pSS, boolean withAppEvent)
@@ -195,12 +199,12 @@ boolean             withAppEvent;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    DeleteAllTrees supprime les arbres abstraits d'un document et de tous | */
-/* |            ses elements associes et parametres. Les schemas de     | */
-/* |            structure et de presentation utilises par le document   | */
-/* |            ne sont pas liberes...                                  | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   DeleteAllTrees supprime les arbres abstraits d'un document et de tous 
+   ses elements associes et parametres. Les schemas de     
+   structure et de presentation utilises par le document   
+   ne sont pas liberes...                                  
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                DeleteAllTrees (PtrDocument pDoc)

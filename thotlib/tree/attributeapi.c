@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 1996 INRIA,  All rights reserved
+ */
+
+
 #include "thot_sys.h"
 #include "constmedia.h"
 #include "typemedia.h"

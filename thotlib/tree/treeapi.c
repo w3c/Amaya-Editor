@@ -1,3 +1,6 @@
+/*
+ * Copyright (c) 1996 INRIA, All rights reserved
+ */
 #include "thot_sys.h"
 #include "constmedia.h"
 #include "typemedia.h"
@@ -378,7 +381,7 @@ Element             parent;
 }
 
 
-/** ---------------------------------------------------------------------- *
+/* ---------------------------------------------------------------------- *
 CreateDescent
 
 CreateDescent creates a new element of a given type and inserts it in the
@@ -395,7 +398,7 @@ Parameters:
 
 Return value:
     the last descendant created or NULL if the element cannot be created.
-*** ---------------------------------------------------------------------- */
+---------------------------------------------------------------------- */
 
 #ifdef __STDC__
 static Element      CreateDescent (Document document, Element element, ElementType elementType, boolean withContent)
@@ -1079,7 +1082,6 @@ Document            document;
       TtaError (ERR_element_does_not_match_DTD);
    else
      {
-
 	if (((PtrElement) parent)->ElStructSchema->SsRule[((PtrElement) parent)->ElTypeNumber - 1].SrConstruct == CsChoice)
 	  {
 	     ((PtrElement) (*newElement))->ElAssocNum = ((PtrElement) parent)->ElAssocNum;
@@ -2562,7 +2564,7 @@ Element             element;
    return right;
 }
 
-/** debut ajout */
+/* debut ajout */
 /* ----------------------------------------------------------------------
    TtaIsHolophrasted
 

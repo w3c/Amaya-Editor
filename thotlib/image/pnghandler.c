@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 1996 INRIA, All rights reserved
+ */
+
 #include "thot_gui.h"
 #include "thot_sys.h"
 
@@ -545,9 +549,9 @@ int *bg;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |	ReadPngToData decompresses and return the main picture info     | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   	ReadPngToData decompresses and return the main picture info     
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 unsigned char *ReadPngToData(char *datafile, int *w, int *h, int *ncolors, int *cpp, ThotColorStruct colrs[256], int *bg)
 
@@ -584,8 +588,8 @@ unsigned char *ReadPngToData(datafile, w, h, ncolors, cpp, colrs, bg)
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 Drawable PngCreate(char *fn, PictureScaling pres, int *xif, int *yif, int *wif, int *hif, unsigned long BackGroundPixel, Drawable *mask1)
 
@@ -649,8 +653,8 @@ Drawable PngCreate(fn, pres, xif, yif, wif, hif, BackGroundPixel, mask1)
 
 
 
-/* ---------------------------------------------------------------------- */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void PngPrint(char * fn, PictureScaling pres, int xif, int yif, int wif, int hif, int PicXArea, int PicYArea, int PicWArea, int PicHArea, int fd, unsigned long BackGroundPixel)
 #else /* __STDC__ */
@@ -780,8 +784,8 @@ void PngPrint(fn, pres, xif, yif, wif, hif, PicXArea, PicYArea, PicWArea, PicHAr
 #endif /* !NEW_WILLOWS */
 }
 
-/* ---------------------------------------------------------------------- */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 boolean IsPngFormat(char * fn)
 #else /* __STDC__ */

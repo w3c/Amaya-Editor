@@ -1,7 +1,10 @@
+/*
+ * Copyright (c) 1996 INRIA, All rights reserved
+ */
+
 
 /*
    Ce module effectue la creation des images abstraites
-   V. Quint I. Vatton  C. Roisin
 */
 
 #include "thot_sys.h"
@@ -39,13 +42,13 @@
 
 
 
-/* ---------------------------------------------------------------------- */
-/* |    GetRule rend la regle de presentation a` appliquer pour la vue  | */
-/* |            numero 1. pRSpecif est la regle specifique courante,    | */
-/* |            pRDefault est la regle par defaut courante. Au retour    | */
-/* |            ces deux pointeurs sont mis a` jour pour la regle       | */
-/* |            suivante.                                               | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   GetRule rend la regle de presentation a` appliquer pour la vue  
+   numero 1. pRSpecif est la regle specifique courante,    
+   pRDefault est la regle par defaut courante. Au retour    
+   ces deux pointeurs sont mis a` jour pour la regle       
+   suivante.                                               
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 PtrPRule        GetRule (PtrPRule * pRSpecif, PtrPRule * pRDefault,
@@ -148,13 +151,13 @@ PtrSSchema        pSS;
 }
 
 
-/* ---------------------------------------------------------------------S- */
-/* |    GetRuleView donne la regle du type Typ a` appliquer pour la vue | */
-/* |            Vue. pRSpecif et pRDefault sont mis a` jour. La fonction | */
-/* |            retourne NULL si il n'y a pas de regle de ce type pour  | */
-/* |            cette vue (dans ce cas, il faut alors appliquer la      | */
-/* |            regle de la vue 1).                                     | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   GetRuleView donne la regle du type Typ a` appliquer pour la vue 
+   Vue. pRSpecif et pRDefault sont mis a` jour. La fonction 
+   retourne NULL si il n'y a pas de regle de ce type pour  
+   cette vue (dans ce cas, il faut alors appliquer la      
+   regle de la vue 1).                                     
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 PtrPRule        GetRuleView (PtrPRule * pRSpecif, PtrPRule * pRDefault,
@@ -224,10 +227,10 @@ PtrSSchema        pSS;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    InitAbsBoxes cree et initialise un pave pour l'element pEl et dans  | */
-/* |            la vue view, avec la visibilite Visib.                    | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   InitAbsBoxes cree et initialise un pave pour l'element pEl et dans  
+   la vue view, avec la visibilite Visib.                    
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 PtrAbstractBox             InitAbsBoxes (PtrElement pEl, DocViewNumber view, int Visib)
@@ -419,11 +422,11 @@ int                 Visib;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    ConstantCopy met dans le pave pAb le text correspondant a`  | */
-/* |            la constante de numero NConst dans le schema de         | */
-/* |            presentation pSchP.                                     | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ConstantCopy met dans le pave pAb le text correspondant a`  
+   la constante de numero NConst dans le schema de         
+   presentation pSchP.                                     
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                ConstantCopy (int NConst, PtrPSchema pSchP, PtrAbstractBox pAb)
@@ -478,10 +481,10 @@ PtrAbstractBox             pAb;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    AssocView retourne vrai si l'element pEl s'affiche dans une vue  | */
-/* |            d'elements associes.                                    | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   AssocView retourne vrai si l'element pEl s'affiche dans une vue  
+   d'elements associes.                                    
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 boolean             AssocView (PtrElement pEl)
@@ -514,10 +517,10 @@ PtrElement          pEl;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    DoesViewExist retourne vrai si la vue de numero viewNb ou` doit      | */
-/* |            s'afficher l'element pEl existe.                        | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   DoesViewExist retourne vrai si la vue de numero viewNb ou` doit      
+   s'afficher l'element pEl existe.                        
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 boolean             DoesViewExist (PtrElement pEl, PtrDocument pDoc, DocViewNumber viewNb)
@@ -549,13 +552,13 @@ DocViewNumber           viewNb;
    return existView;
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    AppliedView retourne le numero de la vue (numero dans le      | */
-/* |            schema de presentation qui s'applique a` l'element pEl  | */
-/* |            ou a` l'attribut pAttr) dont il faut appliquer les      | */
-/* |            regles de presentation a` l'element pEl pour obtenir    | */
-/* |            son image dans la vue viewNb du document pDoc.           | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   AppliedView retourne le numero de la vue (numero dans le      
+   schema de presentation qui s'applique a` l'element pEl  
+   ou a` l'attribut pAttr) dont il faut appliquer les      
+   regles de presentation a` l'element pEl pour obtenir    
+   son image dans la vue viewNb du document pDoc.           
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 int              AppliedView (PtrElement pEl, PtrAttribute pAttr, PtrDocument pDoc,
 				   DocViewNumber viewNb)
@@ -631,20 +634,20 @@ DocViewNumber           viewNb;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    Delay met une regle de presentation en attente au niveau du   | */
-/* |            pave englobant le pave pPRP. Cette regle sera           | */
-/* |            reappliquee lorsque tous les paves freres de pPRP auront| */
-/* |            ete crees.                                              | */
-/* |            - pR: SRule de presentation a` mettre en attente.       | */
-/* |            - pSP: schema de presentation auquel appartient cette   | */
-/* |            regle.                                                  | */
-/* |            - pAbb: pave auquel doit s'appliquer la regle pR.         | */
-/* |            - pAttr: attribut auquel correspond cette regle ou NULL | */
-/* |            si ce n'est pas une regle de presentation d'attribut.   | */
-/* |            Si l'englobant est un pave page ou un pave duplique,    | */
-/* |            on met la regle en attente au niveau de la racine.      | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   Delay met une regle de presentation en attente au niveau du   
+   pave englobant le pave pPRP. Cette regle sera           
+   reappliquee lorsque tous les paves freres de pPRP auront
+   ete crees.                                              
+   - pR: SRule de presentation a` mettre en attente.       
+   - pSP: schema de presentation auquel appartient cette   
+   regle.                                                  
+   - pAbb: pave auquel doit s'appliquer la regle pR.         
+   - pAttr: attribut auquel correspond cette regle ou NULL 
+   si ce n'est pas une regle de presentation d'attribut.   
+   Si l'englobant est un pave page ou un pave duplique,    
+   on met la regle en attente au niveau de la racine.      
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                Delay (PtrPRule pR, PtrPSchema pSP, PtrAbstractBox pAbb, PtrAttribute pAttr,
@@ -710,16 +713,16 @@ PtrAbstractBox             pPRP;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    GetDelayedRule recupere une regle de presentation qui etait retardee    | */
-/* |            au niveau du pave pAbb. Au retour pR contient la regle    | */
-/* |            retardee, pSP contient le schema de presentation auquel | */
-/* |            appartient cette regle, pAbb contient le pave auquel      | */
-/* |            s'applique la regle retardee et pAttr contient          | */
-/* |            l'attribut auquel correspond la regle, si c'est une     | */
-/* |            regle d'attribut (NULL sinon). S'il n'y a pas de regle  | */
-/* |            retardee, pR et pAbb contiennent NULL au retour.          | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   GetDelayedRule recupere une regle de presentation qui etait retardee    
+   au niveau du pave pAbb. Au retour pR contient la regle    
+   retardee, pSP contient le schema de presentation auquel 
+   appartient cette regle, pAbb contient le pave auquel      
+   s'applique la regle retardee et pAttr contient          
+   l'attribut auquel correspond la regle, si c'est une     
+   regle d'attribut (NULL sinon). S'il n'y a pas de regle  
+   retardee, pR et pAbb contiennent NULL au retour.          
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                GetDelayedRule (PtrPRule * pR, PtrPSchema * pSP, PtrAbstractBox * pAbb, PtrAttribute * pAttr)
@@ -782,11 +785,11 @@ PtrAttribute        *pAttr;
 
 #ifdef __COLPAGE__
 
-/* ---------------------------------------------------------------------- */
-/* |    ApplDelayedRule applique les regles retardees conservees pour  | */
-/* |            les paves de l'element El du document pDoc.             | */
-/* |            on remonte les ascendants jusqu'a la racine             | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ApplDelayedRule applique les regles retardees conservees pour  
+   les paves de l'element El du document pDoc.             
+   on remonte les ascendants jusqu'a la racine             
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                ApplDelayedRule (PtrElement pEl, PtrDocument pDoc)
@@ -840,10 +843,10 @@ PtrDocument         pDoc;
 
 #else  /* __COLPAGE__ */
 
-/* ---------------------------------------------------------------------- */
-/* |    ApplDelayedRule applique les regles retardees conservees pour  | */
-/* |            les paves de l'element El du document pDoc.             | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ApplDelayedRule applique les regles retardees conservees pour  
+   les paves de l'element El du document pDoc.             
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                ApplDelayedRule (PtrElement pEl, PtrDocument pDoc)
@@ -898,16 +901,16 @@ PtrDocument         pDoc;
 #endif /* __COLPAGE__ */
 
 
-/* ---------------------------------------------------------------------- */
-/* |    CondPresentation evalue les conditions d'application d'une      | */
-/* |            regle de presentation qui s'applique a` l'element pEl,  | */
-/* |            pour la vue de numero View.                              | */
-/* |            pCond est la premiere condition de la chaine des        | */
-/* |            conditions qui s'appliquent a la regle de presentation. | */
-/* |            pSS est le schema de structure correspondant au schema  | */
-/* |            de presentation auquel appartient la regle.             | */
-/* |            Retourne vrai si les conditions sont toutes satisfaites.| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   CondPresentation evalue les conditions d'application d'une      
+   regle de presentation qui s'applique a` l'element pEl,  
+   pour la vue de numero View.                              
+   pCond est la premiere condition de la chaine des        
+   conditions qui s'appliquent a la regle de presentation. 
+   pSS est le schema de structure correspondant au schema  
+   de presentation auquel appartient la regle.             
+   Retourne vrai si les conditions sont toutes satisfaites.
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 boolean             CondPresentation (PtrCondition pCond, PtrElement pEl, PtrAttribute pAttr,
@@ -1259,16 +1262,16 @@ PtrSSchema        pSS;
 
 #ifndef __COLPAGE__
 
-/* ---------------------------------------------------------------------- */
-/* |    NextElRef cherche (en arriere si backward est vrai, en avant     | */
-/* |            sinon) a` partir de l'element pElRef, un element du     | */
-/* |            type TypEl defini dans le schema pSchStr ou une marque  | */
-/* |            de page concernant la vue traitee. Si une marque de     | */
-/* |            page est trouvee, la fonction retourne NULL. Sinon      | */
-/* |            elle retourne un pointeur sur l'element reference' par  | */
-/* |            l'element trouve' et pElRef est l'element trouve'.      | */
-/* |            L'element recherche' (TypEl) doit etre une reference.   | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   NextElRef cherche (en arriere si backward est vrai, en avant     
+   sinon) a` partir de l'element pElRef, un element du     
+   type TypEl defini dans le schema pSchStr ou une marque  
+   de page concernant la vue traitee. Si une marque de     
+   page est trouvee, la fonction retourne NULL. Sinon      
+   elle retourne un pointeur sur l'element reference' par  
+   l'element trouve' et pElRef est l'element trouve'.      
+   L'element recherche' (TypEl) doit etre une reference.   
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static PtrElement   NextElRef (PtrElement * pElRef, int TypEl,
@@ -1370,11 +1373,11 @@ int                *viewSch;
 
 
 #ifdef __COLPAGE__
-/* ---------------------------------------------------------------------- */
-/* | initpavpres  procedure appelee par CrAbsBoxesPres pour initialiser      | */
-/* |       le contenu du pave pAb de presentation nouvellement cree    | */
-/* |       avec la regle pRCre                                          | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   initpavpres  procedure appelee par CrAbsBoxesPres pour initialiser      
+   le contenu du pave pAb de presentation nouvellement cree    
+   avec la regle pRCre                                          
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static void         initpavpres (PtrAbstractBox pAb, PtrDocument pDoc, PtrPRule pRCre,
@@ -1539,17 +1542,17 @@ boolean             completeCreator;
 
 #ifdef __COLPAGE__
 
-/* ---------------------------------------------------------------------- */
-/* |    CrAbsBoxesPres applique a` la vue viewNb la regle de creation de boite| */
-/* |            de presentation pRCre dans le document pDoc, pour       | */
-/* |            l'element pEl. Cette regle vient du schema de           | */
-/* |            presentation associe' au schema de structure pSS.       | */
-/* |            Retourne le pave cree'. DansBoiteAssoc indique si le    | */
-/* |            createur est une boite de haut ou de bas de page        | */
-/* |            affichant des elements associes.                        | */
-/* |            completeCreator indique si toutes les regles de         | */
-/* |            presentation ont deja ete appliquees au pave createur.  | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   CrAbsBoxesPres applique a` la vue viewNb la regle de creation de boite
+   de presentation pRCre dans le document pDoc, pour       
+   l'element pEl. Cette regle vient du schema de           
+   presentation associe' au schema de structure pSS.       
+   Retourne le pave cree'. DansBoiteAssoc indique si le    
+   createur est une boite de haut ou de bas de page        
+   affichant des elements associes.                        
+   completeCreator indique si toutes les regles de         
+   presentation ont deja ete appliquees au pave createur.  
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 PtrAbstractBox             CrAbsBoxesPres (PtrElement pEl, PtrDocument pDoc, PtrPRule pRCre,
@@ -2056,17 +2059,17 @@ boolean             completeCreator;
 
 #else  /* __COLPAGE__ */
 
-/* ---------------------------------------------------------------------- */
-/* |    CrAbsBoxesPres applique a` la vue viewNb la regle de creation de boite| */
-/* |            de presentation pRCre dans le document pDoc, pour       | */
-/* |            l'element pEl. Cette regle vient du schema de           | */
-/* |            presentation associe' au schema de structure pSS.       | */
-/* |            Retourne le pave cree'. InAssocBox indique si le    | */
-/* |            createur est une boite de haut ou de bas de page        | */
-/* |            affichant des elements associes.                        | */
-/* |            completeCreator indique si toutes les regles de         | */
-/* |            presentation ont deja ete appliquees au pave createur.  | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   CrAbsBoxesPres applique a` la vue viewNb la regle de creation de boite
+   de presentation pRCre dans le document pDoc, pour       
+   l'element pEl. Cette regle vient du schema de           
+   presentation associe' au schema de structure pSS.       
+   Retourne le pave cree'. InAssocBox indique si le    
+   createur est une boite de haut ou de bas de page        
+   affichant des elements associes.                        
+   completeCreator indique si toutes les regles de         
+   presentation ont deja ete appliquees au pave createur.  
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 PtrAbstractBox             CrAbsBoxesPres (PtrElement pEl, PtrDocument pDoc, PtrPRule pRCre,
@@ -2863,18 +2866,18 @@ boolean             completeCreator;
 #endif /* __COLPAGE__ */
 
 
-/* ---------------------------------------------------------------------- */
-/* |    AttrPresRule retourne la premiere regle de la chaine des regles| */
-/* |            de presentation a` appliquer pour l'attribut pAttr.     | */
-/* |            - si inheritRule = true on ne s'interesse pas aux regles   | */
-/* |            par defaut (pRPdef).                                    | */
-/* |            - si inheritRule = false on ne s'interesse pas aux regles  | */
-/* |            d'heritage (pRPherit).                                  | */
-/* |            - si PAttrComp != NULL alors si l'attribut est numerique| */
-/* |            et que ses regles sont des comparaisons on utilisera    | */
-/* |            pAttrComp au lieu de rechercher l'attribut de           | */
-/* |            comparaison dans les ascendants de pEl.                 | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   AttrPresRule retourne la premiere regle de la chaine des regles
+   de presentation a` appliquer pour l'attribut pAttr.     
+   - si inheritRule = true on ne s'interesse pas aux regles   
+   par defaut (pRPdef).                                    
+   - si inheritRule = false on ne s'interesse pas aux regles  
+   d'heritage (pRPherit).                                  
+   - si PAttrComp != NULL alors si l'attribut est numerique
+   et que ses regles sont des comparaisons on utilisera    
+   pAttrComp au lieu de rechercher l'attribut de           
+   comparaison dans les ascendants de pEl.                 
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 PtrPRule        AttrPresRule (PtrAttribute pAttr, PtrElement pEl, boolean inheritRule,
@@ -3046,10 +3049,10 @@ PtrPSchema          pSchP;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |     ApplCrPresRule determine les regles de creation a appliquer    | */
-/* |            au pave pAb en fonction de head                        | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ApplCrPresRule determine les regles de creation a appliquer    
+   au pave pAb en fonction de head                        
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static void         ApplCrPresRule (PtrSSchema pSS, PtrPSchema pSP, PtrAbstractBox * pAbbCreated,
@@ -3146,17 +3149,17 @@ PtrPRule        pRule;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    TruncateOrCompleteAbsBox coupe ou complete le pave pAb. pAb est coupe' si    | */
-/* |            truncate est vrai ou complete si truncate est faux. La coupure | */
-/* |            ou la completion concerne la tete du pave si head est   | */
-/* |            vrai ou la queue du pave si head est faux. Marque cette | */
-/* |            information dans le pave. S'il s'agit d'un pave qui     | */
-/* |            devient complet, cree ses paves de presentation a`      | */
-/* |            l'extremite qui devient complet. Retourne un pointeur  | */
-/* |            sur le dernier pave de presentation cree ou NULL si     | */
-/* |            aucun pave n'est cree.                                  | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   TruncateOrCompleteAbsBox coupe ou complete le pave pAb. pAb est coupe' si    
+   truncate est vrai ou complete si truncate est faux. La coupure 
+   ou la completion concerne la tete du pave si head est   
+   vrai ou la queue du pave si head est faux. Marque cette 
+   information dans le pave. S'il s'agit d'un pave qui     
+   devient complet, cree ses paves de presentation a`      
+   l'extremite qui devient complet. Retourne un pointeur  
+   sur le dernier pave de presentation cree ou NULL si     
+   aucun pave n'est cree.                                  
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 PtrAbstractBox             TruncateOrCompleteAbsBox (PtrAbstractBox pAb, boolean truncate, boolean head, PtrDocument pDoc)
@@ -3327,9 +3330,9 @@ PtrDocument         pDoc;
 
 
 
-/* ---------------------------------------------------------------------- */
-/* |    IsViewFull retourne vrai si la vue viewNb est pleine.             | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   IsViewFull retourne vrai si la vue viewNb est pleine.             
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 boolean             IsViewFull (DocViewNumber viewNb, PtrDocument pDoc, PtrElement pEl)
@@ -3357,13 +3360,13 @@ PtrElement          pEl;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    WaitingRule met en attente la regle pR appartenant au schema de     | */
-/* |            presentation pSP. Cette regle sera reappliquee au pave  | */
-/* |            pAbb lorsque la descendance de ce pave aura ete creee.    | */
-/* |            pA est l'attribut auquel correspond la regle (NULL si   | */
-/* |            ce n'est pas une regle d'attribut).                     | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   WaitingRule met en attente la regle pR appartenant au schema de     
+   presentation pSP. Cette regle sera reappliquee au pave  
+   pAbb lorsque la descendance de ce pave aura ete creee.    
+   pA est l'attribut auquel correspond la regle (NULL si   
+   ce n'est pas une regle d'attribut).                     
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                WaitingRule (PtrPRule pR, PtrAbstractBox pAbb, PtrPSchema pSP, PtrAttribute pA,
@@ -3399,9 +3402,9 @@ int                *lqueue;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    GetAtt recupere une regle de presentation qui etait en attente. | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   GetAtt recupere une regle de presentation qui etait en attente. 
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static void         GetAtt (PtrPRule * pR, PtrAbstractBox * pAbb, PtrPSchema * pSP,
@@ -3438,16 +3441,16 @@ int                *pqueue;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    ApplCrRule verifie que la regle pRuleCr appartenant au   | */
-/* |            schema de presentation pSchPres (correspondant au       | */
-/* |            schema de structure pSS), est une regle de creation et, | */
-/* |            si oui, tente de l'appliquer a` l'element pEl. La       | */
-/* |            fonction retourne Vrai s'il s'agit bien d'une regle de  | */
-/* |            creation. pA est l'attribut auquel correspond la regle, | */
-/* |            s'il s'agit d'une regle de presentation d'attribut (NULL| */
-/* |            sinon).                                                 | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ApplCrRule verifie que la regle pRuleCr appartenant au   
+   schema de presentation pSchPres (correspondant au       
+   schema de structure pSS), est une regle de creation et, 
+   si oui, tente de l'appliquer a` l'element pEl. La       
+   fonction retourne Vrai s'il s'agit bien d'une regle de  
+   creation. pA est l'attribut auquel correspond la regle, 
+   s'il s'agit d'une regle de presentation d'attribut (NULL
+   sinon).                                                 
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static boolean      ApplCrRule (PtrPRule pRuleCr, PtrSSchema pSS,
@@ -3604,10 +3607,10 @@ PtrAbstractBox             pNewAbbox;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    DescVisible cherche le premier descendant de l'element pE qui   | */
-/* |            ait un pave dans la vue viewNb.                          | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   DescVisible cherche le premier descendant de l'element pE qui   
+   ait un pave dans la vue viewNb.                          
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static PtrElement   DescVisible (PtrElement pE, DocViewNumber viewNb, boolean forward)
 #else  /* __STDC__ */
@@ -3685,10 +3688,10 @@ boolean             forward;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    ApplyAttrPresRules applique a` l'element toutes les regles de   | */
-/* |            presentation de l'attribut pAttr.                       | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ApplyAttrPresRules applique a` l'element toutes les regles de   
+   presentation de l'attribut pAttr.                       
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         ApplyAttrPresRules (PtrSSchema pSS, PtrPSchema pSchPres,
 					PtrAttribute pAttr, PtrAbstractBox * pAbbReturn,
@@ -3875,10 +3878,10 @@ boolean             inheritRule;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    ApplyVisibRuleAttr modifie le parametre vis selon la regle de   | */
-/* |            visibilite de pAttr.                                    | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ApplyVisibRuleAttr modifie le parametre vis selon la regle de   
+   visibilite de pAttr.                                    
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         ApplyVisibRuleAttr (PtrElement pEl, PtrAttribute pAttr,
 				PtrDocument pDoc, int *vis, DocViewNumber viewNb,
@@ -3986,13 +3989,13 @@ boolean             inheritRule;
      }
 }
 
-/* ------------------------------------------------------------------------ */
-/* | ComputeVisib determine la visibilite de l'element a creer en         | */
-/* |           fonction de la regle de visibilite associee au type de     | */
-/* |           l'element ou a ses attributs                               | */
-/* |           pAbbReturnne la visibilite calculee dans vis                   | */
-/* |           Met a jour vis, pRSpec, pRDef, TypeP et pSchPPage          | */
-/* ------------------------------------------------------------------------ */
+/*----------------------------------------------------------------------
+   ComputeVisib determine la visibilite de l'element a creer en         
+   fonction de la regle de visibilite associee au type de     
+   l'element ou a ses attributs                               
+   pAbbReturnne la visibilite calculee dans vis                   
+   Met a jour vis, pRSpec, pRDef, TypeP et pSchPPage          
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         ComputeVisib (PtrElement pEl, PtrDocument pDoc, DocViewNumber viewNb,
 				  int viewSch, PtrPRule * pRSpec,
@@ -4270,10 +4273,10 @@ PtrPSchema         *pSchPPage;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* | ApplPresRules   ApplyRule les regles de presentation au pave cree  | */
-/* |                                                                    | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ApplPresRules   ApplyRule les regles de presentation au pave cree  
+   
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         ApplPresRules (PtrElement pEl, PtrDocument pDoc, DocViewNumber viewNb,
 			   int viewSch, PtrSSchema pSchS, PtrPSchema pSchP,
@@ -4467,12 +4470,12 @@ PtrAbstractBox             pNewAbbox;
 }
 
 #ifdef __COLPAGE__
-/* ---------------------------------------------------------------------- */
-/* |	Chaine	chaine et remplit le pave pointe par pAb, correspondant| */
-/* |		a l'element pointe par pEl dans la vue nv du document	| */
-/* |		dont le contexte est pointe par pDoc.			| */
-/* |    forward dit si la creation se fait en avant ou non		| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   	Chaine	chaine et remplit le pave pointe par pAb, correspondant
+   		a l'element pointe par pEl dans la vue nv du document	
+   		dont le contexte est pointe par pDoc.			
+   forward dit si la creation se fait en avant ou non		
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void Chaine(PtrAbstractBox pAb, PtrElement pEl, DocViewNumber nv, int viewSch, PtrDocument pDoc, boolean forward)
 #else /* __STDC__ */
@@ -4848,11 +4851,11 @@ static void Chaine(pAb, pEl, nv, viewSch, pDoc, forward)
 
 #else /* __COLPAGE__ */
 
-/* ---------------------------------------------------------------------- */
-/* |	Attach	chaine et remplit le pave pointe par pAb, correspondant| */
-/* |		a l'element pointe par pEl dans la vue nv du document	| */
-/* |		dont le contexte est pointe par pDoc.			| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   	Attach	chaine et remplit le pave pointe par pAb, correspondant
+   		a l'element pointe par pEl dans la vue nv du document	
+   		dont le contexte est pointe par pDoc.			
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static void Attach(PtrAbstractBox pAb, PtrElement pEl, DocViewNumber nv, PtrDocument pDoc)
@@ -5100,22 +5103,22 @@ static void Attach(pAb, pEl, nv, pDoc)
 
 
 
-/* ---------------------------------------------------------------------- */
-/* |    AbsBoxesCreate cree les paves correspondant au sous-arbre de         | */
-/* |            l'element pEl du document pDoc, uniquement pour la vue  | */
-/* |            viewNb. Certains paves peuvent deja exister; ils ne sont | */
-/* |            pas touche's par AbsBoxesCreate. Si Desc est faux, seuls les | */
-/* |            paves de l'element pEl sont crees, sinon, on cree les   | */
-/* |            paves de tout le sous arbre. La creation de paves       | */
-/* |            s'arrete lorsque tous les paves du sous-arbre sont      | */
-/* |            crees ou de`s qu'il n'y a plus de volume libre dans la  | */
-/* |            vue. En ElemIsBefore indique si la creation a lieu vers l'avant| */
-/* |            ou vers l'arriere. pAbbReturnne le dernier (dans l'ordre    | */
-/* |            defini par forward) pave de plus haut niveau cree'.     | */
-/* |            Au retour, complete indique si l'extremite' (indiquee    | */
-/* |            par forward) de l'image abstraite de l'element a pu     | */
-/* |            etre creee ou non.                                      | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   AbsBoxesCreate cree les paves correspondant au sous-arbre de         
+   l'element pEl du document pDoc, uniquement pour la vue  
+   viewNb. Certains paves peuvent deja exister; ils ne sont 
+   pas touche's par AbsBoxesCreate. Si Desc est faux, seuls les 
+   paves de l'element pEl sont crees, sinon, on cree les   
+   paves de tout le sous arbre. La creation de paves       
+   s'arrete lorsque tous les paves du sous-arbre sont      
+   crees ou de`s qu'il n'y a plus de volume libre dans la  
+   vue. En ElemIsBefore indique si la creation a lieu vers l'avant
+   ou vers l'arriere. pAbbReturnne le dernier (dans l'ordre    
+   defini par forward) pave de plus haut niveau cree'.     
+   Au retour, complete indique si l'extremite' (indiquee    
+   par forward) de l'image abstraite de l'element a pu     
+   etre creee ou non.                                      
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 PtrAbstractBox             AbsBoxesCreate (PtrElement pEl, PtrDocument pDoc, DocViewNumber viewNb,

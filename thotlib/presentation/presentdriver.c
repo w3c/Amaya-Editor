@@ -1,4 +1,8 @@
 /*
+ * Copyright (c) 1996 INRIA, All rights reserved
+ */
+
+/*
  * Set of function common to presentation drivers.
  */
 
@@ -174,16 +178,16 @@ int                 specific;
 		  rule->PrPosRule.PoRefPresBox = 0;
 		  break;
 	       }
-    /************************
-        case PtHeight :
-        case PtWidth : {
-	    rule->PrPresMode = PresImmediate;
-	    rule->PrDimRule.DrPosition = TRUE;
-	    switch (val1) {
-	    }
-            break;
+    /*----------------------------------------------------------------------
+   case PtHeight :
+   case PtWidth : {
+   rule->PrPresMode = PresImmediate;
+   rule->PrDimRule.DrPosition = TRUE;
+   switch (val1) {
+   }
+   break;
 	}
-      ************************/
+  ----------------------------------------------------------------------*/
 	    case PtFont:
 	       {
 		  rule->PrPresMode = PresImmediate;

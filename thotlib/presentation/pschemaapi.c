@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 1996 INRIA, All rights reserved
+ */
+
 #include "thot_sys.h"
 #include "constmedia.h"
 #include "typemedia.h"
@@ -12,10 +16,10 @@
 #include "schemas_f.h"
 #include "compilmsg_f.h"
 
-/* -------------------------------------------------------------------
+/*----------------------------------------------------------------------
    HandleOfPSchema      returns the handle that points the additional
    presentation schema "schema" from document doc.
-   ---------------------------------------------------------------------- */
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static PtrHandlePSchema HandleOfPSchema (PSchema schema, Document doc)
@@ -56,7 +60,7 @@ Document            doc;
    return result;
 }
 
-/* ----------------------------------------------------------------------
+/*----------------------------------------------------------------------
    TtaNewPSchema
 
    Creates a new (empty) presentation schema.
@@ -66,7 +70,7 @@ Document            doc;
 
    Return value:
    the new presentation schema.
-   ---------------------------------------------------------------------- */
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 PSchema             TtaNewPSchema ()
@@ -85,7 +89,7 @@ PSchema             TtaNewPSchema ()
 }
 
 
-/* ----------------------------------------------------------------------
+/*----------------------------------------------------------------------
    TtaRemovePSchema
 
    Removes a presentation schema from a document and destroys that schema
@@ -95,7 +99,7 @@ PSchema             TtaNewPSchema ()
    schema: the presentation schema to be deleted.
    document: the document to which that presentation schema is related.
 
-   ---------------------------------------------------------------------- */
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                TtaRemovePSchema (PSchema schema, Document document)
@@ -130,7 +134,7 @@ Document            document;
 }
 
 
-/* ----------------------------------------------------------------------
+/*----------------------------------------------------------------------
    TtaAddPSchema
 
    Associates an additional presentation schema with a document. All additional
@@ -149,7 +153,7 @@ Document            document;
    oldSchema is NULL.
    document: the document to which the presentation schema is added.
 
-   ---------------------------------------------------------------------- */
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                TtaAddPSchema (PSchema schema, PSchema oldSchema, boolean before, Document document)
@@ -217,7 +221,7 @@ Document            document;
 }
 
 
-/* ----------------------------------------------------------------------
+/*----------------------------------------------------------------------
    TtaGetFirstPSchema
 
    Returns the first (i.e. lowest priority) additional presentation schema
@@ -227,7 +231,7 @@ Document            document;
    Parameter:
    document: the document of interest.
 
-   ---------------------------------------------------------------------- */
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 PSchema             TtaGetFirstPSchema (Document document)
@@ -254,7 +258,7 @@ Document            document;
 }
 
 
-/* ----------------------------------------------------------------------
+/*----------------------------------------------------------------------
    TtaNextPSchema
 
    Gets the next additional presentation schema, in the increasing order of
@@ -267,7 +271,7 @@ Document            document;
    Return parameter:
    schema: the next schema, or NULL if there is no next schema.
 
-   ---------------------------------------------------------------------- */
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                TtaNextPSchema (PSchema * schema, Document document)

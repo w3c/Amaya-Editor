@@ -1,10 +1,12 @@
+/*
+ * Copyright (c) 1996 INRIA, All rights reserved
+ */
+
 /* printpage.c : module de traitement des regles page
    ce module contient les procedures utilisees par le
    paginateur et l'imprimeur (extraites et modifiees
    de page.c et print.c)
  */
-
-/*      C. Roisin       Septembre 1995 */
 
 #include "thot_sys.h"
 #include "constmedia.h"
@@ -23,11 +25,11 @@
 #include "pagecommands_f.h"
 
 
-/* ---------------------------------------------------------------------- */
-/* |    GetPageRule cherche la regle page associee aux elements du        | */
-/* |            type de l'element pointe' par pEl dans la vue view       | */
-/* |            du schema de presentation ou elle est definie           | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   GetPageRule cherche la regle page associee aux elements du        
+   type de l'element pointe' par pEl dans la vue view       
+   du schema de presentation ou elle est definie           
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 PtrPRule        GetPageRule (PtrElement pEl, int view, PtrPSchema * pSchP)
@@ -70,12 +72,12 @@ PtrPSchema         *pSchP;
    return pRPage;
 }
 
-/* ---------------------------------------------------------------------- */
-/* |GetPRulePage  cherche parmi les regles de presentation de la  | */
-/* |                   page, la regle du type TypeR  et retourne un     | */
-/* |                   pointeur sur la regle trouvee ou NULL si pas     | */
-/* |                   trouvee.                                         | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   GetPRulePage  cherche parmi les regles de presentation de la  
+   page, la regle du type TypeR  et retourne un     
+   pointeur sur la regle trouvee ou NULL si pas     
+   trouvee.                                         
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 PtrPRule        GetPRulePage (PRuleType TypeR, int b, PtrPSchema pSchP)
@@ -117,14 +119,14 @@ PtrPSchema          pSchP;
 }
 
 #ifdef __COLPAGE__
-/* ---------------------------------------------------------------------- */
-/* | ReglePageDebut     recherche la regle page qui a cree la Marque de | */
-/* |                    Page Debut pElPage.                             | */
-/* |                    La recherche parcourt les elements qui sont     | */
-/* |                    apres pElPage dans l'arbre abstrait.            | */
-/* |                    retourne dans pSchP le schema de presentation   | */
-/* |                    procedure utilisee dans print et page           | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ReglePageDebut     recherche la regle page qui a cree la Marque de 
+   Page Debut pElPage.                             
+   La recherche parcourt les elements qui sont     
+   apres pElPage dans l'arbre abstrait.            
+   retourne dans pSchP le schema de presentation   
+   procedure utilisee dans print et page           
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 PtrPRule        ReglePageDebut (PtrElement pElPage, PtrPSchema * pSchP)
 
@@ -175,16 +177,16 @@ PtrPSchema         *pSchP;
 
 #ifndef __COLPAGE__
 
-/* ---------------------------------------------------------------------- */
- /* |   PageHeaderFooter met a jour les variables PageHeight et PageFooterHeight | */
-/* |            selon le type de page auquel appartient l'element       | */
-/* |            Marque Page pointe par pElPage.                         | */
-/* |            view indique le numero de la vue dans le schema de       | */
-/* |            presentation pour laquelle on construit des pages.      | */
-/* |            (c'est toujours 1 pour les vues d'elements associes).   | */
-/* |            Procedure utilisee pour la pagination et l'impression   | */
-/* |            les parametres b et pSchP sont utilises pour le print   | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+    PageHeaderFooter met a jour les variables PageHeight et PageFooterHeight 
+   selon le type de page auquel appartient l'element       
+   Marque Page pointe par pElPage.                         
+   view indique le numero de la vue dans le schema de       
+   presentation pour laquelle on construit des pages.      
+   (c'est toujours 1 pour les vues d'elements associes).   
+   Procedure utilisee pour la pagination et l'impression   
+   les parametres b et pSchP sont utilises pour le print   
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                PageHeaderFooter (PtrElement pElPage, int view, int *b, PtrPSchema * pSchP)
 
@@ -233,10 +235,10 @@ PtrPSchema         *pSchP;
  /* V4 : procedure KillAbsBoxAboveLimit supprimee */
 #else  /* __COLPAGE__ */
 
-/* ---------------------------------------------------------------------- */
-/* |    TagAbsBoxInPage marque tous les paves du sous arbre de racine pAb     | */
-/* |            comme faisant partie de la page courante                | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   TagAbsBoxInPage marque tous les paves du sous arbre de racine pAb     
+   comme faisant partie de la page courante                
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                TagAbsBoxInPage (PtrAbstractBox pAb)
@@ -262,10 +264,10 @@ PtrAbstractBox             pAb;
      }
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    KillAbsBoxAboveLimit tue tous les paves contenus dans le            | */
-/* |            pave pointe' par pP et qui sont au-dessus de la limite. | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   KillAbsBoxAboveLimit tue tous les paves contenus dans le            
+   pave pointe' par pP et qui sont au-dessus de la limite. 
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 void                KillAbsBoxAboveLimit (PtrAbstractBox pP, int limit, int viewNb, PtrDocument pDoc, PtrAbstractBox * RedispAbsBox)
@@ -317,16 +319,16 @@ PtrAbstractBox            *RedispAbsBox;
 
 #ifdef __COLPAGE__
  /* V4 : la procedure KillAbsBoxBeforePage est completement changee */
-/* ---------------------------------------------------------------------- */
-/* |    KillAbsBoxBeforePage detruit tous les paves qui precedent la page pPage | */
- /*|      on detruit les paves haut, corps, bas de page et filet */
- /*|      des pages precedentes */
- /*|      cette procedure est plus simple qu'avant */
-/* |            Retourne vrai si l'image restante est plus petite       | */
-/* |            qu'une page.                                            | */
-       /*CP *//* |     On garde la page courante (pour savoir ou continuer.    | */
-       /*CP *//* |     Destruction page par page (y compris le filet)          | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   KillAbsBoxBeforePage detruit tous les paves qui precedent la page pPage 
+    on detruit les paves haut, corps, bas de page et filet 
+    des pages precedentes 
+    cette procedure est plus simple qu'avant 
+   Retourne vrai si l'image restante est plus petite       
+   qu'une page.                                            
+   On garde la page courante (pour savoir ou continuer.    
+   Destruction page par page (y compris le filet)          
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 boolean             KillAbsBoxBeforePage (PtrAbstractBox pPage, int frame, PtrDocument pDoc, int viewNb)
@@ -393,13 +395,13 @@ int                 viewNb;
 
 #else  /* __COLPAGE__ */
 
-/* ---------------------------------------------------------------------- */
-/* |    KillAbsBoxBeforePage detruit tous les paves qui precedent le filet      | */
-/* |            marquant la frontiere de page qui est a l'interieur du  | */
-/* |            pave Marque de Page pointe' par pPage.                  | */
-/* |            Retourne vrai si l'image restante est plus petite       | */
-/* |            qu'une page.                                            | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   KillAbsBoxBeforePage detruit tous les paves qui precedent le filet      
+   marquant la frontiere de page qui est a l'interieur du  
+   pave Marque de Page pointe' par pPage.                  
+   Retourne vrai si l'image restante est plus petite       
+   qu'une page.                                            
+  ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 boolean             KillAbsBoxBeforePage (PtrAbstractBox pPage, int frame, PtrDocument pDoc, int viewNb)
