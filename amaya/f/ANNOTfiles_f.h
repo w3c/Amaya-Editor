@@ -8,8 +8,7 @@
 
 extern void ANNOT_SetPath ( Document document );
 extern Document ANNOT_NewDocument ( Document document);
-extern void ANNOT_InitDocumentStructure ( Document docAnnot, Document document,
-					  int annot_number);
+extern void ANNOT_InitDocumentStructure ( Document docAnnot, Document document );
 extern void ANNOT_PrepareAnnotView ( Document document );
 extern void ANNOT_CheckEmptyDoc ( Document docAnnot );
 
@@ -17,8 +16,7 @@ extern void ANNOT_CheckEmptyDoc ( Document docAnnot );
 
 extern void ANNOT_SetPath (/* Document document */);
 extern Document ANNOT_NewDocument (/* Document document */);
-extern void ANNOT_InitDocumentStructure (/* Document docAnnot, Document document 
-					    int annot_number */);
+extern void ANNOT_InitDocumentStructure (/* Document docAnnot, Document document */);
 extern void ANNOT_PrepareAnnotView (/* Document document */);
 extern void ANNOT_CheckEmptyDoc (/* Document docAnnot */);
 

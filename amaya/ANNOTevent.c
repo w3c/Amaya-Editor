@@ -89,13 +89,12 @@ void ANNOT_Init ()
 void ANNOT_Init ()
 #endif /* __STDC__*/
 {
-  STRING tmp_dir;
   STRING tmp;
 
   /* setup the default registry values */
-  tmp_dir = TtaGetEnvString ("APP_TMPDIR");
-  annotDir = TtaGetMemory (strlen (tmp_dir) + strlen (ANNOT_DIR) + 2);
-  sprintf (annotDir, "%s%c%s", tmp_dir, DIR_SEP, ANNOT_DIR);
+  tmp = TtaGetEnvString ("APP_HOME");
+  annotDir = TtaGetMemory (strlen (tmp) + strlen (ANNOT_DIR) + 2);
+  sprintf (annotDir, "%s%c%s", tmp, DIR_SEP, ANNOT_DIR);
   TtaSetEnvString ("ANNOT_DIR", annotDir, FALSE);
   TtaFreeMemory (annotDir);
   TtaSetEnvString ("ANNOT_MAIN_INDEX", ANNOT_MAIN_INDEX, FALSE);

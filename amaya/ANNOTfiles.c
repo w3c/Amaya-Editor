@@ -37,7 +37,7 @@ static int ANNOT_GetNumber (document)
 
   /* @@ potential mem bug */
   annot_user = GetAnnotUser ();
-  fname = TtaGetMemory (50);
+  fname = TtaGetMemory (150);
   sprintf (fname, "Annotation_%s_%d", annot_user, cpt);
 
   /* we search the first annotation file name which isn't in the annotation index file or in the
@@ -75,7 +75,7 @@ void ANNOT_SetPath (document)
 }
 
 /*-----------------------------------------------------------------------
-   Procedure ANNOT_NewDocument (document, annot_number)
+   Procedure ANNOT_NewDocument (document)
   -----------------------------------------------------------------------
    Creates an annotation file for the current document. Returns the number
    of the created document or 0 in case of failure
@@ -94,10 +94,8 @@ Document ANNOT_NewDocument (doc)
   char     *fname;
   char     *docname;
   char     *tmpname;
-  int      annot_number;
 
   /* Create a new annotation document */
-  annot_number = ANNOT_GetNumber (doc);
   annot_dir = GetAnnotDir ();
   docname = TtaGetDocumentName (doc);
   tmpname = GetTempName (annot_dir, "annot");
@@ -127,7 +125,7 @@ Document ANNOT_NewDocument (doc)
       DocumentMeta[docAnnot]->method = CE_ABSOLUTE;
       DocumentSource[docAnnot] = 0;
       ANNOT_PrepareAnnotView (docAnnot);
-      ANNOT_InitDocumentStructure (docAnnot, doc, annot_number);      
+      ANNOT_InitDocumentStructure (docAnnot, doc);      
     }  
   return docAnnot;
 }
@@ -140,13 +138,11 @@ Document ANNOT_NewDocument (doc)
   -----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-void  ANNOT_InitDocumentStructure (Document docAnnot, Document document, 
-				   int annot_number)
+void  ANNOT_InitDocumentStructure (Document docAnnot, Document document)
 #else /* __STDC__*/
-void  ANNOT_InitDocumentStructure (docAnnot, document, annot_number)
+void  ANNOT_InitDocumentStructure (docAnnot, document)
      Document docAnnot;
      Document document;
-     int annot_number;
 #endif /* __STDC__*/
 {
   ElementType elType;

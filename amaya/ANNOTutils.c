@@ -177,21 +177,42 @@ const char *prefix;
   char *name = NULL;
 
   /* save the value of TMPDIR */
+#ifdef _WINDOWS
+  tmp = getenv ("TMP");
+#else
   tmp = getenv ("TMPDIR");
+#endif /* _WINDOWS */
   if (tmp)
-     tmpdir = strdup (tmp);
+     tmpdir = TtaStrdup (tmp);
   else
      tmpdir = NULL;
 
-  /* rempve TMPDIR from the environment */
-  if (tmpdir)
+  /* remove TMPDIR from the environment */
+   if (tmpdir)
+#ifdef _WINDOWS
+	 _putenv ("TMP=");
+#else
      unsetenv ("TMPDIR");
+#endif /* _WINDOWS */
 
+#ifdef _WINDOWS
+  name = _tempnam (dir, prefix);
+#else
   name = tempnam (dir, prefix);
+#endif /* _WINDOWS */
   /* restore the value of TMPDIR */
   if (tmpdir)
+  {
+#ifdef _WINDOWS
+    tmp = TtaGetMemory (strlen (tmpdir) + 5);
+	sprintf (tmp, "TMP=%s", tmpdir);
+	_putenv (tmp);
+	TtaFreeMemory (tmp);
+#else
     setenv ("TMPDIR", tmpdir, 0);
-
+#endif /* _WINDOWS */
+	TtaFreeMemory (tmpdir);
+  }
   return (name);
 }
 
