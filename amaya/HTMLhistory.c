@@ -354,8 +354,10 @@ void GotoPreviousHTML (Document doc, View view)
 	 one */
       if (DocHistory[doc][DocHistoryIndex[doc]].HistUrl == NULL)
 	{
-	  if (DocumentURLs[doc] &&
-	      !IsW3Path (DocumentURLs[doc]) && !TtaFileExist (DocumentURLs[doc]))
+	  if ((DocumentURLs[doc] &&
+	       !IsW3Path (DocumentURLs[doc]) &&
+	       !TtaFileExist (DocumentURLs[doc])) ||
+	      (DocumentURLs[doc] == NULL))
 	    {
 	      /* cannot store the current document in the history */
 	      last = FALSE;
