@@ -453,6 +453,7 @@ HelpNumbering
 AnnotateDocument
 LoadAnnotations
 PostAnnotation
+DeleteAnnotation
 FilterAnnot
 CustomQuery
 ConfigAnnot
