@@ -439,7 +439,7 @@ boolean removeWhenUndoing;
    /* error if no sequence open */
    if (!pDoc->DocEditSequence)
      {
-      HistError (2);
+      HistError (3);
       return;
      }
 
@@ -490,16 +490,21 @@ PtrDocument pDoc;
       HistError (6);
       return;
      }
-   if (pDoc->DocLastEdit->EoType != EtElement)
-     /* Not an operation on elements. Error */
+   if (pDoc->DocLastEdit->EoType == EtElement)
+     {
+     /* change the pointers in older edits that refer to the saved elements
+        that will be released */
+     if (pDoc->DocLastEdit->EoSavedElement)
+        ChangePointersOlderEdits (pDoc->DocLastEdit,
+				  pDoc->DocLastEdit->EoSavedElement);
+     }
+   else if (pDoc->DocLastEdit->EoType != EtAttribute)
+     /* Not an operation on elements or attributes. Error */
      {
       HistError (7);
       return;
      }
-   /* change the pointers in older edits that refer to the saved elements
-      that will be released */
-   if (pDoc->DocLastEdit->EoSavedElement)
-      ChangePointersOlderEdits (pDoc->DocLastEdit, pDoc->DocLastEdit->EoSavedElement);
+
    /* Remove the latest operation descriptor */
    CancelAnEdit (pDoc->DocLastEdit, pDoc);
 }
@@ -614,6 +619,7 @@ PtrDocument pDoc;
 
 #endif /* __STDC__ */
 {
+   /*********/
    CancelAnEdit (pDoc->DocLastEdit, pDoc);
 }
 

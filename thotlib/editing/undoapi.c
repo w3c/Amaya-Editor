@@ -274,8 +274,7 @@ Document document;
 /* ----------------------------------------------------------------------
    TtaClearUndoHistory
 
-   Clears the last sequence of editing operarations registered in the
-   editing history of document.
+   Clears all editing operations registered in the editing history of document.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void         TtaClearUndoHistory (Document document)
@@ -285,4 +284,20 @@ Document document;
 #endif /* __STDC__ */
 {
    ClearHistory (LoadedDocument [document - 1]);
+}
+
+/* ----------------------------------------------------------------------
+   TtaCancelLastRegisteredOperation
+
+   Cancel the last sequence of editing operations registered in the
+   editing history of document.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void         TtaCancelLastRegisteredOperation (Document document)
+#else /* __STDC__ */
+void         TtaCancelLastRegisteredOperation (document)
+Document document;
+#endif /* __STDC__ */
+{
+   CancelLastEditFromHistory (LoadedDocument [document - 1]);
 }
