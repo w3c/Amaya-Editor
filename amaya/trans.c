@@ -839,9 +839,6 @@ Document doc;
   boolean	      result = FALSE;
   struct stat        *StatBuffer;
   int		      status;
-# ifndef _WINDOWS
-  Language	      lang;
-# endif /* _WINDOWS */
 
   len = BUFFER_LEN - szHTML;
   /*****

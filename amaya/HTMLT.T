@@ -956,9 +956,8 @@ ATTRIBUTES
 	END;
 
  meta_content: BEGIN
-	Create ' content="';
+	Create ' content=';
 	Create meta_content;
-	Create DoubleQuote;
 	END;
 
  scheme: BEGIN

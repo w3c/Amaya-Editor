@@ -2503,14 +2503,11 @@ int                 docid;
 	   /* avoid being called twice while doing a stop */
        lock_stop = TRUE; 
        /* delete the libwww request status */
-       HTTimer_deleteAll ();
+       /*HTTimer_deleteAll ();*/
        EventOrder_deleteAll ();
        HTNet_killAll ();
        /* Delete remaining channels */
 	 HTChannel_deleteAll();
-       /* again delete all the timers which the above operations may have
-	set up */
-       HTTimer_deleteAll ();
 
        cur = Amaya->reqlist;
        while ((me = (AHTReqContext *) HTList_nextObject (cur))) 
@@ -2533,7 +2530,10 @@ int                 docid;
 #endif /* WWW_XWINDOWS */
 #endif /* !_WINDOWS */
 	 }
-	  /* free the stop routine */
+       /* again delete all the timers which the above operations may have
+	set up */
+       HTTimer_deleteAll ();
+       /* free the stop routine */
        lock_stop =FALSE; 
 #ifdef DEBUG_LIBWWW
        fprintf (stderr, "StopRequest: number of Amaya requests "

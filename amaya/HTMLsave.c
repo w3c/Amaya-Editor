@@ -31,6 +31,7 @@
 static char         currentDocToSave[MAX_LENGTH];
 static char         currentPathName[MAX_LENGTH];
 extern HINSTANCE    hInstance;
+
 #ifdef __STDC__
 LRESULT CALLBACK GetSaveDlgProc (HWND, UINT, WPARAM, LPARAM);
 #else  /* !__STDC__ */
@@ -53,7 +54,7 @@ static int          SRC_attr_tab[] = {
    HTML_ATTR_background_,
    HTML_ATTR_Style_
 };
-
+static char        *QuotedText;
 
 #include "AHTURLTools_f.h"
 #include "EDITimage_f.h"
@@ -139,6 +140,60 @@ LPARAM lParam;
 }
 #endif /* _WINDOWS */
 
+/*----------------------------------------------------------------------
+  GenerateQuoteBefore                                                  
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+boolean             GenerateQuoteBefore (NotifyAttribute * event)
+#else  /* __STDC__ */
+boolean             GenerateQuoteBefore (event)
+NotifyAttribute    *event;
+
+#endif /* __STDC__ */
+{
+  char             *ptr;
+  int               length;
+
+  length = TtaGetTextAttributeLength (event->attribute);
+  QuotedText = TtaGetMemory (length + 3);
+  QuotedText[length+1]= EOS;
+  QuotedText[length+2]= EOS;
+  TtaGiveTextAttributeValue (event->attribute, &QuotedText[1], &length);
+  ptr = &QuotedText[1];
+  while (*ptr != '"' && *ptr != '\'' && *ptr != EOS)
+    ptr++;
+  if (*ptr == '\'' || *ptr == EOS)
+    {
+      /* add double quotes before and after the text */
+      QuotedText[0] = '"';
+      QuotedText[length+1] = '"';
+    }
+  else
+    {
+      /* add simple quotes before and after the text */
+      QuotedText[0] = '\'';
+      QuotedText[length+1] = '\'';
+    }
+  TtaSetAttributeText (event->attribute, QuotedText, event->element, event->document);
+  return FALSE;  /* let Thot perform normal operation */
+}
+
+/*----------------------------------------------------------------------
+  GenerateQuoteAfter                                                 
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                GenerateQuoteAfter (NotifyAttribute * event)
+#else  /* __STDC__ */
+void                GenerateQuoteAfter (event)
+NotifyAttribute    *event;
+
+#endif /* __STDC__ */
+{
+  /* remove quotes before and after the text */
+  QuotedText[strlen (QuotedText) - 1] = EOS;
+  TtaSetAttributeText (event->attribute, &QuotedText[1], event->element, event->document);
+  TtaFreeMemory (QuotedText);
+}
 
 /*----------------------------------------------------------------------
    SetRelativeURLs: try to make relative URLs within an HTML document.

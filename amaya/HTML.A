@@ -314,4 +314,9 @@ ATTRIBUTES
 	AttrDelete.Pre ->  DeleteAttrSelected;	
 	END;
 
+   meta_content:
+	BEGIN
+	AttrExport.Pre ->  GenerateQuoteBefore;	
+	AttrExport.Post -> GenerateQuoteAfter;	
+	END;
 END

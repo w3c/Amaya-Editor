@@ -358,6 +358,9 @@ STRUCT
 	Division;						{ DIV }
 	Center;							{ CENTER }
 	Form;
+	Horizontal_Rule;					{ HR }
+	Table;							{ TABLE }
+	Address;						{ ADDRESS }
 	END;
 
   Division							{ DIV }
