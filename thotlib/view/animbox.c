@@ -85,6 +85,28 @@ static float Clipx, Clipy, ClipxMax, ClipyMax;
 #define Max(number, max) (number = ( (number < 0) ? max : (((number - max) > 0.00001) ? number : max)) )
 #endif /* _GL */
 
+/*----------------------------------------------------------------------
+  T_atof prevents the bad conversion of French Windows platforms.
+   ----------------------------------------------------------------------*/
+static float T_atof (char *ptr)
+{
+  float    val = 0.;
+  char    *c;
+
+  val = atof (".5");
+  if (val == 0.5)
+    val = atof (ptr);
+  else
+    {
+      c = strstr (ptr, ".");
+      if (c)
+	*c = ',';
+      val = atof (ptr);
+      if (c)
+	*c = '.';
+    }
+  return val;
+}
 
 #ifdef _GL
 /*----------------------------------------------------------------------
@@ -541,7 +563,7 @@ static void animate_box_set (PtrElement El,
       if (pAb)
 	if (pAb->AbFirstEnclosed)
 	  {	  
-	    result = 1000 * atof ((char *) animated->to);
+	    result = 1000 * T_atof ((char *) animated->to);
 	    pAb->AbOpacity = (int)result;
 	    /*If it's an opaque group manage the opacity*/
 	    if (!TypeHasException (ExcIsGroup, pAb->AbElement->ElTypeNumber,
@@ -556,7 +578,7 @@ static void animate_box_set (PtrElement El,
       if (pAb)
 	if (pAb->AbFirstEnclosed)
 	  {
-	    result = atof ((char *) animated->to);
+	    result = T_atof ((char *) animated->to);
 	    ApplyXToAllBoxes (pAb->AbFirstEnclosed, (float) result);
 	  }
       
@@ -568,7 +590,7 @@ static void animate_box_set (PtrElement El,
       if (pAb)
 	if (pAb->AbFirstEnclosed)
 	  {
-	    result = atof ((char *) animated->to);
+	    result = T_atof ((char *) animated->to);
 	    ApplyYToAllBoxes (pAb->AbFirstEnclosed, (float) result);
 	  }
       
@@ -580,7 +602,7 @@ static void animate_box_set (PtrElement El,
       if (pAb)
 	if (pAb->AbFirstEnclosed)
 	  {
-	    result = atof ((char *) animated->to);
+	    result = T_atof ((char *) animated->to);
 	    ApplyWidthToAllBoxes (pAb->AbFirstEnclosed, (float) result);
 	  }
     }
@@ -591,7 +613,7 @@ static void animate_box_set (PtrElement El,
       if (pAb)
 	if (pAb->AbFirstEnclosed)
 	  {
-	    result = atof ((char *) animated->to);
+	    result = T_atof ((char *) animated->to);
 	    ApplyHeightToAllBoxes (pAb->AbFirstEnclosed, (float) result);	   
 	  }
       
@@ -603,7 +625,7 @@ static void animate_box_set (PtrElement El,
       if (pAb)
 	if (pAb->AbFirstEnclosed)
 	  {
-	    result = atof ((char *) animated->to);
+	    result = T_atof ((char *) animated->to);
 	  }
       
     }
@@ -636,8 +658,8 @@ static void animate_box_animate (PtrElement El,
       if (pAb)
 	if (pAb->AbFirstEnclosed)
 	  {	  
-	    result = 1000 * interpolate_double_value (atof ((char *) animated->from), 
-						      atof ((char *) animated->to),
+	    result = 1000 * interpolate_double_value (T_atof ((char *) animated->from), 
+						      T_atof ((char *) animated->to),
 						      current_time,
 						      animated->duration);
 
@@ -655,8 +677,8 @@ static void animate_box_animate (PtrElement El,
       if (pAb)
 	if (pAb->AbFirstEnclosed)
 	  {
-	    result = interpolate_double_value (atof ((char *) animated->from), 
-					       atof ((char *) animated->to),
+	    result = interpolate_double_value (T_atof ((char *) animated->from), 
+					       T_atof ((char *) animated->to),
 					       current_time,
 					       animated->duration);
 	    ApplyXToAllBoxes (pAb->AbFirstEnclosed, (float) result);
@@ -670,8 +692,8 @@ static void animate_box_animate (PtrElement El,
       if (pAb)
 	if (pAb->AbFirstEnclosed)
 	  {
-	    result = interpolate_double_value (atof ((char *) animated->from), 
-					       atof ((char *) animated->to),
+	    result = interpolate_double_value (T_atof ((char *) animated->from), 
+					       T_atof ((char *) animated->to),
 					       current_time,
 					       animated->duration);
 	    ApplyYToAllBoxes (pAb->AbFirstEnclosed, (float) result);
@@ -685,8 +707,8 @@ static void animate_box_animate (PtrElement El,
       if (pAb)
 	if (pAb->AbFirstEnclosed)
 	  {
-	    result = interpolate_double_value (atof ((char *) animated->from), 
-					       atof ((char *) animated->to),
+	    result = interpolate_double_value (T_atof ((char *) animated->from), 
+					       T_atof ((char *) animated->to),
 					       current_time,
 					       animated->duration);
 	    ApplyWidthToAllBoxes (pAb->AbFirstEnclosed, (float) result);
@@ -699,8 +721,8 @@ static void animate_box_animate (PtrElement El,
       if (pAb)
 	if (pAb->AbFirstEnclosed)
 	  {
-	    result = interpolate_double_value (atof ((char *) animated->from), 
-					       atof ((char *) animated->to),
+	    result = interpolate_double_value (T_atof ((char *) animated->from), 
+					       T_atof ((char *) animated->to),
 					       current_time,
 					       animated->duration);
 	    ApplyHeightToAllBoxes (pAb->AbFirstEnclosed, (float) result);	   
@@ -714,8 +736,8 @@ static void animate_box_animate (PtrElement El,
       if (pAb)
 	if (pAb->AbFirstEnclosed)
 	  {
-	    result = interpolate_double_value (atof ((char *) animated->from), 
-					       atof ((char *) animated->to),
+	    result = interpolate_double_value (T_atof ((char *) animated->from), 
+					       T_atof ((char *) animated->to),
 					       current_time,
 					       animated->duration);
 	  }
@@ -753,19 +775,19 @@ static void animate_box_transformation (PtrElement El,
       FrameToView (Animated_Frame, &doc, &view);
       if (strstr ((char *) animated->to, ","))
 	{
-	  tx = atof ((char *) animated->to);
-	  ty =  atof (strstr ((char *) animated->to, ",") + 1);
+	  tx = T_atof ((char *) animated->to);
+	  ty =  T_atof (strstr ((char *) animated->to, ",") + 1);
 	}
       else
-	tx = ty =  atof ((char *) animated->to);
+	tx = ty =  T_atof ((char *) animated->to);
 
       if (strstr ((char *) animated->from, ","))
 	{
-	  fx = atof ((char *) animated->from);
-	  fy = atof (strstr ((char *) animated->from, ",") + 1);
+	  fx = T_atof ((char *) animated->from);
+	  fy = T_atof (strstr ((char *) animated->from, ",") + 1);
 	}
       else
-	fx = fy =  atof ((char *) animated->from);
+	fx = fy =  T_atof ((char *) animated->from);
 
       tx = (float) interpolate_double_value (fx, 
 					     tx,
@@ -794,19 +816,19 @@ static void animate_box_transformation (PtrElement El,
 
       if (strstr ((char *) animated->to, ","))
 	{
-	  tx = atof ((char *) animated->to);
-	  ty =  atof (strstr ((char *) animated->to, ",") + 1);
+	  tx = T_atof ((char *) animated->to);
+	  ty =  T_atof (strstr ((char *) animated->to, ",") + 1);
 	}
       else
-	tx = ty =  atof ((char *) animated->to);
+	tx = ty =  T_atof ((char *) animated->to);
 
       if (strstr ((char *) animated->from, ","))
 	{
-	  fx = atof ((char *) animated->from);
-	  fy = atof (strstr ((char *) animated->from, ",") + 1);
+	  fx = T_atof ((char *) animated->from);
+	  fy = T_atof (strstr ((char *) animated->from, ",") + 1);
 	}
       else
-	fx = fy =  atof ((char *) animated->from);
+	fx = fy =  T_atof ((char *) animated->from);
 
       tx = (float) interpolate_double_value (fx, 
 					     tx,
@@ -836,30 +858,30 @@ static void animate_box_transformation (PtrElement El,
       tx = ty = fx = fy = 0;
       if (strstr ((char *) animated->to, ","))
 	{
-	  rott = atof ((char *) animated->to);
+	  rott = T_atof ((char *) animated->to);
 	  if (strstr (strstr ((char *) animated->to, ",") + 1, ","))
 	    {
-	      tx =  atof (strstr ((char *) animated->to, ",") + 1);
-	      ty =  atof (strstr (strstr ((char *) animated->to, ",") + 1, ",") + 1);
+	      tx =  T_atof (strstr ((char *) animated->to, ",") + 1);
+	      ty =  T_atof (strstr (strstr ((char *) animated->to, ",") + 1, ",") + 1);
 	    }
 	  else
-	    tx = ty = atof (strstr ((char *) animated->to, ",") + 1);
+	    tx = ty = T_atof (strstr ((char *) animated->to, ",") + 1);
 	}
       else
-	rott =  atof ((char *) animated->to);
+	rott =  T_atof ((char *) animated->to);
       if (strstr ((char *) animated->from, ","))
 	{
-	  rotf = atof ((char *) animated->from);
+	  rotf = T_atof ((char *) animated->from);
 	  if (strstr (strstr ((char *) animated->from, ",") + 1, ","))
 	    {
-	      fx =  atof (strstr ((char *) animated->from, ",") + 1);
-	      fy =  atof (strstr (strstr ((char *) animated->from, ",") + 1, ",") + 1);
+	      fx =  T_atof (strstr ((char *) animated->from, ",") + 1);
+	      fy =  T_atof (strstr (strstr ((char *) animated->from, ",") + 1, ",") + 1);
 	    }
 	  else
-	    fx = fy = atof (strstr ((char *) animated->from, ",") + 1);
+	    fx = fy = T_atof (strstr ((char *) animated->from, ",") + 1);
 	}
       else
-	rotf =  atof ((char *) animated->from);
+	rotf =  T_atof ((char *) animated->from);
       if (tx && fx)
 	tx = (float) interpolate_double_value (fx, 
 					       tx,
@@ -890,8 +912,8 @@ static void animate_box_transformation (PtrElement El,
       
     case 4 :/*skewX*/
       FrameToView (Animated_Frame, &doc, &view);
-      result = (float)interpolate_double_value (atof ((char *) animated->from), 
-						atof ((char *) animated->to),
+      result = (float)interpolate_double_value (T_atof ((char *) animated->from), 
+						T_atof ((char *) animated->to),
 						current_time,
 						animated->duration);      
       if (El->ElTransform)
@@ -907,8 +929,8 @@ static void animate_box_transformation (PtrElement El,
      
     case 5 :/*SKEWY*/
       FrameToView (Animated_Frame, &doc, &view);
-      result = (float)interpolate_double_value (atof ((char *) animated->from), 
-						atof ((char *) animated->to),
+      result = (float)interpolate_double_value (T_atof ((char *) animated->from), 
+						T_atof ((char *) animated->to),
 						current_time,
 						animated->duration);      
       if (El->ElTransform)
