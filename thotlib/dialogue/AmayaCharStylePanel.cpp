@@ -146,6 +146,11 @@ void AmayaCharStylePanel::RefreshToolTips()
 {
   XRCCTRL(*m_pPanelContentDetach,"wxID_REFRESH",wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_REFRESH)));
   XRCCTRL(*m_pPanelContentDetach,"wxID_APPLY",wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_APPLY)));
+  XRCCTRL(*m_pPanelContentDetach,"wxID_APPLY_FONTFAMILY",wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_APPLY)));
+  XRCCTRL(*m_pPanelContentDetach,"wxID_APPLY_UNDERLINE",wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_APPLY)));
+  XRCCTRL(*m_pPanelContentDetach,"wxID_APPLY_BODYSIZE",wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_APPLY)));
+  XRCCTRL(*m_pPanelContentDetach,"wxID_APPLY_CHARSTYLE",wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_APPLY)));
+  XRCCTRL(*m_pPanelContentDetach,"wxID_APPLY_BOLDNESS",wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_APPLY)));
 }
 
 /*
@@ -225,6 +230,77 @@ void AmayaCharStylePanel::OnApply( wxCommandEvent& event )
 /*
  *--------------------------------------------------------------------------------------
  *       Class:  AmayaCharStylePanel
+ *      Method:  OnApplyFontFamily
+ * Description:  
+ *--------------------------------------------------------------------------------------
+ */
+void AmayaCharStylePanel::OnApplyFontFamily( wxCommandEvent& event )
+{
+  int font_family    = XRCCTRL(*m_pPanelContentDetach,"wxID_CHOICE_FONTFAMILY",wxChoice)->GetSelection();
+  ThotCallback (NumMenuCharFamily, INTEGER_DATA, (char*)font_family); /* default=4 */
+  ThotCallback (NumFormPresChar, INTEGER_DATA, (char*) 1);
+}
+
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaCharStylePanel
+ *      Method:  OnApplyUnderline
+ * Description:  
+ *--------------------------------------------------------------------------------------
+ */
+void AmayaCharStylePanel::OnApplyUnderline( wxCommandEvent& event )
+{
+  int font_underline = XRCCTRL(*m_pPanelContentDetach,"wxID_CHOICE_UNDERLINE",wxChoice)->GetSelection();
+  ThotCallback (NumMenuUnderlineType, INTEGER_DATA, (char*)font_underline); /* default=4 */
+  ThotCallback (NumFormPresChar, INTEGER_DATA, (char*) 1);
+}
+
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaCharStylePanel
+ *      Method:  OnApplyBodySize
+ * Description:  
+ *--------------------------------------------------------------------------------------
+ */
+void AmayaCharStylePanel::OnApplyBodySize( wxCommandEvent& event )
+{
+  int font_size      = XRCCTRL(*m_pPanelContentDetach,"wxID_CHOICE_BODYSIZE",wxChoice)->GetSelection();
+  ThotCallback (NumMenuCharFontSize, INTEGER_DATA, (char*)font_size); /* default=2 */
+  ThotCallback (NumFormPresChar, INTEGER_DATA, (char*) 1);
+}
+
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaCharStylePanel
+ *      Method:  OnApplyCharStyle
+ * Description:  
+ *--------------------------------------------------------------------------------------
+ */
+void AmayaCharStylePanel::OnApplyCharStyle( wxCommandEvent& event )
+{
+  int font_style     = XRCCTRL(*m_pPanelContentDetach,"wxID_CHOICE_CHARSTYLE",wxChoice)->GetSelection();
+  ThotCallback (NumMenuCharFontStyle, INTEGER_DATA, (char*)font_style); /* default=3 */
+  ThotCallback (NumFormPresChar, INTEGER_DATA, (char*) 1);
+}
+
+
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaCharStylePanel
+ *      Method:  OnApplyBoldness
+ * Description:  
+ *--------------------------------------------------------------------------------------
+ */
+void AmayaCharStylePanel::OnApplyBoldness( wxCommandEvent& event )
+{
+  int font_weight    = XRCCTRL(*m_pPanelContentDetach,"wxID_CHOICE_BOLDNESS",wxChoice)->GetSelection();
+  ThotCallback (NumMenuCharFontWeight, INTEGER_DATA, (char*)font_weight); /* default=2 */
+  ThotCallback (NumFormPresChar, INTEGER_DATA, (char*) 1);
+}
+
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaCharStylePanel
  *      Method:  OnRefresh
  * Description:  refresh the panel from current selection
  *--------------------------------------------------------------------------------------
@@ -255,6 +331,12 @@ void AmayaCharStylePanel::RefreshCharStylePanel()
  *  the callbacks are assigned to an event type
  *----------------------------------------------------------------------*/
 BEGIN_EVENT_TABLE(AmayaCharStylePanel, AmayaSubPanel)
+  EVT_BUTTON( XRCID("wxID_APPLY_FONTFAMILY"), AmayaCharStylePanel::OnApplyFontFamily ) 
+  EVT_BUTTON( XRCID("wxID_APPLY_UNDERLINE"),  AmayaCharStylePanel::OnApplyUnderline ) 
+  EVT_BUTTON( XRCID("wxID_APPLY_BODYSIZE"),   AmayaCharStylePanel::OnApplyBodySize ) 
+  EVT_BUTTON( XRCID("wxID_APPLY_CHARSTYLE"),  AmayaCharStylePanel::OnApplyCharStyle ) 
+  EVT_BUTTON( XRCID("wxID_APPLY_BOLDNESS"),   AmayaCharStylePanel::OnApplyBoldness ) 
+
   EVT_BUTTON( XRCID("wxID_APPLY"),   AmayaCharStylePanel::OnApply ) 
   EVT_BUTTON( XRCID("wxID_REFRESH"), AmayaCharStylePanel::OnRefresh )
 END_EVENT_TABLE()

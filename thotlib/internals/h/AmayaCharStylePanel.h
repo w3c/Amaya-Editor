@@ -36,6 +36,12 @@ public:
   DECLARE_EVENT_TABLE()
   void OnRefresh( wxCommandEvent& event );
   void OnApply( wxCommandEvent& event );
+  void OnApplyFontFamily( wxCommandEvent& event );
+  void OnApplyUnderline( wxCommandEvent& event );
+  void OnApplyBodySize( wxCommandEvent& event );
+  void OnApplyCharStyle( wxCommandEvent& event );
+  void OnApplyBoldness( wxCommandEvent& event );
+
 };
 
 #endif // __AMAYACHARSTYLEPANEL_H__

@@ -65,13 +65,28 @@
                                       </object>
                                     </object>
                                     <object class="sizeritem">
-                                      <object class="wxChoice" name="wxID_CHOICE_FONTFAMILY">
-                                        <content>
-                                          <item>*Times*</item>
-                                          <item>*Helvetica*</item>
-                                          <item>*Courier*</item>
-                                          <item>*Default*</item>
-                                        </content>
+                                      <object class="wxBoxSizer">
+                                        <orient>wxHORIZONTAL</orient>
+                                        <object class="sizeritem">
+                                          <object class="wxChoice" name="wxID_CHOICE_FONTFAMILY">
+                                            <content>
+                                              <item>*Times*</item>
+                                              <item>*Helvetica*</item>
+                                              <item>*Courier*</item>
+                                              <item>*Default*</item>
+                                            </content>
+                                          </object>
+                                          <option>1</option>
+                                          <flag>wxEXPAND</flag>
+                                        </object>
+                                        <object class="sizeritem">
+                                          <object class="wxBitmapButton" name="wxID_APPLY_FONTFAMILY">
+                                            <tooltip>*Apply*</tooltip>
+                                            <bitmap>../icons/ok.png</bitmap>
+                                          </object>
+                                          <flag>wxLEFT|wxEXPAND|wxALIGN_CENTRE_VERTICAL</flag>
+                                          <border>2</border>
+                                        </object>
                                       </object>
                                       <flag>wxEXPAND</flag>
                                     </object>
@@ -88,14 +103,29 @@
                                       </object>
                                     </object>
                                     <object class="sizeritem">
-                                      <object class="wxChoice" name="wxID_CHOICE_UNDERLINE">
-                                        <content>
-                                          <item>*Normal*</item>
-                                          <item>*Underline*</item>
-                                          <item>*Overline*</item>
-                                          <item>*Cross out*</item>
-                                          <item>*Default*</item>
-                                        </content>
+                                      <object class="wxBoxSizer">
+                                        <orient>wxHORIZONTAL</orient>
+                                        <object class="sizeritem">
+                                          <object class="wxChoice" name="wxID_CHOICE_UNDERLINE">
+                                            <content>
+                                              <item>*Normal*</item>
+                                              <item>*Underline*</item>
+                                              <item>*Overline*</item>
+                                              <item>*Cross out*</item>
+                                              <item>*Default*</item>
+                                            </content>
+                                          </object>
+                                          <option>1</option>
+                                          <flag>wxEXPAND</flag>
+                                        </object>
+                                        <object class="sizeritem">
+                                          <object class="wxBitmapButton" name="wxID_APPLY_UNDERLINE">
+                                            <tooltip>*Apply*</tooltip>
+                                            <bitmap>../icons/ok.png</bitmap>
+                                          </object>
+                                          <flag>wxLEFT|wxEXPAND|wxALIGN_CENTRE_VERTICAL</flag>
+                                          <border>2</border>
+                                        </object>
                                       </object>
                                       <flag>wxEXPAND</flag>
                                     </object>
@@ -112,14 +142,29 @@
                                       </object>
                                     </object>
                                     <object class="sizeritem">
-                                      <object class="wxChoice" name="wxID_CHOICE_BODYSIZE">
-                                        <content>
-                                          <item>*6 pt*</item>
-                                          <item>*8 pt*</item>
-                                          <item>*60 pt*</item>
-                                          <item>*...*</item>
-                                          <item>*Default*</item>
-                                        </content>
+                                      <object class="wxBoxSizer">
+                                        <orient>wxHORIZONTAL</orient>
+                                        <object class="sizeritem">
+                                          <object class="wxChoice" name="wxID_CHOICE_BODYSIZE">
+                                            <content>
+                                              <item>*6 pt*</item>
+                                              <item>*8 pt*</item>
+                                              <item>*60 pt*</item>
+                                              <item>*...*</item>
+                                              <item>*Default*</item>
+                                            </content>
+                                          </object>
+                                          <option>1</option>
+                                          <flag>wxEXPAND</flag>
+                                        </object>
+                                        <object class="sizeritem">
+                                          <object class="wxBitmapButton" name="wxID_APPLY_BODYSIZE">
+                                            <tooltip>*Apply*</tooltip>
+                                            <bitmap>../icons/ok.png</bitmap>
+                                          </object>
+                                          <flag>wxLEFT|wxEXPAND|wxALIGN_CENTRE_VERTICAL</flag>
+                                          <border>2</border>
+                                        </object>
                                       </object>
                                       <flag>wxEXPAND</flag>
                                     </object>
@@ -136,13 +181,28 @@
                                       </object>
                                     </object>
                                     <object class="sizeritem">
-                                      <object class="wxChoice" name="wxID_CHOICE_CHARSTYLE">
-                                        <content>
-                                          <item>*Normal*</item>
-                                          <item>*Italic*</item>
-                                          <item>*Oblique*</item>
-                                          <item>*Default*</item>
-                                        </content>
+                                      <object class="wxBoxSizer">
+                                        <orient>wxHORIZONTAL</orient>
+                                        <object class="sizeritem">
+                                          <object class="wxChoice" name="wxID_CHOICE_CHARSTYLE">
+                                            <content>
+                                              <item>*Normal*</item>
+                                              <item>*Italic*</item>
+                                              <item>*Oblique*</item>
+                                              <item>*Default*</item>
+                                            </content>
+                                          </object>
+                                          <option>1</option>
+                                          <flag>wxEXPAND</flag>
+                                        </object>
+                                        <object class="sizeritem">
+                                          <object class="wxBitmapButton" name="wxID_APPLY_CHARSTYLE">
+                                            <tooltip>*Apply*</tooltip>
+                                            <bitmap>../icons/ok.png</bitmap>
+                                          </object>
+                                          <flag>wxLEFT|wxEXPAND|wxALIGN_CENTRE_VERTICAL</flag>
+                                          <border>2</border>
+                                        </object>
                                       </object>
                                       <flag>wxEXPAND</flag>
                                     </object>
@@ -159,12 +219,27 @@
                                       </object>
                                     </object>
                                     <object class="sizeritem">
-                                      <object class="wxChoice" name="wxID_CHOICE_BOLDNESS">
-                                        <content>
-                                          <item>*Normal*</item>
-                                          <item>*Bold*</item>
-                                          <item>*Default*</item>
-                                        </content>
+                                      <object class="wxBoxSizer">
+                                        <orient>wxHORIZONTAL</orient>
+                                        <object class="sizeritem">
+                                          <object class="wxChoice" name="wxID_CHOICE_BOLDNESS">
+                                            <content>
+                                              <item>*Normal*</item>
+                                              <item>*Bold*</item>
+                                              <item>*Default*</item>
+                                            </content>
+                                          </object>
+                                          <option>1</option>
+                                          <flag>wxEXPAND</flag>
+                                        </object>
+                                        <object class="sizeritem">
+                                          <object class="wxBitmapButton" name="wxID_APPLY_BOLDNESS">
+                                            <tooltip>*Apply*</tooltip>
+                                            <bitmap>../icons/ok.png</bitmap>
+                                          </object>
+                                          <flag>wxLEFT|wxEXPAND|wxALIGN_CENTRE_VERTICAL</flag>
+                                          <border>2</border>
+                                        </object>
                                       </object>
                                       <flag>wxEXPAND</flag>
                                     </object>
