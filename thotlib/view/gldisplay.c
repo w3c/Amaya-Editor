@@ -1772,7 +1772,7 @@ void DrawEllips (int frame, int thick, int style, int x, int y, int width,
    if (pattern == fg)
      bg = fg;
    
-   if (pattern == 2)
+   if (pattern == 2 || bg == fg)
      {
        /* InitDrawing (style, thick, bg); */
        GL_SetForeground (bg);
