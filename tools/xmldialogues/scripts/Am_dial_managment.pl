@@ -56,18 +56,15 @@ my %for_h_file_compilation_end = ();
 	$types {1} = "Amaya dialogues";	
 	$types {2} = "Amaya general messages";	
 	$types {3} = "Thot library dialogues";	
-	$types {4} = "Spell checker dialogues";
 #######and for the dynamic parameters
 my %index =qw ( 	1	dia
-						2	msg
-						3	lib
-						4	corrd);
+			2	msg
+			3	lib);
 
 # to store the particulary labels that ends the label files used by Amaya
 my %ending_label = qw (	dia MAX_EDITOR_LABEL
-								msg AMAYA_MSG_MAX
-								lib TMSG_LIB_MSG_MAX
-								corrd MSG_MAX_CHECK);
+			msg AMAYA_MSG_MAX
+			lib TMSG_LIB_MSG_MAX);
 
 #### 	for Amaya dialogue => dia or $index {1}
   $head_dir{'dia'} = "$path_amaya/Amaya/$dir_obj/amaya/";# idem $head_dir{$index{"1"}} = ...
@@ -95,16 +92,6 @@ my %ending_label = qw (	dia MAX_EDITOR_LABEL
  $base_name {'lib'} = 'base_am_lib.xml';
  $for_h_file_compilation_begin {'lib'} = "#ifndef LIB_MSG_H\n#define LIB_MSG_H\n";
  $for_h_file_compilation_end {'lib'} = "\n#endif\n";
-
-####	for corrdialogue => corrd or $index {4}
- $head_dir {'corrd'} = "$path_amaya/Amaya/thotlib/internals/h/" ;
- $head_name {'corrd'} = 'corrmsg.h' ;
- $lang_dir {'corrd'} = $OUT_MSG_directory;
- $lang_sufix {'corrd'} = '-corrdialogue' ;
- $base_name {'corrd'} = 'base_am_corrd.xml';
- $for_h_file_compilation_begin {'corrd'} = "";
- $for_h_file_compilation_end {'corrd'} = "";
- 
 
 
 ################################################################################
@@ -136,12 +123,11 @@ use Edition qw( &product_translate );
 #############################END MAIN###########################################
 
 sub menu {
-	my @list = ( 	"Quit",																	#0
-						"Amaya dialogues (menus with xx-amayadialogue files)",	#1	
-						"Amaya general messages ( with xx-amayamsg files)",		#2
-						"Thot library dialogues ( with xx-libdialogue files)",	#3
-						"Spell checker dialogues ( with xx-corrdialogue files)",	#4
-						"Or product the preformated file for translating"			#5
+	my @list = ( 	"Quit",							#0
+			"Amaya dialogues (menus with xx-amayadialogue files)",	#1	
+			"Amaya general messages ( with xx-amayamsg files)",	#2
+			"Thot library dialogues ( with xx-libdialogue files)",	#3
+			"Or product the preformated file for translating"	#4
 					);
 	my $count = 0;
 	my $choice = 0;
@@ -165,10 +151,10 @@ sub menu {
 		}
 		while ( $choice eq "" ||$choice =~ /^\D/ || $choice < 0 || $choice >= $count ) ;
 		
-		if ( $choice == 1 || $choice == 2 || $choice == 3 || $choice == 4) {
+		if ( $choice == 1 || $choice == 2 || $choice == 3) {
 			menu1 ( $choice );
 		}
-		elsif ($choice == 5) {
+		elsif ($choice == 4) {
 			my $lang = Iso::return_code_in_ISO_639 ();
 			foreach (values (%index)) {
 				Edition::product_translate (
@@ -194,13 +180,10 @@ sub menu1 {
 	my $choice;
 	my $of_what = $index{ $last_choice}; 
 	my @list = ( 
-		"Go to the previous menu (and Export the current result)", 					#0
-		"Init the XML base" ,							#1
-		"Add/Update a language", 						#2
-		"Export all dialogues files",					#3
-		"Add a label",										#4
-		"Delete a label",									#5						
-		"Force the base into conformity with a label file(\".h\")"#6 
+		"Go to the previous menu (and Export the current result)",  #0
+		"Init the XML base" ,					    #1
+		"Add/Update a language", 				    #2
+		"Export all dialogues files",				    #3
 		);
 	my $lang = "";
 	my @command = "";
@@ -228,10 +211,10 @@ do { # to continue to treat the same type of dialogue
 		$_ = verify ( $BASE_directory . $base_name { $of_what });
 		if ( /^y/i || /^yes/i ) {
 			Initialisation::create_base ( $head_dir{ $of_what }, 
-													$head_name{ $of_what },
-													$BASE_directory, 
-													$base_name { $of_what },
-													$comment_for_begining_of_h_file);
+						      $head_name{ $of_what },
+						      $BASE_directory, 
+						      $base_name { $of_what },
+						      $comment_for_begining_of_h_file);
 			# to initialise with english
 			print "\n\tNow,fill the base with english by default\n\n";
 			$Import_am_msg::in_labelfile = $head_dir{ $index{ $last_choice}} . $head_name{ $index{ $last_choice}};
@@ -288,58 +271,31 @@ do { # to continue to treat the same type of dialogue
 #||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
 	elsif ($choice == 3) { # Export all dialogues files
 		Export_am_msg::export (	$BASE_directory . $base_name{ $of_what},
-										$OUT_MSG_directory,
-										$lang_sufix { $of_what},
-										$head_dir{ $of_what} . $head_name{ $of_what},
-										$ending_label { $of_what},
-										$comment_for_begining_of_h_file,
-										$for_h_file_compilation_begin {  $of_what},
-										$for_h_file_compilation_end { $of_what}
-										);
+					$OUT_MSG_directory,
+					$lang_sufix { $of_what},
+					$head_dir{ $of_what} . $head_name{ $of_what},
+					$ending_label { $of_what},
+					$comment_for_begining_of_h_file,
+					$for_h_file_compilation_begin {  $of_what},
+					$for_h_file_compilation_end { $of_what}
+					);
 		$choice = -1; #to avoid problem		
 	}
 #||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
-	elsif ($choice == 4) { # Add a label
-		Dial_tool_box::add_label ( $BASE_directory,
-											$base_name{ $of_what} 
-											);						
-		$choice = -1; #to avoid problem		
-	}
-#||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
-	elsif ($choice == 5) { # Delete a label
-		Dial_tool_box::delete_label ( $BASE_directory,
-												$base_name{ $of_what} 
-												);
-		$choice = -1; #to avoid problem		
-	}
-#||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
-	elsif ($choice == 6) { # n'arrive que si last_choice = 1
-		#en principe ne reprend que EDITOR.h		
-		$_ = verify ( $BASE_directory . $base_name{ $of_what});
-		if ( /^y/i || /^yes/i ) {
-			Forcer::forcer ( 	$BASE_directory,
-									$base_name{ $of_what},
-									$head_dir{ $of_what},
-									$head_name{ $of_what},
-									$comment_for_begining_of_h_file
-								);	
-		}
-		$choice = -1; #to avoid problem		
-	}	
 	$_ = $choice;
 } while ( $choice != 0 ); 
 
 #to do the update automaticaly
 	if ($_ != 3) {
 		Export_am_msg::export (	$BASE_directory . $base_name { $of_what},
-										$OUT_MSG_directory,
-										$lang_sufix {$of_what},
-										$head_dir {$of_what} . $head_name { $of_what},
-										$ending_label {$of_what},
-										$comment_for_begining_of_h_file,
-										$for_h_file_compilation_begin { $of_what},
-										$for_h_file_compilation_end { $of_what}
-										);
+					$OUT_MSG_directory,
+					$lang_sufix {$of_what},
+					$head_dir {$of_what} . $head_name { $of_what},
+					$ending_label {$of_what},
+					$comment_for_begining_of_h_file,
+					$for_h_file_compilation_begin { $of_what},
+					$for_h_file_compilation_end { $of_what}
+					);
 	}
 }
 
@@ -349,20 +305,20 @@ do { # to continue to treat the same type of dialogue
 #################################################################################
 sub verify {
 	do {
-			print "\tAre you certain to want to erase the old base " . $_[0] . " ?\n";
-			print " \tOur choice (Yes ,No )[n]:\t";
-			$_ = <STDIN>;
-			chomp;
-			if ($_ eq "") {
-			$_ = "n";
-		} 
-		}
-		while ($_ !~ /^y/i
-				&& $_ !~ /^n/i					
-				&& $_ !~ /^yes/i					
-				&& $_ !~ /^no/i					
-		);
-		return $_ ;
+	    print "\tAre you certain to want to erase the old base " . $_[0] . " ?\n";
+	    print " \tOur choice (Yes ,No )[n]:\t";
+	    $_ = <STDIN>;
+	    chomp;
+	    if ($_ eq "") {
+		$_ = "n";
+	    } 
+	}
+	while ($_ !~ /^y/i
+	       && $_ !~ /^n/i					
+	       && $_ !~ /^yes/i					
+	       && $_ !~ /^no/i					
+	       );
+	return $_ ;
 }
 
 #----------------------------------------------------------------------------
