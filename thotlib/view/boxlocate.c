@@ -1904,6 +1904,7 @@ PtrBox GetEnclosingClickedBox (PtrAbstractBox pAb, int higherX,
 
 
 #ifdef _GL
+      x = 0;
       /* Transform windows coordinate x, y to the transformed system 
 	 of the current box */
       GetBoxTransformedCoord (pAb, frame, &lowerX, &higherX, &x, &y);

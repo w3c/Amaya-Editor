@@ -259,7 +259,7 @@ void TtaFreeAnimation (void *void_a_list)
     /* empty list */
     return;  
   TtaFreeAnimation (a_list->next);
-  if (a_list->AnimType == Motion && a_list->to)
+  if (a_list->AnimType == Motion && a_list->from)
     TtaFreeMotionPath (a_list->from);
   else
     TtaFreeMemory (a_list->from);  
@@ -310,6 +310,7 @@ void                FreeAll ()
 	}
       PtFree_Element = PtFree_Element->ElNext;
       TtaFreeMemory (ptr);
+      ptr = NULL;
     }
   NbFree_Element = 0;
 

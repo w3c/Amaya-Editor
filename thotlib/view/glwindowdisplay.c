@@ -2285,7 +2285,6 @@ void TtaNoPlay (int frame)
   ----------------------------------------------------------------------*/
 void TtaPause (int frame)
 {
-
   if (frame && frame < MAX_FRAME)
     if (FrameTable[frame].Anim_play)
       {

@@ -721,8 +721,8 @@ gboolean FrameResizedGTK (GtkWidget *w, GdkEventConfigure *event, gpointer data)
 #ifdef IV
 	/*FrameRedraw can modify Size by hiding scrollbars
 	  so until sizes are stabilized, we resize. 
-	if it never stabilizes itself, we stop at at
-	the tenth resize*/
+	  if it never stabilizes itself, we stop at at
+	  the tenth resize*/
 	while (gtk_events_pending ())
 	  gtk_main_iteration ();
 
@@ -749,9 +749,12 @@ gboolean FrameResizedGTK (GtkWidget *w, GdkEventConfigure *event, gpointer data)
 	FrameTable[frame].DblBuffNeedSwap = TRUE; 
 	GL_SwapEnable (frame);
 	if (GL_prepare (frame))
-	  GL_Swap (frame);
+	  {
+	    GL_Swap (frame);
+	    FrameTable[frame].DblBuffNeedSwap = TRUE; 
+	  }
       }
-#else /* _GL */
+#else /* _GL*/
   FrameRedraw (frame, width, height);
 #endif /* _GL */
   FrameResizedGTKInProgress = FALSE;
@@ -2360,7 +2363,6 @@ gboolean GtkLiningSelection (gpointer data)
   
 }
 #endif /* _GTK */
-
 /*----------------------------------------------------------------------
   Evenement sur une frame document.                              
   D.V. equivalent de la fontion MS-Windows ci dessus !        
@@ -2461,7 +2463,7 @@ gboolean FrameCallbackGTK (GtkWidget *widget, GdkEventButton *event, gpointer da
 	{
 	case Button1:
 	  /* ==========LEFT BUTTON========== */	  
-	  /* Est-ce que la touche modifieur de geometrie est active ? */	  
+	  /* Est-ce que la touche modifieur de geometrie est active ? */
 	  if ((ev->xbutton.state & THOT_KEY_ControlMask) != 0)
 	    {
 	      /* moving a box */
@@ -2665,7 +2667,8 @@ gboolean FrameCallbackGTK (GtkWidget *widget, GdkEventButton *event, gpointer da
 	{
 	  /* ==========LEFT BUTTON========== */
 	case 1:
-	  /* Est-ce que la touche modifieur de geometrie est active ? */	  
+	  /* Est-ce que la touche modifieur de geometrie est active ? */
+	
 	  if ((event->state & GDK_CONTROL_MASK ) == GDK_CONTROL_MASK)
 	    /* moving a box */     
 	    ApplyDirectTranslate (frame, event->x, event->y);
@@ -3390,8 +3393,8 @@ void  DefineClipping (int frame, int orgx, int orgy, int *xd, int *yd,
 		      clipwidth,
 		      clipheight); 
 
-      if (raz > 0)
-		glClear (GL_COLOR_BUFFER_BIT);
+      if (raz > 0 && GL_prepare (frame))
+	glClear (GL_COLOR_BUFFER_BIT);
 #endif /*_GL*/
     }
 }

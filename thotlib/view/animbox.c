@@ -479,11 +479,18 @@ static void animate_box_color (PtrElement El,
   pAb = El->ElAbstractBox[view - 1];
   if (pAb)
     if (pAb->AbFirstEnclosed)
-      {	    	
-	if (strcasecmp (animated->AttrName, "fill") == 0)
+      {	    
+	if (animated->AttrName)
+	  {
+	    if (strlen (animated->AttrName) == 4 &&
+		strcasecmp (animated->AttrName, "fill") == 0)
+	      ApplyFillColorToAllBoxes (pAb->AbFirstEnclosed, result);
+	    else if (strlen (animated->AttrName) == 6 &&
+		     strcasecmp (animated->AttrName, "stroke") == 0)
+	      ApplyStrokeColorToAllBoxes (pAb->AbFirstEnclosed, result);
+	  }
+	else
 	  ApplyFillColorToAllBoxes (pAb->AbFirstEnclosed, result);
-	else if (strcasecmp (animated->AttrName, "stroke") == 0)
-	  ApplyStrokeColorToAllBoxes (pAb->AbFirstEnclosed, result);
       }
 }
 /*----------------------------------------------------------------------

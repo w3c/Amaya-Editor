@@ -2359,11 +2359,11 @@ else
 	    break;
 	  case Color:
 	    current->AttrName = TtaGetMemory (strlen (src->AttrName) + 1);     
-	    *(current->AttrName) = *(src->AttrName);  
+	    strcpy (current->AttrName, src->AttrName);  
 	    break;   
 	  case Set:
 	    current->AttrName = TtaGetMemory (strlen (src->AttrName) + 1);     
-	    *(current->AttrName) = *(src->AttrName);  
+	     strcpy (current->AttrName, src->AttrName);  
 	    break;
 	  case Transformation:
 	    current->AttrName = TtaGetMemory (sizeof (int));      

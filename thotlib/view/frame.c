@@ -480,6 +480,8 @@ void GetBoxTransformedCoord  (PtrAbstractBox pAbSeeked, int frame,
   OldXOrg = 0;
   OldYOrg = 0;
   ClipXOfFirstCoordSys = ClipYOfFirstCoordSys = 0;
+  glGetDoublev (GL_MODELVIEW_MATRIX, model_view);
+  glGetDoublev (GL_PROJECTION_MATRIX, projection_view);
   while (plane != nextplane)
     /* there is a new plane to display */
     {

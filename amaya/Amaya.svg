@@ -19,38 +19,38 @@
       <g style="font: 96px helvetica; font-weight: bold; fill: #488B9B;">
         <text opacity="0" transform="translate(13,0)">A 
           <animate attributeName="opacity" attributeType="CSS" from="0"
-                   to="1" begin="3s" dur="1s" fill="freeze"/>
+                   to="1" begin="3s" dur="0.5s" fill="freeze"/>
           <animateTransform attributeName="transform" attributeType="XML"
                             type="scale" from="1" to="0.5" additive="sum"
-                            begin="3s" dur="1s" fill="freeze"/>
+                            begin="3s" dur="0.5s" fill="freeze"/>
         </text>
         <text opacity="0" transform="translate(33,0)">M 
           <animate attributeName="opacity" attributeType="CSS" from="0"
                    to="1" begin="4s" dur="1s" fill="freeze"/>
           <animateTransform attributeName="transform" attributeType="XML"
-                            type="scale" from="1" to="0.5" additive="sum"
-                            begin="4s" dur="1s" fill="freeze"/>
+                            type="scale" from="0.5" to="0.5" additive="sum"
+                            begin="4s" dur="0.5s" fill="freeze"/>
         </text>
         <text opacity="0" transform="translate(60,0)">A 
           <animate attributeName="opacity" attributeType="CSS" from="0"
-                   to="1" begin="5s" dur="1s" fill="freeze"/>
+                   to="1" begin="5s" dur="0.5s" fill="freeze"/>
           <animateTransform attributeName="transform" attributeType="XML"
                             type="scale" from="1" to="0.5" additive="sum"
-                            begin="5s" dur="1s" fill="freeze"/>
+                            begin="5s" dur="0.5s" fill="freeze"/>
         </text>
         <text opacity="0" transform="translate(80,0)">Y 
           <animate attributeName="opacity" attributeType="CSS" from="0"
-                   to="1" begin="6s" dur="1s" fill="freeze"/>
+                   to="1" begin="6s" dur="0.5s" fill="freeze"/>
           <animateTransform attributeName="transform" attributeType="XML"
                             type="scale" from="1" to="0.5" additive="sum"
-                            begin="6s" dur="1s" fill="freeze"/>
+                            begin="6s" dur="0.5s" fill="freeze"/>
         </text>
         <text opacity="0" transform=" translate(100,0)">A 
           <animate attributeName="opacity" attributeType="CSS" from="0"
-                   to="1" begin="7s" dur="1s" fill="freeze"/>
+                   to="1" begin="7s" dur="0.5s" fill="freeze"/>
           <animateTransform attributeName="transform" attributeType="XML"
                             type="scale" from="1" to="0.5" additive="sum"
-                            begin="7s" dur="1s" fill="freeze"/>
+                            begin="7s" dur="0.5s" fill="freeze"/>
         </text>
       </g>
     </symbol>
