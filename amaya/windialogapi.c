@@ -1708,13 +1708,13 @@ LRESULT CALLBACK SaveListDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
       switch (LOWORD (wParam))
 	{
 	case ID_CONFIRM:
-	  ThotCallback (BaseDialog + ConfirmSaveList, INTEGER_DATA, (char*)1);
+	  ThotCallback (BaseDialog + ConfirmSave, INTEGER_DATA, (char*)1);
 	  EndDialog (hwnDlg, ID_CONFIRM);
 	  SendMessage (SaveAsForm, WM_DESTROY, 0, 0);
 	  break;
 	  
 	case IDCANCEL:
-	  ThotCallback (BaseDialog + ConfirmSaveList, INTEGER_DATA, (char*)0);
+	  ThotCallback (BaseDialog + ConfirmSave, INTEGER_DATA, (char*)0);
 	  EndDialog (hwnDlg, IDCANCEL);
 	  break;
 	}
