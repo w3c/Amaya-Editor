@@ -22,6 +22,7 @@
 #include "appdialogue_wx.h"
 #include "appdialogue_wx_f.h"
 #include "panel.h"
+#include "registry_wx.h"
 
 #undef THOT_EXPORT
 #define THOT_EXPORT extern
@@ -55,7 +56,11 @@ AmayaColorsPanel::AmayaColorsPanel( wxWindow * p_parent_window, AmayaNormalWindo
   m_pPanelContentDetach = XRCCTRL(*this, "wxID_PANEL_CONTENT_DETACH", wxPanel);
 
   RefreshToolTips();
-  
+
+  m_Bitmap_Empty        = wxBitmap( TtaGetResourcePathWX(WX_RESOURCES_ICON, "empty.gif" ) );
+  m_Bitmap_DefaultColor = wxBitmap( TtaGetResourcePathWX(WX_RESOURCES_ICON, "default_color.gif" ) );
+  m_Color_ButtonBG      = XRCCTRL(*m_pPanelContentDetach, "wxID_BUTTON_FGCOLOR", wxBitmapButton)->GetBackgroundColour();
+
   // register myself to the manager, so I will be avertised that another panel is floating ...
   m_pManager->RegisterSubPanel( this );
 }
@@ -161,24 +166,28 @@ void AmayaColorsPanel::SendDataToPanel( AmayaPanelParams& p )
   if (m_ThotBGColor >= 0)
     {
       wxColour * p_bg_colour = ColorPixel(m_ThotBGColor);
-      XRCCTRL(*m_pPanelContentDetach, "wxID_BUTTON_BGCOLOR", wxButton)->SetBackgroundColour( *p_bg_colour );
+      XRCCTRL(*m_pPanelContentDetach, "wxID_BUTTON_BGCOLOR", wxBitmapButton)->SetBackgroundColour( *p_bg_colour );
+      XRCCTRL(*m_pPanelContentDetach, "wxID_BUTTON_BGCOLOR", wxBitmapButton)->SetBitmapLabel(m_Bitmap_Empty);
     }
   else
     {
       // default bg color is ? white ?
-      XRCCTRL(*m_pPanelContentDetach, "wxID_BUTTON_BGCOLOR", wxButton)->SetBackgroundColour( wxColour(_T("white")) );
+      XRCCTRL(*m_pPanelContentDetach, "wxID_BUTTON_BGCOLOR", wxBitmapButton)->SetBackgroundColour( m_Color_ButtonBG );
+      XRCCTRL(*m_pPanelContentDetach, "wxID_BUTTON_BGCOLOR", wxBitmapButton)->SetBitmapLabel(m_Bitmap_DefaultColor);
     }
 
   m_ThotFGColor = (int)p.param2;
   if (m_ThotFGColor >= 0)
     {
       wxColour * p_fg_colour = ColorPixel(m_ThotFGColor);
-      XRCCTRL(*m_pPanelContentDetach, "wxID_BUTTON_FGCOLOR", wxButton)->SetBackgroundColour( *p_fg_colour );
+      XRCCTRL(*m_pPanelContentDetach, "wxID_BUTTON_FGCOLOR", wxBitmapButton)->SetBackgroundColour( *p_fg_colour );
+      XRCCTRL(*m_pPanelContentDetach, "wxID_BUTTON_FGCOLOR", wxBitmapButton)->SetBitmapLabel(m_Bitmap_Empty);
     }
   else
     {
       // default fg color is ? black ?
-      XRCCTRL(*m_pPanelContentDetach, "wxID_BUTTON_FGCOLOR", wxButton)->SetBackgroundColour( wxColour(_T("black")) );
+      XRCCTRL(*m_pPanelContentDetach, "wxID_BUTTON_FGCOLOR", wxBitmapButton)->SetBackgroundColour( m_Color_ButtonBG );
+      XRCCTRL(*m_pPanelContentDetach, "wxID_BUTTON_FGCOLOR", wxBitmapButton)->SetBitmapLabel(m_Bitmap_DefaultColor);
     }
 }
 
@@ -193,14 +202,7 @@ void AmayaColorsPanel::DoUpdate()
 {
   wxLogDebug( _T("AmayaColorsPanel::DoUpdate") );
   AmayaSubPanel::DoUpdate();
-
-#if 0  
-  // force to refresh the strong, emphasis... button states
-  Document doc;
-  View view;
-  TtaGetActiveView( &doc, &view );
-  TtaRefreshPanelButton( doc, view, WXAMAYA_PANEL_XHTML );
-#endif /* 0 */
+  ThotUpdatePalette();
 }
 
 

@@ -40,6 +40,10 @@ public:
 
   int m_ThotBGColor;
   int m_ThotFGColor;
+
+  wxBitmap m_Bitmap_Empty;
+  wxBitmap m_Bitmap_DefaultColor;
+  wxColour m_Color_ButtonBG;
 };
 
 #endif // __AMAYACOLORSPANEL_H__

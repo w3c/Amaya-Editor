@@ -58,31 +58,41 @@
                                 <orient>wxHORIZONTAL</orient>
                                 <object class="sizeritem">
                                   <object class="wxPanel">
-                                    <object class="wxBitmapButton" name="wxID_BUTTON_DEFAULTCOLORS">
-                                      <bitmap>../icons/black_white.png</bitmap>
-                                      <pos>0,24</pos>
+                                    <object class="wxButton" name="wxID_BUTTON_DEFAULTCOLORS">
+                                      <label></label>
+                                      <pos>0,26</pos>
+                                      <size>24,24</size>
                                       <style>wxNO_BORDER</style>
                                       <tooltip>_Black and white_</tooltip>
                                     </object>
-                                    <object class="wxBitmapButton" name="wxID_BUTTON_SWITCHCOLORS">
-                                      <bitmap>../icons/switch_colors.png</bitmap>
-                                      <pos>38,0</pos>
+                                    <object class="wxStaticBitmap" name="wxID_BUTTON_DEFAULTCOLORS">
+                                      <bitmap>../icons/black_white.png</bitmap>
+                                      <pos>4,34</pos>
+                                      <style>wxNO_BORDER</style>
+                                    </object>
+                                    <object class="wxButton" name="wxID_BUTTON_SWITCHCOLORS">
+                                      <label></label>
+                                      <pos>40,0</pos>
+                                      <size>24,24</size>
                                       <style>wxNO_BORDER</style>
                                       <tooltip>_Switch colors_</tooltip>
                                     </object>
-                                    <object class="wxButton" name="wxID_BUTTON_BGCOLOR">
-                                      <label></label>
+                                    <object class="wxStaticBitmap" name="wxID_BMP_SWITCHCOLORS">
+                                      <bitmap>../icons/switch_colors.png</bitmap>
+                                      <pos>44,4</pos>
+                                      <style>wxNO_BORDER</style>
+                                    </object>
+                                    <object class="wxBitmapButton" name="wxID_BUTTON_BGCOLOR">
                                       <pos>24,20</pos>
                                       <size>40,30</size>
-                                      <bg>#C8630D</bg>
                                       <tooltip>_Background_</tooltip>
+                                      <bitmap>../icons/empty.gif</bitmap>
                                     </object>
-									<object class="wxButton" name="wxID_BUTTON_FGCOLOR">
-                                      <label></label>
+                                    <object class="wxBitmapButton" name="wxID_BUTTON_FGCOLOR">
                                       <pos>0,0</pos>
                                       <size>40,30</size>
-                                      <bg>#FFFFFF</bg>
                                       <tooltip>_Foreground_</tooltip>
+                                      <bitmap>../icons/empty.gif</bitmap>
                                     </object>
                                   </object>
                                   <flag>wxALL|wxEXPAND</flag>
@@ -94,7 +104,6 @@
                                     <object class="sizeritem">
                                       <object class="wxButton" name="wxID_MODIFYCOLOR">
                                         <label>_Modi_</label>
-                                        <default>1</default>
                                         <style></style>
                                       </object>
                                       <flag>wxALL|wxEXPAND</flag>

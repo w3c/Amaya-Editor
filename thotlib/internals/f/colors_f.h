@@ -6,6 +6,7 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
+extern void ThotUpdatePalette ( void );
 extern void ThotSelectPalette ( int bground,
                                 int fground );
 extern void ThotGetSelectedElementColor ( void );
@@ -19,6 +20,7 @@ extern void TtcGetPaletteColors ( int *fg,
 
 #else /* __STDC__ */
 
+extern void ThotUpdatePalette ( void );
 extern void ThotSelectPalette ( int bground,
                                   int fground );
 extern void ThotGetSelectedElementColor ( void );

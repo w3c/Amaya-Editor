@@ -98,6 +98,15 @@ static ThotBool     IsRegistered = FALSE;
 #endif /* _WX */
 
 /*----------------------------------------------------------------------
+   ThotUpdatePalette
+   Force to resend FG/BG colors to each colors panels.
+  ----------------------------------------------------------------------*/
+void ThotUpdatePalette()
+{
+  ThotSelectPalette (BgColor, FgColor);
+}
+
+/*----------------------------------------------------------------------
    ThotSelectPalette
    Assign a new background and foreground color (coming from outside) 
    to colors dialog.
