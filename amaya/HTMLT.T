@@ -1740,12 +1740,31 @@ ATTRIBUTES
 	END;
 
  NAME: BEGIN
+#ifndef XHTML11
 	Create ' name="';
-	Create NAME;
-	Create DoubleQuote;
+        Create NAME;
+        Create DoubleQuote;
+#endif
 #ifdef XML
 	if Anchor and not ID BEGIN
        		Create ' id="';
+    		Create NAME;
+       		Create DoubleQuote;
+	       	END;
+#endif
+#ifdef XHTML11
+	if map and not ID BEGIN
+       		Create ' id="';
+    		Create NAME;
+       		Create DoubleQuote;
+	       	END;
+	if MAP and not ID BEGIN
+       		Create ' id="';
+    		Create NAME;
+       		Create DoubleQuote;
+	       	END;
+	if not map and not MAP and not Anchor BEGIN
+       		Create ' name="';
     		Create NAME;
        		Create DoubleQuote;
 	       	END;
