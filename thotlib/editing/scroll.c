@@ -729,23 +729,23 @@ void ShowSelectedBox (int frame, ThotBool active)
 	  }
 	if (pBo1 != NULL)
 	  {
-#ifndef _GL
-	     x = pBo1->BxXOrg;
-	     y = pBo1->BxYOrg;
+#ifdef _GL
+	    if (pBo1->BxBoundinBoxComputed)
+	      {
+		x = pBo1->BxClipX + pFrame->FrXOrg;
+		y = pBo1->BxClipY + pFrame->FrYOrg;
+	      }
+	    else
+#endif /* _GL*/
+	      {
+		x = pBo1->BxXOrg;
+		y = pBo1->BxYOrg;
+	      }
 	     GetSizesFrame (frame, &w, &h);
 	     xmin = pFrame->FrXOrg;
 	     xmax = xmin + w;
 	     ymin = pFrame->FrYOrg;
 	     ymax = ymin + h;
-#else /* _GL */
-	     x = pBo1->BxClipX;
-	     y = pBo1->BxClipY;
-	     GetSizesFrame (frame, &w, &h);
-	     xmin = 0;
-	     xmax = w;
-	     ymin = 0;
-	     ymax = h;
-#endif /* _GL*/
 	     /* center in the window */
 	     dx = pFrame->FrSelectionBegin.VsXPos;
 	     dy = 13;
@@ -767,9 +767,15 @@ void ShowSelectedBox (int frame, ThotBool active)
 		 if (!pBo1->BxAbstractBox->AbVertPos.PosUserSpecified)
 		   /* the box position is not given by the user */
 		   {
+#ifdef _GL
+		   if (y + pBo1->BxClipH < ymin + dy)
+		     /* scroll the window */
+		     VerticalScroll (frame, y + pBo1->BxClipH - ymin - h, 0);
+#else /* _GL */
 		   if (y + pBo1->BxHeight < ymin + dy)
 		     /* scroll the window */
 		     VerticalScroll (frame, y + pBo1->BxHeight - ymin - h, 0);
+#endif /* _GL */
 		   else if (y > ymax - dy)
 		     /* scroll the window */
 		     VerticalScroll (frame, y - ymax + h, 0);

@@ -570,7 +570,7 @@ static void CheckRowHeights (PtrAbstractBox table, int frame)
       pTabSpan = pTabSpan->TaSpanNext;
     }
 
-  /* first manage diferred enclosing rules */
+  /* first manage differed enclosing rules */
   for (j = 0; j < irow; j++)
     {
       if (rowHeight[j])
