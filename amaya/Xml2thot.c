@@ -3728,10 +3728,11 @@ ThotBool   withDoctype;
    char         bufferRead[COPY_BUFFER_SIZE];
    char         tmpBuffer[COPY_BUFFER_SIZE];
    char         tmp2Buffer[COPY_BUFFER_SIZE];
-  CHAR_T      *ptr;
+   CHAR_T      *ptr;
    int          res;
    int          tmplen;
    ThotBool     endOfFile = FALSE;
+   int          tmpLineRead = 0;
   
    if (infile != NULL)
        endOfFile = FALSE;
@@ -3781,6 +3782,7 @@ ThotBool   withDoctype;
 	     }
 
 	   /* Virtual DOCTYPE Declaration */
+	   tmpLineRead = XML_GetCurrentLineNumber (parser);
 	   if (!XML_Parse (parser, DECL_DOCTYPE,
 			   DECL_DOCTYPE_LEN, 0))
 	     {
@@ -3789,8 +3791,7 @@ ThotBool   withDoctype;
 	       XMLabort = TRUE;
 	     }
 	   withDoctype = TRUE;
-	   /* DOCTYPE declaration is consedered as 2 new lines */
-	   extraLineRead += 2;
+	   extraLineRead = XML_GetCurrentLineNumber (parser) - tmpLineRead;
 	 }
 
        /* 'normal' EXPAT processing */
