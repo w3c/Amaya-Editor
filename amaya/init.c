@@ -2255,32 +2255,18 @@ ThotBool            history;
     /* no content type */
     {
       /* check file name extension */
-      if (parsingLevel != L_Other || IsHTMLName (pathname))
-	{
-	  /* it seems to be an HTML document */
-	  docType = docHTML;
-	  parsingLevel = L_Transitional;
-	  unknown = FALSE;
-	}
-      else if (isXML || IsXMLName (pathname))
+      if (isXML)
 	{
 	  /* it seems to be an XML document */
 	  isXML = TRUE;
 	  docType = thotType;
 	  unknown = FALSE;
 	}
-      else if (IsMathMLName (pathname))
+      else if (parsingLevel != L_Other || IsHTMLName (pathname))
 	{
-	  /* it seems to be an XML document */
-	  isXML = TRUE;
-	  docType = docMath;
-	  unknown = FALSE;
-	}
-       else if (IsSVGName (pathname))
-	{
-	  /* it seems to be an XML document */
-	  isXML = TRUE;
-	  docType = docSVG;
+	  /* it seems to be an HTML document */
+	  docType = docHTML;
+	  parsingLevel = L_Transitional;
 	  unknown = FALSE;
 	}
      else if (IsCSSName (pathname))
@@ -2474,7 +2460,7 @@ ThotBool            history;
 	      docType = docLog;
 	      newdoc = doc;
 	    }
-	  else if (method != CE_INIT || docType != docHTML)
+	  else if (method != CE_INIT || docType != DocumentTypes[doc])
 	    newdoc = InitDocView (doc, documentname, docType, 0, FALSE);
 	  else
 	    newdoc = doc;
