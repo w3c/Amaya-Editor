@@ -3,7 +3,7 @@
 # Generated from Options.in
 #
 # Increase the Version number each time one entry is added
-# Version : 1.1
+# Version : 1.2
 #
 
 CC	= @CC@
@@ -19,6 +19,10 @@ ECHO	= @ECHO@
 AR	= @AR@ rc
 RANLIB	= @RANLIB@
 DIFF	= @DIFF@
+INSTALL	= @INSTALL@
+
+INSTALL_DATA= $(INSTALL) -m 444
+INSTALL_BIN= $(INSTALL) -m 755
 
 THOT_VER=@THOT_VER@
 AMAYA_VER=@AMAYA_VER@

@@ -12,6 +12,8 @@ extern void CallbackImage ( int ref,
 extern void InitImage ( void );
 extern char *GetImageURL ( Document document,
                            View view );
+extern void ChangeBackgroundImage ( Document document,
+                                    View view );
 extern void ComputeSRCattribute ( Element el,
                                   Document doc,
                                   Document originDocument,
@@ -38,6 +40,8 @@ extern void CallbackImage (/* int ref,
 extern void InitImage (/* void */);
 extern char *GetImageURL (/* Document document,
                              View view */);
+extern void ChangeBackgroundImage (/* Document document,
+                                      View view */);
 extern void ComputeSRCattribute (/* Element el,
                                     Document doc,
                                     Document originDocument,

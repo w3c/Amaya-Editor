@@ -28,7 +28,11 @@ clean :
 	$(RM) *.o
 
 install : all
-	$(INSTALL) libThotTable.a $(libdir)
+	@(if test ! -d $(libdir) ; then $(MKDIR) $(libdir) ; fi)
+	$(INSTALL_DATA) libThotTable.a $(libdir)
+
+uninstall :
+	$(RM) -f $(libdir)/libThotTable.a
 
 include .depends
 

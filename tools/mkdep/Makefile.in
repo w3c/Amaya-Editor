@@ -25,6 +25,8 @@ clean :
 
 install :
 
+uninstall :
+
 test: all
 	./mkdep -I../../../w3c-libwww-5.0a/Library/src \
 	        -I../../../thotlib/internals/h \

@@ -31,6 +31,8 @@ clean :
 
 install : all
 
+uninstall :
+
 test: all
 	../../bin/javastub -T @srcdir@/JavaTypes.def -M thotlib_APIContent \
 	           @top_srcdir@/thotlib/include/content.h 

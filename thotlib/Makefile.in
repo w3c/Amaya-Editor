@@ -18,6 +18,7 @@ LIBS	= -L../tablelib -L. -L.. @IMGLIBS@ $(X_LIBS) -lXext $(X_PRE_LIBS) \
 prefix = @prefix@
 exec_prefix = @exec_prefix@
 libdir = @libdir@
+bindir = @bindir@
 
 SUBDIRS = include
 OBJDIRS = base content dialogue document editing image presentation tree view
@@ -47,9 +48,20 @@ install : all
 	  do if test -d $$dir ; then cd $$dir ; \
 	  $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" install ; \
 	  cd .. ; fi ;done )
-	$(INSTALL) libThotKernel.a $(libdir)
-	$(INSTALL) libThotEditor.a $(libdir)
-	$(INSTALL) ../bin/print $(bindir)
+	@(if test ! -d $(libdir) ; then $(MKDIR) $(libdir) ; fi)
+	$(INSTALL_DATA) libThotKernel.a $(libdir)
+	$(INSTALL_DATA) libThotEditor.a $(libdir)
+	@(if test ! -d $(bindir) ; then $(MKDIR) $(bindir) ; fi)
+	$(INSTALL_BIN) ../bin/print $(bindir)
+
+uninstall:
+	@(for dir in $(SUBDIRS) ; \
+	  do if test -d $$dir ; then cd $$dir ; \
+	  $(MAKE) uninstall ; \
+	  cd .. ; fi ;done )
+	$(RM) -f $(bindir)/print
+	$(RM) -f $(libdir)/libThotKernel.a
+	$(RM) -f $(libdir)/libThotEditor.a
 
 directories :
 	@(for dir in $(OBJDIRS) ; \

@@ -76,7 +76,7 @@ extern void HTMLSetBackgroundColor ( Document doc,
                                      char *color );
 extern void HTMLSetBackgroundImage ( Document doc,
                                      Element elem,
-				     int repeat,
+                                     int repeat,
                                      char *image );
 extern void HTMLSetForegroundColor ( Document doc,
                                      Element elem,
@@ -169,7 +169,7 @@ extern void HTMLSetBackgroundColor (/* Document doc,
                                        char *color */);
 extern void HTMLSetBackgroundImage (/* Document doc,
                                        Element elem,
-				       int repeat,
+                                       int repeat,
                                        char *image */);
 extern void HTMLSetForegroundColor (/* Document doc,
                                        Element elem,

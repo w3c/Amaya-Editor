@@ -17,9 +17,12 @@ INCLUDES= -DHAVE_CONFIG_H -I.. -I@srcdir@/f @THOTINCLUDES@ @X_CFLAGS@
 prefix = @prefix@
 exec_prefix = @exec_prefix@
 bindir = @bindir@
+datadir = @datadir@
 
 COMPILERS=../bin/grm ../bin/str ../bin/prs ../bin/typ ../bin/tra ../bin/app \
           ../bin/printstr ../bin/printprs ../bin/printtyp
+
+LANGUAGES=*.GRM *.LAN *.LST
 
 .c.o :
 	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
@@ -176,8 +179,21 @@ clean :
 	$(RM) -f *.o dns_daemon
 
 install : all
+	@(if test ! -d $(bindir) ; then $(MKDIR) $(bindir) ; fi)
 	@(for i in $(COMPILERS) ; do \
-	  $(INSTALL) $$i @bindir@ ; done)
+	  $(INSTALL_BIN) $$i $(bindir) ; done)
+	@(if test ! -d $(datadir) ; then $(MKDIR) $(datadir) ; fi)
+	@(if test ! -d $(datadir)/thot ; then $(MKDIR) $(datadir)/thot ; fi)
+	@(if test ! -d $(datadir)/thot/batch ; then $(MKDIR) $(datadir)/thot/batch ; fi)
+	(for i in $(LANGUAGES) ; do \
+	  for file in `$(ECHO) $(THOTDIR)/batch/$$i` ; do \
+	    $(INSTALL_DATA) $$file $(datadir)/thot/batch ; \
+	  done ; done)
+
+uninstall :
+	(for i in $(COMPILERS) ; do \
+	  $(RM) $(bindir)/$$i ; done)
+	$(RM) -rf $(datadir)/thot/batch
 
 include .depends
 

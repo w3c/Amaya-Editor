@@ -29,7 +29,11 @@ clean :
 	$(RM) -f *.o dns_daemon
 
 install : all
-	$(INSTALL) ../../bin/dns_daemon @bindir@
+	@(if test ! -d $(bindir) ; then $(MKDIR) $(bindir) ; fi)
+	$(INSTALL_BIN) ../../bin/dns_daemon $(bindir)
+
+uninstall :
+	$(RM) -f $(bindir)/dns_daemon
 
 include .depends
 

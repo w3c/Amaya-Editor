@@ -29,6 +29,8 @@ clean :
 
 install :
 
+uninstall :
+
 include .depends
 
 ../../tools/mkdep/mkdep : 

@@ -12,12 +12,27 @@ include ../Options
 INCLUDES= -DHAVE_CONFIG_H $(AMAYA_INCLUDES) @X_CFLAGS@
 LIBS	= -L../tablelib -L../thotlib -L.. -lThotTable -lThotEditor \
           $(IMGLIBS) $(AMAYA_OPTION_LIBS) $(MOTIF_LIBRARIES) -lXm \
-	  $(X_LIBS) -lXt -lXext $(X_PRE_LIBS) -lX11 $(X_EXTRA_LIBS) \
+	  $(X_LIBS) -lXt $(X_PRE_LIBS) -lXext -lX11 $(X_EXTRA_LIBS) \
 	  @LIBS@ @EXTRA_LIBS@ -lm
+
+CONFIGFILES=XKeysymDB thot.ini amaya.keyboard en-amayadialogue \
+            en-printdialogue en-amayamsg en-javamsg en-libdialogue \
+	    en-transdialogue en-corrdialogue fr-amayadialogue \
+            fr-printdialogue fr-amayamsg fr-javamsg fr-libdialogue \
+	    fr-transdialogue fr-corrdialogue java.properties
+
+DICOFILES= *.ptn alphabet clavier
+
+AMAYAFILES=COPYRIGHT COPYRIGHT.html HTML.STR HTML.conf HTML.trans HTML.en \
+           HTML.fr HTML*.PRS HTML*.TRA
+
+FONTSFILES=Families.list fonts.dir icones*
 
 prefix = @prefix@
 exec_prefix = @exec_prefix@
 libdir = @libdir@
+datadir = @datadir@
+bindir = @bindir@
 
 #
 # specific entry point check the dependancies
@@ -32,8 +47,8 @@ all : ../bin/amaya
 clean :
 	$(RM) *.o EDITORAPP.c EDITOR.A
 
-install : all
-	$(INSTALL) ../bin/amaya $(bindir)
+../bin/print : 
+	@(cd ../thotlib ; make print)
 
 include .depends
 
@@ -202,10 +217,43 @@ EDITORAPP.c : @srcdir@/EDITOR.A
 	THOTDIR=$(THOTDIR) ; export THOTDIR ; \
 	../bin/app $(AMAYA_OPTIONS) EDITOR.A
 
-../bin/amaya : $(AMAYA_LIBS) $(AMAYA_SCHEMAS) $(AMAYA_OBJ) $(AMAYA_OPTION_OBJ)
+../bin/amaya : $(AMAYA_SCHEMAS) $(AMAYA_OBJ) $(AMAYA_OPTION_OBJ) $(AMAYA_LIBS)
 	@(if test ! -d ../bin ; then $(MKDIR) ../bin ; fi)
 	$(CC) $(LDFLAGS) -o ../bin/amaya $(AMAYA_OBJ) $(AMAYA_OPTION_OBJ) $(LIBS)
 	@$(ECHO) "====>" amaya is done
+
+install : all ../bin/print $(AMAYA_JAVA_INSTALL) $(AMAYA_PLUGIN_INSTALL) \
+	   $(AMAYA_LIBWWW_INSTALL)
+	@(if test ! -d $(bindir) ; then $(MKDIR) $(bindir) ; fi)
+	$(INSTALL_BIN) ../bin/amaya $(bindir)
+	$(INSTALL_BIN) ../bin/print $(bindir)
+	@(if test ! -d $(datadir) ; then $(MKDIR) $(datadir) ; fi)
+	@(if test ! -d $(datadir)/thot ; then $(MKDIR) $(datadir)/thot ; fi)
+	@(if test ! -d $(datadir)/thot/amaya ; then $(MKDIR) $(datadir)/thot/amaya ; fi)
+	@(if test ! -d $(datadir)/thot/config ; then $(MKDIR) $(datadir)/thot/config ; fi)
+	@(if test ! -d $(datadir)/thot/fonts ; then $(MKDIR) $(datadir)/thot/fonts ; fi)
+	@(if test ! -d $(datadir)/thot/dicopar ; then $(MKDIR) $(datadir)/thot/dicopar ; fi)
+	(for i in $(AMAYAFILES) ; do \
+	  for file in `$(ECHO) $(THOTDIR)/amaya/$$i` ; do \
+	    $(INSTALL_DATA) $$file $(datadir)/thot/amaya ; \
+	  done ; done)
+	(for i in $(CONFIGFILES) ; do \
+	  for file in `$(ECHO) $(THOTDIR)/config/$$i` ; do \
+	    $(INSTALL_DATA) $$file $(datadir)/thot/config ; \
+	  done ; done)
+	(for i in $(DICOFILES) ; do \
+	  for file in `$(ECHO) $(THOTDIR)/dicopar/$$i` ; do \
+	    $(INSTALL_DATA) $$file $(datadir)/thot/dicopar ; \
+	  done ; done)
+	(for i in $(FONTSFILES) ; do \
+	  for file in `$(ECHO) $(THOTDIR)/fonts/$$i` ; do \
+	    $(INSTALL_DATA) $$file $(datadir)/thot/fonts ; \
+	  done ; done)
+
+uninstall : $(AMAYA_JAVA_UNINSTALL) $(AMAYA_PLUGIN_UNINSTALL) \
+	   $(AMAYA_LIBWWW_UNINSTALL)
+	$(RM) -f $(bindir)/amaya
+	$(RM) -rf $(datadir)/thot/amaya
 
 CEXTRACT= ../bin/cextract
 

@@ -32,8 +32,13 @@ clean :
 	$(RM) *.o
 
 install : all
-	$(INSTALL) libThotJava.a $(libdir)
-	$(INSTALL) libAmayaJava.a $(libdir)
+	@(if test ! -d $(libdir) ; then $(MKDIR) $(libdir) ; fi)
+	$(INSTALL_DATA) libThotJava.a $(libdir)
+	$(INSTALL_DATA) libAmayaJava.a $(libdir)
+
+uninstall :
+	$(RM) -f $(libdir)/libThotJava.a
+	$(RM) -f $(libdir)/libAmayaJava.a
 
 include .depends
 

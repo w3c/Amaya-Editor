@@ -29,6 +29,12 @@ install :
 	  $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" install ; \
 	  cd .. ; fi ;done )
 
+uninstall :
+	@(for dir in $(SUBDIRS) ;\
+	  do if test -d $$dir ; then cd $$dir ; \
+	  $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" uninstall ; \
+	  cd .. ; fi ;done )
+
 depend : 
 	@(for dir in $(SUBDIRS) ;\
 	  do if test -d $$dir ; then cd $$dir ; \
