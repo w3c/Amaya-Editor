@@ -60,8 +60,8 @@
 #include "views_f.h"
 #include "writepivot_f.h"
 
-static char nameBuffer[MAX_NATURES_DOC];
-static char ISObuffer[MAX_NATURES_DOC];
+static char nameBuffer[100];
+static char ISObuffer[100];
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/

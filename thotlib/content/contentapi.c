@@ -1839,7 +1839,7 @@ void TtaReplaceTransform (Element element, void *transform,
 			 Document document)
 {
    PtrTransform       pPa, pPrevPa;
-     
+
    UserErrorCode = 0;
    if (element == NULL)
       TtaError (ERR_invalid_parameter);
@@ -1940,7 +1940,7 @@ static void TransformAddition (PtrTransform Trans1, PtrTransform Trans2)
 void TtaAddTransform (Element element, void *transform, 
 			 Document document)
 {
-   PtrTransform       pPa, pPrevPa, found;
+   PtrTransform       pPa, pPrevPa;
      
    UserErrorCode = 0;
    if (element == NULL)
