@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2001.
+ *  (c) COPYRIGHT INRIA, 1996-2002
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -1117,9 +1117,13 @@ unsigned char GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset,
 	      fontset->FontIso_7 = lfont;
 	    }
 	  else
-	    lfont = fontset->FontIso_7;
+	    lfont = fontset->FontIso_7; /* Greek */
 	  if (GreekFontAlphabet == '7')
+#ifdef _WINDOWS
+	    car = TtaGetCharFromWC (c, WINDOWS_1253);
+#else /* _WINDOWS */
 	    car = TtaGetCharFromWC (c, ISO_8859_7);
+#endif /* _WINDOWS */
 	  else
 	    /* using the font symbol instead of ISO_8859_7 */
 	    car = TtaGetCharFromWC (c, ISO_SYMBOL);
@@ -1128,45 +1132,73 @@ unsigned char GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset,
 	{
 	  if (c < 0x17F)
 	    {
-	      car = '2';
+	      car = '2'; /* Central Europe */
 	      pfont = &(fontset->FontIso_2);
+#ifdef _WINDOWS
+	      encoding = WINDOWS_1250;
+#else /* _WINDOWS */
 	      encoding = ISO_8859_2;
+#endif /* _WINDOWS */
 	    }
 	  else if (c < 0x24F)
 	    {
 	      car = '3';
 	      pfont = &(fontset->FontIso_3);
+#ifdef _WINDOWS
+	      encoding = WINDOWS_1250;
+#else /* _WINDOWS */
 	      encoding = ISO_8859_3;
+#endif /* _WINDOWS */
 	    }
 	  else if (c < 0x2AF)
 	    {
-	      car = '4';
+	      car = '4'; /* Baltic RIM */
 	      pfont = &(fontset->FontIso_4);
+#ifdef _WINDOWS
+	      encoding = WINDOWS_1257;
+#else /* _WINDOWS */
 	      encoding = ISO_8859_4;
+#endif /* _WINDOWS */
 	    }
 	  else if (c < 0x45F)
 	    {
 	      car = '5'; /* Cyrillic */
 	      pfont = &(fontset->FontIso_5);
+#ifdef _WINDOWS
+	      encoding = WINDOWS_1251;
+#else /* _WINDOWS */
 	      encoding = ISO_8859_5;
+#endif /* _WINDOWS */
 	    }
 	  else if (c < 0x5FF)
 	    {
 	      car = '8'; /* Hebrew */
 	      pfont = &(fontset->FontIso_8);
+#ifdef _WINDOWS
+	      encoding = WINDOWS_1255;
+#else /* _WINDOWS */
 	      encoding = ISO_8859_8;
+#endif /* _WINDOWS */
 	    }
 	  else if (c < 0x5FF)
 	    {
-	      car = '9';
+	      car = '9'; /* Turkish */
 	      pfont = &(fontset->FontIso_9);
+#ifdef _WINDOWS
+	      encoding = WINDOWS_1254;
+#else /* _WINDOWS */
 	      encoding = ISO_8859_9;
+#endif /* _WINDOWS */
 	    }
 	  else if (c < 0x65F)
 	    {
 	      car = '6'; /* Arabic */
 	      pfont = &(fontset->FontIso_6);
+#ifdef _WINDOWS
+	      encoding = WINDOWS_1256;
+#else /* _WINDOWS */
 	      encoding = ISO_8859_6;
+#endif /* _WINDOWS */
 	    }
 	  else
 	    pfont = NULL;

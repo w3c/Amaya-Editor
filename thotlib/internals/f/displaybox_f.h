@@ -18,6 +18,12 @@ extern void DisplayPolyLine ( PtrBox pBox,
 extern void DisplayPath ( PtrBox pBox,
                           int frame,
                           ThotBool selected );
+extern void LocateFirstChar ( PtrBox pBox,
+                              PtrTextBuffer *adbuff,
+                              int *ind );
+extern ThotBool LocateNextChar ( PtrTextBuffer *adbuff,
+                                 int *ind,
+                                 ThotBool rtl );
 extern void DisplayBorders ( PtrBox box,
                              int frame,
                              int x,
@@ -45,6 +51,12 @@ extern void DisplayPolyLine (/* PtrBox pBox,
 extern void DisplayPath (/* PtrBox pBox,
                             int frame,
                             ThotBool selected */);
+extern void LocateFirstChar (/* PtrBox pBox,
+                                PtrTextBuffer *adbuff,
+                                int *ind */);
+extern ThotBool LocateNextChar (/* PtrTextBuffer *adbuff,
+                                   int *ind,
+                                   ThotBool rtl */);
 extern void DisplayBorders (/* PtrBox box,
                                int frame,
                                int x,

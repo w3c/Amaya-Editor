@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT MIT and INRIA, 1996-2001
+ *  (c) COPYRIGHT MIT and INRIA, 1996-2002
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -852,7 +852,7 @@ void                   InitMapping (void)
 /*----------------------------------------------------------------------
    Within  checks if an element of type ThotType is in the stack.
   ----------------------------------------------------------------------*/
-static ThotBool     Within (int ThotType, SSchema ThotSSchema)
+static ThotBool Within (int ThotType, SSchema ThotSSchema)
 {
    ThotBool         ret;
    int              i;
@@ -1140,7 +1140,7 @@ static void         StartOfTag (char c)
 /*----------------------------------------------------------------------
    PutInBuffer     put character c in the input buffer.
   ----------------------------------------------------------------------*/
-static void         PutInBuffer (unsigned char c)
+static void PutInBuffer (unsigned char c)
 {
   int               len;
 
@@ -2593,7 +2593,7 @@ static void         SpecialImplicitEnd (int entry)
    position indicate whether the element type is unknown (FALSE) or the
    tag position is incorrect (TRUE).
   ----------------------------------------------------------------------*/
-static void         InsertInvalidEl (char* content, ThotBool position)
+static void InsertInvalidEl (char* content, ThotBool position)
 {
    ElementType       elType;
    AttributeType     attrType;
@@ -2632,7 +2632,7 @@ static void         InsertInvalidEl (char* content, ThotBool position)
    Create the corresponding Thot thing (element, attribute,
    or character), according to the mapping table.
   ----------------------------------------------------------------------*/
-static void           ProcessStartGI (char* GIname)
+static void ProcessStartGI (char* GIname)
 {
   ElementType         elType;
   Element             el;
@@ -4353,7 +4353,7 @@ void                InitAutomaton (void)
    FreeHTMLParser
    Frees all ressources associated with the HTML parser.
   ----------------------------------------------------------------------*/
-void                   FreeHTMLParser (void)
+void FreeHTMLParser (void)
 {
    PtrTransition       trans, nextTrans;
    PtrClosedElement    pClose, nextClose;
@@ -4441,11 +4441,20 @@ static char GetNextChar (FILE *infile, char* buffer, int *index,
       ptr = &buffer[*index];
       nbBytes = TtaGetNextWCFromString (&wcharRead, &ptr,
 					HTMLcontext.encoding);
-      (*index) += nbBytes;
-      if (wcharRead != 0)
-	charRead = (char) wcharRead;
+      if (nbBytes < 1)
+	{
+	  /* error detected */
+	  HTMLParseError (HTMLcontext.doc, "Invalid character");
+	  *endOfFile = TRUE;
+	}
       else
-	*endOfFile = TRUE;
+	{
+	  (*index) += nbBytes;
+	  if (wcharRead != 0)
+	    charRead = (char) wcharRead;
+	  else
+	    *endOfFile = TRUE;
+	}
 #endif /* _I18N_ */
     }
   else if (infile == NULL)
@@ -4525,12 +4534,28 @@ static char GetNextChar (FILE *infile, char* buffer, int *index,
 		    }
 		  ptr = (unsigned char *) &extrabuf[0];
 		  nbBytes = TtaGetNextWCFromString (&wcharRead, &ptr, UTF_8);
-		  *index = 0;
+		  if (nbBytes < 1)
+		    {
+		      /* error detected */
+		      HTMLParseError (HTMLcontext.doc, "Invalid character");
+		      *endOfFile = TRUE;
+		      charRead = EOS;
+		    }
+		  else
+		    *index = 0;
 		}
 	      else
 		{
 		  nbBytes = TtaGetNextWCFromString (&wcharRead, &ptr, UTF_8);
-		  (*index) += nbBytes;
+		  if (nbBytes < 1)
+		    {
+		      /* error detected */
+		      HTMLParseError (HTMLcontext.doc, "Invalid character");
+		      *endOfFile = TRUE;
+		      charRead = EOS;
+		    }
+		  else
+		    (*index) += nbBytes;
 		}
 	      if (wcharRead < 0x100)
 		/* It's an 8bits character */
@@ -4613,7 +4638,7 @@ static char GetNextChar (FILE *infile, char* buffer, int *index,
    assigns the current line number (number of latest line read from the
    input file) to element el.
   ----------------------------------------------------------------------*/
-void            SetElemLineNumber (Element el)
+void SetElemLineNumber (Element el)
 {
   TtaSetElementLineNumber (el, NumberOfLinesRead);
 }
@@ -4622,7 +4647,7 @@ void            SetElemLineNumber (Element el)
    GetNextInputChar returns the next non-null character in the input
    file or buffer.
   ----------------------------------------------------------------------*/
-char      GetNextInputChar (FILE *infile, int *index, ThotBool *endOfFile)
+char GetNextInputChar (FILE *infile, int *index, ThotBool *endOfFile)
 {
   char    charRead;
 

@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2001
+ *  (c) COPYRIGHT INRIA, 1996-2002
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -860,6 +860,76 @@ void DisplayPath (PtrBox pBox, int frame, ThotBool selected)
     }
 }
 
+/*----------------------------------------------------------------------
+  LocateFirstChar returns the buffer and the index that locates the
+  first character of the box according to the writing orientation
+  (left-to-right or right-to-left).
+  ----------------------------------------------------------------------*/
+void LocateFirstChar (PtrBox pBox, PtrTextBuffer *adbuff, int *ind)
+{
+  int                 indmax;
+  int                 buffleft;
+  int                 nbcar;
+  
+  *ind = pBox->BxFirstChar;
+  *adbuff = pBox->BxBuffer;
+  if (pBox->BxAbstractBox->AbDirection == 'R' && *adbuff)
+    {
+      /* writing right-to-left */
+      nbcar = pBox->BxNChars;
+      buffleft = (*adbuff)->BuLength - *ind + 1;
+      while ((*adbuff)->BuNext && nbcar > buffleft)
+	{
+	  nbcar -= buffleft;
+	  *adbuff = (*adbuff)->BuNext;
+	  buffleft = (*adbuff)->BuLength;
+	  *ind = 1;
+	}
+      if (nbcar <= (*adbuff)->BuLength)
+	*ind = *ind + nbcar - 1;
+      else
+	*ind = (*adbuff)->BuLength;
+    }
+}
+
+/*----------------------------------------------------------------------
+  LocateNextChar returns the buffer and the index of the next character
+  according to the writing orientation (left-to-right or right-to-left).
+  Return TRUE if a new position is found.
+  ----------------------------------------------------------------------*/
+ThotBool LocateNextChar (PtrTextBuffer *adbuff, int *ind, ThotBool rtl)
+{
+  if (rtl)
+    {
+      /* writing right-to-left */
+      if (*ind > 0)
+	/* continue in the same buffer */
+	*ind = *ind - 1;
+      else
+	{
+	  /* another buffer */
+	  if ((*adbuff)->BuPrevious == NULL)
+	    return FALSE;
+	  *adbuff = (*adbuff)->BuPrevious;
+	  *ind = (*adbuff)->BuLength;
+	}
+    }
+  else
+    {
+      if (*ind < (*adbuff)->BuLength)
+	/* continue in the same buffer */
+	*ind = *ind + 1;
+      else
+	{
+	  /* another buffer */
+	  if ((*adbuff)->BuNext == NULL)
+	    return FALSE;
+	  *adbuff = (*adbuff)->BuNext;
+	  *ind = 1;
+	}
+    }
+  return TRUE;
+}
 
 /*----------------------------------------------------------------------
   DisplayJustifiedText display the content of a Text box tweaking
@@ -871,7 +941,6 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 				  ThotBool selected)
 {
   PtrTextBuffer       adbuff;
-  PtrTextBuffer       newbuff;
   ViewFrame          *pFrame;
   PtrBox              nbox;
   PtrAbstractBox      pAb;
@@ -881,13 +950,12 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
   CHAR_T              bchar;
   unsigned char       car;
   unsigned char      *buffer;
-  int                 indbuff;
   int                 restbl;
-  int                 newind;
   int                 newbl, lg;
   int                 charleft;
   int                 buffleft;
-  int                 indmax, bl;
+  int                 indbuff, bl;
+  int                 indmax;
   int                 nbcar, x, y;
   int                 lgspace, whitespace;
   int                 fg, bg;
@@ -896,15 +964,16 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
   int                 left, right;
   ThotBool            blockbegin;
   ThotBool            withbackground;
-  ThotBool            hyphen;
+  ThotBool            hyphen, rtl;
 
   indmax = 0;
   buffleft = 0;
   adbuff = NULL;
   indbuff = 0;
   restbl = 0;
-  nbcar = 0;
   pAb = pBox->BxAbstractBox;
+  /* is it a box with a right-to-left writing? */
+  rtl = (pAb->AbDirection == 'R');
   font = pBox->BxFont;
   /* do we have to display stars instead of characters? */
   if (pAb->AbBox->BxShadow)
@@ -956,8 +1025,6 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 	  pBox->BxTPadding - pFrame->FrYOrg;
       /* no previous spaces */
       bl = 0;
-      newind = pBox->BxFirstChar;
-      newbuff = pBox->BxBuffer;
       charleft = pBox->BxNChars;
       newbl = pBox->BxNPixels;
       lg = 0;
@@ -971,14 +1038,15 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
       if (lgspace == 0)
 	lgspace = whitespace;
       
+      /* locate the first character */
+      LocateFirstChar (pBox, &adbuff, &indbuff);
       /* Search the first displayable char */
-      if (charleft > 0)
+      if (charleft > 0 && adbuff)
 	{
 	  /* there is almost one character to display */
 	  do
 	    {
-	      adbuff = newbuff;
-	      indbuff = newind;
+	      /* skip invisible characters */
 	      restbl = newbl;
 	      x += lg;
 	      car = GetFontAndIndexFromSpec (adbuff->BuContent[indbuff - 1],
@@ -994,36 +1062,42 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 		}
 	      else
 		lg = CharacterWidth (car, nextfont);
-	       
-	      charleft--;
-	      /* Skip to next char */
-	      if (indbuff < adbuff->BuLength)
-		newind = indbuff + 1;
-	      else
+
+	      /* Skip to the next char */
+	      if (x + lg <= 0)
 		{
-		  if (adbuff->BuNext == NULL && charleft > 0)
+		  if (LocateNextChar (&adbuff, &indbuff, rtl))
+		    charleft--;
+		  else
 		    charleft = 0;
-		  newind = 1;
-		  newbuff = adbuff->BuNext;
-		} 
+		}
 	    }
-	  while (!(x + lg > 0 || charleft <= 0));
+	  while (x + lg <= 0 && charleft > 0);
 	   
 	  /* Display the list of text buffers pointed by adbuff */
 	  /* beginning at indbuff and of lenght charleft.       */
 	  /* -------------------------------------------------- */
-	  if (x + lg > 0)
-	    charleft++;
-	  nbcar = 0;
 	  if (adbuff == NULL)
 	    charleft = 0;
 	  else
 	    {
-	      buffleft = adbuff->BuLength - indbuff + 1;
-	      if (charleft > buffleft)
-		indmax = adbuff->BuLength;
+	      /* number of characters to be displayed in the current buffer */
+	      if (rtl)
+		{
+		  if (charleft < indbuff)
+		    indmax = indbuff - charleft;
+		  else
+		    indmax = 1;
+		  buffleft = indbuff;
+		}
 	      else
-		indmax = indbuff - 1 + charleft;
+		{
+		  buffleft = adbuff->BuLength - indbuff + 1;
+		  if (charleft < buffleft)
+		    indmax = indbuff - 1 + charleft;
+		  else
+		    indmax = adbuff->BuLength;
+		}
 	    } 
 	  
 	  /* Do we need to draw a background */
@@ -1095,10 +1169,12 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 
       /* allocate a buffer to store converted characters */
       buffer = TtaGetMemory (pBox->BxNChars + 1);
+      nbcar = 0;
       while (charleft > 0)
 	{
 	  /* handle each char in the buffer */
-	  while (indbuff <= indmax)
+	  while ((rtl && indbuff >= indmax ||
+		  !rtl && indbuff <= indmax))
 	    {
 	      bchar = adbuff->BuContent[indbuff - 1];
 	      car = GetFontAndIndexFromSpec (bchar, font, &nextfont);
@@ -1178,25 +1254,47 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 		  /* add the new char */
 		  buffer[nbcar++] = car;
 		}
-	      indbuff++; /* Skip to next char */
+	      /* Skip to next char */
+	      if (rtl)
+		indbuff--;
+	      else
+		indbuff++;
 	    }
 
 	  /* Draw previous chars in the buffer */
 	  charleft -= buffleft;
 	  if (charleft > 0)
 	    {
-	      /* Skip to next buffer */
-	      if (adbuff->BuNext == NULL)
-		charleft = 0;
+	      /* number of characters to be displayed in the next buffer */
+	      if (rtl)
+		{
+		  if (adbuff->BuPrevious == NULL)
+		    charleft = 0;
+		  else
+		    {
+		      adbuff = adbuff->BuPrevious;
+		      indbuff = adbuff->BuLength;
+		      if (charleft < indbuff)
+			indmax = indbuff - charleft;
+		      else
+			indmax = 1;
+		      buffleft = adbuff->BuLength;
+		    }
+		}
 	      else
 		{
-		  indbuff = 1;
-		  adbuff = adbuff->BuNext;
-		  buffleft = adbuff->BuLength;
-		  if (charleft < buffleft)
-		    indmax = charleft;
+		  if (adbuff->BuNext == NULL)
+		    charleft = 0;
 		  else
-		    indmax = buffleft;
+		    {
+		      adbuff = adbuff->BuNext;
+		      if (charleft < adbuff->BuLength)
+			indmax = charleft;
+		      else
+			indmax = adbuff->BuLength;
+		      indbuff = 1;
+		      buffleft = adbuff->BuLength;
+		    }
 		}
 	    }
 	  if (charleft <= 0)

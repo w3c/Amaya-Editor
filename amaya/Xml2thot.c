@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT MIT and INRIA, 1996-2001
+ *  (c) COPYRIGHT MIT and INRIA, 1996-2002
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -2284,6 +2284,7 @@ static unsigned char *HandleXMLstring (unsigned char *data, int *length,
 	  ptr = &data[i];
 	  nbBytesRead = TtaGetNextWCFromString (&wcharRead,
 						&ptr, UTF_8);
+	  /* the string provided by expat is obviously correct */
 	  i += nbBytesRead;
 	  if (wcharRead <= 255)
 	      /* ISO-Latin1 character */

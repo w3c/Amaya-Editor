@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2001
+ *  (c) COPYRIGHT INRIA, 1996-2002
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -49,7 +49,7 @@
    ClearAbstractBoxSelection parcours l'arborescence pour annuler  
    toutes ls selections de pave.                           
   ----------------------------------------------------------------------*/
-static void         ClearAbstractBoxSelection (PtrAbstractBox pAb)
+static void ClearAbstractBoxSelection (PtrAbstractBox pAb)
 {
    PtrAbstractBox      pChildAb;
    PtrAbstractBox      pAbbox1;
@@ -553,7 +553,7 @@ void InsertViewSelMarks (int frame, PtrAbstractBox pAb, int firstChar,
   ViewFrame          *pFrame;
   ViewSelection      *pViewSel;
   int                 ind, charIndex, w;
-  ThotBool            graphSel;
+  ThotBool            graphSel, rtl;
 
   /* Verifie s'il faut reformater le dernier paragraphe edite */
   if (ThotLocalActions[T_updateparagraph] != NULL)
@@ -566,6 +566,7 @@ void InsertViewSelMarks (int frame, PtrAbstractBox pAb, int firstChar,
 	{
 	  /* eteint la selection */
 	  pBox = pAb->AbBox;
+	  rtl = (pAb->AbDirection == 'R');
 	  adline = SearchLine (pBox);
 	  graphSel = (pAb->AbLeafType == LtPolyLine ||
 		      pAb->AbLeafType == LtPath ||
@@ -627,6 +628,9 @@ void InsertViewSelMarks (int frame, PtrAbstractBox pAb, int firstChar,
 		  pViewSel->VsLine = adline;
 		  if (pAb->AbLeafType == LtPicture && firstChar > 0)
 		    pViewSel->VsXPos = pBox->BxLMargin + pBox->BxLBorder + pBox->BxLPadding + pBox->BxW;
+		  else if (rtl)
+		    /* right-to-left writing */
+		    pViewSel->VsXPos = pBox->BxWidth;
 		  else
 		    pViewSel->VsXPos = 0;
 		  pViewSel->VsNSpaces = 0;
@@ -642,6 +646,9 @@ void InsertViewSelMarks (int frame, PtrAbstractBox pAb, int firstChar,
 		  if ((pAb->AbLeafType == LtPicture && firstChar > 0) ||
 		      (pAb->AbLeafType == LtSymbol && firstChar == 0))
 		    pViewSel->VsXPos = pBox->BxLMargin + pBox->BxLBorder + pBox->BxLPadding + pBox->BxW;
+		  else if (rtl)
+		    /* right-to-left writing */
+		    pViewSel->VsXPos = pBox->BxWidth;
 		  else
 		    pViewSel->VsXPos = 0;
 		  pViewSel->VsNSpaces = 0;
@@ -685,7 +692,7 @@ void InsertViewSelMarks (int frame, PtrAbstractBox pAb, int firstChar,
 	      if (endSelection)
 		{
 		  pViewSel = &pFrame->FrSelectionEnd;
-		  /* startSelection et endSelection sur le meme caractere */
+		  /* startSelection and endSelection on the same character */
 		  if (startSelection && firstChar >= lastChar)
 		    {
 		      pViewSel->VsBox = pFrame->FrSelectionBegin.VsBox;
@@ -731,7 +738,13 @@ void InsertViewSelMarks (int frame, PtrAbstractBox pAb, int firstChar,
 		  /* recherche la position limite du caractere */
 		  pBox = pViewSel->VsBox;
 		  if (pBox->BxNChars == 0 && pBox->BxType == BoComplete)
-		    pViewSel->VsXPos += pBox->BxW;
+		    {
+		      if (rtl)
+			/* right-to-left writing */
+			pViewSel->VsXPos -= pBox->BxW;
+		      else
+			pViewSel->VsXPos += pBox->BxW;
+		    }
 		  else if (pViewSel->VsIndBox == pBox->BxNChars)
 		    pViewSel->VsXPos += 2;
 		  else
@@ -765,9 +778,15 @@ void InsertViewSelMarks (int frame, PtrAbstractBox pAb, int firstChar,
 		    {
 		      /* several pieces of a split box are selected */
 		      /* the last one */
-		      DefClip (frame, pBox->BxXOrg, pBox->BxYOrg,
-			       pBox->BxXOrg + pViewSel->VsXPos,
-			       pBox->BxYOrg + pBox->BxHeight);
+		      if (rtl)
+			/* right-to-left writing */
+			DefClip (frame, pBox->BxXOrg + pViewSel->VsXPos, pBox->BxYOrg,
+				 pBox->BxXOrg + pBox->BxWidth,
+				 pBox->BxYOrg + pBox->BxHeight);
+		      else
+			DefClip (frame, pBox->BxXOrg, pBox->BxYOrg,
+				 pBox->BxXOrg + pViewSel->VsXPos,
+				 pBox->BxYOrg + pBox->BxHeight);
 		      /* the first one */
 		      pBox = pFrame->FrSelectionBegin.VsBox;
 		      DefClip (frame,

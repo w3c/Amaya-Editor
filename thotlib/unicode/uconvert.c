@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA 1999-2001.
+ *  (c) COPYRIGHT INRIA 1999-2002
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -649,7 +649,12 @@ int TtaMBstringToWC (unsigned char **src, wchar_t *dest)
   if (*ptrSrc < 0x80)
     nbBytesToConvert = 1;
   else if (*ptrSrc < 0xC0)
-	/* add some error processing here */ ;
+    {
+      /* not a valid UTF-8 character */
+      *dest = '?';
+      *src = ptrSrc + 1;
+      return -1;
+    }
   else if (*ptrSrc < 0xE0)
     nbBytesToConvert = 2;
   else if (*ptrSrc < 0xF0)
@@ -657,7 +662,12 @@ int TtaMBstringToWC (unsigned char **src, wchar_t *dest)
   else if (*ptrSrc < 0xF8)
     nbBytesToConvert = 4;
   else
-	/* add some error processing here */ ;
+    {
+      /* not a valid UTF-8 character */
+      *dest = '?';
+      *src = ptrSrc + 1;
+      return -1;
+    }
                  
   nbBytesConverted += nbBytesToConvert;
   res = 0;
@@ -696,6 +706,7 @@ int TtaMBstringToWC (unsigned char **src, wchar_t *dest)
 /*----------------------------------------------------------------------
   TtaGetNextWCFromString: Looks for the next Wide character 
   value in a multibyte character string.
+  Returns the number of bytes in the multibyte character or -1
   ----------------------------------------------------------------------*/
 int TtaGetNextWCFromString (wchar_t *car, unsigned char **txt, CHARSET encoding)
 {
@@ -708,7 +719,12 @@ int TtaGetNextWCFromString (wchar_t *car, unsigned char **txt, CHARSET encoding)
       if (*start < 0x80)
 	nbBytesToRead = 1;
       else if (*start < 0xC0)
-    	/* add some error processing here */ ;
+	{
+	  /* not a valid UTF-8 character */
+	  *car = 63;
+	  start++;
+	  return -1;
+	}
       else if (*start < 0xE0)
 	nbBytesToRead = 2;
       else if (*start < 0xF0)
@@ -716,7 +732,12 @@ int TtaGetNextWCFromString (wchar_t *car, unsigned char **txt, CHARSET encoding)
       else if (*start < 0xF8)
 	nbBytesToRead = 4;
       else
-		/* add some error processing here */ ;
+	{
+	  /* not a valid UTF-8 character */
+	  *car = 63;
+	  start++;
+	  return -1;
+	}
       
       res = 0;
       /* See how many bytes to read to build a wide character */

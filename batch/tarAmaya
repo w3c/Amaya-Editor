@@ -60,7 +60,6 @@ echo "Platform ------->" $MACH
    Amaya/amaya/HTML*.PRS \
    Amaya/amaya/HTML*.TRA \
    Amaya/amaya/*.en \
-   Amaya/amaya/*.fr \
    Amaya/amaya/*.gif \
    Amaya/amaya/XLink.STR \
    Amaya/amaya/XLink*.PRS \
@@ -68,17 +67,16 @@ echo "Platform ------->" $MACH
    Amaya/amaya/MathML.STR \
    Amaya/amaya/MathML*.PRS \
    Amaya/amaya/MathML*.TRA \
-    Amaya/amaya/MathML.trans \
+   Amaya/amaya/MathML.trans \
    Amaya/amaya/SVG.STR \
    Amaya/amaya/SVG*.PRS \
    Amaya/amaya/SVG*.TRA \
-    Amaya/amaya/XML.STR \
-    Amaya/amaya/XML*.PRS \
-    Amaya/amaya/XML*.TRA \
+   Amaya/amaya/XML.STR \
+   Amaya/amaya/XML*.PRS \
+   Amaya/amaya/XML*.TRA \
    Amaya/amaya/TextFile.STR \
    Amaya/amaya/TextFile*.PRS \
    Amaya/amaya/TextFile*.TRA \
-   Amaya/amaya/TextFile.conf \
    Amaya/fonts/Families.list \
    Amaya/fonts/fonts.dir \
    Amaya/fonts/icones*

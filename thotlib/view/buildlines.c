@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2001
+ *  (c) COPYRIGHT INRIA, 1996-2002
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -159,6 +159,8 @@ static void Adjust (PtrBox pParentBox, PtrLine pLine, int frame,
   PtrBox              pBox, pBoxInLine;
   int                 width, baseline;
   int                 nSpaces, delta;
+  int                 x;
+  ThotBool            rtl;
 
   nSpaces = 0;	/* number of spaces */
   width = 0;	/* text width without spaces */
@@ -217,9 +219,9 @@ static void Adjust (PtrBox pParentBox, PtrLine pLine, int frame,
     }
 
   /* Update the position, the baseline and the width of each included box */
-  width = pLine->LiXOrg;
+  x = pLine->LiXOrg;
   if (orgXComplete)
-    width += pParentBox->BxXOrg;
+    x += pParentBox->BxXOrg;
   if (orgYComplete)
     baseline += pParentBox->BxYOrg;
   nSpaces = pLine->LiNPixels;
@@ -228,6 +230,11 @@ static void Adjust (PtrBox pParentBox, PtrLine pLine, int frame,
   else
     pBoxInLine = pLine->LiFirstBox;
 
+  /* take into account the writing direction */
+  rtl = pParentBox->BxAbstractBox->AbDirection == 'R';
+  if (rtl)
+    /* right-to-left wirting */
+    x += pLine->LiXMax;
   /* Loop with all included boxes */
   do
     {
@@ -238,8 +245,6 @@ static void Adjust (PtrBox pParentBox, PtrLine pLine, int frame,
       
       if (!pBoxInLine->BxAbstractBox->AbNotInLine)
 	{
-	  XMove (pBox, NULL, width - pBox->BxXOrg, frame);
-	  YMove (pBox, NULL, baseline - pBox->BxHorizRef - pBox->BxYOrg, frame);
 	  /* Add an extra pixel */
 	  if (pBox->BxAbstractBox->AbLeafType == LtText)
 	    {
@@ -247,14 +252,20 @@ static void Adjust (PtrBox pParentBox, PtrLine pLine, int frame,
 		pBox->BxNPixels = pBox->BxNSpaces;
 	      else
 		pBox->BxNPixels = nSpaces;
-	      
 	      nSpaces -= pBox->BxNPixels;
 	      pBox->BxSpaceWidth = pLine->LiSpaceWidth;
 	      delta = pBox->BxNSpaces * pLine->LiSpaceWidth + pBox->BxNPixels;
 	      pBox->BxW += delta;
 	      pBox->BxWidth += delta;
 	    }
-	  width += pBox->BxWidth;
+	  if (rtl)
+	    /* right-to-left wirting */
+	    x -= pBox->BxWidth;
+	  XMove (pBox, NULL, x - pBox->BxXOrg, frame);
+	  YMove (pBox, NULL, baseline - pBox->BxHorizRef - pBox->BxYOrg, frame);
+	  if (!rtl)
+	    /* left-to-right wirting */
+	    x += pBox->BxWidth;
 	}
       /* next box */
       pBoxInLine = GetNextBox (pBox->BxAbstractBox);
@@ -287,6 +298,7 @@ void Align (PtrBox pParentBox, PtrLine pLine, int delta, int frame,
 {
   PtrBox              pBox, pBoxInLine;
   int                 baseline, x;
+  ThotBool            rtl;
 
   /* The baseline of the line */
   baseline = pLine->LiYOrg + pLine->LiHorizRef;
@@ -301,6 +313,11 @@ void Align (PtrBox pParentBox, PtrLine pLine, int delta, int frame,
   else
     pBoxInLine = pLine->LiFirstBox;
   
+  /* take into account the writing direction */
+  rtl = pParentBox->BxAbstractBox->AbDirection == 'R';
+  if (rtl)
+    /* right-to-left wirting */
+    x += pLine->LiRealLength;
   /* Loop with all included boxes */
   do
     {
@@ -311,10 +328,15 @@ void Align (PtrBox pParentBox, PtrLine pLine, int delta, int frame,
       
       if (!pBox->BxAbstractBox->AbNotInLine)
 	{
+	  if (rtl)
+	    /* right-to-left wirting */
+	    x -= pBox->BxWidth;
 	  XMove (pBox, NULL, x - pBox->BxXOrg, frame);
 	  YMove (pBox, NULL, baseline - pBox->BxHorizRef - pBox->BxYOrg, frame);
-	  x += pBox->BxWidth;
 	  pBoxInLine->BxSpaceWidth = 0;
+	  if (!rtl)
+	    /* left-to-right wirting */
+	    x += pBox->BxWidth;
 	}
       /* next box */
       pBoxInLine = GetNextBox (pBox->BxAbstractBox);

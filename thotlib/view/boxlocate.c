@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2001
+ *  (c) COPYRIGHT INRIA, 1996-2002
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -2714,36 +2714,32 @@ void LocateClickedChar (PtrBox pBox, ThotBool extend,
 			PtrTextBuffer *pBuffer, int *x, int *index,
 			int *charsNumber, int *spacesNumber)
 {
-  int                 dx;
+  int                 dx, ind;
   int                 length;
   int                 extraSpace;
   int                 spaceWidth;
   int                 charWidth;
-  int                 newIndex;
   SpecFont            font;
   CHAR_T              c;
-  ThotBool            notfound;
+  ThotBool            notfound, rtl;
 
   /* Nombre de caracteres qui precedent */
   *charsNumber = 0;
   *spacesNumber = 0;
+  ind = *index;
   c = EOS;
   charWidth = 0;
+  rtl = (pBox->BxAbstractBox->AbDirection == 'R');
+  /* locate the first character */
+  LocateFirstChar (pBox, pBuffer, &ind);
   if (pBox->BxNChars == 0 || *x <= 0)
-    {
       *x = 0;
-      *pBuffer = pBox->BxBuffer;
-      *index = pBox->BxFirstChar;
-    }
   else
     {
       font = pBox->BxFont;
       dx = 0;
-      newIndex = pBox->BxFirstChar;
-      *index = newIndex;
-      *pBuffer = pBox->BxBuffer;
       length = pBox->BxNChars;
-      /* Calcule la largeur des blancs */
+      /* space width */
       if (pBox->BxSpaceWidth == 0)
 	{
 	  spaceWidth = BoxCharacterWidth (SPACE, font);
@@ -2755,12 +2751,12 @@ void LocateClickedChar (PtrBox pBox, ThotBool extend,
 	  extraSpace = pBox->BxNPixels;
 	}
       
-      /* Recherche le caractere designe dans la boite */
+      /* look for the selected character */
 #ifdef STRUCT_EDIT
       notfound = (dx < *x);
-#else
+#else /* STRUCT_EDIT */
       /* largeur du caractere suivant */
-      c = (CHAR_T) ((*pBuffer)->BuContent[newIndex - 1]);
+      c = (CHAR_T) ((*pBuffer)->BuContent[ind - 1]);
       if (c == 0)
 	charWidth = 0;
       else if (c == SPACE)
@@ -2771,109 +2767,104 @@ void LocateClickedChar (PtrBox pBox, ThotBool extend,
 	notfound = (dx + charWidth < *x);
       else
 	{
-	notfound = (dx + (charWidth / 2) < *x);
-	if (!notfound)
-	  *x = dx;
+	  notfound = (dx + (charWidth / 2) < *x);
+	  if (!notfound)
+	    *x = dx;
 	}
-#endif
-	while (notfound && length > 0)
-	  {
+#endif /* STRUCT_EDIT */
+      while (notfound && length > 0)
+	{
 #ifdef STRUCT_EDIT
-	     /* largeur du caractere courant */
-	     c = (CHAR_T) ((*pBuffer)->BuContent[newIndex - 1]);
-	     if (c == 0)
-		charWidth = 0;
-	     else if (c == SPACE)
-		charWidth = spaceWidth;
-	     else
-		charWidth = BoxCharacterWidth (c, font);
+	  /* largeur du caractere courant */
+	  c = (CHAR_T) ((*pBuffer)->BuContent[ind - 1]);
+	  if (c == 0)
+	    charWidth = 0;
+	  else if (c == SPACE)
+	    charWidth = spaceWidth;
+	  else
+	    charWidth = BoxCharacterWidth (c, font);
 #endif
+	  
+	  if (c == SPACE)
+	    {
+	      (*spacesNumber)++;
+	      if (extraSpace > 0)
+		{
+		  dx++;
+		  extraSpace--;
+		}
+	    }
+	  
+	  dx += charWidth;
+	  (*charsNumber)++;
 
-	     if (c == SPACE)
-	       {
-		 (*spacesNumber)++;
-		 if (extraSpace > 0)
-		   {
-		     dx++;
-		     extraSpace--;
-		   }
-	       }
-
-	     dx += charWidth;
-	     (*charsNumber)++;
-
-	     /* On passe au caractere suivant */
-	     *index = newIndex;
-	     if (newIndex < (*pBuffer)->BuLength || length == 1)
-		newIndex++;
-	     else if ((*pBuffer)->BuNext == NULL)
-	       {
-		  length = 0;
-		  newIndex++;
-	       }
-	     else
-	       {
-		  *pBuffer = (*pBuffer)->BuNext;
-		  newIndex = 1;
-	       }
-	     length--;
+	  /* Skip to the next char */
+	  if (LocateNextChar (pBuffer, &ind, rtl))
+	    length--;
+	  else
+	    {
+	      length = -1;
+	      if (rtl)
+		ind--;
+	      else
+		ind++;
+	    }
 #ifdef STRUCT_EDIT
-	     notfound = (dx < *x);
-#else
-	     /* largeur du caractere suivant */
-	     c = (*pBuffer)->BuContent[newIndex - 1];
-	     if (c == 0)
-	       charWidth = 0;
-	     else if (c == SPACE)
-	       charWidth = spaceWidth;
-	     else
-	       charWidth = BoxCharacterWidth (c, font);
+	  notfound = (dx < *x);
+#else /* STRUCT_EDIT */
+	  /* largeur du caractere suivant */
+	  c = (*pBuffer)->BuContent[ind - 1];
+	  if (c == 0)
+	    charWidth = 0;
+	  else if (c == SPACE)
+	    charWidth = spaceWidth;
+	  else
+	    charWidth = BoxCharacterWidth (c, font);
+	  
+	  if (extend)
+	    notfound = (dx + charWidth < *x);
+	  else
+	    {
+	      notfound = (dx + charWidth / 2 < *x);
+	      if (!notfound)
+		*x = dx;
+	    }
+#endif /* STRUCT_EDIT */
+	}
 
-	     if (extend)
-	       notfound = (dx + charWidth < *x);
-	     else
-	       {
-		 notfound = (dx + charWidth / 2 < *x);
-		 if (!notfound)
-		   *x = dx;
-	       }
-#endif
-	  }
-
-	/* On a trouve le caractere : Recadre la position x */
-	if (dx == *x)
-	   /* BAlignment OK */
-	   *index = newIndex;
-	else if (dx > *x)
-	  {
+      /* character found, check the position x */
+      if (dx > *x)
+	{
 #ifdef STRUCT_EDIT
-	     /* BAlignment sur le caractere */
-	      *x = dx - charWidth;
-	     if (c == SPACE)
-	       {
-		  if (*spacesNumber > 0 && pBox->BxNPixels >= *spacesNumber)
-		     (*x)--;
-		  (*spacesNumber)--;
-	       }
+	  /* get the starting position of the character */
+	  *x = dx - charWidth;
+	  if (c == SPACE)
+	    {
+	      if (*spacesNumber > 0 && pBox->BxNPixels >= *spacesNumber)
+		(*x)--;
+	      (*spacesNumber)--;
+	    }
 
-	     if (newIndex == 1)
-		*pBuffer = (*pBuffer)->BuPrevious;
-	     (*charsNumber)--;
-#else
-	     *x = dx;
-	     *index = newIndex;
-#endif
-	  }
-	else
-	   /* BAlignment en fin de boite */
-	  {
-	     *x = dx;
-	     if (newIndex == 1 && (*pBuffer)->BuPrevious != NULL)
-	       *pBuffer = (*pBuffer)->BuPrevious;
-	     else
-	       (*index)++;
-	  }
-     }
+	  if (ind == 1)
+	    *pBuffer = (*pBuffer)->BuPrevious;
+	  (*charsNumber)--;
+#else /* STRUCT_EDIT */
+	  *x = dx;
+#endif /* STRUCT_EDIT */
+	}
+      else if (dx != *x)
+	{
+	  /* get the ending position of the character */
+	  *x = dx;
+	  if (ind == 1 && (*pBuffer)->BuPrevious != NULL)
+	    *pBuffer = (*pBuffer)->BuPrevious;
+	  else if (rtl)
+	    ind--;
+	  else
+	    ind++;
+	}
+    }
+  *index = ind;
 }
 
 

@@ -95,6 +95,7 @@ extern void FencedSeparatorModified ( NotifyOnTarget *event );
 extern void AttrSeparatorsChanged ( NotifyAttribute *event );
 extern void AttrScriptShiftCreated ( NotifyAttribute *event );
 extern ThotBool AttrScriptShiftDelete ( NotifyAttribute *event );
+extern void AttrAltModified ( NotifyAttribute *event );
 extern void HandleRowalignAttribute ( Attribute attr,
                                       Element el,
                                       Document doc,
@@ -206,6 +207,7 @@ extern void FencedSeparatorModified (/* NotifyOnTarget *event */);
 extern void AttrSeparatorsChanged (/* NotifyAttribute *event */);
 extern void AttrScriptShiftCreated (/* NotifyAttribute *event */);
 extern ThotBool AttrScriptShiftDelete (/* NotifyAttribute *event */);
+extern void AttrAltModified (/* NotifyAttribute *event */);
 extern void HandleRowalignAttribute (/* Attribute attr,
                                         Element el,
                                         Document doc,

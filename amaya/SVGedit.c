@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT MIT and INRIA, 1996-2001
+ *  (c) COPYRIGHT MIT and INRIA, 1996-2002.
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
