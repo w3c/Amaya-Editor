@@ -1661,7 +1661,7 @@ static void UpdateRowspanForRow (Element row, Document doc, ThotBool inMath,
 {
   Element             colhead, cell, prev, prevRow, table;
   ElementType         elType;
-  int                 colspan;
+  int                 colspan, i;
 
   elType = TtaGetElementType (row);
   if (inMath)
@@ -1677,14 +1677,28 @@ static void UpdateRowspanForRow (Element row, Document doc, ThotBool inMath,
   colhead = TtaSearchTypedElement (elType, SearchForward, table);
   /* get the previous row, if any */
   prevRow = GetSiblingRow (row, TRUE, inMath);
+  /* check the cells for all columns */
   cell = NULL;
   while (colhead)
     {
+      /* is there a cell in a row above that spans to the current row? */
       prev = SpannedCellForRow (prevRow, colhead, doc, inMath, addRow,
 				&colspan);
-      if (addRow && prev == NULL)
+      if (addRow && !prev)
+	/* we are creating a new row and no cell from a row above is
+           covering the current cell position. Create an empty cell at
+	   that position */
 	cell = AddEmptyCellInRow (row, colhead, cell, FALSE, doc, inMath,
 				  FALSE, FALSE);
+      else if (!addRow && prev)
+	/* we are deleting a row and a cell from a row above is covering
+	   the current cell position. Create an empty cell to allow this
+	   row to be pasted correctly later */
+	{
+	  for (i = 1; i <= colspan; i++)
+	      cell = AddEmptyCellInRow (row, colhead, cell, FALSE, doc, inMath,
+					FALSE, TRUE);
+	}
       while (colspan >= 1 && colhead)
 	{
 	  TtaNextSibling (&colhead);
