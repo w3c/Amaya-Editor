@@ -980,11 +980,6 @@ HTList             *c;
     */
    HTConversion_add (c, "text/x-http", "*/*", HTTPStatus_new,
 		     1.0, 0.0, 0.0);
-   HTConversion_add (c, "text/x-nntp-list", "*/*", HTNewsList,
-		     1.0, 0.0, 0.0);
-   HTConversion_add (c, "text/x-nntp-over", "*/*", HTNewsGroup,
-		     1.0, 0.0, 0.0);
-
 
    /*
     ** We also register a special content type guess stream that can figure out
@@ -1027,9 +1022,9 @@ static void         AHTProtocolInit (void)
    HTProtocol_add ("http", "buffered_tcp", NO, HTLoadHTTP, NULL);
    /*   HTProtocol_add ("http", "tcp", NO, HTLoadHTTP, NULL); */
    HTProtocol_add ("file", "local", NO, HTLoadFile, NULL);
-   /*HTProtocol_add ("cache", "local", NO, HTLoadCache, NULL); */
-   HTProtocol_add ("ftp", "tcp", NO, HTLoadFTP, NULL);
 #if 0 /* experimental code */
+   HTProtocol_add ("cache", "local", NO, HTLoadCache, NULL);
+   HTProtocol_add ("ftp", "tcp", NO, HTLoadFTP, NULL);
    HTProtocol_add ("telnet", "", YES, HTLoadTelnet, NULL);
    HTProtocol_add ("tn3270", "", YES, HTLoadTelnet, NULL);
    HTProtocol_add ("rlogin", "", YES, HTLoadTelnet, NULL);
