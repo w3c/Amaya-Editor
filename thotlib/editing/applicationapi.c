@@ -8,6 +8,7 @@
 /*
  *
  * Authors: V. Quint, I. Vatton (INRIA)
+ *          R. Guetari (W3C/INRIA): Adaptation for Windows NT/95
  *
  */
  
@@ -397,10 +398,16 @@ char               *aName;
 {
    int                 lg, i, j;
    char               *ptr, *oldptr;
+   char                my_dir_sep;
 
    if (text == NULL || aDirectory == NULL || aName == NULL)
       return;			/* No input text or error in input parameters */
 
+   if (text && strchr (text, '/'))
+	  my_dir_sep = '/';
+   else 
+	   my_dir_sep = DIR_SEP;
+   
    aDirectory[0] = '\0';
    aName[0] = '\0';
 
@@ -411,8 +418,12 @@ char               *aName;
 	ptr = oldptr = &text[0];
 	do
 	  {
+#        ifndef _WINDOWS
 	     ptr = strrchr (oldptr, DIR_SEP);
-	     if (ptr != NULL)
+#        else  /* _WINDOWS */
+	     ptr = strrchr (oldptr, my_dir_sep);
+#        endif /* _WINDOWS */
+		 if (ptr != NULL)
 		oldptr = &ptr[1];
 	  }
 	while (ptr != NULL);
