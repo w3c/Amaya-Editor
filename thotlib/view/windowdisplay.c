@@ -1241,7 +1241,10 @@ void DrawRectangle (int frame, int thick, int style, int x, int y, int width,
 
    /* how to fill the polygone */
    if (pattern == 0)
-	 hBrush = NULL;
+   {
+     logBrush.lbStyle = BS_NULL;
+     hBrush = CreateBrushIndirect (&logBrush);
+   }
    else if (pattern >= 3)
      {
 	   /* create a the bitmap */
@@ -1259,7 +1262,7 @@ void DrawRectangle (int frame, int thick, int style, int x, int y, int width,
 	 logBrush.lbColor = ColorPixel (fg);
        else
 	 logBrush.lbColor = ColorPixel (bg);
-       logBrush.lbStyle = BS_SOLID;
+     logBrush.lbStyle = BS_SOLID;
      hBrush = CreateBrushIndirect (&logBrush);
      }
 
