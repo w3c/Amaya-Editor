@@ -1800,15 +1800,13 @@ static int          LoopForStop (AHTReqContext * me)
 	    exit (0);
 
 	 status = XtAppPending (app_cont);
-	 if (status & XtIMXEvent) {
-            XtAppNextEvent (app_cont, &ev);
-	    TtaHandleOneEvent (&ev);
-	 } else if (status & (XtIMAll & (~XtIMXEvent))) {
-                XtAppProcessEvent (app_cont, (XtIMAll & (~XtIMXEvent)));
-	 } else {
-               XtAppNextEvent (app_cont, &ev);
-	       TtaHandleOneEvent (&ev);
-	 }
+	 if (status & XtIMXEvent)
+	   {
+	     XtAppNextEvent (app_cont, &ev);
+	     TtaHandleOneEvent (&ev);
+	   } 
+	 else if (status != 0) 
+	   XtAppProcessEvent (app_cont, XtIMAll);
    }
 #endif /* _WINDOWS */
    switch (me->reqStatus) {
@@ -2206,7 +2204,7 @@ char 	     *content_type;
    if (mode & AMAYA_NOCACHE) 
       HTRequest_setReloadMode (me->request, HT_CACHE_FLUSH);
    else
-     HTRequest_setReloadMode (me->request, HT_CACHE_FLUSH_MEM);
+     HTRequest_setReloadMode (me->request, HT_CACHE_OK);
 
    /* prepare the query string and format for POST */
    if (mode & AMAYA_FORM_POST)
