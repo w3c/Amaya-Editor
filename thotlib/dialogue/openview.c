@@ -84,8 +84,8 @@ View                view;
    int                 k, l, nbItems;
    STRING              src;
    STRING              dest;
-   CHAR                buf[MAX_TXT_LEN];
-   CHAR                bufMenu[MAX_TXT_LEN];
+   CHAR_T                buf[MAX_TXT_LEN];
+   CHAR_T                bufMenu[MAX_TXT_LEN];
 
    PtrDocument         pDoc;
 

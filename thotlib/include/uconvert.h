@@ -4,9 +4,9 @@
 #include "ustring.h"
 
 #ifdef __STDC__
-extern CHAR utolower (CHAR);
+extern CHAR_T utolower (CHAR_T);
 #else  /* !__STDC__ */
-extern CHAR utolower ();
+extern CHAR_T utolower ();
 #endif /* __STDC__ */
 
 #endif /* __UCONVERT_H__ */

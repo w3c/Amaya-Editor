@@ -284,12 +284,12 @@ int                 frame;
   A specific background is drawn in the box area.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                DisplayEmptyBox (PtrBox pBox, int frame, CHAR modele)
+void                DisplayEmptyBox (PtrBox pBox, int frame, CHAR_T modele)
 #else  /* __STDC__ */
 void                DisplayEmptyBox (pBox, frame, modele)
 PtrBox              pBox;
 int                 frame;
-CHAR                modele;
+CHAR_T                modele;
 #endif /* __STDC__ */
 {
    PtrBox              mbox;
@@ -844,7 +844,7 @@ int                 frame;
    PtrTextBuffer       newbuff;
    PtrAbstractBox      pAbbox1;
    ViewFrame          *pFrame;
-   UCHAR       car;
+   UCHAR_T       car;
    PtrBox              mbox;
    int                 indbuff;
    int                 restbl;
@@ -956,7 +956,7 @@ int                 frame;
 		      indbuff = newind;
 		      restbl = newbl;
 		      x += lg;
-		      car = (UCHAR) (adbuff->BuContent[indbuff - 1]);
+		      car = (UCHAR_T) (adbuff->BuContent[indbuff - 1]);
 		      if (car == _SPACE_)
 			{
 			   lg = lgspace;
@@ -1010,7 +1010,7 @@ int                 frame;
 		   /* handle each char in the buffer */
 		   while (indbuff <= indmax)
 		     {
-			car = (UCHAR) (adbuff->BuContent[indbuff - 1]);
+			car = (UCHAR_T) (adbuff->BuContent[indbuff - 1]);
 
 			if (car == _SPACE_ || car == THIN_SPACE
 			    || car == HALF_EM || car == UNBREAKABLE_SPACE)
@@ -1071,8 +1071,8 @@ int                 frame;
 			   DisplayUnderline (frame, x, y, pBox->BxFont, pBox->BxUnderline,
 			        pBox->BxThickness, pBox->BxWidth, RO, op, fg);
 			/* Next char lookup */
-			if (((UCHAR) adbuff->BuContent[indbuff - 1] == BREAK_LINE ||
-			     (UCHAR) adbuff->BuContent[indbuff - 1] == NEW_LINE)
+			if (((UCHAR_T) adbuff->BuContent[indbuff - 1] == BREAK_LINE ||
+			     (UCHAR_T) adbuff->BuContent[indbuff - 1] == NEW_LINE)
 			    && !ShowSpace)
 			   DrawChar (SHOWN_BREAK_LINE, frame, x, y, pBox->BxFont, RO, op, fg);
 		     }

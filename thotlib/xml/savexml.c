@@ -43,7 +43,7 @@ static PathBuffer   SaveFileName;
 static boolean      SaveDocWithCopy;
 static boolean      SaveDocWithMove;
 static PtrDocument  DocumentToSave;
-extern CHAR         DefaultFileSuffix[5];
+extern CHAR_T         DefaultFileSuffix[5];
 
 /*----------------------------------------------------------------------
   XmlSetWriteDirectory sets the directory, filename, if the next write 
@@ -112,7 +112,7 @@ STRING              extension;
 
 #endif /* __STDC__ */
 {
-   CHAR                buf[MAX_TXT_LEN];
+   CHAR_T                buf[MAX_TXT_LEN];
    int                 i;
 
    if (pDoc == NULL)
@@ -143,9 +143,9 @@ PtrDocument         pDoc;
 
 {
    boolean             ok;
-   CHAR                docname[MAX_TXT_LEN];
-   CHAR                buf[MAX_TXT_LEN];
-   CHAR                buf2[MAX_TXT_LEN];
+   CHAR_T                docname[MAX_TXT_LEN];
+   CHAR_T                buf[MAX_TXT_LEN];
+   CHAR_T                buf2[MAX_TXT_LEN];
    int                 i;
    NotifyDialog         notifyDoc;
 

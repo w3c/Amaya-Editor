@@ -64,7 +64,7 @@
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-void                ReplaceString (PtrDocument pDoc, PtrElement pEl, int firstChar, int stringLen, CHAR replaceStr[THOT_MAX_CHAR], int replaceLen, boolean select)
+void                ReplaceString (PtrDocument pDoc, PtrElement pEl, int firstChar, int stringLen, CHAR_T replaceStr[THOT_MAX_CHAR], int replaceLen, boolean select)
 
 #else  /* __STDC__ */
 void                ReplaceString (pDoc, pEl, firstChar, stringLen, replaceStr, replaceLen, select)
@@ -72,7 +72,7 @@ PtrDocument         pDoc;
 PtrElement          pEl;
 int                 firstChar;
 int                 stringLen;
-CHAR                replaceStr[THOT_MAX_CHAR];
+CHAR_T                replaceStr[THOT_MAX_CHAR];
 int                 replaceLen;
 boolean             select;
 
@@ -283,12 +283,12 @@ boolean             select;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-static boolean      EquivalentChar (CHAR c1, CHAR c2, boolean caseEquiv)
+static boolean      EquivalentChar (CHAR_T c1, CHAR_T c2, boolean caseEquiv)
 
 #else  /* __STDC__ */
 static boolean      EquivalentChar (c1, c2, caseEquiv)
-CHAR                c1;
-CHAR                c2;
+CHAR_T                c1;
+CHAR_T                c2;
 boolean             caseEquiv;
 
 #endif /* __STDC__ */
@@ -297,9 +297,9 @@ boolean             caseEquiv;
    if (caseEquiv)
      {
 	if ((c1 >= 'A' && c1 <= 'Z') || (c1 >= '\300' && c1 <= '\336'))
-	   c1 = (CHAR) ((int) (c1) + 32);
+	   c1 = (CHAR_T) ((int) (c1) + 32);
 	if ((c2 >= 'A' && c2 <= 'Z') || (c2 >= '\300' && c2 <= '\336'))
-	   c2 = (CHAR) ((int) (c2) + 32);
+	   c2 = (CHAR_T) ((int) (c2) + 32);
      }
    return (c1 == c2);
 }
@@ -310,14 +310,14 @@ boolean             caseEquiv;
    indiquee par (pBuf,ind).                                
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean      SameString (PtrTextBuffer pBuf, int ind, boolean caseEquiv, CHAR strng[THOT_MAX_CHAR], int strngLen)
+static boolean      SameString (PtrTextBuffer pBuf, int ind, boolean caseEquiv, CHAR_T strng[THOT_MAX_CHAR], int strngLen)
 
 #else  /* __STDC__ */
 static boolean      SameString (pBuf, ind, caseEquiv, strng, strngLen)
 PtrTextBuffer       pBuf;
 int                 ind;
 boolean             caseEquiv;
-CHAR                strng[THOT_MAX_CHAR];
+CHAR_T                strng[THOT_MAX_CHAR];
 int                 strngLen;
 
 #endif /* __STDC__ */
@@ -357,7 +357,7 @@ int                 strngLen;
    egale a` la chaine cherchee.                            
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             ContentAndStringEqual (PtrElement firstEl, int firstChar, PtrElement lastEl, int lastChar, boolean caseEquiv, CHAR strng[THOT_MAX_CHAR], int strngLen)
+boolean             ContentAndStringEqual (PtrElement firstEl, int firstChar, PtrElement lastEl, int lastChar, boolean caseEquiv, CHAR_T strng[THOT_MAX_CHAR], int strngLen)
 #else  /* __STDC__ */
 boolean             ContentAndStringEqual (firstEl, firstChar, lastEl, lastChar, caseEquiv, strng, strngLen)
 PtrElement          firstEl;
@@ -365,7 +365,7 @@ int                 firstChar;
 PtrElement          lastEl;
 int                 lastChar;
 boolean             caseEquiv;
-CHAR                strng[THOT_MAX_CHAR];
+CHAR_T                strng[THOT_MAX_CHAR];
 int                 strngLen;
 
 #endif /* __STDC__ */
@@ -399,7 +399,7 @@ int                 strngLen;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-static void         FwdSearchString (PtrTextBuffer pBuf, int ind, boolean * found, int *firstChar, boolean caseEquiv, CHAR strng[THOT_MAX_CHAR])
+static void         FwdSearchString (PtrTextBuffer pBuf, int ind, boolean * found, int *firstChar, boolean caseEquiv, CHAR_T strng[THOT_MAX_CHAR])
 
 #else  /* __STDC__ */
 static void         FwdSearchString (pBuf, ind, found, firstChar, caseEquiv, strng)
@@ -408,7 +408,7 @@ int                 ind;
 boolean            *found;
 int                *firstChar;
 boolean             caseEquiv;
-CHAR                strng[THOT_MAX_CHAR];
+CHAR_T                strng[THOT_MAX_CHAR];
 
 #endif /* __STDC__ */
 
@@ -494,7 +494,7 @@ CHAR                strng[THOT_MAX_CHAR];
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-static void         BackSearchString (PtrTextBuffer pBuf, int ind, boolean * found, int *firstChar, boolean caseEquiv, CHAR strng[THOT_MAX_CHAR], int strngLen)
+static void         BackSearchString (PtrTextBuffer pBuf, int ind, boolean * found, int *firstChar, boolean caseEquiv, CHAR_T strng[THOT_MAX_CHAR], int strngLen)
 
 #else  /* __STDC__ */
 static void         BackSearchString (pBuf, ind, found, firstChar, caseEquiv, strng, strngLen)
@@ -503,7 +503,7 @@ int                 ind;
 boolean            *found;
 int                *firstChar;
 boolean             caseEquiv;
-CHAR                strng[THOT_MAX_CHAR];
+CHAR_T                strng[THOT_MAX_CHAR];
 int                 strngLen;
 
 #endif /* __STDC__ */
@@ -579,7 +579,7 @@ int                 strngLen;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-boolean             SearchText (PtrDocument pDoc, PtrElement * firstEl, int *firstChar, PtrElement * lastEl, int *lastChar, boolean forward, boolean caseEquiv, CHAR strng[THOT_MAX_CHAR], int strngLen)
+boolean             SearchText (PtrDocument pDoc, PtrElement * firstEl, int *firstChar, PtrElement * lastEl, int *lastChar, boolean forward, boolean caseEquiv, CHAR_T strng[THOT_MAX_CHAR], int strngLen)
 
 #else  /* __STDC__ */
 boolean             SearchText (pDoc, firstEl, firstChar, lastEl, lastChar, forward, caseEquiv, strng, strngLen)
@@ -590,7 +590,7 @@ PtrElement         *lastEl;
 int                *lastChar;
 boolean             forward;
 boolean             caseEquiv;
-CHAR                strng[THOT_MAX_CHAR];
+CHAR_T                strng[THOT_MAX_CHAR];
 int                 strngLen;
 
 #endif /* __STDC__ */

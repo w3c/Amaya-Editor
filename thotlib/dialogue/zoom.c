@@ -64,7 +64,7 @@ STRING               data;
    int                 valvisib;
    int                 valzoom;
    int                 bouton;
-   CHAR                chaine[100];
+   CHAR_T                chaine[100];
 
    bouton = (int) data;
    GetFrameParams (Fenzoomview, &valvisib, &valzoom);
@@ -136,7 +136,7 @@ View                view;
 #endif /* __STDC__ */
 {
    int                 i;
-   CHAR                chaine[100];
+   CHAR_T                chaine[100];
 
    /* Faut-il creer le formulaire Zoom */
    if (ThotLocalActions[T_chzoom] == NULL)

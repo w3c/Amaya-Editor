@@ -70,10 +70,10 @@ STRING        name;
 
 #endif /* __STDC__ */
 {
-    UCHAR idx = 0;
-	PCHAR ptr = name;
+    UCHAR_T idx = 0;
+	PCHAR_T ptr = name;
 
-    while (*ptr != EOS) idx += (UCHAR) *ptr++;
+    while (*ptr != EOS) idx += (UCHAR_T) *ptr++;
     return((int) idx);
 }
 
@@ -201,7 +201,7 @@ STRING              path;
 
 {
     int                 typeImage;
-    CHAR                fileName[1023];
+    CHAR_T                fileName[1023];
     PictureScaling      pres = RealSize;
     int                 xif = 0;
     int                 yif = 0;

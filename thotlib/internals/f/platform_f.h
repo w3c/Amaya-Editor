@@ -6,15 +6,15 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern int TtaFileExist ( CONST char *filename );
-extern int TtaFileUnlink ( CONST char *filename );
+extern int TtaFileExist ( CONST STRING filename );
+extern int TtaFileUnlink ( CONST STRING filename );
 extern int ThotDirBrowse_first ( ThotDirBrowse * me,
-                                 char *dir,
-                                 char *name,
-                                 char *ext );
+                                 STRING dir,
+                                 STRING name,
+                                 STRING ext );
 extern int ThotDirBrowse_next ( ThotDirBrowse * me );
 extern int ThotDirBrowse_close ( ThotDirBrowse * me );
-extern ThotFileHandle TtaFileOpen ( CONST char *name,
+extern ThotFileHandle TtaFileOpen ( CONST STRING name,
                                     ThotFileMode mode );
 extern int TtaFileClose ( ThotFileHandle handle );
 extern int TtaFileRead ( ThotFileHandle handle,
@@ -28,22 +28,22 @@ extern ThotFileOffset TtaFileSeek ( ThotFileHandle handle,
                                     ThotFileOrigin origin );
 extern int TtaFileStat ( ThotFileHandle handle,
                          ThotFileInfo * pInfo );
-extern void TtaFileCopy ( CONST char *sourceFileName,
-                          CONST char *targetFileName );
-extern boolean TtaCompareFiles ( CONST char *file1,
-                                 CONST char *file2 );
+extern void TtaFileCopy ( CONST STRING sourceFileName,
+                          CONST STRING targetFileName );
+extern boolean TtaCompareFiles ( CONST STRING file1,
+                                 CONST STRING file2 );
 
 #else /* __STDC__ */
 
-extern int TtaFileExist (/* CONST char *filename */);
-extern int TtaFileUnlink (/* CONST char *filename */);
+extern int TtaFileExist (/* CONST STRING filename */);
+extern int TtaFileUnlink (/* CONST STRING filename */);
 extern int ThotDirBrowse_first (/* ThotDirBrowse * me,
-                                   char *dir,
-                                   char *name,
-                                   char *ext */);
+                                   STRING dir,
+                                   STRING name,
+                                   STRING ext */);
 extern int ThotDirBrowse_next (/* ThotDirBrowse * me */);
 extern int ThotDirBrowse_close (/* ThotDirBrowse * me */);
-extern ThotFileHandle TtaFileOpen (/* CONST char *name,
+extern ThotFileHandle TtaFileOpen (/* CONST STRING name,
                                       ThotFileMode mode */);
 extern int TtaFileClose (/* ThotFileHandle handle */);
 extern int TtaFileRead (/* ThotFileHandle handle,
@@ -57,10 +57,10 @@ extern ThotFileOffset TtaFileSeek (/* ThotFileHandle handle,
                                       ThotFileOrigin origin */);
 extern int TtaFileStat (/* ThotFileHandle handle,
                            ThotFileInfo * pInfo */);
-extern void TtaFileCopy (/* CONST char *sourceFileName,
-                            CONST char *targetFileName */);
-extern boolean TtaCompareFiles (/* CONST char *file1,
-                                   CONST char *file2 */);
+extern void TtaFileCopy (/* CONST STRING sourceFileName,
+                            CONST STRING targetFileName */);
+extern boolean TtaCompareFiles (/* CONST STRING file1,
+                                   CONST STRING file2 */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

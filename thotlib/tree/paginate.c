@@ -1273,7 +1273,7 @@ PtrElement          rootEl;
 
 #ifdef PRINT_DEBUG
 FILE     *list;
-CHAR      localname[50];
+CHAR_T      localname[50];
 static int       n = 1;
 
    sprintf (localname, "/home/stephane/.amaya/printpage%d.debug", n);
@@ -1350,7 +1350,7 @@ int                 schView;
 
 #ifdef PRINT_DEBUG
    FILE     *list;
-   CHAR      localname[50];
+   CHAR_T      localname[50];
    static int       n = 1;
    
    sprintf (localname, "/home/stephane/.amaya/print%d.debug", n);

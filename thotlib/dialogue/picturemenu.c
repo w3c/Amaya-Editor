@@ -55,8 +55,8 @@ extern STRING       FileExtension[];
 
 static int          IndexTypeImage, IndexPresImage, BaseDlgImage;
 static boolean      RedisplayPicture;
-static CHAR         ImageName[100] = "";
-static CHAR         DirectoryImage[MAX_PATH] = "";
+static CHAR_T         ImageName[100] = "";
+static CHAR_T         DirectoryImage[MAX_PATH] = "";
 
 #include "browser_f.h"
 #include "fileaccess_f.h"
@@ -116,7 +116,7 @@ int                 indexType;
   ----------------------------------------------------------------------*/
 static void         InitPathImage ()
 {
-   CHAR                bufDir[MAX_PATH * 2];
+   CHAR_T                bufDir[MAX_PATH * 2];
    int                 i, j;
    int                 nb;
    int                 max;
@@ -183,7 +183,7 @@ STRING              txt;
 {
    PathBuffer          completeName;
    int                 i, val;
-   CHAR                URL_DIR_SEP;
+   CHAR_T                URL_DIR_SEP;
 
    if (typeData == STRING_DATA && txt && ustrchr (txt, '/'))
      URL_DIR_SEP = '/';
@@ -319,10 +319,10 @@ PtrBox              pBox;
 #endif /* __STDC__ */
 {
    int                 i, indx;
-   CHAR                bufTypeImage[MAX_TXT_LEN];
+   CHAR_T                bufTypeImage[MAX_TXT_LEN];
    STRING              source;
    int                 imageTypeCount, length;
-   CHAR                bufMenu[MAX_TXT_LEN];
+   CHAR_T                bufMenu[MAX_TXT_LEN];
    PictInfo           *image;
 
    IndexTypeImage = GetPictTypeIndex (*typim);

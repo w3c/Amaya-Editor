@@ -6,9 +6,9 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern UCHAR NextCharacter ( PtrTextBuffer * buffer,
+extern UCHAR_T NextCharacter ( PtrTextBuffer * buffer,
                              int *rank );
-extern UCHAR PreviousCharacter ( PtrTextBuffer * buffer,
+extern UCHAR_T PreviousCharacter ( PtrTextBuffer * buffer,
                                  int *rank );
 extern boolean MotOk ( PtrElement firstEl,
                        int firstChar,
@@ -24,18 +24,18 @@ extern boolean NextTree ( PtrElement * pEl,
                           PtrSearchContext context );
 extern boolean SearchNextWord ( PtrElement * curEl,
                                 int *curChar,
-                                CHAR word[MAX_WORD_LEN],
+                                CHAR_T word[MAX_WORD_LEN],
                                 PtrSearchContext context );
 extern boolean SearchPreviousWord ( PtrElement * curEl,
                                     int *curChar,
-                                    CHAR word[MAX_WORD_LEN],
+                                    CHAR_T word[MAX_WORD_LEN],
                                     PtrSearchContext context );
 
 #else /* __STDC__ */
 
-extern UCHAR NextCharacter (/* PtrTextBuffer * buffer,
+extern UCHAR_T NextCharacter (/* PtrTextBuffer * buffer,
                                int *rank */);
-extern UCHAR PreviousCharacter (/* PtrTextBuffer * buffer,
+extern UCHAR_T PreviousCharacter (/* PtrTextBuffer * buffer,
                                    int *rank */);
 extern boolean MotOk (/* PtrElement firstEl,
                          int firstChar,
@@ -51,11 +51,11 @@ extern boolean NextTree (/* PtrElement * pEl,
                             PtrSearchContext context */);
 extern boolean SearchNextWord (/* PtrElement * curEl,
                                   int *curChar,
-                                  CHAR word[MAX_WORD_LEN],
+                                  CHAR_T word[MAX_WORD_LEN],
                                   PtrSearchContext context */);
 extern boolean SearchPreviousWord (/* PtrElement * curEl,
                                       int *curChar,
-                                      CHAR word[MAX_WORD_LEN],
+                                      CHAR_T word[MAX_WORD_LEN],
                                       PtrSearchContext context */);
 
 #endif /* __STDC__ */

@@ -52,7 +52,7 @@ BinFile             file;
 
 #endif /* __STDC__ */
 {
-   CHAR                c;
+   CHAR_T                c;
 
    if (!TtaReadByte (file, &c))
      {
@@ -163,7 +163,7 @@ BinFile             file;
 
 #endif /* __STDC__ */
 {
-   CHAR                c;
+   CHAR_T                c;
 
    if (!TtaReadByte (file, &c))
      {
@@ -200,7 +200,7 @@ BinFile             file;
 
 #endif /* __STDC__ */
 {
-   CHAR                c;
+   CHAR_T                c;
 
    if (!TtaReadByte (file, &c))
      {
@@ -242,7 +242,7 @@ BinFile             file;
 
 #endif /* __STDC__ */
 {
-   CHAR                c;
+   CHAR_T                c;
 
    if (!TtaReadByte (file, &c))
      {
@@ -287,7 +287,7 @@ boolean            *repeat;
 
 #endif /* __STDC__ */
 {
-   CHAR                c;
+   CHAR_T                c;
    FunctionType        functType;
 
    *repeat = FALSE;
@@ -390,7 +390,7 @@ BinFile             file;
 
 #endif /* __STDC__ */
 {
-   CHAR                c;
+   CHAR_T                c;
    BAlignment          align;
 
    if (!TtaReadByte (file, &c))
@@ -434,7 +434,7 @@ BinFile             file;
 
 #endif /* __STDC__ */
 {
-   CHAR                c;
+   CHAR_T                c;
    PresCondition       condtype;
 
    if (!TtaReadByte (file, &c))
@@ -536,7 +536,7 @@ BinFile             file;
 
 #endif /* __STDC__ */
 {
-   CHAR                c;
+   CHAR_T                c;
    ArithRel            rel;
 
    if (!TtaReadByte (file, &c))
@@ -570,7 +570,7 @@ BinFile             file;
 
 #endif /* __STDC__ */
 {
-   CHAR                c;
+   CHAR_T                c;
    BoxEdge             edge;
 
    if (!TtaReadByte (file, &c))
@@ -629,7 +629,7 @@ BinFile             file;
 
 #endif /* __STDC__ */
 {
-   CHAR                c;
+   CHAR_T                c;
    Level               level;
 
    if (!TtaReadByte (file, &c))
@@ -689,7 +689,7 @@ BinFile             file;
 
 #endif /* __STDC__ */
 {
-   CHAR                c;
+   CHAR_T                c;
    CounterOp           optype;
 
    if (!TtaReadByte (file, &c))
@@ -732,7 +732,7 @@ BinFile             file;
 
 #endif /* __STDC__ */
 {
-   CHAR                c;
+   CHAR_T                c;
    BasicType           basictyp;
 
    if (!TtaReadByte (file, &c))
@@ -781,7 +781,7 @@ BinFile             file;
 
 #endif /* __STDC__ */
 {
-   CHAR                c;
+   CHAR_T                c;
    VariableType        vartyp;
 
    if (!TtaReadByte (file, &c))
@@ -842,7 +842,7 @@ BinFile             file;
 
 #endif /* __STDC__ */
 {
-   CHAR                c;
+   CHAR_T                c;
    CounterStyle        countstyle;
 
    if (!TtaReadByte (file, &c))
@@ -888,7 +888,7 @@ BinFile             file;
 
 #endif /* __STDC__ */
 {
-   CHAR                c;
+   CHAR_T                c;
    CounterValue        value;
 
    if (!TtaReadByte (file, &c))
@@ -928,7 +928,7 @@ BinFile             file;
 
 #endif /* __STDC__ */
 {
-   CHAR                c;
+   CHAR_T                c;
    ContentType         conttype;
 
    if (!TtaReadByte (file, &c))
@@ -973,7 +973,7 @@ PtrPRule           *pNextPRule;
 
 #endif /* __STDC__ */
 {
-   CHAR                c;
+   CHAR_T                c;
 
    if (!TtaReadByte (file, &c))
       return NULL;
@@ -995,7 +995,7 @@ BinFile             file;
 
 #endif /* __STDC__ */
 {
-   CHAR                c;
+   CHAR_T                c;
 
    if (!TtaReadByte (file, &c))
       c = ' ';
@@ -1055,7 +1055,7 @@ BinFile             file;
 
 #endif /* __STDC__ */
 {
-   CHAR                c;
+   CHAR_T                c;
 
    if (!TtaReadByte (file, &c))
       c = ' ';
@@ -1304,7 +1304,7 @@ PtrSSchema          pSS;
    NumAttrCase        *pCase;
    PathBuffer          dirBuffer;
    BinFile             file;
-   CHAR                buf[MAX_TXT_LEN];
+   CHAR_T                buf[MAX_TXT_LEN];
    int                 InitialNElems, i, j, l;
    boolean             ret;
 

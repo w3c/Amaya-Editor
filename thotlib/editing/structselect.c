@@ -3163,7 +3163,7 @@ void                BuildSelectionMessage ()
 {
    PtrElement          pEl;
    PtrDocument         pDoc;
-   CHAR                msgBuf[MAX_TXT_LEN];
+   CHAR_T                msgBuf[MAX_TXT_LEN];
    int                 nbasc;
 
    if (DocSelectedAttr != NULL && AbsBoxSelectedAttr != NULL)
@@ -3370,7 +3370,7 @@ void                TtcParentElement (Document document, View view)
 void                TtcParentElement (document, view)
 Document            document;
 View                view;
-CHAR                c;
+CHAR_T                c;
 
 #endif /* __STDC__ */
 {
@@ -3389,7 +3389,7 @@ void                TtcPreviousElement (Document document, View view)
 void                TtcPreviousElement (document, view)
 Document            document;
 View                view;
-CHAR                c;
+CHAR_T                c;
 
 #endif /* __STDC__ */
 {
@@ -3408,7 +3408,7 @@ void                TtcNextElement (Document document, View view)
 void                TtcNextElement (document, view)
 Document            document;
 View                view;
-CHAR                c;
+CHAR_T                c;
 
 #endif /* __STDC__ */
 {
@@ -3426,7 +3426,7 @@ void                TtcChildElement (Document document, View view)
 void                TtcChildElement (document, view)
 Document            document;
 View                view;
-CHAR                c;
+CHAR_T                c;
 
 #endif /* __STDC__ */
 {

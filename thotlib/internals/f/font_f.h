@@ -8,11 +8,11 @@
 
 extern int NumberOfFonts ( void );
 extern int GetCharsCapacity ( int volpixel );
-extern int CharacterWidth ( UCHAR c,
+extern int CharacterWidth ( UCHAR_T c,
                             ptrfont font );
-extern int CharacterHeight ( UCHAR c,
+extern int CharacterHeight ( UCHAR_T c,
                              ptrfont font );
-extern int CharacterAscent ( UCHAR c,
+extern int CharacterAscent ( UCHAR_T c,
                              ptrfont font );
 extern int FontAscent ( ptrfont font );
 extern int FontHeight ( ptrfont font );
@@ -27,22 +27,22 @@ extern int LogicalValue ( int val,
 extern int FontBase ( ptrfont font );
 extern int FontRelSize ( int size );
 extern int FontPointSize ( int size );
-extern ptrfont LoadFont ( CHAR name[100],
+extern ptrfont LoadFont ( CHAR_T name[100],
                           int toPatch );
-extern void FontIdentifier ( CHAR alphabet,
-                             CHAR family,
+extern void FontIdentifier ( CHAR_T alphabet,
+                             CHAR_T family,
                              int highlight,
                              int size,
                              TypeUnit unit,
-                             CHAR r_name[10],
-                             CHAR r_nameX[100] );
-extern ptrfont ReadFont ( CHAR alphabet,
-                          CHAR family,
+                             CHAR_T r_name[10],
+                             CHAR_T r_nameX[100] );
+extern ptrfont ReadFont ( CHAR_T alphabet,
+                          CHAR_T family,
                           int highlight,
                           int size,
                           TypeUnit unit );
-extern ptrfont ThotLoadFont ( CHAR alphabet,
-                              CHAR family,
+extern ptrfont ThotLoadFont ( CHAR_T alphabet,
+                              CHAR_T family,
                               int highlight,
                               int size,
                               TypeUnit unit,
@@ -54,11 +54,11 @@ extern void ThotFreeFont ( int frame );
 
 extern int NumberOfFonts (/* void */);
 extern int GetCharsCapacity (/* int volpixel */);
-extern int CharacterWidth (/* UCHAR c,
+extern int CharacterWidth (/* UCHAR_T c,
                               ptrfont font */);
-extern int CharacterHeight (/* UCHAR c,
+extern int CharacterHeight (/* UCHAR_T c,
                                ptrfont font */);
-extern int CharacterAscent (/* UCHAR c,
+extern int CharacterAscent (/* UCHAR_T c,
                                ptrfont font */);
 extern int FontAscent (/* ptrfont font */);
 extern int FontHeight (/* ptrfont font */);
@@ -73,22 +73,22 @@ extern int LogicalValue (/* int val,
 extern int FontBase (/* ptrfont font */);
 extern int FontRelSize (/* int size */);
 extern int FontPointSize (/* int size */);
-extern ptrfont LoadFont (/* CHAR name[100],
+extern ptrfont LoadFont (/* CHAR_T name[100],
                             int toPatch */);
-extern void FontIdentifier (/* CHAR alphabet,
-                               CHAR family,
+extern void FontIdentifier (/* CHAR_T alphabet,
+                               CHAR_T family,
                                int highlight,
                                int size,
                                TypeUnit unit,
-                               CHAR r_name[10],
-                               CHAR r_nameX[100] */);
-extern ptrfont ReadFont (/* CHAR alphabet,
-                            CHAR family,
+                               CHAR_T r_name[10],
+                               CHAR_T r_nameX[100] */);
+extern ptrfont ReadFont (/* CHAR_T alphabet,
+                            CHAR_T family,
                             int highlight,
                             int size,
                             TypeUnit unit */);
-extern ptrfont ThotLoadFont (/* CHAR alphabet,
-                                CHAR family,
+extern ptrfont ThotLoadFont (/* CHAR_T alphabet,
+                                CHAR_T family,
                                 int highlight,
                                 int size,
                                 TypeUnit unit,

@@ -113,8 +113,8 @@ boolean            *save;
 #endif /* __STDC__ */
 {
 #  ifndef _WINDOWS
-   CHAR                buftext[300];
-   CHAR                bufbutton[300];
+   CHAR_T                buftext[300];
+   CHAR_T                bufbutton[300];
    int                 i;
 
    CloseDontSave = TRUE;
@@ -146,7 +146,7 @@ boolean            *save;
    /* attend le retour de ce formulaire (traite' par CallbackCloseDocMenu) */
    TtaWaitShowDialogue ();
 #  else  /* _WINDOWS */
-   CHAR    buftext[300];
+   CHAR_T    buftext[300];
    BOOL    save_befor, close_dont_save;
    ustrcpy (buftext, TtaGetMessage (LIB, TMSG_SAVE_DOC));
    ustrcat (buftext, " ");

@@ -50,7 +50,7 @@
 
 
 #define MaxAsc 30
-static CHAR         text[MAX_TXT_LEN];
+static CHAR_T       text[MAX_TXT_LEN];
 
 
 /*----------------------------------------------------------------------
@@ -72,7 +72,7 @@ boolean		    origName;
    PtrElement          pEl;
 
    if (pAb == NULL)
-      ustrcpy (text, " ");
+      ustrcpy (text, (STRING)" ");
    else
      {
 	pEl = pAb->AbElement;
@@ -84,7 +84,7 @@ boolean		    origName;
 	if (pAb->AbPresentationBox)
 	  /* Ajoute le nom du type de boite de presentation */
 	  {
-	     ustrcat (text, ".");
+	     ustrcat (text, (STRING)".");
 	     ustrcat (text, pAb->AbPSchema->PsPresentBox[pAb->AbTypeNum - 1].PbName);
 	  }
      }

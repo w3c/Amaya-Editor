@@ -152,7 +152,7 @@ unsigned long       BackGroundPixel;
    float               Scx, Scy;
    register int        i;
    unsigned int       *pt;
-   UCHAR               pt1;
+   UCHAR_T               pt1;
    int                 x, y;
    int                 wim ;
 #  ifndef _WINDOWS 
@@ -286,7 +286,7 @@ unsigned long       BackGroundPixel;
 	  {
 
 	     /* RGB components generation */
-	     pt1 = (UCHAR) (*pt);
+	     pt1 = (UCHAR_T) (*pt);
 	     fprintf ((FILE *) fd, "%02x%02x%02x",
 		      (colorTab[pt1].red) & 0xff,
 		      (colorTab[pt1].green) & 0xff,
@@ -318,7 +318,7 @@ STRING              fn;
 #endif /* __STDC__ */
 {
    FILE               *f;
-   CHAR                c;
+   CHAR_T                c;
    boolean                res;
 
    res = FALSE;

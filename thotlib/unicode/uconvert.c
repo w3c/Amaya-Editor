@@ -5,13 +5,13 @@
 #include <stdlib.h>
 #include <ctype.h>
 #ifdef __STDC__
-CHAR utolower (CHAR c)
+CHAR_T utolower (CHAR_T c)
 #else  /* !__STDC__ */
-CHAR utolower (c)
-CHAR c;
+CHAR_T utolower (c)
+CHAR_T c;
 #endif /* __STDC__ */
 {
-     return ((CHAR) tolower ((int)c));
+     return ((CHAR_T) tolower ((int)c));
 }
 
 #endif /* _I18N_ */

@@ -21,7 +21,7 @@ extern void BuildPasteMenu ( int RefMenu,
                              STRING bufMenu,
                              Name title,
                              int nbEntries,
-                             CHAR button );
+                             CHAR_T button );
 
 #else /* __STDC__ */
 
@@ -40,7 +40,7 @@ extern void BuildPasteMenu (/* int RefMenu,
                                STRING bufMenu,
                                Name title,
                                int nbEntries,
-                               CHAR button */);
+                               CHAR_T button */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

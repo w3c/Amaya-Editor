@@ -51,7 +51,7 @@ AttribType         *attrType;
 #endif /* __STDC__ */
 
 {
-   CHAR                c;
+   CHAR_T                c;
 
    TtaReadByte (file, &c);
    switch (c)
@@ -93,7 +93,7 @@ RConstruct         *constr;
 #endif /* __STDC__ */
 
 {
-   CHAR                c;
+   CHAR_T                c;
 
    TtaReadByte (file, &c);
    switch (c)
@@ -155,7 +155,7 @@ BasicType          *typ;
 #endif /* __STDC__ */
 
 {
-   CHAR                c;
+   CHAR_T                c;
 
    TtaReadByte (file, &c);
    switch (c)
@@ -365,7 +365,7 @@ PtrSSchema          pSS;
 #endif /* __STDC__ */
 
 {
-   CHAR                c;
+   CHAR_T                c;
    int                 i;
 
    i = 0;

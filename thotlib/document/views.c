@@ -566,7 +566,7 @@ STRING              newName;
 {
    DocViewDescr       *pView;
    int                 len, view;
-   CHAR                buffer[MAX_TXT_LEN];
+   CHAR_T                buffer[MAX_TXT_LEN];
 
    len = 0;
    ustrcpy (buffer, newName);

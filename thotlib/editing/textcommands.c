@@ -498,7 +498,7 @@ View                view;
    /* On reserve un volant de 100 caracteres pour ajouter des CR */
    max = maxLength + 100;
    /* Alloue un Xbuffer de la longueur voulue */
-   Xbuffer = (USTRING) TtaGetMemory (sizeof (CHAR) * max);
+   Xbuffer = (USTRING) TtaGetMemory (sizeof (CHAR_T) * max);
 
    *buffer = Xbuffer;
    /* Recopie le texte dans le Xbuffer */

@@ -72,16 +72,16 @@
 struct E_List
   {
      struct E_List      *E_Next;	         /* CsList d'entrees suivante         */
-     CHAR                E_Free[C_NUMBER];	 /* Disponibilite des entrees         */
-     CHAR                E_Type[C_NUMBER];	 /* CsList des types des entrees      */
+     CHAR_T                E_Free[C_NUMBER];	 /* Disponibilite des entrees         */
+     CHAR_T                E_Type[C_NUMBER];	 /* CsList des types des entrees      */
      ThotWidget          E_ThotWidget[C_NUMBER]; /* ThotWidgets associes aux entrees  */
   };
 
 struct Cat_Context
   {
      int                 Cat_Ref;	         /* CsReference appli du catalogue    */
-     UCHAR       Cat_Type;	         /* Type du catalogue                 */
-     UCHAR       Cat_Button;	         /* Le bouton qui active              */
+     UCHAR_T       Cat_Type;	         /* Type du catalogue                 */
+     UCHAR_T       Cat_Button;	         /* Le bouton qui active              */
      union {
 	 int             Catu_Data;	         /* Valeur de retour                  */
 	 ThotWidget	 Catu_XtWParent;
@@ -213,7 +213,7 @@ int                 WIN_DesY;	/* Position Y of the selection      */
 int                 WIN_DesReturn;	/* Selection indicator              */
 USTRING      WIN_buffer;	/* Buffer for exchanges with Window */
 int                 WIN_Lgbuffer;
-extern CHAR         docToOpen [256];
+extern CHAR_T         docToOpen [256];
 #ifdef  APPFILENAMEFILTER
 #undef  APPFILENAMEFILTER
 #endif  /* APPFILENAMEFILTER */
@@ -234,7 +234,7 @@ static int      bIndex   = 0;
 static int      bAbsBase = 60 ;
 static WIN_Form formulary ;
 static BYTE     fVirt;
-static CHAR     key;
+static CHAR_T     key;
 
 UINT subMenuID [MAX_FRAME];
 
@@ -258,7 +258,7 @@ HWND hWnd;
 #endif /* __STDC__ */
 {
    int                 msg;
-   CHAR                str[200];
+   CHAR_T                str[200];
 
    WinLastError = GetLastError ();
    if (WinLastError == 0)
@@ -394,7 +394,7 @@ STRING accelerator;
 {
    STRING   pc;
    STRING   pw;
-   CHAR    word [1024];
+   CHAR_T    word [1024];
    BOOL    getEquivChar = FALSE;
 
    fVirt = FNOINVERT;
@@ -563,11 +563,11 @@ STRING accelerator;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void addAccelerator (int frame, BYTE fVirt, CHAR key, int cmd)
+void addAccelerator (int frame, BYTE fVirt, CHAR_T key, int cmd)
 #else  /* __STDC__ */
 void addAccelerator (fVirt, key, cmd)
 BYTE fVirt; 
-CHAR key;
+CHAR_T key;
 int  cmd;
 #endif /* __STDC__ */
 {
@@ -874,9 +874,9 @@ STRING     commandLine;
 {
     int          argc;
     static STRING argv[20];
-    static CHAR  argv0[256];
+    static CHAR_T  argv0[256];
     STRING        ptr     = commandLine;
-    CHAR         lookFor = 0;
+    CHAR_T         lookFor = 0;
 
     enum {
 	nowAt_start, 
@@ -1451,7 +1451,7 @@ caddr_t             call_d;
    int                 i;
    int                 ent;
    int                 entry;
-   CHAR                text[100];
+   CHAR_T                text[100];
    STRING              ptr;
    Arg                 args[MAX_ARGS];
    XmStringTable       strings;
@@ -1599,7 +1599,7 @@ caddr_t             call_d;
 #endif /* __STDC__ */
 {
    int                 val, val1;
-   CHAR                text[11];
+   CHAR_T                text[11];
    ThotWidget          wtext;
 
    /* Indication de valeur */
@@ -2388,7 +2388,7 @@ int                 msgType;
 #  ifndef _WINDOWS
    int                 lg;
    int                 n;
-   CHAR                buff[500 + 1];
+   CHAR_T                buff[500 + 1];
    STRING              pointer;
 
    /* Is the initialisation done ? */
@@ -2607,8 +2607,8 @@ STRING fileName;
 #endif /* __STDC__ */
 {
 
- 	TCHAR szFilter[] = APPFILENAMEFILTER;
-	TCHAR szFileName[256];
+ 	CHAR_T szFilter[] = APPFILENAMEFILTER;
+	CHAR_T szFileName[256];
 
     OpenFileName.lStructSize       = sizeof (OPENFILENAME); 
     OpenFileName.hwndOwner         = parent; 
@@ -2646,9 +2646,9 @@ STRING fileName;
 {
 
     struct Cat_Context* parentCatalogue = CatEntry (parentRef);
- 	TCHAR               szFilter[] = APPFILENAMEFILTER;
-	TCHAR               szFileName[256];
-	TCHAR               szFileTitle[256];
+ 	CHAR_T               szFilter[] = APPFILENAMEFILTER;
+	CHAR_T               szFileName[256];
+	CHAR_T               szFileTitle[256];
 
 	szFileName[0] = EOS;
 
@@ -2800,12 +2800,12 @@ STRING              equiv;
 
    ThotWidget          menu;
    ThotWidget          w;
-   CHAR                heading[200];
+   CHAR_T                heading[200];
 
 #  ifdef _WINDOWS
    struct Cat_Context *copyCat;
-   CHAR                menu_item [1024];
-   CHAR                equiv_item [255];
+   CHAR_T                menu_item [1024];
+   CHAR_T                equiv_item [255];
 #  endif /* _WINDOWS */
 
 #  ifndef _WINDOWS
@@ -3282,7 +3282,7 @@ ThotWidget          parent;
    menu : 'L' pour left, 'M' pour middle et 'R' pour right.           
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                TtaNewPopup (int ref, ThotWidget parent, STRING title, int number, STRING text, STRING equiv, CHAR button)
+void                TtaNewPopup (int ref, ThotWidget parent, STRING title, int number, STRING text, STRING equiv, CHAR_T button)
 #else  /* __STDC__ */
 void                TtaNewPopup (ref, parent, title, number, text, equiv, button)
 int                 ref;
@@ -3291,7 +3291,7 @@ STRING              title;
 int                 number;
 STRING              text;
 STRING              equiv;
-CHAR                button;
+CHAR_T                button;
 
 #endif /* __STDC__ */
 {
@@ -3303,7 +3303,7 @@ CHAR                button;
    boolean             rebuilded;
    struct Cat_Context *catalogue;
    struct E_List      *adbloc;
-   CHAR                heading[200];
+   CHAR_T                heading[200];
 
 #  ifdef _WINDOWS
    HMENU               menu;
@@ -3414,7 +3414,7 @@ CHAR                button;
 	     menu = catalogue->Cat_Widget;
 	     adbloc = catalogue->Cat_Entries;
 	     /* Si on a change de bouton on met a jour le widget avec args[0] */
-	     if (catalogue->Cat_Button != (UCHAR) button)
+	     if (catalogue->Cat_Button != (UCHAR_T) button)
 	       {
 #                 ifndef _WINDOWS
 		  XtSetValues (menu, args, 1);
@@ -3982,18 +3982,18 @@ boolean             react;
    Arg                 args[MAX_ARGS];
    XmString            title_string;
    ThotWidget          menu;
-   CHAR                heading[200];
+   CHAR_T                heading[200];
 #  endif /* !_WINDOWS */
 
    ThotWidget          w;
    ThotWidget          row;
-   CHAR                button;
+   CHAR_T                button;
 
 #  ifdef _WINDOWS
    HMENU               menu;
    STRING              title_string;
-   CHAR                equiv_item [255];
-   CHAR                menu_item [1024];
+   CHAR_T                equiv_item [255];
+   CHAR_T                menu_item [1024];
    struct Cat_Context *copyCat;
 
    equiv_item[0] = 0;
@@ -5641,7 +5641,7 @@ STRING              title;
   NewSheet
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         NewSheet (int ref, ThotWidget parent, STRING title, int number, STRING text, boolean horizontal, int package, CHAR button, int dbutton, int cattype)
+static void         NewSheet (int ref, ThotWidget parent, STRING title, int number, STRING text, boolean horizontal, int package, CHAR_T button, int dbutton, int cattype)
 #else  /* __STDC__ */
 static void         NewSheet (ref, parent, title, number, text, horizontal, package, button, dbutton, cattype)
 int                 ref;
@@ -5651,7 +5651,7 @@ int                 number;
 STRING              text;
 boolean             horizontal;
 int                 package;
-CHAR                button;
+CHAR_T                button;
 int                 dbutton;
 int                 cattype;
 
@@ -6113,7 +6113,7 @@ LPARAM lParam;
    menu : 'L' pour left, 'M' pour middle et 'R' pour right.           
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                TtaNewForm (int ref, ThotWidget parent, STRING title, boolean horizontal, int package, CHAR button, int dbutton)
+void                TtaNewForm (int ref, ThotWidget parent, STRING title, boolean horizontal, int package, CHAR_T button, int dbutton)
 #else  /* __STDC__ */
 void                TtaNewForm (ref, parent, title, horizontal, package, button, dbutton)
 int                 ref;
@@ -6121,7 +6121,7 @@ ThotWidget          parent;
 STRING              title;
 boolean             horizontal;
 int                 package;
-CHAR                button;
+CHAR_T                button;
 int                 dbutton;
 
 #endif /* __STDC__ */
@@ -6148,7 +6148,7 @@ int                 dbutton;
    menu : 'L' pour left, 'M' pour middle et 'R' pour right.           
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                TtaNewSheet (int ref, ThotWidget parent, STRING title, int number, STRING text, boolean horizontal, int package, CHAR button, int dbutton)
+void                TtaNewSheet (int ref, ThotWidget parent, STRING title, int number, STRING text, boolean horizontal, int package, CHAR_T button, int dbutton)
 #else  /* __STDC__ */
 void                TtaNewSheet (ref, parent, title, number, text, horizontal, package, button, dbutton)
 int                 ref;
@@ -6158,7 +6158,7 @@ int                 number;
 STRING              text;
 boolean             horizontal;
 int                 package;
-CHAR                button;
+CHAR_T                button;
 int                 dbutton;
 
 #endif /* __STDC__ */
@@ -6185,7 +6185,7 @@ int                 dbutton;
    menu : 'L' pour left, 'M' pour middle et 'R' pour right.           
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                TtaNewDialogSheet (int ref, ThotWidget parent, STRING title, int number, STRING text, boolean horizontal, int package, CHAR button)
+void                TtaNewDialogSheet (int ref, ThotWidget parent, STRING title, int number, STRING text, boolean horizontal, int package, CHAR_T button)
 
 #else  /* __STDC__ */
 void                TtaNewDialogSheet (ref, parent, title, number, text, horizontal, package, button)
@@ -6196,7 +6196,7 @@ int                 number;
 STRING              text;
 boolean             horizontal;
 int                 package;
-CHAR                button;
+CHAR_T                button;
 
 #endif /* __STDC__ */
 {
@@ -7291,7 +7291,7 @@ boolean             react;
    ThotWidget          w;
    ThotWidget          row;
    XmString            title_string;
-   CHAR                bounds[100];
+   CHAR_T                bounds[100];
 
    if (ref == 0)
      {
@@ -7477,7 +7477,7 @@ int                 val;
 #endif /* __STDC__ */
 {
 #  ifndef _WINDOWS 
-   CHAR                text[10];
+   CHAR_T                text[10];
    int                 lg;
 #  endif /* !_WINDOWS */
    ThotWidget          wtext;

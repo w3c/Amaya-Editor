@@ -883,11 +883,11 @@ Document            document;
    document: the document containing that element.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                TtaSetGraphicsShape (Element element, CHAR shape, Document document)
+void                TtaSetGraphicsShape (Element element, CHAR_T shape, Document document)
 #else  /* __STDC__ */
 void                TtaSetGraphicsShape (element, shape, document)
 Element             element;
-CHAR                shape;
+CHAR_T                shape;
 Document            document;
 #endif /* __STDC__ */
 {
@@ -1619,13 +1619,13 @@ int                 length;
    symbol contained in the element.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-CHAR                TtaGetGraphicsShape (Element element)
+CHAR_T                TtaGetGraphicsShape (Element element)
 #else  /* __STDC__ */
-CHAR                TtaGetGraphicsShape (element)
+CHAR_T                TtaGetGraphicsShape (element)
 Element             element;
 #endif /* __STDC__ */
 {
-   CHAR                content;
+   CHAR_T                content;
 
    UserErrorCode = 0;
    content = EOS;

@@ -75,7 +75,7 @@ extern PtrElement CreateOrPasteInText ( boolean create,
 extern void CreateInsertPageMenu ( void );
 extern void CreatePasteIncludeCmd ( boolean create,
                                     boolean paste,
-                                    CHAR button,
+                                    CHAR_T button,
                                     boolean * ret );
 extern void CreatePasteIncludeMenuCallback ( boolean create,
                                              boolean paste,
@@ -152,7 +152,7 @@ extern PtrElement CreateOrPasteInText (/* boolean create,
 extern void CreateInsertPageMenu (/* void */);
 extern void CreatePasteIncludeCmd (/* boolean create,
                                       boolean paste,
-                                      CHAR button,
+                                      CHAR_T button,
                                       boolean * ret */);
 extern void CreatePasteIncludeMenuCallback (/* boolean create,
                                                boolean paste,

@@ -13,17 +13,17 @@ extern void TtaWritePivotHeader ( BinFile pivotFile,
                                   Document document );
 extern void TtaReadPivotHeader ( BinFile pivotFile,
                                  Document document,
-                                 PCHAR nextChar );
+                                 PCHAR_T nextChar );
 extern void TtaWriteLanguageTable ( BinFile pivotFile,
                                     Document document );
 extern void TtaReadLanguageTable ( BinFile pivotFile,
                                    Document document,
-                                   PCHAR nextChar );
+                                   PCHAR_T nextChar );
 extern void TtaWriteSchemaNames ( BinFile pivotFile,
                                   Document document );
 extern void TtaReadSchemaNames ( BinFile pivotFile,
                                  Document document,
-                                 PCHAR nextChar,
+                                 PCHAR_T nextChar,
                                  void (*withThisPSchema) (Document document,
                                  STRING natSchema,
                                  STRING presentSchema) );
@@ -41,7 +41,7 @@ extern void TtaReadTree ( BinFile pivotFile,
                           SSchema pSchema,
                           Element element,
                           Document document,
-                          PCHAR byte,
+                          PCHAR_T byte,
                           Element * elementRead );
 extern void TtaWriteTree ( BinFile pivotFile,
                            Element element,
@@ -54,7 +54,7 @@ extern void TtaReadPivotVersion ( BinFile pivotFile,
 extern void TtaWritePivotVersion ( BinFile pivotFile,
                                    Document document );
 extern void TtaReadLabel ( BinFile pivotFile,
-                           CHAR byte,
+                           CHAR_T byte,
                            STRING labelRead );
 extern void TtaWriteLabel ( BinFile pivotFile,
                             STRING label );
@@ -74,17 +74,17 @@ extern void TtaWritePivotHeader (/* BinFile pivotFile,
                                     Document document */);
 extern void TtaReadPivotHeader (/* BinFile pivotFile,
                                    Document document,
-                                   PCHAR nextChar */);
+                                   PCHAR_T nextChar */);
 extern void TtaWriteLanguageTable (/* BinFile pivotFile,
                                       Document document */);
 extern void TtaReadLanguageTable (/* BinFile pivotFile,
                                      Document document,
-                                     PCHAR nextChar */);
+                                     PCHAR_T nextChar */);
 extern void TtaWriteSchemaNames (/* BinFile pivotFile,
                                     Document document */);
 extern void TtaReadSchemaNames (/* BinFile pivotFile,
                                    Document document,
-                                   PCHAR nextChar,
+                                   PCHAR_T nextChar,
                                    void (*withThisPSchema) (Document document,
                                    STRING natSchema,
                                    STRING presentSchema) */);
@@ -102,7 +102,7 @@ extern void TtaReadTree (/* BinFile pivotFile,
                             SSchema pSchema,
                             Element element,
                             Document document,
-                            PCHAR byte,
+                            PCHAR_T byte,
                             Element * elementRead */);
 extern void TtaWriteTree (/* BinFile pivotFile,
                              Element element,
@@ -115,7 +115,7 @@ extern void TtaReadPivotVersion (/* BinFile pivotFile,
 extern void TtaWritePivotVersion (/* BinFile pivotFile,
                                      Document document */);
 extern void TtaReadLabel (/* BinFile pivotFile,
-                             CHAR byte,
+                             CHAR_T byte,
                              STRING labelRead */);
 extern void TtaWriteLabel (/* BinFile pivotFile,
                               STRING label */);

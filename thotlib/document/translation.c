@@ -51,12 +51,12 @@
 /* information about an output file */
 typedef struct _AnOutputFile
   {
-     CHAR                OfFileName[MAX_PATH];	/* file name */
+     CHAR_T                OfFileName[MAX_PATH];	/* file name */
      FILE               *OfFileDesc;	/* file descriptor */
      int                 OfBufferLen;	/* current length of output buffer */
      int		 OfIndent;	/* current value of indentation */
      boolean		 OfStartOfLine;	/* start a new line */
-     CHAR                OfBuffer[MAX_BUFFER_LEN];	/* output buffer */
+     CHAR_T                OfBuffer[MAX_BUFFER_LEN];	/* output buffer */
      boolean		 OfCannotOpen;	/* open failure */
   }
 AnOutputFile;
@@ -72,13 +72,13 @@ static AnOutputFile OutputFile[MAX_OUTPUT_FILES];
 	/* other entries: secondary output files */
 
 /* directory of output files */
-static CHAR         fileDirectory[MAX_PATH];
+static CHAR_T         fileDirectory[MAX_PATH];
 
 /* name of main output file */
-static CHAR         fileName[MAX_PATH];
+static CHAR_T         fileName[MAX_PATH];
 
 /* file extension */
-static CHAR         fileExtension[MAX_PATH];
+static CHAR_T         fileExtension[MAX_PATH];
 
 #include "tree_f.h"
 
@@ -167,12 +167,12 @@ boolean		    open;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-static void         PutChar (CHAR c, int fileNum, STRING outBuffer, PtrDocument pDoc,
+static void         PutChar (CHAR_T c, int fileNum, STRING outBuffer, PtrDocument pDoc,
 			     boolean lineBreak)
 
 #else  /* __STDC__ */
 static void         PutChar (c, fileNum, outBuffer, pDoc, lineBreak)
-CHAR                c;
+CHAR_T                c;
 int                 fileNum;
 STRING              outBuffer;
 PtrDocument         pDoc;
@@ -184,7 +184,7 @@ boolean             lineBreak;
    int                 i, j, indent;
    PtrTSchema          pTSch;
    FILE               *fileDesc;
-   CHAR                tmp[2];
+   CHAR_T                tmp[2];
 
    if (outBuffer != NULL)
       /* la sortie doit se faire dans le buffer outBuffer. On ajoute le */
@@ -371,7 +371,7 @@ boolean             lineBreak;
 #endif /* __STDC__ */
 
 {
-   CHAR                buffer[20];
+   CHAR_T                buffer[20];
    int                 i;
 
    sprintf (buffer, "%d", n);
@@ -402,7 +402,7 @@ AlphabetTransl** pTransAlph;
    PtrSSchema   pSS;
    PtrElement   pAncestor;
    int          i;
-   CHAR         alphabet;
+   CHAR_T         alphabet;
    boolean      transExist;
    
    pSS = NULL;
@@ -485,7 +485,7 @@ PtrDocument     pDoc;
 {
    PtrTextBuffer        pNextBufT, pPrevBufT;
    int                  i, j, k, b, ft, lt;
-   CHAR                 c, cs;
+   CHAR_T                 c, cs;
    boolean              continu, equal, stop;
    int                  textTransBegin, textTransEnd;
    StringTransl         *pTrans;   
@@ -691,7 +691,7 @@ PtrDocument         pDoc;
 {
    PtrTSchema          pTSch;
    PtrTextBuffer       pBufT;
-   CHAR                c;
+   CHAR_T                c;
    int                 i, j, b, ft, lt;
    AlphabetTransl     *pTransAlph;
    StringTransl       *pTrans;
@@ -856,16 +856,16 @@ PtrDocument         pDoc;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-static CHAR         PresRuleValue (PtrPRule pPRule)
+static CHAR_T         PresRuleValue (PtrPRule pPRule)
 
 #else  /* __STDC__ */
-static CHAR         PresRuleValue (pPRule)
+static CHAR_T         PresRuleValue (pPRule)
 PtrPRule            pPRule;
 
 #endif /* __STDC__ */
 
 {
-   CHAR                val;
+   CHAR_T                val;
 
    val = ' ';
    switch (pPRule->PrType)
@@ -2035,7 +2035,7 @@ PtrDocument         pDoc;
    PtrTRuleBlock       pBlock;
    TranslNumAttrCase  *pTCase;
    int                 i, nPRules = 0;
-   CHAR                val;
+   CHAR_T                val;
 
 #define MAX_PRULE_TABLE 50
    PtrPRule            PRuleTable[MAX_PRULE_TABLE];
@@ -2202,7 +2202,7 @@ boolean             lineBreak;
    PtrTextBuffer       pBuf;
    int                 item, i, j, k;
    boolean             found;
-   CHAR                number[20];
+   CHAR_T                number[20];
 
    pA = NULL;
    if (outBuffer != NULL)
@@ -2432,17 +2432,17 @@ boolean            *removeEl;
    AlphabetTransl      *pTransAlph;
    int                 fileNum;
    int                 i;
-   CHAR                secondaryFileName[MAX_PATH];
+   CHAR_T                secondaryFileName[MAX_PATH];
    STRING              nameBuffer;
-   CHAR                fname[MAX_PATH];
-   CHAR                fullName[MAX_PATH];	/* nom d'un fichier a inclure */
+   CHAR_T                fname[MAX_PATH];
+   CHAR_T                fullName[MAX_PATH];	/* nom d'un fichier a inclure */
    PathBuffer          directoryName;
    FILE               *newFile;
-   CHAR                currentFileName[MAX_PATH];	/* nom du fichier principal */
+   CHAR_T                currentFileName[MAX_PATH];	/* nom du fichier principal */
    boolean             found, possibleRef;
-   CHAR                c;
+   CHAR_T                c;
 #  ifndef _WINDOWS 
-   CHAR		       cmd[MAX_PATH];
+   CHAR_T		       cmd[MAX_PATH];
 #  endif /* _WINDOWS */
 
    n[0] = EOS;

@@ -257,8 +257,8 @@ STRING              word2;
 {
    boolean             stop;
    int                 ret;
-   CHAR                line[MAX_TXT_LEN];
-   CHAR                word[MAX_TXT_LEN];
+   CHAR_T                line[MAX_TXT_LEN];
+   CHAR_T                word[MAX_TXT_LEN];
 
    stop = FALSE;
    ret = 0;
@@ -300,11 +300,11 @@ boolean            *import;
 {
    int                 i, l, point, res;
    FILE               *file;
-   CHAR                line[MAX_TXT_LEN];
-   CHAR                text[MAX_TXT_LEN];
-   CHAR                word[MAX_TXT_LEN];
+   CHAR_T                line[MAX_TXT_LEN];
+   CHAR_T                text[MAX_TXT_LEN];
+   CHAR_T                word[MAX_TXT_LEN];
    boolean             stop;
-   CHAR                URL_DIR_SEP;
+   CHAR_T                URL_DIR_SEP;
 
    *doctypeOrig = NULL;
    *doctypeTrans = NULL;
@@ -463,7 +463,7 @@ STRING              aSchemaPath;
 #define NAME_LENGTH     100
 #define MAX_NAME         80
 #define SELECTOR_NB_ITEMS 5
-   CHAR                fname[4 * NAME_LENGTH];
+   CHAR_T                fname[4 * NAME_LENGTH];
    STRING              suffix;
    STRING              nameOrig;
    STRING              nameTrans;
@@ -800,7 +800,7 @@ boolean             lang;
 
 {
 
-   CHAR                suffix[10];
+   CHAR_T                suffix[10];
    STRING              ptr;
    int                 i;
    PathBuffer          DirBuffer, filename;
@@ -849,10 +849,10 @@ STRING              BufMenu;
    int                 nbitem, len, indmenu;
    FILE               *file;
    boolean             stop;
-   CHAR                line[MAX_TXT_LEN];
-   CHAR                text[MAX_TXT_LEN];
-   CHAR                textISO[MAX_TXT_LEN];
-   CHAR                word[MAX_TXT_LEN];
+   CHAR_T                line[MAX_TXT_LEN];
+   CHAR_T                text[MAX_TXT_LEN];
+   CHAR_T                textISO[MAX_TXT_LEN];
+   CHAR_T                word[MAX_TXT_LEN];
 
    nbitem = 0;
    indmenu = 0;
@@ -1002,10 +1002,10 @@ STRING              BufMenu;
    int                 nbitem, len;
    FILE               *file;
    boolean             stop;
-   CHAR                line[MAX_TXT_LEN];
-   CHAR                text[MAX_TXT_LEN];
-   CHAR                textISO[MAX_TXT_LEN];
-   CHAR                word[MAX_TXT_LEN];
+   CHAR_T                line[MAX_TXT_LEN];
+   CHAR_T                text[MAX_TXT_LEN];
+   CHAR_T                textISO[MAX_TXT_LEN];
+   CHAR_T                word[MAX_TXT_LEN];
 
    nbitem = 0;
    indmenu = 0;
@@ -1107,7 +1107,7 @@ STRING              trans;
    boolean             found;
    int                 i, j;
    TtAttribute        *pAttr;
-   CHAR		       terme[MAX_NAME_LENGTH];
+   CHAR_T		       terme[MAX_NAME_LENGTH];
 
    found = FALSE;
    strncpy (terme, AsciiTranslate (word), MAX_NAME_LENGTH - 1);
@@ -1251,8 +1251,8 @@ STRING              schpres;
 {
    boolean             ok, stop;
    FILE               *file;
-   CHAR                line[MAX_TXT_LEN];
-   CHAR                word[MAX_TXT_LEN];
+   CHAR_T                line[MAX_TXT_LEN];
+   CHAR_T                word[MAX_TXT_LEN];
 
    ok = FALSE;
    /* ouvre le fichier .conf associe' au schema de structure */
@@ -1309,8 +1309,8 @@ STRING              namePSchema;
 {
    boolean             stop;
    boolean             ok;
-   CHAR                line[MAX_TXT_LEN];
-   CHAR                word[MAX_TXT_LEN];
+   CHAR_T                line[MAX_TXT_LEN];
+   CHAR_T                word[MAX_TXT_LEN];
 
    stop = FALSE;
    ok = FALSE;
@@ -1394,8 +1394,8 @@ STRING              line;
 
 {
    boolean             ok, stop;
-   CHAR                word1[MAX_TXT_LEN];
-   CHAR                word2[MAX_TXT_LEN];
+   CHAR_T                word1[MAX_TXT_LEN];
+   CHAR_T                word2[MAX_TXT_LEN];
 
    ok = FALSE;
    stop = FALSE;
@@ -1460,8 +1460,8 @@ int             *y;
 #endif /* __STDC__ */
 {
    FILE         *file;
-   CHAR          seqLine[MAX_TXT_LEN];
-   CHAR          line[MAX_TXT_LEN];
+   CHAR_T          seqLine[MAX_TXT_LEN];
+   CHAR_T          line[MAX_TXT_LEN];
    int           nbIntegers;
 
    *x = 600;
@@ -1509,7 +1509,7 @@ int                *height;
 
 #endif /* __STDC__ */
 {
-   CHAR                seqLine[MAX_TXT_LEN];
+   CHAR_T                seqLine[MAX_TXT_LEN];
    int                 nbIntegers;
    boolean             result;
 
@@ -1557,8 +1557,8 @@ PtrDocument         pDoc;
 {
    FILE               *file;
    int                 x, y, width, height;
-   CHAR                line[MAX_TXT_LEN];
-   CHAR                nameview[MAX_TXT_LEN];
+   CHAR_T                line[MAX_TXT_LEN];
+   CHAR_T                nameview[MAX_TXT_LEN];
 
    /* ouvre le fichier .conf du document et avance jusqu'a la section "open" */
    file = openConfFileAndReadUntil (pDoc->DocSSchema, "open");
@@ -1600,8 +1600,8 @@ int                *height;
 #endif /* __STDC__ */
 {
    FILE               *file;
-   CHAR                line[MAX_TXT_LEN];
-   CHAR                nameview[MAX_TXT_LEN];
+   CHAR_T                line[MAX_TXT_LEN];
+   CHAR_T                nameview[MAX_TXT_LEN];
    boolean             found;
 
    *x = 0;
@@ -1690,9 +1690,9 @@ STRING              presNature;
 #endif /* __STDC__ */
 {
    FILE               *file;
-   CHAR                line[MAX_TXT_LEN];
-   CHAR                seqLine[MAX_TXT_LEN];
-   CHAR                name[MAX_TXT_LEN];
+   CHAR_T                line[MAX_TXT_LEN];
+   CHAR_T                seqLine[MAX_TXT_LEN];
+   CHAR_T                name[MAX_TXT_LEN];
    boolean             found;
    boolean             ok;
 
@@ -1754,9 +1754,9 @@ STRING              optionValue;
 
 {
    FILE               *file;
-   CHAR                line[MAX_TXT_LEN];
-   CHAR                seqLine[MAX_TXT_LEN];
-   CHAR                name[MAX_TXT_LEN];
+   CHAR_T                line[MAX_TXT_LEN];
+   CHAR_T                seqLine[MAX_TXT_LEN];
+   CHAR_T                name[MAX_TXT_LEN];
    boolean             found;
 
    optionValue[0] = EOS;
@@ -1813,11 +1813,11 @@ STRING              schemaName;
 
 {
    FILE               *file;
-   CHAR                line[MAX_TXT_LEN];
-   CHAR                word[MAX_TXT_LEN];
-   CHAR                seqLine[MAX_TXT_LEN];
-   CHAR                lastStyle[MAX_TXT_LEN];
-   CHAR		       bestStyle[MAX_TXT_LEN];
+   CHAR_T                line[MAX_TXT_LEN];
+   CHAR_T                word[MAX_TXT_LEN];
+   CHAR_T                seqLine[MAX_TXT_LEN];
+   CHAR_T                lastStyle[MAX_TXT_LEN];
+   CHAR_T		       bestStyle[MAX_TXT_LEN];
    int		       lastPrefixLen, bestPrefixLen;
    int		       score, i;
    boolean             stop;
@@ -1908,7 +1908,7 @@ int                 LgMax;
 
 {
    int                 nbentree;
-   CHAR                name[80];
+   CHAR_T                name[80];
    int                 lgname;
    int                 lgmenu;
    int                 max;
@@ -1970,7 +1970,7 @@ int                 LgMax;
    int                 lgmenu;
    int                 lgname;
    int                 max;
-   CHAR                name[80];
+   CHAR_T                name[80];
    STRING              ptr;
 
    nbentree = 0;
@@ -2028,9 +2028,9 @@ STRING              schtypo;
 {
    boolean             ok, found;
    FILE               *file;
-   CHAR                line[MAX_TXT_LEN];
-   CHAR                seqLine[MAX_TXT_LEN];
-   CHAR                name[MAX_TXT_LEN];
+   CHAR_T                line[MAX_TXT_LEN];
+   CHAR_T                seqLine[MAX_TXT_LEN];
+   CHAR_T                name[MAX_TXT_LEN];
 
    /* ouvre le fichier .conf du document */
    /* et avance jusqu'a la section "typography" */

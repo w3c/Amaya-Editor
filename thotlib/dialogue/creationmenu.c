@@ -60,7 +60,7 @@ Name                typeName;
 #endif /* __STDC__ */
 {
    int                 i;
-   CHAR                bufMenu[MAX_TXT_LEN];
+   CHAR_T                bufMenu[MAX_TXT_LEN];
 
    /* creates and activates the menu */
    i = 0;
@@ -118,7 +118,7 @@ boolean             natureChoice;
 #endif /* __STDC__ */
 {
    int                 menu;
-   CHAR                bufMenuB[MAX_TXT_LEN];
+   CHAR_T                bufMenuB[MAX_TXT_LEN];
    STRING              src;
    STRING              dest;
    int                 k, l, nbitem, length;
@@ -203,18 +203,18 @@ STRING              bufMenu;
   BuildPasteMenu
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                BuildPasteMenu (int RefMenu, STRING bufMenu, Name title, int nbEntries, CHAR button)
+void                BuildPasteMenu (int RefMenu, STRING bufMenu, Name title, int nbEntries, CHAR_T button)
 #else  /* __STDC__ */
 void                BuildPasteMenu (RefMenu, bufMenu, title, nbEntries, button)
 int                 RefMenu;
 STRING              bufMenu;
 Name                title;
 int                 nbEntries;
-CHAR                button;
+CHAR_T                button;
 
 #endif /* __STDC__ */
 {
-   CHAR                bufMenuB[MAX_TXT_LEN];
+   CHAR_T                bufMenuB[MAX_TXT_LEN];
    STRING              src;
    STRING              dest;
    int                 k, l;

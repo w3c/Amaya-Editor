@@ -78,8 +78,8 @@ STRING              s1, s2;
 static PathBuffer   DirectoryName;
 static Name         SchStrImport;
 static int          NbDocSuffix = 1;
-static CHAR         tabDocSuffix [10][10] = {".PIV", "\0", "\0", "\0", "\0", "\0", "\0", "\0", "\0", "\0"};
-static CHAR         docSuffix [5];
+static CHAR_T         tabDocSuffix [10][10] = {".PIV", "\0", "\0", "\0", "\0", "\0", "\0", "\0", "\0", "\0"};
+static CHAR_T         docSuffix [5];
 /* static PathBuffer DirectoryDocImport; */
 static Name         NewSchemaName;
 
@@ -104,11 +104,11 @@ static Name         NewSchemaName;
    nbItems returns the number of entries.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                BuildPathDocBuffer (STRING bufDir, CHAR separator, int *nbItems)
+void                BuildPathDocBuffer (STRING bufDir, CHAR_T separator, int *nbItems)
 #else  /* __STDC__ */
 void                BuildPathDocBuffer (bufDir, separator, nbItems)
 STRING              bufDir;
-CHAR                separator;
+CHAR_T                separator;
 int                *nbItems;
 
 #endif /* __STDC__ */
@@ -252,7 +252,7 @@ BuildImportForm : cree Le formulaire d'importation de documents.
 static void BuildImportForm()
 {
   int nbItems,length;
-  CHAR bufMenu[MAX_TXT_LEN];
+  CHAR_T bufMenu[MAX_TXT_LEN];
  
  /* Formulaire Classe du document a importer */
    TtaNewForm (NumFormImportClass,  0,
@@ -337,8 +337,8 @@ STRING              data;
    PathBuffer          docName;
    PtrDocument         pDoc;
    int                 i;
-   CHAR                bufDir[MAX_PATH];
-   CHAR                URL_DIR_SEP;
+   CHAR_T                bufDir[MAX_PATH];
+   CHAR_T                URL_DIR_SEP;
 
    if (typedata == STRING_DATA && data && ustrchr (data, '/'))
      URL_DIR_SEP = '/';
@@ -506,10 +506,10 @@ View                view;
 
 #endif /* __STDC__ */
 {
-   CHAR                bufDir[MAX_PATH];
+   CHAR_T                bufDir[MAX_PATH];
    PathBuffer          docName;
    int                 length, nbItems, entry;
-   CHAR                URL_DIR_SEP;
+   CHAR_T                URL_DIR_SEP;
    ThotWidget	       parentWidget;
    if (ThotLocalActions[T_opendoc] == NULL)
      {

@@ -65,13 +65,13 @@ static int          SearchedPageSchView;
 /* number of the searched page */
 static int          SearchedPageNumber;
 /* precedent searched string */
-static CHAR         pPrecedentString[THOT_MAX_CHAR];
+static CHAR_T         pPrecedentString[THOT_MAX_CHAR];
 /* searched string */
-static CHAR         pSearchedString[THOT_MAX_CHAR];
+static CHAR_T         pSearchedString[THOT_MAX_CHAR];
 /* length of the searched string */
 static int          SearchedStringLen;
 /* the replace string */
-static CHAR         pReplaceString[THOT_MAX_CHAR];
+static CHAR_T         pReplaceString[THOT_MAX_CHAR];
 /* length of the replace string */
 static int          ReplaceStringLen;
 /* pointer to the current reference */
@@ -132,7 +132,7 @@ int                 ref;
 #endif /* __STDC__ */
 {
    int                 i;
-   CHAR                string[200];
+   CHAR_T                string[200];
 
    i = 0;
    sprintf (&string[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_BEFORE_SEL));
@@ -519,7 +519,7 @@ View                view;
    PtrElement          pLastSel;
    int                 firstChar;
    int                 lastChar;
-   CHAR                buffTitle[200];
+   CHAR_T                buffTitle[200];
    PtrDocument         pDoc;
 
    pDoc = LoadedDocument[document - 1];
@@ -662,7 +662,7 @@ View                view;
    PtrElement          pLastSel;
    int                 firstChar;
    int                 lastChar;
-   CHAR                buffTitle[200];
+   CHAR_T                buffTitle[200];
    PtrDocument         pDoc;
 
    pDoc = LoadedDocument[document - 1];
@@ -738,7 +738,7 @@ int                *selEntry;
 
 #endif /* __STDC__ */
 {
-   CHAR                bufMenuB[MAX_TXT_LEN];
+   CHAR_T                bufMenuB[MAX_TXT_LEN];
    STRING              src;
    STRING              dest;
    int                 k, l;
@@ -777,7 +777,7 @@ boolean             docExtNext;
 
 #endif /* __STDC__ */
 {
-   CHAR                msg[100];
+   CHAR_T                msg[100];
 
    /* chercher une reference */
    FindReference (&CurrRef, &CurrRefDoc, &CurrRefElem,
@@ -820,7 +820,7 @@ PtrDocument         pDoc;
    PtrDocument         pDocSel;
    int                 firstChar;
    int                 lastChar;
-   CHAR                bufText[200];
+   CHAR_T                bufText[200];
    boolean             found;
 
    if (GetCurrentSelection (&pDocSel, &pFirstSel, &pLastSel, &firstChar, &lastChar))
@@ -877,7 +877,7 @@ View                view;
 #endif /* __STDC__ */
 {
    PtrDocument         pDoc;
-   CHAR                BufMenu[100];
+   CHAR_T                BufMenu[100];
    int                 i;
 
    pDoc = LoadedDocument[document - 1];
@@ -978,7 +978,7 @@ View                view;
    PtrElement          pLastSel;
    int                 firstChar;
    int                 lastChar, i;
-   CHAR                bufTitle[200], string[200];
+   CHAR_T                bufTitle[200], string[200];
    PtrDocument         pDoc;
 
    pDoc = LoadedDocument[document - 1];
@@ -1448,7 +1448,7 @@ boolean             assoc;
 
 #endif /* __STDC__ */
 {
-   CHAR                buffTitle[200];
+   CHAR_T                buffTitle[200];
 
    if (ThotLocalActions[T_searchpage] == NULL)
       TteConnectAction (T_searchpage, (Proc) CallbackGoToPageMenu);

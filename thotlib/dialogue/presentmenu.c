@@ -115,7 +115,7 @@ static boolean      StdLineSp;	/* user asks to reset the line spacing */
 static boolean      StdLineStyle;  /* user asks to reset the line style */
 static boolean      StdLineWeight; /* user asks to reset the line weight */
 static boolean      StdTrame;	/* user asks to reset the pattern */
-static CHAR         FontFamily;	/* font family requested by the user */
+static CHAR_T         FontFamily;	/* font family requested by the user */
 static int          Style;	/* character style requested by the user */
 static int          UnderlineStyle; /* underline style requested by the user */
 static int          UnderlineWeight;/* underline weight requested by user */
@@ -125,7 +125,7 @@ static boolean      Justif;	/* with or without justification */
 static boolean      Hyphenate;	/* with or without hyphenation */
 static int          IndentValue;/* value in points for the 1st line indent */
 static int          IndentSign;	/* the indentation sign */
-static CHAR         LineStyle;	/* requested line style */
+static CHAR_T         LineStyle;	/* requested line style */
 static int          LineWeight;	/* requested line weight in points */
 static int          PaintWithPattern;	/* number of the requested trame */
 
@@ -755,7 +755,7 @@ View                view;
 #endif /* __STDC__ */
 {
    int                 i;
-   CHAR                string[200];
+   CHAR_T                string[200];
    PtrDocument         pDoc;
 
    pDoc = LoadedDocument[document - 1];
@@ -878,7 +878,7 @@ int                 val;
 STRING              txt;
 #endif /* __STDC__ */
 {
-  CHAR                c;
+  CHAR_T                c;
   int                 i;
 
   switch (ref)
@@ -1228,7 +1228,7 @@ View                view;
    int                 nbItems;
    int                 max, bodyRelatSize, bodyPointSize;
    STRING              s;
-   CHAR                string[MAX_TXT_LEN];
+   CHAR_T                string[MAX_TXT_LEN];
 #  else  /* _WINDOWS */
    int                 fontNum;
 #  endif /* !_WINDOWS */
@@ -1433,7 +1433,7 @@ View                view;
    PtrDocument         pDoc;
    PtrElement          pFirstSel, pLastSel;
    PtrAbstractBox      pAb;
-   CHAR                string[MAX_TXT_LEN];
+   CHAR_T                string[MAX_TXT_LEN];
    int                 currentBodySize;
    int                 i, nbItems;
    int                 firstChar, lastChar;
@@ -1585,7 +1585,7 @@ View                view;
    int                 lineSpacingNum;
    int                 indentNum;
 #  else  /* _WINDOWS */
-   CHAR                string[MAX_TXT_LEN];
+   CHAR_T                string[MAX_TXT_LEN];
 #  endif /* !_WINDOWS */
    boolean             selectionOK;
 

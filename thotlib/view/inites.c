@@ -216,8 +216,8 @@ void         FreeDocColors ()
 
   /* free standard colors */
 #ifdef _WINDOWS
-   for (i = 0; i < NColors; i++)
-     DeleteObject (Pix_Color[i]);
+   /* for (i = 0; i < NColors; i++)
+     DeleteObject (Pix_Color[i]); */
 #else /* _WINDOWS */
    XFreeColors (TtDisplay, TtCmap, Pix_Color, NColors, (unsigned long) 0);
 #endif /* _WINDOWS */
@@ -226,7 +226,7 @@ void         FreeDocColors ()
    for (i = 0; i < NbExtColors; i++)
      if (ExtColor[i] != (ThotColor) 0)
 #ifdef _WINDOWS
-       DeleteObject (ExtColor[i]);
+       /* DeleteObject (ExtColor[i]); */
 #else /* _WINDOWS */
        XFreeColors (TtDisplay, TtCmap, &ExtColor[i], 1, (unsigned long) 0);
 #endif /* _WINDOWS */

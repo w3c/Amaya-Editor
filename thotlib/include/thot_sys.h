@@ -21,6 +21,7 @@
 #ifndef THOT_SYS_H
 #define THOT_SYS_H
 
+#include "ustring.h"
 #define EOS     '\0'
 #define EOL     '\n'
 #define TAB     '\t'
@@ -66,6 +67,8 @@
 
 /********************************************************WINDOWS**/
 #ifdef _WINDOWS
+
+#include <direct.h>
 /*------------------------------------------------------GNUC--*/
 #if defined(__GNUC__) || defined(__GNUWIN32)
 #ifndef EXTERN

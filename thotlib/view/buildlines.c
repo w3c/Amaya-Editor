@@ -414,7 +414,7 @@ PtrTextBuffer      *pNewBuff;
    int                 dummySpaces, spaceWidth;
    int                 spaceAdjust;
    int                 spaceCount;
-   UCHAR               character;
+   UCHAR_T               character;
    PtrTextBuffer       pBuffer;
    PtrBox              pParentBox;
    boolean             still;
@@ -462,7 +462,7 @@ PtrTextBuffer      *pNewBuff;
    while (still)
      {
 	/* Largeur du caractere suivant */
-	character = (UCHAR) (pBuffer->BuContent[charIndex - 1]);
+	character = (UCHAR_T) (pBuffer->BuContent[charIndex - 1]);
 	if (character == NUL)
 	   carWidth = 0;
 	else if (character == _SPACE_)
@@ -1139,7 +1139,7 @@ int                *wordWidth;
 {
    PtrTextBuffer       pBuffer;
    ptrfont             font;
-   UCHAR               character;
+   UCHAR_T               character;
    int                 i, j, l;
    int                 nChars;
    int                 wWidth;
@@ -2706,7 +2706,7 @@ int                 frame;
    boolean             changeSelectEnd;
    boolean             status;
    Propagation         propagateStatus;
-   UCHAR               charIndex;
+   UCHAR_T               charIndex;
    PtrLine             pLine;
    PtrBox              pBox;
    PtrBox              pSelBox;

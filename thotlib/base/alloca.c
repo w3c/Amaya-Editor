@@ -93,7 +93,7 @@ static void         find_stack_direction ()
    static STRING       addr = NULL;	/* address of first
 
 					   `dummy', once known */
-   auto CHAR           dummy;	/* to get stack address */
+   auto CHAR_T           dummy;	/* to get stack address */
 
    if (addr == NULL)
      {				/* initial entry */
@@ -125,7 +125,7 @@ static void         find_stack_direction ()
 
 typedef union hdr
 {
-   CHAR                align[ALIGN_SIZE];	/* to force sizeof(header) */
+   CHAR_T                align[ALIGN_SIZE];	/* to force sizeof(header) */
    struct
      {
 	union hdr          *next;	/* for chaining headers */
@@ -154,8 +154,8 @@ unsigned            size;
 #endif /* __STDC__ */
 
 {
-   auto CHAR           probe;	/* probes stack depth: */
-   register CHAR*      depth = &probe;
+   auto CHAR_T           probe;	/* probes stack depth: */
+   register CHAR_T*      depth = &probe;
 
 #if STACK_DIRECTION == 0
    if (STACK_DIR == 0)		/* unknown growth direction */

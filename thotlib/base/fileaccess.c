@@ -45,15 +45,15 @@
    TtaReadByte reads a character (or byte) value.                  
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             TtaReadByte (BinFile file, PCHAR bval)
+boolean             TtaReadByte (BinFile file, PCHAR_T bval)
 #else  /* __STDC__ */
 boolean             TtaReadByte (file, bval)
 BinFile             file;
-PCHAR               bval;
+PCHAR_T               bval;
 
 #endif /* __STDC__ */
 {
-   if (fread (bval, sizeof (CHAR), 1, file) == 0)
+   if (fread (bval, sizeof (CHAR_T), 1, file) == 0)
      {
 	*bval = EOS;
 	return (FALSE);
@@ -74,7 +74,7 @@ boolean            *bval;
 
 #endif /* __STDC__ */
 {
-   CHAR       b1;
+   CHAR_T       b1;
 
    if (!TtaReadByte (file, &b1))
      {
@@ -101,7 +101,7 @@ int                *sval;
 
 #endif /* __STDC__ */
 {
-  CHAR      car;
+  CHAR_T      car;
  
   *sval = 0; 
   if (!TtaReadByte (file, &car))
@@ -135,7 +135,7 @@ int                *sval;
 
 #endif /* __STDC__ */
 {
-  CHAR      car;
+  CHAR_T      car;
  
   *sval = 0;
   if (!TtaReadByte (file, &car))
@@ -171,7 +171,7 @@ int                *sval;
 
 #endif /* __STDC__ */
 {
-  CHAR      car;
+  CHAR_T      car;
  
   *sval = 0;
    if (!TtaReadByte (file, &car))
@@ -321,15 +321,15 @@ BinFile             file;
    TtaWriteByte writes a character (or byte) value.                  
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             TtaWriteByte (BinFile file, CHAR bval)
+boolean             TtaWriteByte (BinFile file, CHAR_T bval)
 #else  /* __STDC__ */
 boolean             TtaWriteByte (file, bval)
 BinFile             file;
-CHAR                bval;
+CHAR_T                bval;
 
 #endif /* __STDC__ */
 {
-   if (fwrite (&bval, sizeof (CHAR), 1, file) == 0)
+   if (fwrite (&bval, sizeof (CHAR_T), 1, file) == 0)
       return FALSE;
    return TRUE;
 }
@@ -350,10 +350,10 @@ int       sval;
 
 {
 
-   if (!TtaWriteByte (file, (CHAR) ((sval >> DECAL_1) & LMASK)))
+   if (!TtaWriteByte (file, (CHAR_T) ((sval >> DECAL_1) & LMASK)))
       return FALSE;
 
-   if (!TtaWriteByte (file, (CHAR) (sval & LMASK)))
+   if (!TtaWriteByte (file, (CHAR_T) (sval & LMASK)))
       return FALSE;
 
    return TRUE;
@@ -374,16 +374,16 @@ int       lval;
 
 {
 
-   if (!TtaWriteByte (file, (CHAR) ((lval >> DECAL_3) & LMASK)))
+   if (!TtaWriteByte (file, (CHAR_T) ((lval >> DECAL_3) & LMASK)))
       return FALSE;
 
-   if (!TtaWriteByte (file, (CHAR) ((lval >> DECAL_2) & LMASK)))
+   if (!TtaWriteByte (file, (CHAR_T) ((lval >> DECAL_2) & LMASK)))
       return FALSE;
 
-   if (!TtaWriteByte (file, (CHAR) ((lval >> DECAL_1) & LMASK)))
+   if (!TtaWriteByte (file, (CHAR_T) ((lval >> DECAL_1) & LMASK)))
       return FALSE;
 
-   if (!TtaWriteByte (file, (CHAR) (lval & LMASK)))
+   if (!TtaWriteByte (file, (CHAR_T) (lval & LMASK)))
       return FALSE;
 
    return TRUE;
@@ -589,7 +589,7 @@ STRING              fileName;
 {
    int                 length;
    PathBuffer          directory;
-   CHAR                URL_DIR_SEP;
+   CHAR_T                URL_DIR_SEP;
 
    if (name && ustrchr (name, '/'))
      URL_DIR_SEP = '/';
@@ -797,8 +797,8 @@ STRING              fileName;
 #endif /* __STDC__ */
 {
    int                 ret, i;
-   CHAR                c;
-   CHAR                URL_DIR_SEP;
+   CHAR_T                c;
+   CHAR_T                URL_DIR_SEP;
 
    if (fileName && ustrchr (fileName, '/'))
 	  URL_DIR_SEP = '/';
@@ -882,7 +882,7 @@ int                *len;
 	       i = *len;
 	       do
 		 {
-		    string[i - 1] = (CHAR) ((int) ('0') + number % 10);
+		    string[i - 1] = (CHAR_T) ((int) ('0') + number % 10);
 		    i--;
 		    number = number / 10;
 		 }
@@ -971,7 +971,7 @@ int                *len;
 		       /* UPPERCASE --> lowercase */
 		       for (i = begin; i <= *len; i++)
 			  if (string[i - 1] != '?')
-			     string[i - 1] = (CHAR) ((int) (string[i - 1]) + 32);
+			     string[i - 1] = (CHAR_T) ((int) (string[i - 1]) + 32);
 		 }
 	       break;
 
@@ -996,9 +996,9 @@ int                *len;
 		 {
 	          number --;
 	          if (style == CntUppercase)
-		     string[i - 1] = (CHAR) ((number % 26) + (int) ('A'));
+		     string[i - 1] = (CHAR_T) ((number % 26) + (int) ('A'));
 	          else
-		     string[i - 1] = (CHAR) ((number % 26) + (int) ('a'));
+		     string[i - 1] = (CHAR_T) ((number % 26) + (int) ('a'));
 		  i --;
 		  c --;
 		  number = number / 26;

@@ -48,7 +48,7 @@ Name               *boxname;
 {
   int                 i;
   int                 len;
-  CHAR                buffer[100];
+  CHAR_T              buffer[100];
 
   buffer[0] = 0;
   len = 0;

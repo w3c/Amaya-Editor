@@ -143,7 +143,7 @@ BinFile             file;
 #endif /* __STDC__ */
 {
    int                 i;
-   CHAR                c;
+   CHAR_T                c;
    boolean             stop;
 
    stop = FALSE;
@@ -157,7 +157,7 @@ BinFile             file;
 	     if (c < ' ')
 	       {
 		  printf ("^");
-		  c = (CHAR) ((int) c + (int) '@');
+		  c = (CHAR_T) ((int) c + (int) '@');
 		  i++;
 	       }
 	     printf ("%c", c);
@@ -256,7 +256,7 @@ boolean		    removeExclusions
    PathBuffer          directoryName;
    PtrChangedReferredEl pChngRef;
    FILE               *pivotFile;
-   CHAR                text[MAX_TXT_LEN];
+   CHAR_T                text[MAX_TXT_LEN];
 
    ret = FALSE;
    if (pDoc != NULL)
@@ -469,7 +469,7 @@ BinFile             file;
 
 #endif /* __STDC__ */
 {
-   CHAR                c;
+   CHAR_T                c;
 
    if (!TtaReadByte (file, &c))
      {
@@ -494,7 +494,7 @@ BinFile             file;
 
 #endif /* __STDC__ */
 {
-   CHAR                c;
+   CHAR_T                c;
 
    if (!TtaReadByte (file, &c))
      {
@@ -529,7 +529,7 @@ BinFile             file;
 
 #endif /* __STDC__ */
 {
-   CHAR                c;
+   CHAR_T                c;
 
    if (!TtaReadByte (file, &c))
      {
@@ -556,7 +556,7 @@ BinFile             file;
 #endif /* __STDC__ */
 
 {
-   CHAR                c;
+   CHAR_T                c;
 
    if (!TtaReadByte (file, &c))
      {
@@ -583,7 +583,7 @@ BinFile             file;
 #endif /* __STDC__ */
 
 {
-   CHAR                c;
+   CHAR_T                c;
    BAlignment          align;
 
    if (!TtaReadByte (file, &c))
@@ -629,7 +629,7 @@ BinFile             file;
 #endif /* __STDC__ */
 
 {
-   CHAR                c;
+   CHAR_T                c;
    PageType            typ;
 
    if (!TtaReadByte (file, &c))
@@ -707,7 +707,7 @@ boolean             oldformat;
 {
    PtrTextBuffer       firstBuf, pBuf;
    int                 n, len;
-   CHAR                c;
+   CHAR_T                c;
 
    len = 0;
    /* lit l'octet qui suit le tag commentaire */
@@ -716,7 +716,7 @@ boolean             oldformat;
 	c = EOS;
 	PivotError (file);
      }
-   if (oldformat && c != (CHAR) C_PIV_BEGIN)
+   if (oldformat && c != (CHAR_T) C_PIV_BEGIN)
      {
 	PivotError (file);
 	/* tag debut de commentaire ancien format absente */
@@ -807,7 +807,7 @@ boolean             oldformat;
 	     /* lit le tag de fin */
 	     if (!TtaReadByte (file, &c))
 		c = EOS;
-	     if (c != (CHAR) C_PIV_END)
+	     if (c != (CHAR_T) C_PIV_END)
 	       {
 		  PivotError (file);
 		  DisplayPivotMessage ("c");
@@ -827,7 +827,7 @@ static PictureScaling ReadPicturePresentation (pivFile)
 BinFile             pivFile;
 #endif /* __STDC__ */
 {
-   CHAR                c;
+   CHAR_T                c;
    PictureScaling      scaling;
 
    if (!TtaReadByte (pivFile, &c))
@@ -878,7 +878,7 @@ int                *number;
    int                 i;
    int                 val;
    boolean             ok;
-   CHAR                c;
+   CHAR_T                c;
 
    ok = FALSE;
    *number = 0;
@@ -925,7 +925,7 @@ BinFile             file;
 #endif /* __STDC__ */
 {
    int                 j;
-   CHAR                c;
+   CHAR_T                c;
 
    ClearDocIdent (docIdent);
    /* lit un octet */
@@ -1171,7 +1171,7 @@ STRING              tag;
    boolean             Extension;
 
    rule = 0;
-   if (*tag == (CHAR) C_PIV_NATURE)
+   if (*tag == (CHAR_T) C_PIV_NATURE)
      {
 	/* lit le numero de nature */
 	TtaReadShort (pivFile, &nat);
@@ -1215,7 +1215,7 @@ STRING              tag;
 	     }
      }
    if (!error)
-      if (*tag == (CHAR) C_PIV_TYPE)
+      if (*tag == (CHAR_T) C_PIV_TYPE)
 	{
 	   /* lit le numero de type de l'element */
 	   TtaReadShort (pivFile, &rule);
@@ -1447,7 +1447,7 @@ PtrAttribute       *pAttr;
    DocumentIdentifier  I;
    LabelString         label;
    PtrTextBuffer       pBT, pPremBuff;
-   CHAR                c;
+   CHAR_T                c;
    PtrAttribute        pA;
    PtrReference        pRef;
    boolean             found;
@@ -1719,7 +1719,7 @@ boolean             link;
   int                 pictureType, val, view, box;
   int                 PicXArea, PicYArea, PicWArea, PicHArea;
   int                 red, green, blue;
-  CHAR                ch;
+  CHAR_T              ch;
   boolean             absolute, sign, just;
   
   pres = (PictureScaling) 0;
@@ -2161,7 +2161,7 @@ boolean             createDesc;
   NotifyElement       notifyEl;
   PictInfo           *image;
   int                 i, j, n, view, pictureType, elType, rule;
-  CHAR                ch, c, alphabet;
+  CHAR_T                ch, c, alphabet;
   boolean             create, inclusion, modif, parameter;
   boolean             findtype, refExt, found, withReferences;
   
@@ -2169,7 +2169,7 @@ boolean             createDesc;
   pEl = NULL;
   withReferences = FALSE;
   create = FALSE;
-  if (*tag != (CHAR) C_PIV_TYPE && *tag != (CHAR) C_PIV_NATURE)
+  if (*tag != (CHAR_T) C_PIV_TYPE && *tag != (CHAR_T) C_PIV_NATURE)
     {
       i = 1;
       while (!error && i < 200)
@@ -2181,7 +2181,7 @@ boolean             createDesc;
 	      if (c < ' ')
 		{
 		  printf ("^");
-		  c = (CHAR) (((int) c) + ((int) '@'));
+		  c = (CHAR_T) (((int) c) + ((int) '@'));
 		  i++;
 		}
 	      printf ("%c", c);
@@ -2305,7 +2305,7 @@ boolean             createDesc;
 	    PivotError (pivFile);
 	}
       inclusion = FALSE;	/* est-ce une reference a un element inclus? */
-      if (!error && *tag == (CHAR) C_PIV_INCLUDED)
+      if (!error && *tag == (CHAR_T) C_PIV_INCLUDED)
 	/* oui, lit la reference */
 	{
 	  inclusion = TRUE;
@@ -2323,7 +2323,7 @@ boolean             createDesc;
       
       /* lit le tag "Element-reference'" si elle est presente */
       if (!error)
-	if (*tag == (CHAR) C_PIV_REFERRED)
+	if (*tag == (CHAR_T) C_PIV_REFERRED)
 	  {
 	    withReferences = TRUE;
 	    if (!TtaReadByte (pivFile, tag))
@@ -2335,8 +2335,8 @@ boolean             createDesc;
       /* traite le label s'il est present */
       label[0] = EOS;
       if (!error)
-	if (*tag == (CHAR) C_PIV_SHORT_LABEL || *tag == (CHAR) C_PIV_LONG_LABEL ||
-	    *tag == (CHAR) C_PIV_LABEL)
+	if (*tag == (CHAR_T) C_PIV_SHORT_LABEL || *tag == (CHAR_T) C_PIV_LONG_LABEL ||
+	    *tag == (CHAR_T) C_PIV_LABEL)
 	  {
 	    ReadLabel (*tag, label, pivFile);
 	    /* lit le tag qui suit le label */
@@ -2379,7 +2379,7 @@ boolean             createDesc;
       /* lit le tag d'holophraste si elle est presente */
       if (!error && create)
 	pEl->ElHolophrast = FALSE;
-      if (*tag == (CHAR) C_PIV_HOLOPHRAST && !error)
+      if (*tag == (CHAR_T) C_PIV_HOLOPHRAST && !error)
 	{
 	  if (create)
 	    pEl->ElHolophrast = TRUE;
@@ -2388,7 +2388,7 @@ boolean             createDesc;
 	    PivotError (pivFile);
 	}
       /* lit les attributs de l'element s'il y en a */
-      while (*tag == (CHAR) C_PIV_ATTR && !error)
+      while (*tag == (CHAR_T) C_PIV_ATTR && !error)
 	{
 	  ReadAttribute (pivFile, pEl, pDoc, create, &pAttr);
 	  if (!error)
@@ -2406,7 +2406,7 @@ boolean             createDesc;
       /* regles de presentation heritees des attributs des ascendants */
       if (pEl != NULL)
 	pEl->ElParent = pParent;
-      while (*tag == (CHAR) C_PIV_PRESENT && !error)
+      while (*tag == (CHAR_T) C_PIV_PRESENT && !error)
 	{
 	  ReadPRulePiv (pDoc, pivFile, pEl, create, &pPRule, TRUE);
 	  if (!error)
@@ -2416,9 +2416,9 @@ boolean             createDesc;
 	}
       /* lit le commentaire qui accompagne eventuellement l'element */
       if (!error)
-	if (*tag == (CHAR) C_PIV_COMMENT || *tag == (CHAR) C_PIV_OLD_COMMENT)
+	if (*tag == (CHAR_T) C_PIV_COMMENT || *tag == (CHAR_T) C_PIV_OLD_COMMENT)
 	  {
-	    pBufComment = ReadComment (pivFile, create, (boolean) (*tag == (CHAR) C_PIV_OLD_COMMENT));	/*  */
+	    pBufComment = ReadComment (pivFile, create, (boolean) (*tag == (CHAR_T) C_PIV_OLD_COMMENT));	/*  */
 	    if (create)
 	      pEl->ElComment = pBufComment;
 	    /* lit l'octet suivant le commentaire */
@@ -2433,7 +2433,7 @@ boolean             createDesc;
 	  switch (pSSchema->SsRule[elType - 1].SrConstruct)
 	    {
 	    case CsReference:
-	      if (*tag != (CHAR) C_PIV_REFERENCE)
+	      if (*tag != (CHAR_T) C_PIV_REFERENCE)
 		{
 		  PivotError (pivFile);
 		  DisplayPivotMessage ("R");	/* erreur */
@@ -2449,7 +2449,7 @@ boolean             createDesc;
 		}
 	      break;
 	    case CsPairedElement:
-	      if (*tag != (CHAR) C_PIV_BEGIN)
+	      if (*tag != (CHAR_T) C_PIV_BEGIN)
 		{
 		  PivotError (pivFile);
 		  DisplayPivotMessage ("M");	/* erreur, pas de tag debut */
@@ -2464,7 +2464,7 @@ boolean             createDesc;
 		    pDoc->DocMaxPairIdent = i;
 		  if (!TtaReadByte (pivFile, tag))
 		    PivotError (pivFile);
-		  if (*tag != (CHAR) C_PIV_END)
+		  if (*tag != (CHAR_T) C_PIV_END)
 		    /* erreur, pas de tag de fin */
 		    {
 		      PivotError (pivFile);
@@ -2479,7 +2479,7 @@ boolean             createDesc;
 	      if (leafType == CharString)
 		if (pDoc->DocPivotVersion >= 4)
 		  {
-		    if (*tag != (CHAR) C_PIV_LANG)
+		    if (*tag != (CHAR_T) C_PIV_LANG)
 		      /* pas de tag de langue, c'est la premiere langue de la */
 		      /* table des langues du document */
 		      i = 0;
@@ -2516,10 +2516,10 @@ boolean             createDesc;
 		    /* n'y a pas d'alphabet. */
 		    /* dans les versions pivot anciennes, il peut y avoir une */
 		    /* tag d'alphabet. On la saute */
-		    if (*tag != (CHAR) C_PIV_BEGIN &&
-			*tag != (CHAR) C_PIV_END &&
-			*tag != (CHAR) C_PIV_TYPE &&
-			*tag != (CHAR) C_PIV_NATURE)
+		    if (*tag != (CHAR_T) C_PIV_BEGIN &&
+			*tag != (CHAR_T) C_PIV_END &&
+			*tag != (CHAR_T) C_PIV_TYPE &&
+			*tag != (CHAR_T) C_PIV_NATURE)
 		      /* on a lu l'alphabet */
 		      {
 			alphabet = *tag;
@@ -2545,12 +2545,12 @@ boolean             createDesc;
 		      }
 		  }
 	      
-	      if (*tag == (CHAR) C_PIV_BEGIN && !error)
+	      if (*tag == (CHAR_T) C_PIV_BEGIN && !error)
 		{
 		  if (leafType != PageBreak)
 		    if (!TtaReadByte (pivFile, tag))
 		      PivotError (pivFile);
-		  if (*tag != (CHAR) C_PIV_END)	/* il y a un contenu */
+		  if (*tag != (CHAR_T) C_PIV_END)	/* il y a un contenu */
 		    {
 		      switch (leafType)
 			{
@@ -2600,7 +2600,7 @@ boolean             createDesc;
 					    ch = '\351';
 					    break;	/*eacute */
 					  default:
-					    ch = (CHAR) (((int) ch) + 223);
+					    ch = (CHAR_T) (((int) ch) + 223);
 					  }
 				    /* changement des oe et OE */
 				    if (pDoc->DocPivotVersion < 4)
@@ -2688,7 +2688,7 @@ boolean             createDesc;
 			  /* lit l'octet qui suit */
 			  if (!TtaReadByte (pivFile, tag))
 			    PivotError (pivFile);
-			  else if (*tag != (CHAR) C_PIV_POLYLINE)
+			  else if (*tag != (CHAR_T) C_PIV_POLYLINE)
 			    /* c'est un element graphique simple */
 			    {
 			      if (create)
@@ -2767,7 +2767,7 @@ boolean             createDesc;
 			}
 		      
 		    }
-		  if (*tag != (CHAR) C_PIV_END)
+		  if (*tag != (CHAR_T) C_PIV_END)
 		    {
 		      PivotError (pivFile);
 		      DisplayPivotMessage ("F");
@@ -2779,7 +2779,7 @@ boolean             createDesc;
 	      break;
 	    default:
 	      /* traite le contenu s'il y en a un */
-	      if (*tag == (CHAR) C_PIV_BEGIN)
+	      if (*tag == (CHAR_T) C_PIV_BEGIN)
 		{
 		  if (pEl != NULL)
 		    if (pEl->ElTerminal)
@@ -2793,7 +2793,7 @@ boolean             createDesc;
 		      if (!TtaReadByte (pivFile, tag))
 			PivotError (pivFile);
 		      pPrevEl = NULL;
-		      while (*tag != (CHAR) C_PIV_END && !error)
+		      while (*tag != (CHAR_T) C_PIV_END && !error)
 			/* ce n'est pas un element vide, */
 			/* on lit son contenu */
 			{
@@ -3188,10 +3188,10 @@ void (*withThisPSchema) ();
    /* lit les noms des fichiers contenant les schemas de nature  */
    /* dynamiques et charge ces schemas, sauf si on ne charge que */
    /* les elements exportables. */
-   while ((*tag == (CHAR) C_PIV_NATURE || *tag == (CHAR) C_PIV_SSCHEMA_EXT)
+   while ((*tag == (CHAR_T) C_PIV_NATURE || *tag == (CHAR_T) C_PIV_SSCHEMA_EXT)
 	  && !error)
      {
-	ExtensionSch = (*tag == (CHAR) C_PIV_SSCHEMA_EXT);
+	ExtensionSch = (*tag == (CHAR_T) C_PIV_SSCHEMA_EXT);
 	i = 0;
 	rank++;
 	do
@@ -3286,7 +3286,7 @@ STRING              tag;
    /* lit la table des langues utilisees par le document */
    pDoc->DocNLanguages = 0;
    if (pDoc->DocPivotVersion >= 4)
-      while (*tag == (CHAR) C_PIV_LANG && !error)
+      while (*tag == (CHAR_T) C_PIV_LANG && !error)
 	{
 	   i = 0;
 	   do
@@ -3325,18 +3325,18 @@ PtrDocument         pDoc;
 #endif /* __STDC__ */
 
 {
-   CHAR                c;
+   CHAR_T                c;
    int                 ret;
 
    ret = 0;
    pDoc->DocPivotVersion = 1;
    if (!TtaReadByte (file, &c))
       ret = 10;
-   else if (c != (CHAR) C_PIV_VERSION)
+   else if (c != (CHAR_T) C_PIV_VERSION)
       ret = 10;
    else if (!TtaReadByte (file, &c))
       ret = 10;
-   else if (c != (CHAR) C_PIV_VERSION)
+   else if (c != (CHAR_T) C_PIV_VERSION)
       ret = 10;
    else if (!TtaReadByte (file, &c))
       ret = 10;
@@ -3363,12 +3363,12 @@ STRING              tag;
 {
    LabelString         label;
    int                 i;
-   CHAR                c;
+   CHAR_T                c;
 
    /* lit le numero de version s'il est present */
    if (!TtaReadByte (file, tag))
       PivotError (file);
-   if (*tag == (CHAR) C_PIV_VERSION)
+   if (*tag == (CHAR_T) C_PIV_VERSION)
      {
 	if (!TtaReadByte (file, tag))
 	   PivotError (file);
@@ -3385,9 +3385,9 @@ STRING              tag;
       pDoc->DocPivotVersion = 1;
 
    /* lit le label max. du document s'il est present */
-   if (!error && (*tag == (CHAR) C_PIV_SHORT_LABEL ||
-		  *tag == (CHAR) C_PIV_LONG_LABEL ||
-		  *tag == (CHAR) C_PIV_LABEL))
+   if (!error && (*tag == (CHAR_T) C_PIV_SHORT_LABEL ||
+		  *tag == (CHAR_T) C_PIV_LONG_LABEL ||
+		  *tag == (CHAR_T) C_PIV_LABEL))
      {
 	ReadLabel (*tag, label, file);
 	LabelStringToInt (label, &i);
@@ -3435,8 +3435,8 @@ boolean		    removeExclusions
    NotifyDialog        notifyDoc;
    BinFile             EXTfile;
    int                 i, j, assoc, rule, typeRead;
-   CHAR                buffer[MAX_TXT_LEN];
-   CHAR                tag;
+   CHAR_T                buffer[MAX_TXT_LEN];
+   CHAR_T                tag;
    boolean             structureOK, createPages, found, ok;
 
 /*    pDoc->DocToBeChecked = FALSE; */
@@ -3451,16 +3451,16 @@ boolean		    removeExclusions
    /* lit l'entete du fichier pivot */
    ReadPivotHeader (file, pDoc, &tag);
    /* lit le commentaire du document s'il est present */
-   if (!error && (tag == (CHAR) C_PIV_COMMENT ||
-		  tag == (CHAR) C_PIV_OLD_COMMENT))
+   if (!error && (tag == (CHAR_T) C_PIV_COMMENT ||
+		  tag == (CHAR_T) C_PIV_OLD_COMMENT))
      {
-	pDoc->DocComment = ReadComment (file, TRUE, (boolean)(tag == (CHAR) C_PIV_OLD_COMMENT));
+	pDoc->DocComment = ReadComment (file, TRUE, (boolean)(tag == (CHAR_T) C_PIV_OLD_COMMENT));
 	/* lit l'octet suivant le commentaire */
 	if (!TtaReadByte (file, &tag))
 	   PivotError (file);
      }
    /* Lit le nom du schema de structure qui est en tete du fichier pivot */
-   if (!error && tag != (CHAR) C_PIV_NATURE)
+   if (!error && tag != (CHAR_T) C_PIV_NATURE)
      {
 	PivotError (file);
 	DisplayPivotMessage ("N");	/* tag classe absente */
@@ -3522,7 +3522,7 @@ boolean		    removeExclusions
 	for (i = 0; i < MAX_PARAM_DOC; i++)
 	   pDoc->DocParameters[i] = NULL;
 	i = 1;
-	while (tag == (CHAR) C_PIV_PARAM && !error)
+	while (tag == (CHAR_T) C_PIV_PARAM && !error)
 	   if (i > MAX_PARAM_DOC)
 	     {
 		PivotError (file);
@@ -3560,7 +3560,7 @@ boolean		    removeExclusions
 	for (assoc = 0; assoc < MAX_ASSOC_DOC; assoc++)
 	   pDoc->DocAssocRoot[assoc] = NULL;
 	assoc = 0;
-	while (tag == (CHAR) C_PIV_ASSOC && !error)
+	while (tag == (CHAR_T) C_PIV_ASSOC && !error)
 	   /* debut d'un nouveau type d'element associe */
 	  {
 	     assoc++;
@@ -3667,7 +3667,7 @@ boolean		    removeExclusions
 			 }
 		    }
 		  /* lit les elements associes suivants de meme type */
-		  while (!error && (tag == (CHAR) C_PIV_TYPE || tag == (CHAR) C_PIV_NATURE))
+		  while (!error && (tag == (CHAR_T) C_PIV_TYPE || tag == (CHAR_T) C_PIV_NATURE))
 		    {
 		       rule = 0;
 		       pNat = NULL;
@@ -3703,8 +3703,8 @@ boolean		    removeExclusions
 
 	/* lit le corps du document */
 	if (!error)
-	   if (tag != (CHAR) C_PIV_DOC_END)
-	      if (tag != (CHAR) C_PIV_STRUCTURE)
+	   if (tag != (CHAR_T) C_PIV_DOC_END)
+	      if (tag != (CHAR_T) C_PIV_STRUCTURE)
 		{
 		   PivotError (file);
 		   DisplayPivotMessage ("O");
@@ -3713,7 +3713,7 @@ boolean		    removeExclusions
 		{
 		   if (!TtaReadByte (file, &tag))
 		      PivotError (file);
-		   if (tag != (CHAR) C_PIV_TYPE && tag != (CHAR) C_PIV_NATURE)
+		   if (tag != (CHAR_T) C_PIV_TYPE && tag != (CHAR_T) C_PIV_NATURE)
 		     {
 			PivotError (file);
 			DisplayPivotMessage ("P");

@@ -36,7 +36,7 @@ typedef struct _AppMenuItem
   char			*AppItemName;
   char			*AppItemActionName;
   PtrAppMenuItem	AppSubMenu;
-  char			AppItemType;
+  CHAR_T			AppItemType;
   boolean		AppStandardAction;
   PtrAppMenuItem	AppNextItem;
 } AppMenuItem;

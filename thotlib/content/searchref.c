@@ -303,7 +303,7 @@ void                FindReferredEl ()
    DocumentIdentifier  docIdent;
    PtrDocument         pDoc;
    int                 nMenuItems;
-   CHAR                menuBuf[MAX_TXT_LEN];
+   CHAR_T              menuBuf[MAX_TXT_LEN];
    int                 menuBufLen;
    PtrReference        pRefTable[MAX_ITEM_MENU_REF];
    int                 chosenItem;

@@ -32,18 +32,18 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern char        *TtaGetMessage (int, int);
+extern STRING       TtaGetMessage (int, int);
 extern void         TtaDisplaySimpleMessage (int, int, int);
-extern void         TtaDisplaySimpleMessageString (int, int, int, char *);
+extern void         TtaDisplaySimpleMessageString (int, int, int, STRING);
 extern void         TtaDisplaySimpleMessageNum (int, int, int, int);
-extern void	    TtaDisplayMessage (int msgType, char *fmt, ...);
+extern void	        TtaDisplayMessage (int msgType, STRING fmt, ...);
 #else  /* __STDC__ */
 
-extern char        *TtaGetMessage ();
+extern STRING       TtaGetMessage ();
 extern void         TtaDisplaySimpleMessage ();
 extern void         TtaDisplaySimpleMessageString ();
 extern void         TtaDisplaySimpleMessageNum ();
-extern void	    TtaDisplayMessage ();
+extern void	        TtaDisplayMessage ();
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

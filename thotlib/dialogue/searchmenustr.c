@@ -72,14 +72,14 @@ static int          LgTableNaturesDoc;
 
 /* table des natures prises en compte dans le recherche de type */
 static boolean      TableNaturesCherchees[LgTable];
-static CHAR         NomTypeAChercher[THOT_MAX_CHAR];		/* le nom du type a chercher */
-static CHAR         NomAttrAChercher[THOT_MAX_CHAR];		/* le nom de l'attribut a chercher */
+static CHAR_T         NomTypeAChercher[THOT_MAX_CHAR];		/* le nom du type a chercher */
+static CHAR_T         NomAttrAChercher[THOT_MAX_CHAR];		/* le nom de l'attribut a chercher */
 
 					  /* defini l'attribut recherche' */
 int                 ValAttrCherche;	/* valeur de l'attribut recherche' */
 
 #define LgMaxAttrTxtCherche 80
-CHAR                ValAttrTxtCherche[LgMaxAttrTxtCherche];	/* valeur de l'attribut recherche', */
+CHAR_T                ValAttrTxtCherche[LgMaxAttrTxtCherche];	/* valeur de l'attribut recherche', */
 
 #define LgLabelBuffer 200
 
@@ -111,7 +111,7 @@ PtrDocument         pDoc;
 {
 #define LgMaxListeAttr 980
    int                 i, nbitem;
-   CHAR                ListeAttr[LgMaxListeAttr];
+   CHAR_T                ListeAttr[LgMaxListeAttr];
    int                 lgmenu;
    int                 nbentrees;
    int                 entree;
@@ -194,7 +194,7 @@ PtrDocument         pDoc;
 static void         ConstruitSelecteurTypes ()
 {
 #define LgMaxListeTypes 980
-   CHAR                ListeTypes[LgMaxListeTypes];
+   CHAR_T                ListeTypes[LgMaxListeTypes];
    int                 nbitem, lgmenu;
    int                 nat, regle, premregle;
    PtrSSchema          pSS;
@@ -465,7 +465,7 @@ PtrDocument         pDoc;
 #endif
 {
    int                 nbitem;
-   CHAR                ListeTypes[LgMaxListeTypes];
+   CHAR_T                ListeTypes[LgMaxListeTypes];
    int                 lgmenu;
    int                 nat;
    SRule              *pRe;
@@ -523,7 +523,7 @@ PtrDocument         pDoc;
   ----------------------------------------------------------------------*/
 void                BuildStructSearchMenu (pDoc)
 {
-   CHAR BufMenu [MAX_TXT_LEN];
+   CHAR_T BufMenu [MAX_TXT_LEN];
 
    /* menu des natures utilisees dans le document */
    /* NumMenuSearchNature, cree' dynamiquement par cherche.c */
@@ -935,9 +935,9 @@ void                ValAttrSearch ()
 void                ValAttrSearch ()
 #endif
 {
-   CHAR                NomAtt[100];
+   CHAR_T                NomAtt[100];
    int                 lg, lg1;
-   CHAR                LabelBuffer[LgLabelBuffer];
+   CHAR_T                LabelBuffer[LgLabelBuffer];
 
    if (NomAttrAChercher[0] != EOS && pAttrTrouve != NULL)
       /* on cherche un attribut et on l'a trouve' */

@@ -48,12 +48,12 @@ static boolean      AttrFormExists = FALSE;
 static boolean      MandatoryAttrFormExists = FALSE;
 #ifdef _WINDOWS
 static boolean      dlgInitialized = FALSE; 
-static CHAR         WIN_Lab [1024];
+static CHAR_T         WIN_Lab [1024];
 static int          WIN_nbItem;
-static CHAR         WIN_title [MAX_NAME_LENGTH + 2];
+static CHAR_T         WIN_title [MAX_NAME_LENGTH + 2];
 
 int                 WIN_MenuAlphabet;
-CHAR                WIN_buffMenu [MAX_TXT_LEN];
+CHAR_T                WIN_buffMenu [MAX_TXT_LEN];
 #endif /* _WINDOWS */
 
 
@@ -63,7 +63,7 @@ static PtrSSchema   AttrStruct[MAX_MENU * 2];
 static int          AttrNumber[MAX_MENU * 2];
 static boolean      AttrOblig[MAX_MENU * 2];
 static boolean      AttrEvent[MAX_MENU* 2];
-static CHAR         TextAttrValue[LgMaxAttrText];
+static CHAR_T         TextAttrValue[LgMaxAttrText];
 static PtrSSchema   SchCurrentAttr = NULL;
 static int          EventMenu[MAX_FRAME];
 static int          NumCurrentAttr = 0;
@@ -97,8 +97,8 @@ static BOOL         WIN_AtTextAttr = FALSE;
 static BOOL         WIN_AtEnumAttr = FALSE;
 static BOOL         isForm         = FALSE ;
 static PtrAttribute WIN_currAttr;
-static CHAR         formRange [100];
-static CHAR         attr_text [500];
+static CHAR_T         formRange [100];
+static CHAR_T         attr_text [500];
 static int          formValue;
 static int          nbDlgItems ;
 static int          WIN_Language;
@@ -165,12 +165,12 @@ PtrAttribute        currAttr;
 #endif /* __STDC__ */
 {
    int                 i, defItem, nbItem, nbLanguages, firstLanguage, length;
-   CHAR                bufMenu[MAX_TXT_LEN];
-   CHAR                string[MAX_TXT_LEN];
+   CHAR_T                bufMenu[MAX_TXT_LEN];
+   CHAR_T                string[MAX_TXT_LEN];
    STRING              ptr;
    Language            language;
    Name                languageValue;
-   CHAR                Lab[200];
+   CHAR_T                Lab[200];
    PtrAttribute        pHeritAttr;
    PtrElement          pElAttr;
 
@@ -319,7 +319,7 @@ STRING title	;
 #endif /* __STDC__ */
 {
    WNDCLASS    wndFormClass ;
-   static CHAR szAppName[] = "FormClass" ;
+   static CHAR_T szAppName[] = "FormClass" ;
    HWND        hwnFromDialog;
    MSG         msg;
    int         frame;
@@ -386,7 +386,7 @@ LRESULT CALLBACK InitFormDialogWndProc (HWND hwnd, UINT iMsg, WPARAM wParam, LPA
 	HWND        confirmButton;
 	HWND        doneButton;
 	STRING       pBuffer;
-	/* CHAR        attr_text [500]; */
+	/* CHAR_T        attr_text [500]; */
 	int         i, index;
 	static PSTR pWinBuffer;
 	static int  txtLength;
@@ -476,7 +476,7 @@ STRING title	;
 #endif /* __STDC__ */
 {
    WNDCLASSEX    wndSheetClass ;
-   static CHAR szAppName[] = "SheetClass" ;
+   static CHAR_T szAppName[] = "SheetClass" ;
    HWND        hwnSheetDialog;
    MSG         msg;
    int         frame;
@@ -661,7 +661,7 @@ STRING title	;
 #endif /* __STDC__ */
 {
    WNDCLASSEX    wndNumAttrClass ;
-   static CHAR szAppName[] = "NumAttrClass" ;
+   static CHAR_T szAppName[] = "NumAttrClass" ;
    HWND        hwnNumAttrDialog;
    MSG         msg;
    int         frame;
@@ -829,10 +829,10 @@ int                 view;
 {
   int                 i, lgmenu, val;
   int                 form, subform;
-  CHAR                bufMenu[MAX_TXT_LEN];
+  CHAR_T                bufMenu[MAX_TXT_LEN];
   Document            doc;
 # ifndef _WINDOWS
-  CHAR                title[MAX_NAME_LENGTH + 2];
+  CHAR_T                title[MAX_NAME_LENGTH + 2];
 # else  /* _WINDOWS */
   WIN_pAttr1 = pAttr1;
   WIN_currAttr	= currAttr;
@@ -1116,7 +1116,7 @@ STRING        bufEventAttr;
   PtrAttribute        pAttrNew;
   SRule              *pRe1;
   TtAttribute        *pAttr;
-  CHAR                tempBuffer[MAX_NAME_LENGTH + 1];
+  CHAR_T                tempBuffer[MAX_NAME_LENGTH + 1];
   int                 i, j, k;
   int                 firstChar, lastChar;
   int                 lgmenu, lgsubmenu;
@@ -1315,8 +1315,8 @@ PtrDocument         pDoc;
 {
   Document            document;
   Menu_Ctl           *pMenu;
-  CHAR                bufMenuAttr[MAX_TXT_LEN];
-  CHAR                bufEventAttr[MAX_TXT_LEN];
+  CHAR_T                bufMenuAttr[MAX_TXT_LEN];
+  CHAR_T                bufEventAttr[MAX_TXT_LEN];
   int                 view, menu, menuID;
   int                 frame, ref, nbEvent;
   int                 nbItemAttr, i, max;

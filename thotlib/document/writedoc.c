@@ -78,7 +78,7 @@ static PathBuffer   SaveFileName;
 static boolean      SaveDocWithCopy;
 static boolean      SaveDocWithMove;
 static PtrDocument  DocumentToSave;
-extern CHAR         DefaultFileSuffix[5];        
+extern CHAR_T         DefaultFileSuffix[5];        
 
 
 /*----------------------------------------------------------------------
@@ -153,7 +153,7 @@ STRING              extension;
 
 #endif /* __STDC__ */
 {
-   CHAR                buf[MAX_TXT_LEN];
+   CHAR_T                buf[MAX_TXT_LEN];
    int                 i;
 
    if (pDoc == NULL)
@@ -188,7 +188,7 @@ boolean             move;
 {
    PathBuffer          bakName, pivName, tempName, backName, oldDir;
    NotifyDialog        notifyDoc;
-   CHAR                buf[MAX_TXT_LEN];
+   CHAR_T                buf[MAX_TXT_LEN];
    int                 i;
    boolean             sameFile, status, ok;
 

@@ -244,13 +244,13 @@ STRING              s2;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-static void         Transcode (FILE * fout, int encoding, CHAR car)
+static void         Transcode (FILE * fout, int encoding, CHAR_T car)
 
 #else  /* __STDC__ */
 static void         Transcode (fout, encoding, car)
 FILE               *fout;
 int                 encoding;
-CHAR                car;
+CHAR_T                car;
 
 #endif /* __STDC__ */
 
@@ -275,7 +275,7 @@ CHAR                car;
 		  fputs ("\\\\", fout);
 		  break;
 	       default:
-		  fprintf (fout, "\\%o", (UCHAR) car);
+		  fprintf (fout, "\\%o", (UCHAR_T) car);
 	    }
 #  endif /* _WINDOWS */
 }
@@ -326,10 +326,10 @@ int                 num;
   indicates if the box is active parameter fg indicates the drawing color
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                WIN_DrawChar (UCHAR car, int frame, int x, int y, ptrfont font, int RO, int active, int fg)
+void                WIN_DrawChar (UCHAR_T car, int frame, int x, int y, ptrfont font, int RO, int active, int fg)
 #else  /* __STDC__ */
 void                WIN_DrawChar (car, frame, x, y, font, RO, active, fg)
-UCHAR       car;
+UCHAR_T       car;
 int                 frame;
 int                 x;
 int                 y;
@@ -340,7 +340,7 @@ int                 fg;
 
 #endif /* __STDC__ */
 {
-   CHAR  str[2] = {car, 0};
+   CHAR_T  str[2] = {car, 0};
    HFONT hOldFont;
 
    CurrentColor (NULL, fg);
@@ -359,10 +359,10 @@ int                 fg;
   parameter fg indicates the drawing color
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void WIN_DrawMonoSymb (CHAR symb, int frame, int x, int y, int l, int h, int RO, int active, ptrfont font, int fg)
+static void WIN_DrawMonoSymb (CHAR_T symb, int frame, int x, int y, int l, int h, int RO, int active, ptrfont font, int fg)
 #else  /* __STDC__ */
 static void WIN_DrawMonoSymb (symb, frame, x, y, l, h, RO, active, font, fg)
-CHAR                symb;
+CHAR_T                symb;
 int                 frame;
 int                 x;
 int                 y;
@@ -455,7 +455,7 @@ ptrfont             font;
 #endif /* __STDC__ */
 {
    int                 i, retour;
-   CHAR                c1, c2;
+   CHAR_T                c1, c2;
 
    /* browse the table of fonts */
    i = 0;

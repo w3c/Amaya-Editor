@@ -14,20 +14,20 @@ extern void SetCapital ( STRING string );
 extern boolean IsUpperCase ( STRING string );
 extern boolean IsCapital ( STRING string );
 extern boolean IsIso ( STRING string );
-extern int WordInDictionary ( CHAR word[MAX_WORD_LEN],
+extern int WordInDictionary ( CHAR_T word[MAX_WORD_LEN],
                               PtrDict dict );
-extern int CheckWord ( CHAR word[MAX_WORD_LEN],
+extern int CheckWord ( CHAR_T word[MAX_WORD_LEN],
                        Language language,
                        PtrDict dict );
-extern void AddWord ( CHAR word[MAX_WORD_LEN],
+extern void AddWord ( CHAR_T word[MAX_WORD_LEN],
                       PtrDict * pDict );
 extern void GiveProposal ( Language language,
                            PtrDict docDict );
 extern int ParametrizeChecker ( void );
-extern void WordReplace ( CHAR orgWord[MAX_WORD_LEN],
-                          CHAR newWord[MAX_WORD_LEN] );
+extern void WordReplace ( CHAR_T orgWord[MAX_WORD_LEN],
+                          CHAR_T newWord[MAX_WORD_LEN] );
 extern boolean CheckChangeSelection ( void );
-extern void NextSpellingError ( CHAR word[MAX_WORD_LEN],
+extern void NextSpellingError ( CHAR_T word[MAX_WORD_LEN],
                                 PtrDict docDict );
 
 #else /* __STDC__ */
@@ -40,20 +40,20 @@ extern void SetCapital (/* STRING string */);
 extern boolean IsUpperCase (/* STRING string */);
 extern boolean IsCapital (/* STRING string */);
 extern boolean IsIso (/* STRING string */);
-extern int WordInDictionary (/* CHAR word[MAX_WORD_LEN],
+extern int WordInDictionary (/* CHAR_T word[MAX_WORD_LEN],
                                 PtrDict dict */);
-extern int CheckWord (/* CHAR word[MAX_WORD_LEN],
+extern int CheckWord (/* CHAR_T word[MAX_WORD_LEN],
                          Language language,
                          PtrDict dict */);
-extern void AddWord (/* CHAR word[MAX_WORD_LEN],
+extern void AddWord (/* CHAR_T word[MAX_WORD_LEN],
                         PtrDict * pDict */);
 extern void GiveProposal (/* Language language,
                              PtrDict docDict */);
 extern int ParametrizeChecker (/* void */);
-extern void WordReplace (/* CHAR orgWord[MAX_WORD_LEN],
-                            CHAR newWord[MAX_WORD_LEN] */);
+extern void WordReplace (/* CHAR_T orgWord[MAX_WORD_LEN],
+                            CHAR_T newWord[MAX_WORD_LEN] */);
 extern boolean CheckChangeSelection (/* void */);
-extern void NextSpellingError (/* CHAR word[MAX_WORD_LEN],
+extern void NextSpellingError (/* CHAR_T word[MAX_WORD_LEN],
                                   PtrDict docDict */);
 
 #endif /* __STDC__ */

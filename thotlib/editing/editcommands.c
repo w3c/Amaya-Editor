@@ -139,7 +139,7 @@ int                *nChars;
 #endif /* __STDC__ */
 {
    int                 nb;
-   CHAR                car;
+   CHAR_T                car;
 
    nb = 0;
    while (nb < count)
@@ -159,7 +159,7 @@ int                *nChars;
 	     (*nChars)++;
 	     if (car == ' ')
 		(*nSpaces)++;
-	     *width += CharacterWidth ((UCHAR) car, font);
+	     *width += CharacterWidth ((UCHAR_T) car, font);
 	  }
      }
 }
@@ -1171,13 +1171,13 @@ int                 charWidth;
    active (1) ou non (0).                                  
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         RedisplayOneChar (int frame, int x, int y, CHAR c, ptrfont font, PtrBox pBox)
+static void         RedisplayOneChar (int frame, int x, int y, CHAR_T c, ptrfont font, PtrBox pBox)
 #else  /* __STDC__ */
 static void         RedisplayOneChar (frame, x, y, c, font, pBox)
 int                 frame;
 int                 x;
 int                 y;
-CHAR                c;
+CHAR_T                c;
 ptrfont             font;
 PtrBox              pBox;
 
@@ -1210,12 +1210,12 @@ PtrBox              pBox;
    TtcInsertChar insert a character                                
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                TtcInsertChar (Document document, View view, CHAR c)
+void                TtcInsertChar (Document document, View view, CHAR_T c)
 #else  /* __STDC__ */
 void                TtcInsertChar (document, view, c)
 Document            document;
 View                view;
-CHAR                c;
+CHAR_T                c;
 
 #endif /* __STDC__ */
 {
@@ -1283,12 +1283,12 @@ CHAR                c;
    TtcInsertGraph insert a graphics                                
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                TtcInsertGraph (Document document, View view, CHAR c)
+void                TtcInsertGraph (Document document, View view, CHAR_T c)
 #else  /* __STDC__ */
 void                TtcInsertGraph (document, view, c)
 Document            document;
 View                view;
-CHAR                c;
+CHAR_T                c;
 
 #endif /* __STDC__ */
 {
@@ -1435,10 +1435,10 @@ int                 frame;
    insere dans la boite pBox.                                      
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         LoadSymbol (CHAR c, PtrLine pLine, boolean defaultHeight, boolean defaultWidth, PtrBox pBox, PtrAbstractBox pAb, int frame)
+static void         LoadSymbol (CHAR_T c, PtrLine pLine, boolean defaultHeight, boolean defaultWidth, PtrBox pBox, PtrAbstractBox pAb, int frame)
 #else  /* __STDC__ */
 static void         LoadSymbol (c, pLine, defaultHeight, defaultWidth, pBox, pAb, frame)
-CHAR                c;
+CHAR_T                c;
 PtrLine             pLine;
 boolean             defaultHeight;
 boolean             defaultWidth;
@@ -1481,10 +1481,10 @@ int                 frame;
    Charge un graphique ou une polyline.                            
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         LoadShape (CHAR c, PtrLine pLine, boolean defaultHeight, boolean defaultWidth, PtrBox pBox, PtrAbstractBox pAb, int frame)
+static void         LoadShape (CHAR_T c, PtrLine pLine, boolean defaultHeight, boolean defaultWidth, PtrBox pBox, PtrAbstractBox pAb, int frame)
 #else  /* __STDC__ */
 static void         LoadShape (c, pLine, defaultHeight, defaultWidth, pBox, pAb, frame)
-CHAR                c;
+CHAR_T                c;
 PtrLine             pLine;
 boolean             defaultHeight;
 boolean             defaultWidth;
@@ -1643,7 +1643,7 @@ int                 frame;
 
 #endif /* __STDC__ */
 {
-   CHAR                buffer[FULL_BUFFER];
+   CHAR_T                buffer[FULL_BUFFER];
    STRING              ptr;
    int                 i;
    int                 xDelta, yDelta;
@@ -2673,9 +2673,9 @@ int                 editType;
 		else if (pAb->AbLeafType == LtPicture && FromKeyboard)
 		  LoadPictFile (pLine, defaultHeight, defaultWidth, pBox, pAb, frame);
 		else if (pAb->AbLeafType == LtSymbol && FromKeyboard)
-		  LoadSymbol ((CHAR) (editType), pLine, defaultHeight, defaultWidth, pBox, pAb, frame);
+		  LoadSymbol ((CHAR_T) (editType), pLine, defaultHeight, defaultWidth, pBox, pAb, frame);
 		else if ((pAb->AbLeafType == LtGraphics || pAb->AbLeafType == LtPolyLine) && FromKeyboard)
-		  LoadShape ((CHAR) (editType), pLine, defaultHeight, defaultWidth, pBox, pAb, frame);
+		  LoadShape ((CHAR_T) (editType), pLine, defaultHeight, defaultWidth, pBox, pAb, frame);
 	      }
           }
 
@@ -2757,11 +2757,11 @@ int                 editType;
    Insere un caractere dans une boite de texte.                    
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                InsertChar (int frame, UCHAR c, int keyboard)
+void                InsertChar (int frame, UCHAR_T c, int keyboard)
 #else  /* __STDC__ */
 void                InsertChar (frame, c, keyboard)
 int                 frame;
-UCHAR       c;
+UCHAR_T       c;
 int                 keyboard;
 #endif /* __STDC__ */
 {
@@ -2788,7 +2788,7 @@ int                 keyboard;
   boolean             saveinsert;
   boolean             notification = FALSE;
 
-  toDelete = (c == (CHAR) (127));
+  toDelete = (c == (CHAR_T) (127));
   /* Selon la valeur du parametre keyboard on essaie d'inserer */
   if (keyboard == 0)
     nat = LtSymbol;
@@ -3035,8 +3035,8 @@ int                 keyboard;
 				toSplit = TRUE;
 				
 				/* Est-ce un boite qui ne contenait qu'un Ctrl Return ? */
-				if ((c == (UCHAR) BREAK_LINE ||
-				     c == (UCHAR) NEW_LINE) &&
+				if ((c == (UCHAR_T) BREAK_LINE ||
+				     c == (UCHAR_T) NEW_LINE) &&
 				    pAb->AbBox->BxNChars == 1)
 				  {
 				    /* La boite entiere devient vide */
@@ -3197,8 +3197,8 @@ int                 keyboard;
 				  }
 			      
 			      /* Le caractere insere' est un Ctrl Return ? */
-			      if (c == (UCHAR) BREAK_LINE ||
-				  c == (UCHAR) NEW_LINE)
+			      if (c == (UCHAR_T) BREAK_LINE ||
+				  c == (UCHAR_T) NEW_LINE)
 				{
 				  /* il faut reevaluer la mise en ligne */
 				  toSplit = TRUE;
@@ -3249,8 +3249,8 @@ int                 keyboard;
 				    if (pSelBox->BxNPixels > pViewSel->VsNSpaces)
 				      pix = 1;
 				}
-			      else if (c == (UCHAR) BREAK_LINE ||
-				       c == (UCHAR) NEW_LINE)
+			      else if (c == (UCHAR_T) BREAK_LINE ||
+				       c == (UCHAR_T) NEW_LINE)
 				/* Ctrl Return */
 				{
 				  /* il faut reevaluer la mise en ligne */

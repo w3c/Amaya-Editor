@@ -114,7 +114,7 @@ PtrDocument         pDoc;
 
 #endif /* __STDC__ */
 {
-   CHAR                bufItemSplit[MAX_TXT_LEN];
+   CHAR_T              bufItemSplit[MAX_TXT_LEN];
 
    bufItemSplit[0] = EOS;
    if (pDoc == NULL || pDoc != SelectedDocument)

@@ -44,9 +44,9 @@
 #include "platform_tv.h"
 int                 CurrentDialog;
 
-static CHAR         NameDocToCreate[100] = "";
-static CHAR         ClassDocToCreate[100] = "";
-static CHAR         DirectoryDocToCreate[MAX_PATH] = "";
+static CHAR_T         NameDocToCreate[100] = "";
+static CHAR_T         ClassDocToCreate[100] = "";
+static CHAR_T         DirectoryDocToCreate[MAX_PATH] = "";
 
 #include "structschema_f.h"
 #include "browser_f.h"
@@ -121,8 +121,8 @@ STRING              data;
 {
    PathBuffer          docName;
    int                 i;
-   CHAR                BufDir[MAX_PATH];
-   CHAR                URL_DIR_SEP;
+   CHAR_T                BufDir[MAX_PATH];
+   CHAR_T                URL_DIR_SEP;
 
    if (typeData == STRING_DATA && data && ustrchr (data, '/'))
      URL_DIR_SEP = '/';
@@ -240,8 +240,8 @@ View                view;
    STRING              ptr;
    int                 i = 0, length, nbitem;
    int		       entry = 0;
-   CHAR                BufMenu[MAX_TXT_LEN];
-   CHAR                BufDir[MAX_PATH];
+   CHAR_T                BufMenu[MAX_TXT_LEN];
+   CHAR_T                BufDir[MAX_PATH];
    ThotWidget	       parentWidget;
 
    if (ThotLocalActions[T_createdoc] == NULL)

@@ -84,7 +84,7 @@ int          LastPageNumber, LastPageWidth, LastPageHeight;
 static PtrDocument  TheDoc;	/* le document en cours de traitement */
 static PathBuffer   DocumentDir;   /* le directory d'origine du document */
 static int          NumberOfPages;
-static CHAR         tempDir [MAX_PATH];
+static CHAR_T         tempDir [MAX_PATH];
 static boolean      removeDirectory;
 
 /* table des vues a imprimer */
@@ -138,7 +138,7 @@ static ThotWindow    thotWindow;
 #endif /* _WINDOWS */
 
 static int          manualFeed;
-static CHAR         pageSize [3];
+static CHAR_T         pageSize [3];
 static int          BlackAndWhite;
 static int          HorizShift;
 static int          VertShift;
@@ -256,12 +256,39 @@ LPSTR  msg;
 #endif /* __STDC__ */
 {
     DOCINFO         DocInfo;
+    STRING suffix;
 
     bError     = FALSE;     /* no errors yet */
     gbAbort    = FALSE;     /* user hasn't aborted */
 
-    if (!(ghwndAbort = CreateDialog (hInst, (LPCTSTR) "Printinprogress", ghwndMain, (DLGPROC) AbortDlgProc)))
-       WinErrorBox (ghwndMain);
+#  ifdef _WINDOWS
+   suffix = TtaGetVarLANG ();
+
+   if (!ustrncasecmp (suffix, "fr", 2))
+      app_lang = FR_LANG;
+   else if (!ustrncasecmp (suffix, "en", 2))
+      app_lang = EN_LANG;
+   else if (!ustrncasecmp (suffix, "de", 2))
+      app_lang = DE_LANG;
+#  endif /* _WINDOWS */
+
+	switch (app_lang) {
+           case FR_LANG:
+               if (!(ghwndAbort = CreateDialog (hInst, (LPCTSTR) "FR_Printinprogress", ghwndMain, (DLGPROC) AbortDlgProc)))
+                  WinErrorBox (ghwndMain);
+               break;
+
+		   case EN_LANG:
+                if (!(ghwndAbort = CreateDialog (hInst, (LPCTSTR) "EN_Printinprogress", ghwndMain, (DLGPROC) AbortDlgProc)))
+                   WinErrorBox (ghwndMain);
+                break;
+
+		   case DE_LANG:
+                if (!(ghwndAbort = CreateDialog (hInst, (LPCTSTR) "DE_Printinprogress", ghwndMain, (DLGPROC) AbortDlgProc)))
+                   WinErrorBox (ghwndMain);
+				break;
+	} 
+
     EnableWindow (ghwndMain, FALSE);
     SetAbortProc (TtPrinterDC, AbortProc);
 
@@ -449,7 +476,7 @@ XErrorEvent        *err;
 
 #endif /* __STDC__ */
 {
-   CHAR                msg[200];
+   CHAR_T                msg[200];
 
    XGetErrorText (dpy, err->error_code, msg, 200);
    return (0);
@@ -768,11 +795,11 @@ int                *volume;
 #endif /* __STDC__ */
 {
    FILE               *PSfile;
-   CHAR                fileName[256];
+   CHAR_T                fileName[256];
    ViewFrame          *pFrame;
    long                i;
    int                 len;
-   CHAR                tmp[MAX_PATH];
+   CHAR_T                tmp[MAX_PATH];
 
    /* Est-ce la premiere creation de frame ? */
    i = 1;
@@ -2185,7 +2212,7 @@ int                 clipOrg;
 
 #ifdef PRINT_DEBUG
 FILE     *list;
-CHAR      localname[50];
+CHAR_T      localname[50];
 static int       n = 1;
 
    sprintf (localname, "/home/stephane/.amaya/printpave%d.debug", n);
@@ -2405,7 +2432,7 @@ int                 msgType;
 #endif /* __STDC__ */
 {
 # ifndef _WINDOWS
-  CHAR              cmd[800];
+  CHAR_T              cmd[800];
 # endif /* _WINDOWS */
 
   if (msgType == FATAL)
@@ -2526,10 +2553,10 @@ char              **argv;
   STRING              server = (STRING) NULL;
   STRING              pChar;
   STRING              destination = (STRING) NULL;
-  CHAR                option [100];
-  CHAR                name [MAX_PATH];             
-  CHAR                cmd[800];
-  CHAR                tempFile [MAX_PATH];
+  CHAR_T                option [100];
+  CHAR_T                name [MAX_PATH];             
+  CHAR_T                cmd[800];
+  CHAR_T                tempFile [MAX_PATH];
   int                 i, l;
   int                 argCounter;
   int                 viewsCounter = 0;

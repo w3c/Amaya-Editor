@@ -169,7 +169,7 @@ extern PRule        TtaNewPRuleForView (int presentationType, int view, Document
    new presentation rule.
 
   ----------------------------------------------------------------------*/
-extern PRule        TtaNewPRuleForNamedView (int presentationType, char *viewName, Document document);
+extern PRule        TtaNewPRuleForNamedView (int presentationType, STRING viewName, Document document);
 
 /*----------------------------------------------------------------------
    TtaCopyPRule
@@ -337,7 +337,7 @@ extern void         TtaGiveBoxPosition (Element element, Document document, View
 /*----------------------------------------------------------------------
  *   TtaGiveRGB returns the RGB of the color.
  ----------------------------------------------------------------------*/
-extern void         TtaGiveRGB ( char *colname, /*OUT*/ unsigned short *red, /*OUT*/ unsigned short *green, /*OUT*/ unsigned short *blue );
+extern void         TtaGiveRGB ( STRING colname, /*OUT*/ unsigned short *red, /*OUT*/ unsigned short *green, /*OUT*/ unsigned short *blue );
 
 /*----------------------------------------------------------------------
    TtaGiveThotRGB returns the Red Green and Blue values corresponding
@@ -481,7 +481,7 @@ extern int          TtaSamePRules (PRule pRule1, PRule pRule2);
 
 extern PRule        TtaNewPRule ( /* int presentationType, View view, Document document */ );
 extern PRule        TtaNewPRuleForView (/* int presentationType, int view, Document document */);
-extern PRule        TtaNewPRuleForNamedView ( /* int presentationType, char *viewName, Document document */ );
+extern PRule        TtaNewPRuleForNamedView ( /* int presentationType, STRING viewName, Document document */ );
 extern PRule        TtaCopyPRule ( /* PRule pRule */ );
 extern void         TtaAttachPRule ( /* Element element, PRule pRule, Document document */ );
 extern void         TtaRemovePRule ( /* Element element, PRule pRule, Document document */ );
@@ -491,7 +491,7 @@ extern void         TtaChangeBoxSize ( /* Element element, View view, Document d
 extern void         TtaChangeBoxPosition ( /* Element element, Document document, View view, int X, int Y, TypeUnit unit */ );
 extern void         TtaGiveBoxSize ( /* Element element, Document document, View view, TypeUnit unit, int *width, int *height */ );
 extern void         TtaGiveBoxPosition ( /* Element element, Document document, View view, TypeUnit unit, int *xCoord, int *yCoord */ );
-extern void         TtaGiveRGB ( /*char *colname, unsigned short *red, unsigned short *green, unsigned short *blue*/ );
+extern void         TtaGiveRGB ( /*STRING colname, unsigned short *red, unsigned short *green, unsigned short *blue*/ );
 extern void         TtaGiveThotRGB (/*int num, unsigned short *red, unsigned short *green, unsigned short *blue*/);
 extern void         TtaNextPRule ( /* Element element, PRule *pRule */ );
 extern PRule        TtaGetPRule ( /* Element element, int presentationType */ );

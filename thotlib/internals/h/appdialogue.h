@@ -23,11 +23,11 @@
 /* Structure of an item in the Actions Table */
 typedef struct _Action_Ctl
 {
-  char 		*ActionName;	/* External name of the action		*/
+  STRING    ActionName;	/* External name of the action		*/
   UserProc 	User_Action;	/* Address of the User procedure (Java)	*/
   void 		*User_Arg;	/* Arguments of the User procedure	*/
   Proc 		Call_Action;	/* Address C procedure            	*/
-  char 		*ActionEquiv;	/* Displayed text for shortcuts		*/
+  STRING    ActionEquiv;	/* Displayed text for shortcuts		*/
   boolean	ActionActive[MAX_FRAME];
 }Action_Ctl;
 
@@ -35,7 +35,7 @@ typedef struct _Action_Ctl
 typedef struct _Item_Ctl
 {
   int		ItemID;		/* ID of the menu item			*/
-  char		ItemType;	/* 'B'=Button, 'T'=Toggle, 'D'=Dynamic	*/
+  CHAR_T	ItemType;	/* 'B'=Button, 'T'=Toggle, 'D'=Dynamic	*/
   				/* 'S'=Separator, 'M'=Menu		*/
   union
   {
@@ -69,7 +69,7 @@ typedef struct _Menu_Ctl
 /* Structure to associate menus and specific structure schemas */
 typedef struct _SchemaMenu_Ctl
 {
-  char		*SchemaName;	/* Structure schema name		*/
+  STRING     SchemaName;	/* Structure schema name		*/
   Menu_Ctl	*SchemaMenu;	/* Pointer to the first menu		*/
   struct _SchemaMenu_Ctl *NextSchema;	/* Next association	       	*/
 }SchemaMenu_Ctl;

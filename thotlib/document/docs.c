@@ -165,7 +165,7 @@ STRING              fileName;
    PathBuffer          directoryBuffer;
    int                 i, j, len;
    boolean             ok;
-   CHAR                URL_DIR_SEP;
+   CHAR_T                URL_DIR_SEP;
 
    if (fileName && ustrchr (fileName, '/'))
 	  URL_DIR_SEP = '/';
@@ -842,7 +842,7 @@ STRING              extension;
 
 #endif /* __STDC__ */
 {
-   CHAR                buf[MAX_TXT_LEN];
+   CHAR_T                buf[MAX_TXT_LEN];
    int                 i;
 
    if (pDoc == NULL)
@@ -877,7 +877,7 @@ boolean             move;
 {
    PathBuffer          bakName, pivName, tempName, backName, oldDir;
    NotifyDialog        notifyDoc;
-   CHAR                buf[MAX_TXT_LEN];
+   CHAR_T                buf[MAX_TXT_LEN];
    int                 i;
    boolean             sameFile, status, ok;
 
@@ -1048,7 +1048,7 @@ boolean             ask;
 
 {
    Name                docName;
-   CHAR                directory[MAX_PATH];
+   CHAR_T                directory[MAX_PATH];
    boolean             ok;
    boolean             status;
 

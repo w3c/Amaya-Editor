@@ -70,13 +70,13 @@
 
 
 static boolean       Enable_Multikey;
-static UCHAR previous_value = 0;
+static UCHAR_T previous_value = 0;
 static int           mk_state = 0;
 static int           TtaKeyboardMapInstalled = 0;
 static unsigned int  previous_state = 0;
 
 #ifdef _WINDOWS
-static CHAR        previous_keysym;
+static CHAR_T        previous_keysym;
 #else  /* !_WINDOWS */
 static KeySym      previous_keysym;
 #endif /* !_WINDOWS */
@@ -125,8 +125,8 @@ XK_uacute, XK_ucircumflex, XK_udiaeresis, XK_yacute, XK_thorn, XK_ydiaeresis,
 typedef struct multi_key
   {
 #    ifdef _WINDOWS
-     CHAR                c;
-     CHAR                m;
+     CHAR_T                c;
+     CHAR_T                m;
      int                 r;
 #    else  /* !_WINDOWS */
      KeySym              c;
@@ -917,7 +917,7 @@ ThotEvent             *event;
 #endif /* __STDC__ */
 {
    KeySym              KS;
-   CHAR                buf[2];
+   CHAR_T                buf[2];
    ThotComposeStatus   status;
    unsigned int        state;
    int                 keycode;
@@ -1005,14 +1005,14 @@ int*   k;
 {
    int          index;
    int          keycode;
-   CHAR         KS;
+   CHAR_T         KS;
    unsigned int state;
 
    if (!Enable_Multikey) /* no multi-key allowed */
       return 1;
 
    if (msg == WM_CHAR)
-      KS = (CHAR) wParam;
+      KS = (CHAR_T) wParam;
    
    if (mk_state == 1 && msg == WM_CHAR) {
       /* we have already read the stressed character */ 
@@ -1020,12 +1020,12 @@ int*   k;
 
       mk_state = 0;
       for (index = 0; index < NB_MK; index++)
-          if ((mk_tab[index].m == previous_keysym) && (mk_tab[index].c == (CHAR) wParam)) {
+          if ((mk_tab[index].m == previous_keysym) && (mk_tab[index].c == (CHAR_T) wParam)) {
              /*
               * The corresponding sequence is found. 
               * Generation of the corresponding character
               */
-	         (CHAR) *k = mk_tab[index].r;
+	         (CHAR_T) *k = mk_tab[index].r;
              return 1;
 		  }
 

@@ -64,11 +64,11 @@ LabelString         strng;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-void                ReadLabel (CHAR labelType, LabelString label, BinFile file)
+void                ReadLabel (CHAR_T labelType, LabelString label, BinFile file)
 
 #else  /* __STDC__ */
 void                ReadLabel (labelType, label, file)
-CHAR                labelType;
+CHAR_T                labelType;
 LabelString         label;
 BinFile             file;
 
@@ -140,7 +140,7 @@ boolean             labelsOnly;
    LabelString         label;
    DocumentIdentifier  docIdent;
    boolean             stop, error;
-   CHAR                c;
+   CHAR_T                c;
 
    error = FALSE;
    /* lit la 1ere marque de label */
@@ -202,13 +202,13 @@ boolean             labelsOnly;
 	/* lit la 1ere marque de nom de document */
 	if (!TtaReadByte (file, &c))
 	   error = TRUE;
-	if (c != (CHAR) C_PIV_DOCNAME || error)
+	if (c != (CHAR_T) C_PIV_DOCNAME || error)
 	  {
 	     /* ce n'est pas une marque de nom */
 	     DisplayPivotMessage ("T");
 	     error = TRUE;
 	  }
-	while (c == (CHAR) C_PIV_DOCNAME && !error)
+	while (c == (CHAR_T) C_PIV_DOCNAME && !error)
 	   /* lit l'identificateur du document referencant */
 	  {
 	     TtaReadDocIdent (file, &docIdent);
@@ -254,7 +254,7 @@ PtrChangedReferredEl *Anchor;
 
 {
    PtrChangedReferredEl pChnRef, pPrevChnRef;
-   CHAR                c;
+   CHAR_T                c;
    boolean             error;
    LabelString         label;
 
@@ -291,7 +291,7 @@ PtrChangedReferredEl *Anchor;
 	     /* lit la marque de nom de document */
 	     if (!TtaReadByte (file, &c))
 		error = TRUE;
-	     if (c != (CHAR) C_PIV_DOCNAME)
+	     if (c != (CHAR_T) C_PIV_DOCNAME)
 	       {
 		  /* a name was expected */
 		  DisplayPivotMessage ("T");
@@ -306,7 +306,7 @@ PtrChangedReferredEl *Anchor;
 		     /* lit la marque de nom de document */
 		     if (!TtaReadByte (file, &c))
 			error = TRUE;
-		  if (c != (CHAR) C_PIV_DOCNAME)
+		  if (c != (CHAR_T) C_PIV_DOCNAME)
 		    {
 		       /* a name was expected */
 		       DisplayPivotMessage ("T");

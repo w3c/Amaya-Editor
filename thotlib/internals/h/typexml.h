@@ -7,8 +7,8 @@
 -------------------------------------------------------------------------*/
 typedef struct _PrefixType {
   SSchema              Schema;        /* The corresponding SSchema */
-  char                *SchemaName;    /* The corresponding SSchema name */
-  char                *Name;          /* Prefix's id */
+  STRING               SchemaName;    /* The corresponding SSchema name */
+  STRING               Name;          /* Prefix's id */
   boolean              IsExtSchema;   /* true if the namespace is associated */
                                       /* to an extension schema */
   struct _PrefixType  *Next;          /* Next prefix */
@@ -47,7 +47,7 @@ typedef struct _AttrTable
 typedef struct _TranslationSchema *PtrTranslationSchema;
 typedef struct _TranslationSchema
 {
-  char       *SchemaName;      /* the SSchema which was given to construct */
+  STRING      SchemaName;      /* the SSchema which was given to construct */
                                /* the tables */
   TYPETABLE   FirstAttr;       /* the rank of the first attribute name */
   TYPETABLE   FirstAttrValue;  /* the rank of the first attribute value */
@@ -55,7 +55,7 @@ typedef struct _TranslationSchema
  		                          /* each thot element type */
   AttrTable   XmlAttrNameTable[MAXNTYPE]; /* entry in the XmlNameTable for */
 		                          /* thot attr type and values */
-  char       *XmlNameTable[MAXNTYPE];     /* the alphabetical ordered */
+  STRING      XmlNameTable[MAXNTYPE];     /* the alphabetical ordered */
                                           /* Xml name table */
   TYPETABLE   XmlReverseTable[MAXNTYPE];  /* The reverse of XmlElemNameTable */
                                           /* and XmlAttrNameTable */

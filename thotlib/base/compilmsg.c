@@ -158,7 +158,7 @@ int                 lineNum;
 
 #endif /* __STDC__ */
 {
-   CHAR                buffer[LINE_LENGTH];
+   CHAR_T                buffer[LINE_LENGTH];
    int                 i;
 
    TtaDisplayMessage (INFO, TtaGetMessage (COMPIL, ERR_LINE), lineNum);
@@ -201,7 +201,7 @@ STRING              string;
 #endif /* __STDC__ */
 
 {
-   CHAR                buffer[LINE_LENGTH];
+   CHAR_T                buffer[LINE_LENGTH];
    int                 i;
 
    TtaDisplayMessage (INFO, TtaGetMessage (COMPIL, ERR_LINE), lineNum);

@@ -82,7 +82,7 @@
    defined in file .Xdefaults.
 
   ----------------------------------------------------------------------*/
-extern void         TtaInitialize (char *applicationName);
+extern void         TtaInitialize (STRING applicationName);
 
 /*----------------------------------------------------------------------
    TtaQuit
@@ -113,7 +113,7 @@ extern void         TtaSetErrorMessages (int on);
    identifier of the current version.
 
   ----------------------------------------------------------------------*/
-extern char        *TtaGetVersion (void);
+extern STRING       TtaGetVersion (void);
 
 /*----------------------------------------------------------------------
    TtaGetErrorCode
@@ -141,7 +141,7 @@ extern int          TtaGetErrorCode (void);
    See also:
    TtaGetErrorCode
   ----------------------------------------------------------------------*/
-extern char        *TtaGetStrError (int errorCode);
+extern STRING       TtaGetStrError (int errorCode);
 
 /*----------------------------------------------------------------------
    TtaExtractName: extracts the directory and the file name.       
@@ -149,7 +149,7 @@ extern char        *TtaGetStrError (int errorCode);
    which sizes are sufficient to contain the path and      
    the file name.                                          
   ----------------------------------------------------------------------*/
-extern void         TtaExtractName (char *text, /*OUT*/ char *aDirectory, /*OUT*/ char *aName);
+extern void         TtaExtractName (STRING text, /*OUT*/ STRING aDirectory, /*OUT*/ STRING aName);
 
 /*----------------------------------------------------------------------
    TtaCheckDirectory
@@ -162,27 +162,27 @@ extern void         TtaExtractName (char *text, /*OUT*/ char *aDirectory, /*OUT*
    TRUE if the directory is OK, FALSE if not.
 	
   ----------------------------------------------------------------------*/
-extern boolean      TtaCheckDirectory (char *aDirectory);
+extern boolean      TtaCheckDirectory (STRING aDirectory);
 
 extern void        *TtaGetMemory (unsigned int size);
 extern void         TtaFreeMemory (void *buffer);
 extern void        *TtaRealloc (void *ptr, unsigned int n);
-extern char        *TtaStrdup (char *str);
+extern STRING       TtaStrdup (STRING str);
 
 #else  /* __STDC__ */
 
-extern void         TtaInitialize ( /* char *applicationName */ );
+extern void         TtaInitialize ( /* STRING applicationName */ );
 extern void         TtaQuit ( /* void */ );
 extern void        *TtaGetMemory ( /* int size */ );
-extern void         TtaFreeMemory ( /* char *buffer */ );
+extern void         TtaFreeMemory ( /* STRING buffer */ );
 extern void        *TtaRealloc ( /* void *ptr, unsigned int n */ );
 extern void         TtaSetErrorMessages ( /* int on */ );
-extern char        *TtaGetVersion ( /* void */ );
+extern STRING       TtaGetVersion ( /* void */ );
 extern int          TtaGetErrorCode ( /* void */ );
-extern char        *TtaGetStrError ( /* int errorCode */ );
-extern void         TtaExtractName ( /* char *text, char *aDirectory, char *aName */ );
-extern boolean      TtaCheckDirectory ( /* char *aDirectory */ );
-extern char        *TtaStrdup ( /* char *str */ );
+extern STRING       TtaGetStrError ( /* int errorCode */ );
+extern void         TtaExtractName ( /* STRING text, STRING aDirectory, STRING aName */ );
+extern boolean      TtaCheckDirectory ( /* STRING aDirectory */ );
+extern STRING       TtaStrdup ( /* char *str */ );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

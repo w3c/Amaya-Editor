@@ -7,10 +7,10 @@
 #ifdef __STDC__
 
 extern void FontOrig ( ptrfont font,
-                       CHAR firstchar,
+                       CHAR_T firstchar,
                        int *pX,
                        int *pY );
-extern void DrawChar ( UCHAR car,
+extern void DrawChar ( UCHAR_T car,
                        int frame,
                        int x,
                        int y,
@@ -364,10 +364,10 @@ extern void PaintWithPattern ( int frame,
 #else /* __STDC__ */
 
 extern void FontOrig (/* ptrfont font,
-                         CHAR firstchar,
+                         CHAR_T firstchar,
                          int *pX,
                          int *pY */);
-extern void DrawChar (/* UCHAR car,
+extern void DrawChar (/* UCHAR_T car,
                          int frame,
                          int x,
                          int y,

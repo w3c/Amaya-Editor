@@ -58,7 +58,7 @@ typedef struct
   int            PicHeight;
   PictureScaling PicPresent;
   int            PicType;
-  char          *PicFileName; 
+  STRING         PicFileName; 
   Pixmap         PicPixmap;
   int            PicNbColors;
   int           *PicColors;

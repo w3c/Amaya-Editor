@@ -69,7 +69,7 @@
 #endif /* _WIN_PRINT */
 #endif /* _WINDOWS */
 
-static CHAR         Orientation[MAX_NAME_LENGTH];
+static CHAR_T         Orientation[MAX_NAME_LENGTH];
 static Func         pFuncExportPrintDoc = NULL;
 static int          defPaperPrint;
 static int          defManualFeed;
@@ -131,7 +131,7 @@ Document            document;
    HANDLE                  hLib;
    FARPROC                 ptrMainProc;
 #  else  /* !_WINDOWS */
-   CHAR             cmd[1024];
+   CHAR_T             cmd[1024];
    int              res;
 #  endif /* _WINDOWS */
    int              i, j;
@@ -648,7 +648,7 @@ STRING              viewNames;
    boolean	       docReadOnly;
    boolean             ok;
 #  ifndef _WINDOWS 
-   CHAR                cmd[100];
+   CHAR_T                cmd[100];
 #  endif /* _WINDOWS */
 
    pDoc = LoadedDocument[document - 1];
@@ -1127,7 +1127,7 @@ View                view;
 #endif /* __STDC__ */
 {
    int              i;
-   CHAR             bufMenu[MAX_TXT_LEN];
+   CHAR_T             bufMenu[MAX_TXT_LEN];
 
    if (document == 0)
      return;

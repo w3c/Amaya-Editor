@@ -45,8 +45,8 @@ TabMsg;
 
  /* Identification des messages Thot */
 static PtrTabMsg    FirstTableMsg = NULL;
-static CHAR         EmptyMsg[] = "";
-static CHAR         result[MAX_TXT_LEN];
+static CHAR_T         EmptyMsg[] = "";
+static CHAR_T         result[MAX_TXT_LEN];
 
 #include "dialogapi_f.h"
 #include "memory_f.h"
@@ -69,7 +69,7 @@ STRING              pBuffer;
 
 #endif /* __STDC__ */
 {
-   CHAR                nombre[4];
+   CHAR_T                nombre[4];
    int                 uniteid, dixid, centid;
    int                 i = 0, j = 0, k;
 
@@ -114,18 +114,18 @@ STRING              pBuffer;
 			    break;
 			 case 1:
 			    uniteid = nombre[0] - '0';
-			    result[j++] = (CHAR) uniteid;
+			    result[j++] = (CHAR_T) uniteid;
 			    break;
 			 case 2:
 			    uniteid = nombre[1] - '0';
 			    dixid = nombre[0] - '0';
-			    result[j++] = (CHAR) (uniteid + 8 * dixid);
+			    result[j++] = (CHAR_T) (uniteid + 8 * dixid);
 			    break;
 			 case 3:
 			    uniteid = nombre[2] - '0';
 			    dixid = nombre[1] - '0';
 			    centid = nombre[0] - '0';
-			    result[j++] = (CHAR) (uniteid + 8 * dixid + 64 * centid);
+			    result[j++] = (CHAR_T) (uniteid + 8 * dixid + 64 * centid);
 			    break;
 		      }
 	     }
@@ -157,8 +157,8 @@ int                 msgNumber;
    int                 num;
    PtrTabMsg           currenttable;
    PtrTabMsg           previoustable;
-   CHAR                pBuffer[MAX_TXT_LEN];
-   CHAR                fileName[200];
+   CHAR_T                pBuffer[MAX_TXT_LEN];
+   CHAR_T                fileName[200];
 
    /* contruction du nom $THOTDIR/bin/$LANG-msgName */
    s = TtaGetVarLANG ();
@@ -287,7 +287,7 @@ STRING              fmt;
    va_list             pa;
    int                 i, lg, vald;
    STRING              vals, p;
-   CHAR                pBuffer[MAX_PATH];
+   CHAR_T                pBuffer[MAX_PATH];
 
 #  ifdef _WINDOWS
    int len = ustrlen (fmt);
@@ -380,7 +380,7 @@ STRING              code;
 #endif /* __STDC__ */
 {
 #ifndef _WINDOWS
-   CHAR                pBuffer[THOT_MAX_CHAR];
+   CHAR_T                pBuffer[THOT_MAX_CHAR];
 
    ustrncpy (pBuffer, code, THOT_MAX_CHAR);
    TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_ERR_PIV), pBuffer);

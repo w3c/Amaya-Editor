@@ -48,7 +48,7 @@ enum DButtons
    des entre'es du menu.                                              
    Retourne un code d'erreur.                                         
   ----------------------------------------------------------------------*/
-extern void         TtaNewPulldown (int ref, ThotWidget parent, char *title, int number, char *text, char *equiv);
+extern void         TtaNewPulldown (int ref, ThotWidget parent, STRING title, int number, STRING text, STRING equiv);
 
 /*----------------------------------------------------------------------
    TtaSetPulldownOff suspend le pulldown                           
@@ -73,7 +73,7 @@ extern void         TtaSetPulldownOn (int ref, ThotWidget parent);
    Le parame`tre button indique le bouton de la souris qui active le  
    menu : 'L' pour left, 'M' pour middle et 'R' pour right.           
   ----------------------------------------------------------------------*/
-extern void         TtaNewPopup (int ref, ThotWidget parent, char *title, int number, char *text, char *equiv, char button);
+extern void         TtaNewPopup (int ref, ThotWidget parent, STRING title, int number, STRING text, STRING equiv, CHAR_T button);
 
 /*----------------------------------------------------------------------
    TtaNewSubmenu cre'e un sous-menu :                                 
@@ -90,7 +90,7 @@ extern void         TtaNewPopup (int ref, ThotWidget parent, char *title, int nu
    Quand le parame`tre react est vrai, tout changement de se'lection  
    dans le sous-menu est imme'diatement signale' a` l'application.    
   ----------------------------------------------------------------------*/
-extern void         TtaNewSubmenu (int ref, int ref_parent, int entry, char *title, int number, char *text, char *equiv, boolean react);
+extern void         TtaNewSubmenu (int ref, int ref_parent, int entry, STRING title, int number, STRING text, STRING equiv, boolean react);
 
 /*----------------------------------------------------------------------
    TtaNewIconMenu cre'e un sous-menu :                                        
@@ -103,7 +103,7 @@ extern void         TtaNewSubmenu (int ref, int ref_parent, int entry, char *tit
    Tout changement de se'lection dans le sous-menu est imme'diatement 
    signale' a` l'application.                                         
   ----------------------------------------------------------------------*/
-extern void         TtaNewIconMenu (int ref, int ref_parent, int entry, char *title, int number, Pixmap * icons, boolean horizontal);
+extern void         TtaNewIconMenu (int ref, int ref_parent, int entry, STRING title, int number, Pixmap * icons, boolean horizontal);
 
 /*----------------------------------------------------------------------
    TtaSetMenuForm fixe la selection dans un sous-menu de formulaire : 
@@ -126,7 +126,7 @@ extern void         TtaSetMenuForm (int ref, int val);
    Quand le parame`tre react est vrai, tout changement de se'lection  
    dans le sous-menu est imme'diatement signale' a` l'application.    
   ----------------------------------------------------------------------*/
-extern void         TtaNewToggleMenu (int ref, int ref_parent, char *title, int number, char *text, char *equiv, boolean react);
+extern void         TtaNewToggleMenu (int ref, int ref_parent, STRING title, int number, STRING text, STRING equiv, boolean react);
 
 /*----------------------------------------------------------------------
    TtaSetToggleMenu fixe la selection dans un toggle-menu :           
@@ -141,13 +141,13 @@ extern void         TtaSetToggleMenu (int ref, int val, boolean on);
    TtaChangeMenuEntry modifie l'intitule' texte de l`entre'e entry    
    du menu de'signe' par sa re'fe'rence ref.                          
   ----------------------------------------------------------------------*/
-extern void         TtaChangeMenuEntry (int ref, int entry, char *texte);
+extern void         TtaChangeMenuEntry (int ref, int entry, STRING texte);
 
 /*----------------------------------------------------------------------
    TtaRedrawMenuEntry modifie la couleur et/ou la police de l'entre'e 
    entry du menu de'signe' par sa re'fe'rence ref.                    
   ----------------------------------------------------------------------*/
-extern void         TtaRedrawMenuEntry (int ref, int entry, char *fontname, Pixel color, int activate);
+extern void         TtaRedrawMenuEntry (int ref, int entry, STRING fontname, Pixel color, int activate);
 
 /*----------------------------------------------------------------------
    TtaDestroyDialogue de'truit le catalogue de'signe' par ref.                
@@ -166,7 +166,7 @@ extern void         TtaDestroyDialogue (int ref);
    Le parame'tre button indique le bouton de la souris qui active le  
    menu : 'L' pour left, 'M' pour middle et 'R' pour right.           
   ----------------------------------------------------------------------*/
-extern void         TtaNewForm (int ref, ThotWidget parent, char *title, boolean horizontal, int packet, char button, int dbutton);
+extern void         TtaNewForm (int ref, ThotWidget parent, STRING title, boolean horizontal, int packet, CHAR_T button, int dbutton);
 
 /*----------------------------------------------------------------------
    TtaNewSheet cre'e un feuillet de commande :                        
@@ -185,7 +185,7 @@ extern void         TtaNewForm (int ref, ThotWidget parent, char *title, boolean
    Le parame`tre button indique le bouton de la souris qui active le  
    menu : 'L' pour left, 'M' pour middle et 'R' pour right.           
   ----------------------------------------------------------------------*/
-extern void         TtaNewSheet (int ref, ThotWidget parent, char *title, int number, char *text, boolean horizontal, int packet, char button, int dbutton);
+extern void         TtaNewSheet (int ref, ThotWidget parent, STRING title, int number, STRING text, boolean horizontal, int packet, CHAR_T button, int dbutton);
 
 /*----------------------------------------------------------------------
    TtaNewDialogSheet cre'e un feuillet de dialogue :                  
@@ -203,7 +203,7 @@ extern void         TtaNewSheet (int ref, ThotWidget parent, char *title, int nu
    Le parame`tre button indique le bouton de la souris qui active le  
    menu : 'L' pour left, 'M' pour middle et 'R' pour right.           
   ----------------------------------------------------------------------*/
-void                TtaNewDialogSheet (int ref, ThotWidget parent, char *title, int number, char *text, boolean horizontal, int packet, char button);
+void                TtaNewDialogSheet (int ref, ThotWidget parent, STRING title, int number, STRING text, boolean horizontal, int packet, CHAR_T button);
 
 /*----------------------------------------------------------------------
    TtaChangeFormTitle change le titre d'un formulaire ou d'une feuille        
@@ -211,7 +211,7 @@ void                TtaNewDialogSheet (int ref, ThotWidget parent, char *title, 
    Le parame`tre ref donne la re'fe'rence du catalogue.               
    Le parame'tre title donne le titre du catalogue.                   
   ----------------------------------------------------------------------*/
-extern void         TtaChangeFormTitle (int ref, char *title);
+extern void         TtaChangeFormTitle (int ref, STRING title);
 
 /*----------------------------------------------------------------------
    TtaAttachForm attache le catalogue au formulaire ou au feuillet    
@@ -240,7 +240,7 @@ extern void         TtaDetachForm (int ref);
    Quand le parame`tre react est vrai, tout changement de se'lection  
    dans le se'lecteur est imme'diatement signale' a` l'application.   
   ----------------------------------------------------------------------*/
-extern void         TtaNewSelector (int ref, int ref_parent, char *title, int number, char *text, int height, char *label, boolean withText, boolean react);
+extern void         TtaNewSelector (int ref, int ref_parent, STRING title, int number, STRING text, int height, STRING label, boolean withText, boolean react);
 
 /*----------------------------------------------------------------------
    TtaSetSelector initialise l'entre'e et/ou le texte du se'lecteur : 
@@ -249,14 +249,14 @@ extern void         TtaNewSelector (int ref, int ref_parent, char *title, int nu
    se'lectionne'e.                                                    
    Le parame`tre text donne le texte si entry vaut -1.                
   ----------------------------------------------------------------------*/
-extern void         TtaSetSelector (int ref, int entry, char *text);
+extern void         TtaSetSelector (int ref, int entry, STRING text);
 
 /*----------------------------------------------------------------------
    TtaNewLabel cre'e un intitule' constant dans un formulaire :       
    Le parame`tre ref donne la re'fe'rence du catalogue.               
    Le parame`tre text donne l'intitule'.                              
   ----------------------------------------------------------------------*/
-extern void         TtaNewLabel (int ref, int ref_parent, char *text);
+extern void         TtaNewLabel (int ref, int ref_parent, STRING text);
 
 /*----------------------------------------------------------------------
    TtaNewTextForm cre'e une feuille de saisie de texte :              
@@ -267,14 +267,14 @@ extern void         TtaNewLabel (int ref, int ref_parent, char *text);
    Quand le parame`tre react est vrai, tout changement dans la        
    feuille de saisie est imme'diatement signale' a` l'application.    
   ----------------------------------------------------------------------*/
-extern void         TtaNewTextForm (int ref, int ref_parent, char *title, int width, int height, boolean react);
+extern void         TtaNewTextForm (int ref, int ref_parent, STRING title, int width, int height, boolean react);
 
 /*----------------------------------------------------------------------
    TtaSetTextForm initialise une feuille de saisie de texte :         
    Le parame`tre ref donne la re'fe'rence du catalogue.               
    Le parame`tre text donne la valeur initiale.                       
   ----------------------------------------------------------------------*/
-extern void         TtaSetTextForm (int ref, char *text);
+extern void         TtaSetTextForm (int ref, STRING text);
 
 /*----------------------------------------------------------------------
    TtaNewNumberForm cre'e une feuille de saisie de nombre :           
@@ -285,7 +285,7 @@ extern void         TtaSetTextForm (int ref, char *text);
    Quand le parame`tre react est vrai, tout changement dans           
    la feuille de saisie est imme'diatement signale' a` l'application. 
   ----------------------------------------------------------------------*/
-extern void         TtaNewNumberForm (int ref, int ref_parent, char *title, int min, int max, boolean react);
+extern void         TtaNewNumberForm (int ref, int ref_parent, STRING title, int min, int max, boolean react);
 
 /*----------------------------------------------------------------------
    TtaSetNumberForm fixe le contenu de la feuille de saisie de texte :        
@@ -341,9 +341,9 @@ extern void         TtaSetToggleMenu ( /* int ref, int val, boolean on */ );
 extern void         TtaChangeMenuEntry ( /* int ref, int entry, char *texte */ );
 extern void         TtaRedrawMenuEntry ( /* int ref, int entry, char *fontname, Pixel color, int activate */ );
 extern void         TtaDestroyDialogue ( /* int ref */ );
-extern void         TtaNewForm (int ref, ThotWidget parent, char *title, boolean horizontal, int packet, char button, int dbutton);
-extern void         TtaNewSheet (int ref, ThotWidget parent, char *title, int number, char *text, boolean horizontal, int packet, char button, int dbutton);
-void                TtaNewDialogSheet (int ref, ThotWidget parent, char *title, int number, char *text, boolean horizontal, int packet, char button);
+extern void         TtaNewForm (int ref, ThotWidget parent, STRING title, boolean horizontal, int packet, CHAR_T button, int dbutton);
+extern void         TtaNewSheet (int ref, ThotWidget parent, STRING title, int number, STRING text, boolean horizontal, int packet, CHAR_T button, int dbutton);
+void                TtaNewDialogSheet (int ref, ThotWidget parent, STRING title, int number, STRING text, boolean horizontal, int packet, CHAR_T button);
 extern void         TtaChangeFormTitle ( /* int ref, char *title */ );
 extern void         TtaAttachForm ( /* int ref */ );
 extern void         TtaDetachForm ( /* int ref */ );

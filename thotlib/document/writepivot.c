@@ -163,11 +163,11 @@ BinFile             pivFile;
 {
    int                 version;
 
-   TtaWriteByte (pivFile, (CHAR) C_PIV_VERSION);
-   TtaWriteByte (pivFile, (CHAR) C_PIV_VERSION);
+   TtaWriteByte (pivFile, (CHAR_T) C_PIV_VERSION);
+   TtaWriteByte (pivFile, (CHAR_T) C_PIV_VERSION);
    /* Version courante de PIVOT: 5 */
    version = 5;
-   TtaWriteByte (pivFile, (CHAR) version);
+   TtaWriteByte (pivFile, (CHAR_T) version);
 }
 
 /*----------------------------------------------------------------------
@@ -182,8 +182,8 @@ int                 n;
 
 #endif /* __STDC__ */
 {
-   TtaWriteByte (pivFile, (CHAR) (n / 256));
-   TtaWriteByte (pivFile, (CHAR) (n % 256));
+   TtaWriteByte (pivFile, (CHAR_T) (n / 256));
+   TtaWriteByte (pivFile, (CHAR_T) (n % 256));
 }
 
 /*----------------------------------------------------------------------
@@ -401,7 +401,7 @@ PtrTextBuffer       pBuf;
    PtrTextBuffer       pBuf1;
 
    /* ecrit la marque de commentaire */
-   TtaWriteByte (pivFile, (CHAR) C_PIV_COMMENT);
+   TtaWriteByte (pivFile, (CHAR_T) C_PIV_COMMENT);
    /* calcule la longeur du commentaire */
    pBuf1 = pBuf;
    len = 0;
@@ -445,7 +445,7 @@ PtrDocument         pDoc;
    int                 n;
    boolean             stop;
 
-   TtaWriteByte (pivFile, (CHAR) C_PIV_NATURE);
+   TtaWriteByte (pivFile, (CHAR_T) C_PIV_NATURE);
    /* cherche le schema de structure */
    n = 0;
    stop = FALSE;
@@ -477,7 +477,7 @@ LabelString         label;
 {
    int              i;
 
-   TtaWriteByte (pivFile, (CHAR) C_PIV_LABEL);
+   TtaWriteByte (pivFile, (CHAR_T) C_PIV_LABEL);
    i = 0;
    do
       TtaWriteByte (pivFile, label[i++]);
@@ -601,7 +601,7 @@ PtrDocument         pDoc;
 		stop = TRUE;
 	     }
 	while (!stop);
-	TtaWriteByte (pivFile, (CHAR) C_PIV_ATTR);
+	TtaWriteByte (pivFile, (CHAR_T) C_PIV_ATTR);
 	PutShort (pivFile, n);
 	/* numero de la nature de l'attribut */
 	PutShort (pivFile, pAttr->AeAttrNum);
@@ -672,7 +672,7 @@ PtrPRule      pPRule;
       && pPRule->PrPresMode == PresImmediate)
     {
       /* ecrit la marque de regle */
-      TtaWriteByte (pivFile, (CHAR) C_PIV_PRESENT);
+      TtaWriteByte (pivFile, (CHAR_T) C_PIV_PRESENT);
       /* ecrit le numero de vue */
       PutShort (pivFile, pPRule->PrViewNum);
       /* ecrit le numero de la boite de presentation concernee */
@@ -828,7 +828,7 @@ boolean             subTree;
   /* on ecrit effectivement la forme pivot de l'element */
   pEl1 = *pEl;
   /* ecrit la marque de type */
-  TtaWriteByte (pivFile, (CHAR) C_PIV_TYPE);
+  TtaWriteByte (pivFile, (CHAR_T) C_PIV_TYPE);
   /* ecrit le numero de la regle definissant le type */
   PutShort (pivFile, pEl1->ElTypeNumber);
   /* si c'est une copie d'element inclus, ecrit la reference a */
@@ -836,7 +836,7 @@ boolean             subTree;
   if (pEl1->ElSource != NULL)
     /* ecrit la marque d'element inclus */
     {
-      TtaWriteByte (pivFile, (CHAR) C_PIV_INCLUDED);
+      TtaWriteByte (pivFile, (CHAR_T) C_PIV_INCLUDED);
       PutReference (pivFile, pEl1->ElSource);
     }
   /* ecrit la marque "Element-reference'" si l'element est */
@@ -845,13 +845,13 @@ boolean             subTree;
     if (pEl1->ElReferredDescr->ReFirstReference != NULL ||
 	pEl1->ElReferredDescr->ReExtDocRef != NULL)
       /* l'element est effectivement reference' */
-      TtaWriteByte (pivFile, (CHAR) C_PIV_REFERRED);
+      TtaWriteByte (pivFile, (CHAR_T) C_PIV_REFERRED);
   /* ecrit le label de l'element */
   PutLabel (pivFile, pEl1->ElLabel);
   
   /* Ecrit la marque d'holophraste si l'element est holophraste' */
   if (pEl1->ElHolophrast)
-    TtaWriteByte (pivFile, (CHAR) C_PIV_HOLOPHRAST);
+    TtaWriteByte (pivFile, (CHAR_T) C_PIV_HOLOPHRAST);
   
   /* ecrit les attributs de l'element, mais pas les attributs imposes, */
   /* a moins qu'ils soient du type reference */
@@ -888,7 +888,7 @@ boolean             subTree;
   if (pEl1->ElTerminal && pEl1->ElLeafType == LtPicture && pEl1->ElPictInfo != NULL)
     {
       /* write the rule mark */
-      TtaWriteByte (pivFile, (CHAR) C_PIV_PRESENT);
+      TtaWriteByte (pivFile, (CHAR_T) C_PIV_PRESENT);
       /* write the view number */
       PutShort (pivFile, 1);
       /* write the presentation box number */
@@ -955,12 +955,12 @@ boolean             subTree;
 		    i++;
 		  if (i > 0)
 		    {
-		      TtaWriteByte (pivFile, (CHAR) C_PIV_LANG);
-		      TtaWriteByte (pivFile, (CHAR) i);
+		      TtaWriteByte (pivFile, (CHAR_T) C_PIV_LANG);
+		      TtaWriteByte (pivFile, (CHAR_T) i);
 		    }
 		}
 	      if (pEl1->ElLeafType != LtReference)
-		TtaWriteByte (pivFile, (CHAR) C_PIV_BEGIN);
+		TtaWriteByte (pivFile, (CHAR_T) C_PIV_BEGIN);
 	      switch (pEl1->ElLeafType)
 		{
 		case LtPicture:
@@ -1016,7 +1016,7 @@ boolean             subTree;
 		case LtReference:
 		  /* ecrit une marque de reference et le label de */
 		  /* l'element qui est reference' */
-		  TtaWriteByte (pivFile, (CHAR) C_PIV_REFERENCE);
+		  TtaWriteByte (pivFile, (CHAR_T) C_PIV_REFERENCE);
 		  PutReference (pivFile, pEl1->ElReference);
 		  break;
 		case LtSymbol:
@@ -1038,7 +1038,7 @@ boolean             subTree;
 		  /* ecrit le code representant la forme de la ligne */
 		  TtaWriteByte (pivFile, pEl1->ElPolyLineType);
 		  /* ecrit une marque indiquant que c'est une Polyline */
-		  TtaWriteByte (pivFile, (CHAR) C_PIV_POLYLINE);
+		  TtaWriteByte (pivFile, (CHAR_T) C_PIV_POLYLINE);
 		  /* ecrit le nombre de points de la ligne */
 		  PutShort (pivFile, pEl1->ElNPoints);
 		  /* ecrit tous les points */
@@ -1059,7 +1059,7 @@ boolean             subTree;
 		  break;
 		}
 	      if (pEl1->ElLeafType != LtReference)
-		TtaWriteByte (pivFile, (CHAR) C_PIV_END);
+		TtaWriteByte (pivFile, (CHAR_T) C_PIV_END);
 	    }
 	}
       else
@@ -1070,7 +1070,7 @@ boolean             subTree;
 	    /* on n'ecrit pas le contenu des parametres */
 	    {
 	      /* ecrit une marque de debut */
-	      TtaWriteByte (pivFile, (CHAR) C_PIV_BEGIN);
+	      TtaWriteByte (pivFile, (CHAR_T) C_PIV_BEGIN);
 	      pChild = pEl1->ElFirstChild;
 	      /* ecrit successivement la representation pivot de tous */
 	      /* les fils de l'element */
@@ -1107,7 +1107,7 @@ boolean             subTree;
 		  pChild = pChild->ElNext;
 		}
 	      /* ecrit une marque de fin */
-	      TtaWriteByte (pivFile, (CHAR) C_PIV_END);
+	      TtaWriteByte (pivFile, (CHAR_T) C_PIV_END);
 	    }
     }
 }
@@ -1153,9 +1153,9 @@ PtrDocument         pDoc;
      {
 	/* ecrit la marque de classe ou d'extension */
 	if (pDoc->DocNatureSSchema[nat]->SsExtension)
-	   TtaWriteByte (pivFile, (CHAR) C_PIV_SSCHEMA_EXT);
+	   TtaWriteByte (pivFile, (CHAR_T) C_PIV_SSCHEMA_EXT);
 	else
-	   TtaWriteByte (pivFile, (CHAR) C_PIV_NATURE);
+	   TtaWriteByte (pivFile, (CHAR_T) C_PIV_NATURE);
 	/* ecrit le nom de schema de structure dans le fichier */
 	PutName (pivFile, pDoc->DocNatureSSchema[nat]->SsName);
 	/* ecrit le code du schema de structure */
@@ -1221,7 +1221,7 @@ PtrDocument         pDoc;
    UpdateLanguageTable (pDoc, pDoc->DocRootElement);
    for (i = 0; i < pDoc->DocNLanguages; i++)
      {
-	TtaWriteByte (pivFile, (CHAR) C_PIV_LANG);
+	TtaWriteByte (pivFile, (CHAR_T) C_PIV_LANG);
 	PutName (pivFile, TtaGetLanguageCode (pDoc->DocLanguages[i]));
      }
 }
@@ -1296,7 +1296,7 @@ PtrDocument         pDoc;
 	   if (!CallEventType ((NotifyEvent *) & notifyEl, TRUE))
 	      /* l'application accepte que Thot sauve l'element */
 	     {
-		TtaWriteByte (pivFile, (CHAR) C_PIV_PARAM);
+		TtaWriteByte (pivFile, (CHAR_T) C_PIV_PARAM);
 		/* Ecrit l'element */
 		Externalise (pivFile, &pEl, pDoc, TRUE);
 		/* envoie l'evenement ElemSave.Post a l'application, si */
@@ -1346,7 +1346,7 @@ PtrDocument         pDoc;
 			/* l'application accepte que Thot sauve l'element */
 		       {
 			  /* ecrit une marque d'element associe' */
-			  TtaWriteByte (pivFile, (CHAR) C_PIV_ASSOC);
+			  TtaWriteByte (pivFile, (CHAR_T) C_PIV_ASSOC);
 			  /* si ces elements associes sont definis dans une extension */
 			  /* du schema de structure du document, on ecrit un */
 			  /* changement de nature */
@@ -1382,7 +1382,7 @@ PtrDocument         pDoc;
 	if (!CallEventType ((NotifyEvent *) & notifyEl, TRUE))
 	   /* l'application accepte que Thot sauve l'element */
 	  {
-	     TtaWriteByte (pivFile, (CHAR) C_PIV_STRUCTURE);
+	     TtaWriteByte (pivFile, (CHAR_T) C_PIV_STRUCTURE);
 	     /* ecrit la forme pivot de tout l'arbre */
 	     Externalise (pivFile, &pEl, pDoc, TRUE);
 	     /* envoie l'evenement ElemSave.Post a l'application, si */
@@ -1396,7 +1396,7 @@ PtrDocument         pDoc;
 	     CallEventType ((NotifyEvent *) & notifyEl, FALSE);
 	  }
      }
-   TtaWriteByte (pivFile, (CHAR) C_PIV_DOC_END);
+   TtaWriteByte (pivFile, (CHAR_T) C_PIV_DOC_END);
 }
 
 
@@ -1516,11 +1516,11 @@ PathBuffer          fileName;
 	     /* ecrit le nouveau label de l'element */
 	     PutLabel (refFile, pChnRef->CrNewLabel);
 	     /* ecrit une marque de nom de document */
-	     TtaWriteByte (refFile, (CHAR) C_PIV_DOCNAME);
+	     TtaWriteByte (refFile, (CHAR_T) C_PIV_DOCNAME);
 	     /* ecrit le nom de l'ancien document de l'element */
 	     TtaWriteDocIdent (refFile, pChnRef->CrOldDocument);
 	     /* ecrit une marque de nom de document */
-	     TtaWriteByte (refFile, (CHAR) C_PIV_DOCNAME);
+	     TtaWriteByte (refFile, (CHAR_T) C_PIV_DOCNAME);
 	     /* ecrit l'identificateur du nouveau document de l'element */
 	     TtaWriteDocIdent (refFile, pChnRef->CrNewDocument);
 	     /* on libere le descripteur qu'on vient d'ecrire */
@@ -1590,7 +1590,7 @@ PathBuffer          fileName;
 		  do
 		    {
 		       /* ecrit une marque de nom de document */
-		       TtaWriteByte (extFile, (CHAR) C_PIV_DOCNAME);
+		       TtaWriteByte (extFile, (CHAR_T) C_PIV_DOCNAME);
 		       /* ecrit le nom du document referencant */
 		       TtaWriteDocIdent (extFile, pExtDoc->EdDocIdent);
 		       /* passe au descripteur de document referencant suivant */

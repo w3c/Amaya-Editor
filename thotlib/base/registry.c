@@ -80,7 +80,7 @@ static int           AppRegistryInitialized = 0;
 static int           AppRegistryModified = 0;
 static RegistryEntry AppRegistryEntry = NULL;
 static STRING        AppRegistryEntryAppli = NULL;
-static CHAR          CurrentDir[MAX_PATH];
+static CHAR_T          CurrentDir[MAX_PATH];
 static STRING        Thot_Dir;
 
 #ifdef _WINDOWS
@@ -156,7 +156,7 @@ int                 o_len;
   STRING base = input;
   STRING res = output;
   STRING value;
-  CHAR   save;
+  CHAR_T   save;
 #define CHECK_OVERFLOW (((cour - input) > i_len) || ((res - output) >= (o_len - 1)))
 
   while (*cour)
@@ -241,7 +241,7 @@ RegistryLevel       level;
 
 #endif
 {
-   CHAR                resu[2000];
+   CHAR_T                resu[2000];
    RegistryEntry       cour, ptr, previous;
 
    if (AppRegistryInitialized == 0)
@@ -344,7 +344,7 @@ int                 overwrite;
 
 #endif
 {
-  CHAR                resu[2000];
+  CHAR_T                resu[2000];
   RegistryEntry       cour;
 
   if (AppRegistryInitialized == 0)
@@ -510,14 +510,14 @@ static void         SortEnv ()
   Returns TRUE if the env variables exists or FALSE if it isn't the case.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean TtaGetEnvInt (CHAR *name, int *value)
+boolean TtaGetEnvInt (STRING name, int *value)
 #else
 boolean TtaGetEnvInt (name, value)
-CHAR *name;
+STRING name;
 int *value;
 #endif /* __STDC__ */
 {
- CHAR *strptr;
+ STRING strptr;
 
  if (!name || *name == EOS)
    {
@@ -546,14 +546,14 @@ int *value;
   Returns TRUE if the env variables exists or FALSE if it isn't the case.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean TtaGetEnvBoolean (CHAR *name, boolean *value)
+boolean TtaGetEnvBoolean (STRING name, boolean *value)
 #else
 boolean TtaGetEnvBoolean (name, value)
-CHAR *name;
+STRING name;
 boolean *value;
 #endif /* __STDC__ */
 {
- CHAR *strptr;
+ STRING strptr;
 
  if (!name || *name == EOS)
    {
@@ -701,7 +701,7 @@ int                 overwrite;
 {
   /* hardcoded so that the biggest integer value has 5 digits:
      65535 */
-  CHAR ptr[6];
+  CHAR_T ptr[6];
   int  r_val;
 
   r_val = value % 65537;
@@ -723,7 +723,7 @@ CONST boolean       value;
 int                 overwrite;
 #endif
 {
-  CHAR *ptr;
+  STRING ptr;
 
   if (value)
     ptr = "Yes";
@@ -784,14 +784,14 @@ int                 overwrite;
   Returns TRUE if the env variables exists or FALSE if it isn't the case.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean TtaGetDefEnvInt (CHAR *name, int *value)
+boolean TtaGetDefEnvInt (STRING name, int *value)
 #else
 boolean TtaGetDefEnvInt (name, value)
-CHAR *name;
+STRING name;
 int *value;
 #endif /* __STDC__ */
 {
- CHAR *strptr;
+ STRING strptr;
 
  if (!name || *name == EOS)
    {
@@ -820,14 +820,14 @@ int *value;
   Returns TRUE if the env variables exists or FALSE if it isn't the case.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean TtaGetDefEnvBoolean (CHAR *name, boolean *value)
+boolean TtaGetDefEnvBoolean (STRING name, boolean *value)
 #else
 boolean TtaGetDefEnvBoolean (name, value)
-CHAR *name;
+STRING name;
 boolean *value;
 #endif /* __STDC__ */
 {
- CHAR *strptr;
+ STRING strptr;
 
  if (!name || *name == EOS)
    {
@@ -954,7 +954,7 @@ static int          IsThotDir (CONST STRING path)
 static int          IsThotDir (CONST STRING path)
 #endif				/* __STDC__ */
 {
-   CHAR                filename[MAX_PATH];
+   CHAR_T                filename[MAX_PATH];
 
    if (path == NULL)
       return (0);
@@ -992,12 +992,12 @@ static int          IsThotDir (CONST STRING path)
   ----------------------------------------------------------------------*/
 static STRING          WINReg_get (CONST STRING env)
 {
-  static CONST CHAR   userBase[] = "Software";
-  CHAR                textKey[MAX_PATH];
+  static CONST CHAR_T   userBase[] = "Software";
+  CHAR_T                textKey[MAX_PATH];
   HKEY                hKey;
   DWORD               type;
   LONG                success;
-  static CHAR         ret[MAX_PATH];	/* thread unsafe! */
+  static CHAR_T         ret[MAX_PATH];	/* thread unsafe! */
   DWORD               retLen = sizeof (ret);
   
   sprintf (textKey, "%s\\%s\\%s", userBase, AppRegistryEntryAppli, env);	                    
@@ -1019,11 +1019,11 @@ static STRING          WINReg_get (CONST STRING env)
   ----------------------------------------------------------------------*/
 static boolean WINReg_set (CONST STRING key, CONST STRING value)
 {
-  static CONST CHAR    userBase[] = "Software";
-   CHAR                textKey[MAX_PATH];
+  static CONST CHAR_T    userBase[] = "Software";
+   CHAR_T                textKey[MAX_PATH];
    HKEY                hKey;
    LONG                success;
-   CHAR                protValue[MAX_PATH];
+   CHAR_T                protValue[MAX_PATH];
    DWORD               protValueLen = sizeof (protValue);
    DWORD               dwDisposition;
  
@@ -1053,7 +1053,7 @@ static boolean WINReg_set (CONST STRING key, CONST STRING value)
 static STRING          WINIni_get (CONST STRING env)
 {
    DWORD               res;
-   static CHAR         ret[MAX_PATH];	/* thread unsafe! */
+   static CHAR_T         ret[MAX_PATH];	/* thread unsafe! */
 
    res = GetPrivateProfileString ("Amaya", env, "", ret, sizeof (ret), "Amaya.ini");
    return res ? ret : NULL;
@@ -1070,10 +1070,10 @@ void                TtaSaveAppRegistry ()
 {
 
    STRING              app_home;
-   CHAR                filename[MAX_PATH];
+   CHAR_T              filename[MAX_PATH];
    FILE               *output;
 #ifdef _WINDOWS
-   CHAR               *ptr;
+   CHAR_T               *ptr;
 #endif /* _WINDOWS */
 
    if (!AppRegistryInitialized)
@@ -1134,8 +1134,8 @@ RegistryLevel       level;
 {
    FILE*  input;
    STRING str, base;
-   CHAR   string[1000];
-   CHAR   appli[1000] = THOT_LIB_DEFAULTNAME;
+   CHAR_T   string[1000];
+   CHAR_T   appli[1000] = THOT_LIB_DEFAULTNAME;
    STRING name;
    STRING value;
 
@@ -1320,12 +1320,12 @@ STRING appArgv0;
 {
   PathBuffer execname;
   PathBuffer path;
-  CHAR       app_home[MAX_PATH];
-  CHAR       filename[MAX_PATH];
+  CHAR_T       app_home[MAX_PATH];
+  CHAR_T       filename[MAX_PATH];
   STRING     my_path;
   STRING     dir_end = NULL;
   STRING appName;
-  CHAR      *ptr;
+  CHAR_T      *ptr;
 #  ifdef _WINDOWS
 #  ifndef __CYGWIN32__
   extern int _fmode;
@@ -1652,7 +1652,7 @@ int                 dir;
 STRING fullName;
 #endif /* __STDC__ */
 {
-   CHAR   tmpbuf[200];
+   CHAR_T   tmpbuf[200];
    STRING imagepath;
    int                 i, j;
    int                 ret;

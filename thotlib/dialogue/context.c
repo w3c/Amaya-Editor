@@ -91,9 +91,9 @@ int RO;
 
    if (TtLineGC.capabilities & THOT_GC_FOREGROUND)
       if (RO && fg == 1)
-         SetTextColor (hDC, Pix_Color[RO_Color]);
+         SetTextColor (hDC, ColorPixel (RO_Color));
       else         
-         SetTextColor (hDC, Pix_Color[fg]);
+         SetTextColor (hDC, ColorPixel (fg));
 
    if (TtLineGC.capabilities & THOT_GC_BACKGROUND) {
       SetBkMode (hDC, OPAQUE);
@@ -158,7 +158,7 @@ XErrorEvent        *err;
 
 #endif /* __STDC__ */
 {
-   CHAR                msg[200];
+   CHAR_T                msg[200];
 
    XGetErrorText (dpy, err->error_code, msg, 200);
    return (0);

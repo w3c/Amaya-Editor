@@ -3094,7 +3094,7 @@ PtrDocument         pDoc;
 #endif /* __STDC__ */
 {
    Name                menuTitle;
-   CHAR                choiceMenuBuf[MAX_TXT_LEN];
+   CHAR_T                choiceMenuBuf[MAX_TXT_LEN];
    int                 choiceTypeNum[MAX_MENU];
    PtrSSchema          choicePSSchema[MAX_MENU];
    int                 i, NChoiceItems;
@@ -3197,7 +3197,7 @@ int                *NItems;
    int                 typeNum, i, NChoiceItems, firstChar, lastChar, menuInd,
                        len;
    Name                menuTitle, typeName;
-   CHAR                choiceMenuBuf[MAX_TXT_LEN];
+   CHAR_T                choiceMenuBuf[MAX_TXT_LEN];
 
    if (ThotLocalActions[T_rsurround] == NULL)
      TteConnectAction (T_rsurround, SurroundMenuInput);
@@ -3345,7 +3345,7 @@ View                view;
    PtrDocument         pSelDoc;
    int                 firstChar, lastChar, NItems;
    Name                title;
-   CHAR                menuBuffer[MAX_TXT_LEN];
+   CHAR_T                menuBuffer[MAX_TXT_LEN];
    boolean             protected;
 
    /* terminer une insertion eventuelle */
@@ -3494,7 +3494,7 @@ View                view;
    PtrElement          firstSel, lastSel;
    PtrDocument         pSelDoc;
    int                 firstChar, lastChar, NItems;
-   CHAR                menuBuffer[MAX_TXT_LEN];
+   CHAR_T                menuBuffer[MAX_TXT_LEN];
    Name                title;
 
    if (ThotLocalActions[T_rchangetype] == NULL)

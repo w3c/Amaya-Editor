@@ -390,7 +390,7 @@ int                *nSpaces;
    int                 i, j;
    int                 charWidth;
    int                 spaceWidth;
-   UCHAR               car;
+   UCHAR_T               car;
 
    /* Calcule la largeur des blancs */
    if (*nSpaces == 0)
@@ -405,7 +405,7 @@ int                *nSpaces;
    while (j <= nChars)
      {
 	/* On traite les differents caracteres */
-	car = (UCHAR) (pBuffer->BuContent[i - 1]);
+	car = (UCHAR_T) (pBuffer->BuContent[i - 1]);
 	if (car == _SPACE_)
 	  {
 	     (*nSpaces)++;	/* caractere blanc */
@@ -1221,7 +1221,7 @@ int                *carIndex;
    ptrfont             font;
    PictInfo           *picture;
    BoxType             tableType;
-   CHAR                alphabet = 'L';
+   CHAR_T                alphabet = 'L';
    int                 width, i;
    int                 height;
    boolean             enclosedWidth;

@@ -2291,7 +2291,7 @@ int                *spacesNumber;
    int                 charWidth;
    int                 newIndex;
    ptrfont             font;
-   UCHAR       c;
+   UCHAR_T       c;
    boolean             notfound;
 
 
@@ -2331,7 +2331,7 @@ int                *spacesNumber;
 	notfound = (dx < *x);
 #else
 	/* largeur du caractere suivant */
-	c = (UCHAR) ((*pBuffer)->BuContent[newIndex - 1]);
+	c = (UCHAR_T) ((*pBuffer)->BuContent[newIndex - 1]);
 	if (c == 0)
 	   charWidth = 0;
 	else if (c == _SPACE_)
@@ -2344,7 +2344,7 @@ int                *spacesNumber;
 	  {
 #ifdef STRUCT_EDIT
 	     /* largeur du caractere courant */
-	     c = (UCHAR) ((*pBuffer)->BuContent[newIndex - 1]);
+	     c = (UCHAR_T) ((*pBuffer)->BuContent[newIndex - 1]);
 	     if (c == 0)
 		charWidth = 0;
 	     else if (c == _SPACE_)
@@ -2385,7 +2385,7 @@ int                *spacesNumber;
 	     notfound = (dx < *x);
 #else
 	     /* largeur du caractere suivant */
-	     c = (UCHAR) ((*pBuffer)->BuContent[newIndex - 1]);
+	     c = (UCHAR_T) ((*pBuffer)->BuContent[newIndex - 1]);
 	     if (c == 0)
 		charWidth = 0;
 	     else if (c == _SPACE_)

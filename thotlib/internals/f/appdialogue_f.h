@@ -32,7 +32,7 @@ extern void TteAddMenuItem ( WindowType windowtype,
                              int subMenu,
                              int itemID,
                              STRING actionName,
-                             CHAR itemType );
+                             CHAR_T itemType );
 extern void TteOpenMainWindow ( STRING name,
                                 Pixmap logo,
                                 Pixmap icon );
@@ -146,7 +146,7 @@ extern void TteAddMenuItem (/* WindowType windowtype,
                                int subMenu,
                                int itemID,
                                STRING actionName,
-                               CHAR itemType */);
+                               CHAR_T itemType */);
 extern void TteOpenMainWindow (/* STRING name,
                                   Pixmap logo,
                                   Pixmap icon */);

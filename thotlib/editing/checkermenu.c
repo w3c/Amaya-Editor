@@ -52,10 +52,10 @@ static int          OldNC;
 static int          SpellingBase;
 static boolean      FirstStep;
 static boolean      ToReplace;
-static CHAR         CorrectWord[MAX_WORD_LEN];
-static CHAR         CurrentWord[MAX_WORD_LEN];
+static CHAR_T         CorrectWord[MAX_WORD_LEN];
+static CHAR_T         CurrentWord[MAX_WORD_LEN];
 static PtrDocument  pDocSel;
-static CHAR         SpecialChars[] =
+static CHAR_T         SpecialChars[] =
 {"@#$&+~"};
 
 /* les variables importees de l'editeur */
@@ -77,7 +77,7 @@ extern HWND wordButton;
 extern HWND hwnListWords;
 extern HWND hwndCurrentWord;
 extern HWND hwndLanguage;
-extern CHAR currentWord [30];
+extern CHAR_T currentWord [30];
 
 #ifdef __STDC__
 extern void CreateSpellCheckDlgWindow (HWND, STRING, STRING, int, int, int, int, int, int, int);
@@ -112,7 +112,7 @@ static void         DisplayWords ()
 {
    int                 i, indx, length;
    STRING              entry;
-   CHAR                BufMenu[MAX_TXT_LEN];
+   CHAR_T                BufMenu[MAX_TXT_LEN];
 
    /* recopie les propositions */
    indx = 0;
@@ -189,7 +189,7 @@ view                view;
    PtrElement          pEl1, pElN;
    int                 c1, cN;
    int                 indx;
-   CHAR                BufMenu[MAX_TXT_LEN];
+   CHAR_T                BufMenu[MAX_TXT_LEN];
    boolean             ok;
 #  endif /* !_WINDOWS */
 
@@ -340,7 +340,7 @@ static void         SetProposals (language)
 Language            language;
 #endif /* __STDC__ */
 {
-   CHAR             Lab[200];
+   CHAR_T             Lab[200];
 
    /* calculer les propositions de correction du mot courant */
    GiveProposal (language, ChkrFileDict);

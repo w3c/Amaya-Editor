@@ -1012,7 +1012,7 @@ PtrDocument         pDoc;
    TtAttribute        *pAttr1;
    PtrElement          pEl;
    Counter            *pCo1;
-   CHAR                number[20];
+   CHAR_T              number[20];
    PtrTextBuffer       pBTN, pBTA, pBTAPrec;
 
    /* sauve temporairement le contenu de ce pave de presentation */

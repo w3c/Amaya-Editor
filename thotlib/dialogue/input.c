@@ -457,7 +457,8 @@ WPARAM wParam;
 LPARAM lParam;
 #endif /* __STDC__ */
 {   
-   int  keyboard_mask = 0;   int  status;   CHAR string[2];
+   int  keyboard_mask = 0;   int  status;
+   CHAR_T string[2];
    int  len = 0;
 
    if ((msg != WM_KEYDOWN) && (msg != WM_CHAR))
@@ -503,7 +504,7 @@ LPARAM lParam;
 
    if (msg == WM_CHAR){
       len = 1;
-      string[0] = (CHAR) wParam;
+      string[0] = (CHAR_T) wParam;
       ThotInput (frame, &string[0], len, keyboard_mask, wParam);
    } else if ((wParam == VK_CANCEL)  ||
 			  (wParam == VK_RETURN)  ||
@@ -519,7 +520,7 @@ LPARAM lParam;
 			  (wParam == VK_INSERT)  ||
 			  (wParam == VK_DELETE))   
    {
-	  string[0] = (CHAR) wParam;
+	  string[0] = (CHAR_T) wParam;
 	  ThotInput (frame, &string[0], len, keyboard_mask, wParam);
    }
 }
@@ -545,7 +546,7 @@ ThotEvent             *event;
    int                 PicMask;
    int                 frame;
    unsigned int        state, save;
-   UCHAR       string[2];
+   UCHAR_T       string[2];
    ThotComposeStatus      ComS;
    KeySym              KS;
 
@@ -678,7 +679,7 @@ int                 key;
 	   
 	   if (found)
 	     {
-	       value = (UCHAR) ptr->K_Value;
+	       value = (UCHAR_T) ptr->K_Value;
 	       command = ptr->K_Command;
 	     }
 	 }
@@ -732,7 +733,7 @@ int                 key;
 			   if (Automata_current == NULL)
 			     {
 			       /* il s'agit d'une valeur definie a premier niveau */
-			       value = (UCHAR) ptr->K_Value;
+			       value = (UCHAR_T) ptr->K_Value;
 			       command = ptr->K_Command;
 			     }
 #                             ifdef _WINDOWS
@@ -1002,10 +1003,10 @@ STRING              appliname;
 #endif /* __STDC__ */
 {
    STRING              text;	   /* fichier de translation transmis a motif */
-   CHAR                line[200];  /* ligne en construction pour motif */
-   CHAR                home[200], name[80], ch[80]; 
+   CHAR_T                line[200];  /* ligne en construction pour motif */
+   CHAR_T                home[200], name[80], ch[80]; 
    STRING              adr;
-   CHAR                equiv[MAX_EQUIV]; /* equivalents caracteres pour motif */
+   CHAR_T                equiv[MAX_EQUIV]; /* equivalents caracteres pour motif */
    unsigned int        key1, key2; /* 1ere & 2eme cles sous forme de keysym X */
    int                 e, i;
    int                 mod1, mod2; /* 1er/ 2eme modifieurs : voir THOT_MOD_xx */

@@ -92,7 +92,7 @@ typedef struct _SelectionDescriptor
 SelectionDescriptor;
 
 static SelectionDescriptor documentNewSelection[MAX_DOCUMENTS];
-static CHAR         nameBuffer[MAX_NAME_LENGTH];
+static CHAR_T         nameBuffer[MAX_NAME_LENGTH];
 
 
 /*----------------------------------------------------------------------
@@ -950,7 +950,7 @@ STRING              presentationName;
 {
    PathBuffer          DirBuffer;
    BinFile             file;
-   CHAR                text[MAX_TXT_LEN];
+   CHAR_T                text[MAX_TXT_LEN];
    int                 i;
    Name                gotStructName;
    int                 result;

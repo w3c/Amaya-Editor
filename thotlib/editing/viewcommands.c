@@ -154,7 +154,7 @@ int                 height;
 #  ifndef _WIN_PRINT
    int                 createdFrame;
 #  endif /* _WIN_PRINT */
-   CHAR                buf[MAX_TXT_LEN];
+   CHAR_T                buf[MAX_TXT_LEN];
 
    /* met dans le buffer le nom du document... */
    ustrncpy (buf, pDoc->DocDName, MAX_NAME_LENGTH);
@@ -323,7 +323,7 @@ PtrDocument         pDoc;
 {
    PtrElement          pEl, pListEl, pTextEl, pDesc, pPrev, pAncest;
    int                 typeNum, exceptNum, len, i;
-   UCHAR               line[MAX_TXT_LEN];
+   UCHAR_T               line[MAX_TXT_LEN];
    boolean             ok, paragraph, emptyLine;
 
    ok = FALSE;
@@ -1115,9 +1115,9 @@ View                view;
    int                 entreeDesact[LgMaxTableNature];
    int                 LgTableNatures;
    int                 nbPres;
-   CHAR                BufMenuNatures[MAX_TXT_LEN];
-   CHAR                BufMenu[MAX_TXT_LEN];
-   CHAR                BufMenuB[MAX_TXT_LEN];
+   CHAR_T                BufMenuNatures[MAX_TXT_LEN];
+   CHAR_T                BufMenu[MAX_TXT_LEN];
+   CHAR_T                BufMenuB[MAX_TXT_LEN];
    STRING              ptrBufNat;
    STRING              src;
    STRING              dest;
@@ -1126,7 +1126,7 @@ View                view;
    int                 MenuAActiver;
    int                 i, k, l;
    Name                 NomPres;
-   CHAR                NomUtilisateur[50];
+   CHAR_T                NomUtilisateur[50];
    PtrDocument         pDoc;
 
    if (ThotLocalActions[T_rchangepres] == NULL)

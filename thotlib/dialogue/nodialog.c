@@ -50,11 +50,11 @@ void                DrawAddAttr ()
 {
 }
 #ifdef __STDC__
-void                DrawChar (UCHAR car, int frame, int x, int y, ptrfont font, int RO, int active, int fg)
+void                DrawChar (UCHAR_T car, int frame, int x, int y, ptrfont font, int RO, int active, int fg)
 
 #else  /* __STDC__ */
 void                DrawChar (car, frame, x, y, font, RO, active, fg)
-UCHAR       car;
+UCHAR_T       car;
 int                 frame;
 int                 x;
 int                 y;

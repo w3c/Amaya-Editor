@@ -31,7 +31,7 @@
  
 #include "appstruct.h"
  
-typedef char    Name[MAX_NAME_LENGTH]; /* a name is terminated by a null byte*/
+typedef CHAR_T    Name[MAX_NAME_LENGTH]; /* a name is terminated by a null byte*/
 
 /* values for using schema or user attribute and element type names */ 
 #define USER_NAME 1

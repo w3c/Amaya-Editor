@@ -46,8 +46,8 @@
 
 typedef struct _item
   {
-     CHAR                name;
-     UCHAR       value;
+     CHAR_T                name;
+     UCHAR_T       value;
      STRING              legend;
   }
 ITEM;
@@ -410,11 +410,11 @@ extern void CreateGreekKeyboardDlgWindow ();
    Function func indicates if it's an active box (1) or not (0).
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         WChar (ThotWindow w, CHAR ch, int x, int y, int func, ptrfont font, int disp, ThotGC GClocal)
+static void         WChar (ThotWindow w, CHAR_T ch, int x, int y, int func, ptrfont font, int disp, ThotGC GClocal)
 #else  /* __STDC__ */
 static void         WChar (w, ch, x, y, func, font, disp, GClocal)
 ThotWindow          w;
-CHAR                ch;
+CHAR_T                ch;
 int                 x;
 int                 y;
 int                 func;
@@ -470,12 +470,12 @@ caddr_t             call_d;
 
 #endif /* __STDC__ */
 {
-   UCHAR       car;
+   UCHAR_T       car;
    ThotWidget          wp;
    int                 i;
 
    /* Recupere la table des items */
-   car = (UCHAR) param % 256;
+   car = (UCHAR_T) param % 256;
    /* Recupere le widget de la palette */
 #  ifndef _WINDOWS
    wp=XtParent(XtParent(XtParent(XtParent(w))));
@@ -573,7 +573,7 @@ int                 nbitem;
    Arg                 args[MAX_ARGS];
    XmString            title_string;
    XmFontList          xfont;
-   CHAR                string[10];
+   CHAR_T                string[10];
    int                 param;
    XGCValues           GCmodel;
 

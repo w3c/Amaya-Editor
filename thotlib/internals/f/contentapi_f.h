@@ -31,7 +31,7 @@ extern void TtaSplitText ( Element element,
 extern boolean TtaMergeText ( Element element,
                               Document document );
 extern void TtaSetGraphicsShape ( Element element,
-                                  CHAR shape,
+                                  CHAR_T shape,
                                   Document document );
 extern void TtaAddPointInPolyline ( Element element,
                                     int rank,
@@ -66,7 +66,7 @@ extern void TtaGiveSubString ( Element element,
                                STRING buffer,
                                int position,
                                int length );
-extern CHAR TtaGetGraphicsShape ( Element element );
+extern CHAR_T TtaGetGraphicsShape ( Element element );
 extern int TtaGetPolylineLength ( Element element );
 extern void TtaGivePolylinePoint ( Element element,
                                    int rank,
@@ -103,7 +103,7 @@ extern void TtaSplitText (/* Element element,
 extern boolean TtaMergeText (/* Element element,
                                 Document document */);
 extern void TtaSetGraphicsShape (/* Element element,
-                                    CHAR shape,
+                                    CHAR_T shape,
                                     Document document */);
 extern void TtaAddPointInPolyline (/* Element element,
                                       int rank,
@@ -138,7 +138,7 @@ extern void TtaGiveSubString (/* Element element,
                                  STRING buffer,
                                  int position,
                                  int length */);
-extern CHAR TtaGetGraphicsShape (/* Element element */);
+extern CHAR_T TtaGetGraphicsShape (/* Element element */);
 extern int TtaGetPolylineLength (/* Element element */);
 extern void TtaGivePolylinePoint (/* Element element,
                                      int rank,

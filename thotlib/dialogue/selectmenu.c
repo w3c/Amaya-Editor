@@ -60,10 +60,10 @@
    Selection et retourne le nombre d'entrees de ce menu.         
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-int                 BuildSelectMenu (CHAR BufMenu[MAX_TXT_LEN])
+int                 BuildSelectMenu (CHAR_T BufMenu[MAX_TXT_LEN])
 #else  /* __STDC__ */
 int                 BuildSelectMenu (BufMenu)
-CHAR                BufMenu[MAX_TXT_LEN];
+CHAR_T                BufMenu[MAX_TXT_LEN];
 
 #endif /* __STDC__ */
 {
@@ -125,7 +125,7 @@ PtrDocument         pDoc;
 #endif /* __STDC__ */
 {
    int                 NbItemSel;
-   CHAR                BufMenuSel[MAX_TXT_LEN];
+   CHAR_T                BufMenuSel[MAX_TXT_LEN];
    int                 vue, menu, menuID;
    int                 frame, ref;
    Document            document;

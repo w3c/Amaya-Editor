@@ -42,7 +42,7 @@
 #ifndef _WINDOWS
 static XmString  null_string;
 #endif
-static CHAR         OldMsgSelect[MAX_TXT_LEN];
+static CHAR_T         OldMsgSelect[MAX_TXT_LEN];
 static PtrDocument  OldDocMsgSelect;
 
 #undef THOT_EXPORT
@@ -129,8 +129,8 @@ static HWND      hwndHead;
 static STRING     txtZoneLabel;
 static BOOL      paletteRealized = FALSE;
 
-static CHAR      URL_txt [500];
-static CHAR      doc_title [500];
+static CHAR_T      URL_txt [500];
+static CHAR_T      doc_title [500];
 
 static int       oldXPos;
 static int       oldYPos;
@@ -141,7 +141,7 @@ int         X_Pos;
 int         Y_Pos;
 int         cyToolBar;
 int         CommandToString [MAX_FRAME][MAX_BUTTON];
-CHAR        szTbStrings [4096];
+CHAR_T        szTbStrings [4096];
 BOOL        autoScroll = FALSE;
 boolean viewClosed = FALSE;
 DWORD       dwToolBarStyles   = WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | CCS_TOP | TBSTYLE_TOOLTIPS;
@@ -191,8 +191,8 @@ LPTOOLTIPTEXT lpttt;
    int iButton = lpttt->hdr.idFrom ;
    int cb ;
    int cMax ;
-   LPSTR pString ;
-   LPSTR pDest = lpttt->lpszText ;
+   STRING pString ;
+   STRING pDest = lpttt->lpszText ;
 
    /* Map command ID to string index */
    for (i = 0 ; CommandToString[frame][i] != -1 ; i++) {
@@ -207,7 +207,7 @@ LPTOOLTIPTEXT lpttt;
    cMax = 0 ;
    while (*pString != EOS) {
          cMax++ ;
-         cb = lstrlen (pString) ;
+         cb = ustrlen (pString) ;
          pString += (cb + 1) ;
    }
 
@@ -218,12 +218,12 @@ LPTOOLTIPTEXT lpttt;
        /* Cycle through to requested string */
        pString = &szTbStrings [0] ;
        for (i = 0 ; i < iButton ; i++) {
-           cb = lstrlen (pString) ;
+           cb = ustrlen (pString) ;
            pString += (cb + 1) ;
        }
    }
 
-   lstrcpy (pDest, pString) ;
+   ustrcpy (pDest, pString) ;
 }
 #endif /* _WINDOWS */
 
@@ -1155,7 +1155,7 @@ CONST STRING        name;
 #endif /* __STDC__ */
 {
    int                 frame;
-   CHAR                s[1024];
+   CHAR_T                s[1024];
 
 #  ifndef _WINDOWS
    Arg                 args[MAX_ARGS];
@@ -1283,12 +1283,12 @@ LPARAM      lParam;
                    InitToolTip (ToolBar) ;	
 
                 /* Create status bar  */
-                StatusBar = CreateStatusWindow (dwStatusBarStyles, "", hwnd, 2) ;
+                StatusBar = CreateStatusWindow (dwStatusBarStyles, (STRING) "", hwnd, 2) ;
                 ShowWindow (StatusBar, SW_SHOWNORMAL);
                 UpdateWindow (StatusBar);
 
                 /* Create client window */
-                hwndClient = CreateWindowEx (WS_EX_CLIENTEDGE, "ClientWndProc", NULL,
+                hwndClient = CreateWindowEx (WS_EX_CLIENTEDGE, (STRING) "ClientWndProc", NULL,
                                              WS_CHILD | WS_VISIBLE | WS_BORDER, 0, 0, 0, 0,
                                              hwnd, (HMENU) 2, hInstance, NULL) ;
                 ShowWindow (hwndClient, SW_SHOWNORMAL);
@@ -1354,11 +1354,12 @@ LPARAM      lParam;
 				}
                 return 0;
 
+		   case WM_CLOSE:
            case WM_DESTROY:
                 if (!viewClosed) {
                    FrameToView (frame, &doc, &view);
                    viewName = TtaGetViewName (doc, view);
-                   if (!ustrcmp (viewName, "Formatted_view"))
+                   if (!ustrcmp (viewName, (STRING) "Formatted_view"))
                       TtcCloseDocument (doc, view);
                    else
                        TtcCloseView (doc, view);

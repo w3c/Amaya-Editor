@@ -47,12 +47,15 @@
 #include "frame_tv.h"
 #include "appdialogue_tv.h"
 
+#include "applicationapi_f.h"
 #include "checkaccess_f.h"
 #include "config_f.h"
 #include "dialogapi_f.h"
+#include "inites_f.h"
 #include "input_f.h"
 #include "language_f.h"
 #include "memory_f.h"
+#include "message_f.h"
 #include "references_f.h"
 #include "schemas_f.h"
 #include "schtrad_f.h"
@@ -60,8 +63,6 @@
 #include "structschema_f.h"
 #include "structselect_f.h"
 #include "tree_f.h"
-#include "applicationapi_f.h"
-#include "message_f.h"
 
 #define VersionId "V2.0"
 
@@ -195,7 +196,7 @@ STRING              applicationName;
    int                 i;
 
    UserErrorCode = 0;
-   ustrcpy (DefaultDocumentName, "");
+   ustrcpy (DefaultDocumentName, (STRING) "");
    InitEditorMemory ();		/* Initializes the memory managment of the editor */
    InitNatures ();		/* Initializes the table of Natures */
 
@@ -512,7 +513,7 @@ STRING              aName;
 {
    int                 lg, i, j;
    STRING              ptr, oldptr;
-   CHAR                URL_DIR_SEP;
+   CHAR_T                URL_DIR_SEP;
 
    if (text == NULL || aDirectory == NULL || aName == NULL)
       return;			/* No input text or error in input parameters */

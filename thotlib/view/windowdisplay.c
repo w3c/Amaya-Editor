@@ -66,11 +66,11 @@ extern BOOL autoScroll;
   accordingly to the ascent of the font used.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                FontOrig (ptrfont font, CHAR firstchar, int *pX, int *pY)
+void                FontOrig (ptrfont font, CHAR_T firstchar, int *pX, int *pY)
 #else  /* __STDC__ */
 void                FontOrig (font, firstchar, pX, pY)
 ptrfont             font;
-CHAR                firstchar;
+CHAR_T                firstchar;
 int                *pX;
 int                *pY;
 
@@ -145,13 +145,13 @@ int                 fg;
 #endif /* __STDC__ */
 {
 #  ifndef _WINDOWS
-    CHAR                dash[2];
+    CHAR_T                dash[2];
   if (style == 0)
       XSetLineAttributes (TtDisplay, TtLineGC, thick, LineSolid, CapButt, JoinMiter);
    else
      {
-	dash[0] = (CHAR) (style * 4);
-	dash[1] = (CHAR) 4;
+	dash[0] = (CHAR_T) (style * 4);
+	dash[1] = (CHAR_T) 4;
 	XSetDashes (TtDisplay, TtLineGC, 0, dash, 2);
 	XSetLineAttributes (TtDisplay, TtLineGC, thick, LineOnOffDash, CapButt, JoinMiter);
      }
@@ -272,19 +272,19 @@ USTRING             text;
 	switch (text[i])
 	      {
 		 case BREAK_LINE:
-		    text[i] = (UCHAR) SHOWN_BREAK_LINE;
+		    text[i] = (UCHAR_T) SHOWN_BREAK_LINE;
 		    break;
 		 case THIN_SPACE:
-		    text[i] = (UCHAR) SHOWN_THIN_SPACE;
+		    text[i] = (UCHAR_T) SHOWN_THIN_SPACE;
 		    break;
 		 case HALF_EM:
-		    text[i] = (UCHAR) SHOWN_HALF_EM;
+		    text[i] = (UCHAR_T) SHOWN_HALF_EM;
 		    break;
 		 case UNBREAKABLE_SPACE:
-		    text[i] = (UCHAR) SHOWN_UNBREAKABLE_SPACE;
+		    text[i] = (UCHAR_T) SHOWN_UNBREAKABLE_SPACE;
 		    break;
 		 case _SPACE_:
-		    text[i] = (UCHAR) SHOWN_SPACE;
+		    text[i] = (UCHAR_T) SHOWN_SPACE;
 		    break;
 	      }
 	i++;
@@ -298,10 +298,10 @@ USTRING             text;
   indicates if the box is active parameter fg indicates the drawing color
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                DrawChar (UCHAR car, int frame, int x, int y, ptrfont font, int RO, int active, int fg)
+void                DrawChar (UCHAR_T car, int frame, int x, int y, ptrfont font, int RO, int active, int fg)
 #else  /* __STDC__ */
 void                DrawChar (car, frame, x, y, font, RO, active, fg)
-UCHAR       car;
+UCHAR_T       car;
 int                 frame;
 int                 x;
 int                 y;
@@ -314,7 +314,7 @@ int                 fg;
 {
    ThotWindow          w;
 #  ifdef _WINDOWS
-   CHAR                str[2] = {car, 0};
+   CHAR_T                str[2] = {car, 0};
    HFONT               hOldFont;
    int                 result;
 #  endif /* _WINDOWS */
@@ -773,10 +773,10 @@ int                 fg;
   parameter fg indicates the drawing color
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         DrawMonoSymb (CHAR symb, int frame, int x, int y, int l, int h, int RO, int active, ptrfont font, int fg)
+static void         DrawMonoSymb (CHAR_T symb, int frame, int x, int y, int l, int h, int RO, int active, ptrfont font, int fg)
 #else  /* __STDC__ */
 static void         DrawMonoSymb (symb, frame, x, y, l, h, RO, active, font, fg)
-CHAR                symb;
+CHAR_T                symb;
 int                 frame;
 int                 x;
 int                 y;
@@ -3291,7 +3291,11 @@ int                 y;
 #ifndef _WINDOWS
 	XFillRectangle (TtDisplay, w, TtInvertGC, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, width, height);
 #else /* _WINDOWS */
+    if (TtDisplay)
+       WIN_ReleaseDeviceContext ();
+
 	WIN_GetDeviceContext (frame);
+
 	PatBlt (TtDisplay, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, width, height, PATINVERT);
     WIN_ReleaseDeviceContext ();
 #endif /* _WINDOWS */
@@ -3328,8 +3332,10 @@ int yf;
 	     ScrollDC (TtDisplay, xf - xd, yf - yd, NULL, &cltRect, NULL, NULL);
       else 
 	  /* UpdateWindow (FrRef [frame]); */
-	  /* ScrollWindowEx (FrRef [frame], xf - xd, yf - yd, NULL, &cltRect, NULL, NULL, SW_ERASE | SW_INVALIDATE); */
+	  ScrollWindowEx (FrRef [frame], xf - xd, yf - yd, NULL, &cltRect, NULL, NULL, SW_INVALIDATE);
+	  /********
 	  ScrollWindow (FrRef [frame], xf - xd, yf - yd, &cltRect, &cltRect);
+	   ********/
       WIN_ReleaseDeviceContext ();
 #     endif /* _WINDOWS */
    }

@@ -35,7 +35,7 @@
 
 /* that table for the character glyphs */
 static int          FirstRemovableFont = 1;
-static CHAR         StylesTable[MAX_HIGHLIGHT] = "rbiogq";
+static CHAR_T         StylesTable[MAX_HIGHLIGHT] = "rbiogq";
 
 /* Maximum number of font size handled */
 static int          MaxNumberOfSizes;
@@ -58,7 +58,7 @@ static boolean      UseBitStreamFamily;
 #ifdef _WINDOWS
 #include "wininclude.h"
 
-static CHAR  WIN_lpszFace [255];
+static CHAR_T  WIN_lpszFace [255];
 static int   WIN_nHeight;
 static int   WIN_nWidth;
 static int   WIN_fnWeight;
@@ -75,11 +75,11 @@ static int   WIN_fdwStrikeOut;
  *    FontCreated
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static int FontCreated (CHAR alphabet, CHAR family, int highlight, int size, TypeUnit unit)
+static int FontCreated (CHAR_T alphabet, CHAR_T family, int highlight, int size, TypeUnit unit)
 #else  /* __STDC__ */
 static int FontCreated (alphabet, family, highlight, size, unit)
-CHAR     alphabet;
-CHAR     family;
+CHAR_T     alphabet;
+CHAR_T     family;
 int      highlight;
 int      size;
 TypeUnit unit;
@@ -109,11 +109,11 @@ TypeUnit unit;
  *                    characteristics.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static HFONT WIN_LoadFont (CHAR alphabet, CHAR family, int highlight, int size, TypeUnit unit)
+static HFONT WIN_LoadFont (CHAR_T alphabet, CHAR_T family, int highlight, int size, TypeUnit unit)
 #else  /* __STDC__ */
 static HFONT WIN_LoadFont (alphabet, family, highlight, size, unit)
-CHAR     alphabet;
-CHAR     family;
+CHAR_T     alphabet;
+CHAR_T     family;
 int      highlight;
 int      size;
 TypeUnit unit;
@@ -236,10 +236,10 @@ int volpixel;
  *      CharacterWidth returns the width of a char in a given font.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-int                 CharacterWidth (UCHAR c, ptrfont font)
+int                 CharacterWidth (UCHAR_T c, ptrfont font)
 #else  /* __STDC__ */
 int                 CharacterWidth (c, font)
-UCHAR       c;
+UCHAR_T       c;
 ptrfont             font;
 #endif /* __STDC__ */
 {
@@ -270,10 +270,10 @@ ptrfont             font;
  *      CharacterHeight returns the height of a char in a given font.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-int                 CharacterHeight (UCHAR c, ptrfont font)
+int                 CharacterHeight (UCHAR_T c, ptrfont font)
 #else  /* __STDC__ */
 int                 CharacterHeight (c, font)
-UCHAR       c;
+UCHAR_T       c;
 ptrfont             font;
 #endif /* __STDC__ */
 {
@@ -295,10 +295,10 @@ ptrfont             font;
        CharacterAscent returns the ascent of a char in a given font.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-int                 CharacterAscent (UCHAR c, ptrfont font)
+int                 CharacterAscent (UCHAR_T c, ptrfont font)
 #else  /* __STDC__ */
 int                 CharacterAscent (c, font)
-UCHAR       c;
+UCHAR_T       c;
 ptrfont             font;
 #endif /* __STDC__ */
 {
@@ -548,14 +548,14 @@ int                 size;
  *      LoadFont load a given font designed by its name.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-ptrfont             LoadFont (CHAR name[100], int toPatch)
+ptrfont             LoadFont (CHAR_T name[100], int toPatch)
 #else  /* __STDC__ */
 ptrfont             LoadFont (name, toPatch)
-CHAR                name[100];
+CHAR_T                name[100];
 int                 toPatch;
 #endif /* __STDC__ */
 {
-   CHAR                tmp[200];
+   CHAR_T                tmp[200];
    XFontStruct        *result;
    int                 mincar;
    int                 spacewd;
@@ -601,16 +601,16 @@ int                 toPatch;
  *      FontIdentifier computes the name of a Thot font.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                FontIdentifier (CHAR alphabet, CHAR family, int highlight, int size, TypeUnit unit, CHAR r_name[10], CHAR r_nameX[100])
+void                FontIdentifier (CHAR_T alphabet, CHAR_T family, int highlight, int size, TypeUnit unit, CHAR_T r_name[10], CHAR_T r_nameX[100])
 #else  /* __STDC__ */
 void                FontIdentifier (alphabet, family, highlight, size, unit, r_name, r_nameX)
-CHAR                alphabet;
-CHAR                family;
+CHAR_T                alphabet;
+CHAR_T                family;
 int                 highlight;
 int                 size;
 TypeUnit            unit;
-CHAR                r_name[10];
-CHAR                r_nameX[100];
+CHAR_T                r_name[10];
+CHAR_T                r_nameX[100];
 
 #endif /* __STDC__ */
 {
@@ -641,7 +641,7 @@ CHAR                r_nameX[100];
 
    if (UseLucidaFamily)
      {
-	switch ((CHAR) TOLOWER (family))
+	switch ((CHAR_T) TOLOWER (family))
 	      {
 		 case 't':
 		    ustrcat (r_nameX, "bright");
@@ -655,7 +655,7 @@ CHAR                r_nameX[100];
      }
    else
      {
-	switch ((CHAR) TOLOWER (family))
+	switch ((CHAR_T) TOLOWER (family))
 	      {
 		 case 't':
 		    ustrcat (r_nameX, "-times");
@@ -674,14 +674,14 @@ CHAR                r_nameX[100];
 	      }
      }
 
-   switch ((CHAR) TOLOWER (StylesTable[highlight]))
+   switch ((CHAR_T) TOLOWER (StylesTable[highlight]))
 	 {
 	    case 'r':
 	       ustrcat (r_nameX, "-medium-r");
 	       break;
 	    case 'i':
 	    case 'o':
-	       if ((CHAR) TOLOWER (family) == 'h' || (CHAR) TOLOWER (family) == 'c')
+	       if ((CHAR_T) TOLOWER (family) == 'h' || (CHAR_T) TOLOWER (family) == 'c')
 		  ustrcat (r_nameX, "-medium-o");
 	       else
 		  ustrcat (r_nameX, "-medium-i");
@@ -689,19 +689,19 @@ CHAR                r_nameX[100];
 	    case 'b':
 	    case 'g':
 	    case 'q':
-	       if (UseLucidaFamily && (CHAR) TOLOWER (family) == 't')
+	       if (UseLucidaFamily && (CHAR_T) TOLOWER (family) == 't')
 		  ustrcat (r_nameX, "-demibold-r");
 	       else
 		  ustrcat (r_nameX, "-bold-r");
 	       break;
 	 }
 
-   if ((CHAR) TOLOWER (family) == 'h')
+   if ((CHAR_T) TOLOWER (family) == 'h')
       ustrcat (r_nameX, "-normal");	/* narrow helvetica does not exist */
    else
       ustrcat (r_nameX, "-*");
 
-   if ((CHAR) TOLOWER (family) == 's')
+   if ((CHAR_T) TOLOWER (family) == 's')
      {
 	if (UseBitStreamFamily)
 	   sprintf (r_nameX, "%s-*-*-%d-83-83-p-*-*-fontspecific", r_nameX, size * 10);
@@ -714,16 +714,16 @@ CHAR                r_nameX[100];
 	   sprintf (r_nameX, "%s-*-*-%d-83-83", r_nameX, size * 10);
 	else
 	   sprintf (r_nameX, "%s-*-%d-*-75-75", r_nameX, size);
-	if ((CHAR) TOLOWER (family) == 'c')
+	if ((CHAR_T) TOLOWER (family) == 'c')
 	   ustrcat (r_nameX, "-m-*");
 	else
 	   ustrcat (r_nameX, "-p-*");
 
-	if ((CHAR) TOLOWER (alphabet) == 'l')
+	if ((CHAR_T) TOLOWER (alphabet) == 'l')
 	   ustrcat (r_nameX, "-iso8859-1");
-	else if ((CHAR) TOLOWER (alphabet) == 'e')
+	else if ((CHAR_T) TOLOWER (alphabet) == 'e')
 	   ustrcat (r_nameX, "-iso8859-2");
-	else if ((CHAR) TOLOWER (alphabet) == 'g')
+	else if ((CHAR_T) TOLOWER (alphabet) == 'g')
 	   ustrcat (r_nameX, "-*-fontspecific");		/*adobe */
 	else
 	  {
@@ -742,18 +742,18 @@ CHAR                r_nameX[100];
  *      ReadFont do a raw Thot font loading (bypasses the font cache).
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-ptrfont             ReadFont (CHAR alphabet, CHAR family, int highlight, int size, TypeUnit unit)
+ptrfont             ReadFont (CHAR_T alphabet, CHAR_T family, int highlight, int size, TypeUnit unit)
 #else  /* __STDC__ */
 ptrfont             ReadFont (alphabet, family, highlight, size, unit)
-CHAR                alphabet;
-CHAR                family;
+CHAR_T                alphabet;
+CHAR_T                family;
 int                 highlight;
 int                 size;
 TypeUnit            unit;
 
 #endif /* __STDC__ */
 {
-   CHAR                name[10], nameX[100];
+   CHAR_T                name[10], nameX[100];
 
    FontIdentifier (alphabet, family, highlight, size, unit, name, nameX);
 #  ifndef _WINDOWS
@@ -769,11 +769,11 @@ TypeUnit            unit;
  *		a given frame.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static ptrfont      LoadNearestFont (CHAR alphabet, CHAR family, int highlight, int size, TypeUnit unit, int frame, boolean increase)
+static ptrfont      LoadNearestFont (CHAR_T alphabet, CHAR_T family, int highlight, int size, TypeUnit unit, int frame, boolean increase)
 #else  /* __STDC__ */
 static ptrfont      LoadNearestFont (alphabet, family, highlight, size, unit, frame, increase)
-CHAR                alphabet;
-CHAR                family;
+CHAR_T                alphabet;
+CHAR_T                family;
 int                 highlight;
 int                 size;
 TypeUnit            unit;
@@ -783,11 +783,11 @@ boolean             increase;
 {
   int                 i, j, deb, index;
   int                 mask;
-  CHAR                text[10], PsName[10], textX[100];
+  CHAR_T                text[10], PsName[10], textX[100];
 #ifdef _WINDOWS
   SIZE                wsize;
   TEXTMETRIC          textMetric;
-  CHAR                fontSize[5];
+  CHAR_T                fontSize[5];
   STRING              pText;
   STRING              pFontSize;
   int                 c;
@@ -988,11 +988,11 @@ boolean             increase;
  *		a given frame.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-ptrfont             ThotLoadFont (CHAR alphabet, CHAR family, int highlight, int size, TypeUnit unit, int frame)
+ptrfont             ThotLoadFont (CHAR_T alphabet, CHAR_T family, int highlight, int size, TypeUnit unit, int frame)
 #else  /* __STDC__ */
 ptrfont             ThotLoadFont (alphabet, family, highlight, size, unit, frame)
-CHAR                alphabet;
-CHAR                family;
+CHAR_T                alphabet;
+CHAR_T                family;
 int                 highlight;
 int                 size;
 TypeUnit            unit;
@@ -1028,13 +1028,13 @@ STRING              name;
 {
 #  ifndef _WINDOWS
    int                 ndir, ncurrent;
-   CHAR                FONT_PATH[128];
+   CHAR_T                FONT_PATH[128];
    STRING              fontpath;
 #  endif /* _WINDOWS */
    STRING*             dirlist = NULL;
    STRING*             currentlist = NULL;
    STRING              value;
-   CHAR                alphabet;
+   CHAR_T                alphabet;
    int                 f3;
    int                 i;
 

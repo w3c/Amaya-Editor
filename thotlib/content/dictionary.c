@@ -39,7 +39,7 @@ static STRING       dictPath;	/* environment variable DICOPAR */
 static PtrDict      dictTable[MaxDictionaries];
 
 unsigned            ReverseCode[NbLtr];
-UCHAR       Code[256];	/* Alphabet characters */
+UCHAR_T       Code[256];	/* Alphabet characters */
 
 #include "memory_f.h"
 #include "fileaccess_f.h"
@@ -53,7 +53,7 @@ static void           LoadAlphabet ()
 {
   FILE               *falpha;
   Buffer              alphaName;
-  UCHAR       x;
+  UCHAR_T       x;
   int                 i;
   
   if (dictPath != NULL)
@@ -69,12 +69,12 @@ static void           LoadAlphabet ()
   if ((falpha = fopen (alphaName, "r")) != NULL)
     {
       for (i = 0; i < 256; i++)
-	Code[i] = (UCHAR) 100;
+	Code[i] = (UCHAR_T) 100;
       i = 1;
       while ((fscanf (falpha, "%c ", &x) != EOF) && (i < NbLtr))
 	{
-	  Code[x] = (UCHAR) i;
-	  ReverseCode[i++] = (UCHAR) x;
+	  Code[x] = (UCHAR_T) i;
+	  ReverseCode[i++] = (UCHAR_T) x;
 	}
       fclose (falpha);
     }
@@ -94,8 +94,8 @@ PtrDict             dict;
 #endif /* __STDC__ */
 {
    int                 word, i;
-   CHAR                lastWord[MAX_WORD_LEN];
-   CHAR                currentWord[MAX_WORD_LEN];
+   CHAR_T                lastWord[MAX_WORD_LEN];
+   CHAR_T                currentWord[MAX_WORD_LEN];
 
    /* An empty dictionary is not considered  (DictNbWords = -1) */
    if (dict->DictNbWords >= 0)
@@ -262,7 +262,7 @@ STRING              dictDirectory;
 #endif /* __STDC__ */
 {
   int                 ret, i;
-  CHAR                tempbuffer[THOT_MAX_CHAR];
+  CHAR_T                tempbuffer[THOT_MAX_CHAR];
 
   FindCompleteName (dictName, "dic", dictDirectory, tempbuffer, &i);
   if (TtaFileExist (tempbuffer) == 0)	/* Unknown file */
@@ -344,8 +344,8 @@ FILE               *dictFile;
 PtrDict             dict;
 #endif /* __STDC__ */
 {
-   CHAR             wordGotten[MAX_WORD_LEN];
-   CHAR             lineGotten[MAXLIGNE];
+   CHAR_T             wordGotten[MAX_WORD_LEN];
+   CHAR_T             lineGotten[MAXLIGNE];
    STRING           plineGotten;
    int              i, k, length, nbGotten, last_word;
    int              MaxWord, maxWord;
@@ -377,7 +377,7 @@ PtrDict             dict;
 		  currentLength = length;
 	       }
 	     for (k = 0; k < length; k++)
-		dict->DictString[nbChar++] = (CHAR) Code[(UCHAR) wordGotten[k]];
+		dict->DictString[nbChar++] = (CHAR_T) Code[(UCHAR_T) wordGotten[k]];
 	     /* End of a word */
 	     dict->DictString[nbChar++] = EOS;
 
@@ -429,7 +429,7 @@ boolean             treated;
 boolean             toTreat;
 #endif /* __STDC__ */
 {
-  CHAR                tempbuffer[THOT_MAX_CHAR];
+  CHAR_T                tempbuffer[THOT_MAX_CHAR];
   boolean             new = FALSE;
   boolean             ret;
   FILE               *dictFile;

@@ -7,7 +7,7 @@
 #ifdef __STDC__
 
 extern boolean TtaReadByte ( BinFile file,
-                             PCHAR bval );
+                             PCHAR_T bval );
 extern boolean TtaReadBool ( BinFile file,
                              boolean * bval );
 extern boolean TtaReadShort ( BinFile file,
@@ -23,7 +23,7 @@ extern void TtaReadClose ( BinFile file );
 extern BinFile TtaWriteOpen ( CONST STRING filename );
 extern void TtaWriteClose ( BinFile file );
 extern boolean TtaWriteByte ( BinFile file,
-                              CHAR bval );
+                              CHAR_T bval );
 extern boolean TtaWriteShort ( BinFile file,
                                int sval );
 extern boolean TtaWriteInteger ( BinFile file,
@@ -64,7 +64,7 @@ extern boolean TtaCheckDirectory ( STRING directory );
 #else /* __STDC__ */
 
 extern boolean TtaReadByte (/* BinFile file,
-                               PCHAR bval */);
+                               PCHAR_T bval */);
 extern boolean TtaReadBool (/* BinFile file,
                                boolean * bval */);
 extern boolean TtaReadShort (/* BinFile file,
@@ -80,7 +80,7 @@ extern void TtaReadClose (/* BinFile file */);
 extern BinFile TtaWriteOpen (/* CONST STRING filename */);
 extern void TtaWriteClose (/* BinFile file */);
 extern boolean TtaWriteByte (/* BinFile file,
-                                CHAR bval */);
+                                CHAR_T bval */);
 extern boolean TtaWriteShort (/* BinFile file,
                                  int sval */);
 extern boolean TtaWriteInteger (/* BinFile file,

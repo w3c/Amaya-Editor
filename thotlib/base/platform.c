@@ -32,10 +32,10 @@
    Si filename est un repertoire, on retourne 0.           
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-int                 TtaFileExist (CONST char *filename)
+int                 TtaFileExist (CONST STRING filename)
 #else  /* __STDC__ */
 int                 TtaFileExist (filename)
-CONST char         *filename;
+CONST STRING        filename;
 
 #endif /* __STDC__ */
 {
@@ -82,10 +82,10 @@ CONST char         *filename;
    TtaFileUnlink : remove a file.                                     
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-int                 TtaFileUnlink (CONST char *filename)
+int                 TtaFileUnlink (CONST STRING filename)
 #else  /* __STDC__ */
 int                 TtaFileUnlink (filename)
-CONST char         *filename;
+CONST STRING        filename;
 
 #endif /* __STDC__ */
 {
@@ -131,19 +131,19 @@ ThotDirBrowse      *me;
      {
 	ls_car = fgetc (me->ls_stream);
 	/* saute les caracteres de separation */
-	while (((char) ls_car == ' ') || ((char) ls_car == '\t') ||
-	       ((char) ls_car == '\n'))
+	while (((CHAR_T) ls_car == ' ') || ((CHAR_T) ls_car == '\t') ||
+	       ((CHAR_T) ls_car == '\n'))
 	   ls_car = fgetc (me->ls_stream);
 	notEof = TRUE;
 	i = 0;
-	while (((char) ls_car != ' ') && ((char) ls_car != '\t') &&
-	       ((char) ls_car != '\n') && (notEof))
+	while (((CHAR_T) ls_car != ' ') && ((CHAR_T) ls_car != '\t') &&
+	       ((CHAR_T) ls_car != '\n') && (notEof))
 	  {
 	     if (ls_car == EOF)
 		notEof = FALSE;
 	     else
 	       {
-		  me->buf[i] = (char) ls_car;
+		  me->buf[i] = (CHAR_T) ls_car;
 		  i++;
 		  if (i == me->bufLen)
 		    {
@@ -173,17 +173,17 @@ ThotDirBrowse      *me;
    platform dependent ThotDirBrowse structure                
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-int                 ThotDirBrowse_first (ThotDirBrowse * me, char *dir, char *name, char *ext)
+int                 ThotDirBrowse_first (ThotDirBrowse * me, STRING dir, STRING name, STRING ext)
 #else  /* __STDC__ */
 int                 ThotDirBrowse_first (me, dir, name, ext)
 ThotDirBrowse      *me;
-char               *dir;
-char               *name;
-char               *ext;
+STRING              dir;
+STRING              name;
+STRING              ext;
 
 #endif /* __STDC__ */
 {
-   char                space[MAX_PATH];
+   CHAR_T                space[MAX_PATH];
    int                 ret;
 
    me->dirLen = strlen (dir);
@@ -279,14 +279,14 @@ ThotDirBrowse      *me;
 #ifdef INCLUDE_TESTING_CODE
 /* ThotFile_test - use to test ThotFile on any platform
  */
-void                ThotFile_test (char *name)
+void                ThotFile_test (STRING name)
 {
    ThotFileHandle      handle = ThotFile_BADHANDLE;
    ThotFileOffset      offset;
    ThotFileInfo        info;
    int                 i;
-   char                space[16];
-   CONST char         *format = "%15d\0";
+   CHAR_T              space[16];
+   CONST STRING        format = (STRING) "%15d\0";
 
    space[sizeof (space) - 1] = 0;
    printf ("ThotFile_test: opening %s for CREATE/READ/WRITE\n", name);
@@ -373,10 +373,10 @@ void                ThotFile_test (char *name)
    TtaFileOpen returns: ThotFile_BADHANDLE: error handle:		
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-ThotFileHandle      TtaFileOpen (CONST char *name, ThotFileMode mode)
+ThotFileHandle      TtaFileOpen (CONST STRING name, ThotFileMode mode)
 #else  /* __STDC__ */
 ThotFileHandle      TtaFileOpen (name, mode)
-CONST char         *name;
+CONST STRING        name;
 ThotFileMode        mode;
 
 #endif /* __STDC__ */
@@ -560,18 +560,18 @@ ThotFileInfo       *pInfo;
    TtaFileCopy copies a source file into a target file.              
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                TtaFileCopy (CONST char *sourceFileName, CONST char *targetFileName)
+void                TtaFileCopy (CONST STRING sourceFileName, CONST STRING targetFileName)
 #else
 void                TtaFileCopy (sourceFileName, targetFileName)
-CONST char         *sourceFileName;
-CONST char         *targetFileName;
+CONST STRING        sourceFileName;
+CONST STRING        targetFileName;
 
 #endif
 {
    FILE               *targetf;
    FILE               *sourcef;
    int                 size;
-   char                buffer[8192];
+   CHAR_T                buffer[8192];
 
    if (strcmp (sourceFileName, targetFileName) != 0)
      {
@@ -615,18 +615,18 @@ CONST char         *targetFileName;
   if their content differs, TRUE if they are identical.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             TtaCompareFiles(CONST char *file1, CONST char *file2)
+boolean             TtaCompareFiles(CONST STRING file1, CONST STRING file2)
 #else
 boolean             TtaCompareFiles(file1, file2)
-CONST char         *file1;
-CONST char         *file2;
+CONST STRING        file1;
+CONST STRING        file2;
 
 #endif
 {
     FILE *f1;
     FILE *f2;
-    char buffer1[512];
-    char buffer2[512];
+    CHAR_T buffer1[512];
+    CHAR_T buffer2[512];
     size_t res1;
     size_t res2;
 

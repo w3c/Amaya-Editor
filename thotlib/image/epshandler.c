@@ -68,7 +68,7 @@ int                *hif;
    FILE               *fin;
    int                 c;
    STRING              pt; 
-   CHAR                buff[BUFSIZE];
+   CHAR_T                buff[BUFSIZE];
    int                 X2, Y2;
 
    *xif = 0;

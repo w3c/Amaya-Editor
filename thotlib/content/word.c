@@ -45,10 +45,10 @@ static int          lastCharInitialSelection;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-UCHAR       NextCharacter (PtrTextBuffer * buffer, int *rank)
+UCHAR_T       NextCharacter (PtrTextBuffer * buffer, int *rank)
 
 #else  /* __STDC__ */
-UCHAR       NextCharacter (buffer, rank)
+UCHAR_T       NextCharacter (buffer, rank)
 PtrTextBuffer      *buffer;
 int                *rank;
 
@@ -85,10 +85,10 @@ int                *rank;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-UCHAR       PreviousCharacter (PtrTextBuffer * buffer, int *rank)
+UCHAR_T       PreviousCharacter (PtrTextBuffer * buffer, int *rank)
 
 #else  /* __STDC__ */
-UCHAR       PreviousCharacter (buffer, rank)
+UCHAR_T       PreviousCharacter (buffer, rank)
 PtrTextBuffer      *buffer;
 int                *rank;
 
@@ -405,13 +405,13 @@ PtrSearchContext    context;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-boolean             SearchNextWord (PtrElement * curEl, int *curChar, CHAR word[MAX_WORD_LEN], PtrSearchContext context)
+boolean             SearchNextWord (PtrElement * curEl, int *curChar, CHAR_T word[MAX_WORD_LEN], PtrSearchContext context)
 
 #else  /* __STDC__ */
 boolean             SearchNextWord (curEl, curChar, word, context)
 PtrElement         *curEl;
 int                *curChar;
-CHAR                word[MAX_WORD_LEN];
+CHAR_T                word[MAX_WORD_LEN];
 PtrSearchContext    context;
 
 #endif /* __STDC__ */
@@ -423,7 +423,7 @@ PtrSearchContext    context;
    int                 len;
    int                 index;
    PtrTextBuffer       pBuf;
-   UCHAR       charact;
+   UCHAR_T       charact;
 
    pEl = *curEl;
    iChar = *curChar;
@@ -565,13 +565,13 @@ PtrSearchContext    context;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-boolean             SearchPreviousWord (PtrElement * curEl, int *curChar, CHAR word[MAX_WORD_LEN], PtrSearchContext context)
+boolean             SearchPreviousWord (PtrElement * curEl, int *curChar, CHAR_T word[MAX_WORD_LEN], PtrSearchContext context)
 
 #else  /* __STDC__ */
 boolean             SearchPreviousWord (curEl, curChar, word, context)
 PtrElement         *curEl;
 int                *curChar;
-CHAR                word[MAX_WORD_LEN];
+CHAR_T                word[MAX_WORD_LEN];
 PtrSearchContext    context;
 
 #endif /* __STDC__ */
@@ -583,8 +583,8 @@ PtrSearchContext    context;
    int                 len;
    int                 index;
    PtrTextBuffer       pBuf;
-   UCHAR       charact;
-   CHAR                reverse[MAX_WORD_LEN];
+   UCHAR_T       charact;
+   CHAR_T                reverse[MAX_WORD_LEN];
 
    pEl = *curEl;
    iChar = *curChar;

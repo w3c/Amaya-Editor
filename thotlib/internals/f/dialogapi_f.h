@@ -41,7 +41,7 @@ extern void TtaNewPopup ( int ref,
                           int number,
                           STRING text,
                           STRING equiv,
-                          CHAR button );
+                          CHAR_T button );
 extern void TtaNewIconMenu ( int ref,
                              int ref_parent,
                              int entry,
@@ -86,7 +86,7 @@ extern void TtaNewForm ( int ref,
                          STRING title,
                          boolean horizontal,
                          int package,
-                         CHAR button,
+                         CHAR_T button,
                          int dbutton );
 extern void TtaNewSheet ( int ref,
                           ThotWidget parent,
@@ -95,7 +95,7 @@ extern void TtaNewSheet ( int ref,
                           STRING text,
                           boolean horizontal,
                           int package,
-                          CHAR button,
+                          CHAR_T button,
                           int dbutton );
 extern void TtaNewDialogSheet ( int ref,
                                 ThotWidget parent,
@@ -104,7 +104,7 @@ extern void TtaNewDialogSheet ( int ref,
                                 STRING text,
                                 boolean horizontal,
                                 int package,
-                                CHAR button );
+                                CHAR_T button );
 extern void TtaAttachForm ( int ref );
 extern void TtaDetachForm ( int ref );
 extern void TtaNewSelector ( int ref,
@@ -184,7 +184,7 @@ extern void TtaNewPopup (/* int ref,
                             int number,
                             STRING text,
                             STRING equiv,
-                            CHAR button */);
+                            CHAR_T button */);
 extern void TtaNewIconMenu (/* int ref,
                                int ref_parent,
                                int entry,
@@ -229,7 +229,7 @@ extern void TtaNewForm (/* int ref,
                            STRING title,
                            boolean horizontal,
                            int package,
-                           CHAR button,
+                           CHAR_T button,
                            int dbutton */);
 extern void TtaNewSheet (/* int ref,
                             ThotWidget parent,
@@ -238,7 +238,7 @@ extern void TtaNewSheet (/* int ref,
                             STRING text,
                             boolean horizontal,
                             int package,
-                            CHAR button,
+                            CHAR_T button,
                             int dbutton */);
 extern void TtaNewDialogSheet (/* int ref,
                                   ThotWidget parent,
@@ -247,7 +247,7 @@ extern void TtaNewDialogSheet (/* int ref,
                                   STRING text,
                                   boolean horizontal,
                                   int package,
-                                  CHAR button */);
+                                  CHAR_T button */);
 extern void TtaAttachForm (/* int ref */);
 extern void TtaDetachForm (/* int ref */);
 extern void TtaNewSelector (/* int ref,

@@ -323,7 +323,7 @@ boolean             inAbtractBox;
 #endif /* __STDC__ */
 {
    PtrAbstractBox      pChildAb;
-   CHAR                shape;
+   CHAR_T              shape;
 
    if (pAb->AbLeafType == LtCompound && !inAbtractBox)
      {

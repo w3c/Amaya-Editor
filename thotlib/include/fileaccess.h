@@ -65,8 +65,8 @@ typedef long ThotFileOffset;
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern int TtaFileExist ( CONST char *filename );
-extern int TtaFileUnlink ( CONST char *filename );
+extern int TtaFileExist ( CONST STRING filename );
+extern int TtaFileUnlink ( CONST STRING filename );
 extern int TtaFileClose ( ThotFileHandle handle );
 extern int TtaFileClose ( ThotFileHandle handle );
 extern int TtaFileRead ( ThotFileHandle handle,
@@ -80,11 +80,11 @@ extern ThotFileOffset TtaFileSeek ( ThotFileHandle handle,
                                     ThotFileOrigin origin );
 extern int TtaFileStat ( ThotFileHandle handle,
                          ThotFileInfo * pInfo );
-extern void TtaFileCopy ( CONST char *sourceFileName,
-                          CONST char *targetFileName );
+extern void TtaFileCopy ( CONST STRING sourceFileName,
+                          CONST STRING targetFileName );
 
 extern boolean TtaReadByte ( BinFile file,
-                             char *bval );
+                             STRING bval );
 extern boolean TtaReadBool ( BinFile file,
                              boolean * bval );
 extern boolean TtaReadShort ( BinFile file,
@@ -94,18 +94,18 @@ extern boolean TtaReadSignedShort ( BinFile file,
 extern boolean TtaReadInteger ( BinFile file,
                                 int *sval );
 extern boolean TtaReadName ( BinFile file,
-                             char *name );
+                             STRING name );
 extern void TtaReadClose ( BinFile file );
 extern void TtaWriteClose ( BinFile file );
 extern boolean TtaWriteByte ( BinFile file,
-                              char bval );
+                              CHAR_T bval );
 extern boolean TtaWriteShort ( BinFile file,
                                int sval );
 extern boolean TtaWriteInteger ( BinFile file,
                                  int lval );
-extern boolean TtaCompareFiles ( CONST char *file1,
-                                 CONST char *file2 );
-extern boolean TtaCheckDirectory ( char *directory );
+extern boolean TtaCompareFiles ( CONST STRING file1,
+                                 CONST STRING file2 );
+extern boolean TtaCheckDirectory ( STRING directory );
 
 #else /* __STDC__ */
 

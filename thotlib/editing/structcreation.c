@@ -2084,7 +2084,7 @@ boolean             desc;
 {
    PtrElement          pNewEl, pChild, pRet;
    int                 choiceTypeNum;
-   CHAR                menuBuf[MAX_TXT_LEN];
+   CHAR_T                menuBuf[MAX_TXT_LEN];
    Name                menuTitle;
    int                 nItems;
    boolean             ret, ok, stop;
@@ -3581,7 +3581,7 @@ void                CreateInsertPageMenu ()
    PtrDocument         pDoc;
    int                 firstChar, lastChar, nItems, prevMenuInd, menuInd;
    Name                titre;
-   CHAR                menuBuf[MAX_TXT_LEN];
+   CHAR_T                menuBuf[MAX_TXT_LEN];
    Name                typeName;
 
    menuInd = 0;
@@ -3654,12 +3654,12 @@ void                CreateInsertPageMenu ()
    Au retour, ret= vrai si le travail a ete fait, faux sinon.	
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                CreatePasteIncludeCmd (boolean create, boolean paste, CHAR button, boolean * ret)
+void                CreatePasteIncludeCmd (boolean create, boolean paste, CHAR_T button, boolean * ret)
 #else  /* __STDC__ */
 void                CreatePasteIncludeCmd (create, paste, button, ret)
 boolean             create;
 boolean             paste;
-CHAR                button;
+CHAR_T                button;
 boolean            *ret;
 
 #endif /* __STDC__ */
@@ -3669,7 +3669,7 @@ boolean            *ret;
    int                 firstChar, lastChar, menuRef, nItems, prevMenuInd,
                        menuInd, i, distance, typeNum, refTypeNum;
    Name                menuTitle;
-   CHAR                menuBuf[MAX_TXT_LEN];
+   CHAR_T                menuBuf[MAX_TXT_LEN];
    boolean             isList, emptyRef, optional, ok;
    SRule              *pSRule, *pParentSRule;
    PtrSSchema          pSS, pAncestSS, pSSExt;

@@ -10,7 +10,7 @@ extern Pixmap TtaCreatePixmapLogo ( STRING *data );
 extern void ConfigTranslateSSchema ( PtrSSchema pSS );
 extern void RedisplayCopies ( void );
 extern void DrawAddAttr ( void );
-extern void DrawChar ( UCHAR car,
+extern void DrawChar ( UCHAR_T car,
                        int frame,
                        int x,
                        int y,
@@ -102,7 +102,7 @@ extern Pixmap TtaCreatePixmapLogo (/* STRING *data */);
 extern void ConfigTranslateSSchema (/* PtrSSchema pSS */);
 extern void RedisplayCopies (/* void */);
 extern void DrawAddAttr (/* void */);
-extern void DrawChar (/* UCHAR car,
+extern void DrawChar (/* UCHAR_T car,
                          int frame,
                          int x,
                          int y,

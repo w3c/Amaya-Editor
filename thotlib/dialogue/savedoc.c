@@ -58,7 +58,7 @@
 #include "actions_f.h"
 
 extern int          CurrentDialog;
-CHAR                DefaultFileSuffix[5];        
+CHAR_T                DefaultFileSuffix[5];        
 static PathBuffer   SaveDirectoryName;
 static PathBuffer   SaveFileName;
 static PathBuffer   TraductionSchemaName;
@@ -81,8 +81,8 @@ int                 ent;
 
 #endif /* __STDC__ */
 {
-   CHAR                fontname[100];
-   CHAR                text[20];
+   CHAR_T                fontname[100];
+   CHAR_T                text[20];
 
    if (TtWDepth > 1)
       TtaRedrawMenuEntry (ref, ent, NULL, InactiveB_Color, 0);
@@ -194,7 +194,7 @@ STRING              txt;
    PathBuffer          BufDir;
    int                 i, nbitem;
    int                 val;
-   CHAR                URL_DIR_SEP;
+   CHAR_T                URL_DIR_SEP;
 
    if (typedata == STRING_DATA && txt && ustrchr (txt, '/'))
 	  URL_DIR_SEP = '/';
@@ -377,9 +377,9 @@ PtrDocument         pDoc;
 #endif /* __STDC__ */
 {
    int                 nbitem;
-   CHAR                BufMenu[MAX_TXT_LEN];
-   CHAR                BufMenuB[MAX_TXT_LEN];
-   CHAR                BufDir[MAX_PATH];
+   CHAR_T                BufMenu[MAX_TXT_LEN];
+   CHAR_T                BufMenuB[MAX_TXT_LEN];
+   CHAR_T                BufDir[MAX_PATH];
    STRING              src;
    STRING              dest;
    int                 i, k, l, Indx,entry;

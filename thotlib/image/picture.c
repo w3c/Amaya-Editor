@@ -91,7 +91,7 @@ STRING FileExtension[] = {
       ".xbm", ".eps", ".xpm", ".gif", ".jpg", ".png"
 };
 
-static UCHAR MirrorBytes[0x100] = {
+static UCHAR_T MirrorBytes[0x100] = {
    0x00, 0x80, 0x40, 0xc0, 0x20, 0xa0, 0x60, 0xe0,
    0x10, 0x90, 0x50, 0xd0, 0x30, 0xb0, 0x70, 0xf0,
    0x08, 0x88, 0x48, 0xc8, 0x28, 0xa8, 0x68, 0xe8,
@@ -1321,7 +1321,7 @@ STRING              simplename;
 #endif /* __STDC__ */
 {
    register STRING     from, to;
-   CHAR                URL_DIR_SEP;
+   CHAR_T                URL_DIR_SEP;
 
    if (filename && ustrchr (filename, '/'))
 	  URL_DIR_SEP = '/';
@@ -1367,7 +1367,7 @@ int                 hlogo;
 #  ifndef _WINDOWS
    int                 fileNameWidth;
    int                 fnposx, fnposy;
-   CHAR                filename[255];
+   CHAR_T                filename[255];
 #  endif /* !_WINDOWS */
    Drawable            drawable;
    Pixmap              pixmap;

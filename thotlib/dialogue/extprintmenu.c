@@ -167,7 +167,7 @@ STRING              txt;
 {
   int i;
   boolean okprint;
-  CHAR BufMenu[MAX_TXT_LEN];
+  CHAR_T BufMenu[MAX_TXT_LEN];
 
   switch (ref)
     {
@@ -247,7 +247,7 @@ View                view;
 {
    PtrDocument         pDoc;
    int                 i;
-   CHAR                BufMenu[MAX_TXT_LEN];
+   CHAR_T                BufMenu[MAX_TXT_LEN];
 
    docPrint = document;
    pDoc = LoadedDocument[document - 1];

@@ -297,7 +297,7 @@ STRING              documentName;
 {
   PtrDocument         pDoc;
   BinFile             pivotFile;
-  CHAR                path[250];
+  CHAR_T                path[250];
   int                 i;
 
   UserErrorCode = 0;
@@ -469,7 +469,7 @@ Document            document;
   PtrDocument         pDoc;
   int                 i;
   PathBuffer          DirectoryOrig;
-  CHAR                text[MAX_TXT_LEN];
+  CHAR_T                text[MAX_TXT_LEN];
 
   UserErrorCode = 0;
   /* verifies the parameter document */
@@ -1750,10 +1750,10 @@ STRING              presentationName;
 {
    PathBuffer          DirBuffer;
    BinFile             file;
-   CHAR                text[MAX_TXT_LEN];
+   CHAR_T                text[MAX_TXT_LEN];
    int                 i;
    boolean             error;
-   CHAR                charGotten;
+   CHAR_T                charGotten;
    LabelString         lab;
    int                 currentVersion = 0;
 
@@ -1775,7 +1775,7 @@ STRING              presentationName;
 	/* Gets the version number if it exists */
 	if (!TtaReadByte (file, &charGotten))
 	   error = TRUE;
-	if (charGotten == (CHAR) C_PIV_VERSION)
+	if (charGotten == (CHAR_T) C_PIV_VERSION)
 	  {
 	     if (!TtaReadByte (file, &charGotten))
 		error = TRUE;
@@ -1787,8 +1787,8 @@ STRING              presentationName;
 		error = TRUE;
 	  }
 	/* Gets the label max. of the document if it is present */
-	if (!error && (charGotten == (CHAR) C_PIV_SHORT_LABEL || charGotten == (CHAR) C_PIV_LONG_LABEL ||
-		       charGotten == (CHAR) C_PIV_LABEL))
+	if (!error && (charGotten == (CHAR_T) C_PIV_SHORT_LABEL || charGotten == (CHAR_T) C_PIV_LONG_LABEL ||
+		       charGotten == (CHAR_T) C_PIV_LABEL))
 	  {
 	     ReadLabel (charGotten, lab, file);
 	     if (!TtaReadByte (file, &charGotten))
@@ -1798,7 +1798,7 @@ STRING              presentationName;
 	if (currentVersion >= 4)
 	  {
 	     /* Gets the table of laguages used by the document */
-	     while (charGotten == (CHAR) C_PIV_LANG && !error)
+	     while (charGotten == (CHAR_T) C_PIV_LANG && !error)
 	       {
 		  do
 		     if (!TtaReadByte (file, &charGotten))
@@ -1814,14 +1814,14 @@ STRING              presentationName;
 	  }
 
 	/* Gets the comment of the document if it exists */
-	if (!error && (charGotten == (CHAR) C_PIV_COMMENT || charGotten == (CHAR) C_PIV_OLD_COMMENT))
+	if (!error && (charGotten == (CHAR_T) C_PIV_COMMENT || charGotten == (CHAR_T) C_PIV_OLD_COMMENT))
 	  {
 	     /* Get the byte following the comment */
 	     if (!TtaReadByte (file, &charGotten))
 		error = TRUE;
 	  }
 	/* Gets the name of the schema structure which is at the begenning of the pivot file */
-	if (!error && charGotten != (CHAR) C_PIV_NATURE)
+	if (!error && charGotten != (CHAR_T) C_PIV_NATURE)
 	   error = TRUE;
 	if (!error)
 	  {

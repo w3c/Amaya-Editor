@@ -114,7 +114,7 @@ static int   strIndex ;
 
 extern int     tipIndex;
 extern int     CommandToString [MAX_FRAME][MAX_BUTTON];
-extern CHAR    szTbStrings [4096];
+extern CHAR_T    szTbStrings [4096];
 
 #define ToolBar_InsertButton(hwnd, idButton, lpButton) \
     (BOOL)SendMessage((hwnd), TB_INSERTBUTTON, (WPARAM)idButton, (LPARAM)(LPTBBUTTON)lpButton)
@@ -122,20 +122,20 @@ extern CHAR    szTbStrings [4096];
 HMENU hmenu;
 int   menu_item ;
 #ifdef __STDC__
-LPSTR GetString (int frame, int i_String)
+STRING GetString (int frame, int i_String)
 #else  /* __STDC__ */
-LPSTR GetString (frame, i_String)
+STRING GetString (frame, i_String)
 int frane;
 int i_String;
 #endif /* __STDC__ */
 {
    int i, cb ;
-   LPSTR pString ;
+   STRING pString ;
 
    /* Cycle through to requested string */
    pString = &szTbStrings [0] ;
    for (i = 0 ; i < i_String ; i++) {
-       cb = lstrlen (pString) ;
+       cb = ustrlen (pString) ;
        pString += (cb + 1) ;
    }
 
@@ -165,7 +165,7 @@ LPARAM lParam;
       int iButton = nCust[frame][ptbn->iItem] ;
 
       if (iButton != -1) {
-         lstrcpy (ptbn->pszText, GetString (frame, ptbn->iItem)) ;
+         ustrcpy ((STRING) ptbn->pszText, GetString (frame, ptbn->iItem)) ;
          memcpy (&ptbn->tbButton, FrameTable[frame].Button[iButton], sizeof (TBBUTTON)) ;
          return 1 ;
       }
@@ -255,10 +255,10 @@ int                 number;
 #endif /* __STDC__ */
 {
    int                 i;
-   CHAR                namef1[100];
-   CHAR                namef2[100];
-   CHAR                text[100];
-   CHAR                alphabet;
+   CHAR_T                namef1[100];
+   CHAR_T                namef2[100];
+   CHAR_T                text[100];
+   CHAR_T                alphabet;
 
 #  ifndef _WINDOWS
    Display            *Dp;
@@ -279,7 +279,7 @@ int                 number;
      {
 	i = 1;
 	while (i < appArgc - 1)
-	   if (ustrcmp (appArgv[i], "-display") != 0)
+	   if (ustrcmp (appArgv[i], (STRING) "-display") != 0)
 	      i++;
 	   else
 	     {
@@ -337,96 +337,96 @@ int                 number;
 	   MenuActionList[FreeMenuAction].ActionActive[i] = TRUE;
      }
    for (i = FreeMenuAction;i < MaxMenuAction;i++) {
-	MenuActionList[i].ActionName = "";
+	MenuActionList[i].ActionName = (STRING)"";
 	MenuActionList[i].Call_Action = NULL;
 	MenuActionList[i].User_Action = NULL;
 	MenuActionList[i].ActionEquiv = NULL;
    }
 
    /* Initialisation des actions internes obligatoires */
-   MenuActionList[0].ActionName = CST_InsertChar;	/* action InsertChar() */
+   MenuActionList[0].ActionName = (STRING) CST_InsertChar;	/* action InsertChar() */
    MenuActionList[0].Call_Action = (Proc) NULL;
    MenuActionList[0].User_Action = (UserProc) NULL;
 
-   MenuActionList[CMD_DeletePrevChar].ActionName = CST_DeletePrevChar;
+   MenuActionList[CMD_DeletePrevChar].ActionName = (STRING) CST_DeletePrevChar;
    MenuActionList[CMD_DeletePrevChar].Call_Action = (Proc) NULL;
    MenuActionList[CMD_DeletePrevChar].User_Action = (UserProc) NULL;
-   MenuActionList[CMD_DeletePrevChar].ActionEquiv = CST_EquivBS;
+   MenuActionList[CMD_DeletePrevChar].ActionEquiv = (STRING) CST_EquivBS;
 
-   MenuActionList[CMD_DeleteSelection].ActionName = CST_DeleteSelection;
+   MenuActionList[CMD_DeleteSelection].ActionName = (STRING) CST_DeleteSelection;
    MenuActionList[CMD_DeleteSelection].Call_Action = (Proc) NULL;
    MenuActionList[CMD_DeleteSelection].User_Action = (UserProc) NULL;
-   MenuActionList[CMD_DeleteSelection].ActionEquiv = CST_EquivDel;
+   MenuActionList[CMD_DeleteSelection].ActionEquiv = (STRING) CST_EquivDel;
 
-   MenuActionList[CMD_BackwardChar].ActionName = CST_BackwardChar;
+   MenuActionList[CMD_BackwardChar].ActionName = (STRING) CST_BackwardChar;
    MenuActionList[CMD_BackwardChar].Call_Action = (Proc) TtcPreviousChar;
    MenuActionList[CMD_BackwardChar].User_Action = (UserProc) NULL;
 
-   MenuActionList[CMD_ForwardChar].ActionName = CST_ForwardChar;
+   MenuActionList[CMD_ForwardChar].ActionName = (STRING) CST_ForwardChar;
    MenuActionList[CMD_ForwardChar].Call_Action = (Proc) TtcNextChar;
    MenuActionList[CMD_ForwardChar].User_Action = (UserProc) NULL;
 
-   MenuActionList[CMD_PreviousLine].ActionName = CST_PreviousLine;
+   MenuActionList[CMD_PreviousLine].ActionName = (STRING) CST_PreviousLine;
    MenuActionList[CMD_PreviousLine].Call_Action = (Proc) TtcPreviousLine;
    MenuActionList[CMD_PreviousLine].User_Action = (UserProc) NULL;
 
-   MenuActionList[CMD_NextLine].ActionName = CST_NextLine;
+   MenuActionList[CMD_NextLine].ActionName = (STRING) CST_NextLine;
    MenuActionList[CMD_NextLine].Call_Action = (Proc) TtcNextLine;
    MenuActionList[CMD_NextLine].User_Action = (UserProc) NULL;
 
-   MenuActionList[CMD_BeginningOfLine].ActionName = CST_BeginningOfLine;
+   MenuActionList[CMD_BeginningOfLine].ActionName = (STRING) CST_BeginningOfLine;
    MenuActionList[CMD_BeginningOfLine].Call_Action = (Proc) TtcStartOfLine;
    MenuActionList[CMD_BeginningOfLine].User_Action = (UserProc) NULL;
 
-   MenuActionList[CMD_EndOfLine].ActionName = CST_EndOfLine;
+   MenuActionList[CMD_EndOfLine].ActionName = (STRING) CST_EndOfLine;
    MenuActionList[CMD_EndOfLine].Call_Action = (Proc) TtcEndOfLine;
    MenuActionList[CMD_EndOfLine].User_Action = (UserProc) NULL;
 
-   MenuActionList[CMD_ParentElement].ActionName = CST_ParentElement;
+   MenuActionList[CMD_ParentElement].ActionName = (STRING) CST_ParentElement;
    MenuActionList[CMD_ParentElement].Call_Action = (Proc) TtcParentElement;
    MenuActionList[CMD_ParentElement].User_Action = (UserProc) NULL;
 
-   MenuActionList[CMD_PreviousElement].ActionName = CST_PreviousElement;
+   MenuActionList[CMD_PreviousElement].ActionName = (STRING) CST_PreviousElement;
    MenuActionList[CMD_PreviousElement].Call_Action = (Proc) TtcPreviousElement;
    MenuActionList[CMD_PreviousElement].User_Action = (UserProc) NULL;
 
-   MenuActionList[CMD_NextElement].ActionName = CST_NextElement;
+   MenuActionList[CMD_NextElement].ActionName = (STRING) CST_NextElement;
    MenuActionList[CMD_NextElement].Call_Action = (Proc) TtcNextElement;
    MenuActionList[CMD_NextElement].User_Action = (UserProc) NULL;
 
-   MenuActionList[CMD_ChildElement].ActionName = CST_ChildElement;
+   MenuActionList[CMD_ChildElement].ActionName = (STRING) CST_ChildElement;
    MenuActionList[CMD_ChildElement].Call_Action = (Proc) TtcChildElement;
    MenuActionList[CMD_ChildElement].User_Action = (UserProc) NULL;
 
-   MenuActionList[CMD_PageUp].ActionName = CST_PageUp;
+   MenuActionList[CMD_PageUp].ActionName = (STRING) CST_PageUp;
    MenuActionList[CMD_PageUp].Call_Action = (Proc) TtcPageUp;
    MenuActionList[CMD_PageUp].User_Action = (UserProc) NULL;
-   MenuActionList[CMD_PageUp].ActionEquiv = CST_EquivPrior;
+   MenuActionList[CMD_PageUp].ActionEquiv = (STRING) CST_EquivPrior;
 
-   MenuActionList[CMD_PageDown].ActionName = CST_PageDown;
+   MenuActionList[CMD_PageDown].ActionName = (STRING) CST_PageDown;
    MenuActionList[CMD_PageDown].Call_Action = (Proc) TtcPageDown;
    MenuActionList[CMD_PageDown].User_Action = (UserProc) NULL;
-   MenuActionList[CMD_PageDown].ActionEquiv = CST_EquivNext;
+   MenuActionList[CMD_PageDown].ActionEquiv = (STRING) CST_EquivNext;
 
-   MenuActionList[CMD_PageTop].ActionName = CST_PageTop;
+   MenuActionList[CMD_PageTop].ActionName = (STRING) CST_PageTop;
    MenuActionList[CMD_PageTop].Call_Action = (Proc) TtcPageTop;
    MenuActionList[CMD_PageTop].User_Action = (UserProc) NULL;
-   MenuActionList[CMD_PageTop].ActionEquiv = CST_EquivHome;
+   MenuActionList[CMD_PageTop].ActionEquiv = (STRING) CST_EquivHome;
 
-   MenuActionList[CMD_PageEnd].ActionName = CST_PageEnd;
+   MenuActionList[CMD_PageEnd].ActionName = (STRING) CST_PageEnd;
    MenuActionList[CMD_PageEnd].Call_Action = (Proc) TtcPageEnd;
    MenuActionList[CMD_PageEnd].User_Action = (UserProc) NULL;
-   MenuActionList[CMD_PageEnd].ActionEquiv = CST_EquivEnd;
+   MenuActionList[CMD_PageEnd].ActionEquiv = (STRING) CST_EquivEnd;
 
-   MenuActionList[CMD_CreateElement].ActionName = CST_CreateElement;
+   MenuActionList[CMD_CreateElement].ActionName = (STRING) CST_CreateElement;
    MenuActionList[CMD_CreateElement].Call_Action = (Proc) NULL;
    MenuActionList[CMD_CreateElement].User_Action = (UserProc) NULL;
 
-   MenuActionList[CMD_CopyToClipboard].ActionName = CST_CopyClipboard;
+   MenuActionList[CMD_CopyToClipboard].ActionName = (STRING) CST_CopyClipboard;
    MenuActionList[CMD_CopyToClipboard].Call_Action = (Proc) TtcCopyToClipboard;
    MenuActionList[CMD_CopyToClipboard].User_Action = (UserProc) NULL;
 
-   MenuActionList[CMD_PasteFromClipboard].ActionName = CST_PasteClipboard;
+   MenuActionList[CMD_PasteFromClipboard].ActionName = (STRING) CST_PasteClipboard;
    MenuActionList[CMD_PasteFromClipboard].Call_Action = (Proc) NULL;
    MenuActionList[CMD_PasteFromClipboard].User_Action = (UserProc) NULL;
 }
@@ -649,11 +649,11 @@ STRING              menuName;
    newmenu->MenuAttr = FALSE;
    newmenu->MenuSelect = FALSE;
    newmenu->MenuHelp = FALSE;
-   if (!ustrcmp (menuName, "MenuAttribute"))
+   if (!ustrcmp (menuName, (STRING) "MenuAttribute"))
       newmenu->MenuAttr = TRUE;
-   else if (!ustrcmp (menuName, "MenuSelection"))
+   else if (!ustrcmp (menuName, (STRING) "MenuSelection"))
       newmenu->MenuSelect = TRUE;
-   else if (!ustrcmp (menuName, "MenuHelp"))
+   else if (!ustrcmp (menuName, (STRING) "MenuHelp"))
       newmenu->MenuHelp = TRUE;
 
    /* creation et initialisation de la table des items */
@@ -835,7 +835,7 @@ int                 itemsNumber;
    TteAddMenuItem ajoute une nouvel item dans un menu.                
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                TteAddMenuItem (WindowType windowtype, STRING schemaName, int menuID, int subMenu, int itemID, STRING actionName, CHAR itemType)
+void                TteAddMenuItem (WindowType windowtype, STRING schemaName, int menuID, int subMenu, int itemID, STRING actionName, CHAR_T itemType)
 
 #else  /* __STDC__ */
 void                TteAddMenuItem (windowtype, schemaName, menuID, subMenu, itemID, actionName, itemType)
@@ -845,7 +845,7 @@ int                 menuID;
 int                 subMenu;
 int                 itemID;
 STRING              actionName;
-CHAR                itemType;
+CHAR_T                itemType;
 
 #endif /* __STDC__ */
 {
@@ -952,9 +952,9 @@ int                 frame;
    int                 lg, sref;
    int                 item;
    int                 action;
-   CHAR                string[700];
+   CHAR_T                string[700];
 #define MaxEquivLen 200
-   CHAR                equiv[MaxEquivLen];
+   CHAR_T                equiv[MaxEquivLen];
    boolean             withEquiv;
    Item_Ctl           *ptritem;
    STRING              ptr;
@@ -976,7 +976,7 @@ int                 frame;
 	lg = ustrlen (ptr) + 1;
 	if (ptritem[item].ItemType == 'S' && i + 2 < 700)
 	  {
-	     ustrcpy (&string[i], "S");
+	     ustrcpy (&string[i], (STRING) "S");
 	     i += 2;
 	  }
 	else if (i + lg < 699)
@@ -1040,8 +1040,8 @@ int                 doc;
    int                 lg;
    int                 item;
    int                 action;
-   CHAR                string[700];
-   CHAR                equiv[MaxEquivLen];
+   CHAR_T                string[700];
+   CHAR_T                equiv[MaxEquivLen];
    boolean             withEquiv;
    Item_Ctl           *ptritem;
    STRING              ptr;
@@ -1065,7 +1065,7 @@ int                 doc;
 	lg = ustrlen (ptr) + 1;
 	if (ptritem[item].ItemType == 'S' && i + 2 < 700)
 	  {
-	     ustrcpy (&string[i], "S");
+	     ustrcpy (&string[i], (STRING) "S");
 	     i += 2;
 	  }
 	else if (i + lg < 699)
@@ -1098,19 +1098,19 @@ int                 doc;
 			 }
 		    }
 		  /* Is it the Paste command */
-		  if (!ustrcmp (MenuActionList[action].ActionName, "TtcPaste"))
+		  if (!ustrcmp (MenuActionList[action].ActionName, (STRING) "TtcPaste"))
 		    {
 		      FrameTable[frame].MenuPaste = ref;
 		      FrameTable[frame].EntryPaste = item;
 		    }
 		  /* Is it the Undo command */
-		  if (!ustrcmp (MenuActionList[action].ActionName, "TtcUndo"))
+		  if (!ustrcmp (MenuActionList[action].ActionName, (STRING) "TtcUndo"))
 		    {
 		      FrameTable[frame].MenuUndo = ref;
 		      FrameTable[frame].EntryUndo = item;
 		    }
 		  /* Is it the Redo command */
-		  if (!ustrcmp (MenuActionList[action].ActionName, "TtcRedo"))
+		  if (!ustrcmp (MenuActionList[action].ActionName, (STRING) "TtcRedo"))
 		    {
 		      FrameTable[frame].MenuRedo = ref;
 		      FrameTable[frame].EntryRedo = item;
@@ -1178,7 +1178,7 @@ Pixmap              icon;
    int                 i, n;
    int                 ref;
    int                 lg;
-   CHAR                string[700];
+   CHAR_T                string[700];
    Menu_Ctl           *ptrmenu;
    STRING              ptr;
 
@@ -1934,7 +1934,7 @@ XmTextVerifyCallbackStruct *call_d;
 #  ifndef _WINDOWS
    STRING              text;
 #  else  /* _WINDOWS */
-   static CHAR text [1024];
+   static CHAR_T text [1024];
 #  endif /* _WINDOWS */
 
    CloseInsertion ();
@@ -2123,7 +2123,7 @@ void                (*procedure) ();
 #                 else  /* _WINDOWS */
 		          currentFrame = frame;
                   GetClientRect (FrMainRef [frame], &rect);
-                  w = CreateWindow ("EDIT", "", WS_CHILD | WS_VISIBLE | ES_LEFT | WS_BORDER | ES_AUTOHSCROLL,
+                  w = CreateWindow ((STRING) "EDIT", (STRING) "", WS_CHILD | WS_VISIBLE | ES_LEFT | WS_BORDER | ES_AUTOHSCROLL,
                                     0, 0, 0, 0, FrMainRef[frame], (HMENU) i, hInstance, NULL);
 
                   FrameTable[frame].Text_Zone[i] = w;
@@ -2134,7 +2134,7 @@ void                (*procedure) ();
 				  else
 				     SetWindowLong (FrameTable[frame].Text_Zone[i], GWL_WNDPROC, (DWORD) textZoneProc);
 
-                  wLabel = CreateWindow ("STATIC", label, WS_CHILD | WS_VISIBLE | SS_LEFT, 
+                  wLabel = CreateWindow ((STRING) "STATIC", label, WS_CHILD | WS_VISIBLE | SS_LEFT, 
                                          0, 0, 0, 0, FrMainRef[frame], (HMENU) (i + MAX_TEXTZONE), hInstance, NULL);
                   FrameTable[frame].Label[i] = wLabel;
 				  /* FrameTable[frame].showLogo = TRUE ; */
@@ -2369,7 +2369,7 @@ int                 doc;
    Arg                 args[MAX_ARGS], argument[5];
    XmString            title_string;
    Dimension           dx, dy;
-   CHAR                string[700];
+   CHAR_T                string[700];
 #  endif /* _WINDOWS */
    ThotWidget          Main_Wd = (ThotWidget) 0;
    ThotWidget          hscrl;
@@ -2467,8 +2467,8 @@ int                 doc;
 	     appLogo = (HBITMAP) LoadImage (hInstance, bmpID, IMAGE_BITMAP, 0, 0, LR_DEFAULTCOLOR);
 #          endif /* 0 */
 
-	   Main_Wd = CreateWindowEx (0L, tszAppName,    /* window class name */
-				     tszAppName,	/* window caption    */
+	   Main_Wd = CreateWindowEx (0L, (STRING) tszAppName,    /* window class name */
+				     (STRING) tszAppName,	/* window caption    */
 				     WS_OVERLAPPEDWINDOW, /* window style            */
 				     X,	    /* initial x pos           */
 				     Y,	    /* initial y pos           */
@@ -2665,7 +2665,7 @@ int                 doc;
 	   XtAddCallback (hscrl, XmNtoTopCallback, (XtCallbackProc) FrameHScrolled, (XtPointer) frame);
 	   XtAddCallback (hscrl, XmNtoBottomCallback, (XtCallbackProc) FrameHScrolled, (XtPointer) frame);
 #          else  /* _WINDOWS */
-	   hscrl = CreateWindow ("scrollbar", NULL, WS_CHILD | WS_VISIBLE | SBS_HORZ,
+	   hscrl = CreateWindow ((STRING) "scrollbar", NULL, WS_CHILD | WS_VISIBLE | SBS_HORZ,
 				 0, 0, 0, 0, Main_Wd, (HMENU) frame, hInstance, NULL);
 	   
 	   SetScrollRange (hscrl, SB_CTL, 0, 100, FALSE);
@@ -2692,7 +2692,7 @@ int                 doc;
 	   XtAddCallback (vscrl, XmNtoTopCallback, (XtCallbackProc) FrameVScrolled, (XtPointer) frame);
 	   XtAddCallback (vscrl, XmNtoBottomCallback, (XtCallbackProc) FrameVScrolled, (XtPointer) frame);
 #            else  /* _WINDOWS */
-	   vscrl = CreateWindow ("scrollbar", NULL, WS_CHILD | WS_VISIBLE | SBS_VERT,
+	   vscrl = CreateWindow ((STRING) "scrollbar", NULL, WS_CHILD | WS_VISIBLE | SBS_VERT,
 				 0, 0, 0, 0, Main_Wd, (HMENU) (frame + 1), hInstance, NULL);
 	   
 	   SetScrollRange (vscrl, SB_CTL, 0, 100, FALSE);
@@ -2904,16 +2904,16 @@ int                 doc;
 	   FrameTable[frame].WdFrame = w;
 
 	   /* get registry default values for zoom and visibility */
-	   zoomStr = TtaGetEnvString ("ZOOM");
+	   zoomStr = TtaGetEnvString ((STRING) "ZOOM");
 	   if (zoomStr == NULL)
 	     zoomVal = 0;
 	   else
 	     {
-	       zoomVal = atoi (zoomStr);
+	       zoomVal = atoi ((STRING) zoomStr);
 	       if (zoomVal > 10 || zoomVal < -10)
 		 zoomVal = 0;
 	     }
-	   visiStr = TtaGetEnvString ("VISIBILITY");
+	   visiStr = TtaGetEnvString ((STRING) "VISIBILITY");
 	   if (visiStr == NULL)
 	     visiVal = 5;
 	   else
@@ -3227,8 +3227,8 @@ boolean      on;
 #endif /* __STDC__ */
 {
 #ifndef _WINDOWS 
-  CHAR                fontname[100];
-  CHAR                text[20];
+  CHAR_T                fontname[100];
+  CHAR_T                text[20];
 #else _WINDOWS
   HMENU               hMenu;
 #endif /* _WINDOWS */
@@ -3307,8 +3307,8 @@ boolean      on;
 #endif /* __STDC__ */
 {
 #ifndef _WINDOWS 
-  CHAR                fontname[100];
-  CHAR                text[20];
+  CHAR_T                fontname[100];
+  CHAR_T                text[20];
 #else _WINDOWS
   HMENU               hMenu;
 #endif /* _WINDOWS */
@@ -3387,8 +3387,8 @@ boolean      on;
 #endif /* __STDC__ */
 {
 #ifndef _WINDOWS 
-  CHAR                fontname[100];
-  CHAR                text[20];
+  CHAR_T                fontname[100];
+  CHAR_T                text[20];
 #else _WINDOWS
   HMENU               hMenu;
 #endif /* _WINDOWS */
@@ -3670,8 +3670,8 @@ int                 itemID;
    int                 item;
    int                 action;
 #ifndef _WINDOWS 
-   CHAR                fontname[100];
-   CHAR                text[20];
+   CHAR_T                fontname[100];
+   CHAR_T                text[20];
 #else _WINDOWS
    HMENU               hMenu;
 #endif /* _WINDOWS */

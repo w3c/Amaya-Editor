@@ -7,7 +7,7 @@
 #ifdef __STDC__
 
 extern void BuildPathDocBuffer ( STRING bufDir,
-                                 CHAR separator,
+                                 CHAR_T separator,
                                  int *nbItems );
 extern int SearchStringInBuffer ( STRING buffer,
                                   STRING s,
@@ -29,7 +29,7 @@ extern void TtcOpenDocument ( Document document,
 #else /* __STDC__ */
 
 extern void BuildPathDocBuffer (/* STRING bufDir,
-                                   CHAR separator,
+                                   CHAR_T separator,
                                    int *nbItems */);
 extern int SearchStringInBuffer (/* STRING buffer,
                                     STRING s,

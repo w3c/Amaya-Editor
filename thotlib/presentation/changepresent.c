@@ -1612,7 +1612,7 @@ PtrElement          pEl;
   les graphiques demandes par l'utilisateur.		
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                ModifyGraphics (PtrElement pEl, PtrDocument pDoc, int viewToApply, boolean modifLineStyle, CHAR LineStyle, boolean modifLineWeight, int LineWeight, TypeUnit LineWeightUnit, boolean modifFillPattern, int FillPattern, boolean modifColorBackground, int ColorBackground, boolean modifLineColor, int LineColor)
+void                ModifyGraphics (PtrElement pEl, PtrDocument pDoc, int viewToApply, boolean modifLineStyle, CHAR_T LineStyle, boolean modifLineWeight, int LineWeight, TypeUnit LineWeightUnit, boolean modifFillPattern, int FillPattern, boolean modifColorBackground, int ColorBackground, boolean modifLineColor, int LineColor)
 
 #else  /* __STDC__ */
 void                ModifyGraphics (pEl, pDoc, viewToApply, modifLineStyle, LineStyle, modifLineWeight, LineWeight, LineWeightUnit, modifFillPattern, FillPattern, modifColorBackground, ColorBackground, modifLineColor, LineColor)
@@ -1620,7 +1620,7 @@ PtrElement          pEl;
 PtrDocument         pDoc;
 int                 viewToApply;
 boolean             modifLineStyle;
-CHAR                LineStyle;
+CHAR_T                LineStyle;
 boolean             modifLineWeight;
 int                 LineWeight;
 TypeUnit            LineWeightUnit;
@@ -1662,7 +1662,7 @@ int                 LineColor;
 	}
       else if (!isNew)
 	/* reset the previous value */
-	pPRule->PrChrValue = (CHAR) value;
+	pPRule->PrChrValue = (CHAR_T) value;
     }
 
   /* epaisseur des traits dans le graphique */
@@ -2045,7 +2045,7 @@ boolean             Background;
   les caracteres demandes par l'utilisateur.		
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                ModifyChar (PtrElement pEl, PtrDocument pDoc, int viewToApply, boolean modifFamily, CHAR family, boolean modifStyle, int charStyle, boolean modifsize, int size, boolean modifUnderline, int underline, boolean modifWeight, int weightUnderline)
+void                ModifyChar (PtrElement pEl, PtrDocument pDoc, int viewToApply, boolean modifFamily, CHAR_T family, boolean modifStyle, int charStyle, boolean modifsize, int size, boolean modifUnderline, int underline, boolean modifWeight, int weightUnderline)
 
 #else  /* __STDC__ */
 void                ModifyChar (pEl, pDoc, viewToApply, modifFamily, family, modifStyle, charStyle, modifsize, size, modifUnderline, underline, modifWeight, weightUnderline)
@@ -2053,7 +2053,7 @@ PtrElement          pEl;
 PtrDocument         pDoc;
 int                 viewToApply;
 boolean             modifFamily;
-CHAR                family;
+CHAR_T                family;
 boolean             modifStyle;
 int                 charStyle;
 boolean             modifsize;
@@ -2070,7 +2070,7 @@ int                 weightUnderline;
    PtrPRule            pPRule;
    int                 viewSch;
    int                 intValue;
-   CHAR                value;
+   CHAR_T                value;
 
    /* numero de cette view */
    viewSch = AppliedView (pEl, NULL, pDoc, viewToApply);

@@ -1107,7 +1107,7 @@ STRING  fn;
 {
   
    FILE *fp;
-   CHAR buf[8];
+   CHAR_T buf[8];
    int ret;
 
    fp = fopen(fn , "rb");

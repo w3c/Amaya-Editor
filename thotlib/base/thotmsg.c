@@ -49,7 +49,7 @@ int                 errorCode;
 
 #endif /* __STDC__ */
 {
-   CHAR                buffer[50];
+   CHAR_T                buffer[50];
 
    UserErrorCode = errorCode;
    if (PrintErrorMessages)

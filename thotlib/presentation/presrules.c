@@ -306,10 +306,10 @@ DocViewNumber       view;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-static CHAR         CharRule (PtrPRule pPRule, PtrElement pEl, DocViewNumber view, boolean * ok)
+static CHAR_T         CharRule (PtrPRule pPRule, PtrElement pEl, DocViewNumber view, boolean * ok)
 
 #else  /* __STDC__ */
-static CHAR         CharRule (pPRule, pEl, view, ok)
+static CHAR_T         CharRule (pPRule, pEl, view, ok)
 PtrPRule            pPRule;
 PtrElement          pEl;
 DocViewNumber       view;
@@ -319,7 +319,7 @@ boolean            *ok;
 
 {
    PtrAbstractBox      pAbb;
-   CHAR                val;
+   CHAR_T                val;
    PtrAbstractBox      pAbba1;
 
    val = ' ';
@@ -2982,8 +2982,8 @@ PtrAttribute        pAttr;
   PtrAbstractBox      pAbb1;
   PresConstant	     *pConst;
   PathBuffer	      directoryName;
-  CHAR		      fname[MAX_PATH];
-  CHAR                c;
+  CHAR_T		      fname[MAX_PATH];
+  CHAR_T                c;
   int                 viewSch, i;
   boolean             appl;
   boolean             insidePage, afterPageBreak;
@@ -3076,7 +3076,7 @@ PtrAttribute        pAttr;
 	      }
 	    if (pAbb1->AbFont >= 'a' && pAbb1->AbFont <= 'z')
 	      /* on n'utilise que des majuscules pour les noms de police */
-	      pAbb1->AbFont = (CHAR) ((int) (pAbb1->AbFont) - 32);
+	      pAbb1->AbFont = (CHAR_T) ((int) (pAbb1->AbFont) - 32);
 	    break;
 	  case PtAdjust:
 	    pAbb1->AbAdjust = AlignRule (pPRule, pAbb1->AbElement,

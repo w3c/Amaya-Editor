@@ -448,7 +448,7 @@ int                 y;
    XmString            title_string;
    XmFontList          xfont;
    XGCValues           GCmodel;
-   CHAR                string[10];
+   CHAR_T                string[10];
 
    xfont = XmFontListCreate ((XFontStruct *) FontDialogue, XmSTRING_DEFAULT_CHARSET);
    if (SmallFontDialogue == NULL)
@@ -660,7 +660,7 @@ int                 y;
    WNDCLASSEX  wndThotPaletteClass ;
    HWND  HwndColorPal;
    int   frame;
-   static CHAR szAppName[] = "ThotColorPalette" ;
+   static CHAR_T szAppName[] = "ThotColorPalette" ;
    MSG         msg;
 
    WIN_LastBg = -1;
@@ -818,6 +818,7 @@ LRESULT CALLBACK ThotColorPaletteWndProc (HWND hwnd, UINT iMsg, WPARAM wParam, L
 
                   SetFocus (FrRef[currentFrame]);
 			   } 
+               DestroyWindow (hwnd);
 			   break;
 
           case WM_MBUTTONDOWN:
@@ -864,6 +865,7 @@ LRESULT CALLBACK ThotColorPaletteWndProc (HWND hwnd, UINT iMsg, WPARAM wParam, L
 				  }
 
                SetFocus (FrRef[currentFrame]);
+               DestroyWindow (hwnd);
 			   break;
 
           case WM_RBUTTONDOWN:
@@ -910,6 +912,7 @@ LRESULT CALLBACK ThotColorPaletteWndProc (HWND hwnd, UINT iMsg, WPARAM wParam, L
 				  }
 
                SetFocus (FrRef[currentFrame]);
+               DestroyWindow (hwnd);
 			   break;
 
           case WM_PAINT:
@@ -1013,7 +1016,7 @@ LRESULT CALLBACK ThotColorPaletteWndProc (HWND hwnd, UINT iMsg, WPARAM wParam, L
                            DestroyWindow (hwnd);
 						   break;
 			   }
-
+          case WM_CLOSE:
           case WM_DESTROY :
                PostQuitMessage (0) ;
                break;
