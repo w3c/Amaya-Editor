@@ -2951,7 +2951,7 @@ void InsertChar (int frame, CHAR_T c, int keyboard)
 				xDelta = BoxCharacterWidth (c, font);
 			      
 			      /* Est-ce une insertion en debut de boite ? */
-			      if (previousChars == 0)
+			      if (beginOfBox && previousChars == 0)
 				{
 				  pSelBox->BxBuffer = pBuffer;
 				  pSelBox->BxFirstChar = pBuffer->BuLength;
