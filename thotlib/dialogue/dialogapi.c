@@ -12,7 +12,6 @@
    
   ----------------------------------------------------------------------*/
 
-#include <Xm/BulletinB.h>
 #include "thot_gui.h"
 #include "thot_sys.h"
 #include "constmedia.h"

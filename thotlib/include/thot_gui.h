@@ -139,11 +139,13 @@ typedef POINT       ThotPoint;
 #include <X11/keysym.h>
 #include <X11/Intrinsic.h>
 #include <Xm/MwmUtil.h>
+#include <Xm/BulletinB.h>
 #include <Xm/CascadeB.h>
 #include <Xm/DialogS.h>
 #include <Xm/DrawingA.h>
 #include <Xm/DrawnB.h>
 #include <Xm/Frame.h>
+#include <Xm/Form.h>
 #include <Xm/Label.h>
 #include <Xm/List.h>
 #include <Xm/MainW.h>

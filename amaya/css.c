@@ -1250,12 +1250,10 @@ Bool                rebuild;
    if (NonPPresentChanged)
       ApplyExtraPresentation (doc);
 
-#ifdef DEBUG_CSS
-#endif
+#if 0
    DebugPresent (doc, gPres, "/tmp/generic.styles");
    PSchema2CSS (doc, gPres, style->magnification, style->view_background_color,
 		"/tmp/generic.css");
-#ifdef DEBUG_CSS
 #endif
 }
 
@@ -1380,10 +1378,8 @@ Document            doc;
    if (NonPPresentChanged)
       ApplyExtraPresentation (doc);
 
-#ifdef DEBUG_CSS
+#if 0
    DebugPresent (doc, gPres, "/tmp/external.styles");
-#endif
-#ifdef DEBUG_CSS
    PSchema2CSS (doc, gPres, css->magnification, css->view_background_color,
 		"/tmp/external.css");
 #endif
@@ -1564,10 +1560,8 @@ int                 merge;
 	if (NonPPresentChanged)
 	   ApplyExtraPresentation (doc);
      }
-#ifdef DEBUG_CSS
+#if 0
    DebugPresent (doc, gPres, "/tmp/external.styles");
-#endif
-#ifdef DEBUG_CSS
    PSchema2CSS (doc, gPres, css->magnification, css->view_background_color,
 		"/tmp/external.css");
 #endif
@@ -1694,10 +1688,8 @@ Document            doc;
    if (NonPPresentChanged)
       ApplyExtraPresentation (doc);
 
-#ifdef DEBUG_CSS
+#if 0
    DebugPresent (doc, gPres, "/tmp/user.styles");
-#endif
-#ifdef DEBUG_CSS
    PSchema2CSS (doc, gPres, css->magnification, css->view_background_color,
 		"/tmp/user.css");
 #endif
@@ -1934,13 +1926,11 @@ PSchema             gPres;
     */
    RedisplayDocument (doc);
 
-#ifdef DEBUG_CSS
-#endif
+#if 0
    DebugPresent (doc, gPres, "/tmp/generic.styles");
    css = GetDocumentStyle (doc);
    PSchema2CSS (doc, gPres, css->magnification, css->view_background_color,
 		"/tmp/generic.css");
-#ifdef DEBUG_CSS
 #endif
 }
 
