@@ -649,7 +649,7 @@ STRING   name;
   if (ptr && *ptr)
     {
       SearchFile (ptr, 2, buffer);
-      if (strlen (buffer) < length)
+      if (strlen (buffer) < (size_t)length)
 	ustrcpy (name, ISO2WideChar (buffer));
     }
 }
@@ -673,7 +673,7 @@ STRING   name;
   if (ptr && *ptr)
     {
       SearchFile (ptr, 2, buffer);
-      if (strlen (buffer) < length)
+      if (strlen (buffer) < (size_t)length)
 	ustrcpy (name, ISO2WideChar (buffer));
     }
 }

@@ -42,6 +42,8 @@
 #define min(a, b) (((a) < (b)) ? (a) : (b))
 
 #ifdef _WINDOWS
+#include "wininclude.h"
+
 extern void png_read_init (png_structp png_ptr);
 #endif /* _WINDOWS */
 

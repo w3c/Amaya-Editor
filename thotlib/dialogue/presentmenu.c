@@ -144,9 +144,9 @@ static int          NormalLineSpacing;
 static void         ResetMenus ();
 
 #ifdef _WINDOWS 
-extern int WIN_IndentValue;
-extern int WIN_OldLineSp;
-extern int WIN_NormalLineSpacing;
+extern int   WIN_IndentValue;
+extern int   WIN_OldLineSp;
+extern int   WIN_NormalLineSpacing;
 #endif /* _WINDOWS */
 
 /*----------------------------------------------------------------------
@@ -2035,6 +2035,8 @@ View                view;
    CHAR_T                string[MAX_TXT_LEN];
 #  else  /* _WINDOWS */
    int                 fontNum;
+   static CHOOSEFONT   cf ; 
+   static LOGFONT      lf ;
 #  endif /* !_WINDOWS */
    int                 i;
    int                 firstChar, lastChar;

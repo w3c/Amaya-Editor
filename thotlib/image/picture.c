@@ -1741,7 +1741,6 @@ int                 frame;
 #  ifdef _WINDOWS
 #  ifdef _WIN_PRINT
    LPBITMAPINFO lpBmpInfo;
-   char str [1024];
 #  endif /* _WIN_PRINT */
 #  endif /* _WINDOWS */
 

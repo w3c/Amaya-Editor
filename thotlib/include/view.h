@@ -474,6 +474,7 @@ extern int          TtaGetThotColor (unsigned short red, unsigned short green, u
   ----------------------------------------------------------------------*/
 extern void         TtaClearViewSelections ( void );
 
+extern void         TtaChangeWindowTitle (Document, View, STRING);
 #else  /* __STDC__ */
 
 extern void         TtaGetViewWH ( /* Document doc, int view, int *w, int *h */ );
@@ -504,7 +505,8 @@ extern DisplayMode  TtaGetDisplayMode ( /* Document document */ );
 extern void         TtaListView ( /*Document document, View view, FILE *fileDescriptor */ );
 extern void         TtaListBoxes ( /*Document document, View view, FILE *fileDescriptor */ );
 extern int          TtaGetThotColor ( /*unsigned short red, unsigned short green, unsigned short blue */ );
-extern void TtaClearViewSelections ( /*void*/ );
+extern void         TtaClearViewSelections ( /*void*/ );
+extern void         TtaChangeWindowTitle ();
 
 #endif /* __STDC__ */
 #endif

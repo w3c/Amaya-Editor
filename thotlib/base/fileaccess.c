@@ -45,11 +45,11 @@
    TtaReadByte reads a character (or byte) value.                  
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-ThotBool             TtaReadByte (BinFile file, PCHAR_T bval)
+ThotBool             TtaReadByte (BinFile file, char* bval)
 #else  /* __STDC__ */
 ThotBool            TtaReadByte (file, bval)
 BinFile             file;
-PCHAR_T             bval;
+char*               bval;
 
 #endif /* __STDC__ */
 {

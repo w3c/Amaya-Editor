@@ -607,6 +607,7 @@ Document            document;
    ptrMainProc (FrRef [currentFrame], printArgc, printArgv, TtPrinterDC, TtIsTrueColor, TtWDepth, name, dir, hInstance, buttonCommand);
    /* PrintDoc (FrRef [currentFrame], printArgc, printArgv, TtPrinterDC, TtIsTrueColor, TtWDepth, name, dir, hInstance, buttonCommand); */
    FreeLibrary (hLib);
+
    if (!IsWindowEnabled (FrRef[currentFrame]))
       EnableWindow (FrRef[currentFrame], TRUE);
    SetFocus (FrRef[currentFrame]);

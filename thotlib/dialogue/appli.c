@@ -118,19 +118,17 @@ extern HWND      currentWindow;
 extern HWND      WIN_curWin;
 extern HWND      currentDlg;
 extern int       ReturnOption;
-extern int  Window_Curs;
+extern int       Window_Curs;
 
 static HWND      hwndHead;
-static STRING     txtZoneLabel;
+static STRING    txtZoneLabel;
 static BOOL      paletteRealized = FALSE;
 
-static CHAR_T      URL_txt [500];
-static CHAR_T      doc_title [500];
+static CHAR_T    URL_txt [500];
+static CHAR_T    doc_title [500];
 
 static int       oldXPos;
 static int       oldYPos;
-static int       oldSPos = 0;
-static int       latestFrame = -1;
 
 int         X_Pos;
 int         Y_Pos;
@@ -1141,6 +1139,23 @@ void                InitializeOtherThings ()
    OldDocMsgSelect = NULL;
 }
 
+/*----------------------------------------------------------------------
+   TtaChangeWindowTitle: changes the title of a given window.                          
+  ----------------------------------------------------------------------*/
+#ifdef __STDC
+void     TtaChangeWindowTitle (Document document, View view, STRING title)
+#else  /* !__STDC__ */
+void     TtaChangeWindowTitle (document, view, title)
+Document document;
+View     view;
+STRING   title;
+#endif /* __STDC__ */
+{
+    int idwindow = GetWindowNumber (document, view);
+
+	if (idwindow != 0) 
+       ChangeFrameTitle (idwindow, title);
+}
 
 /*----------------------------------------------------------------------
    Map and raise the corresponding window.                          
@@ -2344,8 +2359,11 @@ STRING              text;
 
 #endif /* __STDC__ */
 {
-#ifndef _WINDOWS
-#ifndef _GTK
+#  ifdef _WINDOWS
+   if (FrMainRef [frame] != 0)
+      SetWindowText (FrMainRef[frame], text);
+#  else  /* !_WINDOWS */
+#  ifndef _GTK
    int                 n;
    Arg                 args[MAX_ARGS];
    ThotWidget          w;
@@ -2353,16 +2371,16 @@ STRING              text;
    w = FrameTable[frame].WdFrame;
    if (w != 0)
      {
-	w = XtParent (XtParent (XtParent (w)));
-	n = 0;
-	XtSetArg (args[n], XmNtitle, text);
-	n++;
-	XtSetArg (args[n], XmNiconName, text);
-	n++;
-	XtSetValues (w, args, n);
+        w = XtParent (XtParent (XtParent (w)));
+        n = 0;
+        XtSetArg (args[n], XmNtitle, text);
+        n++;
+        XtSetArg (args[n], XmNiconName, text);
+        n++;
+        XtSetValues (w, args, n);
      }
-#endif /* _GTK */
-#endif /* _WINDOWS */
+#   endif /* _GTK */
+#   endif /* _WINDOWS */
 }
 
 /*----------------------------------------------------------------------

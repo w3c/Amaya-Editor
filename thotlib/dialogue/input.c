@@ -44,7 +44,7 @@
 /* automata structure for the keys */
 typedef struct _key
 {
-  unsigned int        K_EntryCode;    /* input key                           */
+  int                 K_EntryCode;    /* input key                           */
   int                 K_Command;      /* index in the command list or -1     */
   int                 K_Value;	      /* return key if command = -1          */
   struct _key        *K_Other;	      /* next entry at the same level        */

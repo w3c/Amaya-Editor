@@ -42,6 +42,10 @@
 #include "units_f.h"
 #include "gifhandler_f.h"
 
+#ifdef _WINDOWS
+#include "wininclude.h"
+#endif /* _WINDOWS */
+
 struct my_error_mgr
   {
      struct jpeg_error_mgr pub;	           /* "public" fields */
