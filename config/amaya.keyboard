@@ -1,4 +1,37 @@
-
+#
+# How keys are used:
+#
+# These functions are loosely based on emacs keys.
+# 
+# Alt is used, with b,f,Home,r (for reload) and Return (for DoAction),
+#             for navigating from page to page                     
+# Alt-t is used for information types (Types that are in the Style menus)
+#
+# Ctrl- 1, 2, 3, 4, 5, 6 are used for headings.
+# Ctrl- a, e, j, k are used for moving around
+# Ctrl- c, d, w, y are used for cut, delete, copy, paste
+# Ctrl-m is used for Math functions
+# Ctrl-p is used for print
+#
+# ctrl-s is used for Style items
+#
+# Ctrl-t is used for Types in the types menu, and some table actions
+# Ctrl-u is used for useful functions (currently only spellcheck,
+#           but maybe also config and special functions later).
+# Ctrl-v is used for view menus
+# Ctrl-x is used for file functions
+# Ctrl-z and Shift Ctrl-z are used for Undo/Redo
+#
+# Shift Ctrl- L, T, D and Shift-Alt-L are used for linking
+# Shift Ctrl- B, I are used for strong and emphasis
+# Shift Ctrl- ! and S are used in the structure menu.
+#
+# Ctrl- Return, Space are used for BR and &nbsp;
+#
+# Ctrl-minus key is used for child element
+#
+# Ctrl- b, g, h, i, n, o, q, r are not used.
+#
 # personal keyboard file for Amaya
 #moving around 
 <Key>Delete:        TtcDeleteSelection() 
@@ -25,6 +58,7 @@ Ctrl <Key>Home:     TtcPageTop()
 Ctrl <Key>End:      TtcPageEnd() 
 Alt <Key>Return:    DoAction() 
 
+Alt <Key>Home: GoToHome()
 
 
 
