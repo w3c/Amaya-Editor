@@ -4,7 +4,7 @@
 <title>
 Configuring Amaya</title>
 </head>
-<body>
+<body lang="en">
 
 <table border="0" width="100%">
 <tbody>
@@ -39,10 +39,11 @@ This file  is used to define global parameters of Thot applications (Amaya is
 a Thot application). Inside this file, there's a section called
 <code>[amaya]</code> where are specified the configuration options concerning:
 <a href="#L138">the default home page</a>, <a
-href="#Specifying">proxies</a>,<a href="#L139"> default colors</a>,<a
-href="#L140"> the colors palette</a>, <a href="#L141">the dialogue
-language</a>, the path to the personall dictionary, and<a href="#L242"> the
-default printer command</a>.</p>
+href="#Specifying">proxies</a>,<a href="#L139"> default colors</a>, <a
+href="#Default">default zoom</a>,<a href="#L140"> the colors palette</a>, <a
+href="#L141">the dialogue language</a>, the path to the personall dictionary,
+and<a href="#L242"> the default printer command</a>.</p>
+</li>
 <li>
 The <a name="keyboard">keyboard file</a> <strong>$HOME/amaya.keyboard</strong>
 (this file is specific to a Unix user) or <strong><a
@@ -52,6 +53,7 @@ href="../../config/amaya.kb">Thot/config/amaya.kb</a></strong> (this file is
 the default for Windows users).
 <p>
 This file defines <a href="#L236">Amaya keyboard shortcuts</a>..</p>
+</li>
 <li>
 The <a name="HTML1">HTML configuration file</a>
 <strong>$HOME/HTML.conf</strong> (this file is specific to a Unix user) or
@@ -59,10 +61,12 @@ The <a name="HTML1">HTML configuration file</a>
 file is the default for Unix or Windows users). This file defines <a
 href="#HTML">position</a> and the <a href="#HTML">size</a> of the Amaya
 document windows.
+</li>
 <li>
 The standard User's Preference Styles are defined in the file
 <strong>$HOME/.amaya.css</strong> (Unix) or
 <strong>Thot/amaya/amaya.css</strong> (Windows).
+</li>
 </ul>
 <p>
 N.B. These configuration files are loaded at runtime. If you change them,
@@ -114,11 +118,14 @@ document windows defined by the presentation schema:</p>
 <li>
 Each presentation schema name is introduced by the keyword
 <strong>style.</strong>
+</li>
 <li>
 The keyword <strong>open</strong> declares the main view of the document. It's
 always the "Formatted-view" for HTML documents.
+</li>
 <li>
 The keyword <strong>geometry</strong> declares other available views.
+</li>
 </ul>
 <p>
 For each view, in both the <strong>open</strong> and <strong>geometry</strong>
@@ -137,6 +144,7 @@ used:</p>
 <ul>
 <li>
 BackgroundColor, the background color of document windows.
+</li>
 <li>
 <code>DocSelectColor, the</code> background color of the selected part and of
 the insertion cursor.
@@ -144,22 +152,40 @@ the insertion cursor.
 <em>N.B. The default value for Black and White screens is
 </em><code>Black</code><em>. If you can't see a selection in your screen,
 change this value to </em><code>White</code><em>.</em></p>
+</li>
 </ul>
 <ul>
 <li>
 <code>ForegroundColor</code>, the default color of text in documents.
+</li>
 <li>
 <code>MenuBgColor, the b</code>ackground color of: menu bars at the top of
 windows, the area where the selection message is displayed at the top of
 document windows, menus, dialogue boxes.
+</li>
 <li>
 <code>ButtonColor</code>, background color of buttons in dialogue forms.
+</li>
 <li>
-<code>ScrollColor=</code> color of the scrolling bars.
+<code>ScrollColor,</code> color of the scrolling bars.
+</li>
 </ul>
 <p>
 To take into account any change to these options, you need to restart
 <strong>Amaya</strong>.</p>
+
+<h3><a name="Default">Default Zoom</a></h3>
+<p>
+It's now possible to zoom in and zoom out document window by document window,
+so each document displayed within a zoomed window will be displayed larger or
+smaller than its real size according of the current zoom.</p>
+<p>
+Amaya has a default zoom value equal to 0 (documents are displayed by default
+as they are). This default value can be modified in the <a
+href="#registry">registry file</a> of the user by the parameter ZOOM. Users
+who used the CSS rule "Magnification: 3" in previous Amaya releases (before
+1.3) have now to set the corresponding parameter value in the registry file:
+ZOOM=3.</p>
 
 <h3><a name="L140">Colors Palette</a></h3>
 <p>
@@ -171,6 +197,7 @@ in the<a href="#registry"> registry file</a>:</p>
 <ul>
 <li>
 <code>ReduceColor= yes</code>
+</li>
 </ul>
 <p>
 To take into account any changes to this option, you need to restart
@@ -194,14 +221,18 @@ This  file has 4 sections:</p>
 <ul>
 <li>
 <strong>extension:</strong> not used by Amaya
+</li>
 <li>
 <strong>presentation:</strong> not used by Amaya
+</li>
 <li>
 <strong>export</strong>: give the text displayed for each translation schema
 ("Save As" command)
+</li>
 <li>
 <strong>translation</strong>: give the text displayed for each element and
 attribute in the Thot HTML structure.
+</li>
 </ul>
 <p>
 It's possible to adapt Amaya to new ISO-Latin-1 languages by writing
@@ -249,28 +280,36 @@ Moving commands:
 <ul>
 <li>
 TtcNextChar, TtcPreviousChar: move chararcter by character.
+</li>
 <li>
 TtcNextLine, TtcPreviousLine, TtcStartOfLine, TtcEndOfLine: move line by line.
+</li>
 <li>
 TtcNextElement, TtcPreviousElement, TtcChildElement, TtcParentElement: move
 element by element.
+</li>
 <li>
 TtcPageDown, TtcPageUp, TtcPageTop, TtcPageEnd: move page to page.
+</li>
 </ul>
+</li>
 <li>
 In <code>File</code> menu:
 <p>
 New, OpenDoc, OpenDocInNewWindow, Reload, SaveDocument, SaveDocumentAs,
 TtcPrint, TtcPrintSetUp, TtcCloseDocument, AmayaClose</p>
+</li>
 <li>
 In Edit menu:
 <p>
 TtcCutSelection, TtcCopySelection, TtcPaste, TtcDeleteSelection,
 TtcSearchText, EnSpellCheck, FrSpellCheck.</p>
+</li>
 <li>
 In <code>Structure Types</code> menu:
 <p>
 CreateIsIndex, CreateBase, CreateMeta, CreateLinkInHead, CreateComment.</p>
+</li>
 <li>
 In Types menu:
 <p>
@@ -284,15 +323,18 @@ CreateDataCell, CreateHeadingCell, CreateToggle, CreateRadio, CreateOption,
 CreateTextInput, CreateTextArea, CreateCommandLine, CreateAreaRect,
 CreateAreaPoly, CreateDivision, CreateApplet, CreateParameter,
 TransformType.</p>
+</li>
 <li>
 In <code>Links</code> menu:
 <p>
 CreateLink, CreateTarget, ChangeLink, DeleteAnchor.</p>
+</li>
 <li>
 In Views menu:
 <p>
 TtcSwitchButtonBar, TtcSwitchCommands, ShowStructure, ShowAlternate,
 ShowMapAreas.</p>
+</li>
 <li>
 In <code>Style</code> menu:
 <p>
@@ -302,6 +344,7 @@ CreateElemCite, CreateElemDefinition, CreateElemCode, CreateElemVariable,
 CreateElemSample, CreateElemItalic, CreateElemBold, CreateElemTeletype,
 CreateElemStrikeOut, CreateElemBig, CreateElemSmall, CreateSub, CreateSup,
 CreateElemFont.</p>
+</li>
 <li>
 In <code>Help</code> menu:
 <p>
@@ -309,11 +352,13 @@ HelpAmaya, HelpBrowsing, HelpSelecting, HelpSearching, HelpViews,
 HelpCreating, HelpLinks, HelpChanging, HelpTables, HelpImageMaps,
 HelpStyleSheets, HelpAttributes, HelpPublishing, HelpPrinting,
 HelpMakeBook.</p>
+</li>
 </ul>
 <p>
 </p>
 </div>
 <hr>
+
 <address>
 <a href="mailto:vatton@w3.org">Ir&egrave;ne Vatton</a><br>
 <a href="../../Help/Webmaster">Webmaster</a><br>
