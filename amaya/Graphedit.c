@@ -1133,7 +1133,9 @@ void ControlPointChanged(event)
   if (elType.ElSSchema != GetGraphMLSSchema (doc))
     return;
   if (elType.ElTypeNum == GraphML_EL_polyline ||
-	    elType.ElTypeNum == GraphML_EL_polygon)
+      elType.ElTypeNum == GraphML_EL_polygon ||
+      elType.ElTypeNum == GraphML_EL_Spline ||
+      elType.ElTypeNum == GraphML_EL_ClosedSpline)
      {
 	child = TtaGetFirstChild (el);
 	length = TtaGetPolylineLength (child);
