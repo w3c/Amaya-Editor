@@ -115,8 +115,6 @@ static KEY         *Automata_current = NULL;
 
 #ifdef _WINDOWS
 static BOOL specialKey;
-static BOOL isShift = FALSE;
-static BOOL isCtrl = FALSE;
 #endif /* _WINDOWS */
 
 /*----------------------------------------------------------------------
@@ -478,16 +476,12 @@ LPARAM lParam;
       return;
 
    status = GetKeyState (VK_SHIFT);
-   if (HIBYTE (status)) {
+   if (HIBYTE (status)) 
       keyboard_mask |= THOT_MOD_SHIFT;
-	  isShift = TRUE;
-   }
 
    status = GetKeyState (VK_CONTROL);
-   if (HIBYTE (status)) {
+   if (HIBYTE (status)) 
       keyboard_mask |= THOT_MOD_CTRL;
-      isCtrl = TRUE;
-   } 
 
    status = GetKeyState (VK_MENU);
    if (HIBYTE (status))
@@ -763,7 +757,7 @@ int                 key;
      }
 
 #ifdef _WINDOWS
-   if (((isShift || isCtrl) && specialKey) || (specialKey && !found))
+   if (specialKey && !found)
 #else /* !_WINDOWS */
    if (!found)
 #endif /* _WINDOWS */
@@ -977,10 +971,6 @@ int                 key;
 	    }
 	}
      }
-#   ifdef _WINDOWS
-    isShift = FALSE;
-    isCtrl  = FALSE;
-#   endif /* _WINDOWS */
 }
 
 
