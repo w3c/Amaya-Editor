@@ -112,3 +112,6 @@
 111 Server has no new information to send back
 112 This method is not allowed for %s
 113 Please authenticate to access %s
+114 Server reports a 501 error: %s
+115 Server reports a 501 error
+116 Server does not support this request method

@@ -529,6 +529,7 @@ int                 status;
    boolean             error_flag;
    char                msg_status[10];
    HTError             *error;
+   HTErrorElement      errorElement;
    HTList              *cur;
 
    if (!me)
@@ -643,8 +644,6 @@ int                 status;
 	     me->reqStatus = HT_ERR;
 	  }
      }				/* if-else HT_END, HT_ABORT, HT_ERROR */
-   if (HTLog_isOpen ())
-      HTLog_add (request, status);
 
    if ((me->mode & AMAYA_ASYNC) || (me->mode & AMAYA_IASYNC))
      /* for the ASYNC mode, free the memory we allocated in GetObjectWWW
@@ -688,19 +687,32 @@ int                 status;
 	 TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_METHOD_NOT_ALLOWED), (char *) NULL);
        else if (status == -1)
 	 {
+	   /*
+	   ** Here we deal with errors for which libwww does not
+	   ** return a correct status code 
+	   */
 	   cur = HTRequest_error (request);
 	   error = (HTError *) HTList_nextObject (cur);
-	   if ((HTErrorElement) error->element == HTERR_INTERNAL)
-	     /* an error Henrik forgot :-/ */
+	   errorElement = error->element;
+	   if (errorElement == HTERR_NOT_IMPLEMENTED)
 	     {
-	       TtaSetStatus (me->docid, 1, "Internal Server Error", (char *) NULL);
+	       TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_SERVER_NOT_IMPLEMENTED_501_ERROR), (char *) NULL);
+	       status = -501;
+	     }
+	   else if (errorElement == HTERR_INTERNAL)
+	     {
+	       if ((error->length > 0) && (error->length <= 2) &&
+		   (error->par) && (((char *) error->par)[0] != EOS))
+		 TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_SERVER_INTERNAL_ERROR_500_CAUSE), (char *) (error->par));
+	       else
+		 TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_SERVER_INTERNAL_ERROR_500_NO_CAUSE), (char *) NULL);
 	       status = -500; 
 	     }
-	 }
-       else
-	 {
-	   sprintf (msg_status, "%d", status); 
-	 TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_UNKNOWN_XXX_STATUS), msg_status);
+	   else
+	     {
+	       sprintf (msg_status, "%d", status); 
+	       TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_UNKNOWN_XXX_STATUS), msg_status);
+	     }
 	 }
      }
    return HT_OK;
@@ -786,9 +798,6 @@ int                 status;
 	       break;
 	 }
 
-   /* Should we do logging? */
-   if (HTLog_isOpen ())
-      HTLog_add (request, status);
    HT_FREE (uri);
 
    return HT_OK;

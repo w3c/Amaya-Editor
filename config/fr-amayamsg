@@ -112,3 +112,6 @@
 111 La réponse du serveur n'a pas de corps
 112 Cette opération n'est pas permise pour %s
 113 L'accès à %s requiert votre authentification
+114 Le serveur reporte une erreur 501:
+115 Le serveur reporte une erreur 501
+116 Le serveur ne supporte pas cette methode d'accès

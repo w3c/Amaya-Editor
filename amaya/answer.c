@@ -90,6 +90,8 @@ void               *input, HTAlertPar * reply;
 	    case HT_PROG_WRITE:
 	       if ((me->method == METHOD_PUT) || (me->method == METHOD_POST))
 		 {
+		   /*experimental code to display the write progress */
+		   /*it still does not work (libwww bug) */
 #if 0
 		    HTParentAnchor     *anchor = HTRequest_anchor (request);
 		    long                cl = HTAnchor_length (anchor);
@@ -108,7 +110,9 @@ void               *input, HTAlertPar * reply;
 		    else
 #endif
 		       TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_PROG_WRITE), me->urlName);
-
+		    if (Amaya->open_requests == 1)
+		      /* only call this function if there are no other current requests */
+		      TtaHandlePendingEvents ();
 		 }
 	       break;
 

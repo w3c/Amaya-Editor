@@ -123,5 +123,8 @@ int                 AMAYA;
 #define AM_NO_DATA                    111
 #define AM_METHOD_NOT_ALLOWED         112
 #define AM_PLEASE_AUTHENTICATE        113
-#define AMAYA_MSG_MAX                 114
+#define AM_SERVER_INTERNAL_ERROR_500_CAUSE 114
+#define AM_SERVER_INTERNAL_ERROR_500_NO_CAUSE 115
+#define AM_SERVER_NOT_IMPLEMENTED_501_ERROR 116
+#define AMAYA_MSG_MAX                 117
 
