@@ -271,7 +271,8 @@ int TtaMakeFrame( const char * schema_name,
 
   while (frame_id <= MAX_FRAME && !found)
     {
-      found = (FrameTable[frame_id].FrDoc == 0 && FrameTable[frame_id].WdFrame != 0);
+      found = (FrameTable[frame_id].FrDoc == 0 &&
+	       FrameTable[frame_id].WdFrame != 0);
       if (!found)
         frame_id++;
     }
@@ -308,7 +309,7 @@ int TtaMakeFrame( const char * schema_name,
     }
   else
     {
-      /* if a frame allready exist, be sure to cleanup all its atributs */
+      /* if a frame already exist, be sure to cleanup all its atributs */
       DestroyFrame( frame_id );
     }
   
@@ -321,8 +322,8 @@ int TtaMakeFrame( const char * schema_name,
   FrameTable[frame_id].FrTopMargin    = 0; // TODO
   FrameTable[frame_id].FrScrollOrg    = 0; // TODO
   FrameTable[frame_id].FrScrollWidth  = 0; // TODO
-  FrameTable[frame_id].FrWidth        = width;
-  FrameTable[frame_id].FrHeight       = height;
+  FrameTable[frame_id].FrWidth        = 0; //width
+  FrameTable[frame_id].FrHeight       = 0; // height
   
   /* get registry default values for visibility */
   char * visiStr = TtaGetEnvString ("VISIBILITY");
