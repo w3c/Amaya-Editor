@@ -2003,7 +2003,7 @@ static void InitOpenDocForm (Document doc, View view, char *name, char *title,
     }
 
 #ifdef  _WINDOWS
-  CreateOpenDocDlgWindow (TtaGetViewFrame (doc, view), title, s, name
+  CreateOpenDocDlgWindow (TtaGetViewFrame (doc, view), title, s, name,
 			  DocSelect, DirSelect, docType);
 #else /* WINDOWS */
   TtaSetTextForm (BaseDialog + URLName, s);
