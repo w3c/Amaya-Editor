@@ -169,6 +169,7 @@ Alt <Key>f , Alt <Key>b:           CreatePushButton()
 Alt <Key>f , Alt <Key>m:           CreateOption() 
 
 #Math (types submenu)
+Ctrl <Key>m , Ctrl <Key>Space:     CreateMSPACE()
 Ctrl <Key>m , Ctrl <Key>6:         CreateMSUP() 
 Ctrl <Key>m , Ctrl <Key>=:         CreateMO()
 Ctrl <Key>m , Ctrl <Key>a:         CreateApplyFunction()

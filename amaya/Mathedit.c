@@ -647,6 +647,8 @@ static void         CreateMathConstruct (int construct)
   Element            sibling, el, row, child, leaf, placeholderEl,
                      parent, new, next, foreignObj;
   ElementType        newType, elType, parentType;
+  Attribute          attr;
+  AttributeType      attrType;
   SSchema            docSchema, mathSchema;
   char              *name;
   DisplayMode        dispMode;
@@ -1103,7 +1105,11 @@ static void         CreateMathConstruct (int construct)
     case 18:
       newType.ElTypeNum = MathML_EL_MENCLOSE;
       break;
-      
+
+    case 19:
+      newType.ElTypeNum = MathML_EL_MSPACE;
+      break;
+
     default:
       TtaCloseUndoSequence (doc);
       return;
@@ -1257,6 +1263,19 @@ static void         CreateMathConstruct (int construct)
 	  CheckAllRows (el, doc, FALSE, FALSE);
 	}
 
+      /* if the new element is a mspace, create a width attribute
+	 with a default value */
+      if (newType.ElTypeNum == MathML_EL_MSPACE)
+	{
+#define DEFAULT_MSPACE_WIDTH ".2em"
+	  attrType.AttrSSchema = mathSchema;
+	  attrType.AttrTypeNum = MathML_ATTR_width_;
+	  attr =  TtaNewAttribute (attrType);
+	  TtaAttachAttribute (el, attr, doc);
+	  TtaSetAttributeText (attr, DEFAULT_MSPACE_WIDTH, el, doc);
+	  MathMLSpacingAttr (doc, el, DEFAULT_MSPACE_WIDTH, attrType.AttrTypeNum);
+	}
+
       /* if the new element is a child of a FencedExpression element,
 	 create the associated FencedSeparator elements */
       parent = TtaGetParent (el);
@@ -1289,7 +1308,7 @@ static void         CreateMathConstruct (int construct)
       if (leaf)
 	TtaSelectElement (doc, leaf);
     }
-  
+
   TtaCloseUndoSequence (doc);
 }
 
@@ -1917,6 +1936,14 @@ CreateMO
 void CreateMO (Document document, View view)
 {
    CreateCharStringElement (MathML_EL_MO, document);
+}
+
+/*----------------------------------------------------------------------
+CreateMSPACE
+ -----------------------------------------------------------------------*/
+void CreateMSPACE (Document document, View view)
+{
+   CreateMathConstruct (19);
 }
 
 /*----------------------------------------------------------------------

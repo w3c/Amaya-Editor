@@ -908,6 +908,14 @@
 	<message xml:lang="es">Operador (mo)</message>
 	<message xml:lang="pt">Operador (mo)</message>
 </label>
+<label define="BMSpace">
+	<message xml:lang="en">Space (mspace)</message>
+	<message xml:lang="fr">Espace (mspace)</message>
+	<message xml:lang="de">Platz (mspace)</message>
+	<message xml:lang="it">Spazio (mspace)</message>
+	<message xml:lang="es">Espacio (mspace)</message>
+	<message xml:lang="pt">Espaço (mspace)</message>
+</label>
 <label define="BMEntity">
 	<message xml:lang="en">Character (&amp;xxx;)</message>
 	<message xml:lang="fr">CaractÃ¨re (&amp;xxx;)</message>
