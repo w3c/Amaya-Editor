@@ -174,11 +174,11 @@ static ThotWindow         GreekPal = NULL;
 static ThotWindow         CharacterForm = NULL;
 static ThotWindow         FormatForm = NULL;
 static ThotWindow         PrintForm = NULL;
+static ThotWindow         DocInfo[DocumentTableLength];
 
 static UINT         itemIndex;
 static UINT         nbClass;
 static UINT         nbItem;
-
 
 static CHAR_T*      string_par1;
 static CHAR_T*      string_par2;
@@ -190,6 +190,9 @@ ThotWindow          ghwndAbort;
 ThotWindow          ghwndMain;
 ThotWindow          MakeIDHwnd;
 ThotBool            gbAbort;
+
+Document            tmpDoc; /* used to pass the Document id to the
+			       callback when setting up a menu */
 
 /* ------------------------------------------------------------------------ *
    ReusePrinterDC()
@@ -2962,6 +2965,65 @@ LRESULT CALLBACK MakeIDDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam, LPAR
 }
 
 /*-----------------------------------------------------------------------
+ MakeIDDlgProc
+ ------------------------------------------------------------------------*/
+#if 0
+LRESULT CALLBACK DocumentInfoDlgPro (ThotWindow hwnDlg, UINT msg, WPARAM wParam, LPARAM lParam)
+{
+  switch (msg)
+    {
+    case WM_INITDIALOG:
+      DocInfo[doc] = hwnDlg;
+      /* init the dialog's text */
+      SetWindowText (hwnDlg, TEXT("Document Info"));
+      SetWindowText (GetDlgItem (hwnDlg, ID_DONE), 
+		     TtaGetMessage (LIB, TMSG_DONE));
+
+      /* set up the other fields */
+
+      /* document URL */
+      SetDlgItemText (hwnDlg, IDC_DIURL, TEXT("Location:"));
+      SetDlgItemText (hwnDlg, IDC_DIURL_VAL, DocumentURLs[doc]);
+
+      /* MIME type */
+      SetDlgItemText (hwnDlg, IDC_DIMIMETYPE, TEXT("MIME type:"));
+      SetDlgItemText (hwnDlg, IDC_DIMIMETYPE_VAL, 
+		      DocumentMeta[doc]->content_type);
+
+      /* charset */
+      SetDlgItemText (hwnDlg, IDC_DICHARSET, TEXT("Charset:"));
+      SetDlgItemText (hwnDlg, IDC_DICHARSET_VAL, DocumentMeta[doc]->charset);
+
+      /* content length */
+      SetDlgItemText (hwnDlg, IDC_DICHARSET, TEXT("Content Length:"));
+      SetDlgItemText (hwnDlg, IDC_DICHARSET_VAL, DocumentMeta[doc]->charset);
+      break;
+
+    case WM_CLOSE:
+    case WM_DESTROY:
+      DocInfo[doc] = NULL;
+      EndDialog (hwnDlg, ID_DONE);
+      break;
+      
+    case WM_COMMAND:
+      
+      switch (LOWORD (wParam))
+	{
+	  /* action buttons */
+	case ID_DONE:
+	  MakeIDHwnd[doc] = NULL;
+	  EndDialog (hwnDlg, ID_DONE);
+	  break;
+	}
+      break;
+      
+    default: return FALSE;
+    }
+  return TRUE;
+#endif
+}
+
+/*-----------------------------------------------------------------------
  CreateAltDlgWindow
  ------------------------------------------------------------------------*/
 void CreateAltDlgWindow ()
@@ -3373,5 +3435,21 @@ void CreateMakeIDDlgWindow (ThotWindow parent)
   if (MakeIDHwnd)
     EndDialog (MakeIDHwnd, ID_DONE);
   DialogBox (hInstance, MAKEINTRESOURCE (MAKEIDMENU), NULL, (DLGPROC) MakeIDDlgProc);
+}
+
+*-----------------------------------------------------------------------
+ CreateAuthentificationDlgWindow
+ ------------------------------------------------------------------------*/
+void CreateDocumentInfoDlgWindow (ThotWindow parent, const Document doc)
+{  
+  /*
+  if (DocInfo[doc])
+    SetFocus (DocInfo[doc]);
+  else
+    {
+      tmpDoc = doc;
+      DialogBox (hInstance, MAKEINTRESOURCE (DOCUMENTINFODIALOG), parent, (DLGPROC) DocumentInfoDlgProc);
+    }
+  */
 }
 #endif /* _WINDOWS */
