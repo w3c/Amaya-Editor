@@ -1404,6 +1404,7 @@ int                 frame;
 #endif /* _GTK */
 #endif /* _WINDOWS */
 		  TtFonts[i] = NULL;
+		  TtFontFrames[i] = 0;
 	       }
 	     else
 		TtFontFrames[i] = TtFontFrames[i] & (~mask);

@@ -382,7 +382,7 @@ static ThotBool CloseTextInsertionWithControl ()
    int                 i, j;
    int                 ind;
    int                 frame;
-   ThotBool            notified;
+   ThotBool            notified, isAttr;
 
    /* No more enclosing cell */
    LastInsertCell = NULL;
@@ -489,38 +489,45 @@ static ThotBool CloseTextInsertionWithControl ()
 			else if (pBox->BxType != BoGhost)
 			   pBox = NULL;
 		     }
-
+	     /* prepare the selection within attribute values */
+	     isAttr = (pSelBox->BxAbstractBox->AbPresentationBox &&
+		       pSelBox->BxAbstractBox->AbCreatorAttr != NULL);
 	     NewContent (pSelBox->BxAbstractBox);
 	     /* signale la nouvelle selection courante */
-	     pFrame = &ViewFrameTable[frame - 1];
-	     pViewSel = &pFrame->FrSelectionBegin;
-	     pViewSelEnd = &pFrame->FrSelectionEnd;
-	     if (pViewSel->VsBox != NULL)
+	     if (isAttr)
+	       LocateSelectionInView (frame, ClickX, ClickY, 2);
+	     else
 	       {
-		  i = pViewSel->VsBox->BxIndChar + pViewSel->VsIndBox;
-		  if (pViewSel->VsIndBuf > 0)
-		     i++;
-
-		  /* Faut-il changer l'autre extremite de la selection ? */
-		  pBox = pViewSelEnd->VsBox;
-		  if (pBox != NULL)
-		     if (pBox->BxAbstractBox == pViewSel->VsBox->BxAbstractBox)
-		       {
-			  j = pBox->BxIndChar + pViewSelEnd->VsIndBox;
-			  if (pViewSelEnd->VsIndBuf > 0)
+		 pFrame = &ViewFrameTable[frame - 1];
+		 pViewSel = &pFrame->FrSelectionBegin;
+		 pViewSelEnd = &pFrame->FrSelectionEnd;
+		 if (pViewSel->VsBox != NULL)
+		   {
+		     i = pViewSel->VsBox->BxIndChar + pViewSel->VsIndBox;
+		     if (pViewSel->VsIndBuf > 0)
+		       i++;
+		     
+		     /* Faut-il changer l'autre extremite de la selection ? */
+		     pBox = pViewSelEnd->VsBox;
+		     if (pBox != NULL)
+		       if (pBox->BxAbstractBox == pViewSel->VsBox->BxAbstractBox)
+			 {
+			   j = pBox->BxIndChar + pViewSelEnd->VsIndBox;
+			   if (pViewSelEnd->VsIndBuf > 0)
 			     j++;
-			  ChangeSelection (frame, pViewSel->VsBox->BxAbstractBox, i, FALSE, TRUE, FALSE, FALSE);
-			  if (pViewSel->VsBox->BxAbstractBox != pBox->BxAbstractBox || i != j)
+			   ChangeSelection (frame, pViewSel->VsBox->BxAbstractBox, i, FALSE, TRUE, FALSE, FALSE);
+			   if (pViewSel->VsBox->BxAbstractBox != pBox->BxAbstractBox || i != j)
 			     ChangeSelection (frame, pBox->BxAbstractBox, j, TRUE, TRUE, FALSE, FALSE);
-		       }
+			 }
+		       else
+			 ChangeSelection (frame, pViewSel->VsBox->BxAbstractBox, i, FALSE, TRUE, FALSE, FALSE);
 		     else
-			ChangeSelection (frame, pViewSel->VsBox->BxAbstractBox, i, FALSE, TRUE, FALSE, FALSE);
-		  else
-		     ChangeSelection (frame, pViewSel->VsBox->BxAbstractBox, i, FALSE, TRUE, FALSE, FALSE);
-		  /* Nouvelle position de reference du curseur */
-		  ClickX = pViewSel->VsBox->BxXOrg + pViewSel->VsXPos - pFrame->FrXOrg;
+		       ChangeSelection (frame, pViewSel->VsBox->BxAbstractBox, i, FALSE, TRUE, FALSE, FALSE);
+		     /* Nouvelle position de reference du curseur */
+		     ClickX = pViewSel->VsBox->BxXOrg + pViewSel->VsXPos - pFrame->FrXOrg;
+		   }
 	       }
-
+	     
 	     if (LastInsertElText != NULL)
 	       {
 		 /* Notify the end of text insertion */
