@@ -1330,7 +1330,9 @@ int TtaAddButton (Document document, View view, ThotIcon picture,
   int                 n;
   XmString            title_string;
   Arg                 args[MAX_ARGS];
-#endif /* _GTK */
+#else /* _GTK */
+  ThotWidget          tmpw;
+#endif /* !_GTK */
   ThotWidget          w, row;
 #else  /* _WINDOWS */
   ThotButton          w;
@@ -1362,15 +1364,26 @@ int TtaAddButton (Document document, View view, ThotIcon picture,
 #ifndef _WINDOWS
 #ifdef _GTK
 		  if (picture == None)
-		    gtk_toolbar_append_space (GTK_TOOLBAR (FrameTable[frame].Button[0]));
+		    {
+		      gtk_toolbar_append_space (GTK_TOOLBAR (FrameTable[frame].Button[0]));
+		      gtk_object_set_data (GTK_OBJECT(row), "Icon", (gpointer)NULL);
+		    }
 		  else
 		    {
-		      /* insert the icon */
+		      /* Add a button widget to the toolbar and put a pixmap into */
+		      /* 2 widgets are created , and only the pixmap widget will be updated */
+		      row = gtk_button_new ();
 		      w = gtk_pixmap_new (picture, NULL);
-		      row = gtk_toolbar_append_item (GTK_TOOLBAR (FrameTable[frame].Button[0]), 
-						     NULL, info ,"private", 
-						     w, GTK_SIGNAL_FUNC (APP_ButtonCallback), 
-						     (gpointer)frame);
+		      /* insert the icon */
+		      gtk_container_add (GTK_CONTAINER (row), w);
+		      gtk_toolbar_append_widget (GTK_TOOLBAR (FrameTable[frame].Button[0]), 
+						 row, info ,"private");
+		      /* Connecte the clicked acton to the button */
+		      gtk_signal_connect (GTK_OBJECT (row),
+					  "clicked",
+					  GTK_SIGNAL_FUNC (APP_ButtonCallback),
+					  (gpointer)frame);
+		      gtk_object_set_data (GTK_OBJECT(row), "Icon", (gpointer)w);
 		      gtk_widget_show (row);
 		      FrameTable[frame].Call_Button[i] = (Proc) procedure;
 		    }
@@ -1595,8 +1608,13 @@ void TtaSwitchButton (Document document, View view, int index)
 void TtaChangeButton (Document document, View view, int index, ThotIcon picture, ThotBool state)
 {
 #ifndef _WINDOWS
+#ifndef _GTK
   Arg                 args[MAX_ARGS];
   int                 n;
+#else /* _GTK */
+  ThotWidget          tmpw;
+  ThotWidget          pixtmp;
+#endif /* !_GTK */
 #endif
   int                 frame;
 
@@ -1630,13 +1648,18 @@ void TtaChangeButton (Document document, View view, int index, ThotIcon picture,
 	      XtSetValues (FrameTable[frame].Button[index], args, n);
 	      FrameTable[frame].EnabledButton[index] = state;
 #else /* _GTK */
-	      /*
-	      * A FAIRE
-	      * une solution serait de modifier directement l'attribut icon de la GtkToolbarChild
-	      * http://developer.gnome.org/doc/API/gtk/gtktoolbar.html#GTKTOOLBAR-STRUCT
-	      *
-	      *
-	      **/
+	      /* Update the toolbar button stat: Replace the old picture by the new */
+	      /* The old picture is linked to the button widget with gtk_object_set_data */
+	      tmpw = GTK_WIDGET(gtk_object_get_data (GTK_OBJECT (FrameTable[frame].Button[index]), "Icon")); 
+	      if (tmpw)
+		{
+		  gtk_container_remove (GTK_CONTAINER (FrameTable[frame].Button[index]),
+					GTK_WIDGET (tmpw));
+		  tmpw = gtk_pixmap_new (picture, NULL);
+		  gtk_container_add (GTK_CONTAINER (FrameTable[frame].Button[index]), GTK_WIDGET(tmpw));
+		  gtk_object_set_data (GTK_OBJECT(FrameTable[frame].Button[index]), "Icon", (gpointer)tmpw);
+		}
+	      gtk_widget_show_all (GTK_WIDGET(FrameTable[frame].Button[index]));
 	      FrameTable[frame].EnabledButton[index] = state;
 #endif /* !_GTK */
 #endif /* _WINDOWS */

@@ -533,9 +533,9 @@ static void LayoutPicture (Pixmap pixmap, Drawable drawable, int picXOrg,
 	      XSetClipOrigin (TtDisplay, tiledGC, 0, 0);
 	    }
 #else /* _GTK */
+	  gdk_gc_set_fill (tiledGC, GDK_TILED);
 	  gdk_gc_set_ts_origin (tiledGC, xFrame, yFrame);
 	  gdk_gc_set_tile (tiledGC, pixmap);
-	  gdk_gc_set_fill (tiledGC, GDK_TILED);
 	  if (picPresent == RealSize)
 	    {
 	      if (imageDesc->PicMask)
@@ -812,12 +812,6 @@ void InitPictureHandlers (ThotBool printing)
   gdk_rgb_gc_set_background (TtGraphicGC, White_Color);
   gdk_gc_set_exposures (TtGraphicGC,0);
 
-  /* initialize Graphic context to display pictures */
-  /*  TtGraphicGC = gdk_gc_new (DefaultDrawable);
-  gdk_rgb_gc_set_foreground (TtGraphicGC, Black_Color);
-  gdk_rgb_gc_set_background (TtGraphicGC, White_Color);
-  gdk_gc_set_exposures (TtGraphicGC,0);
-  */
    /* initialize Graphic context to create pixmap */
    GCimage = gdk_gc_new (DefaultDrawable);
    gdk_rgb_gc_set_foreground (GCimage, Black_Color);
@@ -826,6 +820,7 @@ void InitPictureHandlers (ThotBool printing)
 
    /* initialize Graphic context to display tiled pictures */
    tiledGC = gdk_gc_new (DefaultDrawable);
+   gdk_gc_set_fill (tiledGC, GDK_TILED);
    gdk_rgb_gc_set_foreground (tiledGC, Black_Color);
    gdk_rgb_gc_set_background (tiledGC, White_Color);
    gdk_gc_set_exposures (tiledGC,0);

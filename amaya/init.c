@@ -1334,8 +1334,13 @@ void InitFormAnswer (Document document, View view, const char *auth_realm, char 
    
    TtaNewTextForm (BaseDialog + NameText, BaseDialog + FormAnswer,
 		   TtaGetMessage (AMAYA, AM_NAME), NAME_LENGTH, 1, FALSE);
+#ifndef _GTK
    TtaNewTextForm (BaseDialog + PasswordText, BaseDialog + FormAnswer,
 		   TtaGetMessage (AMAYA, AM_PASSWORD), NAME_LENGTH, 1, TRUE);
+#else /* _GTK */
+   TtaNewPwdForm (BaseDialog + PasswordText, BaseDialog + FormAnswer,
+		  TtaGetMessage (AMAYA, AM_PASSWORD), NAME_LENGTH, 1, FALSE);
+#endif /* !_GTK */
    TtaSetTextForm (BaseDialog + NameText, Answer_name);
    TtaSetTextForm (BaseDialog + PasswordText, Answer_password);
    TtaSetDialoguePosition ();
@@ -4335,6 +4340,7 @@ void CallbackDialogue (int ref, int typedata, char *data)
        Answer_text[NAME_LENGTH - 1] = EOS;
        break;
      case PasswordText:
+#ifndef _GTK
        i = strlen (data);
        if (i < NAME_LENGTH - 1)
 	 {
@@ -4360,6 +4366,10 @@ void CallbackDialogue (int ref, int typedata, char *data)
        if (i > 0)
 	 TtaSetTextForm (BaseDialog + PasswordText, Display_password);
 #endif /* !_WINDOWS */
+#else /* _GTK */
+       strncpy (Answer_text, data, MAX_LENGTH);
+       Answer_text[MAX_LENGTH - 1] = EOS;
+#endif /* !_GTK */
        break;
        
        /* *********Save document as********* */

@@ -2261,7 +2261,7 @@ void SaveOptions (Document doc, View view)
 void ConfigAnnot (Document doc, View view)
 {
 #ifdef ANNOTATIONS
-   AnnotConfMenu (doc, view);
+     AnnotConfMenu (doc, view);
 #endif /* ANNOTATIONS */
 }
 

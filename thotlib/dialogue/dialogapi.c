@@ -7518,6 +7518,22 @@ void TtaNewTextForm (int ref, int ref_parent, char *title, int width,
 }
 
 /*----------------------------------------------------------------------
+   TtaNewPwdForm creates a dialogue element to input password text:   
+   Parameter ref gives the Thot reference.
+   Parameter title gives the dialogue title.
+   Parameters width and height give the box size. 
+   If the parameter react is TRUE, any change in the input box generates a
+   callback to the application.
+  ----------------------------------------------------------------------*/
+void TtaNewPwdForm (int ref, int ref_parent, char *title, int width,
+ 		     int height, ThotBool react)
+{
+  struct Cat_Context *catalogue;
+  TtaNewTextForm (ref, ref_parent, title, width, height, react);
+  catalogue = CatEntry (ref);
+  gtk_entry_set_visibility (GTK_WIDGET(catalogue->Cat_Entries), FALSE);
+}
+/*----------------------------------------------------------------------
    TtaSetTextForm initialise une feuille de saisie de texte :         
    The parameter ref donne la re'fe'rence du catalogue.               
    The parameter text donne la valeur initiale.                       
