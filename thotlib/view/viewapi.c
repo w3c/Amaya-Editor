@@ -702,19 +702,21 @@ int                 value;
    int                 valvisib, valzoom;
 
    UserErrorCode = 0;
-   if (valvisib < 0 || valvisib > 10)
-     TtaError (ERR_invalid_parameter);
-   else
+   frame = GetWindowNumber (document, view);
+   if (frame != 0)
      {
-       frame = GetWindowNumber (document, view);
-       if (frame != 0)
+       GetFrameParams (frame, &valvisib, &valzoom);
+       if (valvisib < 0 || valvisib > 10)
+	 TtaError (ERR_invalid_parameter);
+       else
 	 {
-	   GetFrameParams (frame, &valvisib, &valzoom);
 	   /* Translation of the sensibility into threshold */
 	   valvisib = 10 - value;
 	   SetFrameParams (frame, valvisib, valzoom);
 	 }
      }
+   else
+     TtaError (ERR_invalid_parameter);
 }
 
 
@@ -743,12 +745,12 @@ int                 value;
   int                 valvisib, valzoom;
 
   UserErrorCode = 0;
-  if (valzoom < 0 || valzoom > 10)
-    TtaError (ERR_invalid_parameter);
-  else
+  frame = GetWindowNumber (document, view);
+  if (frame != 0)
     {
-      frame = GetWindowNumber (document, view);
-      if (frame != 0)
+      if (valzoom < 0 || valzoom > 10)
+	TtaError (ERR_invalid_parameter);
+      else
 	{
 	  GetFrameParams (frame, &valvisib, &valzoom);
 	  /* Translation of the sensibility into threshold */
@@ -756,6 +758,8 @@ int                 value;
 	  SetFrameParams (frame, valvisib, valzoom);
 	}
     }
+  else
+    TtaError (ERR_invalid_parameter);
 }
 
 
@@ -776,10 +780,8 @@ int                 value;
    desired y coordinate of the top of the element.
 
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 void                TtaShowElement (Document document, View view, Element element, int position)
-
 #else  /* __STDC__ */
 void                TtaShowElement (document, view, element, position)
 Document            document;
