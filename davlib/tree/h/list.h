@@ -18,9 +18,6 @@
 #ifndef AWLIST_H
 #define AWLIST_H
 
-extern void * calloc (size_t count, size_t size);
-extern void free (void *ptr);
-
 #define LIST_OK 1		/* success flag */
 #define LIST_FAILED -1		/* failed flag */
 

@@ -12,7 +12,10 @@
  ** $Author$
  ** $Revision$
  ** $Log$
- ** Revision 1.1  2002-05-31 10:48:47  kirschpi
+ ** Revision 1.2  2002-06-17 10:04:48  cheyroul
+ ** Win32 : calloc and free bad re-prototyping correction
+ **
+ ** Revision 1.1  2002/05/31 10:48:47  kirschpi
  ** Added a new module for WebDAV purposes _ davlib.
  ** Some changes have been done to add this module in the following files:
  ** amaya/query.c, amaya/init.c, amaya/answer.c, amaya/libwww.h, amaya/amayamsg.h,
@@ -66,8 +69,6 @@
 #include "list.h"
 #include "awstring.h"
 
-extern void * calloc (size_t count, size_t size);
-extern void free (void *ptr);
 
 #define AW_OK 1     		/* macros with return codes values */
 #define AW_FAILED -1
