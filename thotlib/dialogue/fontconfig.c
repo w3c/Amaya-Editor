@@ -282,7 +282,7 @@ char *FontLoadFromConfig (char script,
 			  int family, 
 			  int highlight)
 {
-  int int_script = 1;
+  int intscript = 1;
 
   if (Fonttab == NULL)
     Fonttab = FontConfigLoad ();
