@@ -563,10 +563,7 @@ static void MenuValues (TtAttribute * pAttr1, ThotBool required,
      {
        form = NumMenuAttrRequired;
        if (MandatoryAttrFormExists)
-	 {
-	   TtaUnmapDialogue (NumMenuAttrRequired);
-	   TtaDestroyDialogue (NumMenuAttrRequired);
-	 } 
+	 TtaDestroyDialogue (NumMenuAttrRequired);
 #ifdef _GTK
        TtaNewForm (NumMenuAttrRequired, TtaGetViewFrame (doc, view),
 		   TtaGetMessage (LIB, TMSG_ATTR), FALSE, 2, 'L', D_DONE);
@@ -582,10 +579,7 @@ static void MenuValues (TtAttribute * pAttr1, ThotBool required,
      {
        form = NumMenuAttr;
        if (AttrFormExists)
-	 {
-	 TtaUnmapDialogue (NumMenuAttr);
 	 TtaDestroyDialogue (NumMenuAttr);
-	 } 
 #ifdef _GTK
        TtaNewSheet (NumMenuAttr, TtaGetViewFrame (doc, view),
 		    TtaGetMessage (LIB, TMSG_ATTR), buttons, bufMenu, FALSE, 2,
@@ -1478,7 +1472,6 @@ void CallbackValAttrMenu (int ref, int valmenu, char *valtext)
 	      UpdateAttrMenu (SelDoc);
 	      DeleteAttribute (NULL, pAttrNew);
 	    }
-	  DocCurrentAttr = NULL;
 	}
     }
 }
@@ -1729,7 +1722,7 @@ void CloseAttributeDialogues (PtrDocument pDoc)
        }
      else
        {
-	 TtaUnmapDialogue (NumMenuAttr);
+	 TtaDestroyDialogue (NumMenuAttrRequired);
 	 TtaDestroyDialogue (NumMenuAttr);
        }
      SchCurrentAttr = NULL;

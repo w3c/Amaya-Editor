@@ -3156,10 +3156,10 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
   /* space added at the top and bottom of the paragraph */
   spacing = lineSpacing - BoxFontHeight (pBox->BxFont);
   standard = (spacing >= 0);
-  if (spacing > 0)
+  /*if (spacing > 0)
     spacing /= 2;
-  else
-    spacing = 0;
+    else*/
+  spacing = 0;
   width = pBox->BxW;
   if (width > BoxCharacterWidth (119, pBox->BxFont)/*'w'*/ || extensibleBox)
     {
