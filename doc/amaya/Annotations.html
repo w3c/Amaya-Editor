@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>Annotations in Amaya</title>
-  <meta name="GENERATOR" content="amaya V4.2.2" />
+  <meta name="GENERATOR" content="amaya V4.3.1" />
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 </head>
 
@@ -34,6 +34,7 @@
   <li><a href="#Deleting">Deleting an Annotation</a></li>
   <li><a href="#Loading">Loading and Presenting Annotations</a></li>
   <li><a href="#Navigating">Navigating Annotations</a></li>
+  <li><a href="#Moving1">Moving annotations</a></li>
   <li><a href="#Issues1">Issues with Annotations and Modified
   Documents</a></li>
 </ul>
@@ -309,6 +310,38 @@ of the used device.</p>
 
 <p style="text-align: center"><img src="../Icons/linkwindow.png"
 alt="Link window shows annotations" /></p>
+</div>
+
+<div id="Moving">
+<h3 id="Moving1">Moving annotations</h3>
+
+<p>Amaya also lets you to move an annotation to any other part of the same
+document. This is interesting, for example, to handle <a
+href="#Issues1">orphan and misleading annotations</a>. You can move an
+annotation to either the current selection or to the value of a stored
+XPointer. For the moment, it is only possible to move annotations in the same
+document where they were created.</p>
+
+<p>To move an annotation to a current selection, first open the annotation
+window. Then, click on the annotated document and select something on it.
+Then, on the Annotation Window, invoke the <strong>Annotations/Move to
+selection</strong>menu. Amaya will then move the annotation icon to the text
+you selected and will mark the annotation document as modified. In order to
+make this change effective, you will have to save the annotation. Otherwise,
+you will loose the change. Similarly to the creation of annotations, you can
+also move an annotation to the current position of the cursor (caret), without
+having to make a selection.</p>
+
+<p>You can also memorize the position where you want to move the annotation
+to, and then move them there. This is useful, for example, if you want to move
+many annotations to the same position or if you want to scroll elsewhere in
+the document before doing the move. To do this, make the selection (or just
+place the cursor) to the location where you want to move the annotation. Then,
+use the <strong>Link/Store link as XPointer</strong> menu to internally store
+an XPointer that represents that selection. Finally, in the Annotations
+window, use the <strong>Annotations/Move to stored XPointer</strong>menu to
+move the annotation to its new location. As before, you will have to save the
+annotation to make this change effective.</p>
 </div>
 
 <div id="Issues">
