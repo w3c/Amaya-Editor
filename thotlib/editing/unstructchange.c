@@ -488,7 +488,7 @@ PtrDocument         pDoc;
 	   pChild = pOrig->ElFirstChild;
 	   pElem = pEl;
 	   pPasted = NULL;
-	   if (before)
+	   if (before && pChild != NULL)
 	     /* insert first the last element before */
 	     while (pChild->ElNext != NULL)
 	       pChild = pChild->ElNext;
