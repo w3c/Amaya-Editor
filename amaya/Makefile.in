@@ -226,19 +226,20 @@ libCSS.a : $(CSS_OBJ)
 	$(RANLIB) libCSS.a
 
 AMAYA_OBJ = \
-	wxdialog/TitleDlgWX.o \
-	wxdialog/InitConfirmDlgWX.o \
-	wxdialog/OpenDocDlgWX.o \
-	wxdialog/SearchDlgWX.o \
-	wxdialog/PrintDlgWX.o \
-	wxdialog/SaveAsDlgWX.o \
-	wxdialog/CSSDlgWX.o \
 	wxdialog/AmayaDialog.o \
+	wxdialog/AuthentDlgWX.o \
+	wxdialog/CreateTableDlgWX.o \
+	wxdialog/CSSDlgWX.o \
 	wxdialog/DocInfoDlgWX.o \
 	wxdialog/HRefDlgWX.o \
-	wxdialog/CreateTableDlgWX.o \
+	wxdialog/InitConfirmDlgWX.o \
+	wxdialog/OpenDocDlgWX.o \
 	wxdialog/PreferenceDlgWX.o \
+	wxdialog/PrintDlgWX.o \
+	wxdialog/SaveAsDlgWX.o \
+	wxdialog/SearchDlgWX.o \
 	wxdialog/SpellCheckDlgWX.o \
+	wxdialog/TitleDlgWX.o \
 	wxdialogapi.o \
 	EDITORAPP.o \
 	HTMLAPP.o \

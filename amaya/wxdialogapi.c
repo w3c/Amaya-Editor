@@ -10,18 +10,19 @@
 #include "message_wx.h"
 
 #ifdef _WX
-  #include "wxdialog/InitConfirmDlgWX.h"
-  #include "wxdialog/OpenDocDlgWX.h"
-  #include "wxdialog/TitleDlgWX.h"
-  #include "wxdialog/SearchDlgWX.h"
-  #include "wxdialog/PrintDlgWX.h"
-  #include "wxdialog/SaveAsDlgWX.h"
+  #include "wxdialog/AuthentDlgWX.h"
+  #include "wxdialog/CreateTableDlgWX.h"
   #include "wxdialog/CSSDlgWX.h"
   #include "wxdialog/DocInfoDlgWX.h"
   #include "wxdialog/HRefDlgWX.h"
+  #include "wxdialog/InitConfirmDlgWX.h"
+  #include "wxdialog/OpenDocDlgWX.h"
   #include "wxdialog/PreferenceDlgWX.h"
-  #include "wxdialog/CreateTableDlgWX.h"
+  #include "wxdialog/PrintDlgWX.h"
+  #include "wxdialog/SaveAsDlgWX.h"
+  #include "wxdialog/SearchDlgWX.h"
   #include "wxdialog/SpellCheckDlgWX.h"
+  #include "wxdialog/TitleDlgWX.h"
 #endif /* _WX */
 
 
@@ -42,7 +43,8 @@ wxArrayString BuildWX_URL_List( const char * url_list )
 #endif /* _WX */
 
 /*----------------------------------------------------------------------
-  CreateInitConfirmDlgWX create the dialog for document changes (save/not save) comfirmation.
+  CreateInitConfirmDlgWX create the dialog for document changes
+  (save/not save) comfirmation.
   params:
     + the thotlib catalog reference
     + parent : parent window
@@ -159,11 +161,6 @@ ThotBool CreateOpenDocDlgWX ( int ref,
   else 
     wx_filter = APPFILENAMEFILTER;
 
-
-  wxLogDebug( _T("CreateOpenDocDlgWX - title=")+wx_title+
-	      _T("\tdocName=")+wx_docName+
-	      _T("\tfilter=")+wx_filter );
-
   OpenDocDlgWX * p_dlg = new OpenDocDlgWX( ref,
 					   parent,
 					   wx_title,
@@ -196,10 +193,8 @@ ThotBool CreateOpenDocDlgWX ( int ref,
   /* ---------------------------------------------------------- */
 
   if ( TtaRegisterWidgetWX( ref, p_dlg ) )
-    {
       /* the dialog has been sucesfully registred */
       return TRUE;
-    }
   else
     {
       /* an error occured durring registration */
@@ -224,20 +219,14 @@ ThotBool CreateTitleDlgWX ( int ref,
 #ifdef _WX
   wxString wx_title     = TtaConvMessageToWX( TtaGetMessage (AMAYA, AM_CHANGE_TITLE) );
   wxString wx_doc_title = TtaConvMessageToWX( doc_title );
-
-  wxLogDebug( _T("TitlelgWX - title=")+wx_title+
-	      _T("\tdoc_title=")+wx_doc_title );
-
   TitleDlgWX * p_dlg = new TitleDlgWX( ref,
 				       parent,
 				       wx_title,
 				       wx_doc_title );
 
   if ( TtaRegisterWidgetWX( ref, p_dlg ) )
-    {
       /* the dialog has been sucesfully registred */
       return TRUE;
-    }
   else
     {
       /* an error occured durring registration */
@@ -263,11 +252,6 @@ ThotBool CreateSearchDlgWX ( int ref, ThotWindow parent,  char* caption,
   wxString wx_caption = TtaConvMessageToWX( caption );
   wxString wx_searched = TtaConvMessageToWX( searched );
   wxString wx_replace = TtaConvMessageToWX( replace );
-
-  wxLogDebug( _T("SearchDlgWX - caption=")+wx_caption+
-	      _T("\tsearched=")+wx_searched+
-	      _T("\treplace=")+wx_replace );
-
   SearchDlgWX * p_dlg = new SearchDlgWX( ref,
 					 parent,
 					 wx_caption,
@@ -277,10 +261,8 @@ ThotBool CreateSearchDlgWX ( int ref, ThotWindow parent,  char* caption,
 					 searchAfter );
 
   if ( TtaRegisterWidgetWX( ref, p_dlg ) )
-    {
-      /* the dialog has been sucesfully registred */
-      return TRUE;
-    }
+    /* the dialog has been sucesfully registred */
+    return TRUE;
   else
     {
       /* an error occured durring registration */
@@ -302,18 +284,13 @@ ThotBool CreatePrintDlgWX ( int ref, ThotWindow parent,  char* ps_file)
 {
 #ifdef _WX
   wxString wx_ps_file = TtaConvMessageToWX( ps_file );
-
-  wxLogDebug( _T("PrintDlgWX - ps_file=")+wx_ps_file );
-
   PrintDlgWX * p_dlg = new PrintDlgWX( ref,
 				       parent,
 				       wx_ps_file );
 
   if ( TtaRegisterWidgetWX( ref, p_dlg ) )
-    {
       /* the dialog has been sucesfully registred */
       return TRUE;
-    }
   else
     {
       /* an error occured durring registration */
@@ -336,13 +313,50 @@ ThotBool CreateSaveAsDlgWX ( int ref, ThotWindow parent,
 {
 #ifdef _WX
   wxString wx_pathname = TtaConvMessageToWX( pathname );
-
-  wxLogDebug( _T("SaveAsDlgWX - pathname=")+wx_pathname );
-
   SaveAsDlgWX * p_dlg = new SaveAsDlgWX( ref,
 					 parent,
 					 wx_pathname,
 					 doc );
+
+  if ( TtaRegisterWidgetWX( ref, p_dlg ) )
+      /* the dialog has been sucesfully registred */
+      return TRUE;
+  else
+    {
+      /* an error occured durring registration */
+      p_dlg->Destroy();
+      return FALSE;
+    }
+#else /* _WX */
+  return FALSE;
+#endif /* _WX */
+}
+
+/*----------------------------------------------------------------------
+  CreateAuthentDlgWX create the Authentification dialog
+  params:
+    + pathname : file location
+  returns:
+  ----------------------------------------------------------------------*/
+ThotBool CreateAuthentDlgWX ( int ref, ThotWindow parent,
+			     char *auth_realm, char *server)
+{
+#ifdef _WX
+  char *label;
+
+  label = (char *)TtaGetMemory (((server) ? strlen (server) : 0)
+				+ strlen (TtaGetMessage (AMAYA, 
+					      AM_AUTHENTICATION_REALM_SERVER))
+				+ ((auth_realm) ? strlen (auth_realm) : 0)
+				+ 20); /*a bit more than enough memory */
+  sprintf (label, TtaGetMessage (AMAYA, AM_AUTHENTICATION_REALM_SERVER),
+	   ((auth_realm) ? auth_realm : ""), 
+	   ((server) ? server : ""));
+  wxString wx_identification = TtaConvMessageToWX( label );
+  AuthentDlgWX * p_dlg = new AuthentDlgWX( ref,
+					   parent,
+					   wx_identification);
+  TtaFreeMemory (label);
 
   if ( TtaRegisterWidgetWX( ref, p_dlg ) )
     {
@@ -388,7 +402,7 @@ ThotBool CreateCSSDlgWX( int ref,
   if ( nb_item <= 0 )
     {
       wxMessageDialog messagedialog( NULL,
-				     TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_NO_CSS)), 
+				     TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_NO_CSS)),
 				     wx_title,
 				     (long) wxOK | wxICON_EXCLAMATION | wxSTAY_ON_TOP);
       messagedialog.ShowModal();
@@ -402,10 +416,8 @@ ThotBool CreateCSSDlgWX( int ref,
 				   wx_items );
 
   if ( TtaRegisterWidgetWX( ref, p_dlg ) )
-    {
       /* the dialog has been sucesfully registred */
       return TRUE;
-    }
   else
     {
       /* an error occured durring registration */
@@ -423,17 +435,12 @@ ThotBool CreateCSSDlgWX( int ref,
 ThotBool CreateDocInfoDlgWX ( int ref, ThotWindow parent, int doc)
 {
 #ifdef _WX
-  wxLogDebug( _T("CreateDocInfoDlgWX") );
-
   DocInfoDlgWX * p_dlg = new DocInfoDlgWX( ref,
 					   parent,
 					   doc );
-
   if ( TtaRegisterWidgetWX( ref, p_dlg ) )
-    {
       /* the dialog has been sucesfully registred */
       return TRUE;
-    }
   else
     {
       /* an error occured durring registration */
@@ -467,10 +474,6 @@ ThotBool CreateHRefDlgWX ( int ref, ThotWindow parent,
     wx_filter = APPFILENAMEFILTER;
 
   wxArrayString wx_items = BuildWX_URL_List(url_list);
-
-  wxLogDebug( _T("CreateHRefDlgWX - title=")+wx_title+
-	      _T("\tfilter=")+wx_filter );
-
   HRefDlgWX * p_dlg = new HRefDlgWX( ref,
 				     parent,
 				     wx_items,
@@ -479,10 +482,8 @@ ThotBool CreateHRefDlgWX ( int ref, ThotWindow parent,
 				     wx_filter );
 
   if ( TtaRegisterWidgetWX( ref, p_dlg ) )
-    {
       /* the dialog has been sucesfully registred */
       return TRUE;
-    }
   else
     {
       /* an error occured durring registration */
@@ -503,20 +504,15 @@ ThotBool CreateCreateTableDlgWX ( int ref, ThotWindow parent,
 {
 #ifdef _WX
   wxString wx_title = TtaConvMessageToWX( TtaGetMessage (AMAYA, AM_BUTTON_TABLE) );
-  wxLogDebug( _T("CreateCreateTableDlgWX - title=")+wx_title);
-
   CreateTableDlgWX * p_dlg = new CreateTableDlgWX( ref,
 						   parent,
 						   def_cols,
 						   def_rows,
 						   def_border,
 						   wx_title );
-
   if ( TtaRegisterWidgetWX( ref, p_dlg ) )
-    {
       /* the dialog has been sucesfully registred */
       return TRUE;
-    }
   else
     {
       /* an error occured durring registration */
@@ -538,18 +534,12 @@ ThotBool CreatePreferenceDlgWX ( int ref, ThotWindow parent,
 {
 #ifdef _WX
   wxArrayString wx_items = BuildWX_URL_List(url_list);
-
-  wxLogDebug( _T("CreatePreferenceDlgWX") );
-
   PreferenceDlgWX * p_dlg = new PreferenceDlgWX( ref,
 						 parent,
 						 wx_items );
-
   if ( TtaRegisterWidgetWX( ref, p_dlg ) )
-    {
       /* the dialog has been sucesfully registred */
       return TRUE;
-    }
   else
     {
       /* an error occured durring registration */
@@ -569,15 +559,10 @@ ThotBool CreatePreferenceDlgWX ( int ref, ThotWindow parent,
 ThotBool CreateSpellCheckDlgWX ( int ref, int base, ThotWindow parent)
 {
 #ifdef _WX
-  wxLogDebug( _T("CreateSpellCheckDlgWX") );
-
   SpellCheckDlgWX * p_dlg = new SpellCheckDlgWX( ref, base, parent);
-
   if ( TtaRegisterWidgetWX( ref, p_dlg ) )
-    {
       /* the dialog has been sucesfully registred */
       return TRUE;
-    }
   else
     {
       /* an error occured durring registration */

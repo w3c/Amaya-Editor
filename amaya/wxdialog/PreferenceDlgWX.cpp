@@ -68,9 +68,6 @@ PreferenceDlgWX::PreferenceDlgWX( int ref,
   AmayaDialog( NULL, ref )
 {
   wxXmlResource::Get()->LoadDialog(this, parent, wxT("PreferenceDlgWX"));
-
-  wxLogDebug( _T("PreferenceDlgWX::PreferenceDlgWX") );
-
   m_UrlList = url_list;
   wxNotebook * p_notebook = XRCCTRL(*this, "wxID_NOTEBOOK", wxNotebook);
 
@@ -166,12 +163,10 @@ int PreferenceDlgWX::GetPagePosFromXMLID( const wxString & xml_id )
     return -1;
 }
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 void PreferenceDlgWX::OnPageChanged( wxNotebookEvent& event )
 {
-  wxLogDebug( _T("PreferenceDlgWX::OnPageChanged : old=%d, new=%d"),
-              event.GetOldSelection(),
-              event.GetSelection() );
-
   wxNotebook * p_notebook = XRCCTRL(*this, "wxID_NOTEBOOK", wxNotebook);
   wxPanel *    p_new_page = (wxPanel *)((event.GetSelection()>=0 && p_notebook)?p_notebook->GetPage(event.GetSelection()):NULL);
 
@@ -209,8 +204,6 @@ void PreferenceDlgWX::OnPageChanged( wxNotebookEvent& event )
   ----------------------------------------------------------------------*/
 void PreferenceDlgWX::SetupLabelDialog_General()
 {
-  wxLogDebug( _T("PreferenceDlgWX::SetupLabelDialog_General") );
-
   // Setup notebook tab names :
   int page_id;
   wxNotebook * p_notebook = XRCCTRL(*this, "wxID_NOTEBOOK", wxNotebook);
@@ -251,8 +244,6 @@ void PreferenceDlgWX::SetupLabelDialog_General()
   ----------------------------------------------------------------------*/
 void PreferenceDlgWX::SetupDialog_General( const Prop_General & prop )
 {
-  wxLogDebug( _T("PreferenceDlgWX::SetupDialog_General") );
-
   XRCCTRL(*this, "wxID_COMBOBOX_HOMEPAGE", wxComboBox)->SetValue( TtaConvMessageToWX(prop.HomePage) );
 
   XRCCTRL(*this, "wxID_CHARZOOM_VALUE", wxSlider)->SetValue( prop.Zoom );
@@ -281,8 +272,6 @@ Prop_General PreferenceDlgWX::GetValueDialog_General()
   wxString        value;
   Prop_General    prop;
   memset( &prop, 0, sizeof(Prop_General) );
-
-  wxLogDebug( _T("PreferenceDlgWX::GetValueDialog_General") );
 
   value = XRCCTRL(*this, "wxID_COMBOBOX_HOMEPAGE", wxComboBox)->GetValue();
   strcpy( prop.HomePage, (const char*)value.mb_str(wxConvUTF8) );
@@ -316,8 +305,6 @@ Prop_General PreferenceDlgWX::GetValueDialog_General()
   ----------------------------------------------------------------------*/
 void PreferenceDlgWX::SetupLabelDialog_Browse()
 {
-  wxLogDebug( _T("PreferenceDlgWX::SetupLabelDialog_Browse") );
-
   // Setup notebook tab names :
   int page_id;
   wxNotebook * p_notebook = XRCCTRL(*this, "wxID_NOTEBOOK", wxNotebook);
@@ -344,8 +331,6 @@ void PreferenceDlgWX::SetupLabelDialog_Browse()
   ----------------------------------------------------------------------*/
 void PreferenceDlgWX::SetupDialog_Browse( const Prop_Browse & prop )
 {
-  wxLogDebug( _T("PreferenceDlgWX::SetupDialog_Browse") );
-
   XRCCTRL(*this, "wxID_CHECK_LOADIMG", wxCheckBox)->SetValue( prop.LoadImages );
   XRCCTRL(*this, "wxID_CHECK_LOADOBJ", wxCheckBox)->SetValue( prop.LoadObjects );
   XRCCTRL(*this, "wxID_CHECK_SHOWBACKGROUND", wxCheckBox)->SetValue( prop.BgImages );
@@ -368,8 +353,6 @@ Prop_Browse PreferenceDlgWX::GetValueDialog_Browse()
   wxString        value;
   Prop_Browse     prop;
   memset( &prop, 0, sizeof(Prop_Browse) );
-
-  wxLogDebug( _T("PreferenceDlgWX::GetValueDialog_Browse") );
 
   prop.LoadImages  = XRCCTRL(*this, "wxID_CHECK_LOADIMG", wxCheckBox)->GetValue();
   prop.LoadObjects = XRCCTRL(*this, "wxID_CHECK_LOADOBJ", wxCheckBox)->GetValue();
@@ -398,8 +381,6 @@ Prop_Browse PreferenceDlgWX::GetValueDialog_Browse()
   ----------------------------------------------------------------------*/
 void PreferenceDlgWX::SetupLabelDialog_Publish()
 {
-  wxLogDebug( _T("PreferenceDlgWX::SetupLabelDialog_Publish") );
-
   // Setup notebook tab names :
   int page_id;
   wxNotebook * p_notebook = XRCCTRL(*this, "wxID_NOTEBOOK", wxNotebook);
@@ -425,8 +406,6 @@ void PreferenceDlgWX::SetupLabelDialog_Publish()
   ----------------------------------------------------------------------*/
 void PreferenceDlgWX::SetupDialog_Publish( const Prop_Publish & prop )
 {
-  wxLogDebug( _T("PreferenceDlgWX::SetupDialog_Publish") );
-
   XRCCTRL(*this, "wxID_CHOICE_CHARSET", wxChoice)->SetStringSelection( TtaConvMessageToWX(prop.CharsetType) );
 
   XRCCTRL(*this, "wxID_CHECK_XHTML", wxCheckBox)->SetValue( prop.UseXHTMLMimeType );
@@ -449,8 +428,6 @@ Prop_Publish PreferenceDlgWX::GetValueDialog_Publish()
   wxString        value;
   Prop_Publish     prop;
   memset( &prop, 0, sizeof(Prop_Publish) );
-
-  wxLogDebug( _T("PreferenceDlgWX::GetValueDialog_Publish") );
 
   value = XRCCTRL(*this, "wxID_CHOICE_CHARSET", wxChoice)->GetStringSelection();
   strcpy( prop.CharsetType, (const char*)value.mb_str(wxConvUTF8) );
@@ -481,8 +458,6 @@ Prop_Publish PreferenceDlgWX::GetValueDialog_Publish()
   ----------------------------------------------------------------------*/
 void PreferenceDlgWX::SetupLabelDialog_Cache()
 {
-  wxLogDebug( _T("PreferenceDlgWX::SetupLabelDialog_Cache") );
-
   // Setup notebook tab names :
   int page_id;
   wxNotebook * p_notebook = XRCCTRL(*this, "wxID_NOTEBOOK", wxNotebook);
@@ -513,8 +488,6 @@ void PreferenceDlgWX::SetupLabelDialog_Cache()
   ----------------------------------------------------------------------*/
 void PreferenceDlgWX::SetupDialog_Cache( const Prop_Cache & prop )
 {
-  wxLogDebug( _T("PreferenceDlgWX::SetupDialog_Cache") );
-
   XRCCTRL(*this, "wxID_CHECK_ENABLECACHE",  wxCheckBox)->SetValue( prop.EnableCache );
   XRCCTRL(*this, "wxID_CHECK_PROTECTEDDOC", wxCheckBox)->SetValue( prop.CacheProtectedDocs );
   XRCCTRL(*this, "wxID_CHECK_DISCO", wxCheckBox)->SetValue( prop.CacheDisconnectMode );
@@ -559,7 +532,6 @@ Prop_Cache PreferenceDlgWX::GetValueDialog_Cache()
   ----------------------------------------------------------------------*/
 void PreferenceDlgWX::OnEmptyCache( wxCommandEvent& event )
 {
-  wxLogDebug( _T("PreferenceDlgWX::OnEmptyCache") );
   ThotCallback (GetPrefCacheBase() + CacheMenu, INTEGER_DATA, (char*) 3);
 }
 
@@ -574,8 +546,6 @@ void PreferenceDlgWX::OnEmptyCache( wxCommandEvent& event )
   ----------------------------------------------------------------------*/
 void PreferenceDlgWX::SetupLabelDialog_Proxy()
 {
-  wxLogDebug( _T("PreferenceDlgWX::SetupLabelDialog_Proxy") );
-
   // Setup notebook tab names :
   int page_id;
   wxNotebook * p_notebook = XRCCTRL(*this, "wxID_NOTEBOOK", wxNotebook);
@@ -599,8 +569,6 @@ void PreferenceDlgWX::SetupLabelDialog_Proxy()
   ----------------------------------------------------------------------*/
 void PreferenceDlgWX::SetupDialog_Proxy( const Prop_Proxy & prop )
 {
-  wxLogDebug( _T("PreferenceDlgWX::SetupDialog_Proxy") );
-
   XRCCTRL(*this, "wxID_VALUE_PROXYHTTP", wxTextCtrl)->SetValue( TtaConvMessageToWX(prop.HttpProxy) );
   XRCCTRL(*this, "wxID_VALUE_PROXYDOM", wxTextCtrl)->SetValue( TtaConvMessageToWX(prop.ProxyDomain) );
 
@@ -643,8 +611,6 @@ Prop_Proxy PreferenceDlgWX::GetValueDialog_Proxy()
   ----------------------------------------------------------------------*/
 void PreferenceDlgWX::SetupLabelDialog_Color()
 {
-  wxLogDebug( _T("PreferenceDlgWX::SetupLabelDialog_Color") );
-
   // Setup notebook tab names :
   int page_id;
   wxNotebook * p_notebook = XRCCTRL(*this, "wxID_NOTEBOOK", wxNotebook);
@@ -682,8 +648,6 @@ void PreferenceDlgWX::SetupLabelDialog_Color()
   ----------------------------------------------------------------------*/
 void PreferenceDlgWX::SetupDialog_Color( const Prop_Color & prop )
 {
-  wxLogDebug( _T("PreferenceDlgWX::SetupDialog_Color") );
-
   XRCCTRL(*this, "wxID_COMBO_SELBACKCOLOR",  wxComboBox)->Append( TtaConvMessageToWX(prop.BgSelColor) );
   XRCCTRL(*this, "wxID_COMBO_SELCOLOR", wxComboBox)->Append( TtaConvMessageToWX(prop.FgSelColor) );
   XRCCTRL(*this, "wxID_COMBO_BACKCOLOR", wxComboBox)->Append( TtaConvMessageToWX(prop.BgColor) );
@@ -741,8 +705,6 @@ Prop_Color PreferenceDlgWX::GetValueDialog_Color()
   ----------------------------------------------------------------------*/
 void PreferenceDlgWX::OnColorPalette( wxCommandEvent& event )
 {
-  wxLogDebug( _T("PreferenceDlgWX::OnColorPalette") );
-  
   int textcolor_id = wxXmlResource::GetXRCID(_T("wxID_BUTTON_TEXTCOLOR"));
   int backcolor_id = wxXmlResource::GetXRCID(_T("wxID_BUTTON_BACKCOLOR"));
   int selcolor_id = wxXmlResource::GetXRCID(_T("wxID_BUTTON_SELCOLOR"));
@@ -807,7 +769,6 @@ void PreferenceDlgWX::OnColorPalette( wxCommandEvent& event )
   ----------------------------------------------------------------------*/
 void PreferenceDlgWX::OnColorChanged( wxCommandEvent& event )
 {
-  wxLogDebug( _T("PreferenceDlgWX::OnColorChanged") );
   event.Skip();
 }
 
@@ -819,8 +780,6 @@ void PreferenceDlgWX::OnColorChanged( wxCommandEvent& event )
   ----------------------------------------------------------------------*/
 void PreferenceDlgWX::OnColorTextChanged( wxCommandEvent& event )
 {
-  wxLogDebug( _T("PreferenceDlgWX::OnColorTextChanged") );
-
   // get the combobox values and convert the string to a wxColour object
   wxString value1;
   wxString value2;
@@ -867,17 +826,14 @@ void PreferenceDlgWX::OnColorTextChanged( wxCommandEvent& event )
   ----------------------------------------------------------------------*/
 void PreferenceDlgWX::SetupLabelDialog_Geometry()
 {
-  wxLogDebug( _T("PreferenceDlgWX::SetupLabelDialog_Geometry") );
+  int page_id;
 
   // Setup notebook tab names :
-  
-  int page_id;
   wxNotebook * p_notebook = XRCCTRL(*this, "wxID_NOTEBOOK", wxNotebook);
   page_id = GetPagePosFromXMLID( _T("wxID_PAGE_GEOMETRY") );
   if (page_id >= 0)
     p_notebook->SetPageText( page_id, TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_GEOMETRY_MENU)) );
 
-  
   XRCCTRL(*this, "wxID_LABEL_GEOMCHG", wxStaticText)->SetLabel( TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_GEOMETRY_CHANGE)) );
   XRCCTRL(*this, "wxID_BUTTON_GEOMSAVE", wxButton)->SetLabel( TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_SAVE_GEOMETRY)) );
   XRCCTRL(*this, "wxID_BUTTON_GEOMRESTOR", wxButton)->SetLabel( TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_RESTORE_GEOMETRY)) );
@@ -891,7 +847,6 @@ void PreferenceDlgWX::SetupLabelDialog_Geometry()
   ----------------------------------------------------------------------*/
 void PreferenceDlgWX::OnGeomSave( wxCommandEvent& event )
 {
-  wxLogDebug( _T("PreferenceDlgWX::OnGeomSave") );
   ThotCallback (GetPrefGeometryBase() + GeometryMenu, INTEGER_DATA, (char*) 1);
 }
 
@@ -902,7 +857,6 @@ void PreferenceDlgWX::OnGeomSave( wxCommandEvent& event )
   ----------------------------------------------------------------------*/
 void PreferenceDlgWX::OnGeomRestor( wxCommandEvent& event )
 {
-  wxLogDebug( _T("PreferenceDlgWX::OnGeomRestor") );
   ThotCallback (GetPrefGeometryBase() + GeometryMenu, INTEGER_DATA, (char*) 2);
 }
 
@@ -918,8 +872,6 @@ void PreferenceDlgWX::OnGeomRestor( wxCommandEvent& event )
   ----------------------------------------------------------------------*/
 void PreferenceDlgWX::SetupLabelDialog_Annot()
 {
-  wxLogDebug( _T("PreferenceDlgWX::SetupLabelDialog_Annot") );
-
   // Setup notebook tab names :
   int page_id;
   wxNotebook * p_notebook = XRCCTRL(*this, "wxID_NOTEBOOK", wxNotebook);
@@ -944,8 +896,6 @@ void PreferenceDlgWX::SetupLabelDialog_Annot()
   ----------------------------------------------------------------------*/
 void PreferenceDlgWX::SetupDialog_Annot( const Prop_Annot & prop )
 {
-  wxLogDebug( _T("PreferenceDlgWX::SetupDialog_Annot") );
-
   XRCCTRL(*this, "wxID_ANNOT_USER", wxTextCtrl)->SetValue( TtaConvMessageToWX(prop.AnnotUser) );
   XRCCTRL(*this, "wxID_POST_SERVER", wxTextCtrl)->SetValue( TtaConvMessageToWX(prop.AnnotPostServer) );
   XRCCTRL(*this, "wxID_ANNOT_SERVERS", wxTextCtrl)->SetValue( TtaConvMessageToWX(prop.AnnotServers) );
@@ -967,7 +917,6 @@ Prop_Annot PreferenceDlgWX::GetValueDialog_Annot()
   Prop_Annot     prop;
   memset( &prop, 0, sizeof(Prop_Annot) );
 
-  wxLogDebug( _T("PreferenceDlgWX::GetValueDialog_Annot") );
   value = XRCCTRL(*this, "wxID_ANNOT_USER", wxTextCtrl)->GetValue();
   strcpy( prop.AnnotUser, (const char*)value.mb_str(wxConvUTF8) );
   value = XRCCTRL(*this, "wxID_POST_SERVER", wxTextCtrl)->GetValue();
@@ -994,8 +943,6 @@ Prop_Annot PreferenceDlgWX::GetValueDialog_Annot()
   ----------------------------------------------------------------------*/
 void PreferenceDlgWX::SetupLabelDialog_DAV()
 {
-  wxLogDebug( _T("PreferenceDlgWX::SetupLabelDialog_DAV") );
-
   // Setup notebook tab names :
   int page_id;
   wxNotebook * p_notebook = XRCCTRL(*this, "wxID_NOTEBOOK", wxNotebook);
@@ -1030,8 +977,6 @@ void PreferenceDlgWX::SetupLabelDialog_DAV()
 void PreferenceDlgWX::SetupDialog_DAV( const Prop_DAV & prop)
 {
   int          val;
-
-  wxLogDebug( _T("PreferenceDlgWX::SetupDialog_DAV") );
 
   XRCCTRL(*this, "wxID_VALUE_DAV_USER", wxTextCtrl)->SetValue( TtaConvMessageToWX(prop.textUserReference) );
   XRCCTRL(*this, "wxID_VALUE_DAV_RESOURCES", wxTextCtrl)->SetValue( TtaConvMessageToWX(prop.textUserResources) );
@@ -1070,10 +1015,8 @@ Prop_DAV PreferenceDlgWX::GetValueDialog_DAV()
   wxString        value;
   Prop_DAV        prop;
   int             val;
+
   memset( &prop, 0, sizeof(Prop_General) );
-
-  wxLogDebug( _T("PreferenceDlgWX::GetValueDialog_DAV") );
-
   value = XRCCTRL(*this, "wxID_VALUE_DAV_USER", wxTextCtrl)->GetValue();
   strcpy( prop.textUserReference, (const char*)value.mb_str(wxConvUTF8) );
   value = XRCCTRL(*this, "wxID_VALUE_DAV_RESOURCES", wxTextCtrl)->GetValue();

@@ -529,9 +529,7 @@ void TtcSearchText (Document document, View view)
 				Caption, SearchedString, ReplacingString,
 				WithReplace, SearchAfter);
    if (created)
-     {
-       TtaShowDialogue ( NumFormSearchText, TRUE );
-     }
+     TtaShowDialogue ( NumFormSearchText, TRUE );
  }
 #endif /* _WX */
 }

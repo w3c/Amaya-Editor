@@ -17,6 +17,8 @@ extern void DeleteSpanIfNoAttr ( Element el,
 extern void AttrToSpan ( Element elem,
                          Attribute attr,
                          Document doc );
+extern void AttrStartChanged ( NotifyAttribute * event );
+extern void AttrItemValueChanged ( NotifyAttribute * event );
 extern void GlobalAttrCreated ( NotifyAttribute * event );
 extern void GlobalAttrDeleted ( NotifyAttribute *event );
 extern void AttrClassChanged ( NotifyAttribute * event );
@@ -47,6 +49,8 @@ extern void DeleteSpanIfNoAttr ( Element el,
 extern void AttrToSpan ( Element elem,
                            Attribute attr,
                            Document doc );
+extern void AttrStartChanged ( NotifyAttribute * event );
+extern void AttrItemValueChanged ( NotifyAttribute * event );
 extern void GlobalAttrCreated ( NotifyAttribute * event );
 extern void GlobalAttrDeleted ( NotifyAttribute *event );
 extern void AttrClassChanged ( NotifyAttribute * event );

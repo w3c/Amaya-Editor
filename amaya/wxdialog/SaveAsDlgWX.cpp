@@ -53,8 +53,6 @@ SaveAsDlgWX::SaveAsDlgWX( int ref,
   int  doc_type;
 
   wxXmlResource::Get()->LoadDialog(this, parent, wxT("SaveAsDlgWX"));
-  wxLogDebug( _T("SaveAsDlgWX::SaveAsDlgWX - pathname=")+pathname);
-
   wxString wx_title = TtaConvMessageToWX( TtaGetMessage (AMAYA, AM_SAVE_AS) );
   SetTitle( wx_title );
 
@@ -243,7 +241,6 @@ SaveAsDlgWX::~SaveAsDlgWX()
   ----------------------------------------------------------------------*/
 void SaveAsDlgWX::OnConfirmButton( wxCommandEvent& event )
 {
-  wxLogDebug( _T("SaveAsDlgWX::OnConfirmButton") );
   // print callback
   ThotCallback (BaseDialog + SaveForm, INTEGER_DATA, (char*) 1);
 }
@@ -253,7 +250,6 @@ void SaveAsDlgWX::OnConfirmButton( wxCommandEvent& event )
   ----------------------------------------------------------------------*/
 void SaveAsDlgWX::OnCancelButton( wxCommandEvent& event )
 {
-  wxLogDebug( _T("SaveAsDlgWX::OnCancelButton") );
   ThotCallback (BaseDialog + SaveForm, INTEGER_DATA, (char*) 0);
 }
 
@@ -262,8 +258,6 @@ void SaveAsDlgWX::OnCancelButton( wxCommandEvent& event )
   ----------------------------------------------------------------------*/
 void SaveAsDlgWX::OnBrowseButton( wxCommandEvent& event )
 {
-  wxLogDebug( _T("SaveAsDlgWX::OnBrowseButton") );
-
   wxString wx_filter;
 
   /*  if (doc_type == docHTML)
@@ -303,7 +297,6 @@ void SaveAsDlgWX::OnBrowseButton( wxCommandEvent& event )
   ----------------------------------------------------------------------*/
 void SaveAsDlgWX::OnClearButton( wxCommandEvent& event )
 {
-  wxLogDebug( _T("SaveAsDlgWX::OnClearButton") );
   ThotCallback (BaseDialog + SaveForm, INTEGER_DATA, (char*) 3);
   XRCCTRL(*this, "wxID_DOC_LOCATION_CTRL", wxTextCtrl)->SetValue(TtaConvMessageToWX( SavePath));
   XRCCTRL(*this, "wxID_IMG_LOCATION_CTRL", wxTextCtrl)->SetValue(TtaConvMessageToWX( SaveImgsURL));
@@ -314,11 +307,10 @@ void SaveAsDlgWX::OnClearButton( wxCommandEvent& event )
   ----------------------------------------------------------------------*/
 void SaveAsDlgWX::OnCharsetCbx( wxCommandEvent& event )
 {
-  wxString wx_charset_sel = XRCCTRL(*this, "wxID_CHARSET_CB", wxComboBox)->GetValue ();
-  wxLogDebug( _T("SaveAsDlgWX::OnCharsetCbx - wx_charset=")+wx_charset_sel );
-
-  // allocate a temporary buffer to copy the 'const char *' url buffer 
   char buf_charset[50];
+
+  wxString wx_charset_sel = XRCCTRL(*this, "wxID_CHARSET_CB", wxComboBox)->GetValue ();
+  // allocate a temporary buffer to copy the 'const char *' url buffer 
   wxASSERT( wx_charset_sel.Len() < 50 );
   strcpy( buf_charset, wx_charset_sel.ToAscii() );
   strcpy (UserCharset, buf_charset);
@@ -329,11 +321,10 @@ void SaveAsDlgWX::OnCharsetCbx( wxCommandEvent& event )
   ----------------------------------------------------------------------*/
 void SaveAsDlgWX::OnMimeTypeCbx( wxCommandEvent& event )
 {
-  wxString wx_mimetype = XRCCTRL(*this, "wxID_MIME_TYPE_CB", wxComboBox)->GetValue ();
-  wxLogDebug( _T("SaveAsDlgWX::OnMimeTypeCbx - wx_mimetype=")+wx_mimetype );
-
-  // allocate a temporary buffer to copy the 'const char *' url buffer 
   char buf_mimetype[50];
+
+  wxString wx_mimetype = XRCCTRL(*this, "wxID_MIME_TYPE_CB", wxComboBox)->GetValue ();
+  // allocate a temporary buffer to copy the 'const char *' url buffer 
   wxASSERT( wx_mimetype.Len() < 50 );
   strcpy( buf_mimetype, wx_mimetype.ToAscii() );
   strcpy (UserMimeType, buf_mimetype);
@@ -345,7 +336,6 @@ void SaveAsDlgWX::OnMimeTypeCbx( wxCommandEvent& event )
   ----------------------------------------------------------------------*/
 void SaveAsDlgWX::OnDocFormatBox ( wxCommandEvent& event )
 {
-  wxLogDebug( _T("SaveAsDlgWX::OnDocFormatBox") );
   ThotCallback (BaseDialog + RadioSave, INTEGER_DATA,
 		(char*) (XRCCTRL(*this, "wxID_DOC_FORMAT", wxRadioBox)->GetSelection( )));
 }
@@ -355,7 +345,6 @@ void SaveAsDlgWX::OnDocFormatBox ( wxCommandEvent& event )
   ---------------------------------------------------------------*/
 void SaveAsDlgWX::OnImagesChkBox ( wxCommandEvent& event )
 {
-  wxLogDebug( _T("SaveAsDlgWX::OnImagesChkBox") );
   ThotCallback (BaseDialog + ToggleSave, INTEGER_DATA, (char*) 0);
 }
 
@@ -364,7 +353,6 @@ void SaveAsDlgWX::OnImagesChkBox ( wxCommandEvent& event )
   ---------------------------------------------------------------*/
 void SaveAsDlgWX::OnUrlsChkBox ( wxCommandEvent& event )
 {
-  wxLogDebug( _T("SaveAsDlgWX::OnUrlsChkBox") );
   ThotCallback (BaseDialog + ToggleSave, INTEGER_DATA, (char*) 0);
 }
 
@@ -373,13 +361,11 @@ void SaveAsDlgWX::OnUrlsChkBox ( wxCommandEvent& event )
   ---------------------------------------------------------------*/
 void SaveAsDlgWX::OnDocLocation ( wxCommandEvent& event )
 {
+  char buffer[100];
 
   wxString doc_location = XRCCTRL(*this, "wxID_DOC_LOCATION_CTRL", wxTextCtrl)->GetValue( );
-  wxLogDebug( _T("SaveAsDlgWX::OnDocLocation - doc_location =")+  doc_location);
-  
   // set the printer name
   // allocate a temporary buffer to copy the 'const char *' printer name buffer 
-  char buffer[100];
   wxASSERT( doc_location.Len() < 100 );
   strcpy( buffer, doc_location.ToAscii() );
   ThotCallback (BaseDialog + NameSave,  STRING_DATA, (char *)buffer );
@@ -390,13 +376,11 @@ void SaveAsDlgWX::OnDocLocation ( wxCommandEvent& event )
   ---------------------------------------------------------------*/
 void SaveAsDlgWX::OnImgLocation ( wxCommandEvent& event )
 {
+  char buffer[100];
 
   wxString img_location = XRCCTRL(*this, "wxID_IMG_LOCATION_CTRL", wxTextCtrl)->GetValue( );
-  wxLogDebug( _T("SaveAsDlgWX::OnImgLocation - img_location =")+  img_location);
-  
   // set the printer name
   // allocate a temporary buffer to copy the 'const char *' printer name buffer 
-  char buffer[100];
   wxASSERT( img_location.Len() < 100 );
   strcpy( buffer, img_location.ToAscii() );
   ThotCallback (BaseDialog + ImgDirSave,  STRING_DATA, (char *)buffer );

@@ -1901,13 +1901,13 @@ static ThotBool SaveDocumentThroughNet (Document doc, View view, char *url,
       tempname = TtaStrdup (pImage->localName);
     }
   res = 0;
-#ifndef _WINGUI
+#ifdef _GTK
   TtaNewForm (BaseDialog + ConfirmSave, TtaGetViewFrame (doc, view), 
 	      TtaGetMessage (LIB, TMSG_LIB_CONFIRM),
 	      TRUE, 1, 'L', D_CANCEL);
   TtaNewLabel (BaseDialog + Label1, BaseDialog + ConfirmSave,
 	       TtaGetMessage (AMAYA, AM_WARNING_SAVE_OVERWRITE));
-#endif /* _WINGUI */
+#endif /* _GTK */
   msg[0] = EOS;
   len = 0;
   pImage = ImageURLs;
@@ -1938,7 +1938,7 @@ static ThotBool SaveDocumentThroughNet (Document doc, View view, char *url,
   if (msg[0] != EOS)
     {
       /* there is almost an image to be saved */
-#ifndef _WINGUI
+#ifdef _GTK
       if (nb < 6)
 	TtaNewSizedSelector (BaseDialog + ConfirmSaveList, BaseDialog + ConfirmSave,
 			"", nb, msg, 300, nb+1, NULL, FALSE, TRUE);
@@ -1949,7 +1949,11 @@ static ThotBool SaveDocumentThroughNet (Document doc, View view, char *url,
       TtaShowDialogue (BaseDialog + ConfirmSave, FALSE);
       /* wait for an answer */
       TtaWaitShowDialogue ();
-#else  /* _WINGUI */
+#endif  /* _GTK */
+#ifdef _WX
+      /* TODO: display the list of saved images */
+#endif  /* _WX */
+#ifdef _WINGUI
       CreateSaveListDlgWindow (TtaGetViewFrame (doc, view), nb, msg);
 #endif /* _WINGUI */
       if (!UserAnswer)

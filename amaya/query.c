@@ -1832,9 +1832,9 @@ static void         AHTProtocolInit (void)
   /* TODO: verifier que le param YES est adapte pour WX */
   HTProtocol_add ("file", "local", 0, YES, HTLoadFile, NULL);
 #endif /* _WINDOWS */
-#if defined(_GTK) || defined(_NOGUI)
+#if defined(_GTK) || defined(_WX)
   HTProtocol_add ("file", "local", 0, NO, HTLoadFile, NULL);
-#endif /* #if defined(_GTK) || defined(_NOGUI) */
+#endif /* #if defined(_GTK) || defined(_WX) */
 
 #ifdef AMAYA_WWW_CACHE
    HTProtocol_add("cache",  "local", 0, YES, HTLoadCache, NULL);

@@ -95,20 +95,6 @@
 #include "home.xpm"
 #endif /* #if defned(_GTK) || defined(_WX) */
 
-#include "XPointer_f.h"
-#include "anim_f.h"
-#include "animbuilder_f.h"
-#include "libmanag_f.h"
-#ifdef ANNOTATIONS
-#include "annotlib.h"
-#include "ANNOTevent_f.h"
-#include "ANNOTfiles_f.h"
-#include "ANNOTtools_f.h"
-#endif /* ANNOTATIONS */
-#ifdef BOOKMARKS
-#include "BMevent_f.h"
-#endif /* BOOKMARKS */
-
 #ifdef _WINGUI
 /*
 #ifndef __GNUC__
@@ -244,6 +230,23 @@ extern int       menu_item;
 #include "UIcss_f.h"
 #include "string.h"
 #include "Xml2thot_f.h"
+#include "XPointer_f.h"
+#include "anim_f.h"
+#include "animbuilder_f.h"
+#include "libmanag_f.h"
+#ifdef ANNOTATIONS
+#include "annotlib.h"
+#include "ANNOTevent_f.h"
+#include "ANNOTfiles_f.h"
+#include "ANNOTtools_f.h"
+#endif /* ANNOTATIONS */
+#ifdef BOOKMARKS
+#include "BMevent_f.h"
+#endif /* BOOKMARKS */
+#ifdef _WX
+#include "wxdialogapi_f.h"
+#endif /* _WX */
+
 #ifdef DAV
 #define WEBDAV_EXPORT extern
 #include "davlib.h"
@@ -1562,7 +1565,7 @@ void SetWindowTitle (Document sourceDoc, Document targetDoc, View view)
 void InitFormAnswer (Document document, View view, const char *auth_realm,
 		     char *server)
 {
-#if defined(_GTK)
+#ifdef _GTK
    char *label;
 
    TtaNewForm (BaseDialog + FormAnswer, TtaGetViewFrame (document, view), 
@@ -1583,11 +1586,8 @@ void InitFormAnswer (Document document, View view, const char *auth_realm,
    
    TtaNewTextForm (BaseDialog + NameText, BaseDialog + FormAnswer,
 		   TtaGetMessage (AMAYA, AM_NAME), NAME_LENGTH, 1, FALSE);
-   
-#ifdef _GTK
    TtaNewPwdForm (BaseDialog + PasswordText, BaseDialog + FormAnswer,
 		  TtaGetMessage (AMAYA, AM_PASSWORD), NAME_LENGTH, 1, TRUE);
-#endif /* _GTK */
    
    TtaSetTextForm (BaseDialog + NameText, Answer_name);
    TtaSetTextForm (BaseDialog + PasswordText, Answer_password);
@@ -1604,8 +1604,17 @@ void InitFormAnswer (Document document, View view, const char *auth_realm,
        TtaShowDialogue (BaseDialog + FormAnswer, FALSE);
        TtaWaitShowDialogue ();
      }
-#endif /* #if defined(_GTK) */
+#endif /* _GTK */
+#ifdef _WX
+   ThotBool created;
 
+   created = CreateAuthentDlgWX (BaseDialog + FormAnswer,
+				 TtaGetViewFrame (document, view),
+				 (char *)auth_realm, server);
+   if (created)
+     TtaShowDialogue (BaseDialog + FormAnswer, FALSE);
+   TtaWaitShowDialogue ();
+#endif /* _WX */
 #ifdef _WINGUI
    CreateAuthenticationDlgWindow (TtaGetViewFrame (document, view),
 				  (char *)auth_realm, server);
@@ -1683,7 +1692,7 @@ void ConfirmError (Document document, View view, char *label,
 void InitConfirm3L (Document document, View view, char *label1, char *label2,
 		    char *label3, ThotBool withCancel)
 {
-#if defined(_GTK)
+#ifdef _GTK
   /* IV: This widget can't be called twice, but it happens when downloading a
      document with protected images. This is a quick silution to avoid the
      sigsev, although it doesn't fix the problem */
@@ -1720,7 +1729,7 @@ void InitConfirm3L (Document document, View view, char *label1, char *label2,
   /* wait for an answer */
   TtaWaitShowDialogue ();
   CriticConfirm = FALSE;
-#endif /* #if defined(_GTK) */
+#endif /* _GTK */
 #ifdef _WINGUI
   CreateInitConfirm3LDlgWindow (TtaGetViewFrame (document, view),
 				TtaGetMessage (LIB, TMSG_LIB_CONFIRM), label1,
