@@ -77,7 +77,6 @@ ${AMAYADIR}/amaya/*.T \
 ${AMAYADIR}/amaya/amaya.css \
 ${AMAYADIR}/amaya*.spec \
 ${AMAYADIR}/amaya/*.c \
-${AMAYADIR}/amaya/*.cpp \
 ${AMAYADIR}/amaya/*.conf \
 ${AMAYADIR}/amaya/*.en \
 ${AMAYADIR}/amaya/*.h \
@@ -239,6 +238,7 @@ ${AMAYADIR}/pluginlib/f/*.h \
 ${AMAYADIR}/thotlib/Makefile.in \
 ${AMAYADIR}/thotlib/include/Makefile.in \
 ${AMAYADIR}/thotlib/base/*.c \
+${AMAYADIR}/thotlib/base/*.cpp \
 ${AMAYADIR}/thotlib/content/*.c \
 ${AMAYADIR}/thotlib/dialogue/*.c \
 ${AMAYADIR}/thotlib/dialogue/*.cpp \
@@ -314,12 +314,10 @@ ${AMAYADIR}/Windows/thotprinter/*.dsp \
 ${AMAYADIR}/Windows/tra/*.dsp \
 ${AMAYADIR}/Windows/zlib/*.dsp \
 ${AMAYADIR}/Windows/zlib/*.dev \
-${AMAYADIR}/WindowsWX/*.mak \
 ${AMAYADIR}/WindowsWX/*.dsp \
 ${AMAYADIR}/WindowsWX/*.dsw \
 ${AMAYADIR}/WindowsWX/amaya/*.mkf \
 ${AMAYADIR}/WindowsWX/annotlib/*.dsp \
-${AMAYADIR}/WindowsWX/Compilers/*.mak \
 ${AMAYADIR}/WindowsWX/Compilers/*.dsp \
 ${AMAYADIR}/WindowsWX/Compilers/*.dsw \
 ${AMAYADIR}/WindowsWX/LibThotEditor/*.dsp \
