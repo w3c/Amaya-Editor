@@ -1100,9 +1100,11 @@ HBITMAP WIN_MakeImage (HDC hDC, unsigned char *data, int width, int height,
       ind = 0; /* pixel index */
 	  if (depth == 15)
 	  {
-      rshift = 0;
-      gshift = 5;
-      bshift = 10;
+      rshift = 1;
+      gshift = 6;
+      bshift = 11;
+	  /* For 15 bit, Windows seems to be using 16 bit pixels */
+	  depth = 16;
 	  }
 	  else
 	  {
@@ -1135,7 +1137,7 @@ HBITMAP WIN_MakeImage (HDC hDC, unsigned char *data, int width, int height,
 		  g = colrs[col].green;
 		  b = colrs[col].blue;
 	    }
-	  rmask = (r << 8) & 0xf800;
+	  rmask = ((r << 8) >> rshift) & 0xf800;
 	  gmask = ((g << 8) >> gshift) & 0x7e0;
 	  bmask = ((b << 8) >> bshift) & 0x1f;
 	  temp = (rmask | gmask | bmask);

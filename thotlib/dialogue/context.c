@@ -409,6 +409,46 @@ void ThotInitDisplay (char* name, int dx, int dy)
    if (TtWDepth == 1)
      TtWDepth = GetDeviceCaps (TtDisplay, BITSPIXEL);
 
+   /* test for 15 or 16 bits. Adapted from:
+       Tim Lesher http://mlarchive.ima.com/windev/1999/0273.html */
+   if (TtWDepth == 16)
+   {
+    LPBITMAPINFOHEADER pDib;
+	HDC hdc;
+	HBITMAP hbm;
+    int iDibSize;
+
+	iDibSize = sizeof( BITMAPINFOHEADER ) + 256 * sizeof ( DWORD );
+	pDib = (LPBITMAPINFOHEADER) malloc( iDibSize );
+    memset( pDib, 0, iDibSize );
+        
+    /* Use old-style BMIH for compatibility, and leave biBitCount zero */
+    pDib->biSize = sizeof( BITMAPINFOHEADER );
+        
+    /* Need to call GetDIBits twice: the first one just fills in the */
+    /* biBitCount member; the second fills in the bitfields or palette */
+    hdc = GetDC (NULL);
+    hbm = CreateCompatibleBitmap (hdc, 1, 1);
+    GetDIBits (hdc, hbm, 0, 1, NULL, (LPBITMAPINFO) pDib, DIB_RGB_COLORS);
+    GetDIBits (hdc, hbm, 0, 1, NULL, (LPBITMAPINFO) pDib, DIB_RGB_COLORS);
+    DeleteObject (hbm);
+    if (!ReleaseDC (NULL, hdc))
+      WinErrorBox (NULL, "ReleaseDC: ThotInitDisplay");
+
+	/* printf( "Current video mode is %lu-bit.\n", pDib->biBitCount ); */
+
+    if (BI_BITFIELDS == pDib->biCompression)
+    {
+        DWORD * pdwFields = (DWORD*) (pDib+1);
+       /* 0xf800: == 565 BGR;
+	      0x7c00  == 555 BGR; */
+
+		if (pdwFields[0] == 0x7c00)
+            TtWDepth = 15;
+	}
+    free( pDib );
+   }
+
    InitDocColors (name);
    InitColors (name);   
    if (WIN_LastBitmap)
