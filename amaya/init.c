@@ -2520,22 +2520,27 @@ Document InitDocAndView (Document doc, char *docname, DocumentType docType,
 	   h = 300;
 	   w = 580;
 	 }
-       else if (docType == docLibrary || method == CE_HELP)
+       else if (method == CE_HELP )
 	 {
 	   x += 500;
 	   y += 200;
 	   h = 500;
-	   if (docType == docLibrary)
-	     w = 400;
-	   else
-	     w = 800;
+	   w = 800;
+	 }
+       else if (docType == docLibrary && method == CE_RELATIVE)
+	 {
+	   x += 500;
+	   y += 200;
+	   h = 500;
+	   w = 400;
 	 }
        /* change the position slightly to avoid hiding completely the main
 	  view of other documents */
        x = x + (doc - 1) * 10;
        y = y + (doc - 1) * 10;
        /* open the main view */
-       if (docType == docLog || docType == docLibrary)
+       if (docType == docLog ||
+	   (docType == docLibrary && method == CE_RELATIVE))
 	 /* without menu bar */
 	 mainView = TtaOpenMainView (doc, x, y, w, h, FALSE, TRUE);
        else
@@ -2991,9 +2996,9 @@ Document InitDocAndView (Document doc, char *docname, DocumentType docType,
 
 
 #ifdef DAV    /* after all, we active the WebDAV menu in the main view */
-     TtaSetMenuOn (doc,DAV_VIEW,Cooperation_);     
+     TtaSetMenuOn (doc, DAV_VIEW, Cooperation_);     
 #else
-     TtaSetMenuOff (doc,1,Cooperation_);
+     TtaSetMenuOff (doc, 1, Cooperation_);
 #endif  /* DAV */
 
 #ifdef _SVGLIB
@@ -4700,7 +4705,9 @@ void GetAmayaDoc_callback (int newdoc, int status, char *urlName,
 		 }
 	     }
 	   /* check parsing errors */
-	   if (DocumentTypes[newdoc] != docLog)
+	   if (DocumentTypes[newdoc] == docLog || method == CE_MAKEBOOK)
+	     CleanUpParsingErrors ();
+	   else
 	     CheckParsingErrors (newdoc);
 	 }
        else

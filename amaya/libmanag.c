@@ -62,15 +62,10 @@
 #include "libmanag_f.h"
 
 #ifdef _SVGLIB
-/* common local variables */
-static char    buffermem[MAX_LENGTH];
-
 /* Variable to handle Use Library Interface (context of png selection)*/
 Document	LibraryDocDocument = 0;
 static Element	LibraryDocElement = NULL;
-
-/* Inserted boolean */
-static ThotBool docModified = FALSE;
+static char     LibURL[MAX_LENGTH];
 
 /* Structure List URI-Title */
 typedef struct _Library_URITitle
@@ -84,22 +79,9 @@ typedef struct _Library_URITitle
 /* List header */
 static ListUriTitle *HeaderListUriTitle = NULL;
 
-#ifdef EBDEBUG
-/* Structure List Uri-Id */
-typedef struct _Copy_UseElement
-{
-  char          Uri[MAX_LENGTH];
-  char          Id[MAX_LENGTH];
-  ThotBool      IdAlreadyExist;
-  struct        _Copy_UseElement *Next;
-} ListUriId;
-/* List Header */
-static ListUriId *HeaderlistUriId = NULL;
-#endif /* EBDEBUG */
-
 /* variable to handle SVGLibrary dialogue */
-static char libraryFilter[MAX_LENGTH];
-static char baseDirectory1[MAX_LENGTH];
+static char Filter[MAX_LENGTH];
+static char LibDirectory[MAX_LENGTH];
 static char SaveLibraryTitleSelection[MAX_LENGTH];
 static char NewLibraryTitle[MAX_LENGTH];
 static char LastURLCatalogue[MAX_LENGTH];
@@ -564,7 +546,7 @@ void AddNewModelIntoLibraryForm (Document doc, View view)
 #ifdef _SVGLIB
   int            nbr;
 #ifndef _WINDOWS
-  char           bufButton[MAX_LENGTH];
+  char           buffer[MAX_LENGTH];
   int            i;
 #endif /* _WINDOWS */
 
@@ -576,13 +558,13 @@ void AddNewModelIntoLibraryForm (Document doc, View view)
     {
 #ifndef _WINDOWS
       i = 0;
-      strcpy (&bufButton[i], TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
-      i += strlen (&bufButton[i]) + 1;
-      strcpy (&bufButton[i], TtaGetMessage (AMAYA, AM_SVGLIB_CREATE_NEW_CATALOGUE));
+      strcpy (&buffer[i], TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
+      i += strlen (&buffer[i]) + 1;
+      strcpy (&buffer[i], TtaGetMessage (AMAYA, AM_SVGLIB_CREATE_NEW_CATALOGUE));
 
       TtaNewSheet (BaseLibrary + AddSVGModel, TtaGetViewFrame (doc, view), 
 		   TtaGetMessage (AMAYA, AM_SVGLIB_ADD_SVG_MODEL_DIALOG), 2,
-		   bufButton, TRUE, 2, 'L', D_CANCEL);
+		   buffer, TRUE, 2, 'L', D_CANCEL);
 
       /* Catalogue Or URI text zone */
       nbr = SVGLibraryListItemNumber (SVGlib_list);
@@ -618,11 +600,11 @@ void CallbackLibrary (int ref, int typedata, char *data)
 #ifdef _SVGLIB
   int                 val;
   Document            svgDoc, res, libDoc;
-  char               *pathname, *documentname, *id, *buffer;
-  char                tempname[MAX_LENGTH];
+  char               *id, *buffer;
+  char                tempname[MAX_LENGTH], pathname[MAX_LENGTH];
   char               *tempfile, *libraryTitle;
   char               *dirname, *filename;
-  Element             copiedElement, Elt = NULL;
+  Element             copiedElement, el = NULL;
   PRule               PRuleSearch;
 
   val = (int) data + 1;
@@ -631,45 +613,40 @@ void CallbackLibrary (int ref, int typedata, char *data)
     case FormLibrary:
       TtaDestroyDialogue (BaseLibrary + FormLibrary);
       /* Initialize path parameter */
-      pathname = TtaGetMemory (MAX_LENGTH);
-      documentname = TtaGetMemory (MAX_LENGTH);
-      NormalizeURL (buffermem, LibraryDocDocument, pathname, documentname, NULL);
-      /* Open svg file in a document (Cf. MakeBook) */
-      svgDoc = TtaNewDocument("SVG","tmp");
-      res = GetAmayaDoc (pathname, NULL, svgDoc, 0, CE_MAKEBOOK,
-			 FALSE, NULL, NULL, ISO_8859_1/* TtaGetDefaultCharset */);
-      TtaFreeMemory (pathname);
-      TtaFreeMemory (documentname);
+      NormalizeURL (LibURL, LibraryDocDocument, pathname, tempname, NULL);
       switch (val)
 	{
 	case CopySVGLibSelection:
-	  id = GetURIId (buffermem);
+	  /* Open svg file in a document (Cf. MakeBook) */
+	  svgDoc = TtaNewDocument("SVG","tmp");
+	  res = GetAmayaDoc (pathname, NULL, svgDoc, 0, CE_MAKEBOOK,
+			     FALSE, NULL, NULL, ISO_8859_1/* TtaGetDefaultCharset */);
+	  id = GetURIId (LibURL);
 	  if (id)
 	    {
-	      Elt = SearchSVGElement (svgDoc, id);
+	      el = SearchSVGElement (svgDoc, id);
 	      TtaFreeMemory (id);
 	    }
 	  DocumentTypes[svgDoc] = docSVG;
-	  if (Elt)
-	    {
-	      /* Copy element */
-	      copiedElement = PasteLibraryGraphicElement (Elt, svgDoc, CopySVGLibSelection);
-	    }
+	  if (el)
+	    /* Copy element */
+	    copiedElement = PasteLibraryGraphicElement (el, svgDoc, CopySVGLibSelection);
 	  FreeDocumentResource (svgDoc);
 	  TtaCloseDocument (svgDoc);
 	  break;
 
 	case ReferToSVGLibSelection:
+	  svgDoc = TtaNewDocument("SVG","tmp");
+	  res = GetAmayaDoc (pathname, NULL, svgDoc, 0, CE_MAKEBOOK,
+			     FALSE, NULL, NULL, ISO_8859_1/* TtaGetDefaultCharset */);
 	  /* Only paste a use element into the clicked view  */
-	  copiedElement = PasteLibraryGraphicElement (Elt, svgDoc, ReferToSVGLibSelection);
+	  copiedElement = PasteLibraryGraphicElement (el, svgDoc, ReferToSVGLibSelection);
 	  /* Free external resource before displaying svg image */
 	  FreeDocumentResource (svgDoc);
 	  TtaCloseDocument (svgDoc);
 	  break;
 
 	default:
-	  FreeDocumentResource (svgDoc);
-	  TtaCloseDocument (svgDoc);
 	  break;
 	}
       break;
@@ -767,9 +744,7 @@ void CallbackLibrary (int ref, int typedata, char *data)
       /* Is this Library exist? */
       /* Search this data into HeaderListUriTitle */
       if (data)
-	{
-	  buffer = IsSVGCatalogueExist (data);
-	}
+	buffer = IsSVGCatalogueExist (data);
       break;
     case NewSVGLibraryTitle:
       strcpy (NewLibraryTitle , data);
@@ -783,50 +758,51 @@ void CallbackLibrary (int ref, int typedata, char *data)
 	{
 	  /* suppress last directory */
 	  tempfile = (char *) TtaGetMemory (MAX_LENGTH);
-	  strcpy (tempname, baseDirectory1);
-	  TtaExtractName (tempname, baseDirectory1, tempfile);
-	  strcpy (LastURLCatalogue, baseDirectory1);
+	  strcpy (tempname, LibDirectory);
+	  TtaExtractName (tempname, LibDirectory, tempfile);
+	  strcpy (LastURLCatalogue, LibDirectory);
 	  TtaFreeMemory (tempfile);
 	}
       else
 	{
-	  strcat (baseDirectory1, DIR_STR);
-	  strcat (baseDirectory1, data);
-	  strcpy (LastURLCatalogue, baseDirectory1);
+	  strcat (LibDirectory, DIR_STR);
+	  strcat (LibDirectory, data);
+	  strcpy (LastURLCatalogue, LibDirectory);
 	}
 #ifndef _WINDOWS
-      TtaSetTextForm (BaseLibrary + SVGLibFileBrowserText/*SVGLibraryURL*/, baseDirectory1);
+      TtaSetTextForm (BaseLibrary + SVGLibFileBrowserText, LibDirectory);
 #endif /* !_WINDOWS */
-      TtaListDirectory (baseDirectory1, BaseLibrary + NewSVGLibrary,
+      TtaListDirectory (LibDirectory, BaseLibrary + NewSVGLibrary,
 			TtaGetMessage (LIB, TMSG_DOC_DIR),
-			BaseLibrary + SVGLibraryDir, libraryFilter,
+			BaseLibrary + SVGLibraryDir, Filter,
 			TtaGetMessage (AMAYA, AM_FILES),
 			BaseLibrary + SVGLibrarySel);
       break;
     case SVGLibrarySel:
-      if (baseDirectory1[0] == EOS)
+      if (LibDirectory[0] == EOS)
 	/* set path on current directory */
-	getcwd (baseDirectory1, MAX_LENGTH);
+	getcwd (LibDirectory, MAX_LENGTH);
       /* construct the library full name */
-      strcpy (LastURLCatalogue, baseDirectory1);
+      strcpy (LastURLCatalogue, LibDirectory);
       val = strlen (LastURLCatalogue) - 1;
       if (LastURLCatalogue[val] != DIR_SEP)
 	strcat (LastURLCatalogue, DIR_STR);
       strcat (LastURLCatalogue, data);
 #ifndef _WINDOWS
-      TtaSetTextForm (BaseLibrary + SVGLibFileBrowserText/*SVGLibraryURL*/, LastURLCatalogue);
+      TtaSetTextForm (BaseLibrary + SVGLibFileBrowserText, LastURLCatalogue);
 #endif /* !_WINDOWS */
       break;
     case LibraryFilter: /* Filter value */
       if (strlen(data) <= NAME_LENGTH)
-	strcpy (libraryFilter, data);
+	strcpy (Filter, data);
 #ifndef _WINDOWS
       else
-	TtaSetTextForm (BaseLibrary + LibraryFilter, libraryFilter);
+	TtaSetTextForm (BaseLibrary + LibraryFilter, Filter);
 #endif /* !_WINDOWS */
       break;
 
-    case SVGLibFileBrowserText: /* store the NewSVGLibFileURL */
+    case SVGLibFileBrowserText:
+      /* store the NewSVGLibFileURL */
       if (strlen(data) <= MAX_LENGTH)
 	strcpy (LastURLCatalogue, data);
 #ifndef _WINDOWS
@@ -869,9 +845,9 @@ void CallbackLibrary (int ref, int typedata, char *data)
 	  TtaDestroyDialogue (ref);
 	  break;
 	case 3: /* Filter button,  reinitialize directories and document lists */
-	  TtaListDirectory (baseDirectory1, BaseLibrary + SVGLibFileBrowser,
+	  TtaListDirectory (LibDirectory, BaseLibrary + SVGLibFileBrowser,
 			    TtaGetMessage (LIB, TMSG_DOC_DIR),
-			    BaseLibrary + SVGLibraryDir, libraryFilter,
+			    BaseLibrary + SVGLibraryDir, Filter,
 			    TtaGetMessage (AMAYA, AM_FILES),
 			    BaseLibrary + SVGLibrarySel);
 	  break;
@@ -903,31 +879,31 @@ void CreateNewLibraryDialog (Document doc, View view)
 {
 #ifdef _SVGLIB
 #ifndef _WINDOWS
-  char           bufButton[MAX_LENGTH];
-  char          *filename;
+  char           buffer[MAX_LENGTH];
+  char          *app_home;
   int            i;
 
   /* fonction de test de la selection courante */
   i = 0;
-  strcpy (&bufButton[i], TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
-  i += strlen (&bufButton[i]) + 1;
-  strcpy (&bufButton[i], TtaGetMessage (AMAYA, AM_CLEAR));
-  i += strlen (&bufButton[i]) + 1;
-  strcpy (&bufButton[i], TtaGetMessage (AMAYA, AM_SVGLIB_ADD_NEW_CATALOGUE));
-
-  filename =  (char *) TtaGetMemory (MAX_LENGTH);
-  TtaExtractName (DocumentURLs[doc], baseDirectory1, filename);
-  strcpy (libraryFilter, "*.lhtml*");
+  strcpy (&buffer[i], TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
+  i += strlen (&buffer[i]) + 1;
+  strcpy (&buffer[i], TtaGetMessage (AMAYA, AM_CLEAR));
+  i += strlen (&buffer[i]) + 1;
+  strcpy (&buffer[i], TtaGetMessage (AMAYA, AM_SVGLIB_ADD_NEW_CATALOGUE));
 
   TtaNewSheet (BaseLibrary + NewSVGLibrary, TtaGetViewFrame (doc, view),
 	       TtaGetMessage (AMAYA, AM_SVGLIB_CREATE_NEW_CATALOGUE_DIALOG), 3,
-	       bufButton, TRUE, 2, 'L', D_CANCEL);
+	       buffer, TRUE, 2, 'L', D_CANCEL);
 
   /* Library URL text zone*/
+  app_home = TtaGetEnvString ("THOTDIR");
+  sprintf (LibDirectory, "%s%cconfig%clibconfig", app_home, DIR_SEP, DIR_SEP);
+  sprintf (buffer, "%s%cNew.lhtml", LibDirectory, DIR_SEP);
+  strcpy (Filter, "*.lhtml*");
   TtaNewTextForm (BaseLibrary + SVGLibraryURL, BaseLibrary + NewSVGLibrary,
 		  TtaGetMessage (AMAYA, AM_SVGLIB_CATALOGUE_URL),
 		  50, 1, FALSE);
-  TtaSetTextForm (BaseLibrary + SVGLibraryURL, DocumentURLs[doc]);
+  TtaSetTextForm (BaseLibrary + SVGLibraryURL, buffer);
   TtaNewLabel (BaseLibrary + SVGLibraryLabel, BaseLibrary + NewSVGLibrary, " "); 
 
   /* Library Title text zone*/
@@ -940,11 +916,6 @@ void CreateNewLibraryDialog (Document doc, View view)
   TtaSetDialoguePosition ();
   TtaShowDialogue (BaseLibrary + NewSVGLibrary, TRUE);
   TtaWaitShowDialogue ();
-  TtaFreeMemory (filename);
-/*
-  filename =  (char *) TtaGetMemory (MAX_LENGTH);
-  TtaExtractName (DocumentURLs[doc], baseDirectory, filename);
-*/
 #else /* _WINDOWS */
   CreateNewLibraryDlgWindow (TtaGetViewFrame (doc, view), docLibrary);
 #endif /* _WINDOWS */
@@ -959,47 +930,45 @@ void ShowLibraryBrowser ()
 #ifdef _SVGLIB
   Document       doc;
 #ifndef _WINDOWS
-  char           bufButton[MAX_LENGTH];
-  char          *filename;
+  char           buffer[MAX_LENGTH];
+  char          *app_home;
   int            i;
 
   i = 0;
-  strcpy (&bufButton[i], TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
-  i += strlen (&bufButton[i]) + 1;
-  strcpy (&bufButton[i], TtaGetMessage (AMAYA, AM_PARSE));
+  strcpy (&buffer[i], TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
+  i += strlen (&buffer[i]) + 1;
+  strcpy (&buffer[i], TtaGetMessage (AMAYA, AM_PARSE));
   doc = TtaGetSelectedDocument ();
 
-  filename =  (char *) TtaGetMemory (MAX_LENGTH);
-  TtaExtractName (DocumentURLs[doc], baseDirectory1, filename);
-  strcpy (libraryFilter, "*.lhtml*");
-  
   TtaNewSheet (BaseLibrary + SVGLibFileBrowser, TtaGetViewFrame (doc, 1),
 	       TtaGetMessage (AMAYA, AM_FILE_BROWSER), 2,
-	       bufButton, TRUE, 2, 'L', D_CANCEL);
-  
+	       buffer, TRUE, 2, 'L', D_CANCEL);
+
+  app_home = TtaGetEnvString ("THOTDIR");
+  sprintf (LibDirectory, "%s%cconfig%clibconfig", app_home, DIR_SEP, DIR_SEP);
+  sprintf (buffer, "%s%cdefault_cat.lhtml", LibDirectory, DIR_SEP);
+  strcpy (Filter, "*.lhtml*");
   TtaNewTextForm (BaseLibrary + SVGLibFileBrowserText, BaseLibrary + SVGLibFileBrowser,
 		  TtaGetMessage (AMAYA, AM_SVGLIB_CATALOGUE_URL),
 		  50, 1, FALSE);
-  TtaSetTextForm (BaseLibrary + SVGLibFileBrowserText, baseDirectory1);
+  TtaSetTextForm (BaseLibrary + SVGLibFileBrowserText, buffer);
   TtaNewLabel (BaseLibrary + SVGLibraryLabel3, BaseLibrary + SVGLibFileBrowser, " ");
   
-  TtaListDirectory (baseDirectory1, BaseLibrary + SVGLibFileBrowser,
+  TtaListDirectory (LibDirectory, BaseLibrary + SVGLibFileBrowser,
 		    TtaGetMessage (LIB, TMSG_DOC_DIR),
-		    BaseLibrary + SVGLibraryDir, libraryFilter,
+		    BaseLibrary + SVGLibraryDir, Filter,
 		    TtaGetMessage (AMAYA, AM_FILES),
 		    BaseLibrary + SVGLibrarySel);
   
   /* Library filter text zone */
   TtaNewTextForm (BaseLibrary + LibraryFilter, BaseLibrary + SVGLibFileBrowser,
 		  TtaGetMessage (AMAYA, AM_PARSE), 10, 1, TRUE);
-  TtaSetTextForm (BaseLibrary + LibraryFilter, libraryFilter);
+  TtaSetTextForm (BaseLibrary + LibraryFilter, Filter);
   
   /* Set Browser dialogue actif */
   TtaSetDialoguePosition ();
   TtaShowDialogue (BaseLibrary + SVGLibFileBrowser, TRUE);
   TtaWaitShowDialogue ();
-  
-  TtaFreeMemory (filename);
 #else /* _WINDOWS */
   doc = TtaGetSelectedDocument ();
 #endif /* _WINDOWS */
@@ -1071,6 +1040,44 @@ void AddGraphicalObjectIntoCatalogue (Document doc, View view)
 #endif /* _SVGLIB */
 }
 
+#ifdef _SVGLIB
+/*-------------------------------------------------------------------
+  InitSVGBufferForCombobox
+  Initializes a string by reading data in a Library Manager Structure List
+  This function allocates memory and returns it.
+  So you have to free them after calling this function.
+  -------------------------------------------------------------------*/
+static void InitSVGBufferForComboBox ()
+{
+  ListUriTitle     *curList;
+  int               lg = 0;
+
+  if (HeaderListUriTitle)
+    {
+      /* length of the string */
+      curList = HeaderListUriTitle;
+      while (curList)
+	{
+	  lg += strlen (curList->Title) + 1;
+	  curList = curList->next;
+	}
+      /* remove the previous list */
+      TtaFreeMemory (SVGlib_list);
+      SVGlib_list = TtaGetMemory (lg + 10);
+      curList = HeaderListUriTitle;
+      SVGlib_list[0] = EOS;
+      lg = 0;
+      while (curList)
+	{
+	  strcpy (&SVGlib_list[lg], curList->Title);
+	  lg += strlen (curList->Title) + 1;
+	  curList = curList->next;
+	}
+       SVGlib_list[lg] = EOS;
+    }
+}
+#endif /* _SVGLIB */
+
 /*----------------------------------------------------------------------
   CreateNewLibraryFile
   Creates a library file document, initializes the title of this document
@@ -1091,10 +1098,10 @@ Document CreateNewLibraryFile (char *libUrl, char *libtitle)
   ElementType          elType;
   Attribute            attr;
   AttributeType        attrType;
+  Language             language;
   char                *s, *documentname, *pathname, *textStr;
   char                 tempfile[MAX_LENGTH];
   char                 charsetName[MAX_LENGTH];
-  Language             language;
 
   /* create the document */
   textStr = (char * ) TtaGetMemory (MAX_LENGTH);
@@ -1102,8 +1109,12 @@ Document CreateNewLibraryFile (char *libUrl, char *libtitle)
   documentname = (char * ) TtaGetMemory (MAX_LENGTH);
   NormalizeURL (libUrl, 0, pathname, documentname, NULL);
 
-  newLibraryDoc = InitDocAndView (newLibraryDoc, documentname, 0, 0, FALSE,
-				  L_Xhtml11, CE_ABSOLUTE);
+  AddLibraryDataIntoStructure (TRUE, libUrl, libtitle);
+  WriteInterSessionLibraryFileManager ();
+  InitSVGBufferForComboBox ();
+  InNewWindow = TRUE;
+  newLibraryDoc = InitDocAndView (newLibraryDoc, documentname, docLibrary, 0, FALSE,
+				  L_Xhtml11, CE_RELATIVE);
   InNewWindow = FALSE;
 
   TtaFreeMemory (documentname);
@@ -1253,6 +1264,8 @@ Document CreateNewLibraryFile (char *libUrl, char *libtitle)
   el = TtaSearchTypedElement (elType, SearchInTree, body);
   /* set the initial selection */
   TtaSelectElement (newLibraryDoc, el);
+  /* apply style */
+  EnableStyleElement (newLibraryDoc, style);
 
   if (SelectionDoc != 0)
     UpdateContextSensitiveMenus (SelectionDoc);
@@ -1264,7 +1277,6 @@ Document CreateNewLibraryFile (char *libUrl, char *libtitle)
   /* Activate show areas */
   if (MapAreas[newLibraryDoc])
     ChangeAttrOnRoot (newLibraryDoc, HTML_ATTR_ShowAreas);
-  DocumentTypes[newLibraryDoc] = docLibrary;
 #endif /* _SVGLIB */
   return newLibraryDoc;
 }
@@ -1472,44 +1484,6 @@ char *GetLibraryPathFromTitle (char *title)
 #endif /* _SVGLIB */
   return path;
 }
-
-#ifdef _SVGLIB
-/*-------------------------------------------------------------------
-  InitSVGBufferForCombobox
-  Initializes a string by reading data in a Library Manager Structure List
-  This function allocates memory and returns it.
-  So you have to free them after calling this function.
-  -------------------------------------------------------------------*/
-static void InitSVGBufferForComboBox ()
-{
-  ListUriTitle     *curList;
-  int               lg = 0;
-
-  if (HeaderListUriTitle)
-    {
-      /* length of the string */
-      curList = HeaderListUriTitle;
-      while (curList)
-	{
-	  lg += strlen (curList->Title) + 1;
-	  curList = curList->next;
-	}
-      /* remove the previous list */
-      TtaFreeMemory (SVGlib_list);
-      SVGlib_list = TtaGetMemory (lg + 10);
-      curList = HeaderListUriTitle;
-      SVGlib_list[0] = EOS;
-      lg = 0;
-      while (curList)
-	{
-	  strcpy (&SVGlib_list[lg], curList->Title);
-	  lg += strlen (curList->Title) + 1;
-	  curList = curList->next;
-	}
-       SVGlib_list[lg] = EOS;
-    }
-}
-#endif /* _SVGLIB */
 
 /*-------------------------------------------------------------------
   SelectLibraryFromPath
@@ -1720,13 +1694,10 @@ void OpenCatalogue (Document doc, View view)
 	{
 	  if (IsLibraryName (buffer))
 	    {
-	      /* Open the first catalogue of the Library File */
-/*	      sprintf (LastURLName, "%s",
-		       buffer);*/
 	      /* load the HOME document */
 	      InNewWindow = TRUE;
 	      CurrentDocument = doc;
-	      GetAmayaDoc (buffer, NULL, 0, 0, CE_ABSOLUTE,
+	      GetAmayaDoc (buffer, NULL, 0, 0, CE_RELATIVE,
 			   FALSE, NULL, NULL, TtaGetDefaultCharset());
 	    }
 	  TtaFreeMemory (buffer);
@@ -1743,10 +1714,8 @@ void OpenCatalogue (Document doc, View view)
       /* load the Catalogue document */
       InNewWindow = TRUE;
       CurrentDocument = doc;
-      GetAmayaDoc (lib_path, NULL,
-		   0, 0, CE_ABSOLUTE,
-		   FALSE, NULL, NULL,
-		   TtaGetDefaultCharset());
+      GetAmayaDoc (lib_path, NULL, 0, 0, CE_ABSOLUTE,
+		   FALSE, NULL, NULL, TtaGetDefaultCharset());
       TtaFreeMemory (lib_path);
     }
 #endif /* _SVGLIB */
@@ -1768,12 +1737,11 @@ void ShowLibrary (Document doc, View view)
 }
 
 /*----------------------------------------------------------------------
-  SaveSVGURL
-  function that save SVG URL into a buffer
+  SaveSVGURL saves SVG URL into a buffer
   input parameters:
-  doc:the number of the selected document
-  El:the selected element
-  output: the SVG URL in local variable buffermem (if URL exist)
+  doc: the number of the selected document
+  El: the selected element
+  output: the SVG URL in local variable LibURL (if URL exist)
   ----------------------------------------------------------------------*/
 void SaveSVGURL (Document doc, Element El)
 {
@@ -1784,7 +1752,6 @@ void SaveSVGURL (Document doc, Element El)
   Attribute         attrSearch;
   AttributeType     attrTypeSearch;
   int     length;
-  char   *buffer;
   
   currentEl = El;
   /*
@@ -1806,11 +1773,8 @@ void SaveSVGURL (Document doc, Element El)
   attrSearch = TtaGetAttribute (currentEl, attrTypeSearch);
   if (attrSearch)
     {
-      length = TtaGetTextAttributeLength (attrSearch);
-      buffer = (char *) TtaGetMemory (length + 2);
-      TtaGiveTextAttributeValue (attrSearch, buffer, &length);
-      strcpy (buffermem, buffer);
-      TtaFreeMemory (buffer);
+      length = MAX_LENGTH;
+      TtaGiveTextAttributeValue (attrSearch, LibURL, &length);
     }
 #endif /* _SVGLIB */
 }
@@ -1818,10 +1782,10 @@ void SaveSVGURL (Document doc, Element El)
 
 /*----------------------------------------------------------------------
   ChangeSVGLibraryLinePresentation
-  function that change table line presentation of a library Document
+  function that changes table line presentation of a library Document
   input parameters:
-  doc:the number of the selected document
-  El:the selected element
+  doc: the selected document
+  El: the selected element
   ----------------------------------------------------------------------*/
 void ChangeSVGLibraryLinePresentation (Document doc, Element El)
 {
@@ -1859,7 +1823,6 @@ void ChangeSVGLibraryLinePresentation (Document doc, Element El)
   strcpy (color, "#FFD8C1");
   HTMLSetBackgroundColor (doc, prev, color);
   TtaFreeMemory (color);
-/*  TtaHandlePendingEvents ();*/
 #endif /* _SVGLIB */
 }
 
@@ -2009,7 +1972,6 @@ Element PasteLibraryGraphicElement (Element sourceEl, Document sourceDoc, int Me
   TtaOpenUndoSequence (destDoc, NULL, NULL, 0, 0);
   selEl = firstSelEl;
   child = NULL;
-  docModified = TtaIsDocumentModified (destDoc);
   /* Are we in a drawing? */
   docSchema = TtaGetDocumentSSchema (destDoc);
   SvgSchema = GetSVGSSchema (destDoc);
@@ -2196,7 +2158,7 @@ Element PasteLibraryGraphicElement (Element sourceEl, Document sourceDoc, int Me
       basename = (char *) TtaGetMemory (MAX_LENGTH);
 /*      relativeURL = (char *) TtaGetMemory (MAX_LENGTH);*/
       filename = (char *) TtaGetMemory (MAX_LENGTH);
-      NormalizeURL (buffermem, sourceDoc, pathname, filename, NULL);
+      NormalizeURL (LibURL, sourceDoc, pathname, filename, NULL);
       NormalizeURL (filename, sourceDoc, pathname, basename, NULL);
       basename = GetBaseURL (destDoc);
       relativeURL = MakeRelativeURL (pathname, basename);
@@ -2235,20 +2197,31 @@ Element PasteLibraryGraphicElement (Element sourceEl, Document sourceDoc, int Me
 void CopyOrReference (Document doc, View view)
 {
 #ifdef _SVGLIB
-#ifndef _WINDOWS
-  char           bufButton[MAX_LENGTH];
   int            i;
+#ifndef _WINDOWS
+  char           buffer[MAX_LENGTH];
 #endif /* _WINDOWS */
+
+  i = TtaGetSelectedDocument();
+  if (i == 0 ||
+      (DocumentTypes[i] == docLibrary ||
+       DocumentTypes[i] == docMath ||
+       DocumentTypes[i] == docText ||
+       DocumentTypes[i] == docCSS ||
+       DocumentTypes[i] == docSource ||
+       DocumentTypes[i] == docAnnot))
+    /* there is no selection. Nothing to do */
+    return;
 #ifndef _WINDOWS  
   /* Create the dialogue form */
   i = 0;
-  strcpy (&bufButton[i], TtaGetMessage (AMAYA, AM_SVGLIB_COPY_SELECTION));
-  i += strlen (&bufButton[i]) + 1;
-  strcpy (&bufButton[i], TtaGetMessage (AMAYA, AM_SVGLIB_REF_SELECTION));
+  strcpy (&buffer[i], TtaGetMessage (AMAYA, AM_SVGLIB_COPY_SELECTION));
+  i += strlen (&buffer[i]) + 1;
+  strcpy (&buffer[i], TtaGetMessage (AMAYA, AM_SVGLIB_REF_SELECTION));
   
   TtaNewSheet (BaseLibrary + FormLibrary, TtaGetViewFrame (doc, view), 
 	       TtaGetMessage (AMAYA, AM_SVGLIB_DIALOG1), 2/*bouton supplementaire*/,
-	       bufButton, FALSE, 3, 'L', D_CANCEL);
+	       buffer, FALSE, 3, 'L', D_CANCEL);
   /* activates the Library Dialogue 1 */
   TtaShowDialogue (BaseLibrary+FormLibrary, TRUE);
 #else /* _WINDOWS */
@@ -2685,112 +2658,11 @@ void CopyUseElementAttribute (Element useEl, Element destElement, Document doc)
 
 
 /*----------------------------------------------------------------------
-  AddSVGModelIntoLibrary
-  This function creates png files and svg files associated to the 
-  current selection. Then it adds HTML element into libraryDocument.
-  Parameters:
-  libraryDoc : document to update if it's not a newLib file
-  newLib : TRUE if it's a new library
-  title : Title of the new Library
-  ----------------------------------------------------------------------*/
-void AddSVGModelIntoLibrary (Document libraryDoc, ThotBool newLib, char *title)
-{
-#ifdef _SVGLIB
-  char      *newURL, *suffix, *libraryURL, *tmp, *filename, *dirname;
-  ThotBool   repExist, ok = FALSE;
-  Document   svgDoc, tmpDoc;
-  long int   i = 0;
-
-  libraryURL = NULL;
-  suffix = (char *) TtaGetMemory (10);
-
-  if (!newLib)
-    {
-      if (libraryDoc != 0)
-	{
-	  libraryURL = (char *) TtaGetMemory (MAX_LENGTH);
-	  strcpy (libraryURL, DocumentURLs[libraryDoc]);
-	}
-      else
-	{
-	  /* initialize string buffer */
-	  tmp = GetLibraryPathFromTitle (title);
-	  if (tmp)
-	    {
-	  libraryURL = (char *) TtaGetMemory (MAX_LENGTH);
-	  strcpy (libraryURL, tmp);
-	    }
-	  /* Open it */
-	  tmpDoc = TtaNewDocument ("HTML", "temp_library");
-	  DocumentTypes[tmpDoc] = docLibrary;
-	  InNewWindow = TRUE;
-	  libraryDoc = GetAmayaDoc (libraryURL, NULL, tmpDoc, tmpDoc, CE_ABSOLUTE,
-				    FALSE, FALSE, FALSE, TtaGetDefaultCharset ());
-	}
-    }
-  else
-    {
-      libraryURL = (char *) TtaGetMemory (strlen (LastURLCatalogue) + 1);
-      strcpy (libraryURL, LastURLCatalogue);
-    }
-  /* Create library directory if it doesn't exist yet */
-  /* this directory will contain all svg and png file corresponding to the library */
-  ExtractLibraryPrefixFilename (libraryURL);
-  repExist = CreateLibraryDirectory (libraryURL);
-
-  if (repExist)
-    {
-      /* We save SVG file and PNG file into */
-      filename = (char *) TtaGetMemory (MAX_LENGTH);
-      dirname = (char *) TtaGetMemory (MAX_LENGTH);
-      TtaExtractName (libraryURL, dirname, filename);
-      sprintf (libraryURL, "%s%c%s", libraryURL, DIR_SEP, filename);
-      TtaFreeMemory (filename);
-      TtaFreeMemory (dirname);
-    }
-  /* else we save SVG file and PNG file in the same directory than library file */
-
-  /* Create SVG file corresponding to the current selection*/
-  strcpy (suffix, ".svg");
-  newURL = MakeUniqueSuffixFilename (libraryURL, suffix);
-
-  svgDoc = CreateNewSVGFileofSVGSelected(newURL);
-  if (svgDoc)
-    {
-      SaveAsText = FALSE;
-      ok = TtaExportDocumentWithNewLineNumbers (svgDoc, newURL, "SVGT");
-    }
-
-  while (i < 1000000)
-    {
-      i++;
-    }
-
-  /*  Create PNG file corresponding to the svg file */
-  ExtractLibraryPrefixFilename (newURL);
-  strcat (newURL, ".png");
-  CreatePNGofSVGFile (svgDoc, newURL);
-  
-  /* edit (update) library file */
-  if (newLib)
-    libraryDoc = CreateNewLibraryFile (LastURLCatalogue, NewLibraryTitle);
-  addingModelIntoLibraryFile (libraryDoc, newURL);
-
-  if (newURL)
-    TtaFreeMemory (newURL);
-  TtaFreeMemory (suffix);
-  if (libraryURL)
-    TtaFreeMemory (libraryURL);
-#endif /* _SVGLIB */
-}
-
-
-/*----------------------------------------------------------------------
-  addingModelIntoLibraryFile
+  AddingModelIntoLibraryFile
   this function updates library file by adding HTML element of a new 
   SVG model.
   ----------------------------------------------------------------------*/
-void addingModelIntoLibraryFile (Document libDoc, char *newURL)
+void AddingModelIntoLibraryFile (Document libDoc, char *newURL)
 {
 #ifdef _SVGLIB
   Element         imgEl, rootEl, rowEl, cellEl, anchorEl, table, newcellEl;
@@ -2980,6 +2852,107 @@ void addingModelIntoLibraryFile (Document libDoc, char *newURL)
   TtaSetStructureChecking (oldStructureChecking, libDoc);
   TtaCloseUndoSequence (libDoc);
   TtaSetDocumentModified (libDoc);
+#endif /* _SVGLIB */
+}
+
+
+/*----------------------------------------------------------------------
+  AddSVGModelIntoLibrary
+  This function creates png files and svg files associated to the 
+  current selection. Then it adds HTML element into libraryDocument.
+  Parameters:
+  libraryDoc : document to update if it's not a newLib file
+  newLib : TRUE if it's a new library
+  title : Title of the new Library
+  ----------------------------------------------------------------------*/
+void AddSVGModelIntoLibrary (Document libraryDoc, ThotBool newLib, char *title)
+{
+#ifdef _SVGLIB
+  char      *newURL, *suffix, *libraryURL, *tmp, *filename, *dirname;
+  ThotBool   repExist, ok = FALSE;
+  Document   svgDoc, tmpDoc;
+  long int   i = 0;
+
+  libraryURL = NULL;
+  suffix = (char *) TtaGetMemory (10);
+
+  if (!newLib)
+    {
+      if (libraryDoc != 0)
+	{
+	  libraryURL = (char *) TtaGetMemory (MAX_LENGTH);
+	  strcpy (libraryURL, DocumentURLs[libraryDoc]);
+	}
+      else
+	{
+	  /* initialize string buffer */
+	  tmp = GetLibraryPathFromTitle (title);
+	  if (tmp)
+	    {
+	  libraryURL = (char *) TtaGetMemory (MAX_LENGTH);
+	  strcpy (libraryURL, tmp);
+	    }
+	  /* Open it */
+	  tmpDoc = TtaNewDocument ("HTML", "temp_library");
+	  DocumentTypes[tmpDoc] = docLibrary;
+	  InNewWindow = TRUE;
+	  libraryDoc = GetAmayaDoc (libraryURL, NULL, tmpDoc, tmpDoc, CE_ABSOLUTE,
+				    FALSE, FALSE, FALSE, TtaGetDefaultCharset ());
+	}
+    }
+  else
+    {
+      libraryURL = (char *) TtaGetMemory (strlen (LastURLCatalogue) + 1);
+      strcpy (libraryURL, LastURLCatalogue);
+    }
+  /* Create library directory if it doesn't exist yet */
+  /* this directory will contain all svg and png file corresponding to the library */
+  ExtractLibraryPrefixFilename (libraryURL);
+  repExist = CreateLibraryDirectory (libraryURL);
+
+  if (repExist)
+    {
+      /* We save SVG file and PNG file into */
+      filename = (char *) TtaGetMemory (MAX_LENGTH);
+      dirname = (char *) TtaGetMemory (MAX_LENGTH);
+      TtaExtractName (libraryURL, dirname, filename);
+      sprintf (libraryURL, "%s%c%s", libraryURL, DIR_SEP, filename);
+      TtaFreeMemory (filename);
+      TtaFreeMemory (dirname);
+    }
+  /* else we save SVG file and PNG file in the same directory than library file */
+
+  /* Create SVG file corresponding to the current selection*/
+  strcpy (suffix, ".svg");
+  newURL = MakeUniqueSuffixFilename (libraryURL, suffix);
+
+  svgDoc = CreateNewSVGFileofSVGSelected(newURL);
+  if (svgDoc)
+    {
+      SaveAsText = FALSE;
+      ok = TtaExportDocumentWithNewLineNumbers (svgDoc, newURL, "SVGT");
+    }
+
+  while (i < 1000000)
+    {
+      i++; /* wait !!!!!! */
+    }
+
+  /*  Create PNG file corresponding to the svg file */
+  ExtractLibraryPrefixFilename (newURL);
+  strcat (newURL, ".png");
+  CreatePNGofSVGFile (svgDoc, newURL);
+  
+  /* edit (update) library file */
+  if (newLib)
+    libraryDoc = CreateNewLibraryFile (LastURLCatalogue, NewLibraryTitle);
+  AddingModelIntoLibraryFile (libraryDoc, newURL);
+
+  if (newURL)
+    TtaFreeMemory (newURL);
+  TtaFreeMemory (suffix);
+  if (libraryURL)
+    TtaFreeMemory (libraryURL);
 #endif /* _SVGLIB */
 }
 
