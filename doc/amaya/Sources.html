@@ -19,22 +19,18 @@ alt="Doc"></a></p>
 <h3>The Amaya Source Tree</h3>
 <p>
 Below is the picture of the whole tree built from the source archives for Thot
-and Amaya. Since Amaya is an application built on top of the Thot library, one
-need first to extract the Thot source tree, and then graft the Amaya sources
-in the Thot tree.</p>
+and Amaya.</p>
 <p>
-We assume that all the archives needed have been fetched from W3C and INRIA
+We assume that all the archives needed have been fetched from W3C or INRIA
 servers, namely and stored in <code>/tmp</code> :</p>
 <ul>
 <li>
-the <strong>Thot</strong> source archive
-<code>thot-src-xxx.tar.gz</code>(where xxx is the <strong>Thot</strong>
-version number).
-<li>
-the <strong>Amaya</strong> source archive
-<code>amaya-src-yyy.tar.gz</code>(where yyy is the <strong>Amaya</strong>
-version number).
+the <strong>Amaya</strong> source archive <code>amaya-src-yyy.tar.gz</code>
+(where yyy is the <strong>Amaya</strong> version number).
 </ul>
+<p>
+<img src="../Icons/warning.gif">The archive amaya-src-yyy.tar.gz,  allows you
+only to build the Amaya  without Java support.</p>
 <p>
 Here is a short table of compatibles versions of Thot and Amaya :</p>
 
@@ -117,7 +113,7 @@ Amaya (yyy)
 2.1e
 </td>
 <td>
-1.1b
+1.1b or 1.1c
 </td>
 </tr>
 </tbody>
@@ -126,15 +122,11 @@ Amaya (yyy)
 The tree is created by invoking the following commands in the directory of
 choice (it will create the <code>Thot</code> sub-directory) :</p>
 <p>
-<code>gunzip -c /tmp/thot-src-xxx.tar.gz | tar xvf -</code></p>
-<p>
-<code>cd Thot</code></p>
-<p>
 <code>gunzip -c /tmp/amaya-src-yyy.tar.gz | tar xvf -</code></p>
 <p>
 Be sure to have plenty of room available, compiling a <strong>debug</strong>
-version of Amaya can use up to 150 Mbytes of disk space. A non-debug one
-shouldn't use more than 60 Mbytes.</p>
+version of Amaya can use up to 80 Mbytes of disk space. A non-debug one
+shouldn't use more than 40 Mbytes.</p>
 <p>
 <img src="../Icons/Sources.gif"></p>
 <p>
