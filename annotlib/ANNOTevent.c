@@ -1175,9 +1175,10 @@ ThotBool Annot_RaiseSourceDoc (NotifyElement *event)
   doc_annot = event->document;
   docModified = TtaIsDocumentModified (doc_annot);
 
+  elType = TtaGetElementType (el);
 #ifdef ANNOT_ON_ANNOT
   /* only do this action for thread items and for source document elements */
-  elType = TtaGetElementType (el);
+
   if (elType.ElTypeNum != Annot_EL_SourceDoc)
     {
       elType.ElTypeNum = Annot_EL_Thread_item;
@@ -1186,7 +1187,10 @@ ThotBool Annot_RaiseSourceDoc (NotifyElement *event)
 	return FALSE;  /* let Thot do its usual operations */
       has_thread = TRUE;
     }
+  else
 #endif /* ANNOT_ON_ANNOT */
+    if (elType.ElTypeNum != Annot_EL_SourceDoc)
+      return FALSE;
 
   /* remove the selection */
   TtaUnselect (doc_annot);
