@@ -232,14 +232,14 @@ int                 msgNumber;
   int                 num;
   PtrTabMsg           currenttable;
   PtrTabMsg           previoustable;
-  CHAR_T*             s;
-  CHAR_T*             string;
+  CHAR_T             *s;
+  CHAR_T             *string;
   CHAR_T              pBuffer[MAX_TXT_LEN];
   CHAR_T              fileName[MAX_TXT_LEN];
   CHARSET             encoding;
   unsigned char       pBuff[MAX_TXT_LEN];
 #ifdef _I18N_
-  unsigned char*      ptrBuff;
+  unsigned char      *ptrBuff;
 #endif
 
   /* contruction du nom $THOTDIR/bin/$LANG-msgName */
@@ -278,7 +278,8 @@ int                 msgNumber;
 	    }
 	  previoustable->TabNext = currenttable;
 	}
-      
+
+      pBuff[0] = EOS;
       fscanf (file, "# %500s\n]", pBuff);
       if (!strcasecmp (pBuff, "encoding="))
 	{
