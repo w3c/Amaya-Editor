@@ -2054,16 +2054,19 @@ LRESULT CALLBACK ClientWndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lPar
     case WM_IME_COMPOSITION:
 	{
 	  HIMC hIMC = ImmGetContext(hwnd);
-	  wchar_t str[128];
-	  int len;
 
 	  if (lParam & GCS_RESULTSTR) {
+	    CHAR_T str[128];
+	    int len, i;
+
 	    len = ImmGetCompositionStringW(hIMC, GCS_RESULTSTR, NULL, 0);
 	    /* need to check (len/2) < 128; len is strangely in bytes rather than wchars */
 	    ImmGetCompositionStringW(hIMC, GCS_RESULTSTR, str, len);
 	    ImmReleaseContext(hwnd, hIMC);
-	    str[len/2] = '\0';
+	    len /= 2;
 	    /* actually move the characters to the document */
+	    for (i=0; i<len; i++)
+	      InsertChar(ActiveFrame, str[i], -1);
 	    return 0;
 	  }
 	}
