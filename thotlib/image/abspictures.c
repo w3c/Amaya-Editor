@@ -147,6 +147,7 @@ int                 imagetype;
 #     endif /* _WINDOWS */
       image->PicType = imagetype;
       image->PicPresent = (PictureScaling) picPresent;
+      image->PicColors = NULL;
       image->PicXArea = 0;
       image->PicYArea = 0;
       image->PicWArea = 0;
@@ -205,5 +206,6 @@ int                *Imdsource;
    imagec->PicHeight = images->PicHeight;
    imagec->PicPresent = images->PicPresent;
    imagec->PicType = images->PicType;
+   imagec->PicColors = NULL;
 }
 

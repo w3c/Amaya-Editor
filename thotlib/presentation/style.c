@@ -1890,6 +1890,8 @@ PresentationValue   v;
 
       if (type == PRBackgroundPicture)
 	{
+	  if (!generic)
+	    tsch = (PSchema) (LoadedDocument[c->doc - 1]->DocSSchema->SsPSchema);
 	  cst = PresConstInsert (tsch, v.pointer);
 	  v.typed_data.unit = STYLE_UNIT_REL;
 	  v.typed_data.value = cst;

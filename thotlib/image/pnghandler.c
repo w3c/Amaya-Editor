@@ -879,11 +879,11 @@ int*            bg;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-ThotBitmap PngCreate (STRING fn, PictureScaling pres, int* xif, int* yif, int* wif, int* hif, unsigned long BackGroundPixel, ThotBitmap *mask1, int *width, int *height, int zoom)
+ThotBitmap PngCreate (STRING fn, PictInfo *imageDesc, int* xif, int* yif, int* wif, int* hif, unsigned long BackGroundPixel, ThotBitmap *mask1, int *width, int *height, int zoom)
 #else /* __STDC__ */
-ThotBitmap PngCreate (fn, pres, xif, yif, wif, hif, BackGroundPixel, mask1, width, height, zoom)
-STRING          fn;
-PictureScaling pres;
+ThotBitmap PngCreate (fn, imageDesc, xif, yif, wif, hif, BackGroundPixel, mask1, width, height, zoom)
+STRING         fn;
+PictInfo      *imageDesc;
 int*           xif;
 int*           yif;
 int*           wif;
@@ -956,7 +956,9 @@ int            zoom;
 #   endif /* _WINDOWS */
   }
 
-  pixmap = DataToPixmap (buffer, w, h, ncolors,  colrs);
+  pixmap = DataToPixmap (buffer, w, h, ncolors, colrs, &(imageDesc->PicColors));
+  if (imageDesc->PicColors != NULL)
+    imageDesc->PicNbColors = ncolors;
   TtaFreeMemory (buffer);
   if (pixmap == None) 
     return (ThotBitmapNone); 

@@ -60,6 +60,8 @@ typedef struct
   int            PicType;
   char          *PicFileName; 
   Pixmap         PicPixmap;
+  int            PicNbColors;
+  int           *PicColors;
 # ifndef _WINDOWS
   Pixmap         PicMask;
 # else  /* _WINDOWS */

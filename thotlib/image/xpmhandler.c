@@ -49,11 +49,11 @@
    fn. updates the wif, hif, xif , yif                     
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-Drawable            XpmCreate (STRING fn, PictureScaling pres, int *xif, int *yif, int *wif, int *hif, unsigned long BackGroundPixel, Drawable *mask1, int *width, int *height, int zoom)
+Drawable            XpmCreate (STRING fn, PictInfo *imageDesc, int *xif, int *yif, int *wif, int *hif, unsigned long BackGroundPixel, Drawable *mask1, int *width, int *height, int zoom)
 #else  /* __STDC__ */
-Drawable            XpmCreate (fn, pres, xif, yif, wif, hif, BackGroundPixel, mask1, width, height, zoom)
+Drawable            XpmCreate (fn, imageDesc, xif, yif, wif, hif, BackGroundPixel, mask1, width, height, zoom)
 STRING              fn;
-PictureScaling      pres;
+PictInfo           *imageDesc;
 int                *xif;
 int                *yif;
 int                *wif;

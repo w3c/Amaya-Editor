@@ -6,11 +6,12 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern void FindOutColor ( Display * dsp,
-                           Colormap colormap,
-                           ThotColorStruct * colr );
 extern void InitDocColors ( char *name );
 extern unsigned long ColorPixel ( int num );
+extern void TtaFreeThotColor ( int num );
+extern int TtaGetThotColor ( unsigned short red,
+                             unsigned short green,
+                             unsigned short blue );
 extern void TtaGiveThotRGB ( int num,
                              unsigned short *red,
                              unsigned short *green,
@@ -24,11 +25,12 @@ extern unsigned long CreatePattern ( int disp,
 
 #else /* __STDC__ */
 
-extern void FindOutColor (/* Display * dsp,
-                             Colormap colormap,
-                             ThotColorStruct * colr */);
 extern void InitDocColors (/* char *name */);
 extern unsigned long ColorPixel (/* int num */);
+extern void TtaFreeThotColor (/* int num */);
+extern int TtaGetThotColor (/* unsigned short red,
+                               unsigned short green,
+                               unsigned short blue */);
 extern void TtaGiveThotRGB (/* int num,
                                unsigned short *red,
                                unsigned short *green,

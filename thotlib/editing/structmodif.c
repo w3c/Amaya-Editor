@@ -1586,7 +1586,9 @@ boolean             caret;
    if (select && !caret)
      {
        /* set the new selection */
-       if (firstChar > 1)
+       if (!firstSel->ElTerminal)
+	 SelectElement (pDoc, firstSel, TRUE, TRUE);
+       else if (firstChar > 1)
 	 {
 	   if (firstSel == lastSel)
 	     prevLen = lastChar - 1;
@@ -1594,9 +1596,7 @@ boolean             caret;
 	     prevLen = 0;
 	   SelectString (pDoc, firstSel, firstChar, prevLen);
 	 }
-       else if (!firstSel->ElTerminal ||
-		(lastChar == 0 && firstChar == 0) ||
-		lastSel != firstSel)
+       else if ((lastChar == 0 && firstChar == 0) || lastSel != firstSel)
 	 SelectElement (pDoc, firstSel, TRUE, TRUE);
        else
 	 SelectString (pDoc, firstSel, 1, lastChar - 1);

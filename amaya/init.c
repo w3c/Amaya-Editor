@@ -1685,8 +1685,10 @@ boolean             logFile;
 	     TtaSetItemOff (doc, 1, Views, BShowLinks);
 	     TtaSetItemOff (doc, 1, Views, BShowToC);
 	   }
-
-	 TtaChangeButton (doc, 1, 7, iconSaveNo, FALSE);
+	 if (DocumentTypes[doc] == docReadOnly ||
+	     DocumentTypes[doc] == docTextRO ||
+	     DocumentTypes[doc] == docCSSRO)
+	   TtaChangeButton (doc, 1, 7, iconSaveNo, FALSE);
 	 TtaChangeButton (doc, 1, 11, iconINo, FALSE);
 	 TtaChangeButton (doc, 1, 12, iconBNo, FALSE);
 	 TtaChangeButton (doc, 1, 13, iconTNo, FALSE);
@@ -3794,7 +3796,7 @@ STRING              data;
 
      case AttrHREFText:
        /* save the HREF name */
-       ustrcpy (AttrHREFvalue, data);
+       NormalizeFile (data, AttrHREFvalue);
        break;
 
      case ClassForm:

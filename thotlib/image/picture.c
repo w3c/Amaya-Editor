@@ -1850,8 +1850,9 @@ PictInfo           *imageDesc;
        if (TtPrinterDC == NULL) {
           imageDesc->PicType = 3;
           pres = RealSize;
+	  imageDesc->PicPresent = pres;
           myDrawable = (*(PictureHandlerTable [GIF_FORMAT].Produce_Picture)) 
-			             (LostPicturePath, pres, &xFrame, &yFrame, &wFrame, &hFrame, Bgcolor, &picMask, &width, &height);
+			             (LostPicturePath, imageDesc, &xFrame, &yFrame, &wFrame, &hFrame, Bgcolor, &picMask, &width, &height);
 	   }
 #      else  /* !_WINDOWS */
        myDrawable = PictureLogo;
@@ -1941,13 +1942,9 @@ PictInfo           *imageDesc;
 	       pic2print = FALSE;
 #              endif /* _WINDOWS */
 	       myDrawable = (*(PictureHandlerTable[typeImage].Produce_Picture))
-		 (fileName, pres, &xFrame, &yFrame, &wFrame, &hFrame, Bgcolor, &picMask, &width, &height, ViewFrameTable[frame - 1].FrMagnification);
+		 (fileName, imageDesc, &xFrame, &yFrame, &wFrame, &hFrame, Bgcolor, &picMask, &width, &height, ViewFrameTable[frame - 1].FrMagnification);
 	       /* intrinsic width and height */
 #              ifdef _WINDOWS 
-#if 0
-		   imageDesc->PicWidth  = width;
-		   imageDesc->PicHeight = height;
-#endif /* 0 */
 	       imageDesc->bgRed   = bgRed;
 	       imageDesc->bgGreen = bgGreen;
 	       imageDesc->bgBlue  = bgBlue;
@@ -2070,8 +2067,9 @@ PictInfo           *imageDesc;
       if (TtPrinterDC == NULL) {
          imageDesc->PicType = 3;
          pres = RealSize;
+	 imageDesc->PicPresent = pres;
          myDrawable = (*(PictureHandlerTable [GIF_FORMAT].Produce_Picture)) 
-                        (LostPicturePath, pres, &xFrame, &yFrame, &wFrame, &hFrame, Bgcolor, &picMask, &width, &height);
+                        (LostPicturePath, imageDesc, &xFrame, &yFrame, &wFrame, &hFrame, Bgcolor, &picMask, &width, &height);
 	  }
 
       imageDesc->PicType = -1;
@@ -2106,7 +2104,7 @@ PictInfo           *imageDesc;
                    yFrame = box->BxHeight;
 		   }
            myDrawable = (*(PictureHandlerTable[typeImage].Produce_Picture)) 
-                          (fileName, pres, &xFrame, &yFrame, &wFrame, &hFrame, Bgcolor, &picMask, &width, &height);
+                          (fileName, imageDesc, &xFrame, &yFrame, &wFrame, &hFrame, Bgcolor, &picMask, &width, &height);
            /* intrinsic width and height */
            imageDesc->PicWidth = width;
            imageDesc->PicHeight = height;
@@ -2164,6 +2162,7 @@ PictInfo           *imageDesc;
 
 #endif /* __STDC__ */
 {
+  int        i;
 
    if (imageDesc->PicPixmap != None)
      {
@@ -2179,6 +2178,9 @@ PictInfo           *imageDesc;
        imageDesc->PicHArea = 0;
        imageDesc->PicWidth = 0;
        imageDesc->PicHeight = 0;
+       if (imageDesc->PicColors != NULL)
+	 for (i = 0; i < imageDesc->PicNbColors; i++)
+	   TtaFreeThotColor (imageDesc->PicColors[i]);
      }
 
      if ((imageDesc->PicType >= InlineHandlers) && (PictureHandlerTable[imageDesc->PicType].FreePicture != NULL))

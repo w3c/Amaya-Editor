@@ -275,24 +275,17 @@ STRING              applicationName;
 void                TtaQuit ()
 {
  /***JK: 25/Feb/1999 removed this systematic call. Applications now must
-   explicitly call this function to save the user options */
-  /* 
-   TtaSaveAppRegistry ();
-  */
+   explicitly call TtaSaveAppRegistry to save the user options */
 
-#  ifndef NODISPLAY
-#  ifdef _WINDOWS
-   if (!TtIsTrueColor)
-	  if (TtCmap && !DeleteObject (TtCmap))
-         WinErrorBox (WIN_Main_Wd);
-#  endif /* _WINDOWS */
-   FreeAllMessages ();
-#  endif /* NODISPLAY */
-   FreeAll ();
-#  ifndef NODISPLAY
-   FreeTranslations ();
-#  endif /* NODISPLAY */
-   exit (0);
+#ifndef NODISPLAY
+  FreeDocColors ();
+  FreeAllMessages ();
+#endif /* NODISPLAY */
+  FreeAll ();
+#ifndef NODISPLAY
+  FreeTranslations ();
+#endif /* NODISPLAY */
+  exit (0);
 }
 
 /*----------------------------------------------------------------------
@@ -304,13 +297,11 @@ void                TtaQuit ()
    on: 1 if error messages must be printed, 0 if not.
 
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 void                TtaSetErrorMessages (int on)
 #else  /* __STDC__ */
 void                TtaSetErrorMessages (on)
 int                 on;
-
 #endif /* __STDC__ */
 {
    PrintErrorMessages = (boolean) on;

@@ -1192,16 +1192,18 @@ static signed int tabCorres [256];
 #endif /* _WINDOWS */
 
 /*----------------------------------------------------------------------
+  Allocate and return the thotColors table.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-Pixmap DataToPixmap (unsigned char *image_data, int width, int height, int num_colors, ThotColorStruct colrs[256])
+Pixmap DataToPixmap (unsigned char *image_data, int width, int height, int num_colors, ThotColorStruct colrs[256], int **thotColors)
 #else  /* __STDC__ */
-Pixmap DataToPixmap (image_data, width, height, num_colors, colrs)
+Pixmap DataToPixmap (image_data, width, height, num_colors, colrs, thotColors)
 unsigned char*      image_data;
 int                 width;
 int                 height;
 int                 num_colors;
 ThotColorStruct     colrs[256];
+int               **thotColors;
 #endif /* __STDC__ */
 {
 
@@ -1212,7 +1214,7 @@ ThotColorStruct     colrs[256];
    Pixmap              Img;
    XImage             *tmpimage;
    ThotColorStruct     tmpcolr;
-   int                *Mapping;
+   int                *Mapping, *tcolors;
    unsigned char      *tmpdata;
    unsigned char      *ptr;
    unsigned char      *ptr2;
@@ -1220,111 +1222,135 @@ ThotColorStruct     colrs[256];
 
    /* find the visual class. */
    if (THOT_vInfo.depth == 1)
-      need_to_dither = TRUE;
+     need_to_dither = TRUE;
    else
-      need_to_dither = FALSE;
+     need_to_dither = FALSE;
 
    Mapping = (int*) TtaGetMemory (num_colors * sizeof (int));
+   tcolors = NULL;
+   for (i = 0; i < num_colors; i++)
+     {
+       tmpcolr.red   = colrs[i].red;
+       tmpcolr.green = colrs[i].green;
+       tmpcolr.blue  = colrs[i].blue;
+       tmpcolr.pixel = 0;
+       tmpcolr.flags = DoRed | DoGreen | DoBlue;
+       if (THOT_vInfo.class == THOT_TrueColor ||
+	   THOT_vInfo.class == THOT_DirectColor)
+	 Mapping[i] = i;
+       else if (need_to_dither == TRUE)
+	 {
+	   Mapping[i] = ((tmpcolr.red >> 5) * 11 +
+			 (tmpcolr.green >> 5) * 16 +
+			 (tmpcolr.blue >> 5) * 5) / (65504 / 64);
+	 }
+       else
+	 {
+	   
+	   if (tcolors == NULL)
+	     tcolors = (int*) TtaGetMemory (num_colors * sizeof (int));
+	   tcolors[i] = TtaGetThotColor (tmpcolr.red /256,
+					 tmpcolr.green / 256,
+					 tmpcolr.blue / 256);
+	   tmpcolr.pixel = ColorPixel (tcolors[i]);
+	   Mapping[i] = tmpcolr.pixel;
+	 }
+     }
 
-   for (i = 0; i < num_colors; i++) {
-	tmpcolr.red   = colrs[i].red;
-	tmpcolr.green = colrs[i].green;
-	tmpcolr.blue  = colrs[i].blue;
-	tmpcolr.pixel = 0;
-	tmpcolr.flags = DoRed | DoGreen | DoBlue;
-
-	if ((THOT_vInfo.class == THOT_TrueColor) || (THOT_vInfo.class == THOT_DirectColor))
-	   Mapping[i] = i;
-	else if (need_to_dither == TRUE) {
-	     Mapping[i] = ((tmpcolr.red >> 5) * 11 +
-			   (tmpcolr.green >> 5) * 16 +
-			   (tmpcolr.blue >> 5) * 5) / (65504 / 64);
-	} else {
-	       FindOutColor (TtDisplay, TtCmap, &tmpcolr);
-	       Mapping[i] = tmpcolr.pixel;
-	}
-   }
-
+   *thotColors = tcolors;
    /*
     * Special case:  For 2 color non-black&white images, instead
     * of 2 dither patterns, we will always drop them to be
     * black on white.
     */
-   if ((need_to_dither == TRUE) && (num_colors == 2)) {
-      if (Mapping[0] < Mapping[1]) {
+   if (need_to_dither == TRUE && num_colors == 2)
+     {
+       if (Mapping[0] < Mapping[1]) {
 	 Mapping[0] = 0;
 	 Mapping[1] = 64;
-      } else {
-	     Mapping[0] = 64;
-	     Mapping[1] = 0;
-      }
-   }
+       }
+       else
+	 {
+	   Mapping[0] = 64;
+	   Mapping[1] = 0;
+	 }
+     }
 
    size = width * height;
    if (size == 0)
-      tmpdata = NULL;
+     tmpdata = NULL;
    else
-       tmpdata = (unsigned char *) TtaGetMemory (size);
+     tmpdata = (unsigned char *) TtaGetMemory (size);
 
-   if (tmpdata == NULL) {
-      tmpimage = None;
-      Img = (Pixmap) None;
-   } else {
-	  ptr = image_data;
-	  ptr2 = tmpdata;
+   if (tmpdata == NULL)
+     {
+       tmpimage = None;
+       Img = (Pixmap) None;
+     }
+   else
+     {
+       ptr = image_data;
+       ptr2 = tmpdata;
 
-	  if (need_to_dither == TRUE) {
-	     int                 cx, cy;
+       if (need_to_dither == TRUE)
+	 {
+	   int                 cx, cy;
 
-	     for (ptr2 = tmpdata, ptr = image_data; ptr2 < tmpdata + (size - 1); ptr2++, ptr++)
-		 *ptr2 = Mapping[(int) *ptr];
+	   for (ptr2 = tmpdata, ptr = image_data; ptr2 < tmpdata + (size - 1); ptr2++, ptr++)
+	     *ptr2 = Mapping[(int) *ptr];
 
-	     ptr2 = tmpdata;
-	     for (cy = 0; cy < height; cy++) {
-		 for (cx = 0; cx < width; cx++) {
-		     /* Assume high numbers are really negative. */
-		     if (*ptr2 > 128)
-			*ptr2 = 0;
-		     else if (*ptr2 > 64)
-			  *ptr2 = 64;
+	   ptr2 = tmpdata;
+	   for (cy = 0; cy < height; cy++)
+	     {
+	       for (cx = 0; cx < width; cx++)
+		 {
+		   /* Assume high numbers are really negative. */
+		   if (*ptr2 > 128)
+		     *ptr2 = 0;
+		   else if (*ptr2 > 64)
+		     *ptr2 = 64;
 
-		     /* Traditional Floyd-Steinberg */
-		     if (*ptr2 < 32) {
-			delta = *ptr2;
-			*ptr2 = Black_Color;
-		     } else {
-			    delta = *ptr2 - 64;
-			    *ptr2 = White_Color;
+		   /* Traditional Floyd-Steinberg */
+		   if (*ptr2 < 32)
+		     {
+		       delta = *ptr2;
+		       *ptr2 = Black_Color;
 		     }
-		     if ((not_right_col = (cx < (width - 1))))
-			*(ptr2 + 1) += delta * 7 >> 4;
+		   else
+		     {
+		       delta = *ptr2 - 64;
+		       *ptr2 = White_Color;
+		     }
+		   if ((not_right_col = (cx < (width - 1))))
+		     *(ptr2 + 1) += delta * 7 >> 4;
 
-		     if ((not_last_row = (cy < (height - 1))))
-			(*(ptr2 + width)) += delta * 5 >> 4;
+		   if ((not_last_row = (cy < (height - 1))))
+		     (*(ptr2 + width)) += delta * 5 >> 4;
 
-		     if (not_right_col && not_last_row)
-			(*(ptr2 + width + 1)) += delta >> 4;
+		   if (not_right_col && not_last_row)
+		     (*(ptr2 + width + 1)) += delta >> 4;
 
-		     if (cx && not_last_row)
-			(*(ptr2 + width - 1)) += delta * 3 >> 4;
-		     ptr2++;
+		   if (cx && not_last_row)
+		     (*(ptr2 + width - 1)) += delta * 3 >> 4;
+		   ptr2++;
 		 }
 	     }
-	  } else {
-	         for (i = 0; i < size; i++) {
-		   if (*ptr < 0)
-		     *ptr2++ = (unsigned char) Mapping[0];
-		   else if (*ptr > num_colors)
-		     *ptr2++ = (unsigned char) Mapping[num_colors];
-		   else
-		     *ptr2++ = (unsigned char) Mapping[(int) *ptr];
-		   ptr++;
-		 }
-	  }
-	  tmpimage = MakeImage (TtDisplay, tmpdata, width, height, TtWDepth, colrs);
-	  TtaFreeMemory (tmpdata);
-	  Img = XCreatePixmap (TtDisplay, TtRootWindow, width, height, TtWDepth);
-   }
+	 }
+       else
+	 {
+	   for (i = 0; i < size; i++)
+	     {
+	       if (*ptr > num_colors)
+		 *ptr2++ = (unsigned char) Mapping[num_colors];
+	       else
+		 *ptr2++ = (unsigned char) Mapping[(int) *ptr];
+	       ptr++;
+	     }
+	 }
+       tmpimage = MakeImage (TtDisplay, tmpdata, width, height, TtWDepth, colrs);
+       TtaFreeMemory (tmpdata);
+       Img = XCreatePixmap (TtDisplay, TtRootWindow, width, height, TtWDepth);
+     }
 
    if ((tmpimage == None) || (Img == (Pixmap) None))
      {
@@ -1460,11 +1486,11 @@ ThotColorStruct     colrs[256];
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-ThotBitmap          GifCreate (char *fn, PictureScaling pres, int *xif, int *yif, int *wif, int *hif, unsigned long BackGroundPixel, ThotBitmap * mask1, int *width, int *height, int zoom)
+ThotBitmap          GifCreate (char *fn, PictInfo *imageDesc, int *xif, int *yif, int *wif, int *hif, unsigned long BackGroundPixel, ThotBitmap * mask1, int *width, int *height, int zoom)
 #else  /* __STDC__ */
-ThotBitmap          GifCreate (fn, pres, xif, yif, wif, hif, BackGroundPixel, mask1, width, height, zoom)
+ThotBitmap          GifCreate (fn, imageDesc, xif, yif, wif, hif, BackGroundPixel, mask1, width, height, zoom)
 char               *fn;
-PictureScaling      pres;
+PictInfo           *imageDesc;
 int                *xif;
 int                *yif;
 int                *wif;
@@ -1555,7 +1581,9 @@ int                 zoom;
 #     endif /* _WINDOWS */
     }
   
-   pixmap = DataToPixmap (buffer, w, h, ncolors, colrs);
+   pixmap = DataToPixmap (buffer, w, h, ncolors, colrs, &(imageDesc->PicColors));
+   if (imageDesc->PicColors != NULL)
+     imageDesc->PicNbColors = ncolors;
    TtaFreeMemory (buffer);
    if (pixmap == None)
      return (ThotBitmapNone);

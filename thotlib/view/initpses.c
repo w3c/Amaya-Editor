@@ -298,22 +298,6 @@ extern unsigned char  basket_bits[32];
 #endif /* _WINDOWS */
 
 /*----------------------------------------------------------------------
-   FindOutColor finds the closest color by allocating it, or picking
-   an already allocated color.
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                FindOutColor (Display * dsp, Colormap colormap, ThotColorStruct * colr)
-#else  /* __STDC__ */
-void                FindOutColor (dsp, colormap, colr)
-Display            *dsp;
-Colormap            colormap;
-ThotColorStruct    *colr;
-
-#endif /* __STDC__ */
-{
-}
-
-/*----------------------------------------------------------------------
    InitDocColors initialize the Thot internal color table. (fake)
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -341,6 +325,33 @@ int                 num;
    return 0;
 }
 
+/*----------------------------------------------------------------------
+  TtaFreeThotColor frees the Thot Color.
+ ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void             TtaFreeThotColor (int num)
+#else  /* __STDC__ */
+int              TtaGetThotColor (num)
+int              num;
+#endif /* __STDC__ */
+{
+}
+
+/*----------------------------------------------------------------------
+  TtaGetThotColor returns the Thot Color.
+  red, green, blue express the color RGB in 8 bits values
+ ----------------------------------------------------------------------*/
+#ifdef __STDC__
+int                 TtaGetThotColor (unsigned short red, unsigned short green, unsigned short blue)
+#else  /* __STDC__ */
+int                 TtaGetThotColor (red, green, blue)
+unsigned short      red;
+unsigned short      green;
+unsigned short      blue;
+#endif /* __STDC__ */
+{
+  return 0;
+}
 
 /*----------------------------------------------------------------------
    TtaGiveThotRGB        returns the Red Green and Blue values corresponding

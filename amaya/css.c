@@ -365,10 +365,7 @@ CSSInfoPtr          css;
 	  /* check against double inclusion */
 	  oldcss = SearchCSS (0, tempURL);
 	  if (oldcss != NULL)
-	    {
-	      ustrcpy (tempfile, oldcss->localName);
-	      oldcss->documents[doc] = TRUE;
-	    }
+	    ustrcpy (tempfile, oldcss->localName);
 	  else
 	    {
 	      /* the document is not loaded yet */
@@ -403,12 +400,14 @@ CSSInfoPtr          css;
 	  ustrcpy (tempfile, tempURL);
 	}
 
-      if (oldcss == NULL)
+      if (oldcss == NULL || oldcss->category != CSS_EXTERNAL_STYLE)
 	{
 	  /* It's a new CSS file: allocate a new Presentation structure */
 	  css = AddCSS (0, doc, CSS_EXTERNAL_STYLE, tempURL, tempfile);
 	  oldcss = css;
 	}
+      else
+	oldcss->documents[doc] = TRUE;
 
       if (tempfile[0] == EOS)
 	return;

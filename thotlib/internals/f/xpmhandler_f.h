@@ -7,7 +7,7 @@
 #ifdef __STDC__
 
 extern Drawable XpmCreate ( STRING fn,
-                            PictureScaling pres,
+                            PictInfo *imageDesc,
                             int *xif,
                             int *yif,
                             int *wif,
@@ -34,7 +34,7 @@ extern boolean IsXpmFormat ( STRING fn );
 #else /* __STDC__ */
 
 extern Drawable XpmCreate (/* STRING fn,
-                              PictureScaling pres,
+                              PictInfo *imageDesc,
                               int *xif,
                               int *yif,
                               int *wif,

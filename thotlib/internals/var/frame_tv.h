@@ -40,6 +40,7 @@ THOT_EXPORT ThotColor FgMenu_Color;     /* Couleur des boutons         */
 THOT_EXPORT ThotColor Box_Color;        /* Couleur des boites actives  */
 THOT_EXPORT ThotColor RO_Color;         /* Couleur du Read Only        */
 THOT_EXPORT ThotColor InactiveB_Color;  /* Couleur des boutons inactifs*/
+THOT_EXPORT boolean   TtIsTrueColor;
 
 #ifdef _WINDOWS
 THOT_EXPORT HACCEL       hAccel[MAX_FRAME + 2];
@@ -51,7 +52,6 @@ THOT_EXPORT HPALETTE     TtCmap;      /* Table des couleurs pour Thot  */
 THOT_EXPORT LPLOGPALETTE ptrLogPal;
 THOT_EXPORT HRGN         clipRgn;
 THOT_EXPORT WIN_GC_BLK   TtLineGC;
-THOT_EXPORT boolean      TtIsTrueColor;
 THOT_EXPORT boolean      TtIsPrinterTrueColor;
 #else /* _WINDOWS */
 THOT_EXPORT ThotWidget   RootShell;

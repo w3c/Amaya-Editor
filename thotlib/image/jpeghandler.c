@@ -246,11 +246,11 @@ int                 ErrorNumber;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-ThotBitmap          JpegCreate (char *fn, PictureScaling pres, int *xif, int *yif, int *wif, int *hif, unsigned long BackGroundPixel, ThotBitmap *mask1, int *width, int *height, int zoom)
+ThotBitmap          JpegCreate (char *fn, PictInfo *imageDesc, int *xif, int *yif, int *wif, int *hif, unsigned long BackGroundPixel, ThotBitmap *mask1, int *width, int *height, int zoom)
 #else  /* __STDC__ */
-ThotBitmap          JpegCreate (fn, pres, xif, yif, wif, hif, BackGroundPixel, mask1, width, height, zoom)
+ThotBitmap          JpegCreate (fn, imageDesc, xif, yif, wif, hif, BackGroundPixel, mask1, width, height, zoom)
 char               *fn;
-PictureScaling      pres;
+PictInfo           *imageDesc;
 int                *xif;
 int                *yif;
 int                *wif;
@@ -309,7 +309,9 @@ int                 zoom;
   if (buffer == NULL)
     return (ThotBitmapNone);	
 
-  pixmap = DataToPixmap (buffer, w, h, 100, colrs);
+  pixmap = DataToPixmap (buffer, w, h, 100, colrs, &(imageDesc->PicColors));
+  if (imageDesc->PicColors != NULL)
+    imageDesc->PicNbColors = 100;
   TtaFreeMemory (buffer);  
   if (pixmap == None)
     return (ThotBitmapNone);

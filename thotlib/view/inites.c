@@ -44,23 +44,20 @@ static int          have_colors = 0;
    an already allocated color.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                FindOutColor (Display* dsp, Colormap colormap, ThotColorStruct* colr)
+static void       FindOutColor (Display* dsp, Colormap colormap, ThotColorStruct* colr)
 #else  /* __STDC__ */
-void                FindOutColor (dsp, colormap, colr)
-Display            *dsp;
-Colormap            colormap;
-ThotColorStruct    *colr;
-
+static void       FindOutColor (dsp, colormap, colr)
+Display          *dsp;
+Colormap          colormap;
+ThotColorStruct  *colr;
 #endif /* __STDC__ */
 {
    int                 i, match;
-
 #ifdef MORE_ACCURATE
    double              rd, gd, bd, dist, mindist;
 #else
    int                 rd, gd, bd, dist, mindist;
 #endif /* MORE_ACCURATE */
-
    int                 cindx;
    int                 NumCells;
 
@@ -134,37 +131,6 @@ ThotColorStruct    *colr;
 }
 #endif /* !_WINDOWS */
 
-#ifndef _WIN_PRINT
-/*----------------------------------------------------------------------
-   TtaGiveThotRGB returns the Red Green and Blue values corresponding
-   to color number num.
-   If the color doesn't exist the function returns the values
-   for the default color.
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                TtaGiveThotRGB (int num, unsigned short *red, unsigned short *green, unsigned short *blue)
-#else  /* __STDC__ */
-void                TtaGiveThotRGB (num, red, green, blue)
-int                 num;
-unsigned short     *red;
-unsigned short     *green;
-unsigned short     *blue;
-#endif /* __STDC__ */
-{
-   if (num < NColors && num >= 0)
-     {
-	*red   = RGB_Table[num].red;
-	*green = RGB_Table[num].green;
-	*blue  = RGB_Table[num].blue;
-     }
-   else
-     {
-	*red   = RGB_Table[1].red;
-	*green = RGB_Table[1].green;
-	*blue  = RGB_Table[1].blue;
-     }
-}
-#endif /* _WIN_PRINT */
 
 /*----------------------------------------------------------------------
    InstallColor try to install a color in the public colormap.
@@ -237,6 +203,40 @@ static void ApproximateColors ()
 	   else
 	      Pix_Color[line * 8 + b] = col;
      }
+}
+
+/*----------------------------------------------------------------------
+ *      FreeDocColors frees the Thot predefined X-Window colors.
+ ----------------------------------------------------------------------*/
+void         FreeDocColors ()
+{
+#ifndef _WIN_PRINT
+  int        i;
+
+  /* free standard colors */
+#ifdef _WINDOWS
+   for (i = 0; i < NColors; i++)
+     DeleteObject (Pix_Color[i]);
+#else /* _WINDOWS */
+   XFreeColors (TtDisplay, TtCmap, Pix_Color, NColors, (unsigned long) 0);
+#endif /* _WINDOWS */
+
+   /* free extended colors */
+   for (i = 0; i < NbExtColors; i++)
+     if (ExtColor[i] != (ThotColor) 0)
+#ifdef _WINDOWS
+       DeleteObject (ExtColor[i]);
+#else /* _WINDOWS */
+       XFreeColors (TtDisplay, TtCmap, &ExtColor[i], 1, (unsigned long) 0);
+#endif /* _WINDOWS */
+   TtaFreeMemory (ExtColor);
+   TtaFreeMemory (ExtRGB_Table);
+   TtaFreeMemory (ExtCount_Table);
+#ifdef _WINDOWS
+   if (!TtIsTrueColor && TtCmap && !DeleteObject (TtCmap))
+     WinErrorBox (WIN_Main_Wd);
+#endif /* _WINDOWS */
+#endif /* _WIN_PRINT */
 }
 
 #ifndef _WIN_PRINT
@@ -337,6 +337,11 @@ STRING              name;
 	if (colormap_full)
 	   ApproximateColors ();
      }
+
+   NbExtColors = 0;
+   ExtColor = (ThotColor *) TtaGetMemory (256 * sizeof (ThotColor));
+   ExtRGB_Table = (RGBstruct *) TtaGetMemory (256 * sizeof (RGBstruct));
+   ExtCount_Table = (int *) TtaGetMemory (256 * sizeof (int));
 }
 #endif /* _WIN_PRINT */
 
@@ -378,9 +383,169 @@ int                 num;
 #endif /* __STDC__ */
 {
    if (num < NColors && num >= 0)
-      return Pix_Color[num];
+     return (Pix_Color[num]);
+  else if (num < NColors + NbExtColors && num >= 0)
+    return (ExtColor[num - NColors]);
    else
-      return (ThotColor) 0;
+     return ((ThotColor) 0);
+}
+
+/*----------------------------------------------------------------------
+  TtaFreeThotColor frees the Thot Color.
+ ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void             TtaFreeThotColor (int num)
+#else  /* __STDC__ */
+int              TtaGetThotColor (num)
+int              num;
+#endif /* __STDC__ */
+{
+  if (num < NColors + NbExtColors && num >= 0)
+    {
+      num -= NColors;
+      if (ExtCount_Table[num] == 1)
+	{
+#ifdef _WINDOWS
+	  DeleteObject (ExtColor[num]);
+#else /* _WINDOWS */
+	  XFreeColors (TtDisplay, TtCmap, &ExtColor[num], 1, (unsigned long) 0);
+#endif /* _WINDOWS */
+	  ExtColor[num] = (ThotColor) 0;
+	}
+      ExtCount_Table[num]--;
+    }
+}
+
+/*----------------------------------------------------------------------
+  TtaGetThotColor returns the Thot Color.
+  red, green, blue express the color RGB in 8 bits values
+ ----------------------------------------------------------------------*/
+#ifdef __STDC__
+int                 TtaGetThotColor (unsigned short red, unsigned short green, unsigned short blue)
+#else  /* __STDC__ */
+int                 TtaGetThotColor (red, green, blue)
+unsigned short      red;
+unsigned short      green;
+unsigned short      blue;
+#endif /* __STDC__ */
+{
+   short               delred, delgreen, delblue;
+   int                 best;
+   int                 i, prev;
+   unsigned int        dsquare;
+   unsigned int        best_dsquare = (unsigned int) -1;
+#ifndef _WINDOWS
+   ThotColorStruct     col;
+#endif /* _WINDOWS */
+
+   /*
+    * lookup for the color number among the color set allocated
+    * by the application.
+    * The lookup is based on a closest in cube algorithm hence
+    * we try to get the closest color available for the display.
+    */
+
+   best = 0;			/* best color in list not found */
+   for (i = 0; i < NColors; i++)
+     {
+	delred = RGB_Table[i].red - red;
+	delgreen = RGB_Table[i].green - green;
+	delblue = RGB_Table[i].blue - blue;
+	dsquare = delred * delred + delgreen * delgreen + delblue * delblue;
+	if (dsquare < best_dsquare)
+	  {
+	     best = i;
+	     best_dsquare = dsquare;
+	  }
+     }
+
+   if (best_dsquare != 0)
+     {
+       prev = 256;
+       /* look in the extended table */
+       for (i = 0; i < NbExtColors; i++)
+	 if (ExtCount_Table[i] > 0)
+	   {
+	     delred = ExtRGB_Table[i].red - red;
+	     delgreen = ExtRGB_Table[i].green - green;
+	     delblue = ExtRGB_Table[i].blue - blue;
+	     dsquare  = delred * delred + delgreen * delgreen + delblue * delblue;
+	     if (dsquare < best_dsquare)
+	       {
+		 best = i + NColors;
+		 best_dsquare = dsquare;
+	       }
+	   }
+       else if (prev == 256)
+	 /* this is the first empty entry */
+	 prev = i;
+
+       if (prev == 256)
+	 /* this is the first empty entry */
+	 prev = NbExtColors;
+	 
+       if (best_dsquare != 0 && prev < 256)
+	 {
+	   /* try to allocate the right color */
+	   ExtRGB_Table[prev].red = red;
+	   ExtRGB_Table[prev].green = green;
+	   ExtRGB_Table[prev].blue = blue;
+#ifdef _WINDOWS
+	   ExtColor[prev] = RGB (red, green, blue);
+#else  /* _WINDOWS */
+	   col.red   = red * 256;
+	   col.green = green * 256;
+	   col.blue  = blue * 256;
+	   FindOutColor (TtDisplay, TtCmap, &col);
+	   ExtColor[prev] = col.pixel;
+#endif /* _WINDOWS */
+	   best = prev + NColors;
+	   ExtCount_Table[prev] = 1;
+	   if (prev == NbExtColors)
+	     NbExtColors++;
+	 }
+       else
+	 ExtCount_Table[best - NColors]++;
+     }
+
+   return (best);
+}
+
+/*----------------------------------------------------------------------
+   TtaGiveThotRGB returns the Red Green and Blue values corresponding
+   to color number num.
+   If the color doesn't exist the function returns the values
+   for the default color.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                TtaGiveThotRGB (int num, unsigned short *red, unsigned short *green, unsigned short *blue)
+#else  /* __STDC__ */
+void                TtaGiveThotRGB (num, red, green, blue)
+int                 num;
+unsigned short     *red;
+unsigned short     *green;
+unsigned short     *blue;
+#endif /* __STDC__ */
+{
+  if (num < NColors && num >= 0)
+    {
+      *red   = RGB_Table[num].red;
+      *green = RGB_Table[num].green;
+      *blue  = RGB_Table[num].blue;
+    }
+  else if (num < NColors + NbExtColors && num >= 0)
+    {
+      num -= NColors;
+      *red   = ExtRGB_Table[num].red;
+      *green = ExtRGB_Table[num].green;
+      *blue  = ExtRGB_Table[num].blue;
+    }
+  else
+    {
+      *red   = RGB_Table[1].red;
+      *green = RGB_Table[1].green;
+      *blue  = RGB_Table[1].blue;
+    }
 }
 #endif /* _WIN_PRINT */
 

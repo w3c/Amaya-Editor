@@ -16,7 +16,7 @@ extern unsigned char *ReadJpegToData ( char* datafile,
                                        ThotColorStruct colrs[256] );
 extern void JpegPrintErrorMsg ( int ErrorNumber );
 extern ThotBitmap JpegCreate ( char *fn,
-                               PictureScaling pres,
+                               PictInfo *imageDesc,
                                int *xif,
                                int *yif,
                                int *wif,
@@ -52,7 +52,7 @@ extern unsigned char *ReadJpegToData (/* char* datafile,
                                          ThotColorStruct colrs[256] */);
 extern void JpegPrintErrorMsg (/* int ErrorNumber */);
 extern ThotBitmap JpegCreate (/* char *fn,
-                                 PictureScaling pres,
+                                 PictInfo *imageDesc,
                                  int *xif,
                                  int *yif,
                                  int *wif,

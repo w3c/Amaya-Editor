@@ -31,8 +31,8 @@
 #include "thotcolor_tv.h"
 #include "appdialogue_tv.h"
 
-ThotColorStruct     cblack;
-static ThotColorStruct cwhite;
+ThotColorStruct         cblack;
+static ThotColorStruct  cwhite;
 
 #include "appli_f.h"
 #include "textcommands_f.h"
@@ -47,10 +47,10 @@ static ThotColorStruct cwhite;
 #ifdef _WINDOWS
 #include "wininclude.h"
 
-static int palSize ;
-int nbPalEntries;
+static int   palSize;
+int          nbPalEntries;
 PALETTEENTRY palEntries[256];
-int nbSysColors;
+int          nbSysColors;
 
 /*----------------------------------------------------------------------
  *      WinCreateGC is an emulation of the XWindows XCreateGC under
@@ -123,14 +123,11 @@ void WinInitColors ()
       return;
 
    WIN_GetDeviceContext (-1);
-
    palSize = GetDeviceCaps (TtDisplay, SIZEPALETTE);
    if (palSize == 0)
-      TtIsTrueColor = TRUE ;
-   else  {
-       TtIsTrueColor = FALSE ;
-       /* nbSysColors = GetSystemPaletteEntries (TtDisplay, 0, palSize, palEntries); */
-   }
+     TtIsTrueColor = TRUE;
+   else
+     TtIsTrueColor = FALSE;
 
    /* Create a color palette for the Thot set of colors. */
 
@@ -189,51 +186,6 @@ Display            *dpy;
 }
 #endif /* _WINDOWS */
 
-/*----------------------------------------------------------------------
- * TtaGetThotColor returns the Thot Color.
- *            red, green, blue express the color RGB in 8 bits values
- ----------------------------------------------------------------------*/
-#ifdef __STDC__
-int TtaGetThotColor (unsigned short red, unsigned short green, unsigned short blue)
-#else  /* __STDC__ */
-int TtaGetThotColor (red, green, blue)
-unsigned short      red;
-unsigned short      green;
-unsigned short      blue;
-#endif /* __STDC__ */
-{
-   int                 best;
-   short               delred, delgreen, delblue;
-   int                 i;
-   unsigned int        dsquare;
-   unsigned int        best_dsquare = (unsigned int) -1;
-   int                 maxcolor;
-
-   /*
-    * lookup for the color number among the color set allocated
-    * by the application.
-    * The lookup is based on a closest in cube algorithm hence
-    * we try to get the closest color available for the display.
-    */
-
-   maxcolor = NumberOfColors ();
-   best = 0;			/* best color in list not found */
-   for (i = 0; i < maxcolor; i++)
-     {
-	TtaGiveThotRGB (i, &delred, &delgreen, &delblue);
-	delred   -= red;
-	delgreen -= green;
-	delblue  -= blue;
-	dsquare  = delred * delred + delgreen * delgreen + delblue * delblue;
-	if (dsquare < best_dsquare)
-	  {
-	     best = i;
-	     best_dsquare = dsquare;
-	  }
-     }
-   return (best);
-}
-
 
 /*----------------------------------------------------------------------
  *   TtaGiveRGB returns the RGB of the color.
@@ -250,7 +202,7 @@ unsigned short     *blue;
 #endif /* __STDC__ */
 {
    int                 i, maxcolor;
-#  ifndef _WINDOWS 
+#ifndef _WINDOWS 
    ThotColorStruct     color;
 
    /* Lookup the color name in the X color name database */
@@ -266,15 +218,18 @@ unsigned short     *blue;
      }
    else
      {
-#  endif /* _WINDOWS */
+#endif /* _WINDOWS */
        /* Lookup the color name in the application color name database */
-       maxcolor = NumberOfColors ();
-       for (i = 0; i < maxcolor; i++)
+       for (i = 0; i < NColors; i++)
 	 if (!ustrcasecmp (ColorName (i), colname))
-	   TtaGiveThotRGB (i, red, green, blue);
-#  ifndef _WINDOWS
+	   {
+	     *red   = RGB_Table[i].red;
+	     *green = RGB_Table[i].green;
+	     *blue  = RGB_Table[i].blue;
+	   }
+#ifndef _WINDOWS
      }
-#  endif /* _WINDOWS */
+#endif /* _WINDOWS */
 }
 
 
@@ -338,7 +293,7 @@ static void         InitCurs ()
 }
 
 /*----------------------------------------------------------------------
- *      InitColors initialize the Thot predefined X-Window colors.
+ *      InitColors initializes the Thot predefined X-Window colors.
  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         InitColors (STRING name)
@@ -351,6 +306,11 @@ STRING              name;
    boolean             found;
 #ifndef _WINDOWS
    ThotColorStruct     col;
+
+   if (TtaGetScreenDepth () > 8)
+     TtIsTrueColor = TRUE;
+   else
+     TtIsTrueColor = FALSE;
 
    /* Depending on the display Black and White order may be inverted */
    if (XWhitePixel (TtDisplay, TtScreen) == 0)

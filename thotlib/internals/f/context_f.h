@@ -6,9 +6,6 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern int TtaGetThotColor ( unsigned short red,
-                             unsigned short green,
-                             unsigned short blue );
 extern void TtaGiveRGB ( STRING colname,
                          unsigned short *red,
                          unsigned short *green,
@@ -23,9 +20,6 @@ extern void SelectionEvents ( void *ev );
 
 #else /* __STDC__ */
 
-extern int TtaGetThotColor (/* unsigned short red,
-                               unsigned short green,
-                               unsigned short blue */);
 extern void TtaGiveRGB (/* STRING colname,
                            unsigned short *red,
                            unsigned short *green,
