@@ -191,12 +191,11 @@ static ThotBool ElIsHidden (Element el)
 
   result = TtaHasHiddenException (elType);
 
-#if 0
   /* ignore all elements that were added by Amaya (they don't have
-     a linue number */
+     a line number */
   if (!result)
     result = (TtaGetElementLineNumber (el) == 0);
-#endif
+
 
   return result;
 }
@@ -932,15 +931,18 @@ char * XPointer_build (Document doc, View view, ThotBool useDocRoot)
     }
 
   /* calculate the length of the xptr buffer */
-  i = sizeof ("xpointer()/range-to()") + strlen (firstXpath) 
-	      + ((lastEl) ? strlen (lastXpath) : 0) + 1;
-  xptr_expr = TtaGetMemory (i);
-
-  if (lastEl)
-      sprintf (xptr_expr, "xpointer(%s/range-to(%s))", firstXpath, lastXpath);
-  else
-    sprintf (xptr_expr, "xpointer(%s)", firstXpath);
-
+  if (firstXpath)
+    {
+      i = sizeof ("xpointer()/range-to()") + strlen (firstXpath) 
+	+ ((lastEl) ? strlen (lastXpath) : 0) + 1;
+      xptr_expr = TtaGetMemory (i);
+      
+      if (lastEl)
+	sprintf (xptr_expr, "xpointer(%s/range-to(%s))", firstXpath, lastXpath);
+      else
+	sprintf (xptr_expr, "xpointer(%s)", firstXpath);
+    }
+  
   TtaFreeMemory (firstXpath);
   if (lastEl)
     TtaFreeMemory (lastXpath);
