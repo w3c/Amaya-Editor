@@ -147,8 +147,12 @@ void InitializeNewDoc (char *url, int docType, Document doc, int profile)
   DocumentMeta[doc]->method = CE_ABSOLUTE;
   DocumentSource[doc] = 0;
 
-  /* default document profile */
-  TtaSetDocumentProfile(doc, L_Other);
+  /* store the document profile */
+  TtaSetDocumentProfile (doc, profile);
+  
+  /* update the menus according to the profile of the new document */
+  if (profile != L_Other)
+    TtaUpdateMenus (doc, 1);
 
   ResetStop (doc);
   language = TtaGetDefaultLanguage ();

@@ -1145,7 +1145,7 @@ static void RestartParser (Document doc, char *localFile,
 {
   CHARSET       charset;
   char          charsetname[MAX_LENGTH];
-  int           parsingLevel;
+  int           profile, parsingLevel;
   int           i;
   ThotBool      xmlDec, withDoctype, isXML;
   DocumentType  thotType;
@@ -1185,8 +1185,13 @@ static void RestartParser (Document doc, char *localFile,
   TtaSetDisplayMode (doc, DeferredDisplay);
   RemoveDocCSSs (doc);  
 
-  /* store the document profile */
-  TtaSetDocumentProfile (doc, parsingLevel);
+  /* store the document profile if it has been modified */
+  profile = TtaGetDocumentProfile (doc);
+  if (profile != parsingLevel)
+    {
+      TtaSetDocumentProfile (doc, parsingLevel);
+      TtaUpdateMenus (doc, 1);
+    }
 
   /* Calls the corresponding parser */
   if (DocumentMeta[doc]->xmlformat)       

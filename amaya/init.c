@@ -2849,11 +2849,10 @@ static Document LoadDocument (Document doc, char *pathname,
       /* store the document profile */
       docprofile = TtaGetDocumentProfile (newdoc);
       TtaSetDocumentProfile (newdoc, parsingLevel);
-      if (docprofile != parsingLevel)
-	TtaUpdateMenus (newdoc, 1);
 
       /* update the menus according to the profile of the new document */
-
+      if (docprofile != parsingLevel)
+	TtaUpdateMenus (newdoc, 1);
      	
       if (docType == docImage)
       /* create an HTML container */
