@@ -41,6 +41,24 @@ HWND currentWindow = NULL;
 static char WIN_buffer [1024];
 #endif /* _WINDOWS */
 
+/**** Some prototypes *****/
+#ifdef __STDC__
+static boolean      FollowTheLink (Element anchor, Element elSource, Document doc);
+#else  /* __STDC__ */
+static boolean      FollowTheLink (/* anchor, elSource, doc */);
+
+#endif /* __STDC__ */
+
+/* the structure used for the Forward and Backward buttons history callbacks */
+typedef struct _FollowTheLink_context {
+  Document             doc;
+  Element              anchor;
+  Element              elSource;
+  char                *sourceDocUrl;
+  char                *url;
+  
+} FollowTheLink_context;
+
 /*----------------------------------------------------------------------
    SetFontOrPhraseOnElement                                
   ----------------------------------------------------------------------*/
@@ -173,6 +191,111 @@ Attribute           ignore;
       return (NULL);
 }
 
+
+/*----------------------------------------------------------------------
+   FollowTheLink_callback
+   This function is called when the document is loaded
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void               FollowTheLink_callback (int targetDocument, int status, 
+					   char *urlName,
+					   char *outputfile, 
+					   char *content_type,
+					   void * context)
+#else  /* __STDC__ */
+void               FollowTheLink_callback (targetDocument, status, urlName,
+                                             outputfile, content_type, 
+                                             context)
+int TargetDocument;
+int status;
+char *url, urlName;
+char *outputfile;
+char *content_type;
+void *context;
+
+#endif
+{
+  Element             elFound;
+  ElementType         elType;
+  Element             elSource;
+  Document             doc;
+  Element              anchor;
+  char                *sourceDocUrl, *url;
+  AttributeType       attrType;
+  Attribute           PseudoAttr;
+  SSchema             docSchema; 
+  View                view;
+  FollowTheLink_context      *ctx = (FollowTheLink_context *) context;
+
+  /* retrieve the context */
+
+  if (ctx == NULL)
+    return;
+
+  doc = ctx->doc;
+  sourceDocUrl = ctx->sourceDocUrl;  
+  anchor = ctx->anchor;
+  url = ctx->url;
+  elSource = ctx->elSource;
+
+  if (anchor != NULL) 
+    {
+      /* search PseudoAttr attribute */
+      docSchema = TtaGetDocumentSSchema (doc);
+      attrType.AttrSSchema = docSchema;
+      attrType.AttrTypeNum = HTML_ATTR_PseudoClass;
+      PseudoAttr = TtaGetAttribute (anchor, attrType);
+      /* if the target document has replaced the clicked
+	 document, pseudo attribute "visited" should not be set */
+      if (targetDocument == doc)
+	/* the target document is in the same window as the
+	   source document */
+	if (strcmp (sourceDocUrl, DocumentURLs[targetDocument]))
+	  /* both document have different URLs */
+	  PseudoAttr = NULL;
+      
+      if (PseudoAttr != NULL)	
+	TtaSetAttributeText (PseudoAttr, "visited", anchor, doc);
+    }
+
+  /*TtaSetSelectionMode (TRUE);*/
+  
+  if (url[0] == '#' && targetDocument != 0)
+    {
+      /* attribute HREF contains the NAME of a target anchor */
+      elFound = SearchNAMEattribute (targetDocument, &url[1], NULL);
+      if (elFound != NULL)
+	{
+	  elType = TtaGetElementType (elFound);
+	  if (elType.ElSSchema == docSchema && elType.ElTypeNum == HTML_EL_LINK)
+	    {
+	      /* the target is a link element, follow this link */
+	      FollowTheLink (elFound, elSource, doc);
+	      return;
+	    }
+	  else
+	    {
+	      if (targetDocument == doc)
+		/* jump in the same document */
+		{
+		  /* record current position in the history */
+		  AddDocHistory (doc, DocumentURLs[doc]);
+		}
+	      /* show the target element in all views */
+	      for (view = 1; view < 4; view++)
+		if (TtaIsViewOpened (targetDocument, view))
+		  TtaShowElement (targetDocument, view, elFound, 0);
+	    }
+	}
+    }
+  if (targetDocument > 0)
+    TtaRaiseView (targetDocument, 1);
+  TtaFreeMemory (url);
+  if (sourceDocUrl)
+    TtaFreeMemory (sourceDocUrl);
+  TtaFreeMemory (ctx);
+}
+
 /*----------------------------------------------------------------------
   FollowTheLink follows the link given by the anchor element for a
   double click on the elSource element.
@@ -190,14 +313,13 @@ Document            doc;
 {
    AttributeType       attrType;
    Attribute           HrefAttr, PseudoAttr, attr;
-   Element             elFound;
    ElementType         elType;
    Document            targetDocument;
    SSchema             docSchema;
-   View                view;
    char                documentURL[MAX_LENGTH];
    char               *url, *info, *sourceDocUrl;
    int                 length;
+   FollowTheLink_context *ctx;
 
    docSchema = TtaGetDocumentSSchema (doc);
    if (anchor != NULL)
@@ -242,9 +364,31 @@ Document            doc;
 	     length--;
 	     while (url[length] == ' ')
 		url[length--] = EOS;
+	     /* save the complete URL of the source document */
+	     length = strlen (DocumentURLs[doc])+1;
+	     sourceDocUrl = TtaGetMemory (length);
+	     strcpy (sourceDocUrl, DocumentURLs[doc]);
+	     /* save the context */
+	     ctx = TtaGetMemory (sizeof (FollowTheLink_context));
+	     ctx->anchor = anchor;
+	     ctx->doc = doc;
+	     ctx->url = url;
+	     ctx->elSource = elSource;
+	     ctx->sourceDocUrl = sourceDocUrl;
+	     TtaSetSelectionMode (TRUE);
 	     if (url[0] == '#')
-		/* the target element is part of the same document */
-		targetDocument = doc;
+	       {
+		 /* the target element is part of the same document */
+		 targetDocument = doc;
+		 /* manually invoke the callback */
+		 FollowTheLink_callback (targetDocument, 1, NULL, NULL, NULL, 
+ 					 (void *) ctx);
+		 /*
+		 if (PseudoAttr != NULL)
+		   TtaSetAttributeText (PseudoAttr, "visited", anchor, doc);
+		   */
+
+	       }
 	     else
 		/* the target element seems to be in another document */
 	       {
@@ -264,60 +408,12 @@ Document            doc;
 			  TtaFreeMemory (info);
 			}
 		    }
-
-		  /* save the complete URL of the source document */
-		  length = strlen (DocumentURLs[doc])+1;
-		  sourceDocUrl = TtaGetMemory (length);
-		  strcpy (sourceDocUrl, DocumentURLs[doc]);
 		  /* get the referred document */
 		  targetDocument = GetHTMLDocument (documentURL, NULL,
-				   doc, doc, CE_TRUE, TRUE);
-
-		  /* if the target document has replaced the clicked
-		     document, pseudo attribute "visited" should not be set */
-		  if (targetDocument == doc)
-		     /* the target document is in the same window as the
-			source document */
-		     if (strcmp (sourceDocUrl, DocumentURLs[targetDocument]))
-			/* both document have different URLs */
-		        PseudoAttr = NULL;
-		  TtaFreeMemory (sourceDocUrl);
+				   doc, doc, CE_TRUE, TRUE, 
+				   (void *) FollowTheLink_callback, (void *) ctx);
 	       }
-
-	     TtaSetSelectionMode (TRUE);
-	     if (PseudoAttr != NULL)
-	       TtaSetAttributeText (PseudoAttr, "visited", anchor, doc);
-	     if (url[0] == '#' && targetDocument != 0)
-	       {
-		  /* attribute HREF contains the NAME of a target anchor */
-		  elFound = SearchNAMEattribute (targetDocument, &url[1], NULL);
-		  if (elFound != NULL)
-		    {
-		      elType = TtaGetElementType (elFound);
-		      if (elType.ElSSchema == docSchema && elType.ElTypeNum == HTML_EL_LINK)
-			{
-			  /* the target is a link element, follow this link */
-			  return (FollowTheLink (elFound, elSource, doc));
-			}
-		      else
-			{
-			if (targetDocument == doc)
-			   /* jump in the same document */
-			   {
-			   /* record current position in the history */
-			   AddDocHistory (doc, DocumentURLs[doc]);
-			   }
-		        /* show the target element in all views */
-		        for (view = 1; view < 4; view++)
-			  if (TtaIsViewOpened (targetDocument, view))
-			    TtaShowElement (targetDocument, view, elFound, 0);
-			}
-		    }
-	       }
-	     if (targetDocument > 0)
-	       TtaRaiseView (targetDocument, 1);
-	     TtaFreeMemory (url);
-	     return (TRUE);
+	return (TRUE);
 	  }
      }
    return (FALSE);

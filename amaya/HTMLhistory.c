@@ -156,6 +156,63 @@ static int      RelativePosition (doc, distance)
    return sum;
 }
 
+
+/* the structure used for the Forward and Backward buttons history callbacks */
+typedef struct _GotoHistory_context {
+  Document             doc;
+  int                  prevnext;
+  boolean	       last;
+} GotoHistory_context;
+
+/*----------------------------------------------------------------------
+   GotoPreviousHTML_callback
+   This function is called when the document is loaded
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void               GotoPreviousHTML_callback (int newdoc, int status, 
+					      char *urlName,
+					      char *outputfile, 
+					      char *content_type,
+					      void * context)
+#else  /* __STDC__ */
+void               GotoPreviousHTML_callback (newdoc, status, urlName,
+                                             outputfile, content_type, 
+                                             context)
+int newdoc;
+int status;
+char *urlName;
+char *outputfile;
+char *content_type;
+void *context;
+
+#endif
+{
+  Document             doc;
+  Element	       el;
+  int                  prev;
+  boolean	       last;
+  GotoHistory_context *ctx = (GotoHistory_context *) context;
+
+  if (ctx == NULL)
+    return;
+
+  prev = ctx->prevnext;
+  last = ctx->last;
+  doc = ctx->doc;
+
+   /* show the document at the position stored in the history */
+   el = ElementAtPosition (doc, DocHistory[doc][prev].HistPosition);
+   TtaShowElement (doc, 1, el, DocHistory[doc][prev].HistDistance);
+
+   DocHistoryIndex[doc] = prev;
+
+   /* set the Forward button on if it was the last document in the history */
+   if (last)
+      SetArrowButton (doc, FALSE, TRUE);
+
+   TtaFreeMemory (ctx);
+}
+
 /*----------------------------------------------------------------------
    GotoPreviousHTML
    This function is called when the user presses the Previous button
@@ -170,10 +227,10 @@ View                view;
 
 #endif
 {
-   Element	       el;
    int                 prev, i;
    char               *url = NULL;
    boolean	       last, hist;
+   GotoHistory_context *ctx;
 
    if (DocHistoryIndex[doc] < 0)
       return;
@@ -229,16 +286,57 @@ View                view;
 
    /* load the previous document */
    url = DocHistory[doc][prev].HistUrl;
-   (void) GetHTMLDocument (url, NULL, doc, doc, CE_FALSE, hist);
+
+   /* save the context */
+   ctx = TtaGetMemory (sizeof (GotoHistory_context));
+   ctx->prevnext = prev;
+   ctx->last = last;
+   ctx->doc = doc;
+      
+   (void) GetHTMLDocument (url, NULL, doc, doc, CE_FALSE, hist, (void *) GotoPreviousHTML_callback, (void *) ctx);
+}
+
+/*----------------------------------------------------------------------
+   GotoNextHTML_callback
+   This function is called when the document is loaded
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void               GotoNextHTML_callback (int newdoc, int status, 
+					      char *urlName,
+					      char *outputfile, 
+					      char *content_type,
+					      void * context)
+#else  /* __STDC__ */
+void               GotoNextHTML_callback (newdoc, status, urlName,
+                                             outputfile, content_type, 
+                                             context)
+int newdoc;
+int status;
+char *urlName;
+char *outputfile;
+char *content_type;
+void *context;
+
+#endif
+{
+  Element	       el;
+  int                 next;
+  Document             doc;
+  GotoHistory_context     *ctx = (GotoHistory_context *) context;
+  
+  /* retrieve the context */
+
+  if (ctx == NULL)
+    return;
+
+  next = ctx->prevnext;
+  doc = ctx->doc;
+
    /* show the document at the position stored in the history */
-   el = ElementAtPosition (doc, DocHistory[doc][prev].HistPosition);
-   TtaShowElement (doc, 1, el, DocHistory[doc][prev].HistDistance);
+   el = ElementAtPosition (doc, DocHistory[doc][next].HistPosition);
+   TtaShowElement (doc, 1, el, DocHistory[doc][next].HistDistance);
 
-   DocHistoryIndex[doc] = prev;
-
-   /* set the Forward button on if it was the last document in the history */
-   if (last)
-      SetArrowButton (doc, FALSE, TRUE);
+   TtaFreeMemory (ctx);
 }
 
 /*----------------------------------------------------------------------
@@ -255,9 +353,9 @@ View                view;
 
 #endif
 {
-   Element	el;
    char         *url = NULL;
    int		next, i;
+   GotoHistory_context  *ctx;
 
    if (DocHistoryIndex[doc] < 0)
       return;
@@ -305,10 +403,13 @@ View                view;
    /* load the next document */
    DocHistoryIndex[doc] = next;
    url = DocHistory[doc][next].HistUrl;
-   (void) GetHTMLDocument (url, NULL, doc, doc, CE_FALSE, FALSE);
-   /* show the document at the position stored in the history */
-   el = ElementAtPosition (doc, DocHistory[doc][next].HistPosition);
-   TtaShowElement (doc, 1, el, DocHistory[doc][next].HistDistance);
+
+   /* save the context */
+   ctx = TtaGetMemory (sizeof (GotoHistory_context));
+   ctx->prevnext = next;
+   ctx->doc = doc;
+
+   (void) GetHTMLDocument (url, NULL, doc, doc, CE_FALSE, FALSE, (void *) GotoNextHTML_callback, (void *) ctx);
 }
 
 /*----------------------------------------------------------------------

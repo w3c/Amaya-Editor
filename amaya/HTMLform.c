@@ -627,12 +627,12 @@ char               *action;
 		    strcat (urlName, "?");
 		    if (buffer_size)
 		      strcat (urlName, buffer);
-		    GetHTMLDocument (urlName, NULL, doc, doc, CE_FORM_GET, TRUE);
+		    GetHTMLDocument (urlName, NULL, doc, doc, CE_FORM_GET, TRUE, FALSE, FALSE);
 		    TtaFreeMemory (urlName);
 		 }
 	       break;
 	    case HTML_ATTR_METHOD_VAL_Post_:
-	       GetHTMLDocument (action, buffer, doc, doc, CE_FORM_POST, TRUE);
+	       GetHTMLDocument (action, buffer, doc, doc, CE_FORM_POST, TRUE, NULL, NULL);
 	       break;
 	    default:
 	       break;

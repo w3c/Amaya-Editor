@@ -198,6 +198,10 @@ typedef struct _GETHTMLDocument_context {
   char *target;
   char *documentname;
   char *tempdocument;
+  char *sourceDocUrl;
+  Element anchor;
+  TTcbf *cbf;
+  void *ctx_cbf;
 } GETHTMLDocument_context;
 
 
@@ -871,9 +875,9 @@ View                view;
 #  else /* _WINDOWS */
    CreateOpenDocDlgWindow (TtaGetViewFrame (document, view), docToOpen)	;
    if (InNewWindow)
-      GetHTMLDocument (docToOpen, NULL, 0, 0, CE_FALSE, FALSE);
+      GetHTMLDocument (docToOpen, NULL, 0, 0, CE_FALSE, NULL, 0, FALSE);
    else 
-      GetHTMLDocument (docToOpen, NULL, document, document, CE_FALSE, TRUE);
+      GetHTMLDocument (docToOpen, NULL, document, document, CE_FALSE, NULL, 0, TRUE);
 #  endif /* _WINDOWS */
 }
 
@@ -1714,6 +1718,10 @@ void *context;
    boolean	       history;
    boolean             ok;
    GETHTMLDocument_context *ctx;
+   char               *sourceDocUrl;
+   Element             anchor;
+   TTcbf              *cbf;
+   void               *ctx_cbf;
 
    /* restore GETHTMLDocument's context */  
    ctx = (GETHTMLDocument_context *) context;
@@ -1721,19 +1729,24 @@ void *context;
    if (!ctx)
      return;
 
-     baseDoc = ctx->baseDoc;
-     doc = ctx->doc;
-     ok = ctx->ok;
-     history = ctx->history;
-     target = ctx->target;
-     documentname = ctx->documentname;
-     tempdocument = ctx->tempdocument;
-     pathname = TtaGetMemory (MAX_LENGTH + 1);
-     strncpy (pathname, urlName, MAX_LENGTH);
-     pathname[MAX_LENGTH] = EOS;
-     tempfile = TtaGetMemory (MAX_LENGTH + 1);
-     strncpy (tempfile, outputfile, MAX_LENGTH);
-     tempfile[MAX_LENGTH] = EOS;
+   baseDoc = ctx->baseDoc;
+   doc = ctx->doc;
+   ok = ctx->ok;
+   history = ctx->history;
+   target = ctx->target;
+   documentname = ctx->documentname;
+   tempdocument = ctx->tempdocument;
+   sourceDocUrl = ctx->sourceDocUrl;
+   anchor = ctx->anchor;
+   cbf = ctx->cbf;
+   ctx_cbf = ctx->ctx_cbf;
+   
+   pathname = TtaGetMemory (MAX_LENGTH + 1);
+   strncpy (pathname, urlName, MAX_LENGTH);
+   pathname[MAX_LENGTH] = EOS;
+   tempfile = TtaGetMemory (MAX_LENGTH + 1);
+   strncpy (tempfile, outputfile, MAX_LENGTH);
+   tempfile[MAX_LENGTH] = EOS;
    
    if (ok)
      {
@@ -1799,13 +1812,16 @@ void *context;
 	 }
      }
 
+   /* if there's a callback associated with GetHTMLDocument, call it */
+   if (cbf)
+     (*cbf) (newdoc, status, pathname, tempfile, NULL, ctx_cbf);
+
    TtaFreeMemory (target);
    TtaFreeMemory (documentname);
    TtaFreeMemory (pathname);
    TtaFreeMemory (tempfile);
    TtaFreeMemory (tempdocument);
-   if (ctx)
-     TtaFreeMemory (ctx);
+   TtaFreeMemory (ctx);
    if (HelpDocuments[newdoc])
      TtaSetDocumentAccessMode (newdoc, 0);
 }
@@ -1819,20 +1835,19 @@ void *context;
     - baseDoc: the document which documentPath is relative to.
     - CE_event: CE_FORM_POST for a post request, CE_TRUE for a double click.
     - history: record the URL in the browsing history
- [ ]  fix the calls to the callback whenever they are no documents or errors
- [ ]  clean all calls to this function, so that they are also rentrable
- [ ]  make this function call the callbacks!
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-Document            GetHTMLDocument (const char *documentPath, char *form_data, Document doc, Document baseDoc, ClickEvent CE_event, boolean history)
+Document            GetHTMLDocument (const char *documentPath, char *form_data, Document doc, Document baseDoc, ClickEvent CE_event, boolean history, TTcbf *cbf, void *ctx_cbf)
 #else
-Document            GetHTMLDocument (documentPath, form_data, doc, baseDoc, CE_event, history)
+Document            GetHTMLDocument (documentPath, form_data, doc, baseDoc, CE_event, history, void *cbf, void *ctx_cbf)
 const char         *documentPath;
 char               *form_data;
 Document            doc;
 Document            baseDoc;
 ClickEvent          CE_event;
 boolean		    history;
+TTcbf              *cbf;
+void               *ctx_cbf;
 
 #endif
 {
@@ -1849,6 +1864,7 @@ boolean		    history;
    int                 mode;
    boolean             ok;
    GETHTMLDocument_context *ctx = NULL;
+
 
    /* Extract parameters if necessary */
 
@@ -1996,6 +2012,8 @@ boolean		    history;
 	       ctx->target = target;
 	       ctx->documentname = documentname;
 	       ctx->tempdocument = tempdocument;
+	       ctx->cbf = cbf;
+	       ctx->ctx_cbf = ctx_cbf;
 	       if (IsW3Path (pathname))
 		 {
 		   if (CE_event == CE_FORM_POST)
@@ -2057,20 +2075,25 @@ boolean		    history;
 	       }
 	     }
 	 }
+     } 
+   else if ((ok && newdoc != 0) || ok == FALSE)
+     /* if the document isn't loaded off the web (because of an error, or
+	because it was already loaded), we invoke the callback function */
+     {
+       if (cbf)
+	 (*cbf) (newdoc, -1, pathname, tempfile, NULL, ctx_cbf);
      }
 
-   /* if the document couldn't be opened because of an error, we free the
-      allocated memory */
-
+   /* free the allocated memory */
    if (ok == FALSE)
      {
+       /* Free the memory associated with the context */
        TtaFreeMemory (target);
        TtaFreeMemory (documentname);
        TtaFreeMemory (tempdocument);
        if (ctx)
 	 TtaFreeMemory (ctx);
      }
-   /* so if we got here, we need to free the memory */
 
    TtaFreeMemory (parameters);
    TtaFreeMemory (tempfile);
@@ -2224,9 +2247,9 @@ char               *data;
 		 {
 		   /* load an URL */
 		   if (InNewWindow)
-		     GetHTMLDocument (LastURLName, NULL, 0, 0, CE_FALSE, FALSE);
+		     GetHTMLDocument (LastURLName, NULL, 0, 0, CE_FALSE, FALSE, NULL, NULL);
 		   else
-		     GetHTMLDocument (LastURLName, NULL, CurrentDocument, CurrentDocument, CE_FALSE, TRUE);
+		     GetHTMLDocument (LastURLName, NULL, CurrentDocument, CurrentDocument, CE_FALSE, TRUE, NULL, NULL);
 		 }
 	       else if (DirectoryName[0] != EOS && DocumentName[0] != EOS)
 		 {
@@ -2238,9 +2261,9 @@ char               *data;
 		   if (TtaFileExist (tempfile))
 		     {
 		       if (InNewWindow)
-			 GetHTMLDocument (tempfile, NULL, 0, 0, CE_FALSE, FALSE);
+			 GetHTMLDocument (tempfile, NULL, 0, 0, CE_FALSE, FALSE, NULL, NULL);
 		       else
-			 GetHTMLDocument (tempfile, NULL, CurrentDocument, CurrentDocument, CE_FALSE, TRUE);
+			 GetHTMLDocument (tempfile, NULL, CurrentDocument, CurrentDocument, CE_FALSE, TRUE, NULL, NULL);
 		     }
 		   else
 		     TtaSetStatus (CurrentDocument, 1, TtaGetMessage (AMAYA, AM_CANNOT_LOAD), tempfile);
@@ -3010,7 +3033,7 @@ int         index;
       strcpy (localname, AMAYA_PAGE_DOC);
       strcat (localname, Manual[index]);
     }
-  document = GetHTMLDocument (localname, NULL, 0, 0, CE_HELP, FALSE);
+  document = GetHTMLDocument (localname, NULL, 0, 0, CE_HELP, FALSE, NULL, NULL);
   InitDocHistory (document);
 }
 

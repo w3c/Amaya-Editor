@@ -407,11 +407,11 @@ HTStream           *target;
      {
 	if (PROT_TRACE)
 	   HTTrace ("Posting Data Target PAUSED\n");
-
-	return HT_PAUSE;
 	/*
-	return HT_CONTINUE;
+	return HT_PAUSE;
 	*/
+	return HT_CONTINUE;
+	
      }
    else if (status > 0)
      {				/* Stream specific return code */
@@ -1291,7 +1291,7 @@ void                QueryInit ()
    /* Maximum number of simultaneous open sockets */
    HTNet_setMaxSocket (8);
    /* different network services timeouts */
-   HTDNS_setTimeout (3600);
+   HTDNS_setTimeout (1800);
 #ifdef _WINDOWS
    /* under windows, the libwww persistent socket handling has
    ** some bugs. The following line inhibits idle socket reusal.

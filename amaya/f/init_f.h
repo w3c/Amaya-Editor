@@ -66,7 +66,9 @@ extern Document GetHTMLDocument ( const char *documentPath,
                                   Document doc,
                                   Document baseDoc,
                                   ClickEvent CE_event,
-                                  boolean history );
+                                  boolean history,
+				  TTcbf *cbf,
+				  void *context_cbf);
 extern void CallbackDialogue ( int ref,
                                int typedata,
                                char *data );
@@ -174,7 +176,8 @@ extern Document GetHTMLDocument (/* const char *documentPath,
                                     Document doc,
                                     Document baseDoc,
                                     ClickEvent CE_event,
-                                    boolean history */);
+				    TTcbf *cbf,
+				    void *context_cbf */);
 extern void CallbackDialogue (/* int ref,
                                  int typedata,
                                  char *data */);
