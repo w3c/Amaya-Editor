@@ -97,12 +97,42 @@ KEY;
 #define MY_KEY_Next      7
 #define MY_KEY_Home      8
 #define MY_KEY_End       9
-static int          SpecialKeys[] =
-{5, 3, 4, 6, 1, 2, 13, 14, 15, 16};
-static int          SpecialShiftKeys[] =
-{22, 20, 21, 23, 1, 2, 13, 14, 15, 16};
-static int          SpecialCtrlKeys[] =
-{5, 3, 4, 6, 1, 2, 15, 16, 15, 16};
+static int          SpecialKeys[] = {
+  CMD_PreviousLine,
+  CMD_PreviousChar,
+  CMD_NextChar,
+  CMD_NextLine,
+  CMD_DeletePrevChar,
+  CMD_DeleteSelection,
+  CMD_PageUp,
+  CMD_PageDown,
+  CMD_PageTop,
+  CMD_PageEnd
+};
+static int          SpecialShiftKeys[] = {
+  CMD_PreviousSelLine,
+  CMD_PreviousSelChar,
+  CMD_NextSelChar,
+  CMD_NextSelLine,
+  CMD_DeletePrevChar,
+  CMD_DeleteSelection,
+  CMD_PageUp,
+  CMD_PageDown,
+  CMD_PageTop,
+  CMD_PageEnd
+};
+static int          SpecialCtrlKeys[] = {
+  CMD_LineUp,
+  CMD_PreviousChar,
+  CMD_NextChar,
+  CMD_LineDown,
+  CMD_DeletePrevChar,
+  CMD_DeleteSelection,
+  CMD_PageUp,
+  CMD_PageDown,
+  CMD_PageTop,
+  CMD_PageEnd
+};
 
 /* the automata */
 static KEY         *Automata_normal = NULL;

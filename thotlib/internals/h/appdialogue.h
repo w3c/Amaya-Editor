@@ -238,24 +238,16 @@ typedef struct _SchemaMenu_Ctl
 #define CMD_NextSelChar		21
 #define CMD_PreviousSelLine	22
 #define CMD_NextSelLine		23
-#define MAX_INTERNAL_CMD	24
+#define CMD_LineUp		24
+#define CMD_LineDown		25
+#define MAX_INTERNAL_CMD	26
 
-#if defined(_I18N_) || defined(__JIS__)
-
-#   define CST_EquivDel L"Delete"
-#   define CST_EquivBS L"BackSpace"
-#   define CST_EquivPrior L"Prior"
-#   define CST_EquivNext L"Next"
-#   define CST_EquivHome L"Home"
-#   define CST_EquivEnd L"End"
-#else  /* !_I18N_ */
-
-#   define CST_EquivDel "Delete"
-#   define CST_EquivBS "BackSpace"
-#   define CST_EquivPrior "Prior"
-#   define CST_EquivNext "Next"
-#   define CST_EquivHome "Home"
-#   define CST_EquivEnd "End"
-#   endif /* _I18N_ */
-
+#define CST_EquivDel TEXT("Delete")
+#define CST_EquivBS TEXT("BackSpace")
+#define CST_EquivPrior TEXT("Prior")
+#define CST_EquivNext TEXT("Next")
+#define CST_EquivHome TEXT("Home")
+#define CST_EquivEnd TEXT("End")
+#define CST_EquivLineUp TEXT("C Up")
+#define CST_EquivLineDown TEXT("C Down")
 #endif

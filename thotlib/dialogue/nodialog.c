@@ -308,19 +308,6 @@ CONST STRING        name;
 {
 }
 
-/*----------------------------------------------------------------------
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                CloseParagraphInsertion (PtrAbstractBox pAb, int frame)
-#else  /* __STDC__ */
-void                CloseParagraphInsertion (pAb, frame)
-PtrAbstractBox      pAb;
-int                 frame;
-
-#endif /* __STDC__ */
-{
-}
-
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/

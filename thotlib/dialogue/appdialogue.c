@@ -392,6 +392,16 @@ int                 number;
    MenuActionList[CMD_PageEnd].User_Action = (UserProc) NULL;
    MenuActionList[CMD_PageEnd].ActionEquiv = CST_EquivEnd;
 
+   MenuActionList[CMD_LineUp].ActionName = "TtcLineUp";
+   MenuActionList[CMD_LineUp].Call_Action = (Proc) TtcLineUp;
+   MenuActionList[CMD_LineUp].User_Action = (UserProc) NULL;
+   MenuActionList[CMD_LineUp].ActionEquiv = CST_EquivLineUp;
+
+   MenuActionList[CMD_LineDown].ActionName = "TtcLineDown";
+   MenuActionList[CMD_LineDown].Call_Action = (Proc) TtcLineDown;
+   MenuActionList[CMD_LineDown].User_Action = (UserProc) NULL;
+   MenuActionList[CMD_LineDown].ActionEquiv = CST_EquivLineDown;
+
    MenuActionList[CMD_CreateElement].ActionName = "TtcCreateElement";
    MenuActionList[CMD_CreateElement].Call_Action = (Proc) NULL;
    MenuActionList[CMD_CreateElement].User_Action = (UserProc) NULL;

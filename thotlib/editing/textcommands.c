@@ -237,6 +237,9 @@ ThotBool            extendSel;
    if (frame > 0)
      {
        pFrame = &ViewFrameTable[frame - 1];
+       /* reformat the current paragraph if necessary */
+       if (ThotLocalActions[T_updateparagraph])
+	 (*ThotLocalActions[T_updateparagraph]) (pFrame->FrAbstractBox, frame);
        pViewSel = &(pFrame->FrSelectionBegin);
        pViewSelEnd = &(pFrame->FrSelectionEnd);
        if (pViewSel->VsBox != NULL)

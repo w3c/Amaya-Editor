@@ -46,8 +46,8 @@
 <Key>L8:	TtcPasteFromClipboard()
 <Key>F6:	TtcCopyToClipboard()
 <Key>F8:	TtcPasteFromClipboard()
-Ctrl <Key>Up:       TtcLineUp()
-Ctrl <Key>Down:     TtcLineDown()
+#Ctrl <Key>Up:       TtcLineUp()
+#Ctrl <Key>Down:     TtcLineDown()
 
 Ctrl <Key>Return:	CreateBreak("\212")
 Ctrl <Key>Space:	TtcInsertChar("\240")
