@@ -147,15 +147,19 @@ static HFONT WIN_LoadFont (char alphabet, char family, int highlight,
        return NULL;
      }
 
-   nHeight = -MulDiv (size, DOT_PER_INCH, 72);
+#ifdef _WIN_PRINT
+   nHeight = -MulDiv(size, DOT_PER_INCH, 72);
+#else /* _WIN_PRINT */
+   nHeight = -size;
+#endif /* _WIN_PRINT */
    hFont = CreateFont (nHeight, nWidth, 0, 0, fnWeight,
                        fdwItalic, fdwUnderline, fdwStrikeOut,
                        DEFAULT_CHARSET, OUT_TT_ONLY_PRECIS, CLIP_DEFAULT_PRECIS,
                        PROOF_QUALITY, DEFAULT_PITCH | FF_DONTCARE,
                        lpszFace);
+   if (hFont == (HFONT)0)
+	WinErrorBox (NULL, "CreateFont");
 
-   if (hFont == NULL)
-      WinErrorBox (WIN_Main_Wd, "WIN_LoadFont");
    return (hFont);
 }
 
@@ -187,10 +191,8 @@ HFONT WinLoadFont (HDC hdc, ptrfont font)
     if (ActiveFont != (HFONT)0)
       {
 	SelectObject (hdc, GetStockObject (SYSTEM_FONT));
-	if (!DeleteObject (ActiveFont))
-	  WinErrorBox (NULL, "WinLoadFont (2)");
+	DeleteObject (ActiveFont);
 	ActiveFont = (HFONT)0;
-
 	LastUsedFont->highlight = font->highlight; 
 	LastUsedFont->size      = font->size;
 	LastUsedFont->alphabet  = font->alphabet; 
@@ -198,14 +200,8 @@ HFONT WinLoadFont (HDC hdc, ptrfont font)
       } 
    }
 
-  if (ActiveFont == (HFONT)0)
-    {
-      ActiveFont = WIN_LoadFont (font->alphabet, font->family,
+   ActiveFont = WIN_LoadFont (font->alphabet, font->family,
 				 font->highlight, font->size, 0);
-      if (ActiveFont == (HFONT)0)
-	WinErrorBox (NULL, "WinLoadFont (3)");
-      return (OldFont = SelectObject (hdc, ActiveFont));
-    }
   return (OldFont = SelectObject (hdc, ActiveFont));
 }
 #endif /* _WINDOWS */
@@ -1046,18 +1042,12 @@ ptrfont ThotLoadFont (char alphabet, char family, int highlight, int size,
 {
   if (unit == UnPixel)
     {
-      if (Printing)
-	{
-#ifdef _WIN_PRINT
-	  if (TtPrinterDC && ScreenDPI)
-	    size = (size * PrinterDPI + ScreenDPI / 2) / ScreenDPI;
-	  size = LogicalValue (size, UnPoint, NULL, 0);
-#else /* _WIN_PRINT */
+#ifndef _WIN_PRINT
+     if (Printing)
 	  /* adjust the font size to the printer definition */
 	  size = (size * 72 + DOT_PER_INCH / 2) / DOT_PER_INCH;
+     else
 #endif /* _WIN_PRINT */
-	}
-      else
 	size = LogicalValue (size, UnPoint, NULL, 0);
       unit = UnPoint;
     }

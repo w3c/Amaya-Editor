@@ -23,15 +23,17 @@
 #endif /* _WINDOWS */
 
 #define THOT_EXPORT extern
+#include "edit_tv.h"
 #include "picture_tv.h"
 
 #include "font_f.h"
-#include "units_f.h"
 #include "frame_tv.h"
-#include "edit_tv.h"
-#include "picture_f.h"
 #include "gifhandler_f.h"
+#include "inites_f.h"
 #include "memory_f.h"
+#include "picture_f.h"
+#include "units_f.h"
+
 #define min(a, b) (((a) < (b)) ? (a) : (b))
 
 
@@ -598,12 +600,12 @@ Drawable PngCreate (char *fn, PictInfo *imageDesc, int *xif, int *yif,
 #ifdef _WINDOWS
       if (Printing)
 	{
-	  i = bgColor;
 	  TtaGiveThotRGB (bgColor, &red, &green, &blue);
-	  colrs[bg].red   = red;
-	  colrs[bg].green = green;
-	  colrs[bg].blue  = blue;
-	  colrs[bg].pixel = PixelColor (bgColor);
+	  colrs[bg].red   = (unsigned char) red;
+	  colrs[bg].green = (unsigned char) green;
+	  colrs[bg].blue  = (unsigned char) blue;
+	  colrs[bg].pixel = ColorPixel (bgColor);
+	  bg = bgColor;
 	}
       else
 	/* register the transparent color index */

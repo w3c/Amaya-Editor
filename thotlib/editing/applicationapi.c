@@ -271,10 +271,6 @@ void TtaInitialize (char *applicationName)
    InitTranslationSchemasTable ();
    /* Read the environment variables concerning the directories */
    InitLanguage ();
-   /* Initializes the color table */
-   NColors = MAX_COLOR;
-   RGB_Table = RGB_colors;
-   Color_Table = Name_colors;
 
 #ifndef NODISPLAY
 #ifdef _WINDOWS

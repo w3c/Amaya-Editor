@@ -238,6 +238,10 @@ void InitDocColors (char *name)
   unsigned int        dsquare;
   unsigned int        best_dsquare;
 
+  /* Initializes the color table */
+  NColors = MAX_COLOR;
+  RGB_Table = RGB_colors;
+  Color_Table = Name_colors;
   palSize = GetDeviceCaps (TtDisplay, SIZEPALETTE);
   TtIsTrueColor = (palSize == 0);
   Pix_Color[0] = RGB (255, 255, 255);
@@ -303,6 +307,10 @@ void InitDocColors (char *name)
   ThotColorStruct     gdkwhite, gdkblack;
 #endif /* _GTK */
   
+  /* Initializes the color table */
+  NColors = MAX_COLOR;
+  RGB_Table = RGB_colors;
+  Color_Table = Name_colors;
   reducecolor = FALSE;
   colormap_full = FALSE;
   value = TtaGetEnvString ("ReduceColor");

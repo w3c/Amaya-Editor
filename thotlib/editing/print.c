@@ -2263,7 +2263,7 @@ int main (int argc, char **argv)
   Orientation    = "Portrait";
   PoscriptFont = NULL;
   ColorPs = -1;
-  
+  Printing = TRUE;
   ShowSpace = 1;  /* Restitution des espaces */
   InitLanguage ();
   /*Dict_Init ();*/

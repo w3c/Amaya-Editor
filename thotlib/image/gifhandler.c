@@ -1348,10 +1348,10 @@ Drawable GifCreate (char *fn, PictInfo *imageDesc, int *xif, int *yif,
 	{
 	  i = bgColor;
 	  TtaGiveThotRGB (bgColor, &red, &green, &blue);
-	  colrs[GifTransparent].red   = red;
-	  colrs[GifTransparent].green = green;
-	  colrs[GifTransparent].blue  = blue;
-	  colrs[GifTransparent].pixel = PixelColor (bgColor);
+	  colrs[GifTransparent].red   = (unsigned char) red;
+	  colrs[GifTransparent].green = (unsigned char) green;
+	  colrs[GifTransparent].blue  = (unsigned char) blue;
+	  colrs[GifTransparent].pixel = ColorPixel (bgColor);
 	}
       else
 	/* register the Thot color index of the transparent color */

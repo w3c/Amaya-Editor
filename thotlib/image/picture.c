@@ -128,7 +128,6 @@ static void TransparentPicture (HBITMAP pixmap, int xFrame, int yFrame,
    HBITMAP        pBitmapDest;
    COLORREF       crColor;
    COLORREF       crOldBkColor;
-   unsigned short red, green, blue;
 
    /* give the background color pixel */
    crColor = ColorPixel (bg);
