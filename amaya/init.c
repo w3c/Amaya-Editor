@@ -2607,6 +2607,9 @@ Document InitDocAndView (Document doc, char *docname, DocumentType docType,
 #ifdef ANNOTATIONS
 	   TtaSetMenuOff (doc, 1, Annotations_);
 #endif /* ANNOTATIONS */
+#ifdef BOOKMARKS
+	   TtaSetMenuOff (doc, 1, Bookmarks_);
+#endif /* BOOKMARKS */
 	   TtaSetMenuOff (doc, 1, Help_);
 	   TtcSwitchButtonBar (doc, 1); /* no button bar */
 	   /* change the document status */
@@ -2628,6 +2631,40 @@ Document InitDocAndView (Document doc, char *docname, DocumentType docType,
 	   else
 	     TtcSwitchCommands (doc, 1); /* no command open */
 	 }
+#ifdef BOOKMARKS
+       else if (docType == docBookmark)
+	 {
+	   TtaSetItemOff (doc, 1, File, New1);
+	   TtaSetItemOff (doc, 1, File, BOpenDoc);
+	   TtaSetItemOff (doc, 1, File, BOpenInNewWindow);
+	   TtaSetItemOff (doc, 1, File, BReload);
+	   TtaSetItemOff (doc, 1, File, BBack);
+	   TtaSetItemOff (doc, 1, File, BForward);
+	   TtaSetItemOff (doc, 1, File, BSave);
+	   TtaSetItemOff (doc, 1, File, BSaveAs);
+	   TtaSetItemOff (doc, 1, File, BSynchro);
+	   TtaSetItemOff (doc, 1, File, Doctype1);
+	   TtaSetItemOff (doc, 1, File, BDocInfo);
+	   TtaSetItemOff (doc, 1, File, BSetUpandPrint);
+	   TtaSetItemOff (doc, 1, File, BPrint);
+	   TtaSetMenuOff (doc, 1, Edit_);
+	   TtaSetMenuOff (doc, 1, Types);
+	   TtaSetMenuOff (doc, 1, XMLTypes);
+	   TtaSetMenuOff (doc, 1, Links);
+	   TtaSetMenuOff (doc, 1, Views);
+	   TtaSetMenuOff (doc, 1, Style);
+	   TtaSetMenuOff (doc, 1, Special);
+	   TtaSetMenuOff (doc, 1, Attributes_);
+#ifdef ANNOTATIONS
+	   TtaSetMenuOff (doc, 1, Annotations_);
+#endif /* ANNOTATIONS */
+	   TtaSetItemOff (doc, 1, Bookmarks_, BBookmarkFile);
+	   TtcSwitchButtonBar (doc, 1); /* no button bar */
+	   TtaAddTextZone (doc, 1, TtaGetMessage (AMAYA,  AM_OPEN_URL),
+			   TRUE, TextURL, URL_list);
+	   TtcSwitchCommands (doc, 1); /* no command open */
+	 }
+#endif /* BOOKMARKS */
        else if (!isOpen)
 	 /* use a new window */
 	 {
@@ -2756,6 +2793,9 @@ Document InitDocAndView (Document doc, char *docname, DocumentType docType,
 	       TtaSetItemOff (doc, 1, Views, BShowAlternate);
 	       TtaSetItemOff (doc, 1, Views, BShowToC);
 	       TtaSetItemOff (doc, 1, Views, BShowSource);
+#ifdef BOOKMARKS
+	       TtaSetMenuOff (doc, 1, Bookmarks_);
+#endif /* BOOKMARKS */
 	     }
 	   else
 	     {
