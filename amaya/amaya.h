@@ -142,8 +142,9 @@ typedef enum _ClickEvent {
 #define mElemName       39
 #define mAddId          40
 #define mRemoveId       41
-#define mUseSelection   42
-#define OptionMenu	43
+#define mIdUseSelection 42
+#define mIdStatus       43
+#define OptionMenu	44
 /* MAX_SUBMENUS references reserved for submenus of Option menu */
 /* Do not insert new entries here */
 #define MAX_SUBMENUS    400
@@ -267,6 +268,7 @@ THOT_EXPORT CHAR_T       Display_password[NAME_LENGTH];
 THOT_EXPORT CHAR_T       ScanFilter[NAME_LENGTH]; /* to scan directories    */
 THOT_EXPORT CHAR_T       MathMLEntityName[MAX_LENGTH]; /* entity name typed by the user for a MathML expression */
 THOT_EXPORT CHAR_T       IdElemName[MAX_LENGTH]; /* element name typed by the user from the MakeID menu */
+THOT_EXPORT CHAR_T       IdStatus[50]; /* element name typed by the user from the MakeID menu */
 THOT_EXPORT CHAR_T       ImgFilter[NAME_LENGTH];
 THOT_EXPORT CHAR_T*      LastURLName;	/* last URL requested               */
 THOT_EXPORT CHAR_T*      DirectoryName;	/* local path of the document       */
