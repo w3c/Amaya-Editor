@@ -2623,7 +2623,8 @@ boolean            remove;
     }
   /* tente de fusionner les elements voisins et reaffiche les paves */
   /* modifie's et la selection */
-  MergeAndSelect (pSelDoc, pFirstSel, pLastSel, firstChar, lastChar);
+  if (pSelDoc != NULL)
+    MergeAndSelect (pSelDoc, pFirstSel, pLastSel, firstChar, lastChar);
 }
 
 /*----------------------------------------------------------------------

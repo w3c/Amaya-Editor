@@ -35,9 +35,10 @@ static char         LastURLImage[MAX_LENGTH];
 static char         ImageName[MAX_LENGTH];
 static char         ImgFilter[NAME_LENGTH];
 #include "AHTURLTools_f.h"
+#include "HTMLedit_f.h"
 #include "EDITimage_f.h"
 #include "HTMLimage_f.h"
-#include "HTMLedit_f.h"
+#include "HTMLpresentation_f.h"
 #include "HTMLstyle_f.h"
 #include "init_f.h"
 
@@ -238,15 +239,40 @@ void ChangeBackgroundImage (document, view)
      View view;
 #endif /* __STDC__*/
 {
-   Element             el;
+   Document            docSel;
+   ElementType	       elType;
+   Element             el, elStyle;
    char                s[MAX_LENGTH];
    int                 firstchar, lastchar;
    int                 i;
 
-   TtaGiveFirstSelectedElement (document, &el, &firstchar, &lastchar);
-   if (el == NULL)
-     /* nothing to do */
-     return;
+   TtaGiveFirstSelectedElement (docSel, &el, &firstchar, &lastchar);
+   if (docSel != document)
+     {
+       /* set the pRule on the root element */
+       el =  TtaGetMainRoot (document);
+       elType.ElSSchema = TtaGetDocumentSSchema (document);
+       elType.ElTypeNum = HTML_EL_BODY;
+       /* set the style on body element */
+       elStyle = TtaSearchTypedElement (elType, SearchInTree, el);
+     }
+   else
+     {
+       elType = TtaGetElementType (el);
+       elStyle = el;
+       if (elType.ElTypeNum == HTML_EL_BODY)
+	 /* move the pRule on the root element */
+	 el =  TtaGetMainRoot (document);
+       else if (elType.ElTypeNum == HTML_EL_HEAD)
+	 /* set the style on body element */
+	 elStyle = TtaSearchTypedElement (elType, SearchInTree, el);
+       else if (TtaIsLeaf (elType))
+	 {
+	   /* move the pRule and the style on the parent element */
+	   el = TtaGetParent (el);
+	   elStyle = el;
+	 }
+     }
 
    /* there is a selection */
    /* Dialogue form for open URL or local */
@@ -309,6 +335,7 @@ void ChangeBackgroundImage (document, view)
 	 i = DRIVERP_SCALE;
        HTMLSetBackgroundImage (document, el, i, LastURLImage);
      }
+   SetStyleAttribute (document, elStyle);
 }
 
 

@@ -1322,14 +1322,15 @@ Document            doc;
     * A rule applying to BODY is really meant to address HTML.
     */
    elType = TtaGetElementType(elem);
-   if ((elType.ElTypeNum == HTML_EL_BODY) || (elType.ElTypeNum == HTML_EL_HEAD)) {
+   if (elType.ElTypeNum == HTML_EL_BODY || elType.ElTypeNum == HTML_EL_HEAD)
+     {
        elType.ElTypeNum = HTML_EL_HTML;
 
        el = TtaGetMainRoot (doc);
        /*el = TtaSearchTypedElement (elType, SearchInTree, el);*/
        if (el != NULL)
-           elem = el;
-   }
+	 elem = el;
+     }
 	   
    /*
     * create the context of the Specific presentation driver.
@@ -4492,7 +4493,6 @@ char               *color;
 
    sprintf (css_command, "background: %s", color);
    ParseHTMLSpecificStyle (elem, css_command, doc);
-   SetStyleAttribute (doc, elem);
 }
 
 /*----------------------------------------------------------------------
@@ -4524,7 +4524,6 @@ char               *image;
    else
      strcat (css_command, "no-repeat");
    ParseHTMLSpecificStyle (elem, css_command, doc);
-   SetStyleAttribute (doc, elem);
 }
 
 /*----------------------------------------------------------------------
@@ -4543,7 +4542,6 @@ char               *color;
 
    sprintf (css_command, "color: %s", color);
    ParseHTMLSpecificStyle (elem, css_command, doc);
-   SetStyleAttribute (doc, elem);
 }
 
 /*----------------------------------------------------------------------
@@ -4563,7 +4561,6 @@ Element             elem;
    SetHTMLStyleParserDestructiveMode (True);
    ParseHTMLSpecificStyle (elem, css_command, doc);
    SetHTMLStyleParserDestructiveMode (False);
-   SetStyleAttribute (doc, elem);
 }
 
 /*----------------------------------------------------------------------
@@ -4583,7 +4580,6 @@ Element             elem;
    SetHTMLStyleParserDestructiveMode (True);
    ParseHTMLSpecificStyle (elem, css_command, doc);
    SetHTMLStyleParserDestructiveMode (False);
-   SetStyleAttribute (doc, elem);
 }
 
 /*----------------------------------------------------------------------
@@ -4602,9 +4598,7 @@ Element             elem;
    sprintf (css_command, "color: xx");
    SetHTMLStyleParserDestructiveMode (True);
    ParseHTMLSpecificStyle (elem, css_command, doc);
-   SetStyleAttribute (doc, elem);
    SetHTMLStyleParserDestructiveMode (False);
-   SetStyleAttribute (doc, elem);
 }
 
 /*----------------------------------------------------------------------
@@ -4622,7 +4616,6 @@ char               *color;
 
    sprintf (css_command, "A:link { color : %s }", color);
    ParseHTMLStyleHeader (NULL, css_command, doc, True);
-   SetStyleAttribute (doc, 0);
 }
 
 /*----------------------------------------------------------------------
@@ -4640,7 +4633,6 @@ char               *color;
 
    sprintf (css_command, "A:active { color : %s }", color);
    ParseHTMLStyleHeader (NULL, css_command, doc, True);
-   SetStyleAttribute (doc, 0);
 }
 
 /*----------------------------------------------------------------------
@@ -4658,7 +4650,6 @@ char               *color;
 
    sprintf (css_command, "A:visited { color : %s }", color);
    ParseHTMLStyleHeader (NULL, css_command, doc, True);
-   SetStyleAttribute (doc, 0);
 }
 
 /*----------------------------------------------------------------------
@@ -4677,7 +4668,6 @@ Document            doc;
    SetHTMLStyleParserDestructiveMode (True);
    ParseHTMLStyleHeader (NULL, css_command, doc, True);
    SetHTMLStyleParserDestructiveMode (False);
-   SetStyleAttribute (doc, 0);
 }
 
 /*----------------------------------------------------------------------
@@ -4696,7 +4686,6 @@ Document            doc;
    SetHTMLStyleParserDestructiveMode (True);
    ParseHTMLStyleHeader (NULL, css_command, doc, True);
    SetHTMLStyleParserDestructiveMode (False);
-   SetStyleAttribute (doc, 0);
 }
 
 /*----------------------------------------------------------------------
@@ -4715,5 +4704,4 @@ Document            doc;
    SetHTMLStyleParserDestructiveMode (True);
    ParseHTMLStyleHeader (NULL, css_command, doc, True);
    SetHTMLStyleParserDestructiveMode (False);
-   SetStyleAttribute (doc, 0);
 }

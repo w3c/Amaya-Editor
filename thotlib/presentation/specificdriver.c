@@ -811,12 +811,13 @@ void               *param;
 
 #endif /* __STDC__ */
 {
-   Element el = (Element) target;
-   PtrPRule rule;
+   Element                  el = (Element) target;
+   PtrPRule                 rule;
    PresentationSettingBlock setting;
+   PtrPSchema               pSc1;
+   int                      cst;
     
    rule = ((PtrElement) el)->ElFirstPRule;
-
    /*
     * for each rule corresponding to the same context i.e. identical
     * conditions, create the corresponding PresentationSetting and
@@ -837,8 +838,7 @@ void               *param;
 	 * need to do some tweaking in the case of BackgroudPicture
 	 */
 	if (setting.type == DRIVERP_BGIMAGE) {
-            int cst = setting.value.typed_data.value;
-	    PtrPSchema pSc1;
+            cst = setting.value.typed_data.value;
 	    pSc1 = (PtrPSchema) GetDocumentMainPSchema (ctxt->doc);
 
             setting.value.pointer = &pSc1->PsConstant[cst-1].PdString[0];
