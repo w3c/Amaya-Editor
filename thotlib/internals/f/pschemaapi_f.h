@@ -9,6 +9,8 @@
 extern PSchema TtaNewPSchema ( SSchema nature,
                                ThotBool userStyleSheet,
                                Element refElement );
+extern void TtaMoveDocumentExtensionsToElement ( Document document,
+                                                 Element element );
 extern void TtaUnlinkPSchema ( PSchema schema,
                                Document document,
                                SSchema nature );
@@ -31,6 +33,8 @@ extern void TtaNextPSchema ( PSchema * schema,
 extern PSchema TtaNewPSchema (/* SSchema nature,
                                  ThotBool userStyleSheet,
                                  Element refElement */);
+extern void TtaMoveDocumentExtensionsToElement (/* Document document,
+                                                   Element element */);
 extern void TtaUnlinkPSchema (/* PSchema schema,
                                  Document document,
                                  SSchema nature */);

@@ -24,11 +24,14 @@ extern PtrHandlePSchema FirstPSchemaExtension ( PtrSSchema pSS,
 extern void UnlinkPSchemaExtension ( PtrDocument pDoc,
                                      PtrSSchema pSS,
                                      PtrPSchema pPS );
+extern void SetElSchemasExtens ( PtrElement pEl,
+                                 PtrDocSchemasDescr pPfS );
 extern ThotBool InsertPSchemaExtension ( PtrDocument pDoc,
                                          PtrSSchema pSS,
                                          PtrPSchema pPS,
                                          PtrPSchema pOldPS,
                                          ThotBool before );
+extern void UnlinkAllSchemasExtens ( PtrElement pEl );
 extern PtrPSchema PresentationSchema ( PtrSSchema pSS,
                                        PtrDocument pDoc );
 extern PtrSSchema LoadStructureSchema ( Name schemaName,
@@ -122,11 +125,14 @@ extern PtrHandlePSchema FirstPSchemaExtension (/* PtrSSchema pSS,
 extern void UnlinkPSchemaExtension (/* PtrDocument pDoc,
                                        PtrSSchema pSS,
                                        PtrPSchema pPS */);
+extern void SetElSchemasExtens (/* PtrElement pEl,
+                                   PtrDocSchemasDescr pPfS */);
 extern ThotBool InsertPSchemaExtension (/* PtrDocument pDoc,
                                            PtrSSchema pSS,
                                            PtrPSchema pPS,
                                            PtrPSchema pOldPS,
                                            ThotBool before */);
+extern void UnlinkAllSchemasExtens (/* PtrElement pEl */);
 extern PtrPSchema PresentationSchema (/* PtrSSchema pSS,
                                          PtrDocument pDoc */);
 extern PtrSSchema LoadStructureSchema (/* Name schemaName,

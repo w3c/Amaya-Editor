@@ -291,7 +291,7 @@ void ReleaseSSchemasForSavedElements ()
    FreePRuleList
    libere la liste de regles de presentation dont l'ancre est firstPRule.
   ----------------------------------------------------------------------*/
-static void         FreePRuleList (PtrPRule * firstPRule)
+static void FreePRuleList (PtrPRule *firstPRule)
 {
    PtrPRule            pPRule, pNextPRule;
 
@@ -312,7 +312,7 @@ static void         FreePRuleList (PtrPRule * firstPRule)
   or when the count of usages is null.
   ----------------------------------------------------------------------*/
 static void ReleasePresentationSchema (PtrPSchema pPSchema, PtrSSchema pSS, 
-				       PtrDocument pDoc, ThotBool force)
+				       ThotBool force)
 {
   APresentation      *pPres;
   AttributePres      *pAttrPres;
@@ -461,7 +461,7 @@ ThotBool LoadPresentationSchema (Name schemaName, PtrSSchema pSS,
 	 if (pPfS->PfPSchema)
 	   /* release the previous presentation schema */
 	   {
-	     ReleasePresentationSchema (pPfS->PfPSchema, pSS, pDoc, FALSE);
+	     ReleasePresentationSchema (pPfS->PfPSchema, pSS, FALSE);
 	     pPfS->PfPSchema = NULL;
 	   }
 	 pPfS->PfPSchema = pPSchema;
@@ -481,9 +481,9 @@ void FreePresentationSchema (PtrPSchema pPSchema, PtrSSchema pSS,
 			     PtrDocument pDoc)
 {
   PtrDocSchemasDescr   pPfS, pPrevPfS;
-  PtrHandlePSchema     pHd, pNextHSP;
+  PtrHandlePSchema     pHd, pNextHd;
 
-  ReleasePresentationSchema (pPSchema, pSS, pDoc, FALSE);
+  ReleasePresentationSchema (pPSchema, pSS, FALSE);
   pPfS = StructSchemaForDoc (pDoc, pSS, &pPrevPfS);
   if (pPfS && pPfS->PfPSchema == pPSchema)
     /* it's the main presentation schema. Unlink it */
@@ -492,11 +492,11 @@ void FreePresentationSchema (PtrPSchema pPSchema, PtrSSchema pSS,
       pHd = pPfS->PfFirstPSchemaExtens;
       while (pHd)
 	{
-	  pNextHSP = pHd->HdNextPSchema;
+	  pNextHd = pHd->HdNextPSchema;
 	  /* release the extension schema */
-	  ReleasePresentationSchema (pHd->HdPSchema, pSS, pDoc, TRUE);
+	  ReleasePresentationSchema (pHd->HdPSchema, pSS, TRUE);
 	  FreeHandleSchPres (pHd);
-	  pHd = pNextHSP;
+	  pHd = pNextHd;
 	}
       pPfS->PfFirstPSchemaExtens = NULL;
       /* unlink the block */
@@ -528,10 +528,10 @@ PtrHandlePSchema FirstPSchemaExtension (PtrSSchema pSS, PtrDocument pDoc)
 }
 
 /*----------------------------------------------------------------------
-  UnlinkPSchemaExtension
+  UnlinkPSchemaExtension unlinks a presentation schema pPs from the list
+  of extensions associated to the document pDoc not NULL.
   ----------------------------------------------------------------------*/
-void UnlinkPSchemaExtension (PtrDocument pDoc, PtrSSchema pSS,
-			     PtrPSchema pPS)
+void UnlinkPSchemaExtension (PtrDocument pDoc, PtrSSchema pSS, PtrPSchema pPS)
 {
   PtrDocSchemasDescr  pPfS, pPrevPfS;
   PtrHandlePSchema    pHd;
@@ -547,7 +547,7 @@ void UnlinkPSchemaExtension (PtrDocument pDoc, PtrSSchema pSS,
 	  if (pHd)
 	    {
 	      /* release the extension schema */
-	      ReleasePresentationSchema (pHd->HdPSchema, pSS, pDoc, TRUE);
+	      ReleasePresentationSchema (pHd->HdPSchema, pSS, TRUE);
 	      /* release the block */
 	      if (pHd->HdPrevPSchema == NULL)
 		pPfS->PfFirstPSchemaExtens = pHd->HdNextPSchema;
@@ -562,7 +562,31 @@ void UnlinkPSchemaExtension (PtrDocument pDoc, PtrSSchema pSS,
 }
 
 /*----------------------------------------------------------------------
-  InsertPSchemaExtension
+  SetElSchemasExtens associates or clears (NULL) the list of extension
+  schemas to the current element and all its children.
+  ----------------------------------------------------------------------*/
+void SetElSchemasExtens (PtrElement pEl, PtrDocSchemasDescr pPfS)
+{
+  PtrElement          pChild;
+
+  if (pEl && pEl->ElStructSchema)
+    {
+      pEl->ElFirstSchDescr = pPfS;
+      if (!pEl->ElTerminal)
+	{
+	  pChild = pEl->ElFirstChild;
+	  while (pChild)
+	    {
+	      SetElSchemasExtens (pEl, pPfS);
+	      pChild = pChild->ElNext;
+	    }
+	}
+    }
+}
+
+/*----------------------------------------------------------------------
+  InsertPSchemaExtension inserts the new presentation schema pPs after
+  or before the old presentation schema pOldPs in the list of extensions.
   ----------------------------------------------------------------------*/
 ThotBool InsertPSchemaExtension (PtrDocument pDoc, PtrSSchema pSS,
 				 PtrPSchema pPS, PtrPSchema pOldPS,
@@ -572,10 +596,12 @@ ThotBool InsertPSchemaExtension (PtrDocument pDoc, PtrSSchema pSS,
   PtrHandlePSchema    oldHd, newHd;
   ThotBool            ok;
 
+  /* get the schemas descriptor of the structure schema */
   pPfS = StructSchemaForDoc (pDoc, pSS, &pPrevPfS);
   if (!pPfS)
     return FALSE;
   ok = FALSE;
+  /* look for the old presentation schema */
   oldHd = pPfS->PfFirstPSchemaExtens;
   if (!pOldPS)
     ok = TRUE;
@@ -589,12 +615,14 @@ ThotBool InsertPSchemaExtension (PtrDocument pDoc, PtrSSchema pSS,
 
   if (ok)
     {
+      /* the handle of the old presentation schema is found */
       GetHandleSchPres (&newHd);
       newHd->HdPSchema = pPS;
       if (oldHd == NULL)
 	pPfS->PfFirstPSchemaExtens = newHd;
       else if (before)
 	{
+	  /* add the new handle before */
 	  newHd->HdNextPSchema = oldHd;
 	  newHd->HdPrevPSchema = oldHd->HdPrevPSchema;
 	  oldHd->HdPrevPSchema = newHd;
@@ -605,6 +633,7 @@ ThotBool InsertPSchemaExtension (PtrDocument pDoc, PtrSSchema pSS,
 	}
       else
 	{
+	  /* add the new handle after */
 	  newHd->HdNextPSchema = oldHd->HdNextPSchema;
 	  newHd->HdPrevPSchema = oldHd;
 	  oldHd->HdNextPSchema = newHd;
@@ -615,6 +644,48 @@ ThotBool InsertPSchemaExtension (PtrDocument pDoc, PtrSSchema pSS,
   return ok;
 }
 #endif /* NODISPLAY */
+
+/*----------------------------------------------------------------------
+  UnlinkAllSchemasExtens unlinks a presentation schema pPs from the
+  list of extensions associated to the document pDoc not NULL.
+  ----------------------------------------------------------------------*/
+void UnlinkAllSchemasExtens (PtrElement pEl)
+{
+#ifndef NODISPLAY
+  PtrDocSchemasDescr  pPfS, pNextPfS;
+  PtrHandlePSchema    pHd, pNextHd;
+
+  if (pEl->ElFirstSchDescr)
+    {
+      pPfS = pEl->ElFirstSchDescr;
+      if (pEl->ElParent && pEl->ElParent->ElFirstSchDescr == pPfS)
+	/* don't remove schema extensions linked by enclosing elements */
+	pPfS = NULL;
+      /* remove the link in the whole hierarchy */
+      SetElSchemasExtens (pEl, NULL);
+      /* remove all descriptors */
+      while (pPfS)
+	{
+	  pNextPfS = pPfS->PfNext;
+	  /* free all handles */
+	  pHd = pPfS->PfFirstPSchemaExtens;
+	  while (pHd)
+	    {
+	      pNextHd = pHd->HdNextPSchema;
+	      /* release the extension schema */
+	      ReleasePresentationSchema (pHd->HdPSchema,
+					 pPfS->PfSSchema, TRUE);
+	      /* release the block */
+	      FreeHandleSchPres (pHd);
+	      pHd = pNextHd;
+	    }
+	  /* free the descriptor itself */
+	  FreeDocSchemasDescr (pPfS);
+	  pPfS = pNextPfS;
+	}
+    }
+#endif /* NODISPLAY */
+}
 
 /*----------------------------------------------------------------------
   PresentationSchema
@@ -2213,7 +2284,7 @@ void AppendXmlElement (char *xmlName, ElementType *elType,
     }
   if (pPSch == NULL)
     return;
-#endif
+#endif /* NODISPLAY */
   AppendSRule (&rule, pSS, pPSch, pDoc);
 
   if (rule == 0)

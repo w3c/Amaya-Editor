@@ -2658,7 +2658,7 @@ void       RemoveExcludedElem (PtrElement * pEl, PtrDocument pDoc)
    RemoveElement
    removes the subtree whose root is pointed by pEl
   ----------------------------------------------------------------------*/
-void                RemoveElement (PtrElement pEl)
+void RemoveElement (PtrElement pEl)
 {
    PtrElement          pAsc;
 
@@ -2691,7 +2691,7 @@ void                RemoveElement (PtrElement pEl)
    removes from the pEl element the pAttr attribute, without freeing
    this attribute.
   ----------------------------------------------------------------------*/
-void                RemoveAttribute (PtrElement pEl, PtrAttribute pAttr)
+void RemoveAttribute (PtrElement pEl, PtrAttribute pAttr)
 {
    PtrAttribute        pPrevAttr;
    ThotBool            stop;
@@ -2736,7 +2736,7 @@ void                RemoveAttribute (PtrElement pEl, PtrAttribute pAttr)
    The function also removes from the element all the
    specific presentation rules associated to the attribute.
   ----------------------------------------------------------------------*/
-void                DeleteAttribute (PtrElement pEl, PtrAttribute pAttr)
+void DeleteAttribute (PtrElement pEl, PtrAttribute pAttr)
 {
    PtrPRule            pPR, pPRprev, pPRnext;
    PtrTextBuffer       buf, nextbuf;
@@ -2797,7 +2797,6 @@ void                DeleteAttribute (PtrElement pEl, PtrAttribute pAttr)
      FreeAttribute (pAttr);
 }
 
-
 /*----------------------------------------------------------------------
    DeleteElement
    deletes the pEl and all its dependents from the tree. It also
@@ -2806,7 +2805,7 @@ void                DeleteAttribute (PtrElement pEl, PtrAttribute pAttr)
    For each freed element, all corresponding abstract boxes, in all views,
    are also freed.
   ----------------------------------------------------------------------*/
-void DeleteElement (PtrElement * pEl, PtrDocument pDoc)
+void DeleteElement (PtrElement *pEl, PtrDocument pDoc)
 {
   PtrElement          pChild, pNextChild;
   PtrTextBuffer       pBuf, pNextBuf;
@@ -2818,7 +2817,7 @@ void DeleteElement (PtrElement * pEl, PtrDocument pDoc)
   PictInfo           *image;
   int                 c;
 
-  if (*pEl != NULL && (*pEl)->ElStructSchema != NULL)
+  if (*pEl && (*pEl)->ElStructSchema)
     {
       pEl1 = *pEl;
       /* if its a text leaf, delete the text */
@@ -2891,10 +2890,10 @@ void DeleteElement (PtrElement * pEl, PtrDocument pDoc)
 	      pEl1->ElOtherPairedEl->ElOtherPairedEl = NULL;
 	}
       else
-	/* it's not a leaf, so delete the element's childs */
+	/* it's not a leaf, so delete the element's children */
 	{
 	  pChild = pEl1->ElFirstChild;
-	  while (pChild != NULL)
+	  while (pChild)
 	    {
 	      pNextChild = pChild->ElNext;
 	      DeleteElement (&pChild, pDoc);
@@ -2941,6 +2940,10 @@ void DeleteElement (PtrElement * pEl, PtrDocument pDoc)
       /* frees the descriptor of the referenced element */
       DeleteReferredElDescr (pEl1->ElReferredDescr);
       pEl1->ElReferredDescr = NULL;
+
+      /* remove extension schemas */
+      UnlinkAllSchemasExtens (pEl1);
+
       /* removes the element from the tree */
       RemoveElement (*pEl);
       /* frees all the Abstract boxes */

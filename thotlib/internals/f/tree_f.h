@@ -114,7 +114,7 @@ extern void RemoveAttribute ( PtrElement pEl,
                               PtrAttribute pAttr );
 extern void DeleteAttribute ( PtrElement pEl,
                               PtrAttribute pAttr );
-extern void DeleteElement ( PtrElement * pEl,
+extern void DeleteElement ( PtrElement *pEl,
                             PtrDocument pDoc );
 extern PtrElement CopyTree ( PtrElement pSource,
                              PtrDocument pDocSource,
@@ -291,7 +291,7 @@ extern void RemoveAttribute (/* PtrElement pEl,
                                 PtrAttribute pAttr */);
 extern void DeleteAttribute (/* PtrElement pEl,
                                 PtrAttribute pAttr */);
-extern void DeleteElement (/* PtrElement * pEl,
+extern void DeleteElement (/* PtrElement *pEl,
                               PtrDocument pDoc */);
 extern PtrElement CopyTree (/* PtrElement pSource,
                                PtrDocument pDocSource,

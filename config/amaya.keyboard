@@ -1,4 +1,4 @@
-# Keyboard configuration file for Unix
+trL
 # These functions are loosely based on emacs keys.
 # You have to distinguish between <Alt/Control><Key> sequences and
 # <Shift><Alt/Control><Key> sequences.
@@ -110,7 +110,7 @@ Shift Alt <Key>%:                  TtcSearchText()
 Ctrl <Key>c:                       TtcCopySelection() 
 Ctrl <Key>d:                       TtcDeleteSelection() 
 Shift Ctrl <Key>*:                 SetBrowserEditor() 
-ctrl <Key>t , Ctrl <Key>x:         TransformType()
+Ctrl <Key>t , Ctrl <Key>x:         TransformType()
 Ctrl <Key>u , Ctrl <Key>s:         SpellCheck()
  
 #Types 
