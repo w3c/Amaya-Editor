@@ -1965,8 +1965,8 @@ void DeleteColumn (Document document, View view)
 }
 
 /*----------------------------------------------------------------------
-   	GetEnclosingForm creates if necessary and returns the	
-   		enclosing form element.				
+  GetEnclosingForm creates if necessary and returns the	
+  enclosing form element.				
   ----------------------------------------------------------------------*/
 Element GetEnclosingForm (Document document, View view)
 {
@@ -1976,7 +1976,7 @@ Element GetEnclosingForm (Document document, View view)
 
    /* get the first selected element */
    TtaGiveFirstSelectedElement (document, &el, &firstchar, &lastchar);
-   if (el != NULL)
+   if (el)
      {
 	/* there is a selection */
 	elType = TtaGetElementType (el);
@@ -1989,7 +1989,6 @@ Element GetEnclosingForm (Document document, View view)
 	       return (el);
 	     elType = TtaGetElementType (el);
 	  }
-
 	if (elType.ElTypeNum != HTML_EL_Form)
 	  {
 	     /* it is not already a form */
@@ -2027,6 +2026,8 @@ static Element InsertForm (Document doc, View view, ThotBool *withinP)
        elType.ElTypeNum = HTML_EL_Form;
        /* within HTML element */
        form = TtaGetTypedAncestor (el, elType);
+#ifdef IV
+       /* It's not mandatory to create an enclosing form */
        if (form == NULL)
 	 {
 	   if (!strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML"))
@@ -2043,6 +2044,7 @@ static Element InsertForm (Document doc, View view, ThotBool *withinP)
 	     el = NULL;
 	 }
        else
+#endif
 	 {
 	   /* there is a parent form element */
 	   parent = el;
