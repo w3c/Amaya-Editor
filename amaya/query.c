@@ -3718,15 +3718,12 @@ ThotBool CheckSingleInstance (char *pid_dir)
 #ifdef _WINDOWS
   HWND hwnd;
 
-  return FALSE;
-
-#if 0
   hwnd = FindWindow ("Amaya", NULL);
+
   if (!hwnd)
     return TRUE;
   else
     return FALSE;
-#endif
 
 #else /* _WINDOWS */
 
