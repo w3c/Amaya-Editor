@@ -797,7 +797,7 @@ View                view;
       /* Rien a copier */
       return 0;
 
-   lg = 0;
+   lg = 1;
    if (lastChar == 0)
       /* Il faut prendre tout le contenu de tout l'element */
       lastChar = pLastEl->ElVolume;
