@@ -2106,7 +2106,6 @@ void GoToHome (Document doc, View view)
       s = TtaGetEnvString ("THOTDIR");
       sprintf (LastURLName, "%s%camaya%c%s.%s",
 	       s, DIR_SEP, DIR_SEP, AMAYA_PAGE, lang);
-      
       if (!TtaFileExist (LastURLName))
 	sprintf (LastURLName, "%s%camaya%c%s",
 		 s, DIR_SEP, DIR_SEP, AMAYA_PAGE);
@@ -6641,7 +6640,7 @@ void InitAmaya (NotifyEvent * event)
    if (s == NULL || s[0] == EOS)
      /* no argument: display the Home Page */
      s = TtaGetEnvString ("HOME_PAGE");
-   if (URL_list && (s == NULL || s[0] == EOS))
+   if (URL_list && s && strcasecmp (s, "$PREV"))
      {
        /* no argument and no Home: display the previous open URI */
        for (i = 0; URL_list[i] != EOS && URL_list[i] != EOL; i++)
@@ -7364,7 +7363,7 @@ void AddURLInCombobox (char *url, ThotBool keep)
 {
   char     *urlstring, *app_home, *ptr;
   int       i, j, len, nb, end;
-  FILE     *file=NULL;
+  FILE     *file = NULL;
 
   if (url == NULL || url[0] == EOS)
     return;
@@ -7407,9 +7406,10 @@ void AddURLInCombobox (char *url, ThotBool keep)
 		  j += end;
 		  nb++;
 		}
-	      i = i + end;
+	      i += end;
 	    }
 	}
+	  
       URL_list[j] = EOS;
       URL_list_keep = keep;
       if (keep)
@@ -7426,9 +7426,10 @@ void AddURLInCombobox (char *url, ThotBool keep)
   ----------------------------------------------------------------------*/
 void InitStringForCombobox ()
 {
-  char     *urlstring, *app_home;
-  FILE     *file;
-  int       i, nb, len;
+  unsigned char     *urlstring, c;
+  char              *app_home;
+  FILE              *file;
+  int                i, nb, len;
 
   /* remove the previous list */
   TtaFreeMemory (URL_list);
@@ -7445,27 +7446,36 @@ void InitStringForCombobox ()
       fseek (file, 0L, 2);	/* end of the file */
       URL_list_len = ftell (file) + MAX_URL_list + 4;
       URL_list = TtaGetMemory (URL_list_len);
+	  URL_list[0] = EOS;
       fseek (file, 0L, 0);	/* beginning of the file */
       /* initialize the list by reading the file */
       i = 0;
       nb = 0;
-      while (fscanf (file, "%s", urlstring) > 0 && nb < MAX_URL_list)
+    while (TtaReadByte (file, &c))
 	{
-	  if (i > 0)
-	    /* add an EOS between two urls */
-	    URL_list[i++] = EOS;
-	  len = strlen (urlstring) - 1;
-	  if (urlstring[0] == '"' && urlstring[len] == '"')
-	    {
-	      urlstring[len--] = EOS;
-	      strcpy (&URL_list[i], &urlstring[1]);
-	      i += len;
+	  if (c == '"')
+	  {
+        len = 0;
+	    urlstring[len] = EOS;
+        while (len < MAX_LENGTH && TtaReadByte (file, &c) && c != EOL)
+		  {
+	        if (c == '"')
+	          urlstring[len] = EOS;
+	        else
+	          urlstring[len++] = (char)c;
+		  }
+	    if (i > 0 && len)
+	      /* add an EOS between two urls */
+	      URL_list[i++] = EOS;
+	    if (len)
+		{
 	      nb++;
-	    }
-	  else if (i > 0)
-	    i--;
+	      strcpy (&URL_list[i], urlstring);
+	      i += len;
+		}
+	  }
 	}
-      URL_list[i + 1] = EOS;
+     URL_list[i + 1] = EOS;
       TtaReadClose (file);
     }
   TtaFreeMemory (urlstring);
