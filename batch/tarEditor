@@ -114,7 +114,7 @@ do
    Thot/schemas/Text_SGML.inc \
    Thot/schemas/Text_Latex.inc \
    Thot/schemas/exc_matrix.h \
-   Thot/schemas/exc_tableau.h \
+   Thot/schemas/exc_Table.h \
    Thot/schemas/Math.h \
    Thot/schemas/Rapport.h \
    Thot/schemas/Arbre2.S \
