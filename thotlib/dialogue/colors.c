@@ -852,7 +852,6 @@ LRESULT CALLBACK ThotColorPaletteWndProc (HWND hwnd, UINT iMsg, WPARAM wParam, L
                      Rectangle (hdc, x, y, x + 39, y + 15);
                      SelectObject (hdc, hOldBrush);
                      DeleteObject (hBrush);
-                     SelectObject (hdc, hOldPen);
                      EndPaint (hwnd, &ps);
                      DeleteDC (hdc);
 				  }
@@ -899,7 +898,7 @@ LRESULT CALLBACK ThotColorPaletteWndProc (HWND hwnd, UINT iMsg, WPARAM wParam, L
                      Rectangle (hdc, x, y, x + 39, y + 15);
                      SelectObject (hdc, hOldBrush);
                      DeleteObject (hBrush);
-                     SelectObject (hdc, hOldPen);
+                     /* SelectObject (hdc, hOldPen); */
                      EndPaint (hwnd, &ps);
                      DeleteDC (hdc);
 				  }

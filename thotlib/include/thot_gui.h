@@ -49,48 +49,50 @@ extern HDC          TtDisplay;
 int app_lang;
 
 typedef struct struct_ThotGC {
-     int                 capabilities;
-     int                 foreground;
-     int                 background;
-     int                 thick;
-     int                 style;
+        int capabilities;
+        int foreground;
+        int background;
+        int thick;
+        int style;
 } WIN_GC_BLK, *WIN_GC, *ThotGC;
 
-typedef struct _FontInfo
-{
-  int            FiHeight;
-  int            FiAscent;
-  int            FiHeights[256];
-  int            FiWidths[256];
-  int            PFiHeight;
-  int            PFiAscent;
-  int            PFiHeights[256];
-  int            PFiWidths[256];
-  HFONT          FiFont;
-}FontInfo;
+typedef struct _FontInfo {
+        int   FiHeight;
+        int   FiAscent;
+        int   FiHeights[256];
+        int   FiWidths[256];
+        int   PFiHeight;
+        int   PFiAscent;
+        int   PFiHeights[256];
+        int   PFiWidths[256];
+        HFONT FiFont;
+} FontInfo;
+
 typedef FontInfo *ptrfont;
 
-typedef HWND        ThotWidget;
-typedef HWND        ThotWindow;
-typedef HBITMAP     ThotBitmap;
-typedef COLORREF    ThotColor;
-typedef COLORREF    Pixel;
-typedef void       *Pixmap;
-typedef HCURSOR     ThotCursor;
-typedef HBITMAP     Drawable;
-typedef POINT       ThotPoint;
-typedef MSG         ThotEvent;
-typedef MSG         ThotKeyEvent;
-typedef UINT        ThotComposeStatus;
-typedef void       *ThotAppContext;
-typedef void       *ThotTranslations;
-typedef void       *KeySym;
-typedef void       *XtPointer;
-typedef void       *XtIntervalId;
-typedef void       *XtInputId;
-typedef int         ThotIcon;
+typedef void*          ThotWidget;
+typedef HWND           ThotWindow;
+typedef TBBUTTON*      ThotButton;
+typedef HMENU          ThotMenu;
+typedef HBITMAP        ThotBitmap;
+typedef COLORREF       ThotColor;
+typedef COLORREF       Pixel;
+typedef void*          Pixmap;
+typedef HCURSOR        ThotCursor;
+typedef HBITMAP        Drawable;
+typedef POINT          ThotPoint;
+typedef MSG            ThotEvent;
+typedef MSG            ThotKeyEvent;
+typedef UINT           ThotComposeStatus;
+typedef void*          ThotAppContext;
+typedef void*          ThotTranslations;
+typedef void*          KeySym;
+typedef void*          XtPointer;
+typedef void*          XtIntervalId;
+typedef void*          XtInputId;
+typedef int            ThotIcon;
 #define TBBUTTONS_BASE 50000
-#define ThotColorNone ((COLORREF)~1) /* anything in high byte is bad COLORREF */
+#define ThotColorNone  ((COLORREF)~1) /* anything in high byte is bad COLORREF */
 #define ThotBitmapNone ((ThotBitmap)NULL)
 
 #define FOR_MSW			/* for XPM stuff ! */
@@ -154,6 +156,8 @@ typedef XColor    ThotColorStruct;
 
 typedef Widget         ThotWidget;
 typedef Window         ThotWindow;
+typedef ThotWidget     ThotButton;
+typedef ThotWidget     ThotMenu;
 typedef Drawable       ThotBitmap;
 typedef GC             ThotGC;
 typedef unsigned long  ThotColor;

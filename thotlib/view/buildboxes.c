@@ -3384,6 +3384,10 @@ PtrAbstractBox      pAb;
    ThotBool            change;
    ThotBool            result;
 
+#  ifdef _WINDOWS
+   WIN_GetDeviceContext (frame);
+#  endif /* _WINDOWS */
+
    result = TRUE;
    document = FrameTable[frame].FrDoc;
    if (document == 0)
@@ -3584,5 +3588,8 @@ PtrAbstractBox      pAb;
 	     pFrame->FrReady = TRUE;	/* La frame est affichable */
 	  }
      }
+#  ifdef _WINDOWS
+   /* >>>>>>>>>>>>> WIN_ReleaseDeviceContext (); <<<<<<<<<<<< */
+#  endif /* _WINDOWS */
    return result;
 }

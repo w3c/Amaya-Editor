@@ -48,7 +48,7 @@ enum DButtons
    des entre'es du menu.                                              
    Retourne un code d'erreur.                                         
   ----------------------------------------------------------------------*/
-extern void         TtaNewPulldown (int ref, ThotWidget parent, STRING title, int number, STRING text, STRING equiv);
+extern void         TtaNewPulldown (int ref, ThotMenu parent, STRING title, int number, STRING text, STRING equiv);
 
 /*----------------------------------------------------------------------
    TtaSetPulldownOff suspend le pulldown                           

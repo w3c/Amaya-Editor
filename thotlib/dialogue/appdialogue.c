@@ -1073,12 +1073,12 @@ int                 frame;
    de menu.                                                
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         BuildPopdown (Menu_Ctl * ptrmenu, int ref, ThotWidget button, int frame, int doc)
+static void         BuildPopdown (Menu_Ctl * ptrmenu, int ref, ThotMenu button, int frame, int doc)
 #else  /* __STDC__ */
 static void         BuildPopdown (ptrmenu, ref, button, frame, doc)
-Menu_Ctl           *ptrmenu;
+Menu_Ctl*           ptrmenu;
 int                 ref;
-ThotWidget          button;
+ThotMenu            button;
 int                 frame;
 int                 doc;
 #endif /* __STDC__ */
@@ -1187,7 +1187,10 @@ int                 doc;
      }
    
 #  ifdef _WINDOWS
-   currentMenu = button;
+   /* <<<<<<<<<<<<<<<<<<
+   currentMenu = button; 
+   =====================
+   >>>>>>>>>>>>>>>>>>>>*/
 #  endif /* _WINDOWS */
 
    /* Creation du Pulldown avec ou sans equiv */
@@ -1199,7 +1202,10 @@ int                 doc;
 		      string, NULL);
 
 #  ifdef _WINDOWS
-   currentMenu = button;
+   /* <<<<<<<<<<<<<<<<<<
+   currentMenu = button; 
+   =====================
+   >>>>>>>>>>>>>>>>>>>>*/
 #  endif /* _WINDOWS */
 
    /* traite les sous-menus de l'item de menu */
@@ -1246,8 +1252,8 @@ Pixmap              icon;
    int                 i, n;
    int                 ref;
    int                 lg;
-   CHAR_T                string[700];
-   Menu_Ctl           *ptrmenu;
+   CHAR_T              string[700];
+   Menu_Ctl*           ptrmenu;
    STRING              ptr;
 
    /* Creation de la fenetre principale */
@@ -1338,11 +1344,11 @@ Pixmap              icon;
    ButtonAction                                                    
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void APP_ButtonCallback (ThotWidget w, int frame, caddr_t call_d)
+void APP_ButtonCallback (ThotButton w, int frame, caddr_t call_d)
 
 #else  /* __STDC__ */
 void APP_ButtonCallback (w, frame, call_d)
-ThotWidget          w;
+ThotButton          w;
 int                 frame;
 caddr_t             call_d;
 
@@ -2430,7 +2436,7 @@ int                 doc;
 #endif /* __STDC__ */
 {
 #  ifdef _WINDOWS
-   HMENU               menu_bar, w;
+   ThotMenu            menu_bar, w;
 #  else  /* _WINDOWS */
    ThotWidget          menu_bar;
    ThotWidget          w, row1, row2, rowv;
@@ -2973,7 +2979,7 @@ int                 doc;
 	   FrameTable[frame].FrWidth  = (int) large;
 	   FrameTable[frame].FrHeight = (int) haut;
 #          endif /* _WINDOWS */
-	   FrameTable[frame].WdFrame = w;
+	   FrameTable[frame].WdFrame = (ThotMenu) w;
 
 	   /* get registry default values for zoom and visibility */
 	   zoomStr = TtaGetEnvString (_ZOOMCST_);
@@ -3518,11 +3524,11 @@ int                 menuID;
 
 #endif /* __STDC__ */
 {
-   ThotWidget          w;
+   ThotMenu            w;
    int                 menu;
    int                 frame;
    int                 ref;
-   Menu_Ctl           *ptrmenu;
+   Menu_Ctl*           ptrmenu;
 #  ifndef _WINDOWS
    int                 n; 
 #  endif /* !_WINDOWS */
@@ -3606,11 +3612,11 @@ int                 menuID;
 
 #endif /* __STDC__ */
 {
-   ThotWidget          w;
+   ThotMenu            w;
    int                 menu;
    int                 frame;
    int                 ref;
-   Menu_Ctl           *ptrmenu;
+   Menu_Ctl*           ptrmenu;
 
 #ifndef _WINDOWS
    Arg                 args[MAX_ARGS];

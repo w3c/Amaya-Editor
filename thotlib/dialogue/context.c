@@ -121,7 +121,6 @@ void WinInitColors ()
    if (initialized)
       return;
 
-   WIN_GetDeviceContext (-1);
    palSize = GetDeviceCaps (TtDisplay, SIZEPALETTE);
    if (palSize == 0)
      TtIsTrueColor = TRUE;
@@ -139,7 +138,6 @@ void WinInitColors ()
        BackgroundColor[i] = 0;
 
    initialized = 1;
-   WIN_ReleaseDeviceContext ();
 
 }
 #endif /* _WINDOWS */
@@ -626,12 +624,10 @@ int                 dy;
 #endif /* __STDC__ */
 {
 #  ifdef _WINDOWS
-   HDC                 hdc;
-
-   hdc = GetDC (WIN_Main_Wd);
-   TtWDepth = GetDeviceCaps (hdc, PLANES);
+   WIN_GetDeviceContext (-1);
+   TtWDepth = GetDeviceCaps (TtDisplay, PLANES);
    if (TtWDepth == 1)
-      TtWDepth = GetDeviceCaps (hdc, BITSPIXEL);
+      TtWDepth = GetDeviceCaps (TtDisplay, BITSPIXEL);
 #  endif /* _WINDOWS */
 
 #  ifndef _WINDOWS
@@ -649,14 +645,16 @@ int                 dy;
    InitCurs ();
 
 #  ifdef _WINDOWS 
-   WIN_InitDialogueFonts (hdc, name);
-   DeleteDC (hdc);
+   WIN_InitDialogueFonts (TtDisplay, name);
 #  else /* !_WINDOWS */
    InitDialogueFonts (name);
-#endif /* _WINDOWS */
+#  endif /* _WINDOWS */
 
    /* Initialization of Picture Drivers */
    InitPictureHandlers (FALSE);
+#  ifdef _WINDOWS
+   WIN_ReleaseDeviceContext ();
+#  endif /* _WINDOWS */
 }
 
 /*----------------------------------------------------------------------

@@ -18,40 +18,39 @@
 #define MAX_BUTTON  30
 #define MAX_TEXTZONE 3
 
-typedef struct _Frame_Ctl
-{
-  short         FrTopMargin;    /* Window Top Margin			  */
-  short         FrLeftMargin;   /* Window Left Margin			  */
-  short 	FrWidth;	/* Window Width				  */
-  short 	FrHeight;      	/* Window Height			  */
-  int		FrDoc;		/* Document ID				  */
-  int		FrView;		/* Document View			  */
-  ThotWidget	WdScrollV;	/* Widget of Vertical Scroll              */
-  ThotWidget 	WdScrollH;	/* Widget of Horizontal Scroll            */
-  ThotWidget 	WdFrame;	/* Widget of the Document Frame           */
-  ThotWidget	WdStatus;	/* Widget of the Document status          */
-  struct _Menu_Ctl *FrMenus;	/* First menu context			  */
-  int		MenuAttr;	/* Attributes menu ID or -1		  */
-  int		MenuSelect;	/* Selection menu ID or -1		  */
-  int		MenuPaste;	/* Menu including the Paste command or -1 */
-  int           EntryPaste;	/* Entry number of the Paste command	  */
-  int		MenuUndo;	/* Menu including the Undo command or -1  */
-  int           EntryUndo;	/* Entry number of the Undo command	  */
-  int		MenuRedo;	/* Menu including the Redo command or -1  */
-  int           EntryRedo;	/* Entry number of the Redo command	  */
-  ThotWidget	WdMenus[MAX_MENU];	/* List of menu Widgets		  */
-  ThotBool	EnabledMenus[MAX_MENU];	/* Enabled menus   		  */
-  Proc  	Call_Button[MAX_BUTTON];/* List of button Callbacks	  */
-#ifndef _WINDOWS
-  ThotWidget	Button[MAX_BUTTON];	/* List of button Widgets	  */
-  ThotBool	EnabledButton[MAX_BUTTON]; /* Enabled buttons  		  */
-#else  /* _WINDOWS */
-  TBBUTTON*	Button[MAX_BUTTON];	/* List of button Widgets	  */
-  ThotWidget    Label[MAX_TEXTZONE];    /* Labels of text zones           */
-#endif /* _WINDOWS */
-  ThotWidget	Text_Zone[MAX_TEXTZONE];/* List of text-zone Widgets	  */
-  Proc  	Call_Text[MAX_TEXTZONE];/* List of text-zone Callbacks	  */
-}Frame_Ctl;
+typedef struct _Frame_Ctl {
+        short      FrTopMargin;               /* Window Top Margin                      */
+        short      FrLeftMargin;              /* Window Left Margin                     */
+        short      FrWidth;                   /* Window Width                           */
+        short      FrHeight;                  /* Window Height                          */
+        int        FrDoc;                     /* Document ID                            */
+        int        FrView;                    /* Document View                          */
+        ThotWidget WdScrollV;                 /* Widget of Vertical Scroll              */
+        ThotWidget WdScrollH;                 /* Widget of Horizontal Scroll            */
+        ThotWidget WdFrame;                   /* Widget of the Document Frame           */
+        ThotWidget WdStatus;                  /* Widget of the Document status          */
+        struct     _Menu_Ctl *FrMenus;        /* First menu context                     */
+        int        MenuAttr;                  /* Attributes menu ID or -1               */
+        int        MenuSelect;                /* Selection menu ID or -1                */
+        int        MenuPaste;                 /* Menu including the Paste command or -1 */
+        int        EntryPaste;                /* Entry number of the Paste command      */
+        int        MenuUndo;                  /* Menu including the Undo command or -1  */
+        int        EntryUndo;                 /* Entry number of the Undo command       */
+        int        MenuRedo;                  /* Menu including the Redo command or -1  */
+        int        EntryRedo;                 /* Entry number of the Redo command       */
+        ThotMenu   WdMenus[MAX_MENU];         /* List of menu Widgets                   */
+        ThotBool   EnabledMenus[MAX_MENU];    /* Enabled menus                          */
+        Proc       Call_Button[MAX_BUTTON];   /* List of button Callbacks               */
+#       ifndef _WINDOWS
+        ThotWidget Button[MAX_BUTTON];        /* List of button Widgets                 */
+        ThotBool   EnabledButton[MAX_BUTTON]; /* Enabled buttons                        */
+#       else  /* _WINDOWS */
+        TBBUTTON*  Button[MAX_BUTTON];        /* List of button Widgets	                */
+        ThotWidget Label[MAX_TEXTZONE];       /* Labels of text zones                   */
+#       endif /* _WINDOWS */
+        ThotWidget Text_Zone[MAX_TEXTZONE];   /* List of text-zone Widgets              */
+        Proc       Call_Text[MAX_TEXTZONE];   /* List of text-zone Callbacks            */
+} Frame_Ctl;
 #endif /* !NODISPLAY */
 
 #endif

@@ -392,7 +392,6 @@ int                 zoom;
 
    dist = 0;
 #  ifdef _WINDOWS 
-   WIN_GetDeviceContext (-1);
 #  endif /* _WINDOWS */
    switch (unit)
      {
@@ -436,7 +435,6 @@ int                 zoom;
        break;
      }
 #  ifdef _WINDOWS
-   WIN_ReleaseDeviceContext ();
 #  endif /* _WINDOWS */
    return (dist);
 }
@@ -946,7 +944,6 @@ ThotBool            increase;
 		 }
          SelectObject (TtPrinterDC, hOldFont);
       } else { 
-           WIN_GetDeviceContext (-1);
            hOldFont = SelectObject (TtDisplay, ptfont->FiFont);
 
            if (GetTextMetrics (TtDisplay, &textMetric)) {
@@ -962,7 +959,6 @@ ThotBool            increase;
                ptfont->FiHeights[c] = wsize.cy;
 		   }
            SelectObject (TtDisplay, hOldFont);
-           WIN_ReleaseDeviceContext ();
 	  }
 #      else  /* _WINDOWS */
 	  if (alphabet == TEXT('G') && size > 8 && (size < 16 || size == 24))

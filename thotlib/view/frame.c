@@ -762,6 +762,10 @@ int                 scroll;
    ThotBool            ontop;
    ThotBool            toadd;
 
+#  ifdef _WINDOWS
+   WIN_GetDeviceContext (frame);
+#  endif /* _WINDOWS */
+
    /* are new abstract boxes needed */
    toadd = FALSE;
    /* used to store boxes created on the fly */
@@ -1096,6 +1100,10 @@ int                 scroll;
      }
 
    FirstCreation = FALSE;
+
+#  ifdef _WINDOWS
+   /* >>>>>>>>>>>> WIN_ReleaseDeviceContext (); <<<<<<<<<<<< */
+#  endif /* _WINDOWS */
    return toadd;
 }
 

@@ -70,10 +70,10 @@
 
 struct E_List
   {
-     struct E_List      *E_Next;	         /* CsList d'entrees suivante         */
-     CHAR_T                E_Free[C_NUMBER];	 /* Disponibilite des entrees         */
-     CHAR_T                E_Type[C_NUMBER];	 /* CsList des types des entrees      */
-     ThotWidget          E_ThotWidget[C_NUMBER]; /* ThotWidgets associes aux entrees  */
+     struct     E_List* E_Next;         /* CsList d'entrees suivante         */
+     CHAR_T     E_Free[C_NUMBER];       /* Disponibilite des entrees         */
+     CHAR_T     E_Type[C_NUMBER];       /* CsList des types des entrees      */
+     ThotWidget E_ThotWidget[C_NUMBER]; /* ThotWidgets associes aux entrees  */
   };
 
 struct Cat_Context
@@ -334,20 +334,14 @@ int frame;
    WIN_curWin = NULL;
    TtDisplay = GetDC (WIN_curWin);
 #  else  /* !_WIN_PRINT */
-   if (frame == -1) {
+   if ((frame < 0) || (frame > MAX_FRAME)) {
       if (TtDisplay != 0)
          return;
 
-      for (frame = 0; frame <= MAX_FRAME; frame++)
-	  if (FrRef[frame] != 0)
-	     break;
-   }
-
-   if ((frame < 0) || (frame > MAX_FRAME)) {
       TtDisplay = GetDC (WIN_curWin = NULL);
       return;
    }
-   
+
    if (FrRef[frame] == 0)
       return;
 
@@ -359,7 +353,6 @@ int frame;
    if (TtDisplay)
       ReleaseDC (WIN_curWin, TtDisplay);
 
-   WIN_curWin = (ThotWindow) (-1);
    TtDisplay = 0;
 
    /* load the new Context. */
@@ -663,15 +656,15 @@ CONST WNDCLASS lpwc ;
    given menu.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-int GetMenuParentNumber (ThotWidget menu)
+int GetMenuParentNumber (ThotMenu menu)
 #else  /* !__STDC__ */
-int GetMenuParentNumber (win)
-ThotWindow win ;
+int GetMenuParentNumber (menu)
+ThotMenu menu ;
 #endif /* __STDC__ */
 {
-   int     menuIndex;
-   int     frameIndex = 0;
-   int     frame      = -1;
+   int      menuIndex;
+   int      frameIndex = 0;
+   int      frame      = -1;
    ThotBool found      = FALSE;
   
    while (frameIndex <= MAX_FRAME && !found) {
@@ -762,7 +755,7 @@ struct Cat_Context* catalogue;
    struct Cat_Context* tmpCat;
 
    if (frame == -1) {
-      frame = GetMenuParentNumber (parent) ;
+      frame = GetMenuParentNumber ((ThotMenu) parent) ;
    
       if (frame == - 1) {
          frameIndex = 0 ;
@@ -951,6 +944,7 @@ int       nShow;
    int     argc ;
    char**  argv;
 
+   currentFrame = -1;
    hInstance  = hInst;
    nAmayaShow = nShow;
    /* tszAppName = "Amaya"; */
@@ -1149,12 +1143,12 @@ caddr_t             call_d;
 		while ((entry == -1) && (i < C_NUMBER))
 		  {
 #            ifdef _WINDOWS
-             if (IsMenu (adbloc->E_ThotWidget[i])) {
+             if (IsMenu ((ThotMenu) (adbloc->E_ThotWidget[i]))) {
                 int  ndx;
                 UINT menuEntry;
-                int nbMenuItem = GetMenuItemCount (adbloc->E_ThotWidget[i]);
+                int nbMenuItem = GetMenuItemCount ((ThotMenu) (adbloc->E_ThotWidget[i]));
                 for (ndx = 0; ndx < nbMenuItem; ndx++) {
-                    menuEntry = GetMenuItemID (adbloc->E_ThotWidget[i], ndx);
+                    menuEntry = GetMenuItemID ((ThotMenu) (adbloc->E_ThotWidget[i]), ndx);
                     if (menuEntry == (catalogue->Cat_Ref + (UINT)w))
                        entry = ndx;
 				}
@@ -2799,11 +2793,11 @@ struct Cat_Context *catalogue;
    Retourne un code d'erreur.                                         
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                TtaNewPulldown (int ref, ThotWidget parent, STRING title, int number, STRING text, STRING equiv)
+void                TtaNewPulldown (int ref, ThotMenu parent, STRING title, int number, STRING text, STRING equiv)
 #else  /* __STDC__ */
 void                TtaNewPulldown (ref, parent, title, number, text, equiv)
 int                 ref;
-ThotWidget          parent;
+ThotMenu            parent;
 STRING              title;
 int                 number;
 STRING              text;
@@ -2821,14 +2815,14 @@ STRING              equiv;
    struct Cat_Context *catalogue;
    struct E_List      *adbloc;
 
-   ThotWidget          menu;
+   ThotMenu            menu;
    ThotWidget          w;
-   CHAR_T                heading[200];
+   CHAR_T              heading[200];
 
 #  ifdef _WINDOWS
    struct Cat_Context *copyCat;
-   CHAR_T                menu_item [1024];
-   CHAR_T                equiv_item [255];
+   CHAR_T              menu_item [1024];
+   CHAR_T              equiv_item [255];
 #  endif /* _WINDOWS */
 
 #  ifndef _WINDOWS
@@ -2880,7 +2874,7 @@ STRING              equiv;
 	     return;
 	  }
 	else if (number == 0)
-	   menu = (ThotWidget) - 1;	/* pas de pull-down */
+	   menu = (ThotMenu) - 1;	/* pas de pull-down */
 	else if (!rebuilded)
 	  {
 #            ifdef _WINDOWS
@@ -2891,7 +2885,7 @@ STRING              equiv;
 	  }
 	else
 	  {
-        menu = catalogue->Cat_Widget;
+        menu = (ThotMenu) catalogue->Cat_Widget;
 	  }
 
 	catalogue->Cat_Ref = ref;
@@ -3186,11 +3180,11 @@ STRING              equiv;
   ----------------------------------------------------------------------*/
 #ifdef _WINDOWS
 #ifdef __STDC__
-void                WIN_TtaSetPulldownOff (int ref, ThotWidget parent, HWND owner)
+void                WIN_TtaSetPulldownOff (int ref, ThotMenu parent, HWND owner)
 #else  /* __STDC__ */
 void                WIN_TtaSetPulldownOff (ref, parent, owner)
 int                 ref;
-ThotWidget          parent;
+ThotMenu            parent;
 HWND                owner;
 #endif /* __STDC__ */
 #else  /* !_WINDOWS */
@@ -3240,11 +3234,11 @@ ThotWidget          parent;
   ----------------------------------------------------------------------*/
 #ifdef _WINDOWS
 #ifdef __STDC__
-void                WIN_TtaSetPulldownOn (int ref, ThotWidget parent, HWND owner)
+void                WIN_TtaSetPulldownOn (int ref, ThotMenu parent, HWND owner)
 #else  /* __STDC__ */
 void                WIN_TtaSetPulldownOn (ref, parent, owner)
 int                 ref;
-ThotWidget          parent;
+ThotMenu            parent;
 HWND                owner;
 #endif /* __STDC__ */
 #else  /* !_WINDOWS */
@@ -4005,12 +3999,12 @@ ThotBool            react;
    Arg                 args[MAX_ARGS];
    XmString            title_string;
    ThotWidget          menu;
-   CHAR_T                heading[200];
+   CHAR_T              heading[200];
 #  endif /* !_WINDOWS */
 
    ThotWidget          w;
    ThotWidget          row;
-   CHAR_T                button;
+   CHAR_T              button;
 
 #  ifdef _WINDOWS
    HMENU               menu;

@@ -1336,32 +1336,27 @@ PtrDocument         pDoc;
    int                 frame, h, w;
    ThotBool            complete;
 
-   if (Assoc)
-     {
-	pDoc->DocAssocFreeVolume[view - 1] = pDoc->DocAssocVolume[view - 1];
-	pElRoot = pDoc->DocAssocRoot[view - 1];
-	pAbbRoot = pElRoot->ElAbstractBox[0];
-	frame = pDoc->DocAssocFrame[view - 1];
-	AbsBoxesCreate (pElRoot, pDoc, 1, TRUE, TRUE, &complete);
-        if (pAbbRoot == NULL)
-          pAbbRoot = pElRoot->ElAbstractBox[0];
-	h = 0;
-	ChangeConcreteImage (frame, &h, pAbbRoot);
-     }
-   else
-     {
-	pElRoot = pDoc->DocRootElement;
-	pDoc->DocViewFreeVolume[view - 1] = pDoc->DocViewVolume[view - 1];
-	pAbbRoot = pDoc->DocViewRootAb[view - 1];
-	frame = pDoc->DocViewFrame[view - 1];
-	AbsBoxesCreate (pElRoot, pDoc, view, TRUE, TRUE, &complete);
-        if (pAbbRoot == NULL)
-          pAbbRoot =
-            pDoc->DocViewRootAb[view - 1] =
-            pElRoot->ElAbstractBox[view - 1];
-	h = 0;
-	ChangeConcreteImage (frame, &h, pAbbRoot);
-     }
+   if (Assoc) {
+      pDoc->DocAssocFreeVolume[view - 1] = pDoc->DocAssocVolume[view - 1];
+      pElRoot = pDoc->DocAssocRoot[view - 1];
+      pAbbRoot = pElRoot->ElAbstractBox[0];
+      frame = pDoc->DocAssocFrame[view - 1];
+      AbsBoxesCreate (pElRoot, pDoc, 1, TRUE, TRUE, &complete);
+      if (pAbbRoot == NULL)
+         pAbbRoot = pElRoot->ElAbstractBox[0];
+      h = 0;
+      ChangeConcreteImage (frame, &h, pAbbRoot);
+   } else {
+          pElRoot = pDoc->DocRootElement;
+          pDoc->DocViewFreeVolume[view - 1] = pDoc->DocViewVolume[view - 1];
+          pAbbRoot = pDoc->DocViewRootAb[view - 1];
+          frame = pDoc->DocViewFrame[view - 1];
+          AbsBoxesCreate (pElRoot, pDoc, view, TRUE, TRUE, &complete);
+          if (pAbbRoot == NULL)
+             pAbbRoot = pDoc->DocViewRootAb[view - 1] = pElRoot->ElAbstractBox[view - 1];
+          h = 0;
+          ChangeConcreteImage (frame, &h, pAbbRoot);
+   } 
    /* force to redraw all the frame */
    pFrame = &ViewFrameTable[frame - 1];
    GetSizesFrame (frame, &w, &h);

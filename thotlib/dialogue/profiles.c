@@ -34,7 +34,24 @@ static ThotBool   defined_profile = FALSE;
 static STRING     tab[MAX_FUNCTIONS];
 static int        nb_elem = 0;
 
+#ifdef __STDC__
+static void skip_spaces (char *string)
+#else  /* !__STDC__ */
+static void skip_spaces (string)
+char *string;
+#endif /* !__STDC__ */
+{
+  int c = 0;
+  int nbsp = 0;
 
+  do { 
+     while (string[c+nbsp] == ' ' || string[c+nbsp] == '\t')
+           nbsp++;
+      
+     string [c] = string[c+nbsp];
+  } while (string [c++] != EOS);
+}
+  
 /*-------------------------------------------------------------------------
    Prof_InitTable: Seek the current profile and init the function table
 --------------------------------------------------------------------------*/
@@ -266,23 +283,5 @@ void Prof_ProfileCompilator()
 }
 
 
-void skip_spaces (char *string)
-{
-  int c = 0;
-  int nbsp = 0;
-
-  do
-    { 
-      while (string[c+nbsp] == ' ' || string[c+nbsp] == '\t')
-	{
-	  nbsp++;
-	}
-      
-      string [c] = string[c+nbsp];
-    }
-  while (string [c++] != EOS);
-
-}
-  
 
 

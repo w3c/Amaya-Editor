@@ -31,7 +31,7 @@ extern void DisplayMessage ( STRING text,
                              int msgType );
 extern void TtaDefineDialogueCallback ( void (*procedure) () );
 extern void TtaNewPulldown ( int ref,
-                             ThotWidget parent,
+                             ThotMenu parent,
                              STRING title,
                              int number,
                              STRING text,

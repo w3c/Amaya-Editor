@@ -1590,8 +1590,6 @@ LPARAM lParam;
                  int  cy         = HIWORD (lParam) ;
 
                  WIN_ChangeViewSize (frame, cx, cy, 0, 0) ;
-                 WIN_ReleaseDeviceContext ();
-
                  return 0 ;
             }
 
@@ -2473,12 +2471,12 @@ int                 frame;
    XSetClipRectangles (TtDisplay, TtGreyGC, 0, 0, &rect, 1, Unsorted);
    XFlushOutput (frame);
 #  else  /* _WINDOWS */
-    WIN_GetDeviceContext (frame);
+   /* >>>>>>>>>>>>  WIN_GetDeviceContext (frame); <<<<<<<<<<<<< */
    SelectClipRgn(TtDisplay, NULL); 
    if (clipRgn && !DeleteObject (clipRgn))
       WinErrorBox (NULL);
    clipRgn = (HRGN) 0;
-   WIN_ReleaseDeviceContext ();
+   /* >>>>>>>>>>>>  WIN_ReleaseDeviceContext (); <<<<<<<<<<<< */
 #  endif /* _WINDOWS */
 }
 

@@ -1393,9 +1393,11 @@ int                 hlogo;
 #  ifndef _WINDOWS
    int                 fileNameWidth;
    int                 fnposx, fnposy;
-   CHAR_T                filename[255];
-#  endif /* !_WINDOWS */
+   CHAR_T              filename[255];
    Drawable            drawable;
+#  else  /* _WINDOWS */
+   ThotWindow          drawable;
+#  endif /* !_WINDOWS */
    Pixmap              pixmap;
    float               scaleX, scaleY;
 
@@ -1573,7 +1575,11 @@ int                 frame;
    int                 xFrame, yFrame, wFrame, hFrame;
    int                 picXArea, picYArea, picWArea, picHArea;
    int                 xTranslate, yTranslate, picXOrg, picYOrg;
+#  ifdef _WINDOWS
+   ThotWindow          drawable;
+#  else  /* !_WINDOWS */
    Drawable            drawable;
+#  endif /* !_WINDOWS */
    int                 x, y;
    ThotColor           BackGroundPixel;
 
