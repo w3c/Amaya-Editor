@@ -1464,6 +1464,73 @@ BOXES
                 END;
         END;
 
+ ATTR_linebreak_auto: BEGIN
+        Content: Text ' linebreak=auto';
+        Visibility: 0;
+        IN Structure_view BEGIN
+                HorizPos: Left = Previous . Right;
+                VertPos: HRef = Previous . HRef;
+                Size: TAG_FONTSIZE;
+                Font: ATTR_Font; Style: ATTR_Style; Weight: ATTR_Weight;
+                Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+                END;
+        END;
+ ATTR_linebreak_newline: BEGIN
+        Content: Text ' linebreak=newline';
+        Visibility: 0;
+        IN Structure_view BEGIN
+                HorizPos: Left = Previous . Right;
+                VertPos: HRef = Previous . HRef;
+                Size: TAG_FONTSIZE;
+                Font: ATTR_Font; Style: ATTR_Style; Weight: ATTR_Weight;
+                Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+                END;
+        END;
+ ATTR_linebreak_indentingnewline: BEGIN
+        Content: Text ' linebreak=indentingnewline';
+        Visibility: 0;
+        IN Structure_view BEGIN
+                HorizPos: Left = Previous . Right;
+                VertPos: HRef = Previous . HRef;
+                Size: TAG_FONTSIZE;
+                Font: ATTR_Font; Style: ATTR_Style; Weight: ATTR_Weight;
+                Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+                END;
+        END;
+ ATTR_linebreak_nobreak: BEGIN
+        Content: Text ' linebreak=nobreak';
+        Visibility: 0;
+        IN Structure_view BEGIN
+                HorizPos: Left = Previous . Right;
+                VertPos: HRef = Previous . HRef;
+                Size: TAG_FONTSIZE;
+                Font: ATTR_Font; Style: ATTR_Style; Weight: ATTR_Weight;
+                Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+                END;
+        END;
+ ATTR_linebreak_goodbreak: BEGIN
+        Content: Text ' linebreak=goodbreak';
+        Visibility: 0;
+        IN Structure_view BEGIN
+                HorizPos: Left = Previous . Right;
+                VertPos: HRef = Previous . HRef;
+                Size: TAG_FONTSIZE;
+                Font: ATTR_Font; Style: ATTR_Style; Weight: ATTR_Weight;
+                Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+                END;
+        END;
+ ATTR_linebreak_badbreak: BEGIN
+        Content: Text ' linebreak=badbreak';
+        Visibility: 0;
+        IN Structure_view BEGIN
+                HorizPos: Left = Previous . Right;
+                VertPos: HRef = Previous . HRef;
+                Size: TAG_FONTSIZE;
+                Font: ATTR_Font; Style: ATTR_Style; Weight: ATTR_Weight;
+                Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+                END;
+        END;
+
  ATTR_linethickness: BEGIN
         Content: Text ' linethickness=';
         Visibility: 0;
@@ -4092,6 +4159,19 @@ ATTRIBUTES
 	CreateBefore(VALUE_depth);
 	END;
 
+  linebreak_ = auto_:
+	CreateBefore(ATTR_linebreak_auto);
+  linebreak_ = newline:
+	CreateBefore(ATTR_linebreak_newline);
+  linebreak_ = indentingnewline:
+	CreateBefore(ATTR_linebreak_indentingnewline);
+  linebreak_ = nobreak_:
+	CreateBefore(ATTR_linebreak_nobreak);
+  linebreak_ = goodbreak:
+	CreateBefore(ATTR_linebreak_goodbreak);
+  linebreak_ = badbreak:
+	CreateBefore(ATTR_linebreak_badbreak);
+  
   linethickness:
 	BEGIN
 	CreateBefore(ATTR_linethickness);

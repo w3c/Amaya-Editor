@@ -67,7 +67,9 @@ sans_serif: sans-serif
 bold_sans_serif: bold-sans-serif
 sans_serif_italic: sans-serif-italic
 sans_serif_bold_italic: sans-serif-bold-italic
-
+linebreak_: linebreak
+auto_: auto
+nobreak_: nobreak
 xml_space_default: default
 xml_space_preserve: preserve
 xml_space: xml:space

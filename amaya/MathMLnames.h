@@ -90,6 +90,7 @@ static AttributeMapping MathMLAttributeMappingTable[] =
    {TEXT("id"), TEXT(""), 'A', MathML_ATTR_id, L_Other},
    {TEXT("index"), TEXT(""), 'A', MathML_ATTR_index, L_Other},
    {TEXT("largeop"), TEXT(""), 'A', MathML_ATTR_largeop, L_Other},
+   {TEXT("linebreak"), TEXT(""), 'A', MathML_ATTR_linebreak_, L_Other},
    {TEXT("linethickness"), TEXT(""), 'A', MathML_ATTR_linethickness, L_Other},
    {TEXT("lquote"), TEXT(""), 'A', MathML_ATTR_lquote, L_Other},
    {TEXT("lspace"), TEXT(""), 'A', MathML_ATTR_lspace, L_Other},

@@ -947,6 +947,37 @@ ATTRIBUTES
 	create '"';
 	end;
 
+   linebreak_ = auto_:
+	begin
+	create SAN;
+	create 'linebreak="auto"';
+	end;
+   linebreak_ = newline:
+	begin
+	create SAN;
+	create 'linebreak="newline"';
+	end;
+   linebreak_ = indentingnewline:
+	begin
+	create SAN;
+	create 'linebreak="indentingnewline"';
+	end;
+   linebreak_ = nobreak_:
+	begin
+	create SAN;
+	create 'linebreak="nobreak"';
+	end;
+   linebreak_ = goodbreak:
+	begin
+	create SAN;
+	create 'linebreak="goodbreak"';
+	end;
+   linebreak_ = badbreak:
+	begin
+	create SAN;
+	create 'linebreak="badbreak"';
+	end;
+
    lquote:
 	begin
 	create SAN;

@@ -111,7 +111,9 @@ STRUCT
       MSPACE
 	  (ATTR width\240 = TEXT;
 	        height\240 = TEXT;
-	        depth\240 = TEXT)
+	        depth\240 = TEXT;
+	        linebreak_ = auto_, newline, indentingnewline, nobreak_,
+	                        goodbreak, badbreak)
 	  = CONSTANT C_Space;
 
       { plschema }

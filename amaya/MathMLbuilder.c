@@ -337,6 +337,13 @@ static AttrValueMapping MathMLAttrValueMappingTable[] =
  {MathML_ATTR_movablelimits, TEXT("true"), MathML_ATTR_movablelimits_VAL_true},
  {MathML_ATTR_movablelimits, TEXT("false"), MathML_ATTR_movablelimits_VAL_false},
 
+ {MathML_ATTR_linebreak_, TEXT("auto"), MathML_ATTR_linebreak__VAL_auto_},
+ {MathML_ATTR_linebreak_, TEXT("newline"), MathML_ATTR_linebreak__VAL_newline},
+ {MathML_ATTR_linebreak_, TEXT("indentingnewline"), MathML_ATTR_linebreak__VAL_indentingnewline},
+ {MathML_ATTR_linebreak_, TEXT("nobreak"), MathML_ATTR_linebreak__VAL_nobreak_},
+ {MathML_ATTR_linebreak_, TEXT("goodbreak"), MathML_ATTR_linebreak__VAL_goodbreak},
+ {MathML_ATTR_linebreak_, TEXT("badbreak"), MathML_ATTR_linebreak__VAL_badbreak},
+
  {MathML_ATTR_notation, TEXT("longdiv"), MathML_ATTR_notation_VAL_longdiv},
  {MathML_ATTR_notation, TEXT("actuarial"), MathML_ATTR_notation_VAL_actuarial},
  {MathML_ATTR_notation, TEXT("radical"), MathML_ATTR_notation_VAL_radical},
