@@ -42,6 +42,7 @@ static gchar * null_string;
 
 static char         OldMsgSelect[MAX_TXT_LEN];
 static PtrDocument  OldDocMsgSelect;
+static ThotBool     JumpInProgress = FALSE;
 
 #undef THOT_EXPORT
 #define THOT_EXPORT extern
@@ -822,7 +823,7 @@ void FrameVScrolledGTK (GtkAdjustment *w, int frame)
     delta = MAX_SIZE;		/* indeterminee */
 #else /* _GTK */
   /* delta is the actual position into the page */
-  delta=w->value;
+  delta = w->value;
   /*  printf ("value=%d\n", delta);*/
 
 #endif /* !_GTK */
@@ -836,7 +837,8 @@ void FrameVScrolledGTK (GtkAdjustment *w, int frame)
   if (!CallEventType ((NotifyEvent *) & notifyDoc, TRUE))
     {
 #ifndef _GTK
-      if (infos->reason == XmCR_VALUE_CHANGED || infos->reason == XmCR_DRAG)
+      if (infos->reason == XmCR_VALUE_CHANGED ||
+	  infos->reason == XmCR_DRAG)
 	{
 	  /* Deplacement absolu dans la vue du document */
 	  delta = infos->value;
@@ -888,8 +890,9 @@ void FrameVScrolledGTK (GtkAdjustment *w, int frame)
 #endif /* !_GTK */
 	      ShowYPosition (frame, y, delta);
 	    }
-	  else
+	  else if (!JumpInProgress)
 	    {
+	      JumpInProgress = TRUE;
 	      /* On regarde si le deplacement bute en bas du document */
 	      if (delta + h >= FrameTable[frame].FrHeight - 4)
 		delta = FrameTable[frame].FrHeight;
@@ -898,11 +901,11 @@ void FrameVScrolledGTK (GtkAdjustment *w, int frame)
 		delta += h / 2;
 	      else
 		delta = 0;
-                  
 	      delta = (delta * 100) / FrameTable[frame].FrHeight;
 	      JumpIntoView (frame, delta);
 	      /* recompute the scroll bars */
 	      UpdateScrollbars (frame);
+	      JumpInProgress = TRUE;
 	    }
 #ifndef _GTK
 	}

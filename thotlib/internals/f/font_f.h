@@ -8,11 +8,11 @@
 
 extern int NumberOfFonts ( void );
 extern int GetCharsCapacity ( int volpixel );
-extern int CharacterWidth ( unsigned char c,
+extern int CharacterWidth ( CHAR_T c,
                             ptrfont font );
-extern int CharacterHeight ( unsigned char c,
+extern int CharacterHeight ( CHAR_T c,
                              ptrfont font );
-extern int CharacterAscent ( unsigned char c,
+extern int CharacterAscent ( CHAR_T c,
                              ptrfont font );
 extern int FontAscent ( ptrfont font );
 extern int FontHeight ( ptrfont font );
@@ -55,11 +55,11 @@ extern void ThotFreeAllFonts ( void );
 
 extern int NumberOfFonts (/* void */);
 extern int GetCharsCapacity (/* int volpixel */);
-extern int CharacterWidth (/* unsigned char c,
+extern int CharacterWidth (/* CHAR_T c,
                               ptrfont font */);
-extern int CharacterHeight (/* unsigned char c,
+extern int CharacterHeight (/* CHAR_T c,
                                ptrfont font */);
-extern int CharacterAscent (/* unsigned char c,
+extern int CharacterAscent (/* CHAR_T c,
                                ptrfont font */);
 extern int FontAscent (/* ptrfont font */);
 extern int FontHeight (/* ptrfont font */);

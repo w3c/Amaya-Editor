@@ -71,8 +71,8 @@ static HFONT OldFont;
 #include "wininclude.h"
 
 /*----------------------------------------------------------------------
- *    WIN_LoadFont :  load a Windows TRUEType with a defined set of
- *                    characteristics.
+  WIN_LoadFont :  load a Windows TrueType with a defined set of
+  characteristics.
   ----------------------------------------------------------------------*/
 static HFONT WIN_LoadFont (char alphabet, char family, int highlight,
 			   int size, TypeUnit unit)
@@ -160,8 +160,8 @@ static HFONT WIN_LoadFont (char alphabet, char family, int highlight,
 }
 
 /*----------------------------------------------------------------------
- *      WinLoadFont : Load a Windows font in a Device context.
- *----------------------------------------------------------------------*/
+  WinLoadFont : Load a Windows font in a Device context.
+  ----------------------------------------------------------------------*/
 HFONT WinLoadFont (HDC hdc, ptrfont font)
 {
   if (LastUsedFont == (ptrFC)0)
@@ -203,7 +203,7 @@ HFONT WinLoadFont (HDC hdc, ptrfont font)
 #endif /* _WINDOWS */
 
 /*----------------------------------------------------------------------
- *      NumberOfFonts returns the number of fonts.
+  NumberOfFonts returns the number of fonts.
   ----------------------------------------------------------------------*/
 int NumberOfFonts ()
 {
@@ -211,7 +211,7 @@ int NumberOfFonts ()
 }
 
 /*----------------------------------------------------------------------
- *      GetCharsCapacity converts from pixel volume to char size
+  GetCharsCapacity converts from pixel volume to char size
   ----------------------------------------------------------------------*/
 int GetCharsCapacity (int volpixel)
 {
@@ -220,24 +220,22 @@ int GetCharsCapacity (int volpixel)
 
 
 /*----------------------------------------------------------------------
- *      CharacterWidth returns the width of a char in a given font.
+  CharacterWidth returns the width of a char in a given font.
   ----------------------------------------------------------------------*/
-int CharacterWidth (unsigned char c, ptrfont font)
+int CharacterWidth (CHAR_T c, ptrfont font)
 {
-#if defined(_I18N_) && defined(_WINDOWS)
-  SIZE wsize;
-  HFONT currentFont, HOldFont; 
-
-  currentFont = WinLoadFont (TtDisplay, font);
-  GetTextExtentPoint (TtDisplay, (LPCTSTR) (&c), 1, (LPSIZE) (&wsize));
-  SelectObject (TtDisplay, currentFont);
-  return wsize.cx;
-#else /* _I18N_ && _WINDOWS */
 #if !defined(_WINDOWS) && !defined(_GTK)
   XFontStruct        *xf;
   int                 i;
 #endif /* !defined(_WINDOWS) && !defined(_GTK) */
-  int                 l;
+  int
+                 l;
+#ifdef _I18N_
+  /* as long as we don't handle mutifonts */
+  if (c > 255)
+    c = 32;
+#endif /* _I18N_ */
+
   if (font == NULL)
     return (0);
   else
@@ -268,7 +266,7 @@ int CharacterWidth (unsigned char c, ptrfont font)
       xf = (XFontStruct *) font;
       if (xf->per_char == NULL)
 	l = xf->max_bounds.width;
-      else if (c < xf->min_char_or_byte2)
+      else if (c < (CHAR_T)(xf->min_char_or_byte2))
 	l = 0;
       else
 	{
@@ -302,17 +300,22 @@ int CharacterWidth (unsigned char c, ptrfont font)
 #endif /* _WINDOWS */
      }
    return (l);
-#endif /* _I18N_ && _WINDOWS */
 }
 
 /*----------------------------------------------------------------------
- *      CharacterHeight returns the height of a char in a given font.
+  CharacterHeight returns the height of a char in a given font.
   ----------------------------------------------------------------------*/
-int CharacterHeight (unsigned char c, ptrfont font)
+int CharacterHeight (CHAR_T c, ptrfont font)
 {
 #ifdef _GTK
   int l;
 #endif /* _GTK */
+
+#ifdef _I18N_
+  /* as long as we don't handle mutifonts */
+  if (c > 255)
+    c = 32;
+#endif /* _I18N_ */
 
   if (font == NULL)
     return (0);
@@ -331,13 +334,13 @@ int CharacterHeight (unsigned char c, ptrfont font)
     return ((XFontStruct *) font)->per_char[c - ((XFontStruct *) font)->min_char_or_byte2].ascent
       + ((XFontStruct *) font)->per_char[c - ((XFontStruct *) font)->min_char_or_byte2].descent;
 #endif /* _GTK */
-#endif /* !_WINDOWS */
+#endif /* _WINDOWS */
 }
 
 /*----------------------------------------------------------------------
-       CharacterAscent returns the ascent of a char in a given font.
+  CharacterAscent returns the ascent of a char in a given font.
   ----------------------------------------------------------------------*/
-int CharacterAscent (unsigned char c, ptrfont font)
+int CharacterAscent (CHAR_T c, ptrfont font)
 {
 #ifdef _GTK
   int               lbearing, rbearing, width, ascent, descent;
@@ -347,7 +350,13 @@ int CharacterAscent (unsigned char c, ptrfont font)
   int               i;
 #endif /* _WINDOWS */
 #endif /* _GTK */
- 
+
+#ifdef _I18N_
+  /* as long as we don't handle mutifonts */
+  if (c > 255)
+    c = 32;
+#endif /* _I18N_ */
+
   if (font == NULL)
     return (0);
 #ifdef _WINDOWS
@@ -383,9 +392,9 @@ int CharacterAscent (unsigned char c, ptrfont font)
 }
 
 /*----------------------------------------------------------------------
- *      FontAscent returns a global ascent for a font.
+  FontAscent returns a global ascent for a font.
   ----------------------------------------------------------------------*/
-int                 FontAscent (ptrfont font)
+int FontAscent (ptrfont font)
 {
   if (font == NULL)
     return (0);
@@ -399,11 +408,11 @@ int                 FontAscent (ptrfont font)
 #else /* _GTK */
     return (((XFontStruct *) font)->ascent);
 #endif /* _GTK */
-#endif /* !_WINDOWS */
+#endif /* _WINDOWS */
 }
 
 /*----------------------------------------------------------------------
- *      FontHeight returns the height of a given font.
+  FontHeight returns the height of a given font.
   ----------------------------------------------------------------------*/
 int                 FontHeight (ptrfont font)
 {
@@ -576,7 +585,7 @@ int LogicalValue (int val, TypeUnit unit, PtrAbstractBox pAb, int zoom)
 
 
 /*----------------------------------------------------------------------
- *      FontBase returns the shifting of the base line for a given font.
+  FontBase returns the shifting of the base line for a given font.
   ----------------------------------------------------------------------*/
 int FontBase (ptrfont font)
 {
@@ -587,7 +596,7 @@ int FontBase (ptrfont font)
 }
 
 /*----------------------------------------------------------------------
- *   FontRelSize converts between a size in points and the logical size.
+  FontRelSize converts between a size in points and the logical size.
   ----------------------------------------------------------------------*/
 int FontRelSize (int size)
 {
@@ -601,7 +610,7 @@ int FontRelSize (int size)
 }
 
 /*----------------------------------------------------------------------
- *   FontPointSize convert a logical size to the point value.
+  FontPointSize convert a logical size to the point value.
   ----------------------------------------------------------------------*/
 int FontPointSize (int size)
 {
@@ -632,7 +641,7 @@ ptrfont LoadFont (char *name)
 #  endif /* !_WINDOWS */
 
 /*----------------------------------------------------------------------
- *      FontIdentifier computes the name of a Thot font.
+  FontIdentifier computes the name of a Thot font.
   ----------------------------------------------------------------------*/
 void FontIdentifier (char alphabet, char family, int highlight, int size,
 		     TypeUnit unit, char r_name[10], char r_nameX[100])
@@ -786,7 +795,7 @@ void FontIdentifier (char alphabet, char family, int highlight, int size,
 }
 
 /*----------------------------------------------------------------------
- *      ReadFont do a raw Thot font loading (bypasses the font cache).
+  ReadFont do a raw Thot font loading (bypasses the font cache).
   ----------------------------------------------------------------------*/
 ptrfont ReadFont (char alphabet, char family, int highlight, int size,
 		  TypeUnit unit)
@@ -802,9 +811,9 @@ ptrfont ReadFont (char alphabet, char family, int highlight, int size,
 }
 
 /*----------------------------------------------------------------------
- *      LoadNearestFont load the nearest possible font given a set
- *		of attributes like alphabet, family, the size and for
- *		a given frame.
+  LoadNearestFont load the nearest possible font given a set
+  of attributes like alphabet, family, the size and for
+  a given frame.
   ----------------------------------------------------------------------*/
 static ptrfont LoadNearestFont (char alphabet, char family, int highlight,
 				int size, TypeUnit unit, int frame,
@@ -1011,9 +1020,8 @@ static ptrfont LoadNearestFont (char alphabet, char family, int highlight,
 }
 
 /*----------------------------------------------------------------------
- *      ThotLoadFont try to load a font given a set
- *		of attributes like alphabet, family, the size and for
- *		a given frame.
+  ThotLoadFont try to load a font given a set of attributes like alphabet,
+  family, the size and for a given frame.
   ----------------------------------------------------------------------*/
 ptrfont ThotLoadFont (char alphabet, char family, int highlight, int size,
 		      TypeUnit unit, int frame)
@@ -1289,7 +1297,7 @@ void ThotFreeFont (int frame)
 }
 
 /*----------------------------------------------------------------------
- *      ThotFreeAllFonts
+  ThotFreeAllFonts
   ----------------------------------------------------------------------*/
 void ThotFreeAllFonts (void)
 {

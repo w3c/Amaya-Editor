@@ -535,9 +535,9 @@ void DrawIntegral (int frame, int thick, int x, int y, int l, int h,
 	 {
 	   /* double integral */
 	   fprintf (fout, "%d %d (\\362) c\n", -ym,
-		    x - CharacterWidth ('\362', font) / 4);
+		    x - CharacterWidth (242, font) / 4);
 	   fprintf (fout, "%d %d (\\362) c\n", -ym,
-		    x + CharacterWidth ('\362', font) / 4);
+		    x + CharacterWidth (242, font) / 4);
 	 }
        else
 	 {
@@ -553,10 +553,10 @@ void DrawIntegral (int frame, int thick, int x, int y, int l, int h,
 	 {
 	   /* double integral */
 	   fprintf (fout, "%d %d %d %s (\\363) (\\364) (\\365) s3\n",
-		    x - CharacterWidth ('\364', font) / 4,
+		    x - CharacterWidth (244, font) / 4,
 		    -yf, -y, Scale);
 	   fprintf (fout, "%d %d %d %s (\\363) (\\364) (\\365) s3\n",
-		    x + CharacterWidth ('\364', font) / 4,
+		    x + CharacterWidth (244, font) / 4,
 		    -yf, -y, Scale);
 	 }
        else

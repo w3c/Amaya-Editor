@@ -772,7 +772,7 @@ ThotBool      ReleaseStructureSchema (PtrSSchema pSS, PtrDocument pDoc)
    Charge la nature definie dans la regle rule du schema de structure pSS.
    Si le 1er octet de PSchName est nul on propose a l'utilisateur le schema
    de presentation par defaut defini dans le schema de structure, sinon on
-   propose le schema de presentation de nom PSchName.			       
+   propose le schema de presentation de nom PSchName.
   ----------------------------------------------------------------------*/
 void LoadNatureSchema (PtrSSchema pSS, char *PSchName, int rule,
 		       PtrDocument pDoc)

@@ -1476,7 +1476,7 @@ static void RemoveSelection (int charsDelta, int spacesDelta, int xDelta,
   int                 width, height;
 
   font = pBox->BxFont;
-  width = CharacterWidth ('m', font);
+  width = CharacterWidth (109, font);
   height = FontHeight (font);
   if (pAb->AbVolume == 0)
     DefClip (frame, 0, 0, 0, 0);
@@ -2685,7 +2685,7 @@ void InsertChar (int frame, CHAR_T c, int keyboard)
 				&& pSelBox->BxNChars == 1)
 			      {
 				/* Mise a jour des marques */
-				xDelta = CharacterWidth ('m', font);
+				xDelta = CharacterWidth (109, font);
 				pViewSel->VsXPos = 0;
 				pViewSel->VsIndBox = 0;
 				pViewSel->VsNSpaces = 0;
@@ -2719,7 +2719,7 @@ void InsertChar (int frame, CHAR_T c, int keyboard)
 				    pAb->AbBox->BxNChars == 1)
 				  {
 				    /* La boite entiere devient vide */
-				    xDelta = CharacterWidth ('m', font);
+				    xDelta = CharacterWidth (109, font);
 				    pFrame->FrClipXBegin = pSelBox->BxXOrg;
 				    /* Mise a jour de la selection */
 				    pSelBox = pAb->AbBox;
@@ -2777,7 +2777,7 @@ void InsertChar (int frame, CHAR_T c, int keyboard)
 					pBox = pAb->AbBox;
 					/* Est-ce que la boite devient vide ? */
 					if (pBox->BxNChars == 1)
-					  xDelta = CharacterWidth ('m', font) - pBox->BxWidth;
+					  xDelta = CharacterWidth (109, font) - pBox->BxWidth;
 				      }
 				    /* Reevaluation du debut de la boite coupee ? */
 				    else if (pBox->BxIndChar == 0)
