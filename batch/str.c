@@ -111,6 +111,7 @@ static boolean      ImportExcept;/* we met exception ImportLine or ImportParagra
 #include "writestr_f.h"
 #include "readstr_f.h"
 #include "fileaccess_f.h"
+#include "memory_f.h"
 #include "message_f.h"
 #include "compilmsg_f.h"
 #include "registry_f.h"

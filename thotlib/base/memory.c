@@ -1872,7 +1872,7 @@ PtrBox              pBox;
    pBox->BxPrevious = NULL;
    pBox->BxNext = NULL;
    /* free lines for box block of lines */
-   if (pBox->BxType = BoBlock)
+   if (pBox->BxType == BoBlock)
      {
        pBox->BxFirstLine = NULL;
        pBox->BxLastLine = NULL;

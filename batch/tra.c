@@ -124,6 +124,7 @@ static boolean      SecondInPair;	/* on a rencontre' "Second" */
 #include "readstr_f.h"
 #include "writetra_f.h"
 #include "fileaccess_f.h"
+#include "memory_f.h"
 #include "message_f.h"
 #include "compilmsg_f.h"
 #include "registry_f.h"
@@ -170,6 +171,37 @@ static void         Initialize ()
    GetSchTra (&pTSchema);
    if (pTSchema == NULL || pSSchema == NULL || pExtSSchema == NULL)
       TtaDisplaySimpleMessage (FATAL, TRA, OUT_OF_MEMORY);
+
+   /* initialise le schema de traduction */
+   pTSchema->TsLineLength = 0;	/* pas de longueur max des lignes traduites */
+   strcpy (pTSchema->TsEOL, "\n");	/* caractere fin de ligne par
+					   defaut */
+   strcpy (pTSchema->TsTranslEOL, "\n");	/* fin de ligne a inserer par
+						   defaut */
+   pTSchema->TsNConstants = 0;	/* nombre de constantes */
+   pTSchema->TsNCounters = 0;	/* nombre de compteurs */
+   pTSchema->TsNVariables = 0;	/* nombre de variables de traduction */
+   pTSchema->TsNBuffers = 0;	/* nombre de buffers */
+   pTSchema->TsPictureBuffer = 0;	/* pas de buffer pour les images */
+   for (i = 0; i < MAX_RULES_SSCHEMA; i++)
+     {
+	pTSchema->TsElemTRule[i] = NULL;	/* pointeurs sur le debut de la chaine
+						   de regles de traduction specifiques a chaque type d'element */
+	pTSchema->TsInheritAttr[i] = False;
+     }
+   for (i = 0; i < MAX_TRANSL_PRULE; i++)
+      pTSchema->TsPresTRule[i].RtExist = False;
+   pTSchema->TsNTranslAlphabets = 0;	/* pas de traduction de texte */
+   pTSchema->TsSymbolFirst = 0;	/* indice de la 1ere regle de traduction
+				   de symboles dans la table TsCharTransl */
+   pTSchema->TsSymbolLast = 0;	/* indice de la derniere regle de traduction de
+				   symboles dans la meme table */
+   pTSchema->TsGraphicsFirst = 0;	/* indice de la 1ere regle de traduction de
+					   graphiques dans la table TsCharTransl */
+   pTSchema->TsGraphicsLast = 0;	/* indice de la derniere regle de traduction
+					   de graphiques dans la meme table */
+   pTSchema->TsNCharTransls = 0;	/* nombre total de regles de traduction de
+					   caracteres */
 }
 
 /*----------------------------------------------------------------------
