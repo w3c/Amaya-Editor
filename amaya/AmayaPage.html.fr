@@ -140,13 +140,6 @@ What You Get). La version courante supporte les recommandations HTML
 (Hypertext Markup Language), XHTML (Extensible Hypertext Markup Language),
 MathML (Mathematical Markup Language), SVG (Scalable Vector Graphics), CSS
 (Cascading Style Sheets), et  HTTP (Hypertext Transfer Protocol).</p>
-
-<p>Les versions OpenGL implémentent les transformations, la transparence et
-l'animation des éléments SVG. Comme Amaya supporte complètement les documents
-composés, toutes ces nouvelles propriétés s'appliquent aussi aux éléments
-XHTML et MathML inclus. Vous pouvez voir une <a
-href="Amaya.svg">démonstration d'animation</a> si vous avez téléchagé une
-version OpenGL d'Amaya.</p>
 </div>
 
 <div>

@@ -151,12 +151,6 @@ Markup Language = Lenguage Matemático de Marcas), <acronym>SVG</acronym>
 <acronym>CSS</acronym> (Cascading Style Sheets = Hojas de Estilo en Cascada)
 y <acronym title="HyperText Transfer Protocol">HTTP</acronym> (HyperText
 Transfer Protocol = Protocolo de Transferencia de HiperTexto).</p>
-
-<p>Las versiones OpenGL permiten incluir transformaciones, transparencia y
-animaciones SMIL en los elementos SVG. Puesto que Amaya admite documentos
-compuestos, estas nuevas propiedades se aplican también a los elementos XHTML
-y MathML incluidos. Puedes ver <a href="Amaya.svg">una demostración de una
-animación</a> descargando una versión OpenGL de Amaya.</p>
 </div>
 
 <div>
