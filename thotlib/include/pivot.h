@@ -30,7 +30,7 @@ extern void         TtaReadPivotHeader (BinFile pivotFile, Document document, ch
 extern void         TtaWriteLanguageTable (BinFile pivotFile, Document document);
 extern void         TtaReadLanguageTable (BinFile pivotFile, Document document, char *nextChar);
 extern void         TtaWriteSchemaNames (BinFile pivotFile, Document document);
-extern void         TtaReadSchemaNames (BinFile pivotFile, Document document, char *nextChar);
+extern void         TtaReadSchemaNames (BinFile pivotFile, Document document, char *nextChar, void (*withThisPSchema) (Document document, char *natSchema, char *presentSchema));
 extern void         TtaReadAttribute (BinFile pivotFile, Document document, boolean create, Attribute * attribute);
 extern void         TtaReadPRule (BinFile pivotFile, Element element, Document document, boolean create, PRule * pRule);
 extern void         TtaReadTree (BinFile pivotFile, SSchema pSchema, Element element, Document document, char *byte, Element * elementRead);
@@ -51,8 +51,8 @@ extern void         TtaWritePivotHeader ( /* BinFile pivotFile, Document documen
 extern void         TtaReadPivotHeader ( /* BinFile pivotFile, Document document, char *nextChar */ );
 extern void         TtaWriteLanguageTable ( /* BinFile pivotFile, Document document */ );
 extern void         TtaReadLanguageTable ( /* BinFile pivotFile, Document document, char *nextChar */ );
-extern void         TtaWriteSchemaNames ( /* BinFile pivotFile, Document document */ );
-extern void         TtaReadSchemaNames ( /* BinFile pivotFile, Document document, char *nextChar */ );
+extern void         TtaWriteSchemaNames ( /* Document document, BinFile pivotFile, Document document */ );
+extern void         TtaReadSchemaNames ( /* BinFile pivotFile, Document document, char *nextChar, void (*withThisPSchema) (char *natSchema, char *presentSchema) */ );
 extern void         TtaReadAttribute ( /* BinFile pivotFile, Document document, boolean create, Attribute *attribute */ );
 extern void         TtaReadPRule ( /* BinFile pivotFile, Element element, Document document, boolean create, PRule *pRule */ );
 extern void         TtaReadTree ( /* BinFile pivotFile,  SSchema pSchema, Element element, Document document, char *byte, Element *elementRead */ );

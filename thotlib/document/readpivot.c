@@ -3098,13 +3098,14 @@ int                 rank;
    	schemas								
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                ReadSchemaNamesPiv (BinFile file, PtrDocument pDoc, char *tag, PtrSSchema pLoadedSS)
+void                ReadSchemaNamesPiv (BinFile file, PtrDocument pDoc, char *tag, PtrSSchema pLoadedSS, void (*withThisPSchema) (Document document, char *natSchema, char *presentSchema))
 #else  /* __STDC__ */
-void                ReadSchemaNamesPiv (file, pDoc, tag, pLoadedSS)
+void                ReadSchemaNamesPiv (file, pDoc, tag, pLoadedSS, withThisPSchema)
 BinFile             file;
 PtrDocument         pDoc;
 char               *tag;
 PtrSSchema          pLoadedSS;
+void (*withThisPSchema) ();
 
 #endif /* __STDC__ */
 
@@ -3143,6 +3144,10 @@ PtrSSchema          pLoadedSS;
 
 	if (!TtaReadByte (file, tag))
 	   PivotError (file);
+        if (withThisPSchema != NULL)
+           (*withThisPSchema) ((Document) IdentDocument (pDoc),
+                               SSName,
+                               PSchemaName);
 	PutNatureInTable (pDoc, SSName, rank);
 	/* charge les schemas de structure et de presentation du document */
 	if (pDoc->DocSSchema == NULL)
@@ -3170,7 +3175,7 @@ PtrSSchema          pLoadedSS;
 	      /* structure charge' le nom du schema P associe' */
 	      strncpy (pDoc->DocSSchema->SsDefaultPSchema, PSchemaName, MAX_NAME_LENGTH);
      }
-   /* lit les noms des fileiers contenant les schemas de nature  */
+   /* lit les noms des fichiers contenant les schemas de nature  */
    /* dynamiques et charge ces schemas, sauf si on ne charge que */
    /* les elements exportables. */
    while ((*tag == (char) C_PIV_NATURE || *tag == (char) C_PIV_SSCHEMA_EXT)
@@ -3211,6 +3216,10 @@ PtrSSchema          pLoadedSS;
 	pSS = NULL;
 	if (!error)
 	  {
+             if (withThisPSchema != NULL)
+                (*withThisPSchema) ((Document) IdentDocument (pDoc),
+                                    SSName,
+                                    PSchemaName);
 	     PutNatureInTable (pDoc, SSName, rank);
 	     if (pDoc->DocNatureSSchema[rank - 1] == NULL)
 		if (ExtensionSch)
@@ -3448,7 +3457,7 @@ boolean		    removeExclusions
      }
    if (!error)
       /* lit les noms des schemas de structure et de presentation */
-      ReadSchemaNamesPiv (file, pDoc, &tag, pLoadedSS);
+      ReadSchemaNamesPiv (file, pDoc, &tag, pLoadedSS, NULL);
    if (withEvent && pDoc->DocSSchema != NULL && !error)
      {
 	notifyDoc.event = TteDocOpen;

@@ -371,6 +371,7 @@ boolean             pre;
 	    case TteDocClose:
 	    case TteDocSave:
 	    case TteDocExport:
+	    case TteDocNatPresent:
 	    case TteViewOpen:
 	    case TteViewClose:
 	    case TteViewResize:

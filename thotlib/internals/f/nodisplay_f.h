@@ -18,6 +18,7 @@ extern void LibAbbEl ( PtrElement pEl );
 extern void ConfigTranslateSSchema ( PtrSSchema pSS );
 extern PtrPRule GlobalSearchRulepEl ( PtrElement pEl,
                                       PtrPSchema * pSPR,
+                                      PtrSSchema * pSSR,
                                       int NumPres,
                                       PtrPSchema pSchP,
                                       int Vue,
@@ -45,6 +46,7 @@ extern void LibAbbEl (/* PtrElement pEl */);
 extern void ConfigTranslateSSchema (/* PtrSSchema pSS */);
 extern PtrPRule GlobalSearchRulepEl (/* PtrElement pEl,
                                         PtrPSchema * pSPR,
+                                        PtrSSchema * pSSR,
                                         int NumPres,
                                         PtrPSchema pSchP,
                                         int Vue,

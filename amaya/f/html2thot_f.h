@@ -12,8 +12,8 @@ extern int MapGI ( char *gi,
                    SSchema *schema );
 extern void GIType ( char *gi,
                      ElementType *elType );
-extern char *GITagName ( Element elem );
 extern char *GITagNameByType ( ElementType elType );
+extern char *GITagName ( Element elem );
 extern int MapThotAttr ( char *Attr,
                          char *tag );
 extern int MapAttrValue ( int ThotAtt,
@@ -25,11 +25,6 @@ extern boolean IsCharacterLevelElement ( Element el );
 extern void OnlyOneOptionSelected ( Element el,
                                     Document doc,
                                     boolean parsing );
-extern boolean ElementContainsText ( Element el );
-extern void SetFontslantAttr ( Element el,
-                               Document doc );
-extern void SetAddspaceAttr ( Element el,
-                              Document doc );
 extern void SetAttrIntItemStyle ( Element el,
                                   Document doc );
 extern void CreateAttrWidthPercentPxl ( char *buffer,
@@ -60,8 +55,8 @@ extern int MapGI (/* char *gi,
                      SSchema *schema */);
 extern void GIType (/* char *gi,
                        ElementType *elType */);
-extern char *GITagName (/* Element elem */);
 extern char *GITagNameByType (/* ElementType elType */);
+extern char *GITagName (/* Element elem */);
 extern int MapThotAttr (/* char *Attr,
                            char *tag */);
 extern int MapAttrValue (/* int ThotAtt,
@@ -73,11 +68,6 @@ extern boolean IsCharacterLevelElement (/* Element el */);
 extern void OnlyOneOptionSelected (/* Element el,
                                       Document doc,
                                       boolean parsing */);
-extern boolean ElementContainsText (/* Element el */);
-extern void SetFontslantAttr (/* Element el,
-                                 Document doc */);
-extern void SetAddspaceAttr (/* Element el,
-                                Document doc */);
 extern void SetAttrIntItemStyle (/* Element el,
                                     Document doc */);
 extern void CreateAttrWidthPercentPxl (/* char *buffer,

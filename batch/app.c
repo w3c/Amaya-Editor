@@ -142,6 +142,7 @@ char               *RegisteredAppEvents[] =
    "DocClose",
    "DocSave",
    "DocExport",
+   "DocNatPresent",
    "ViewOpen",
    "ViewClose",
    "ViewResize",

@@ -312,13 +312,14 @@ Document            document;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-void                TtaReadSchemaNames (BinFile pivotFile, Document document, char *nextChar)
+void                TtaReadSchemaNames (BinFile pivotFile, Document document, char *nextChar, void (*withThisPSchema) (char *natSchema, char *presentSchema))
 
 #else  /* __STDC__ */
-void                TtaReadSchemaNames (pivotFile, document, nextChar)
+void                TtaReadSchemaNames (pivotFile, document, nextChar, withThisPSchema)
 BinFile             pivotFile;
 Document            document;
 char               *nextChar;
+void (*withThisPSchema) ();
 
 #endif /* __STDC__ */
 
@@ -331,7 +332,7 @@ char               *nextChar;
       TtaError (ERR_invalid_document_parameter);
    else
       /* parametre document correct */
-      ReadSchemaNamesPiv (pivotFile, LoadedDocument[document - 1], nextChar, NULL);
+      ReadSchemaNamesPiv (pivotFile, LoadedDocument[document - 1], nextChar, NULL, withThisPSchema);
 }
 
 /*----------------------------------------------------------------------

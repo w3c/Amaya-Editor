@@ -19,8 +19,6 @@ extern void SectionNumbering ( Document document,
                                View view );
 extern void MakeBook ( Document document,
                        View view );
-extern void RealTimeHTML ( Document document,
-                           View view );
 
 #else /* __STDC__ */
 
@@ -37,8 +35,6 @@ extern void SectionNumbering (/* Document document,
                                  View view */);
 extern void MakeBook (/* Document document,
                          View view */);
-extern void RealTimeHTML (/* Document document,
-                             View view */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

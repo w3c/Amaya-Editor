@@ -710,12 +710,13 @@ PtrElement          pRoot;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-static void          ChangeDocumentPSchema (PtrDocument pDoc, Name newPSchemaName)
+static void          ChangeDocumentPSchema (PtrDocument pDoc, Name newPSchemaName, boolean withEvent)
 
 #else  /* __STDC__ */
-static void          ChangeDocumentPSchema (pDoc, newPSchemaName)
+static void          ChangeDocumentPSchema (pDoc, newPSchemaName, withEvent)
 PtrDocument         pDoc;
 Name                newPSchemaName;
+boolean             withEvent;
 
 #endif /* __STDC__ */
 
@@ -776,6 +777,18 @@ Name                newPSchemaName;
 		}
 	/* ouvre les vues definies pour le nouveau schema du document */
 	DisplayDoc (pDoc);
+
+        if (withEvent) {
+NotifyNaturePresent notifyDoc;
+
+           notifyDoc.event = TteDocNatPresent;
+           notifyDoc.document = (Document) IdentDocument (pDoc);
+           notifyDoc.nature = (SSchema) pDoc->DocSSchema;
+
+           CallEventType ((NotifyEvent *) & notifyDoc, FALSE);
+
+        };
+
      }
    strncpy (pDoc->DocSchemasPath, SchemaPath, MAX_PATH);
    /* restaure le path courant des schemas */
@@ -925,12 +938,13 @@ PtrSSchema          pNatSSchema;
    le schema de structure est pointe' par pNatSSchema.             
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         ChangeNaturePSchema (PtrDocument pDoc, PtrSSchema pNatSSchema, Name newPSchemaName)
+static void         ChangeNaturePSchema (PtrDocument pDoc, PtrSSchema pNatSSchema, Name newPSchemaName, boolean withEvent)
 #else  /* __STDC__ */
-static void         ChangeNaturePSchema (pDoc, pNatSSchema, newPSchemaName)
+static void         ChangeNaturePSchema (pDoc, pNatSSchema, newPSchemaName, withEvent)
 PtrDocument         pDoc;
 PtrSSchema          pNatSSchema;
 Name                newPSchemaName;
+boolean             withEvent;
 
 #endif /* __STDC__ */
 
@@ -982,10 +996,23 @@ Name                newPSchemaName;
 		   }
 	/* reaffiche les elements de la nature qui change de presentation */
 	RedisplayNature (pDoc, pNatSSchema);
+
+        if (withEvent) {
+NotifyNaturePresent notifyDoc;
+
+           notifyDoc.event = TteDocNatPresent;
+           notifyDoc.document = (Document) IdentDocument (pDoc);
+           notifyDoc.nature = (SSchema) pNatSSchema;
+
+           CallEventType ((NotifyEvent *) & notifyDoc, FALSE);
+
+        };
+
      }
    strncpy (pDoc->DocSchemasPath, SchemaPath, MAX_PATH);
    /* restaure le path courant des schemas */
    strncpy (SchemaPath, schemaPath, MAX_PATH);
+
 }
 
 /***------------------------------------------------------------
@@ -1035,7 +1062,8 @@ char               *newPresentation;
       pDoc = LoadedDocument[document - 1];
       ChangeNaturePSchema (pDoc,
                            (PtrSSchema) natureSSchema,
-                           newPresentation);
+                           newPresentation,
+                           FALSE);
     }
 
 }
@@ -1090,11 +1118,13 @@ int                 val;
                    ConfigGetPSchemaName (val, newpres);
                    if (nat == 0)
                       /* c'est le schema de presentation du doocument */
-                      ChangeDocumentPSchema (pDocChangeSchPresent, newpres);
+                      ChangeDocumentPSchema (pDocChangeSchPresent, newpres, TRUE);
                    else
                       /* c'est une nature dans le document */
                       ChangeNaturePSchema (pDocChangeSchPresent,
-                                      TableNaturesSchPresent[nat], newpres);
+                                           TableNaturesSchPresent[nat],
+                                           newpres,
+                                           TRUE);
                 }
            }
 }

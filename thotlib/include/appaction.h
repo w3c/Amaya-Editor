@@ -18,6 +18,7 @@
 #define _ACTION_H_
 
 #include "document.h"
+#include "pschema.h"
 #include "tree.h"
 #include "view.h"
 #include "attribute.h"
@@ -29,7 +30,7 @@
 /* La constante NUMBER_OF_APP_EVENTS indique le nombre de valeurs de */
 /* l'enum APPevent */
 
-#define NUMBER_OF_APP_EVENTS 44
+#define NUMBER_OF_APP_EVENTS 45
 typedef enum
   {
      TteAttrMenu,
@@ -69,6 +70,7 @@ typedef enum
      TteDocClose,
      TteDocSave,
      TteDocExport,
+     TteDocNatPresent,
      TteViewOpen,
      TteViewClose,
      TteViewResize,
@@ -174,6 +176,14 @@ typedef struct
   }
 NotifyPresentation;
 
+typedef struct
+  {
+     APPevent            event;
+     Document            document;
+     SSchema             nature;
+  }
+NotifyNaturePresent;
+
 typedef union
   {
      NotifyEvent         notifyevent;
@@ -185,6 +195,7 @@ typedef union
      NotifyOnTarget      notifyontarget;
      NotifyOnValue       notifyonvalue;
      NotifyPresentation  notifypresentation;
+     NotifyNaturePresent notifynaturepresent;
   }
 Notify;
 

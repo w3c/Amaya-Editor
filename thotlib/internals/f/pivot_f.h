@@ -23,7 +23,9 @@ extern void TtaWriteSchemaNames ( BinFile pivotFile,
                                   Document document );
 extern void TtaReadSchemaNames ( BinFile pivotFile,
                                  Document document,
-                                 char *nextChar );
+                                 char *nextChar,
+                                 void (*withThisPSchema) (char *natSchema,
+                                 char *presentSchema) );
 extern void TtaReadAttribute ( BinFile pivotFile,
                                Element element,
                                Document document,
@@ -81,7 +83,9 @@ extern void TtaWriteSchemaNames (/* BinFile pivotFile,
                                     Document document */);
 extern void TtaReadSchemaNames (/* BinFile pivotFile,
                                    Document document,
-                                   char *nextChar */);
+                                   char *nextChar,
+                                   void (*withThisPSchema) (char *natSchema,
+                                   char *presentSchema) */);
 extern void TtaReadAttribute (/* BinFile pivotFile,
                                  Element element,
                                  Document document,

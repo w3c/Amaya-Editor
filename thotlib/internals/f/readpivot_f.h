@@ -52,7 +52,10 @@ extern void AssociatePairs ( PtrElement pRoot );
 extern void ReadSchemaNamesPiv ( BinFile file,
                                  PtrDocument pDoc,
                                  char *tag,
-                                 PtrSSchema pLoadedSS );
+                                 PtrSSchema pLoadedSS,
+                                 void (*withThisPSchema) (Document document,
+                                 char *natSchema,
+                                 char *presentSchema) );
 extern void ReadLanguageTablePiv ( BinFile file,
                                    PtrDocument pDoc,
                                    char *tag );
@@ -117,7 +120,10 @@ extern void AssociatePairs (/* PtrElement pRoot */);
 extern void ReadSchemaNamesPiv (/* BinFile file,
                                    PtrDocument pDoc,
                                    char *tag,
-                                   PtrSSchema pLoadedSS */);
+                                   PtrSSchema pLoadedSS,
+                                   void (*withThisPSchema) (Document document,
+                                   char *natSchema,
+                                   char *presentSchema) */);
 extern void ReadLanguageTablePiv (/* BinFile file,
                                      PtrDocument pDoc,
                                      char *tag */);

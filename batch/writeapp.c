@@ -535,6 +535,11 @@ char               *fname;
 			 fprintf (actionFile, "NotifyEvent *event)\n");
 			 strcat (s, "event)\n     NotifyEvent *event;\n");
 			 break;
+		      case TteDocNatPresent:
+			 fprintf (AppFile, "NotifyNaturePresent *event);\n");
+			 fprintf (actionFile, "NotifyNaturePresent *event)\n");
+			 strcat (s, "event)\n     NotifyNaturePresent *event;\n");
+			 break;
 		      default:
 			 break;
 		   }
@@ -631,6 +636,9 @@ char               *fname;
 		      case TteInit:
 		      case TteExit:
 			 fprintf (AppFile, "/* NotifyEvent *event */);\n");
+			 break;
+		      case TteDocNatPresent:
+			 fprintf (AppFile, "/* NotifyNaturePresent *event */);\n");
 			 break;
 		      default:
 			 break;
