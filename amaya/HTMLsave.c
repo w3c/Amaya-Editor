@@ -1851,9 +1851,11 @@ void Synchronize (Document doc, View view)
        otherDoc = xmlDoc;
        if (saveBefore)
 	 {
+#ifdef IV
 	   TtaSetDisplayMode (doc, NoComputedDisplay);
 	   /* save the current selection */
 	   GetCurrentLine (doc, &line, &index);
+#endif /* IV */
 	   /* save the current state of the document into the temporary file */
 	   tempdoc = GetLocalPath (xmlDoc, DocumentURLs[xmlDoc]);
 	   TtaExportDocumentWithNewLineNumbers (doc, tempdoc, "TextFileT");
