@@ -1,11 +1,14 @@
-	{ Structure Schema de structure for MathML.
+	{ Thot Structure Schema for MathML
 
-	  I. Vatton			June 1997	}
+	  I. Vatton		 June 1997	}
 
 
 STRUCTURE MathML;
 
 DEFPRES MathMLP;
+
+CONST
+   C_Empty = ' ';
 
 STRUCT
 
@@ -14,7 +17,7 @@ STRUCT
    MROW = LIST OF (Construct);
 
    Construct = CASE OF
-		  MTEXT = TEXT;
+		  MTEXT = TEXT (ATTR entity = yes_, no_);
 		  MROW;
 		  MROOT = BEGIN
 			RootBase = Construct;
@@ -77,11 +80,15 @@ STRUCT
 			END;
 		  MN = TEXT;
 		  MI (ATTR fontslant = plain, italic) = TEXT;
-		  MO (ATTR addspace = nospace, spacebefore, spaceafter, both;
-		           entity = TEXT) =
+		  MO (ATTR addspace = nospace, spacebefore, spaceafter, both) =
 			TEXT;
 		  MS = TEXT;
 		  MF = SYMBOL;
+		  SEP = CONSTANT C_Empty;
+		  MSPACE = CONSTANT C_Empty;
+		  MSTYLE = LIST OF (Construct);
+		  MERROR = LIST OF (Construct);
+		  MPHANTOM = LIST OF (Construct);
 		  END;
 
 EXCEPT
@@ -105,6 +112,7 @@ EXCEPT
    MSuperscript:	Hidden, NoCut;
    PrescriptPairs:	Hidden;
    PrescriptPair:	Hidden;
+   C_Empty:		Hidden, NoSelect;
 
    addspace:	  Invisible;
    entity:	  Invisible;

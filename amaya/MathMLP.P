@@ -4,10 +4,11 @@
 
 
 PRESENTATION MathML;
+
 VIEWS
    Formatted_view, Math_Structure_view;
 
-#define OPERATOR_SPACE 0.2
+#define OPERATOR_SPACE 0.27
 #define ROOT_OFFSET 0.6
 #define STRUCT_INDENT 1.5
 #define TAG_FONTSIZE 10 pt
@@ -200,8 +201,8 @@ BOXES
 		END;
 	END;
 
- MF_S: BEGIN
-	Content: Text 'MF';
+ MN_S: BEGIN
+	Content: Text 'MN';
 	Visibility: 0;
 	IN Math_Structure_view BEGIN
 		VertPos: Top = Enclosing . Top;
@@ -239,8 +240,8 @@ BOXES
 		END;
 	END;
 
- MN_S: BEGIN
-	Content: Text 'MN';
+ MS_S: BEGIN
+	Content: Text 'MS';
 	Visibility: 0;
 	IN Math_Structure_view BEGIN
 		VertPos: Top = Enclosing . Top;
@@ -252,8 +253,8 @@ BOXES
 		END;
 	END;
 
- MS_S: BEGIN
-	Content: Text 'MS';
+ MF_S: BEGIN
+	Content: Text 'MF';
 	Visibility: 0;
 	IN Math_Structure_view BEGIN
 		VertPos: Top = Enclosing . Top;
@@ -270,6 +271,65 @@ BOXES
 	Visibility: 0;
 	IN Math_Structure_view BEGIN
 		VertPos: Top = Enclosing . Top;
+		Size: TAG_FONTSIZE;
+		Font: TAG_Font;
+		Style: TAG_Style;
+		Visibility: TAG_Visibility;  Foreground: TAG_Color;
+		END;
+	END;
+
+ SEP_S: BEGIN
+	Content: Text 'SEP';
+	Visibility: 0;
+	IN Math_Structure_view BEGIN
+		VertPos: Top = Enclosing . Top;
+		Width: 1.5;
+		Size: TAG_FONTSIZE;
+		Font: TAG_Font;
+		Style: TAG_Style;
+		Visibility: TAG_Visibility;  Foreground: TAG_Color;
+		END;
+	END;
+
+ MSPACE_S: BEGIN
+	Content: Text 'MSPACE';
+	Visibility: 0;
+	IN Math_Structure_view BEGIN
+		VertPos: Top = Enclosing . Top;
+		Width: 1.5;
+		Size: TAG_FONTSIZE;
+		Font: TAG_Font;
+		Style: TAG_Style;
+		Visibility: TAG_Visibility;  Foreground: TAG_Color;
+		END;
+	END;
+
+ MSTYLE_S: BEGIN
+	Content: Text 'MSTYLE';
+	Visibility: 0;
+	IN Math_Structure_view BEGIN
+		Size: TAG_FONTSIZE;
+		Font: TAG_Font;
+		Style: TAG_Style;
+		Visibility: TAG_Visibility;  Foreground: TAG_Color;
+		END;
+	END;
+
+ MERROR_S: BEGIN
+	Content: Text 'MERROR';
+	Visibility: 0;
+	IN Math_Structure_view BEGIN
+		Size: TAG_FONTSIZE;
+		Font: TAG_Font;
+		Style: TAG_Style;
+		Visibility: TAG_Visibility;  Foreground: TAG_Color;
+		END;
+	END;
+
+ MPHANTOM_S: BEGIN
+	Content: Text 'MPHANTOM';
+	Visibility: 0;
+	IN Math_Structure_view BEGIN
 		Size: TAG_FONTSIZE;
 		Font: TAG_Font;
 		Style: TAG_Style;
@@ -327,17 +387,16 @@ BOXES
 		Visibility: 0;
 	END;
 
- ATTR_entity: BEGIN
-	Visibility:0;
-	Content: (entity);
+ OpeningQuote: BEGIN
+ 	Content: Text '"';
 	IN Math_Structure_view
-		BEGIN
-		Visibility: Enclosing =;
-		Size: DOC_FONTSIZE;
-		Height: Enclosed . Height;
-		HorizPos: Left = Previous . Right + 0.5;
-		VertPos: HRef = Previous . HRef;
-		END;
+		Visibility: 0;
+	END;
+
+ ClosingQuote: BEGIN
+ 	Content: Text '"';
+	IN Math_Structure_view
+		Visibility: 0;
 	END;
 
  HR_Graph: BEGIN
@@ -805,6 +864,8 @@ RULES
    MS:
 	BEGIN
 	CreateFirst(MS_S);
+	CreateFirst (OpeningQuote);
+	CreateLast (ClosingQuote);
 	VertPos: HRef = Previous not MF . HRef;
 	IN Math_Structure_view BEGIN
 		Size: DOC_FONTSIZE;
@@ -823,6 +884,78 @@ RULES
 		Height: Enclosed . Height;
 		END;
 	END;
+
+   C_Empty:
+	IN Math_Structure_view
+		Visibility: 0;
+
+   SEP:
+	BEGIN
+	CreateFirst(SEP_S);
+	Visibility: 0;
+	IN Math_Structure_view BEGIN
+		Visibility: Enclosing =;
+		Size: DOC_FONTSIZE;
+		Font: Helvetica;
+		END;		
+	END;
+
+   MSPACE:
+	BEGIN
+	CreateFirst(MSPACE_S);
+	VertPos: HRef = Previous not MF . HRef;
+	IN Math_Structure_view BEGIN
+		Size: DOC_FONTSIZE;
+		Width: Enclosing . Width;
+		Height: Enclosed . Height;
+		END;
+	END;
+
+   MSTYLE:
+	BEGIN
+	CreateBefore(MSTYLE_S);
+	CreateWith(VerticalLine);
+        HorizRef: Enclosed . HRef;
+	VertPos: HRef = Previous . HRef;
+	IN Math_Structure_view BEGIN
+		Size: DOC_FONTSIZE;
+		Width: Enclosing . Width - STRUCT_INDENT;
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+		Font: Helvetica;
+		END;
+  	END;
+
+   MERROR:
+	BEGIN
+	CreateBefore(MERROR_S);
+	CreateWith(VerticalLine);
+	Foreground: Red;
+        HorizRef: Enclosed . HRef;
+	VertPos: HRef = Previous . HRef;
+	IN Math_Structure_view BEGIN
+		Foreground: Enclosing =;
+		Size: DOC_FONTSIZE;
+		Width: Enclosing . Width - STRUCT_INDENT;
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+		Font: Helvetica;
+		END;
+  	END;
+
+   MPHANTOM:
+	BEGIN
+	CreateBefore(MPHANTOM_S);
+	CreateWith(VerticalLine);
+	Foreground: White;	{****** should be Transparent ****}
+        HorizRef: Enclosed . HRef;
+	VertPos: HRef = Previous . HRef;
+	IN Math_Structure_view BEGIN
+		Foreground: Enclosing =;
+		Size: DOC_FONTSIZE;
+		Width: Enclosing . Width - STRUCT_INDENT;
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+		Font: Helvetica;
+		END;
+  	END;
 
    SYMBOL_UNIT:
 	BEGIN
@@ -890,11 +1023,9 @@ ATTRIBUTES
 
   entity:
 	BEGIN
-	CreateFirst (ATTR_entity);
-	END;
-
-  entity (TEXT_UNIT):
+	Visibility: 0;
 	IN Math_Structure_view
-	    Visibility: 0;
+		Visibility: Enclosing =;
+	END;
 
 END

@@ -35,6 +35,10 @@ RULES
 	indent -2 after;
 	create '</mroot>\12' after;
   	end;
+   RootBase:
+	if empty create '<none/>\12';
+   Index:
+	if empty create '<none/>\12';
 
    MSQRT :
         begin
@@ -55,6 +59,11 @@ RULES
 	indent -2 after;
 	create '</mfrac>\12' after;
 	end;
+   Numerator:
+	if empty create '<none/>\12';
+   Denominator:
+	if empty create '<none/>\12';
+
 
    MSUBSUP :
 	begin
@@ -65,6 +74,12 @@ RULES
 	indent -2 after;
 	create '</msubsup>\12' after;
 	end;
+   Base:
+	if empty create '<none/>\12';
+   Subscript:
+	if empty create '<none/>\12';
+   Superscript:
+	if empty create '<none/>\12';
 
    MSUB :
 	begin
@@ -95,6 +110,10 @@ RULES
 	indent -2 after;
 	create '</munder>\12' after;
 	end;
+   UnderOverBase:
+	if empty create '<none/>\12';
+   Underscript:
+	if empty create '<none/>\12';
 
    MOVER :
 	begin
@@ -105,6 +124,8 @@ RULES
 	indent -2 after;
 	create '</mover>\12' after;
 	end;
+   Overscript:
+	if empty create '<none/>\12';
 
    MUNDEROVER :
 	begin
@@ -125,6 +146,9 @@ RULES
 	indent -2 after;
 	create '</mmultiscripts>\12' after;
 	end;
+   MultiscriptBase:
+	if empty create '<none/>\12';
+   
    Construct :
 	begin
 	if immediately within MSubscript
@@ -148,6 +172,14 @@ RULES
 	create '</mf>\12' after;
 	end;
 
+   MN :
+	begin
+	create '<mn';
+	create Attributes;
+	create '>';
+	create '</mn>\12' after;
+	end;
+
    MI :
 	begin
 	create '<mi';
@@ -162,14 +194,6 @@ RULES
 	create Attributes;
 	create '>';
 	create '</mo>\12' after;
-	end;
-
-   MN :
-	begin
-	create '<mn';
-	create Attributes;
-	create '>';
-	create '</mn>\12' after;
 	end;
 
    MS :
@@ -188,6 +212,44 @@ RULES
 	create '</mtext>\12' after;
 	end;
 
+   C_Empty:
+	remove;
+
+   SEP:
+	create '<sep/>\12';
+
+   MSPACE:
+	create '<mspace/>\12';
+
+   MSTYLE:
+	begin
+	create '<mstyle';
+	create Attributes;
+	create tagend;
+	indent +2;
+	indent -2 after;
+	create '</mstyle>\12' after;
+	end;
+
+   MERROR:
+	begin
+	create '<merror';
+	create Attributes;
+	create tagend;
+	indent +2;
+	indent -2 after;
+	create '</merror>\12' after;
+	end;
+
+   MPHANTOM:
+	begin
+	create '<mphantom';
+	create Attributes;
+	create tagend;
+	indent +2;
+	indent -2 after;
+	create '</mphantom>\12' after;
+	end;
 
    TEXT_UNIT :
 	begin
@@ -207,7 +269,9 @@ RULES
 ATTRIBUTES
 
    entity:
-	create entity;
+	begin
+	notranslation;	{ do not translate & into &amp; }
+	end;
 
 #include "Text_SGML.inc"
 #include "greek.sgml"

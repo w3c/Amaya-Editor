@@ -195,7 +195,7 @@ typedef struct _GIMapping
   {				/* mapping of a HTML element */
      GI                  htmlGI;	/* name of the HTML element */
      char                htmlContents;	/* info about the contents of the HTML element:
-					   'E'=empty,  space=any contents */
+					   'E'=empty,  space=some contents */
      int                 ThotType;	/* type of the Thot element or attribute */
      PtrClosedElement    firstClosedElem;	/* first element closed by the start
 						   tag htmlGI */
@@ -372,6 +372,7 @@ MathEntity        MathEntityTable[] =
 static GIMapping    MathMLGIMappingTable[] =
 {
    /* This table MUST be in alphabetical order */
+   {"MERROR", SPACE, MathML_EL_MERROR, NULL},
    {"MF", SPACE, MathML_EL_MF, NULL},
    {"MFRAC", SPACE, MathML_EL_MFRAC, NULL},
    {"MI", SPACE, MathML_EL_MI, NULL},
@@ -379,11 +380,14 @@ static GIMapping    MathMLGIMappingTable[] =
    {"MN", SPACE, MathML_EL_MN, NULL},
    {"MO", SPACE, MathML_EL_MO, NULL},
    {"MOVER", SPACE, MathML_EL_MOVER, NULL},
+   {"MPHANTOM", SPACE, MathML_EL_MPHANTOM, NULL},
    {"MPRESCRIPTS", SPACE, MathML_EL_PrescriptPairs, NULL},
    {"MROOT", SPACE, MathML_EL_MROOT, NULL},
    {"MROW", SPACE, MathML_EL_MROW, NULL},
    {"MS", SPACE, MathML_EL_MS, NULL},
+   {"MSPACE", 'E', MathML_EL_MSPACE, NULL},
    {"MSQRT", SPACE, MathML_EL_MSQRT, NULL},
+   {"MSTYLE", SPACE, MathML_EL_MSTYLE, NULL},
    {"MSUB", SPACE, MathML_EL_MSUB, NULL},
    {"MSUBSUP", SPACE, MathML_EL_MSUBSUP, NULL},
    {"MSUP", SPACE, MathML_EL_MSUP, NULL},
@@ -391,6 +395,7 @@ static GIMapping    MathMLGIMappingTable[] =
    {"MUNDER", SPACE, MathML_EL_MUNDER, NULL},
    {"MUNDEROVER", SPACE, MathML_EL_MUNDEROVER, NULL},
    {"NONE", SPACE, MathML_EL_Construct, NULL},
+   {"SEP", 'E', MathML_EL_SEP, NULL},
    {"", SPACE, 0, NULL}	/* Last entry. Mandatory */
 };
 
@@ -428,9 +433,6 @@ static GIMapping    HTMLGIMappingTable[] =
    {"DL", SPACE, HTML_EL_Definition_List, NULL},
    {"DT", SPACE, HTML_EL_Term, NULL},
    {"EM", SPACE, HTML_EL_Emphasis, NULL},
-#ifdef R_HTML
-   {"ENTITY", 'E', HTML_EL_Entity, NULL},
-#endif
    {"FONT", SPACE, HTML_EL_Font_, NULL},
    {"FORM", SPACE, HTML_EL_Form, NULL},
    {"H1", SPACE, HTML_EL_H1, NULL},
@@ -691,9 +693,6 @@ static AttributeMapping AttributeMappingTable[] =
    {"MULTIPLE", "", 'A', HTML_ATTR_Multiple},
    {"N", "", 'C', 0},
    {"NAME", "APPLET", 'A', HTML_ATTR_applet_name},
-#ifdef R_HTML
-   {"NAME", "ENTITY", 'A', HTML_ATTR_entity_name},
-#endif
    {"NAME", "META", 'A', HTML_ATTR_meta_name},
    {"NAME", "PARAM", 'A', HTML_ATTR_Param_name},
    {"NAME", "", 'A', HTML_ATTR_NAME},
@@ -1859,13 +1858,13 @@ char	alphabet;
 }
 
 /*----------------------------------------------------------------------
-  ElementContainsText
-  returns TRUE if element el contains some text.
+  ElementNeedsPlaceholder
+  returns TRUE if element el needs a sibling placeholder.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean      ElementContainsText (Element el)
+boolean      ElementNeedsPlaceholder (Element el)
 #else
-boolean      ElementContainsText (el)
+boolean      ElementNeedsPlaceholder (el)
 Element el;
  
 #endif
@@ -1874,15 +1873,16 @@ Element el;
  
   elType = TtaGetElementType (el);
   if (elType.ElTypeNum == MathML_EL_Construct ||
+      elType.ElTypeNum == MathML_EL_SEP ||
       elType.ElTypeNum == MathML_EL_TEXT_UNIT ||
       elType.ElTypeNum == MathML_EL_MI  ||
       elType.ElTypeNum == MathML_EL_MO ||
       elType.ElTypeNum == MathML_EL_MN ||
       elType.ElTypeNum == MathML_EL_MS ||
       elType.ElTypeNum == MathML_EL_MTEXT)
-     return TRUE;
-  else
      return FALSE;
+  else
+     return TRUE;
 }
  
 /*----------------------------------------------------------------------
@@ -1906,7 +1906,7 @@ static void	CreatePlaceholders (el, doc)
    sibling = el;
    while (sibling != NULL)
       {
-      if (ElementContainsText (sibling))
+      if (!ElementNeedsPlaceholder (sibling))
 	 create = FALSE;
       else
 	 {
@@ -1946,8 +1946,10 @@ static void	CreatePlaceholders (el, doc)
    if (prev != NULL && create)
       {
 	elType = TtaGetElementType (prev);
-	/* don't insert a placeholder after the last element if it's a MF */
-	if (elType.ElTypeNum == MathML_EL_MF)
+	/* don't insert a placeholder after the last element if it's a MF
+	   or a SEP */
+	if (elType.ElTypeNum == MathML_EL_MF ||
+	    elType.ElTypeNum == MathML_EL_SEP)
 	   create = FALSE;
 	else if (elType.ElTypeNum == MathML_EL_MROW)
 	   /* the last element is a MROW */
@@ -2930,8 +2932,34 @@ Element el;
 #ifdef MATHML
 
 /*----------------------------------------------------------------------
+  NextNotSep
+  Return the next sibling of element el that is not a SEP element
+  Return el itself if it's not a SEP
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void	NextNotSep (Element* el, Element* prev)
+#else
+static void	NextNotSep (el, prev)
+   Element	*el;
+#endif
+{
+   ElementType	elType;
+
+   if (*el == NULL)
+      return;
+   elType = TtaGetElementType (*el);
+   while (*el != NULL && elType.ElTypeNum == MathML_EL_SEP)
+      {
+      *prev = *el;
+      TtaNextSibling (el);
+      if (*el != NULL)
+	elType = TtaGetElementType (*el);
+      }
+}
+
+/*----------------------------------------------------------------------
   CheckMathSubExpressions
-  Children of elements el should be of type type1, type2, and type3.
+  Children of element el should be of type type1, type2, and type3.
   Create an element of that type.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -2947,14 +2975,19 @@ static void	CheckMathSubExpressions (el, type1, type2, type3)
    Element	child, new, prev;
    ElementType	elType;
 
-   child = TtaGetFirstChild (el);
    elType.ElSSchema = MathMLSSchema;
+   child = TtaGetFirstChild (el);
+   prev = NULL;
+   NextNotSep (&child, &prev);
    if (child != NULL && type1 != 0)
       {
       TtaRemoveTree (child, theDocument);
       elType.ElTypeNum = type1;
       new = TtaNewElement (theDocument, elType);
-      TtaInsertFirstChild (&new, el, theDocument);
+      if (prev == NULL)
+         TtaInsertFirstChild (&new, el, theDocument);
+      else
+	 TtaInsertSibling (new, prev, FALSE, theDocument);
       TtaInsertFirstChild (&child, new, theDocument);
       CreatePlaceholders (child, theDocument);
       child = new;
@@ -2962,6 +2995,7 @@ static void	CheckMathSubExpressions (el, type1, type2, type3)
 	{
 	prev = child;
 	TtaNextSibling (&child);
+	NextNotSep (&child, &prev);
 	if (child != NULL)
 	  {
 	  TtaRemoveTree (child, theDocument);
@@ -2975,6 +3009,7 @@ static void	CheckMathSubExpressions (el, type1, type2, type3)
 	     child = new;
 	     prev = child;
 	     TtaNextSibling (&child);
+	     NextNotSep (&child, &prev);
 	     if (child != NULL)
 	        {
 	        TtaRemoveTree (child, theDocument);
@@ -4915,9 +4950,10 @@ char		    alphabet
 #endif
 {
    ElementType	 elType;
-   Element	 el;
+   Element	 elText;
    AttributeType attrType;
    Attribute	 attr;
+   Language	 lang;
    char		 buffer[MaxEntityLength+2];
 
    if (alphabet == 'L')
@@ -4934,31 +4970,30 @@ char		    alphabet
        ((int)c) == 160)		/* sticky space */
       /* null character or space */
       if (LgEntityName > 0)
-	/* this character comes from an entity */
-	/* if it's the content of an operator (MO element), associate an
-           entity attribute with the MO element, to keep the entity name */
+        /* this character comes from an entity */
+        /* create a text element containing the entity name with an
+           attribute entity */
 	{
-	if (StackLevel >= 1)
-	  if (ElementStack[StackLevel - 1] != NULL)
-	    {
-	    /* parent element */
-	    el = ElementStack[StackLevel - 1];
-	    elType = TtaGetElementType (el);
-	    if (elType.ElTypeNum == MathML_EL_MO &&
-		elType.ElSSchema == MathMLSSchema)
-	      /* the parent element is a MO */
-	      {
-	      attrType.AttrSSchema = MathMLSSchema;
-	      attrType.AttrTypeNum = MathML_ATTR_entity;
-              attr = TtaNewAttribute (attrType);
-              TtaAttachAttribute (el, attr, theDocument);
-	      buffer[0] = '&';
-	      strncpy (&buffer[1], EntityName, LgEntityName);
-	      buffer[LgEntityName+1] = ';';
-	      buffer[LgEntityName+2] = '\0';
-	      TtaSetAttributeText (attr, buffer, el, theDocument);
-	      }
-	    }
+	if (alphabet == 'L')
+	   TextToMath ('L');
+	buffer[0] = '&';
+	strncpy (&buffer[1], EntityName, LgEntityName);
+	buffer[LgEntityName+1] = ';';
+	buffer[LgEntityName+2] = '\0';
+	elType.ElTypeNum = MathML_EL_TEXT_UNIT;
+	elType.ElSSchema = MathMLSSchema;
+	elText = TtaNewElement (theDocument, elType);
+	InsertMathElement (&elText);
+	lastElementClosed = TRUE;
+	MergeText = FALSE;
+	lang = TtaGetLanguageIdFromAlphabet('L');
+	TtaSetTextContent (elText, buffer, lang, theDocument);
+	attrType.AttrSSchema = MathMLSSchema;
+	attrType.AttrTypeNum = MathML_ATTR_entity;
+        attr = TtaNewAttribute (attrType);
+        TtaAttachAttribute (elText, attr, theDocument);
+	TtaSetAttributeValue (attr, MathML_ATTR_entity_VAL_yes_, elText,
+			      theDocument);
 	}
 }
 

@@ -136,7 +136,7 @@ boolean		createConstruct;
 	TtaNextSibling (&sibling);
 	createConstruct = TRUE;
 	if (sibling != NULL)
-	if (ElementContainsText (sibling))
+	if (!ElementNeedsPlaceholder (sibling))
 	   createConstruct = FALSE;
 	if (createConstruct)
 	   {
