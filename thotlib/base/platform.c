@@ -58,7 +58,7 @@ char               *filename;
 #ifdef __CYGWIN32__
    filedes = open (filename, 0 + O_BINARY);
 #else
-   filedes = open (filename, 0);
+   filedes = open (filename, O_RDONLY);
 #endif
    if (filedes < 0)
       status = 0;

@@ -967,32 +967,24 @@ Attribute           attribute;
    length: actual length of the character string.
 
    ---------------------------------------------------------------------- */
-
 #ifdef __STDC__
 void                TtaGiveTextAttributeValue (Attribute attribute, char *buffer, int *length)
-
 #else  /* __STDC__ */
 void                TtaGiveTextAttributeValue (attribute, buffer, length)
 Attribute           attribute;
 char               *buffer;
 int                *length;
-
 #endif /* __STDC__ */
 
 {
 
-   UserErrorCode = 0;
-/**** supprimer ca :	*length = 0;	****/
-   *buffer = '\0';
-   if (((PtrAttribute) attribute)->AeAttrType != AtTextAttr)
-     {
-	TtaError (ERR_invalid_attribute_type);
-     }
-   else
-     {
-	CopyTextToString (((PtrAttribute) attribute)->AeAttrText, buffer,
-			  length);
-     }
+  UserErrorCode = 0;
+  /**** supprimer ca :	*length = 0;	****/
+  *buffer = '\0';
+  if (((PtrAttribute) attribute)->AeAttrType != AtTextAttr)
+    TtaError (ERR_invalid_attribute_type);
+  else
+    CopyTextToString (((PtrAttribute) attribute)->AeAttrText, buffer, length);
 }
 
 /* ----------------------------------------------------------------------

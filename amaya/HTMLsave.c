@@ -816,7 +816,7 @@ DBG(fprintf(stderr, "     changing to new BASE %s\n", imgbase);)
 		   buf = AmayaParseUrl (newURL, "", AMAYA_PARSE_ALL);
 		   if (buf)
 		     {
-		       AmayaSimplifyUrl (&buf);
+		       SimplifyUrl (&buf);
 		       TtaExtractName (buf, tempfile, tempname);
 		       strcat (tempfile, DIR_STR);
 

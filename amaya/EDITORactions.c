@@ -1189,7 +1189,7 @@ char               *shape;
    ElementType         elType;
    AttributeType       attrType;
    Attribute           attr, attrRef, attrShape;
-   char               *text, url[MAX_LENGTH];
+   char                url[MAX_LENGTH];
    int                 length, w, h;
    int                 firstchar, lastchar;
    DisplayMode         dispMode;
@@ -1218,19 +1218,13 @@ char               *shape;
 	if (attr != NULL)
 	  {
 	     /* Search the MAP element associated with IMG element */
-	     length = TtaGetTextAttributeLength (attr);
-	     length++;
-	     text = TtaGetMemory (length);
-	     TtaGiveTextAttributeValue (attr, text, &length);
-	     if (text[0] == '#')
-		map = SearchNAMEattribute (doc, &text[1], NULL);
-	     TtaFreeMemory (text);
+	     length = TtaGetTextAttributeLength (attr) + 1;
+	     TtaGiveTextAttributeValue (attr, url, &length);
+	     if (url[0] == '#')
+		map = SearchNAMEattribute (doc, &url[1], NULL);
 	  }
 	else
 	  {
-	     /* create the USEMAP attribute */
-	     attr = TtaNewAttribute (attrType);
-	     TtaAttachAttribute (image, attr, doc);
 	     /* create the MAP element */
 	     elType.ElTypeNum = HTML_EL_MAP;
 	     map = TtaNewElement (doc, elType);
@@ -1244,10 +1238,18 @@ char               *shape;
 	     while (elType.ElTypeNum != HTML_EL_BODY);
 	     TtaInsertSibling (map, el, FALSE, doc);
 	     CreateTargetAnchor (doc, map);
-	     text = TtaGetElementLabel (map);
-	     strcpy (url, "#");
-	     strcat (url, text);
+	     attrType.AttrTypeNum = HTML_ATTR_NAME;
+	     attr = TtaGetAttribute (map, attrType);
+
+	     /* create the USEMAP attribute */
+	     length = TtaGetTextAttributeLength (attr) + 1;
+	     url[0] = '#';
+	     TtaGiveTextAttributeValue (attr, &url[1], &length);
+	     attrType.AttrTypeNum = HTML_ATTR_USEMAP;
+	     attr = TtaNewAttribute (attrType);
+	     TtaAttachAttribute (image, attr, doc);
 	     TtaSetAttributeText (attr, url, image, doc);
+
 	     /* create the Ref_IMG attribute */
 	     attrType.AttrTypeNum = HTML_ATTR_Ref_IMG;
 	     attr = TtaNewAttribute (attrType);
@@ -1279,10 +1281,8 @@ char               *shape;
 	if (attr != NULL)
 	  {
 	     /* Search the IMAGE element associated with the MAP */
-	     length = 200;
-	     text = TtaGetMemory (length);
-	     TtaGiveReferenceAttributeValue (attr, &image, text, &length);
-	     TtaFreeMemory (text);
+	     length = MAX_LENGTH;
+	     TtaGiveReferenceAttributeValue (attr, &image, url, &length);
 	  }
      }
 

@@ -30,10 +30,10 @@ extern void ChopURL ( char *outputURL,
 extern char * AmayaParseUrl ( char *aName,
                               char *relatedName,
                               int wanted );
-extern void AmayaSimplifyUrl ( char ** url );
+extern void SimplifyUrl ( char ** url );
 extern boolean NormalizeFile ( char *src,
                                char *target );
-extern char *AmayaRelativeUrl ( char *aName,
+extern char *MakeRelativeUrl ( char *aName,
                                 char *relatedName );
 
 #else /* __STDC__ */
@@ -62,10 +62,10 @@ extern void ChopURL (/* char *outputURL,
 extern char * AmayaParseUrl (/* char *aName,
                                 char *relatedName,
                                 int wanted */);
-extern void AmayaSimplifyUrl (/* char ** url */);
+extern void SimplifyUrl (/* char ** url */);
 extern boolean NormalizeFile (/* char *src,
                                  char *target */);
-extern char *AmayaRelativeUrl (/* char *aName,
+extern char *MakeRelativeUrl (/* char *aName,
                                   char *relatedName */);
 
 #endif /* __STDC__ */

@@ -14,16 +14,20 @@
  *
  */
  
-/* Amaya includes  */
 #define THOT_EXPORT extern
 #include "amaya.h"
 
 #include "init_f.h"
 #include "AHTURLTools_f.h"
 
-/* Local definitions */
-
 #define MAX_PRINT_URL_LENGTH 50
+typedef struct _HTURI {
+    char * access;		/* Now known as "scheme" */
+    char * host;
+    char * absolute;
+    char * relative;
+    char * fragment;
+} HTURI;
 
 
 /*----------------------------------------------------------------------
@@ -104,7 +108,7 @@ char              **file;
    if (curr < url)
       goto finished;
 
-   /* search for the "/" indicating the host name start */
+   /* search for the DIR_STR indicating the host name start */
    while ((curr > url) && ((*curr != DIR_SEP) || (*(curr + 1) != DIR_SEP)))
       curr--;
 
@@ -132,7 +136,7 @@ char              **file;
    if (curr < url)
       goto finished;
 
-   if (*curr == ':')
+   if (*curr == PATH_SEP)
      {
 	*curr = EOS;
 	curr--;
@@ -471,8 +475,8 @@ char               *docName;
 		      AMAYA_PARSE_PUNCTUATION);
        if (ptr && !strcmp (ptr, newName))
 	 {
-	   /* it has this form, we complete it by adding a "/"  */
-	   strcat (newName, "/");
+	   /* it has this form, we complete it by adding a DIR_STR  */
+	   strcat (newName, DIR_STR);
 	 }
        if (ptr)
 	 TtaFreeMemory (ptr);
@@ -513,8 +517,8 @@ char               *docName;
 				                AMAYA_PARSE_PUNCTUATION);
 		   if (ptr && !strcmp (ptr, basename))
 		     {
-		     /* it has this form, we complete it by adding a "/"  */
-		     strcat (basename, "/");
+		     /* it has this form, we complete it by adding a DIR_STR  */
+		     strcat (basename, DIR_STR);
 		     length++;
 		     }
 		   if (ptr)
@@ -535,11 +539,11 @@ char               *docName;
 		 /* found the last DIR_SEP char, end the string there */
 		 basename[length + 1] = EOS;		   
 	       else
-		 /* search for the first ":" char */
+		 /* search for the first PATH_STR char */
 		 {
-		   for (length = 0; basename[length] != ':' && 
+		   for (length = 0; basename[length] != PATH_SEP && 
 			  basename[length] != EOS; length++);
-		   if (basename[length] == ':')
+		   if (basename[length] == PATH_SEP)
 		     /* found, so end the string there */
 		     basename[length + 1] = EOS;
 		   else
@@ -571,11 +575,11 @@ char               *docName;
 		 /* found the last DIR_SEP char, end the string there */
 		 basename[length + 1] = EOS;		   
 	       else
-		 /* search for the first ":" char */
+		 /* search for the first PATH_STR char */
 		 {
-		   for (length = 0; basename[length] != ':' && 
+		   for (length = 0; basename[length] != PATH_SEP && 
 			  basename[length] != EOS; length ++);
-		   if (basename[length] == ':')
+		   if (basename[length] == PATH_SEP)
 		     /* found, so end the string there */
 		     basename[length + 1] = EOS;
 		   else
@@ -595,7 +599,7 @@ char               *docName;
 
        if (ptr)
 	 {
-	   AmayaSimplifyUrl (&ptr);
+	   SimplifyUrl (&ptr);
 	   strcpy (newName, ptr);
 	   TtaFreeMemory (ptr);
 	 }
@@ -660,51 +664,10 @@ char               *path;
 
    TtaFreeMemory (basename_ptr1);
    TtaFreeMemory (basename_ptr2);
-
    return (result);
 }
 
 
-/*----------------------------------------------------------------------
-  AHTMakeRelativeURL                                                
-  converts url into a relative url to base_url.
-  If succesful, returns the new URL, otherwise, it returns NULL.
-  The caller has to free the new URL.
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-char           *AHTMakeRelativeName (char *url, char *base_url)
-#else  /* __STDC__ */
-char           *AHTMakeRelativeName (url, base_url)
-char            url;
-char            base_url;
-
-#endif /* __STDC__ */
-{
-  char        *base_ptr, *url_ptr;
-  char        *result;
-
-  /* verify if we are in the same host */
-  base_ptr = AmayaParseUrl (base_url, "", AMAYA_PARSE_ACCESS | AMAYA_PARSE_HOST | AMAYA_PARSE_PUNCTUATION);
-  url_ptr = AmayaParseUrl (url, "", AMAYA_PARSE_ACCESS | AMAYA_PARSE_HOST | AMAYA_PARSE_PUNCTUATION);
-  if (!strcmp (base_ptr, url_ptr))
-    {
-      TtaFreeMemory (base_ptr);
-      TtaFreeMemory (url_ptr);
-      
-      /* Normalize the URLs */
-      base_ptr = AmayaParseUrl (base_url, "", AMAYA_PARSE_ALL);
-      url_ptr = AmayaParseUrl (url, "", AMAYA_PARSE_ALL);
-      
-      /* Use libwww to make relative name */
-      result = AmayaRelativeUrl (url_ptr, base_ptr);
-      TtaFreeMemory (base_ptr);
-      TtaFreeMemory (url_ptr);
-    }
-  else
-    result = (char *) NULL;
-  
-  return (result);
-}
 /*----------------------------------------------------------------------
   HasKnownFileSuffix
   returns TRUE if path points to a file ending with a suffix.
@@ -716,14 +679,14 @@ boolean             HasKnownFileSuffix (path)
 char               *path;
 #endif /* __STDC__ */
 {
-   char                *root;
-   char                temppath[MAX_LENGTH];
-   char                suffix[MAX_LENGTH];
+   char            *root;
+   char             temppath[MAX_LENGTH];
+   char             suffix[MAX_LENGTH];
 
    if (!path || path[0] == EOS || path[strlen(path)] == DIR_SEP)
      return (FALSE);
 
-   root = AmayaParseUrl(path, (char *) NULL, AMAYA_PARSE_PATH | AMAYA_PARSE_PUNCTUATION);
+   root = AmayaParseUrl(path, "", AMAYA_PARSE_PATH | AMAYA_PARSE_PUNCTUATION);
 
    if (root) 
      {
@@ -792,9 +755,7 @@ char *inputURL;
 
   len = strlen (inputURL);
   if (len <= MAX_PRINT_URL_LENGTH) 
-    {
-      strcpy (outputURL, inputURL);
-    }
+    strcpy (outputURL, inputURL);
   else
     /* make a truncated urlName on the status window */
     {
@@ -805,26 +766,6 @@ char *inputURL;
     }
 }
 
-/************************************************************************
- *									*
- *  Local Adaptation of the libWWW Library/src/AmayaParseUrl.c code.	*
- *									*
- ************************************************************************/
-
-#define StringAllocCopy(dest,src) {					\
-    if (src == NULL) dest = NULL;					\
-    else {								\
-	if ((dest = (char *) TtaGetMemory(strlen(src) + 1)) == NULL)	\
-		exit(1);						\
-	else strcpy(dest, src); }}					\
-
-typedef struct _HTURI {
-    char * access;		/* Now known as "scheme" */
-    char * host;
-    char * absolute;
-    char * relative;
-    char * fragment;
-} HTURI;
 
 /*----------------------------------------------------------------------
    scan
@@ -862,7 +803,7 @@ HTURI               *parts;
     {
       if (*p==DIR_SEP || *p=='#' || *p=='?')
 	break;
-      if (*p==':')
+      if (*p==PATH_SEP)
 	{
 	  *p = 0;
 	  parts->access = after_access; /* Scheme has been specified */
@@ -934,98 +875,122 @@ int            wanted;
 
 #endif /* __STDC__ */
 {
-    char * result = 0;
-    char * return_value = 0;
-    int len;
-    char * name = 0;
-    char * rel = 0;
-    char * p;
-    char * access;
-    HTURI given, related;
+  char      *return_value;
+  char       result[MAX_LENGTH];
+  char       name[MAX_LENGTH];
+  char       rel[MAX_LENGTH];
+  char      *p, *access;
+  HTURI      given, related;
+  int        len;
     
-    if (!relatedName)        /* HWL 23/8/94: dont dump due to NULL */
-        relatedName = "";
-    
-    /* Make working copies of input strings to cut up: */
-    len = strlen(aName)+strlen(relatedName)+10;
-    if ((result=(char *) TtaGetMemory(len)) == NULL) /* Lots of space: more than enough */
-	exit(1);
-    StringAllocCopy(name, aName);
-    StringAllocCopy(rel, relatedName);
-    
-    scan(name, &given);
-    scan(rel,  &related); 
-    result[0]=0;		/* Clear string  */
-    access = given.access ? given.access : related.access;
-    if (wanted & AMAYA_PARSE_ACCESS)
-        if (access) {
-	    strcat(result, access);
-	    if(wanted & AMAYA_PARSE_PUNCTUATION) strcat(result, ":");
+  /* Make working copies of input strings to cut up: */
+  return_value = NULL;
+  result[0] = 0;		/* Clear string  */
+  strcpy (name, aName);
+  if (relatedName != NULL)  
+    strcpy (rel, relatedName);
+  else
+    relatedName[0] = EOS;
+  
+  scan (name, &given);
+  scan (rel,  &related); 
+  access = given.access ? given.access : related.access;
+  if (wanted & AMAYA_PARSE_ACCESS)
+    if (access)
+      {
+	strcat (result, access);
+	if(wanted & AMAYA_PARSE_PUNCTUATION)
+	  strcat (result, PATH_STR);
+      }
+  
+  if (given.access && related.access)
+    /* If different, inherit nothing. */
+    if (strcmp (given.access, related.access) != 0)
+      {
+	related.host = 0;
+	related.absolute = 0;
+	related.relative = 0;
+	related.fragment = 0;
+      }
+  
+  if (wanted & AMAYA_PARSE_HOST)
+    if(given.host || related.host)
+      {
+	if(wanted & AMAYA_PARSE_PUNCTUATION)
+	  strcat (result, "//");
+	strcat (result, given.host ? given.host : related.host);
+      }
+  
+  if (given.host && related.host)
+    /* If different hosts, inherit no path. */
+    if (strcmp(given.host, related.host) != 0)
+      {
+	related.absolute = 0;
+	related.relative = 0;
+	related.fragment = 0;
+      }
+  
+  if (wanted & AMAYA_PARSE_PATH)
+    {
+      if (given.absolute)
+	{
+	  /* All is given */
+	  if (wanted & AMAYA_PARSE_PUNCTUATION)
+	    strcat (result, DIR_STR);
+	  strcat (result, given.absolute);
 	}
-	
-    if (given.access && related.access)	/* If different, inherit nothing. */
-        if (strcmp(given.access, related.access)!=0) {
-	    related.host=0;
-	    related.absolute=0;
-	    related.relative=0;
-	    related.fragment=0;
-	}
-	
-    if (wanted & AMAYA_PARSE_HOST)
-        if(given.host || related.host) {
-	    if(wanted & AMAYA_PARSE_PUNCTUATION) strcat(result, "//");
-	    strcat(result, given.host ? given.host : related.host);
-	}
-	
-    if (given.host && related.host)  /* If different hosts, inherit no path. */
-        if (strcmp(given.host, related.host)!=0) {
-	    related.absolute=0;
-	    related.relative=0;
-	    related.fragment=0;
-	}
-	
-    if (wanted & AMAYA_PARSE_PATH) {
-        if(given.absolute) {				/* All is given */
-	    if(wanted & AMAYA_PARSE_PUNCTUATION) strcat(result, "/");
-	    strcat(result, given.absolute);
-	} else if(related.absolute) {	/* Adopt path not name */
-	    strcat(result, "/");
-	    strcat(result, related.absolute);
-	    if (given.relative) {
-		p = strchr(result, '?');	/* Search part? */
-		if (!p) p=result+strlen(result)-1;
-		for (; *p!=DIR_SEP; p--);	/* last / */
-		p[1]=0;					/* Remove filename */
-		strcat(result, given.relative);		/* Add given one */
-		/*AmayaSimplifyUrl (&result);*/
+      else if (related.absolute)
+	{
+	  /* Adopt path not name */
+	  strcat (result, DIR_STR);
+	  strcat (result, related.absolute);
+	  if (given.relative)
+	    {
+	      /* Search part? */
+	      p = strchr (result, '?');
+	      if (!p)
+		p=result+strlen(result)-1;
+	      for (; *p!=DIR_SEP; p--);	/* last / */
+	      /* Remove filename */
+	      p[1]=0;
+	      /* Add given one */
+	      strcat (result, given.relative);
+	      /*SimplifyUrl (&result);*/
 	    }
-	} else if(given.relative) {
-	    strcat(result, given.relative);		/* what we've got */
-	} else if(related.relative) {
-	    strcat(result, related.relative);
-	} else {  /* No inheritance */
-	    strcat(result, "/");
 	}
+      else if (given.relative)
+	/* what we've got */
+	strcat (result, given.relative);
+      else if (related.relative)
+	strcat (result, related.relative);
+      else
+	/* No inheritance */
+	strcat (result, DIR_STR);
     }
-		
-    if (wanted & AMAYA_PARSE_ANCHOR)
-	if(given.fragment || related.fragment) {
-	    if(given.absolute && given.fragment) {   /*Fixes for relURLs...*/
-		if(wanted & AMAYA_PARSE_PUNCTUATION) strcat(result, "#");
-		strcat(result, given.fragment); 
-	    } else if (!(given.absolute) && !(given.fragment)) {
-		strcat(result, "");
-	    } else {
-		if(wanted & AMAYA_PARSE_PUNCTUATION) strcat(result, "#");
-		strcat(result, given.fragment ? given.fragment : related.fragment); 
-	    }
-	}
-    TtaFreeMemory(rel);
-    TtaFreeMemory(name);
-    
-    StringAllocCopy(return_value, result);
-    TtaFreeMemory(result);
-    return return_value;		/* exactly the right length */
+  
+  if (wanted & AMAYA_PARSE_ANCHOR)
+    if (given.fragment || related.fragment)
+      {
+	if (given.absolute && given.fragment)
+	  {
+	    /*Fixes for relURLs...*/
+	    if (wanted & AMAYA_PARSE_PUNCTUATION)
+	      strcat (result, "#");
+	    strcat (result, given.fragment); 
+	  }
+	else if (!(given.absolute) && !(given.fragment))
+	  strcat (result, "");
+	else
+	  {
+	    if (wanted & AMAYA_PARSE_PUNCTUATION)
+	      strcat (result, "#");
+	    strcat (result, given.fragment ? given.fragment : related.fragment); 
+	  }
+      }
+  len = strlen (result);
+  if ((return_value = (char *) TtaGetMemory (len + 1)) != NULL)
+    strcpy (return_value, result);
+  return (return_value);		/* exactly the right length */
 }
 
 /*----------------------------------------------------------------------
@@ -1060,7 +1025,7 @@ char        *host;
 	path = host + strlen(host);
     if ((strptr = strchr(host, '@')) != NULL && strptr<path)	   /* UserId */
 	host = strptr;
-    if ((port = strchr(host, ':')) != NULL && port>path)      /* Port number */
+    if ((port = strchr(host, PATH_SEP)) != NULL && port>path)      /* Port number */
 	port = NULL;
 
     strptr = host;				    /* Convert to lower-case */
@@ -1117,9 +1082,9 @@ char        *host;
 
 
 /*----------------------------------------------------------------------
-  AmayaSimplifyUrl: simplify a URI
+  SimplifyUrl: simplify a URI
   A URI is allowed to contain the seqeunce xxx/../ which may be
-  replaced by "" , and the seqeunce "/./" which may be replaced by "/".
+  replaced by "" , and the seqeunce "/./" which may be replaced by DIR_STR.
   Simplification helps us recognize duplicate URIs. 
   
   Thus, 	/etc/junk/../fred 	becomes	/etc/fred
@@ -1142,9 +1107,9 @@ char        *host;
   Returns: A string which might be the old one or a new one.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void         AmayaSimplifyUrl (char ** url)
+void         SimplifyUrl (char ** url)
 #else  /* __STDC__ */
-void         AmayaSimplifyUrl (url)
+void         SimplifyUrl (url)
 char        **url;
 #endif /* __STDC__ */
 {
@@ -1292,13 +1257,13 @@ char               *target;
       strcpy (target, src);
 
    /* remove /../ and /./ */
-   AmayaSimplifyUrl (&target);
+   SimplifyUrl (&target);
    return (change);
 }
 
 
 /*----------------------------------------------------------------------
-  AmayaRelativeUrl: make Relative Name
+  MakeRelativeUrl: make relative name
   
   This function creates and returns a string which gives an expression of
   one address as related to another. Where there is no relation, an absolute
@@ -1314,59 +1279,74 @@ char               *target;
   	The caller is responsible for freeing the resulting name later.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-char            *AmayaRelativeUrl (char *aName, char *relatedName)
+char            *MakeRelativeUrl (char *aName, char *relatedName)
 #else  /* __STDC__ */
-char            *AmayaRelativeUrl (aName, relatedName)
+char            *MakeRelativeUrl (aName, relatedName)
 char            *aName;
 char            *relatedName;
 #endif  /* __STDC__ */
 {
-  char               *result = 0;
-  const char         *p = aName;
-  const char         *q = relatedName;
-  const char         *after_access = 0;
-  const char         *last_slash = 0;
-  int                 slashes = 0;
-    
-  for (;*p; p++, q++)
+  char      *return_value;
+  char       result[MAX_LENGTH];
+  char          *p;
+  char          *q = relatedName;
+  char          *after_access;
+  char          *last_slash = NULL;
+  int            slashes, levels, len;
+
+  if (aName == NULL || relatedName == NULL)
+    return (NULL);
+
+  slashes = 0;
+  after_access = NULL;
+  p = aName;
+  q = relatedName;
+  for (; *p && (*p == *q); p++, q++)
     {
       /* Find extent of match */
-      if (*p != *q)
-	break;
-      if (*p == ':')
-	after_access = p+1;
+      if (*p == PATH_SEP)
+	after_access = p + 1;
       if (*p == DIR_SEP)
 	{
+	  /* memorize the last slash position and count them */
 	  last_slash = p;
 	  slashes++;
 	}
     }
     
     /* q, p point to the first non-matching character or zero */
-    if (!after_access)
+    if ((slashes < 2 && after_access == NULL)
+	|| (slashes < 3 && after_access != NULL))
       {
-	/* Different access */
-        StringAllocCopy (result, aName);
-      }
-    else if (slashes < 3)
-      {
-	/* Different nodes */
-    	StringAllocCopy(result, after_access);
+	/* Local files or remote files whitout common path */
+	/* exactly the right length */
+	len = strlen (aName);
+	if ((return_value = (char *) TtaGetMemory (len + 1)) != NULL)
+	  strcpy (return_value, aName);
       }
     else
       {
 	/* Some path in common */
-        int levels= 0;
-        for (; *q && (*q!='#'); q++)
-	  if (*q==DIR_SEP)
-	    levels++;
-	result = (char  *) TtaGetMemory (3*levels + strlen(last_slash) + 1);
-	if (result == NULL)
-	  exit(1);
-	result[0] = 0;
-	for (;levels; levels--)
-	  strcat (result, "../");
-	strcat (result, last_slash+1);
+	if (slashes == 3 && strncmp (aName, "http:", 5) != 0)
+	  /* just the same server */
+	  strcpy (result, last_slash);
+	else
+	  {
+	    levels= 0; 
+	    for (; *q && (*q != '#'); q++)
+	      if (*q == DIR_SEP)
+		levels++;
+	    
+	    result[0] = 0;
+	    for (;levels; levels--)
+	      strcat (result, "../");
+	    strcat (result, last_slash+1);
+	  } 
+
+	/* exactly the right length */
+	len = strlen (result);
+	if ((return_value = (char *) TtaGetMemory (len + 1)) != NULL)
+	  strcpy (return_value, result);
     }
-    return result;
+  return (return_value);
 }

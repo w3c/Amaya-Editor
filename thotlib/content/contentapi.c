@@ -100,29 +100,19 @@ Document            document;
 
    UserErrorCode = 0;
    if (element == NULL)
-     {
 	TtaError (ERR_invalid_parameter);
-     }
    else if (!((PtrElement) element)->ElTerminal)
-     {
 	TtaError (ERR_invalid_element_type);
-     }
    else if (((PtrElement) element)->ElLeafType != LtText &&
 	    ((PtrElement) element)->ElLeafType != LtPicture)
-     {
 	TtaError (ERR_invalid_element_type);
-     }
    else
      {
 	/* verifies the parameter document */
 	if (document < 1 || document > MAX_DOCUMENTS)
-	  {
 	     TtaError (ERR_invalid_document_parameter);
-	  }
 	else if (LoadedDocument[document - 1] == NULL)
-	  {
 	     TtaError (ERR_invalid_document_parameter);
-	  }
 	else
 	   /* parameter document is correct */
 	  {
@@ -1448,24 +1438,14 @@ Language           *language;
 
    UserErrorCode = 0;
    if (element == NULL)
-     {
 	TtaError (ERR_invalid_parameter);
-     }
    else if (!((PtrElement) element)->ElTerminal)
-     {
 	TtaError (ERR_invalid_element_type);
-     }
    else if (((PtrElement) element)->ElLeafType != LtText &&
 	    ((PtrElement) element)->ElLeafType != LtPicture)
-     {
 	TtaError (ERR_invalid_element_type);
-     }
    else
      {
-	if (*length <= ((PtrElement) element)->ElTextLength)
-	  {
-	     TtaError (ERR_buffer_too_small);
-	  }
 	len = 0;
 	pBuf = ((PtrElement) element)->ElText;
 	ptr = buffer;

@@ -88,6 +88,10 @@ extern void UpdateBoxesCounter ( PtrElement pElBegin,
                                  int counter,
                                  PtrPSchema pSchP,
                                  PtrSSchema pSS );
+extern boolean ElemWithinImage (PtrElement pEl,
+				int view,
+				PtrAbstractBox pAbbRoot,
+				PtrDocument pDoc);
 extern void UpdatePresAttr ( PtrElement pEl,
                              PtrAttribute pAttr,
                              PtrDocument pDoc,
@@ -182,6 +186,10 @@ extern void UpdateBoxesCounter (/* PtrElement pElBegin,
                                    int counter,
                                    PtrPSchema pSchP,
                                    PtrSSchema pSS */);
+extern boolean ElemWithinImage (/*PtrElement pEl,
+				  int view,
+				  PtrAbstractBox pAbbRoot,
+				  PtrDocument pDoc*/);
 extern void UpdatePresAttr (/* PtrElement pEl,
                                PtrAttribute pAttr,
                                PtrDocument pDoc,

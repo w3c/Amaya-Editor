@@ -98,6 +98,7 @@ DEFAULT
 	Adjust: Enclosing =;
 	Indent: Enclosing =;
 	Depth: Enclosing =;
+	FillPattern: nopattern;
 	END;
 
 BOXES
@@ -5260,8 +5261,10 @@ RULES
 	CreateBefore(MAP_S);
 	CreateWith(VerticalLine);
 	CreateAfter(MAP_dummy);
+	Depth: 10;
 	LineBreak: No;
 	Visibility: 0;
+	Gather: Yes;
 	IN Structure_view BEGIN
 		Visibility: Enclosing =;
 		Font: Enclosing =;
@@ -5279,6 +5282,7 @@ RULES
  	VertPos: Top = Enclosing . Top UserSpecified;
 	Width: 5 pt UserSpecified;
 	Height: 5 pt UserSpecified;
+	Depth: 0;
 	FillPattern: nopattern;
 	IN Structure_view BEGIN
 		Font: Enclosing =;

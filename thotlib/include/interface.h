@@ -197,6 +197,12 @@ extern void         TtaSetStatus (Document document, View view, char *text, char
 extern ThotWidget   TtaGetViewFrame (Document document, View view);
 
 #ifndef _WINDOWS
+/*----------------------------------------------------------------------
+   TtaFetchOneEvent
+
+   retrieve one X-Windows Event from the queue, this is a blocking call.
+  ----------------------------------------------------------------------*/
+extern void         TtaFetchOneEvent (ThotEvent *ev);
 extern void         TtaHandleOneEvent (ThotEvent * ev);
 extern int          TtaXLookupString (ThotKeyEvent * event, char *buffer, int nbytes,
 				  KeySym * keysym, ThotComposeStatus * status);
@@ -337,6 +343,7 @@ extern int          TtaSetCallback ( /*void (*callbakProcedure) (), int set */ )
 extern void         TtaSetStatus ( /*Document document, View view, char *text, char *name */ );
 
 #ifndef _WINDOWS
+extern void         TtaFetchOneEvent ( /*ThotEvent *ev */ );
 extern void         TtaHandleOneEvent ( /*ThotEvent *ev */ );
 extern int          TtaXLookupString (	/* ThotKeyEvent *event, char *buffer, int nbytes,
 					   KeySym *keysym, ThotComposeStatus *status */ );

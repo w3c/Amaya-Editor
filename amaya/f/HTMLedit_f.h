@@ -15,6 +15,8 @@ extern Attribute GetNameAttr ( Document doc,
                                Element selectedElement );
 extern void CreateTargetAnchor ( Document doc,
                                  Element el );
+extern void MakeUniqueName (Element el,
+			    Document doc);
 extern void ElementCreated ( NotifyElement * event );
 extern void ElementPasted ( NotifyElement * event );
 extern void CreateLink ( Document doc,
@@ -77,9 +79,6 @@ extern void CreateSup ( Document document,
                         View view );
 extern void CreateElemFont ( Document document,
                              View view );
-extern Element SearchNAMEattribute ( Document doc,
-                                     char *nameVal,
-                                     Attribute ignore );
 extern Element SearchAnchor ( Document doc,
                               Element element,
                               boolean link );
@@ -103,6 +102,8 @@ extern Attribute GetNameAttr (/* Document doc,
                                  Element selectedElement */);
 extern void CreateTargetAnchor (/* Document doc,
                                    Element el */);
+extern void MakeUniqueName (/*Element el,
+			      Document doc*/);
 extern void ElementCreated (/* NotifyElement * event */);
 extern void ElementPasted (/* NotifyElement * event */);
 extern void CreateLink (/* Document doc,
@@ -165,9 +166,6 @@ extern void CreateSup (/* Document document,
                           View view */);
 extern void CreateElemFont (/* Document document,
                                View view */);
-extern Element SearchNAMEattribute (/* Document doc,
-                                       char *nameVal,
-                                       Attribute ignore */);
 extern Element SearchAnchor (/* Document doc,
                                 Element element,
                                 boolean link */);

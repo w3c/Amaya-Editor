@@ -37,6 +37,7 @@ static char         LastURLImage[MAX_LENGTH];
 static char         ImageName[MAX_LENGTH];
 static char         ImgFilter[NAME_LENGTH];
 #include "AHTURLTools_f.h"
+#include "HTMLactions_f.h"
 #include "HTMLedit_f.h"
 #include "EDITimage_f.h"
 #include "HTMLimage_f.h"

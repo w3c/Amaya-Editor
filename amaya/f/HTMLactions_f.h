@@ -6,15 +6,15 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
+extern Element SearchNAMEattribute ( Document doc,
+                                     char *nameVal,
+                                     Attribute ignore );
 extern boolean DoubleClick ( NotifyElement * event );
 extern void FreeDocumentResource ( Document doc );
 extern void DocumentClosed ( NotifyDialog * event );
 extern void UpdateContextSensitiveMenus ( Document doc );
 extern void SelectionChanged ( NotifyElement * event );
 extern boolean ElemToTransform ( NotifyOnElementType * event );
-extern void CreateAnchor ( Document doc,
-                           View view,
-                           boolean createLink );
 extern void AttrFontSizeModified ( NotifyAttribute * event );
 extern void SetCharFontOrPhrase ( int document,
                                   int eltype );
@@ -23,15 +23,15 @@ extern void SelectDestination ( Document doc,
 
 #else /* __STDC__ */
 
+extern Element SearchNAMEattribute (/* Document doc,
+                                       char *nameVal,
+                                       Attribute ignore */);
 extern boolean DoubleClick (/* NotifyElement * event */);
 extern void FreeDocumentResource (/* Document doc */);
 extern void DocumentClosed (/* NotifyDialog * event */);
 extern void UpdateContextSensitiveMenus (/* Document doc */);
 extern void SelectionChanged (/* NotifyElement * event */);
 extern boolean ElemToTransform (/* NotifyOnElementType * event */);
-extern void CreateAnchor (/* Document doc,
-                             View view,
-                             boolean createLink */);
 extern void AttrFontSizeModified (/* NotifyAttribute * event */);
 extern void SetCharFontOrPhrase (/* int document,
                                     int eltype */);

@@ -56,23 +56,23 @@
 #include "viewapi_f.h"
 
 #include "absboxes_f.h"
+#include "appdialogue_f.h"
+#include "applicationapi_f.h"
+#include "boxparams_f.h"
+#include "boxselection_f.h"
 #include "buildboxes_f.h"
-#include "inites_f.h"
-#include "structmodif_f.h"
 #include "changeabsbox_f.h"
 #include "changepresent_f.h"
-#include "boxparams_f.h"
+#include "fileaccess_f.h"
+#include "frame_f.h"
+#include "inites_f.h"
 #include "paginate_f.h"
 #include "presrules_f.h"
-#include "schemas_f.h"
-#include "boxselection_f.h"
-#include "structselect_f.h"
-#include "fileaccess_f.h"
 #include "structschema_f.h"
+#include "structselect_f.h"
+#include "schemas_f.h"
+#include "structmodif_f.h"
 #include "thotmsg_f.h"
-#include "applicationapi_f.h"
-#include "appdialogue_f.h"
-#include "frame_f.h"
 
 extern int          UserErrorCode;
 
@@ -1209,141 +1209,6 @@ View               *view;
      }
 }
 
-
-/* les fonctions suivantes servent au reaffichage */
-
-/*----------------------------------------------------------------------
-   ElemIntoImage  checks if abstract boxes of the element pEl 
-   Corresponding to view may be displayed within the abstract image
-   part already builded.
-  ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-static boolean      ElemIntoImage (PtrElement pEl, int view, PtrAbstractBox pAbbRoot, PtrDocument pDoc)
-#else  /* __STDC__ */
-static boolean      ElemIntoImage (pEl, view, pAbbRoot, pDoc)
-PtrElement          pEl;
-int                 view;
-PtrAbstractBox      pAbbRoot;
-PtrDocument         pDoc;
-#endif /* __STDC__ */
-{
-   boolean             result, finished, found;
-   PtrElement          pAsc;
-   PtrAbstractBox      pAb;
-
-   result = TRUE;
-   finished = FALSE;
-   /* Has the element close to this one an abstract box in the view */
-   if (pEl->ElPrevious != NULL)
-     {
-	pAb = pEl->ElPrevious->ElAbstractBox[view - 1];
-	if (pAb != NULL)
-	   /* The previous element has an abstract box in the view */
-	  {
-	     finished = TRUE;
-	     /* If the abstract box of the previous element is complete in queue,
-	        the element will have its abstract box in the existing image */
-	     if (pAb->AbInLine || pAb->AbLeafType != LtCompound)
-		result = TRUE;
-	     else
-		result = !pAb->AbTruncatedTail;
-	  }
-     }
-   else if (pEl->ElNext != NULL)
-      /* There is a next element */
-     {
-	pAb = pEl->ElNext->ElAbstractBox[view - 1];
-	if (pAb != NULL)
-	   /* The next element has an abstract box in the view */
-	  {
-	     finished = TRUE;
-	     /* si le pave de l'element suivant est complet en tete, */
-	     /* l'element aura son pave dans l'image existante */
-	     if (pAb->AbInLine || pAb->AbLeafType != LtCompound)
-		/* les paves mis en lignes sont toujours entiers */
-		result = TRUE;
-	     else
-		result = !pAb->AbTruncatedHead;
-	  }
-     }
-   else
-      /* l'element n'a aucun voisin. On cherche le premier ascendant qui */
-      /* ait un pave dans la vue */
-     {
-	pAsc = pEl->ElParent;
-	found = FALSE;
-	while (pAsc != NULL && !found)
-	   if (pAsc->ElAbstractBox[view - 1] == NULL)
-	      pAsc = pAsc->ElParent;
-	   else
-	      found = TRUE;
-	if (found)
-	   if (pAsc->ElAbstractBox[view - 1]->AbInLine ||
-	       ((!pAsc->ElAbstractBox[view - 1]->AbTruncatedHead) &&
-		(!pAsc->ElAbstractBox[view - 1]->AbTruncatedTail)))
-	      /* le premier pave englobant est complet */
-	     {
-		result = TRUE;
-		finished = TRUE;
-	     }
-     }
-   if (!finished && pEl->ElParent == NULL)
-      /* c'est un element racine. Il s'agit donc d'une vue qu'on cree */
-      /* entierement */
-     {
-	result = TRUE;
-	finished = TRUE;
-     }
-   if (!finished && pAbbRoot != NULL)
-      /* on regarde si notre element est entre l'element qui possede le */
-      /* premier pave feuille de la vue et celui qui possede le dernier */
-     {
-	/* cherche le premier pave feuille */
-	pAb = pAbbRoot;
-	while (pAb->AbFirstEnclosed != NULL)
-	   pAb = pAb->AbFirstEnclosed;
-	if (ElemIsBefore (pEl, pAb->AbElement))
-	   /* notre element se trouve avant l'element qui a la premiere */
-	   /* feuille */
-	   if (!pAbbRoot->AbTruncatedHead)
-	      /* l'image est complete en tete,on creera l'image de l'element */
-	      result = TRUE;
-	   else
-	      /* il est hors de l'image */
-	      result = FALSE;
-	else
-	   /* notre element se trouve apres l'element qui a la premiere */
-	   /* feuille, comment se situe-t-il par rapport a l'element qui */
-	   /* a la derniere feuille de l'image ? */
-	  {
-	     /* cherche d'abord le dernier pave feuille */
-	     pAb = pAbbRoot;
-	     while (pAb->AbFirstEnclosed != NULL)
-	       {
-		  pAb = pAb->AbFirstEnclosed;
-		  while (pAb->AbNext != NULL)
-		     pAb = pAb->AbNext;
-	       }
-	     if (ElemIsBefore (pEl, pAb->AbElement))
-		/* notre element se trouve avant l'element qui a la derniere */
-		/* feuille, il est dans l'image */
-		result = TRUE;
-	     else
-		/* notre element se trouve apres l'element qui a la derniere */
-		/* feuille */
-	     if (!pAbbRoot->AbTruncatedTail)
-		/* l'image est complete en queue, on creera l'image de */
-		/* l'element */
-		result = TRUE;
-	     else
-		/* il est hors de l'image */
-		result = FALSE;
-	  }
-     }
-   return result;
-}
-
 /*----------------------------------------------------------------------
    ExtinguishOrLightSelection bascule la selection courante dans      
    toutes les vues du document pDoc.                               
@@ -1523,7 +1388,7 @@ boolean             creation;
 	{
 	   if (pDoc->DocView[view - 1].DvPSchemaView > 0)
 	      /* la vue est ouverte */
-	      if (ElemIntoImage (newElement, view, pDoc->DocViewRootAb[view - 1], pDoc))
+	      if (ElemWithinImage (newElement, view, pDoc->DocViewRootAb[view - 1], pDoc))
 		 /* l'element se trouve a l'interieur de l'image deja construite */
 		{
 		   /* indique qu'il faut creer les paves sans limite de volume */
@@ -1536,7 +1401,7 @@ boolean             creation;
       /* View of associated elements */
    if (pDoc->DocAssocFrame[newElement->ElAssocNum - 1] != 0)
       /* la vue est ouverte */
-      if (ElemIntoImage (newElement, 1, pDoc->DocAssocRoot[newElement->ElAssocNum - 1]->ElAbstractBox[0], pDoc))
+      if (ElemWithinImage (newElement, 1, pDoc->DocAssocRoot[newElement->ElAssocNum - 1]->ElAbstractBox[0], pDoc))
 	 /* l'element se trouve a l'interieur de l'image deja construite */
 	{
 	   /* indique qu'il faut creer les paves sans limite de volume */
@@ -2055,7 +1920,7 @@ Document            document;
 	{
 	   if (pDoc->DocView[view - 1].DvPSchemaView > 0)
 	      /* la vue est ouverte */
-	      if (ElemIntoImage (pEl, view, pDoc->DocViewRootAb[view - 1], pDoc))
+	      if (ElemWithinImage (pEl, view, pDoc->DocViewRootAb[view - 1], pDoc))
 		 /* l'element se trouve a l'interieur de l'image deja construite */
 		{
 		   /* indique qu'il faut creer les paves sans limite de volume */
@@ -2068,7 +1933,7 @@ Document            document;
       /* View of associated elements */
    if (pDoc->DocAssocFrame[pEl->ElAssocNum - 1] != 0)
       /* la vue est ouverte */
-      if (ElemIntoImage (pEl, 1, pDoc->DocAssocRoot[pEl->ElAssocNum - 1]->ElAbstractBox[0], pDoc))
+      if (ElemWithinImage (pEl, 1, pDoc->DocAssocRoot[pEl->ElAssocNum - 1]->ElAbstractBox[0], pDoc))
 	 /* l'element se trouve a l'interieur de l'image deja construite */
 	{
 	   /* indique qu'il faut creer les paves sans limite de volume */

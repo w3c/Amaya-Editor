@@ -32,24 +32,24 @@
 #include "platform_tv.h"
 #include "page_tv.h"
 
-#include "tree_f.h"
+#include "absboxes_f.h"
 #include "attributes_f.h"
 #include "attrpresent_f.h"
-#include "search_f.h"
-#include "createabsbox_f.h"
-#include "createpages_f.h"
-#include "structlist_f.h"
-#include "frame_f.h"
-#include "absboxes_f.h"
 #include "buildboxes_f.h"
-#include "memory_f.h"
 #include "changeabsbox_f.h"
 #include "changepresent_f.h"
-#include "presrules_f.h"
-#include "references_f.h"
-#include "presvariables_f.h"
 #include "content_f.h"
+#include "createabsbox_f.h"
+#include "createpages_f.h"
+#include "frame_f.h"
+#include "memory_f.h"
+#include "presrules_f.h"
+#include "presvariables_f.h"
+#include "references_f.h"
+#include "search_f.h"
 #include "searchref_f.h"
+#include "structlist_f.h"
+#include "tree_f.h"
 #include "writepivot_f.h"
 
 static PtrAbstractBox pAbbBegin[MAX_VIEW_DOC];
@@ -5279,6 +5279,139 @@ PtrAttribute        pAttr;
 
 
 /*----------------------------------------------------------------------
+   ElemWithinImage  checks if abstract boxes of the element pEl 
+   Corresponding to view may be displayed within the abstract image
+   part already builded.
+  ----------------------------------------------------------------------*/
+
+#ifdef __STDC__
+boolean             ElemWithinImage (PtrElement pEl, int view, PtrAbstractBox pAbbRoot, PtrDocument pDoc)
+#else  /* __STDC__ */
+boolean             ElemWithinImage (pEl, view, pAbbRoot, pDoc)
+PtrElement          pEl;
+int                 view;
+PtrAbstractBox      pAbbRoot;
+PtrDocument         pDoc;
+#endif /* __STDC__ */
+{
+   boolean             result, finished, found;
+   PtrElement          pAsc;
+   PtrAbstractBox      pAb;
+
+   result = TRUE;
+   finished = FALSE;
+   /* Has the element close to this one an abstract box in the view */
+   if (pEl->ElPrevious != NULL)
+     {
+	pAb = pEl->ElPrevious->ElAbstractBox[view - 1];
+	if (pAb != NULL)
+	   /* The previous element has an abstract box in the view */
+	  {
+	     finished = TRUE;
+	     /* If the abstract box of the previous element is complete in queue,
+	        the element will have its abstract box in the existing image */
+	     if (pAb->AbInLine || pAb->AbLeafType != LtCompound)
+		result = TRUE;
+	     else
+		result = !pAb->AbTruncatedTail;
+	  }
+     }
+   else if (pEl->ElNext != NULL)
+      /* There is a next element */
+     {
+	pAb = pEl->ElNext->ElAbstractBox[view - 1];
+	if (pAb != NULL)
+	   /* The next element has an abstract box in the view */
+	  {
+	     finished = TRUE;
+	     /* si le pave de l'element suivant est complet en tete, */
+	     /* l'element aura son pave dans l'image existante */
+	     if (pAb->AbInLine || pAb->AbLeafType != LtCompound)
+		/* les paves mis en lignes sont toujours entiers */
+		result = TRUE;
+	     else
+		result = !pAb->AbTruncatedHead;
+	  }
+     }
+   else
+      /* l'element n'a aucun voisin. On cherche le premier ascendant qui */
+      /* ait un pave dans la vue */
+     {
+	pAsc = pEl->ElParent;
+	found = FALSE;
+	while (pAsc != NULL && !found)
+	   if (pAsc->ElAbstractBox[view - 1] == NULL)
+	      pAsc = pAsc->ElParent;
+	   else
+	      found = TRUE;
+	if (found)
+	   if (pAsc->ElAbstractBox[view - 1]->AbInLine ||
+	       ((!pAsc->ElAbstractBox[view - 1]->AbTruncatedHead) &&
+		(!pAsc->ElAbstractBox[view - 1]->AbTruncatedTail)))
+	      /* le premier pave englobant est complet */
+	     {
+		result = TRUE;
+		finished = TRUE;
+	     }
+     }
+   if (!finished && pEl->ElParent == NULL)
+      /* c'est un element racine. Il s'agit donc d'une vue qu'on cree */
+      /* entierement */
+     {
+	result = TRUE;
+	finished = TRUE;
+     }
+   if (!finished && pAbbRoot != NULL)
+      /* on regarde si notre element est entre l'element qui possede le */
+      /* premier pave feuille de la vue et celui qui possede le dernier */
+     {
+	/* cherche le premier pave feuille */
+	pAb = pAbbRoot;
+	while (pAb->AbFirstEnclosed != NULL)
+	   pAb = pAb->AbFirstEnclosed;
+	if (ElemIsBefore (pEl, pAb->AbElement))
+	   /* notre element se trouve avant l'element qui a la premiere */
+	   /* feuille */
+	   if (!pAbbRoot->AbTruncatedHead)
+	      /* l'image est complete en tete,on creera l'image de l'element */
+	      result = TRUE;
+	   else
+	      /* il est hors de l'image */
+	      result = FALSE;
+	else
+	   /* notre element se trouve apres l'element qui a la premiere */
+	   /* feuille, comment se situe-t-il par rapport a l'element qui */
+	   /* a la derniere feuille de l'image ? */
+	  {
+	     /* cherche d'abord le dernier pave feuille */
+	     pAb = pAbbRoot;
+	     while (pAb->AbFirstEnclosed != NULL)
+	       {
+		  pAb = pAb->AbFirstEnclosed;
+		  while (pAb->AbNext != NULL)
+		     pAb = pAb->AbNext;
+	       }
+	     if (ElemIsBefore (pEl, pAb->AbElement))
+		/* notre element se trouve avant l'element qui a la derniere */
+		/* feuille, il est dans l'image */
+		result = TRUE;
+	     else
+		/* notre element se trouve apres l'element qui a la derniere */
+		/* feuille */
+	     if (!pAbbRoot->AbTruncatedTail)
+		/* l'image est complete en queue, on creera l'image de */
+		/* l'element */
+		result = TRUE;
+	     else
+		/* il est hors de l'image */
+		result = FALSE;
+	  }
+     }
+   return (result);
+}
+
+
+/*----------------------------------------------------------------------
    UpdatePresAttr Pour l'element pEl dans le document pDoc, supprime 
    ou applique (selon remove) la presentation attachee a    
    l'attribut pointe par pAttr.                            
@@ -5304,18 +5437,17 @@ PtrAttribute        pAttrComp;
 {
    PtrPRule            pR, pRuleView1, pRuleNext, pRNA, pRSpecif, pRS,
                        pRP;
-   int                 view, viewSch, val;
    PRuleType           typeRule;
    FunctionType        TFonct;
    PtrAbstractBox      pAbb, pReaff, pPR, pAbbNext, pAbbChild;
-   boolean             appl, stop, sameType, found;
    PtrPSchema          pSchP, pSPR;
    PtrAttribute        pAttrib;
-   PtrElement          pEl1;
-   boolean             existingView;
-   boolean             complete;
    PtrHandlePSchema    pHd;
    TypeUnit            unit;
+   int                 view, viewSch, val;
+   boolean             appl, stop, sameType, found;
+   boolean             existingView;
+   boolean             createBox, complete;
 
 #ifdef __COLPAGE__
    boolean             TRep;
@@ -5323,7 +5455,6 @@ PtrAttribute        pAttrComp;
 
 #endif /* __COLPAGE__ */
 
-   pEl1 = pEl;
    typeRule = (PRuleType) 0;
    TFonct = (FunctionType) 0;
    /* on cherche d'abord dans les schemas de presentation additionnels les */
@@ -5341,7 +5472,7 @@ PtrAttribute        pAttrComp;
    while (pSchP != NULL)
      {
 	/* pR: premiere regle correspondant a l'attribut */
-	pR = AttrPresRule (pAttr, pEl1, inherit, pAttrComp, pSchP);
+	pR = AttrPresRule (pAttr, pEl, inherit, pAttrComp, pSchP);
 	if (pR != NULL)
 	  {
 	     typeRule = pR->PrType;
@@ -5423,7 +5554,8 @@ PtrAttribute        pAttrComp;
 		       /* il n'y a rien (encore) a reafficher */
 		       pAbb = NULL;
 		       /* on n'a pas cree de pave */
-		       if (pEl1->ElAbstractBox[view - 1] == NULL && typeRule == PtVisibility)
+		       createBox = ElemWithinImage (pEl, view, pDoc->DocViewRootAb[view - 1], pDoc);
+		       if (createBox && pEl->ElAbstractBox[view - 1] == NULL && typeRule == PtVisibility)
 			  /* le pave n'existe pas et c'est une regle de visibilite */
 			 {
 			    val = IntegerRule (pR, pEl, view, &appl, &unit, pAttr);
@@ -5431,18 +5563,31 @@ PtrAttribute        pAttrComp;
 			       /* cette regle rend le pave visible et ce n'est pas une suppression
 			          ou c'est une suppression et le pave etait rendu invisible par la regle
 			          on cree le pave et ses paves de presentation eventuels */
-			       pAbb = AbsBoxesCreate (pEl, pDoc, view, TRUE, TRUE, &complete);
+			      {
+				if (AssocView (pEl))
+				  pDoc->DocAssocFreeVolume[pEl->ElAssocNum - 1] = THOT_MAXINT;
+				else
+				  pDoc->DocViewFreeVolume[view - 1] = THOT_MAXINT;
+				pAbb = AbsBoxesCreate (pEl, pDoc, view, TRUE, TRUE, &complete);
+			      }
 			 }
-		       if (pEl1->ElAbstractBox[view - 1] != NULL && typeRule == PtFunction
+		       if (createBox
+			   && pEl->ElAbstractBox[view - 1] != NULL && typeRule == PtFunction
 			   && (TFonct == FnCreateBefore || TFonct == FnCreateAfter
 #ifndef __COLPAGE__
 			       || TFonct == FnCreateWith
 #endif /* __COLPAGE__ */
-		       || TFonct == FnCreateFirst || TFonct == FnCreateLast)
+		               || TFonct == FnCreateFirst || TFonct == FnCreateLast)
 			   && !remove)
 			  /* il faut creer un pave de presentation */
-			  pAbb = CrAbsBoxesPres (pEl, pDoc, pR, pAttr->AeAttrSSchema, pAttr, view,
-						 pSchP, FALSE, TRUE);
+			 {
+			   if (AssocView (pEl))
+			     pDoc->DocAssocFreeVolume[pEl->ElAssocNum - 1] = THOT_MAXINT;
+			   else
+			     pDoc->DocViewFreeVolume[view - 1] = THOT_MAXINT;
+			   pAbb = CrAbsBoxesPres (pEl, pDoc, pR, pAttr->AeAttrSSchema, pAttr, view,
+						  pSchP, FALSE, TRUE);
+			 }
 		       /* traite les paves crees par la regle de visibilite ou de */
 		       /* creation */
 		       /* code inutile et incorrect (fait dans AbsBoxesCreate) si saut de page */
@@ -5466,9 +5611,9 @@ PtrAttribute        pAttrComp;
 
 		       /* traite les paves qui existaient deja */
 		       /* il faut faire une boucle de parcours des paves dupliques de l'element */
-		       if (pEl1->ElAbstractBox[view - 1] != NULL && pAbb == NULL)
+		       if (pEl->ElAbstractBox[view - 1] != NULL && pAbb == NULL)
 			 {
-			    pAbb = pEl1->ElAbstractBox[view - 1];
+			    pAbb = pEl->ElAbstractBox[view - 1];
 			    /* saute les paves de presentation de l'element */
 			    while (pAbb->AbNext != NULL && pAbb->AbPresentationBox && pAbb->AbElement == pEl)
 			       pAbb = pAbb->AbNext;
@@ -5511,7 +5656,7 @@ PtrAttribute        pAttrComp;
 					 /* regle de presentation specifique de meme type que */
 					 /* celle qu'on vient d'appliquer */
 					{
-					   pRSpecif = pEl1->ElFirstPRule;
+					   pRSpecif = pEl->ElFirstPRule;
 					   pRP = NULL;
 					   stop = FALSE;
 					   do
@@ -5542,7 +5687,7 @@ PtrAttribute        pAttrComp;
 						pRS = pRSpecif->PrNextPRule;
 						if (pRP == NULL)
 						   /* c'etait la 1ere */
-						   pEl1->ElFirstPRule = pRS;
+						   pEl->ElFirstPRule = pRS;
 						else
 						   pRP->PrNextPRule = pRS;
 						FreePresentRule (pRSpecif);
@@ -5561,7 +5706,7 @@ PtrAttribute        pAttrComp;
 						  && pAbb->AbPrevious->AbElement == pAbb->AbElement)
 					      pAbb = pAbb->AbPrevious;
 #else  /* __COLPAGE__ */
-					   pAbb = pEl1->ElAbstractBox[view - 1];
+					   pAbb = pEl->ElAbstractBox[view - 1];
 #endif /* __COLPAGE__ */
 					   /* 1er pave a tuer */
 					   pReaff = pAbb;
@@ -5610,7 +5755,7 @@ PtrAttribute        pAttrComp;
 #endif /* __COLPAGE__ */
 			 }
 
-		       if (pEl1->ElAbstractBox[view - 1] != NULL
+		       if (pEl->ElAbstractBox[view - 1] != NULL
 			   && typeRule == PtFunction
 			   && (TFonct == FnCreateBefore || TFonct == FnCreateAfter
 #ifndef __COLPAGE__
@@ -5623,7 +5768,7 @@ PtrAttribute        pAttrComp;
 			  /* cree la regle pR */
 			  /* cherche d'abord le pave de l'element */
 			 {
-			    pAbb = pEl1->ElAbstractBox[view - 1];
+			    pAbb = pEl->ElAbstractBox[view - 1];
 			    /* saute les paves de presentation de l'element */
 			    while (pAbb->AbNext != NULL && pAbb->AbPresentationBox && pAbb->AbElement == pEl)
 			       pAbb = pAbb->AbNext;
@@ -5722,8 +5867,8 @@ PtrAttribute        pAttrComp;
 		       if (pReaff != NULL)
 			 {
 			    if (AssocView (pEl))
-			       pDoc->DocAssocModifiedAb[pEl1->ElAssocNum - 1] =
-				  Enclosing (pReaff, pDoc->DocAssocModifiedAb[pEl1->ElAssocNum - 1]);
+			       pDoc->DocAssocModifiedAb[pEl->ElAssocNum - 1] =
+				  Enclosing (pReaff, pDoc->DocAssocModifiedAb[pEl->ElAssocNum - 1]);
 			    else
 			       pDoc->DocViewModifiedAb[view - 1] =
 				  Enclosing (pReaff, pDoc->DocViewModifiedAb[view - 1]);
@@ -5764,9 +5909,6 @@ PtrAttribute        pAttrComp;
      }
 }
 
- /* procedure deplacee pour la pagination dans le print */
- /* elle etait avant dans modif.c */
- /* procedure appelee par les procedures de modif.c et par page.c */
 /*----------------------------------------------------------------------
    IsIdenticalTextType       retourne 'vrai' si l'element pointe par pEl     
    (appartenant au document pointe par pDoc) a un frere suivant et 
@@ -5778,7 +5920,6 @@ PtrAttribute        pAttrComp;
    sur l'element libere par la fusion (cet element n'est pas rendu 
    a la memoire libre).                                            
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 boolean             IsIdenticalTextType (PtrElement pEl, PtrDocument pDoc, PtrElement * pLib)
 
@@ -5791,26 +5932,24 @@ PtrElement         *pLib;
 #endif /* __STDC__ */
 
 {
-   boolean             equal, stop;
    PtrElement          pEl2, pEVoisin;
-   int                 view, dvol;
    PtrAbstractBox      pAb;
-   PtrElement          pEl1;
    PtrAbstractBox      pAbbox1;
+   int                 view, dvol;
+   boolean             equal, stop;
 
    equal = FALSE;
    if (pEl != NULL)
      {
-	pEl1 = pEl;
-	pEl2 = pEl1->ElNext;
-	if (pEl2 != NULL && pEl1->ElLeafType == LtText && pEl1->ElTerminal)
+	pEl2 = pEl->ElNext;
+	if (pEl2 != NULL && pEl->ElLeafType == LtText && pEl->ElTerminal)
 	   if (pEl2->ElTerminal && pEl2->ElLeafType == LtText)
-	      if (pEl2->ElLanguage == pEl1->ElLanguage)
-		 if (!pEl2->ElHolophrast && !pEl1->ElHolophrast)
+	      if (pEl2->ElLanguage == pEl->ElLanguage)
+		 if (!pEl2->ElHolophrast && !pEl->ElHolophrast)
 		    if (SameAttributes (pEl, pEl2))
 		       if (pEl->ElSource == NULL && pEl2->ElSource == NULL)
 			  if (BothHaveNoSpecRules (pEl, pEl2))
-			     if (pEl1->ElStructSchema->SsRule[pEl1->ElTypeNumber - 1].SrConstruct !=
+			     if (pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrConstruct !=
 				 CsConstant)
 				if (pEl2->ElStructSchema->SsRule[pEl2->ElTypeNumber - 1].SrConstruct
 				    != CsConstant)
@@ -5841,7 +5980,7 @@ PtrElement         *pLib;
 				     /* met a jour le volume des paves correspondants */
 				     for (view = 1; view <= MAX_VIEW_DOC; view++)
 				       {
-					  pAb = pEl1->ElAbstractBox[view - 1];
+					  pAb = pEl->ElAbstractBox[view - 1];
 					  if (pAb != NULL)
 					    {
 					       pAb->AbChange = TRUE;
@@ -5854,7 +5993,7 @@ PtrElement         *pLib;
 						    pDoc->DocAssocModifiedAb[pEl2->ElAssocNum - 1] =
 						       Enclosing (pAb, pDoc->DocAssocModifiedAb[pEl2->ElAssocNum - 1]);
 						 }
-					       dvol = pEl1->ElTextLength - pAb->AbVolume;
+					       dvol = pEl->ElTextLength - pAb->AbVolume;
 
 					       if (pAb->AbDead && pAb->AbNext != NULL)
 						  pAb->AbNext->AbVolume += dvol;

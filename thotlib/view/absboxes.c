@@ -1708,87 +1708,81 @@ PtrElement          pEl;
 PtrDocument         pDoc;
 #endif /* __STDC__ */
 {
-   int                 view;
-
+  int                 view;
 #ifdef __COLPAGE__
-   PtrAbstractBox      pAb;
-   int                 nb;
-
+  PtrAbstractBox      pAb;
+  int                 nb, vol;
 #endif /* __COLPAGE__ */
 
-   if (pEl != NULL && pDoc != NULL)
-     {
-	if (!AssocView (pEl))
-	   /* une vue de l'arbre principal */
-	   for (view = 0; view < MAX_VIEW_DOC; view++)
-	     {
-		/* traite toutes les vues */
-		if (pDoc->DocView[view].DvPSchemaView > 0)
-		   /* la vue existe */
-		  {
+  if (pEl != NULL && pDoc != NULL)
+    {
+      if (!AssocView (pEl))
+	/* une vue de l'arbre principal */
+	for (view = 0; view < MAX_VIEW_DOC; view++)
+	  {
+	    /* traite toutes les vues */
+	    if (pDoc->DocView[view].DvPSchemaView > 0)
+	      /* la vue existe */
+	      {
 #ifdef __COLPAGE__
-		     /* le document est-il pagine dans cette vue ? */
-		     /* si oui, on compte le nombre de pages actuel */
-		     /* pour etre sur d'ajouter au moins une page */
-		     /* (sauf si fin de vue) */
-		     pAb = pDoc->DocViewRootAb[view];
-		     if (pAb->AbFirstEnclosed != NULL
-			 && pAb->AbFirstEnclosed->AbElement->ElTypeNumber ==
-			 PageBreak + 1)
-		       {
-			  nb = NbPages (pAb);
-			  pDoc->DocViewNPages[view] = nb;
-			  pDoc->DocViewFreeVolume[view] = THOT_MAXINT;
-		       }
-		     else
-#endif /* __COLPAGE__ */
-			pDoc->DocViewFreeVolume[view] =
-			   pDoc->DocViewVolume[view] - pDoc->DocViewRootAb[view]->AbVolume;
-		     AddVolView (pDoc->DocViewVolume[view], pDoc->DocViewRootAb[view],
-				 pEl, pDoc);
-		  }
-	     }
-	else
-	   /* element associe */
-	if (pDoc->DocAssocFrame[pEl->ElAssocNum - 1] > 0)
-	   /* la vue de ces elements associes a ete creee */
-	   if (pDoc->DocAssocVolume[pEl->ElAssocNum - 1] > 0)
-	      /* on ne fait rien si ces elements associes sont affiches */
-	      /* dans des boites de haut ou bas de page */
-	     {
-#ifdef __COLPAGE__
-		pAb = pDoc->DocAssocRoot[pEl->ElAssocNum - 1]->ElAbstractBox[0];
+		/* le document est-il pagine dans cette vue ? */
+		/* si oui, on compte le nombre de pages actuel */
+		/* pour etre sur d'ajouter au moins une page */
+		/* (sauf si fin de vue) */
+		pAb = pDoc->DocViewRootAb[view];
 		if (pAb->AbFirstEnclosed != NULL
-		    && pAb->AbFirstEnclosed->AbElement->ElTypeNumber ==
-		    PageBreak + 1)
-		   /* vue du document paginee */
+		    && pAb->AbFirstEnclosed->AbElement->ElTypeNumber == PageBreak + 1)
 		  {
-		     nb = NbPages (pAb);
-		     pDoc->DocAssocNPages[view] = nb;
-		     pDoc->DocAssocFreeVolume[pEl->ElAssocNum - 1] = THOT_MAXINT;
+		    nb = NbPages (pAb);
+		    pDoc->DocViewNPages[view] = nb;
+		    pDoc->DocViewFreeVolume[view] = THOT_MAXINT;
 		  }
 		else
 #endif /* __COLPAGE__ */
-		   pDoc->DocAssocFreeVolume[pEl->ElAssocNum - 1] =
-		      pDoc->DocAssocVolume[pEl->ElAssocNum - 1] -
-		      pDoc->DocAssocRoot[pEl->ElAssocNum - 1]->ElAbstractBox[0]->AbVolume;
-		AddVolView (pDoc->DocAssocVolume[pEl->ElAssocNum - 1],
-		  pDoc->DocAssocRoot[pEl->ElAssocNum - 1]->ElAbstractBox[0],
+		  pDoc->DocViewFreeVolume[view] = pDoc->DocViewVolume[view] - pDoc->DocViewRootAb[view]->AbVolume;
+		AddVolView (pDoc->DocViewVolume[view], pDoc->DocViewRootAb[view],
 			    pEl, pDoc);
-	     }
-     }
+	      }
+	  }
+      else if (pDoc->DocAssocFrame[pEl->ElAssocNum - 1] > 0)
+	/* element associe */
+	/* la vue de ces elements associes a ete creee */
+	if (pDoc->DocAssocVolume[pEl->ElAssocNum - 1] > 0)
+	  /* on ne fait rien si ces elements associes sont affiches */
+	  /* dans des boites de haut ou bas de page */
+	  {
+#ifdef __COLPAGE__
+	    pAb = pDoc->DocAssocRoot[pEl->ElAssocNum - 1]->ElAbstractBox[0];
+	    if (pAb->AbFirstEnclosed != NULL
+		&& pAb->AbFirstEnclosed->AbElement->ElTypeNumber ==
+		PageBreak + 1)
+	      /* vue du document paginee */
+	      {
+		nb = NbPages (pAb);
+		pDoc->DocAssocNPages[view] = nb;
+		pDoc->DocAssocFreeVolume[pEl->ElAssocNum - 1] = THOT_MAXINT;
+	      }
+	    else
+#endif /* __COLPAGE__ */
+	      pDoc->DocAssocFreeVolume[pEl->ElAssocNum - 1] =
+		pDoc->DocAssocVolume[pEl->ElAssocNum - 1] -
+		pDoc->DocAssocRoot[pEl->ElAssocNum - 1]->ElAbstractBox[0]->AbVolume;
+	    AddVolView (pDoc->DocAssocVolume[pEl->ElAssocNum - 1],
+			pDoc->DocAssocRoot[pEl->ElAssocNum - 1]->ElAbstractBox[0],
+			pEl, pDoc);
+	  }
+    }
 }
 
 
 
 /*----------------------------------------------------------------------
-   IncreaseVolume Le Mediateur augmente de dVol le volume affichable  
-   dans la fenetre ViewFrame. Met a jour la capacite de la   
-   vue affichee dans cette frame et cree de nouveaux       
-   paves en tete ou en queue, selon le booleen head,     
-   de l'image abstraite affichee dans ViewFrame.             
-   On cree des paves, le Mediateur se charge du            
-   reaffichage                                             
+  IncreaseVolume Le Mediateur augmente de dVol le volume affichable  
+  dans la fenetre ViewFrame.
+  Met a jour la capacite de la vue affichee dans cette frame et cree de
+  nouveaux paves en tete ou en queue, selon le booleen head, de l'image
+  abstraite affichee dans ViewFrame.             
+  On cree des paves, le Mediateur se charge du reaffichage
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                IncreaseVolume (boolean head, int dVol, int frame)
@@ -1803,21 +1797,21 @@ int                 frame;
    int                 view, h;
    boolean             assoc;
    PtrAbstractBox      pAb;
-
 #ifdef __COLPAGE__
    PtrElement          pElRoot, pEl;
    int                 nb, viewSch;
    PtrPSchema          pSchPage;
-
 #endif /* __COLPAGE__ */
 
+   if (dVol <= 0)
+     return;
 
    GetDocAndView (frame, &pDoc, &view, &assoc);
    /* met a jour la nouvelle capacite de la vue, indique dans le contexte */
    /* du document le volume des paves a creer et cherche le pave racine de */
    /* la vue */
    if (pDoc == NULL)
-      printf ("\nErreur IncreaseVolume: frame incorrecte\n");
+      printf ("\nError IncreaseVolume: bad frame\n");
    else
      {
 	if (assoc)
@@ -1841,6 +1835,7 @@ int                 frame;
 	     pDoc->DocViewVolume[view - 1] = pAb->AbVolume + dVol;
 	     pDoc->DocViewFreeVolume[view - 1] = dVol;
 	  }
+
 #ifdef __COLPAGE__
 	/*  test si vue paginee */
 	pEl = pElRoot->ElFirstChild;
@@ -1902,13 +1897,12 @@ int                 frame;
 
 
 /*----------------------------------------------------------------------
-   DecreaseVolume Le Mediateur reduit de dVol le volume affichable      
-   dans la fenetre frame. Met a jour la capacite de la     
-   vue affichee dans cette frame et supprime des paves     
-   en tete ou en queue, selon le booleen head, de        
-   l'image abstraite affichee dans frame.          
-   On supprime des paves, le Mediateur se charge du        
-   reaffichage                                             
+  DecreaseVolume Le Mediateur reduit de dVol le volume affichable      
+  dans la fenetre frame.
+  Met a jour la capacite de la vue affichee dans cette frame et supprime
+  des paves en tete ou en queue, selon le booleen head, de l'image abstraite
+  affichee dans frame.
+  On supprime des paves, le Mediateur se charge du reaffichage
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                DecreaseVolume (boolean head, int dVol, int frame)
@@ -1925,9 +1919,8 @@ int                 frame;
    boolean             assoc;
    PtrAbstractBox      pAb;
 
-#ifdef __COLPAGE__
-
-#endif /* __COLPAGE__ */
+   if (dVol <= 0)
+     return;
 
    GetDocAndView (frame, &pDoc, &view, &assoc);
    /* met a jour la nouvelle capacite de la vue et cherche le pave racine */
