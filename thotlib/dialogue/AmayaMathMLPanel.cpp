@@ -342,6 +342,7 @@ void AmayaMathMLPanel::DoFilter( int * filtre )
 			 + wxString((wxChar)filtre[element_id]));
       element_id++;
     }
+  m_pList->SetSelection(0);
 }
 
 /*
