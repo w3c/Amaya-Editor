@@ -76,7 +76,7 @@
 75 Forbidden in a presentation box\n
 76 Too many Transmit rules for this counter\n
 77 This is not an included document\n
-78 Invalid file, usage: prs [-Dname=val] file[.P] [outpufile(without .PRS)]\n
+78 Invalid file, usage: prs [-Dname] file[.P] [outpufile(without .PRS)]\n
 79 Forbidden in a reference\n
 80 Only for boxes, references, and pairs\n
 81 Only one Copy or Content\n

@@ -46,7 +46,7 @@
 45 Memoire insuffisante\n
 46 Seulement pour les pages\n
 47 Impossible de charger le schema de structure\n
-48 Fichier inacessible, usage : tra [-Dnom=val] fichier[.T] [fichier_sortie (sans .TRA)]\n
+48 Fichier inacessible, usage : tra [-Dnom] fichier[.T] [fichier_sortie (sans .TRA)]\n
 49 Suffixe de fichier invalide : %s\n
 50 Table des regles saturee\n
 51 Compteur invalide\n

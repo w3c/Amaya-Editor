@@ -46,7 +46,7 @@
 45 Not enough memory\n
 46 Only for pages\n
 47 Cannot load the structure schema\n
-48 Invalid file, usage: tra [-Dname=val] file[.T] [outputfile (without .TRA)]\n
+48 Invalid file, usage: tra [-Dname] file[.T] [outputfile (without .TRA)]\n
 49 Invalid file suffix: %s\n
 50 Rules table full\n
 51 Invalid counter\n
