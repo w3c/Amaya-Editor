@@ -1096,7 +1096,7 @@ boolean             save;
   int                 firstChar, lastChar, nextChar, NSiblings, last, i,
                       firstCharInit, lastCharInit;
   boolean             oneAtLeast, cutPage, stop, pageSelected, cutAll,
-                      canCut;
+                      canCut, recorded;
 
   pPrevPage = NULL;
   last = 0;
@@ -1204,38 +1204,7 @@ boolean             save;
 			lastChar = 0;
 		      }
 		  }
-		/* cherche l'element qui precede la partie selectionnee */
-		pPrev = PreviousNotPage (firstSel);
-		/* cherche le premier element apres la selection */
-		pNext = NextNotPage (lastSel);
-		nextChar = 0;
-		pEl1 = firstSel;
-		if (pEl1->ElTerminal
-		    && pEl1->ElLeafType == LtText
-		    && pEl1->ElTextLength > 0
-		    && pEl1->ElTextLength < firstChar)
-		  /* debut de la selection apres l'element complet */
-		  {
-		    firstSel = NextElement (firstSel);
-		    firstChar = 0;
-		    pPrev = firstSel;
-		  }
-		if (firstChar > 1)
-		  /* la selection commence a l'interieur d'un element */
-		  /* coupe le premier element selectionne */
-		  {
-		    pPrev = firstSel;
-		    SplitBeforeSelection (&firstSel, &firstChar,
-					  &lastSel, &lastChar, pSelDoc);
-		  }
-		if (lastSel->ElTerminal && lastSel->ElLeafType == LtText
-		    && lastChar > 0 && lastChar <= lastSel->ElTextLength)
-		  /* la selection se termine a l'interieur d'un element
-		     coupe en deux le dernier element selectionne' */
-		  {
-		    SplitAfterSelection (lastSel, lastChar, pSelDoc);
-		    pNext = lastSel->ElNext;
-		  }
+
 		/* on ne supprime pas l'element racine mais son contenu */
 		stop = FALSE;
 		do
@@ -1255,13 +1224,45 @@ boolean             save;
 			lastSel = firstSel;
 			while (lastSel->ElNext != NULL)
 			  lastSel = lastSel->ElNext;
-			pPrev = NULL;
 		      }
 		  else
 		    stop = TRUE;
 		while (!stop);
+
+		/* cherche l'element qui precede la partie selectionnee */
+		pPrev = PreviousNotPage (firstSel);
+		/* cherche le premier element apres la selection */
+		pNext = NextNotPage (lastSel);
+		nextChar = 0;
+		pEl1 = firstSel;
+		if (pEl1->ElTerminal
+		    && pEl1->ElLeafType == LtText
+		    && pEl1->ElTextLength > 0
+		    && pEl1->ElTextLength < firstChar)
+		  /* debut de la selection apres l'element complet */
+		  {
+		    firstSel = NextElement (firstSel);
+		    firstChar = 0;
+		    pPrev = firstSel;
+		  }
+
 		if (firstSel != NULL)
 		  {
+		    /* open the sequence of editing operations for the history */
+		    OpenHistorySequence (pSelDoc, firstSelInit, lastSelInit,
+				         firstCharInit, lastCharInit);
+		    recorded = FALSE;
+		    if (firstChar > 1)
+		      /* la selection commence a l'interieur d'un element */
+		      /* coupe le premier element selectionne */
+		      {
+		      AddEditOpInHistory (firstSel, pSelDoc, TRUE, TRUE);
+		      recorded = TRUE;
+		      pPrev = firstSel;
+		      SplitBeforeSelection (&firstSel, &firstChar,
+					    &lastSel, &lastChar, pSelDoc);
+		      }
+
 		    /* On a selectionne' seulement une marque de page ? */
 		    pageSelected = cutPage;
 		    if (firstSel == lastSel)
@@ -1308,29 +1309,6 @@ boolean             save;
 			  }
 		      }
 
-		    /* open the sequence of editing operations for the history */
-		    OpenHistorySequence (pSelDoc, firstSelInit, lastSelInit,
-					 firstCharInit, lastCharInit);
-		    pEl = firstSel;
-		    pE = lastSel;
-		    if (firstSel->ElPrevious)
-		      if (firstSel->ElPrevious->ElTerminal)
-			if (firstSel->ElPrevious->ElLeafType == LtText)
-			  if (lastSel->ElNext)
-			    if (lastSel->ElNext->ElTerminal)
-			      if (lastSel->ElNext->ElLeafType == LtText)
-				/* both the previous element and the following
-				   one are text elements. They will probably
-				   be merged when the deletion is finished.
-				   Save also these two elements to avoid
-				   troubles caused by merging */
-			       {
-			       AddEditOpInHistory (firstSel->ElPrevious,
-						   pSelDoc, TRUE, TRUE);
-			       AddEditOpInHistory (lastSel->ElNext,
-						   pSelDoc, TRUE, TRUE);
-			       }
-
 		    /* traite tous les elements selectionnes */
 		    pEl = firstSel;	/* premier element selectionne */
 		    pS = NULL;
@@ -1346,8 +1324,29 @@ boolean             save;
 			  pEl = NextElemToBeCut (pEl, lastSel, pSelDoc, pSave);
 			if (pEl != NULL)
 			  {
-			    pE = pEl;
 			    /* pE : pointeur sur l'element a detruire */
+			    pE = pEl;
+
+			    if (pE == lastSel)
+			      /* that's the last selected element */
+		              if (lastSel->ElTerminal &&
+				  lastSel->ElLeafType == LtText &&
+				  lastChar > 0 &&
+				  lastChar <= lastSel->ElTextLength)
+				/* la selection se termine a l'interieur d'un
+				   element, on le coupe en deux */
+				{
+				  AddEditOpInHistory (lastSel, pSelDoc, TRUE,
+						      FALSE);
+				  recorded = TRUE;
+				  SplitAfterSelection (lastSel, lastChar,
+						       pSelDoc);
+				  pNext = lastSel->ElNext;
+				  AddEditOpInHistory (pNext, pSelDoc, FALSE,
+						      TRUE);
+				  pAncestorNext[0] = pNext;
+				}
+
 			    /* cherche l'element a traiter apres
 			       l'element courant */
 			    /* on detruit une marque de page */
@@ -1394,8 +1393,12 @@ boolean             save;
 				    pF = pF->ElPrevious;
 				  }
 				notifyEl.position = NSiblings;
-				/* record that deletion in the history */
-				AddEditOpInHistory (pE, pSelDoc, TRUE, FALSE);
+
+				if (!recorded)
+				  /* record that deletion in the history */
+				  AddEditOpInHistory (pE, pSelDoc, TRUE, FALSE);
+				recorded = FALSE;
+
 				/* retire l'element courant de l'arbre */
 				pA = GetOtherPairedElement (pE);
 				RemoveElement (pE);
@@ -1568,35 +1571,7 @@ boolean             save;
 			pS = pS->ElNext;
 			/* element detruit suivant */
 		      }
-		    /* cherche a fusionner l'element qui precede la partie */
-		    /* supprimee avec son nouveau suivant, si ce sont des */
-		    /* elements TEXT avec les memes attributs */
-		    if (!pageSelected)
-		      /* deja fait pour les pages */
-		      if (pPrev != NULL)
-			/* On conserve la longueur de l'element precedent, */
-			/* au cas ou la fusion aurait lieu. */
-			{
-			  nextChar = pPrev->ElTextLength + 1;
-			  if (IsIdenticalTextType (pPrev, pSelDoc, &pFree))
-			    /* la fusion a eu lieu */
-			    /* l'element qui suivait la partie coupee fait */
-			    /* maintenant partie de l'element precedent */
-			    {
-			      pNext = pPrev;
-			      if (pFree != NULL)
-				pFree->ElNext = NULL;
-			      oneAtLeast = TRUE;
-			      pSelDoc->DocModified = TRUE;
-			    }
-			  else
-			    /* il n'y a pas eu de fusion, l'element
-			       suivant sera a selectionner en entier*/
-			    nextChar = 0;
-			  /* applique les regles de presentation
-			     conditionnelles des elements qui precedent
-			     ou suivent la partie detruite. */
-			}
+
 		    if (!oneAtLeast)
 		      /* on n'a rien detruit. Retablit la slection
 			 initiale */
