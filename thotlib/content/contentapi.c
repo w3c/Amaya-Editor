@@ -228,34 +228,41 @@ static void SetContent (Element element, unsigned char *content,
 	  max = strlen (content);
 	  pBuf = pEl->ElText;
 	  if (pBuf == NULL)
-	    GetTextBuffer (&pEl->ElText);
-	  pBuf = pEl->ElText;
+	    {
+	      GetTextBuffer (&pEl->ElText);
+	      pBuf = pEl->ElText;
+	    }
 	  if (pBuf && max > 0)
 	    length = CopyS2B (content, max, pBuf, 0);
 	  else
 	    length = 0;
 	}
       else
-	{
 	  length = 0;
-	  /* point to the first buffer to be released */
-	  pBuf = pEl->ElText;
-	  if (pBuf)
-	    pBuf = pBuf->BuNext;
-	}
 
       delta = length - pEl->ElTextLength;
       pEl->ElTextLength = length;
       pEl->ElVolume = length;
 
-      /* Release extra buffers */
+      /* Point to the first buffer to be released */
       pBuf = pEl->ElText;
-      i = 0;
-      while (pBuf && i < length)
+      if (length == 0)
+	/* keep the first buffer, even if it's empty */
 	{
-	  i += pBuf->BuLength;
-	  pBuf = pBuf->BuNext;
+	  pBuf = pEl->ElText;
+	  if (pBuf)
+	    pBuf = pBuf->BuNext;	  
 	}
+      else
+	{
+	  i = 0;
+	  while (pBuf && i < length)
+	    {
+	      i += pBuf->BuLength;
+	      pBuf = pBuf->BuNext;
+	    }
+	}
+      /* Release extra buffers */
       while (pBuf)
 	{
 	  pNextBuff = pBuf->BuNext;
