@@ -1166,11 +1166,12 @@ STRING              text;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                InitFormAnswer (Document document, View view)
+void                InitFormAnswer (Document document, View view, STRING auth_realm)
 #else
-void                InitFormAnswer (document, view)
+void                InitFormAnswer (document, view, auth_realm)
 Document            document;
 View                view;
+STRING              auth_realm;
 
 #endif
 {
@@ -1179,6 +1180,8 @@ View                view;
    TtaNewForm (BaseDialog + FormAnswer, TtaGetViewFrame (document, view), 
 		TtaGetMessage (AMAYA, AM_GET_AUTHENTICATION),
 		TRUE, 1, 'L', D_CANCEL);
+   TtaNewLabel (BaseDialog + RealmText, BaseDialog + FormAnswer,
+		auth_realm);
    TtaNewTextForm (BaseDialog + NameText, BaseDialog + FormAnswer,
 		   TtaGetMessage (AMAYA, AM_NAME), NAME_LENGTH, 1, FALSE);
    TtaNewTextForm (BaseDialog + PasswordText, BaseDialog + FormAnswer,
@@ -1199,6 +1202,28 @@ View                view;
 #  else /* _WINDOWS */
    CreateAuthenticationDlgWindow (TtaGetViewFrame (document, view));
 #  endif /* _WINDOWS */
+}
+
+/*----------------------------------------------------------------------
+  InitInfo
+  Displays a message box with the given info text
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                InitInfo (STRING label, STRING info)
+#else
+void                InitInfo (label, info)
+STRING              label;
+STRING              info;
+
+#endif
+{
+  if (!info || *info == EOS)
+    return;
+#ifdef _WINDOWS   
+  MessageBox (NULL, info, label, MB_OK);
+#else /* !_WINDOWS */
+  TtaDisplayMessage (CONFIRM, info, NULL);
+#endif /* _WINDOWS */
 }
 
 /*----------------------------------------------------------------------

@@ -26,7 +26,10 @@ extern void UpdateTransfer ( Document document );
 extern void StopTransfer ( Document document,
                            View view );
 extern void InitFormAnswer ( Document document,
-                             View view );
+                             View view,
+                             STRING auth_realm );     
+extern void InitInfo ( STRING label,
+		       STRING info );
 extern void InitConfirm ( Document document,
                           View view,
                           STRING label );
@@ -163,7 +166,10 @@ extern void UpdateTransfer (/* Document document */);
 extern void StopTransfer (/* Document document,
                              View view */);
 extern void InitFormAnswer (/* Document document,
-                               View view */);
+                               View view,
+                               STRING auth_realm */);     
+extern void InitInfo (/*  STRING label,
+			  STRING info */);
 extern void InitConfirm (/* Document document,
                             View view,
                             STRING label */);

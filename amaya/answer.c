@@ -342,21 +342,23 @@ HTAlertPar         *reply;
        Lg_password = 0;
        Answer_password[0] = EOS;
 
-       /* Update the status bar */
+       /* prepare the authentication realm message */
        host = AmayaParseUrl (ISO2WideChar (me->urlName), _EMPTYSTR_, AMAYA_PARSE_HOST);
        label = TtaAllocString (((host) ? ustrlen (host) : 0)
-				     + ustrlen (TtaGetMessage (AMAYA, 
+			       + ustrlen (TtaGetMessage (AMAYA, 
 						   AM_AUTHENTICATION_REALM))
-				      + ((realm) ? ustrlen (realm) : 0)
-				     + 20); /*a bit more than enough memory */
+			       + ((realm) ? ustrlen (realm) : 0)
+			       + 20); /*a bit more than enough memory */
        usprintf (label, TtaGetMessage (AMAYA, AM_AUTHENTICATION_REALM),
-		((realm) ? realm : _EMPTYSTR_), 	((host) ? host : _EMPTYSTR_));
-       TtaSetStatus (me->docid, 1, label, NULL);
+		 ((realm) ? realm : _EMPTYSTR_), 
+		 ((host) ? host : _EMPTYSTR_));
+       /* show the popup */
+       InitFormAnswer (me->docid, 1, label);
+       /* free allocated memory */
        if (host)
 	 TtaFreeMemory (host);
        TtaFreeMemory (label);
 
-       InitFormAnswer (me->docid, 1);
        /* handle the user's answers back to the library */
        if (Answer_name[0] != EOS)
 	 {
