@@ -342,15 +342,19 @@ Element             elem;
 
    /* does the element have a Style_ attribute ? */
    elType = TtaGetElementType (elem);
-   attrType.AttrSSchema = elType.ElSSchema;
    schName = TtaGetSSchemaName (elType.ElSSchema);
    if (ustrcmp (schName, TEXT("MathML")) == 0)
-	attrType.AttrTypeNum = MathML_ATTR_style_;
+     {
+       attrType.AttrSSchema = elType.ElSSchema;
+       attrType.AttrTypeNum = MathML_ATTR_style_;
+     }
    else
 #ifdef GRAPHML
-   elType = TtaGetElementType (elem);
    if (ustrcmp (schName, TEXT("GraphML")) == 0)
-     attrType.AttrTypeNum = GraphML_ATTR_style_;
+     {
+       attrType.AttrSSchema = elType.ElSSchema;
+       attrType.AttrTypeNum = GraphML_ATTR_style_;
+     }
    else
 #endif
       {

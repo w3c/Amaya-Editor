@@ -68,8 +68,7 @@ ThotBool          removeSpan;
       return;
    elType = TtaGetElementType (el);
    /* if it's a MathML element, remove the style attribute defined in the
-      MathML DTD, otherwise, remove the style attribute defined in the
-      HTML DTD */
+      MathML DTD */
    if (!ustrcmp (TtaGetSSchemaName (elType.ElSSchema), TEXT("MathML")))
       {
       attrType.AttrSSchema = elType.ElSSchema;
@@ -78,8 +77,7 @@ ThotBool          removeSpan;
    else
 #ifdef GRAPHML
    /* if it's a GraphML element, remove the style attribute defined in the
-      GraphML DTD, otherwise, remove the style attribute defined in the
-      HTML DTD */
+      GraphML DTD */
    if (!ustrcmp (TtaGetSSchemaName (elType.ElSSchema), TEXT("GraphML")))
       {
       attrType.AttrSSchema = elType.ElSSchema;
@@ -87,6 +85,7 @@ ThotBool          removeSpan;
       }
    else
 #endif
+      /* remove the style attribute defined in the HTML DTD */
       {
       attrType.AttrSSchema = TtaGetSSchema (TEXT("HTML"), doc);
       attrType.AttrTypeNum = HTML_ATTR_Style_;
@@ -458,8 +457,7 @@ NotifyAttribute    *event;
 	/* empty Style attribute. Delete it */
 	elType = TtaGetElementType (el);
         /* if it's a MathML element, delete the style attribute defined in the
-           MathML DTD, otherwise, delete the style attribute defined in the
-           HTML DTD */
+           MathML DTD */
 	if (!ustrcmp (TtaGetSSchemaName (elType.ElSSchema), TEXT("MathML")))
 	   {
 	   atType.AttrSSchema = elType.ElSSchema;
@@ -468,8 +466,7 @@ NotifyAttribute    *event;
 	else
 #ifdef GRAPHML
         /* if it's a GraphML element, delete the style attribute defined in the
-           GraphML DTD, otherwise, delete the style attribute defined in the
-           HTML DTD */
+           GraphML DTD */
 	if (!ustrcmp (TtaGetSSchemaName (elType.ElSSchema), TEXT("GraphML")))
 	   {
 	   atType.AttrSSchema = elType.ElSSchema;
@@ -477,6 +474,7 @@ NotifyAttribute    *event;
 	   }
 	else
 #endif
+	   /* delete the style attribute defined in the HTML DTD */
 	   {
 	   atType.AttrSSchema = TtaGetSSchema (TEXT("HTML"), doc);
 	   atType.AttrTypeNum = HTML_ATTR_Style_;
@@ -873,11 +871,17 @@ Document            doc;
   /* get the current style attribute*/
   schName = TtaGetSSchemaName (elType.ElSSchema);
   if (ustrcmp (schName, TEXT("MathML")) == 0)
-    attrType.AttrTypeNum = MathML_ATTR_style_;
+    {
+      attrType.AttrSSchema = elType.ElSSchema;
+      attrType.AttrTypeNum = MathML_ATTR_style_;
+    }
   else
 #ifdef GRAPHML
   if (ustrcmp (schName, TEXT("GraphML")) == 0)
-    attrType.AttrTypeNum = GraphML_ATTR_style_;
+    {
+      attrType.AttrSSchema = elType.ElSSchema;
+      attrType.AttrTypeNum = GraphML_ATTR_style_;
+    }
   else
 #endif
     {
@@ -1291,14 +1295,20 @@ View                view;
       elType = TtaGetElementType (ClassReference);
     }
 
-  /* check if the element has an style attribute */
+  /* check if the element has a style attribute */
   schName = TtaGetSSchemaName (elType.ElSSchema);
   if (ustrcmp (schName, TEXT("MathML")) == 0)
-    attrType.AttrTypeNum = MathML_ATTR_style_;
+    {
+      attrType.AttrSSchema = elType.ElSSchema;
+      attrType.AttrTypeNum = MathML_ATTR_style_;
+    }
   else
 #ifdef GRAPHML
   if (ustrcmp (schName, TEXT("GraphML")) == 0)
-    attrType.AttrTypeNum = GraphML_ATTR_style_;
+    {
+      attrType.AttrSSchema = elType.ElSSchema;
+      attrType.AttrTypeNum = GraphML_ATTR_style_;
+    }
   else
 #endif
     {
