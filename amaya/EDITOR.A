@@ -64,6 +64,7 @@ MENUS
 	Types button:BAddress -> CreateAddress;
 
 	Types.Table button:BTable -> CreateTable;
+	Types.Table Separator;
 	Types.Table button:BCaption -> CreateCaption;
 	Types.Table button:BTHead -> CreateTHead;
 	Types.Table button:BTBody -> CreateTBody;
@@ -72,6 +73,8 @@ MENUS
 	Types.Table button:BDataCell -> CreateDataCell;
 	Types.Table button:BHeadingCell -> CreateHeadingCell;
 
+	Types.Form button:BForm -> CreateForm;
+	Types.Form Separator;
 	Types.Form button:BToggle -> CreateToggle;
 	Types.Form button:BRadio -> CreateRadio;
 	Types.Form button:BOption -> CreateOption;

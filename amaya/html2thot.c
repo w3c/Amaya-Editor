@@ -5080,14 +5080,16 @@ Document            doc;
    curChar = 0;
 }
 
+#ifdef HANDLE_COMPRESSED_FILES
+
 /*----------------------------------------------------------------------
    ReadCompressedFile
    load and uncompress a file in memory.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-char               *ReadCompressedFile (char *filename)
+static char               *ReadCompressedFile (char *filename)
 #else
-char               *ReadCompressedFile (filename)
+static char               *ReadCompressedFile (filename)
 char              *filename;
 
 #endif
@@ -5131,6 +5133,7 @@ char              *filename;
     gzclose(stream);
     return(buffer);
 }
+#endif
 
 #ifdef STANDALONE
 /*----------------------------------------------------------------------

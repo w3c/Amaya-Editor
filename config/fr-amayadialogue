@@ -64,53 +64,54 @@
 63 DataCell
 64 HeadingCell
 65 Form
-66 Toggle
-67 Radio
-68 Option
-69 TextInput
-70 TextArea
-71 CommandLine
-72 Zone active
-73 Rectangle
-74 Cercle
-75 Polygone
-76 Division
-77 Applet
+66 Form
+67 Toggle
+68 Radio
+69 Option
+70 TextInput
+71 TextArea
+72 CommandLine
+73 Zone active
+74 Rectangle
+75 Cercle
+76 Polygone
+77 Division
 78 Applet
-79 Param\350tre
-80 Transformer
-81 Cr\351er lien
-82 Cr\351er cible
-83 Changer lien
-84 D\351truire ancre
-85 Montrer boutons
-86 Montrer les informations
-87 Montrer la structure
-88 Montrer la vue altern\351e
-89 Montrer les zones actives
-90 Style de caract\350res
-91 Couleurs
-92 Format
-93 Cr\351er une Classe
-94 Appliquer une Classe
-95 Feuilles de style
-96 Types information
-97 Emphase
-98 Strong
-99 Cite
-100 D\351finition
-101 Code
-102 Variable
-103 Sample
-104 Keyboard
-105 Elements caract\350res
-106 Italique
-107 Gras
-108 Teletype
-109 Biff\351
-110 Gros
-111 Petit
-112 Indice
-113 Exposant
-114 Fonte
-115 Amaya Version 0.95 Alpha
+79 Applet
+80 Param\350tre
+81 Transformer
+82 Cr\351er lien
+83 Cr\351er cible
+84 Changer lien
+85 D\351truire ancre
+86 Montrer boutons
+87 Montrer les informations
+88 Montrer la structure
+89 Montrer la vue altern\351e
+90 Montrer les zones actives
+91 Style de caract\350res
+92 Couleurs
+93 Format
+94 Cr\351er une Classe
+95 Appliquer une Classe
+96 Feuilles de style
+97 Types information
+98 Emphase
+99 Strong
+100 Cite
+101 D\351finition
+102 Code
+103 Variable
+104 Sample
+105 Keyboard
+106 Elements caract\350res
+107 Italique
+108 Gras
+109 Teletype
+110 Biff\351
+111 Gros
+112 Petit
+113 Indice
+114 Exposant
+115 Fonte
+116 Amaya Version 0.95 Alpha

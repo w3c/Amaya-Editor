@@ -805,6 +805,24 @@ View                view;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
+void                CreateForm (Document document, View view)
+#else  /* __STDC__ */
+void                CreateForm (document, view)
+Document            document;
+View                view;
+
+#endif /* __STDC__ */
+{
+   ElementType         elType;
+
+   elType.ElSSchema = TtaGetDocumentSSchema (document);
+   elType.ElTypeNum = HTML_EL_Form;
+   TtaCreateElement (elType, document);
+}
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
 void                CreateToggle (Document document, View view)
 #else  /* __STDC__ */
 void                CreateToggle (document, view)
@@ -1337,6 +1355,33 @@ View                view;
    el = SearchAnchor (doc, el, TRUE);
    /* Select a new destination */
    if (el != NULL)
+      SelectDestination (doc, el);
+}
+
+/*----------------------------------------------------------------------
+   CreateOrChangeLink
+   If current selection is within an anchor, change that link, otherwise
+   create a link.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                CreateOrChangeLink (Document doc, View view)
+#else  /* __STDC__ */
+void                CreateOrChangeLink (doc, view)
+Document            doc;
+View                view;
+
+#endif /* __STDC__ */
+{
+   Element             el;
+   int                 firstSelectedChar, i;
+
+   TtaGiveFirstSelectedElement (doc, &el, &firstSelectedChar, &i);
+   /* Search the anchor element */
+   el = SearchAnchor (doc, el, TRUE);
+   /* Select a new destination */
+   if (el == NULL)
+      CreateLink (doc, view);
+   else
       SelectDestination (doc, el);
 }
 

@@ -64,53 +64,54 @@
 63 DataCell
 64 HeadingCell
 65 Form
-66 Toggle
-67 Radio
-68 Option
-69 TextInput
-70 TextArea
-71 CommandLine
-72 AreaMap
-73 Rectangle
-74 Circle
-75 Polygon
-76 Division
-77 Applet
+66 Form
+67 Toggle
+68 Radio
+69 Option
+70 TextInput
+71 TextArea
+72 CommandLine
+73 AreaMap
+74 Rectangle
+75 Circle
+76 Polygon
+77 Division
 78 Applet
-79 Parameter
-80 Transform
-81 Create Link
-82 Create Target
-83 Change Link
-84 Delete Anchor
-85 Show Buttonbar
-86 Show Informations
-87 Show Structure
-88 Show Alternate
-89 Show Map Areas
-90 Character Style
-91 Colors
-92 Format
-93 Create Class
-94 Apply Class
-95 Style sheets
-96 Information Type
-97 Emphasis
-98 Strong
-99 Cite
-100 Definition
-101 Code
-102 Variable
-103 Sample
-104 Keyboard
-105 Character Element
-106 Italic
-107 Bold
-108 Teletype
-109 StrikeOut
-110 Big
-111 Small
-112 Sub
-113 Sup
-114 Font
-115 Amaya Version 0.95 Alpha
+79 Applet
+80 Parameter
+81 Transform
+82 Create Link
+83 Create Target
+84 Change Link
+85 Delete Anchor
+86 Show Buttonbar
+87 Show Informations
+88 Show Structure
+89 Show Alternate
+90 Show Map Areas
+91 Character Style
+92 Colors
+93 Format
+94 Create Class
+95 Apply Class
+96 Style sheets
+97 Information Type
+98 Emphasis
+99 Strong
+100 Cite
+101 Definition
+102 Code
+103 Variable
+104 Sample
+105 Keyboard
+106 Character Element
+107 Italic
+108 Bold
+109 Teletype
+110 StrikeOut
+111 Big
+112 Small
+113 Sub
+114 Sup
+115 Font
+116 Amaya Version 0.95 Alpha

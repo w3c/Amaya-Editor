@@ -106,6 +106,8 @@ extern void CreateParameter ( Document document,
                               View view );
 extern void ChangeLink ( Document doc,
                          View view );
+extern void CreateOrChangeLink ( Document doc,
+                                 View view );
 extern void DeleteAnchor ( Document doc,
                            View view );
 
@@ -211,6 +213,8 @@ extern void CreateParameter (/* Document document,
                                 View view */);
 extern void ChangeLink (/* Document doc,
                            View view */);
+extern void CreateOrChangeLink (/* Document doc,
+                                   View view */);
 extern void DeleteAnchor (/* Document doc,
                              View view */);
 
