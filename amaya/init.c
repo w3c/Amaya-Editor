@@ -3853,7 +3853,9 @@ NotifyEvent        *event;
    /* initialize automaton for the HTML parser */
    InitAutomaton ();
    /* initialize the configuration menu context */
+#ifdef CONF_MENU
    InitConfMenu ();
+#endif /* CONF_MENU */
 #if !defined(AMAYA_JAVA) && !defined(AMAYA_ILU)
    /* initialize the libwww */
    QueryInit ();

@@ -1,3 +1,4 @@
+#ifdef CONF_MENU
 /*
  *
  *  (c) COPYRIGHT MIT and INRIA, 1999
@@ -114,8 +115,6 @@ void                InitConfMenu ()
   AppearanceBase = TtaSetCallback (AppearanceCallbackDialog,
 				   MAX_APPEARANCEMENU_DLG);
 }
-
-#ifndef _WINDOWS
 
 /*----------------------------------------------------------------------
    GetEnvString: front end to TtaGetEnvString. If the variable name doesn't
@@ -791,7 +790,7 @@ STRING              pathname;
    TtaShowDialogue (AppearanceBase + AppearanceMenu, FALSE);
 }
 
-#endif /* !_WINDOWS */
+#endif /* CONF_MENU */
 
 
 
