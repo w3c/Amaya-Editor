@@ -633,86 +633,6 @@ void AttrLangDeleted (NotifyAttribute *event)
      }
 }
 
-
-/*----------------------------------------------------------------------
- MoveAttrLang
- 
- -----------------------------------------------------------------------*/
-static void MoveAttrLang (Attribute oldAttr, Element *el, Document doc)
-{
-  Element	first, parent, sibling, next, firstChild, lastChild;
-  Attribute	newAttr, attr;
-  AttributeType	attrType;
-  int		kind, len;
-  char	       *value    = TtaGetMemory (ATTRLEN); 
-  char         * oldValue = TtaGetMemory (ATTRLEN);
-  ThotBool	sameLang;
-
-  /* if all siblings have the same LANG attribute, move that attibute to
-     the parent element, unless the parent element has exception Hidden
-     or the parent element is the document element */
-  parent = TtaGetParent (*el);
-  if (parent)
-     if (TtaIsHidden (parent) || !TtaGetParent (parent))
-        parent = NULL;
-  if (parent != NULL)
-     {
-     TtaGiveAttributeType (oldAttr, &attrType, &kind);
-     len = ATTRLEN - 1;
-     TtaGiveTextAttributeValue (oldAttr, oldValue, &len);
-     first = TtaGetFirstChild (parent);
-     sameLang = TRUE;
-     sibling = first;
-     while (sibling != NULL && sameLang)
-	{
-	if (sibling != *el)
-	   {
-	   attr = TtaGetAttribute (sibling, attrType);
-	   if (attr == NULL)
-	      sameLang = FALSE;
-	   else
-	      {
-	      len = ATTRLEN - 1;
-	      TtaGiveTextAttributeValue (attr, value, &len);
-	      if (strcasecmp(oldValue, value) != 0)
-		 sameLang = FALSE;
-	      }
-	   }
-	if (sameLang)
-	   TtaNextSibling (&sibling);
-	}
-     if (sameLang)
-        /* all sibling have the same LANG attribute */
-	{
-	/* delete the LANG attribute for all siblings */
-	sibling = first;
-	while (sibling != NULL)
-	   {
-	   attr = TtaGetAttribute (sibling, attrType);
-	   TtaRemoveAttribute (sibling, attr, doc);
-	   next = sibling;
-	   TtaNextSibling (&next);
-	   DeleteSpanIfNoAttr (sibling, doc, &firstChild, &lastChild);
-	   sibling = next;
-	   }
-	/* associate a LANG attribute with the parent element */
-	newAttr = TtaGetAttribute (parent, attrType);
-	if (newAttr == NULL)
-	  {
-	    newAttr = TtaNewAttribute (attrType);
-	    TtaAttachAttribute (parent, newAttr, doc);
-	  }
-	TtaSetAttributeText (newAttr, oldValue, parent, doc);
-	*el = parent;
-	/* do it again for the parent element */
-        MoveAttrLang (newAttr, el, doc);
-	}
-     }
-  TtaFreeMemory (value);
-  TtaFreeMemory (oldValue);
-}
-
-
 /*----------------------------------------------------------------------
  AttrLangCreated
  A Lang attribute has been created
@@ -726,11 +646,7 @@ void AttrLangCreated (NotifyAttribute *event)
   Attribute	attr;
   char	       *value = TtaGetMemory (ATTRLEN); 
 
-  /* move the LANG attribute to the parent element if all sibling have the
-     same attribute with the same value */
   elem = event->element;
-  MoveAttrLang (event->attribute, &elem, event->document);
-
   len = ATTRLEN - 1;
   TtaGiveTextAttributeValue (event->attribute, value, &len);
   if (strcasecmp(value, "Symbol") == 0)
