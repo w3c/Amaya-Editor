@@ -7288,19 +7288,24 @@ char *InitStringForCombobox()
   char   *url_home, *urlstring, *app_home;
   FILE   *urlfile;
 
-  /* Initialize string by reading a file in APPHOME 
-		  .amaya/list_url.dat */
+  /* Initialize string
+     by reading a file in APPHOME 
+     .amaya/list_url.dat */
   url_home = (char *) TtaGetMemory (MAX_LENGTH);
   urlstring = (char *) TtaGetMemory (MAX_LENGTH);
-  buffer = (char *) TtaGetMemory (MAX_LENGTH);
+  
   
   /* Read list_url.dat into APP_HOME directory */
-  app_home = TtaGetEnvString ("APP_HOME");
-  sprintf (url_home, "%s%clist_url.dat", app_home, DIR_SEP); 
+  sprintf (url_home,
+	   "%s%clist_url.dat",
+	   app_home,
+	   DIR_SEP);
   /* ./.amaya/list_url.dat */
   urlfile = TtaReadOpen (url_home);
+  *urlstring = EOS;
   if (urlfile)
     {
+      buffer = (char *) TtaGetMemory (MAX_LENGTH);
       while (fscanf (urlfile, "%s", urlstring) > 0)
 	{
 	  strcat (buffer, urlstring);
