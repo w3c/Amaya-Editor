@@ -797,6 +797,7 @@ View                view;
       /* Rien a copier */
       return 0;
 
+   lg = 0;
    if (lastChar == 0)
       /* Il faut prendre tout le contenu de tout l'element */
       lastChar = pLastEl->ElVolume;
@@ -819,10 +820,13 @@ View                view;
 
 	     /* On ajoute le volume de l'element */
 	     if (pEl != NULL)
-		if (pEl == pLastEl)
+	       {
+		 if (pEl == pLastEl)
 		   maxLength += lastChar;
-		else
+		 else
 		   maxLength += pEl->ElVolume;
+		 lg += 2;
+	       }
 	  }
      }
 
@@ -831,7 +835,7 @@ View                view;
       return 0;
 
    /* On reserve un volant de 100 caracteres pour ajouter des CR */
-   max = maxLength + 100;
+   max = maxLength + lg;
    /* Alloue un Xbuffer de la longueur voulue */
    Xbuffer = TtaAllocString (max);
 
