@@ -1398,7 +1398,7 @@ void StopTransfer (Document document, View view)
   else if (DocNetworkStatus[document] & AMAYA_NET_ACTIVE)
     {
       if (TtaGetViewFrame (document, 1) != 0)
-	TtaChangeButton (document, 1, 1, stopN, FALSE);
+	TtaChangeButton (document, 1, iStop, stopN, FALSE);
       StopRequest (document);
       FilesLoading[document] = 0;
       DocNetworkStatus[document] = AMAYA_NET_INACTIVE;
@@ -2896,6 +2896,8 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
       iLogo = TtaAddToolBarButton( window_id, iconLogo,
 				   NULL, NULL, NULL, TRUE );
     }
+  /* force the logo to be enable */
+  TtaChangeButton (doc, 1, iLogo, iconLogo, TRUE);
 #endif /* _WX */
 
    /* store the new document type */
