@@ -1151,10 +1151,10 @@ PtrFont ReadFont (char script, int family, int highlight, int size,
 /*----------------------------------------------------------------------
   GetFontIdentifierFromConfig computes the name of a Thot font.
   ----------------------------------------------------------------------*/
-static int GetFontIdentifierFromConfig (char script, int family, int highlight, int size,
-		     TypeUnit unit, char r_name[10], char r_nameX[100])
+static int GetFontIdentifierFromConfig (char script, int family, int highlight,
+					int size, TypeUnit unit, char r_name[10],
+					char r_nameX[100])
 {
- 
 #ifdef _FONTCONFIG
  int i, j, k;
   char *result = NULL;
@@ -1201,6 +1201,8 @@ static int GetFontIdentifierFromConfig (char script, int family, int highlight, 
   GeneratePoscriptFont (r_name, script, 
 			family, highlight, size);
   return 1;
+#else /* _FONTCONFIG */
+  return 0;
 #endif /* _FONTCONFIG */
 }
 /*----------------------------------------------------------------------
