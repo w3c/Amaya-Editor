@@ -3095,6 +3095,7 @@ static char *ParseCSSUrl (char *cssRule, char **url)
   char                      *base, *ptr;
 
   cssRule = SkipBlanksAndComments (cssRule);
+  saved = *cssRule;
   if (*cssRule == '(')
     {
       cssRule++;
