@@ -2523,10 +2523,9 @@ static ThotBool RemovePosRelation (PtrBox pOrginBox, PtrBox pTargetBox,
 
 
 /*----------------------------------------------------------------------
-   RemoveDimRelation defait, s'il existe, le lien de dimension     
-   horizontale ou verticale de la boite pOrginBox vers la boite
-   pTargetBox et retasse la liste des liens.                   
-   Rend la valeur Vrai si l'operation a ete executee.          
+  RemoveDimRelation removes if it exists the horizontal or vertical link
+  from pOrginBox to pTargetBox and compact the list.
+  Return TRUE if the operation is done.
   ----------------------------------------------------------------------*/
 static ThotBool RemoveDimRelation (PtrBox pOrginBox, PtrBox pTargetBox,
 				   ThotBool horizRef)
@@ -2915,13 +2914,13 @@ void ClearAllRelations (PtrBox pBox, int frame)
 
 /*----------------------------------------------------------------------
   ClearDimRelation looks for the box that gives the current box dimension
-  It could be  the enclosing, asibling, or a relation out of structure
+  It could be  the enclosing, a sibling, or a relation out of structure
   (the relation is stored in the other box).
    Si cette dependance existe encore, on detruit la        
    relation. L'indicateur BtLg(Ht)HorsStruct indique que   
    la relation est hors-structure.                         
   ----------------------------------------------------------------------*/
-void    ClearDimRelation (PtrBox pBox, ThotBool horizRef, int frame)
+void ClearDimRelation (PtrBox pBox, ThotBool horizRef, int frame)
 {
   PtrAbstractBox      pRefAb;
   PtrAbstractBox      pAb;
@@ -2932,32 +2931,29 @@ void    ClearDimRelation (PtrBox pBox, ThotBool horizRef, int frame)
   pRefAb = pBox->BxAbstractBox;
   pAb = pRefAb->AbEnclosing;
   loop = FALSE;
-
-  /* Est-ce une relation hors-structure en X ? */
   if ((horizRef && pBox->BxWOutOfStruct) ||
       (!horizRef && pBox->BxHOutOfStruct))
     {
-      /* Si la boite est detruite la procedure ClearOutOfStructRelation
-	 detruit automatiquement cette relation */
+      /* relation out of structure */
       if (!IsDead (pRefAb))
 	{
-	  /* On remonte a la racine depuis le pave pere */
-	  if (pAb != NULL)
-	    while (pAb->AbEnclosing != NULL)
+	  /* got to the root abstract box */
+	  if (pAb)
+	    while (pAb->AbEnclosing)
 	      pAb = pAb->AbEnclosing;
 	  
-	  /* Recherche dans toute l'arborecence la relation inverse */
+	  /* look every where the invert relation */
 	  loop = TRUE;
 	  if (horizRef)
 	    {
-	      /* La dimension est elastique en X ? */
 	      if (pBox->BxHorizFlex)
 		{
-		  while (loop && pAb != NULL)
+		  /* strechable box */
+		  while (loop && pAb)
 		    {
-		      if (pAb->AbBox != NULL)
+		      if (pAb->AbBox)
 			loop = !RemovePosRelation (pAb->AbBox, pBox, NULL, FALSE, FALSE, horizRef);
-		      if (pAb != NULL)
+		      if (pAb)
 			pAb = NextAbToCheck (pAb, pRefAb);
 		    }
 		  
@@ -2970,103 +2966,109 @@ void    ClearDimRelation (PtrBox pBox, ThotBool horizRef, int frame)
 		  /* Annule la largeur de la boite */
 		  ResizeWidth (pBox, NULL, NULL, -pBox->BxW, 0, 0, 0, frame);
 		}
-	      /* La dimension n'est pas elastique en X */
 	      else
-		while (loop && pAb != NULL)
+		/* not strechable box */
+		while (loop && pAb)
 		  {
-		    if (pAb->AbBox != NULL)
+		    if (pAb->AbBox)
 		      loop = !RemoveDimRelation (pAb->AbBox, pBox, horizRef);
-		    if (pAb != NULL)
+		    if (pAb)
 		      pAb = NextAbToCheck (pAb, pRefAb);
 		  }
 
-	      /* La relation hors-structure est detruite */
+	      /* not out of structure relations now */
 	      pBox->BxWOutOfStruct = FALSE;
 	    }
-	     else
-	       {
-		 /* La dimension est elastique en Y ? */
-		  if (pBox->BxVertFlex)
+	  else
+	    {
+	      if (pBox->BxVertFlex)
+		{
+		  /* strechable box */
+		  while (loop && pAb)
 		    {
-		      while (loop && pAb != NULL)
-			{
-			  if (pAb->AbBox != NULL)
-			    loop = !RemovePosRelation (pAb->AbBox, pBox, NULL, FALSE, FALSE, horizRef);
-			  if (pAb != NULL)
-			    pAb = NextAbToCheck (pAb, pRefAb);
-			}
-		      
-		      /* Il faut retablir le point fixe */
-		      pBox->BxVertEdge = pBox->BxAbstractBox->AbVertPos.PosEdge;
-		      /* La boite n'est pas inversee */
-		      pBox->BxVertInverted = FALSE;
-		      /* La dimension n'est plus elastique */
-		      pBox->BxVertFlex = FALSE;
-		      /* Annule la hauteur de la boite */
-		      ResizeHeight (pBox, NULL, NULL, -pBox->BxH, 0, 0, frame);
+		      if (pAb->AbBox)
+			loop = !RemovePosRelation (pAb->AbBox, pBox, NULL, FALSE, FALSE, horizRef);
+		      if (pAb)
+			pAb = NextAbToCheck (pAb, pRefAb);
 		    }
-		  /* La dimension n'est pas elastique en Y */
-		  else
-		    while (loop && pAb != NULL)
-		      {
-			if (pAb->AbBox != NULL)
-			  loop = !RemoveDimRelation (pAb->AbBox, pBox, horizRef);
-			if (pAb != NULL)
-			  pAb = NextAbToCheck (pAb, pRefAb);
-		      }
 		  
-		  /* La relation hors-structure est detruite */
-		  pBox->BxHOutOfStruct = FALSE;
-	       }
+		  /* Il faut retablir le point fixe */
+		  pBox->BxVertEdge = pBox->BxAbstractBox->AbVertPos.PosEdge;
+		  /* La boite n'est pas inversee */
+		  pBox->BxVertInverted = FALSE;
+		  /* La dimension n'est plus elastique */
+		  pBox->BxVertFlex = FALSE;
+		  /* Annule la hauteur de la boite */
+		  ResizeHeight (pBox, NULL, NULL, -pBox->BxH, 0, 0, frame);
+		}
+	      else
+		/* not strechable box */
+		while (loop && pAb)
+		  {
+		    if (pAb->AbBox)
+		      loop = !RemoveDimRelation (pAb->AbBox, pBox, horizRef);
+		    if (pAb)
+		      pAb = NextAbToCheck (pAb, pRefAb);
+		  }
+	    }
 	}
     }
-   else
-     {
-       /* Est-ce que la dimension depend de l'englobante ? */
-       if (pAb != NULL)
-	 {
-	   loop = !RemoveDimRelation (pAb->AbBox, pBox, horizRef);
-	   if (loop)
-	     pAb = pAb->AbFirstEnclosed;
-	 }
+  else
+    {
+      /* Remove a possible relation from the enclosing boxe */
+      if (pAb)
+	{
+	  loop = !RemoveDimRelation (pAb->AbBox, pBox, horizRef);
+	  if (loop)
+	    pAb = pAb->AbFirstEnclosed;
+	}
 
-       /* Est-ce que la dimension de la boite depend d'une voisine ? */
-       while (loop && pAb != NULL)
-	 {
-	   if (pAb->AbBox != NULL && pAb != pRefAb)
-	     {
-	       loop = !RemoveDimRelation (pAb->AbBox, pBox, horizRef);
-	       if (loop)
-		 pAb = pAb->AbNext;
-	     }
-	   else
-	     pAb = pAb->AbNext;
-	 }
+      /* Remove a pposible relation from sibling boxes */
+      while (loop && pAb)
+	{
+	  if (pAb->AbBox && pAb != pRefAb)
+	    {
+	      loop = !RemoveDimRelation (pAb->AbBox, pBox, horizRef);
+	      if (loop)
+		pAb = pAb->AbNext;
+	    }
+	  else
+	    pAb = pAb->AbNext;
+	}
+      
+      /* La dimension est elastique en X ? */
+      if (horizRef && pBox->BxHorizFlex)
+	{
+	  /* La boite n'est pas inversee */
+	  pBox->BxHorizInverted = FALSE;
+	  /* La dimension n'est plus elastique */
+	  pBox->BxHorizFlex = FALSE;
+	  /* Il faut retablir le point fixe */
+	  pBox->BxHorizEdge = pBox->BxAbstractBox->AbHorizPos.PosEdge;
+	  /* Annule la largeur de la boite */
+	  ResizeWidth (pBox, NULL, NULL, -pBox->BxW, 0, 0, 0, frame);
+	}
+      
+      /* La dimension est elastique en Y ? */
+      if (!horizRef && pBox->BxVertFlex)
+	{
+	  /* La boite n'est pas inversee */
+	  pBox->BxVertInverted = FALSE;
+	  /* La dimension n'est plus elastique */
+	  pBox->BxVertFlex = FALSE;
+	  /* Il faut retablir le point fixe */
+	  pBox->BxVertEdge = pBox->BxAbstractBox->AbVertPos.PosEdge;
+	  /* Annule la hauteur de la boite */
+	  ResizeHeight (pBox, NULL, NULL, -pBox->BxH, 0, 0, frame);
+	}
+    }
 
-       /* La dimension est elastique en X ? */
-       if (horizRef && pBox->BxHorizFlex)
-	 {
-	   /* La boite n'est pas inversee */
-	   pBox->BxHorizInverted = FALSE;
-	   /* La dimension n'est plus elastique */
-	   pBox->BxHorizFlex = FALSE;
-	   /* Il faut retablir le point fixe */
-	   pBox->BxHorizEdge = pBox->BxAbstractBox->AbHorizPos.PosEdge;
-	   /* Annule la largeur de la boite */
-	   ResizeWidth (pBox, NULL, NULL, -pBox->BxW, 0, 0, 0, frame);
-	 }
-
-       /* La dimension est elastique en Y ? */
-       if (!horizRef && pBox->BxVertFlex)
-	 {
-	   /* La boite n'est pas inversee */
-	   pBox->BxVertInverted = FALSE;
-	   /* La dimension n'est plus elastique */
-	   pBox->BxVertFlex = FALSE;
-	   /* Il faut retablir le point fixe */
-	   pBox->BxVertEdge = pBox->BxAbstractBox->AbVertPos.PosEdge;
-	   /* Annule la hauteur de la boite */
-	   ResizeHeight (pBox, NULL, NULL, -pBox->BxH, 0, 0, frame);
-	 }
-     }
+  /* remove a possible dim relation from the root box */
+  pAb = pRefAb->AbEnclosing;
+  if (pAb)
+    {
+      while (pAb->AbEnclosing)
+	pAb = pAb->AbEnclosing;
+      RemoveDimRelation (pAb->AbBox, pBox, horizRef);
+    }
 }

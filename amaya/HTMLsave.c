@@ -1767,17 +1767,19 @@ void Synchronize (Document doc, View view)
    char              tempdir[MAX_LENGTH];
    DisplayMode       dispMode;
    Document          xmlDoc, otherDoc;
+   ThotBool          saveBefore;
 
    if (!DocumentURLs[doc])
      /* the document is not loaded yet */
      return;
    otherDoc = 0;
+   saveBefore = TtaIsDocumentUpdated (doc);
    if (DocumentTypes[doc] == docCSS)
      {
        if (!TtaIsDocumentModified (doc))
 	 return;
      }
-   else if (!TtaIsDocumentUpdated (doc))
+   else if (!saveBefore)
      /* nothing new to be saved in this view of the document. Let see if
         the other view has been modified */
      {
@@ -1790,10 +1792,10 @@ void Synchronize (Document doc, View view)
        else if (DocumentTypes[doc] == docSource)
           otherDoc = GetDocFromSource (doc);
        else
-	  return;
-       if (otherDoc == 0 || !TtaIsDocumentUpdated (otherDoc))
+	 otherDoc = 0;
+       if (otherDoc && TtaIsDocumentUpdated (otherDoc))
 	  /* the other view has not been modified either */
-	  return;
+	  saveBefore = TRUE;
      }
 
    /* change display mode to avoid flicker due to callbacks executed when
@@ -1801,7 +1803,7 @@ void Synchronize (Document doc, View view)
    dispMode = TtaGetDisplayMode (doc);
    if (dispMode == DisplayImmediately)
      TtaSetDisplayMode (doc, DeferredDisplay);
-
+       
    if (DocumentTypes[doc] == docHTML ||
        DocumentTypes[doc] == docSVG ||
        DocumentTypes[doc] == docLibrary ||
@@ -1809,24 +1811,27 @@ void Synchronize (Document doc, View view)
        DocumentTypes[doc] == docXml)
      /* it's the structured form of the document */
      {
-       /* save the current state of the document into the temporary file */
-       tempdoc = GetLocalPath (doc, DocumentURLs[doc]);
-       SetNamespacesAndDTD (doc);
-       if (DocumentTypes[doc] == docLibrary || DocumentTypes[doc] == docHTML)
+       if (saveBefore)
 	 {
-	   if (TtaGetDocumentProfile (doc) == L_Xhtml11)
-	     TtaExportDocumentWithNewLineNumbers (doc, tempdoc, "HTMLT11");
-	   else if (DocumentMeta[doc]->xmlformat)
-	     TtaExportDocumentWithNewLineNumbers (doc, tempdoc, "HTMLTX");
+	   /* save the current state of the document into the temporary file */
+	   tempdoc = GetLocalPath (doc, DocumentURLs[doc]);
+	   SetNamespacesAndDTD (doc);
+	   if (DocumentTypes[doc] == docLibrary || DocumentTypes[doc] == docHTML)
+	     {
+	       if (TtaGetDocumentProfile (doc) == L_Xhtml11)
+		 TtaExportDocumentWithNewLineNumbers (doc, tempdoc, "HTMLT11");
+	       else if (DocumentMeta[doc]->xmlformat)
+		 TtaExportDocumentWithNewLineNumbers (doc, tempdoc, "HTMLTX");
+	       else
+		 TtaExportDocumentWithNewLineNumbers (doc, tempdoc, "HTMLT");
+	     }
+	   else if (DocumentTypes[doc] == docSVG)
+	     TtaExportDocumentWithNewLineNumbers (doc, tempdoc, "SVGT");
+	   else if (DocumentTypes[doc] == docMath)
+	     TtaExportDocumentWithNewLineNumbers (doc, tempdoc, "MathMLT");
 	   else
-	     TtaExportDocumentWithNewLineNumbers (doc, tempdoc, "HTMLT");
+	     TtaExportDocumentWithNewLineNumbers (doc, tempdoc, NULL);
 	 }
-       else if (DocumentTypes[doc] == docSVG)
-	 TtaExportDocumentWithNewLineNumbers (doc, tempdoc, "SVGT");
-       else if (DocumentTypes[doc] == docMath)
-	 TtaExportDocumentWithNewLineNumbers (doc, tempdoc, "MathMLT");
-       else
-	 TtaExportDocumentWithNewLineNumbers (doc, tempdoc, NULL);
        RedisplaySourceFile (doc);
        otherDoc = DocumentSource[doc];
        /* the other document is now different from the original file. It can
@@ -1838,10 +1843,13 @@ void Synchronize (Document doc, View view)
      {
        xmlDoc = GetDocFromSource (doc);
        otherDoc = xmlDoc;
-       /* save the current state of the document into the temporary file */
-       tempdoc = GetLocalPath (xmlDoc, DocumentURLs[xmlDoc]);
-       TtaExportDocumentWithNewLineNumbers (doc, tempdoc, "TextFileT");
-       TtaExtractName (tempdoc, tempdir, docname);
+       if (saveBefore)
+	 {
+	   /* save the current state of the document into the temporary file */
+	   tempdoc = GetLocalPath (xmlDoc, DocumentURLs[xmlDoc]);
+	   TtaExportDocumentWithNewLineNumbers (doc, tempdoc, "TextFileT");
+	   TtaExtractName (tempdoc, tempdir, docname);
+	 }
        RestartParser (xmlDoc, tempdoc, tempdir, docname);
        /* the other document is now different from the original file. It can
 	  be saved */
@@ -1853,11 +1861,14 @@ void Synchronize (Document doc, View view)
      }
    else
      {
-       /* save the current state of the CSS document into the temporary file */
-       tempdoc = GetLocalPath (doc, DocumentURLs[doc]);
-       TtaExportDocument (doc, tempdoc, "TextFileT");
-       /* reapply the CSS to relative documents */
-       UpdateStyleSheet (DocumentURLs[doc], tempdoc);
+       if (saveBefore)
+	 {
+	   /* save the current state of the CSS document into the temporary file */
+	   tempdoc = GetLocalPath (doc, DocumentURLs[doc]);
+	   TtaExportDocument (doc, tempdoc, "TextFileT");
+	   /* reapply the CSS to relative documents */
+	   UpdateStyleSheet (DocumentURLs[doc], tempdoc);
+	 }
      }
 
    if (DocumentTypes[otherDoc] != docSource)

@@ -5617,9 +5617,12 @@ void CheckBlocksInCharElem (Document doc)
 		  while (child != NULL);
 		  elType.ElTypeNum = HTML_EL_Pseudo_paragraph;
 		  if (TtaGetTypedAncestor (parent, elType))
-		    /* there is already an ancestor of type pseudo paragraph.
-		       Delete this one */
-		    TtaDeleteTree (el, doc);
+		    {
+		      /* there is already an ancestor of type pseudo paragraph.
+			 Delete this one */
+		      TtaDeleteTree (el, doc);
+		      el = NULL;
+		    }
 		  else
 		    /* move parent as a child of the pseudo paragraph */
 		    {

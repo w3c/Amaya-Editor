@@ -3735,7 +3735,7 @@ Element             TtaGetParent (Element element)
    Return value:
    type of the element.
    ---------------------------------------------------------------------- */
-ElementType         TtaGetElementType (Element element)
+ElementType TtaGetElementType (Element element)
 {
    ElementType         elementType;
 

@@ -61,7 +61,7 @@
 #include "writepivot_f.h"
 
 static char nameBuffer[100];
-static char ISObuffer[100];
+static char ISObuffer[400];
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
@@ -967,7 +967,7 @@ char *TtaGetSSchemaName (SSchema schema)
        TtaError (ERR_invalid_parameter);
      }
    else
-     strcpy (ISObuffer, ((PtrSSchema) schema)->SsName);
+     strncpy (ISObuffer, ((PtrSSchema) schema)->SsName, 400);
    return ISObuffer;
 }
 
@@ -990,7 +990,7 @@ char *TtaGetPSchemaName (SSchema schema)
        TtaError (ERR_invalid_parameter);
      }
    else
-     strcpy (ISObuffer, ((PtrSSchema) schema)->SsDefaultPSchema);
+     strncpy (ISObuffer, ((PtrSSchema) schema)->SsDefaultPSchema, 400);
    return ISObuffer;
 }
 

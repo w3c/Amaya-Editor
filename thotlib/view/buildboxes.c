@@ -2639,12 +2639,13 @@ void RemoveBoxes (PtrAbstractBox pAb, ThotBool rebuild, int frame)
 {
   PtrAbstractBox      pChildAb;
   PtrBox              pBox, pPieceBox;
+  PtrFloat            pfloat;
   ThotBool            changeSelectBegin;
   ThotBool            changeSelectEnd;
 
   if (pAb != NULL)
     {
-      if (pAb->AbBox != NULL)
+      if (pAb->AbBox)
 	{
 	  /* Liberation des lignes et boites coupees */
 	  pBox = pAb->AbBox;
@@ -2655,15 +2656,31 @@ void RemoveBoxes (PtrAbstractBox pAb, ThotBool rebuild, int frame)
 	      /* unregister the box */
 	      pBox->BxDisplay = FALSE;
 	      pBox->BxFill = FALSE;
+	      if (pBox->BxType == BoBlock || pBox->BxType == BoFloatBlock)
+		{
+		  /* free floating contexts */
+		  while (pBox->BxLeftFloat)
+		    {
+		      pfloat = pBox->BxLeftFloat;
+		      pBox->BxLeftFloat = pfloat->FlNext;
+		      TtaFreeMemory (pfloat);
+		    }
+		  while (pBox->BxRightFloat)
+		    {
+		      pfloat = pBox->BxRightFloat;
+		      pBox->BxRightFloat = pfloat->FlNext;
+		      TtaFreeMemory (pfloat);
+		    }
+		  RemoveLines (pBox, frame, pBox->BxFirstLine, TRUE,
+			       &changeSelectBegin, &changeSelectEnd);
+		}
+	      else if (pBox->BxType == BoTable && ThotLocalActions[T_cleartable])
+		(*ThotLocalActions[T_cleartable]) (pAb);
+	      else if (pBox->BxType == BoColumn && ThotLocalActions[T_checktable])
+		(*ThotLocalActions[T_checktable]) (NULL, pAb, NULL, frame);
+	      else if (pBox->BxType == BoRow && ThotLocalActions[T_checktable])
+		(*ThotLocalActions[T_checktable]) (NULL, NULL, pAb, frame);
 	    }
-	  if (pBox->BxType == BoBlock || pBox->BxType == BoFloatBlock)
-	    RemoveLines (pBox, frame, pBox->BxFirstLine, &changeSelectBegin, &changeSelectEnd);
-	  else if (pBox->BxType == BoTable && ThotLocalActions[T_cleartable])
-	    (*ThotLocalActions[T_cleartable]) (pAb);
-	  else if (pBox->BxType == BoColumn && ThotLocalActions[T_checktable])
-	    (*ThotLocalActions[T_checktable]) (NULL, pAb, NULL, frame);
-	  else if (pBox->BxType == BoRow && ThotLocalActions[T_checktable])
-	    (*ThotLocalActions[T_checktable]) (NULL, NULL, pAb, frame);
 	  else if (pAb->AbLeafType == LtPolyLine)
 	    FreePolyline (pBox);
 	  else if (pAb->AbLeafType == LtPath)
@@ -2689,7 +2706,6 @@ void RemoveBoxes (PtrAbstractBox pAb, ThotBool rebuild, int frame)
 		}
 	    }
 
-	  pChildAb = pAb->AbFirstEnclosed;
 	  pAb->AbNew = rebuild;
 	  if (rebuild)
 	    {
@@ -2702,6 +2718,7 @@ void RemoveBoxes (PtrAbstractBox pAb, ThotBool rebuild, int frame)
 	    }
 
 	  /* Liberation des boites des paves inclus */
+	  pChildAb = pAb->AbFirstEnclosed;
 	  while (pChildAb != NULL)
 	    {
 	      RemoveBoxes (pChildAb, rebuild, frame);
@@ -2724,6 +2741,7 @@ void RemoveBoxes (PtrAbstractBox pAb, ThotBool rebuild, int frame)
 	      pAb->AbBox->DisplayList = 0;
 	    }
 #endif /* _GL */
+	  ClearAllRelations (pAb->AbBox, frame);
 	  pAb->AbBox = FreeBox (pAb->AbBox);
 	  pAb->AbBox = NULL;
 	}
@@ -3415,7 +3433,6 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
       /* Destruction */
       pCell = GetParentCell (pCurrentBox);
       isCell = pAb->AbBox->BxType == BoCell;
-      ClearAllRelations (pBox, frame);
       RemoveBoxes (pAb, FALSE, frame);
       
       /* update the list of leaf boxes */

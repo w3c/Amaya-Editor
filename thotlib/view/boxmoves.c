@@ -2695,7 +2695,7 @@ void ResizeHeight (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
 		  box = pDimRel->DimRTable[i];
 		  pAb = box->BxAbstractBox;		    
 		  /* Is it the same dimension? */
-		  if (pDimRel->DimRSame[i])
+		  if (pDimRel->DimRSame[i] && pAb)
 		    {
 		      /* Changing the height */
 		      if (pAb->AbHeight.DimUnit == UnPercent)

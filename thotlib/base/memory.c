@@ -1983,7 +1983,7 @@ PtrBox FreeBox (PtrBox pBox)
      nextBox = pBox->BxNexChild;
    else
      nextBox = NULL;
-
+   pBox->BxType == BoComplete;
    /* Free remaining relation blocks */
    pPosRel = pBox->BxPosRelations;
    while (pPosRel != NULL)

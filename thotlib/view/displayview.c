@@ -479,6 +479,8 @@ void FreeView (PtrDocument pDoc, DocViewNumber view)
    pDoc->DocViewSubTree[view] = NULL;
 }
 
+static Closing_doc = NULL;
+static Closing_view = 0;
 /*----------------------------------------------------------------------
    CloseDocumentView detruit la vue de numero view
    pour le document pDoc. S'il s'agit de la derniere vue, libere le
@@ -486,13 +488,26 @@ void FreeView (PtrDocument pDoc, DocViewNumber view)
   ----------------------------------------------------------------------*/
 void  CloseDocumentView (PtrDocument pDoc, int view, ThotBool closeDoc)
 {
-  if (pDoc /*&& pDoc->DocViewRootAb[view]*/)
+  /* avoid to close the same view twice */
+  if (Closing_doc == pDoc && Closing_view == view)
+    return;
+  else if (Closing_doc == NULL && Closing_view == 0)
+    {
+      Closing_doc = pDoc;
+      Closing_view = view;
+    }
+  if (pDoc)
     {
       /* check if the document already exist */
       FreeView (pDoc, view);
       if (closeDoc && NumberOfOpenViews (pDoc) < 1)
 	/* the last view of the document is closed */
 	TCloseDocument (pDoc);
+    }
+  if (Closing_doc == pDoc && Closing_view == view)
+    {
+      Closing_doc = NULL;
+      Closing_view == view;
     }
 }
 

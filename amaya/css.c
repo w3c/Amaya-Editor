@@ -709,10 +709,15 @@ ThotBool UnlinkCSS (CSSInfoPtr css, Document doc, Element link,
 	  }
       if (pInfo)
 	{
-	  if (pInfo->PiEnabled && pInfo->PiCategory != CSS_EMBED)
+	  pIS = pInfo->PiSchemas;
+	  if (pInfo->PiCategory == CSS_EMBED)
+	    {
+	      pInfo->PiSchemas = NULL;
+	      TtaFreeMemory (pIS);
+	    }
+	  else if (pInfo->PiEnabled)
 	    {
 	      /* disapply the CSS */
-	      pIS = pInfo->PiSchemas;
 	      while (pIS)
 		{
 		  if (pIS->PiPSchema)

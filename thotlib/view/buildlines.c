@@ -2508,12 +2508,13 @@ int SetFloat (PtrBox box, PtrBox pBlock, PtrLine pLine, PtrAbstractBox pRootAb,
 
 /*----------------------------------------------------------------------
   RemoveBreaks removes all pieces of the main box pBox.
+  The parameter removed is TRUE when the enclosing box will be freed.
   Return:
-  changeSelectBegin and changeSelectEnd are TRUE when the box
+  Parameters changeSelectBegin and changeSelectEnd are TRUE when the box
   is concerned by the box selection.
   ----------------------------------------------------------------------*/
-static void RemoveBreaks (PtrBox pBox, int frame, ThotBool *changeSelectBegin,
-			  ThotBool *changeSelectEnd)
+static void RemoveBreaks (PtrBox pBox, int frame, ThotBool removed,
+			  ThotBool *changeSelectBegin, ThotBool *changeSelectEnd)
 {
   PtrBox              ibox1;
   PtrBox              ibox2;
@@ -2561,7 +2562,7 @@ static void RemoveBreaks (PtrBox pBox, int frame, ThotBool *changeSelectBegin,
 		  while (ibox1)
 		    {
 		      /* remove piece boxes but keep all script boxes */
-		      RemoveBreaks (ibox1, frame, changeSelectBegin,
+		      RemoveBreaks (ibox1, frame, removed, changeSelectBegin,
 				    changeSelectEnd);
 		      ibox1 = ibox1->BxNexChild;
 		    }
@@ -2577,10 +2578,15 @@ static void RemoveBreaks (PtrBox pBox, int frame, ThotBool *changeSelectBegin,
 		  /* transmit the current position */
 		  pBox->BxXOrg = ibox1->BxXOrg;
 		  pBox->BxYOrg = ibox1->BxYOrg;
-		  if (pBox->BxPrevious)
-		    pBox->BxPrevious->BxNext = pBox;
-		  else
-		    pFrame->FrAbstractBox->AbBox->BxNext = pBox;
+		  if (!removed)
+		    {
+		      /* update box links */
+		      if (pBox->BxPrevious)
+			/* not already freed box */
+			pBox->BxPrevious->BxNext = pBox;
+		      else
+			pFrame->FrAbstractBox->AbBox->BxNext = pBox;
+		    }
 		  width = 0;
 		  nspace = 0;
 		  lost = 1;
@@ -3117,7 +3123,7 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
 		  /* the last box has been broken */
 		  full = FALSE;
 		  still = FALSE;
-		  RemoveBreaks (pLine->LiLastBox, frame, &full, &still);
+		  RemoveBreaks (pLine->LiLastBox, frame, FALSE, &full, &still);
 		}
 	      if (pBox->BxMaxWidth < pLine->LiRealLength)
 		pBox->BxMaxWidth = pLine->LiRealLength;
@@ -3384,21 +3390,20 @@ static void CompressLine (PtrLine pLine, int xDelta, int frame, int spaceDelta)
 
 
 /*----------------------------------------------------------------------
-   RemoveLines libere les lignes acquises pour l'affichage du bloc de 
-   lignes a` partir et y compris la ligne passee en        
-   parametre. Libere toutes les boites coupees creees pour 
-   ces lignes.						
-   		changeSelectBegin et changeSelectEnd sont bascules si   
-   la boite referencee par la marque Debut ou Fin de       
-   Selection est liberee.                                  
+  RemoveLines frees lines generated within a block of line starting from
+  (and including) the first line pFirstLine.
+  Free all piece boxes.
+  The parameter removed is TRUE when the enclosing box will be removed.
+  Parameters changeSelectBegin and changeSelectEnd are TRUE when the
+  beginning and the end of the selection must be updated.
   ----------------------------------------------------------------------*/
 void RemoveLines (PtrBox pBox, int frame, PtrLine pFirstLine,
-		  ThotBool *changeSelectBegin, ThotBool *changeSelectEnd)
+		  ThotBool removed, ThotBool *changeSelectBegin,
+		  ThotBool *changeSelectEnd)
 {
   PtrBox              ibox1;
   PtrLine             pNextLine;
   PtrLine             pLine;
-  PtrAbstractBox      pAb;
 
   *changeSelectBegin = FALSE;
   *changeSelectEnd = FALSE;
@@ -3407,27 +3412,21 @@ void RemoveLines (PtrBox pBox, int frame, PtrLine pFirstLine,
   if (pLine &&
       (pBox->BxType == BoBlock || pBox->BxType == BoFloatBlock))
     {
-      ibox1 = NULL;
-      /* Mise a jour du chainage des lignes */
+      if (pLine->LiFirstPiece)
+	ibox1 = pLine->LiFirstPiece;
+      else
+	ibox1 = pLine->LiFirstBox;
+      RemoveBreaks (ibox1, frame, removed, changeSelectBegin, changeSelectEnd);
+      /* update the lines chaining */
       if (pLine->LiPrevious)
-	{
-	  ibox1 = pLine->LiFirstBox;
-	  pLine->LiPrevious->LiNext = NULL;
-	  /* Est-ce que la premiere boite est une boite suite ? */
-	  if (pLine->LiPrevious->LiLastBox == ibox1)
-	    RemoveBreaks (pLine->LiFirstPiece, frame, changeSelectBegin,
-			  changeSelectEnd);
-	  else
-	    RemoveBreaks (ibox1, frame, changeSelectBegin, changeSelectEnd);
-	  pBox->BxLastLine = pLine->LiPrevious;
-	}
+	pBox->BxLastLine = pLine->LiPrevious;
       else
 	{
 	  pBox->BxFirstLine = NULL;
 	  pBox->BxLastLine = NULL;
 	}
 
-      /* Liberation des lignes */
+      /* free all lines */
       while (pLine)
 	{
 	  pNextLine = pLine->LiNext;
@@ -3444,26 +3443,10 @@ void RemoveLines (PtrBox pBox, int frame, PtrLine pFirstLine,
 	  else
 	    ibox1 = GetNextBox (ibox1->BxAbstractBox);
 	}
-      else
-	{
-	  /* recherche la premiere boite mise en ligne */
-	  pAb = pBox->BxAbstractBox->AbFirstEnclosed;
-	  while (ibox1 == NULL && pAb)
-	    if (pAb->AbBox == NULL)
-	      /* la boite a deja ete detruite */
-	      pAb = pAb->AbNext;
-	    else if (pAb->AbBox->BxType == BoGhost ||
-		     pAb->AbBox->BxType == BoFloatGhost)
-	      /* c'est un pave fantome -> descend la hierarchie */
-	      pAb = pAb->AbFirstEnclosed;
-	    else
-	      /* Sinon c'est la boite du pave */
-	      ibox1 = pAb->AbBox;
-	}
-      
       while (ibox1)
 	{
-	  RemoveBreaks (ibox1, frame, changeSelectBegin, changeSelectEnd);
+	  RemoveBreaks (ibox1, frame, removed,
+			changeSelectBegin, changeSelectEnd);
 	  if (ibox1->BxType == BoScript && ibox1->BxNexChild)
 	    /* get the next child */
 	    ibox1 = ibox1->BxNexChild;
@@ -3543,7 +3526,7 @@ void RecomputeLines (PtrAbstractBox pAb, PtrLine pFirstLine, PtrBox ibox,
 
 	status = ReadyToDisplay;
 	ReadyToDisplay = FALSE;
-	RemoveLines (pBox, frame, pLine, &changeSelectBegin, &changeSelectEnd);
+	RemoveLines (pBox, frame, pLine, FALSE, &changeSelectBegin, &changeSelectEnd);
 	if (pBox->BxFirstLine == NULL)
 	  {
 	     /* fait reevaluer la mise en lignes et on recupere */

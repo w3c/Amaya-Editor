@@ -141,6 +141,10 @@ extern void TtaSetSelector ( int ref,
 extern void TtaNewLabel ( int ref,
                           int ref_parent,
                           char *text );
+extern void TtaNewPaddedLabel ( int ref,
+                                int ref_parent,
+                                char *text,
+                                int padding );
 extern void TtaNewButton ( int ref,
                            int ref_parent,
                            char *text );
@@ -324,6 +328,10 @@ extern void TtaSetSelector (/* int ref,
 extern void TtaNewLabel (/* int ref,
                             int ref_parent,
                             char *text */);
+extern void TtaNewPaddedLabel (/* int ref,
+                                  int ref_parent,
+                                  char *text,
+                                  int padding */);
 extern void TtaNewButton (/* int ref,
                              int ref_parent,
                              char *text */);

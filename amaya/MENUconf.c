@@ -2821,7 +2821,7 @@ static void RefreshBrowseMenu ()
   ----------------------------------------------------------------------*/
 static void BrowseCallbackDialog (int ref, int typedata, char *data)
 {
-  int                 val;
+  int                 val, doc;
 
   if (ref == -1)
     /* removes the network conf menu */
@@ -2874,6 +2874,13 @@ static void BrowseCallbackDialog (int ref, int typedata, char *data)
 	    strcpy (ScreenType, data);
 	  else
 	    ScreenType[0] = EOS;
+	  for (doc = 0; doc < MAX_DOCUMENTS; doc++)
+	    {
+	      if (DocumentTypes[doc] == docHTML ||
+		  DocumentTypes[doc] == docSVG ||
+		  DocumentTypes[doc] == docMath)
+		Synchronize (doc, 1);
+	    }
 	  break;
 
 	default:
