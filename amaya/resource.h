@@ -661,6 +661,7 @@
 #define IDC_FILTERBYTYPE                1526
 #define IDC_TFILTEROPTIONS              1528
 #define IDC_TFILTERHIDDEN               1529
+#define IDC_TFILTERHELP                 1529
 #define IDC_FILTERSEL                   1531
 #define ID_CREATEID                     1533
 #define ID_REMOVEID                     1534
@@ -718,7 +719,7 @@
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        546
+#define _APS_NEXT_RESOURCE_VALUE        547
 #define _APS_NEXT_COMMAND_VALUE         40052
 #define _APS_NEXT_CONTROL_VALUE         1547
 #define _APS_NEXT_SYMED_VALUE           101
