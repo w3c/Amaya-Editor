@@ -66,7 +66,7 @@
                                       <tooltip>*Deault colors*</tooltip>
                                     </object>
                                     <object class="wxStaticBitmap" name="wxID_BUTTON_DEFAULTCOLORS">
-                                      <bitmap>../icons/black_white.png</bitmap>
+                                      <bitmap>../icons/black_white.gif</bitmap>
                                       <pos>4,34</pos>
                                       <style>wxNO_BORDER</style>
                                     </object>
@@ -78,19 +78,21 @@
                                       <tooltip>*Switch colors*</tooltip>
                                     </object>
                                     <object class="wxStaticBitmap" name="wxID_BMP_SWITCHCOLORS">
-                                      <bitmap>../icons/switch_colors.png</bitmap>
+                                      <bitmap>../icons/switch_colors.gif</bitmap>
                                       <pos>44,4</pos>
                                       <style>wxNO_BORDER</style>
                                     </object>
                                     <object class="wxBitmapButton" name="wxID_BUTTON_BGCOLOR">
                                       <pos>24,20</pos>
                                       <size>40,30</size>
+                                      <style>wxBU_AUTODRAW|wxRAISED_BORDER</style>
                                       <tooltip>*Background*</tooltip>
                                       <bitmap>../icons/empty.gif</bitmap>
                                     </object>
                                     <object class="wxBitmapButton" name="wxID_BUTTON_FGCOLOR">
                                       <pos>0,0</pos>
                                       <size>40,30</size>
+                                      <style>wxBU_AUTODRAW|wxRAISED_BORDER</style>
                                       <tooltip>*Foreground*</tooltip>
                                       <bitmap>../icons/empty.gif</bitmap>
                                     </object>
