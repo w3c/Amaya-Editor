@@ -1482,7 +1482,7 @@ NotifyAttribute    *event;
 }
 
 /*----------------------------------------------------------------------
-   An attribute ItemStyle has been created, updated or deleted.
+   An attribute ItemStyle has been created, updated or deleted.    
    Create or update the corresponding IntItemStyle attribute.      
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -1493,7 +1493,14 @@ NotifyAttribute    *event;
 
 #endif /* __STDC__ */
 {
-   SetAttrIntItemStyle (event->element, event->document);
+   Element             el;
+
+   el = event->element;
+   while (el != NULL)
+     {
+	SetAttrIntItemStyle (el, event->document);
+	TtaNextSibling (&el);
+     }
 }
 
 /*----------------------------------------------------------------------

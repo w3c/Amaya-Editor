@@ -41,6 +41,6 @@ Fixed bugs 1.5:
 * When following a link which had a "?foo" ending, Amaya treated that
   ending as a query string
 
-* Setting attribute "style" for a list item caused all following items
-  in that list to get the same style.
+* Some attributes values appeared with strange names in the
+  Attribute menu.
 

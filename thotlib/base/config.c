@@ -1103,20 +1103,19 @@ char               *trans;
    boolean             found;
    int                 i, j;
    TtAttribute        *pAttr;
-   char               *terme;
+   char		       terme[MAX_NAME_LENGTH];
 
    found = FALSE;
-   terme = AsciiTranslate (word);
+   strncpy (terme, AsciiTranslate (word), MAX_NAME_LENGTH - 1);
    /* cherche le mot a traduire d'abord parmi les noms d'elements */
-   for (i = 0; i < pSS->SsNRules && !found; i++)
+   for (i = 0; i < pSS->SsNRules; i++)
       if (strcmp (terme, pSS->SsRule[i].SrName) == 0)
 	{
 	   strncpy (pSS->SsRule[i].SrName, AsciiTranslate (trans), MAX_NAME_LENGTH - 1);
 	   found = TRUE;
 	}
    /* cherche ensuite parmi les noms d'attributs et de valeurs d'attributs */
-   if (!found)
-      for (i = 0; i < pSS->SsNAttributes && !found; i++)
+   for (i = 0; i < pSS->SsNAttributes; i++)
 	{
 	   pAttr = &pSS->SsAttribute[i];
 	   if (strcmp (terme, pAttr->AttrName) == 0)
@@ -1125,17 +1124,17 @@ char               *trans;
 		found = TRUE;
 	     }
 	   else if (pAttr->AttrType == AtEnumAttr)
-	      for (j = 0; j < pAttr->AttrNEnumValues && !found; j++)
+	      for (j = 0; j < pAttr->AttrNEnumValues; j++)
 		 if (strcmp (terme, pAttr->AttrEnumValue[j]) == 0)
 		   {
 		      strncpy (pAttr->AttrEnumValue[j], AsciiTranslate (trans), MAX_NAME_LENGTH - 1);
 		      found = TRUE;
 		   }
 	}
-   /* cherche enfin parmi les regles d'extension, si c'est un schema d'ecxtension */
-   if (!found && pSS->SsExtension)
+   /* cherche enfin parmi les regles d'extension, si c'est un schema d'extension */
+   if (pSS->SsExtension)
       if (pSS->SsNExtensRules > 0 && pSS->SsExtensBlock != NULL)
-	 for (i = 0; i < pSS->SsNExtensRules && !found; i++)
+	 for (i = 0; i < pSS->SsNExtensRules; i++)
 	    if (strcmp (terme, pSS->SsExtensBlock->EbExtensRule[i].SrName) == 0)
 	      {
 		 strncpy (pSS->SsExtensBlock->EbExtensRule[i].SrName,
