@@ -81,7 +81,7 @@ static ElemMapping    XHTMLElemMappingTable[] =
    {"meta", 'E', HTML_EL_META, L_BasicValue, FALSE},
    {"noframes", SPACE, HTML_EL_NOFRAMES, L_TransitionalValue, FALSE},
    {"noscript", SPACE, HTML_EL_NOSCRIPT, L_StrictValue, FALSE},
-   {"object", SPACE, HTML_EL_Object, L_BasicValue, FALSE},
+   {"object", SPACE, HTML_EL_Object, L_BasicValue, TRUE},
    {"ol", SPACE, HTML_EL_Numbered_List, L_BasicValue, FALSE},
    {"optgroup", SPACE, HTML_EL_OptGroup, L_StrictValue, TRUE},
    {"option", SPACE, HTML_EL_Option, L_BasicValue, TRUE},

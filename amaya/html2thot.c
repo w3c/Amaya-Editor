@@ -311,6 +311,7 @@ static int          CharLevelElement[] =
    HTML_EL_Button_Input, HTML_EL_BUTTON_,
    HTML_EL_LABEL,
    HTML_EL_BR,
+   HTML_EL_Object,
    0};
 
 /* block level elements, i.e. elements having a Line rule in the presentation
