@@ -1276,12 +1276,27 @@ Document            doc;
    SpecificContextBlock block;
    PresentationContext context;
    PresentationValue   unused;
+   ElementType         elType;
 
    unused.data = 0;
 #ifdef DEBUG_STYLES
    fprintf (stderr, "ParseHTMLSpecificStyle(%s,%s,%d)\n",
 	    GetHTML3Name (elem, doc), attrstr, doc);
 #endif
+   /* 
+    * A rule applying to BODY is really meant to address HTML.
+    */
+   elType = TtaGetElementType(elem);
+   if ((elType.ElTypeNum == HTML_EL_BODY) || (elType.ElTypeNum == HTML_EL_HEAD)) {
+       Element el;
+       elType.ElTypeNum = HTML_EL_HTML;
+
+       el = TtaGetMainRoot (doc);
+       el = TtaSearchTypedElement (elType, SearchInTree, el);
+       if (el != NULL)
+           elem = el;
+   }
+	   
    /*
     * create the context of the Specific presentation driver.
     */
@@ -3319,6 +3334,7 @@ void *extra;
    PresentationTarget target;
    PresentationContext context;
    PresentationValue image;
+   PresentationValue repeat;
 
    if (callblock == NULL) return;
    target = callblock->target;
@@ -3330,6 +3346,15 @@ void *extra;
    image.pointer = file;
    if (context->drv->SetBgImage)
        context->drv->SetBgImage (target, context, image);
+   if (context->drv->GetPictureMode) {
+       if (context->drv->GetPictureMode (target, context, &repeat)) {
+	   if (context->drv->SetPictureMode) {
+	       repeat.typed_data.value = DRIVERP_VREPEAT;
+	       if (context->drv->SetPictureMode (target, context, repeat))
+	           context->drv->SetPictureMode (target, context, repeat);
+	   }
+       }
+   }
    TtaFreeMemory(callblock);
    RedisplayDocument (doc);
 }

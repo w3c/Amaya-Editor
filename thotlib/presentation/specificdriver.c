@@ -242,7 +242,7 @@ int                 extra;
 	  }
 	
 	/* check for extra specification in case of function rule */
-	if ((type == PresFunction) && (cur->PrPresFunction != extra)) {
+	if ((type == PRFunction) && (cur->PrPresFunction != extra)) {
 	    prev = cur;
 	    cur = cur->PrNextPRule;
 	    continue;
