@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996.
+ *  (c) COPYRIGHT INRIA, 1996-2000
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -1128,144 +1128,118 @@ int                 assocNum;
 
 /*----------------------------------------------------------------------
    CopyAttributes
-   copies the attributs of the source element pointed by pEl1 into the
-   target element pointed by pEl2.
-   If Check is TRUE, the attributes are copied only if the structure
-   scheme defining them is used by pEl2 or by one of its ancestors.
+   copies the attributs of the source element pEl1 belonging to document
+   pSourceDoc into the target element pEl2 belonging to document pTargetDoc.
+   If Check is TRUE, check that the target document uses the structure
+   schemas that define the attributes to be copied.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         CopyAttributes (PtrElement pEl1, PtrElement pEl2, PtrDocument pDoc, ThotBool Check)
+static void         CopyAttributes (PtrElement pEl1, PtrElement pEl2, PtrDocument pSourceDoc, PtrDocument pTargetDoc, ThotBool Check)
 #else  /* __STDC__ */
-static void         CopyAttributes (pEl1, pEl2, pDoc, Check)
+static void         CopyAttributes (pEl1, pEl2, pSourceDoc, pTargetDoc, Check)
 PtrElement          pEl1;
 PtrElement          pEl2;
-PtrDocument	    pDoc;
+PtrDocument	    pSourceDoc;
+PtrDocument	    pTargetDoc;
 ThotBool            Check;
 #endif /* __STDC__ */
 
 {
    PtrAttribute        pAttr1, pAttr2, pPrevAttr;
-   PtrElement          pAsc;
-   ThotBool            found;
    PtrReference        rf;
    PtrReference        pPr;
-   ThotBool            bool;
-   int                 len;
+   int                 len, nR;
+   ThotBool            ok;
 
    /* no attributes (yet) on the copy */
    pEl2->ElFirstAttr = NULL;	
    if (pEl1->ElFirstAttr != NULL)
       /* there are some attributes on the source element, so let's copy them */
-     {
-	pAttr1 = pEl1->ElFirstAttr;	/* attribute to copy */
-	pPrevAttr = NULL;	/* last attribute of the target */
-	pAttr2 = NULL;
-	/* fill and link all copied elements */
-	do
-	  {
-	     if (pAttr2 == NULL)
-	       /* gets an attribute block for the target */
-		GetAttribute (&pAttr2);	
-	     /* copies the attribute */
-	     *pAttr2 = *pAttr1;	
-	     if (pAttr2->AeAttrType == AtTextAttr)
-		/* it's a text attribute and it does not yet have a
-		   buffer */
-		pAttr2->AeAttrText = NULL;
-	     pAttr2->AeNext = NULL;
-	     found = !Check;
-	     if (!found)
-		/* verifies that the structure scheme defining the
-		   attribute is used by an ancestor element of the target */
+      {
+      pAttr1 = pEl1->ElFirstAttr;	/* attribute to copy */
+      pPrevAttr = NULL;	/* last attribute of the target */
+      pAttr2 = NULL;
+      /* fill and link all copied elements */
+      do
+	 {
+	 if (pAttr2 == NULL)
+	   /* gets an attribute block for the target */
+	   GetAttribute (&pAttr2);	
+	 /* copies the attribute */
+	 *pAttr2 = *pAttr1;	
+	 if (pAttr2->AeAttrType == AtTextAttr)
+	   /* it's a text attribute and it does not yet have a buffer */
+	   pAttr2->AeAttrText = NULL;
+	 pAttr2->AeNext = NULL;
+	 ok = TRUE;
+	 if (Check && pSourceDoc != pTargetDoc)
+	    /* check that the structure schema defining the attribute is
+	       known in the target document */
+	    {
+            nR = CreateNature (pAttr1->AeAttrSSchema->SsName, NULL,
+			       pTargetDoc->DocSSchema);
+	    if (nR == 0)
+	       /* can't create the schema for the target document. Don't
+		  copy this attribute */
+	       ok = FALSE;
+	    else
+	       /* schema is loaded, changes the structure scheme of the copy */
+	       pAttr2->AeAttrSSchema = pTargetDoc->DocSSchema->SsRule[nR - 1].
+		                             SrSSchemaNat;
+	    }
+	 if (ok)
+	    {
+	    if (pAttr1->AeAttrType == AtReferenceAttr)
+	       /* it's a reference attribute, we copy the reference */
 	       {
-		  pAsc = pEl2;
-		  do
-
-		     if (pAsc->ElStructSchema == pAttr2->AeAttrSSchema)
-			found = TRUE;
-		     else
-			pAsc = pAsc->ElParent;
-		  while (pAsc != NULL && !found);
-		  if (!found)
-		     /* searches a structure scheme of the same name or one
-                        extension of the structure scheme in the ancestors
-                        of the target */
-		    {
-		       pAsc = pEl2;
-		       do
-			  if (ustrcmp (pAsc->ElStructSchema->SsName, pAttr2->AeAttrSSchema->SsName) == 0)
-			    {
-			       pAttr2->AeAttrSSchema = pAsc->ElStructSchema;
-			       found = TRUE;
-			    }
-			  else
-			    {
-			       if (pAttr2->AeAttrSSchema->SsExtension)
-				  /* the attribute to copy is defined in an extension */
-				  if (ValidExtension (pAsc, &pAttr2->AeAttrSSchema))
-				     /* this extension applies to the scheme of the ancestor */
-				     found = TRUE;
-			       if (!found)
-				  pAsc = pAsc->ElParent;
-			    }
-		       while (pAsc != NULL && !found);
-		    }
-		  if (found && pDoc->DocCheckingMode & STR_CHECK_MASK)
-		     found = CanAssociateAttr (pEl2, NULL, pAttr1, &bool);
+	       if (pAttr1->AeAttrReference == NULL)
+	          pAttr2->AeAttrReference = NULL;
+	       else
+		  {
+	          /* gets a reference */
+	          GetReference (&rf);		
+		  pAttr2->AeAttrReference = rf;
+		  /* fills the new reference */
+		  pPr = pAttr2->AeAttrReference;
+		  pPr->RdElement = pEl2;
+		  pPr->RdAttribute = pAttr2;
+		  pPr->RdReferred = pAttr1->AeAttrReference->RdReferred;
+		  pPr->RdTypeRef = pAttr1->AeAttrReference->RdTypeRef;
+		  pPr->RdInternalRef = pAttr1->AeAttrReference->RdInternalRef;
+		  if (pPr->RdReferred != NULL)
+		     /* puts the new reference at the head of the link */
+		     {
+		     pPr->RdNext = pPr->RdReferred->ReFirstReference;
+		     if (pPr->RdNext != NULL)
+		        pPr->RdNext->RdPrevious = rf;
+		     pPr->RdReferred->ReFirstReference = rf;
+		     }
+		  }
 	       }
-	     if (found)
-	       {
-		  if (pAttr1->AeAttrType == AtReferenceAttr)
-		     /* it's a reference attribute, we copy the reference */
-		    {
-		       if (pAttr1->AeAttrReference == NULL)
-			  pAttr2->AeAttrReference = NULL;
-		       else
-			 {
-			   /* gets a reference */
-			    GetReference (&rf);		
-			    pAttr2->AeAttrReference = rf;
-			    /* fills the new reference */
-			    pPr = pAttr2->AeAttrReference;
-			    pPr->RdElement = pEl2;
-			    pPr->RdAttribute = pAttr2;
-			    pPr->RdReferred = pAttr1->AeAttrReference->RdReferred;
-			    pPr->RdTypeRef = pAttr1->AeAttrReference->RdTypeRef;
-			    pPr->RdInternalRef = pAttr1->AeAttrReference->RdInternalRef;
-			    if (pPr->RdReferred != NULL)
-			       /* puts the new reference at the head of the link */
-			      {
-				 pPr->RdNext = pPr->RdReferred->ReFirstReference;
-				 if (pPr->RdNext != NULL)
-				    pPr->RdNext->RdPrevious = rf;
-				 pPr->RdReferred->ReFirstReference = rf;
-			      }
-			 }
-		    }
-		  else if (pAttr2->AeAttrType == AtTextAttr)
-		     /* it's a text attribute, we attach a text buffer to it */
-		     /* where we'll copy the context */
-		     if (pAttr1->AeAttrText != NULL)
-		       {
-			  GetTextBuffer (&pAttr2->AeAttrText);
-			  CopyTextToText (pAttr1->AeAttrText, pAttr2->AeAttrText, &len);
-		       }
-		  /* links the attribute to the target */
-		  if (pPrevAttr == NULL)
-		     /* first attribute of the target */
-		     pEl2->ElFirstAttr = pAttr2;
-		  else
-		     pPrevAttr->AeNext = pAttr2;
-		  pPrevAttr = pAttr2;
-		  pAttr2 = NULL;
-	       }
-	     /* continues with the next attribute of the source */
-	     pAttr1 = pAttr1->AeNext;
-	  }
-	while (pAttr1 != NULL);
-	if (pAttr2 != NULL)
-	   FreeAttribute (pAttr2);
-     }
+	    else if (pAttr2->AeAttrType == AtTextAttr)
+	       /* it's a text attribute, we attach a text buffer to it */
+	       /* where we'll copy the context */
+	       if (pAttr1->AeAttrText != NULL)
+	          {
+	          GetTextBuffer (&pAttr2->AeAttrText);
+		  CopyTextToText (pAttr1->AeAttrText, pAttr2->AeAttrText,&len);
+		  }
+	    /* links the attribute to the target */
+	    if (pPrevAttr == NULL)
+	       /* first attribute of the target */
+	       pEl2->ElFirstAttr = pAttr2;
+	    else
+	       pPrevAttr->AeNext = pAttr2;
+	    pPrevAttr = pAttr2;
+	    pAttr2 = NULL;
+	    }
+	 /* continues with the next attribute of the source */
+	 pAttr1 = pAttr1->AeNext;
+	 }
+      while (pAttr1 != NULL);
+      if (pAttr2 != NULL)
+	FreeAttribute (pAttr2);
+      }
 }
 
 
@@ -3574,7 +3548,7 @@ ThotBool            shareRef;
 #endif /* __STDC__ */
 
 {
-   PtrElement          pEl, pS2, pC1, pC2, pSP;
+   PtrElement          pEl, pS2, pC1, pC2;
    PtrReference        rf;
    int                 copyType, nR;
    SRule              *pSRule;
@@ -3586,248 +3560,246 @@ ThotBool            shareRef;
    pEl = NULL;
    /* pointer to the element that will be created */
    if (pSource != NULL)
-     {
-	doCopy = TRUE;
-	/* we don't copy the page breaks */
-	if (pSource->ElTerminal && pSource->ElLeafType == LtPageColBreak)
-	   doCopy = FALSE;
-	else if (pSource->ElSource != NULL)
-	   /* this element is an inclusion copy. We don't copy it if
-	      if was created before or after a page break (e.g., the
-	      table headers) */
-	   if (TypeHasException (ExcPageBreakRepBefore, pSource->ElTypeNumber, pSource->ElStructSchema))
-	      doCopy = FALSE;
-	   else if (TypeHasException (ExcPageBreakRepetition, pSource->ElTypeNumber, pSource->ElStructSchema))
-	      doCopy = FALSE;
-	if (doCopy)
-	  {
-	     copyType = pSource->ElTypeNumber;
-	     if (ustrcmp (pSource->ElStructSchema->SsName, pSSchema->SsName) != 0)
-		/* change the generic structure */
-		if (pSource->ElStructSchema->SsRule[pSource->ElTypeNumber - 1].SrUnitElem ||
-		    pSource->ElStructSchema->SsExtension || pSource->ElTypeNumber <= MAX_BASIC_TYPE)
-		   /* the source element is a unit or an element defined
-		      in a scheme extension */
-		   if (!checkAttr)
-		      /* we don't verify the units. The copy will inherit the
-			 structure scheme of the source */
-		      pSSchema = pSource->ElStructSchema;
-		   else
-		     {
-			/* verifies if the "future" ancestor of the copy has
-			   an element belonging to the scheme where the source element
-			   is defined */
-			if (pParent == NULL)
-			   pAsc = pDocCopy->DocRootElement;
-			else
-			   pAsc = pParent;
-			sameSSchema = pSource->ElTypeNumber <= MAX_BASIC_TYPE;
-			if (pAsc != NULL && !sameSSchema)
-			   do
-			     {
-				if (pSource->ElStructSchema->SsCode ==
-				    pAsc->ElStructSchema->SsCode)
-				  {
-				     /* the copy will inherit the structure scheme of
-					its document */
-				     pSSchema = pAsc->ElStructSchema;
-				     sameSSchema = TRUE;
-				  }
-				else if (pSource->ElStructSchema->SsExtension)
-				   /* verifies if the ancestor has this scheme
-				      extension */
-				  {
-				     pSSchema = pSource->ElStructSchema;
-				     if (ValidExtension (pAsc, &pSSchema))
-					sameSSchema = TRUE;
-				  }
-				else if (pAsc->ElStructSchema->SsExtension)
-				   /* the ancestor is an extension */
-				  {
-				     pSS = pAsc->ElStructSchema;
-				     if (ValidExtension (pSource, &pSS))
-				       {
-					  pSSchema = pSource->ElStructSchema;
-					  sameSSchema = TRUE;
-				       }
-				  }
-				if (!sameSSchema)
-				   /* climbs one level to the next ancestor element */
-                                   if ((pAsc->ElParent == NULL) &&
-                                       (pAsc->ElStructSchema->SsExtension))
-                                     pAsc = pDocCopy->DocRootElement;
-                                   else
-				     pAsc = pAsc->ElParent;
-			     }
-			   while (pAsc != NULL && !sameSSchema);
-			if (!sameSSchema)
-			   /* No ancestor has this structure scheme, so the unit is
-			      invalid */
-			  {
-#ifdef IV
-			     if (ResdynCt.ElSour != NULL && !pSource->ElStructSchema->SsExtension)
-				/* if we are doing a restructuration, we search for a
-				   compatible unit */
-				GDRCompatibleUnit ((Element) pSource, (Element) pParent,
-					     &copyType, (int **) &pSSchema);
-			     else
-#endif
-				copyType = 0;
-			  }
-		     }
-		else
-		   /* the source is another document or another nature, we must load
-		      the schemes for the copy */
+      {
+      doCopy = TRUE;
+      /* we don't copy the page breaks */
+      if (pSource->ElTerminal && pSource->ElLeafType == LtPageColBreak)
+	doCopy = FALSE;
+      else
+	if (pSource->ElSource != NULL)
+	  /* this element is an inclusion copy. We don't copy it if it was
+	     created before or after a page break (e.g., the table headers) */
+	  if (TypeHasException (ExcPageBreakRepBefore, pSource->ElTypeNumber,
+				pSource->ElStructSchema))
+	    doCopy = FALSE;
+	  else if (TypeHasException (ExcPageBreakRepetition,
+				     pSource->ElTypeNumber,
+				     pSource->ElStructSchema))
+	    doCopy = FALSE;
+      if (doCopy)
+	 {
+	 copyType = pSource->ElTypeNumber;
+	 if (ustrcmp (pSource->ElStructSchema->SsName, pSSchema->SsName) != 0)
+	    /* change the generic structure */
+	    if (pSource->ElStructSchema->SsRule[pSource->ElTypeNumber - 1].
+		   SrUnitElem ||
+		pSource->ElStructSchema->SsExtension ||
+		pSource->ElTypeNumber <= MAX_BASIC_TYPE)
+	       /* the source element is a unit or an element defined
+		  in a scheme extension */
+	       if (!checkAttr)
+		  /* we don't verify the units. The copy will inherit the
+		     structure scheme of the source */
+		  pSSchema = pSource->ElStructSchema;
+	       else
 		  {
-		     /* loads the structure and presentation schemes for the copy */
-		     /* no preference for the presentation scheme */
-		     nR = CreateNature (pSource->ElStructSchema->SsName, NULL, pSSchema);
-		     if (nR == 0)
-			/* could not load the schema */
-			copyType = 0;
+		  /* verifies if the "future" ancestor of the copy has an
+		     element belonging to the scheme where the source element
+		     is defined */
+		  if (pParent == NULL)
+		     pAsc = pDocCopy->DocRootElement;
+		  else
+		     pAsc = pParent;
+		  sameSSchema = pSource->ElTypeNumber <= MAX_BASIC_TYPE;
+		  if (pAsc != NULL && !sameSSchema)
+		     do
+		        {
+			if (pSource->ElStructSchema->SsCode ==
+			    pAsc->ElStructSchema->SsCode)
+			   {
+			   /* the copy will inherit the structure scheme of
+			      its document */
+			   pSSchema = pAsc->ElStructSchema;
+			   sameSSchema = TRUE;
+			   }
+			else if (pSource->ElStructSchema->SsExtension)
+			   /* verifies if the ancestor has this scheme
+			      extension */
+			   {
+			   pSSchema = pSource->ElStructSchema;
+			   if (ValidExtension (pAsc, &pSSchema))
+			      sameSSchema = TRUE;
+			   }
+			else if (pAsc->ElStructSchema->SsExtension)
+			   /* the ancestor is an extension */
+			   {
+			   pSS = pAsc->ElStructSchema;
+			   if (ValidExtension (pSource, &pSS))
+			      {
+			      pSSchema = pSource->ElStructSchema;
+			      sameSSchema = TRUE;
+			      }
+			   }
+			if (!sameSSchema)
+			   /* climbs one level to the next ancestor element */
+			   if ((pAsc->ElParent == NULL) &&
+			       (pAsc->ElStructSchema->SsExtension))
+			      pAsc = pDocCopy->DocRootElement;
+			   else
+			      pAsc = pAsc->ElParent;
+			}
+		     while (pAsc != NULL && !sameSSchema);
+		  if (!sameSSchema)
+		     /* No ancestor has this structure scheme, so the unit is
+			invalid */
+		     {
+#ifdef IV
+		     if (ResdynCt.ElSour != NULL &&
+			 !pSource->ElStructSchema->SsExtension)
+		        /* if we are doing a restructuration, we search for a
+			   compatible unit */
+		       GDRCompatibleUnit ((Element) pSource, (Element) pParent,
+					  &copyType, (int **) &pSSchema);
 		     else
-			/* schema is loaded, changes the structure scheme of the copy */
-		       {
-			  pSRule = &pSSchema->SsRule[nR - 1];
-			  pSSchema = pSRule->SrSSchemaNat;
-		       }
+#endif
+		       copyType = 0;
+		     }
 		  }
-	     if (copyType != 0)
+	    else
+	       /* the source is another document or another nature, we must
+		  load the schemes for the copy */
 	       {
-		  /* gest an element for the copy */
-		  GetElement (&pEl);
-		  /* fills the copy */
-		  pEl->ElStructSchema = pSSchema;
-		  pEl->ElTypeNumber = copyType;
-		  if (pEl->ElTypeNumber == pEl->ElStructSchema->SsRootElem)
-		     /* we create an element and build it according to the root rule of
-			its structure scheme. We then increment the counter */
-		     pSSchema->SsNObjects++;
-		  pEl->ElAssocNum = assocNum;
-		  /* for CopyAttributes */
-		  pEl->ElParent = pParent;
-		  /* copies the attributes */
-		  CopyAttributes (pSource, pEl, pDocCopy, checkAttr);
-		  /* copies the specific presentation rules */
-		  CopyPresRules (pSource, pEl);	
-		  /* copies the commentary associated to the element */
-		  if (pSource->ElComment != NULL)
-		     pEl->ElComment = CopyText (pSource->ElComment, pEl);
-		  if (shareRef)
-		    {
-		       strncpy (pEl->ElLabel, pSource->ElLabel, MAX_LABEL_LEN);
-		       pEl->ElReferredDescr = pSource->ElReferredDescr;	
-		       /* (temporarily) shares the descriptor of the element
-			  referenced between the source element and the copy element
-			  so that CopyCommand or the Paste procedures can
-			  link the copied references to the copied elements */
-		    }
-		  else
-		    {
-		      /* the copy is not referenced */
-		       pEl->ElReferredDescr = NULL;
-		       /* computes the value of the label */
-		       ConvertIntToLabel (NewLabel (pDocCopy), pEl->ElLabel);
-		    }
-		  pSource->ElCopy = pEl;
-		  pEl->ElCopy = pSource;
-		  pEl->ElIsCopy = pSource->ElIsCopy;
-		  pEl->ElAccess = AccessInherited;
-		  pEl->ElHolophrast = pSource->ElHolophrast;
-		  pEl->ElTerminal = pSource->ElTerminal;
-		  if (!pEl->ElTerminal)
-		     pEl->ElFirstChild = NULL;
-		  else
-		    {
-		       pEl->ElLeafType = pSource->ElLeafType;
-		       switch (pEl->ElLeafType)
-			     {
-				case LtPicture:
-				   pEl->ElPictInfo = NULL;
-				   /* copies the content of a text or of an image */
-				   pEl->ElText = CopyText (pSource->ElText, pEl);
-				   pEl->ElTextLength = pSource->ElTextLength;
-				   pEl->ElVolume = pEl->ElTextLength;
-				   break;
-				case LtText:
-				   pEl->ElLanguage = pSource->ElLanguage;
-				   /* copies the content of a texte or of an image */
-				   pEl->ElText = CopyText (pSource->ElText, pEl);
-				   pEl->ElTextLength = pSource->ElTextLength;
-				   pEl->ElVolume = pEl->ElTextLength;
-				   break;
-				case LtPolyLine:
-				   pEl->ElPolyLineBuffer = CopyText (pSource->ElPolyLineBuffer, pEl);
-				   pEl->ElNPoints = pSource->ElNPoints;
-				   pEl->ElPolyLineType = pSource->ElPolyLineType;
-				   pEl->ElVolume = pEl->ElNPoints;
-				   break;
-				case LtSymbol:
-				case LtGraphics:
-				   pEl->ElGraph = pSource->ElGraph;
-				   break;
-				case LtPageColBreak:
-
-				   break;
-				case LtReference:
-				   if (pSource->ElReference != NULL)
-				     {
-				       /* gets a reference */
-					GetReference (&rf);	
-					pEl->ElReference = rf;
-					/* fills the new reference */
-					CopyReference (pEl->ElReference, pSource->ElReference, &pEl);
-				     }
-				   break;
-				case LtPairedElem:
-				   pEl->ElPairIdent = pSource->ElPairIdent;
-				   pEl->ElOtherPairedEl = NULL;
-				   break;
-				default:
-				   break;
-			     }
-		    }
-		  if (pSource->ElSource != NULL)
-		    {
-		      /* gets a reference */
-		       GetReference (&rf);	
-		       pEl->ElSource = rf;
-		       /* fills the new reference */
-		       CopyReference (pEl->ElSource, pSource->ElSource, &pEl);
-		    }
-		  /* creates the copies of the elements of the children (if they exist) */
-		  if (!pSource->ElTerminal)
-		     if (pSource->ElFirstChild != NULL)
-		       {
-			  pS2 = pSource->ElFirstChild;
-			  pC1 = NULL;
-			  do
-			    {
-			       pC2 = CopyTree (pS2, pDocSource, assocNum, pSSchema,
-					pDocCopy, pEl, checkAttr, shareRef);
-			       if (pC2 != NULL)
-				 {
-				    /* temporarily breaks the link with future parent to be able
-				       to compute the volume */
-				    pSP = pEl->ElParent;
-				    pEl->ElParent = NULL;
-				    if (pC1 == NULL)
-				       InsertFirstChild (pEl, pC2);
-				    else
-				       InsertElementAfter (pC1, pC2);
-				    pC1 = pC2;
-				    /* reestablishes the link with the future parent */
-				    pEl->ElParent = pSP;
-				 }
-			       pS2 = pS2->ElNext;
-			    }
-			  while (pS2 != NULL);
-		       }
-		  /* ElParent was set by CopyAttributes */
-		  pEl->ElParent = NULL;	
+	       /* loads the structure and presentation schemes for the copy */
+	       /* no preference for the presentation scheme */
+	       nR = CreateNature (pSource->ElStructSchema->SsName, NULL,
+				  pSSchema);
+	       if (nR == 0)
+		  /* could not load the schema */
+		  copyType = 0;
+	       else
+		  /* schema is loaded, changes the structure scheme of the copy */
+		  {
+		  pSRule = &pSSchema->SsRule[nR - 1];
+		  pSSchema = pSRule->SrSSchemaNat;
+		  }
 	       }
-	  }
-     }
+	 if (copyType != 0)
+	    {
+	    /* gest an element for the copy */
+	    GetElement (&pEl);
+	    /* fills the copy */
+	    pEl->ElStructSchema = pSSchema;
+	    pEl->ElTypeNumber = copyType;
+	    if (pEl->ElTypeNumber == pEl->ElStructSchema->SsRootElem)
+	       /* we create an element and build it according to the root rule
+		  of its structure scheme. We then increment the counter */
+	       pSSchema->SsNObjects++;
+	    pEl->ElAssocNum = assocNum;
+	    /* copies the attributes */
+	    CopyAttributes (pSource, pEl, pDocSource, pDocCopy, checkAttr);
+	    /* copies the specific presentation rules */
+	    CopyPresRules (pSource, pEl);	
+	    /* copies the commentary associated to the element */
+	    if (pSource->ElComment != NULL)
+	       pEl->ElComment = CopyText (pSource->ElComment, pEl);
+	    if (shareRef)
+	       {
+	       strncpy (pEl->ElLabel, pSource->ElLabel, MAX_LABEL_LEN);
+	       pEl->ElReferredDescr = pSource->ElReferredDescr;	
+	       /* (temporarily) shares the descriptor of the element
+		  referenced between the source element and the copy element
+		  so that CopyCommand or the Paste procedures can
+		  link the copied references to the copied elements */
+	       }
+	    else
+	       {
+	       /* the copy is not referenced */
+	       pEl->ElReferredDescr = NULL;
+	       /* computes the value of the label */
+	       ConvertIntToLabel (NewLabel (pDocCopy), pEl->ElLabel);
+	       }
+	    pSource->ElCopy = pEl;
+	    pEl->ElCopy = pSource;
+	    pEl->ElIsCopy = pSource->ElIsCopy;
+	    pEl->ElAccess = AccessInherited;
+	    pEl->ElHolophrast = pSource->ElHolophrast;
+	    pEl->ElTerminal = pSource->ElTerminal;
+	    if (!pEl->ElTerminal)
+	       pEl->ElFirstChild = NULL;
+	    else
+	       {
+	       pEl->ElLeafType = pSource->ElLeafType;
+	       switch (pEl->ElLeafType)
+		  {
+		  case LtPicture:
+		     pEl->ElPictInfo = NULL;
+		     /* copies the content of a text or of an image */
+		     pEl->ElText = CopyText (pSource->ElText, pEl);
+		     pEl->ElTextLength = pSource->ElTextLength;
+		     pEl->ElVolume = pEl->ElTextLength;
+		     break;
+		  case LtText:
+		     pEl->ElLanguage = pSource->ElLanguage;
+		     /* copies the content of a texte or of an image */
+		     pEl->ElText = CopyText (pSource->ElText, pEl);
+		     pEl->ElTextLength = pSource->ElTextLength;
+		     pEl->ElVolume = pEl->ElTextLength;
+		     break;
+		  case LtPolyLine:
+		     pEl->ElPolyLineBuffer = CopyText (pSource->ElPolyLineBuffer, pEl);
+		     pEl->ElNPoints = pSource->ElNPoints;
+		     pEl->ElPolyLineType = pSource->ElPolyLineType;
+		     pEl->ElVolume = pEl->ElNPoints;
+		     break;
+		  case LtSymbol:
+		  case LtGraphics:
+		     pEl->ElGraph = pSource->ElGraph;
+		     break;
+		  case LtPageColBreak:
+		     break;
+		  case LtReference:
+		     if (pSource->ElReference != NULL)
+		        {
+			/* gets a reference */
+			GetReference (&rf);	
+			pEl->ElReference = rf;
+			/* fills the new reference */
+			CopyReference (pEl->ElReference, pSource->ElReference,
+				       &pEl);
+			}
+		     break;
+		  case LtPairedElem:
+		     pEl->ElPairIdent = pSource->ElPairIdent;
+		     pEl->ElOtherPairedEl = NULL;
+		     break;
+		  default:
+		     break;
+		  }
+	       }
+	    if (pSource->ElSource != NULL)
+	       {
+	       /* gets a reference */
+	       GetReference (&rf);	
+	       pEl->ElSource = rf;
+	       /* fills the new reference */
+	       CopyReference (pEl->ElSource, pSource->ElSource, &pEl);
+	       }
+	    /* creates the copies of the elements of the children (if they
+	       exist) */
+	    if (!pSource->ElTerminal)
+	       if (pSource->ElFirstChild != NULL)
+		  {
+		  pS2 = pSource->ElFirstChild;
+		  pC1 = NULL;
+		  do
+		     {
+		     pC2 = CopyTree (pS2, pDocSource, assocNum, pSSchema,
+				     pDocCopy, pEl, checkAttr, shareRef);
+		     if (pC2 != NULL)
+		        {
+			if (pC1 == NULL)
+			   InsertFirstChild (pEl, pC2);
+			else
+			   InsertElementAfter (pC1, pC2);
+			pC1 = pC2;
+			}
+		     pS2 = pS2->ElNext;
+		     }
+		  while (pS2 != NULL);
+		  }
+	    }
+	 }
+      }
    return pEl;
 }
 
@@ -3968,7 +3940,7 @@ PtrDocument         pDoc;
 		   copy it's content */
 	       {
 		  /* we copy the attributes */
-		  CopyAttributes (pSource, pEl, pDoc, TRUE);
+		  CopyAttributes (pSource, pEl, pDocSource, pDoc, TRUE);
 		  /* we copy the specific presentation rules */
 		  CopyPresRules (pSource, pEl);
 		  /* we copy the comment associated to the element */
@@ -4085,7 +4057,7 @@ PtrDocument         pDoc;
 
 /*----------------------------------------------------------------------
    ReplicateElement
-   copies a node without copying it's sons.
+   copies a node without copying its children.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 PtrElement          ReplicateElement (PtrElement pEl, PtrDocument pDoc)
@@ -4109,7 +4081,7 @@ PtrDocument         pDoc;
    ConvertIntToLabel (NewLabel (pDoc), pNew->ElLabel);
    /* copies the attributes without verifying because we don't change 
       the structure  scheme */
-   CopyAttributes (pEl, pNew, pDoc, FALSE);
+   CopyAttributes (pEl, pNew, pDoc, pDoc, FALSE);
    /* copies the specific presentation rules */
    CopyPresRules (pEl, pNew);
    pNew->ElPrevious = NULL;
