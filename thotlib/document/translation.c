@@ -128,7 +128,7 @@ static int GetSecondaryFile (char *fName, PtrDocument pDoc, ThotBool open)
   else
     {
       sprintf (buff, "%s%c%s", fileDirectory, DIR_SEP, fName);
-      OutFile[NOutFiles].OfFileDesc = fopen (buff, "w");
+      OutFile[NOutFiles].OfFileDesc = TtaWriteOpen (buff);
       if (OutFile[NOutFiles].OfFileDesc == NULL)
 	{
 	  if (!OutFile[NOutFiles].OfCannotOpen)
@@ -2499,12 +2499,12 @@ static void ApplyTRule (PtrTRule pTRule, PtrTSchema pTSch, PtrSSchema pSSch,
       if (pTRule->TrType == TCreate)
 	{
 	  if (pTRule->TrFileNameVar == 0)
-	    /* sortie sur le fichier principal courant */
+	    /* output into the main file */
 	    fnum = 1;
 	  else
-	    /* sortie sur un fichier secondaire */
+	    /* output into a secondary file */
 	    {
-	      /* construit le nom du fichier secondaire */
+	      /* build the filemane */
 	      PutVariable (pEl, pAttr, pTSch, pSSch, pTRule->TrFileNameVar,
 			   FALSE, secondaryFileName, 0, pDoc, *lineBreak);
 	      fnum = GetSecondaryFile (secondaryFileName, pDoc, TRUE);
@@ -3008,7 +3008,7 @@ static void ApplyTRule (PtrTRule pTRule, PtrTSchema pTSch, PtrSSchema pSSch,
 		   currentFileName, 0, pDoc, *lineBreak);
       if (currentFileName[0] != EOS)
 	{
-	  newFile = fopen (currentFileName, "w");
+	  newFile = TtaWriteOpen (currentFileName);
 	  if (newFile)
 	    /* on a reussi a ouvrir le nouveau fichier */
 	    {
@@ -3016,7 +3016,7 @@ static void ApplyTRule (PtrTRule pTRule, PtrTSchema pTSch, PtrSSchema pSSch,
 	      for (i = 0; i < OutFile[1].OfBufferLen; i++)
 		putc (OutFile[1].OfBuffer[i], OutFile[1].OfFileDesc);
 	      /* on ferme l'ancien fichier */
-	      fclose (OutFile[1].OfFileDesc);
+	      TtaWriteClose (OutFile[1].OfFileDesc);
 	      /* on bascule sur le nouveau fichier */
 	      OutFile[1].OfBufferLen = 0;
 	      OutFile[1].OfLineLen = 0;
@@ -3031,10 +3031,14 @@ static void ApplyTRule (PtrTRule pTRule, PtrTSchema pTSch, PtrSSchema pSSch,
       break;
 
     case TRemoveFile:
+      /* unlink a secondary file */
       PutVariable (pEl, pAttr, pTSch, pSSch, pTRule->TrNewFileVar,
-		   FALSE, currentFileName, 0, pDoc, *lineBreak);
-      if (currentFileName[0] != EOS)
-	unlink (currentFileName);
+		   FALSE, secondaryFileName, 0, pDoc, *lineBreak);
+      if (secondaryFileName[0] != EOS)
+	{
+	  sprintf (fname, "%s%c%s", fileDirectory, DIR_SEP, secondaryFileName);
+	  unlink (fname);
+	}
       break;
 
     case TSetCounter:
@@ -3189,41 +3193,36 @@ static void ApplyTRule (PtrTRule pTRule, PtrTSchema pTSch, PtrSSchema pSSch,
       /* lecture au terminal */
       break;
     case TInclude:
-      /* inclusion d'un fichier */
+      /* include a secondary file */
       if (pTRule->TrBufOrConst == ToConst)
 	{
 	  i = pTSch->TsConstBegin[pTRule->TrInclFile - 1] - 1;
-	  strncpy(fname, &pTSch->TsConstant[i], MAX_PATH - 1);
+	  strncpy(secondaryFileName, &pTSch->TsConstant[i], MAX_PATH - 1);
 	}
       else if (pTRule->TrBufOrConst == ToBuffer)
 	/* le nom du fichier est dans un buffer */
-	strncpy (fname, pTSch->TsBuffer[pTRule->TrInclFile - 1], MAX_PATH-1);
-      if (fname[0] == EOS)
-	/* pas de nom de fichier */
-	fullName[0] = EOS;
-      else if (fname[0] == '/')
-	/* nom de fichier absolu */
-	strcpy (fullName, fname);
-      else
+	strncpy (secondaryFileName, pTSch->TsBuffer[pTRule->TrInclFile - 1], MAX_PATH-1);
+      if (secondaryFileName[0] != EOS)
 	{
-	  /* compose le nom du fichier a ouvrir avec le nom du
-	     directory des schemas... */
-	  strncpy (directoryName, SchemaPath, MAX_PATH);
-	  MakeCompleteName (fname, "", directoryName, fullName, &i);
-	}
-      /* si le fichier a inclure est deja ouvert en ecriture, on le flush.  */
-      i = GetSecondaryFile (fullName, pDoc, FALSE);
-      if (i >= 0)
-	fflush (OutFile[i].OfFileDesc);
-      /* ouvre le fichier a inclure */
-      includedFile = TtaReadOpen (fullName);
-      if (includedFile != 0)
-	/* le fichier a inclure est ouvert */
-	{
-	  while (TtaReadByte (includedFile, &car))
-	    /* on ecrit dans le fichier principal courant */
-	    PutChar ((wchar_t) car, 1, NULL, pDoc, *lineBreak, TRUE, FALSE);
-	  TtaReadClose (includedFile);
+	  /* si le fichier a inclure est deja ouvert en ecriture, on le flush.  */
+	  i = GetSecondaryFile (secondaryFileName, pDoc, FALSE);
+	  if (i >= 0)
+	    {
+	      includedFile = OutFile[i].OfFileDesc;
+	      fflush (includedFile);
+	      TtaWriteClose (includedFile);
+	      OutFile[i].OfFileDesc = NULL;
+	      /* beginning of the file */
+	      sprintf (fname, "%s%c%s", fileDirectory, DIR_SEP, secondaryFileName);
+	      includedFile = TtaReadOpen (fname);
+	      if (includedFile)
+		{
+		  while (TtaReadByte (includedFile, &car))
+		    /* write into the main file */
+		    PutChar ((wchar_t) car, 1, NULL, pDoc, *lineBreak, TRUE, FALSE);
+		  TtaReadClose (includedFile);
+		}
+	    }
 	}
       break;
     default:
@@ -3531,7 +3530,7 @@ static void FlushOutputFiles (PtrDocument pDoc)
 	for (i = 0; i < OutFile[f].OfBufferLen; i++)
 	  putc (OutFile[f].OfBuffer[i], OutFile[f].OfFileDesc);
 	if (OutFile[f].OfFileDesc != NULL)
-	  fclose (OutFile[f].OfFileDesc);
+	  TtaWriteClose (OutFile[f].OfFileDesc);
       }
 }
 
@@ -3558,7 +3557,7 @@ ThotBool ExportDocument (PtrDocument pDoc, char *fName,
   /* does it have to generate simple LF or CRLF */
   TtaGetEnvBoolean ("EXPORT_CRLF", &ExportCRLF);
   /* create the main output file */
-  outputFile = fopen (fName, "w");
+  outputFile = TtaWriteOpen (fName);
   if (outputFile == NULL)
    /* not created */
     ok = FALSE;
@@ -3573,7 +3572,7 @@ ThotBool ExportDocument (PtrDocument pDoc, char *fName,
       if (fileDirectory[i] == DIR_SEP)
 	{
 	  strcpy (fileName, &fileDirectory[i + 1]);
-       fileDirectory[i + 1] = EOS;
+	  fileDirectory[i + 1] = EOS;
 	}
       else
 	{
@@ -3585,7 +3584,7 @@ ThotBool ExportDocument (PtrDocument pDoc, char *fName,
 	  !LoadTranslationSchema (tschema, pDoc->DocSSchema) != 0)
 	{
 	  /* echec au chargement du schema de traduction */
-	  fclose (outputFile);
+	  TtaReadClose (outputFile);
 	  ok = FALSE;
 	}
       else
@@ -4163,7 +4162,7 @@ void ExportTree (PtrElement pEl, PtrDocument pDoc, char *fName,
   FILE               *outputFile; /* fichier de sortie principal */
 
   /* cree le fichier de sortie principal */
-  outputFile = fopen (fName, "w");
+  outputFile = TtaWriteOpen (fName);
   if (outputFile)
     /* le fichier de sortie principal a ete cree' */
     {
@@ -4187,7 +4186,7 @@ void ExportTree (PtrElement pEl, PtrDocument pDoc, char *fName,
     if (!LoadTranslationSchema (tschema, pDoc->DocSSchema) != 0 ||
 	!GetTranslationSchema (pEl->ElStructSchema) != 0)
       /* echec au chargement du schema de traduction */
-      fclose (outputFile);
+      TtaReadClose (outputFile);
     else
       {
       /* separe nom de fichier et extension */
