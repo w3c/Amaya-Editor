@@ -21,8 +21,10 @@ extern ThotBool SendEventSubTree ( APPevent AppEvent,
                                    ThotBool inRow );
 extern void FreeSavedElements ( void );
 extern void CopyCommand ( void );
-extern PtrElement NextNotPage ( PtrElement pEl );
-extern PtrElement PreviousNotPage ( PtrElement pEl );
+extern PtrElement NextNotPage ( PtrElement pEl,
+                                ThotBool sibling );
+extern PtrElement PreviousNotPage ( PtrElement pEl,
+                                    ThotBool sibling );
 extern void ProcessFirstLast ( PtrElement pPrev,
                                PtrElement pNext,
                                PtrDocument pDoc );
@@ -62,8 +64,10 @@ extern ThotBool SendEventSubTree ( APPevent AppEvent,
                                      ThotBool inRow );
 extern void FreeSavedElements ( void );
 extern void CopyCommand ( void );
-extern PtrElement NextNotPage ( PtrElement pEl );
-extern PtrElement PreviousNotPage ( PtrElement pEl );
+extern PtrElement NextNotPage ( PtrElement pEl,
+                                  ThotBool sibling );
+extern PtrElement PreviousNotPage ( PtrElement pEl,
+                                      ThotBool sibling );
 extern void ProcessFirstLast ( PtrElement pPrev,
                                  PtrElement pNext,
                                  PtrDocument pDoc );

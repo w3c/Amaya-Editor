@@ -95,6 +95,7 @@ extern void FwdSkipPageBreakAndExtension ( PtrElement * pEl );
 extern void SkipPageBreakBegin ( PtrElement * pEl );
 extern void BackSkipPageBreak ( PtrElement * pEl );
 extern PtrElement NextElement ( PtrElement pEl );
+extern PtrElement PreviousElement ( PtrElement pEl );
 extern PtrElement PreviousLeaf ( PtrElement pEl );
 extern PtrElement NextLeaf ( PtrElement pEl );
 extern void InsertElementBefore ( PtrElement pOld,
@@ -310,6 +311,7 @@ extern void FwdSkipPageBreakAndExtension ( PtrElement * pEl );
 extern void SkipPageBreakBegin ( PtrElement * pEl );
 extern void BackSkipPageBreak ( PtrElement * pEl );
 extern PtrElement NextElement ( PtrElement pEl );
+extern PtrElement PreviousElement ( PtrElement pEl );
 extern PtrElement PreviousLeaf ( PtrElement pEl );
 extern PtrElement NextLeaf ( PtrElement pEl );
 extern void InsertElementBefore ( PtrElement pOld,

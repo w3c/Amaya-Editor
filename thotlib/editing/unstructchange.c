@@ -1919,8 +1919,8 @@ void TtcCreateElement (Document doc, View view)
 		    }
 		  AddEditOpInHistory (pElDelete, pDoc, TRUE, FALSE);
 		  
-		  pPrevious = PreviousNotPage (pElDelete);
-		  pNext = NextNotPage (pElDelete);
+		  pPrevious = PreviousNotPage (pElDelete, FALSE);
+		  pNext = NextNotPage (pElDelete, FALSE);
 		  DestroyAbsBoxes (pElDelete, pDoc, TRUE);
 		  AbstractImageUpdated (pDoc);
 		  /* prepare l'evenement ElemDelete.Post */
@@ -1955,11 +1955,11 @@ void TtcCreateElement (Document doc, View view)
 		  /* envoie l'evenement ElemDelete.Post a l'application */
 		  CallEventType ((NotifyEvent *) (&notifyEl), FALSE);
 		  if (pNext != NULL)
-		    if (PreviousNotPage (pNext) == NULL)
+		    if (PreviousNotPage (pNext, FALSE) == NULL)
 		      /* l'element qui suit l'element detruit devient premier*/
 		      ChangeFirstLast (pNext, pDoc, TRUE, FALSE);
 		  if (pPrevious != NULL)
-		    if (NextNotPage (pPrevious) == NULL)
+		    if (NextNotPage (pPrevious, FALSE) == NULL)
 		      /* l'element qui precede l'element detruit devient
 			 dernier */
 		      ChangeFirstLast (pPrevious, pDoc, FALSE, FALSE);
@@ -2157,7 +2157,7 @@ void DeleteNextChar (int frame, PtrElement pEl, ThotBool before)
    do
      {
        if (before)
-	 pSibling = PreviousNotPage (pParent);
+	 pSibling = PreviousNotPage (pParent, FALSE);
        else
 	 pSibling = NextSiblingNotPage (pParent);
        if (pSibling == NULL)
@@ -2259,7 +2259,7 @@ void DeleteNextChar (int frame, PtrElement pEl, ThotBool before)
        do
 	 {
 	   if (before)
-	     pSibling = PreviousNotPage (pElem);
+	     pSibling = PreviousNotPage (pElem, FALSE);
 	   else
 	     pSibling = NextSiblingNotPage (pElem);
 	   if (pSibling != NULL)
@@ -2504,7 +2504,7 @@ void DeleteNextChar (int frame, PtrElement pEl, ThotBool before)
 				  FALSE, FALSE))
 	     {
 	     /* cherche l'element qui precede l'element a detruire */
-	     pPrev = PreviousNotPage (pE);
+	     pPrev = PreviousNotPage (pE, FALSE);
 	     DestroyAbsBoxes (pE, pDoc, TRUE);
 	     AbstractImageUpdated (pDoc);
 	     pNext = NextElement (pE);

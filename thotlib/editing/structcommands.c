@@ -1108,48 +1108,63 @@ static PtrElement NextElemToBeCut (PtrElement pEl, PtrElement lastSel,
 
 
 /*----------------------------------------------------------------------
-   NextNotPage retourne l'element suivant pEl qui n'est pas un     
-   saut de page.                                           
+  NextNotPage returns the next element which is not a page.
+  The parameter sibling is TRUE when only direct sibling are checked.
   ----------------------------------------------------------------------*/
-PtrElement NextNotPage (PtrElement pEl)
+PtrElement NextNotPage (PtrElement pEl, ThotBool sibling)
 {
-   PtrElement          pNext;
-   ThotBool            stop;
+  PtrElement          pNext;
+  ThotBool            stop;
 
-   pNext = NextElement (pEl);
-   stop = FALSE;
-   do
-      if (pNext == NULL)
-	 stop = TRUE;
-      else if (pNext->ElTerminal && pNext->ElLeafType == LtPageColBreak)
-	 pNext = NextElement (pNext);
-      else
-	 stop = TRUE;
-   while (!stop);
-   return pNext;
+  if (sibling)
+    pNext = pEl->ElNext;
+  else
+    pNext = NextElement (pEl);
+  stop = FALSE;
+  do
+    if (pNext == NULL)
+      stop = TRUE;
+    else if (pNext->ElTerminal && pNext->ElLeafType == LtPageColBreak)
+      {
+	if (sibling)
+	  pNext = pNext->ElNext;
+	else
+	  pNext = NextElement (pNext);
+      }
+    else
+      stop = TRUE;
+  while (!stop);
+  return pNext;
 }
 
 /*----------------------------------------------------------------------
-   PreviousNotPage retourne l'element precedent pEl qui n'est pas  
-   un saut de page.                                        
+   PreviousNotPage returns the previous element which is not a page.
+  The parameter sibling is TRUE when only direct sibling are checked.
   ----------------------------------------------------------------------*/
-PtrElement PreviousNotPage (PtrElement pEl)
+PtrElement PreviousNotPage (PtrElement pEl, ThotBool sibling)
 {
-   PtrElement          pPrev;
-   ThotBool            stop;
+  PtrElement          pPrev;
+  ThotBool            stop;
 
-   pPrev = pEl->ElPrevious;
-   /* saute les marques de page */
-   stop = FALSE;
-   do
-      if (pPrev == NULL)
-	 stop = TRUE;
-      else if (!pPrev->ElTerminal || pPrev->ElLeafType != LtPageColBreak)
-	 stop = TRUE;
-      else
-	 pPrev = pPrev->ElPrevious;
-   while (!stop);
-   return pPrev;
+  if (sibling)
+    pPrev = pEl->ElPrevious;
+  else
+    pPrev = PreviousElement (pEl);
+  stop = FALSE;
+  do
+    if (pPrev == NULL)
+      stop = TRUE;
+    else if (pPrev->ElTerminal && pPrev->ElLeafType == LtPageColBreak)
+      {
+	if (sibling)
+	  pPrev = pPrev->ElPrevious;
+	else
+	  pPrev = PreviousElement (pPrev);
+      }
+    else
+      stop = TRUE;
+  while (!stop);
+  return pPrev;
 }
 
 /*----------------------------------------------------------------------
@@ -1390,9 +1405,9 @@ void CutCommand (ThotBool save, ThotBool replace)
 	      if (firstSel != NULL)
 		{
 		  /* cherche l'element qui precede la partie selectionnee */
-		  pPrev = PreviousNotPage (firstSel);
+		  pPrev = PreviousNotPage (firstSel, !replace);
 		  /* cherche le premier element apres la selection */
-		  pNext = NextNotPage (lastSel);
+		  pNext = NextNotPage (lastSel, replace);
 		  nextChar = 0;
 		  if (firstSel->ElTerminal &&
 		      firstSel->ElLeafType == LtText &&
@@ -1772,7 +1787,7 @@ void CutCommand (ThotBool save, ThotBool replace)
 			pParent = pAncestor[i];
 		    }
 		  
-		  pNext = NULL;
+		  pNext = pAncestorNext[0];
 		  for (i = 0; i < MAX_ANCESTOR && pNext == NULL; i++)
 		    {
 		      if (pAncestor[i] == NULL)
@@ -1790,7 +1805,7 @@ void CutCommand (ThotBool save, ThotBool replace)
 			}
 		    }
 		  
-		  pPrev = NULL;
+		  pPrev = pAncestorPrev[0];
 		  for (i = 0; i < MAX_ANCESTOR && pPrev == NULL; i++)
 		    {
 		      if (pAncestor[i] == NULL)
@@ -1932,6 +1947,18 @@ void CutCommand (ThotBool save, ThotBool replace)
 		    }
 		  if (cellCleared)
 		    SelectElementWithEvent (pSelDoc, cellCleared, TRUE, TRUE);
+		  else if (replace && pParent && pParent->ElFirstChild == NULL)
+		    /* select the empty parent */
+		    SelectElementWithEvent (pSelDoc, pParent, TRUE, TRUE);
+		  else if (replace && pPrev && prevDepth >= nextDepth)
+		    {
+		      /* try first to select the end of the previous element */
+		      pSel = LastLeaf (pPrev);
+		      if (pSel->ElTerminal && pSel->ElLeafType == LtText)
+			SelectPositionWithEvent (pSelDoc, pSel, pSel->ElTextLength + 1);
+		      else
+			SelectElementWithEvent (pSelDoc, pSel, FALSE, TRUE);
+		    }
 		  else if (pNext && nextDepth >= prevDepth)
 		    {
 		      /* there is a next element and it's deeper in
@@ -1965,27 +1992,7 @@ void CutCommand (ThotBool save, ThotBool replace)
 	      else
 		/* reset the selection */
 		HighlightSelection (FALSE, FALSE);
-#ifdef IV
-	      {
-		if (lastCharInit > 0)
-		  lastCharInit--;
-		if (firstCharInit > 1)
-		  {
-		    if (firstSelInit == lastSelInit)
-		      i = lastCharInit;
-		    else
-		      i = 0;
-		    SelectString (pSelDoc, firstSelInit, firstCharInit, i);
-		  }
-		else if ((lastCharInit == 0 && firstCharInit != 1) ||
-			 lastSelInit != firstSelInit)
-		  SelectElement (pSelDoc, firstSelInit, TRUE, TRUE);
-		else
-		  SelectString (pSelDoc, firstSelInit, 1, lastCharInit);
-		if (lastSelInit != firstSelInit)
-		  ExtendSelection (lastSelInit, lastCharInit, TRUE, FALSE, FALSE);
-	      }
-#endif
+
 	      if (!save)
 		{
 		  /* libere les elements coupe's */

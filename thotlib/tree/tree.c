@@ -1833,7 +1833,7 @@ void                SkipPageBreakBegin (PtrElement * pEl)
    from a page break.
    Does not do anything if pEl does not point to a page break.
   ----------------------------------------------------------------------*/
-void                BackSkipPageBreak (PtrElement * pEl)
+void BackSkipPageBreak (PtrElement * pEl)
 {
    ThotBool            stop;
 
@@ -1858,20 +1858,35 @@ void                BackSkipPageBreak (PtrElement * pEl)
    returns a pointer to the element following the one pointed by
    pEl.
   ----------------------------------------------------------------------*/
-PtrElement          NextElement (PtrElement pEl)
+PtrElement NextElement (PtrElement pEl)
 {
    if (pEl == NULL)
       return NULL;
-   while (pEl->ElNext == NULL && pEl->ElParent != NULL)
+   while (pEl->ElNext == NULL && pEl->ElParent)
       pEl = pEl->ElParent;
    return pEl->ElNext;
+}
+
+
+/*----------------------------------------------------------------------
+   NextElement 
+   returns a pointer to the element preceding the one pointed by
+   pEl.
+  ----------------------------------------------------------------------*/
+PtrElement PreviousElement (PtrElement pEl)
+{
+   if (pEl == NULL)
+      return NULL;
+   while (pEl->ElPrevious == NULL && pEl->ElParent)
+      pEl = pEl->ElParent;
+   return pEl->ElPrevious;
 }
 
 /*----------------------------------------------------------------------
    PreviousLeaf
    returns a pointer to the first leaf preceding the pEl element.
   ----------------------------------------------------------------------*/
-PtrElement          PreviousLeaf (PtrElement pEl)
+PtrElement PreviousLeaf (PtrElement pEl)
 {
    PtrElement          pEl1;
 
