@@ -2909,7 +2909,7 @@ void *context;
 	   W3Loading = 0;	/* loading is complete now */
 	 }
  
-       if (!stopped_flag)
+       if (ok && !stopped_flag)
 	 ResetStop(newdoc);
      }
 
