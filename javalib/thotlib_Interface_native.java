@@ -1,0 +1,14 @@
+ TtaSwitchButton(int document, int view, int index);
+ TtaSetTextZone(int document, int view, int index, String text);
+ TtaSetMenuOff(int document, int view, int menuID);
+ TtaSetMenuOn(int document, int view, int menuID);
+ TtaSetToggleItem(int document, int view, int menuID, int itemID, boolean on);
+ TtaSetActionOff(int document, int view, int menuID, int itemID);
+ TtaSetActionOn(int document, int view, int menuID, int itemID);
+ TtaSetStatus(int document, int view, String text, String name);
+ TtaMainLoop(void);
+ TtaHandlePendingEvents(void);
+ TtaSetCursorWatch(int document, int view);
+ TtaResetCursor(int document, int view);
+int TtaGetScreenDepth(void);
+ TtaHandlePendingEvents(void);

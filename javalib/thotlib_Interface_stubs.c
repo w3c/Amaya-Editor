@@ -1,0 +1,191 @@
+/*
+ * Kaffe stubs generated for class thotlib_Interface from includes
+ */
+
+#include <native.h>
+#include "thotlib_Interface.h"
+
+/*
+ * Java to C function TtaSwitchButton stub.
+ */
+void
+thotlib_Interface_TtaSwitchButton(struct Hthotlib_Interface* none, jint document, jint view, jint index)
+{
+
+
+	TtaSwitchButton((int ) document, (int ) view, (int ) index);
+}
+
+/*
+ * Java to C function TtaSetTextZone stub.
+ */
+void
+thotlib_Interface_TtaSetTextZone(struct Hthotlib_Interface* none, jint document, jint view, jint index, struct Hjava_lang_String* jtext)
+{
+	char text[1024];
+
+	javaString2CString(jtext, text, sizeof(text));
+
+	TtaSetTextZone((char *) document, (char *) view, (char *) index, (char *) text);
+}
+
+/*
+ * Java to C function TtaSetMenuOff stub.
+ */
+void
+thotlib_Interface_TtaSetMenuOff(struct Hthotlib_Interface* none, jint document, jint view, jint menuID)
+{
+
+
+	TtaSetMenuOff((int ) document, (int ) view, (int ) menuID);
+}
+
+/*
+ * Java to C function TtaSetMenuOn stub.
+ */
+void
+thotlib_Interface_TtaSetMenuOn(struct Hthotlib_Interface* none, jint document, jint view, jint menuID)
+{
+
+
+	TtaSetMenuOn((int ) document, (int ) view, (int ) menuID);
+}
+
+/*
+ * Java to C function TtaSetToggleItem stub.
+ */
+void
+thotlib_Interface_TtaSetToggleItem(struct Hthotlib_Interface* none, jint document, jint view, jint menuID, jint itemID, jint on)
+{
+
+
+	TtaSetToggleItem((boolean ) document, (boolean ) view, (boolean ) menuID, (boolean ) itemID, (boolean ) on);
+}
+
+/*
+ * Java to C function TtaSetActionOff stub.
+ */
+void
+thotlib_Interface_TtaSetActionOff(struct Hthotlib_Interface* none, jint document, jint view, jint menuID, jint itemID)
+{
+
+
+	TtaSetActionOff((int ) document, (int ) view, (int ) menuID, (int ) itemID);
+}
+
+/*
+ * Java to C function TtaSetActionOn stub.
+ */
+void
+thotlib_Interface_TtaSetActionOn(struct Hthotlib_Interface* none, jint document, jint view, jint menuID, jint itemID)
+{
+
+
+	TtaSetActionOn((int ) document, (int ) view, (int ) menuID, (int ) itemID);
+}
+
+/*
+ * Java to C function TtaSetStatus stub.
+ */
+void
+thotlib_Interface_TtaSetStatus(struct Hthotlib_Interface* none, jint document, jint view, struct Hjava_lang_String* jtext, struct Hjava_lang_String* jname)
+{
+	char text[1024];
+	char name[1024];
+
+	javaString2CString(jtext, text, sizeof(text));
+	javaString2CString(jname, name, sizeof(name));
+
+	TtaSetStatus((char *) document, (char *) view, (char *) text, (char *) name);
+}
+
+/*
+ * Java to C function TtaMainLoop stub.
+ */
+void
+thotlib_Interface_TtaMainLoop(struct Hthotlib_Interface* none)
+{
+
+
+	TtaMainLoop();
+}
+
+/*
+ * Java to C function TtaHandlePendingEvents stub.
+ */
+void
+thotlib_Interface_TtaHandlePendingEvents(struct Hthotlib_Interface* none)
+{
+
+
+	TtaHandlePendingEvents();
+}
+
+/*
+ * Java to C function TtaSetCursorWatch stub.
+ */
+void
+thotlib_Interface_TtaSetCursorWatch(struct Hthotlib_Interface* none, jint document, jint view)
+{
+
+
+	TtaSetCursorWatch((View ) document, (View ) view);
+}
+
+/*
+ * Java to C function TtaResetCursor stub.
+ */
+void
+thotlib_Interface_TtaResetCursor(struct Hthotlib_Interface* none, jint document, jint view)
+{
+
+
+	TtaResetCursor((View ) document, (View ) view);
+}
+
+/*
+ * Java to C function TtaGetScreenDepth stub.
+ */
+jint
+thotlib_Interface_TtaGetScreenDepth(struct Hthotlib_Interface* none)
+{
+	int res;
+
+
+	res = TtaGetScreenDepth();
+
+	return((jint) result);
+}
+
+/*
+ * Java to C function TtaHandlePendingEvents stub.
+ */
+void
+thotlib_Interface_TtaHandlePendingEvents(struct Hthotlib_Interface* none)
+{
+
+
+	TtaHandlePendingEvents();
+}
+
+/*
+ * Function to register all thotlib_Interface stubs.
+ */
+void register_thotlib_Interface_stubs(void)
+{
+	addExternalNativeFunc("thotlib_Interface_TtaSwitchButton", thotlib_Interface_TtaSwitchButton);
+	addExternalNativeFunc("thotlib_Interface_TtaSetTextZone", thotlib_Interface_TtaSetTextZone);
+	addExternalNativeFunc("thotlib_Interface_TtaSetMenuOff", thotlib_Interface_TtaSetMenuOff);
+	addExternalNativeFunc("thotlib_Interface_TtaSetMenuOn", thotlib_Interface_TtaSetMenuOn);
+	addExternalNativeFunc("thotlib_Interface_TtaSetToggleItem", thotlib_Interface_TtaSetToggleItem);
+	addExternalNativeFunc("thotlib_Interface_TtaSetActionOff", thotlib_Interface_TtaSetActionOff);
+	addExternalNativeFunc("thotlib_Interface_TtaSetActionOn", thotlib_Interface_TtaSetActionOn);
+	addExternalNativeFunc("thotlib_Interface_TtaSetStatus", thotlib_Interface_TtaSetStatus);
+	addExternalNativeFunc("thotlib_Interface_TtaMainLoop", thotlib_Interface_TtaMainLoop);
+	addExternalNativeFunc("thotlib_Interface_TtaHandlePendingEvents", thotlib_Interface_TtaHandlePendingEvents);
+	addExternalNativeFunc("thotlib_Interface_TtaSetCursorWatch", thotlib_Interface_TtaSetCursorWatch);
+	addExternalNativeFunc("thotlib_Interface_TtaResetCursor", thotlib_Interface_TtaResetCursor);
+	addExternalNativeFunc("thotlib_Interface_TtaGetScreenDepth", thotlib_Interface_TtaGetScreenDepth);
+	addExternalNativeFunc("thotlib_Interface_TtaHandlePendingEvents", thotlib_Interface_TtaHandlePendingEvents);
+}
+

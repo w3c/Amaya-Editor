@@ -1,0 +1,14 @@
+void TtaSwitchButton(Document document, View view, int index);
+void TtaSetTextZone(Document document, View view, int index, char *text);
+void TtaSetMenuOff(Document document, View view, int menuID);
+void TtaSetMenuOn(Document document, View view, int menuID);
+void TtaSetToggleItem(Document document, View view, int menuID, int itemID, boolean on);
+void TtaSetActionOff(Document document, View view, int menuID, int itemID);
+void TtaSetActionOn(Document document, View view, int menuID, int itemID);
+void TtaSetStatus(Document document, View view, char *text, char *name);
+void TtaMainLoop(void);
+void TtaHandlePendingEvents(void);
+void TtaSetCursorWatch(Document document, View view);
+void TtaResetCursor(Document document, View view);
+int TtaGetScreenDepth(void);
+void TtaHandlePendingEvents(void);
