@@ -3322,12 +3322,15 @@ static char *ParseCSSBackgroundAttachment (Element element, PSchema tsch,
 					   char *cssRule, CSSInfoPtr css,
 					   ThotBool isHTML)
 {
+  char     *ptr;
+
   cssRule = SkipBlanksAndComments (cssRule);
   if (!strncasecmp (cssRule, "scroll", 6))
     {
       /* force no-repeat for that background image */
-      ParseCSSBackgroundPosition (element, tsch, context,
-				  "no-repeat", css, isHTML);
+      ptr = "no-repeat";
+      ParseCSSBackgroundRepeat (element, tsch, context,
+				ptr, css, isHTML);
       cssRule = SkipWord (cssRule);
     }
   else if (!strncasecmp (cssRule, "fixed", 5))
@@ -3350,6 +3353,7 @@ static char *ParseCSSBackgroundPosition (Element element, PSchema tsch,
 					 ThotBool isHTML)
 {
   PresentationValue     repeat;
+  char                 *ptr;
   ThotBool              ok;
 
   cssRule = SkipBlanksAndComments (cssRule);
@@ -3374,8 +3378,9 @@ static char *ParseCSSBackgroundPosition (Element element, PSchema tsch,
   if (ok && DoApply)
     {
       /* force no-repeat for that background image */
-      ParseCSSBackgroundPosition (element, tsch, context,
-				  "no-repeat", css, isHTML);
+      ptr = "no-repeat";
+      ParseCSSBackgroundRepeat (element, tsch, context,
+				ptr, css, isHTML);
       /* force realsize for the background image */
       repeat.typed_data.value = REALSIZE;
       repeat.typed_data.unit = UNIT_REL;
