@@ -6122,8 +6122,8 @@ char              **argv;
 {
    FILE               *infile;
    boolean             fileOK;
-   char                fname[100];
-   char                buffer[200];
+   char                fname[200], buffer[200], cmd[800];
+   char               *pwd, *ptr;
    Name                srceFileName;	/* nom du fichier a compiler */
    indLine             wi;	/* position du debut du mot courant dans la
 				   ligne en cours */
@@ -6135,34 +6135,89 @@ char              **argv;
    int                 nb;	/* indice dans Identifier du mot trouve', si
 				   identificateur */
    int                 i;
+   int                 param;
 
    TtaInitializeAppRegistry (argv[0]);
    i = TtaGetMessageTable ("libdialogue", TMSG_LIB_MSG_MAX);
    COMPIL = TtaGetMessageTable ("compildialogue", COMP_MSG_MAX);
    PRS = TtaGetMessageTable ("prsdialogue", PRS_MSG_MAX);
    error = False;
-   /* initialise l'analyseur syntaxique */
+   /* initialize the parser */
    InitParser ();
-   /* charge la grammaire du langage a compiler */
+   /* load the compiler grammar */
    InitSyntax ("PRESEN.GRM");
    if (!error)
      {
-	/* recupere d'abord le nom du schema a compiler */
-	if (argc != 2)
+        /* prepare the cpp command */
+	strcpy (cmd, "cpp ");
+        param = 1;
+	while (param < argc && argv[param][0] == '-')
 	  {
-	     fprintf (stderr, "usage: %s <input-file>\n", argv[0]);
+	    /* keep cpp params */
+	    strcat (cmd, argv[param]);
+	    strcat (cmd, " ");
+	    param++;
+	  }
+
+	/* recupere d'abord le nom du schema a compiler */
+	if (param >= argc)
+	  {
+	     TtaDisplaySimpleMessage (FATAL, PRS, UNKNOWN_FILE);
 	     exit (1);
 	  }
-	strncpy (srceFileName, argv[1], MAX_NAME_LENGTH - 1);
-	/* ajoute le suffixe .SCH */
+	strncpy (srceFileName, argv[param], MAX_NAME_LENGTH - 1);
+	param++;
 	strcpy (fname, srceFileName);
-	strcat (fname, ".SCH");
-	/* ouvre le fichier a compiler */
-	if (TtaFileExist (fname) == 0)
-	   TtaDisplayMessage (FATAL, TtaGetMessage (PRS, UNKNOWN_FILE), fname);
+	/* check if the name contains a suffix */
+	ptr = strrchr(fname, '.');
+	nb = strlen (srceFileName);
+	if (!ptr)
+	  /* there is no suffix */
+	  strcat (srceFileName, ".P");
+	else if (strcmp(ptr, ".P"))
+	  {
+	    /* it's not the valid suffix */
+	    TtaDisplayMessage (FATAL, TtaGetMessage (PRS, INVALID_FILE), srceFileName);
+	    exit (1);
+	  }
 	else
 	  {
-	     infile = TtaReadOpen (fname);
+	    /* it's the valid suffix, cut the srcFileName here */
+	    ptr[0] = '\0';
+	    nb -= 2; /* length without the suffix */
+	  }
+	/* add the suffix .SCH in srceFileName */
+	strcat (fname, ".SCH");
+	
+	/* does the file to compile exist */
+	if (TtaFileExist (srceFileName) == 0)
+	  TtaDisplaySimpleMessage (FATAL, PRS, UNKNOWN_FILE);
+	else
+	  {
+	    /* provide the real source file */
+	    TtaFileUnlink (fname);
+	    pwd = TtaGetEnvString ("PWD");
+	    nb = strlen (cmd);
+	    if (pwd != NULL)
+	      sprintf (&cmd[nb], "-I%s -C %s > %s", pwd, srceFileName, fname);
+	    else
+	      sprintf (&cmd[nb], "-C %s > %s", srceFileName, fname);
+	    i = system (cmd);
+	    if (i == -1)
+	      {
+		/* cpp is not available, copy directely the file */
+		TtaDisplaySimpleMessage (INFO, PRS, CPP_NOT_FOUND);
+		TtaFileCopy (srceFileName, fname);
+	      }
+
+	    infile = TtaReadOpen (fname);
+	    if (param == argc)
+	      /* the output name is equal to the input name */
+	      /*suppress the suffix ".SCH" */
+	      srceFileName[nb] = '\0';
+	    else
+	      /* read the output name */
+	      strncpy (srceFileName, argv[param], MAX_NAME_LENGTH - 1);
 	     /* le fichier a compiler est ouvert */
 	     NIdentifiers = 0;	/* table des identificateurs vide */
 	     LineNum = 0;	/* encore aucune ligne lue */
@@ -6170,8 +6225,8 @@ char              **argv;
 	     /* lit tout le fichier et fait l'analyse */
 	     fileOK = True;
 	     while (fileOK && !error)
-		/* lit une ligne */
 	       {
+		  /* lit une ligne */
 		  LineNum++;	/* incremente le compteur de lignes lues */
 		  i = 0;
 		  do
@@ -6206,10 +6261,10 @@ char              **argv;
 			    GetNextToken (i, &wi, &wl, &wn);
 			    /* mot suivant */
 			    if (wi > 0)
-			       /* on a trouve un mot */
+			       /* word found */
 			      {
 				 AnalyzeToken (wi, wl, wn, &c, &r, &nb, &pr);
-				 /* on analyse le mot */
+				 /* analyze the word */
 				 if (!error)
 				    ProcessToken (wi, wl, c, r, nb - 1, pr);	/* on le traite */
 			      }
@@ -6218,7 +6273,8 @@ char              **argv;
 		       /* il n'y a plus de mots a analyser dans la ligne */
 		    }
 	       }
-	     /* fin du fichier */
+
+	     /* end of file */
 	     TtaReadClose (infile);
 	     if (!error)
 		ParserEnd ();
@@ -6240,16 +6296,17 @@ char              **argv;
 		  CheckPageBoxes ();
 		  /* verifie que toutes les boites de presentation sont bien utilisees */
 		  CheckAllBoxesUsed ();
-		  /* ajoute le suffixe .PRS a la fin du nom de fichier */
-		  strcpy (fname, srceFileName);
-		  strcat (fname, ".PRS");
-		  /* ecrit le schema compile' dans le directory courant */
-		  fileOK = WritePresentationSchema (fname, pPSchema, pSSchema);
+		  /* write the compiled schema into the output file */
+		  /* remove temporary file */
+		  TtaFileUnlink (fname);
+		  strcat (srceFileName, ".PRS");
+		  fileOK = WritePresentationSchema (srceFileName, pPSchema, pSSchema);
 		  if (!fileOK)
-		     TtaDisplayMessage (FATAL, TtaGetMessage (PRS, WRITE_ERROR), fname);
+		     TtaDisplayMessage (FATAL, TtaGetMessage (PRS, WRITE_ERROR), srceFileName);
 	       }
 	  }
      }
+   fflush (stdout);
    TtaSaveAppRegistry ();
    exit (0);
 }

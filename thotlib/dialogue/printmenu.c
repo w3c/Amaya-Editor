@@ -350,7 +350,7 @@ char               *viewNames;
      }
    strncpy (pDocPrint->DocDirectory, dirName, MAX_PATH);
    strncpy (pDocPrint->DocDName, docName, MAX_NAME_LENGTH);
-   numOfJobs++ ;
+   numOfJobs++;
 }
 
 

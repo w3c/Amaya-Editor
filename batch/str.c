@@ -2742,7 +2742,7 @@ char              **argv;
 #endif /* __STDC__ */
 {
    FILE               *inputFile;
-   char                buffer[200], cmd[800];
+   char                buffer[200], fname[200], cmd[800];
    char               *pwd, *ptr;
    indLine             i;	/* current position in current line */
    indLine             wi;	/* start position of current word in the line */
@@ -2766,154 +2766,157 @@ char              **argv;
      {
 	/* check program arguments */
 	if (argc != 2)
-	   TtaDisplaySimpleMessage (FATAL, STR, STR_NO_SUCH_FILE);
+	  {
+	     TtaDisplaySimpleMessage (FATAL, STR, STR_NO_SUCH_FILE);
+	     exit (1);
+	  }
+
+	/* get the name of the file to be compiled */
+	strncpy (srceFileName, argv[1], MAX_NAME_LENGTH - 5);
+	strcpy (fname, srceFileName);
+	/* check if the name contains a suffix */
+	ptr = strrchr(fname, '.');
+	nb = strlen (srceFileName);
+	if (!ptr)
+	  /* there is no suffix */
+	  strcat (srceFileName, ".S");
+	else if (strcmp(ptr, ".S"))
+	  {
+	    /* it's not the valid suffix */
+	    TtaDisplayMessage (FATAL, TtaGetMessage (STR, STR_INVALID_FILE), srceFileName);
+	    exit (1);
+	  }
 	else
 	  {
-	     /* get the name of the file to be compiled */
-	     strncpy (srceFileName, argv[1], MAX_NAME_LENGTH - 5);
-	     strcpy (buffer, srceFileName);
-	     /* check if the name contains a suffix */
-	     ptr = strrchr(buffer, '.');
-	     nb = strlen (srceFileName);
-	     if (!ptr)
-	       /* there is no suffix */
-	       strcat (srceFileName, ".S");
-	     else if (strcmp(ptr, ".S"))
-	       {
-		 /* it's not the valid suffix */
-		 TtaDisplayMessage (FATAL, TtaGetMessage (STR, STR_INVALID_FILE), srceFileName);
-		 exit (1);
-	       }
-	     else
-	       {
-		 /* it's the valid suffix, cut the srcFileName here */
-		 ptr[0] = '\0';
-		 nb -= 2; /* length without the suffix */
-	       }
-	     /* add the suffix .SCH in srceFileName */
-	     strcat (buffer, ".SCH");
+	    /* it's the valid suffix, cut the srcFileName here */
+	    ptr[0] = '\0';
+	    nb -= 2; /* length without the suffix */
+	  }
+	/* add the suffix .SCH in srceFileName */
+	strcat (fname, ".SCH");
+	
+	/* does the file to compile exist */
+	if (TtaFileExist (srceFileName) == 0)
+	  TtaDisplaySimpleMessage (FATAL, STR, STR_NO_SUCH_FILE);
+	else
+	  {
+	    /* provide the real source file */
+	    TtaFileUnlink (fname);
+	    pwd = TtaGetEnvString ("PWD");
+	    if (pwd != NULL)
+	      sprintf (cmd, "cpp -I%s -C %s > %s", pwd, srceFileName, fname);
+	    else
+	      sprintf (cmd, "cpp -C %s > %s", srceFileName, fname);
+	    i = system (cmd);
+	    if (i == -1)
+	      {
+		/* cpp is not available, copy directely the file */
+		TtaDisplaySimpleMessage (INFO, STR, STR_CPP_NOT_FOUND);
+		TtaFileCopy (srceFileName, fname);
+	      }
+	    /* open the resulting file */
+	    inputFile = TtaReadOpen (fname);
+	    /* suppress the suffix ".SCH" */
+	    srceFileName[nb] = '\0';
+	    /* get memory for structure schema */
+	    if ((pSSchema = (PtrSSchema) malloc (sizeof (StructSchema))) == NULL)
+	      TtaDisplaySimpleMessage (FATAL, STR, STR_NOT_ENOUGH_MEM);
+	    /* get memory for external structure schema */
+	    if ((pExternSSchema = (PtrSSchema) malloc (sizeof (StructSchema))) == NULL)
+	      TtaDisplaySimpleMessage (FATAL, STR, STR_NOT_ENOUGH_MEM);
+	    /* table of identifiers is empty */
+	    NIdentifiers = 0;
+	    LineNum = 0;
+	    /* start the generation */
+	    Initialize ();
+	    /* read the whole file and parse */
+	    fileOK = True;
+	    while (fileOK && !error)
+	      /* read a line */
+	      {
+		i = 0;
+		do
+		  {
+		    fileOK = TtaReadByte (inputFile, &inputLine[i]);
+		    i++;
+		  }
+		while (i < LINE_LENGTH && inputLine[i - 1] != '\n' && fileOK);
+		/* mark the real end of line */
+		inputLine[i - 1] = '\0';
+		/* increment lines counter */
+		LineNum++;
+		if (i >= LINE_LENGTH)
+		  CompilerError (1, STR, FATAL, STR_LINE_TOO_LONG,
+				 inputLine, LineNum);
+		else if (inputLine[0] == '#')
+		  /* this line contains a cpp directive */
+		  {
+		    sscanf (inputLine, "# %d %s", &LineNum, buffer);
+		    LineNum--;
+		  }
+		else
+		  /* translate line characters */
+		  {
+		    OctalToChar ();
+		    /* analyze the line */
+		    wi = 1;
+		    wl = 0;
+		    /* analyze all words in the current line */
+		    do
+		      {
+			i = wi + wl;
+			/* next word */
+			GetNextToken (i, &wi, &wl, &wn);
+			if (wi > 0)
+			  /* word found */
+			  {
+			    /* parse the word */
+			    AnalyzeToken (wi, wl, wn, &c, &r, &nb, &pr);
+			    if (!error)
+			      /* process the word */
+			      ProcessToken (wi, wl, c, r, nb, pr);
+			  }
+		      }
+		    while (wi != 0 && !error);
+		    /* no more word in the line */
+		  }
+	      }
 
-	     /* does the file to compile exist */
-	     if (TtaFileExist (srceFileName) == 0)
-		TtaDisplaySimpleMessage (FATAL, STR, STR_NO_SUCH_FILE);
-	     else
-	       {
-		 /* provide the real source file */
-		 TtaFileUnlink (buffer);
-		 pwd = TtaGetEnvString ("PWD");
-		 if (pwd != NULL)
-		   sprintf (cmd, "cpp -I%s -C %s > %s", pwd, srceFileName, buffer);
-		 else
-		   sprintf (cmd, "cpp -C %s > %s", srceFileName, buffer);
-		 i = system (cmd);
-		 if (i == -1)
-		   {
-		     /* cpp is not available, copy directely the file */
-		     TtaDisplaySimpleMessage (FATAL, STR, STR_CPP_NOT_FOUND);
-		     TtaFileCopy (srceFileName, buffer);
-		   }
-		 /* open the resulting file */
-		  inputFile = TtaReadOpen (buffer);
-		  /* suppress the suffix ".SCH" */
-		  srceFileName[nb] = '\0';
-		  /* get memory for structure schema */
-		  if ((pSSchema = (PtrSSchema) malloc (sizeof (StructSchema))) == NULL)
-		     TtaDisplaySimpleMessage (FATAL, STR, STR_NOT_ENOUGH_MEM);
-		  /* get memory for external structure schema */
-		  if ((pExternSSchema = (PtrSSchema) malloc (sizeof (StructSchema))) == NULL)
-		     TtaDisplaySimpleMessage (FATAL, STR, STR_NOT_ENOUGH_MEM);
-		  /* table of identifiers is empty */
-		  NIdentifiers = 0;
-		  LineNum = 0;
-		  /* start the generation */
-		  Initialize ();
-		  /* read the whole file and parse */
-		  fileOK = True;
-		  while (fileOK && !error)
-		     /* read a line */
-		    {
-		       i = 0;
-		       do
-			 {
-			    fileOK = TtaReadByte (inputFile, &inputLine[i]);
-			    i++;
-			 }
-		       while (i < LINE_LENGTH && inputLine[i - 1] != '\n' && fileOK);
-		       /* mark the real end of line */
-		       inputLine[i - 1] = '\0';
-		       /* increment lines counter */
-		       LineNum++;
-		       if (i >= LINE_LENGTH)
-			  CompilerError (1, STR, FATAL, STR_LINE_TOO_LONG,
-					 inputLine, LineNum);
-		       else if (inputLine[0] == '#')
-			  /* this line contains a cpp directive */
-			 {
-			    sscanf (inputLine, "# %d %s", &LineNum, buffer);
-			    LineNum--;
-			 }
-		       else
-			  /* translate line characters */
-			 {
-			    OctalToChar ();
-			    /* analyze the line */
-			    wi = 1;
-			    wl = 0;
-			    /* analyze all words in the current line */
-			    do
-			      {
-				 i = wi + wl;
-				 /* next word */
-				 GetNextToken (i, &wi, &wl, &wn);
-				 if (wi > 0)
-				    /* word found */
-				   {
-				      /* parse the word */
-				      AnalyzeToken (wi, wl, wn, &c, &r, &nb, &pr);
-				      if (!error)
-					 /* process the word */
-					 ProcessToken (wi, wl, c, r, nb, pr);
-				   }
-			      }
-			    while (wi != 0 && !error);
-			    /* no more word in the line */
-			 }
-		    }
-		  if (!error)
-		    /* stop the parser */
-		     ParserEnd ();
-		  if (!error)
-		     /* set right rule number when we met the keyword EXPORT */
-		     if (!pSSchema->SsExport)
-			ChangeRules ();
-		  if (!error)
-		     /* list external type names */
-		     ExternalTypes ();
-		  if (!error)
-		    {
-		       /* list recursive rules */
-		       ChkRecurs ();
-		       /* list associated elements */
-		       ListAssocElem ();
-		       /* list elements which will not be created by the editor */
-		       ListNotCreated ();
-
-		       /* write the compiled schema into the output file */
-		       SchemaPath[0] = '\0';	/* use current directory */
-		       if (!error)
-			 {
-			    /* remove temporary file */
-			    unlink (buffer);
-			    strcat (srceFileName, ".STR");
-			    fileOK = WriteStructureSchema (srceFileName, pSSchema, 0);
-			    if (!fileOK)
-			       TtaDisplayMessage (FATAL, TtaGetMessage (STR, STR_CANNOT_WRITE), srceFileName);
-			 }
-		    }
-		  free (pSSchema);
-		  free (pExternSSchema);
-		  TtaReadClose (inputFile);
-	       }
+	    /* end of file */
+	    TtaReadClose (inputFile);
+	    if (!error)
+	      /* stop the parser */
+	      ParserEnd ();
+	    if (!error)
+	      /* set right rule number when we met the keyword EXPORT */
+	      if (!pSSchema->SsExport)
+		ChangeRules ();
+	    if (!error)
+	      /* list external type names */
+	      ExternalTypes ();
+	    if (!error)
+	      {
+		/* list recursive rules */
+		ChkRecurs ();
+		/* list associated elements */
+		ListAssocElem ();
+		/* list elements which will not be created by the editor */
+		ListNotCreated ();
+		
+		/* write the compiled schema into the output file */
+		SchemaPath[0] = '\0';	/* use current directory */
+		if (!error)
+		  {
+		    /* remove temporary file */
+		    TtaFileUnlink (fname);
+		    strcat (srceFileName, ".STR");
+		    fileOK = WriteStructureSchema (srceFileName, pSSchema, 0);
+		    if (!fileOK)
+		      TtaDisplayMessage (FATAL, TtaGetMessage (STR, STR_CANNOT_WRITE), srceFileName);
+		  }
+	      }
+	    free (pSSchema);
+	    free (pExternSSchema);
 	  }
      }
    fflush (stdout);

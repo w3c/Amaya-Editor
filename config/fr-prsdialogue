@@ -65,7 +65,7 @@
 64 %s : boite inutilisee\n
 65 Regle interdite pour ce type d\'attribut\n
 66 Ce n\'est pas un attribut numerique\n
-67 Memoire insuffisante\n
+67 M\351moire insuffisante\n
 68 Valeur de compteur incorrecte\n
 69 Une seule regle Content par boite\n
 70 %s : regle Content incorrecte\n
@@ -76,7 +76,7 @@
 75 Interdit dans une boite de presentation\n
 76 Trop de regles Transmit pour ce compteur\n
 77 Ce n\'est pas un document inclus\n
-78 Fichier inconnu : %s.\n
+78 Fichier incorrect\n
 79 Interdit dans une reference\n
 80 Seulement dans les boites de presentation, les references et les paires\n
 81 Deja une regle Copy ou Content\n
@@ -101,3 +101,5 @@
 100 Message inconnu\n
 101 %s : ecriture impossible\n
 102 Seulement pour les attributs\n
+103 Le suffixe du fichier n'est pas valide\n
+104 cpp non trouv\351\n

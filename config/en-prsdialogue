@@ -76,7 +76,7 @@
 75 Forbidden in a presentation box\n
 76 Too many Transmit rules for this counter\n
 77 This is not an included document\n
-78 No such file: %s.\n\n
+78 No such file\n
 79 Forbidden in a reference\n
 80 Only for boxes, references, and pairs\n
 81 Only one Copy or Content\n
@@ -101,3 +101,5 @@
 100 Unknown message\n
 101 Cannot write %s\n
 102 Only for attributes\n
+103 The suffix of the file is invalid: %s\n
+104 cpp not found\n
