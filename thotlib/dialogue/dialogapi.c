@@ -1,5 +1,3 @@
-/* -- Copyright (c) 1990 - 1994 Inria/CNRS  All rights reserved. -- */
-
 /*=======================================================================*/
 /*|                                                                     | */
 /*|               Module de gestion des catalogues de dialogue.         | */
@@ -10,7 +8,6 @@
 /*|                                                                     | */
 /*=======================================================================*/
 
-/* Les includes */
 #include "thot_gui.h"
 #include "thot_sys.h"
 #include "constmedia.h"
@@ -32,7 +29,7 @@
 #include <commctrl.h>
 #endif
 
-/* Structures des catalogues */
+/* Catalogues structures */
 #define CAT_INT   0
 #define CAT_TEXT  1
 #define CAT_FORM  2
@@ -56,9 +53,9 @@
 
 struct E_List
   {
-     struct E_List      *E_Suiv;	/* CsList d'entrees suivante      */
-     char                E_Free[C_NUMBER];	/* Disponibilite des entrees     */
-     char                E_Type[C_NUMBER];	/* CsList des types des entrees   */
+     struct E_List      *E_Next;	                /* CsList d'entrees suivante         */
+     char                E_Free[C_NUMBER];	        /* Disponibilite des entrees         */
+     char                E_Type[C_NUMBER];	        /* CsList des types des entrees      */
      ThotWidget          E_ThotWidget[C_NUMBER];	/* ThotWidgets associes aux entrees  */
   };
 
@@ -80,14 +77,14 @@ struct Cat_Context
   };
 
 /* Redefiniton de champs de catalogues dans certains cas */
-#define Cat_ListLength Cat_Data
-#define Cat_FormPack Cat_Data
-#define Cat_XtWParent Cat_Data
+#define Cat_ListLength  Cat_Data
+#define Cat_FormPack    Cat_Data
+#define Cat_XtWParent   Cat_Data
 #define Cat_SelectLabel Cat_in_lines
 
 struct Cat_List
   {
-     struct Cat_List    *Cat_Suiv;
+     struct Cat_List    *Cat_Next;
      struct Cat_Context  Cat_Table[MAX_CAT];
   };
 
@@ -109,24 +106,24 @@ static XmFontList   formFONT;
 static char         Confirm_string[40];
 static char         Cancel_string[40];
 static char         Done_string[40];
-static int          FirstFreeRef;	/* premiere reference libre */
+static int          FirstFreeRef;	/* First free reference */
 
 /* Declarations des variables globales */
-static struct Cat_List *PtrCatalogue;	/* Le pointeur su les catalogues  */
-static int          NbOccCat;
-static int          NbLibCat;
-static struct E_List *PtrFreeE_List;
-static int          NbOccE_List;
-static int          NbLibE_List;
+static struct Cat_List    *PtrCatalogue;	/* Le pointeur su les catalogues  */
+static int                 NbOccCat;
+static int                 NbLibCat;
+static struct E_List      *PtrFreeE_List;
+static int                 NbOccE_List;
+static int                 NbLibE_List;
 
-static int          CurrentWait;
-static int          ShowReturn;
-static int          ShowX, ShowY;
+static int                 CurrentWait;
+static int                 ShowReturn;
+static int                 ShowX, ShowY;
 static struct Cat_Context *ShowCat = NULL;
 
 #ifdef WWW_XWINDOWS
-static XtAppContext Def_AppCont;
-static Display     *GDp;
+static XtAppContext   Def_AppCont;
+static Display       *GDp;
 static XtTranslations TextTranslations;
 
 #endif /* WWW_XWINDOWS */
@@ -179,11 +176,11 @@ HINSTANCE           hInstance = 0;
 char               *tszAppName;
 int                 nAmayaShow;
 DWORD               WinLastError;
-ThotWindow          WinToolBar[MAX_FRAME + 1 + 1];;
-HMENU               WinMenus[MAX_FRAME + 1 + 1];	/* Les menu MS-Windows associes */
+ThotWindow          WinToolBar[MAX_FRAME + 2];
+HMENU               WinMenus[MAX_FRAME + 2];	/* MS-Windows associated menus */
 HFONT               WIN_DefaultFont;
 HWND                hwndAmaya;
-ThotWindow          WinStatusBar[MAX_FRAME + 1 + 1];
+ThotWindow          WinStatusBar[MAX_FRAME + 2];
 HWND                WIN_Main_Wd;
 TBBUTTON            WIN_buttons[MAX_BUTTON] =
 {
@@ -209,25 +206,25 @@ TBBUTTON            WIN_buttons[MAX_BUTTON] =
    0, 0, TBSTATE_ENABLED, TBSTYLE_SEP, 0, 0, 0, 0,
 };
 
-COLORREF            WIN_Black_Color;	/* Couleur d'ecriture          */
-COLORREF            WIN_White_Color;	/* Couleur de fond             */
-COLORREF            WIN_Scroll_Color;	/* Couleur des bandeaux        */
-COLORREF            WIN_Button_Color;	/* Couleur des boutons         */
-COLORREF            WIN_Select_Color;	/* Couleur de la selection     */
-COLORREF            WIN_BgMenu_Color;	/* Couleur des menus           */
-COLORREF            WIN_Box_Color;	/* Couleur des boites actives  */
-COLORREF            WIN_RO_Color;	/* Couleur du Read Only        */
-COLORREF            WIN_InactiveB_Color;	/* Couleur des boutons inactifs */
+COLORREF            WIN_Black_Color;	  /* Text color                  */
+COLORREF            WIN_White_Color;	  /* Background color            */
+COLORREF            WIN_Scroll_Color;	  /* Captions color              */
+COLORREF            WIN_Button_Color;	  /* Button colors               */
+COLORREF            WIN_Select_Color;	  /* Selection colors            */
+COLORREF            WIN_BgMenu_Color;	  /* Menus colors                */
+COLORREF            WIN_Box_Color;	  /* Active boxes color          */
+COLORREF            WIN_RO_Color;	  /* Read Only color             */
+COLORREF            WIN_InactiveB_Color;  /* Disabeled buttons color     */
 HFONT               WIN_DefaultFont;
 HFONT               WIN_FontMenu = 0;
 HBITMAP             WIN_LastBitmap = 0;
 HFONT               WIN_LastFont = 0;
-int                 WIN_ActifFen;	/* Numero de frame document active */
-int                 WIN_DesFen;	/* ViewFrame designee par la selection */
-int                 WIN_DesX;	/* Position X de la selection  */
-int                 WIN_DesY;	/* Position Y de la selection  */
-int                 WIN_DesReturn;	/* Indicateur de selection     */
-unsigned char      *WIN_buffer;	/* Buffer pour echanges avec Window */
+int                 WIN_ActifFen;  /* Number of active document frame  */
+int                 WIN_DesFen;	   /* selected ViewFrame               */
+int                 WIN_DesX;	   /* Position X of the selection      */
+int                 WIN_DesY;	   /* Position Y of the selection      */
+int                 WIN_DesReturn; /* Selection indicator              */
+unsigned char      *WIN_buffer;	   /* Buffer for exchanges with Window */
 int                 WIN_Lgbuffer;
 
 void                terminate__Fv (void)
@@ -235,7 +232,7 @@ void                terminate__Fv (void)
 }
 
 /* ---------------------------------------------------------------------- */
-/* |  GetFen :  return the Thot window number associated to an          | */
+/* |  GetFen :  returns the Thot window number associated to an         | */
 /* |        X-Window window.                                            | */
 /* ---------------------------------------------------------------------- */
 
@@ -253,7 +250,7 @@ int                 GetFen (ThotWindow win)
 }
 
 /* ---------------------------------------------------------------------- */
-/* |  WIN_GetFen :  return the Thot window number associated to an      | */
+/* |  WIN_GetFen :  returns the Thot window number associated to an     | */
 /* |        MS-Windows window.                                          | */
 /* ---------------------------------------------------------------------- */
 
@@ -427,7 +424,7 @@ static struct Cat_Context *WinLookupCatEntry (int ref)
 	     icat++;
 	  }			/*while */
 
-	adlist = adlist->Cat_Suiv;
+	adlist = adlist->Cat_Next;
      }				/*while */
 
    return (catval);
@@ -461,11 +458,10 @@ void                WinErrorBox (void)
 }
 
 
-BOOL                PASCAL
-                    WinMain (HINSTANCE hInst,
-			     HINSTANCE hPrevInst,
-			     LPSTR lpCommand,
-			     int nShow)
+BOOL                PASCAL WinMain (HINSTANCE hInst,
+			            HINSTANCE hPrevInst,
+			            LPSTR lpCommand,
+			            int nShow)
 {
    hInstance = hInst;
    nAmayaShow = nShow;
@@ -497,7 +493,7 @@ char               *data;
 static void         (*CallbackDialogue) () = CallbackError;
 
 /* ---------------------------------------------------------------------- */
-/* | NewCatList cre'e une nouvelle liste de catalogues.                 | */
+/* | NewCatList Creates a new catalogue list.                           | */
 /* ---------------------------------------------------------------------- */
 static struct Cat_List *NewCatList ()
 {
@@ -506,9 +502,9 @@ static struct Cat_List *NewCatList ()
 
    adlist = (struct Cat_List *) TtaGetMemory (sizeof (struct Cat_List));
 
-   adlist->Cat_Suiv = NULL;
+   adlist->Cat_Next = NULL;
 
-   /* Mets a jour le nombre de catalogues alloues libres */
+   /* Updates thenumber of available and free catalogues */
    NbLibCat += MAX_CAT;
    for (i = 0; i < MAX_CAT; i++)
       adlist->Cat_Table[i].Cat_Widget = 0;
@@ -518,27 +514,27 @@ static struct Cat_List *NewCatList ()
 
 
 /* ---------------------------------------------------------------------- */
-/* | NewEList cre'e un nouveau bloc d'e'le'ments.                       | */
+/* | NewEList: creates a new block of elements.                         | */
 /* ---------------------------------------------------------------------- */
 static struct E_List *NewEList ()
 {
    register int        i;
    struct E_List      *adbloc;
 
-   /* Regarde s'il y a un bloc libre */
+   /* verifies if there is a free block */
    if (PtrFreeE_List == NULL)
       adbloc = (struct E_List *) TtaGetMemory (sizeof (struct E_List));
 
    else
      {
 	adbloc = PtrFreeE_List;
-	PtrFreeE_List = adbloc->E_Suiv;
+	PtrFreeE_List = adbloc->E_Next;
 	NbLibE_List--;
      }
 
-   /* Mets a jour le nombre de blocs E_List alloues */
+   /* Updates the number of blocks of allocated E_List */
    NbOccE_List++;
-   adbloc->E_Suiv = NULL;
+   adbloc->E_Next = NULL;
    for (i = 0; i < C_NUMBER; i++)
      {
 	adbloc->E_ThotWidget[i] = 0;
@@ -549,7 +545,7 @@ static struct E_List *NewEList ()
 
 
 /* ---------------------------------------------------------------------- */
-/* | FreeEList libe`re tous les blocs d'elements.                       | */
+/* | FreeEList: Releases all blocks of elements.                        | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
 static void         FreeEList (struct E_List *adbloc)
@@ -566,20 +562,20 @@ struct E_List      *adbloc;
    while (cebloc != NULL)
      {
 	NbLibE_List++;
-	if (cebloc->E_Suiv == NULL)
+	if (cebloc->E_Next == NULL)
 	  {
-	     cebloc->E_Suiv = PtrFreeE_List;
+	     cebloc->E_Next = PtrFreeE_List;
 	     PtrFreeE_List = adbloc;
 	     cebloc = NULL;
 	  }
 	else
-	   cebloc = cebloc->E_Suiv;
+	   cebloc = cebloc->E_Next;
      }				/*while */
 }				/*FreeEList */
 
 
 /* ---------------------------------------------------------------------- */
-/* | Callback de disparition d'un menu                                  | */
+/* | Callback for closing a menu                                        | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
 static void         UnmapMenu (ThotWidget w, struct Cat_Context *catalogue, caddr_t call_d)
@@ -605,7 +601,7 @@ caddr_t             call_d;
 
 
 /* ---------------------------------------------------------------------- */
-/* | Callback pour un bouton du menu                                    | */
+/* | Callback for a menu button                                         | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
 static void         CallMenu (ThotWidget w, struct Cat_Context *catalogue, caddr_t call_d)
@@ -632,10 +628,10 @@ caddr_t             call_d;
    if ((icatal == ShowCat) && (ShowReturn == 1))
       ShowReturn = 0;
 
-   /* On a selectionne une entree du menu */
+   /* A menu entry is selected */
    if (catalogue->Cat_Widget != 0)
       if ((int) catalogue->Cat_Widget == -1)
-/*** Retour du simple bouton ***/
+   /*** back to a simple button ***/
 	 (*CallbackDialogue) (catalogue->Cat_Ref, INTEGER_DATA, 0);
       else
 	{
@@ -653,7 +649,7 @@ caddr_t             call_d;
 		     index++;
 		  }		/*while */
 		/* Passe au bloc suivant */
-		adbloc = adbloc->E_Suiv;
+		adbloc = adbloc->E_Next;
 		i = 0;
 	     }			/*while */
 
@@ -700,7 +696,7 @@ caddr_t             call_d;
 		  index++;
 	       }		/*while */
 	     /* Passe au bloc suivant */
-	     adbloc = adbloc->E_Suiv;
+	     adbloc = adbloc->E_Next;
 	     i = 0;
 	  }			/*while */
 
@@ -759,7 +755,7 @@ caddr_t             call_d;
 		  ent++;
 	       }		/*while */
 	     /* Passe au bloc suivant */
-	     adbloc = adbloc->E_Suiv;
+	     adbloc = adbloc->E_Next;
 	     i = 0;
 	  }			/*while */
      }				/*if */
@@ -808,7 +804,7 @@ struct Cat_Context *catalogue;
 		  index++;
 	       }		/*while */
 	     /* Passe au bloc suivant */
-	     adbloc = adbloc->E_Suiv;
+	     adbloc = adbloc->E_Next;
 	     i = 0;
 	  }			/*while */
      }				/*if */
@@ -819,12 +815,12 @@ struct Cat_Context *catalogue;
 /* | Callback d'initialisation d'un formulaire.                         | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-static void         INITform (ThotWidget w, struct Cat_Context *catalpere, caddr_t call_d)
+static void         INITform (ThotWidget w, struct Cat_Context *parentCatalogue, caddr_t call_d)
 
 #else  /* __STDC__ */
-static void         INITform (w, catalpere, call_d)
+static void         INITform (w, parentCatalogue, call_d)
 ThotWidget          w;
-struct Cat_Context *catalpere;
+struct Cat_Context *parentCatalogue;
 caddr_t             call_d;
 
 #endif /* __STDC__ */
@@ -840,12 +836,12 @@ caddr_t             call_d;
    struct Cat_Context *catalogue;
 
    /* Affiche le formulaire */
-   if (catalpere->Cat_Widget != 0)
+   if (parentCatalogue->Cat_Widget != 0)
      {
 /*** Allume les sous-widgets du formulaire ***/
-	adbloc = catalpere->Cat_Entries;
+	adbloc = parentCatalogue->Cat_Entries;
 	/* Le premier bloc contient les boutons de la feuille de saisie */
-	adbloc = adbloc->E_Suiv;
+	adbloc = adbloc->E_Next;
 
 	ent = 1;
 	while (adbloc->E_ThotWidget[ent] != 0)
@@ -865,16 +861,16 @@ caddr_t             call_d;
 	     if (ent >= C_NUMBER)
 	       {
 		  ent = 0;
-		  if (adbloc->E_Suiv == NULL)
+		  if (adbloc->E_Next == NULL)
 		     break;
 		  else
-		     adbloc = adbloc->E_Suiv;
+		     adbloc = adbloc->E_Next;
 	       }
 	  }			/*while */
 
 /*** Positionne le formulaire a la position courante du show ***/
 	n = 0;
-	w = catalpere->Cat_Widget;
+	w = parentCatalogue->Cat_Widget;
 	n = 0;
 #ifndef NEW_WILLOWS
 	XtSetArg (args[n], XmNx, (Position) ShowX);
@@ -894,18 +890,18 @@ caddr_t             call_d;
 /* | Callback d'initialisation d'un formulaire avec positionnement.     | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-static void         INITetPOSform (ThotWidget w, struct Cat_Context *catalpere, caddr_t call_d)
+static void         INITetPOSform (ThotWidget w, struct Cat_Context *parentCatalogue, caddr_t call_d)
 
 #else  /* __STDC__ */
-static void         INITetPOSform (w, catalpere, call_d)
+static void         INITetPOSform (w, parentCatalogue, call_d)
 ThotWidget          w;
-struct Cat_Context *catalpere;
+struct Cat_Context *parentCatalogue;
 caddr_t             call_d;
 
 #endif /* __STDC__ */
 {
    TtaSetDialoguePosition ();
-   INITform (w, catalpere, call_d);
+   INITform (w, parentCatalogue, call_d);
 }				/*INITetPOSform */
 
 
@@ -913,18 +909,18 @@ caddr_t             call_d;
 /* | Destruction de feuillet.                                           | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-static void         formKill (ThotWidget w, struct Cat_Context *catalpere, caddr_t call_d)
+static void         formKill (ThotWidget w, struct Cat_Context *parentCatalogue, caddr_t call_d)
 
 #else  /* __STDC__ */
-static void         formKill (w, catalpere, call_d)
+static void         formKill (w, parentCatalogue, call_d)
 ThotWidget          w;
-struct Cat_Context *catalpere;
+struct Cat_Context *parentCatalogue;
 caddr_t             call_d;
 
 #endif /* __STDC__ */
 {
    /* Le widget est detruit */
-   TtaDestroyDialogue (catalpere->Cat_Ref);
+   TtaDestroyDialogue (parentCatalogue->Cat_Ref);
 }
 
 
@@ -933,12 +929,12 @@ caddr_t             call_d;
 /* ---------------------------------------------------------------------- */
 #ifndef NEW_WILLOWS
 #ifdef __STDC__
-static void         CallSheet (ThotWidget w, struct Cat_Context *catalpere, caddr_t call_d)
+static void         CallSheet (ThotWidget w, struct Cat_Context *parentCatalogue, caddr_t call_d)
 
 #else  /* __STDC__ */
-static void         CallSheet (w, catalpere, call_d)
+static void         CallSheet (w, parentCatalogue, call_d)
 ThotWidget          w;
-struct Cat_Context *catalpere;
+struct Cat_Context *parentCatalogue;
 caddr_t             call_d;
 
 #endif /* __STDC__ */
@@ -956,9 +952,9 @@ caddr_t             call_d;
    ThotWidget          wtext;
 
    /* On a selectionne une entree du menu */
-   if (catalpere->Cat_Widget != 0)
+   if (parentCatalogue->Cat_Widget != 0)
      {
-	adbloc = catalpere->Cat_Entries;
+	adbloc = parentCatalogue->Cat_Entries;
 	entry = -1;
 	i = 0;
 	while ((entry == -1) && (i < C_NUMBER))
@@ -970,7 +966,7 @@ caddr_t             call_d;
 
 	/* Si la feuille de dialogue est detruite cela force l'abandon */
 	if (entry == -1)
-	   if (catalpere->Cat_Type == CAT_SHEET)
+	   if (parentCatalogue->Cat_Type == CAT_SHEET)
 	      entry = 0;
 	   else
 	      return;
@@ -978,7 +974,7 @@ caddr_t             call_d;
 /*** Retour vers l'application ***/
 /*** Eteins les sous-widgets du feuillet si on quitte ***/
 /*** Recupere les retours des sous-catalogues         ***/
-	adbloc = adbloc->E_Suiv;
+	adbloc = adbloc->E_Next;
 	ent = 1;
 	while (adbloc->E_ThotWidget[ent] != 0)
 	  {
@@ -1054,21 +1050,21 @@ caddr_t             call_d;
 	     if (ent >= C_NUMBER)
 	       {
 		  ent = 0;
-		  if (adbloc->E_Suiv == NULL)
+		  if (adbloc->E_Next == NULL)
 		     break;
 		  else
-		     adbloc = adbloc->E_Suiv;
+		     adbloc = adbloc->E_Next;
 	       }
 	  }			/*while */
 
 /*** On fait disparaitre le formulaire ***/
-	if (entry == 0 || catalpere->Cat_Type == CAT_DIALOG || catalpere->Cat_Type == CAT_FORM)
+	if (entry == 0 || parentCatalogue->Cat_Type == CAT_DIALOG || parentCatalogue->Cat_Type == CAT_FORM)
 	  {
-	     XtUnmanageChild (catalpere->Cat_Widget);
-	     XtUnmanageChild (XtParent (catalpere->Cat_Widget));
+	     XtUnmanageChild (parentCatalogue->Cat_Widget);
+	     XtUnmanageChild (XtParent (parentCatalogue->Cat_Widget));
 
 	     /* Si on en a fini avec la feuille de dialogue */
-	     catalogue = catalpere;
+	     catalogue = parentCatalogue;
 	     while (catalogue->Cat_PtParent != NULL)
 		catalogue = catalogue->Cat_PtParent;
 
@@ -1076,7 +1072,7 @@ caddr_t             call_d;
 		ShowReturn = 0;
 	  }
 
-	(*CallbackDialogue) (catalpere->Cat_Ref, INTEGER_DATA, entry);
+	(*CallbackDialogue) (parentCatalogue->Cat_Ref, INTEGER_DATA, entry);
      }				/*if */
 }				/*CallSheet */
 
@@ -1161,17 +1157,17 @@ XmListCallbackStruct *infos;
 #endif /* __STDC__ */
 
 {
-   char               *texte;
+   char               *text;
    boolean             ok;
 
    if (catalogue->Cat_Widget != 0)
       if (catalogue->Cat_Type == CAT_SELECT)
 	{
-	   ok = XmStringGetLtoR (infos->item, XmSTRING_DEFAULT_CHARSET, &texte);
+	   ok = XmStringGetLtoR (infos->item, XmSTRING_DEFAULT_CHARSET, &text);
 	   /* retourne l'entree choisie */
-	   if (ok && texte != NULL)
-	      if (texte[0] != '\0' && texte[0] != ' ')
-		 (*CallbackDialogue) (catalogue->Cat_Ref, STRING_DATA, texte);
+	   if (ok && text != NULL)
+	      if (text[0] != '\0' && text[0] != ' ')
+		 (*CallbackDialogue) (catalogue->Cat_Ref, STRING_DATA, text);
 	}
 }				/*CallList */
 
@@ -1223,7 +1219,7 @@ caddr_t             call_d;
 {
    Arg                 args[MAX_ARGS];
    XmString            text;
-   char               *texte;
+   char               *str;
 
    if (catalogue->Cat_Widget != 0)
      {
@@ -1236,8 +1232,8 @@ caddr_t             call_d;
 	if (catalogue->Cat_SelectList)
 	  {
 	     /* retourne la valeur du label */
-	     XmStringGetLtoR (text, XmSTRING_DEFAULT_CHARSET, &texte);
-	     (*CallbackDialogue) (catalogue->Cat_Ref, STRING_DATA, texte);
+	     XmStringGetLtoR (text, XmSTRING_DEFAULT_CHARSET, &str);
+	     (*CallbackDialogue) (catalogue->Cat_Ref, STRING_DATA, str);
 	  }
 	else
 	   XtSetValues ((ThotWidget) catalogue->Cat_Entries, args, 1);
@@ -1930,10 +1926,10 @@ void                (*procedure) ();
 /* | ClearChildren nettoie tous les catalalogues fils du catalogue.     | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-static void         ClearChildren (struct Cat_Context *catalpere)
+static void         ClearChildren (struct Cat_Context *parentCatalogue)
 #else  /* __STDC__ */
-static void         ClearChildren (catalpere)
-struct Cat_Context *catalpere;
+static void         ClearChildren (parentCatalogue)
+struct Cat_Context *parentCatalogue;
 
 #endif /* __STDC__ */
 {
@@ -1942,7 +1938,7 @@ struct Cat_Context *catalpere;
    struct Cat_List    *adlist;
 
    /* Tous les sous-menus ou sous-formulaires sont detruits par MOTIF */
-   /* Recherche les catalogues qui sont les fils de catalpere         */
+   /* Recherche les catalogues qui sont les fils de parentCatalogue         */
    adlist = PtrCatalogue;
    while (adlist != NULL)
      {
@@ -1951,7 +1947,7 @@ struct Cat_Context *catalpere;
 	  {
 	     catalogue = &adlist->Cat_Table[icat];
 	     if ((catalogue->Cat_Widget != 0)
-		 && (catalogue->Cat_PtParent == catalpere))
+		 && (catalogue->Cat_PtParent == parentCatalogue))
 	       {
 		  /* Libere les blocs des entrees */
 		  if ((catalogue->Cat_Type != CAT_TEXT)
@@ -1978,19 +1974,19 @@ struct Cat_Context *catalpere;
 	     icat++;
 	  }			/*while */
 	/* On passe au bloc suivant */
-	adlist = adlist->Cat_Suiv;
+	adlist = adlist->Cat_Next;
      }				/*while */
 }				/*ClearChildren */
 
 /* ---------------------------------------------------------------------- */
-/* | CatEntree recherche si le catalogue de'signe' par sa re'fe'rence   | */
+/* | CatEntry recherche si le catalogue de'signe' par sa re'fe'rence   | */
 /* | existe de'ja` ou une entre'e libre dans la table des catalogues.   | */
 /* | Retourne l'adresse du catalogue cre'e' ou NULL.                    | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-static struct Cat_Context *CatEntree (int ref)
+static struct Cat_Context *CatEntry (int ref)
 #else  /* __STDC__ */
-static struct Cat_Context *CatEntree (ref)
+static struct Cat_Context *CatEntry (ref)
 int                 ref;
 
 #endif /* __STDC__ */
@@ -2032,12 +2028,12 @@ int                 ref;
 	  }			/*while */
 
 	/* On passe au bloc suivant */
-	if (adlist->Cat_Suiv == NULL && catval == NULL && catlib == NULL)
+	if (adlist->Cat_Next == NULL && catval == NULL && catlib == NULL)
 	  {
 	     /* Cree une nouvelle liste de catalogues */
-	     adlist->Cat_Suiv = NewCatList ();
+	     adlist->Cat_Next = NewCatList ();
 	  }
-	adlist = adlist->Cat_Suiv;
+	adlist = adlist->Cat_Next;
      }				/*while */
 
    /* Si le catalogue n'existe pas encore */
@@ -2050,7 +2046,7 @@ int                 ref;
      }
    else
       return (catval);
-}				/*CatEntree */
+}				/*CatEntry */
 
 
 /* ---------------------------------------------------------------------- */
@@ -2114,8 +2110,8 @@ struct Cat_Context *catalogue;
 		     ent++;
 		     if (ent >= C_NUMBER)
 		       {
-			  if (adbloc->E_Suiv != NULL)
-			     adbloc = adbloc->E_Suiv;
+			  if (adbloc->E_Next != NULL)
+			     adbloc = adbloc->E_Next;
 			  ent = 0;
 		       }	/*if */
 		  }		/*while */
@@ -2127,9 +2123,9 @@ struct Cat_Context *catalogue;
 		ClearChildren (catalogue);
 
 	     /* Libere les blocs des entrees */
-	     adbloc = catalogue->Cat_Entries->E_Suiv;
+	     adbloc = catalogue->Cat_Entries->E_Next;
 	     FreeEList (adbloc);
-	     catalogue->Cat_Entries->E_Suiv = NULL;
+	     catalogue->Cat_Entries->E_Next = NULL;
 	  }			/*else */
 
 	/* On memorise le widget parent des entrees a recreer */
@@ -2171,7 +2167,7 @@ char               *equiv;
    int                 eindex;
    register int        i;
    int                 n;
-   boolean             reconstruit;
+   boolean             rebuilded;
    struct Cat_Context *catalogue;
    struct E_List      *adbloc;
 
@@ -2181,7 +2177,7 @@ char               *equiv;
 #endif /* NEW_WILLOWS */
    ThotWidget          menu;
    ThotWidget          w;
-   char                intitule[200];
+   char                heading[200];
 
 #ifndef NEW_WILLOWS
    XmString            title_string;
@@ -2193,7 +2189,7 @@ char               *equiv;
 	TtaError (ERR_invalid_reference);
 	return;
      }
-   catalogue = CatEntree (ref);
+   catalogue = CatEntry (ref);
 #ifndef NEW_WILLOWS
    title_string = 0;
 #endif /* NEW_WILLOWS */
@@ -2207,13 +2203,13 @@ char               *equiv;
    else
      {
 	/* Est-ce que le catalogue existe deja ? */
-	reconstruit = FALSE;
+	rebuilded = FALSE;
 	if (catalogue->Cat_Widget != 0)
 	  {
 	     if (catalogue->Cat_Type == CAT_PULL)
 	       {
 		  DestContenuMenu (catalogue);	/* Modification du catalogue */
-		  reconstruit = TRUE;
+		  rebuilded = TRUE;
 	       }
 	     else
 		TtaDestroyDialogue (ref);
@@ -2234,7 +2230,7 @@ char               *equiv;
 	  }
 	else if (number == 0)
 	   menu = (ThotWidget) - 1;	/* pas de pull-down */
-	else if (!reconstruit)
+	else if (!rebuilded)
 	  {
 #ifdef NEW_WILLOWS
 	     menu = parent;
@@ -2280,7 +2276,7 @@ char               *equiv;
 	     XtSetArg (args[n], XmNlabelString, title_string);
 	     n++;
 #endif /* NEW_WILLOWS */
-	     if (!reconstruit)
+	     if (!rebuilded)
 	       {
 		  adbloc = NewEList ();
 		  catalogue->Cat_Entries = adbloc;
@@ -2317,7 +2313,7 @@ char               *equiv;
 		XmStringFree (title_string);
 #endif /* NEW_WILLOWS */
 	  }
-	else if (!reconstruit)
+	else if (!rebuilded)
 	  {
 	     adbloc = NewEList ();
 	     catalogue->Cat_Entries = adbloc;
@@ -2363,8 +2359,8 @@ char               *equiv;
 		     /* Faut-il changer de bloc d'entrees ? */
 		     if (ent >= C_NUMBER)
 		       {
-			  adbloc->E_Suiv = NewEList ();
-			  adbloc = adbloc->E_Suiv;
+			  adbloc->E_Next = NewEList ();
+			  adbloc = adbloc->E_Next;
 			  ent = 0;
 		       }
 
@@ -2426,14 +2422,14 @@ char               *equiv;
 		     else if (text[index] == 'F')
 /*_________________________________ Creation d'un sous-formulaire __*/
 		       {
-			  strcpy (intitule, &text[index + 1]);
-			  strcat (intitule, "...");
+			  strcpy (heading, &text[index + 1]);
+			  strcat (heading, "...");
 #ifdef NEW_WILLOWS
 			  w = (HMENU) CreateMenu ();
-			  AppendMenu (menu, MF_POPUP, (UINT) w, &intitule);
+			  AppendMenu (menu, MF_POPUP, (UINT) w, &heading);
 			  adbloc->E_ThotWidget[ent] = i;
 #else  /* NEW_WILLOWS */
-			  w = XmCreatePushButton (menu, intitule, args, n);
+			  w = XmCreatePushButton (menu, heading, args, n);
 			  XtManageChild (w);
 			  adbloc->E_ThotWidget[ent] = w;
 #endif /* NEW_WILLOWS */
@@ -2471,7 +2467,7 @@ char               *equiv;
 	     }			/*while */
 
 	/* Attache le pull-down menu au widget passe en parametre */
-	if (parent != 0 && !reconstruit)
+	if (parent != 0 && !rebuilded)
 	  {
 #ifndef NEW_WILLOWS
 	     n = 0;
@@ -2510,7 +2506,7 @@ ThotWidget          parent;
       TtaError (ERR_invalid_parent_dialogue);
    else
      {
-	catalogue = CatEntree (ref);
+	catalogue = CatEntry (ref);
 	if (catalogue == NULL)
 	   TtaError (ERR_invalid_reference);
 	else if (catalogue->Cat_Widget != 0)
@@ -2550,7 +2546,7 @@ ThotWidget          parent;
       TtaError (ERR_invalid_parent_dialogue);
    else
      {
-	catalogue = CatEntree (ref);
+	catalogue = CatEntry (ref);
 	if (catalogue == NULL)
 	   TtaError (ERR_invalid_reference);
 	else if (catalogue->Cat_Widget != 0)
@@ -2598,11 +2594,11 @@ char                button;
    register int        i;
    int                 n;
    int                 eindex;
-   boolean             reconstruit;
+   boolean             rebuilded;
    struct Cat_Context *catalogue;
    struct E_List      *adbloc;
    ThotWidget          w;
-   char                intitule[200];
+   char                heading[200];
 
 #ifdef NEW_WILLOWS
    HMENU               menu;
@@ -2619,7 +2615,7 @@ char                button;
 	TtaError (ERR_invalid_reference);
 	return;
      }
-   catalogue = CatEntree (ref);
+   catalogue = CatEntry (ref);
 #ifdef NEW_WILLOWS
    fprintf (stderr, "TtaNewPopup(ref %d, parent %X, title %s, number %d,\n text %s, equiv %s, button %d)\n",
 	    ref, parent, title, number, text, equiv, button);
@@ -2633,19 +2629,19 @@ char                button;
    else
      {
 	/* Est-ce que le catalogue existe deja ? */
-	reconstruit = FALSE;
+	rebuilded = FALSE;
 	if (catalogue->Cat_Widget != 0)
 	  {
 	     if (catalogue->Cat_Type == CAT_POPUP)
 	       {
 		  DestContenuMenu (catalogue);	/* Modification du catalogue */
-		  reconstruit = TRUE;
+		  rebuilded = TRUE;
 	       }
 	     else
 		TtaDestroyDialogue (ref);
 	  }
 
-	if (!reconstruit)
+	if (!rebuilded)
 	  {
 	     /* Creation du Popup Shell pour contenir le menu */
 #ifdef NEW_WILLOWS
@@ -2674,7 +2670,7 @@ char                button;
 	  }
 #endif /* !NEW_WILLOWS */
 
-	if (!reconstruit)
+	if (!rebuilded)
 	  {
 #ifndef NEW_WILLOWS
 	     n = 1;
@@ -2732,7 +2728,7 @@ char                button;
 	     XtSetArg (args[n], XmNlabelString, title_string);
 	     n++;
 #endif /* !NEW_WILLOWS */
-	     if (!reconstruit)
+	     if (!rebuilded)
 	       {
 #ifdef NEW_WILLOWS
 		  adbloc->E_ThotWidget[0] = 0;
@@ -2808,8 +2804,8 @@ char                button;
 		     /* Faut-il changer de bloc d'entrees ? */
 		     if (ent >= C_NUMBER)
 		       {
-			  adbloc->E_Suiv = NewEList ();
-			  adbloc = adbloc->E_Suiv;
+			  adbloc->E_Next = NewEList ();
+			  adbloc = adbloc->E_Next;
 			  ent = 0;
 		       }	/*if */
 
@@ -2870,13 +2866,13 @@ char                button;
 		     else if (text[index] == 'F')
 /*_________________________________ Creation d'un sous-formulaire __*/
 		       {
-			  strcpy (intitule, &text[index + 1]);
-			  strcat (intitule, "...");
+			  strcpy (heading, &text[index + 1]);
+			  strcat (heading, "...");
 #ifdef NEW_WILLOWS
-			  AppendMenu (menu, MF_STRING, ref + i, &intitule);
+			  AppendMenu (menu, MF_STRING, ref + i, &heading);
 			  adbloc->E_ThotWidget[ent] = i;
 #else  /* NEW_WILLOWS */
-			  w = XmCreatePushButton (menu, intitule, args, n);
+			  w = XmCreatePushButton (menu, heading, args, n);
 			  XtManageChild (w);
 			  adbloc->E_ThotWidget[ent] = w;
 #endif /* !NEW_WILLOWS */
@@ -2919,7 +2915,7 @@ char                button;
 }				/*TtaNewPopup */
 
 /* ---------------------------------------------------------------------- */
-/* | AjoutDansFormulaire recherche une entree libre dans le formulaire  | */
+/* | AddInFormulary recherche une entree libre dans le formulaire  | */
 /* | et cre'e e'ventuellement un nouveau bloc d'entre'es et un nouveau  | */
 /* | Row-Column.                                                        | */
 /* | Retourne :                                                         | */
@@ -2928,9 +2924,9 @@ char                button;
 /* | + adbloc -> le bloc des entre'es concerne'.                        | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-static ThotWidget   AjoutDansFormulaire (struct Cat_Context *catalogue, int *index, int *entry, struct E_List **adbloc)
+static ThotWidget   AddInFormulary (struct Cat_Context *catalogue, int *index, int *entry, struct E_List **adbloc)
 #else  /* __STDC__ */
-static ThotWidget   AjoutDansFormulaire (catalogue, index, entry, adbloc)
+static ThotWidget   AddInFormulary (catalogue, index, entry, adbloc)
 struct Cat_Context *catalogue;
 int                *index;
 int                *entry;
@@ -2951,7 +2947,7 @@ struct E_List     **adbloc;
    *entry = 1;
    *index = 1;
    /* Le 1er bloc sert aux boutons du feuillet */
-   *adbloc = catalogue->Cat_Entries->E_Suiv;
+   *adbloc = catalogue->Cat_Entries->E_Next;
 
    /* Recupere le Row-Column racine du formulaire */
    w = (*adbloc)->E_ThotWidget[0];
@@ -2973,9 +2969,9 @@ struct E_List     **adbloc;
 	if (*entry >= C_NUMBER)
 	  {
 	     /* Il faut changer de bloc et enventuellement en creer un */
-	     if ((*adbloc)->E_Suiv == NULL)
-		(*adbloc)->E_Suiv = NewEList ();
-	     *adbloc = (*adbloc)->E_Suiv;
+	     if ((*adbloc)->E_Next == NULL)
+		(*adbloc)->E_Next = NewEList ();
+	     *adbloc = (*adbloc)->E_Next;
 	     *entry = 0;
 	  }
      }				/*while */
@@ -3008,9 +3004,9 @@ struct E_List     **adbloc;
 	if (*entry >= C_NUMBER)
 	  {
 	     /* Il faut changer de bloc et enventuellement en creer un */
-	     if ((*adbloc)->E_Suiv == NULL)
-		(*adbloc)->E_Suiv = NewEList ();
-	     *adbloc = (*adbloc)->E_Suiv;
+	     if ((*adbloc)->E_Next == NULL)
+		(*adbloc)->E_Next = NewEList ();
+	     *adbloc = (*adbloc)->E_Next;
 	     *entry = 0;
 	  }
      }				/*if */
@@ -3018,7 +3014,7 @@ struct E_List     **adbloc;
    /*                                       il faut mettre a jour l'index */
    *index += C_NUMBER;
    return (w);
-}				/*AjoutDansFormulaire */
+}				/*AddInFormulary */
 
 
 /* ---------------------------------------------------------------------- */
@@ -3051,7 +3047,7 @@ boolean             horizontal;
    int                 ent;
    int                 n;
    struct Cat_Context *catalogue;
-   struct Cat_Context *catalpere;
+   struct Cat_Context *parentCatalogue;
    struct E_List      *adbloc;
    Arg                 args[MAX_ARGS];
    ThotWidget          menu;
@@ -3065,7 +3061,7 @@ boolean             horizontal;
 	return;
      }
 
-   catalogue = CatEntree (ref);
+   catalogue = CatEntry (ref);
    if (catalogue == NULL)
       TtaError (ERR_cannot_create_dialogue);
    else if (catalogue->Cat_Widget != 0)
@@ -3074,24 +3070,24 @@ boolean             horizontal;
      {
 	catalogue->Cat_React = TRUE;
 	title_string = 0;
-	catalpere = CatEntree (ref_parent);
+	parentCatalogue = CatEntry (ref_parent);
 /*__________________________________ Le catalogue parent n'existe pas __*/
-	if (catalpere == NULL)
+	if (parentCatalogue == NULL)
 	  {
 	     TtaError (ERR_invalid_parent_dialogue);
 	     return;
 	  }
-	else if (catalpere->Cat_Widget == 0)
+	else if (parentCatalogue->Cat_Widget == 0)
 	  {
 	     TtaError (ERR_invalid_parent_dialogue);
 	     return;
 	  }
 /*_________________________________________ Sous-menu d'un formulaire __*/
-	else if (catalpere->Cat_Type == CAT_FORM
-		 || catalpere->Cat_Type == CAT_SHEET
-		 || catalpere->Cat_Type == CAT_DIALOG)
+	else if (parentCatalogue->Cat_Type == CAT_FORM
+		 || parentCatalogue->Cat_Type == CAT_SHEET
+		 || parentCatalogue->Cat_Type == CAT_DIALOG)
 	  {
-	     w = AjoutDansFormulaire (catalpere, &i, &ent, &adbloc);
+	     w = AddInFormulary (parentCatalogue, &i, &ent, &adbloc);
 
 /*** Cree un sous-menu d'un formulaire ***/
 	     n = 0;
@@ -3111,7 +3107,7 @@ boolean             horizontal;
 	     catalogue->Cat_Type = CAT_FMENU;
 	     catalogue->Cat_Data = -1;
 	     catalogue->Cat_Widget = menu;
-	     catalogue->Cat_PtParent = catalpere;
+	     catalogue->Cat_PtParent = parentCatalogue;
 	     adbloc->E_ThotWidget[ent] = (ThotWidget) (catalogue);
 	     adbloc->E_Free[ent] = 'N';
 	     catalogue->Cat_EntryParent = i;
@@ -3193,8 +3189,8 @@ boolean             horizontal;
 	     /* Faut-il changer de bloc d'entrees ? */
 	     if (ent >= C_NUMBER)
 	       {
-		  adbloc->E_Suiv = NewEList ();
-		  adbloc = adbloc->E_Suiv;
+		  adbloc->E_Next = NewEList ();
+		  adbloc = adbloc->E_Next;
 		  ent = 0;
 	       }		/*if */
 
@@ -3249,9 +3245,9 @@ boolean             react;
    int                 i;
    int                 ent;
    int                 n;
-   boolean             reconstruit;
+   boolean             rebuilded;
    struct Cat_Context *catalogue;
-   struct Cat_Context *catalpere;
+   struct Cat_Context *parentCatalogue;
    struct E_List      *adbloc;
 
 #ifndef NEW_WILLOWS
@@ -3266,7 +3262,7 @@ boolean             react;
    ThotWidget          menu;
 
 #endif /* !NEW_WILLOWS */
-   char                intitule[200];
+   char                heading[200];
    char                button;
 
 #ifdef NEW_WILLOWS
@@ -3284,7 +3280,7 @@ boolean             react;
 	return;
      }
 
-   catalogue = CatEntree (ref);
+   catalogue = CatEntry (ref);
    if (catalogue == NULL)
       TtaError (ERR_cannot_create_dialogue);
    else
@@ -3293,39 +3289,39 @@ boolean             react;
 	title_string = 0;
 
 	/* Faut-il detruire le catalogue precedent ? */
-	reconstruit = FALSE;
+	rebuilded = FALSE;
 	if (catalogue->Cat_Widget != 0)
 	   if (catalogue->Cat_Type == CAT_MENU
 	       || catalogue->Cat_Type == CAT_FMENU)
 	     {
 		DestContenuMenu (catalogue);	/* Modification du catalogue */
-		reconstruit = TRUE;
+		rebuilded = TRUE;
 	     }
 	   else
 	      /* Modification du catalogue */
 	      TtaDestroyDialogue (ref);
 
 /*======================================> Recherche le catalogue parent */
-	catalpere = CatEntree (ref_parent);
+	parentCatalogue = CatEntry (ref_parent);
 /*__________________________________ Le catalogue parent n'existe pas __*/
-	if (catalpere == NULL)
+	if (parentCatalogue == NULL)
 	  {
 	     TtaError (ERR_invalid_parent_dialogue);
 	     return;
 	  }
-	else if (catalpere->Cat_Widget == 0)
+	else if (parentCatalogue->Cat_Widget == 0)
 	  {
 	     TtaError (ERR_invalid_parent_dialogue);
 	     return;
 	  }
 /*_________________________________________ Sous-menu d'un formulaire __*/
-	else if (catalpere->Cat_Type == CAT_FORM
-		 || catalpere->Cat_Type == CAT_SHEET
-		 || catalpere->Cat_Type == CAT_DIALOG)
+	else if (parentCatalogue->Cat_Type == CAT_FORM
+		 || parentCatalogue->Cat_Type == CAT_SHEET
+		 || parentCatalogue->Cat_Type == CAT_DIALOG)
 	  {
-	     if (!reconstruit)
+	     if (!rebuilded)
 	       {
-		  w = AjoutDansFormulaire (catalpere, &i, &ent, &adbloc);
+		  w = AddInFormulary (parentCatalogue, &i, &ent, &adbloc);
 
 #ifdef NEW_WILLOWS
 #else  /* NEW_WILLOWS */
@@ -3348,7 +3344,7 @@ boolean             react;
 		  catalogue->Cat_Type = CAT_FMENU;
 		  catalogue->Cat_Data = -1;
 		  catalogue->Cat_Widget = menu;
-		  catalogue->Cat_PtParent = catalpere;
+		  catalogue->Cat_PtParent = parentCatalogue;
 		  adbloc->E_ThotWidget[ent] = (ThotWidget) (catalogue);
 		  adbloc->E_Free[ent] = 'N';
 		  catalogue->Cat_EntryParent = i;
@@ -3372,7 +3368,7 @@ boolean             react;
 		  XtSetArg (args[n], XmNlabelString, title_string);
 		  n++;
 #endif /* !NEW_WILLOWS */
-		  if (!reconstruit)
+		  if (!rebuilded)
 		    {
 #ifdef NEW_WILLOWS
 #else  /* NEW_WILLOWS */
@@ -3411,7 +3407,7 @@ boolean             react;
 #endif /* !NEW_WILLOWS */
 	       }
 
-	     if (!reconstruit)
+	     if (!rebuilded)
 	       {
 #ifdef NEW_WILLOWS
 #else  /* NEW_WILLOWS */
@@ -3474,8 +3470,8 @@ boolean             react;
 		       /* Faut-il changer de bloc d'entrees ? */
 		       if (ent >= C_NUMBER)
 			 {
-			    adbloc->E_Suiv = NewEList ();
-			    adbloc = adbloc->E_Suiv;
+			    adbloc->E_Next = NewEList ();
+			    adbloc = adbloc->E_Next;
 			    ent = 0;
 			 }	/*if */
 
@@ -3516,33 +3512,33 @@ boolean             react;
 /*_______________________________________________ Sous-menu d'un menu __*/
 	else
 	  {
-	     if (catalpere->Cat_Type == CAT_POPUP
-		 || catalpere->Cat_Type == CAT_PULL
-		 || catalpere->Cat_Type == CAT_MENU)
+	     if (parentCatalogue->Cat_Type == CAT_POPUP
+		 || parentCatalogue->Cat_Type == CAT_PULL
+		 || parentCatalogue->Cat_Type == CAT_MENU)
 	       {
 
 		  /* Faut-il reconstruire entierement le menu */
-		  if (!reconstruit)
+		  if (!rebuilded)
 		    {
 /*=========> Recherche l'entree du menu parent corespondante */
-		       adbloc = catalpere->Cat_Entries;
+		       adbloc = parentCatalogue->Cat_Entries;
 		       ent = entry + 2;		/* decalage de 2 pour le widget titre */
 		       while (ent >= C_NUMBER)
 			 {
-			    if (adbloc->E_Suiv == NULL)
+			    if (adbloc->E_Next == NULL)
 			      {
 				 TtaError (ERR_invalid_parent_dialogue);
 				 return;
 			      }
 			    else
-			       adbloc = adbloc->E_Suiv;
+			       adbloc = adbloc->E_Next;
 			    ent -= C_NUMBER;
 			 }	/*while */
 
 		       if ((adbloc->E_Type[ent] == 'M') && (adbloc->E_Free[ent] == 'Y'))
 			 {
 			    /* Cree un sous-menu d'un menu */
-			    w = catalpere->Cat_Widget;
+			    w = parentCatalogue->Cat_Widget;
 #ifdef NEW_WILLOWS
 #else  /* NEW_WILLOWS */
 			    n = 0;
@@ -3550,7 +3546,7 @@ boolean             react;
 			    n++;
 			    XtSetArg (args[n], XmNborderColor, Button_Color);
 			    n++;
-			    button = catalpere->Cat_Button;
+			    button = parentCatalogue->Cat_Button;
 			    if (button == 'R')
 			       XtSetArg (args[n], XmNwhichButton, Button3);
 			    else if (button == 'M')
@@ -3573,7 +3569,7 @@ boolean             react;
 			    catalogue->Cat_Button = button;
 			    catalogue->Cat_Data = -1;
 			    catalogue->Cat_Widget = menu;
-			    catalogue->Cat_PtParent = catalpere;
+			    catalogue->Cat_PtParent = parentCatalogue;
 			    /* Memorise l'entree decalee de 2 pour le widget titre */
 			    catalogue->Cat_EntryParent = entry + 2;
 
@@ -3622,7 +3618,7 @@ boolean             react;
 		  XtSetArg (args[n], XmNlabelString, title_string);
 		  n++;
 #endif /* !NEW_WILLOWS */
-		  if (!reconstruit)
+		  if (!rebuilded)
 		    {
 #ifdef NEW_WILLOWS
 #else  /* NEW_WILLOWS */
@@ -3698,8 +3694,8 @@ boolean             react;
 		       /* Faut-il changer de bloc d'entrees ? */
 		       if (ent >= C_NUMBER)
 			 {
-			    adbloc->E_Suiv = NewEList ();
-			    adbloc = adbloc->E_Suiv;
+			    adbloc->E_Next = NewEList ();
+			    adbloc = adbloc->E_Next;
 			    ent = 0;
 			 }	/*if */
 
@@ -3756,9 +3752,9 @@ boolean             react;
 			 {
 #ifdef NEW_WILLOWS
 #else  /* NEW_WILLOWS */
-			    strcpy (intitule, &text[index + 1]);
-			    strcat (intitule, "...");
-			    w = XmCreatePushButton (menu, intitule, args, n);
+			    strcpy (heading, &text[index + 1]);
+			    strcat (heading, "...");
+			    w = XmCreatePushButton (menu, heading, args, n);
 			    XtManageChild (w);
 			    adbloc->E_ThotWidget[ent] = w;
 #endif /* !NEW_WILLOWS */
@@ -3823,7 +3819,7 @@ int                 val;
 
 #endif /* NEW_WILLOWS */
 
-   catalogue = CatEntree (ref);
+   catalogue = CatEntry (ref);
    if (catalogue == NULL)
       TtaError (ERR_invalid_reference);
    else if (catalogue->Cat_Widget == 0)
@@ -3875,7 +3871,7 @@ int                 val;
 		  ent++;
 	       }		/*while */
 	     /* Passe au bloc suivant */
-	     adbloc = adbloc->E_Suiv;
+	     adbloc = adbloc->E_Next;
 	     i = 0;
 	  }			/*while */
 
@@ -3923,9 +3919,9 @@ boolean             react;
    int                 i;
    int                 ent;
    int                 n;
-   boolean             reconstruit;
+   boolean             rebuilded;
    struct Cat_Context *catalogue;
-   struct Cat_Context *catalpere;
+   struct Cat_Context *parentCatalogue;
    struct E_List      *adbloc;
    Arg                 args[MAX_ARGS];
    ThotWidget          menu;
@@ -3939,7 +3935,7 @@ boolean             react;
 	return;
      }
 
-   catalogue = CatEntree (ref);
+   catalogue = CatEntry (ref);
    if (catalogue == NULL)
       TtaError (ERR_cannot_create_dialogue);
    else
@@ -3948,36 +3944,36 @@ boolean             react;
 	title_string = 0;
 
 	/* Faut-il detruire le catalogue precedent ? */
-	reconstruit = FALSE;
+	rebuilded = FALSE;
 	if (catalogue->Cat_Widget != 0)
 	   if (catalogue->Cat_Type == CAT_TMENU)
 	     {
 		DestContenuMenu (catalogue);	/* Modification du catalogue */
-		reconstruit = TRUE;
+		rebuilded = TRUE;
 	     }
 	   else
 	      /* Modification du catalogue */
 	      TtaDestroyDialogue (ref);
 
 /*======================================> Recherche le catalogue parent */
-	if (!reconstruit)
-	   catalpere = CatEntree (ref_parent);
+	if (!rebuilded)
+	   parentCatalogue = CatEntry (ref_parent);
 	else
-	   catalpere = catalogue->Cat_PtParent;
+	   parentCatalogue = catalogue->Cat_PtParent;
 
 /*__________________________________ Le catalogue parent n'existe pas __*/
-	if (catalpere == NULL)
+	if (parentCatalogue == NULL)
 	   TtaError (ERR_invalid_parent_dialogue);
-	else if (catalpere->Cat_Widget == 0)
+	else if (parentCatalogue->Cat_Widget == 0)
 	   TtaError (ERR_invalid_parent_dialogue);
 /*_________________________________________ Sous-menu d'un formulaire __*/
-	else if (catalpere->Cat_Type == CAT_FORM
-		 || catalpere->Cat_Type == CAT_SHEET
-		 || catalpere->Cat_Type == CAT_DIALOG)
+	else if (parentCatalogue->Cat_Type == CAT_FORM
+		 || parentCatalogue->Cat_Type == CAT_SHEET
+		 || parentCatalogue->Cat_Type == CAT_DIALOG)
 	  {
-	     if (!reconstruit)
+	     if (!rebuilded)
 	       {
-		  w = AjoutDansFormulaire (catalpere, &i, &ent, &adbloc);
+		  w = AddInFormulary (parentCatalogue, &i, &ent, &adbloc);
 
 		  /* Cree un sous-menu d'un formulaire */
 		  n = 0;
@@ -3996,7 +3992,7 @@ boolean             react;
 		  catalogue->Cat_Ref = ref;
 		  catalogue->Cat_Type = CAT_TMENU;
 		  catalogue->Cat_Widget = menu;
-		  catalogue->Cat_PtParent = catalpere;
+		  catalogue->Cat_PtParent = parentCatalogue;
 		  adbloc->E_ThotWidget[ent] = (ThotWidget) catalogue;
 		  adbloc->E_Free[ent] = 'N';
 		  catalogue->Cat_EntryParent = i;
@@ -4017,7 +4013,7 @@ boolean             react;
 		  title_string = XmStringCreateSimple (title);
 		  XtSetArg (args[n], XmNlabelString, title_string);
 		  n++;
-		  if (!reconstruit)
+		  if (!rebuilded)
 		    {
 		       XtSetArg (args[n], XmNfontList, DefaultFont);
 		       n++;
@@ -4046,7 +4042,7 @@ boolean             react;
 		  XmStringFree (title_string);
 	       }
 
-	     if (!reconstruit)
+	     if (!rebuilded)
 	       {
 		  /* Cree un Row-Column de Toggle dans le Row-Column du formulaire */
 		  n = 0;
@@ -4116,8 +4112,8 @@ boolean             react;
 		       /* Faut-il changer de bloc d'entrees ? */
 		       if (ent >= C_NUMBER)
 			 {
-			    adbloc->E_Suiv = NewEList ();
-			    adbloc = adbloc->E_Suiv;
+			    adbloc->E_Next = NewEList ();
+			    adbloc = adbloc->E_Next;
 			    ent = 0;
 			 }
 
@@ -4183,7 +4179,7 @@ boolean             on;
 #endif /* NEW_WILLOWS */
    ThotWidget          w;
 
-   catalogue = CatEntree (ref);
+   catalogue = CatEntry (ref);
    if (catalogue == NULL)
       TtaError (ERR_invalid_reference);
    else if (catalogue->Cat_Widget == 0)
@@ -4273,7 +4269,7 @@ boolean             on;
 		  ent++;
 	       }		/*while */
 	     /* Passe au bloc suivant */
-	     adbloc = adbloc->E_Suiv;
+	     adbloc = adbloc->E_Next;
 	     i = 0;
 	  }			/*while */
 
@@ -4289,12 +4285,12 @@ boolean             on;
 /* | du menu de'signe' par sa re'fe'rence ref.                          | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                TtaChangeMenuEntry (int ref, int entry, char *texte)
+void                TtaChangeMenuEntry (int ref, int entry, char *text)
 #else  /* __STDC__ */
-void                TtaChangeMenuEntry (ref, entry, texte)
+void                TtaChangeMenuEntry (ref, entry, text)
 int                 ref;
 int                 entry;
-char               *texte;
+char               *text;
 
 #endif /* __STDC__ */
 {
@@ -4316,7 +4312,7 @@ char               *texte;
 	return;
      }
 
-   catalogue = CatEntree (ref);
+   catalogue = CatEntry (ref);
    if (catalogue == NULL)
       TtaError (ERR_invalid_reference);
    /* Est-ce qu'il s'agit bien d'un menu ou d'un sous-menu ? */
@@ -4334,13 +4330,13 @@ char               *texte;
 	ent = entry + 2;	/* decalage de 2 pour le widget titre */
 	while (ent >= C_NUMBER)
 	  {
-	     if (adbloc->E_Suiv == NULL)
+	     if (adbloc->E_Next == NULL)
 	       {
 		  TtaError (ERR_invalid_parameter);
 		  return;
 	       }
 	     else
-		adbloc = adbloc->E_Suiv;
+		adbloc = adbloc->E_Next;
 	     ent -= C_NUMBER;
 	  }			/*while */
 
@@ -4350,7 +4346,7 @@ char               *texte;
 	  {
 	     w = adbloc->E_ThotWidget[ent];
 #ifndef NEW_WILLOWS
-	     title_string = XmStringCreateSimple (texte);
+	     title_string = XmStringCreateSimple (text);
 	     n = 0;
 	     XtSetArg (args[n], XmNlabelString, title_string);
 	     n++;
@@ -4397,7 +4393,7 @@ int                 activate;
 	return;
      }
 
-   catalogue = CatEntree (ref);
+   catalogue = CatEntry (ref);
    if (catalogue == NULL)
       TtaError (ERR_invalid_reference);
 
@@ -4416,13 +4412,13 @@ int                 activate;
 	ent = entry + 2;	/* decalage de 2 pour le widget titre */
 	while (ent >= C_NUMBER)
 	  {
-	     if (adbloc->E_Suiv == NULL)
+	     if (adbloc->E_Next == NULL)
 	       {
 		  TtaError (ERR_invalid_parameter);
 		  return;
 	       }
 	     else
-		adbloc = adbloc->E_Suiv;
+		adbloc = adbloc->E_Next;
 	     ent -= C_NUMBER;
 	  }			/*while */
 
@@ -4503,10 +4499,10 @@ int                 ref;
    register int        entry;
    ThotWidget          w;
    struct Cat_Context *catalogue;
-   struct Cat_Context *catalpere;
+   struct Cat_Context *parentCatalogue;
    struct E_List      *adbloc;
 
-   catalogue = CatEntree (ref);
+   catalogue = CatEntry (ref);
    if (catalogue == NULL)
       return (1);
    else if (catalogue->Cat_Widget == 0)
@@ -4524,29 +4520,29 @@ int                 ref;
 	else
 	  {
 	     /* Il faut liberer l'entree du menu pere qui le reference */
-	     catalpere = catalogue->Cat_PtParent;
+	     parentCatalogue = catalogue->Cat_PtParent;
 	     entry = catalogue->Cat_EntryParent;
 	     catalogue->Cat_PtParent = NULL;
 	     catalogue->Cat_EntryParent = 0;
 
-	     if (catalpere != NULL)
+	     if (parentCatalogue != NULL)
 	       {
 		  /* Recherche l'entree du menu qui lui correspond */
-		  adbloc = catalpere->Cat_Entries;
+		  adbloc = parentCatalogue->Cat_Entries;
 		  while (entry >= C_NUMBER)
 		    {
 		       entry -= C_NUMBER;
-		       if (adbloc->E_Suiv == NULL)
+		       if (adbloc->E_Next == NULL)
 			  entry = -1;
 		       else
-			  adbloc = adbloc->E_Suiv;
+			  adbloc = adbloc->E_Next;
 		    }		/*while */
 
 		  if (entry >= 0)
 		    {
-		       if ((catalpere->Cat_Type == CAT_FORM)
-			   || (catalpere->Cat_Type == CAT_SHEET)
-			   || (catalpere->Cat_Type == CAT_DIALOG))
+		       if ((parentCatalogue->Cat_Type == CAT_FORM)
+			   || (parentCatalogue->Cat_Type == CAT_SHEET)
+			   || (parentCatalogue->Cat_Type == CAT_DIALOG))
 /*__________________________________________ Dans un formulaire __*/
 			 {
 #ifndef NEW_WILLOWS
@@ -4555,9 +4551,9 @@ int                 ref;
 			    adbloc->E_ThotWidget[entry] = 0;
 			    adbloc->E_Free[entry] = 'Y';
 			 }
-		       else if ((catalpere->Cat_Type == CAT_POPUP)
-				|| (catalpere->Cat_Type == CAT_PULL)
-				|| (catalpere->Cat_Type == CAT_MENU))
+		       else if ((parentCatalogue->Cat_Type == CAT_POPUP)
+				|| (parentCatalogue->Cat_Type == CAT_PULL)
+				|| (parentCatalogue->Cat_Type == CAT_MENU))
 /*________________________________ Formulaire attache a un menu __*/
 			 {
 			    if ((adbloc->E_Type[entry] == 'F')
@@ -4620,7 +4616,7 @@ int                 ref;
 	return;
      }
 
-   catalogue = CatEntree (ref);
+   catalogue = CatEntry (ref);
    if (catalogue == NULL)
       return;
    else if (catalogue->Cat_Widget == 0)
@@ -4663,7 +4659,7 @@ int                 ref;
    ThotWidget          w;
    struct E_List      *adbloc;
    struct Cat_Context *catalogue;
-   struct Cat_Context *catalpere;
+   struct Cat_Context *parentCatalogue;
    int                 n;
 
 #ifndef NEW_WILLOWS
@@ -4677,7 +4673,7 @@ int                 ref;
 	return;
      }
 
-   catalogue = CatEntree (ref);
+   catalogue = CatEntry (ref);
    if (catalogue == NULL)
       return;
    else if (catalogue->Cat_Widget == 0)
@@ -4691,22 +4687,22 @@ int                 ref;
 	    || (catalogue->Cat_Type == CAT_FMENU))
 	  {
 	     /* Il faut liberer l'entree du menu pere qui le reference */
-	     catalpere = catalogue->Cat_PtParent;
+	     parentCatalogue = catalogue->Cat_PtParent;
 	     entry = catalogue->Cat_EntryParent;
 	     catalogue->Cat_PtParent = NULL;
 	     catalogue->Cat_EntryParent = 0;
 
-	     if (catalpere != NULL)
+	     if (parentCatalogue != NULL)
 	       {
 		  /* Recherche l'entree du menu qui lui correspond */
-		  adbloc = catalpere->Cat_Entries;
+		  adbloc = parentCatalogue->Cat_Entries;
 		  while (entry >= C_NUMBER)
 		    {
 		       entry -= C_NUMBER;
-		       if (adbloc->E_Suiv == NULL)
+		       if (adbloc->E_Next == NULL)
 			  entry = -1;
 		       else
-			  adbloc = adbloc->E_Suiv;
+			  adbloc = adbloc->E_Next;
 		    }		/*while */
 
 		  if (entry >= 0)
@@ -4804,7 +4800,7 @@ char               *title;
 	return;
      }
 
-   catalogue = CatEntree (ref);
+   catalogue = CatEntry (ref);
    if (catalogue == NULL)
       TtaError (ERR_invalid_reference);
    /* Est-ce que le catalogue existe deja ? */
@@ -4848,7 +4844,7 @@ int                 cattype;
    int                 index;
    int                 count;
    struct Cat_Context *catalogue;
-   struct Cat_Context *catalpere;
+   struct Cat_Context *parentCatalogue;
    struct E_List      *adbloc;
 
 #ifndef NEW_WILLOWS
@@ -4872,7 +4868,7 @@ int                 cattype;
 	return;
      }
 
-   catalogue = CatEntree (ref);
+   catalogue = CatEntry (ref);
    if (catalogue == NULL)
       TtaError (ERR_cannot_create_dialogue);
    else
@@ -4887,23 +4883,23 @@ int                 cattype;
 	if (ref_parent != 0)
 	  {
 	     /* Recherche le catalogue parent */
-	     catalpere = CatEntree (ref_parent);
+	     parentCatalogue = CatEntry (ref_parent);
 
 /*_______________ le catalogue parent n'existe pas */
-	     if (catalpere == NULL)
+	     if (parentCatalogue == NULL)
 	       {
 		  TtaError (ERR_invalid_parent_dialogue);
 		  return;
 	       }
-	     else if (catalpere->Cat_Widget == 0)
+	     else if (parentCatalogue->Cat_Widget == 0)
 	       {
 		  TtaError (ERR_invalid_parent_dialogue);
 		  return;
 	       }
 /*_____________ le catalogue parent n'est conforme */
-	     else if ((catalpere->Cat_Type != CAT_POPUP)
-		      && (catalpere->Cat_Type != CAT_PULL)
-		      && (catalpere->Cat_Type != CAT_MENU))
+	     else if ((parentCatalogue->Cat_Type != CAT_POPUP)
+		      && (parentCatalogue->Cat_Type != CAT_PULL)
+		      && (parentCatalogue->Cat_Type != CAT_MENU))
 	       {
 		  TtaError (ERR_invalid_parent_dialogue);
 		  return;
@@ -4911,17 +4907,17 @@ int                 cattype;
 	     else
 	       {
 		  /* Recherche l'entree du menu qui lui correspond */
-		  adbloc = catalpere->Cat_Entries;
+		  adbloc = parentCatalogue->Cat_Entries;
 		  ent = entry + 2;	/* pour sauter le titre et le filet */
 		  while (ent >= C_NUMBER)
 		    {
-		       if (adbloc->E_Suiv == NULL)
+		       if (adbloc->E_Next == NULL)
 			 {
 			    TtaError (ERR_invalid_parent_dialogue);
 			    return;
 			 }
 		       else
-			  adbloc = adbloc->E_Suiv;
+			  adbloc = adbloc->E_Next;
 		       ent -= C_NUMBER;
 		    }		/*while */
 
@@ -4939,7 +4935,7 @@ int                 cattype;
 		    }
 
 		  /* Note la relation entre le formulaire et le menu parent */
-		  catalogue->Cat_PtParent = catalpere;
+		  catalogue->Cat_PtParent = parentCatalogue;
 		  catalogue->Cat_EntryParent = entry + 2;	/* pour le titre et le filet */
 	       }		/*else */
 
@@ -5008,8 +5004,8 @@ int                 cattype;
 	/* Cree le contenu initial du feuillet */
 	adbloc = NewEList ();	/* Un bloc supplementaire pour les boutons */
 	catalogue->Cat_Entries = adbloc;
-	adbloc->E_Suiv = NewEList ();
-	adbloc = adbloc->E_Suiv;
+	adbloc->E_Next = NewEList ();
+	adbloc = adbloc->E_Next;
 
 /*** Cree un Row-Column pour mettre les boutons QUIT/... ***/
 /*** en dessous des sous-menus et sous-formulaires.    ***/
@@ -5307,7 +5303,7 @@ int                 ref;
    int                 entry;
    struct E_List      *adbloc;
    struct Cat_Context *catalogue;
-   struct Cat_Context *catalpere;
+   struct Cat_Context *parentCatalogue;
 
    if (ref == 0)
      {
@@ -5315,7 +5311,7 @@ int                 ref;
 	return;
      }
 
-   catalogue = CatEntree (ref);
+   catalogue = CatEntry (ref);
    if (catalogue == NULL)
       TtaError (ERR_invalid_reference);
    else if (catalogue->Cat_Widget == 0)
@@ -5330,27 +5326,27 @@ int                 ref;
    else
      {
 	/* Attache le catalogue au formulaire designe */
-	catalpere = catalogue->Cat_PtParent;
-	if (catalpere == NULL)
+	parentCatalogue = catalogue->Cat_PtParent;
+	if (parentCatalogue == NULL)
 	  {
 	     TtaError (ERR_invalid_parent_dialogue);
 	     return;
 	  }
 
 	/* Recherche l'entree du menu qui lui correspond */
-	adbloc = catalpere->Cat_Entries;
+	adbloc = parentCatalogue->Cat_Entries;
 	entry = catalogue->Cat_EntryParent;
 
 	/* Saute au bloc qui contient l'entree recherchee */
 	while (entry >= C_NUMBER)
 	  {
-	     if (adbloc->E_Suiv == NULL)
+	     if (adbloc->E_Next == NULL)
 	       {
 		  TtaError (ERR_invalid_parameter);
 		  return;
 	       }
 	     else
-		adbloc = adbloc->E_Suiv;
+		adbloc = adbloc->E_Next;
 	     entry -= C_NUMBER;
 	  }
 
@@ -5360,7 +5356,7 @@ int                 ref;
 	     adbloc->E_Free[entry] = 'N';
 	     /* affiche le widget sur l'ecran */
 #ifndef NEW_WILLOWS
-	     if (XtIsManaged (catalpere->Cat_Widget))
+	     if (XtIsManaged (parentCatalogue->Cat_Widget))
 		XtManageChild (catalogue->Cat_Widget);
 #endif /* NEW_WILLOWS */
 	  }
@@ -5383,7 +5379,7 @@ int                 ref;
    int                 entry;
    struct E_List      *adbloc;
    struct Cat_Context *catalogue;
-   struct Cat_Context *catalpere;
+   struct Cat_Context *parentCatalogue;
 
    if (ref == 0)
      {
@@ -5391,7 +5387,7 @@ int                 ref;
 	return;
      }
 
-   catalogue = CatEntree (ref);
+   catalogue = CatEntry (ref);
    if (catalogue == NULL)
       TtaError (ERR_invalid_reference);
    else if (catalogue->Cat_Widget == 0)
@@ -5406,27 +5402,27 @@ int                 ref;
    else
      {
 	/* Detache le catalogue du formulaire designe */
-	catalpere = catalogue->Cat_PtParent;
-	if (catalpere == NULL)
+	parentCatalogue = catalogue->Cat_PtParent;
+	if (parentCatalogue == NULL)
 	  {
 	     TtaError (ERR_invalid_parent_dialogue);
 	     return;
 	  }
 
 	/* Recherche l'entree du menu qui lui correspond */
-	adbloc = catalpere->Cat_Entries;
+	adbloc = parentCatalogue->Cat_Entries;
 	entry = catalogue->Cat_EntryParent;
 
 	/* Saute au bloc qui contient l'entree recherchee */
 	while (entry >= C_NUMBER)
 	  {
-	     if (adbloc->E_Suiv == NULL)
+	     if (adbloc->E_Next == NULL)
 	       {
 		  TtaError (ERR_invalid_parameter);
 		  return;
 	       }
 	     else
-		adbloc = adbloc->E_Suiv;
+		adbloc = adbloc->E_Next;
 	     entry -= C_NUMBER;
 	  }
 
@@ -5481,7 +5477,7 @@ boolean             react;
    int                 i;
    int                 index;
    struct Cat_Context *catalogue;
-   struct Cat_Context *catalpere;
+   struct Cat_Context *parentCatalogue;
    struct E_List      *adbloc;
 
 #ifndef NEW_WILLOWS
@@ -5497,7 +5493,7 @@ boolean             react;
    XmString           *item;
 
 #endif /* NEW_WILLOWS */
-   boolean             reconstruit;
+   boolean             rebuilded;
 
    if (ref == 0)
      {
@@ -5505,8 +5501,8 @@ boolean             react;
 	return;
      }
 
-   catalogue = CatEntree (ref);
-   reconstruit = FALSE;
+   catalogue = CatEntry (ref);
+   rebuilded = FALSE;
    if (catalogue == NULL)
      {
 	TtaError (ERR_invalid_reference);
@@ -5518,36 +5514,36 @@ boolean             react;
      {
 	/* Si c'est une mise a jour du selecteur */
 	if (catalogue->Cat_Type == CAT_SELECT && (withText != catalogue->Cat_SelectList))
-	   reconstruit = TRUE;
+	   rebuilded = TRUE;
 	else
 	   TtaDestroyDialogue (ref);	/* Modification du catalogue */
      }
 
 /*______________________________ Regarde si le catalogue parent existe __*/
-   if (!reconstruit)
+   if (!rebuilded)
      {
-	catalpere = CatEntree (ref_parent);
-	if (catalpere == NULL)
+	parentCatalogue = CatEntry (ref_parent);
+	if (parentCatalogue == NULL)
 	  {
 	     TtaError (ERR_invalid_parent_dialogue);
 	     return;
 	  }
-	else if (catalpere->Cat_Widget == 0)
+	else if (parentCatalogue->Cat_Widget == 0)
 	  {
 	     TtaError (ERR_invalid_parent_dialogue);
 	     return;
 	  }
-	else if ((catalpere->Cat_Type != CAT_FORM)
-		 && (catalpere->Cat_Type != CAT_SHEET)
-		 && (catalpere->Cat_Type != CAT_DIALOG))
+	else if ((parentCatalogue->Cat_Type != CAT_FORM)
+		 && (parentCatalogue->Cat_Type != CAT_SHEET)
+		 && (parentCatalogue->Cat_Type != CAT_DIALOG))
 	  {
 	     TtaError (ERR_invalid_parent_dialogue);
 	     return;
 	  }
-	catalogue->Cat_PtParent = catalpere;
+	catalogue->Cat_PtParent = parentCatalogue;
      }
    else
-      catalpere = catalogue->Cat_PtParent;
+      parentCatalogue = catalogue->Cat_PtParent;
 
    /* Avec ou sans zone texte */
    catalogue->Cat_SelectList = !withText;
@@ -5577,7 +5573,7 @@ boolean             react;
    item[number] = NULL;
 
    /* Faut-il simplement mettre a jour le selecteur ? */
-   if (reconstruit)
+   if (rebuilded)
      {
 
 	/* On met a jour le titre du selecteur */
@@ -5645,7 +5641,7 @@ boolean             react;
    else
      {
 /*_______________________________________ C'est un nouveau formulaire __*/
-	w = AjoutDansFormulaire (catalpere, &i, &ent, &adbloc);
+	w = AddInFormulary (parentCatalogue, &i, &ent, &adbloc);
 
 	/* Cree un sous-menu d'un formulaire */
 /*** Cree un Row-Column dans le Row-Column du formulaire ***/
@@ -5828,7 +5824,7 @@ int                 ref;
 
 #endif /* NEW_WILLOWS */
 
-   catalogue = CatEntree (ref);
+   catalogue = CatEntry (ref);
    if (catalogue == NULL)
       TtaError (ERR_invalid_reference);
    else if (catalogue->Cat_Widget == 0)
@@ -5868,7 +5864,7 @@ int                 ref;
 #endif /* NEW_WILLOWS */
 
 
-   catalogue = CatEntree (ref);
+   catalogue = CatEntry (ref);
    if (catalogue == NULL)
       TtaError (ERR_invalid_reference);
    else if (catalogue->Cat_Widget == 0)
@@ -5910,7 +5906,7 @@ char               *text;
    ThotWidget          select;
    struct Cat_Context *catalogue;
 
-   catalogue = CatEntree (ref);
+   catalogue = CatEntry (ref);
    wt = 0;
    if (catalogue == NULL)
       TtaError (ERR_invalid_reference);
@@ -5999,13 +5995,13 @@ char               *text;
    int                 n;
    int                 i;
    int                 ent;
-   int                 reconstruit;
+   int                 rebuilded;
    Arg                 args[MAX_ARGS];
    XmString            title_string;
    struct E_List      *adbloc;
    ThotWidget          w;
    struct Cat_Context *catalogue;
-   struct Cat_Context *catalpere;
+   struct Cat_Context *parentCatalogue;
 
    if (ref == 0)
      {
@@ -6013,8 +6009,8 @@ char               *text;
 	return;
      }
 
-   catalogue = CatEntree (ref);
-   reconstruit = 0;
+   catalogue = CatEntry (ref);
+   rebuilded = 0;
    if (catalogue == NULL)
       TtaError (ERR_cannot_create_dialogue);
    else if (catalogue->Cat_Widget != 0 && catalogue->Cat_Type == CAT_LABEL)
@@ -6023,9 +6019,9 @@ char               *text;
 	w = catalogue->Cat_Widget;
 	/* Regarde si le widget est affiche */
 	if (XtIsManaged (w))
-	   reconstruit = 2;
+	   rebuilded = 2;
 	else
-	   reconstruit = 1;
+	   rebuilded = 1;
 
 	n = 0;
 	title_string = XmStringCreateSimple (text);
@@ -6033,7 +6029,7 @@ char               *text;
 	n++;
 	XtSetValues (w, args, n);
 	/* Faut-il reafficher le widget ? */
-	if (reconstruit == 2)
+	if (rebuilded == 2)
 	   XtManageChild (w);
      }
    else
@@ -6043,22 +6039,22 @@ char               *text;
 	   TtaDestroyDialogue (ref);
 
 /*======================================> Recherche le catalogue parent */
-	catalpere = CatEntree (ref_parent);
+	parentCatalogue = CatEntry (ref_parent);
 /*__________________________________ Le catalogue parent n'existe pas __*/
-	if (catalpere == NULL)
+	if (parentCatalogue == NULL)
 	  {
 	     TtaError (ERR_invalid_parent_dialogue);
 	     return;
 	  }
-	else if (catalpere->Cat_Widget == 0)
+	else if (parentCatalogue->Cat_Widget == 0)
 	  {
 	     TtaError (ERR_invalid_parent_dialogue);
 	     return;
 	  }
 /*_________________________________________ Sous-menu d'un formulaire __*/
-	else if ((catalpere->Cat_Type != CAT_FORM)
-		 && (catalpere->Cat_Type != CAT_SHEET)
-		 && (catalpere->Cat_Type != CAT_DIALOG))
+	else if ((parentCatalogue->Cat_Type != CAT_FORM)
+		 && (parentCatalogue->Cat_Type != CAT_SHEET)
+		 && (parentCatalogue->Cat_Type != CAT_DIALOG))
 	  {
 	     TtaError (ERR_invalid_parent_dialogue);
 	     return;
@@ -6070,7 +6066,7 @@ char               *text;
 	  }
 
 	/* Recupere le widget parent */
-	w = AjoutDansFormulaire (catalpere, &i, &ent, &adbloc);
+	w = AddInFormulary (parentCatalogue, &i, &ent, &adbloc);
 
 /*** Cree l'intitule ***/
 	n = 0;
@@ -6090,7 +6086,7 @@ char               *text;
 	catalogue->Cat_Widget = w;
 	catalogue->Cat_Ref = ref;
 	catalogue->Cat_Type = CAT_LABEL;
-	catalogue->Cat_PtParent = catalpere;
+	catalogue->Cat_PtParent = parentCatalogue;
 	adbloc->E_ThotWidget[ent] = (ThotWidget) (catalogue);
 	adbloc->E_Free[ent] = 'N';
 	catalogue->Cat_EntryParent = i;
@@ -6128,7 +6124,7 @@ boolean             react;
    int                 n;
    int                 i;
    struct Cat_Context *catalogue;
-   struct Cat_Context *catalpere;
+   struct Cat_Context *parentCatalogue;
    struct E_List      *adbloc;
    Arg                 args[MAX_ARGS];
    ThotWidget          w;
@@ -6141,7 +6137,7 @@ boolean             react;
 	return;
      }
 
-   catalogue = CatEntree (ref);
+   catalogue = CatEntry (ref);
    if (catalogue == NULL)
       TtaError (ERR_cannot_create_dialogue);
    else
@@ -6153,22 +6149,22 @@ boolean             react;
 	   DestForm (ref);	/* Modification du catalogue */
 
 /*======================================> Recherche le catalogue parent */
-	catalpere = CatEntree (ref_parent);
+	parentCatalogue = CatEntry (ref_parent);
 /*__________________________________ Le catalogue parent n'existe pas __*/
-	if (catalpere == NULL)
+	if (parentCatalogue == NULL)
 	  {
 	     TtaError (ERR_invalid_parent_dialogue);
 	     return;
 	  }
-	else if (catalpere->Cat_Widget == 0)
+	else if (parentCatalogue->Cat_Widget == 0)
 	  {
 	     TtaError (ERR_invalid_parent_dialogue);
 	     return;
 	  }
 /*_______________________ Le catalogue parent n'est pas un formulaire __*/
-	else if ((catalpere->Cat_Type != CAT_FORM)
-		 && (catalpere->Cat_Type != CAT_SHEET)
-		 && (catalpere->Cat_Type != CAT_DIALOG))
+	else if ((parentCatalogue->Cat_Type != CAT_FORM)
+		 && (parentCatalogue->Cat_Type != CAT_SHEET)
+		 && (parentCatalogue->Cat_Type != CAT_DIALOG))
 	  {
 	     TtaError (ERR_invalid_parent_dialogue);
 	     return;
@@ -6176,7 +6172,7 @@ boolean             react;
 /*_____________________________________________________________ Sinon __*/
 	else
 	  {
-	     row = AjoutDansFormulaire (catalpere, &i, &ent, &adbloc);
+	     row = AddInFormulary (parentCatalogue, &i, &ent, &adbloc);
 
 	     /* Cree a l'interieur Row-Column du formulaire */
 	     n = 0;
@@ -6263,7 +6259,7 @@ boolean             react;
 	     /* L'entree Cat_Entries contient le numero du widget texte */
 	     catalogue->Cat_Entries = (struct E_List *) w;
 	     catalogue->Cat_Widget = row;
-	     catalogue->Cat_PtParent = catalpere;
+	     catalogue->Cat_PtParent = parentCatalogue;
 	     adbloc->E_ThotWidget[ent] = (ThotWidget) catalogue;
 	     adbloc->E_Free[ent] = 'N';
 	     catalogue->Cat_EntryParent = i;
@@ -6292,7 +6288,7 @@ char               *text;
    struct Cat_Context *catalogue;
    ThotWidget          w;
 
-   catalogue = CatEntree (ref);
+   catalogue = CatEntry (ref);
    if (catalogue == NULL)
       TtaError (ERR_invalid_reference);
    else if (catalogue->Cat_Widget == 0)
@@ -6348,13 +6344,13 @@ boolean             react;
    int                 n;
    int                 i;
    struct Cat_Context *catalogue;
-   struct Cat_Context *catalpere;
+   struct Cat_Context *parentCatalogue;
    struct E_List      *adbloc;
    Arg                 args[MAX_ARGS];
    ThotWidget          w;
    ThotWidget          row;
    XmString            title_string;
-   char                bornes[100];
+   char                bounds[100];
 
    if (ref == 0)
      {
@@ -6362,7 +6358,7 @@ boolean             react;
 	return;
      }
 
-   catalogue = CatEntree (ref);
+   catalogue = CatEntry (ref);
    if (catalogue == NULL)
       TtaError (ERR_cannot_create_dialogue);
    else
@@ -6374,22 +6370,22 @@ boolean             react;
 	   DestForm (ref);	/* Modification du catalogue */
 
 /*======================================> Recherche le catalogue parent */
-	catalpere = CatEntree (ref_parent);
+	parentCatalogue = CatEntry (ref_parent);
 /*__________________________________ Le catalogue parent n'existe pas __*/
-	if (catalpere == NULL)
+	if (parentCatalogue == NULL)
 	  {
 	     TtaError (ERR_invalid_parent_dialogue);
 	     return;
 	  }
-	else if (catalpere->Cat_Widget == 0)
+	else if (parentCatalogue->Cat_Widget == 0)
 	  {
 	     TtaError (ERR_invalid_parent_dialogue);
 	     return;
 	  }
 /*_______________________ Le catalogue parent n'est pas un formulaire __*/
-	else if ((catalpere->Cat_Type != CAT_FORM)
-		 && (catalpere->Cat_Type != CAT_SHEET)
-		 && (catalpere->Cat_Type != CAT_DIALOG))
+	else if ((parentCatalogue->Cat_Type != CAT_FORM)
+		 && (parentCatalogue->Cat_Type != CAT_SHEET)
+		 && (parentCatalogue->Cat_Type != CAT_DIALOG))
 	  {
 	     TtaError (ERR_invalid_parent_dialogue);
 	     return;
@@ -6397,7 +6393,7 @@ boolean             react;
 /*_____________________________________________________________ Sinon __*/
 	else
 	  {
-	     row = AjoutDansFormulaire (catalpere, &i, &ent, &adbloc);
+	     row = AddInFormulary (parentCatalogue, &i, &ent, &adbloc);
 
 	     /* Cree a l'interieur Row-Column du formulaire */
 	     n = 0;
@@ -6416,7 +6412,7 @@ boolean             react;
 	     n++;
 	     row = XmCreateRowColumn (row, "Dialogue", args, n);
 	     catalogue->Cat_Widget = row;
-	     catalogue->Cat_PtParent = catalpere;
+	     catalogue->Cat_PtParent = parentCatalogue;
 	     adbloc->E_ThotWidget[ent] = (ThotWidget) catalogue;
 	     adbloc->E_Free[ent] = 'N';
 	     catalogue->Cat_EntryParent = i;
@@ -6464,9 +6460,9 @@ boolean             react;
 	     if (min < max)
 	       {
 		  /* Note les bornes de l'echelle */
-		  sprintf (bornes, "%d", min);
-		  strcat (&bornes[strlen (bornes)], "..");
-		  sprintf (&bornes[strlen (bornes)], "%d", max);
+		  sprintf (bounds, "%d", min);
+		  strcat (&bounds[strlen (bounds)], "..");
+		  sprintf (&bounds[strlen (bounds)], "%d", max);
 		  catalogue->Cat_Entries->E_ThotWidget[2] = (ThotWidget) min;
 		  catalogue->Cat_Entries->E_ThotWidget[3] = (ThotWidget) max;
 		  ent = max;
@@ -6474,14 +6470,14 @@ boolean             react;
 	     else
 	       {
 		  /* Note les bornes de l'echelle */
-		  sprintf (bornes, "%d", max);
-		  strcat (&bornes[strlen (bornes)], "..");
-		  sprintf (&bornes[strlen (bornes)], "%d", min);
+		  sprintf (bounds, "%d", max);
+		  strcat (&bounds[strlen (bounds)], "..");
+		  sprintf (&bounds[strlen (bounds)], "%d", min);
 		  catalogue->Cat_Entries->E_ThotWidget[2] = (ThotWidget) max;
 		  catalogue->Cat_Entries->E_ThotWidget[3] = (ThotWidget) min;
 		  ent = min;
 	       }
-	     title_string = XmStringCreateSimple (bornes);
+	     title_string = XmStringCreateSimple (bounds);
 	     XtSetArg (args[n], XmNfontList, DefaultFont);
 	     n++;
 	     XtSetArg (args[n], XmNlabelString, title_string);
@@ -6502,8 +6498,8 @@ boolean             react;
 	     n++;
 	     XtSetArg (args[n], XmNbackground, White_Color);
 	     n++;
-	     sprintf (bornes, "%d", min);
-	     XtSetArg (args[n], XmNvalue, bornes);
+	     sprintf (bounds, "%d", min);
+	     XtSetArg (args[n], XmNvalue, bounds);
 	     n++;
 	     if (min < 0)
 		i = 1;
@@ -6551,7 +6547,7 @@ int                 val;
    int                 lg;
    struct Cat_Context *catalogue;
 
-   catalogue = CatEntree (ref);
+   catalogue = CatEntry (ref);
    if (catalogue == NULL)
       TtaError (ERR_invalid_reference);
    else if (catalogue->Cat_Widget == 0)
@@ -6635,7 +6631,7 @@ boolean             remanent;
 	return;
      }
 
-   catalogue = CatEntree (ref);
+   catalogue = CatEntry (ref);
    if (catalogue == NULL)
      {
 	TtaError (ERR_invalid_reference);
