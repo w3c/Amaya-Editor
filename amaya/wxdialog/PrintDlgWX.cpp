@@ -18,16 +18,18 @@
 BEGIN_EVENT_TABLE(PrintDlgWX, AmayaDialog)
   EVT_BUTTON( XRCID("wxID_PRINTBUTTON"),        PrintDlgWX::OnPrintButton )
   EVT_BUTTON( XRCID("wxID_CANCELBUTTON"),       PrintDlgWX::OnCancelButton )
+#ifndef _WINDOWS
   EVT_RADIOBOX( XRCID("wxID_PAPER_FORMAT_BOX"), PrintDlgWX::OnPaperFormatBox )
   EVT_RADIOBOX( XRCID("wxID_ORIENTATION_BOX"),  PrintDlgWX::OnPaperOrientationBox )
   EVT_RADIOBOX( XRCID("wxID_DISPOSITION_BOX"),  PrintDlgWX::OnPaperDispositionBox )
   EVT_RADIOBOX( XRCID("wxID_OUTPUT_BOX"),       PrintDlgWX::OnOutputBox )
-  EVT_CHECKBOX( XRCID("wxID_MANUAL_CHK"),       PrintDlgWX::OnManualChkBox )
+  //EVT_CHECKBOX( XRCID("wxID_MANUAL_CHK"),       PrintDlgWX::OnManualChkBox )
+  EVT_TEXT( XRCID("wxID_FILE_TXT_CTRL"),        PrintDlgWX::OnTypePrinter )
+#endif _WINDOWS
   EVT_CHECKBOX( XRCID("wxID_TOC_CHK"),          PrintDlgWX::OnTocChkBox )
   EVT_CHECKBOX( XRCID("wxID_LINKS_CHK"),        PrintDlgWX::OnLinksChkBox )
   EVT_CHECKBOX( XRCID("wxID_PRINT_URL_CHK"),    PrintDlgWX::OnPrintUrlChkBox )
   EVT_CHECKBOX( XRCID("wxID_IGNORE_CSS_CHK"),   PrintDlgWX::OnIgnoreCssChkBox )
-  EVT_TEXT( XRCID("wxID_FILE_TXT_CTRL"),        PrintDlgWX::OnTypePrinter )
 END_EVENT_TABLE()
 
 /*----------------------------------------------------------------------
@@ -55,11 +57,16 @@ PrintDlgWX::PrintDlgWX( int ref,
   m_Printer = printer_file;
   m_PS = ps_file;
 
+#ifdef _WINDOWS
+  wxXmlResource::Get()->LoadDialog(this, parent, wxT("WinPrintDlgWX"));
+#else /* _WINDOWS */
   wxXmlResource::Get()->LoadDialog(this, parent, wxT("PrintDlgWX"));
+#endif /* _WINDOWS */
   wxLogDebug( _T("PrintDlgWX::PrintDlgWX - ps_file=")+ps_file);
   wxString wx_title = TtaConvMessageToWX( TtaGetMessage (LIB, TMSG_LIB_PRINT) );
   SetTitle( wx_title );
 
+#ifndef _WINDOWS
   // paper format radio box
   XRCCTRL(*this, "wxID_PAPER_FORMAT_BOX", wxRadioBox)->SetLabel(TtaConvMessageToWX( TtaGetMessage (LIB, TMSG_PAPER_SIZE) ));
   XRCCTRL(*this, "wxID_PAPER_FORMAT_BOX", wxRadioBox)->SetString(0, TtaConvMessageToWX( TtaGetMessage (LIB, TMSG_A4) ));
@@ -89,15 +96,16 @@ PrintDlgWX::PrintDlgWX( int ref,
   XRCCTRL(*this, "wxID_DISPOSITION_BOX", wxRadioBox)->SetString(1, TtaConvMessageToWX( TtaGetMessage (LIB, TMSG_2_PAGE_SHEET) ));
   XRCCTRL(*this, "wxID_DISPOSITION_BOX", wxRadioBox)->SetString(2, TtaConvMessageToWX( TtaGetMessage (LIB, TMSG_4_PAGE_SHEET) ));
   XRCCTRL(*this, "wxID_DISPOSITION_BOX", wxRadioBox)->SetSelection(disposition);
+#endif /* _WINDOWS */
 
   // options check list
   XRCCTRL(*this, "wxID_OPTIONS_TXT", wxStaticText)->SetLabel(TtaConvMessageToWX( TtaGetMessage(LIB, TMSG_OPTIONS) ));
-  XRCCTRL(*this, "wxID_MANUAL_CHK", wxCheckBox)->SetLabel(TtaConvMessageToWX( TtaGetMessage(LIB, TMSG_MANUAL_FEED) ));
+  //XRCCTRL(*this, "wxID_MANUAL_CHK", wxCheckBox)->SetLabel(TtaConvMessageToWX( TtaGetMessage(LIB, TMSG_MANUAL_FEED) ));
   XRCCTRL(*this, "wxID_TOC_CHK", wxCheckBox)->SetLabel(TtaConvMessageToWX( TtaGetMessage(AMAYA, AM_PRINT_TOC) ));
   XRCCTRL(*this, "wxID_LINKS_CHK", wxCheckBox)->SetLabel(TtaConvMessageToWX( TtaGetMessage(AMAYA, AM_NUMBERED_LINKS) ));
   XRCCTRL(*this, "wxID_PRINT_URL_CHK", wxCheckBox)->SetLabel(TtaConvMessageToWX( TtaGetMessage(AMAYA, AM_PRINT_URL) ));
   XRCCTRL(*this, "wxID_IGNORE_CSS_CHK", wxCheckBox)->SetLabel(TtaConvMessageToWX( TtaGetMessage(AMAYA, AM_WITH_CSS) ));
-  XRCCTRL(*this, "wxID_MANUAL_CHK", wxCheckBox)->SetValue(manual_feed);
+  //XRCCTRL(*this, "wxID_MANUAL_CHK", wxCheckBox)->SetValue(manual_feed);
   XRCCTRL(*this, "wxID_TOC_CHK", wxCheckBox)->SetValue(with_toc);
   XRCCTRL(*this, "wxID_LINKS_CHK", wxCheckBox)->SetValue(with_links);
   XRCCTRL(*this, "wxID_PRINT_URL_CHK", wxCheckBox)->SetValue(with_url);
@@ -108,7 +116,6 @@ PrintDlgWX::PrintDlgWX( int ref,
   XRCCTRL(*this, "wxID_CANCELBUTTON", wxButton)->SetLabel(TtaConvMessageToWX( TtaGetMessage(LIB, TMSG_CANCEL) ));
 
   Layout();
-  
   SetAutoLayout( TRUE );
 }
 
@@ -143,9 +150,11 @@ void PrintDlgWX::OnCancelButton( wxCommandEvent& event )
   ----------------------------------------------------------------------*/
 void PrintDlgWX::OnPaperFormatBox ( wxCommandEvent& event )
 {
+#ifndef _WINDOWS
   wxLogDebug( _T("PrintDlgWX::OnPaperFormatBox") );
   ThotCallback (BasePrint + PaperFormat, INTEGER_DATA,
 		(char*) (XRCCTRL(*this, "wxID_PAPER_FORMAT_BOX", wxRadioBox)->GetSelection( )));
+#endif /* _WINDOWS */
 }
 
 /*----------------------------------------------------------------------------
@@ -153,9 +162,11 @@ void PrintDlgWX::OnPaperFormatBox ( wxCommandEvent& event )
   ----------------------------------------------------------------------------*/
 void PrintDlgWX::OnPaperOrientationBox ( wxCommandEvent& event )
 {
+#ifndef _WINDOWS
   wxLogDebug( _T("PrintDlgWX::OnPaperOrientationBox") );
   ThotCallback (BasePrint + PaperOrientation, INTEGER_DATA,
 		(char*) (XRCCTRL(*this, "wxID_ORIENTATION_BOX", wxRadioBox)->GetSelection( )));
+#endif /* _WINDOWS */
 }
 
 /*---------------------------------------------------------------------------
@@ -163,9 +174,11 @@ void PrintDlgWX::OnPaperOrientationBox ( wxCommandEvent& event )
   ----------------------------------------------------------------------------*/
 void PrintDlgWX::OnPaperDispositionBox ( wxCommandEvent& event )
 {
+#ifndef _WINDOWS
   wxLogDebug( _T("PrintDlgWX::OnPaperDispositionBox") );
   ThotCallback (BasePrint + PPagesPerSheet, INTEGER_DATA,
 		(char*) (XRCCTRL(*this, "wxID_DISPOSITION_BOX", wxRadioBox)->GetSelection( )));
+#endif /* _WINDOWS */
 }
 
 /*----------------------------------------------------------------------------
@@ -173,10 +186,10 @@ void PrintDlgWX::OnPaperDispositionBox ( wxCommandEvent& event )
   ----------------------------------------------------------------------------*/
 void PrintDlgWX::OnOutputBox ( wxCommandEvent& event )
 {
+#ifndef _WINDOWS
   int m_output;
 
   wxLogDebug( _T("PrintDlgWX::OnOutputBox") );
-
   m_output = XRCCTRL(*this, "wxID_OUTPUT_BOX", wxRadioBox)->GetSelection( );
   ThotCallback (BasePrint + PrintSupport, INTEGER_DATA,
 		(char*) m_output);
@@ -196,16 +209,17 @@ void PrintDlgWX::OnOutputBox ( wxCommandEvent& event )
 	  XRCCTRL(*this, "wxID_FILE_TXT_CTRL", wxTextCtrl)->SetValue(m_PS);
 	}
     }
+#endif /* _WINDOWS */
 }
 
 /*---------------------------------------------------------------
   OnManualChkBox
   ---------------------------------------------------------------*/
-void PrintDlgWX::OnManualChkBox ( wxCommandEvent& event )
-{
-  wxLogDebug( _T("PrintDlgWX::OnManualChkBox") );
-  ThotCallback (BasePrint + PrintOptions, INTEGER_DATA,	(char*) 0);
-}
+//void PrintDlgWX::OnManualChkBox ( wxCommandEvent& event )
+//{
+//  wxLogDebug( _T("PrintDlgWX::OnManualChkBox") );
+//  ThotCallback (BasePrint + PrintOptions, INTEGER_DATA, (char*) 0);
+//}
 
 /*---------------------------------------------------------------
   OnTocChkBox
@@ -248,15 +262,13 @@ void PrintDlgWX::OnIgnoreCssChkBox ( wxCommandEvent& event )
   ---------------------------------------------------------------*/
 void PrintDlgWX::OnTypePrinter ( wxCommandEvent& event )
 {
-
+#ifndef _WINDOWS
   wxString printer_name = XRCCTRL(*this, "wxID_FILE_TXT_CTRL", wxTextCtrl)->GetValue( );
   wxLogDebug( _T("PrintDlgWX::OnTypePrinter -printer_name =")+printer_name );
-
   if (m_print == 0)
     m_Printer = printer_name;
   else
     m_PS = printer_name;
-  
 
   // allocate a temporary buffer to convert wxString to (char *) UTF-8 buffer
   char buffer[512];
@@ -264,6 +276,7 @@ void PrintDlgWX::OnTypePrinter ( wxCommandEvent& event )
   strcpy( buffer, (const char*)printer_name.mb_str(wxConvUTF8) );
 
   ThotCallback (BasePrint + PPrinterName,  STRING_DATA, (char *)buffer );
+#endif /* _WINDOWS */
 }
 
 #endif /* _WX */

@@ -180,7 +180,11 @@ bool AmayaApp::OnInit()
   wxXmlResource::Get()->Load( TtaGetResourcePathWX( WX_RESOURCES_XRC, "Panel_XHTML.xrc") );
   wxXmlResource::Get()->Load( TtaGetResourcePathWX( WX_RESOURCES_XRC, "Panel_XML.xrc") );
   wxXmlResource::Get()->Load( TtaGetResourcePathWX( WX_RESOURCES_XRC, "PreferenceDlgWX.xrc") );
-  wxXmlResource::Get()->Load( TtaGetResourcePathWX( WX_RESOURCES_XRC, "PrintDlgWX.xrc") );
+#ifdef _WINDOWS
+  wxXmlResource::Get()->Load( TtaGetResourcePathWX( WX_RESOURCES_XRC, "WinPrintDlgWX.xrc") );
+#else /* _WINDOWS */
+ wxXmlResource::Get()->Load( TtaGetResourcePathWX( WX_RESOURCES_XRC, "PrintDlgWX.xrc") );
+#endif /* _WINDOWS */
   wxXmlResource::Get()->Load( TtaGetResourcePathWX( WX_RESOURCES_XRC, "SaveAsDlgWX.xrc") );
   wxXmlResource::Get()->Load( TtaGetResourcePathWX( WX_RESOURCES_XRC, "SearchDlgWX.xrc") );
   wxXmlResource::Get()->Load( TtaGetResourcePathWX( WX_RESOURCES_XRC, "SpellCheckDlgWX.xrc") );

@@ -42,7 +42,7 @@ private:
   void OnPaperOrientationBox( wxCommandEvent& event );
   void OnPaperDispositionBox( wxCommandEvent& event );
   void OnOutputBox( wxCommandEvent& event );
-  void OnManualChkBox( wxCommandEvent& event );
+  //void OnManualChkBox( wxCommandEvent& event );
   void OnTocChkBox( wxCommandEvent& event );
   void OnLinksChkBox( wxCommandEvent& event );
   void OnPrintUrlChkBox( wxCommandEvent& event );

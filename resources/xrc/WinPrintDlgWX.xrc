@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resource version="2.3.0.1" xmlns="http://www.wxwindows.org/wxxrc">
+  <object class="wxDialog" name="PrintDlgWX">
+    <title></title>
+    <centered>1</centered>
+    <style>wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER</style>
+    <object class="wxBoxSizer">
+      <orient>wxVERTICAL</orient>
+      <object class="sizeritem">
+        <object class="wxBoxSizer">
+          <orient>wxVERTICAL</orient>
+          <object class="sizeritem">
+            <object class="wxStaticText" name="wxID_OPTIONS_TXT">
+              <label>Options</label>
+            </object>
+            <flag>wxALL|wxEXPAND</flag>
+            <border>5</border>
+          </object>
+          <object class="sizeritem">
+            <object class="wxStaticLine"/>
+            <flag>wxALL|wxEXPAND</flag>
+          </object>
+          <object class="sizeritem">
+            <object class="wxCheckBox" name="wxID_TOC_CHK">
+              <label>Table des matieres</label>
+            </object>
+            <flag>wxALL|wxEXPAND</flag>
+            <border>2</border>
+          </object>
+          <object class="sizeritem">
+            <object class="wxCheckBox" name="wxID_LINKS_CHK">
+              <label>Table des liens</label>
+            </object>
+            <flag>wxALL|wxEXPAND</flag>
+            <border>2</border>
+          </object>
+          <object class="sizeritem">
+            <object class="wxCheckBox" name="wxID_PRINT_URL_CHK">
+              <label>Imprimer l URL</label>
+            </object>
+            <flag>wxALL|wxEXPAND</flag>
+            <border>2</border>
+          </object>
+          <object class="sizeritem">
+            <object class="wxCheckBox" name="wxID_IGNORE_CSS_CHK">
+              <label>Sans feuilles de style</label>
+            </object>
+            <flag>wxALL|wxEXPAND</flag>
+            <border>2</border>
+          </object>
+        </object>
+        <flag>wxALL|wxEXPAND</flag>
+        <border>5</border>
+      </object>
+      <object class="sizeritem">
+        <option>0</option>
+        <flag>wxALL|wxALIGN_RIGHT|wxADJUST_MINSIZE</flag>
+        <border>7</border>
+        <object class="wxBoxSizer">
+          <orient>wxHORIZONTAL</orient>
+          <object class="sizeritem">
+            <flag>wxALL</flag>
+            <object class="wxButton" name="wxID_PRINTBUTTON">
+              <label>CONFIRMBUTTON</label>
+              <default>1</default>
+            </object>
+          </object>
+          <object class="spacer">
+            <size>10,0</size>
+          </object>
+          <object class="sizeritem">
+            <flag>wxALL</flag>
+            <object class="wxButton" name="wxID_CANCELBUTTON">
+              <label>CANCELBUTTON</label>
+            </object>
+          </object>
+        </object>
+      </object>
+    </object>
+  </object>
+</resource>
