@@ -55,85 +55,63 @@
                             <object class="wxPanel" name="wxID_PANEL_CONTENT_DETACH">
                               <style>wxTAB_TRAVERSAL|wxSIMPLE_BORDER</style>
                               <object class="wxBoxSizer">
-                                <orient>wxVERTICAL</orient>
+                                <orient>wxHORIZONTAL</orient>
                                 <object class="sizeritem">
-                                  <object class="wxBoxSizer">
-                                    <orient>wxHORIZONTAL</orient>
-                                    <object class="sizeritem">
-                                      <object class="wxComboBox" name="wxID_COMBO_COLOR_FG">
-                                        <content/>
-                                      </object>
-                                      <option>1</option>
-                                      <flag>wxEXPAND|wxALIGN_CENTRE</flag>
+                                  <object class="wxPanel">
+                                    <object class="wxBitmapButton" name="wxID_BUTTON_DEFAULTCOLORS">
+                                      <bitmap>../icons/black_white.png</bitmap>
+                                      <pos>0,24</pos>
+                                      <style>wxNO_BORDER</style>
+                                      <tooltip>_Black and white_</tooltip>
                                     </object>
-                                    <object class="spacer">
-                                      <size>4,0</size>
+                                    <object class="wxBitmapButton" name="wxID_BUTTON_SWITCHCOLORS">
+                                      <bitmap>../icons/switch_colors.png</bitmap>
+                                      <pos>38,0</pos>
+                                      <style>wxNO_BORDER</style>
+                                      <tooltip>_Switch colors_</tooltip>
                                     </object>
-                                    <object class="sizeritem">
-                                      <object class="wxBitmapButton" name="wxID_BUTTON_COLOR_FG">
-                                        <bitmap>../icons/colorize.gif</bitmap>
-                                        <style></style>
-                                        <bg>#FFFFFF</bg>
-                                        <tooltip>FG</tooltip>
-                                      </object>
-                                      <option>0</option>
+                                    <object class="wxButton" name="wxID_BUTTON_BGCOLOR">
+                                      <label></label>
+                                      <pos>24,20</pos>
+                                      <size>40,30</size>
+                                      <bg>#C8630D</bg>
+                                      <tooltip>_Background_</tooltip>
+                                    </object>
+									<object class="wxButton" name="wxID_BUTTON_FGCOLOR">
+                                      <label></label>
+                                      <pos>0,0</pos>
+                                      <size>40,30</size>
+                                      <bg>#FFFFFF</bg>
+                                      <tooltip>_Foreground_</tooltip>
                                     </object>
                                   </object>
                                   <flag>wxALL|wxEXPAND</flag>
-                                  <border>2</border>
+                                  <border>4</border>
                                 </object>
                                 <object class="sizeritem">
                                   <object class="wxBoxSizer">
-                                    <orient>wxHORIZONTAL</orient>
+                                    <orient>wxVERTICAL</orient>
                                     <object class="sizeritem">
-                                      <object class="wxComboBox" name="wxID_COMBO_COLOR_BG">
-                                        <content/>
-                                      </object>
-                                      <option>1</option>
-                                      <flag>wxEXPAND</flag>
-                                    </object>
-                                    <object class="spacer">
-                                      <size>4,0</size>
-                                    </object>
-                                    <object class="sizeritem">
-                                      <object class="wxBitmapButton" name="wxID_BUTTON_COLOR_BG">
-                                        <bitmap>../icons/colorize.gif</bitmap>
-                                        <bg>#000000</bg>
-                                        <tooltip>BG</tooltip>
-                                      </object>
-                                      <option>0</option>
-                                    </object>
-                                  </object>
-                                  <flag>wxALL|wxEXPAND</flag>
-                                  <border>2</border>
-                                </object>
-                                <object class="sizeritem">
-                                  <object class="wxBoxSizer">
-                                    <orient>wxHORIZONTAL</orient>
-                                    <object class="sizeritem">
-                                      <object class="wxButton" name="wxID_OK">
+                                      <object class="wxButton" name="wxID_MODIFYCOLOR">
                                         <label>_Modi_</label>
                                         <default>1</default>
+                                        <style></style>
                                       </object>
-                                      <option>1</option>
-                                      <flag>wxALL|wxALIGN_CENTRE</flag>
-                                      <border>2</border>
+                                      <flag>wxALL|wxEXPAND</flag>
                                     </object>
                                     <object class="sizeritem">
-                                      <object class="wxButton" name="wxID_GET">
+                                      <object class="wxButton" name="wxID_GETCOLOR">
                                         <label>_Get_</label>
                                       </object>
-                                      <option>1</option>
-                                      <flag>wxALL|wxALIGN_RIGHT</flag>
-                                      <border>2</border>
+                                      <flag>wxALL|wxEXPAND</flag>
                                     </object>
                                   </object>
-                                  <option>0</option>
-                                  <flag>wxEXPAND</flag>
+                                  <option>1</option>
+                                  <flag>wxALL|wxEXPAND</flag>
+                                  <border>4</border>
                                 </object>
                               </object>
                             </object>
-                            <option>1</option>
                             <flag>wxEXPAND</flag>
                           </object>
                           <object class="spacer">

@@ -33,10 +33,13 @@ public:
 
  protected:
   DECLARE_EVENT_TABLE()
-  void OnButton( wxCommandEvent& event );
+  void OnModifyColor( wxCommandEvent& event );
+  void OnGetColor( wxCommandEvent& event );
+  void OnDefaultColors( wxCommandEvent& event );
+  void OnSwitchColors( wxCommandEvent& event );
 
-  wxColour m_OffColour;
-  wxColour m_OnColour;
+  int m_ThotBGColor;
+  int m_ThotFGColor;
 };
 
 #endif // __AMAYACOLORSPANEL_H__

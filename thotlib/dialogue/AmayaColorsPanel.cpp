@@ -2,6 +2,7 @@
 
 #include "wx/wx.h"
 #include "wx/xrc/xmlres.h"              // XRC XML resouces
+#include "wx/tglbtn.h"
 
 #include "thot_gui.h"
 #include "thot_sys.h"
@@ -22,9 +23,13 @@
 #include "appdialogue_wx_f.h"
 #include "panel.h"
 
+#undef THOT_EXPORT
 #define THOT_EXPORT extern
 #include "frame_tv.h"
 #include "panel_tv.h"
+#include "colors_f.h"
+#include "inites_f.h"
+#include "presentmenu_f.h"
 
 #include "AmayaColorsPanel.h"
 #include "AmayaNormalWindow.h"
@@ -42,6 +47,8 @@ IMPLEMENT_DYNAMIC_CLASS(AmayaColorsPanel, AmayaSubPanel)
  */
 AmayaColorsPanel::AmayaColorsPanel( wxWindow * p_parent_window, AmayaNormalWindow * p_parent_nwindow )
   : AmayaSubPanel( p_parent_window, p_parent_nwindow, _T("wxID_PANEL_COLORS") )
+    ,m_ThotBGColor(-1)
+    ,m_ThotFGColor(-1)
 {
   wxLogDebug( _T("AmayaColorsPanel::AmayaColorsPanel") );
 
@@ -85,67 +92,59 @@ int AmayaColorsPanel::GetPanelType()
  */
 void AmayaColorsPanel::RefreshToolTips()
 {  
-#if 0
-  const char ** p_tooltip_array = PanelTable[WXAMAYA_PANEL_XHTML].Tooltip_Panel;
-  XRCCTRL(*m_pPanelContentDetach, "wxID_PANEL_XHTML_STRONG", wxBitmapButton)->SetToolTip(TtaConvMessageToWX(p_tooltip_array[WXAMAYA_PANEL_XHTML_STRONG]));
-  XRCCTRL(*m_pPanelContentDetach, "wxID_PANEL_XHTML_EMPH",   wxBitmapButton)->SetToolTip(TtaConvMessageToWX(p_tooltip_array[WXAMAYA_PANEL_XHTML_EMPH])); 
-  XRCCTRL(*m_pPanelContentDetach, "wxID_PANEL_XHTML_CODE",   wxBitmapButton)->SetToolTip(TtaConvMessageToWX(p_tooltip_array[WXAMAYA_PANEL_XHTML_CODE]));
-  XRCCTRL(*m_pPanelContentDetach, "wxID_PANEL_XHTML_H1",     wxBitmapButton)->SetToolTip(TtaConvMessageToWX(p_tooltip_array[WXAMAYA_PANEL_XHTML_H1]));
-  XRCCTRL(*m_pPanelContentDetach, "wxID_PANEL_XHTML_H2",     wxBitmapButton)->SetToolTip(TtaConvMessageToWX(p_tooltip_array[WXAMAYA_PANEL_XHTML_H2]));
-  XRCCTRL(*m_pPanelContentDetach, "wxID_PANEL_XHTML_H3",     wxBitmapButton)->SetToolTip(TtaConvMessageToWX(p_tooltip_array[WXAMAYA_PANEL_XHTML_H3]));
-  XRCCTRL(*m_pPanelContentDetach, "wxID_PANEL_XHTML_BULLET", wxBitmapButton)->SetToolTip(TtaConvMessageToWX(p_tooltip_array[WXAMAYA_PANEL_XHTML_BULLET]));
-  XRCCTRL(*m_pPanelContentDetach, "wxID_PANEL_XHTML_NL",     wxBitmapButton)->SetToolTip(TtaConvMessageToWX(p_tooltip_array[WXAMAYA_PANEL_XHTML_NL]));
-  XRCCTRL(*m_pPanelContentDetach, "wxID_PANEL_XHTML_DL",     wxBitmapButton)->SetToolTip(TtaConvMessageToWX(p_tooltip_array[WXAMAYA_PANEL_XHTML_DL]));
-  XRCCTRL(*m_pPanelContentDetach, "wxID_PANEL_XHTML_IMG",    wxBitmapButton)->SetToolTip(TtaConvMessageToWX(p_tooltip_array[WXAMAYA_PANEL_XHTML_IMG]));
-  XRCCTRL(*m_pPanelContentDetach, "wxID_PANEL_XHTML_LINK",   wxBitmapButton)->SetToolTip(TtaConvMessageToWX(p_tooltip_array[WXAMAYA_PANEL_XHTML_LINK]));
-  XRCCTRL(*m_pPanelContentDetach, "wxID_PANEL_XHTML_TABLE",  wxBitmapButton)->SetToolTip(TtaConvMessageToWX(p_tooltip_array[WXAMAYA_PANEL_XHTML_TABLE]));
-#endif /* 0 */
 }
 
 /*
  *--------------------------------------------------------------------------------------
  *       Class:  AmayaColorPanel
- *      Method:  OnButton
+ *      Method:  OnModifyColor
  * Description:  
  *--------------------------------------------------------------------------------------
  */
-void AmayaColorsPanel::OnButton( wxCommandEvent& event )
+void AmayaColorsPanel::OnModifyColor( wxCommandEvent& event )
 {
-  wxLogDebug( _T("AmayaColorsPanel::OnButton") );
-#if 0  
-  int id       = event.GetId();
-  int amaya_id = -1;
+  wxLogDebug( _T("AmayaColorsPanel::OnModifyColor") );
+  ModifyColor (m_ThotFGColor, FALSE);
+  ModifyColor (m_ThotBGColor, TRUE);
+}
 
-  if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_XHTML_STRONG")) )
-    amaya_id = WXAMAYA_PANEL_XHTML_STRONG;
-  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_XHTML_EMPH")) )
-    amaya_id = WXAMAYA_PANEL_XHTML_EMPH;
-  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_XHTML_CODE")) )
-    amaya_id = WXAMAYA_PANEL_XHTML_CODE;
-  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_XHTML_H1")) )
-    amaya_id = WXAMAYA_PANEL_XHTML_H1;
-  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_XHTML_H2")) )
-    amaya_id = WXAMAYA_PANEL_XHTML_H2;
-  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_XHTML_H3")) )
-    amaya_id = WXAMAYA_PANEL_XHTML_H3;
-  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_XHTML_BULLET")) )
-    amaya_id = WXAMAYA_PANEL_XHTML_BULLET;
-  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_XHTML_NL")) )
-    amaya_id = WXAMAYA_PANEL_XHTML_NL;
-  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_XHTML_DL")) )
-    amaya_id = WXAMAYA_PANEL_XHTML_DL;
-  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_XHTML_IMG")) )
-    amaya_id = WXAMAYA_PANEL_XHTML_IMG;
-  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_XHTML_LINK")) )
-    amaya_id = WXAMAYA_PANEL_XHTML_LINK;
-  else if ( id == wxXmlResource::GetXRCID(_T("wxID_PANEL_XHTML_TABLE")) )
-    amaya_id = WXAMAYA_PANEL_XHTML_TABLE;
-  
-  if (amaya_id != -1)
-    APP_Callback_PanelButtonActivate ( WXAMAYA_PANEL_XHTML,
-				       TtaGiveActiveFrame(),
-				       amaya_id );
-#endif /* 0 */
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaColorPanel
+ *      Method:  OnGetColor
+ * Description:  
+ *--------------------------------------------------------------------------------------
+ */
+void AmayaColorsPanel::OnGetColor( wxCommandEvent& event )
+{
+  wxLogDebug( _T("AmayaColorsPanel::OnGetColor") );
+  ThotGetSelectedElementColor();
+}
+
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaColorPanel
+ *      Method:  OnDefaultColors
+ * Description:  
+ *--------------------------------------------------------------------------------------
+ */
+void AmayaColorsPanel::OnDefaultColors( wxCommandEvent& event )
+{
+  wxLogDebug( _T("AmayaColorsPanel::OnDefaultColors") );
+  ThotSelectPalette (-1, -1);
+}
+
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaColorPanel
+ *      Method:  OnSwitchColors
+ * Description:  
+ *--------------------------------------------------------------------------------------
+ */
+void AmayaColorsPanel::OnSwitchColors( wxCommandEvent& event )
+{
+  wxLogDebug( _T("AmayaColorsPanel::OnSwitchColors") );
+  ThotSelectPalette (m_ThotFGColor, m_ThotBGColor);
 }
 
 /*
@@ -157,29 +156,30 @@ void AmayaColorsPanel::OnButton( wxCommandEvent& event )
  */
 void AmayaColorsPanel::SendDataToPanel( AmayaPanelParams& p )
 {
-#if 0
-  bool * p_checked_array = (bool *)p.param1;
-
-  wxLogDebug(_T("AmayaColorsPanel::SendDataToPanel") );
-
-  if (p_checked_array[WXAMAYA_PANEL_XHTML_STRONG])
-    XRCCTRL(*m_pPanelContentDetach, "wxID_PANEL_XHTML_STRONG", wxBitmapButton)->SetBackgroundColour( m_OnColour );
+  // update button background colors
+  m_ThotBGColor = (int)p.param1;
+  if (m_ThotBGColor >= 0)
+    {
+      wxColour * p_bg_colour = ColorPixel(m_ThotBGColor);
+      XRCCTRL(*m_pPanelContentDetach, "wxID_BUTTON_BGCOLOR", wxButton)->SetBackgroundColour( *p_bg_colour );
+    }
   else
-    XRCCTRL(*m_pPanelContentDetach, "wxID_PANEL_XHTML_STRONG", wxBitmapButton)->SetBackgroundColour( m_OffColour );
-  
-  if (p_checked_array[WXAMAYA_PANEL_XHTML_EMPH])
-    XRCCTRL(*m_pPanelContentDetach, "wxID_PANEL_XHTML_EMPH", wxBitmapButton)->SetBackgroundColour( m_OnColour );
-  else
-    XRCCTRL(*m_pPanelContentDetach, "wxID_PANEL_XHTML_EMPH", wxBitmapButton)->SetBackgroundColour( m_OffColour );
-  
-  if (p_checked_array[WXAMAYA_PANEL_XHTML_CODE])
-    XRCCTRL(*m_pPanelContentDetach, "wxID_PANEL_XHTML_CODE", wxBitmapButton)->SetBackgroundColour( m_OnColour );
-  else
-    XRCCTRL(*m_pPanelContentDetach, "wxID_PANEL_XHTML_CODE", wxBitmapButton)->SetBackgroundColour( m_OffColour );
+    {
+      // default bg color is ? white ?
+      XRCCTRL(*m_pPanelContentDetach, "wxID_BUTTON_BGCOLOR", wxButton)->SetBackgroundColour( wxColour(_T("white")) );
+    }
 
-  Refresh();
-  Layout();
-#endif /* 0 */
+  m_ThotFGColor = (int)p.param2;
+  if (m_ThotFGColor >= 0)
+    {
+      wxColour * p_fg_colour = ColorPixel(m_ThotFGColor);
+      XRCCTRL(*m_pPanelContentDetach, "wxID_BUTTON_FGCOLOR", wxButton)->SetBackgroundColour( *p_fg_colour );
+    }
+  else
+    {
+      // default fg color is ? black ?
+      XRCCTRL(*m_pPanelContentDetach, "wxID_BUTTON_FGCOLOR", wxButton)->SetBackgroundColour( wxColour(_T("black")) );
+    }
 }
 
 /*
@@ -221,20 +221,10 @@ bool AmayaColorsPanel::IsActive()
  *  the callbacks are assigned to an event type
  *----------------------------------------------------------------------*/
 BEGIN_EVENT_TABLE(AmayaColorsPanel, AmayaSubPanel)
-  /*
-  EVT_BUTTON( XRCID("wxID_PANEL_XHTML_STRONG"), AmayaColorsPanel::OnButton ) 
-  EVT_BUTTON( XRCID("wxID_PANEL_XHTML_EMPH"),   AmayaColorsPanel::OnButton ) 
-  EVT_BUTTON( XRCID("wxID_PANEL_XHTML_CODE"),   AmayaColorsPanel::OnButton ) 
-  EVT_BUTTON( XRCID("wxID_PANEL_XHTML_H1"),     AmayaColorsPanel::OnButton ) 
-  EVT_BUTTON( XRCID("wxID_PANEL_XHTML_H2"),     AmayaColorsPanel::OnButton ) 
-  EVT_BUTTON( XRCID("wxID_PANEL_XHTML_H3"),     AmayaColorsPanel::OnButton ) 
-  EVT_BUTTON( XRCID("wxID_PANEL_XHTML_BULLET"), AmayaColorsPanel::OnButton ) 
-  EVT_BUTTON( XRCID("wxID_PANEL_XHTML_NL"),     AmayaColorsPanel::OnButton ) 
-  EVT_BUTTON( XRCID("wxID_PANEL_XHTML_DL"),     AmayaColorsPanel::OnButton ) 
-  EVT_BUTTON( XRCID("wxID_PANEL_XHTML_IMG"),    AmayaColorsPanel::OnButton ) 
-  EVT_BUTTON( XRCID("wxID_PANEL_XHTML_LINK"),   AmayaColorsPanel::OnButton ) 
-  EVT_BUTTON( XRCID("wxID_PANEL_XHTML_TABLE"),  AmayaColorsPanel::OnButton )
-  */
+  EVT_BUTTON( XRCID("wxID_MODIFYCOLOR"), AmayaColorsPanel::OnModifyColor ) 
+  EVT_BUTTON( XRCID("wxID_GETCOLOR"),    AmayaColorsPanel::OnGetColor ) 
+  EVT_BUTTON( XRCID("wxID_BUTTON_DEFAULTCOLORS"), AmayaColorsPanel::OnDefaultColors ) 
+  EVT_BUTTON( XRCID("wxID_BUTTON_SWITCHCOLORS"),  AmayaColorsPanel::OnSwitchColors ) 
 END_EVENT_TABLE()
 
 #endif /* #ifdef _WX */

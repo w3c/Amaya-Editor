@@ -10,8 +10,13 @@
  *
  * Authors: I. Vatton (INRIA)
  *          R. Guetari (W3C/INRIA) - Windows version
+ *          S. Gully (INRIA) - GTK and wxWidgets versions
  *
  */
+
+#ifdef _WX
+  #include "wx/wx.h"
+#endif /* _WX */
 
 #include "thot_gui.h"
 #include "thot_sys.h"
@@ -85,13 +90,20 @@ static ThotBool     IsRegistered = FALSE;
 #include "presentmenu_f.h"
 #include "structselect_f.h"
 #include "xwindowdisplay_f.h"
+#include "colors_f.h"
 
+#ifdef _WX
+  #include "AmayaSubPanelManager.h"
+  #include "AmayaColorsPanel.h"
+#endif /* _WX */
 
 /*----------------------------------------------------------------------
    ThotSelectPalette
-   Shows the current selection.
+   Assign a new background and foreground color (coming from outside) 
+   to colors dialog.
+   (outside could be the color palette or the user selection)
   ----------------------------------------------------------------------*/
-static void ThotSelectPalette (int bground, int fground)
+void ThotSelectPalette (int bground, int fground)
 {
 #ifdef _GTK
    BgColor = bground;
@@ -105,6 +117,15 @@ static void ThotSelectPalette (int bground, int fground)
    BgColor = bground;
    FgColor = fground;
 #endif /* _WINGUI */
+#ifdef _WX
+   BgColor = bground;
+   FgColor = fground;
+   /* refresh color panels */
+   AmayaPanelParams p;
+   p.param1 = (void*)BgColor;
+   p.param2 = (void*)FgColor;
+   AmayaSubPanelManager::GetInstance()->SendDataToPanel( WXAMAYA_PANEL_COLORS, p );
+#endif /* _WX */
 }
 
 #ifdef _WINGUI
@@ -274,21 +295,32 @@ gboolean ApplyExtendedColorGTK (GtkWidget *widget, gpointer data)
   ----------------------------------------------------------------------*/
 gboolean GetSelectedElementColorGTK (GtkWidget *widget, gpointer data)
 {
+  ThotGetSelectedElementColor();
+  return TRUE;
+}
+#endif /* _GTK */
+
+/*----------------------------------------------------------------------
+   Update BgColor and FgColor variables with current selected element bg and fg colors
+   FgColor is the foreground id color
+   BgColor is the background id color
+  ----------------------------------------------------------------------*/
+void ThotGetSelectedElementColor()
+{
   PtrDocument         pSelDoc;
   PtrElement          pFirstSel, pLastSel;
   int                 firstChar, lastChar;
   ThotBool            selectionOK;
   
   selectionOK = GetCurrentSelection (&pSelDoc, &pFirstSel, &pLastSel, &firstChar, &lastChar);
-  if (!selectionOK) return TRUE;
+  if (!selectionOK)
+    return;
   
   BgColor = pFirstSel->ElAbstractBox[0]->AbBackground;
   FgColor = pFirstSel->ElAbstractBox[0]->AbForeground;
   
-  ThotSelectPalette (BgColor, FgColor);
-  return TRUE;
+  ThotSelectPalette (BgColor, FgColor);  
 }
-#endif /* _GTK */
 
 #ifdef _WINGUI
 /*----------------------------------------------------------------------
@@ -1299,6 +1331,7 @@ void TtcChangeColors (Document document, View view)
 	else
 	  pAb = AbsBoxOfEl (pFirstSel, view);
 	
+	/* assign default fg and bg colors to colors dialog */
 	if (pAb != NULL)
 	  ThotSelectPalette (pAb->AbBackground, pAb->AbForeground);
 #ifdef _WINGUI
