@@ -416,7 +416,7 @@ void ChangeTitle (Document doc, View view)
        length = MAX_LENGTH;
        TtaGiveTextContent (child, Answer_text, &length, &lang);
 #ifdef _I18N_
-       title = TtaConvertMbsToByte (Answer_text, ISO_8859_1);
+       title = TtaConvertMbsToByte (Answer_text, TtaGetDefaultCharset ());
        strcpy (Answer_text, title);
        TtaFreeMemory (title);
 #endif /* _I18N_ */

@@ -523,7 +523,7 @@ static void InitSaveForm (Document document, View view, char *pathname)
 		   TtaGetMessage (AMAYA, AM_DOC_LOCATION), 50, 1, FALSE);
    TtaSetTextForm (BaseDialog + NameSave, pathname);
    /* second line */
-   /* Transform URL oprion */
+   /* Transform URL option */
    if (!TextFormat && DocumentTypes[document] != docImage)
      {
        sprintf (buffer, "B%s%cB%s",

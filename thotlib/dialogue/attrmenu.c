@@ -774,6 +774,9 @@ static void MenuValues (TtAttribute * pAttr1, ThotBool required,
 			PtrAttribute currAttr, PtrDocument pDoc, int view)
 {
    Document          doc;
+#ifdef _I18N_
+   char             *tmp;
+#endif /* _I18N_ */
    char              bufMenu[MAX_TXT_LEN];
    char              title[MAX_NAME_LENGTH + 2];
    int               i, lgmenu, val, buttons;
@@ -859,13 +862,19 @@ static void MenuValues (TtAttribute * pAttr1, ThotBool required,
 	 {
 	   i = LgMaxAttrText - 2;
 	   i = CopyBuffer2MBs (currAttr->AeAttrText, 0, TextAttrValue, i);
+#ifdef _I18N_
+	   /* convert to the dialogue encoding */
+	   tmp = TtaConvertMbsToByte (TextAttrValue, TtaGetDefaultCharset ());
+	   strcpy (TextAttrValue, tmp);
+	   TtaFreeMemory (tmp);
+#endif /* _I18N_ */
 	 }
        else
 	   TextAttrValue[0] = EOS;
 #ifndef _WINDOWS
        TtaNewTextForm (subform, form, title, 40, 1, FALSE);
        TtaAttachForm (subform);
-	   TtaSetTextForm (subform, TextAttrValue);       
+       TtaSetTextForm (subform, TextAttrValue);       
 #else  /* _WINDOWS */
        WIN_AtNumAttr  = FALSE;
        WIN_AtTextAttr = TRUE;
@@ -1466,8 +1475,11 @@ void CallbackValAttrMenu (int ref, int valmenu, char *valtext)
   PtrAttribute        pAttrNew;
   DisplayMode         dispMode = DeferredDisplay;
   Document            doc = 0;
+#ifdef _I18N_
+   char              *tmp;
+#endif /* _I18N_ */
   int                 firstChar, lastChar;
-  int                 lg, act;
+  int                 act;
   ThotBool            lock = TRUE;
 
   act = 1; /* apply by default */
@@ -1558,7 +1570,14 @@ void CallbackValAttrMenu (int ref, int valmenu, char *valtext)
 			GetTextBuffer (&(pAttrNew->AeAttrText));
 		      else
 			ClearText (pAttrNew->AeAttrText);
-		      CopyStringToBuffer (TextAttrValue, pAttrNew->AeAttrText, &lg);
+#ifdef _I18N_
+		      tmp = TtaConvertByteToMbs (TextAttrValue, TtaGetDefaultCharset ());
+		      CopyMBs2Buffer (tmp, pAttrNew->AeAttrText, 0, strlen (tmp));
+		      TtaFreeMemory (tmp);
+#else /* _I18N_ */
+		      CopyMBs2Buffer (TextAttrValue, pAttrNew->AeAttrText, 0,
+				      strlen (TextAttrValue));
+#endif /* _I18N_ */
 		    }
 		  /* applique les attributs a la partie selectionnee */
 		  AttachAttrToRange (pAttrNew, lastChar, firstChar, lastSel,

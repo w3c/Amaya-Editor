@@ -123,7 +123,7 @@ ThotBool AddLoadedImage (char *name, char *pathname,
    its local name.
    The function returns the descriptor entry or NULL.
   ----------------------------------------------------------------------*/
-LoadedImageDesc    *SearchLoadedImage (char *localpath, Document doc)
+LoadedImageDesc *SearchLoadedImage (char *localpath, Document doc)
 {
   LoadedImageDesc    *pImage;
   
@@ -152,7 +152,7 @@ LoadedImageDesc    *SearchLoadedImage (char *localpath, Document doc)
    per document).
    The function returns the descriptor entry or NULL.
   ----------------------------------------------------------------------*/
-LoadedImageDesc    *SearchLoadedDocImage (Document doc, char *url)
+LoadedImageDesc *SearchLoadedDocImage (Document doc, char *url)
 {
   LoadedImageDesc    *pImage;
   char               *ptr;
@@ -742,9 +742,9 @@ static void HandleImageLoaded (int doc, int status, char *urlName,
    libWWWImageLoaded is the libWWW callback procedure when the image
                 is loaded from the web.
   ----------------------------------------------------------------------*/
-static void     libWWWImageLoaded (int doc, int status, char *urlName,
-				   char *outputfile, AHTHeaders *http_headers,
-				   void * context)
+static void libWWWImageLoaded (int doc, int status, char *urlName,
+			       char *outputfile, AHTHeaders *http_headers,
+			       void * context)
 {
   FetchImage_context *FetchImage_ctx;
 

@@ -45,7 +45,7 @@ static char       ImgAlt[MAX_LENGTH];
 /*----------------------------------------------------------------------
    DeleteMap                                              
   ----------------------------------------------------------------------*/
-ThotBool            DeleteMap (NotifyElement * event)
+ThotBool DeleteMap (NotifyElement * event)
 {
    Element             image;
    ElementType	       elType;
@@ -384,7 +384,7 @@ void InitImage (void)
 /*----------------------------------------------------------------------
    GetAlt gets the Alt value for an Area                            
   ----------------------------------------------------------------------*/
-static void         GetAlt (Document document, View view)
+static void GetAlt (Document document, View view)
 {
   ImgAlt[0] = EOS;
 #ifndef _WINDOWS
@@ -424,7 +424,7 @@ static void CreateAreaMap (Document doc, View view, char *shape)
    ElementType         elType;
    AttributeType       attrType;
    Attribute           attr, attrRef, attrShape, attrRefimg;
-   char               *url;
+   char               *url, *tmp;
    int                 length, w, h;
    int                 firstchar, lastchar;
    int                 docModified;
@@ -634,7 +634,13 @@ static void CreateAreaMap (Document doc, View view, char *shape)
 	attr = TtaNewAttribute (attrType);
 	TtaAttachAttribute (el, attr, doc);
 	GetAlt (doc, view);
+#ifdef _I18N_
+	tmp = TtaConvertByteToMbs (ImgAlt, TtaGetDefaultCharset ());
+	TtaSetAttributeText (attr, tmp, el, doc);
+	TtaFreeMemory (tmp);
+#else /* _I18N_ */
 	TtaSetAttributeText (attr, ImgAlt, el, doc);
+#endif /* _I18N_ */
 	ImgAlt[0] = EOS;
 	/* The link element is a new created one */
 	IsNewAnchor = TRUE;
@@ -937,7 +943,7 @@ void UpdateSRCattribute (NotifyElement *event)
   Document           doc;
   char*            text;
   char*            pathimage;
-  char*            imagename;
+  char*            tmp;
 
    el = event->element;
    doc = event->document;
@@ -970,18 +976,24 @@ void UpdateSRCattribute (NotifyElement *event)
    /* copy image name in ALT attribute */
    if (ImgAlt[0] == EOS)
      {
-       imagename = TtaGetMemory (MAX_LENGTH);
+       tmp = TtaGetMemory (MAX_LENGTH);
        pathimage = TtaGetMemory (MAX_LENGTH);
-       strcpy (imagename, " ");
-       TtaExtractName (text, pathimage, &imagename[1]);
-       strcat (imagename, " ");
-       TtaSetAttributeText (attr, imagename, elSRC, doc);
+       strcpy (tmp, " ");
+       TtaExtractName (text, pathimage, &tmp[1]);
+       strcat (tmp, " ");
+       TtaSetAttributeText (attr, tmp, elSRC, doc);
        TtaFreeMemory (pathimage);
-       TtaFreeMemory (imagename);
+       TtaFreeMemory (tmp);
      }
    else
      {
+#ifdef _I18N_
+       tmp = TtaConvertByteToMbs (ImgAlt, TtaGetDefaultCharset ());
+       TtaSetAttributeText (attr, tmp, elSRC, doc);
+       TtaFreeMemory (tmp);
+#else /* _I18N_ */
        TtaSetAttributeText (attr, ImgAlt, elSRC, doc);
+#endif /* _I18N_ */
        ImgAlt[0] = EOS;
      }
    /* search the SRC attribute */
@@ -1008,9 +1020,9 @@ void SvgImageCreated (NotifyElement *event)
   ElementType        elType;
   Element            el, desc, leaf;
   Document           doc;
-  char*            text;
-  char*            pathimage;
-  char*            imagename;
+  char              *text;
+  char              *pathimage;
+  char              *imagename;
 
    el = event->element;
    doc = event->document;

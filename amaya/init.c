@@ -1422,6 +1422,8 @@ void StopTransfer (Document document, View view)
     }
 }
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 static int  CompleteUrl(char **url)
 {
     char *s;
@@ -4810,7 +4812,7 @@ static void SetFileSuffix ()
   char         *filename;
   int		i, len;
 
-  if (SavingDocument != 0 && SaveName[0] != EOS)
+  if (SavingDocument && SaveName[0] != EOS)
     {
      if (SaveAsHTML)
         strcpy (suffix, "html");
@@ -4838,7 +4840,7 @@ static void SetFileSuffix ()
 	   /* the requested suffix is already here. Do nothing */
 	   i = 0;
 #ifdef _WINDOWS
-	 strcpy (DocToOpen, SavePath );
+	 strcpy (DocToOpen, SavePath);
 	 if (strchr (SavePath, '/'))
 	   strcat (DocToOpen, URL_STR);
 	 else
@@ -4853,7 +4855,7 @@ static void SetFileSuffix ()
 	 strcpy (&SaveName[i], suffix);
 	 /* display the new filename in the dialog box */
 	 filename = TtaGetMemory (MAX_LENGTH);
-	 strcpy (filename, SavePath );
+	 strcpy (filename, SavePath);
 	 if (strchr (SavePath, '/'))
            strcat (filename, URL_STR);
 	 else
@@ -4876,7 +4878,7 @@ void CallbackDialogue (int ref, int typedata, char *data)
 {
   char              tempfile[MAX_LENGTH];
   char              tempname[MAX_LENGTH];
-  char              sep;
+  char              sep, *tmp;
   int               val;
 #ifndef _GTK
   int               i;
@@ -4887,952 +4889,909 @@ void CallbackDialogue (int ref, int typedata, char *data)
     sep = URL_SEP;
   else
     sep = DIR_SEP;
-
-   val = (int) data;
-   if (ref - BaseDialog >= OptionMenu &&
-       ref - BaseDialog <= OptionMenu + MAX_SUBMENUS)
-     /* a popup menu corresponding to a SELECT element or a submenu
-        corresponding to an OPTGROUP element*/
-     {
-       ReturnOption = val;
-       ReturnOptionMenu = ref - BaseDialog - OptionMenu;
-       TtaDestroyDialogue (BaseDialog + OptionMenu);
-     }
-   else switch (ref - BaseDialog)
-     {
-     case OpenForm:
-       /* *********Load URL or local document********* */
-       if (val == 1)
-	 /* Confirm */
-	 {
-	   TtaDestroyDialogue (BaseDialog + OpenForm);
-	   TtaDestroyDialogue (BaseDialog + FileBrowserForm);
-	   
-	   if (LastURLName[0] != EOS)
-	     {
-	       TtaSetStatus (CurrentDocument, 1,
-			   TtaGetMessage (AMAYA, AM_CANNOT_LOAD),
-			   DocumentName);
-	
-	       if (NewFile)
-		 InitializeNewDoc (LastURLName, NewDocType, 0, NewDocProfile);
-	       /* load an URL */ 
-	       else if (InNewWindow)
-		 GetAmayaDoc (LastURLName, NULL, 0, 0, Loading_method,
-				  FALSE, NULL, NULL, TtaGetDefaultCharset ());
-	       else
-		 GetAmayaDoc (LastURLName, NULL, CurrentDocument,
-				  CurrentDocument, Loading_method, TRUE,
-				  NULL, NULL, TtaGetDefaultCharset ());
-	     }
-	   else if (DirectoryName[0] != EOS && DocumentName[0] != EOS)
-	     {
-		 
-	       /* load a local file */
-	       strcpy (tempfile, DirectoryName);
-	       strcat (tempfile, DIR_STR);
-	       strcat (tempfile, DocumentName);
-	       if (FileExistTarget (tempfile))
-		 {
-		   if (InNewWindow)
-		     GetAmayaDoc (tempfile, NULL, 0, 0, Loading_method,
-				      FALSE, NULL, NULL, TtaGetDefaultCharset ());
-		   else
-		     GetAmayaDoc (tempfile, NULL, CurrentDocument,
-				      CurrentDocument, Loading_method,
-				      TRUE, NULL, NULL, TtaGetDefaultCharset ());
-		 }
-	       else if (NewFile)
-		 InitializeNewDoc (tempfile, NewDocType, 0, NewDocProfile);
-	       else
-		 {
-		   if (IsMathMLName (tempfile))
-		     NewDocType = docMath;
-		   else if (IsSVGName (tempfile))
-		     NewDocType = docSVG;
-		   else if (IsCSSName (tempfile))
-		     NewDocType = docCSS;
-#ifdef XML_GENERIC
-		   else if (IsXMLName (tempfile))
-		     NewDocType = docXml;
-#endif /* XML_GENERIC */
-		   else
-		     NewDocType = docHTML;
-		   InitializeNewDoc (tempfile, NewDocType, CurrentDocument, NewDocProfile);
-		 }
-	     }
-	   else if (DocumentName[0] != EOS)
-	     {
-	       CompleteUrl(&DocumentName);  
-	       if (InNewWindow)
-		   GetAmayaDoc (DocumentName, NULL, 0, 0, Loading_method,
-				    FALSE, NULL, NULL, TtaGetDefaultCharset ());
-	       else
-		   GetAmayaDoc (DocumentName, NULL, CurrentDocument,
-				    CurrentDocument, Loading_method, TRUE,
-				    NULL, NULL, TtaGetDefaultCharset ());
-	     }
-	   else if (DirectoryName[0] != EOS)
-	     TtaSetStatus (CurrentDocument, 1,
-			   TtaGetMessage (AMAYA, AM_CANNOT_LOAD),
-			   DirectoryName);
-	   else
-	     TtaSetStatus (CurrentDocument, 1,
-			   TtaGetMessage (AMAYA, AM_CANNOT_LOAD),
-			   "");
-	   NewFile = FALSE;
-	   CurrentDocument = 0;
-	 }
-       else if (val == 2)
-	 {
-	   /* Browse button */
-#ifndef _WINDOWS
-	   WidgetParent = OpenDocBrowser;
-	   BrowserForm (CurrentDocument, 1, &LastURLName[0]);
-#endif /* !_WINDOWS */
-	 }
-       else if (val == 3)
-	 {
-	   /* Clear button */
-	   LastURLName[0] = EOS;
-	   DirectoryName[0] = EOS;
-	   DocumentName[0] = EOS;
-#ifndef _WINDOWS
-	   TtaSetTextForm (BaseDialog + URLName, LastURLName);
-#endif /* !_WINDOWS */
-	 }
-       else if (NewFile)
-	 {
-	   /* the command is aborted */
-	   CheckAmayaClosed ();
-	   NewFile = FALSE;
-	 }
-       break;
-
-     case URLName:
-       RemoveNewLines (data);
-       CompleteUrl(&data); 
-       if (IsW3Path (data))
-	 {
-	   /* save the URL name */
-	   strcpy (LastURLName, data);
-	   DocumentName[0] = EOS;
-	 }
-       else
-	 {
-	   LastURLName[0] = EOS;
-	   change = NormalizeFile (data, tempfile, AM_CONV_NONE);
-	   if (!IsW3Path (tempfile))
+  val = (int) data;
+  if (ref - BaseDialog >= OptionMenu &&
+      ref - BaseDialog <= OptionMenu + MAX_SUBMENUS)
+    /* a popup menu corresponding to a SELECT element or a submenu
+       corresponding to an OPTGROUP element*/
+    {
+      ReturnOption = val;
+      ReturnOptionMenu = ref - BaseDialog - OptionMenu;
+      TtaDestroyDialogue (BaseDialog + OptionMenu);
+    }
+  else switch (ref - BaseDialog)
+    {
+    case OpenForm:
+      /* *********Load URL or local document********* */
+      if (val == 1)
+	/* Confirm */
+	{
+	  TtaDestroyDialogue (BaseDialog + OpenForm);
+	  TtaDestroyDialogue (BaseDialog + FileBrowserForm);
+	  
+	  if (LastURLName[0] != EOS)
 	    {
-		if (TtaCheckDirectory (tempfile))
-		  {
-		    strcpy (DirectoryName, tempfile);
-		    DocumentName[0] = EOS;
-		  }
-		else
-		  TtaExtractName (tempfile, DirectoryName, DocumentName);
+	      TtaSetStatus (CurrentDocument, 1,
+			    TtaGetMessage (AMAYA, AM_CANNOT_LOAD),
+			    DocumentName);
+	      if (NewFile)
+		InitializeNewDoc (LastURLName, NewDocType, 0, NewDocProfile);
+	      /* load an URL */ 
+	      else if (InNewWindow)
+		GetAmayaDoc (LastURLName, NULL, 0, 0, Loading_method,
+			     FALSE, NULL, NULL, TtaGetDefaultCharset ());
+	      else
+		GetAmayaDoc (LastURLName, NULL, CurrentDocument,
+			     CurrentDocument, Loading_method, TRUE,
+			     NULL, NULL, TtaGetDefaultCharset ());
 	    }
-	   else 
-	   {
-	       /* save the URL name */
-	       strcpy (LastURLName, tempfile);
-	       DocumentName[0] = EOS;
-	   }
-	 }       
-       break;
-
-     case DirSelect:
-#ifdef _WINDOWS
-       sprintf (DirectoryName, "%s", data);
-#else  /* _WINDOWS */
-       if (DirectoryName[0] != EOS)
-	 {
-	   if (!strcmp (data, ".."))
-	     {
-	       /* suppress last directory */
-	       strcpy (tempname, DirectoryName);
-	       TtaExtractName (tempname, DirectoryName, tempfile);
-	     }
-	   else
-	     {
-	       strcat (DirectoryName, DIR_STR);
-	       strcat (DirectoryName, data);
-	     }
-	   TtaSetTextForm (BaseDialog + URLName, DirectoryName);
-	   TtaListDirectory (DirectoryName, BaseDialog + OpenForm,
-			     TtaGetMessage (LIB, TMSG_DOC_DIR),
-			     BaseDialog + DirSelect, ScanFilter,
-			     TtaGetMessage (AMAYA, AM_FILES),
-			     BaseDialog + DocSelect);
-	   DocumentName[0] = EOS;
-	 }
-#endif /* _WINDOWS */
-       break;
-     case DocSelect:
-       if (DirectoryName[0] == EOS)
-	 /* set path on current directory */
-	 getcwd (DirectoryName, MAX_LENGTH);
-       
-       /* Extract suffix from document name */
-       strcpy (DocumentName, data);
-       LastURLName[0] = EOS;
-       /* construct the document full name */
-       strcpy (tempfile, DirectoryName);
-       strcat (tempfile, DIR_STR);
-       strcat (tempfile, DocumentName);
+	  else if (DirectoryName[0] != EOS && DocumentName[0] != EOS)
+	    {
+	      /* load a local file */
+	      strcpy (tempfile, DirectoryName);
+	      strcat (tempfile, DIR_STR);
+	      strcat (tempfile, DocumentName);
+	      if (FileExistTarget (tempfile))
+		{
+		  if (InNewWindow)
+		    GetAmayaDoc (tempfile, NULL, 0, 0, Loading_method,
+				 FALSE, NULL, NULL, TtaGetDefaultCharset ());
+		  else
+		    GetAmayaDoc (tempfile, NULL, CurrentDocument,
+				 CurrentDocument, Loading_method,
+				 TRUE, NULL, NULL, TtaGetDefaultCharset ());
+		}
+	      else if (NewFile)
+		InitializeNewDoc (tempfile, NewDocType, 0, NewDocProfile);
+	      else
+		{
+		  if (IsMathMLName (tempfile))
+		    NewDocType = docMath;
+		  else if (IsSVGName (tempfile))
+		    NewDocType = docSVG;
+		  else if (IsCSSName (tempfile))
+		    NewDocType = docCSS;
+#ifdef XML_GENERIC
+		  else if (IsXMLName (tempfile))
+		    NewDocType = docXml;
+#endif /* XML_GENERIC */
+		  else
+		    NewDocType = docHTML;
+		  InitializeNewDoc (tempfile, NewDocType, CurrentDocument, NewDocProfile);
+		}
+	    }
+	  else if (DocumentName[0] != EOS)
+	    {
+	      CompleteUrl (&DocumentName);  
+	      if (InNewWindow)
+		GetAmayaDoc (DocumentName, NULL, 0, 0, Loading_method,
+			     FALSE, NULL, NULL, TtaGetDefaultCharset ());
+	      else
+		GetAmayaDoc (DocumentName, NULL, CurrentDocument,
+			     CurrentDocument, Loading_method, TRUE,
+			     NULL, NULL, TtaGetDefaultCharset ());
+	    }
+	  else if (DirectoryName[0] != EOS)
+	    TtaSetStatus (CurrentDocument, 1,
+			  TtaGetMessage (AMAYA, AM_CANNOT_LOAD),
+			  DirectoryName);
+	  else
+	    TtaSetStatus (CurrentDocument, 1,
+			  TtaGetMessage (AMAYA, AM_CANNOT_LOAD), "");
+	  NewFile = FALSE;
+	  CurrentDocument = 0;
+	}
+      else if (val == 2)
+	{
+	  /* Browse button */
 #ifndef _WINDOWS
-       TtaSetTextForm (BaseDialog + URLName, tempfile);
+	  WidgetParent = OpenDocBrowser;
+	  BrowserForm (CurrentDocument, 1, &LastURLName[0]);
 #endif /* !_WINDOWS */
-       break;
-     case ConfirmForm:
-       /* *********Confirm********* */
-       UserAnswer = (val == 1);
-       ShowErrors = (val == 2);
-       TtaDestroyDialogue (BaseDialog + ConfirmForm);
-       break;
-     case FilterText:
-       /* Filter value */
-       if (strlen(data) <= NAME_LENGTH)
-	 strcpy (ScanFilter, data);
+	}
+      else if (val == 3)
+	{
+	  /* Clear button */
+	  LastURLName[0] = EOS;
+	  DirectoryName[0] = EOS;
+	  DocumentName[0] = EOS;
 #ifndef _WINDOWS
-       else
-	 TtaSetTextForm (BaseDialog + FilterText, ScanFilter);
+	  TtaSetTextForm (BaseDialog + URLName, LastURLName);
+#endif /* !_WINDOWS */
+	}
+      else if (NewFile)
+	{
+	  /* the command is aborted */
+	  CheckAmayaClosed ();
+	  NewFile = FALSE;
+	}
+      break;
+
+    case URLName:
+      RemoveNewLines (data);
+      CompleteUrl (&data); 
+      if (IsW3Path (data))
+	{
+	  /* save the URL name */
+	  strcpy (LastURLName, data);
+	  DocumentName[0] = EOS;
+	}
+      else
+	{
+	  LastURLName[0] = EOS;
+	  change = NormalizeFile (data, tempfile, AM_CONV_NONE);
+	  if (!IsW3Path (tempfile))
+	    {
+	      if (TtaCheckDirectory (tempfile))
+		{
+		  strcpy (DirectoryName, tempfile);
+		  DocumentName[0] = EOS;
+		}
+	      else
+		TtaExtractName (tempfile, DirectoryName, DocumentName);
+	    }
+	  else 
+	    {
+	      /* save the URL name */
+	      strcpy (LastURLName, tempfile);
+	      DocumentName[0] = EOS;
+	    }
+	}       
+      break;
+
+    case DirSelect:
+#ifdef _WINDOWS
+      sprintf (DirectoryName, "%s", data);
+#else  /* _WINDOWS */
+      if (DirectoryName[0] != EOS)
+	{
+	  if (!strcmp (data, ".."))
+	    {
+	      /* suppress last directory */
+	      strcpy (tempname, DirectoryName);
+	      TtaExtractName (tempname, DirectoryName, tempfile);
+	    }
+	  else
+	    {
+	      strcat (DirectoryName, DIR_STR);
+	      strcat (DirectoryName, data);
+	    }
+	  TtaSetTextForm (BaseDialog + URLName, DirectoryName);
+	  TtaListDirectory (DirectoryName, BaseDialog + OpenForm,
+			    TtaGetMessage (LIB, TMSG_DOC_DIR),
+			    BaseDialog + DirSelect, ScanFilter,
+			    TtaGetMessage (AMAYA, AM_FILES),
+			    BaseDialog + DocSelect);
+	  DocumentName[0] = EOS;
+	}
 #endif /* _WINDOWS */
-       break;
-     case FormAnswer:
-       /* *********Get an answer********* */
-       if (val == 0)
-	 {
-	   /* no answer */
-	   Answer_text[0] = EOS;
-	   Answer_name[0] = EOS;
-	   Answer_password[0] = EOS;
-	   UserAnswer = 0;
-	 }
-       else
-	 UserAnswer = 1;
-       TtaDestroyDialogue (BaseDialog + FormAnswer);
-       break;
-     case AnswerText:
-       strncpy (Answer_text, data, MAX_LENGTH);
-       Answer_text[MAX_LENGTH - 1] = EOS;
-       break;
-     case NameText:
-       strncpy (Answer_name, data, NAME_LENGTH);
-       Answer_text[NAME_LENGTH - 1] = EOS;
-       break;
-     case PasswordText:
-#ifndef _GTK
-       i = strlen (data);
-       if (i < NAME_LENGTH - 1)
-	 {
-	   if (Lg_password < i)
-	     {
-	       /* a new char */
-	       Answer_password[Lg_password] = data[Lg_password];
-	       Display_password[Lg_password] = '*';
-	       Answer_password[++Lg_password] = EOS;
-	       Display_password[Lg_password] = EOS;
-	     }
-	   else if (Lg_password > i)
-	     {		/* a valid backspace */
-	       
-	       Lg_password--;
-	       Answer_password[Lg_password] = EOS;
-	       Display_password[Lg_password] = EOS;
-	     }
-	 }
-       else
-	 Answer_password[NAME_LENGTH - 1] = EOS;
+      break;
+    case DocSelect:
+      if (DirectoryName[0] == EOS)
+	/* set path on current directory */
+	getcwd (DirectoryName, MAX_LENGTH);
+      
+      /* Extract suffix from document name */
+      strcpy (DocumentName, data);
+      LastURLName[0] = EOS;
+      /* construct the document full name */
+      strcpy (tempfile, DirectoryName);
+      strcat (tempfile, DIR_STR);
+      strcat (tempfile, DocumentName);
 #ifndef _WINDOWS
-       if (i > 0)
-	 TtaSetTextForm (BaseDialog + PasswordText, Display_password);
+      TtaSetTextForm (BaseDialog + URLName, tempfile);
+#endif /* !_WINDOWS */
+      break;
+    case ConfirmForm:
+      /* *********Confirm********* */
+      UserAnswer = (val == 1);
+      ShowErrors = (val == 2);
+      TtaDestroyDialogue (BaseDialog + ConfirmForm);
+      break;
+    case FilterText:
+      /* Filter value */
+      if (strlen (data) <= NAME_LENGTH)
+	strcpy (ScanFilter, data);
+#ifndef _WINDOWS
+      else
+	TtaSetTextForm (BaseDialog + FilterText, ScanFilter);
+#endif /* _WINDOWS */
+      break;
+    case FormAnswer:
+      /* *********Get an answer********* */
+      if (val == 0)
+	{
+	  /* no answer */
+	  Answer_text[0] = EOS;
+	  Answer_name[0] = EOS;
+	  Answer_password[0] = EOS;
+	  UserAnswer = 0;
+	}
+      else
+	UserAnswer = 1;
+      TtaDestroyDialogue (BaseDialog + FormAnswer);
+      break;
+    case AnswerText:
+      strncpy (Answer_text, data, MAX_LENGTH);
+      Answer_text[MAX_LENGTH - 1] = EOS;
+      break;
+    case NameText:
+      strncpy (Answer_name, data, NAME_LENGTH);
+      Answer_text[NAME_LENGTH - 1] = EOS;
+      break;
+    case PasswordText:
+#ifndef _GTK
+      i = strlen (data);
+      if (i < NAME_LENGTH - 1)
+	{
+	  if (Lg_password < i)
+	    {
+	      /* a new char */
+	      Answer_password[Lg_password] = data[Lg_password];
+	      Display_password[Lg_password] = '*';
+	      Answer_password[++Lg_password] = EOS;
+	      Display_password[Lg_password] = EOS;
+	    }
+	  else if (Lg_password > i)
+	    {
+	      /* a valid backspace */
+	      Lg_password--;
+	      Answer_password[Lg_password] = EOS;
+	      Display_password[Lg_password] = EOS;
+	    }
+	}
+      else
+	Answer_password[NAME_LENGTH - 1] = EOS;
+#ifndef _WINDOWS
+      if (i > 0)
+	TtaSetTextForm (BaseDialog + PasswordText, Display_password);
 #endif /* _WINDOWS */
 #else /* _GTK */
-       strncpy (Answer_password, data, NAME_LENGTH);
-       Answer_password[NAME_LENGTH - 1] = EOS;
+      strncpy (Answer_password, data, NAME_LENGTH);
+      Answer_password[NAME_LENGTH - 1] = EOS;
 #endif /* _GTK */
-       break;
-       
-       /* *********Save document as********* */
-     case RadioSave:
-       /* Output format */
-       switch (val)
-	 {
-	 case 0:	/* "Save as HTML" button */
-	   if (SaveAsXML == TRUE)
-	     /* XML -> HTML : modify the doctype declaration */
-	     ChangeDoctype (FALSE);
-	   SaveAsHTML = TRUE;
-	   SaveAsXML = FALSE;
-	   SaveAsText = FALSE;
-	   UpdateSaveAsButtons ();
-	   SetFileSuffix ();
-	   break;
-	 case 1:	/* "Save as XML" button */
-	   if (SaveAsHTML == TRUE)
-	     /* HTML -> XML : modify the doctype declaration */
-	     ChangeDoctype (TRUE);
-	   SaveAsXML = TRUE;
-	   SaveAsHTML = FALSE;
-	   SaveAsText = FALSE;
-	   UpdateSaveAsButtons ();
-	   SetFileSuffix ();
-	   /* Set the document charset */
-	   if (TtaGetDocumentCharset (SavingDocument) == UNDEFINED_CHARSET)
-	     TtaSetDocumentCharset (SavingDocument, ISO_8859_1);
-	   break;
-	 case 2:	/* "Save as Text" button */
-	   SaveAsText = TRUE;
-	   SaveAsHTML = FALSE;
-	   SaveAsXML = FALSE;
+      break;
+
+    /* *********Save document as********* */
+    case RadioSave:
+      /* Output format */
+      switch (val)
+	{
+	case 0:	/* "Save as HTML" button */
+	  if (SaveAsXML == TRUE)
+	    /* XML -> HTML : modify the doctype declaration */
+	    ChangeDoctype (FALSE);
+	  SaveAsHTML = TRUE;
+	  SaveAsXML = FALSE;
+	  SaveAsText = FALSE;
+	  UpdateSaveAsButtons ();
+	  SetFileSuffix ();
+	  break;
+	case 1:	/* "Save as XML" button */
+	  if (SaveAsHTML == TRUE)
+	    /* HTML -> XML : modify the doctype declaration */
+	    ChangeDoctype (TRUE);
+	  SaveAsXML = TRUE;
+	  SaveAsHTML = FALSE;
+	  SaveAsText = FALSE;
+	  UpdateSaveAsButtons ();
+	  SetFileSuffix ();
+	  /* Set the document charset */
+	  if (TtaGetDocumentCharset (SavingDocument) == UNDEFINED_CHARSET)
+	    TtaSetDocumentCharset (SavingDocument, ISO_8859_1);
+	  break;
+	case 2:	/* "Save as Text" button */
+	  SaveAsText = TRUE;
+	  SaveAsHTML = FALSE;
+	  SaveAsXML = FALSE;
 #ifndef _WINDOWS
-	   TtaSetToggleMenu (BaseDialog + ToggleSave, 1, SaveAsXML);
-	   TtaSetToggleMenu (BaseDialog + ToggleSave, 0, SaveAsHTML);
-	   UpdateSaveAsButtons ();
+	  TtaSetToggleMenu (BaseDialog + ToggleSave, 1, SaveAsXML);
+	  TtaSetToggleMenu (BaseDialog + ToggleSave, 0, SaveAsHTML);
+	  UpdateSaveAsButtons ();
 #endif /* _WINDOWS */
-	   SetFileSuffix ();
-	   break;
-	 }
-       break;
-     case ToggleSave:
-       switch (val)
-	 {
-	 case 0:	/* "Copy Images" button */
-	   CopyImages = !CopyImages;
-	   break;
-	 case 1:	/* "Transform URLs" button */
-	   UpdateURLs = !UpdateURLs;
-	   break; 
-	 }
-       break;
-     case SaveForm:
-       if (val == 1)
-	 /* "Confirm" Button */
-	 {
-	   /* protect against saving without a MIME type */
-	   if (SavingDocument != 0)
-	     {
-	       if ((!DocumentMeta[SavingDocument] 
-		    || !DocumentMeta[SavingDocument]->content_type
-		    || DocumentMeta[SavingDocument]->content_type[0] == EOS)
-		   && (UserMimeType[0] == EOS))
-		 {
+	  SetFileSuffix ();
+	  break;
+	}
+      break;
+    case ToggleSave:
+      switch (val)
+	{
+	case 0:	/* "Copy Images" button */
+	  CopyImages = !CopyImages;
+	  break;
+	case 1:	/* "Transform URLs" button */
+	  UpdateURLs = !UpdateURLs;
+	  break; 
+	}
+      break;
+    case SaveForm:
+      if (val == 1)
+	/* "Confirm" Button */
+	{
+	  /* protect against saving without a MIME type */
+	  if (SavingDocument != 0)
+	    {
+	      if ((!DocumentMeta[SavingDocument] 
+		   || !DocumentMeta[SavingDocument]->content_type
+		   || DocumentMeta[SavingDocument]->content_type[0] == EOS)
+		  && (UserMimeType[0] == EOS))
+		{
 #ifndef _WINDOWS
-		   TtaNewLabel (BaseDialog + SaveFormStatus,
-				BaseDialog + SaveForm,
+		  TtaNewLabel (BaseDialog + SaveFormStatus,
+			       BaseDialog + SaveForm,
+			       TtaGetMessage (AMAYA, AM_INVALID_MIMETYPE));
+#else
+		  SaveAsDlgStatus (TtaGetMessage (AMAYA, AM_INVALID_MIMETYPE));
+#endif /* _WINDOWS */
+		  break;
+		}
+	    }
+	  TtaDestroyDialogue (BaseDialog + SaveForm);
+	  if (SavingDocument != 0)
+	    DoSaveAs (UserCharset, UserMimeType);
+	  else if (SavingObject != 0)
+	    DoSaveObjectAs ();
+
+	  /* Move the information into LastURLName or DirectoryName */
+	  if (IsW3Path (SavePath))
+	    {
+	      strcpy (LastURLName, SavePath);
+	      strcat (LastURLName, "/");
+	      strcat (LastURLName, SaveName);
+	      DirectoryName[0] = EOS;
+	    }
+	  else
+	    {
+	      LastURLName[0] = EOS;
+	      strcpy (DirectoryName, SavePath);
+	      strcat (DocumentName, SaveName);
+	    }
+	}
+      else if (val == 2)
+	/* "Browse" button */
+	{
+#ifndef _WINDOWS
+	  WidgetParent = DocSaveBrowser;
+	  strcpy (LastURLName, SavePath);
+	  strcat (LastURLName, DIR_STR);
+	  strcat (LastURLName, SaveName);
+	  BrowserForm (SavingDocument, 1, LastURLName);
+#endif /* _WINDOWS */
+	}
+      else if (val == 3)
+	/* "Clear" button */
+	{
+	  if (SavingDocument != 0)
+	    {
+	      SavePath[0] = EOS;
+	      SaveImgsURL[0] = EOS;
+	      SaveName[0] = EOS;
+#ifndef _WINDOWS
+	      TtaSetTextForm (BaseDialog + NameSave, SaveImgsURL);
+	      TtaSetTextForm (BaseDialog + ImgDirSave, SaveImgsURL);
+#endif /* _WINDOWS */
+	    }
+	}
+      else if (val == 4)
+	/* "Charset" button */
+	{
+	  if (SavingDocument != 0)
+	    {
+	      if (DocumentTypes[SavingDocument] != docImage)
+		{
+		  /* clear the status message */
+#ifndef _WINDOWS
+		  TtaNewLabel (BaseDialog + SaveFormStatus,
+			       BaseDialog + SaveForm, " ");
+#else
+		  SaveAsDlgStatus ("");
+#endif /* _WINDOWS */
+		  InitCharset (SavingDocument, 1, SavePath);
+		  if (SaveFormTmp[0] != EOS)
+		    {
+		      strcpy (UserCharset, SaveFormTmp);
+#ifndef _WINDOWS
+		      TtaNewLabel (BaseDialog + CharsetSave,  
+				   BaseDialog + SaveForm, UserCharset);
+#endif /* _WINDOWS */
+		    }
+		}
+	      else
+		{
+#ifndef _WINDOWS
+		  TtaNewLabel (BaseDialog + SaveFormStatus,
+			       BaseDialog + SaveForm,
+			       TtaGetMessage (AMAYA, AM_NOCHARSET_SUPPORT));
+#else
+		  SaveAsDlgStatus (TtaGetMessage (AMAYA, AM_NOCHARSET_SUPPORT));
+#endif /* _WINDOWS */
+		}
+	    }
+	}
+      else if (val == 5)
+	/* "MIME type" button */
+	{
+	  if (SavingDocument != 0)
+	    {
+	      if (SavePath[0] && IsW3Path (SavePath))
+		{
+		  /* clear the status message */
+#ifndef _WINDOWS
+		  TtaNewLabel (BaseDialog + SaveFormStatus,
+			       BaseDialog + SaveForm,
+			       " ");
+#else
+		  SaveAsDlgStatus ("");
+#endif /* _WINDOWS */
+		  InitMimeType (SavingDocument, 1, SavePath, NULL);
+		  if (SaveFormTmp[0] != EOS)
+		    {
+		      strcpy (UserMimeType, SaveFormTmp);
+		      
+#ifndef _WINDOWS
+		      TtaNewLabel (BaseDialog + MimeTypeSave,  
+				   BaseDialog + SaveForm, UserMimeType);
+#endif /* _WINDOWS */
+		    }
+		}
+	      else
+		{
+#ifndef _WINDOWS
+		  TtaNewLabel (BaseDialog + SaveFormStatus,
+			       BaseDialog + SaveForm,
+			       TtaGetMessage (AMAYA, AM_NOMIMETYPE_SUPPORT));
+#else
+		  SaveAsDlgStatus (TtaGetMessage (AMAYA, AM_NOMIMETYPE_SUPPORT));
+#endif /* _WINDOWS */
+		}
+	    }
+	}
+      else
+	/* "Cancel" button */
+	{
+	  TtaDestroyDialogue (BaseDialog + SaveForm);
+	  if (SavingObject != 0)
+	    /* delete temporary file */
+	    DeleteTempObjectFile ();
+	  SavingDocument = 0;
+	  SavingObject = 0;
+	}
+      break;
+    case NameSave:
+      /* Document location */
+      if (!IsW3Path (data))
+	change = NormalizeFile (data, tempfile, AM_CONV_NONE);
+      else
+	strcpy (tempfile, data);
+      
+      if (*tempfile && tempfile[strlen (tempfile) - 1] == sep)
+	{
+	  strcpy (SavePath, tempfile);
+	  SaveName[0] = EOS;
+	}
+      else
+	{
+	  /* Extract document name */
+	  if (SavingDocument != 0)
+	    TtaExtractName (tempfile, SavePath, SaveName);
+	  else
+	    TtaExtractName (tempfile, SavePath, ObjectName);
+	}
+      break;
+    case ImgDirSave:
+      /* Image directory */
+      if (!IsW3Path (data))
+	change = NormalizeFile (data, SaveImgsURL, AM_CONV_NONE);
+      else
+	strcpy (SaveImgsURL, data);
+      break;
+    case ConfirmSave:
+      /* *********SaveConfirm********* */
+      UserAnswer = (val == 1);
+      TtaDestroyDialogue (BaseDialog + ConfirmSave);
+      if (!UserAnswer)
+	{
+	  SavingDocument = 0;
+	  SavingObject = 0;
+	}
+      break;
+       
+    case AttrHREFForm:
+      /* *********HREF Attribute*********** */
+      if (val == 1)
+	{
+	  /* Confirm button */
+	  if (AttrHREFvalue[0] != EOS)
+	    {
+#ifdef _I18N_
+	      tmp = TtaConvertByteToMbs (AttrHREFvalue, TtaGetDefaultCharset ());
+	      /* create an attribute HREF for the Link_Anchor */
+	      SetREFattribute (AttrHREFelement, AttrHREFdocument,
+			       tmp, NULL);
+	      TtaFreeMemory (tmp);
+#else /* _I18N_ */
+	      /* create an attribute HREF for the Link_Anchor */
+	      SetREFattribute (AttrHREFelement, AttrHREFdocument,
+			       AttrHREFvalue, NULL);
+#endif /* _I18N_ */
+	    }
+	  TtaDestroyDialogue (BaseDialog + AttrHREFForm);
+	  TtaDestroyDialogue (BaseDialog + FileBrowserForm);
+	}
+      else if (val == 2)
+	/* Browse button */
+	{
+#ifndef _WINDOWS
+	  WidgetParent = HrefAttrBrowser;
+	  BrowserForm (AttrHREFdocument, 1, &AttrHREFvalue[0]);
+#endif /* !_WINDOWS */
+	}
+      else if (val == 3)
+	{
+	  /* Clear button */
+	  AttrHREFvalue[0] = EOS;
+#ifndef _WINDOWS
+	  TtaSetTextForm (BaseDialog + AttrHREFText, AttrHREFvalue);
+#endif /* !_WINDOWS */
+	}
+      else 
+	/* Cancel button */
+	if (IsNewAnchor)
+	  {
+	    LinkAsCSS = FALSE;
+	    /* remove the link if it was just created */
+	    TtaCancelLastRegisteredSequence (AttrHREFdocument);	   
+	    DeleteAnchor (AttrHREFdocument, 1);
+	    TtaCancelLastRegisteredSequence (AttrHREFdocument);	   
+	  }
+      break;
+
+    case AttrHREFText:
+      /* save the HREF name */
+      RemoveNewLines (tmp);
+      if (IsW3Path (tmp))
+	{
+	  /* save the URL name */
+	  strcpy (AttrHREFvalue, tmp);
+	  DocumentName[0] = EOS;
+	}
+      else
+	{
+	  change = NormalizeFile (tmp, tempfile, AM_CONV_NONE);
+	  if (TtaCheckDirectory (tempfile))
+	    {
+	      strcpy (DirectoryName, tempfile);
+	      DocumentName[0] = EOS;
+	    }
+	  else
+	    TtaExtractName (tempfile, DirectoryName, DocumentName);
+	  strcpy (AttrHREFvalue, tempfile);
+	}       
+      break;
+      
+      /* *********File Browser*********** */
+    case FileBrowserForm:
+      if (val == 1)
+	{
+	  /* Confirm button */
+	  /* it's no longer the default Welcome page */
+	  WelcomePage = FALSE;
+#ifndef _WINDOWS
+	  /* this code is only valid under Unix. */
+	  /* In Windows, we're using a system widget */
+	  strcpy (tempfile, DirectoryName);
+	  strcat (tempfile, DIR_STR);
+	  strcat (tempfile, DocumentName);
+	  if (WidgetParent == HrefAttrBrowser)
+	    {
+	      TtaSetTextForm (BaseDialog + AttrHREFText, tempfile);
+	      strcpy (AttrHREFvalue, tempfile);
+	      CallbackDialogue (BaseDialog + AttrHREFForm, INTEGER_DATA, (char *) 1);
+	    }
+	  else if (WidgetParent == OpenDocBrowser)
+	    {
+	      TtaSetTextForm (BaseDialog + URLName, tempfile);
+	      CallbackDialogue (BaseDialog + OpenForm, INTEGER_DATA, (char *) 1);
+	    }
+	  else if (WidgetParent == DocSaveBrowser)
+	    {
+	      TtaSetTextForm (BaseDialog + NameSave, tempfile);
+	      CallbackDialogue (BaseDialog + NameSave, STRING_DATA, tempfile);
+	    }
+	  /* remove the browsing dialogue */
+	  TtaDestroyDialogue (ref);
+#endif /* _WINDOWS */
+	}
+      else if (val == 2)
+	/* Clear button */
+	{
+	  if (WidgetParent == OpenDocBrowser)
+	    {
+	      LastURLName[0] = EOS;
+#ifndef _WINDOWS
+	      TtaSetTextForm (BaseDialog + FileBrowserText, LastURLName);
+#endif /* _WINDOWS */
+	    }
+	  else if (WidgetParent == HrefAttrBrowser)
+	    {
+	      tempname[0] = EOS; 	       
+#ifndef _WINDOWS
+	      TtaSetTextForm (BaseDialog + FileBrowserText, tempname);
+#endif /* _WINDOWS */
+	    }
+	}
+      else if (val == 3)
+	/* Filter button */
+	{
+	  /* reinitialize directories and document lists */
+	  TtaListDirectory (DirectoryName, BaseDialog + FileBrowserForm,
+			    TtaGetMessage (LIB, TMSG_DOC_DIR),
+			    BaseDialog + BrowserDirSelect,
+			    ScanFilter, TtaGetMessage (AMAYA, AM_FILES),
+			    BaseDialog + BrowserDocSelect);
+	}
+      else 
+	/* Cancel button */
+	{
+	}
+      break;
+      
+    case FileBrowserText:
+      RemoveNewLines (data);
+      if (IsW3Path (data))
+	{
+	  DocumentName[0] = EOS;
+	}
+      else
+	{
+	  change = NormalizeFile (data, tempfile, AM_CONV_NONE);
+	  if (TtaCheckDirectory (tempfile))
+	    {
+	      strcpy (DirectoryName, tempfile);
+	      DocumentName[0] = EOS;
+	    }
+	  else
+	    TtaExtractName (tempfile, DirectoryName, DocumentName);
+	  strcpy (AttrHREFvalue, tempfile);
+	}       
+      break;
+      
+      /* *********Browser DirSelect*********** */
+    case BrowserDirSelect:
+#ifdef _WINDOWS
+      sprintf (DirectoryName, "%s", data);
+#else  /* _WINDOWS */
+      if (DirectoryName[0] != EOS)
+	{
+	  if (!strcmp (data, ".."))
+	    {
+	      /* suppress last directory */
+	      strcpy (tempname, DirectoryName);
+	      TtaExtractName (tempname, DirectoryName, tempfile);
+	      if (DirectoryName[0] == EOS)
+		strcpy (DirectoryName, DIR_STR);
+	    }
+	  else
+	    {
+	      strcat (DirectoryName, DIR_STR);
+	      strcat (DirectoryName, data);
+	    }
+	  
+	  if (WidgetParent == OpenDocBrowser)
+	    LastURLName[0] = EOS;
+	  
+	  TtaSetTextForm (BaseDialog + FileBrowserText, DirectoryName);
+	  TtaListDirectory (DirectoryName, BaseDialog + FileBrowserForm,
+			    TtaGetMessage (LIB, TMSG_DOC_DIR),
+			    BaseDialog + BrowserDirSelect, ScanFilter,
+			    TtaGetMessage (AMAYA, AM_FILES),
+			    BaseDialog + BrowserDocSelect);
+	  DocumentName[0] = EOS;
+	}
+#endif /* _WINDOWS */
+      break;
+      
+      /* *********Browser DocSelect*********** */
+    case BrowserDocSelect:
+      /* set path on current directory */
+      if (DirectoryName[0] == EOS)
+	getcwd (DirectoryName, MAX_LENGTH);
+      
+      /* Extract suffix from document name */
+      strcpy (DocumentName, data);
+      
+      if (WidgetParent == OpenDocBrowser)
+	LastURLName[0] = EOS;
+      
+      /* construct the document full name */
+      strcpy (tempfile, DirectoryName);
+      strcat (tempfile, DIR_STR);
+      strcat (tempfile, DocumentName);
+#ifndef _WINDOWS
+      TtaSetTextForm (BaseDialog + FileBrowserText, tempfile);
+#endif /* !_WINDOWS */
+      break;
+      
+      /* *********Browser Filter*********** */
+    case FileBrowserFilter:
+      /* Filter value */
+      if (strlen(data) <= NAME_LENGTH)
+	strcpy (ScanFilter, data);
+#ifndef _WINDOWS
+      else
+	TtaSetTextForm (BaseDialog + BrowserFilterText, ScanFilter);
+#endif /* !_WINDOWS */
+      break;
+      
+    case TitleForm:
+      /* ********Change the document title*********** */
+      TtaDestroyDialogue (BaseDialog + TitleForm);
+      if (val == 1)
+	SetNewTitle (CurrentDocument);
+      break;
+      
+    case TitleText:
+      /* new document name */
+      strncpy (Answer_text, data, MAX_LENGTH);
+      Answer_text[MAX_LENGTH - 1] = EOS;
+      break;
+      
+    case ClassForm:
+    case ClassSelect:
+    case AClassForm:
+    case AClassSelect:
+      StyleCallbackDialogue (ref, typedata, data);
+      break;
+      
+    case TableForm:
+      /* *********Table Form*********** */
+      UserAnswer = (val == 1);
+      TtaDestroyDialogue (BaseDialog + TableForm);
+      break;
+    case TableRows:
+      NumberRows = val;
+      break;
+    case TableCols:
+      NumberCols = val;
+      break;
+    case TableBorder:
+      TBorder = val;
+      break;
+    case MathEntityForm:
+      /* ********* MathML entity form ********* */
+      if (val == 0)
+	/* no answer */
+	MathMLEntityName[0] = EOS;
+      break;
+    case MathEntityText:
+      strncpy (MathMLEntityName, data, MAX_LENGTH);
+      MathMLEntityName[MAX_LENGTH - 1] = EOS;
+      break;
+    case MakeIdMenu:
+      switch (val)
+	{
+	case 1:
+	  CreateRemoveIDAttribute (IdElemName, IdDoc, TRUE, 
+				   (IdApplyToSelection) ? TRUE: FALSE);
+#ifndef _WINDOWS
+	  /* and show the status */
+	  TtaNewLabel (BaseDialog + mIdStatus,
+		       BaseDialog + MakeIdMenu,
+		       IdStatus);
+#endif /* _WINDOWS */
+	  break;
+	case 2:
+	  CreateRemoveIDAttribute (IdElemName, IdDoc, FALSE, 
+				   (IdApplyToSelection) ? TRUE: FALSE);
+#ifndef _WINDOWS
+	  /* and show the status */
+	  TtaNewLabel (BaseDialog + mIdStatus,
+		       BaseDialog + MakeIdMenu,
+		       IdStatus);
+#endif /* _WINDOWS */
+	  break;
+	}
+      break;
+    case mElemName:
+      strncpy (IdElemName, data, MAX_LENGTH);
+      IdElemName[MAX_LENGTH - 1] = EOS;
+      break;
+    case mIdUseSelection:
+      IdApplyToSelection = val;
+      break;
+      /* Charset Save As menu */
+    case CharsetForm:
+      {
+	switch (val)
+	  {
+	  case 0:
+	    SaveFormTmp[0] = EOS;
+	    TtaDestroyDialogue (ref);
+	    break;
+	  case 1:
+	    TtaDestroyDialogue (ref);
+	    break;
+	  }
+      }
+      break;
+    case CharsetSel:
+      switch (val)
+	{
+	case 0:
+	  strcpy (SaveFormTmp, "us-ascii");
+	  break;
+	case 1:
+	  strcpy (SaveFormTmp, "UTF-8");
+	  break;
+	case 2:
+	  strcpy (SaveFormTmp, "iso-8859-1");
+	  break;
+	case 3:
+	  strcpy (SaveFormTmp, "iso-8859-2");
+	  break;
+	}
+      break;
+
+      /* MIME type Save As menu */
+    case MimeTypeForm:
+      {
+	switch (val)
+	  {
+	  case 0:
+	    SaveFormTmp[0] = EOS;
+	    TtaDestroyDialogue (ref);
+	    break;
+	  case 1:
+	    {
+	      char *src, *dst;
+	      /* filter the UserMimeType */
+	      src = dst = SaveFormTmp;
+	      while (*src)
+		{
+		  if (!isascii (*src) 
+		      || (!isalnum (*src) && *src != '/' && *src != '-'
+			  && *src != '+'))
+		    {
+		      /* skip the character */
+		      src++;
+		      continue;;
+		    }
+		  
+		  if (isupper (*src))
+		    /* convert to lower case */
+		    *dst = tolower (*src);
+		  else
+		    *dst = *src;
+		  src++;
+		  dst++;
+		}
+	      *dst = EOS;
+	      /* validate the mime type */
+	      if (SaveFormTmp[0] == EOS ||!strchr (SaveFormTmp, '/'))
+		{
+		  SaveFormTmp[0] = EOS;
+#ifndef _WINDOWS
+		  InitMimeType (SavingDocument, 1, SavePath,
 				TtaGetMessage (AMAYA, AM_INVALID_MIMETYPE));
 #else
- 		   SaveAsDlgStatus (TtaGetMessage (AMAYA, AM_INVALID_MIMETYPE));
+		  /* the Window dialog won't be closed */
+		  MimeTypeDlgStatus (TtaGetMessage (AMAYA, AM_INVALID_MIMETYPE));
 #endif /* _WINDOWS */
-		   break;
-		 }
-	     }
-	   TtaDestroyDialogue (BaseDialog + SaveForm);
-	   if (SavingDocument != 0)
-	     DoSaveAs (UserCharset, UserMimeType);
-	   else if (SavingObject != 0)
-	     DoSaveObjectAs ();
-
-	   /* Move the information into LastURLName or DirectoryName */
-	   if (IsW3Path (SavePath))
-	     {
-	       strcpy (LastURLName, SavePath);
-	       strcat (LastURLName, "/");
-	       strcat (LastURLName, SaveName);
-	       DirectoryName[0] = EOS;
-	     }
-	   else
-	     {
-	       LastURLName[0] = EOS;
-	       strcpy (DirectoryName, SavePath);
-	       strcat (DocumentName, SaveName);
-	     }
-	 }
-       else if (val == 2)
-	 /* "Browse" button */
-	 {
-#ifndef _WINDOWS
-	   WidgetParent = DocSaveBrowser;
-	   strcpy (LastURLName, SavePath);
-	   strcat (LastURLName, DIR_STR);
-	   strcat (LastURLName, SaveName);
-	   BrowserForm (SavingDocument, 1, LastURLName);
-#endif /* _WINDOWS */
-	 }
-       else if (val == 3)
-	 /* "Clear" button */
-	 {
-	   if (SavingDocument != 0)
-	     {
-	       SavePath[0] = EOS;
-	       SaveImgsURL[0] = EOS;
-	       SaveName[0] = EOS;
-#ifndef _WINDOWS
-	       TtaSetTextForm (BaseDialog + NameSave, SaveImgsURL);
-	       TtaSetTextForm (BaseDialog + ImgDirSave, SaveImgsURL);
-#endif /* _WINDOWS */
-	     }
-	 }
-       else if (val == 4)
-	 /* "Charset" button */
-	 {
-	   if (SavingDocument != 0)
-	     {
-	       if (DocumentTypes[SavingDocument] != docImage)
-		 {
-		   /* clear the status message */
-#ifndef _WINDOWS
-		   TtaNewLabel (BaseDialog + SaveFormStatus,
-				BaseDialog + SaveForm,
-				" ");
-#else
- 		   SaveAsDlgStatus ("");
-#endif /* _WINDOWS */
-		   InitCharset (SavingDocument, 1, SavePath);
-		   if (SaveFormTmp[0] != EOS)
-		     {
-		       strcpy (UserCharset, SaveFormTmp);
-#ifndef _WINDOWS
-		       TtaNewLabel (BaseDialog + CharsetSave,  
-				    BaseDialog + SaveForm, UserCharset);
-#endif /* _WINDOWS */
-		     }
-		 }
-	       else
-		 {
-#ifndef _WINDOWS
-		   TtaNewLabel (BaseDialog + SaveFormStatus,
-				BaseDialog + SaveForm,
-				TtaGetMessage (AMAYA, AM_NOCHARSET_SUPPORT));
-#else
-		   SaveAsDlgStatus (TtaGetMessage (AMAYA, AM_NOCHARSET_SUPPORT));
-#endif /* _WINDOWS */
-		 }
-	     }
-	 }
-       else if (val == 5)
-	 /* "MIME type" button */
-	 {
-	   if (SavingDocument != 0)
-	     {
-	       if (SavePath[0] && IsW3Path (SavePath))
-		 {
-		   /* clear the status message */
-#ifndef _WINDOWS
-		   TtaNewLabel (BaseDialog + SaveFormStatus,
-				BaseDialog + SaveForm,
-				" ");
-#else
-		   SaveAsDlgStatus ("");
-#endif /* _WINDOWS */
-		   InitMimeType (SavingDocument, 1, SavePath, NULL);
-		   if (SaveFormTmp[0] != EOS)
-		     {
-		       strcpy (UserMimeType, SaveFormTmp);
-
-#ifndef _WINDOWS
-		     TtaNewLabel (BaseDialog + MimeTypeSave,  
-				  BaseDialog + SaveForm, UserMimeType);
-#endif /* _WINDOWS */
-		     }
-		 }
-	       else
-		 {
-#ifndef _WINDOWS
-		   TtaNewLabel (BaseDialog + SaveFormStatus,
-				BaseDialog + SaveForm,
-				TtaGetMessage (AMAYA, AM_NOMIMETYPE_SUPPORT));
-#else
-		   SaveAsDlgStatus (TtaGetMessage (AMAYA, AM_NOMIMETYPE_SUPPORT));
-#endif /* _WINDOWS */
-		 }
-	     }
-	 }
-       else
-	 /* "Cancel" button */
-	 {
-	   TtaDestroyDialogue (BaseDialog + SaveForm);
-	   if (SavingObject != 0)
-	     /* delete temporary file */
-	     DeleteTempObjectFile ();
-	   SavingDocument = 0;
-	   SavingObject = 0;
-	 }
-       break;
-     case NameSave:
-       /* Document location */
-       if (!IsW3Path (data))
-	 change = NormalizeFile (data, tempfile, AM_CONV_NONE);
-       else
-	 strcpy (tempfile, data);
-       
-       if (*tempfile && tempfile[strlen (tempfile) - 1] == sep)
-	 {
-	   strcpy (SavePath, tempfile);
-	   SaveName[0] = EOS;
-	 }
-       else
-	 {
-	   /* Extract document name */
-	   if (SavingDocument != 0)
-	     TtaExtractName (tempfile, SavePath, SaveName);
-	   else
-	     TtaExtractName (tempfile, SavePath, ObjectName);
-	 }
-       break;
-     case ImgDirSave:
-       /* Image directory */
-       if (!IsW3Path (data))
-	 change = NormalizeFile (data, SaveImgsURL, AM_CONV_NONE);
-       else
-	 strcpy (SaveImgsURL, data);
-       break;
-#ifdef IV
-     case DirSave:
-       if (!IsW3Path (SavePath))
-	 {
-	   /* Document directories */
-	   if (!strcmp (data, ".."))
-	     {
-	       /* suppress last directory */
-	       strcpy (tempname, SavePath);
-	       TtaExtractName (tempname, SavePath, tempfile);
-	     }
-	   else
-	     {
-	       strcat (SavePath, DIR_STR);
-	       strcat (SavePath, data);
-	     }
-	   strcpy (tempfile, SavePath);
-	   strcat (tempfile, DIR_STR);
-	   if (SavingDocument != 0)
-	     strcat (tempfile, DocumentName);
-	   else
-	     strcat (tempfile, ObjectName);
-#ifndef _WINDOWS
-	   TtaSetTextForm (BaseDialog + NameSave, SavePath);
-#endif /* !_WINDOWS */
-	   TtaListDirectory (SavePath, BaseDialog + SaveForm,
-			     TtaGetMessage (LIB, TMSG_DOC_DIR),
-			     BaseDialog + DirSave,
-			     ScanFilter, TtaGetMessage (AMAYA, AM_FILES),
-			     BaseDialog + DocSave);
-	 }
-       break;
-     case DocSave:
-       /* Files */
-       if (SaveName[0] == EOS)
-	 /* set path on current directory */
-	 getcwd (SavePath, MAX_LENGTH);
-       
-       strcpy (SaveName, data);
-       /* construct the document full name */
-       strcpy (tempfile, SavePath);
-       strcat (tempfile, DIR_STR);
-       strcat (tempfile, SaveName);
-#ifndef _WINDOWS
-       TtaSetTextForm (BaseDialog + NameSave, tempfile);
-#endif /* !_WINDOWS */
-       break;
-#endif /* IV */
-     case ConfirmSave:
-       /* *********SaveConfirm********* */
-       UserAnswer = (val == 1);
-       TtaDestroyDialogue (BaseDialog + ConfirmSave);
-       if (!UserAnswer)
-	 {
-	   SavingDocument = 0;
-	   SavingObject = 0;
-	 }
-       break;
-       
-     case AttrHREFForm:
-       /* *********HREF Attribute*********** */
-       if (val == 1)
-	 {
-	   /* Confirm button */
-	   /* create an attribute HREF for the Link_Anchor */
-	   if (AttrHREFvalue[0] != EOS)
-	     SetREFattribute (AttrHREFelement, AttrHREFdocument,
-			      AttrHREFvalue, NULL);
-	   TtaDestroyDialogue (BaseDialog + AttrHREFForm);
-	   TtaDestroyDialogue (BaseDialog + FileBrowserForm);
-	 }
-       else if (val == 2)
-	 /* Browse button */
-	 {
-#ifndef _WINDOWS
-	   WidgetParent = HrefAttrBrowser;
-           BrowserForm (AttrHREFdocument, 1, &AttrHREFvalue[0]);
-#endif /* !_WINDOWS */
-	 }
-       else if (val == 3)
-	 {
-	   /* Clear button */
-	   AttrHREFvalue[0] = EOS;
-#ifndef _WINDOWS
-	   TtaSetTextForm (BaseDialog + AttrHREFText, AttrHREFvalue);
-#endif /* !_WINDOWS */
-	 }
-       else 
-	 /* Cancel button */
-	 if (IsNewAnchor)
-	   {
-	     LinkAsCSS = FALSE;
-	     /* remove the link if it was just created */
-	     TtaCancelLastRegisteredSequence (AttrHREFdocument);	   
-	     DeleteAnchor (AttrHREFdocument, 1);
-	     TtaCancelLastRegisteredSequence (AttrHREFdocument);	   
-	   }
-       break;
-
-     case AttrHREFText:
-       /* save the HREF name */
-       RemoveNewLines (data);
-       if (IsW3Path (data))
-	 {
-	   /* save the URL name */
-	     strcpy (AttrHREFvalue, data);
-	   DocumentName[0] = EOS;
-	 }
-       else
-	 {
-	   change = NormalizeFile (data, tempfile, AM_CONV_NONE);
-	   if (TtaCheckDirectory (tempfile))
-	     {
-	       strcpy (DirectoryName, tempfile);
-	       DocumentName[0] = EOS;
-	     }
-	   else
-	     TtaExtractName (tempfile, DirectoryName, DocumentName);
-	   strcpy (AttrHREFvalue, tempfile);
-	 }       
-       break;
-
-       /* *********File Browser*********** */
-     case FileBrowserForm:
-       if (val == 1)
-	 {
-	   /* Confirm button */
-	   /* it's no longer the default Welcome page */
-	   WelcomePage = FALSE;
-#ifndef _WINDOWS
-	   /* this code is only valid under Unix. */
-	   /* In Windows, we're using a system widget */
-	   strcpy (tempfile, DirectoryName);
-	   strcat (tempfile, DIR_STR);
-	   strcat (tempfile, DocumentName);
-	   if (WidgetParent == HrefAttrBrowser)
-	     {
-	       TtaSetTextForm (BaseDialog + AttrHREFText, tempfile);
-	       strcpy (AttrHREFvalue, tempfile);
-	       CallbackDialogue (BaseDialog + AttrHREFForm, INTEGER_DATA, (char *) 1);
-	     }
-	   else if (WidgetParent == OpenDocBrowser)
-	     {
-	       TtaSetTextForm (BaseDialog + URLName, tempfile);
-	       CallbackDialogue (BaseDialog + OpenForm, INTEGER_DATA, (char *) 1);
-	     }
-	   else if (WidgetParent == DocSaveBrowser)
-	     {
-	       TtaSetTextForm (BaseDialog + NameSave, tempfile);
-	       CallbackDialogue (BaseDialog + NameSave, STRING_DATA, tempfile);
-	     }
-	   /* remove the browsing dialogue */
-	   TtaDestroyDialogue (ref);
-#endif /* _WINDOWS */
-	 }
-       else if (val == 2)
-	 /* Clear button */
-	 {
-	   if (WidgetParent == OpenDocBrowser)
-	     {
-	       LastURLName[0] = EOS;
-#ifndef _WINDOWS
-	       TtaSetTextForm (BaseDialog + FileBrowserText, LastURLName);
-#endif /* _WINDOWS */
-	     }
-	   else if (WidgetParent == HrefAttrBrowser)
-	     {
-	       tempname[0] = EOS; 	       
-#ifndef _WINDOWS
-	       TtaSetTextForm (BaseDialog + FileBrowserText, tempname);
-#endif /* _WINDOWS */
-	     }
-	 }
-       else if (val == 3)
-	 /* Filter button */
-	 {
-	   /* reinitialize directories and document lists */
-	   TtaListDirectory (DirectoryName, BaseDialog + FileBrowserForm,
-			     TtaGetMessage (LIB, TMSG_DOC_DIR),
-			     BaseDialog + BrowserDirSelect,
-			     ScanFilter, TtaGetMessage (AMAYA, AM_FILES),
-			     BaseDialog + BrowserDocSelect);
-	 }
-       else 
-	 /* Cancel button */
-	 {
-	 }
-       break;
-
-     case FileBrowserText:
-       RemoveNewLines (data);
-       if (IsW3Path (data))
-	 {
-	   DocumentName[0] = EOS;
-	 }
-       else
-	 {
-	   change = NormalizeFile (data, tempfile, AM_CONV_NONE);
-	   if (TtaCheckDirectory (tempfile))
-	     {
-	       strcpy (DirectoryName, tempfile);
-	       DocumentName[0] = EOS;
-	     }
-	   else
-	     TtaExtractName (tempfile, DirectoryName, DocumentName);
-	   strcpy (AttrHREFvalue, tempfile);
-	 }       
-       break;
-
-       /* *********Browser DirSelect*********** */
-     case BrowserDirSelect:
-#ifdef _WINDOWS
-       sprintf (DirectoryName, "%s", data);
-#else  /* _WINDOWS */
-       if (DirectoryName[0] != EOS)
-	 {
-	   if (!strcmp (data, ".."))
-	     {
-	       /* suppress last directory */
-	       strcpy (tempname, DirectoryName);
-	       TtaExtractName (tempname, DirectoryName, tempfile);
-	       if (DirectoryName[0] == EOS)
-		 strcpy (DirectoryName, DIR_STR);
-	     }
-	   else
-	     {
-	       strcat (DirectoryName, DIR_STR);
-	       strcat (DirectoryName, data);
-	     }
-
-	   if (WidgetParent == OpenDocBrowser)
-	     LastURLName[0] = EOS;
-
-	   TtaSetTextForm (BaseDialog + FileBrowserText, DirectoryName);
-	   TtaListDirectory (DirectoryName, BaseDialog + FileBrowserForm,
-			     TtaGetMessage (LIB, TMSG_DOC_DIR),
-			     BaseDialog + BrowserDirSelect, ScanFilter,
-			     TtaGetMessage (AMAYA, AM_FILES),
-			     BaseDialog + BrowserDocSelect);
-	   DocumentName[0] = EOS;
-	 }
-#endif /* _WINDOWS */
-       break;
-
-       /* *********Browser DocSelect*********** */
-     case BrowserDocSelect:
-       /* set path on current directory */
-       if (DirectoryName[0] == EOS)
-	 getcwd (DirectoryName, MAX_LENGTH);
-
-       /* Extract suffix from document name */
-       strcpy (DocumentName, data);
-
-       if (WidgetParent == OpenDocBrowser)
-	 LastURLName[0] = EOS;
-
-       /* construct the document full name */
-       strcpy (tempfile, DirectoryName);
-       strcat (tempfile, DIR_STR);
-       strcat (tempfile, DocumentName);
-#ifndef _WINDOWS
-       TtaSetTextForm (BaseDialog + FileBrowserText, tempfile);
-#endif /* !_WINDOWS */
-       break;
-
-       /* *********Browser Filter*********** */
-     case FileBrowserFilter:
-       /* Filter value */
-       if (strlen(data) <= NAME_LENGTH)
-	 strcpy (ScanFilter, data);
-#ifndef _WINDOWS
-       else
-	 TtaSetTextForm (BaseDialog + BrowserFilterText, ScanFilter);
-#endif /* !_WINDOWS */
-       break;
-       
-     case TitleForm:
-       /* ********Change the document title*********** */
-       TtaDestroyDialogue (BaseDialog + TitleForm);
-       if (val == 1)
-	 SetNewTitle (CurrentDocument);
-       break;
-
-     case TitleText:
-       /* new document name */
-       strncpy (Answer_text, data, MAX_LENGTH);
-       Answer_text[MAX_LENGTH - 1] = EOS;
-       break;
-
-     case ClassForm:
-     case ClassSelect:
-     case AClassForm:
-     case AClassSelect:
-       StyleCallbackDialogue (ref, typedata, data);
-       break;
-
-     case TableForm:
-       /* *********Table Form*********** */
-       UserAnswer = (val == 1);
-       TtaDestroyDialogue (BaseDialog + TableForm);
-       break;
-     case TableRows:
-       NumberRows = val;
-       break;
-     case TableCols:
-       NumberCols = val;
-       break;
-     case TableBorder:
-       TBorder = val;
-       break;
-     case MathEntityForm:
-       /* ********* MathML entity form ********* */
-       if (val == 0)
-	   /* no answer */
-	   MathMLEntityName[0] = EOS;
-       break;
-     case MathEntityText:
-       strncpy (MathMLEntityName, data, MAX_LENGTH);
-       MathMLEntityName[MAX_LENGTH - 1] = EOS;
-       break;
-     case MakeIdMenu:
-       switch (val)
-	 {
-	 case 1:
-	   CreateRemoveIDAttribute (IdElemName, IdDoc, TRUE, 
-				    (IdApplyToSelection) ? TRUE: FALSE);
-#ifndef _WINDOWS
-	   /* and show the status */
-	   TtaNewLabel (BaseDialog + mIdStatus,
-			BaseDialog + MakeIdMenu,
-			IdStatus);
-#endif /* _WINDOWS */
-	   break;
-	 case 2:
-	   CreateRemoveIDAttribute (IdElemName, IdDoc, FALSE, 
-				    (IdApplyToSelection) ? TRUE: FALSE);
-#ifndef _WINDOWS
-	   /* and show the status */
-	   TtaNewLabel (BaseDialog + mIdStatus,
-			BaseDialog + MakeIdMenu,
-			IdStatus);
-#endif /* _WINDOWS */
-	   break;
-	 }
-       break;
-     case mElemName:
-       strncpy (IdElemName, data, MAX_LENGTH);
-       IdElemName[MAX_LENGTH - 1] = EOS;
-       break;
-     case mIdUseSelection:
-       IdApplyToSelection = val;
-       break;
-       /* Charset Save As menu */
-     case CharsetForm:
-       {
-	 switch (val)
-	   {
-	   case 0:
-	     SaveFormTmp[0] = EOS;
-	     TtaDestroyDialogue (ref);
-	     break;
-	   case 1:
-	     TtaDestroyDialogue (ref);
-	     break;
-	   }
-       }
-       break;
-     case CharsetSel:
-       switch (val)
-	 {
-	 case 0:
-	   strcpy (SaveFormTmp, "us-ascii");
-	   break;
-	 case 1:
-	   strcpy (SaveFormTmp, "UTF-8");
-	   break;
-	 case 2:
-	   strcpy (SaveFormTmp, "iso-8859-1");
-	   break;
-	 case 3:
-	   strcpy (SaveFormTmp, "iso-8859-2");
-	   break;
-	 }
-       break;
-
-       /* MIME type Save As menu */
-     case MimeTypeForm:
-       {
-	 switch (val)
-	   {
-	   case 0:
-	     SaveFormTmp[0] = EOS;
-	     TtaDestroyDialogue (ref);
-	     break;
-	   case 1:
-	     {
-	       char *src, *dst;
-	       /* filter the UserMimeType */
-	       src = dst = SaveFormTmp;
-	       while (*src)
-		 {
-		   if (!isascii (*src) 
-		       || (!isalnum (*src) && *src != '/' && *src != '-'
-			   && *src != '+'))
-		     {
-		       /* skip the character */
-		       src++;
-		       continue;;
-		     }
-
-		   if (isupper (*src))
-		       /* convert to lower case */
-		     *dst = tolower (*src);
-		   else
-		     *dst = *src;
-		   src++;
-		   dst++;
-		 }
-	       *dst = EOS;
-	       /* validate the mime type */
-	       if (SaveFormTmp[0] == EOS ||!strchr (SaveFormTmp, '/'))
-		 {
-		   SaveFormTmp[0] = EOS;
-#ifndef _WINDOWS
-		   InitMimeType (SavingDocument, 1, SavePath,
-				 TtaGetMessage (AMAYA, AM_INVALID_MIMETYPE));
-#else
-		   /* the Window dialog won't be closed */
- 		   MimeTypeDlgStatus (TtaGetMessage (AMAYA, AM_INVALID_MIMETYPE));
-#endif /* _WINDOWS */
-		 }
-	       else
-		 TtaDestroyDialogue (ref);
-	     }
-	     break;
-	   }
-       }
-       break;
-     case MimeTypeSel:
-       if (data)
-	 strcpy (SaveFormTmp, data);
-       else
-	 SaveFormTmp[0] = EOS;
-       break;
-     }
+		}
+	      else
+		TtaDestroyDialogue (ref);
+	    }
+	    break;
+	  }
+      }
+      break;
+    case MimeTypeSel:
+      if (data)
+	strcpy (SaveFormTmp, data);
+      else
+	SaveFormTmp[0] = EOS;
+      break;
+    }
 }
 
 /*----------------------------------------------------------------------
