@@ -5116,6 +5116,7 @@ char ReadCSSRules (Document docRef, CSSInfoPtr css, char *buffer, char *url,
   ThotBool            toParse, eof, quoted;
   ThotBool            ignoreMedia, media;
   ThotBool            noRule, ignoreImport;
+  CSSInfoPtr          refcss = NULL, tmpcss;
 
   CSScomment = MAX_CSS_LENGTH;
   HTMLcomment = FALSE;
@@ -5145,6 +5146,26 @@ char ReadCSSRules (Document docRef, CSSInfoPtr css, char *buffer, char *url,
   if (css == NULL)
     css = AddCSS (docRef, docRef, CSS_DOCUMENT_STYLE, NULL, NULL,
 		  styleElement);
+
+  /* Lookk for the first external css as reference */
+  if (css->category == CSS_EXTERNAL_STYLE)
+    refcss = css;
+  else
+    {
+      tmpcss = css;
+      while (tmpcss != NULL)
+	{
+	  if (tmpcss->category == CSS_EXTERNAL_STYLE)
+	    {
+	      refcss = tmpcss;
+	      tmpcss = NULL;
+	    }
+	  else
+	    tmpcss = tmpcss->NextCSS;
+	}
+      if (refcss == NULL)
+	refcss = css;
+    }
 
   /* register parsed CSS file and the document to which CSS are to be applied*/
   ParsedDoc = docRef;
@@ -5319,7 +5340,7 @@ char ReadCSSRules (Document docRef, CSSInfoPtr css, char *buffer, char *url,
 		{
 		  /* future import rules must be ignored */
 		  ignoreImport = TRUE;
-		  ParseStyleDeclaration (NULL, CSSbuffer, docRef, css, FALSE);
+		  ParseStyleDeclaration (NULL, CSSbuffer, docRef, refcss, FALSE);
 		  LineNumber += newlines;
 		  newlines = 0;
 		  NewLineSkipped = 0;

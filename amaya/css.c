@@ -653,7 +653,7 @@ char *GetStyleContents (Element el)
 void LoadStyleSheet (char *url, Document doc, Element el, CSSInfoPtr css,
 		     CSSmedia media, ThotBool user)
 {
-  CSSInfoPtr          oldcss;
+  CSSInfoPtr          oldcss, refcss = NULL, tmpcss;
   PInfoPtr            pInfo;
   struct stat         buf;
   FILE               *res;
@@ -683,8 +683,8 @@ void LoadStyleSheet (char *url, Document doc, Element el, CSSInfoPtr css,
 	  else
 	    css = AddCSS (0, doc, CSS_EXTERNAL_STYLE, tempURL, tempfile, NULL);
 	  css->media[doc] = media;
+	  oldcss = css;
 	}
-      oldcss = css;
     }
   else if (!oldcss->documents[doc])
     {
@@ -704,7 +704,24 @@ void LoadStyleSheet (char *url, Document doc, Element el, CSSInfoPtr css,
     }
   
   if (import)
-    oldcss = css;
+    {
+      tmpcss = oldcss;
+      while (tmpcss != NULL)
+	{
+	  if (tmpcss->category == CSS_EXTERNAL_STYLE)
+	    {
+	      refcss = tmpcss;
+	      tmpcss = NULL;
+	    }
+	  else
+	    tmpcss = tmpcss->NextCSS;
+	}
+      if (refcss == NULL)
+	refcss = css;
+    }
+  else
+    refcss = css;
+
   if (tempfile[0] == EOS)
     /* cannot do more */
     return;
@@ -715,8 +732,9 @@ void LoadStyleSheet (char *url, Document doc, Element el, CSSInfoPtr css,
     /* nothing more to do */
     return;
   
+
   /* store the element which links the CSS */
-  pInfo = oldcss->infos;
+  pInfo = refcss->infos;
   while (pInfo && pInfo->PiDoc != doc)
     /* next info context */
     pInfo = pInfo->PiNext;
@@ -724,11 +742,11 @@ void LoadStyleSheet (char *url, Document doc, Element el, CSSInfoPtr css,
     {
       /* add the presentation info block */
       pInfo = (PInfoPtr) TtaGetMemory (sizeof (PInfo));
-      pInfo->PiNext = oldcss->infos;
+      pInfo->PiNext = refcss->infos;
       pInfo->PiDoc = doc;
       pInfo->PiLink = el;
       pInfo->PiSchemas = NULL;
-      oldcss->infos = pInfo;
+      refcss->infos = pInfo;
     }
 
   /* apply CSS rules in current Presentation structure (import) */
