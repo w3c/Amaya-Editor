@@ -635,11 +635,11 @@ int                 frame;
   if (height < 0)
     height = 0;
   zoom = ViewFrameTable[frame - 1].FrMagnification;
-  val = PixelValue (pBox->BxBuffer->BuPoints[0].XCoord / 1000, UnPoint, NULL, zoom);
+  val = PixelValue (pBox->BxBuffer->BuPoints[0].XCoord, UnPixel, NULL, zoom);
   /* Compute ratio for axis X */
   if (val != width && pBox->BxBuffer->BuPoints[0].XCoord > 0)
     {
-      val = LogicalValue (width, UnPoint, NULL, zoom) * 1000;
+      val = LogicalValue (width, UnPixel, NULL, zoom);
       pointIndex = (float) pBox->BxBuffer->BuPoints[0].XCoord / pBox->BxXRatio;
       /* save the new distortion ratio between box and abstract box */
       pBox->BxXRatio = (float) val / pointIndex;
@@ -651,10 +651,10 @@ int                 frame;
     xRatio = 1.0;
 
   /* Compute ratio for axis Y */
-  val = PixelValue (pBox->BxBuffer->BuPoints[0].YCoord / 1000, UnPoint, NULL, zoom);
+  val = PixelValue (pBox->BxBuffer->BuPoints[0].YCoord, UnPixel, NULL, zoom);
   if (val != height && pBox->BxBuffer->BuPoints[0].YCoord > 0)
     {
-      val = LogicalValue (height, UnPoint, NULL, zoom) * 1000;
+      val = LogicalValue (height, UnPixel, NULL, zoom);
       pointIndex = (float) pBox->BxBuffer->BuPoints[0].YCoord / pBox->BxYRatio;
       /* save the new distortion ratio between box and abstract box */
       pBox->BxYRatio = (float) val / pointIndex;

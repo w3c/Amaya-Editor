@@ -249,14 +249,14 @@ int                 zoom;
 
    pBuffer = buffer;
    j = 1;
-   x1 = (float) PixelValue (pBuffer->BuPoints[j].XCoord / 1000, UnPoint, NULL,
+   x1 = (float) PixelValue (pBuffer->BuPoints[j].XCoord, UnPixel, NULL,
 			    zoom);
-   y1 = (float) PixelValue (pBuffer->BuPoints[j].YCoord / 1000, UnPoint, NULL,
+   y1 = (float) PixelValue (pBuffer->BuPoints[j].YCoord, UnPixel, NULL,
 			    zoom);
    j++;
-   x2 = (float) PixelValue (pBuffer->BuPoints[j].XCoord / 1000, UnPoint, NULL,
+   x2 = (float) PixelValue (pBuffer->BuPoints[j].XCoord, UnPixel, NULL,
 			    zoom);
-   y2 = (float) PixelValue (pBuffer->BuPoints[j].YCoord / 1000, UnPoint, NULL,
+   y2 = (float) PixelValue (pBuffer->BuPoints[j].YCoord, UnPixel, NULL,
 			    zoom);
    if (nb < 3)
      {
@@ -267,9 +267,9 @@ int                 zoom;
    else
      {
 	j++;
-	x3 = (float) PixelValue (pBuffer->BuPoints[j].XCoord / 1000, UnPoint,
+	x3 = (float) PixelValue (pBuffer->BuPoints[j].XCoord, UnPixel,
 				 NULL, zoom);
-	y3 = (float) PixelValue (pBuffer->BuPoints[j].YCoord / 1000, UnPoint,
+	y3 = (float) PixelValue (pBuffer->BuPoints[j].YCoord, UnPixel,
 				 NULL, zoom);
      }
 
@@ -328,11 +328,11 @@ int                 zoom;
 		       j = 0;
 		    }
 	       }
-	     x3 = (float) PixelValue (pBuffer->BuPoints[j].XCoord / 1000,
-				      UnPoint, NULL,
+	     x3 = (float) PixelValue (pBuffer->BuPoints[j].XCoord,
+				      UnPixel, NULL,
 				      zoom);
-	     y3 = (float) PixelValue (pBuffer->BuPoints[j].YCoord / 1000,
-				      UnPoint, NULL,
+	     y3 = (float) PixelValue (pBuffer->BuPoints[j].YCoord,
+				      UnPixel, NULL,
 				      zoom);
 	  }
 	dx = x3 - x2;
@@ -638,8 +638,8 @@ int           *height;
       *height = pBuffer->BuPoints[0].YCoord;
       
       /* Convertit en pixels */
-      *width = PixelValue (*width / 1000, UnPoint, NULL, zoom);
-      *height = PixelValue (*height / 1000, UnPoint, NULL, zoom);
+      *width = PixelValue (*width, UnPixel, NULL, zoom);
+      *height = PixelValue (*height, UnPixel, NULL, zoom);
     }
 }
 

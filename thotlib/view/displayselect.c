@@ -123,13 +123,13 @@ int                 pointselect;
 		}
 	      if (pointselect == 0 || pointselect == i)
 		{
-		  x = leftX + PixelValue (pBuffer->BuPoints[j].XCoord / 1000,
-					  UnPoint, NULL,
+		  x = leftX + PixelValue (pBuffer->BuPoints[j].XCoord,
+					  UnPixel, NULL,
 					  ViewFrameTable[frame - 1].FrMagnification);
 		  if (x > rightX)
 		    x =  rightX;
-		  y = topY + PixelValue (pBuffer->BuPoints[j].YCoord / 1000,
-					 UnPoint, NULL,
+		  y = topY + PixelValue (pBuffer->BuPoints[j].YCoord,
+					 UnPixel, NULL,
 					 ViewFrameTable[frame - 1].FrMagnification);
 		  if (y > bottomY)
 		    y =  bottomY;

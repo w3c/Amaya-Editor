@@ -260,9 +260,9 @@ int           *y3;
 	  adbuff = adbuff->BuNext;
 	  j = 0;
 	}
-      points[i].x = x + PixelValue (adbuff->BuPoints[j].XCoord / 1000, UnPoint, NULL,
+      points[i].x = x + PixelValue (adbuff->BuPoints[j].XCoord, UnPixel, NULL,
 				    ViewFrameTable[frame - 1].FrMagnification);
-      points[i].y = y + PixelValue (adbuff->BuPoints[j].YCoord / 1000, UnPoint, NULL,
+      points[i].y = y + PixelValue (adbuff->BuPoints[j].YCoord, UnPixel, NULL,
 				    ViewFrameTable[frame - 1].FrMagnification);
       /* write down predecessor and sucessor of point */
       if (i + 1 == point)
@@ -545,10 +545,10 @@ PtrTextBuffer    Bbuffer;
 		  point++;
 
 		  /* update the box buffer */
-		  newx = LogicalValue (lastx - x, UnPoint, NULL,
-				       ViewFrameTable[frame - 1].FrMagnification) * 1000;
-		  newy = LogicalValue (lasty - y, UnPoint, NULL,
-				       ViewFrameTable[frame - 1].FrMagnification) * 1000;
+		  newx = LogicalValue (lastx - x, UnPixel, NULL,
+				       ViewFrameTable[frame - 1].FrMagnification);
+		  newy = LogicalValue (lasty - y, UnPixel, NULL,
+				       ViewFrameTable[frame - 1].FrMagnification);
 		  AddPointInPolyline (Bbuffer, point, newx, newy);
 		  /* update the abstract box buffer */
 		  newx = (int) ((float) newx * ratioX);
@@ -683,10 +683,10 @@ PtrTextBuffer    Bbuffer;
 		  input = TRUE;
 
 		  /* update the box buffer */
-		  newx = LogicalValue (lastx - x, UnPoint, NULL,
-				       ViewFrameTable[frame - 1].FrMagnification) * 1000;
-		  newy = LogicalValue (lasty - y, UnPoint, NULL,
-				       ViewFrameTable[frame - 1].FrMagnification) * 1000;
+		  newx = LogicalValue (lastx - x, UnPixel, NULL,
+				       ViewFrameTable[frame - 1].FrMagnification);
+		  newy = LogicalValue (lasty - y, UnPixel, NULL,
+				       ViewFrameTable[frame - 1].FrMagnification);
 		  AddPointInPolyline (Bbuffer, point, newx, newy);
 		  /* update the abstract box buffer */
 		  newx = (int) ((float) newx * ratioX);
@@ -850,10 +850,10 @@ PtrTextBuffer    Bbuffer;
 	  lastx = newx;
 	  lasty = newy;
 	  /* update the box buffer */
-	  newx = LogicalValue (lastx - x, UnPoint, NULL,
-			       ViewFrameTable[frame - 1].FrMagnification) * 1000;
-	  newy = LogicalValue (lasty - y, UnPoint, NULL,
-			       ViewFrameTable[frame - 1].FrMagnification) * 1000;
+	  newx = LogicalValue (lastx - x, UnPixel, NULL,
+			       ViewFrameTable[frame - 1].FrMagnification);
+	  newy = LogicalValue (lasty - y, UnPixel, NULL,
+			       ViewFrameTable[frame - 1].FrMagnification);
 	  ModifyPointInPolyline (Bbuffer, point, newx, newy);
 	  /* update the abstract box buffer */
 	  newx = (int) ((float) newx * ratioX);
@@ -932,10 +932,10 @@ PtrTextBuffer    Bbuffer;
 	  lastx = newx;
 	  lasty = newy;
 	  /* update the box buffer */
-	  newx = LogicalValue (lastx - x, UnPoint, NULL,
-			       ViewFrameTable[frame - 1].FrMagnification) * 1000;
-	  newy = LogicalValue (lasty - y, UnPoint, NULL,
-			       ViewFrameTable[frame - 1].FrMagnification) * 1000;
+	  newx = LogicalValue (lastx - x, UnPixel, NULL,
+			       ViewFrameTable[frame - 1].FrMagnification);
+	  newy = LogicalValue (lasty - y, UnPixel, NULL,
+			       ViewFrameTable[frame - 1].FrMagnification);
 	  ModifyPointInPolyline (Bbuffer, point, newx, newy);
 	  /* update the abstract box buffer */
 	  newx = (int) ((float) newx * ratioX);
@@ -1030,11 +1030,11 @@ int                 maxPoints;
   /* constraint is done by the polyline element */
   x = *xOrg;
   width = Bbuffer->BuPoints[0].XCoord;
-  width = PixelValue (width / 1000, UnPoint, NULL,
+  width = PixelValue (width, UnPixel, NULL,
 		      ViewFrameTable[frame - 1].FrMagnification);
   y = *yOrg;
   height = Bbuffer->BuPoints[0].YCoord;
-  height = PixelValue (height / 1000, UnPoint, NULL,
+  height = PixelValue (height, UnPixel, NULL,
 		       ViewFrameTable[frame - 1].FrMagnification);
 
   nbpoints = 1;
@@ -1086,11 +1086,11 @@ ThotBool            close;
   /* constraint is done by the polyline element */
   x = *xOrg;
   width = Bbuffer->BuPoints[0].XCoord;
-  width = PixelValue (width / 1000, UnPoint, NULL,
+  width = PixelValue (width, UnPixel, NULL,
 		      ViewFrameTable[frame - 1].FrMagnification);
   y = *yOrg;
   height = Bbuffer->BuPoints[0].YCoord;
-  height = PixelValue (height / 1000, UnPoint, NULL,
+  height = PixelValue (height, UnPixel, NULL,
 		       ViewFrameTable[frame - 1].FrMagnification);
 
   /* get the current point */
@@ -1149,11 +1149,11 @@ ThotBool         close;
   /* constraint is done by the polyline element */
   x = *xOrg;
   width = Bbuffer->BuPoints[0].XCoord;
-  width = PixelValue (width / 1000, UnPoint, NULL,
+  width = PixelValue (width, UnPixel, NULL,
 		      ViewFrameTable[frame - 1].FrMagnification);
   y = *yOrg;
   height = Bbuffer->BuPoints[0].YCoord;
-  height = PixelValue (height / 1000, UnPoint, NULL,
+  height = PixelValue (height, UnPixel, NULL,
 		       ViewFrameTable[frame - 1].FrMagnification);
 
   RedrawPolyLine (frame, x, y, Bbuffer, nbpoints, point, close,
@@ -1208,10 +1208,10 @@ int                *y2;
       width = pBox->BxAbstractBox->AbEnclosing->AbBox->BxW;
       height = pBox->BxAbstractBox->AbEnclosing->AbBox->BxH;
     }
-  pBuffer->BuPoints[0].XCoord = LogicalValue (width, UnPoint, NULL,
-					      ViewFrameTable[frame - 1].FrMagnification) * 1000;
-  pBuffer->BuPoints[0].YCoord = LogicalValue (height, UnPoint, NULL,
-					      ViewFrameTable[frame - 1].FrMagnification) * 1000;
+  pBuffer->BuPoints[0].XCoord = LogicalValue (width, UnPixel, NULL,
+					      ViewFrameTable[frame - 1].FrMagnification);
+  pBuffer->BuPoints[0].YCoord = LogicalValue (height, UnPixel, NULL,
+					      ViewFrameTable[frame - 1].FrMagnification);
   x = *x1;
   y = *y1;
 
@@ -1220,13 +1220,13 @@ int                *y2;
   lasty = y;
   AddPoints (frame, x, y, -1, -1, -1, -1, lastx, lasty, 1, &nbpoints, 2, width, height,
 	     pBuffer, pBuffer);
-  *x1 = PixelValue (pBuffer->BuPoints[1].XCoord / 1000, UnPoint, NULL,
+  *x1 = PixelValue (pBuffer->BuPoints[1].XCoord, UnPixel, NULL,
 		    ViewFrameTable[frame - 1].FrMagnification);
-  *y1 = PixelValue (pBuffer->BuPoints[1].YCoord / 1000, UnPoint, NULL,
+  *y1 = PixelValue (pBuffer->BuPoints[1].YCoord, UnPixel, NULL,
 		    ViewFrameTable[frame - 1].FrMagnification);
-  *x2 = PixelValue (pBuffer->BuPoints[2].XCoord / 1000, UnPoint, NULL,
+  *x2 = PixelValue (pBuffer->BuPoints[2].XCoord, UnPixel, NULL,
 		    ViewFrameTable[frame - 1].FrMagnification);
-  *y2 = PixelValue (pBuffer->BuPoints[2].YCoord / 1000, UnPoint, NULL,
+  *y2 = PixelValue (pBuffer->BuPoints[2].YCoord, UnPixel, NULL,
 		    ViewFrameTable[frame - 1].FrMagnification);
   /* Free the buffer */
   FreeTextBuffer (pBuffer);
@@ -1281,10 +1281,10 @@ int                *yi;
       width = pBox->BxAbstractBox->AbEnclosing->AbBox->BxW;
       height = pBox->BxAbstractBox->AbEnclosing->AbBox->BxH;
     }
-  pBuffer->BuPoints[0].XCoord = LogicalValue (width, UnPoint, NULL,
-					      ViewFrameTable[frame - 1].FrMagnification) * 1000;
-  pBuffer->BuPoints[0].YCoord = LogicalValue (height, UnPoint, NULL,
-					      ViewFrameTable[frame - 1].FrMagnification) * 1000;
+  pBuffer->BuPoints[0].XCoord = LogicalValue (width, UnPixel, NULL,
+					      ViewFrameTable[frame - 1].FrMagnification);
+  pBuffer->BuPoints[0].YCoord = LogicalValue (height, UnPixel, NULL,
+					      ViewFrameTable[frame - 1].FrMagnification);
 
   /* store current points in the buffer:
      positions are relative to the parent box origin */
@@ -1315,14 +1315,14 @@ int                *yi;
       break;
     default: break;
     }
-  pBuffer->BuPoints[1].XCoord = LogicalValue (x, UnPoint, NULL,
-					      ViewFrameTable[frame - 1].FrMagnification) * 1000;
-  pBuffer->BuPoints[1].YCoord = LogicalValue (y, UnPoint, NULL,
-					      ViewFrameTable[frame - 1].FrMagnification) * 1000;
-  pBuffer->BuPoints[2].XCoord = LogicalValue (x1, UnPoint, NULL,
-					      ViewFrameTable[frame - 1].FrMagnification) * 1000;
-  pBuffer->BuPoints[2].YCoord = LogicalValue (y1, UnPoint, NULL,
-					      ViewFrameTable[frame - 1].FrMagnification) * 1000;
+  pBuffer->BuPoints[1].XCoord = LogicalValue (x, UnPixel, NULL,
+					      ViewFrameTable[frame - 1].FrMagnification);
+  pBuffer->BuPoints[1].YCoord = LogicalValue (y, UnPixel, NULL,
+					      ViewFrameTable[frame - 1].FrMagnification);
+  pBuffer->BuPoints[2].XCoord = LogicalValue (x1, UnPixel, NULL,
+					      ViewFrameTable[frame - 1].FrMagnification);
+  pBuffer->BuPoints[2].YCoord = LogicalValue (y1, UnPixel, NULL,
+					      ViewFrameTable[frame - 1].FrMagnification);
 
   /* get the current point */
   xorg -= pFrame->FrXOrg;
@@ -1330,9 +1330,9 @@ int                *yi;
   RedrawPolyLine (frame, xorg, yorg, pBuffer, 3, 1, FALSE,
 		  &x1, &y1, &lastx, &lasty, &x3, &y3);
   MoveApoint (frame, xorg, yorg, x1, y1, x3, y3, lastx, lasty, 1, width, height, pBuffer, pBuffer);
-  *xi = PixelValue (pBuffer->BuPoints[1].XCoord / 1000, UnPoint, NULL,
+  *xi = PixelValue (pBuffer->BuPoints[1].XCoord, UnPixel, NULL,
 		    ViewFrameTable[frame - 1].FrMagnification);
-  *yi = PixelValue (pBuffer->BuPoints[1].YCoord / 1000, UnPoint, NULL,
+  *yi = PixelValue (pBuffer->BuPoints[1].YCoord, UnPixel, NULL,
 		    ViewFrameTable[frame - 1].FrMagnification);
   /* Free the buffer */
   FreeTextBuffer (pBuffer);

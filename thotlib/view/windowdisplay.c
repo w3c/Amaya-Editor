@@ -2401,11 +2401,11 @@ int                 arrow;
 	  adbuff = adbuff->BuNext;
 	  j = 0;
 	}
-      points[i - 1].x = x + PixelValue (adbuff->BuPoints[j].XCoord / 1000,
-					UnPoint, NULL,
+      points[i - 1].x = x + PixelValue (adbuff->BuPoints[j].XCoord,
+					UnPixel, NULL,
 					ViewFrameTable[frame - 1].FrMagnification);
-      points[i - 1].y = y + PixelValue (adbuff->BuPoints[j].YCoord / 1000,
-					UnPoint, NULL,
+      points[i - 1].y = y + PixelValue (adbuff->BuPoints[j].YCoord,
+					UnPixel, NULL,
 					ViewFrameTable[frame - 1].FrMagnification);
       j++;
     }
@@ -2501,11 +2501,11 @@ int                 pattern;
 		  j = 0;
 	       }
 	  }
-	points[i - 1].x = x + PixelValue (adbuff->BuPoints[j].XCoord / 1000,
-					UnPoint, NULL,
+	points[i - 1].x = x + PixelValue (adbuff->BuPoints[j].XCoord,
+					UnPixel, NULL,
 					ViewFrameTable[frame - 1].FrMagnification);
-	points[i - 1].y = y + PixelValue (adbuff->BuPoints[j].YCoord / 1000,
-					UnPoint, NULL,
+	points[i - 1].y = y + PixelValue (adbuff->BuPoints[j].YCoord,
+					UnPixel, NULL,
 					ViewFrameTable[frame - 1].FrMagnification);
 	j++;
      }
@@ -2794,20 +2794,20 @@ C_points           *controls;
   adbuff = buffer;
   y += FrameTable[frame].FrTopMargin;
   j = 1;
-  x1 = (float) (x + PixelValue (adbuff->BuPoints[j].XCoord / 1000,
-				UnPoint, NULL,
+  x1 = (float) (x + PixelValue (adbuff->BuPoints[j].XCoord,
+				UnPixel, NULL,
 				ViewFrameTable[frame - 1].FrMagnification));
-  y1 = (float) (y + PixelValue (adbuff->BuPoints[j].YCoord / 1000,
-				UnPoint, NULL,
+  y1 = (float) (y + PixelValue (adbuff->BuPoints[j].YCoord,
+				UnPixel, NULL,
 				ViewFrameTable[frame - 1].FrMagnification));
   j++;
   cx1 = (controls[j].lx * 3 + x1 - x) / 4 + x;
   cy1 = (controls[j].ly * 3 + y1 - y) / 4 + y;
-  x2 = (float) (x + PixelValue (adbuff->BuPoints[j].XCoord / 1000,
-				UnPoint, NULL,
+  x2 = (float) (x + PixelValue (adbuff->BuPoints[j].XCoord,
+				UnPixel, NULL,
 				ViewFrameTable[frame - 1].FrMagnification));
-  y2 = (float) (y + PixelValue (adbuff->BuPoints[j].YCoord / 1000,
-				UnPoint, NULL,
+  y2 = (float) (y + PixelValue (adbuff->BuPoints[j].YCoord,
+				UnPixel, NULL,
 				ViewFrameTable[frame - 1].FrMagnification));
   cx2 = (controls[j].lx * 3 + x2 - x) / 4 + x;
   cy2 = (controls[j].ly * 3 + y2 - y) / 4 + y;
@@ -2841,11 +2841,11 @@ C_points           *controls;
 	      adbuff = adbuff->BuNext;
 	      j = 0;
 	    }
-	  x2 = (float) (x + PixelValue (adbuff->BuPoints[j].XCoord / 1000,
-					UnPoint, NULL,
+	  x2 = (float) (x + PixelValue (adbuff->BuPoints[j].XCoord,
+					UnPixel, NULL,
 					ViewFrameTable[frame - 1].FrMagnification));
-	  y2 = (float) (y + PixelValue (adbuff->BuPoints[j].YCoord / 1000,
-					UnPoint, NULL,
+	  y2 = (float) (y + PixelValue (adbuff->BuPoints[j].YCoord,
+					UnPixel, NULL,
 					ViewFrameTable[frame - 1].FrMagnification));
 	  if (i == nb - 2)
 	    {
@@ -2933,20 +2933,20 @@ C_points           *controls;
   adbuff = buffer;
   y += FrameTable[frame].FrTopMargin;
   j = 1;
-  x1 = (float) (x + PixelValue (adbuff->BuPoints[j].XCoord / 1000,
-				UnPoint, NULL,
+  x1 = (float) (x + PixelValue (adbuff->BuPoints[j].XCoord,
+				UnPixel, NULL,
 				ViewFrameTable[frame - 1].FrMagnification));
-  y1 = (float) (y + PixelValue (adbuff->BuPoints[j].YCoord / 1000,
-				UnPoint, NULL,
+  y1 = (float) (y + PixelValue (adbuff->BuPoints[j].YCoord,
+				UnPixel, NULL,
 				ViewFrameTable[frame - 1].FrMagnification));
   cx1 = controls[j].rx + x;
   cy1 = controls[j].ry + y;
   j++;
-  x2 = (float) (x + PixelValue (adbuff->BuPoints[j].XCoord / 1000,
-				UnPoint, NULL,
+  x2 = (float) (x + PixelValue (adbuff->BuPoints[j].XCoord,
+				UnPixel, NULL,
 				ViewFrameTable[frame - 1].FrMagnification));
-  y2 = (float) (y + PixelValue (adbuff->BuPoints[j].YCoord / 1000,
-				UnPoint, NULL,
+  y2 = (float) (y + PixelValue (adbuff->BuPoints[j].YCoord,
+				UnPixel, NULL,
 				ViewFrameTable[frame - 1].FrMagnification));
   cx2 = controls[j].lx + x;
   cy2 = controls[j].ly + y;
@@ -2970,11 +2970,11 @@ C_points           *controls;
 	      adbuff = adbuff->BuNext;
 	      j = 0;
 	    }
-	  x2 = (float) (x + PixelValue (adbuff->BuPoints[j].XCoord / 1000,
-					UnPoint, NULL,
+	  x2 = (float) (x + PixelValue (adbuff->BuPoints[j].XCoord,
+					UnPixel, NULL,
 					ViewFrameTable[frame - 1].FrMagnification));
-	  y2 = (float) (y + PixelValue (adbuff->BuPoints[j].YCoord / 1000,
-					UnPoint, NULL,
+	  y2 = (float) (y + PixelValue (adbuff->BuPoints[j].YCoord,
+					UnPixel, NULL,
 					ViewFrameTable[frame - 1].FrMagnification));
 	  cx2 = controls[i + 1].lx + x;
 	  cy2 = controls[i + 1].ly + y;
@@ -2982,11 +2982,11 @@ C_points           *controls;
       else
 	{
 	  /* loop around the origin point */
-	  x2 = (float) (x + PixelValue (buffer->BuPoints[1].XCoord / 1000,
-					UnPoint, NULL,
+	  x2 = (float) (x + PixelValue (buffer->BuPoints[1].XCoord,
+					UnPixel, NULL,
 					ViewFrameTable[frame - 1].FrMagnification));
-	  y2 = (float) (y + PixelValue (buffer->BuPoints[1].YCoord / 1000,
-					UnPoint, NULL,
+	  y2 = (float) (y + PixelValue (buffer->BuPoints[1].YCoord,
+					UnPixel, NULL,
 					ViewFrameTable[frame - 1].FrMagnification));
 	  cx2 = controls[1].lx + x;
 	  cy2 = controls[1].ly + y;

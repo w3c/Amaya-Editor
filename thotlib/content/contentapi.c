@@ -1041,15 +1041,6 @@ Document            document;
       else
 	{
 	   firstBuffer = ((PtrElement) element)->ElPolyLineBuffer;
-	   /* Convert values to millipoints */
-	   x = x * 1000;
-	   y = y * 1000;
-	   if (unit == UnPixel)
-	     {
-		x = PixelToPoint (x);
-		y = PixelToPoint (y);
-	     }
-
 	   /* adds the point to the polyline */
 	   AddPointInPolyline (firstBuffer, rank, x, y);
 	   ((PtrElement) element)->ElNPoints++;
@@ -1157,14 +1148,6 @@ Document            document;
 	 TtaError (ERR_invalid_parameter);
       else
 	{
-	   /* Convert values to millipoints */
-	   x = x * 1000;
-	   y = y * 1000;
-	   if (unit == UnPixel)
-	     {
-		x = PixelToPoint (x);
-		y = PixelToPoint (y);
-	     }
 	   ModifyPointInPolyline (((PtrElement) element)->ElPolyLineBuffer,
 				  rank, x, y);
 #ifndef NODISPLAY
@@ -1214,14 +1197,6 @@ Document            document;
 	 TtaError (ERR_invalid_parameter);
       else
 	{
-	   /* Convert values to millipoints */
-	   x = x * 1000;
-	   y = y * 1000;
-	   if (unit == UnPixel)
-	     {
-		x = PixelToPoint (x);
-		y = PixelToPoint (y);
-	     }
 	   firstBuffer = ((PtrElement) element)->ElPolyLineBuffer;
 	   /* verifies that the new point coordinates are greatest than all
 	      the coordinates of the other points of the polyline */
@@ -1617,14 +1592,6 @@ int         *y;
 	  {
 	     *x = pBuff->BuPoints[rank].XCoord;
 	     *y = pBuff->BuPoints[rank].YCoord;
-	     /* Convert values to millipoints */
-	     if (unit == UnPixel)
-	       {
-		  *x = PointToPixel (*x);
-		  *y = PointToPixel (*y);
-	       }
-	     *x = *x / 1000;
-	     *y = *y / 1000;
 	  }
      }
 }

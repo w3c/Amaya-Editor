@@ -335,17 +335,17 @@ int                 frame;
    max = pLastBuffer->BuLength - 1;
 
    cross = 0;
-   nextX = PixelValue (buff->BuPoints[i].XCoord / 1000,
-		       UnPoint, NULL,
+   nextX = PixelValue (buff->BuPoints[i].XCoord,
+		       UnPixel, NULL,
 		       ViewFrameTable[frame - 1].FrMagnification);
-   nextY = PixelValue (buff->BuPoints[i].YCoord / 1000,
-		       UnPoint, NULL,
+   nextY = PixelValue (buff->BuPoints[i].YCoord,
+		       UnPixel, NULL,
 		       ViewFrameTable[frame - 1].FrMagnification);
-   prevX = PixelValue (pLastBuffer->BuPoints[max].XCoord / 1000,
-		       UnPoint, NULL,
+   prevX = PixelValue (pLastBuffer->BuPoints[max].XCoord,
+		       UnPixel, NULL,
 		       ViewFrameTable[frame - 1].FrMagnification);
-   prevY = PixelValue (pLastBuffer->BuPoints[max].YCoord / 1000,
-		       UnPoint, NULL,
+   prevY = PixelValue (pLastBuffer->BuPoints[max].YCoord,
+		       UnPixel, NULL,
 		       ViewFrameTable[frame - 1].FrMagnification);
    if ((prevY >= y) != (nextY >= y))
      /* y between nextY and prevY */
@@ -356,11 +356,11 @@ int                 frame;
      {
 	prevX = nextX;
 	prevY = nextY;
-	nextX = PixelValue (buff->BuPoints[i].XCoord / 1000,
-			    UnPoint, NULL,
+	nextX = PixelValue (buff->BuPoints[i].XCoord,
+			    UnPixel, NULL,
 			    ViewFrameTable[frame - 1].FrMagnification);
-	nextY = PixelValue (buff->BuPoints[i].YCoord / 1000,
-			    UnPoint, NULL,
+	nextY = PixelValue (buff->BuPoints[i].YCoord,
+			    UnPixel, NULL,
 			    ViewFrameTable[frame - 1].FrMagnification);
 	if (prevY >= y)
 	  {
@@ -374,11 +374,11 @@ int                 frame;
 		    }
 		  prevY = nextY;
 		  prevX = nextX;
-		  nextX = PixelValue (buff->BuPoints[i].XCoord / 1000,
-				      UnPoint, NULL,
+		  nextX = PixelValue (buff->BuPoints[i].XCoord,
+				      UnPixel, NULL,
 				      ViewFrameTable[frame - 1].FrMagnification);
-		  nextY = PixelValue (buff->BuPoints[i].YCoord / 1000,
-				      UnPoint, NULL,
+		  nextY = PixelValue (buff->BuPoints[i].YCoord,
+				      UnPixel, NULL,
 				      ViewFrameTable[frame - 1].FrMagnification);
 	       }
 
@@ -398,11 +398,11 @@ int                 frame;
 		    }
 		  prevY = nextY;
 		  prevX = nextX;
-		  nextX = PixelValue (buff->BuPoints[i].XCoord / 1000,
-				      UnPoint, NULL,
+		  nextX = PixelValue (buff->BuPoints[i].XCoord,
+				      UnPixel, NULL,
 				      ViewFrameTable[frame - 1].FrMagnification);
-		  nextY = PixelValue (buff->BuPoints[i].YCoord / 1000,
-				      UnPoint, NULL,
+		  nextY = PixelValue (buff->BuPoints[i].YCoord,
+				      UnPixel, NULL,
 				      ViewFrameTable[frame - 1].FrMagnification);
 	       }
 
@@ -467,11 +467,11 @@ int                *pointselect;
 	  }
 
 	/* Teste si le point est sur ce segment */
-	X2 = PixelValue (adbuff->BuPoints[j].XCoord / 1000,
-			 UnPoint, NULL,
+	X2 = PixelValue (adbuff->BuPoints[j].XCoord,
+			 UnPixel, NULL,
 			 ViewFrameTable[frame - 1].FrMagnification);
-	Y2 = PixelValue (adbuff->BuPoints[j].YCoord / 1000,
-			 UnPoint, NULL,
+	Y2 = PixelValue (adbuff->BuPoints[j].YCoord,
+			 UnPixel, NULL,
 			 ViewFrameTable[frame - 1].FrMagnification);
 	if (x >= X2 - DELTA_SEL && x <= X2 + DELTA_SEL && y >= Y2 - DELTA_SEL && y <= Y2 + DELTA_SEL)
 	  {
@@ -497,11 +497,11 @@ int                *pointselect;
    /* traite le cas particulier des polylines fermees */
    if (pAb->AbPolyLineShape == 'p' || pAb->AbPolyLineShape == 's')
      {
-	X2 = PixelValue (box->BxBuffer->BuPoints[1].XCoord / 1000,
-			 UnPoint, NULL,
+	X2 = PixelValue (box->BxBuffer->BuPoints[1].XCoord,
+			 UnPixel, NULL,
 			 ViewFrameTable[frame - 1].FrMagnification);
-	Y2 = PixelValue (box->BxBuffer->BuPoints[1].YCoord / 1000,
-			 UnPoint, NULL,
+	Y2 = PixelValue (box->BxBuffer->BuPoints[1].YCoord,
+			 UnPixel, NULL,
 			 ViewFrameTable[frame - 1].FrMagnification);
 	OK = IsOnPolyline (x, y, X1, Y1, X2, Y2);
 	if (OK)

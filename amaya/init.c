@@ -1687,8 +1687,8 @@ ThotBool     readOnly;
        TtaGetViewGeometry (doc, tmp, &x, &y, &w, &h);
        if (docType == docLog)
 	 {
-	   x += 30;
-	   y += 30;
+	   x += 100;
+	   y += 60;
 	   h = 300;
 	   w = 550;
 	 }

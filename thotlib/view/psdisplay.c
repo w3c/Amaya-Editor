@@ -1252,17 +1252,15 @@ int                 arrow;
 
    /* Do we need to change the current color ? */
    CurrentColor (fout, fg);
-   x = PixelToPoint (x);
-   y = PixelToPoint (y);
    adbuff = buffer;
 
    /* backward arrow  */
    if (arrow == 2 || arrow == 3)
       fprintf (fout, "%d %d -%d %d -%d %d %d %d arr\n", style,
-	       FloatToInt ((float) buffer->BuPoints[2].XCoord / 1000 + x),
-	       FloatToInt ((float) buffer->BuPoints[2].YCoord / 1000 + y),
-	       FloatToInt ((float) buffer->BuPoints[1].XCoord / 1000 + x),
-	       FloatToInt ((float) buffer->BuPoints[1].YCoord / 1000 + y), thick, lg, lg);
+	       PixelToPoint (buffer->BuPoints[2].XCoord + x),
+	       PixelToPoint (buffer->BuPoints[2].YCoord + y),
+	       PixelToPoint (buffer->BuPoints[1].XCoord + x),
+	       PixelToPoint (buffer->BuPoints[1].YCoord + y), thick, lg, lg);
 
    j = 1;
    for (i = 1; i < nb; i++)
@@ -1283,8 +1281,8 @@ int                 arrow;
 	     prevy = FloatToInt (yp);
 	  }
 	/* Coordinate for next point */
-	xp = (float) adbuff->BuPoints[j].XCoord / 1000 + x;
-	yp = (float) adbuff->BuPoints[j].YCoord / 1000 + y;
+	xp = (float) PixelToPoint (adbuff->BuPoints[j].XCoord + x);
+	yp = (float) PixelToPoint (adbuff->BuPoints[j].YCoord + y);
 	fprintf (fout, "%f -%f\n", xp, yp);
 	j++;
      }
@@ -1340,8 +1338,6 @@ int                 pattern;
    /* Do we need to change the current color ? */
    CurrentColor (fout, fg);
    FillWithPattern (fout, fg, bg, pattern);
-   x = PixelToPoint (x);
-   y = PixelToPoint (y);
    adbuff = buffer;
    j = 1;
 
@@ -1357,8 +1353,8 @@ int                 pattern;
 	       }
 	  }
 	/* Coordinate for next point */
-	xp = (float) adbuff->BuPoints[j].XCoord / 1000. + x;
-	yp = (float) adbuff->BuPoints[j].YCoord / 1000. + y;
+	xp = (float) PixelToPoint (adbuff->BuPoints[j].XCoord + x);
+	yp = (float) PixelToPoint (adbuff->BuPoints[j].YCoord + y);
 	fprintf (fout, "%f -%f\n", xp, yp);
 	j++;
      }
@@ -1416,8 +1412,6 @@ C_points           *controls;
    CurrentColor (fout, fg);
 
    lg = HL + thick;
-   x = PixelToPoint (x);
-   y = PixelToPoint (y);
    j = 1;
    i = 2;
    adbuff = buffer;
@@ -1427,12 +1421,12 @@ C_points           *controls;
    newx = adbuff->BuPoints[j].XCoord;
    newy = adbuff->BuPoints[j].YCoord;
    /* control points for first arc */
-   x1 = (float) lastx / 1000 + x;
-   y1 = (float) lasty / 1000 + y;
-   x2 = (float) (PixelToPoint ((int) (controls[i].lx * 3000)) + lastx) / 4000 + x;
-   y2 = (float) (PixelToPoint ((int) (controls[i].ly * 3000)) + lasty) / 4000 + y;
-   x3 = (float) (PixelToPoint ((int) (controls[i].lx * 3000)) + newx) / 4000 + x;
-   y3 = (float) (PixelToPoint ((int) (controls[i].ly * 3000)) + newy) / 4000 + y;
+   x1 = (float) (lastx + x);
+   y1 = (float) (lasty + y);
+   x2 = (float) (PixelToPoint ((int) controls[i].lx * 3 + lastx / 4 + x));
+   y2 = (float) (PixelToPoint ((int) controls[i].ly * 3 + lasty / 4 + y));
+   x3 = (float) (PixelToPoint ((int) controls[i].lx * 3 + newx / 4 + x));
+   y3 = (float) (PixelToPoint ((int) controls[i].ly * 3 + newy / 4 + y));
 
    /* backward arrow  */
    if (arrow == 2 || arrow == 3)
@@ -1457,21 +1451,21 @@ C_points           *controls;
 	lasty = newy;
 	newx = adbuff->BuPoints[j].XCoord;
 	newy = adbuff->BuPoints[j].YCoord;
-	x1 = (float) lastx / 1000 + x;
-	y1 = (float) lasty / 1000 + y;
+	x1 = (float) lastx + x;
+	y1 = (float) lasty + y;
 	if (i < nb - 2)
 	  {
-	     x2 = (float) PixelToPoint ((int) (controls[i].rx * 1000)) / 1000 + x;
-	     y2 = (float) PixelToPoint ((int) (controls[i].ry * 1000)) / 1000 + y;
-	     x3 = (float) PixelToPoint ((int) (controls[i + 1].lx * 1000)) / 1000 + x;
-	     y3 = (float) PixelToPoint ((int) (controls[i + 1].ly * 1000)) / 1000 + y;
+	     x2 = (float) PixelToPoint ((int) controls[i].rx + x);
+	     y2 = (float) PixelToPoint ((int) controls[i].ry + y);
+	     x3 = (float) PixelToPoint ((int) controls[i + 1].lx + x);
+	     y3 = (float) PixelToPoint ((int) controls[i + 1].ly + y);
 	  }
 	else if (i == nb - 2)
 	  {
-	     x2 = (float) (PixelToPoint ((int) (controls[i].rx * 3000)) + lastx) / 4000 + x;
-	     y2 = (float) (PixelToPoint ((int) (controls[i].ry * 3000)) + lasty) / 4000 + y;
-	     x3 = (float) (PixelToPoint ((int) (controls[i].rx * 3000)) + newx) / 4000 + x;
-	     y3 = (float) (PixelToPoint ((int) (controls[i].ry * 3000)) + newy) / 4000 + y;
+	     x2 = (float) PixelToPoint (((int) controls[i].rx * 3 + lastx) / 4 + x);
+	     y2 = (float) PixelToPoint (((int) controls[i].ry * 3 + lasty) / 4 + y);
+	     x3 = (float) PixelToPoint (((int) controls[i].rx * 3 + newx) / 4 + x);
+	     y3 = (float) PixelToPoint (((int) controls[i].ry * 3 + newy) / 4 + y);
 	  }
      }
    fprintf (fout, "%f -%f %d %d %d Curv\n", x1, y1, style, thick, nb - 1);
@@ -1525,20 +1519,18 @@ C_points           *controls;
    /* Do we need to change the current color ? */
    CurrentColor (fout, fg);
    FillWithPattern (fout, fg, bg, pattern);
-   x = PixelToPoint (x);
-   y = PixelToPoint (y);
    j = 1;
    i = 1;
    adbuff = buffer;
-   x0 = x1 = (float) adbuff->BuPoints[j].XCoord / 1000 + x;
-   y0 = y1 = (float) adbuff->BuPoints[j].YCoord / 1000 + y;
-   x2 = (float) PixelToPoint ((int) ((controls[i].rx * 1000))) / 1000 + x;
-   y2 = (float) PixelToPoint ((int) ((controls[i].ry * 1000))) / 1000 + y;
+   x0 = x1 = (float) adbuff->BuPoints[j].XCoord + x;
+   y0 = y1 = (float) adbuff->BuPoints[j].YCoord + y;
+   x2 = (float) PixelToPoint ((int) controls[i].rx + x);
+   y2 = (float) PixelToPoint ((int) controls[i].ry + y);
 
    for (i = 2; i < nb; i++)
      {
-	x3 = (float) PixelToPoint ((int) ((controls[i].lx * 1000))) / 1000 + x;
-	y3 = (float) PixelToPoint ((int) ((controls[i].ly * 1000))) / 1000 + y;
+	x3 = (float) PixelToPoint ((int) controls[i].lx + x);
+	y3 = (float) PixelToPoint ((int) controls[i].ly + y);
 	fprintf (fout, "%f -%f %f -%f %f -%f\n", x3, y3, x2, y2, x1, y1);
 	j++;
 	if (j >= adbuff->BuLength)
@@ -1550,15 +1542,15 @@ C_points           *controls;
 		  j = 0;
 	       }
 	  }
-	x1 = (float) adbuff->BuPoints[j].XCoord / 1000 + x;
-	y1 = (float) adbuff->BuPoints[j].YCoord / 1000 + y;
-	x2 = (float) PixelToPoint ((int) ((controls[i].rx * 1000))) / 1000 + x;
-	y2 = (float) PixelToPoint ((int) ((controls[i].ry * 1000))) / 1000 + y;
+	x1 = (float) adbuff->BuPoints[j].XCoord + x;
+	y1 = (float) adbuff->BuPoints[j].YCoord + y;
+	x2 = (float) PixelToPoint ((int) controls[i].rx + x);
+	y2 = (float) PixelToPoint ((int) controls[i].ry + y);
      }
 
    /* Close the stroke */
-   x3 = (float) PixelToPoint ((int) ((controls[1].lx * 1000))) / 1000 + x;
-   y3 = (float) PixelToPoint ((int) ((controls[1].ly * 1000))) / 1000 + y;
+   x3 = (float) PixelToPoint ((int) (controls[1].lx)) + x;
+   y3 = (float) PixelToPoint ((int) (controls[1].ly)) + y;
    fprintf (fout, "%f -%f %f -%f %f -%f\n", x3, y3, x2, y2, x1, y1);
    fprintf (fout, "%f -%f %d %d %d Splin\n", x0, y0, style, thick, nb);
 }

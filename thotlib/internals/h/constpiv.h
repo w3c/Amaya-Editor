@@ -109,6 +109,7 @@
 /* units of measure codes */	
 #define C_PIV_EM 'C'
 #define C_PIV_PT 'P'
+#define C_PIV_PX 'x'
 #define C_PIV_PERCENT '%'
 
 /* arithmetic signs codes */

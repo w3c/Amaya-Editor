@@ -152,6 +152,8 @@ TypeUnit            unit;
 {
    if (unit == UnPoint)
       TtaWriteByte (pivFile, C_PIV_PT);
+   else if (unit == UnPixel)
+      TtaWriteByte (pivFile, C_PIV_PX);
    else
       TtaWriteByte (pivFile, C_PIV_EM);
 }

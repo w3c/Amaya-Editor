@@ -1666,53 +1666,9 @@ int             *y;
    /* extrait la partie de la ligne qui suit les deux-points */
    getStringAfterColon (line, seqLine);
    if (seqLine[0] != WC_EOS)
-     {
-       /* extrait les 4 entiers */
-       nbIntegers = usscanf (seqLine, TEXT("%d %d"), x, y);
-       if (nbIntegers == 2)
-         if (DOT_PER_INCHE != 83)
-	   {
-	     /* convertit si necessaire en fonction de la resolution de l'ecran */
-	     *x = (int) ((float) (*x * 83) / (float) DOT_PER_INCHE);
-	     *y = (int) ((float) (*y * 83) / (float) DOT_PER_INCHE);
-	   }
-     }
+     /* extrait les 4 entiers */
+     nbIntegers = usscanf (seqLine, TEXT("%d %d"), x, y);
    TtaReadClose (file);
-}
-
-/*----------------------------------------------------------------------
-   pixeltomm converts pixels into mm
-   motif_conversion is true whenever we want to convert the geometry value
-   returned by motif.
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static int          pixeltomm (int value, ThotBool motif_conversion)
-#else  /* __STDC__ */
-static int          pixeltomm (value, motif_conversion)
-int                 value;
-ThotBool            motif_conversion;
-#endif /* __STDC__ */
-{
-  /* converts the resolution of the screen, if needed */
-  value = (int) (((float) value) * 25.4 / DOT_PER_INCHE);
-  return value;
-}
-
-/*----------------------------------------------------------------------
-   mmtopixel converts mm into pixels
-   motif_conversion is true whenever we want to convert the geometry value
-   returned by motif.
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static int          mmtopixel (int value, ThotBool motif_conversion)
-#else  /* __STDC__ */
-static int          mmtopixel (value, motif_conversion)
-int                 value;
-ThotBool            motif_conversion;
-#endif /* __STDC__ */
-{
-  value = (int) (((float) (value * DOT_PER_INCHE)) / 25.4);
-  return value;
 }
 
 /*----------------------------------------------------------------------
@@ -1750,14 +1706,7 @@ int                *height;
 	fprintf (stderr, "invalid line in file %s.conf\n   %s\n",
 		 pDoc->DocSSchema->SsName, line);
       else
-	{
-	  /* convertit si necessaire en fonction de la resolution de l'ecran */
-	  *x = mmtopixel (*x, TRUE);
-	  *y = mmtopixel (*y, TRUE);
-	  *width = mmtopixel (*width, TRUE);
-	  *height = mmtopixel (*height, TRUE);
-	  result = TRUE;
-	}
+	result = TRUE;
     }
   return result;
 }
@@ -1916,11 +1865,11 @@ int           *height;
   XtGetValues (widget, args, n);
 #endif /* !_GTK */
   /* convert the result into mm */
-  *xmm = pixeltomm ((int) x, TRUE);
+  *xmm = x;
   /* take into account the window manager headband */
-  *ymm = pixeltomm ((int) y - 18, TRUE);
-  *width = pixeltomm ((int) w, TRUE);
-  *height = pixeltomm ((int) h, TRUE);
+  *ymm = y - 18;
+  *width = w;
+  *height = h;
 #else /* !_WINDOWS */
   int  frame;
   HWND hWnd;
@@ -1938,10 +1887,6 @@ int           *height;
       *ymm = (int) (rect.top);
       *width = (int) (rect.right - rect.left);
       *height = (int) (rect.bottom - rect.top);
-      *xmm = pixeltomm (*xmm, TRUE);
-      *ymm = pixeltomm (*ymm, TRUE);
-      *width = pixeltomm (*width, TRUE);
-      *height = pixeltomm (*height, TRUE);
     }
 #endif /* !_WINDOWS */
 }
@@ -2016,12 +1961,6 @@ int                *height;
 #endif /* __STDC__ */
 {
    TtaGetViewGeometry (document, name, x, y, width, height);
-   /* the above function returns the geometry in pixels, so we'll now convert
-      it to mm */
-   *x = pixeltomm (*x, FALSE);
-   *y = pixeltomm (*y, FALSE);
-   *width = pixeltomm (*width, FALSE);
-   *height = pixeltomm (*height, FALSE);
 }
 
 /*----------------------------------------------------------------------
