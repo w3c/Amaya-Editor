@@ -37,11 +37,11 @@
 #
 
 /* RDF Property names */
-#define DEFAULT_ANNOT_TYPE "http://www.w3.org/1999/xx/annotation-ns#Comment"
-#define RDF_TYPE  "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
-#define RDFS_LABEL "http://www.w3.org/2000/01/rdf-schema#label"
-#define RDFS_SUBCLASSOF "http://www.w3.org/2000/01/rdf-schema#subClassOf"
-#define ANNOTATION_PROP "http://www.w3.org/1999/xx/annotation-ns#Annotation"
+#define DEFAULT_ANNOT_TYPE TEXT("http://www.w3.org/1999/xx/annotation-ns#Comment")
+#define RDF_TYPE  TEXT("http://www.w3.org/1999/02/22-rdf-syntax-ns#type")
+#define RDFS_LABEL TEXT("http://www.w3.org/2000/01/rdf-schema#label")
+#define RDFS_SUBCLASSOF TEXT("http://www.w3.org/2000/01/rdf-schema#subClassOf")
+#define ANNOTATION_PROP TEXT("http://www.w3.org/1999/xx/annotation-ns#Annotation")
 
 /* Structures and global variables */
 
@@ -177,7 +177,6 @@ typedef struct _RDFStatement
 #include "ANNOTschemas_f.h"
 
 #endif /* ANNOTATIONS_H */
-
 
 
 

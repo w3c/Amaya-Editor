@@ -756,11 +756,16 @@ View view;
   REMOTELOAD_context *ctx;
   int res;
   CHAR_T *rdf_file;
+  CHAR_T *url;
+  ThotBool free_url;
 
   elType.ElSSchema = TtaGetDocumentSSchema (doc);
+  if (!annotPostServer 
+      || *annotPostServer == EOS)
+    return;
   /*
-  if (!annotServer
-      || DocumentTypes[doc] != 10
+    tests for saying we only want post an annotation doc...
+  if (|| DocumentTypes[doc] != 10
       || DocumentTypes[doc] != 11)
     return;
   */
@@ -782,9 +787,32 @@ View view;
   else
     ctx->localfile = NULL;
 
+  /* compute the URL */
+  if (IsW3Path (DocumentURLs[doc]))
+    {
+      /* we're saving a modification to an existing annotation */
+      url = TtaGetMemory (ustrlen (annotPostServer)
+			  + sizeof (TEXT("?replace_source="))
+			  + ustrlen (DocumentURLs[doc])
+			  + sizeof (TEXT("&rdftype="))
+			  + sizeof (ANNOTATION_PROP)
+			  + 1);
+      usprintf (url,"%s?replace_source=%s&rdftype=%s",
+		annotPostServer,
+		DocumentURLs[doc],
+		ANNOTATION_PROP);
+      free_url = TRUE;
+    }
+  else
+    {
+      /* we're saving a new annotation */
+      url = annotPostServer;
+      free_url = FALSE;
+    }
+
   /* launch the request */
   res = GetObjectWWW (doc,
-		      annotPostServer,
+		      url,
 		      rdf_file,
 		      ctx->remoteAnnotIndex,
 		      AMAYA_FILE_POST | AMAYA_ASYNC | AMAYA_FLUSH_REQUEST,
@@ -794,6 +822,8 @@ View view;
 		      (void *) ctx,
 		      NO,
 		      NULL);
+  if (free_url)
+    TtaFreeMemory (url);
   /* @@ here we should delete the context or call the callback in case of
      error */
   if (res)
@@ -1292,17 +1322,13 @@ void ANNOT_Delete (document, view)
       if (annot_server)
 	{
 	  /* compute the form_data */
-	  i =  (sizeof (TEXT("delete_source="))
-				   + ustrlen (annot_url)
-				   + sizeof (TEXT("&rdftype=http://www.w3.org/1999/xx/annotation-ns#/Annotation"))
-				   + 1);
-	  form_data = TtaGetMemory (sizeof (TEXT("delete_source="))
-				   + ustrlen (annot_url)
-				   + sizeof (TEXT("&rdftype=http://www.w3.org/1999/xx/annotation-ns#/Annotation"))
-				   + 1);
+	  form_data = TtaGetMemory  (sizeof (TEXT("delete_source="))
+				     + ustrlen (annot_url)
+				     + sizeof (TEXT("&rdftype="))
+				     + sizeof (ANNOTATION_PROP)
+				     + 1);
 	  usprintf (form_data,
-		    "delete_source=%s&rdftype=http://www.w3.org/1999/xx/annotation-ns#Annotation",
-		    annot_url);
+		    "delete_source=%s&rdftype=%s", annot_url, ANNOTATION_PROP);
 	  /* launch the request */
 	  res = GetObjectWWW (doc,
 			      annot_server,
