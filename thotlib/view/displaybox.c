@@ -1132,6 +1132,8 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 		    }
 		 
 		  nbcar = 0;
+		  if (!Printing)
+		    {
 		  if (car == SPACE)
 		    {
 		      if (restbl > 0)
@@ -1145,6 +1147,7 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 		    }
 		  else
 		    x += CharacterWidth (car, nextfont);
+		    }
 		  /* a new space is handled */
 		  bl++;
 		}
