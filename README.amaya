@@ -7,7 +7,7 @@ About this release
 
 Amaya is intended to be a comprehensive environment for testing and
 evaluating new proposals for Web standards and formats. The first version of
-this testbed has been available in April 1996.
+this testbed was released in April 1996.
 
 For more information:  http://www.w3.org/Amaya
 
@@ -26,9 +26,9 @@ For subscribing to the mailing list, send a message to:
 
 www-amaya-request@w3.org
 
-with a body containing the line:
+with a subject containing the line:
 
-subscribe www-amaya
+subscribe
 
 A history is maintained at the following URL:
 
@@ -95,10 +95,14 @@ Extract the source tar file: amaya-src-release.tar.gz
 Set up the environment and start the compiling
 ----------------------------------------------
 
-You have to create a new directory platform or obj within the directory Amaya then you have
-to go within this new directory.
-In this directory, you call configure application:
-../configure
+You have to create a new directory platform-name or obj within the 
+directory Amaya. Then you have to call the configure application, which
+is in the Amaya directory, from within this subdirectory.
+For example, if we want to compile Amaya in a LINUX platform, we could do the
+following:
+[1]>cd Amaya
+[2]>mkdir LINUX-ELF
+[3]>cd LINUX-ELF
+[4]>../configure
 
-See http://www.w3.org/Amaya/User/Autoconf.html for more
-information.
+See http://www.w3.org/Amaya/User/Autoconf.html for more information.
