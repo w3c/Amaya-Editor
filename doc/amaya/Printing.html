@@ -8,7 +8,7 @@
 </head>
 
 <body lang="en">
-
+ 
 <table border="0" width="100%" summary="toc">
   <tbody>
     <tr>
@@ -34,58 +34,74 @@ Postscript description, so you need to have a PostScript printer or use a
 application able to translate the PostScript into your specific printer
 language.</p>
 
-<p>There are two commands for printing a document:</p>
+<p>There are three ways for printing a document thru Amaya:</p>
 <ul>
-  <li>The <strong>Setup and Print</strong> command (File/Setup and Print)
-    allows you to set some parameters before printing.
-    <p>On Unix platforms these parameters are:</p>
-    <ul>
-      <li>the paper format: A4. US</li>
-      <li>the orientation: Portrait, Landscape</li>
-      <li>the number of pages printed on the same sheet of paper: 1, 2, 4
-        pages per sheet</li>
-      <li>the output: file, or printer</li>
-      <li>options:
-        <ul>
-          <li>Manual feed</li>
-          <li>Generation of the table of contents of the document</li>
-          <li>Generation of  the table of links: a number is generated after
-            each link in the document that refers an entry within the table of
-            links; each table entry lists the corresponding URL</li>
-          <li>Printing of the document URL</li>
-          <li>Printing with CSS style sheets</li>
-        </ul>
-      </li>
-    </ul>
-    <p>On Windows platforms, a first dialogue box propose following
-    options:</p>
-    <ul type="square">
-      <li>Generation of the table of contents of the document</li>
-      <li>Generation of  the table of links of the document</li>
-      <li>Printing of the document URL,</li>
-      <li>Printing with CSS style sheets</li>
-    </ul>
-    <p>then the standard Windows dialogue will let you choose the other
-    parameters.</p>
-  </li>
-  <li>The <strong>Print</strong> command (File/Print) prints the current
-    document with default parameters or previous values set  by the command
-    <strong>Setup and Print</strong>. You may pay attention that parameters
-    (Manual feed, Orientation, etc.) are reset to the default value when the
-    document change.
-    <p>On Windows platforms, the first times you launch the command
-    <strong>Print</strong> the standard Windows dialogue will be displayed to
-    let you check that the default printer is correct. Following printing will
-    be launched without any dialogue.</p>
-  </li>
+  <li>the <strong>Setup and Print </strong>command (<code>File/Setup and
+    Print)</code>, which allows you to set some parameters and options before
+    printing.</li>
+  <li>the <strong>Print command</strong> (<code>File/Print</code>), which
+    prints a document using the configuration setup thru the previous
+  command.</li>
+  <li>the  <img src="../Icons/Print.gif" alt="Print"> <strong>button</strong>,
+    in the button bar, which is a shortcut to the <strong>Print</strong>
+    command on Unix platforms. Under Windows, this button is a shortcut to the
+    <strong>Setup and Print</strong> command. This is due to a problem with
+    the use of DLLs on Windows 95.</li>
 </ul>
 
-<p>In the button bar, the button <img src="../Icons/Print.gif" alt="Print">
-gives you access to the command <strong>Print</strong>. Due to a trouble with
-the use of DLLs on Windows 95, that  button calls the command <strong>Setup
-and Print</strong> on all Windows platforms.</p>
+<h3>Setup and Print command</h3>
 
-<h2>Controlling page breaks with CSS</h2>
+<p>This command allows you to set up different parameters and options. Note
+that some parameters and options are reset to their default value when you
+browse another document. This clear up depends on each platform.</p>
+
+<h4>Unix platforms</h4>
+
+<p>Under Unix, you can set the following parameters:</p>
+<ul>
+  <li>the paper format: A4. US</li>
+  <li>the orientation: Portrait, Landscape</li>
+  <li>the number of pages printed on the same sheet of paper: 1, 2, 4 pages
+    per sheet</li>
+  <li>the output: file, or printer</li>
+</ul>
+
+<p>In addition, you can select the following options:</p>
+<ul>
+  <li>Manual paper feed</li>
+  <li>Generation of the table of contents of the document</li>
+  <li>Generation of  the table of links: a number is generated after each link
+    in the document that refers an entry within the table of links; each table
+    entry lists the corresponding URL</li>
+  <li>Printing of the document URL on each page</li>
+  <li>Printing with  or without CSS style sheets</li>
+</ul>
+
+<h4>Windows platforms</h4>
+
+<p>On Windows platforms, a first dialogue box will propose the following
+options:</p>
+<ul>
+  <li>Generation of the table of contents of the document</li>
+  <li>Generation of  the table of links of the document</li>
+  <li>Printing of the document URL on each page</li>
+  <li>Printing with or without CSS style sheets</li>
+</ul>
+
+<p>then the standard Windows dialogue will let you choose the other printing
+parameters.</p>
+
+<h3>Print command</h3>
+This command prints the current document with the default printing parameters
+or with the values previously set with the command <strong>Setup and
+Print</strong>. 
+
+<p>On Windows platforms, the first time you launch the command
+<strong>Print</strong>, the standard Windows dialogue will be displayed to let
+you check that the default printer is correct. The following
+<strong>Print</strong> commands will be launched without any dialogue.</p>
+
+<h3>Controlling page breaks with CSS</h3>
 
 <p>Amaya supports the CSS page break properties: "<strong>page-break-before:
 always</strong>". When that property is attached to a specific element by an
