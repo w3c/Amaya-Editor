@@ -45,6 +45,7 @@ static char       *DisplayCategory[]={
 #include "UIcss_f.h"
 #include "css_f.h"
 #include "dialog.h"
+#include "fetchXMLname_f.h"
 #include "init_f.h"
 #include "query_f.h"
 #include "styleparser_f.h"

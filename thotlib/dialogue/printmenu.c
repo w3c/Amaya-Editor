@@ -103,7 +103,7 @@ static void Print (char *name, char *dir, char *thotSch, char *thotDoc,
    char                   *printArgv [100];
    int                     printArgc = 0;
 #else /* _WINDOWS_DLL */
-   char                    cmd[1024], c;
+   char                    cmd[1024];
 #ifndef _WINDOWS
    int                     res;
 #endif /*_WINDOWS*/
@@ -648,7 +648,7 @@ static void Print (char *name, char *dir, char *thotSch, char *thotDoc,
        TtaDisplaySimpleMessage (CONFIRM, LIB, TMSG_ERROR_PS_TRANSLATION); 
 
 #endif /* _WINDOWS */
- 
+
 }
 
 /*----------------------------------------------------------------------

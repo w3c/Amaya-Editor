@@ -1202,7 +1202,7 @@ static PtrPRule PresRuleInsert (PtrPSchema tsch, GenericContext ctxt,
 				PRuleType pres, unsigned int extra)
 {
   PtrPRule           *chain;
-  PtrPRule            cur, pRule = NULL;
+  PtrPRule            pRule = NULL;
   int                 i, att;
 
   /* Search presentation rule */
@@ -1394,10 +1394,12 @@ static void PresentationValueToPRule (PresentationValue val, int type,
     }
 
     if (real)
-      if (value > 0)
-	value = (value + 500) / 1000;
-      else
-	value = (value - 500) / 1000;
+      {
+	if (value > 0)
+	  value = (value + 500) / 1000;
+	else
+	  value = (value - 500) / 1000;
+      }
   
   /* now, set-up the value */
   switch (type)
@@ -3043,7 +3045,6 @@ void TtaApplyAllSpecificSettings (Element el, Document doc,
   PtrPRule                 rule;
   PresentationSettingBlock setting;
   PtrPSchema               pPS;
-  int                      cst;
 
   if (el == NULL)
     return;

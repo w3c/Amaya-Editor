@@ -37,10 +37,13 @@ static int          DisplayedRuleCounter;
 #include "absboxes_f.h"
 #include "boxmoves_f.h"
 #include "content_f.h"
+#include "createabsbox_f.h"
 #include "fileaccess_f.h"
 #include "presrules_f.h"
 #include "schemas_f.h"
+#include "selectionapi_f.h"
 #include "structlist_f.h"
+#include "style_f.h"
 #include "thotmsg_f.h"
 #include "tree_f.h"
 #include "viewapi_f.h"
@@ -3731,7 +3734,7 @@ void TtaListStyleSchemas (Document document, FILE *fileDescriptor)
   DisplayPRule displays the presentation rule in the CSS format.
   ----------------------------------------------------------------------*/
 void DisplayPRule (PtrPRule rule, FILE *fileDescriptor,
-		   PtrElement pEl, PtrSSchema pSchS)
+		   PtrElement pEl, PtrPSchema pSchP)
 {
   PresentationSettingBlock setting;
   char                     buffer[200];
@@ -3742,7 +3745,7 @@ void DisplayPRule (PtrPRule rule, FILE *fileDescriptor,
   if (rule->PrSpecificity != 100 && rule->PrCSSLine == 0)
     return;
 
-  PRuleToPresentationSetting (rule, &setting, pSchS);
+  PRuleToPresentationSetting (rule, &setting, pSchP);
   buffer[0] = EOS;
   TtaPToCss (&setting, buffer, 199, (Element) pEl);
   if (buffer[0] == EOS)
@@ -3782,6 +3785,7 @@ int TtaListStyleOfCurrentElement (Document document, FILE *fileDescriptor)
   PtrDocument         pDoc;
   PtrPSchema          pSchP;
   PtrSSchema          pSchS;
+  Element             El;
   PtrElement          pEl;
   PtrPRule            pRDef, pRSpec;
   PtrPRule            queuePR[MAX_QUEUE_LEN];
@@ -3802,7 +3806,8 @@ int TtaListStyleOfCurrentElement (Document document, FILE *fileDescriptor)
     /* parametre document correct */
     {
       pDoc = LoadedDocument[document - 1];
-      TtaGiveFirstSelectedElement (document, &pEl, &f, &l);
+      TtaGiveFirstSelectedElement (document, &El, &f, &l);
+      pEl = (PtrElement) El;
       if (pEl && pEl->ElTerminal)
 	pEl = pEl->ElParent;
       if (pEl)

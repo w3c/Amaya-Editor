@@ -21,7 +21,7 @@
   DisplayPRule displays the presentation rule pointed by RP.
   ----------------------------------------------------------------------*/
 void DisplayPRule (PtrPRule RP, FILE *fileDescriptor,
-		   PtrElement pEl, PtrSSchema pSchS)
+		   PtrElement pEl, PtrPSchema pSchP)
 {
 }
 

@@ -9,7 +9,7 @@
 extern void DisplayPRule ( PtrPRule RP,
                            FILE *fileDescriptor,
                            PtrElement pEl,
-                           PtrSSchema pSchS );
+                           PtrPSchema pSchP );
 extern void ShowBox ( int frame,
                       PtrBox pBox,
                       int position,
@@ -146,7 +146,7 @@ extern ThotBool OpenParsingErrors ( Document document );
 extern void DisplayPRule (/* PtrPRule RP,
                              FILE *fileDescriptor,
                              PtrElement pEl,
-                             PtrSSchema pSchS */);
+                             PtrPSchema pSchP */);
 extern void ShowBox (/* int frame,
                         PtrBox pBox,
                         int position,

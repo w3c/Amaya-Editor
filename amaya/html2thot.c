@@ -4856,7 +4856,6 @@ static void ReadTextFile (FILE *infile, char *textbuf, Document doc,
   AttributeType       attrType;
   Attribute	      attr;
   unsigned char       charRead;
-  char               *ptr;
   int		      val;
   ThotBool            endOfTextFile;
   ThotBool            withinTag = FALSE, withinString = FALSE;

@@ -46,6 +46,7 @@
 #include "callback_f.h"
 #include "contentapi_f.h"
 #include "displayview_f.h"
+#include "documentapi_f.h"
 #include "memory_f.h"
 #include "structcommands_f.h"
 #include "structcreation_f.h"
