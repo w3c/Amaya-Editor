@@ -74,6 +74,7 @@ UnicodeFallbackEntry	UnicodeFallbackTable[] =
 /* fnof     */ {402, 166},  /* latin small f with hook = function = florin, U+0192 ISOtech */
 /* circ     */ {710, 2217}, /* modifier letter circumflex accent, U+02C6 ISOpub */
 /* tilde    */ {732, 1126}, /* small tilde, U+02DC ISOdia */
+/* UnderBar */ {818, 45}, /* U+0332 */
 /* Alpha    */ {913, 65}, /* greek capital letter alpha, U+0391 */
 /* Beta     */ {914, 66}, /* greek capital letter beta, U+0392 */
 /* Gamma    */ {915, 71}, /* greek capital letter gamma, U+0393 ISOgrk3 */
@@ -125,6 +126,7 @@ UnicodeFallbackEntry	UnicodeFallbackTable[] =
 /* omega    */ {969, 119}, /* greek small letter omega, U+03C9 ISOgrk3 */
 /* thetasym */ {977, 74},  /* greek small letter theta symbol, U+03D1 NEW */
 /* upsih    */ {978, 161}, /* greek upsilon with hook symbol, U+03D2 NEW */
+/* phiv     */ {981, 106}, /* greek U+03D5 ISOgrk3 */
 /* piv      */ {982, 118}, /* greek pi symbol, U+03D6 ISOgrk3 */
 /* ensp     */ {8194, 1130}, /* en space, U+2002 ISOpub */
 /* emsp     */ {8195, 1160}, /* em space, U+2003 ISOpub */
@@ -135,6 +137,8 @@ UnicodeFallbackEntry	UnicodeFallbackTable[] =
 /* rlm      */ {8207, 1063}, /* right-to-left mark, U+200F NEW RFC 2070 */
 /* ndash    */ {8211, 2045}, /* en dash, U+2013 ISOpub */
 /* mdash    */ {8212, 2190}, /* em dash, U+2014 ISOpub */
+/* horbar   */ {8213, 190},  /* U+2015 */
+/* Verbar   */ {8214, 189},  /* U+2016 */
 /* lsquo    */ {8216, 1096}, /* left single quotation mark, U+2018 ISOnum */
 /* rsquo    */ {8217, 1039}, /* right single quotation mark, U+2019 ISOnum */
 /* sbquo    */ {8218, 1044}, /* single low-9 quotation mark, U+201A NEW */
@@ -153,17 +157,21 @@ UnicodeFallbackEntry	UnicodeFallbackTable[] =
 /* oline    */ {8254, 1175}, /* overline = spacing overscore,  U+203E NEW */
 /* frasl    */ {8260, 164},  /* fraction slash, U+2044 NEW */
 /* euro     */ {8364, 2206}, /* euro sign, U+20AC NEW */
+/*TripleDot */ {8411, 188},  /* tdot, U+20DB ISOtech */
 /* image    */ {8465, 193},  /* blackletter capital I = imaginary part,  U+2111 ISOamso */
+/* copysf   */ {8471, 211}, /* U+2117 */
 /* weierp   */ {8472, 195}, /* script capital P = power set  = Weierstrass p, U+2118 ISOamso */
 /* real     */ {8476, 194}, /* blackletter capital R = real part symbol,  U+211C ISOamso */
 /* trade    */ {8482, 212}, /* trade mark sign, U+2122 ISOnum */
 /* alefsym  */ {8501, 192}, /* alef symbol = first transfinite cardinal,  U+2135 NEW */
+/*DifferentialD*/ {8518, 100}, /* U+2146 */
 /* larr     */ {8592, 172}, /* leftwards arrow, U+2190 ISOnum */
 /* uarr     */ {8593, 173}, /* upwards arrow, U+2191 ISOnum*/
 /* rarr     */ {8594, 174}, /* rightwards arrow, U+2192 ISOnum */
 /* darr     */ {8595, 175}, /* downwards arrow, U+2193 ISOnum */
 /* harr     */ {8596, 171}, /* left right arrow, U+2194 ISOamsa */
 /* crarr    */ {8629, 191}, /* downwards arrow with corner leftwards  = carriage return, U+21B5 NEW */
+/* lrarr    */ {8646, 171}, /* U+21C6 */
 /* lArr     */ {8656, 220}, /* leftwards double arrow, U+21D0 ISOtech */
 /* uArr     */ {8657, 221}, /* upwards double arrow, U+21D1 ISOamsa */
 /* rArr     */ {8658, 222}, /* rightwards double arrow,  U+21D2 ISOtech */
@@ -191,7 +199,9 @@ UnicodeFallbackEntry	UnicodeFallbackTable[] =
 /* cup      */ {8746, 200}, /* union = cup, U+222A ISOtech */
 /* int      */ {8747, 242}, /* integral, U+222B ISOtech */
 /* there4   */ {8756, 92},  /* therefore, U+2234 ISOtech */
+/* Colon    */ {8759, 58},  /* Colon, U+2237 */
 /* sim      */ {8764, 126}, /* tilde operator = varies with = similar to,  U+223C ISOtech */
+/*EqualTilde*/ {8770, 64},  /* U+2242 ISOamsr */
 /* cong     */ {8773, 64},  /* approximately equal to, U+2245 ISOtech */
 /* asymp    */ {8776, 187}, /* almost equal to = asymptotic to,  U+2248 ISOamsr */
 /* ne       */ {8800, 185}, /* not equal to, U+2260 ISOtech */
@@ -203,21 +213,36 @@ UnicodeFallbackEntry	UnicodeFallbackTable[] =
 /* nsub     */ {8836, 203}, /* not a subset of, U+2284 ISOamsn */
 /* sube     */ {8838, 205}, /* subset of or equal to, U+2286 ISOtech */
 /* supe     */ {8839, 202}, /* superset of or equal to,  U+2287 ISOtech */
+/* subne    */ {8842, 203}, /* U+228A */
 /* oplus    */ {8853, 197}, /* circled plus = direct sum,  U+2295 ISOamsb */
 /* otimes   */ {8855, 196}, /* circled times = vector product,  U+2297 ISOamsb */
+/* DownTee  */ {8868, 94},  /* U+22A4 ISOtech */
 /* perp     */ {8869, 94},  /* up tack = orthogonal to = perpendicular,  U+22A5 ISOtech */
+/* Vee      */ {8897, 218},  /* U+22C1 ISOamsb */
+/*Intersection*/ {8898, 199},  /* U+22C2 ISOamsb */
+/*Intersection*/ {8899, 200},  /* U+22C3 ISOamsb */
+/* Diamond  */ {8900, 168}, /* diamond operator, U+22C4 ISOamsb */
 /* sdot     */ {8901, 215}, /* dot operator, U+22C5 ISOamsb */
+/* Subset   */ {8912, 204}, /* U+22D0 */
+/* Cap      */ {8914, 199}, /* U+22D2 */
+/* Cup      */ {8915, 199}, /* U+22D3 */
 /* lceil    */ {8968, 233}, /* left ceiling = apl upstile,  U+2308 ISOamsc  */
 /* rceil    */ {8969, 249}, /* right ceiling, U+2309 ISOamsc  */
 /* lfloor   */ {8970, 235}, /* left floor = apl downstile,  U+230A ISOamsc  */
 /* rfloor   */ {8971, 251}, /* right floor, U+230B ISOamsc  */
 /* lang     */ {9001, 225}, /* left-pointing angle bracket = bra,  U+2329 ISOtech */
 /* rang     */ {9002, 241}, /* right-pointing angle bracket = ket,  U+232A ISOtech */
+/* dtri     */ {9663, 209}, /* lozenge, U+25BF */
 /* loz      */ {9674, 224}, /* lozenge, U+25CA ISOpub */
 /* spades   */ {9824, 170}, /* black spade suit, U+2660 ISOpub */
 /* clubs    */ {9827, 167}, /* black club suit = shamrock,  U+2663 ISOpub */
 /* hearts   */ {9829, 169}, /* black heart suit = valentine,  U+2665 ISOpub */
 /* diams    */ {9830, 168}, /* black diamond suit, U+2666 ISOpub */
+/* And      */ {10835, 217}, /* U+2A53 */
+/* Or       */ {10836, 218}, /* U+2A54 */
+/* Not      */ {10988, 216}, /* U+2AEC */
+/* OverBrace*/ {65079, 132}, /* U+FE37 */
+/*UnderBrace*/ {65080, 133}, /* U+FE38 */
 
 /* THE END  */ {0, 0}	    /* last entry (required) */
 };
