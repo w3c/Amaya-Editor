@@ -265,14 +265,8 @@ unsigned long       BackGroundPixel;
      }
 
    wim = image.width;
-   /*him = image.height; */
-
-
-
    /* generation of the poscript , header Dumpimage2 + dimensions  */
    /* + picture location. Each pixel = RRGGBB in  hexa    */
-
-
    fprintf ((FILE *) fd, "gsave %d -%d translate\n", PixelToPoint (xif), PixelToPoint (yif + hif));
    fprintf ((FILE *) fd, "%d %d %d %d DumpImage2\n", PicWArea, PicHArea, PixelToPoint (wif), PixelToPoint (hif));
    fprintf ((FILE *) fd, "\n");

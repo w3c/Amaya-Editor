@@ -1289,7 +1289,7 @@ PictInfo           *imageDesc;
 	 }
      }
 
-   if (imageDesc->PicPresent != ReScale)
+   if (imageDesc->PicPresent != ReScale || Printing)
      {
        imageDesc->PicXArea = xFrame;
        imageDesc->PicYArea = yFrame;

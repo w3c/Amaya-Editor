@@ -1072,10 +1072,11 @@ ThotEvent             *ev;
 
 #endif /* __STDC__ */
 {
-    if (NewFetchEvent) {
+    if (NewFetchEvent)
+      {
         NewFetchEvent(ev);
 	return;
-    }
+      }
 #ifndef _WINDOWS
     XtAppNextEvent (app_cont, ev);
 #endif /* ! _WINDOWS */
@@ -1104,10 +1105,13 @@ ThotEvent             *ev;
 
 #ifndef _WINDOWS
    status = XtAppPending (app_cont);
-   if (status != 0) {
+   if (status != 0)
+     {
        XtAppNextEvent (app_cont, ev);
        return(TRUE);
-   }
+     }
+   return(FALSE);
+#else /* ! _WINDOWS */
    return(FALSE);
 #endif /* ! _WINDOWS */
 }
@@ -1237,9 +1241,8 @@ void                TtaHandlePendingEvents ()
 #ifndef _WINDOWS
    ThotEvent              ev;
 
-   while (TtaFetchOneAvailableEvent(&ev)) {
-       TtaHandleOneEvent (&ev);
-   }
+   while (TtaFetchOneAvailableEvent(&ev))
+     TtaHandleOneEvent (&ev);
 #endif /* _WINDOWS */
 }
 
@@ -1278,12 +1281,14 @@ void                TtaMainLoop ()
    /* Loop wainting for the events */
    while (1)
      {
-        if (NewMainLoop != NULL) {
+        if (NewMainLoop != NULL)
+	  {
 	    NewMainLoop();
 	    continue;
-	}
+	  }
 #ifndef _WINDOWS
         TtaFetchOneEvent(&ev);
+printf("event->type=%d\n", ev.type);
 	TtaHandleOneEvent(&ev);
 #else  /* !_WINDOWS */
 	if (GetMessage (&msg, NULL, 0, 0))

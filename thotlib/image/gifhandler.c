@@ -1584,61 +1584,48 @@ unsigned long       BackGroundPixel;
    xtmp = 0;
    ytmp = 0;
    switch (pres)
+     {
+     case FillFrame:
+     case XRepeat:
+     case YRepeat:
+     case RealSize:
+       delta = (wif - PicWArea) / 2;
+       if (delta > 0)
 	 {
-	    case RealSize:
-	    case FillFrame:
-	    case XRepeat:
-	    case YRepeat:
-	    case ReScale:
-	       delta = (wif - PicWArea) / 2;
-	       if (delta > 0)
-		 {
-		    xif += delta;
-		    wif = PicWArea;
-		 }
-	       else
-		 {
-		    xtmp = -delta;
-		    PicWArea = wif;
-		 }
-	       delta = (hif - PicHArea) / 2;
-	       if (delta > 0)
-		 {
-		    yif += delta;
-		    hif = PicHArea;
-		 }
-	       else
-		 {
-
-		    ytmp = -delta;
-		    PicHArea = hif;
-		 }
-	       fprintf (fd, "gsave %d -%d translate\n", PixelToPoint (xif), PixelToPoint (yif + hif));
-	       break;
-#ifdef IV
-	    case ReScale:
-	       if ((float) PicHArea / (float) PicWArea <= (float) hif / (float) wif)
-		 {
-		    Scx = (float) wif / (float) PicWArea;
-		    yif += (hif - (PicHArea * Scx)) / 2;
-		    hif = PicHArea * Scx;
-		 }
-	       else
-		 {
-		    Scy = (float) hif / (float) PicHArea;
-		    xif += (wif - (PicWArea * Scy)) / 2;
-		    wif = PicWArea * Scy;
-		 }
-	       break;
-#endif
-	    default:
-	       break;
+	   xif += delta;
+	   wif = PicWArea;
 	 }
+       else
+	 {
+	   xtmp = -delta;
+	   PicWArea = wif;
+	 }
+       delta = (hif - PicHArea) / 2;
+       if (delta > 0)
+	 {
+	   yif += delta;
+	   hif = PicHArea;
+	 }
+       else
+	 {
+	   
+	   ytmp = -delta;
+	   PicHArea = hif;
+	 }
+       fprintf (fd, "gsave %d -%d translate\n", PixelToPoint (xif), PixelToPoint (yif + hif));
+       fprintf (fd, "%d %d %d %d DumpImage2\n", PicWArea, PicHArea, PixelToPoint (wif), PixelToPoint (hif));
+       break;
+     case ReScale:
+       fprintf (fd, "gsave %d -%d translate\n", PixelToPoint (xif), PixelToPoint (yif + hif));
+       fprintf (fd, "%d %d %d %d DumpImage2\n", PicWArea, PicHArea, PixelToPoint (wif), PixelToPoint (hif));
+       wif = PicWArea;
+       hif = PicHArea;
+       break;
+     default:
+       break;
+     }
 
    wim = w;
-   /*m = h; */
-
-   fprintf (fd, "%d %d %d %d DumpImage2\n", PicWArea, PicHArea, PixelToPoint (wif), PixelToPoint (hif));
    fprintf (fd, "\n");
    NbCharPerLine = wim;
 

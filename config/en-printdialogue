@@ -1,10 +1,6 @@
-0 Missing file: %s
-1 Unable to create file %s
-2 The document does not begin with a page break
-3 Page is too long, format the document
-4 Page %4d
-5 \n%s
-6 \nFile closed\n
-7 Name of document to be printed:
-8 document directory:
-9 name of view to be printed:
+0 Missing file: %s\n
+1 Unable to create file %s\n
+2 The document does not begin with a page break\n
+3 Page is too long, format the document\n
+4 Error: destination is already given\n
+5 Error: bad option (%s). Program aborted\n
