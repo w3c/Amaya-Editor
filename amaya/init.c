@@ -86,6 +86,9 @@
 #include <direct.h>
 #endif 
 */
+extern HWND FrMainRef [12];
+extern int  currentFrame;
+
 int  Window_Curs;
 
 CHAR_T docToOpen [256];
@@ -3303,6 +3306,11 @@ void               *ctx_cbf;
    ThotBool            ok;
    GETHTMLDocument_context *ctx = NULL;
 
+#  ifdef _WINDOWS
+   int    ndx, len;
+   STRING title;
+#  endif /* _WINDOWS */
+
 
    /* Extract parameters if necessary */
    if (ustrlen (documentPath) > MAX_LENGTH - 1) 
@@ -3551,6 +3559,29 @@ void               *ctx_cbf;
        TtaFreeMemory (documentname);
        TtaFreeMemory (tempdocument);
      }
+
+#  ifdef _WINDOWS
+   ndx = len = ustrlen (pathname) - 1;
+
+   if (pathname[len] == TEXT('/')) {
+      len--;
+	  ndx--;
+   }
+
+   while (pathname[ndx] != TEXT('/') && pathname[ndx] != TEXT('\\'))
+         ndx--;
+   
+   if (ndx == len)
+      SetWindowText (FrMainRef[currentFrame], TEXT("untitled"));
+   else {
+        title = TtaAllocString (len - ndx + 1);
+        ustrcpy (title, &pathname[ndx + 1]);
+        if (title [len-ndx] == TEXT('/'))
+           title [len-ndx] = EOS;
+
+        SetWindowText (FrMainRef[currentFrame], title);
+   }
+#  endif /* _WINDOWS */
 
    TtaFreeMemory (parameters);
    TtaFreeMemory (tempfile);
