@@ -39,10 +39,10 @@ This file  is used to define global parameters for Thot applications (Amaya is
 a Thot application). In this file, there's a section called
 <code>[amaya]</code> where the configuration options are specified for <a
 href="#L138">the default home page</a>, <a href="#Specifying">proxies</a><a>,
-</a><a href="#Network">network timeouts</a>, <a href="#Cache">network cache</a>, <a
-href="#Multi-key"> multi-key support</a>, <a href="#Double-click">double-click
-delay, <a href="#L139">default colors</a>,
-<a href="#Default">default zoom-factor</a>,<a href="#L140"> colors
+</a><a href="#Network">network timeouts</a>, <a href="#Cache">network
+cache</a>, <a href="#Multi-key"> multi-key support</a>, <a
+href="#Double-click">double-click delay, </a><a href="#L139">default
+colors</a>, <a href="#Default">default zoom-factor</a>,<a href="#L140"> colors
 palette</a>, <a href="#L141">dialogue language</a>, <a
 href="#Personnal">personal dictionary</a>, and <a href="#L242"> default
 printer command</a>.</p>
@@ -59,14 +59,14 @@ This file defines <a href="#L236">Amaya keyboard shortcuts</a>.</p>
 <li>
 The <a name="HTML1">HTML configuration file</a>
 <strong>$HOME/HTML.conf</strong> (this file is specific to a Unix user) or
-<strong>Thot/amaya/HTMLconf</strong> (this file is the default for Unix or
+<strong>Thot/amaya/HTML.conf</strong> (this file is the default for Unix or
 Windows users). This file defines the <a href="#HTML">position</a> and the <a
 href="#HTML">size</a> of Amaya document windows.
 </li>
 <li>
-The user's style sheet are defined in the file
-<strong>$HOME/.amaya.css</strong> (Unix) or
-<strong>Thot/amaya/amaya.css</strong> (Windows).
+File <strong>$HOME/.amaya.css</strong> (Unix) or
+<strong>Thot/amaya/amaya.css</strong> (Windows) contains the user's style
+sheet.
 </li>
 </ul>
 <p>
@@ -127,8 +127,8 @@ Timeout while consulting a domain name server
 <dd>
 Timeout before closing an idle persistent connection (keep-alive)
 </dd>
-<dt><strong>NET_EVENT_TIMEOUT</strong> [in milliseconds, default 60000
-ms, use -1 to supress the timeout]</dt>
+<dt><strong>NET_EVENT_TIMEOUT</strong> [in milliseconds, default 60000 ms, use
+-1 to supress the timeout]</dt>
 <dd>
 Timeout while waiting for a network event (e.g., while opening a connection)
 </dd>
@@ -549,14 +549,13 @@ value "<code>ENABLE_MULTIKEY=yes</code>".</p>
 <h3><a name="Double-click">Double-click delay</a></h3>
 <p>
 On Unix platforms only, the variable <code>DOUBLECLICKDELAY</code> of the
-registry $HOME/.thotrc allows one to control the delay under
-which two mouse clicks are classed as a double-click. The syntax of this
-variable is:</p>
+registry $HOME/.thotrc allows one to control the delay under which two mouse
+clicks are classed as a double-click. The syntax of this variable is:</p>
 <dl>
 <dt></dt>
 <dd>
-<strong>DOUBLECLICKDELAY</strong> [value in milliseconds, default 
-500 ms]</dd>
+<strong>DOUBLECLICKDELAY</strong> [value in milliseconds, default 500 ms]
+</dd>
 </dl>
 
 <h3><a name="L236">Keyboard Shortcuts</a></h3>
