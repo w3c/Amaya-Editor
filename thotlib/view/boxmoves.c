@@ -3572,6 +3572,8 @@ void WidthPack (PtrAbstractBox pAb, PtrBox pSourceBox, int frame)
    * Check if the width depends on the box contents
    * and if we're not already doing the job
    */
+  if (pAb == NULL)
+    return;
   pBox = pAb->AbBox;
   if (pBox == NULL)
     return;
@@ -3828,6 +3830,8 @@ void HeightPack (PtrAbstractBox pAb, PtrBox pSourceBox, int frame)
    * Check if the height depends on the box contents
    * and if we're not already doing the job
    */
+  if (pAb == NULL)
+    return;
   pBox = pAb->AbBox;
   if (pBox == NULL)
     return;
