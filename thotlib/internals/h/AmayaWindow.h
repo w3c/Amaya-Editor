@@ -96,6 +96,7 @@ class AmayaWindow : public wxFrame
   virtual AmayaFrame * GetActiveFrame() const;
 
   virtual AmayaPanel * GetAmayaPanel() const;
+  virtual bool IsPanelOpened();
   virtual void ClosePanel();
   virtual void OpenPanel();
 

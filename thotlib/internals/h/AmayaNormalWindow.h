@@ -96,6 +96,7 @@ class AmayaNormalWindow : public AmayaWindow
   virtual void     SetupURLBar();
 
   AmayaPanel * GetAmayaPanel() const;
+  bool IsPanelOpened();
   void ClosePanel();
   void OpenPanel();
   

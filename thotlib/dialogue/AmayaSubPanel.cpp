@@ -454,7 +454,7 @@ void AmayaSubPanel::SendDataToPanel( AmayaPanelParams& p )
  */
 bool AmayaSubPanel::IsActive()
 {
-  return (IsExpanded() || IsFloating());
+  return (m_pParentNWindow->IsPanelOpened() && (IsExpanded() || IsFloating()));
 }
 
 /*----------------------------------------------------------------------

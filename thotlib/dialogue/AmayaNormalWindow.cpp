@@ -160,6 +160,7 @@ void AmayaNormalWindow::SetupURLBar()
       // Create the url entry and add it to the toolbar
       m_pURLBar = new AmayaURLBar( m_pToolBar, this );
       m_pToolBar->AddSpacer();
+
       m_pToolBar->AddTool( m_pURLBar, TRUE );
     }
 }
@@ -773,7 +774,7 @@ void AmayaNormalWindow::ClosePanel()
 {
   wxLogDebug( _T("AmayaNormalWindow::ClosePanel") );
 
-  if (m_pSplitterWindow->IsSplit())
+  if (IsPanelOpened())
     {
       m_pSplitterWindow->Unsplit( m_pPanel );
       m_pPanel->ShowWhenUnsplit( false );
@@ -791,7 +792,7 @@ void AmayaNormalWindow::OpenPanel()
 {
   wxLogDebug( _T("AmayaNormalWindow::OpenPanel") );
   
-  if (!m_pSplitterWindow->IsSplit())
+  if (!IsPanelOpened())
     {
       m_pSplitterWindow->SplitVertically( m_pPanel,
 					  m_pNotebookPanel,
@@ -799,6 +800,19 @@ void AmayaNormalWindow::OpenPanel()
       m_pPanel->ShowWhenUnsplit( true );
     }
 }
+
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaNormalWindow
+ *      Method:  IsPanelOpened
+ * Description:  returns true if the side panel is opened
+ *--------------------------------------------------------------------------------------
+ */
+bool AmayaNormalWindow::IsPanelOpened()
+{
+  return m_pSplitterWindow->IsSplit();
+}
+
 
 /*
  *--------------------------------------------------------------------------------------
@@ -811,6 +825,7 @@ AmayaPanel * AmayaNormalWindow::GetAmayaPanel() const
 {
   return m_pPanel;
 }
+
 
 /*----------------------------------------------------------------------
  *  this is where the event table is declared

@@ -484,6 +484,18 @@ void AmayaWindow::OpenPanel()
 /*
  *--------------------------------------------------------------------------------------
  *       Class:  AmayaWindow
+ *      Method:  IsPanelOpened
+ * Description:  returns true if the side panel is opened
+ *--------------------------------------------------------------------------------------
+ */
+bool AmayaWindow::IsPanelOpened()
+{
+  return false;
+}
+
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaWindow
  *      Method:  OnKeyDown
  * Description:  manage menu shortcut
  *--------------------------------------------------------------------------------------
