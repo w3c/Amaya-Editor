@@ -13,6 +13,8 @@
  *
  */
 
+#ifndef AMAYA_JAVA
+
 /* Included headerfiles */
 #define THOT_EXPORT extern
 #include "amaya.h"
@@ -491,4 +493,4 @@ BOOL             last_seconds_of_life;
   end of Module answer.c
 */
 
-
+#endif

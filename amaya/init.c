@@ -1827,7 +1827,10 @@ NotifyEvent        *event;
 
    /* initialize parser mapping table and HTLib */
    InitMapping ();
+
+#ifndef AMAYA_JAVA
    QueryInit ();
+#endif
 
    AMAYA = TtaGetMessageTable ("amayamsg", AMAYA_MSG_MAX);
    /* allocate callbacks for amaya */

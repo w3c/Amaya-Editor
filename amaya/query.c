@@ -14,6 +14,8 @@
  *
  */
 
+#ifndef AMAYA_JAVA
+
 /* Amaya includes  */
 #define THOT_EXPORT extern
 #include "amaya.h"
@@ -1216,9 +1218,6 @@ static int          LoopForStop (AHTReqContext * me)
 	  /* Amaya was killed by one of the callback handlers */
 	  exit (0);
 
-#ifdef AMAYA_JAVA
-        JavaPollLoop();
-#else /* ! AMAYA_JAVA */
         status = XtAppPending (app_cont);
         if (status & XtIMXEvent)
           {
@@ -1235,7 +1234,6 @@ static int          LoopForStop (AHTReqContext * me)
              XtAppNextEvent (app_cont, &ev);
              TtaHandleOneEvent (&ev);
           }
-#endif /* AMAYA_JAVA */
 #endif /* !_WINDOWS */
      }
 
@@ -1290,7 +1288,6 @@ void                QueryClose ()
    AHTProfile_delete ();
 }
 
-#ifndef AMAYA_JAVA
 /*----------------------------------------------------------------------
    GetObjectWWW
    this function requests a resource designated by a URLname into a
@@ -1792,7 +1789,6 @@ void               *context_tcbf;
 
    return (status);
 }
-#endif /* !AMAYA_JAVA */
 
 /*----------------------------------------------------------------------
   UploadMemWWW
@@ -1906,7 +1902,6 @@ char               *outputfile;
 
 
 
-#ifndef AMAYA_JAVA
 /*----------------------------------------------------------------------
   Stop Request
   stops (kills) all active requests associated with a docid 
@@ -1978,11 +1973,11 @@ int                 docid;
 	  }			/* while */
      }				/* if amaya open requests */
 }				/* StopRequest */
-#endif /* AMAYA_JAVA */
 
 /*
   end of Module query.c
 */
 
+#endif /* AMAYA_JAVA */
 
 

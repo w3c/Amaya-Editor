@@ -364,7 +364,11 @@ Document       doc;
 	if (i == DocumentTableLength)
 	  {
 	     /* now exit the application */
+#ifdef AMAYA_JAVA
+             CloseJava ();
+#else /* !AMAYA_JAVA */
 	     QueryClose ();
+#endif /* !AMAYA_JAVA */
 	     CloseCSS ();
 	     TtaQuit ();
 	  }

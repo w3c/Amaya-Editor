@@ -173,12 +173,8 @@ void               InitJavaSelect()
 #endif
 {
     NbJavaSelect = 0;
-    max_extra_fd = 0;
     DoJavaSelectPoll = 0;
     BreakJavaSelectPoll = 0;
-    FD_ZERO(&extra_readfds);
-    FD_ZERO(&extra_writefds);
-    FD_ZERO(&extra_exceptfds);
 #ifdef DEBUG_SELECT
     TIMER
     fprintf(stderr,"InitJavaSelect\n");
@@ -187,96 +183,10 @@ void               InitJavaSelect()
 }
 
 /*----------------------------------------------------------------------
-  JavaSetSelectCallback
-
-  Set SelectCallback, ugly !
-  ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-void               JavaSetSelectCallback (void *val)
-#else
-void               JavaSetSelectCallback (val)
-void *val;
-#endif
-{
-    if (!JavaSelectInitialized) InitJavaSelect();
-    JavaSelectCallback = (SelectCallback) val;
-}
-
-/*----------------------------------------------------------------------
-  JavaFdSetState
-
-  This routine register an I/O channel, either for Read, Write or
-  Exceptions.  From that point all the Select call will catch the
-  corresponding situations and call the adequate handler.
-  ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-void               JavaFdSetState (int fd, int io)
-#else
-void               JavaFdSetState (fd, io)
-int fd;
-int io;
-#endif
-{
-    if (!JavaSelectInitialized) InitJavaSelect();
-    if (DoJavaSelectPoll) BreakJavaSelectPoll++;
-    if ((fd < 0) || (fd > sizeof(fd_set) * 8)) return;
-    if (fd >= max_extra_fd) max_extra_fd = fd;
-#ifdef DEBUG_SELECT_CHANNELS
-    TIMER
-    if (io & 1) fprintf(stderr, "adding channel %d for read\n", fd);
-    if (io & 2) fprintf(stderr, "adding channel %d for write\n", fd);
-    if (io & 4) fprintf(stderr, "adding channel %d for exceptions\n", fd);
-#endif
-    if (io & 1) FD_SET(fd, &extra_readfds);
-    if (io & 2) FD_SET(fd, &extra_writefds);
-    if (io & 4) FD_SET(fd, &extra_exceptfds);
-    threadedFileDescriptor(fd);
-}
-
-/*----------------------------------------------------------------------
-  JavaFdResetState
-
-  This routine unregister an I/O channel, either for Read, Write or
-  Exceptions.
-  ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-void               JavaFdResetState (int fd, int io)
-#else
-void               JavaFdResetState (fd, io)
-int fd;
-int io;
-#endif
-{
-    int i;
-    int max;
-    if (!JavaSelectInitialized) InitJavaSelect();
-    if (DoJavaSelectPoll) BreakJavaSelectPoll++;
-    if ((fd < 0) || (fd > sizeof(fd_set) * 8)) return;
-#ifdef DEBUG_SELECT_CHANNELS
-    TIMER
-    if (io & 1) fprintf(stderr, "removing channel %d for read\n", fd);
-    if (io & 2) fprintf(stderr, "removing channel %d for write\n", fd);
-    if (io & 4) fprintf(stderr, "removing channel %d for exceptions\n", fd);
-#endif
-    if (io & 1) FD_CLR(fd, &extra_readfds);
-    if (io & 2) FD_CLR(fd, &extra_writefds);
-    if (io & 4) FD_CLR(fd, &extra_exceptfds);
-    for (i = 0,max = 0;i <= fd;i++) {
-        if ((FD_ISSET(i, &extra_readfds)) || (FD_ISSET(i, &extra_writefds)) ||
-	    (FD_ISSET(i, &extra_exceptfds)))
-	    max = i;
-    }
-    max_extra_fd = max;
-}
-
-/*----------------------------------------------------------------------
   JavaSelect
 
   This routine provide a shared select() syscall needed to multiplex
-  the various packages (libWWW, Java, X-Windows ...) needing I/O in
+  the various packages (Java, X-Windows ...) needing I/O in
   the Java program.
   ----------------------------------------------------------------------*/
 
@@ -301,7 +211,6 @@ ThotEvent *ev;
     fd_set lextra_writefds;
     fd_set lextra_exceptfds;
     struct timeval tm;
-    int nb;
     int res;
     static int InJavaSelect = 0;
 
@@ -345,14 +254,6 @@ ThotEvent *ev;
 
 restart_select:
     /*
-     * Do a local copy of everything needed later.
-     */
-    nb = (n > (max_extra_fd + 1)? n : (max_extra_fd + 1));
-    COPY_FD(nb, &extra_readfds, &lextra_readfds);
-    COPY_FD(nb, &extra_writefds, &lextra_writefds);
-    COPY_FD(nb, &extra_exceptfds, &lextra_exceptfds);
-
-    /*
      * Do not block if there is a Poll Break requested.
      */
     if ((DoJavaSelectPoll) && (BreakJavaSelectPoll)) {
@@ -361,66 +262,27 @@ restart_select:
     } else if (timeout != NULL)
        memcpy(&tm, timeout, sizeof(tm));
 
-#ifdef DEBUG_SELECT_CHANNELS
-    /*
-     * Check that Kaffe and External descriptor sets don't overlap.
-     */
-
-    FD_ZERO(&full_readfds); /* CLEAR_FD(nb, &full_readfds); */
-    OR_FD(nb, readfds, &full_readfds);
-    OR_FD(nb, writefds, &full_readfds);
-    OR_FD(nb, exceptfds, &full_readfds);
-
-    FD_ZERO(&full_writefds); /* CLEAR_FD(nb, &full_writefds); */
-    OR_FD(max_extra_fd, &extra_readfds, &full_writefds);
-    OR_FD(max_extra_fd, &extra_writefds, &full_writefds);
-    OR_FD(max_extra_fd, &extra_exceptfds, &full_writefds);
-    
-    AND_FD(nb, &full_writefds, &full_readfds);
-
-    for (fd = 0;fd < nb; fd++) {
-        if (FD_ISSET(fd, &full_readfds))
-	    fprintf(stderr, 
-	      "Kaffe and external conflict on channel %d\n", fd);
-    }
-#endif /* DEBUG_SELECT */
-
-    /*
-     * Create a full descriptor set merging both Kaffe ones and External ones.
-     */
-    FD_ZERO(&full_readfds); /* CLEAR_FD(nb, &full_readfds); */
-    FD_ZERO(&full_writefds); /* CLEAR_FD(nb, &full_writefds); */
-    FD_ZERO(&full_exceptfds); /* CLEAR_FD(nb, &full_exceptfds); */
-
-    COPY_FD(nb, readfds, &full_readfds);
-    COPY_FD(nb, writefds, &full_writefds);
-    COPY_FD(nb, exceptfds, &full_exceptfds);
-
-    OR_FD(nb, &extra_readfds, &full_readfds);
-    OR_FD(nb, &extra_writefds, &full_writefds);
-    OR_FD(nb, &extra_exceptfds, &full_exceptfds);
-
     /*
      * Do the select on the merged channels descriptors.
      */
     NbJavaSelect++;
     if (((DoJavaSelectPoll) && (BreakJavaSelectPoll)) ||
         (timeout != NULL))
-       res = select(nb, &full_readfds, &full_writefds, &full_exceptfds, &tm);
+       res = select(n, readfds, writefds, exceptfds, &tm);
     else
-       res = select(nb, &full_readfds, &full_writefds, &full_exceptfds, NULL);
+       res = select(n, readfds, writefds, exceptfds, NULL);
 
 #ifdef DEBUG_SELECT_CHANNELS
     /*
      * shows the channel state.
      */
-    fprintf(stderr,"res:%d nb:%d rd:",res,nb);
-    for (fd = 0;fd < nb;fd++)
-        if (FD_ISSET(fd, &full_readfds)) fprintf(stderr,"r");
+    fprintf(stderr,"res:%d nb:%d rd:",res,n);
+    for (fd = 0;fd < n;fd++)
+        if (FD_ISSET(fd, readfds)) fprintf(stderr,"r");
         else fprintf(stderr,"-");
     fprintf(stderr," wr:");
-    for (fd = 0;fd < nb;fd++)
-        if (FD_ISSET(fd, &full_writefds)) fprintf(stderr,"w");
+    for (fd = 0;fd < n;fd++)
+        if (FD_ISSET(fd, writefds)) fprintf(stderr,"w");
         else fprintf(stderr,"-");
     fprintf(stderr,"\n");
 #endif
@@ -429,9 +291,6 @@ restart_select:
      * Error !
      */
     if (res < 0) {
-        AND_FD(nb, &full_readfds, readfds);
-        AND_FD(nb, &full_writefds, writefds);
-        AND_FD(nb, &full_exceptfds, exceptfds);
 	InJavaSelect = 0;
 #ifdef DEBUG_SELECT
 	TIMER
@@ -444,9 +303,6 @@ restart_select:
      * Timeout, give control back to Kaffe.
      */
     if (res == 0) {
-        AND_FD(nb, &full_readfds, readfds);
-        AND_FD(nb, &full_writefds, writefds);
-        AND_FD(nb, &full_exceptfds, exceptfds);
 	InJavaSelect = 0;
 #ifdef DEBUG_SELECT
 	TIMER
@@ -468,49 +324,6 @@ restart_select:
         BreakJavaSelectPoll++;
     }
 
-    for (fd = 0;(fd < nb) && (res > 0); fd++) {
-        if (FD_ISSET(fd, &lextra_readfds) && FD_ISSET(fd, &full_readfds)) {
-#ifdef DEBUG_SELECT_CHANNELS
-            fprintf(stderr,"reading on channel %d\n", fd);
-#endif
-            JavaSelectCallback(fd, EVENT_READ);
-	    res--;
-        }
-        if (FD_ISSET(fd, &lextra_writefds) && FD_ISSET(fd, &full_writefds)) {
-#ifdef DEBUG_SELECT_CHANNELS
-            fprintf(stderr,"writing on channel %d\n", fd);
-#endif
-            JavaSelectCallback(fd, EVENT_WRITE);
-	    res--;
-        }
-        if (FD_ISSET(fd, &lextra_exceptfds) && FD_ISSET(fd, &full_exceptfds)) {
-#ifdef DEBUG_SELECT_CHANNELS
-            fprintf(stderr,"exception on channel %d\n", fd);
-#endif
-	    res--;
-        }
-    }
-
-    /*
-     * If no Kaffe file descriptor need attention, loop on select
-     * after updating tm.
-     * !!!!!! update tm
-     */
-    if (res <= 0) {
-#ifdef DEBUG_SELECT
-	TIMER
-        fprintf(stderr,"|");
-#endif
-        goto restart_select;
-    }
-
-    /*
-     * Update Kaffe file descriptor sets.
-     */
-    AND_FD(nb, &full_readfds, readfds);
-    AND_FD(nb, &full_writefds, writefds);
-    AND_FD(nb, &full_exceptfds, exceptfds);
-    /* !!! Do or do not update timeout ??? */
     InJavaSelect = 0;
 #ifdef DEBUG_SELECT
     TIMER
