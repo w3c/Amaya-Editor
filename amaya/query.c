@@ -676,7 +676,6 @@ int                 status;
    HTMethod            method = HTRequest_method (request);
    STRING              ref;
    STRING              escape_src, dst;
-   char               *tmp;
 
    if (!me)
      /* if the redirect doesn't come from Amaya, we call libwww's standard
@@ -1966,7 +1965,6 @@ static void ProxyInit ()
 #endif /* __STDC__ */
 {
   CharUnit* strptr;
-  CharUnit* str = NULL;
   char*     name;
   ThotBool  proxy_is_onlyproxy;
   char*     tmp = NULL;
