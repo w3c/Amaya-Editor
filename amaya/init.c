@@ -4312,12 +4312,12 @@ CHAR_T*             data;
        switch (val)
 	 {
 	 case 1:
-	   /* we need to memorize the document number... how to do that? */
-	   CreateRemoveIDAttribute (IdElemName, 1, TRUE, IdApplyToSelection);
+	   CreateRemoveIDAttribute (IdElemName, IdDoc, TRUE, 
+				    (IdApplyToSelection) ? TRUE: FALSE);
 	   break;
 	 case 2:
-       /* we need to memorize the document number... how to do that? */
-	   CreateRemoveIDAttribute (IdElemName, 1, FALSE, IdApplyToSelection);
+	   CreateRemoveIDAttribute (IdElemName, IdDoc, FALSE, 
+				    (IdApplyToSelection) ? TRUE: FALSE);
 	   break;
 	 }
        break;
@@ -4326,7 +4326,7 @@ CHAR_T*             data;
        IdElemName[MAX_LENGTH -1] = EOS;
        break;
      case mUseSelection:
-       IdApplyToSelection = !IdApplyToSelection;
+       IdApplyToSelection = val;
        break;
      }
 }
@@ -4932,10 +4932,10 @@ View                view;
   A menu for adding or removing ID attributes in a document
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                MakeIDMenu (Document document, View view)
+void                MakeIDMenu (Document doc, View view)
 #else
-void                MakeIDMenu (document, view)
-Document            document;
+void                MakeIDMenu (doc, view)
+Document            doc;
 View                view;
 
 #endif
@@ -4947,6 +4947,7 @@ View                view;
 
   /* initialize the global variables */
   IdElemName[0] = EOS;
+  IdDoc = doc;
 
   /* Create the dialogue form */
 #ifndef _WINDOWS
@@ -4955,7 +4956,7 @@ View                view;
   i += ustrlen (&s[i]) + 1;
   strcpy (&s[i], TEXT("Remove id"));
   TtaNewSheet (BaseDialog + MakeIdMenu,
-	       TtaGetViewFrame (document, view),
+	       TtaGetViewFrame (doc, view),
 	       TEXT("Create/Remove ID attributes"),
 	       2, s, FALSE, 6, 'L', D_DONE);
   TtaNewTextForm (BaseDialog + mElemName,
@@ -4964,17 +4965,22 @@ View                view;
 		  10,
 		  1,
 		  TRUE);
-  TtaNewToggleMenu (BaseDialog + mUseSelection,
-		    BaseDialog + MakeIdMenu,
-		    NULL,
-		    1,
-		    TEXT("TApply only to selection"),
-		    NULL,
-		    TRUE);
+  strcpy (s, "TIn the whole document");
+  i += ustrlen (&s[i]) + 1;
+  strcpy (&s[i], TEXT("TWithin selection"));
+  TtaNewSubmenu (BaseDialog + mUseSelection,
+		 BaseDialog + MakeIdMenu,
+		 0,
+		 TEXT("Apply operation"),
+		 2,
+		 s,
+		 NULL,
+		 TRUE);
+  TtaSetMenuForm (BaseDialog + mUseSelection, IdApplyToSelection);
   TtaSetDialoguePosition ();
   TtaShowDialogue (BaseDialog + MakeIdMenu, TRUE);
 #else
-  CreateMakeIDDlgWindow (TtaGetViewFrame (document, view));
+  CreateMakeIDDlgWindow (TtaGetViewFrame (doc, view));
 #endif /* _WINDOWS */
 }
 

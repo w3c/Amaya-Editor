@@ -291,6 +291,7 @@ THOT_EXPORT int          NumberRows;
 THOT_EXPORT int          NumberCols;
 THOT_EXPORT int          TBorder;
 THOT_EXPORT int          ReturnOptionMenu;
+THOT_EXPORT int          IdDoc;
 THOT_EXPORT Document     CurrentDocument;
 THOT_EXPORT Document     SavingDocument;
 THOT_EXPORT Document     SavingObject;

@@ -1231,11 +1231,38 @@ Document     doc;
 }
 
 /*----------------------------------------------------------------------
+  GetNextNode
+  Returns the next node in the tree, using a complete traversal algorithm.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static Element    GetNextNode (Element curr)
+#else  /* __STDC__ */
+static Element    GetNExtNode (curr)
+Element curr;
+Element last;
+
+#endif /* __STDC__ */
+{
+  Element el;
+
+  if (!curr)
+    return NULL;
+
+  /* get the next child */
+  el = TtaGetFirstChild (curr);
+  if (!el)
+    {
+      /* get the next siblign, or parent
+	 if there was no other sibling */
+      el = TtaGetSuccessor (curr);
+    }
+  return el;
+}
+
+/*----------------------------------------------------------------------
   SearchTypedElementForward
   Searchs for a typed element and stops when it finds it or if the
-  search goes over the last element.
-  Note that if the last element is of elType_search, then this function
-  will never return NULL, but the value of the last element.
+  search reaches the last element.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static Element    SearchTypedElementForward (ElementType elType_search, Element curr, Element last)
@@ -1248,24 +1275,23 @@ Element last;
 #endif /* __STDC__ */
 {
   ElementType elType;
-  Element el = curr;
+  Element el;
 
-  el = TtaGetSuccessor (el);
-  while (el)
+  /* start by getting the next node */
+  el = GetNextNode (curr);
+  /*  continue browsing until we get an element
+     of the searched type or the end condition is
+     reached */
+  while (el && el != last)
     {
       elType = TtaGetElementType (el);
       if (TtaSameTypes (elType_search, elType))
-	{
 	  break;
-	}
-      else if (el == last)
-	{
-	  el = NULL;
-	  break;
-	}
-      el = TtaGetSuccessor (el);
+      el = GetNextNode (el);
     }
-  return el;
+
+  /* don't return el if it's equal to the last element parameter */
+  return ((el != last) ? el : NULL);
 }
 
 /*----------------------------------------------------------------------
@@ -1273,9 +1299,10 @@ Element last;
   For all elements elName of a document, this functions eithers adds or 
   deletes an ID attribute. 
   The createID flag tells which operation must be done.
+  The inSelection attribute says if we must apply the operation in the
+  whole document or just in the current selection.
   If an element already has an ID attribute, a new one won't be created.
-  TO DO: count the changes we have done and set/remove the modified
-  flag accordingly
+  TO DO: Output error messages.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void         CreateRemoveIDAttribute (CHAR_T *elName, Document doc, ThotBool createID, ThotBool inSelection)
@@ -1283,12 +1310,12 @@ void         CreateRemoveIDAttribute (CHAR_T *elName, Document doc, ThotBool cre
 void         CreateRemoveIDdAttribute (elName, doc, createID, inSelection)
 CHAR_T         *elNamel
 Document	doc;
-ThotBool        createID;
+int             createID;
 ThotBool        inSelection;
 
 #endif /* __STDC__ */
 {
-  Element             el, lastEl, tmp;
+  Element             el, lastEl;
   ElementType         elType;
   AttributeType       attrType;
   Attribute           attr;
@@ -1329,6 +1356,8 @@ ThotBool        inSelection;
   else if (!ustrcmp (schema_name, TEXT("GraphML")))
     attrType.AttrTypeNum = GraphML_ATTR_id;
 
+  /* we didn't find an attribute or we can't put an ID attribute
+     in this element */
   if (attrType.AttrTypeNum == 0)
     return;
   attrType.AttrSSchema = elType.ElSSchema;
@@ -1347,56 +1376,52 @@ ThotBool        inSelection;
 	 lastEl = el;
        else
 	 TtaGiveLastSelectedElement (doc, &lastEl, &j, &i);
-
-#if 0
-       /* re-order the elements if necessary */
-       if (el != lastEl && !TtaIsBefore (el, lastEl))
-	 {
-	   tmp = el;
-	   el = lastEl;
-	   lastEl = tmp;
-	 }
-#endif
+       /* and set the last element as the element just after
+	  the selection */
+       lastEl = TtaGetSuccessor (lastEl);
     }
   else
-    el = TtaGetMainRoot (doc);
-
-  /* browse the tree and add the ID if it's missing */
-  if (inSelection)
     {
-      /* the element where we started is not of the chosen type */
-      if (!TtaSameTypes (TtaGetElementType (el), elType))
-	el = SearchTypedElementForward (elType, el, lastEl);
+      el = TtaGetMainRoot (doc);
+      lastEl = NULL;
     }
-  else
-    el = TtaSearchTypedElement (elType, SearchInTree, el);
 
+  /*
+  ** browse the tree and add the ID if it's missing. Variable i
+  ** stores the number of changes we have done.
+  */
+
+  /* move to the first element that is of the chosen elementType */
+  /* the element where we started is not of the chosen type */
+  if (!TtaSameTypes (TtaGetElementType (el), elType))
+    el = SearchTypedElementForward (elType, el, lastEl);
+
+  i = 0;
   while (el)
     {
+      /* does the element have an ID attribute already? */
       attr = TtaGetAttribute (el, attrType);
-      if (!attr && createID)
+      if (!attr && createID) /* add it */
 	{
 	  /* we reuse an existing Amaya function */
 	  CreateTargetAnchor (doc, el, TRUE, TRUE);
+	  i++;
 	}
-      else if (attr && !createID)
+      else if (attr && !createID) /* delete it */
 	{
 	  TtaOpenUndoSequence (doc, NULL, NULL, 0, 0);
 	  TtaRemoveAttribute (el, attr, doc);
 	  TtaRegisterAttributeDelete (attr, el, doc);
 	  TtaCloseUndoSequence (doc);
+	  i++;
 	}
-      if (inSelection)
-	{
-	  if (el == lastEl)
-	    break;
-	  else
-	    el = SearchTypedElementForward (elType, el, lastEl);
-	}
-      else
-	el = TtaSearchTypedElement (elType, SearchForward, el);
+      /* get the next element */
+      el = SearchTypedElementForward (elType, el, lastEl);
     }
-  TtaSetDocumentModified (doc);
+
+  /* reset the state of the document */
+  if (i)
+    TtaSetDocumentModified (doc);
   if (dispMode == DisplayImmediately)
     TtaSetDisplayMode (doc, dispMode);
 }
