@@ -737,6 +737,7 @@ int                 status;
 	  {
 	    /* if it's a valid URL, we try to normalize it */
 	    /* We use the pre-redirection anchor as a base name */
+	    /* @@ how to obtain this address here? */
 	    dst = ISO2WideChar (new_anchor->parent->address);
 	    escape_src = EscapeURL (ISO2WideChar (me->urlName));
 	    if (escape_src)
@@ -749,11 +750,7 @@ int                 status;
 
 	     if (ref)
 	       {
-		 HT_FREE (new_anchor->parent->address);
-		 new_anchor->parent->address = NULL;
-		 tmp = NULL;
-		 HTSACopy (&tmp, WideChar2ISO (ref));
-		 new_anchor->parent->address = tmp;
+		 HTAnchor_setPhysical (HTAnchor_parent (new_anchor), ref);
 		 TtaFreeMemory (ref);
 	       }
 	     else
