@@ -56,7 +56,7 @@ amaya_tablelib          -a tablelib
 amaya_drawlib           -a drawlib
 
 amaya_alliance          -a alliance
-amaya_amaya             -a amaya
+amaya_amaya             -d amaya
 
 amaya_full              -a opera
 
