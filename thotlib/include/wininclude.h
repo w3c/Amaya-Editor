@@ -68,7 +68,7 @@ extern void       CreateInitConfirm3LDlgWindow (ThotWindow, int, STRING, STRING,
 extern void       CreateChangeFormatDlgWindow (int, int, int, int, int, int, int, int);
 extern void       CreateGreekKeyboardDlgWindow (ThotWindow);
 extern void       CreateAuthenticationDlgWindow (ThotWindow, STRING, STRING);
-extern void       CreateBackgroundImageDlgWindow (ThotWindow parent, int form_background, int image_URL, int image_label, int image_dir, int image_sel, int repeat_image, STRING image_location);
+extern void       CreateBackgroundImageDlgWindow (ThotWindow parent, STRING image_location);
 extern void       TtaHandleOneEvent (ThotEvent*);
 extern ThotWindow TtaGetThotWindow (int);
 extern BinFile    TtaReadOpen (CONST CHAR_T*);

@@ -108,7 +108,6 @@ static CHAR_T       newText [255];
 static int          currentDoc;
 static int          currentView;
 static int          currentRef;
-static int          currentParentRef;
 static int          SpellingBase;
 static int          ChkrSelectProp;
 static int          ChkrMenuOR;
@@ -116,10 +115,6 @@ static int          ChkrFormCorrect;
 static int          ChkrMenuIgnore;
 static int          ChkrCaptureNC;
 static int          ChkrSpecial;
-static int          bgImageForm;
-static int          imageURL;
-static int          repeatImage;
-static int          imageSel;
 static int          fontNum;
 static int          fontStyle;
 static int          fontWeight;
@@ -145,11 +140,10 @@ static int          numCols;
 static int          numRows;
 static int          tBorder;
 static int          formAlt;
-static int          imageLabel;
 static int          iLocation;
 static int          cxChar;
 static int          cyChar;
-static int          iMode, iLocation;
+static int          iMode;
 
 static HDC          hDC;
 static HDC          hMemDC;
@@ -3446,97 +3440,99 @@ WPARAM wParam;
 LPARAM lParam;
 #endif /* __STDC__ */
 {
-    static int repeatMode;
-    switch (msg) {
-	       case WM_INITDIALOG:
-			    SetDlgItemText (hwnDlg, IDC_BGLOCATION, currentPathName);
-                CheckRadioButton (hwnDlg, IDC_REPEAT, IDC_NOREPEAT, IDC_REPEAT);
-                SetWindowText (hwnDlg, TtaGetMessage (AMAYA, AM_BACKGROUND_IMAGE));
-				SetWindowText (GetDlgItem (hwnDlg, IDC_OPENLOCATION), TtaGetMessage (AMAYA, AM_IMAGES_LOCATION));
-				SetWindowText (GetDlgItem (hwnDlg, IDC_REPEATMODE), TtaGetMessage (AMAYA, AM_REPEAT_MODE));
-				SetWindowText (GetDlgItem (hwnDlg, IDC_REPEAT), TtaGetMessage (AMAYA, AM_REPEAT));
-				SetWindowText (GetDlgItem (hwnDlg, IDC_REPEATX), TtaGetMessage (AMAYA, AM_REPEAT_X));
-				SetWindowText (GetDlgItem (hwnDlg, IDC_REPEATY), TtaGetMessage (AMAYA, AM_REPEAT_Y));
-				SetWindowText (GetDlgItem (hwnDlg, IDC_NOREPEAT), TtaGetMessage (AMAYA, AM_NO_REPEAT));
-				SetWindowText (GetDlgItem (hwnDlg, ID_CONFIRM), TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
-				SetWindowText (GetDlgItem (hwnDlg, ID_CLEAR), TtaGetMessage (AMAYA, AM_CLEAR));
-				SetWindowText (GetDlgItem (hwnDlg, IDC_BROWSE), TEXT("Browse"));
-				SetWindowText (GetDlgItem (hwnDlg, IDCANCEL), TtaGetMessage (LIB, TMSG_CANCEL));
-				break;
+  static int repeatMode;
+    switch (msg)
+      {
+      case WM_INITDIALOG:
+	SetDlgItemText (hwnDlg, IDC_BGLOCATION, currentPathName);
+	CheckRadioButton (hwnDlg, IDC_REPEAT, IDC_NOREPEAT, IDC_REPEAT);
+	SetWindowText (hwnDlg, TtaGetMessage (AMAYA, AM_BACKGROUND_IMAGE));
+	SetWindowText (GetDlgItem (hwnDlg, IDC_OPENLOCATION), TtaGetMessage (AMAYA, AM_IMAGES_LOCATION));
+	SetWindowText (GetDlgItem (hwnDlg, IDC_REPEATMODE), TtaGetMessage (AMAYA, AM_REPEAT_MODE));
+	SetWindowText (GetDlgItem (hwnDlg, IDC_REPEAT), TtaGetMessage (AMAYA, AM_REPEAT));
+	SetWindowText (GetDlgItem (hwnDlg, IDC_REPEATX), TtaGetMessage (AMAYA, AM_REPEAT_X));
+	SetWindowText (GetDlgItem (hwnDlg, IDC_REPEATY), TtaGetMessage (AMAYA, AM_REPEAT_Y));
+	SetWindowText (GetDlgItem (hwnDlg, IDC_NOREPEAT), TtaGetMessage (AMAYA, AM_NO_REPEAT));
+	SetWindowText (GetDlgItem (hwnDlg, ID_CONFIRM), TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
+	SetWindowText (GetDlgItem (hwnDlg, ID_CLEAR), TtaGetMessage (AMAYA, AM_CLEAR));
+	SetWindowText (GetDlgItem (hwnDlg, IDC_BROWSE), TEXT("Browse"));
+	SetWindowText (GetDlgItem (hwnDlg, IDCANCEL), TtaGetMessage (LIB, TMSG_CANCEL));
+	break;
 
-		   case WM_COMMAND:
-			    if (HIWORD (wParam) == EN_UPDATE) {
-                   GetDlgItemText (hwnDlg, IDC_BGLOCATION, urlToOpen, sizeof (urlToOpen) - 1);
-                   ThotCallback (imageURL, STRING_DATA, urlToOpen);
-				}
+      case WM_COMMAND:
+	if (HIWORD (wParam) == EN_UPDATE)
+	  {
+	    GetDlgItemText (hwnDlg, IDC_BGLOCATION, urlToOpen, sizeof (urlToOpen) - 1);
+	    ThotCallback (BaseImage + ImageURL, STRING_DATA, urlToOpen);
+	  }
 
-			    switch (LOWORD (wParam)) {
-                       case IDC_REPEAT:
-                            repeatMode  = REPEAT;
-                            break;
+	switch (LOWORD (wParam))
+	  {
+	  case IDC_REPEAT:
+	    repeatMode  = REPEAT;
+	    break;
+	    
+	  case IDC_REPEATX:
+	    repeatMode  = REPEAT_X;
+	    break;
+	    
+	  case IDC_REPEATY:
+	    repeatMode  = REPEAT_Y;
+	    break;
+	    
+	  case IDC_NOREPEAT:
+	    repeatMode  = NO_REPEAT;
+	    break;
+	    
+	  case ID_CONFIRM:
+	    ThotCallback (BaseImage + RepeatImage, INTEGER_DATA, (CHAR_T*)repeatMode);
+	    ThotCallback (BaseImage + FormBackground, INTEGER_DATA, (CHAR_T*)1);
+	    EndDialog (hwnDlg, ID_CONFIRM);
+	    break;
+	    
+	  case ID_CLEAR:
+	    SetDlgItemText (hwnDlg, IDC_BGLOCATION, TEXT(""));
+	    ThotCallback (BaseImage + RepeatImage, INTEGER_DATA, (CHAR_T*)repeatMode);
+	    ThotCallback (BaseImage + FormBackground, INTEGER_DATA, (CHAR_T*)2);
+	    break;
+	    
+	  case IDC_BROWSE:
+	    OpenFileName.lStructSize       = sizeof (OPENFILENAME);
+	    OpenFileName.hwndOwner         = hwnDlg;
+	    OpenFileName.hInstance         = hInstance;
+	    OpenFileName.lpstrFilter       = (LPTSTR) szFilter;
+	    OpenFileName.lpstrCustomFilter = (LPTSTR) NULL;
+	    OpenFileName.nMaxCustFilter    = 0L;
+	    OpenFileName.nFilterIndex      = 1L;
+	    OpenFileName.lpstrFile         = (LPTSTR) szFileName;
+	    OpenFileName.nMaxFile          = 256;
+	    OpenFileName.lpstrInitialDir   = NULL;
+	    OpenFileName.lpstrTitle        = TEXT ("Open a File");
+	    OpenFileName.nFileOffset       = 0;
+	    OpenFileName.nFileExtension    = 0;
+	    OpenFileName.lpstrDefExt       = TEXT ("*.gif");
+	    OpenFileName.lCustData         = 0;
+	    OpenFileName.Flags             = OFN_SHOWHELP | OFN_HIDEREADONLY;
+	    
+	    if (GetOpenFileName (&OpenFileName))
+	      ustrcpy (urlToOpen, OpenFileName.lpstrFile);
+	    
+	    SetDlgItemText (hwnDlg, IDC_BGLOCATION, urlToOpen);
+	    EndDialog (hwnDlg, ID_CONFIRM);
+	    ThotCallback (BaseImage + RepeatImage, INTEGER_DATA, (CHAR_T*)repeatMode);
+	    ThotCallback (BaseImage + FormBackground, INTEGER_DATA, (CHAR_T*)1);
+	    break;
 
-                       case IDC_REPEATX:
-                            repeatMode  = REPEAT_X;
-                            break;
-
-                       case IDC_REPEATY:
-                            repeatMode  = REPEAT_Y;
-                            break;
-
-                       case IDC_NOREPEAT:
-                            repeatMode  = NO_REPEAT;
-                            break;
-
-		               case ID_CONFIRM:
-                            ThotCallback (repeatImage, INTEGER_DATA, (CHAR_T*)repeatMode);
-                            ThotCallback (bgImageForm, INTEGER_DATA, (CHAR_T*)1);
-			                EndDialog (hwnDlg, ID_CONFIRM);
-			                break;
-
-                       case ID_CLEAR:
-							SetDlgItemText (hwnDlg, IDC_BGLOCATION, TEXT(""));
-                            ThotCallback (repeatImage, INTEGER_DATA, (CHAR_T*)repeatMode);
-                            ThotCallback (bgImageForm, INTEGER_DATA, (CHAR_T*)2);
-							break;
-
-					   case IDC_BROWSE:
-                            OpenFileName.lStructSize       = sizeof (OPENFILENAME);
-                            OpenFileName.hwndOwner         = hwnDlg;
-                            OpenFileName.hInstance         = hInstance;
-                            OpenFileName.lpstrFilter       = (LPTSTR) szFilter;
-                            OpenFileName.lpstrCustomFilter = (LPTSTR) NULL;
-                            OpenFileName.nMaxCustFilter    = 0L;
-                            OpenFileName.nFilterIndex      = 1L;
-                            OpenFileName.lpstrFile         = (LPTSTR) szFileName;
-                            OpenFileName.nMaxFile          = 256;
-                            OpenFileName.lpstrInitialDir   = NULL;
-                            OpenFileName.lpstrTitle        = TEXT ("Open a File");
-                            OpenFileName.nFileOffset       = 0;
-                            OpenFileName.nFileExtension    = 0;
-                            OpenFileName.lpstrDefExt       = TEXT ("*.gif");
-                            OpenFileName.lCustData         = 0;
-                            OpenFileName.Flags             = OFN_SHOWHELP | OFN_HIDEREADONLY;
- 
-                            if (GetOpenFileName (&OpenFileName)) {
-	                           ustrcpy (urlToOpen, OpenFileName.lpstrFile);
-	                        }
-
-							SetDlgItemText (hwnDlg, IDC_BGLOCATION, urlToOpen);
-			                EndDialog (hwnDlg, ID_CONFIRM);
-                            ThotCallback (repeatImage, INTEGER_DATA, (CHAR_T*)repeatMode);
-                            ThotCallback (bgImageForm, INTEGER_DATA, (CHAR_T*)1);
-							break;
-
-		               case IDCANCEL:
-                            ThotCallback (bgImageForm, INTEGER_DATA, (CHAR_T*)0);
-			                EndDialog (hwnDlg, IDCANCEL);
-				            break;
-				}
-				break;
-
-				default: return FALSE;
-	}
-	return TRUE;
+	  case IDCANCEL:
+	    ThotCallback (BaseImage + FormBackground, INTEGER_DATA, (CHAR_T*)0);
+	    EndDialog (hwnDlg, IDCANCEL);
+	    break;
+	  }
+	break;
+	
+      default: return FALSE;
+      }
+    return TRUE;
 }
 
 
@@ -4154,27 +4150,15 @@ STRING server;
  CreateBackgroundImageDlgWindow
  ------------------------------------------------------------------------*/
 #ifdef __STDC__
-void CreateBackgroundImageDlgWindow (ThotWindow parent, int form_background, int image_URL, int image_label, int image_dir, int image_sel, int repeat_image, STRING image_location)
+void CreateBackgroundImageDlgWindow (ThotWindow parent, STRING image_location)
 #else /* !__STDC__ */
-void CreateBackgroundImageDlgWindow (parent, form_background, image_URL, image_label, image_dir, image_sel, repeat_image, image_location)
+void CreateBackgroundImageDlgWindow (parent, image_location)
 ThotWindow  parent;
-int   form_background;
-int   image_URL;
-int   image_label;
-int   image_dir;
-int   image_sel;
-int   repeat_image;
 STRING image_location;
 #endif /* __STDC__ */
 {
-  bgImageForm      = form_background;
-  imageURL         = image_URL;
-  imageSel         = image_sel;
   szFilter         = APPIMAGENAMEFILTER;
-  repeatImage      = repeat_image;
-  currentParentRef = bgImageForm;
   ustrcpy (currentPathName, image_location);
-
   DialogBox (hInstance, MAKEINTRESOURCE (BGIMAGEDIALOG), parent, (DLGPROC) BackgroundImageDlgProc);
 }
 #endif /* _WINDOWS */
