@@ -1,0 +1,148 @@
+#ifndef _WIN_FCT_
+#define _WIN_FCT_
+#include <windows.h>
+
+#include "fileaccess.h"
+
+#ifdef __STDC__
+extern void       WinErrorBox (HWND);
+extern void       WinLoadGC (HDC, int, int);
+extern HFONT      WinLoadFont (HDC, ptrfont);
+extern int        WIN_InitSystemColors ();
+extern void       WIN_GetDeviceContext (int);
+extern void       WIN_ReleaseDeviceContext ();
+extern BOOL       WIN_TtaInitDialogue (char*);
+extern void       WIN_TtaSetPulldownOff (int, ThotWidget, HWND);
+extern void       WIN_TtaSetPulldownOn (int, ThotWidget, HWND);
+extern void       WIN_TtaSetToggleMenu (int, int, boolean, HWND);
+extern void       WIN_APP_TextCallback (HWND, int);
+extern void       WIN_ThotCallBack (HWND, WPARAM, LPARAM);
+extern void       WIN_CharTranslation (HWND, int, UINT, WPARAM, LPARAM);
+extern void       WIN_InitDialogueFonts (HDC, char*);
+extern void       APP_ButtonCallback (ThotWidget, int, caddr_t);
+extern void       CleanFrameCatList (int);
+extern int        GetMainFrameNumber (ThotWindow);
+extern LRESULT    ToolBarNotify (int, HWND, WPARAM, LPARAM);
+extern int        GetFrameNumber (ThotWindow);
+extern void       TtaHandleOneWindowEvent (MSG*);
+extern HMENU      WIN_GetMenu (int);
+extern void       CreateOpenImgDlgWindow (HWND, STRING, int, int, int, int, int, int);
+extern void       CreateTableDlgWindow (int, int, int, int, int, int, int, int);
+extern void       WIN_ListSaveDirectory (int, STRING);
+extern void       ThotCallback (int, int, STRING data);
+extern void       WIN_TtaChangeButton (Document, View, int, int, BOOL);
+extern void       WIN_TtaSwitchButton (Document, View, int, int, int, BOOL);
+extern void       SwitchIconMath (Document, View, boolean);
+extern int        WIN_TtaAddButton (Document, View, int, void (*) (), STRING, BYTE, BOOL);
+extern void       AddMathButton (Document, View);
+extern int        TtaGetMessageTable (CONST STRING, int msgNumber);
+extern int        GetWindowNumber (Document, View view);
+extern void       TtaError (int);
+extern void       CreateMatrixDlgWindow (int, int, int, int, int, int);
+extern HDC        PASCAL GetPrinterDC (void);
+extern void       WinInitPrinterColors (void);
+extern void       CreateCSSDlgWindow (int, int, int, char*, int, char*);
+extern void       CreateLinkDlgWindow (HWND, char*, int, int, int);
+extern void       CreateHelpDlgWindow (HWND, char*, char*, char*);
+extern void       CreateMathDlgWindow (HWND, int, HWND);
+extern void       CreatePrintDlgWindow (HWND, char*, int, int, int, int, int, int);
+extern void       CreateAlign1DlgWindow (HWND, int);
+extern void       CreateAlign2DlgWindow (HWND, int);
+extern void       CreateAlign3DlgWindow (HWND, int);
+extern void       CreateSearchDlgWindow (HWND);
+extern void       CreateSaveAsDlgWindow (HWND, char*, int, int, int, int, int, int);
+extern void       CreateOpenDocDlgWindow (HWND, char*, int, int, int, int, int);
+extern void       CreateGraphicsDlgWindow (int, int, int, HWND);
+extern void       CreateSaveListDlgWindow (HWND, int, char*, int, int);
+extern void       CreateCloseDocDlgWindow (HWND, char*, char*, BOOL*, BOOL*);
+extern void       CreateLanguageDlgWindow (HWND, char*, char*, int, char*, char*, int, int, int, char*);
+extern void       CreateCharacterDlgWindow (HWND, int, int, int, int);
+extern void       CreateAttributeDlgWindow (char*, int, int);
+extern void       CreateCreateRuleDlgWindow (HWND, int, int, int, int, char*);
+extern void       CreateApplyClassDlgWindow (HWND, int, int, int, int, char*);
+extern void       CreateSpellCheckDlgWindow (HWND, char*, char*, int, int, int, int, int, int, int);
+extern void       CreateMathAttribDlgWindow (int);
+extern void       CreateInitConfirmDlgWindow (HWND, int, char*, char*);
+extern void       CreateChangeFormatDlgWindow (int, int, int, int, int, int, int, int);
+extern void       CreateGreekKeyboardDlgWindow (HWND);
+extern void       CreateAuthenticationDlgWindow (HWND);
+extern void       CreateBackgroundImageDlgWindow (HWND, int, int, int, int, int, int, int, char*);
+extern void       TtaHandleOneEvent (ThotEvent*);
+extern ThotWindow TtaGetThotWindow (int);
+extern BinFile    TtaReadOpen (CONST STRING);
+extern HWND       GetCurrentWindow ();
+extern void       WIN_DisplayWords (void);
+extern void       KbdCallbackHandler (ThotWidget, int, caddr_t);
+
+#else  /* __STDC__ */
+extern void       WinErrorBox ();
+extern void       WinLoadGC ();
+extern HFONT      WinLoadFont ();
+extern int        WIN_InitSystemColors ();
+extern void       WIN_GetDeviceContext ();
+extern void       WIN_ReleaseDeviceContext ();
+extern BOOL       WIN_TtaInitDialogue ();
+extern void       WIN_TtaSetPulldownOff ();
+extern void       WIN_TtaSetPulldownOn ();
+extern void       WIN_TtaSetToggleMenu ();
+extern void       WIN_APP_TextCallback ();
+extern void       WIN_ThotCallBack ();
+extern void       WIN_CharTranslation ();
+extern void       WIN_InitDialogueFonts ();
+extern void       APP_ButtonCallback ();
+extern void       CleanFrameCatList ();
+extern int        GetMainFrameNumber ();
+extern LRESULT    ToolBarNotify ();
+extern int        GetFrameNumber ();
+extern void       TtaHandleOneWindowEvent ();
+extern HMENU      WIN_GetMenu ();
+extern void       CreateOpenImgDlgWindow ();
+extern void       CreateTableDlgWindow ();
+extern void       WIN_ListSaveDirectory ();
+extern void       ThotCallback ();
+extern void       WIN_TtaChangeButton ();
+extern void       WIN_TtaSwitchButton ();
+extern void       SwitchIconMath ();
+extern int        WIN_TtaAddButton ();
+extern void       AddMathButton ();
+extern int        TtaGetMessageTable ();
+extern int        GetWindowNumber (Document, View);
+extern void       TtaError ();
+extern void       CreateMatrixDlgWindow ();
+extern HDC        PASCAL GetPrinterDC ();
+extern void       WinInitPrinterColors ();
+extern void       CreateCSSDlgWindow ();
+extern void       CreateLinkDlgWindow ();
+extern void       CreateHelpDlgWindow ();
+extern void       CreatePrintDlgWindow ();
+extern void       CreateAlign1DlgWindow ();
+extern void       CreateAlign2DlgWindow ();
+extern void       CreateAlign3DlgWindow ();
+extern void       CreateSearchDlgWindow ();
+extern void       CreateSaveAsDlgWindow ();
+extern void       CreateOpenDocDlgWindow ();
+extern void       CreateGraphicsDlgWindow ();
+extern void       CreateSaveListDlgWindow ();
+extern void       CreateCloseDocDlgWindow ();
+extern void       CreateLanguageDlgWindow ();
+extern void       CreateCharacterDlgWindow ();
+extern void       CreateAttributeDlgWindow ();
+extern void       CreateCreateRuleDlgWindow ();
+extern void       CreateApplyClassDlgWindow ();
+extern void       CreateSpellCheckDlgWindow ();
+extern void       CreateMathAttribDlgWindow ();
+extern void       CreateInitConfirmDlgWindow ();
+extern void       CreateChangeFormatDlgWindow ();
+extern void       CreateGreekKeyboardDlgWindow ();
+extern void       CreateAuthenticationDlgWindow ();
+extern void       CreateBackgroundImageDlgWindow ();
+extern void       TtaHandleOneEvent ();
+extern ThotWindow TtaGetThotWindow ();
+extern BinFile    TtaReadOpen ();
+extern HWND       GetCurrentWindow ();
+extern void       WIN_DisplayWords ();
+extern void       KbdCallbackHandler ();
+#endif /* __STDC__ */
+
+#endif /* _WIN_FCT_ */
+
