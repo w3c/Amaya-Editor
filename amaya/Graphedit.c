@@ -19,6 +19,7 @@
 #include "css.h"
 #include "trans.h"
 #include "view.h"
+#include "content.h"
  
 #include "GraphML.h"
 #include "HTML.h"
@@ -1255,7 +1256,7 @@ void             NameSpaceGenerated (NotifyAttribute *event)
  Check if any ancestor of element el has an attribute of type attrType.
  Check only ancestors defined in the same Thot schema (name space) as el.
  -----------------------------------------------------------------------*/
-ThotBool        InheritAttribute (Element el, AttributeType attrType)
+static ThotBool     InheritAttribute (Element el, AttributeType attrType)
 {
   Element     asc;
   SSchema     sch;
@@ -1296,7 +1297,7 @@ void         CreateGraphicElement (int entry)
   SSchema	    docSchema, graphSchema;
   DisplayMode       dispMode;
   char		    shape;
-  STRING            name;
+  STRING            path;
   int		    c1, i, w, h;
   int	            oldStructureChecking;
   int               docModified;
@@ -1329,8 +1330,7 @@ void         CreateGraphicElement (int entry)
 	/* the current selection is not in a GraphML element, create one */
 	{
 	  selType = TtaGetElementType (first);
-	  name = TtaGetSSchemaName (selType.ElSSchema);
-	  if (ustrcmp (name, TEXT("HTML")))
+	  if (ustrcmp (TtaGetSSchemaName (selType.ElSSchema), TEXT("HTML")))
 	    {
 	      /* selection is not in an HTML element. */
 	      TtaCancelLastRegisteredSequence (doc);
@@ -1432,12 +1432,12 @@ void         CreateGraphicElement (int entry)
       shape = 'p';
       break;
     case 7:	/* spline */
-      /* newType.ElTypeNum = GraphML_EL_path;        ********
-	 shape = 'B'; */
+      newType.ElTypeNum = GraphML_EL_path;
+      shape = 'B';
       break;
     case 8:	/* closed spline */
-      /* newType.ElTypeNum = GraphML_EL_path;        ********
-	 shape = 's'; */
+      newType.ElTypeNum = GraphML_EL_path;
+      shape = 's';
       break;
     case 9:	/* foreignObject with some HTML code */
       newType.ElTypeNum = GraphML_EL_foreignObject;
@@ -1584,16 +1584,38 @@ void         CreateGraphicElement (int entry)
       TtaSelectElement (doc, child);
       TtcInsertGraph (doc, 1, shape);
       /* the user has created the points */
-      if (shape != 'g' && TtaGetVolume (child) < 3)
+      if (shape != 'g')
 	{
-	  /* the polyline doesn't have enough points */
-	  TtaDeleteTree (newEl, doc);
-	  TtaCancelLastRegisteredSequence (doc);
-	  if (!docModified)
-	    TtaSetDocumentUnmodified (doc);
-	  TtaSelectElement (doc, first);
-	  InCreation = FALSE;
-	  return;
+	  if (TtaGetVolume (child) < 3)
+	    {
+	      /* the polyline doesn't have enough points */
+	      TtaDeleteTree (newEl, doc);
+	      TtaCancelLastRegisteredSequence (doc);
+	      if (!docModified)
+		TtaSetDocumentUnmodified (doc);
+	      TtaSelectElement (doc, first);
+	      InCreation = FALSE;
+	      return;
+	    }
+	  else if (shape == 'B' || /* open spline */
+		   shape == 's')   /* closed spline */
+	    /* transform a Thot curve into a SVG path */
+	    {
+	      TtaCancelLastRegisteredOperation (doc);
+	      path = TtaTransformCurveIntoPath (child);
+	      TtaRemoveTree (child, doc);
+	      TtaInsertFirstChild (&child, newEl, doc);
+	      attrType.AttrTypeNum = GraphML_ATTR_d;
+	      attr = TtaNewAttribute (attrType);
+	      TtaAttachAttribute (newEl, attr, doc);
+	      TtaSetAttributeText (attr, path, newEl, doc);
+	      TtaFreeMemory (path);
+	      ParsePathDataAttribute (attr, newEl, doc);
+	      if (newGraph)
+		TtaRegisterElementCreate (graphRoot, doc);
+	      else
+		TtaRegisterElementCreate (newEl, doc);
+	    }
 	}
     }
   if (selEl != NULL)

@@ -38,6 +38,7 @@
 #include "abspictures_f.h"
 #include "attributes_f.h"
 #include "boxselection_f.h"
+#include "buildboxes_f.h"
 #include "changeabsbox_f.h"
 #include "changepresent_f.h"
 #include "content_f.h"
@@ -227,7 +228,9 @@ void TtaSetTextContent (Element element, CHAR_T* content, Language language,
    "position". If "document" is null, we have not to consider
    the selction nor the displaying
   ----------------------------------------------------------------------*/
-void InsertText (PtrElement pEl, int position, STRING content, Document document)
+void InsertText (PtrElement pEl, int position, STRING content,
+		 Document document)
+
 {
    PtrTextBuffer       pBuf, pPreviousBuff, newBuf;
    STRING              ptr;
@@ -1127,6 +1130,100 @@ void TtaChangeLimitOfPolyline (Element element, TypeUnit unit, int x, int y,
 }
 
 /*----------------------------------------------------------------------
+   TtaTransformCurveIntoPath
+
+   Transform a polyline element into a path and return the SVG
+   representation of that path.
+
+   Parameters:
+   el: the element to be transformed
+
+   Return value:
+   the SVG path expression
+
+   ---------------------------------------------------------------------- */
+STRING  TtaTransformCurveIntoPath (Element el)
+{
+  STRING          path = NULL;
+#ifndef NODISPLAY
+  C_points        *ctrlPoints;
+  PtrBox          pBox;
+  PtrAbstractBox  pAb;
+  PtrElement      pEl;
+  PtrTextBuffer   adBuff, adNextBuff;
+  int             nbPoints, i, j, len;
+  ThotBool        closed;
+
+  pEl = (PtrElement) el;
+  if (pEl->ElLeafType != LtPolyLine)
+    return (NULL);
+  if (pEl->ElPolyLineType != 'B' &&        /* open Bezier */
+      pEl->ElPolyLineType != 's')          /* closed Bezier */
+    return (NULL);
+  adBuff = pEl->ElPolyLineBuffer;
+  nbPoints = pEl->ElNPoints;
+  closed = (pEl->ElPolyLineType == 's');
+  pAb = pEl->ElAbstractBox[0];
+  pBox = pAb->AbBox;
+
+  if (pBox->BxPictInfo)
+    {
+      ctrlPoints = (C_points *) pBox->BxPictInfo;
+      path = TtaGetMemory (nbPoints * 40);
+      sprintf (path, "M %d,%d", adBuff->BuPoints[1].XCoord,
+	       adBuff->BuPoints[1].YCoord);
+      len = strlen (path);
+      j = 1;
+      for (i = 1; i < nbPoints - 1; i++)
+	{
+	  j++;
+	  if (j >= adBuff->BuLength &&  adBuff->BuNext != NULL)
+	    {
+	      adBuff = adBuff->BuNext;
+	      j = 0;
+	    }
+	  sprintf (&path[len], " C %d,%d %d,%d %d,%d",
+		   (int) ctrlPoints[i].rx, (int) ctrlPoints[i].ry,
+		   (int) ctrlPoints[i+1].lx, (int) ctrlPoints[i+1].ly,
+		   adBuff->BuPoints[j].XCoord, adBuff->BuPoints[j].YCoord);
+	  len = strlen (path);
+	}
+      if (closed)
+	{
+	  adBuff = pEl->ElPolyLineBuffer;
+	  sprintf (&path[len], " C %d,%d %d,%d %d,%d",
+		   (int) ctrlPoints[i].rx, (int) ctrlPoints[i].ry,
+		   (int) ctrlPoints[1].lx, (int) ctrlPoints[1].ly,
+		   adBuff->BuPoints[1].XCoord, adBuff->BuPoints[1].YCoord);
+	  len = strlen (path);
+	  sprintf (&path[len], " Z");
+	}
+    }
+
+  adBuff = pEl->ElPolyLineBuffer;
+  while (adBuff)
+    {
+      adNextBuff = adBuff->BuNext;
+      free (adBuff);
+      adBuff = adNextBuff;
+    }
+
+  if (pBox->BxPictInfo != NULL)
+     free (pBox->BxPictInfo);
+
+  pEl->ElLeafType = LtPath;
+  pEl->ElFirstPathSeg = NULL;
+
+  pAb->AbLeafType = LtPath;
+  pAb->AbFirstPathSeg = NULL;
+
+  pBox->BxFirstPathSeg = NULL;
+
+#endif
+  return (path);
+}
+
+/*----------------------------------------------------------------------
    TtaNewPathSegLine
 
    Creates a new path segment of type line.
@@ -1141,7 +1238,6 @@ void TtaChangeLimitOfPolyline (Element element, TypeUnit unit, int x, int y,
    ---------------------------------------------------------------------- */
 PathSegment  TtaNewPathSegLine (int xstart, int ystart, int xend, int yend,
 				ThotBool newSubpath)
-
 {
    PtrPathSeg       pPa;
 
@@ -1355,7 +1451,7 @@ void TtaAppendPathSeg (Element element, PathSegment segment, Document document)
    destination: identifier of the page element to be modified.
    source : identifier of the source page element.
   ----------------------------------------------------------------------*/
-void TtaCopyPage (Element destination, Element source)
+void                TtaCopyPage (Element destination, Element source)
 {
    UserErrorCode = 0;
    if (destination == NULL || source == NULL)
@@ -1491,7 +1587,8 @@ PicType TtaGetPictureType (Element element)
    Return parameter:
    buffer: (the buffer contains the substring).
   ----------------------------------------------------------------------*/
-void TtaGiveSubString (Element element, STRING buffer, int position, int length)
+void TtaGiveSubString (Element element, STRING buffer, int position,
+		       int length)
 {
    PtrTextBuffer       pBuf;
    STRING              ptr;
@@ -1558,7 +1655,7 @@ void TtaGiveSubString (Element element, STRING buffer, int position, int length)
    a single character representing the shape of the graphics element or
    symbol contained in the element.
   ----------------------------------------------------------------------*/
-char TtaGetGraphicsShape (Element element)
+char                TtaGetGraphicsShape (Element element)
 {
    char                content;
 

@@ -212,6 +212,21 @@ extern void         TtaModifyPointInPolyline (Element element, int rank, TypeUni
 extern void         TtaChangeLimitOfPolyline (Element element, TypeUnit unit, int x, int y, Document document);
 
 /*----------------------------------------------------------------------
+   TtaTransformCurveIntoPath
+
+   Transform a polyline element into a path and return the SVG
+   representation of that path.
+
+   Parameters:
+   el: the element to be transformed
+
+   Return value:
+   the SVG path expression. - don't forget to free that buffer.
+
+   ---------------------------------------------------------------------- */
+extern STRING       TtaTransformCurveIntoPath (Element el);
+
+/*----------------------------------------------------------------------
    TtaNewPathSegLine
 
    Creates a new path segment of type line.
