@@ -44,13 +44,13 @@ static int          GridSize = 1;
 #include "windowdisplay_f.h"
 
 #ifdef _GL
-#include <GL/gl.h>
-#include "glwindowdisplay.h"
+  #include <GL/gl.h>
+  #include "glwindowdisplay.h"
 #endif /*_GL*/
 
 #ifdef _GTK
-#include <gdk/gdkx.h>
-#include <gtk/gtkprivate.h>
+  #include <gdk/gdkx.h>
+  #include <gtk/gtkprivate.h>
 #endif /*_GTK*/
 
 #ifdef _WINDOWS
@@ -122,15 +122,19 @@ static void VideoInvert (int frame, int width, int height, int x, int y)
 #ifdef _GL
       GL_DrawEmptyRectangle (152, x, y, width, height);
 #else /*_GL*/
+      
 #ifdef _WINDOWS
       PatBlt (Gdc, x, y, width, height, PATINVERT);
-#else /* _WINDOWS */
+#endif /* _WINDOWS */
+      
 #ifdef _GTK
       gdk_draw_rectangle (w, TtInvertGC, TRUE, x, y, width, height);
-#else /* _GTK */
-      XFillRectangle (TtDisplay, w, TtInvertGC, x, y, width, height);
 #endif /* _GTK */
-#endif /* _WINDOWS */
+
+#ifdef _MOTIF     
+      XFillRectangle (TtDisplay, w, TtInvertGC, x, y, width, height);
+#endif /* _MOTIF */
+      
 #endif /*_GL*/
     }
 }
@@ -190,13 +194,16 @@ static void InvertEllipse (int frame, int x, int y, int width, int height,
 	    InvertRgn (Gdc, rgn);
 	    DeleteObject (rgn);
 	  }
-#else /* _WINDOWS */
+#endif /* _WINDOWS */
+    
 #ifdef _GTK
       gdk_draw_arc (w, TtInvertGC, FALSE, x, y, width, height, 0, 360 * 64);
-#else /* _GTK */
-      XDrawArc (TtDisplay, w, TtInvertGC, x, y, width, height, 0, 360 * 64);
 #endif /* _GTK */
-#endif /* _WINDOWS */
+
+#ifdef _MOTIF      
+      XDrawArc (TtDisplay, w, TtInvertGC, x, y, width, height, 0, 360 * 64);
+#endif /* _MOTIF */
+
 #endif /*_GL*/
     }
 }
@@ -284,32 +291,38 @@ static void RedrawPolyLine (int frame, int x, int y, PtrTextBuffer buffer,
      /* GL_DrawPolygon (points, nb); */
 
 #else /*_GL*/
+
 #ifdef _WINDOWS
      DrawOutpolygon (w, points, nb);
-#else  /* !_WINDOWS */
-#ifndef _GTK
+#endif  /* !_WINDOWS */
+
+#ifdef _MOTIF
      XDrawLines (TtDisplay, w, TtInvertGC, points, nb, CoordModeOrigin);
-#else /* _GTK */
+#endif /* _MOTIF */
+     
+#ifdef _GTK
      gdk_draw_polygon (FrRef[frame], TtInvertGC, FALSE, points, nb);
-#endif
-#endif /* _WINDOWS */
+#endif /* _GTK */
+     
 #endif /*_GL*/
     }
   else 
 #ifdef _GL
-
     /* GL_DrawPolygon (points, nb - 1); */
-
 #else /*_GL*/
+    
 #ifdef _WINDOWS 
   DrawOutpolygon (w, points, nb - 1);
-#else  /* _WINDOWS */
-#ifndef _GTK
+#endif /* _WINDOWS */
+  
+#ifdef _MOTIF
   XDrawLines (TtDisplay, w, TtInvertGC, points, nb - 1, CoordModeOrigin);
-#else /* _GTK */
+#endif /* _MOTIF */
+  
+#ifdef _GTK
   gdk_draw_lines(FrRef[frame], TtInvertGC, points, nb - 1);
 #endif /* !_GTK */
-#endif /* _WINDOWS */
+
 #endif /*_GL*/
   /* free the table of points */
   free ((STRING) points);
@@ -333,18 +346,24 @@ static void AddPoints (int frame, int x, int y, int x1, int y1, int x3,
 		       int *nbpoints, int maxPoints, int width, int height,
 		       PtrTextBuffer Pbuffer, PtrTextBuffer Bbuffer)
 {
+#if defined(_MOTIF) || defined(_WINDOWS) || defined(_GTK)
+  
   ThotWindow          w;
-#ifndef _GTK
+#if defined(_MOTIF) || defined(_WINDOWS)
    ThotEvent           event;
-#else /*_GTK*/
+#endif /* #if defined(_MOTIF) || defined(_WINDOWS) */
+   
+#ifdef _GTK
    ThotEvent           *event;
    GdkWindowPrivate    *xwindow;
 #endif /*_GTK*/
-  float               ratioX, ratioY;
+
+   float               ratioX, ratioY;
   int                 ret;
   int                 newx, newy;
   ThotBool            input;
   ThotBool            wrap;
+
 #ifdef _WINDOWS
   RECT                rect;
   POINT               cursorPos;
@@ -352,9 +371,11 @@ static void AddPoints (int frame, int x, int y, int x1, int y1, int x3,
   POINT               ptEnd;
   POINT               ptCur;
   HCURSOR             cross;
-#else /* _WINDOWS */
-  int                 e, f;
 #endif /* _WINDOWS */
+  
+#if defined(_MOTIF) || defined(_GTK)  
+  int                 e, f;
+#endif /* #if defined(_MOTIF) || defined(_GTK) */
 
   /* need the window to change the cursor */
   w = FrRef[frame];
@@ -373,15 +394,18 @@ static void AddPoints (int frame, int x, int y, int x1, int y1, int x3,
   if (!SetCursorPos (lastx + rect.left, lasty + rect.top))
     WinErrorBox (w, "AddPoints (1)");
   cross = LoadCursor (NULL, IDC_CROSS);
-#else /* !_WINDOWS */
-#ifndef _GTK
+#endif /* !_WINDOWS */
+
+#ifdef _MOTIF
   e = PointerMotionMask | ButtonPressMask | ButtonReleaseMask | ButtonMotionMask;
   XMapRaised (TtDisplay, w);
   XFlush (TtDisplay);
   ThotGrab (w, HVCurs, e, 0);
   XWarpPointer (TtDisplay, None, w, 0, 0, 0, 0, lastx, lasty);
   XFlush (TtDisplay);
-#else /* _GTK */
+#endif /* _MOTIF */
+
+#ifdef _GTK
   gdk_window_set_cursor (GTK_WIDGET(FrameTable[frame].WdFrame)->window, HVCurs);
   e = GDK_BUTTON_MOTION_MASK | GDK_POINTER_MOTION_MASK 
     | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK;
@@ -392,7 +416,6 @@ static void AddPoints (int frame, int x, int y, int x1, int y1, int x3,
 		xwindow->xwindow,
 		0, 0, 0, 0, lastx, lasty);
 #endif /* !_GTK */
-#endif /* _WINDOWS */
 
   /* shows up limit borders */
   /*BoxGeometry (frame, x, y, width, height, x + width - 2, y + height - 2);*/
@@ -403,6 +426,7 @@ static void AddPoints (int frame, int x, int y, int x1, int y1, int x3,
   wrap = FALSE;
   while (ret == 0)
     {
+
 #ifdef _WINDOWS
       GetMessage (&event, NULL, 0, 0);
 	  SetCursor (cross);
@@ -565,8 +589,9 @@ static void AddPoints (int frame, int x, int y, int x1, int y1, int x3,
 	    default: break;
 	    }
 	}
-#else /* !_WINDOWS */
-#ifndef _GTK
+#endif /* !_WINDOWS */
+
+#ifdef _MOTIF
 
 #ifdef _LSOSOS
       if (XPending (TtDisplay) == 0)
@@ -648,7 +673,9 @@ static void AddPoints (int frame, int x, int y, int x1, int y1, int x3,
 	    }
 	  else
 	    lasty = newy;
-#endif
+
+#else /* #ifdef _LSOSOS */
+    
 	  XNextEvent (TtDisplay, &event);
 	  switch (event.type)
 	    {
@@ -758,8 +785,10 @@ static void AddPoints (int frame, int x, int y, int x1, int y1, int x3,
 	    default: 
 	      break;
 	    }
-	
-#else /* _GTK */
+#endif /* #ifdef _LSOSOS */
+#endif /* _MOTIF */	
+    
+#ifdef _GTK
 	  event = gdk_event_get ();
 
 	  if (event)
@@ -884,22 +913,27 @@ static void AddPoints (int frame, int x, int y, int x1, int y1, int x3,
 #endif /* _GL */
 
 	}
-#endif /* !_GTK */
-#endif /* _WINDOWS */
+#endif /* _GTK */
+
 	}
       /* erase box frame */
 
   /*BoxGeometry (frame, x, y, width, height, x + width - 2, y + height - 2);*/
 #ifdef _WINDOWS
   SetCursor (LoadCursor (NULL, IDC_ARROW));
-#else /* *_WINDOWS */
-  ThotUngrab ();
-#ifndef _GTK
+#endif /* *_WINDOWS */
+
+#ifdef _MOTIF
+  ThotUngrab ();  
   XFlush (TtDisplay);
-#else /* _GTK */
+#endif /* #ifdef _MOTIF */
+  
+#ifdef _GTK
+  ThotUngrab ();  
   gdk_window_set_cursor (GTK_WIDGET(FrameTable[frame].WdFrame)->window, ArrowCurs);
 #endif /* !_GTK */
-#endif /* _WINDOWS */
+
+#endif /* #if defined(_MOTIF) || defined(_WINDOWS) || defined(_GTK) */
 }
 
 
@@ -919,18 +953,22 @@ static void MoveApoint (PtrBox box, int frame, int x, int y, int x1, int y1, int
 			PtrTextBuffer Bbuffer, int pointselect)
 {
   ThotWindow          w;
-#ifndef _GTK
+#if defined(_MOTIF) || defined(_WINDOWS)
    ThotEvent           event;
-#else /*_GTK*/
+#endif 
+   
+#ifdef _GTK
    ThotEvent           *event_tmp;
    ThotEvent           *event;
    GdkWindowPrivate    *xwindow;
 #endif /*_GTK*/
-  float               ratioX, ratioY;
+
+   float               ratioX, ratioY;
   int                 ret;
   int                 newx, newy;
   ThotBool            input;
   ThotBool            wrap;
+  
 #ifdef _WINDOWS
   RECT                rect;
   POINT               cursorPos;
@@ -938,9 +976,11 @@ static void MoveApoint (PtrBox box, int frame, int x, int y, int x1, int y1, int
   POINT               ptEnd;
   POINT               ptCur;
   HCURSOR             cross;
-#else /* _WINDOWS */
-  int                 e,f;
 #endif /* _WINDOWS */
+
+#if defined(_MOTIF) || defined(_GTK)
+  int                 e,f;
+#endif /* #if defined(_MOTIF) || defined(_GTK) */
 
   /* need the window to change the cursor */
   w = FrRef[frame];
@@ -959,15 +999,18 @@ static void MoveApoint (PtrBox box, int frame, int x, int y, int x1, int y1, int
   ptEnd.y = y3;
   cross = LoadCursor (NULL, IDC_CROSS);
   SetCursorPos (lastx + rect.left, lasty + rect.top);
-#else /* !_WINDOWS */
-#ifndef _GTK
+#endif /* !_WINDOWS */
+  
+#ifdef _MOTIF
   e = ButtonPressMask | ButtonReleaseMask | ButtonMotionMask;
   XMapRaised (TtDisplay, w);
   XFlush (TtDisplay);
   ThotGrab (w, HVCurs, e, 0);
   XWarpPointer (TtDisplay, None, w, 0, 0, 0, 0, lastx, lasty);
   XFlush (TtDisplay);
-#else /* _GTK */
+#endif /* _MOTIF */  
+  
+#ifdef _GTK
   gdk_window_set_cursor (GTK_WIDGET(FrameTable[frame].WdFrame)->window, HVCurs);
   e = GDK_BUTTON_MOTION_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK;
   ThotGrab (w, HVCurs, e, 0);
@@ -977,7 +1020,6 @@ static void MoveApoint (PtrBox box, int frame, int x, int y, int x1, int y1, int
 		xwindow->xwindow,
 		0, 0, 0, 0, lastx, lasty);
 #endif /* !_GTK */
-#endif /* _WINDOWS */
 
   /* shows up limit borders */
   /*BoxGeometry (frame, x, y, width, height, x + width - 2, y + height - 2);*/
@@ -1069,8 +1111,9 @@ static void MoveApoint (PtrBox box, int frame, int x, int y, int x1, int y1, int
 	  WIN_HandleExpose (w, frame, event.wParam, event.lParam);
 	default: break;
 	}
-#else /* !_WINDOWS */
-#ifndef _GTK
+#endif /* !_WINDOWS */
+      
+#ifdef _MOTIF
       XNextEvent (TtDisplay, &event);
 	  
       /* check the coordinates */
@@ -1150,7 +1193,9 @@ static void MoveApoint (PtrBox box, int frame, int x, int y, int x1, int y1, int
 	  XtDispatchEvent (&event);
 	  break;
 	}
-#else /* _GTK */       
+#endif /* _MOTIF */      
+      
+#ifdef _GTK
       event = gdk_event_get ();
       if (event)
 	{
@@ -1319,21 +1364,24 @@ static void MoveApoint (PtrBox box, int frame, int x, int y, int x1, int y1, int
 				  (GdkEventExpose *) & event);
 	    }
 	}
-#endif /* !_GTK */
-#endif /* _WINDOWS */
+#endif /* _GTK */
+      
     }
   /* erase box frame */
   /*BoxGeometry (frame, x, y, width, height, x + width - 2, y + height - 2);*/
 #ifdef _WINDOWS
   SetCursor (LoadCursor (NULL, IDC_ARROW));
-#else /* *_WINDOWS */
+#endif /* *_WINDOWS */
+  
+#ifdef _MOTIF
   ThotUngrab ();
-#ifndef _GTK
   XFlush (TtDisplay);
-#else /* _GTK */
+#endif /* #ifdef _MOTIF */
+  
+#ifdef _GTK
+  ThotUngrab ();
   gdk_window_set_cursor (GTK_WIDGET(FrameTable[frame].WdFrame)->window, ArrowCurs);
-#endif /* !_GTK */
-#endif /* _WINDOWS */
+#endif /* _GTK */
 }
 
 
@@ -1379,14 +1427,17 @@ int PolyLineCreation (int frame, int *xOrg, int *yOrg, PtrBox pBox,
 #if defined(_WINDOWS) && !defined(_GL)
   Gdc = GetDC (FrRef[frame]);
 #endif /* _WINDOWS */
+  
   nbpoints = 1;
   lastx = x; 
   lasty = y;
   AddPoints (frame, x, y, -1, -1, -1, -1, lastx, lasty, 1, &nbpoints, maxPoints, width, height,
 	     Pbuffer, Bbuffer);
+
 #if defined(_WINDOWS) && !defined(_GL)
   ReleaseDC (FrRef[frame], Gdc);
 #endif /* _WINDOWS */
+  
   return (nbpoints);
 }
 
@@ -1443,13 +1494,16 @@ void PolyLineModification (int frame, int *xOrg, int *yOrg, PtrBox pBox,
 #if defined(_WINDOWS) && !defined(_GL)
   Gdc = GetDC (FrRef[frame]);
 #endif /* _WINDOWS */
+
   /* get the current point */
   RedrawPolyLine (frame, *xOrg, *yOrg, Bbuffer, nbpoints, point, close,
 		  &x1, &y1, &lastx, &lasty, &x3, &y3);
   MoveApoint (pBox, frame, x, y, x1, y1, x3, y3, lastx, lasty, point, width, height, Pbuffer, Bbuffer, 0);
+
 #if defined(_WINDOWS) && !defined(_GL)
   ReleaseDC (FrRef[frame], Gdc);
 #endif /* _WINDOWS */
+
   if (pBox->BxPictInfo != NULL)
     {
       /* we have to recompute the current spline */
@@ -1502,15 +1556,18 @@ int PolyLineExtension (int frame, int *xOrg, int *yOrg, PtrBox pBox,
 #if defined(_WINDOWS) && !defined(_GL)
   Gdc = GetDC (FrRef[frame]);
 #endif /* _WINDOWS */
+
   RedrawPolyLine (frame, x, y, Bbuffer, nbpoints, point, close,
 		  &x1, &y1, &lastx, &lasty, &x3, &y3);
   x1 = lastx;
   y1 = lasty;
   AddPoints (frame, x, y, x1, y1, x3, y3, lastx, lasty, point, &nbpoints, 0, width, height,
 	     Pbuffer, Bbuffer);
+
 #if defined(_WINDOWS) && !defined(_GL)
   ReleaseDC (FrRef[frame], Gdc);
 #endif /* _WINDOWS */
+
   return (nbpoints);
 }
 
@@ -1559,6 +1616,7 @@ int LineCreation (int frame, PtrBox pBox, int *x1, int *y1, int *x2,
 #if defined(_WINDOWS) && !defined(_GL)
   Gdc = GetDC (FrRef[frame]);
 #endif /* _WINDOWS */
+
   nbpoints = 1;
   lastx = x; 
   lasty = y;
@@ -1572,9 +1630,11 @@ int LineCreation (int frame, PtrBox pBox, int *x1, int *y1, int *x2,
 		    ViewFrameTable[frame - 1].FrMagnification);
   *y2 = PixelValue (pBuffer->BuPoints[2].YCoord, UnPixel, NULL,
 		    ViewFrameTable[frame - 1].FrMagnification);
+
 #if defined(_WINDOWS) && !defined(_GL)
   ReleaseDC (FrRef[frame], Gdc);
 #endif /* _WINDOWS */
+
   /* Free the buffer */
   FreeTextBuffer (pBuffer);
   return (nbpoints);
@@ -1665,6 +1725,7 @@ void LineModification (int frame, PtrBox pBox, int point, int *xi, int *yi)
 #if defined(_WINDOWS) && !defined(_GL)
   Gdc = GetDC (FrRef[frame]);
 #endif /* _WINDOWS */
+
   /* get the current point */
   xorg -= pFrame->FrXOrg;
   yorg -= pFrame->FrYOrg;
@@ -1676,9 +1737,11 @@ void LineModification (int frame, PtrBox pBox, int point, int *xi, int *yi)
 		    ViewFrameTable[frame - 1].FrMagnification);
   *yi = PixelValue (pBuffer->BuPoints[1].YCoord, UnPixel, NULL,
 		    ViewFrameTable[frame - 1].FrMagnification);
+
 #if defined(_WINDOWS) && !defined(_GL)
   ReleaseDC (FrRef[frame], Gdc);
 #endif /* _WINDOWS */
+
   /* Free the buffer */
   FreeTextBuffer (pBuffer);
 }
@@ -1698,13 +1761,17 @@ static void Resizing (int frame, int *x, int *y, int *width, int *height,
 #define C_LEFT 0
 #define C_VCENTER 1
 #define C_RIGHT 2
-#ifndef _GTK
+
+#if defined(_MOTIF) 
    ThotEvent           event;
-#else /*_GTK*/
+#endif /* #if defined(_MOTIF) */
+   
+#ifdef _GTK
    ThotEvent           *event_tmp;
    ThotEvent           *event;
    GdkWindowPrivate    *xwindow;
 #endif /*_GTK*/
+   
   ThotWindow          w;
   PtrAbstractBox      pAb;
   int                 ret, dx, dy, dl, dh;
@@ -1712,9 +1779,11 @@ static void Resizing (int frame, int *x, int *y, int *width, int *height,
   int                 hDirection, vDirection;
   int                 xref, yref;
   int                 warpx, warpy;
+
 #ifdef _WINDOWS
   POINT               cursorPos;
 #endif /* _WINDOWS */
+
   ThotBool           isEllipse;
 
   pAb = box->BxAbstractBox;
@@ -1795,6 +1864,7 @@ static void Resizing (int frame, int *x, int *y, int *width, int *height,
   ret = 0;
   while (ret == 0)
     {
+
 #ifdef _WINDOWS
       GetMessage (&event, NULL, 0, 0);
       switch (event.message)
@@ -2013,8 +2083,9 @@ static void Resizing (int frame, int *x, int *y, int *width, int *height,
 	  WIN_HandleExpose (w, frame, event.wParam, event.lParam);
 	default:  break;
         }
-#else  /* _WINDOWS */
-#ifndef _GTK
+#endif /* _WINDOWS */
+
+#ifdef _MOTIF
       /* X11R4 bug fix, if events are used too rapidly sometimes    */
       /* an event with event.xbutton.y=1 arose. Solution, pick only */
       /* MotionNotify events from the queue !                       */
@@ -2242,7 +2313,9 @@ static void Resizing (int frame, int *x, int *y, int *width, int *height,
 	default:
 	  break;
 	}
-#else /* _GTK */
+#endif /* _MOTIF */
+
+#ifdef _GTK
       event = gdk_event_get ();
       if (event)
 	{
@@ -2497,7 +2570,7 @@ static void Resizing (int frame, int *x, int *y, int *width, int *height,
 
 	}
 #endif /* !_GTK */
-#endif  /* _WINDOWS */
+      
     }
 
 #ifndef _GL
@@ -2528,9 +2601,11 @@ void GeometryResize (int frame, int x, int y, int *width, int *height,
   ThotWindow       w;
 #ifdef _WINDOWS
   POINT            cursorPos;
-#else /* _WINDOWS */
-  int              e;
 #endif /* _WINDOWS */
+
+#if defined (_MOTIF) || defined(_GTK)  
+  int              e;
+#endif /* #if defined (_MOTIF) || defined(_GTK) */
 
   /* select the correct cursor */
   w = FrRef[frame];
@@ -2549,8 +2624,9 @@ void GeometryResize (int frame, int x, int y, int *width, int *height,
 #ifndef _GL
   ReleaseDC (w, Gdc);
 #endif /*_GL*/
-#else  /* _WINDOWS */
-#ifndef _GTK
+#endif /* _WINDOWS */
+  
+#ifdef _MOTIF
   e = ButtonPressMask | ButtonReleaseMask | ButtonMotionMask;
   if (xmin == xmax)
     ThotGrab (w, VCurs, e, 0);
@@ -2558,7 +2634,9 @@ void GeometryResize (int frame, int x, int y, int *width, int *height,
     ThotGrab (w, HCurs, e, 0);
   else
     ThotGrab (w, HVCurs, e, 0);
-#else /*_GTK*/
+#endif /* _MOTIF */
+
+#ifdef _GTK
  e = GDK_BUTTON_MOTION_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK;
  if (xmin == xmax)
     ThotGrab (w, VCurs, e, 0);
@@ -2566,17 +2644,22 @@ void GeometryResize (int frame, int x, int y, int *width, int *height,
     ThotGrab (w, HCurs, e, 0);
   else
     ThotGrab (w, HVCurs, e, 0);
-#endif /*_GTK*/
+
   Resizing (frame, &x, &y, width, height, box, xmin, xmax, ymin, ymax, xm, ym,
 	  percentW, percentH);
   /* restore the previous state of the Thot Library */
   ThotUngrab ();
-#ifndef _GTK
-  XFlush (TtDisplay);
-#else /* _GTK */
+#endif /*_GTK*/
+  
+#ifdef _MOTIF
+  Resizing (frame, &x, &y, width, height, box, xmin, xmax, ymin, ymax, xm, ym,
+	  percentW, percentH);
+  /* restore the previous state of the Thot Library */
+  ThotUngrab ();
 
-#endif /* !_GTK */
-#endif  /* _WINDOWS */
+  XFlush (TtDisplay);
+#endif /* _MOTIF */
+
 }
 
 
@@ -2588,13 +2671,16 @@ static void Moving (int frame, int *x, int *y, int width, int height,
 		    PtrBox box, int xmin, int xmax, int ymin, int ymax,
 		    int xm, int ym)
 {
-#ifndef _GTK
+#if defined(_MOTIF) || defined(_WINDOWS)
    ThotEvent           event;
-#else /*_GTK*/
+#endif /* #if defined(_MOTIF) || defined(_WINDOWS) */
+
+#ifdef _GTK
    ThotEvent           *event_tmp;
    ThotEvent           *event;
    GdkWindowPrivate    *xwindow;
 #endif /*_GTK*/
+
    ThotWindow          w;
    PtrAbstractBox      pAb;
    int                 ret, dx, dy, newx, newy;
@@ -2763,8 +2849,9 @@ static void Moving (int frame, int *x, int *y, int width, int height,
 	  WIN_HandleExpose (w, frame, event.wParam, event.lParam);
 	default: break;
 	}
-#else  /* !_WINDOWS */
-#ifndef _GTK
+#endif /* !_WINDOWS */
+
+#ifdef _MOTIF
       XNextEvent (TtDisplay, &event);
       switch (event.type)
 	{
@@ -2882,7 +2969,9 @@ static void Moving (int frame, int *x, int *y, int width, int height,
 	default:
 	  break;
 	}
-#else /*_GTK*/
+#endif /* #ifdef _MOTIF */
+      
+#ifdef _GTK
       event = gdk_event_get ();
       if (event)
 	{
@@ -3027,8 +3116,7 @@ static void Moving (int frame, int *x, int *y, int width, int height,
 	  if (event->type ==  GDK_BUTTON_RELEASE)
 	    ret = 1;
 	}
-#endif /* !_GTK */
-#endif /* _WINDOWS */
+#endif /* _GTK */
     }
 
   /* erase the box drawing */
@@ -3052,12 +3140,13 @@ void GeometryMove (int frame, int *x, int *y, int width, int height,
 		   int xm, int ym)
 {
    ThotWindow          w;
-#ifndef _WINDOWS
+#if defined(_MOTIF) || defined(_GTK)
    int                 e;
-#endif /* _WINDOWS */
+#endif /* #if defined(_MOTIF) || defined(_GTK) */
 
   /* Pick the correct cursor */
   w = FrRef[frame];
+
 #ifdef _WINDOWS
 #ifndef _GL
   Gdc = GetDC (w);
@@ -3068,8 +3157,9 @@ void GeometryMove (int frame, int *x, int *y, int width, int height,
 #ifndef _GL
   ReleaseDC (w, Gdc);
 #endif _GL
-#else  /* !_WINDOWS */
-#ifndef _GTK
+#endif /* !_WINDOWS */
+
+#ifdef _MOTIF
   e = ButtonPressMask | ButtonReleaseMask | ButtonMotionMask;
   if ((xmin >= *x) && (xmax <= *x + width))
     ThotGrab (w, VCurs, e, 0);
@@ -3077,7 +3167,12 @@ void GeometryMove (int frame, int *x, int *y, int width, int height,
     ThotGrab (w, HCurs, e, 0);
   else
     ThotGrab (w, HVCurs, e, 0);
-#else /*_GTK*/
+  Moving (frame, x, y, width, height, box, xmin, xmax, ymin, ymax, xm, ym);
+   /* restore the Thot Library state */
+  ThotUngrab ();
+#endif /* #ifdef _MOTIF */
+  
+#ifdef _GTK
  e = GDK_BUTTON_MOTION_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK;
  if ((xmin >= *x) && (xmax <= *x + width))
     ThotGrab (w, VCurs, e, 0);
@@ -3085,14 +3180,15 @@ void GeometryMove (int frame, int *x, int *y, int width, int height,
     ThotGrab (w, HCurs, e, 0);
   else
     ThotGrab (w, HVCurs, e, 0);
-#endif /*_GTK*/
   Moving (frame, x, y, width, height, box, xmin, xmax, ymin, ymax, xm, ym);
    /* restore the Thot Library state */
   ThotUngrab ();
-#ifndef _GTK
+#endif /*_GTK*/
+
+#ifdef _MOTIF
   XFlush (TtDisplay);
-#endif /* !_GTK */
-#endif  /* !_WINDOWS */
+#endif /* _MOTIF */
+
 }
 
 
@@ -3116,13 +3212,16 @@ void GeometryCreate (int frame, int *x, int *y, int *width, int *height,
 		     int percentH)
 {
   ThotWindow          w;
-#ifndef _GTK
+#if defined(_WINDOWS) || defined(_MOTIF)
    ThotEvent           event;
-#else /*_GTK*/
+#endif /*#if defined(_WINDOWS) || defined(_MOTIF) */
+
+#ifdef _GTK
    ThotEvent           *event;
    GdkWindowPrivate    *xwindow, *xwindow2;
 #endif /*_GTK*/
-  PtrAbstractBox      pAb;
+
+   PtrAbstractBox      pAb;
   int                 xm, ym;
   int                 dx, dy;
   int                 ret;
@@ -3132,10 +3231,13 @@ void GeometryCreate (int frame, int *x, int *y, int *width, int *height,
   RECT                rect;
   POINT               cursorPos;
   HCURSOR             cross;
-#else  /* _WINDOWS */
+#endif /* _WINDOWS */
+
+#if defined(_GTK) || defined(_MOTIF)  
   ThotWindow          wdum;
   int                 e, f;
-#endif /* _WINDOWS */
+#endif /* #if defined(_GTK) || defined(_MOTIF)   */
+  
   ThotBool           isEllipse;
 
   pAb = box->BxAbstractBox;
@@ -3198,6 +3300,7 @@ void GeometryCreate (int frame, int *x, int *y, int *width, int *height,
     }
   /* change the cursor, modify library state */
   w = FrRef[frame];
+
 #ifdef _WINDOWS
   cross = LoadCursor (NULL, IDC_CROSS);
 #ifndef _GL
@@ -3205,18 +3308,20 @@ void GeometryCreate (int frame, int *x, int *y, int *width, int *height,
 #endif /*_GL*/
   GetWindowRect (w, &rect);
   SetCursorPos (*x + rect.left, *y + rect.top);
-#else /* !_WINDOWS */
-#ifndef _GTK 
+#endif /* !_WINDOWS */
+
+#ifdef _MOTIF
   e = ButtonPressMask | ButtonReleaseMask | ButtonMotionMask;
   ThotGrab (w, HVCurs, e, 0);
   XMapRaised (TtDisplay, w);
   XWarpPointer (TtDisplay, None, w, 0, 0, 0, 0, *x, *y);
   XFlush (TtDisplay);
-#else /*_GTK*/
+#endif /* _MOTIF*/
+  
+#ifdef _GTK
   e = GDK_BUTTON_MOTION_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK;
   ThotGrab (w, HVCurs, e, 0);
 #endif /* !_GTK */
-#endif /* !_WINDOWS */
 
   if (isEllipse)
     InvertEllipse (frame, *x, *y, *width, *height, *x + xref, *y + yref);
@@ -3295,8 +3400,9 @@ void GeometryCreate (int frame, int *x, int *y, int *width, int *height,
 	    default: break;
 	    } 
 	} 
-#else  /* !_WINDOWS */
-#ifndef _GTK
+#endif /* !_WINDOWS */
+
+#ifdef _MOTIF
       if (XPending (TtDisplay) == 0)
 	{
 	  /* get the cursor location */
@@ -3367,7 +3473,9 @@ void GeometryCreate (int frame, int *x, int *y, int *width, int *height,
 	  default: break;
 	  }
 	}
-#else /*_GTK*/
+#endif /*#ifdef _MOTIF*/
+
+#ifdef _GTK
    if (gdk_events_pending () == 0)
 	{ 
 	  /* current pointer position */
@@ -3484,7 +3592,7 @@ void GeometryCreate (int frame, int *x, int *y, int *width, int *height,
 
 	}
 #endif /* !_GTK */
-#endif /* !_WINDOWS */
+
     }
 
   /* switch off the old box geometry */
@@ -3497,22 +3605,28 @@ void GeometryCreate (int frame, int *x, int *y, int *width, int *height,
   *x = xm - rect.left;
   *y = ym - rect.top;
   SetCursor (LoadCursor (NULL, IDC_CROSS));
-#else  /* _WINDOWS */
+#endif /* _WINDOWS */
+
+#if defined(_GTK) || defined(_MOTIF)  
   *x = xm;
   *y = ym; 
-#endif /* _WINDOWS */
+#endif /* #if defined(_GTK) || defined(_MOTIF) */
+  
   Resizing (frame, x, y, width, height, box, xmin, xmax, ymin, ymax, xm, ym, percentW, percentH);
+
 #ifdef _WINDOWS 
 #ifndef _GL
   ReleaseDC (w, Gdc);
 #endif /*_GL*/
   SetCursor (LoadCursor (NULL, IDC_ARROW));
-#else  /* _WINDOWS */
+#endif /* _WINDOWS */
+
+#if defined(_GTK) || defined(_MOTIF)  
   /* restore state of the Thot Library */
   ThotUngrab ();
-#ifndef _GTK
+#ifdef _MOTIF
   XFlush (TtDisplay);
-#endif /* !_GTK */
-#endif /* _WINDOWS */
+#endif /* _MOTIF */
+#endif /* #if defined(_GTK) || defined(_MOTIF) */
 }
 

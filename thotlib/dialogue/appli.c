@@ -30,44 +30,38 @@
 #include "picture.h"
 
 #ifdef _GTK
-#include <gdk/gdkx.h>
+  #include <gdk/gdkx.h>
 #endif /*_GTK*/
 
 #ifdef _GL
-#include <GL/gl.h>
-#include "glwindowdisplay.h"
-
-#ifdef _GTK
-#include <gtkgl/gtkglarea.h>
-#endif /*_GTK*/
-
+  #include <GL/gl.h>
+  #include "glwindowdisplay.h"
+  #ifdef _GTK
+    #include <gtkgl/gtkglarea.h>
+  #endif /*_GTK*/
 #endif /*_GL*/
 
 #ifdef _WINDOWS
+  #include "winsys.h"
+  #include "wininclude.h"
 
-#include "winsys.h"
-#include "wininclude.h"
-
-#ifdef WM_MOUSELAST
-#ifndef WM_MOUSEWHEEL
-#define WM_MOUSEWHEEL WM_MOUSELAST+1 
-#endif /*WM_MOUSEWHEEL*/
-#endif /*WM_MOUSELAST*/
-
-#else /* _WINDOWS */
-
-#ifndef _GTK
-#define MAX_ARGS 20
-static Time         T1, T2, T3;
-static XmString     null_string;
-static ThotBool     JumpInProgress = FALSE;
-
-#else /* _GTK */
-
-static gchar *null_string;
-#endif /*_GTK*/
-
+  #ifdef WM_MOUSELAST
+    #ifndef WM_MOUSEWHEEL
+      #define WM_MOUSEWHEEL WM_MOUSELAST+1 
+    #endif /*WM_MOUSEWHEEL*/
+  #endif /*WM_MOUSELAST*/
 #endif /* _WINDOWS */
+
+#ifdef _MOTIF
+  #define MAX_ARGS 20
+  static Time         T1, T2, T3;
+  static XmString     null_string;
+  static ThotBool     JumpInProgress = FALSE;
+#endif /* _MOTIF */
+
+#ifdef _GTK
+  static gchar *null_string;
+#endif /*_GTK*/
 
 static char         OldMsgSelect[MAX_TXT_LEN];
 static PtrDocument  OldDocMsgSelect;
@@ -302,12 +296,15 @@ ThotBool InitToolTip (HWND hwndToolBar)
 #endif /* _WINDOWS */
 
 #include "absboxes_f.h"
+
 #ifdef _GTK
-#include "gtk-functions.h"
-#else /* _GTK */
-#include "appli_f.h"
-#include "input_f.h"
+  #include "gtk-functions.h"
 #endif /* _GTK */
+
+#ifdef _MOTIF
+  #include "appli_f.h"
+  #include "input_f.h"
+#endif /* _MOTIF */
 
 #include "applicationapi_f.h"
 #include "boxlocate_f.h"
@@ -526,16 +523,19 @@ void WIN_ChangeViewSize (int frame, int width, int height, int top_delta,
    /* recompute the scroll bars */
   /*UpdateScrollbars (frame); Done in rebuildconcreteimage, no ?*/
 }
-#else /* _WINDOWS */
+#endif /* _WINDOWS */
 
 /*----------------------------------------------------------------------
   XFlushOutput enforce updating of the calculated image for frame.
   ----------------------------------------------------------------------*/
 void XFlushOutput (int frame)
 {
-#ifndef _GTK
+#if !defined(_MOTIF) && !defined(_GTK)
+  return;
+#endif /* #if defined(_MOTIF) || defined(_GTK) */  
+#ifdef _MOTIF
    XFlush (TtDisplay);
-#endif /* _GTK */
+#endif /* _MOTIF */
 }
 
 /*----------------------------------------------------------------------
@@ -544,6 +544,9 @@ void XFlushOutput (int frame)
   ----------------------------------------------------------------------*/
 void FrameToRedisplay (ThotWindow w, int frame, void *ev)
 {
+#if !defined(_MOTIF) && !defined(_GTK)
+  return;
+#endif /* #if defined(_MOTIF) || defined(_GTK) */  
   XExposeEvent       *event = (XExposeEvent *) ev;
   ViewFrame          *pFrame;
   int                 xmin, xmax, ymin, ymax;
@@ -584,6 +587,9 @@ void FrameToRedisplay (ThotWindow w, int frame, void *ev)
   ----------------------------------------------------------------------*/
 static void FrameRedraw (int frame, Dimension width, Dimension height)
 {
+#if !defined(_MOTIF) && !defined(_GTK)
+  return;
+#endif /* #if defined(_MOTIF) || defined(_GTK) */
   int                 dx, dy, view;
   NotifyWindow        notifyDoc;
   Document            doc;
@@ -789,7 +795,9 @@ gboolean ExposeCallbackGTK (ThotWidget widget, GdkEventExpose *event, gpointer d
 #endif /* _GL */
   return FALSE;
 }
-#else /* _GTK */
+#endif /* _GTK */
+
+#ifdef _MOTIF
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 void FrameResized (int *w, int frame, int *info)
@@ -807,8 +815,7 @@ void FrameResized (int *w, int frame, int *info)
 
   FrameRedraw (frame, width, height);
 }
-#endif /* _GTK */
-#endif /* _WINDOWS */
+#endif /* _MOTIF */
 
 #ifdef _WINDOWS
 /*----------------------------------------------------------------------
@@ -936,24 +943,27 @@ void WIN_ChangeHScroll (int frame, int reason, int value)
   if (delta)
     HorizontalScroll (frame, delta, 1);
 }
-#else /* _WINDOWS */
+#endif /* _WINDOWS */
+
+#if defined(_MOTIF) || defined(_GTK)
 
 /*----------------------------------------------------------------------
   Demande de scroll horizontal.                                    
   ----------------------------------------------------------------------*/
-#ifndef _GTK
+#ifdef _MOTIF
 void FrameHScrolled (int *w, int frame, int *param)
-#else /* _GTK */
+#endif /* _MOTIF */
+#ifdef _GTK  
 void FrameHScrolledGTK (GtkAdjustment *w, int frame)
 #endif /* _GTK */
 {
   int                 delta, l;
   int                 view;
-#ifndef _GTK
+#ifdef _MOTIF
   int                 n;
   Arg                 args[MAX_ARGS];
   XmScrollBarCallbackStruct *info;
-#endif /* _GTK */
+#endif /* _MOTIF */
   NotifyWindow        notifyDoc;
   Document            doc;
 
@@ -961,7 +971,8 @@ void FrameHScrolledGTK (GtkAdjustment *w, int frame)
   if (FrameTable[frame].FrDoc &&
       documentDisplayMode[FrameTable[frame].FrDoc - 1] == NoComputedDisplay)
     return;
-#ifndef _GTK
+
+#ifdef _MOTIF
   info = (XmScrollBarCallbackStruct *) param;
   if (info->reason == XmCR_DECREMENT)
     /* Deplacement en arriere d'un caractere de la fenetre */
@@ -977,7 +988,9 @@ void FrameHScrolledGTK (GtkAdjustment *w, int frame)
     delta = FrameTable[frame].FrWidth;
   else
     delta = MAX_SIZE;		/* indeterminee */
-#else /* _GTK */
+#endif /* _MOTIF */ 
+  
+#ifdef _GTK 
   /* delta is the position into the page */
   delta = w->value;
 #endif  /* _GTK */
@@ -990,7 +1003,7 @@ void FrameHScrolledGTK (GtkAdjustment *w, int frame)
   notifyDoc.horizontalValue = delta;
   if (!CallEventType ((NotifyEvent *) & notifyDoc, TRUE))
     {
-#ifndef _GTK
+#ifdef _MOTIF
       if (info->reason == XmCR_VALUE_CHANGED || info->reason == XmCR_DRAG)
 	{
 	  /* On recupere la largeur de l'ascenseur */
@@ -1014,7 +1027,9 @@ void FrameHScrolledGTK (GtkAdjustment *w, int frame)
       else if (info->reason == XmCR_TO_BOTTOM)
 	/* force the right alignment */
 	delta = FrameTable[frame].FrScrollWidth;
-#else /* _GTK */
+#endif /* _MOTIF */
+
+#ifdef _GTK 
        /* l is the width of the page */
        l = w->page_size;
        /* On regarde si le deplacement bute sur le bord droit */
@@ -1027,6 +1042,7 @@ void FrameHScrolledGTK (GtkAdjustment *w, int frame)
 	   delta = delta + FrameTable[frame].FrScrollOrg - ViewFrameTable[frame - 1].FrXOrg;
 	 }
 #endif /* _GTK */
+
        if (delta)
 	 HorizontalScroll (frame, delta, 1);
        notifyDoc.document = doc;
@@ -1040,7 +1056,7 @@ void FrameHScrolledGTK (GtkAdjustment *w, int frame)
 /*----------------------------------------------------------------------
   Demande de scroll vertical.                                      
   ----------------------------------------------------------------------*/
-#ifndef _GTK
+#ifdef _MOTIF
 void FrameVScrolled (int *w, int frame, int *param)
 {
   int                 delta;
@@ -1153,7 +1169,9 @@ void FrameVScrolled (int *w, int frame, int *param)
       CallEventType ((NotifyEvent *) & notifyDoc, FALSE);
     }
 }
-#else /* _GTK */
+#endif /* _MOTIF */
+
+#ifdef _GTK
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 void FrameVScrolledGTK (GtkAdjustment *w, int frame)
@@ -1185,18 +1203,20 @@ void FrameVScrolledGTK (GtkAdjustment *w, int frame)
     }
 }
 #endif /*_GTK*/
-#endif /* _WINDOWS */
+
+#endif /* #if defined(_MOTIF) || defined(_GTK) */
 
 /*----------------------------------------------------------------------
   TtcLineUp scrolls one line up.                                    
   ----------------------------------------------------------------------*/
 void TtcLineUp (Document document, View view)
 {
-#if !defined(_WINDOWS) && !defined(_GTK)
+#ifdef _MOTIF
   XmScrollBarCallbackStruct infos;
-#else /* _GTK */
+#endif /* _MOTIF */
+#if defined(_WINDOWS) || defined(_GTK)
   int                       delta;
-#endif /* _WINDOWS && _GTK */
+#endif /* defined(_WINDOWS) || defined(_GTK) */
   int                       frame;
   
   if (document != 0)
@@ -1204,13 +1224,15 @@ void TtcLineUp (Document document, View view)
   else
     frame = 0;
 
-#if !defined(_WINDOWS) && !defined(_GTK)
+#ifdef _MOTIF
   infos.reason = XmCR_DECREMENT;
   FrameVScrolled (0, frame, (int *) &infos);
-#else /* _WINDOWS && _GTK */
+#endif /* _MOTIF */
+
+#if defined(_WINDOWS) || defined(_GTK)
   delta = -13;
   VerticalScroll (frame, delta, 1);
-#endif /* _WINDOWS && GTK */
+#endif /*#if defined(_WINDOWS) || defined(_GTK) */
 }
 
 /*----------------------------------------------------------------------
@@ -1218,11 +1240,12 @@ void TtcLineUp (Document document, View view)
   ----------------------------------------------------------------------*/
 void TtcLineDown (Document document, View view)
 {
-#if !defined(_WINDOWS) && !defined(_GTK)
+#ifdef _MOTIF
   XmScrollBarCallbackStruct infos;
-#else /* _WINDOWS && _GTK */
+#endif /* _MOTIF */
+#if defined(_WINDOWS) || defined(_GTK)
   int                       delta;
-#endif /* _WINDOWS && _GTK */
+#endif /* #if defined(_WINDOWS) || defined(_GTK) */
   int                       frame;
 
   if (document != 0)
@@ -1230,13 +1253,15 @@ void TtcLineDown (Document document, View view)
   else
     frame = 0;
 
-#if !defined(_WINDOWS) && !defined(_GTK)
+#ifdef _MOTIF
   infos.reason = XmCR_INCREMENT;
   FrameVScrolled (0, frame, (int *) &infos);
-#else /* _WINDOWS && _GTK */
+#endif /* _MOTIF */
+  
+#if defined(_WINDOWS) || defined(_GTK)
   delta = 13;
   VerticalScroll (frame, delta, 1);
-#endif /* _WINDOWS && _GTK */
+#endif /* #if defined(_WINDOWS) || defined(_GTK) */
 }
 
 /*----------------------------------------------------------------------
@@ -1244,11 +1269,12 @@ void TtcLineDown (Document document, View view)
   ----------------------------------------------------------------------*/
 void TtcScrollLeft (Document document, View view)
 {
-#if !defined(_WINDOWS) && !defined(_GTK)
+#ifdef _MOTIF
   XmScrollBarCallbackStruct infos;
-#else /* _WINDOWS && _GTK */
+#endif /* _MOTIF */
+#if defined(_WINDOWS) || defined(_GTK)
   int                       delta;
-#endif /* _WINDOWS && GTK */
+#endif /* #if defined(_WINDOWS) || defined(_GTK) */
   int                       frame;
   
   if (document != 0)
@@ -1256,13 +1282,15 @@ void TtcScrollLeft (Document document, View view)
   else
     frame = 0;
 
-#if !defined(_WINDOWS) && !defined(_GTK)
+#ifdef _MOTIF
   infos.reason = XmCR_DECREMENT;
   FrameHScrolled (0, frame, (int *) &infos);
-#else /* _WINDOWS && _GTK */
+#endif /* _MOTIF */
+
+#if defined(_WINDOWS) || defined(_GTK)
   delta = -13;
   HorizontalScroll (frame, delta, 1);
-#endif /* _WINDOWS && _GTK */
+#endif /* #if defined(_WINDOWS) || defined(_GTK) */
 }
 
 /*----------------------------------------------------------------------
@@ -1270,11 +1298,12 @@ void TtcScrollLeft (Document document, View view)
   ----------------------------------------------------------------------*/
 void TtcScrollRight (Document document, View view)
 {
-#if !defined(_WINDOWS) && !defined(_GTK)
+#ifdef _MOTIF
   XmScrollBarCallbackStruct infos;
-#else /* _WINDOWS && _GTK */
+#endif /* _MOTIF */
+#if defined(_WINDOWS) || defined(_GTK)
   int                       delta;
-#endif /* _WINDOWS && GTK */
+#endif /* #if defined(_WINDOWS) || defined(_GTK) */
   int                       frame;
 
   if (document != 0)
@@ -1282,13 +1311,15 @@ void TtcScrollRight (Document document, View view)
   else
     frame = 0;
 
-#if !defined(_WINDOWS) && !defined(_GTK)
+#ifdef _MOTIF
   infos.reason = XmCR_INCREMENT;
   FrameHScrolled (0, frame, (int *) &infos);
-#else  /* _WINDOWS && GTK */
+#endif /* _MOTIF */
+
+#if defined(_WINDOWS) || defined(_GTK)
   delta = 13;
   HorizontalScroll (frame, delta, 1);
-#endif /* _WINDOWS */
+#endif /* #if defined(_WINDOWS) || defined(_GTK) */
 }
 
 /*----------------------------------------------------------------------
@@ -1296,24 +1327,27 @@ void TtcScrollRight (Document document, View view)
   ----------------------------------------------------------------------*/
 void TtcPageUp (Document document, View view)
 {
-#if !defined(_WINDOWS) && !defined(_GTK)
+#ifdef _MOTIF
   XmScrollBarCallbackStruct infos;
-#else   /* _WINDOWS && GTK */
+#endif /* _MOTIF */
+#if defined(_WINDOWS) || defined(_GTK)
   int                       delta;
-#endif  /* _WINDOWS && GTK */
+#endif  /* #if defined(_WINDOWS) || defined(_GTK) */
   int                       frame;
 
   if (document != 0)
     frame = GetWindowNumber (document, view);
   else
     frame = 0;
-#if !defined(_WINDOWS) && !defined(_GTK)
+#ifdef _MOTIF
   infos.reason = XmCR_PAGE_DECREMENT;
   FrameVScrolled (0, frame, (int *) &infos);
-#else  /* _WINDOWS && GTK */
+#endif /* _MOTIF */
+  
+#if defined(_WINDOWS) || defined(_GTK)
   delta = -FrameTable[frame].FrHeight;
   VerticalScroll (frame, delta, 1);
-#endif /* _WINDOWS && GTK */
+#endif /*#if defined(_WINDOWS) || defined(_GTK) */
 }
 
 /*----------------------------------------------------------------------
@@ -1321,24 +1355,27 @@ void TtcPageUp (Document document, View view)
   ----------------------------------------------------------------------*/
 void TtcPageDown (Document document, View view)
 {
-#if !defined(_WINDOWS) && !defined(_GTK)
+#ifdef _MOTIF
   XmScrollBarCallbackStruct infos;
-#else   /* _WINDOWS && GTK */
+#endif /* _MOTIF */
+#if defined(_WINDOWS) || defined(_GTK)
   int                       delta;
-#endif  /* _WINDOWS && GTK */
+#endif  /* #if defined(_WINDOWS) || defined(_GTK) */
   int                        frame;
 
   if (document != 0)
     frame = GetWindowNumber (document, view);
   else
     frame = 0;
-#if !defined(_WINDOWS) && !defined(_GTK)
+#ifdef _MOTIF
   infos.reason = XmCR_PAGE_INCREMENT;
   FrameVScrolled (0, frame, (int *) &infos);
-#else  /* _WINDOWS && GTK */
+#endif /* _MOTIF */
+  
+#if defined(_WINDOWS) || defined(_GTK)
   delta = FrameTable[frame].FrHeight;
   VerticalScroll (frame, delta, 1);
-#endif /* _WINDOWS && GTK */
+#endif /* #if defined(_WINDOWS) || defined(_GTK) */
 }
 
 
@@ -1347,9 +1384,9 @@ void TtcPageDown (Document document, View view)
   ----------------------------------------------------------------------*/
 void TtcPageTop (Document document, View view)
 {
-#if !defined(_WINDOWS) && !defined(_GTK)
+#ifdef _MOTIF
   XmScrollBarCallbackStruct infos;
-#endif  /* _WINDOWS && GTK */
+#endif /* _MOTIF */
   int                        frame;
 
   if (document != 0)
@@ -1357,12 +1394,14 @@ void TtcPageTop (Document document, View view)
   else
     frame = 0;
 
-#if !defined(_WINDOWS) && !defined(_GTK)
+#ifdef _MOTIF
   infos.reason = XmCR_TO_TOP;
   FrameVScrolled (0, frame, (int *) &infos);
-#else   /* _WINDOWS && GTK */
+#endif /* _MOTIF */
+  
+#if defined(_WINDOWS) || defined(_GTK)
   JumpIntoView (frame, 0);
-#endif /* _WINDOWS && GTK */
+#endif /* #if defined(_WINDOWS) || defined(_GTK) */
 }
 
 /*----------------------------------------------------------------------
@@ -1370,9 +1409,9 @@ void TtcPageTop (Document document, View view)
   ----------------------------------------------------------------------*/
 void TtcPageEnd (Document document, View view)
 {
-#if !defined(_WINDOWS) && !defined(_GTK)
+#ifdef _MOTIF
   XmScrollBarCallbackStruct infos;
-#endif  /* _WINDOWS && GTK */
+#endif /* _MOTIF */
   int                        frame;
 
   if (document != 0)
@@ -1380,12 +1419,14 @@ void TtcPageEnd (Document document, View view)
   else
     frame = 0;
 
-#if !defined(_WINDOWS) && !defined(_GTK)
+#ifdef _MOTIF
   infos.reason = XmCR_TO_BOTTOM;
   FrameVScrolled (0, frame, (int *) &infos);
-#else /* _WINDOWS && _GTK */
+#endif /* _MOTIF */
+  
+#if defined(_WINDOWS) || defined(_GTK)
   JumpIntoView (frame, 100);
-#endif /* _WINDOWS && _GTK */
+#endif /* #if defined(_WINDOWS) || defined(_GTK) */
 }
 
 
@@ -1410,13 +1451,14 @@ void InitializeOtherThings ()
   ClickX = 0;
   ClickY = 0;
   /* message de selection vide */
-#ifndef _WINDOWS
-#ifndef _GTK
+#ifdef _MOTIF
   null_string = XmStringCreateSimple ("");
-#else /* _GTK */
+#endif /* _MOTIF */
+  
+#ifdef _GTK
   null_string = (gchar *)"";
 #endif /* _GTK */
-#endif /* _WINDOWS */
+
   OldMsgSelect[0] = EOS;
   OldDocMsgSelect = NULL;
 }
@@ -1434,15 +1476,17 @@ void TtaRaiseView (Document document, View view)
   if (idwindow != 0)
     {
       w = FrameTable[idwindow].WdFrame;
-#ifndef _WINDOWS
-#ifndef _GTK
+#ifdef _MOTIF
       if (w != 0)
 	XMapRaised (TtDisplay, XtWindowOfObject (XtParent (XtParent (XtParent (w)))));
-#else /* _GTK */
+#endif /* _MOTIF */
+      
+#ifdef _GTK
       if (w != 0)
 	gdk_window_show (gtk_widget_get_parent_window(GTK_WIDGET(w)));
 #endif /* _GTK */
-#else  /* _WINDOWS */
+
+#ifdef _WINDOWS
       {
 	OpenIcon (FrMainRef[idwindow]);
 	SetForegroundWindow (FrMainRef[idwindow]);
@@ -1483,14 +1527,14 @@ void TtaSetStatus (Document document, View view, char *text, char *name)
 {
   int                 frame, length;
   char                *s;
-#ifndef _WINDOWS
-#ifndef _GTK
+#ifdef _MOTIF
   Arg                 args[MAX_ARGS];
   XmString            title_string;
-#else /* _GTK */
+#endif /* _MOTIF */
+
+#ifdef _GTK
   gchar * title_string;
 #endif /* _GTK */
-#endif /* _WINDOWS */
 
   if (document == 0)
     return;
@@ -1519,8 +1563,9 @@ void TtaSetStatus (Document document, View view, char *text, char *name)
 
 	    SendMessage (FrameTable[frame].WdStatus, SB_SETTEXT, (WPARAM) 0, (LPARAM) s);
 	    SendMessage (FrameTable[frame].WdStatus, WM_PAINT, (WPARAM) 0, (LPARAM) 0);
-#else  /* _WINDOWS */
-#ifndef _GTK
+#endif /* _WINDOWS */
+
+#ifdef _MOTIF
 	    if (name)
 	      {
 		/* text est un format */
@@ -1533,7 +1578,9 @@ void TtaSetStatus (Document document, View view, char *text, char *name)
 	    XtSetValues (FrameTable[frame].WdStatus, args, 1);
 	    XtManageChild (FrameTable[frame].WdStatus);
 	    XmStringFree (title_string);
-#else /* _GTK */
+#endif /* _MOTIF */
+
+#ifdef _GTK
 	    if (name)
 	      {
 		/* text est un format */
@@ -1549,8 +1596,8 @@ void TtaSetStatus (Document document, View view, char *text, char *name)
 				title_string);
 	    gtk_widget_show_all (GTK_WIDGET(FrameTable[frame].WdStatus));
 #endif /* _GTK */
-#endif /* _WINDOWS */
-	    TtaFreeMemory (s);
+
+      TtaFreeMemory (s);
 	  }
     }
 }
@@ -1558,7 +1605,6 @@ void TtaSetStatus (Document document, View view, char *text, char *name)
 
 
 #ifdef _WINDOWS
-
 /*----------------------------------------------------------------------
   CheckTtCmap creates the Thot palette if it doesn't exist
   ----------------------------------------------------------------------*/
@@ -1750,6 +1796,7 @@ LRESULT CALLBACK WndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lParam)
 	}
       return 0L;
 #endif /*_GL*/
+      
 #ifdef WM_MOUSEWHEEL
     case WM_MOUSEWHEEL:
       {
@@ -2247,7 +2294,8 @@ LRESULT CALLBACK ClientWndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lPar
 
   return (DefWindowProc (hwnd, mMsg, wParam, lParam));
 }
-#else /* _WINDOWS */
+#endif /* _WINDOWS */
+
 #ifdef _GTK
 /*----------------------------------------------------------------------
   GtkLiningSelection 
@@ -2355,22 +2403,27 @@ gboolean GtkLiningSelection (gpointer data)
   
 }
 #endif /* _GTK */
+
+#if defined(_GTK) || defined(_MOTIF)
+
 /*----------------------------------------------------------------------
   Evenement sur une frame document.                              
   D.V. equivalent de la fontion MS-Windows ci dessus !        
   GTK: fonction qui traite les click de la souris sauf la selection   
   ----------------------------------------------------------------------*/
-#ifndef _GTK
+#ifdef _MOTIF
 void FrameCallback (int frame, void *evnt)
-#else /* _GTK */
+#endif /* _MOTIF */
+#ifdef _GTK
 gboolean FrameCallbackGTK (GtkWidget *widget, GdkEventButton *event, gpointer data)
 #endif /* _GTK */
 {
-#ifndef _GTK
+#ifdef _MOTIF
   ThotEvent           event;
   ThotEvent          *ev = (ThotEvent *) evnt;
   int                 comm, dx, dy, sel, h;
-#else /* _GTK */
+#endif /* _MOTIF */
+#ifdef _GTK
   int                 frame;
   GtkEntry            *textzone;
   static int          timer = None;
@@ -2386,7 +2439,7 @@ gboolean FrameCallbackGTK (GtkWidget *widget, GdkEventButton *event, gpointer da
   GL_prepare (frame);  
 #endif /* _GL */
 
-#ifndef _GTK
+#ifdef _MOTIF
   if (FrameTable[frame].FrDoc == 0 ||
       documentDisplayMode[FrameTable[frame].FrDoc - 1] == NoComputedDisplay)
     /* don't manage a document with NoComputedDisplay mode */
@@ -2406,7 +2459,9 @@ gboolean FrameCallbackGTK (GtkWidget *widget, GdkEventButton *event, gpointer da
       && (ev->type != ButtonPress || (ev->xbutton.state & THOT_KEY_ControlMask) == 0))
     /* a TtaWaitShowDialogue in progress, don't change the selection */
     return;
-#else /* _GTK */
+#endif /* _MOTIF */
+  
+#ifdef _GTK
     frame = (int )data;
   if (FrameTable[frame].FrDoc == 0 ||
       documentDisplayMode[FrameTable[frame].FrDoc - 1] == NoComputedDisplay)
@@ -2441,7 +2496,7 @@ gboolean FrameCallbackGTK (GtkWidget *widget, GdkEventButton *event, gpointer da
   gtk_widget_grab_focus (GTK_WIDGET(textzone));  
 #endif /* _GTK */
 
-#ifndef _GTK
+#ifdef _MOTIF
   switch (ev->type)
     {
     case ButtonPress:
@@ -2639,7 +2694,9 @@ gboolean FrameCallbackGTK (GtkWidget *widget, GdkEventButton *event, gpointer da
     default:
       break;
     }
-#else /* _GTK */
+#endif /* _MOTIF */
+  
+#ifdef _GTK
   switch (event->type)
     {
     case GDK_BUTTON_PRESS:
@@ -2808,8 +2865,10 @@ gboolean FrameCallbackGTK (GtkWidget *widget, GdkEventButton *event, gpointer da
     }
   return TRUE;
 #endif /* _GTK */
+  
 }
-#endif /* _WINDOWS */
+
+#endif /* #if defined(_GTK) || defined(_MOTIF) */
 
 
 #ifdef _GTK
@@ -2858,7 +2917,7 @@ gboolean ButtonReleaseCallbackGTK (GtkWidget *widget, GdkEventButton *event,
   gtk_object_set_data (GTK_OBJECT(widget), "ButtonRelease", (gpointer)TRUE);    
   return FALSE;
 }
- 
+
 #endif /*_GTK*/
 
 
@@ -2867,14 +2926,14 @@ gboolean ButtonReleaseCallbackGTK (GtkWidget *widget, GdkEventButton *event,
   ----------------------------------------------------------------------*/
 void ThotGrab (ThotWindow win, ThotCursor cursor, long events, int disp)
 {
-#ifndef _WINDOWS
-#ifndef _GTK 
+#ifdef _MOTIF
   XGrabPointer (TtDisplay, win, FALSE, events, GrabModeAsync, GrabModeAsync,
 		win, cursor, CurrentTime);
-#else /* _GTK */
+#endif /* _MOTIF */
+  
+#ifdef _GTK
   gdk_pointer_grab (win, FALSE, events, win, cursor, GDK_CURRENT_TIME);
 #endif /* _GTK */
-#endif /* _WINDOWS */
 }
 
 
@@ -2883,13 +2942,13 @@ void ThotGrab (ThotWindow win, ThotCursor cursor, long events, int disp)
   ----------------------------------------------------------------------*/
 void ThotUngrab ()
 {
-#ifndef _WINDOWS
-#ifndef _GTK
+#ifdef _MOTIF
   XUngrabPointer (TtDisplay, CurrentTime);
-#else /* _GTK */
+#endif /* _MOTIF */
+  
+#ifdef _GTK
   gdk_pointer_ungrab (GDK_CURRENT_TIME);
 #endif /* _GTK */
-#endif /* _WINDOWS */
 }
 
 /*----------------------------------------------------------------------
@@ -2905,18 +2964,21 @@ ThotWindow TtaGetThotWindow (int frame)
   ----------------------------------------------------------------------*/
 void SetCursorWatch (int thotThotWindowid)
 {
-#ifndef _WINDOWS
+#if defined(_GTK) || defined(_MOTIF)
+
   Drawable            drawable;
-#ifdef _GTK   
+#ifdef _GTK
   int                 frame;
   ThotWidget          w;
 #endif /* _GTK */
 
   
   drawable = (Drawable)TtaGetThotWindow (thotThotWindowid);
-#ifndef _GTK
+#ifdef _MOTIF
   XDefineCursor (TtDisplay, drawable, WaitCurs);
-#else /*_GTK */
+#endif /* #ifdef _MOTIF */
+
+#ifdef _GTK
   for (frame = 1; frame <= MAX_FRAME; frame++)
     {
       w = FrameTable[frame].WdFrame;
@@ -2925,10 +2987,13 @@ void SetCursorWatch (int thotThotWindowid)
 	  gdk_window_set_cursor (GTK_WIDGET(w)->window, WaitCurs);
     }
 #endif /* _GTK */
-#else  /* _WINDOWS */
+  
+#endif /* #if defined(_GTK) || defined(_MOTIF) */
+
+#ifdef _WINDOWS
   SetCursor (LoadCursor (NULL, IDC_WAIT));
   ShowCursor (TRUE);
-#endif /* _WINDOWS */
+#endif /* #ifdef _WINDOWS */  
 }
 
 /*----------------------------------------------------------------------
@@ -2936,7 +3001,7 @@ void SetCursorWatch (int thotThotWindowid)
   ----------------------------------------------------------------------*/
 void ResetCursorWatch (int thotThotWindowid)
 {  
-#ifndef _WINDOWS
+#if defined(_GTK) || defined(_MOTIF)
   Drawable            drawable;
 #ifdef _GTK
   int                 frame;
@@ -2944,9 +3009,11 @@ void ResetCursorWatch (int thotThotWindowid)
 #endif /* _GTK */
 
   drawable = (Drawable) TtaGetThotWindow (thotThotWindowid);
-#ifndef _GTK
+#ifdef _MOTIF
   XUndefineCursor (TtDisplay, drawable);
-#else /* GTK */
+#endif /* _MOTIF */
+  
+#ifdef _GTK
   for (frame = 1; frame <= MAX_FRAME; frame++)
     {
       w = FrameTable[frame].WdFrame;
@@ -2955,10 +3022,13 @@ void ResetCursorWatch (int thotThotWindowid)
 	  gdk_window_set_cursor (GTK_WIDGET(w)->window, ArrowCurs);
     }
 #endif /* _GTK */
-#  else  /* _WINDOWS */
+  
+#endif /* #if defined(_GTK) || defined(_MOTIF) */
+
+#ifdef _WINDOWS
   ShowCursor (FALSE);
   SetCursor (LoadCursor (NULL, IDC_ARROW));
-#  endif /* _WINDOWS */
+#endif /* _WINDOWS */
 }
 
 /*----------------------------------------------------------------------
@@ -2966,12 +3036,12 @@ void ResetCursorWatch (int thotThotWindowid)
 void TtaSetCursorWatch (Document document, View view)
 {
   int                 frame;
-#  ifndef _WINDOWS
+#if defined(_GTK) || defined(_MOTIF)
   Drawable            drawable;
 #ifdef _GTK
   ThotWidget          w;
 #endif /* _GTK */
-#  endif  /* _WINDOWS */
+#endif  /* #if defined(_GTK) || defined(_MOTIF) */
 
   UserErrorCode = 0;
   /* verifie le parametre document */
@@ -2979,34 +3049,36 @@ void TtaSetCursorWatch (Document document, View view)
     {
       for (frame = 1; frame <= MAX_FRAME; frame++)
 	{
-#ifndef _WINDOWS
+#if defined(_GTK) || defined(_MOTIF)
 	  drawable = (Drawable)TtaGetThotWindow (frame);
 	  if (drawable != 0)
-#ifndef _GTK
+#ifdef _MOTIF
 	    XDefineCursor (TtDisplay, drawable, WaitCurs);
-#else /* _GTK */
+#endif /* _MOTIF */
+#ifdef _GTK
 	  {
 	    w = FrameTable[frame].WdFrame;
 	    gdk_window_set_cursor (GTK_WIDGET(w)->window, WaitCurs);
 	  }
 #endif /* _GTK */
-#endif /* _WINDOWS */
+#endif /* #if defined(_GTK) || defined(_MOTIF) */
 	}
     }
   else
     {
       frame = GetWindowNumber (document, view);
-#   ifndef _WINDOWS
+#if defined(_GTK) || defined(_MOTIF)
       if (frame != 0)
-#ifndef _GTK
+#ifdef _MOTIF
 	XDefineCursor (TtDisplay, TtaGetThotWindow (frame), WaitCurs);
-#else /* _GTK */
+#endif /* _MOTIF */
+#ifdef _GTK
       {
 	w = FrameTable[frame].WdFrame;
 	gdk_window_set_cursor (GTK_WIDGET(w)->window, WaitCurs);
       }
 #endif /* _GTK */
-#   endif /* _WINDOWS */
+#endif /* #if defined(_GTK) || defined(_MOTIF) */
     }
 }
 
@@ -3015,12 +3087,12 @@ void TtaSetCursorWatch (Document document, View view)
 void TtaResetCursor (Document document, View view)
 {
   int                 frame;
-#ifndef _WINDOWS
+#if defined(_GTK) || defined(_MOTIF)
   Drawable            drawable;
 #ifdef _GTK
   ThotWidget          w;
 #endif /* _GTK */
-#endif /* _WINDOWS */
+#endif /* #if defined(_GTK) || defined(_MOTIF) */
 
   UserErrorCode = 0;
   /* verifie le parametre document */
@@ -3028,12 +3100,13 @@ void TtaResetCursor (Document document, View view)
     {
       for (frame = 1; frame <= MAX_FRAME; frame++)
 	{
-#ifndef _WINDOWS
+#if defined(_GTK) || defined(_MOTIF)
 	  drawable = (Drawable)TtaGetThotWindow (frame);
 	  if (drawable != 0)
-#ifndef _GTK
+#ifdef _MOTIF
 	    XUndefineCursor (TtDisplay, drawable);
-#else /* _GTK */
+#endif /* _MOTIF */
+#ifdef _GTK
 	  {
 	    w = FrameTable[frame].WdFrame;
 	    if (w != NULL)
@@ -3041,17 +3114,18 @@ void TtaResetCursor (Document document, View view)
 		gdk_window_set_cursor(GTK_WIDGET(w)->window, ArrowCurs);
 	  }  
 #endif /* _GTK */
-#endif /* _WINDOWS */
+#endif /* #if defined(_GTK) || defined(_MOTIF) */
 	}
     }
   else
     {
       frame = GetWindowNumber (document, view);
-#ifndef _WINDOWS
+#if defined(_GTK) || defined(_MOTIF)
       if (frame != 0)
-#ifndef _GTK
+#ifdef _MOTIF
 	XUndefineCursor (TtDisplay, TtaGetThotWindow (frame));
-#else /* _GTK */
+#endif /* _MOTIF */
+#ifdef _GTK
       {
 	w = FrameTable[frame].WdFrame;
 	if (w != NULL)
@@ -3059,7 +3133,7 @@ void TtaResetCursor (Document document, View view)
 	    gdk_window_set_cursor(GTK_WIDGET(w)->window, ArrowCurs);
       }  
 #endif /* _GTK */
-#endif /* _WINDOWS */
+#endif /* #if defined(_GTK) || defined(_MOTIF) */
     }
 }
 
@@ -3068,14 +3142,16 @@ void TtaResetCursor (Document document, View view)
   ----------------------------------------------------------------------*/
 void GiveClickedAbsBox (int *frame, PtrAbstractBox *pAb)
 {
-#ifndef _WINDOWS
+#if defined(_GTK) || defined(_MOTIF)
   ThotEvent           event;
   Drawable            drawable;
   int                 i;
 #ifdef _GTK   
   ThotWidget          w;
 #endif /* _GTK */
-#else  /* _WINDOWS */
+#endif /* #if defined(_GTK) || defined(_MOTIF) */
+
+#ifdef _WINDOWS
   MSG                 event;
   HCURSOR             cursor;          
   int                 curFrame;
@@ -3090,14 +3166,17 @@ void GiveClickedAbsBox (int *frame, PtrAbstractBox *pAb)
   /* Change the cursor */
 #ifdef _WINDOWS
   cursor = LoadCursor (hInstance, MAKEINTRESOURCE (Window_Curs));
-#else  /* _WINDOWS */
+#endif  /* _WINDOWS */
+  
+#if defined(_GTK) || defined(_MOTIF)  
   for (i = 1; i <= MAX_FRAME; i++)
     {
       drawable = (Drawable)TtaGetThotWindow (i);
       if (drawable)
-#ifndef _GTK
+#ifdef _MOTIF
 	XDefineCursor (TtDisplay, drawable, WindowCurs);
-#else /* _GTK */   
+#endif /* _MOTIF */
+#ifdef _GTK
       {
 	w = FrameTable[i].WdFrame;
 	if (w && w->window)
@@ -3105,7 +3184,7 @@ void GiveClickedAbsBox (int *frame, PtrAbstractBox *pAb)
       }
 #endif /* _GTK */
     }
-#endif /* _WINDOWS */
+#endif /* #if defined(_GTK) || defined(_MOTIF) */
 
   /* wait the click on the target */
   ClickIsDone = 1;
@@ -3114,10 +3193,12 @@ void GiveClickedAbsBox (int *frame, PtrAbstractBox *pAb)
   ClickY = 0;
   while (ClickIsDone == 1)
     {
-#ifndef _WINDOWS 
+#if defined(_GTK) || defined(_MOTIF)  
       TtaFetchOneEvent (&event);
       TtaHandleOneEvent (&event);
-#else /* _WINDOWS */
+#endif /* #if defined(_GTK) || defined(_MOTIF) */
+      
+#ifdef _WINDOWS
       GetMessage (&event, NULL, 0, 0);
       curFrame = GetFrameNumber (event.hwnd);
       TtaHandleOneEvent (&event);
@@ -3125,15 +3206,17 @@ void GiveClickedAbsBox (int *frame, PtrAbstractBox *pAb)
 #endif /* _WINDOWS */
     }
 
-#ifndef _WINDOWS
+#if defined(_GTK) || defined(_MOTIF)  
   /* Restore the cursor */
   for (i = 1; i <= MAX_FRAME; i++)
     {
       drawable = (Drawable)TtaGetThotWindow (i);
       if (drawable)
-#ifndef _GTK
+#ifdef _MOTIF
 	XUndefineCursor (TtDisplay, drawable);
-#else /* _GTK */
+#endif /* _MOTIF */
+      
+#ifdef _GTK
 
       {
 	w = FrameTable[i].WdFrame;  
@@ -3143,7 +3226,7 @@ void GiveClickedAbsBox (int *frame, PtrAbstractBox *pAb)
       }
 #endif /* _GTK */
     }
-#endif /* _WINDOWS */
+#endif /* #if defined(_GTK) || defined(_MOTIF) */
 
   *frame = ClickFrame;
   if (ClickFrame > 0 && ClickFrame <= MAX_FRAME)
@@ -3158,13 +3241,15 @@ void GiveClickedAbsBox (int *frame, PtrAbstractBox *pAb)
 void ChangeFrameTitle (int frame, unsigned char *text, CHARSET encoding)
 {
   unsigned char      *title;
-#ifndef _WINDOWS
+#if defined(_GTK) || defined(_MOTIF)  
   ThotWidget          w;
-#endif /* _WINDOWS */
-#if !defined(_GTK) && !defined(_WINDOWS)
+#endif /* #if defined(_GTK) || defined(_MOTIF) */
+
+#ifdef _MOTIF
   int                 n;
   Arg                 args[MAX_ARGS];
-#endif /* _GTK  && _WINDOWS*/
+#endif /* _MOTIF */
+
 #ifdef _I18N_
   CHAR_T             *ptr;
 
@@ -3185,14 +3270,17 @@ void ChangeFrameTitle (int frame, unsigned char *text, CHARSET encoding)
 #ifdef _WINDOWS
   if (FrMainRef [frame])
     SetWindowText (FrMainRef[frame], title);
-#else  /* _WINDOWS */
+#endif /* _WINDOWS */
+
+#if defined(_GTK) || defined(_MOTIF)  
   w = FrameTable[frame].WdFrame;
   if (w)
     {
 #ifdef _GTK
       w = gtk_widget_get_toplevel (w);
       gtk_window_set_title (GTK_WINDOW(w), title);
-#else /* _GTK */
+#endif /* _GTK */
+#ifdef _MOTIF
       w = XtParent (XtParent (XtParent (w)));
       n = 0;
       XtSetArg (args[n], XmNtitle, title);
@@ -3200,9 +3288,10 @@ void ChangeFrameTitle (int frame, unsigned char *text, CHARSET encoding)
       XtSetArg (args[n], XmNiconName, title);
       n++;
       XtSetValues (w, args, n);
-#endif /* _GTK */
+#endif /* _MOTIF */
     }
-#endif /* _WINDOWS */
+#endif /* #if defined(_GTK) || defined(_MOTIF) */
+  
   if (title != text)
     TtaFreeMemory (title);
 }
@@ -3227,14 +3316,10 @@ void ChangeSelFrame (int frame)
 	{
 	  /* raise the new document */
 	  w = FrameTable[frame].WdFrame;
-#ifndef _WINDOWS
-#ifndef _GTK
+#ifdef _MOTIF
 	  if (w != 0)
 	    XMapRaised (TtDisplay, XtWindowOfObject (XtParent (XtParent (XtParent (w)))));
-#else /* _GTK */
-
-#endif /* _GTK */
-#endif /* _WINDOWS */
+#endif /* _MOTIF */
 	}
     }
 }
@@ -3281,11 +3366,15 @@ void GetSizesFrame (int frame, int *width, int *height)
 #ifdef _GL
   *width = FrameTable[frame].FrWidth;
   *height = FrameTable[frame].FrHeight;
+
 #else /*_GL*/
-#ifndef _WINDOWS
+
+#if defined(_GTK) || defined(_MOTIF) 
   *width = FrameTable[frame].FrWidth;
   *height = FrameTable[frame].FrHeight;
-#else  /* _WINDOWS */
+#endif /* #if defined(_GTK) || defined(_MOTIF)  */
+  
+#ifdef _WINDOWS
   RECT rWindow;
 
   if (GetClientRect (FrRef[frame], &rWindow) != 0)
@@ -3299,6 +3388,7 @@ void GetSizesFrame (int frame, int *width, int *height)
       *width = 0;
     }
 #endif /* _WINDOWS */
+
 #endif /*_GL*/
 }
 
@@ -3312,13 +3402,14 @@ void  DefineClipping (int frame, int orgx, int orgy, int *xd, int *yd,
   int              clipx, clipy, clipwidth, clipheight;
 
 #ifndef _GL 
-#ifndef _WINDOWS
+#if defined(_GTK) || defined(_MOTIF)   
 #ifdef _GTK
   GdkRectangle      rect;
-#else /* _GTK */
-  XRectangle        rect;
 #endif /* _GTK */
-#endif /* _WINDOWS */
+#ifdef _MOTIF
+  XRectangle        rect;
+#endif /* _MOTIF */
+#endif /* #if defined(_GTK) || defined(_MOTIF) */
 #endif /* _GL */
 
   if (*xd < *xf && *yd < *yf && orgx < *xf && orgy < *yf) 
@@ -3347,11 +3438,15 @@ void  DefineClipping (int frame, int orgx, int orgy, int *xd, int *yd,
       clipheight = *yf - *yd;
       clipy += FrameTable[frame].FrTopMargin;
 #ifndef _GL
+      
 #ifdef _WINDOWS
       if (!(clipRgn = CreateRectRgn (clipx, clipy, 
 				     clipx + clipwidth, clipy + clipheight)))
 	WinErrorBox (NULL, "DefineClipping");
-#else  /* _WINDOWS */ 
+#endif  /* _WINDOWS */ 
+      
+#if defined(_GTK) || defined(_MOTIF)
+      
 #ifdef _GTK 
       rect.x = clipx;
       rect.y = clipy;
@@ -3360,7 +3455,9 @@ void  DefineClipping (int frame, int orgx, int orgy, int *xd, int *yd,
       gdk_gc_set_clip_rectangle (TtLineGC, &rect);	
       gdk_gc_set_clip_rectangle (TtGreyGC, &rect);
       gdk_gc_set_clip_rectangle (TtGraphicGC, &rect);
-#else /* _GTK */
+#endif /* _GTK */
+      
+#ifdef _MOTIF
       rect.x = 0;
       rect.y = 0;
       rect.width = clipwidth;
@@ -3371,8 +3468,10 @@ void  DefineClipping (int frame, int orgx, int orgy, int *xd, int *yd,
 			  clipy + FrameTable[frame].FrTopMargin, &rect, 1, Unsorted);
       XSetClipRectangles (TtDisplay, TtGraphicGC, clipx,
 			  clipy + FrameTable[frame].FrTopMargin, &rect, 1, Unsorted);
-#endif /* _GTK */
-#endif /* _WINDOWS */
+#endif /* _MOTIF */
+      
+#endif /* #if defined(_GTK) || defined(_MOTIF)  */
+      
       if (raz > 0)
 	Clear (frame, clipwidth, clipheight, clipx, clipy);
 #else /* _GL */
@@ -3394,7 +3493,7 @@ void  DefineClipping (int frame, int orgx, int orgy, int *xd, int *yd,
 void RemoveClipping (int frame)
 {
 #ifndef _GL
-#ifndef _WINDOWS
+
 #ifdef _GTK
   GdkRectangle         rect;
 
@@ -3406,9 +3505,9 @@ void RemoveClipping (int frame)
   gdk_gc_set_clip_rectangle (TtLineGC, &rect);
   gdk_gc_set_clip_rectangle (TtGraphicGC, &rect);
   gdk_gc_set_clip_rectangle (TtGreyGC, &rect);
-
-
-#else /* _GTK */
+#endif /* _GTK */
+  
+#ifdef _MOTIF
   XRectangle          rect;
 
   rect.x = 0;
@@ -3419,13 +3518,15 @@ void RemoveClipping (int frame)
   XSetClipRectangles (TtDisplay, TtGraphicGC, 0, 0, &rect, 1, Unsorted); 
   XSetClipRectangles (TtDisplay, TtGreyGC, 0, 0, &rect, 1, Unsorted);
   XFlushOutput (frame);
-#endif /* _GTK */
-#else  /* _WINDOWS */
+#endif /* _MOTIF */
+
+#ifdef _WINDOWS
   SelectClipRgn(TtDisplay, NULL); 
   if (clipRgn && !DeleteObject (clipRgn))
     WinErrorBox (NULL, "RemoveClipping");
   clipRgn = (HRGN) 0;
 #endif /* _WINDOWS */
+
 #else /* _GL */
   GL_UnsetClippingRestore (FALSE);
 #endif /*_GL*/
@@ -3441,14 +3542,15 @@ void UpdateScrollbars (int frame)
   int                 width, height;
   int                 l, h;
   ThotWidget          hscroll, vscroll;
-#ifndef _WINDOWS
-#ifndef _GTK
+
+#ifdef _MOTIF
   Arg                 args[MAX_ARGS];
   int                 n;
-#else /* _GTK */
+#endif /* _MOTIF */
+#ifdef _GTK
   GtkAdjustment      *tmpw;  
-#endif /* _GTK */
-#else /* _WINDOWS */
+#endif /* _GTK */ 
+#ifdef _WINDOWS
   SCROLLINFO          scrollInfo;
   ThotBool            need_resize;
 #endif /* _WINDOWS */
@@ -3457,20 +3559,25 @@ void UpdateScrollbars (int frame)
       documentDisplayMode[FrameTable[frame].FrDoc - 1] 
       == NoComputedDisplay)
     return;
+
 #ifdef _GL
   if (FrameTable[frame].Scroll_enabled == FALSE)
     return;
 #endif /* _GL */
+  
   /* Get the displayed volume */
   ComputeDisplayedChars (frame, &x, &y, &width, &height);
   hscroll = FrameTable[frame].WdScrollH;
   vscroll = FrameTable[frame].WdScrollV;
   if (hscroll == NULL || vscroll == NULL)
     return;
-#ifndef _WINDOWS
+
+#if defined(_GTK) || defined(_MOTIF)
+
   l = FrameTable[frame].FrWidth;
   h = FrameTable[frame].FrHeight;
-#ifndef _GTK
+
+#ifdef _MOTIF
   if (width + x <= l)
     {
       n = 0;
@@ -3489,7 +3596,9 @@ void UpdateScrollbars (int frame)
       XtSetArg (args[n], XmNsliderSize, height);n++;
       XtSetValues (vscroll, args, n);
     }
-#else /*_GTK*/
+#endif /* _MOTIF */
+
+#ifdef _GTK
   if (width + x <= l &&
       (width + vscroll->allocation.width <= l || 
        x || width <= 60))
@@ -3545,9 +3654,11 @@ void UpdateScrollbars (int frame)
       if (GTK_WIDGET_VISIBLE(GTK_WIDGET (vscroll)))
 	gtk_widget_hide (GTK_WIDGET (vscroll));
     }  
-  
 #endif /*_GTK*/  
-#else  /* _WINDOWS */
+
+#endif /* #if defined(_GTK) || defined(_MOTIF)*/
+
+#ifdef _WINDOWS
   need_resize = FALSE;
   l = FrameTable[frame].FrWidth;
   h = FrameTable[frame].FrHeight;

@@ -205,8 +205,6 @@ AC_TYPE_SIGNAL
 AC_FUNC_VPRINTF
 AC_CHECK_FUNCS(getcwd gethostname gettimeofday getwd mkdir mktime putenv select socket strdup strerror strftime strstr strtod strtol uname lstat strcasecmp strncasecmp strchr memcpy)
 
-
-
 AC_ARG_WITH(GL,              [  --with-gl               enable Opengl canvas (experimental) ])
 dnl
 dnl GL canvas is disabled by default
@@ -227,18 +225,69 @@ if test "$with_gl" = "" ; then
   fi
 fi  
 
-GTK_OPTIONS=
-AC_ARG_WITH(gtk, [  --without-gtk              use Motif instead of GTK])
-if test "$withval" = "no" ; then
-  if test "$with_gl" = "yes" ; then
-    with_gtk="yes"
-  else
+#GTK_OPTIONS=
+#AC_ARG_WITH(gtk, [  --without-gtk              use Motif instead of GTK])
+#if test "$withval" = "no" ; then
+#  if test "$with_gl" = "yes" ; then
+#    with_gtk="yes"
+#  else
+#    with_gtk="no"
+#  fi
+#else
+#  with_gtk="yes"
+#fi
+
+# check if gtk gui should be used
+AC_ARG_WITH(gtk, [  --with-gtk              use GTK GUI toolkit ])
+if test "$with_gtk" = "yes" -o "$enable_gtk" = "yes" ; then
+  if test "$withval" = "no" ; then
     with_gtk="no"
+  else
+    with_gtk="yes"
   fi
-else
-  with_gtk="yes"
 fi
 
+# check if motif gui should be used
+AC_ARG_WITH(motif, [  --with-motif            use MOTIF GUI toolkit ])
+if test "$with_motif" = "yes" -o "$enable_motif" = "yes" ; then
+  with_motif="yes"
+  no_motif=no
+fi
+
+# Check if a GUI toolkit is enabled
+if test "$with_motif" = "no" -o "$with_motif" = "" ; then
+  if test "$with_gtk" = "no" -o "$with_gtk" = "" ; then
+    # Default GUI toolkits
+    with_motif="no"
+    no_motif=yes
+    with_gtk="yes"
+  fi
+fi
+
+if test "$with_motif" = "yes" ; then
+  if test "$with_gtk" = "yes" ; then
+    echo 
+    echo "****************************************************************"
+    echo " ERROR: "
+    echo " More than one GUI toolkit is enable"
+    echo " Only one GUI toolkit should be enable (turn off one)"
+    echo " exemple ok :  ../configure --with-gtk "
+    echo " exemple !ok : ../configure --with-gtk --with-motif"
+    echo "****************************************************************"
+    echo 
+    exit 1
+  fi
+  if test "$with_gl" = "yes" ; then
+    echo 
+    echo "****************************************************************"
+    echo " ERROR: "
+    echo " MOTIF GUI doesn't support OpenGL canvas (turn off --with-gl)"
+    echo "****************************************************************"
+    echo 
+    exit 1
+  fi
+fi
+  
 if test "$with_gtk" = "yes" ; then
   for ac_dir in               \
     /usr/lib/glib/include     \
@@ -280,7 +329,9 @@ AC_SUBST(GTK_LIBRARIES)
 GTK_OPTIONS="-D_GTK"
   no_motif=yes
   no_graphic=yes
-else
+fi
+
+if test "$with_motif" = "yes" ; then
 dnl
 dnl Checking for Motif libraries and includes
 dnl
@@ -447,6 +498,8 @@ AC_SUBST(MOTIF_INCLUDES)
 AC_SUBST(MOTIF_LIBRARIES)
 ])
 
+MOTIF_OPTIONS="-D_MOTIF"
+
 AC_PATH_MOTIF
 fi
 
@@ -465,7 +518,7 @@ dnl  ***************************************************************
 dnl echo "with gtk is ${with_gtk}, with gl is ${with_gl}\n"
 
 if test "${with_gtk}" != "yes" -o "${with_gl}" = "yes" ; then
-  AC_ARG_WITH(graphic-libs, [  --with-graphic-libs    use static libjpeg, libpng.])
+  AC_ARG_WITH(graphic-libs, [  --with-graphic-libs     use static libjpeg, libpng.])
   if test "$withval" = "no" ; then
     no_graphic=yes
   fi
@@ -886,7 +939,7 @@ if test "$with_generic_xml" = "" ; then
     fi
 fi
 
-AC_ARG_WITH(dav,            [  --with-dav             enable WebDAV support (experimental) ])
+AC_ARG_WITH(dav,            [  --with-dav              enable WebDAV support (experimental) ])
 dnl
 dnl DAV support disabled by default
 dnl
@@ -1093,8 +1146,8 @@ dnl
 dnl The options for each library or binary
 dnl
 
-THOT_OPTIONS="$GTK_OPTIONS $I18N_OPTIONS $GL_OPTIONS"
-AMAYA_OPTIONS="$MATH_OPTIONS $SVG_OPTIONS $GTK_OPTIONS $GENERIC_XML_OPTIONS $I18N_OPTIONS $GL_OPTIONS"
+THOT_OPTIONS="$GTK_OPTIONS $I18N_OPTIONS $GL_OPTIONS $MOTIF_OPTIONS"
+AMAYA_OPTIONS="$MATH_OPTIONS $SVG_OPTIONS $GTK_OPTIONS $GENERIC_XML_OPTIONS $I18N_OPTIONS $GL_OPTIONS $MOTIF_OPTIONS"
 #PLUGIN_OPTIONS="-DPLUGIN_TRACE -DXP_UNIX"
 AMAYA_ANNOT_OPTIONS="$AMAYA_ANNOT_OPTIONS $I18N_OPTIONS"
 
@@ -1318,10 +1371,12 @@ fi
 
 if test "$with_gtk" = "yes" ; then
     echo "Amaya configured with GTK"
-else 
+fi
+
+if test "$with_motif" = "yes" ; then
   if test "$no_motif" = "yes" ; then
-    echo "Motif seems not installed on this machine"
-    echo "Amaya need Motif 1.2 or 2.0"
+      echo "Motif seems not installed on this machine"
+      echo "Amaya need Motif 1.2 or 2.0"
   else
     if test "$motif_includes" = "" ; then
       echo "Motif includes were not found"
@@ -1332,6 +1387,8 @@ else
         echo "Motif libraries were not found"
         echo "Amaya might not compile"
         echo "Edit your Option file"
+      else
+        echo "Amaya configured with MOTIF"
       fi
     fi
   fi
@@ -1340,3 +1397,4 @@ fi
 echo ""
 echo "Now type \"make\" (GNU make preferably) to build the binaries"
 echo ""
+

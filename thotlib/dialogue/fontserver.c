@@ -16,12 +16,14 @@
 #ifdef _GL
 
 #ifdef _GTK
-/* Font Server */
-#include <gdk/gdkx.h>
-#include "Xft.h"
-#else /* _GTK */
-#include <windows.h>
+  /* Font Server */
+  #include <gdk/gdkx.h>
+  #include "Xft.h"
 #endif  /* _GTK */
+
+#ifdef _WINDOWS
+  #include <windows.h>
+#endif    /* _WINDOWS */
 
 #include "thot_sys.h"
 #include "application.h"
@@ -353,8 +355,10 @@ int GetFontFilename (char script, int family, int highlight, int size,
     }
   XftPatternDestroy (pat); 
   return ok;
-#else /* _GTK */
+#endif /* _GTK */
   
+
+#ifdef _WINDOWS  
   if (GetFontFilenameFromConfig (script, family, highlight,  size, filename))
     return 1;
   
@@ -426,6 +430,7 @@ int GetFontFilename (char script, int family, int highlight, int size,
     }
   strcat (filename, ".ttf\0");
   return 1;
-#endif /* _GTK */
+#endif /* #ifdef _WINDOWS */
+
 }
 #endif /* _GL */

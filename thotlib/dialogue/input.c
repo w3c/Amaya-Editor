@@ -54,12 +54,15 @@ KEY;
 #include "select_tv.h"
 
 #ifdef _GTK
-#include "gtk-functions.h"
-#include "absboxes_f.h" 
-#else /* _GTK */
-#include "appli_f.h"
-#include "input_f.h"
+  #include "gtk-functions.h"
+  #include "absboxes_f.h" 
 #endif /* _GTK */
+
+#if defined(_WINDOWS) || defined(_MOTIF)
+  #include "appli_f.h"
+  #include "input_f.h"
+#endif /* #if defined(_WINDOWS) || defined(_MOTIF) */
+
 /* Actions table */
 #include "applicationapi_f.h"
 #include "callback_f.h"
@@ -543,7 +546,9 @@ ThotBool WIN_CharTranslation (HWND hWnd, int frame, UINT msg, WPARAM wParam,
 #endif
    return (ThotInput (frame, (unsigned int) wParam, 0, keyboard_mask, wParam));
 }
-#else /* _WINDOWS */
+
+#endif /* _WINDOWS */
+
 #ifdef _GTK
 /*----------------------------------------------------------------------
    CharTranslationGTK
@@ -765,7 +770,9 @@ gboolean KeyScrolledGTK (GtkWidget *w, GdkEvent* event, gpointer data)
 
   return FALSE;
 }
-#else /* _GTK */
+#endif /* _GTK */
+
+#ifdef _MOTIF
 /*----------------------------------------------------------------------
    CharTranslation
    X-Window front-end to the character translation and handling.
@@ -836,7 +843,6 @@ void CharTranslation (ThotKeyEvent *event)
   ThotInput (frame, (unsigned int) &string[0], command, PicMask, key);
 }
 #endif /* _MOTIF */
-#endif /* !_WINDOWS */
 
 /*----------------------------------------------------------------------
    APPKey send a message msg to the application.   
@@ -1000,38 +1006,48 @@ ThotBool ThotInput (int frame, unsigned int value, int command, int PicMask, int
 
 	    while (!found && ptr != NULL)
 	      {
-		if (ptr != NULL)
-		  {
-#ifdef _WINDOWS
-		    if (ptr->K_EntryCode == key
-			&& ptr->K_Special == Special)
-#else /* _WINDOWS */
-		    if (ptr->K_EntryCode == key)
-#endif /* _WINDOWS */
+		      if (ptr != NULL)
 		      {
-			/* first level entry found */
-			found = TRUE;
-			Automata_current = ptr->K_Next;
-			if (Automata_current == NULL)
-			  {
-			    /* one key shortcut */
-			    value = ptr->K_Value;
-			    command = ptr->K_Command;
-			  }
+        
+#ifdef _WINDOWS
+		        if (ptr->K_EntryCode == key
+			          && ptr->K_Special == Special)
+#endif /* _WINDOWS */
+
+#if defined(_MOTIF) || defined(_GTK)
+		        if (ptr->K_EntryCode == key)
+#endif /* #if defined(_MOTIF) || defined(_GTK) */
+          
+		        {
+              /* first level entry found */
+              found = TRUE;
+              Automata_current = ptr->K_Next;
+              if (Automata_current == NULL)
+                {
+                  /* one key shortcut */
+                  value = ptr->K_Value;
+                  command = ptr->K_Command;
+                }
+            }
+#if defined(_MOTIF) || defined(_GTK) || defined(_WINDOWS)        
+		        else
+		          ptr = ptr->K_Other;
+#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WINDOWS) */
+        
 		      }
-		    else
-		      ptr = ptr->K_Other;
-		  }
-	      }
+        }
 	}
-    }
+}
   
 #ifdef _WINDOWS
   if (Special && !found)
-#else /* !_WINDOWS */
+#endif /* !_WINDOWS */
+    
+#if defined(_MOTIF) || defined(_GTK)    
   if (!found)
-#endif /* _WINDOWS */
-    {
+#endif /* #if defined(_MOTIF) || defined(_GTK) */
+
+   {
       /* Handling special keys */
       switch (key)
 	{
@@ -1409,9 +1425,11 @@ void InitTranslations (char *appliname)
   strcpy (name, appliname);
 #ifdef _WINDOWS
   strcat (name, ".kb");
-#else  /* _WINDOWS */
+#endif  /* _WINDOWS */
+  
+#if defined(_MOTIF) || defined(_GTK)
   strcat (name, ".keyboard");
-#endif /* _WINDOWS */
+#endif /* #if defined(_MOTIF) || defined(_GTK) */
 
   strcpy (home, appHome);
   strcat (home, DIR_STR);
@@ -1701,12 +1719,12 @@ void InitTranslations (char *appliname)
 	} while (e != 0);
 
       fclose (file);
-#ifndef _WINDOWS
-#ifndef _GTK
+
+#ifdef _MOTIF
       /* Creation of the translation table */
       TextTranslations = XtParseTranslationTable (text);
-#endif
-#endif  /* _WINDOWS */
+#endif /* _MOTIF */
+
       TtaFreeMemory (text);
     }
 }

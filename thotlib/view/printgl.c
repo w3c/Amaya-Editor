@@ -107,9 +107,11 @@ static HGLRC GL_Context[MAX_FRAME];
 
 #include "buildlines_f.h"
 #include "font_f.h"
-#ifndef _WINDOWS
-#include "initpses_f.h"
-#endif /*_WINDOWS*/
+
+#if defined(_MOTIF) || defined(_GTK)
+  #include "initpses_f.h"
+#endif /*#if defined(_MOTIF) || defined(_GTK)*/
+
 #include "memory_f.h"
 #include "units_f.h"
 
@@ -418,12 +420,16 @@ void ComputeFilledBox (PtrBox box, int frame, int xmin, int xmax, int ymin, int 
   GL_prepare: If a modif has been done
   ----------------------------------------------------------------------*/
 ThotBool GL_prepare (int frame)
-{  
+{ 
+  
 #ifdef _GTK
   return gdk_gl_pixmap_make_current (glpixmap, context);
-#else
+#endif 
+  
+#ifdef _WINDOWS
    return wglMakeCurrent (GL_Windows[frame], GL_Context[frame]);
-#endif /* _GTK */
+#endif /* _WINDOWS */
+   
   return TRUE;
 }
 
@@ -520,18 +526,11 @@ GLint GLParseFeedbackBuffer (GLfloat *current)
 	      i = GLGetVertex (&vertices[0], current);
 	      current += i;
 	      used    -= i;
-#ifndef _WINDOWS
+#if defined(_MOTIF) || defined(_GTK)
 	      GLPrintPostScriptColor (vertices[0].rgb);
 	      fprintf (FILE_STREAM, "%g -%g %g P\n", 
 		       vertices[0].xyz[0], GL_HEIGHT - vertices[0].xyz[1], 0.5*psize);
-#else /*_WINDOWS*/
-		  
-		   /* dessiner un point A de taille 0.5*psize avec les fonctions win32 
-			  (cf windowdisplay)
-			  A : vertices[1].xyz[0], GL_HEIGHT - vertices[1].xyz[1]
-			  */
-#endif/*_WINDOWS*/
-
+#endif /*#if defined(_MOTIF) || defined(_GTK)*/
 	      break;
 
 	    case GL_LINE_TOKEN :
@@ -544,7 +543,8 @@ GLint GLParseFeedbackBuffer (GLfloat *current)
 	      i = GLGetVertex (&vertices[1], current);
 	      current += i;
 	      used    -= i;
-#ifndef _WINDOWS
+
+#if defined(_MOTIF) || defined(_GTK)
 	      if (LastLineWidth != lwidth)
 		{
 		  LastLineWidth = lwidth;
@@ -562,14 +562,9 @@ GLint GLParseFeedbackBuffer (GLfloat *current)
 		{
 		  fprintf (FILE_STREAM, "[] 0 setdash\n");
 		}
-		  #else /*_WINDOWS*/
-		   /* dessiner une ligne AB avec les fonctions win32 
-			  (cf windowdisplay)
-			  A : vertices[1].xyz[0], GL_HEIGHT - vertices[1].xyz[1],
-			  B : vertices[0].xyz[0], GL_HEIGHT - vertices[0].xyz[1]
-			  */
-#endif/*_WINDOWS*/
-	      break;
+#endif /* #if defined(_MOTIF) || defined(_GTK) */
+
+        break;
 
 	    case GL_POLYGON_TOKEN :
 	      count = (GLint)current[1];
@@ -585,23 +580,17 @@ GLint GLParseFeedbackBuffer (GLfloat *current)
 		  vtot++;
 		  if (v == 2)
 		    {
-                      flag = 0;
-#ifndef _WINDOWS
+          flag = 0;
+
+#if defined(_MOTIF) || defined(_GTK)
 		      GLPrintPostScriptColor (vertices[0].rgb);
 		      fprintf (FILE_STREAM, "%g -%g %g -%g %g -%g T\n",
 			       vertices[2].xyz[0], GL_HEIGHT - vertices[2].xyz[1],
 			       vertices[1].xyz[0], GL_HEIGHT - vertices[1].xyz[1],
 			       vertices[0].xyz[0], GL_HEIGHT - vertices[0].xyz[1]);
 		      vertices[1] = vertices[2];
-#else /*_WINDOWS*/
-
-		      /* dessiner avec les fonctions win32 un triangle ABC avec les 3 points suivant
-			 (cf windowdisplay)
-			 A : vertices[2].xyz[0], GL_HEIGHT - vertices[2].xyz[1],
-			 B : vertices[1].xyz[0], GL_HEIGHT - vertices[1].xyz[1],
-			 C : vertices[0].xyz[0], GL_HEIGHT - vertices[0].xyz[1]
-		      */
-#endif/*_WINDOWS*/
+#endif/*#if defined(_MOTIF) || defined(_GTK)*/
+          
 		    }
 		  else
 		    v ++;

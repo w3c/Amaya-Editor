@@ -34,14 +34,15 @@
 #include "appdialogue.h"
 #include "typecorr.h"
 #include "frame_f.h"
+
 #ifdef _WINDOWS
-#include "wininclude.h"
-#else /* _WINDOWS */
-#include <X11/Intrinsic.h>
-#ifndef _GTK
-/*#include <X11/Xlibint.h>*/
-#endif /* _GTK */
+  #include "wininclude.h"
 #endif /* _WINDOWS */
+
+#if defined(_MOTIF) || defined(_GTK) 
+  #include <X11/Intrinsic.h>
+#endif /* #if defined(_MOTIF) || defined(_GTK) */
+
 #include <locale.h>
 
 #define MAX_ARGS 20
@@ -72,7 +73,7 @@
 #include "views_f.h"
 
 
-#if !defined(_WINDOWS) && !defined(_GTK)
+#ifdef _MOTIF
 static int           mk_state = 0;
 static int           TtaKeyboardMapInstalled = 0;
 static KeySym        previous_keysym;
@@ -905,7 +906,7 @@ static void *TimerCallback (XtPointer cdata, XtIntervalId *id)
 {
   return (0);
 }
-#endif /* !_WINDOWS && !_GTK */
+#endif /* _MOTIF */
 
 /*----------------------------------------------------------------------
    TtaFetchOneEvent
@@ -914,9 +915,9 @@ static void *TimerCallback (XtPointer cdata, XtIntervalId *id)
   ----------------------------------------------------------------------*/
 void TtaFetchOneEvent (ThotEvent *ev)
 {
-#if !defined(_WINDOWS) && !defined(_GTK)
+#ifdef _MOTIF
   XtAppNextEvent (app_cont, ev);
-#endif /* ! _WINDOWS && !_GTK */
+#endif /* _MOTIF */
 }
 
 /*----------------------------------------------------------------------
@@ -927,7 +928,7 @@ void TtaFetchOneEvent (ThotEvent *ev)
   ----------------------------------------------------------------------*/
 void TtaFetchOrWaitEvent (ThotEvent *ev)
 {
-#if !defined(_WINDOWS) && !defined(_GTK)
+#ifdef _MOTIF
    XtInputMask         status;
 
    status = XtAppPending (app_cont);
@@ -939,7 +940,7 @@ void TtaFetchOrWaitEvent (ThotEvent *ev)
        XtAppAddTimeOut (app_cont, 1000, (XtTimerCallbackProc) TimerCallback, NULL);
        XtAppNextEvent (app_cont, ev);
      }
-#endif /* ! _WINDOWS && !_GTK */
+#endif /* _MOTIF */
 }
 
 /*----------------------------------------------------------------------
@@ -950,8 +951,7 @@ void TtaFetchOrWaitEvent (ThotEvent *ev)
   ----------------------------------------------------------------------*/
 ThotBool TtaFetchOneAvailableEvent (ThotEvent *ev)
 {
-#ifndef _GTK
-#ifndef _WINDOWS
+#ifdef _MOTIF
    XtInputMask         status;
 
    status = XtAppPending (app_cont);
@@ -962,8 +962,9 @@ ThotBool TtaFetchOneAvailableEvent (ThotEvent *ev)
      }
    else if (status != 0)
      XtAppProcessEvent (app_cont, XtIMAll);
-#endif /* _WINDOWS */
-#else /* _GTK */
+#endif /* _MOTIF */
+
+#ifdef _GTK
    if (gtk_events_pending ())
      {
        ev = gtk_get_current_event ();
@@ -972,6 +973,7 @@ ThotBool TtaFetchOneAvailableEvent (ThotEvent *ev)
    else
      return FALSE;
 #endif /* _GTK */
+
    return (FALSE);
 }
 
@@ -983,14 +985,16 @@ ThotBool TtaFetchOneAvailableEvent (ThotEvent *ev)
   ----------------------------------------------------------------------*/
 void TtaHandleOneEvent (ThotEvent *ev)
 {
-#ifndef _GTK
+
 #ifdef _WINDOWS
   if (ev->message != WM_QUIT)
     {
       TranslateMessage (ev);
       DispatchMessage (ev);
     }
-#else /* _WINDOWS */
+#endif /* _WINDOWS */
+
+#ifdef _MOTIF
   PtrDocument         pDoc;
   ThotWindow          w;
   char               *s;
@@ -1076,13 +1080,15 @@ void TtaHandleOneEvent (ThotEvent *ev)
 	    FrameCallback (frame, ev);
 	}
     }
-#endif /* !_WINDOWS */
-#else /* _GTK */
+#endif /* _MOTIF */
+
+#ifdef _GTK
   gtk_main_iteration_do (TRUE);
   /*if (ev) gtk_main_do_event (ev);*/
   /* a main loop iteration , not blocking */
   /*  gtk_main_iteration_do (FALSE);*/
 #endif /* !_GTK */
+
 }
 
 /*----------------------------------------------------------------------
@@ -1091,30 +1097,37 @@ void TtaHandleOneEvent (ThotEvent *ev)
   ----------------------------------------------------------------------*/
 void TtaHandlePendingEvents ()
 {
-#ifndef _WINDOWS
+#if defined(_MOTIF) || defined(_GTK) 
+  
   static ThotBool         crit_section; /* protect against multiple imbrications of
 					   calls to this function */
-#ifndef _GTK
+#ifdef _MOTIF
    ThotEvent              ev;  
-#endif /* !_GTK */
+#endif /* _MOTIF */
 
   if (crit_section)
     return;
   /*crit_section = TRUE;*/
-#ifndef _GTK
+
+#ifdef _MOTIF
    while (TtaFetchOneAvailableEvent(&ev))
      TtaHandleOneEvent (&ev);
-#else /* _GTK */
+#endif /* _MOTIF */
+
+#ifdef _GTK
    while (gtk_events_pending ()) 
      gtk_main_iteration ();
 #endif /* !_GTK */
+
    crit_section = FALSE;
-#endif /* _WINDOWS */
+   
+#endif /* #if defined(_MOTIF) || defined(_GTK)  */
 }
 
 #ifdef _GL
-#include "glwindowdisplay.h"
+  #include "glwindowdisplay.h"
 #endif /*_GL*/
+
 /*----------------------------------------------------------------------
    TtaMainLoop
    Starts the main loop for processing all events in an application. This
@@ -1127,15 +1140,18 @@ void TtaMainLoop ()
 
   UserErrorCode = 0;
   /* Sets the current locale according to the program environment */
-#ifndef _WINDOWS
+
 #ifdef _GTK
    gtk_set_locale ();
    /* In order to get a "." even in a localised unix (ie: french becomes ",") */
    setlocale (LC_NUMERIC, "C");
-#else /* _GTK */
+#endif /* _GTK */
+
+#ifdef _MOTIF   
   TtaInstallMultiKey ();
 #endif /* _GTK */
-#else /* _WINDOWS */
+
+#ifdef _WINDOWS
   setlocale (LC_ALL, ".OCP");
   /* _setmbcp (_MB_CP_OEM); */
 #endif /* _WINDOWS */
@@ -1162,21 +1178,27 @@ void TtaMainLoop ()
   /* Loop wainting for the events */
   while (1)
     {
-#ifdef _WINDOWS
-      if (GetMessage (&ev, NULL, 0, 0))
-	  {
-#else  /* !_WINDOWS */
-      TtaFetchOneEvent (&ev);
-#endif /* _WINDOWS */
-      TtaHandleOneEvent (&ev);
-#ifdef _GL
-      /* buffer swapping, when needed*/
-      GL_DrawAll ();
-#endif/*  _GL */
 
 #ifdef _WINDOWS
+      if (GetMessage (&ev, NULL, 0, 0))
+	    {
+        TtaHandleOneEvent (&ev);
+#ifdef _GL
+        /* buffer swapping, when needed*/
+        GL_DrawAll ();
+#endif/*  _GL */
       }
 #endif  /* !_WINDOWS */
+      
+#if defined(_MOTIF) || defined(_GTK)
+        TtaFetchOneEvent (&ev);
+        TtaHandleOneEvent (&ev);
+#ifdef _GL
+        /* buffer swapping, when needed*/
+        GL_DrawAll ();
+#endif/*  _GL */
+#endif  /* #if defined(_MOTIF) || defined(_GTK) */
+        
     }
 }
 

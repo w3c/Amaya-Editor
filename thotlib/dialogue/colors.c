@@ -23,18 +23,18 @@
 #include "dialog.h"
 #include "thotcolor.h"
 #ifdef _WINDOWS
-#include "winsys.h"
-#include "wininclude.h"
-#define HORIZ_DIV  8
-#define VERT_DIV  19
-#define Button1    1		
-#ifdef _IDDONE_
-#undef _IDDONE_
-#endif /* _IDDONE_ */
-#define _IDDONE_     100
-#define DEFAULTCOLOR 103
-static HWND   HwndColorPal  = NULL;
-extern LPCTSTR iconID;
+  #include "winsys.h"
+  #include "wininclude.h"
+  #define HORIZ_DIV  8
+  #define VERT_DIV  19
+  #define Button1    1		
+  #ifdef _IDDONE_
+  #undef _IDDONE_
+  #endif /* _IDDONE_ */
+  #define _IDDONE_     100
+  #define DEFAULTCOLOR 103
+  static HWND   HwndColorPal  = NULL;
+  extern LPCTSTR iconID;
 #endif /* _WINDOWS */
 
 #undef THOT_EXPORT
@@ -51,6 +51,7 @@ extern LPCTSTR iconID;
 
 static ThotWindow   Color_Window = 0;
 static ThotWidget   Color_Palette;
+
 #ifdef _GTK
 static ThotWidget   Color_Animation_Popup = NULL;
 static ThotWindow   Color_Window2 = 0;
@@ -58,13 +59,16 @@ static ThotWidget   Color_Palette_Extended = NULL;
 static ThotBool     ApplyFg = FALSE;
 static ThotBool     ApplyBg = FALSE;
 #endif /* _GTK */
-#ifndef _GTK
+
+#if defined(_MOTIF) || defined(_WINDOWS)
 static ThotGC       GCkey;
 #endif /* !_GTK */
+
 static int          LastBg;
 static int          LastFg;
 static int          FgColor, BgColor;
 static ThotBool     applyToSelection = TRUE;
+
 #ifdef _WINDOWS
 /* @@ JK: a quick, ugly hack just for selecting the messages drawn on the
 color palette */
@@ -73,7 +77,7 @@ static ThotBool     IsRegistered = FALSE;
 #endif
 
 #ifdef _GTK
-#include "gtk-functions.h"
+  #include "gtk-functions.h"
 #endif /* _GTK */
 
 #include "appdialogue_f.h"
@@ -100,11 +104,14 @@ static void ThotSelectPalette (int bground, int fground)
    /* redraw the palette */
    gtk_widget_queue_draw (GTK_WIDGET(Color_Palette));
    return;
-#else /* !_GTK */
+#endif /* !_GTK */
+
 #ifdef _WINDOWS
    BgColor = bground;
    FgColor = fground;
-#else  /* _WINDOWS */
+#endif /* _WINDOWS */
+
+#ifdef _MOTIF
    int                 x, y;
    int                 wcase, hcase;
    int                 w, h;
@@ -181,12 +188,11 @@ static void ThotSelectPalette (int bground, int fground)
 	     XFillRectangle (TtDisplay, Color_Window, TtInvertGC, x + w, y + 2, 2, h);
 	  }
      }
-#endif /* _WINDOWS */
-#endif /* _GTK */
+#endif /* _MOTIF */
 }
 
 
-#ifndef _GTK
+#if defined(_MOTIF) || defined(_WINDOWS)
 /*----------------------------------------------------------------------
    KillPalette
    kills the palette.
@@ -196,7 +202,7 @@ static void KillPalette (ThotWidget w, int index, caddr_t call_d)
    Color_Palette = 0;
    Color_Window = 0;
 }
-#endif /* !_GTK */
+#endif /* #if defined(_MOTIF) || defined(_WINDOWS) */
 
 #ifdef _GTK
 /*----------------------------------------------------------------------
@@ -369,7 +375,7 @@ gboolean GetSelectedElementColorGTK (GtkWidget *widget, gpointer data)
 }
 #endif /* _GTK */
 
-#ifndef _GTK
+#if defined(_MOTIF) || defined(_WINDOWS)
 /*----------------------------------------------------------------------
    ColorsExpose
    redisplays a color keyboard.
@@ -377,12 +383,12 @@ gboolean GetSelectedElementColorGTK (GtkWidget *widget, gpointer data)
 static void ColorsExpose ()
 {
    int                 max, y, w, h;
-#ifndef _WINDOWS 
+#ifdef _MOTIF 
    char               *ptr;
    register int        i;
    int                 x;
    int                 fground, bground;
-#endif /* !_WINDOWS */
+#endif /* _MOTIF */
    int                 wcase, hcase;
 
    if (TtWDepth == 1)
@@ -397,7 +403,7 @@ static void ColorsExpose ()
    max = NumberOfColors ();
    y = hcase;
    h = (max + COLORS_COL - 1) / COLORS_COL * hcase + y;
-#ifndef _WINDOWS
+#ifdef _MOTIF
    XClearWindow (TtDisplay, Color_Window);
 
    /* entree couleur standard */
@@ -440,11 +446,11 @@ static void ColorsExpose ()
    LastFg = -1;
    LastBg = -1;
    ThotSelectPalette (bground, fground);
-#endif /* _WINDOWS */
+#endif /* _MOTIF */
 }
-#endif /*!_GTK*/
+#endif /* #if defined(_MOTIF) || defined(_WINDOWS) */
 
-#ifndef _GTK
+#if defined(_MOTIF) || defined(_WINDOWS)
 /*----------------------------------------------------------------------
    ColorsPress
    handles a click on the color palette
@@ -452,7 +458,7 @@ static void ColorsExpose ()
 static void ColorsPress (int button, int x, int y)
 {
   int                 color, li, co;
-#ifndef _WINDOWS
+#ifdef _MOTIF
   int                 wcase, hcase;
 
   if (TtWDepth == 1)
@@ -482,7 +488,9 @@ static void ColorsPress (int button, int x, int y)
   li = x / wcase;
   co = (y - hcase) / hcase;
   color = co * COLORS_COL + li;
-#else  /* _WINDOWS  */
+#endif /* _MOTIF */
+  
+#ifdef _WINDOWS
   if (y < 60 || y > 345)
     {
       if (button == Button1)
@@ -511,6 +519,7 @@ static void ColorsPress (int button, int x, int y)
   co = x / 39;
   color = co + li * COLORS_COL;
 #endif /* _WINDOWS */
+  
   if (button == Button1)
     {
       /* selectionne la couleur de trace' */
@@ -532,7 +541,8 @@ static void ColorsPress (int button, int x, int y)
 	}
     }
 }
-#endif /* !_GTK */
+
+#endif /* #if defined(_MOTIF) || defined(_WINDOWS) */
 
 #ifdef _WINDOWS
 /*----------------------------------------------------------------------
@@ -793,17 +803,20 @@ LRESULT CALLBACK ThotColorPaletteWndProc (HWND hwnd, UINT iMsg,
     }
   return DefWindowProc (hwnd, iMsg, wParam, lParam);
 }
-#else /* _WINDOWS */
+#endif /* _WINDOWS */
 
+#if defined(_MOTIF) || defined(_GTK)
 /*----------------------------------------------------------------------
    EndPalette
    Ends the display of the palette.
   ----------------------------------------------------------------------*/
 static void EndPalette (ThotWidget w, int index, caddr_t call_d)
 {
-#ifndef _GTK
+#ifdef _MOTIF
   XtPopdown (Color_Palette);
-#else /* !_GTK */
+#endif /* _MOTIF */
+
+#ifdef _GTK
   if (Color_Animation_Popup)
     {
       gtk_widget_hide (Color_Animation_Popup);      
@@ -820,7 +833,7 @@ static void EndPalette (ThotWidget w, int index, caddr_t call_d)
   ----------------------------------------------------------------------*/
 void ColorsEvent (ThotEvent * event)
 {
-#ifndef _GTK
+#ifdef _MOTIF
   if (event->xbutton.window == Color_Window && Color_Window != 0)
     {
       if (event->type == Expose)
@@ -828,9 +841,10 @@ void ColorsEvent (ThotEvent * event)
       else if (event->type == ButtonPress)
 	ColorsPress (event->xbutton.button, event->xbutton.x, event->xbutton.y);
     }
-#endif /* !_GTK */
+#endif /* _MOTIF */
+  
 }
-#endif /* !_WINDOWS */
+#endif /* #if defined(_MOTIF) || defined(_GTK) */
 
 #ifdef _GTK
 /*----------------------------------------------------------------------
@@ -977,8 +991,9 @@ ThotBool ThotCreatePalette (int x, int y)
        TranslateMessage (&msg);
        DispatchMessage (&msg);
      }
-#else  /* _WINDOWS */
-#ifndef _GTK
+#endif /* _WINDOWS */
+
+#ifdef _MOTIF
    int                 n;
    int                 width, height;
    Arg                 args[MAX_ARGS];
@@ -1196,7 +1211,9 @@ ThotBool ThotCreatePalette (int x, int y)
    /* pas de selection precedente */
    LastBg = -1;
    LastFg = -1;
-#else /* !_GTK */
+#endif /* _MOTIF */
+   
+#ifdef _GTK
    /* create the color selection in GTK, it's possible to add some elements by adding it into the tmpw_vbox container */
   GtkWidget *vbox1;
   GtkWidget *vbox2;
@@ -1414,12 +1431,11 @@ ThotBool ThotCreatePalette (int x, int y)
   LastFg = -1;
   
 #endif /* _GTK */
-#endif /* _WINDOWS */
+  
   return TRUE;
 }
 
 #ifdef _GTK
-
 /*----------------------------------------------------------------------
    ThotCreatePaletteModal
    creates the color palette. (user choose colors into a predefined palette)
@@ -1667,13 +1683,13 @@ void TtcChangeColors (Document document, View view)
    int                 KbX, KbY;
    ThotBool            selectionOK;
 
-#ifndef _WINDOWS
+#if defined(_MOTIF) || defined(_GTK)
    if (ThotLocalActions[T_colors] == NULL)
      {
 	/* Connecte le traitement des evenements */
 	TteConnectAction (T_colors, (Proc) ColorsEvent);
      }
-#endif /* _WINDOWS */
+#endif /* #if defined(_MOTIF) || defined(_GTK) */
 
    pDoc = LoadedDocument[document - 1];
    /* demande quelle est la selection courante */
@@ -1693,22 +1709,24 @@ void TtcChangeColors (Document document, View view)
 	if (Color_Window == 0)
 	  {
 	    ConfigKeyboard (&KbX, &KbY);
-#ifndef _WINDOWS
+#if defined(_MOTIF) || defined(_GTK)
 	    ThotCreatePalette (KbX, KbY);
-#endif /* _WINDOWS */
+#endif /* #if defined(_MOTIF) || defined(_GTK) */
 	  }
-#ifndef _WINDOWS
-#ifndef _GTK
+
+#ifdef _MOTIF
 	else
 	  XtPopup (Color_Palette, XtGrabNonexclusive);
-#else /* !_GTK */
+#endif /* _MOTIF */
+
+#ifdef _GTK
 	else
 	  {
 	    gtk_widget_show_all (GTK_WIDGET(Color_Palette));
 	    gdk_window_raise (GTK_WIDGET(Color_Palette)->window);
 	  }
 #endif /* _GTK */
-#endif /* _WINDOWS */
+
 	
 	/* recherche le pave concerne */
 	if (view > 100)
@@ -1742,7 +1760,8 @@ void TtcGetPaletteColors (int *fg, int *bg, ThotBool palType)
     *fg = FgColor;
     *bg = BgColor;
     applyToSelection = TRUE;
-#else
+#endif /* _WINDOWS */
+
 #ifdef _GTK
     /* PalMessageSet1 = palType; */
     FgColor = BgColor = -1;
@@ -1760,5 +1779,4 @@ void TtcGetPaletteColors (int *fg, int *bg, ThotBool palType)
     applyToSelection = TRUE;
     /**/
 #endif /* _GTK */
-#endif /* _WINDOWS */
 }

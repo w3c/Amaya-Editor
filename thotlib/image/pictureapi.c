@@ -39,13 +39,18 @@
   ----------------------------------------------------------------------*/
 Pixmap TtaCreateBitmapLogo (int width, int height, char *bits)
 {
-#ifndef _WINDOWS
-#ifndef _GTK
+#if !defined(_MOTIF) && !defined(_GTK) && !defined(_WINDOWS)
+  return 0;
+#endif /* #if !defined(_MOTIF) && !defined(_GTK) && !defined(_WINDOWS) */
+  
+#ifdef _MOTIF
    if (bits != NULL)
       return (XCreateBitmapFromData (TtDisplay, TtRootWindow, bits, width, height));
    else
       return (0);
-#else /* _GTK */
+#endif /* _MOTIF */
+
+#ifdef _GTK
    GdkColor           black;
    GdkColor           white;
    gdk_color_black (TtCmap, &black);
@@ -60,10 +65,11 @@ Pixmap TtaCreateBitmapLogo (int width, int height, char *bits)
 						  (GdkColor *)&black);
    else
      return 0;
-#endif /* !_GTK */
-#else  /* _WINDOWS */
+#endif /* _GTK */
+
+#ifdef _WINDOWS
    return CreateBitmap (width, height, 16, 4, bits);
-#endif /* _WINDOWS */
+#endif /* _WINDOWS */   
 }
 
 /*----------------------------------------------------------------------
@@ -71,9 +77,14 @@ Pixmap TtaCreateBitmapLogo (int width, int height, char *bits)
   ----------------------------------------------------------------------*/
 Pixmap TtaCreatePixmapLogo(char **d)
 {
+#if !defined(_MOTIF) && !defined(_GTK) && !defined(_WINDOWS)
+  return 0;
+#endif /* #if !defined(_MOTIF) && !defined(_GTK) && !defined(_WINDOWS) */
+
 #ifdef _WINDOWS
    return (Pixmap) NULL;
-#else  /* _WINDOWS */
+#endif /* _WINDOWS */
+   
 #ifdef _GTK
   _Thot_icon            *icon;
 
@@ -84,7 +95,9 @@ Pixmap TtaCreatePixmapLogo(char **d)
 						 &DefaultWindow->style->bg[GTK_STATE_NORMAL] ,
 						 (gchar **) d); 
   return ((Pixmap) icon);
-#else /* _GTK */
+#endif /* _GTK */
+
+#ifdef _MOTIF  
    Pixmap              pixmap;
    Pixmap              pmask;
    XpmAttributes       att;
@@ -117,7 +130,6 @@ Pixmap TtaCreatePixmapLogo(char **d)
 	   XFreePixmap (TtDisplay, pmask);
      }
    return (pixmap);
-#endif /* _GTK */
-#endif /* _WINDOWS */
+#endif /* _MOTIF */
 }
 

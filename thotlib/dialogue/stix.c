@@ -25,15 +25,18 @@
 #include "registry.h"
 
 #ifdef _GL
-#include "openglfont.h"
-#include "glwindowdisplay.h"
+  #include "openglfont.h"
+  #include "glwindowdisplay.h"
 #endif /*_GL*/
 
 #ifdef _WINDOWS
-#include "windowdisplay_f.h"
-#else /*_WINDOWS*/
-#include "xwindowdisplay_f.h"
+  #include "windowdisplay_f.h"
 #endif /*_WINDOWS*/
+
+#if defined(_GTK) || defined(_MOTIF)
+  #include "xwindowdisplay_f.h"
+#endif /*#if defined(_GTK) || defined(_MOTIF)*/
+
 #include "font_f.h"
 
 #include "stix.h"
@@ -46,14 +49,13 @@
 
 
 #ifdef _GL
-#define LOW_CHAR 25
-#define MID_CHAR 45
-#define HIGH_CHAR 45
+  #define LOW_CHAR 25
+  #define MID_CHAR 45
+  #define HIGH_CHAR 45
 #else /*_GL*/
-
-#define LOW_CHAR 25
-#define MID_CHAR 45
-#define HIGH_CHAR 45
+  #define LOW_CHAR 25
+  #define MID_CHAR 45
+  #define HIGH_CHAR 45
 #endif /*_GL*/
 
 

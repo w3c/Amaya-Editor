@@ -22,7 +22,7 @@
 #include "picture.h"
 #include "appdialogue.h"
 #ifdef _WINDOWS
-#include "wininclude.h"
+  #include "wininclude.h"
 #endif /* _WINDOWS */
 
 
@@ -48,8 +48,7 @@ extern int              errno;
 #include "registry_f.h"
 #include "textcommands_f.h"
 
-#ifndef _WINDOWS
-#ifndef _GTK
+#ifdef _MOTIF
 /*----------------------------------------------------------------------
  * XWindowError is the X-Windows non-fatal errors handler.
  ----------------------------------------------------------------------*/
@@ -77,8 +76,7 @@ static int XWindowFatalError (Display * dpy)
     (*ThotLocalActions[T_backuponfatal]) ();
   return (0);
 }
-#endif /* !_GTK */
-#endif /* _WINDOWS */
+#endif /* _MOTIF */
 
 
 /*----------------------------------------------------------------------
@@ -114,11 +112,15 @@ static ThotBool FindColor (int disp, char *name, char *colorplace,
      BgSelColor = col;
    else if (strcmp (colorplace, "FgSelectColor") == 0)
      FgSelColor = col;
+   
 #ifdef _WINDOWS 
    *colorpixel = col;
-#else  /* _WINDOWS */
-   *colorpixel = ColorPixel (col);
 #endif /* _WINDOWS */
+   
+#if defined(_MOTIF) || defined(_GTK)
+   *colorpixel = ColorPixel (col);
+#endif /* #if defined(_MOTIF) || defined(_GTK) */
+   
    return (TRUE);
 
 }
@@ -128,14 +130,15 @@ static ThotBool FindColor (int disp, char *name, char *colorplace,
  ----------------------------------------------------------------------*/
 static void         InitCurs ()
 {
-#ifndef _WINDOWS
-#ifndef _GTK
+#ifdef _MOTIF
    WindowCurs = XCreateFontCursor (TtDisplay, XC_hand2);
    VCurs = XCreateFontCursor (TtDisplay, XC_sb_v_double_arrow);
    HCurs = XCreateFontCursor (TtDisplay, XC_sb_h_double_arrow);
    HVCurs = XCreateFontCursor (TtDisplay, /*XC_fleur*/XC_plus);
    WaitCurs = XCreateFontCursor (TtDisplay, XC_watch);
-#else /* !_GTK */
+#endif /* _MOTIF*/
+
+#ifdef _GTK
    ArrowCurs = gdk_cursor_new (GDK_LEFT_PTR);
    WindowCurs = gdk_cursor_new (GDK_HAND2);
    VCurs = gdk_cursor_new (GDK_SB_V_DOUBLE_ARROW);
@@ -143,7 +146,6 @@ static void         InitCurs ()
    HVCurs = gdk_cursor_new (GDK_PLUS);
    WaitCurs = gdk_cursor_new (GDK_CLOCK);
 #endif /* _GTK */
-#endif /* _WINDOWS */
 }
 
 /*----------------------------------------------------------------------
@@ -183,16 +185,16 @@ void TtaUpdateEditorColors (void)
 static void InitColors (char* name)
 {
    ThotBool            found;
-#ifndef _WINDOWS
 #ifdef _GTK
    GdkVisual          *vptr;
    GdkVisualType       vinfo;
-#else /* _GTK */
+#endif /* _GTK */
+#ifdef _MOTIF
    XVisualInfo        *vptr;
    XVisualInfo         vinfo;
    ThotColorStruct     col;
    int                 i;
-#endif /* _GTK */
+#endif /* _MOTIF */
 
 #ifdef _GTK
    vptr = gdk_visual_get_best ();
@@ -210,7 +212,9 @@ static void InitColors (char* name)
     FgMenu_Color = 0x000000;
     White_Color = 0xffffff;
     Scroll_Color =  0xffffff;
-#else /* _GTK */
+#endif /* _GTK */
+
+#ifdef _MOTIF
    vinfo.visualid = XVisualIDFromVisual (XDefaultVisual (TtDisplay, TtScreen));
    vptr = XGetVisualInfo (TtDisplay, VisualIDMask, &vinfo, &i);
    if (vptr)
@@ -241,8 +245,8 @@ static void InitColors (char* name)
    FgMenu_Color = cblack.pixel;
    White_Color  = cwhite.pixel;
    Scroll_Color = BgMenu_Color = cwhite.pixel;
-#endif /* _GTK */
-#endif /* _WINDOWS */
+#endif /* _MOTIF */
+
    if (TtWDepth > 1)
      TtaUpdateEditorColors ();
    else
@@ -253,17 +257,17 @@ static void InitColors (char* name)
      }
 }
 
-#ifndef _WINDOWS
+#if defined(_MOTIF) || defined(_GTK)
 /*----------------------------------------------------------------------
   InitGraphicContexts initialize the X-Windows graphic contexts and their
   Windows counterpart in Microsoft environment.
  ----------------------------------------------------------------------*/
 static void InitGraphicContexts (void)
 {
-#ifndef _GTK
+#ifdef _MOTIF
   unsigned long       valuemask;
   XGCValues           GCmodel;
-#endif /* _GTK */
+#endif /* _MOTIF */
   int                 white;
   int                 black;
   Pixmap              pix;
@@ -328,9 +332,9 @@ static void InitGraphicContexts (void)
   gdk_gc_set_fill (TtGreyGC, GDK_TILED);
 
   gdk_pixmap_unref ((GdkPixmap *)pix);
-
-
-#else /* _GTK */
+#endif /* _GTK */
+  
+#ifdef _MOTIF
    valuemask = GCForeground | GCBackground | GCFunction;
    white = ColorNumber ("White");
    black = ColorNumber ("Black");
@@ -377,9 +381,10 @@ static void InitGraphicContexts (void)
    TtGreyGC = XCreateGC (TtDisplay, TtRootWindow, valuemask, &GCmodel);
    XSetFillStyle (TtDisplay, TtGreyGC, FillTiled);
    XFreePixmap (TtDisplay, pix);
-#endif /* _GTK */
+#endif /* _MOTIF */
 }
-#endif /* _WINDOWS */
+
+#endif /* #if defined(_MOTIF) || defined(_GTK) */
 
 
 /*----------------------------------------------------------------------
@@ -445,7 +450,8 @@ void ThotInitDisplay (char* name, int dx, int dy)
    /* Initialization of Picture Drivers */
    InitPictureHandlers (FALSE);
    WIN_ReleaseDeviceContext ();
-#else /* _WINDOWS */
+#endif /* _WINDOWS */
+   
 #ifdef _GTK
    
    /* Declaration of a DefaultDrawable useful for the creation of Pixmap and the
@@ -478,7 +484,9 @@ void ThotInitDisplay (char* name, int dx, int dy)
 
    /* Initialization of Picture Drivers */
    InitPictureHandlers (FALSE);
-#else /* _GTK */
+#endif /* _GTK */
+
+#ifdef _MOTIF
    XSetErrorHandler (XWindowError);
    XSetIOErrorHandler (XWindowFatalError);
    TtScreen = DefaultScreen (TtDisplay);
@@ -494,8 +502,7 @@ void ThotInitDisplay (char* name, int dx, int dy)
 
    /* Initialization of Picture Drivers */
    InitPictureHandlers (FALSE);
-#endif /* _GTK */
-#  endif /* _WINDOWS */
+#endif /* _MOTIF */
 }
 
 /*----------------------------------------------------------------------
@@ -523,9 +530,7 @@ void InitDocContexts ()
   InitializeOtherThings ();
 }
 
-#ifndef _WINDOWS
-
-#ifndef _GTK
+#ifdef _MOTIF
 /*----------------------------------------------------------------------
  *      SelectionEvents handle the X-Windows selection events.
  ----------------------------------------------------------------------*/
@@ -686,6 +691,6 @@ void SelectionEvents (void *ev)
        break;
      }
 }
-#endif /* _GTK */
-#endif /* _WINDOWS */
+#endif /* _MOTIF */
+
 

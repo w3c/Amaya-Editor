@@ -127,7 +127,7 @@ void TtaListDirectory (char *dirname, int formRef, char *dirTitle,
 		       int dirRef, char *suffix, char *fileTitle,
 		       int fileRef)
 {
-#ifndef _WINDOWS
+#if defined(_GTK) || defined(_MOTIF)
   DIR *dp;
   struct stat         st;
 #ifdef HAVE_DIRENT_H
@@ -317,6 +317,6 @@ void TtaListDirectory (char *dirname, int formRef, char *dirTitle,
 	  TtaSetSelector (fileRef, -1, "");
 	}
     }
-#endif /* _WINDOWS */
+#endif /* #if defined(_GTK) || defined(_MOTIF) */
 }
 

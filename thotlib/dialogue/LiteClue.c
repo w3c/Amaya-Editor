@@ -30,7 +30,7 @@ J Satchell, Eric Marttila
 */
 
 #include "string.h"
-#ifndef _WINDOWS
+#ifdef _MOTIF
 #include "thot_gui.h"
 #include "thot_sys.h"
 #include "LiteClueP.h"
@@ -801,4 +801,4 @@ Boolean XcgLiteClueDispatchEvent(Widget w, XEvent  *event)
 }
 
 
-#endif /* ! _WINDOWS */
+#endif /* ! _MOTIF */

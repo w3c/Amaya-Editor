@@ -23,9 +23,10 @@
 #include "fileaccess.h"
 #include "interface.h"
 #include "appdialogue.h"
+
 #ifdef _WINDOWS
-#include "resource.h"
-#include "wininclude.h"
+  #include "resource.h"
+  #include "wininclude.h"
 #endif /* _WINDOWS */
 
 #define THOT_EXPORT extern
@@ -312,7 +313,9 @@ void CreateSearchDlgWindow (ThotWindow parent)
     DialogBox (hInstance, MAKEINTRESOURCE (SEARCHDIALOG), NULL,
 	       (DLGPROC) SearchDlgProc);
 }
-#else /* _WINDOWS */
+#endif /* _WINDOWS */
+
+#if defined(_GTK) || defined(_MOTIF)
 /*----------------------------------------------------------------------
   InitMenuWhereToSearch 
   inits the "Where to search" submenu.
@@ -336,7 +339,7 @@ static void InitMenuWhereToSearch (int ref)
 		 NULL, FALSE);
   TtaSetMenuForm (NumMenuOrSearchText, 2);
 }
-#endif /* _WINDOWS */
+#endif /* #if defined(_GTK) || defined(_MOTIF) */
 
 
 /*----------------------------------------------------------------------
@@ -348,12 +351,16 @@ void         ResetSearchInDocument (PtrDocument pDoc)
   if (SearchingD && pDoc == SearchingD->SDocument)
     {
       SearchingD->SDocument = NULL;
+
 #ifdef _WINDOWS
       EndDialog (SearchW, ID_DONE);
       SearchW = NULL;
-#else /* _WINDOWS */
-      TtaDestroyDialogue (NumFormSearchText);
 #endif /* _WINDOWS */
+      
+#if defined(_GTK) || defined(_MOTIF)      
+      TtaDestroyDialogue (NumFormSearchText);
+#endif /* #if defined(_GTK) || defined(_MOTIF) */
+      
     }
 }
 
@@ -428,7 +435,8 @@ void TtcSearchText (Document document, View view)
   strcpy (string, TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
   i = strlen (TtaGetMessage (LIB, TMSG_LIB_CONFIRM)) + 1;
   strcpy (string + i, TtaGetMessage (LIB, TMSG_DO_NOT_REPLACE));
-#ifndef _WINDOWS
+
+#if defined(_GTK) || defined(_MOTIF)  
   TtaNewSheet (NumFormSearchText, TtaGetViewFrame (document, view), 
 	       bufTitle, 2, string, FALSE, 6, 'L', D_DONE);
   
@@ -482,7 +490,7 @@ void TtcSearchText (Document document, View view)
   
   /* sous-menu Ou` rechercher */
   InitMenuWhereToSearch (NumFormSearchText);
-#endif /* _WINDOWS */
+#endif /* #if defined(_GTK) || defined(_MOTIF) */
   
   WithReplace = FALSE;
   ReplaceDone = FALSE;
@@ -499,14 +507,18 @@ void TtcSearchText (Document document, View view)
     InitSearchDomain (3, SearchingD);
   SearchingD->SDocument = pDoc;
   TextOK = FALSE;
-#ifndef _WINDOWS 
+
+#if defined(_GTK) || defined(_MOTIF)
   TtaShowDialogue (NumFormSearchText, TRUE);
   if (!ok)
     TtaSetMenuForm (NumMenuOrSearchText, 3);
-#else  /* _WINDOWS */
+#endif /* #if defined(_GTK) || defined(_MOTIF) */
+
+#ifdef _WINDOWS
   searchEnd = FALSE;
   CreateSearchDlgWindow (TtaGetViewFrame (document, view));
 #endif /* _WINDOWS */
+
 }
 
 /*----------------------------------------------------------------------
@@ -564,9 +576,11 @@ void CallbackTextReplace (int ref, int val, char *txt)
 	    {
 	      WithReplace = TRUE;
 	      DoReplace = TRUE;
-#ifndef _WINDOWS
+        
+#if defined(_GTK) || defined(_MOTIF)
 	      TtaSetMenuForm (NumMenuReplaceMode, 1);
-#endif /* _WINDOWS */
+#endif /* #if defined(_GTK) || defined(_MOTIF) */
+
 	    }
 	}
       strcpy (pReplaceString, txt);
@@ -613,12 +627,16 @@ void CallbackTextReplace (int ref, int val, char *txt)
       if (SearchingD->SDocument == NULL ||
 	  SearchingD->SDocument->DocSSchema == NULL)
 	{
+
 #ifdef _WINDOWS
       EndDialog (SearchW, ID_DONE);
       SearchW = NULL;
-#else /* _WINDOWS */
-      TtaDestroyDialogue (NumFormSearchText);
 #endif /* _WINDOWS */
+
+#if defined(_GTK) || defined(_MOTIF)      
+      TtaDestroyDialogue (NumFormSearchText);
+#endif /* #if defined(_GTK) || defined(_MOTIF) */
+      
 	  TtaFreeMemory (SString);
 	  SString = NULL;
 	  TtaFreeMemory (RString);
@@ -810,7 +828,8 @@ void CallbackTextReplace (int ref, int val, char *txt)
 	  if (found)
 	    {
 	      /* on a trouve' et selectionne'. */
-#ifndef _WINDOWS
+        
+#if defined(_GTK) || defined(_MOTIF)
 	     if (!AutoReplace)
 	       {
 		 /* On prepare la recherche suivante */
@@ -819,7 +838,8 @@ void CallbackTextReplace (int ref, int val, char *txt)
 		 else /* Before selection */
 		   TtaSetMenuForm (NumMenuOrSearchText, 0);
 	       }
-#endif /* _WINDOWS */
+#endif /* #if defined(_GTK) || defined(_MOTIF) */
+       
 	     StartSearch = FALSE;
 	    }
 	  else
@@ -840,7 +860,9 @@ void CallbackTextReplace (int ref, int val, char *txt)
 		    MessageBox (NULL, TtaGetMessage (LIB, TMSG_NOT_FOUND),
 				msgCaption, MB_OK | MB_ICONEXCLAMATION);
 		}
-#else /* _WINDOWS */
+#endif /* _WINDOWS */
+        
+#if defined(_GTK) || defined(_MOTIF)        
 	      if (WithReplace && ReplaceDone)
 		{
 		  if (!AutoReplace)
@@ -852,7 +874,8 @@ void CallbackTextReplace (int ref, int val, char *txt)
 		TtaDisplayMessage (CONFIRM,
 				   TtaGetMessage (LIB, TMSG_NOT_FOUND),
 				   NULL);
-#endif /* _WINDOWS */
+#endif /* #if defined(_GTK) || defined(_MOTIF) */
+        
 	      StartSearch = TRUE;
 	    }
 	}

@@ -21,8 +21,9 @@
 #include "appdialogue.h"
 #include "dialog.h"
 #include "message.h"
+
 #ifdef _WINDOWS
-#include "wininclude.h"
+  #include "wininclude.h"
 #endif /* _WINDOWS */
 
 #undef THOT_EXPORT
@@ -34,7 +35,7 @@
 #include "appdialogue_tv.h"
 
 #ifdef _GTK
-#include "gtk-functions.h"
+  #include "gtk-functions.h"
 #endif /* _GTK */
 
 #define MAX_ARGS 20
@@ -54,9 +55,9 @@ static ThotWidget   Keyboards[MAX_KEYBOARD];
 static PtrFont      KbFonts[MAX_KEYBOARD];
 static int          KbX = 800;
 static int          KbY = 100;
-#ifndef _GTK
-static ThotGC       GCkey;
-#endif /* !_GTK */
+#if defined(_MOTIF) || defined(_WINDOWS)
+  static ThotGC       GCkey;
+#endif /* #if defined(_MOTIF) || defined(_WINDOWS) */
 
 /* data for the keyboards */
 /*iso */
@@ -372,7 +373,7 @@ static ITEM         Items_Graph[] =
 #include "xwindowdisplay_f.h"
 
 
-#ifndef _GTK
+#if defined(_MOTIF) || defined(_WINDOWS)
 /*----------------------------------------------------------------------
    WChar
    displays character ch at position <x,y> of window w using the character
@@ -385,15 +386,20 @@ static void WChar (ThotWindow w, char ch, int x, int y, int func,
    int                 length;
 
    length = 1;
+   
 #ifdef _WINDOWS
    /* DrawTextEx or some such thing - @@@ */
-#else
+#endif /* _WINDOWS */
+
+#ifdef _MOTIF
    XSetFont (TtDisplay, GClocal, ((XFontStruct *) font)->fid);
    FontOrig (font, ch, &x, &y);
    XDrawString (TtDisplay, w, GClocal, x, y, &ch, length);
-#endif
+#endif /* _MOTIF*/
+   
 }
-#endif /* _GTK */
+
+#endif /* #if defined(_MOTIF) || defined(_WINDOWS) */
 
 /*----------------------------------------------------------------------
    KbdEndDisplay
@@ -401,11 +407,11 @@ static void WChar (ThotWindow w, char ch, int x, int y, int func,
   ----------------------------------------------------------------------*/
 static void KbdEndDisplay (ThotWidget w, int index, caddr_t call_d)
 {
-#ifndef _GTK
-#ifndef _WINDOWS
+#ifdef _MOTIF
    XtPopdown (Keyboards[index]);
-#endif /* _WINDOWS */
-#else /* _GTK */
+#endif /* _MOTIF */
+   
+#ifdef _GTK
    gtk_widget_hide (GTK_WIDGET(Keyboards[index]));
 #endif /* !_GTK */
 }
@@ -422,15 +428,19 @@ void KbdCallbackHandler (ThotWidget w, unsigned int param, caddr_t call_d)
    /* Recupere la table des items */
    car = (CHAR_T) (param % 256);
    /* Recupere le widget de la palette */
-#ifndef _GTK
-#ifndef _WINDOWS
+
+#ifdef _MOTIF
    wp=XtParent(XtParent(XtParent(XtParent(w))));
-#else  /* _WINDOWS */
+#endif /* #ifdef _MOTIF */
+   
+#ifdef _WINDOWS
    wp = GetParent (GetParent (GetParent (GetParent (w))));
 #endif /* _WINDOWS */
-#else /* _GTK */
+
+#ifdef _GTK
    wp = GTK_WIDGET (w)->parent->parent->parent->parent;
 #endif /* !_GTK */
+   
    /* met a jour l'indicateur de palette */
    if (Keyboards[KeyboardMode] != wp)
      {
@@ -460,8 +470,7 @@ void KbdCallbackHandler (ThotWidget w, unsigned int param, caddr_t call_d)
      CloseTextInsertion();
 }
 
-#ifndef _WINDOWS
-#ifndef _GTK
+#ifdef _MOTIF
 /*----------------------------------------------------------------------
   ExposeKbd displays the keyboard keys
   ----------------------------------------------------------------------*/
@@ -682,7 +691,9 @@ static void CreateKeyboard (int number, char *title, PtrFont pFont,
 	  }
      }
 }
-#else /* _GTK */
+#endif /*#ifdef _MOTIF*/
+
+#ifdef _GTK
 /*----------------------------------------------------------------------
   CreateKeyboard creates a keyboard.
   ----------------------------------------------------------------------*/
@@ -815,6 +826,7 @@ static void CreateKeyboard (int number, char *title, PtrFont pFont,
 }
 #endif /* _GTK */
 
+#if defined(_GTK) || defined(_MOTIF)
 
 /*----------------------------------------------------------------------
    LoadKbd
@@ -859,7 +871,8 @@ static void LoadKbd (int number)
       break;
     }
 }
-#endif /* _WINDOWS */
+
+#endif /* #if defined(_GTK) || defined(_MOTIF) */
 
 
 /*----------------------------------------------------------------------
@@ -868,24 +881,30 @@ static void LoadKbd (int number)
   ----------------------------------------------------------------------*/
 void KeyboardMap (int kb)
 {
-#ifndef _WINDOWS
-   if (kb >= 0 && kb < MAX_KEYBOARD)
-     {
+#if defined(_GTK) || defined(_MOTIF)  
+
+  if (kb >= 0 && kb < MAX_KEYBOARD)
+  {
 	/* Faut-il charger le clavier avant de l'afficher ? */
 	if (Keyboards[kb] == 0)
 	   LoadKbd (kb);
 	if (Keyboards[kb] != 0)
 	  {
-#ifndef _GTK
+      
+#ifdef _MOTIF
 	    XtPopup (Keyboards[kb], XtGrabNonexclusive);
 	    XMapRaised (TtDisplay, XtWindowOfObject (Keyboards[kb]));
-#else /* _GTK */
+#endif /* #ifdef _MOTIF */
+      
+#ifdef _GTK
 	    gtk_widget_show_all (GTK_WIDGET(Keyboards[kb]));
 	    gdk_window_raise (GTK_WIDGET(Keyboards[kb])->window);
 #endif /* !_GTK */
+      
 	  }
-     }
-#endif /* _WINDOWS */
+  }
+
+#endif /* #if defined(_GTK) || defined(_MOTIF) */
 }
 
 /*----------------------------------------------------------------------
@@ -909,9 +928,10 @@ void GraphicsLoadResources ()
 	   SmallDialogFont = DialogFont;
      }
 
-#ifndef _WINDOWS
+#if defined(_GTK) || defined(_MOTIF)
    GraphicsIcons = LoadFont ("ivgraf");
-#endif /* _WINDOWS */
+#endif /*  #if defined(_GTK) || defined(_MOTIF) */
+   
    if (GraphicsIcons == NULL)
      GraphicsIcons = DialogFont;
 }
@@ -948,9 +968,9 @@ void TtcDisplayMathKeyboard (Document document, View view)
 {
    KeyboardsLoadResources ();
    /* Enregistre la position pour le dialogue */
-#ifndef _WINDOWS
+#if defined(_GTK) || defined(_MOTIF)
    TtaSetDialoguePosition ();
-#endif /* !_WINDOWS */
+#endif /* #if defined(_GTK) || defined(_MOTIF) */
    TtaSetCurrentKeyboard (0);
 }
 
@@ -963,9 +983,9 @@ void TtcDisplayGraphicsKeyboard (Document document, View view)
 {
    KeyboardsLoadResources ();
    /* Enregistre la position pour le dialogue */
-#ifndef _WINDOWS
+#if defined(_GTK) || defined(_MOTIF)
    TtaSetDialoguePosition ();
-#endif /* !_WINDOWS */
+#endif /* #if defined(_GTK) || defined(_MOTIF) */
    TtaSetCurrentKeyboard (1);
 }
 
@@ -978,9 +998,9 @@ void TtcDisplayLatinKeyboard (Document document, View view)
 {
    KeyboardsLoadResources ();
    /* Enregistre la position pour le dialogue */
-#ifndef _WINDOWS 
+#if defined(_GTK) || defined(_MOTIF)
    TtaSetDialoguePosition ();
-#endif /* !_WINDOWS */
+#endif /* #if defined(_GTK) || defined(_MOTIF) */
    TtaSetCurrentKeyboard (2);
 }
 
@@ -992,9 +1012,9 @@ void TtcDisplayGreekKeyboard (Document document, View view)
 {
    KeyboardsLoadResources ();
    /* Enregistre la position pour le dialogue */
-#ifndef _WINDOWS 
+#if defined(_GTK) || defined(_MOTIF)
    TtaSetDialoguePosition ();
-#endif /* !_WINDOWS */
+#endif /* #if defined(_GTK) || defined(_MOTIF) */
    TtaSetCurrentKeyboard (3);
 #ifdef _WINDOWS
    CreateGreekKeyboardDlgWindow (NULL);

@@ -41,7 +41,7 @@ static ThotBool     SaveBeforeClosing;
 #include "views_f.h"
 
 #ifdef _WINDOWS
-#include "wininclude.h"
+  #include "wininclude.h"
 #endif /* _WINDOWS */
 
 /*----------------------------------------------------------------------
@@ -50,7 +50,7 @@ static ThotBool     SaveBeforeClosing;
   ----------------------------------------------------------------------*/
 void CallbackCloseDocMenu (int ref, int typedata, char *data)
 {
-#ifndef _WINDOWS
+#if defined(_GTK) || defined(_MOTIF)
   switch ((int) data)
     {
     case 0:
@@ -67,7 +67,7 @@ void CallbackCloseDocMenu (int ref, int typedata, char *data)
       break;
     }
   TtaDestroyDialogue (NumFormClose);
-#endif /* _WINDOWS */
+#endif /* #if defined(_GTK) || defined(_MOTIF) */
 }
 
 /*----------------------------------------------------------------------
@@ -79,10 +79,10 @@ void AskToConfirm (PtrDocument pDoc, Document document, View view,
 		   ThotBool *confirmation, ThotBool *save)
 {
   char              buftext[300];
-#ifndef _WINDOWS
+#if defined(_GTK) || defined(_MOTIF)
   char              bufbutton[300];
   int                 i;
-#endif /* _WINDOWS */
+#endif /* #if defined(_GTK) || defined(_MOTIF) */
 
   CloseDontSave = TRUE;
   SaveBeforeClosing = FALSE;
@@ -95,7 +95,7 @@ void AskToConfirm (PtrDocument pDoc, Document document, View view,
   strcat (buftext, " ");
   strcat (buftext, TtaGetMessage (LIB, TMSG_BEFORE_CLOSING));
 
-#ifndef _WINDOWS
+#if defined(_GTK) || defined(_MOTIF)
   /* Feuille de dialogue Fermer */
   strcpy (bufbutton, TtaGetMessage (LIB, TMSG_SAVE_DOC));
   i = strlen (TtaGetMessage (LIB, TMSG_SAVE_DOC)) + 1;
@@ -110,7 +110,9 @@ void AskToConfirm (PtrDocument pDoc, Document document, View view,
   TtaShowDialogue (NumFormClose, FALSE);
   /* attend le retour de ce formulaire (traite' par CallbackCloseDocMenu) */
   TtaWaitShowDialogue ();
-#else  /* _WINDOWS */
+#endif /* #if defined(_GTK) || defined(_MOTIF) */
+
+#ifdef _WINDOWS
   CreateCloseDocDlgWindow (TtaGetViewFrame(document,view), buftext,
 			   &SaveBeforeClosing, &CloseDontSave);
 #endif /* _WINDOWS */

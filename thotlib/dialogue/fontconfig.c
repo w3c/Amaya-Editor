@@ -29,7 +29,7 @@
 #include "frame_tv.h"
 
 #ifdef _GTK
-#include <gdk/gdkx.h>
+  #include <gdk/gdkx.h>
 #endif /*_GTK*/
 
 #undef MAX_TXT_LEN
@@ -82,12 +82,19 @@ static ThotBool IsXLFDName (char *font)
       if (*font++ == '-')
 	k++;
     }
-#ifndef _WINDOWS
+  
+#if defined(_MOTIF) || defined(_GTK)
   return (k == 14) ? TRUE : FALSE;
-#else /*_WINDOWS*/
+#endif /* #if defined(_MOTIF) || defined(_GTK) */
+  
+#ifdef _WINDOWS
   return (k == 2) ? TRUE : FALSE;
 #endif /*_WINDOWS*/
 
+#if !defined(_MOTIF) && !defined(_GTK) && !defined(_WINDOWS)
+  return FALSE;
+#endif /* #if !defined(_MOTIF) && !defined(_GTK) && !defined(_WINDOWS) */
+  
 }
 
 /*----------------------------------------------------------------------
@@ -95,7 +102,7 @@ static ThotBool IsXLFDName (char *font)
   ----------------------------------------------------------------------*/
 static int IsXLFDPatterneAFont (char *pattern)
 {
-#ifndef _WINDOWS
+#if defined(_MOTIF) || defined(_GTK)
   char    **fontlist;
   int       count = 0;  
 
@@ -109,9 +116,16 @@ static int IsXLFDPatterneAFont (char *pattern)
 	}
     }
   return 0;
-#else /*_WINDOWS*/
+#endif /*#if defined(_MOTIF) || defined(_GTK)*/
+  
+#ifdef _WINDOWS
   return IsXLFDName (pattern);  
 #endif /*_WINDOWS*/
+
+#if !defined(_MOTIF) && !defined(_GTK) && !defined(_WINDOWS)
+  return 0;
+#endif /* #if !defined(_MOTIF) && !defined(_GTK) && !defined(_WINDOWS) */  
+
 }
 #endif /*_GL*/
 
@@ -208,6 +222,10 @@ static int getFontFace (int indline, unsigned char *line, char *word)
 static int getFontFamily (int indline, unsigned char *line, char *word)
 {
   int             indword;
+
+  #if !defined(_MOTIF) && !defined(_GTK) && !defined(_WINDOWS)
+  return 0;
+  #endif /* #if !defined(_MOTIF) && !defined(_GTK) && !defined(_WINDOWS) */  
 
   /* copy the word from the line*/
   indword = 0;

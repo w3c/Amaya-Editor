@@ -18,9 +18,11 @@
 #include "thot_sys.h"
 #include "constmedia.h"
 #include "typemedia.h"
-#ifndef _GTK
-#include "lost.xpm"
-#endif /*_GTK*/
+
+#if defined(_WINDOWS) || defined(_MOTIF)
+  #include "lost.xpm"
+#endif /* #if defined(_WINDOWS) || defined(_MOTIF) */
+
 #include "picture.h"
 #include "frame.h"
 #include "epsflogo.h"
@@ -30,7 +32,7 @@
 #include "fileaccess.h"
 
 #ifdef _WINDOWS
-#include "winsys.h"
+  #include "winsys.h"
 #endif /* _WINDOWS */
 
 #define THOT_EXPORT extern
@@ -45,8 +47,8 @@
 #include "picture_tv.h"
 
 #ifdef _WINDOWS 
-#include "units_tv.h"
-#include "wininclude.h"
+  #include "units_tv.h"
+  #include "wininclude.h"
 #endif /* _WINDOWS */
 
 #include "appli_f.h"
@@ -69,21 +71,25 @@
 #include "xpmhandler_f.h"
 
 #ifdef _GL
-#include "displaybox_f.h"
-#include "glgradient_f.h"
-#include "glprint.h"
+  #include "displaybox_f.h"
+  #include "glgradient_f.h"
+  #include "glprint.h"
 #endif /* _GL */
 
 
 static char*    PictureMenu;
 #ifdef _GL
-static unsigned char *PictureLogo;
+  static unsigned char *PictureLogo;
 #else /*_GL*/
-#if !defined (_GTK)
-static Pixmap   PictureLogo;
-#else /*_GTK*/
-static GdkPixmap *PictureLogo;
-#endif /*_GTK*/
+  
+  #if defined(_WINDOWS) || defined(_MOTIF)
+    static Pixmap   PictureLogo;
+  #endif /* #if defined(_WINDOWS) || defined(_MOTIF) */
+  
+  #ifdef _GTK
+    static GdkPixmap *PictureLogo;
+  #endif /*_GTK*/
+
 #endif /*_GL*/
 static ThotGC   tiledGC;
 
@@ -132,12 +138,13 @@ static ThotBool PrintingGL = FALSE;
 #include "glwindowdisplay.h"
 
 #ifdef _GTK
-#include <gtkgl/gtkglarea.h>
+  #include <gtkgl/gtkglarea.h>
 #endif /*_GTK*/
+
 #include <GL/gl.h>
 
 #ifdef GL_MESA_window_pos
-#define MESA
+  #define MESA
 #endif
 /* For now not software optimised but quality optimized...
  if too sloooooow we'll revert*/
@@ -1197,17 +1204,21 @@ void FreePixmap (Pixmap pixmap)
 #ifdef _GL
     TtaFreeMemory ((void *)pixmap);
 #else /*_GL*/
-#ifndef _WINDOWS
-#ifndef _GTK
+
+#ifdef _MOTIF
     XFreePixmap (TtDisplay, pixmap);
-#else /* _GTK */
+#endif /* _MOTIF */
+    
+#ifdef _GTK 
     if (((GdkPixmap *) pixmap) != PictureLogo)
       gdk_imlib_free_pixmap ((GdkPixmap *) pixmap);
 #endif /* _GTK */
-#else  /* _WINDOWS */
+    
+#ifdef _WINDOWS
   if (!DeleteObject ((HBITMAP)pixmap))
     WinErrorBox (WIN_Main_Wd, "FreePixmap");
 #endif /* _WINDOWS */
+  
 #endif /*_GL*/
 }
 
@@ -1319,13 +1330,17 @@ static void LayoutPicture (Pixmap pixmap, Drawable drawable, int picXOrg,
   int               nbPalColors;
   int               i, j, iw, jh;
   HRGN              hrgn;
-#else /* _WINDOWS */
+#endif /* _WINDOWS */
+
+#if defined(_MOTIF) || defined(_GTK)
+
   XRectangle        rect;
-#ifndef _GTK
+#ifdef _MOTIF
   XGCValues         values;
   unsigned int      valuemask;
-#endif /* _GTK */
-#endif /* _WINDOWS */
+#endif /* _MOTIF */
+  
+#endif /* #if defined(_MOTIF) || defined(_GTK) */
 
 #ifdef _GL
 #ifdef _TRACE_GL_BUGS_GLISTEXTURE
@@ -1348,6 +1363,7 @@ static void LayoutPicture (Pixmap pixmap, Drawable drawable, int picXOrg,
       yFrame = yFrame - picYOrg;
       picYOrg = 0;
     }
+
 #ifdef _WINDOWS
   if (!TtIsTrueColor)
     {
@@ -1355,6 +1371,7 @@ static void LayoutPicture (Pixmap pixmap, Drawable drawable, int picXOrg,
       nbPalColors = RealizePalette (TtDisplay);
     }
 #endif /* _WINDOWS */
+
 #endif /* _GL */
 
   pFrame = &ViewFrameTable[frame - 1];
@@ -1383,8 +1400,8 @@ static void LayoutPicture (Pixmap pixmap, Drawable drawable, int picXOrg,
 #ifdef _GL
       GL_TextureMap (imageDesc, xFrame, yFrame, w, h, frame);
 #else /*_GL*/
-#ifndef _WINDOWS
-#ifndef _GTK
+
+#ifdef _MOTIF
       if (imageDesc->PicMask)
 	{
 	  XSetClipOrigin (TtDisplay, TtGraphicGC, xFrame - picXOrg, yFrame - picYOrg);
@@ -1397,7 +1414,9 @@ static void LayoutPicture (Pixmap pixmap, Drawable drawable, int picXOrg,
 	  XSetClipMask (TtDisplay, TtGraphicGC, None);
 	  XSetClipOrigin (TtDisplay, TtGraphicGC, 0, 0);
 	}
-#else /* _GTK */
+#endif /* _MOTIF */
+      
+#ifdef _GTK
       if (imageDesc->PicMask)
 	{
 	  gdk_gc_set_clip_origin (TtGraphicGC, xFrame - picXOrg, 
@@ -1415,7 +1434,8 @@ static void LayoutPicture (Pixmap pixmap, Drawable drawable, int picXOrg,
 	  gdk_gc_set_clip_origin (TtGraphicGC, 0, 0);
 	}
 #endif /* _GTK */
-#else /* _WINDOWS */
+      
+#ifdef _WINDOWS
       if (imageDesc->PicBgMask != -1 && imageDesc->PicType != -1)
 	{
 	  TransparentPicture (pixmap, xFrame, yFrame,
@@ -1440,6 +1460,7 @@ static void LayoutPicture (Pixmap pixmap, Drawable drawable, int picXOrg,
 	    DeleteDC (hMemDC);
 	}
 #endif /* _WINDOWS */
+      
 #endif /* _GL */
     }
   else
@@ -1575,14 +1596,16 @@ static void LayoutPicture (Pixmap pixmap, Drawable drawable, int picXOrg,
 		w = delta;
 	    }
 	}
-#ifndef _WINDOWS
+      
+#if defined(_MOTIF) || defined(_GTK)
       ix = -pFrame->FrXOrg;
       jy = -pFrame->FrYOrg;
       rect.x = x;
       rect.y = y;
       rect.width = clipWidth + dx;
       rect.height = clipHeight + dy;
-#ifndef _GTK
+
+#ifdef _MOTIF
       valuemask = GCTile | GCFillStyle | GCTileStipXOrigin | GCTileStipYOrigin;
       values.tile = pixmap;
       values.ts_x_origin = ix;
@@ -1604,7 +1627,9 @@ static void LayoutPicture (Pixmap pixmap, Drawable drawable, int picXOrg,
 	  XSetClipMask (TtDisplay, tiledGC, None);
 	  XSetClipOrigin (TtDisplay, tiledGC, 0, 0);
 	}
-#else /* _GTK */
+#endif /* _MOTIF */
+      
+#ifdef _GTK
       /*if (picPresent == RealSize)
 	printf ("Display RealSize x=%d y=%d w=%d+%d h=%d+%d img=%d\n", x, y, clipWidth, dx, clipHeight, dy, imageDesc->PicHArea);*/
       gdk_gc_set_fill (tiledGC, GDK_TILED);
@@ -1629,7 +1654,10 @@ static void LayoutPicture (Pixmap pixmap, Drawable drawable, int picXOrg,
 	  gdk_gc_set_clip_origin (tiledGC, 0, 0);
 	}
 #endif /* _GTK */
-#else  /* _WINDOWS */
+
+#endif /* #if defined(_MOTIF) || defined(_GTK) */
+      
+#ifdef _WINDOWS
       hMemDC  = CreateCompatibleDC (TtDisplay);
       bitmapTiled = CreateCompatibleBitmap (TtDisplay, w, h);
       hOrigDC = CreateCompatibleDC (TtDisplay);
@@ -1683,6 +1711,7 @@ static void LayoutPicture (Pixmap pixmap, Drawable drawable, int picXOrg,
       if (hrgn)
 	DeleteObject (hrgn);
 #endif /* _WINDOWS */
+
 #endif /* _GL */
     }
 }
@@ -1749,13 +1778,14 @@ Picture_Report PictureFileOk (char *fileName, int *typeImage)
   return status;
 }
 
-#if defined (_GTK) || defined (_WINDOWS)
 /*----------------------------------------------------------------------
   Create The logo for lost pictures
   ----------------------------------------------------------------------*/
 void CreateGifLogo ()
 {
-#if !defined(_GTK) || defined (_GL) 
+#if defined (_GTK) || defined (_WINDOWS)
+
+#if defined(_WINDOWS) || defined (_GL) 
   PictInfo            *imageDesc;
   unsigned long       Bgcolor = 0;
   int                 xBox = 0;
@@ -1771,23 +1801,28 @@ void CreateGifLogo ()
      &hBox, Bgcolor, &width, &height, 0);
   TtaFreeMemory (imageDesc);
   PictureLogo = (unsigned char *) drw;
-#else /*_WIN && _GL*/
+#else /* #if defined(_WINDOWS) || defined (_GL)  */
+
+#ifdef _GTK  
   GdkImlibImage      *im;
 
   im = gdk_imlib_load_image (LostPicturePath);
   gdk_imlib_render (im, 40, 40);
   PictureLogo = gdk_imlib_copy_image (im);
   TtaFreeMemory (im);
+#endif /*_GTK*/
+ 
 #endif /*_WIN && _GL*/
-}
+
 #endif /*_GTK && _WIN*/
+}
 
 /*----------------------------------------------------------------------
    Private Initializations of picture handlers and the visual type 
   ----------------------------------------------------------------------*/
 void InitPictureHandlers (ThotBool printing)
 {
-#ifndef _WINDOWS
+
 #ifdef _GTK
   if (!printing)
     {
@@ -1816,7 +1851,9 @@ void InitPictureHandlers (ThotBool printing)
       gdk_gc_set_exposures (GCpicture,0);
     }
   theVisual = (Visual *) gdk_visual_get_system ();
-#else /* _GTK */
+#endif /* _GTK */
+  
+#ifdef _MOTIF
    /* initialize Graphic context to display pictures */
    TtGraphicGC = XCreateGC (TtDisplay, TtRootWindow, 0, NULL);
    XSetForeground (TtDisplay, TtGraphicGC, Black_Color);
@@ -1849,8 +1886,7 @@ void InitPictureHandlers (ThotBool printing)
 						  White_Color,
 						  TtWDepth);
    theVisual = DefaultVisual (TtDisplay, TtScreen);
-#endif /* _GTK */
-#endif /* _WINDOWS */
+#endif /* _MOTIF */
 
    Printing = printing;
    /* by default no plugins loaded */
@@ -1937,7 +1973,7 @@ void GetPictHandlersList (int *count, char* buffer)
 
 }
 
-#ifndef _GTK
+#if defined(_MOTIF) || defined(_WINDOWS)
 /*----------------------------------------------------------------------
   SimpleName
   If the filename is a complete name returns into simplename the file name.
@@ -1970,7 +2006,7 @@ static void SimpleName (char *filename, char *simplename)
       *to++ = *from++;
    *to = EOS;
 }
-#endif /*_GTK*/
+#endif /* #if defined(_MOTIF) || defined(_WINDOWS) */
 
 /*----------------------------------------------------------------------
    DrawEpsBox draws the eps logo into the picture box.            
@@ -1978,7 +2014,7 @@ static void SimpleName (char *filename, char *simplename)
 static void  DrawEpsBox (PtrBox box, PictInfo *imageDesc, int frame,
 			 int wlogo, int hlogo)
 {
-#ifndef _GTK
+#if defined(_MOTIF) || defined(_WINDOWS)
    ThotWindow          drawable;
    Pixmap              pixmap;
    float               scaleX, scaleY;
@@ -1988,11 +2024,13 @@ static void  DrawEpsBox (PtrBox box, PictInfo *imageDesc, int frame,
    HDC                 hDc, hMemDc;
    POINT               lPt[2];
    HBITMAP             hOldBitmap;
-#else  /* _WINDOWS */
+#endif /* _WINDOWS */
+
+#ifdef _MOTIF
    char                filename[255];
    int                 fileNameWidth;
    int                 fnposx, fnposy;
-#endif /* _WINDOWS */
+#endif /* _MOTIF */
 
    /* Create the temporary picture */
    scaleX = 0.0;
@@ -2031,7 +2069,7 @@ static void  DrawEpsBox (PtrBox box, PictInfo *imageDesc, int frame,
        break;
      }
    
-#ifndef _WINDOWS
+#ifdef _MOTIF
    pixmap = XCreatePixmap (TtDisplay, TtRootWindow, w, h, TtWDepth);
    XFillRectangle (TtDisplay, pixmap, TtBlackGC, x, y, w, h);
    
@@ -2041,7 +2079,9 @@ static void  DrawEpsBox (PtrBox box, PictInfo *imageDesc, int frame,
    XDrawLine (TtDisplay, pixmap, TtDialogueGC, x + w - 1, y, x, y + h - 2);
    XDrawLine (TtDisplay, pixmap, TtWhiteGC, x, y + 1, x + w - 1, y + h - 1);
    XDrawLine (TtDisplay, pixmap, TtWhiteGC, x + w - 1, y + 1, x, y + h - 1);
-#else  /* _WINDOWS */
+#endif /* _MOTIF */   
+   
+#ifdef _WINDOWS
    pixmap = CreateBitmap (w, h, TtWDepth, 1, NULL);
    hDc    = GetDC (drawable);
    hMemDc = CreateCompatibleDC (hDc);
@@ -2103,9 +2143,11 @@ static void  DrawEpsBox (PtrBox box, PictInfo *imageDesc, int frame,
        picYOrg = 0;
      }
    /* Drawing In the Picture Box */
-#ifndef _WINDOWS
+
+#ifdef _MOTIF
    XCopyArea (TtDisplay, imageDesc->PicPixmap, pixmap, TtDialogueGC, picXOrg, picYOrg, wFrame, hFrame, xFrame, yFrame);
-#endif /* _WINDOWS */
+#endif /* _MOTIF */
+   
    GetXYOrg (frame, &XOrg, &YOrg);
    xFrame = box->BxXOrg + box->BxLMargin + box->BxLBorder + box->BxLPadding - XOrg;
    yFrame = box->BxYOrg + box->BxTMargin + box->BxTBorder + box->BxTPadding + FrameTable[frame].FrTopMargin - YOrg;
@@ -2118,14 +2160,18 @@ static void  DrawEpsBox (PtrBox box, PictInfo *imageDesc, int frame,
      h = hFrame;
    x += xFrame;
    y += yFrame;
+
 #ifndef _GL
    LayoutPicture (pixmap, drawable, picXOrg, picYOrg, w, h, x, y, frame,
 		  imageDesc, box);
 #endif /*_GL*/
+
 #ifdef _WINDOWS
    if (pixmap)
 	   DeleteObject (pixmap);
-#else /* _WINDOWS */ 
+#endif /* _WINDOWS */ 
+
+#ifdef _MOTIF
    XFreePixmap (TtDisplay, pixmap);
    pixmap = None;
    XSetLineAttributes (TtDisplay, TtLineGC, 1, LineSolid, CapButt, JoinMiter);
@@ -2145,8 +2191,9 @@ static void  DrawEpsBox (PtrBox box, PictInfo *imageDesc, int frame,
        XDrawString (TtDisplay, drawable, TtLineGC, fnposx, fnposy,
 		            filename, strlen (filename));
      }
-#endif /* _WINDOWS */
-#endif /* _GTK */
+#endif /* _MOTIF */
+
+#endif /* #if defined(_MOTIF) || defined(_WINDOWS) */
 }
 
 
@@ -2364,12 +2411,14 @@ void DrawPicture (PtrBox box, PictInfo *imageDesc, int frame,
 	WIN_ReleaseDeviceContext ();
 #endif /* _WIN_PRINT */
       }
-#else /* _WINDOWS */
+#endif /* _WINDOWS */
+#if defined(_MOTIF) || defined(_GTK)
   (*(PictureHandlerTable[typeImage].Produce_Postscript)) (fileName,pres,
 							  x, y, w, h,
 							  (FILE *) drawable,
 							  bgColor);
-#endif /* _WINDOWS*/
+#endif /* #if defined(_MOTIF) || defined(_GTK) */
+  
 #ifdef _GL
 if (PrintingGL)
 {
@@ -2389,14 +2438,14 @@ void UnmapImage (PictInfo *imageDesc)
   if (imageDesc == NULL)
     return;
   typeImage = imageDesc->PicType;
-#ifndef _WINDOWS
+#if defined(_MOTIF) || defined(_GTK)
   if (typeImage >= InlineHandlers && imageDesc->mapped &&
       imageDesc->created)
     {	
       XtUnmapWidget ((Widget) (imageDesc->wid));
       imageDesc->mapped = FALSE;
     }
-#endif /* _WINDOWS */
+#endif /* #if defined(_MOTIF) || defined(_GTK) */
 }
 
 
@@ -2996,16 +3045,19 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
   PathBuffer          fileName;
   PictureScaling      pres;
 #ifdef _GTK
-#ifndef _GTK2
-  GdkImlibImage      *im = None;
-  GdkPixmap          *drw = None;
-#else /* _GTK2 */
-  GdkPixbuf          *im = None;
-  GError             *error=NULL;
-#endif /* _GTK2 */
-#else /* _GTK */
-  Drawable            drw = None;
+  #ifndef _GTK2
+    GdkImlibImage      *im = None;
+    GdkPixmap          *drw = None;
+  #else /* _GTK2 */
+    GdkPixbuf          *im = None;
+    GError             *error=NULL;
+  #endif /* _GTK2 */
 #endif /* _GTK */
+
+#if defined(_MOTIF) || defined(_WINDOWS)
+  Drawable            drw = None;
+#endif /* #if defined(_MOTIF) || defined(_WINDOWS) */
+  
   PtrAbstractBox      pAb;
   Picture_Report      status;
   unsigned long       Bgcolor;
@@ -3048,6 +3100,7 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
 	/* create a special logo for lost pictures */
 	CreateGifLogo ();
 #endif 
+      
 #ifdef _WINDOWS
 #ifdef _WIN_PRINT
       if (TtDisplay == NULL)
@@ -3063,18 +3116,21 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
       imageDesc->PicPresent = pres;
       drw = PictureLogo;
 #endif /* _WIN_PRINT */
-#else  /* _WINDOWS */
+#endif  /* _WINDOWS */
+      
 #ifdef _GTK 
       imageDesc->PicType = 3;
       imageDesc->PicPresent = pres;
       imageDesc->PicHeight = 40;
       imageDesc->PicWidth = 40;
       drw = (GdkPixmap *) PictureLogo;
-#else /*_GTK*/
+#endif /*_GTK*/
+
+#ifdef _MOTIF
       drw = PictureLogo;
       imageDesc->PicType = -1;
-#endif /* ! GTK */
-#endif /* _WINDOWS */
+#endif /* _MOTIF */
+
       wBox = w = 40;
       hBox = h = 40;
     }
@@ -3135,8 +3191,8 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
 	}
       if (!Printing)
 	{
-#ifndef _WINDOWS
-#ifndef _GTK
+
+#ifdef _MOTIF
 	  /* set the colors of the  graphic context GC */
 	  if (TtWDepth == 1)
 	    {
@@ -3163,22 +3219,25 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
 	      XSetBackground (TtDisplay, TtGraphicGC,
 			      ColorPixel (pAb->AbBackground));
 	    }
-#endif /* _GTK */
-#endif /* _WINDOWS */
+#endif /* _MOTIF */
+
 	}
-#ifndef _GTK
+#if defined(_MOTIF) || defined(_WINDOWS)
       if (PictureHandlerTable[typeImage].Produce_Picture != NULL)
 	{
-#endif /* _GTK */
+#endif /* #if defined(_MOTIF) || defined(_WINDOWS) */
+    
 	  if (typeImage >= InlineHandlers)
 	    {
 	      /* Plugins are displayed in RealSize */
 	      imageDesc->PicPresent = RealSize;
-#ifndef _GTK
+#if defined(_MOTIF) || defined(_WINDOWS)
 	      imageDesc->PicWArea = wBox = w;
 	      imageDesc->PicHArea = hBox = h;
 	      drw = (*(PictureHandlerTable[typeImage].Produce_Picture)) (frame, imageDesc, fileName);
-#else /* _GTK */
+#endif /* #if defined(_MOTIF) || defined(_WINDOWS) */
+        
+#ifdef _GTK
 	      imageDesc->PicWArea = wBox = w;
 	      imageDesc->PicHArea = hBox = h;
 #ifndef _GTK2
@@ -3191,6 +3250,7 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
 	      im = gdk_pixbuf_new_from_file(fileName, &error);
 #endif /* _GTK2 */
 #endif /* _GTK */
+        
 	      xBox = imageDesc->PicXArea;
 	      yBox = imageDesc->PicYArea;
 	    }
@@ -3210,13 +3270,14 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
 		  if(box->BxH != 0)
 		    yBox = h;
 		}
-#ifndef _GTK
+#if defined(_MOTIF) || defined(_WINDOWS)
 	      drw = (*(PictureHandlerTable[typeImage].Produce_Picture))
 		(fileName, imageDesc, &xBox, &yBox, &wBox, &hBox,
 		 Bgcolor, &width, &height,
 		 ViewFrameTable[frame - 1].FrMagnification);
-
-#else /* _GTK */
+#endif /* #if defined(_MOTIF) || defined(_WINDOWS) */
+        
+#ifdef _GTK
 	      if (typeImage == EPS_FORMAT)
 		drw = (GdkPixmap *) (*(PictureHandlerTable[typeImage].Produce_Picture))
 		  (fileName, imageDesc, &xBox, &yBox, &wBox, &hBox,
@@ -3260,6 +3321,7 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
 	      width = (gint) wBox;
 	      height = (gint) hBox;
 #endif /* _GTK */
+        
 	      /* intrinsic width and height */
 	      imageDesc->PicWidth = width;
 	      imageDesc->PicHeight = height;
@@ -3286,9 +3348,9 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
 		  h = h / 2;
 		}
 	    }
-#ifndef _GTK
+#if defined(_MOTIF) || defined(_WINDOWS)
 	}
-#endif /* _GTK */
+#endif /* #if defined(_MOTIF) || defined(_WINDOWS) */
        
       if (drw == None)
 	{
@@ -3297,6 +3359,7 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
 	    /* create a special logo for lost pictures */
 	    CreateGifLogo ();
 #endif 
+    
 #ifdef _WINDOWS
 #ifdef _WIN_PRINT
 	  if (TtDisplay == NULL)
@@ -3310,17 +3373,20 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
 	  imageDesc->PicPresent = pres;
 	  drw = PictureLogo;
 #endif /* _WIN_PRINT */
-#else  /* _WINDOWS */
+#endif  /* _WINDOWS */
+    
 #ifdef _GTK 
 	  imageDesc->PicType = 3;
 	  imageDesc->PicPresent = pres;
 	  imageDesc->PicFileName = TtaStrdup (LostPicturePath);
 	  drw = (GdkPixmap *) PictureLogo;
-#else /*_GTK*/
+#endif /*_GTK*/
+    
+#ifdef _MOTIF
 	  drw = PictureLogo;
 	  imageDesc->PicType = -1;
-#endif /* ! GTK */
-#endif /* _WINDOWS */
+#endif /* #ifdef _MOTIF */
+
 	  wBox = w = 40;
 	  hBox = h = 40;
 	}
@@ -3356,10 +3422,12 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
       imageDesc->PicHArea = h;
     }
   imageDesc->PicPixmap = drw;
+
 #ifdef _GTK
   if (im)
     imageDesc->im = im;
 #endif /*_GTK*/
+
 #ifdef _WIN_PRINT
   if (releaseDC)
     /* release the device context into TtDisplay */
@@ -3477,10 +3545,12 @@ unsigned char *GetScreenshot (int frame, char *pngurl)
   saveBuffer (pngurl, FrameTable[frame].FrWidth, FrameTable[frame].FrHeight);
   return NULL;
 #else /*_GL*/
+
 #ifdef _GTK
   GdkImlibImage *image;  
   int              widthb, heightb;
-#else /* !_GTK */
+#endif /* !_GTK */
+
 #ifdef _WINDOWS
   int              widthb, heightb;
   int              x,y;
@@ -3496,8 +3566,9 @@ unsigned char *GetScreenshot (int frame, char *pngurl)
   LPVOID           lpvBits = NULL; 
   RECT             rect;
 #endif /* _WINDOWS */
-#endif /* _GTK */
+
   TtaHandlePendingEvents ();
+  
 #ifdef _GTK
   widthb = (FrameTable[frame].WdFrame)->allocation.width;
   heightb = (FrameTable[frame].WdFrame)->allocation.height;
@@ -3507,7 +3578,8 @@ unsigned char *GetScreenshot (int frame, char *pngurl)
   gdk_imlib_destroy_image (image);
   
   return NULL;
-#else /* !_GTK */
+#endif /* _GTK */
+  
 #ifdef _WINDOWS
     GetClientRect (FrRef[frame], &rect);
     widthb = rect.right;
@@ -3532,7 +3604,7 @@ unsigned char *GetScreenshot (int frame, char *pngurl)
   return screenshot;
 
 #endif /* _WINDOWS */
-#endif /* _GTK */
+
   return NULL;
 #endif /*_GL*/
 }

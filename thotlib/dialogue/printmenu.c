@@ -59,11 +59,12 @@
 #include "views_f.h"
 #include "viewapi_f.h"
 #include "writedoc_f.h"
+
 #ifdef _WINDOWS
-#include "thotprinter_f.h"
-#include "wininclude.h"
-static PRINTDLG     Pdlg;
-static ThotBool     LpInitialized = FALSE;
+  #include "thotprinter_f.h"
+  #include "wininclude.h"
+  static PRINTDLG     Pdlg;
+  static ThotBool     LpInitialized = FALSE;
 #endif /* _WINDOWS */
 
 
@@ -104,9 +105,11 @@ static void Print (char *name, char *dir, char *thotSch, char *thotDoc,
    int                     printArgc = 0;
 #else /* _WINDOWS_DLL */
    char                    cmd[1024];
-#ifndef _WINDOWS
+   
+#if defined(_GTK) || defined(_MOTIF)
    int                     res;
-#endif /*_WINDOWS*/
+#endif /*#if defined(_GTK) || defined(_MOTIF)*/
+
 #endif /* _WINDOWS_DLL */
    int                     i, j = 0;
    int                     frame;
@@ -128,11 +131,15 @@ static void Print (char *name, char *dir, char *thotSch, char *thotDoc,
    strcpy (printArgv[printArgc], ptr);
    printArgc++;
 #else /* !_WINDOWS_DLL */
+
 #ifdef _WINDOWS
    strcpy (cmd, "thotprinter.exe"); 
-#else
-   sprintf (cmd, "%s/print", BinariesDirectory); 
 #endif /* _WINDOWS */
+   
+#if defined(_GTK) || defined(_MOTIF)   
+   sprintf (cmd, "%s/print", BinariesDirectory); 
+#endif /* #if defined(_GTK) || defined(_MOTIF) */
+   
    strcat (cmd, " -lang ");
    strcat (cmd, ptr);
 #endif /* !_WINDOWS_DLL */
@@ -632,7 +639,9 @@ static void Print (char *name, char *dir, char *thotSch, char *thotDoc,
        TtPrinterDC = (HDC) 0;
      }
 #endif /*_WINDOWSDLL*/
-#else /* !_WINDOWS */
+#endif /*_WINDOWS */
+
+#if defined(_GTK) || defined(_MOTIF)
    cmd[j] = EOS;
    i = strlen (cmd);
 
@@ -647,7 +656,7 @@ static void Print (char *name, char *dir, char *thotSch, char *thotDoc,
     if (res == -1) 
        TtaDisplaySimpleMessage (CONFIRM, LIB, TMSG_ERROR_PS_TRANSLATION); 
 
-#endif /* _WINDOWS */
+#endif /* #if defined(_GTK) || defined(_MOTIF) */
 
 }
 
@@ -728,11 +737,15 @@ void InitPrintParameters (Document document)
 		 }
 	       else
 		 {
+       
 #ifdef _WINDOWS
 		   strcpy (PSdir, "C:\\TEMP");
-#else  /* !_WINDOWS */
-		   strcpy (PSdir,"/tmp");
-#endif /* !_WINDOWS */
+#endif  /* _WINDOWS */
+       
+#if defined(_GTK) || defined(_MOTIF)
+       strcpy (PSdir,"/tmp");
+#endif /* #if defined(_GTK) || defined(_MOTIF) */
+       
 		   lg = strlen (PSdir);
 		 }
 	       sprintf (&PSdir[lg], "/%s.ps", pDoc->DocDName);
@@ -1234,18 +1247,22 @@ void                CallbackPrintmenu (int ref, int val, char *txt)
 	      if (!NewPaperPrint)
 		{
 		  NewPaperPrint = TRUE;
-#ifndef _WINDOWS
+      
+#if defined(_GTK) || defined(_MOTIF)
 		  TtaSetTextForm (NumZonePrinterName, pPrinter);
-#endif /* !_WINDOWS */
+#endif /* #if defined(_GTK) || defined(_MOTIF) */
+      
 		}
 	      break;
 	    case 1:
 	      if (NewPaperPrint)
 		{
 		  NewPaperPrint = FALSE;
-#ifndef _WINDOWS
+      
+#if defined(_GTK) || defined(_MOTIF)
 		  TtaSetTextForm (NumZonePrinterName, PSdir);
-#endif /* !_WINDOWS */
+#endif /* #if defined(_GTK) || defined(_MOTIF) */
+      
 		}
 	      break;
 	    }
@@ -1322,7 +1339,8 @@ void                TtcPrintSetup (Document document, View view)
 
    /* Print form */
    InitPrintParameters (document);
-#ifndef _WINDOWS
+   
+#if defined(_GTK) || defined(_MOTIF)
    TtaNewSheet (NumFormPrint, TtaGetViewFrame (document, view), TtaGetMessage (LIB, TMSG_LIB_PRINT), 1, TtaGetMessage (LIB, TMSG_LIB_CONFIRM), FALSE, 2, 'L', D_CANCEL);
 
    i = 0;
@@ -1330,7 +1348,7 @@ void                TtcPrintSetup (Document document, View view)
    TtaNewToggleMenu (NumMenuOptions, NumFormPrint, TtaGetMessage (LIB, TMSG_OPTIONS), 1, bufMenu, NULL, FALSE);
    if (ManualFeed)
       TtaSetToggleMenu (NumMenuOptions, 0, TRUE);
-#endif /* _WINDOWS */
+#endif /* #if defined(_GTK) || defined(_MOTIF) */
 
    /* Paper format submenu */
    i = 0;
@@ -1338,12 +1356,13 @@ void                TtcPrintSetup (Document document, View view)
    i += strlen (&bufMenu[i]) + 1;
    sprintf (&bufMenu[i], "B%s", TtaGetMessage (LIB, TMSG_US));
    TtaNewSubmenu (NumMenuPaperFormat, NumFormPrint, 0, TtaGetMessage (LIB, TMSG_PAPER_SIZE), 2, bufMenu, NULL, FALSE);
-#ifndef _WINDOWS
+
+#if defined(_GTK) || defined(_MOTIF)
    if (!strcmp (PageSize, "US"))
       TtaSetMenuForm (NumMenuPaperFormat, 1);
    else
       TtaSetMenuForm (NumMenuPaperFormat, 0);
-#endif /* !_WINDOWS */
+#endif /* #if defined(_GTK) || defined(_MOTIF) */
 
    /* Print to paper/ Print to file submenu */
    i = 0;
@@ -1354,7 +1373,8 @@ void                TtcPrintSetup (Document document, View view)
                   TtaGetMessage (LIB, TMSG_OUTPUT), 2, bufMenu, NULL, TRUE);
    /* initialization of the PaperPrint selector */
    NewPaperPrint = PaperPrint;
-#ifndef _WINDOWS
+
+#if defined(_GTK) || defined(_MOTIF)
    if (PaperPrint)
      {
        TtaSetMenuForm (NumMenuSupport, 0);
@@ -1370,6 +1390,7 @@ void                TtcPrintSetup (Document document, View view)
 
    /* activates the Print form */
    TtaShowDialogue (NumFormPrint, FALSE);
-#endif /* !_WINDOWS */
+#endif /* #if defined(_GTK) || defined(_MOTIF) */
+   
 }
 

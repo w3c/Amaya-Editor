@@ -55,16 +55,18 @@
 #include "glprint.h"
 
 #ifdef _GTK
-#include <gtkgl/gtkglarea.h>
-/* Unix timer */
-#include <unistd.h>
-#include <sys/timeb.h>
-#else /*WINDOWS*/
-#include <wininclude.h>
-/* Win32 opengl context based on frame number*/
-static HDC   GL_Windows[MAX_FRAME];	
-static HGLRC GL_Context[MAX_FRAME];
+  #include <gtkgl/gtkglarea.h>
+  /* Unix timer */
+  #include <unistd.h>
+  #include <sys/timeb.h>
 #endif /*_GTK*/
+
+#ifdef _WINDOWS
+  #include <wininclude.h>
+  /* Win32 opengl context based on frame number*/
+  static HDC   GL_Windows[MAX_FRAME];	
+  static HGLRC GL_Context[MAX_FRAME];
+#endif /* _WINDOWS */
 
 #include <GL/gl.h>
 #include <GL/glu.h>
@@ -199,11 +201,15 @@ ThotBool GL_Err()
   if((errCode = glGetError ()) != GL_NO_ERROR)
     {
 #ifdef _PCLDEBUG
+
 #ifdef _GTK
       g_print ("\n%s :", (char*) gluErrorString (errCode));
-#else /*_GTK*/
-      WinErrorBox (NULL, (char*) gluErrorString (errCode));;
 #endif /*_GTK*/
+
+#ifdef _WINDOWS
+      WinErrorBox (NULL, (char*) gluErrorString (errCode));;
+#endif /*_WINDOWS*/
+      
 #endif /*_PCLDEBUG*/
       return TRUE;
     }
@@ -253,15 +259,18 @@ void GL_KillFrame (int frame)
     return;
   for (i = 0 ; i <= MAX_FRAME; i++)
     {  
-#ifndef _WINDOWS 
+#if defined(_MOTIF) || defined(_GTK)
       if (i != Shared_Context && FrameTable[i].WdFrame)
-#else /* _WINDOWS */
-	if (i != Shared_Context && GL_Context[i])
+#endif /*#if defined(_MOTIF) || defined(_GTK)        */
+        
+#ifdef _WINDOWS
+	    if (i != Shared_Context && GL_Context[i])
 #endif /* _WINDOWS */
-	{
-	Shared_Context = i;
-	return;
-	} 
+
+	    {
+    	  Shared_Context = i;
+	      return;
+	    } 
     }
 }
 #endif /*_NOSHARELIST*/
@@ -1491,16 +1500,18 @@ AnimTime ComputeThotCurrentTime (int frame)
 
   if (FrameTable[frame].Anim_play) 
     {   
+
 #ifdef _GTK
       /* while (gtk_events_pending ()) */
       /*   gtk_main_iteration (); */
       ftime (&after);
       current_time = after.time + (((double)after.millitm)/1000);      
-#else /* _GTK */
+#endif /* _GTK */
+      
 #ifdef _WINDOWS
       current_time = ((double) GetTickCount ()) / 1000; 
 #endif /*_WINDOWS*/	
-#endif /*_GTK*/
+
       if (FrameTable[frame].BeginTime < 0.0001)
 	{
 	  FrameTable[frame].BeginTime = current_time;
@@ -1541,11 +1552,15 @@ void SetGlPipelineState ()
       Software_Mode = TRUE;  
   if (strstr (version, "1.0") || strstr (version, "1.1")) 
     {
+
 #ifdef _WINDOWS
       WinErrorBox (NULL,  GLU_ERROR_MSG);
-#else /*  _WINDOWS */
+#endif /*  _WINDOWS */
+
+#if defined(_MOTIF) || defined(_GTK)      
       fprintf( stderr, GLU_ERROR_MSG);
-#endif /* _WINDOWS */
+#endif /* #if defined(_MOTIF) || defined(_GTK) */
+      
       exit (1);
     }
 
@@ -1661,12 +1676,15 @@ void SetGlPipelineState ()
   glBlendFunc (GL_SRC_ALPHA, 
 	       GL_ONE_MINUS_SRC_ALPHA); 
   GL_SetOpacity (1000);
-  if (GL_Err())
 #ifdef _GTK
+  if (GL_Err())
     g_print ("Bad INIT\n"); 
-#else  /*_GTK*/
-  WinErrorBox (NULL, "Bad INIT\n");
-#endif  /*_GTK*/
+#endif /*_GTK*/
+
+#ifdef _WINDOWS
+  if (GL_Err())
+    WinErrorBox (NULL, "Bad INIT\n");
+#endif  /*_WINDOWS*/
 }
 
 

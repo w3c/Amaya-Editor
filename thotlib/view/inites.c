@@ -30,8 +30,9 @@
 #include "memory_f.h"
 #include "inites_f.h"
 #include "registry_f.h"
+
 #ifdef _WINDOWS
-#include "wininclude.h"
+  #include "wininclude.h"
 #endif /* _WINDOWS*/
 
 static ThotColorStruct def_colrs[256];
@@ -39,7 +40,7 @@ static int             allocation_index[256];
 static int             have_colors = 0;
 
 
-#ifndef _WINDOWS
+#if defined(_MOTIF) || defined(_GTK)
 /*----------------------------------------------------------------------
    FindOutColor finds the closest color by allocating it, or picking
    an already allocated color.
@@ -51,34 +52,46 @@ static void FindOutColor (Display *dsp, Colormap colormap,
    int                 rd, gd, bd, dist, mindist;
    int                 cindx;
    int                 NumCells;
-#ifndef _GTK
+#ifdef _MOTIF
    int                 match;
-#else /* _GTK */
+#endif /* #ifdef _MOTIF */
+   
+#ifdef _GTK
    gboolean            match;
-#endif /* !_GTK */
+#endif /* _GTK */
 
 #ifdef _GTK
  match = gdk_colormap_alloc_color ((GdkColormap *)colormap, (GdkColor *)colr, FALSE, TRUE);
-#else /* _GTK */
+#endif /* _GTK */
+
+#ifdef _MOTIF 
  match = XAllocColor (dsp, colormap, colr);
-#endif /* _GTK */
-   NumCells = 0;
-#ifndef _GTK
-   if (match == 0)
-     {
-#else /* _GTK */
- if (!match)
-     {
-#endif /* !_GTK */
+#endif /* #ifdef _MOTIF */
+
+ NumCells = 0;
+
+#ifdef _MOTIF
+  if (match == 0)
+#endif /* #ifdef _MOTIF */
+       
 #ifdef _GTK
-        NumCells = gdk_colormap_get_system_size ();
-#else /* _GTK */
-	NumCells = XDisplayCells (dsp, TtScreen);
+  if (!match)
+#endif /* !_GTK */
+  {
+       
+#ifdef _GTK
+    NumCells = gdk_colormap_get_system_size (); 
 #endif /* _GTK */
-	if (!have_colors)
+    
+#ifdef _MOTIF    
+    NumCells = XDisplayCells (dsp, TtScreen);
+#endif /* #ifdef _MOTIF */
+    
+    if (!have_colors)
 	  {
 	     for (i = 0; i < NumCells; i++)
 		def_colrs[i].pixel = i;
+
 #ifdef _GTK
 	     match = gdk_colormap_alloc_colors ((GdkColormap *)colormap,
 						(GdkColor *)&def_colrs[0],
@@ -86,9 +99,12 @@ static void FindOutColor (Display *dsp, Colormap colormap,
 						FALSE,
 						TRUE, 
 						NULL); 
-#else /* _GTK */
-	     XQueryColors (dsp, colormap, def_colrs, NumCells);
 #endif /* _GTK */
+
+#ifdef _MOTIF       
+	     XQueryColors (dsp, colormap, def_colrs, NumCells);
+#endif /* _MOTIF */
+       
 	     have_colors = 1;
 	  }
 	mindist = 196608;	/* 256 * 256 * 3 */
@@ -128,7 +144,8 @@ static void FindOutColor (Display *dsp, Colormap colormap,
 	   have_colors = 0;
      }
 }
-#endif /* !_WINDOWS */
+
+#endif /* #if defined(_MOTIF) || defined(_GTK) */
 
 
 /*----------------------------------------------------------------------
@@ -138,7 +155,9 @@ static void InstallColor (int i)
 {
 #ifdef _WINDOWS
    Pix_Color[i] = RGB (RGB_Table[i].red, RGB_Table[i].green, RGB_Table[i].blue);
-#else  /* _WINDOWS */
+#endif /* _WINDOWS */
+   
+#if defined(_MOTIF) || defined(_GTK)
    ThotColorStruct     col;
 
    if (Color_Table[i] != NULL)
@@ -153,7 +172,7 @@ static void InstallColor (int i)
 	Pix_Color[i] = col.pixel;
 	/* TODO: find the nearest color */
      }
-#endif /* _WINDOWS */
+#endif /* #if defined(_MOTIF) || defined(_GTK) */
 }
 
 /*----------------------------------------------------------------------
@@ -201,15 +220,17 @@ static void ApproximateColors (void)
 void         FreeDocColors ()
 {
 #ifndef _WIN_PRINT
+
 #ifdef _WINDOWS
   /* free extended colors */
   if (!TtIsTrueColor && TtCmap && !DeleteObject (TtCmap))
     WinErrorBox (WIN_Main_Wd, "FreeDocColors (1)");
   TtCmap = 0;
-#else /* _WINDOWS */
-  int        i;
+#endif /* _WINDOWS */
 
 #ifdef _GTK
+  int        i;
+
   /* free standard colors */
   gdk_colors_free (TtCmap, &Pix_Color[0], NColors, (gulong)0 );
 
@@ -217,7 +238,11 @@ void         FreeDocColors ()
   for (i = 0; i < NbExtColors; i++)
     if (ExtColor[i])
       gdk_colors_free (TtCmap, &ExtColor[i], 1, (gulong)0);
-#else /* _GTK */
+#endif /* _GTK */
+
+#ifdef _MOTIF  
+  int        i;
+
   /* free standard colors */
   XFreeColors (TtDisplay, TtCmap, Pix_Color, NColors, (unsigned long) 0);
 
@@ -225,8 +250,8 @@ void         FreeDocColors ()
   for (i = 0; i < NbExtColors; i++)
     if (ExtColor[i])
       XFreeColors (TtDisplay, TtCmap, &ExtColor[i], 1, (unsigned long) 0);
-#endif /* _GTK */
-#endif /* _WINDOWS */
+#endif /* _MOTIF */
+
 #endif /* _WIN_PRINT */
 
   TtaFreeMemory (ExtRGB_Table);
@@ -313,7 +338,9 @@ void InitDocColors (char *name)
 			     sysPalEntries[j].peBlue);
 	}
     }
-#else  /* _WINDOWS */
+#endif /* _WINDOWS */
+
+#if defined(_GTK) || defined(_MOTIF) 
   int                 i, j, k;
   char               *value;
   ThotBool            reducecolor;
@@ -342,10 +369,13 @@ void InitDocColors (char *name)
   gdk_color_black (TtCmap, (GdkColor *)&gdkblack);
   Pix_Color[0] = gdkwhite.pixel;
   Pix_Color[1] = gdkblack.pixel;
-#else /* _GTK */
+#endif /* _GTK */
+
+#ifdef _MOTIF
   Pix_Color[0] = WhitePixel (TtDisplay, DefaultScreen (TtDisplay));
   Pix_Color[1] = BlackPixel (TtDisplay, DefaultScreen (TtDisplay));
-#endif /* _GTK */
+#endif /* _MOTIF */
+
   /* clean up everything with white */
   for (i = 2; i < NColors; i++)
     Pix_Color[i] = Pix_Color[0];
@@ -365,8 +395,8 @@ void InitDocColors (char *name)
   if (colormap_full)
     {
       for (j = 1; j <= (NColors / 8); j++)
-	for (i = j * 8, k = 0; (i < NColors) && (k < 8); i++, k++)
-	  Pix_Color[i] = Pix_Color[j * 8 + 4];
+	      for (i = j * 8, k = 0; (i < NColors) && (k < 8); i++, k++)
+	        Pix_Color[i] = Pix_Color[j * 8 + 4];
       return;
     }
   
@@ -412,7 +442,7 @@ void InitDocColors (char *name)
   ExtRGB_Table = (RGBstruct *) TtaGetMemory (Max_Extend_Colors * sizeof (RGBstruct));
   ExtColor = (ThotColor *) TtaGetMemory (Max_Extend_Colors * sizeof (ThotColor));
   ExtCount_Table = (int *) TtaGetMemory (Max_Extend_Colors * sizeof (int));
-#endif /* _WINDOWS */
+#endif /* #if defined(_GTK) || defined(_MOTIF)  */
 }
 
 /*----------------------------------------------------------------------
@@ -453,14 +483,16 @@ ThotColor ColorPixel (int num)
   color <<= 8;
   color |= (blue & 0xFF);
   return (color);
-#else /* _GTK */
+#endif /* _GTK */
+  
+#if defined(_MOTIF) || defined(_WINDOWS)
    if (num < NColors && num >= 0)
     return (Pix_Color[num]);
   else if (num < NColors + NbExtColors && num >= 0)
     return (ExtColor[num - NColors]);
   else
     return ((ThotColor) 0);
-#endif /* _GTK */
+#endif /* #if defined(_MOTIF) || defined(_WINDOWS) */
 }
 
 /*----------------------------------------------------------------------
@@ -468,22 +500,28 @@ ThotColor ColorPixel (int num)
  ----------------------------------------------------------------------*/
 void             TtaFreeThotColor (int num)
 {
+#if !defined(_MOTIF) && !defined(_GTK) && !defined(_WINDOWS)
+  return;
+#endif /* #if !defined(_MOTIF) && !defined(_GTK) && !defined(_WINDOWS) */  
+  
   if (num < NColors + NbExtColors && num >= NColors)
-    {
-      num -= NColors;
-      if (ExtCount_Table[num] == 1)
-	{
-#ifndef _WINDOWS
+  {
+    num -= NColors;
+    if (ExtCount_Table[num] == 1)
+	  {
+
 #ifdef _GTK
-	  gdk_colors_free (TtCmap, &ExtColor[num], 1, (gulong)0);
-#else /* _GTK */
-	  XFreeColors (TtDisplay, TtCmap, &ExtColor[num], 1, (unsigned long) 0);
+	    gdk_colors_free (TtCmap, &ExtColor[num], 1, (gulong)0);
 #endif /* _GTK */
-#endif /* _WINDOWS */
-	  ExtColor[num] = (ThotColor) 0;
-	}
-      ExtCount_Table[num]--;
-    }
+
+#ifdef _MOTIF    
+	    XFreeColors (TtDisplay, TtCmap, &ExtColor[num], 1, (unsigned long) 0);
+#endif /* _GTK */
+
+	    ExtColor[num] = (ThotColor) 0;
+	  }
+    ExtCount_Table[num]--;
+  }
 }
 
 /*----------------------------------------------------------------------
@@ -498,11 +536,17 @@ int TtaGetThotColor (unsigned short red, unsigned short green,
    int                 i, prev;
    unsigned int        dsquare;
    unsigned int        best_dsquare = (unsigned int) -1;
-#ifndef _WINDOWS
+
+#if defined(_MOTIF) || defined(_GTK)
    ThotColorStruct     col;
-#endif /* _WINDOWS */
+#endif /* #if defined(_MOTIF) || defined(_GTK) */
+   
    ThotBool            found;
 
+#if !defined(_MOTIF) && !defined(_GTK) && !defined(_WINDOWS)
+  return 0;
+#endif /* #if !defined(_MOTIF) && !defined(_GTK) && !defined(_WINDOWS) */  
+   
    /*
     * lookup for the color number among the color set allocated
     * by the application.
@@ -556,13 +600,16 @@ int TtaGetThotColor (unsigned short red, unsigned short green,
 	   /* try to allocate the right color */
 #ifdef _WINDOWS
 	   ExtColor[prev] = RGB ((BYTE)red, (BYTE)green, (BYTE)blue);
-#else  /* _WINDOWS */
+#endif  /* _WINDOWS */
+
+#if defined(_MOTIF) || defined(_GTK)
 	   col.red   = red * 256;
 	   col.green = green * 256;
 	   col.blue  = blue * 256;
 	   FindOutColor (TtDisplay, (Colormap)TtCmap, &col);
 	   ExtColor[prev] = col.pixel;
-#endif /* _WINDOWS */
+#endif /* #if defined(_MOTIF) || defined(_GTK) */
+     
 	   /* check if this color is already in the table */
 	   found = FALSE;
 	   for (i = 0; i < NColors && !found; i++)
@@ -576,11 +623,14 @@ int TtaGetThotColor (unsigned short red, unsigned short green,
 	       ExtRGB_Table[prev].red = red;
 	       ExtRGB_Table[prev].green = green;
 	       ExtRGB_Table[prev].blue = blue;
-#else  /* _WINDOWS */
+#endif  /* _WINDOWS */
+         
+#if defined(_MOTIF) || defined(_GTK)         
 	       ExtRGB_Table[prev].red = col.red / 256;
 	       ExtRGB_Table[prev].green = col.green / 256;
 	       ExtRGB_Table[prev].blue = col.blue / 256;
-#endif /* _WINDOWS */
+#endif /* #if defined(_MOTIF) || defined(_GTK) */
+         
 	       best = prev + NColors;
 	       ExtCount_Table[prev] = 1;
 	       if (prev == NbExtColors)
@@ -1066,7 +1116,8 @@ Pixmap CreatePattern (int disp, int fg, int bg, int motif)
      }
    /* WIN_LastBitmap = hBitmap; */
    pixmap = hBitmap;
-#else /* _WINDOWS */
+#endif /* _WINDOWS */
+   
 #ifdef _GTK
    switch (motif)
      {
@@ -1190,7 +1241,9 @@ Pixmap CreatePattern (int disp, int fg, int bg, int motif)
        pixmap = None;
        break;
      }
-#else /* _GTK */
+#endif /* _GTK */
+
+#ifdef _MOTIF   
    switch (motif)
      {
      case 1:
@@ -1314,7 +1367,7 @@ Pixmap CreatePattern (int disp, int fg, int bg, int motif)
        break;
      }
    XFlush (TtDisplay);
-#endif /* _GTK */
-#endif /* _WINDOWS */
+#endif /* _MOTIF */
+
    return (pixmap);
 }

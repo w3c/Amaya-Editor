@@ -360,13 +360,17 @@ static int FontFaceSize (GL_font *font, unsigned int size, unsigned int res)
   if (size == font->size)
     return 0;
   size = SUPERSAMPLINGMUL (size);
-#ifndef _WINDOWS
+
+#ifdef _GTK
   err = FT_Set_Char_Size (font->face, 0, size * 64, res, res);
   if (err) 
     err = FT_Set_Char_Size (font->face, 0, size * 64, 75, 75);
-#else /*_WINDOWS*/
+#endif /* #ifdef _GTK */
+
+#ifdef _WINDOWS
   err = FT_Set_Char_Size (font->face, 0, size * 64, 96, 96);
 #endif /*_WINDOWS*/
+
   /*res x_resolution, res, y_resolution*/
   if (err)
     return err;
