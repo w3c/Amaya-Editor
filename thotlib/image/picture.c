@@ -1837,6 +1837,8 @@ int                 frame;
                   WinErrorBox (NULL, "DrawPicture (3)");
 			    
                PrintDIB (lpBmpInfo, lpBits, FrRef [frame], TtPrinterDC, xFrame, yFrame, box->BxWidth, box->BxHeight) ;
+               if (GlobalFree (lpBits) != NULL)
+                  WinErrorBox (NULL, "DrawPicture (4)");
 		}
 	 } else {
            (*(PictureHandlerTable[typeImage].Produce_Postscript)) (fileName, pres, xFrame, yFrame, wFrame, hFrame, picXArea,
