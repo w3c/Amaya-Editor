@@ -586,7 +586,7 @@ LRESULT CALLBACK InitNumAttrDialogWndProc (ThotWindow hwnd, UINT iMsg,
 			      10, 20, 120, 20, hwnd, (HMENU) ID_EDITVALUE,
 			      ((LPCREATESTRUCT) lParam)->hInstance, NULL);
       /* set the font of the window */
-      WIN_SetDialogfont (hwndEdit);
+      WIN_SetDialogfont (hwnEdit);
       SetDlgItemInt (hwnd, ID_EDITVALUE, formValue, TRUE);
       if (lpfnTextZoneWndProc == (WNDPROC) 0)
 	lpfnTextZoneWndProc = (WNDPROC) SetWindowLong (hwnEdit, GWL_WNDPROC,
