@@ -1131,21 +1131,6 @@ BEGIN
     PUSHBUTTON      "Flush Cache",ID_FLUSHCACHE,126,156,49,14
 END
 
-DE_PROXYMENU DIALOG DISCARDABLE  0, 0, 190, 114
-STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
-CAPTION "Proxy Preferences"
-FONT 8, "MS Sans Serif"
-BEGIN
-    DEFPUSHBUTTON   "Apply",ID_APPLY,7,93,50,14
-    PUSHBUTTON      "Done",ID_DONE,133,93,50,14
-    PUSHBUTTON      "Defaults",ID_DEFAULTS,70,93,50,14
-    LTEXT           "HTTP proxy",IDC_STATIC,7,7,39,8
-    EDITTEXT        IDC_HTTPPROXY,7,19,176,14,ES_AUTOHSCROLL
-    LTEXT           "No proxy on these domains",IDC_STATIC,7,41,86,8
-    EDITTEXT        IDC_NOPROXY,7,54,175,14,ES_AUTOHSCROLL
-    LTEXT           "(Separate entries with a space)",IDC_STATIC,7,74,98,8
-END
-
 DE_GETALTERNATEDIALOG DIALOG DISCARDABLE  0, 0, 267, 68
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Alternate Text"
@@ -1240,6 +1225,25 @@ BEGIN
     LTEXT           "Profile selection",-1,7,42,200,11
     EDITTEXT        IDC_PROFILENAME,7,111,131,13,ES_AUTOHSCROLL | NOT 
                     WS_TABSTOP
+END
+
+DE_PROXYMENU DIALOG DISCARDABLE  0, 0, 189, 137
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Proxy Preferences"
+FONT 8, "MS Sans Serif"
+BEGIN
+    DEFPUSHBUTTON   "Apply",ID_APPLY,7,116,50,14
+    PUSHBUTTON      "Done",ID_DONE,132,116,50,14
+    PUSHBUTTON      "Defaults",ID_DEFAULTS,70,116,50,14
+    LTEXT           "HTTP proxy",IDC_STATIC,7,7,39,8
+    EDITTEXT        IDC_HTTPPROXY,7,19,175,14,ES_AUTOHSCROLL
+    LTEXT           "Proxy domain list",IDC_STATIC,7,41,53,8
+    EDITTEXT        IDC_PROXYDOMAIN,7,54,175,14,ES_AUTOHSCROLL
+    LTEXT           "(Separate entries with a space)",IDC_STATIC,7,73,98,8
+    CONTROL         "Don't proxy these domains",IDC_NOPROXY,"Button",
+                    BS_AUTORADIOBUTTON,7,86,114,9
+    CONTROL         "Proxy only these domains",IDC_ONLYPROXY,"Button",
+                    BS_AUTORADIOBUTTON,7,99,115,9
 END
 
 
@@ -1472,14 +1476,6 @@ BEGIN
         BOTTOMMARGIN, 171
     END
 
-    DE_PROXYMENU, DIALOG
-    BEGIN
-        LEFTMARGIN, 7
-        RIGHTMARGIN, 183
-        TOPMARGIN, 7
-        BOTTOMMARGIN, 107
-    END
-
     DE_GETALTERNATEDIALOG, DIALOG
     BEGIN
         LEFTMARGIN, 7
@@ -1526,6 +1522,14 @@ BEGIN
         RIGHTMARGIN, 207
         TOPMARGIN, 7
         BOTTOMMARGIN, 160
+    END
+
+    DE_PROXYMENU, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 182
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 130
     END
 END
 #endif    // APSTUDIO_INVOKED
@@ -2667,19 +2671,23 @@ BEGIN
     PUSHBUTTON      "Flush Cache",ID_FLUSHCACHE,126,156,49,14
 END
 
-EN_PROXYMENU DIALOG DISCARDABLE  0, 0, 190, 114
+EN_PROXYMENU DIALOG DISCARDABLE  0, 0, 189, 137
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Proxy Preferences"
 FONT 8, "MS Sans Serif"
 BEGIN
-    DEFPUSHBUTTON   "Apply",ID_APPLY,7,93,50,14
-    PUSHBUTTON      "Done",ID_DONE,133,93,50,14
-    PUSHBUTTON      "Defaults",ID_DEFAULTS,70,93,50,14
+    DEFPUSHBUTTON   "Apply",ID_APPLY,7,116,50,14
+    PUSHBUTTON      "Done",ID_DONE,132,116,50,14
+    PUSHBUTTON      "Defaults",ID_DEFAULTS,70,116,50,14
     LTEXT           "HTTP proxy",IDC_STATIC,7,7,39,8
-    EDITTEXT        IDC_HTTPPROXY,7,19,176,14,ES_AUTOHSCROLL
-    LTEXT           "No proxy on these domains",IDC_STATIC,7,41,86,8
-    EDITTEXT        IDC_NOPROXY,7,54,175,14,ES_AUTOHSCROLL
-    LTEXT           "(Separate entries with a space)",IDC_STATIC,7,74,98,8
+    EDITTEXT        IDC_HTTPPROXY,7,19,175,14,ES_AUTOHSCROLL
+    LTEXT           "Proxy domain list",IDC_STATIC,7,41,53,8
+    EDITTEXT        IDC_PROXYDOMAIN,7,54,175,14,ES_AUTOHSCROLL
+    LTEXT           "(Separate entries with a space)",IDC_STATIC,7,73,98,8
+    CONTROL         "Don't proxy these domains",IDC_NOPROXY,"Button",
+                    BS_AUTORADIOBUTTON,7,86,114,9
+    CONTROL         "Proxy only these domains",IDC_ONLYPROXY,"Button",
+                    BS_AUTORADIOBUTTON,7,99,115,9
 END
 
 EN_GEOMETRYMENU DIALOG DISCARDABLE  0, 0, 266, 65
@@ -2996,9 +3004,9 @@ BEGIN
     EN_PROXYMENU, DIALOG
     BEGIN
         LEFTMARGIN, 7
-        RIGHTMARGIN, 183
+        RIGHTMARGIN, 182
         TOPMARGIN, 7
-        BOTTOMMARGIN, 107
+        BOTTOMMARGIN, 130
     END
 
     EN_GEOMETRYMENU, DIALOG
@@ -4301,21 +4309,24 @@ BEGIN
     EDITTEXT        IDC_CACHEDIRECTORY,8,79,202,12,ES_AUTOHSCROLL
 END
 
-FR_PROXYMENU DIALOG DISCARDABLE  0, 0, 190, 114
+FR_PROXYMENU DIALOG DISCARDABLE  0, 0, 189, 138
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Configuration du Proxy"
 FONT 8, "MS Sans Serif"
 BEGIN
-    DEFPUSHBUTTON   "Appliquer",ID_APPLY,7,93,50,14
-    PUSHBUTTON      "Terminer",ID_DONE,133,93,50,14
-    PUSHBUTTON      "Défauts",ID_DEFAULTS,70,93,50,14
+    DEFPUSHBUTTON   "Appliquer",ID_APPLY,7,117,50,14
+    PUSHBUTTON      "Terminer",ID_DONE,132,117,50,14
+    PUSHBUTTON      "Défauts",ID_DEFAULTS,70,117,50,14
     LTEXT           "Proxy HTTP",IDC_STATIC,7,7,40,8
-    EDITTEXT        IDC_HTTPPROXY,7,19,176,14,ES_AUTOHSCROLL
-    LTEXT           "Ne pas utiliser un proxy avec ces domaines",IDC_STATIC,
-                    7,41,137,8
-    EDITTEXT        IDC_NOPROXY,7,54,175,14,ES_AUTOHSCROLL
-    LTEXT           "(séparer les entrées avec un espace)",IDC_STATIC,7,74,
+    EDITTEXT        IDC_HTTPPROXY,7,19,175,14,ES_AUTOHSCROLL
+    LTEXT           "Domaines du proxy",IDC_STATIC,7,41,61,8
+    EDITTEXT        IDC_PROXYDOMAIN,7,54,175,14,ES_AUTOHSCROLL
+    LTEXT           "(séparer les entrées avec un espace)",IDC_STATIC,7,73,
                     118,8
+    CONTROL         "Ne pas utiliser le proxy avec ces domaines",IDC_NOPROXY,
+                    "Button",BS_AUTORADIOBUTTON,7,86,149,9
+    CONTROL         "Utiliser le proxy uniquement avec ces domaines",
+                    IDC_ONLYPROXY,"Button",BS_AUTORADIOBUTTON,7,99,163,9
 END
 
 FR_GETALTERNATEDIALOG DIALOG DISCARDABLE  0, 0, 267, 68
@@ -4651,9 +4662,9 @@ BEGIN
     FR_PROXYMENU, DIALOG
     BEGIN
         LEFTMARGIN, 7
-        RIGHTMARGIN, 183
+        RIGHTMARGIN, 182
         TOPMARGIN, 7
-        BOTTOMMARGIN, 107
+        BOTTOMMARGIN, 131
     END
 
     FR_GETALTERNATEDIALOG, DIALOG
