@@ -1,9 +1,36 @@
-i! file MathML.trans : structure transformation for MathML
+! file MathML.trans : structure transformation for MathML
 ! see HTML.trans for a description of Trans language
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 ! WARNING : transformations do NOT work with Multiscript elements
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+ 
+!!! Parenthesis Transformations
+
+!surround an element with parentheses
+mettre entre parenthèses:*;
+        {
+        * > mrow:mo."(";
+        * > mrow:*;
+        * > mrow:mo.")";
+        }
+
+!surround a sequence of elements with parentheses
+!group: first:*,?*+, last:* ;
+!        {
+!        first > mrow:mo."(";
+!        first > mrow:*;
+!        * > mrow:*;
+!        last > mrow:*;
+!        last > mrow:mo.")";
+!        }
+
+!remove parenthesis
+retirer les parenthèses: mrow{mf,?*+,mf};
+	{
+	mf /;
+	* > :*;
+	}
 
 !!! mrow transformations
 
@@ -321,31 +348,5 @@ changer en msubsup: munderover{base:*,under:*,over:*};
   under > msubsup:*;
   over > msubsup:*;
   }
- 
-!!! Parenthesis Transformations
 
-!surround an element with parentheses
-mettre entre parenthèses:*;
-        {
-        * > mrow:mo."(";
-        * > mrow:*;
-        * > mrow:mo.")";
-        }
-
-!surround a sequence of elements with parentheses
-!group: first:*,?*+, last:* ;
-!        {
-!        first > mrow:mo."(";
-!        first > mrow:*;
-!        * > mrow:*;
-!        last > mrow:*;
-!        last > mrow:mo.")";
-!        }
-
-!remove parenthesis
-retirer les parenthèses: mrow{mf,?*+,mf};
-	{
-	mf /;
-	* > :*;
-	}
 

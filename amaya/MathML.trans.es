@@ -4,6 +4,33 @@
 
 ! NOTA: las transformaciones no funcionan con elementos multiscript
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+ 
+!!! Transformaciones de paréntesis
+
+! Incluir un elemento entre paréntesis
+Entre paréntesis:*;
+        {
+        * > mrow:mo."(";
+        * > mrow:*;
+        * > mrow:mo.")";
+        }
+
+! Incluir una secuencia de elementos entre paréntesis
+!grupo: first:*,?*+, last:* ;
+!        {
+!        first > mrow:mo."(";
+!        first > mrow:*;
+!        * > mrow:*;
+!        last > mrow:*;
+!        last > mrow:mo.")";
+!        }
+
+! Eliminar paréntesis
+Eliminar paréntesis: mrow{mf,?*+,mf};
+	{
+	mf /;
+	* > :*;
+	}
 
 !!! transformaciones mrow
 
@@ -321,31 +348,4 @@ msubsup: munderover{base:*,under:*,over:*};
   under > msubsup:*;
   over > msubsup:*;
   }
- 
-!!! Transformaciones de paréntesis
-
-! Incluir un elemento entre paréntesis
-Entre paréntesis:*;
-        {
-        * > mrow:mo."(";
-        * > mrow:*;
-        * > mrow:mo.")";
-        }
-
-! Incluir una secuencia de elementos entre paréntesis
-!grupo: first:*,?*+, last:* ;
-!        {
-!        first > mrow:mo."(";
-!        first > mrow:*;
-!        * > mrow:*;
-!        last > mrow:*;
-!        last > mrow:mo.")";
-!        }
-
-! Eliminar paréntesis
-Eliminar paréntesis: mrow{mf,?*+,mf};
-	{
-	mf /;
-	* > :*;
-	}
 
