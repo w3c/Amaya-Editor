@@ -395,6 +395,15 @@ boolean             rep;
 	    case FnNoLine:
 	       TtaWriteByte (outfile, C_PF_NOLINE);
 	       break;
+	    case FnShowBox:
+	       TtaWriteByte (outfile, C_PF_SHOWBOX);
+	       break;
+	    case FnBackgroundPicture:
+	       TtaWriteByte (outfile, C_PF_BGPICTURE);
+	       break;
+	    case FnPictureMode:
+	       TtaWriteByte (outfile, C_PF_PICTUREMODE);
+	       break;
 	    default:
 	       fprintf (stderr, "Invalid function %X\n", functType);
 	       break;
@@ -997,7 +1006,8 @@ PtrPRule            pPRule;
 		    WriteFunctionType (currentRule->PrPresFunction,
 				       currentRule->PrPresBoxRepeat);
 		    if (currentRule->PrPresFunction != FnLine
-			&& currentRule->PrPresFunction != FnNoLine)
+			&& currentRule->PrPresFunction != FnNoLine
+			&& currentRule->PrPresFunction != FnShowBox)
 		      {
 			 WriteBoolean (currentRule->PrExternal);
 			 WriteBoolean (currentRule->PrElement);

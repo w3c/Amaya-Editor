@@ -980,9 +980,42 @@ PtrPRule            pR;
 	       fprintf (output, "Content: Cste");
 	       wrnb (pRe1->PrPresBox[0]);
 	       break;
+	    case FnShowBox:
+	       fprintf (output, "ShowBox");
+	       break;
+	    case FnBackgroundPicture:
+	       fprintf (output, "BackgroundPicture: Cste");
+	       wrnb (pRe1->PrPresBox[0]);
+	       break;
+            case FnPictureMode:
+               fprintf (output, "PictureMode: ");
+               switch (pRe1->PrPresBox[0])
+                 {
+                 case RealSize:
+                    fprintf (output, "NormalSize");
+                    break;
+                 case ReScale:
+                    fprintf (output, "Scale");
+                    break;
+                 case FillFrame:
+                    fprintf (output, "RepeatXY");
+                    break;
+                 case XRepeat:
+                    fprintf (output, "RepeatX");
+                    break;
+                 case YRepeat:
+                    fprintf (output, "RepeatY");
+                    break;
+                 default:
+                    fprintf (output, "????");
+                    break;
+                 }
+               break;
 	 }
    if (pRe1->PrPresFunction != FnLine && pRe1->PrPresFunction != FnContentRef
-       && pRe1->PrPresFunction != FnNoLine)
+       && pRe1->PrPresFunction != FnNoLine && pRe1->PrPresFunction != ShowBox
+       && pRe1->PrPresFunction != FnPictureMode
+       && pRe1->PrPresFunction != FnBackgroundPicture)
      {
 	fprintf (output, "(");
 	if (pRe1->PrNPresBoxes == 0)

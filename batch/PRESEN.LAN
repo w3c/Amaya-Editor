@@ -127,7 +127,13 @@ Rule4 =		  'LineStyle' ':' LineStyleInherit /
 		  'LineWeight' ':' DistInherit /
 		  'FillPattern' ':' NameInherit /
 		  'Background' ':' NameInherit /
-		  'Foreground' ':' NameInherit .
+		  'Foreground' ':' NameInherit /
+		  'ShowBox' /
+		  'BackgroundPicture' ':' FileName /
+		  'PictureMode' ':' PictMode .
+
+FileName =	  STRING .
+PictMode =	  'NormalSize' / 'Scale' / 'RepeatXY' / 'RepeatX' / 'RepeatY' .
 
 LineStyleInherit = Link '=' / 'Solid' / 'Dashed' / 'Dotted' .
 

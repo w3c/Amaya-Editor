@@ -32,7 +32,7 @@ PRINT
 #define ATTR_Color Blue
 #define ATTRVALUE_Color Black
 #define INVALID_Color Red
-#define UNKNOWNTAG_Color Orange
+#define UNKNOWNTAG_Color Red
 #define LINK_Color DarkIndigo1
 #define TARGET_Color DarkGreen2
 #endif

@@ -165,13 +165,18 @@ int                 imagetype;
 	  }
       ppav->AbPictInfo = ppav->AbElement->ElPictInfo;
      }
-   else
+   else if (ppav->AbPresentationBox)
      {
        /*  Ce n'est pas un element image -> Creation du descripteur */
        image = (PictInfo *) TtaGetMemory (sizeof (PictInfo));
        ppav->AbPictInfo = (int *) image;
      }
-  
+   else if (ppav->AbLeafType == LtCompound)
+     {
+       image = (PictInfo *) TtaGetMemory (sizeof (PictInfo));
+       ppav->AbPictBackground = (int *) image;
+     }
+
   if (image)
     {
       /* Initialize image descriptor */

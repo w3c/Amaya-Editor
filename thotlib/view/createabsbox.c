@@ -2581,6 +2581,13 @@ boolean             completeCreator;
 			       FreePictInfo (pAb->AbPictInfo);
 			    pAb->AbPictInfo = NULL;
 			 }
+		       else if (pAb->AbLeafType == LtCompound &&
+				pAb->AbPictBackground != NULL)
+			 {
+			 FreePictInfo (pAb->AbPictBackground);
+			 pAb->AbPictBackground = NULL;
+			 }
+			 
 		       FreeAbstractBox (pAb);
 		    }
 		  else if (pAb)

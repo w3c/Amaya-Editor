@@ -1235,11 +1235,6 @@ int                *carIndex;
 			 split = TRUE;
 			 pCurrentBox->BxType = BoGhost;
 		      }
-		    /*********************** TEST ****************/
-		    if (pAb->AbFillPattern != 0)
-		      pAb->AbFillBox = TRUE;
-		    /*********************** TEST ****************/
-
 		    /* Is there a background image ? */
 		    if (pAb->AbPictBackground != NULL)
 		      {
@@ -2019,11 +2014,6 @@ int                 frame;
 	       }
 	     else if (pAb->AbLeafType == LtCompound)
 	       {
-		 /*********************** TEST ****************/
-		 if (pAb->AbFillPattern != 0)
-		   pAb->AbFillBox = TRUE;
-		 /*********************** TEST ****************/
-
 		 /* Is there a background image ? */
 		 if (pAb->AbPictBackground != NULL)
 		   {

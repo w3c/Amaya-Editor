@@ -356,6 +356,15 @@ boolean            *repeat;
 	    case C_PF_NOLINE:
 	       functType = FnNoLine;
 	       break;
+	    case C_PF_SHOWBOX:
+	       functType = FnShowBox;
+	       break;
+	    case C_PF_BGPICTURE:
+	       functType = FnBackgroundPicture;
+	       break;
+	    case C_PF_PICTUREMODE:
+	       functType = FnPictureMode;
+	       break;
 	    default:
 	       error = True;
 	       functType = FnLine;
@@ -1130,7 +1139,8 @@ PtrPRule           *pNextPRule;
 			    pPR->PrPresBoxRepeat = FALSE;
 			    pPR->PrPresFunction = ReadFunctionType (file, &pPR->PrPresBoxRepeat);
 			    if (pPR->PrPresFunction != FnLine
-				&& pPR->PrPresFunction != FnNoLine)
+				&& pPR->PrPresFunction != FnNoLine
+				&& pPR->PrPresFunction != FnShowBox)
 			      {
 				 TtaReadBool (file, &pPR->PrExternal);
 				 TtaReadBool (file, &pPR->PrElement);

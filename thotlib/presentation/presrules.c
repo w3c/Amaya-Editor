@@ -26,6 +26,7 @@
 
 #include "constmedia.h"
 #include "typemedia.h"
+#include "fileaccess.h"
 #include "picture.h"
 #include "appdialogue.h"
 
@@ -40,6 +41,7 @@
 #include "appdialogue_f.h"
 #include "viewcommands_f.h"
 #include "exceptions_f.h"
+#include "fileaccess_f.h"
 #include "absboxes_f.h"
 #include "abspictures_f.h"
 #include "buildboxes_f.h"
@@ -3445,16 +3447,18 @@ PtrAttribute        pAttr;
    TypeUnit            unit;
    AbPosition          Posit;
    char                c;
-   int                 viewSch;
+   int                 viewSch, i;
    PtrAbstractBox      pAbb1;
    PictInfo           *myPictInfo;
+   PresConstant	      *pConst;
+   char		       fname[MAX_PATH];
+   PathBuffer	       directoryName;
 
 #ifdef __COLPAGE__
    *destroyedAb = FALSE;
 #else  /* __COLPAGE__ */
    boolean             insidePage, afterPageBreak;
    AbPosition         *pPavP1;
-
 #endif /* __COLPAGE__ */
 
    appl = TRUE;
@@ -3881,6 +3885,52 @@ PtrAttribute        pAttr;
 				   break;
 				case FnContentRef:
 				   ConstantCopy (pPRule->PrPresBox[0], pSchP, pAb);
+				   break;
+				case FnShowBox:
+				   if (pAbb1->AbLeafType == LtCompound)
+				     if (pPRule->PrViewNum == viewSch)
+				        pAbb1->AbFillBox = TRUE;
+				   break;
+				case FnBackgroundPicture:
+				   if (pAbb1->AbLeafType == LtCompound)
+				     if (pPRule->PrViewNum == viewSch)
+					{
+					pConst = &pSchP->PsConstant[pPRule->PrPresBox[0] - 1];
+					if (pConst->PdString[0] != '\0')
+					  {
+					  if (pConst->PdString[0] == '/')
+					     /* absolute file name */
+					     strncpy (fname, pConst->PdString, MAX_PATH - 1);
+					  else
+					     /* relative file name */
+					     {
+					     strncpy (directoryName, SchemaPath, MAX_PATH - 1);
+					     MakeCompleteName (pConst->PdString, "", directoryName, fname, &i);
+					     }
+					  NewPictInfo (pAbb1, fname, UNKNOWN_FORMAT);
+					  }
+					}
+				   break;
+				case FnPictureMode:
+				   if (pPRule->PrViewNum == viewSch)
+				     if (pAbb1->AbElement->ElTerminal &&
+					 pAbb1->AbElement->ElLeafType == LtPicture)
+					{
+					if (pAbb1->AbElement->ElPictInfo != NULL)
+					   ((PictInfo *) (pAbb1->AbElement->ElPictInfo))->PicPresent = pPRule->PrPresBox[0];
+					}
+				     else if (pAbb1->AbPresentationBox)
+					{
+					if (pAbb1->AbPictInfo != NULL)
+					   ((PictInfo *) (pAbb1->AbPictInfo))->PicPresent =
+							pPRule->PrPresBox[0];
+					}
+				     else if (pAbb1->AbLeafType == LtCompound)
+				        {
+					if (pAbb1->AbPictBackground != NULL)
+					   ((PictInfo *) (pAbb1->AbPictBackground))->PicPresent =
+							pPRule->PrPresBox[0];
+					}
 				   break;
 				default:
 				   break;

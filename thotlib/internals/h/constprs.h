@@ -148,6 +148,9 @@
 #define C_PF_COPY 'C'
 #define C_PF_REF_CONTENT 'r'
 #define C_PF_NOLINE 'N'
+#define C_PF_SHOWBOX 'B'
+#define C_PF_BGPICTURE 'b'
+#define C_PF_PICTUREMODE 'M'
 
 /* counters presentation style */
 #define C_NUM_ARABIC 'A'

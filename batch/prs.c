@@ -630,9 +630,14 @@ indLine             wi;
 
 {
    if (pPSchema->PsNConstants >= MAX_PRES_CONST)
-      CompilerMessage (wi, PRS, FATAL, MAX_CONSTANTS_OVERFLOW, inputLine, LineNum);
+      CompilerMessage (wi, PRS, FATAL, MAX_CONSTANTS_OVERFLOW, inputLine,
+		       LineNum);
    else
-      pPSchema->PsConstant[pPSchema->PsNConstants++].PdAlphabet = 'L';
+      {
+      pPSchema->PsConstant[pPSchema->PsNConstants].PdAlphabet = 'L';
+      pPSchema->PsConstant[pPSchema->PsNConstants].PdType = CharString;
+      pPSchema->PsNConstants++;
+      }
 }
 
 
@@ -1157,6 +1162,7 @@ SyntacticCode       gCode;
 	       if (gCode == RULE_VarConst)
 		  /* dans une regle VarConst */
 		  if (PresBoxDef)
+		    /* dans la regle Content d'une boite de presentation */
 		    {
 		       NewVar (wi);	/* cree une nouvelle variable */
 		       pPSchema->PsPresentBox[CurPresBox - 1].PbContent = ContVariable;
@@ -1164,9 +1170,9 @@ SyntacticCode       gCode;
 		       NewVariableDef = True;
 		    }
 		  else
-		     /* dans une regle Content d'une paire ou d'une reference, */
-		     /* on refuse: seules les constantes sont acceptees dans cette */
-		     /* regle */
+		     /* dans une regle Content d'une paire ou d'une reference,
+		        on refuse: seules les constantes sont acceptees dans
+			cette regle */
 		     CompilerMessage (wi, PRS, FATAL, FORBIDDEN_IN_A_REF, inputLine, LineNum);
 	       else if (gCode == RULE_Rule3)
 		  /* dans Rule3 */
@@ -1371,23 +1377,25 @@ indLine             wi;
 	     pPresVar = &pPSchema->PsVariable[pPSchema->PsNVariables - 1];
 	     NewVarListItem (pPresVar, wi);
 	     pPresVar->PvItem[pPresVar->PvNItems - 1].ViType = VarText;
-	     pPresVar->PvItem[pPresVar->PvNItems - 1].ViConstant = pPSchema->PsNConstants;
+	     pPresVar->PvItem[pPresVar->PvNItems - 1].ViConstant =
+							pPSchema->PsNConstants;
 	  }
 	else
 	   /* on ne peut etre que dans une regle 'Content' */
-	if (PresBoxDef)
-	   /* definition dans une regle Content d'une boite de presentation */
-	  {
+	  if (PresBoxDef)
+	    /* definition dans une regle Content d'une boite de presentation */
+	    {
 	     pPSchema->PsPresentBox[CurPresBox - 1].PbContent = ContConst;
-	     pPSchema->PsPresentBox[CurPresBox - 1].PbContConstant = pPSchema->PsNConstants;
-	  }
-	else if (RuleDef && CurRule->PrPresMode == PresFunction
-		 && CurRule->PrPresFunction == FnContentRef)
-	   /* dans une regle Content d'un element reference ou paire */
-	  {
+	     pPSchema->PsPresentBox[CurPresBox - 1].PbContConstant =
+							pPSchema->PsNConstants;
+	    }
+	  else if (RuleDef && CurRule->PrPresMode == PresFunction
+		   && CurRule->PrPresFunction == FnContentRef)
+	     /* dans une regle Content d'un element reference ou paire */
+	    {
 	     CurRule->PrNPresBoxes = 1;
 	     CurRule->PrPresBox[0] = pPSchema->PsNConstants;
-	  }
+	    }
      }
    pPSchema->PsConstant[pPSchema->PsNConstants - 1].PdType = constType;
 }
@@ -2839,6 +2847,36 @@ indLine             wi;
 	       break;
 	    case KWD_Foreground:
 	       CreatePRule (PtForeground, wi);
+	       break;
+	    case KWD_ShowBox:
+	       LayoutRule (FnShowBox, wi);
+	       break;
+	    case KWD_BackgroundPicture:
+	       /* create a new constant */
+	       NewConst (wi);
+	       LayoutRule (FnBackgroundPicture, wi);
+	       CurRule->PrNPresBoxes = 1;
+	       CurRule->PrPresBox[0] = pPSchema->PsNConstants;
+	       break;
+	    case KWD_PictureMode:
+	       LayoutRule (FnPictureMode, wi);
+	       CurRule->PrNPresBoxes = 1;
+	       CurRule->PrPresBox[0] = RealSize;
+	       break;
+	    case KWD_NormalSize:
+	       CurRule->PrPresBox[0] = RealSize;
+	       break;
+	    case KWD_Scale:
+	       CurRule->PrPresBox[0] = ReScale;
+	       break;
+	    case KWD_RepeatXY:
+	       CurRule->PrPresBox[0] = FillFrame;
+	       break;
+	    case KWD_RepeatX:
+	       CurRule->PrPresBox[0] = XRepeat;
+	       break;
+	    case KWD_RepeatY:
+	       CurRule->PrPresBox[0] = YRepeat;
 	       break;
 	    case KWD_Solid:
 	       CurRule->PrChrValue = 'S';
@@ -4836,10 +4874,11 @@ indLine             wi;
    int                 i;
    PresConstant       *pPresConst;
 
-   if (gCode == RULE_ConstValue)
-      /* ConstValue c'est une valeur de constante */
+   if (gCode == RULE_ConstValue || gCode == RULE_FileName)
+      /* c'est une valeur de constante ou le nom de fichier d'une image de fond */
       if (wl > MAX_PRES_CONST_LEN)
-	 CompilerMessage (wi, PRS, FATAL, MAX_CHAR_STRING_SIZE_OVERFLOW, inputLine, LineNum);
+	 CompilerMessage (wi, PRS, FATAL, MAX_CHAR_STRING_SIZE_OVERFLOW,
+			  inputLine, LineNum);
       else
 	{
 	   pPresConst = &pPSchema->PsConstant[pPSchema->PsNConstants - 1];
@@ -4847,13 +4886,14 @@ indLine             wi;
 	      pPresConst->PdString[i] = inputLine[wi + i - 1];
 	   pPresConst->PdString[wl - 1] = '\0';
 	}
-   if (gCode == RULE_TextEqual)
+   else if (gCode == RULE_TextEqual)
       /* TextEqual c'est une valeur d'attribut */
       if (pSSchema->SsAttribute[CurAttrNum - 1].AttrType != AtTextAttr)
+	 /* ce n'est pas un attribut a valeur textuelle */
 	 CompilerMessage (wi, PRS, FATAL, INVALID_ATTR_VALUE, inputLine, LineNum);
-   /* ce n'est pas un attribut a valeur textuelle */
       else if (wl > MAX_NAME_LENGTH)
-	 CompilerMessage (wi, PRS, FATAL, MAX_CHAR_STRING_SIZE_OVERFLOW, inputLine, LineNum);
+	 CompilerMessage (wi, PRS, FATAL, MAX_CHAR_STRING_SIZE_OVERFLOW,
+			  inputLine, LineNum);
       else
 	{
 	   for (i = 0; i < wl - 1; i++)
