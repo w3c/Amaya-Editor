@@ -3045,8 +3045,11 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 		     BuildPopdown (ptrmenu, ref, w, frame, doc,
 				   FALSE, FALSE);
 #ifdef _WINGUI
-		   AppendMenu (menu_bar, MF_POPUP, (UINT) w,
-			       TtaGetMessage (THOT, ptrmenu->MenuID));
+           /* Le menu contextuel ne doit pas etre accroche a notre bar de menu */
+		   /* il sera affiche qd le boutton droit de la souris sera active */
+		   if (!ptrmenu->MenuContext)
+		     AppendMenu( menu_bar, MF_POPUP, (UINT) w,
+			             TtaGetMessage (THOT, ptrmenu->MenuID) );
 #endif  /* _WINGUI */
 		   }
 	       ptrmenu = ptrmenu->NextMenu;
