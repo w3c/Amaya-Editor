@@ -801,6 +801,10 @@ void CallbackReqAttrMenu (int ref, int val, char *txt)
 	{
 	  TtaDestroyDialogue (NumMenuAttrRequired);
 	  MandatoryAttrFormExists = FALSE;
+#ifdef _WX
+	  PtrReqAttr = NULL;
+	  PtrDocOfReqAttr = NULL;
+#endif /* _WX */
 	}
       /* on ne fait rien d'autre : tout a ete fait par les cas */
       /* suivants */
