@@ -34,6 +34,7 @@
 #include "font_f.h"
 #include "memory_f.h"
 #include "picture_f.h"
+#include "registry_f.h"
 #include "units_f.h"
 #include "xwindowdisplay_f.h"
 
@@ -1147,6 +1148,36 @@ ThotBool LocateNextChar (PtrTextBuffer *adbuff, int *ind, ThotBool rtl)
     }
   return TRUE;
 }
+
+/*----------------------------------------------------------------------
+  TranslateChars replaces a character by a visual equivalent character.
+  ----------------------------------------------------------------------*/
+static int TranslateChars (int c, ThotBool showSpecial)
+{
+  if (c == START_ENTITY)
+    /* display '&' */
+    return 0x26;
+  else if (!Printing && showSpecial)
+    /* show special characters */
+    switch (c)
+      {
+      case TAB:
+	return SHOWN_TAB;
+      case BREAK_LINE:
+	return SHOWN_BREAK_LINE;
+      case THIN_SPACE:
+	return SHOWN_THIN_SPACE;
+      case FOUR_PER_EM:
+	return SHOWN_HALF_EM;
+      case UNBREAKABLE_SPACE:
+	return SHOWN_UNBREAKABLE_SPACE;
+      default:
+	return c;
+      }
+  else
+    return c;
+}
+
 /*----------------------------------------------------------------------
   DisplayJustifiedText display the content of a Text box tweaking
   the space sizes to ajust line length to the size of the frame.
@@ -1165,7 +1196,8 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
   SpecFont            font;
   ThotFont            prevfont = NULL;
   ThotFont            nextfont = NULL;
-  CHAR_T              c;
+  CHAR_T              c, transc;
+  CHAR_T              prevChar, nextChar;
   wchar_t            *wbuffer = NULL;
   unsigned char      *buffer = NULL;
   char                script;
@@ -1182,8 +1214,7 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
   int                 left, right;
   ThotBool            shadow;
   ThotBool            blockbegin, withinSel = FALSE;
-  ThotBool            hyphen, rtl;
-  CHAR_T              prevChar, nextChar;
+  ThotBool            hyphen, rtl, showSpecial = FALSE;
 
 #ifdef _GL
   SetTextureScale (IsBoxDeformed(pBox));
@@ -1194,6 +1225,10 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
   indbuff = 0;
   restbl = 0;
   pAb = pBox->BxAbstractBox;
+  if (pAb->AbElement && pAb->AbElement->ElStructSchema &&
+      !strcmp (pAb->AbElement->ElStructSchema->SsName, "TextFile"))
+    /* only for TextFile documents */
+    TtaGetEnvBoolean ("SHOW_SPECIAL_CHARS", &showSpecial);
   script = pBox->BxScript;
   /* is it a box with a right-to-left writing? */
   if (pAb->AbUnicodeBidi == 'O')
@@ -1462,6 +1497,8 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 	      else
 	        c = adbuff->BuContent[indbuff];
 
+	      /* check if a translation is requested */
+	      transc = TranslateChars (c, showSpecial);
 	      /* get the font index into val */
 	      if (c == 0x28 && script == 'A') 
 		c = 0x29;
@@ -1485,10 +1522,10 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 		      else
 			prevChar = 0x0020;
 		    }  
-		  val = GetArabFontAndIndex (c, prevChar, nextChar, font, &nextfont);
+		  val = GetArabFontAndIndex (transc, prevChar, nextChar, font, &nextfont);
 		}
 	      else
-		val = GetFontAndIndexFromSpec (c, font, &nextfont);
+		val = GetFontAndIndexFromSpec (transc, font, &nextfont);
 
 	      if (val == INVISIBLE_CHAR || c == ZERO_SPACE ||
 		  c == EOL || c == BREAK_LINE)
@@ -1599,25 +1636,7 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 			  x += w;
 			  bl = 0; /* all previous spaces are managed */
 			}
-		  
-		      if (!ShowSpace)
-			{
-			  /* Show the space chars */
-			  if (c == SPACE || c == TAB) 
-			    DrawChar ((char) SHOWN_SPACE, frame, x, y, nextfont, fg);
-			  else if (c == THIN_SPACE)
-			    DrawChar ((char) SHOWN_THIN_SPACE, frame, x, y, nextfont, fg);
-			  else if (c == FOUR_PER_EM)
-			    DrawChar ((char) SHOWN_HALF_EM, frame, x, y, nextfont, fg);
-			  else if (c == UNBREAKABLE_SPACE)
-			    DrawChar ((char) SHOWN_UNBREAKABLE_SPACE, frame, x, y,
-				      nextfont, fg);
-			}
-		      else
-			/* a new space is handled */
-			bl++;	 
-		      nbcar = 0;
-		      if (c == SPACE)
+		      if (transc == SPACE)
 			{
 			  if (restbl > 0)
 			    {
@@ -1630,6 +1649,14 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 			}
 		      else if (c != EOS)
 			lg = CharacterWidth (c, nextfont);
+
+		      if (transc == SHOWN_SPACE || transc == SHOWN_TAB ||
+			  transc == SHOWN_UNBREAKABLE_SPACE || transc == SHOWN_HALF_EM)
+			/* a new space is handled */
+			DrawChar (val, frame, x, y1, nextfont, BgSelColor);
+		      else
+			bl++;
+		      nbcar = 0;
 		      x += lg;
 		      psW +=lg;
 		      xpos = x;

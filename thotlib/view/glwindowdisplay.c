@@ -678,50 +678,6 @@ static void SetPixelTransferBias (int fg)
 }
 #endif /*_PIXELFONT*/
 
-
-/*----------------------------------------------------------------------
-  TranslateChars replaces in the text space chars to their visual
-  equivalents and the character 128 by '&'.
-  ----------------------------------------------------------------------*/
-void TranslateChars (CHAR_T *text)
-{
-  int                 i;
-
-  if (text == NULL)
-    return;
-  i = 0;
-  while (text[i] != 0)
-    {
-      switch (text[i])
-	{
-	case BREAK_LINE:
-	  if (!ShowSpace)
-	    text[i] = SHOWN_BREAK_LINE;
-	  break;
-	case THIN_SPACE:
-	  if (!ShowSpace)
-	    text[i] = SHOWN_THIN_SPACE;
-	  break;
-	case FOUR_PER_EM:
-	  if (!ShowSpace)
-	    text[i] = SHOWN_HALF_EM;
-	  break;
-	case UNBREAKABLE_SPACE:
-	  if (!ShowSpace)
-	    text[i] = SHOWN_UNBREAKABLE_SPACE;
-	  break;
-	case SPACE:
-	  if (!ShowSpace)
-	    text[i] = SHOWN_SPACE;
-	  break;
-	case START_ENTITY:
-	  text[i] = '&';
-	}
-      i++;
-    }
-}
-
-
 /*----------------------------------------------------------------------
   GL_DrawUnicodeChar : draw a character in a texture or a bitmap 
   ----------------------------------------------------------------------*/
@@ -751,8 +707,6 @@ int GL_DrawString (int fg,  CHAR_T *str, float x, float y,  int hyphen,
   if (end <= 0 || fg < 0 || GL_font == NULL)
     return 0; 
   str[end] = EOS; 
-  TranslateChars (str);
-
   if (Printing)
     {      
       TransText = TRUE;

@@ -347,9 +347,6 @@ void TtaInitialize (char *applicationName)
    InitErrorHandler ();
 #ifndef NODISPLAY
    ConfigInit ();
-   /* Initilizes the space character displaying mode */
-   ShowSpace = 1;
-   InputSpace = 0;
 #endif
    CheckAccessLoadResources ();
 }

@@ -2545,7 +2545,6 @@ int main (int argc, char **argv)
   PostscriptFont = NULL;
   ColorPs = -1;
   Printing = TRUE;
-  ShowSpace = 1;  /* Restitution des espaces */
   InitLanguage ();
 
   /* Initialisation de la gestion memoire */

@@ -33,7 +33,8 @@
 #define HALF_EM           130
 ******/
 
-#define SHOWN_HALF_EM     166 /* HALF-EM display value */
-#define SHOWN_UNBREAKABLE_SPACE 185 /* UNBREAKABLE-SPACE display value */
-#define SHOWN_SPACE       183 /* SPACE display value */
+#define SHOWN_HALF_EM     0xBD /* HALF-EM display value */
+#define SHOWN_UNBREAKABLE_SPACE 0x7E /* UNBREAKABLE-SPACE display value */
+#define SHOWN_SPACE       0xAC /* SPACE display value */
+#define SHOWN_TAB         0xBB /* SPACE display value */
 #endif

@@ -140,48 +140,6 @@ static void DoDrawOneLine (int frame, int x1, int y1, int x2, int y2)
 
 
 /*----------------------------------------------------------------------
-  TranslateChars replaces in the text space chars to their visual
-  equivalents and the character 128 by '&'.
-  ----------------------------------------------------------------------*/
-static void TranslateChars (unsigned char *text)
-{
-  int                 i;
-
-  if (text == NULL)
-    return;
-  i = 0;
-  while (text[i] != 0)
-    {
-      switch (text[i])
-	{
-	case BREAK_LINE:
-      if (!ShowSpace)
-	    text[i] = SHOWN_BREAK_LINE;
-	  break;
-	case THIN_SPACE:
-      if (!ShowSpace)
-	    text[i] = SHOWN_THIN_SPACE;
-	  break;
-	case FOUR_PER_EM:
-      if (!ShowSpace)
-	    text[i] = SHOWN_HALF_EM;
-	  break;
-	case UNBREAKABLE_SPACE:
-      if (!ShowSpace)
-	    text[i] = SHOWN_UNBREAKABLE_SPACE;
-	  break;
-	case SPACE:
-      if (!ShowSpace)
-	    text[i] = SHOWN_SPACE;
-	  break;
-	case START_ENTITY:
-	  text[i] = '&';
-	}
-      i++;
-    }
-}
-
-/*----------------------------------------------------------------------
   DrawChar draw a char at location (x, y) in frame and with font.
   The parameter fg indicates the drawing color
   ----------------------------------------------------------------------*/
@@ -276,7 +234,6 @@ int DrawString (unsigned char *buff, int lg, int frame, int x, int y,
     {
       /* Dealing with BR tag for windows */
       buff[lg] = EOS;
-      TranslateChars (buff);
       j = 0;
       while (j < lg)
 	width += CharacterWidth (buff[j++], font);
