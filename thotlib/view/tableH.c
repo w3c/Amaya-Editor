@@ -755,9 +755,8 @@ static void CheckTableWidths (PtrAbstractBox table, int frame, ThotBool freely)
     }
 
   /* get the extra width of the table */
-  /*mbp =  pBox->BxMinWidth - min - minOfWidth - minOfPercent;*/
-  min = min + mbp;
-  max = max + mbp;
+  min = min;
+  max = max;
   if (sumPercent > 0)
     {
       minOfPercent = sumPercent * width / 100;
@@ -894,8 +893,8 @@ printf ("Specific Widths ...\n");
 		var = delta * box->BxMaxWidth / max;
 	      else
 		var = delta / n;
-	      /* check if the delta could be increased */
 	      if (colPercent[cRef] == 0 && colWidth[cRef] == 0)
+		/* decrease extra pixels */
 		pixels -= var;
 	    }
 	}
@@ -913,7 +912,7 @@ printf ("Specific Widths ...\n");
 		{
 		  box = colBox[cRef]->AbBox;
 		  var = delta * box->BxMaxWidth / max;
-		  /* check if the delat could be increased */
+		  /* check if the delta could be increased */
 		  if (colPercent[cRef] < 0 &&
 		      var - colPercent[cRef] > box->BxMaxWidth)
 		    {
