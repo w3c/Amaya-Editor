@@ -117,57 +117,6 @@ Document doc;
 }
 
 /*----------------------------------------------------------------------
- SelectGraphMLElement
- The user wants to select a new element in a GraphML drawing.
- -----------------------------------------------------------------------*/
-#ifdef __STDC__
-boolean SelectGraphMLElement (NotifyElement *event)
-#else /* __STDC__*/
-boolean SelectGraphMLElement(event)
-     NotifyElement *event;
-#endif /* __STDC__*/
-{
-/******* a revoir ****
-   ElementType	elType;
-   Element	el;
-   boolean	found;
-
-   el = event->element;
-   found = FALSE;
-   while (el && !found)
-      {
-      elType = TtaGetElementType (el);
-      if (strcmp (TtaGetSSchemaName (elType.ElSSchema), "GraphML"))
-	el = NULL;
-      else
-        if (elType.ElTypeNum == GraphML_EL_Line_ ||
-	    elType.ElTypeNum == GraphML_EL_Rectangle ||
-	    elType.ElTypeNum == GraphML_EL_RoundRect ||
-	    elType.ElTypeNum == GraphML_EL_Circle ||
-	    elType.ElTypeNum == GraphML_EL_Oval ||
-	    elType.ElTypeNum == GraphML_EL_Polyline ||
-	    elType.ElTypeNum == GraphML_EL_Polygon ||
-	    elType.ElTypeNum == GraphML_EL_Spline ||
-	    elType.ElTypeNum == GraphML_EL_ClosedSpline ||
-	    elType.ElTypeNum == GraphML_EL_Text_ ||
-	    elType.ElTypeNum == GraphML_EL_Math)
-	   found = TRUE;
-        else
-	   if (elType.ElTypeNum == GraphML_EL_GraphML)
-	     el = NULL;
-	   else
-             el = TtaGetParent (el);
-      }
-   if (found)
-      {
-      TtaSelectElement (event->document, el);
-      return TRUE;
-      }
-******/
-   return FALSE; /* let Thot perform normal operation */
-}
-
-/*----------------------------------------------------------------------
  ExtendSelectGraphMLElement
  The user wants to add a new element in the current selection.
  -----------------------------------------------------------------------*/
@@ -178,27 +127,93 @@ boolean ExtendSelectGraphMLElement(event)
      NotifyElement *event;
 #endif /* __STDC__*/
 {
-   Element	el, ancestor;
-   ElementType	elType;
+   Element	firstSel, newFirstSel, ancestor, parent, selEl;
+   ElementType	elType, ancestType, parentType;
    int		c1, i;
+   SSchema	graphSSchema;
 
-   elType = TtaGetElementType (event->element);
-   if (strcmp (TtaGetSSchemaName (elType.ElSSchema), "GraphML"))
-      /* the element is not a GraphML element */
-      return FALSE;	/* let Thot perform normal operation */
-   TtaGiveFirstSelectedElement (event->document, &el, &c1, &i);
-   if (el == NULL)
+   TtaGiveFirstSelectedElement (event->document, &firstSel, &c1, &i);
+   if (firstSel == NULL)
+      /* the first selected element is not in the same document */
       return TRUE;	/* Don't let Thot perform normal operation */
-   ancestor = TtaGetCommonAncestor (el, event->element);
+   /* get the common ancestor */
+   ancestor = TtaGetCommonAncestor (firstSel, event->element);
    if (ancestor == NULL)
       return TRUE;	/* Don't let Thot perform normal operation */
-   elType = TtaGetElementType (ancestor);
-   if (strcmp (TtaGetSSchemaName (elType.ElSSchema), "GraphML"))
+   graphSSchema = TtaGetSSchema ("GraphML", event->document);
+   ancestType = TtaGetElementType (ancestor);
+   if (ancestType.ElSSchema != graphSSchema)
       /* common ancestor is not a GraphML element */
-      return TRUE;
-   
-   /******** code to be written */
-   TtaAddElementToSelection (event->document, event->element);
+      {
+      /* is the common ancestor within a Label ? */
+      parent = ancestor;
+      do
+	{
+	parent = TtaGetParent (parent);
+        parentType = TtaGetElementType (parent);
+	}
+      while (parent != NULL && parentType.ElSSchema != graphSSchema);
+      if (parent)
+	 /* the common ancestor is within a GraphML element. Let Thot
+	    perform normal operation: selection is being extended within
+	    a Label */
+	 return FALSE;
+      else
+         return TRUE;	/* abort selection */
+      }
+
+   newFirstSel = firstSel;
+   elType = TtaGetElementType (firstSel);
+   if (elType.ElSSchema != graphSSchema ||
+        (elType.ElTypeNum != GraphML_EL_Rectangle &&
+	 elType.ElTypeNum != GraphML_EL_RoundRect &&
+	 elType.ElTypeNum != GraphML_EL_Circle &&
+	 elType.ElTypeNum != GraphML_EL_Oval &&
+	 elType.ElTypeNum != GraphML_EL_Polyline &&
+	 elType.ElTypeNum != GraphML_EL_Polygon &&
+	 elType.ElTypeNum != GraphML_EL_Spline &&
+	 elType.ElTypeNum != GraphML_EL_ClosedSpline &&
+	 elType.ElTypeNum != GraphML_EL_Text_ &&
+	 elType.ElTypeNum != GraphML_EL_Math &&
+	 elType.ElTypeNum != GraphML_EL_Group))
+      {
+      elType.ElSSchema = graphSSchema;
+      elType.ElTypeNum = GraphML_EL_GraphicalElement;
+      newFirstSel = TtaGetTypedAncestor (newFirstSel, elType);
+      }
+
+   selEl = event->element;
+   elType = TtaGetElementType (selEl);
+   if (elType.ElSSchema != graphSSchema ||
+        (elType.ElTypeNum != GraphML_EL_Rectangle &&
+	 elType.ElTypeNum != GraphML_EL_RoundRect &&
+	 elType.ElTypeNum != GraphML_EL_Circle &&
+	 elType.ElTypeNum != GraphML_EL_Oval &&
+	 elType.ElTypeNum != GraphML_EL_Polyline &&
+	 elType.ElTypeNum != GraphML_EL_Polygon &&
+	 elType.ElTypeNum != GraphML_EL_Spline &&
+	 elType.ElTypeNum != GraphML_EL_ClosedSpline &&
+	 elType.ElTypeNum != GraphML_EL_Text_ &&
+	 elType.ElTypeNum != GraphML_EL_Math &&
+	 elType.ElTypeNum != GraphML_EL_Group))
+      {
+      elType.ElSSchema = graphSSchema;
+      elType.ElTypeNum = GraphML_EL_GraphicalElement;
+      selEl = TtaGetTypedAncestor (selEl, elType);
+      }
+
+   if (TtaGetParent (newFirstSel) != TtaGetParent (selEl))
+     {
+     ancestor = TtaGetCommonAncestor (newFirstSel, selEl);
+     while (newFirstSel != NULL && TtaGetParent (newFirstSel) != ancestor)
+         newFirstSel = TtaGetParent (newFirstSel);
+     while (selEl != NULL && TtaGetParent (selEl) != ancestor)
+         selEl = TtaGetParent (selEl);
+     }
+
+   if (newFirstSel != firstSel)
+      TtaSelectElement (event->document, newFirstSel);
+   TtaAddElementToSelection (event->document, selEl);
    return TRUE; /* Don't let Thot perform normal operation */
 }
  
@@ -439,7 +454,7 @@ static void UpdateWidthHeightAttribute (attr, el, doc)
      Document doc;
 #endif /* __STDC__*/
 {
-  ElementType	        elType;
+  ElementType           elType;
    AttributeType	attrType;
    Attribute		extAttr;
    char			buffer[10];
@@ -556,7 +571,6 @@ void AttrPointsModified (event)
   CreatePoints (event->attribute, event->element, event->document);
 }
 
-/***** A quoi sert cette procedure GraphicsPRuleChanged ?  *****/
 /*----------------------------------------------------------------------
  GraphicsPRuleChange
  A presentation rule is going to be changed by Thot.
@@ -568,32 +582,32 @@ boolean    GraphicsPRuleChange (event)
            NotifyPresentation *event;
 #endif /* __STDC__*/
 {
-  Element	el;
-  PRule	presRule;
-  Document	doc;
-  ElementType	elType;
+  Element       el;
+  PRule presRule;
+  Document      doc;
+  ElementType   elType;
   AttributeType  attrType, otherAttrType;
-  Attribute	attr, otherAttr;
-  DisplayMode	dispMode;
-  int		presType;
-  int		mainView, xPos, yPos, width, height, val, otherVal;
+  Attribute     attr, otherAttr;
+  DisplayMode   dispMode;
+  int           presType;
+  int           mainView, xPos, yPos, width, height, val, otherVal;
   boolean      ret;
-
+ 
   ret = FALSE; /* let Thot perform normal operation */
   presType = event->pRuleType;
   if (presType != PRVertPos && presType != PRHorizPos &&
       presType != PRHeight && presType != PRWidth)
     return (ret); /* let Thot perform normal operation */
-  
+ 
   el = event->element;
   doc = event->document;
   presRule = event->pRule;
-
+ 
   mainView = TtaGetViewFromName (doc, "Formatted_view");
   elType = TtaGetElementType (el);
   if (elType.ElSSchema != GetGraphMLSSchema (doc))
     return (ret); /* let Thot perform normal operation */
-
+ 
   attrType.AttrSSchema = elType.ElSSchema;
   dispMode = TtaGetDisplayMode (doc);
   /* ask Thot to stop displaying changes made in the document */
@@ -602,97 +616,97 @@ boolean    GraphicsPRuleChange (event)
   if (presType == PRVertPos || presType == PRHorizPos)
     {
       if (elType.ElTypeNum == GraphML_EL_Rectangle ||
-	  elType.ElTypeNum == GraphML_EL_RoundRect ||
-	  elType.ElTypeNum == GraphML_EL_Circle ||
-	  elType.ElTypeNum == GraphML_EL_Oval ||
-	  elType.ElTypeNum == GraphML_EL_Polyline ||
-	  elType.ElTypeNum == GraphML_EL_Polygon ||
-	  elType.ElTypeNum == GraphML_EL_Spline ||
-	  elType.ElTypeNum == GraphML_EL_ClosedSpline ||
-	  elType.ElTypeNum == GraphML_EL_Text_ ||
-	  elType.ElTypeNum == GraphML_EL_Math ||
-	  elType.ElTypeNum == GraphML_EL_Group)
-	{
-	  TtaGiveBoxPosition (el, doc, mainView, UnPoint, &xPos, &yPos);
-	  val = TtaGetPRuleValue (presRule);
-	  if (presType == PRVertPos)
-	    {
-	      attrType.AttrTypeNum = GraphML_ATTR_IntPosY;
-	      otherAttrType.AttrTypeNum = GraphML_ATTR_IntPosX;
-	      otherVal = xPos;
-	      ret = TRUE; /* don't let Thot perform normal operation */
-	    }
-	  else
-	    {
-	      attrType.AttrTypeNum = GraphML_ATTR_IntPosX;
-	      otherAttrType.AttrTypeNum = GraphML_ATTR_IntPosY;
-	      otherVal = yPos;
-	      ret = TRUE; /* don't let Thot perform normal operation */
-	    }
-
-	  attr = TtaGetAttribute (el, attrType);
-	  if (attr == NULL)
-	    {
-	      attr = TtaNewAttribute (attrType);
-	      TtaAttachAttribute (el, attr, doc);
-	      /* create also a IntPosX attribute is we are creating a IntPosY
-		 attribute, and conversely */
-	      otherAttrType.AttrSSchema = attrType.AttrSSchema;
-	      otherAttr = TtaNewAttribute (otherAttrType);
-	      TtaAttachAttribute (el, otherAttr, doc);
-	      TtaSetAttributeValue (otherAttr, otherVal, el, doc);
-	    }
-	  TtaSetAttributeValue (attr, val, el, doc);
-	  UpdatePositionAttribute (attr, el, doc);
-	}
+          elType.ElTypeNum == GraphML_EL_RoundRect ||
+          elType.ElTypeNum == GraphML_EL_Circle ||
+          elType.ElTypeNum == GraphML_EL_Oval ||
+          elType.ElTypeNum == GraphML_EL_Polyline ||
+          elType.ElTypeNum == GraphML_EL_Polygon ||
+          elType.ElTypeNum == GraphML_EL_Spline ||
+          elType.ElTypeNum == GraphML_EL_ClosedSpline ||
+          elType.ElTypeNum == GraphML_EL_Text_ ||
+          elType.ElTypeNum == GraphML_EL_Math ||
+          elType.ElTypeNum == GraphML_EL_Group)
+        {
+          TtaGiveBoxPosition (el, doc, mainView, UnPoint, &xPos, &yPos);
+          val = TtaGetPRuleValue (presRule);
+          if (presType == PRVertPos)
+            {
+              attrType.AttrTypeNum = GraphML_ATTR_IntPosY;
+              otherAttrType.AttrTypeNum = GraphML_ATTR_IntPosX;
+              otherVal = xPos;
+              ret = TRUE; /* don't let Thot perform normal operation */
+            }
+          else
+            {
+              attrType.AttrTypeNum = GraphML_ATTR_IntPosX;
+              otherAttrType.AttrTypeNum = GraphML_ATTR_IntPosY;
+              otherVal = yPos;
+              ret = TRUE; /* don't let Thot perform normal operation */
+            }
+ 
+          attr = TtaGetAttribute (el, attrType);
+          if (attr == NULL)
+            {
+              attr = TtaNewAttribute (attrType);
+              TtaAttachAttribute (el, attr, doc);
+              /* create also a IntPosX attribute is we are creating a IntPosY
+                 attribute, and conversely */
+              otherAttrType.AttrSSchema = attrType.AttrSSchema;
+              otherAttr = TtaNewAttribute (otherAttrType);
+              TtaAttachAttribute (el, otherAttr, doc);
+              TtaSetAttributeValue (otherAttr, otherVal, el, doc);
+            }
+          TtaSetAttributeValue (attr, val, el, doc);
+          UpdatePositionAttribute (attr, el, doc);
+        }
     }
   else if (presType == PRHeight)
     {
       if (elType.ElTypeNum == GraphML_EL_Rectangle ||
-	  elType.ElTypeNum == GraphML_EL_RoundRect ||
-	  elType.ElTypeNum == GraphML_EL_Oval ||
-	  elType.ElTypeNum == GraphML_EL_Polyline ||
-	  elType.ElTypeNum == GraphML_EL_Polygon ||
-	  elType.ElTypeNum == GraphML_EL_Spline ||
-	  elType.ElTypeNum == GraphML_EL_ClosedSpline)
-	{
-	  height = TtaGetPRuleValue (presRule);
-	  attrType.AttrTypeNum = GraphML_ATTR_IntHeight;
-	  attr = TtaGetAttribute (el, attrType);
-	  if (attr == NULL)
-	    {
-	      attr = TtaNewAttribute (attrType);
-	      TtaAttachAttribute (el, attr, doc);
-	    }
-	  TtaSetAttributeValue (attr, height, el, doc);
-	  UpdateWidthHeightAttribute (attr, el, doc);
-	  ret = TRUE; /* don't let Thot perform normal operation */
-	}
+          elType.ElTypeNum == GraphML_EL_RoundRect ||
+          elType.ElTypeNum == GraphML_EL_Oval ||
+          elType.ElTypeNum == GraphML_EL_Polyline ||
+          elType.ElTypeNum == GraphML_EL_Polygon ||
+          elType.ElTypeNum == GraphML_EL_Spline ||
+          elType.ElTypeNum == GraphML_EL_ClosedSpline)
+        {
+          height = TtaGetPRuleValue (presRule);
+          attrType.AttrTypeNum = GraphML_ATTR_IntHeight;
+          attr = TtaGetAttribute (el, attrType);
+          if (attr == NULL)
+            {
+              attr = TtaNewAttribute (attrType);
+              TtaAttachAttribute (el, attr, doc);
+            }
+          TtaSetAttributeValue (attr, height, el, doc);
+          UpdateWidthHeightAttribute (attr, el, doc);
+          ret = TRUE; /* don't let Thot perform normal operation */
+        }
     }
   else if (presType == PRWidth)
     {
       if (elType.ElTypeNum == GraphML_EL_Rectangle ||
-	  elType.ElTypeNum == GraphML_EL_RoundRect ||
-	  elType.ElTypeNum == GraphML_EL_Circle ||
-	  elType.ElTypeNum == GraphML_EL_Oval ||
-	  elType.ElTypeNum == GraphML_EL_Polyline ||
-	  elType.ElTypeNum == GraphML_EL_Polygon ||
-	  elType.ElTypeNum == GraphML_EL_Spline ||
-	  elType.ElTypeNum == GraphML_EL_ClosedSpline ||
-	  elType.ElTypeNum == GraphML_EL_Text_)
-	{
-	  width = TtaGetPRuleValue (presRule);
-	  attrType.AttrTypeNum = GraphML_ATTR_IntWidth;
-	  attr = TtaGetAttribute (el, attrType);
-	  if (attr == NULL)
-	    {
-	      attr = TtaNewAttribute (attrType);
-	      TtaAttachAttribute (el, attr, doc);
-	    }
-	  TtaSetAttributeValue (attr, width, el, doc);
-	  UpdateWidthHeightAttribute (attr, el, doc);
-	  ret = TRUE; /* don't let Thot perform normal operation */
-	}
+          elType.ElTypeNum == GraphML_EL_RoundRect ||
+          elType.ElTypeNum == GraphML_EL_Circle ||
+          elType.ElTypeNum == GraphML_EL_Oval ||
+          elType.ElTypeNum == GraphML_EL_Polyline ||
+          elType.ElTypeNum == GraphML_EL_Polygon ||
+          elType.ElTypeNum == GraphML_EL_Spline ||
+          elType.ElTypeNum == GraphML_EL_ClosedSpline ||
+          elType.ElTypeNum == GraphML_EL_Text_)
+        {
+          width = TtaGetPRuleValue (presRule);
+          attrType.AttrTypeNum = GraphML_ATTR_IntWidth;
+          attr = TtaGetAttribute (el, attrType);
+          if (attr == NULL)
+            {
+              attr = TtaNewAttribute (attrType);
+              TtaAttachAttribute (el, attr, doc);
+            }
+          TtaSetAttributeValue (attr, width, el, doc);
+          UpdateWidthHeightAttribute (attr, el, doc);
+          ret = TRUE; /* don't let Thot perform normal operation */
+        }
     }
   TtaSetDisplayMode (doc, dispMode);
   return ret; /* let Thot perform normal operation */
@@ -849,13 +863,21 @@ int                 construct;
 	shape = 's';
 	break;
     case 9:	/* label */
-	/* a label can be inserted only in some types of elements and
-	   only when there is no Label already in the element */
-	elType = TtaGetElementType (first);
-	if (first == last && elType.ElTypeNum == GraphML_EL_GRAPHICS_UNIT)
+	/* a label can be inserted only in some types of elements (closed
+	shapes), only when there is no Label in the element and only if a
+        single element is selected */
+        if (first == last)
+	   /* a single element is selected */
 	   {
-	   parent = TtaGetParent (first);
-	   elType = TtaGetElementType (parent);
+	   elType = TtaGetElementType (first);
+	   if (elType.ElTypeNum == GraphML_EL_GRAPHICS_UNIT)
+	      {
+	      parent = TtaGetParent (first);
+	      elType = TtaGetElementType (parent);
+	      }
+	   else
+	      parent = first;
+	   
 	   if (elType.ElTypeNum == GraphML_EL_Rectangle ||
 	       elType.ElTypeNum == GraphML_EL_RoundRect ||
 	       elType.ElTypeNum == GraphML_EL_Circle ||
@@ -926,7 +948,7 @@ int                 construct;
 	 }
       else if (newType.ElTypeNum == GraphML_EL_Label ||
 	       newType.ElTypeNum == GraphML_EL_Text_)
-	 /* create an HTML Block element in the new element */
+	 /* create an HTML DIV element in the new element */
 	 {
 	 /* the document is supposed to be HTML */
 	 childType.ElSSchema = docSchema;

@@ -4,7 +4,6 @@ DEFAULT
    BEGIN
    PRuleCreate.Pre -> GraphicsPRuleChange;
    PRuleModify.Pre -> GraphicsPRuleChange;
-   ElemSelect.Pre -> SelectGraphMLElement;
    ElemExtendSelect.Pre -> ExtendSelectGraphMLElement;
    END;
 
