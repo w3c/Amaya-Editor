@@ -2515,14 +2515,27 @@ boolean            remove;
 		{
 		  /* is the view concerned by the presentation rule ? */
 		  ruleType = pCurrentRule->PrType;
+		  /* note if a rule has been applied */
+		  found = FALSE;
 		  if (pCurrentRule->PrViewNum == 1 || pCurrentRule->PrViewNum == viewSch)
 		    {
 		      /* checks if the abstract box is concerned by the new rule */
 		      pRP = SearchRulepAb (pDoc, pAb, &pSPR, ruleType, pCurrentRule->PrPresFunction, TRUE, &pAttr);
 		      if (pRP == pCurrentRule || remove)
-			ApplyPRuleAndRedisplay (pAb, pDoc, pAttr, pRP, pSPR);
+			{
+			  /* apply a new rule */
+			  found = TRUE;
+			  ApplyPRuleAndRedisplay (pAb, pDoc, pAttr, pRP, pSPR);
+			}
 		    }
 		  pCurrentRule = pCurrentRule->PrNextPRule;
+		}
+	      /* redisplay the element if needed */
+	      if (found)
+		{
+		  /* update abstract image and redisplay */
+		  AbstractImageUpdated (pDoc);
+		  RedisplayDocViews (pDoc);
 		}
 	    }
 	  /* get the next abstract box */
