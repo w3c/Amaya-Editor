@@ -1230,7 +1230,7 @@ void GetAttributePres (AttributePres **pAP)
   if (pNewAP)
     {
       memset (pNewAP, 0, sizeof (AttributePres));
-      pNewAP->ApMatch = CoWord;
+      /* pNewAP->ApMatch = CoWord; */
     }
 }
 
