@@ -318,6 +318,12 @@ extern void TtaGiveSelectPosition (Document document, Element element, View view
   The parameter RO is TRUE when only ReadOnly functions are accepted
   ----------------------------------------------------------------------*/
 extern void TtaUpdateMenus (Document doc, View view, ThotBool RO);
+
+/*----------------------------------------------------------------------
+   TtaListShortcuts
+   Produces in a file a human-readable the list of current shortcuts.  
+  ----------------------------------------------------------------------*/
+extern void TtaListShortcuts (Document doc, FILE *fileDescriptor);
 #endif /* __CEXTRACT__  */
 
 #endif

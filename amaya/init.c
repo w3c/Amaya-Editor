@@ -7502,6 +7502,13 @@ void HelpAmaya (Document document, View view)
        fprintf (list, "\n");
      }
    fclose (list);
+   /* list now shortcuts */
+   strcpy (localname, TempFileDirectory);
+   strcat (localname, DIR_STR);
+   strcat (localname, "shortcuts.debug");
+   list = fopen (localname, "w");
+   TtaListShortcuts (document, list);
+   fclose (list);
 #endif /* AMAYA_DEBUG */
 
 #if defined(_MOTIF) || defined(_GTK) || defined(_WX) 

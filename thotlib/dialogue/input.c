@@ -163,7 +163,7 @@ static ThotBool    Special;
    translates the keynames not supported by the interpreter of
    Motif translations.
   ----------------------------------------------------------------------*/
-static char        *NameCode (char* name)
+static char *NameCode (char* name)
 {
    if (strlen (name) < 5)
       if (name[0] == ',')
@@ -186,13 +186,94 @@ static char        *NameCode (char* name)
 
 
 /*----------------------------------------------------------------------
+   KeyName translates a key value into a key name.
+  ----------------------------------------------------------------------*/
+static char *KeyName (unsigned int key)
+{
+  static char s[2];
+
+  switch (key)
+    {
+    case THOT_KEY_Return:
+      return "Enter";
+    case THOT_KEY_BackSpace:
+      return "Backspace";
+    case THOT_KEY_Tab:
+    case THOT_KEY_TAB:
+      return "Tab";
+    case THOT_KEY_Escape:
+      return "Escape";
+    case THOT_KEY_Delete:
+      return "Delete";
+    case THOT_KEY_F1:
+      return "F1";
+    case THOT_KEY_F2:
+      return "F2";
+    case THOT_KEY_F3:
+      return "F3";
+    case THOT_KEY_F4:
+      return "F4";
+    case THOT_KEY_F5:
+      return "F5";
+    case THOT_KEY_F6:
+      return "F6";
+    case THOT_KEY_F7:
+      return "F7";
+    case THOT_KEY_F8:
+      return "F8";
+    case THOT_KEY_F9:
+      return "F9";
+    case THOT_KEY_F10:
+      return "F10";
+    case THOT_KEY_F11:
+      return "F11";
+    case THOT_KEY_F12:
+      return "F12";
+    case THOT_KEY_F13:
+      return "F13";
+    case THOT_KEY_F14:
+      return "F14";
+    case THOT_KEY_F15:
+      return "F15";
+    case THOT_KEY_F16:
+      return "F16";
+    case THOT_KEY_F17:
+      return "F17";
+    case THOT_KEY_F18:
+      return "F18";
+    case THOT_KEY_F19:
+      return "F19";
+    case THOT_KEY_F20:
+      return "F20";
+    case THOT_KEY_Up:
+      return "Up";
+    case THOT_KEY_Down:
+      return "Down";
+    case THOT_KEY_Left:
+      return "Left";
+    case THOT_KEY_Right:
+      return "Right";
+    case THOT_KEY_Home:
+      return "Home";
+    case THOT_KEY_End:
+      return "End";
+    case SPACE:
+      return "Space";
+    default:
+      s[0] = key;
+      s[1] = EOS;
+      return s;
+    }
+}
+
+/*----------------------------------------------------------------------
    SpecialKey
    translates the name given by the file thot.keyboard into a key value
    which Thot can use.
    The parameter shifted is TRUE when a shifted key is selected.
    Returns TRUE in the parameter isSpecial when it's a special key.
   ----------------------------------------------------------------------*/
-static unsigned int  SpecialKey (char *name, ThotBool shifted, ThotBool *isSpecial)
+static unsigned int SpecialKey (char *name, ThotBool shifted, ThotBool *isSpecial)
 {
    *isSpecial = TRUE;
    /* is it the name of a special character? */
@@ -888,7 +969,7 @@ ThotBool ThotInput (int frame, unsigned int value, int command, int PicMask, int
   View                view;
   int                 modtype;
   int                 mainframe;
-  int                 index;
+  int                 index = -1;
   ThotBool            found, done;
   
   modtype = THOT_NO_MOD;
@@ -1013,50 +1094,44 @@ ThotBool ThotInput (int frame, unsigned int value, int command, int PicMask, int
 	  else
 	    ptr = Automata_normal;
 
-	    while (!found && ptr != NULL)
-	      {
-		      if (ptr != NULL)
-		      {
-        
+	  while (!found && ptr != NULL)
+	    {
+	      if (ptr != NULL)
+		{
 #ifdef _WINDOWS
-		        if (ptr->K_EntryCode == key
-			          && ptr->K_Special == Special)
+		  if (ptr->K_EntryCode == key
+		      && ptr->K_Special == Special)
 #endif /* _WINDOWS */
-
 #if defined(_MOTIF) || defined(_GTK)
-		        if (ptr->K_EntryCode == key)
+		  if (ptr->K_EntryCode == key)
 #endif /* #if defined(_MOTIF) || defined(_GTK) */
-          
-		        {
-              /* first level entry found */
-              found = TRUE;
-              Automata_current = ptr->K_Next;
-              if (Automata_current == NULL)
-                {
-                  /* one key shortcut */
-                  value = ptr->K_Value;
-                  command = ptr->K_Command;
-                }
-            }
+		    {
+		      /* first level entry found */
+		      found = TRUE;
+		      Automata_current = ptr->K_Next;
+		      if (Automata_current == NULL)
+			{
+			  /* one key shortcut */
+			  value = ptr->K_Value;
+			  command = ptr->K_Command;
+			}
+		    }
 #if defined(_MOTIF) || defined(_GTK) || defined(_WINDOWS)        
-		        else
-		          ptr = ptr->K_Other;
+		  else
+		    ptr = ptr->K_Other;
 #endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WINDOWS) */
-        
-		      }
-        }
+		}
+	    }
 	}
-}
+    }
   
 #ifdef _WINDOWS
   if (Special && !found)
 #endif /* !_WINDOWS */
-    
 #if defined(_MOTIF) || defined(_GTK)    
   if (!found)
 #endif /* #if defined(_MOTIF) || defined(_GTK) */
-
-   {
+    {
       /* Handling special keys */
       switch (key)
 	{
@@ -1092,22 +1167,20 @@ ThotBool ThotInput (int frame, unsigned int value, int command, int PicMask, int
 	  break;
 	case THOT_KEY_Delete:
 	  index = MY_KEY_Delete;
-	  break;
+	 break;
 	default:
 	  index = -1;
 #ifdef _WINDOWS
-	  if (!found)
-	    {
-	      /* Rien a inserer */ 
-	      Automata_current = NULL;
-	      return FALSE;
-	    }
+	 /* Nothing to do */ 
+	  Automata_current = NULL;
+	  return FALSE;
 #endif /* _WINDOWS */
 	  break;
 	}
 
       if (index >= 0)
 	{
+	  found = TRUE;
 	  if (modtype == THOT_MOD_SHIFT)
 	    command = SpecialShiftKeys[index];
 	  else if (modtype == THOT_MOD_CTRL)
@@ -1118,10 +1191,17 @@ ThotBool ThotInput (int frame, unsigned int value, int command, int PicMask, int
 	    command = SpecialKeys[index];
 	  Automata_current = NULL;
 	}
-    } 
+    }
 
   if (Automata_current == NULL)
     {
+      /* don't accept to insert a character when there is CTRL
+	 or ALT active and no shortcut is found */
+      if (!found &&
+	  (modtype == THOT_MOD_CTRL || modtype == THOT_MOD_S_CTRL ||
+	   modtype == THOT_MOD_ALT || modtype == THOT_MOD_S_ALT))
+	return FALSE;
+	  
       /* Appel d'une action Thot */
       mainframe = GetWindowNumber (document, 1);
       if (command > 0)
@@ -1312,7 +1392,7 @@ static int      EndOfString (char *string, char *suffix)
 /*----------------------------------------------------------------------
   TtaSetAccessKeyFunction registers the access key function.
   ----------------------------------------------------------------------*/
-void      TtaSetAccessKeyFunction (Proc procedure)
+void TtaSetAccessKeyFunction (Proc procedure)
 {
   AccessKeyFunction = (Proc)procedure;
 }
@@ -1323,7 +1403,7 @@ void      TtaSetAccessKeyFunction (Proc procedure)
   The parameter param which will be returned when the access key will be
   activated.
   ----------------------------------------------------------------------*/
-void      TtaAddAccessKey (Document doc, unsigned int key, void *param)
+void TtaAddAccessKey (Document doc, unsigned int key, void *param)
 {
   KEY                *ptr, *next;
   unsigned int        k;
@@ -1362,7 +1442,7 @@ void      TtaAddAccessKey (Document doc, unsigned int key, void *param)
 /*----------------------------------------------------------------------
   TtaRemoveDocAccessKeys removes all access keys of a document.
   ----------------------------------------------------------------------*/
-void      TtaRemoveDocAccessKeys (Document doc)
+void TtaRemoveDocAccessKeys (Document doc)
 {
   KEY                *ptr, *next;
 
@@ -1383,7 +1463,7 @@ void      TtaRemoveDocAccessKeys (Document doc)
 /*----------------------------------------------------------------------
   TtaRemoveAccessKey removes an access key of a document.
   ----------------------------------------------------------------------*/
-void      TtaRemoveAccessKey (Document doc, unsigned int key)
+void TtaRemoveAccessKey (Document doc, unsigned int key)
 {
   KEY                *ptr, *next;
   unsigned int        k;
@@ -1412,6 +1492,96 @@ void      TtaRemoveAccessKey (Document doc, unsigned int key)
     }
 }
 
+/*----------------------------------------------------------------------
+   TtaListShortcuts
+   Produces in a file a human-readable the list of current shortcuts.  
+  ----------------------------------------------------------------------*/
+void TtaListShortcuts (Document doc, FILE *fileDescriptor)
+{
+  KEY                *next, *ptr;
+  char               *s, *k1, *k2;
+  int                 i;
+
+  s = TtaGetEnvString ("ACCESSKEY_MOD");
+  if (doc)
+    {
+      /* display current access keys table */
+      next = DocAccessKey[doc - 1];
+      if (next)
+	fprintf (fileDescriptor, "Access keys\n");
+      while (next)
+	{
+	  /* display the access key */
+	  k1 = KeyName (next->K_EntryCode);
+	  fprintf (fileDescriptor, " %s %s\n", s, k1);
+	  next = next->K_Other;
+	}
+      fprintf (fileDescriptor, "\nShortcuts\n");
+      i = 0;
+      while (i < 6)
+	{
+	  if (i == 0)
+	    {
+	      next = Automata_SHIFT;
+	      s = "Shift ";
+	    }
+	  else if (i == 1)
+	    {
+	      next = Automata_normal;
+	      s = "";
+	    }
+	  else if (i == 2)
+	    {
+	      next = Automata_ALT;
+	      s = "Shift Alt ";
+	    }
+	  else if (i == 3)
+	    {
+	      next = Automata_alt;
+	      s = "Alt ";
+	    }
+	  else if (i == 4)
+	    {
+	      next = Automata_CTRL;
+	      s = "Shift Ctrl ";
+	    }
+	  else
+	    {
+	      next = Automata_ctrl;
+	      s = "Ctrl ";
+	    }
+
+	  while (next)
+	    {
+	      k1 = KeyName (next->K_EntryCode);
+	      ptr = next->K_Next;
+	      if (ptr == NULL)
+		{
+		  /* display the shortcut */
+		  if (MenuActionList[next->K_Command].ActionName)
+		    fprintf (fileDescriptor, " %s%s -> %s\n", s, k1,
+			     MenuActionList[next->K_Command].ActionName);
+		}
+	      else
+		/* two levels */
+		while (ptr)
+		  {
+		    /* display the shortcut sequence */
+		    if (MenuActionList[ptr->K_Command].ActionName)
+		      {
+			k2 = KeyName (ptr->K_EntryCode);
+			fprintf (fileDescriptor, " %s%s %s%s -> %s\n", s, k1,
+				 s, k2,
+				 MenuActionList[ptr->K_Command].ActionName);
+		      }
+		    ptr = ptr->K_Other;
+		  }
+	      next = next->K_Other;
+	    }
+	  i++;
+	}
+    }
+}
 
 /*----------------------------------------------------------------------
    InitTranslations
