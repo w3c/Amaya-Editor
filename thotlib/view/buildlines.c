@@ -1384,10 +1384,6 @@ boolean            *adjust;
 boolean            *breakLine
 #endif /* __STDC__ */
 {
-   int                 xi, maxX;
-   int                 maxLength;
-   boolean             still;
-   boolean             toCut;
    PtrTextBuffer       pNewBuff;
    PtrBox              pBox;
    PtrBox              pNextBox;
@@ -1399,6 +1395,10 @@ boolean            *breakLine
    int                 boxLength;
    int                 nSpaces;
    int                 newIndex;
+   int                 xi, maxX;
+   int                 maxLength;
+   boolean             still;
+   boolean             toCut;
    boolean             found;
 
    *full = TRUE;
@@ -1546,7 +1546,22 @@ boolean            *breakLine
 	   /* Si elle n'est pas secable -> on laisse deborder */
 	   if (!pNextBox->BxAbstractBox->AbAcceptLineBreak
 	       || pNextBox->BxAbstractBox->AbLeafType != LtText)
-	      pBox = pNextBox;	/* derniere boite de la ligne */
+	     {
+	       pBox = pNextBox;	/* derniere boite de la ligne */
+	       /* look at whether next boxes are not in line */
+	       lastbox = pBox;
+	       still = (lastbox != NULL);
+	       while (still)
+		 {
+		   lastbox = GetNextBox (lastbox->BxAbstractBox);
+		   if (lastbox == NULL)
+		     still = FALSE;
+		   else if (!lastbox->BxAbstractBox->AbNotInLine)
+		     still = FALSE;
+		   else
+		     pBox = lastbox;
+		 }
+	     }
 	/* Sinon on coupe la boite texte en un point quelconque */
 	   else
 	     {
@@ -1646,6 +1661,7 @@ boolean            *breakLine
 	       }
 	  }
      }
+
 
    /* ajoute toutes les boites de la ligne */
    if (pLine->LiFirstPiece != NULL)
