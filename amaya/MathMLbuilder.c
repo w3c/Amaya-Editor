@@ -250,11 +250,10 @@ ThotBool     ElementNeedsPlaceholder (Element el)
   ElementType   elType;
   Element	child, parent, sibling;
   ThotBool	ret;
- 
+
   ret = FALSE;
   elType = TtaGetElementType (el);
   if (elType.ElTypeNum == MathML_EL_MS ||
-      elType.ElTypeNum == MathML_EL_MSPACE ||
       elType.ElTypeNum == MathML_EL_MFRAC ||
       elType.ElTypeNum == MathML_EL_BevelledMFRAC ||
       elType.ElTypeNum == MathML_EL_MSQRT ||
@@ -283,7 +282,7 @@ ThotBool     ElementNeedsPlaceholder (Element el)
       sibling = el;  TtaNextSibling (&sibling);
       if (!sibling)
 	{
-	  sibling = el;  TtaNextSibling (&sibling);
+	  sibling = el;  TtaPreviousSibling (&sibling);
 	  if (!sibling)
 	    {
 	      parent = TtaGetParent (el);
@@ -326,6 +325,32 @@ ThotBool     ElementNeedsPlaceholder (Element el)
 		  elType = TtaGetElementType (parent);
 		  if (elType.ElTypeNum == MathML_EL_Base ||
 		      elType.ElTypeNum == MathML_EL_UnderOverBase)
+		    ret = FALSE;
+		}
+	    }
+	}
+    }
+  else if (elType.ElTypeNum == MathML_EL_MSPACE)
+    {
+      /* in principle mspace needs a placeholder sibling */
+      ret = TRUE;
+      /* but if it's the only child of a mstyle element, the placeholders
+	 would change the height and width of the mstyle. Consider for
+	 instance:
+	 <mstyle background="#000099">
+	   <mspace depth="2mm" width=".2in"/>
+	 </mstyle>  */
+      sibling = el;  TtaNextSibling (&sibling);
+      if (!sibling)
+	{
+	  sibling = el;  TtaPreviousSibling (&sibling);
+	  if (!sibling)
+	    {
+	      parent = TtaGetParent (el);
+	      if (parent)
+		{
+		  elType = TtaGetElementType (parent);
+		  if (elType.ElTypeNum == MathML_EL_MSTYLE)
 		    ret = FALSE;
 		}
 	    }
