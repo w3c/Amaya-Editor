@@ -65,8 +65,6 @@ extern void MathStringModified ( NotifyOnTarget *event );
 extern void NewMathString ( NotifyElement *event );
 extern void MathElementPasted ( NotifyElement *event );
 extern ThotBool MathElementWillBeDeleted ( NotifyElement *event );
-extern void DeleteMColumn ( Document document,
-                            View view );
 extern void MathElementDeleted ( NotifyElement *event );
 extern void FenceModified ( NotifyOnValue *event );
 extern void MathAttrOtherCreated ( NotifyAttribute *event );
@@ -112,6 +110,8 @@ extern void AttrColumnlinesCreated ( NotifyAttribute *event );
 extern void AttrColumnlinesDeleted ( NotifyAttribute *event );
 extern void HandleColAndRowAlignAttributes ( Element row,
                                              Document doc );
+extern void DeleteMColumn ( Document document,
+                            View view );
 
 #else /* __STDC__ */
 
@@ -174,8 +174,6 @@ extern void MathStringModified (/* NotifyOnTarget *event */);
 extern void NewMathString (/* NotifyElement *event */);
 extern void MathElementPasted (/* NotifyElement *event */);
 extern ThotBool MathElementWillBeDeleted (/* NotifyElement *event */);
-extern void DeleteMColumn (/* Document document,
-                              View view */);
 extern void MathElementDeleted (/* NotifyElement *event */);
 extern void FenceModified (/* NotifyOnValue *event */);
 extern void MathAttrOtherCreated (/* NotifyAttribute *event */);
@@ -221,6 +219,8 @@ extern void AttrColumnlinesCreated (/* NotifyAttribute *event */);
 extern void AttrColumnlinesDeleted (/* NotifyAttribute *event */);
 extern void HandleColAndRowAlignAttributes (/* Element row,
                                                Document doc */);
+extern void DeleteMColumn (/* Document document,
+                              View view */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

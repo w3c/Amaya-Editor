@@ -53,13 +53,13 @@ extern void HandleColalignAttribute ( Attribute attr,
                                       ThotBool delete,
                                       ThotBool allRows );
 extern void HandleRowlinesAttribute ( Attribute attr,
-				      Element el,
-				      Document doc,
-				      ThotBool delete );
+                                      Element el,
+                                      Document doc,
+                                      ThotBool delete );
 extern void HandleColumnlinesAttribute ( Attribute attr,
-					 Element el,
-					 Document doc,
-					 ThotBool delete );
+                                         Element el,
+                                         Document doc,
+                                         ThotBool delete );
 extern void MathMLElementComplete ( ParserData *context,
                                     Element el,
                                     int *error );
@@ -142,13 +142,13 @@ extern void HandleColalignAttribute (/* Attribute attr,
                                         ThotBool delete,
                                         ThotBool allRows */);
 extern void HandleRowlinesAttribute (/* Attribute attr,
-					Element el,
-					Document doc,
-					ThotBool delete */);
+                                        Element el,
+                                        Document doc,
+                                        ThotBool delete */);
 extern void HandleColumnlinesAttribute (/* Attribute attr,
-					   Element el,
-					   Document doc,
-					   ThotBool delete */);
+                                           Element el,
+                                           Document doc,
+                                           ThotBool delete */);
 extern void MathMLElementComplete (/* ParserData *context,
                                       Element el,
                                       int *error */);

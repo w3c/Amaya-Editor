@@ -21,6 +21,7 @@ extern ThotBool AttrXlinkHrefWillBeChanged ( NotifyAttribute * event );
 extern void AttrXlinkHrefChanged ( NotifyAttribute *event );
 extern ThotBool DeleteAttrXlinkHref ( NotifyAttribute *event );
 extern void AttrAnimTimeChanged ( NotifyAttribute *event );
+extern void Timeline_cross_prule_modified ( NotifyPresentation *event );
 
 #else /* __STDC__ */
 
@@ -39,6 +40,7 @@ extern ThotBool AttrXlinkHrefWillBeChanged (/* NotifyAttribute * event */);
 extern void AttrXlinkHrefChanged (/* NotifyAttribute *event */);
 extern ThotBool DeleteAttrXlinkHref (/* NotifyAttribute *event */);
 extern void AttrAnimTimeChanged (/* NotifyAttribute *event */);
+extern void Timeline_cross_prule_modified (/* NotifyPresentation *event */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

@@ -2509,21 +2509,6 @@ static char *ParseCSSBackgroundColor (Element element, PSchema tsch,
 					CSSInfoPtr css, ThotBool isHTML)
 {
   PresentationValue     best;
-  unsigned int          savedtype = 0;
-  ThotBool              moved;
-
-  /* move the HTML rule to the root element */
-  moved = ((context->type == HTML_EL_HTML || context->type == HTML_EL_BODY) && isHTML);
-  if (moved)
-    {
-      if (element)
-	element = TtaGetMainRoot (context->doc);
-      else
-	{
-	  savedtype = context->type;
-	  context->type = HTML_EL_Document;
-	}
-    }
 
   best.typed_data.unit = STYLE_UNIT_INVALID;
   best.typed_data.real = FALSE;
@@ -2559,8 +2544,6 @@ static char *ParseCSSBackgroundColor (Element element, PSchema tsch,
     }
 
   /* restore the refered element */
-  if (moved && !element)
-    context->type = savedtype;
   return (cssRule);
 }
 
@@ -2758,26 +2741,8 @@ static char *ParseCSSBackgroundImage (Element element, PSchema tsch,
   char                      *base;
   char                       tempname[MAX_LENGTH];
   char                       imgname[MAX_LENGTH];
-  unsigned int               savedtype = 0;
-  ThotBool                   moved;
 
-  /* default element for FetchImage */
-  el = TtaGetMainRoot (context->doc);
-  /* move the HTML rule to the root element */
-  moved = ((context->type == HTML_EL_HTML || context->type == HTML_EL_BODY) && isHTML);
-  if (moved)
-    {
-      if (element)
-	element = el;
-      else
-	{
-	  savedtype = context->type;
-	  context->type = HTML_EL_Document;
-	}
-    }
-  else if (element)
-    el = element;
-
+  el = element;
   url = NULL;
   cssRule = SkipBlanksAndComments (cssRule);
   if (!strncasecmp (cssRule, "url", 3))
@@ -2867,10 +2832,6 @@ static char *ParseCSSBackgroundImage (Element element, PSchema tsch,
 	    TtaFreeMemory (url);
 	}
     }
-
-  /* restore the refered element */
-  if (moved && !element)
-    context->type = savedtype;
   return (cssRule);
 }
 
@@ -2882,21 +2843,6 @@ static char *ParseCSSBackgroundRepeat (Element element, PSchema tsch,
 				       char *cssRule, CSSInfoPtr css, ThotBool isHTML)
 {
   PresentationValue   repeat;
-  unsigned int        savedtype = 0;
-  ThotBool            moved;
-
-  /* move the HTML rule to the root element */
-  moved = ((context->type == HTML_EL_HTML || context->type == HTML_EL_BODY) && isHTML);
-  if (moved)
-    {
-      if (element)
-	element = TtaGetMainRoot (context->doc);
-      else
-	{
-	  savedtype = context->type;
-	  context->type = HTML_EL_Document;
-	}
-    }
 
   repeat.typed_data.value = STYLE_REALSIZE;
   repeat.typed_data.unit = STYLE_UNIT_REL;
@@ -2922,11 +2868,7 @@ static char *ParseCSSBackgroundRepeat (Element element, PSchema tsch,
       TtaSetStylePresentation (PRPictureMode, element, tsch, context, repeat);
     }
   cssRule = SkipWord (cssRule);
-
-  /* restore the refered element */
-  if (moved && !element)
-    context->type = savedtype;
-   return (cssRule);
+  return (cssRule);
 }
 
 /*----------------------------------------------------------------------
@@ -2938,31 +2880,11 @@ static char *ParseCSSBackgroundAttachment (Element element, PSchema tsch,
 					   char *cssRule, CSSInfoPtr css,
 					   ThotBool isHTML)
 {
-  unsigned int          savedtype = 0;
-  ThotBool              moved;
-
-  /* move the HTML rule to the root element */
-  moved = ((context->type == HTML_EL_HTML || context->type == HTML_EL_BODY) && isHTML);
-  if (moved)
-    {
-      if (element)
-	element = TtaGetMainRoot (context->doc);
-      else
-	{
-	  savedtype = context->type;
-	  context->type = HTML_EL_Document;
-	}
-    }
-
    cssRule = SkipBlanksAndComments (cssRule);
    if (!strncasecmp (cssRule, "scroll", 6))
      cssRule = SkipWord (cssRule);
    else if (!strncasecmp (cssRule, "fixed", 5))
      cssRule = SkipWord (cssRule);
-
-  /* restore the refered element */
-  if (moved && !element)
-    context->type = savedtype;
    return (cssRule);
 }
 
@@ -2976,22 +2898,7 @@ static char *ParseCSSBackgroundPosition (Element element, PSchema tsch,
 					 ThotBool isHTML)
 {
   PresentationValue     repeat;
-  unsigned int          savedtype = 0;
-  ThotBool              moved;
   ThotBool              ok;
-
-  /* move the HTML rule to the root element */
-  moved = ((context->type == HTML_EL_HTML || context->type == HTML_EL_BODY) && isHTML);
-  if (moved)
-    {
-      if (element)
-	element = TtaGetMainRoot (context->doc);
-      else
-	{
-	  savedtype = context->type;
-	  context->type = HTML_EL_Document;
-	}
-    }
 
    cssRule = SkipBlanksAndComments (cssRule);
    ok = TRUE;
@@ -3021,10 +2928,6 @@ static char *ParseCSSBackgroundPosition (Element element, PSchema tsch,
 	 cssRule = CheckImportantRule (cssRule, context);
        TtaSetStylePresentation (PRPictureMode, element, tsch, context, repeat);
      }
-
-  /* restore the refered element */
-  if (moved && !element)
-    context->type = savedtype;
    return (cssRule);
 }
 
