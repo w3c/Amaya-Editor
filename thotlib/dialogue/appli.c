@@ -58,6 +58,8 @@ static XmString     null_string;
 #define TITLE_TXTZONE   1
 #define ID_TOOLBAR    165
 
+#define WM_ENTER (WM_USER)
+
 #define MAX_MENUS 5
 #define ToolBar_AutoSize(hwnd) \
     (void)SendMessage((hwnd), TB_AUTOSIZE, 0, 0L)
@@ -87,14 +89,16 @@ static char      doc_title [500];
 
 int         cyToolBar ;
 int         CommandToString [MAX_BUTTON];
-char        szTbStrings [4096];
-HWND        hwndToolTip ;
-HWND        hwndTT;
+char        szTbStrings [MAX_FRAME] [4096];
+#ifdef AMAYA_TOOLTIPS
 DWORD       dwToolBarStyles   = WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | CCS_TOP | TBSTYLE_TOOLTIPS;
+#else  /* !AMAYA_TOOLTIPS */
+DWORD       dwToolBarStyles   = WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | CCS_TOP;
+#endif /* AMAYA_TOOLTIPS */
 DWORD       dwStatusBarStyles = WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | CCS_BOTTOM | SBARS_SIZEGRIP;
 TBADDBITMAP AmayaTBBitmap;
 
-#if 0
+#ifdef AMAYA_TOOLTIPS
 #ifdef __STDC__
 BOOL InitToolTip (HWND hwndToolBar)
 #else  /* __STDC__ */
@@ -102,7 +106,8 @@ BOOL InitToolTip (hwndToolBar)
 HWND hwndToolBar;
 #endif /* __STDC__ */
 {
-   BOOL bSuccess ;
+   BOOL     bSuccess ;
+   HWND     hwndTT;
    TOOLINFO ti ;
 
    /* Fetch handle to tooltip control */
@@ -113,12 +118,12 @@ HWND hwndToolBar;
 
    return bSuccess ;
 }
-#endif /* 0 */
 
 #ifdef __STDC__
-void CopyToolTipText (LPTOOLTIPTEXT lpttt)
+void CopyToolTipText (int frame, LPTOOLTIPTEXT lpttt)
 #else  /* __STDC__ */
-void CopyToolTipText (lpttt)
+void CopyToolTipText (frame, lpttt)
+int           frame;
 LPTOOLTIPTEXT lpttt;
 #endif /* __STDC__ */
 {
@@ -138,7 +143,7 @@ LPTOOLTIPTEXT lpttt;
    }
 
    /* To be safe, count number of strings in text */
-   pString = szTbStrings ;
+   pString = &szTbStrings [frame][0] ;
    cMax = 0 ;
    while (*pString != '\0') {
          cMax++ ;
@@ -151,7 +156,7 @@ LPTOOLTIPTEXT lpttt;
       pString = "Invalid Button Index" ;
    else {
        /* Cycle through to requested string */
-       pString = szTbStrings ;
+       pString = &szTbStrings[frame] [0] ;
        for (i = 0 ; i < iButton ; i++) {
            cb = lstrlen (pString) ;
            pString += (cb + 1) ;
@@ -160,6 +165,7 @@ LPTOOLTIPTEXT lpttt;
 
    lstrcpy (pDest, pString) ;
 }
+#endif /* AMAYA_TOOLTIPS */
 #endif /* _WINDOWS */
 
 #include "absboxes_f.h"
@@ -1072,20 +1078,25 @@ WPARAM      wParam;
 LPARAM      lParam; 
 #endif /* __STDC__ */
 {
-     int  frame = GetMainFrameNumber (hwnd);
+	HWND hwndTextEdit;
+    HWND hwndToolTip ;
+	int  doc, view ;
+	int  frame = GetMainFrameNumber (hwnd);
 
      switch (mMsg) {
             case WM_CREATE:
 	         /* Create toolbar  */
 		 AmayaTBBitmap.hInst = hInstance;
 		 AmayaTBBitmap.nID   = ID_TOOLBAR;
-                 ToolBar = CreateWindow (TOOLBARCLASSNAME, NULL, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | CCS_TOP | TBSTYLE_TOOLTIPS,
+                 ToolBar = CreateWindow (TOOLBARCLASSNAME, NULL, dwToolBarStyles,
                                          0, 0, 0, 0, hwnd, (HMENU) 1, hInstance, 0) ;
-                 ToolBar_AddString (ToolBar, 0, szTbStrings);
-                 /*hwndToolTip = ToolBar_GetToolTips (ToolBar);*/
-				 /*
+#                ifdef AMAYA_TOOLTIPS
+                 ToolBar_AddString (ToolBar, 0, &szTbStrings[frame][0]);
+                 hwndToolTip = ToolBar_GetToolTips (ToolBar);
+				 
                  if (dwToolBarStyles & TBSTYLE_TOOLTIPS)
-                    InitToolTip (ToolBar) ;	*/
+                    InitToolTip (ToolBar) ;	
+#                endif /* AMAYA_TOOLTIPS */
 
                  /* Create status bar  */
                  StatusBar = CreateStatusWindow (dwStatusBarStyles, "", hwnd, 2) ;
@@ -1108,7 +1119,12 @@ LPARAM      lParam;
 	    case WM_HSCROLL:
 		 WIN_ChangeHScroll (frame, LOWORD (wParam), HIWORD (wParam));
 	         return (0);
-		 
+
+		case WM_ENTER:
+			 hwndTextEdit = GetFocus ();
+		     WIN_APP_TextCallback (hwndTextEdit, frame);
+			 return 0;
+
 	    case WM_KEYDOWN:
                  SendMessage (FrRef [frame], WM_KEYDOWN, wParam, lParam);
                  return 0;
@@ -1116,36 +1132,28 @@ LPARAM      lParam;
 	    case WM_CHAR:
                  SendMessage (FrRef [frame], WM_CHAR, wParam, lParam);
                  return 0;
-		 
-            case WM_NOTIFY: {
-                 LPNMHDR pnmh = (LPNMHDR) lParam ;
-                 int idCtrl = (int) wParam ;
 
-		 /*Toolbar notifications */
-		 if ((pnmh->code >= TBN_LAST) && (pnmh->code <= TBN_FIRST))
-		    return ToolBarNotify (frame, hwnd, wParam, lParam) ;
+#       ifdef AMAYA_TOOLTIPS		 
+        case WM_NOTIFY: {
+             LPNMHDR pnmh = (LPNMHDR) lParam ;
+             int idCtrl = (int) wParam ;
+
+		     /*Toolbar notifications */
+		     if ((pnmh->code >= TBN_LAST) && (pnmh->code <= TBN_FIRST))
+		        return ToolBarNotify (frame, hwnd, wParam, lParam) ;
 		 
-		 /* Fetch tooltip text */
-		 if (pnmh->code == TTN_NEEDTEXT) {
-		    LPTOOLTIPTEXT lpttt = (LPTOOLTIPTEXT) lParam ;
-		    CopyToolTipText (lpttt) ;
-		 }
+		     /* Fetch tooltip text */
+		     if (pnmh->code == TTN_NEEDTEXT) {
+		        LPTOOLTIPTEXT lpttt = (LPTOOLTIPTEXT) lParam ;
+		        CopyToolTipText (frame, lpttt) ;
+		     }
 		 
-		 return 0 ;
+		     return 0 ;
 	    }
+#      	endif /* AMAYA_TOOLTIPS */
 
             case WM_COMMAND:
-			     if (HIWORD (wParam) == EN_UPDATE) {
-				    if (LOWORD (wParam) == URL_TXTZONE) {
-					   /* GetWindowText (hwnd, URL_TXTZONE, URL_txt, sizeof (URL_txt) - 1);*/
-					   GetWindowText (FrameTable[frame].Text_Zone[LOWORD (wParam)], URL_txt, sizeof (URL_txt) - 1);
-					  /* ThotCallback (baseDlg + nameSave, STRING_DATA, urlToOpen); */
-				   } else if (LOWORD (wParam) == TITLE_TXTZONE) {
-					      GetWindowText (FrameTable[frame].Text_Zone[LOWORD (wParam)], doc_title, sizeof (doc_title) - 1);
-					      /* GetWindowText (hwnd, TITLE_TXTZONE, doc_title, sizeof (doc_title) - 1);*/
-					      /* ThotCallback (baseDlg + imgSave, STRING_DATA, urlToOpen);*/
-				   }
-				} else if (LOWORD (wParam) >= TBBUTTONS_BASE)
+			     if (LOWORD (wParam) >= TBBUTTONS_BASE)
 					   APP_ButtonCallback (FrameTable[frame].Button[LOWORD (wParam) - TBBUTTONS_BASE], frame, "\n");
 				else 
 	                WIN_ThotCallBack (hwnd, wParam, lParam);
@@ -1153,10 +1161,6 @@ LPARAM      lParam;
 
             case WM_DESTROY:
                  SendMessage (FrRef [frame], "WM_DESTROY", (WPARAM) 0, (LPARAM) 0) ;
-		 /*
-                 HeapFree (GetProcessHeap (), 0, TtCmap);
-                 DeleteObject (TtCmap);
-		 */
                  PostQuitMessage (0) ;
                  return 0 ;
 

@@ -80,6 +80,7 @@ static BOOL         isForm         = FALSE ;
 static PtrAttribute WIN_currAttr;
 static char         formRange [100];
 static int          formValue;
+static int          nbDlgItems ;
 
 extern HINSTANCE hInstance;
 
@@ -793,7 +794,6 @@ int                 view;
 	         /* cree un menu de toutes les valeurs possibles de l'attribut */
 	         lgmenu = 0;
 	         val = 0;
-#            ifndef _WINDOWS
 	         /* boucle sur les valeurs possibles de l'attribut */
 	         while (val < pAttr1->AttrNEnumValues) {
 		           i = strlen (pAttr1->AttrEnumValue[val]) + 2;	/* for 'B' and '\0' */
@@ -804,6 +804,9 @@ int                 view;
 				   }
 		           lgmenu += i;
 			 }
+			 nbDlgItems = val;
+
+#            ifndef _WINDOWS
 	         /* cree le menu des valeurs de l'attribut */
 	         TtaNewSubmenu (subform, form, 0, title, val, bufMenu, NULL, FALSE);
 	         TtaAttachForm (subform);
@@ -1424,7 +1427,10 @@ int                 frame;
 			 } else if (WIN_AtTextAttr && !isForm) {
 		            WIN_InitSheetDialog (TtaGetViewFrame (doc, view), TtaGetMessage (LIB, TMSG_ATTR));
 			 } else if (WIN_AtEnumAttr) {
-                    CreateAlignDlgWindow (TtaGetViewFrame (doc, view));
+				    if (nbDlgItems == 3)
+                       CreateAlign1DlgWindow (TtaGetViewFrame (doc, view));
+					else if (nbDlgItems == 5)
+                         CreateAlign2DlgWindow (TtaGetViewFrame (doc, view));
 			 }
 #            endif /* _WINDOWS */
 		  }

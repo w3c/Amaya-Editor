@@ -84,29 +84,41 @@ static Menu_Ctl    *DocumentMenuList;
 static SchemaMenu_Ctl *SchemasMenuList;
 
 #ifdef _WINDOWS
+#define WM_ENTER (WM_USER)
+
 extern TBADDBITMAP AmayaTBBitmap;
+
+static WNDPROC lpfnTextZoneWndProc = (WNDPROC) 0;
+static int     currentFrame;
+
 HWND hwndClient ;
 HWND ToolBar ;
 HWND StatusBar;
-
+#ifdef AMAYA_TOOLTIPS
+int  nCust[MAX_FRAME][30];
 static HWND hwndTB;
 
 static int  tipIndex = 0;
 static int  strIndex = 0;
-static int  CommandToString [MAX_BUTTON];
-extern char szTbStrings [4096];
+extern int  CommandToString [MAX_BUTTON];
+extern char szTbStrings [MAX_FRAME][4096];
+#endif /* AMAYA_TOOLTIPS */
 
 #define ToolBar_ButtonStructSize(hwnd) \
     (void)SendMessage((hwnd), TB_BUTTONSTRUCTSIZE, (WPARAM)sizeof(TBBUTTON), 0L)
+
 #define ToolBar_AddBitmap(hwnd, nButtons, lptbab) \
     (int)SendMessage((hwnd), TB_ADDBITMAP, (WPARAM)nButtons, (LPARAM)(LPTBADDBITMAP) lptbab)
+
 #define ToolBar_InsertButton(hwnd, idButton, lpButton) \
     (BOOL)SendMessage((hwnd), TB_INSERTBUTTON, (WPARAM)idButton, (LPARAM)(LPTBBUTTON)lpButton)
 
+#ifdef AMAYA_TOOLTIPS
 #ifdef __STDC__
-LPSTR GetString (int iString)
+LPSTR GetString (int frame, int iString)
 #else  /* __STDC__ */
-LPSTR GetString (iString)
+LPSTR GetString (frame, iString)
+int frame;
 int iString;
 #endif /* __STDC__ */
 {
@@ -114,7 +126,7 @@ int iString;
    LPSTR pString ;
 
    /* Cycle through to requested string */
-   pString = szTbStrings ;
+   pString = &szTbStrings[frame][0] ;
    for (i = 0 ; i < iString ; i++) {
        cb = lstrlen (pString) ;
        pString += (cb + 1) ;
@@ -124,9 +136,10 @@ int iString;
 }
 
 #ifdef __STDC__
-LRESULT ToolBarNotify (HWND hwnd, WPARAM wParam, LPARAM lParam)
+LRESULT ToolBarNotify (int frame, HWND hwnd, WPARAM wParam, LPARAM lParam)
 #else  /* __STDC__ */
-LRESULT ToolBarNotify (hwnd, wParam, lParam)
+LRESULT ToolBarNotify (frame, hwnd, wParam, lParam)
+int    frame;
 HWND   hwnd; 
 WPARAM wParam; 
 LPARAM lParam;
@@ -142,18 +155,53 @@ LPARAM lParam;
    /* Provide details of allowable toolbar buttons */
    if (pnmh->code == TBN_GETBUTTONINFO) {
       LPTBNOTIFY ptbn = (LPTBNOTIFY) lParam ;
-      int iButton = nCust[ptbn->iItem] ;
+      int iButton = nCust[frame][ptbn->iItem] ;
 
       if (iButton != -1) {
-         lstrcpy (ptbn->pszText, GetString (ptbn->iItem)) ;
-         memcpy (&ptbn->tbButton, &tbb[iButton], sizeof (TBBUTTON)) ;
+         lstrcpy (ptbn->pszText, GetString (frame, ptbn->iItem)) ;
+         memcpy (&ptbn->tbButton, FrameTable[frame].Button[iButton], sizeof (TBBUTTON)) ;
          return 1 ;
       }
    }
 
    return 0 ;
 }
+#endif /* AMAYA_TOOLTIPS */
 
+#ifdef __STDC__
+LRESULT CALLBACK textZoneProc (HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
+#else  /* __STDC__ */
+LRESULT CALLBACK textZoneProc (hwnd, msg, wParam, lParam)
+HWND   hwnd; 
+UINT   msg; 
+WPARAM wParam; 
+LPARAM lParam;
+#endif /* __STDC__ */
+{
+    switch (msg) { 
+           case WM_KEYDOWN: 
+                switch (wParam) { 
+                       case VK_RETURN: 
+                            SendMessage(FrMainRef [currentFrame], WM_ENTER, 0, 0); 
+                            return 0; 
+				} 
+                break; 
+ 
+           case WM_KEYUP: 
+           case WM_CHAR: 
+                switch (wParam) { 
+                       case VK_RETURN: 
+                       return 0; 
+				} 
+    } 
+ 
+    /* 
+     * Call the original window procedure for default 
+     * processing. 
+     */ 
+ 
+    return CallWindowProc (lpfnTextZoneWndProc, hwnd, msg, wParam, lParam); 
+}
 #endif /* _WINDOWS */
 
 #include "appli_f.h"
@@ -1374,9 +1422,12 @@ char               *info;
                      w->fsStyle   = TBSTYLE_BUTTON;
                      w->dwData    = 0;
                      w->iString   = 0;
+#                    ifdef AMAYA_TOOLTIPS
                      CommandToString[tipIndex++] = TBBUTTONS_BASE + i;
                      CommandToString[tipIndex]   = -1;
-                    FrameTable[frame].Button[i] = w;
+					 nCust [frame][i] = i;
+#                    endif /* AMAYA_TOOLTIPS */
+                     FrameTable[frame].Button[i] = w;
                      FrameTable[frame].Call_Button[i] = (Proc) procedure;
                      ToolBar_ButtonStructSize (WinToolBar[frame]);
                      ToolBar_AddBitmap (WinToolBar[frame], 1, &AmayaTBBitmap);
@@ -1398,8 +1449,10 @@ char               *info;
 #                 endif /* _WINDOWS */
                   if (info != NULL) {
 #                    ifdef _WINDOWS
-		     strcat (&szTbStrings[strIndex], info);
+#            ifdef AMAYA_TOOLTIPS
+		     strcat (&szTbStrings[frame][strIndex], info);
 		     strIndex += (strlen (info) + 1);
+#            endif /* AMAYA_TOOLTIPS */
 #                    else  /* !_WINDOWS */
 		     XcgLiteClueAddWidget(liteClue, w,  info, strlen(info), 0);
 #                    endif /* _WINDOWS */
@@ -1626,7 +1679,15 @@ View                view;
 /*----------------------------------------------------------------------
    TextAction                                                      
   ----------------------------------------------------------------------*/
-#ifndef _WINDOWS
+#ifdef _WINDOWS
+#ifdef __STDC__
+void WIN_APP_TextCallback (HWND w, int frame)
+#else  /* __STDC__ */
+void WIN_APP_TextCallback (w, rame)
+HWND w; 
+int  frame;
+#endif /* __STDC__ */
+#else  /* !_WINDOWS */
 #ifdef __STDC__
 static void         APP_TextCallback (ThotWidget w, int frame, XmTextVerifyCallbackStruct * call_d)
 #else  /* __STDC__ */
@@ -1634,13 +1695,17 @@ static void         APP_TextCallback (w, frame, call_d)
 ThotWidget          w;
 int                 frame;
 XmTextVerifyCallbackStruct *call_d;
-
 #endif /* __STDC__ */
+#endif /* _WINDOWS */
 {
    Document            document;
    View                view;
    int                 i;
+#  ifndef _WINDOWS
    char               *text;
+#  else  /* _WINDOWS */
+   char                text [1024];
+#  endif /* _WINDOWS */
 
    CloseInsertion ();
    i = 0;
@@ -1649,11 +1714,14 @@ XmTextVerifyCallbackStruct *call_d;
    if (i < MAX_TEXTZONE)
      {
 	FrameToView (frame, &document, &view);
+#   ifndef _WINDOWS
 	text = XmTextGetString (w);
+#   else  /* _WINDOWS */
+	GetWindowText (w, text, sizeof (text) + 1);
+#   endif /* _WINDOWS */
 	(*FrameTable[frame].Call_Text[i]) (document, view, text);
      }
 }
-#endif /* _WINDOWS */
 
 /*----------------------------------------------------------------------
    TtaAddTextZone
@@ -1821,10 +1889,18 @@ void                (*procedure) ();
 		  XtManageChild (XtParent (XtParent (row)));
 		  XtManageChild (XtParent (XtParent (XtParent (row))));
 #                 else  /* _WINDOWS */
+		          currentFrame = frame;
                   GetClientRect (FrMainRef [frame], &rect);
                   w = CreateWindow ("EDIT", "", WS_CHILD | WS_VISIBLE | ES_LEFT | WS_BORDER | ES_AUTOHSCROLL,
                                     0, 0, 0, 0, FrMainRef[frame], (HMENU) i, hInstance, NULL);
+
                   FrameTable[frame].Text_Zone[i] = w;
+                  FrameTable[frame].Call_Text[i] = (Proc) procedure;
+
+				  if (lpfnTextZoneWndProc == (WNDPROC) 0)
+                     lpfnTextZoneWndProc = SetWindowLong (FrameTable[frame].Text_Zone[i], GWL_WNDPROC, (DWORD) textZoneProc);
+				  else
+				     SetWindowLong (FrameTable[frame].Text_Zone[i], GWL_WNDPROC, (DWORD) textZoneProc);
 
                   wLabel = CreateWindow ("STATIC", label, WS_CHILD | WS_VISIBLE | SS_LEFT, 
                                          0, 0, 0, 0, FrMainRef[frame], (HMENU) (i + MAX_TEXTZONE), hInstance, NULL);
@@ -1888,7 +1964,8 @@ char               *text;
 #            else  /* _WINDOWS */
 	     w = FrameTable[frame].Text_Zone[index - 1];
 	     if (w != 0)
-                SetWindowText (w, text);
+                 SetWindowText (w, text);
+
 #            endif /* _WINDOWS */
 	     /*XtAddCallback(w, XmNmodifyVerifyCallback, (XtCallbackProc)APP_TextCallback, (XtPointer)frame); */
 	  }
