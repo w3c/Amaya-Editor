@@ -335,7 +335,8 @@ LPARAM     lParam;
    if (frame > 0 && frame <= MAX_FRAME) {
       /* Do not redraw if the document is in NoComputedDisplay mode. */
       if (documentDisplayMode[FrameTable[frame].FrDoc - 1] != NoComputedDisplay) {
-         TtDisplay = BeginPaint (w, &ps);
+         WIN_curWin = w;
+         TtDisplay = BeginPaint (WIN_curWin, &ps);
          GetClientRect (w, &rect);
          DefRegion (frame, ps.rcPaint.left, ps.rcPaint.top, ps.rcPaint.right, ps.rcPaint.bottom);
          SwitchSelection (frame, FALSE);
@@ -1434,6 +1435,7 @@ LPARAM lParam;
 #endif /* __STDC__ */
 {
      HDC          saveHdc;	/* Used to save TtDisplay during current event processing */
+	 HWND         saveCurWin;
      int          frame;
      int          status;
 	 int          delta;
@@ -1507,8 +1509,10 @@ LPARAM lParam;
             case WM_PAINT: 
 	             /* Some part of the Client Area has to be repaint. */
                  saveHdc = TtDisplay;
+				 saveCurWin = WIN_curWin;
                  WIN_HandleExpose (hwnd, frame, wParam, lParam);
                  TtDisplay = saveHdc;
+				 WIN_curWin =saveCurWin;
                  return 0;
 
             case WM_SIZE: {
@@ -2389,7 +2393,7 @@ int                 frame;
    XSetClipRectangles (TtDisplay, TtGreyGC, 0, 0, &rect, 1, Unsorted);
    XFlushOutput (frame);
 #  else  /* _WINDOWS */
-   WIN_GetDeviceContext (frame);
+    WIN_GetDeviceContext (frame);
    SelectClipRgn(TtDisplay, NULL); 
    if (clipRgn && !DeleteObject (clipRgn))
       WinErrorBox (NULL);
