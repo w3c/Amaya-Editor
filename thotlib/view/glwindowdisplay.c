@@ -1450,7 +1450,6 @@ void GL_DrawAll (ThotWidget widget, int frame)
 	     RedrawFrameBottom (frame, 0, NULL);
 	     glFinish ();
 	     gtk_gl_area_swapbuffers (GTK_GL_AREA(widget)); 
-	     saveBuffer (200, 400);
 	     if (GL_Err())
 	       g_print ("Bad drawing\n"); 
 	     GL_Drawing = FALSE;
@@ -1614,23 +1613,38 @@ void GL_BackBufferRegionSwapping (int x, int y,
 void GL_window_copy_area (int frame, int xf, int yf, int xd, int yd,
 			  int width, int height)
 {
-  if (!Software_Mode)
+  /* if (!Software_Mode) */
     DefRegion (frame, 
 	       xd, yd+FrameTable[frame].FrTopMargin, 
 	       width+xd, yd+height+FrameTable[frame].FrTopMargin);
-  else
-    {
-      if (GL_MakeCurrent (frame))
-	return;
+ /*  else */
+/*     { */
+/*       if (GL_MakeCurrent (frame)) */
+/*       	return; */
       /* Copy from backbuffer to backbuffer */
-      glRasterPos2i (xf, yf + height);
-      glCopyPixels (xd,  
-		    FrameTable[frame].FrHeight + FrameTable[frame].FrTopMargin 
-		    - (yd + height), 
-		    width, height, GL_COLOR);
+    
+     /*  glRasterPos2i (xf, yf + height); */
+/*       glCopyPixels (xd,    */
+/*  		    FrameTable[frame].FrHeight + FrameTable[frame].FrTopMargin    */
+/* 		    - (yd + height),  */
+/*  		    width, height, GL_COLOR);  */
       /*copy from back to front */
-      GL_Swap (frame);
-    }
+     /*  GL_Swap (frame); */
+/*       glFinish (); */
+      
+      /* glRasterPos2i (xf, yf + height); */
+/*       glCopyPixels (xd,   */
+/* 		    FrameTable[frame].FrHeight + FrameTable[frame].FrTopMargin  */
+/* 		    - (yd + height),  */
+/* 		    width, height, GL_COLOR); */
+/*       glDrawBuffer (GL_FRONT); */
+/*       glCopyPixels (xd,  */
+/* 		    FrameTable[frame].FrHeight + FrameTable[frame].FrTopMargin  */
+/* 		    - (yd + height),  */
+/* 		    width, height,  */
+/* 		    GL_COLOR); */
+/*       glDrawBuffer (GL_BACK); */
+   /*  } */
 }
 
 
@@ -1738,6 +1752,7 @@ int make_carre()
 	 glVertex2i(  0, 0);/* bas gauche */
 	 glEnd();
    glPopMatrix(); 
+   return 0;
 }
 
 /*-------------------------------
@@ -1796,6 +1811,7 @@ int saveBuffer (int width, int height)
   fwrite(Data, sizeof(unsigned char), length, screenFile);
   fclose(screenFile);
   free(Data);
+  return 0;
 }
 #endif /*_PCLDEBUG*/
 

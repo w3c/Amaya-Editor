@@ -627,7 +627,7 @@ gboolean ExposeCallbackGTK (ThotWidget widget, GdkEventExpose *event, gpointer d
   int                 width;
   int                 height;
 
-  /*
+  /* 
     if (event->count > 0)
       return TRUE;
   */
@@ -1100,25 +1100,21 @@ void FrameVScrolledGTK (GtkAdjustment *w, int frame)
   int                 start, end, total;
   int                 n;
   int                 view;
-  float               carparpix;
-  NotifyWindow        notifyDoc;
+  float               carparpix;  
   Document            doc;
 
   /* ne pas traiter si le document est en mode NoComputedDisplay */
   if (documentDisplayMode[FrameTable[frame].FrDoc - 1] == NoComputedDisplay)
     return;
+  
   FrameToView (frame, &doc, &view);
   /***** printf ("FrameVScrolled\n"); ****/
-  /* h is the height of the page */
-  h = w->page_size;
-  /* Absolute move in the document */
-  delta = w->value;
   /* Regarde ou se situe l'image abstraite dans le document */
   n = PositionAbsBox (frame, &start, &end, &total);
   /* au retour n = 0 si l'image est complete */
   /* Calcule le nombre de caracteres represente par un pixel */
   carparpix = (float) total / (float) FrameTable[frame].FrHeight;
-  y = (int) ((float) w->value * carparpix);
+  y = (int) (w->value * carparpix);
   /******* printf ("  n=%d, y=%d, start=%d, end=%d, total=%d\n", n, y, start, end, total); ****/
   if (n == 0 || (y >= start && y <= total - end))
     {
@@ -1129,24 +1125,30 @@ void FrameVScrolledGTK (GtkAdjustment *w, int frame)
       delta = FrameTable[frame].FrHeight - start - end;
       /* Calcule la position demandee dans cette portion de scroll */
       /* On detecte quand le deplacement bute en bas du document */
-      if (w->value + h >= FrameTable[frame].FrHeight)
+      if ((int)(w->value + w->page_size) >= FrameTable[frame].FrHeight)
 	y = delta;
       else
-	y = w->value - start;
+	y = (int) w->value - start;
       /***** printf ("  ShowYPosition %d %d\n", y, delta); *****/
       ShowYPosition (frame, y, delta);
     }
   else if (!JumpInProgress)
     {
       JumpInProgress = TRUE;
+      /* h is the height of the page */
+      h = (int) w->page_size;
+      /* Absolute move in the document */
+      delta = (int) w->value; 
       /* On regarde si le deplacement bute en bas du document */
       if (delta + h >= FrameTable[frame].FrHeight - 4)
 	delta = FrameTable[frame].FrHeight;
       else if (delta >= 4)
 	/* Ou plutot vers le milieu */
-	delta += h / 2;
-      else
-	delta = 0;
+	  delta -= h / 2;
+      /* else */
+      /* 	delta = 0; */
+      if (delta <= 0)
+	return;
       delta = (delta * 100) / FrameTable[frame].FrHeight;
       /***** printf ("  JumpIntoView %d\n", delta); ****/
       JumpIntoView (frame, delta);
@@ -3339,12 +3341,12 @@ void UpdateScrollbars (int frame)
 	 gtk_widget_show (GTK_WIDGET (hscroll));
 	 
 	 tmpw = gtk_range_get_adjustment (GTK_RANGE (hscroll));
-	 tmpw->lower = 0;
-	 tmpw->upper = l;
-	 tmpw->page_size = width;
-	 tmpw->page_increment = width-13;
-	 tmpw->step_increment = 8;
-	 tmpw->value = Xpos;
+	 tmpw->lower = (gfloat) 0;
+	 tmpw->upper = (gfloat) l;
+	 tmpw->page_size = (gfloat) width;
+	 tmpw->page_increment = (gfloat) width-13;
+	 tmpw->step_increment = (gfloat) 8;
+	 tmpw->value = (gfloat) Xpos;
 	 gtk_adjustment_changed (tmpw);
        }
    else
@@ -3358,19 +3360,18 @@ void UpdateScrollbars (int frame)
 	 gtk_widget_show (GTK_WIDGET (vscroll));
 	 
 	 tmpw = gtk_range_get_adjustment (GTK_RANGE (vscroll));
-	 tmpw->lower = 0;
-	 tmpw->upper = h;
-	 tmpw->page_size = height;
-	 tmpw->page_increment = height;
-	 tmpw->step_increment = 6;
-	 tmpw->value = Ypos;
+	 tmpw->lower = (gfloat) 0;
+	 tmpw->upper = (gfloat) h;
+	 tmpw->page_size = (gfloat) height;
+	 tmpw->page_increment = (gfloat) height;
+	 tmpw->step_increment = (gfloat) 6;
+	 tmpw->value = (gfloat) Ypos;
 	 gtk_adjustment_changed (tmpw);
        }
      else
        {
 	 gtk_widget_show (GTK_WIDGET (vscroll));
        } 
-   gtk_widget_queue_draw   (GTK_WIDGET (vscroll));
 #endif /*_GTK*/  
 #else  /* _WINDOWS */
    GetWindowRect (FrRef[frame], &rWindow);
