@@ -1,0 +1,33 @@
+# package property file for package biss.awt.kernel
+
+#
+# if nothing is specified here, the property defaults to the DISPLAY
+# environment variable
+#
+#biss.awt.kernel.Display=:0.0 
+
+#
+# these are the default fonts hardcoded in the native lib
+#
+#biss.awt.kernel.Courier=-adobe-courier-
+#biss.awt.kernel.Helvetica=-adobe-helvetica-
+#biss.awt.kernel.TimesRoman=-adobe-times-
+#biss.awt.kernel.Dialog=-b&h-lucida-
+#biss.awt.kernel.Symbol=-misc-fixed-
+
+#
+# misc dynamic behavior
+#
+#biss.awt.kernel.HasNativePopUps=true
+#biss.awt.kernel.UseBackingStore=true
+
+#
+# Frame insets
+#
+#biss.awt.kernel.ShrinkFrame=true
+#biss.awt.kernel.BorderInset=4
+# border-exclusive, value of '0' defaults to (biss.awt.SysFont * 3/2)
+#biss.awt.kernel.TitleInset=0
+
+
+
