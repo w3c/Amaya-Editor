@@ -722,7 +722,9 @@ void XhtmlElementComplete (ParserData *context, Element el, int *error)
        
      case HTML_EL_Data_cell:
      case HTML_EL_Heading_cell:
-       /* insert a pseudo paragraph into empty cells */
+     case HTML_EL_List_Item:
+     case HTML_EL_Definition:
+       /* insert a pseudo paragraph into empty cells or list items */
        child = TtaGetFirstChild (el);
        if (child == NULL)
 	 {
@@ -731,17 +733,20 @@ void XhtmlElementComplete (ParserData *context, Element el, int *error)
 	   if (child != NULL)
 	       TtaInsertFirstChild (&child, el, doc);
 	 }
-       
-       /* detect whether we are parsing a whole table or just a cell */
-       if (DocumentMeta[doc]->xmlformat)
+       if (elType.ElTypeNum == HTML_EL_Data_cell ||
+	   elType.ElTypeNum == HTML_EL_Heading_cell)
+	 /* detect whether we are parsing a whole table or just a cell */
 	 {
-	   if (IsWithinXmlTable ())
-	     NewCell (el, doc, FALSE, FALSE, FALSE);
-	 }
-       else
-	 {
-	   if (IsWithinHtmlTable ())
-	     NewCell (el, doc, FALSE, FALSE, FALSE);
+	   if (DocumentMeta[doc]->xmlformat)
+	     {
+	       if (IsWithinXmlTable ())
+		 NewCell (el, doc, FALSE, FALSE, FALSE);
+	     }
+	   else
+	     {
+	       if (IsWithinHtmlTable ())
+		 NewCell (el, doc, FALSE, FALSE, FALSE);
+	     }
 	 }
        break;
        
