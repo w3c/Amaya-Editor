@@ -14,30 +14,8 @@
  *                   for the byzance collaborative work application
  */
 
-/* app generated files */
-#include "HTML.h"
-#include "MathML.h"
-#include "GraphML.h"
-#include "XLink.h"
-#include "Annot.h"
-
-/* Amaya modules */
-
 #define THOT_EXPORT extern
 #include "amaya.h"
-
-#ifdef _WINDOWS
-#include "wininclude.h"
-#endif /* _WINDOWS */
-
-#include "html2thot_f.h"
-#include "init_f.h"
-#include "query_f.h"
-#include "EDITORactions_f.h"
-#include "HTMLactions_f.h"
-#include "HTMLedit_f.h"
-#include "HTMLtable_f.h"
-#
 
 /* RDF Property names */
 
@@ -156,13 +134,6 @@ typedef struct _AnnotMetaDataList {
 				  document */
 } AnnotMetaDataList;
 
-/* Annotation modules */
-#include "ANNOTtools_f.h"
-#include "ANNOTlink_f.h"
-#include "ANNOTevent_f.h"
-#include "ANNOTfiles_f.h"
-#include "ANNOTmenu_f.h"
-#include "AHTrdf2annot_f.h"
 
 /*************
  ** Annot Filter menu
@@ -203,10 +174,4 @@ typedef struct _RDFStatement
   RDFResourceP object;
 } RDFStatement, *RDFStatementP;
 
-#include "ANNOTschemas_f.h"
-
 #endif /* ANNOTATIONS_H */
-
-
-
-

@@ -80,6 +80,7 @@
 #ifdef ANNOTATIONS
 #include "annotlib.h"
 #include "ANNOTevent_f.h"
+#include "ANNOTfiles_f.h"
 #endif /* ANNOTATIONS */
 
 #ifdef _WINDOWS
@@ -1831,10 +1832,19 @@ Document InitDocView (Document doc, char *docname, DocumentType docType,
 	   AddGraphicsButton (doc, 1);
 #endif /* GRAPHML */
 	   if (docType == docAnnot)
-	     TtcSwitchCommands (doc, 1); /* no command open */
+	     {
+	       TtcSwitchCommands (doc, 1); /* no command open */
+	     }
 	   else
-	     TtaAddTextZone (doc, 1, TtaGetMessage (AMAYA,  AM_OPEN_URL), TRUE,
-			   TextURL);
+	     {
+	       TtaAddTextZone (doc, 1, TtaGetMessage (AMAYA,  AM_OPEN_URL),
+			       TRUE, TextURL);
+	       /* turn off the assign annotation buttons (should be
+		  contextual */
+	       TtaSetItemOff (doc, 1, Annotations_, BMoveAnnotSel);
+	       TtaSetItemOff (doc, 1, Annotations_, BMoveAnnotXPtr);
+	       TtaSetItemOff (doc, 1, Annotations_, BPostAnnot);
+	     }
 
 	   /* initial state for menu entries */
 	   TtaSetItemOff (doc, 1, File, BBack);

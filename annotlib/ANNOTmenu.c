@@ -15,16 +15,20 @@
  */
 
 /**
-w3c_algaeQuery=(ask '((?p ?s ?o)) :collect '(?p ?s ?o))
+   w3c_algaeQuery=(ask '((?p ?s ?o)) :collect '(?p ?s ?o))
+**/
 
- **/
-
-#define THOT_EXPORT extern
-#include "HTML.h"
+/* annotlib includes */
 #include "annotlib.h"
-#include "HTMLhistory_f.h"
 #include "ANNOTmenu.h"
-#
+#include "ANNOTschemas_f.h"
+#include "ANNOTevent_f.h"
+#include "ANNOTtools_f.h"
+
+/* amaya includes */
+#include "HTMLhistory_f.h"
+
+/* windows includes */
 #ifdef _WINDOWS
 #include "resource.h"
 #include "wininclude.h"
@@ -34,6 +38,9 @@ w3c_algaeQuery=(ask '((?p ?s ?o)) :collect '(?p ?s ?o))
 
 extern HINSTANCE hInstance;
 #endif /* _WINDOWS */
+
+/* schema includes */
+#include "XLink.h"
 
 /* common local variables */
 static CHAR_T  s[MAX_LENGTH]; /* general purpose buffer */

@@ -14,8 +14,18 @@
  *                  for the byzance collaborative work application
  */
 
+/* annotlib includes */
 #include "annotlib.h"
-#include "AHTURLTools_f.h"
+#include "ANNOTfiles_f.h"
+#include "ANNOTschemas_f.h"
+#include "ANNOTevent_f.h"
+#include "ANNOTtools_f.h"
+
+/* Amaya includes */
+#include "init_f.h"
+
+/* schema includes */
+#include "Annot.h"
 
 /*-----------------------------------------------------------------------
    Procedure ANNOT_SetPath (document)

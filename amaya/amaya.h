@@ -31,6 +31,8 @@
 /* Included headerfiles */
 #include "EDITOR.h"
 #include "HTML.h"
+#include "MathML.h"
+#include "GraphML.h"
 #include "TextFile.h"
 #include "amayamsg.h"
 #include "parser.h"
@@ -38,8 +40,8 @@
 #define NAME_LENGTH     32
 
 #define HTAppName     TEXT("amaya")
-#define HTAppVersion  TEXT("V4.3")
-#define HTAppDate     TEXT ("28 February 2001")
+#define HTAppVersion  TEXT("V4.3.1")
+#define HTAppDate     TEXT ("15 March 2001")
 
 #define URL_STR       "/"
 #define URL_SEP       '/'

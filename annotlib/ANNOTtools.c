@@ -14,13 +14,32 @@
  * Acknowledgments: inspired from code written by Christophe Marjoline 
  *                  for the byzance collaborative work application
  */
- 
+
+/* system includes */
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+ 
+/* annotlib includes */
 #include "annotlib.h"
-#include "AHTURLTools_f.h"
+/* #include "ANNOTtools_f.h" */
+#include "ANNOTlink_f.h"
+#include "ANNOTevent_f.h"
+#include "ANNOTfiles_f.h"
+#include "ANNOTschemas_f.h"
+
+/* Amaya includes */
+#include "XPointer.h"
+#include "XPointerparse_f.h"
+#include "init_f.h"
+#include "XLinkedit_f.h"
 #include "fetchXMLname_f.h"
+#include "AHTURLTools_f.h"
+
+/* schema includes */
+#include "Annot.h"
+#include "XLink.h"
+
 #ifdef _WINDOWS
 #define TMPDIR "TMP"
 #else

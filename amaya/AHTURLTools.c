@@ -88,7 +88,7 @@ char *EscapeURL (const char *url)
     {
       buffer_free_mem = strlen (url) + 20;
       buffer = TtaGetMemory (buffer_free_mem + 1);
-      ptr = url;
+      ptr = (char *) url;
       buffer_len = 0;
 
       while (*ptr)

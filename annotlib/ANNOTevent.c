@@ -15,12 +15,30 @@
  *                  for the byzance collaborative work application
  */
 
+
+/* annotlib includes */
 #include "annotlib.h"
-#include "AHTURLTools_f.h"
+#include "ANNOTevent_f.h"
 #include "ANNOTtools_f.h"
+#include "ANNOTschemas_f.h"
+#include "ANNOTlink_f.h"
+#include "ANNOTfiles_f.h"
+#include "ANNOTmenu_f.h"
+#include "AHTrdf2annot_f.h"
+
+/* Amaya includes */
+#include "init_f.h"
+#include "HTMLactions_f.h"
+#include "AHTURLTools_f.h"
+#include "query_f.h"
+#include "XLinkedit_f.h"
 #include "XPointer.h"
 #include "XPointer_f.h"
 #include "XPointerparse_f.h"
+
+/* schema includes */
+#include "Annot.h"
+#include "XLink.h"
 
 #define DEFAULT_ALGAE_QUERY "w3c_algaeQuery=(ask '((?p ?s ?o)) :collect '(?p ?s ?o))"
 

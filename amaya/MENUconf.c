@@ -45,7 +45,8 @@
 #include "fileaccess.h"
 #include "profiles.h"
 
-#ifdef _ANNOTATIONS
+#ifdef ANNOTATIONS
+#include "annotlib.h"
 #include "ANNOTevent_f.h"
 #endif /* ANNOTATIONS */
 

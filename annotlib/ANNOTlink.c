@@ -15,15 +15,28 @@
  *                  for the byzance collaborative work application
  */
 
+/* annotlib includes */
 #include "annotlib.h"
-#include "ANNOTtools_f.h"
-#include "AHTURLTools_f.h"
+#include "ANNOTlink_f.h"
+#include "ANNOTschemas_f.h"
 #include "ANNOTevent_f.h"
+#include "ANNOTtools_f.h"
+#include "AHTrdf2annot_f.h"
+
+/* Amaya includes */
 #include "XPointer.h"
-#include "XPointer_f.h"
 #include "XPointerparse_f.h"
+#include "init_f.h"
 #include "XLinkedit_f.h"
 #include "fetchXMLname_f.h"
+#include "AHTURLTools_f.h"
+
+/* schema includes */
+#include "XLink.h"
+#include "HTML.h"
+#include "MathML.h"
+#include "GraphML.h"
+
 
 /*-----------------------------------------------------------------------
   LINK_CreateAName
@@ -703,7 +716,7 @@ Element LINK_SelectSourceDoc (Document doc, CONST CHAR_T *annot_url,
   ThotBool selected = FALSE;
 
   if (IsW3Path (annot_url) || IsFilePath (annot_url))
-    url = annot_url;
+    url = (CHAR_T *) annot_url;
   else
     url = ANNOT_MakeFileURL (annot_url);
 

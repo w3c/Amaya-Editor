@@ -23,6 +23,7 @@
 
 #ifdef ANNOTATIONS
 #include "annotlib.h"
+#include "ANNOTevent_f.h"
 #endif /* ANNOTATIONS */
 
 #ifdef _WINDOWS

@@ -15,13 +15,23 @@
  *
  */
 
+/* system includes */
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "xmlparse.h"
+
+/* annotlib includes */
 #include "annotlib.h"
-#include "AHTURLTools_f.h"
+#include "AHTrdf2annot_f.h"
+#include "ANNOTschemas_f.h"
+#include "ANNOTtools_f.h"
+
+/* libwww  includes */
+#include "xmlparse.h"
 #include "HTRDF.h"
+
+/* Amaya includes */
+#include "AHTURLTools_f.h"
 
 /********************** static variables ***********************/
 

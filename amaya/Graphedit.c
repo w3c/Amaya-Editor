@@ -1742,30 +1742,6 @@ static void         CallbackGraph (int ref, int typedata, STRING data)
 }
 
 /*----------------------------------------------------------------------
-   InitGraphML initializes GraphML context.
-  ----------------------------------------------------------------------*/
-void                InitGraphML ()
-{
-#  ifndef _WINDOWS
-   iconGraph = TtaCreatePixmapLogo (Graph_xpm);
-   iconGraphNo = TtaCreatePixmapLogo (GraphNo_xpm);
-   mIcons[0] = TtaCreatePixmapLogo (line_xpm);
-   mIcons[1] = TtaCreatePixmapLogo (rect_xpm);
-   mIcons[2] = TtaCreatePixmapLogo (roundrect_xpm);
-   mIcons[3] = TtaCreatePixmapLogo (circle_xpm);
-   mIcons[4] = TtaCreatePixmapLogo (oval_xpm);
-   mIcons[5] = TtaCreatePixmapLogo (polyline_xpm);
-   mIcons[6] = TtaCreatePixmapLogo (polygon_xpm);
-   mIcons[7] = TtaCreatePixmapLogo (spline_xpm);
-   mIcons[8] = TtaCreatePixmapLogo (closed_xpm);
-   mIcons[9] = TtaCreatePixmapLogo (label_xpm);
-   mIcons[10] = TtaCreatePixmapLogo (text_xpm);
-   mIcons[11] = TtaCreatePixmapLogo (group_xpm);
-#  endif /* _WINDOWS */
-   GraphDialogue = TtaSetCallback (CallbackGraph, MAX_GRAPH);
-}
-
-/*----------------------------------------------------------------------
    ShowGraphicsPalette displays the Graphics palette
   ----------------------------------------------------------------------*/
 static void         ShowGraphicsPalette (Document doc, View view)
@@ -1773,7 +1749,6 @@ static void         ShowGraphicsPalette (Document doc, View view)
    if (!TtaGetDocumentAccessMode (doc))
      /* the document is in ReadOnly mode */
      return;
-
 # ifndef _WINDOWS
   if (!PaletteDisplayed)
     {
@@ -1794,6 +1769,32 @@ static void         ShowGraphicsPalette (Document doc, View view)
 # endif /* _WINDOWS */
 }
 #endif /* GRAPHML */
+
+/*----------------------------------------------------------------------
+   InitGraphML initializes GraphML context.
+  ----------------------------------------------------------------------*/
+void                InitGraphML ()
+{
+#ifdef GRAPHML
+#  ifndef _WINDOWS
+   iconGraph = TtaCreatePixmapLogo (Graph_xpm);
+   iconGraphNo = TtaCreatePixmapLogo (GraphNo_xpm);
+   mIcons[0] = TtaCreatePixmapLogo (line_xpm);
+   mIcons[1] = TtaCreatePixmapLogo (rect_xpm);
+   mIcons[2] = TtaCreatePixmapLogo (roundrect_xpm);
+   mIcons[3] = TtaCreatePixmapLogo (circle_xpm);
+   mIcons[4] = TtaCreatePixmapLogo (oval_xpm);
+   mIcons[5] = TtaCreatePixmapLogo (polyline_xpm);
+   mIcons[6] = TtaCreatePixmapLogo (polygon_xpm);
+   mIcons[7] = TtaCreatePixmapLogo (spline_xpm);
+   mIcons[8] = TtaCreatePixmapLogo (closed_xpm);
+   mIcons[9] = TtaCreatePixmapLogo (label_xpm);
+   mIcons[10] = TtaCreatePixmapLogo (text_xpm);
+   mIcons[11] = TtaCreatePixmapLogo (group_xpm);
+#  endif /* _WINDOWS */
+   GraphDialogue = TtaSetCallback (CallbackGraph, MAX_GRAPH);
+#endif /* GRAPHML */
+}
 
 /*----------------------------------------------------------------------
    AddGraphicsButton    
