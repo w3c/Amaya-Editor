@@ -1,6 +1,7 @@
 #ifdef _WX
 
 #include "wx/wx.h"
+#include "wx/button.h"
 
 #include "thot_gui.h"
 #include "thot_sys.h"
@@ -95,6 +96,14 @@ AmayaCanvas::AmayaCanvas( AmayaFrame *  p_parent_window,
   m_pAmayaFrame( p_parent_window ),
   m_Init( false )
 {
+#ifdef FORUMLARY_WIDGET_DEMO
+  // demo de comment afficher des widgets dans uen fenetre opengl
+  // il faut creer un panel fils du canvas et y mettre un widget fils du panel
+  wxWindow * p_panel = new wxPanel( this, -1, wxPoint(100,100), wxSize(50,50) );
+  wxWindow * p_button = new wxButton( p_panel, -1, _T("Submit"), wxPoint(0,0) );
+  p_panel->SetSize( p_button->GetSize() );
+#endif /* FORUMLARY_WIDGET_DEMO */
+
   m_Selecting = FALSE;
   SetAutoLayout(TRUE);
   Layout();
