@@ -3435,31 +3435,40 @@ static void SetContentAfterEntity (char *entityName, Element el, Document doc)
  -----------------------------------------------------------------------*/
 static void InsertMathEntity (unsigned char *entityName, Document document)
 {
-  Element       firstSel, lastSel, el, el1, parent, sibling;
+  Element       firstSel, lastSel, el, el1, parent, sibling, delEl, next;
   ElementType   elType, elType1;
   Attribute     attr;
   AttributeType attrType;
   int           firstChar, lastChar, i, len;
-  ThotBool      before, done;
-  char	        *ptr;
+  ThotBool      before, done, emptySel;
   char          buffer[MAX_LENGTH+2];
 
-  if (!TtaIsSelectionEmpty ())
+  if (!TtaGetDocumentAccessMode (document))
+    /* the document is in ReadOnly mode, don't do any change */
     return;
-  TtaGiveFirstSelectedElement (document, &firstSel, &firstChar, &i);
+
   /* if not within a MathML element, nothing to do */
-  elType = TtaGetElementType (firstSel);
+  TtaGiveFirstSelectedElement (document, &firstSel, &firstChar, &i);
+  parent = TtaGetParent (firstSel);
+  if (!parent)
+    return;
+  elType = TtaGetElementType (parent);
   if (strcmp (TtaGetSSchemaName (elType.ElSSchema), "MathML") != 0)
     return;
+  /* an entity can only replace a single element */
   TtaGiveLastSelectedElement (document, &lastSel, &i, &lastChar);
+  if (firstSel != lastSel)
+    return;
+  emptySel = TtaIsSelectionEmpty ();
   TtaOpenUndoSequence (document, firstSel, lastSel, firstChar, lastChar);
   TtaUnselect (document);
   done = FALSE;
+  delEl = NULL;
   /* the new text element will be inserted before the first element
      selected */
   before = TRUE;
   sibling = firstSel;
-  ptr = NULL;
+  elType = TtaGetElementType (firstSel);
   /* create a Thot TEXT element */
   elType1.ElSSchema = elType.ElSSchema;
   elType1.ElTypeNum = MathML_EL_TEXT_UNIT;
@@ -3485,16 +3494,46 @@ static void InsertMathEntity (unsigned char *entityName, Document document)
       done = TRUE;
       TtaRegisterElementCreate (el1, document);
     }
-  else if (elType.ElTypeNum == MathML_EL_TEXT_UNIT)
+  else if (elType.ElTypeNum != MathML_EL_TEXT_UNIT)
+    /* it's a construct. Replace it by a mtext element */
+    {
+      elType1.ElTypeNum = MathML_EL_MTEXT;
+      el1 = TtaNewElement (document, elType1);
+      TtaInsertSibling (el1, firstSel, TRUE, document);
+      TtaInsertFirstChild (&el, el1, document);
+      SetAttrParseMe (el1, document);
+      delEl = firstSel;
+      done = TRUE;
+      TtaRegisterElementCreate (el1, document);
+    }
+  else
     /* current selection is in a text leaf */
     {
-      parent = TtaGetParent (firstSel);
       elType1 = TtaGetElementType (parent);
       if (elType1.ElTypeNum == MathML_EL_MGLYPH &&
 	  strcmp (TtaGetSSchemaName (elType1.ElSSchema), "MathML") == 0)
 	/* the first selected element is within a mglyph. The new text
 	   leaf will be inserted as a sibling of this mglyph */
 	sibling = parent;
+      if (firstChar == 0 && lastChar == 0)
+	/* the whole text string is selected. Delete it */
+	delEl = firstSel;
+      len = TtaGetElementVolume (firstSel);
+      if (firstChar == 1 && !emptySel)
+	/* some text has to be deleted */
+	{
+	  if (lastChar > len)
+	    delEl = firstSel;
+	  else
+	    {
+	      TtaRegisterElementReplace (firstSel, document);
+	      TtaSplitText (firstSel, lastChar, document);
+	      delEl = firstSel;
+	      sibling = firstSel;
+	      TtaNextSibling (&sibling);
+	      TtaRegisterElementCreate (sibling, document);
+	    }
+	}
       if (firstChar > 1)
 	{
 	  len = TtaGetElementVolume (firstSel);
@@ -3511,6 +3550,16 @@ static void InsertMathEntity (unsigned char *entityName, Document document)
 	      sibling = firstSel;
 	      TtaNextSibling (&sibling);
 	      TtaRegisterElementCreate (sibling, document);
+	      if (lastChar > len)
+		delEl = sibling;
+	      else if (lastChar > firstChar)
+		{
+		  TtaSplitText (sibling, lastChar-firstChar+1, document);
+		  delEl = sibling;
+		  next = sibling;
+		  TtaNextSibling (&next);
+		  TtaRegisterElementCreate (next, document);
+		}
 	    }
 	}
     }
@@ -3518,6 +3567,11 @@ static void InsertMathEntity (unsigned char *entityName, Document document)
     {
       TtaInsertSibling (el, sibling, before, document);
       TtaRegisterElementCreate (el, document);
+    }
+  if (delEl)
+    {
+      TtaRegisterElementDelete (delEl, document);
+      TtaDeleteTree (delEl, document);
     }
   attrType.AttrSSchema = elType.ElSSchema;
   attrType.AttrTypeNum = MathML_ATTR_EntityName;
@@ -3542,39 +3596,42 @@ static void InsertMathEntity (unsigned char *entityName, Document document)
  -----------------------------------------------------------------------*/
 void CreateMathEntity (Document document, View view)
 {
-   Element       firstSel;
-   ElementType   elType;
-   int           firstChar, i;
+  Element       firstSel, lastSel, parent;
+  ElementType   elType;
+  int           firstChar, lastChar, i;
 
-   if (!TtaGetDocumentAccessMode (document))
-      /* the document is in ReadOnly mode */
-      return;
-
-   if (!TtaIsSelectionEmpty ())
-      return;
-   TtaGiveFirstSelectedElement (document, &firstSel, &firstChar, &i);
-
-   /* if not within a MathML element, nothing to do */
-   elType = TtaGetElementType (firstSel);
-   if (strcmp (TtaGetSSchemaName (elType.ElSSchema), "MathML") != 0)
-      return;
-   
-   MathMLEntityName[0] = EOS;
+  if (!TtaGetDocumentAccessMode (document))
+    /* the document is in ReadOnly mode, don't do any change */
+    return;
+  TtaGiveFirstSelectedElement (document, &firstSel, &firstChar, &i);
+  /* if not within a MathML element, nothing to do */
+  parent = TtaGetParent (firstSel);
+  if (!parent)
+    return;
+  elType = TtaGetElementType (parent);
+  if (strcmp (TtaGetSSchemaName (elType.ElSSchema), "MathML") != 0)
+    return;
+  TtaGiveFirstSelectedElement (document, &firstSel, &firstChar, &i);
+  TtaGiveLastSelectedElement (document, &lastSel, &i, &lastChar);
+  /* an entity can replace only a single element */
+  if (firstSel != lastSel)
+    return;
+  MathMLEntityName[0] = EOS;
 #ifdef _WINDOWS
-   CreateMCHARDlgWindow (TtaGetViewFrame (document, view), MathMLEntityName);
+  CreateMCHARDlgWindow (TtaGetViewFrame (document, view), MathMLEntityName);
 #else
-   TtaNewForm (BaseDialog + MathEntityForm, TtaGetViewFrame (document, view), 
-	       TtaGetMessage (1, BMEntity), TRUE, 1, 'L', D_CANCEL);
-   TtaNewTextForm (BaseDialog + MathEntityText, BaseDialog + MathEntityForm,
-		   TtaGetMessage (AMAYA, AM_MATH_ENTITY_NAME), NAME_LENGTH, 1,
-		   FALSE);
-   TtaSetTextForm (BaseDialog + MathEntityText, MathMLEntityName);
-   TtaSetDialoguePosition ();
-   TtaShowDialogue (BaseDialog + MathEntityForm, FALSE);
-   TtaWaitShowDialogue ();
+  TtaNewForm (BaseDialog + MathEntityForm, TtaGetViewFrame (document, view), 
+	      TtaGetMessage (1, BMEntity), TRUE, 1, 'L', D_CANCEL);
+  TtaNewTextForm (BaseDialog + MathEntityText, BaseDialog + MathEntityForm,
+		  TtaGetMessage (AMAYA, AM_MATH_ENTITY_NAME), NAME_LENGTH, 1,
+		  FALSE);
+  TtaSetTextForm (BaseDialog + MathEntityText, MathMLEntityName);
+  TtaSetDialoguePosition ();
+  TtaShowDialogue (BaseDialog + MathEntityForm, FALSE);
+  TtaWaitShowDialogue ();
 #endif /* _WINDOWS */
-   if (MathMLEntityName[0] != EOS)
-      InsertMathEntity (MathMLEntityName, document);
+  if (MathMLEntityName[0] != EOS)
+    InsertMathEntity (MathMLEntityName, document);
 }
 
 /*----------------------------------------------------------------------
@@ -3583,22 +3640,6 @@ void CreateMathEntity (Document document, View view)
  -----------------------------------------------------------------------*/
 void CreateInvisibleTimes (Document document, View view)
 {
-   Element       firstSel;
-   ElementType   elType;
-   int           firstChar, i;
-
-   if (!TtaGetDocumentAccessMode (document))
-      /* the document is in ReadOnly mode */
-      return;
-
-   if (!TtaIsSelectionEmpty ())
-      return;
-   TtaGiveFirstSelectedElement (document, &firstSel, &firstChar, &i);
-
-   /* if not within a MathML element, nothing to do */
-   elType = TtaGetElementType (firstSel);
-   if (strcmp (TtaGetSSchemaName (elType.ElSSchema), "MathML") != 0)
-      return;
    InsertMathEntity ("InvisibleTimes", document);
 }
 
@@ -3608,22 +3649,6 @@ void CreateInvisibleTimes (Document document, View view)
  -----------------------------------------------------------------------*/
 void CreateApplyFunction (Document document, View view)
 {
-   Element       firstSel;
-   ElementType   elType;
-   int           firstChar, i;
-
-   if (!TtaGetDocumentAccessMode (document))
-      /* the document is in ReadOnly mode */
-      return;
-
-   if (!TtaIsSelectionEmpty ())
-      return;
-   TtaGiveFirstSelectedElement (document, &firstSel, &firstChar, &i);
-
-   /* if not within a MathML element, nothing to do */
-   elType = TtaGetElementType (firstSel);
-   if (strcmp (TtaGetSSchemaName (elType.ElSSchema), "MathML") != 0)
-      return;
    InsertMathEntity ("ApplyFunction", document);
 }
 
@@ -4253,11 +4278,13 @@ void MathAttrOtherCreated (NotifyAttribute *event)
 
 /*----------------------------------------------------------------------
  MathEntityModified
- An attribute EntityName has been modified by the user.
+ An attribute EntityName has been modified by the user. Update the
+ content of the corresponding element accordingly.
  -----------------------------------------------------------------------*/
 void MathEntityModified (NotifyAttribute *event)
 {
 #define buflen 200
+  Element        el;
   char          *value;
   int            length, i;
   ThotBool       changed;
@@ -4269,6 +4296,7 @@ void MathEntityModified (NotifyAttribute *event)
   if (length >= buflen)
     length = buflen - 2;
   if (length <= 0)
+    /* entity name emty. Unknown entity. */
     {
       value[0] = START_ENTITY;
       value[1] = '?';
@@ -4297,12 +4325,13 @@ void MathEntityModified (NotifyAttribute *event)
 	}
     }
   value[length - 1] = EOS;
-  SetContentAfterEntity (&value[1], event->element, event->document);
+  el = event->element;
+  SetContentAfterEntity (&value[1], el, event->document);
   value[length - 1] = ';';
   value[length] = EOS;
   if (changed)
-    TtaSetAttributeText (event->attribute, value, event->element,
-			 event->document);
+    TtaSetAttributeText (event->attribute, value, el, event->document);
+  ParseMathString (el, TtaGetParent (el), event->document);
 }
 
 /*----------------------------------------------------------------------
