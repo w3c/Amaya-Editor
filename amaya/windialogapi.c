@@ -243,7 +243,7 @@ void WinInitPrinterColors (void)
 void WinInitPrinterColors ()
 #endif /* __STDC__ */
 {
-   int        i, palSize;
+   int        palSize;
    static int initialized = 0;
 
    if (initialized)
@@ -1475,6 +1475,9 @@ LPARAM lParam;
 				if (SaveAsHTML)
 				   CheckRadioButton (hwnDlg, IDC_HTML, IDC_TEXT, IDC_HTML);
 
+				if (SaveAsXML)
+				   CheckRadioButton (hwnDlg, IDC_HTML, IDC_TEXT, IDC_XML);
+
 				if (SaveAsText)
 				   CheckRadioButton (hwnDlg, IDC_HTML, IDC_TEXT, IDC_TEXT);
 
@@ -1500,8 +1503,12 @@ LPARAM lParam;
 						    ThotCallback (baseDlg + toggleSave, INTEGER_DATA, (char*) 0);
 						    break;
 
-					   case IDC_TEXT:
+				       case IDC_XML:
 						    ThotCallback (baseDlg + toggleSave, INTEGER_DATA, (char*) 1);
+						    break;
+
+					   case IDC_TEXT:
+						    ThotCallback (baseDlg + toggleSave, INTEGER_DATA, (char*) 2);
 						    break;
 
 					   case IDC_COPYIMG:

@@ -325,9 +325,10 @@ BEGIN
     PUSHBUTTON      "Clear",ID_CLEAR,91,79,50,14
     PUSHBUTTON      "Browse",IDC_BROWSE,147,79,55,13
     PUSHBUTTON      "Cancel",IDCANCEL,207,79,51,14
-    GROUPBOX        "Output format",-1,7,3,55,34,WS_GROUP
+    GROUPBOX        "Output format",-1,7,3,55,42,WS_GROUP
     CONTROL         "HTML",IDC_HTML,"Button",BS_AUTORADIOBUTTON,12,11,45,12
-    CONTROL         "Text",IDC_TEXT,"Button",BS_AUTORADIOBUTTON,12,22,41,12
+    CONTROL         "XML",IDC_XML,"Button",BS_AUTORADIOBUTTON,12,23,44,8
+    CONTROL         "Text",IDC_TEXT,"Button",BS_AUTORADIOBUTTON,12,31,41,12
     CONTROL         "Copy images",IDC_COPYIMG,"Button",BS_AUTOCHECKBOX | 
                     WS_TABSTOP,14,47,59,16
     CONTROL         "Transform URLs",IDC_TRANSFORMURL,"Button",
@@ -402,6 +403,50 @@ BEGIN
                     14
     CONTROL         "Justify",IDC_JUSTIFY,"Button",BS_AUTORADIOBUTTON,25,58,
                     76,14
+END
+
+GRAPHDIALOG DIALOGEX 0, 0, 68, 148
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Graphics"
+FONT 8, "MS Sans Serif"
+BEGIN
+    PUSHBUTTON      "Done",ID_DONE,12,127,44,14
+    CONTROL         405,IDC_GELLIPSE,"Static",SS_BITMAP | SS_NOTIFY,7,44,27,
+                    18,WS_EX_DLGMODALFRAME | WS_EX_CLIENTEDGE | 
+                    WS_EX_STATICEDGE
+    CONTROL         401,IDC_GLINE,"Static",SS_BITMAP | SS_NOTIFY,7,7,27,18,
+                    WS_EX_DLGMODALFRAME | WS_EX_CLIENTEDGE | 
+                    WS_EX_STATICEDGE
+    CONTROL         407,IDC_GCPOLYLINE,"Static",SS_BITMAP | SS_NOTIFY,7,63,
+                    27,18,WS_EX_DLGMODALFRAME | WS_EX_CLIENTEDGE | 
+                    WS_EX_STATICEDGE
+    CONTROL         404,IDC_GCIRCLE,"Static",SS_BITMAP | SS_NOTIFY,34,25,27,
+                    18,WS_EX_DLGMODALFRAME | WS_EX_CLIENTEDGE | 
+                    WS_EX_STATICEDGE
+    CONTROL         409,IDC_GCCURVE,"Static",SS_BITMAP | SS_NOTIFY,7,82,27,
+                    18,WS_EX_DLGMODALFRAME | WS_EX_CLIENTEDGE | 
+                    WS_EX_STATICEDGE
+    CONTROL         408,IDC_GCURVE,"Static",SS_BITMAP | SS_NOTIFY,34,63,27,
+                    18,WS_EX_DLGMODALFRAME | WS_EX_CLIENTEDGE | 
+                    WS_EX_STATICEDGE
+    CONTROL         402,IDC_GRECT,"Static",SS_BITMAP | SS_NOTIFY,34,7,27,18,
+                    WS_EX_DLGMODALFRAME | WS_EX_CLIENTEDGE | 
+                    WS_EX_STATICEDGE
+    CONTROL         410,IDC_GALPHA1,"Static",SS_BITMAP | SS_NOTIFY,34,82,27,
+                    18,WS_EX_DLGMODALFRAME | WS_EX_CLIENTEDGE | 
+                    WS_EX_STATICEDGE
+    CONTROL         406,IDC_GPOLYLINE,"Static",SS_BITMAP | SS_NOTIFY,34,44,
+                    27,18,WS_EX_DLGMODALFRAME | WS_EX_CLIENTEDGE | 
+                    WS_EX_STATICEDGE
+    CONTROL         403,IDC_GRRECT,"Static",SS_BITMAP | SS_NOTIFY,7,25,27,18,
+                    WS_EX_DLGMODALFRAME | WS_EX_CLIENTEDGE | 
+                    WS_EX_STATICEDGE
+    CONTROL         411,IDC_GALPHA2,"Static",SS_BITMAP | SS_NOTIFY,7,101,27,
+                    18,WS_EX_DLGMODALFRAME | WS_EX_CLIENTEDGE | 
+                    WS_EX_STATICEDGE
+    CONTROL         412,IDC_GGROUP,"Static",SS_BITMAP | SS_NOTIFY,34,101,27,
+                    18,WS_EX_DLGMODALFRAME | WS_EX_CLIENTEDGE | 
+                    WS_EX_STATICEDGE
 END
 
 
@@ -587,6 +632,18 @@ IDB_BSMEDIUM            BITMAP  DISCARDABLE     "bsmedium.bmp"
 IDB_BSLARGE             BITMAP  DISCARDABLE     "bslarge.bmp"
 IDR_TOOLBAR1            BITMAP  DISCARDABLE     "toolbar1.bmp"
 IDB_MATRIX              BITMAP  DISCARDABLE     "matrix.bmp"
+IDB_GLINE               BITMAP  DISCARDABLE     "gline.bmp"
+IDB_GRECT               BITMAP  DISCARDABLE     "grect.bmp"
+IDB_GRRECT              BITMAP  DISCARDABLE     "grrect.bmp"
+IDB_GCIRCLE             BITMAP  DISCARDABLE     "gcircle.bmp"
+IDB_GELLIPSE            BITMAP  DISCARDABLE     "gellipse.bmp"
+IDB_GPOLYLINE           BITMAP  DISCARDABLE     "gpolylin.bmp"
+IDB_GCPOLYLINE          BITMAP  DISCARDABLE     "gcpolyli.bmp"
+IDB_GCURVE              BITMAP  DISCARDABLE     "gcurve.bmp"
+IDB_GCCURVE             BITMAP  DISCARDABLE     "gccurve.bmp"
+IDB_GALPHA1             BITMAP  DISCARDABLE     "galpha1.bmp"
+IDB_GALPHA2             BITMAP  DISCARDABLE     "galpha2.bmp"
+IDB_GGROUP              BITMAP  DISCARDABLE     "ggroup.bmp"
 
 /////////////////////////////////////////////////////////////////////////////
 //
