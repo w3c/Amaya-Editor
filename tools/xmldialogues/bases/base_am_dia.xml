@@ -232,6 +232,9 @@
 	<message xml:lang="it">Sincronizza</message>
 	<message xml:lang="es">Sinchronizar</message>
 </label>
+<label define="BLatinReading">
+	<message xml:lang="en">Latin Reading</message>
+</label>
 <label define="BDocInfo">
 	<message xml:lang="en">Document Information</message>
 	<message xml:lang="fr">Informations sur le document</message>
