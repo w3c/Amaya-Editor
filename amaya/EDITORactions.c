@@ -1823,30 +1823,6 @@ void CreateCol (Document document, View view)
 }
 
 /*----------------------------------------------------------------------
-  CreateTHead
-  ----------------------------------------------------------------------*/
-void CreateTHead (Document document, View view)
-{
-   CreateHTMLelement (HTML_EL_thead, document);
-}
-
-/*----------------------------------------------------------------------
-  CreateTBody
-  ----------------------------------------------------------------------*/
-void CreateTBody (Document document, View view)
-{
-   CreateHTMLelement (HTML_EL_tbody, document);
-}
-
-/*----------------------------------------------------------------------
-  CreateTFoot
-  ----------------------------------------------------------------------*/
-void CreateTFoot (Document document, View view)
-{
-   CreateHTMLelement (HTML_EL_tfoot, document);
-}
-
-/*----------------------------------------------------------------------
   ChangeCell creates or transforms a cell
   ----------------------------------------------------------------------*/
 static void ChangeCell (Document doc, View view, int typeCell)
@@ -2348,13 +2324,12 @@ static void CreateColumn (Document doc, View view, ThotBool before)
 	  if (dispMode == DisplayImmediately)
 	    TtaSetDisplayMode (doc, DeferredDisplay);
 	  
-	  TtaOpenUndoSequence (doc, NULL, NULL, 0, 0);
 	  /* Create the column */
 	  elNew = NewColumnHead (col, before, FALSE, NULL, doc, inMath, TRUE);
-	  TtaCloseUndoSequence (doc);
 	  TtaSetDisplayMode (doc, dispMode);
 	  TtaSetDocumentModified (doc);
 	}
+      TtaCloseUndoSequence (doc);
     }
 }
 
@@ -2379,7 +2354,28 @@ void CreateColumnAfter (Document doc, View view)
   ----------------------------------------------------------------------*/
 void PasteBefore (Document doc, View view)
 {
-  ;
+  Element             cell, el, child;
+  ElementType         elType;
+
+  /* get the enclosing cell */
+  cell = GetEnclosingCell (doc);
+  if (cell)
+    {
+      /* move the selection at the beginning of the cell */
+      child = cell;
+      while (child)
+	{
+	  el = child;
+	  child = TtaGetFirstChild (el);
+	}
+      elType = TtaGetElementType (el);
+      if (elType.ElTypeNum == HTML_EL_TEXT_UNIT)
+	TtaSelectString (doc, el, 1, 0);
+      else
+	TtaSelectElement (doc, el);
+      TtcPaste (doc, view);
+      TtaCloseUndoSequence (doc);
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -2387,7 +2383,40 @@ void PasteBefore (Document doc, View view)
   ----------------------------------------------------------------------*/
 void PasteAfter (Document doc, View view)
 {
-  ;
+  Element             cell;
+
+  /* get the enclosing cell */
+  cell = GetEnclosingCell (doc);
+  if (cell)
+    {
+      TtaSelectElement (doc, cell);
+      TtcPaste (doc, view);
+      TtaCloseUndoSequence (doc);
+    }
+}
+
+/*----------------------------------------------------------------------
+  CreateTHead
+  ----------------------------------------------------------------------*/
+void CreateTHead (Document document, View view)
+{
+   CreateHTMLelement (HTML_EL_thead, document);
+}
+
+/*----------------------------------------------------------------------
+  CreateTBody
+  ----------------------------------------------------------------------*/
+void CreateTBody (Document document, View view)
+{
+   CreateHTMLelement (HTML_EL_tbody, document);
+}
+
+/*----------------------------------------------------------------------
+  CreateTFoot
+  ----------------------------------------------------------------------*/
+void CreateTFoot (Document document, View view)
+{
+   CreateHTMLelement (HTML_EL_tfoot, document);
 }
 
 /*----------------------------------------------------------------------
