@@ -84,6 +84,7 @@ typedef HBITMAP        ThotBitmap;
 typedef COLORREF       ThotColor;
 typedef COLORREF       Pixel;
 typedef void          *ThotPixmap;
+typedef void          *Pixmap;
 typedef HCURSOR        ThotCursor;
 #ifndef _GL
 typedef HWND           Drawable;
