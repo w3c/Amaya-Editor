@@ -340,17 +340,5 @@ SOURCE=..\..\thotlib\image\xbmhandler.c
 
 SOURCE=..\..\thotlib\image\xpmhandler.c
 # End Source File
-# Begin Source File
-
-SOURCE=..\libjpeg.lib
-# End Source File
-# Begin Source File
-
-SOURCE=..\libpng.lib
-# End Source File
-# Begin Source File
-
-SOURCE=..\libThotTable.lib
-# End Source File
 # End Target
 # End Project
