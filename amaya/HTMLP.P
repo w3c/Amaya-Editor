@@ -4792,6 +4792,7 @@ RULES
   CDATA:
 	BEGIN
 	Visibility: Enclosing =;
+        LineBreak: no;
 	MarginBottom: 0.4;
 	IN Structure_view BEGIN
 		Width: Enclosing . Width;
