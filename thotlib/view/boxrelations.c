@@ -530,23 +530,65 @@ void     ComputeRadius (PtrAbstractBox pAb, int frame, ThotBool horizRef)
   ----------------------------------------------------------------------*/
 int GetGhostSize (PtrBox pBox, ThotBool horizontal)
 {
-  PtrAbstractBox  pParent;
+  PtrAbstractBox  pAb, pChild, pNext, pParent;
   int             dim;
 
   if (pBox == NULL)
     return 0;
   else if (pBox->BxType == BoGhost || pBox->BxType == BoFloatGhost)
     {
-      pParent = pBox->BxAbstractBox->AbEnclosing;
-      pBox = pParent->AbBox;
-      if (pBox && (pBox->BxType == BoGhost || pBox->BxType == BoFloatGhost))
-	dim = GetGhostSize (pParent->AbBox, horizontal);
-      else if (horizontal)
-	dim = pBox->BxW;
+      pAb = pBox->BxAbstractBox;
+      pParent = pAb->AbEnclosing;
+      if ((horizontal &&
+	   pAb->AbWidth.DimValue < 0 &&
+	   pAb->AbWidth.DimAbRef == NULL) ||
+	  (!horizontal &&
+	   pAb->AbHeight.DimValue < 0 &&
+	   pAb->AbHeight.DimAbRef == NULL))
+	{
+	  /* depend of the contents */
+	  pChild = pAb->AbFirstEnclosed;
+	  dim = 0;
+	  while (pChild)
+	    {
+	      /* skip presentation boxes */
+	      pNext = pChild->AbNext;
+	      while (pNext && pNext->AbPresentationBox)
+		pNext = pNext->AbNext;
+	      if (pChild->AbBox && !pChild->AbPresentationBox)
+		{
+		  if (pChild->AbBox->BxType == BoGhost ||
+		      pChild->AbBox->BxType == BoFloatGhost)
+		    dim += GetGhostSize (pChild->AbBox, horizontal);
+		  else if (!pChild->AbPresentationBox)
+		    {
+		      if (horizontal)
+			dim += pChild->AbBox->BxWidth;
+		      else
+			dim += pChild->AbBox->BxHeight;
+		    }
+		  if (!pChild->AbPresentationBox &&
+		      ((horizontal && pParent->AbBox->BxType == BoFloatBlock) ||
+		       (!horizontal && pParent->AbBox->BxType == BoBlock)))
+		    /* the first child gives the size */
+		    return dim;
+		}
+	      pChild = pNext;
+	    }
+	}
       else
-	dim = pBox->BxH;
-      if (horizontal && pBox->BxAbstractBox->AbWidth.DimUnit == UnPercent)
-	dim = dim * pBox->BxAbstractBox->AbWidth.DimValue / 100;
+	{
+	  /* inherit from the enclosing box */
+	  pBox = pParent->AbBox;
+	  if (pBox && (pBox->BxType == BoGhost || pBox->BxType == BoFloatGhost))
+	    dim = GetGhostSize (pParent->AbBox, horizontal);
+	  else if (horizontal)
+	    dim = pBox->BxW;
+	  else
+	    dim = pBox->BxH;
+	  if (horizontal && pBox->BxAbstractBox->AbWidth.DimUnit == UnPercent)
+	    dim = dim * pBox->BxAbstractBox->AbWidth.DimValue / 100;
+	}
       return dim;
     }
   else if (horizontal)

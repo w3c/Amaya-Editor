@@ -1567,17 +1567,18 @@ void ClearFloats (PtrBox pBox)
   The parameter pBox points the next box to be inserted.
   Work with absolute positions when xAbs and yAbs are TRUE.
   ----------------------------------------------------------------------*/
-static void InitLine (PtrLine pLine, PtrBox pBlock, int indent,
+static void InitLine (PtrLine pLine, PtrBox pBlock, int frame, int indent,
 		      PtrBox floatL, PtrBox floatR, PtrBox pBox,
 		      int top, int bottom, int left, int right,
 		      ThotBool xAbs, ThotBool yAbs)
 {
   PtrFloat            pfloatL = NULL, pfloatR = NULL;
   PtrAbstractBox      pAb, pAbRef = NULL;
+  PtrBox              box;
   char                clearL, clearR;
   int                 bottomL = 0, bottomR = 0, y;
   int                 orgX, orgY, width;
-  int                 t, b, l, r;
+  int                 t, b, l, r, lbmp, rbmp;
   ThotBool            variable, newFloat;
 
   if (pLine == NULL)
@@ -1593,12 +1594,39 @@ static void InitLine (PtrLine pLine, PtrBox pBlock, int indent,
   if (pBox)
     {
       pAb = pBox->BxAbstractBox;
+      if (pAb->AbVisibility < ViewFrameTable[frame - 1].FrVisibility /*||
+	  pAb->AbFloat != 'N' |
+	  pBox->BxType == BoFloatGhost*/)
+	{
+	  /* ignore invisible or floated boxes */
+	  while (pAb &&
+		 (pAb->AbVisibility < ViewFrameTable[frame - 1].FrVisibility ||
+		 pAb->AbFloat != 'N' ||
+		 pAb->AbBox == NULL ||
+		 pAb->AbBox->BxType == BoFloatGhost))
+	    {
+	      box = GetNextBox (pAb, frame);
+	      if (box)
+		pAb = box->BxAbstractBox;
+	      else
+		pAb = NULL;
+	    }
+	  if (box)
+	    pBox = box;
+	}
       GetExtraMargins (pBox, NULL, &t, &b, &l, &r);
+      /* border, margin, and padding of the current box */
+      lbmp = pBox->BxLMargin + pBox->BxLBorder + pBox->BxLPadding;
+      rbmp = pBox->BxRMargin + pBox->BxRBorder + pBox->BxRPadding;
+      /* keep the CSS2 minimun of margins and the current shift */
+      l += lbmp;
+      r += rbmp;
+      lbmp = rbmp = 0;
     } 
   else
     {
       pAb = NULL;
-      t = b = l = r = 0;
+      t = b = l = r = lbmp = rbmp = 0;
     }
   /* clear values */
   clearL = 'N';
@@ -1618,23 +1646,28 @@ static void InitLine (PtrLine pLine, PtrBox pBlock, int indent,
 	      pBox->BxType != BoFloatGhost &&
 	      (pAb->AbLeafType == LtText ||
 	       (pAb->AbLeafType == LtCompound &&
-		((pAbRef == NULL &&
-		  pAb->AbWidth.DimUnit == UnPercent) ||
+		((pAbRef == NULL && pAb->AbWidth.DimUnit == UnPercent) ||
 		(pAbRef &&
-	      (pAbRef == pBlock->BxAbstractBox ||
-	       pAbRef->AbBox->BxType == BoGhost ||
-	       pAbRef->AbBox->BxType == BoFloatGhost))))));
+		 (pAbRef == pBlock->BxAbstractBox ||
+		  pAbRef->AbBox->BxType == BoGhost ||
+		  pAbRef->AbBox->BxType == BoFloatGhost))))));
+  if (!variable && pBox && pAb &&
+      pBlock->BxType == BoFloatBlock && pBox->BxType == BoBlock &&
+      pAbRef == NULL && pAb->AbWidth.DimValue == -1)
+    /* it's an extensible block of lines */
+    variable = TRUE;
+
   /* minimum width needed to format the line */
   if (variable && (pBox->BxType == BoBlock || pBox->BxType == BoFloatBlock))
     {
       width = pBox->BxMinWidth;
       if (width == 0)
-	width = 20 + pBox->BxLMargin + pBox->BxLBorder + pBox->BxLPadding + pBox->BxRMargin + pBox->BxRBorder + pBox->BxRPadding;
+	width = 20 + lbmp + rbmp;
     }
   else if (!variable && pBox)
-    width = pBox->BxWidth;
+    width = pBox->BxW + lbmp + rbmp;
   else if (pBox)
-    width = 20 + pBox->BxLMargin + pBox->BxLBorder + pBox->BxLPadding + pBox->BxRMargin + pBox->BxRBorder + pBox->BxRPadding;
+    width = 20 + lbmp + rbmp;
   else
     width = 20;
 
@@ -1700,7 +1733,7 @@ static void InitLine (PtrLine pLine, PtrBox pBlock, int indent,
 	}
       else if (pBlock->BxType == BoFloatBlock)
 	{
-	  /* keep the minimun of extra margins and the current shift */
+	  /* keep the CSS2 minimun of margins and the current shift */
 	  if (pLine->LiXOrg > left + l)
 	    pLine->LiXOrg -= l;
 	  else
@@ -1754,7 +1787,7 @@ static void InitLine (PtrLine pLine, PtrBox pBlock, int indent,
 	}
       else if (pBlock->BxType == BoFloatBlock)
 	{
-	  /* keep the minimun of extra margins and the current shift */
+	  /* keep the CSS2 minimun of margins and the current shift */
 	  if (pLine->LiXMax > left + pBlock->BxW - pLine->LiXOrg)
 	    pLine->LiXMax = left + pBlock->BxW - pLine->LiXOrg;
 	}
@@ -1909,7 +1942,7 @@ static int FillLine (PtrLine pLine, PtrBox pBlock, PtrAbstractBox pRootAb,
       pNextBox->BxAbstractBox->AbFloat == 'N' &&
        pNextBox->BxType != BoFloatGhost)
     pLine->LiHeight = pNextBox->BxHeight;
-  InitLine (pLine, pBlock, indent, *floatL, *floatR, pNextBox,
+  InitLine (pLine, pBlock, frame, indent, *floatL, *floatR, pNextBox,
 	    top, bottom, left, right, xAbs, yAbs);
   pLine->LiLastPiece = NULL;
   pBox = NULL;
@@ -2005,7 +2038,7 @@ static int FillLine (PtrLine pLine, PtrBox pBlock, PtrAbstractBox pRootAb,
 	      ResizeWidth (pNextBox, pBlock, NULL,
 			   val - pNextBox->BxWidth, 0, 0, 0, frame);
 	      /* recheck if the line could be moved under floating boxes */
-	      InitLine (pLine, pBlock, indent, *floatL, *floatR, pNextBox,
+	      InitLine (pLine, pBlock, frame, indent, *floatL, *floatR, pNextBox,
 			top, bottom, left, right, xAbs, yAbs);
 	    }
 	}
@@ -2659,13 +2692,10 @@ int SetFloat (PtrBox box, PtrBox pBlock, PtrLine pLine, PtrAbstractBox pRootAb,
   if (pLine)
     {
       y = orgY;
-      /*if (pBlock->BxType == BoBlock)*/
-	{
-	  y += pLine->LiYOrg;
-	  if (pLine->LiXMax - pLine->LiRealLength < box->BxWidth)
-	    /* it must be displayed under the current line */
-	    y += pLine->LiHeight;
-	}
+      y += pLine->LiYOrg;
+      if (pLine->LiXMax - pLine->LiRealLength < box->BxWidth)
+	/* it must be displayed under the current line */
+	y += pLine->LiHeight;
       w = pLine->LiXMax;
     }
   else
@@ -3169,7 +3199,7 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
 	      pLine->LiFirstPiece = NULL;
 	      pLine->LiLastPiece = NULL;
 	      /* It's placed under the previous line */
-	      InitLine (pLine, pBox, indent, floatL, floatR, pNextBox,
+	      InitLine (pLine, pBox, frame, indent, floatL, floatR, pNextBox,
 			top, bottom, left, right, xAbs, yAbs);
 	      if (extensibleBox)
 		/* no limit for an extensible line */
