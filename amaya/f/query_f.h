@@ -24,8 +24,7 @@ extern int AHTLoadTerminate_handler ( HTRequest *request,
 extern void libwww_CleanCache ( void );
 extern void QueryInit ( void );
 extern void QueryClose ( void );
-extern void AHTRequest_setRefererHeader ( HTRequest *request,
-                                          char *value );
+extern void AHTRequest_setRefererHeader ( AHTReqContext *me );
 extern void AHTRequest_setCustomAcceptHeader ( HTRequest *request,
                                                char *value );
 extern void InvokeGetObjectWWW_callback ( int docid,
@@ -87,8 +86,7 @@ extern int AHTLoadTerminate_handler (/* HTRequest *request,
 extern void libwww_CleanCache (/* void */);
 extern void QueryInit (/* void */);
 extern void QueryClose (/* void */);
-extern void AHTRequest_setRefererHeader (/* HTRequest *request,
-                                            char *value */);
+extern void AHTRequest_setRefererHeader (/* AHTReqContext *me */);
 extern void AHTRequest_setCustomAcceptHeader (/* HTRequest *request,
                                                  char *value */);
 extern void InvokeGetObjectWWW_callback (/* int docid,

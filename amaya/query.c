@@ -700,6 +700,9 @@ ThotBool  AHTReqContext_delete (AHTReqContext * me)
 	 TtaFreeMemory (me->document);
 #endif /* ANNOTATIONS */
 
+       if (me->refdocUrl)
+	 TtaFreeMemory (me->refdocUrl);
+
        /* to trace bugs */
        memset ((void *) me, 0, sizeof (AHTReqContext));
        
@@ -997,8 +1000,8 @@ static int redirection_handler (HTRequest *request, HTResponse *response,
 	   if (escape_src)
 	     {
 	       ref = AmayaParseUrl (dst, escape_src, AMAYA_PARSE_ALL);
-	       /* @@@@@@@ */
-	       AHTRequest_setRefererHeader (me->request, escape_src);
+	       if (me->method != METHOD_PUT)
+		 AHTRequest_setRefererHeader (me);
 	       TtaFreeMemory (escape_src);
 	     }
 	   else
@@ -2800,12 +2803,23 @@ static   HTAssocList * PrepareFormdata (char *string)
 
 /*----------------------------------------------------------------------
   ---------------------------------------------------------------------*/
-void AHTRequest_setRefererHeader (HTRequest *request, char *value)
+void AHTRequest_setRefererHeader (AHTReqContext  *me)
 {				
-  HTRqHd rqhd = HTRequest_rqHd (request);
-  rqhd = rqhd & (~HT_C_REFERER);
-  HTRequest_setRqHd (request, rqhd);
-  HTRequest_addExtraHeader (request, "Referer", value);
+  HTRequest *request;
+  HTRqHd     rqhd;
+  ThotBool   referer;
+
+  TtaGetEnvBoolean ("SEND_REFERER", &referer);
+  if (referer && me->refdocUrl && me->refdocUrl[0] != EOS
+      && IsHTTPPath (me->refdocUrl))
+    {
+      request = me->request;
+      rqhd = HTRequest_rqHd (request);
+      rqhd = rqhd & (~HT_C_REFERER);
+
+      HTRequest_setRqHd (request, rqhd);
+      HTRequest_addExtraHeader (request, "Referer", me->refdocUrl);
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -3052,7 +3066,10 @@ int GetObjectWWW (int docid, int refdoc, char *urlName, char *formdata,
        TtaGetEnvBoolean ("SEND_REFERER", &referer);
        if (referer && refdoc && DocumentURLs[refdoc] &&
 	   IsHTTPPath (DocumentURLs[refdoc]))
-	 AHTRequest_setRefererHeader (me->request, DocumentURLs[refdoc]);
+	 {
+	   me->refdocUrl = TtaStrdup (DocumentURLs[refdoc]);
+	   AHTRequest_setRefererHeader (me);
+	 }
        /* language negotiation */
        HTRequest_setLanguage (me->request, acceptLanguages, TRUE);
      }
