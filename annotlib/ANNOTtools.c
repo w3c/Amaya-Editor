@@ -2990,7 +2990,7 @@ void ANNOT_CreateBodyTree (Document doc, DocumentType bodyType)
 void WWWToLocal (char *url)
 {
   char *tmp;
-  char *tmp_url;
+  char *tmp_url, *esc_url;
   char target[MAX_LENGTH];
 
   ThotBool free_tmp_url;
@@ -3005,7 +3005,6 @@ void WWWToLocal (char *url)
      If this is the case, we try to convert them to slashes before invoking
      the libwww function. Otherwise, the convertion will fail.
   */
-
   if (strchr (url, '\\'))
     {
       tmp_url = TtaStrdup (url);
@@ -3024,9 +3023,15 @@ void WWWToLocal (char *url)
       free_tmp_url = FALSE;
     }
 
-  tmp = HTWWWToLocal (tmp_url, "file://", NULL);
+  /* @@ IV: Some of the local annotations could include spaces.
+     If this is the case, we convert them to %20 before invoking
+     the libwww function.
+  */
+  esc_url = EscapeURL (tmp_url);
+  tmp = HTWWWToLocal (esc_url, "file://", NULL);
   if (free_tmp_url)
     TtaFreeMemory (tmp_url);
+  TtaFreeMemory (esc_url);
 
    /* @@ JK: A patch for Windows */
   if (tmp[0] == DIR_SEP && tmp[1] == DIR_SEP && tmp[3] ==':')

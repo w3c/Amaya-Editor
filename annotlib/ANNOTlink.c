@@ -290,12 +290,6 @@ void LINK_AddAnnotIcon (Document source_doc, Element anchor, AnnotMeta *annot)
       char temp[MAX_LENGTH];
 
       /* @@@ JK? */
-#if 0
-      sprintf (s, "%s%camaya%cannot.png",
-	       TtaGetEnvString ("THOTDIR"), DIR_SEP, DIR_SEP);
-      iconName = s;
-#endif
-      /* @@@ JK? */
       strcpy (iconName, iconS->object->name);
       WWWToLocal (iconName);
       /* expand $THOTDIR and $APP_HOME */
