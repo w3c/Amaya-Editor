@@ -1148,7 +1148,7 @@ extern void TtaGetXmlAttributeType (char *XMLName, AttributeType *attrType,
 extern void TtaAddEmptyBox (Element el);
 
 /*----------------------------------------------------------------------
-   TtaIsXmlTypeInLine
+   TtaHasXmlInLineRule
    Retuns TRUE if the element type has a 'Line' presentation rule
   ----------------------------------------------------------------------*/
 extern ThotBool TtaHasXmlInLineRule (ElementType elType, Document document);
