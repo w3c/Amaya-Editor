@@ -78,16 +78,11 @@ compiled:</p>
       --enable-java           Add Kaffe Java virtual machine
       --enable-plugin         Add Netscape Plug-Ins support</pre>
 <p>
-By default configure enable <strong>Java</strong> (otherwise network accesses
-are done using <strong>libWWW</strong>) on Linux and Solaris machine where
-Kaffe is stable. Since Kaffe Java V.M. and Plugins usually don't work well
-together, plugins support are disabled if <strong>Java</strong> is
-enabled.</p>
-<p>
-To compile <strong>Amaya</strong> without Java (for example if
-<strong>Kaffe</strong> doesn't work well on your platform) use the
-following:</p>
-<pre> ../configure --disable-java
+By default configure disable <strong>Java</strong> (network accesses are done
+using <strong>libWWW</strong>) and enable Plugins. On Linux and Solaris
+machine where Kaffe is stable <strong>Java</strong> can be enabled. To compile
+<strong>Amaya</strong> without Plugins use the following:</p>
+<pre> ../configure --disable-plugin
  </pre>
 <p>
 This creates all the Makefiles needed and generate an Options.orig file
@@ -172,7 +167,7 @@ make <strong>classes</strong> rebuild <strong>Java</strong>
 <code>.class</code> files from their <code>.java</code> sources. With some
 versions of kaffe it may be a good idea to increase the maximum size of a Java
 V.M. while compiling by adding " <code>-mx 64000000</code> " before
-<code>sun.tools.javac.Main</code> in <code>bin/javac</code> file.
+<code>sun.tools.javac.Main</code> in <code>bin/javac</code> file. 
 </ul>
 <p>
 One can also go to a specific sub-directory in the object tree and launch make
@@ -224,9 +219,6 @@ mailing-list. Please check first the <a
 href="http://opera.inrialpes.fr/amaya/messages/">archive</a>, the error may
 have been already reported. 
 </ol>
-<p>
-On an unsupported platform see the document on <a href="Porting.html">porting
-to an new platform</a></p>
 <li>
 an error running a compiler schema occured: 
 <ol>

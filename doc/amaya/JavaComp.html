@@ -10,8 +10,8 @@ Compiling Amaya with Kaffe</title>
 src="../../Icons/WWW/w3c_home"></a><a href="../"><img border="0"
 src="amaya.gif" alt="Amaya"></a> <a href="./"><img border="0"
 src="../../Icons/WWW/guide48x" alt="Using"></a></p>
-<h1>Compiling Amaya with Kaffe (Java) Support (old version)</h1>
 
+<h1>Compiling Amaya with Kaffe (Java) Support (old version)</h1>
 <p>
 </p>
 <p>
@@ -29,7 +29,7 @@ distributed <a href="Sources.html">source tree</a> and on one of the <a
 href="Platforms.html">platforms</a> . In the following we will use
 <strong>Target</strong> for the platform nickname (e.g. solaris2 for a Sun
 workstation running Solaris 2.5). Adding support to for a new achitecture is
-explained in the <a href="Porting.html">porting section</a>.</p>
+explained in the <a href="/Autoconf.html">compiling section</a>.</p>
 <p>
 Here is the content of this document:</p>
 <ol>
@@ -48,8 +48,8 @@ Here is the content of this document:</p>
 <li>
 <a href="#L689">If amaya binary doesn't work</a> 
 </ol>
-<h3><a name="L437">Prerequisite:</a></h3>
 
+<h3><a name="L437">Prerequisite:</a></h3>
 <p>
 The complete source tree must have been set-up accordingly to the source
 distribution <a href="Sources.html">installation instructions</a>.</p>
@@ -65,10 +65,10 @@ Having usual Unix development tools, at least <code>sed</code>,
 <li>
 Amaya requires X-Windows (X11R5 or X11R6) and Motif (1.2.x or 2.0). Amaya
 should now work fine with latests versions (0.8.0 and later) of <a
-href="http://www.lesstif.org/">Lesstif</a> (a free Motif clone).
+href="http://www.lesstif.org/">Lesstif</a> (a free Motif clone). 
 </ul>
-<h3><a name="L1012">Differences with non-Java Amaya</a></h3>
 
+<h3><a name="L1012">Differences with non-Java Amaya</a></h3>
 <p>
 The Java environments add the following to the existing Amaya source tree:</p>
 <p>
@@ -100,8 +100,8 @@ When compiling strictly on a Kaffe based Amaya environment, all the
 useful to keep it, for example in case you need to rebuild the
 <code>Thot/</code><strong><code>Target</code></strong><code>/config.h</code>
 which is the result of the <code>libWWW</code> autoconf process.</p>
-<h3><a name="L438">How to build, short version:</a></h3>
 
+<h3><a name="L438">How to build, short version:</a></h3>
 <p>
 Here is a simple recipe explaining how to build on one of the supported
 target, i.e. <code>SOLARIS2</code>, <code>SUN4</code>, <code>LINUX-ELF</code>
@@ -181,8 +181,8 @@ libThotKernel.a : the core Thot library.
 <p>
 One can test the resulting <strong>Amaya</strong> binary by starting
 <code>bin/amaya</code> from the shell.</p>
-<h3><a name="L439">More on the make files:</a></h3>
 
+<h3><a name="L439">More on the make files:</a></h3>
 <p>
 The <code>Thot/makes</code> directory contains a few important files related
 to <strong>Amaya</strong> compilation process:</p>
@@ -278,8 +278,8 @@ Jigsaw HTTP client implementation. It starts the Makefile in
 make <strong>zips</strong> : call make classes and rebuild the ZIP files
 containing the compiled classes. 
 </ul>
-<h3><a name="L666">More info on the build process</a></h3>
 
+<h3><a name="L666">More info on the build process</a></h3>
 <p>
 Here are the steps done when starting <code>make</code> in the
 <code>Thot/</code><strong>Target</strong> directory:</p>
@@ -367,8 +367,8 @@ produce the <strong>Amaya</strong> binary.
 </ol>
 <p>
 Next section try to give some hint on debugging errors at compile-time.</p>
-<h3><a name="L440">If make failed:</a></h3>
 
+<h3><a name="L440">If make failed:</a></h3>
 <p>
 Errors may append at diffferent stages in the compilation process. Here is a
 small checklist:</p>
@@ -431,7 +431,7 @@ href="http://opera.inrialpes.fr/amaya/messages/">archive</a>, the error may
 have been already reported. 
 </ol>
 <p>
-On an unsupported platform see the document on <a href="Porting.html">porting
+On an unsupported platform see the document on <a href="Autoconf.html">porting
 to an new platform</a></p>
 <li>
 an error running a compiler schema occured: 
@@ -515,8 +515,8 @@ development Team, by sending the error to the
 have been already reported 
 </ol>
 </ul>
-<h3><a name="L689">If amaya binary doesn't work:</a></h3>
 
+<h3><a name="L689">If amaya binary doesn't work:</a></h3>
 <p>
 Here is a few rules to check if the amaya binary just produced does not
 start:</p>
