@@ -358,32 +358,29 @@ void TCloseDocument (PtrDocument pDoc)
   if (pDoc != NULL)
     {
       document = (Document) IdentDocument (pDoc);
-      if (LoadedDocument[document] == pDoc)
+      /* the document is still open */
+      notifyDoc.event = TteDocClose;
+      notifyDoc.document = document;
+      notifyDoc.view = 0;
+      if (!CallEventType ((NotifyEvent *) & notifyDoc, TRUE))
 	{
-	  /* the document is still open */
+	  /* if there is a "Spell checker" menu entry, close the spell checker
+	     dialog box */
+	  if (ThotLocalActions[T_clearhistory] != NULL)
+	    (*ThotLocalActions[T_clearhistory]) (pDoc);
+	  /* if some dialog boxes for attribute input are displayed
+	     for that document, close them */
+	  CloseAttributeDialogues (pDoc);
+	  TtaHandlePendingEvents ();
+	  /* detruit toutes les vues ouvertes du document */
+	  CloseAllViewsDoc (pDoc);
+	  /* free document contents */
+	  UnloadTree (document);
 	  notifyDoc.event = TteDocClose;
 	  notifyDoc.document = document;
 	  notifyDoc.view = 0;
-	  if (!CallEventType ((NotifyEvent *) & notifyDoc, TRUE))
-	    {
-	      /* if there is a "Spell checker" menu entry, close the spell checker
-		 dialog box */
-	      if (ThotLocalActions[T_clearhistory] != NULL)
-		(*ThotLocalActions[T_clearhistory]) (pDoc);
-	      /* if some dialog boxes for attribute input are displayed
-		 for that document, close them */
-	      CloseAttributeDialogues (pDoc);
-	      TtaHandlePendingEvents ();
-	      /* detruit toutes les vues ouvertes du document */
-	      CloseAllViewsDoc (pDoc);
-	      /* free document contents */
-	      UnloadTree (document);
-	      notifyDoc.event = TteDocClose;
-	      notifyDoc.document = document;
-	      notifyDoc.view = 0;
-	      CallEventType ((NotifyEvent *) & notifyDoc, FALSE);
-	      UnloadDocument (&pDoc);
-	    }
+	  CallEventType ((NotifyEvent *) & notifyDoc, FALSE);
+	  UnloadDocument (&pDoc);
 	}
     }
 }
