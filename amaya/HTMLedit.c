@@ -100,7 +100,7 @@ Document            targetDoc;
    char               *value, *base;
    char*               tempURL = (char*) TtaGetMemory (sizeof (char) * MAX_LENGTH);
 
-   attrType.AttrSSchema = TtaGetDocumentSSchema (document);
+   attrType.AttrSSchema = TtaGetSSchema ("HTML", document);
    attrType.AttrTypeNum = HTML_ATTR_HREF_;
    attr = TtaGetAttribute (element, attrType);
    if (attr == 0)
@@ -179,7 +179,7 @@ Element             selectedElement;
 	else
 	  {
 	    /* no ascending Anchor element */
-	    attrType.AttrSSchema = TtaGetSSchema ("HTML", doc);;
+	    attrType.AttrSSchema = TtaGetSSchema ("HTML", doc);
 	    /* get the ID attribute of the selected element */
 	    attrType.AttrTypeNum = HTML_ATTR_ID;
 	    attr = TtaGetAttribute (selectedElement, attrType);
@@ -841,7 +841,7 @@ NotifyElement      *event;
   AttributeType       attrType;
   Attribute           attr;
   ElementType         elType;
-  SSchema             docSchema;
+  SSchema             HTMLschema;
   int                 length, i, iName;
   char               *value, *base;
   char*               documentURL = (char*) TtaGetMemory (sizeof (char) * MAX_LENGTH);
@@ -850,10 +850,10 @@ NotifyElement      *event;
 
   el = event->element;
   doc = event->document;
-  docSchema = TtaGetDocumentSSchema (doc);
+  HTMLschema = TtaGetSSchema ("HTML", doc);
   CheckPseudoParagraph (el, doc);
   elType = TtaGetElementType (el);
-  if (docSchema == elType.ElSSchema && elType.ElTypeNum == HTML_EL_Anchor)
+  if (HTMLschema == elType.ElSSchema && elType.ElTypeNum == HTML_EL_Anchor)
     {
       /* Check attribute NAME in order to make sure that its value unique */
       /* in the document */
@@ -1026,10 +1026,12 @@ NotifyAttribute    *event;
 
 #endif /* __STDC__ */
 {
+   Element	firstChild, lastChild;
+
    if (event->event == TteAttrDelete)
       /* if the element is a SPAN without any other attribute, remove the SPAN
          element */
-      DeleteSpanIfNoAttr (event->element, event->document);
+      DeleteSpanIfNoAttr (event->element, event->document, &firstChild, &lastChild);
    else
       {
       MakeUniqueName (event->element, event->document);
@@ -1571,7 +1573,7 @@ int                 notType;
    ElementType         elType, parentType;
    Element             elFont, parent, prev, next, added, child, last;
 
-   elType.ElSSchema = TtaGetDocumentSSchema (document);
+   elType.ElSSchema = TtaGetSSchema ("HTML", document);
    elType.ElTypeNum = notType;
    /* is this element already within an element of the requested type? */
    elFont = TtaGetTypedAncestor (elem, elType);
@@ -1648,7 +1650,7 @@ int                 newtype;
    ElementType         elType, siblingType;
    Element             prev, next, child, added, parent;
 
-   elType.ElSSchema = TtaGetDocumentSSchema (document);
+   elType.ElSSchema = TtaGetSSchema ("HTML", document);
    elType.ElTypeNum = newtype;
    /* is this element already within an element of the requested type? */
    if (TtaGetTypedAncestor (*elem, elType) == NULL)
@@ -2023,7 +2025,7 @@ View                view;
 {
    ElementType         elType;
 
-   elType.ElSSchema = TtaGetDocumentSSchema (document);
+   elType.ElSSchema = TtaGetSSchema ("HTML", document);
    elType.ElTypeNum = HTML_EL_Subscript;
    TtaCreateElement (elType, document);
 }
@@ -2042,7 +2044,7 @@ View                view;
 {
    ElementType         elType;
 
-   elType.ElSSchema = TtaGetDocumentSSchema (document);
+   elType.ElSSchema = TtaGetSSchema ("HTML", document);
    elType.ElTypeNum = HTML_EL_Superscript;
    TtaCreateElement (elType, document);
 }
@@ -2061,7 +2063,7 @@ View                view;
 {
    ElementType         elType;
 
-   elType.ElSSchema = TtaGetDocumentSSchema (document);
+   elType.ElSSchema = TtaGetSSchema ("HTML", document);
    elType.ElTypeNum = HTML_EL_Quotation;
    TtaCreateElement (elType, document);
 }
@@ -2080,7 +2082,7 @@ View                view;
 {
    ElementType         elType;
 
-   elType.ElSSchema = TtaGetDocumentSSchema (document);
+   elType.ElSSchema = TtaGetSSchema ("HTML", document);
    elType.ElTypeNum = HTML_EL_BDO;
    TtaCreateElement (elType, document);
 }
@@ -2105,7 +2107,7 @@ boolaen             link;
    ElementType         elType;
    Element             elAnchor;
    int                 typeNum;
-   SSchema             docSchema;
+   SSchema             HTMLschema;
 
    attr = NULL;
    elType = TtaGetElementType (element);
@@ -2116,13 +2118,13 @@ boolaen             link;
       /* search an ancestor of type Anchor */
       typeNum = HTML_EL_Anchor;
 
-   docSchema = TtaGetDocumentSSchema (doc);
-   if (elType.ElTypeNum == typeNum && elType.ElSSchema == docSchema)
+   HTMLschema = TtaGetSSchema ("HTML", doc);
+   if (elType.ElTypeNum == typeNum && elType.ElSSchema == HTMLschema)
       elAnchor = element;
    else
      {
 	elType.ElTypeNum = typeNum;
-	elType.ElSSchema = docSchema;
+	elType.ElSSchema = HTMLschema;
 	elAnchor = TtaGetTypedAncestor (element, elType);
      }
 

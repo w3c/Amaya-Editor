@@ -32,10 +32,7 @@ static int          NbClass = 0;
 static char         CurrentClass[80];
 static Element      ClassReference;
 static Document     DocReference;
-static Element      AClassFirstReference;
-static Element      AClassLastReference;
-static Document     ADocReference;
-
+static Document	    ApplyClassDoc;
 
 /*----------------------------------------------------------------------
    CleanStylePresentation:  remove the existing style presentation of a
@@ -81,6 +78,7 @@ boolean           removeSpan;
 {
    Attribute            attr;
    AttributeType        attrType;
+   Element		firstChild, lastChild;
 
    if (el == NULL)
       return;
@@ -95,7 +93,7 @@ boolean           removeSpan;
      {
 	TtaRemoveAttribute (el, attr, doc);
 	if (removeSpan)
-	  DeleteSpanIfNoAttr (el, doc);
+	  DeleteSpanIfNoAttr (el, doc, &firstChild, &lastChild);
 	TtaSetDocumentModified (doc);
      }
 
@@ -105,7 +103,7 @@ boolean           removeSpan;
      {
 	TtaRemoveAttribute (el, attr, doc);
 	if (removeSpan)
-	  DeleteSpanIfNoAttr (el, doc);
+	  DeleteSpanIfNoAttr (el, doc, &firstChild, &lastChild);
 	TtaSetDocumentModified (doc);
      }
 
@@ -302,7 +300,7 @@ void                UpdateStylePost (event)
 NotifyAttribute    *event;
 #endif
 {
-   Element             el;
+   Element             el, firstChild, lastChild;
    Document            doc;
    Attribute           at;
    AttributeType       atType;
@@ -332,7 +330,7 @@ NotifyAttribute    *event;
 	if (at != NULL)
 	  {
 	     TtaRemoveAttribute (el, at, doc);
-	     DeleteSpanIfNoAttr (el, doc);
+	     DeleteSpanIfNoAttr (el, doc, &firstChild, &lastChild);
 	     TtaSetDocumentModified (doc);
 	  }
      }
@@ -353,21 +351,26 @@ NotifyAttribute    *event;
 }
 
 /*----------------------------------------------------------------------
-   ApplyClassChange : Change all the presentation attributes of    
-   the selected elements to reflect their new class                
+   DoApplyClass
+   Put a class attribute on all selected elements
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         ApplyClassChange (Document doc)
+static void         DoApplyClass (Document doc)
 #else  /* __STDC__ */
-static void         ApplyClassChange (doc)
+static void         DoApplyClass (doc)
 Document            doc;
 
 #endif /* __STDC__ */
 {
-  Element             cour;
+  Element             firstSelectedEl, lastSelectedEl, cour, el, span, next,
+		      firstChild, lastChild, parent;
+  ElementType	      elType;
   Attribute           attr;
   AttributeType       attrType;
   char               *a_class = CurrentClass;
+  int		      firstSelectedChar, lastSelectedChar, i, j, lg;
+  DisplayMode         dispMode;
+  boolean	      setClassAttr;
 
   if (!a_class)
     return;
@@ -378,65 +381,170 @@ Document            doc;
   if (*a_class == EOS)
     return;
 
-  /* class default : suppress all specific presentation. */
-  if (!strcmp (CurrentClass, "default"))
-    {
-      cour = AClassFirstReference;
-      while (cour != NULL)
-	{
-	  /* remove any style attribute and update the presentation. */
-	  RemoveStyle (cour, doc, FALSE);
-	  
-	  /* jump on next element until last one is reached. */
-	  if (cour == AClassLastReference)
-	    break;
-	  TtaNextSibling (&cour);
-	}
-      return;
-    }
-  else
-    {
-      if (AClassFirstReference == AClassLastReference)
-	{
-	  /* only one element -> create a SPAN if needed */
-	  if (MakeASpan (AClassFirstReference, &cour, doc))
-	    {
-	      /* re-select the element */
-	      TtaSelectElement (doc, cour);
-	      AClassLastReference = cour;
-	    }
-	  else
-	    cour = AClassFirstReference;
-	}
-      else
-	cour = AClassFirstReference;
+  TtaGiveFirstSelectedElement (doc, &firstSelectedEl, &firstSelectedChar, &i);
+  if (firstSelectedEl == NULL)
+     return;
+  TtaGiveLastSelectedElement (doc, &lastSelectedEl, &i, &lastSelectedChar);
 
-      /* loop on each selected element */
-      while (cour != NULL)
+  TtaClearViewSelections ();
+  /* stop displaying changes that will be made in the document */
+  dispMode = TtaGetDisplayMode (doc);
+  if (dispMode == DisplayImmediately)
+     TtaSetDisplayMode (doc, DeferredDisplay);
+
+  if (strcmp (CurrentClass, "default") &&
+      !IsImplicitClassName (CurrentClass, doc))
+     {
+     setClassAttr = TRUE;
+     attrType.AttrSSchema = TtaGetSSchema ("HTML", doc);
+     attrType.AttrTypeNum = HTML_ATTR_Class;
+     }
+  else
+     setClassAttr = FALSE;
+
+  /* process all selected elements */
+  cour = firstSelectedEl;
+  while (cour != NULL)
+     {
+      /* The current element may be deleted by DeleteSpanIfNoAttr. So, get
+	 first for the next element to be processed */
+      next = cour;
+      TtaGiveNextSelectedElement (doc, &next, &i, &j);
+
+      if (cour == firstSelectedEl)
+        /* process the first selected element */
 	{
-	  /* remove any Style attribute left */
-	  RemoveStyle (cour, doc, FALSE);
-	  
-	  /* set the Class attribute of the element */
-	  attrType.AttrSSchema = TtaGetSSchema ("HTML", doc);
-	  if (!IsImplicitClassName (CurrentClass, doc))
-	    {
-	      attrType.AttrTypeNum = HTML_ATTR_Class;
-	      attr = TtaGetAttribute (cour, attrType);
-	      if (!attr)
-		{
-		  attr = TtaNewAttribute (attrType);
-		  TtaAttachAttribute (cour, attr, doc);
-		}
-	      TtaSetAttributeText (attr, a_class, cour, doc);
-	      TtaSetDocumentModified (doc);
-	    }
-	  /* jump on next element until last one is reached. */
-	  if (cour == AClassLastReference)
-	    break;
-	  TtaNextSibling (&cour);
+	elType = TtaGetElementType (firstSelectedEl);
+	if (elType.ElTypeNum == HTML_EL_TEXT_UNIT)
+	   /* It's a text element */
+	   if (firstSelectedChar <= 1)
+	      /* selection starts at the beginning of the element */
+	      {
+	      if (lastSelectedEl != firstSelectedEl ||
+		  (lastSelectedEl == firstSelectedEl && lastSelectedChar == 0))
+	         /* this text element is entirely selected */
+		 {
+		 parent = TtaGetParent (cour);
+		 elType = TtaGetElementType (parent);
+		 if (elType.ElTypeNum == HTML_EL_Span &&
+		     !strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML"))
+		    /* parent is a SPAN element */
+		    if (firstSelectedEl == TtaGetFirstChild (parent) &&
+			firstSelectedEl == TtaGetLastChild (parent))
+		        /* this is the only child of the SPAN. Process the
+		           SPAN instead of the text element */
+			{
+			cour = parent;
+			firstSelectedEl = parent;
+			if (lastSelectedEl == firstSelectedEl)
+			   lastSelectedEl = parent;
+			}
+		 }
+	      }
+	   else
+	      /* It's only partly selected. Split it */
+	      {
+	      el = firstSelectedEl;
+	      TtaSplitText (firstSelectedEl, firstSelectedChar - 1, doc);
+	      TtaNextSibling (&firstSelectedEl);
+	      cour = firstSelectedEl;
+	      firstSelectedChar = 0;
+	      if (lastSelectedEl == el)
+	         {
+	         /* we have to change the end of selection because the last
+		    selected element was split */
+	         lastSelectedEl = firstSelectedEl;
+	         lastSelectedChar = lastSelectedChar - firstSelectedChar + 1;
+	         }
+	      }
 	}
-    }
+
+      if (cour == lastSelectedEl)
+	{
+        /* process the last selected element */
+	elType = TtaGetElementType (lastSelectedEl);
+	if (elType.ElTypeNum == HTML_EL_TEXT_UNIT)
+	   /* it's a text element */
+	   {
+	   lg = TtaGetTextLength (lastSelectedEl);
+	   if (lastSelectedChar >= lg || lastSelectedChar == 0)
+	      /* selection ends at the end of the element */
+	      /* this text element is entirely selected */
+	      {
+	      parent = TtaGetParent (cour);
+	      elType = TtaGetElementType (parent);
+	      if (elType.ElTypeNum == HTML_EL_Span &&
+		  !strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML"))
+		 /* parent element is a SPAN */
+		 if (lastSelectedEl == TtaGetFirstChild (parent) &&
+		     lastSelectedEl == TtaGetLastChild (parent))
+		    /* this is the only child of the SPAN. Process the
+		       SPAN instead of the text element */
+		    {
+		    cour = parent;
+		    lastSelectedEl = parent;
+		    }
+	      }
+	   else
+	      /* It's only partly selected. Split it */
+	      TtaSplitText (lastSelectedEl, lastSelectedChar, doc);
+	   }
+	}
+
+      /* remove any Style attribute left */
+      RemoveStyle (cour, doc, FALSE);
+	  
+      if (!setClassAttr)
+	 {
+	 DeleteSpanIfNoAttr (cour, doc, &firstChild, &lastChild);
+	 if (firstChild)
+	    {
+	    if (cour == firstSelectedEl)
+	        firstSelectedEl = firstChild;
+	    if (cour == lastSelectedEl)
+		lastSelectedEl = lastChild;
+	    }
+	 }
+      else
+	 {
+	  elType = TtaGetElementType (cour);
+	  if (elType.ElTypeNum == HTML_EL_TEXT_UNIT)
+	     /* that's a text element. Create an enclosing SPAN element */
+	     {
+	     MakeASpan (cour, &span, doc);
+	     if (span)
+		/* a SPAN element was created */
+		{
+		if (cour == firstSelectedEl)
+		   {
+		   firstSelectedEl = span;
+		   if (firstSelectedEl == lastSelectedEl)
+		      lastSelectedEl = span;
+		   }
+		else if (cour == lastSelectedEl)
+		   lastSelectedEl = span;
+		cour = span;
+		}
+	     }
+	  /* set the Class attribute of the element */
+	  attr = TtaGetAttribute (cour, attrType);
+	  if (!attr)
+	     {
+	      attr = TtaNewAttribute (attrType);
+	      TtaAttachAttribute (cour, attr, doc);
+	     }
+	  TtaSetAttributeText (attr, a_class, cour, doc);
+	  TtaSetDocumentModified (doc);
+	 }
+      /* jump to next element until last one is reached. */
+      cour = next;
+     }
+
+  /* ask Thot to display changes made in the document */
+  TtaSetDisplayMode (doc, dispMode);
+  TtaSelectElement (doc, firstSelectedEl);
+  if (lastSelectedEl != firstSelectedEl)
+     TtaExtendSelection (doc, lastSelectedEl, 0);
 }
 
 /*----------------------------------------------------------------------
@@ -673,8 +781,8 @@ View                view;
 }
 
 /*----------------------------------------------------------------------
-   ApplyClass : Use a class to change the presentation             
-   attributes of the selected elements                             
+   ApplyClass
+   Initialize and activate the Apply Class dialogue box.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                ApplyClass (Document doc, View view)
@@ -687,85 +795,17 @@ View                view;
 {
   Attribute           attr;
   AttributeType       attrType;
-  Element             cour, parent;
-  ElementType         elType;
+  Element             firstSelectedEl;
   char                a_class[50];
-  int                 len, i, j;
+  int                 len;
   int                 firstSelectedChar, lastSelectedChar;
-  boolean             select_parent;
 
-  ADocReference = doc;
-  CurrentClass[0] = EOS;
-  AClassFirstReference = NULL;
-  AClassLastReference = NULL;
-
-  /* a class can be applied to many elements. */
-  TtaGiveFirstSelectedElement (doc, &AClassFirstReference,
+  TtaGiveFirstSelectedElement (doc, &firstSelectedEl,
 			       &firstSelectedChar, &lastSelectedChar);
-
-  if (AClassFirstReference == NULL)
-    return;
-  cour = AClassLastReference = AClassFirstReference;
-  do
-    {
-      TtaGiveNextSelectedElement (doc, &cour, &i, &j);
-      if (cour != NULL)
-	AClassLastReference = cour;
-    }
-  while (cour != NULL);
-  
-  /* Case of a substring : need to split the original text. */
-  if (AClassFirstReference == AClassLastReference &&
-      firstSelectedChar != 0)
-    {
-      len = TtaGetTextLength (AClassFirstReference);
-      if (len <= 0)
-	return;
-      if (lastSelectedChar < len)
-	TtaSplitText (AClassFirstReference, lastSelectedChar, doc);
-      if (firstSelectedChar > 1)
-	{
-	  firstSelectedChar--;
-	  TtaSplitText (AClassFirstReference, firstSelectedChar, doc);
-	  TtaNextSibling (&AClassFirstReference);
-	  AClassLastReference = AClassFirstReference;
-	}
-      if (AClassFirstReference != NULL)
-	/* re-select the element */
-	TtaSelectElement (doc, AClassFirstReference);
-    }
-
-  if (AClassFirstReference == NULL)
-    return;
-
-  /* if all child of an element are selected, select the parent instead */
-  parent = TtaGetParent (AClassFirstReference);
-  if ((parent == TtaGetParent (AClassLastReference)) &&
-      (AClassFirstReference == TtaGetFirstChild(parent)) &&
-      (AClassLastReference == TtaGetLastChild(parent)))
-    { 
-      select_parent = TRUE;
-      elType = TtaGetElementType(AClassFirstReference);
-      if (elType.ElTypeNum == HTML_EL_TEXT_UNIT)
-	{
-	  if (firstSelectedChar > 1)
-	    select_parent = FALSE;
-	}
-      
-      elType = TtaGetElementType (AClassLastReference);
-      if (elType.ElTypeNum == HTML_EL_TEXT_UNIT)
-	{
-	  len = TtaGetTextLength (AClassLastReference);
-	  if (lastSelectedChar < len)
-	    select_parent = FALSE;
-	}
-      
-      if (select_parent)
-	{
-	  AClassFirstReference = AClassLastReference = parent;
-	  firstSelectedChar = lastSelectedChar = 0;
-	}
-    }
+  if (!firstSelectedEl)
+     return;
+  CurrentClass[0] = EOS;
+  ApplyClassDoc = doc;
 
   /* updating the class name selector. */
 #  ifndef _WINDOWS
@@ -779,10 +819,11 @@ View                view;
 		  NbClass, ListBuffer, 5, NULL, FALSE, FALSE);
 #  endif /* !_WINDOWS */
 
-  /* preselect the entry corresponding to the class of the element. */
+  /* preselect the entry corresponding to the class of the first selected
+     element. */
   attrType.AttrSSchema = TtaGetSSchema ("HTML", doc);
   attrType.AttrTypeNum = HTML_ATTR_Class;
-  attr = TtaGetAttribute (AClassFirstReference, attrType);
+  attr = TtaGetAttribute (firstSelectedEl, attrType);
   if (attr)
     {
       len = 50;
@@ -841,7 +882,7 @@ char               *data;
       break;
     case AClassForm:
       if (typedata == INTEGER_DATA && val == 1)
-	ApplyClassChange (ADocReference);
+	DoApplyClass (ApplyClassDoc);
       TtaDestroyDialogue (BaseDialog + AClassForm);
       break;
     default:

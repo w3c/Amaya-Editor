@@ -46,7 +46,7 @@ boolean MakeASpan (elem, span, doc)
   ret = FALSE;
   *span = NULL;
   elType = TtaGetElementType (elem);
-  if (elType.ElSSchema == TtaGetDocumentSSchema (doc))
+  if (strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)
     /* it's an HTML element */
     if (elType.ElTypeNum == HTML_EL_TEXT_UNIT)
      {
@@ -90,13 +90,19 @@ boolean MakeASpan (elem, span, doc)
 /*----------------------------------------------------------------------
  DeleteSpanIfNoAttr
  An attribute has been removed from element el in document doc.
+ If element el is a SPAN without any attribute, the SPAN element is
+ removed and variables firstChild and lastChild are the first and
+ last child of the former SPAN element.
+ Otherwise, firstChild and lastChild are NULL.
  -----------------------------------------------------------------------*/
 #ifdef __STDC__
-void DeleteSpanIfNoAttr (Element el, Document doc)
+void DeleteSpanIfNoAttr (Element el, Document doc, Element *firstChild, Element *lastChild)
 #else /* __STDC__*/
-void DeleteSpanIfNoAttr (el, doc)
+void DeleteSpanIfNoAttr (el, doc, firstChild, lastChild)
      Element el;
      Document doc;
+     Element *firstChild;
+     Element *lastChild;
 #endif /* __STDC__*/
 {
   ElementType	elType;
@@ -105,8 +111,11 @@ void DeleteSpanIfNoAttr (el, doc)
 
   /* if the element is a SPAN without any other attribute, remove the SPAN
      element */
+  *firstChild = NULL;
+  *lastChild = NULL;
   elType = TtaGetElementType (el);
-  if (elType.ElTypeNum == HTML_EL_Span)
+  if (elType.ElTypeNum == HTML_EL_Span &&
+      strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)
      {
      span = el;
      attr = NULL;
@@ -120,6 +129,9 @@ void DeleteSpanIfNoAttr (el, doc)
 	   TtaNextSibling (&next);
 	   TtaRemoveTree (child, doc);
 	   TtaInsertSibling (child, span, TRUE, doc);
+	   if (*firstChild == NULL)
+	      *firstChild = child;
+	   *lastChild = child;
 	   child = next;
 	   }
 	TtaDeleteTree (span, doc);
@@ -129,8 +141,8 @@ void DeleteSpanIfNoAttr (el, doc)
 
 /*----------------------------------------------------------------------
   AttrToSpan
-  If attribute attr is on a text string (elem), create a SPAN element that
-  encloses this text string and move the attribute to that SPAN element.
+  If attribute attr is on a text string (elem), create a SPAN element
+  enclosing this text string and move the attribute to that SPAN element.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void  AttrToSpan (Element elem, Attribute attr, Document doc)
@@ -155,7 +167,7 @@ void  AttrToSpan (elem, attr, doc)
     {
       parent = TtaGetParent (elem);
       elType = TtaGetElementType (parent);
-      if (elType.ElSSchema == TtaGetDocumentSSchema (doc))
+      if (strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)
         /* the parent element is an HTML element */
 	/* Create a Span element and move to attribute to this Span element */
         MakeASpan (elem, &span, doc);
@@ -192,9 +204,11 @@ NotifyAttribute    *event;
  
 #endif
 {
+   Element	firstChild, lastChild;
+
    /* if the element is a SPAN without any other attribute, remove the SPAN
       element */
-   DeleteSpanIfNoAttr (event->element, event->document);
+   DeleteSpanIfNoAttr (event->element, event->document, &firstChild, &lastChild);
 }
 
 /*----------------------------------------------------------------------
@@ -209,10 +223,12 @@ NotifyAttribute    *event;
  
 #endif
 {
+   Element	firstChild, lastChild;
+
    if (event->event == TteAttrDelete)
       /* if the element is a SPAN without any other attribute, remove the SPAN
          element */
-      DeleteSpanIfNoAttr (event->element, event->document);
+      DeleteSpanIfNoAttr (event->element, event->document, &firstChild, &lastChild);
    else if (event->event == TteAttrCreate)
       /* if the Class attribute is on a text string, create a SPAN element that
          encloses this text string and move the Class attribute to that SPAN
@@ -299,12 +315,13 @@ Element             elem;
 {
    AttributeType       attrType;
    Attribute           styleAttr;
+   Element	       firstChild, lastChild;
 #define STYLELEN 1000
    char*               style;
    int                 len;
 
    /* does the element have a Style_ attribute ? */
-   attrType.AttrSSchema = TtaGetDocumentSSchema (doc);
+   attrType.AttrSSchema = TtaGetSSchema ("HTML", doc);
    attrType.AttrTypeNum = HTML_ATTR_Style_;
    styleAttr = TtaGetAttribute (elem, attrType);
    /* keep the new style string */
@@ -317,7 +334,7 @@ Element             elem;
 	if (styleAttr != 0)
 	   {
 	     TtaRemoveAttribute (elem, styleAttr, doc);
-	     DeleteSpanIfNoAttr (elem, doc);
+	     DeleteSpanIfNoAttr (elem, doc, &firstChild, &lastChild);
 	   }
      }
    else
@@ -366,7 +383,7 @@ NotifyPresentation *event;
   presRule = event->pRule;
   elType = TtaGetElementType (el);
   ret = FALSE;
-  HTMLschema = TtaGetDocumentSSchema (doc);
+  HTMLschema = TtaGetSSchema ("HTML", doc);
 
   /* if it's a background rule on element BODY, move it to element HTML */
   /* if it's a rule on element HTML and it's not a background rule, move
@@ -584,9 +601,11 @@ void AttrLangDeleted(event)
      NotifyAttribute *event;
 #endif /* __STDC__*/
 {
+   Element	firstChild, lastChild;
+
   /* if the element is a SPAN without any other attribute, remove the SPAN
      element */
-  DeleteSpanIfNoAttr (event->element, event->document);
+  DeleteSpanIfNoAttr (event->element, event->document, &firstChild, &lastChild);
 }
 
 
@@ -603,7 +622,7 @@ static void MoveAttrLang (oldAttr, el, doc)
      Document doc;
 #endif /* __STDC__*/
 {
-  Element	first, parent, sibling, next;
+  Element	first, parent, sibling, next, firstChild, lastChild;
   Attribute	newAttr, attr;
   AttributeType	attrType;
   int		kind, len;
@@ -651,7 +670,7 @@ static void MoveAttrLang (oldAttr, el, doc)
 	   TtaRemoveAttribute (sibling, attr, doc);
 	   next = sibling;
 	   TtaNextSibling (&next);
-	   DeleteSpanIfNoAttr (sibling, doc);
+	   DeleteSpanIfNoAttr (sibling, doc, &firstChild, &lastChild);
 	   sibling = next;
 	   }
 	/* associate a LANG attribute to the parent element */

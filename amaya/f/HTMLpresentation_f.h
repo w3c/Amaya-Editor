@@ -10,7 +10,9 @@ extern boolean MakeASpan ( Element elem,
                            Element *span,
                            Document doc );
 extern void DeleteSpanIfNoAttr ( Element el,
-                                 Document doc );
+                                 Document doc,
+                                 Element *firstChild,
+                                 Element *lastChild );
 extern void AttrToSpan ( Element elem,
                          Attribute attr,
                          Document doc );
@@ -29,7 +31,9 @@ extern boolean MakeASpan (/* Element elem,
                              Element *span,
                              Document doc */);
 extern void DeleteSpanIfNoAttr (/* Element el,
-                                   Document doc */);
+                                   Document doc,
+                                   Element *firstChild,
+                                   Element *lastChild */);
 extern void AttrToSpan (/* Element elem,
                            Attribute attr,
                            Document doc */);
