@@ -479,21 +479,7 @@ CHARSET TtaGetDefaultCharset ()
     /* default macosx dialog charset is iso_8859_1 */
   return ISO_8859_1;
 #else /* _MACOS */
-  CHARSET   defaultCharset;
-  char     *charsetname;
-
-  /* it should be given by the system locale */
-  charsetname = TtaGetEnvString ("Default_Charset");
-  if (charsetname)
-    {
-      defaultCharset = TtaGetCharset (charsetname);
-      if ((defaultCharset == UNSUPPORTED_CHARSET) ||
-	  (defaultCharset == UNDEFINED_CHARSET))
-	defaultCharset = ISO_8859_1;
-    }
-  else
-    defaultCharset = TtaGetLocaleCharset ();
-  return defaultCharset;
+  return TtaGetLocaleCharset ();
 #endif /* _MACOSX */
 #endif /* _WX */
 }
