@@ -8154,10 +8154,12 @@ void TtaShowDialogue (int ref, ThotBool remanent)
 }
 
 /*----------------------------------------------------------------------
-   TtaWaitShowDialogue attends le retour du catalogue affiche par     
-   TtaShowDialogue.                                                   
+   TtaWaitShowProcDialogue
+   Waits the return of the catalogue that is shown by TtaShowDialogue.
+   The dialog has its own callback handler and the function returns
+   when the dialogue disappears.
   ----------------------------------------------------------------------*/
-void TtaWaitShowDialogue ()
+void TtaWaitShowProcDialogue ()
 {
   ThotEvent              event;
 
@@ -8169,15 +8171,33 @@ void TtaWaitShowDialogue ()
 	DispatchMessage (&event);
       }
 #else  /* _WINDOWS */
-   /* Un TtaWaitShowDialogue en cours */
-   CurrentWait = 1;
-   while (ShowReturn == 1)
-     {
-	TtaFetchOneEvent (&event);
-	TtaHandleOneEvent (&event);
-     }
-   /* Fin de l'attente */
-   CurrentWait = 0;
+   TtaWaitShowDialogue ();
+#endif /* _WINDOWS */
+}
+
+/*----------------------------------------------------------------------
+   TtaWaitShowDialogue attends le retour du catalogue affiche par     
+   TtaShowDialogue.                                                   
+  ----------------------------------------------------------------------*/
+void TtaWaitShowDialogue ()
+{
+  ThotEvent              event;
+
+#ifdef _WINDOWS
+  GetMessage (&event, NULL, 0, 0))
+  TranslateMessage (&event);
+  DispatchMessage (&event);
+#else  /* _WINDOWS */
+
+  /* Un TtaWaitShowDialogue en cours */
+  CurrentWait = 1;
+  while (ShowReturn == 1)
+    {
+      TtaFetchOneEvent (&event);
+      TtaHandleOneEvent (&event);
+    }
+  /* Fin de l'attente */
+  CurrentWait = 0;
 #endif /* _WINDOWS */
 }
 

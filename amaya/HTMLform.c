@@ -1533,7 +1533,10 @@ void SelectOneOption (Document doc, Element el)
 #endif /* !_WINDOWS */
 	       TtaShowDialogue (BaseDialog + OptionMenu, FALSE);
 	       /* wait for an answer from the user */
-		   TtaWaitShowDialogue ();
+	       if (nbsubmenus == 0)
+		 TtaWaitShowProcDialogue ();
+	       else
+		 TtaWaitShowDialogue ();
 	       /* destroy the dialogue */
 	       TtaDestroyDialogue (BaseDialog + OptionMenu);
 

@@ -358,6 +358,12 @@ extern void TtaSetDialoguePosition (void);
 extern void TtaShowDialogue (int ref, ThotBool remanent);
 
 /*----------------------------------------------------------------------
+   TtaWaitShowProcDialogue waits for a catalogue (that has its own
+   callback handler) to end.
+  ----------------------------------------------------------------------*/
+extern void TtaWaitShowProcDialogue (void);
+
+/*----------------------------------------------------------------------
    TtaWaitShowDialogue attends le retour du catalogue affiche par     
    TtaShowDialogue.                                                   
   ----------------------------------------------------------------------*/
