@@ -31,12 +31,12 @@
 
 
 static void ProcessElements(char * element);
-static void InsertTable(STRING string, STRING Table[], int * nbelem);
-static void FileToTable(FILE * File, STRING Table[],int * nbelem, int maxelem);
-static void SortTable (STRING Table[], int nbelem);
-static void DeleteTable(STRING Table[], int  *nbelem);
-static int  SearchInTable(char * StringToFind, STRING Table[], int nbelem, ThotBool sort);
-static void SkipNewLineSymbol(char  Astring[]);
+static void InsertTable(STRING string, STRING * Table, int * nbelem);
+static void FileToTable(FILE * File,  STRING * Table,int * nbelem, int maxelem);
+static void SortTable (STRING * Table, int nbelem);
+static void DeleteTable(STRING * Table, int  *nbelem);
+static int  SearchInTable(char * StringToFind, STRING * Table, int nbelem, ThotBool sort);
+static void SkipNewLineSymbol(char  * Astring);
 static void SkipAllBlanks (char * Astring);
 static char * AddHooks (char * Astring);
 static void RemoveHooks (char  * Astring);
@@ -65,14 +65,16 @@ static int                  Pro_nbelem = 0;
 static STRING               Edition_Table[MAX_EDITION_FUNCTIONS];
 static int                  Edition_nbelem = 0;
 
-/* Current profile : the current selected profile*/
+/* Current profile : the current selected profile */
 static char                 CurrentProfile[MAX_PRO_LENGTH];
-
-/* User Profile */  
-static char                 UserProfile[MAX_PRO_LENGTH];
+                
+/* User Profile (taken from the thot.rc) */  
+static char                  * UserProfile;
+//static char                 UserProfile[MAX_PRO_LENGTH];
 
 static char                 TempString[MAX_PRO_LENGTH];
 
+/* This boolean goes FALSE if the profile only contains browsing functions */
 static ThotBool             Prof_ReadOnly = TRUE;
 
 
@@ -91,6 +93,8 @@ void Prof_InitTable(void)
   char                TempString [MAX_PRO_LENGTH];
   int                 i = 0;
 
+
+  /* Retrive thot.rc variables and open usefull files */
   ptr = TtaGetEnvString(TEXT("Profiles_File"));
   if (ptr && *ptr)
       Prof_FILE = fopen(ptr,"r");
@@ -100,10 +104,12 @@ void Prof_InitTable(void)
   ptr = TtaGetEnvString (TEXT("Profile"));
   if (ptr && *ptr)
   {
+	UserProfile = TtaGetMemory (strlen(ptr) + sizeof(char));
 	strcpy (UserProfile, AddHooks (ptr));	
   }
   else
-	 UserProfile[0] = EOS;
+	// UserProfile[0] = EOS;
+	UserProfile = NULL;
   
   ptr = TtaGetEnvString(TEXT("THOTDIR"));
   ptr2 = TtaGetMemory (strlen (ptr) + strlen (DEF_FILE) + 10);
@@ -293,6 +299,7 @@ char   *  element;
 	       InsertTable(element, Fun_Table, &Fun_nbelem);
 	 }
     }
+	
 }
 
 
@@ -327,6 +334,7 @@ void Prof_DeleteFunTable(void)
 #endif /* __STDC__ */
 {
   DeleteTable(Fun_Table, & Fun_nbelem);
+  TtaFreeMemory (UserProfile);
 }
 
 
@@ -400,8 +408,7 @@ STRING Profile;
 #endif /* !__STDC__ */
 {
   if (Profile)
-    {
-     
+    {    
       return (SearchInTable(Profile, Pro_Table, Pro_nbelem, FALSE));
     }
   else 
@@ -501,12 +508,12 @@ Menu_Ctl  *ptrmenu;
 
 
 #ifdef __STDC__
-static void InsertTable(STRING function, STRING Table[], int * nbelem)
+static void InsertTable(STRING function, STRING  * Table, int * nbelem)
 #else  /* !__STDC__ */
-static void InsertTable(function, Table[],nbelem )
+static void InsertTable(function, Table,nbelem )
 STRING         function;
-STRING         Table;
-int *          nbelem;
+STRING        * Table;
+int           * nbelem;
 #endif /* !__STDC__ */
 {
   Table[*nbelem] = TtaStrdup (function);
@@ -520,12 +527,12 @@ int *          nbelem;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-static void FileToTable(FILE * File, STRING Table[],int * nbelem, int maxelem)
+static void FileToTable(FILE * File, STRING * Table,int * nbelem, int maxelem)
 #else  /* !__STDC__ */
-static void FileToTable(File, Table[], nbelem, maxelem)
-STRING      Table;
-FILE *      File;
-int  *      nbelem;
+static void FileToTable(File, Table, nbelem, maxelem)
+STRING    *  Table;
+FILE      *  File;
+int       *  nbelem;
 int         maxelem;
 #endif /* !__STDC__ */
 {
@@ -541,11 +548,11 @@ int         maxelem;
 
 
 #ifdef __STDC__
-static void DeleteTable(STRING Table[], int  *nbelem)
+static void DeleteTable(STRING * Table, int  *nbelem)
 #else  /* __STDC__ */
-static void DeleteTable(Table[], nbelem)
-STRING      Table[];
-int *       nbelem;
+static void DeleteTable(Table, nbelem)
+STRING      * Table;
+int         * nbelem;
 #endif /* __STDC__ */
 {
   int        i;
@@ -567,12 +574,12 @@ int *       nbelem;
 		    ThotBool sort)       ** Is the table presorted ?
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static int SearchInTable(char * StringToFind, STRING Table[],
+static int SearchInTable(char * StringToFind, STRING  * Table,
 			 int nbelem, ThotBool sort)
 #else  /* !__STDC__ */
-static int SearchInTable(stringToFind, Table[], nbelem, sort) 
+static int SearchInTable(stringToFind, Table, nbelem, sort) 
 char * StringToFind;
-STRING Table[];
+STRING * Table;
 int nbelem;
 ThotBool sort;
 #endif /* !__STDC__ */
@@ -622,11 +629,11 @@ ThotBool sort;
 ----------------------------------------------------*/
 
 #ifdef __STDC__
-static void SortTable (STRING Table[], int nbelem)
+static void SortTable (STRING * Table, int nbelem)
 #else  /* !__STDC__ */
-static void SortTable (Table[], nbelem)
-STRING  Table[];
-int nbelem;
+static void SortTable (Table, nbelem)
+STRING  * Table;
+int     nbelem;
 #endif /* !__STDC__ */
 {
   int i, j, kmax;
@@ -650,10 +657,10 @@ int nbelem;
 ----------------------------------------------------------*/
 
 #ifdef __STDC__
-static void SkipNewLineSymbol(char Astring[])
+static void SkipNewLineSymbol(char * Astring)
 #else  /* !__STDC__ */
 static void SkipNewLineSymbol(Astring)
-char  Astring[];
+char   * Astring;
 #endif /* !__STDC__ */
 {
   int         c = 0;
