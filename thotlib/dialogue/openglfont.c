@@ -861,7 +861,7 @@ static void MakeBitmapGlyph (GL_font *font, unsigned int g,
   ----------------------------------------------------------------------*/
 static void BitmapAppend (unsigned char *data, unsigned char *append_data,
 			  int x, int y, unsigned int width, 
-			  unsigned int height, unsigned int Width)
+			  unsigned int height, unsigned int Width, ThotBool justcopy)
 {
   register unsigned int i = 0;
 
@@ -870,48 +870,62 @@ static void BitmapAppend (unsigned char *data, unsigned char *append_data,
   append_data += height*width;
   if (data && append_data)
     /* copy each line one by one */
-    while (height)
-      {      
-	append_data -= width;
-	while (i < width)
-	  {
-	    /* copy each pixels one by one
-	     * it's not possible to copy directly the whole line because
-	     * sometime characteres overlap on other characteres
-	     * it's the case when an italic word is displayed,
-	     * for example : "lp"
-	     *  **********                                                       
-	     *  *      ..*                                                       
-	     *  *     .. *                                                       
-	     *  *    ..  ******                                                  
-	     *  *   ..  .!... *                                                  
-	     *  *  ..   .!....*                                                  
-	     *  * ..   ..!  ..*                                                  
-	     *  *....  ..!... *                                                  
-	     *  *.... ...!.   *                                                  
-	     *  ****-----     *                                                  
-	     *     * ..       *                                                  
-	     *     *..        *                                                  
-	     *     *..        *                                                  
-	     *     ************                                                  
-	     * */
-	    if (*(append_data + i) > ANTIALIASINGDEPTH)
-	      *(data + i) = *(append_data + i);
-#ifdef AALIASTEST
-	    /*if (*(append_data + i) < 12)*/
-	    if (*(append_data + i))
-	      {		
-		if ((*(append_data + i) + 15) > 255)
-		  *(data + i) = 255;
-		else
-		  *(data + i) = (*(append_data + i) + 15);
-	      }	  
-#endif /* AALIASTEST*/
-	    i++;
+    if (justcopy)
+      {
+	// copy bitmap line by line (FASTEST than pixel by pixel bellow)
+	while (height)
+	  {      
+	    append_data -= width;
+	    memcpy( data, append_data, width * sizeof(unsigned char));
+	    data += Width;
+	    height--;
 	  }
-	i = 0;
-	data += Width;
-	height--;
+      }
+    else
+      {
+	while (height)
+	  {      
+	    append_data -= width;
+	    while (i < width)
+	      {
+		/* copy each pixels one by one
+		 * it's not possible to copy directly the whole line because
+		 * sometime characteres overlap on other characteres
+		 * it's the case when an italic word is displayed,
+		 * for example : "lp"
+		 *  **********                                                       
+		 *  *      ..*                                                       
+		 *  *     .. *                                                       
+		 *  *    ..  ******                                                  
+		 *  *   ..  .!... *                                                  
+		 *  *  ..   .!....*                                                  
+		 *  * ..   ..!  ..*                                                  
+		 *  *....  ..!... *                                                  
+		 *  *.... ...!.   *                                                  
+		 *  ****-----     *                                                  
+		 *     * ..       *                                                  
+		 *     *..        *                                                  
+		 *     *..        *                                                  
+		 *     ************                                                  
+		 * */
+		if (*(append_data + i) > ANTIALIASINGDEPTH)
+		  *(data + i) = *(append_data + i);
+#ifdef AALIASTEST
+		/*if (*(append_data + i) < 12)*/
+		if (*(append_data + i))
+		  {		
+		    if ((*(append_data + i) + 15) > 255)
+		      *(data + i) = 255;
+		    else
+		      *(data + i) = (*(append_data + i) + 15);
+		  }	  
+#endif /* AALIASTEST*/
+		i++;
+	      }
+	    i = 0;
+	    data += Width;
+	    height--;
+	  }
       }
 }
 
@@ -1160,12 +1174,19 @@ int UnicodeFontRender (void *gl_font, wchar_t *text, float x, float y, int size)
     {
       if (bitmaps[n] && bitmaps[n]->data)
 	{
-	  BitmapAppend (data, (unsigned char *)bitmaps[n]->data,
+	  BitmapAppend( data, (unsigned char *)bitmaps[n]->data,
 			(int) (bitmap_pos[n].x + shift), 
 			(int) (bitmap_pos[n].y - miny),
 			(int) bitmaps[n]->dimension.x, 
 			(int) bitmaps[n]->dimension.y, 
-			Width);
+			Width,
+			// if it's the first lettre just copy the bitmap without testing the pixels
+			(n == 0) ||
+			// OR
+			// if the variation between the two letter is bigger than the
+			// last character width, just copy the bitmap without testing each pixels.
+			(bitmap_pos[n].x-bitmap_pos[n-1].x)>(bitmaps[n-1]->advance)
+			);
 	}
      }
   
