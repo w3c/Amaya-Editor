@@ -221,14 +221,14 @@ void initwgl (HDC hDC, int frame)
 	  glEnable (GL_SCISSOR_TEST);
       glScissor (0, 0, GL_HEIGHT, GL_WIDTH);
       GL_Err();
-#ifndef _TEST
+#ifdef _TEST
 	  /*permet de verifier la validite du contexte opengl. 
 	  size doit etre >0, sinon cela signifie qu'opengl n'arrive pas a dessiner !!*/
 	  {
 		  int size = 0;
-		  char feedbuffer[16384];
+		  /*char feedbuffer[16384];*/
 
-		glFeedbackBuffer (FEEDBUFFERSIZE, GL_2D, feedBuffer);
+		glFeedbackBuffer (FEEDBUFFERSIZE, GL_3D_COLOR, feedBuffer);
 		glRenderMode (GL_FEEDBACK);
 		glBegin (GL_QUADS);
 			glVertex2i (1, 1);
@@ -487,6 +487,7 @@ GLint GLParseFeedbackBuffer (GLfloat *current)
   /*
 	used doit etre > 0, 
 	sinon cela signifie qu'opengl n'arrive pas a dessiner !!
+	(ou qu'il dessine des objets transparents...
   */
   if (used > 0)
     {

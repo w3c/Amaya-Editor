@@ -263,7 +263,7 @@ BOOL PASCAL InitPrinting(HDC hDC, HWND hWnd, HANDLE hInst, LPSTR msg)
   
 #ifdef _WINDOWS
 #ifdef _GLPRINT
-   SetupPixelFormatPrintGL (TtPrinterDC, 0);
+   SetupPixelFormatPrintGL (TtPrinterDC, 1);
 #endif /*_GLPRINT*/
 #endif /*_WINDOWS*/
 
@@ -3029,7 +3029,7 @@ int main (int argc, char **argv)
    return;
 #else /*_WINDOWS_DLL*/
 	ReleaseDC (NULL, TtPrinterDC);
-	closewgl (TtPrinterDC, 0);
+	closewgl (TtPrinterDC, 1);
 	DeleteDC (TtPrinterDC);
 
    exit (0);
