@@ -29,9 +29,8 @@ RULES
  Document_URL:
 	BEGIN
 	Create In TmpFile 'The URL of the document is:  ';
-	Create Attributes;
+	Create In TmpFile Content;
 	Create In TmpFile '\12' After;
-	{Waiting for a change of HTML.S}
 	Remove;
 	END;
 
@@ -72,8 +71,8 @@ RULES
 
 
  BODY:	BEGIN
-	Indent +3;
-	Indent -3 After;
+	Indent +4;
+	Indent -4 After;
 	Create '\12\12' After;
 	Create '-------------------------\12' After;
 	Create 'List of References\12\12' After;
@@ -81,42 +80,42 @@ RULES
 	END;
 
  H1:	BEGIN
-	Indent -3;
+	Indent -4;
 	if not within Preformatted Create '\12';
-	Indent +3 After;
+	Indent +4 After;
 	if not within Preformatted Create '\12\12' After;
 	END;
 
  H2:	BEGIN
+	Indent -2;
 	if not within Preformatted Create '\12';
+	Indent +2 After;
 	if not within Preformatted Create '\12\12' After;
 	END;
 
  H3:	BEGIN
-	Indent +3;
 	if not within Preformatted Create '\12';
-	Indent -3 After;
 	if not within Preformatted Create '\12\12' After;
 	END;
 
  H4:	BEGIN
-	Indent +6;
+	Indent +2;
 	if not within Preformatted Create '\12';
-	Indent -6 After;
+	Indent -2 After;
 	if not within Preformatted Create '\12\12' After;
 	END;
 
  H5:	BEGIN
-	Indent +9;
+	Indent +4;
 	if not within Preformatted Create '\12';
-	Indent -9 After;
+	Indent -4 After;
 	if not within Preformatted Create '\12\12' After;
 	END;
 
  H6:	BEGIN
-	Indent +12;
+	Indent +6;
 	if not within Preformatted Create '\12';
-	Indent -12 After;
+	Indent -6 After;
 	if not within Preformatted Create '\12\12' After;
 	END;
 
@@ -217,19 +216,11 @@ RULES
 	END;
 
  TEXT_UNIT: BEGIN
-	IF *Style\240 and not Within HEAD
-	    BEGIN
-   	    Remove;
-	    END;
-	IF *Class and not Within HEAD
-	    BEGIN
-            Remove;
-	    END;
 	IF Within Text_Area
 		Remove;
 	IF Within Text_Input
 		Remove;
-        IF Within HEAD
+        IF Within HEAD and not Within TITLE
 	        Remove;
         IF Within STYLE 
                 Remove;
@@ -292,7 +283,7 @@ RULES
 	END;
 
  Horizontal_Rule: BEGIN
-	If NOT within Paragraph AND NOT within  Pseudo_paragraph
+	If NOT within Paragraph AND NOT within  Pseudo_paragraph 
            Create '\12';
 	Create '-----------------------------\12';	
 	Remove;
@@ -385,28 +376,32 @@ RULES
 	if NOT Immediately within Object BEGIN
 		Create Attributes;
 		END;
-	if NOT within Paragraph AND NOT Immediately within Object BEGIN
-		END;
 #else
 	Create Attributes;
 #endif
+	if NOT ALT 
+	  Create '[Image]';
 	END;
 
+
  Anchor: BEGIN
-	Create IN TmpFile '[';
-	Create IN TmpFile  OUT_AnchorCounter;
-	Create IN TmpFile  '] ';
-	Create Attributes;
-	Create IN TmpFile '\12' After;
+	if HREF_ AND NOT InternalLink
+	  BEGIN
+  	    Create In TmpFile '[';
+	    Create In TmpFile  OUT_AnchorCounter;
+	    Create In TmpFile  '] ';
+ 	    Create Attributes;
+	    Create IN TmpFile '\12' After;
 #ifdef ANCHOR_PREFIX
-	Create '[' ;
-	Create OUT_AnchorCounter;
-	Create ']';
+	    Create '[' ;
+	    Create OUT_AnchorCounter;
+	    Create ']';
 #else
-	Create '[' After;
-	Create OUT_AnchorCounter After;
-	Create ']' After;
+	    Create '[' After;
+	    Create OUT_AnchorCounter After;
+	    Create ']' After;
 #endif
+          END;
 	END;
 
  MAP:
@@ -538,7 +533,7 @@ ATTRIBUTES
 
  HREF_ :
 	BEGIN
-	If NOT Within LINK
+	If NOT Within LINK AND NOT InternalLink
            Create IN TmpFile HREF_;
 	END;
 
@@ -648,7 +643,6 @@ ATTRIBUTES
 	END;
 
  Style\240: BEGIN
-	Remove;
 	END;
 
  COMPACT: BEGIN
@@ -878,7 +872,6 @@ ATTRIBUTES
 TextTRANSLATE
 	BEGIN
 	'\240' -> ' '; { &nbsp; }
-	'\267' -> '-'; { &middot; }
 	'\212' -> '\12'; { &CTLrc; }	
 	END;
 
