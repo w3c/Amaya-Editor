@@ -321,7 +321,28 @@ static ThotBool FontLoadFile ( FILE *file, FontScript **fontsscript_tab)
 			    {
 			      /*Get the font-face in 1=font-face string (so +1-1)*/
 #ifdef _GL
-			      if (!TtaFileExist (&word[2]))
+			      if (!strncmp (&word[2], "$THOTDIR", 8))
+				{
+				  char filename[MAX_TXT_LEN], *Thot_Dir;
+
+				  Thot_Dir = TtaGetEnvString ("THOTDIR");
+				  if (Thot_Dir)
+				    strcpy (filename, Thot_Dir);
+				  else
+				    filename[0] = EOS;
+				  strcat (filename, &word[10]);
+				  if (!TtaFileExist (filename))
+				    complete = FALSE;
+				  else
+				    {
+				      fontface = TtaStrdup (filename);
+				      fontsscript_tab[script]->family[face]->highlight[style] = fontface;
+				      /* note if STIX fonts are available */
+				      if (script == 21 && !StixExist)
+					StixExist = TRUE;
+				    }
+				}
+			      else if (!TtaFileExist (&word[2]))
 #else /* _GL */
 			      if (!IsXLFDPatterneAFont (&word[2]))
 #endif /* _GL */
@@ -330,9 +351,6 @@ static ThotBool FontLoadFile ( FILE *file, FontScript **fontsscript_tab)
 				{
 				  fontface = TtaStrdup (&word[2]);
 				  fontsscript_tab[script]->family[face]->highlight[style] = fontface;
-				  /* note if STIX fonts are available */
-				  if (script == 21 && !StixExist)
-				    StixExist = TRUE;
 				}
 			    }
 			}

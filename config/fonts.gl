@@ -7,40 +7,40 @@
 #5 = fantasy;normale face;bold face;italic face  
 
 1;#Latin1 (West European)
-1;1=/usr/local/share/fonts/truetype/times.ttf;2=/usr/local/share/fonts/truetype/timesbd.ttf;3=/usr/local/share/fonts/truetype/timesi.ttf;
-2;1=/usr/local/share/fonts/truetype/arial.ttf;2=/usr/local/share/fonts/truetype/arialbd.ttf;3=/usr/local/share/fonts/truetype/ariali.ttf;
-3;1=/usr/local/share/fonts/truetype/cour.ttf;2=/usr/local/share/fonts/truetype/courbd.ttf;3=/usr/local/share/fonts/truetype/couri.ttf;
+1;1=/usr/share/fonts/truetype/times.ttf;2=/usr/share/fonts/truetype/timesbd.ttf;3=/usr/share/fonts/truetype/timesi.ttf;
+2;1=/usr/share/fonts/truetype/arial.ttf;2=/usr/share/fonts/truetype/arialbd.ttf;3=/usr/share/fonts/truetype/ariali.ttf;
+3;1=/usr/share/fonts/truetype/cour.ttf;2=/usr/share/fonts/truetype/courbd.ttf;3=/usr/share/fonts/truetype/couri.ttf;
 
 2;#Latin2 (East European)
-1;1=/usr/local/share/fonts/truetype/times.ttf;2=/usr/local/share/fonts/truetype/timesbd.ttf;3=/usr/local/share/fonts/truetype/timesi.ttf;
-2;1=/usr/local/share/fonts/truetype/arial.ttf;2=/usr/local/share/fonts/truetype/arialbd.ttf;3=/usr/local/share/fonts/truetype/ariali.ttf;
-3;1=/usr/local/share/fonts/truetype/cour.ttf;2=/usr/local/share/fonts/truetype/courbd.ttf;3=/usr/local/share/fonts/truetype/couri.ttf;
+1;1=/usr/share/fonts/truetype/times.ttf;2=/usr/share/fonts/truetype/timesbd.ttf;3=/usr/share/fonts/truetype/timesi.ttf;
+2;1=/usr/share/fonts/truetype/arial.ttf;2=/usr/share/fonts/truetype/arialbd.ttf;3=/usr/share/fonts/truetype/ariali.ttf;
+3;1=/usr/share/fonts/truetype/cour.ttf;2=/usr/share/fonts/truetype/courbd.ttf;3=/usr/share/fonts/truetype/couri.ttf;
 
 3;#Latin3 (South European)
-1;1=/usr/local/share/fonts/truetype/times.ttf;2=/usr/local/share/fonts/truetype/timesbd.ttf;3=/usr/local/share/fonts/truetype/timesi.ttf;
-2;1=/usr/local/share/fonts/truetype/arial.ttf;2=/usr/local/share/fonts/truetype/arialbd.ttf;3=/usr/local/share/fonts/truetype/ariali.ttf;
-3;1=/usr/local/share/fonts/truetype/cour.ttf;2=/usr/local/share/fonts/truetype/courbd.ttf;3=/usr/local/share/fonts/truetype/couri.ttf;
+1;1=/usr/share/fonts/truetype/times.ttf;2=/usr/share/fonts/truetype/timesbd.ttf;3=/usr/share/fonts/truetype/timesi.ttf;
+2;1=/usr/share/fonts/truetype/arial.ttf;2=/usr/share/fonts/truetype/arialbd.ttf;3=/usr/share/fonts/truetype/ariali.ttf;
+3;1=/usr/share/fonts/truetype/cour.ttf;2=/usr/share/fonts/truetype/courbd.ttf;3=/usr/share/fonts/truetype/couri.ttf;
 
 
 
 4;#Latin4 (North European)
-1;1=/usr/local/share/fonts/truetype/times.ttf;2=/usr/local/share/fonts/truetype/timesbd.ttf;3=/usr/local/share/fonts/truetype/timesi.ttf;
-2;1=/usr/local/share/fonts/truetype/arial.ttf;2=/usr/local/share/fonts/truetype/arialbd.ttf;3=/usr/local/share/fonts/truetype/ariali.ttf;
-3;1=/usr/local/share/fonts/truetype/cour.ttf;2=/usr/local/share/fonts/truetype/courbd.ttf;3=/usr/local/share/fonts/truetype/couri.ttf;
+1;1=/usr/share/fonts/truetype/times.ttf;2=/usr/share/fonts/truetype/timesbd.ttf;3=/usr/share/fonts/truetype/timesi.ttf;
+2;1=/usr/share/fonts/truetype/arial.ttf;2=/usr/share/fonts/truetype/arialbd.ttf;3=/usr/share/fonts/truetype/ariali.ttf;
+3;1=/usr/share/fonts/truetype/cour.ttf;2=/usr/share/fonts/truetype/courbd.ttf;3=/usr/share/fonts/truetype/couri.ttf;
 
 
 
 5;#Cyrillic
-1;1=/usr/local/share/fonts/truetype/times.ttf;2=/usr/local/share/fonts/truetype/timesbd.ttf;3=/usr/local/share/fonts/truetype/timesi.ttf;
-2;1=/usr/local/share/fonts/truetype/arial.ttf;2=/usr/local/share/fonts/truetype/arialbd.ttf;3=/usr/local/share/fonts/truetype/ariali.ttf;
-3;1=/usr/local/share/fonts/truetype/cour.ttf;2=/usr/local/share/fonts/truetype/courbd.ttf;3=/usr/local/share/fonts/truetype/couri.ttf;
+1;1=/usr/share/fonts/truetype/times.ttf;2=/usr/share/fonts/truetype/timesbd.ttf;3=/usr/share/fonts/truetype/timesi.ttf;
+2;1=/usr/share/fonts/truetype/arial.ttf;2=/usr/share/fonts/truetype/arialbd.ttf;3=/usr/share/fonts/truetype/ariali.ttf;
+3;1=/usr/share/fonts/truetype/cour.ttf;2=/usr/share/fonts/truetype/courbd.ttf;3=/usr/share/fonts/truetype/couri.ttf;
 
 
 
 6;#Arabic
-1;1=/usr/local/share/fonts/truetype/times.ttf;2=/usr/local/share/fonts/truetype/timesbd.ttf;3=/usr/local/share/fonts/truetype/timesi.ttf;
-2;1=/usr/local/share/fonts/truetype/arial.ttf;2=/usr/local/share/fonts/truetype/arialbd.ttf;3=/usr/local/share/fonts/truetype/ariali.ttf;
-3;1=/usr/local/share/fonts/truetype/cour.ttf;2=/usr/local/share/fonts/truetype/courbd.ttf;3=/usr/local/share/fonts/truetype/couri.ttf;
+1;1=/usr/share/fonts/truetype/times.ttf;2=/usr/share/fonts/truetype/timesbd.ttf;3=/usr/share/fonts/truetype/timesi.ttf;
+2;1=/usr/share/fonts/truetype/arial.ttf;2=/usr/share/fonts/truetype/arialbd.ttf;3=/usr/share/fonts/truetype/ariali.ttf;
+3;1=/usr/share/fonts/truetype/cour.ttf;2=/usr/share/fonts/truetype/courbd.ttf;3=/usr/share/fonts/truetype/couri.ttf;
 
 
 7;#Greek
@@ -50,23 +50,23 @@
 
 
 8;#Hebrew
-1;1=/usr/local/share/fonts/truetype/times.ttf;2=/usr/local/share/fonts/truetype/timesbd.ttf;3=/usr/local/share/fonts/truetype/timesi.ttf;
-2;1=/usr/local/share/fonts/truetype/arial.ttf;2=/usr/local/share/fonts/truetype/arialbd.ttf;3=/usr/local/share/fonts/truetype/ariali.ttf;
-3;1=/usr/local/share/fonts/truetype/cour.ttf;2=/usr/local/share/fonts/truetype/courbd.ttf;3=/usr/local/share/fonts/truetype/couri.ttf;
+1;1=/usr/share/fonts/truetype/times.ttf;2=/usr/share/fonts/truetype/timesbd.ttf;3=/usr/share/fonts/truetype/timesi.ttf;
+2;1=/usr/share/fonts/truetype/arial.ttf;2=/usr/share/fonts/truetype/arialbd.ttf;3=/usr/share/fonts/truetype/ariali.ttf;
+3;1=/usr/share/fonts/truetype/cour.ttf;2=/usr/share/fonts/truetype/courbd.ttf;3=/usr/share/fonts/truetype/couri.ttf;
 
 
 
 9;#Latin9 (Turkish)
-1;1=/usr/local/share/fonts/truetype/times.ttf;2=/usr/local/share/fonts/truetype/timesbd.ttf;3=/usr/local/share/fonts/truetype/timesi.ttf;
-2;1=/usr/local/share/fonts/truetype/arial.ttf;2=/usr/local/share/fonts/truetype/arialbd.ttf;3=/usr/local/share/fonts/truetype/ariali.ttf;
-3;1=/usr/local/share/fonts/truetype/cour.ttf;2=/usr/local/share/fonts/truetype/courbd.ttf;3=/usr/local/share/fonts/truetype/couri.ttf;
+1;1=/usr/share/fonts/truetype/times.ttf;2=/usr/share/fonts/truetype/timesbd.ttf;3=/usr/share/fonts/truetype/timesi.ttf;
+2;1=/usr/share/fonts/truetype/arial.ttf;2=/usr/share/fonts/truetype/arialbd.ttf;3=/usr/share/fonts/truetype/ariali.ttf;
+3;1=/usr/share/fonts/truetype/cour.ttf;2=/usr/share/fonts/truetype/courbd.ttf;3=/usr/share/fonts/truetype/couri.ttf;
 
 
 
 10;#Latin6 (Nordic)
-1;1=/usr/local/share/fonts/truetype/times.ttf;2=/usr/local/share/fonts/truetype/timesbd.ttf;3=/usr/local/share/fonts/truetype/timesi.ttf;
-2;1=/usr/local/share/fonts/truetype/arial.ttf;2=/usr/local/share/fonts/truetype/arialbd.ttf;3=/usr/local/share/fonts/truetype/ariali.ttf;
-3;1=/usr/local/share/fonts/truetype/cour.ttf;2=/usr/local/share/fonts/truetype/courbd.ttf;3=/usr/local/share/fonts/truetype/couri.ttf;
+1;1=/usr/share/fonts/truetype/times.ttf;2=/usr/share/fonts/truetype/timesbd.ttf;3=/usr/share/fonts/truetype/timesi.ttf;
+2;1=/usr/share/fonts/truetype/arial.ttf;2=/usr/share/fonts/truetype/arialbd.ttf;3=/usr/share/fonts/truetype/ariali.ttf;
+3;1=/usr/share/fonts/truetype/cour.ttf;2=/usr/share/fonts/truetype/courbd.ttf;3=/usr/share/fonts/truetype/couri.ttf;
 
 
 
@@ -75,10 +75,10 @@
 
 
 21;#esstix (...)
-1;1=/usr/local/share/fonts/esstix/ESSTIX1_.TTF;2=/usr/local/share/fonts/esstix/ESSTIX2_.TTF;3=/usr/local/share/fonts/esstix/ESSTIX3_.TTF;4=/usr/local/share/fonts/esstix/ESSTIX4_.TTF;5=/usr/local/share/fonts/esstix/ESSTIX5_.TTF;
-2;1=/usr/local/share/fonts/esstix/ESSTIX6_.TTF;2=/usr/local/share/fonts/esstix/ESSTIX7_.TTF;3=/usr/local/share/fonts/esstix/ESSTIX8_.TTF;4=/usr/local/share/fonts/esstix/ESSTIX4_.TTF;5=/usr/local/share/fonts/esstix/ESSTIX8_.TTF;
-3;1=/usr/local/share/fonts/esstix/ESSTIX10.TTF;2=/usr/local/share/fonts/esstix/ESSTIX11.TTF;3=/usr/local/share/fonts/esstix/ESSTIX11.TTF;4=/usr/local/share/fonts/esstix/ESSTIX12.TTF;5=/usr/local/share/fonts/esstix/ESSTIX13.TTF;
-4;1=/usr/local/share/fonts/esstix/ESSTIX14.TTF;2=/usr/local/share/fonts/esstix/ESSTIX15.TTF;3=/usr/local/share/fonts/esstix/ESSTIX16.TTF;4=/usr/local/share/fonts/esstix/ESSTIX17.TTF;
+1;1=$THOTDIR/fonts/ESSTIX1_.TTF;2=$THOTDIR/fonts/ESSTIX2_.TTF;3=$THOTDIR/fonts/ESSTIX3_.TTF;4=$THOTDIR/fonts/ESSTIX4_.TTF;5=$THOTDIR/fonts/ESSTIX5_.TTF;
+2;1=$THOTDIR/fonts/ESSTIX6_.TTF;2=$THOTDIR/fonts/ESSTIX7_.TTF;3=$THOTDIR/fonts/ESSTIX8_.TTF;4=$THOTDIR/fonts/ESSTIX4_.TTF;5=$THOTDIR/fonts/ESSTIX8_.TTF;
+3;1=$THOTDIR/fonts/ESSTIX10.TTF;2=$THOTDIR/fonts/ESSTIX11.TTF;3=$THOTDIR/fonts/ESSTIX11.TTF;4=$THOTDIR/fonts/ESSTIX12.TTF;5=$THOTDIR/fonts/ESSTIX13.TTF;
+4;1=$THOTDIR/fonts/ESSTIX14.TTF;2=$THOTDIR/fonts/ESSTIX15.TTF;3=$THOTDIR/fonts/ESSTIX16.TTF;4=$THOTDIR/fonts/ESSTIX17.TTF;
 
 
 

@@ -75,10 +75,10 @@
 
 
 21;#esstix (...)
-1;1=c:\windows\fonts\esstix1_.ttf;2=c:\windows\fonts\esstix2_.ttf;3=c:\windows\fonts\esstix3_.ttf;4=c:\windows\fonts\esstix4_.ttf;5=c:\windows\fonts\esstix5_.ttf;
-2;1=c:\windows\fonts\esstix6_.ttf;2=c:\windows\fonts\esstix7_.ttf;3=c:\windows\fonts\esstix8_.ttf;4=c:\windows\fonts\esstix4_.ttf;5=c:\windows\fonts\esstix8_.ttf;
-3;1=c:\windows\fonts\esstix10.ttf;2=c:\windows\fonts\esstix11.ttf;3=c:\windows\fonts\esstix11.ttf;4=c:\windows\fonts\esstix12.ttf;5=c:\windows\fonts\esstix13.ttf;
-4;1=c:\windows\fonts\esstix14.ttf;2=c:\windows\fonts\esstix15.ttf;3=c:\windows\fonts\esstix16.ttf;4=c:\windows\fonts\esstix17.ttf;
+1;1=#THOTDIR\fonts\esstix1_.ttf;2=#THOTDIR\fonts\esstix2_.ttf;3=#THOTDIR\fonts\esstix3_.ttf;4=#THOTDIR\fonts\esstix4_.ttf;5=#THOTDIR\fonts\esstix5_.ttf;
+2;1=#THOTDIR\fonts\esstix6_.ttf;2=#THOTDIR\fonts\esstix7_.ttf;3=#THOTDIR\fonts\esstix8_.ttf;4=#THOTDIR\fonts\esstix4_.ttf;5=#THOTDIR\fonts\esstix8_.ttf;
+3;1=#THOTDIR\fonts\esstix10.ttf;2=#THOTDIR\fonts\esstix11.ttf;3=#THOTDIR\fonts\esstix11.ttf;4=#THOTDIR\fonts\esstix12.ttf;5=#THOTDIR\fonts\esstix13.ttf;
+4;1=#THOTDIR\fonts\esstix14.ttf;2=#THOTDIR\fonts\esstix15.ttf;3=#THOTDIR\fonts\esstix16.ttf;4=#THOTDIR\fonts\esstix17.ttf;
 
 
 

@@ -40,7 +40,7 @@ AMAYAFILES= *.STR *.conf *.trans* *.en *.gif *.png \
 RESOURCE_XRC_FILES= *.xrc
 RESOURCE_ICONS_FILES= *.png
 
-FONTSFILES=Families.list fonts.dir icones*
+FONTSFILES=Families.list fonts.dir icones* *.ttf *.TTF
 
 AMAYA	= @top_srcdir@/amaya
 
