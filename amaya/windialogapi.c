@@ -3992,7 +3992,10 @@ void CreateGreekKeyboardDlgWindow (parent)
 ThotWindow  parent;
 #endif /* __STDC__ */
 {  
-  DialogBox (hInstance, MAKEINTRESOURCE (GALPHABETDIALOG), NULL, (DLGPROC) GreekKeyboardDlgProc);
+  if (GreekPal)
+    SetFocus (GreekPal);
+  else
+    DialogBox (hInstance, MAKEINTRESOURCE (GALPHABETDIALOG), NULL, (DLGPROC) GreekKeyboardDlgProc);
 }
 
 /*-----------------------------------------------------------------------
