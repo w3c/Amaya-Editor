@@ -80,9 +80,9 @@ static Name         PresSchema;
   Print: interface to the Print program.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         Print (char *name, char *dir, char *thotSch, char *thotDoc, char *realName, char *output, int firstPage, int lastPage, int nCopies, int hShift, int vShift, int userOrientation, int reduction, int nbPagesPerSheet, int suppFrame, int manualFeed, int blackAndWhite, int repaginate, char *viewsToPrint)
+static void         Print (char *name, char *dir, char *thotSch, char *thotDoc, char *realName, char *output, int firstPage, int lastPage, int nCopies, int hShift, int vShift, int userOrientation, int reduction, int nbPagesPerSheet, int suppFrame, int manualFeed, int blackAndWhite, int repaginate, char *viewsToPrint, Document document)
 #else  /* __STDC__ */
-static void         Print (name, dir, thotSch, thotDoc, realName, output, firstPage, lastPage, nCopies, hShift, vShift, userOrientation, reduction, nbPagesPerSheet, suppFrame, manualFeed, blackAndWhite, repaginate, viewsToPrint)
+static void         Print (name, dir, thotSch, thotDoc, realName, output, firstPage, lastPage, nCopies, hShift, vShift, userOrientation, reduction, nbPagesPerSheet, suppFrame, manualFeed, blackAndWhite, repaginate, viewsToPrint, document)
 char               *name;
 char               *dir;
 char               *thotSch;
@@ -102,11 +102,13 @@ int                 manualFeed;
 int                 blackAndWhite;
 int                 repaginate;
 char               *viewsToPrint;
+Document            document;
 #endif /* __STDC__ */
 {
 #ifndef _WINDOWS
-   char                cmd[1024];
-   int                 i, j, res;
+   char             cmd[1024];
+   int              i, j, res;
+   int              frame;
 
    /* initialize the print command */
 
@@ -175,9 +177,24 @@ char               *viewsToPrint;
    strcat (cmd, " -P");
    strcat (cmd, PageSize);
 
+   /* transmit window id */
+   i = strlen (cmd);
+   if (FrRef[0] != 0)
+     sprintf (&cmd[i], " -w%ld", FrRef[0]);
+   else
+     {
+	frame = 1;
+	while (frame <= MAX_FRAME && FrameTable[frame].FrDoc != document)
+	  frame++;
+	if (frame <= MAX_FRAME)
+	  sprintf (&cmd[i], " -w%ld", FrRef[frame]);
+	else
+	  sprintf (&cmd[i], " -w%ld", FrRef[0]);
+     }
+
    /* transmit values */
    i = strlen (cmd);
-   sprintf (&cmd[i], " -w%ld -npps %d -F%d -L%d -#%d -H%d -V%d -%%%d ", FrRef[0], nbPagesPerSheet, firstPage, lastPage, nCopies, hShift, vShift, reduction);
+   sprintf (&cmd[i], " -npps %d -F%d -L%d -#%d -H%d -V%d -%%%d ", nbPagesPerSheet, firstPage, lastPage, nCopies, hShift, vShift, reduction);
 
    /* insert the flag -v before each view name */
    i = 0;
@@ -374,9 +391,9 @@ char               *viewNames;
    if (newPres[0] != '\0')
       strcpy (pDoc->DocSSchema->SsDefaultPSchema, newPres);
    if (ThotLocalActions[T_rextprint]!=NULL && 
-       strcmp(pDoc->DocSSchema->SsDefaultPSchema,savePres))
+       strcmp(pDoc->DocSSchema->SsDefaultPSchema, savePres))
      {
-       TtaDisplayMessage(INFO,TtaGetMessage(LIB,TMSG_CHANGE_PSCH),newPres);
+       TtaDisplayMessage(INFO, TtaGetMessage(LIB,TMSG_CHANGE_PSCH), newPres);
      }
    /* recupere le repertoire tmp du registry */
    dirString = NULL;
@@ -385,7 +402,7 @@ char               *viewNames;
      { 
        if (!TtaCheckDirectory(dirString))
          {
-           TtaDisplayMessage(INFO,TtaGetMessage(LIB,TMSG_MISSING_DIR),dirString);
+           TtaDisplayMessage(INFO, TtaGetMessage(LIB,TMSG_MISSING_DIR), dirString);
            return;
          }
        strcpy (tmpDirName, dirString);
@@ -433,8 +450,8 @@ char               *viewNames;
      }
 
    /* searches the paper orientation for the presentation scheme */
-   ConfigGetPresentationOption(pDoc->DocSSchema,"orientation",Orientation);
-   if (!strcmp (Orientation,"Landscape"))
+   ConfigGetPresentationOption(pDoc->DocSSchema, "orientation", Orientation);
+   if (!strcmp (Orientation, "Landscape"))
      orientation = 1;
    else
      orientation = 0;
@@ -456,7 +473,8 @@ char               *viewNames;
 		  Reduction, PagesPerSheet, TRUE,
 		  (int) ManualFeed, 0,
 		  Paginate,
-		  viewNames);
+		  viewNames,
+		  document);
 	else if (PSdir[0] != '\0')
 	   Print (tmpDocName,
 		  tmpDirName,
@@ -468,7 +486,8 @@ char               *viewNames;
 		  Reduction, PagesPerSheet, TRUE,
 		  (int) ManualFeed, 0,
 		  Paginate,
-		  viewNames);
+		  viewNames,
+		  document);
      }
    /* restores the presentation scheme */
    strcpy (pDoc->DocSSchema->SsDefaultPSchema, savePres);

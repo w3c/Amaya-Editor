@@ -2475,7 +2475,7 @@ int                 messageID;
    Atom                atom;
    XClientMessageEvent event;
 
-   if (clientWindow > MAX_FRAME)
+   if (clientWindow == 0)
      fprintf (stderr, TtaGetMessage (LIB, messageID), name);
    else
      {
@@ -2639,7 +2639,7 @@ char              **argv;
   NPagesPerSheet = 1;
   BlackAndWhite  = 0;
   manualFeed     = 0;
-  thotWindow     = MAX_FRAME + 1;
+  thotWindow     = (ThotWindow) 0;
   NoEmpyBox      = 1;
   Repaginate     = 0;
   firstPage      = 0;
