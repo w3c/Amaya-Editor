@@ -307,7 +307,7 @@ RULES
 		Visibility: COMMENT_Visibility;
 		Font: COMMENT_Font;
 		Style: COMMENT_Style; Weight: COMMENT_Weight;
-		Width: Enclosing . Width ;
+		Width: Enclosed . Width ;
 		END;
 	END;
 
@@ -330,7 +330,7 @@ RULES
 		Visibility: COMMENT_Visibility;
 		Font: COMMENT_Font;
 		Style: COMMENT_Style; Weight: COMMENT_Weight;
-		Width: Enclosing . Width;
+		Width: Enclosed . Width;
 		END;
 	END;
 
@@ -351,7 +351,7 @@ RULES
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Visibility: Enclosing =;
-		Width: Enclosing . Width;
+		Width: Enclosed . Width;
 		END;
 	END;
 
@@ -373,7 +373,7 @@ RULES
 	MarginBottom: 0.4;
 	IN Structure_view BEGIN
 		Visibility: Enclosing =;
-		Width: Enclosing . Width;
+		Width: Enclosed . Width;
 	        MarginBottom: 0;
 		END;
 	END;
