@@ -454,12 +454,18 @@ dnl    SPECIFIC STUFF : CONFIGURATION OPTIONS FOR AMAYA
 dnl
 dnl  ***************************************************************
 
-AC_ARG_WITH(graphic-libs, [  --without-graphic-libs    doesn't use provided libjpeg, libpng.])
-if test "$withval" = "no" ; then
-  no_graphic=yes
-fi
-if test "$withval" = "yes" ; then
-  no_graphic=no
+# We don't use our graphic libraries for the pure GTK version (without GL)
+
+echo "with gtk is ${with_gtk}, with gl is ${with_gl}\n"
+
+if test "${with_gtk}" != "yes" -o "${with_gl}" = "yes" ; then
+  AC_ARG_WITH(graphic-libs, [  --without-graphic-libs    doesn't use provided libjpeg, libpng.])
+  if test "$withval" = "no" ; then
+    no_graphic=yes
+  fi
+  if test "$withval" = "yes" ; then
+    no_graphic=no
+  fi
 fi
 
 if test "$no_graphic" = yes; then
@@ -906,7 +912,13 @@ THOT_OPTIONS="$GTK_OPTIONS $I18N_OPTIONS $GL_OPTIONS"
 AMAYA_OPTIONS="$MATH_OPTIONS $SVG_OPTIONS $GTK_OPTIONS $GENERIC_XML_OPTIONS $I18N_OPTIONS $GL_OPTIONS"
 #PLUGIN_OPTIONS="-DPLUGIN_TRACE -DXP_UNIX"
 AMAYA_ANNOT_OPTIONS="$AMAYA_ANNOT_OPTIONS $I18N_OPTIONS"
-IMGLIBS="-ljpeg -lpng -lz"
+
+# only include the IMG libraries if we are not in pure GTK mode (without GL)
+if test "${with_gtk}" = "yes" -a "${with_gl}" != "yes" ; then
+  IMGLIBS=
+else
+  IMGLIBS="-ljpeg -lpng -lz"
+fi
 EXTRA_LIBS=
 
 dnl

@@ -960,7 +960,7 @@ if test "$ac_test_CFLAGS" = set; then
   CFLAGS="$ac_save_CFLAGS"
 elif test $ac_cv_prog_cc_g = yes; then
   if test "$GCC" = yes; then
-    CFLAGS="-O2"
+    CFLAGS="-g"
   else
     CFLAGS="-g"
   fi
@@ -6377,24 +6377,30 @@ if test "${GCC}" = "yes"; then
 fi
 
 
-# Check whether --with-graphic-libs or --without-graphic-libs was given.
+# We don't use our graphic libraries for the pure GTK version (without GL)
+
+echo "with gtk is ${with_gtk}, with gl is ${with_gl}\n"
+
+if test "${with_gtk}" != "yes" -o "${with_gl}" = "yes" ; then
+  # Check whether --with-graphic-libs or --without-graphic-libs was given.
 if test "${with_graphic_libs+set}" = set; then
   withval="$with_graphic_libs"
   :
 fi
 
-if test "$withval" = "no" ; then
-  no_graphic=yes
-fi
-if test "$withval" = "yes" ; then
-  no_graphic=no
+  if test "$withval" = "no" ; then
+    no_graphic=yes
+  fi
+  if test "$withval" = "yes" ; then
+    no_graphic=no
+  fi
 fi
 
 if test "$no_graphic" = yes; then
     echo $ac_n "checking for libjpeg version = 6b""... $ac_c" 1>&6
-echo "configure:6396: checking for libjpeg version = 6b" >&5
+echo "configure:6402: checking for libjpeg version = 6b" >&5
     cat > conftest.$ac_ext <<EOF
-#line 6398 "configure"
+#line 6404 "configure"
 #include "confdefs.h"
 #include <jpeglib.h>
          x JPEG_LIB_VERSION x
@@ -6413,9 +6419,9 @@ fi
 rm -f conftest*
 
     echo $ac_n "checking for libpng version = 1.0.x or 1.2.x""... $ac_c" 1>&6
-echo "configure:6417: checking for libpng version = 1.0.x or 1.2.x" >&5
+echo "configure:6423: checking for libpng version = 1.0.x or 1.2.x" >&5
     cat > conftest.$ac_ext <<EOF
-#line 6419 "configure"
+#line 6425 "configure"
 #include "confdefs.h"
 #include <png.h>
 	x PNG_LIBPNG_VER_STRING x
@@ -6504,7 +6510,7 @@ fi
 
 if test "$with_gl" = "yes" ; then
   	echo $ac_n "checking OpenGL""... $ac_c" 1>&6
-echo "configure:6508: checking OpenGL" >&5
+echo "configure:6514: checking OpenGL" >&5
 	for ac_dir in               		\
 		/usr/include 			\
 		/usr/X11R6/include 		\
@@ -6521,7 +6527,7 @@ echo "configure:6508: checking OpenGL" >&5
     	    fi
 	done	
   	echo $ac_n "checking GLU""... $ac_c" 1>&6
-echo "configure:6525: checking GLU" >&5	
+echo "configure:6531: checking GLU" >&5	
 	for ac_dir in               		\
 		/usr/include/GL			\
 		/usr/include 			\
@@ -6543,7 +6549,7 @@ echo "configure:6525: checking GLU" >&5
     	    fi
 	done	
   	echo $ac_n "checking GTKGLAREA""... $ac_c" 1>&6
-echo "configure:6547: checking GTKGLAREA" >&5	
+echo "configure:6553: checking GTKGLAREA" >&5	
 	for ac_dir in               		\
 		/usr/include/GL			\
 		/usr/include 			\
@@ -6566,7 +6572,7 @@ echo "configure:6547: checking GTKGLAREA" >&5
     	    fi
 	done	
   	echo $ac_n "checking freetype""... $ac_c" 1>&6
-echo "configure:6570: checking freetype" >&5	
+echo "configure:6576: checking freetype" >&5	
 	for ac_dir in               		\
 		/usr/include 			\
 		/usr/X11R6/include 		\
@@ -6581,7 +6587,7 @@ echo "configure:6570: checking freetype" >&5
 	done	
 
 	echo $ac_n "checking gcc3""... $ac_c" 1>&6
-echo "configure:6585: checking gcc3" >&5	
+echo "configure:6591: checking gcc3" >&5	
 	for ac_dir in               		\
 		/usr/lib 			\
 		/usr/X11R6/lib 		\
@@ -6842,7 +6848,13 @@ THOT_OPTIONS="$GTK_OPTIONS $I18N_OPTIONS $GL_OPTIONS"
 AMAYA_OPTIONS="$MATH_OPTIONS $SVG_OPTIONS $GTK_OPTIONS $GENERIC_XML_OPTIONS $I18N_OPTIONS $GL_OPTIONS"
 #PLUGIN_OPTIONS="-DPLUGIN_TRACE -DXP_UNIX"
 AMAYA_ANNOT_OPTIONS="$AMAYA_ANNOT_OPTIONS $I18N_OPTIONS"
-IMGLIBS="-ljpeg -lpng -lz"
+
+# only include the IMG libraries if we are not in pure GTK mode (without GL)
+if test "${with_gtk}" = "yes" -a "${with_gl}" != "yes" ; then
+  IMGLIBS=
+else
+  IMGLIBS="-ljpeg -lpng -lz"
+fi
 EXTRA_LIBS=
 
 
