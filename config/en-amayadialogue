@@ -1,3 +1,4 @@
+# encoding= latin1
 0 File
 1 File
 2 File
@@ -179,7 +180,7 @@
 178 BiDi override (bdo)
 179 Section numbering
 180 Make book
-181 Add/Remove id attributes...
+181 Add/Remove IDs...
 182 Show log file
 183 Preferences
 184 General...

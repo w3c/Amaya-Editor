@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-<base version="13" last_update="Wed Sep 27 08:29:40 CEST 2000">
+<base version="16" last_update="Tue Oct 24 16:05:59 CEST 2000">
 <control>
 	<language encoding="latin1">en</language>
 	<language encoding="latin1">fr</language>
@@ -1416,6 +1416,11 @@
 	<message xml:lang="it">Crea libro</message>
 	<message xml:lang="tr">Kitap yap</message>
 	<message xml:lang="es">Hacer libro</message>
+</label>
+<label define="BMakeID">
+	<message xml:lang="en">Add/Remove IDs...</message>
+	<message xml:lang="fr">Ajouter/Retirer des attributs ID...</message>
+	<message xml:lang="es">Crear/Suprimir attributos ID...</message>
 </label>
 <label define="BShowLogFile">
 	<message xml:lang="en">Show log file</message>

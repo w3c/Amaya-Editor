@@ -180,43 +180,44 @@
 178 **BiDi override (bdo)
 179 Bölüm numaralandýrmasý
 180 Kitap yap
-181 **Show log file
-182 **Preferences
-183 **General...
-184 **Publishing...
-185 **Cache...
-186 **Proxy...
-187 **Colors...
-188 **Window Geometry...
-189 **Language Negotiation...
-190 **Profiles...
-191 **Templates...
-192 **Annotate Selection
-193 **Annotate document
-194 **Post annotation
-195 **Delete annotation
-196 **Load annotations
-197 **Customize query...
-198 **Local filter...
-199 **Configure...
-200 **About Amaya
-201 Amaya hakkýnda
-202 **Browsing
-203 Tarama
-204 Seçme
-205 Arama
-206 Görünümler
-207 Birim yaratma
-208 Baðlantýlar
-209 Yeniden yapýlandýrma
-210 Tablolar
-211 Matematik
-212 Görüntü haritalarý
-213 Tarz tanýmlarý
-214 Özellikler
-215 Yazým hatalarý aranýyor
-216 Sayfa yerleþtirme
-217 Bastýrma
-218 Numaralandýrmasý
-219 Kitap oluþturma
-220 Amaya yapýlandýrmasý
+181 **Add/Remove IDs...
+182 **Show log file
+183 **Preferences
+184 **General...
+185 **Publishing...
+186 **Cache...
+187 **Proxy...
+188 **Colors...
+189 **Window Geometry...
+190 **Language Negotiation...
+191 **Profiles...
+192 **Templates...
+193 **Annotate Selection
+194 **Annotate document
+195 **Post annotation
+196 **Delete annotation
+197 **Load annotations
+198 **Customize query...
+199 **Local filter...
+200 **Configure...
+201 **About Amaya
+202 Amaya hakkýnda
+203 **Browsing
+204 Tarama
+205 Seçme
+206 Arama
+207 Görünümler
+208 Birim yaratma
+209 Baðlantýlar
+210 Yeniden yapýlandýrma
+211 Tablolar
+212 Matematik
+213 Görüntü haritalarý
+214 Tarz tanýmlarý
+215 Özellikler
+216 Yazým hatalarý aranýyor
+217 Sayfa yerleþtirme
+218 Bastýrma
+219 Numaralandýrmasý
+220 Kitap oluþturma
+221 Amaya yapýlandýrmasý

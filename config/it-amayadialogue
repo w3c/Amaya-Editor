@@ -180,43 +180,44 @@
 178 BiDi (bdo)
 179 Numerazione delle sezioni
 180 Crea libro
-181 Mostra il log file
-182 Preferenze
-183 Generali...
-184 Pubblicazione...
-185 Cache...
-186 Proxy...
-187 Colori...
-188 Dimensioni della finestra...
-189 Negoziazione della lingua...
-190 Profili...
-191 Modelli...
-192 **Annotate Selection
-193 **Annotate document
-194 Registra annotazione
-195 **Delete annotation
-196 Carica annotazioni
-197 Personalizza la richiesta
-198 Filtro locale...
-199 Configurazione...
-200 Informazioni su Amaya
-201 Informazioni su Amaya al W3C
-202 Navigazione
-203 Selezione
-204 Ricerca
-205 Viste
-206 Creazione elementi
-207 Collegamenti
-208 Ristrutturazione
-209 Tabelle
-210 Matematica
-211 Zone attive
-212 Fogli di stile
-213 Attributi
-214 Controllo ortografico
-215 Pubblicazione
-216 Stampa
-217 Numerazione
-218 Creare un libro
-219 Configurazione di Amaya
-220 Accessibility in Amaya
+181 **Add/Remove IDs...
+182 Mostra il log file
+183 Preferenze
+184 Generali...
+185 Pubblicazione...
+186 Cache...
+187 Proxy...
+188 Colori...
+189 Dimensioni della finestra...
+190 Negoziazione della lingua...
+191 Profili...
+192 Modelli...
+193 **Annotate Selection
+194 **Annotate document
+195 Registra annotazione
+196 **Delete annotation
+197 Carica annotazioni
+198 Personalizza la richiesta
+199 Filtro locale...
+200 Configurazione...
+201 Informazioni su Amaya
+202 Informazioni su Amaya al W3C
+203 Navigazione
+204 Selezione
+205 Ricerca
+206 Viste
+207 Creazione elementi
+208 Collegamenti
+209 Ristrutturazione
+210 Tabelle
+211 Matematica
+212 Zone attive
+213 Fogli di stile
+214 Attributi
+215 Controllo ortografico
+216 Pubblicazione
+217 Stampa
+218 Numerazione
+219 Creare un libro
+220 Configurazione di Amaya
+221 Accessibility in Amaya

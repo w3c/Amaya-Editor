@@ -180,43 +180,44 @@
 178 BiDi override (bdo)
 179 Numeracón de sección
 180 Hacer libro
-181 Mostrar fichero log
-182 Preferencias
-183 General...
-184 Publicar...
-185 Cache...
-186 Proxy...
-187 Colores...
-188 Geometría de la ventana...
-189 Negociación de idioma...
-190 Perfiles...
-191 Plantillas...
-192 **Annotate Selection
-193 **Annotate document
-194 Post anotacion
-195 **Delete annotation
-196 Cargar anotaciones
-197 Personalizar consulta...
-198 Filtro local...
-199 Configurar...
-200 Sobre Amaya
-201 Sobre Amaya en W3C
-202 Hojear
-203 Seleccionar
-204 Buscar
-205 Vistas
-206 Creación de elementos
-207 Enlaces
-208 Restructuración
-209 Tablas
-210 Matemáticas
-211 Mapas de imagen
-212 Hojas de estilo
-213 Atributos
-214 Comprobar ortografía
-215 Publicar
-216 Imprimir
-217 Numerar
-218 Crear libros
-219 Configurar Amaya
-220 Accesibilidad en Amaya
+181 Crear/Suprimir attributos ID...
+182 Mostrar fichero log
+183 Preferencias
+184 General...
+185 Publicar...
+186 Cache...
+187 Proxy...
+188 Colores...
+189 Geometría de la ventana...
+190 Negociación de idioma...
+191 Perfiles...
+192 Plantillas...
+193 **Annotate Selection
+194 **Annotate document
+195 Post anotacion
+196 **Delete annotation
+197 Cargar anotaciones
+198 Personalizar consulta...
+199 Filtro local...
+200 Configurar...
+201 Sobre Amaya
+202 Sobre Amaya en W3C
+203 Hojear
+204 Seleccionar
+205 Buscar
+206 Vistas
+207 Creación de elementos
+208 Enlaces
+209 Restructuración
+210 Tablas
+211 Matemáticas
+212 Mapas de imagen
+213 Hojas de estilo
+214 Atributos
+215 Comprobar ortografía
+216 Publicar
+217 Imprimir
+218 Numerar
+219 Crear libros
+220 Configurar Amaya
+221 Accesibilidad en Amaya

@@ -180,43 +180,44 @@
 178 Textrichtung LTR/RTL (bdo)
 179 Abschnittsnummern
 180 Buch zusammenfügen
-181 Logdatei anzeigen
-182 Einstellungen
-183 Allgemein...
-184 Veröffentlichen...
-185 Cache...
-186 Proxy...
-187 Farben...
-188 Fenstergeometrie...
-189 Akzeptierte sprachen...
-190 Profiles...
-191 Seitenvorlagen...
-192 **Annotate Selection
-193 **Annotate document
-194 Anmerkung veröffentlichen
-195 **Delete annotation
-196 Anmerkungen laden
-197 Abfrage anpassen...
-198 Lokaler filter...
-199 Konfigurieren...
-200 Info
-201 Über Amaya beim W3C
-202 Verknüpfungen folgen/Dokumente öffnen
-203 Auswählen
-204 Suchen
-205 Ansichten
-206 Einfügen von Elementen
-207 Verknüpfungen bearbeiten
-208 Umformatieren
-209 Tabellen
-210 Formeln
-211 Aktive Grafikbereiche
-212 Formate/Stylesheets
-213 Attribute
-214 Rechtschreibung
-215 Speichern/Publizieren
-216 Drucken
-217 Abschnittsnummern
-218 Buch zusammenfügen
-219 Konfiguration
-220 Benutzerfreundlichkeit
+181 **Add/Remove IDs...
+182 Logdatei anzeigen
+183 Einstellungen
+184 Allgemein...
+185 Veröffentlichen...
+186 Cache...
+187 Proxy...
+188 Farben...
+189 Fenstergeometrie...
+190 Akzeptierte sprachen...
+191 Profiles...
+192 Seitenvorlagen...
+193 **Annotate Selection
+194 **Annotate document
+195 Anmerkung veröffentlichen
+196 **Delete annotation
+197 Anmerkungen laden
+198 Abfrage anpassen...
+199 Lokaler filter...
+200 Konfigurieren...
+201 Info
+202 Über Amaya beim W3C
+203 Verknüpfungen folgen/Dokumente öffnen
+204 Auswählen
+205 Suchen
+206 Ansichten
+207 Einfügen von Elementen
+208 Verknüpfungen bearbeiten
+209 Umformatieren
+210 Tabellen
+211 Formeln
+212 Aktive Grafikbereiche
+213 Formate/Stylesheets
+214 Attribute
+215 Rechtschreibung
+216 Speichern/Publizieren
+217 Drucken
+218 Abschnittsnummern
+219 Buch zusammenfügen
+220 Konfiguration
+221 Benutzerfreundlichkeit
