@@ -526,8 +526,8 @@ int                 maxPoints;
 # ifdef _WINDOWS
   GetWindowRect (w, &rect);
   /* The grid stepping begins at the origin */
-  lastx = x + rect.left; 
-  lasty = y + rect.top;
+  lastx = x + rect.left + FrameTable[frame].FrLeftMargin; 
+  lasty = y + rect.top + FrameTable[frame].FrTopMargin;
   if (!SetCursorPos (lastx, lasty))
     WinErrorBox (FrRef[frame]);
 # else /* !_WINDOWS */
@@ -556,12 +556,10 @@ int                 maxPoints;
       if (event.message == WM_MOUSEMOVE) {
          GetCursorPos (&cursorPos);
          /* current pointer position */
-         newx = cursorPos.x ;
-         newy = cursorPos.y;
          /* coordinate checking */
-         newx = DO_ALIGN (newx - FrameTable[frame].FrLeftMargin - x);
+         newx = DO_ALIGN (cursorPos.x - FrameTable[frame].FrLeftMargin - x);
          newx += x;
-         newy = DO_ALIGN (newy - FrameTable[frame].FrTopMargin - y);
+         newy = DO_ALIGN (cursorPos.y - FrameTable[frame].FrTopMargin - y);
          newy += y;
          if ((newx - rect.left) < x || (newx - rect.left) > x + width || (newy - rect.top) < y || (newy - rect.top) > y + height) {
             /* CHKR_LIMIT to size of the box */
@@ -571,7 +569,7 @@ int                 maxPoints;
             else if (newx - rect.left > x + width)
                  newx = x + width + FrameTable[frame].FrLeftMargin + rect.left;
             else
-                 newx += FrameTable[frame].FrLeftMargin;
+                 newx += FrameTable[frame].FrLeftMargin + rect.left;
 	  
             /* new Y valid position */
             if (newy - rect.top < y)
@@ -579,7 +577,7 @@ int                 maxPoints;
             else if (newy - rect.top > y + height)
                  newy = y + height + FrameTable[frame].FrTopMargin + rect.top;
             else
-                 newy += FrameTable[frame].FrTopMargin;
+                 newy += FrameTable[frame].FrTopMargin + rect.top;
 	  
             if (!SetCursorPos (newx, newy))
                WinErrorBox (FrRef [frame]);
@@ -635,7 +633,7 @@ int                 maxPoints;
                   case WM_MBUTTONDOWN:
                   case WM_RBUTTONDOWN:
                        input = TRUE;
-                       if (newx - rect.left< x || newx - rect.left > x + width || newy - rect.top < y || newy - rect.top > y + height)
+                       if (newx - rect.left < x || newx - rect.left > x + width || newy - rect.top < y || newy - rect.top > y + height)
 	                      if (!SetCursorPos (lastx, lasty))
 	                         WinErrorBox (FrRef [frame]);
 	                   break;
