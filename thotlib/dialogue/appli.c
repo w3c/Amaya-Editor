@@ -1131,7 +1131,7 @@ void FrameHScrolled (int *w, int frame, int *param)
   
 #ifdef _GTK 
   /* delta is the position into the page */
-  delta = w->value;
+  delta = (int)w->value;
 #endif  /* _GTK */
 
   notifyDoc.event = TteViewScroll;
@@ -1170,7 +1170,7 @@ void FrameHScrolled (int *w, int frame, int *param)
 
 #ifdef _GTK 
        /* l is the width of the page */
-       l = w->page_size;
+       l = (int)w->page_size;
        /* On regarde si le deplacement bute sur le bord droit */
        if (w->value + l >= FrameTable[frame].FrWidth)	     
 	 delta = FrameTable[frame].FrScrollWidth;
@@ -2590,8 +2590,8 @@ void FrameCallback (int frame, void *evnt)
     {
       ClickIsDone = 0;
       ClickFrame = frame;
-      ClickX = ev->xbutton.x;
-      ClickY = ev->xbutton.y;
+      ClickX = (int)ev->xbutton.x;
+      ClickY = (int)ev->xbutton.y;
       return;
     }
   else if (TtaTestWaitShowDialogue ()
@@ -2614,8 +2614,8 @@ void FrameCallback (int frame, void *evnt)
     {
       ClickIsDone = 0;
       ClickFrame = frame;
-      ClickX = event->x;
-      ClickY = event->y;
+      ClickX = (int)event->x;
+      ClickY = (int)event->y;
       return FALSE;
     }
   else if (TtaTestWaitShowDialogue ()
@@ -2649,7 +2649,7 @@ void FrameCallback (int frame, void *evnt)
 	  if ((ev->xbutton.state & THOT_KEY_ControlMask) != 0)
 	    {
 	      /* moving a box */
-	      ApplyDirectTranslate (frame, ev->xbutton.x, ev->xbutton.y);
+	      ApplyDirectTranslate (frame, (int)ev->xbutton.x, (int)ev->xbutton.y);
 	      T1 = T2 = T3 = 0;
 	    }
 	  else if ((ev->xbutton.state & THOT_KEY_ShiftMask) != 0)
@@ -2752,7 +2752,7 @@ void FrameCallback (int frame, void *evnt)
 	  if ((ev->xbutton.state & THOT_KEY_ControlMask) != 0)
 	    {
 	      /* resizing a box */
-	      ApplyDirectResize (frame, ev->xbutton.x, ev->xbutton.y);
+	      ApplyDirectResize (frame, (int)ev->xbutton.x, (int)ev->xbutton.y);
 	      T1 = T2 = T3 = 0;
 	    }
 	  else
@@ -2790,7 +2790,7 @@ void FrameCallback (int frame, void *evnt)
 	  if ((ev->xbutton.state & THOT_KEY_ControlMask) != 0)
 	    {
 	      /* resize a box */
-	      ApplyDirectResize (frame, ev->xbutton.x, ev->xbutton.y);
+	      ApplyDirectResize (frame, (int)ev->xbutton.x, (int)ev->xbutton.y);
 	      T1 = T2 = T3 = 0;
 	    }
 	  else
@@ -2856,12 +2856,12 @@ void FrameCallback (int frame, void *evnt)
 	
 	  if ((event->state & GDK_CONTROL_MASK ) == GDK_CONTROL_MASK)
 	    /* moving a box */     
-	    ApplyDirectTranslate (frame, event->x, event->y);
+	    ApplyDirectTranslate (frame, (int)event->x, (int)event->y);
 	  else if ((event->state & GDK_SHIFT_MASK ) == GDK_SHIFT_MASK)
 	    {
 	      /* a selection extension */
 	      TtaAbortShowDialogue ();
-	      LocateSelectionInView (frame, event->x, event->y, 0);
+	      LocateSelectionInView (frame, (int)event->x, (int)event->y, 0);
 	      FrameToView (frame, &document, &view);
 	      TtcCopyToClipboard (document, view);
 	    }
@@ -2869,8 +2869,8 @@ void FrameCallback (int frame, void *evnt)
 	    {
 	      /* a simple selection */
 	      ClickFrame = frame;
-	      ClickX = event->x;
-	      ClickY = event->y;
+	      ClickX = (int)event->x;
+	      ClickY = (int)event->y;
 	      LocateSelectionInView (frame, ClickX, ClickY, 2);
 	      Selecting = TRUE;
 	    }
@@ -2879,12 +2879,12 @@ void FrameCallback (int frame, void *evnt)
 	  /* ==========MIDDLE BUTTON========== */
 	  if ((event->state & GDK_CONTROL_MASK) != 0)
 	    /* resizing a box */
-	    ApplyDirectResize (frame, event->x, event->y);
+	    ApplyDirectResize (frame, (int)event->x, (int)event->y);
 	  else
 	    {
 	      ClickFrame = frame;
-	      ClickX = event->x;
-	      ClickY = event->y; 
+	      ClickX = (int)event->x;
+	      ClickY = (int)event->y; 
 	      LocateSelectionInView (frame, ClickX, ClickY, 5);	     
 	    }
 	  break;
@@ -2892,12 +2892,12 @@ void FrameCallback (int frame, void *evnt)
 	  /* ==========RIGHT BUTTON========== */
 	  if ((event->state & GDK_CONTROL_MASK) != 0)
 	    /* resize a box */
-	    ApplyDirectResize (frame, event->x, event->y);
+	    ApplyDirectResize (frame, (int)event->x, (int)event->y);
 	  else
 	    {
 	      ClickFrame = frame;
-	      ClickX = event->x;
-	      ClickY = event->y;
+	      ClickX = (int)event->x;
+	      ClickY = (int)event->y;
 	      LocateSelectionInView (frame, ClickX, ClickY, 6);
 	    }
 	  break;	
@@ -2942,24 +2942,24 @@ void FrameCallback (int frame, void *evnt)
 	case 1:
 	  /* LEFT BUTTON */
 	  ClickFrame = frame;
-	  ClickX = event->x;
-	  ClickY = event->y;
+	  ClickX = (int)event->x;
+	  ClickY = (int)event->y;
 	  LocateSelectionInView (frame, ClickX, ClickY, 3);
 	  break;
 	case 2:
 	  /* MIDDLE BUTTON */
 	  /* handle a simple selection */
 	  ClickFrame = frame;
-	  ClickX = event->x;
-	  ClickY = event->y;
+	  ClickX = (int)event->x;
+	  ClickY = (int)event->y;
 	  LocateSelectionInView (frame, ClickX, ClickY, 5);
 	  break;
 	case 3:
 	  /* RIGHT BUTTON */
 	  /* handle a simple selection */
 	  ClickFrame = frame;
-	  ClickX = event->x;
-	  ClickY = event->y;
+	  ClickX = (int)event->x;
+	  ClickY = (int)event->y;
 	  LocateSelectionInView (frame, ClickX, ClickY, 6);
 	  break;
 	}
@@ -2989,8 +2989,8 @@ void FrameCallback (int frame, void *evnt)
       else if (event->button == 1)
 	{
 	  ClickFrame = frame;
-	  ClickX = event->x;
-	  ClickY = event->y;
+	  ClickX = (int)event->x;
+	  ClickY = (int)event->y;
 	  LocateSelectionInView (frame, ClickX, ClickY, 4);
 	  TtaAbortShowDialogue ();
 	}
