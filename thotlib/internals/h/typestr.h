@@ -32,7 +32,11 @@
 #include "app.h"
  
 typedef char    Name[MAX_NAME_LENGTH]; /* a name is terminated by a null byte*/
- 
+
+/* values for using schema or user attribute and element type names */ 
+#define USER_NAME 1
+#define SCHEMA_NAME 0
+
 /* constructors for structure rules */
 typedef enum
 {
@@ -129,6 +133,7 @@ typedef struct _SRule
 {
 	Name             SrName;	/* left-hand symbol of the rule =
 					   type defined by the rule */
+        Name            SrOrigName;      /* real name of the rule */
 	int 		SrNDefAttrs; 	/* 0..MAX_DEFAULT_ATTR, number of
 					   attributes with a default value */
         /* numbers of default value attributes */

@@ -83,7 +83,9 @@ PtrDocument        *pDoc;
 /*----------------------------------------------------------------------
    GetSRuleFromName cherche dans le schema de structure pSS (et dans les    
    extensions et schemas de structures utilises comme      
-   natures par ce schema), une regle de nom typeName       
+   natures par ce schema), une regle de nom typeName
+   si whichName = USER_NAME typeName est le nom traduit
+   si whichName = SCHEMA_NAME typeName est le nom defini dans le schema
    Retourne dans pSS le schema contenant la                
    regle trouvee et dans typeNum le numero de la regle     
    trouvee dans ce schema. typeNum vaut zero si le nom     
@@ -91,19 +93,21 @@ PtrDocument        *pDoc;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-void                GetSRuleFromName (int *typeNum, PtrSSchema * pSS, Name typeName)
+void                GetSRuleFromName (int *typeNum, PtrSSchema * pSS, Name typeName, int whichName)
 
 #else  /* __STDC__ */
-void                GetSRuleFromName (typeNum, pSS, typeName)
+void                GetSRuleFromName (typeNum, pSS, typeName, whichName)
 int                *typeNum;
 PtrSSchema         *pSS;
 Name                typeName;
+int                 whichName;
 
 #endif /* __STDC__ */
 
 {
    int                 ruleNum;
    PtrSSchema          pSSch;
+   char                *ruleName;
 
    /* on n'a pas encore trouve' */
    *typeNum = 0;
@@ -117,7 +121,11 @@ Name                typeName;
 	  {
 	     /* si c'est une regle de changement de nature, on prendra la
 	        regle racine de la nature */
-	     if (strcmp (typeName, pSSch->SsRule[ruleNum].SrName) == 0
+	    if (whichName == SCHEMA_NAME)
+	      ruleName = pSSch->SsRule[ruleNum].SrOrigName;
+	    else
+	      ruleName = pSSch->SsRule[ruleNum].SrName;
+	    if (strcmp (typeName, ruleName) == 0
 		 && pSSch->SsRule[ruleNum].SrConstruct != CsNatureSchema)
 		/* trouve' */
 	       {
@@ -128,7 +136,7 @@ Name                typeName;
 		/* une nature, cherche dans son schema de structure */
 	       {
 		  *pSS = pSSch->SsRule[ruleNum].SrSSchemaNat;
-		  GetSRuleFromName (typeNum, pSS, typeName);
+		  GetSRuleFromName (typeNum, pSS, typeName, whichName);
 	       }
 	     ruleNum++;
 	  }
@@ -139,11 +147,136 @@ Name                typeName;
 	   if (pSSch->SsNextExtens != NULL)
 	     {
 		*pSS = pSSch->SsNextExtens;
-		GetSRuleFromName (typeNum, pSS, typeName);
+		GetSRuleFromName (typeNum, pSS, typeName, whichName);
 	     }
      }
 }
 
+/*----------------------------------------------------------------------
+   GetAttrRuleFromName cherche dans les schema de structure de pEl et de
+   ses ancetres (et dans les extensions de ces schemas), un attribut de 
+   nom attrName, pouvant etre attache a l'element pEl
+   si whichName = USER_NAME attrName est le nom traduit
+   si whichName = SCHEMA_NAME attrName est le nom defini dans le schema
+   Retourne dans pSSch le schema contenant la                
+   regle trouvee et dans attrNum le numero de l'attribut     
+   trouve dans ce schema. attrNum vaut zero si le nom     
+   n'est pas trouve'.                                      
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                GetAttrRuleFromName (int *attrNum, PtrSSchema *pSSch, PtrElement pElem, Name attrName, int whichName)
+#else  /* __STDC__ */
+void                GetAttrRuleFromName (attrNum, pSSch, pElem, attrName, whichName)
+int                *attrNum;
+PtrSSchema          pSSch;
+PtrElement          pEl;
+Name                attrName; 
+int                 whichName;
+
+#endif /* __STDC__ */
+{
+  int                 i;
+  boolean             found, newCshema;
+  PtrSSchema          pSS;
+  PtrElement	      pEl;
+  SRule              *pRe1;
+#define MaxSch 20
+  PtrSSchema          attrStruct[MaxSch];
+  int                 att, schNumber;
+  char               *name;
+
+  name = NULL;
+  pSS = NULL;
+  att = 0;
+  found = FALSE;
+  schNumber = 0;
+  pEl = pElem;
+  /* looks for all structure schemas used by the ancestors elements */
+  while (pEl != NULL && !found)
+    {
+      /* the structure schema of the current element */
+      pSS = pEl->ElStructSchema;
+      /* one go throw all extension schemas of this one */
+      do
+	{
+	  /* is this schema already treated ? */
+	  newCshema = TRUE;
+	  for (i = 1; i <= schNumber; i++)	/* glance of the table */
+	    if (pSS == attrStruct[i - 1])	/* already in the table */
+	      newCshema = FALSE;
+	  if (newCshema)
+	    /* The element uses a structure schema not found yet */
+	    {
+	      /* Puts the structure schema in the table */
+	      if (schNumber < MaxSch)
+		{
+		  schNumber++;
+		  attrStruct[schNumber - 1] = pSS;
+		}
+	      /* verifies all the global attributes of this schema */
+	      att = 0;
+	      while (att < pSS->SsNAttributes && !found)
+		{
+		  att++;
+		  /* The local attributes are not considered */
+		  if (pSS->SsAttribute[att - 1].AttrGlobal)
+		    {
+		      if (whichName == SCHEMA_NAME)
+			name = pSS->SsAttribute[att - 1].AttrOrigName;
+		      else
+			name = pSS->SsAttribute[att - 1].AttrName;
+		      if (strcmp (attrName, name) == 0)
+			found = TRUE;
+		    }
+		}
+	    }
+	  if (!found)
+	    /* Go to the next extension schema */
+	    pSS = pSS->SsNextExtens;
+	}
+      while (pSS != NULL && !found);
+      pEl = pEl->ElParent;	/* Go the the ancestor element */
+    }
+  if (!found)
+    {
+      /* looks in the local attributes of the element */
+      /* at first, looks at the rule defining this element */
+      pSS = pElem->ElStructSchema;
+      pRe1 = &pSS->SsRule[pElem->ElTypeNumber - 1];
+      do
+	{
+	  if (pRe1 != NULL)
+	    /* verify the local attributes defined in this rule */
+	    for (i = 1; i <= pRe1->SrNLocalAttrs && !found; i++)
+	      {
+		att = pRe1->SrLocalAttr[i - 1];
+		if (whichName == SCHEMA_NAME)
+		  name = pSS->SsAttribute[att - 1].AttrOrigName;
+		else
+		  name = pSS->SsAttribute[att - 1].AttrName;
+		if (strcmp (attrName, name) == 0)
+		  found = TRUE;
+	      }
+	  if (!found)
+	    {
+	      /* Go to the next extension of the structure schema */
+	      pSS = pSS->SsNextExtens;
+	      /* looks in schema extension the extension rule for the element */
+	      if (pSS != NULL)
+		pRe1 = ExtensionRule (pElem->ElStructSchema,
+				      pElem->ElTypeNumber, pSS);
+	    }
+	}
+      while (pSS != NULL && !found);
+    }
+  if (found)
+    {
+      *attrNum = att;
+      *pSSch = pSS;
+    }
+  else
+    *attrNum = 0;
+}
 
 /*----------------------------------------------------------------------
    	GetTypeNumIdentity						

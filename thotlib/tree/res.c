@@ -19,6 +19,7 @@ char IndexSymols[] = {'T', 'G', 'S', 'R', 'P',
 		      '2', 'U', 'C', '{', 
 		      '[', '(', 'N', 'E', '@', '*', '\0'};
 
+static StrUnitDesc *ListUnitDesc = NULL;
 static TypeTree BuildStack[MAXDEPTH];
 static int BuildStackTop;
 /*----------------------------------------------------------------------
@@ -81,6 +82,8 @@ TypeTree second;
       fChild = RestNextEffNode (first, fChild);
       sChild = RestNextEffNode (second, sChild);
     }
+  if (fChild == NULL && sChild == NULL)
+    return 2;
   if (fChild == NULL)
     return 1;
   if (sChild == NULL)
@@ -117,7 +120,7 @@ TypeTree parent;
       found = FALSE;
       while (!found && sibling != NULL)
 	{
-	  found = (RestIsBefore (child, sibling) != 0);
+	  found = (RestIsBefore (child, sibling) == 1);
 	  if (!found)
 	    {
 	      last = sibling;
@@ -213,7 +216,7 @@ ElementType elemType;
       elemType.ElSSchema != NULL)
     {
       /* verifie que le type n'existe pas dans les ascendants (noeud recursifs) */
-      for(i = BuildStackTop; i >= 0 && theTree == NULL; i--)
+      for (i = BuildStackTop; i >= 0 && theTree == NULL; i--)
 	{
 	  newNode = BuildStack[i];
 	  if(newNode->TypeNum == elemType.ElTypeNum)
@@ -224,87 +227,87 @@ ElementType elemType;
 	    }
 	}
       /* construit un noeud */
-      if(theTree == NULL)
+      if (theTree == NULL)
 	{
 	  strRule = &(((PtrSSchema)(elemType.ElSSchema))->SsRule[(elemType.ElTypeNum) - 1]);
 	  childType.ElSSchema = elemType.ElSSchema;
-	  if(strRule->SrConstruct == CsIdentity)
+	  if (strRule->SrConstruct == CsIdentity)
 	    {
 	      /* c'est une identite, on ne cree pas de noeud */
 	      childType.ElTypeNum = (strRule->SrIdentRule);
-	      theTree = RecBuildTypeTree(childType);
+	      theTree = RecBuildTypeTree (childType);
 	      theTree->TypeNum = elemType.ElTypeNum;
 	    }
 	  else
 	    {
 	      /* creation d'un noeud */
-	      theTree = RestNewTypeNode(elemType);
+	      theTree = RestNewTypeNode (elemType);
 	    
 	      BuildStack[++BuildStackTop] = theTree;
-	      switch(strRule->SrConstruct)
+	      switch (strRule->SrConstruct)
 		{
 		case CsList:
 		  theTree->TPrintSymb = '(';
 		  childType.ElTypeNum = strRule->SrListItem;
-		  newNode = RecBuildTypeTree(childType);
+		  newNode = RecBuildTypeTree (childType);
 		  RestInsertNode (newNode, theTree);
 		  break;
 		case CsChoice:
-		  if(strRule->SrNChoices>0)
+		  if (strRule->SrNChoices > 0)
 		    { /* it's a choice */
 		      theTree->TPrintSymb = '[';
-		      for(i = 0; i < strRule->SrNChoices; i++)
+		      for (i = 0; i < strRule->SrNChoices; i++)
 			{
 			  childType.ElTypeNum = strRule->SrChoice[i];
 			  newNode = RecBuildTypeTree (childType);
 			  RestInsertNode (newNode, theTree);
 			}
 		    }
-		  else if(strRule->SrNChoices==0)
+		  else if (strRule->SrNChoices == 0)
 		    { /* it'a a unit*/
-		      theTree->TPrintSymb='U';
+		      theTree->TPrintSymb = 'U';
 		    }
-		  else if(strRule->SrNChoices==-1)
+		  else if (strRule->SrNChoices == -1)
 		    {
-		      theTree->TPrintSymb='N';
+		      theTree->TPrintSymb = 'N';
 		    }
 		  break;
 		case CsAggregate:
 		case CsUnorderedAggregate:
 		  theTree->TPrintSymb = '{';
-		  if(strRule->SrNComponents > 0)
+		  if (strRule->SrNComponents > 0)
 		    {
-		      for(i = 0; i < strRule->SrNComponents; i++)
+		      for (i = 0; i < strRule->SrNComponents; i++)
 			{
-			  childType.ElTypeNum=strRule->SrComponent[i];
+			  childType.ElTypeNum = strRule->SrComponent[i];
 			  newNode = RecBuildTypeTree (childType);
 			  RestInsertNode (newNode, theTree);
 			}
 		    }
 		  break;
 		case CsConstant:
-		  theTree->TPrintSymb='C';
+		  theTree->TPrintSymb = 'C';
 		  break;
 		case CsReference:
-		  theTree->TPrintSymb='R';
+		  theTree->TPrintSymb = 'R';
 		  break;
 		case CsBasicElement:
-		  switch(elemType.ElTypeNum)
+		  switch (elemType.ElTypeNum)
 		    {
 		    case 1:
-		      theTree->TPrintSymb='T';
+		      theTree->TPrintSymb = 'T';
 		      break;
 		    case 2:
-		      theTree->TPrintSymb='G';
+		      theTree->TPrintSymb = 'G';
 		      break;
 		    case 4:
-		      theTree->TPrintSymb='S';
+		      theTree->TPrintSymb = 'S';
 		      break;
 		    case 5:
-		      theTree->TPrintSymb='R';
+		      theTree->TPrintSymb = 'R';
 		      break;
 		    case 6:
-		      theTree->TPrintSymb='P';
+		      theTree->TPrintSymb = 'P';
 		      break;
 		    }
 		  break;
@@ -319,7 +322,7 @@ ElementType elemType;
 		  break;
 		default : break;
 		}
-	      BuildStack[BuildStackTop--]=NULL;
+	      BuildStack[BuildStackTop--] = NULL;
 	    } 
 	}
     }
@@ -444,7 +447,72 @@ TypeTree tree;
       TtaFreeMemory((char *)tree);
     }
 }
-	
+/*----------------------------------------------------------------------  
+  GetUDescSymbGetUDescSymb 
+  retourne le symbole correspondant au noeud unite tree ('U' si aucune
+  information n'est presente pour ce noeud).
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static char GetUDescSymb (TypeTree tree)
+#else  /* __STDC__ */
+static char GetUDescSymb (tree)
+TypeTree tree;
+#endif  /* __STDC__ */	
+{
+  StrUnitDesc *ptrDesc;
+
+  ptrDesc = ListUnitDesc;
+  while (ptrDesc != NULL && ptrDesc->Tree != tree)
+    ptrDesc = ptrDesc->Next;
+  if (ptrDesc == NULL)
+    return 'U';
+  else
+    return IndexSymols[ptrDesc->TypeNumber - 1];
+}
+
+/*----------------------------------------------------------------------  
+  AddUnitDescriptor 
+  ajoute une entree, si elle n'existe pas deja, dans la liste des 
+  descripteurs d'unites effective
+  retire l'entree si elle existe deja et n'est pas instanciee avec le
+  type de base donne
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void AddUnitDescriptor (TypeTree tree, ElementType elType)
+#else  /* __STDC__ */
+static void AddUnitDescriptor (tree, elType)
+TypeTree tree;
+ElementType elType;
+#endif  /* __STDC__ */
+{
+  StrUnitDesc *ptrDesc, *previous;
+  
+  
+  ptrDesc = ListUnitDesc;
+  previous = NULL;
+  while (ptrDesc != NULL && ptrDesc->Tree != tree)
+    {
+      previous = ptrDesc;
+      ptrDesc = ptrDesc->Next;
+    }
+  if (ptrDesc == NULL)
+    {
+      ptrDesc = (StrUnitDesc *) TtaGetMemory (sizeof (StrUnitDesc));
+      ptrDesc->Tree = tree;
+      ptrDesc->TypeNumber = elType.ElTypeNum;
+      ptrDesc->Next = ListUnitDesc;
+      ListUnitDesc = ptrDesc;
+    }
+  else
+    if (ptrDesc->TypeNumber != elType.ElTypeNum) 
+      {
+	if (previous != NULL)
+	  previous->Next =  ptrDesc->Next;
+	else
+	  ListUnitDesc = ptrDesc->Next;
+	TtaFreeMemory ((char *)ptrDesc);
+      }
+}
 
 /*----------------------------------------------------------------------  
   RestRecPrintType
@@ -481,7 +549,10 @@ PrintMethod method;
 	  if (theTree->TEffective)
 	    {
 	      nodes[*indice] = theTree;
-	      buffer[(*indice)++] = theTree->TPrintSymb;
+	      if (theTree->TPrintSymb == 'U')
+		buffer[(*indice)++] = GetUDescSymb (theTree);
+	      else
+		buffer[(*indice)++] = theTree->TPrintSymb;
 	    }
 	}
       else
@@ -619,10 +690,10 @@ TypeTree tree;
       result = (elType.ElTypeNum == 8) ;
       break;
     case 'U' :
-      result = TtaIsLeaf(elType);
+      result = TtaIsLeaf (elType);
       break;
     case '@':
-      result = RestCompatible(elType, tree->TRecursive);
+      result = RestCompatible (elType, tree->TRecursive);
       break;
     default :
       if (TtaIsLeaf (elType))
@@ -679,7 +750,11 @@ PrintMethod method;
     }
   if (TtaIsLeaf (elType) || tree->TPrintSymb == 'N')
     /* cas d'une feuille */
-    result = TRUE;
+    {
+      if (tree->TPrintSymb == 'U')
+	AddUnitDescriptor (tree, elType);
+      result = TRUE;
+    }
   else
     {
       elemChild = TtaGetFirstChild (elem);
@@ -750,6 +825,7 @@ TypeTree tree;
 #endif  /* __STDC__ */
 {
   TypeTree child;
+  StrUnitDesc *ptrDesc;
 
   if (tree != NULL)
     {
@@ -762,6 +838,14 @@ TypeTree tree;
 	  child = child->TNext;
 	}
     }
+  ptrDesc = ListUnitDesc;
+  while (ptrDesc != NULL)
+    {
+      ListUnitDesc = ptrDesc->Next;
+      TtaFreeMemory((char *)ptrDesc);
+      ptrDesc = ListUnitDesc;
+    }
+  ListUnitDesc = NULL;
 }
 
 /*----------------------------------------------------------------------  

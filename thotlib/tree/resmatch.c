@@ -9,7 +9,7 @@
 #define THOT_EXPORT extern
 #include "constres.h"
 
-
+#undef DEBUG
 /*----------------------------------------------------------------------  
   RestCoupler
   ----------------------------------------------------------------------*/
@@ -109,7 +109,8 @@ int IDst;
        resctx->RSrcPrint->SNodes[ISrc] != NULL &&
        resctx->RDestNodes[IDst] != NULL &&
        resctx->RSrcPrint->SNodes[ISrc]->TypeNum == resctx->RDestNodes[IDst]->TypeNum &&
-       resctx->RSrcPrint->SPrint[ISrc] == resctx->RDestPrint[IDst])
+       (resctx->RSrcPrint->SPrint[ISrc] == '@' ||
+	resctx->RDestPrint[IDst] == '@'))
        result = IDENTITE;
    if (result == NONE)
      {
@@ -331,41 +332,49 @@ Restruct resctx;
               ClusterStack[TopMS].Retour = i;
               ClusterStack[TopMS].Compteur = 0;
 	      RestCoupler (resctx, i - 1, j - 1);
+
 	      if (rel == IDENTITE)
 		{
-		  /* recherche la parenthese correspondante dans la source */
-		  level = -1;
-		  stop = FALSE;
-		  while (!stop)
+		  if (CSrc[i - 1] != '@')
 		    {
-		      stop = (CSrc[i - 1] == ClusterStack[TopMS].Inverse &&
-			       level == 0);
-		      if (!stop)
+		      /* recherche la parenthese correspondante dans la source */
+		      level = -1;
+		      stop = FALSE;
+		      while (!stop)
 			{
-			  if (CSrc[i - 1] == ClusterStack[TopMS].Inverse)
-			    level--;
-			  if (CSrc[i - 1] == ClusterStack[TopMS].Emp)
-			    level++;
-			  i++;
-			} 
+			  stop = (CSrc[i - 1] == ClusterStack[TopMS].Inverse &&
+				  level == 0);
+			  if (!stop)
+			    {
+			      if (CSrc[i - 1] == ClusterStack[TopMS].Inverse)
+				level--;
+			      if (CSrc[i - 1] == ClusterStack[TopMS].Emp)
+				level++;
+			      i++;
+			    } 
+			}
 		    }
-		  /* recherche la parenthese correspondante dans la destination */
-		  level = -1;
-		  stop = FALSE;
-		  while (!stop)
+		  if (V[j] != '@')
 		    {
-		      stop = (V[j] == ClusterStack[TopMS].Inverse &&
-			       level == 0);
-		      if (!stop)
+		      /* recherche la parenthese correspondante dans la destination */
+		      level = -1;
+		      stop = FALSE;
+		      while (!stop)
 			{
-			  if (V[j] == ClusterStack[TopMS].Inverse)
+			  stop = (V[j] == ClusterStack[TopMS].Inverse &&
+				  level == 0);
+			  if (!stop)
+			    {
+			      if (V[j] == ClusterStack[TopMS].Inverse)
 			    level--;
-			  if (V[j] == ClusterStack[TopMS].Emp)
-			    level++;
-			  j++;
+			      if (V[j] == ClusterStack[TopMS].Emp)
+				level++;
+			      j++;
+			    }
 			}
 		    }
 		}
+
 	      i += 1;
 	   
             }

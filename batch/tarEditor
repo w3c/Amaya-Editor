@@ -101,6 +101,7 @@ do
    Thot/config/fr-transdialogue \
    Thot/config/fr-typdialogue \
    Thot/dicopar/*.ptn \
+   Thot/dicopar/*.tri \
    Thot/dicopar/alphabet \
    Thot/dicopar/*.tri \
    Thot/dicopar/clavier \

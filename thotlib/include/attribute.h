@@ -176,6 +176,22 @@ extern void         TtaGiveAttributeType (Attribute attribute, /*OUT*/ Attribute
 extern void         TtaGiveAttributeTypeFromName (char *name, Element element, /*OUT*/ AttributeType * attributeType, /*OUT*/ int *attrKind);
 
 /* ----------------------------------------------------------------------
+   TtaGiveAttributeTypeFromOriginalName
+
+   Retrieves the type of an attribute from its original name.
+
+   Parameter:
+   name: name of the attribute (in the language of the structure schema).
+   element: the element with which the attribute is associated.
+
+   Return parameters:
+   attributeType: type of the attribute.
+   attrKind: kind of the attribute: 0 = Enumerate, 1 = Integer, 2 = Text,
+   3 = CsReference
+   ---------------------------------------------------------------------- */
+extern void        TtaGiveAttributeTypeFromOriginalName (char *name, Element element, /*OUT*/ AttributeType * attributeType, /*OUT*/ int *attrKind);
+
+/* ----------------------------------------------------------------------
    TtaGetAttributeName
 
    Returns the name of an attribute type.
@@ -188,6 +204,20 @@ extern void         TtaGiveAttributeTypeFromName (char *name, Element element, /
 
    ---------------------------------------------------------------------- */
 extern char        *TtaGetAttributeName (AttributeType attributeType);
+
+/* ----------------------------------------------------------------------
+   TtaGetAttributeOriginalName
+
+   Returns the name of an attribute type in the schema language.
+
+   Parameter:
+   attributeType: type of the attribute.
+
+   Return value:
+   name of that type.
+
+   ---------------------------------------------------------------------- */
+extern char       *TtaGetAttributeOriginalName (AttributeType attributeType);
 
 /* ----------------------------------------------------------------------
    TtaSameAttributeTypes

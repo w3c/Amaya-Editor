@@ -772,7 +772,7 @@ PtrSearchContext    DomaineCherche;
    if (NomTypeAChercher[0] != '\0')
      {
 	pStrTypeCherche = DomaineCherche->SDocument->DocSSchema;
-	GetSRuleFromName (&NumTypeCherche, &pStrTypeCherche, NomTypeAChercher);
+	GetSRuleFromName (&NumTypeCherche, &pStrTypeCherche, NomTypeAChercher, USER_NAME);
 	if (NumTypeCherche == 0)
 	  {
 	     /* message 'Type inconnu' dans la feuille de saisie */

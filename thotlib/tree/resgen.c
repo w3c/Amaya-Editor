@@ -188,6 +188,96 @@ static boolean RestTransferContent (Element oldElem, Element newElem, Document d
   return result;
 }
 /*----------------------------------------------------------------------  
+  IsPresentInAggregate
+  est vrai si un element de type typeNum est present comme fils de 
+  elParent (dont le constructeur est un aggregat), si oui elem est
+  cet element. Dans le cas ou l'element n'est pas present, elem 
+  contient l'element precedant dans l'aggregat (ou NULL s'il n'y en 
+  a pas).
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static boolean IsPresentInAggregate (Element elParent, int typeNum, Element *elem)
+#else  /* __STDC__ */
+static boolean IsPresentInAggregate (elParent, typeNum, elem)
+Element elParent;
+int typeNum;
+Element *elem;
+#endif  /* __STDC__ */
+{
+  int card, indice;
+  ElementType *typesArray;
+  ElementType typeParent, typeChild;
+  Element elChild,elPrev;
+  boolean result, found;
+  
+  typeParent = TtaGetElementType (elParent);
+  card = TtaGetCardinalOfType (typeParent);
+  typesArray = TtaGetMemory (card * sizeof (ElementType));
+  TtaGiveConstructorsOfType (&typesArray, &card, typeParent);
+  elChild = TtaGetFirstChild (elParent);
+  if (elChild == NULL)
+    {
+      /* l'aggregat est vide */
+      *elem = NULL;
+      result = FALSE;
+    }
+  else
+    {
+      elPrev = NULL;
+      typeChild = TtaGetElementType (elChild);
+      found = FALSE;
+      indice = 0;
+       /* boucle sur les fils de l'aggregat */
+      while (!found && 
+	     elChild != NULL && 
+	     indice < card && 
+	     typeChild.ElTypeNum != typeNum)
+	{
+	  /* pour chaque fils, cherche son no de type dans le tableau */
+	  /* des types, on arrete si on a trouve le no de type recheche */
+	  while (!found && 
+		 indice < card &&
+		 typeChild.ElTypeNum != typesArray[indice].ElTypeNum)
+	    {
+	      found = (typesArray[indice].ElTypeNum == typeNum);
+	      if (!found)
+		indice ++;
+	    }
+	  if (!found && indice < card)
+	    {
+	      /* on a trouve le type du fils courant dans le tableau */
+	      /* on passe au fils suivant */
+	      elPrev = elChild;
+	      TtaNextSibling (&elChild);
+	      if (elChild != NULL)
+		typeChild = TtaGetElementType (elChild);
+	    }
+	}
+      if (found)
+	{ /* on a trouve le no de type cherche dans le tableau */
+	  /* mais l'element n'est pas present dans l'aggregat */
+	  result = FALSE;
+	  *elem = elPrev;
+	}
+      else
+	if (typeChild.ElTypeNum == typeNum)
+	  {
+	    /* on a trouve l'element recherche */
+	    result = TRUE;
+	    *elem = elChild;
+	  }
+	else
+	  {
+	    /* autres cas (erreur ??)*/
+	    result = FALSE;
+	    *elem = elPrev;
+	  }
+    }
+  return result;
+}
+
+ 
+/*----------------------------------------------------------------------  
   RestCreateDescent
   cree une descendance d'elements correspondant a la branche de l'arbre
   de types destination definie par ancestTree...descendTree, ancestor
@@ -195,9 +285,9 @@ static boolean RestTransferContent (Element oldElem, Element newElem, Document d
   newElem retourne l'element de plus bas niveau cree
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean RestCreateDescent (Element ancestor, Element *newElem, TypeTree ancestTree, TypeTree descendTree, Document doc)
+static Element RestCreateDescent (Element ancestor, TypeTree ancestTree, TypeTree descendTree, Document doc)
 #else  /* __STDC__ */
-static boolean RestCreateDescent (ancestor, newElem, ancestTree, descendTree, doc)
+static boolean RestCreateDescent (ancestor, ancestTree, descendTree, doc)
 Element ancestor;
 Element *newElem;
 TypeTree ancestTree;
@@ -206,62 +296,81 @@ Document doc;
 #endif  /* __STDC__ */
 {
   ElementType elType;
-  Element elLast, elNew;
-  TypeTree firstChild, tChild;
-  boolean found = FALSE;
-
-  if (descendTree->TId != ancestTree->TId)
+  Element elLast, elNew, elParent;
+  TypeTree nStack [10];
+  int top, i;
+  TypeTree tNode;
+ 
+  elNew = NULL;
+  top = 1;
+  tNode = descendTree;
+  while (ancestTree != NULL && tNode->TId != ancestTree->TId && top < 10)
     {
-      firstChild = NULL;
-      if (ancestTree->TChild != NULL)
-	firstChild = ancestTree->TChild;
-      else if (ancestTree->TPrintSymb == '@')
-	firstChild = ancestTree->TRecursive->TChild;
-      tChild = firstChild;
-      while (!found && tChild != NULL)
+      /* recherche ancestTree dans les ancetres de descendTree */
+      nStack [top++] = tNode;
+      tNode = tNode->TParent;
+    }
+  elType = TtaGetElementType (ancestor);
+  while (!IsNodeOfType (tNode, elType))
+    { /* recherche le noeud de meme type que ancestor dans les ancetres */
+      /* de ancestTree */
+      nStack [top++] = tNode;
+      tNode = tNode->TParent;
+    }
+  if (top < 10)
+    {
+      elParent = ancestor;
+      for (i = top - 1; i > 0; i--)
 	{
-	  found = (tChild->TId == descendTree->TId);
-	  if (!found)
-	    tChild = tChild->TNext;
-	}
-      if (!found)
-	{
-	  tChild = firstChild;
-	  while (!found && tChild != NULL)
-	    {
-	      found = RestCreateDescent (ancestor, newElem, tChild, descendTree, doc);
-	      if (!found)
-		tChild = tChild->TNext;
-	    }
-	}
-      if (found)
-	{
-	  elType.ElTypeNum = tChild->TypeNum;
-	  elType.ElSSchema = (TtaGetElementType (ancestor)).ElSSchema;
-	  elLast = TtaGetLastChild (ancestor);
+	  elType.ElTypeNum = nStack[i]->TypeNum;
+	  elLast = TtaGetLastChild (elParent);
 	  if (elLast == NULL)
 	    {
 	      elNew = TtaNewElement (doc, elType);
-	      TtaInsertFirstChild (&elNew, *newElem, doc);
+	      TtaInsertFirstChild (&elNew, elParent, doc);
 	    }
-	  else if (((TtaGetElementType (elLast)).ElTypeNum == elType.ElTypeNum)
-               && (descendTree->TParent->TPrintSymb != '('))
-	    {
-	      elNew = elLast;
-	    }
-	   else 
-	     {
-	       elNew = TtaNewElement (doc, elType);
-	       TtaInsertSibling (elNew, elLast, FALSE, doc);
-	     }
-	  *newElem = elNew;
+	  else
+	    if (nStack[i]->TParent->TPrintSymb == '[')
+	      /* constructeur choix : echec si elLast n'est pas du type */
+	      /* de nStack[i] */
+	      if (IsNodeOfType (nStack[i], TtaGetElementType (elLast)))
+		elNew = elLast;
+	      else
+		{
+		  i = 0;
+		  elNew = NULL;
+		}
+	    else if (nStack[i]->TParent->TPrintSymb == '{')
+	      {
+		/* constructeur aggregat : recherche si l'element est deja */
+		/* present, le cree et l'insere sinon */
+		if (IsPresentInAggregate (elParent, nStack[i]->TypeNum,&elLast))
+		  elNew = elLast;
+		else
+		  {
+		    elNew = TtaNewElement (doc, elType);
+		    if (elLast != NULL)
+		      TtaInsertSibling (elNew, elLast, FALSE, doc);
+		    else
+		      TtaInsertFirstChild (&elNew, elParent, doc);
+		  }
+	      }
+	    else
+	      if (nStack[i]->TPrintSymb == '[')
+		{
+		  /* constructeur liste (autre ??) on cree un nouvel elt */
+		  elNew = TtaNewElement (doc, elType);
+		  TtaInsertSibling (elNew, elLast, FALSE, doc);
+		}
+	      else
+		elNew = elLast;
+	  elParent = elNew;
 	}
-      
     }
-  else
-    *newElem = ancestor;
-  return (!TtaGetErrorCode());
+  return elNew;
 }
+
+     
 
 static boolean RestTransAttr (Element oldElem, Element newElem, Document doc)
 {
@@ -338,7 +447,7 @@ Document doc;
 #endif  /* __STDC__ */
 {
   ElementType elType, targetType;
-  Element elTarget, elTargetParent, prev, elParent, elChild;
+  Element elTarget, prev, elParent, elChild;
   TypeTree target, treeChild, targetParent;
   boolean result = FALSE;
   
@@ -361,121 +470,111 @@ Document doc;
   printf (" destParent : %s \n",msgbuf);
   
 #endif 
-
-  if (TtaIsLeaf (elType))
+  if ( sourceTree != NULL && sourceTree->TEffective)
     {
-      /* cas des feuilles : copie d'arbre */ 
-      /* probleme avec TtaCreateDescentWithContent si elDestParent a deja */
-      /* des fils, cree une branche AVANT !!! */
-      elTarget = TtaCreateDescentWithContent (doc, elDestParent, elType);
-      if (elTarget != NULL)
-	result = RestTransferContent (elSource, elTarget, doc) &&
-	  RestTransAttr (elSource, elTarget, doc);
-    }
-  else
-    { 
-      /*
-      treeChild = RestNextEffNode (parentTree, parentTree);
-      *//* recherche le type de elChild dans l'arbre de types source *//*
-      while (treeChild != NULL && !IsNodeOfType(treeChild, elType))
-	treeChild = RestNextEffNode (parentTree, treeChild);
-	*/
-      if (/*treeChild*/ sourceTree != NULL && sourceTree->TEffective)
-	{
 #ifdef DEBUG
-	  printf("trouve noeud effectif ");
+      printf("trouve noeud effectif ");
 #endif 
-
-	  /* on a trouve un noeud effectif correspondant au type du fils */
-	  target = RestTarget (sourceTree, restr);
-	  if (parentTree->TPrintSymb != '*')
-	    targetParent = RestTarget (parentTree, restr);
-	  else
-	    targetParent = restr->RDestTree;
-	  if (target != NULL)
-	    {
-
-	      targetType.ElSSchema = restr->RDestType.ElSSchema;
-	      targetType.ElTypeNum = target->TypeNum;
-#ifdef DEBUG
-	      printf("couple avec ");
-	      
-	      strcpy (msgbuf, TtaGetElementTypeName (targetType));
-	      printf ("%s \n",msgbuf);
-#endif
-	    }
-	  else
-	    {
-#ifdef DEBUG
-	      printf("non couple\n ");
-#endif 
-	      targetType.ElSSchema = elType.ElSSchema;
-	      targetType.ElTypeNum = elType.ElTypeNum;
-	    }
-	  /* on recherche si un element du type fils est deja dans */
-	  /* la descendence de elDestParent */
-	  elTargetParent = RestSearchInTree (targetType, elDestParent);
-	  if (elTargetParent == NULL)
-	    /* on cree la descendence de elDestParent */
-	    elTargetParent = TtaCreateDescent (doc, elDestParent, targetType);
-	  if (elTargetParent != NULL)
-	    if (target == NULL || target->TypeNum == sourceTree->TypeNum)
-	      {
-		/* les noeuds couples sont de meme type, */
-		/* on copie la source */
-		elParent = TtaGetParent (elTargetParent);
-		elTarget = TtaCopyTree (elSource, doc, doc, elParent);
-		prev = TtaGetLastChild (elParent);
-		while (prev != NULL && TtaGetElementVolume (prev) == 0)
-		  {
-		    TtaDeleteTree (prev, doc);
-		    prev = TtaGetLastChild (elParent);
-		  }
-		if (prev == NULL)
-		  TtaInsertFirstChild (&elTarget, elParent, doc);
-		else
-		  TtaInsertSibling (elTarget, prev, FALSE, doc);
-		if (TtaGetElementVolume (elTargetParent) == 0)
-		  TtaDeleteTree (elTargetParent, doc);
-		result = !TtaGetErrorCode();
-	      }
-	    else 
-	      { 
-		/* applique la transformation aux descendants */
-		result = RestTransformChildren (restr, 
-						elSource, 
-						elTargetParent, 
-						sourceTree, 
-						doc);
-		if (result) 
-		  result = RestTransAttr (elSource, 
-					  elTargetParent, 
-					  doc);
-		if (TtaGetElementVolume (elTargetParent) == 0)
-		  TtaDeleteTree (elTargetParent, doc);
-	      } 
-	}
-      else /* treeChild == NULL */
-	/* l'element n'a pas de type marque comme effectif,
-	   c'est donc un choix ou une liste uniquement instanciee
-	   on transforme sa descendence en l'ignorant. */
+      /* on a trouve un noeud effectif correspondant au type du fils */
+      target = RestTarget (sourceTree, restr);
+      if (parentTree->TPrintSymb != '*')
+	targetParent = RestTarget (parentTree, restr);
+      else
+	targetParent = restr->RDestTree;
+      if (target != NULL)
 	{
-	  /* recherche le fils de elSource et son arbre de type */
-	  elChild = TtaGetFirstChild (elSource);
-	  elType = TtaGetElementType (elChild);
-	  treeChild = sourceTree->TChild;
-	  while (treeChild != NULL && !IsNodeOfType (treeChild, elType))
-	    /*treeChild->TypeNum != elType.ElTypeNum*/
-	    treeChild = treeChild->TNext;
+	  elTarget = RestCreateDescent (elDestParent, targetParent, target, doc);
+#ifdef DEBUG
+	  targetType.ElSSchema = restr->RDestType.ElSSchema;
+	  targetType.ElTypeNum = target->TypeNum;
+
+	  printf("couple avec ");
 	  
-	  result = (treeChild != NULL &&
-		    RestTransformElement (restr, 
-					  elChild, 
-					  elDestParent,
-					  treeChild,
-					  parentTree, 
-					  doc));
+	  strcpy (msgbuf, TtaGetElementTypeName (targetType));
+	  printf ("%s \n",msgbuf);
+#endif
 	}
+      else
+	{
+#ifdef DEBUG
+	  printf("non couple\n ");
+#endif 
+	  targetType.ElSSchema = elType.ElSSchema;
+	  targetType.ElTypeNum = elType.ElTypeNum;
+	}
+      if (target == NULL || IsNodeOfType (target, elType))
+	  /* target->TypeNum == sourceTree->TypeNum)*/
+	{
+	  /* les noeuds couples sont de meme type, */
+	  /* on copie la source */
+	  if (elTarget != NULL)
+	    {
+	      prev = elTarget;
+	      TtaPreviousSibling (&prev);
+	      elParent = TtaGetParent (elTarget);
+	      TtaDeleteTree (elTarget, doc);
+	    }
+	  else
+	    {
+	      elParent = elDestParent;
+	      prev = TtaGetLastChild (elParent);
+	    }
+	  elTarget = TtaCopyTree (elSource, doc, doc, elParent);
+	  /* on insere la copie */
+	  if (prev == NULL)
+	    TtaInsertFirstChild (&elTarget, elParent, doc);
+	  else
+	    TtaInsertSibling (elTarget, prev, FALSE, doc);
+	  result = !TtaGetErrorCode();
+	}
+      else if (TtaIsLeaf(elType))
+	{
+	  /* RestTransferContent (elSource, elTarget, doc);*/
+	  prev = TtaCopyTree (elSource, doc, doc, elTarget);
+	  if (prev != NULL)
+	    TtaInsertFirstChild (&prev, elTarget, doc);
+	  result =!TtaGetErrorCode();
+	}
+      else
+	{ /* les noeuds couple ne sont pas de meme type */
+	  /* applique la transformation aux descendants */
+	  if (elTarget != NULL)
+	    elParent = elTarget;
+	  else
+	    elParent = elDestParent;
+	  result = RestTransformChildren (restr, 
+					  elSource, 
+					  elParent, 
+					  sourceTree, 
+					  doc);
+	  if (result) 
+	    result = RestTransAttr (elSource, 
+				    elParent, 
+				    doc);
+	  if (TtaGetElementVolume (elParent) == 0)
+	    TtaDeleteTree (elParent, doc);
+	} 
+    }
+  else /* sourceTree == NULL */
+    /* l'element n'a pas de type marque comme effectif, */
+    /* c'est donc un choix ou une liste uniquement instanciee */
+    /* on transforme sa descendence en l'ignorant. */
+    {
+      /* recherche le fils de elSource et son arbre de type */
+      elChild = TtaGetFirstChild (elSource);
+      elType = TtaGetElementType (elChild);
+      treeChild = sourceTree->TChild;
+      while (treeChild != NULL && !IsNodeOfType (treeChild, elType))
+	/*treeChild->TypeNum != elType.ElTypeNum*/
+	treeChild = treeChild->TNext;
+      
+      result = (treeChild != NULL &&
+		RestTransformElement (restr, 
+				      elChild, 
+				      elDestParent,
+				      treeChild,
+				      parentTree, 
+				      doc));
     }
   return result;
 }
@@ -496,7 +595,7 @@ TypeTree typeTree;
 Document doc;
 #endif  /* __STDC__ */
 {
-  Element elChild;
+  Element elChild, elCopy, prev;
   ElementType elType;
   boolean result = TRUE;
   TypeTree childTree;
@@ -507,12 +606,34 @@ Document doc;
     {
       childTree = typeTree->TChild;
       elType = TtaGetElementType (elChild);
-      while (childTree != NULL && !IsNodeOfType (childTree, elType))
-	/* childTree->TypeNum != elType.ElTypeNum */
+      /* recherche dans les fils de typeTree le noeud de type elType */
+      /* recherche dans les petit-fils si le fils est un choix */
+      while (childTree != NULL && 
+	     (!IsNodeOfType (childTree, elType) &&
+	      !(childTree->TPrintSymb == '[' &&
+		childTree->TChild != NULL &&
+		IsNodeOfType (childTree->TChild, elType))))
 	childTree = childTree->TNext;
-      result = (result && 
-		(childTree != NULL) && 
-		RestTransformElement (restr, elChild, newElem, childTree, typeTree, doc));
+
+      if (childTree != NULL && !IsNodeOfType (childTree, elType))
+	childTree = childTree->TChild;
+      if (childTree != NULL)
+	result = (result && 
+		  RestTransformElement (restr, elChild, newElem, childTree, typeTree, doc));
+      else if (TtaIsLeaf (elType))
+	{
+	  elCopy = TtaCopyTree (elChild, doc, doc, newElem);
+	  prev = TtaGetLastChild (newElem);
+	  if (elCopy != NULL)
+	    if (prev == NULL)
+	      TtaInsertFirstChild (&elCopy, newElem, doc);
+	    else
+	      TtaInsertSibling (elCopy, prev, FALSE, doc);
+      	  result = !TtaGetErrorCode();
+	}
+      else
+	result = FALSE; 
+	
       /* traite le fils suivant */
       TtaNextSibling (&elChild);
     }
@@ -587,7 +708,7 @@ Restruct restruct;
 	      /* de meme type : cree une descendance et copie l'element */
 	      targetType.ElSSchema = destType.ElSSchema;
 	      targetType.ElTypeNum = target->TypeNum;
-	      elTargetParent = TtaCreateDescent (doc, newInstance, targetType);
+	      elTargetParent = RestCreateDescent (newInstance, NULL, target, doc);
 	      tprev = elTargetParent;
 	      TtaPreviousSibling (&tprev);
 	      if (tprev == NULL)

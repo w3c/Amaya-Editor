@@ -567,6 +567,21 @@ extern boolean      TtaIsExtensionElement (Element element);
 extern char        *TtaGetElementTypeName (ElementType elementType);
 
 /* ----------------------------------------------------------------------
+   TtaGetElementTypeOriginalName
+
+   Returns the name of an element type in the language it is defined in
+   the structure schema.
+
+   Parameter:
+   elementType: element type.
+
+   Return value:
+   original name of that type.
+
+   ---------------------------------------------------------------------- */
+extern char        *TtaGetElementTypeOriginalName (ElementType elementType);
+
+/* ----------------------------------------------------------------------
    TtaGiveTypeFromName
 
    Gives an element type whose name is known (the structure schema that
@@ -585,6 +600,27 @@ extern char        *TtaGetElementTypeName (ElementType elementType);
 
    ---------------------------------------------------------------------- */
 extern void         TtaGiveTypeFromName (/*OUT*/ ElementType * elementType, char *name);
+
+/* ----------------------------------------------------------------------
+   TtaGiveTypeFromOriginalName
+
+   Gives an element type whose name is known (the structure schema that
+   defines that type must be loaded). That type is searched in a given
+   structure schema (elementType.ElSSchema) and in all structure schemas
+   that are extensions of that structure schema or natures used in that
+   structure schema.
+
+   Parameters:
+   elementType.ElSSchema: the structure schema of interest.
+   name: the name of the type of interest in the language it is defined
+   in the structure schema.
+
+   Return parameter:
+   elementType: the type having this name, or elementType.ElTypeNum = 0
+   if the type is not found.
+
+   ---------------------------------------------------------------------- */
+extern void        TtaGiveTypeFromOriginalName (/*OUT*/ ElementType * elementType, char *name);
 
 /* ----------------------------------------------------------------------
    TtaSameTypes

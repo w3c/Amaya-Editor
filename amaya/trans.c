@@ -833,18 +833,35 @@ Document doc;
   char		      tmpfilename[25];
   char		      charRead;
   FILE		     *inputFile;
-# ifndef _WINDOWS  
-  strcpy (tmpfilename, "/tmp/amayatrans.tmp");
-# else  /* _WINDOWS */
-  strcpy (tmpfilename, "C:\\TEMP\\amayatrans.tmp");
-# endif /* _WINDOWS */
-  TtaExportTree (subTree, doc, tmpfilename, "HTMLT");
-  inputFile = fopen (tmpfilename, "r");
-  charRead = getc (inputFile);  
-  while (charRead != EOF)
+  Language	      lang;
+  int                 len;
+  
+  if (TtaGetElementType (subTree).ElTypeNum == HTML_EL_TEXT_UNIT)
     {
-      bufHTML[szHTML++] = charRead;
-      charRead = getc (inputFile);
+      len = BUFFER_LEN - szHTML;
+      lang = TtaGetDefaultLanguage ();
+      TtaGiveTextContent (subTree, &(bufHTML[szHTML]), &len , &lang);
+      szHTML += len;
+    }
+  else
+    {
+# ifndef _WINDOWS  
+      strcpy (tmpfilename, "/tmp/amayatrans.tmp");
+# else  /* _WINDOWS */
+      strcpy (tmpfilename, "C:\\TEMP\\amayatrans.tmp");
+# endif /* _WINDOWS */
+      TtaExportTree (subTree, doc, tmpfilename, "HTMLT");
+      inputFile = TtaReadOpen (tmpfilename);
+      if (inputFile != NULL)
+	{
+	  charRead = getc (inputFile);  
+	  while (charRead != EOF)
+	    {
+	      bufHTML[szHTML++] = charRead;
+	      charRead = getc (inputFile);
+	    }
+	  TtaReadClose (inputFile);  
+	}
     }
   bufHTML[szHTML] = EOS;
 }
@@ -1426,7 +1443,8 @@ strNode            *TN;
 
   NS->Idf = idfCounter++;
   NS->Nbc = 0;
-  if (strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)
+  if (FALSE)
+    /*strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)*/
     {
       TransferMode = ByAttribute;
       /* create a ghost attribute with the identifier of the node */     

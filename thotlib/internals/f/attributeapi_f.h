@@ -32,6 +32,10 @@ extern void TtaGiveAttributeTypeFromName ( char *name,
                                            Element element,
                                            AttributeType * attributeType,
                                            int *attrKind );
+extern void TtaGiveAttributeTypeFromOriginalName ( char *name,
+                                                   Element element,
+                                                   AttributeType * attributeType,
+                                                   int *attrKind );
 extern char *TtaGetAttributeName ( AttributeType attributeType );
 extern int TtaSameAttributeTypes ( AttributeType type1,
                                    AttributeType type2 );
@@ -74,6 +78,10 @@ extern void TtaGiveAttributeTypeFromName (/* char *name,
                                              Element element,
                                              AttributeType * attributeType,
                                              int *attrKind */);
+extern void TtaGiveAttributeTypeFromOriginalName (/* char *name,
+                                                     Element element,
+                                                     AttributeType * attributeType,
+                                                     int *attrKind */);
 extern char *TtaGetAttributeName (/* AttributeType attributeType */);
 extern int TtaSameAttributeTypes (/* AttributeType type1,
                                      AttributeType type2 */);

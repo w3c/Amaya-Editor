@@ -2242,6 +2242,42 @@ ElementType         elementType;
 }
 
 /* ----------------------------------------------------------------------
+   TtaGetElementTypeOriginalName
+
+   Returns the name of an element type in the language it is defined in
+   the structure schema.
+
+   Parameter:
+   elementType: element type.
+
+   Return value:
+   original name of that type.
+
+   ---------------------------------------------------------------------- */
+#ifdef __STDC__
+char               *TtaGetElementTypeOriginalName (ElementType elementType)
+
+#else  /* __STDC__ */
+char               *TtaGetElementTypeOriginalName (elementType)
+ElementType         elementType;
+
+#endif /* __STDC__ */
+
+{
+
+   UserErrorCode = 0;
+   nameBuffer[0] = '\0';
+   if (elementType.ElSSchema == NULL)
+	TtaError (ERR_invalid_parameter);
+   else if (elementType.ElTypeNum > ((PtrSSchema) (elementType.ElSSchema))->SsNRules ||
+	    elementType.ElTypeNum < 1)
+	TtaError (ERR_invalid_element_type);
+   else
+	strncpy (nameBuffer, ((PtrSSchema) (elementType.ElSSchema))->SsRule[elementType.ElTypeNum - 1].SrOrigName, MAX_NAME_LENGTH);
+   return nameBuffer;
+}
+
+/* ----------------------------------------------------------------------
    TtaGiveTypeFromName
 
    Gives an element type whose name is known (the structure schema that
@@ -2279,7 +2315,50 @@ char               *name;
 	TtaError (ERR_invalid_parameter);
      }
    else
-	GetSRuleFromName (&((*elementType).ElTypeNum), (PtrSSchema *) (&((*elementType).ElSSchema)), name);
+	GetSRuleFromName (&((*elementType).ElTypeNum), (PtrSSchema *) (&((*elementType).ElSSchema)), name, USER_NAME);
+}
+
+
+/* ----------------------------------------------------------------------
+   TtaGiveTypeFromOriginalName
+
+   Gives an element type whose name is known (the structure schema that
+   defines that type must be loaded). That type is searched in a given
+   structure schema (elementType.ElSSchema) and in all structure schemas
+   that are extensions of that structure schema or natures used in that
+   structure schema.
+
+   Parameters:
+   elementType.ElSSchema: the structure schema of interest.
+   name: the name of the type of interest in the language it is defined
+   in the structure schema.
+
+   Return parameter:
+   elementType: the type having this name, or elementType.ElTypeNum = 0
+   if the type is not found.
+
+   ---------------------------------------------------------------------- */
+
+#ifdef __STDC__
+void                TtaGiveTypeFromOriginalName (ElementType * elementType, char *name)
+
+#else  /* __STDC__ */
+void                TtaGiveTypeFromOriginalName (elementType, name)
+ElementType        *elementType;
+char               *name;
+
+#endif /* __STDC__ */
+
+{
+   UserErrorCode = 0;
+   (*elementType).ElTypeNum = 0;
+   if (name == NULL || name[0] == '\0' || (*elementType).ElSSchema == NULL)
+     {
+	(*elementType).ElSSchema = NULL;
+	TtaError (ERR_invalid_parameter);
+     }
+   else
+	GetSRuleFromName (&((*elementType).ElTypeNum), (PtrSSchema *) (&((*elementType).ElSSchema)), name, SCHEMA_NAME);
 }
 
 /* ----------------------------------------------------------------------

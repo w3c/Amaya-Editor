@@ -90,5 +90,15 @@ typedef struct StrClusterStack
   int Compteur;
 } TyClusterStack;
 
+/* definition de descripteurs d'unites */
+/* associe a un noeud unite un type de base */
+typedef struct _StrUnitDesc
+{
+  TypeTree Tree;
+  int TypeNumber;
+  struct _StrUnitDesc *Next;
+} StrUnitDesc;
+
+
 
 THOT_EXPORT RestContext RContext;

@@ -9,7 +9,13 @@
 extern void CreateDocument ( PtrDocument * pDoc );
 extern void GetSRuleFromName ( int *typeNum,
                                PtrSSchema * pSS,
-                               Name typeName );
+                               Name typeName,
+                               int whichName );
+extern void GetAttrRuleFromName ( int *attrNum,
+                                  PtrSSchema *pSSch,
+                                  PtrElement pElem,
+                                  Name attrName,
+                                  int whichName );
 extern int GetTypeNumIdentity ( int typeNum,
                                 PtrSSchema pSS );
 extern boolean SameSRules ( int typeNum1,
@@ -109,7 +115,13 @@ extern boolean CanSplitElement ( PtrElement firstEl,
 extern void CreateDocument (/* PtrDocument * pDoc */);
 extern void GetSRuleFromName (/* int *typeNum,
                                  PtrSSchema * pSS,
-                                 Name typeName */);
+                                 Name typeName,
+                                 int whichName */);
+extern void GetAttrRuleFromName (/* int *attrNum,
+                                    PtrSSchema *pSSch,
+                                    PtrElement pElem,
+                                    Name attrName,
+                                    int whichName */);
 extern int GetTypeNumIdentity (/* int typeNum,
                                   PtrSSchema pSS */);
 extern boolean SameSRules (/* int typeNum1,

@@ -647,124 +647,111 @@ int                *attrKind;
 #endif /* __STDC__ */
 
 {
-   int                 i;
-   PtrElement          pEl;
-   boolean             found, newCshema;
    PtrSSchema          pSS;
-   SRule              *pRe1;
 
-#define MaxSch 20
-   PtrSSchema          attrStruct[MaxSch];
-   int                 att, schNumber;
-
-   pSS = NULL;
-   att = 0;
    UserErrorCode = 0;
    (*attributeType).AttrSSchema = NULL;
    (*attributeType).AttrTypeNum = 0;
    *attrKind = 0;
-   if (name[0] == '\0' || strlen (name) >= MAX_NAME_LENGTH)
+   if (name[0] == '\0' || strlen (name) >= MAX_NAME_LENGTH || element == NULL)
       TtaError (ERR_invalid_parameter);
    else
      {
-	found = FALSE;
-	schNumber = 0;
-	pEl = (PtrElement) element;
-	/* looks for all structure schemacs used by the ancestors elements */
-	while (pEl != NULL && !found)
-	  {
-	     /* the structure schema of the current element */
-	     pSS = pEl->ElStructSchema;
-	     /* one go throw all extension schemas of this one */
-	     do
-	       {
-		  /* is this schema already treated ? */
-		  newCshema = TRUE;
-		  for (i = 1; i <= schNumber; i++)	/* glance of the table */
-		     if (pSS == attrStruct[i - 1])	/* already in the table */
-			newCshema = FALSE;
-		  if (newCshema)
-		     /* The element uses a structure schema not found yet */
-		    {
-		       /* Puts the structure schema in the table */
-		       if (schNumber < MaxSch)
-			 {
-			    schNumber++;
-			    attrStruct[schNumber - 1] = pSS;
-			 }
-		       /* verifies all the global attributes of this schema */
-		       att = 0;
-		       while (att < pSS->SsNAttributes && !found)
-			 {
-			    att++;
-			    /* The local attributes are not considered */
-			    if (pSS->SsAttribute[att - 1].AttrGlobal)
-			       if (strcmp (name, pSS->SsAttribute[att - 1].AttrName) == 0)
-				  found = TRUE;
-			 }
-		    }
-		  if (!found)
-		     /* Go to the next extension schema */
-		     pSS = pSS->SsNextExtens;
-	       }
-	     while (pSS != NULL && !found);
-	     pEl = pEl->ElParent;	/* Go the the ancestor element */
-	  }
-	if (!found)
-	  {
-	     /* looks in the local attributes of the element */
-	     /* at first, looks at the rule defining this element */
-	     pSS = ((PtrElement) element)->ElStructSchema;
-	     pRe1 = &pSS->SsRule[((PtrElement) element)->ElTypeNumber - 1];
-	     do
-	       {
-		  if (pRe1 != NULL)
-		     /* verify the local attributes defined in this rule */
-		     for (i = 1; i <= pRe1->SrNLocalAttrs && !found; i++)
-		       {
-			  att = pRe1->SrLocalAttr[i - 1];
-			  if (strcmp (name, pSS->SsAttribute[att - 1].AttrName) == 0)
-			     found = TRUE;
-		       }
-		  if (!found)
-		    {
-		       /* Go to the next extension of the structure schema */
-		       pSS = pSS->SsNextExtens;
-		       /* looks in schema extension the extension rule for the element */
-		       if (pSS != NULL)
-			  pRe1 = ExtensionRule (((PtrElement) element)->ElStructSchema,
-				 ((PtrElement) element)->ElTypeNumber, pSS);
-		    }
-	       }
-	     while (pSS != NULL && !found);
-	  }
-	if (!found)
-	  {
-	     TtaError (ERR_invalid_parameter);
-	  }
-	else
-	  {
-	     (*attributeType).AttrSSchema = (SSchema) pSS;
-	     (*attributeType).AttrTypeNum = att;
-	     switch (pSS->SsAttribute[att - 1].AttrType)
-		   {
-		      case AtEnumAttr:
-			 *attrKind = 0;
-			 break;
-		      case AtNumAttr:
-			 *attrKind = 1;
-			 break;
-		      case AtTextAttr:
-			 *attrKind = 2;
-			 break;
-		      case AtReferenceAttr:
-			 *attrKind = 3;
-			 break;
-		      default:
-			 TtaError (ERR_invalid_attribute_type);
-			 break;
-		   }
-	  }
+       GetAttrRuleFromName (&((*attributeType).AttrTypeNum), (PtrSSchema *)&((*attributeType).AttrSSchema), (PtrElement) element, name, USER_NAME);
+       if ((*attributeType).AttrTypeNum == 0)
+	 {
+	   TtaError (ERR_invalid_parameter);
+	 }
+       else
+	 {
+	   pSS = (PtrSSchema)((*attributeType).AttrSSchema);
+	   switch (pSS->SsAttribute[(*attributeType).AttrTypeNum - 1].AttrType)
+	     {
+	     case AtEnumAttr:
+	       *attrKind = 0;
+	       break;
+	     case AtNumAttr:
+	       *attrKind = 1;
+	       break;
+	     case AtTextAttr:
+	       *attrKind = 2;
+	       break;
+	     case AtReferenceAttr:
+	       *attrKind = 3;
+	       break;
+	     default:
+	       TtaError (ERR_invalid_attribute_type);
+	       break;
+	     }
+	 }
+     }
+}
+
+/* ----------------------------------------------------------------------
+   TtaGiveAttributeTypeFromOriginalName
+
+   Retrieves the type of an attribute from its original name.
+
+   Parameter:
+   name: name of the attribute (in the language of the structure schema).
+   element: the element with which the attribute is associated.
+
+   Return parameters:
+   attributeType: type of the attribute.
+   attrKind: kind of the attribute: 0 = Enumerate, 1 = Integer, 2 = Text,
+   3 = CsReference
+   ---------------------------------------------------------------------- */
+
+#ifdef __STDC__
+void                TtaGiveAttributeTypeFromOriginalName (char *name, Element element, AttributeType * attributeType, int *attrKind)
+
+#else  /* __STDC__ */
+void                TtaGiveAttributeTypeFromOriginalName (name, element, attributeType, attrKind)
+char               *name;
+Element             element;
+AttributeType      *attributeType;
+int                *attrKind;
+
+#endif /* __STDC__ */
+
+{
+   PtrSSchema          pSS;
+
+   UserErrorCode = 0;
+   (*attributeType).AttrSSchema = NULL;
+   (*attributeType).AttrTypeNum = 0;
+   *attrKind = 0;
+   if (name[0] == '\0' || strlen (name) >= MAX_NAME_LENGTH || element == NULL)
+      TtaError (ERR_invalid_parameter);
+   else
+     {
+       GetAttrRuleFromName (&((*attributeType).AttrTypeNum), (PtrSSchema *)&((*attributeType).AttrSSchema), (PtrElement) element, name, SCHEMA_NAME);
+       if ((*attributeType).AttrTypeNum == 0)
+	 {
+	   TtaError (ERR_invalid_parameter);
+	 }
+       else
+	 {
+	   pSS = (PtrSSchema)((*attributeType).AttrSSchema);
+	   switch (pSS->SsAttribute[(*attributeType).AttrTypeNum - 1].AttrType)
+	     {
+	     case AtEnumAttr:
+	       *attrKind = 0;
+	       break;
+	     case AtNumAttr:
+	       *attrKind = 1;
+	       break;
+	     case AtTextAttr:
+	       *attrKind = 2;
+	       break;
+	     case AtReferenceAttr:
+	       *attrKind = 3;
+	       break;
+	     default:
+	       TtaError (ERR_invalid_attribute_type);
+	       break;
+	     }
+	 }
      }
 }
 
@@ -806,6 +793,48 @@ AttributeType       attributeType;
    else
      {
 	strncpy (bufferName, ((PtrSSchema) (attributeType.AttrSSchema))->SsAttribute[attributeType.AttrTypeNum - 1].AttrName, MAX_NAME_LENGTH);
+     }
+   return bufferName;
+}
+
+/* ----------------------------------------------------------------------
+   TtaGetAttributeOriginalName
+
+   Returns the name of an attribute type in the schema language.
+
+   Parameter:
+   attributeType: type of the attribute.
+
+   Return value:
+   name of that type.
+
+   ---------------------------------------------------------------------- */
+
+#ifdef __STDC__
+char               *TtaGetAttributeOriginalName (AttributeType attributeType)
+
+#else  /* __STDC__ */
+char               *TtaGetAttributeOriginalName (attributeType)
+AttributeType       attributeType;
+
+#endif /* __STDC__ */
+
+{
+
+   UserErrorCode = 0;
+   bufferName[0] = '\0';
+   if (attributeType.AttrSSchema == NULL)
+     {
+	TtaError (ERR_invalid_attribute_type);
+     }
+   else if (attributeType.AttrTypeNum < 1 ||
+	    attributeType.AttrTypeNum > ((PtrSSchema) (attributeType.AttrSSchema))->SsNAttributes)
+     {
+	TtaError (ERR_invalid_attribute_type);
+     }
+   else
+     {
+	strncpy (bufferName, ((PtrSSchema) (attributeType.AttrSSchema))->SsAttribute[attributeType.AttrTypeNum - 1].AttrOrigName, MAX_NAME_LENGTH);
      }
    return bufferName;
 }

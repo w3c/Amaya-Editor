@@ -255,6 +255,7 @@ SRule              *pSRule;
    int                 j;
 
    TtaReadName (file, pSRule->SrName);
+   strcpy (pSRule->SrOrigName, pSRule->SrName);
    TtaReadShort (file, &pSRule->SrNDefAttrs);
    for (j = 0; j < pSRule->SrNDefAttrs; j++)
       TtaReadShort (file, &pSRule->SrDefAttr[j]);
