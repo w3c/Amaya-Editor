@@ -36,13 +36,19 @@ extern  HTEventCallback *HTEvent_Retrieve (SOCKET, SockOps, HTRequest ** arp);
  * Private functions
  */
 #ifdef __STDC__
+static void         RequestRegisterReadXtevent (AHTReqContext *, SOCKET);
 static void         RequestKillReadXtevent (AHTReqContext *);
+static void         RequestRegisterWriteXtevent (AHTReqContext *, SOCKET);
 static void         RequestKillWriteXtevent (AHTReqContext *);
+static void         RequestRegisterExceptXtevent (AHTReqContext *, SOCKET);
 static void         RequestKillExceptXtevent (AHTReqContext *);
 
 #else
+static void         RequesAddReadXtevent ();
 static void         RequestKillReadXtevent ();
+static void         RequesAddWriteXtevent ();
 static void         RequestKillWriteXtevent ();
+static void         RequestRegisterExceptXtevent ();
 static void         RequestKillExceptXtevent ();
 
 #endif
@@ -120,6 +126,9 @@ XtInputId          *id;
      {
 	if (THD_TRACE)
 	   HTTrace ("Callback.... No callback found\n");
+	/* experimental */
+	/* remove the Xt input which caused this callback */
+	XtRemoveInput (*id);
 	/* put some more code to correctly destroy this request ?*/
 	return (0);
      }
@@ -354,19 +363,8 @@ HTPriority          p;
 	if (ops & ReadBits)
 	  {
 	     me->read_ops = ops;
-
 #ifdef WWW_XWINDOWS
-	     if (me->read_xtinput_id)
-		XtRemoveInput (me->read_xtinput_id);
-	     me->read_xtinput_id =
-		XtAppAddInput (app_cont,
-			       sock,
-			       (XtPointer) XtInputReadMask,
-			       (XtInputCallbackProc) AHTCallback_bridge,
-			       (XtPointer) XtInputReadMask);
-	     if (THD_TRACE)
-		fprintf (stderr, "(BT) adding Xtinput %lu Socket %d R\n",
-			 me->read_xtinput_id, sock);
+	     RequestRegisterReadXtevent (me, sock);
 #endif /* WWW_XWINDOWS */
 	  }
 
@@ -374,15 +372,7 @@ HTPriority          p;
 	  {
 	     me->write_ops = ops;
 #ifdef WWW_XWINDOWS
-	     if (me->write_xtinput_id)
-		XtRemoveInput (me->write_xtinput_id);
-	     me->write_xtinput_id = XtAppAddInput (app_cont, sock,
-					       (XtPointer) XtInputWriteMask,
-				   (XtInputCallbackProc) AHTCallback_bridge,
-					      (XtPointer) XtInputWriteMask);
-	     if (THD_TRACE)
-		fprintf (stderr, "(BT) adding Xtinput %lu Socket %d W\n",
-			 me->write_xtinput_id, sock);
+	     RequestRegisterWriteXtevent (me, sock);
 #endif /* WWW_XWINDOWS */
 	  }
 
@@ -390,15 +380,7 @@ HTPriority          p;
 	  {
 	     me->except_ops = ops;
 #ifdef WWW_XWINDOWS
-	     if (me->except_xtinput_id)
-		XtRemoveInput (me->except_xtinput_id);
-
-	     me->except_xtinput_id = XtAppAddInput (app_cont, sock,
-					      (XtPointer) XtInputExceptMask,
-				   (XtInputCallbackProc) AHTCallback_bridge,
-					     (XtPointer) XtInputExceptMask);
-	     if (THD_TRACE)
-		fprintf (stderr, "(BT) adding Xtinput %lu Socket %d E\n", me->except_xtinput_id, sock);
+	     RequestRegisterExceptXtevent (me, sock);
 #endif /* WWW_XWINDOWS */
 	  }
      }
@@ -448,8 +430,6 @@ SockOps             ops;
 
 	     if (ops & ExceptBits)
 		RequestKillExceptXtevent (me);
-
-
 	  }
      }
 
@@ -483,6 +463,44 @@ AHTReqContext      *me;
 }
 
 /*----------------------------------------------------------------------
+  RequestRegisterReadXtevent
+  Registers with Xt the read events associated with socket sock
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void         RequestRegisterReadXtevent (AHTReqContext * me, SOCKET sock)
+#else
+static void         RequestRegisterReadXtevent (me, sock)
+AHTReqContext      *me;
+SOCKET sock;
+
+#endif /* __STDC__ */
+{
+#ifdef WWW_XWINDOWS
+  if (me->read_xtinput_id)
+    {
+      if (THD_TRACE)
+	fprintf (stderr, "Request_kill: Clearing Xtinput %lu Socket %d R\n", me->read_xtinput_id, sock);
+      XtRemoveInput (me->read_xtinput_id);
+    }
+
+  me->read_xtinput_id =
+    XtAppAddInput (app_cont,
+		   sock,
+		   (XtPointer) XtInputReadMask,
+		   (XtInputCallbackProc) AHTCallback_bridge,
+		   (XtPointer) XtInputReadMask);
+
+  if (THD_TRACE)
+    fprintf (stderr, "(BT) adding Xtinput %lu Socket %d R\n",
+	     me->read_xtinput_id, sock);
+#endif /* WWW_XWINDOWS */
+
+#ifdef AMAYA_JAVA
+  JavaFdSetState (sock, 1);
+#endif
+}
+
+/*----------------------------------------------------------------------
   RequestKillReadXtevent
   kills any read Xt event associated with the request pointed to by "me".
   ----------------------------------------------------------------------*/
@@ -498,11 +516,53 @@ AHTReqContext      *me;
    if (me->read_xtinput_id)
      {
 	if (THD_TRACE)
-	   fprintf (stderr, "Request_kill: Clearing Read Xtinputs%lu\n", me->read_xtinput_id);
+	   fprintf (stderr, "Request_kill: Clearing Xtinput %lu R\n", me->read_xtinput_id);
 	XtRemoveInput (me->read_xtinput_id);
 	me->read_xtinput_id = (XtInputId) NULL;
      }
 #endif /* WWW_XWINDOWS */
+
+#ifdef AMAYA_JAVA
+  JavaFdResetState (sock, 1);
+#endif
+}
+
+/*----------------------------------------------------------------------
+  RequestRegisterWriteXtevent
+  Registers with Xt the write events associated with socket sock
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void         RequestRegisterWriteXtevent (AHTReqContext * me, SOCKET sock)
+#else
+static void         RequestRegisterWriteXtevent (me, sock)
+AHTReqContext      *me;
+SOCKET              sock;
+
+#endif /* __STDC__ */
+{
+#ifdef WWW_XWINDOWS
+   if (me->write_xtinput_id)
+    {
+      if (THD_TRACE)
+	fprintf (stderr, "Request_kill: Clearing Xtinput %lu Socket %d W\n", me->write_xtinput_id, sock);
+      XtRemoveInput (me->write_xtinput_id);
+    }
+
+  me->write_xtinput_id =
+    XtAppAddInput (app_cont,
+		   sock,
+		   (XtPointer) XtInputWriteMask,
+		   (XtInputCallbackProc) AHTCallback_bridge,
+		   (XtPointer) XtInputWriteMask);
+
+  if (THD_TRACE)
+    fprintf (stderr, "(BT) adding Xtinput %lu Socket %d W\n",
+	     me->write_xtinput_id, sock);
+#endif /* WWW_XWINDOWS */
+
+#ifdef AMAYA_JAVA
+  JavaFdSetState (sock, 2);
+#endif
 }
 
 /*----------------------------------------------------------------------
@@ -527,6 +587,50 @@ AHTReqContext      *me;
 	me->write_xtinput_id = (XtInputId) NULL;
      }
 #endif /* WWW_XWINDOWS */
+
+#ifdef AMAYA_JAVA
+  JavaFdResetState (sock, 2);
+#endif
+}
+
+/*----------------------------------------------------------------------
+  RequestRegisterExceptXtevent
+  Registers with Xt the except events associated with socket sock
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void         RequestRegisterExceptXtevent (AHTReqContext * me, SOCKET sock)
+#else
+static void         RequestRegisterExceptXtevent (me, sock)
+AHTReqContext      *me;
+SOCKET              sock;
+
+#endif /* __STDC__ */
+{
+#ifdef WWW_XWINDOWS
+   if (me->except_xtinput_id)
+     {
+       if (THD_TRACE)
+	   fprintf (stderr, "Request_kill: Clearing Xtinput %lu Socket %d E\n", me->except_xtinput_id, sock);
+	XtRemoveInput (me->except_xtinput_id);
+     }
+
+  me->except_xtinput_id =
+    XtAppAddInput (app_cont,
+		   sock,
+		   (XtPointer) XtInputExceptMask,
+		   (XtInputCallbackProc) AHTCallback_bridge,
+		   (XtPointer) XtInputExceptMask);
+
+  if (THD_TRACE)
+    fprintf (stderr, "(BT) adding Xtinput %lu Socket %d E\n",
+	     me->write_xtinput_id, sock);
+
+#endif /* WWW_XWINDOWS */
+
+#ifdef AMAYA_JAVA
+  JavaFdSetState (sock, 4);
+#endif
+
 }
 
 /*----------------------------------------------------------------------
@@ -551,11 +655,16 @@ AHTReqContext      *me;
 	me->except_xtinput_id = (XtInputId) NULL;
      }
 #endif /* WWW_XWINDOWS */
+
+#ifdef AMAYA_JAVA
+  JavaFdResetState (sock, 4);
+#endif
 }
 
 /*
   End of Module AHTBridge.c
 */
+
 
 
 
