@@ -1684,7 +1684,7 @@ void ChangeURI (Element el, Attribute attr, Document originDocument,
     }
 }
 
-static void CheckDescendants (/* Element el, Document doc */);
+static void CheckDescendants (/* Element el, Document doc */);  /* see below */
 
 /*----------------------------------------------------------------------
    ElementOKforProfile
@@ -1709,16 +1709,16 @@ ThotBool ElementOKforProfile (Element el, Document doc)
   /* handle only HTML elements */
   elType = TtaGetElementType (el);
   if (!strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML"))
-    /* it's an element from the HTML namspace */
+    /* it's an element from the HTML namespace */
     if (TtaGetDocumentProfile (doc) != L_Other)
-      /* the document profile does not accept any element and attribute */
+      /* the document profile accepts only certain elements and attributes */
       {
         name = GetXMLElementName (elType, doc);
 	if (name == NULL || name[0] == EOS)
 	  /* this element type is not acceptend in the document profile */
 	  ok = FALSE;
 	else
-	  /* the element type is OK */
+	  /* the element type is OK for the profile */
 	  {
 	    /* check all attributes of the element */
 	    attr = 0;
@@ -1730,28 +1730,32 @@ ThotBool ElementOKforProfile (Element el, Document doc)
 		name = GetXMLAttributeName (attrType, elType, doc);
 		if (name == NULL || name[0] == EOS)
 		  /* this attribute is not valid for this element in the
-		     document profile. Delete the attribute */
+		     document profile. Delete it */
 		  TtaRemoveAttribute (el, attr, doc);
 		attr = nextAttr;
 	      }
 	  }
       }
   if (!ok)
+    /* The element type is not acceptend in the document profile.
+       Delete the element but keep its children if they are allowed */
     {
       record = FALSE;
       if (TtaGetLastCreatedElemInHistory (doc) == el)
-	/* the last element created that is registerd in the undo history
-	   is the element that will be removed. Register its children
-	   instead of itself */
+	/* the last item in the undo history is the creation of this element,
+	   but this element will be removed. Register its children instead */
 	{
 	  TtaCancelLastRegisteredOperation (doc);
 	  record = TRUE;
 	}
-      /* remove element el but keep its descendants */
+      /* move all children right before the element */
       child = TtaGetFirstChild (el);
       while (child)
 	{
+	  /* check that this child is allowed. If not, delete it */
 	  if (ElementOKforProfile (child, doc))
+	    /* this child is allowed. Move it and remove all invalid elements
+	       and attributes from its decendants */
 	    {
 	      TtaRemoveTree (child, doc);
 	      CheckDescendants (child, doc);
@@ -1759,13 +1763,21 @@ ThotBool ElementOKforProfile (Element el, Document doc)
 	      if (record)
 		TtaRegisterElementCreate (child, doc);
 	    }
+	  /* take the first child of el, not the sibling of child, as
+	     child may have been deleted by ElementOKforProfile */
 	  child = TtaGetFirstChild (el);
 	}
+      /* the element is now empty. Delete it. */
       TtaDeleteTree (el, doc);
     }
   return ok;
 }
 
+/*----------------------------------------------------------------------
+   CheckDescendants
+   Element el is a valid element in the document profile. Remove the
+   invalid elements and attributes from its decendants.
+  ----------------------------------------------------------------------*/
 static void CheckDescendants (Element el, Document doc)
 {
   Element child, nextChild;
