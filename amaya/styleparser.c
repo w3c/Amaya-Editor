@@ -3184,9 +3184,9 @@ static char *ParseCSSWidth (Element element, PSchema tsch,
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSMarginTop: parse a CSS margin-top attribute
+   ParseACSSMarginTop: parse a CSS margin-top attribute
   ----------------------------------------------------------------------*/
-static char *ParseCSSMarginTop (Element element, PSchema tsch,
+static char *ParseACSSMarginTop (Element element, PSchema tsch,
 				  PresentationContext context,
 				  char *cssRule, CSSInfoPtr css,
 				  ThotBool isHTML)
@@ -3204,7 +3204,6 @@ static char *ParseCSSMarginTop (Element element, PSchema tsch,
       margin.typed_data.real = FALSE;
       cssRule += 4;
       cssRule = CheckImportantRule (cssRule, context);
-      cssRule = CSSCheckEndValue (ptr, cssRule, "Invalid margin-top value");
     }
   else
     cssRule = ParseCSSUnit (cssRule, &margin);
@@ -3220,9 +3219,24 @@ static char *ParseCSSMarginTop (Element element, PSchema tsch,
 }
 
 /*----------------------------------------------------------------------
-  ParseCSSMarginBottom: parse a CSS margin-bottom attribute
+   ParseCSSMarginTop: parse a CSS margin-top attribute
   ----------------------------------------------------------------------*/
-static char *ParseCSSMarginBottom (Element element, PSchema tsch,
+static char *ParseCSSMarginTop (Element element, PSchema tsch,
+				  PresentationContext context,
+				  char *cssRule, CSSInfoPtr css,
+				  ThotBool isHTML)
+{
+  char *ptr = cssRule;
+
+  cssRule = ParseACSSMarginTop (element, tsch, context, ptr, css, isHTML);
+  cssRule = CSSCheckEndValue (ptr, cssRule, "Invalid margin-top value");
+  return (cssRule);
+}
+
+/*----------------------------------------------------------------------
+  ParseACSSMarginBottom: parse a CSS margin-bottom attribute
+  ----------------------------------------------------------------------*/
+static char *ParseACSSMarginBottom (Element element, PSchema tsch,
 				     PresentationContext context,
 				     char *cssRule, CSSInfoPtr css,
 				     ThotBool isHTML)
@@ -3240,7 +3254,6 @@ static char *ParseCSSMarginBottom (Element element, PSchema tsch,
       margin.typed_data.real = FALSE;
       cssRule += 4;
       cssRule = CheckImportantRule (cssRule, context);
-      cssRule = CSSCheckEndValue (ptr, cssRule, "Invalid margin-bottom value");
     }
   else
     cssRule = ParseCSSUnit (cssRule, &margin);
@@ -3256,9 +3269,24 @@ static char *ParseCSSMarginBottom (Element element, PSchema tsch,
 }
 
 /*----------------------------------------------------------------------
-  ParseCSSMarginLeft: parse a CSS margin-left attribute string
+  ParseCSSMarginBottom: parse a CSS margin-bottom attribute
   ----------------------------------------------------------------------*/
-static char *ParseCSSMarginLeft (Element element, PSchema tsch,
+static char *ParseCSSMarginBottom (Element element, PSchema tsch,
+				     PresentationContext context,
+				     char *cssRule, CSSInfoPtr css,
+				     ThotBool isHTML)
+{
+  char *ptr = cssRule;
+
+  cssRule = ParseACSSMarginBottom (element, tsch, context, ptr, css, isHTML);
+  cssRule = CSSCheckEndValue (ptr, cssRule, "Invalid margin-bottom value");
+  return (cssRule);
+}
+
+/*----------------------------------------------------------------------
+  ParseACSSMarginLeft: parse a CSS margin-left attribute string
+  ----------------------------------------------------------------------*/
+static char *ParseACSSMarginLeft (Element element, PSchema tsch,
 				   PresentationContext context,
 				   char *cssRule, CSSInfoPtr css,
 				   ThotBool isHTML)
@@ -3276,7 +3304,6 @@ static char *ParseCSSMarginLeft (Element element, PSchema tsch,
       margin.typed_data.real = FALSE;
       cssRule += 4;
       cssRule = CheckImportantRule (cssRule, context);
-      cssRule = CSSCheckEndValue (ptr, cssRule, "Invalid margin-left value");
     }
   else
     cssRule = ParseCSSUnit (cssRule, &margin);
@@ -3292,9 +3319,25 @@ static char *ParseCSSMarginLeft (Element element, PSchema tsch,
 }
 
 /*----------------------------------------------------------------------
-  ParseCSSMarginRight: parse a CSS margin-right attribute string
+  ParseCSSMarginBottom: parse a CSS margin-bottom attribute
   ----------------------------------------------------------------------*/
-static char *ParseCSSMarginRight (Element element, PSchema tsch,
+static char *ParseCSSMarginLeft (Element element, PSchema tsch,
+				     PresentationContext context,
+				     char *cssRule, CSSInfoPtr css,
+				     ThotBool isHTML)
+{
+  char *ptr = cssRule;
+
+  cssRule = ParseACSSMarginLeft (element, tsch, context, ptr, css, isHTML);
+  cssRule = CSSCheckEndValue (ptr, cssRule, "Invalid margin-left value");
+  return (cssRule);
+}
+
+
+/*----------------------------------------------------------------------
+  ParseACSSMarginRight: parse a CSS margin-right attribute string
+  ----------------------------------------------------------------------*/
+static char *ParseACSSMarginRight (Element element, PSchema tsch,
 				    PresentationContext context,
 				    char *cssRule, CSSInfoPtr css,
 				    ThotBool isHTML)
@@ -3312,7 +3355,6 @@ static char *ParseCSSMarginRight (Element element, PSchema tsch,
       margin.typed_data.real = FALSE;
       cssRule += 4;
       cssRule = CheckImportantRule (cssRule, context);
-      cssRule = CSSCheckEndValue (ptr, cssRule, "Invalid margin-right value");
     }
   else
     cssRule = ParseCSSUnit (cssRule, &margin);
@@ -3324,6 +3366,21 @@ static char *ParseCSSMarginRight (Element element, PSchema tsch,
     CSSParseError ("Invalid margin-right value", ptr, cssRule);
   else if (DoApply)
     TtaSetStylePresentation (PRMarginRight, element, tsch, context, margin);
+  return (cssRule);
+}
+
+/*----------------------------------------------------------------------
+  ParseCSSMarginRight: parse a CSS margin-right attribute string
+  ----------------------------------------------------------------------*/
+static char *ParseCSSMarginRight (Element element, PSchema tsch,
+				    PresentationContext context,
+				    char *cssRule, CSSInfoPtr css,
+				    ThotBool isHTML)
+{
+  char *ptr = cssRule;
+
+  cssRule = ParseACSSMarginTop (element, tsch, context, ptr, css, isHTML);
+  cssRule = CSSCheckEndValue (ptr, cssRule, "Invalid margin-right value");
   return (cssRule);
 }
 
@@ -3340,48 +3397,48 @@ static char *ParseCSSMargin (Element element, PSchema tsch,
 
   ptrT = SkipBlanksAndComments (cssRule);
   /* First parse Margin-Top */
-  ptrR = ParseCSSMarginTop (element, tsch, context, ptrT, css, isHTML);
+  ptrR = ParseACSSMarginTop (element, tsch, context, ptrT, css, isHTML);
   ptrR = SkipBlanksAndComments (ptrR);
   if (*ptrR == ';' || *ptrR == EOS || *ptrR == ',')
     {
       skippedNL = NewLineSkipped;
       cssRule = ptrR;
       /* apply the Margin-Top to all */
-      ptrR = ParseCSSMarginRight (element, tsch, context, ptrT, css, isHTML);
+      ptrR = ParseACSSMarginRight (element, tsch, context, ptrT, css, isHTML);
       NewLineSkipped = skippedNL;
-      ptrR = ParseCSSMarginBottom (element, tsch, context, ptrT, css, isHTML);
+      ptrR = ParseACSSMarginBottom (element, tsch, context, ptrT, css, isHTML);
       NewLineSkipped = skippedNL;
-      ptrR = ParseCSSMarginLeft (element, tsch, context, ptrT, css, isHTML);
+      ptrR = ParseACSSMarginLeft (element, tsch, context, ptrT, css, isHTML);
     }
   else
     {
       /* parse Margin-Right */
-      ptrB = ParseCSSMarginRight (element, tsch, context, ptrR, css, isHTML);
+      ptrB = ParseACSSMarginRight (element, tsch, context, ptrR, css, isHTML);
       ptrB = SkipBlanksAndComments (ptrB);
       if (*ptrB == ';' || *ptrB == EOS || *ptrB == ',')
 	{
 	  skippedNL = NewLineSkipped;
 	  cssRule = ptrB;
 	  /* apply the Margin-Top to Margin-Bottom */
-	  ptrB = ParseCSSMarginBottom (element, tsch, context, ptrT, css, isHTML);
+	  ptrB = ParseACSSMarginBottom (element, tsch, context, ptrT, css, isHTML);
 	  NewLineSkipped = skippedNL;
 	  /* apply the Margin-Right to Margin-Left */
-	  ptrB = ParseCSSMarginLeft (element, tsch, context, ptrR, css, isHTML);
+	  ptrB = ParseACSSMarginLeft (element, tsch, context, ptrR, css, isHTML);
 	}
       else
 	{
 	  /* parse Margin-Bottom */
-	  ptrL = ParseCSSMarginBottom (element, tsch, context, ptrB, css, isHTML);
+	  ptrL = ParseACSSMarginBottom (element, tsch, context, ptrB, css, isHTML);
 	  ptrL = SkipBlanksAndComments (ptrL);
 	  if (*ptrL == ';' || *ptrL == EOS || *ptrL == ',')
 	    {
 	      cssRule = ptrL;
 	      /* apply the Margin-Right to Margin-Left */
-	      ptrL = ParseCSSMarginLeft (element, tsch, context, ptrR, css, isHTML);
+	      ptrL = ParseACSSMarginLeft (element, tsch, context, ptrR, css, isHTML);
 	    }
 	  else
 	    /* parse Margin-Left */
-	    cssRule = ParseCSSMarginLeft (element, tsch, context, ptrL, css, isHTML);
+	    cssRule = ParseACSSMarginLeft (element, tsch, context, ptrL, css, isHTML);
 	  cssRule = SkipBlanksAndComments (cssRule);
 	}
     }
