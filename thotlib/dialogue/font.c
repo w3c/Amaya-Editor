@@ -2371,9 +2371,9 @@ void InitDialogueFonts (char *name)
   while (LogicalPointsSizes[index] < MenuSize && index <= MaxNumberOfSizes)
     index++;
 #ifdef _WINDOWS
-  if (script == 'L')
+  /*if (script == 'L')
     DialogFont = GetStockObject (DEFAULT_GUI_FONT);
-  else
+  else*/
     DialogFont =  ReadFont (script, 2, 0, index, UnRelative);
 #else /* _WINDOWS */
   DialogFont =  ReadFont (script, 2, 0, index, UnRelative);
