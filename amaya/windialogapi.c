@@ -850,11 +850,11 @@ ThotBool* close_dont_save;
            case FR_LANG:
                 DialogBox (hInstance, MAKEINTRESOURCE (FR_CLOSEDOCDIALOG), parent, (DLGPROC) CloseDocDlgProc);
 				break;
-           case EN_LANG:
-                DialogBox (hInstance, MAKEINTRESOURCE (EN_CLOSEDOCDIALOG), parent, (DLGPROC) CloseDocDlgProc);
-				break;
            case DE_LANG:
                 DialogBox (hInstance, MAKEINTRESOURCE (DE_CLOSEDOCDIALOG), parent, (DLGPROC) CloseDocDlgProc);
+				break;
+           default:
+                DialogBox (hInstance, MAKEINTRESOURCE (EN_CLOSEDOCDIALOG), parent, (DLGPROC) CloseDocDlgProc);
 				break;
 	}
 
@@ -893,11 +893,11 @@ STRING curLang;
     case FR_LANG:
       DialogBox (hInstance, MAKEINTRESOURCE (FR_LANGUAGEDIALOG), parent, (DLGPROC) LanguageDlgProc);
       break;
-    case EN_LANG:
-      DialogBox (hInstance, MAKEINTRESOURCE (EN_LANGUAGEDIALOG), parent, (DLGPROC) LanguageDlgProc);
-      break;
     case DE_LANG:
       DialogBox (hInstance, MAKEINTRESOURCE (DE_LANGUAGEDIALOG), parent, (DLGPROC) LanguageDlgProc);
+      break;
+    default:
+      DialogBox (hInstance, MAKEINTRESOURCE (EN_LANGUAGEDIALOG), parent, (DLGPROC) LanguageDlgProc);
       break;
     }
 }
@@ -927,13 +927,13 @@ int   font_size;
            case FR_LANG:
                 DialogBox (hInstance, MAKEINTRESOURCE (FR_CHARACTERSDIALOG), NULL, (DLGPROC) CharacterDlgProc);
 				break;
-           case EN_LANG:
-                DialogBox (hInstance, MAKEINTRESOURCE (EN_CHARACTERSDIALOG), NULL, (DLGPROC) CharacterDlgProc);
-				break;
            case DE_LANG:
                 DialogBox (hInstance, MAKEINTRESOURCE (DE_CHARACTERSDIALOG), NULL, (DLGPROC) CharacterDlgProc);
 				break;
-	}
+           default:
+                DialogBox (hInstance, MAKEINTRESOURCE (EN_CHARACTERSDIALOG), NULL, (DLGPROC) CharacterDlgProc);
+				break;
+ 	}
 }
 
 /*-----------------------------------------------------------------------
@@ -1061,11 +1061,11 @@ STRING class_list;
            case FR_LANG:
                 DialogBox (hInstance, MAKEINTRESOURCE (FR_CREATERULEDIALOG), parent, (DLGPROC) CreateRuleDlgProc);
 				break;
-           case EN_LANG:
-                DialogBox (hInstance, MAKEINTRESOURCE (EN_CREATERULEDIALOG), parent, (DLGPROC) CreateRuleDlgProc);
-				break;
            case DE_LANG:
                 DialogBox (hInstance, MAKEINTRESOURCE (DE_CREATERULEDIALOG), parent, (DLGPROC) CreateRuleDlgProc);
+				break;
+           default:
+                DialogBox (hInstance, MAKEINTRESOURCE (EN_CREATERULEDIALOG), parent, (DLGPROC) CreateRuleDlgProc);
 				break;
 	}
 }
@@ -1092,11 +1092,11 @@ STRING class_list;
            case FR_LANG:
                 DialogBox (hInstance, MAKEINTRESOURCE (FR_APPLYCLASSDIALOG), parent, (DLGPROC) ApplyClassDlgProc);
 				break;
-           case EN_LANG:
-                DialogBox (hInstance, MAKEINTRESOURCE (EN_APPLYCLASSDIALOG), parent, (DLGPROC) ApplyClassDlgProc);
-				break;
            case DE_LANG:
                 DialogBox (hInstance, MAKEINTRESOURCE (DE_APPLYCLASSDIALOG), parent, (DLGPROC) ApplyClassDlgProc);
+				break;
+           default:
+                DialogBox (hInstance, MAKEINTRESOURCE (EN_APPLYCLASSDIALOG), parent, (DLGPROC) ApplyClassDlgProc);
 				break;
 	}
 }
@@ -1137,11 +1137,11 @@ int   chkrSpecial;
            case FR_LANG:
                 DialogBox (hInstance, MAKEINTRESOURCE (FR_SPELLCHECKDIALOG), NULL, (DLGPROC) SpellCheckDlgProc);
 				break;
-           case EN_LANG:
-                DialogBox (hInstance, MAKEINTRESOURCE (EN_SPELLCHECKDIALOG), NULL, (DLGPROC) SpellCheckDlgProc);
-				break;
            case DE_LANG:
                 DialogBox (hInstance, MAKEINTRESOURCE (DE_SPELLCHECKDIALOG), NULL, (DLGPROC) SpellCheckDlgProc);
+				break;
+           default:
+                DialogBox (hInstance, MAKEINTRESOURCE (EN_SPELLCHECKDIALOG), NULL, (DLGPROC) SpellCheckDlgProc);
 				break;
 	}
 }
@@ -1167,13 +1167,13 @@ STRING msg;
            case FR_LANG:
                 DialogBox (hInstance, MAKEINTRESOURCE (FR_INITCONFIRMDIALOG), parent, (DLGPROC) InitConfirmDlgProc);
 				break;
-           case EN_LANG:
-                DialogBox (hInstance, MAKEINTRESOURCE (EN_INITCONFIRMDIALOG), parent, (DLGPROC) InitConfirmDlgProc);
-				break;
            case DE_LANG:
                 DialogBox (hInstance, MAKEINTRESOURCE (DE_INITCONFIRMDIALOG), parent, (DLGPROC) InitConfirmDlgProc);
 				break;
-	}
+           default:
+                DialogBox (hInstance, MAKEINTRESOURCE (EN_INITCONFIRMDIALOG), parent, (DLGPROC) InitConfirmDlgProc);
+				break;
+ 	}
 }
 
 /*-----------------------------------------------------------------------
@@ -4452,17 +4452,10 @@ LPARAM lParam;
 	GetDlgItemText (hwnDlg, IDC_NAMEEDIT, Answer_name, sizeof (Answer_name) + 1);
 	GetDlgItemText (hwnDlg, IDC_PASSWDEDIT, Answer_password, sizeof (Answer_password) + 1);
 	/* don't end the dialogue unless both answer fields have something */
-<<<<<<< windialogapi.c
-	if (Answer_name[0] == EOS)
-	  SetFocus (hwnNameEdit);
-	else if (Answer_password[0] == EOS)
-	  SetFocus (hwnPasswdEdit);
-=======
 	if (Answer_name[0] == WC_EOS)
-	   SetFocus (hwnNameEdit);
+	  SetFocus (hwnNameEdit);
 	else if (Answer_password[0] == WC_EOS)
-		SetFocus (hwnPasswdEdit);
->>>>>>> 1.83
+	  SetFocus (hwnPasswdEdit);
 	else
 	  {
 	    UserAnswer = 1;
@@ -4472,12 +4465,8 @@ LPARAM lParam;
 	
       case IDCANCEL:
     /* we clear the answer fields */
-<<<<<<< windialogapi.c
-	Answer_name[0] = Answer_password[0] = EOS;
+	Answer_name[0] = Answer_password[0] = WC_EOS;
 	UserAnswer = 0;
-=======
-    Answer_name[0] = Answer_password[0] = WC_EOS;
->>>>>>> 1.83
 	EndDialog (hwnDlg, IDCANCEL);
 	break;
       }
