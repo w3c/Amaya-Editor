@@ -62,7 +62,7 @@
 #include "searchref_f.h"
 #include "docs_f.h"
 
-static boolean      CaseDistinction;	/* flag indicating whether there's a character */
+static boolean      CaseEquivalent;	/* flag indicating whether there's a character */
                                         /* Upper/lower case distinction */
 static boolean      WithReplace;	/* find and replace strings */
 
@@ -187,15 +187,8 @@ int                 menu;
 	       break;
 	 }
    if (StartSearch)
-     {
-	InitSearchDomain (val, searchDomain);
-	if (!AutoReplace)
-	   /* On prepare la recherche suivante */
-	   if (searchDomain->SStartToEnd)
-	      TtaSetMenuForm (ref, 2);	/* Apres selection */
-	   else
-	      TtaSetMenuForm (ref, 0);	/* ElemIsBefore selection */
-     }
+      InitSearchDomain (val, searchDomain);
+
 }
 
 
@@ -295,6 +288,12 @@ PtrSearchContext    pContext;
 	    /* il y a un autre arbre a traiter, on continue avec le */
 	    /* debut de ce nouvel arbre */
 	    ok = SearchEmptyElem (pNextEl, pContext);
+   if (ok)
+     /* On prepare la recherche suivante */
+     if (searchDomain->SStartToEnd)
+	TtaSetMenuForm (NumMenuOrSearchText, 2);	/* After selection */
+     else
+	TtaSetMenuForm (NumMenuOrSearchText, 0);	/* Before selection */
    return ok;
 }
 
@@ -407,6 +406,12 @@ PtrSearchContext    pContext;
 	    /* il y a un autre arbre a traiter, on continue avec le */
 	    /* debut de ce nouvel arbre */
 	    ok = SearchEmptyRefer (pNextEl, pContext);
+   if (ok)
+     /* On prepare la recherche suivante */
+     if (searchDomain->SStartToEnd)
+	TtaSetMenuForm (NumMenuOrSearchText, 2);	/* After selection */
+     else
+	TtaSetMenuForm (NumMenuOrSearchText, 0);	/* Before selection */
    return ok;
 }
 
@@ -1008,12 +1013,12 @@ View                view;
 		   TtaGetMessage (LIB, TMSG_SEARCH_FOR), 30, 1, FALSE);
    TtaSetTextForm (NumZoneTextSearch, pSearchedString);
 
-   /* Toggle button "UPPERCAE = lowercase" */
+   /* Toggle button "UPPERCASE = lowercase" */
    i = 0;
    sprintf (&string[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_UPPERCASE_EQ_LOWERCASE));
    TtaNewToggleMenu (NumToggleUpperEqualLower, NumFormSearchText,
 		     NULL, 1, string, NULL, FALSE);
-   TtaSetToggleMenu (NumToggleUpperEqualLower, 0, CaseDistinction);
+   TtaSetToggleMenu (NumToggleUpperEqualLower, 0, CaseEquivalent);
 
    /* zone de saisie du texte de remplacement */
    TtaNewTextForm (NumZoneTextReplace, NumFormSearchText,
@@ -1058,7 +1063,8 @@ View                view;
    TtaNewLabel (NumLabelAttributeValue, NumFormSearchText, " ");
    SearchLoadResources ();
    /* complete la feuille de dialogue avec les menus de recherche de types */
-   /*  d'elt et d'attributs si la ressource de recherche avec structure est chargee */
+   /* d'element et d'attributs si la ressource de recherche avec structure */
+   /* est chargee */
    if (ThotLocalActions[T_strsearchconstmenu] != NULL)
       (*ThotLocalActions[T_strsearchconstmenu]) (pDoc);
 
@@ -1103,8 +1109,6 @@ char               *txt;
 
 
    error = FALSE;
-   if (searchDomain->SDocument != NULL)
-      if (searchDomain->SDocument->DocSSchema != NULL)
 	 switch (ref)
 	       {
 		  case NumZoneTextSearch:
@@ -1131,8 +1135,8 @@ char               *txt;
 		     break;
 		  case NumToggleUpperEqualLower:
 		     if (val == 0)
-			/* toggle button MAJUSCULES = minuscules */
-			CaseDistinction = !CaseDistinction;
+			/* toggle button UPPERCASE = lowercase */
+			CaseEquivalent = !CaseEquivalent;
 		     break;
 		  case NumMenuReplaceMode:
 		     /* sous-menu mode de remplacement */
@@ -1160,13 +1164,23 @@ char               *txt;
 		     break;
 		  case NumFormSearchText:
 		     /* Boutons de la feuille de dialogue */
+		     TtaNewLabel (NumLabelAttributeValue, NumFormSearchText,
+				  " ");
+		     if (searchDomain->SDocument == NULL)
+			{
+			TtaDestroyDialogue (NumFormSearchText);
+			return;
+			}
+		     if (searchDomain->SDocument->DocSSchema == NULL)
+			return;
 		     if (val == 2 && WithReplace && !StartSearch)
 			DoReplace = FALSE;
 		     else if (val == 0)
-			/* Abandon de la recherhce */
+			/* Abandon de la recherche */
 			return;
 
-		     selectionOK = GetCurrentSelection (&pDocSel, &pFirstSel, &pLastSel, &firstChar, &lastChar);
+		     selectionOK = GetCurrentSelection (&pDocSel, &pFirstSel,
+					&pLastSel, &firstChar, &lastChar);
 		     if (selectionOK)
 			if (pDocSel != searchDomain->SDocument)
 			   selectionOK = FALSE;
@@ -1300,7 +1314,7 @@ char               *txt;
 					 found = SearchText (searchDomain->SDocument,
 					      &pFirstSel, &firstChar, &pLastSel,
 					      &lastChar, searchDomain->SStartToEnd,
-					      CaseDistinction, pSearchedString,
+					      CaseEquivalent, pSearchedString,
 					      SearchedStringLen);
 					 if (found)
 					    lastChar--;
@@ -1357,6 +1371,14 @@ char               *txt;
 			  if (found)
 			    {
 			       /* on a trouve' et selectionne'. */
+			       if (!AutoReplace)
+				  /* On prepare la recherche suivante */
+				  if (searchDomain->SStartToEnd)
+				     /* After selection */
+				     TtaSetMenuForm (NumMenuOrSearchText, 2);
+				  else
+				     /* Before selection */
+				     TtaSetMenuForm (NumMenuOrSearchText, 0);
 			       StartSearch = FALSE;
 			       if (ThotLocalActions[T_strsearchshowvalattr] != NULL)
 				  (*ThotLocalActions[T_strsearchshowvalattr]) ();
@@ -1508,15 +1530,9 @@ void                SearchLoadResources ()
      }
    pSearchedString[0] = '\0';
    SearchedStringLen = 0;
-   CaseDistinction = FALSE;
+   CaseEquivalent = FALSE;
    WithReplace = FALSE;
    pReplaceString[0] = '\0';
    ReplaceStringLen = 0;
 }
-
-
 /* End Of searchmenu.c module */
-
-
-
-
