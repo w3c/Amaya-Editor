@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>Configurer Amaya</title>
-  <meta name="GENERATOR" content="amaya V5.0" />
+  <meta name="GENERATOR" content="amaya 5.1" />
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 </head>
 
@@ -13,8 +13,8 @@
 <table border="0" summary="toc">
   <tbody>
     <tr>
-      <td><p><img alt="W3C" src="../images/w3c_home" /> <img
-        alt="Amaya" src="../images/amaya.gif" /></p>
+      <td><p><img alt="W3C" src="../images/w3c_home" /> <img alt="Amaya"
+        src="../images/amaya.gif" /></p>
       </td>
       <td><p><a href="Annotations.html.fr" accesskey="p"><img alt="previous"
         src="../images/left.gif" /></a> <a href="Manual.html.fr"
@@ -89,20 +89,19 @@ stocké dans les différentes architectures :</p>
 installe les nouvelles versions d'Amaya et peut contenir les fichiers
 suivants :</p>
 <ul>
-  <li><strong>thot.rc</strong>
-     : les préférences de l'utilisateur, changées grâce au menu
-  préférences.</li>
-  <li><a name="keyboard"><strong>amaya.keyboard</strong></a>
-     (Unix) ou <strong>amaya.kb</strong> (Windows) : ce fichier définit <a
+  <li><strong>thot.rc</strong> : les préférences de l'utilisateur, changées
+    grâce au menu préférences.</li>
+  <li><a name="keyboard"><strong>amaya.keyboard</strong></a> (Unix) ou
+    <strong>amaya.kb</strong> (Windows) : ce fichier définit <a
     href="ShortCuts.html.fr#shortcuts">les raccourcis clavier
   d'Amaya</a>.</li>
-  <li><strong>amaya.css</strong>
-     : contient la feuille de style de l'utilisateur.</li>
-  <li><strong>dictionary.DCT</strong>
-     : Amaya fournit un <a href="#keyboard">vérificateur d'orthographe
-    multi-langues</a>. Par défaut le vérificateur d'orthographe travaille
-    avec deux dictionnaires : Le dictionnaire Anglais et le dictionnaire
-    Français (ces deux dictionnaires peuvent être téléchargés depuis les <a
+  <li><strong>amaya.css</strong> : contient la feuille de style de
+    l'utilisateur.</li>
+  <li><strong>dictionary.DCT</strong> : Amaya fournit un <a
+    href="#keyboard">vérificateur d'orthographe multi-langues</a>. Par défaut
+    le vérificateur d'orthographe travaille avec deux dictionnaires : Le
+    dictionnaire Anglais et le dictionnaire Français (ces deux dictionnaires
+    peuvent être téléchargés depuis les <a
     href="http://www.w3.org/Amaya/User/BinDist.html">serveurs W3C</a>). Quand
     l'utilisateur veut enregistrer un nouveau mot, le vérificateur
     d'orthographe crée ou met à jour le "dictionnaire personnel de
@@ -162,7 +161,7 @@ href="#lang">Négociation des langues</a>, <a href="#Profiles">Profils</a>, et
 <a href="#Templates">Modèles de page</a>. Dans chacun de ces menus, il y a
 trois boutons d'action en commun :</p>
 
-<table border="0" cellspacing="10" cellpadding="5"
+<table border="0" cellspacing="5" cellpadding="5"
 summary="action button chart">
   <tbody>
     <tr>
@@ -238,6 +237,24 @@ alt="General Preferences Menu" /></p>
       double cliquer sur un lien pour l'activer. Cela permet de différencier
       l'édition d'un lien de son activation. Vous pouvez changer ce
       comportement en désactivant cette option. 
+      <p></p>
+    </dd>
+  <dt><strong>Montrer les cibles</strong></dt>
+    <dd>Contrôle si les cibles de liens sont visualisées ou non. Montrer les
+      cibles peut aider quand on veut <a href="Links.html.fr#L245">créer de
+      nouveaux liens</a>. Cette option agit immédiatement sur toutes les vues
+      formatées de documents.
+      <p></p>
+    </dd>
+  <dt><strong>Numéroter les sections</strong></dt>
+    <dd>Contrôle si les <a href="Numbering.html.fr">sections sont
+      numérotées</a> ou non. Cette option agit immédiatement sur toutes les
+      vues formatées de documents.
+      <p></p>
+    </dd>
+  <dt><strong>Exporter CR/LF</strong> (Windows uniquement)</dt>
+    <dd>Indique si les fins de lignes des fichiers produits par Amaya se
+      terminent par CR/LF (format DOS) ou par un simple LF (format standard).
       <p></p>
     </dd>
   <dt><strong>Activer le FTP (expérimental)</strong></dt>
@@ -385,11 +402,11 @@ devrait ou ne devrait pas être utilisé par le biais de ce menu.</p>
       port. 
       <p>Par exemple :</p>
       <pre>  groucho.marx.edu
-          </pre>
+         </pre>
       <p>déclare un proxy appelé groucho.marx.edu fonctionne par défaut sur
       le port 80, et</p>
       <pre>  groucho.marx.edu:1234
-            </pre>
+           </pre>
       <p>déclare un proxy appelé groucho.marx.edu, fonctionnant sur le port
       1234</p>
     </dd>
@@ -400,7 +417,7 @@ devrait ou ne devrait pas être utilisé par le biais de ce menu.</p>
       vous utilisez votre proxy. Par exemple : 
       <pre>harpo.marx.edu zeppo.marx.edu chico.marx.edu
               ^--------------^----&gt; entrées séparées par des espaces
-            </pre>
+           </pre>
       <p>Utilisez le menu pour spécifier si le proxy doit ou ne doit pas être
       utilisé avec cette liste de domaines.</p>
     </dd>
@@ -415,12 +432,11 @@ alt="Color Preferences Menu" /></p>
 plan par défaut pour les documents. Il permet également de contrôler les
 couleurs utilisées par Amaya pour visualiser la sélection courante.</p>
 <ul type="square">
-  <li><strong>Couleur du point d'insertion</strong>
-     donne la couleur du premier plan qui montre la sélection quand elle est
-    limitée à un point d'insertion.</li>
-  <li><strong>Sélection de la couleur</strong>
-     donne la couleur de l'arrière plan qui montre la sélection courante
-    quand elle est étendue.</li>
+  <li><strong>Couleur du point d'insertion</strong> donne la couleur du
+    premier plan qui montre la sélection quand elle est limitée à un point
+    d'insertion.</li>
+  <li><strong>Sélection de la couleur</strong> donne la couleur de l'arrière
+    plan qui montre la sélection courante quand elle est étendue.</li>
 </ul>
 
 <p>La version Unix fournit également des entrées pour changer les couleurs
@@ -515,8 +531,9 @@ page avec Amaya</a>.</p>
 </div>
 
 <p><a href="Annotations.html.fr"><img alt="previous" src="../images/left.gif"
-/></a><a href="Manual.html.fr"><img alt="top" src="../images/up.gif" /></a> <a
-href="ShortCuts.html.fr"><img alt="next" src="../images/right.gif" /></a></p>
+/></a><a href="Manual.html.fr"><img alt="top" src="../images/up.gif" /></a>
+<a href="ShortCuts.html.fr"><img alt="next" src="../images/right.gif"
+/></a></p>
 <hr />
 <address>
   <a href="mailto:vatton@w3.org">Irène Vatton</a><br />

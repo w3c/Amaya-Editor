@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>Configuring Amaya</title>
-  <meta name="GENERATOR" content="amaya V5.0" />
+  <meta name="GENERATOR" content="amaya 5.1" />
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 </head>
 
@@ -13,8 +13,8 @@
 <table border="0" summary="toc">
   <tbody>
     <tr>
-      <td><p><img alt="W3C" src="../images/w3c_home" /> <img
-        alt="Amaya" src="../images/amaya.gif" /></p>
+      <td><p><img alt="W3C" src="../images/w3c_home" /> <img alt="Amaya"
+        src="../images/amaya.gif" /></p>
       </td>
       <td><p><a href="Annotations.html" accesskey="p"><img alt="previous"
         src="../images/left.gif" /></a> <a href="Manual.html"
@@ -87,21 +87,19 @@ architectures:</p>
 <p>The <strong>AmayaHome</strong> directory is preserved even when installing
 new versions of Amaya and may contain the following files:</p>
 <ul>
-  <li><strong>thot.rc</strong>
-     : the user preferences, changed through the preferences menu.</li>
-  <li><a name="keyboard"><strong>amaya.keyboard</strong></a>
-     (Unix) or <strong>amaya.kb</strong> (Windows) : this file defines <a
+  <li><strong>thot.rc</strong> : the user preferences, changed through the
+    preferences menu.</li>
+  <li><a name="keyboard"><strong>amaya.keyboard</strong></a> (Unix) or
+    <strong>amaya.kb</strong> (Windows) : this file defines <a
     href="ShortCuts.html#shortcuts">Amaya keyboard shortcuts</a>.</li>
-  <li><strong>amaya.css</strong>
-     : contains the user's style sheet.</li>
-  <li><strong>dictionary.DCT</strong>
-     : Amaya provides a <a href="SpellChecking.html#Spell">multilingual spell
-    checker</a>. By default the spell checker works with two dictionaries:
-    the English dictionary and the French dictionary (these two dictionaries
-    can be downloaded from <a
-    href="http://www.w3.org/Amaya/User/BinDist.html">W3C servers</a>). When
-    the user wants to register a new word, the spell checker creates or
-    updates the "user's personal dictionary".</li>
+  <li><strong>amaya.css</strong> : contains the user's style sheet.</li>
+  <li><strong>dictionary.DCT</strong> : Amaya provides a <a
+    href="SpellChecking.html#Spell">multilingual spell checker</a>. By
+    default the spell checker works with two dictionaries: the English
+    dictionary and the French dictionary (these two dictionaries can be
+    downloaded from <a href="http://www.w3.org/Amaya/User/BinDist.html">W3C
+    servers</a>). When the user wants to register a new word, the spell
+    checker creates or updates the "user's personal dictionary".</li>
 </ul>
 
 <p><strong>Note:</strong> the <strong>amaya.keyboard/amaya.kb</strong> and
@@ -129,8 +127,7 @@ architectures:</p>
     </tr>
     <tr>
       <td>Windows</td>
-      <td><p>c:\temp\amaya (default value)</p>
-      </td>
+      <td>c:\temp\amaya (default value)</td>
     </tr>
   </tbody>
 </table>
@@ -155,7 +152,7 @@ href="#lang">language negotiation</a>, <a href="#Profiles">profiles</a>, and
 <a href="#Templates">templates</a>. In each of these menus, there are three
 common action buttons:</p>
 
-<table border="0" cellspacing="10" cellpadding="5"
+<table border="0" cellspacing="0" cellpadding="5"
 summary="action button chart">
   <tbody>
     <tr>
@@ -228,6 +225,24 @@ alt="General Preferences Menu" /></p>
       deactivating this option. 
       <p></p>
     </dd>
+  <dt><strong>Show targets</strong></dt>
+    <dd>Controls whether targets for links should be shown. Showing targets
+      can help when you want to <a href="Links.html#L245">create new
+      links</a>. This option is immediately effective in all formatted views
+      of document.
+      <p></p>
+    </dd>
+  <dt><strong>Section numbering</strong></dt>
+    <dd><p>Controls whether <a href="Numbering.html">section numbering</a> is
+      active or not.This option is immediately effective in all formatted
+      views of document.</p>
+      <p></p>
+    </dd>
+  <dt><strong>Export CR/LF</strong> (Windows only)</dt>
+    <dd><p>Specifies if the lines in output files end with a CR/LF (DOS
+      format) or a simple LF (standard format).</p>
+      <p></p>
+    </dd>
   <dt><strong>Enable FTP (experimental)</strong></dt>
     <dd>Allows Amaya to follow FTP URLs. This support is experimental and
       it's not yet fully debugged. For example, for FTP URLs needing user
@@ -281,16 +296,12 @@ alt="General Preferences Menu" /></p>
       <em>code</em> suffix is a language abbreviation (e.g. <code>en</code>
       or <code>fr</code>). This file has 4 sections:</p>
       <ul>
-        <li><strong>extension:</strong>
-           not used by Amaya</li>
-        <li><strong>presentation:</strong>
-           not used by Amaya</li>
-        <li><strong>export</strong>
-           : give the text displayed for each translation schema ("Save As"
-          command)</li>
-        <li><strong>translation</strong>
-           : give the text displayed for each element and attribute in the
-          Thot HTML structure.</li>
+        <li><strong>extension:</strong> not used by Amaya</li>
+        <li><strong>presentation:</strong> not used by Amaya</li>
+        <li><strong>export</strong> : give the text displayed for each
+          translation schema ("Save As" command)</li>
+        <li><strong>translation</strong> : give the text displayed for each
+          element and attribute in the Thot HTML structure.</li>
       </ul>
       <p>It is possible to adapt Amaya to new ISO-Latin-1 languages by
       writing corresponding dialogue files. These dialogue files have to be
@@ -379,11 +390,11 @@ should not be used by means of this menu.</p>
       other than 80, then, like in a URL, you need to add a ":" char to the
       proxy name, followed by the port number. For example:: 
       <pre>   groucho.marx.edu
-            </pre>
+           </pre>
       <p>declares a proxy called groucho.marx.edu running at the default port
       80, and</p>
       <pre>   groucho.marx.edu:1234
-            </pre>
+           </pre>
       <p>declares a proxy called groucho.marx.edu, running at port 1234</p>
     </dd>
 </dl>
@@ -393,7 +404,7 @@ should not be used by means of this menu.</p>
       use your proxy. For example: 
       <pre>harpo.marx.edu zeppo.marx.edu chico.marx.edu
               ^--------------^----&gt; space separated entries
-            </pre>
+           </pre>
       <p>Use the switch buttons to specify if the proxy should or shouldn't
       be used with this domain list.</p>
     </dd>
@@ -408,12 +419,10 @@ alt="Color Preferences Menu" /></p>
 for documents. It allows also to control the colors: used by Amaya to display
 the current selection</p>
 <ul type="square">
-  <li><strong>Caret color</strong>
-     gives the foreground color that shows the selection when it's limited to
-    an insert point;</li>
-  <li><strong>Selection colo</strong>
-     r gives the background that shows the current selection when it's
-    extended.</li>
+  <li><strong>Caret color</strong> gives the foreground color that shows the
+    selection when it's limited to an insert point;</li>
+  <li><strong>Selection colo</strong> r gives the background that shows the
+    current selection when it's extended.</li>
 </ul>
 
 <p>The Unix version also provides entries for changing the menu colors. To
