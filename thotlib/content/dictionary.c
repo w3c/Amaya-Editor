@@ -60,7 +60,11 @@ static void           LoadAlphabet ()
   else
     strcpy (alphaName, "");
   
+# ifdef _WINDOWS
+  strcat (alphaName, "\\alphabet");	/* iso alphabet */
+# else  /* _WINDOWS */
   strcat (alphaName, "/alphabet");	/* iso alphabet */
+# endif /* _WINDOWS */
   if ((falpha = fopen (alphaName, "r")) != NULL)
     {
       for (i = 0; i < 256; i++)
@@ -244,8 +248,8 @@ char               *dictDirectory;
 /*----------------------------------------------------------------------
    TestDictionary verifies if the file which name is dictName exists 
    returns -1 if the file is not found (inaccessible)                
-   returns  0 if the file .DIC exists (not treated yet)              
-   returns  1 if the file .DIC exists (treated)                      
+   returns  0 if the file .DCT exists (not treated yet)              
+   returns  1 if the file .DCT exists (treated)                      
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static int          TestDictionary (char *dictName, char *dictDirectory)
@@ -263,10 +267,10 @@ char               *dictDirectory;
   if (TtaFileExist (tempbuffer) == 0)	/* Unknown file */
     {
       /* Looks for not pre-treated dictionary */
-      FindCompleteName (dictName, "DIC", dictDirectory, tempbuffer, &i);
+      FindCompleteName (dictName, "DCT", dictDirectory, tempbuffer, &i);
       if (TtaFileExist (tempbuffer) == 0)
 	{
-	  /* File .DIC unknown: looks for a dictionary LEX not pre-treated */
+	  /* File .DCT unknown: looks for a dictionary LEX not pre-treated */
 	  FindCompleteName (dictName, "LEX", dictDirectory, tempbuffer, &i);
 	  if (TtaFileExist (tempbuffer) == 0)
 	    /* unknown file */
@@ -276,7 +280,7 @@ char               *dictDirectory;
 	    ret = 2;
 	}
       else
-	/* File .DIC exists */
+	/* File .DCT exists */
 	ret = 0;
     }
   else
@@ -438,7 +442,7 @@ boolean             toTreat;
   else
     {
       if (toTreat)
-	FindCompleteName (dictName, "DIC", dictDirectory, tempbuffer, &i);
+	FindCompleteName (dictName, "DCT", dictDirectory, tempbuffer, &i);
       else
 	FindCompleteName (dictName, "LEX", dictDirectory, tempbuffer, &i);
     }
@@ -628,7 +632,7 @@ boolean             toCreate;
 		      }
 		    /* else: create the new dictionary not readonly */
 		 case (0):
-		    /* file .DIC */
+		    /* file .DCT */
 		    PrepareDictionary (&pdict, dictName, document,
 				dictDirectory, lang, readonly, FALSE, TRUE);
 		    ret = (pdict == NULL) ? -1 : 1;

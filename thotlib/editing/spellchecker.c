@@ -106,7 +106,7 @@ boolean             ToCreate;
     }
 
 # ifdef _WINDOWS
-  if (path[0] == EOS ||  !TtaFileExist (path))
+  if (path[0] == EOS ||  !TtaCheckDirectory (path))
     {
       ptr = TtaGetEnvString ("HOME");
       if (ptr != NULL)
@@ -114,7 +114,7 @@ boolean             ToCreate;
       else
 	{
 	  strcpy (path, "C:\\TEMP");
-	  if (!TtaFileExist (path))
+	  if (!TtaCheckDirectory (path))
 	    _mkdir (path);
 	}
     }
@@ -733,7 +733,7 @@ PtrDict             docDict;
    char                tempbuffer[THOT_MAX_CHAR];
    char                word[MAX_WORD_LEN];
 
-   FindCompleteName (docDict->DictName, "DIC", docDict->DictDirectory, tempbuffer, &i);
+   FindCompleteName (docDict->DictName, "DCT", docDict->DictDirectory, tempbuffer, &i);
    if (docDict->DictNbWords >= 0)
      {
 	f = fopen (tempbuffer, "w");
