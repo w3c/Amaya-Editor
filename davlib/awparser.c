@@ -12,14 +12,9 @@
  ** $Author$
  ** $Revision$
  ** $Log$
- ** Revision 1.1  2002-05-31 10:48:46  kirschpi
- ** Added a new module for WebDAV purposes _ davlib.
- ** Some changes have been done to add this module in the following files:
- ** amaya/query.c, amaya/init.c, amaya/answer.c, amaya/libwww.h, amaya/amayamsg.h,
- ** amaya/EDITOR.A, amaya/EDITORactions.c, amaya/Makefile.libwww amaya/Makefile.in,
- ** config/amaya.profiles, tools/xmldialogues/bases/base_am_dia.xml,
- ** tools/xmldialogues/bases/base_am_dia.xml, Makefile.in, configure.in
- ** This new module is only activated when --with-dav options is used in configure.
+ ** Revision 1.2  2002-05-31 17:59:19  kirschpi
+ ** Functions to give to user some informations about active locks
+ ** (a basic awareness support) when the user load or exit a document.
  **
  ** Revision 1.2  2002/03/28 16:19:43  kirschpi
  ** New function AwParser_searchInTree to search a value

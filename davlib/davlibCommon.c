@@ -15,14 +15,9 @@
  ** $Id$
  ** $Date$
  ** $Log$
- ** Revision 1.1  2002-05-31 10:48:46  kirschpi
- ** Added a new module for WebDAV purposes _ davlib.
- ** Some changes have been done to add this module in the following files:
- ** amaya/query.c, amaya/init.c, amaya/answer.c, amaya/libwww.h, amaya/amayamsg.h,
- ** amaya/EDITOR.A, amaya/EDITORactions.c, amaya/Makefile.libwww amaya/Makefile.in,
- ** config/amaya.profiles, tools/xmldialogues/bases/base_am_dia.xml,
- ** tools/xmldialogues/bases/base_am_dia.xml, Makefile.in, configure.in
- ** This new module is only activated when --with-dav options is used in configure.
+ ** Revision 1.2  2002-05-31 17:59:19  kirschpi
+ ** Functions to give to user some informations about active locks
+ ** (a basic awareness support) when the user load or exit a document.
  **
  * -------------------------------------------------------- 
  */
@@ -101,15 +96,15 @@ char * CopyFile (char * filename, int size) {
     if (filename) {
          FILE *fp;
          int i = 0;
-	 char c[1];
-	 document = TtaGetMemory (size + 1);
+         char c[1];
+         document = TtaGetMemory (size + 1);
 
-	 fp = fopen (filename, "r");
-  	 while (fp && fread(c,1,1,fp)) 
-	     document[i++] = c[0];
-	 
-	 document[i] = '\0';	 
-	 fclose (fp);
+         fp = fopen (filename, "r");
+         while (fp && fread(c,1,1,fp)) 
+             document[i++] = c[0];
+         
+         document[i] = '\0';     
+         fclose (fp);
     }
 
     return document;
@@ -118,10 +113,74 @@ char * CopyFile (char * filename, int size) {
 
 
 /*----------------------------------------------------------------------
+   Returns the most recent valid Lock-Token found in the lock base 
+   for the given URL.
+
+   Parameters:
+            char * hostname: host (server) name
+        char * relative: relative URL
+   Returns:
+        char * with the lock-token, or NULL if fails
+ ----------------------------------------------------------------------*/
+char * FindLockToken (char *hostname, char *relative) {
+    char   *lock    = NULL;
+    HTList *matches = NULL;
+    LockLine *line  = NULL;
+    LockLine *last  = NULL;
+    time_t itime, tout;
+    
+    /* search matches in lock base */
+    matches = processLockFile ((const char*)hostname, (const char*)relative);
+    if (!matches)      /* no matches, returning NULL */
+        return NULL;
+
+    while (!HTList_isEmpty(matches) && \
+          (line = (LockLine *) HTList_nextObject(matches)) !=NULL ) {
+
+        /* verify if it is an exact match. If we already found it, use 
+         * the loop to free the LockLine objects too */
+        if (strcasecomp (line->relativeURI,relative)!=0) {                    
+            LockLine_delete (line); 
+            continue;
+        }
+        
+        /* we don't need to verify if the lock token expired, because we 
+         * can only unlock a resource after get it, consequently, after 
+         * the DAVFindLock, which upadtes the base*/
+        itime = strtotime (line->initialTime);    
+        tout = TimeoutValue (line->timeout);
+
+        
+        /* try to get the most recent token */ 
+        {
+            time_t last_itime = (last)?strtotime(last->initialTime):-1;
+            if (last_itime < itime) {
+                if (last) LockLine_delete (last);
+                last = line;
+            }
+        }
+    }
+
+    /* we found something, return the lock-token */
+    if (last) {
+       StrAllocCopy (lock,last->lockToken);
+       LockLine_delete (last); 
+    }
+    
+#ifdef DEBUG_DAV
+    fprintf (stderr,"FindLockToken.... Returning %s\n",(lock)?lock:"NULL");
+#endif
+    HTList_delete (matches);
+    return lock;
+}
+
+
+
+/*----------------------------------------------------------------------
    GetLockFromTree: Get the lock information from the AwTree object.
    Parameters:
-   	AwTree * tree: where we should look for lock information  
-	char * owner: for return purposes 
+        AwTree * tree: where we should look for lock information  
+        char * owner: for return purposes 
    Returns:
         LockLine *: lock information or NULL
   ----------------------------------------------------------------------*/
@@ -137,125 +196,125 @@ LockLine * GetLockFromTree (AwTree * tree, char *owner) {
     Iowner = Itimeout = Ilocktoken = Idepth = Irelative = NULL;
 
     if (tree && owner) {
-	AwString tmp = NULL; 
-	AwString pattern = AwString_new (15);
-	
+        AwString tmp = NULL; 
+        AwString pattern = AwString_new (15);
+        
          /*look for lockdiscovery info*/
-	AwString_set (pattern,"lockdiscovery");
+        AwString_set (pattern,"lockdiscovery");
         Nactivelock = AwTree_search (AwTree_getRoot(tree),pattern);
-	
-	if (Nactivelock && AwNode_howManyChildren(Nactivelock)>0) {
-		
+        
+        if (Nactivelock && AwNode_howManyChildren(Nactivelock)>0) {
+                
             /* look for owner information */
-	    AwString_set (pattern,"owner");
-	    node = AwTree_search (Nactivelock,pattern);
-	    if (node) {
+            AwString_set (pattern,"owner");
+            node = AwTree_search (Nactivelock,pattern);
+            if (node) {
                 AwString_set (pattern,"href");
-		node = AwTree_search (node,pattern);
-		node = (node)?AwNode_nextChild (node):NULL;
-		tmp = (node)?AwNode_getInfo (node):NULL;
-		if (tmp) {
+                node = AwTree_search (node,pattern);
+                node = (node)?AwNode_nextChild (node):NULL;
+                tmp = (node)?AwNode_getInfo (node):NULL;
+                if (tmp) {
                     Iowner = AwString_get(tmp);
-		    AwString_delete (tmp);
-		    tmp = NULL;
-		}
-	    }
+                    AwString_delete (tmp);
+                    tmp = NULL;
+                }
+            }
             if (Iowner && *Iowner) {
-	       strcpy (owner, Iowner);
-	       HT_FREE (Iowner);
-	    }
+               strcpy (owner, Iowner);
+               HT_FREE (Iowner);
+            }
 
 
-	    /* look for timeout information */
-	    AwString_set (pattern,"timeout");
-	    node = AwTree_search (Nactivelock,pattern);
-	    if (node) {
-		node = AwNode_nextChild (node);
-		tmp = (node)?AwNode_getInfo (node):NULL;
-		if (tmp) {
+            /* look for timeout information */
+            AwString_set (pattern,"timeout");
+            node = AwTree_search (Nactivelock,pattern);
+            if (node) {
+                node = AwNode_nextChild (node);
+                tmp = (node)?AwNode_getInfo (node):NULL;
+                if (tmp) {
                     Itimeout = AwString_get(tmp);
-		    AwString_delete (tmp);
-		    tmp = NULL;
-		}
-	    }
+                    AwString_delete (tmp);
+                    tmp = NULL;
+                }
+            }
 
-	    
-	    /* look for depth information */
-	    AwString_set (pattern,"depth");
-	    node = AwTree_search (Nactivelock,pattern);
-	    if (node) {
-		node = AwNode_nextChild (node);
-		tmp = (node)?AwNode_getInfo (node):NULL;
-		if (tmp) {
+            
+            /* look for depth information */
+            AwString_set (pattern,"depth");
+            node = AwTree_search (Nactivelock,pattern);
+            if (node) {
+                node = AwNode_nextChild (node);
+                tmp = (node)?AwNode_getInfo (node):NULL;
+                if (tmp) {
                     Idepth = AwString_get(tmp);
-		    AwString_delete (tmp);
-		    tmp = NULL;
-		}
-	    }
+                    AwString_delete (tmp);
+                    tmp = NULL;
+                }
+            }
 
 
-	    /* look for locktoken information */
-	    AwString_set (pattern,"locktoken");
-	    node = AwTree_search (Nactivelock,pattern);
-	    if (node) {
+            /* look for locktoken information */
+            AwString_set (pattern,"locktoken");
+            node = AwTree_search (Nactivelock,pattern);
+            if (node) {
                 AwString_set (pattern,"href");
-		node = AwTree_search (node,pattern);
-		node = (node)?AwNode_nextChild (node):NULL;
-		tmp = (node)?AwNode_getInfo (node):NULL;
-		if (tmp) {
+                node = AwTree_search (node,pattern);
+                node = (node)?AwNode_nextChild (node):NULL;
+                tmp = (node)?AwNode_getInfo (node):NULL;
+                if (tmp) {
                     Ilocktoken = AwString_get(tmp);
-		    AwString_delete (tmp);
-		    tmp = NULL;  
-		}
+                    AwString_delete (tmp);
+                    tmp = NULL;  
+                }
 
-		/*put < and > in locktoken */
-		if (Ilocktoken && *Ilocktoken!='<') {
-		    char *s = HT_CALLOC (strlen(Ilocktoken)+3,sizeof(char));
-		    sprintf (s,"<%s>",Ilocktoken);
-		    HT_FREE (Ilocktoken);
-		    Ilocktoken = s;
-		}
-	    }
+                /*put < and > in locktoken */
+                if (Ilocktoken && *Ilocktoken!='<') {
+                    char *s = HT_CALLOC (strlen(Ilocktoken)+3,sizeof(char));
+                    sprintf (s,"<%s>",Ilocktoken);
+                    HT_FREE (Ilocktoken);
+                    Ilocktoken = s;
+                }
+            }
 
 
-	    /* look for relative URL information */
+            /* look for relative URL information */
             AwString_set (pattern,"href");
-	    node = AwTree_search (AwTree_getRoot(tree),pattern);
-	    node = (node)?AwNode_nextChild (node):NULL;
-	    tmp = (node)?AwNode_getInfo (node):NULL;
-	    if (tmp) {		
+            node = AwTree_search (AwTree_getRoot(tree),pattern);
+            node = (node)?AwNode_nextChild (node):NULL;
+            tmp = (node)?AwNode_getInfo (node):NULL;
+            if (tmp) {          
                 Irelative = AwString_get(tmp);
-	        AwString_delete (tmp);
-	        tmp = NULL;
-	    }
+                AwString_delete (tmp);
+                tmp = NULL;
+            }
             /* some servers use absolute URL in href element
-	    * others use the relative. Try to separate it. */
-	    if (Irelative) {
+            * others use the relative. Try to separate it. */
+            if (Irelative) {
                char *abs, *rel;
-	       if (separateUri ((const char*) Irelative, \
-	                        (const char*)DAVFullHostName, &abs, &rel))
-	       {
+               if (separateUri ((const char*) Irelative, \
+                                (const char*)DAVFullHostName, &abs, &rel))
+               {
                     HT_FREE (Irelative);
-	            HT_FREE (abs);
-		    Irelative = rel;
-	       }    
-	    }
-	   
+                    HT_FREE (abs);
+                    Irelative = rel;
+               }    
+            }
+           
 
-	    /* mounts LockLine object */
-	    lock = LockLine_newObject(Irelative, Ilocktoken, Idepth, Itimeout, time(NULL));
-		    
-	    /* freeing everything */
-	    if (Irelative) HT_FREE (Irelative);
-	    if (Ilocktoken) HT_FREE (Ilocktoken);
-	    if (Idepth) HT_FREE (Idepth);
-	    if (Itimeout) HT_FREE (Itimeout);
-			    
-#ifdef DEBUG_DAV	    
-	    fprintf (stderr,"GetLockFromTree..... LockLine: %s Owner %s\n", \
-			    (lock)?"OK":"NO",owner);
+            /* mounts LockLine object */
+            lock = LockLine_newObject(Irelative, Ilocktoken, Idepth, Itimeout, time(NULL));
+                    
+            /* freeing everything */
+            if (Irelative) HT_FREE (Irelative);
+            if (Ilocktoken) HT_FREE (Ilocktoken);
+            if (Idepth) HT_FREE (Idepth);
+            if (Itimeout) HT_FREE (Itimeout);
+                            
+#ifdef DEBUG_DAV            
+            fprintf (stderr,"GetLockFromTree..... LockLine: %s Owner %s\n", \
+                            (lock)?"OK":"NO",owner);
 #endif
-	}
+        }
 
     }
 
@@ -276,9 +335,9 @@ void DAVAddIfHeader (AHTReqContext *context, char *url) {
     AHTDAVContext *davctx = NULL;
     
     if (context && url && (*url) && (context->request)) {
-	/*create DAV context*/
+        /*create DAV context*/
         davctx =  AHTDAVContext_new (url);
-	
+        
         if (davctx) {                                                
             char *ifHeader = NULL;
             HTList * matches = searchLockBase (davctx->absoluteURI, \
@@ -288,7 +347,7 @@ void DAVAddIfHeader (AHTReqContext *context, char *url) {
             fprintf (stderr,"DAVAddIfHeader..... matches? %s\n",\
                             (matches && !HTList_isEmpty(matches))?"YES":"NO");
 #endif         
-	    /*search in lock base: if found something creates the header */
+            /*search in lock base: if found something creates the header */
             if (matches && !HTList_isEmpty(matches))
                 ifHeader = mountIfHeader (matches);
 
@@ -299,11 +358,6 @@ void DAVAddIfHeader (AHTReqContext *context, char *url) {
             if (ifHeader) /*add If header */
                 HTRequest_addExtraHeader (context->request,"If",ifHeader);
 
-/*            if (context->dav_context)
-                AHTDAVContext_delete (context->dav_context);
-
-            context->dav_context = davctx;
-*/	    
         }
     }
 }
@@ -394,13 +448,13 @@ void AHTDAVContext_delete (AHTDAVContext * me)
         if (me->tree) AwTree_delete (me->tree);
         if (me->error_msgs) AwList_delete (me->error_msgs);
 
-	/* ignore new_source and new_request because they should be in use
-	 * when this context is deleted.*/ 
-    	me->new_source = NULL;
+        /* ignore new_source and new_request because they should be in use
+         * when this context is deleted.*/ 
+        me->new_source = NULL;
         me->new_request = NULL;
          
         HT_FREE (me);
-	me = NULL;
+        me = NULL;
     }
 }
 
@@ -416,60 +470,60 @@ void AHTDAVContext_delete (AHTDAVContext * me)
    Create an AHTReqContext object 
 
    Parameters:
-	int doc : document
-	char *url : destiny url name (cannot be NULL)
-	AHTDAVContext *dav : WebDAV context
-	HTNet *after : local after filter (position LAST)
-	TTcbf *terminate : terminate callback function
-	TIcbf *incremental : incremental callback function
-	BOOL preemptive : should the request be preemptive?
-	int mode : request mode
-	
+        int doc : document
+        char *url : destiny url name (cannot be NULL)
+        AHTDAVContext *dav : WebDAV context
+        HTNet *after : local after filter (position LAST)
+        TTcbf *terminate : terminate callback function
+        TIcbf *incremental : incremental callback function
+        BOOL preemptive : should the request be preemptive?
+        int mode : request mode
+        
   ----------------------------------------------------------------------*/
 AHTReqContext * CreateDefaultContext (int doc, char *url, AHTDAVContext *dav,\
-		                      HTNetAfter * after, TTcbf * terminate, \
-				      TIcbf * incremental, BOOL preemptive, int mode)  
+                                      HTNetAfter * after, TTcbf * terminate, \
+                                      TIcbf * incremental, BOOL preemptive, int mode)  
 {
     AHTReqContext *me = AHTReqContext_new (doc);
     if (me) {
         if (!url || !(*url)) {
             AHTReqContext_delete (me);
-	    return NULL;
-	}
-	
-	/* WebDav context */
-	me->dav_context = dav;
-	
-	/* destiny url */
-	me->urlName = TtaGetMemory (MAX_LENGTH + 2);
-	strcpy (me->urlName, url);
+            return NULL;
+        }
+        
+        /* WebDav context */
+        me->dav_context = dav;
+        
+        /* destiny url */
+        me->urlName = TtaGetMemory (MAX_LENGTH + 2);
+        strcpy (me->urlName, url);
         ChopURL (me->status_urlName,me->urlName);
 
-	/* request mode */
-	me->mode = mode;
+        /* request mode */
+        me->mode = mode;
 
-	/* request callbacks */
-	me->terminate_cbf = terminate;
-	me->incremental_cbf = incremental;	
-	if (me->terminate_cbf)
-	    me->context_tcbf = me;
-	else 
-	    me->context_tcbf = NULL;
-	
-	if (me->incremental_cbf)
-	    me->context_icbf = me;
-	else
-	    me->context_icbf = NULL;
+        /* request callbacks */
+        me->terminate_cbf = terminate;
+        me->incremental_cbf = incremental;      
+        if (me->terminate_cbf)
+            me->context_tcbf = me;
+        else 
+            me->context_tcbf = NULL;
+        
+        if (me->incremental_cbf)
+            me->context_icbf = me;
+        else
+            me->context_icbf = NULL;
 
-	/* local after filter */
-	if (after)
-	    HTRequest_addAfter (me->request,after,NULL,NULL,HT_ALL,HT_FILTER_LAST,NO);
+        /* local after filter */
+        if (after)
+            HTRequest_addAfter (me->request,after,NULL,NULL,HT_ALL,HT_FILTER_LAST,NO);
 
-	/* preemptive */
-	HTRequest_setPreemptive (me->request, preemptive);
+        /* preemptive */
+        HTRequest_setPreemptive (me->request, preemptive);
 
-	/* initial status */
-	me->reqStatus = HT_NEW;
+        /* initial status */
+        me->reqStatus = HT_NEW;
     }
 
     return me;
@@ -485,33 +539,33 @@ AHTReqContext * CopyContext (AHTReqContext *context) {
     if (context) {
 #ifdef DEBUG_DAV
         fprintf (stderr,"Copycontext.... copying the request context\n");
-#endif		    
-	me = CreateDefaultContext (context->docid, context->urlName,NULL, NULL, \
-				   context->terminate_cbf, context->incremental_cbf,\
-				   HTRequest_preemptive (context->request),\
-				   context->mode);
-	if (!me) 
-    	    return NULL;
+#endif              
+        me = CreateDefaultContext (context->docid, context->urlName,NULL, NULL, \
+                                   context->terminate_cbf, context->incremental_cbf,\
+                                   HTRequest_preemptive (context->request),\
+                                   context->mode);
+        if (!me) 
+            return NULL;
 
-	me->method = context->method;
+        me->method = context->method;
 
         me->anchor = context->anchor;
         me->dest = context->dest;
 
         HTRequest_setOutputFormat (me->request, HTRequest_outputFormat(context->request));
-	HTRequest_setOutputStream (me->request, HTRequest_outputStream (context->request));
+        HTRequest_setOutputStream (me->request, HTRequest_outputStream (context->request));
 
-	me->output = context->output;
-	context->output = NULL;
-	me->outputfile = context->outputfile;
-	context->outputfile = NULL;
-	me->formdata = context->formdata;
-	context->formdata = NULL;
+        me->output = context->output;
+        context->output = NULL;
+        me->outputfile = context->outputfile;
+        context->outputfile = NULL;
+        me->formdata = context->formdata;
+        context->formdata = NULL;
 
         me->context_tcbf = context->context_tcbf;
-	me->context_icbf = context->context_icbf;
-	
-	me->error_html = context->error_html;
+        me->context_icbf = context->context_icbf;
+        
+        me->error_html = context->error_html;
     }
 
     return me;

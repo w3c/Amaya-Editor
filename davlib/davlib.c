@@ -14,14 +14,9 @@
  ** $Id$
  ** $Date$
  ** $Log$
- ** Revision 1.1  2002-05-31 10:48:46  kirschpi
- ** Added a new module for WebDAV purposes _ davlib.
- ** Some changes have been done to add this module in the following files:
- ** amaya/query.c, amaya/init.c, amaya/answer.c, amaya/libwww.h, amaya/amayamsg.h,
- ** amaya/EDITOR.A, amaya/EDITORactions.c, amaya/Makefile.libwww amaya/Makefile.in,
- ** config/amaya.profiles, tools/xmldialogues/bases/base_am_dia.xml,
- ** tools/xmldialogues/bases/base_am_dia.xml, Makefile.in, configure.in
- ** This new module is only activated when --with-dav options is used in configure.
+ ** Revision 1.2  2002-05-31 17:59:19  kirschpi
+ ** Functions to give to user some informations about active locks
+ ** (a basic awareness support) when the user load or exit a document.
  **
  * -------------------------------------------------------- 
  */
@@ -78,6 +73,7 @@ void InitDAV (void) {
 
     
     /***** DAVUserURL, DAVLockScope, DAVDepth, DAVTimeout *****/
+
     /* getting user URL: if no DAV_USER_URL element defined in 
      * thot.rc, get the user email */
     ptr = NULL; 
@@ -139,6 +135,38 @@ void InitDAV (void) {
         modified = TRUE;
     }
 
+    
+    /************* DAVAwareness, DAVAwarenessOnExit ************ */
+    /* getting general option about awareness information */
+    ptr = NULL;
+    DAVAwareness = NO;
+    ptr = TtaGetEnvString (DAV_AWARENESS);
+    if (ptr && (*ptr)) {
+        if (!strcasecomp (ptr,"yes"))
+            DAVAwareness = YES; 
+        HT_FREE (ptr);
+    }
+    else {
+        TtaSetEnvString (DAV_AWARENESS,"no",TRUE);
+        modified = TRUE;
+    }
+    
+    /* getting option about awareness information when exiting a resouce */
+    ptr = NULL;
+    DAVAwarenessExit = NO;
+    ptr = TtaGetEnvString (DAV_AWARENESS_EXIT);
+    if (ptr && (*ptr)) {
+        if (!strcasecomp (ptr,"yes"))
+            DAVAwarenessExit = YES; 
+        HT_FREE (ptr);
+    }    
+    else {
+        TtaSetEnvString (DAV_AWARENESS_EXIT,"no",TRUE);
+        modified = TRUE;
+    }
+    
+    
+
     /* *********************** SAVING REGISTRY ***************** */
     if (modified) TtaSaveAppRegistry();
 
@@ -170,6 +198,57 @@ void InitDAV (void) {
     
 }
 
+
+/* ********************************************************************* *
+ *                      CLOSE DOCUMENT FUNCTION                          *
+ * ********************************************************************* */
+
+
+/*----------------------------------------------------------------------
+   DAVFreeLock - ask to user if he/she wants to free pending locks 
+                 when closing the session.   
+  ----------------------------------------------------------------------*/
+void DAVFreeLock (Document docid) {
+    BOOL ok = NO;
+    char *lockinfo;
+    char *relURI, *absURI;
+
+    lockinfo = relURI = absURI = NULL;
+    
+    /* if user doesn't want awareness info, neither
+     * awareness info on exit, return
+     */ 
+    if (!(DAVAwareness && DAVAwarenessExit))
+        return;
+    
+#ifdef DEBUG_DAV
+    fprintf (stderr,"Closing document %s\n",DocumentURLs[docid]);
+#endif
+
+    /* separing URI into hostname and relative parts */
+    ok = separateUri (DocumentURLs[docid], DAVFullHostName, &absURI, &relURI);
+    
+    if (ok && absURI && relURI) {
+        /* if there is a lock info in the local base,
+         * user has a lock for this resource.
+         */
+        lockinfo = FindLockToken (absURI, relURI);
+        if (lockinfo && *lockinfo) {
+            char label1[LINE_MAX], label2[LINE_MAX];
+
+            sprintf (label1,TtaGetMessage(AMAYA,AM_LOCKED),DocumentURLs[docid]);
+            sprintf (label2,TtaGetMessage(AMAYA,AM_UNLOCK_DOCUMENT));
+            
+            if (DAVConfirmDialog (docid,label1, label2, " ")) {
+                AHTDAVContext *new_davctx = GetUnlockInfo (docid);
+                if (new_davctx) {
+                    new_davctx->showIt = NO;    
+                    DoUnlockRequest (docid, new_davctx);                    
+                }    
+            }
+        } /* lockinfo */
+    }
+}
 
 
 /* ********************************************************************* *

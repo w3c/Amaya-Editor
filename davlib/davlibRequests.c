@@ -15,14 +15,9 @@
  ** $Id$
  ** $Date$
  ** $Log$
- ** Revision 1.1  2002-05-31 10:48:46  kirschpi
- ** Added a new module for WebDAV purposes _ davlib.
- ** Some changes have been done to add this module in the following files:
- ** amaya/query.c, amaya/init.c, amaya/answer.c, amaya/libwww.h, amaya/amayamsg.h,
- ** amaya/EDITOR.A, amaya/EDITORactions.c, amaya/Makefile.libwww amaya/Makefile.in,
- ** config/amaya.profiles, tools/xmldialogues/bases/base_am_dia.xml,
- ** tools/xmldialogues/bases/base_am_dia.xml, Makefile.in, configure.in
- ** This new module is only activated when --with-dav options is used in configure.
+ ** Revision 1.2  2002-05-31 17:59:19  kirschpi
+ ** Functions to give to user some informations about active locks
+ ** (a basic awareness support) when the user load or exit a document.
  **
  * -------------------------------------------------------- 
  */
@@ -522,7 +517,7 @@ int FilterFindAndPut_handler (HTRequest * request, HTResponse * response,
             TtaSetDocumentModified (context->docid);
             DocStatusUpdate (context->docid, TRUE);
                             
-            /* reset stop button */
+            /* we finished? reset stop button */
             ResetStop (context->docid);
             
             /* display the correct message */   
@@ -842,7 +837,7 @@ int FilterLock_handler (HTRequest * request, HTResponse * response,
     }
 #endif    
    
-    /* we finished - reset stop button here */
+    /* we finished? reset stop button here */
     ResetStop (context->docid);
     
     return HT_OK;
@@ -929,7 +924,7 @@ int FilterFindAndShowLock_handler (HTRequest * request, HTResponse * response,
         /* display the message */
         DAVHorizontalDialog (context->docid, NULL, NULL, NULL, list);
 
-        /* testing if stop button will work here */
+        /* we finished? reset stop button */
         ResetStop (context->docid);
         
         /* clear new_request from davctx */
@@ -948,69 +943,6 @@ int FilterFindAndShowLock_handler (HTRequest * request, HTResponse * response,
 /* ********************************************************************* *
  *                      FUNCTIONS FOR UNLOCK REQUESTS                    *
  * ********************************************************************* */
-
-/*----------------------------------------------------------------------
-   Returns the most recent valid Lock-Token found in the lock base 
-   for the given URL.
-
-   Parameters:
-            char * hostname: host (server) name
-        char * relative: relative URL
-   Returns:
-        char * with the lock-token, or NULL if fails
- ----------------------------------------------------------------------*/
-char * FindLockToken (char *hostname, char *relative) {
-    char   *lock    = NULL;
-    HTList *matches = NULL;
-    LockLine *line  = NULL;
-    LockLine *last  = NULL;
-    time_t itime, tout;
-    
-    /* search matches in lock base */
-    matches = processLockFile ((const char*)hostname, (const char*)relative);
-    if (!matches)      /* no matches, returning NULL */
-        return NULL;
-
-    while (!HTList_isEmpty(matches) && \
-          (line = (LockLine *) HTList_nextObject(matches)) !=NULL ) {
-
-        /* verify if it is an exact match. If we already found it, use 
-         * the loop to free the LockLine objects too */
-        if (strcasecomp (line->relativeURI,relative)!=0) {                    
-            LockLine_delete (line); 
-            continue;
-        }
-        
-        /* we don't need to verify if the lock token expired, because we 
-         * can only unlock a resource after get it, consequently, after 
-         * the DAVFindLock, which upadtes the base*/
-        itime = strtotime (line->initialTime);    
-        tout = TimeoutValue (line->timeout);
-
-        
-        /* try to get the most recent token */ 
-        {
-            time_t last_itime = (last)?strtotime(last->initialTime):-1;
-            if (last_itime < itime) {
-                if (last) LockLine_delete (last);
-                last = line;
-            }
-        }
-    }
-
-    /* we found something, return the lock-token */
-    if (last) {
-       StrAllocCopy (lock,last->lockToken);
-       LockLine_delete (last); 
-    }
-    
-#ifdef DEBUG_DAV
-    fprintf (stderr,"FindLockToken.... Returning %s\n",(lock)?lock:NULL);
-#endif
-    HTList_delete (matches);
-    return lock;
-}
-
 
 
 /*----------------------------------------------------------------------
@@ -1085,6 +1017,7 @@ BOOL DoUnlockRequest (int doc, AHTDAVContext *info) {
 
         if (context) {
             HTRequest *request = context->request;
+            HTRequest_setPreemptive (request,YES);
 
 #ifdef DEBUG_DAV    
             fprintf (stderr,"DoUnlockRequest.... setting request\n");
@@ -1199,7 +1132,9 @@ int FilterUnlock_handler (HTRequest * request, HTResponse * response,
         }
         
         /* we stop the work _ reset stop button */
-        ResetStop (context->docid);
+        if (Amaya->open_requests<=1) 
+           ResetStop (context->docid);
+        
     
         /* **** User interface is done by the DAVTerminate_handler **** */
     }
@@ -1481,12 +1416,54 @@ int FilterFindLock_handler (HTRequest * request, HTResponse * response,
         /* there is a lockdiscovery element in XML response, 
          * the resource is locked*/  
         if (lockdiscovery) { 
+            char owner[LINE_MAX];
+            HTList *matches = NULL;
+            LockLine *lockinfo;
+            BOOL saved = NO;
+            
             DAVLockIndicatorState = TRUE;
 #ifdef DEBUG_DAV
             fprintf (stderr,"FilterFindLock_handler.... found %s, "
                             "resource is locked\n",lockdiscovery);
-#endif            
-        }
+#endif        
+            /* try to discover who is the lock's owner */
+            lockinfo = GetLockFromTree (davctx->tree, owner);
+            if (lockinfo && owner && *owner) {
+                /* if the user wants to receive awareness information,
+                 * notify him/her about locked resources
+                 */
+                if (DAVAwareness) {    
+                    matches = searchLockBase (davctx->absoluteURI, davctx->relativeURI);
+                
+                    /* if there is no lock info in the base, the user is not 
+                     * the lock owner. So, we need to notify him 
+                     */
+                    if (!matches) {
+                        char label1[LINE_MAX], label2[LINE_MAX];
+
+                        sprintf (label1,TtaGetMessage(AMAYA,AM_LOCKED_BY_OTHER),\
+                                 lockinfo->relativeURI, owner, lockinfo->timeout);
+                        sprintf (label2,TtaGetMessage(AMAYA,AM_COPY_LOCK));
+            
+                        if (DAVConfirmDialog (context->docid,label1, label2, " ")) {
+                            /* save lock info */
+                            if (saveLockLine (davctx->absoluteURI, lockinfo)!=YES) {  
+                                DAVDisplayMessage (TtaGetMessage (AMAYA, AM_SAVE_LOCKBASE_FAILED), NULL);
+                            }
+                            else
+                                saved = YES;
+                        }
+
+                        /* if the lock information is not saved, 
+                         * change document to read only mode
+                         */ 
+                        if (!saved) {
+                           ChangeToBrowserMode (context->docid);
+                        }
+                    }/*!matches*/
+                } /*DAVAwareness */
+            } /*lockinfo*/
+        }/*lockdiscovery*/
         else { /* the resource is unlocked */ 
             LockLine *line = LockLine_newObject (davctx->relativeURI,\
                             " ",DAVDepth,DAVTimeout,time(NULL));
@@ -1508,7 +1485,7 @@ int FilterFindLock_handler (HTRequest * request, HTResponse * response,
 
         DAVSetLockIndicator(context->docid);
 
-        /* testing if stop button will work here */
+        /* we finished? reset stop button */
         ResetStop (context->docid);
     }
     
@@ -1632,7 +1609,7 @@ int FilterPropfind_handler (HTRequest * request, HTResponse * response,
 
         /* **** User interface is done by the DAVTerminate_handler **** */
         
-        /* done _ reset stop button */
+        /* done? reset stop button */
         ResetStop (context->docid);
     }
 #ifdef DEBUG_DAV    
@@ -1718,7 +1695,7 @@ int FilterCopyLockInfo_handler (HTRequest *request, HTResponse *response,\
         DAVSetLockIndicator(context->docid);
 
         
-        /* testing if stop button will work here */
+        /* we finished? reset stop button */
         ResetStop (context->docid);
     }
     

@@ -45,6 +45,10 @@
 #include "ANNOTevent_f.h"
 #endif /* ANNOTATIONS */
 
+#ifdef DAV
+#include "davlib_f.h"
+#endif
+
 /* info about the last element highlighted when synchronizing with the
    source view */
 Document	HighlightDocument = 0;
@@ -1525,7 +1529,7 @@ void FreeDocumentResource (Document doc)
   TtaDestroyDialogue (BaseDialog + SaveForm);
 
   CleanUpParsingErrors ();
-
+  
   if (DocumentURLs[doc] != NULL)
     {
       if (DocumentTypes[doc] != docLog)
@@ -1599,6 +1603,10 @@ void DocumentClosed (NotifyDialog * event)
 {
    if (event == NULL)
       return;
+#ifdef DAV
+      DAVFreeLock (event->document);
+#endif
+  
    FreeDocumentResource (event->document);
 }
 
