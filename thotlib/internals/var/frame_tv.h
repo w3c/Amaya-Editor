@@ -81,6 +81,7 @@ THOT_EXPORT GdkGC       *TtGraphicGC;   /* Graphic context for images    */
 #else /* _GTK */
 THOT_EXPORT ThotWidget   RootShell;
 THOT_EXPORT XmFontList   DefaultFont;   /* default Font                  */
+THOT_EXPORT ThotBool     TtPatchedFont[MAX_FONT];/* loaded fonts         */
 THOT_EXPORT Time         t1;
 THOT_EXPORT Display     *TtDisplay;	/* Server context                */
 THOT_EXPORT int	         TtScreen; 	/* Screen                        */

@@ -284,7 +284,6 @@ ptrfont             font;
 #else  /* !_WINDOWS */
 #endif /* _WINDOWS */
 #else /* !_I18N_ */
-
    int                 l;
 
    if (font == NULL)
@@ -307,8 +306,19 @@ ptrfont             font;
 	  l = ((XFontStruct*) font)->max_bounds.width;
         else if (c < ((XFontStruct*) font)->min_char_or_byte2)
 	  l = 0;
-        else 
-	  l = ((XFontStruct *) font)->per_char[c - ((XFontStruct *) font)->min_char_or_byte2].width;
+        else
+	  {
+	    if (c == UNBREAKABLE_SPACE)
+	      l = ((XFontStruct *) font)->per_char[32 - ((XFontStruct *) font)->min_char_or_byte2].width;
+	    else if (c == BREAK_LINE)
+	      l = 1;
+	    else if (c == THIN_SPACE)
+	      l = (((XFontStruct *) font)->per_char[32 - ((XFontStruct *) font)->min_char_or_byte2].width + 3) / 4;
+	    else if (c == HALF_EM)
+	      l = (((XFontStruct *) font)->per_char[32 - ((XFontStruct *) font)->min_char_or_byte2].width + 1) / 2;
+	    else
+	      l = ((XFontStruct *) font)->per_char[c - ((XFontStruct *) font)->min_char_or_byte2].width;
+	  }
 #endif /* _GTK */
 #endif /* !_WINDOWS */
      }
@@ -363,7 +373,6 @@ UCHAR_T       c;
 ptrfont             font;
 #endif /* __STDC__ */
 {
-
 #ifdef _GTK
    int lbearing, rbearing, width, ascent, descent;
 #endif /* _GTK */
@@ -375,10 +384,11 @@ ptrfont             font;
     return font->FiAscent;
 #else  /* _WINDOWS */
 #ifdef _GTK
-  else {
-    gdk_string_extents (font, &c, &lbearing, &rbearing, &width, &ascent, &descent);
-    return (ascent);
-  }
+  else
+    {
+      gdk_string_extents (font, &c, &lbearing, &rbearing, &width, &ascent, &descent);
+      return (ascent);
+    }
 #else /* _GTK */
   else if (((XFontStruct *) font)->per_char == NULL)
     return ((XFontStruct *) font)->max_bounds.ascent;
@@ -650,45 +660,54 @@ int                 toPatch;
   result = gdk_font_load ((gchar *)name);
   return (result);
 #else /* _GTK */
-   char                tmp[200];
-   XFontStruct        *result;
-   int                 mincar;
-   int                 spacewd;
+  char                tmp[200];
+  XFontStruct        *result, *patched;
+  int                 mincar, nb, i;
 
-   strcpy (tmp, name);
-
-   result = XLoadQueryFont (TtDisplay, tmp);
-   if (result != NULL)
-      if (result->per_char != NULL)
-	{
-	   mincar = result->min_char_or_byte2;
-	   spacewd = result->per_char[32 - mincar].width;
-	   if (toPatch != 0)
-	     {
-	       /* a patch due to errors in standard symbol fonts */
-	       if (toPatch == 8 || toPatch == 10)
-		 result->per_char[244 - mincar].width = 1;
-	       else if (toPatch == 12 || toPatch == 14)
-		 result->per_char[244 - mincar].width = 2;
-	       else if (toPatch == 24)
-		 result->per_char[244 - mincar].width = 4;
-
-	       result->per_char[244 - mincar].ascent -= 2;
-	     }
-	   if (result->max_char_or_byte2 > UNBREAKABLE_SPACE)
-	      /* largeur(Ctrl Space) = largeur(Space) */
-	      result->per_char[UNBREAKABLE_SPACE - mincar].width = spacewd;
-	   if (result->max_char_or_byte2 > BREAK_LINE)
-	      /* largeur(Ctrl Return) = largeur(Space) */
-	      result->per_char[BREAK_LINE - mincar].width = 1;
-	   if (result->max_char_or_byte2 > THIN_SPACE)
-	      /* largeur(Fine) = 1/4largeur(Space) */
-	      result->per_char[THIN_SPACE - mincar].width = (spacewd + 3) / 4;
-	   if (result->max_char_or_byte2 > HALF_EM)
-	      /* largeur(DemiCadratin) = 1/2largeur(Space) */
-	      result->per_char[HALF_EM - mincar].width = (spacewd + 1) / 2;
-	}
-   return ((ptrfont) result);
+  strcpy (tmp, name);
+  result = XLoadQueryFont (TtDisplay, tmp);
+  if (result != NULL)
+    if (result->per_char != NULL)
+      {
+	mincar = result->min_char_or_byte2;
+	nb = result->max_char_or_byte2 - mincar + 1;
+	if (toPatch != 0)
+	  {
+	    patched = TtaGetMemory (sizeof (XFontStruct));
+	    patched->min_char_or_byte2 = mincar;
+	    patched->min_char_or_byte2 = result->min_char_or_byte2;
+	    patched->max_bounds.ascent = result->max_bounds.ascent;
+	    patched->max_bounds.descent = result->max_bounds.descent;
+	    patched->ascent = result->ascent;
+	    patched->descent = result->descent;
+	    patched->per_char = TtaGetMemory (sizeof (XCharStruct) * nb);
+	    for (i = 0; i < nb; i++)
+	      {
+		/* a patch due to errors in standard symbol fonts */
+		if (i == 244 - mincar)
+		  {
+		    if (toPatch == 8 || toPatch == 10)
+		      patched->per_char[i].width = 1;
+		    else if (toPatch == 12 || toPatch == 14)
+		      patched->per_char[i].width = 2;
+		    else if (toPatch == 24)
+		      result->per_char[i].width = 4;
+		    else
+		      patched->per_char[i].width = result->per_char[i].width;
+		    patched->per_char[i].ascent -= 2;
+		  }
+		else
+		  {
+		    patched->per_char[i].width = result->per_char[i].width;
+		    patched->per_char[i].ascent = result->per_char[i].ascent;
+		  }
+		patched->per_char[i].descent = result->per_char[i].descent;
+	      }
+	    XFreeFont (TtDisplay, result);
+	    result = patched;
+	  }
+      }
+  return ((ptrfont) result);
 #endif /* _GTK */
 }
 #  endif /* !_WINDOWS */
@@ -957,7 +976,7 @@ ThotBool            increase;
   i = 0;
   deb = 0;
   ptfont = NULL;
-  while ((ptfont == NULL) && (i < MAX_FONT) && (TtFonts[i] != NULL))
+  while (ptfont == NULL && i < MAX_FONT && TtFonts[i] != NULL)
     {
       j = strcmp (&TtFontName[deb], text);
       if (j == 0)
@@ -981,7 +1000,7 @@ ThotBool            increase;
 	  strcpy (&TtFontName[i * MAX_FONTNAME], text);
 	  strcpy (&TtPsFontName[i * 8], PsName);
 	   
-#         ifdef _WINDOWS
+#ifdef _WINDOWS
 	  if (unit == UnRelative)
 	    {
 	      pText = text;
@@ -996,52 +1015,62 @@ ThotBool            increase;
 	    }
 	  /* Allocate the font structure */
 	  ptfont = TtaGetMemory (sizeof (FontInfo));
-      ptfont->alphabet  = alphabet;
-      ptfont->family    = family;
-      ptfont->highlight = highlight;
-      ptfont->size      = size;
+	  ptfont->alphabet  = alphabet;
+	  ptfont->family    = family;
+	  ptfont->highlight = highlight;
+	  ptfont->size      = size;
 	  currentActiveFont = WIN_LoadFont (alphabet, family, highlight, size, unit);
-      if (TtPrinterDC != 0) {
-         hOldFont = SelectObject (TtPrinterDC, currentActiveFont);
-         if (GetTextMetrics (TtPrinterDC, &textMetric)) {
-            ptfont->FiAscent = textMetric.tmAscent;
-            ptfont->FiHeight = textMetric.tmAscent + textMetric.tmDescent;
-		 } else {
-               ptfont->FiAscent = 0;
-               ptfont->FiHeight = 0;
-		 }
-         for (c = 0; c < 256; c++) {
-             GetTextExtentPoint (TtPrinterDC, (LPCTSTR) (&c), 1, (LPSIZE) (&wsize));
-             ptfont->FiWidths[c] = wsize.cx;
-             ptfont->FiHeights[c] = wsize.cy;
-		 }
-         SelectObject (TtPrinterDC, hOldFont);
-      } else { 
-           hOldFont = SelectObject (TtDisplay, currentActiveFont);
-
-           if (GetTextMetrics (TtDisplay, &textMetric)) {
-              ptfont->FiAscent = textMetric.tmAscent;
-              ptfont->FiHeight = textMetric.tmAscent + textMetric.tmDescent;
-		   } else {
-                ptfont->FiAscent = 0;
-                ptfont->FiHeight = 0;
-		   }
-           for (c = 0; c < 256; c++) {
-               GetTextExtentPoint (TtDisplay, (LPCTSTR) (&c), 1, (LPSIZE) (&wsize));
-               ptfont->FiWidths[c] = wsize.cx;
-               ptfont->FiHeights[c] = wsize.cy;
-		   }
-           /* SelectObject (TtDisplay, hOldFont); */
-           if (!DeleteObject (SelectObject (TtDisplay, currentActiveFont)))
-              WinErrorBox (NULL, TEXT("LoadNearestFont (1)"));
-           currentActiveFont = 0;
-	  }
-#      else  /* _WINDOWS */
+	  if (TtPrinterDC != 0)
+	    {
+	      hOldFont = SelectObject (TtPrinterDC, currentActiveFont);
+	      if (GetTextMetrics (TtPrinterDC, &textMetric))
+		{
+		  ptfont->FiAscent = textMetric.tmAscent;
+		  ptfont->FiHeight = textMetric.tmAscent + textMetric.tmDescent;
+		}
+	      else
+		{
+		  ptfont->FiAscent = 0;
+		  ptfont->FiHeight = 0;
+		}
+	      for (c = 0; c < 256; c++)
+		{
+		  GetTextExtentPoint (TtPrinterDC, (LPCTSTR) (&c), 1, (LPSIZE) (&wsize));
+		  ptfont->FiWidths[c] = wsize.cx;
+		  ptfont->FiHeights[c] = wsize.cy;
+		}
+	      SelectObject (TtPrinterDC, hOldFont);
+	    }
+	  else
+	    { 
+	      hOldFont = SelectObject (TtDisplay, currentActiveFont);
+	      if (GetTextMetrics (TtDisplay, &textMetric))
+		{
+		  ptfont->FiAscent = textMetric.tmAscent;
+		  ptfont->FiHeight = textMetric.tmAscent + textMetric.tmDescent;
+		}
+	      else
+		{
+		  ptfont->FiAscent = 0;
+		  ptfont->FiHeight = 0;
+		}
+	      for (c = 0; c < 256; c++)
+		{
+		  GetTextExtentPoint (TtDisplay, (LPCTSTR) (&c), 1, (LPSIZE) (&wsize));
+		  ptfont->FiWidths[c] = wsize.cx;
+		  ptfont->FiHeights[c] = wsize.cy;
+		}
+	      /* SelectObject (TtDisplay, hOldFont); */
+	      if (!DeleteObject (SelectObject (TtDisplay, currentActiveFont)))
+		WinErrorBox (NULL, TEXT("LoadNearestFont (1)"));
+	      currentActiveFont = 0;
+	    }
+#else  /* _WINDOWS */
 	  if (alphabet == 'G' && size > 8 && (size < 16 || size == 24))
 	    ptfont = LoadFont (textX, size);
 	  else
 	    ptfont = LoadFont (textX, 0);
-#      endif /* !_WINDOWS */
+#endif /* !_WINDOWS */
 	  /* Loading failed try to find a neighbour */
 	  if (ptfont == NULL)
 	    {
@@ -1097,6 +1126,10 @@ ThotBool            increase;
 	{
 	  /* initialize a new cache entry */
 	  TtFonts[i] = ptfont;
+#ifndef _GTK
+	  if (alphabet == 'G' && size > 8 && (size < 16 || size == 24))
+	    TtPatchedFont[j] = TRUE;
+#endif /* _GTK */
 	  TtFontFrames[i] = 0;
 	}
     }
@@ -1233,11 +1266,11 @@ CHAR_T*             name;
 		UseBitStreamFamily = FALSE;
 	  }
      }
-#  ifdef _WINDOWS
+#ifdef _WINDOWS
    DOT_PER_INCHE = GetDeviceCaps(hDC, LOGPIXELSY);
-#  else  /* !_WINDOWS */
+#else  /* !_WINDOWS */
    DOT_PER_INCHE = 72;
-#  endif /* _WINDOWS */
+#endif /* _WINDOWS */
 
 
    /* Is there any predefined size for menu fonts ? */
@@ -1246,7 +1279,7 @@ CHAR_T*             name;
       usscanf (value, TEXT("%d"), &MenuSize);
    f3 = MenuSize + 2;
 
-#  ifndef _WINDOWS
+#ifndef _WINDOWS
    fontpath = TtaGetEnvString ("THOTFONT");
    if (fontpath)
      {
@@ -1276,17 +1309,21 @@ CHAR_T*             name;
 #ifdef SYSV
 		memcpy (dirlist, currentlist, ncurrent * sizeof (char*));
 
-#else
+#else /* SYSV */
 		bcopy (currentlist, dirlist, ncurrent * sizeof (char*));
 
-#endif
+#endif /* SYSV */
 	     dirlist[ncurrent] = FONT_PATH;
 	     XSetFontPath (TtDisplay, dirlist, ndir);
 	     TtaFreeMemory ( dirlist);
 	  }
 	TtaFreeMemory ( currentlist);
      }
-#  endif /* _WINDOWS */
+#ifndef _GTK
+   for (i = 0; i < MAX_FONT; i++)
+     TtPatchedFont[i] = FALSE;
+#endif /* _GTK */
+#endif /* _WINDOWS */
 
    /* Initialize the Thot Lib standards fonts */
    FontDialogue = IFontDialogue = LargeFontDialogue = NULL;
@@ -1296,8 +1333,7 @@ CHAR_T*             name;
 
    /* Initialize the font table */
    for (i = 0; i < MAX_FONT; i++)
-      TtFonts[i] = NULL;
-
+     TtFonts[i] = NULL;
    /* load first five predefined fonts */
    FontDialogue = ThotLoadFont (alphabet, 't', 0, MenuSize, UnPoint, 0);
    if (FontDialogue == NULL)
@@ -1368,22 +1404,23 @@ int                 frame;
 
 		  /* Shall we free this family ? */
 		  if (j == MAX_FONT)
-#                   ifdef _WINDOWS
-            /* if (TtDisplay)
-               SelectObject (TtDisplay, (HFONT)0);
-		    if (!DeleteObject (TtFonts[i]->FiFont))
-		      WinErrorBox (WIN_Main_Wd);
-            TtFonts[i]->FiFont = (HFONT)0; */
-            DeleteObject (SelectObject (TtDisplay, currentActiveFont));
-		    TtaFreeMemory (TtFonts[i]);
-#                   else  /* _WINDOWS */
+#ifdef _WINDOWS
+		    DeleteObject (SelectObject (TtDisplay, currentActiveFont));
+		  TtaFreeMemory (TtFonts[i]);
+#else  /* _WINDOWS */
 #ifdef _GTK
- 		    gdk_font_unref (TtFonts[i]);
+		  gdk_font_unref (TtFonts[i]);
 #else /* _GTK */
+		  if (TtPatchedFont[i])
+		    {
+		      TtPatchedFont[i] = FALSE;
+		      TtaFreeMemory ( TtFonts[i]);
+		    }
+		  else
 		    XFreeFont (TtDisplay, (XFontStruct *) TtFonts[i]);
 #endif /* _GTK */
-#                   endif /* _WINDOWS */
-		    TtFonts[i] = NULL;
+#endif /* _WINDOWS */
+		  TtFonts[i] = NULL;
 	       }
 	     else
 		TtFontFrames[i] = TtFontFrames[i] & (~mask);
