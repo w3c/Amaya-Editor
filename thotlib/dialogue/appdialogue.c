@@ -61,6 +61,7 @@
 #include "inites_f.h"
 #ifdef _GTK
 #include "gtk-functions.h"
+static    Time   t1;
 #else /* !_GTK */
 #include "input_f.h"
 #include "appli_f.h"
