@@ -5,7 +5,7 @@
 <head>
   <meta http-equiv="Content-Type"
   content="application/xhtml+xml; charset=iso-8859-1" />
-  <title>Graphics and SMIL Animation</title>
+  <title>Gr&aacute;ficos y animaciones SMIL</title>
   <meta name="generator" content="amaya 8.6, see http://www.w3.org/Amaya/" />
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
@@ -17,9 +17,9 @@
     <tr>
       <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
         src="../../images/amaya.gif" /></td>
-      <td><p align="right"><a href="SVGLibrary.html.es" accesskey="p"><img
-        alt="previous" src="../../images/left.gif" /></a> <a
-        href="../SVG.html.es" accesskey="t"><img alt="top"
+      <td><p align="right"><a href="SVGLibrary.html" accesskey="p"><img
+        alt="anterior" src="../../images/left.gif" /></a> <a
+        href="../SVG.html" accesskey="t"><img alt="arriba"
         src="../../images/up.gif" /></a></p>
       </td>
     </tr>
@@ -27,102 +27,62 @@
 </table>
 
 <div id="page_body">
-<h1>Graphics and SMIL Animation</h1>
+<h1>Gr&aacute;ficos y animaciones <acronym title="Synchronized Multimedia Integration Language" xml:lang="en" lang="en">SMIL</acronym></h1>
 
-<p>SVG represents animation as elements interspersed through the main
-structure which represents the organization of the graphics. Animation
-elements appear as children of the graphics elements they animate. To allow
-the author to focus on animation, a timeline view shows all animation
-elements and group them together according to the graphics element they
-animate.</p>
+<p><acronym title="Scalable Vector Graphics" xml:lang="en" lang="en">SVG</acronym> representa las animaciones como elementos entremezclados en la estructura principal que representa la organizaci&oacute;n de los gr&aacute;ficos. Los elementos de la animación aparecen como hijos de los elementos gráficos que animan. Para permitir al autor centrarse en una animaci&oacute;n, la vista de l&iacute;nea temporal le muestra todos los elementos de animaci&oacute;n y agrupados de acuerdo con los elementos gr&aacute;ficos que animan.</p>
 
-<h2>The Timeline View</h2>
+<h2>La vista de l&iacute;nea temporal</h2>
 
-<p>The timeline view displays animations associated with graphics objects.
-Each animated object of the document is represented there, with a graphical
-representation of its animation elements.</p>
+<p>La vista de l&iacute;nea temporal presenta las animaciones asociadas con objetos gr&aacute;ficos. Cada objeto animado del documento se representa all&iacute; con una representaci&oacute;n gr&aacute;fica de sus elementos de animaci&oacute;n.</p>
 
-<p>The following figure shows the three animated objects of a document. Each
-object is represented on the left side of the view by a label with a white
-background and a box next to its label. Clicking the label highlights the
-corresponding element in the formatted view, thus providing the user with the
-context of that element. If the graphics element has a single animation
-element (like element Rectangle in the figure), this animation element is
-displayed as a colored bar. If there are several elements, a single gray bar
-represents the whole animation (Circle, at the bottom of the figure), and a
-'+' button in the label allows the user to get a expanded representation.
-Element MyText, is an example of such an expanded representation where each
-animation element is represented by a colored bar. The button becomes a '-'
-that allows the user to get back to the condensed representation.</p>
+<p>La siguiente figura muestra los tres objetos animados de un documento. Cada objeto se representa en el lado izquierdo de la vista por medio de una etiqueta con un fondo blanco y un cuadro de selecci&oacute;n junto a su etiqueta. Al hacer clic en la etiqueta se destaca el elemento correspondiente en la vista Formateado, lo que le proporciona al usuario el contexto de ese elemento. Si el elemento gr&aacute;fico tiene un &uacute;nico elemento de animaci&oacute;n, como el elemento Rect&aacute;ngulo de la figura, ese elemento de animaci&oacute;n se presenta como una barra coloreada. Si hay varios elementos, una &uacute;nica barra en gris representa a la animaci&oacute;n completa (El C&iacute;rculo en la parte inferior de la figura) y un bot&oacute;n marcado con el signo '+' en la etiqueta permite al usuario obtener una representaci&oacute;n expandida. El elemento MiTexto, es un ejemplo de tal representaci&oacute;n expandida, en la que cada elemento de animaci&oacute;n se representa mediante una barra coloreada. El bot&oacute;n se convierte en un signo '-' lo que permite al usuario obtener de nuevo la representaci&oacute;n condensada.</p>
 
-<p>Position on the timeline depends on when they start and stop acting and
-the color of each bar reflects the type of animation:</p>
+
+<p>La posici&oacute;n en la l&iacute;nea temporal depende de cu&aacute;ndo comienzan y terminan de actuar, y el color de cada barra refleja el tipo de animaci&oacute;n:</p>
 <ul>
-  <li>yellow for <code>animate</code>,</li>
-  <li>red for <code>set</code>,</li>
-  <li>green for <code>animateMotion</code>,</li>
-  <li>dark blue for <code>animateColor</code>,</li>
-  <li>light blue <code>animateTransform</code></li>
+  <li>Amarillo para <code>animar</code>,</li>
+  <li>rojo para <code>configurar</code>,</li>
+  <li>verde para <code>animarMovimiento</code>,</li>
+  <li>azul marino para <code>animarColor</code>,</li>
+  <li>azul claro para <code>animarTransformaci&oacute;n</code>.</li>
 </ul>
 
-<p class="figure"><img alt="Animation view"
+<p class="figure"><img alt="Vista de animaci&oacute;n"
 src="//home/vatton/Amaya/doc/images/timeline_view.png" /></p>
 </div>
 
-<h2>Editing Animations</h2>
+<h2>Editar animaciones</h2>
 
-<p>The timeline view is helpful to quickly perceive the animation of all
-graphics in a document, but it also allows an author to edit animation.
-Existing elements can be modified. Most manipulations are done directly on
-the timeline, such as moving a bar or changing its length. This is
-immediately reflected in other views where the corresponding attributes of
-the animation element are updated (attributes <code>begin</code> and
-<code>dur</code> in that case).</p>
+<p>La vista de l&iacute;nea temporal es &uacute;til para percibir de un vistazo la animaci&oacute;n de todos los gr&aacute;ficos de un documento, pero tambi&eacute;n permite a un autor editar la animaci&oacute;n. Los elementos existentes pueden modificarse. La mayor&iacute;a de las manipulaciones se hacen directamente sobre la l&iacute;nea temporal, por ejemplo, al mover una barra o cambiar su extensi&oacute;n. Esto queda inmediatamente reflejado en otras vistas en las que los correspondientes atributos de los elementos de la animaci&oacute;n se actualizan (en este caso los atributos <code>inicio</code> y
+<code>duraci&oacute;n</code>).</p>
 
-<p>When creating a movement for an existing graphics element:</p>
+<p>Para animar el movimiento de un elemento gr&aacute;fico existente:</p>
 <ul>
-  <li>The user starts by selecting the start time of the animation
-    <p>Click Ctrl + Left mouse button on the red timeline slider and move it
-    to the right start position</p>
+  <li>El usuario comienza por seleccionar el momento de inicio de la animaci&oacute;n 
+    <p>Haciendo clic en <abbr title="tecla control">Ctrl</abbr> + bot&oacute;n izquierdo del rat&oacute;n sobre la barra de desplazamiento roja y movi&eacute;ndola hacia la derecha de la posici&oacute;n de inicio.</p>
   </li>
-  <li>Then he'she selects the element of interest in the formatted view
-    <p>If the element should have an ID which will be used as a label,</p>
+  <li>Entonces selecciona el elemento que le interesa en la vista Formateado 
+    <p>Si el elemento tiene un ID &eacute;ste se usar&aacute; como etiqueta,</p>
   </li>
-  <li>Then he/she clicks on the top left <img alt="anim_motion"
-    src="../../../amaya/anim_motion_sh_db.png" /> button in the timeline view
-    <p>This creates a new animation element in that view.</p>
+  <li>Entonces hace clic sobre el bot&oacute;n superior izquierdo <img alt="animar_movimiento"
+    src="../../../amaya/anim_motion_sh_db.png" /> en la vista de l&iacute;nea temporal
+    <p>Esto crea un nuevo elemento de animaci&oacute;n en esa vista.</p>
   </li>
-  <li>The user then points at the starting position and at the ending
-    position of the movement in the formatted view
-    <p>Click Ctrl + Left mouse button on the displayed <img alt="cross"
-    src="../../../amaya/timeline_cross.gif" /> icon in the formatted
-    view.Doing so, he/she can control the key positions of the animated
-    element in the context of the other graphics elements. In fact, the user
-    draws the motion path it as if he/she would draw the shape of any curve
-    belonging to the document.</p>
+  <li>Entonces el usuario apunta la posici&oacute;n de inicio y de culminaci&oacute;n del movimiento en la vista de formato
+    <p>Hace clic en la tecla <abbr title="control">Ctrl</abbr> + bot&oacute;n izquierdo del rat&oacute;n en el icono <img alt="cross"
+    src="../../../amaya/timeline_cross.gif" /> que se presenta en la vista Formateado. Haciendo esto, tiene control sobre las posiciones clave del elemento animado en el contexto de los otors elementos gr&aacute;ficos. De hecho el usuario traza el recorrido del movimiento como si estuviera dibujando la forma de cualquier curva perteneciente al documento.</p>
   </li>
-  <li>Finally, going back to the timeline view, he/she can move and/or resize
-    the new bar to adjust the timing</li>
+  <li>Finalmente, volviendo a la vista de l&iacute;nea temporal, puede mover y/o redimensionar la nueva barra para ajustar el tiempo.</li>
 </ul>
 
-<p>Manipulating timing in the timeline view is more comfortable, as this
-allows the user to better understand the synchronization of a particular
-element with the other animated elements. The user can also modify the key
-positions in the main view, just by moving points with the mouse. But the
-other views are still there, and some parameters may be adjusted in the
-structure view by editing attributes, as well as in the source code if
-necessary.</p>
+<p>Mainpular el tiempo en la vista de l&iacute;nea temporal es m&aacute;s c&oacute;modo, ya que permite al usuario comprender mejor la sincronizaci&oacute;n de un elemento en particular con los otros elementos animados. El usuario puede tambi&eacute;n modificar las posiciones clave en la vista principal, tan s&oacute;lo moviendo los puntos con el rat&oacute;n. Pero las otras vistas siguen estando ah&iacute;, y algunos par&aacute;metros pueden ajustarse en la vista de estructura editando los atributos, as&iacute; como tambi&eacute;n en la vista del c&oacute;digo fuente si fuera necesario.</p>
 
-<p>When creating a a color change for an existing graphics element, the user
-starts by selecting the element of interest in the main view, he/she then
-clicks on the top left <img alt="anim_color"
-src="../../../amaya/anim_color_sh_db.png" /> button.</p>
+<p>Para crear un cambio de color de un elemento gr&aacute;fico existente, el usuario comienza seleccionando el elemento que le interesa en la vista principal, y hace clic en el bot&oacute;n superior izquierdo <img alt="animar_color"
+src="../../../amaya/anim_color_sh_db.png" />.</p>
 
-<p>The user can manipulate a bar representing an animation in the same way
-he/she manipulates a rectangle in the document. Obviously some constraints
-are put in the timeline view. For instance colored bars can move only
-horizontally along the time axis and their height can not be changed
-individually. Those constraints represent the semantics of the timeline
-graphic language.</p>
+<p>El usuario puede manipular una barra que representa una animaci&oacute;n, de la misma manera que manipula un rect&aacute;ngulo en un documento. Obviamente hay algunas limitaciones en la vista de l&iacute;nea temporal. Por ejemplo, las barras coloreadas pueden moverse s&oacute;lo horizontalmente a lo largo de el eje de tiempo y no puede cambiarse su altura individualmente. Estas limitaciones representan la sem&aacute;ntica del lenguaje gr&aacute;fico de la l&iacute;nea temporal.</p>
+
+
 </body>
 </html>
+
