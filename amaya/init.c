@@ -986,15 +986,16 @@ View                view;
 }
 
 /*----------------------------------------------------------------------
-   InitDocView prepares the main view of a new document.           
+   InitDocView prepares the main view of a new document.
+   logFile is TRUE if the new view is created to display a log file
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static Document     InitDocView (Document doc, char *pathname)
+static Document     InitDocView (Document doc, char *pathname, boolean logFile)
 #else
-static Document     InitDocView (doc, pathname)
+static Document     InitDocView (doc, pathname, logFile)
 Document            doc;
 char               *pathname;
-
+boolean             logFile;
 #endif
 {
    char               *tempname;
@@ -1020,7 +1021,7 @@ char               *pathname;
 	if (altView != 0)
 	   if (TtaIsViewOpened (doc, altView))
 	     {
-		TtaCloseView (doc, altView);
+	       TtaCloseView (doc, altView);
 	     }
         /* close the Structure view if it is open */
 	structView = TtaGetViewFromName (doc, "Structure_view");
@@ -1096,7 +1097,10 @@ char               *pathname;
 	   view of other documents */
 	x += (((int) doc) - 1) * 5;
 	y += (((int) doc) - 1) * 5;
-	mainView = TtaOpenMainView (doc, x, y, w, h);
+	if (logFile)
+	  mainView = TtaOpenMainView (doc, x, y, w, 60);
+	else
+	  mainView = TtaOpenMainView (doc, x, y, w, h);
 	if (mainView == 0)
 	  {
 	     TtaCloseDocument (doc);
@@ -1337,7 +1341,7 @@ boolean		    history;
 			     DocumentMeta[doc]->form_data,
 			     DocumentMeta[doc]->method);
 	  /* free the previous document */
-	  newdoc = InitDocView (doc, pathname);
+	  newdoc = InitDocView (doc, pathname, FALSE);
 	}
       else
 	newdoc = doc;
@@ -1411,8 +1415,7 @@ boolean		    history;
 
       tempdir = TtaGetMemory (MAX_LENGTH);
       TtaExtractName (tempdocument, tempdir, documentname);
-      StartParser (newdoc, tempdocument, documentname, tempdir, pathname,
-		       PlainText);
+      StartParser (newdoc, tempdocument, documentname, tempdir, pathname, PlainText);
       TtaFreeMemory (tempdir);
       if (HTMLErrorsFound)
          TtaSetItemOn (newdoc, 1, Special, BShowLogFile);
@@ -1427,6 +1430,49 @@ boolean		    history;
   return (newdoc);
 }
 
+
+/*----------------------------------------------------------------------
+   SetFormReadWrite
+   Set ReadWrite access to input elements
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void	SetFormReadWrite (Element el, Document doc)
+#else
+static void	SetFormReadWrite (el, doc)
+Element         el;
+Document        doc;
+#endif
+{
+   ElementType         elType;
+   Element             child, next;
+
+   while (el != NULL)
+     {
+       /* look at all elements within this form */
+       elType = TtaGetElementType (el);
+       child = TtaGetFirstChild (el);
+       next = el;
+       TtaNextSibling (&next);
+       switch (elType.ElTypeNum)
+	 {
+	 case HTML_EL_Input:
+	 case HTML_EL_Text_Input:
+	 case HTML_EL_Password_Input:
+	 case HTML_EL_File_Input:
+	 case HTML_EL_Text_Area:	/* it's a Text_Area */
+	   TtaSetAccessRight (child, ReadWrite, doc);
+	   child = NULL;
+	   break;
+	 default:
+	   break;
+	 }
+       if (child != NULL)
+	 SetFormReadWrite (child, doc);
+       el = next;
+     }
+}
+
+
 /*----------------------------------------------------------------------
    SetHTMLReadOnly
    Set the whole document in ReadOnly mode except input elements
@@ -1439,7 +1485,7 @@ Document        doc;
 #endif
 {
    ElementType         elType;
-   Element             el, elForm, child, next;
+   Element             el, elForm;
 
   TtaSetDocumentAccessMode (doc, 0);
   el = TtaGetMainRoot (doc);
@@ -1450,31 +1496,8 @@ Document        doc;
     {
       /* there is a form */
       el = TtaGetFirstChild (elForm);
-      while (el != NULL)
-	{
-	  /* look at all elements within this form */
-	  elType = TtaGetElementType (el);
-	  child = TtaGetFirstChild (el);
-	  next = el;
-	  TtaNextSibling (&next);
-	  switch (elType.ElTypeNum)
-	    {
-	    case HTML_EL_Input:
-	    case HTML_EL_Text_Input:
-	    case HTML_EL_Password_Input:
-	    case HTML_EL_File_Input:
-	    case HTML_EL_Text_Area:	/* it's a Text_Area */
-	      TtaSetAccessRight (child, ReadWrite, doc);
-	      child = NULL;
-	      break;
-	    default:
-	      break;
-	    }
-	  if (child != NULL)
-	    el = child;
-	  else
-	    el = next;
-	}
+      if (el != NULL)
+	SetFormReadWrite (el, doc);
       elForm = TtaSearchTypedElement (elType, SearchForward, elForm);
     }
 }
@@ -1572,7 +1595,7 @@ View                view;
    int		       distance;
    RELOAD_context     *ctx;
 
-   if (DocumentURLs[(int) document] == NULL)
+   if (DocumentURLs[document] == NULL)
       /* the document has not been loaded yet */
       return;
 
@@ -1606,7 +1629,7 @@ View                view;
    position = RelativePosition (document, &distance);
 
    W3Loading = document;	/* this document is currently in load */
-   newdoc = InitDocView (document, pathname);
+   newdoc = InitDocView (document, pathname, FALSE);
 
 #if defined(AMAYA_JAVA) || defined(AMAYA_ILU)
    /* Check against concurrent loading on the same frame */
@@ -2353,35 +2376,44 @@ void               *ctx_cbf;
 	   /* In case of initial document, open the view before loading */
 	   if (doc == 0)
 	     {
-	       newdoc = InitDocView (doc, pathname);
+	       newdoc = InitDocView (doc, pathname, CE_event == CE_LOG);
 	       if (newdoc == 0)
 		 /* cannot display the new document */
 		 ok = FALSE;
-	       else if (CE_event == CE_HELP && DocumentTypes[newdoc] != docHelp)
+	       else if (CE_event == CE_HELP || CE_event == CE_LOG)
 		 {
 		   DocumentTypes[newdoc] = docHelp;
 		   /* help document has to be in read-only mode */
-		   TtcSwitchCommands (newdoc, 1);
-		   TtaSetToggleItem (newdoc, 1, Views, TShowTextZone, FALSE);
-		   TtcSwitchButtonBar (newdoc, 1);
-		   TtaSetToggleItem (newdoc, 1, Views, TShowButtonbar, FALSE);
+		   TtcSwitchCommands (newdoc, 1); /* no command filed */
+		   TtcSwitchButtonBar (newdoc, 1); /* no button bar */
+
+		   TtaSetItemOff (newdoc, 1, File, BNew);
+		   TtaSetItemOff (newdoc, 1, File, BOpenDoc);
+		   TtaSetItemOff (newdoc, 1, File, BOpenInNewWindow);
+		   TtaSetItemOff (newdoc, 1, File, BSave);
 		   TtaSetItemOff (newdoc, 1, Edit_, BCut);
 		   TtaSetItemOff (newdoc, 1, Edit_, BPaste);
 		   TtaSetItemOff (newdoc, 1, Edit_, BClear);
 		   TtaSetItemOff (newdoc, 1, Edit_, BSpellCheck);
 		   TtaSetItemOff (newdoc, 1, Edit_, BTransform);
+		   if (CE_event == CE_HELP)
+		     {
+		       TtaSetToggleItem (newdoc, 1, Views, TShowTextZone, FALSE);
+		       TtaSetToggleItem (newdoc, 1, Views, TShowButtonbar, FALSE);
+		     }
+		   else
+		     {
+		       TtaSetItemOff (newdoc, 1, File, BReload);
+		       /* invalid the menu Views */
+		       TtaSetMenuOff (newdoc, 1, Views);
+		     }
 		   TtaSetMenuOff (newdoc, 1, Types);
 		   TtaSetMenuOff (newdoc, 1, Links);
 		   TtaSetMenuOff (newdoc, 1, Style);
 		   TtaSetMenuOff (newdoc, 1, Special);
 		   TtaSetMenuOff (newdoc, 1, Attributes_);
 		   TtaSetMenuOff (newdoc, 1, Help_);
-		   TtaSetItemOff (newdoc, 1, File, BNew);
-		   
-		   TtaSetItemOff (newdoc, 1, File, BOpenDoc);
-		   TtaSetItemOff (newdoc, 1, File, BOpenInNewWindow);
-		   TtaSetItemOff (newdoc, 1, File, BReload);
-		   TtaSetItemOff (newdoc, 1, File, BSave);
+
 		 }
 	       else
 		 /* it's a simple HTML document */
@@ -3078,7 +3110,7 @@ char     *docname;
 
   W3Loading = doc;
   BackupDocument = doc;
-  newdoc = InitDocView (doc, docname);
+  newdoc = InitDocView (doc, docname, FALSE);
   if (newdoc != 0)
     {
       /* load the saved file */
@@ -3597,18 +3629,15 @@ int         index;
   char   *s;
   
   localname[0] = EOS;
-  if (index == SHOWLOGFILE) 
-     sprintf (localname, "%s%c%d%cHTML.ERR", TempFileDirectory, DIR_SEP, doc, DIR_SEP);
-  else {
-       s = (char *) TtaGetEnvString ("THOTDIR");
-       if (s != NULL)
-          sprintf (localname, "%s%cdoc%camaya%c%s", s, DIR_SEP, DIR_SEP, DIR_SEP, Manual[index]);
-  } 
+  s = (char *) TtaGetEnvString ("THOTDIR");
+  if (s != NULL)
+    sprintf (localname, "%s%cdoc%camaya%c%s", s, DIR_SEP, DIR_SEP, DIR_SEP, Manual[index]);
 
-  if (!TtaFileExist (localname)) {
-     strcpy (localname, AMAYA_PAGE_DOC);
-     strcat (localname, Manual[index]);
-  }
+  if (!TtaFileExist (localname))
+    {
+      strcpy (localname, AMAYA_PAGE_DOC);
+      strcat (localname, Manual[index]);
+    }
   document = GetHTMLDocument (localname, NULL, 0, 0, CE_HELP, FALSE, NULL, NULL);
   InitDocHistory (document);
 }
@@ -3863,15 +3892,20 @@ void HelpConfigure (document, view)
   DisplayHelp (document, CONFIGURE);
 }
 
+/*----------------------------------------------------------------------
+ -----------------------------------------------------------------------*/
 #ifdef __STDC__
-void HelpParseErrors (Document document, View view)
+void HelpParseErrors (Document doc, View view)
 #else  /* __STDC__ */
-void HelpParseErrors (document, view)
-Document document; 
+void HelpParseErrors (doc, view)
+Document doc; 
 View     view;
 #endif /* __STDC__ */
 {
-  DisplayHelp (document, SHOWLOGFILE);
+  char    localname[MAX_LENGTH];
+
+  sprintf (localname, "%s%c%d%cHTML.ERR", TempFileDirectory, DIR_SEP, doc, DIR_SEP);
+  doc = GetHTMLDocument (localname, NULL, 0, 0, CE_LOG, FALSE, NULL, NULL);
 }
 
 

@@ -807,6 +807,10 @@ View                view;
    int                 firstChar, i;
    boolean             displayTableForm;
 
+   if (!TtaGetDocumentAccessMode (document))
+     /* the document is in ReadOnly mode */
+     return;
+
    elType.ElSSchema = TtaGetDocumentSSchema (document);
    if (strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)
      {

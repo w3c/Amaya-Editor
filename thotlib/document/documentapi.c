@@ -1212,19 +1212,36 @@ int                 accessMode;
 #endif /* __STDC__ */
 
 {
+  PtrDocument      pDoc;
+
    UserErrorCode = 0;
    /* verifies the parameter document */
    if (document < 1 || document > MAX_DOCUMENTS)
 	TtaError (ERR_invalid_document_parameter);
-   else if (LoadedDocument[document - 1] == NULL)
-	TtaError (ERR_invalid_document_parameter);
    else
-      /* parameter document is correct */
      {
-	LoadedDocument[document - 1]->DocReadOnly = (accessMode == 0);
+       pDoc = LoadedDocument[document - 1];
+       if (pDoc == NULL)
+	 TtaError (ERR_invalid_document_parameter);
+       else
+	 /* parameter document is correct */
+	 {
+	   if (accessMode == 0)
+	     {
+	       pDoc->DocReadOnly = TRUE;
+	       if (pDoc->DocRootElement != NULL)
+		 pDoc->DocRootElement->ElAccess = AccessReadOnly;
+	     }
+	   else
+	     {
+	       pDoc->DocReadOnly = FALSE;
+	       if (pDoc->DocRootElement != NULL)
+		 pDoc->DocRootElement->ElAccess = AccessReadWrite;
+	     }
 #ifndef NODISPLAY
-	SetAccessMode (LoadedDocument[document - 1], accessMode);
+	   SetAccessMode (LoadedDocument[document - 1], accessMode);
 #endif
+	 }
      }
 }
 

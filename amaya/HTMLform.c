@@ -950,19 +950,25 @@ Element             element;
      {
 	attrType.AttrTypeNum = HTML_ATTR_Script_URL;
 	attr = TtaGetAttribute (elForm, attrType);
-	length = TtaGetTextAttributeLength (attr);
-	if (length) {
-	  action = TtaGetMemory (length + 1);
-	  TtaGiveTextAttributeValue (attr, action, &length);
-	}
+	if (attr != NULL)
+	  {
+	    length = TtaGetTextAttributeLength (attr);
+	    if (length)
+	      {
+		action = TtaGetMemory (length + 1);
+		TtaGiveTextAttributeValue (attr, action, &length);
+	      }
+	  }
+	else
+	  action = NULL;
 
 	/* get the  METHOD attribute value */
 	attrType.AttrTypeNum = HTML_ATTR_METHOD;
 	attr = TtaGetAttribute (elForm, attrType);
 	if (attr == NULL)
-	   method = HTML_ATTR_METHOD_VAL_Get_;
+	  method = HTML_ATTR_METHOD_VAL_Get_;
 	else
-	   method = TtaGetAttributeValue (attr);
+	  method = TtaGetAttributeValue (attr);
      }
    else
      method = HTML_ATTR_METHOD_VAL_Get_;
@@ -971,12 +977,15 @@ Element             element;
    elForm  = TtaGetFirstChild(elForm);
 
    /* process the form */
-   if (button_type == HTML_EL_Submit_Input) {
-     if (action) {
-       ParseForm (doc, ancestor, elForm, button_type);   
-       DoSubmit (doc, method, action);
+   if (button_type == HTML_EL_Submit_Input)
+     {
+       if (action)
+	 {
+	   ParseForm (doc, ancestor, elForm, button_type);   
+	   DoSubmit (doc, method, action);
+	 }
      }
-   } else
+   else
      ParseForm (doc, ancestor, elForm, button_type);   
    
    if (action)

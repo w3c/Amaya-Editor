@@ -1617,7 +1617,6 @@ Document            document;
    on: 0 disables structure checking. All other values activates
    structure checking.
    document: the document for which structure checking is changed.
-
    ---------------------------------------------------------------------- */
 #ifdef __STDC__
 void                TtaSetStructureChecking (boolean on, Document document)
@@ -1625,17 +1624,12 @@ void                TtaSetStructureChecking (boolean on, Document document)
 void                TtaSetStructureChecking (on, document)
 boolean             on;
 Document            document;
-
 #endif /* __STDC__ */
 {
    if (document < 1 || document > MAX_DOCUMENTS)
-     {
        TtaError (ERR_invalid_document_parameter);
-     }
    else if (LoadedDocument[document - 1] == NULL)
-     {
        TtaError (ERR_invalid_document_parameter);
-     }
    else
      {
        if (on == 0)
@@ -1656,30 +1650,21 @@ Document            document;
 
    Parameter:
    document: the document for which structure checking is asked.
-
    ---------------------------------------------------------------------- */
-
 #ifdef __STDC__
 int                 TtaGetStructureChecking (Document document)
-
 #else  /* __STDC__ */
 int                 TtaGetStructureChecking (document)
 Document            document;
-
 #endif /* __STDC__ */
-
 {
   int	ret;
 
   ret = 0;
   if (document < 1 || document > MAX_DOCUMENTS)
-    {
       TtaError (ERR_invalid_document_parameter);
-    }
   else if (LoadedDocument[document - 1] == NULL)
-    {
       TtaError (ERR_invalid_document_parameter);
-    }
   else
     ret = !(boolean)(~COMPLETE_CHECK_MASK | (LoadedDocument[document - 1]->DocCheckingMode));
   return ret;
@@ -1693,18 +1678,13 @@ Document            document;
 
    Parameter:
    strict: if TRUE, the presence of all mandatory elements is checked.
-
    ---------------------------------------------------------------------- */
-
 #ifdef __STDC__
 void                TtaSetCheckingMode (boolean strict)
-
 #else  /* __STDC__ */
 void                TtaSetCheckingMode (strict)
 boolean             strict;
-
 #endif /* __STDC__ */
-
 {
    FullStructureChecking = strict;
 }
@@ -1720,18 +1700,13 @@ boolean             strict;
 
    Return value:
    the root element of the main abstract tree.
-
    ---------------------------------------------------------------------- */
-
 #ifdef __STDC__
 Element             TtaGetMainRoot (Document document)
-
 #else  /* __STDC__ */
 Element             TtaGetMainRoot (document)
 Document            document;
-
 #endif /* __STDC__ */
-
 {
    PtrElement          element;
 
@@ -1739,18 +1714,12 @@ Document            document;
    /* Checks the parameter document */
    element = NULL;
    if (document < 1 || document > MAX_DOCUMENTS)
-     {
 	TtaError (ERR_invalid_document_parameter);
-     }
    else if (LoadedDocument[document - 1] == NULL)
-     {
 	TtaError (ERR_invalid_document_parameter);
-     }
    else
       /* Parameter document is ok */
-     {
 	element = LoadedDocument[document - 1]->DocRootElement;
-     }
    return ((Element) element);
 }
 

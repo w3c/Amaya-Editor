@@ -220,14 +220,13 @@ PtrElement          pEl;
 #endif /* __STDC__ */
 
 {
-register Proc Rofunction;
+  Proc              Rofunction;
+  boolean           isRO;
 
    if ((Rofunction = ThotLocalActions[T_checkReadOnlyElement]) == NULL)
      return FALSE; /* No function => Element not protected! */
    else
      {
-boolean isRO;
-
        (*Rofunction) (pEl, &isRO);
        return isRO;
      }

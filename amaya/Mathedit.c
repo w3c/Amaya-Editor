@@ -816,6 +816,10 @@ char               *data;
     case MenuMaths:
       /* the user has selected an entry in the math menu */
       doc = TtaGetSelectedDocument ();
+      if (!TtaGetDocumentAccessMode (doc))
+	/* the document is in ReadOnly mode */
+	return;
+
       if ((int) data == 13)
 	/* the user asks for the Symbol palette */
 	{
