@@ -35,10 +35,11 @@
 #include "compil.var"
 #undef EXPORT
 #define EXPORT extern
+#include "appevents.var"
 
-EXPORT int         LineNum;
+EXPORT int          LineNum;
 EXPORT PtrEventsSet pAppli;
-EXPORT PtrSSchema pSSchema;
+EXPORT PtrSSchema   pSSchema;
 extern int          IncNbIdent;
 
 int                 LineNum;	/* compteur de lignes dans le fichier source */
@@ -924,7 +925,7 @@ indLine               wi;
 		 {
 		    /* action associee a un evenement */
 		    eventAction = strdup (name);
-		    InsertAction (eventAction, 0);
+		    TteAddAction (eventAction, 0);
 		 }
 	       break;
 
@@ -1494,12 +1495,10 @@ char               *fname;
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
 void                main (int argc, char **argv)
-
 #else  /* __STDC__ */
 void                main (argc, argv)
 int                 argc;
 char              **argv;
-
 #endif /* __STDC__ */
 {
    FILE               *filedesc;
@@ -1518,6 +1517,8 @@ char              **argv;
    /* identificateur */
 
    TtaInitializeAppRegistry (argv[0]);
+   /* no external action declared at that time */
+   ActionList = NULL;
    APP = TtaGetMessageTable ("appdialogue", MSG_MAX_APP);
    COMPIL = TtaGetMessageTable ("compildialogue", COMP_MSG_MAX);
    error = False;

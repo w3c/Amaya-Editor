@@ -10,7 +10,10 @@
 #include "thotfile.h"
 #include "thotdir.h"
 
-extern PtrAction    externalActions;
+#undef EXPORT
+#define EXPORT extern
+#include "appevents.var"
+
 extern PtrEventsSet pAppli;
 extern PtrSSchema pSSchema;
 extern char        *RegisteredAppEvents[];
@@ -385,7 +388,7 @@ char               *fname;
 	  }
      }
 
-   action = externalActions;
+   action = ActionList;
    fprintf (AppFile, "#ifdef __STDC__\n");
    while (action != NULL)
      {
@@ -511,7 +514,7 @@ char               *fname;
      }
 
    /* Seconde boucle */
-   action = externalActions;
+   action = ActionList;
    fprintf (AppFile, "#else /* __STDC__*/\n");
    while (action != NULL)
      {
@@ -599,10 +602,10 @@ char               *fname;
    fprintf (AppFile, "void %sActionListInit ()\n", fname);
    fprintf (AppFile, "{\n");
 
-   action = externalActions;
+   action = ActionList;
    while (action != NULL)
      {
-	fprintf (AppFile, "  InsertAction (\"%s\", (Proc)%s);\n",
+	fprintf (AppFile, "  TteAddAction (\"%s\", (Proc)%s);\n",
 		 action->ActName,
 		 action->ActName);
 	action = action->ActNext;
