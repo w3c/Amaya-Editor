@@ -177,7 +177,6 @@ Border: border
 cellspacing: cellspacing
 cellpadding: cellpadding
 Position: align
-Row_align: align
 Row_valign: valign
 colspan_: colspan
 rowspan_: rowspan
@@ -215,9 +214,6 @@ Post_: post
 No_: no
 Position_top: top
 Position_bottom: bottom
-Row_left: left
-Row_center: center
-Row_right: right
 Row_top: top
 Row_middle: middle
 Row_bottom: bottom

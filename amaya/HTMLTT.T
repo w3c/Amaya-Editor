@@ -440,7 +440,6 @@ RULES
 	If Last
   	   Create '\12';
 	Remove;
-
 	END;
 
  Block_Quote: BEGIN
@@ -550,16 +549,35 @@ RULES
 	If Error_type = BadPosition
 	   Remove;
 
- Comment\240: BEGIN
+ Comment\240:
 	Remove;
-	END;
 
- Comment_line: BEGIN
+ Comment_line:
 	Remove;
-	END;
 
 ATTRIBUTES
 
+ profile: BEGIN
+	END;
+
+ content_type: BEGIN
+	END;
+
+ script_language: BEGIN
+	END;
+
+ script_src: BEGIN
+	END;
+
+ defer: BEGIN
+	END;
+
+ event: BEGIN
+	END;
+
+ for_: BEGIN
+	END;
+ 
  http_equiv: BEGIN
 	Remove;
 	END;
@@ -569,6 +587,25 @@ ATTRIBUTES
 	END;
 
  meta_content: BEGIN
+	Remove;
+	END;
+
+ scheme: BEGIN
+	END;
+
+ charset: BEGIN
+	Remove;
+	END;
+
+ hreflang: BEGIN
+	Remove;
+	END;
+
+ media: BEGIN
+	Remove;
+	END;
+
+ target_: BEGIN
 	Remove;
 	END;
 
@@ -702,10 +739,16 @@ ATTRIBUTES
  Width__: BEGIN
 	END;
 
+ declare: BEGIN
+	END;
+
  codebase: BEGIN
 	END;
 
  code:	BEGIN
+	END;
+
+ object: BEGIN
 	END;
 
  applet_name: BEGIN
@@ -715,6 +758,12 @@ ATTRIBUTES
 	END;
 
  Param_value: BEGIN
+	END;
+
+ valuetype: BEGIN
+	END;
+
+ Param_type: BEGIN
 	END;
 
  classid: BEGIN
@@ -732,8 +781,22 @@ ATTRIBUTES
  codetype: BEGIN
 	END;
 
+ archive: BEGIN
+	END;
+
+ standby: BEGIN
+	END;
+
  Title : BEGIN
 	NoTranslation;
+	END;
+
+ accesskey: BEGIN
+	Remove;
+	END;
+
+ tabindex: BEGIN
+	Remove;
 	END;
 
  Class: BEGIN
@@ -744,6 +807,60 @@ ATTRIBUTES
  Style\240: BEGIN
 	END;
 
+ onclick: BEGIN
+        END;
+ 
+ ondblclick: BEGIN
+        END;
+ 
+ onmousedown: BEGIN
+        END;
+ 
+ onmouseup: BEGIN
+        END;
+ 
+ onmouseover: BEGIN
+        END;
+ 
+ onmousemove: BEGIN
+        END;
+ 
+ onmouseout: BEGIN
+        END;
+ 
+ onkeypress: BEGIN
+        END;
+ 
+ onkeydown: BEGIN
+        END;
+ 
+ onkeyup: BEGIN
+        END;
+ 
+ onload: BEGIN
+        END;
+ 
+ onunload: BEGIN
+        END;
+ 
+ onfocus: BEGIN
+        END;
+ 
+ onblur: BEGIN
+        END;
+
+ onsubmit: BEGIN
+	END;
+
+ onreset: BEGIN
+	END;
+ 
+ onselect: BEGIN
+	END;
+ 
+ onchange: BEGIN
+	END;
+ 
  COMPACT: BEGIN
 	END;
 
@@ -784,6 +901,9 @@ ATTRIBUTES
  ENCTYPE: BEGIN
 	END;
 
+ accept_charset: BEGIN
+	END;
+
  NAME: BEGIN
 	END;
 
@@ -809,6 +929,18 @@ ATTRIBUTES
  Checked = Yes_: BEGIN
 	END;
 
+ disabled: BEGIN
+	END;
+
+ readonly: BEGIN
+	END;
+
+ label:	BEGIN
+	END;
+
+ accept: BEGIN
+	END;
+
  Area_Size: BEGIN
 	END;
 
@@ -816,11 +948,13 @@ ATTRIBUTES
 	END;
 
  SRC:	BEGIN
-	Remove;
 	END;
 
  ALT:	BEGIN
 	Create ALT;
+	END;
+
+ longdesc: BEGIN
 	END;
 
  Alignment = Top_:
@@ -884,6 +1018,39 @@ ATTRIBUTES
 	END;
 #endif
 
+ summary: BEGIN
+	END;
+
+ frame = void: BEGIN
+	END;
+ frame = above: BEGIN
+	END;
+ frame = below: BEGIN
+	END;
+ frame = hsides: BEGIN
+	END;
+ frame = lhs: BEGIN
+	END;
+ frame = rhs: BEGIN
+	END;
+ frame = vsides: BEGIN
+	END;
+ frame = box: BEGIN
+	END;
+ frame = border: BEGIN
+	END;
+ 
+ rules_ = none: BEGIN
+	END;
+ rules_ = groups: BEGIN
+	END;
+ rules_ = rows: BEGIN
+	END;
+ rules_ = cols: BEGIN
+	END;
+ rules_ = all: BEGIN
+	END;
+
  Border: BEGIN
 	END;
 
@@ -894,22 +1061,22 @@ ATTRIBUTES
 	 BEGIN
 	END;
 
+ datapagesize: BEGIN
+	END;
+
  Position = Position_top:
 		BEGIN
 		END;
  Position = Position_bottom:
 		BEGIN
 		END;
+ Position = Position_left:
+		BEGIN
+		END;
+ Position = Position_right:
+		BEGIN
+		END;
 
- Row_align = Row_left:
-		BEGIN
-		END;
- Row_align = Row_center:
-		BEGIN
-		END;
- Row_align = Row_right:
-		BEGIN
-		END;
  Row_valign = Row_top:
 		BEGIN
 		END;
@@ -919,11 +1086,26 @@ ATTRIBUTES
  Row_valign = Row_bottom:
 		BEGIN
 		END;
+ Row_valign = Row_baseline:
+		BEGIN
+		END;
 
- colspan_: BEGIN
+ abbr: BEGIN
+	END;
+
+ axis: BEGIN
+	END;
+
+ headers: BEGIN
+	END;
+
+ scope: BEGIN
 	END;
 
  rowspan_: BEGIN
+	END;
+
+ colspan_: BEGIN
 	END;
 
  Cell_align = Cell_left:
@@ -935,6 +1117,18 @@ ATTRIBUTES
  Cell_align = Cell_right:
 		BEGIN
 		END;
+ Cell_align = Cell_justify:
+		BEGIN
+		END;
+ Cell_align = Cell_char:
+		BEGIN
+		END;
+
+ char:	BEGIN
+	END;
+
+ charoff: BEGIN
+	END;
 
  Cell_valign = Cell_top:
 		BEGIN
@@ -943,6 +1137,9 @@ ATTRIBUTES
 		BEGIN
 		END;
  Cell_valign = Cell_bottom:
+		BEGIN
+		END;
+ Cell_valign = Cell_baseline:
 		BEGIN
 		END;
 

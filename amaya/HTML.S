@@ -5,27 +5,27 @@ DEFPRES HTMLP;
 
 ATTR
 			{ coreattrs }
-   ID = TEXT;			{ id }
-   Class = TEXT;		{ class }
-   PseudoClass = TEXT;
-   Style\240 = TEXT;		{ style }
-   Title = TEXT;		{ title }
+   ID = Text;			{ id }
+   Class = Text;		{ class }
+   PseudoClass = Text;
+   Style\240 = Text;		{ style }
+   Title = Text;		{ title }
 			{ i18n }
    dir = ltr, rtl;		{ dir }
 			{ events }
-   onclick = TEXT;		{ onclick }
-   ondblclick = TEXT;		{ ondblclick }
-   onmousedown = TEXT;		{ onmousedown }
-   onmouseup = TEXT;		{ onmouseup }
-   onmouseover = TEXT;		{ onmouseover }
-   onmousemove = TEXT;		{ onmousemove }
-   onmouseout = TEXT;		{ onmouseout }
-   onkeypress = TEXT;		{ onkeypress }
-   onkeydown = TEXT;		{ onkeydown }
-   onkeyup = TEXT;		{ onkeyup }
+   onclick = Text;		{ onclick }
+   ondblclick = Text;		{ ondblclick }
+   onmousedown = Text;		{ onmousedown }
+   onmouseup = Text;		{ onmouseup }
+   onmouseover = Text;		{ onmouseover }
+   onmousemove = Text;		{ onmousemove }
+   onmouseout = Text;		{ onmouseout }
+   onkeypress = Text;		{ onkeypress }
+   onkeydown = Text;		{ onkeydown }
+   onkeyup = Text;		{ onkeyup }
 
-   Invalid_attribute = TEXT;
-   Ghost_restruct = TEXT;
+   Invalid_attribute = Text;
+   Ghost_restruct = Text;
 
 CONST
 
@@ -36,66 +36,89 @@ CONST
 
 STRUCT
 
-  HTML (ATTR SectionNumbering = Yes_; ShowAreas = Yes_) =	{ HTML }
+  HTML								{ HTML }
+     (ATTR SectionNumbering = Yes_; ShowAreas = Yes_) =
 	BEGIN
 	HEAD;
 	BODY;
 	END + (Invalid_element, Comment\240);
 
 #ifdef FRAMES
-  FRAMESET (ATTR RowHeight = TEXT; ColWidth = TEXT) =		{ FRAMESET }
-	       { rows		   cols }
+  FRAMESET							{ FRAMESET }
+     (ATTR RowHeight = Text; ColWidth = Text) =
+	 { rows              cols }
 	AGGREGATE
 	Frames = LIST [1, *] OF (CASE OF FRAMESET; FRAME; END);
       ?	NOFRAMES = BODY;					{ NOFRAMES }
 	END;
 
-  FRAME (ATTR FrameName = TEXT; FrameSrc = TEXT) =		{ FRAME }
+  FRAME								{ FRAME }
+     (ATTR FrameName = Text; FrameSrc = Text) =
 	    { name		src }
 	CONSTANT C_Empty;
 #endif
 
   BODY								{ BODY }
-	(ATTR background_ = Text; BackgroundColor = Text; TextColor = Text;
-	   { background          bgcolor                 text }
-	     LinkColor = Text; VisitedLinkColor = Text; ActiveLinkColor = Text)
-           { link              vlink                    alink }
-	= LIST OF (Element) + (INS, DEL);
+     (ATTR onload = Text; onunload = Text;
+	 { onload         onunload }
+	   background_ = Text; BackgroundColor = Text;
+	 { background          bgcolor }
+	   TextColor = Text; LinkColor = Text;
+         { text              link }
+	   VisitedLinkColor = Text; ActiveLinkColor = Text) =
+         { vlink                    alink }
+	LIST OF (Element) + (INS, DEL);
 
   Invalid_element (ATTR Error_type = UnknownTag, BadPosition) = TEXT;
   Comment\240 = LIST OF (Comment_line = TEXT);
 
-  HEAD = AGGREGATE						{ HEAD }
-	  Document_URL = TEXT;
-	  TITLE = TEXT;						{ TITLE }
-	? ISINDEX (ATTR Prompt = TEXT) = CONSTANT C_Empty;	{ ISINDEX }
-		      { prompt }
-	? BASE;							{ BASE }
-	? Styles						{ STYLE }
-		(ATTR Notation = TEXT) = TEXT;
-		    { type }
-	? Scripts = LIST OF (SCRIPT);
-	? Metas = LIST OF (META);
-	? Links = LIST OF (LINK);
+  HEAD								{ HEAD }
+     (ATTR profile = Text) =
+	AGGREGATE
+	Document_URL = TEXT;
+	TITLE = TEXT;						{ TITLE }
+      ? ISINDEX (ATTR Prompt = Text) = CONSTANT C_Empty;	{ ISINDEX }
+		    { prompt }
+      ? BASE;							{ BASE }
+      ? Styles							{ STYLE }
+		(ATTR Notation = Text; media = Text) = TEXT;
+		    { type             media }
+      ? Scripts = LIST OF (SCRIPT);
+      ? Metas = LIST OF (META);
+      ? Links = LIST OF (LINK);
 	END;
 
-  SCRIPT = TEXT;						{ SCRIPT }
+  SCRIPT							{ SCRIPT }
+     (ATTR charset = Text; !content_type = Text;
+	 { charset          type }
+	   script_language = Text; script_src = Text;
+	 { language                src }
+	   defer = Yes_; event = Text; for_ = Text) =
+	 { defer         event         for }
+	TEXT;
 
   META								{ META }
-	(ATTR http_equiv = Text; !meta_name = Text; !meta_content = Text)
-	    { http-equic          name               content }
-	 = CONSTANT C_Empty;
+     (ATTR http_equiv = Text;
+	 { http-equiv }
+	   !meta_name = Text; !meta_content = Text;
+         {  name               content }
+	   scheme = Text) =
+	 { scheme }
+	CONSTANT C_Empty;
 
-  LINK (ATTR HREF_ = Text;					{ LINK }
-	   { href }
-	     Link_type = TEXT;
-	   { type }
-	     REL = Text; REV = Text)
-	   { rel         rev }
-	 = CONSTANT C_Empty;
+  LINK								{ LINK }
+     (ATTR charset; HREF_ = Text; hreflang = Text;
+	 { charset  href          hreflang }
+	   Link_type = Text; REL = Text; REV = Text;
+	 { type              rel         rev }
+	   media; target_ = Text) =
+	 { media  target }
+	CONSTANT C_Empty;
 
-  BASE (ATTR !HREF_) = CONSTANT C_Empty;			{ BASE }
-	    { href }
+  BASE								{ BASE }
+     (ATTR !HREF_; target_) =
+	  { href   target }
+	CONSTANT C_Empty;
 
   Element = CASE OF						{ block }
 	Paragraph;						{ P }
@@ -106,43 +129,37 @@ STRUCT
 	Division;						{ DIV }
 	Center;							{ CENTER }
 	NOSCRIPT = LIST OF (Element);				{ NOSCRIPT }
-	Block_Quote (ATTR cite = TEXT;				{ BLOCKQUOTE }
-			{ cite }
-	        InternalLink = Reference(Any); ExternalLink = Yes_) =
-		LIST OF (Element);
+	Block_Quote;						{ BLOCKQUOTE }
 	Form;							{ FORM }
 	ISINDEX;						{ ISINDEX }
-	Horizontal_Rule (ATTR Align = left_, center_, right_;	{ HR }
-			    { align   left   center   right }
-			NoShade = NoShade_; Size_ = Integer;
-		      { noshade             size }
-			Width__ = Text;
-		      { width }
-			IntWidthPercent = Integer;
-			IntWidthPxl = Integer) =
-		CONSTANT C_Empty;
+	Horizontal_Rule;					{ HR }
 	Table;							{ TABLE }
 	Address = LIST OF (AddressContent);			{ ADDRESS }
 	PICTURE							{ IMG }
-		(ATTR Alignment = Top_, Middle_, Bottom_, Left_, Right_;
-		{     align       top   middle   bottom   left   right }
-		  Height_ = Integer; Width__; IntWidthPercent; IntWidthPxl;
+	    (ATTR SRC = Text; ALT = Text; longdesc = Text;
+		{ src         alt         longdesc }
+		  Height_ = Integer; Width__ = Text;
 		{ height             width }
-		  hspace = Integer; vspace = Integer; Img_border = Integer;
-		{ hspace            vspace            border }
-		  ISMAP = Yes_; USEMAP = Text; SRC = Text; ALT = Text);
-		{ ismap        usemap         src         alt }
+		  IntWidthPercent = Integer; IntWidthPxl = Integer;
+		  USEMAP = Text; ISMAP = Yes_;
+		{ usemap         ismap }
+		  Alignment = Top_, Middle_, Bottom_, Left_, Right_;
+		{ align       top   middle   bottom   left   right }
+		  Img_border = Integer;
+		{ border }
+		  hspace = Integer; vspace = Integer);
+		{ hspace            vspace }
 	Object;							{ OBJECT }
 	Applet;							{ APPLET }
 #ifdef MATHML
-	MathDisp (ATTR mode = display, inline_math) = MathML;
+	MathDisp (ATTR mode = display, inline_math) = MathML;	{ MATH }
 #endif
 #ifdef GRAPHML
         XMLGraphics (ATTR Height_; Width__;
 			IntWidthPercent;
 			IntWidthPxl)
-	 = GraphML
-	   with Height_ ?= 200, Width__ ?= '100%', IntWidthPercent ?= 100;
+	 = GraphML with Height_ ?= 200, Width__ ?= '100%',
+			IntWidthPercent ?= 100;
 #endif
 	MAP;							{ MAP }
 	END;
@@ -150,6 +167,20 @@ STRUCT
 #ifdef GRAPHML
 	HTMLfragment = LIST OF (Element);
 #endif
+
+  Block_Quote							{ BLOCKQUOTE }
+     (ATTR cite = Text;
+	 { cite }
+	   InternalLink = Reference(Any); ExternalLink = Yes_) =
+	LIST OF (Element);
+
+  Horizontal_Rule						{ HR }
+     (ATTR Align = left_, center_, right_;
+	 { align   left   center   right }
+	   NoShade = NoShade_; Size_ = Integer; Width__;
+	 { noshade             size             width }
+	   IntWidthPercent; IntWidthPxl) =
+	CONSTANT C_Empty;
 
   AddressContent = CASE OF
 	Basic_Elem;
@@ -160,8 +191,10 @@ STRUCT
   Basic_Set = LIST OF (Basic_Elem);
 
   Paragraph							{ P }
-	(ATTR TextAlign = left_, center_, right_, justify_) = Basic_Set;
-	    { align	  left   center   right   justify }
+     (ATTR TextAlign = left_, center_, right_, justify_) =
+	 { align       left   center   right   justify }
+	Basic_Set;
+
   Pseudo_paragraph = Basic_Set;
 
   Heading = CASE OF						{ heading }
@@ -174,54 +207,70 @@ STRUCT
 	H6 (ATTR TextAlign) = Basic_Set;			{ H6 }
 	END;
 
-  Preformatted (ATTR Width__; IntWidthPercent; IntWidthPxl)	{ PRE }
-		   { width }
-		= Basic_Set
+  Preformatted							{ PRE }
+     (ATTR Width__; IntWidthPercent; IntWidthPxl) =
+	 { width }
+	Basic_Set
 	     - (PICTURE, Object, Applet,
 		Big_text, Small_text, Subscript, Superscript,
 		Font_, BaseFont);
 
-  { A }
-  Anchor (ATTR HREF_; NAME = Text; REL; REV;
-	     { href   name         rel  rev }
-	       InternalLink; ExternalLink)
-	= Basic_Set;
+  Anchor							{ A }
+     (ATTR charset; Link_type; NAME = Text;
+	 { charset  type       name }
+	   HREF_; hreflang; target_;
+	 { href   hreflang  target}
+	   REL; REV; accesskey = Text;
+	 { rel  rev  accesskey }
+	   shape = rectangle, circle, polygon, default_;
+	 { shape   rect       cirecle poly     default }
+	   coords = Text; tabindex = Integer;
+	 { coords         tabindex }
+	   onfocus = Text; onblur = Text;
+	 { onfocus         onfocus }
+	   InternalLink; ExternalLink) =
+	Basic_Set;
 
-  Basic_Elem = CASE OF					{ special }
+  Basic_Elem = CASE OF						{ special }
         TEXT;
-	Font;
-	Phrase;
+	Font;							{ fontstyle }
+	Phrase;							{ phrase }
 	Anchor;							{ A }
 	PICTURE;						{ IMG }
 	Applet;							{ APPLET }
 	Object;							{ OBJECT }
 	Font_;							{ FONT }
 	BaseFont;						{ BASEFONT }
-	BR (ATTR Clear = Left_, Right_, All_, None) =		{ BR }
-	       { clear   left   right   all   none }
-		 CONSTANT C_BR;
+	BR;							{ BR }
 	SCRIPT;							{ SCRIPT }
 	MAP;							{ MAP }
-	Quotation (ATTR cite; InternalLink; ExternalLink) =	{ Q }
-		      { cite }
-		 Basic_Set;
-
+	Quotation;						{ Q }
 	Subscript = Basic_Set;					{ SUB }
 	Superscript = Basic_Set;				{ SUP }
 	Span = Basic_Set;					{ SPAN }
 	BDO = Basic_Set;					{ BDO }
 	IFRAME;							{ IFRAME }
 #ifdef MATHML
-	Math (ATTR mode) = MathML;
+	Math (ATTR mode) = MathML;				{ MATH }
 #endif
 	END;
 
   BaseFont							{ BASEFONT }
-	(ATTR BaseFontSize = Integer; BaseFontColor = Text;
-	    { size                    color }
-	      BaseFontFace = Text) =
-            { face }
-		CONSTANT C_Empty;
+     (ATTR BaseFontSize = Integer; BaseFontColor = Text;
+	 { size                    color }
+	   BaseFontFace = Text) =
+         { face }
+	CONSTANT C_Empty;
+
+  BR								{ BR }
+     (ATTR Clear = Left_, Right_, All_, None) =
+	 { clear   left   right   all   none }
+	CONSTANT C_BR;
+
+  Quotation							{ Q }
+     (ATTR cite; InternalLink; ExternalLink) =
+	 { cite }
+	Basic_Set;
 
   Font = CASE OF		{ fontstyle }
 	Teletype_text = Basic_Set;	{ TT }
@@ -246,45 +295,64 @@ STRUCT
         ACRONYM = Basic_Set;		{ ACRONYM }
 	END;
 
-  Font_ (ATTR Font_size = Text; color = Text; face = Text;	{ FONT }
-	    { size              color	      face }
-	      IntSizeIncr = Integer; IntSizeDecr = Integer;
-	      IntSizeRel = Integer) = Basic_Set;
+  Font_								{ FONT }
+     (ATTR Font_size = Text; color = Text; face = Text;
+	 { size              color	      face }
+	   IntSizeIncr = Integer; IntSizeDecr = Integer;
+	   IntSizeRel = Integer) =
+	Basic_Set;
 
-  Applet (ATTR codebase = TEXT; !code = TEXT;			{ APPLET }
-	     { codebase          code }
-	       alt = TEXT; applet_name = TEXT;
-	     { alt         name }
-	       Width__; Height_;
-	     { width    height }
-	       IntWidthPercent; IntWidthPxl;
-	       Alignment; hspace; vspace) =
-	     { align      hspace  vspace }
+  Applet							{ APPLET }
+     (ATTR codebase = Text; archive = Text; code = Text;
+	 { codebase         archive         code }
+	   object = Text; alt = Text; applet_name = Text;
+	 { object         alt         name }
+	   Width__; Height_; IntWidthPercent; IntWidthPxl;
+	 { width    height }
+	   Alignment; hspace; vspace) =
+	 { align      hspace  vspace }
 	LIST OF (Applet_Content = CASE OF
 				  Parameter;			{ PARAM }
 				  Basic_Set;
 				  END);
-  Parameter (ATTR Param_name = TEXT; Param_value = TEXT) =	{ PARAM }
-		{ name               value }
+  Parameter							{ PARAM }
+     (ATTR Param_name = Text; Param_value = Text;
+	 { name               value }
+	   valuetype = data_, ref, object_;
+	 { valuetype   data   ref  object }
+	   Param_type = Text) =
+	 { type }
 	CONSTANT C_Empty;
 
   Object							{ OBJECT }
-	(ATTR classid = TEXT; codebase; data = TEXT; Object_type = TEXT;
-	    { classid         codebase  data         type }
-	  codetype = TEXT; Alignment; !Height_; !Width__; IntWidthPercent;
-        { codetype         align       height    width }
-	  IntWidthPxl; hspace; vspace;
-        {              hspace  vspace }
-	  Img_border; USEMAP; ALT) =
-	{ border      usemap  alt }
+     (ATTR declare = Yes_; classid = Text; codebase;
+	 { declare         classid         codebase }
+	   data = Text; Object_type = Text;
+	 { data         type }
+	   codetype = Text; archive; standby = Text;
+         { codetype         archive  standby }
+	   !Height_; !Width__; IntWidthPercent; IntWidthPxl; 
+	 {  height    width }
+	   USEMAP; NAME; tabindex; Alignment; Img_border;
+	 { usemap  name  tabindex  align      border }
+	   hspace; vspace) =
+         { hspace  vspace }
 	BEGIN
 	PICTURE;
 	Object_Content = LIST OF (CASE OF Element; Parameter; END);
 						 { PARAM }
-	END with Height_ ?= 400, Width__ ?= '400', IntWidthPxl ?= 400;
+	END with Height_ ?= 400, Width__ ?= '400',
+		 IntWidthPxl ?= 400;
 
-  INS (ATTR cite; datetime = TEXT) = Basic_Set;			{ INS }
-  DEL (ATTR cite; datetime) = Basic_Set;			{ DEL }
+  INS								{ INS }
+     (ATTR cite; datetime = Text) =
+	 { cite  datetime }
+	Basic_Set;
+
+  DEL								{ DEL }
+     (ATTR cite; datetime) =
+	 { cite  datetime }
+	Basic_Set;
 
   Block = CASE OF						{ block }
 	Paragraph;						{ P }
@@ -294,65 +362,87 @@ STRUCT
 	Block_Quote;						{ BLOCKQUOTE }
 	Preformatted;						{ PRE }
 	Division;						{ DIV }
-	Center = LIST OF (Element);				{ CENTER }
+	Center;							{ CENTER }
 	Form;
 	END;
 
-  Division (ATTR TextAlign) = LIST OF (Element);		{ DIV }
+  Division							{ DIV }
+     (ATTR TextAlign) =
+	 { align }
+	LIST OF (Element);
+
+  Center =							{ CENTER }
+	LIST OF (Element);
 
   List_ = CASE OF						{ list }
-	Unnumbered_List			 			{ UL }
-		(ATTR BulletStyle = disc, circle, square;
-		    { type          disc  circle  square }
-		      COMPACT = Yes_) =
-		    { compact }
-			LIST OF (List_Item);
-	Numbered_List						{ OL }
-		(ATTR NumberStyle = Arabic_, LowerAlpha, UpperAlpha,
-		    { type          1        a           A }
-				    LowerRoman, UpperRoman;
-				  { i           I }
-		      Start = Integer; COMPACT) =
-		    { start            compact }
-			LIST OF (List_Item) with Start ?= 1;
-	Directory (ATTR COMPACT) =				{ DIR }
-			LIST OF (List_Item);
-	Menu (ATTR COMPACT) =					{ MENU }
-			LIST OF (List_Item);
-	Definition_List (ATTR COMPACT) =			{ DL }
-			LIST OF (Definition_Item);
+	Unnumbered_List;		 			{ UL }
+	Numbered_List;						{ OL }
+	Directory;						{ DIR }
+	Menu;							{ MENU }
+	Definition_List;					{ DL }
 	END;
 
-  List_Item (ATTR ItemStyle = disc, circle, square,		{ LI }
-		{ type        disc  circle  square }
-		  Arabic_, LowerAlpha, UpperAlpha, LowerRoman, UpperRoman;
-		{ 1        a           A           i           I }
-		  IntItemStyle = disc, circle, square,
-		  Arabic_, LowerAlpha, UpperAlpha, LowerRoman, UpperRoman;
-		  ItemValue = Integer) =
-		{ value }
+  Unnumbered_List			 			{ UL }
+     (ATTR BulletStyle = disc, circle, square;
+	 { type          disc  circle  square }
+	   COMPACT = Yes_) =
+	 { compact }
+	LIST OF (List_Item);
+
+  Numbered_List							{ OL }
+     (ATTR NumberStyle = Arabic_, LowerAlpha, UpperAlpha,
+	 { type          1        a           A }
+	   LowerRoman, UpperRoman;
+	 { i           I }
+	   Start = Integer; COMPACT) =
+	 { start            compact }
+	LIST OF (List_Item) with Start ?= 1;
+
+  Directory							{ DIR }
+     (ATTR COMPACT) =
+	 { compact }
+	LIST OF (List_Item);
+
+  Menu								{ MENU }
+     (ATTR COMPACT) =
+	 { compact }
+	LIST OF (List_Item);
+
+  Definition_List						{ DL }
+     (ATTR COMPACT) =
+	 { compact }
+	LIST OF (Definition_Item);
+
+  List_Item							{ LI }
+     (ATTR ItemStyle = disc, circle, square, Arabic_,
+	 { type        disc  circle  square  1 }
+	   LowerAlpha, UpperAlpha, LowerRoman, UpperRoman;
+	 { a           A           i           I }
+	   IntItemStyle = disc, circle, square, Arabic_,
+	   LowerAlpha, UpperAlpha, LowerRoman, UpperRoman;
+	   ItemValue = Integer) =
+	 { value }
 	LIST OF (Block);
 
   Definition_Item = BEGIN
 	Term_List = LIST OF (Term = Basic_Set);			{ DT }
-	? Definition = LIST OF (Block);				{ DD }
+      ? Definition = LIST OF (Block);				{ DD }
 	END;
 
-  Form (ATTR !Script_URL = Text; METHOD = Get_, Post_;		{ FORM }
-	    { action             method }
-	     ENCTYPE = Text) =
-	   { enctype }
+  Form								{ FORM }
+     (ATTR !Script_URL = Text; METHOD = Get_, Post_;
+	 {  action             method }
+	   ENCTYPE = Text; onsubmit = Text; onreset = Text;
+	 { enctype         onsubmit         onreset }
+	   target_; accept_charset = Text) =
+	 { target   accept-charset }
 	LIST OF (Form_Element) + (Input) with METHOD ?= Get_;
 
   Form_Element = CASE OF
 	Paragraph;						{ P }
 	Pseudo_paragraph;
 	Option_Menu;						{ SELECT }
-	Text_Area 						{ TEXTAREA }
-		(ATTR !NAME; Rows = Integer; Columns = Integer;
-		     { name  rows            cols }
-		       Default_Value = Text) =
-		Text_With_Frame with Rows ?= 4, Columns ?= 20;
+	Text_Area; 						{ TEXTAREA }
 	Heading;						{ heading }
 	List_;							{ list + DL }
 	Horizontal_Rule;					{ HR }
@@ -364,43 +454,109 @@ STRUCT
 	ISINDEX;						{ ISINDEX }
 	END;
 
-  Option_Menu (ATTR !NAME; Multiple = Yes_; MenuSize = Integer) =    { SELECT }
-		   { name  multiple         size }
+  Option_Menu   						{ SELECT }
+     (ATTR !NAME; MenuSize = Integer; Multiple = Yes_;
+	 {  name  size                multiple }
+	    disabled = Yes_; tabindex; onfocus; onblur;
+	  { disabled         tabindex  onfocus  onblur}
+	    onchange = Text) =
+	  { onchange }
 	LIST OF (Option) - (Input);
-  Option							     { OPTION }
-	(ATTR Selected = Yes_; DefaultSelected = Yes_; !Value_ = Text) =
-	    { selected                                  value }
+
+  Option							{ OPTION }
+     (ATTR Selected = Yes_; DefaultSelected = Yes_;
+	 { selected }
+	   disabled; label = Text; !Value_ = Text) =
+         { disabled  label          value }
 	TEXT;
 
+  Text_Area							{ TEXTAREA }
+     (ATTR !NAME; Rows = Integer; Columns = Integer;
+	 {  name  rows            cols }
+	   disabled; readonly = Yes_; tabindex; accesskey;
+	 { disabled  readonly         tabindex  accesskey  }
+	   onfocus; onblur; onselect = Text; onchange;
+	 { onfocus  onblur  onselect         onchange }
+	   Default_Value = Text) =
+	Text_With_Frame with Rows ?= 4, Columns ?= 20;
+
   Input = CASE OF					{ formctrl }
+	Text_Input					{ INPUT / TEXT }
+	   (ATTR !NAME; Value_; disabled; readonly;
+	        { name  value   disabled  readonly }
+		  Area_Size = Integer; MaxLength = Integer;
+		{ size                 maxlength }
+		  tabindex; accesskey;
+		{ tabindex  accesskey }
+		  onfocus; onblur; onselect; onchange) =
+		{ onfocus  onblur  onselect  onchange }
+		Text_With_Frame with Area_Size ?= 20;
+	Password_Input					{ INPUT / PASSWORD }
+	   (ATTR !NAME; disabled; readonly;
+		{ name  disabled  readonly }
+		  Area_Size; MaxLength;
+		{ size       maxlength }
+		  tabindex; accesskey; onfocus; onblur;
+		{ tabindex  accesskey  onfocus  onblur }
+		  onselect; onchange) =
+		{ onselect  onchange }
+		Text_With_Frame;
 	Checkbox_Input					{ INPUT / CHECKBOX }
-		(ATTR !NAME; { name }
-		      Checked = Yes_, No_; DefaultChecked = Yes_, No_;
-		    { checked }
-		      Value_ { value } ) =
+	   (ATTR !NAME; Value_; Checked = Yes_, No_;
+		{ name   value   checked }
+		  disabled; readonly;
+		{ disabled  readonly }
+		  tabindex; accesskey; onfocus; onblur;
+		{ tabindex  accesskey  onfocus  onblur }
+		  DefaultChecked = Yes_, No_) =
 		CONSTANT C_Empty with Checked ?= No_;
 	Radio_Input					{ INPUT / RADIO }
-		(ATTR !NAME; Checked; DefaultChecked; !Value_) =
-		     { name  checked                   value }
-		CONSTANT C_Empty with Checked ?= No_, NAME ?= 'radio';
-	Text_Input					{ INPUT / TEXT }
-		(ATTR !NAME; Area_Size = Integer;
-		     { name  size }
-		      MaxLength = Integer; Value_) =
-		     { maxlength           value }
-		Text_With_Frame with Area_Size ?= 20;
-	Hidden_Input					{ INPUT / HIDDEN }
-		(ATTR !NAME; Value_) = CONSTANT C_Empty;
-	Password_Input					{ INPUT / PASSWORD }
-		(ATTR !NAME; Area_Size; MaxLength) = Text_With_Frame;
-	File_Input					{ INPUT / FILE }
-		(ATTR !NAME) = CONSTANT C_Empty;
-	Reset_Input (ATTR NAME; Value_) = BEGIN		{ INPUT / RESET }
-		Frame;
-		END with NAME ?= 'Reset', Value_ ?= 'Reset';
-	Submit_Input (ATTR NAME; Value_) = BEGIN	{ INPUT / SUBMIT }
+	   (ATTR !NAME; !Value_; Checked; disabled;
+		{ name  value    checked   disabled }
+		  readonly; tabindex; accesskey;
+		{ readonly  tabindex  accesskey }
+		  onfocus; onblur;
+		{ onfocus  onblur }
+		  DefaultChecked) =
+		CONSTANT C_Empty with Checked ?= No_,
+				      NAME ?= 'radio';
+	Submit_Input					{ INPUT / SUBMIT }
+	   (ATTR  NAME; Value_; disabled; readonly;
+		{ name  value   disabled; readonly }
+		  tabindex; accesskey;
+		{ tabindex  accesskey }
+		  onfocus; onblur) =
+		{ onfocus  onblur }
+		BEGIN
 		Frame;
 		END with Value_ ?= 'Submit';
+	Reset_Input					{ INPUT / RESET }
+	   (ATTR  NAME; Value_; disabled; readonly;
+		{ name  value   disabled  readonly }
+		  tabindex; accesskey;
+		{ tabindex  accesskey }
+		  onfocus; onblur) =
+		{ onfocus  onblur }
+		BEGIN
+		Frame;
+		END with NAME ?= 'Reset',
+			 Value_ ?= 'Reset';
+	File_Input					{ INPUT / FILE }
+	   (ATTR !NAME; disabled; readonly;
+		{ name  disabled  readonly }
+		  tabindex; accesskey;
+		{ tabindex  accesskey }
+		  onfocus; onblur; accept = Text) =
+		{ onfocus  onblur }
+		CONSTANT C_Empty;
+	Hidden_Input					{ INPUT / HIDDEN }
+	   (ATTR !NAME; Value_; disabled; readonly;
+		{ name  value   disabled  readonly }
+		  tabindex; accesskey;
+		{ tabindex  accesskey }
+		  onfocus; onblur) =
+		{ onfocus  onblur }
+		CONSTANT C_Empty;
 	Option_Menu;					{ SELECT }
 	Text_Area;					{ TEXTAREA }
 {****
@@ -414,73 +570,116 @@ STRUCT
 	Frame = CONSTANT C_Empty;
 	END;
 
-  Table (ATTR Border = Integer;					{ TABLE }
-	    { border }
-	      Align; BackgroundColor;
-	    { align  bgcolor }
-	      Width__; IntWidthPxl; IntWidthPercent;
-	    { width }
-	      cellspacing = Integer; cellpadding = Integer) =
-	    { cellspacing	     cellpadding }
+  Table_row							{ TR }
+     (ATTR Cell_align = Cell_left, Cell_center, Cell_right,
+	 { align        left       center       right }
+			Cell_justify, Cell_char;
+	 {		justify       char }
+	   char = Text; charoff = Text;
+	 { char	        charoff }
+	   Row_valign = Row_top, Row_middle, Row_bottom, Row_baseline;
+	 { valign       top      middle      bottom      baseline }
+	   BackgroundColor) =
+	 { bgcolor }
+	LIST OF (Table_cell);
+
+  Table								{ TABLE }
+     (ATTR summary = Text; Width__; Border = Integer;
+	 { summary         width    border }
+	   frame = void, above, below, hsides, lhs, rhs,
+	 { frame   void  above  below  hsides  lhs  rhs  }
+		   vsides, box, border;
+	 {	   vsides  box  border }
+	   rules_ = none, groups, rows, cols, all;
+	 { rules    none  groups  rows  cols  all }
+	   cellspacing = Integer; cellpadding = Integer;
+	 { cellspacing	          cellpadding }
+	   Align; BackgroundColor;
+	 { align  bgcolor }
+	   datapagesize = Text; IntWidthPxl; IntWidthPercent) =
+	 { datapagesize }
 	BEGIN
-	CAPTION							{ CAPTION }
-	      (ATTR Position = Position_top, Position_bottom) =
-		  { align      top           bottom }
-		Basic_Set;
+	CAPTION	;						{ CAPTION }
 	Table_head = LIST OF (Column_head);
-	? thead = LIST OF (Table_row);				{ THEAD }
-	Table_body = LIST OF (
-		tbody = LIST OF (Table_row));			{ TBODY }
-	? tfoot = LIST OF (Table_row);				{ TFOOT }
+      ? thead;							{ THEAD }
+	Table_body = LIST OF (tbody);
+      ? tfoot;							{ TFOOT }
 	Table_foot = CONSTANT C_Foot;
 	END;
+
+  CAPTION							{ CAPTION }
+     (ATTR Position = Position_top, Position_bottom,
+	 { align      top           bottom }
+	   Position_left, Position_right) =
+	 { left           right }
+	Basic_Set;
+
   Column_head (ATTR IntWidthPercent; IntWidthPxl) =
 	CONSTANT C_Head;
-  Table_row							{ TR }
-	(ATTR Row_align = Row_left, Row_center, Row_right;
-	    { align       left      center      right }
-	      Row_valign = Row_top, Row_middle, Row_bottom, Row_baseline;
-	    { valign       top      middle      bottom      baseline }
-	      BackgroundColor) =
-	    { bgcolor }
-	LIST OF (Table_cell);
+
+  thead								{ THEAD }
+     (ATTR Cell_align; char; charoff; Row_valign) =
+	LIST OF (Table_row);
+
+  tbody								 { TBODY }
+     (ATTR Cell_align; char; charoff; Row_valign) =
+	LIST OF (Table_row);
+
+  tfoot								{ TFOOT }
+     (ATTR Cell_align; char; charoff; Row_valign) =
+	LIST OF (Table_row);
+
   Table_cell = CASE OF
-	Data_cell(ATTR Ref_column = REFERENCE(Column_head);	{ TD }
-                 ColExt = REFERENCE(Column_head);
-                 RowExt = REFERENCE(Table_row);
-		 colspan_ = INTEGER;
-		{ colspan }
-                 rowspan_ = INTEGER;
-		{ rowspan }
-                 Cell_align = Cell_left, Cell_center, Cell_right;
-		{ align       left       center       right }
-                 Cell_valign = Cell_top, Cell_middle, Cell_bottom;
-		{ valign       top       middle       bottom }
-		 BackgroundColor;
-		{ bgcolor }
-		 Width__; IntWidthPxl; IntWidthPercent;
-		{ width }
-		 Height_;
-		{ height }
-                 No_wrap = no_wrap) = LIST OF (Element);
-		{ nowrap }
-	Heading_cell						{ TH }
-		(ATTR Ref_column; ColExt; RowExt;
-		 colspan_; rowspan_;
-		 Cell_align; Cell_valign; BackgroundColor;
-		 Width__; IntWidthPxl; IntWidthPercent;
-		 Height_; No_wrap) = LIST OF (Element);
+	Data_cell;						{ TD }
+	Heading_cell;						{ TH }
 	END;
 
-  MAP (ATTR NAME; Ref_IMG = REFERENCE(Any)) = LIST OF (AREA);	{ MAP }
-	  { name }
-  AREA (ATTR shape = rectangle, circle, polygon, default_;	{ AREA }
-	   { shape   rect       cirecle poly     default }
-	coords = Text; HREF_; nohref = Yes_; ALT;
-	{ coords       href   nohref         alt }
-	x_coord = Integer; y_coord = Integer; IntWidthPxl;
-        height\240 = Integer; AreaRef_IMG = REFERENCE(Any)) = GRAPHICS
-	with x_coord ?= 0, y_coord ?= 0, IntWidthPxl ?= 25, height\240 ?= 10;
+  Data_cell							{ TD }
+     (ATTR Ref_column = REFERENCE(Column_head);
+           ColExt = REFERENCE(Column_head);
+           RowExt = REFERENCE(Table_row);
+	   abbr = Text; axis = Text; headers = Text; scope = Text;
+	 { abbr         axis         headers         scope }
+           rowspan_ = INTEGER; colspan_ = INTEGER;
+	 { rowspan             colspan }
+           Cell_align; char; charoff;
+	 { align       char  charoff }
+           Cell_valign = Cell_top, Cell_middle, Cell_bottom, Cell_baseline;
+	 { valign        top       middle       bottom       baseline }
+           No_wrap = no_wrap; BackgroundColor;
+	 { nowrap             bgcolor }
+	   Width__; Height_; IntWidthPxl; IntWidthPercent) =
+	 { width    height }
+	LIST OF (Element);
+
+  Heading_cell							{ TH }
+     (ATTR Ref_column; ColExt; RowExt;
+	   abbr; axis; headers; scope;
+	 { abbr  axis  headers  scope }
+	   rowspan_; colspan_;
+	 { rowspan   colspan }
+	   Cell_align; char; charoff; Cell_valign;
+	 { align       char  charoff  valign }
+	   No_wrap; BackgroundColor;
+	 { nowrap   bgcolor }
+	   Width__; Height_; IntWidthPxl; IntWidthPercent) =
+	 { width    height }
+	LIST OF (Element);
+
+  MAP								{ MAP }
+     (ATTR NAME; Ref_IMG = REFERENCE(Any)) =
+	 { name }
+	LIST OF (AREA);
+
+  AREA								{ AREA }
+     (ATTR shape; coords; HREF_; target_; nohref = Yes_; ALT;
+	 { shape  coords  href   target   nohref         alt }
+	   tabindex; accesskey; onfocus; onblur;
+	 { tabindex  accesskey  onfocus  onblur }
+	   x_coord = Integer; y_coord = Integer; IntWidthPxl;
+           height\240 = Integer; AreaRef_IMG = REFERENCE(Any)) =
+	GRAPHICS with x_coord ?= 0, y_coord ?= 0,
+		      IntWidthPxl ?= 25, height\240 ?= 10;
 
   FRAMESET =							{ FRAMESET }
 	AGGREGATE
@@ -488,14 +687,18 @@ STRUCT
 	NOFRAMES = LIST OF (Element);				{ NOFRAMES }
 	END;
 
-  FRAME = CONSTANT C_Empty;					{ FRAME }
+  FRAME =							{ FRAME }
+	CONSTANT C_Empty;
 
   FrameElem = CASE OF
 	FRAMESET;
 	FRAME;
 	END;
 
-  IFRAME = LIST OF (Element);					{ IFRAME }
+  IFRAME							{ IFRAME }
+     (ATTR longdesc) =
+	 { longdesc }
+	LIST OF (Element);
 
 EXCEPT
 	HTML:           NoMove, NoResize;
@@ -512,13 +715,13 @@ EXCEPT
 	Inserted_Text:	Hidden, NoSelect;
 	Basic_Set:	Hidden, NoSelect;
 	Term_List:	Hidden, NoSelect;
-	Definition_Item: Hidden;
+	Definition_Item:Hidden;
 	Comment_line:	Hidden;
 	GRAPHICS:	NoMove, NoResize;
 	TEXT:		NoMove, NoResize;
 	PICTURE:	MoveResize;
-	Invalid_element: NoCreate;
-	Pseudo_paragraph:	ParagraphBreak, Hidden;
+	Invalid_element:NoCreate;
+	Pseudo_paragraph: ParagraphBreak, Hidden;
 	Paragraph:	ParagraphBreak;
 	H1:		ParagraphBreak;
 	H2:		ParagraphBreak;
@@ -553,7 +756,7 @@ EXCEPT
 	Invalid_attribute: Invisible;
 	PseudoClass:	Invisible;
 	Default_Value:	Invisible;
-	DefaultSelected: Invisible;
+	DefaultSelected:Invisible;
 	DefaultChecked:	Invisible;
 	SectionNumbering:Invisible;
 	ShowAreas:	Invisible;
@@ -575,4 +778,5 @@ EXCEPT
 	rowspan_:	RowSpan;
 	Object_Content: Hidden, NoCreate, NoCut, NoSelect;
 	Ghost_restruct:	Invisible;
+
 END

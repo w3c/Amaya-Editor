@@ -749,6 +749,12 @@ RULES
 
 ATTRIBUTES
 
+ profile: BEGIN
+	Create ' profile="';
+	Create profile;
+	Create DoubleQuote;
+	END;
+
  Langue:
 	IF not HTML
 	    BEGIN
@@ -756,6 +762,40 @@ ATTRIBUTES
 	    Create Langue;
 	    Create DoubleQuote;
 	    END;
+
+ content_type: BEGIN
+	Create ' type="';
+	Create content_type;
+	Create DoubleQuote;
+	END;
+
+ script_language: BEGIN
+	Create ' language="';
+	Create script_language;
+	Create DoubleQuote;
+	END;
+
+ script_src: BEGIN
+	Create ' src="';
+	Create script_src;
+	Create DoubleQuote;
+	END;
+
+ defer: BEGIN
+	Create ' defer';
+	END;
+
+ event: BEGIN
+	Create ' event="';
+	Create event;
+	Create DoubleQuote;
+	END;
+
+ for_: BEGIN
+	Create ' for="';
+	Create for_;
+	Create DoubleQuote;
+	END;
 
  http_equiv: BEGIN
 	Create ' http-equiv="';
@@ -772,6 +812,18 @@ ATTRIBUTES
  meta_content: BEGIN
 	Create ' content="';
 	Create meta_content;
+	Create DoubleQuote;
+	END;
+
+ scheme: BEGIN
+	Create ' scheme="';
+	Create scheme;
+	Create DoubleQuote;
+	END;
+
+ charset: BEGIN
+	Create ' charset="';
+	Create charset;
 	Create DoubleQuote;
 	END;
 
@@ -792,6 +844,27 @@ ATTRIBUTES
 	NoTranslation;
 	Create ' href="';
 	Create HREF_;
+	Create DoubleQuote;
+	END;
+
+ hreflang :
+	BEGIN
+	Create ' hreflang="';
+	Create hreflang;
+	Create DoubleQuote;
+	END;
+
+ media :
+	BEGIN
+	Create ' media="';
+	Create media;
+	Create DoubleQuote;
+	END;
+
+ target_ :
+	BEGIN
+	Create ' target="';
+	Create target_;
 	Create DoubleQuote;
 	END;
 
@@ -934,6 +1007,9 @@ ATTRIBUTES
 	Create DoubleQuote;
 	END;
 
+ declare:
+	Create ' declare';
+
  codebase: BEGIN
 	NoTranslation;
 	Create ' codebase="';
@@ -944,6 +1020,12 @@ ATTRIBUTES
  code:	BEGIN
 	Create ' code="';
 	Create code;
+	Create DoubleQuote;
+	END;
+
+ object: BEGIN
+	Create ' object="';
+	Create object;
 	Create DoubleQuote;
 	END;
 
@@ -962,6 +1044,19 @@ ATTRIBUTES
  Param_value: BEGIN
 	Create ' value="';
 	Create Param_value;
+	Create DoubleQuote;
+	END;
+
+ valuetype = data_:
+	Create ' valuetype="data"';
+ valuetype = ref:
+	Create ' valuetype="ref"';
+ valuetype = object_:
+	Create ' valuetype="object"';
+
+ Param_type: BEGIN
+	Create ' type="';
+	Create Param_type;
 	Create DoubleQuote;
 	END;
 
@@ -995,10 +1090,34 @@ ATTRIBUTES
 	Create DoubleQuote;
 	END;
 
+ archive: BEGIN
+	Create ' archive="';
+	Create archive;
+	Create DoubleQuote;
+	END;
+
+ standby: BEGIN
+	Create ' standby="';
+	Create standby;
+	Create DoubleQuote;
+	END;
+
  Title : BEGIN
 	NoTranslation;
 	Create ' title="';
 	Create Title;
+	Create DoubleQuote;
+	END;
+
+ accesskey: BEGIN
+	Create ' accesskey="';
+	Create accesskey;
+	Create DoubleQuote;
+	END;
+
+ tabindex: BEGIN
+	Create ' tabindex="';
+	Create tabindex;
 	Create DoubleQuote;
 	END;
 
@@ -1088,6 +1207,54 @@ ATTRIBUTES
 	Create DoubleQuote;
 	END;
 
+ onload: BEGIN
+	Create ' onload="';
+	Create onload;
+	Create DoubleQuote;
+	END;
+
+ onunload: BEGIN
+	Create ' onunload="';
+	Create onunload;
+	Create DoubleQuote;
+	END;
+
+ onfocus: BEGIN
+	Create ' onfocus="';
+	Create onfocus;
+	Create DoubleQuote;
+	END;
+
+ onblur: BEGIN
+	Create ' onblur="';
+	Create onblur;
+	Create DoubleQuote;
+	END;
+
+ onsubmit: BEGIN
+	Create ' onsubmit="';
+	Create onsubmit;
+	Create DoubleQuote;
+	END;
+
+ onreset: BEGIN
+	Create ' onreset="';
+	Create onreset;
+	Create DoubleQuote;
+	END;
+
+ onselect: BEGIN
+	Create ' onselect="';
+	Create onselect;
+	Create DoubleQuote;
+	END;
+
+ onchange: BEGIN
+	Create ' onchange="';
+	Create onchange;
+	Create DoubleQuote;
+	END;
+
  BulletStyle = disc :
 	Create ' type="disc"';
  BulletStyle = square :
@@ -1156,6 +1323,12 @@ ATTRIBUTES
 	Create DoubleQuote;
 	END;
 
+ accept_charset: BEGIN
+	Create ' accept-charset="';
+	Create accept_charset;
+	Create DoubleQuote;
+	END;
+
  NAME: BEGIN
 	NoTranslation;
 	Create ' name="';
@@ -1196,6 +1369,24 @@ ATTRIBUTES
  Checked = Yes_:
 	Create ' checked';
 
+ disabled:
+	Create ' disabled';
+
+ readonly:
+	Create ' readonly';
+
+ label: BEGIN
+	Create ' label="';
+	Create label;
+	Create DoubleQuote;
+	END;
+
+ accept: BEGIN
+	Create ' accept="';
+	Create accept;
+	Create DoubleQuote;
+	END;
+
  Area_Size: BEGIN
 	Create ' size="';
 	Create Area_Size;
@@ -1217,6 +1408,12 @@ ATTRIBUTES
  ALT:	BEGIN
 	Create ' alt="';
 	Create ALT;
+	Create DoubleQuote;
+	END;
+
+ longdesc: BEGIN
+	Create ' longdesc="';
+	Create longdesc;
 	Create DoubleQuote;
 	END;
 
@@ -1288,6 +1485,42 @@ ATTRIBUTES
 	Create ' mode="display"';
 #endif
 
+ summary: BEGIN
+	Create ' summary="';
+	Create summary;
+	Create DoubleQuote;
+	END;
+
+ frame = void:
+	Create ' frame="void"';
+ frame = above:
+	Create ' frame="above"';
+ frame = below:
+	Create ' frame="below"';
+ frame = hsides:
+	Create ' frame="hsides"';
+ frame = lhs:
+	Create ' frame="lhs"';
+ frame = rhs:
+	Create ' frame="rhs"';
+ frame = vsides:
+	Create ' frame="vsides"';
+ frame = box:
+	Create ' frame="box"';
+ frame = border:
+	Create ' frame="border"';
+ 
+ rules_ = none:
+	Create ' rules="none"';
+ rules_ = groups:
+	Create ' rules="groups"';
+ rules_ = rows:
+	Create ' rules="rows"';
+ rules_ = cols:
+	Create ' rules="cols"';
+ rules_ = all:
+	Create ' rules="all"';
+
  Border: BEGIN
 	Create ' border="';
 	Create Border;
@@ -1306,27 +1539,51 @@ ATTRIBUTES
 	Create DoubleQuote;
 	END;
 
+ datapagesize: BEGIN
+	Create ' datapagesize="';
+	Create datapagesize;
+	Create DoubleQuote;
+	END;
+
  Position = Position_top:
 	 Create ' align="top"';
  Position = Position_bottom:
 	 Create ' align="bottom"';
-
- Row_align = Row_left:
+ Position = Position_left:
 	 Create ' align="left"';
- Row_align = Row_center:
-	 Create ' align="center"';
- Row_align = Row_right:
+ Position = Position_right:
 	 Create ' align="right"';
+
  Row_valign = Row_top:
 	 Create ' valign="top"';
  Row_valign = Row_middle:
 	 Create ' valign="middle"';
  Row_valign = Row_bottom:
 	 Create ' valign="bottom"';
+ Row_valign = Row_baseline:
+	 Create ' valign="baseline"';
 
- colspan_: BEGIN
-	Create ' colspan="';
-	Create colspan_;
+ abbr: BEGIN
+	Create ' ="abbr';
+	Create abbr;
+	Create DoubleQuote;
+	END;
+
+ axis: BEGIN
+	Create ' ="axis';
+	Create axis;
+	Create DoubleQuote;
+	END;
+
+ headers: BEGIN
+	Create ' ="headers';
+	Create headers;
+	Create DoubleQuote;
+	END;
+
+ scope: BEGIN
+	Create ' ="scope';
+	Create scope;
 	Create DoubleQuote;
 	END;
 
@@ -1336,19 +1593,43 @@ ATTRIBUTES
 	Create DoubleQuote;
 	END;
 
+ colspan_: BEGIN
+	Create ' colspan="';
+	Create colspan_;
+	Create DoubleQuote;
+	END;
+
  Cell_align = Cell_left:
 	Create ' align="left"';
  Cell_align = Cell_center:
 	Create ' align="center"';
  Cell_align = Cell_right:
 	Create ' align="right"';
+ Cell_align = Cell_justify:
+	Create ' align="justify"';
+ Cell_align = Cell_char:
+	Create ' align="char"';
 
+ char: BEGIN
+	Create ' char="';
+	Create char;
+	Create DoubleQuote;
+	END;
+
+ charoff: BEGIN
+	Create ' charoff="';
+	Create charoff;
+	Create DoubleQuote;
+	END;
+ 
  Cell_valign = Cell_top:
 	Create ' valign="top"';
  Cell_valign = Cell_middle:
 	Create ' valign="middle"';
  Cell_valign = Cell_bottom:
 	Create ' valign="bottom"';
+ Cell_valign = Cell_baseline:
+	Create ' valign="baseline"';
 
  No_wrap = no_wrap:
 	Create ' nowrap';

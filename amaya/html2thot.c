@@ -433,6 +433,11 @@ static AttributeMapping HTMLAttributeMappingTable[] =
    /* The first entry MUST be unknown_attr */
    /* The rest of this table MUST be in alphabetical order */
    {"unknown_attr", "", 'A', HTML_ATTR_Invalid_attribute},
+
+   {"ABBR", "", 'A', HTML_ATTR_abbr},
+   {"ACCEPT", "", 'A', HTML_ATTR_accept},
+   {"ACCEPT-CHARSET", "FORM", 'A', HTML_ATTR_accept_charset},
+   {"ACCESSKEY", "", 'A', HTML_ATTR_accesskey},
    {"ACTION", "", 'A', HTML_ATTR_Script_URL},
    {"ALIGN", "APPLET", 'A', HTML_ATTR_Alignment},
    {"ALIGN", "CAPTION", 'A', HTML_ATTR_Position},
@@ -445,21 +450,32 @@ static AttributeMapping HTMLAttributeMappingTable[] =
    {"ALIGN", "H6", 'A', HTML_ATTR_TextAlign},
    {"ALIGN", "HR", 'A', HTML_ATTR_TextAlign},
    {"ALIGN", "IMG", 'A', HTML_ATTR_Alignment},
+   {"ALIGN", "INPUT", 'A', HTML_ATTR_Alignment},
    {"ALIGN", "OBJECT", 'A', HTML_ATTR_Alignment},
    {"ALIGN", "P", 'A', HTML_ATTR_TextAlign},
    {"ALIGN", "TABLE", 'A', HTML_ATTR_Align},
+   {"ALIGN", "TBODY", 'A', HTML_ATTR_Cell_align},
    {"ALIGN", "TD", 'A', HTML_ATTR_Cell_align},
+   {"ALIGN", "TFOOT", 'A', HTML_ATTR_Cell_align},
    {"ALIGN", "TH", 'A', HTML_ATTR_Cell_align},
-   {"ALIGN", "TR", 'A', HTML_ATTR_Row_align},
+   {"ALIGN", "THEAD", 'A', HTML_ATTR_Cell_align},
+   {"ALIGN", "TR", 'A', HTML_ATTR_Cell_align},
    {"ALINK", "", 'A', HTML_ATTR_ActiveLinkColor},
    {"ALT", "", 'A', HTML_ATTR_ALT},
+   {"ARCHIVE", "", 'A', HTML_ATTR_archive},
+   {"AXIS", "", 'A', HTML_ATTR_axis},
+
    {"BACKGROUND", "", 'A', HTML_ATTR_background_},
    {"BGCOLOR", "", 'A', HTML_ATTR_BackgroundColor},
    {"BORDER", "IMG", 'A', HTML_ATTR_Img_border},
    {"BORDER", "OBJECT", 'A', HTML_ATTR_Img_border},
    {"BORDER", "TABLE", 'A', HTML_ATTR_Border},
+
    {"CELLSPACING", "", 'A', HTML_ATTR_cellspacing},
    {"CELLPADDING", "", 'A', HTML_ATTR_cellpadding},
+   {"CHAR", "", 'A', HTML_ATTR_char},
+   {"CHAROFF", "", 'A', HTML_ATTR_charoff},
+   {"CHARSET", "", 'A', HTML_ATTR_charset},
    {"CHECKED", "", 'A', HTML_ATTR_Checked},
    {"CITE", "", 'A', HTML_ATTR_cite},
    {"CLASS", "", 'A', HTML_ATTR_Class},
@@ -475,26 +491,47 @@ static AttributeMapping HTMLAttributeMappingTable[] =
    {"COMPACT", "", 'A', HTML_ATTR_COMPACT},
    {"CONTENT", "", 'A', HTML_ATTR_meta_content},
    {"COORDS", "", 'A', HTML_ATTR_coords},
+
    {"DATA", "", 'A', HTML_ATTR_data},
+   {"DATAPAGESIZE", "TABLE", 'A', HTML_ATTR_datapagesize},
    {"DATETIME", "", 'A', HTML_ATTR_datetime},
+   {"DECLARE", "OBJECT", 'A', HTML_ATTR_declare},
+   {"DEFER", "SCRIPT", 'A', HTML_ATTR_defer},
    {"DIR", "", 'A', HTML_ATTR_dir},
+   {"DISABLED", "", 'A', HTML_ATTR_disabled},
+
    {"ENCTYPE", "", 'A', HTML_ATTR_ENCTYPE},
+   {"EVENT", "SCRIPT", 'A', HTML_ATTR_event},
+
    {"FACE", "BASEFONT", 'A', HTML_ATTR_BaseFontFace},
    {"FACE", "FONT", 'A', HTML_ATTR_face},
+   {"FOR", "SCRIPT", 'A', HTML_ATTR_for_},
+   {"FRAME", "TABLE", 'A', HTML_ATTR_frame},
+
+   {"HEADERS", "", 'A', HTML_ATTR_headers},
    {"HEIGHT", "", 'A', HTML_ATTR_Height_},
    {"HREF", "", 'A', HTML_ATTR_HREF_},
+   {"HREFLANG", "", 'A', HTML_ATTR_hreflang},
    {"HSPACE", "", 'A', HTML_ATTR_hspace},
    {"HTTP-EQUIV", "", 'A', HTML_ATTR_http_equiv},
+
    {"ID", "", 'A', HTML_ATTR_ID},
    {"ISMAP", "", 'A', HTML_ATTR_ISMAP},
+
+   {"LABEL", "", 'A', HTML_ATTR_label},
    {"LANG", "", 'A', HTML_ATTR_Langue},
+   {"LANGUAGE", "SCRIPT", 'A', HTML_ATTR_script_language},
    {"LINK", "", 'A', HTML_ATTR_LinkColor},
+   {"LONGDESC", "", 'A', HTML_ATTR_longdesc},
+
    {"MAXLENGTH", "", 'A', HTML_ATTR_MaxLength},
+   {"MEDIA", "", 'A', HTML_ATTR_media},
    {"METHOD", "", 'A', HTML_ATTR_METHOD},
 #ifdef MATHML
    {"MODE", "", 'A', HTML_ATTR_mode},
 #endif
    {"MULTIPLE", "", 'A', HTML_ATTR_Multiple},
+
    {"N", "", 'C', 0},
    {"NAME", "APPLET", 'A', HTML_ATTR_applet_name},
    {"NAME", "META", 'A', HTML_ATTR_meta_name},
@@ -504,22 +541,38 @@ static AttributeMapping HTMLAttributeMappingTable[] =
    {"NOSHADE", "", 'A', HTML_ATTR_NoShade},
    {"NOWRAP", "", 'A', HTML_ATTR_No_wrap},
 
+   {"OBJECT", "APPLET", 'A', HTML_ATTR_object},
+   {"ONBLUR", "", 'A', HTML_ATTR_onblur},
+   {"ONCHANGE", "", 'A', HTML_ATTR_onchange},
    {"ONCLICK", "", 'A', HTML_ATTR_onclick},
    {"ONDBLCLICK", "", 'A', HTML_ATTR_ondblclick},
+   {"ONFOCUS", "", 'A', HTML_ATTR_onfocus},
    {"ONKEYDOWN", "", 'A', HTML_ATTR_onkeydown},
    {"ONKEYPRESS", "", 'A', HTML_ATTR_onkeypress},
    {"ONKEYUP", "", 'A', HTML_ATTR_onkeyup},
+   {"ONLOAD", "", 'A', HTML_ATTR_onload},
    {"ONMOUSEDOWN", "", 'A', HTML_ATTR_onmousedown},
    {"ONMOUSEMOVE", "", 'A', HTML_ATTR_onmousemove},
    {"ONMOUSEOUT", "", 'A', HTML_ATTR_onmouseout},
    {"ONMOUSEOVER", "", 'A', HTML_ATTR_onmouseover},
    {"ONMOUSEUP", "", 'A', HTML_ATTR_onmouseup},
+   {"ONRESET", "FORM", 'A', HTML_ATTR_onreset},
+   {"ONSELECT", "", 'A', HTML_ATTR_onselect},
+   {"ONSUBMIT", "FORM", 'A', HTML_ATTR_onsubmit},
+   {"ONUNLOAD", "", 'A', HTML_ATTR_onunload},
 
+   {"PROFILE", "HEAD", 'A', HTML_ATTR_profile},
    {"PROMPT", "", 'A', HTML_ATTR_Prompt},
+
+   {"READONLY", "", 'A', HTML_ATTR_readonly},
    {"REL", "", 'A', HTML_ATTR_REL},
    {"REV", "", 'A', HTML_ATTR_REV},
    {"ROWS", "", 'A', HTML_ATTR_Rows},
    {"ROWSPAN", "", 'A', HTML_ATTR_rowspan_},
+   {"RULES", "TABLE", 'A', HTML_ATTR_rules_},
+
+   {"SCHEME", "META", 'A', HTML_ATTR_scheme},
+   {"SCOPE", "", 'A', HTML_ATTR_scope},
    {"SELECTED", "", 'A', HTML_ATTR_Selected},
    {"SHAPE", "", 'A', HTML_ATTR_shape},
    {"SIZE", "BASEFONT", 'A', HTML_ATTR_BaseFontSize},
@@ -527,28 +580,44 @@ static AttributeMapping HTMLAttributeMappingTable[] =
    {"SIZE", "HR", 'A', HTML_ATTR_Size_},
    {"SIZE", "INPUT", 'A', HTML_ATTR_Area_Size},
    {"SIZE", "SELECT", 'A', HTML_ATTR_MenuSize},
+   {"SRC", "SCRIPT", 'A', HTML_ATTR_script_src},
    {"SRC", "", 'A', HTML_ATTR_SRC},
+   {"STANDBY", "", 'A', HTML_ATTR_standby},
    {"START", "", 'A', HTML_ATTR_Start},
    {"STYLE", "", 'A', HTML_ATTR_Style_},
+   {"SUMMARY", "TABLE", 'A', HTML_ATTR_summary},
+
+   {"TABINDEX", "", 'A', HTML_ATTR_tabindex},
+   {"TARGET", "", 'A', HTML_ATTR_target_},
    {"TEXT", "", 'A', HTML_ATTR_TextColor},
    {"TITLE", "", 'A', HTML_ATTR_Title},
    {"TYPE", "LI", 'A', HTML_ATTR_ItemStyle},
    {"TYPE", "LINK", 'A', HTML_ATTR_Link_type},
+   {"TYPE", "A", 'A', HTML_ATTR_Link_type},
    {"TYPE", "OBJECT", 'A', HTML_ATTR_Object_type},
    {"TYPE", "OL", 'A', HTML_ATTR_NumberStyle},
+   {"TYPE", "PARAM", 'A', HTML_ATTR_Param_type},
+   {"TYPE", "SCRIPT", 'A', HTML_ATTR_content_type},
    {"TYPE", "STYLE", 'A', HTML_ATTR_Notation},
    {"TYPE", "UL", 'A', HTML_ATTR_BulletStyle},
    {"TYPE", "", SPACE, DummyAttribute},
+
    {"USEMAP", "", 'A', HTML_ATTR_USEMAP},
+
+   {"VALIGN", "TBODY", 'A', HTML_ATTR_Row_valign},
    {"VALIGN", "TD", 'A', HTML_ATTR_Cell_valign},
+   {"VALIGN", "TFOOT", 'A', HTML_ATTR_Row_valign},
    {"VALIGN", "TH", 'A', HTML_ATTR_Cell_valign},
+   {"VALIGN", "THEAD", 'A', HTML_ATTR_Row_valign},
    {"VALIGN", "TR", 'A', HTML_ATTR_Row_valign},
    {"VALUE", "LI", 'A', HTML_ATTR_ItemValue},
    {"VALUE", "PARAM", 'A', HTML_ATTR_Param_value},
    {"VALUE", "", 'A', HTML_ATTR_Value_},
+   {"VALUETYPE", "PARAM", 'A', HTML_ATTR_valuetype},
    {"VERSION", "", 'A', 0},
    {"VLINK", "", 'A', HTML_ATTR_VisitedLinkColor},
    {"VSPACE", "", 'A', HTML_ATTR_vspace},
+
    {"WIDTH", "APPLET", 'A', HTML_ATTR_Width__},
    {"WIDTH", "HR", 'A', HTML_ATTR_Width__},
    {"WIDTH", "IMG", 'A', HTML_ATTR_Width__},
@@ -560,6 +629,7 @@ static AttributeMapping HTMLAttributeMappingTable[] =
 #ifdef GRAPHML
    {"WIDTH", "XMLGRAPHICS", 'A', HTML_ATTR_Width__},
 #endif
+
    {"ZZGHOST", "", 'A', HTML_ATTR_Ghost_restruct},
    {"", "", EOS, 0}		/* Last entry. Mandatory */
 };
@@ -609,13 +679,27 @@ static AttrValueMapping HTMLAttrValueMappingTable[] =
    {HTML_ATTR_mode, "INLINE", HTML_ATTR_mode_VAL_inline_math},
 #endif
 
-   {HTML_ATTR_Row_align, "LEFT", HTML_ATTR_Row_align_VAL_Row_left},
-   {HTML_ATTR_Row_align, "CENTER", HTML_ATTR_Row_align_VAL_Row_center},
-   {HTML_ATTR_Row_align, "RIGHT", HTML_ATTR_Row_align_VAL_Row_right},
+   {HTML_ATTR_frame, "VOID", HTML_ATTR_frame_VAL_void},
+   {HTML_ATTR_frame, "ABOVE", HTML_ATTR_frame_VAL_above},
+   {HTML_ATTR_frame, "BELOW", HTML_ATTR_frame_VAL_below},
+   {HTML_ATTR_frame, "HSIDES", HTML_ATTR_frame_VAL_hsides},
+   {HTML_ATTR_frame, "LHS", HTML_ATTR_frame_VAL_lhs},
+   {HTML_ATTR_frame, "RHS", HTML_ATTR_frame_VAL_rhs},
+   {HTML_ATTR_frame, "VSIDES", HTML_ATTR_frame_VAL_vsides},
+   {HTML_ATTR_frame, "BOX", HTML_ATTR_frame_VAL_box},
+   {HTML_ATTR_frame, "BORDER", HTML_ATTR_frame_VAL_border},
+
+   {HTML_ATTR_rules_, "NONE", HTML_ATTR_rules__VAL_none},
+   {HTML_ATTR_rules_, "GROUPS", HTML_ATTR_rules__VAL_groups},
+   {HTML_ATTR_rules_, "ROWS", HTML_ATTR_rules__VAL_rows},
+   {HTML_ATTR_rules_, "COLS", HTML_ATTR_rules__VAL_cols},
+   {HTML_ATTR_rules_, "ALL", HTML_ATTR_rules__VAL_all},
 
    {HTML_ATTR_Cell_align, "LEFT", HTML_ATTR_Cell_align_VAL_Cell_left},
    {HTML_ATTR_Cell_align, "CENTER", HTML_ATTR_Cell_align_VAL_Cell_center},
    {HTML_ATTR_Cell_align, "RIGHT", HTML_ATTR_Cell_align_VAL_Cell_right},
+   {HTML_ATTR_Cell_align, "JUSTIFY", HTML_ATTR_Cell_align_VAL_Cell_justify},
+   {HTML_ATTR_Cell_align, "CHAR", HTML_ATTR_Cell_align_VAL_Cell_char},
 
    {HTML_ATTR_Alignment, "TOP", HTML_ATTR_Alignment_VAL_Top_},
    {HTML_ATTR_Alignment, "MIDDLE", HTML_ATTR_Alignment_VAL_Middle_},
@@ -628,18 +712,26 @@ static AttrValueMapping HTMLAttrValueMappingTable[] =
 
    {HTML_ATTR_Position, "TOP", HTML_ATTR_Position_VAL_Position_top},
    {HTML_ATTR_Position, "BOTTOM", HTML_ATTR_Position_VAL_Position_bottom},
+   {HTML_ATTR_Position, "LEFT", HTML_ATTR_Position_VAL_Position_left},
+   {HTML_ATTR_Position, "RIGHT", HTML_ATTR_Position_VAL_Position_right},
 
    {HTML_ATTR_Row_valign, "TOP", HTML_ATTR_Row_valign_VAL_Row_top},
    {HTML_ATTR_Row_valign, "MIDDLE", HTML_ATTR_Row_valign_VAL_Row_middle},
    {HTML_ATTR_Row_valign, "BOTTOM", HTML_ATTR_Row_valign_VAL_Row_bottom},
+   {HTML_ATTR_Row_valign, "BASELINE", HTML_ATTR_Row_valign_VAL_Row_baseline},
 
    {HTML_ATTR_Cell_valign, "TOP", HTML_ATTR_Cell_valign_VAL_Cell_top},
    {HTML_ATTR_Cell_valign, "MIDDLE", HTML_ATTR_Cell_valign_VAL_Cell_middle},
    {HTML_ATTR_Cell_valign, "BOTTOM", HTML_ATTR_Cell_valign_VAL_Cell_bottom},
+   {HTML_ATTR_Cell_valign, "BASELINE", HTML_ATTR_Cell_valign_VAL_Cell_baseline},
 
    {HTML_ATTR_shape, "RECT", HTML_ATTR_shape_VAL_rectangle},
    {HTML_ATTR_shape, "CIRCLE", HTML_ATTR_shape_VAL_circle},
    {HTML_ATTR_shape, "POLY", HTML_ATTR_shape_VAL_polygon},
+
+   {HTML_ATTR_valuetype, "DATA", HTML_ATTR_valuetype_VAL_data_},
+   {HTML_ATTR_valuetype, "REF", HTML_ATTR_valuetype_VAL_ref},
+   {HTML_ATTR_valuetype, "OBJECT", HTML_ATTR_valuetype_VAL_object_},
 
 /* HTML attribute TYPE generates a Thot element */
    {DummyAttribute, "CHECKBOX", HTML_EL_Checkbox_Input},
@@ -662,6 +754,10 @@ static AttrValueMapping HTMLAttrValueMappingTable[] =
    {HTML_ATTR_Checked, "CHECKED", HTML_ATTR_Checked_VAL_Yes_},
    {HTML_ATTR_No_wrap, "NOWRAP", HTML_ATTR_No_wrap_VAL_no_wrap},
    {HTML_ATTR_NoShade, "NOSHADE", HTML_ATTR_NoShade_VAL_NoShade_},
+   {HTML_ATTR_declare, "DECLARE", HTML_ATTR_declare_VAL_Yes_},
+   {HTML_ATTR_defer, "DEFER", HTML_ATTR_defer_VAL_Yes_},
+   {HTML_ATTR_disabled, "DISABLED", HTML_ATTR_disabled_VAL_Yes_},
+   {HTML_ATTR_readonly, "READONLY", HTML_ATTR_readonly_VAL_Yes_},
    {0, "", 0}			/* Last entry. Mandatory */
 };
 
@@ -3339,6 +3435,10 @@ char                c;
 {
    char                theGI[MaxMsgLength];
 
+   /* if the last character in the GI is a '/', ignore it.  This is to
+      accept the XML syntax for empty elements, for instance <br/> */
+   if (LgBuffer > 0 && inputBuffer[LgBuffer-1] == '/')
+      LgBuffer--;
    CloseBuffer ();
    strncpy (theGI, inputBuffer, MaxMsgLength - 1);
    theGI[MaxMsgLength - 1] = EOS;
@@ -3520,6 +3620,14 @@ char                c;
    unsigned char       msgBuffer[MaxMsgLength];
 
    CloseBuffer ();
+   /* if a single '/' has been read instead of an attribute name, ignore
+      that character.  This is to accept the XML syntax for empty elements,
+      such as <img src="SomeUrl" />  */
+   if (LgBuffer == 1 && inputBuffer[0] == '/')
+      {
+      InitBuffer ();
+      return;
+      }
    /* inputBuffer contains the attribute name */
    /* get the corresponding Thot attribute */
    if (UnknownTag)
