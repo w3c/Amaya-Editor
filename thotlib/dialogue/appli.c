@@ -139,7 +139,6 @@ int         X_Pos;
 int         Y_Pos;
 int         cyToolBar;
 BOOL        autoScroll = FALSE;
-ThotBool    IsViewClosed = FALSE;
 DWORD       dwToolBarStyles   = WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | CCS_TOP | TBSTYLE_TOOLTIPS;
 DWORD       dwStatusBarStyles = WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | CCS_BOTTOM | SBARS_SIZEGRIP;
 TBADDBITMAP ThotTBBitmap;
@@ -1319,6 +1318,7 @@ LPARAM      lParam;
   RECT                rWindow;
   int                 frame = GetMainFrameNumber (hwnd);
   int                 view;
+  int                 frameNDX;
   ThotBool            assoc;
 
   if (frame != -1)
@@ -1432,21 +1432,24 @@ LPARAM      lParam;
     return 0;
 
   case WM_CLOSE:
-  case WM_DESTROY:
-    if (!IsViewClosed) {
        if (frame <= MAX_FRAME) {
           GetDocAndView (frame, &pDoc, &view, &assoc);
-          CloseView (pDoc, view, assoc);
+		  if (pDoc && view)
+           CloseView (pDoc, view, assoc);
+           FrMainRef[frame] = 0;
 	   }
-       for (frame = 0; frame <= MAX_FRAME; frame++)
-           if (FrRef[frame] != 0) {
-              /* there is still an active frame */
-              IsViewClosed = FALSE;
-              PostQuitMessage (0);
-              return 0;
-		   }
-           TtaQuit();
-	}
+    return 0;
+
+  case WM_DESTROY:
+       FrMainRef[frame] = 0;
+       if (frame <= MAX_FRAME) {
+          for (frameNDX = 0; frameNDX <= MAX_FRAME; frameNDX++)
+              if (FrMainRef[frameNDX] != 0) 
+                 /* there is still an active frame */
+                 return 0;
+          TtaQuit();
+	   }
+    PostQuitMessage (0);
     return 0;
         
   case WM_SIZE: {
@@ -1524,6 +1527,7 @@ LPARAM      lParam;
   default: 
     return (DefWindowProc (hwnd, mMsg, wParam, lParam));
   }
+  return (DefWindowProc (hwnd, mMsg, wParam, lParam));
 }
 
 /* -------------------------------------------------------------------
@@ -1821,6 +1825,7 @@ LPARAM lParam;
 
             case WM_DESTROY: 
                  WIN_ReleaseDeviceContext ();
+                 FrRef[frame] = 0;
                  PostQuitMessage (0);
                  return 0;
 	       

@@ -3579,7 +3579,7 @@ int                 frame;
 	    DestroyAcceleratorTable (hAccel [frame]);
 	    hAccel [frame] = NULL;
 	  }
-        DestroyWindow (FrMainRef[frame]);
+    /* PostMessage(FrMainRef[frame], WM_DESTROY, 0, 0);      */
 	CleanFrameCatList (frame);
 
         for (i = 0; i < MAX_BUTTON; i++)
@@ -3589,7 +3589,6 @@ int                 frame;
 	    FrameTable[frame].ButtonId[i] = -1;
 	  }
 
-        FrMainRef [0] = 0;
 #endif /* _WINDOWS */
 	FrRef[frame] = 0;
 	FrameTable[frame].WdFrame = 0;
@@ -3600,6 +3599,12 @@ int                 frame;
 	ThotFreeFont (frame);	/* On libere les polices de caracteres utilisees */
      }
 #endif /* _GTK */		
+#ifdef _WINDOWS
+   if (FrMainRef [frame]) {
+      DestroyWindow (FrMainRef[frame]);
+   }
+#endif
+
 }
 
 

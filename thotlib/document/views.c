@@ -86,8 +86,6 @@
 
 #ifdef _WINDOWS
 #include "wininclude.h"
-
-extern ThotBool IsViewClosed;
 #endif /* _WINDOWS */
 
 static AvailableView AllViews;
@@ -1370,10 +1368,6 @@ ThotBool            assoc;
    ThotBool            ok, Save;
    View                view;
    Document            document;
-
-#  ifdef _WINDOWS
-   IsViewClosed = TRUE;
-#  endif /* _WINDOWS */
 
    if (pDoc != NULL)
      {

@@ -47,6 +47,7 @@
 #include "frame_tv.h"
 #include "appdialogue_tv.h"
 
+#include "appdialogue_f.h"
 #include "applicationapi_f.h"
 #include "checkaccess_f.h"
 #include "config_f.h"
