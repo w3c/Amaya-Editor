@@ -9,7 +9,8 @@
  * geom.c : boxes geometry handling, i.e. interracting with the user
  *          concerning a box position, or size.
  *
- * Author: I. Vatton (INRIA)
+ * Authors: I. Vatton (INRIA)
+ *          R. Guetari (W3C/INRIA): Windows NT/95
  *
  */
 
@@ -35,6 +36,9 @@ static int          GridSize = 1;
 #include "memory_f.h"
 #include "content_f.h"
 
+#ifdef _WINDOWS
+BOOL WIN_UserGeometry = FALSE ; 
+#endif /* _WINDOWS */
 
 /**
  *      BoxGeometry set the geometry of the fake box used to interract
@@ -809,7 +813,7 @@ int                 DimY;
 #endif /* __STDC__ */
 
 {
-#ifndef _WINDOWS
+#  ifndef _WINDOWS
    int                 xm, ym;
    int                 ret, e, dx, dy;
    int                 nx, ny, f;
@@ -1151,7 +1155,13 @@ int                 DimY;
    /* restore state of the Thot Library */
    ThotUngrab ();
    XFlush (TtDisplay);
-#endif /* _WINDOWS */
+#  else  /* _WINDOWS */
+   /*
+   ThotWindow w = FrRef[frame];
+   WIN_UserGeometry = TRUE;
+   SetCursor (LoadCursor (NULL, IDC_CROSS));
+   */
+#  endif /* _WINDOWS */
 }				/*UserGeometryCreate */
 
 /**

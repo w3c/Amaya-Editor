@@ -18,7 +18,7 @@
  * User interface for attributes
  *
  * Author: I. Vatton (INRIA)
- *         R. Guetari (W3C/INRIA): Amaya porting on Windows NT and Window 95
+ *         R. Guetari (W3C/INRIA): Windows NT/95
  *
  */ 
 #include "thot_gui.h"
@@ -61,6 +61,23 @@ static char         TextAttrValue[LgMaxAttrText];
 
 /* required attributs context */
 static PtrAttribute PtrReqAttr;
+
+#ifdef _WINDOWS
+#define ID_CONFIRM 1000
+#define ID_DONE    1001
+
+static TtAttribute* WIN_pAttr1;
+static BOOL         wndRegistered;
+static PtrAttribute WIN_currAttr;
+
+extern HINSTANCE hInstance;
+
+#ifdef __STDC__
+LRESULT CALLBACK InitFormDialogWndProc (HWND, UINT, WPARAM, LPARAM);
+#else  /* __STDC__ */
+LRESULT CALLBACK InitFormDialogWndProc ();
+#endif /* __STDC__ */
+#endif /* _WINDOWS */
 
 #include "appli_f.h"
 #include "tree_f.h"
@@ -182,6 +199,139 @@ PtrAttribute        currAttr;
    TtaShowDialogue (NumFormLanguage, TRUE);
 }
 
+#ifdef _WINDOWS
+/*----------------------------------------------------------------------
+  WIN_InitFormDialog
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void WIN_InitFormDialog (HWND parent, char* title)
+#else  /* __STDC__ */
+static void WIN_InitFormDialog (parent, title)
+HWND  parent;
+char* title
+#endif /* __STDC__ */
+{
+   WNDCLASSEX  wndFormClass ;
+   static char szAppName[] = "FormClass" ;
+   HWND        hwnFromDialog;
+   MSG         msg;
+
+   if (!wndRegistered) {
+	  wndRegistered = TRUE;
+      wndFormClass.cbSize        = sizeof (wndFormClass) ;
+      wndFormClass.style         = CS_HREDRAW | CS_VREDRAW ;
+      wndFormClass.lpfnWndProc   = InitFormDialogWndProc ;
+      wndFormClass.cbClsExtra    = 0 ;
+      wndFormClass.cbWndExtra    = 0 ;
+      wndFormClass.hInstance     = hInstance ;
+      wndFormClass.hIcon         = LoadIcon (NULL, IDI_APPLICATION) ;
+      wndFormClass.hCursor       = LoadCursor (NULL, IDC_ARROW) ;
+      wndFormClass.hbrBackground = (HBRUSH) GetStockObject (LTGRAY_BRUSH) ;
+      wndFormClass.lpszMenuName  = NULL ;
+      wndFormClass.lpszClassName = szAppName ;
+      wndFormClass.hIconSm       = LoadIcon (NULL, IDI_APPLICATION) ;
+
+      RegisterClassEx (&wndFormClass) ;
+   }
+
+   hwnFromDialog = CreateWindow (szAppName, title,
+                                 DS_MODALFRAME | WS_POPUP | 
+                                 WS_VISIBLE | WS_CAPTION | WS_SYSMENU,
+                                 CW_USEDEFAULT, CW_USEDEFAULT,
+                                 335, 200,
+                                 parent, NULL, hInstance, NULL) ;
+
+   ShowWindow (hwnFromDialog, SW_SHOWNORMAL) ;
+   UpdateWindow (hwnFromDialog) ;
+
+   while (GetMessage (&msg, NULL, 0, 0)) {
+         TranslateMessage (&msg) ;
+         DispatchMessage (&msg) ;
+   }
+}
+
+/*----------------------------------------------------------------------
+ InitFormDialogWndProc
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+LRESULT CALLBACK InitFormDialogWndProc (HWND hwnd, UINT iMsg, WPARAM wParam, LPARAM lParam)
+#else  /* __STDC__ */
+LRESULT CALLBACK InitFormDialogWndProc (HWND hwnd, UINT iMsg, WPARAM wParam, LPARAM lParam)
+#endif /* __STDC__ */
+{
+	HWND        hwnTitle;
+	HWND        confirmButton;
+	HWND        doneButton;
+	char*       pBuffer;
+	int         i, index;
+	static PSTR pWinBuffer;
+	static int  txtLength;
+	static HWND hwnEdit ;
+
+    switch (iMsg) {
+	       case WM_CREATE:
+			    /* Create static window for the title */
+			    hwnTitle = CreateWindow ("STATIC", WIN_pAttr1->AttrName, 
+					                     WS_CHILD | WS_VISIBLE | SS_LEFT,
+										 10, 10, 100, 15, hwnd, (HMENU) 99, 
+										 ((LPCREATESTRUCT) lParam)->hInstance, NULL); 
+
+			    /* Create Edit Window autoscrolled */
+				hwnEdit = CreateWindow ("EDIT", NULL, 
+					                    WS_CHILD | WS_VISIBLE | WS_HSCROLL | WS_VSCROLL |
+										WS_BORDER | ES_LEFT | ES_MULTILINE |
+										ES_AUTOHSCROLL | ES_AUTOVSCROLL,
+										10, 30, 310, 110, hwnd, (HMENU) 1, ((LPCREATESTRUCT) lParam)->hInstance, NULL);
+				/* Create Confirm button */
+                confirmButton = CreateWindow ("BUTTON", TtaGetMessage (LIB, TMSG_LIB_CONFIRM), 
+                                              WS_CHILD | BS_PUSHBUTTON | WS_VISIBLE,
+                                              100, 150, 55, 20, hwnd, 
+                                              (HMENU) ID_CONFIRM, ((LPCREATESTRUCT) lParam)->hInstance, NULL) ;
+
+				/* Create Done Button */
+				doneButton = CreateWindow ("BUTTON", TtaGetMessage (LIB, TMSG_DONE), 
+                                           WS_CHILD | BS_PUSHBUTTON | WS_VISIBLE,
+                                           175, 150, 55, 20, hwnd, 
+                                           (HMENU) ID_DONE, ((LPCREATESTRUCT) lParam)->hInstance, NULL) ;
+ 
+				return 0;
+
+           case WM_DESTROY :
+                PostQuitMessage (0) ;
+                return 0 ;
+
+		   case WM_COMMAND:
+			    switch (LOWORD (wParam)) {
+				       case ID_CONFIRM:
+						    txtLength = GetWindowTextLength (hwnEdit);
+							if ((pWinBuffer = (PSTR) TtaGetMemory (txtLength + 1))) {
+							   GetWindowText (hwnEdit, pWinBuffer, txtLength + 1);
+							   index = 0;
+							   pBuffer = (char*) TtaGetMemory (txtLength + 1);
+							   for (i = 0; i < txtLength; i ++) 
+								   if (pWinBuffer [i] != '\r') {
+									  pBuffer [index++] = pWinBuffer[i];
+								   }
+
+							   pBuffer [index] = '\0';
+							} else {
+								  pWinBuffer = "";	  
+							      pBuffer = "";
+							}
+
+							ThotCallback (NumMenuAttrTextNeeded, STRING_DATA, pBuffer);
+							ThotCallback (NumMenuAttrRequired, INTEGER_DATA, (char*) 1);
+						    break;
+					   case ID_DONE:
+						    DestroyWindow (hwnd);
+						    /* Traitement ID_DONE */
+						    break;
+				}
+			    return 0;
+    }
+    return DefWindowProc (hwnd, iMsg, wParam, lParam) ;
+}
+#endif /* _WINDOWS */
 
 /*----------------------------------------------------------------------
    MenuValues
@@ -210,35 +360,39 @@ int                 view;
    char                bufMenu[MAX_TXT_LEN];
    Document            doc;
 
+#  ifdef _WINDOWS
+   WIN_pAttr1 = pAttr1;
+   WIN_currAttr	= currAttr;
+#  endif /* _WINDOWS */
+
    doc = (Document) IdentDocument (pDoc);
    /* detruit la feuille de dialogue et la recree */
    strcpy (bufMenu, TtaGetMessage (LIB, TMSG_APPLY));
    i = strlen (bufMenu) + 1;
    strcpy (&bufMenu[i], TtaGetMessage (LIB, TMSG_DEL));
-   if (required)
-     {
-	form = NumMenuAttrRequired;
-	if (MandatoryAttrFormExists)
-	  {
+   if (required) {
+	  form = NumMenuAttrRequired;
+	  if (MandatoryAttrFormExists) {
 	     TtaUnmapDialogue (NumMenuAttrRequired);
 	     TtaDestroyDialogue (NumMenuAttrRequired);
 	  }
-	TtaNewForm (NumMenuAttrRequired, TtaGetViewFrame (doc, view), 
-		    TtaGetMessage (LIB, TMSG_ATTR), FALSE, 2, 'L', D_DONE);
-	MandatoryAttrFormExists = TRUE;
-     }
-   else
-     {
-	form = NumMenuAttr;
-	if (AttrFormExists)
-	  {
-	     TtaUnmapDialogue (NumMenuAttr);
-	     TtaDestroyDialogue (NumMenuAttr);
-	  }
-	TtaNewSheet (NumMenuAttr, TtaGetViewFrame (doc, view), 
-	 TtaGetMessage (LIB, TMSG_ATTR), 2, bufMenu, FALSE, 2, 'L', D_DONE);
-	AttrFormExists = TRUE;
-     }
+#     ifndef _WINDOWS 
+	  TtaNewForm (NumMenuAttrRequired, TtaGetViewFrame (doc, view), 
+	    	      TtaGetMessage (LIB, TMSG_ATTR), FALSE, 2, 'L', D_DONE);
+#     else  /* _WINDOWS */
+	  WIN_InitFormDialog (TtaGetViewFrame (doc, view), TtaGetMessage (LIB, TMSG_ATTR));
+#     endif /* _WINDOWS */
+	  MandatoryAttrFormExists = TRUE;
+   } else {
+	    form = NumMenuAttr;
+	    if (AttrFormExists) {
+	       TtaUnmapDialogue (NumMenuAttr);
+	       TtaDestroyDialogue (NumMenuAttr);
+	    }
+	    TtaNewSheet (NumMenuAttr, TtaGetViewFrame (doc, view), 
+	                 TtaGetMessage (LIB, TMSG_ATTR), 2, bufMenu, FALSE, 2, 'L', D_DONE);
+	    AttrFormExists = TRUE;
+   }
 
    strncpy (title, pAttr1->AttrName, MAX_NAME_LENGTH);
    switch (pAttr1->AttrType)
@@ -249,56 +403,54 @@ int                 view;
 	       TtaNewNumberForm (subform, form, title, -MAX_INT_ATTR_VAL, MAX_INT_ATTR_VAL, FALSE);
 	       TtaAttachForm (subform);
 	       if (currAttr == NULL)
-		  i = 0;
+		      i = 0;
 	       else
-		  i = currAttr->AeAttrValue;
+		      i = currAttr->AeAttrValue;
 	       TtaSetNumberForm (subform, i);
 	       break;
 
 	    case AtTextAttr:
-	       /* attribut a valeur textuelle */
-	       subform = form + 2;
-	       TtaNewTextForm (subform, form, title, 40, 3, FALSE);
-	       TtaAttachForm (subform);
-	       if (currAttr == NULL)
-		  TtaSetTextForm (subform, "");
-	       else if (currAttr->AeAttrText == NULL)
-		  TtaSetTextForm (subform, "");
-	       else
-		  TtaSetTextForm (subform, currAttr->AeAttrText->BuContent);
-	       break;
+	        /* attribut a valeur textuelle */
+	        subform = form + 2;
+	        TtaNewTextForm (subform, form, title, 40, 3, FALSE);
+	        TtaAttachForm (subform);
+	        if (currAttr == NULL)
+		       TtaSetTextForm (subform, "");
+	        else if (currAttr->AeAttrText == NULL)
+		         TtaSetTextForm (subform, "");
+	        else
+		        TtaSetTextForm (subform, currAttr->AeAttrText->BuContent);
+	        break;
 
 	    case AtEnumAttr:
-	       /* attribut a valeurs enumerees */
-	       subform = form + 3;
-	       /* cree un menu de toutes les valeurs possibles de l'attribut */
-	       lgmenu = 0;
-	       val = 0;
-	       /* boucle sur les valeurs possibles de l'attribut */
-	       while (val < pAttr1->AttrNEnumValues)
-		 {
-		    i = strlen (pAttr1->AttrEnumValue[val]) + 2;	/* for 'B' and '\0' */
-		    if (lgmenu + i < MAX_TXT_LEN)
-		      {
-			 bufMenu[lgmenu] = 'B';
-			 strcpy (&bufMenu[lgmenu + 1], pAttr1->AttrEnumValue[val]);
-			 val++;
-		      }
-		    lgmenu += i;
-		 }
-	       /* cree le menu des valeurs de l'attribut */
-	       TtaNewSubmenu (subform, form, 0, title, val, bufMenu, NULL, FALSE);
-	       TtaAttachForm (subform);
-	       /* initialise le menu avec la valeur courante */
-	       val = -1;
-	       if (currAttr != NULL)
-		  val = currAttr->AeAttrValue - 1;
-	       TtaSetMenuForm (subform, val);
-	       break;
+	         /* attribut a valeurs enumerees */
+	         subform = form + 3;
+	         /* cree un menu de toutes les valeurs possibles de l'attribut */
+	         lgmenu = 0;
+	         val = 0;
+	         /* boucle sur les valeurs possibles de l'attribut */
+	         while (val < pAttr1->AttrNEnumValues) {
+		           i = strlen (pAttr1->AttrEnumValue[val]) + 2;	/* for 'B' and '\0' */
+		           if (lgmenu + i < MAX_TXT_LEN) {
+			          bufMenu[lgmenu] = 'B';
+			          strcpy (&bufMenu[lgmenu + 1], pAttr1->AttrEnumValue[val]);
+			          val++;
+				   }
+		           lgmenu += i;
+			 }
+	         /* cree le menu des valeurs de l'attribut */
+	         TtaNewSubmenu (subform, form, 0, title, val, bufMenu, NULL, FALSE);
+	         TtaAttachForm (subform);
+	         /* initialise le menu avec la valeur courante */
+	         val = -1;
+	         if (currAttr != NULL)
+		        val = currAttr->AeAttrValue - 1;
+	         TtaSetMenuForm (subform, val);
+	         break;
 
 	    case AtReferenceAttr:
-	       /* attribut reference, on ne fait rien */
-	       break;
+	         /* attribut reference, on ne fait rien */
+	         break;
 
 	    default:
 	       break;

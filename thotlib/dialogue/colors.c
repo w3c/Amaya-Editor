@@ -666,6 +666,9 @@ int                 y;
 #  endif /* _WINDOWS */
 }
 
+/*----------------------------------------------------------------------
+ ThotColorPaletteWndProc
+  ----------------------------------------------------------------------*/
 #ifdef _WINDOWS
 #ifdef __STDC__
 LRESULT CALLBACK ThotColorPaletteWndProc (HWND hwnd, UINT iMsg, WPARAM wParam, LPARAM lParam)
@@ -757,9 +760,9 @@ LRESULT CALLBACK ThotColorPaletteWndProc (HWND hwnd, UINT iMsg, WPARAM wParam, L
           case WM_DESTROY :
                PostQuitMessage (0) ;
                return 0 ;
-          }
+	 }
      return DefWindowProc (hwnd, iMsg, wParam, lParam) ;
-     }
+}
 #endif /* _WINDOWS */
 
 
