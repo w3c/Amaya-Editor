@@ -3930,24 +3930,6 @@ void ConfigLanNeg (Document doc, View view)
 }
 
 /*----------------------------------------------------------------------
-  ConfigProfile
-  A frontend to the profile configuration menu
-  ----------------------------------------------------------------------*/
-void ConfigProfile (Document doc, View view)
-{
-  ProfileConfMenu (doc, view);
-}
-
-/*----------------------------------------------------------------------
-  ConfigTemplates
-  A frontend to the Templates configuration menu
-  ----------------------------------------------------------------------*/
-void ConfigTemplates (Document doc, View view)
-{
-   TemplatesConfMenu (doc, view);
-}
-
-/*----------------------------------------------------------------------
   SaveOptions
   Saves the user modified configuration options
   ----------------------------------------------------------------------*/

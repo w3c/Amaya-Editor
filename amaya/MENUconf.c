@@ -29,8 +29,7 @@
  * function.
  *
  * Authors: J. Kahan
- * Contributors: Luc Bonameau for profiles and templates
- *               I. Vatton colors selection, browsing menu and access keys
+ * Contributors: I. Vatton colors selection, browsing menu and access keys
  *
  * To do: remove the CACHE_RESTART option from some options, once we write
  * the code that should take it into account.
@@ -48,7 +47,6 @@
 #include "MENUconf_f.h"
 #include "print.h"
 #include "fileaccess.h"
-#include "profiles.h"
 
 #ifdef _WX
   #include "wxdialogapi_f.h"
@@ -376,40 +374,6 @@ static char *    LanNeg = GProp_LanNeg.LanNeg;
 /* do not use references on Windows C compiler, it doesn't understand it :( */
 static char     LanNeg[MAX_LENGTH];
 #endif /* _WINGUI*/
-
-/* Profile menu options */
-#ifdef _WINGUI
-static HWND     ProfileHwnd = NULL;
-static HWND     ProfilesList;
-static AM_WIN_MenuText WIN_ProfileMenuText[] = 
-{
-	{AM_INIT_ALL, AM_PROFILE_MENU},
-	{IDC_TPROFILESLOCA, AM_PROFILES_FILE},
-	{IDC_TPROFILESELECT, AM_PROFILE_SELECT},
-	{IDC_TPROFILECHANGE, AM_PROFILE_CHANGE},
-	{0, 0}
-};
-#endif /* _WINGUI */
-static int      ProfileBase;
-static int      CurrentProfile = -1;
-static char     Profile[MAX_LENGTH];
-static char     NewProfile[MAX_LENGTH];
-static char     Profiles_File[MAX_LENGTH];
-#define MAX_PRO 50
-static char    *MenuText[MAX_PRO];
-
-/* Templates menu option */
-#ifdef _WINGUI
-static HWND     TemplatesHwnd = NULL;
-static AM_WIN_MenuText WIN_TemplatesMenuText[] = 
-{
-	{AM_INIT_ALL, AM_TEMPLATES_MENU},
-	{IDC_TTEMPLATESURL, AM_TEMPLATES_SERVER},
-	{0, 0}
-};
-#endif /* _WINGUI */
-static int      TemplatesBase;
-static char     TemplatesUrl[MAX_LENGTH];
 
 #ifdef ANNOTATIONS
 /* Annotation menu option */
@@ -4114,548 +4078,6 @@ void         LanNegConfMenu (Document document, View view)
 }
 
 
-/**********************
-** Profile Menu
-**********************/
-/*----------------------------------------------------------------------
-  GetProfileConf
-  Makes a copy of the current registry Profile values
-  ----------------------------------------------------------------------*/
-static void GetProfileConf (void)
-{
-  TtaGetProfileFileName (Profiles_File, MAX_LENGTH);
-  GetEnvString ("Profile", Profile);
-}
-
-/*----------------------------------------------------------------------
-  GetDefaultProfileConf
-  Makes a copy of the default registry Profile values
-  ----------------------------------------------------------------------*/
-static void GetDefaultProfileConf (void)
-{
-  TtaGetDefProfileFileName (Profiles_File, MAX_LENGTH);
-  GetDefEnvString ("Profile", Profile);
-}
-
-
-/*----------------------------------------------------------------------
-  SetProfileConf
-  Updates the registry Profile values
-  ----------------------------------------------------------------------*/
-static void SetProfileConf (void)
-{
-  char def_profiles_file[MAX_LENGTH];
-
-  TtaGetDefProfileFileName (def_profiles_file, MAX_LENGTH);
-  if (!strcasecmp (def_profiles_file, Profiles_File))
-    /* it is the default value. Erase the precedent registry value */
-    Profiles_File[0] = EOS;
-  TtaSetEnvString ("Profiles_File", Profiles_File, TRUE);
-  TtaSetEnvString ("Profile", Profile, TRUE);
-  TtaSaveAppRegistry ();
-}
-
-#ifdef _WINGUI
-/*----------------------------------------------------------------------
-  BuildProfileList builds the list allowing to select a profile
-  (for windows)
-  ----------------------------------------------------------------------*/
-static void BuildProfileList (void)
-{
-  int           nbprofiles = 0;
-  int           i = 0;
-
-  /* Get the propositions of the list */ 
-  SendMessage (ProfilesList, LB_RESETCONTENT, 0, 0);
-  nbprofiles = TtaGetProfilesItems (MenuText, MAX_PRO);
-  while (i < nbprofiles && MenuText[i] != EOS)
-    {
-      /* keep in mind the current selected entry */
-      if (*Profile && !strcmp (Profile, MenuText[i]))
-	CurrentProfile = i;
-      SendMessage (ProfilesList, LB_INSERTSTRING, i, (LPARAM) MenuText[i]);
-      i++;
-    }
-  strcpy (NewProfile, Profile);
-  SendMessage (ProfilesList, LB_SETCURSEL, (WPARAM)CurrentProfile, (LPARAM)0);
-}
-
-/*----------------------------------------------------------------------
-  WIN_RefreshProfileMenu
-  Displays the current registry values in the menu
-  ----------------------------------------------------------------------*/
-void WIN_RefreshProfileMenu (HWND hwnDlg)
-{		
-  SetDlgItemText (hwnDlg, IDC_PROFILESLOCATION, Profiles_File);
-  SetDlgItemText (hwnDlg, IDC_PROFILENAME, Profile);
-  BuildProfileList();
-}
-
-/*----------------------------------------------------------------------
-  WIN_ProfileDlgProc
-  Windows callback for the Profile menu
-  ----------------------------------------------------------------------*/
-LRESULT CALLBACK WIN_ProfileDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
-				     LPARAM lParam)
-{
-  int       itemIndex = 0;
-  char     *ptr;
-
-  switch (msg)
-    {
-    case WM_INITDIALOG:
-      ProfileHwnd = hwnDlg;
-	  ProfilesList = GetDlgItem (hwnDlg, IDC_PROFILELIST);
-	  WIN_SetDialogfont (ProfilesList);
-      WIN_SetMenuText (hwnDlg, WIN_ProfileMenuText);
-      SetDlgItemText (hwnDlg, IDC_PROFILESLOCATION, Profiles_File);
-      SetDlgItemText (hwnDlg, IDC_PROFILENAME, Profile);
-      break;      
-    case WM_CLOSE:
-    case WM_DESTROY:
-      ptr = TtaGetEnvString ("Profiles_File");
-      if (ptr && strcmp (ptr, Profiles_File))
-	TtaRebuildProTable (ptr);
-      /* reset the status flag */
-      ProfileHwnd = NULL;
-      EndDialog (hwnDlg, ID_DONE);
-      break;
-    case WM_COMMAND:
-      switch (LOWORD (wParam)) 
-	{
-	case IDC_PROFILESLOCATION:
-	  GetDlgItemText (hwnDlg, IDC_PROFILESLOCATION, Profiles_File,
-			  sizeof (Profiles_File) - 1);
-	  /* if the text entry changed */
-	  if (HIWORD(wParam) == EN_UPDATE)
-	    {	
-	      if (strlen(Profiles_File))
-		{
-		  TtaRebuildProTable(Profiles_File); 
-		  BuildProfileList();
-		}
-	    }
-	  break;		
-
-	  /* action buttons */
-	case ID_APPLY:
-      strcpy (Profile, NewProfile);
-	  SetProfileConf ();
-	  TtaRebuildProTable (Profiles_File);
-	  /* reset the status flag */
-	  EndDialog (hwnDlg, ID_DONE);
-	  break;
-	case ID_DONE:
-    case IDCANCEL:
-	  /* as the user may have changed the profile,
-	     we need to rebuild the profile list again */
-	  ptr = TtaGetEnvString ("Profiles_File");
-	  if (ptr && strcmp (ptr, Profiles_File))
-	    TtaRebuildProTable (ptr);
-	  /* reset the status flag */
-	  ProfileHwnd = NULL;
-	  EndDialog (hwnDlg, ID_DONE);
-	  break;
-	case ID_DEFAULTS:
-	  /* always signal this as modified */
-	  GetDefaultProfileConf ();
-	  TtaRebuildProTable(Profiles_File); 
-	  BuildProfileList();
-	  WIN_RefreshProfileMenu (ProfileHwnd);
-	  break;
-	}
-      switch (HIWORD (wParam))
-	{
-	case LBN_SELCHANGE:
-	  itemIndex = SendMessage (ProfilesList, LB_GETCURSEL, 0, 0);
-	  CurrentProfile = SendMessage (ProfilesList, LB_GETTEXT, itemIndex,
-				   (LPARAM) NewProfile);
-	  SetDlgItemText (hwnDlg, IDC_PROFILENAME, NewProfile);
-	  break;
-	}
-      break;
-      
-    default: return FALSE;
-    }	     
-  
-  return TRUE; 
-}
-
-#else /* _WINGUI */
-/*----------------------------------------------------------------------
-  BuildProfileSelector builds the list allowing to select a profile
-  (for unix)
-  ----------------------------------------------------------------------*/
-static void BuildProfileSelector (void)
-{
-  int                  i;
-  int                  nbprofiles = 0;
-  int                  indx, length;
-  char                *entry;
-  char                 BufMenu[MAX_LENGTH];
-
-  /* Get the propositions of the selector */ 
-  nbprofiles = TtaGetProfilesItems (MenuText, MAX_PRO);
-  /* recopy the propositions  */
-  indx = 0;
-  for (i = 0; i < nbprofiles; i++)
-    {
-      entry =  MenuText[i];
-      /* keep in mind the current selected entry */
-      if (*Profile && !strcmp (Profile, entry))
-	CurrentProfile = i;
-      length = strlen (entry) + 1;
-      if (length + indx < MAX_LENGTH)  
-	{
-	  strcpy (&BufMenu[indx], entry);
-	  indx += length;
-	}
-    }
-  
-  strcpy (NewProfile, Profile);
-  /* Fill in the profile form  */
-  TtaNewSelector (ProfileBase + mProfileSelector, ProfileBase + ProfileMenu,
-		  NULL, nbprofiles,
-		  ((i < 2) ? (char *)"" : BufMenu), 3, NULL, TRUE, FALSE);
-  /* preselect the profile matching the user current profile */
-  if (nbprofiles)
-    TtaSetSelector (ProfileBase + mProfileSelector, CurrentProfile, NULL);
-}
-
-/*----------------------------------------------------------------------
-  RefreshProfileMenu
-  Displays the current registry values in the menu
-  ----------------------------------------------------------------------*/
-static void RefreshProfileMenu ()
-{
-  TtaSetTextForm (ProfileBase + mProfiles_File, Profiles_File);
-  TtaSetSelector (ProfileBase + mProfileSelector, CurrentProfile, NULL);
-}
-
-/*----------------------------------------------------------------------
-   callback of the Profile configuration menu
-  ----------------------------------------------------------------------*/
-static void ProfileCallbackDialog (int ref, int typedata, char *data)
-{
-  int   val;
-  char *ptr;
-
-  if (ref == -1)
-    /* removes the Profile conf menu */
-    TtaDestroyDialogue (ProfileBase + ProfileMenu);
-  else
-    {
-      /* has the user changed the options? */
-      val = (int) data;
-      switch (ref - ProfileBase)
-	{
-	case ProfileMenu:
-	  switch (val) 
-	    {
-	    case 0:
-	      /* as the user may have changed the profile,
-		 we need to rebuild the profile list again */
-	      ptr = TtaGetEnvString ("Profiles_File");
-	      if (ptr && strcmp (ptr, Profiles_File))
-		TtaRebuildProTable (ptr);
-	      TtaDestroyDialogue (ref);
-	      break;
-	    case 1:
-          strcpy (Profile, NewProfile);
-	      SetProfileConf ();
-	      TtaRebuildProTable (Profiles_File);
-#ifndef _WX
-	      TtaDestroyDialogue (ref);
-#endif /* _WX */
-	      break;
-	    case 2:
-	      GetDefaultProfileConf ();
-	      /* update the current profile */
-	      TtaRebuildProTable (Profiles_File);
-	      BuildProfileSelector();
-	      RefreshProfileMenu ();
-	      break;
-	    default:
-	      break;
-	    }
-	  break;
-	case mProfileSelector:
-	  /* Get the desired profile from the item number */
-	  strcpy (NewProfile, data);
-	  break;
-	case mProfiles_File:
-	  if (data)
-	    { 
-	      /* did the profile file change ? */
-	      if (strcmp (data, Profiles_File) != 0) 
-		/* Yes, the profile file changed  : rescan the
-		   profile definition file and display the new
-		   profiles in the selector */
-		strcpy (Profiles_File, data);
-	    }
-	  else
-	    Profiles_File[0] = EOS;
- 	  break;
-
-	default:
-	  break;
-	}
-    }
-}
-#endif /* !_WINGUI */
-
-
-/*----------------------------------------------------------------------
-  ProfileConfMenu
-  Build and display the Conf Menu dialog box and prepare for input.
-  ----------------------------------------------------------------------*/
-void ProfileConfMenu (Document document, View view)
-{
-#ifndef _WINGUI
-   int                   i;
- 
-   /* load and display the current values */
-   GetProfileConf ();
-
-   /* Create the dialogue form */
-   i = 0;
-   strcpy (&s[i], TtaGetMessage (AMAYA, AM_APPLY_BUTTON));
-   i += strlen (&s[i]) + 1;
-   strcpy (&s[i], TtaGetMessage (AMAYA, AM_DEFAULT_BUTTON));
-   TtaNewSheet (ProfileBase + ProfileMenu, TtaGetViewFrame (document, view),
-		TtaGetMessage(AMAYA, AM_PROFILE_MENU), 2, s, TRUE, 1, 'L', 
-		D_DONE);
-
-   TtaNewTextForm (ProfileBase + mProfiles_File, ProfileBase + ProfileMenu,
-		   TtaGetMessage (AMAYA, AM_PROFILES_FILE),
-		   40, 1, FALSE);
-
-   TtaNewLabel (ProfileBase + mProfileEmpty1, ProfileBase + ProfileMenu,
-		TtaGetMessage (AMAYA, AM_PROFILE_SELECT));
-   BuildProfileSelector();
-  
-   /* message "changes will take effect after Amaya restarts" */
-   TtaNewLabel (ProfileBase + mProfileEmpty2, ProfileBase + ProfileMenu,
-		TtaGetMessage (AMAYA, AM_PROFILE_CHANGE));
-   RefreshProfileMenu ();
-   /* display the menu */
-   TtaSetDialoguePosition ();
-   TtaShowDialogue (ProfileBase + ProfileMenu, TRUE);
-#else /* !_WINGUI */
- 
-   /* load and display the current values */
-   GetProfileConf ();
-
-   if (!ProfileHwnd)
-     DialogBox (hInstance, MAKEINTRESOURCE (PROFILEMENU), NULL, 
-		(DLGPROC) WIN_ProfileDlgProc);
-   else
-     SetFocus (ProfileHwnd);
-#endif /* !_WINGUI */
-}
-
-
-/**********************
-** Templates Menu
-**********************/
-/*----------------------------------------------------------------------
-  GetTemplatesConf
-  Makes a copy of the current registry Templates values
-  ----------------------------------------------------------------------*/
-static void GetTemplatesConf (void)
-{
-  GetEnvString ("TEMPLATE_URL", TemplatesUrl);
-}
-
-/*----------------------------------------------------------------------
-  GetDefaultTemplatesConf
-  Makes a copy of the default registry Templates values
-  ----------------------------------------------------------------------*/
-static void GetDefaultTemplatesConf (void)
-{
-  GetDefEnvString ("TEMPLATE_URL", TemplatesUrl);
-}
-
-
-/*----------------------------------------------------------------------
-  SetTemplatesConf
-  Updates the registry Templates values
-  ----------------------------------------------------------------------*/
-static void SetTemplatesConf (void)
-{
-  TtaSetEnvString ("TEMPLATE_URL", TemplatesUrl, TRUE);
-  TtaSaveAppRegistry ();
-}
-
-#ifdef _WINGUI
-/*----------------------------------------------------------------------
-  WIN_RefreshTemplatesMenu
-  Displays the current registry values in the menu
-  ----------------------------------------------------------------------*/
-void WIN_RefreshTemplatesMenu (HWND hwnDlg)
-{
-  SetDlgItemText (hwnDlg, IDC_TEMPLATESURL, TemplatesUrl);
-}
-
-/*----------------------------------------------------------------------
-  WIN_TemplatesDlgProc
-  Windows callback for the Templates menu
-  ----------------------------------------------------------------------*/
-LRESULT CALLBACK WIN_TemplatesDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
-				       LPARAM lParam)
-{
-  switch (msg)
-    {
-    case WM_INITDIALOG:
-      TemplatesHwnd = hwnDlg;
-      /* initialize the menu text */
-      WIN_SetMenuText (hwnDlg, WIN_TemplatesMenuText);
-      /* write the current values in the dialog entries */
-      WIN_RefreshTemplatesMenu (hwnDlg);
-      break;
-
-    case WM_CLOSE:
-    case WM_DESTROY:
-      /* reset the status flag */
-      TemplatesHwnd = NULL;
-      EndDialog (hwnDlg, ID_DONE);
-      break;
-
-    case WM_COMMAND:
-      switch (LOWORD (wParam))
-	{
-	case IDC_TEMPLATESURL:
-	  GetDlgItemText (hwnDlg, IDC_TEMPLATESURL, TemplatesUrl,
-			  sizeof (TemplatesUrl) - 1);
-	  break;
-	  /* action buttons */
-	case ID_APPLY:
-	  SetTemplatesConf ();	  
-	  /* reset the status flag */
-	  EndDialog (hwnDlg, ID_DONE);
-	  break;
-	case ID_DONE:
-    case IDCANCEL:
-	  /* reset the status flag */
-	  TemplatesHwnd = NULL;
-	  EndDialog (hwnDlg, ID_DONE);
-	  break;
-	case ID_DEFAULTS:
-	  /* always signal this as modified */
-	  GetDefaultTemplatesConf ();
-	  WIN_RefreshTemplatesMenu (hwnDlg);
-	  break;
-	}
-      break;	     
-    default: return FALSE;
-    }
-  return TRUE; 
-}
-
-#else /* _WINGUI */
-/*----------------------------------------------------------------------
-  RefreshTemplatesMenu
-  Displays the current registry values in the menu
-  ----------------------------------------------------------------------*/
-static void RefreshTemplatesMenu ()
-{
-  TtaSetTextForm (TemplatesBase + mTemplates, TemplatesUrl);
-}
-
-/*----------------------------------------------------------------------
-   callback of the Templates configuration menu
-  ----------------------------------------------------------------------*/
-static void TemplatesCallbackDialog (int ref, int typedata, char *data)
-{
-  int val;
-
-  if (ref == -1)
-    {
-      /* removes the Templates conf menu */
-      TtaDestroyDialogue (TemplatesBase + TemplatesMenu);
-    }
-  else
-    {
-      /* has the user changed the options? */
-      val = (int) data;
-      switch (ref - TemplatesBase)
-	{
-	case TemplatesMenu:
-	  switch (val) 
-	    {
-	    case 0:
-	      TtaDestroyDialogue (ref);
-	      break;
-	    case 1:
-	      SetTemplatesConf ();
-#ifndef _WX
-	      TtaDestroyDialogue (ref);
-#endif /* _WX */
-	      break;
-	    case 2:
-	      GetDefaultTemplatesConf ();
-	      RefreshTemplatesMenu ();
-	      break;
-	    default:
-	      break;
-	    }
-	  break;
-
-	case mTemplates:
-	  if (data)
-	    strcpy (TemplatesUrl, data);
-	  else
-	    TemplatesUrl[0] = EOS;
-	  break;
-	  
-	default:
-	  break;
-	}
-    }
-}
-#endif /* !_WINGUI */
-
-
-/*----------------------------------------------------------------------
-  TemplatesConfMenu
-  Build and display the Conf Menu dialog box and prepare for input.
-  ----------------------------------------------------------------------*/
-void TemplatesConfMenu (Document document, View view)
-{
-#ifndef _WINGUI
-   int              i;
-
-   /* Create the dialogue form */
-   i = 0;
-   strcpy (&s[i], TtaGetMessage (AMAYA, AM_APPLY_BUTTON));
-   i += strlen (&s[i]) + 1;
-   strcpy (&s[i], TtaGetMessage (AMAYA, AM_DEFAULT_BUTTON));
-
-   TtaNewSheet (TemplatesBase + TemplatesMenu, TtaGetViewFrame (document, view),
-		TtaGetMessage(AMAYA, AM_TEMPLATES_MENU), 2, s, TRUE, 1, 'L', D_DONE);
-   
-   TtaNewTextForm (TemplatesBase + mTemplates, TemplatesBase + TemplatesMenu,
-		   TtaGetMessage (AMAYA, AM_TEMPLATES_SERVER),
-		   20, 1, FALSE);
-  
-#endif   /* !_WINGUI */
- 
-   /* load and display the current values */
-   GetTemplatesConf ();
-#ifndef _WINGUI
-   RefreshTemplatesMenu ();
-   /* display the menu */
-   TtaSetDialoguePosition ();
-   TtaShowDialogue (TemplatesBase + TemplatesMenu, TRUE);
-#else 
-   if (!TemplatesHwnd)
-		DialogBox (hInstance, MAKEINTRESOURCE (TEMPLATESMENU), NULL, 
-		     (DLGPROC) WIN_TemplatesDlgProc);
-   else
-     SetFocus (TemplatesHwnd);
-#endif /* !_WINGUI */
-}
-
 /*********************
 ** Annotations configuration menu
 ***********************/
@@ -5001,13 +4423,15 @@ int GetPrefGeneralBase()
 {
   return GeneralBase;
 }
-/*----------------------------------------------------------------------
+/*--
+--------------------------------------------------------------------
   Returns a tab dialog reference (used into PreferenceDlgWX callbacks)
   ----------------------------------------------------------------------*/
 int GetPrefBrowseBase()
 {
   return BrowseBase;
 }
+
 /*----------------------------------------------------------------------
   Returns a tab dialog reference (used into PreferenceDlgWX callbacks)
   ----------------------------------------------------------------------*/
@@ -5022,6 +4446,7 @@ int GetPrefProxyBase()
 {
   return ProxyBase;
 }
+
 /*----------------------------------------------------------------------
   Returns a tab dialog reference (used into PreferenceDlgWX callbacks)
   ----------------------------------------------------------------------*/
@@ -5036,13 +4461,15 @@ int GetPrefColorBase()
 {
   return ColorBase;
 }
-/*----------------------------------------------------------------------
+/*-
+---------------------------------------------------------------------
   Returns a tab dialog reference (used into PreferenceDlgWX callbacks)
   ----------------------------------------------------------------------*/
 int GetPrefGeometryBase()
 {
   return GeometryBase;
 }
+
 /*----------------------------------------------------------------------
   Returns a tab dialog reference (used into PreferenceDlgWX callbacks)
   ----------------------------------------------------------------------*/
@@ -5050,20 +4477,7 @@ int GetPrefLanNegBase()
 {
   return LanNegBase;
 }
-/*----------------------------------------------------------------------
-  Returns a tab dialog reference (used into PreferenceDlgWX callbacks)
-  ----------------------------------------------------------------------*/
-int GetPrefProfileBase()
-{
-  return ProfileBase;
-}
-/*----------------------------------------------------------------------
-  Returns a tab dialog reference (used into PreferenceDlgWX callbacks)
-  ----------------------------------------------------------------------*/
-int GetPrefTemplatesBase()
-{
-  return TemplatesBase;
-}
+
 /*----------------------------------------------------------------------
   Returns a tab dialog reference (used into PreferenceDlgWX callbacks)
   ----------------------------------------------------------------------*/
@@ -5355,10 +4769,6 @@ void InitConfMenu (void)
   GeometryBase = TtaSetCallback ((Proc)GeometryCallbackDialog,
 				 MAX_GEOMETRYMENU_DLG);
   LanNegBase = TtaSetCallback ((Proc)LanNegCallbackDialog,
-			       MAX_LANNEGMENU_DLG);
-  ProfileBase = TtaSetCallback ((Proc)ProfileCallbackDialog,
-			       MAX_PROFILEMENU_DLG);
-  TemplatesBase = TtaSetCallback ((Proc)TemplatesCallbackDialog,
 			       MAX_LANNEGMENU_DLG);
 #ifdef ANNOTATIONS
   AnnotBase = TtaSetCallback ((Proc)AnnotCallbackDialog,

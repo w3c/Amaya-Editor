@@ -616,7 +616,7 @@ int Prof_BelongDoctype (char *name, int docProfile, ThotBool RO)
 /*-----------------------------------------------------------------------
    Prof_InitTable: Seek the current profile file and init tables
   ----------------------------------------------------------------------*/
-void Prof_InitTable (char *prof_file)
+void Prof_InitTable (char *profile)
 {
   FILE               *profFile;
   char               *ptr;
@@ -624,31 +624,29 @@ void Prof_InitTable (char *prof_file)
   int                 i, j;
 
   /* open the profile file */
-  /* if the caller didn't specify any profile, we use the one
-     given in the registry */
-  if (prof_file && *prof_file)
-    ptr = prof_file;
-  else
-    ptr = TtaGetEnvString ("Profiles_File");
-
+  ptr = TtaGetEnvString ("Profiles_File");
   if (ptr && *ptr)
     {
       if (SearchFile (ptr, 2, buffer))
 	{
 	  profFile = fopen (buffer, "r");
-	  /* what is the current active profile */  
-	  ptr = TtaGetEnvString ("Profile");
-	  if (ptr && *ptr)
+	  /* if the caller didn't specify any profile, we use the one
+	     given in the registry */
+	  strcpy (UserProfile, "Editor");
+	  if (profile && *profile)
 	    {
-	      if (strstr (ptr, "(editor)"))
+	      if (strstr (profile, "(editor)"))
 		/* avoid to use a dead profile */
 		strcpy (UserProfile, "Editor");
+	      else if (strstr (profile, "browser"))
+		/* avoid to use a dead profile */
+		strcpy (UserProfile, "Browser");
+	      else if (strstr (profile, "display"))
+		/* avoid to use a dead profile */
+		strcpy (UserProfile, "Display");
 	      else
-		strcpy (UserProfile, ptr);
+		strcpy (UserProfile, profile);
 	    }
-	  else
-	    strcpy (UserProfile, "Editor");
-
 #ifdef _WX
 	  strcat (UserProfile, "_WX");
 #endif /* _WX */
@@ -761,18 +759,6 @@ void Prof_FreeTable ()
   NbFunctions = 0;
 }
 
-
-/*----------------------------------------------------------------------
-  TtaRebuildProTable: Rebuild the Profiles Table
-  ----------------------------------------------------------------------*/
-void TtaRebuildProTable (char *prof_file)
-{
-  /* delete the profiles table */
-  Prof_FreeTable ();
-  Prof_InitTable (prof_file);
-}
-
-
 /*----------------------------------------------------------------------
   TtaCanEdit returns TRUE if there is almost one editing function active.
   ----------------------------------------------------------------------*/
@@ -799,26 +785,6 @@ void TtaGetProfileFileName (char *name, int length)
 	strcpy (name, buffer);
     }
 }
-
-/*----------------------------------------------------------------------
-   TtaGetDefProfileFileName:  Get the text for the default profile file name.
-   name is a provided buffer of length characters to receive the name.
-  ----------------------------------------------------------------------*/
-void TtaGetDefProfileFileName (char *name, int length)
-{
-  char *ptr;
-  char  buffer[200];
-
-  name[0] = EOS;
-  ptr = TtaGetDefEnvString ("Profiles_File");
-  if (ptr && *ptr)
-    {
-      SearchFile (ptr, 2, buffer);
-      if (strlen (buffer) < (size_t)length)
-	strcpy (name, buffer);
-    }
-}
-
 
 /*----------------------------------------------------------------------
    TtaGetProfilesItems:  Get the text for the profile menu items.

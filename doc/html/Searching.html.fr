@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>Rechercher et remplacer</title>
-  <meta name="GENERATOR" content="amaya 5.4, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 8.6, see http://www.w3.org/Amaya/" />
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <link href="style.css" rel="stylesheet" type="text/css" />
 </head>
 
 <body xml:lang="en" lang="en">
@@ -16,11 +17,11 @@
       <td><p><img alt="W3C" src="../images/w3c_home" /> <img alt="Amaya"
         src="../images/amaya.gif" /></p>
       </td>
-      <td><p><a href="StyleSheets.html.fr#Style" accesskey="p"><img
-        alt="previous" src="../images/left.gif" /></a> <a
-        href="Manual.html.fr" accesskey="t"><img alt="top"
-        src="../images/up.gif" /></a> <a href="SpellChecking.html.fr#Spell"
-        accesskey="n"><img alt="next" src="../images/right.gif" /></a></p>
+      <td><p><a href="StyleSheets.html.fr" accesskey="p"><img alt="previous"
+        src="../images/left.gif" /></a> <a href="Manual.html.fr"
+        accesskey="t"><img alt="top" src="../images/up.gif" /></a> <a
+        href="SpellChecking.html.fr" accesskey="n"><img alt="next"
+        src="../images/right.gif" /></a></p>
       </td>
     </tr>
   </tbody>
@@ -48,7 +49,7 @@ différents critères :</p>
     opération similaire. Le texte de remplacement est écrit dans la zone
     d'entrée <strong>Texte de remplacement</strong>et le mode de remplacement
     est sélectionné depuis le menu <strong>Remplacement</strong>. Les modes
-    de remplacements sont les suivants : 
+    de remplacements sont les suivants :
     <ul>
       <li><strong>Sans remplacement</strong> : même si la zone d'entrée
         "Texte de remplacement" contient une chaîne de caractères, rien ne
@@ -56,7 +57,7 @@ différents critères :</p>
         recherche.</li>
       <li><strong>Remplacement à la demande</strong> : quand la chaîne est
         trouvée, elle est sélectionnée. L'utilisateur peut alors sélectionner
-        l'un des boutons suivants : 
+        l'un des boutons suivants :
         <ul>
           <li><strong>Confirmer</strong> pour remplacer et effectuer la
             recherche de nouveau.</li>
@@ -71,7 +72,7 @@ différents critères :</p>
     </ul>
   </li>
   <li>Le menu <strong>Où rechercher</strong> vous permet de spécifier la
-    partie du document dans laquelle la recherche s'effectue : 
+    partie du document dans laquelle la recherche s'effectue :
     <ul>
       <li><strong>Avant la sélection</strong> : la recherche commence au
         début de la partie sélectionnée et remonte jusqu'au début du

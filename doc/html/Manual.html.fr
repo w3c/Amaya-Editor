@@ -16,9 +16,8 @@ body {background-color: #FFFFFF}</style>
 
 <h1 style="text-align : center">Manuel d'utilisation d'Amaya</h1>
 
-<h4 style="text-align: center">Version 8.4, février 2004<br />
-<img src="../images/amaya.gif" alt="Amaya" />
-</h4>
+<h4 style="text-align: center">Version 8.7, septembre 2004<br />
+<img src="../images/amaya.gif" alt="Amaya" /></h4>
 <dl>
   <dt><strong>Auteurs :</strong></dt>
     <dd>Irène Vatton, Vincent Quint, José Kahan</dd>
@@ -46,11 +45,15 @@ décrits.</p>
 <h2><a name="L9201" id="L9201">Démarrer Amaya</a></h2>
 
 <p>Pour démarrer <strong>Amaya</strong> sur une station Unix :</p>
-<pre>    amaya [-display host] [document]</pre>
+<pre>    amaya [-display host] [-profile browser|display] [document]</pre>
 
-<p>Le paramètre [-display host] est optionnel. Il détermine l'écran hôte
-lointain où Amaya doit afficher des pages Web. Si ce paramètre est omis,
-Amaya affiche dans l'écran&nbsp; local.</p>
+<p>Le paramètre <code>-display host</code> est optionnel. Il permet
+d'afficher les pages Web sur un écran X-Window (host) distant quand cet
+affichage distant est autorisé.</p>
+
+<p>Le paramètre <code>-profile browser|display</code> est optionnel. Il
+permet de lancer l'application en mode navigateur (<code>-profile
+browser</code>) ou en mode afficheur (<code>-profile display</code>).</p>
 
 <p>Le paramètre <code>[document]</code> est optionnel. C'est le nom de
 fichier ou le URI du premier document qu' <strong>Amaya</strong> doit
@@ -250,7 +253,8 @@ Home Page</a>) ou la page de bienvenue d'Amaya.</p>
         CSS</a></li>
     </ul>
   </li>
-  <li><a href="Numbering.html.fr#Section">Numéroter une section</a></li>
+  <li><a href="Numbering.html.fr#Section">Numéroter les sections et engendrer
+    une table des matières</a></li>
   <li><a href="MakeBook.html.fr#Assembling">Assembler des collections de
     document</a></li>
   <li><a href="Annotations.html.fr#Assembling">Les annotations dans Amaya</a>
@@ -278,16 +282,9 @@ Home Page</a>) ou la page de bienvenue d'Amaya.</p>
   </li>
   <li><a href="Configure.html.fr#Configuring">Configurer Amaya</a>
     <ul>
-      <li><a href="Configure.html.fr#Conventions">Conventions</a>
-        <ul>
-          <li><a href="Configure.html.fr#L979">Le répertoire
-            d'Amaya/Config</a></li>
-          <li><a href="Configure.html.fr#AmayaHome">Le répertoire
-            d'AmayaHome</a></li>
-          <li><a href="Configure.html.fr#AmayaTemp">Le répertoire d'
-            AmayaTemp</a></li>
-        </ul>
-      </li>
+      <li><a href="Configure.html.fr#Conventions">Conventions</a></li>
+      <li><a href="Configure.html.fr#L979">Le répertoire
+      d'Amaya/Config</a></li>
       <li><a href="Configure.html.fr#preferences">Menus des
       préférences</a></li>
     </ul>
@@ -358,8 +355,8 @@ spécifique d'Amaya :</p>
     documents</a></li>
   <li><a rel="Chapter" href="Printing.html.fr#Printing">Imprimer des
     documents</a></li>
-  <li><a rel="Chapter" href="Numbering.html.fr#Section">Numéroter une
-    section</a></li>
+  <li><a rel="Chapter" href="Numbering.html.fr#Section">Numéroter les
+    sections</a></li>
   <li><a rel="Chapter" href="MakeBook.html.fr#Assembling">Assembler des
     collections de document</a></li>
   <li><a rel="Chapter" href="Annotations.html.fr#Annotations">Les annotations
@@ -403,9 +400,9 @@ utiliser.</a></p>
   <a href="mailto:vatton@w3.org">I. Vatton</a>
 </address>
 
-<p class="policyfooter"><small>Copyright &nbsp;©&nbsp; 1994-2003 <a
+<p class="policyfooter"><small>Copyright  ©  1994-2004 <a
 href="http://www.inria.fr/">INRIA</a> and <a
-href="http://www.w3.org/">W3C</a><sup>®</sup>(<a
+href="http://www.w3.org/">W3C</a><sup>®</sup> (<a
 href="http://www.lcs.mit.edu/">MIT</a>, <a
 href="http://www.ercim.org/">ERCIM</a>, <a
 href="http://www.keio.ac.jp/">Keio</a>), All Rights Reserved. W3C <a

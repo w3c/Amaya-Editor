@@ -1053,28 +1053,6 @@
 	<message xml:lang="tr">Ülke dilleri...</message>
 	<message xml:lang="ru">Язык обсуже&amp;дения...</message>
 </label>
-<label define="BConfigProfile">
-	<message xml:lang="en">&amp;Profiles...</message>
-	<message xml:lang="fr">&amp;Profils...</message>
-	<message xml:lang="de">Profile...</message>
-	<message xml:lang="it">Profili...</message>
-	<message xml:lang="es">P&amp;erfiles...</message>
-	<message xml:lang="pt">Perfís...</message>
-	<message xml:lang="fi">Profiilit...</message>
-	<message xml:lang="tr">Profiller...</message>
-	<message xml:lang="ru">Профили...</message>
-</label>
-<label define="BConfigTemplates">
-	<message xml:lang="en">&amp;Templates...</message>
-	<message xml:lang="fr">Mo&amp;dèles de page</message>
-	<message xml:lang="de">Schablonen...</message>
-	<message xml:lang="it">Modelli...</message>
-	<message xml:lang="es">P&amp;lantillas...</message>
-	<message xml:lang="pt">Templates...</message>
-	<message xml:lang="fi">Mallit...</message>
-	<message xml:lang="tr">Sayfa modelleri...</message>
-	<message xml:lang="ru">Шаблоны...</message>
-</label>
 <label define="BTitle">
 	<message xml:lang="en">Change Title...</message>
 	<message xml:lang="fr">Changer le titre...</message>

@@ -6,6 +6,7 @@
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
   <title>Configurer Amaya</title>
   <meta name="GENERATOR" content="amaya 8.6, see http://www.w3.org/Amaya/" />
+  <link href="style.css" rel="stylesheet" type="text/css" />
 </head>
 
 <body xml:lang="fr" lang="fr">
@@ -178,7 +179,7 @@ Générales</strong> et <strong>Préférences Cache</strong>.</p>
 Cependant, si Amaya plante, les fichiers temporaires ne seront pas effacés.
 Ceci n'aura pas d'impact sur les exécutions d'Amaya ultérieurement.</p>
 
-<h3><a name="preferences">Menus des Préférences</a></h3>
+<h2><a name="preferences">Menus des Préférences</a></h2>
 
 <p>Ces menus se trouvent sous le menu <strong>Éditer/Préférences</strong>. Il
 y a 10 différents menus de préférences disponibles : <a
@@ -209,12 +210,8 @@ summary="action button chart">
   </tbody>
 </table>
 
-<h4><a name="General">Les préférences générales</a></h4>
-
-<p style="text-align: center"><img src="../images/GeneralMenu-fr.gif"
-alt="General Preferences Menu" /></p>
+<h3><a name="General">Les préférences générales</a></h3>
 <dl>
-  <dt></dt>
   <dt><strong>Le répertoire Amaya user</strong> (sur stations Windows
   uniquement, non montré dans la figure incluse)</dt>
     <dd>Spécifie le répertoire où les préférences de l'utilisateur sont
@@ -244,8 +241,8 @@ alt="General Preferences Menu" /></p>
   ligne</a></strong></dt>
     <dd>Cette option concerne le coller depuis une autre application. Quand
       cette option est activée, les lignes de l'application source sont
-      conservées. Sinon les caractères «&nbsp;fin de ligne&nbsp;» sont
-      remplacés par des espaces.</dd>
+      conservées. Sinon les caractères « fin de ligne » sont remplacés par
+      des espaces.</dd>
   <dt><strong>Produire des fichiers de sauvegarde</strong></dt>
     <dd>Si cette option est active Amaya va produire périodiquement un
       fichier de sauvegarde pour chaque document édité.</dd>
@@ -263,11 +260,6 @@ alt="General Preferences Menu" /></p>
       cibles peut aider quand on veut <a href="Links.html.fr#L245">créer de
       nouveaux liens</a>. Cette option agit immédiatement sur toutes les vues
       formatées de documents. <br />
-    </dd>
-  <dt><strong>Numéroter les sections</strong></dt>
-    <dd>Contrôle si les <a href="Numbering.html.fr">sections sont
-      numérotées</a> ou non. Cette option agit immédiatement sur toutes les
-      vues formatées de documents. <br />
     </dd>
   <dt><strong>Accès rapides</strong></dt>
     <dd>Spécifie la touche <strong>Alt</strong> ou <strong>Control</strong>
@@ -307,15 +299,11 @@ alt="General Preferences Menu" /></p>
     </dd>
 </dl>
 
-<h4><a name="L970">Préférences de navigation</a></h4>
+<h3><a name="L970">Préférences de navigation</a></h3>
 
 <p>Cette boîte de dialogue vous permet d'enregistrer vos préférences de
 navigation.</p>
-
-<p style="text-align: center"><img src="../images/BrowsingMenu-fr.gif"
-alt="Publish Preferences Menu" /></p>
 <dl>
-  <dt></dt>
   <dt><strong>Charger les images</strong></dt>
     <dd>Contrôle si les images doivent être chargées et affichées. Sinon,
       l'attribut ALT est visualisé à la place de l'image. Cette option prend
@@ -349,16 +337,13 @@ alt="Publish Preferences Menu" /></p>
       choisi dans ce formulaire.</dd>
 </dl>
 
-<h4><a name="Publishing">Pré</a>férences de publication</h4>
+<h3><a name="Publishing">Pré</a>férences de publication</h3>
 
 <p>Cette boîte de dialogue vous permet d'enregistrer vos préférences pour les
 ETAGS et pré-conditions, pour vérifier ou non chaque commande PUT avec une
 commande GET, pour définir un nom par défaut pour les URLs finissant par un
 '/' et pour autoriser la redirection automatique de la commande PUT dans des
 domaines spécifiques.</p>
-
-<p style="text-align: center"><img src="../images/PublishMenu-fr.gif"
-alt="Publish Preferences Menu" /></p>
 <dl>
   <dt><strong>Charset pour les nouveaux documents</strong></dt>
     <dd>Définit le charset (groupe de caractères) utilisé pour les nouveaux
@@ -408,11 +393,12 @@ alt="Publish Preferences Menu" /></p>
       publication. Vous pouvez spécifier un ou plusieurs domaines, chacun
       séparé d'un <em>espace</em>, par exemple, <code>www.w3.org
       groucho.marx.edu</code>.</dd>
-  <dt><a name="Cache"><strong>Préférences de cache</strong></a></dt>
 </dl>
 
-<p style="text-align: center"><img src="../images/CacheMenu-fr.gif"
-alt="Cache Preferences Menu" /></p>
+<h3><strong>Préférences de cache</strong></h3>
+<dl>
+  <dt><a name="Cache" id="Cache"></a></dt>
+</dl>
 
 <p>Amaya fournit un cache par l'intermédiaire de la libwww. Par défaut, le
 cache est activé et est stocké dans le répertoire
@@ -443,10 +429,7 @@ cache est activé et est stocké dans le répertoire
     <dd>Donne la taille maximum d'entrée d'un cache.</dd>
 </dl>
 
-<h4><a name="Proxy">Préférences du proxy</a></h4>
-
-<p style="text-align: center"><img src="../images/ProxyMenu-fr.gif"
-alt="Proxy Preferences Menu" /></p>
+<h3><a name="Proxy">Préférences du proxy</a></h3>
 
 <p>Vous pouvez spécifier un proxy et une série de domaines où le proxy
 devrait ou ne devrait pas être utilisé par le biais de ce menu.</p>
@@ -480,10 +463,7 @@ devrait ou ne devrait pas être utilisé par le biais de ce menu.</p>
     </dd>
 </dl>
 
-<h4><a name="color">Préférences des couleurs</a></h4>
-
-<p style="text-align: center"><img src="../images/ColorMenu-fr.gif"
-alt="Color Preferences Menu" /></p>
+<h3><a name="color">Préférences des couleurs</a></h3>
 
 <p>Ce menu permet la sélection des couleurs du premier plan et de l'arrière
 plan par défaut pour les documents. Il permet également de contrôler les
@@ -523,10 +503,7 @@ document.</p>
 <p>Le moyen de fixer ou de changer les couleurs des liens, des liens visités
 et des liens activés est donné dans la feuille de style Amaya.css</p>
 
-<h4><a name="HTML">Les préférences de géométrie</a></h4>
-
-<p style="text-align: center"><img src="../images/GeomMenu-fr.gif"
-alt="Geometry Preferences Menu" /></p>
+<h3><a name="HTML">Les préférences de géométrie</a></h3>
 
 <p>Ce menu vous permet de sauver la position de la fenêtre courante et la
 taille des différentes vues d'un document (formatée, structure, alterné,
@@ -535,10 +512,7 @@ Notez que les valeurs qui sont sauvées appartiennent aux vues du document
 d'où vous appelez le menu. Ces changements seront effectifs quand vous
 ouvrirez des nouvelles fenêtres document.</p>
 
-<h4><a name="lang">Les préférences de négociation de langues</a></h4>
-
-<p style="text-align: center"><img src="../images/LangueNegotiation-fr.gif"
-alt="Language negotiation menu" /></p>
+<h3><a name="lang">Les préférences de négociation de langues</a></h3>
 
 <p>Si un document existe en différentes langues et que votre serveur est
 configuré pour faire une négociation de langue, vous pouvez utiliser ce menu
@@ -549,41 +523,6 @@ qui existe en versions Française, Anglaise et Japonaise. En changeant la
 négociation de la langue en code ISO pour les langues ci dessus
 (<strong>fr</strong>, <strong>en</strong>, ou <strong>ja</strong>) vous
 pouvez demander de façon transparente n'importe laquelle de ces versions.</p>
-
-<h4><a name="Profiles">Profils</a></h4>
-
-<p style="text-align: center"><img src="../images/ProfilesMenu-fr.gif"
-alt="Profiles  menu" /></p>
-
-<p>Dans Amaya, un <strong>profil</strong> permet d'adapter l'interface
-utilisateur. Vous pouvez utiliser des profils pour cacher ou visualiser des
-boutons ou des menus d'Amaya. Ce menu vous permet de choisir un fichier de
-définition de profil donné et d'en sélectionner un parmi les profils proposés
-dans ce fichier. Amaya propose deux profils en édition <em>(editor et
-mini-editor)</em> et deux profils en navigation<em>(browser et
-mini-browser)</em>, chacun avec des capacités différentes. Les changements de
-profil seront effectifs au prochain lancement d'Amaya.</p>
-
-<h4><a name="Templates">Modèles de pages</a></h4>
-
-<p style="text-align: center"><img src="../images/TemplatesMenu-fr.gif"
-alt="Templates " /></p>
-
-<p>Un <strong>modèle de page</strong> est un modèle, ou un squelette de
-document que vous, pouvez utiliser pour créer vos propres documents. Ce menu
-vous permet de spécifier l'URL du serveur du modèle de page, qui pourra être
-soit localisé sur votre station soit stocké dans un serveur particulier. Vous
-aurez besoin de quitter Amaya pour valider cette option. Quand vous lancerez
-Amaya de nouveau, il y aura une nouvelle entrée de fichier
-<code>Fichier/Nouveau/depuis modèle de page</code>. En suivant cette entrée,
-vous ouvrirez un nouveau document montrant les résultats de navigation de
-l'URL du modèle de page. L'idée est que cette page agit comme un index des
-modèles de page disponibles sur votre station ou sur le serveur des modèles
-de page. Un exemple de modèle de page est disponible à cette adresse <a
-href="http://cgi.w3.org/cgi-bin/createform.pl">http://cgi.w3.org/cgi-bin/createform.pl</a>.
-Pour plus d'information, naviguer la page <a
-href="http://www.w3.org/Amaya/User/Templates.html">utilisez des modèles de
-page avec Amaya</a>.</p>
 </div>
 
 <p><a href="Annotations.html.fr"><img alt="previous" src="../images/left.gif"

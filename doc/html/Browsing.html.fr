@@ -3,9 +3,10 @@
        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
   <title>Naviguer avec Amaya</title>
   <meta name="GENERATOR" content="amaya 8.6, see http://www.w3.org/Amaya/" />
-  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <link href="style.css" rel="stylesheet" type="text/css" />
 </head>
 
 <body xml:lang="en" lang="en">
@@ -17,7 +18,7 @@
         src="../images/amaya.gif" /></p>
       </td>
       <td><p><a href="Manual.html.fr" accesskey="t"><img alt=""
-        src="../images/up.gif" /></a> <a href="Views.html.fr#Views"
+        src="../images/up.gif" /></a> <a href="Views.html.fr"
         accesskey="n"><img alt="next" src="../images/right.gif" /></a></p>
       </td>
     </tr>

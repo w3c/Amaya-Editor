@@ -2308,39 +2308,6 @@
 	<message xml:lang="tr">Bu değişiklikler yeniden Amaya\'yı açtığınız taktirde geçerli olurlar</message>
 	<message xml:lang="ru">Изменения вступят в силу только после перезапуска Amaya</message>
 </label>
-<label define="AM_PROFILE_MENU">
-	<message xml:lang="en">Profiles Preferences</message>
-	<message xml:lang="fr">Configuration du profil</message>
-	<message xml:lang="de">Profile</message>
-	<message xml:lang="it">Preferenze dei profili</message>
-	<message xml:lang="es">Preferencias de perfiles</message>
-	<message xml:lang="pt">Preferências de perfís</message>
-	<message xml:lang="fi">Profiilin asetukset</message>
-	<message xml:lang="tr">Profil ayarları</message>
-	<message xml:lang="ru">Настройки профилей</message>
-</label>
-<label define="AM_TEMPLATES_SERVER">
-	<message xml:lang="en">Enter the URL of the templates server</message>
-	<message xml:lang="fr">Entrez l'URL du serveur de modèles</message>
-	<message xml:lang="de">URI des Schablonen-Servers angeben</message>
-	<message xml:lang="it">Digita l'URL del server dei modelli</message>
-	<message xml:lang="es">URL del servidor de plantillas:</message>
-	<message xml:lang="pt">Introduzir a URL do servidor de gabaritos</message>
-	<message xml:lang="fi">Syötä mallipalvelimen osoite</message>
-	<message xml:lang="tr">Model servörün URL\'ini girin</message>
-	<message xml:lang="ru">Введите URL сервера шаблонов</message>
-</label>
-<label define="AM_TEMPLATES_MENU">
-	<message xml:lang="en">Templates Preferences</message>
-	<message xml:lang="fr">Configuration des modèles de pages</message>
-	<message xml:lang="de">Schablonen</message>
-	<message xml:lang="it">Preferenze sui modelli</message>
-	<message xml:lang="es">Preferencias de plantillas</message>
-	<message xml:lang="pt">Preferências de gabaritos</message>
-	<message xml:lang="fi">Mallien asetukset</message>
-	<message xml:lang="tr">Sayfa modellerin ayarları</message>
-	<message xml:lang="ru">Настройки шаблонов</message>
-</label>
 <label define="AM_SAFE_PUT_REDIRECT">
 	<message xml:lang="en">Allow automatic PUT redirections to these domains</message>
 	<message xml:lang="fr">Autoriser la redirection automatique du PUT vers ces domaines</message>

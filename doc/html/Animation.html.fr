@@ -2,10 +2,11 @@
        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
+  <title>Graphiques et Animation SMIL</title>
   <meta http-equiv="Content-Type"
   content="application/xhtml+xml; charset=iso-8859-1" />
-  <title>Graphiques et Animation SMIL</title>
   <meta name="generator" content="amaya 8.6, see http://www.w3.org/Amaya/" />
+  <link href="style.css" rel="stylesheet" type="text/css" />
 </head>
 
 <body xml:lang="fr" lang="fr">
@@ -20,7 +21,7 @@
       <td><a href="SVG.html.fr" accesskey="p"><img alt="previous"
         src="../images/left.gif" /></a> <a href="Manual.html"
         accesskey="t"><img alt="top" src="../images/up.gif" /></a> <a
-        href="Xml.html.fr#page_body" accesskey="n"><img alt="next"
+        href="Xml.html.fr" accesskey="n"><img alt="next"
         src="../images/right.gif" /></a></td>
     </tr>
   </tbody>

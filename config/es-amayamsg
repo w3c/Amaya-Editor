@@ -210,170 +210,167 @@
 208 Ubicación del archivo de definición de perfiles:
 209 Perfil elegido:
 210 Estos cambios no serán efectivos hasta que se reinicie Amaya.
-211 Preferencias de perfiles
-212 URL del servidor de plantillas:
-213 Preferencias de plantillas
-214 Permitir redirecciones PUT automáticas a estos dominios:
-215 Ignorar hojas de estilo
-216 Tipo de transformación
-217 (separar los dominios con un espacio)
-218 No usar proxy en estos dominios
-219 Usar proxy sólo en estos dominios
-220 Nombre de carácter:
-221 Directorio de usuario de Amaya:
-222 Directorio temporal:
-223 Usar paleta
-224 Preferencias de negociación de idioma
-225 Configuración de anotaciones
-226 Usuario anotaciones/marcadores:
-227 Servidor de publicación:
-228 Servidores de anotaciones:
-229 Autocargar anotaciones locales
-230 Autocargar anotaciones remotas
-231 Deshabilitar la recarga automática remota en cada inicio (para trabajo sin conexión)
-232 Color del texto seleccionado:
-233 Color de fondo texto selecc.:
-234 Orientación
-235 Vertical
-236 Apaisado
-237 Activar FTP
-238 XML inválido - ¿Recargar como HTML o mostrar análisis de errores?
-239 XML inválido - ¿Mostrar análisis de errores?
-240 Utiliza el menú 'Archivo / Forzar codificación de caracteres'
-241 Caracteres inválidos
-242 Perfil de este documento:
-243 Se ignoran Tags/atributos - vea Archivo / Ver errores sintácticos
-244 La codificación de este documento no está soportada por Amaya
-245 Al editar y guardar este documento se cambiará su tipo
-246 No disponible
-247 Buscar
-248 Buscador de archivos
-249 Selección
-250 Filtro local de anotaciones
-251 Mostrar
-252 Ocultar
-253 Mostrar todo
-254 Ocultar todo
-255 * significa oculto, - significa parcialmente oculto
-256 Opciones de filtrado
-257 Por autor
-258 Por tipo
-259 Por servidor
-260 Atajos de teclado
-261 Ignorar
-262 Elemento de estilo
-263 No puedo crear un XPointer
-264 Imposible adjuntar un XPointer inicial sobre un elemento interno agregado
-265 Imposible adjuntar un XPointer final sobre un elemento interno agregado
-266 No sé a dónde mover la anotación
-267 No puedo mover la anotación a otro documento
-268 No puede anotar un documento que está siendo modificado. Por favor, guárdelo primero.
-269 No hay usuarios de anotaciones declarados. Por favor, abra el menú de configuración de Anotaciones
-270 No se puede crear un XPointer para esta anotación
-271 Crear una nueva anotación
-272 Fallo al enviar la anotación
-273 Fallo al borrar la anotación
-274 ¡Anotación borrada!
-275 Fallo al cargar el índice de anotaciones
-276 Error
-277 Seleccionar un juego de caracteres
-278 Seleccionar un tipo MIME
-279 Cambiar juego de caracteres
-280 Cambiar tipo MIME
-281 Cambiar
-282 Este tipo de documento no soporta juegos de caracteres
-283 Para usar esta opción el destino tiene que ser una URL HTTP
-284 Error: tipo MIME inválido
-285 Desconocido
-286 Se ignoran los estilos - vea Ver / Ver errores sintácticos
-287 Este documento ya está cargado en otra ventana
-288 Guardar la copia puede originar un problema de pérdida de actualización
-289 Al añadir o modificar el doctype se eliminarán algunos elementos o atributos
-290 Por favor, confirme la operación
-291 En documentos XHTML usar tipo MIME application/xhtml+xml
-292 Juego de caracteres para nuevos documentos:
-293 ¡Bloqueo conseguido!
-294 ¡Bloqueo fallido!
-295 Bloqueando %s...
-296 El documento %s bloqueado!
-297 El documento %s está bloqueado por % (timeout %s)
-298 ¿Sobreescribir la información de bloqueo?
-299 ¿Copiar la información de bloqueo?
-300 Intenta desbloquear el documento antes...
-301 ¡Desbloqueo conseguido!
-302 ¡Desbloqueo fallido!
-303 Desbloqueando %s...
-304 El documento %s está desbloqueado!
-305 ¿Desbloquear el documento?
-306 Propiedades del documento
-307 Las propiedades del documento no están disponibles
-308 Las propiedades del documento no están disponibles temporalmente. Inténtelo de nuevo más tarde...
-309 Buscando las propiedades del documento...
-310 Lo siento, WebDAV no soporta URLs de este tipo %s
-311 Fallo al guardar la información de bloqueo en la base local
-312 Fallo al eliminar la información de bloqueo en la base local
-313 Lo siento, esta operación no está permitida para %s
-314 ¡Solicitud suspendida! Razón: Dependencia suspendida
-315 ¡Solicitud suspendida! Razón: %s
-316 ¿Intentar de nuevo?
-317 Preferencias WebDAV
-318 Referencia Personal del Usuario (URL)
-319 Lista de Recursos WebDAV del Usuario
-320 Profundidad de bloqueo
-321 infinita
-322 Bloqueo terminado
-323 Infinita
-324 Otro
-325 Segundos
-326 Alcance del bloqueo
-327 exclusivo
-328 compartido
-329 Conocimiento
-330 Conocimiento general
-331 Conocimiento al salir
-332 Animación
-333 Biblioteca SVG
-334 Copiar opción
-335 Copiar selección
-336 Remitir a selección
-337 Añadir nuevo modelo a la bibloteca
-338 URL del nuevo archivo SVG...
-339 Título de la bibloteca
-340 URL de la biblioteca
-341 Crear biblioteca
-342 Ojear la biblioteca
-343 Crear o buscar en la biblioteca
-344 La selección no contiene sólo elementos SVG. Por favor, vuelva a seleccionar
-345 El título de la biblioteca es obligatorio
-346 Desplace la posición del cursor en el documento editado para definir una nueva posición clave...
-347 Posición clave definida. Desplace el marcador para definir la duración de la animación...
-348 Seleccione el color inicial del elemento...
-349 Color inicial definido. Desplace el marcador para definir la duración de la animación...
-350 Seleccione color final...
-351 Animación definida.
-352 Atributo animado
-353 Elemento sin atributo id
-354 Crear atributos id
-355 Borrar atributos id
-356 Crear/Borrar atributos id
-357 Aplicar operación
-358 Escribe un nombre de elemento:
-359 Aplicar hojas de estilo
-360 Tipo de pantalla actual:
-361 Nuevo Tema
-362 Propiedades de marcador
-363 Propiedades de tema
-364 Jerarquía de temas:
-365 Título:
-366 Enlace al recurso:
-367 Autor:
-368 Creado:
-369 Última modificación:
-370 Descripción:
-371 Por favor, seleccione un elemento
-372 Todos las hojas de estilo
-373 Reglas de estilo aplicadas al elemento <%s>\n
-374 Cada línea de código (en color azul) es un enlace al correspondiente código fuente. Para editarlo, active el enlace.\n
-375 Cargar objetos (object, embed, iframe)
-376 No hay regla de estilo para este elemento
-377 >No insert position defined.
+211 Permitir redirecciones PUT automáticas a estos dominios:
+212 Ignorar hojas de estilo
+213 Tipo de transformación
+214 (separar los dominios con un espacio)
+215 No usar proxy en estos dominios
+216 Usar proxy sólo en estos dominios
+217 Nombre de carácter:
+218 Directorio de usuario de Amaya:
+219 Directorio temporal:
+220 Usar paleta
+221 Preferencias de negociación de idioma
+222 Configuración de anotaciones
+223 Usuario anotaciones/marcadores:
+224 Servidor de publicación:
+225 Servidores de anotaciones:
+226 Autocargar anotaciones locales
+227 Autocargar anotaciones remotas
+228 Deshabilitar la recarga automática remota en cada inicio (para trabajo sin conexión)
+229 Color del texto seleccionado:
+230 Color de fondo texto selecc.:
+231 Orientación
+232 Vertical
+233 Apaisado
+234 Activar FTP
+235 XML inválido - ¿Recargar como HTML o mostrar análisis de errores?
+236 XML inválido - ¿Mostrar análisis de errores?
+237 Utiliza el menú 'Archivo / Forzar codificación de caracteres'
+238 Caracteres inválidos
+239 Perfil de este documento:
+240 Se ignoran Tags/atributos - vea Archivo / Ver errores sintácticos
+241 La codificación de este documento no está soportada por Amaya
+242 Al editar y guardar este documento se cambiará su tipo
+243 No disponible
+244 Buscar
+245 Buscador de archivos
+246 Selección
+247 Filtro local de anotaciones
+248 Mostrar
+249 Ocultar
+250 Mostrar todo
+251 Ocultar todo
+252 * significa oculto, - significa parcialmente oculto
+253 Opciones de filtrado
+254 Por autor
+255 Por tipo
+256 Por servidor
+257 Atajos de teclado
+258 Ignorar
+259 Elemento de estilo
+260 No puedo crear un XPointer
+261 Imposible adjuntar un XPointer inicial sobre un elemento interno agregado
+262 Imposible adjuntar un XPointer final sobre un elemento interno agregado
+263 No sé a dónde mover la anotación
+264 No puedo mover la anotación a otro documento
+265 No puede anotar un documento que está siendo modificado. Por favor, guárdelo primero.
+266 No hay usuarios de anotaciones declarados. Por favor, abra el menú de configuración de Anotaciones
+267 No se puede crear un XPointer para esta anotación
+268 Crear una nueva anotación
+269 Fallo al enviar la anotación
+270 Fallo al borrar la anotación
+271 ¡Anotación borrada!
+272 Fallo al cargar el índice de anotaciones
+273 Error
+274 Seleccionar un juego de caracteres
+275 Seleccionar un tipo MIME
+276 Cambiar juego de caracteres
+277 Cambiar tipo MIME
+278 Cambiar
+279 Este tipo de documento no soporta juegos de caracteres
+280 Para usar esta opción el destino tiene que ser una URL HTTP
+281 Error: tipo MIME inválido
+282 Desconocido
+283 Se ignoran los estilos - vea Ver / Ver errores sintácticos
+284 Este documento ya está cargado en otra ventana
+285 Guardar la copia puede originar un problema de pérdida de actualización
+286 Al añadir o modificar el doctype se eliminarán algunos elementos o atributos
+287 Por favor, confirme la operación
+288 En documentos XHTML usar tipo MIME application/xhtml+xml
+289 Juego de caracteres para nuevos documentos:
+290 ¡Bloqueo conseguido!
+291 ¡Bloqueo fallido!
+292 Bloqueando %s...
+293 El documento %s bloqueado!
+294 El documento %s está bloqueado por % (timeout %s)
+295 ¿Sobreescribir la información de bloqueo?
+296 ¿Copiar la información de bloqueo?
+297 Intenta desbloquear el documento antes...
+298 ¡Desbloqueo conseguido!
+299 ¡Desbloqueo fallido!
+300 Desbloqueando %s...
+301 El documento %s está desbloqueado!
+302 ¿Desbloquear el documento?
+303 Propiedades del documento
+304 Las propiedades del documento no están disponibles
+305 Las propiedades del documento no están disponibles temporalmente. Inténtelo de nuevo más tarde...
+306 Buscando las propiedades del documento...
+307 Lo siento, WebDAV no soporta URLs de este tipo %s
+308 Fallo al guardar la información de bloqueo en la base local
+309 Fallo al eliminar la información de bloqueo en la base local
+310 Lo siento, esta operación no está permitida para %s
+311 ¡Solicitud suspendida! Razón: Dependencia suspendida
+312 ¡Solicitud suspendida! Razón: %s
+313 ¿Intentar de nuevo?
+314 Preferencias WebDAV
+315 Referencia Personal del Usuario (URL)
+316 Lista de Recursos WebDAV del Usuario
+317 Profundidad de bloqueo
+318 infinita
+319 Bloqueo terminado
+320 Infinita
+321 Otro
+322 Segundos
+323 Alcance del bloqueo
+324 exclusivo
+325 compartido
+326 Conocimiento
+327 Conocimiento general
+328 Conocimiento al salir
+329 Animación
+330 Biblioteca SVG
+331 Copiar opción
+332 Copiar selección
+333 Remitir a selección
+334 Añadir nuevo modelo a la bibloteca
+335 URL del nuevo archivo SVG...
+336 Título de la bibloteca
+337 URL de la biblioteca
+338 Crear biblioteca
+339 Ojear la biblioteca
+340 Crear o buscar en la biblioteca
+341 La selección no contiene sólo elementos SVG. Por favor, vuelva a seleccionar
+342 El título de la biblioteca es obligatorio
+343 Desplace la posición del cursor en el documento editado para definir una nueva posición clave...
+344 Posición clave definida. Desplace el marcador para definir la duración de la animación...
+345 Seleccione el color inicial del elemento...
+346 Color inicial definido. Desplace el marcador para definir la duración de la animación...
+347 Seleccione color final...
+348 Animación definida.
+349 Atributo animado
+350 Elemento sin atributo id
+351 Crear atributos id
+352 Borrar atributos id
+353 Crear/Borrar atributos id
+354 Aplicar operación
+355 Escribe un nombre de elemento:
+356 Aplicar hojas de estilo
+357 Tipo de pantalla actual:
+358 Nuevo Tema
+359 Propiedades de marcador
+360 Propiedades de tema
+361 Jerarquía de temas:
+362 Título:
+363 Enlace al recurso:
+364 Autor:
+365 Creado:
+366 Última modificación:
+367 Descripción:
+368 Por favor, seleccione un elemento
+369 Todos las hojas de estilo
+370 Reglas de estilo aplicadas al elemento <%s>\n
+371 Cada línea de código (en color azul) es un enlace al correspondiente código fuente. Para editarlo, active el enlace.\n
+372 Cargar objetos (object, embed, iframe)
+373 No hay regla de estilo para este elemento
+374 >No insert position defined.

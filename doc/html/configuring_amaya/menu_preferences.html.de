@@ -38,8 +38,7 @@
 Dialoge stehen zur Verfügung: <strong>Allgemein</strong>,
 <strong>Browser</strong>, <strong>Veröffentlichen</strong>,
 <strong>Cache</strong>, <strong>Proxy</strong>, <strong>Farben</strong>,
-<strong>Fenstergeometrie</strong>, <strong>Sprachen</strong>,
-<strong>Profile</strong> und <strong>Vorlagen</strong>.</p>
+<strong>Fenstergeometrie</strong>, und <strong>Sprachen</strong>.</p>
 
 <p>Jeder dieser Dialoge enthält drei Knöpfe:</p>
 <dl>
@@ -56,9 +55,6 @@ Dialoge stehen zur Verfügung: <strong>Allgemein</strong>,
 
 <p>Mit diesem Dialog werden allgemeine, die gesamte Anwendung betreffende
 Einstellungen vorgenommen.</p>
-
-<p><img alt="Der Dialog allgemeine Einstellungen"
-src="../../images/general_preferences-de.png" /></p>
 
 <h3>Spezielle Verzeichnisse</h3>
 
@@ -123,9 +119,6 @@ an, dass die Option aktiv ist.</p>
     <dd>Kontrolliert ob Anker mit dem Icon <img alt="Anker-Icon"
       src="../../images/target.gif" /> in der Browseransicht gekennzeichnet
       werden sollen.</dd>
-  <dt>Abschnitte numerieren</dt>
-    <dd>Kontrolliert ob alle Überschriften der Ebene 2 bis Ebene 6 in der
-      Browseransicht numeriert werden sollen</dd>
   <dt>Zugriffstasten</dt>
     <dd>Spezifiziert den Modifikator der benutzt werden soll (<kbd>Alt</kbd>
       oder <kbd>Strg</kbd>), um die, in einem Dokument definierten <a
@@ -204,8 +197,6 @@ einstellen.</p>
 <p>Die folgenden Optionen können ein- oder ausgeschaltet werden, indem man in
 das Kästchen neben der Option klickt. Eine Markierung in dem Kästchen zeigt
 an, dass die Option aktiv ist.</p>
-<img alt="Dialog für Browsereinstellungen"
-src="../../images/browser_preferences-de.png" />
 <dl>
   <dt>Bilder laden</dt>
     <dd>Kontrolliert ob Bilder angezeigt werden sollen. Diese Option ist nur
@@ -236,9 +227,6 @@ Schrägstrich ("/") endet angehängt werden soll und die Umleitung für PUT an
 spezifische Domänen angeben. Diese Optionen werden von dem Befehl
 <strong>Speichern unter</strong> im Menü <strong>Datei</strong> ausgewertet.
 Die Optionen werden nachfolgend erklärt.</p>
-
-<p><img alt="Der Dialog Einstellungen fpr Veröffentlichen"
-src="../../images/publishing_preferences-de.png" /></p>
 <dl>
   <dt>Für XHTML application/xhtml+xml verwenden</dt>
     <dd>Diese Option verknüpft den neuen offiziellen MIME-Typ
@@ -286,9 +274,6 @@ src="../../images/publishing_preferences-de.png" /></p>
 fehlwertmäßig aktiviert und befindet sich unter dem Verzeichnis libwww-cache
 im Temporärverzeichnis. In dem Menü befindet sich zusätzlich noch der Knopf
 Cache leeren, womit der Inhalt des Cache-Verzeichnisses gelöscht wird.</p>
-
-<p><img alt="Der Dialog Einstellungen für Cache"
-src="../../images/cache_preferences-de.png" /></p>
 <dl>
   <dt>Cache aktivieren</dt>
     <dd>Aktiviert oder deaktiviert den Cache.</dd>
@@ -319,9 +304,6 @@ src="../../images/cache_preferences-de.png" /></p>
 
 <p>Im diesem Dialog kann man einen Proxy spezifizieren und Domänen angeben,
 auf denen ein Proxy benutzt oder nicht benutzt werden soll.</p>
-
-<p><img alt="Der Dialog Einstellungen für Proxy"
-src="../../images/proxy_preferences-de.png" /></p>
 <dl>
   <dt>HTTP Proxy</dt>
     <dd>Identifiziert den Proxy, welcher für HTTP-Requests benutzt werden
@@ -339,9 +321,6 @@ src="../../images/proxy_preferences-de.png" /></p>
 <p>In diesem Dialog kann man die fehlwertmäßige Hintergrundfarbe und die
 Textfarbe für ein Dokument, die Cursorfarbe und die Markierungsfarbe
 bestimmen.</p>
-
-<p><img alt="Der Dialog Einstellungen für Farben"
-src="../../images/color_preferences-de.png" /></p>
 <dl>
   <dt>Schrift</dt>
     <dd>Dies ist die Farbe der Schrift im Dokument.</dd>
@@ -382,9 +361,6 @@ gehandhabt.</p>
 verschiedenen momentan geöffneten Ansichtenfenster eines Dokuments speichern
 oder deren Fehlwerte laden.</p>
 
-<p><img alt="Der Dialig Einstellungen für Geometrie"
-src="../../images/geometry_preferences-de.png" /></p>
-
 <p>Die Werte, welche gespeichert werden, gehören zum jeweiligen Fenster einer
 Dokumentenansicht von dem dieser Dialog aufgerufen wurde. Die Änderungen
 werden erst beim Öffnen eines neuen Dokumentenfensters wirksam.</p>
@@ -396,43 +372,11 @@ und ist dieser Server für "Language Negotiation" konfiguriert, dann kann man
 hier die Sprachen für diese Verhandlung, in der Reihenfolge ihrer Priorität
 angeben beispielsweise <code>en</code> <code>de</code> <code>fr</code>).</p>
 
-<p><img alt="Der Dialog Einstellungen für Sprache"
-src="../../images/language_negotiation-de.png" /></p>
-
 <p>Man kann diese <a
 href="http://www.w3.org/1999/05/WCAG-RECPressRelease.html">Pressemitteilung</a>
 testen, welche in französischer, englischer und japanischer Version vorliegt.
 Ändert man den ISO-Code für die o. g. Sprachen, so erhält man die jeweilige
 Version.</p>
-
-<h2>Profile</h2>
-
-<p>In Amaya definiert ein Profil das "Look and Feel" der
-Benutzerschnittstelle. Man kann Profile verwenden, welche die Menü- und
-Knopfleiste verbergen. Dieser Dialog ermöglicht die Auswahl eines
-Profilverzeichnisses und der dort enthaltenen Profildateien. Die Änderung des
-Profils wird erst beim nächsten Start von Amaya wirksam.</p>
-
-<p><img alt="Der Dialog Einstellungen für Profile"
-src="../../images/profiles_preferences-de.png" /></p>
-
-<h2>Schablonen</h2>
-
-<p>Eine Schablone ist ein Modell oder ein Skelett eines Dokuments, welches
-man dazu verwenden kann um seine eigenen Dokumente zu erstellen. In diesem
-Dialog kann man den URI eines Schablonenservers spezifizieren, der sowohl
-lokal, als auch entfernt sein kann.</p>
-<img alt="Der Dialog Einstellungen für Vorlagen"
-src="../../images/templates_preferences-de.png" />
-
-<p>Man muss Amaya beenden um diese Option zu validieren. Startet man danach
-Amaya wieder, dann enthällt das Menü <strong>Datei</strong>, Untermenü
-<strong>Neu</strong> die Option <strong>Schablonen</strong>. Wählt man diesen
-Befehl, dann wird der Index des Vorlagenservers geöffnet. Fehlwertmäßig wird
-der Vorlagenserver <a
-href="http://cgi.w3.org/cgi-bin/createform.pl">http://cgi.w3.org/cgi-bin/createform.pl</a>
-beim W3C zur Verfügung gestellt. Siehe auch <a
-href="http://www.w3.org/Amaya/User/Templates.html">Vorlagen benutzen.</a></p>
 </div>
 </body>
 </html>

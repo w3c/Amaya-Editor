@@ -17,7 +17,7 @@
 <div id="page_body">
 <h1 style="text-align : center">Amaya User Manual</h1>
 
-<h4 style="text-align:center">Version 8.6 - May 2004<br />
+<h4 style="text-align:center">Version 8.7 - September 2004<br />
 <img src="../images/amaya.gif" alt="Amaya" /></h4>
 <hr />
 <dl>
@@ -47,11 +47,15 @@ common word processors and editors. They are not presented here. Only
 <h2><a name="L92011" id="L92011">Starting Amaya</a></h2>
 
 <p>To start <strong>Amaya</strong> on a Unix platform, type:</p>
-<pre>    amaya [document]</pre>
+<pre>    amaya [-display host] [-profile browser|display] [document]</pre>
 
-<p>The parameter [-display host] is optional. It defines the remote host
-screen where Amaya should display Web pages. If you omit this parameter,
-Amaya displays on the local host screen.</p>
+<p>The parameter <code>-display host</code> is optional. It allows one to
+define the remote X-Window host screen where Amaya should display Web pages
+provided this feature is available.</p>
+
+<p>The parameter <code>-profile browser|display</code> is optional. It allows
+one to launch the application in browser mode (<code>-profile browser</code>)
+or in display mode (<code>-profile display</code>).</p>
 
 <p>The parameter <code>[document]</code> is optional. It is the file name or
 the URI of the first document <strong>Amaya</strong> should display when
@@ -400,11 +404,11 @@ page.</p>
         rel="subdocument">About Controlling Printing with CSS</a></li>
     </ul>
   </li>
-  <li><a href="Numbering.html#page_body" rel="subdocument">Section
-    numbering</a>
+  <li><a href="Numbering.html#page_body" rel="subdocument">Section numbering
+    and Generating table of contents</a>
     <ul>
-      <li><a href="numbering_sections/numbering_sections.html#page_body"
-        rel="subdocument">Numbering Sections</a></li>
+      <li><a href="Numbering.html#page_body" rel="subdocument">Numbering
+        Sections and Generating table of contents</a></li>
     </ul>
   </li>
   <li><a href="MakeBook.html#page_body" rel="subdocument">Assembling large
@@ -501,9 +505,9 @@ page.</p>
   <a href="mailto:vatton@w3.org">I. Vatton</a>
 </address>
 
-<p class="policyfooter"><small>Copyright &nbsp;©&nbsp; 1994-2003 <a
+<p class="policyfooter"><small>Copyright  ©  1994-2004 <a
 href="http://www.inria.fr/">INRIA</a> and <a
-href="http://www.w3.org/">W3C</a><sup>®</sup>(<a
+href="http://www.w3.org/">W3C</a><sup>®</sup> (<a
 href="http://www.lcs.mit.edu/">MIT</a>, <a
 href="http://www.ercim.org/">ERCIM</a>, <a
 href="http://www.keio.ac.jp/">Keio</a>), All Rights Reserved. W3C <a

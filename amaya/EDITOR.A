@@ -124,8 +124,6 @@ MENUS
 	Edit_.Coptions button:BConfigColor -> ConfigColor;
 	Edit_.Coptions button:BConfigGeometry -> ConfigGeometry;
 	Edit_.Coptions button:BConfigLanNeg -> ConfigLanNeg;
-	Edit_.Coptions button:BConfigProfile -> ConfigProfile;
-	Edit_.Coptions button:BConfigTemplates -> ConfigTemplates;
 
 	Types button:BTitle -> ChangeTitle;
 	Types Separator;

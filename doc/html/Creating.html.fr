@@ -6,6 +6,7 @@
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
   <title>Créer des éléments</title>
   <meta name="GENERATOR" content="amaya 8.2+, see http://www.w3.org/Amaya/" />
+  <link href="style.css" rel="stylesheet" type="text/css" />
 </head>
 
 <body xml:lang="fr" lang="fr">
@@ -16,10 +17,10 @@
       <td><p><img alt="W3C" src="../images/w3c_home" /> <img alt="Amaya"
         src="../images/amaya.gif" /></p>
       </td>
-      <td><p><a href="Document.html.fr#Changing" accesskey="p"><img
+      <td><p><a href="Document.html.fr" accesskey="p"><img
         alt="previous" src="../images/left.gif" /></a> <a
         href="Manual.html.fr" accesskey="t"><img alt="top"
-        src="../images/up.gif" /></a> <a href="Attributes.html.fr#Attributes"
+        src="../images/up.gif" /></a> <a href="Attributes.html.fr"
         accesskey="n"><img alt="next" src="../images/right.gif" /></a></p>
       </td>
     </tr>

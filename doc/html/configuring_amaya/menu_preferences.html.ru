@@ -6,9 +6,7 @@
   <meta http-equiv="Content-Type" content="text/html; charset=windows-1251" />
   <title>&#xcc;&#xe5;&#xed;&#xfe;
   &#xcd;&#xe0;&#xf1;&#xf2;&#xf0;&#xee;&#xe9;&#xea;&#xe8;</title>
-  <style type="text/css">
-  </style>
-  <meta name="GENERATOR" content="amaya 8.5, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 8.6, see http://www.w3.org/Amaya/" />
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -36,8 +34,8 @@
 <strong>Специальные</strong>. Доступны девять диалоговых окон настроек:
 <strong>основные</strong>, <strong>просмотр</strong>,
 <strong>публикация</strong>, <strong>кэш</strong>, <strong>прокси</strong>,
-<strong>цвета</strong>, <strong>геометрия окна</strong>, <strong>язык
-обсуждения</strong>, <strong>профили</strong>, и <strong>шаблоны</strong>.</p>
+<strong>цвета</strong>, <strong>геометрия окна</strong>, и <strong>язык
+обсуждения</strong>.</p>
 
 <p>Каждое из этих диалоговых окон содержит три кнопки выполняющих
 определённое действие:</p>
@@ -94,9 +92,6 @@ style="width:435.75pt;  margin-left:3.75pt;border-collapse:collapse;border:none;
 
 <p>Откройте диалоговое окно <strong>Основные настройки</strong>, выбрав пункт
 <strong>Основные</strong> из подменю <strong>Настройки</strong>.</p>
-
-<p><img alt="Диалоговое окно основных настроек"
-src="../../images/general_preferences-ru.png" /></p>
 
 <h3>Определяемые директории</h3>
 
@@ -209,25 +204,25 @@ xml:lang="EN" lang="EN">). Этот файл имеет 4 раздела:</span></p>
 
 <p class="Bullet"><span xml:lang="EN" lang="EN"
 style="font-family:Symbol;">·<span
-style="font:7.0pt &#34;Times New Roman&#34;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></span><strong><span
+style="font:7.0pt &#34;Times New Roman&#34;">        </span></span><strong><span
 xml:lang="EN" lang="EN">extension:</span></strong> Не используется в Amaya</p>
 
 <p class="Bullet"><span xml:lang="EN" lang="EN"
 style="font-family:Symbol;">·<span
-style="font:7.0pt &#34;Times New Roman&#34;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></span><strong><span
+style="font:7.0pt &#34;Times New Roman&#34;">        </span></span><strong><span
 xml:lang="EN" lang="EN">presentation:</span></strong> Не используется в
 Amaya</p>
 
 <p class="Bullet"><span xml:lang="EN" lang="EN"
 style="font-family:Symbol;">·<span
-style="font:7.0pt &#34;Times New Roman&#34;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></span><strong><span
+style="font:7.0pt &#34;Times New Roman&#34;">        </span></span><strong><span
 xml:lang="EN" lang="EN">export</span></strong>: Идентифицирует выводимый
 текст, для каждой схемы преобразования (команда <strong>Сохранить
 как</strong>)</p>
 
 <p class="Bullet"><span xml:lang="EN" lang="EN"
 style="font-family:Symbol;">·<span
-style="font:7.0pt &#34;Times New Roman&#34;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></span><strong><span
+style="font:7.0pt &#34;Times New Roman&#34;">        </span></span><strong><span
 xml:lang="EN" lang="EN">translation</span></strong>: Идентифицирует выводимый
 текст для каждого элемента и атрибута в структуре Thot HTML.</p>
 
@@ -242,9 +237,6 @@ de- немецкого, ru- русского, и.т.д.). Также, вы должны создать специальный
 
 <p>Диалоговое окно <strong>Настройки просмотра</strong> позволяют вам
 устанавливать ...</p>
-
-<p><img alt="Диалоговое окно настроек просмотра"
-src="../../images/browsing_preferences-ru.png" /></p>
 
 <h3>Переключатели</h3>
 
@@ -290,9 +282,6 @@ Amaya, пользователи активируют ссылку двойным щелчком. Эта опция даёт вам
 проверять каждую PUT команду с GET, устанавливать имя, принятое по умолчанию,
 для URLs которые заканчиваются символом слэш, и включать PUT перенаправления
 на определённые домены. Эти опции будут объяснены ниже.</p>
-
-<p><img alt="Диалоговое окно настроек публикации"
-src="../../images/publishing_preferences-ru.png" /></p>
 
 <p><strong>Кодировка для новых документов.</strong> Определяет кодировку для
 вновь создаваемых документов.</p>
@@ -347,9 +336,6 @@ href="http://www.w3.org/WinCom/NoMoreLostUpdates.html">потери обновления</a>
 Это меню предоставляет в пользование кнопку <strong>Сбросить кэш</strong> для
 стирания (очистки) директории кэширования.</p>
 
-<p><img alt="Диалоговое окно настроек кэширования"
-src="../../images/cache_preferences-ru.png" /></p>
-
 <p><strong>Включить кэш.</strong> Включает или выключает кэш.</p>
 
 <p><strong>Кэшировать защищённые документы.</strong> По умолчанию, документы
@@ -382,9 +368,6 @@ src="../../images/cache_preferences-ru.png" /></p>
 
 <p>Вы можете использовать это диалоговое окно для определения прокси сервера
 и набора доменов для которых будет или не будет применяться прокси сервер.</p>
-
-<p><img alt="Диалоговое окно настроек прокси сервера"
-src="../../images/proxy_preferences-ru.png" /></p>
 
 <p><strong>HTTP proxy.</strong> Определяет прокси сервер, использующийся для
 HTTP запросов. Вы должны задать полное имя сервера. Если прокси использует
@@ -425,11 +408,10 @@ HTTP запросов. Вы должны задать полное имя сервера. Если прокси использует
                               <td width="194" valign="top"
                               style="width:145.85pt;border:none;padding:0in 5.4pt 0in 5.4pt"><p
                                 class="Code0"><span xml:lang="EN"
-                                lang="EN">&nbsp;&nbsp;
-                                groucho.marx.edu</span></p>
+                                lang="EN">   groucho.marx.edu</span></p>
 
                                 <p class="Code0"><span xml:lang="EN"
-                                lang="EN">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></p>
+                                lang="EN">           </span></p>
                               </td>
                               <td width="377" valign="top"
                               style="width:282.55pt;border:none;padding:0in 5.4pt 0in 5.4pt"><p
@@ -443,11 +425,10 @@ HTTP запросов. Вы должны задать полное имя сервера. Если прокси использует
                               <td width="194" valign="top"
                               style="width:145.85pt;border:none;border-bottom:   solid green 1.5pt;padding:0in 5.4pt 0in 5.4pt"><p
                                 class="Code0"><span xml:lang="EN"
-                                lang="EN">&nbsp;&nbsp;
-                                groucho.marx.edu:1234</span></p>
+                                lang="EN">   groucho.marx.edu:1234</span></p>
 
                                 <p class="Code0"><span xml:lang="EN"
-                                lang="EN">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></p>
+                                lang="EN">           </span></p>
                               </td>
                               <td width="377" valign="top"
                               style="width:282.55pt;border:none;border-bottom:   solid green 1.5pt;padding:0in 5.4pt 0in 5.4pt"><p
@@ -477,17 +458,14 @@ HTTP запросов. Вы должны задать полное имя сервера. Если прокси использует
 кнопки выключателя, чтобы определить, должен или не должен использоваться
 прокси сервер с этим списком доменов. Например:</p>
 <pre style="margin-left:.5in"><code>harpo.marx.edu zeppo.marx.edu chico.marx.edu</code></pre>
-<pre style="margin-left:.5in">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &nbsp;&nbsp; ^----------------^----&gt; каждую запись отделяет пробел</pre>
-<pre style="margin-left:.5in">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </pre>
+<pre style="margin-left:.5in">                ^----------------^----&gt; каждую запись отделяет пробел</pre>
+<pre style="margin-left:.5in">            </pre>
 
 <h2 id="Color">Настройки цвета</h2>
 
 <p>Это диалоговое окно позволяет вам устанавливать принятый по умолчанию цвет
 фона и цвет главной части документов. Это дает вам возможность управлять
 цветами, используемыми Amaya для отображения текущего выбора.</p>
-
-<p><img alt="Диалоговое окно настроек цвета"
-src="../../images/color_preferences-ru.png" /></p>
 <ul>
   <li><strong>Цвет выделенного текста</strong> Является цветом символов,
     которые они принимают после их выделения путём маркировки с помощью мыши
@@ -534,9 +512,6 @@ src="../../images/color_preferences-ru.png" /></p>
 альтернативный, ссылки, и оглавление) или возвращать это к величинам принятым
 по умолчанию.</p>
 
-<p><img alt="Диалоговое окно настроек геометрии"
-src="../../images/geometry_preferences-ru.png" /></p>
-
 <p>Сохраняемые значения, применяются к тем видам документа которые на данный
 момент активны. Эти изменения вступают в силу после открытия нового окна.</p>
 
@@ -547,48 +522,12 @@ src="../../images/geometry_preferences-ru.png" /></p>
 диалоговое окно для ввода настроек языка (первый язык в этом списке имеет
 высший приоритет).</p>
 
-<p><img alt="Диалоговое окно настроек языка обсуждения"
-src="../../images/language_negotiation-ru.png" /></p>
-
 <p>Просмотрите этот <a
 href="http://www.w3.org/1999/05/WCAG-RECPressRelease.html">пресс релиз</a>,
 который доступен во французской, английской и японских версиях. Указание
 языка обсуждения должно соответствовать ISO кодам (<strong>fr</strong>,
 <strong>en</strong>, или <strong>ja</strong>) вы можете преобразовывать
 запрос в любую из этих версий.</p>
-
-<h2 id="Profiles">Профили</h2>
-
-<p>В Amaya, <em>профиль</em> определяет как будет выглядеть интерфейс
-программы. Вы можете использовать профили в Amaya для показа или наоборот
-скрытия определённых кнопок и меню. Это диалоговое окно позволяет вам
-выбирать профиль и файл определяющий профиль. Amaya предлагает два профиля
-редактора <em>(редактор и мини-редактор)</em> и два профиля браузера
-<em>(браузер и мини-браузер</em>). Любое изменение профиля вступает в силу
-только после перезапуска Amaya.</p>
-
-<p><img alt="Диалоговое окно настроек профилей"
-src="../../images/profiles_preferences-ru.png" /></p>
-
-<h2 id="Templates">Шаблоны</h2>
-
-<p><strong>Шаблон</strong> является моделью, или скелетоном документа,
-который вы можете использовать для создания своих собственных документов. Это
-диалоговое окно позволяет вам задавать URL сервера шаблонов, который может
-находиться локально, на вашей рабочей станции, или на удалённом сервере.</p>
-<img alt="Диалоговое окно настроек шаблона"
-src="../../images/templates_preferences-ru.png" />
-
-<p>Для проверки работы этой опции, вы сначала должны выйти из Amaya. Когда вы
-запустите Amaya снова, меню Файл будет содержать новую опцию <strong>Новый
-&gt; Из шаблона</strong>. Выберите этот пункт, чтобы открыть новый документ,
-показывая результат просмотра URL шаблона. Эта страница действует как индекс
-к шаблонам, доступным на вашей рабочей станции или на сервере шаблонов.
-Пример сервера шаблона доступен на <a
-href="http://cgi.w3.org/cgi-bin/createform.pl">http://cgi.w3.org/cgi-bin/createform.pl</a>.
-Для более подробной информации, смотрите страницу <a
-href="http://www.w3.org/Amaya/User/Templates.html">Использование шаблонов в
-Amaya</a>.</p>
 </div>
 </body>
 </html>

@@ -34,11 +34,6 @@
 #define L_OtherValue        0xFF
 
 /*----------------------------------------------------------------------
-  TtaRebuildProTable: Rebuild the Profiles Table
-  ----------------------------------------------------------------------*/
-extern void TtaRebuildProTable (char *prof_file);
-
-/*----------------------------------------------------------------------
   TtaCanEdit returns TRUE if there is almost one editing function active.
   ----------------------------------------------------------------------*/
 extern ThotBool TtaCanEdit ();
@@ -48,12 +43,6 @@ extern ThotBool TtaCanEdit ();
    name is a provided buffer of length characters to receive the name.
   ----------------------------------------------------------------------*/
 extern void TtaGetProfileFileName (char *name, int length);
-
-/*----------------------------------------------------------------------
-   TtaGetDefProfileFileName:  Get the text for the default profile file name.
-   name is a provided buffer of length characters to receive the name.
-  ----------------------------------------------------------------------*/
-extern void TtaGetDefProfileFileName (char *name, int length);
 
 /*---------------------------------------------------------------
    TtaGetProfilesItems:  Get the text for the profile menu items.

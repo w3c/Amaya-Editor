@@ -43,7 +43,6 @@ ShowAddress
 ZoomIn
 ZoomOut
 
-################# WX AMAYA EDITOR
 <Editor_WX>
 +config_WX
 #+templates
@@ -58,8 +57,17 @@ ZoomOut
 ZoomIn
 ZoomOut
 
+<Browser_WX>
++browsing
+ZoomIn
+ZoomOut
+
 ################# AMAYA DISPLAY
 <Display>
+HelpAmaya
+HelpAtW3C
+
+<Display_WX>
 HelpAmaya
 HelpAtW3C
 
@@ -230,8 +238,6 @@ DAVLockDocument
 ######### BROWSING
 [browsing]
 +annot
-+base-module
-+bdi-text-module
 +bookmarks
 +views
 +print
@@ -279,12 +285,11 @@ ReadAsWINDOWS_1254
 ReadAsISO_2022_JP
 ReadAsEUC_JP
 ReadAsSHIFT_JIS
+TtcCopySelection
 TtcSearchText
 
 [browsing_WX]
 +annot
-+base-module
-+bdi-text-module
 +bookmarks
 +views
 +print
@@ -334,12 +339,14 @@ ReadAsWINDOWS_1254
 ReadAsISO_2022_JP
 ReadAsEUC_JP
 ReadAsSHIFT_JIS
+TtcCopySelection
 TtcSearchText
 
 
 ########### EDITING
 [edit]
 +attr-style
++bdi-text-module
 +clientside-module
 +css-style
 +davbase
@@ -364,6 +371,7 @@ TtcSearchText
 +spell
 +svg
 +tables
+&CreateBase
 &CreateMath
 &CreateXMLElementMenu
 HelpDocument
@@ -391,7 +399,6 @@ HelpXml
 &SaveDocument
 &TransformType
 &TtcCutSelection
-TtcCopySelection
 &TtcDeleteSelection
 &TtcPaste
 &PasteBuffer
@@ -504,9 +511,6 @@ ShowTargets
 
 [link-module]
 &CreateLinkInHead
-
-[base-module]
-&CreateBase
 
 [clientside-module]
 &CreateMap

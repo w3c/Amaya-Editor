@@ -33,9 +33,8 @@
 Preferencias</strong>. Hay diez cajas de diálogos:
 <strong>Generales</strong>, <strong>Navegación</strong>,
 <strong>Publicación</strong>, <strong>Caché</strong>, <strong>Proxy</strong>,
-<strong>Colores</strong>, <strong>Geometría de la ventana</strong>,
-<strong>Negociación de idioma</strong>, <strong>Perfiles</strong> y
-<strong>Plantillas</strong>.</p>
+<strong>Colores</strong>, <strong>Geometría de la ventana</strong>, y
+<strong>Negociación de idioma</strong>.</p>
 
 <p>Cada una de estas cajas de diálogo contienen tres botones:</p>
 
@@ -75,9 +74,6 @@ Preferencias</strong>. Hay diez cajas de diálogos:
 
 <p>Para abrir la caja de diálogo <strong>Preferencias generales</strong>,
 elige el menú <strong>Preferencias &gt; Generales</strong>.</p>
-
-<p><img alt="Caja de diálogo Preferencias generales"
-src="../../images/general_preferences-es.png" /></p>
 
 <h3>Directorios específicos</h3>
 
@@ -138,9 +134,6 @@ dirección en las vistas principales del documento.</p>
 
 <p><strong>Mostrar destinos.</strong> Controla si se muestran los destinos de
 enlaces en las vistas principales del documento.</p>
-
-<p><strong>Numeración de secciones.</strong> Controla si se numeran los
-encabezados en las vistas principales del documento.</p>
 
 <p><strong>Atajos de teclado.</strong> Especifica la tecla (<kbd>Alt</kbd> o
 <kbd>Control</kbd>) utilizada en las <a
@@ -214,9 +207,6 @@ específico.</p>
 <p>La caja de diálogo <strong>Preferencias de navegación</strong> te
 permite...</p>
 
-<p><img alt="Caja de diálogo Preferencias de navegación"
-src="../../images/browsing_preferences-es.png" /></p>
-
 <h3>Casillas de verificación</h3>
 
 <p>Las opciones siguientes se pueden activar o desactivar haciendo clic en la
@@ -252,9 +242,6 @@ permite establecer las preferencias de ETAGS y precondiciones, tanto para
 verificar cada comando PUT con un comando GET, como para definir el nombre
 por omisión de los URLs que acaban en barra, y permitir redirecciones PUT en
 dominios específicos. Estas opciones se explican a continuación.</p>
-
-<p><img alt="Caja de diálogo Preferencias de publicación"
-src="../../images/publishing_preferences-es.png" /></p>
 
 <p><strong>Juego de caracteres para nuevos documentos.</strong> Establece el
 juego de caracteres a utilizar al crear un documento nuevo.</p>
@@ -306,9 +293,6 @@ omisión y se almacena en la carpeta AmayaTemp/libwww-cache. Este menú también
 contiene un botón <strong>Vaciar caché</strong> para borrar la carpeta
 caché.</p>
 
-<p><img alt="Caja de diálogo Preferencias de Caché"
-src="../../images/cache_preferences-es.png" /></p>
-
 <p><strong>Activar caché.</strong> Activa o desactiva la caché.</p>
 
 <p><strong>Documentos protegidosen la Caché.</strong> Por omisión, los
@@ -340,9 +324,6 @@ máximo de una entrada de caché.</p>
 
 <p>En esta caja de diálogo puedes especificar un proxy y un conjunto de
 dominios en el que el proxy debe o no utilizarse.</p>
-
-<p><img alt="Caja de diálogo Preferencias de proxy"
-src="../../images/proxy_preferences-es.png" /></p>
 
 <p><strong>Proxy HTTP.</strong> Identifica el proxy a utilizar en las
 peticiones HTTP. Debes especificar el nombre completo del servidor. Si el
@@ -380,16 +361,13 @@ espacios con los que quieres utilizar el proxy. Utiliza los botones radio
 para especificar si el proxy debe o no debe utilizarse con esta lista de
 dominios.Por ejemplo:</p>
 <pre style="margin-left:.5in"><code>harpo.marx.edu zeppo.marx.edu chico.marx.edu</code></pre>
-<pre style="margin-left:.5in">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;  ^----------------^----&gt; entradas separadas por espacios</pre>
+<pre style="margin-left:.5in">               ^----------------^----&gt; entradas separadas por espacios</pre>
 
 <h2>Color</h2>
 
 <p>Esta caja de diálogo te permite definir los colores de texto y fondo de
 los documentos. También te permite definir los colores utilizados por Amaya
 para mostrar la selección actual.</p>
-
-<p><img alt="Caja de diálogo Preferencias de color"
-src="../../images/color_preferences-es.png" /></p>
 <ul>
   <li><strong>Color del cursor</strong> es el color de fondo de la selección
     cuando ésta se limita al punto de inserción.</li>
@@ -430,9 +408,6 @@ distintas ventanas de vistas de un documento (formateada, estructura,
 alternativa, enlaces y tabla de contenidos) o restaurar los valores por
 omisión.</p>
 
-<p><img alt="Caja de diálogo Preferencias de geometría"
-src="../../images/geometry_preferences-es.png" /></p>
-
 <p>Los valores que se guardan son los de la ventana de la vista desde la que
 has abierto la caja de diálogo. Estos cambios se aplican al abrir nuevas
 ventanas de documentos.</p>
@@ -444,48 +419,12 @@ para establecer una negociación de idioma, puedes utilizar esta caja de
 diálogo para escribir tus preferencias de idiomas (el primer idioma tiene la
 máxima prioridad).</p>
 
-<p><img alt="Caja de diálogo Negociación de idioma"
-src="../../images/language_negotiation-es.png" /></p>
-
 <p>Consulta esta <a
 href="http://www.w3.org/1999/05/WCAG-RECPressRelease.html">nota de
 prensa</a>, disponible en francés, inglés y japonés. Escribiendo los códigos
 ISO de estos idiomas (<strong>fr</strong>, <strong>en</strong>, o
 <strong>ja</strong>), puedes consultar de forma transparente cualquiera de
 estas versiones.</p>
-
-<h2>Perfiles</h2>
-
-<p>En Amaya, un <em>perfil</em> define el aspecto del interface de usuario.
-Puedes utilizar perfiles para mostrar u ocultar los botones y menús de Amaya.
-Esta caja de diálogo te permite elegir el archivo de definición de perfil y
-seleccionar cualquiera de los perfiles contenidos en el archivo. Amaya
-propone dos perfiles de editor (<em>editor y mini-editor)</em> y dos perfiles
-de navegador (<em>browser y mini-browser</em>). Cualquier cambio de perfil se
-tomará en cuenta la próxima vez que inicies Amaya.</p>
-
-<p><img alt="Caja de diálogo Preferencias de perfiles"
-src="../../images/profiles_preferences-es.png" /></p>
-
-<h2>Plantillas</h2>
-
-<p>Una <strong>plantilla</strong> es un modelo o esqueleto de un documento
-que puedes utilizar para crear tus propios documentos. Esta caja de diálogo
-te permite especificar el URL de un servidor de plantillas, que puede ser
-local en tu ordenador o estar almacenado en un servidor.</p>
-<img alt="Caja de diálogo Preferencias de plantillas"
-src="../../images/templates_preferences-es.png" />
-
-<p>Debes cerrar Amaya para validar esta opción. Al iniciar Amaya de nuevo, el
-menú Archivo contendrá la opción <strong>Nuevo &gt; Desde plantilla</strong>.
-Elige este comando para abrir un nuevo documento mostrando el URL de las
-plantillas. Esta página es un índice de las plantillas disponibles en tu
-ordenador o en el servidor de plantillas. Está disponible un ejemplo de
-servidor de plantillas en <a
-href="http://cgi.w3.org/cgi-bin/createform.pl">http://cgi.w3.org/cgi-bin/createform.pl</a>.
-Más información en la página <a
-href="http://www.w3.org/Amaya/User/Templates.html">Utilizar plantillas en
-Amaya</a>.</p>
 </div>
 </body>
 </html>

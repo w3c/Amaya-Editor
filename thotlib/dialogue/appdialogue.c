@@ -347,6 +347,7 @@ HWND GetCurrentWindow ()
   ----------------------------------------------------------------------*/
 void TteInitMenus (char *name, int number)
 {
+  char               *profile;
   int                 i;
 
   /* Initialisation du  contexte serveur */
@@ -354,23 +355,22 @@ void TteInitMenus (char *name, int number)
   FrRef[0] = 0;
 #endif /* #ifndef _WX */
   InitDocContexts ();
-  /* Init the profile table */
-  Prof_InitTable (NULL);
   /* Initialise le dialogue */
   servername = NULL;
   if (appArgc > 2)
     {
       i = 1;
       while (i < appArgc - 1)
-	if (strcmp (appArgv[i], "-display") != 0)
-	  i++;
-	else
-	  {
-	    /* l'argument est "-display" et celui qui suit le nom du display */
-	    servername = appArgv[i + 1];
-	    i = appArgc;
-	  }
+	if (!strcmp (appArgv[i], "-display"))
+	  /* the display name is the following argument */
+	  servername = appArgv[++i];
+	else if (!strcmp (appArgv[i], "-profile"))
+	  /* the profile name is the following argument */
+	  profile = appArgv[++i];
+      i++;
     }
+  /* Init the profile table */
+  Prof_InitTable (profile);
   TtaInitDialogue (servername, &app_cont);
   /* Definition de la procedure de retour des dialogues */
   TtaDefineDialogueCallback ((Proc)ThotCallback);

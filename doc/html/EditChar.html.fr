@@ -7,6 +7,7 @@
   <title>Entrer des caracteres ISO-Latin-1 et Unicode dans Amaya</title>
   <style type="text/css">
 .name { background-color : #FFF6C1}</style>
+  <link href="style.css" rel="stylesheet" type="text/css" />
 </head>
 
 <body xml:lang="fr" lang="fr">
@@ -17,10 +18,10 @@
       <td><p><img alt="W3C" src="../images/w3c_home" /> <img alt="Amaya"
         src="../images/amaya.gif" /></p>
       </td>
-      <td><p><a href="Attributes.html.fr#Attributes" accesskey="p"><img
+      <td><p><a href="Attributes.html.fr" accesskey="p"><img
         alt="previous" src="../images/left.gif" /></a> <a
         href="Manual.html.fr" accesskey="t"><img alt="top"
-        src="../images/up.gif" /></a> <a href="Changing.html.fr#Changing"
+        src="../images/up.gif" /></a> <a href="Changing.html.fr"
         accesskey="n"><img alt="next" src="../images/right.gif" /></a></p>
       </td>
     </tr>
