@@ -816,9 +816,15 @@ int                 status;
              HTAlertCallback    *prompt = HTAlert_find (HT_A_CONFIRM);
              if (prompt) {
                 if ((*prompt) (request, HT_A_CONFIRM, HT_MSG_REDIRECTION, NULL, NULL, NULL) != YES)
-                   /* @@@ should it be HT_ERROR ? */
-                   return HT_ERROR;
-			 } 
+		  {
+		    /* the user didn't agree on the redirection, so
+		       we consider it's an abort */
+		    me->reqStatus = HT_ABORT;
+		    /* and we return HT_OK so that the terminate_handler
+		       will be called */
+		    return HT_OK;
+		  }
+	     } 
 	  } 
    } 
    /*
@@ -1144,6 +1150,7 @@ int                 status;
 
    /* trying to protect against this problem... hard to place
       the detection elsewhere :-/ */
+   /* @@ JK: Is this still needed? */
    if (IsHTTP09Error (request))
      status = -1;
 
@@ -3306,20 +3313,21 @@ void               *context_tcbf;
    /*
    **  Set the Charset of the file we are uploading 
    */
-   /* we try to use any charset previosuly associated
-      with the parent. If it doesn't exist, we try to guess it
-      from the metadata */
-   tmp = HTAtom_name (HTAnchor_charset (dest_anc_parent));
-   if (!tmp)
+   /* we set the charset as indicated in the document's metadata
+      structure (and only if it exists) */
+   tmp = DocumentMeta[docid]->charset;
+   if (tmp && *tmp != WC_EOS)
      {
-       HTAnchor_setCharset (dest_anc_parent, HTAtom_for ("iso-8859-3"));
-       tmp = HTAtom_name (HTAnchor_charset (dest_anc_parent));
+       tmp2 = TtaWC2ISOdup (tmp);
+       HTAnchor_setCharset (dest_anc_parent, HTAtom_for (tmp2));
+       TtaFreeMemory (tmp2);
+       tmp2 = HTAtom_name (HTAnchor_charset (dest_anc_parent));
+       /* .. and we give the same charset to the source anchor */
+       /* we go thru setCharSet, rather than change the parent's
+	  anchor, as that's the place that libwww expects it to be */
+       HTAnchor_setCharset (HTAnchor_parent (me->source),
+			    HTAtom_for (tmp2));
      }
-   /* .. and we give the same charset to the source anchor */
-   /* we go thru setCharSet, rather than change the parent's
-      anchor, as that's the place that libwww expects it to be */
-   HTAnchor_setCharset (HTAnchor_parent (me->source),
-			HTAtom_for (tmp));
 #endif /* CHARSET */
 
    /*
