@@ -5024,8 +5024,6 @@ RULES
 	Width: Enclosing . Width;
 	VertPos: Top = Previous . Bottom + 0.1;
 	IN Structure_view BEGIN
-		Width: Enclosing . Width - STRUCT_INDENT;
-		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		VertPos: Top = Previous . Bottom;
 		NoLine;
 		END;
@@ -5037,8 +5035,11 @@ RULES
 	VertPos: Top = Previous NOT MAP . Bottom + 0.4;
 	CreateBefore(PRE_S);
 	CreateWith(VerticalLine);
-	IN Structure_view
+	IN Structure_view BEGIN
+		Width: Enclosing . Width - STRUCT_INDENT;
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		VertPos: Top = Previous . Bottom;
+		END;
 	END;
 
  Radio_Item: BEGIN
@@ -5046,8 +5047,6 @@ RULES
 	Width: Enclosing . Width;
 	VertPos: Top = Previous . Bottom + 0.1;
 	IN Structure_view BEGIN
-		Width: Enclosing . Width - STRUCT_INDENT;
-		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		VertPos: Top = Previous . Bottom;
 		NoLine;
 		END;

@@ -253,7 +253,15 @@ boolean             lineBreak;
 			  while (OutputFile[fileNum].OfBuffer[i] != ' ' && i > 0)
 			     i--;
 			  if (OutputFile[fileNum].OfBuffer[i] == ' ')
+			    /* on a trouve' le dernier blanc */
 			    {
+			    /* cherche s'il y a au moins un caractere non blanc
+			       avant */
+			    for (j = i; j > 0 && OutputFile[fileNum].OfBuffer[j] <= ' '; j--);
+			    if (OutputFile[fileNum].OfBuffer[j] != ' ')
+			       /* le blanc trouve' ne fait pas partie des
+				  blancs d'indentation */
+			       {
 			       /* on ecrit tout ce qui precede ce blanc */
 			       for (j = 0; j < i; j++)
 				  putc (OutputFile[fileNum].OfBuffer[j], fileDesc);
@@ -277,6 +285,7 @@ boolean             lineBreak;
 			       if (i > 0 )
 			         for (j = indent; j < OutputFile[fileNum].OfBufferLen; j++)
 				    OutputFile[fileNum].OfBuffer[j] = OutputFile[fileNum].OfBuffer[i + j];
+			       }
 			    }
 		       }
 	       }
