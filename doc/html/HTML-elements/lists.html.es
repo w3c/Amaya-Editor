@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>Elementos de lista</title>
-  <meta name="GENERATOR" content="amaya 6.4+, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 7.2, see http://www.w3.org/Amaya/" />
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -26,7 +26,7 @@
   </tbody>
 </table>
 
-<div id="List">
+<div id="page_body">
 <h1>Elementos de lista</h1>
 
 <p>Existen tres tipos de listas en HTML. Los dos tipos simples son las listas

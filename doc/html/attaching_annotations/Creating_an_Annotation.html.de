@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title>Eine Anmerkung erzeugen</title>
+  <meta name="generator" content="amaya 6.1, see http://www.w3.org/Amaya/" />
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <style type="text/css">
+  </style>
+  <link href="../style.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body xml:lang="de" lang="de">
+
+<table border="0" cellspacing="5" cellpadding="5">
+  <tbody>
+    <tr>
+      <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
+        src="../../images/amaya.gif" /></td>
+      <td><a accesskey="p" href="./configuring_annotation_settings.html.de"><img
+        alt="vorherige Seite" src="../../images/left.gif" /></a> <a
+        accesskey="t" href="../Annotations.html.de"><img alt="erste Seite"
+        src="../../images/up.gif" /></a> <a accesskey="n"
+        href="./deleting_an_annotation.html.de"><img alt="nächste Seite"
+        src="../../images/right.gif" /></a></td>
+    </tr>
+  </tbody>
+</table>
+
+<div id="page_body">
+<h1>Eine Anmerkung erzeugen</h1>
+<p>In der derzeitigen Version von Amaya werden zwei Arten von Anmerkungen
+unterstützt: Anmerkungen, welche sich auf das ganze Dokument beziehen und
+Anmerkungen, welche sich auf eine bestimmte Markierung oder Stelle im
+Dokument beziehen.</p>
+<ul>
+  <li>Um eine Anmerkung zu einem ganzen Dokument zu erzeugen, <strong>Zum
+    Dokument</strong> im Menü
+    <strong>Anmerkungen</strong> wählen.</li>
+  <li>Um eine Anmerkung zu einer Stelle oder Markierung zu erzeugen, den
+    Cursor an die entsprechende Stelle positionieren oder den entsprechenden
+    Text markieren und <strong>Zur Markierung</strong> im Menü
+    <strong>Anmerkungen</strong> wählen.</li>
+</ul>
+
+<p></p>
+
+<p>Daraufhin wird das folgende Fenster geöffnet:</p>
+
+<p><img alt="Das Fenster Anmerkungen" src="../../images/annotationwindow-de.png"
+/></p>
+
+<p>Hier werden zunächst nur die Metadaten der Anmerkung angezeigt.</p>
+
+<h2>Metadaten der Anmerkung</h2>
+
+<p>Momentan bestehen die Metadaten aus dem Namen des Autors, dem Titel des
+Dokuments, dem Typ der Anmerkung, dem Datum der Erzeugung und dem Datum der
+letzten Änderung. Einige dieser Felder der Metadaten haben spezielle
+Eigenschaften:</p>
+<ul>
+  <li><strong>Source document</strong> ist ein Verweis, welcher auf den Text
+    der Anmerkung zeigt. Führt man darauf einen Doppelklick aus, so wird das
+    mit der Anmerkung versehene Dokument geöffnet und der Text der Anmerkung
+    wird hervorgehoben.</li>
+  <li><strong>Annotation type</strong> klassifiziert den Typ der Anmerkung
+    und kann geändert werden. Führt man darauf einen Doppelklick aus, so wird
+    eine Liste der verfügbaren Typen einer Anmerkung angezeigt.</li>
+  <li><strong>Last modified</strong> wird immer dann automatisch
+    aktualisiert, wenn die Anmerkung gespeichert wird.</li>
+</ul>
+
+<p>Unterhalb der Metadaten kann der eigentliche Text der Anmerkung eingegeben
+werden.</p>
+
+<h2>Eine Anmerkung speichern</h2>
+
+<p>Eine Anmerkung wird, wie jedes andere Dokument auch gespeichert: mit
+<strong>Speichern</strong> im Menü <strong>Datei</strong> (oder den
+entsprechenden Knopf der Knopfleiste oder die entsprechenden
+Tastenkürzel).</p>
+
+<p>Lokale Anmerkungen werden in das Anmerkungsverzeichnis gespeichert und
+entfernte Anmerkungen werden an einen Server übergeben und dort gespeichert,
+falls der Benutzer dort Schreibrechte hat und der Server dafür konfiguriert
+ist.</p>
+
+<p>Eine lokal gespeicherte Anmerkung wird mit
+<strong>Veröffentlichen</strong> im Menü <strong>Anmerkungen</strong> an den
+Server gesendet, der unter <strong>Konfigurieren</strong> im Menü
+<strong>Anmerkungen</strong> festgelegt wurde. Ist die Operation erfolgreich,
+wird die lokale Anmerkung gelöscht und zukünftiges Speichern bewirkt, dass
+die Anmerkung direkt an den Server gesendet wird.</p>
+
+<p>Einige Menübefehle, welche im Browserfenster verwendet werden können,
+stehen auch im Anmerkungsfenster zur Verfügung. Beispielsweise kann der Text
+einer Anmerkung mit <strong>Drucken</strong> aus dem Menü
+<strong>Datei</strong> gedruckt werden oder der Text der Anmerkung kann mit
+<strong>Aktualisieren</strong> aus dem Menü <strong>Datei</strong>
+aktualisiert werden.</p>
+</div>
+</body>
+</html>

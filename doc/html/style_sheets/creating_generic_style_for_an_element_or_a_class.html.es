@@ -3,26 +3,25 @@
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta name="GENERATOR" content="amaya 6.4+, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 7.2, see http://www.w3.org/Amaya/" />
   <title>Crear un estilo genérico para un elemento o clase</title>
-  
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
 <body xml:lang="es" lang="es">
 
-<table border="0" summary="toc">
+<table border="0" width="100%" summary="toc">
   <tbody>
     <tr>
       <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
         src="../../images/amaya.gif" /></td>
-      <td><p><a href="creating_and_updating_a_style_attribute.html.es"
+      <td><p align="right"><a
+        href="creating_and_updating_a_style_attribute.html.es"
         accesskey="p"><img alt="anterior" src="../../images/left.gif" /></a>
         <a href="../StyleSheets.html.es" accesskey="t"><img alt="superior"
         src="../../images/up.gif" /></a> <a
-        href="about_linking_external_and_user_style_sheets.html.es"
-        accesskey="n"><img alt="siguiente" src="../../images/right.gif"
-        /></a></p>
+        href="creating_html_style_elements.html.es" accesskey="n"><img
+        alt="siguiente" src="../../images/right.gif" /></a></p>
       </td>
     </tr>
   </tbody>
@@ -52,7 +51,7 @@ clase:</p>
     <p></p>
   </li>
   <li>Elige un selector de esta lista o escribe un nuevo nombre de clase y
-    haz clic en <strong>Confirme</strong>. El estilo del elemento
+    haz clic en <strong>Confirmar</strong>. El estilo del elemento
     seleccionado se añde al selector elegido y el atributo de estilo se
     elimina del elemento elegido. Su contenido se traslada al elemento
     <code>style</code> del encabezado (<code>HEAD</code>) del documento, y

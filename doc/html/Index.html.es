@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta name="GENERATOR" content="amaya 6.1, see http://www.w3.org/Amaya/" />
-  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <meta name="GENERATOR" content="amaya 7.2, see http://www.w3.org/Amaya/" />
   <title>Index</title>
   <link rel="stylesheet" href="index.css" />
 </head>
@@ -27,129 +27,629 @@
 <a name="A" id="A">A</a></div>
 
 <div class="level1">
-<a href="Browsing.html.es#Access">access keys</a></div>
+abrir</div>
 
 <div class="level2">
-<a href="Configure.html.es#preferences">specifying</a></div>
+<a href="Manual.html.es#L920">Amaya</a></div>
+
+<div class="level2">
+<a href="Browsing.html.es#Opening">documentos</a></div>
+
+<div class="level2">
+<a href="Browsing.html.es">documentos codificados</a></div>
+
+<div class="level2">
+<a href="Views.html.es#Opening">vistas</a></div>
 
 <div class="level1">
-<a href="Access.html.es">accessibility</a></div>
+<p><a href="Access.html.es">accesibilidad</a></p>
+</div>
 
 <div class="level2">
 <a href="Access.html.es">Amaya</a></div>
 
 <div class="level2">
-<a href="Access.html.es">producing content for</a></div>
+<a href="Access.html.es">crear contenido para</a></div>
 
 <div class="level1">
-<a href="Views.html.es">Alternate view</a></div>
+<a href="Browsing.html.es#Moving">adelante, moverse</a></div>
 
 <div class="level1">
-<a href="ImageMaps.html.es#Alternative">alternative text</a></div>
+<a href="Views.html.es">Alternativa, vista</a></div>
 
 <div class="level1">
-<a href="#targetanchors">anchors, see target anchors</a></div>
+<a href="StyleSheets.html.es">altura</a></div>
 
 <div class="level1">
-<a name="annotations" id="annotations">annotations</a></div>
+<a href="StyleSheets.html.es">anchura</a></div>
+
+<div class="level1">
+<a href="#targetanchors">anclas, anclas de destino</a></div>
+
+<div class="level1">
+<a name="annotations" id="annotations">anotaciones</a></div>
 
 <div class="level2">
-<a href="Annotations.html.es#What">about</a></div>
+<a href="Annotations.html.es#What">acerca de</a></div>
 
 <div class="level2">
-<a href="Annotations.html.es#Configurat">configuring settings for</a></div>
+<a href="Annotations.html.es#Configurat">configuración</a></div>
 
 <div class="level2">
-<a href="Annotations.html.es#Creating">creating</a></div>
+<a href="Annotations.html.es#Creating">crear</a></div>
 
 <div class="level2">
-<a href="Annotations.html.es">deleting</a></div>
+<a href="Annotations.html.es">borrar</a></div>
 
 <div class="level2">
-<a href="Annotations.html.es">loading</a></div>
+<a href="Annotations.html.es">cargar</a></div>
 
 <div class="level2">
 <a href="Annotations.html.es">local</a></div>
 
 <div class="level2">
-<a href="Annotations.html.es">moving</a></div>
+<a href="Annotations.html.es">mover</a></div>
 
 <div class="level2">
-<a href="Annotations.html.es">navigating</a></div>
+<a href="Annotations.html.es">navegar</a></div>
 
 <div class="level2">
-<a href="Annotations.html.es">presenting</a></div>
+<a href="Annotations.html.es">presentar</a></div>
 
 <div class="level2">
-<a href="Annotations.html.es">remote</a></div>
+<a href="Annotations.html.es">remota</a></div>
 
 <div class="level2">
-<a href="Annotations.html.es">server for</a></div>
+<a href="Annotations.html.es">servidor de</a></div>
 
 <div class="level1">
-<a href="Browsing.html.es">ASCII documents</a></div>
+<a href="Manual.html.es#L932">archivos de seguridad</a></div>
 
 <div class="level1">
-attributes</div>
+<a href="ShortCuts.html.es" name="shortcuts" id="shortcuts">atajos</a></div>
 
 <div class="level2">
-<a href="Attributes.html.es#Copying">copying</a></div>
+<a href="ShortCuts.html.es">comandos</a></div>
 
 <div class="level2">
-<a href="Attributes.html.es">editing</a></div>
+<a href="Configure.html.es">configurar</a></div>
 
 <div class="level2">
-<a href="Attributes.html.es#Editing">using the structure view to edit</a></div>
+<a href="Selecting.html.es">de teclado</a></div>
+
+<div class="level2">
+<a href="Selecting.html.es">de ratón</a></div>
+
+<div class="level2">
+<a href="Browsing.html.es#Access">sobreescribir</a></div>
+
+<div class="level1">
+<a href="Browsing.html.es#Moving">atrás, moverse</a></div>
+
+<div class="level1">
+atributos</div>
+
+<div class="level2">
+<a href="Attributes.html.es#Copying">copiar</a></div>
+
+<div class="level2">
+<a href="Attributes.html.es">editar</a></div>
+
+<div>
+<a href="Attributes.html.es#Editing">utilizar la vista Estructura para
+editar</a></div>
 
 <div class="backtotop">
-<a href="#HTMLIndexerTop">Back to Top</a></div>
+<a href="#HTMLIndexerTop">Volver al principio</a></div>
 <hr />
 
 <div class="letters">
 <a name="B" id="B">B</a></div>
 
 <div class="level1">
-<a href="Configure.html.es#preferences">background color</a></div>
+<a href="Creating.html.es#Structure">&lt;body&gt;, elemento</a></div>
 
 <div class="level1">
-<a href="Configure.html.es#preferences">background images, showing</a></div>
+<p><a href="Changing.html.es#Back">Borrar, tecla</a></p>
+</div>
 
 <div class="level1">
-<a href="Changing.html.es#Back">Backspace key</a></div>
+<a href="Annotations.html.es">borrar anotaciones</a></div>
 
 <div class="level1">
-<a href="Manual.html.es#L932">backup files</a></div>
-
-<div class="level1">
-<a href="Browsing.html.es#Moving">backward, moving</a></div>
-
-<div class="level1">
-<a href="Creating.html.es#Structure">BODY element</a></div>
-
-<div class="level1">
-browsing</div>
-
-<div class="level2">
-<a href="Browsing.html.es#Moving">history lists</a></div>
-
-<div class="level2">
-<a href="Manual.html.es#Browsing">Web pages</a></div>
+<a href="Searching.html.es">buscar y sustituir</a></div>
 
 <div class="backtotop">
-<a href="#HTMLIndexerTop">Back to Top</a></div>
+<a href="#HTMLIndexerTop">Volver al principio</a></div>
 <hr />
 
 <div class="letters">
 <a name="C" id="C">C</a></div>
 
 <div class="level1">
-<a href="Configure.html.es#preferences">cache preferences</a></div>
+<a href="Configure.html.es#preferences">caché, preferencias</a></div>
 
 <div class="level1">
-<a href="#editing">changing, see editing</a></div>
+<a href="#editing">cambios, ver editar</a></div>
 
 <div class="level1">
-<a href="Browsing.html.es">character sets</a></div>
+caracteres</div>
+
+<div class="level2">
+<a href="EditChar.html.es#Standard">insertar</a></div>
+
+<div class="level2">
+<a href="Math.html.es#Entering">matemáticas</a></div>
+
+<div class="level1">
+<a href="Annotations.html.es">cargar anotaciones</a></div>
+
+<div class="level1">
+<a href="Views.html.es#Closing">cerrar vistas</a></div>
+
+<div class="level1">
+<a href="#imagemaps">cliente, mapas de imagen de, ver mapas de
+imágenes</a></div>
+
+<div class="level1">
+<a href="MakeBook.html.es">colecciones de documentos</a></div>
+
+<div class="level1">
+color</div>
+
+<div class="level2">
+<a href="SVG.html.es#Painting">rellenar</a></div>
+
+<div class="level2">
+<a href="Configure.html.es#preferences">preferencias</a></div>
+
+<div class="level2">
+<a href="SVG.html.es#Painting">trazo</a></div>
+
+<div class="level1">
+<a href="Configure.html.es#preferences">color de fondo</a></div>
+
+<div class="level1">
+<a href="#tables">columnas, ver tablas</a></div>
+
+<div class="level1">
+combinaciones de teclas</div>
+
+<div class="level2">
+<a href="Configure.html.es#preferences">activar</a></div>
+
+<div class="level2">
+<a href="EditChar.html.es#Optional">soporte opcional</a></div>
+
+<div class="level2">
+<a href="EditChar.html.es#Standard">soporte</a></div>
+
+<div class="level1">
+<a href="Creating.html.es#Structure">comentarios</a></div>
+
+<div class="level1">
+<a href="Configure.html.es">configurar Amaya</a></div>
+
+<div class="level1">
+<a href="Printing.html.es#Setup">Configurar e Imprimir</a></div>
+
+<div class="level1">
+<a href="Attributes.html.es#Copying">copiar atributos</a></div>
+
+<div class="level1">
+<a href="SpellChecking.html.es">corrector ortográfico</a></div>
+
+<div class="level1">
+crear</div>
+
+<div class="level2">
+<a href="Annotations.html.es">anotaciones</a></div>
+
+<div class="level2">
+<a href="Creating.html.es#New">documentos</a></div>
+
+<div class="level2">
+<a href="Creating.html.es#Types">elementos</a></div>
+
+<div class="level2">
+<a href="SVG.html.es#Creating">gráficos</a></div>
+
+<div class="level2">
+<a href="ImageMaps.html.es#Creating">mapas de imagen</a></div>
+
+<div class="level2">
+<a href="StyleSheets.html.es#Creating,">hojas de estilo</a></div>
+
+<div class="level2">
+<a href="Tables.html.es#Creating">tablas</a></div>
+
+<div class="level1">
+<a href="#stylesheets">CSS, ver hojas de estilo</a></div>
+
+<div class="backtotop">
+<a href="#HTMLIndexerTop">Volver al principio</a></div>
+<hr />
+
+<div class="letters">
+<a name="D" id="D">D</a></div>
+
+<div class="level1">
+<a href="Creating.html.es#edit-dl">definición, listas de</a></div>
+
+<div class="level1">
+<a href="Links.html.es#target1">destino, elementos</a></div>
+
+<div class="level1">
+<a href="Configure.html.es">diálogos, configurar</a></div>
+
+<div class="level1">
+<a href="Changing.html.es#Inserting">&lt;div&gt; elemento</a></div>
+
+<div class="level1">
+<a href="Configure.html.es#preferences">div tamaño, menú</a></div>
+
+<div class="level1">
+<a href="Configure.html.es#preferences">div zoom</a></div>
+
+<div class="level1">
+documentos</div>
+
+<div class="level2">
+<a href="Creating.html.es#New">crear</a></div>
+
+<div class="level2">
+<a href="Printing.html.es">imprimir</a></div>
+
+<div class="level2">
+<a href="Manual.html.es#L932">recuperar</a></div>
+
+<div class="level1">
+<a href="Browsing.html.es">documentos ASCII</a></div>
+
+<div class="level1">
+<a href="MakeBook.html.es">documentos, colecciones de</a></div>
+
+<div class="level1">
+<a href="Creating.html.es#Types">DTD, HTML</a></div>
+
+<div class="backtotop">
+<a href="#HTMLIndexerTop">Volver al principio</a></div>
+<hr />
+
+<div class="letters">
+<a name="E" id="E">E</a></div>
+
+<div class="level1">
+<a href="Browsing.html.es">Edición, modo</a></div>
+
+<div class="level1">
+<p><a name="editing" id="editing">editar</a></p>
+</div>
+
+<div class="level2">
+<a href="Attributes.html.es">atributos</a></div>
+
+<div class="level2">
+<a href="Changing.html.es#L631">estructuras del documento</a></div>
+
+<div class="level2">
+<a href="Browsing.html.es">documentos</a></div>
+
+<div class="level2">
+<a href="Views.html.es#Using">documentos mediante vistas</a></div>
+
+<div class="level2">
+<a href="Changing.html.es#L653">tipos de elementos</a></div>
+
+<div class="level2">
+<a href="SVG.html.es">gráficos</a></div>
+
+<div class="level2">
+<a href="Links.html.es#Changing">enlaces</a></div>
+
+<div class="level2">
+<a href="Math.html.es">matemáticas</a></div>
+
+<div class="level2">
+<a href="Configure.html.es#preferences">preferencias</a></div>
+
+<div class="level2">
+<a href="Tables.html.es">tablas</a></div>
+
+<div class="level2">
+<a href="Manual.html.es#L932">páginas Web</a></div>
+
+<div class="level1">
+elementos</div>
+
+<div class="level2">
+<a href="Creating.html.es#Structure">&lt;body&gt;</a></div>
+
+<div class="level2">
+<a href="Creating.html.es#Types">crear</a></div>
+
+<div class="level2">
+<a href="Creating.html.es#L906">crear secuencialmente</a></div>
+
+<div class="level2">
+<a href="Creating.html.es#Structure">&lt;head&gt;</a></div>
+
+<div class="level2">
+<a href="Links.html.es#L245">enlaces</a></div>
+
+<div class="level2">
+<a href="Math.html.es">MathML</a></div>
+
+<div class="level2">
+<a href="Changing.html.es#Back">mezclar</a></div>
+
+<div class="level2">
+<a href="SVG.html.es">SVG</a></div>
+
+<div class="level2">
+<a href="Links.html.es#target1">destino</a></div>
+
+<div class="level2">
+<a>anclas destino</a></div>
+
+<div class="level2">
+<a href="Creating.html.es#Changing">&lt;title&gt;</a></div>
+
+<div class="level1">
+<a href="HTML-elements\headings.html.es">encabezados</a></div>
+
+<div class="level1">
+<a href="Views.html.es">Enlaces, vista</a></div>
+
+<div class="level1">
+<a name="links" id="links">enlaces</a></div>
+
+<div class="level2">
+<a href="Browsing.html.es#Activating">activar</a></div>
+
+<div class="level2">
+<a href="Links.html.es#Changing">cambiar</a></div>
+
+<div class="level2">
+<a href="Links.html.es#L245">crear</a></div>
+
+<div class="level2">
+<a href="Math.html.es#Links">MathML</a></div>
+
+<div class="level2">
+<a href="Configure.html.es#preferences">desactivar doble clic</a></div>
+
+<div class="level2">
+<a href="Links.html.es#Removing">eliminar</a></div>
+
+<div class="level2">
+<a href="#targetanchors">ver también see also destinos</a></div>
+
+<div class="level1">
+estilos</div>
+
+<div class="level2">
+<a href="StyleSheets.html.es#L1371">crear elementos HTML</a></div>
+
+<div class="level2">
+<a href="StyleSheets.html.es#L1371">eliminar</a></div>
+
+<div class="level2">
+<a href="#stylesheets">ver también hojas de estilo</a></div>
+
+<div class="level1">
+<a href="Views.html.es">Estructura, vista</a></div>
+
+<div class="level2">
+<a href="Math.html.es#Math_Struc">editar matemáticas en la</a></div>
+
+<div class="level2">
+<a href="Selecting.html.es#Selecting1">seleccionar en la</a></div>
+
+<div class="level1">
+<a href="Changing.html.es#L631">estructura del documento, cambiar</a></div>
+
+<div class="level1">
+<a href="#mathematics">expresiones, ver matemáticas</a></div>
+
+<div class="level1">
+<a href="StyleSheets.html.es#External">externas, hojas de estilo</a></div>
+
+<div class="backtotop">
+<a href="#HTMLIndexerTop">Volver al principio</a></div>
+<hr />
+
+<div class="letters">
+<a name="F" id="F">F</a></div>
+
+<div class="level1">
+<a href="#tables">filas, ver tablas</a></div>
+
+<div class="level1">
+<a href="Configure.html.es#preferences">fondo, color</a></div>
+
+<div class="level1">
+<a href="Configure.html.es#preferences">fondo, mostrar imágenes de</a></div>
+
+<div class="level1">
+<a href="Views.html.es">Formateada, vista</a></div>
+
+<div class="level1">
+<a href="Configure.html.es#preferences">FTP, activar</a></div>
+
+<div class="level1">
+<a href="Views.html.es">Fuente, vista</a></div>
+
+<div class="backtotop">
+<a href="#HTMLIndexerTop">Volver al principio</a></div>
+<hr />
+
+<div class="letters">
+<a name="G" id="G">G</a></div>
+
+<div class="level1">
+<a href="Configure.html.es#preferences">GET</a></div>
+
+<div class="level1">
+<a name="graphics" id="graphics">gráficos</a></div>
+
+<div class="level2">
+<a href="SVG.html.es#Creating">crear</a></div>
+
+<div class="level2">
+<a href="SVG.html.es">editar</a></div>
+
+<div class="level2">
+<a href="SVG.html.es#Moving">mover</a></div>
+
+<div class="level2">
+<a href="SVG.html.es#Painting">colorear</a></div>
+
+<div class="level2">
+<a href="SVG.html.es#Resizing">tamaño, cambiar</a></div>
+
+<div class="level2">
+<a href="#images">ver también imágenes</a></div>
+
+<div class="level1">
+guardar</div>
+
+<div class="level2">
+<a href="Publishing.html.es">y publicar documentos</a></div>
+
+<div class="level2">
+<a href="Publishing.html.es#L1105">documentos como texto</a></div>
+
+<div class="level2">
+<a href="Publishing.html.es#L1104">documentos como HTML</a></div>
+
+<div class="level2">
+<a href="Numbering.html.es">numeración de secciones</a></div>
+
+<div class="level2">
+<a href="Views.html.es#Using">sincronización al</a></div>
+
+<div class="backtotop">
+<a href="#HTMLIndexerTop">Volver al principio</a></div>
+<hr />
+
+<div class="letters">
+<a name="H" id="H">H</a></div>
+
+<div class="level1">
+<a href="MakeBook.html.es">hacer libro</a></div>
+
+<div class="level1">
+<a href="Creating.html.es#Structure">&lt;head&gt;</a></div>
+
+<div class="level1">
+<a href="#links">hiperenlaces, ver enlaces</a></div>
+
+<div class="level1">
+<a href="Browsing.html.es#Moving">historial, navegar</a></div>
+
+<div class="level1">
+<a href="StyleSheets.html.es" name="stylesheets" id="stylesheets">hojas de
+estilo</a></div>
+
+<div class="level2">
+<a href="StyleSheets.html.es#Creating">atributos para</a></div>
+
+<div class="level2">
+<a href="StyleSheets.html.es#Creating,">crear</a></div>
+
+<div class="level2">
+<a href="StyleSheets.html.es#External">externas</a></div>
+
+<div class="level2">
+<a href="StyleSheets.html.es#Managing">gestionar externas</a></div>
+
+<div class="level2">
+<a href="Printing.html.es#Controllin">imprimir con</a></div>
+
+<div class="level2">
+<a href="StyleSheets.html.es#External">definidas por el usuario</a></div>
+
+<div class="level1">
+HTML</div>
+
+<div class="level2">
+<a href="Browsing.html.es">documentos</a></div>
+
+<div class="level2">
+<a href="Creating.html.es#Types">DTD</a></div>
+
+<div class="level2">
+<a href="HTML.html.es">elementos</a></div>
+
+<div class="level2">
+<a href="Publishing.html.es#L1104">guardar archivos en</a></div>
+
+<div class="backtotop">
+<a href="#HTMLIndexerTop">Volver al principio</a></div>
+<hr />
+
+<div class="letters">
+<a name="I" id="I">I</a> - <a name="J" id="J">J</a> - <a name="K"
+id="K">K</a></div>
+
+<p></p>
+
+<div class="level1">
+idioma</div>
+
+<div class="level2">
+<a href="Configure.html.es#preferences">preferencias de negociación</a></div>
+
+<div class="level2">
+<a href="Configure.html.es#preferences">especificar</a></div>
+
+<div class="level1">
+<a name="images" id="images">imágenes</a></div>
+
+<div class="level2">
+<a href="ImageMaps.html.es#Adding">crear</a></div>
+
+<div class="level2">
+<a href="Selecting.html.es#Selecting2">seleccionar</a></div>
+
+<div class="level2">
+<a href="Configure.html.es#preferences">mostrar fondo</a></div>
+
+<div class="level2">
+<a href="#graphics">ver también gráficos</a></div>
+
+<div class="level1">
+<a href="Printing.html.es#Print">Imprimir</a></div>
+
+<div class="level1">
+imprimir</div>
+
+<div class="level2">
+<a href="MakeBook.html.es">colecciones de documentos</a></div>
+
+<div class="level2">
+<a href="Printing.html.es">documentos</a></div>
+
+<div class="level2">
+<a href="Numbering.html.es">Numeración de secciones</a></div>
+
+<div class="level1">
+<a href="Manual.html.es#L920">iniciar Amaya</a></div>
+
+<div class="level1">
+<a href="EditChar.html.es#Standard">insertar caracteres</a></div>
+
+<div class="level1">
+<a href="Creating.html.es#L906">Intro, tecla</a></div>
+
+<div class="level1">
+<a href="Browsing.html.es">ISO-latin-1, documentos</a></div>
+
+<p></p>
+
+<div class="level1">
+<a href="Browsing.html.es">juegos de caracteres</a></div>
 
 <div class="level2">
 <a href="EditChar.html.es">ISO-latin-1</a></div>
@@ -157,904 +657,390 @@ browsing</div>
 <div class="level2">
 <a href="Browsing.html.es">UTF 8</a></div>
 
-<div class="level1">
-characters</div>
-
-<div class="level2">
-<a href="EditChar.html.es#Standard">inserting</a></div>
-
-<div class="level2">
-<a href="Math.html.es#Entering">mathematic</a></div>
-
-<div class="level1">
-<a href="#imagemaps">client-side image maps, see image maps</a></div>
-
-<div class="level1">
-<a href="Views.html.es#Closing">closing views</a></div>
-
-<div class="level1">
-<a href="MakeBook.html.es">collections, document</a></div>
-
-<div class="level1">
-color</div>
-
-<div class="level2">
-<a href="SVG.html.es#Painting">fill</a></div>
-
-<div class="level2">
-<a href="Configure.html.es#preferences">preferences</a></div>
-
-<div class="level2">
-<a href="SVG.html.es#Painting">stroke</a></div>
-
-<div class="level1">
-<a href="#tables">columns, see tables</a></div>
-
-<div class="level1">
-<a href="Creating.html.es#Structure">comments</a></div>
-
-<div class="level1">
-<a href="Configure.html.es">configuring Amaya</a></div>
-
-<div class="level1">
-<a href="Attributes.html.es#Copying">copying attributes</a></div>
-
-<div class="level1">
-creating</div>
-
-<div class="level2">
-<a href="Annotations.html.es">annotations</a></div>
-
-<div class="level2">
-<a href="Creating.html.es#New">documents</a></div>
-
-<div class="level2">
-<a href="Creating.html.es#Types">elements</a></div>
-
-<div class="level2">
-<a href="SVG.html.es#Creating">graphics</a></div>
-
-<div class="level2">
-<a href="ImageMaps.html.es#Creating">image maps</a></div>
-
-<div class="level2">
-<a href="StyleSheets.html.es#Creating,">style sheets</a></div>
-
-<div class="level2">
-<a href="Tables.html.es#Creating">tables</a></div>
-
-<div class="level1">
-<a href="#stylesheets">CSS, see style sheets</a></div>
-
 <div class="backtotop">
-<a href="#HTMLIndexerTop">Back to Top</a></div>
-<hr />
-
-<div class="letters">
-<a name="D" id="D">D</a></div>
-
-<div class="level1">
-<a href="Creating.html.es#edit-dl">definition lists</a></div>
-
-<div class="level1">
-<a href="Changing.html.es#Back">Delete key</a></div>
-
-<div class="level1">
-<a href="Annotations.html.es">deleting annotations</a></div>
-
-<div class="level1">
-<a href="Configure.html.es">dialogues, configuring</a></div>
-
-<div class="level1">
-<a href="Changing.html.es#Inserting">div element</a></div>
-
-<div class="level1">
-<a href="MakeBook.html.es">document collections</a></div>
-
-<div class="level1">
-<a href="Changing.html.es#L631">document structure, changing the</a></div>
-
-<div class="level1">
-<a href="Creating.html.es#Types">Document Type Definition, HTML</a></div>
-
-<div class="level1">
-documents</div>
-
-<div class="level2">
-<a href="Creating.html.es#New">creating</a></div>
-
-<div class="level2">
-<a href="Printing.html.es">printing</a></div>
-
-<div class="level2">
-<a href="Manual.html.es#L932">recovering</a></div>
-
-<div class="level1">
-<a href="Configure.html.es#preferences">double-click delay</a></div>
-
-<div class="level1">
-<a href="Creating.html.es#Types">DTD, HTML</a></div>
-
-<div class="backtotop">
-<a href="#HTMLIndexerTop">Back to Top</a></div>
-<hr />
-
-<div class="letters">
-<a name="E" id="E">E</a></div>
-
-<div class="level1">
-<a name="editing" id="editing">editing</a></div>
-
-<div class="level2">
-<a href="Attributes.html.es">attributes</a></div>
-
-<div class="level2">
-<a href="Changing.html.es#L631">document structures</a></div>
-
-<div class="level2">
-<a href="Browsing.html.es">documents</a></div>
-
-<div class="level2">
-<a href="Views.html.es#Using">documents using views</a></div>
-
-<div class="level2">
-<a href="Changing.html.es#L653">element types</a></div>
-
-<div class="level2">
-<a href="SVG.html.es">graphics</a></div>
-
-<div class="level2">
-<a href="Links.html.es#Changing">links</a></div>
-
-<div class="level2">
-<a href="Math.html.es">mathematics</a></div>
-
-<div class="level2">
-<a href="Configure.html.es#preferences">preferences</a></div>
-
-<div class="level2">
-<a href="Tables.html.es">tables</a></div>
-
-<div class="level2">
-<a href="Manual.html.es#L932">Web pages</a></div>
-
-<div class="level1">
-<a href="Browsing.html.es">Editor mode</a></div>
-
-<div class="level1">
-<a href="Changing.html.es#L653">element types, changing</a></div>
-
-<div class="level1">
-elements</div>
-
-<div class="level2">
-<a href="Creating.html.es#Structure">BODY</a></div>
-
-<div class="level2">
-<a href="Creating.html.es#Types">creating</a></div>
-
-<div class="level2">
-<a href="Creating.html.es#L906">creating sequential</a></div>
-
-<div class="level2">
-<a href="Creating.html.es#Structure">HEAD</a></div>
-
-<div class="level2">
-<a href="Links.html.es#L245">links</a></div>
-
-<div class="level2">
-<a href="Math.html.es">MathML</a></div>
-
-<div class="level2">
-<a href="Changing.html.es#Back">merging</a></div>
-
-<div class="level2">
-<a href="SVG.html.es">SVG</a></div>
-
-<div class="level2">
-<a href="Links.html.es#target1">target</a></div>
-
-<div class="level2">
-<a href="Links.html.es#L557">target anchors</a></div>
-
-<div class="level2">
-<a href="Creating.html.es#Changing">TITLE</a></div>
-
-<div class="level1">
-<a href="Creating.html.es#L906">Intro key</a></div>
-
-<div class="level1">
-<a href="#mathematics">expressions, see mathematics</a></div>
-
-<div class="level1">
-<a href="StyleSheets.html.es#External">external style sheets</a></div>
-
-<div class="backtotop">
-<a href="#HTMLIndexerTop">Back to Top</a></div>
-<hr />
-
-<div class="letters">
-<a name="F" id="F">F</a></div>
-
-<div class="level1">
-<a href="SVG.html.es#Painting">fill color</a></div>
-
-<div class="level1">
-<a href="Searching.html.es">find and replace</a></div>
-
-<div class="level1">
-<a href="Configure.html.es#preferences">div size, menu</a></div>
-
-<div class="level1">
-<a href="Configure.html.es#preferences">div zooming</a></div>
-
-<div class="level1">
-<a href="Configure.html.es#preferences">foregound color</a></div>
-
-<div class="level1">
-<a href="Views.html.es">Formatted view</a></div>
-
-<div class="level1">
-<a href="Browsing.html.es#Moving">forward, moving</a></div>
-
-<div class="level1">
-<a href="Configure.html.es#preferences">FTP, enabling</a></div>
-
-<div class="backtotop">
-<a href="#HTMLIndexerTop">Back to Top</a></div>
-<hr />
-
-<div class="letters">
-<a name="G" id="G">G</a></div>
-
-<div class="level1">
-<a href="Configure.html.es#preferences">GET action</a></div>
-
-<div class="level1">
-<a name="graphics" id="graphics">graphics</a></div>
-
-<div class="level2">
-<a href="SVG.html.es#Creating">creating</a></div>
-
-<div class="level2">
-<a href="SVG.html.es">editing</a></div>
-
-<div class="level2">
-<a href="SVG.html.es#Moving">moving</a></div>
-
-<div class="level2">
-<a href="SVG.html.es#Painting">painting</a></div>
-
-<div class="level2">
-<a href="SVG.html.es#Resizing">resizing</a></div>
-
-<div class="level2">
-<a href="#images">see also images</a></div>
-
-<div class="backtotop">
-<a href="#HTMLIndexerTop">Back to Top</a></div>
-<hr />
-
-<div class="letters">
-<a name="H" id="H">H</a></div>
-
-<div class="level1">
-<a href="Creating.html.es#Structure">HEAD element</a></div>
-
-<div class="level1">
-<a href="HTML-elements\headings.html.es">heading elements</a></div>
-
-<div class="level1">
-<a href="StyleSheets.html.es">height</a></div>
-
-<div class="level1">
-<a href="Browsing.html.es#Moving">history list, browsing a</a></div>
-
-<div class="level1">
-<a href="Configure.html.es#preferences">home page, setting the</a></div>
-
-<div class="level1">
-HTML</div>
-
-<div class="level2">
-<a href="Browsing.html.es">documents</a></div>
-
-<div class="level2">
-<a href="Creating.html.es#Types">DTD</a></div>
-
-<div class="level2">
-<a href="HTML.html.es">elements</a></div>
-
-<div class="level2">
-<a href="Publishing.html.es#L1104">saving documents in</a></div>
-
-<div class="level1">
-<a href="#links">hyperlinks, see links</a></div>
-
-<div class="backtotop">
-<a href="#HTMLIndexerTop">Back to Top</a></div>
-<hr />
-
-<div class="letters">
-<a name="I" id="I">I</a> - <a name="J" id="J">J</a></div>
-
-<div class="level1">
-<a href="ImageMaps.html.es#Using" name="imagemaps" id="imagemaps">image
-maps</a></div>
-
-<div class="level2">
-<a href="ImageMaps.html.es#Creating">creating</a></div>
-
-<div class="level2">
-<a href="ImageMaps.html.es#L11711">moving areas of</a></div>
-
-<div class="level2">
-<a href="ImageMaps.html.es#L1171">resizing areas of</a></div>
-
-<div class="level1">
-<a name="images" id="images">images</a></div>
-
-<div class="level2">
-<a href="ImageMaps.html.es#Adding">creating</a></div>
-
-<div class="level2">
-<a href="Selecting.html.es#Selecting2">selecting</a></div>
-
-<div class="level2">
-<a href="Configure.html.es#preferences">showing background</a></div>
-
-<div class="level2">
-<a href="#graphics">see also graphics</a></div>
-
-<div class="level1">
-<a href="EditChar.html.es#Standard">inserting characters</a></div>
-
-<div class="level1">
-<a href="Browsing.html.es">ISO-latin-1 documents</a></div>
-
-<div class="backtotop">
-<a href="#HTMLIndexerTop">Back to Top</a></div>
-<hr />
-
-<div class="letters">
-<a name="K" id="K">K</a></div>
-
-<div class="level1">
-<a href="#shortcuts">keyboard shortcuts, see shortcuts</a></div>
-
-<div class="backtotop">
-<a href="#HTMLIndexerTop">Back to Top</a></div>
+<a href="#HTMLIndexerTop">Volver al principio</a></div>
 <hr />
 
 <div class="letters">
 <a name="L" id="L">L</a></div>
 
 <div class="level1">
-language</div>
-
-<div class="level2">
-<a href="Configure.html.es#preferences">negotiation preferences</a></div>
-
-<div class="level2">
-<a href="Configure.html.es#preferences">specifying</a></div>
+<a href="HTML-elements\lists.html.es">lista, elementos</a></div>
 
 <div class="level1">
-<a href="Views.html.es">Links view</a></div>
-
-<div class="level1">
-<a name="links" id="links">links</a></div>
-
-<div class="level2">
-<a href="Browsing.html.es#Activating">activating</a></div>
-
-<div class="level2">
-<a href="Links.html.es#Changing">changing</a></div>
-
-<div class="level2">
-<a href="Links.html.es#L245">creating</a></div>
-
-<div class="level2">
-<a href="Math.html.es#Links">MathML</a></div>
-
-<div class="level2">
-<a href="Configure.html.es#preferences">overriding double-click for</a></div>
-
-<div class="level2">
-<a href="Links.html.es#Removing">removing</a></div>
-
-<div class="level2">
-<a href="#targetanchors">see also target anchors</a></div>
-
-<div class="level1">
-<a href="HTML-elements\lists.html.es">list elements</a></div>
-
-<div class="level1">
-<a href="Annotations.html.es">loading annotations</a></div>
-
-<div class="level1">
-<a href="Annotations.html.es">local annotations</a></div>
+<a href="Annotations.html.es">locales, anotaciones</a></div>
 
 <div class="backtotop">
-<a href="#HTMLIndexerTop">Back to Top</a></div>
+<a href="#HTMLIndexerTop">Volver al principio</a></div>
 <hr />
 
 <div class="letters">
 <a name="M" id="M">M</a></div>
 
 <div class="level1">
-<a href="MakeBook.html.es">make book function</a></div>
+<a href="ImageMaps.html.es#Using" name="imagemaps" id="imagemaps">mapas de
+imágenes</a></div>
+
+<div class="level2">
+<a href="ImageMaps.html.es#Creating">crear</a></div>
+
+<div class="level2">
+<a href="ImageMaps.html.es#L11711">mover áreas</a></div>
+
+<div class="level2">
+<a href="ImageMaps.html.es#L1171">cambiar el tamaño de las áreas</a></div>
 
 <div class="level1">
-<a href="Math.html.es" name="mathematics" id="mathematics">mathematics</a></div>
+<a href="Math.html.es" name="mathematics"
+id="mathematics">matemáticas</a></div>
 
 <div class="level1">
 <a href="Math.html.es">MathML</a></div>
 
 <div class="level2">
-<a href="Creating.html.es#New">creating documents for</a></div>
+<a href="Creating.html.es#New">crear documentos con</a></div>
 
 <div class="level2">
-<a href="Math.html.es#Current">limitations</a></div>
+<a href="Math.html.es#Current">limitaciones</a></div>
 
 <div class="level1">
 <a href="Math.html.es#Structure">matrices</a></div>
 
 <div class="level1">
-<a href="Changing.html.es#Back">merging elements</a></div>
+<a href="Annotations.html.es#What">metadatos</a></div>
 
 <div class="level1">
-<a href="Annotations.html.es#What">metadata</a></div>
-
-<div class="level1">
-moving</div>
+mover</div>
 
 <div class="level2">
-<a href="Annotations.html.es">annotations</a></div>
+<a href="Annotations.html.es">anotaciones</a></div>
 
 <div class="level2">
-<a href="Browsing.html.es#Moving">backward</a></div>
+<a href="Browsing.html.es#Moving">atrás</a></div>
 
 <div class="level2">
-<a href="Browsing.html.es#Moving">forward</a></div>
+<a href="Browsing.html.es#Moving">adelante</a></div>
 
 <div class="level2">
-<a href="SVG.html.es#Moving">graphics</a></div>
+<a href="SVG.html.es#Moving">gráficas</a></div>
 
 <div class="level2">
-<a href="ImageMaps.html.es#L11711">image maps</a></div>
-
-<div class="level1">
-<a href="EditChar.html.es#Standard">support</a></div>
-
-<div class="level1">
-multi-key</div>
-
-<div class="level2">
-<a href="Configure.html.es#preferences">enabling</a></div>
-
-<div class="level2">
-<a href="EditChar.html.es#Optional">optional support</a></div>
-
-<div class="level2">
-<a href="EditChar.html.es#Standard">support</a></div>
+<a href="ImageMaps.html.es#L11711">mapas de imágenes</a></div>
 
 <div class="backtotop">
-<a href="#HTMLIndexerTop">Back to Top</a></div>
+<a href="#HTMLIndexerTop">Volver al principio</a></div>
 <hr />
 
 <div class="letters">
-<a name="N" id="N">N</a></div>
+<a name="N" id="N">N</a> - <a name="O1" id="O1">O</a></div>
 
 <div class="level1">
-<a href="Annotations.html.es">navigating annotations</a></div>
+navegar</div>
+
+<div class="level2">
+<a href="Browsing.html.es#Moving">historia</a></div>
+
+<div class="level2">
+<a href="Manual.html.es#Browsing">páginas Web</a></div>
 
 <div class="level1">
-<a href="Browsing.html.es#Opening">new window</a></div>
+<a href="Annotations.html.es">navegar anotaciones</a></div>
 
 <div class="level1">
-<a href="#annotations">notes, see annotations</a></div>
+<a href="#annotations">notas, ver anotaciones</a></div>
 
 <div class="level1">
-<a href="Numbering.html.es">numbering, section</a></div>
+<a href="Browsing.html.es#Opening">nueva ventana</a></div>
+
+<div class="level1">
+<a href="Numbering.html.es">numeración de secciones</a></div>
 
 <div class="backtotop">
-<a href="#HTMLIndexerTop">Back to Top</a></div>
-<hr />
-
-<div class="letters">
-<a name="O" id="O">O</a></div>
-
-<div class="level1">
-opening</div>
-
-<div class="level2">
-<a href="Manual.html.es#L920">Amaya</a></div>
-
-<div class="level2">
-<a href="Browsing.html.es#Opening">documents</a></div>
-
-<div class="level2">
-<a href="Browsing.html.es">encoded documents</a></div>
-
-<div class="level2">
-<a href="Views.html.es#Opening">views</a></div>
-
-<div class="backtotop">
-<a href="#HTMLIndexerTop">Back to Top</a></div>
+<a href="#HTMLIndexerTop">Volver al principio</a></div>
 <hr />
 
 <div class="letters">
 <a name="P" id="P">P</a> - <a name="Q" id="Q">Q</a></div>
 
 <div class="level1">
-<a href="Manual.html.es#L920">parameters</a></div>
-
-<div class="level2">
-<a href="Configure.html.es">configuring global</a></div>
+<a href="Configure.html.es#preferences">página de inicio, establecer</a></div>
 
 <div class="level1">
-<a href="Creating.html.es#end-anchor">plain text</a></div>
-
-<div class="level1">
-<a href="Configure.html.es#preferences">preferences</a></div>
+<a href="Manual.html.es#L920">parámetros</a></div>
 
 <div class="level2">
-<a href="Configure.html.es#preferences">cache</a></div>
+<a href="Configure.html.es">configuración global</a></div>
+
+<div class="level1">
+<a href="Configure.html.es#preferences">perfiles, preferencias</a></div>
+
+<div class="level1">
+<a href="Configure.html.es#preferences">plantillas, preferencias de</a></div>
+
+<div class="level1">
+<a href="Configure.html.es#preferences">preferenciass</a></div>
+
+<div class="level2">
+<a href="Configure.html.es#preferences">caché</a></div>
 
 <div class="level2">
 <a href="Configure.html.es#preferences">color</a></div>
 
 <div class="level2">
-<a href="Configure.html.es#preferences">editing</a></div>
+<a href="Configure.html.es#preferences">edición</a></div>
 
 <div class="level2">
-<a href="Configure.html.es#preferences">language negotiation</a></div>
+<a href="Configure.html.es#preferences">negociación de idioma</a></div>
 
 <div class="level2">
-<a href="Configure.html.es#preferences">profiles</a></div>
+<a href="Configure.html.es#preferences">perfiles</a></div>
 
 <div class="level2">
 <a href="Configure.html.es#preferences">proxy</a></div>
 
 <div class="level2">
-<a href="Configure.html.es#preferences">templates</a></div>
+<a href="Configure.html.es#preferences">plantillas</a></div>
 
 <div class="level1">
-<a href="Printing.html.es#Print">Print command</a></div>
+<a href="Configure.html.es#preferences">proxy, preferencias</a></div>
 
 <div class="level1">
-printing</div>
+publicar</div>
 
 <div class="level2">
-<a href="MakeBook.html.es">document collections</a></div>
+<a href="Publishing.html.es">documentos</a></div>
 
 <div class="level2">
-<a href="Printing.html.es">documents</a></div>
-
-<div class="level2">
-<a href="Numbering.html.es">Numeración de secciones</a></div>
+<a href="Configure.html.es#preferences">detectar conflictos al</a></div>
 
 <div class="level1">
-<a href="Configure.html.es#preferences">profiles preferences</a></div>
-
-<div class="level1">
-<a href="Configure.html.es#preferences">proxy preferences</a></div>
-
-<div class="level1">
-publishing</div>
-
-<div class="level2">
-<a href="Publishing.html.es">documents</a></div>
-
-<div class="level2">
-<a href="Configure.html.es#preferences">detecting conflicts when</a></div>
-
-<div class="level1">
-<a href="Configure.html.es#preferences">PUT action</a></div>
+<a href="Configure.html.es#preferences">PUT</a></div>
 
 <div class="backtotop">
-<a href="#HTMLIndexerTop">Back to Top</a></div>
+<a href="#HTMLIndexerTop">Volver al principio</a></div>
 <hr />
 
 <div class="letters">
 <a name="R" id="R">R</a></div>
 
 <div class="level1">
-<a href="Manual.html.es#L932">recovering documents</a></div>
+<a href="Manual.html.es#L932">recuperar documentos</a></div>
 
 <div class="level1">
-<a href="Browsing.html.es#Reloading">reloading a page</a></div>
+<a href="Browsing.html.es#Reloading">recargar una página</a></div>
 
 <div class="level1">
-<a href="Annotations.html.es">remote annotations</a></div>
+<a href="SVG.html.es#Painting">relleno, color de</a></div>
 
 <div class="level1">
-<a href="Searching.html.es">replacing text</a></div>
+<a href="Annotations.html.es">remotas, anotaciones</a></div>
 
 <div class="level1">
-<a href="ImageMaps.html.es#L1171">resizing image map areas</a></div>
-
-<div class="level1">
-<a href="Creating.html.es#L906">Return key</a></div>
-
-<div class="level1">
-<a href="#tables">rows, see tables</a></div>
+<a href="Configure.html.es#preferences">retardo en el doble clic</a></div>
 
 <div class="backtotop">
-<a href="#HTMLIndexerTop">Back to Top</a></div>
+<a href="#HTMLIndexerTop">Volver al principio</a></div>
 <hr />
 
 <div class="letters">
 <a name="S" id="S">S</a></div>
 
 <div class="level1">
-saving</div>
-
-<div class="level2">
-<a href="Publishing.html.es">and publishing documents</a></div>
-
-<div class="level2">
-<a href="Publishing.html.es#L1105">documents as text</a></div>
-
-<div class="level2">
-<a href="Publishing.html.es#L1104">documents in HTML</a></div>
-
-<div class="level2">
-<a href="Numbering.html.es">Numeración de secciones</a></div>
-
-<div class="level2">
-<a href="Views.html.es#Using">synchronization when</a></div>
+<a href="Numbering.html.es">secciones, numeración de</a></div>
 
 <div class="level1">
-<a href="Searching.html.es">searching and replacing text</a></div>
+seleccionar</div>
+
+<div class="level2">
+<a href="Selecting.html.es">elementos</a></div>
+
+<div class="level2">
+<a href="Selecting.html.es#Selecting2">imágenes</a></div>
 
 <div class="level1">
-<a href="Numbering.html.es">Numeración de secciones</a></div>
+<a href="Views.html.es#Using">sincronizar, comando</a></div>
 
 <div class="level1">
-selecting</div>
-
-<div class="level2">
-<a href="Selecting.html.es">elements</a></div>
-
-<div class="level2">
-<a href="Selecting.html.es#Selecting2">images</a></div>
+<a href="EditChar.html.es#Standard">soporte</a></div>
 
 <div class="level1">
-<a href="Printing.html.es#Setup">Setup and Print command</a></div>
+<a href="Changing.html.es#Back">Suprimir, tecla</a></div>
 
 <div class="level1">
-<a href="ShortCuts.html.es" name="shortcuts" id="shortcuts">shortcuts</a></div>
-
-<div class="level2">
-<a href="ShortCuts.html.es">commands</a></div>
-
-<div class="level2">
-<a href="Configure.html.es">configuring</a></div>
-
-<div class="level2">
-<a href="Selecting.html.es">for keyboard</a></div>
-
-<div class="level2">
-<a href="Selecting.html.es">for mouse</a></div>
-
-<div class="level2">
-<a href="Browsing.html.es#Access">overwriting</a></div>
+<a href="Searching.html.es">sustituir, buscar y</a></div>
 
 <div class="level1">
-<a href="Views.html.es">Source view</a></div>
+<a href="Creating.html.es#New">SVG, crear nuevos documentos</a></div>
 
 <div class="level1">
-<a href="SpellChecking.html.es">spell checking</a></div>
-
-<div class="level1">
-<a href="Manual.html.es#L920">starting Amaya</a></div>
-
-<div class="level1">
-<a href="SVG.html.es#Painting">stroke color</a></div>
-
-<div class="level1">
-<a href="Views.html.es">Structure view</a></div>
-
-<div class="level2">
-&gt;<a href="Math.html.es#Math_Struc">editing mathematics in the</a></div>
-
-<div class="level2">
-<a href="Selecting.html.es#Selecting1">selecting in the</a></div>
-
-<div class="level1">
-<a href="StyleSheets.html.es" name="stylesheets" id="stylesheets">style
-sheets</a></div>
-
-<div class="level2">
-<a href="StyleSheets.html.es#Creating">attributes for</a></div>
-
-<div class="level2">
-<a href="StyleSheets.html.es#Creating,">creating</a></div>
-
-<div class="level2">
-<a href="StyleSheets.html.es#External">external</a></div>
-
-<div class="level2">
-<a href="StyleSheets.html.es#Managing">handling external</a></div>
-
-<div class="level2">
-<a href="Printing.html.es#Controllin">printing with</a></div>
-
-<div class="level2">
-<a href="StyleSheets.html.es#External">user defined</a></div>
-
-<div class="level1">
-styles</div>
-
-<div class="level2">
-<a href="StyleSheets.html.es#L1371">creating HTML element</a></div>
-
-<div class="level2">
-<a href="StyleSheets.html.es#L1371">removing</a></div>
-
-<div class="level2">
-<a href="#stylesheets">see also style sheets</a></div>
-
-<div class="level1">
-<a href="Creating.html.es#New">SVG documents, creating new</a></div>
-
-<div class="level1">
-<a href="SVG.html.es">SVG elements</a></div>
-
-<div class="level1">
-<a href="Views.html.es#Using">Synchronize command</a></div>
+<a href="SVG.html.es">SVG, elementos</a></div>
 
 <div class="backtotop">
-<a href="#HTMLIndexerTop">Back to Top</a></div>
+<a href="#HTMLIndexerTop">Volver al principio</a></div>
 <hr />
 
 <div class="letters">
 <a name="T" id="T">T</a></div>
 
 <div class="level1">
-<a href="Views.html.es">Table of Contents view</a></div>
+<a href="Views.html.es">Tabla de Contenidos, vista</a></div>
 
 <div class="level1">
-<a href="Creating.html.es#Structure" name="tables" id="tables">tables</a></div>
+<a href="Creating.html.es#Structure" name="tables"
+id="tables">tablas</a></div>
 
 <div class="level2">
-<a href="Tables.html.es#Creating">creating</a></div>
+<a href="Tables.html.es#Creating">crear</a></div>
 
 <div class="level2">
-<a href="Tables.html.es">editing</a></div>
+<a href="Tables.html.es">editar</a></div>
 
 <div class="level1">
-<a href="Browsing.html.es#target" name="targetanchors" id="targetanchors">target
-anchors</a></div>
+<a href="Browsing.html.es#target" name="targetanchors"
+id="targetanchors">destinos</a></div>
 
 <div class="level2">
-<a href="Links.html.es#L557">creating</a></div>
+<a href="Links.html.es#L557">crear</a></div>
 
 <div class="level2">
-<a href="Links.html.es#Removing">removing</a></div>
+<a href="Links.html.es#Removing">eliminar</a></div>
 
 <div class="level1">
-<a href="Links.html.es#target1">target elements</a></div>
+<a href="ImageMaps.html.es#L1171">tamaño de áreas de mapas de imágenes,
+cambiar</a></div>
 
 <div class="level1">
-<a href="Configure.html.es#preferences">templates preferences</a></div>
+<a href="#shortcuts">teclado, atajos de, ver atajos</a></div>
 
 <div class="level1">
-<a href="Creating.html.es#Changing">TITLE element</a></div>
+<a href="Browsing.html.es#Access">teclas de acceso</a></div>
+
+<div class="level2">
+<a href="Configure.html.es#preferences">especificar</a></div>
 
 <div class="level1">
-<a href="Changing.html.es#L141">Transform command</a></div>
+<p><a href="ImageMaps.html.es#Alternative">texto alternativo</a></p>
+</div>
+
+<div class="level1">
+<a href="Creating.html.es#end-anchor">texto sin código</a></div>
+
+<div class="level1">
+<a href="Changing.html.es#L653">tipos de elementos, cambiar</a></div>
+
+<div class="level1">
+<a href="Creating.html.es#Changing">&lt;title&gt;</a></div>
+
+<div class="level1">
+<a href="Changing.html.es#L141">Transformar, comando</a></div>
+
+<div class="level1">
+<a href="SVG.html.es#Painting">trazo, color de</a></div>
 
 <div class="backtotop">
-<a href="#HTMLIndexerTop">Back to Top</a></div>
+<a href="#HTMLIndexerTop">Volver al principio</a></div>
 <hr />
 
 <div class="letters">
 <a name="U" id="U">U</a></div>
 
 <div class="level1">
-Unix</div>
-
-<div class="level2">
-<a href="Configure.html.es">configuring Amaya for</a></div>
-
-<div class="level2">
-<a href="Manual.html.es#L920">parameters</a></div>
-
-<div class="level2">
-<a href="Printing.html.es#Setup">print setup</a></div>
-
-<div class="level2">
-<a href="Manual.html.es">user interface for</a></div>
+<a href="Changing.html.es#Back">unir elementos</a></div>
 
 <div class="level1">
-<a href="Browsing.html.es">UTF 8 documents</a></div>
+<p>Unix</p>
+</div>
+
+<div class="level2">
+<a href="Configure.html.es">configurar Amaya para</a></div>
+
+<div class="level2">
+<a href="Manual.html.es#L920">parámetros</a></div>
+
+<div class="level2">
+<a href="Printing.html.es#Setup">impresión, configuración</a></div>
+
+<div class="level2">
+<a href="Manual.html.es">interface de usuario para</a></div>
+
+<div class="level1">
+<p><a href="Browsing.html.es">UTF 8, documentos</a></p>
+</div>
 
 <div class="backtotop">
-<a href="#HTMLIndexerTop">Back to Top</a></div>
+<a href="#HTMLIndexerTop">Volver al principio</a></div>
 <hr />
 
 <div class="letters">
-<a name="V" id="V">V</a></div>
+<a name="V" id="V">V</a> -  <a name="W" id="W">W</a></div>
 
 <div class="level1">
-<a href="Manual.html.es">version</a></div>
+Ventanas</div>
+
+<div class="level2">
+<a href="Configure.html.es">configurar Amaya para</a></div>
+
+<div class="level2">
+<a href="Printing.html.es#Setup">configuración de impresión</a></div>
+
+<div class="level2">
+<a href="Manual.html.es">interface de usuario</a></div>
 
 <div class="level1">
-view window</div>
-
-<div class="level2">
-<a href="Views.html.es">Alternate</a></div>
-
-<div class="level2">
-<a href="Views.html.es">Formatted</a></div>
-
-<div class="level2">
-<a href="Views.html.es">Links</a></div>
-
-<div class="level2">
-<a href="Views.html.es">Source</a></div>
-
-<div class="level2">
-<a href="Views.html.es">Structure</a></div>
-
-<div class="level2">
-<a href="Views.html.es">Table of Contents</a></div>
+<a href="Manual.html.es">versión</a></div>
 
 <div class="level1">
-<a href="Views.html.es">views</a></div>
+vista</div>
 
 <div class="level2">
-<a href="Views.html.es#Closing">closing</a></div>
+<a href="Views.html.es">Alternativa</a></div>
 
 <div class="level2">
-<a href="Views.html.es#Opening">opening</a></div>
+<a href="Views.html.es">Formateada</a></div>
 
 <div class="level2">
-<a href="Views.html.es#Using">synchronization of</a></div>
+<a href="Views.html.es">Enlaces</a></div>
 
 <div class="level2">
-<a href="Views.html.es#Using">using</a></div>
+<a href="Views.html.es">Fuente</a></div>
+
+<div class="level2">
+<a href="Views.html.es">Estructura</a></div>
+
+<div class="level2">
+<a href="Views.html.es">Tabla de contenidos</a></div>
+
+<div class="level1">
+<a href="Views.html.es">vistas</a></div>
+
+<div class="level2">
+<a href="Views.html.es#Closing">cerrar</a></div>
+
+<div class="level2">
+<a href="Views.html.es#Opening">abrir</a></div>
+
+<div class="level2">
+<a href="Views.html.es#Using">sincronización de</a></div>
+
+<div class="level2">
+<a href="Views.html.es#Using">utilizar</a></div>
 
 <div class="backtotop">
-<a href="#HTMLIndexerTop">Back to Top</a></div>
+<a href="#HTMLIndexerTop">Volver al principio</a></div>
 <hr />
 
 <div class="letters">
-<a name="W" id="W">W</a></div>
+<a name="X" id="X">X</a> - <a name="Z" id="Z">Z</a> - <a name="Y"
+id="Y">Y</a></div>
 
 <div class="level1">
-<a href="StyleSheets.html.es">width</a></div>
-
-<div class="level1">
-Windows</div>
+<a href="Browsing.html.es">XHTML, documentos</a></div>
 
 <div class="level2">
-<a href="Configure.html.es">configuring Amaya for</a></div>
-
-<div class="level2">
-<a href="Printing.html.es#Setup">print setup</a></div>
-
-<div class="level2">
-<a href="Manual.html.es">user interface for</a></div>
+<a href="Creating.html.es#New">crear nuevos</a></div>
 
 <div class="backtotop">
-<a href="#HTMLIndexerTop">Back to Top</a></div>
-<hr />
-
-<div class="letters">
-<a name="X" id="X">X</a> - <a name="Z" id="Z">Z</a><a name="Y"
-id="Y">&nbsp;</a></div>
-
-<div class="level1">
-<a href="Browsing.html.es">XHTML documents</a></div>
-
-<div class="level2">
-<a href="Creating.html.es#New">creating new</a></div>
-
-<div class="backtotop">
-<a href="#HTMLIndexerTop">Back to Top</a></div>
+<a href="#HTMLIndexerTop">Volver al principio</a></div>
 <hr />
 </body>
 </html>

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title>Das Menü Anmerkungen</title>
+  <meta name="generator" content="amaya 6.1, see http://www.w3.org/Amaya/" />
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <style type="text/css">
+  </style>
+  <link href="../style.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body xml:lang="de" lang="de">
+
+<table border="0" cellspacing="5" cellpadding="5">
+  <tbody>
+    <tr>
+      <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
+        src="../../images/amaya.gif" /></td>
+      <td><a accesskey="p"
+        href="./about_storing_remote_annotations.html.de"><img
+        alt="vorherige Seite" src="../../images/left.gif" /></a> <a
+        accesskey="t" href="../Annotations.html.de"><img alt="erste Seite"
+        src="../../images/up.gif" /></a> <a accesskey="n"
+        href="./configuring_annotation_settings.html.de"><img
+        alt="nächste Seite" src="../../images/right.gif" /></a></td>
+    </tr>
+  </tbody>
+</table>
+
+<div id="page_body">
+<h1>Das Menü Anmerkungen</h1>
+
+<p>Die Mehrzahl der Befehle zur Handhabung von Anmerkungen befinden sich im
+Menü <strong>Anmerkungen</strong>, welches unten zu sehen ist. Die Befehle
+werden in anderen Abschnitten im Zusammenhang mit ihrer Anwendung erklärt.</p>
+
+<p><img alt="Das Menü Anmerkungen" src="../../images/annotationsmenu-de.png"
+/></p>
+</div>
+</body>
+</html>

@@ -11,12 +11,12 @@
 
 <body xml:lang="es" lang="es">
 
-<table summary="toc">
+<table border="0" width="100%" summary="toc">
   <tbody>
     <tr>
       <td><img alt="W3C" src="../images/w3c_home" /><img alt="Amaya"
         src="../images/amaya.gif" /></td>
-      <td><p><a href="SVG.html.es" accesskey="p"><img alt="anterior"
+      <td><p align="right"><a href="SVG.html.es" accesskey="p"><img alt="anterior"
         src="../images/left.gif" /></a> <a href="Manual.html.es"
         accesskey="t"><img alt="superior" src="../images/up.gif" /></a> <a
         href="StyleSheets.html.es" accesskey="n"><img
@@ -31,12 +31,12 @@
 
 <p>En esta sección se tratan los temas siguientes:</p>
 <ul>
-  <li><a href="using_xml/loading_xml_document.html.es#page_body"
-    rel="subdocument">Cargar documentos XML</a></li>
-  <li><a href="using_xml/xml_using_style.html.es#page_body"
-    rel="subdocument">Utilizar estilos en XML</a></li>
-  <li><a href="using_xml/editing_xml_document.html.es#page_body"
-    rel="subdocument">Editar documentos XML</a></li>
+  <li><a href="using_xml/loading_xml_document.html.es"
+    >Cargar documentos XML</a></li>
+  <li><a href="using_xml/xml_using_style.html.es"
+    >Utilizar estilos en XML</a></li>
+  <li><a href="using_xml/editing_xml_document.html.es"
+    >Editar documentos XML</a></li>
 </ul>
 </div>
 </body>

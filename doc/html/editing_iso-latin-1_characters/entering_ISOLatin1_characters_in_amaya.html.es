@@ -11,12 +11,12 @@
 
 <body xml:lang="es" lang="es">
 
-<table border="0" summary="toc">
+<table border="0" width="100%" summary="toc">
   <tbody>
     <tr>
       <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
         src="../../images/amaya.gif" /></td>
-      <td><p><a href="../EditChar.html.es" accesskey="t"><img alt="superior"
+      <td><p align="right"><a href="../EditChar.html.es" accesskey="t"><img alt="superior"
         src="../../images/up.gif" /></a> <a
         href="about_optional_multikey_support.html.es" accesskey="n"><img
         alt="siguiente" src="../../images/right.gif" /></a></p>
@@ -41,7 +41,7 @@ predefinidos:</p>
   <li>Para escribir un carácter nulo, pulsa <code>Control - space</code>.
     Este carácter se guarda como la entidad de carácter <span
     class="code"><span
-    style="font-size: 11.0pt;font-family:"Courier New";"><code>&amp;nbsp;</code></span></span>.</li>
+    style="font-size: 11.0pt;font-family:'Courier New';"><code>&amp;nbsp;</code></span></span>.</li>
   <li>Para escribir el símbolo de euro (&euro;), pulsa <code>Alt -
   e</code>.</li>
   <li>Para escribir &#x153; (oelig), pulsa <code>Control - o</code> y a

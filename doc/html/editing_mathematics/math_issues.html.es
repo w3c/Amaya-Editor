@@ -11,12 +11,12 @@
 
 <body lang="es">
 
-<table border="0" summary="toc">
+<table border="0" width="100%" summary="toc">
   <tbody>
     <tr>
       <td><img alt="W3C" src="../../images/w3c_home"> <img alt="Amaya"
         src="../../images/amaya.gif"></td>
-      <td><p><a href="about_linking_in_mathml.html.es" accesskey="p"><img
+      <td><p align="right"><a href="about_linking_in_mathml.html.es" accesskey="p"><img
         alt="anterior" src="../../images/left.gif"></a> <a
         href="../Math.html.es" accesskey="t"><img alt="superior"
         src="../../images/up.gif"></a></p>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-<base last_update="Mon Apr 14 10:58:40 CEST 2003" version="54">
+<base last_update="Mon Apr 14 11:39:30 CEST 2003" version="55">
 <control>
 	<language encoding="latin1">en</language>
 	<language encoding="latin1">fr</language>
@@ -425,7 +425,7 @@
 	<message xml:lang="de">Suche: %s</message>
 	<message xml:lang="it">Sto cercando %s</message>
 	<message xml:lang="tr">%s: aranıyor</message>
-	<message xml:lang="es">Mejorando %s</message>
+	<message xml:lang="es">Buscando %s</message>
 	<message xml:lang="pt">Pesquisando %s</message>
 	<message xml:lang="fi">Etsitään %s</message>
 </label>
@@ -535,7 +535,7 @@
 	<message xml:lang="de">Deutsche Systemfehlermeldungen</message>
 	<message xml:lang="it">italian system errors messages</message>
 	<message xml:lang="tr">Türkçe sistem hata mesajları</message>
-	<message xml:lang="es">Mensajes de errores de sistema en inglés</message>
+	<message xml:lang="es">Mensajes de errores de sistema en castellano</message>
 	<message xml:lang="pt">Mensagens de erro do sistema em português</message>
 	<message xml:lang="fi">Englantilaisen järjestelmän virhesanomat.</message>
 </label>
@@ -684,7 +684,7 @@
 	<message xml:lang="fr">Authentification requise pour le domaine \'%s\' du serveur \'%s\'</message>
 	<message xml:lang="de">Bitte auf der Domäne \'%s\', Server \'%s\' einloggen:</message>
 	<message xml:lang="it">Autenticazione per il dominio \'%s\' sul server \'%s\'</message>
-	<message xml:lang="es">Por favor, valide para \'%s\' en el servidor \'%s\'</message>
+	<message xml:lang="es">Necesita autentificar el dominio \'%s\' en el servidor \'%s\'</message>
 	<message xml:lang="pt">Por favor autenticar para o domínio \'%s\' no servidor \'%s\'</message>
 	<message xml:lang="fi">Anna tunnistetiedot alueelle \'%s\' palvelimella \'%s\'</message>
 	<message xml:lang="tr">Lütfen kendinizi \'%s\' alanı, \'%s\'servör için resmileştirin</message>
@@ -1800,7 +1800,7 @@
 <label define="AM_PASTE_LINE_BY_LINE">
 	<message xml:lang="en">Enable line-by-line paste</message>
 	<message xml:lang="fr">Activer le coller ligne � ligne</message>
-	<message xml:lang="it">Abilita incolla riga per riga</message>
+	<message xml:lang="it">Incolla mantenendo le righe originali</message>
 	<message xml:lang="de">Zeilenweises Einfügen aktivieren</message>
 </label>
 <label define="AM_SHOW_BG_IMAGES">
@@ -1849,7 +1849,7 @@
 	<message xml:lang="de">Abschnitte numerieren</message>
 	<message xml:lang="it">Numerazione delle sezioni</message>
 	<message xml:lang="tr">Bölüm numaralandırması</message>
-	<message xml:lang="es">Numeracón de sección</message>
+	<message xml:lang="es">Numeración de sección</message>
 	<message xml:lang="pt">Numeração de seção</message>
 	<message xml:lang="fi">Osien numerointi</message>
 </label>
@@ -3178,7 +3178,7 @@
 	<message xml:lang="de">Unendlich</message>
 	<message xml:lang="fi">rajattomuus</message>
 	<message xml:lang="it">infinito</message>
-	<message xml:lang="es">Infinito</message>
+	<message xml:lang="es">infinita</message>
 	<message xml:lang="tr">Sonsuz</message>
 </label>
 <label define="AM_DAV_TIMEOUT">
@@ -3198,7 +3198,7 @@
 	<message xml:lang="de">Unendlich</message>
 	<message xml:lang="fi">Rajaton</message>
 	<message xml:lang="it">Infinito</message>
-	<message xml:lang="es">Infinito</message>
+	<message xml:lang="es">Infinita</message>
 	<message xml:lang="tr">Sonsuz</message>
 </label>
 <label define="AM_DAV_TIMEOUT_OTHER">

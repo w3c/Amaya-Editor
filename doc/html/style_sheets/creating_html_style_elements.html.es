@@ -3,24 +3,25 @@
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta name="GENERATOR" content="amaya 6.4+, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 7.2, see http://www.w3.org/Amaya/" />
   <title>Crear elementos de estilo HTML</title>
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
 <body xml:lang="es" lang="es">
 
-<table border="0" summary="toc">
+<table border="0" width="100%" summary="toc">
   <tbody>
     <tr>
       <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
         src="../../images/amaya.gif" /></td>
-      <td><p><a href="about_applying_style_using_html_elements.html.es"
+      <td><p align="right"><a
+        href="creating_generic_style_for_an_element_or_a_class.html.es"
         accesskey="p"><img alt="anterior" src="../../images/left.gif" /></a>
         <a href="../StyleSheets.html.es" accesskey="t"><img alt="superior"
-        src="../../images/up.gif" /></a> <a href="removing_style.html.es"
-        accesskey="n"><img alt="siguiente" src="../../images/right.gif"
-        /></a></p>
+        src="../../images/up.gif" /></a> <a
+        href="handling_external_css.html.es" accesskey="n"><img
+        alt="siguiente" src="../../images/right.gif" /></a></p>
       </td>
     </tr>
   </tbody>
@@ -60,7 +61,7 @@ del texto a itálica, negrita, teletipo, superíndice, subíndice, y otros
 
 <p class="ProcedureCaption">Para aplicar un elemento carácter:</p>
 <ol>
-  <li>Selecciona una cadena de carácteres del documento. 
+  <li>Selecciona una cadena de caracteres del documento. 
     <p></p>
   </li>
   <li>Elige una opción del submenú <strong>Elemento carácter</strong>. 

@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta name="GENERATOR" content="amaya 6.4+, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 7.2, see http://www.w3.org/Amaya/" />
   <title>Crear gráficos con la paleta</title>
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
 <body xml:lang="es" lang="es">
 
-<table border="0" summary="toc">
+<table border="0" width="100%" summary="toc">
   <tbody>
     <tr>
       <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
         src="../../images/amaya.gif" /></td>
-      <td><p><a href="working_with_graphics.html.es" accesskey="p"><img
-        alt="anterior" src="../../images/left.gif" /></a> <a
-        href="../SVG.html.es" accesskey="t"><img alt="superior"
+      <td><p align="right"><a href="working_with_graphics.html.es"
+        accesskey="p"><img alt="anterior" src="../../images/left.gif" /></a>
+        <a href="../SVG.html.es" accesskey="t"><img alt="superior"
         src="../../images/up.gif" /></a> <a href="moving_graphics.html.es"
         accesskey="n"><img alt="siguiente" src="../../images/right.gif"
         /></a></p>
@@ -168,7 +168,7 @@ MathML.</p>
 <h2>Ver también:</h2>
 <ul>
   <li><a href="working_with_graphics.html.es">Trabajar con gráficos</a></li>
-  <li><a href="../Math.html.es">Editing Mathematics</a></li>
+  <li><a href="../Math.html.es">Editar Matemáticas</a></li>
   <li><a
     href="../editing_mathematics/the_math_palette_and_the_types.html.es">La
     paleta Matemáticas y el menú Xml &gt; Matemáticas</a></li>

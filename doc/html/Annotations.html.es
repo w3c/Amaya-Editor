@@ -10,12 +10,12 @@
 
 <body xml:lang="es" lang="es">
 
-<table border="0" summary="toc">
+<table border="0" width="100%" summary="toc">
   <tbody>
     <tr>
       <td><img alt="W3C" src="../images/w3c_home" /> <img alt="Amaya"
         src="../images/amaya.gif" /></td>
-      <td><p><a href="MakeBook.html.es" accesskey="p"><img alt="anterior"
+      <td><p align="right"><a href="MakeBook.html.es" accesskey="p"><img alt="anterior"
         src="../images/left.gif" /></a> <a href="Manual.html.es"
         accesskey="t"><img alt="superior" src="../images/up.gif" /></a> <a
         href="Configure.html.es" accesskey="n"><img alt="siguiente"
@@ -30,42 +30,42 @@
 
 <p>En esta sección se tratan los temas siguientes:</p>
 <ul>
-  <li><a href="attaching_annotations/what_is_an_annotation.html.es#page_body"
-    rel="subdocument">¿Qué es una anotación?</a></li>
+  <li><a href="attaching_annotations/what_is_an_annotation.html.es"
+    >¿Qué es una anotación?</a></li>
   <li><a
-    href="attaching_annotations/about_reading_annotations.html.es#page_body"
-    rel="subdocument">Leer anotaciones</a></li>
+    href="attaching_annotations/about_reading_annotations.html.es"
+    >Leer anotaciones</a></li>
   <li><a
-    href="attaching_annotations/about_storing_local_annotations.html.es#page_body"
-    rel="subdocument">Anotaciones locales</a></li>
+    href="attaching_annotations/about_storing_local_annotations.html.es"
+    >Anotaciones locales</a></li>
   <li><a
-    href="attaching_annotations/about_storing_remote_annotations.html.es#page_body"
-    rel="subdocument">Anotaciones remotas</a></li>
-  <li><a href="attaching_annotations/annotation_menu.html.es#page_body"
-    rel="subdocument">Menú Anotaciones</a></li>
+    href="attaching_annotations/about_storing_remote_annotations.html.es"
+    >Anotaciones remotas</a></li>
+  <li><a href="attaching_annotations/annotation_menu.html.es"
+    >Menú Anotaciones</a></li>
   <li><a
-    href="attaching_annotations/configuring_annotation_settings.html.es#page_body"
-    rel="subdocument">Configuración de anotaciones</a></li>
+    href="attaching_annotations/configuring_annotation_settings.html.es"
+    >Configuración de anotaciones</a></li>
   <li><a
-    href="attaching_annotations/creating_an_annotation.html.es#page_body"
-    rel="subdocument">Crear una anotación</a></li>
+    href="attaching_annotations/creating_an_annotation.html.es"
+    >Crear una anotación</a></li>
   <li><a
-    href="attaching_annotations/deleting_an_annotation.html.es#page_body"
-    rel="subdocument">Borrar una anotación</a></li>
+    href="attaching_annotations/deleting_an_annotation.html.es"
+    >Borrar una anotación</a></li>
   <li><a
-    href="attaching_annotations/loading_and_presenting_annotations.html.es#page_body"
-    rel="subdocument">Cargar y mostrar anotaciones</a></li>
+    href="attaching_annotations/loading_and_presenting_annotations.html.es"
+    >Cargar y mostrar anotaciones</a></li>
   <li><a
-    href="attaching_annotations/navigating_annotations.html.es#page_body"
-    rel="subdocument">Navegar por las anotaciones</a></li>
-  <li><a href="attaching_annotations/moving_annotations.html.es#page_body"
-    rel="subdocument">Mover anotaciones</a></li>
-  <li><a href="attaching_annotations/annotation_issues.html.es#page_body"
-    rel="subdocument">Contestar anotaciones / Hilos de discusión</a></li>
-  <li><a href="attaching_annotations/configuring_icons.html.es#page_body"
-    rel="subdocument">Configurar los iconos de anotación</a></li>
-  <li><a href="attaching_annotations/annotation_issues.html.es#page_body"
-    rel="subdocument">Problemas conocidos con las anotaciones</a></li>
+    href="attaching_annotations/navigating_annotations.html.es"
+    >Navegar por las anotaciones</a></li>
+  <li><a href="attaching_annotations/moving_annotations.html.es"
+    >Mover anotaciones</a></li>
+  <li><a href="attaching_annotations/annotation_issues.html.es"
+    >Contestar anotaciones / Hilos de discusión</a></li>
+  <li><a href="attaching_annotations/configuring_icons.html.es"
+    >Configurar los iconos de anotación</a></li>
+  <li><a href="attaching_annotations/annotation_issues.html.es"
+    >Problemas conocidos con las anotaciones</a></li>
 </ul>
 </div>
 </body>

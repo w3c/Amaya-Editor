@@ -3,19 +3,19 @@
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta name="GENERATOR" content="amaya 6.4+, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 7.2, see http://www.w3.org/Amaya/" />
   <title>Eliminar estilos</title>
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
 <body xml:lang="es" lang="es">
 
-<table border="0" summary="toc">
+<table border="0" width="100%" summary="toc">
   <tbody>
     <tr>
       <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
         src="../../images/amaya.gif" /></td>
-      <td><p><a href="creating_html_style_elements.html.es"
+      <td><p align="right"><a href="handling_external_css.html.es"
         accesskey="p"><img alt="anterior" src="../../images/left.gif" /></a>
         <a href="../StyleSheets.html.es" accesskey="t"><img alt="superior"
         src="../../images/up.gif" /></a></p>
@@ -40,7 +40,7 @@ caracteres</p>
   </li>
   <li>En el submenú <strong>Xhtml &gt; Tipo de información</strong>, elige el
     estilo que quieres eliminar. Por ejemplo, si deseas eliminar el estilo
-    <strong>énfasis</strong> de una cadena de carácteres, elige
+    <strong>énfasis</strong> de una cadena de caracteres, elige
     <strong>énfasis.</strong> 
     <p class="Note"><strong>Nota:</strong> Puedes elegir también estilos
     mediante atajos de teclado. Los atajos de teclado se muestran en el

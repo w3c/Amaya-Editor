@@ -3,25 +3,24 @@
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta name="GENERATOR" content="amaya 6.4, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 7.2, see http://www.w3.org/Amaya/" />
   <title>Gestionar hojas de estilo externas</title>
-  
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
 <body xml:lang="es" lang="es">
 
-<table border="0" summary="toc">
+<table border="0" width="100%" summary="toc">
   <tbody>
     <tr>
       <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
         src="../../images/amaya.gif" /></td>
-      <td><p><a href="about_linking_external_and_user_style_sheets.html.es"
+      <td><p align="right"><a href="creating_html_style_elements.html.es"
         accesskey="p"><img alt="anterior" src="../../images/left.gif" /></a>
         <a href="../StyleSheets.html.es" accesskey="t"><img alt="superior"
-        src="../../images/up.gif" /></a> <a
-        href="about_applying_style_using_html_elements.html.es"
-        accesskey="n"><img alt="siguiente" src="../../images/right.gif" /></a></p>
+        src="../../images/up.gif" /></a> <a href="removing_style.html.es"
+        accesskey="n"><img alt="siguiente" src="../../images/right.gif"
+        /></a></p>
       </td>
     </tr>
   </tbody>
@@ -40,21 +39,21 @@ que te permiten controlar las hojas de estilo CSS externas y de usuario.</p>
     no está abierta, haz clic sobre el documento para mostrar una caja de
     diálogo y escribe el URI de la hoja de estilo. El comando
     <strong>Enlace</strong> añade un elemento enlace con sus atributos en el
-    encabezado del documento.
+    encabezado del documento. 
     <p></p>
   </li>
   <li>Elige <strong>Abrir</strong> para abrir una hoja de estilo CSS que ya
-    está enlazada en el documento actual.
+    está enlazada en el documento actual. 
     <p></p>
   </li>
   <li>Elige <strong>Desactivar</strong> para eliminar los efectos de una hoja
     de estilo CSS enlazada al documento actual. Este comando no elimina el
-    elemento enlace del encabezado del documento.
+    elemento enlace del encabezado del documento. 
     <p></p>
   </li>
   <li>Elige <strong>Activar</strong> para aplicar nuevamente los efectos de
     una hoja de estilo CSS desactivada previamente. Este comando no modifica
-    el elemento enlace del encabezado del documento.
+    el elemento enlace del encabezado del documento. 
     <p></p>
   </li>
   <li>Elige <strong>Eliminar</strong> para eliminar el elemento enlace del

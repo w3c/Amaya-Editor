@@ -11,12 +11,12 @@
 
 <body xml:lang="es" lang="es">
 
-<table border="0" summary="toc">
+<table border="0" width="100%" summary="toc">
   <tbody>
     <tr>
       <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
         src="../../images/amaya.gif" /></td>
-      <td><p><a href="working_with_the_amaya_browser_and_editor.html.es"
+      <td><p align="right"><a href="working_with_the_amaya_browser_and_editor.html.es"
         accesskey="p"><img alt="anterior" src="../../images/left.gif" /></a>
         <a href="../Browsing.html.es" accesskey="t"><img alt="superior"
         src="../../images/up.gif" /></a> <a href="activating_a_link.html.es"
@@ -53,7 +53,7 @@ formas.</p>
     <strong>Buscar</strong> para abrir una ventana de selección de
   archivo.</li>
   <li>Cuando el documento está correctamente especificado, haz clic en
-    <strong>Confirme.</strong></li>
+    <strong>Confirmar.</strong></li>
 </ol>
 
 <p>Para abrir un documento en una ventana nueva:</p>
@@ -70,7 +70,7 @@ formas.</p>
     URI del archivo que quieres abrir, o haz clic en <strong>Buscar</strong>
     para abrir una ventana de selección de archivo.</li>
   <li>Cuando el documento está correctamente especificado, haz clic en
-    Confirme.</li>
+    Confirmar.</li>
 </ol>
 
 <p>Para abrir un archivo desde el campo <strong>Abrir</strong>:</p>

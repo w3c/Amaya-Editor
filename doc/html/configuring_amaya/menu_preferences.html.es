@@ -4,24 +4,22 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>Menú Preferencias</title>
-  <meta name="GENERATOR" content="amaya 6.4+, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 7.2, see http://www.w3.org/Amaya/" />
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
 <body xml:lang="es" lang="es">
 
-<table border="0" summary="toc">
+<table border="0" width="100%" summary="toc">
   <tbody>
     <tr>
       <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
         src="../../images/amaya.gif" /></td>
-      <td><p><a
+      <td><p align="right"><a
         href="about_configuration_directory_and_file_conventions.html.es"
         accesskey="p"><img alt="anterior" src="../../images/left.gif" /></a>
         <a href="../Configure.html.es" accesskey="t"><img alt="superior"
-        src="../../images/up.gif" /></a> <a
-        href="about_keyboard_shortcuts.html.es" accesskey="n"><img
-        alt="siguiente" src="../../images/right.gif" /></a></p>
+        src="../../images/up.gif" /></a></p>
       </td>
     </tr>
   </tbody>
@@ -117,12 +115,10 @@ href="http://www.w3.org/">http://www.w3.org</a></code></p>
 haciendo clic en la casilla de verificación que se encuentra a la izquierda
 de cada opción. Una casilla marcada indica que la opción está activada.</p>
 
-<p><strong>Activar las combinaciones de teclas opcionales.</strong> Habilita
-o deshabilita las combinaciones de teclas opcionales, que se basan en
-combinaciones de dos teclas que comienzan por un acento seguido de una letra.
-Por ejemplo, para obtener 'ã', pulsa '~' (o ALT+126) y a continuación pulsa
-'a'. Para obtener la tilde '~', debes pulsar '~' dos veces. Las combinaciones
-de tecla estándar y opcionales se detallan en sendas tablas.</p>
+<p><strong>Permitir pegar línea a línea</strong>. Esta opción afecta al
+pegado desde un aplicación externa. Cuando está activada, Amaya mantiene la
+separación en líneas de la aplicación original. Si está desactivada, los
+caracteres de <code>salto de línea</code> se sustituyen por espacios.</p>
 
 <p><strong>Mostrar imágenes de fondo.</strong> Controla la presentación de
 las imágenes de fondo. Esta opción se tiene en cuenta al cargar un
@@ -173,14 +169,15 @@ permite cambiar el zoom por omisión de todas las ventanas. Este cambio afecta
 únicamente al tamaño de fuente, pero no al tamaño de las imágenes y se
 refleja inmediatamente en todas las ventanas abiertas.</p>
 
-<p><strong>Idioma de diálogo.</strong>Especifica el idioma en todos los menús
-y mensajes de diálogo. El idioma por omisión es el inglés americano (valor:
-<code>en_US</code>). Actualmente, sólo hay cuatro idiomas disponibles: inglés
-(<code>en</code>), francés (<code>fr</code>), alemán (<code>de</code>) y
-castellano (<code>es</code>). Al inicar Amaya, se cargan los archivos de
-diálogo correspondiente al idioma de diálogo especificado: en-, fr-, de- o
-es-. Estos archivos de diálogos se encuentran en la carpeta
-<strong>Amaya/config</strong>.</p>
+<p><strong>Idioma de diálogo.</strong> Especifica el idioma en todos los
+menús y mensajes de diálogo. El idioma por omisión es el inglés americano
+(valor: <code>en_US</code>). Actualmente, hay varios idiomas más disponibles:
+francés (<code>fr</code>), alemán (<code>de</code>), italiano
+(<code>it</code>), castellano (<code>es</code>), portugués (<code>pt</code>),
+finés (<code>fi</code>) y turco (<code>tr</code>). Al inicar Amaya, se cargan
+los archivos de diálogo correspondiente al idioma de diálogo especificado:
+en-, fr-, de-, it-, es-, pt-, fi- o tr-. Estos archivos de diálogos se
+encuentran en la carpeta <strong>Amaya/config</strong>.</p>
 
 <p>En Thot, un documento está especificado por un esquema. En Amaya, los
 mensajes de diálogo que se muestran al analizar un documento o al guardarlos
@@ -365,7 +362,7 @@ espacios con los que quieres utilizar el proxy. Utiliza los botones radio
 para especificar si el proxy debe o no debe utilizarse con esta lista de
 dominios.Por ejemplo:</p>
 <pre style="margin-left:.5in"><code>harpo.marx.edu zeppo.marx.edu chico.marx.edu</code></pre>
-<pre style="margin-left:.5in">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ^----------------------^----&gt; entradas separadas por espacios</pre>
+<pre style="margin-left:.5in">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;  ^----------------^----&gt; entradas separadas por espacios</pre>
 
 <h2>Color</h2>
 
@@ -474,7 +471,7 @@ ordenador o en el servidor de plantillas. Está disponible un ejemplo de
 servidor de plantillas en <a
 href="http://cgi.w3.org/cgi-bin/createform.pl">http://cgi.w3.org/cgi-bin/createform.pl</a>.
 Más información en la página <a
-href="http://www.w3.org/Amaya/User/Templates.html">Utilizar plantilla en
+href="http://www.w3.org/Amaya/User/Templates.html">Utilizar plantillas en
 Amaya</a>.</p>
 </div>
 </body>

@@ -3,22 +3,23 @@
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta name="GENERATOR" content="amaya 6.4+, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 7.2, see http://www.w3.org/Amaya/" />
   <title>Accesibilidad en Amaya</title>
   <link href="style.css" rel="stylesheet" type="text/css" />
 </head>
 
 <body xml:lang="es" lang="es">
 
-<table border="0" summary="toc">
+<table border="0" width="100%" summary="toc">
   <tbody>
     <tr>
       <td><p><img alt="W3C" src="../images/w3c_home" /> <img alt="Amaya"
         src="../images/amaya.gif" /></p>
       </td>
-      <td><p><a href="ShortCuts.html.es" accesskey="p"><img alt="anterior"
-        src="../images/left.gif" /></a> <a href="Manual.html.es"
-        accesskey="t"><img alt="superior" src="../images/up.gif" /></a></p>
+      <td><p align="right"><a href="ShortCuts.html.es" accesskey="p"><img
+        alt="anterior" src="../images/left.gif" /></a> <a
+        href="Manual.html.es" accesskey="t"><img alt="superior"
+        src="../images/up.gif" /></a></p>
       </td>
     </tr>
   </tbody>
@@ -30,14 +31,15 @@
 <p>En esta sección se tratan los temas siguientes:</p>
 <ul>
   <li><a
-    href="accessibility_in_amaya/accessibility_in_amaya.html.es#page_body"
-    rel="subdocument">Accesibilidad en Amaya</a></li>
+    href="accessibility_in_amaya/accessibility_in_amaya.html.es"
+    >Accesibilidad en Amaya</a></li>
   <li><a
-    href="accessibility_in_amaya/about_amayas_accessibility_features.html.es">Acerca
-    de las características de accesibilidad de Amaya</a></li>
+    href="accessibility_in_amaya/about_amayas_accessibility_features.html.es"
+    >Acerca de las características de accesibilidad de
+    Amaya</a></li>
   <li><a
-    href="accessibility_in_amaya/about_producing_accessible_content.html.es#page_body"
-    rel="subdocument">Crear contenido accesible</a></li>
+    href="accessibility_in_amaya/about_producing_accessible_content.html.es"
+    >Crear contenido accesible</a></li>
 </ul>
 </div>
 </body>

@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title>Bekannte Probleme bei Anmerkungen und modifizierten
+  Dokumenten</title>
+  <meta name="GENERATOR" content="amaya 6.3, see http://www.w3.org/Amaya/" />
+  <style type="text/css">
+  </style>
+  <link href="../style.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body xml:lang="de" lang="de">
+
+<table border="0" cellspacing="5" cellpadding="5"
+summary="Inhaltsverzeichnis">
+  <tbody>
+    <tr>
+      <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
+        src="../../images/amaya.gif" /></td>
+      <td><a accesskey="p" href="./configuring_icons.html.de"><img
+        alt="vorherige Seite" src="../../images/left.gif" /></a> <a
+        accesskey="t" href="../Annotations.html.de"><img alt="erste Seite"
+        src="../../images/up.gif" /></a></td>
+    </tr>
+  </tbody>
+</table>
+
+<div id="Issues">
+
+<div id="page_body">
+<h1>Bekannte Probleme bei Anmerkungen und modifizierten Dokumenten</h1>
+
+<p>Wenn man Anmerkungen bei Dokumenten benutzt, deren Inhalt modifiziert
+werden kann, dann kann man auf zwei Probleme stoßen:
+<strong>Waisenkinder</strong> und <strong>irreführende Anmerkungen</strong>.
+Um die Problematik zu verstehen, muss zunächst erklärt werden wie Amaya
+Anmerkungen an Dokumente bindet.</p>
+
+<p>Amaya benutzt <strong><a
+href="http://www.w3.org/XML/Linking">XPointer</a></strong> um anzugeben, wo
+eine Anmerkung an ein Dokument gebunden werden soll. XPointer basieren auf
+der Struktur des Dokuments. Um einen XPointer für eine Markierung zu erzeugen
+läuft Amaya beispielsweise vom Anfangspunkt der Markierung in der Stuktur
+rückwärts, bis die Wurzel des Dokuments oder ein Element mit dem Attribut
+<em>id</em> gefunden wurde. Hat ein Element das Attribut <em>id</em> dann
+wird die Erzeugung des XPointers beendet und Amaya betrachtet dieses als
+Beginn des XPointers.</p>
+
+<p>Beispiel: betrachtet man den Quellcode dieses Dokuments, dann erkennt man,
+dass dieser Abschnitt in ein div-Element eingeschlossen ist, dessen
+<em>id</em>-Attribut den Wert <em>Issues</em> hat. Hier ist ein Auszug aus
+dem Code:</p>
+<pre>  &lt;div id="Issues"&gt;
+  &lt;h1&gt;Issues with ....&lt;/h1&gt;
+  &lt;p&gt;If you are using...&lt;/p&gt;
+  &lt;p&gt;Amaya uses &lt;strong&gt;XPointer&lt;/strong&gt;...&lt;/p&gt;
+  ...
+  &lt;/div&gt;</pre>
+
+<p>Der XPointer zeigt auf den zweiten Abschnitt:
+<code>xpointer(id("Issues")/p[2])</code></p>
+
+<p>Der obige XPointer zeigt auf das zweite <code>p</code>-Element, dessen
+Elternelement das ID-Attribut mit dem Wert "Issues" hat.</p>
+
+<p>Man beachte, dass die Benutzung des Attibuts <em>id</em> dem Autor des
+Dokuments erlaubt die gesamte, durch den XPointer referenzierte Information
+an eine andere Stelle im Dokument zu verschieben, ohne dass dabei der
+XPointer aktualisiert werden muss. Der XPointer hängt also nicht vom Element,
+welches ihm vorangeht ab.</p>
+
+<h2>Waisenkinder</h2>
+
+<p>Eine Anmerkung wird zum Waisenkind, wenn sie nicht mehr an ein Dokument
+gebunden ist, das heißt , wenn dessen XPointer nicht mehr in der Struktur des
+Dokuments aufgelöst werden kann. Dies geschieht, wenn die Struktur des
+Dokuments geändert wird. Amaya zeigt eine Warnung an, wenn es eine verwaiste
+Anmerkung während des Herunterladens von Anmerkungen von einem Server
+erkennt. Alle Waisenkinder werden in der Verweisansicht angezeigt und dort
+mit einem Fragezeichen-Icon, welches dem Anmerkungs-Icon überlagert ist
+gekennzeichnet <img alt="Icon einer verwaisten Anmerkung"
+src="../../images/annotorp.png" />.</p>
+
+<h2>Irreführende Anmerkungen</h2>
+
+<p>Eine Anmerkung wird irreführend, wenn sie auf falsche Informationen zeigt.
+Das geschieht wenn man einen Text mit einer Anmerkung versieht und diesen
+dann ändert. In der ersten Version von Amaya wird der Benutzer nicht gewarnt,
+wenn eine Anmerkung in die Irre führt. Zukünftige Versionen können den
+Benutzer vor einer potentiellen Irreführung warnen.</p>
+
+<h2>Was kann man tun, um dies zu vermeiden?</h2>
+
+<p>Als Autor eines Dokuments sollte man versuchen das Attribut
+<code>id</code> strategisch zu plazieren, beispielsweise innerhalb des
+Elements <code>&lt;div&gt;</code> oder <code>&lt;p&gt;</code>.
+Beispilesweise:</p>
+<pre>  &lt;p id="Amaya"&gt;Amaya uses...&lt;/p&gt;</pre>
+
+<p>Ein XPointer, der auf diesen Absatz zeigt ist:
+<code>xpointer(id("Amaya"))</code></p>
+
+<p>Somit wird dieser XPointer immer auf den gleichen Absatz zeigen,
+unabhängig davon, an welcher Stelle in der Dokumentstruktur er sich
+befindet.</p>
+
+<p>Hinweis: mit Amaya kann man automatisch ein <code>id</code>-Attribut einer
+Anzahl von Elementen zuweisen oder von diesen entfernen, indem man <strong>Id
+hinzufügen/entfernen</strong> im Menü <strong>Extras</strong> ausführt.</p>
+</div>
+</div>
+</body>
+</html>

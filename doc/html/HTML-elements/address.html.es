@@ -4,8 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>Acerca del autor</title>
-  <meta name="GENERATOR" content="amaya 6.4, see http://www.w3.org/Amaya/" />
-  
+  <meta name="GENERATOR" content="amaya 7.2, see http://www.w3.org/Amaya/" />
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -27,7 +26,7 @@
   </tbody>
 </table>
 
-<div id="About">
+<div id="page_body">
 <h1>Acerca del autor</h1>
 
 <p>Una página web debe siempre contener la información que permita al lector
@@ -37,12 +36,10 @@ ser un enlace), un URI o incluso una dirección física. El tipo <a
 href="http://www.w3.org/TR/REC-html40/struct/global.html#edef-ADDRESS"><code>address</code></a>
 se utiliza para identificar ese tipo de información y puede contener otros
 elementos de tipo bloque como párrafos, encabezados y listas.</p>
-</div>
 
 <p>La mayoría de navegadores utilizan un estilo por omisión para identificar
 los elementos address, pero el autor puede también utilizar <a
 href="../StyleSheets.html.es">hojas de estilo</a> para definir su formato.</p>
-
-<p></p>
+</div>
 </body>
 </html>

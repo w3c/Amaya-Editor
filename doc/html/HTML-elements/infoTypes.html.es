@@ -4,8 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>Tipos de información en HTML</title>
-  <meta name="GENERATOR" content="amaya 6.4+, see http://www.w3.org/Amaya/" />
-  
+  <meta name="GENERATOR" content="amaya 7.2, see http://www.w3.org/Amaya/" />
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -26,7 +25,7 @@
   </tbody>
 </table>
 
-<div id="Information">
+<div id="page_body">
 <h1>Tipos de información en HTML</h1>
 
 <p>El HTML 4.0 (Strict) proporciona elementos para identificar ciertos tipos

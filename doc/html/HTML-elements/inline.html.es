@@ -4,8 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>Marcado en línea</title>
-  <meta name="GENERATOR" content="amaya 6.4+, see http://www.w3.org/Amaya/" />
-  
+  <meta name="GENERATOR" content="amaya 7.2, see http://www.w3.org/Amaya/" />
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -17,9 +16,7 @@
       <td><p><img border="0" alt="W3C" src="../../images/w3c_home" /> <img
         border="0" alt="Amaya" src="../../images/amaya.gif" /></p>
       </td>
-      <td><p align="right"><a href="../Manual.html.es"></a></p>
-
-        <p align="right"><a href="address.html.es"><img alt="anterior"
+      <td><p align="right"><a href="address.html.es"><img alt="anterior"
         border="0" src="../../images/left.gif" /></a> <a
         href="../HTML.html.es"><img alt="superior" border="0"
         src="../../images/up.gif" /></a> <a href="40styling.html.es"><img
@@ -29,7 +26,7 @@
   </tbody>
 </table>
 
-<div id="Inline3">
+<div id="page_body">
 <h1>Marcado en línea</h1>
 
 <p>El texto contenido en un párrafo, encabezado u otro elemento de bloque

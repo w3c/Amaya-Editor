@@ -10,12 +10,12 @@
 
 <body xml:lang="es" lang="es">
 
-<table border="0" summary="toc">
+<table border="0" width="100%" summary="toc">
   <tbody>
     <tr>
       <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
         src="../../images/amaya.gif" /></td>
-      <td><p><a href="../Searching.html.es" accesskey="t"><img alt="superior"
+      <td><p align="right"><a href="../Searching.html.es" accesskey="t"><img alt="superior"
         src="../../images/up.gif" /></a></p>
       </td>
     </tr>
@@ -57,7 +57,7 @@ diferentes criterios:</p>
         cadena, Amaya la selecciona. Puedes entonces hacer clic en uno de los
         siguientes botones: 
         <ul>
-          <li><strong>Confirme</strong> para sustituir y repetir la
+          <li><strong>Confirmar</strong> para sustituir y repetir la
           búsqueda.</li>
           <li><strong>No sustituir</strong> para realizar una nueva búsqueda
             sin sustituir la cadena encontrada.</li>
@@ -88,11 +88,11 @@ diferentes criterios:</p>
   </li>
 </ul>
 
-<p>Para empezar la búsqueda, haz clic en el botón <strong>Confirme</strong>.
+<p>Para empezar la búsqueda, haz clic en el botón <strong>Confirmar</strong>.
 Si Amaya encuentra la cabena buscada, se selecciona y el documento se
 desplaza de manera que la cadena sea visible. Puedes buscar la siguiente
 aparición de la cadena haciendo nuevamente clic en el botón
-<strong>Confirme</strong>. Si la cadena no se encuentra, Amaya muestra un
+<strong>Confirmar</strong>. Si la cadena no se encuentra, Amaya muestra un
 mensaje <strong>No encontrado</strong>.</p>
 
 <p>Puedes dejar de buscar y sustituir en cualquier momento haciendo clic en

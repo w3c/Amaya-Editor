@@ -10,13 +10,13 @@
 
 <body xml:lang="es" lang="es">
 
-<table border="0" summary="toc">
+<table border="0" width="100%" summary="toc">
   <tbody>
     <tr>
       <td><p><img alt="W3C" src="../images/w3c_home" /> <img alt="Amaya"
         src="../images/amaya.gif" /></p>
       </td>
-      <td><p><a href="Links.html.es" accesskey="p"><img alt="anterior"
+      <td><p align="right"><a href="Links.html.es" accesskey="p"><img alt="anterior"
         src="../images/left.gif" /></a> <a href="Manual.html.es"
         accesskey="t"><img alt="superior" src="../images/up.gif" /></a> <a
         href="ImageMaps.html.es" accesskey="n"><img alt="siguiente"
@@ -31,18 +31,18 @@
 
 <p>En esta sección se tratan los temas siguientes:</p>
 <ul>
-  <li><a href="editing_tables/working_with_tables.html.es#page_body"
-    rel="subdocument">Trabajar con tablas</a></li>
-  <li><a href="editing_tables/create_table.html.es#page_body"
-    rel="subdocument">Crear una tabla</a></li>
-  <li><a href="editing_tables/add_column.html.es#page_body"
-    rel="subdocument">Añadir columnas a una tabla</a></li>
-  <li><a href="editing_tables/add_row.html.es#page_body"
-    rel="subdocument">Añadir filas a una tabla</a></li>
-  <li><a href="editing_tables/add_tbody.html.es#page_body"
-    rel="subdocument">Añadir cuerpos de tabla</a></li>
-  <li><a href="editing_tables/remove_column.html.es#page_body"
-    rel="subdocument">Eliminar columnas de una tabla</a></li>
+  <li><a href="editing_tables/working_with_tables.html.es"
+    >Trabajar con tablas</a></li>
+  <li><a href="editing_tables/create_table.html.es"
+    >Crear una tabla</a></li>
+  <li><a href="editing_tables/add_column.html.es"
+    >Añadir columnas a una tabla</a></li>
+  <li><a href="editing_tables/add_row.html.es"
+    >Añadir filas a una tabla</a></li>
+  <li><a href="editing_tables/add_tbody.html.es"
+    >Añadir cuerpos de tabla</a></li>
+  <li><a href="editing_tables/remove_column.html.es"
+    >Eliminar columnas de una tabla</a></li>
 </ul>
 </div>
 </body>

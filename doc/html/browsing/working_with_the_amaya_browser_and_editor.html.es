@@ -3,22 +3,22 @@
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta name="GENERATOR" content="amaya 6.4+, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 7.2, see http://www.w3.org/Amaya/" />
   <title>Trabajar con el Navegador y Editor Amaya</title>
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
 <body xml:lang="es" lang="es">
 
-<table border="0" summary="toc">
+<table border="0" width="100%" summary="toc">
   <tbody>
     <tr>
       <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
         src="../../images/amaya.gif" /></td>
-      <td><p><a href="../Browsing.html.es" accesskey="t"><img alt="superior"
-        src="../../images/up.gif" /></a> <a href="opening_documents.html.es"
-        accesskey="n"><img alt="siguiente" src="../../images/right.gif"
-        /></a></p>
+      <td><p align="right"><a href="../Browsing.html.es" accesskey="t"><img
+        alt="superior" src="../../images/up.gif" /></a> <a
+        href="opening_documents.html.es" accesskey="n"><img alt="siguiente"
+        src="../../images/right.gif" /></a></p>
       </td>
     </tr>
   </tbody>
@@ -45,8 +45,8 @@ edición de páginas web. para obtener más información sobre la edición,
 consulta:</p>
 <ul>
   <li><a href="../Changing.html.es">Editar Documentos</a></li>
-  <li><a href="../Tables.html.es">Editar Tablas</a></li>
-  <li><a href="../Math.html.es">Editar Matemáticas</a></li>
+  <li><a href="../Tables.html.es#page_body">Editar Tablas</a></li>
+  <li><a href="../Math.html.es#page_body">Editar Matemáticas</a></li>
 </ul>
 
 <h2>Modo editor y Modo navegador</h2>
@@ -97,7 +97,7 @@ los errores encontrados en el análisis. Si eliges mostrar los errores, Amaya
 ejecuta el comando de menú <strong>Archivo &gt; Reanalizar como
 HTML</strong>. Elige este comando para definir el juego de caracteres como
 ISO-Latin-1 y reabrir el documento de manera que pueda ser analizado
-adeucadamente. Amaya considera que el documento se ha modificado (ya que has
+adecuadamente. Amaya considera que el documento se ha modificado (ya que has
 añadido un juego de caracteres) y puedes guardarlo.</p>
 </div>
 </body>

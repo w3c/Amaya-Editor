@@ -4,8 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>Estructura de un documento HTML</title>
-  <meta name="GENERATOR" content="amaya 6.4+, see http://www.w3.org/Amaya/" />
-  
+  <meta name="GENERATOR" content="amaya 7.2, see http://www.w3.org/Amaya/" />
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -27,7 +26,7 @@
   </tbody>
 </table>
 
-<div id="HTML">
+<div id="page_body">
 <h1>Estructura de un documento HTML</h1>
 
 <p>Los documentos HTML no tienen una estructura muy complicada, en vez de

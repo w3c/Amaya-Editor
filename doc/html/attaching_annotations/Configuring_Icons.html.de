@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title>Configuring Annotation Icons</title>
+  <style type="text/css">
+  </style>
+  <meta name="GENERATOR" content="amaya 6.3, see http://www.w3.org/Amaya/" />
+  <link href="../style.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body xml:lang="en" lang="en">
+
+<table border="0" summary="toc">
+  <tbody>
+    <tr>
+      <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
+        src="../../images/amaya.gif" /></td>
+      <td><p><a href="replying_to_annotations.html.de" accesskey="p"><img
+        alt="previous" src="../../images/left.gif" /></a> <a
+        href="../Annotations.html.de" accesskey="t"><img alt="top"
+        src="../../images/up.gif" /></a> <a href="annotation_issues.html.de"
+        accesskey="n"><img alt="next" src="../../images/right.gif" /></a></p>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<div id="page_body">
+<h1>Icons für Anmerkungen konfigurieren</h1>
+
+<p>Ab Amaya 6.2 kann das Icon, welches zur Markierung einer Anmerkung
+innerhalb eines Dokuments benutzt wird durch den Benutzer festgelegt
+werden.</p>
+
+<p>Hierbei wird das Icon als Eigenschaft der Anmerkung selbst festgelegt.
+Fügt man dem benutzten Anmerkungstyp eine RDF-Eigenschaft hinzu, so kann man
+das gewünschte Icon dieser Anmerkung zuordnen.</p>
+
+<p>Folgende Icons werden bei der Auslieferung bereitgestellt.</p>
+</div>
+
+<div id="page_body1">
+
+<table>
+  <tbody>
+    <tr>
+      <td width="35"><img src="../../../amaya/advice.png" alt="Advice" /></td>
+      <td>Ratschlag</td>
+    </tr>
+    <tr>
+      <td width="35"><img src="../../../amaya/change.png" alt="Change" /></td>
+      <td>Änderung</td>
+    </tr>
+    <tr>
+      <td width="35"><img src="../../../amaya/annot.png" alt="Comment" /></td>
+      <td>Kommentar</td>
+    </tr>
+    <tr>
+      <td width="35"><img src="../../../amaya/example.png" alt="Example"
+      /></td>
+      <td>Beispiel</td>
+    </tr>
+    <tr>
+      <td width="35"><img src="../../../amaya/explanation.png"
+        alt="Explanation" /></td>
+      <td>Erklärung</td>
+    </tr>
+    <tr>
+      <td width="35"><img src="../../../amaya/question.png" alt="Question"
+      /></td>
+      <td>Frage</td>
+    </tr>
+    <tr>
+      <td width="35"><img src="../../../amaya/seealso.png" alt="SeeAlso"
+      /></td>
+      <td>Hinweis</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Der Name der RDF-Eigenschaft ist <a
+href="http://www.w3.org/2001/10/typeIcon#usesIcon">http://www.w3.org/2001/10/typeIcon#usesIcon</a>.
+Will man beispielsweise ein Icon namens
+<samp>file:///home/question-icon.jpg</samp> für Anmerkungen vomTyp <a
+href="http://www.w3.org/2000/10/annotationType#Question">http://www.w3.org/2000/10/annotationType#Question</a>
+definieren, dann muss man folgendes in eine Datei schreiben, welche Amaya
+beim Start liest:</p>
+<pre>&lt;rdf:RDF
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:i = "http://www.w3.org/2001/10/typeIcon#"&gt;
+&lt;rdf:Description rdf:about="http://www.w3.org/2000/10/annotationType#Question"&gt;
+  &lt;i:usesIcon rdf:resource="file:///home/question-icon.jpg" /&gt;
+&lt;/rdf:Description&gt;
+&lt;/rdf:RDF&gt;</pre>
+
+<p>Der einfachste Weg dies beim Start von Amaya zu laden ist, diese Zeilen in
+die Datei <samp>annot.schemas</samp> im Verzeichnis <samp>config</samp>
+einzufügen. Damit diese Datei bei einer Neuinstallation von Amaya nicht
+überschrieben wird, ist es ratsam diese in das persönliche Heimatverzeichnis
+zu kopieren:<samp> ~/.amaya/annot.schemas</samp> (unter Unix) oder
+<samp>/winnt/profiles/&lt;username&gt;/amaya/annot.schemas</samp> (unter
+Windows). Man kann soviele RDF-Zeilen wie man möchte in diese Datei
+eintragen. Man beachte hierbei die Kommentare im Amaya-Kit.</p>
+
+<p>Es wird eine Beispieldatei mit dem Namen <samp>typeIcon.rdf</samp>
+bereitgestellt, welche einheitliche Icons für jeden Anmerkungstyp im
+Namensraum <a
+href="http://www.w3.org/2000/10/annotationType#">http://www.w3.org/2000/10/annotationType#</a>
+definiert. Um mit benutzerdefinierten Icons zu experimentieren ist es am
+einfachsten die Datei  <samp>typeIcon.rdf</samp> in ein anderes Verzeichnis
+zu kopieren und dort zu modifizieren. Danach kopiert man
+<samp>annot.schemas</samp> in das oben genannte Verzeichnis und ändert darin
+(am Ende) die entsprechende Zeile, sodass diese auf die eigene Datei des
+Icons zeigt.</p>
+
+<p>Um das ursprüngliche Verhalten von Amaya wieder herzustellen (vor der
+Ausgabe 6.2), muss man die Datei <samp>config/annot.schemas</samp> im
+Installationsverzeichnis von Amaya editieren, wobei man am Ende der Datei die
+Zeilen, welche sich auf <samp>typeIcon.rdf</samp> beziehen mit dem Zeichen
+"#" am Anfang der Zeile "auskommentieren" muss:</p>
+<pre>#user-defined icons
+#http://www.w3.org/2001/10/typeIcon# $THOTDIR/config/typeIcon.rdf</pre>
+
+<p>Amaya unterstützt die Grafikformate JPEG, PNG und GIF für Icons. In der
+Ausgabe 6.2 von Amaya kann der URI des Icons nur eine Datei sein. Das
+bedeutet, das sich das Icon in einem lokalen Verzeichnis auf der Maschine
+befinden muss. Es werden zwei spezielle Formen des URI unterstützt: beginnt
+der Pfadname des Icons mit "$THOTDIR" oder "$APP_HOME", so wird das
+entsprechende Installationsverzeichnis oder Heimatverzeichnis
+substituiert.</p>
+</div>
+</body>
+</html>

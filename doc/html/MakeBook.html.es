@@ -10,13 +10,13 @@
 
 <body xml:lang="es" lang="es">
 
-<table border="0" summary="toc">
+<table border="0" width="100%" summary="toc">
   <tbody>
     <tr>
       <td><p><img alt="W3C" src="../images/w3c_home" /> <img alt="Amaya"
         src="../images/amaya.gif" /></p>
       </td>
-      <td><p><a href="Numbering.html.es" accesskey="p"><img alt="anterior"
+      <td><p align="right"><a href="Numbering.html.es" accesskey="p"><img alt="anterior"
         src="../images/left.gif" /></a> <a href="Manual.html.es"
         accesskey="t"><img alt="superior" src="../images/up.gif" /></a> <a
         href="Annotations.html.es" accesskey="n"><img alt="siguiente"
@@ -33,8 +33,8 @@
 en un único volumen.</p>
 <ul>
   <li><a
-    href="using_the_makebook_function/assembling_large_document_collections.html.es#page_body"
-    rel="subdocument">Unir varios documentos</a></li>
+    href="using_the_makebook_function/assembling_large_document_collections.html.es"
+    >Unir varios documentos</a></li>
 </ul>
 </div>
 </body>

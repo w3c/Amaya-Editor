@@ -10,13 +10,13 @@
 
 <body xml:lang="es" lang="es">
 
-<table border="0" summary="toc">
+<table border="0" width="100%" summary="toc">
   <tbody>
     <tr>
       <td><p><img alt="W3C" src="../images/w3c_home" /> <img alt="Amaya"
         src="../images/amaya.gif" /></p>
       </td>
-      <td><p><a href="Attributes.html.es" accesskey="p"><img alt="anterior"
+      <td><p align="right"><a href="Attributes.html.es" accesskey="p"><img alt="anterior"
         src="../images/left.gif" /></a> <a href="Manual.html.es"
         accesskey="t"><img alt="superior" src="../images/up.gif" /></a> <a
         href="HTML.html.es" accesskey="n"><img alt="siguiente"
@@ -32,19 +32,19 @@
 <p>En esta sección se tratan los temas siguientes:</p>
 <ul>
   <li><a
-    href="editing_iso-latin-1_characters/entering_ISOLatin1_characters_in_amaya.html.es#page_body"
-    rel="subdocument">Escribir caracteres</a></li>
+    href="editing_iso-latin-1_characters/entering_ISOLatin1_characters_in_amaya.html.es"
+    >Escribir caracteres</a></li>
   <li><a
-    href="editing_iso-latin-1_characters/about_optional_multikey_support.html.es#page_body"
-    rel="subdocument">Combinaciones de teclas en las versiones Motif y
+    href="editing_iso-latin-1_characters/about_optional_multikey_support.html.es"
+    >Combinaciones de teclas en las versiones Motif y
     Windows</a></li>
   <li><a
-    href="editing_iso-latin-1_characters/about_standard_multikey_support.html.es#page_body"
-    rel="subdocument">Combinaciones de teclas en las versiones Motif y
+    href="editing_iso-latin-1_characters/about_standard_multikey_support.html.es"
+    >Combinaciones de teclas en las versiones Motif y
   GTK</a></li>
   <li><a
-    href="editing_iso-latin-1_characters/about_white_space_handling.html.es#page_body"
-    rel="subdocument">Acerca de los espacios en blanco</a></li>
+    href="editing_iso-latin-1_characters/about_white_space_handling.html.es"
+    >Acerca de los espacios en blanco</a></li>
 </ul>
 </div>
 </body>
