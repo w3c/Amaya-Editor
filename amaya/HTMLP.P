@@ -5231,6 +5231,7 @@ RULES
  	VertPos: Top = Enclosing . Top UserSpecified;
 	Width: 5 pt UserSpecified;
 	Height: 5 pt UserSpecified;
+	FillPattern: nopattern;
 	IN Structure_view BEGIN
 		Font: Enclosing =;
 		Width: Enclosing . Width - STRUCT_INDENT;

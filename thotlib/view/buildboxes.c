@@ -641,28 +641,31 @@ int                *height;
    else if (pAb->AbInLine)
      /* La boite composee est mise en ligne */
      {
-       pCurrentBox->BxType = BoBlock;
-       pCurrentBox->BxFirstLine = NULL;
-       pCurrentBox->BxLastLine = NULL;
-       ComputeLines (pCurrentBox, frame, height);
-       if (pCurrentBox->BxContentWidth)
-	 {
-	   /* it's an extensible line */
-	   *width = pCurrentBox->BxMaxWidth;
-	   pCurrentBox->BxWidth = *width;
-	 }
+       if (pCurrentBox->BxType == BoBlock && pCurrentBox->BxFirstLine != NULL)
+	 /* we hahe to reformat the block of lines */
+	 RecomputeLines (pAb, NULL, NULL, frame);
        else
 	 {
-	   /* Si la largeur du contenu depasse le minimum */
-	   if (!pAb->AbWidth.DimIsPosition && pAb->AbWidth.DimMinimum
-	       && pCurrentBox->BxMaxWidth > pCurrentBox->BxWidth)
+	   pCurrentBox->BxType = BoBlock;
+	   pCurrentBox->BxFirstLine = NULL;
+	   pCurrentBox->BxLastLine = NULL;
+	   ComputeLines (pCurrentBox, frame, height);
+	   if (pCurrentBox->BxContentWidth)
+	     /* it's an extensible line */
+	     pCurrentBox->BxWidth = pCurrentBox->BxMaxWidth;
+	   else
 	     {
-	       /* Il faut prendre la largeur du contenu */
-	       pCurrentBox->BxContentWidth = TRUE;
-	       RecomputeLines (pAb, NULL, NULL, frame);
+	       /* Si la largeur du contenu depasse le minimum */
+	       if (!pAb->AbWidth.DimIsPosition && pAb->AbWidth.DimMinimum
+		   && pCurrentBox->BxMaxWidth > pCurrentBox->BxWidth)
+		 {
+		   /* Il faut prendre la largeur du contenu */
+		   pCurrentBox->BxContentWidth = TRUE;
+		   RecomputeLines (pAb, NULL, NULL, frame);
+		 }
 	     }
-	     *width = pCurrentBox->BxWidth;
 	 }
+       *width = pCurrentBox->BxWidth;
      }
    /* La boite est une composition geometrique */
    else

@@ -774,7 +774,8 @@ boolean             createLink;
 
 #endif /* __STDC__ */
 {
-   Element             first, last, el, next, prev, child, anchor;
+   Element             first, last, el, next;
+   Element             parag, prev, child, anchor;
    int                 c1, cN, lg, i;
    ElementType         elType;
    AttributeType       attrType;
@@ -892,7 +893,26 @@ boolean             createLink;
 		     TtaAttachAttribute (anchor, attr, doc);
 		  }
 		}
-	     TtaInsertSibling (anchor, first, TRUE, doc);
+
+	     /* Check if the first element is included within a paragraph */
+	     elType = TtaGetElementType (TtaGetParent (first));
+	     if (elType.ElTypeNum == HTML_EL_BODY ||
+		 elType.ElTypeNum == HTML_EL_Division ||
+#ifdef COUGAR
+		 elType.ElTypeNum == HTML_EL_Object_Content ||
+#endif /* COUGAR */
+		 elType.ElTypeNum == HTML_EL_Data_cell ||
+		 elType.ElTypeNum == HTML_EL_Heading_cell ||
+		 elType.ElTypeNum == HTML_EL_Block_Quote)
+	       {
+		 elType.ElTypeNum = HTML_EL_Pseudo_paragraph;
+		 parag = TtaNewElement (doc, elType);
+		 TtaInsertSibling (parag, first, TRUE, doc);
+		 TtaInsertFirstChild (&anchor, parag, doc);
+	       }
+	     else
+	       TtaInsertSibling (anchor, first, TRUE, doc);
+
 	     /* move the selected elements within the new Anchor element */
 	     child = first;
 	     prev = NULL;

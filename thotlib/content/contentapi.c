@@ -1710,8 +1710,8 @@ int                *y;
 	   TtaError (ERR_invalid_parameter);
 	else
 	  {
-	     *x = pBuff->BuPoints[rank - 1].XCoord;
-	     *y = pBuff->BuPoints[rank - 1].YCoord;
+	     *x = pBuff->BuPoints[rank].XCoord;
+	     *y = pBuff->BuPoints[rank].YCoord;
 	     /* Convert values to millipoints */
 	     if (unit == UnPixel)
 	       {

@@ -96,7 +96,8 @@ extern void CreateTextArea ( Document document,
 extern void CreateCommandLine ( Document document,
                                 View view );
 extern void SetAreaCoords ( Document document,
-                            Element element );
+                            Element element,
+			    int attrNum);
 extern void CreateAreaRect ( Document doc,
                              View view );
 extern void CreateAreaCircle ( Document doc,
@@ -210,7 +211,8 @@ extern void CreateTextArea (/* Document document,
 extern void CreateCommandLine (/* Document document,
                                   View view */);
 extern void SetAreaCoords (/* Document document,
-                              Element element */);
+                              Element element,
+			      int attrNum */);
 extern void CreateAreaRect (/* Document doc,
                                View view */);
 extern void CreateAreaCircle (/* Document doc,

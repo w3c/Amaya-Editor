@@ -997,28 +997,31 @@ View                view;
    width and height of the box.                           
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                SetAreaCoords (Document document, Element element)
+void                SetAreaCoords (Document document, Element element, int attrNum)
 #else  /* __STDC__ */
-void                SetAreaCoords (document, element)
+void                SetAreaCoords (document, element, attrNum)
 Document            document;
 Element             element;
-
+int                 attrNum;
 #endif /* __STDC__ */
 {
    ElementType         elType;
-   Element             child;
+   Element             child, map;
    AttributeType       attrType;
    Attribute           attrCoords, attrX, attrY;
    Attribute           attrW, attrH, attrShape;
    char               *text, buffer[100];
    int                 x1, y1, x2, y2;
+   int                 w, h;
    int                 length, shape, i;
 
    /* Is it an AREA element */
    elType = TtaGetElementType (element);
    if (elType.ElTypeNum != HTML_EL_AREA)
       return;
-
+   /* get size of the map */
+   map = TtaGetParent (element);
+   TtaGiveBoxSize (map, document, 1, UnPixel, &w, &h);
    /* Search the coords attribute */
    attrType.AttrSSchema = elType.ElSSchema;
    attrType.AttrTypeNum = HTML_ATTR_coords;
@@ -1059,20 +1062,55 @@ Element             element;
 	   return;
 
 	x1 = TtaGetAttributeValue (attrX);
+	if (x1 < 0)
+	  {
+	    /* out of left side */
+	    x1 = 0;
+	    TtaSetAttributeValue (attrX, x1, element, document);	    
+	  }
 	y1 = TtaGetAttributeValue (attrY);
+	if (y1 < 0)
+	  {
+	    /* out of top side */
+	    y1 = 0;
+	    TtaSetAttributeValue (attrY, y1, element, document);	    
+	  }
 	x2 = TtaGetAttributeValue (attrW);
+	if (x1 + x2 > w)
+	  {
+	    /* out of right side */
+	    x2 = w - x1;
+	    TtaSetAttributeValue (attrW, x2, element, document);	    
+	  }
 	y2 = TtaGetAttributeValue (attrH);
+	if (y1 + y2 > h)
+	  {
+	    /* out of bottom side */
+	    y2 = h - y1;
+	    TtaSetAttributeValue (attrH, y2, element, document);	    
+	  }
 	if (shape == HTML_ATTR_shape_VAL_rectangle)
 	   sprintf (text, "%d,%d,%d,%d", x1, y1, x1 + x2, y1 + y2);
 	else
 	  {
 	     /* to make a circle, height and width have to be equal */
-	     if (x2 > y2)
-	       x2 = y2 / 2;
-	     else
-	       x2 = x2 / 2;
-	     TtaSetAttributeValue (attrW, x2, element, document);
-	     sprintf (text, "%d,%d,%d", x1 + x2, y1 + x2, x2);
+	     if ((attrNum == 0 && x2 > y2) ||
+		 attrNum == HTML_ATTR_height_)
+	       {
+		 /* we need to update the width */
+		 w = y2;
+		 h = w / 2;
+		 TtaSetAttributeValue (attrW, w, element, document);
+	       }
+	     else if ((attrNum == 0 && x2 < y2) ||
+		      attrNum == HTML_ATTR_width_)
+	       {
+		 /* we need to update the height */
+		 w = x2;
+		 h = w / 2;
+		 TtaSetAttributeValue (attrH, w, element, document);
+	       }
+	     sprintf (text, "%d,%d,%d", x1 + h, y1 + h, h);
 	  }
      }
    else if (shape == HTML_ATTR_shape_VAL_polygon)
@@ -1258,7 +1296,7 @@ char               *shape;
 	if (shape[0] == 'p')
 	   TtcInsertGraph (doc, 1, 'p');
 	/* Compute coords attribute */
-	SetAreaCoords (doc, el);
+	SetAreaCoords (doc, el, 0);
 	/* FrameUpdating creation of Area and selection of destination */
 	SelectDestination (doc, el);
      }
