@@ -859,7 +859,7 @@ static int XFontAscent (SpecFont specfont)
 
   car = GetFontAndIndexFromSpec (120, specfont, &font);
   if (font == NULL)
-    font = FontDialogue;
+    font = DialogFont;
   return CharacterAscent ('x', font);
 #else /* _I18N_ */
   return CharacterAscent ('x', specfont);
@@ -1714,7 +1714,7 @@ static PtrFont LoadNearestFont (char script, int family, int highlight,
 	    }
 	  /* last case the default font */
 	  if (ptfont == NULL)
-	    ptfont = FontDialogue;
+	    ptfont = DialogFont;
 	}
     }
 
@@ -2084,7 +2084,7 @@ int GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset, PtrFont *font)
 	    *font = NULL;
   
 	  if (*font == NULL ||
-	      (*font == FontDialogue && code != '1'))
+	      (*font == DialogFont && code != '1'))
 	    {
 	      car = UNDISPLAYED_UNICODE;
 	      *font = NULL;
@@ -2355,9 +2355,9 @@ void InitDialogueFonts (char *name)
 #endif /* _WINDOWS */
 
   /* Initialize the Thot Lib standards fonts */
-  FontDialogue = IFontDialogue = LargeFontDialogue = NULL;
+  DialogFont = IDialogFont = LargeDialogFont = NULL;
   GraphicsIcons = NULL;
-  SmallFontDialogue = NULL;
+  SmallDialogFont = NULL;
 
   /* Initialize the font table */
   for (i = 0; i < MAX_FONT; i++)
@@ -2370,31 +2370,36 @@ void InitDialogueFonts (char *name)
   index = 0;
   while (LogicalPointsSizes[index] < MenuSize && index <= MaxNumberOfSizes)
     index++;
-  FontDialogue =  ReadFont (script, 2, 0, index, UnRelative);
-#ifndef _WINDOWS
-  if (FontDialogue == NULL)
+#ifdef _WINDOWS
+  if (script == 'L')
+    DialogFont = GetStockObject (DEFAULT_GUI_FONT);
+  else
+    DialogFont =  ReadFont (script, 2, 0, index, UnRelative);
+#else /* _WINDOWS */
+  DialogFont =  ReadFont (script, 2, 0, index, UnRelative);
+  if (DialogFont == NULL)
     {
-      FontDialogue = ReadFont ('L', 2, 0, index, UnRelative);
-      if (FontDialogue == NULL)
+      DialogFont = ReadFont ('L', 2, 0, index, UnRelative);
+      if (DialogFont == NULL)
 	TtaDisplaySimpleMessage (FATAL, LIB, TMSG_MISSING_FONT);
     }
   InitDialogueFont ();
-  IFontDialogue = ReadFont (script, 1, 2, index, UnRelative);
-  if (IFontDialogue == NULL)
+  IDialogFont = ReadFont (script, 1, 2, index, UnRelative);
+  if (IDialogFont == NULL)
     {
-      IFontDialogue = ReadFont (script, 2, 2, index, UnRelative);
-      if (IFontDialogue == NULL)
-	IFontDialogue = FontDialogue;
+      IDialogFont = ReadFont (script, 2, 2, index, UnRelative);
+      if (IDialogFont == NULL)
+	IDialogFont = DialogFont;
     }
   index = 0;
   while (LogicalPointsSizes[index] < f3 && index <= MaxNumberOfSizes)
     index++;
-  LargeFontDialogue = ReadFont (script, 1, 1, index, UnRelative);
-  if (LargeFontDialogue == NULL)
+  LargeDialogFont = ReadFont (script, 1, 1, index, UnRelative);
+  if (LargeDialogFont == NULL)
     {
-      LargeFontDialogue = ReadFont (script, 2, 1, index, UnRelative);
-      if (LargeFontDialogue == NULL)
-	LargeFontDialogue = IFontDialogue;
+      LargeDialogFont = ReadFont (script, 2, 1, index, UnRelative);
+      if (LargeDialogFont == NULL)
+	LargeDialogFont = IDialogFont;
     }
 #endif /*_WINDOWS*/
   FirstRemovableFont = FirstFreeFont;

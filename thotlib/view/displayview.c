@@ -440,7 +440,7 @@ void FreeView (PtrDocument pDoc, DocViewNumber view)
 void  CloseDocumentView (PtrDocument pDoc, int view, ThotBool closeDoc)
 {
   int                 d;
-  if (pDoc)
+  if (pDoc && pDoc->DocViewRootAb[view])
     {
       /* check if the document already exist */
       d = 0;

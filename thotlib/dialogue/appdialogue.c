@@ -146,6 +146,17 @@ void WinErrorBox (HWND hWnd, char *source)
 #endif /* _AMAYA_RELEASE_ */
 }
 
+/*-----------------------------------------------------------------------
+ WIN_SetDialogfont applies the dialog font to the widget wnd
+ ------------------------------------------------------------------------*/
+void WIN_SetDialogfont (ThotWindow wnd)
+{
+  if (DialogFont == NULL)
+    DialogFont = GetStockObject (DEFAULT_GUI_FONT);
+  if (DialogFont)
+    SendMessage (wnd, WM_SETFONT, (WPARAM) DialogFont, MAKELPARAM(FALSE, 0));
+}
+
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 LRESULT ToolBarNotify (int frame, HWND hwnd, WPARAM wParam, LPARAM lParam)
@@ -2297,7 +2308,6 @@ int TtaAddTextZone (Document doc, View view, char *label,
   ThotWidget     ComboList;
 #endif /* _GTK */
 #else /* _WINDOWS */
-  HFONT          newFont;
   RECT           rect;
   ThotWidget     wLabel;
 #endif /* _WINDOWS */
@@ -2361,7 +2371,7 @@ int TtaAddTextZone (Document doc, View view, char *label,
 	      n++;
 	      XtSetArg (args[n], XmNforeground, FgMenu_Color);
 	      n++;
-	      XtSetArg (args[n], XmNheight, (Dimension) FontHeight (LargeFontDialogue));
+	      XtSetArg (args[n], XmNheight, (Dimension) FontHeight (LargeDialogFont));
 	      n++;
 	      XtSetArg (args[n], XmNfontList, DefaultFont);
 	      n++;
@@ -2517,13 +2527,12 @@ int TtaAddTextZone (Document doc, View view, char *label,
 	  currentFrame = frame;
 	  GetClientRect (FrMainRef [frame], &rect);
 	  /* get the default GUI font */
-	  newFont = GetStockObject (DEFAULT_GUI_FONT); 
 	  wLabel = CreateWindow ("STATIC", label, WS_CHILD | WS_VISIBLE | SS_LEFT, 
 				 5, 8, 0, 30, FrMainRef[frame], (HMENU) 1,
 				 hInstance, NULL);
 	  FrameTable[frame].Label = wLabel;
-	  if(newFont)
-	    SendMessage (wLabel, WM_SETFONT, (WPARAM) newFont, MAKELPARAM(FALSE, 0));
+	  /* set the font of the window */
+	  WIN_SetDialogfont (wLabel);
 	  if (editable)
 	    {
 	      /* IDC_COMBO1,26,36,48,30,CBS_DROPDOWN | CBS_AUTOHSCROLL | 
@@ -2545,8 +2554,7 @@ int TtaAddTextZone (Document doc, View view, char *label,
 				0, 0, 0, 300, FrMainRef[frame], (HMENU) 3, hInstance, NULL);
 	    }
 	  /* set the font of the window */
-	  if(newFont)
-	    SendMessage (w, WM_SETFONT, (WPARAM) newFont, MAKELPARAM(FALSE, 0));
+	  WIN_SetDialogfont (w);
 	  FrameTable[frame].Text_Zone = w;
 	  FrameTable[frame].Call_Text = (Proc) procedure;
 	  
@@ -3883,14 +3891,14 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 	   n++;
 	   XtSetArg (args[n], XmNforeground, FgMenu_Color);
 	   n++;
-	   XtSetArg (args[n], XmNheight, (Dimension) FontHeight (LargeFontDialogue));
+	   XtSetArg (args[n], XmNheight, (Dimension) FontHeight (LargeDialogFont));
 	   n++;
 	   XtSetArg (args[n], XmNfontList, DefaultFont);
 	   n++;
 	   title_string = XmStringCreateSimple (" ");
 	   XtSetArg (args[n], XmNlabelString, title_string);
 	   n++;
-	   i = CharacterWidth ('M', LargeFontDialogue) * 50;
+	   i = CharacterWidth ('M', LargeDialogFont) * 50;
 	   XtSetArg (args[n], XmNwidth, (Dimension) i);
 	   n++;
 	   FrameTable[frame].WdStatus = XmCreateLabel (hbox2, "Thot_MSG", args, n);
@@ -4430,7 +4438,7 @@ void TtaSetMenuOff (Document document, View view, int menuID)
 	       else
 		 {
 		   /* Change the font */
-		   font = XmFontListCreate ((XFontStruct *) IFontDialogue,
+		   font = XmFontListCreate ((XFontStruct *) IDialogFont,
 					    XmSTRING_DEFAULT_CHARSET);
 		   n = 0;
 		   XtSetArg (args[n], XmNfontList, font);

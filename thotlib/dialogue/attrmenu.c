@@ -234,7 +234,6 @@ LRESULT CALLBACK TextAttrProc (HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam
 LRESULT CALLBACK InitFormDialogWndProc (ThotWindow hwnd, UINT iMsg,
 					WPARAM wParam, LPARAM lParam)
 {
-  HFONT               newFont;
   ThotWindow          hwnTitle;
   ThotWindow          confirmButton;
   ThotWindow          doneButton;
@@ -245,16 +244,13 @@ LRESULT CALLBACK InitFormDialogWndProc (ThotWindow hwnd, UINT iMsg,
     {
     case WM_CREATE:
       /* get the default GUI font */
-      newFont = GetStockObject (DEFAULT_GUI_FONT); 
       /* Create static window for the title */
       hwnTitle = CreateWindow ("STATIC", WIN_pAttr1->AttrName, 
 			       WS_CHILD | WS_VISIBLE | SS_LEFT,
 			       10, 5, 100, 15, hwnd, (HMENU) 99, 
 			       ((LPCREATESTRUCT) lParam)->hInstance, NULL); 
       /* set the font of the window */
-      if(newFont)
-         SendMessage (hwnTitle, WM_SETFONT, (WPARAM) newFont, MAKELPARAM(FALSE, 0));
-       
+      WIN_SetDialogfont (hwnTitle);
       /* Create Edit Window autoscrolled */
       hwnEdit = CreateWindow ("EDIT", TextAttrValue, 
 			      WS_CHILD | WS_VISIBLE | WS_BORDER | ES_LEFT |
@@ -262,9 +258,7 @@ LRESULT CALLBACK InitFormDialogWndProc (ThotWindow hwnd, UINT iMsg,
 			      10, 25, 320, 20, hwnd, (HMENU) 1,
 			      ((LPCREATESTRUCT) lParam)->hInstance, NULL);
       /* set the font of the window */
-      if(newFont)
-         SendMessage (hwnEdit, WM_SETFONT, (WPARAM) newFont, MAKELPARAM(FALSE, 0));
- 
+      WIN_SetDialogfont (hwnEdit);
       if (lpfnTextZoneWndProc == (WNDPROC) 0)
 	lpfnTextZoneWndProc = (WNDPROC) SetWindowLong (hwnEdit, GWL_WNDPROC,
 						       (DWORD) TextAttrProc);
@@ -279,9 +273,7 @@ LRESULT CALLBACK InitFormDialogWndProc (ThotWindow hwnd, UINT iMsg,
 				    (HMENU) ID_CONFIRM,
  				    ((LPCREATESTRUCT)lParam)->hInstance, NULL);
       /* set the font of the window */
-      if(newFont)
-         SendMessage (confirmButton, WM_SETFONT, (WPARAM) newFont, MAKELPARAM(FALSE, 0));
-      
+      WIN_SetDialogfont (confirmButton);
       /* Create Done Button */
       doneButton = CreateWindow ("BUTTON", TtaGetMessage(LIB, TMSG_DONE),
 				 WS_CHILD | BS_PUSHBUTTON | WS_VISIBLE,
@@ -289,9 +281,7 @@ LRESULT CALLBACK InitFormDialogWndProc (ThotWindow hwnd, UINT iMsg,
 				 (HMENU) ID_DONE,
 				 ((LPCREATESTRUCT) lParam)->hInstance, NULL);
       /* set the font of the window */
-      if(newFont)
-         SendMessage (doneButton, WM_SETFONT, (WPARAM) newFont, MAKELPARAM(FALSE, 0));
-       
+      WIN_SetDialogfont (doneButton);
       SetFocus (hwnEdit);
       break;
       
@@ -348,7 +338,6 @@ LRESULT CALLBACK InitFormDialogWndProc (ThotWindow hwnd, UINT iMsg,
   ----------------------------------------------------------------------*/
 static ThotBool WIN_InitFormDialog (ThotWindow parent, char *title)
 {
-  HFONT           newFont;
   WNDCLASS        wndFormClass;
   char           *szAppName; 
   ThotWindow      hwnFromDialog;
@@ -369,7 +358,6 @@ static ThotBool WIN_InitFormDialog (ThotWindow parent, char *title)
       wndFormClass.hbrBackground = (HBRUSH) GetStockObject (LTGRAY_BRUSH);
       wndFormClass.lpszClassName = szAppName;
       wndFormClass.lpszMenuName  = NULL;
-      
       if (IS_WIN95)
 	{
 	  if (!RegisterWin95 (&wndFormClass))
@@ -380,7 +368,6 @@ static ThotBool WIN_InitFormDialog (ThotWindow parent, char *title)
     }
   
   /* get the default GUI font */
-  newFont = GetStockObject (DEFAULT_GUI_FONT); 
   hwnFromDialog = CreateWindow (szAppName, title,
 				DS_MODALFRAME | WS_POPUP | 
 				WS_VISIBLE | WS_CAPTION | WS_SYSMENU,
@@ -388,12 +375,9 @@ static ThotBool WIN_InitFormDialog (ThotWindow parent, char *title)
 				340, 100,
 				parent, NULL, hInstance, NULL);
   /* set the font of the window */
-  if(newFont)
-    SendMessage (hwnFromDialog, WM_SETFONT, (WPARAM) newFont, MAKELPARAM(FALSE, 0));
-  
+  WIN_SetDialogfont (hwnFromDialog);
   ShowWindow (hwnFromDialog, SW_SHOWNORMAL);
   UpdateWindow (hwnFromDialog);
-  
   while (GetMessage (&msg, NULL, 0, 0))
     {
       frame = GetFrameNumber (msg.hwnd);
@@ -409,7 +393,6 @@ static ThotBool WIN_InitFormDialog (ThotWindow parent, char *title)
 LRESULT CALLBACK InitSheetDialogWndProc (ThotWindow hwnd, UINT iMsg,
 					 WPARAM wParam, LPARAM lParam)
 {
-  HFONT           newFont;
   ThotWindow      hwnTitle;
   ThotWindow      applyButton;
   ThotWindow      deleteButton;
@@ -421,16 +404,13 @@ LRESULT CALLBACK InitSheetDialogWndProc (ThotWindow hwnd, UINT iMsg,
     {
     case WM_CREATE:
       /* get the default GUI font */
-      newFont = GetStockObject (DEFAULT_GUI_FONT); 
      /* Create static window for the title */
       hwnTitle = CreateWindow ("STATIC", WIN_pAttr1->AttrName, 
 			       WS_CHILD | WS_VISIBLE | SS_LEFT,
 			       10, 5, 100, 15, hwnd, (HMENU) 99, 
 			       ((LPCREATESTRUCT) lParam)->hInstance, NULL); 
       /* set the font of the window */
-      if(newFont)
-         SendMessage (hwnTitle, WM_SETFONT, (WPARAM) newFont, MAKELPARAM(FALSE, 0));
-      
+      WIN_SetDialogfont (hwnTitle);
       /* Create Edit Window autoscrolled */
       hwnEdit = CreateWindow ("EDIT", TextAttrValue, 
 			      WS_CHILD | WS_VISIBLE | WS_BORDER | ES_LEFT |
@@ -438,9 +418,7 @@ LRESULT CALLBACK InitSheetDialogWndProc (ThotWindow hwnd, UINT iMsg,
 			      10, 25, 310, 20, hwnd, (HMENU) 1,
 			      ((LPCREATESTRUCT) lParam)->hInstance, NULL);
       /* set the font of the window */
-      if(newFont)
-         SendMessage (hwnEdit, WM_SETFONT, (WPARAM) newFont, MAKELPARAM(FALSE, 0));
-				
+      WIN_SetDialogfont (hwnEdit);
       if (lpfnTextZoneWndProc == (WNDPROC) 0)
 	lpfnTextZoneWndProc = (WNDPROC) SetWindowLong (hwnEdit, GWL_WNDPROC,
 						       (DWORD) TextAttrProc);
@@ -454,9 +432,7 @@ LRESULT CALLBACK InitSheetDialogWndProc (ThotWindow hwnd, UINT iMsg,
 				  10, 50, 80, 20, hwnd, (HMENU) ID_APPLY,
 				  ((LPCREATESTRUCT) lParam)->hInstance, NULL);
       /* set the font of the window */
-      if(newFont)
-         SendMessage (applyButton, WM_SETFONT, (WPARAM) newFont, MAKELPARAM(FALSE, 0));
-      
+      WIN_SetDialogfont (applyButton);
       /* Create Delete Button */
       deleteButton = CreateWindow ("BUTTON",
 				   TtaGetMessage (LIB, TMSG_DEL_ATTR), 
@@ -464,9 +440,7 @@ LRESULT CALLBACK InitSheetDialogWndProc (ThotWindow hwnd, UINT iMsg,
 				   100, 50, 120, 20, hwnd, (HMENU) ID_DELETE,
 				   ((LPCREATESTRUCT) lParam)->hInstance, NULL);
       /* set the font of the window */
-      if(newFont)
-         SendMessage (deleteButton, WM_SETFONT, (WPARAM) newFont, MAKELPARAM(FALSE, 0));
-      
+      WIN_SetDialogfont (deleteButton);
       /* Create Done Button */
       doneButton = CreateWindow ("BUTTON",
 				 TtaGetMessage (LIB, TMSG_DONE), 
@@ -474,8 +448,7 @@ LRESULT CALLBACK InitSheetDialogWndProc (ThotWindow hwnd, UINT iMsg,
 				 230, 50, 80, 20, hwnd, (HMENU) ID_DONE,
 				 ((LPCREATESTRUCT) lParam)->hInstance, NULL);
       /* set the font of the window */
-      if(newFont)
-         SendMessage (doneButton, WM_SETFONT, (WPARAM) newFont, MAKELPARAM(FALSE, 0));
+      WIN_SetDialogfont (doneButton);
       SetFocus (hwnEdit);
       break;
 
@@ -536,7 +509,6 @@ LRESULT CALLBACK InitSheetDialogWndProc (ThotWindow hwnd, UINT iMsg,
   ----------------------------------------------------------------------*/
 static ThotBool WIN_InitSheetDialog (ThotWindow parent)
 {
-  HFONT         newFont;
   WNDCLASSEX    wndSheetClass;
   char         *szAppName;
   ThotWindow    hwnSheetDialog;
@@ -564,7 +536,6 @@ static ThotBool WIN_InitSheetDialog (ThotWindow parent)
     }
    
   /* get the default GUI font */
-  newFont = GetStockObject (DEFAULT_GUI_FONT); 
   hwnSheetDialog = CreateWindow (szAppName, TtaGetMessage (LIB, TMSG_ATTR),
 				 DS_MODALFRAME | WS_POPUP | WS_VISIBLE |
 				 WS_CAPTION | WS_SYSMENU | WS_TABSTOP,
@@ -572,8 +543,7 @@ static ThotBool WIN_InitSheetDialog (ThotWindow parent)
 				 340, 100,
 				 parent, NULL, hInstance, NULL);
   /* set the font of the window */
-  if(newFont)
-    SendMessage (hwnSheetDialog, WM_SETFONT, (WPARAM) newFont, MAKELPARAM(FALSE, 0));
+  WIN_SetDialogfont (hwnSheetDialog);
   ShowWindow (hwnSheetDialog, SW_SHOWNORMAL);
   UpdateWindow (hwnSheetDialog);
   while (GetMessage (&msg, NULL, 0, 0))
@@ -591,7 +561,6 @@ static ThotBool WIN_InitSheetDialog (ThotWindow parent)
 LRESULT CALLBACK InitNumAttrDialogWndProc (ThotWindow hwnd, UINT iMsg,
 					   WPARAM wParam, LPARAM lParam)
 {
-  HFONT           newFont;
   ThotWindow      hwnTitle;
   ThotWindow      applyButton;
   ThotWindow      deleteButton;
@@ -603,16 +572,13 @@ LRESULT CALLBACK InitNumAttrDialogWndProc (ThotWindow hwnd, UINT iMsg,
     {
     case WM_CREATE:
       /* get the default GUI font */
-      newFont = GetStockObject (DEFAULT_GUI_FONT); 
       /* Create static window for the title */
       hwnTitle = CreateWindow ("STATIC", WIN_pAttr1->AttrName, 
 			       WS_CHILD | WS_VISIBLE | SS_LEFT,
 			       10, 5, 160, 240, hwnd, (HMENU) 1,
 			       ((LPCREATESTRUCT) lParam)->hInstance, NULL); 
       /* set the font of the window */
-      if(newFont)
-         SendMessage (hwnTitle, WM_SETFONT, (WPARAM) newFont, MAKELPARAM(FALSE, 0));
-      
+      WIN_SetDialogfont (hwnTitle);
       /* Create Edit Window autoscrolled */
       hwnEdit = CreateWindow ("EDIT", NULL, 
 			      WS_CHILD | WS_VISIBLE | WS_BORDER | ES_LEFT |
@@ -620,15 +586,13 @@ LRESULT CALLBACK InitNumAttrDialogWndProc (ThotWindow hwnd, UINT iMsg,
 			      10, 20, 120, 20, hwnd, (HMENU) ID_EDITVALUE,
 			      ((LPCREATESTRUCT) lParam)->hInstance, NULL);
       /* set the font of the window */
-      if(newFont)
-         SendMessage (hwnEdit, WM_SETFONT, (WPARAM) newFont, MAKELPARAM(FALSE, 0));
+      WIN_SetDialogfont (hwndEdit);
       SetDlgItemInt (hwnd, ID_EDITVALUE, formValue, TRUE);
       if (lpfnTextZoneWndProc == (WNDPROC) 0)
 	lpfnTextZoneWndProc = (WNDPROC) SetWindowLong (hwnEdit, GWL_WNDPROC,
 						       (DWORD) TextAttrProc);
       else
 	SetWindowLong (hwnEdit, GWL_WNDPROC, (DWORD) TextAttrProc);
-      
       /* Create Apply button */
       applyButton = CreateWindow ("BUTTON",
 				  TtaGetMessage (LIB, TMSG_APPLY), 
@@ -636,9 +600,7 @@ LRESULT CALLBACK InitNumAttrDialogWndProc (ThotWindow hwnd, UINT iMsg,
 				  10, 55, 65, 25, hwnd, (HMENU) ID_APPLY,
 				  ((LPCREATESTRUCT) lParam)->hInstance, NULL);
       /* set the font of the window */
-      if(newFont)
-         SendMessage (applyButton, WM_SETFONT, (WPARAM) newFont, MAKELPARAM(FALSE, 0));
-      
+      WIN_SetDialogfont (applyButton);
       /* Create Delete Button */
       deleteButton = CreateWindow ("BUTTON",
 				   TtaGetMessage (LIB, TMSG_DEL_ATTR), 
@@ -646,9 +608,7 @@ LRESULT CALLBACK InitNumAttrDialogWndProc (ThotWindow hwnd, UINT iMsg,
 				   80, 55, 120, 25, hwnd, (HMENU) ID_DELETE,
 				   ((LPCREATESTRUCT) lParam)->hInstance, NULL);
       /* set the font of the window */
-      if(newFont)
-         SendMessage (deleteButton, WM_SETFONT, (WPARAM) newFont, MAKELPARAM(FALSE, 0));
-      
+      WIN_SetDialogfont (deleteButton);
       /* Create Done Button */
       doneButton = CreateWindow ("BUTTON",
 				 TtaGetMessage (LIB, TMSG_DONE), 
@@ -656,8 +616,7 @@ LRESULT CALLBACK InitNumAttrDialogWndProc (ThotWindow hwnd, UINT iMsg,
 				 205, 55, 65, 25, hwnd, (HMENU) ID_DONE,
 				 ((LPCREATESTRUCT) lParam)->hInstance, NULL);
       /* set the font of the window */
-      if(newFont)
-         SendMessage (doneButton, WM_SETFONT, (WPARAM) newFont, MAKELPARAM(FALSE, 0));
+      WIN_SetDialogfont (doneButton);
       SetFocus (hwnEdit);
       break;
       
@@ -711,7 +670,6 @@ LRESULT CALLBACK InitNumAttrDialogWndProc (ThotWindow hwnd, UINT iMsg,
   ----------------------------------------------------------------------*/
 static ThotBool WIN_InitNumAttrDialog (ThotWindow parent)
 {
-  HFONT         newFont;
   WNDCLASSEX    wndNumAttrClass;
   ThotWindow    hwnNumAttrDialog;
   MSG           msg;
@@ -738,7 +696,6 @@ static ThotBool WIN_InitNumAttrDialog (ThotWindow parent)
     }
    
   /* get the default GUI font */
-  newFont = GetStockObject (DEFAULT_GUI_FONT); 
   hwnNumAttrDialog = CreateWindow (szAppName, TtaGetMessage (LIB, TMSG_ATTR),
 				   DS_MODALFRAME | WS_POPUP | 
 				   WS_VISIBLE | WS_CAPTION | WS_SYSMENU,
@@ -746,8 +703,7 @@ static ThotBool WIN_InitNumAttrDialog (ThotWindow parent)
 				   285, 110,
 				   parent, NULL, hInstance, NULL);
   /* set the font of the window */
-  if(newFont)
-    SendMessage (hwnNumAttrDialog, WM_SETFONT, (WPARAM) newFont, MAKELPARAM(FALSE, 0));
+  WIN_SetDialogfont (hwnNumAttrDialog);
   ShowWindow (hwnNumAttrDialog, SW_SHOWNORMAL);
   UpdateWindow (hwnNumAttrDialog);
   while (GetMessage (&msg, NULL, 0, 0))

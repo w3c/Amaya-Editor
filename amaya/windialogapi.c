@@ -76,27 +76,30 @@ extern ThotBool     WithToC;
 extern ThotBool     NumberLinks;
 extern ThotBool     PrintURL;
 extern ThotBool     IgnoreCSS;
+extern HFONT        DialogFont;
 
-static char       UrlToOpen[MAX_LENGTH];
-static char       HrefUrl[MAX_LENGTH];
-static char       TmpDocName[MAX_LENGTH];
-static char       AltText[MAX_LENGTH];
-static char       Message[300];
-static char       Message2[300];
-static char       Message3[300];
-static char       WndTitle[100];
-static char       CurrentPathName[100];
-static char       WinCurLang[100];
-static char       CurFileToPrint[MAX_PATH];
-static char       AttDlgTitle[100];
-static char       MathEntName[MAX_TXT_LEN];
-static char       SzBuffer[MAX_BUFF];
-static char      *ClassList;
-static char      *ItemList;
-static char      *SavList;
-static char      *cssList;
-static char      *mimeType;
-static char      *charSet;
+static HDC          hDC;
+static HDC          hMemDC;
+static char         UrlToOpen[MAX_LENGTH];
+static char         HrefUrl[MAX_LENGTH];
+static char         TmpDocName[MAX_LENGTH];
+static char         AltText[MAX_LENGTH];
+static char         Message[300];
+static char         Message2[300];
+static char         Message3[300];
+static char         WndTitle[100];
+static char         CurrentPathName[100];
+static char         WinCurLang[100];
+static char         CurFileToPrint[MAX_PATH];
+static char         AttDlgTitle[100];
+static char         MathEntName[MAX_TXT_LEN];
+static char         SzBuffer[MAX_BUFF];
+static char        *ClassList;
+static char        *ItemList;
+static char        *SavList;
+static char        *cssList;
+static char        *mimeType;
+static char        *charSet;
 static int          currentDoc;
 static int          currentView;
 static int          SpellingBase;
@@ -131,12 +134,6 @@ static int          iLocation;
 static int          cxChar;
 static int          cyChar;
 static int          iMode;
-
-static HDC          hDC;
-static HDC          hMemDC;
-
-static HFONT        hFont;
-static HFONT        hOldFont;
 
 static ThotBool	    saveBeforeClose;
 static ThotBool     closeDontSave;
@@ -266,12 +263,10 @@ LRESULT CALLBACK CSSDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
 {
   int             index = 0;
   UINT            i = 0;
-  HFONT           newFont;
 
   switch (msg)
     {
     case WM_INITDIALOG:
-      newFont = GetStockObject (DEFAULT_GUI_FONT); 
       SetWindowText (hwnDlg, WndTitle);
       SetWindowText (GetDlgItem (hwnDlg, ID_CONFIRM),
 		  TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
@@ -286,9 +281,8 @@ LRESULT CALLBACK CSSDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
 				 NULL);
 
       /* set the font of the window */
-      if (newFont)
-	SendMessage (wndCSSList, WM_SETFONT, (WPARAM) newFont, MAKELPARAM(FALSE, 0));
-       SendMessage (wndCSSList, LB_RESETCONTENT, 0, 0);
+      WIN_SetDialogfont (wndCSSList);
+      SendMessage (wndCSSList, LB_RESETCONTENT, 0, 0);
       while (i < NbItem && cssList[index] != EOS)
 	{
 	  SendMessage (wndCSSList, LB_INSERTSTRING, i, (LPARAM) &cssList[index]); 
@@ -791,17 +785,15 @@ LRESULT CALLBACK AttrItemsDlgProc (ThotWindow hwnDlg, UINT msg,
   ThotWindow radio9;
   ThotWindow groupBx;
   TEXTMETRIC tm;
-  HFONT      newFont;
 
   switch (msg)
     {
     case WM_INITDIALOG:
-      newFont = GetStockObject (DEFAULT_GUI_FONT); 
       /* store the window ID to be able to destroy it from elsewhere */
       AttrForm = hwnDlg;
       GetClientRect (hwnDlg, &rect);
       hDC = GetDC (hwnDlg);
-      SelectObject (hDC, newFont);
+      SelectObject (hDC, DialogFont);
       GetTextMetrics (hDC, &tm);
       cxChar = tm.tmAveCharWidth;
       cyChar = tm.tmHeight + tm.tmExternalLeading;
@@ -817,114 +809,104 @@ LRESULT CALLBACK AttrItemsDlgProc (ThotWindow hwnDlg, UINT msg,
       
       radio1 = CreateWindow ("BUTTON", &ItemList[ndx],
 			     WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON, 2 * cxChar,
-			     cyChar * (1 + 2 * i), 20 * cxChar, 7 * cyChar / 4, hwnDlg,
+			     cyChar * (1+2*i), 20 * cxChar, 7 * cyChar / 4, hwnDlg,
 			     (HMENU) OPT1, (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
        /* set the font of the window */
-      if (newFont)
-	SendMessage (radio1, WM_SETFONT, (WPARAM) newFont, MAKELPARAM(FALSE, 0));
+      WIN_SetDialogfont (radio1);
       ndx += strlen (&ItemList[ndx]) + 1;
       i++;
       radio2 = CreateWindow ("BUTTON", &ItemList[ndx],
 		  WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON, 2 * cxChar,
-		  cyChar * (1 + 2 * i), 20 * cxChar, 7 * cyChar / 4, hwnDlg,
+		  cyChar * (1+2*i), 20 * cxChar, 7 * cyChar / 4, hwnDlg,
 		  (HMENU) OPT2, (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
        /* set the font of the window */
-      if (newFont)
-	SendMessage (radio2, WM_SETFONT, (WPARAM) newFont, MAKELPARAM(FALSE, 0));
+      WIN_SetDialogfont (radio2);
       ndx += strlen (&ItemList[ndx]) + 1;
       i++;
       if (attDlgNbItems > 2)
 	{
 	  radio3 = CreateWindow ("BUTTON", &ItemList[ndx],
 				 WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON, 2 * cxChar,
-				 cyChar * (1 + 2 * i), 20 * cxChar, 7 * cyChar / 4, hwnDlg,
+				 cyChar * (1+2*i), 20 * cxChar, 7 * cyChar / 4, hwnDlg,
 				 (HMENU) OPT3, (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
 	  /* set the font of the window */
-	  if (newFont)
-	    SendMessage (radio3, WM_SETFONT, (WPARAM) newFont, MAKELPARAM(FALSE, 0));
+	  WIN_SetDialogfont (radio3);
 	  ndx += strlen (&ItemList[ndx]) + 1;
 	  i++;
 	  if (attDlgNbItems > 3)
 	    {	  
 	      radio4 = CreateWindow ("BUTTON", &ItemList[ndx],
 				     WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON, 2 * cxChar,
-				     cyChar * (1 + 2 * i), 20 * cxChar, 7 * cyChar / 4, hwnDlg,
+				     cyChar * (1+2*i), 20 * cxChar, 7 * cyChar / 4, hwnDlg,
 				     (HMENU) OPT4, (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
 	      /* set the font of the window */
-	      if (newFont)
-		SendMessage (radio4, WM_SETFONT, (WPARAM) newFont, MAKELPARAM(FALSE, 0));
+	      WIN_SetDialogfont (radio4);
 	      ndx += strlen (&ItemList[ndx]) + 1;
 	      i++;
 	      if (attDlgNbItems > 4)
 		{
 		  radio5 = CreateWindow ("BUTTON", &ItemList[ndx],
 					 WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON, 2 * cxChar,
-					 cyChar * (1 + 2 * i), 20 * cxChar, 7 * cyChar / 4, hwnDlg,
+					 cyChar * (1+2*i), 20 * cxChar, 7 * cyChar / 4, hwnDlg,
 					 (HMENU) OPT5, (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
 		  /* set the font of the window */
-		  if (newFont)
-		    SendMessage (radio5, WM_SETFONT, (WPARAM) newFont, MAKELPARAM(FALSE, 0));
+		  WIN_SetDialogfont (radio5);
 		  ndx += strlen (&ItemList[ndx]) + 1;
 		  i++;
-          if (attDlgNbItems > 5)
-		  {
-	         radio6 = CreateWindow ("BUTTON", &ItemList[ndx],
-				 WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON, 2 * cxChar,
-				 cyChar * (1 + 2 * i), 20 * cxChar, 7 * cyChar / 4, hwnDlg,
-				 (HMENU) OPT6, (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
-		 /* set the font of the window */
-		 if (newFont)
-		   SendMessage (radio6, WM_SETFONT, (WPARAM) newFont, MAKELPARAM(FALSE, 0));
-	         ndx += strlen (&ItemList[ndx]) + 1;
-	         i++;
-	         if (attDlgNbItems > 6)
-			 {	  
-	            radio7 = CreateWindow ("BUTTON", &ItemList[ndx],
-					WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON, 2 * cxChar,
-					cyChar * (1 + 2 * i), 20 * cxChar, 7 * cyChar / 4, hwnDlg,
-					(HMENU) OPT7, (HINSTANCE) GetWindowLong (hwnDlg,
-					GWL_HINSTANCE), NULL);
-		    /* set the font of the window */
-		    if (newFont)
-		      SendMessage (radio7, WM_SETFONT, (WPARAM) newFont, MAKELPARAM(FALSE, 0));
-	            ndx += strlen (&ItemList[ndx]) + 1;
-	            i++;
-	            if (attDlgNbItems > 7)
-				{
-		          radio8 = CreateWindow ("BUTTON", &ItemList[ndx],
-					  WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON, 2 * cxChar,
-					  cyChar * (1 + 2 * i), 20 * cxChar, 7 * cyChar / 4, hwnDlg,
-					  (HMENU) OPT8, (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
+		  if (attDlgNbItems > 5)
+		    {
+		      radio6 = CreateWindow ("BUTTON", &ItemList[ndx],
+					     WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON, 2 * cxChar,
+					     cyChar * (1+2*i), 20 * cxChar, 7 * cyChar / 4, hwnDlg,
+					     (HMENU) OPT6, (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
+		      /* set the font of the window */
+		      WIN_SetDialogfont (radio6);
+		      ndx += strlen (&ItemList[ndx]) + 1;
+		      i++;
+		      if (attDlgNbItems > 6)
+			{	  
+			  radio7 = CreateWindow ("BUTTON", &ItemList[ndx],
+						 WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON, 2 * cxChar,
+						 cyChar * (1+2*i), 20 * cxChar, 7 * cyChar / 4, hwnDlg,
+						 (HMENU) OPT7, (HINSTANCE) GetWindowLong (hwnDlg,
+											  GWL_HINSTANCE), NULL);
 			  /* set the font of the window */
-			  if (newFont)
-			    SendMessage (radio8, WM_SETFONT, (WPARAM) newFont, MAKELPARAM(FALSE, 0));
-	              ndx += strlen (&ItemList[ndx]) + 1;
-		          i++;
-				  if (attDlgNbItems > 8)
-				  {
+			  WIN_SetDialogfont (radio7);
+			  ndx += strlen (&ItemList[ndx]) + 1;
+			  i++;
+			  if (attDlgNbItems > 7)
+			    {
+			      radio8 = CreateWindow ("BUTTON", &ItemList[ndx],
+						     WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON, 2 * cxChar,
+						     cyChar * (1+2*i), 20 * cxChar, 7 * cyChar / 4, hwnDlg,
+						     (HMENU) OPT8, (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
+			      /* set the font of the window */
+			      WIN_SetDialogfont (radio8);
+			      ndx += strlen (&ItemList[ndx]) + 1;
+			i++;
+			if (attDlgNbItems > 8)
+			  {
 		            radio9 = CreateWindow ("BUTTON", &ItemList[ndx],
-					  WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON, 2 * cxChar,
-					  cyChar * (1 + 2 * i), 20 * cxChar, 7 * cyChar / 4, hwnDlg,
-					  (HMENU) OPT9, (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
+						   WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON, 2 * cxChar,
+						   cyChar * (1+2*i), 20 * cxChar, 7 * cyChar / 4, hwnDlg,
+						   (HMENU) OPT9, (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
 			    /* set the font of the window */
-			    if (newFont)
-			      SendMessage (radio9, WM_SETFONT, (WPARAM) newFont, MAKELPARAM(FALSE, 0));
-	                ndx += strlen (&ItemList[ndx]) + 1;
+			    WIN_SetDialogfont (radio9);
+			    ndx += strlen (&ItemList[ndx]) + 1;
 		            i++;
-				  }
-				}
-			 }
-			 }
+			  }
+			    }
+			}
+		    }
 		}
-	   }
+	    }
 	}
       groupBx = CreateWindow ("BUTTON", AttDlgTitle,
-		  WS_CHILD | WS_VISIBLE | BS_GROUPBOX, cxChar, 0,
-		  rect.right - (2 * cxChar), i * (2 * cyChar) + cyChar, hwnDlg,
-		  (HMENU) 1, (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
-       /* set the font of the window */
-      if (newFont)
-	SendMessage (groupBx, WM_SETFONT, (WPARAM) newFont, MAKELPARAM(FALSE, 0));
+			      WS_CHILD | WS_VISIBLE | BS_GROUPBOX, cxChar, 0,
+			      rect.right - (2 * cxChar), i * (2 * cyChar) + cyChar, hwnDlg,
+			      (HMENU) 1, (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
+      /* set the font of the window */
+      WIN_SetDialogfont (groupBx);
       switch (currAttrVal)
 	{
 	case 1: CheckRadioButton (hwnDlg, OPT1, OPT9, OPT1);
@@ -1097,7 +1079,6 @@ void MimeTypeDlgStatus (char *msg)
 LRESULT CALLBACK MimeTypeDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
 				  LPARAM lParam)
 {
-  HFONT           newFont;
   int             index = 0;
   UINT            i = 0; 
   static ThotWindow   wndMTlist;
@@ -1107,7 +1088,6 @@ LRESULT CALLBACK MimeTypeDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
     case WM_INITDIALOG:
       /* get the default GUI font */
       MimeTypeDlg = hwnDlg;
-      newFont = GetStockObject (DEFAULT_GUI_FONT); 
       SetWindowText (hwnDlg, TtaGetMessage (AMAYA, AM_SELECT_MIMETYPE));
       SetWindowText (GetDlgItem (hwnDlg, ID_APPLY), TtaGetMessage (LIB, TMSG_APPLY));
       SetWindowText (GetDlgItem (hwnDlg, IDCANCEL), TtaGetMessage (LIB, TMSG_CANCEL));
@@ -1117,8 +1097,7 @@ LRESULT CALLBACK MimeTypeDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
 				5, 5, 310, 100, hwnDlg, (HMENU) 1, 
 				(HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
       /* set the font of the window */
-      if (newFont)
-	    SendMessage (wndMTlist, WM_SETFONT, (WPARAM) newFont, MAKELPARAM(FALSE, 0));
+      WIN_SetDialogfont (wndMTlist);
       SendMessage (wndMTlist, LB_RESETCONTENT, 0, 0);
       while (i < NbItem && mimeType[index] != '\0')
 	{
@@ -1690,7 +1669,6 @@ LRESULT CALLBACK SaveListDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
 								  LPARAM lParam)
 {
   static ThotWindow  wndSavList;
-  HFONT              newFont;
   int                index = 0;
   UINT               i = 0;
 
@@ -1698,7 +1676,6 @@ LRESULT CALLBACK SaveListDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
     {
     case WM_INITDIALOG:
       /* get the default GUI font */
-      newFont = GetStockObject (DEFAULT_GUI_FONT); 
       SetWindowText (hwnDlg, TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
       SetWindowText (GetDlgItem (hwnDlg, IDC_MSG),
 		     TtaGetMessage (AMAYA, AM_WARNING_SAVE_OVERWRITE));
@@ -1713,8 +1690,7 @@ LRESULT CALLBACK SaveListDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
 				  (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
       
       /* set the font of the window */
-      if (newFont)
-	SendMessage (wndSavList, WM_SETFONT, (WPARAM) newFont, MAKELPARAM(FALSE, 0));
+      WIN_SetDialogfont (wndSavList);
       SendMessage (wndSavList, LB_RESETCONTENT, 0, 0);
       while (i < NbItem && SavList[index] != EOS)
 	{
@@ -1807,7 +1783,6 @@ LRESULT CALLBACK CloseDocDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
 LRESULT CALLBACK LanguageDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
 								  LPARAM lParam)
 {
-  HFONT           newFont;
   int             index = 0;
   UINT            i = 0; 
 
@@ -1815,7 +1790,6 @@ LRESULT CALLBACK LanguageDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
     {
     case WM_INITDIALOG:
       /* get the default GUI font */
-      newFont = GetStockObject (DEFAULT_GUI_FONT); 
       /* destroy the focus of the previous open dialog */
       LangForm = hwnDlg;
       SetWindowText (hwnDlg, WndTitle);
@@ -1831,8 +1805,7 @@ LRESULT CALLBACK LanguageDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
 				  10, 20, 310, 200, hwnDlg, (HMENU) 1, 
 				  (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
        /* set the font of the window */
-      if (newFont)
-         SendMessage (wndLangList, WM_SETFONT, (WPARAM) newFont, MAKELPARAM(FALSE, 0));
+      WIN_SetDialogfont (wndLangList);
       SendMessage (wndLangList, LB_RESETCONTENT, 0, 0);
       while (i < NbItem && ItemList[index] != '\0')
 	{
@@ -2192,7 +2165,6 @@ LRESULT CALLBACK MathEntityDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
 LRESULT CALLBACK ApplyClassDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
 				    LPARAM lParam)
 {
-  HFONT           newFont;
   int             index = 0;
   UINT            i = 0;
 
@@ -2200,7 +2172,6 @@ LRESULT CALLBACK ApplyClassDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
     {
     case WM_INITDIALOG:
       /* get the default GUI font */
-      newFont = GetStockObject (DEFAULT_GUI_FONT); 
       if (WithEdit)
 	{
 	  SetWindowText (hwnDlg, TtaGetMessage (AMAYA, AM_DEF_CLASS));
@@ -2221,8 +2192,7 @@ LRESULT CALLBACK ApplyClassDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
 				  NULL);
       
        /* set the font of the window */
-      if (newFont)
-         SendMessage (wndListRule, WM_SETFONT, (WPARAM) newFont, MAKELPARAM(FALSE, 0));
+      WIN_SetDialogfont (wndListRule);
       SendMessage (wndListRule, LB_RESETCONTENT, 0, 0);
       while (i < nbClass && ClassList[index] != EOS)
 	{
@@ -2237,8 +2207,7 @@ LRESULT CALLBACK ApplyClassDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
 				      10, 130, 200, 30, hwnDlg, (HMENU) IDC_EDITRULE, 
 				      (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
 	  /* set the font of the window */
-	  if (newFont)
-	    SendMessage (wndEditRule, WM_SETFONT, (WPARAM) newFont, MAKELPARAM(FALSE, 0));
+	  WIN_SetDialogfont (wndEditRule);
 	  SetDlgItemText (hwnDlg, IDC_EDITRULE, ClassList);
 	}
       break;
@@ -2322,7 +2291,6 @@ LRESULT CALLBACK ApplyClassDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
 LRESULT CALLBACK InitConfirmDlgProc (ThotWindow hwnDlg, UINT msg,
 				     WPARAM wParam, LPARAM lParam)
 {
-  HFONT           newFont;
   ThotWindow      messageWnd;
   char           *ptr;
 
@@ -2330,22 +2298,20 @@ LRESULT CALLBACK InitConfirmDlgProc (ThotWindow hwnDlg, UINT msg,
     {
     case WM_INITDIALOG:
       /* get the default GUI font */
-      newFont = GetStockObject (DEFAULT_GUI_FONT);
-	  ptr = TtaGetMessage (LIB, TMSG_LIB_CONFIRM);
+      ptr = TtaGetMessage (LIB, TMSG_LIB_CONFIRM);
       SetWindowText (hwnDlg, ptr);
       SetWindowText (GetDlgItem (hwnDlg, ID_CONFIRM), WndTitle);
 	if (strcmp (WndTitle, ptr))
 		/* generate a button show */
       SetWindowText (GetDlgItem (hwnDlg, ID_SHOW), TtaGetMessage (AMAYA, AM_AFILTER_SHOW));
-    SetWindowText (GetDlgItem (hwnDlg, IDCANCEL), TtaGetMessage (LIB, TMSG_CANCEL));
+	SetWindowText (GetDlgItem (hwnDlg, IDCANCEL), TtaGetMessage (LIB, TMSG_CANCEL));
       messageWnd = CreateWindow ("STATIC", Message,
 				 WS_CHILD | WS_VISIBLE | SS_LEFT,
 				 10, 5, 500, 15, hwnDlg, (HMENU) 99, 
 				 (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE),
 				 NULL);
        /* set the font of the window */
-      if (newFont)
-         SendMessage (messageWnd, WM_SETFONT, (WPARAM) newFont, MAKELPARAM(FALSE, 0));
+      WIN_SetDialogfont (messageWnd);
       break; 
       
     case WM_COMMAND:

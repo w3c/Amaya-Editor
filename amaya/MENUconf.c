@@ -2668,6 +2668,7 @@ static void BuildScreensList (void)
       SendMessage (ScreensList, LB_INSERTSTRING, i, (LPARAM) ScreensTxt[i]);
       i++;
     }
+  SendMessage (ScreensList, LB_SETCURSEL, (WPARAM)CurrentScreen, (LPARAM)0);
 }
 
 /*----------------------------------------------------------------------

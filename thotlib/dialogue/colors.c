@@ -111,12 +111,12 @@ static void ThotSelectPalette (int bground, int fground)
 
    if (TtWDepth == 1)
       /* Affiche le nom des couleurs sur un ecran N&B */
-      wcase = CharacterWidth (109, FontDialogue) * 12;
+      wcase = CharacterWidth (109, DialogFont) * 12;
    else
       /* Affiche les couleurs sur un ecran couleur */
-      wcase = CharacterWidth (109, FontDialogue) * 4;
+      wcase = CharacterWidth (109, DialogFont) * 4;
 
-   hcase = FontHeight (FontDialogue);
+   hcase = FontHeight (DialogFont);
 
    if (LastBg != -1 && LastBg != bground)
      {
@@ -387,13 +387,13 @@ static void ColorsExpose ()
 
    if (TtWDepth == 1)
       /* Affiche le nom des couleurs sur un ecran N&B */
-      wcase = CharacterWidth (109, FontDialogue) * 12;
+      wcase = CharacterWidth (109, DialogFont) * 12;
    else
       /* Affiche les couleurs sur un ecran couleur */
-      wcase = CharacterWidth (109, FontDialogue) * 4;
+      wcase = CharacterWidth (109, DialogFont) * 4;
 
    w = wcase * COLORS_COL;
-   hcase = FontHeight (FontDialogue);
+   hcase = FontHeight (DialogFont);
    max = NumberOfColors ();
    y = hcase;
    h = (max + COLORS_COL - 1) / COLORS_COL * hcase + y;
@@ -401,15 +401,15 @@ static void ColorsExpose ()
    XClearWindow (TtDisplay, Color_Window);
 
    /* entree couleur standard */
-   if (SmallFontDialogue == NULL)
+   if (SmallDialogFont == NULL)
       KeyboardsLoadResources ();
    XSetForeground (TtDisplay, TtLineGC, ColorPixel (0));
    XFillRectangle (TtDisplay, Color_Window, TtLineGC, 0, 0, w, hcase - 2);
    XSetForeground (TtDisplay, TtLineGC, ColorPixel (1));
    ptr = TtaGetMessage (LIB, TMSG_STD_COLORS);
    WChaine (Color_Window, ptr,
-	    (w / 2) - (XTextWidth ((XFontStruct *) SmallFontDialogue, ptr, strlen (ptr)) / 2),
-	    0, FontDialogue, TtLineGC);
+	    (w / 2) - (XTextWidth ((XFontStruct *) SmallDialogFont, ptr, strlen (ptr)) / 2),
+	    0, DialogFont, TtLineGC);
    /* grille */
    XSetLineAttributes (TtDisplay, TtLineGC, 1, LineSolid, CapButt, JoinMiter);
    for (x = wcase; x < w; x += wcase)
@@ -423,8 +423,8 @@ static void ColorsExpose ()
 	   x = (i % COLORS_COL) * wcase;
 	   y = ((i / COLORS_COL) + 1) * hcase;
 	   WChaine (Color_Window, ColorName (i),
-		    x + (wcase / 2) - (XTextWidth ((XFontStruct *) SmallFontDialogue, ColorName (i), strlen (ColorName (i))) / 2),
-		    y, SmallFontDialogue, TtLineGC);
+		    x + (wcase / 2) - (XTextWidth ((XFontStruct *) SmallDialogFont, ColorName (i), strlen (ColorName (i))) / 2),
+		    y, SmallDialogFont, TtLineGC);
 	}
    else
       for (i = 0; i < max; i++)
@@ -457,11 +457,11 @@ static void ColorsPress (int button, int x, int y)
 
   if (TtWDepth == 1)
     /* Affiche le nom des couleurs sur un ecran N&B */
-    wcase = CharacterWidth (109, FontDialogue) * 12;
+    wcase = CharacterWidth (109, DialogFont) * 12;
   else
     /* Affiche les couleurs sur un ecran couleur */
-    wcase = CharacterWidth (109, FontDialogue) * 4;
-  hcase = FontHeight (FontDialogue);
+    wcase = CharacterWidth (109, DialogFont) * 4;
+  hcase = FontHeight (DialogFont);
   /* Regarde si on n'a pas clique dans le titre */
   if (y < hcase)
     {
@@ -675,13 +675,11 @@ LRESULT CALLBACK ThotColorPaletteWndProc (HWND hwnd, UINT iMsg,
   HWND            hwnRButton;
   HWND            hwnDefaultColors;
   HWND            doneButton;
-  HFONT           newFont;
 
   switch (iMsg)
     {
     case WM_CREATE:
       /* get the default GUI font */
-      newFont = GetStockObject (DEFAULT_GUI_FONT); 
       cxBlock = 39;
       cyBlock = 15;
       hwnLButton = CreateWindow ("STATIC",
@@ -691,8 +689,7 @@ LRESULT CALLBACK ThotColorPaletteWndProc (HWND hwnd, UINT iMsg,
 				 WS_CHILD | WS_VISIBLE | SS_LEFT, 5, 5, 315, 15,
 				 hwnd, (HMENU) 99, hInstance, NULL);
       /* set the font of the window */
-      if(newFont)
-         SendMessage (hwnLButton, WM_SETFONT, (WPARAM) newFont, MAKELPARAM(FALSE, 0));
+      WIN_SetDialogfont (hwnLButton);
       ShowWindow (hwnLButton, SW_SHOWNORMAL);
       UpdateWindow (hwnLButton);
       
@@ -703,8 +700,7 @@ LRESULT CALLBACK ThotColorPaletteWndProc (HWND hwnd, UINT iMsg,
 				 WS_CHILD | WS_VISIBLE | SS_LEFT, 5, 20, 315, 20,
 				 hwnd, (HMENU) 101, hInstance, NULL);
       /* set the font of the window */
-      if(newFont)
-         SendMessage (hwnRButton, WM_SETFONT, (WPARAM) newFont, MAKELPARAM(FALSE, 0));
+      WIN_SetDialogfont (hwnRButton);
       ShowWindow (hwnRButton, SW_SHOWNORMAL);
       UpdateWindow (hwnRButton);
       
@@ -712,8 +708,7 @@ LRESULT CALLBACK ThotColorPaletteWndProc (HWND hwnd, UINT iMsg,
 				       WS_CHILD | WS_VISIBLE | SS_CENTER | WS_BORDER, 0, 45, 320, 15,
 				       hwnd, (HMENU) DEFAULTCOLOR, hInstance, NULL);
       /* set the font of the window */
-      if(newFont)
-         SendMessage (hwnDefaultColors, WM_SETFONT, (WPARAM) newFont, MAKELPARAM(FALSE, 0));
+      WIN_SetDialogfont (hwnDefaultColors);
       ShowWindow (hwnDefaultColors, SW_SHOWNORMAL);
       UpdateWindow (hwnDefaultColors);
       
@@ -722,8 +717,7 @@ LRESULT CALLBACK ThotColorPaletteWndProc (HWND hwnd, UINT iMsg,
 				 110, 350, 80, 20, hwnd, 
 				 (HMENU) _IDDONE_, hInstance, NULL);
       /* set the font of the window */
-      if(newFont)
-         SendMessage (doneButton, WM_SETFONT, (WPARAM) newFont, MAKELPARAM(FALSE, 0));
+      WIN_SetDialogfont (doneButton);
       ShowWindow (doneButton, SW_SHOWNORMAL);
       UpdateWindow (doneButton);
       break;
@@ -996,9 +990,9 @@ ThotBool ThotCreatePalette (int x, int y)
    ThotWidget          row;
    ThotWidget          frame;
 
-   xfont = XmFontListCreate ((XFontStruct *) FontDialogue, XmSTRING_DEFAULT_CHARSET);
-   if (SmallFontDialogue == NULL)
-      SmallFontDialogue = ReadFont ('L', 2, 0, 9, UnPoint);
+   xfont = XmFontListCreate ((XFontStruct *) DialogFont, XmSTRING_DEFAULT_CHARSET);
+   if (SmallDialogFont == NULL)
+      SmallDialogFont = ReadFont ('L', 2, 0, 9, UnPoint);
 
    n = 0;
    sprintf (string, "+%d+%d", x, y);
@@ -1098,11 +1092,11 @@ ThotBool ThotCreatePalette (int x, int y)
    n = 0;
    if (TtWDepth == 1)
       /* Affiche le nom des couleurs sur un ecran N&B */
-      width = CharacterWidth (109, FontDialogue) * 12 * COLORS_COL;
+      width = CharacterWidth (109, DialogFont) * 12 * COLORS_COL;
    else
       /* Affiche les couleurs sur un ecran couleur */
-      width = CharacterWidth (109, FontDialogue) * 4 * COLORS_COL;
-   height = ((NumberOfColors () + COLORS_COL - 1) / COLORS_COL + 1) * FontHeight (FontDialogue);
+      width = CharacterWidth (109, DialogFont) * 4 * COLORS_COL;
+   height = ((NumberOfColors () + COLORS_COL - 1) / COLORS_COL + 1) * FontHeight (DialogFont);
 
 /*** Cree un DrawingArea pour contenir les touches de la palette ***/
    n = 0;

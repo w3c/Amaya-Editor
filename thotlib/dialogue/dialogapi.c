@@ -933,7 +933,6 @@ LRESULT CALLBACK WIN_ScrPopupProc (HWND hwnDlg, UINT msg, WPARAM wParam, LPARAM 
       /* initialize the widget */
     case WM_CREATE:
       {
-	HFONT  newFont;
         HWND   listBox;
         DWORD  dwStyle;
         RECT   rect;
@@ -943,10 +942,7 @@ LRESULT CALLBACK WIN_ScrPopupProc (HWND hwnDlg, UINT msg, WPARAM wParam, LPARAM 
 	int    height;
 
 	/* get the rectangle size according to the font metrics (hack) */
-	newFont = GetStockObject (DEFAULT_GUI_FONT); 
-	if (newFont)
-	  SendMessage (hwnDlg, WM_SETFONT, (WPARAM) newFont, MAKELPARAM(FALSE, 0));
-
+	WIN_SetDialogfont (hwnDlg);
 	GetWindowRect (hwnDlg, &rect);
 	width = rect.right - rect.left;
 	height = rect.bottom - rect.top;
@@ -977,9 +973,7 @@ LRESULT CALLBACK WIN_ScrPopupProc (HWND hwnDlg, UINT msg, WPARAM wParam, LPARAM 
 				  width, height,
 				  hwnDlg, (HMENU) 1, hInstance, NULL);
 	/* set the font of the window */
-	newFont = GetStockObject (DEFAULT_GUI_FONT); 
-	if (newFont)
-	  SendMessage (listBox, WM_SETFONT, (WPARAM) newFont, MAKELPARAM(FALSE, 0));
+	WIN_SetDialogfont (listBox);
 	SetFocus (listBox);
 	return 0;
       }
@@ -2088,10 +2082,10 @@ void InitDialogueFont ()
 {
 #ifndef _WINDOWS
 #ifndef _GTK
-  DefaultFont = XmFontListCreate ((XFontStruct *)FontDialogue,
+  DefaultFont = XmFontListCreate ((XFontStruct *)DialogFont,
 				  XmSTRING_DEFAULT_CHARSET);
 #else /* _GTK */
-  DefaultFont = FontDialogue;
+  DefaultFont = DialogFont;
 #endif /* _GTK */
 #endif /* _WINDOWS */
 }
@@ -3619,8 +3613,8 @@ void TtaNewScrollPopup (int ref, ThotWidget parent, char *title, int number,
       /* set the widget size */
       /* (experience shows that GTK doesn't report a good font height ! Multiplying
 	 it by two fixes a bit the problem)  */
-      width = (width) * (gdk_char_width (FontDialogue, 'm'));
-      height = height * 2 * (gdk_char_height (FontDialogue, 'M'));
+      width = (width) * (gdk_char_width (DialogFont, 'm'));
+      height = height * 2 * (gdk_char_height (DialogFont, 'M'));
       gtk_widget_set_usize (scr_window, width, height);
       GTK_WIDGET_UNSET_FLAGS (GTK_SCROLLED_WINDOW (scr_window)->hscrollbar, GTK_CAN_FOCUS);
       GTK_WIDGET_UNSET_FLAGS (GTK_SCROLLED_WINDOW (scr_window)->vscrollbar, GTK_CAN_FOCUS);

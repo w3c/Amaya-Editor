@@ -794,33 +794,8 @@ void RemoveStyleSheet (char *url, Document doc, ThotBool disabled,
   CSSInfoPtr      css;
   PInfoPtr        pInfo;
   DisplayMode     dispMode;
-  ThotBool        found;
 
-  css = CSSList;
-  found = FALSE;
-  while (css && !found)
-    {
-      if ((url &&
-	   ((css->url && !strcmp (url, css->url)) ||
-	    (css->localName && !strcmp (url, css->localName)))) ||
-	  (!url && css->infos[doc]))
-	{
-	  pInfo = css->infos[doc];
-	  while (pInfo)
-	    {
-	      if (pInfo->PiCategory == CSS_DOCUMENT_STYLE &&
-		  (pInfo->PiLink == NULL || pInfo->PiLink == link))
-		found = TRUE;
-	      else
-		pInfo = pInfo->PiNext;
-	    }
-	  if (found)
-	    link = pInfo->PiLink;
-	  else
-	    css = css->NextCSS;
-	}
-    }
-
+  SearchCSS (doc, url, link, &pInfo);
   if (css)
     {
       /* Change the Display Mode to take into account the new presentation */

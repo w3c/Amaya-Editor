@@ -491,11 +491,11 @@ static void ExposeKbd (ThotWidget w, int param,
   y = 4;
   i = param % 256;		/* indice dans la table des items */
   it = (ITEM *) ((int) it + (sizeof (ITEM) * i));
-  WChar (infos->window, it->index, CharacterWidth (87, FontDialogue), y, GXcopy, KbFonts[kb], 0, GCkey);
+  WChar (infos->window, it->index, CharacterWidth (87, DialogFont), y, GXcopy, KbFonts[kb], 0, GCkey);
   if (it->legend)
     {
       y = FontHeight (KbFonts[kb]);
-      WChaine (infos->window, it->legend, 4, y, FontDialogue, GCkey);
+      WChaine (infos->window, it->legend, 4, y, DialogFont, GCkey);
     }
 }
 
@@ -534,7 +534,7 @@ static void CreateKeyboard (int number, char *title, PtrFont pFont,
    n++;
    XtSetArg (args[n], XmNborderColor, BgMenu_Color);
    n++;
-   xfont = XmFontListCreate ((XFontStruct *) FontDialogue, XmSTRING_DEFAULT_CHARSET);
+   xfont = XmFontListCreate ((XFontStruct *) DialogFont, XmSTRING_DEFAULT_CHARSET);
    XtSetArg (args[n], XmNfontList, xfont);
    n++;
    title_string = XmStringCreateSimple (title);
@@ -666,9 +666,9 @@ static void CreateKeyboard (int number, char *title, PtrFont pFont,
 	n++;
 	XtSetArg (args[n], XmNmarginHeight, 0);
 	n++;
-	XtSetArg (args[n], XmNwidth, (Dimension) CharacterWidth (87, FontDialogue) * 3);
+	XtSetArg (args[n], XmNwidth, (Dimension) CharacterWidth (87, DialogFont) * 3);
 	n++;
-	XtSetArg (args[n], XmNheight, (Dimension) FontHeight (pFont) + FontHeight (FontDialogue) + 4);
+	XtSetArg (args[n], XmNheight, (Dimension) FontHeight (pFont) + FontHeight (DialogFont) + 4);
 	n++;
 
 	for (i = 0; i < nbitem; i++, it++)
@@ -841,7 +841,7 @@ static void LoadKbd (int number)
     case 2:		/* ISO latin 1 */
       pFontAc = ReadFont ('L', 1, 0, 14, UnPoint);
       if (!pFontAc)
-	pFontAc = FontDialogue;
+	pFontAc = DialogFont;
       KbFonts[number] = pFontAc;
       if (pFontAc != NULL)
 	CreateKeyboard (number, TtaGetMessage (LIB, TMSG_LATIN_ALPHABET), pFontAc, 13,
@@ -851,7 +851,7 @@ static void LoadKbd (int number)
       pFontIg = ReadFont ('G', 1, 0, 14, UnPoint);
       /*pFontIg = LoadFont ("-ttf-esstixone-*-*-*-*-14-*-*-*-*-*-*-*");*/
       if (!pFontIg)
-	pFontIg = FontDialogue;
+	pFontIg = DialogFont;
       if (pFontIg != NULL)
 	KbFonts[number] = pFontIg;	/* Greek */
       CreateKeyboard (number, TtaGetMessage (LIB, TMSG_GREEK_ALPHABET), pFontIg, 16,
@@ -903,17 +903,17 @@ void GraphicsLoadResources ()
 	/* Initialise la table des claviers */
 	for (i = 0; i < MAX_KEYBOARD; i++)
 	   Keyboards[i] = 0;
-	if (SmallFontDialogue == NULL)
-	   SmallFontDialogue = ReadFont ('L', 2, 0, 9, UnPoint);
-	if (SmallFontDialogue == NULL)
-	   SmallFontDialogue = FontDialogue;
+	if (SmallDialogFont == NULL)
+	   SmallDialogFont = ReadFont ('L', 2, 0, 9, UnPoint);
+	if (SmallDialogFont == NULL)
+	   SmallDialogFont = DialogFont;
      }
 
 #ifndef _WINDOWS
    GraphicsIcons = LoadFont ("ivgraf");
 #endif /* _WINDOWS */
    if (GraphicsIcons == NULL)
-     GraphicsIcons = FontDialogue;
+     GraphicsIcons = DialogFont;
 }
 
 /*----------------------------------------------------------------------
@@ -932,10 +932,10 @@ void KeyboardsLoadResources ()
 	Keyboards[i] = 0;
       GraphicsIcons = NULL;
 
-      if (SmallFontDialogue == NULL)
-	SmallFontDialogue = ReadFont ('L', 2, 0, 9, UnPoint);
-      if (SmallFontDialogue == NULL)
-	SmallFontDialogue = FontDialogue;
+      if (SmallDialogFont == NULL)
+	SmallDialogFont = ReadFont ('L', 2, 0, 9, UnPoint);
+      if (SmallDialogFont == NULL)
+	SmallDialogFont = DialogFont;
     }
 }
 

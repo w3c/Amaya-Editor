@@ -1764,14 +1764,14 @@ static void  DrawEpsBox (PtrBox box, PictInfo *imageDesc, int frame,
 
    /* Display the filename in the bottom of the Picture Box */
    SimpleName (imageDesc->PicFileName, filename);
-   fileNameWidth = XTextWidth ((XFontStruct *) FontDialogue, filename,
+   fileNameWidth = XTextWidth ((XFontStruct *) DialogFont, filename,
 	                           strlen (filename));
    if ((fileNameWidth + wlogo <= wFrame) &&
-	   (FontHeight (FontDialogue) + hlogo <= hFrame))
+	   (FontHeight (DialogFont) + hlogo <= hFrame))
      {
        fnposx = (wFrame - fileNameWidth) / 2 + xFrame;
        fnposy = hFrame - 5 + yFrame;
-       XSetFont (TtDisplay, TtLineGC, ((XFontStruct *) FontDialogue)->fid);
+       XSetFont (TtDisplay, TtLineGC, ((XFontStruct *) DialogFont)->fid);
        XDrawString (TtDisplay, drawable, TtLineGC, fnposx, fnposy,
 		            filename, strlen (filename));
      }
