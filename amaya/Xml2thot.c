@@ -4732,7 +4732,7 @@ void        ParseExternalDocument (char     *fileName,
   /* When we parse an external document, we ignore comments and PIs */
   /* (otherwise they are displayed in structure view) */
   /* We don't report parsing errors too */
-  IgnoreCommentAndPi = TRUE;
+  IgnoreCommentAndPi = FALSE;
   savParsingError = ShowParsingErrors;
   ShowParsingErrors = FALSE;
 
