@@ -1902,6 +1902,7 @@ PtrPRule AttrPresRule (PtrAttribute pAttr, PtrElement pEl,
       /* the content of the attribute is considered as a single value */
       {
       *valueNum = 0;
+      len = strlen (attrValue);
       }
     else
       /* the content of this text attribute is considered as a sequence of
