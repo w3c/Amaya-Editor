@@ -125,7 +125,7 @@
       <th>Assigned To</th>
       <th>Fixed</th>
     </tr>
-    <tr>
+    <tr class="fixed">
       <td>. Both right and left margins are set to the left value 
 
         <p>. + "bizarrerie" : text brought up horizontal scroll rather than
@@ -149,7 +149,7 @@
       <td></td>
       <td></td>
     </tr>
-    <tr>
+    <tr class="fixed">
       <td>Amaya 6.2 signals background:none as an error.Tthe TR for CSS1
         states background can take any value of its subsidiaries
         background-image can take the value none .... therefore background
@@ -162,7 +162,7 @@
       <td></td>
       <td></td>
     </tr>
-    <tr>
+    <tr class="fixed">
       <td>Table should be centered when margin-left and margin-right are auto 
 
         <p>See ablebug.html</p>
@@ -188,23 +188,6 @@
       <th>Fixed</th>
     </tr>
     <tr>
-      <td>Problem copy+paste URLs on Windows 
-
-        <p>I cannot copy a URL from the line where Amaya shows the URL of the
-        current document into another window (e.g. an e-mail) on Windows. The
-        copy buffer always has the content of the last copy I made, i.e.
-        Amaya doesn't seem to put the URL into the copy buffer. A related
-        issue is copying and pasting text out of amaya into a mail message:
-        there are still weird linebreak charactars that appear, and one has
-        to reformat the whole text by hand - very painful - I think I
-        reported this already quite a few times :-)</p>
-      </td>
-      <td>2001-07-20</td>
-      <td>P. Hoschka</td>
-      <td></td>
-      <td></td>
-    </tr>
-    <tr>
       <td><p>Searching for a single character backwards works only once. When
         the first occurence of the character is found, the search command is
         stuck.</p>
@@ -226,19 +209,6 @@
       </td>
       <td>2002-07-10</td>
       <td>K.M. Schneider</td>
-      <td>Irène</td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>shift-arrow does not work properly: 
-
-        <p>put the pointer at the beginning of a header, hold down shift,
-        press right-arrow. The selection extends to the end of the element,
-        and then goes back to the beginning rather than extending into the
-        next element.</p>
-      </td>
-      <td>2002-07-10</td>
-      <td>Steven Pemberton</td>
       <td>Irène</td>
       <td></td>
     </tr>
@@ -302,7 +272,7 @@
       <td>Laurent</td>
       <td></td>
     </tr>
-    <tr>
+    <tr class="fixed">
       <td>Amaya 7 fails to save carriage return characters, although the
         "Export CR/LF" checkbox is checked in the Special | Preferences |
         Publishing dialog.</td>
@@ -455,6 +425,13 @@
       <th>Submitted By</th>
       <th>Assigned To</th>
       <th>Fixed</th>
+    </tr>
+    <tr>
+      <td>Attribute ALT should be mandatory when creating an AREA</td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
     </tr>
     <tr>
       <td>A Thot pseudo-paragraph contains most of the document, not only the
@@ -729,9 +706,10 @@
       <td></td>
     </tr>
     <tr>
-      <td>Using Amaya 6.4, running W2K, viewing
-        http://www.w3.org/2001/04/roadmap/all.svg , the arcs (lines) are not
-        refreshed when the window is covered and then uncovered.</td>
+      <td>Using Amaya 6.4, running W2K, viewing <a
+        href="http://www.w3.org/2001/04/roadmap/all.svg">http://www.w3.org/2001/04/roadmap/all.svg</a>
+        , the arcs (lines) are not refreshed when the window is covered and
+        then uncovered.</td>
       <td>2002-11-08</td>
       <td>David Booth</td>
       <td></td>
@@ -816,18 +794,6 @@
       <td></td>
     </tr>
     <tr>
-      <td>Tables become confused if stacked more than two levels down (text
-        printed outside their associated box in the example). 
-
-        <p><a
-        href="http://www.bahnhof.se/~chimbis/tocb/links/">tocb/links</a></p>
-      </td>
-      <td></td>
-      <td>J. Russel</td>
-      <td></td>
-      <td></td>
-    </tr>
-    <tr>
       <td>Errors in mathematics during table construction that are editor
         detectable, should be flagged to user.</td>
       <td></td>
@@ -841,15 +807,6 @@
       <td>2002-12-15</td>
       <td>Alexander Voropay</td>
       <td>Irène</td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>Amaya 7 fails to save carriage return characters, although the
-        "Export CR/LF" checkbox is checked in the Special | Preferences |
-        Publishing dialog.</td>
-      <td></td>
-      <td></td>
-      <td></td>
       <td></td>
     </tr>
   </tbody>
@@ -866,18 +823,6 @@
       <th>Submitted By</th>
       <th>Assigned To</th>
       <th>Fixed</th>
-    </tr>
-    <tr>
-      <td>The shortcut procedure (shift ctrl *) for edit mode toggle does not
-        work. However the menu selection method works fine! 
-
-        <p><a
-        href="http://lists.w3.org/Archives/Public/www-amaya/2001JulSep/0070.html">http://lists.w3.org/Archives/Public/www-amaya/2001JulSep/0070.html</a></p>
-      </td>
-      <td>2001-07-13</td>
-      <td>J. Russel</td>
-      <td></td>
-      <td></td>
     </tr>
     <tr>
       <td>Cut with shift delete ok but shift insert doesnt paste correctly
@@ -945,25 +890,7 @@
       <td>Laurent</td>
       <td></td>
     </tr>
-    <tr>
-      <td>Dialog boxes are sometimes not long enough to hold the contained
-        message. This may be specific to 85dpi and other alternative dpi
-        settings (Windows).</td>
-      <td>2002-07-20</td>
-      <td>B.L. Gurganus</td>
-      <td></td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>If I save a file without .html extension with Save command in the
-        name it creates that file. Earlier Amaya knew to add the .html to the
-        file. Save As... adds .html so it works.</td>
-      <td></td>
-      <td>Marja</td>
-      <td></td>
-      <td></td>
-    </tr>
-    <tr>
+    <tr class="fixed">
       <td>When saving an all.htm file that includes images, Amaya pops up a
         dialogue box with a warning (which is confusing, as I reported over a
         year ago. Whether you hit "confirm" or "cancel", you always get back
@@ -987,17 +914,6 @@
       <td></td>
     </tr>
     <tr>
-      <td>There seem to be occasions when the vertical scroll bar is drawn in
-        the wrong place. This cannot be recreated consistently, however.</td>
-      <td>2002-09-09 
-
-        <p>Re. 6.3</p>
-      </td>
-      <td>B.L. Gurganus</td>
-      <td></td>
-      <td></td>
-    </tr>
-    <tr>
       <td>When I size the following window by dragging from bottom right
         corner the left size of the window is moving too. In IE6 the left
         side stays in place. Bug?</td>
@@ -1006,15 +922,6 @@
         <p>Re. 6.3</p>
       </td>
       <td>Marja</td>
-      <td></td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>When inserting an image, and doing "browse", Amaya seems to only
-        look for "gif" files on the local disk. If possible, jpg and png
-        should be added.</td>
-      <td>2002-09-29</td>
-      <td>Philipp Hoschka</td>
       <td></td>
       <td></td>
     </tr>
@@ -1089,47 +996,7 @@
       <td></td>
     </tr>
     <tr>
-      <td>Currently www.w3.org will not get a page from the web (needs
-        http://) but \temp\foobar.htm will get one from local drive. Either
-        the default mode should be switched around so that http:// is assumed
-        (to coincide with other browsers) or that the service MUST BE
-        declared (which is Amaya like solution).</td>
-      <td></td>
-      <td>J. Russel</td>
-      <td></td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>Follow any link from the table of contents of example. The source
-        anchor is displayed in red, because the href attribute is something
-        like: 
-
-        <p><code>chapter3.html#somename</code></p>
-
-        <p><a
-        href="http://www.w3.org/TR/2000/CR-MathML2-20001113/chapter3.html">chapter3.html.</a></p>
-      </td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>Attribute ALT should be mandatory when creating an AREA</td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-    </tr>
-    <tr>
       <td>Paste is invalid when several elements have been created</td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>cut&amp;paste buffer truncated??</td>
       <td></td>
       <td></td>
       <td></td>
