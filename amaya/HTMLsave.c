@@ -827,7 +827,7 @@ Document          doc;
     else
       {
       TtaSetDocumentUnmodified (sourceDoc);
-      TtaSetStatus (sourceDoc, 1, TtaGetMessage (AMAYA, AM_SAVED), DocumentURLs[doc]);
+      TtaSetStatus (sourceDoc, 1, TtaGetMessage (AMAYA, AM_SAVED), DocumentURLs[sourceDoc]);
       doc = 0;
       for (i = 1; i < DocumentTableLength && doc == 0; i++)
          if (DocumentTypes[i] == docHTML)
