@@ -214,7 +214,7 @@
 212 Support FTP (experimental)
 213 XML invalide - Recharger pour corriger ou montrer les erreurs ?
 214 XML invalide - Montrer les erreurs ?
-215 Caractères invalides - Recharger en HTML ou	montrer les erreurs ?
+215 Caractères invalides - Recharger en HTML ou montrer les erreurs ?
 216 Caractères invalides
 217 Avec le profil Amaya courant :
 218 Des balises/attributs sont ignorés - voir Vues/Montrer les erreurs
@@ -238,18 +238,18 @@
 236 Ignorer
 237 Elément Style
 238 Impossible de créer un XPointer
-239 **Impossible to attach a start XPointer on an internal       added element
-240 **Impossible to attach an end XPointer on an internal       added element
-241 Je ne peux pas deplacer l'annotation là
+239 Impossible de débuter un XPointer sur un élément ajouté par Amaya
+240 Impossible de terminer un XPointer sur un élément ajouté par Amaya
+241 Je ne peux pas déplacer l'annotation là
 242 Je ne peux pas bouger l'annotation vers un autre document
-243 **You cannot annotate a modified document. Please save it first.
-244 **No annotation user declared. Please open the      	Annotations/Configure menu.
-245 **Unable to build an XPointer for this annotation
-246 **Make a new annotation
-247 **Failed to post the annotation
-248 **Failed to delete the annotation
-249 **Annotation deleted!
-250 **Failed to load the annotation index
+243 Vous ne pouvez pas annoter un document modifié. Sauver le d'abord.
+244 Pas de nom d'utilisateur déclaré. Voir le menu Annotations/Configure.
+245 Impossible de construire un XPointer pour cette annotation
+246 Faire une nouvelle annotation
+247 La publication de l'annotation a échoué
+248 La destruction de l'annotation a échoué
+249 Annotation détruite!
+250 Impossible de charger l'index des annotations
 251 Erreur
 252 Sélectionner un Charset
 253 Sélectionner un type MIME

@@ -219,7 +219,7 @@
 217 Durch gegenwärtigen Amaya Profil:
 218 Tags/Attribute sind unbeachtet geblieben - siehe Ansicht/Logdatei anzeigen
 219 Die Codierung dieses Dokuments wird von Amaya nicht unterstützt
-220 **Editing and saving this document will change its	type
+220 **Editing and saving this document will change its type
 221 Nicht verfügbar
 222 Browsen
 223 Datei-Browser
@@ -238,12 +238,12 @@
 236 Ignorieren
 237 Stilelement
 238 Kann keinen XPointer erzeugen
-239 **Impossible to attach a start XPointer on an internal       added element
-240 **Impossible to attach an end XPointer on an internal       added element
+239 **Impossible to attach a start XPointer on an internal added element
+240 **Impossible to attach an end XPointer on an internal added element
 241 Kein Ziel zum Verschieben der Anmerkung [gefunden]
 242 Die Anmerkung kann nicht in ein anderes Dokument verschoben werden
 243 **You cannot annotate a modified document. Please save it first.
-244 **No annotation user declared. Please open the      	Annotations/Configure menu.
+244 **No annotation user declared. Please open the Annotations/Configure menu.
 245 **Unable to build an XPointer for this annotation
 246 **Make a new annotation
 247 **Failed to post the annotation

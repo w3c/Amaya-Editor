@@ -219,7 +219,7 @@
 217 Con el perfil actual de Amaya:
 218 Se ignoran Tags/atributos - vea Vistas/Mostrar fichero log
 219 La codificación de este documento no está soportada por Amaya
-220 **Editing and saving this document will change its	type
+220 **Editing and saving this document will change its type
 221 No disponible
 222 Navegar
 223 Navegador de ficheros
@@ -238,12 +238,12 @@
 236 Ignorar
 237 Elemento de estilo
 238 No puedo crear un XPointer
-239 **Impossible to attach a start XPointer on an internal       added element
-240 **Impossible to attach an end XPointer on an internal       added element
+239 **Impossible to attach a start XPointer on an internal added element
+240 **Impossible to attach an end XPointer on an internal added element
 241 No se a donde mover la annotación
 242 No puedo mover la annotación a un otro documento
 243 **You cannot annotate a modified document. Please save it first.
-244 **No annotation user declared. Please open the      	Annotations/Configure menu.
+244 **No annotation user declared. Please open the Annotations/Configure menu.
 245 **Unable to build an XPointer for this annotation
 246 **Make a new annotation
 247 **Failed to post the annotation

@@ -219,7 +219,7 @@
 217 **With the current Amaya profile:
 218 **Some tags/attributes are ignored - see Views/Show parsing errors
 219 **The encoding of this document is not supported by Amaya
-220 **Editing and saving this document will change its	type
+220 **Editing and saving this document will change its type
 221 **Not available
 222 **Browse
 223 **File Browser
@@ -238,12 +238,12 @@
 236 **Ignore
 237 **Style element
 238 **Cannot create an XPointer
-239 **Impossible to attach a start XPointer on an internal       added element
-240 **Impossible to attach an end XPointer on an internal       added element
+239 **Impossible to attach a start XPointer on an internal added element
+240 **Impossible to attach an end XPointer on an internal added element
 241 **Cannot find where to move the annotation
 242 **Cannot move the annotation to a different document
 243 **You cannot annotate a modified document. Please save it first.
-244 **No annotation user declared. Please open the      	Annotations/Configure menu.
+244 **No annotation user declared. Please open the Annotations/Configure menu.
 245 **Unable to build an XPointer for this annotation
 246 **Make a new annotation
 247 **Failed to post the annotation

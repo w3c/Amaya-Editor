@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-<base last_update="Wed Jul 11 10:33:38 CEST 2001" version="36">
+<base last_update="Wed Oct 24 17:33:48 CEST 2001" version="37">
 <control>
 	<language encoding="latin1">en</language>
 	<language encoding="latin1">fr</language>
@@ -1841,8 +1841,7 @@
 </label>
 <label define="AM_XML_CHARACTER_RETRY">
 	<message xml:lang="en">Invalid characters - Reload as HTML or show parsing errors?</message>
-	<message xml:lang="fr">Caractères invalides - Recharger en HTML ou
-	montrer les erreurs ?</message>
+	<message xml:lang="fr">Caractères invalides - Recharger en HTML ou montrer les erreurs ?</message>
 </label>
 <label define="AM_XML_CHARACTER_ERROR">
 	<message xml:lang="en">Invalid characters</message>
@@ -1873,8 +1872,7 @@
 	<message xml:lang="pt">A codificação deste documento não é suportada por Amaya</message>
 </label>
 <label define="AM_XML_MISMATCH_PROFILE">
-	<message xml:lang="en">Editing and saving this document will change its
-	type</message>
+	<message xml:lang="en">Editing and saving this document will change its type</message>
 	<message xml:lang="fr">Editer et sauver ce document changera son type</message>
 </label>
 <label define="AM_NOT_AVAILABLE">
@@ -2022,16 +2020,16 @@
 	<message xml:lang="pt">Não é possível criar um XPointer</message>
 </label>
 <label define="AM_NO_SXPOINTER">
-       <message xml:lang="en">Impossible to attach a start XPointer on an internal
-       added element</message>
+	<message xml:lang="en">Impossible to attach a start XPointer on an internal added element</message>
+	<message xml:lang="fr">Impossible de débuter un XPointer sur un élément ajouté par Amaya</message>
 </label>
 <label define="AM_NO_EXPOINTER">
-       <message xml:lang="en">Impossible to attach an end XPointer on an internal
-       added element</message>
+	<message xml:lang="en">Impossible to attach an end XPointer on an internal added element</message>
+	<message xml:lang="fr">Impossible de terminer un XPointer sur un élément ajouté par Amaya</message>
 </label>
 <label define="AM_NO_ANNOT_MOVE">
 	<message xml:lang="en">Cannot find where to move the annotation</message>
-	<message xml:lang="fr">Je ne peux pas deplacer l'annotation là</message>
+	<message xml:lang="fr">Je ne peux pas déplacer l'annotation là</message>
 	<message xml:lang="es">No se a donde mover la annotación</message>
 	<message xml:lang="de">Kein Ziel zum Verschieben der Anmerkung [gefunden]</message>
 	<message xml:lang="it">Non trovo dove muovere l'annotazione</message>
@@ -2046,29 +2044,36 @@
 	<message xml:lang="pt">Não é possível mover a anotação para outro documento</message>
 </label>
 <label define="AM_NO_ANNOT_MOD_DOC">
-      	<message xml:lang="en">You cannot annotate a modified document. Please save it first.</message>
+	<message xml:lang="en">You cannot annotate a modified document. Please save it first.</message>
+	<message xml:lang="fr">Vous ne pouvez pas annoter un document modifié. Sauver le d'abord.</message>
 </label>
 <label define="AM_NO_ANNOT_USER">
-	<message xml:lang="en">No annotation user declared. Please open the
-      	Annotations/Configure menu.</message>
+	<message xml:lang="en">No annotation user declared. Please open the Annotations/Configure menu.</message>
+	<message xml:lang="fr">Pas de nom d'utilisateur déclaré. Voir le menu Annotations/Configure.</message>
 </label>
 <label define="AM_CANNOT_ANNOTATE">
 	<message xml:lang="en">Unable to build an XPointer for this annotation</message>
+	<message xml:lang="fr">Impossible de construire un XPointer pour cette annotation</message>
 </label>
 <label define="AM_NEW_ANNOTATION">
 	<message xml:lang="en">Make a new annotation</message>
+	<message xml:lang="fr">Faire une nouvelle annotation</message>
 </label>
 <label define="AM_ANNOT_POST_FAILURE">
 	<message xml:lang="en">Failed to post the annotation</message>
+	<message xml:lang="fr">La publication de l'annotation a échoué</message>
 </label>
 <label define="AM_ANNOT_DELETE_FAILURE">
 	<message xml:lang="en">Failed to delete the annotation</message>
+	<message xml:lang="fr">La destruction de l'annotation a échoué</message>
 </label>
 <label define="AM_ANNOT_DELETED">
 	<message xml:lang="en">Annotation deleted!</message>
+	<message xml:lang="fr">Annotation détruite!</message>
 </label>
 <label define="AM_ANNOT_INDEX_FAILURE">
 	<message xml:lang="en">Failed to load the annotation index</message>
+	<message xml:lang="fr">Impossible de charger l'index des annotations</message>
 </label>
 <label define="AM_ERROR">
 	<message xml:lang="en">Error</message>
