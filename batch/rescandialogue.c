@@ -35,7 +35,11 @@ main(argc, argv)
       file1 = fopen(name, "r"); /* Open the new file */
       file2 = fopen(argv[1], "w"); /* Open the old file */
       if (!file1 || !file2)
-	printf("cannot open %s or %s.new\n", argv[1], argv[1]);
+	{
+	  printf("cannot open %s or %s.new\n", argv[1], argv[1]);
+	  /* restore the old name */
+	  rename (name, argv[1]);
+	}
       else
 	{
 	  i = 0;
