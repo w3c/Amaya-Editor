@@ -18,7 +18,7 @@
                   <orient>wxVERTICAL</orient>
                   <object class="sizeritem">
                     <object class="wxRadioBox" name="wxID_DOC_FORMAT">
-                      <label></label>
+                      <label>Document Format </label>
                       <content>
                         <item></item>
                         <item></item>
@@ -38,7 +38,7 @@
                   <orient>wxVERTICAL</orient>
                   <object class="sizeritem">
                     <object class="wxStaticText" name="wxID_DOC_LOCATION">
-                      <label>        .                                                    </label>
+                      <label>        .        </label>
                     </object>
                     <flag>wxALL|wxEXPAND</flag>
                     <border>5</border>
@@ -68,7 +68,7 @@
                   <orient>wxVERTICAL</orient>
                   <object class="sizeritem">
                     <object class="wxStaticText" name="wxID_OPTIONS">
-                      <label></label>
+                      <label>Save Options </label>
                     </object>
                     <flag>wxALL|wxEXPAND</flag>
                     <border>5</border>
@@ -134,14 +134,14 @@
               </object>
               <object class="sizeritem">
                 <object class="wxStaticText" name="wxID_CHARSET">
-                  <label></label>
+                  <label>'                                                                          '</label>
                 </object>
                 <flag>wxALL|wxEXPAND</flag>
                 <border>5</border>
               </object>
               <object class="sizeritem">
                 <object class="wxStaticText" name="wxID_MIME_TYPE">
-                  <label></label>
+                  <label>'                                                                           '</label>
                 </object>
                 <flag>wxALL|wxEXPAND</flag>
                 <border>5</border>
@@ -180,14 +180,14 @@
           </object>
           <object class="sizeritem">
             <object class="wxButton" name="wxID_ENCODINGBUTTON">
-              <label>Encoding</label>
+              <label>Change Character Coding</label>
             </object>
             <flag>wxALL</flag>
             <border>5</border>
           </object>
           <object class="sizeritem">
             <object class="wxButton" name="wxID_MIMETYPEBUTTON">
-              <label>Mime type</label>
+              <label>Change Mime Type</label>
               <size></size>
             </object>
             <flag>wxALL</flag>

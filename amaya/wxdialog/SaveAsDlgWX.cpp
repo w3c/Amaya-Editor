@@ -40,6 +40,8 @@ SaveAsDlgWX::SaveAsDlgWX( int ref,
   AmayaDialog( NULL, ref )
 {
   int  page_size;
+  char buf_charset[100];
+  char buf_mime_type[100];
 
   wxXmlResource::Get()->LoadDialog(this, parent, wxT("SaveAsDlgWX"));
   wxLogDebug( _T("SaveAsDlgWX::SaveAsDlgWX - pathname=")+pathname);
@@ -70,9 +72,14 @@ SaveAsDlgWX::SaveAsDlgWX( int ref,
 /* XRCCTRL(*this, "wxID_IMG_LOCATION_CTRL", wxTextCtrl)->SetValue(pathname); */
 
   // Charset and Mime Type infos
-  /* + infos charset et type mime */
-  XRCCTRL(*this, "wxID_CHARSET", wxStaticText)->SetLabel(TtaConvMessageToWX( "Charset: " ));
-  XRCCTRL(*this, "wxID_MIME_TYPE", wxStaticText)->SetLabel(TtaConvMessageToWX( "MIME type:" ));
+  strcpy (buf_charset, "Charset : ");
+  strcat (buf_charset, UserCharset);
+  wxString wx_charset = TtaConvMessageToWX( buf_charset );
+  strcpy (buf_mime_type, "Mime Type : ");
+  strcat (buf_mime_type, UserMimeType);
+  wxString wx_mime_type = TtaConvMessageToWX( buf_mime_type );
+  XRCCTRL(*this, "wxID_CHARSET", wxStaticText)->SetLabel(wx_charset);
+  XRCCTRL(*this, "wxID_MIME_TYPE", wxStaticText)->SetLabel( wx_mime_type );
 
   // buttons
   XRCCTRL(*this, "wxID_CONFIRMBUTTON", wxButton)->SetLabel(TtaConvMessageToWX( TtaGetMessage(LIB, TMSG_LIB_CONFIRM) ));
@@ -122,7 +129,6 @@ void SaveAsDlgWX::OnCancelButton( wxCommandEvent& event )
 void SaveAsDlgWX::OnBrowseButton( wxCommandEvent& event )
 {
   wxLogDebug( _T("SaveAsDlgWX::OnBrowseButton") );
-  ThotCallback (BaseDialog + SaveForm, INTEGER_DATA, (char*) 0);
 }
 
 /*----------------------------------------------------------------------
@@ -131,7 +137,7 @@ void SaveAsDlgWX::OnBrowseButton( wxCommandEvent& event )
 void SaveAsDlgWX::OnClearButton( wxCommandEvent& event )
 {
   wxLogDebug( _T("SaveAsDlgWX::OnClearButton") );
-  ThotCallback (BaseDialog + SaveForm, INTEGER_DATA, (char*) 0);
+  ThotCallback (BaseDialog + SaveForm, INTEGER_DATA, (char*) 3);
 }
 
 /*----------------------------------------------------------------------
@@ -139,8 +145,18 @@ void SaveAsDlgWX::OnClearButton( wxCommandEvent& event )
   ----------------------------------------------------------------------*/
 void SaveAsDlgWX::OnEncodingButton( wxCommandEvent& event )
 {
+  char buf_charset[100];
+
   wxLogDebug( _T("SaveAsDlgWX::OnEncodingButton") );
-  ThotCallback (BaseDialog + SaveForm, INTEGER_DATA, (char*) 0);
+  ThotCallback (BaseDialog + SaveForm, INTEGER_DATA, (char*) 4);
+  
+  if (SaveFormTmp[0] != EOS)
+    {
+      strcpy (buf_charset, "Charset : ");
+      strcat (buf_charset, SaveFormTmp);
+      wxString wx_charset = TtaConvMessageToWX( buf_charset );
+      XRCCTRL(*this, "wxID_CHARSET", wxStaticText)->SetLabel( wx_charset );
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -148,8 +164,17 @@ void SaveAsDlgWX::OnEncodingButton( wxCommandEvent& event )
   ----------------------------------------------------------------------*/
 void SaveAsDlgWX::OnMimeTypeButton( wxCommandEvent& event )
 {
+  char buf_mime_type[100];
+
   wxLogDebug( _T("SaveAsDlgWX::OnMimeTypeButton") );
-  ThotCallback (BaseDialog + SaveForm, INTEGER_DATA, (char*) 0);
+  ThotCallback (BaseDialog + SaveForm, INTEGER_DATA, (char*) 5);
+  if (SaveFormTmp[0] != EOS)
+    {
+      strcpy (buf_mime_type, "Mime Type : ");
+      strcat (buf_mime_type, SaveFormTmp);
+      wxString wx_mime_type = TtaConvMessageToWX( buf_mime_type );
+      XRCCTRL(*this, "wxID_MIME_TYPE", wxStaticText)->SetLabel( wx_mime_type );
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -158,10 +183,8 @@ void SaveAsDlgWX::OnMimeTypeButton( wxCommandEvent& event )
 void SaveAsDlgWX::OnDocFormatBox ( wxCommandEvent& event )
 {
   wxLogDebug( _T("SaveAsDlgWX::OnDocFormatBox") );
-  /*
-  ThotCallback (BaseDialog + SaveForm, INTEGER_DATA,
-		(char*) (XRCCTRL(*this, "wxID_PAPER_FORMAT_BOX", wxRadioBox)->GetSelection( )));
-  */
+  ThotCallback (BaseDialog + RadioSave, INTEGER_DATA,
+		(char*) (XRCCTRL(*this, "wxID_DOC_FORMAT", wxRadioBox)->GetSelection( )));
 }
 
 /*---------------------------------------------------------------
@@ -170,7 +193,7 @@ void SaveAsDlgWX::OnDocFormatBox ( wxCommandEvent& event )
 void SaveAsDlgWX::OnImagesChkBox ( wxCommandEvent& event )
 {
   wxLogDebug( _T("SaveAsDlgWX::OnImagesChkBox") );
-  ThotCallback (BaseDialog + SaveForm, INTEGER_DATA, (char*) 4);
+  ThotCallback (BaseDialog + ToggleSave, INTEGER_DATA, (char*) 0);
 }
 
 /*---------------------------------------------------------------
@@ -179,7 +202,7 @@ void SaveAsDlgWX::OnImagesChkBox ( wxCommandEvent& event )
 void SaveAsDlgWX::OnUrlsChkBox ( wxCommandEvent& event )
 {
   wxLogDebug( _T("SaveAsDlgWX::OnUrlsChkBox") );
-  ThotCallback (BaseDialog + SaveForm, INTEGER_DATA, (char*) 4);
+  ThotCallback (BaseDialog + ToggleSave, INTEGER_DATA, (char*) 0);
 }
 
 /*---------------------------------------------------------------
@@ -196,7 +219,7 @@ void SaveAsDlgWX::OnDocLocation ( wxCommandEvent& event )
   char buffer[100];
   wxASSERT( doc_location.Len() < 100 );
   strcpy( buffer, doc_location.ToAscii() );
-  ThotCallback (BaseDialog + SaveForm,  STRING_DATA, (char *)buffer );
+  ThotCallback (BaseDialog + NameSave,  STRING_DATA, (char *)buffer );
 }
 
 /*---------------------------------------------------------------
@@ -213,7 +236,7 @@ void SaveAsDlgWX::OnImgLocation ( wxCommandEvent& event )
   char buffer[100];
   wxASSERT( img_location.Len() < 100 );
   strcpy( buffer, img_location.ToAscii() );
-  ThotCallback (BaseDialog + SaveForm,  STRING_DATA, (char *)buffer );
+  ThotCallback (BaseDialog + ImgDirSave,  STRING_DATA, (char *)buffer );
 }
 
 #endif /* _WX */
