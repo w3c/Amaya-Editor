@@ -1842,8 +1842,10 @@ char              **argv;
                           MakeMenusAndActionList ();
                           /* ecrit le schema compile' dans le fichier de sortie     */
                           /* le directory des schemas est le directory courant      */
+#ifndef _WINDOWS 
                           SchemaPath[0] = '\0';
-                          ustrcpy (srceFileName, fileName);
+#endif /* _WINDOWS */
+                         ustrcpy (srceFileName, fileName);
                           GenerateApplication (srceFileName, pAppli);
                           ustrcpy (srceFileName, fileName);
                           if (ustrcmp (srceFileName, TEXT("EDITOR")) != 0)
@@ -1854,10 +1856,10 @@ char              **argv;
       }  
    } 
    TtaSaveAppRegistry ();
-#  ifdef _WINDOWS 
+#ifdef _WINDOWS 
    *Y = _CY_;
    ReleaseDC (hwnd, compilersDC);
-#  else  /* !_WINDOWS */
+#else  /* !_WINDOWS */
    exit (0);
-#  endif /* _WINDOWS */
+#endif /* _WINDOWS */
 }

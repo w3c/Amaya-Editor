@@ -904,8 +904,10 @@ char* fileName;
 				 SrcFileName = NULL;
 			  }
 			  for (i = 0; i < indexBinFiles; i++) {
+#ifdef _I18N_
                   char sfname[MAX_LENGTH];
-                  len = ustrlen (WorkPath);
+ #endif /* !_I18N_ */
+                 len = ustrlen (WorkPath);
                   if (len > 0 && WorkPath [len - 1] == TEXT('\\')) {
                       SrcFileName = TtaAllocString (len + ustrlen (BinFiles[i]) + 1);
                       usprintf (SrcFileName, TEXT("%s%s"), WorkPath, BinFiles [i]);
@@ -913,12 +915,12 @@ char* fileName;
                          SrcFileName = TtaAllocString (len + ustrlen (BinFiles [i]) + 2);
                          usprintf (SrcFileName, TEXT("%s\\%s"), WorkPath, BinFiles [i]);
 				  }
-#                 ifdef _I18N_
+#ifdef _I18N_
                   wcstombs (sfname, SrcFileName, MAX_LENGTH);
                   _unlink (sfname);
-#                 else  /* !_I18N_ */
+#else  /* !_I18N_ */
                   _unlink (SrcFileName);
-#                 endif /* !_I18N_ */
+#endif /* !_I18N_ */
                   free (SrcFileName);
                   SrcFileName = NULL;
 			  }
