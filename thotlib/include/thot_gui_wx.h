@@ -13,6 +13,7 @@ class AmayaScrollBar;
 class wxStatusBar;
 class wxWindow;
 class wxButton;
+class wxBitmapButton;
 class wxMenuBar;
 class wxMenu;
 class wxToolBar;
@@ -30,6 +31,7 @@ typedef wxStatusBar *	ThotStatusBar;
 
 typedef wxWindow *	ThotWindow;
 typedef wxButton * 	ThotButton;
+typedef wxBitmapButton * 	ThotBitmapButton;
 typedef wxMenuBar *	ThotMenuBar;
 typedef wxMenu *	ThotMenu;
 typedef AmayaToolBar *	ThotToolBar;

@@ -152,8 +152,8 @@ typedef struct _Window_Ctl {
   ThotStatusBar WdStatus;               /* Widget of the window status bar   */
 
   
-  ThotControl 	Button[MAX_BUTTON];               /* List of toolbar button Widgets */
-  Proc          Call_Button[MAX_BUTTON];          /* List of toolbar button Callbacks  */
+  ThotBitmapButton 	Button[MAX_BUTTON];               /* List of toolbar button Widgets */
+  Proc              Call_Button[MAX_BUTTON];          /* List of toolbar button Callbacks  */
 } Window_Ctl;
 
 #endif /* #if defined(_WX) */
