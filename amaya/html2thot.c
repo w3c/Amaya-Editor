@@ -3619,10 +3619,10 @@ char                c;
 
    EntityName[LgEntityName] = EOS;
    if (ISOlat1table[EntityTableEntry].charName[CharRank] == EOS)
-      /* the entity read matches current entry of entity table */
+      /* the entity read matches the current entry of entity table */
       PutInBuffer ((char) (ISOlat1table[EntityTableEntry].charCode));
    else
-      /* entity not in the table. Put its name in the buffer */
+      /* entity not in the table. Print an error message */
      {
 	PutInBuffer ('&');
 	for (i = 0; i < LgEntityName; i++)
@@ -3649,6 +3649,7 @@ unsigned char       c;
 {
    int                 i;
    char                msgBuffer[MaxBufferLength];
+   boolean	       OK;
 
    if (ISOlat1table[EntityTableEntry].charName[CharRank] == EOS)
       /* the entity name read so far matches the current entry of */
@@ -3656,8 +3657,9 @@ unsigned char       c;
      {
 	/* assume that semicolon is missing and put the corresponding char */
 	PutInBuffer ((char) (ISOlat1table[EntityTableEntry].charCode));
-	/* print an error message */
-	ParseHTMLError (theDocument, "Missing semicolon");
+	if (c != SPACE)
+	   /* print an error message */
+	   ParseHTMLError (theDocument, "Missing semicolon");
 	/* next state is the return state from the entity subautomaton, not
 	   the state computed by the automaton. In addition the character read
 	   has not been processed yet */
@@ -3671,13 +3673,21 @@ unsigned char       c;
 	while (ISOlat1table[EntityTableEntry].charName[CharRank] < c
 	       && ISOlat1table[EntityTableEntry].charCode != 0)
 	   EntityTableEntry++;
-	if (ISOlat1table[EntityTableEntry].charName[CharRank] == c)
-	  {
-	     CharRank++;
-	     if (LgEntityName < MaxEntityLength - 1)
-		EntityName[LgEntityName++] = c;
-	  }
+	if (ISOlat1table[EntityTableEntry].charName[CharRank] != c)
+	  OK = FALSE;
 	else
+	  if (LgEntityName > 0 &&
+	      strncmp (EntityName, ISOlat1table[EntityTableEntry].charName,
+		       LgEntityName) != 0)
+	     OK = FALSE;
+	  else
+	     {
+	       OK = TRUE;
+	       CharRank++;
+	       if (LgEntityName < MaxEntityLength - 1)
+		  EntityName[LgEntityName++] = c;
+	     }
+	if (!OK)
 	  {
 	     /* the entity name read so far is not in the table */
 	     /* invalid entity */
@@ -3754,8 +3764,9 @@ char                c;
 	   /* and the character read has not been processed yet */
 	   NormalTransition = FALSE;
 	   currentState = 0;
-	   /* error message */
-	   ParseHTMLError (theDocument, "Missing semicolon");
+	   if (c != SPACE)
+	      /* error message */
+	      ParseHTMLError (theDocument, "Missing semicolon");
 	}
 }
 
