@@ -278,6 +278,27 @@ AnnotMeta *AnnotMeta_new (void)
 }
 
 /* ------------------------------------------------------------
+   AnnotFilter_free
+   Frees a linked list of annotation filters.
+   ------------------------------------------------------------*/
+void AnnotFilter_free (List *annot_list)
+{
+  List *list_ptr, *next;
+  AnnotFilterData *filter;
+
+  list_ptr = annot_list;
+  while (list_ptr)
+    {
+      filter = (AnnotFilterData *) list_ptr->object;
+      TtaFreeMemory (filter->object);
+      TtaFreeMemory (filter);
+      next = list_ptr->next;
+      TtaFreeMemory (list_ptr);
+      list_ptr = next;
+    }
+}
+
+/* ------------------------------------------------------------
    AnnotList_free
    Frees a linked list of annotations.
    ------------------------------------------------------------*/

@@ -26,6 +26,7 @@ extern List *AnnotList_search ( List *list,
 extern AnnotMeta *AnnotList_searchAnnot ( List *list,
                                           CHAR_T *url );
 extern AnnotMeta *AnnotMeta_new ( void );
+extern void AnnotFilter_free ( List *annot_list );
 extern void AnnotList_free ( List *annot_list );
 extern void Annot_free ( AnnotMeta *annot );
 extern void AnnotList_print ( List *annot_list );
@@ -76,6 +77,7 @@ extern List *AnnotList_search (/* List *list,
 extern AnnotMeta *AnnotList_searchAnnot (/* List *list,
                                             CHAR_T *url */);
 extern AnnotMeta *AnnotMeta_new (/* void */);
+extern void AnnotFilter_free (/* List *annot_list */);
 extern void AnnotList_free (/* List *annot_list */);
 extern void Annot_free (/* AnnotMeta *annot */);
 extern void AnnotList_print (/* List *annot_list */);

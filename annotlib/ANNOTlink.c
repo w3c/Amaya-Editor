@@ -357,7 +357,7 @@ AnnotMeta* LINK_CreateMeta (source_doc, annot_doc, labf, c1, labl, cl)
 }
 
 /*-----------------------------------------------------------------------
-  Procedure LINK_DelMetaToMemory
+  Procedure LINK_DelMetaFromMemory
   -----------------------------------------------------------------------
   Frees the memory used by the parsed metadata
   -----------------------------------------------------------------------*/
@@ -368,12 +368,12 @@ void LINK_DelMetaFromMemory (Document doc)
 
   AnnotList_free (AnnotMetaData[doc].annotations);
   AnnotMetaData[doc].annotations = NULL;
-  /*
-  AnnotList_free (AnnotMetaData[doc].authors);
-  AnnotList_free (AnnotMetaData[doc].types);
-  AnnotList_free (AnnotMetaData[doc].servers);
-  */
-
+  AnnotFilter_free (AnnotMetaData[doc].authors);
+  AnnotMetaData[doc].authors = NULL;
+  AnnotFilter_free (AnnotMetaData[doc].types);
+  AnnotMetaData[doc].types = NULL;
+  AnnotFilter_free (AnnotMetaData[doc].servers);
+  AnnotMetaData[doc].servers = NULL;
 }
 
 /*-----------------------------------------------------------------------
