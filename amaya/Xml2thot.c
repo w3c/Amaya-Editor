@@ -1520,7 +1520,7 @@ static void       StartOfXmlStartElement (char *name)
   ThotBool        isAllowed = TRUE;
   char           *buffer, *ptr, *elementName;
   char           *nsName = NULL;
-  int             nslevel, tmpnslevel;
+  int             nslevel = 0, tmpnslevel = 0;
   PtrParserCtxt   savParserCtxt = NULL;
   char           *s;
 
@@ -1547,7 +1547,6 @@ static void       StartOfXmlStartElement (char *name)
       strcpy (elementName, ptr);
       nsName = TtaGetMemory ((strlen (buffer) + 1));
       strcpy (nsName, buffer);
-      nslevel = 0;
       if ((currentParserCtxt != NULL &&
 	   strcmp (nsName, currentParserCtxt->UriName)) ||
 	  (currentParserCtxt == NULL))
