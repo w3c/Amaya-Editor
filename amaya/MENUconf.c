@@ -2892,8 +2892,6 @@ static void RestoreDefaultGeometryConf ()
 
   RestoreDefEnvGeom ("Formatted_view", GeometryDoc);
   RestoreDefEnvGeom ("Structure_view", GeometryDoc);
-  RestoreDefEnvGeom ("Math_Structure_view", GeometryDoc);
-  RestoreDefEnvGeom ("Graph_Structure_view", GeometryDoc);
   RestoreDefEnvGeom ("Alternate_view", GeometryDoc);
   RestoreDefEnvGeom ("Links_view", GeometryDoc);
   RestoreDefEnvGeom ("Table_of_contents", GeometryDoc);
@@ -2920,8 +2918,6 @@ static void SetEnvCurrentGeometry ()
     {
       SetEnvGeom ("Formatted_view", GeometryDoc);
       SetEnvGeom ("Structure_view", GeometryDoc);
-      SetEnvGeom ("Math_Structure_view", GeometryDoc);
-      SetEnvGeom ("Graph_Structure_view", GeometryDoc);
       SetEnvGeom ("Alternate_view", GeometryDoc);
       SetEnvGeom ("Links_view", GeometryDoc);
       SetEnvGeom ("Table_of_contents", GeometryDoc);

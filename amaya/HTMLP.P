@@ -49,7 +49,7 @@ PRINT
 #define COMMENT_Style Italics
 #define COMMENT_Weight Normal
 #define INVALID_Style Roman
-#define INVALID_Weight Bold
+#define INVALID_Weight Normal
 #define INVALID_Visibility 5
 #define INVALID_Font Helvetica
 #define TableHSpace 0.2

@@ -908,7 +908,19 @@ Document     doc;
 	   else
 	     Charset[0] = EOS;
 	   }
+#ifdef VQ
+        No language attribute, no charset specified in the document.
+        We could set a default charset (for instance iso-8859-1), but
+        should we do that if the document is in another encoding?
+
+	else
+           /* No language attribute. Default Charset is ISO Latin 1 */
+           ustrcpy (Charset, TEXT("iso-8859-1"));
+#endif
 	}
+      /* indicate the MIME type and the charset in a meta element with
+	 an http-equiv attr */
+      /* look for a meta/http-equiv element */
       el = TtaGetFirstChild (head);
       meta = NULL;
       lastmeta = NULL;
@@ -933,6 +945,8 @@ Document     doc;
 	    }
 	 }
       if (!meta)
+	 /* there is no meta element with a http-equiv attribute */
+	 /* create one */
 	 {
 	 elType.ElSSchema = attrType.AttrSSchema;
 	 elType.ElTypeNum = HTML_EL_META;

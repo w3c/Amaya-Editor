@@ -1402,8 +1402,8 @@ CHAR_T     *GIname;
      currentParserCtxt = xhtmlParserCtxt;
    /**** il faut le bon contexte pour CloseElement qui doit appeller la
          bonne procedure ElementComplete ****/ 
-   elementParserCtxt = currentParserCtxt;  /*******/
-   
+   /****/ elementParserCtxt = currentParserCtxt;  /*******/
+
    elType.ElSSchema = NULL;
    elType.ElTypeNum = 0;
    GetXmlElType (GIname, &elType, &mappedName,
