@@ -1320,7 +1320,7 @@ STRING              txt;
 		       else if (searchDomain->SStartToEnd)
 			 {
 			   pFirstSel = pLastSel;
-			   firstChar = lastChar + 1;
+			   firstChar = lastChar;
 			 }
 		       
 		       if (searchDomain->SStartToEnd)

@@ -902,7 +902,7 @@ RULES
 
  Comment\240: BEGIN
 	NoLineBreak;
- 	Create '<!--';
+ 	Create '\12<!--';
 	NoTranslation;
 	Create '-->\12' after;
 	END;

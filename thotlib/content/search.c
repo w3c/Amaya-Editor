@@ -32,29 +32,29 @@
 #include "edit_tv.h"
 #include "appdialogue_tv.h"
 
+#include "absboxes_f.h"
 #include "applicationapi_f.h"
-#include "tree_f.h"
 #include "attrpresent_f.h"
+#include "boxselection_f.h"
+#include "callback_f.h"
+#include "changeabsbox_f.h"
+#include "createabsbox_f.h"
+#include "exceptions_f.h"
+#include "fileaccess_f.h"
+#include "memory_f.h"
+#include "references_f.h"
+#include "schemas_f.h"
+#include "scroll_f.h"
 #include "search_f.h"
 #include "searchmenu_f.h"
 #include "structcreation_f.h"
-#include "createabsbox_f.h"
-#include "changeabsbox_f.h"
-#include "scroll_f.h"
-#include "views_f.h"
-#include "callback_f.h"
-#include "viewcommands_f.h"
-#include "exceptions_f.h"
-#include "absboxes_f.h"
-#include "memory_f.h"
 #include "structmodif_f.h"
-
-#include "references_f.h"
-#include "schemas_f.h"
-#include "boxselection_f.h"
-#include "structselect_f.h"
-#include "fileaccess_f.h"
 #include "structschema_f.h"
+#include "structselect_f.h"
+#include "tree_f.h"
+#include "undo_f.h"
+#include "viewcommands_f.h"
+#include "views_f.h"
 
 /*----------------------------------------------------------------------
    ReplaceString
@@ -105,6 +105,12 @@ boolean             select;
      }
    if (DontReplace)
       return;
+
+   /* register the editing operation (for Undo command) */
+   OpenHistorySequence (pDoc, pEl, pEl, firstChar, firstChar+stringLen-1);
+   AddEditOpInHistory (pEl, pDoc, TRUE, TRUE);
+   CloseHistorySequence (pDoc);
+
    /* cherche le buffer du premier caractere a remplacer: pBuf1 */
    pBuf1 = pEl->ElText;
    len = 0;

@@ -1168,5 +1168,6 @@ View                view;
          Remove it from the Redo queue and put it in the Undo queue */
          MoveEditToUndoQueue (pDoc);
       }
-   CloseHistorySequence (pDoc);
+   /* close sequence in Undo queue */
+   pDoc->DocEditSequence = FALSE;
 }
