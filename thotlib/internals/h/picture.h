@@ -17,15 +17,6 @@
 /*
  * Definition for picture management
 */
-#include "thot_gui.h"
-#include "thot_sys.h"
-#include "thotdir.h"
-#include "dialog.h"
-#include "message.h"
-#include "application.h"
-
-#include "npapi.h"
-#include "npupp.h"
 
 #ifndef _PICTURE_h
 #define _PICTURE_h
@@ -62,10 +53,10 @@ typedef struct
   char          *PicFileName; 
   Pixmap         PicPixmap;
   Pixmap         PicMask;
-  boolean        mapped;
-  boolean        created;
-  ThotWidget         wid;
-  NPP            pluginInstance;
+  boolean        mapped;         /* Used for ExtraHandlers */
+  boolean        created;        /* Used for ExtraHandlers */
+  ThotWidget     wid;            /* Used for ExtraHandlers */
+  void*          pluginInstance; /* Used for ExtraHandlers */
 } PictInfo;
 
 typedef enum
@@ -86,9 +77,6 @@ typedef struct
   void     (*FreePicture)();
 } PictureHandler;
 
-
-
-
-#endif
+#endif /* _PICTURE_h */
 
 

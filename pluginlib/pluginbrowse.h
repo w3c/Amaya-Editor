@@ -30,9 +30,9 @@
 
 typedef struct _PluginInfo {
         char*            pluginDL ;       /* Location of the dynamic library of the plugin */
-        char*            pluginMimeType ;
-        char*            pluginType ;     /* Mime type of the plugin                       */
-        char*            pluginID ;       /* Plugin identifier                             */
+        char*            pluginMimeType ; /* Mime type of the plugin                       */
+        char*            pluginType ;
+        char*            pluginID ;       /* Plugin identifier (if mentionned)             */
         char*            pluginURL ;      /* URL of the plugin                             */
         char*            fileExt ;        /* Suffix of files supported by the plugin       */
 #ifdef WINDOWS
@@ -40,7 +40,6 @@ typedef struct _PluginInfo {
 #else  /* WINDOWS */
         void*            pluginHandle ;
 #endif /* WINDOWS */
-    /*        NPP              pluginInstance; */
         NPPluginFuncs*   pluginFunctionsTable;
 } PluginInfo ;
 

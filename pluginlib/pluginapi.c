@@ -37,7 +37,7 @@
 #define THOT_EXPORT extern
 #include "picture_tv.h"
 
-extern XtAppContext     app_cont;
+extern ThotAppContext   app_cont;
 extern PluginInfo*      pluginTable [100];
 extern Document         currentDocument;
 extern int              pluginCounter;
@@ -181,8 +181,14 @@ const char* pluginMimeType;
    strcpy (pluginTable [indexHandler]->fileExt, suffixes);
 }
 
-void Ap_FreePicture (PictInfo* imageDesc) {
-     pluginTable [imageDesc->PicType - InlineHandlers]->pluginFunctionsTable->destroy (imageDesc->pluginInstance, NULL);
+#ifdef __STDC__
+void Ap_FreePicture (PictInfo* imageDesc) 
+#else  /* __STDC__ */
+void Ap_FreePicture (imageDesc)
+PictInfo* imageDesc;
+#endif /* __STDC__ */
+{
+   pluginTable [imageDesc->PicType - InlineHandlers]->pluginFunctionsTable->destroy ((NPP)(imageDesc->pluginInstance), NULL);
 }
 
 /*----------------------------------------------------------------------
@@ -381,8 +387,8 @@ NPByteRange* rangeList ;
 	offset += count;
 	free (buffer);
     }
-    */
     fclose (fptr);
+    */
     return NPERR_NO_ERROR;
 }
 
@@ -669,7 +675,7 @@ Display* display;
     pwindow->y               = 0;
     pwindow->width           = imageDesc->PicWArea;
     pwindow->height          = imageDesc->PicHArea;
-    pwindow->window          = (Window*) XtWindow ((Widget) (imageDesc->wid));
+    pwindow->window          = (Window*) XtWindowOfObject ((Widget) (imageDesc->wid));
     
     pwindow->clipRect.top    = 0;
     pwindow->clipRect.left   = 0;
@@ -688,8 +694,8 @@ Display* display;
     strcpy (url, imageDesc->PicFileName);
     
     /*     pluginTable [indexPlug]->pluginInstance = (NPP) malloc (sizeof (NPP_t)); */
-    imageDesc->pluginInstance = (NPP) malloc (sizeof (NPP_t)); 
-    (*(pluginTable [indexPlug]->pluginFunctionsTable->newp)) (pluginTable [indexPlug]->pluginType, imageDesc->pluginInstance, NP_EMBED, argc, argn, argv,  NULL);
+    (NPP) (imageDesc->pluginInstance) = (NPP) malloc (sizeof (NPP_t)); 
+    (*(pluginTable [indexPlug]->pluginFunctionsTable->newp)) (pluginTable [indexPlug]->pluginType, (NPP)(imageDesc->pluginInstance), NP_EMBED, argc, argn, argv,  NULL);
     /*    (*(pluginTable [indexPlug]->pluginFunctionsTable->newp)) (pluginTable [indexPlug]->pluginType, pluginTable [indexPlug]->pluginInstance, NP_EMBED, argc, argn, argv,  NULL); */
 
     stream      = (NPStream*) malloc (sizeof (NPStream));
@@ -697,10 +703,10 @@ Display* display;
     stream->end = 0;
        
     /*    (*(pluginTable [indexPlug]->pluginFunctionsTable->setwindow)) (pluginTable [indexPlug]->pluginInstance, pwindow); */
-    (*(pluginTable [indexPlug]->pluginFunctionsTable->setwindow)) (imageDesc->pluginInstance, pwindow); 
+    (*(pluginTable [indexPlug]->pluginFunctionsTable->setwindow)) ((NPP)(imageDesc->pluginInstance), pwindow); 
     
     /*ret = (*(pluginTable [indexPlug]->pluginFunctionsTable->newstream)) (pluginTable [indexPlug]->pluginInstance, pluginMimeType, stream, TRUE, &stype); */
-    ret = (*(pluginTable [indexPlug]->pluginFunctionsTable->newstream)) (imageDesc->pluginInstance, pluginMimeType, stream, TRUE, &stype); 
+    ret = (*(pluginTable [indexPlug]->pluginFunctionsTable->newstream)) ((NPP)(imageDesc->pluginInstance), pluginMimeType, stream, TRUE, &stype); 
 
     range.offset = 0; /*10; */
     range.length = 2000; /*20;*/
@@ -710,7 +716,7 @@ Display* display;
  
     /* printf ("Retrun from new stream = %d\n", ret); */
     /* (*(pluginTable [indexPlug]->pluginFunctionsTable->asfile)) (pluginTable [indexPlug]->pluginInstance, stream, url); */
-    (*(pluginTable [indexPlug]->pluginFunctionsTable->asfile)) (imageDesc->pluginInstance, stream, url); 
+    (*(pluginTable [indexPlug]->pluginFunctionsTable->asfile)) ((NPP)(imageDesc->pluginInstance), stream, url); 
     /*dlclose(fighandle);*/       
 }
 
