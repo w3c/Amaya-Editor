@@ -1170,10 +1170,7 @@ void ANNOT_Post_callback (int doc, int status,
 	       /* if we were posting a localfile, remove this file
 		  (and update the indexes */
 	       if (ctx->localfile)
-		 {
 		   TtaFileUnlink (ctx->localfile);
-		   TtaFreeMemory (ctx->localfile);
-		 }
 	     }
 	 }
        TtaFileUnlink (ctx->remoteAnnotIndex);
@@ -1200,6 +1197,7 @@ void ANNOT_Post_callback (int doc, int status,
    TtaFreeMemory (ctx->annot_url);
    TtaFreeMemory (ctx->rdf_file);
    TtaFreeMemory (ctx->remoteAnnotIndex);
+   TtaFreeMemory (ctx->localfile);
    TtaFreeMemory (ctx);
 }
 

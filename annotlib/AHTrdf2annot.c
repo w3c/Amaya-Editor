@@ -486,8 +486,6 @@ static void triple_handler (HTRDF * rdfp, HTTriple * triple, void * context)
       else
 #endif /* AM_REDLAND */
 	object = AM_RAPTOR_URI_AS_STRING(triple->object);
-
-
 #endif
 
 #ifdef _RDFDEBUG
@@ -534,25 +532,17 @@ static void triple_handler (HTRDF * rdfp, HTTriple * triple, void * context)
 	  predicateP = ANNOT_FindRDFResource (&annot_schema_list,
 					      predicate,
 					      TRUE);
-#ifdef RAPTOR_RDF_PARSER
-          /* @@ Do anything different for Raptor RDF Parser ?? */
-#ifdef AM_REDLAND
-	  if (triple->object_type ==  RAPTOR_IDENTIFIER_TYPE_LITERAL)
-	    object = (char *) triple->object;
-	  else
-#endif /* AM_REDLAND */
-	    object = AM_RAPTOR_URI_AS_STRING(triple->object);
+	  /* ugly, ugly; libwww discards info -- is the object a Literal? 
+	    JK: What do we need to do in this case? */
 	  objectP = ANNOT_FindRDFResource (rdf_model, object, TRUE);
-#else
-	  /* ugly, ugly; libwww discards info -- is the object a Literal? */
-	  objectP = ANNOT_FindRDFResource (rdf_model, object, TRUE);
-#endif
 
 	  SCHEMA_AddStatement (subjectP, predicateP, objectP);
 	}
 #ifdef RAPTOR_RDF_PARSER
       if (triple->subject_type == RAPTOR_IDENTIFIER_TYPE_ANONYMOUS)
 	TtaFreeMemory (subject);
+      if (triple->object_type ==  RAPTOR_IDENTIFIER_TYPE_ANONYMOUS)
+	TtaFreeMemory (object);
 #endif
     }
 }
