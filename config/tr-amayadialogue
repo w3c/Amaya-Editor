@@ -1,3 +1,4 @@
+# encoding= latin1
 0 Dosya
 1 Dosya
 2 Dosya
@@ -14,9 +15,9 @@
 13 **Annotations
 14 Yardým
 15 Yeni
-16 **New HTML...
+16 **New HTML document...
 17 **From template
-18 **New CSS...
+18 **New CSS style sheet...
 19 Belge aç...
 20 Yeni pencerede aç...
 21 Belgeyi yeniden yükle
@@ -57,10 +58,10 @@
 56 Bölme (div)
 57 Form
 58 form
-59 **button (input)
+59 **Button (input)
 60 Deðiþtir (input)
-61 **File select (input)
-62 **Hidden control (input)
+61 **File selector (input)
+62 **Hidden (input)
 63 Görüntü (input)...
 64 **Password (input)
 65 Radio (input)
@@ -70,7 +71,7 @@
 69 fieldset
 70 label
 71 Seçenek (option)
-72 **Submenu  (optgroup)
+72 **Submenu (optgroup)
 73 Metin alaný (textarea)
 74 Baþlýk
 75 h1
@@ -127,14 +128,14 @@
 126 Veri hücresi (td)
 127 Baþlýk hücresi (th)
 128 **Delete table column
-129 **Link to target
+129 **Link to previous target
 130 Baðlantý yarat...
 131 Hedef yarat
 132 <A> tanýmý sil
 133 Tuþlarý göster
 134 Adres göster
 135 Yakýnlaþtýr
-136 **Show Targets
+136 **Show targets
 137 Uzaklaþtýr
 138 Harita alanlarýný göster
 139 Yapýyý göster
@@ -149,7 +150,7 @@
 148 Kural yarat...
 149 \'class\' uygula...
 150 Tarzý tanýmlarý
-151 **Link a new one...
+151 **Link...
 152 **Open...
 153 **Disable...
 154 **Enable...
@@ -164,7 +165,7 @@
 163 Örnek (samp)
 164 Tuþtakýmý (kbd)
 165 **Abbreviation (abbr)
-166 **Acronym (acronym)
+166 **acronym
 167 **Insertion (ins)
 168 **Deletion (del)
 169 Karakter birimi
@@ -195,10 +196,10 @@
 194 **Load annotations
 195 **Customize query...
 196 **Post annotation
-197 **Customize query...
-198 **Configuration...
+197 **Configure...
+198 **About Amaya
 199 Amaya hakkýnda
-200 **About Amaya at W3C
+200 **Browsing
 201 Tarama
 202 Seçme
 203 Arama
@@ -217,4 +218,3 @@
 216 Numaralandýrmasý
 217 Kitap oluþturma
 218 Amaya yapýlandýrmasý
-219 **Amaya accessibility

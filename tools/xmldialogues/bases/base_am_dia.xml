@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-<base version="5" last_update="Tue Jun 27 11:23:13 CEST 2000">
+<base version="6" last_update="Tue Jun 27 12:03:21 CEST 2000">
 <control>
 	<language encoding="latin1">en</language>
 	<language encoding="latin1">fr</language>
@@ -681,7 +681,7 @@
 <label define="BEnclose">
 	<message xml:lang="en">Enclose (menclose)</message>
 	<message xml:lang="fr">Englobe (menclose)</message>
-	<message xml:lang="de">Beilegen (menclose)</message>
+	<message xml:lang="de">Einfügen (menclose)</message>
 	<message xml:lang="it">Ingloba (menclose)</message>
 </label>
 <label define="BFraction">
@@ -889,6 +889,7 @@
 	<message xml:lang="en">Link to previous target</message>
 	<message xml:lang="fr">Lier la cible créée</message>
 	<message xml:lang="it">Collega al precedente obiettivo</message>
+	<message xml:lang="de">Verknüpfen mit Ziel</message>
 </label>
 <label define="BCreateLink">
 	<message xml:lang="en">Create or change link...</message>
@@ -984,6 +985,7 @@
 	<message xml:lang="en">Show source</message>
 	<message xml:lang="fr">Montrer le source</message>
 	<message xml:lang="it">Mostra sorgente</message>
+	<message xml:lang="de">Quelltext-Fenster</message>
 </label>
 <label define="BCharacterStyle">
 	<message xml:lang="en">Character style...</message>
@@ -1038,26 +1040,31 @@
 	<message xml:lang="en">Link...</message>
 	<message xml:lang="fr">Ajouter...</message>
 	<message xml:lang="it">Collegamento...</message>
+	<message xml:lang="de">Mit neuem verknüpfen...</message>
 </label>
 <label define="BOpenCSS">
 	<message xml:lang="en">Open...</message>
 	<message xml:lang="fr">Ouvrir...</message>
 	<message xml:lang="it">Apri...</message>
+	<message xml:lang="de">Öffnen...</message>
 </label>
 <label define="BDisableCSS">
 	<message xml:lang="en">Disable...</message>
 	<message xml:lang="fr">Désactiver...</message>
 	<message xml:lang="it">Disabilita...</message>
+	<message xml:lang="de">Deaktivieren...</message>
 </label>
 <label define="BEnableCSS">
 	<message xml:lang="en">Enable...</message>
 	<message xml:lang="fr">Réactiver...</message>
 	<message xml:lang="it">Abilita...</message>
+	<message xml:lang="de">Aktivieren...</message>
 </label>
 <label define="BRemoveCSS">
 	<message xml:lang="en">Remove...</message>
 	<message xml:lang="fr">Retirer...</message>
 	<message xml:lang="it">Rimuovi...</message>
+	<message xml:lang="de">Entfernen...</message>
 </label>
 <label define="Phrase">
 	<message xml:lang="en">Information type</message>

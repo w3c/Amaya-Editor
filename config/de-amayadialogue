@@ -1,3 +1,4 @@
+# encoding= latin1
 0 Datei
 1 Datei
 2 Datei
@@ -45,7 +46,7 @@
 44 Verweis (link)
 45 Javascript (script)
 46 Style-Sheet (style)
-47 Kommentar (<!--  -->)
+47 Kommentar (<!-- -->)
 48 Titel ändern...
 49 Autorenadresse (address)
 50 Aktiver Grafikbereich (area)
@@ -115,7 +116,7 @@
 114 Objekt-Parameter (param)
 115 Absatz (p)
 116 Vorformatierter Text (pre)
-117 Tabelle 
+117 Tabelle
 118 Tabelle (table)
 119 Überschrift (caption)
 120 colgroup
