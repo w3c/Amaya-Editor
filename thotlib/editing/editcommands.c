@@ -2907,6 +2907,9 @@ void InsertChar (int frame, CHAR_T c, int keyboard)
 				      FirstSelectedChar = 1;
 				      NewContent (pAb);
 				      CutCommand (FALSE);
+				      /* move the selection at the end of the
+					 previous element */
+				      TtcPreviousChar (FrameTable[frame].FrDoc, 1);
 				      return;
 				    }
 				  xDelta = BoxCharacterWidth (109, font);
