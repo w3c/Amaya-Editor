@@ -2348,9 +2348,6 @@ static void GiveWindowGeometry (Document doc, int docType, int method,
       *h = 500;
       *w = 400;
     }
-  else
-    {
-    }
 }
 
 /*----------------------------------------------------------------------

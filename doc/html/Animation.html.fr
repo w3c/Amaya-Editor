@@ -1,6 +1,5 @@
-<?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-      "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta http-equiv="Content-Type"
@@ -9,7 +8,7 @@
   <meta name="generator" content="amaya 8.6, see http://www.w3.org/Amaya/" />
 </head>
 
-<body>
+<body xml:lang="fr" lang="fr">
 
 <div id="page_body" xml:lang="fr" lang="fr">
 
@@ -29,100 +28,104 @@
 
 <h2>Graphiques et Animation SMIL</h2>
 
-<p>SVG représente l'animation comme des elements intermédiaires dans la
-structure qui represente l'organisation du graphique. Les elements Animation
+<p>SVG représente l'animation comme des éléments intermédiaires dans la
+structure qui représente l'organisation du graphique. Les éléments Animation
 apparaissent comme des fils des graphiques qu'ils animent. Pour permettre à
 l'auteur de se concentrer sur l'animation, une vue <strong>Ligne de
-temps</strong> montre toutes les elements animation et les regroupe pour
-chaque element graphique animé.</p>
+temps</strong> montre toutes les éléments animation et les regroupe pour
+chaque élément graphique animé.</p>
 
-<h3>The Timeline View</h3>
+<h3>La vue Ligne te temps</h3>
 
-<p>The timeline view displays animations associated with graphics objects.
-Each animated object of the document is represented there, with a graphical
-representation of its animation elements.</p>
+<p>La vue Ligne te temps visualise les animations associées aux objets
+graphiques. Chaque objet graphique animé du document est représenté ici, avec
+une représentation graphique.</p>
 
-<p>The following figure shows the three animated objects of a document. Each
-object is represented on the left side of the view by a label with a white
-background and a box next to its label. Clicking the label highlights the
-corresponding element in the formatted view, thus providing the user with the
-context of that element. If the graphics element has a single animation
-element (like element Rectangle in the figure), this animation element is
-displayed as a colored bar. If there are several elements, a single gray bar
-represents the whole animation (Circle, at the bottom of the figure), and a
-'+' button in the label allows the user to get a expanded representation.
-Element MyText, is an example of such an expanded representation where each
-animation element is represented by a colored bar. The button becomes a '-'
-that allows the user to get back to the condensed representation.</p>
+<p>La figure suivante montre trois objets animés d'un document. Chaque objet
+est représenté sur le coté gauche de la vue par un label sur fond blanc et
+une boîte autour. En cliquant sur le label met en évidence l'élément
+correspondant dans la vue formatée, montrant ainsi à l'utilisateur le
+contexte de l'élément. Si l'élément graphique possède un seul élément
+d'animation (comme l'élément Rectangle dans la figure), l'élément d'animation
+est visualisé comme une barre colorée. Si l'élément graphique possède
+plusieurs éléments d'animation, une seule barre grise représente l'ensemble
+des animations (Circle en bas de la figure), et un bouton '+' dans le label
+permet à l'utilisateur d'expanser la représentation. L'élément MyText est un
+exemple d'une telle expansion, où chaque animation est représentée par une
+barre colorée.</p>
 
-<p>Position on the timeline depends on when they start and stop acting and
-the color of each bar reflects the type of animation:</p>
+<p>La position sur la ligne de temps dépend de quand l'animation débute et
+s'arrête et la couleur de la barre reflète le type d'animation :</p>
 <ul>
-  <li>yellow for <code>animate</code>,</li>
-  <li>red for <code>set</code>,</li>
-  <li>green for <code>animateMotion</code>,</li>
-  <li>dark blue for <code>animateColor</code>,</li>
-  <li>light blue <code>animateTransform</code></li>
+  <li>jaune pour <code>animate</code>,</li>
+  <li>rouge pour <code>set</code>,</li>
+  <li>vert pour <code>animateMotion</code>,</li>
+  <li>bleu foncé pour <code>animateColor</code>,</li>
+  <li>bleu clair pour <code>animateTransform</code></li>
 </ul>
 
 <p class="figure"><img alt="Animation view"
 src="//home/vatton/Amaya/doc/images/timeline_view.png" /></p>
 </div>
 
-<h3>Editing Animations</h3>
+<h3>Edition des animations</h3>
 
-<p>The timeline view is helpful to quickly perceive the animation of all
-graphics in a document, but it also allows an author to edit animation.
-Existing elements can be modified. Most manipulations are done directly on
-the timeline, such as moving a bar or changing its length. This is
-immediately reflected in other views where the corresponding attributes of
-the animation element are updated (attributes <code>begin</code> and
-<code>dur</code> in that case).</p>
+<p>La vue Ligne de temps est utile pour percevoir rapidement l'animation de
+tous les graphiques du document, mais elle permet aussi à l'auteur d'éditer
+les animations. Les éléments existants peuvent être modifiés. La plupart des
+manipulations sont faites sur la ligne de temps, comme le déplacement d'une
+barre ou son changement de longueur. ceci est immédiatement reflété sur les
+autres vues où les attributs de l'élément d'animation sont mis à jour (les
+attributs <code>begin</code> et <code>dur</code> dans ce cas).</p>
 
-<p>When creating a movement for an existing graphics element:</p>
+<p>Quand on crée un mouvement d'un élément graphique existant :</p>
 <ul>
-  <li>The user starts by selecting the start time of the animation
-    <p>Click Ctrl + Left mouse button on the red timeline slider and move it
-    to the right start position</p>
+  <li>L'utilisateur débute par la sélection le moment de départ de
+    l'animation :
+    <p>Cliquer Ctrl + Bouton gauche de la souris sur l'onglet rouge de la
+    ligne de temps et le déplacer à la bonne position de départ.</p>
   </li>
-  <li>Then he'she selects the element of interest in the formatted view
-    <p>If the element should have an ID which will be used as a label,</p>
+  <li>Puis, il sélectionne l'élément concerné dans la vue formatée :
+    <p>L'élément devrait avoir un ID. Cet ID sera utilisé comme label de
+    l'élément.</p>
   </li>
-  <li>Then he/she clicks on the top left <img alt="anim_motion"
-    src="../../amaya/anim_motion_sh_db.png" /> button in the timeline view
-    <p>This creates a new animation element in that view.</p>
+  <li>Puis, il clique sur le bouton <img alt="anim_motion"
+    src="../../amaya/anim_motion_sh_db.png" /> en haut à gauche de la vue
+    Linge de temps.
+    <p>Ceci crée un nouvel élément d'animation dans cette vue.</p>
   </li>
-  <li>The user then points at the starting position and at the ending
-    position of the movement in the formatted view
-    <p>Click Ctrl + Left mouse button on the displayed <img alt="cross"
-    src="../../amaya/timeline_cross.gif" /> icon in the formatted view.Doing
-    so, he/she can control the key positions of the animated element in the
-    context of the other graphics elements. In fact, the user draws the
-    motion path it as if he/she would draw the shape of any curve belonging
-    to the document.</p>
+  <li>L'utilisateur donne les positions de départ et de fin du mouvement dans
+    la vue formatée :
+    <p>Cliquer Ctrl + Bouton gauche de la souris sur l'icône <img alt="cross"
+    src="../../amaya/timeline_cross.gif" /> dans la vue formatée. Ainsi, il
+    peut contrôler les positions clé de l'élément animé dans le contexte des
+    autres graphiques.</p>
   </li>
-  <li>Finally, going back to the timeline view, he/she can move and/or resize
-    the new bar to adjust the timing</li>
+  <li>Finalement, en retournant dans la vue Ligne de temps, il peut déplacer
+    et/ou retailler la nouvelle barre colorée créée pour ajuster le temps
+    d'animation.</li>
 </ul>
 
-<p>Manipulating timing in the timeline view is more comfortable, as this
-allows the user to better understand the synchronization of a particular
-element with the other animated elements. The user can also modify the key
-positions in the main view, just by moving points with the mouse. But the
-other views are still there, and some parameters may be adjusted in the
-structure view by editing attributes, as well as in the source code if
-necessary.</p>
+<p>La manipulation du temps dans la vue Ligne de temps est plus confortable,
+puisque l'utilisateur comprend mieux la synchronisation d'un élément
+particulier avec les autres éléments animés. Les autres vues sont aussi
+accessibles et certains paramètres peuvent être ajustés en éditant les
+attributs dans la vue structure ou dans la vue source si nécessaire.</p>
 
-<p>When creating a a color change for an existing graphics element, the user
-starts by selecting the element of interest in the main view, he/she then
-clicks on the top left <img alt="anim_color"
-src="../../amaya/anim_color_sh_db.png" /> button.</p>
+<p>Quand on crée un changement de couleur d'un élément graphique
+existant :</p>
+<ul>
+  <li>L'utilisateur débute en sélectionnant l'élément dans la vue
+  formatée,</li>
+  <li>Puis, il clique sur le bouton <img alt="anim_color"
+    src="../../amaya/anim_color_sh_db.png" /> en haut à gauche de la vue
+    Ligne de temps.</li>
+</ul>
 
-<p>The user can manipulate a bar representing an animation in the same way
-he/she manipulates a rectangle in the document. Obviously some constraints
-are put in the timeline view. For instance colored bars can move only
-horizontally along the time axis and their height can not be changed
-individually. Those constraints represent the semantics of the timeline
-graphic language.</p>
+<p>L'utilisateur peut manipuler les barres de représentation des animation
+comme il manipule un rectangle dans le document. Evidement quelques
+contraintes sont données dans la vue Ligne de temps. Par exemple, les barres
+colorées ne peuvent bouger uniquement en horizontal sur l'axe de la ligne de
+temps, et la hauteur de peut pas être modifiée.</p>
 </body>
 </html>
