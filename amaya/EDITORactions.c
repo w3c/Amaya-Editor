@@ -50,6 +50,7 @@
 #include "styleparser_f.h"
 #include "UIcss_f.h"
 #include "SVGbuilder_f.h"
+#include "SVGedit_f.h"
 #include "XHTMLbuilder_f.h"
 
 #ifdef DAV
@@ -1310,11 +1311,6 @@ static ThotBool HTMLelementAllowed (Document doc)
 {
   ElementType         elType;
   Element             el, ancestor, sibling;
-  Element             child, foreignObj, leaf, altText;
-  Attribute           attr;
-  AttributeType       attrType;
-  Language            lang;
-  SSchema             htmlSchema;
   char               *s;
   int                 firstChar, lastChar;
 
@@ -1335,72 +1331,8 @@ static ThotBool HTMLelementAllowed (Document doc)
 #ifdef _SVG
   else if (strcmp (s, "SVG") == 0)
     {
-      elType.ElTypeNum = SVG_EL_switch;
-      sibling = el;
-      if (!TtaCanInsertSibling (elType, sibling, FALSE, doc))
-	/* cannot insert a switch element as a sibling */
-	{
-	  child = TtaGetLastChild (sibling);
-	  if (TtaCanInsertSibling (elType, child, FALSE, doc))
-	    /* insert a switch element as a child */
-	    sibling = child;
-	  else
-	    {
-	      sibling = TtaGetParent (sibling);
-	      if (!TtaCanInsertSibling (elType, sibling, FALSE,doc))
-		/* cannot insert a switch element as a sibling of
-		   the parent element */
-		sibling = NULL;
-	    }
-	}
-      if (sibling)
-	{
-	  /* create a switch element and insert it */
-	  TtaOpenUndoSequence (doc, NULL, NULL, 0, 0);
-	  el = TtaNewElement (doc, elType);
-	  TtaInsertSibling (el, sibling, FALSE, doc);
-	  /* create a foreignObject element and insert it as
-	     a child of the new switch element */
-	  elType.ElTypeNum = SVG_EL_foreignObject;
-	  TtaAskFirstCreation ();
-	  foreignObj = TtaNewElement (doc, elType);
-	  TtaInsertFirstChild (&foreignObj, el, doc);
-	  /* associate a requiredExtensions attribute with the
-	     foreignObject element */
-	  attrType.AttrSSchema = elType.ElSSchema;
-	  attrType.AttrTypeNum = SVG_ATTR_requiredExtensions;
-	  attr = TtaNewAttribute (attrType);
-	  TtaAttachAttribute (foreignObj, attr, doc);
-	  TtaSetAttributeText (attr, XHTML_URI, foreignObj, doc);
-	  /* create an alternate SVG text element for viewers
-	     that can't display embedded MathML */
-	  elType.ElTypeNum = SVG_EL_text_;
-	  altText = TtaNewElement (doc, elType);
-	  TtaInsertSibling (altText, foreignObj, FALSE, doc);
-	  elType.ElTypeNum = SVG_EL_TEXT_UNIT;
-	  leaf = TtaNewElement (doc, elType);
-	  TtaInsertFirstChild (&leaf, altText, doc);
-	  lang = TtaGetLanguageIdFromScript('L');
-	  TtaSetTextContent (leaf, (unsigned char *)"<html>", lang, doc);
-	  /* set the visibility of the alternate text */
-	  EvaluateTestAttrs (el, doc);
-	  /* update depth of SVG elements */
-	  SetGraphicDepths (doc, el);
-	  /* create the root division */
-	  TtaSetStructureChecking (0, doc);
-	  htmlSchema = TtaNewNature (doc, elType.ElSSchema, "HTML", "HTMLP");
-	  elType.ElSSchema = htmlSchema;
-	  elType.ElTypeNum = HTML_EL_Division;
-	  child = TtaNewElement (doc, elType);
-	  TtaInsertFirstChild (&child, foreignObj, doc);
-	  TtaSetStructureChecking (1, doc);
-	  /* register the switch element in the Undo queue*/
-	  TtaRegisterElementCreate (el, doc);
-	  TtaSelectElement (doc, child);
-	  return TRUE;
-	}
-      else
-	return FALSE;
+      CreateGraphicElement (9);
+      return TRUE;
     }
 #endif /* _SVG */
   else

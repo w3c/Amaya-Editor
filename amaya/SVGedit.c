@@ -1517,6 +1517,7 @@ static Attribute InheritAttribute (Element el, AttributeType attrType)
     }
   return (inheritedAttr);
 }
+#endif /* _SVG */
 
 /*----------------------------------------------------------------------
    CreateGraphicElement
@@ -1526,6 +1527,7 @@ static Attribute InheritAttribute (Element el, AttributeType attrType)
   ----------------------------------------------------------------------*/
 void CreateGraphicElement (int entry)
 {
+#ifdef _SVG
   Document	    doc;
   Element	    first, SvgRoot, newEl, sibling, selEl;
   Element           child, parent, elem, foreignObj, altText, leaf;
@@ -1962,8 +1964,10 @@ void CreateGraphicElement (int entry)
   TtaSetDocumentModified (doc);
   if (newType.ElTypeNum == 0)
     InitInfo ("      ", TtaGetMessage (AMAYA, AM_NOT_AVAILABLE));
+#endif /* _SVG */
 }
 
+#ifdef _SVG
 /*----------------------------------------------------------------------
    CreateGroup
    Create a g element surrounding the selected elements
