@@ -3815,40 +3815,42 @@ Element         ChangeSvgImageType (Element el, Document doc)
   ElementType   elType;
   Element       svgImageElement, svgImageContent;
   Attribute     attr, nextattr;
+  int           oldStructureChecking;
  
   svgImageElement = NULL;
   svgImageContent = NULL;
   elType = TtaGetElementType (el);
 
+  /* Disable the structure checking */
+  oldStructureChecking = TtaGetStructureChecking (doc);
+  TtaSetStructureChecking (0, doc);
+
   if ((strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0) &&
-      elType.ElTypeNum == HTML_EL_PICTURE_UNIT)
+      (elType.ElTypeNum == HTML_EL_PICTURE_UNIT))
     {
-      /* create a SVG_Image element within a HTML element*/
+      /* create a SVG_Image element instead of the PICTURE element */
       elType.ElTypeNum = HTML_EL_SVG_Image;
       svgImageElement = TtaNewElement (doc, elType);
-      if (svgImageElement == NULL)
-	return NULL;
-      else
-	TtaInsertSibling (svgImageElement, el, FALSE, doc);
-      
-      /* Attach the attributes to that new element */
-      nextattr = NULL;
-      TtaNextAttribute (el, &nextattr);
-      while (nextattr != NULL)
+      if (svgImageElement != NULL)
 	{
-	  attr = nextattr;
+	  TtaInsertSibling (svgImageElement, el, FALSE, doc);
+	  /* Attach the attributes to that new element */
+	  nextattr = NULL;
 	  TtaNextAttribute (el, &nextattr);
-	  TtaAttachAttribute (svgImageElement, attr, doc);
+	  while (nextattr != NULL)
+	    {
+	      attr = nextattr;
+	      TtaNextAttribute (el, &nextattr);
+	      TtaAttachAttribute (svgImageElement, attr, doc);
+	    }
+	  /* create a SVG_ImageContent element */
+	  elType.ElTypeNum = HTML_EL_SVG_ImageContent;
+	  svgImageContent = TtaNewElement (doc, elType);
+	  if (svgImageContent != NULL)
+	    TtaInsertFirstChild (&svgImageContent, svgImageElement, doc);
+	  /* Remove the PICTURE_UNIT element form the tree */
+	  TtaRemoveTree (el, doc);
 	}
-      
-      /* create a SVG_ImageContent element */
-      elType.ElTypeNum = HTML_EL_SVG_ImageContent;
-      svgImageContent = TtaNewElement (doc, elType);
-      if (svgImageContent != NULL)
-	TtaInsertFirstChild (&svgImageContent, svgImageElement, doc);
-      
-      /* Remove the PICTURE_UNIT element form the tree */
-      TtaRemoveTree (el, doc);
     }
   else if ((strcmp (TtaGetSSchemaName (elType.ElSSchema), "GraphML") == 0) &&
 	   elType.ElTypeNum == GraphML_EL_PICTURE_UNIT)
@@ -3856,24 +3858,25 @@ Element         ChangeSvgImageType (Element el, Document doc)
       /* create a SVG_Image element within a SVG element*/
       elType.ElTypeNum = GraphML_EL_SVG_Image;
       svgImageContent = TtaNewElement (doc, elType);
-      if (svgImageContent == NULL)
-	return NULL;
-      else
-	TtaInsertSibling (svgImageContent, el, FALSE, doc);
-      
-      /* Attach the attributes to that new element */
-      nextattr = NULL;
-      TtaNextAttribute (el, &nextattr);
-      while (nextattr != NULL)
+      if (svgImageContent != NULL)
 	{
-	  attr = nextattr;
+	  TtaInsertSibling (svgImageContent, el, FALSE, doc);
+	  /* Attach the attributes to that new element */
+	  nextattr = NULL;
 	  TtaNextAttribute (el, &nextattr);
-	  TtaAttachAttribute (svgImageContent, attr, doc);
+	  while (nextattr != NULL)
+	    {
+	      attr = nextattr;
+	      TtaNextAttribute (el, &nextattr);
+	      TtaAttachAttribute (svgImageContent, attr, doc);
+	    }
+	  /* Remove the PICTURE_UNIT element form the tree */
+	  TtaRemoveTree (el, doc);
 	}
-            
-      /* Remove the PICTURE_UNIT element form the tree */
-      TtaRemoveTree (el, doc);
     }
+
+  /* Restore the structure checking */
+  TtaSetStructureChecking (oldStructureChecking, doc);
 
   return svgImageContent;
 }
@@ -3901,6 +3904,7 @@ ThotBool       ParseXmlSubTree (char     *xmlBuffer,
   Element      parent;
   CHARSET      charset;
   Element      svgEl = NULL;
+  DisplayMode  dispMode;
 #define	 COPY_BUFFER_SIZE	1024
   gzFile       infile;
   char         bufferRead[COPY_BUFFER_SIZE];
@@ -3913,7 +3917,10 @@ ThotBool       ParseXmlSubTree (char     *xmlBuffer,
   if (fileName != NULL && xmlBuffer != NULL)
     return FALSE;
 
-  TtaSetDisplayMode (doc, DeferredDisplay);
+  /* avoid too many redisplay */
+  dispMode = TtaGetDisplayMode (doc);
+  if (dispMode == DisplayImmediately)
+    TtaSetDisplayMode (doc, DeferredDisplay);
 
   /* Initialize all parser contexts */
   if (firstParserCtxt == NULL)
@@ -3923,8 +3930,8 @@ ThotBool       ParseXmlSubTree (char     *xmlBuffer,
   RootElement = NULL;
   if (fileName != NULL && DTDname!= NULL &&
       strcmp (DTDname, "SVG") == 0)
-    /* We are parsing an external SVG image */
     {
+      /* We are parsing an external SVG image */
       svgEl = ChangeSvgImageType (el, doc);
       if (svgEl == NULL)
 	return FALSE;
@@ -3958,8 +3965,6 @@ ThotBool       ParseXmlSubTree (char     *xmlBuffer,
     charset = ISO_8859_1;
   InitializeExpatParser (charset);
  
-  TtaSetStructureChecking (0, doc);
-
   if (xmlBuffer != NULL)
     {
       /* Parse virtual DOCTYPE */
@@ -4014,22 +4019,27 @@ ThotBool       ParseXmlSubTree (char     *xmlBuffer,
 	}
     }
   
-  TtaSetStructureChecking (1, doc);
+  /* Free expat parser */ 
+  FreeXmlParserContexts ();
+  FreeExpatParser ();
 
-  if (svgEl != NULL && !XMLNotWellFormed)
-    /* TtaSetAccessRight (TtaGetParent (svgEl), ReadOnly, doc); */
-    TtaSetAccessRight (svgEl, ReadOnly, doc);
+  if (svgEl != NULL)
+    {
+      /* Fetch and display the recursive images */
+      FetchAndDisplayImages (doc, AMAYA_LOAD_IMAGE, svgEl);
+      /* Make not editable the external SVG image */
+      TtaSetAccessRight (svgEl, ReadOnly, doc);
+    }
 
   if (docURL != NULL)
     {
       TtaFreeMemory (docURL);
       docURL = NULL;
     }
-  TtaSetDisplayMode (doc, DisplayImmediately);
 
-  /* Free expat parser */ 
-  FreeXmlParserContexts ();
-  FreeExpatParser ();
+  /* Restore the display mode */
+  if (dispMode == DisplayImmediately)
+    TtaSetDisplayMode (doc, dispMode);
 
   return (!XMLNotWellFormed);
 }

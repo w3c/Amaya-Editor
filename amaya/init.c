@@ -2374,7 +2374,7 @@ void LatinReading (Document document, View view)
    
    /* fetch and display all images referred by the document */
    DocNetworkStatus[document] = AMAYA_NET_ACTIVE;
-   FetchAndDisplayImages (document, AMAYA_LOAD_IMAGE);
+   FetchAndDisplayImages (document, AMAYA_LOAD_IMAGE, NULL);
    DocNetworkStatus[document] = AMAYA_NET_INACTIVE;
 
    /* check parsing errors */
@@ -3006,7 +3006,7 @@ void Reload_callback (int doc, int status, char *urlName,
 #endif /* ANNOTATIONS */
 	   TtaHandlePendingEvents ();
 	   /* fetch and display all images referred by the document */
-	   stopped_flag = FetchAndDisplayImages (newdoc, AMAYA_NOCACHE | AMAYA_LOAD_IMAGE);
+	   stopped_flag = FetchAndDisplayImages (newdoc, AMAYA_NOCACHE | AMAYA_LOAD_IMAGE, NULL);
 	   if (stopped_flag == FALSE) 
 	     {
 	       TtaResetCursor (0, 0);
@@ -3612,10 +3612,10 @@ void GetHTMLDocument_callback (int newdoc, int status, char *urlName,
 	     {
 	       /* fetch and display all images referred by the document */
 	       if (method == CE_MAKEBOOK)
-		 stopped_flag = FetchAndDisplayImages (newdoc, AMAYA_LOAD_IMAGE | AMAYA_MBOOK_IMAGE);
+		 stopped_flag = FetchAndDisplayImages (newdoc, AMAYA_LOAD_IMAGE | AMAYA_MBOOK_IMAGE, NULL);
 	       else
 		 {
-		   stopped_flag = FetchAndDisplayImages (newdoc, AMAYA_LOAD_IMAGE);
+		   stopped_flag = FetchAndDisplayImages (newdoc, AMAYA_LOAD_IMAGE, NULL);
 #ifdef ANNOTATIONS
 		   /* if it's an annotation, add the existing metadata */
 		   if (DocumentTypes[newdoc] == docAnnot)
@@ -5087,7 +5087,7 @@ static int RestoreOneAmayaDoc (Document doc, char *tempdoc, char *docname,
       TtaSetDocumentModified (newdoc);
       W3Loading = 0;		/* loading is complete now */
       DocNetworkStatus[newdoc] = AMAYA_NET_ACTIVE;
-      stopped_flag = FetchAndDisplayImages (newdoc, AMAYA_LOAD_IMAGE);
+      stopped_flag = FetchAndDisplayImages (newdoc, AMAYA_LOAD_IMAGE, NULL);
       if (!stopped_flag)
 	{
 	  DocNetworkStatus[newdoc] = AMAYA_NET_INACTIVE;

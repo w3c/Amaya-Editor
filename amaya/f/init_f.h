@@ -132,6 +132,8 @@ extern void HelpAmaya ( Document document,
                         View view );
 extern void HelpAtW3C ( Document document,
                         View view );
+extern void HelpIndex ( Document document,
+                        View view );
 extern void HelpBrowsing ( Document document,
                            View view );
 extern void HelpSelecting ( Document document,
@@ -309,6 +311,8 @@ extern void MakeIDMenu (/* Document doc,
 extern void HelpAmaya (/* Document document,
                           View view */);
 extern void HelpAtW3C (/* Document document,
+                          View view */);
+extern void HelpIndex (/* Document document,
                           View view */);
 extern void HelpBrowsing (/* Document document,
                              View view */);

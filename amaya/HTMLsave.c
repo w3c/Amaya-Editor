@@ -1133,7 +1133,7 @@ static void RestartParser (Document doc, char *localFile,
 
   /* fetch and display all images referred by the document */
   DocNetworkStatus[doc] = AMAYA_NET_ACTIVE;
-  FetchAndDisplayImages (doc, AMAYA_LOAD_IMAGE);
+  FetchAndDisplayImages (doc, AMAYA_LOAD_IMAGE, NULL);
   DocNetworkStatus[doc] = AMAYA_NET_INACTIVE;
 
   /* check parsing errors */

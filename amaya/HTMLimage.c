@@ -37,8 +37,8 @@
    For already loaded remote images the function returns the      
    descriptor entry and the value FALSE.                           
   ----------------------------------------------------------------------*/
-ThotBool AddLoadedImage (char *name, char *pathname, Document doc,
-			 LoadedImageDesc ** desc)
+ThotBool AddLoadedImage (char *name, char *pathname,
+			 Document doc, LoadedImageDesc ** desc)
 {
    LoadedImageDesc    *pImage, *previous, *sameImage;
    char               *localname;
@@ -480,14 +480,13 @@ void                DisplayImage (Document doc, Element el, char *imageName, cha
 
   modified = TtaIsDocumentModified (doc);
   elType = TtaGetElementType (el);
-  if (elType.ElTypeNum == HTML_EL_PICTURE_UNIT)
+  if ((elType.ElTypeNum == HTML_EL_PICTURE_UNIT) ||
+      ((elType.ElTypeNum == HTML_EL_Object) &&
+      (strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML")  == 0)))
     {
-      /* display the content of a picture element */
-      TtaSetPictureContent (el, imageName, SPACE, doc, mime_type);
-
-      /** for the moment, the above function won't identify SVG images. So, we do the
-	  job here. This block should at some time be integrated with the above one */
-      /* detect if we have an SVG image */
+      /** for the moment, the above function won't identify SVG images.
+	  So, we do the job here.
+	  This block should at some time be integrated with the above one */
       if (TtaGetPictureType (el) == unknown_type)
 	{
 	  is_svg = FALSE;
@@ -517,14 +516,18 @@ void                DisplayImage (Document doc, Element el, char *imageName, cha
       if (is_svg)
 	{
 	  TtaSetPictureType (el, "image/svg");
-	  /* it's an SVG image */
-	  /* parse the SVG file and include the parse tree at the
+	  /* parse the SVG file and include the parsed tree at the
 	     position of the image element */
 	  ParseXmlSubTree (NULL, imageName, el, FALSE,
 				doc, TtaGetDefaultLanguage(), "SVG");
 	}
-      else /* svg images don't use Image Maps */
-	UpdateImageMap (el, doc, -1, -1);
+      else
+	{
+	  /* svg images don't use Image Maps */
+	  /* display the content of a picture element */
+	  TtaSetPictureContent (el, imageName, SPACE, doc, mime_type);
+	  UpdateImageMap (el, doc, -1, -1);
+	}
     }
   else
     {
@@ -890,13 +893,14 @@ void                FetchImage (Document doc, Element el, char *URL, int flags, 
    FetchAndDisplayImages   fetch and display all images referred   
    by document doc. The flags may indicate extra transfer parameters,
    for example bypassing the cache.
+   elSubTree indicates we ara paring an external SVG image
    Returns TRUE if the the transfer succeeds without being stopped;
    Otherwise, returns FALSE.
   ----------------------------------------------------------------------*/
-ThotBool FetchAndDisplayImages (Document doc, int flags)
+ThotBool FetchAndDisplayImages (Document doc, int flags, Element elSubTree)
 {
    AttributeType       attrType;
-   Attribute           attr;
+   Attribute           attr, attrFound;
    ElementType         elType;
    Element             el, elFound, pic, elNext;
    char               *currentURL, *imageURI;
@@ -917,19 +921,27 @@ ThotBool FetchAndDisplayImages (Document doc, int flags)
 
    /* register the current URL */
    currentURL = TtaStrdup (DocumentURLs[doc]);
+
    /* We are currently fetching images for this document */
    /* during this time LoadImage has not to stop transfer */
    /* prepare the attribute to be searched */
    attrType.AttrSSchema = TtaGetSSchema ("HTML", doc);
    if (attrType.AttrSSchema)
-     /* there are some HTML elements in this documents. Get all HTML img
-	elements */
+     /* there are some HTML elements in this documents. 
+	Get all 'img' or 'object' elements */
      {
        /* search all elements having an attribute SRC */
        attrType.AttrTypeNum = HTML_ATTR_SRC;
        /* Start from the root element */
-       el = TtaGetMainRoot (doc);
-       TtaSearchAttribute (attrType, SearchForward, el, &elFound, &attr);
+       if (elSubTree == NULL)
+	 {
+	   el = TtaGetMainRoot (doc);
+	   TtaSearchAttribute (attrType, SearchForward,
+			       el, &elFound, &attr);
+	 }
+       else
+	 TtaSearchAttribute (attrType, SearchInTree,
+			     elSubTree, &elFound, &attr);
        el = elFound;
        do
 	 {
@@ -942,14 +954,19 @@ ThotBool FetchAndDisplayImages (Document doc, int flags)
 	   
 	   if (W3Loading == doc || DocNetworkStatus[doc] & AMAYA_NET_INACTIVE)
 	     break;
-	   /* FetchImage increments FilesLoading[doc] for each new get
-	      request */
+
+	   /* FetchImage increments FilesLoading[doc] for
+	      each new get request */
 	   if (el != NULL)
 	     {
 	       /* search the next element having an attribute SRC */
 	       elNext = el;
-	       TtaSearchAttribute (attrType, SearchForward,
-				   elNext, &elFound, &attr);
+	       if (elSubTree == NULL)
+		 TtaSearchAttribute (attrType, SearchForward,
+				     elNext, &elFound, &attr);
+	       if (elSubTree != NULL && elFound != NULL &&
+		   !TtaIsAncestor (elFound, elSubTree))
+		 elFound = NULL;
 	       FetchImage (doc, el, NULL, flags, NULL, NULL);
 	       el = elFound;
 	     }
@@ -962,48 +979,66 @@ ThotBool FetchAndDisplayImages (Document doc, int flags)
    attrType.AttrSSchema = TtaGetSSchema ("GraphML", doc);
    if (attrType.AttrSSchema)
      {
-     attrType.AttrTypeNum = GraphML_ATTR_xlink_href;
-     /* Start from the root element */
-     el = TtaGetMainRoot (doc);
-     do
-       {
-	 TtaHandlePendingEvents ();
-	 /* verify if StopTransfer was called */
-	 if (DocumentURLs[doc] == NULL ||
-	     strcmp (currentURL, DocumentURLs[doc]))
-	   /* the document has been removed */
-	   break;
-	 
-	 if (W3Loading == doc || DocNetworkStatus[doc] & AMAYA_NET_INACTIVE)
-	   break;
-	 /* search the next element having an attribute xlink_href */
-	 TtaSearchAttribute (attrType, SearchForward, el, &elFound, &attr);
-	 el = elFound;
-	 /* FetchImage increments FilesLoading[doc] for each new get request */
-	 if (el != NULL)
-	   {
-	   /* get the PICTURE_UNIT element within the image element */
-	   elType = TtaGetElementType (el);
-	   elType.ElTypeNum = GraphML_EL_PICTURE_UNIT;
-	   pic = TtaSearchTypedElement (elType, SearchInTree, el);
-           if (pic)
+       attrType.AttrTypeNum = GraphML_ATTR_xlink_href;
+       /* Search the next element having an attribute xlink_href */
+       /* Start from the root element */
+       if (elSubTree == NULL)
+	 {
+	   el = TtaGetMainRoot (doc);
+	   TtaSearchAttribute (attrType, SearchForward,
+			       el, &elFound, &attrFound);
+	 }
+       else
+	 TtaSearchAttribute (attrType, SearchInTree,
+			     elSubTree, &elFound, &attrFound);
+       attr = attrFound;
+       el = elFound;
+       do
+	 {
+	   TtaHandlePendingEvents ();
+	   /* verify if StopTransfer was called */
+	   if (DocumentURLs[doc] == NULL ||
+	       strcmp (currentURL, DocumentURLs[doc]))
+	     /* the document has been removed */
+	     break;
+	   
+	   if (W3Loading == doc || DocNetworkStatus[doc] & AMAYA_NET_INACTIVE)
+	     break;
+	   
+	   /* FetchImage increments FilesLoading[doc] for each new get request */
+	   if (el != NULL)
 	     {
-	       /* get the attribute value */
-	       length = TtaGetTextAttributeLength (attr);
-	       if (length > 0)
-		 {
-		   /* allocate some memory */
-		   imageURI = TtaGetMemory (length + 7);
-		   TtaGiveTextAttributeValue (attr, imageURI, &length);
-		   FetchImage (doc, pic, imageURI, flags, NULL, NULL);
-		   TtaFreeMemory (imageURI);
-		 }
-	     }
-	   }
-       }
-     while (el);
-     }
+	       /* search the next element having an attribute xlink_href */
+	       TtaSearchAttribute (attrType, SearchForward,
+				   el, &elFound, &attrFound);
+	       if (elSubTree != NULL && elFound != NULL &&
+		   !TtaIsAncestor (elFound, elSubTree))
+		 elFound = NULL;
 
+	       /* get the PICTURE_UNIT element within the image element */
+	       elType = TtaGetElementType (el);
+	       elType.ElTypeNum = GraphML_EL_PICTURE_UNIT;
+	       pic = TtaSearchTypedElement (elType, SearchInTree, el);
+	       if (pic)
+		 {
+		   /* get the attribute value */
+		   length = TtaGetTextAttributeLength (attr);
+		   if (length > 0)
+		     {
+		       /* allocate some memory */
+		       imageURI = TtaGetMemory (length + 7);
+		       TtaGiveTextAttributeValue (attr, imageURI, &length);
+		       FetchImage (doc, pic, imageURI, flags, NULL, NULL);
+		       TtaFreeMemory (imageURI);
+		     }
+		 }
+	       el = elFound;
+	       attr = attrFound;
+	     }
+	 }
+       while (el);
+     }
+   
    if (W3Loading != doc)
        stopped_flag = FALSE;
    else

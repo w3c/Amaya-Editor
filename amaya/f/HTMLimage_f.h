@@ -32,7 +32,8 @@ extern void FetchImage ( Document doc,
                          LoadedImageCallback callback,
                          void *extra );
 extern ThotBool FetchAndDisplayImages ( Document doc,
-                                        int flags );
+                                        int flags,
+                                        Element elSubTree );
 
 #else /* __STDC__ */
 
@@ -62,7 +63,8 @@ extern void FetchImage (/* Document doc,
                            LoadedImageCallback callback,
                            void *extra */);
 extern ThotBool FetchAndDisplayImages (/* Document doc,
-                                          int flags */);
+                                          int flags,
+                                          Element elSubTree */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */
