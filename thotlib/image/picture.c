@@ -1974,6 +1974,13 @@ PictInfo           *imageDesc;
 	    DefClip (frame, box->BxXOrg, box->BxYOrg, box->BxXOrg + box->BxRMargin + box->BxRBorder + box->BxRPadding + w, box->BxYOrg + box->BxBMargin + box->BxBBorder + box->BxBPadding + h);
 	  if (box->BxAbstractBox && !box->BxAbstractBox->AbPresentationBox)
 	    NewDimPicture (box->BxAbstractBox);
+	  /* check if a rule min is applied to this box */
+	  if (!box->BxAbstractBox->AbWidth.DimIsPosition &&
+	      box->BxAbstractBox->AbWidth.DimMinimum)
+	    ChangeDefaultWidth (box, box, w, 0, frame);
+	  if (!box->BxAbstractBox->AbHeight.DimIsPosition &&
+	      box->BxAbstractBox->AbHeight.DimMinimum)
+	    ChangeDefaultHeight (box, box, h, frame);
 	}
     }
 
