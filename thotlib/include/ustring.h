@@ -2,14 +2,10 @@
 #define _USTRING_H
 
 #include <string.h>
-
 #ifdef _WINDOWS
 #include <windows.h>
 #endif /* _WINDOWS */
-
-#ifdef _I18N_
 #include <wchar.h>
-#endif /* _I18N_ */
 
 #ifdef _WINDOWS
 #define strncasecmp _strnicmp

@@ -7,7 +7,7 @@
 
 /* Unicode Routines
  * Authors: I. Vatton (W3C/INRIA)
- *          R. Guetari (W3C/INRIA)
+ *          R. Guetari (W3C/INRIA): previous version
  */
 
 #include <stdio.h>
@@ -178,35 +178,35 @@ static CharsetCode CharsetCodeTable[] =
   -------------------------------------------------------------*/
 #ifdef __STDC__
 int     uputchar (int c)
-#else  /* !__STDC__ */
+#else  /* __STDC__ */
 int     uputchar (c)
 int     c;
-#endif /* !__STDC__ */
+#endif /* __STDC__ */
 {
-#   ifdef _I18N_
+#ifdef _I18N_
     /* Compatibility of putwchar: ANSI, WIN NT and WIN 9x */
     return putwchar (c);
-#   else  /* !_I18N_ */
+#else  /* _I18N_ */
     return putchar (c);
-#   endif /* !_I18N_ */
+#endif /* _I18N_ */
 }
 
 /*-------------------------------------------------------------
   ustrcasecmp: compare two strings without regard to case.
   -------------------------------------------------------------*/
 #ifdef __STDC__
-int ustrcasecmp (const CHAR_T *str1, const CHAR_T *str2)
+int           ustrcasecmp (const CHAR_T *str1, const CHAR_T *str2)
 #else  /* __STDC__ */
-int ustrcasecmp (str1, str2)
+int           ustrcasecmp (str1, str2)
 const CHAR_T *str1;
 const CHAR_T *str2;
 #endif /* __STDC__ */
 {
-#   ifdef _I18N_
-#   ifdef _WINDOWS
+#ifdef _I18N_
+#ifdef _WINDOWS
     /* Compatibility of _wcsicmp: WIN NT WIN 9x */
     return (int) _wcsicmp ((wchar_t*)str1, (wchar_t*)str2);
-#   else  /* !_WINDOWS */
+#else  /* _WINDOWS */
     int len1 = ustrlen (str1);
     int len2 = ustrlen (str2);
     int i    = 0;
@@ -220,14 +220,14 @@ const CHAR_T *str2;
           i++;
 	}
     return 0;
-#   endif /* !_WINDOWS */
-#   else  /* !_I18N_ */
-#   ifdef _WINDOWS
+#endif /* _WINDOWS */
+#else  /* _I18N_ */
+#ifdef _WINDOWS
     return (unsigned int) _stricmp ((char*)str1, (char*)str2);
-#   else  /* !_WINDOWS */
+#else  /* _WINDOWS */
     return (unsigned int) strcasecmp ((char*)str1, (char*)str2);
-#   endif /* !_WINDOWS */
-#   endif /* !_I18N_ */
+#endif /* _WINDOWS */
+#endif /* _I18N_ */
 }
 
 
@@ -237,19 +237,19 @@ const CHAR_T *str2;
   way that strcat does.
   -------------------------------------------------------------*/
 #ifdef __STDC__
-CHAR_T *ustrcat (CHAR_T *dest, const CHAR_T *src)
+CHAR_T       *ustrcat (CHAR_T *dest, const CHAR_T *src)
 #else  /* __STDC__ */
-CHAR_T *ustrcat (dest, src)
+CHAR_T       *ustrcat (dest, src)
 CHAR_T       *dest;
 const CHAR_T *src;
 #endif /* __STDC__ */
 {
-#   ifdef _I18N_
+#ifdef _I18N_
     /* Compatibility of wcscat: ANSI, WIN NT and WIN 9x */
     return (CHAR_T*) wcscat ((wchar_t*)dest, (wchar_t*)src);
-#   else  /* !_I18N_ */
+#else  /* _I18N_ */
     return (CHAR_T*) strcat ((char*)dest, (char*)src);
-#   endif /* !_I18N_ */
+#endif /* _I18N_ */
 }
 
 
@@ -257,19 +257,19 @@ const CHAR_T *src;
   ustrchr: Find a character in a string.
   -------------------------------------------------------------*/
 #ifdef __STDC__
-CHAR_T *ustrchr (const CHAR_T *src, CHAR_T c)
+CHAR_T        *ustrchr (const CHAR_T *src, CHAR_T c)
 #else  /* __STDC__ */
-CHAR_T *ustrchr (src, c)
+CHAR_T        *ustrchr (src, c)
 const CHAR_T  *src;
 CHAR_T         c;
 #endif /* __STDC__ */
 {
-#   ifdef _I18N_
+#ifdef _I18N_
     /* Compatibility of wcschr: ANSI, WIN NT and WIN 9x */
     return ((CHAR_T*) wcschr ((wchar_t*)src, (wint_t)c));
-#   else  /* !_I18N_ */
+#else  /* _I18N_ */
     return ((CHAR_T*) strchr ((char*)src, (int)c));
-#   endif /* !_I18N_ */
+#endif /* _I18N_ */
 }
 
 
@@ -277,19 +277,19 @@ CHAR_T         c;
   ustrcmp: compare strings.
   -------------------------------------------------------------*/
 #ifdef __STDC__
-int ustrcmp (const CHAR_T *str1, const CHAR_T *str2)
+int           ustrcmp (const CHAR_T *str1, const CHAR_T *str2)
 #else  /* __STDC__ */
-int ustrcmp (str1, str2)
+int           ustrcmp (str1, str2)
 const CHAR_T *str1;
 const CHAR_T *str2;
 #endif /* __STDC__ */
 {
-#   ifdef _I18N_
+#ifdef _I18N_
     /* Compatibility of wcscmp: ANSI, WIN NT and WIN 9x */
     return wcscmp ((wchar_t*)str1, (wchar_t*)str2);
-#   else  /* !_I18N_ */
+#else  /* _I18N_ */
     return strcmp ((char*)str1, (char*)str2);
-#   endif /* !_I18N_ */
+#endif /* _I18N_ */
 }
 
 
@@ -297,19 +297,19 @@ const CHAR_T *str2;
   ustrcoll: compre strings using local-specific information.
   -------------------------------------------------------------*/
 #ifdef __STDC__
-int ustrcoll (const CHAR_T *str1, const CHAR_T *str2)
+int           ustrcoll (const CHAR_T *str1, const CHAR_T *str2)
 #else  /* __STDC__ */
-int ustrcoll (str1, str2)
+int           ustrcoll (str1, str2)
 const CHAR_T *str1;
 const CHAR_T *str2;
 #endif /* __STDC__ */
 {
-#   ifdef _I18N_
+#ifdef _I18N_
     /* Compatibility of wcscoll: ANSI, WIN NT and WIN 9x */
     return wcscoll ((wchar_t*)str1, (wchar_t*)str2);
-#   else  /* !_I18N_ */
+#else  /* _I18N_ */
     return strcoll ((char*)str1, (char*)str2);
-#   endif /* !_I18N_ */
+#endif /* _I18N_ */
 }
 
 
@@ -319,19 +319,19 @@ const CHAR_T *str2;
   does.
   -------------------------------------------------------------*/
 #ifdef __STDC__
-CHAR_T *ustrcpy (CHAR_T *dest, const CHAR_T *src)
+CHAR_T       *ustrcpy (CHAR_T *dest, const CHAR_T *src)
 #else  /* __STDC__ */
-CHAR_T *ustrcpy (dest, src)
+CHAR_T       *ustrcpy (dest, src)
 CHAR_T       *dest;
 const CHAR_T *src;
 #endif /* __STDC__ */
 {
-#   ifdef _I18N_
+#ifdef _I18N_
     /* Compatibility of wcscpy: ANSI, WIN NT and WIN 9x */
     return (CHAR_T*) wcscpy ((wchar_t*)dest, (wchar_t*)src);
-#   else  /* !_I18N_ */
+#else  /* _I18N_ */
     return (CHAR_T*) strcpy ((char*)dest, (char*)src);
-#   endif /* !_I18N_ */
+#endif /* _I18N_ */
 }
 
 
@@ -339,30 +339,30 @@ const CHAR_T *src;
   ustrdup: duplicate strings.
   -------------------------------------------------------------*/
 #ifdef __STDC__
-CHAR_T *ustrdup (const CHAR_T *str)
+CHAR_T       *ustrdup (const CHAR_T *str)
 #else  /* __STDC__ */
-CHAR_T *ustrdup (str)
+CHAR_T       *ustrdup (str)
 const CHAR_T *str;
 #endif /* __STDC__ */
 {
-#   ifdef _I18N_
-#   ifdef _WINDOWS
+#ifdef _I18N_
+#ifdef _WINDOWS
     /* Compatibility of _wcsdup: WIN NT and WIN 9x */
     return (CHAR_T*) _wcsdup (str);
-#   else  /* !_WINDOWS */
+#else  /* _WINDOWS */
     int     len = ustrlen (str);
     CHAR_T* res = (CHAR_T*) malloc (len * sizeof (CHAR_T));
     if (res)
        ustrcpy (res, str);
     return res;
-#   endif /* _WINDOWS */
-#   else  /* !_I18N_ */
-#   ifdef _WINDOWS
+#endif /* _WINDOWS */
+#else  /* _I18N_ */
+#ifdef _WINDOWS
     return (CHAR_T*) _strdup ((char*)str);
-#   else  /* !_WINDOWS */
+#else  /* _WINDOWS */
     return (CHAR_T*) strdup ((char*)str);
-#   endif /* _WINDOWS */
-#   endif /* !_I18N_ */
+#endif /* _WINDOWS */
+#endif /* _I18N_ */
 }
 
 
@@ -379,18 +379,18 @@ CHAR_T     *dest;
 const char *src;
 #endif /* __STDC__ */
 {
-#   ifdef _I18N_
+#ifdef _I18N_
     int len = strlen (src);
-	/*
+    /*
     for (i = 0; i < len; i++)
         dest[i] = (CHAR_T)src[i];
     dest[i] = (CHAR_T)0;
-	*/
+    */
     mbstowcs (dest, src, len + 1);
     return dest;
-#   else  /* !_I18N_ */
+#else  /* _I18N_ */
     return (CHAR_T*) strcpy ((char*)dest, (char*)src);
-#   endif /* !_I18N_ */
+#endif /* _I18N_ */
 }
 
 
@@ -398,18 +398,18 @@ const char *src;
   ustrlen: get the length of a string.
   -------------------------------------------------------------*/
 #ifdef __STDC__
-size_t ustrlen (const CHAR_T *str)
+size_t        ustrlen (const CHAR_T *str)
 #else  /* __STDC__ */
-size_t ustrlen (str)
+size_t        ustrlen (str)
 const CHAR_T *str;
 #endif /* __STDC__ */
 {
-#   ifdef _I18N_
+#ifdef _I18N_
     /* Compatibility of wcslen: ANSI, WIN NT and WIN 9x */
     return wcslen ((wchar_t*)str);
-#   else  /* !_I18N_ */
+#else  /* _I18N_ */
     return (size_t) strlen ((char*)str);
-#   endif /* !_I18N_ */
+#endif /* _I18N_ */
 }
 
 
@@ -418,48 +418,49 @@ const CHAR_T *str;
                 to case.
   -------------------------------------------------------------*/
 #ifdef __STDC__
-int ustrncasecmp (const CHAR_T *str1, const CHAR_T *str2, unsigned int count)
+int           ustrncasecmp (const CHAR_T *str1, const CHAR_T *str2, unsigned int count)
 #else  /* __STDC__ */
-int ustrncasecmp (str1, str2, count)
+int           ustrncasecmp (str1, str2, count)
 const CHAR_T *str1;
 const CHAR_T *str2;
 unsigned int  count;
 #endif /* __STDC__ */
 {
-#   ifdef _I18N_
-#   ifdef _WINDOWS
-    /* Compatibility of _wcsnicmp: WIN NT and WIN 9x */
-    return _wcsnicmp ((wchar_t*)str1, (wchar_t*)str2, (size_t)count);
-#   else  /* !_WINDOWS */
-    int len1 = ustrlen (str1);
-    int len2 = ustrlen (str2);
-    int len;
-    int ndx;
+#ifdef _I18N_
+#ifdef _WINDOWS
+  /* Compatibility of _wcsnicmp: WIN NT and WIN 9x */
+  return _wcsnicmp ((wchar_t*)str1, (wchar_t*)str2, (size_t)count);
+#else  /* _WINDOWS */
+  int len1 = ustrlen (str1);
+  int len2 = ustrlen (str2);
+  int len;
+  int ndx;
 
-    if (count < len1 && count < len2)
-       len = count;
-    else if (len1 < count && len2 < count)
-		len = (len1 < len2) ? len1 : len2;
-    else if (len1 < count)
-         len = len1;
-    else
-         len = len2;
+  if (count < len1 && count < len2)
+    len = count;
+  else if (len1 < count && len2 < count)
+    len = (len1 < len2) ? len1 : len2;
+  else if (len1 < count)
+    len = len1;
+  else
+    len = len2;
 
-    for (ndx = 0; ndx < len; ndx++) {
-        CHAR_T c1 = towlower (str1[ndx]);
-        CHAR_T c2 = towlower (str2[ndx]);
-        if (c1 != c2)
-           return c1 - c2;
-	}
-    return 0;
-#   endif /* !_WINDOWS */
-#   else  /* !_I18N_ */
-#   ifdef _WINDOWS
-    return (unsigned int) _strnicmp ((char*)str1, (char*)str2, (size_t)count);
-#   else  /* !_WINDOWS */
-    return (unsigned int) strncasecmp ((char*)str1, (char*)str2, (size_t)count);
-#   endif /* !_WINDOWS */
-#   endif /* !_I18N_ */
+  for (ndx = 0; ndx < len; ndx++)
+    {
+      CHAR_T c1 = towlower (str1[ndx]);
+      CHAR_T c2 = towlower (str2[ndx]);
+      if (c1 != c2)
+	return c1 - c2;
+    }
+  return 0;
+#endif /* _WINDOWS */
+#else  /* _I18N_ */
+#ifdef _WINDOWS
+  return (unsigned int) _strnicmp ((char*)str1, (char*)str2, (size_t)count);
+#else  /* _WINDOWS */
+  return (unsigned int) strncasecmp ((char*)str1, (char*)str2, (size_t)count);
+#endif /* _WINDOWS */
+#endif /* _I18N_ */
 }
 
 
@@ -467,20 +468,20 @@ unsigned int  count;
   ustrncat: append n characters of a string src.
   -------------------------------------------------------------*/
 #ifdef __STDC__
-CHAR_T *ustrncat (CHAR_T *dest, const CHAR_T *src, unsigned int count)
+CHAR_T       *ustrncat (CHAR_T *dest, const CHAR_T *src, unsigned int count)
 #else  /* __STDC__ */
-CHAR_T *ustrncat (dest, src, count)
+CHAR_T       *ustrncat (dest, src, count)
 CHAR_T       *dest;
 const CHAR_T *src;
 unsigned int  count;
 #endif /* __STDC__ */
 {
-#   ifdef _I18N_ 
+#ifdef _I18N_ 
     /* Compatibility of wcsncat: ANSI, WIN NT and WIN 9x */
     return (CHAR_T*) wcsncat (dest, src, (size_t)count);
-#   else  /* !_I18N_ */
+#else  /* _I18N_ */
     return (CHAR_T*) strncat ((char*)dest, (char*)src, (size_t)count);
-#   endif /* !_I18N_ */
+#endif /* _I18N_ */
 }
 
 
@@ -496,12 +497,12 @@ const CHAR_T *str2;
 unsigned int  count;
 #endif /* __STDC__ */
 {
-#   ifdef _I18N_ 
-    /* Compatibility of wcsncmp: ANSI, WIN NT and WIN 9x */
-    return (CHAR_T*) wcsncmp ((wchar_t*)str1, (wchar_t*)str2, (size_t)count);
-#   else  /* !_I18N_ */
-    return (CHAR_T*) strncmp ((char*)str1, (char*)str2, (size_t)count);
-#   endif /* !_I18N_ */
+#ifdef _I18N_ 
+  /* Compatibility of wcsncmp: ANSI, WIN NT and WIN 9x */
+  return (CHAR_T*) wcsncmp ((wchar_t*)str1, (wchar_t*)str2, (size_t)count);
+#else  /* _I18N_ */
+  return (CHAR_T*) strncmp ((char*)str1, (char*)str2, (size_t)count);
+#endif /* _I18N_ */
 }
 
 
@@ -517,12 +518,12 @@ const CHAR_T *src;
 unsigned int  count;
 #endif /* __STDC__ */
 {
-#   ifdef _I18N_ 
-    /* Compatibility of wcsncpy: ANSI, WIN NT and WIN 9x */
-    return (CHAR_T*) wcsncpy ((wchar_t*)dest, (wchar_t*)src, (size_t)count);
-#   else  /* !_I18N_ */
-    return (CHAR_T*) strncpy ((char*)dest, (char*)src, (size_t)count);
-#   endif /* !_I18N_ */
+#ifdef _I18N_ 
+  /* Compatibility of wcsncpy: ANSI, WIN NT and WIN 9x */
+  return (CHAR_T*) wcsncpy ((wchar_t*)dest, (wchar_t*)src, (size_t)count);
+#else  /* _I18N_ */
+  return (CHAR_T*) strncpy ((char*)dest, (char*)src, (size_t)count);
+#endif /* _I18N_ */
 }
 
 
@@ -537,12 +538,12 @@ const CHAR_T  *str;
 CHAR_T         c;
 #endif /* __STDC__ */
 {
-#   ifdef _I18N_
-    /* Compatibility of wcsrchr: ANSI, WIN NT and WIN 9x */
-    return (CHAR_T*) (wcsrchr ((wchar_t*)str, (int)c));
-#   else  /* !_I18N_ */
-    return (CHAR_T*) strrchr ((char*)str, (int)c);
-#   endif /* !_I18N_ */
+#ifdef _I18N_
+  /* Compatibility of wcsrchr: ANSI, WIN NT and WIN 9x */
+  return (CHAR_T*) (wcsrchr ((wchar_t*)str, (int)c));
+#else  /* _I18N_ */
+  return (CHAR_T*) strrchr ((char*)str, (int)c);
+#endif /* _I18N_ */
 }
 
 
@@ -550,23 +551,23 @@ CHAR_T         c;
   ustrtok: find the next token in a string.
   -------------------------------------------------------------*/
 #ifdef __STDC__
-CHAR_T *ustrtok (CHAR_T *str, const CHAR_T *delemiter)
+CHAR_T       *ustrtok (CHAR_T *str, const CHAR_T *delemiter)
 #else  /* __STDC__ */
-CHAR_T *ustrtok (str, delemiter)
+CHAR_T       *ustrtok (str, delemiter)
 CHAR_T       *str;
 const CHAR_T *delemiter;
 #endif /* __STDC__ */
 {
-#   ifdef _I18N_ 
-    /* Compatibility of wcstok: ANSI, WIN NT and WIN 9x */
-#   ifdef _WINDOWS
-    return (CHAR_T*) wcstok ((wchar_t*)str, (wchar_t*)delemiter);
-#   else  /* !_WINDOWS */
-    return (CHAR_T*) wcstok ((wchar_t*)str, (wchar_t*)delemiter, NULL);
-#   endif /* !_WINDOWS */
-#   else  /* !_I18N_ */
-    return (CHAR_T*) strtok ((char*)str, (char*)delemiter);
-#   endif /* !_I18N_ */
+#ifdef _I18N_ 
+  /* Compatibility of wcstok: ANSI, WIN NT and WIN 9x */
+#ifdef _WINDOWS
+  return (CHAR_T*) wcstok ((wchar_t*)str, (wchar_t*)delemiter);
+#else  /* _WINDOWS */
+  return (CHAR_T*) wcstok ((wchar_t*)str, (wchar_t*)delemiter, NULL);
+#endif /* _WINDOWS */
+#else  /* _I18N_ */
+  return (CHAR_T*) strtok ((char*)str, (char*)delemiter);
+#endif /* _I18N_ */
 }
 
 
@@ -581,12 +582,12 @@ const CHAR_T  *str;
 const CHAR_T  *strCharSet;
 #endif /* __STDC__ */
 {
-#   ifdef _I18N_
-    /* Compatibility of wcsstr: ANSI, WIN NT and WIN 9x */
-    return (CHAR_T*) wcsstr ((wchar_t*)str, (wchar_t*)strCharSet);
-#   else  /* !_I18N_ */
-    return (CHAR_T*) strstr ((char*)str, (char*)strCharSet);
-#   endif /* !_I18N_ */
+#ifdef _I18N_
+  /* Compatibility of wcsstr: ANSI, WIN NT and WIN 9x */
+  return (CHAR_T*) wcsstr ((wchar_t*)str, (wchar_t*)strCharSet);
+#else  /* _I18N_ */
+  return (CHAR_T*) strstr ((char*)str, (char*)strCharSet);
+#endif /* _I18N_ */
 }
 
 
@@ -601,14 +602,13 @@ const CHAR_T *str1;
 const char   *str2;
 #endif /* __STDC__ */
 {
-    int       diff;
-    CHAR_T *wc_str2 = (CHAR_T*) malloc ((strlen (str2) + 1) * sizeof (CHAR_T));
+  int       diff;
+  CHAR_T *wc_str2 = (CHAR_T*) malloc ((strlen (str2) + 1) * sizeof (CHAR_T));
 
-    iso2wc_strcpy (wc_str2, str2);
-    diff = ustrcasecmp ((CHAR_T*)str1, (CHAR_T*)wc_str2);
-
-    free (wc_str2);
-    return diff;
+  iso2wc_strcpy (wc_str2, str2);
+  diff = ustrcasecmp ((CHAR_T*)str1, (CHAR_T*)wc_str2);
+  free (wc_str2);
+  return diff;
 }
 
 
@@ -623,7 +623,7 @@ const CHAR_T *str1;
 const char   *str2;
 #endif /* __STDC__ */
 {
-    return wc2iso_strcasecmp (str2, str1);
+  return wc2iso_strcasecmp (str2, str1);
 }
 
 
@@ -640,18 +640,18 @@ char         *dest;
 const CHAR_T *src;
 #endif /* __STDC__ */
 {
-    /* 
+  /* 
 	int i, len = ustrlen (src);
     for (i = 0; i < len; i++)
         dest[i] = (char)src[i];
     dest[i] = (char)0;
-	*/
-#   ifdef _I18N_
-    wcstombs (dest, src, MAX_TXT_LEN);
-#   else  /* !_I18N_ */
-    strcpy (dest, src);
-#   endif /* !_I18N_ */
-    return dest;
+  */
+#ifdef _I18N_
+  wcstombs (dest, src, MAX_TXT_LEN);
+#else  /* _I18N_ */
+  strcpy (dest, src);
+#endif /* _I18N_ */
+  return dest;
 }
 
 
@@ -669,15 +669,15 @@ const CHAR_T  *src;
 int           count;
 #endif /* __STDC__ */
 {
-    int i, len = ustrlen (src);
+  int i, len = ustrlen (src);
 
-    if (len <= count)
-       return wc2iso_strcpy (dest, src);
+  if (len <= count)
+    return wc2iso_strcpy (dest, src);
 
-    for (i = 0; i < count; i++)
-        dest[i] = (char)src[i];
-    dest[i] = (char)0;
-    return dest;
+  for (i = 0; i < count; i++)
+    dest[i] = (char)src[i];
+  dest[i] = (char)0;
+  return dest;
 }
 
 
@@ -687,21 +687,21 @@ int           count;
   The second arg mest be char*
   -------------------------------------------------------------*/
 #ifdef __STDC__
-int wc2iso_strcmp (CHAR_T *str1, const char *str2)
+int           wc2iso_strcmp (CHAR_T *str1, const char *str2)
 #else  /* __STDC__ */
-int wc2iso_strcmp (str1, str2)
+int           wc2iso_strcmp (str1, str2)
 const CHAR_T *str1;
 const char   *str2;
 #endif /* __STDC__ */
 {
-    int       diff;
-    CHAR_T *cus_str2 = (CHAR_T*) malloc ((strlen (str2) + 1) * sizeof (CHAR_T));
-
-    iso2wc_strcpy (cus_str2, str2);
-    diff = ustrcmp (str1, cus_str2);
-
-    free (cus_str2);
-    return diff;
+  int       diff;
+  CHAR_T *cus_str2 = (CHAR_T*) malloc ((strlen (str2) + 1) * sizeof (CHAR_T));
+  
+  iso2wc_strcpy (cus_str2, str2);
+  diff = ustrcmp (str1, cus_str2);
+  
+  free (cus_str2);
+  return diff;
 }
 
 
@@ -710,10 +710,10 @@ const char   *str2;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 CHARSET       TtaGetCharset (const CHAR_T *charsetname)
-#else  /* !__STDC__ */
+#else  /* __STDC__ */
 CHARSET       TtaGetCharset (charsetname)
 const CHAR_T *charsetname;
-#endif /* !__STDC__ */
+#endif /* __STDC__ */
 {
   int index = 0;
 
@@ -734,10 +734,10 @@ const CHAR_T *charsetname;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 CHAR_T      *TtaGetCharsetName (CHARSET charset)
-#else  /* !__STDC__ */
+#else  /* __STDC__ */
 CHAR_T      *TtaGetCharsetName (charset)
 CHARSET      charset;
-#endif /* !__STDC__ */
+#endif /* __STDC__ */
 {
   int index = 0;
 
@@ -753,176 +753,6 @@ CHARSET      charset;
 }
 
 
-#ifdef _I18N_
-/*----------------------------------------------------------------------
-  TtaGetNextWideCharFromMultibyteString: Looks for the next Wide character 
-  value in a multibyte character string.
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-int            TtaGetNextWideCharFromMultibyteString (CHAR_T *car, unsigned char **txt, CHARSET encoding)
-#else  /* !__STDC__ */
-int            TtaGetNextWideCharFromMultibyteString (car, txt, encoding)
-CHAR_T        *car;
-unsigned char *txt;
-CHARSET        encoding;
-#endif /* !__STDC__ */
-{
-  int            nbBytesToRead;
-  unsigned char *start = *txt;
-  CHAR_T         res;
-
-  switch (encoding)
-    {
-    case ISO_8859_1: 
-      nbBytesToRead = 1;
-      *car = (CHAR_T) *start++;
-      break;
-      
-    case ISO_8859_2:
-      nbBytesToRead = 1;
-      *car = TtaGetUnicodeValueFrom_ISO_8859_2_Code (*start);
-      start++;
-      break;
-      
-    case ISO_8859_3:
-      nbBytesToRead = 1;
-      *car = TtaGetUnicodeValueFrom_ISO_8859_3_Code (*start);
-      start++;
-      break;
-      
-    case ISO_8859_4:
-      nbBytesToRead = 1;
-      *car = TtaGetUnicodeValueFrom_ISO_8859_4_Code (*start);
-      start++;
-      break;
-      
-    case ISO_8859_5:
-      nbBytesToRead = 1;
-      *car = TtaGetUnicodeValueFrom_ISO_8859_5_Code (*start);
-      start++;
-      break;
-      
-    case ISO_8859_6:
-      nbBytesToRead = 1;
-      *car = TtaGetUnicodeValueFrom_ISO_8859_6_Code (*start);
-      start++;
-      break;
-      
-    case ISO_8859_7:
-      nbBytesToRead = 1;
-      *car = TtaGetUnicodeValueFrom_ISO_8859_7_Code (*start);
-      start++;
-      break;
-      
-    case ISO_8859_8:
-      nbBytesToRead = 1;
-      *car = TtaGetUnicodeValueFrom_ISO_8859_8_Code (*start);
-      start++;
-      break;
-      
-    case ISO_8859_9:
-      nbBytesToRead = 1;
-      *car = TtaGetUnicodeValueFrom_ISO_8859_9_Code (*start);
-      start++;
-      break;
-      
-    case WINDOWS_1250:
-      nbBytesToRead = 1;
-      *car = TtaGetUnicodeValueFromWindows1250CP (*start);
-      start++;
-      break;
-      
-    case WINDOWS_1251:
-      nbBytesToRead = 1;
-      *car = TtaGetUnicodeValueFromWindows1251CP (*start);
-      start++;
-      break;
-      
-    case WINDOWS_1252:
-      nbBytesToRead = 1;
-      *car = TtaGetUnicodeValueFromWindows1252CP (*start);
-      start++;
-      break;
-      
-    case WINDOWS_1253:
-      nbBytesToRead = 1;
-      *car = TtaGetUnicodeValueFromWindows1253CP (*start);
-      start++;
-      break;
-      
-    case WINDOWS_1254:
-      nbBytesToRead = 1;
-      *car = TtaGetUnicodeValueFromWindows1254CP (*start);
-      start++;
-      break;
-      
-    case WINDOWS_1255:
-      nbBytesToRead = 1;
-      *car = TtaGetUnicodeValueFromWindows1255CP (*start);
-      start++;
-      break;
-      
-    case WINDOWS_1256:
-      nbBytesToRead = 1;
-      *car = TtaGetUnicodeValueFromWindows1256CP (*start);
-      start++;
-      break;
-      
-    case WINDOWS_1257:
-      nbBytesToRead = 1;
-      *car = TtaGetUnicodeValueFromWindows1257CP (*start);
-      start++;
-      break;
-      
-    case UTF_8:
-      if (*start < 0xC0)
-	nbBytesToRead = 1;
-      else if (*start < 0xE0)
-	nbBytesToRead = 2;
-      else if (*start < 0xF0)
-	nbBytesToRead = 3;
-      else if (*start < 0xF8)
-	nbBytesToRead = 4;
-      else if (*start < 0xFC)
-	nbBytesToRead = 5;
-      else if (*start <= 0xFF)
-	nbBytesToRead = 6;
-      
-      res = 0;
-      
-      /* See how many bytes to read to build a wide character */
-      switch (nbBytesToRead)
-	{
-	  /** WARNING: There is not break statement between cases */
-	case 6: res += *start++;
-	  res <<= 6;
-	  
-	case 5: res += *start++;
-	  res <<= 6;
-	  
-	case 4: res += *start++;
-	  res <<= 6;
-	  
-	case 3: res += *start++;
-	  res <<= 6;
-	  
-	case 2: res += *start++;
-	  res <<= 6;
-	  
-	case 1: res += *start++;
-	}
-      res -= offset[nbBytesToRead - 1];
-      
-      if (res <= 0xFFFF)
-	*car = res;
-      else 
-	*car = TEXT('?');    
-      break;
-    }
-  
-  return nbBytesToRead;
-}
-#endif /* _I18N_ */
 
 
 

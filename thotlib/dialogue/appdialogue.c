@@ -3289,7 +3289,7 @@ int                 doc;
 	     zoomVal = 0;
 	   else
 	     {
-	       zoomVal = wctoi (zoomStr);
+	       zoomVal = uatoi (zoomStr);
 	       if (zoomVal > 10 || zoomVal < -10)
 		 zoomVal = 0;
 	     }
@@ -3298,7 +3298,7 @@ int                 doc;
 	     visiVal = 5;
 	   else
 	     {
-	       visiVal = wctoi (visiStr);
+	       visiVal = uatoi (visiStr);
 	       if (visiVal < 0 || visiVal > 10)
 		 visiVal = 5;
 	     }

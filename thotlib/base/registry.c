@@ -47,15 +47,15 @@
 #include <direct.h>
 #include <winbase.h>
 #include "winsys.h"
-#   define WIN_DEF_USERNAME       TEXT("default")
-#   define THOT_INI_FILENAME      TEXT("win-thot.rc")
-#   define WIN_USERS_HOME_DIR     TEXT("users")
-#   define DEF_TMPDIR             TEXT("c:\\temp")
+#define WIN_DEF_USERNAME       TEXT("default")
+#define THOT_INI_FILENAME      TEXT("win-thot.rc")
+#define WIN_USERS_HOME_DIR     TEXT("users")
+#define DEF_TMPDIR             TEXT("c:\\temp")
 STRING WIN_Home;
-#else /* !_WINDOWS */
-#   define THOT_INI_FILENAME      TEXT("unix-thot.rc")
-#   define DEF_TMPDIR             TEXT("/tmp")
-#endif /* ! _WINDOWS */
+#else /* _WINDOWS */
+#define THOT_INI_FILENAME      TEXT("unix-thot.rc")
+#define DEF_TMPDIR             TEXT("/tmp")
+#endif /*  _WINDOWS */
 
 #define THOT_RC_FILENAME      TEXT("thot.rc")
 #define THOT_CONFIG_FILENAME  TEXT("config")
@@ -93,13 +93,13 @@ static STRING        Thot_Dir;
 
 #ifdef _I18N_
 static CHAR_T        EnvString[MAX_TXT_LEN];
-#endif /* !_I18N_ */
+#endif /* _I18N_ */
 
 #ifndef _WINDOWS
 CHAR_T  UCOMPILED_IN_THOTDIR[MAX_TXT_LEN];
 CHAR_T  UCOMPILED_IN_THOTDIR2[MAX_TXT_LEN];
 CHAR_T  UMACHINE[MAX_TXT_LEN];
-#endif  /* !_WINDOWS */         
+#endif  /* _WINDOWS */         
 
 PathBuffer execname;
 PathBuffer path;
@@ -111,24 +111,24 @@ int errno;
 
 #ifdef __STDC__
 CHAR_T* WGetEnv (char* name)
-#else  /* !__STDC__ */
+#else  /* __STDC__ */
 CHAR_T* WGetEnv (name)
 char*   name;
-#endif /* !__STDC__ */
+#endif /* __STDC__ */
 {
 #ifdef _I18N_
-#      ifdef _WINDOWS
+#ifdef _WINDOWS
        CHAR_T w_name[MAX_TXT_LEN];
        iso2wc_strcpy (w_name, name);
        return _wgetenv (w_name);
-#      else  /* !_WINDOWS */
+#else  /* _WINDOWS */
        char* val = getenv (name);
        mbstowcs (EnvString, val, MAX_TXT_LEN);
        return EnvString;
-#      endif /* !_WINDOWS */
-#else  /* !_I18N_ */
+#endif /* _WINDOWS */
+#else  /* _I18N_ */
        return getenv (name);
-#endif /* !_I18N_ */
+#endif /* _I18N_ */
 }
 
 /*----------------------------------------------------------------------
@@ -234,9 +234,9 @@ int                 o_len;
   CHAR_T* res  = output;
   CHAR_T* value;
   CHAR_T  save;
-# ifdef _I18N_
+#ifdef _I18N_
   char      baseA [MAX_LENGTH];
-# endif /* _I18N_ */
+#endif /* _I18N_ */
 
 #define CHECK_OVERFLOW (((cour - input) > i_len) || ((res - output) >= (o_len - 1)))
 
@@ -280,12 +280,12 @@ int                 o_len;
 	fprintf (stderr, "invalid variable name %s in %s\n", base, THOT_INI_FILENAME);
 
       /* We are ready to fetch the base value from the Registry */
-#     ifdef _I18N_
+#ifdef _I18N_
       wc2iso_strcpy (baseA, base);
       value = TtaGetEnvString (baseA);
-#     else  /* !_I18N_ */
+#else  /* _I18N_ */
       value = TtaGetEnvString (base);
-#     endif /* !_I18N_ */
+#endif /* _I18N_ */
       if (value == NULL)
 	{
 	  fprintf (stderr, "%s referencing undefined variable %s\n", THOT_INI_FILENAME, base);
@@ -619,16 +619,14 @@ int *value;
    }
 
   strptr = TtaGetEnvString (name);
-
   /* the name entry doesn't exist */
   if (!strptr || *strptr == WC_EOS)
    {
      *value = 0;
      return FALSE;
    }
-
  /* make the convertion */
- *value = wctoi (strptr);
+ *value = uatoi (strptr);
 
  return TRUE;
 }
@@ -695,7 +693,7 @@ char*   name;
       return(AppRegistryEntryAppli);
 
    if ((!strcasecmp (name, "cwd")) || (!strcasecmp (name, "pwd")))
-#     ifdef _I18N_
+#ifdef _I18N_
       {
          int len;
          value = getcwd (&CurrentDir[0], sizeof(CurrentDir));
@@ -703,17 +701,17 @@ char*   name;
          mbstowcs (EnvString, value, len);
          return EnvString;
       }
-#     else  /* !_I18N_ */
+#else  /* _I18N_ */
       return (getcwd (&CurrentDir[0], sizeof(CurrentDir)));
-#     endif /* !_I18N_ */
+#endif /* _I18N_ */
 
    /* first lookup in the System defaults */
    cour = AppRegistryEntry;
    while (cour != NULL) {
          if (!ustrcasecmp (cour->appli, TEXT("System")) && !strcmp (cour->name, name) && cour->value[0] != WC_EOS) {
-#           ifdef DEBUG_REGISTRY
+#ifdef DEBUG_REGISTRY
             fprintf (stderr, "TtaGetEnvString(\"%s\") = %s\n", name, cour->value);
-#           endif
+#endif
             return (cour->value);
 		 }
          cour = cour->next;
@@ -725,9 +723,9 @@ char*   name;
          if (!ustrcasecmp (cour->appli, AppRegistryEntryAppli)      && 
              !strcmp (cour->name, name) && cour->value[0] != WC_EOS && 
              cour->level == REGISTRY_USER) {
-#           ifdef DEBUG_REGISTRY
+#ifdef DEBUG_REGISTRY
             fprintf (stderr, "TtaGetEnvString(\"%s\") = %s\n", name, cour->value);
-#           endif
+#endif
             return (cour->value);
 		 }
          cour = cour->next;
@@ -739,9 +737,9 @@ char*   name;
          if (!ustrcasecmp (cour->appli, AppRegistryEntryAppli)      && 
              !strcmp (cour->name, name) && cour->value[0] != WC_EOS && 
              cour->level == REGISTRY_SYSTEM) {
-#           ifdef DEBUG_REGISTRY
+#ifdef DEBUG_REGISTRY
             fprintf (stderr, "TtaGetEnvString(\"%s\") = %s\n", name, cour->value);
-#           endif
+#endif
             return (cour->value);
 		 }
          cour = cour->next;
@@ -751,9 +749,9 @@ char*   name;
    cour = AppRegistryEntry;
    while (cour != NULL) {
          if (!ustrcasecmp (cour->appli, THOT_LIB_DEFAULTNAME) && !strcmp (cour->name, name) && cour->value[0] != WC_EOS) {
-#           ifdef DEBUG_REGISTRY
+#ifdef DEBUG_REGISTRY
             fprintf (stderr, "TtaGetEnvString(\"%s\") = %s\n", name, cour->value);
-#           endif
+#endif
             return (cour->value);
 		 }
          cour = cour->next;
@@ -770,26 +768,26 @@ char*   name;
    if (value == NULL)
       TtaSetEnvString (name, TEXT(""), FALSE); 
    else {
-#      ifdef _I18N_
+#ifdef _I18N_
        mbstowcs (EnvString, value, MAX_TXT_LEN);
        TtaSetEnvString (name, EnvString, FALSE);
-#      else  /* !_I18N_ */
+#else  /* _I18N_ */
        TtaSetEnvString (name, value, FALSE);
-#      endif /* !_I18N_ */
+#endif /* _I18N_ */
    }
   
-#  ifdef DEBUG_REGISTRY
+#ifdef DEBUG_REGISTRY
    fprintf (stderr, "TtaGetEnvString(\"%s\") = %s\n", name, value);
-#  endif
+#endif
 
-#  ifdef _I18N_
+#ifdef _I18N_
    if (value != NULL)
       return EnvString;
 
    return NULL;
-#  else  /* !_I18N_ */
+#else  /* _I18N_ */
    return (value);
-#  endif /* !_I18N_ */
+#endif /* _I18N_ */
 }
 
 /*----------------------------------------------------------------------
@@ -924,7 +922,7 @@ int *value;
    }
 
  /* make the convertion */
- *value = wctoi (strptr);
+ *value = uatoi (strptr);
 
  return TRUE;
 }
@@ -981,10 +979,10 @@ char*   name;
 {
   RegistryEntry cour;
   CHAR_T*       value;
-# ifdef _I18N_
+#ifdef _I18N_
   char*         EnvVarVal;
   CHAR_T        tmp[MAX_TXT_LEN];
-# endif /* _I18N_ */
+#endif /* _I18N_ */
 
   if (AppRegistryInitialized == 0)
      return WGetEnv (name);
@@ -995,15 +993,15 @@ char*   name;
 
   if ((!strcasecmp (name, "cwd")) || (!strcasecmp (name, "pwd")))
     {
-#     ifdef _I18N_
+#ifdef _I18N_
       {
          EnvVarVal = getcwd (&CurrentDir[0], sizeof(CurrentDir));
          mbstowcs (EnvString, EnvVarVal, MAX_TXT_LEN);
          return EnvString;
       }
-#     else  /* !_I18N_ */
+#else  /* _I18N_ */
       return (getcwd (&CurrentDir[0], sizeof(CurrentDir)));
-#     endif /* !_I18N_ */
+#endif /* _I18N_ */
     }
 
   /* First lookup in the System defaults */
@@ -1058,18 +1056,18 @@ char*   name;
     * Hopefully this will be stored to the user registry
     * next time it will be saved.
     */
-# ifdef _I18N_
-# ifdef _WINDOWS
+#ifdef _I18N_
+#ifdef _WINDOWS
   iso2wc_strcpy (tmp, name);
   value = _wgetenv (tmp);
-# else  /* !_WINDOWS */
+#else  /* _WINDOWS */
   EnvVarVal = getenv (name); 
   mbstowcs (EnvString, EnvVarVal, MAX_TXT_LEN);
   value = EnvString;
-# endif /* !_WINDOWS */
-# else  /* !_I18N_ */
+#endif /* _WINDOWS */
+#else  /* _I18N_ */
   value = getenv (name);
-# endif /* !_I18N_ */
+#endif /* _I18N_ */
   
 #ifdef DEBUG_REGISTRY
   fprintf (stderr, "TtaGetDefEnvString(\"%s\") = %s\n", name, value);
@@ -1256,9 +1254,9 @@ RegistryLevel level;
    CHAR_T    appli[MAX_LENGTH];
    char*     name;
    char*     value;
-#  ifdef _I18N_
+#ifdef _I18N_
    CHAR_T*   wc_value;
-#  endif /* _I18N_ */
+#endif /* _I18N_ */
    ustrcpy (appli, THOT_LIB_DEFAULTNAME);
    input = ufopen (filename, TEXT("r"));
    if (input == NULL)
@@ -1312,13 +1310,13 @@ RegistryLevel level;
 	value = str;
 	str = SkipToEqual (str);
 	*str = EOS;
-#   ifdef _I18N_
+#ifdef _I18N_
     wc_value = TtaAllocString (strlen (value) + 1);
     iso2wc_strcpy (wc_value, value);
 	AddRegisterEntry (appli, name, wc_value, level, TRUE);
-#   else /* !_I18N_ */
+#else /* _I18N_ */
 	AddRegisterEntry (appli, name, value, level, TRUE);
-#   endif /* !_I18N_ */
+#endif /* _I18N_ */
      }
    fclose (input);
 }
@@ -1332,7 +1330,7 @@ RegistryLevel level;
 static void         InitEnviron ()
 #else  /* __STDC__ */
 static void         InitEnviron ()
-#endif				/* __STDC__ */
+#endif /* __STDC__ */
 {
    CHAR_T* pT;
    CHAR_T* Thot_Sys_Sch;
@@ -1343,7 +1341,7 @@ static void         InitEnviron ()
    CurSaveInterval = 0;
    pT = TtaGetEnvString ("AUTOSAVE");
    if (pT != NULL)
-     CurSaveInterval = wctoi(pT);
+     CurSaveInterval = uatoi (pT);
    if (CurSaveInterval <= 0)
      CurSaveInterval = DEF_SAVE_INTVL;
    HighlightBoxErrors = FALSE;
@@ -1352,7 +1350,7 @@ static void         InitEnviron ()
    TtaSetDefEnvString ("DOUBLECLICKDELAY", TEXT("500"), TRUE);
    pT = TtaGetEnvString ("DOUBLECLICKDELAY");
    if (pT != NULL)
-     DoubleClickDelay = wctoi(pT);
+     DoubleClickDelay = uatoi (pT);
    else 
        DoubleClickDelay = 500;
 #endif /* _WINDOWS */
@@ -1447,13 +1445,13 @@ CHAR_T*             appArgv0;
   CHAR_T*     dir_end = NULL;
   CHAR_T*     appName;
   CHAR_T*     ptr;
-# ifdef _WINDOWS
+#ifdef _WINDOWS
   /* name in Windows NT 4 is 20 chars */
   CHAR_T      username[MAX_LENGTH];
   CHAR_T      windir[MAX_PATH+1];
   DWORD       dwSize;
   ThotBool    status;
-#else /* ! _WINDOWS */
+#else /*  _WINDOWS */
   struct stat stat_buf;
   char        c_execname[MAX_LENGTH];
   char        c_filename[MAX_LENGTH];
@@ -1476,9 +1474,9 @@ CHAR_T*             appArgv0;
     {
 #ifdef _WINDOWS
       MessageBox (NULL, TEXT("TtaInitializeAppRegistry called with invalid argv[0] value"), TEXT("Amaya"), MB_OK);
-#else  /* !_WINDOWS */
+#else  /* _WINDOWS */
       fprintf (stderr, "TtaInitializeAppRegistry called with invalid argv[0] value\n");
-#endif /* !_WINDOWS */
+#endif /* _WINDOWS */
       exit (1);
     }
 
@@ -1493,7 +1491,7 @@ CHAR_T*             appArgv0;
 #ifdef _WINDOWS
   if (appArgv0[0] == WC_DIR_SEP || (appArgv0[1] == TEXT(':') && appArgv0[2] == WC_DIR_SEP))
      ustrncpy (&execname[0], appArgv0, sizeof (execname) / sizeof (CHAR_T));
-#else  /* !_WINDOWS */
+#else  /* _WINDOWS */
   if (appArgv0[0] == WC_DIR_SEP)
      ustrncpy (&execname[0], appArgv0, sizeof (execname) / sizeof (CHAR_T));
 #endif /* _WINDOWS */
@@ -1743,7 +1741,7 @@ CHAR_T*             appArgv0;
    else
      /* win95: apphome is  thotdir\users\username */
      usprintf (app_home, TEXT("%s\\%s\\%s"), execname, WIN_USERS_HOME_DIR, ptr);   
-#else /* !_WINDOWS */
+#else /* _WINDOWS */
    ptr = getenv ("HOME");
    usprintf (app_home, TEXT("%s%c.%s"), ptr, WC_DIR_SEP, AppNameW); 
 #endif _WINDOWS

@@ -5042,119 +5042,68 @@ int*            index;
 ThotBool*       endOfFile;
 #endif
 {
-    CHAR_T        charRead;
-    int           res;
-
+  CHAR_T        charRead;
+  int           res;
 #ifdef _I18N_
-    unsigned char mbcstr[MAX_BYTES + 1] = "\0";
-    int           nbBytes;
+  int           nbBytes;
 #endif /* _I18N_ */
-    charRead = WC_EOS;
-    *endOfFile = FALSE;
 
+  charRead = WC_EOS;
+  *endOfFile = FALSE;
+  if (buffer != NULL)
+    {
 #ifdef _I18N_
-    if (buffer != NULL)
-       {
-       mbcstr[0] = buffer[(*index)++];
-       nbBytes   = 1;
-       if (isleadbyte (mbcstr[0]))
-	  {
-	  mbcstr[1] = buffer[(*index)++];
-          nbBytes = 2;
-	  }
-       TtaMB2WC (mbcstr, &charRead, ParsingCharset);
-       *endOfFile = (charRead == WC_EOS);
-       }
-    else if (infile == NULL)
-       *endOfFile = TRUE;
-    else
-       {
-       if (*index == 0)
-	 {
-	   if (NotToReadFile)
-	     NotToReadFile = FALSE;
-	   else
-	     {
-	       strcpy (PreviousFileBuffer, FileBuffer);
-	       LastCharInPreviousFileBuffer = LastCharInFileBuffer;
-	       res = gzread (infile, FileBuffer, INPUT_FILE_BUFFER_SIZE);
-	       if (res <= 0)
-		 {
-		   /* error or end of file */
-		   *endOfFile = TRUE;
-		   charRead = WC_EOS;
-		   LastCharInFileBuffer = 0;
-		 }
-	       else
-		 LastCharInFileBuffer = res - 1;
-	     }
-	 }
-       if (NotToReadFile)
-	 {
-	   char* mbsBuff = &PreviousFileBuffer[(*index)];
-	   (*index) += TtaGetNextWideCharFromMultibyteString (&charRead, &mbsBuff, ParsingCharset);
-	   if (*index > LastCharInPreviousFileBuffer)
-	     *index = 0;
-	 }
-       else
-	 {
-	   if (*endOfFile == FALSE)
-	     {
-	       char* mbsBuff = &FileBuffer[(*index)];
-	       (*index) += TtaGetNextWideCharFromMultibyteString (&charRead, &mbsBuff, ParsingCharset);
-	       if (*index > LastCharInFileBuffer)
-		 *index = 0;
-	     }
-	 }
-       }
+      nbBytes = TtaGetNextWideCharFromMultibyteString (&charRead, buffer[(*index)++], ParsingCharset);
+      if (nbBytes > 0)
+	*endOfFile = 0;
+      else
+	*endOfFile = (charRead == WC_EOS);
 #else  /* !_I18N_ */
-    if (buffer != NULL)
-       {
        charRead = buffer[(*index)++];
        *endOfFile = (charRead == WC_EOS);
-       }
-    else if (infile == NULL)
-       *endOfFile = TRUE;
-    else
-       {
-       if (*index == 0)
-	 {
-	   if (NotToReadFile)
-	     NotToReadFile = FALSE;
-	   else
-	     {
-	       strcpy (PreviousFileBuffer, FileBuffer);
-	       LastCharInPreviousFileBuffer = LastCharInFileBuffer;
-	       res = gzread (infile, FileBuffer, INPUT_FILE_BUFFER_SIZE);
-	       if (res <= 0)
-		 {
-		   /* error or end of file */
-		   *endOfFile = TRUE;
-		   charRead = WC_EOS;
-		   LastCharInFileBuffer = 0;
-		 }
-	       else
-		 LastCharInFileBuffer = res - 1;
-	     }
-	 }
-       if (NotToReadFile)
-	 {
-	   charRead = PreviousFileBuffer[(*index)++];
-	   if (*index > LastCharInPreviousFileBuffer)
-	     *index = 0;
-	 }
-       else
-	 {
-	   if (*endOfFile == FALSE)
-	     {
-	       charRead = FileBuffer[(*index)++];
-	       if (*index > LastCharInFileBuffer)
-		 *index = 0;
-	     }
-	 }
-       }
 #endif /* !_I18N_ */
-    return charRead;
+    }
+  else if (infile == NULL)
+    *endOfFile = TRUE;
+  else
+    {
+      if (*index == 0)
+	{
+	  if (NotToReadFile)
+	    NotToReadFile = FALSE;
+	  else
+	    {
+	      strcpy (PreviousFileBuffer, FileBuffer);
+	      LastCharInPreviousFileBuffer = LastCharInFileBuffer;
+	      res = gzread (infile, FileBuffer, INPUT_FILE_BUFFER_SIZE);
+	      if (res <= 0)
+		{
+		  /* error or end of file */
+		  *endOfFile = TRUE;
+		  charRead = WC_EOS;
+		  LastCharInFileBuffer = 0;
+		}
+	      else
+		LastCharInFileBuffer = res - 1;
+	    }
+	}
+      if (NotToReadFile)
+	{
+	  charRead = PreviousFileBuffer[(*index)++];
+	  if (*index > LastCharInPreviousFileBuffer)
+	    *index = 0;
+	}
+      else
+	{
+	  if (*endOfFile == FALSE)
+	    {
+	      charRead = FileBuffer[(*index)++];
+	      if (*index > LastCharInFileBuffer)
+		*index = 0;
+	    }
+	}
+    }
+  return charRead;
 }
 
 /*----------------------------------------------------------------------
