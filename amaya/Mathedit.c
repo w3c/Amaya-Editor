@@ -370,7 +370,7 @@ static Element InsertPlaceholder (Element el, ThotBool before, Document doc,
   ElementType	elType;
   Attribute	attr;
   AttributeType	attrType;
-  ThotBool	createConstruct, oldStructureChecking, afterMsubsup;
+  ThotBool	createConstruct, oldStructureChecking, afterMsubsup, ok;
 
   placeholderEl = NULL;
 
@@ -393,10 +393,43 @@ static Element InsertPlaceholder (Element el, ThotBool before, Document doc,
       sibling = el;
       afterMsubsup = FALSE;
       if (before)
-	TtaPreviousSibling (&sibling);
+	{
+	  /* get the previous sibling that is not a comment */
+	  TtaPreviousSibling (&sibling);
+	  if (sibling)
+	    {
+	      ok = FALSE;
+	      do
+		{
+		  elType = TtaGetElementType (sibling);
+		  if (elType.ElTypeNum == MathML_EL_XMLcomment &&
+		      !strcmp (TtaGetSSchemaName (elType.ElSSchema), "MathML"))
+		    TtaPreviousSibling (&sibling);
+		  else
+		    ok = TRUE;
+		}
+	      while (sibling && !ok);
+	    }
+	}
       else
 	{
+	  /* get the next sibling that is not a comment */
 	  TtaNextSibling (&sibling);
+	  if (sibling)
+	    {
+	      ok = FALSE;
+	      do
+		{
+		  elType = TtaGetElementType (sibling);
+		  if (elType.ElTypeNum == MathML_EL_XMLcomment &&
+		      !strcmp (TtaGetSSchemaName (elType.ElSSchema), "MathML"))
+		    TtaNextSibling (&sibling);
+		  else
+		    ok = TRUE;
+		}
+	      while (sibling && !ok);
+	    }
+
 	  if (!sibling)
 	    /* the element has no following sibling */
 	    {
@@ -2059,10 +2092,10 @@ static ThotBool MathMoveForward ()
 {
   Document      doc;
   Element       el, nextEl, leaf, ancestor, sibling;
-  ElementType   elType;
+  ElementType   elType, successorType;
   int           firstChar, lastChar, len;
   NotifyElement event;
-  ThotBool      done, found;
+  ThotBool      done, found, ok;
 
   done = FALSE;
   doc = TtaGetSelectedDocument ();
@@ -2090,6 +2123,22 @@ static ThotBool MathMoveForward ()
     {
       /* get the following element in the tree structure */
       nextEl = TtaGetSuccessor (el);
+      /* skip comments */
+      if (nextEl)
+	{
+	  ok = FALSE;
+	  do
+	    {
+	      successorType = TtaGetElementType (nextEl);
+	      if (successorType.ElTypeNum == MathML_EL_XMLcomment &&
+		  !strcmp (TtaGetSSchemaName (successorType.ElSSchema), "MathML"))
+		nextEl = TtaGetSuccessor (nextEl);
+	      else
+		ok = TRUE;
+	    }
+	  while (nextEl && !ok);
+	}
+	
       /* are we in a mroot? */
       elType.ElTypeNum = MathML_EL_MROOT;
       ancestor = TtaGetTypedAncestor (el, elType);
@@ -2187,10 +2236,10 @@ static ThotBool MathMoveBackward ()
 {
   Document    doc;
   Element     el, prevEl, leaf, ancestor, sibling;
-  ElementType elType;
+  ElementType elType, predecType;
   int         firstChar, lastChar, len;
   NotifyElement event;
-  ThotBool    done, found;
+  ThotBool    done, found, ok;
 
   done = FALSE;  
   doc = TtaGetSelectedDocument ();
@@ -2213,6 +2262,22 @@ static ThotBool MathMoveBackward ()
     {
       /* get the previous element in the tree structure */
       prevEl = TtaGetPredecessor (el);
+      /* skip comments */
+      if (prevEl)
+	{
+	  ok = FALSE;
+	  do
+	    {
+	      predecType = TtaGetElementType (prevEl);
+	      if (predecType.ElTypeNum == MathML_EL_XMLcomment &&
+		  !strcmp (TtaGetSSchemaName (predecType.ElSSchema), "MathML"))
+		prevEl = TtaGetPredecessor (prevEl);
+	      else
+		ok = TRUE;
+	    }
+	  while (prevEl && !ok);
+	}
+	
       /* are we in a mroot? */
       elType.ElTypeNum = MathML_EL_MROOT;
       ancestor = TtaGetTypedAncestor (el, elType);
@@ -2451,73 +2516,95 @@ static void MergeMathEl (Element el, Element el2, ThotBool before,
  -----------------------------------------------------------------------*/
 static Element ClosestLeaf (Element el, int* pos)
 {
-   Element	elem, prev, next, child, leaf, parent;
-   ElementType	elType;
+  Element	elem, prev, next, child, leaf, parent;
+  ElementType	elType;
+  ThotBool     ok;
 
-   elem = NULL;
-   leaf = NULL;
-   prev = NULL;
-   next = NULL;
-   parent = el;
-   do
-      {
+  elem = NULL;
+  leaf = NULL;
+  prev = NULL;
+  next = NULL;
+  parent = el;
+  do
+    {
       prev = parent;  TtaPreviousSibling (&prev);
-      if (prev != NULL)
-	 {
-         elType = TtaGetElementType (prev);
-         if (elType.ElTypeNum == MathML_EL_FencedSeparator &&
-	     strcmp (TtaGetSSchemaName (elType.ElSSchema), "MathML") == 0)
-	    /* avoid selecting FencedSeparator elements */
-	    TtaPreviousSibling (&prev);
-	 }
-      if (prev == NULL)
-	 {
-	 next = parent;  TtaNextSibling (&next);
-	 if (next != NULL)
+      if (prev)
+	{
+	  /* avoid selecting FencedSeparator elements or comments */
+	  ok = FALSE;
+	  do
 	    {
-	    elType = TtaGetElementType (next);
-	    if (elType.ElTypeNum == MathML_EL_FencedSeparator &&
-		strcmp (TtaGetSSchemaName (elType.ElSSchema), "MathML") == 0)
-	       /* avoid selecting FencedSeparator elements */
-	       TtaNextSibling (&next);
+	      elType = TtaGetElementType (prev);
+	      if ((elType.ElTypeNum == MathML_EL_FencedSeparator ||
+		   elType.ElTypeNum == MathML_EL_XMLcomment) &&
+		  !strcmp (TtaGetSSchemaName (elType.ElSSchema), "MathML"))
+		TtaPreviousSibling (&prev);
+	      else
+		ok = TRUE;
+	    }
+	  while (prev && !ok);
+	  /* avoid selecting an MF element */
+	  if (prev)
+	    if (elType.ElTypeNum == MathML_EL_MF &&
+		!strcmp (TtaGetSSchemaName (elType.ElSSchema), "MathML"))
+	      prev = NULL;
+	}
+      if (!prev)
+	{
+	  next = parent;  TtaNextSibling (&next);
+	  if (next)
+	    {
+	      /* avoid selecting FencedSeparator elements or comments */
+	      ok = FALSE;
+	      do
+		{
+		  elType = TtaGetElementType (next);
+		  if ((elType.ElTypeNum == MathML_EL_FencedSeparator ||
+		       elType.ElTypeNum == MathML_EL_XMLcomment) &&
+		      !strcmp (TtaGetSSchemaName (elType.ElSSchema), "MathML"))
+		    TtaNextSibling (&next);
+		  else
+		    ok = TRUE;
+		}
+	      while (next && !ok);
 	    }
 	 if (next == NULL)
-	    parent = TtaGetParent (parent);
-	 }
-      }
-   while (next == NULL && prev == NULL && parent != NULL);
-   if (prev != NULL)
-      {
+	   parent = TtaGetParent (parent);
+	}
+    }
+  while (next == NULL && prev == NULL && parent != NULL);
+  if (prev != NULL)
+    {
       child = prev;
       while (child != NULL)
 	{
-	leaf = child;
-	child = TtaGetLastChild (child);
+	  leaf = child;
+	  child = TtaGetLastChild (child);
 	}
-      }
-   else
-      if (next != NULL)
-        {
+    }
+  else
+    if (next != NULL)
+      {
 	child = next;
 	while (child != NULL)
-	   {
-	   leaf = child;
-	   child = TtaGetFirstChild (child);
-	   }
-	}
-   if (leaf != NULL)
-      {
+	  {
+	    leaf = child;
+	    child = TtaGetFirstChild (child);
+	  }
+      }
+  if (leaf != NULL)
+    {
       elem = leaf;
       elType = TtaGetElementType (leaf);
       if (elType.ElTypeNum == MathML_EL_TEXT_UNIT)
 	{
-	if (prev != NULL)
-	   *pos = TtaGetElementVolume (leaf) + 1;
-	else
-	   *pos = 1;
+	  if (prev != NULL)
+	    *pos = TtaGetElementVolume (leaf) + 1;
+	  else
+	    *pos = 1;
 	}
-      }
-   return elem;
+    }
+  return elem;
 }
 
 /*----------------------------------------------------------------------
@@ -2794,7 +2881,7 @@ static void ParseMathString (Element theText, Element theElem, Document doc)
   Language	language[TXTBUFLEN];
   char          mathType[TXTBUFLEN];
   int           oldStructureChecking;
-  ThotBool      empty, closeUndoSeq, separate;
+  ThotBool      empty, closeUndoSeq, separate, ok;
 
   elType = TtaGetElementType (theElem);
   MathMLSchema = elType.ElSSchema;
@@ -2947,13 +3034,43 @@ static void ParseMathString (Element theText, Element theElem, Document doc)
 	  if (newSelEl != NULL)
 	     newSelEl = ClosestLeaf (theElem, &newSelChar);
 
-	  prev = theElem;
-	  TtaPreviousSibling (&prev);
-	  if (prev == NULL)
-	     {
-	     next = theElem;
-	     TtaNextSibling (&next);
-	     }
+	  /* get the previous sibling that is not a comment */
+	  prev = theElem; TtaPreviousSibling (&prev);
+	  if (prev)
+	    {
+	      ok = FALSE;
+	      do
+		{
+		  elType = TtaGetElementType (prev);
+		  if (elType.ElTypeNum == MathML_EL_XMLcomment &&
+		      !strcmp (TtaGetSSchemaName (elType.ElSSchema), "MathML"))
+		    TtaPreviousSibling (&prev);
+		  else
+		    ok = TRUE;
+		}
+	      while (prev && !ok);
+	    }
+	  
+	  if (!prev)
+	    /* No previous sibling. Get the next sibling that is not a
+	       comment */
+	    {
+	      next = theElem; TtaNextSibling (&next);
+	      if (next)
+		{
+		  ok = FALSE;
+		  do
+		    {
+		      elType = TtaGetElementType (next);
+		      if (elType.ElTypeNum == MathML_EL_XMLcomment &&
+			  !strcmp (TtaGetSSchemaName (elType.ElSSchema), "MathML"))
+			TtaNextSibling (&next);
+		      else
+			ok = TRUE;
+		    }
+		  while (next && !ok);
+		}
+	    }
 
 	  parent = TtaGetParent (theElem);
 	  TtaRegisterElementDelete (theElem, doc);
