@@ -526,6 +526,12 @@ ThotBool show;
       TtaFreeMemory (annot_url);
       if (!annot || !(annot->is_visible) || annot->is_orphan)
 	continue;
+
+#ifdef ANNOT_ON_ANNOT
+      /* skip the reply annotations */
+      if (annot->isReplyTo)
+	continue;
+#endif /* ANNOT_ON_ANNOT */
       
       switch (selector) 
 	{

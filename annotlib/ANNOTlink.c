@@ -399,12 +399,23 @@ ThotBool LINK_AddLinkToSource (Document source_doc, AnnotMeta *annot)
 
   attrType.AttrSSchema = XLinkSchema;
 
+
+#ifdef ANNOT_ON_ANNOT
+  /* @@ JK: Systematically hiding the thread annotations */
+  if (annot->isReplyTo)
+    {
+      attrType.AttrTypeNum = XLink_ATTR_AnnotIsHidden;
+      attr = TtaNewAttribute (attrType);
+      TtaAttachAttribute (anchor, attr, source_doc);
+    }
+#endif /* ANNOT_ON_ANNOT */
+
   /* add the annotation icon */
   if (!annot->is_orphan)
     attrType.AttrTypeNum = XLink_ATTR_AnnotIcon1;
   else
     attrType.AttrTypeNum = XLink_ATTR_AnnotOrphIcon;
-
+      
   attr = TtaNewAttribute (attrType);
   TtaAttachAttribute (anchor, attr, source_doc);  
 
