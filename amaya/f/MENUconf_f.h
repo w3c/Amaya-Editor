@@ -16,8 +16,6 @@ extern void GeneralConfMenu ( Document document,
                               View view );
 extern void PublishConfMenu ( Document document,
                               View view );
-extern void PrinterConfMenu ( Document document,
-                              View view );
 extern void ColorConfMenu ( Document document,
                             View view );
 extern void GeometryConfMenu ( Document document,
@@ -34,8 +32,6 @@ extern void ProxyConfMenu (/* Document document,
 extern void GeneralConfMenu (/* Document document,
                                 View view */);
 extern void PublishConfMenu (/* Document document,
-                                View view */);
-extern void PrinterConfMenu (/* Document document,
                                 View view */);
 extern void ColorConfMenu (/* Document document,
                               View view */);

@@ -211,7 +211,6 @@ MENUS
 	view:1 Special.Coptions button:BConfigPublish -> ConfigPublish;
 	view:1 Special.Coptions button:BConfigCache -> ConfigCache;
 	view:1 Special.Coptions button:BConfigProxy -> ConfigProxy;
-	view:1 Special.Coptions button:BConfigPrinter -> ConfigPrinter;
 	view:1 Special.Coptions button:BConfigColor -> ConfigColor;
 	view:1 Special.Coptions button:BConfigGeometry -> ConfigGeometry;
         view:1 Special.Coptions Separator;

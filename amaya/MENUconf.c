@@ -44,12 +44,6 @@
 #include "resource.h"
 #include "wininclude.h"
 extern HINSTANCE hInstance;
-
-#ifdef __STDC__
-LRESULT CALLBACK ConfigDlgProc (HWND, UINT, WPARAM, LPARAM);
-#else
-LRESULT CALLBACK ConfigDlgProc (HWND, UINT, WPARAM, LPARAM);
-#endif /* __STDC__ */
 #endif /* _WINDOWS */
 
 #define MAX_GEOMETRY_LENGTH 24
@@ -58,6 +52,9 @@ static int CacheStatus;
 static int ProxyStatus;
 
 /* Cache menu options */
+#ifdef _WINDOWS
+static boolean CacheActive = FALSE;
+#endif _WINDOWS
 static int CacheBase;
 static boolean EnableCache;
 static boolean CacheProtectedDocs;
@@ -68,11 +65,17 @@ static int CacheSize;
 static int MaxCacheFile;
 
 /* Proxy menu options */
+#ifdef _WINDOWS
+static boolean ProxyActive = FALSE;
+#endif _WINDOWS
 static int ProxyBase;
 static CHAR HttpProxy [MAX_LENGTH+1];
 static CHAR NoProxy [MAX_LENGTH+1];
 
 /* General menu options */
+#ifdef _WINDOWS
+static boolean GeneralActive = FALSE;
+#endif _WINDOWS
 static int GeneralBase;
 static int ToolTipDelay;
 static int DoubleClickDelay;
@@ -85,17 +88,18 @@ static CHAR DialogueLang [MAX_LENGTH+1];
 static int FontMenuSize;
 
 /* Publish menu options */
+#ifdef _WINDOWS
+static boolean PublishActive = FALSE;
+#endif _WINDOWS
 static int PublishBase;
 static boolean LostUpdateCheck;
 static boolean VerifyPublish;
 static CHAR HomePage [MAX_LENGTH+1];
 
-/* Print menu options */
-static int PrintBase;
-static CHAR ThotPrint [MAX_LENGTH+1];
-static int  PaperSize;
-
 /* Color menu options */
+#ifdef _WINDOWS
+static boolean ColorActive = FALSE;
+#endif _WINDOWS
 static int ColorBase;
 static CHAR FgColor [MAX_LENGTH+1];
 static CHAR BgColor [MAX_LENGTH+1];
@@ -103,6 +107,9 @@ static CHAR MenuFgColor [MAX_LENGTH+1];
 static CHAR MenuBgColor [MAX_LENGTH+1];
 
 /* Geometry menu options */
+#ifdef _WINDOWS
+static boolean GeometryActive = FALSE;
+#endif _WINDOWS
 static int GeometryBase;
 static CHAR FormattedView [MAX_GEOMETRY_LENGTH+1];
 static CHAR StructureView [MAX_GEOMETRY_LENGTH+1];
@@ -115,42 +122,83 @@ static CHAR TableOfContentsView [MAX_GEOMETRY_LENGTH+1];
 /* common local variables */
 CHAR s[300]; /* general purpose buffer */
 
+/* 
+** function prototypes
+*/
+
+#ifdef _WINDOWS
+#ifdef __STDC__
+LRESULT CALLBACK WIN_GeneralDlgProc (HWND, UINT, WPARAM, LPARAM);
+static void WIN_RefreshGeneralMenu (HWND hwnDlg);
+LRESULT CALLBACK WIN_CacheDlgProc (HWND, UINT, WPARAM, LPARAM);
+static void WIN_RefreshCacheMenu (HWND hwnDlg);
+LRESULT CALLBACK WIN_ProxyDlgProc (HWND, UINT, WPARAM, LPARAM);
+static void WIN_RefreshProxyMenu (HWND hwnDlg);
+LRESULT CALLBACK WIN_PublishDlgProc (HWND, UINT, WPARAM, LPARAM);
+static void WIN_RefreshPublishMenu (HWND hwnDlg);
+LRESULT CALLBACK WIN_GeometryDlgProc (HWND, UINT, WPARAM, LPARAM);
+static void WIN_RefreshGeometryMenu (HWND hwnDlg);
+LRESULT CALLBACK WIN_ColorDlgProc (HWND, UINT, WPARAM, LPARAM);
+static void WIN_RefreshColorMenu (HWND hwnDlg);
+#else
+LRESULT CALLBACK WIN_GeneralDlgProc (HWND, UINT, WPARAM, LPARAM);
+static void WIN_RefreshGeneralMenu (/* HWND hwnDlg */);
+LRESULT CALLBACK WIN_CacheDlgProc (HWND, UINT, WPARAM, LPARAM);
+static void WIN_RefreshCacheMenu (/* HWND hwnDlg */);
+LRESULT CALLBACK WIN_ProxyDlgProc (HWND, UINT, WPARAM, LPARAM);
+static void WIN_RefreshProxyMenu (/* HWND hwnDlg */);
+LRESULT CALLBACK WIN_PublishDlgProc (HWND, UINT, WPARAM, LPARAM);
+static void WIN_RefreshPublishMenu (/* HWND hwnDlg */);
+LRESULT CALLBACK WIN_GeometryDlgProc (HWND, UINT, WPARAM, LPARAM);
+static void WIN_RefreshGeometryMenu (/* HWND hwnDlg */);
+LRESULT CALLBACK WIN_ColorDlgProc (HWND, UINT, WPARAM, LPARAM);
+static void WIN_RefreshColorMenu (/* HWND hwnDlg */);
+#endif /* __STDC__ */
+#endif /* _WINDOWS */
+
 #ifdef __STDC__
 static void         GetEnvString (const STRING name, STRING value);
 static void         GetDefEnvToggle (const STRING name, boolean *value, int ref, int entry);
 static void         GetDefEnvString (const STRING name, STRING value);
+#ifndef _WINDOWS
 static void         CacheCallbackDialog (int ref, int typedata, STRING data);
 static void         RefreshCacheMenu (void);
+#endif /* !_WINDOWS */
 static void         GetCacheConf (void);
 static void         GetDefaultCacheConf (void);
 static void         SetCacheConf (void);
+#ifndef _WINDOWS
 static void         ProxyCallbackDialog(int ref, int typedata, STRING data);
 static void         RefreshProxyMenu (void);
+#endif /* !_WINDOWS */
 static void         GetProxyConf (void);
 static void         GetDefaultProxyConf (void);
 static void         SetProxyConf (void);
+#ifndef _WINDOWS
 static void	    GeneralCallbackDialog(int ref, int typedata, STRING data);
 static void         RefreshGeneralMenu (void);
+#endif /* !_WINDOWS */
 static void         GetGeneralConf (void);
 static void         GetDefaultGeneralConf (void);
 static void         SetGeneralConf (void);
+#ifndef _WINDOWS
 static void	    PublishCallbackDialog(int ref, int typedata, STRING data);
 static void         RefreshPublishMenu (void);
+#endif /* !_WINDOWS */
 static void         GetPublishConf (void);
 static void         GetDefaultPublishConf (void);
 static void         SetPublishConf (void);
-static void         PrintCallbackDialog(int ref, int typedata, STRING data);
-static void         RefreshPrintMenu (void);
-static void         GetPrintConf (void);
-static void         GetDefaultPrintConf (void);
-static void         SetPrintConf (void);
+#ifndef _WINDOWS
 static void         ColorCallbackDialog(int ref, int typedata, STRING data);
 static void         RefreshColorMenu (void);
+#endif /* !_WINDOWS */
 static void         GetColorConf (void);
 static void         GetDefaultColorConf (void);
 static void         SetColorConf (void);
+#ifndef _WINDOWS
 static void         GeometryCallbackDialog(int ref, int typedata, STRING data);
 static void         RefreshGeometryMenu (void);
+#endif /* !_WINDOWS */
 static void         GetGeometryConf (void);
 static void         GetDefaultGeometryConf (void);
 static void         SetGeometryConf (void);
@@ -158,38 +206,45 @@ static void         SetGeometryConf (void);
 static void         GetEnvString (/* const STRING name, STRING value */);
 static void         GetDefEnvToggle (/* const STRING name, boolean *value, int ref, int entry */);
 static void         GetDefEnvString (/* const STRING name, STRING value */);
+#ifndef _WINDOWS
 static void         CacheCallbackDialog (/* int ref, int typedata, STRING data */);
 static void         RefreshCacheMenu (/* void */);
+#endif /* !_WINDOWS */
 static void         GetCacheConf (/* void */);
 static void         GetDefaultCacheConf (/* void */);
 static void         SetCacheConf (/* void */);
+#ifndef _WINDOWS
 static void         ProxyCallbackDialog(/* int ref, int typedata, STRING data */);
 static void         RefreshProxyMenu (/* void */);
+#endif /* !_WINDOWS */
 static void         GetProxyConf (/* void */);
 static void         GetDefaultProxyConf (/* void */);
 static void         SetProxyConf (/* void */);
+#ifndef _WINDOWS
 static void	    GeneralCallbackDialog(/*int ref, int typedata, STRING data*/);
 static void         RefreshGeneralMenu (/* void */);
+#endif /* !_WINDOWS */
 static void         GetGeneralConf (/* void */);
 static void         GetDefaultGeneralConf (/* void */);
 static void         SetGeneralConf (/* void */);
+#ifndef _WINDOWS
 static void	    PublishCallbackDialog(/*int ref, int typedata, STRING data*/);
 static void         RefreshPublishMenu (/* void */);
+#endif /* !_WINDOWS */
 static void         GetPublishConf (/* void */);
 static void         GetDefaultPublishConf (/* void */);
 static void         SetPublishConf (/* void */);
-static void         PrintCallbackDialog(/* int ref, int typedata, STRING data */);
-static void         RefreshPrintMenu (/* void */);
-static void         GetPrintConf (/* void */);
-static void         GetDefaultPrintConf (/* void */);
-static void         SetPrintConf (/* void */);
+#ifndef _WINDOWS
 static void         ColorCallbackDialog(/* int ref, int typedata, STRING data */);
 static void         RefreshColorMenu (/* void */);
+#endif /* !_WINDOWS */
 static void         GetColorConf (/* void */);
 static void         GetDefaultColorConf (/* void */);
 static void         SetColorConf (/* void */);
+#ifndef _WINDOWS
 static void         GeometryCallbackDialog(/* int ref, int typedata, STRING data */);
 static void         RefreshGeometryMenu (/* void */);
+#endif /* !_WINDOWS */
 static void         GetGeometryConf (/* void */);
 static void         GetDefaultGeometryConf (/* void */);
 static void         SetGeometryConf (/* void */);
@@ -272,16 +327,16 @@ void                InitConfMenu ()
 #endif /* __STDC__*/
 {
   InitAmayaDefEnv ();
+#ifndef _WINDOWS
   CacheBase = TtaSetCallback (CacheCallbackDialog, MAX_CACHEMENU_DLG);
   ProxyBase = TtaSetCallback (ProxyCallbackDialog, MAX_PROXYMENU_DLG);
   GeneralBase = TtaSetCallback (GeneralCallbackDialog, MAX_GENERALMENU_DLG);
   PublishBase = TtaSetCallback (PublishCallbackDialog, MAX_PUBLISHMENU_DLG);
-  PrintBase = TtaSetCallback (PrintCallbackDialog,
-			      MAX_PRINTMENU_DLG);
   ColorBase = TtaSetCallback (ColorCallbackDialog,
 			      MAX_COLORMENU_DLG);
   GeometryBase = TtaSetCallback (GeometryCallbackDialog,
 				 MAX_GEOMETRYMENU_DLG);
+#endif /* !_WINDOWS */
 }
 
 /*----------------------------------------------------------------------
@@ -358,6 +413,79 @@ STRING value;
 ** Cache configuration menu
 ***********************/
 
+#ifdef _WINDOWS
+/*----------------------------------------------------------------------
+  WIN_CacheDlgProc
+  windows callback for the cache configuration menu
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+LRESULT CALLBACK WIN_CacheDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam, 
+				   LPARAM lParam)
+#else  /* !__STDC__ */
+LRESULT CALLBACK WIN_CacheDlgProc (hwnDlg, msg, wParam, lParam)
+HWND   hwndParent; 
+UINT   msg; 
+WPARAM wParam; 
+LPARAM lParam;
+#endif /* __STDC__ */
+{ 
+#if 0
+  switch (msg)
+    {
+    case WM_INITDIALOG:
+      WIN_RefreshCacheMenu (hwnDlg);
+      break;
+      
+    case WM_COMMAND:
+      if (HIWORD (wParam) == EN_UPDATE)
+	{
+          switch (LOWORD (wParam))
+	    {
+	    case IDC_CACHEDIRECTORY:
+	      GetDlgItemText (hwnDlg, IDC_CACHEDIRECTORY, CacheDirectory,
+			      sizeof (CacheDirectory) - 1);
+	      break;
+	    }
+	}
+      switch (LOWORD (wParam))
+	{
+	case IDC_ENABLECACHE:
+	  EnableCache = !EnableCache;
+	  break;
+	case IDC_CACHEPROTECTEDDOCS:
+	  CacheProtectedDocs = !CacheProtectedDocs;
+	  break;
+	case IDC_CACHEDISCONNECTEDMODE:
+	  CacheDisconnectedMode = !CacheDisconnectedMode;
+	  break;
+	case IDC_CACHEEXPIREIGNORE:
+	  CacheExpireIgnore = !CacheExpireIgnore;
+	  break;
+
+	  /* action buttons */
+	case ID_APPLY:
+	  SetCacheConf ();	  
+	  break;
+	case ID_DONE:
+	  CacheActive = FALSE;
+	  EndDialog (hwnDlg, ID_DONE);
+	  break;
+	case ID_DEFAULTS:
+	  GetDefaultCacheConf ();
+	  WIN_RefreshCacheMenu (hwnDlg);
+	  break;
+	}
+      break;	     
+    default: return FALSE;
+    }
+  return TRUE;
+#else
+ return FALSE;
+#endif /* 0 */
+}
+#endif /* _WINDOWS */
+
+#ifndef _WINDOWS
 /*----------------------------------------------------------------------
   CacheCallbackDialog
   callback of the cache configuration menu
@@ -466,6 +594,7 @@ STRING              data;
 	}
     }
 }
+#endif /* !_WINDOWS */
 
 /*----------------------------------------------------------------------
   GetCacheConf
@@ -536,6 +665,35 @@ static void GetDefaultCacheConf ()
   TtaGetDefEnvInt ("MAX_CACHE_ENTRY_SIZE", &MaxCacheFile);
 }
 
+#ifdef _WINDOWS
+/*----------------------------------------------------------------------
+  WIN_RefreshCacheMenu
+  Displays the current registry values in the menu
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void WIN_RefreshCacheMenu (HWND hwnDlg)
+#else
+static void WIN_RefreshCacheMenu (hwnDlg)
+HWND hwnDlg;
+#endif /* __STDC__ */
+{
+#if 0
+  CheckDlgButton (hwnDlg, IDC_ENABLECACHE, (EnableCache)
+		  ? BST_CHECKED : BST_UNCHECKED);
+  CheckDlgButton (hwnDlg, IDC_CACHEPROTECTEDDOCS, (CacheProtectedDocs)
+		  ? BST_CHECKED : BST_UNCHECKED);
+  CheckDlgButton (hwnDlg, IDC_CACHEDISCONNECTEDMODE, (CacheDisconnectedMode)
+		  ? BST_CHECKED : BST_UNCHECKED);
+  CheckDlgButton (hwnDlg, IDC_CACHEEXPIREIGNORE, (CacheExpireIgnore)
+		  ? BST_CHECKED : BST_UNCHECKED);
+  SetDlgItemText (hwnDlg, IDC_CACHEDIRECTORY, CacheDirectory);
+  SetDlgItemInt (hwnDlg, IDC_CACHESIZE, CacheSize, FALSE);
+  SetDlgItemInt (hwnDlg, IDC_MAXCACHEFILE, MaxCacheFile, FALSE);
+#endif /* 0 */
+}
+#endif /* WINDOWS */
+
+#ifndef _WINDOWS
 /*----------------------------------------------------------------------
   RefreshCacheMenu
   Displays the current registry values in the menu
@@ -549,17 +707,16 @@ static void RefreshCacheMenu ()
   /* verify what happens when the option is NULL */
 
   /* set the menu entries to the current values */
-#ifndef _WINDOWS
   TtaSetToggleMenu (CacheBase + mCacheOptions, 0, EnableCache);
   TtaSetToggleMenu (CacheBase + mCacheOptions, 1, CacheProtectedDocs);
   TtaSetToggleMenu (CacheBase + mCacheOptions, 2, CacheDisconnectMode);
   TtaSetToggleMenu (CacheBase + mCacheOptions, 3, CacheExpireIgnore);
-#endif /* _WINDOWS */
   if (CacheDirectory)
     TtaSetTextForm (CacheBase + mCacheDirectory, CacheDirectory);
   TtaSetNumberForm (CacheBase + mCacheSize, CacheSize);
   TtaSetNumberForm (CacheBase + mMaxCacheFile, MaxCacheFile);
 }
+#endif /* !_WINDOWS */
 
 /*----------------------------------------------------------------------
   CacheConfMenu
@@ -573,6 +730,7 @@ Document            document;
 View                view;
 #endif
 {
+#ifndef _WINDOWS
    int              i;
 
    /* Create the dialogue form */
@@ -615,19 +773,105 @@ View                view;
 		     0,
 		     5,
 		     TRUE);
+#endif /* !_WINDOWS */
+   /* reset the modified flag */
+   CacheStatus = 0;
    /* load and display the current values */
    GetCacheConf ();
+#ifndef _WINDOWS
    RefreshCacheMenu ();
-   /* clean the modified flags */
-   CacheStatus = 0;
   /* display the menu */
   TtaShowDialogue (CacheBase + CacheMenu, TRUE);
+#else /* !_WINDOWS */
+#if 0
+  if (!CacheActive)
+    /* only activate the menu if it isn't active already */
+    {
+      CacheActive = TRUE;
+      DialogBox (hInstance, MAKEINTRESOURCE (CACHEMENU), NULL, 
+		 (DLGPROC) CacheDlgProc);
+    }
+#endif
+#endif /* !_WINDOWS */
 }
 
 /*********************
 ** Proxy configuration menu
 ***********************/
 
+#ifdef _WINDOWS
+/*----------------------------------------------------------------------
+  WIN_ProxyDlgProc
+  Windows callback for the proxy menu
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+LRESULT CALLBACK WIN_ProxyDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
+				     LPARAM lParam)
+#else  /* !__STDC__ */
+LRESULT CALLBACK WIN_ProxyDlgProc (hwnDlg, msg, wParam, lParam)
+HWND   hwndParent; 
+UINT   msg; 
+WPARAM wParam; 
+LPARAM lParam;
+#endif /* __STDC__ */
+{
+#if 0
+  switch (msg)
+    {
+    case WM_INITDIALOG:
+      WIN_RefreshProxyMenu (hwnDlg);
+      break;
+      
+    case WM_COMMAND:
+      if (HIWORD (wParam) == EN_UPDATE)
+	{
+          switch (LOWORD (wParam))
+	    {
+	    case IDC_HTTPPROXY:
+	      GetDlgItemText (hwnDlg, IDC_HTTPPROXY, HttpProxy,
+			      sizeof (HttpProxy) - 1);
+	      ProxyStatus |= AMAYA_PROXY_RESTART;
+	      break;
+	    case IDC_NOPROXY:
+	      GetDlgItemText (hwnDlg, IDC_NOPROXY, NoProxy,
+			      sizeof (NoProxy) - 1);
+	      ProxyStatus |= AMAYA_PROXY_RESTART;
+	      break;
+	    }
+	}
+      switch (LOWORD (wParam))
+	{
+	  /* action buttons */
+	case ID_APPLY:
+	  SetProxyConf ();	  
+	  libwww_updateNetworkConf (ProxyStatus);
+	  /* reset the status flag */
+	  ProxyStatus = 0;
+	  break;
+	case ID_DONE:
+	  /* reset the status flag */
+	  ProxyStatus = 0;
+	  ProxyActive = FALSE;
+	  EndDialog (hwnDlg, ID_DONE);
+	  break;
+	case ID_DEFAULTS:
+	  /* always signal this as modified */
+	  ProxyStatus |= AMAYA_PROXY_RESTART;
+	  GetDefaultProxyConf ();
+	  WIN_RefreshProxyMenu (hwnDlg);
+	  break;
+	}
+      break;	     
+    default: return FALSE;
+    }
+  return TRUE;
+#else
+ return FALSE;
+#endif /* 0 */ 
+}
+#endif /* _WINDOWS */
+
+#ifndef _WINDOWS
 /*----------------------------------------------------------------------
   ProxyCallbackDialog
   callback of the proxy configuration menu
@@ -702,6 +946,7 @@ STRING              data;
 	}
     }
 }
+#endif /* !_WINDOWS */
 
 /*----------------------------------------------------------------------
   GetProxyConf
@@ -747,6 +992,26 @@ static void GetDefaultProxyConf ()
   GetDefEnvString ("NO_PROXY", NoProxy);
 }
 
+#ifdef _WINDOWS
+/*----------------------------------------------------------------------
+  WIN_RefreshProxyMenu
+  Displays the current registry values in the menu
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void WIN_RefreshProxyMenu (HWND hwnDlg)
+#else
+void WIN_RefreshProxyMenu (hwnDlg)
+HWND hwnDlg;
+#endif /* __STDC__ */
+{
+#if 0
+  SetDlgItemText (hwnDlg, IDC_HTTPPROXY, HttpProxy);
+  SetDlgItemText (hwnDlg, IDC_NOPROXY, NoProxy);
+#endif
+}
+#endif /* WINDOWS */
+
+#ifndef _WINDOWS
 /*----------------------------------------------------------------------
   RefreshProxyMenu
   Displays the current registry values in the menu
@@ -761,6 +1026,7 @@ static void RefreshProxyMenu ()
   TtaSetTextForm (ProxyBase + mHttpProxy, HttpProxy);
   TtaSetTextForm (ProxyBase + mNoProxy, NoProxy);
 }
+#endif /* !_WINDOWS */
 
 /*----------------------------------------------------------------------
   ProxyConfMenu
@@ -774,6 +1040,8 @@ Document            document;
 View                view;
 #endif
 {
+
+#ifndef _WINDOWS
    int              i;
 
    /* Create the dialogue form */
@@ -798,14 +1066,26 @@ View                view;
 		   20,
 		   1,
 		   TRUE);
-
+#endif /* !_WINDOWS */
+   /* reset the modified flag */
+   ProxyStatus = 0;
    /* load and display the current values */
    GetProxyConf ();
+#ifndef _WINDOWS
    RefreshProxyMenu ();
-   /* clean the modified flags */
-   ProxyStatus = 0;
   /* display the menu */
   TtaShowDialogue (ProxyBase + ProxyMenu, TRUE);
+#else
+#if 0
+  if (!ProxyActive)
+    /* only activate the menu if it isn't active already */
+    {
+      ProxyActive = TRUE;
+      DialogBox (hInstance, MAKEINTRESOURCE (PROXYMENU), NULL, 
+		 (DLGPROC) WIN_ProxyDlgProc);
+    }
+#endif
+#endif /* !_WINDOWS */
 }
 
 /**********************
@@ -813,29 +1093,15 @@ View                view;
 ***********************/
 
 #ifdef _WINDOWS
-#ifdef __STDC__
-void WIN_RefreshGeneralMenu (HWND hwnDlg)
-#else
-void WIN_RefreshGeneralMenu (hwnDlg)
-HWND hwnDlg;
-#endif /* __STDC__ */
-{
-	SetDlgItemText (hwnDlg, IDC_HOMEPAGE, HomePage);
-	SetDlgItemInt (hwnDlg, IDC_FONTMENUSIZE, FontMenuSize, FALSE);
-	CheckDlgButton (hwnDlg, IDC_MULTIKEY, (Multikey) ? BST_CHECKED : BST_UNCHECKED);
-	CheckDlgButton (hwnDlg, IDC_BGIMAGES, (BgImages) ? BST_CHECKED : BST_UNCHECKED);
-	CheckDlgButton (hwnDlg, IDC_DOUBLECLICK, (DoubleClick) ? BST_CHECKED : BST_UNCHECKED);
-	SetDlgItemText (hwnDlg, IDC_DIALOGUELANG, DialogueLang);
-	SetDlgItemInt (hwnDlg, IDC_ZOOM, Zoom, FALSE);
-}
-
 /*----------------------------------------------------------------------
-   Windows callback of the general menu
+  WIN_GeneralDlgProc
+  Windows callback for the general menu
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-LRESULT CALLBACK ConfigDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam, LPARAM lParam)
+LRESULT CALLBACK WIN_GeneralDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
+				     LPARAM lParam)
 #else  /* !__STDC__ */
-LRESULT CALLBACK ConfigDlgProc (hwnDlg, msg, wParam, lParam)
+LRESULT CALLBACK WIN_GeneralDlgProc (hwnDlg, msg, wParam, lParam)
 HWND   hwndParent; 
 UINT   msg; 
 WPARAM wParam; 
@@ -844,61 +1110,66 @@ LPARAM lParam;
 { 
   switch (msg)
     {
-     case WM_INITDIALOG:
-         GetGeneralConf ();
-	 	 WIN_RefreshGeneralMenu (hwnDlg);
+    case WM_INITDIALOG:
+      WIN_RefreshGeneralMenu (hwnDlg);
       break;
       
-     case WM_COMMAND:
-		 if (HIWORD (wParam) == EN_UPDATE)
-		 {
+    case WM_COMMAND:
+      if (HIWORD (wParam) == EN_UPDATE)
+	{
           switch (LOWORD (wParam))
-		  {
-           case IDC_HOMEPAGE:
-				GetDlgItemText (hwnDlg, IDC_HOMEPAGE, HomePage, sizeof (HomePage) - 1);
-				break;
-		    case IDC_FONTMENUSIZE:
-				/* @@@ do we need to check the boolean variable? */
-				FontMenuSize = GetDlgItemInt (hwnDlg, IDC_FONTMENUSIZE, FALSE, FALSE);
-				break;
-			case IDC_DIALOGUELANG:
-				GetDlgItemText (hwnDlg, IDC_DIALOGUELANG, DialogueLang, sizeof (DialogueLang) - 1);
-				break;
-			case IDC_ZOOM:
-				Zoom = GetDlgItemInt (hwnDlg, IDC_ZOOM, FALSE, FALSE);
-				break;	
-		  }
-		 }
+	    {
+	    case IDC_HOMEPAGE:
+	      GetDlgItemText (hwnDlg, IDC_HOMEPAGE, HomePage, 
+			      sizeof (HomePage) - 1);
+	      break;
+	    case IDC_FONTMENUSIZE:
+	      /* @@@ do we need to check the boolean variable? */
+	      FontMenuSize = GetDlgItemInt (hwnDlg, IDC_FONTMENUSIZE, FALSE,
+					    FALSE);
+	      break;
+	    case IDC_DIALOGUELANG:
+	      GetDlgItemText (hwnDlg, IDC_DIALOGUELANG, DialogueLang,
+			      sizeof (DialogueLang) - 1);
+	      break;
+	    case IDC_ZOOM:
+	      Zoom = GetDlgItemInt (hwnDlg, IDC_ZOOM, FALSE, FALSE);
+	      break;	
+	    }
+	}
+      switch (LOWORD (wParam))
+	{
+	case IDC_MULTIKEY:
+	  Multikey = !Multikey;
+	  break;
+	case IDC_BGIMAGES:
+	  BgImages = !BgImages;
+	  break;
+	case IDC_DOUBLECLICK:
+	  DoubleClick = !DoubleClick;
+	  break;
 
-          switch (LOWORD (wParam))
-			{
-			case IDC_MULTIKEY:
-				Multikey = !Multikey;
-				break;
-			case IDC_BGIMAGES:
-				BgImages = !BgImages;
-				break;
-			case IDC_DOUBLECLICK:
-				DoubleClick = !DoubleClick;
-				break;
-		    case ID_APPLY:
-			    SetGeneralConf ();	  
-				break;
-			case ID_DONE:
-				EndDialog (hwnDlg, ID_DONE);
-				break;
-			case ID_DEFAULTS:
-				GetDefaultGeneralConf ();
-				WIN_RefreshGeneralMenu (hwnDlg);
-				break;
-			}
-		break;	     
+	  /* action buttons */
+	case ID_APPLY:
+	  SetGeneralConf ();	  
+	  break;
+	case ID_DONE:
+	  GeneralActive = FALSE;
+	  EndDialog (hwnDlg, ID_DONE);
+	  break;
+	case ID_DEFAULTS:
+	  GetDefaultGeneralConf ();
+	  WIN_RefreshGeneralMenu (hwnDlg);
+	  break;
+	}
+      break;	     
     default: return FALSE;
     }
-  return TRUE ;
+  return TRUE;
 }
 #endif /* _WINDOWS */
 
+#ifndef _WINDOWS
 /*----------------------------------------------------------------------
    callback of the general menu
   ----------------------------------------------------------------------*/
@@ -993,6 +1264,7 @@ STRING              data;
 	}
     }
 }
+#endif /* !_WINDOWS */
 
 /*----------------------------------------------------------------------
   GetGeneralConf
@@ -1071,6 +1343,32 @@ static void GetDefaultGeneralConf ()
 
 }
 
+#ifdef _WINDOWS
+/*----------------------------------------------------------------------
+  WIN_RefreshGeneralMenu
+  Displays the current registry values in the menu
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void WIN_RefreshGeneralMenu (HWND hwnDlg)
+#else
+void WIN_RefreshGeneralMenu (hwnDlg)
+HWND hwnDlg;
+#endif /* __STDC__ */
+{
+  SetDlgItemText (hwnDlg, IDC_HOMEPAGE, HomePage);
+  SetDlgItemInt (hwnDlg, IDC_FONTMENUSIZE, FontMenuSize, FALSE);
+  CheckDlgButton (hwnDlg, IDC_MULTIKEY, (Multikey) 
+		  ? BST_CHECKED : BST_UNCHECKED);
+  CheckDlgButton (hwnDlg, IDC_BGIMAGES, (BgImages) 
+		  ? BST_CHECKED : BST_UNCHECKED);
+  CheckDlgButton (hwnDlg, IDC_DOUBLECLICK, (DoubleClick) 
+		  ? BST_CHECKED : BST_UNCHECKED);
+  SetDlgItemText (hwnDlg, IDC_DIALOGUELANG, DialogueLang);
+  SetDlgItemInt (hwnDlg, IDC_ZOOM, Zoom, FALSE);
+}
+#endif _WINDOWS
+
+#ifndef _WINDOWS
 /*----------------------------------------------------------------------
   RefreshGeneralMenu
   Displays the current registry values in the menu
@@ -1084,15 +1382,14 @@ static void RefreshGeneralMenu ()
   TtaSetNumberForm (GeneralBase + mToolTipDelay, ToolTipDelay);
   TtaSetNumberForm (GeneralBase + mDoubleClickDelay, DoubleClickDelay);
   TtaSetNumberForm (GeneralBase + mZoom, Zoom);
-#ifndef _WINDOWS
   TtaSetToggleMenu (GeneralBase + mToggleGeneral, 0, Multikey);
   TtaSetToggleMenu (GeneralBase + mToggleGeneral, 1, BgImages);
   TtaSetToggleMenu (GeneralBase + mToggleGeneral, 2, DoubleClick);
-#endif /* _WINDOWS */
   TtaSetTextForm (GeneralBase + mHomePage, HomePage);
   TtaSetTextForm (GeneralBase + mDialogueLang, DialogueLang);
   TtaSetNumberForm (GeneralBase + mFontMenuSize, FontMenuSize);
 }
+#endif /* !_WINDOWS */
 
 /*----------------------------------------------------------------------
   GeneralConfMenu
@@ -1177,13 +1474,22 @@ STRING              pathname;
 		     s,
 		     NULL,
 		     FALSE);
-   /* load and display the current values */
+#endif /* !_WINDOWS */
+   /* load the current values */
    GetGeneralConf ();
+
+#ifndef _WINDOWS
+   /* display the menu */
    RefreshGeneralMenu ();
-  /* display the menu */
-  TtaShowDialogue (GeneralBase + GeneralMenu, TRUE);
+   TtaShowDialogue (GeneralBase + GeneralMenu, TRUE);
 #else /* !_WINDOWS */
-  DialogBox (hInstance, MAKEINTRESOURCE (GENERALMENU), NULL, (DLGPROC) ConfigDlgProc);
+   if (!GeneralActive)
+     /* only activate the menu if it isn't active already */
+     {
+       GeneralActive = TRUE;
+       DialogBox (hInstance, MAKEINTRESOURCE (GENERALMENU), NULL, 
+		  (DLGPROC) WIN_GeneralDlgProc);
+     }
 #endif /* !_WINDOWS */
 }
 
@@ -1191,6 +1497,80 @@ STRING              pathname;
 ** Publishing menu
 ***********************/
 
+#ifdef _WINDOWS
+/*----------------------------------------------------------------------
+  WIN_PublishDlgProc
+  Windows callback for the publish menu
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+LRESULT CALLBACK WIN_PublishDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
+				     LPARAM lParam)
+#else  /* !__STDC__ */
+LRESULT CALLBACK WIN_PublishDlgProc (hwnDlg, msg, wParam, lParam)
+HWND   hwndParent; 
+UINT   msg; 
+WPARAM wParam; 
+LPARAM lParam;
+#endif /* __STDC__ */
+{ 
+#if 0
+  switch (msg)
+    {
+    case WM_INITDIALOG:
+      WIN_RefreshPublishMenu (hwnDlg);
+      break;
+      
+    case WM_COMMAND:
+      if (HIWORD (wParam) == EN_UPDATE)
+	{
+          switch (LOWORD (wParam))
+	    {
+	    case IDC_HTTPPublish:
+	      GetDlgItemText (hwnDlg, IDC_DEFAULTNAME, DefaultName,
+			      sizeof (DefaultName) - 1);
+	      break;
+	    }
+	}
+      switch (LOWORD (wParam))
+	{
+	case IDC_LOSTUPDATECHECK:
+	  LostUpdateCheck = !LostUpdateCheck;
+	  break;
+	case IDC_VERIFYPUBLISH:
+	  VerifyPublish = !VerifyPublish;
+	  break;
+
+	  /* action buttons */
+	case ID_APPLY:
+	  SetPublishConf ();	  
+	  libwww_updateNetworkConf (PublishStatus);
+	  /* reset the status flag */
+	  PublishStatus = 0;
+	  break;
+	case ID_DONE:
+	  /* reset the status flag */
+	  PublishStatus = 0;
+	  PublishActive = FALSE;
+	  EndDialog (hwnDlg, ID_DONE);
+	  break;
+	case ID_DEFAULTS:
+	  /* always signal this as modified */
+	  PublishStatus |= AMAYA_Publish_RESTART;
+	  GetDefaultPublishConf ();
+	  WIN_RefreshPublishMenu (hwnDlg);
+	  break;
+	}
+      break;	     
+    default: return FALSE;
+    }
+  return TRUE;
+#else
+  return FALSE;
+#endif /* 0 */
+}
+#endif /* _WINDOWS */
+
+#ifndef _WINDOWS
 /*----------------------------------------------------------------------
    callback of the Publishing menu
   ----------------------------------------------------------------------*/
@@ -1259,6 +1639,7 @@ STRING              data;
 	}
     }
 }
+#endif /* !_WINDOWS */
 
 /*----------------------------------------------------------------------
   GetPublishConf
@@ -1308,6 +1689,29 @@ static void GetDefaultPublishConf ()
   GetDefEnvString ("DEFAULTNAME", DefaultName);
 }
 
+#ifdef _WINDOWS
+/*----------------------------------------------------------------------
+  WIN_RefreshPublishMenu
+  Displays the current registry values in the menu
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void WIN_RefreshPublishMenu (HWND hwnDlg)
+#else
+void WIN_RefreshPublishMenu (hwnDlg)
+HWND hwnDlg;
+#endif /* __STDC__ */
+{
+#if 0
+  CheckDlgButton (hwnDlg, IDC_LOSTUPDATECHECK, (LostUpdateCheck)
+		  ? BST_CHECKED : BST_UNCHECKED);
+  CheckDlgButton (hwnDlg, IDC_VERIFYPUBLISH, (Verifypublish)
+		  ? BST_CHECKED : BST_UNCHECKED);
+  SetDlgItemText (hwnDlg, IDC_DEFAULTNAME, DefaultName);
+#endif
+}
+#endif /* WINDOWS */
+
+#ifndef _WINDOWS
 /*----------------------------------------------------------------------
   RefreshPublishMenu
   Displays the current registry values in the menu
@@ -1318,12 +1722,11 @@ static void RefreshPublishMenu ()
 static void RefreshPublishMenu ()
 #endif /* __STDC__ */
 {
-#ifndef _WINDOWS
   TtaSetToggleMenu (PublishBase + mTogglePublish, 0, LostUpdateCheck);
   TtaSetToggleMenu (PublishBase + mTogglePublish, 1, VerifyPublish);
-#endif /* _WINDOWS */
   TtaSetTextForm (PublishBase + mDefaultName, DefaultName);
 }
+#endif /* !_WINDOWS */
 
 /*----------------------------------------------------------------------
   PublishConfMenu
@@ -1340,6 +1743,7 @@ STRING              pathname;
 
 #endif
 {
+#ifndef _WINDOWS
    CHAR             s[MAX_LENGTH];
    int              i;
 
@@ -1367,198 +1771,52 @@ STRING              pathname;
 		   20,
 		   1,
 		   FALSE);
-   /* load and display the current values */
+#endif /* !_WINDOWS */
+   /* load the current values */
    GetPublishConf ();
-   RefreshPublishMenu ();
-  /* display the menu */
-  TtaShowDialogue (PublishBase + PublishMenu, TRUE);
-}
 
-/**********************
-** Print Menu
-**********************/
-
-/*----------------------------------------------------------------------
-   callback of the print configuration menu
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         PrintCallbackDialog (int ref, int typedata, STRING data)
-#else
-static void         PrintCallbackDialog (ref, typedata, data)
-int                 ref;
-int                 typedata;
-STRING              data;
-
-#endif
-{
-  int val;
-
-  if (ref == -1)
-    {
-      /* removes the print conf menu */
-      TtaDestroyDialogue (PrintBase + PrintMenu);
-    }
-  else
-    {
-      /* has the user changed the options? */
-      val = (int) data;
-      switch (ref - PrintBase)
-	{
-	case PrintMenu:
-	  switch (val) 
-	    {
-	    case 0:
-	      TtaDestroyDialogue (ref);
-	      break;
-	    case 1:
-	      SetPrintConf ();
-	      break;
-	    case 2:
-	      GetDefaultPrintConf ();
-	      RefreshPrintMenu ();
-	      break;
-	    default:
-	      break;
-	    }
-	  break;
-
-	case mThotPrint:
-	  if (data)
-	    ustrcpy (ThotPrint, data);
-	  else
-	    ThotPrint [0] = EOS;
-	  break;  
-
-	case mPaperSize:
-	   switch (val)
-	     {
-	     case 0:
-	       PaperSize = PP_A4;
-	       break;
-	     case 1:
-	       PaperSize = PP_US;
-	       break;
-	     }
-	   break;
-
-	default:
-	  break;
-	}
-    }
-}
-
-/*----------------------------------------------------------------------
-  PrinterConfMenu
-  Build and display the Conf Menu dialog box and prepare for input.
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void         PrinterConfMenu (Document document, View view)
-#else
-void         PrinterConfMenu (document, view)
-Document            document;
-View                view;
-STRING              pathname;
-
-#endif
-{
-   CHAR             s[MAX_LENGTH];
-   int              i;
-
-   /* Create the dialogue form */
-   i = 0;
-   strcpy (&s[i], "Apply");
-   i += strlen (&s[i]) + 1;
-   strcpy (&s[i], "Defaults");
-   TtaNewSheet (PrintBase + PrintMenu, 
-		TtaGetViewFrame (document, view),
-	       "Printer Configuration", 2, s, FALSE, 2, 'L', D_DONE);
-   TtaNewTextForm (PrintBase + mThotPrint,
-		   PrintBase + PrintMenu,
-		   "Printer command",
-		   20,
-		   1,
-		   FALSE);
-   /* Paper format submenu */
-   i = 0;
-   sprintf (&s[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_A4));
-   i += ustrlen (&s[i]) + 1;
-   sprintf (&s[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_US));
-   TtaNewSubmenu (PrintBase+ mPaperSize, PrintBase+PrintMenu, 0,
-		  TtaGetMessage (LIB, TMSG_PAPER_SIZE), 2, s, NULL, FALSE);
-   /* load and display the current values */
-   GetPrintConf ();
-   RefreshPrintMenu ();
    /* display the menu */
-   TtaShowDialogue (PrintBase + PrintMenu, TRUE);
-}
-
-/*----------------------------------------------------------------------
-  RefreshPrintMenu
-  Displays the current registry values in the menu
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void RefreshPrintMenu ()
+#ifndef _WINDOWS
+   RefreshPublishMenu ();
+  TtaShowDialogue (PublishBase + PublishMenu, TRUE);
 #else
-static void RefreshPrintMenu ()
-#endif /* __STDC__ */
-{
-  TtaSetTextForm (PrintBase + mThotPrint, ThotPrint);
-  if (PaperSize == PP_US)
-    TtaSetMenuForm (PrintBase+ mPaperSize, 1);
-  else
-    TtaSetMenuForm (PrintBase+ mPaperSize, 0);
-}
-
-/*----------------------------------------------------------------------
-  GetPrintConf
-  Makes a copy of the current registry print values
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void GetPrintConf (void)
-#else
-static void GetPrintConf ()
-#endif /* __STDC__ */
-{
-  GetEnvString ("THOTPRINT", ThotPrint);
-  TtaGetEnvInt ("PAPERSIZE", &PaperSize);
-}
-
-/*----------------------------------------------------------------------
-  GetDefaultPrintConf
-  Makes a copy of the default registry print values
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void GetDefaultPrintConf (void)
-#else
-static void GetDefaultPrintConf ()
-#endif /* __STDC__ */
-{
-  GetDefEnvString ("THOTPRINT", ThotPrint);
-  TtaGetDefEnvInt ("PAPERSIZE", &PaperSize);
-}
-
-
-/*----------------------------------------------------------------------
-  SetPrintConf
-  Updates the registry Print values
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void SetPrintConf (void)
-#else
-static void SetPrintConf ()
-#endif /* __STDC__ */
-{
-  TtaSetEnvString ("THOTPRINT", ThotPrint, TRUE);
-  TtaSetEnvInt ("PAPERSIZE", PaperSize, TRUE);
-  /* update the print environment */
-  TtaSetPrintCommand (ThotPrint);
-  TtaSetPrintParameter (PP_PaperSize, PaperSize);
+#if 0
+  if (!PublishActive)
+    /* only activate the menu if it isn't active already */
+    {
+      PublishActive = TRUE;
+      DialogBox (hInstance, MAKEINTRESOURCE (PUBLISHMENU), NULL, 
+		 (DLGPROC) WIN_PublishDlgProc);
+    }
+#endif
+#endif /* !_WINDOWS */
 }
 
 /**********************
 ** Color Menu
 **********************/
 
+#ifdef _WINDOWS
+/*----------------------------------------------------------------------
+  WIN_ColorDlgProc
+  Windows callback for the color menu
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+LRESULT CALLBACK WIN_ColorDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
+				     LPARAM lParam)
+#else  /* !__STDC__ */
+LRESULT CALLBACK WIN_ColorDlgProc (hwnDlg, msg, wParam, lParam)
+HWND   hwndParent; 
+UINT   msg; 
+WPARAM wParam; 
+LPARAM lParam;
+#endif /* __STDC__ */
+{ 
+  return FALSE;
+}
+#endif /* _WINDOWS */
+
+#ifndef _WINDOWS
 /*----------------------------------------------------------------------
    callback of the color configuration menu
   ----------------------------------------------------------------------*/
@@ -1633,6 +1891,7 @@ STRING              data;
 	}
     }
 }
+#endif /* !_WINDOWS */
 
 /*----------------------------------------------------------------------
   ColorConfMenu
@@ -1648,6 +1907,7 @@ STRING              pathname;
 
 #endif
 {
+#ifndef _WINDOWS
    CHAR             s[MAX_LENGTH];
    int              i;
 
@@ -1684,14 +1944,35 @@ STRING              pathname;
 		   "Menu background color",
 		   20,
 		   1,
-		   FALSE);   
+		   FALSE);  
+#endif /* !_WINDOWS */
+ 
    /* load and display the current values */
    GetColorConf ();
+#ifndef _WINDOWS
    RefreshColorMenu ();
    /* display the menu */
    TtaShowDialogue (ColorBase + ColorMenu, TRUE);
+#else 
+#endif /* !_WINDOWS */
 }
 
+#ifdef _WINDOWS
+/*----------------------------------------------------------------------
+  WIN_RefreshColorMenu
+  Displays the current registry values in the menu
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void WIN_RefreshColorMenu (HWND hwnDlg)
+#else
+void WIN_RefreshColorMenu (hwnDlg)
+HWND hwnDlg;
+#endif /* __STDC__ */
+{
+}
+#endif /* WINDOWS */
+
+#ifndef _WINDOWS
 /*----------------------------------------------------------------------
   RefreshColorMenu
   Displays the current registry values in the menu
@@ -1707,6 +1988,7 @@ static void RefreshColorMenu ()
   TtaSetTextForm (ColorBase + mMenuFgColor, MenuFgColor);
   TtaSetTextForm (ColorBase + mMenuBgColor, MenuBgColor);
 }
+#endif /* !_WINDOWS */
 
 /*----------------------------------------------------------------------
   GetColorConf
@@ -1762,8 +2044,30 @@ static void SetColorConf ()
 ** Geometry Menu
 **********************/
 
+#ifdef _WINDOWS
 /*----------------------------------------------------------------------
-   callback of the geometry configuration menu
+  WIN_GeometryDlgProc
+  Windows callback for the geometry menu
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+LRESULT CALLBACK WIN_GeometryDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
+				     LPARAM lParam)
+#else  /* !__STDC__ */
+LRESULT CALLBACK WIN_GeometryDlgProc (hwnDlg, msg, wParam, lParam)
+HWND   hwndParent; 
+UINT   msg; 
+WPARAM wParam; 
+LPARAM lParam;
+#endif /* __STDC__ */
+{ 
+  return FALSE;
+}
+#endif /* _WINDOWS */
+
+#ifndef _WINDOWS
+/*----------------------------------------------------------------------
+  GeometryCallbackDialog
+  callback of the geometry configuration menu
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         GeometryCallbackDialog (int ref, int typedata, STRING data)
@@ -1853,6 +2157,7 @@ STRING              data;
 	}
     }
 }
+#endif /* !_WINDOWS */
 
 /*----------------------------------------------------------------------
   GeometryConfMenu
@@ -1868,6 +2173,7 @@ STRING              pathname;
 
 #endif
 {
+#ifndef _WINDOWS
    CHAR             s[MAX_LENGTH];
    int              i;
 
@@ -1921,14 +2227,33 @@ STRING              pathname;
 		   20,
 		   1,
 		   FALSE);
-
+#endif /* !_WINDOWS */
    /* load and display the current values */
    GetGeometryConf ();
+#ifndef _WINDOWS
    RefreshGeometryMenu ();
    /* display the menu */
    TtaShowDialogue (GeometryBase + GeometryMenu, TRUE);
+#else
+#endif /* !_WINDOWS */
 }
 
+#ifdef _WINDOWS
+/*----------------------------------------------------------------------
+  WIN_RefreshGeometryMenu
+  Displays the current registry values in the menu
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void WIN_RefreshGeometryMenu (HWND hwnDlg)
+#else
+void WIN_RefreshGeometryMenu (hwnDlg)
+HWND hwnDlg;
+#endif /* __STDC__ */
+{
+}
+#endif /* WINDOWS */
+
+#ifndef _WINDOWS
 /*----------------------------------------------------------------------
   RefreshGeometryMenu
   Displays the current registry values in the menu
@@ -1947,6 +2272,7 @@ static void RefreshGeometryMenu ()
   TtaSetTextForm (GeometryBase + mLinksView, LinksView);
   TtaSetTextForm (GeometryBase + mTableOfContentsView, TableOfContentsView);
 }
+#endif /* !_WINDOWS */
 
 /*----------------------------------------------------------------------
   GetGeometryConf
@@ -1986,7 +2312,6 @@ static void GetDefaultGeometryConf ()
   GetDefEnvString ("TableOfContentsView", TableOfContentsView);
 }
 
-
 /*----------------------------------------------------------------------
   SetGeometryConf
   Updates the registry Geometry values
@@ -2005,15 +2330,3 @@ static void SetGeometryConf ()
   TtaSetEnvString ("LinksView", LinksView, TRUE);
   TtaSetEnvString ("TableOfContentsView", TableOfContentsView, TRUE);
 }
-
-
-
-
-
-
-
-
-
-
-
-

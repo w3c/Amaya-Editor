@@ -46,11 +46,6 @@
 #define mDefaultName        3
 #define MAX_PUBLISHMENU_DLG 4
 
-#define PrintMenu           1
-#define mPaperSize          2
-#define mThotPrint          3
-#define MAX_PRINTMENU_DLG   4
-
 #define ColorMenu           1
 #define mFgColor            2
 #define mBgColor            3
