@@ -559,6 +559,7 @@ void DisplayImage (Document doc, Element el, LoadedImageDesc *desc,
   ThotBool            is_svg, is_mml, is_html, htmlok;
   ThotBool            xmlDec, withDoctype, isXML, isKnown;
   DocumentType        thotType;
+  PicType             picType;
   int                 parsingLevel;
   CHARSET             charset;
   char                charsetname[MAX_LENGTH];
@@ -566,11 +567,14 @@ void DisplayImage (Document doc, Element el, LoadedImageDesc *desc,
   char               *tempfile;
   char               *originalName;
 
+  picType = TtaGetPictureType (el);
   if (desc)
     {
       imageName = desc->localName;
       tempfile = desc->tempfile;
       originalName = desc->originalName;
+      /* get image type */
+      desc->imageType = picType;
     }
   else
     {
@@ -594,7 +598,7 @@ void DisplayImage (Document doc, Element el, LoadedImageDesc *desc,
       is_html = FALSE;
 
       htmlok = TRUE;
-      if (TtaGetPictureType (el) == unknown_type)
+      if (picType == unknown_type)
 	{
 	  if (!strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") &&
 	      (elType.ElTypeNum == HTML_EL_PICTURE_UNIT))
@@ -845,7 +849,8 @@ static void HandleImageLoaded (int doc, int status, char *urlName,
 	   strcpy (desc->originalName, pathname);
 	*/
 
-	/* update desc->status in order to alert DisplayImage if the image was not found */	
+	/* update desc->status in order to alert DisplayImage if the
+	   image was not found */	
 	if ((status != 200) && (status != 0))
 	  desc->status = IMAGE_NOT_LOADED;
 	else
@@ -882,9 +887,6 @@ static void HandleImageLoaded (int doc, int status, char *urlName,
 		       elType.ElTypeNum == SVG_EL_use_ ||
 		       elType.ElTypeNum == SVG_EL_tref)))
 		  DisplayImage (doc, ctxEl->currentElement, desc, NULL, ptr);
-		/* get image type */
-		if (desc->imageType == unknown_type)
-		  desc->imageType = TtaGetPictureType (ctxEl->currentElement);
 	      }
 	    ctxPrev = ctxEl;
 	    ctxEl = ctxEl->nextElement;
@@ -1097,8 +1099,6 @@ void FetchImage (Document doc, Element el, char *URL, int flags,
 		    callback (doc, el, desc->tempfile, extra, FALSE);
 		  else
 		    DisplayImage (doc, el, desc, NULL, desc->content_type);
-		  /* get image type */
-		  desc->imageType = TtaGetPictureType (el);
 		}
 	      else
 		{
