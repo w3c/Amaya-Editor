@@ -1581,17 +1581,25 @@ int                 pattern;
    if (thick > 0)
      CurrentColor (fout, fg);
 
-   arc = 3 * 72 / 25.4;
+   /* radius of arcs */
+   if (rx == 0 && ry != 0)
+     rx = ry;
+   else if (ry == 0 && rx != 0)
+     ry = rx;
+   arc = width / 2;
+   if (rx > arc)
+     rx = arc;
+   arc = height / 2;
+   if (ry > arc)
+     ry = arc;
+ 
    xf = PixelToPoint (x + width - 1);
    yf = PixelToPoint (y + height - 1);
    x = PixelToPoint (x);
    y = PixelToPoint (y);
    FillWithPattern (fout, fg, bg, pattern);
-   fprintf (fout, "%d %d %d -%d %d -%d %d -%d %d -%d %d -%d %d -%d %d ov\n",
-	    style, thick,
-	    /*5 */ x, y, /*4 */ x, yf, /*3 */ xf, yf, /*2 */ xf, y,
-	    /*1 */ x, y, /*o */ x, yf - arc,
-	    arc);
+   fprintf (fout, "%d %d %d -%d %d -%d %d %d oval\n", style, thick,
+	    x, y, xf, yf, PixelToPoint (rx), PixelToPoint (ry));
 }
 
 
