@@ -310,7 +310,7 @@ ac_includes_default="\
 # include <unistd.h>
 #endif"
 
-ac_subst_vars='SHELL PATH_SEPARATOR PACKAGE_NAME PACKAGE_TARNAME PACKAGE_VERSION PACKAGE_STRING PACKAGE_BUGREPORT exec_prefix prefix program_transform_name bindir sbindir libexecdir datadir sysconfdir sharedstatedir localstatedir libdir includedir oldincludedir infodir mandir build_alias host_alias target_alias DEFS ECHO_C ECHO_N ECHO_T LIBS build build_cpu build_vendor build_os host host_cpu host_vendor host_os target target_cpu target_vendor target_os SET_MAKE YACC CC CFLAGS LDFLAGS CPPFLAGS ac_ct_CC EXEEXT OBJEXT CPP CXX CXXFLAGS ac_ct_CXX LEX LEXLIB LEX_OUTPUT_ROOT AWK INSTALL_PROGRAM INSTALL_SCRIPT INSTALL_DATA LN_S RANLIB ac_ct_RANLIB CP MV RM MKDIR ECHO CAT CHMOD SED AR DIFF X_CFLAGS X_PRE_LIBS X_LIBS X_EXTRA_LIBS EGREP ALLOCA LIBOBJS GTKCONFIG_FOUND GTK_INCLUDES GTK_LIBRARIES WXCONFIG_FOUND WX_INCLUDES WX_LIBRARIES LIBJPEG LIBPNG LIBZ MAKEJPEG MAKEPNG GL_INCLUDES GL_LIBRARIES PRINTIFNOTGL NOPRINT AMAYA_VER CEXTRACT_VER CEXTRACT_FLAGS THOTINCLUDES APIINCLUDES VPATHOPT GTK_OPTIONS THOT_OPTIONS AMAYA_OPTIONS PLUGIN_OPTIONS AMAYA_ANNOT_OPTIONS AMAYA_ANNOT_INCLUDES AMAYA_ANNOT_EXTRA_LIBS IMGLIBS EXTRA_LIBS EXTRA_INCLUDES DAVDIR LIBDAV WITHDAV WWWDAV MAKERAPTOR MAKEREDLAND ANNOTLIB_COMPILE_BM AMAYA_RAPTOR_SRC AMAYA_RAPTOR_LIBS AMAYA_RAPTOR_INCLUDES MAKE_LIBWWW_RDF_PARSER LIBWWW_RDF_PARSER SUBDIRS EXTRA_MAKEFILE_IN LTLIBOBJS'
+ac_subst_vars='SHELL PATH_SEPARATOR PACKAGE_NAME PACKAGE_TARNAME PACKAGE_VERSION PACKAGE_STRING PACKAGE_BUGREPORT exec_prefix prefix program_transform_name bindir sbindir libexecdir datadir sysconfdir sharedstatedir localstatedir libdir includedir oldincludedir infodir mandir build_alias host_alias target_alias DEFS ECHO_C ECHO_N ECHO_T LIBS build build_cpu build_vendor build_os host host_cpu host_vendor host_os target target_cpu target_vendor target_os SET_MAKE YACC CC CFLAGS LDFLAGS CPPFLAGS ac_ct_CC EXEEXT OBJEXT CPP CXX CXXFLAGS ac_ct_CXX LEX LEXLIB LEX_OUTPUT_ROOT AWK INSTALL_PROGRAM INSTALL_SCRIPT INSTALL_DATA LN_S RANLIB ac_ct_RANLIB CP MV RM MKDIR ECHO CAT CHMOD SED AR DIFF X_CFLAGS X_PRE_LIBS X_LIBS X_EXTRA_LIBS EGREP ALLOCA LIBOBJS GTKCONFIG_FOUND GTK_INCLUDES GTK_LIBRARIES WX_INCLUDES WX_LIBRARIES LIBJPEG LIBPNG LIBZ MAKEJPEG MAKEPNG GL_INCLUDES GL_LIBRARIES PRINTIFNOTGL NOPRINT AMAYA_VER CEXTRACT_VER CEXTRACT_FLAGS THOTINCLUDES APIINCLUDES VPATHOPT GTK_OPTIONS THOT_OPTIONS AMAYA_OPTIONS PLUGIN_OPTIONS AMAYA_ANNOT_OPTIONS AMAYA_ANNOT_INCLUDES AMAYA_ANNOT_EXTRA_LIBS IMGLIBS EXTRA_LIBS EXTRA_INCLUDES DAVDIR LIBDAV WITHDAV WWWDAV MAKERAPTOR MAKEREDLAND ANNOTLIB_COMPILE_BM AMAYA_RAPTOR_SRC AMAYA_RAPTOR_LIBS AMAYA_RAPTOR_INCLUDES MAKE_LIBWWW_RDF_PARSER LIBWWW_RDF_PARSER SUBDIRS EXTRA_MAKEFILE_IN LTLIBOBJS'
 ac_subst_files='plugin_frag www_frag math_frag svg_frag annot_frag dav_frag'
 
 # Initialize some variables set by options.
@@ -14964,57 +14964,65 @@ echo "$as_me: error: Cannot find gtk-config. Please install gtk development libr
 fi
 
 if test "$with_wx" = "yes" ; then
-  # check that wx-config exists
-  # Extract the first word of "wx-config", so it can be a program name with args.
-set dummy wx-config; ac_word=$2
-echo "$as_me:$LINENO: checking for $ac_word" >&5
-echo $ECHO_N "checking for $ac_word... $ECHO_C" >&6
-if test "${ac_cv_prog_WXCONFIG_FOUND+set}" = set; then
-  echo $ECHO_N "(cached) $ECHO_C" >&6
-else
-  if test -n "$WXCONFIG_FOUND"; then
-  ac_cv_prog_WXCONFIG_FOUND="$WXCONFIG_FOUND" # Let the user override the test.
-else
-as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
-for as_dir in $PATH
-do
-  IFS=$as_save_IFS
-  test -z "$as_dir" && as_dir=.
-  for ac_exec_ext in '' $ac_executable_extensions; do
-  if $as_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
-    ac_cv_prog_WXCONFIG_FOUND="yes"
-    echo "$as_me:$LINENO: found $as_dir/$ac_word$ac_exec_ext" >&5
-    break 2
-  fi
-done
-done
 
-  test -z "$ac_cv_prog_WXCONFIG_FOUND" && ac_cv_prog_WXCONFIG_FOUND="no"
-fi
-fi
-WXCONFIG_FOUND=$ac_cv_prog_WXCONFIG_FOUND
-if test -n "$WXCONFIG_FOUND"; then
-  echo "$as_me:$LINENO: result: $WXCONFIG_FOUND" >&5
-echo "${ECHO_T}$WXCONFIG_FOUND" >&6
-else
-  echo "$as_me:$LINENO: result: no" >&5
-echo "${ECHO_T}no" >&6
-fi
-
-  if test "$WXCONFIG_FOUND" = no ; then
-    { { echo "$as_me:$LINENO: error: Cannot find wx-config. Please install wxWidgets (http://www.wxwidgets.org/) " >&5
-echo "$as_me: error: Cannot find wx-config. Please install wxWidgets (http://www.wxwidgets.org/) " >&2;}
+  # check that sources of wxWidgets exists
+  if test ! -f ../../wxWidgets/Makefile.in ; then
+    { { echo "$as_me:$LINENO: error: wxWidgets library sources not found. Please download wxWidgets sources (http://www.wxwidgets.org/) or remove --with-wx option !" >&5
+echo "$as_me: error: wxWidgets library sources not found. Please download wxWidgets sources (http://www.wxwidgets.org/) or remove --with-wx option !" >&2;}
    { (exit 1); exit 1; }; }
   fi
 
-  WX_INCLUDES="`wx-config --cxxflags`"
+  # --------- compile wxWidgets library --------------- #
+  echo "---> Configuring wxWidgets library."
+  OLDDIR=`pwd`
+  cd ../../wxWidgets/
+  mkdir AMAYABUILD
+  cd AMAYABUILD
+  # remove old configure options
+  rm -f configarg.cache
+  # launch the configure
+  if test "$OS_OPTIONS" = "-D_UNIX" ; then
+    # LINUX
+    ../configure --with-opengl --with-gtk --enable-gtk2 --enable-unicode --enable-debug
+  fi
+  if test "$OS_OPTIONS" = "-D_UNIX -D_MACOS" ; then
+    # MACOSX
+    { { echo "$as_me:$LINENO: error: TODO: configurer wxWidgets pour MACOSX" >&5
+echo "$as_me: error: TODO: configurer wxWidgets pour MACOSX" >&2;}
+   { (exit 1); exit 1; }; }
+    # ../configure --with-opengl --with-gtk --enable-gtk2 --enable-unicode --enable-debug
+  fi
+  echo "---> Configuring wxWidgets library. - DONE"
+  echo "---> Compiling wxWidgets library."
+  # compile the lib
+  make
+  echo "---> Compiling wxWidgets contrib xrc library."
+  cd contrib/src/xrc
+  # compile xrc lib (xml resource lib)
+  make
+  cd $OLDDIR
+  echo "---> Compiling wxWidgets library. - DONE"
+  # --------- compile wxWidgets library - DONE --------------- #
+
+  # --------- configuring wxWidgets paths --------------- #
+  WXCONFIG=../../wxWidgets/AMAYABUILD/wx-config
+  # loop for absolute wxWidgets path : necessary to compile thotlib and amaya because they are in subdirectory
+  cd ../../wxWidgets/ && WXROOTDIR=`pwd` && WXCONFIG_ARGS="--prefix=$WXROOTDIR --exec-prefix=$WXROOTDIR/AMAYABUILD" && cd -
+  # check that wx-config exists
+  if test ! -f $WXCONFIG ; then
+    { { echo "$as_me:$LINENO: error: Cannot find wx-config. Please install wxWidgets (http://www.wxwidgets.org/)" >&5
+echo "$as_me: error: Cannot find wx-config. Please install wxWidgets (http://www.wxwidgets.org/)" >&2;}
+   { (exit 1); exit 1; }; }
+  fi
+
+  WX_INCLUDES="`$WXCONFIG $WXCONFIG_ARGS --cxxflags`"
 
 
-  WX_LIBRARIES="`wx-config --libs`"
+  WX_LIBRARIES="-Wl,-rpath,$WXROOTDIR `$WXCONFIG $WXCONFIG_ARGS --libs`"
 
   # GL is used ?
   if test "${with_gl}" = "yes" ; then
-    WX_LIBRARIES="${WX_LIBRARIES} `wx-config --gl-libs`"
+    WX_LIBRARIES="${WX_LIBRARIES} `$WXCONFIG $WXCONFIG_ARGS --gl-libs`"
 
     # SG: this is a mistery why wx-config doesn't add these needed option on macosx
     if test "$OS_OPTIONS" = "-D_UNIX -D_MACOS" ; then
@@ -15023,10 +15031,11 @@ echo "$as_me: error: Cannot find wx-config. Please install wxWidgets (http://www
   fi
 
   # xrc ressources are used
-  WX_LIBRARIES="${WX_LIBRARIES} -l`wx-config --basename`_xrc-`wx-config --release`"
+  WX_LIBRARIES="${WX_LIBRARIES} -l`$WXCONFIG $WXCONFIG_ARGS --basename`_xrc-`wx-config --release`"
 
 
   WX_OPTIONS="-D_WX"
+  # --------- configuring wxWidgets paths - DONE --------------- #
 
   no_graphic=yes
 fi
@@ -16554,7 +16563,6 @@ s,@LIBOBJS@,$LIBOBJS,;t t
 s,@GTKCONFIG_FOUND@,$GTKCONFIG_FOUND,;t t
 s,@GTK_INCLUDES@,$GTK_INCLUDES,;t t
 s,@GTK_LIBRARIES@,$GTK_LIBRARIES,;t t
-s,@WXCONFIG_FOUND@,$WXCONFIG_FOUND,;t t
 s,@WX_INCLUDES@,$WX_INCLUDES,;t t
 s,@WX_LIBRARIES@,$WX_LIBRARIES,;t t
 s,@LIBJPEG@,$LIBJPEG,;t t

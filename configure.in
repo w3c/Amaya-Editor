@@ -359,20 +359,59 @@ if test "$with_gtk" = "yes" ; then
 fi
 
 if test "$with_wx" = "yes" ; then
+  
+  # check that sources of wxWidgets exists
+  if test ! -f ../../wxWidgets/Makefile.in ; then
+    AC_MSG_ERROR(wxWidgets library sources not found. Please download wxWidgets sources (http://www.wxwidgets.org/) or remove --with-wx option !)
+  fi
+
+  # --------- compile wxWidgets library --------------- #
+  echo "---> Configuring wxWidgets library."
+  OLDDIR=`pwd`
+  cd ../../wxWidgets/
+  mkdir AMAYABUILD
+  cd AMAYABUILD
+  # remove old configure options
+  rm -f configarg.cache
+  # launch the configure
+  if test "$OS_OPTIONS" = "-D_UNIX" ; then
+    # LINUX
+    ../configure --with-opengl --with-gtk --enable-gtk2 --enable-unicode --enable-debug  
+  fi
+  if test "$OS_OPTIONS" = "-D_UNIX -D_MACOS" ; then
+    # MACOSX
+    AC_MSG_ERROR(TODO: configurer wxWidgets pour MACOSX)
+    # ../configure --with-opengl --with-gtk --enable-gtk2 --enable-unicode --enable-debug
+  fi
+  echo "---> Configuring wxWidgets library. - DONE"
+  echo "---> Compiling wxWidgets library."
+  # compile the lib
+  make
+  echo "---> Compiling wxWidgets contrib xrc library."
+  cd contrib/src/xrc
+  # compile xrc lib (xml resource lib)
+  make
+  cd $OLDDIR
+  echo "---> Compiling wxWidgets library. - DONE"
+  # --------- compile wxWidgets library - DONE --------------- #
+
+  # --------- configuring wxWidgets paths --------------- #
+  WXCONFIG=../../wxWidgets/AMAYABUILD/wx-config
+  # loop for absolute wxWidgets path : necessary to compile thotlib and amaya because they are in subdirectory
+  cd ../../wxWidgets/ && WXROOTDIR=`pwd` && WXCONFIG_ARGS="--prefix=$WXROOTDIR --exec-prefix=$WXROOTDIR/AMAYABUILD" && cd -
   # check that wx-config exists
-  AC_CHECK_PROG(WXCONFIG_FOUND,wx-config,yes,no)
-  if test "$WXCONFIG_FOUND" = no ; then
-    AC_MSG_ERROR(Cannot find wx-config. Please install wxWidgets (http://www.wxwidgets.org/) )
+  if test ! -f $WXCONFIG ; then
+    AC_MSG_ERROR(Cannot find wx-config. Please install wxWidgets (http://www.wxwidgets.org/))
   fi
   
-  WX_INCLUDES="`wx-config --cxxflags`"
+  WX_INCLUDES="`$WXCONFIG $WXCONFIG_ARGS --cxxflags`"
   AC_SUBST(WX_INCLUDES)
 
-  WX_LIBRARIES="`wx-config --libs`"
+  WX_LIBRARIES="-Wl,-rpath,$WXROOTDIR `$WXCONFIG $WXCONFIG_ARGS --libs`"
 
   # GL is used ?
   if test "${with_gl}" = "yes" ; then
-    WX_LIBRARIES="${WX_LIBRARIES} `wx-config --gl-libs`"
+    WX_LIBRARIES="${WX_LIBRARIES} `$WXCONFIG $WXCONFIG_ARGS --gl-libs`"
 
     # SG: this is a mistery why wx-config doesn't add these needed option on macosx
     if test "$OS_OPTIONS" = "-D_UNIX -D_MACOS" ; then
@@ -381,10 +420,11 @@ if test "$with_wx" = "yes" ; then
   fi
 
   # xrc ressources are used
-  WX_LIBRARIES="${WX_LIBRARIES} -l`wx-config --basename`_xrc-`wx-config --release`"
+  WX_LIBRARIES="${WX_LIBRARIES} -l`$WXCONFIG $WXCONFIG_ARGS --basename`_xrc-`wx-config --release`"
   
   AC_SUBST(WX_LIBRARIES)
   WX_OPTIONS="-D_WX"
+  # --------- configuring wxWidgets paths - DONE --------------- #
 
   no_graphic=yes
 fi
