@@ -101,18 +101,22 @@ void CallbackImage (int ref, int typedata, char *data)
       break;
     case FormImage:
     case FormBackground:
-      if (val == 2) { /* Clear button */
+      if (val == 2)
+	{ 
+	  /* Clear button */
 	LastURLImage[0] = EOS;
 #ifndef _WINDOWS
 	TtaSetTextForm (BaseImage + ImageURL, LastURLImage);
 #endif /* !_WINDOWS */
-      }
+	}
       else if (val == 3)
 	{
 	  /* Filter button */
 	  /* reinitialize directories and document lists */
-	  TtaListDirectory (DirectoryImage, ref, TtaGetMessage (LIB, TMSG_DOC_DIR), BaseImage + ImageDir,
-			    ImgFilter, TtaGetMessage (AMAYA, AM_FILES), BaseImage + ImageSel);
+	  TtaListDirectory (DirectoryImage, ref,
+			    TtaGetMessage (LIB, TMSG_DOC_DIR), BaseImage + ImageDir,
+			    ImgFilter,
+			    TtaGetMessage (AMAYA, AM_FILES), BaseImage + ImageSel);
 	}
       else if (val == 0)
 	{ /* Cancel button */ 
@@ -130,6 +134,7 @@ void CallbackImage (int ref, int typedata, char *data)
 	}
       else if (ref == BaseImage + FormBackground && BgDocument != 0)
 	{
+	  TtaDestroyDialogue (ref);
 	  /* save BgDocument because operation can be too long */
 	  document = BgDocument;
 	  /* get the first and last selected element */
@@ -207,7 +212,8 @@ void CallbackImage (int ref, int typedata, char *data)
 		} 
 	    } 
 	  if (!el)
-	    TtaSetStatus (document, 1, TtaGetMessage(AMAYA, AM_BG_IMAGE_NOT_ALLOWED), NULL);
+	    TtaSetStatus (document, 1,
+			  TtaGetMessage(AMAYA, AM_BG_IMAGE_NOT_ALLOWED), NULL);
 	  else
 	    {
 	      if (RepeatValue == 0)

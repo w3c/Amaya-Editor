@@ -233,6 +233,11 @@ static void DrawFilledBox (PtrAbstractBox pAb, int frame, int xmin,
     return;
   if (pAb == pFrame->FrAbstractBox)
     {
+      /* get the maximum of the window size and the root box size */
+      if (pBox->BxWidth > w)
+	w = pBox->BxWidth;
+      if (pBox->BxHeight > h)
+	h = pBox->BxHeight;
       width = w + 1;
       height = h + 1;
       if (pBox->BxFill
@@ -250,7 +255,7 @@ static void DrawFilledBox (PtrAbstractBox pAb, int frame, int xmin,
 	}
       xd = pBox->BxXOrg;
       yd = pBox->BxYOrg;
-	  /* fill the whole window surface */
+      /* fill the whole window surface */
       width -= xd;
       height -= yd;
     }
