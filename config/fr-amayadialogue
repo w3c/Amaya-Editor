@@ -216,48 +216,51 @@
 214 Négociation de Langues...
 215 Profils...
 216 Modèles de page
-217 Annoter la séléction
-218 Annoter le document
-219 Déplacer sur la séléction
-220 Déplacer sur le XPointer enregistré
-221 Répondre à l'annotation
-222 Enregister sur le serveur
-223 Détruire
-224 Charger annotations
-225 Personaliser la requête...
-226 Filtrer local...
-227 Configuration...
-228 Verrouiller la ressource...
-229 Déverrouiller la ressource...
-230 Visualiser les propriétés de la ressource...
-231 Copier les informations du verrou...
-232 Verrouillé ?
-233 Préférences...
-234 À propos de Amaya
-235 À propos de Amaya au W3C
-236 Index
-237 Navigation
-238 Vues
-239 Sélection
-240 Document
-241 Création
-242 Attributs
-243 Caratères
-244 Transformer
-245 Liens
-246 Tables
-247 Zones actives
-248 Math
-249 Graphiques
-250 Support Xml
-251 Feuilles de style
-252 Chercher
-253 Corriger
-254 Publier
-255 Imprimer
-256 Numéroter
-257 Construire un livre
-258 Annotations
-259 Configurer Amaya
-260 Raccourcis clavier
-261 Accessibilité d'Amaya
+217 SVG
+218 Montrer la librairie SVG
+219 Ajouter la sélection dans une librairie
+220 Annoter la séléction
+221 Annoter le document
+222 Déplacer sur la séléction
+223 Déplacer sur le XPointer enregistré
+224 Répondre à l'annotation
+225 Enregister sur le serveur
+226 Détruire
+227 Charger annotations
+228 Personaliser la requête...
+229 Filtrer local...
+230 Configuration...
+231 Verrouiller la ressource...
+232 Déverrouiller la ressource...
+233 Visualiser les propriétés de la ressource...
+234 Copier les informations du verrou...
+235 Verrouillé ?
+236 Préférences...
+237 À propos de Amaya
+238 À propos de Amaya au W3C
+239 Index
+240 Navigation
+241 Vues
+242 Sélection
+243 Document
+244 Création
+245 Attributs
+246 Caratères
+247 Transformer
+248 Liens
+249 Tables
+250 Zones actives
+251 Math
+252 Graphiques
+253 Support Xml
+254 Feuilles de style
+255 Chercher
+256 Corriger
+257 Publier
+258 Imprimer
+259 Numéroter
+260 Construire un livre
+261 Annotations
+262 Configurer Amaya
+263 Raccourcis clavier
+264 Accessibilité d'Amaya

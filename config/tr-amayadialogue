@@ -216,48 +216,51 @@
 214 **Language Negotiation...
 215 **Profiles...
 216 **Templates...
-217 **Annotate selection
-218 **Annotate document
-219 **Move to selection
-220 **Move to stored XPointer
-221 **Reply to annotation
-222 **Post to server
-223 **Delete
-224 **Load
-225 **Customize query...
-226 **Local filter...
-227 **Configure...
-228 **Lock resource...
-229 **Unlock resource...
-230 **View resource properties...
-231 **Copy lock information...
-232 **Locked?
-233 **Preferences...
-234 **About Amaya
-235 Amaya hakkýnda
-236 **Index
-237 **Browsing
-238 Arama
-239 Tarama
-240 **Document
-241 Görünümler
-242 Tarz tanýmlarý
-243 **Characters
-244 Baðlantýlar
-245 Birim yaratma
-246 Yeniden yapýlandýrma
-247 Matematik
-248 Tablolar
-249 **Graphics
-250 **Xml support
-251 Görüntü haritalarý
-252 Seçme
-253 Özellikler
-254 Yazým hatalarý aranýyor
-255 Sayfa yerleþtirme
-256 Bastýrma
-257 Numaralandýrmasý
-258 **Annotations
-259 Kitap oluþturma
-260 **ShortCuts
-261 Amaya yapýlandýrmasý
+217 SVG
+218 **Show SVG Library
+219 **Add selection in SVG Library
+220 **Annotate selection
+221 **Annotate document
+222 **Move to selection
+223 **Move to stored XPointer
+224 **Reply to annotation
+225 **Post to server
+226 **Delete
+227 **Load
+228 **Customize query...
+229 **Local filter...
+230 **Configure...
+231 **Lock resource...
+232 **Unlock resource...
+233 **View resource properties...
+234 **Copy lock information...
+235 **Locked?
+236 **Preferences...
+237 **About Amaya
+238 Amaya hakkýnda
+239 **Index
+240 **Browsing
+241 Arama
+242 Tarama
+243 **Document
+244 Görünümler
+245 Tarz tanýmlarý
+246 **Characters
+247 Baðlantýlar
+248 Birim yaratma
+249 Yeniden yapýlandýrma
+250 Matematik
+251 Tablolar
+252 **Graphics
+253 **Xml support
+254 Görüntü haritalarý
+255 Seçme
+256 Özellikler
+257 Yazým hatalarý aranýyor
+258 Sayfa yerleþtirme
+259 Bastýrma
+260 Numaralandýrmasý
+261 **Annotations
+262 Kitap oluþturma
+263 **ShortCuts
+264 Amaya yapýlandýrmasý

@@ -216,48 +216,51 @@
 214 Kieliasetukset...
 215 Profiilit...
 216 Mallit...
-217 Valinnan lisätiedot
-218 Dokumentin lisätiedot
-219 Siirrä valintaan
-220 Siirrä XPointer:iin
-221 Vastaa merkintään
-222 Lähetä palvelimelle
-223 Poista
-224 Lataa
-225 Mukauta tiedustelu...
-226 Paikalliset rajoitukset...
-227 **Configure...
-228 Lukitse objekti...
-229 Vapauta objekti...
-230 Näytä objektin ominaisuudet...
-231 Kopioi lukitustiedot...
-232 Lukittu?
-233 Asetukset...
-234 Tietoja Amayasta
-235 Lisätietoa Amayasta W3C:ssä
-236 Hakemisto
-237 Selaaminen
-238 Näkymät
-239 Valinta
-240 Dokumentti
-241 Elementtien luominen
-242 Asetukset
-243 Fontit
-244 Rakenteen muunto
-245 Linkit
-246 Taulukot
-247 Kuvakartat
-248 Matematiikka
-249 Grafiikka
-250 Xml-tuki
-251 Tyylitiedostot (CSS)
-252 Etsiminen
-253 Oikeinkirjoituksen tarkastus
-254 Julkaisu
-255 Tulostus
-256 Numerointi
-257 Koosteen valmistus
-258 Merkinnät
-259 Asetuksien määritys
-260 Näppäinkomennot
-261 Amayan helppokäyttötoiminnot
+217 SVG
+218 **Show SVG Library
+219 **Add selection in SVG Library
+220 Valinnan lisätiedot
+221 Dokumentin lisätiedot
+222 Siirrä valintaan
+223 Siirrä XPointer:iin
+224 Vastaa merkintään
+225 Lähetä palvelimelle
+226 Poista
+227 Lataa
+228 Mukauta tiedustelu...
+229 Paikalliset rajoitukset...
+230 **Configure...
+231 Lukitse objekti...
+232 Vapauta objekti...
+233 Näytä objektin ominaisuudet...
+234 Kopioi lukitustiedot...
+235 Lukittu?
+236 Asetukset...
+237 Tietoja Amayasta
+238 Lisätietoa Amayasta W3C:ssä
+239 Hakemisto
+240 Selaaminen
+241 Näkymät
+242 Valinta
+243 Dokumentti
+244 Elementtien luominen
+245 Asetukset
+246 Fontit
+247 Rakenteen muunto
+248 Linkit
+249 Taulukot
+250 Kuvakartat
+251 Matematiikka
+252 Grafiikka
+253 Xml-tuki
+254 Tyylitiedostot (CSS)
+255 Etsiminen
+256 Oikeinkirjoituksen tarkastus
+257 Julkaisu
+258 Tulostus
+259 Numerointi
+260 Koosteen valmistus
+261 Merkinnät
+262 Asetuksien määritys
+263 Näppäinkomennot
+264 Amayan helppokäyttötoiminnot

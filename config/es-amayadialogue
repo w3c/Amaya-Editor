@@ -216,48 +216,51 @@
 214 Negociación de idioma...
 215 Perfiles...
 216 Plantillas...
-217 Anotar selección
-218 Anotar documento
-219 Mover a selección
-220 Mover a XPointer guardado
-221 Responder a anotación
-222 Salvar en el servidor
-223 Borrar
-224 Cargar
-225 Personalizar consulta...
-226 Filtro local...
-227 Configurar...
-228 **Lock resource...
-229 **Unlock resource...
-230 **View resource properties...
-231 **Copy lock information...
-232 **Locked?
-233 **Preferences...
-234 Sobre Amaya
-235 Sobre Amaya en W3C
-236 Índice
-237 Hojear
-238 Vistas
-239 Seleccionar
-240 Documento
-241 Creación de elementos
-242 Atributos
-243 Caracteres
-244 Restructuración
-245 Enlaces
-246 Tablas
-247 Mapas de imagen
-248 Matemáticas
-249 Graficas
-250 Soporte Xml
-251 Hojas de estilo
-252 Buscar
-253 Comprobar ortografía
-254 Publicar
-255 Imprimir
-256 Numerar
-257 Crear libros
-258 Anotaciones
-259 Configurar Amaya
-260 Atajos
-261 Accesibilidad en Amaya
+217 SVG
+218 **Show SVG Library
+219 **Add selection in SVG Library
+220 Anotar selección
+221 Anotar documento
+222 Mover a selección
+223 Mover a XPointer guardado
+224 Responder a anotación
+225 Salvar en el servidor
+226 Borrar
+227 Cargar
+228 Personalizar consulta...
+229 Filtro local...
+230 Configurar...
+231 **Lock resource...
+232 **Unlock resource...
+233 **View resource properties...
+234 **Copy lock information...
+235 **Locked?
+236 **Preferences...
+237 Sobre Amaya
+238 Sobre Amaya en W3C
+239 Índice
+240 Hojear
+241 Vistas
+242 Seleccionar
+243 Documento
+244 Creación de elementos
+245 Atributos
+246 Caracteres
+247 Restructuración
+248 Enlaces
+249 Tablas
+250 Mapas de imagen
+251 Matemáticas
+252 Graficas
+253 Soporte Xml
+254 Hojas de estilo
+255 Buscar
+256 Comprobar ortografía
+257 Publicar
+258 Imprimir
+259 Numerar
+260 Crear libros
+261 Anotaciones
+262 Configurar Amaya
+263 Atajos
+264 Accesibilidad en Amaya

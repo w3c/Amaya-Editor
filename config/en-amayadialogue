@@ -216,48 +216,51 @@
 214 Language Negotiation...
 215 Profiles...
 216 Templates...
-217 Annotate selection
-218 Annotate document
-219 Move to selection
-220 Move to stored XPointer
-221 Reply to annotation
-222 Post to server
-223 Delete
-224 Load
-225 Customize query...
-226 Local filter...
-227 Configure...
-228 Lock resource...
-229 Unlock resource...
-230 View resource properties...
-231 Copy lock information...
-232 Locked?
-233 Preferences...
-234 About Amaya
-235 About Amaya at W3C
-236 Index
-237 Browsing
-238 Views
-239 Selecting
-240 Document
-241 Creating elements
-242 Attributes
-243 Characters
-244 Restructuring
-245 Links
-246 Tables
-247 Image maps
-248 Math
-249 Graphics
-250 Xml support
-251 Style sheets
-252 Searching
-253 Spell Checking
-254 Publishing
-255 Printing
-256 Numbering
-257 Making books
-258 Annotations
-259 Configuring Amaya
-260 ShortCuts
-261 Accessibility in Amaya
+217 SVG
+218 Show SVG Library
+219 Add selection in SVG Library
+220 Annotate selection
+221 Annotate document
+222 Move to selection
+223 Move to stored XPointer
+224 Reply to annotation
+225 Post to server
+226 Delete
+227 Load
+228 Customize query...
+229 Local filter...
+230 Configure...
+231 Lock resource...
+232 Unlock resource...
+233 View resource properties...
+234 Copy lock information...
+235 Locked?
+236 Preferences...
+237 About Amaya
+238 About Amaya at W3C
+239 Index
+240 Browsing
+241 Views
+242 Selecting
+243 Document
+244 Creating elements
+245 Attributes
+246 Characters
+247 Restructuring
+248 Links
+249 Tables
+250 Image maps
+251 Math
+252 Graphics
+253 Xml support
+254 Style sheets
+255 Searching
+256 Spell Checking
+257 Publishing
+258 Printing
+259 Numbering
+260 Making books
+261 Annotations
+262 Configuring Amaya
+263 ShortCuts
+264 Accessibility in Amaya

@@ -216,48 +216,51 @@
 214 Sprachen...
 215 Profile...
 216 Schablonen...
-217 Zur Markierung
-218 Zum Dokument
-219 Auf Markierung verschieben
-220 Auf XPointer verschieben
-221 Beantworten
-222 Veröffentlichen
-223 Löschen
-224 Laden
-225 Abfrage bearbeiten...
-226 Filter...
-227 Konfigurieren...
-228 Resource sperren...
-229 Resource entsperren...
-230 Resourceeigenschaften anzeigen...
-231 Sperrinformation kopieren...
-232 Gesperrt?
-233 Einstellungen...
-234 Info
-235 Über Amaya
-236 Index
-237 Browsen
-238 Ansichten
-239 Markieren
-240 Dokument
-241 Elemente
-242 Attribute
-243 Zeichen
-244 Transformieren
-245 Verweise
-246 Tabellen
-247 Aktive Bildbereiche
-248 Formeln
-249 SVG
-250 XML
-251 Formate/Formatvorlagen
-252 Suchen/Ersetzen
-253 Rechtschreibprüfung
-254 Speichern/Veröffentlichen
-255 Drucken
-256 Abschnitte numerieren
-257 Buch erstellen
-258 Anmerkungen
-259 Konfiguration
-260 Tastenkürzel
-261 Benutzerfreundlichkeit
+217 SVG
+218 **Show SVG Library
+219 **Add selection in SVG Library
+220 Zur Markierung
+221 Zum Dokument
+222 Auf Markierung verschieben
+223 Auf XPointer verschieben
+224 Beantworten
+225 Veröffentlichen
+226 Löschen
+227 Laden
+228 Abfrage bearbeiten...
+229 Filter...
+230 Konfigurieren...
+231 Resource sperren...
+232 Resource entsperren...
+233 Resourceeigenschaften anzeigen...
+234 Sperrinformation kopieren...
+235 Gesperrt?
+236 Einstellungen...
+237 Info
+238 Über Amaya
+239 Index
+240 Browsen
+241 Ansichten
+242 Markieren
+243 Dokument
+244 Elemente
+245 Attribute
+246 Zeichen
+247 Transformieren
+248 Verweise
+249 Tabellen
+250 Aktive Bildbereiche
+251 Formeln
+252 SVG
+253 XML
+254 Formate/Formatvorlagen
+255 Suchen/Ersetzen
+256 Rechtschreibprüfung
+257 Speichern/Veröffentlichen
+258 Drucken
+259 Abschnitte numerieren
+260 Buch erstellen
+261 Anmerkungen
+262 Konfiguration
+263 Tastenkürzel
+264 Benutzerfreundlichkeit

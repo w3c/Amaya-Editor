@@ -216,48 +216,51 @@
 214 Negociação de idioma...
 215 Perfís...
 216 Templates...
-217 Anotar seleção
-218 Anotar documento
-219 Mover até a seleção
-220 Mover para o XPointer memorizado
-221 Responder à anotação
-222 Registrar
-223 Apagar
-224 Carregar
-225 Personalizar consulta...
-226 Filtro local...
-227 Configurar...
-228 Travar o recurso
-229 Destravar o recurso
-230 Exibir as propriedades do recurso
-231 Copiar a informação da trava...
-232 Travado?
-233 Preferências...
-234 Sobre Amaya
-235 Sobre Amaya no W3C
-236 Índice
-237 Navegar
-238 Vistas
-239 Selecionar
-240 Documento
-241 Criar elementos
-242 Atributos
-243 Caracteres
-244 Reestruturar
-245 Enlaces (links)
-246 Tabelas
-247 Mapas de Imagem
-248 Matemática
-249 Gráficos
-250 Suporte à XML
-251 Folhas de estilo
-252 Achar...
-253 Verificar ortografia
-254 Publicar
-255 Imprimir
-256 Numberar
-257 Criar livros
-258 Anotações
-259 Configurar Amaya
-260 Atalhos
-261 Accessibilidade em Amaya
+217 SVG
+218 **Show SVG Library
+219 **Add selection in SVG Library
+220 Anotar seleção
+221 Anotar documento
+222 Mover até a seleção
+223 Mover para o XPointer memorizado
+224 Responder à anotação
+225 Registrar
+226 Apagar
+227 Carregar
+228 Personalizar consulta...
+229 Filtro local...
+230 Configurar...
+231 Travar o recurso
+232 Destravar o recurso
+233 Exibir as propriedades do recurso
+234 Copiar a informação da trava...
+235 Travado?
+236 Preferências...
+237 Sobre Amaya
+238 Sobre Amaya no W3C
+239 Índice
+240 Navegar
+241 Vistas
+242 Selecionar
+243 Documento
+244 Criar elementos
+245 Atributos
+246 Caracteres
+247 Reestruturar
+248 Enlaces (links)
+249 Tabelas
+250 Mapas de Imagem
+251 Matemática
+252 Gráficos
+253 Suporte à XML
+254 Folhas de estilo
+255 Achar...
+256 Verificar ortografia
+257 Publicar
+258 Imprimir
+259 Numberar
+260 Criar livros
+261 Anotações
+262 Configurar Amaya
+263 Atalhos
+264 Accessibilidade em Amaya
