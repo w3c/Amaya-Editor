@@ -489,7 +489,7 @@ ThotBool TtaDestroyFrame( int frame_id )
   return TRUE;
 #else /* _WX */
   return FALSE;
-#endif /* #ifdef _WX */
+#endif /* _WX */
 }
 
 /*----------------------------------------------------------------------
@@ -500,6 +500,7 @@ ThotBool TtaDestroyFrame( int frame_id )
   ----------------------------------------------------------------------*/
 void TtaCleanUpWindow( int window_id )
 {
+#ifdef _WX
   AmayaWindow * p_window = NULL;
   if (window_id == 0)
     {
@@ -518,6 +519,7 @@ void TtaCleanUpWindow( int window_id )
       if (p_window)
 	p_window->CleanUp();
     }
+#endif /* _WX */
 }
 
 
