@@ -2298,6 +2298,8 @@ void SaveDocument (Document doc, View view)
     }
   else if (SavingDocument != 0 || SavingObject != 0)
     return;
+  else if (DocumentURLs[doc] == 0)
+    return;
   else if (!TtaIsDocumentModified (doc))
     {
       TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_NOTHING_TO_SAVE), "");
