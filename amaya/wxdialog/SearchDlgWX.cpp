@@ -73,7 +73,7 @@ SearchDlgWX::~SearchDlgWX()
   ----------------------------------------------------------------------*/
 void SearchDlgWX::OnConfirmButton( wxCommandEvent& event )
 {
-  wxString new_title = XRCCTRL(*this, "wxID_TITLE", wxTextCtrl)->GetValue( );
+  wxString new_title = XRCCTRL(*this, "wx_ID_SEAR_FOR_TXT", wxTextCtrl)->GetValue( );
   wxLogDebug( _T("SearchDlgWX::OnConfirmButton - new_title=")+new_title );
   
   // allocate a temporary buffer to copy the 'const char *' new_title buffer 
