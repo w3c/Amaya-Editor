@@ -8082,7 +8082,7 @@ RULES
 	Width: 20 px;
 	Depth: Enclosing - 5;
 	Adjust: Enclosing =;
-	if NOT RowExt
+	if NOT RowExt AND  immediately within Table_row
 	  CreateAfter(CellFrame);
 	CreateBefore(TD_S);
 	CreateWith(VerticalLine);

@@ -4502,32 +4502,35 @@ static ThotBool       RestoreAmayaDocs ()
       else
 	f = NULL;
 
-      if (f != NULL) {
-         InNewWindow = TRUE;
-         tempdoc[0] = WC_EOS;
-         fscanf (f, "%s %s %d\n", tempdocA, docnameA, &docType);
-         iso2wc_strcpy (tempdoc, tempdocA);
-         iso2wc_strcpy (docname, docnameA);
-         while (tempdoc[0] != WC_EOS && TtaFileExist (tempdoc)) {
-               if (UserAnswer) {
-                  if (RestoreOneAmayaDoc (0, tempdoc, docname,
-					  (DocumentType) docType))
-                     aDoc = TRUE;
-			   } else
-                    /* unlink this saved file */
-                    TtaFileUnlink (tempdoc);
+      if (f != NULL)
+	{
+	  InNewWindow = TRUE;
+	  tempdoc[0] = WC_EOS;
+	  fscanf (f, "%s %s %d\n", tempdocA, docnameA, &docType);
+	  iso2wc_strcpy (tempdoc, tempdocA);
+	  iso2wc_strcpy (docname, docnameA);
+	  while (tempdoc[0] != WC_EOS && TtaFileExist (tempdoc))
+	    {
+	      if (UserAnswer)
+		{
+                  if (RestoreOneAmayaDoc (0, tempdoc, docname, (DocumentType) docType))
+		    aDoc = TRUE;
+		}
+	      else
+		/* unlink this saved file */
+		TtaFileUnlink (tempdoc);
                /*next saved file */
                tempdoc[0] = WC_EOS;
                tempdocA[0] = EOS;
                fscanf (f, "%s %s %d\n", tempdocA, docnameA, &docType);
                iso2wc_strcpy (tempdoc, tempdocA);
                iso2wc_strcpy (docname, docnameA);
-		 }
-         InNewWindow = FALSE;	  
-         fclose (f);
-	  }
+	    }
+	  InNewWindow = FALSE;	  
+	  fclose (f);
+	}
       TtaFileUnlink (tempname);
-  }
+    }
   return (aDoc);
 }
 
