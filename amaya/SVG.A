@@ -9,6 +9,7 @@ DEFAULT
         AttrMenu.Pre -> GlobalSVGAttrInMenu;
 	PRuleCreate.Pre -> GraphicsPRuleChange;
 	PRuleModify.Pre -> GraphicsPRuleChange;
+	PRuleDelete.Post -> GraphicsPRuleDeleted;
         ElemSelect.Post -> GraphicsSelectionChanged;
 	ElemExtendSelect.Pre -> ExtendSelectSVGElement;
    END;

@@ -375,16 +375,17 @@ static void ModifyGraphics (PtrElement pEl, PtrDocument pDoc,
 void         ModifyColor (int colorNum, ThotBool Background)
 {
    PtrDocument         SelDoc;
-   PtrElement          pElFirstSel, pElLastSel, pEl;
+   PtrElement          pElFirstSel, pElLastSel, oldFirstSel, oldLastSel, pEl;
    PtrAbstractBox      pAb;
-   int                 firstChar, lastChar;
+   int                 firstChar, lastChar, oldFirstChar, oldLastChar;
    ThotBool            selok, modifFillPattern;
    int                 fillPatternNum;
    RuleSet             rulesS;
 
    CloseInsertion ();
    /* demande quelle est la selection courante */
-   selok = GetCurrentSelection (&SelDoc, &pElFirstSel, &pElLastSel, &firstChar, &lastChar);
+   selok = GetCurrentSelection (&SelDoc, &pElFirstSel, &pElLastSel, 
+				&firstChar, &lastChar);
    if (selok && SelDoc && !SelDoc->DocReadOnly && SelDoc->DocSSchema != NULL)
      /* le document selectionne' n'a pas ete ferme' */
      {
@@ -410,16 +411,22 @@ void         ModifyColor (int colorNum, ThotBool Background)
 	if (firstChar > 1 || lastChar > 0)
 	   IsolateSelection (SelDoc, &pElFirstSel, &pElLastSel, &firstChar,
 			     &lastChar, TRUE);
-
+	/* save the current selection */
+	oldFirstSel = pElFirstSel;
+	oldLastSel = pElLastSel;
+	oldFirstChar = firstChar;
+	oldLastChar = lastChar;
 	if (colorNum < 0)
 	   /* standard color */
 	   {
 	   /* set selection to the highest level elements having the same
 	      content */
 	     if (ThotLocalActions[T_selectsiblings] != NULL)
-	       (*ThotLocalActions[T_selectsiblings]) (&pElFirstSel, &pElLastSel, &firstChar, &lastChar);
+	       (*ThotLocalActions[T_selectsiblings]) (&pElFirstSel,
+					   &pElLastSel, &firstChar, &lastChar);
 	     if (firstChar == 0 && lastChar == 0)
-	       if (pElFirstSel->ElPrevious == NULL && pElLastSel->ElNext == NULL)
+	       if (pElFirstSel->ElPrevious == NULL &&
+		   pElLastSel->ElNext == NULL)
 		 if (pElFirstSel->ElParent != NULL &&
 		     pElFirstSel->ElParent == pElLastSel->ElParent)
 	           {
@@ -433,7 +440,8 @@ void         ModifyColor (int colorNum, ThotBool Background)
 	   }
 
 	if (ThotLocalActions[T_openhistory] != NULL)
-	  (*ThotLocalActions[T_openhistory]) (SelDoc, pElFirstSel, pElLastSel, firstChar, lastChar);
+	  (*ThotLocalActions[T_openhistory]) (SelDoc, pElFirstSel, pElLastSel,
+					      firstChar, lastChar);
 	/* parcourt les elements selectionnes */
 	pEl = pElFirstSel;
 	while (pEl != NULL)
@@ -452,8 +460,8 @@ void         ModifyColor (int colorNum, ThotBool Background)
 		   {
 		     pAb = AbsBoxOfEl (pEl, SelectedView);
 		     if (pAb != NULL && pAb->AbFillPattern < 2)
-		       /* on force la trame backgroundcolor si la trame du pave */
-		       /* est nopattern ou foregroundcolor */
+		       /* on force la trame backgroundcolor si la trame du */
+		       /* pave est nopattern ou foregroundcolor */
 		       {
 			 modifFillPattern = TRUE;
 			 fillPatternNum = 2;
@@ -490,7 +498,8 @@ void         ModifyColor (int colorNum, ThotBool Background)
 	/* modifie's et la selection */
 	if (ThotLocalActions[T_closehistory] != NULL)
 	  (*ThotLocalActions[T_closehistory]) (SelDoc);
-	SelectRange (SelDoc, pElFirstSel, pElLastSel, firstChar, lastChar);
+	SelectRange (SelDoc, oldFirstSel, oldLastSel, oldFirstChar,
+		     oldLastChar);
      }
 }
 

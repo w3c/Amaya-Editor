@@ -1102,8 +1102,8 @@ ThotBool GlobalSVGAttrInMenu (NotifyAttribute * event)
 }
 
 /*----------------------------------------------------------------------
- GraphicsPRuleChanged
- A presentation rule is going to be changed by Thot.
+ GraphicsChanged
+ A GRAPHIC base element has been changed by the user.
  -----------------------------------------------------------------------*/
 void GraphicsChanged (NotifyOnValue *event)
 {
@@ -1137,7 +1137,7 @@ ThotBool GraphicsPRuleChange (NotifyPresentation *event)
   elType = TtaGetElementType (el);
   doc = event->document;
   if (elType.ElSSchema != GetSVGSSchema (doc))
-    return (ret); /* let Thot perform normal operation */
+    return (FALSE); /* let Thot perform normal operation */
 
   presType = event->pRuleType;
   if (presType != PRHeight      &&  presType != PRWidth      &&
@@ -1237,6 +1237,35 @@ ThotBool GraphicsPRuleChange (NotifyPresentation *event)
 	}
     }
   return ret; /* let Thot perform normal operation */
+}
+
+/*----------------------------------------------------------------------
+ GraphicsPRuleDeleted
+ A specific presentation rule has been deleted
+ -----------------------------------------------------------------------*/
+void GraphicsPRuleDeleted (NotifyPresentation *event)
+{
+  ElementType    elType;
+  Document       doc;
+  Element        el;
+  int            presType;
+
+  el = event->element;
+  elType = TtaGetElementType (el);
+  doc = event->document;
+  if (elType.ElSSchema != GetSVGSSchema (doc))
+    return;
+
+  presType = event->pRuleType;
+  if (presType == PRSize       || presType == PRStyle      ||
+      presType == PRWeight     || presType == PRFont       ||
+      presType == PRLineStyle  || presType == PRLineWeight ||
+      presType == PRBackground || presType == PRForeground ||
+      presType == PRFillPattern)
+    {
+      SetStyleAttribute (doc, el);
+      TtaSetDocumentModified (doc);
+    }
 }
 
 /*----------------------------------------------------------------------
