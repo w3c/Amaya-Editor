@@ -183,7 +183,7 @@ summary="action button chart">
 
 <h4><a name="General">Les préférences générales</a></h4>
 
-<p style="text-align: center"><img src="../Icons/GeneralMenu.gif"
+<p style="text-align: center"><img src="../Icons/GeneralMenufr.gif"
 alt="General Preferences Menu" /></p>
 <dl>
   <dt></dt>
@@ -296,7 +296,7 @@ alt="General Preferences Menu" /></p>
 <h4><a name="Publishing">Pré</a><a name="Publishing1">férences de
 publication</a></h4>
 
-<p style="text-align: center"><img src="../Icons/PublishMenu.gif"
+<p style="text-align: center"><img src="../Icons/PublishMenufr.gif"
 alt="Publish Preferences Menu" /></p>
 <dl>
   <dt><strong>Utiliser les ETAGS et les conditions requises</strong></dt>
@@ -330,7 +330,7 @@ alt="Publish Preferences Menu" /></p>
   <dt><a name="Cache"><strong>Préférences de cache</strong></a></dt>
 </dl>
 
-<p style="text-align: center"><img src="../Icons/CacheMenu.gif"
+<p style="text-align: center"><img src="../Icons/CacheMenufr.gif"
 alt="Cache Preferences Menu" /></p>
 
 <p>Amaya fournit un cache par l'intermédiaire de la libwww. Par défaut, le
@@ -364,7 +364,7 @@ cache est activé et est stocké dans le répertoire
 
 <h4><a name="Proxy">Préférences du proxy</a></h4>
 
-<p style="text-align: center"><img src="../Icons/ProxyMenu.gif"
+<p style="text-align: center"><img src="../Icons/ProxyMenufr.gif"
 alt="Proxy Preferences Menu" /></p>
 
 <p>Vous pouvez spécifier un proxy et une série de domaines où le proxy devrait
@@ -400,7 +400,7 @@ ou ne devrait pas être utilisé par le biais de ce menu.</p>
 
 <h4><a name="color">Préférences des couleurs</a></h4>
 
-<p style="text-align: center"><img src="../Icons/ColorMenu.gif"
+<p style="text-align: center"><img src="../Icons/ColorMenufr.gif"
 alt="Color Preferences Menu" /></p>
 
 <p>Ce menu permet la sélection des couleurs du premier plan et de l'arrière
@@ -443,7 +443,7 @@ et des liens activés est donné dans la feuille de style Amaya.css</p>
 
 <h4><a name="HTML">Les préférences de géométrie</a></h4>
 
-<p style="text-align: center"><img src="../Icons/GeomMenu.gif"
+<p style="text-align: center"><img src="../Icons/GeomMenufr.gif"
 alt="Geometry Preferences Menu" /></p>
 
 <p>Ce menu vous permet de sauver la position de la fenêtre courante et la
@@ -455,7 +455,7 @@ nouvelles fenêtres document.</p>
 
 <h4><a name="lang">Les préférences de négociation de langues</a></h4>
 
-<p style="text-align: center"><img src="../Icons/LangueNegotiation.gif"
+<p style="text-align: center"><img src="../Icons/LangueNegotiationfr.gif"
 alt="Language negotiation menu" /></p>
 
 <p>Si un document existe en différentes langues et que votre serveur est
@@ -470,7 +470,7 @@ demander de façon transparente n'importe laquelle de ces versions.</p>
 
 <h4><a name="Profiles">Profils</a></h4>
 
-<p style="text-align: center"><img src="../Icons/ProfilesMenu.gif"
+<p style="text-align: center"><img src="../Icons/ProfilesMenufr.gif"
 alt="Profiles  menu" /></p>
 
 <p>Dans Amaya, un <strong>profil</strong> permet d'adapter l'interface Amaya
@@ -484,7 +484,7 @@ lancement d'Amaya.</p>
 
 <h4><a name="Templates">Modèles de pages</a></h4>
 
-<p style="text-align: center"><img src="../Icons/TemplatesMenu.gif"
+<p style="text-align: center"><img src="../Icons/TemplatesMenufr.gif"
 alt="Templates " /></p>
 
 <p>Un <strong>modèle de page</strong> est un modèle, ou un squelette de
