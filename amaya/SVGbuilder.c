@@ -201,9 +201,11 @@ void   ParseCSSequivAttribute (int attrType, Attribute attr, Element el,
 	  sprintf (css_command, "font-weight: inherit");
 	  break;
 	}
+      break;
     case SVG_ATTR_text_decoration:
       sprintf (css_command, "text-decoration: %s", text);
       break;
+    default:
       break;
     }
 
