@@ -80,7 +80,6 @@ void GL_DrawUnicodeChar (CHAR_T const c,
 
 /* GL specific */
 void GL_Swap (int frame);
-int  GL_MakeCurrent (int frame);
 void SetGlPipelineState ();
 void GLResize (int width, int height, int x, int y);
 void GL_SetForeground (int fg);
@@ -96,12 +95,13 @@ void GL_ActivateDrawing();
 void GL_DrawAll (ThotWidget widget, int frame);
 
 
-ThotBool GL_prepare (ThotWidget *widget, int frame);
+ThotBool GL_prepare (int frame);
+void GL_realize ();
+
 ThotBool SavePng (const char *filename, 
 		 unsigned char *m_pData,
 		 unsigned int m_width,
 		  unsigned int m_height);
-void GL_realize ();
 
 void saveBuffer (int width, int height);
 
