@@ -460,6 +460,8 @@ static AttributeMapping* lastAttrEntry = NULL; /* entry in the AttributeMappingT
 static ThotBool     UnknownAttr = FALSE;  /* the last attribute encountered is
 					     invalid */
 static ThotBool     ReadingAnAttrValue = FALSE;
+static ThotBool     TruncatedAttrValue = FALSE;
+static STRING       bufferAttrValue = NULL;
 static Element      CommentText = NULL;	  /* TEXT element of the current
 					     Comment element */
 static ThotBool     UnknownTag = FALSE;	  /* the last start tag encountered is
@@ -486,6 +488,7 @@ static int          EntityTableEntry = 0; /* entry of the entity table that
 static int          CharRank = 0;	  /* rank of the last matching
 					     character in that entry */
 static void         ProcessStartGI (CHAR_T* GIname);
+static void         EndOfAttrValue (CHAR_T c);
 
 
 /*----------------------------------------------------------------------
@@ -1164,8 +1167,11 @@ static void         PutInBuffer (UCHAR_T c)
 	  if (currentState == 0)
 	    TextToDocument ();
 	  else if (currentState == 6)
-	    ParseHTMLError (HTMLcontext.doc,
-			    TEXT("Attribute value too long"));
+	    {
+	      TruncatedAttrValue = TRUE;
+	      EndOfAttrValue (c);
+	      TruncatedAttrValue = FALSE;
+	    }
 	  else
 	    ParseHTMLError (HTMLcontext.doc,
 			    TEXT("Buffer overflow"));
@@ -3585,33 +3591,83 @@ static void            EndOfAttrValue (CHAR_T c)
 static void         EndOfAttrValue (CHAR_T c)
 {
 
-   ReadingAnAttrValue = FALSE;
-   if (UnknownAttr)
-     /* this is the end of value of an invalid attribute. Keep the */
-     /* quote character that ends the value for copying it into the */
-     /* Invalid_attribute. */
-     if (c == TEXT('\'') || c == TEXT('\"'))
-       PutInBuffer (c);
-   CloseBuffer ();
-   /* inputBuffer contains the attribute value */
-   
-   if (lastAttrEntry == NULL)
-     {
-       InitBuffer ();
-       return;
-     }
-   
-   if (HTMLcontext.lastElementClosed &&
-       (HTMLcontext.lastElement == rootElement))
-     {
-       /* an attribute after the tag </html>, ignore it */
-     }
-   else
-     EndOfHTMLAttributeValue (inputBuffer, lastAttrEntry, lastAttribute,
-			      lastAttrElement, UnknownAttr, &HTMLcontext,
-			      FALSE/*HTML parser*/);
+  static ThotBool   isAttrValueTruncated;
+  void             *status;
+  int               lg;
 
-   InitBuffer ();
+  if (TruncatedAttrValue)
+    {
+      isAttrValueTruncated = TRUE;
+      if (bufferAttrValue == NULL)
+	{
+	  bufferAttrValue = TtaAllocString (MaxBufferLength + 1);
+	  ustrcpy (bufferAttrValue, inputBuffer);
+	}
+      else
+	{
+	  lg = ustrlen (bufferAttrValue);
+	  status = TtaRealloc (bufferAttrValue,
+			       sizeof (CHAR_T) * (MaxBufferLength + lg));
+	  if (status != NULL)
+	    {
+	      bufferAttrValue = status;
+	      ustrcat (bufferAttrValue, inputBuffer);
+	    }
+	}
+    }
+  else
+    {
+      ReadingAnAttrValue = FALSE;
+      if (UnknownAttr)
+	/* this is the end of value of an invalid attribute. Keep the */
+	/* quote character that ends the value for copying it into the */
+	/* Invalid_attribute. */
+	if (c == TEXT('\'') || c == TEXT('\"'))
+	  PutInBuffer (c);
+      CloseBuffer ();
+      /* inputBuffer contains the attribute value */
+      
+      if (lastAttrEntry == NULL)
+	{
+	  InitBuffer ();
+	  return;
+	}
+      
+      if (HTMLcontext.lastElementClosed &&
+	  (HTMLcontext.lastElement == rootElement))
+	{
+	  /* an attribute after the tag </html>, ignore it */
+	}
+      else
+	{
+	  if (isAttrValueTruncated)
+	    {
+	      lg = ustrlen (bufferAttrValue);
+	      status = TtaRealloc (bufferAttrValue,
+				   sizeof (CHAR_T) * ((strlen(inputBuffer)) + lg));
+	      if (status != NULL)
+		{
+		  bufferAttrValue = status;
+		  ustrcat (bufferAttrValue, inputBuffer);
+		  EndOfHTMLAttributeValue (bufferAttrValue, lastAttrEntry,
+					   lastAttribute, lastAttrElement,
+					   UnknownAttr, &HTMLcontext,
+					   FALSE/*HTML parser*/);
+		  TtaFreeMemory (bufferAttrValue);
+		  bufferAttrValue = NULL;
+		  isAttrValueTruncated = FALSE;
+		}
+	    }
+	  else
+	    {
+	      EndOfHTMLAttributeValue (inputBuffer, lastAttrEntry, lastAttribute,
+				       lastAttrElement, UnknownAttr, &HTMLcontext,
+				       FALSE/*HTML parser*/);
+	    }
+	}
+      
+      InitBuffer ();
+    }
 }
 
 /*----------------------------------------------------------------------
