@@ -2256,7 +2256,9 @@ Document InitDocAndView (Document doc, char *docname, DocumentType docType,
 	   else
 	     elType.ElTypeNum = MathML_EL_XMLcomment;
 	   comment = TtaNewTree (doc, elType, "");
-	   TtaInsertFirstChild (&comment, root, doc);
+	   TtaSetStructureChecking (0, doc);
+	   TtaInsertSibling (comment, root, TRUE, doc);
+	   TtaSetStructureChecking (1, doc);
 	   strcpy (buffer, " Created by ");
 	   strcat (buffer, HTAppName);
 	   strcat (buffer, " ");
@@ -4545,7 +4547,7 @@ static void    ChangeDoctype (ThotBool isXml)
   TtaDeleteTree (doctype, doc);
   
   profile = TtaGetDocumentProfile (doc);
-  /* Check the Thot abstract tree against the structure schema. */
+  /* Don't check the Thot abstract tree against the structure schema. */
   TtaSetStructureChecking (0, doc);
   
   doctype = TtaNewElement (doc, elType);
