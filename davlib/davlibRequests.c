@@ -15,7 +15,14 @@
  ** $Id$
  ** $Date$
  ** $Log$
- ** Revision 1.4  2002-06-04 14:52:42  kirschpi
+ ** Revision 1.5  2002-06-05 16:46:06  kirschpi
+ ** Applying Amaya code format.
+ ** Modifying some dialogs (looking for a better windows presentation)
+ ** Adding a DAVResource list, a list of resources (specially collections),
+ ** where we should do a Lock discovery.
+ ** Manuele
+ **
+ ** Revision 1.4  2002/06/04 14:52:42  kirschpi
  ** *** empty log message ***
  **
  ** Revision 1.3  2002/06/03 14:37:43  kirschpi
@@ -57,7 +64,8 @@
                                  Dependency status code.
   ---------------------------------------------------------------------- */
 int FilterFailedDependency_handler (HTRequest * request, HTResponse * response,
-                   void * param, int status)  {
+                   void * param, int status)  
+{
     /* A 424 Failed Dependency status code may have many causes. The
      * most problably is an If header without the opaque lock of some
      * ancestral resource or with an invalid opaque lock.
@@ -79,76 +87,85 @@ int FilterFailedDependency_handler (HTRequest * request, HTResponse * response,
                    method needs. Used by FilterLoked_handler and 
                    FilterMultiStatus_handler.
    ---------------------------------------------------------------------- */
-void DAVSetCopyRequest (AHTReqContext *new_request, AHTReqContext *context, \
-                     AHTDAVContext *davctx) {
+void DAVSetCopyRequest (AHTReqContext *new_request, AHTReqContext *context, 
+                        AHTDAVContext *davctx) 
+{
+    char *filename = NULL;
                                    
     if (new_request && context && davctx) 
-    {
+     {
 #ifdef DEBUG_DAV
         fprintf (stderr,"DAVSetCopyRequest.... copying the request\n");
 #endif  
         /* copy the document content for PUT and file POST */   
-        if (new_request->method == METHOD_PUT || \
-           (new_request->method == METHOD_POST && \
+        if (new_request->method == METHOD_PUT || 
+           (new_request->method == METHOD_POST && 
            (new_request->mode & AMAYA_FILE_POST))) 
-        {
-            if (context->document) {
+         {
+            if (context->document) 
+             {
                 new_request->document = TtaStrdup (context->document);
-            }
-            else {
-                char *filename = HTAnchor_address (context->source);
+             }
+            else
+             {
+                filename = HTAnchor_address (context->source);
                 filename = strchr (filename,':');
-                if (filename) {
+                if (filename) 
+                 {
                     filename++;
                     new_request->document = DAVCopyFile (filename,context->block_size);
-                }
-            }
+                 }
+             }
                         
             /* set new source anchor with the document */
             if (new_request->document) 
-            {
+             {
                 davctx->new_source = HTTmpAnchor (NULL);
                 HTAnchor_setDocument (davctx->new_source, new_request->document);
                 HTAnchor_setLength (davctx->new_source, context->block_size);
                 HTAnchor_setFormat (davctx->new_source, HTAnchor_format (HTAnchor_parent\
-                                                                (context->source)));
+                                                                     (context->source)));
 
-                if (new_request->method == METHOD_PUT) {
+                if (new_request->method == METHOD_PUT) 
+                 {
                     if (HTAnchor_charset (HTAnchor_parent(context->source)))
                         HTAnchor_setCharset (davctx->new_source,
                                              HTAnchor_charset (HTAnchor_parent\
-                                                                    (context->source)));
-                }                           
-            } /* document */
+                                                                     (context->source)));
+                 }                           
+             } /* document */
 
-        } /* PUT || POST file */        
+         } /* PUT || POST file */        
 
-        if (new_request->method == METHOD_PUT) {
+        if (new_request->method == METHOD_PUT) 
+         {
             /* default put name */
             new_request->default_put_name = TtaStrdup (context->default_put_name);
-            HTRequest_setDefaultPutName (new_request->request, \
+            HTRequest_setDefaultPutName (new_request->request, 
                                          new_request->default_put_name);
 
             /* preconditions */
-            HTRequest_setPreconditions(new_request->request, \
-                                    HTRequest_preconditions (context->request));
+            HTRequest_setPreconditions(new_request->request, 
+                                       HTRequest_preconditions (context->request));
 
             /* request anchor */
             HTRequest_setAnchor (new_request->request, new_request->dest);
                             
-        } /* PUT */
+         } /* PUT */
         else if (new_request->method == METHOD_POST) 
         {
-            if (new_request->mode & AMAYA_FILE_POST) {
+            if (new_request->mode & AMAYA_FILE_POST) 
+             {
                 HTRequest_setEntityAnchor (new_request->request,davctx->new_source);
-            }
-            else if (new_request->mode & AMAYA_FORM_POST) {
+             }
+            else if (new_request->mode & AMAYA_FORM_POST) 
+             {
                 HTRequest_setEntityAnchor (new_request->request,new_request->anchor);
-            }
+             }
 
-        }/* POST FORM & FILE */
+         }/* POST FORM & FILE */
                 
-    } /* new_request */
+     } /* new_request */
 }
 
 
@@ -158,26 +175,30 @@ void DAVSetCopyRequest (AHTReqContext *new_request, AHTReqContext *context, \
   
   ---------------------------------------------------------------------- */
 int FilterLocked_handler (HTRequest * request, HTResponse * response,
-                   void * param, int status)  {
+                          void * param, int status)  
+{
 
     AHTReqContext *context = (AHTReqContext *) HTRequest_context (request);
     AHTDAVContext *davctx  = (context)?(AHTDAVContext *)context->dav_context:NULL;
+    AHTDAVContext *new_davctx = NULL;
+    char *msg = NULL;
     BOOL ok = NO;
     
-    if (context) {
-        AHTDAVContext *new_davctx = GetPropfindInfo (context->docid); 
+    if (context) 
+     {
+        new_davctx = GetPropfindInfo (context->docid); 
    
         if (new_davctx) 
-        {             
+         {             
             new_davctx->showIt = NO;
             new_davctx->retry = YES;
             
 #ifdef DEBUG_DAV
             fprintf (stderr,"FilterLocked_handler.... finding lock informations \n");
 
-            fprintf (stderr,"FilterLocked_handler.... source (%s) %s\n", \
-                             HTAnchor_address (context->source),\
-                             (HTAnchor_document (HTAnchor_parent(context->source)))?\
+            fprintf (stderr,"FilterLocked_handler.... source (%s) %s\n", 
+                             HTAnchor_address (context->source),
+                             (HTAnchor_document (HTAnchor_parent(context->source)))?
                              "YES":"NO");       
 #endif
 
@@ -185,42 +206,45 @@ int FilterLocked_handler (HTRequest * request, HTResponse * response,
             if (!createPropfindBody (YES,new_davctx->xmlbody,DAV_XML_LEN)) 
                     return HT_OK;
             
-            if (context->method != METHOD_LOCK) {
+            if (context->method != METHOD_LOCK) 
+             {
                 /* copy info to retry later */
                 AHTReqContext *new_request = DAVCopyContext (context);
                 DAVSetCopyRequest (new_request, context, new_davctx);
                 new_davctx->new_request = new_request;          
-            }
+             }
 
             /* create the message to be displayed later */
             new_davctx->error_msgs = AwList_new (2);
-            if (new_davctx->error_msgs) {
-                char *msg = HT_CALLOC (LINE_MAX, sizeof(char));
+            if (new_davctx->error_msgs) 
+             {
+                msg = HT_CALLOC (LINE_MAX, sizeof(char));
                 sprintf (msg, TtaGetMessage (AMAYA,AM_LOCKED), new_davctx->relativeURI);
                 AwList_put (new_davctx->error_msgs,msg);
-            }
+             }
             
             
             /* disable the output from this request */
             if (davctx) davctx->showIt = NO;
                 
             /* find lock informations with a propfind request */                
-            ok = DoPropfindRequest(context->docid,new_davctx, \
-                                  (context->method == METHOD_LOCK)?\
-                                  FilterFindAndShowLock_handler : FilterFindAndPut_handler, NULL);
+            ok = DoPropfindRequest(context->docid,new_davctx, 
+                                   (context->method == METHOD_LOCK)?
+                                   FilterFindAndShowLock_handler : FilterFindAndPut_handler, NULL);
 
-        } /* new_davctx */
+         } /* new_davctx */
 
-        if (ok!=YES) {
-            DAVDisplayMessage (TtaGetMessage (AMAYA,AM_LOCKED),\
+        if (ok!=YES) 
+         {
+            DAVDisplayMessage (TtaGetMessage (AMAYA,AM_LOCKED),
                                DocumentURLs[context->docid]);
         
             /* we stop the work _ reset stop button */
             ResetStop (context->docid);
     
             return HT_OK;
-        }
-    } /* context */
+         }
+     } /* context */
     
     return HT_OK;
 }
@@ -233,35 +257,41 @@ int FilterLocked_handler (HTRequest * request, HTResponse * response,
                              status code.
   ---------------------------------------------------------------------- */
 int FilterMultiStatus_handler (HTRequest * request, HTResponse * response,
-                   void * param, int status)  {
+                               void * param, int status)  
+{
 
     AHTReqContext *context = (AHTReqContext *) HTRequest_context (request);
     AHTDAVContext *davctx  = (context)?(AHTDAVContext *)context->dav_context:NULL;
+    AHTDAVContext *new_davctx  = NULL; 
+    AHTReqContext *new_request = NULL;
+    char *msg    = NULL;
+    char *reason = NULL;
     char urlName[LINE_MAX];
     BOOL ok = NO;
+    int i = 0;
+    char c;
       
-    if (context) {
-        AHTDAVContext *new_davctx  = GetPropfindInfo (context->docid); 
-        AHTReqContext *new_request = NULL;
+    if (context) 
+     {
+        new_davctx  = GetPropfindInfo (context->docid); 
+        new_request = NULL;
         
         if (new_davctx) 
-        {         
+         {         
             new_davctx->showIt = NO;
             new_davctx->retry = YES;
 
 #ifdef DEBUG_DAV
-            fprintf (stderr,"FilterMultiStatus_handler.... finding lock info for %s\n",\
+            fprintf (stderr,"FilterMultiStatus_handler.... finding lock info for %s\n",
                              context->urlName);
 #endif
             
             /* 207 Multi-Status is the normal status code for PROPFIND requests*/
             if (context->method == METHOD_PROPFIND)
                 return HT_OK;  
-
             /* 207 Multi-Status is an error code for LOCK requests */
-            else if (context->method == METHOD_LOCK || context->method == METHOD_UNLOCK) {
+            else if (context->method == METHOD_LOCK || context->method == METHOD_UNLOCK) 
                 return HT_OK;
-            }
 
             
             /*sets xmlbody to lockdiscovery*/
@@ -275,9 +305,9 @@ int FilterMultiStatus_handler (HTRequest * request, HTResponse * response,
             
             /* continue only if we could copy the request*/ 
             if (new_request) 
-            {
-                int i = 0;
-                char c;
+             {
+                i = 0;
+                c = ' ';
                 
                /* change the destiny url for the propfind request.
                 * Multi-Status status code may be caused by a lock in a ancestral
@@ -305,34 +335,36 @@ int FilterMultiStatus_handler (HTRequest * request, HTResponse * response,
         
                 /* create the message to be displayed later */
                 new_davctx->error_msgs = AwList_new (2);
-                if (new_davctx->error_msgs) {
-                    char *msg = HT_CALLOC (LINE_MAX, sizeof(char));
-                    char *reason = HTResponse_reason (response);
-                    sprintf (msg, TtaGetMessage (AMAYA,AM_MULTI_STATUS_FAIL), \
+                if (new_davctx->error_msgs) 
+                 {
+                    msg = HT_CALLOC (LINE_MAX, sizeof(char));
+                    reason = HTResponse_reason (response);
+                    sprintf (msg, TtaGetMessage (AMAYA,AM_MULTI_STATUS_FAIL), 
                                                  (reason)?reason:"Multi-Status Failure");
                     AwList_put (new_davctx->error_msgs,msg);
-                }
+                 }
             
                                 
                 /* find lock informations with a propfind request */                    
-                ok = DoPropfindRequest(context->docid,new_davctx, \
-                              FilterFindAndPut_handler, urlName);
+                ok = DoPropfindRequest(context->docid,new_davctx, 
+                                       FilterFindAndPut_handler, urlName);
 
-            }
-        } /* new_davctx */
+             } /* new_context */
+         } /* new_davctx */
 
-        if (!ok) {
-            char *reason = HTResponse_reason (response);
-            DAVDisplayMessage (TtaGetMessage (AMAYA,AM_MULTI_STATUS_FAIL),\
+        if (!ok) 
+         {
+            reason = HTResponse_reason (response);
+            DAVDisplayMessage (TtaGetMessage (AMAYA,AM_MULTI_STATUS_FAIL),
                                (reason)?reason:"Multi-Status Failure");
         
             /* we stop the work _ reset stop button */
             ResetStop (context->docid);
             
             return HT_OK;
-        }
+         }
         
-    } /* context */
+     } /* context */
     
     return HT_OK;
 }
@@ -349,41 +381,29 @@ void DAVTerminate_callback (int doc, int status, char *urlName,
                       void * context)
 {
                                               
-    AHTDAVContext *davctx = (context)? \
-                            (AHTDAVContext*)((AHTReqContext*)context)->dav_context\
+    AHTDAVContext *davctx = (context)? 
+                            (AHTDAVContext*)((AHTReqContext*)context)->dav_context
                             :NULL;
         
-    if (davctx) {
+    if (davctx) 
+     {
         /*show results to the user*/
         if (davctx->showIt) DAVShowInfo ((AHTReqContext*)context);            
-        else {  /*set the status line */
-            char *msg = NULL; 
-            switch (((AHTReqContext*)context)->method) {
-                case METHOD_LOCK: 
-                            msg = TtaGetMessage (AMAYA, AM_LOCK_SUCCEED);
-                            break;
-                case METHOD_UNLOCK: 
-                            msg = TtaGetMessage (AMAYA, AM_UNLOCK_SUCCEED);
-                            break;
-                default:
-                            msg = TtaGetMessage (AMAYA, AM_DOCUMENT_LOADED);
-                            break;
-            }
-            
-            if (msg)
-                TtaSetStatus ( ((AHTReqContext*)context)->docid, DAV_VIEW, \
-                       msg, NULL);
-        } 
 
 #ifdef DEBUG_DAV        
-        fprintf (stderr, "DAVTerminate_callback.... starting for %s\n",  \
-                       (urlName)?urlName:"NULL");
-        fprintf (stderr, "\tstatus %d\n\tfile: %s\n",status,\
-                      (outputfile)?outputfile:"NULL");
-        fprintf (stderr, "\tcontext: %s\n\tdav_context: %s\n",\
-                      (context)?"YES":"NO", (davctx)?"YES":"NO");
+        fprintf (stderr, "DAVTerminate_callback.... starting for %s\n",  
+                         (urlName)?urlName:"NULL");
+        fprintf (stderr, "\tstatus %d\n\tfile: %s\n",status,
+                         (outputfile)?outputfile:"NULL");
+        fprintf (stderr, "\tcontext: %s\n\tdav_context: %s\n",
+                         (context)?"YES":"NO", (davctx)?"YES":"NO");
+       fprintf (stderr,"FilterUnlock_handler.... Open requests %d\n",Amaya->open_requests);
 #endif    
-    } 
+        /* we stop the work _ reset stop button */
+        if (Amaya->open_requests<=1) 
+           ResetStop ( ((AHTReqContext*)context)->docid);
+
+     } 
 }
 
 
@@ -399,7 +419,8 @@ void DAVTerminate_callback (int doc, int status, char *urlName,
   non-dav operations (specially PUT), when the resource is locked.
   ---------------------------------------------------------------------- */
 int FilterFindAndPut_handler (HTRequest * request, HTResponse * response,
-                   void * param, int status)  {
+                              void * param, int status)  
+{
 
     AHTReqContext  *context  =   (AHTReqContext *)HTRequest_context(request);
     AHTDAVContext  *davctx   =   (context)?context->dav_context:NULL;
@@ -407,27 +428,32 @@ int FilterFindAndPut_handler (HTRequest * request, HTResponse * response,
     BOOL            ok       =   NO;
     
     char owner[LINE_MAX];
-    char *out, *deb, *uri;
+    char label1[LINE_MAX],label2[LINE_MAX];
+    char *out, *deb, *uri,*msg ;
     
-    out = deb = uri = NULL;
+    out = deb = uri = msg = NULL;
      
-    if (davctx) {
+    if (davctx) 
+     {
 
         /* if we haven't the old request to retry, show message and return */    
-        if (!davctx->retry || !davctx->new_request || !davctx->new_request->request) {
-            char *msg = NULL;
-            if (davctx->error_msgs) {
+        if (!davctx->retry || !davctx->new_request || !davctx->new_request->request) 
+         {
+            msg = NULL;
+            if (davctx->error_msgs) 
+             {
                 AwList_reset(davctx->error_msgs);
                 msg = AwList_next (davctx->error_msgs);
-                if (msg) {
+                if (msg) 
+                 {
                     DAVDisplayMessage (msg,NULL);
                     return HT_OK;
-                }
-            }       
-            DAVDisplayMessage (TtaGetMessage (AMAYA, AM_MULTI_STATUS_FAIL), \
+                 }
+             }       
+            DAVDisplayMessage (TtaGetMessage (AMAYA, AM_MULTI_STATUS_FAIL), 
                                "Locked or Multi-Status Failure");
             return HT_OK;
-        }
+         }
            
         
         /* get output and debug streams */
@@ -448,74 +474,80 @@ int FilterFindAndPut_handler (HTRequest * request, HTResponse * response,
         davctx->status = status;
 
         /* if succed (status 207) set AHTDAVContext - response body tree */
-        if (status == HT_MULTI_STATUS && out) {
+        if (status == HT_MULTI_STATUS && out) 
             davctx->tree = AwParser_umountMessage(out);
-        }
 
         /*find lock informations*/
         if (davctx->tree)
             lockinfo = DAVGetLockFromTree (davctx->tree,owner);
 
         /*document is locked, ask to*/
-        if (lockinfo) {
-            char label1[LINE_MAX],label2[LINE_MAX];
-            
+        if (lockinfo) 
+         {
                     
             /*user if s/he wants to try again */            
-            sprintf (label1,TtaGetMessage(AMAYA,AM_LOCKED_BY_OTHER),\
+            sprintf (label1,TtaGetMessage(AMAYA,AM_LOCKED_BY_OTHER),
                             lockinfo->relativeURI, owner, lockinfo->timeout);
             sprintf (label2,TtaGetMessage(AMAYA,AM_LOCK_OVERWRITE));
             
-            if (DAVConfirmDialog (context->docid,label1, label2, " ")) {
+            if (DAVConfirmDialog (context->docid,label1, " ", label2))
+             {
                 /* save lock info */
-                if (saveLockLine (davctx->absoluteURI, lockinfo)==YES) {                 
+                if (saveLockLine (davctx->absoluteURI, lockinfo)==YES) 
+                 {
                     /* retry the request, using davctx->new_request */
-                    DAVAddIfHeader (davctx->new_request,\
+                    DAVAddIfHeader (davctx->new_request,
                                     davctx->new_request->urlName);
                     
                     /* add a local filter to set save icon */
-                    HTRequest_addAfter (davctx->new_request->request, FilterSave_handler, \
+                    HTRequest_addAfter (davctx->new_request->request, FilterSave_handler, 
                                         NULL,NULL,HT_ALL,HT_FILTER_LAST,NO); 
                                     
                     /* it was a PUT request */
-                    if (davctx->new_request->method == METHOD_PUT && \
-                        davctx->new_source) {
-                        ok = HTPutAnchor (davctx->new_source,\
-                                          davctx->new_request->dest,\
+                    if (davctx->new_request->method == METHOD_PUT && 
+                        davctx->new_source) 
+                     {
+                        ok = HTPutAnchor (davctx->new_source,
+                                          davctx->new_request->dest,
                                           davctx->new_request->request);
-                    }
+                     }
                     /* POST request */
-                    else if (davctx->new_request->method == METHOD_POST) {
-                         if ((davctx->new_request->mode & AMAYA_FORM_POST) && \
-                              davctx->new_request->formdata) {
+                    else if (davctx->new_request->method == METHOD_POST) 
+                     {
+                         if ((davctx->new_request->mode & AMAYA_FORM_POST) && 
+                              davctx->new_request->formdata) 
+                          {
                              HTParentAnchor *posted = NULL;
-                             posted = HTPostFormAnchor (davctx->new_request->formdata,\
-                                                 (HTAnchor *)davctx->new_request->anchor,\
+                             posted = HTPostFormAnchor (davctx->new_request->formdata,
+                                                 (HTAnchor *)davctx->new_request->anchor,
                                                   davctx->new_request->request);
                              ok = (posted)?YES:NO;
-                         }
-                         else if ((davctx->new_request->mode & AMAYA_FORM_POST) && \
-                                  davctx->new_source) {
-                             ok = HTPostAnchor (davctx->new_source,\
-                                               (HTAnchor *)davctx->new_request->anchor,\
+                          }
+                         else if ((davctx->new_request->mode & AMAYA_FORM_POST) && 
+                                  davctx->new_source) 
+                          {
+                             ok = HTPostAnchor (davctx->new_source,
+                                               (HTAnchor *)davctx->new_request->anchor,
                                                 davctx->new_request->request);
-                         }
-                    }
+                          }
+                     }
                     /* GET form */
-                    else if (davctx->new_request->formdata) {
-                        ok = HTGetFormAnchor (davctx->new_request->formdata, \
-                                             (HTAnchor *)davctx->new_request->anchor,\
-                                              davctx->new_request->request);                                    
-                    }   
+                    else if (davctx->new_request->formdata) 
+                     {
+                        ok = HTGetFormAnchor (davctx->new_request->formdata, 
+                                             (HTAnchor *)davctx->new_request->anchor,
+                                              davctx->new_request->request); 
+                     }   
 
                     TtaHandlePendingEvents ();      
-                } /* save */
-            }
-        } /* lockinfo */
+                 } /* save */
+             } /*confirm dialog */
+         } /* lockinfo */
             
         /* if status != YES, continue filters */
-        if (ok!=YES) {
-            char *msg = NULL;
+        if (ok!=YES) 
+         {
+            msg = NULL;
             
             SavingDocument = 0;
             SavingObject = 0;
@@ -528,19 +560,21 @@ int FilterFindAndPut_handler (HTRequest * request, HTResponse * response,
             ResetStop (context->docid);
             
             /* display the correct message */   
-            if (davctx->error_msgs) {
+            if (davctx->error_msgs) 
+             {
                 AwList_reset(davctx->error_msgs);
                 msg = AwList_next (davctx->error_msgs);
-                if (msg) {
+                if (msg) 
+                 {
                     DAVDisplayMessage (msg,NULL);
                     return HT_OK;
-                }
-            }       
-            DAVDisplayMessage (TtaGetMessage (AMAYA, AM_MULTI_STATUS_FAIL), \
+                 }
+             }       
+            DAVDisplayMessage (TtaGetMessage (AMAYA, AM_MULTI_STATUS_FAIL), 
                                "Locked or Multi-Status Failure");
-        }
+         }
 
-    }
+     }
 
     return HT_OK;
 }
@@ -552,20 +586,23 @@ int FilterFindAndPut_handler (HTRequest * request, HTResponse * response,
   It only set the document status according the request status.
   ---------------------------------------------------------------------- */
 int FilterSave_handler (HTRequest * request, HTResponse * response,
-                   void * param, int status)  {
+                        void * param, int status)  
+{
     AHTReqContext * context = (AHTReqContext *)param;
-    if (context) {
+    if (context) 
+     {
         SavingDocument = 0;
         SavingObject = 0;       
 
          /* request succeed, document is saved */
-        if (context->method == METHOD_PUT) {
+        if (context->method == METHOD_PUT) 
+         {
             if (status > 0)
                 DocStatusUpdate (context->docid,FALSE);
             else
                 DocStatusUpdate (context->docid,TRUE);
-        }
-    }
+         }
+     }
 
     return HT_OK;
 }
@@ -581,19 +618,23 @@ int FilterSave_handler (HTRequest * request, HTResponse * response,
    Redo a LOCK/UNLOCK request. 
    Note: It doesn't use this context, just pick up its dav_context object.
   ----------------------------------------------------------------------*/
-void DAVRedo (AHTReqContext *context) {
+void DAVRedo (AHTReqContext *context) 
+{
     AHTDAVContext *info = (context)?context->dav_context:NULL;
     
-    if (info) {
-        if (context->method == METHOD_LOCK) {
+    if (info) 
+     {
+        if (context->method == METHOD_LOCK) 
+         {
                 context->dav_context = NULL;
                 DoLockRequest (context->docid, info);    
-        }       
-        else if (context->method ==  METHOD_UNLOCK) {
+         }       
+        else if (context->method ==  METHOD_UNLOCK) 
+         {
                 context->dav_context = NULL;
                 DoUnlockRequest (context->docid, info);    
-        }
-    }
+         }
+     }
 }
 
 
@@ -619,30 +660,33 @@ void DAVRedo (AHTReqContext *context) {
         if succed, the parameter "body" will contain the XML request body.
         
   ----------------------------------------------------------------------*/
-BOOL createLockBody (char *owner, char *scope, char *body, int len) {
+BOOL createLockBody (char *owner, char *scope, char *body, int len) 
+{
      char tmp[DAV_XML_LEN];
      char nl[3];
+     int i; 
      BOOL status = NO;
      
      sprintf (nl,"%c%c",CR,LF);     
             
-     if (owner && *owner && scope && *scope) {
+     if (owner && *owner && scope && *scope) 
+      {
         sprintf (tmp,"<?xml version=\"1.0\" encoding=\"utf-8\" ?>%s"
                      "<D:lockinfo xmlns:D=\"DAV:\">%s"
-                     "    <D:lockscope><D:%s/></D:lockscope>%s"
-                     "    <D:locktype><D:write/></D:locktype>%s"
-                     "    <D:owner><D:href>%s</D:href></D:owner>%s"
+                     "<D:lockscope><D:%s/></D:lockscope>%s"
+                     "<D:locktype><D:write/></D:locktype>%s"
+                     "<D:owner><D:href>%s</D:href></D:owner>%s"
                      "</D:lockinfo>", nl,nl,scope,nl,nl,owner,nl);
          
-         if ( body!=NULL && (unsigned) len > strlen (tmp)) {
-             int i; 
+         if ( body!=NULL && (unsigned) len > strlen (tmp)) 
+          {
              /* clen the memory */
              for (i=0;i<len;i++) body[i]='\0';
              /* copy the body value */
              sprintf (body,"%s%c",tmp,'\0');
              status = YES;
-         }
-     }
+          }
+      }
      
      return status;    
 }
@@ -658,7 +702,8 @@ BOOL createLockBody (char *owner, char *scope, char *body, int len) {
    Returns:
         AHTDAVContext * object if suceed, or NULL if it fails.        
   ----------------------------------------------------------------------*/
-AHTDAVContext * GetLockInfo (int document) {
+AHTDAVContext * GetLockInfo (int document) 
+{
     AHTDAVContext * info = NULL; 
     char *owner, *scope;
     char *depth, *timeout;  
@@ -675,15 +720,17 @@ AHTDAVContext * GetLockInfo (int document) {
 
     /* mounting LOCK XML body: without the XML body, we can't lock the
      * resource, returning NULL  */
-    if (!createLockBody (owner,scope,info->xmlbody,DAV_XML_LEN)) {
+    if (!createLockBody (owner,scope,info->xmlbody,DAV_XML_LEN)) 
+     {
         AHTDAVContext_delete (info);
         return NULL;
 #ifdef DEBUG_DAV              
-    } 
-    else {
+     } 
+    else 
+     {
         fprintf (stderr,"OK\n**%s**\n",info->xmlbody);
 #endif
-    }
+     }
     
     /*depth and timeout headers*/
     depth = DAVDepth;
@@ -708,12 +755,14 @@ AHTDAVContext * GetLockInfo (int document) {
    Returns:
         BOOL: YES, if suceed, No, if fails
   ----------------------------------------------------------------------*/
-BOOL DoLockRequest (int doc, AHTDAVContext *info) {
+BOOL DoLockRequest (int doc, AHTDAVContext *info) 
+{
     AHTReqContext *context = NULL;
     BOOL status = NO;
     char *url = (doc>=0)?DocumentURLs[doc]:NULL;
     
-    if (url && *url && info) {
+    if (url && *url && info) 
+     {
         /*creating request context
          * terminate handler for the request: FilterLock_handler
          * terminate callback : DAVTerminate_callback
@@ -725,12 +774,13 @@ BOOL DoLockRequest (int doc, AHTDAVContext *info) {
          * the end of the application (request will be kept in memory), 
          * and AMAYA_NOCACHE is  mandatory for DAV requests 
          * */
-        context = DAVCreateDefaultContext (doc, url, info, \
-                        FilterLock_handler, \
-                        (TTcbf *) DAVTerminate_callback, NULL, NO, \
+        context = DAVCreateDefaultContext (doc, url, info, 
+                        FilterLock_handler, 
+                        (TTcbf *) DAVTerminate_callback, NULL, NO, 
                         (AMAYA_ASYNC | AMAYA_FLUSH_REQUEST | AMAYA_NOCACHE));
                         
-        if (context) {
+        if (context) 
+         {
             HTRequest *request = context->request;
 
 #ifdef DEBUG_DAV    
@@ -741,8 +791,8 @@ BOOL DoLockRequest (int doc, AHTDAVContext *info) {
             context->method = METHOD_LOCK;
            
             /* set status line */
-            TtaSetStatus (context->docid, DAV_VIEW, \
-                          TtaGetMessage (AMAYA, AM_LOCKING),\
+            TtaSetStatus (context->docid, DAV_VIEW, 
+                          TtaGetMessage (AMAYA, AM_LOCKING),
                           context->urlName);
 
             /* 
@@ -754,11 +804,11 @@ BOOL DoLockRequest (int doc, AHTDAVContext *info) {
              */
             
             HTRequest_setOutputFormat (request,HTAtom_for("text/xml"));
-            HTRequest_setOutputStream(request, HTStreamToChunk (request, \
+            HTRequest_setOutputStream(request, HTStreamToChunk (request, 
                                                &(info->output),0));
     
             HTRequest_setDebugFormat (request, WWW_SOURCE);
-            HTRequest_setDebugStream (request, HTStreamToChunk (request, \
+            HTRequest_setDebugStream (request, HTStreamToChunk (request,
                                                &(info->debug),0));
                         
 #ifdef DEBUG_DAV    
@@ -770,8 +820,8 @@ BOOL DoLockRequest (int doc, AHTDAVContext *info) {
             
             /*Doing the request*/
             status = HTLOCKAbsolute(request,url,info->xmlbody,info->davheaders);
-        }
-    }
+         } /* if context */
+     }
 
     return status;
 }
@@ -785,7 +835,8 @@ BOOL DoLockRequest (int doc, AHTDAVContext *info) {
   
   ---------------------------------------------------------------------- */
 int FilterLock_handler (HTRequest * request, HTResponse * response,
-                   void * param, int status)  {
+                        void * param, int status)  
+{
 
     char *out, *deb;
     AHTReqContext  *context = (AHTReqContext *)HTRequest_context(request);
@@ -796,7 +847,8 @@ int FilterLock_handler (HTRequest * request, HTResponse * response,
     char *format = (response)?HTAtom_name(HTResponse_format(response)):"Unknwon";
 
     out = deb = NULL;
-    if (davctx) {
+    if (davctx) 
+     {
         out = (davctx->output)?HTChunk_data (davctx->output):NULL;
         deb = (davctx->debug)?HTChunk_data (davctx->debug):NULL;
         
@@ -820,28 +872,30 @@ int FilterLock_handler (HTRequest * request, HTResponse * response,
         davctx->status = status;
         
         /* if succed (status 200 OK), save lock info in base */
-        if (status == HT_LOADED && out) {
+        if (status == HT_LOADED && out) 
+         {
             headers = HTAnchor_header(anchor);
          
-            if (saveLockBase (davctx->absoluteURI,davctx->relativeURI, out, headers)!=YES) { 
+            if (saveLockBase (davctx->absoluteURI,davctx->relativeURI, out, headers)!=YES) 
+             { 
                 DAVDisplayMessage (TtaGetMessage (AMAYA, AM_SAVE_LOCKBASE_FAILED), NULL);
                 saved = NO;
-            }
+             }
  
             DAVLockIndicatorState = TRUE;
          }
-         else if (status == HT_MULTI_STATUS && out) {
+         else if (status == HT_MULTI_STATUS && out) 
+          {
             /* set AHTDAVContext - response body tree */ 
             if (!strcasecomp(format,"text/xml")) 
                 davctx->tree = AwParser_umountMessage(out);
-         }   
+          }   
          
         /* **** User interface is done by the DAVTerminate_handler **** */
-    }
+     }
 #ifdef DEBUG_DAV    
-    else {
+    else
        fprintf (stderr,"FilterLock_handler.... Error condition: no DAV context\n");
-    }
 #endif    
    
     /* we finished? reset stop button here */
@@ -858,19 +912,22 @@ int FilterLock_handler (HTRequest * request, HTResponse * response,
   show that the ressource is locked. 
   ---------------------------------------------------------------------- */
 int FilterFindAndShowLock_handler (HTRequest * request, HTResponse * response,
-                   void * param, int status)  {
+                                   void * param, int status)  
+{
 
     AHTReqContext  *context  = (AHTReqContext *)HTRequest_context(request);
     AHTDAVContext  *davctx   = (context)?context->dav_context:NULL;
     LockLine       *lockinfo = NULL;
-    AwList         *list     = AwList_new (2);
     char owner[LINE_MAX];
-    char tmp[LINE_MAX];
+    char tmp1[LINE_MAX];
+    char tmp2[LINE_MAX];
+    char tmp3[LINE_MAX];
     char *msg, *out, *deb;
     
     out = deb = msg = NULL;
     
-    if (davctx) {
+    if (davctx) 
+     {
         out = (davctx->output)?HTChunk_data (davctx->output):NULL;
         deb = (davctx->debug)?HTChunk_data (davctx->debug):NULL;
 
@@ -885,59 +942,40 @@ int FilterFindAndShowLock_handler (HTRequest * request, HTResponse * response,
         davctx->status = status;
         
         /* if succed (status 207) set AHTDAVContext - response body tree */
-        if (status == HT_MULTI_STATUS && out) {
+        if (status == HT_MULTI_STATUS && out) 
             davctx->tree = AwParser_umountMessage(out);
-        }
       
         /*find lock informations*/
         if (davctx->tree)
             lockinfo = DAVGetLockFromTree (davctx->tree,owner);
 
         /* show lock informations to the user */
-        if (lockinfo) {
+        if (lockinfo) 
+         {
             /* mounts the message for the user */
-            sprintf (tmp,TtaGetMessage(AMAYA,AM_LOCKED_BY_OTHER),\
+            sprintf (tmp1,TtaGetMessage(AMAYA,AM_LOCKED_BY_OTHER),
                             lockinfo->relativeURI, owner, lockinfo->timeout);
-            StrAllocCopy (msg,tmp);
-            AwList_put (list, msg);
-            msg = NULL;
-            StrAllocCopy (msg," ");
-            AwList_put (list, msg);
-
-            msg = NULL;
-            StrAllocCopy(msg,TtaGetMessage(AMAYA,AM_UNLOCK_BEFORE));
-            AwList_put (list, msg);
-            msg = NULL;
-            StrAllocCopy (msg," ");
-            AwList_put (list, msg);
-        }
-        else {
+            sprintf (tmp2," "); 
+            sprintf (tmp3,TtaGetMessage(AMAYA,AM_UNLOCK_BEFORE));     
+         }
+        else 
+         {
             /* mounts the message for the user */
-            StrAllocCopy(msg,TtaGetMessage(AMAYA,AM_LOCK_FAILED));
-            AwList_put (list, msg);
-            msg = NULL;
-            StrAllocCopy (msg," ");
-            AwList_put (list, msg);
-            
-            sprintf (tmp, TtaGetMessage(AMAYA,AM_LOCKED),context->urlName);
-            msg = NULL;
-            StrAllocCopy (msg,tmp);
-            AwList_put (list, msg);
-            msg = NULL;
-            StrAllocCopy (msg," ");
-            AwList_put (list, msg);
-        }
+            sprintf (tmp1,TtaGetMessage(AMAYA,AM_LOCK_FAILED));
+            sprintf (tmp2,TtaGetMessage(AMAYA,AM_LOCKED),context->urlName);
+            sprintf (tmp3," "); 
+         }
             
         /* display the message */
-        DAVHorizontalDialog (context->docid, NULL, NULL, NULL, list);
+        DAVDisplayMultiLineMessage (context->docid,tmp1, tmp2, tmp3);
 
         /* we finished? reset stop button */
         ResetStop (context->docid);
         
         /* clear new_request from davctx */
         if (davctx->new_request)
-                AHTReqContext_delete (davctx->new_request);
-    }
+           AHTReqContext_delete (davctx->new_request);
+     }
 
     return HT_OK;
 }
@@ -961,7 +999,8 @@ int FilterFindAndShowLock_handler (HTRequest * request, HTResponse * response,
    Returns:
         AHTDAVContext * object if suceed, or NULL if it fails.        
   ----------------------------------------------------------------------*/
-AHTDAVContext * GetUnlockInfo (int document) {
+AHTDAVContext * GetUnlockInfo (int document) 
+{
     AHTDAVContext *info = NULL; 
     char *lock, *depth;  
     
@@ -973,10 +1012,11 @@ AHTDAVContext * GetUnlockInfo (int document) {
     /* get the lock-token. if there isn't a lock-token, we can't do the
      * request here, returning NULL */
     lock = DAVFindLockToken (info->absoluteURI,info->relativeURI);
-    if (!lock) {
+    if (!lock) 
+     {
         AHTDAVContext_delete (info);
         return NULL;
-    }
+     }
     
     /* getting depth hearder */
     depth = DAVDepth;                             
@@ -999,12 +1039,14 @@ AHTDAVContext * GetUnlockInfo (int document) {
    Returns:
         BOOL: YES, if suceed, No, if fails
   ----------------------------------------------------------------------*/
-BOOL DoUnlockRequest (int doc, AHTDAVContext *info) {
+BOOL DoUnlockRequest (int doc, AHTDAVContext *info) 
+{
     AHTReqContext *context=NULL;
     BOOL status = NO;
     char *url = (doc>=0)?DocumentURLs[doc]:NULL;
     
-    if (url && *url && info) {
+    if (url && *url && info) 
+     {
         /* creating: request context
          * 
          * after filter : FilterUnlock_handler
@@ -1017,12 +1059,13 @@ BOOL DoUnlockRequest (int doc, AHTDAVContext *info) {
          * be kept in memory), and AMAYA_NOCACHE is mandatory for 
          * DAV requests 
          * */
-        context = DAVCreateDefaultContext (doc, url, info, \
-                  FilterUnlock_handler, \
-                  (TTcbf *)DAVTerminate_callback, NULL, YES, \
+        context = DAVCreateDefaultContext (doc, url, info, 
+                  FilterUnlock_handler, 
+                  (TTcbf *)DAVTerminate_callback, NULL, YES, 
                   AMAYA_ASYNC | AMAYA_FLUSH_REQUEST | AMAYA_NOCACHE);
 
-        if (context) {
+        if (context) 
+         {
             HTRequest *request = context->request;
 
 #ifdef DEBUG_DAV    
@@ -1033,8 +1076,8 @@ BOOL DoUnlockRequest (int doc, AHTDAVContext *info) {
             context->method = METHOD_UNLOCK;
            
             /* set status line */
-            TtaSetStatus (context->docid, DAV_VIEW, \
-                          TtaGetMessage (AMAYA, AM_UNLOCKING),\
+            TtaSetStatus (context->docid, DAV_VIEW, 
+                          TtaGetMessage (AMAYA, AM_UNLOCKING),
                           context->urlName);
 
            /* 
@@ -1045,11 +1088,11 @@ BOOL DoUnlockRequest (int doc, AHTDAVContext *info) {
             */
         
             HTRequest_setOutputFormat (request,HTAtom_for("text/xml"));
-            HTRequest_setOutputStream(request, HTStreamToChunk (request, \
+            HTRequest_setOutputStream(request, HTStreamToChunk (request, 
                                                &(info->output),0)); 
     
             HTRequest_setDebugFormat (request, WWW_SOURCE);
-            HTRequest_setDebugStream (request, HTStreamToChunk (request, \
+            HTRequest_setDebugStream (request, HTStreamToChunk (request, 
                                                &(info->debug),0));
 
 #ifdef DEBUG_DAV    
@@ -1061,8 +1104,8 @@ BOOL DoUnlockRequest (int doc, AHTDAVContext *info) {
                     
             /* Doing the request */
             status = HTUNLOCKAbsolute (request,url,info->davheaders);
-        }
-    }
+         }
+     }
 
     return status;
 }
@@ -1075,23 +1118,26 @@ BOOL DoUnlockRequest (int doc, AHTDAVContext *info) {
   
   ---------------------------------------------------------------------- */
 int FilterUnlock_handler (HTRequest * request, HTResponse * response,
-                   void * param, int status)  {
+                          void * param, int status)  
+{
         
     AHTReqContext *context = (AHTReqContext *)HTRequest_context(request);
     AHTDAVContext *davctx  = (context)?context->dav_context:NULL;
+    LockLine *line = NULL;
     BOOL saved = YES;
-    char *out, *deb;
+    char *out, *deb, *lock, *format;
     
-    out = deb = NULL;
+    out = deb = lock = format = NULL;
     
-    if (davctx) {
+    if (davctx) 
+     {
         out = (davctx->output)?HTChunk_data (davctx->output):NULL;
         deb = (davctx->debug)?HTChunk_data (davctx->debug):NULL;
 
 #ifdef DEBUG_DAV
         fprintf (stderr,"FilterUnlock_handler.... status %d\n",status);    
-        fprintf (stderr,"FilterUnlock_handler.... Response format %s\n", \
-                            (response && (HTResponse_format(response)))?\
+        fprintf (stderr,"FilterUnlock_handler.... Response format %s\n", 
+                            (response && (HTResponse_format(response)))?
                              HTAtom_name(HTResponse_format(response)):"Unknwon");
         if (out) 
             fprintf (stderr,"FilterUnlock_handler.... readed %s\n",out);
@@ -1111,9 +1157,10 @@ int FilterUnlock_handler (HTRequest * request, HTResponse * response,
         /*remove lock info from base
          * status 204 No content = sucess condition, lock info should be removed
          * status 400 Bad Request = fail condition, lock info is not valid anymore */
-        if (status == HT_NO_DATA || status == DAV_BAD_REQUEST) {
-            char *lock = HTDAV_LockTokenHeader (davctx->davheaders); 
-            LockLine *line = LockLine_newObject (davctx->relativeURI,\
+        if (status == HT_NO_DATA || status == DAV_BAD_REQUEST) 
+         {
+            lock = HTDAV_LockTokenHeader (davctx->davheaders); 
+            line = LockLine_newObject (davctx->relativeURI,
                                   lock,DAVDepth,DAVTimeout,time(NULL));
             
 #ifdef DEBUG_DAV
@@ -1123,24 +1170,21 @@ int FilterUnlock_handler (HTRequest * request, HTResponse * response,
 #endif            
             if (lock) HT_FREE (lock);
             
-            if (removeFromBase (davctx->absoluteURI,line)!=YES) {
+            if (removeFromBase (davctx->absoluteURI,line)!=YES) 
+             {
                 DAVDisplayMessage (TtaGetMessage (AMAYA, AM_REMOVE_LOCKBASE_FAILED), NULL);    
                 saved = NO;
-            }
+             }
 
             DAVLockIndicatorState = FALSE;
-        }
-        else if (status == HT_MULTI_STATUS && out) {
+         }
+        else if (status == HT_MULTI_STATUS && out) 
+         {
             /* if XML response body is available, create the tree */
-            char * format = (response)?HTAtom_name (HTResponse_format(response)):"Unknown";
+            format = (response)?HTAtom_name (HTResponse_format(response)):"Unknown";
             if (format && !strcasecomp (format,"text/xml")) 
                 davctx->tree = AwParser_umountMessage (out);
-        }
-        
-        /* we stop the work _ reset stop button */
-        if (Amaya->open_requests<=1) 
-           ResetStop (context->docid);
-        
+         }
     
         /* **** User interface is done by the DAVTerminate_handler **** */
     }
@@ -1159,24 +1203,27 @@ int FilterUnlock_handler (HTRequest * request, HTResponse * response,
   ForceUnlockRequest: Look for lock information to do the unlock request.
   
   ---------------------------------------------------------------------- */
-void ForceUnlockRequest (Document document) {
+void ForceUnlockRequest (Document document) 
+{
    AHTDAVContext *davctx = NULL;
 
 #ifdef DEBUG_DAV
-   fprintf (stderr,"ForceUnlockRequest.... finding lock info for %s\n",\
+   fprintf (stderr,"ForceUnlockRequest.... finding lock info for %s\n",
                    DocumentURLs[document]);
 #endif
    
    /*basic info for the request*/
    davctx = GetPropfindInfo (document); 
    
-   if (davctx) {             
+   if (davctx) 
+    {
       davctx->showIt = NO;
       /*sets xmlbody to lockdiscovery*/
-      if (createPropfindBody (YES,davctx->xmlbody,DAV_XML_LEN)) {
+      if (createPropfindBody (YES,davctx->xmlbody,DAV_XML_LEN)) 
           DoPropfindRequest (document,davctx,FilterFindAndUnlock_handler,NULL);
-      } 
-   }
+      else 
+          AHTDAVContext_delete (davctx);
+    }
 }
 
 
@@ -1186,11 +1233,14 @@ void ForceUnlockRequest (Document document) {
   unlock the ressource. 
   ---------------------------------------------------------------------- */
 int FilterFindAndUnlock_handler (HTRequest * request, HTResponse * response,
-                   void * param, int status)  {
+                                 void * param, int status)  
+{
 
-    AHTReqContext  *context  = (AHTReqContext *)HTRequest_context(request);
-    AHTDAVContext  *davctx   = (context)?context->dav_context:NULL;
-    LockLine       *lockinfo = NULL;
+    AHTReqContext  *context    = (AHTReqContext *)HTRequest_context(request);
+    AHTDAVContext  *davctx     = (context)?context->dav_context:NULL;
+    AHTDAVContext  *new_davctx = NULL;
+    LockLine       *lockinfo   = NULL;
+    char label1[LINE_MAX],label2[LINE_MAX];
     char owner[LINE_MAX];
     char msg[LINE_MAX];
     char *out, *deb;
@@ -1198,7 +1248,8 @@ int FilterFindAndUnlock_handler (HTRequest * request, HTResponse * response,
     
     out = deb = NULL;
     
-    if (davctx) {
+    if (davctx) 
+     {
         out = (davctx->output)?HTChunk_data (davctx->output):NULL;
         deb = (davctx->debug)?HTChunk_data (davctx->debug):NULL;
 
@@ -1213,54 +1264,56 @@ int FilterFindAndUnlock_handler (HTRequest * request, HTResponse * response,
         davctx->status = status;
       
         /* if succed (status 207) set AHTDAVContext - response body tree */
-        if (status == HT_MULTI_STATUS && out) {
+        if (status == HT_MULTI_STATUS && out) 
             davctx->tree = AwParser_umountMessage(out);
-        }
 
         /*find lock informations*/
         if (davctx->tree)
             lockinfo = DAVGetLockFromTree (davctx->tree,owner);
 
         /*document is locked, ask to*/
-        if (lockinfo && !davctx->retry) {
-            char label1[LINE_MAX],label2[LINE_MAX];
+        if (lockinfo && !davctx->retry) 
+         {
             
             /*user if s/he wants unlock it*/        
-            sprintf (label1,TtaGetMessage(AMAYA,AM_LOCKED_BY_OTHER),\
+            sprintf (label1,TtaGetMessage(AMAYA,AM_LOCKED_BY_OTHER),
                             lockinfo->relativeURI, owner, lockinfo->timeout);
             sprintf (label2,TtaGetMessage(AMAYA,AM_LOCK_OVERWRITE));
             
-            if (DAVConfirmDialog (context->docid,label1, label2, " ")) {
+            if (DAVConfirmDialog (context->docid,label1, " ", label2))
+             {
                 /* save lock info */
-                if (saveLockLine (davctx->absoluteURI, lockinfo)==YES) {                 
-                    AHTDAVContext *new_davctx = GetUnlockInfo (context->docid);
-                    if (new_davctx) {
+                if (saveLockLine (davctx->absoluteURI, lockinfo)==YES) 
+                 {
+                    new_davctx = GetUnlockInfo (context->docid);
+                    if (new_davctx) 
+                     {
                         new_davctx->retry = YES;
                         ok = DoUnlockRequest (context->docid, new_davctx);
-                    } 
-                }
-            }
+                     } 
+                 }
+             }
 
-            if (ok!=YES) {
+            if (ok!=YES) 
                 sprintf (msg,"%s",TtaGetMessage (AMAYA, AM_UNLOCK_FAILED));
-            }
-        }
-        else { /* file is unlocked */
+            
+         } /* if lockinfo && !davctx->retry */
+        else  /* file is unlocked */
             sprintf (msg,TtaGetMessage (AMAYA, AM_UNLOCKED), davctx->relativeURI);
-        }
                 
             
         /* if ok != YES, continue filters */
-        if (ok!=YES) {
+        if (ok!=YES) 
+         {
             DAVDisplayMessage (msg,NULL);
         
             /* we stop the work _ reset stop button */
             ResetStop (context->docid);
     
             return HT_OK;
-        }
+         }
         
-    }
+     }
 
     return HT_OK;
 }
@@ -1288,28 +1341,30 @@ int FilterFindAndUnlock_handler (HTRequest * request, HTResponse * response,
         if succed, the parameter "body" will contain the XML request body.
         
   ----------------------------------------------------------------------*/
-BOOL createPropfindBody (BOOL lockdiscovery, char *body, int len) {
+BOOL createPropfindBody (BOOL lockdiscovery, char *body, int len) 
+{
      char tmp[DAV_XML_LEN];
      char nl[3];
+     int i;
      BOOL status = NO;
      
      sprintf (nl,"%c%c",CR,LF);     
             
      sprintf (tmp,"<?xml version=\"1.0\" encoding=\"utf-8\" ?>%s"
                      "<D:propfind xmlns:D=\"DAV:\">%s"
-                     "    %s%s"
-                     "</D:propfind>", nl,nl,\
-                     (lockdiscovery)?"<D:prop><D:lockdiscovery/></D:prop>":\
+                     "%s%s"
+                     "</D:propfind>", nl,nl,
+                     (lockdiscovery)?"<D:prop><D:lockdiscovery/></D:prop>":
                      "<D:allprop/>",nl);
          
-     if ( body!=NULL && (unsigned) len > strlen (tmp)) {
-         int i;
+     if ( body!=NULL && (unsigned) len > strlen (tmp)) 
+      {
          /* clean the memory */
          for (i=0;i<len;i++) body[i]='\0';
          /* copy the body value */
          sprintf (body,"%s%c",tmp,'\0');  
          status = YES;
-     }
+      }
      
      return status;    
 }
@@ -1325,7 +1380,8 @@ BOOL createPropfindBody (BOOL lockdiscovery, char *body, int len) {
    Returns:
         AHTDAVContext * object if suceed, or NULL if it fails.        
   ----------------------------------------------------------------------*/
-AHTDAVContext * GetPropfindInfo (int document) {
+AHTDAVContext * GetPropfindInfo (int document) 
+{
     AHTDAVContext * info = NULL; 
     
     /*getting absolute and relative URI. if NULL, URL has not an "http://"
@@ -1335,10 +1391,11 @@ AHTDAVContext * GetPropfindInfo (int document) {
 
     /* mounting LOCK XML body. without the XML body, we can't do a 
      * propfind, returning NULL  */
-    if (!createPropfindBody (NO,info->xmlbody,DAV_XML_LEN)) {
+    if (!createPropfindBody (NO,info->xmlbody,DAV_XML_LEN)) 
+     {
         AHTDAVContext_delete (info); 
         return NULL;
-    }
+     }
     
     /*setting DAV headers: depth 0 to get only resource's props */
     HTDAV_setDepthHeader (info->davheaders,"0");
@@ -1354,24 +1411,27 @@ AHTDAVContext * GetPropfindInfo (int document) {
    the DAVLockIndicatorState variable. 
    
   ----------------------------------------------------------------------*/
-void DAVLockDiscovery (Document document) {
+void DAVLockDiscovery (Document document)
+{
    AHTDAVContext *davctx = NULL;
-
 #ifdef DEBUG_DAV
-   fprintf (stderr,"DAVLockDiscovery.... Executing a lock discovery in %s\n",\
+   fprintf (stderr,"DAVLockDiscovery.... Executing a lock discovery in %s\n",
                    DocumentURLs[document]);
 #endif
 
+   if (!DAVAllowResource (DAVResources,DocumentURLs[document])) 
+    return;
+   
    /*basic info for the request*/
    davctx = GetPropfindInfo (document);
    
-   if (davctx) {             
+   if (davctx) 
+    {
       davctx->showIt = NO; 
       /*sets xmlbody to lockdiscovery*/
-      if (createPropfindBody (YES,davctx->xmlbody,DAV_XML_LEN)) {
-          DoPropfindRequest (document,davctx,FilterFindLock_handler,NULL);
-      } 
-   }
+      if (createPropfindBody (YES,davctx->xmlbody,DAV_XML_LEN)) 
+          DoPropfindRequest (document,davctx,FilterFindLock_handler,NULL);      
+    }
    
    /*if request is successful, FilterFindLock_handler will set it correctly */
    DAVLockIndicatorState = FALSE;
@@ -1384,17 +1444,25 @@ void DAVLockDiscovery (Document document) {
 
   ---------------------------------------------------------------------- */
 int FilterFindLock_handler (HTRequest * request, HTResponse * response,
-                   void * param, int status)  {
+                            void * param, int status)  
+{
 
     AHTReqContext *context = (AHTReqContext *)HTRequest_context(request);
     AHTDAVContext *davctx  = (context)?context->dav_context:NULL;
     char          *format  = (response)?HTAtom_name(HTResponse_format(response)):"Unknwon";
+    HTList        *matches = NULL;
     char *lockdiscovery    = NULL;
+    LockLine     *lockinfo = NULL;
+    LockLine     *line     = NULL;
+    char label1[LINE_MAX], label2[LINE_MAX];
+    char owner[LINE_MAX];
     char *out, *deb;
+    BOOL saved = NO;
 
     out = deb = NULL;
 
-    if (davctx) {
+    if (davctx) 
+     {
         out = (davctx->output)?HTChunk_data (davctx->output):NULL;
         deb = (davctx->debug)?HTChunk_data (davctx->debug):NULL;
 
@@ -1410,9 +1478,8 @@ int FilterFindLock_handler (HTRequest * request, HTResponse * response,
         davctx->status = status; 
       
         /* if succed (status 207), set AHTDAVContext - response body tree */ 
-        if (status == HT_MULTI_STATUS && out) {
+        if (status == HT_MULTI_STATUS && out) 
             davctx->tree = AwParser_umountMessage(out);
-        }
 
         /*find lockdiscovery element*/
         if (davctx->tree)
@@ -1421,11 +1488,10 @@ int FilterFindLock_handler (HTRequest * request, HTResponse * response,
         
         /* there is a lockdiscovery element in XML response, 
          * the resource is locked*/  
-        if (lockdiscovery) { 
-            char owner[LINE_MAX];
-            HTList *matches = NULL;
-            LockLine *lockinfo;
-            BOOL saved = NO;
+        if (lockdiscovery) 
+         { 
+            matches = NULL;
+            saved = NO;
             
             DAVLockIndicatorState = TRUE;
 #ifdef DEBUG_DAV
@@ -1434,45 +1500,48 @@ int FilterFindLock_handler (HTRequest * request, HTResponse * response,
 #endif        
             /* try to discover who is the lock's owner */
             lockinfo = DAVGetLockFromTree (davctx->tree, owner);
-            if (lockinfo && owner && *owner) {
+            if (lockinfo && owner && *owner) 
+             {
                 /* if the user wants to receive awareness information,
                  * notify him/her about locked resources
                  */
-                if (DAVAwareness) {    
+                if (DAVAwareness) 
+                 {
                     matches = searchLockBase (davctx->absoluteURI, davctx->relativeURI);
                 
                     /* if there is no lock info in the base, the user is not 
                      * the lock owner. So, we need to notify him 
                      */
-                    if (!matches) {
-                        char label1[LINE_MAX], label2[LINE_MAX];
+                    if (!matches) 
+                     {
 
                         sprintf (label1,TtaGetMessage(AMAYA,AM_LOCKED_BY_OTHER),\
                                  lockinfo->relativeURI, owner, lockinfo->timeout);
                         sprintf (label2,TtaGetMessage(AMAYA,AM_COPY_LOCK));
             
-                        if (DAVConfirmDialog (context->docid,label1, label2, " ")) {
+                        if (DAVConfirmDialog (context->docid,label1, " ", label2)) 
+                         {
                             /* save lock info */
-                            if (saveLockLine (davctx->absoluteURI, lockinfo)!=YES) {  
+                            if (saveLockLine (davctx->absoluteURI, lockinfo)!=YES) 
                                 DAVDisplayMessage (TtaGetMessage (AMAYA, AM_SAVE_LOCKBASE_FAILED), NULL);
-                            }
                             else
                                 saved = YES;
-                        }
+                         }
 
                         /* if the lock information is not saved, 
                          * change document to read only mode
                          */ 
-                        if (!saved) {
+                        if (!saved) 
                            ChangeToBrowserMode (context->docid);
-                        }
-                    }/*!matches*/
-                } /*DAVAwareness */
-            } /*lockinfo*/
-        }/*lockdiscovery*/
-        else { /* the resource is unlocked */ 
-            LockLine *line = LockLine_newObject (davctx->relativeURI,\
-                            " ",DAVDepth,DAVTimeout,time(NULL));
+                        
+                     }/*!matches*/
+                 } /*DAVAwareness */
+             } /*lockinfo*/
+         }/*lockdiscovery*/
+         else
+          { /* the resource is unlocked */ 
+            line = LockLine_newObject (davctx->relativeURI," ",DAVDepth,DAVTimeout,time(NULL));
+            
 #ifdef DEBUG_DAV
             fprintf (stderr,"FilterFindLock_handler.... not found, "
                             "resource is unlocked\n");
@@ -1480,18 +1549,20 @@ int FilterFindLock_handler (HTRequest * request, HTResponse * response,
             /* use this information to clean the lock base from 
              * expired locks */ 
             DAVLockIndicatorState = FALSE;
-            if (davctx->status>0) {
+            if (davctx->status>0) 
+             {
                 removeFromBase (davctx->absoluteURI,line);
 
 #ifdef DEBUG_DAV
                 fprintf (stderr,"FilterFindLock_handler.... base cleaned\n");
 #endif            
-            }
-        }
+             }
+         }
 
-        DAVSetLockIndicator(context->docid);
+         DAVSetLockIndicator(context->docid);
 
-        /* we finished? reset stop button */
+        /* we finished? reset stop button 
+         * We need this reset here to avoid problems due the pipelining */
         ResetStop (context->docid);
     }
     
@@ -1511,12 +1582,15 @@ int FilterFindLock_handler (HTRequest * request, HTResponse * response,
    Returns:
         BOOL: YES, if suceed, No, if fails
   ----------------------------------------------------------------------*/
-BOOL DoPropfindRequest (int doc, AHTDAVContext *info, HTNetAfter * filter_handler, char *urlName) {
-    AHTReqContext *context=NULL;
+BOOL DoPropfindRequest (int doc, AHTDAVContext *info, HTNetAfter * filter_handler, char *urlName) 
+{
+    AHTReqContext *context = NULL;
+    HTRequest     *request = NULL;
     BOOL status = NO;
     char *url = (doc>=0)?DocumentURLs[doc]:NULL;
     
-    if (url && *url && info) {
+    if (url && *url && info) 
+     {
          /*if there is urlName, use it as url */
          if (urlName)
               url = urlName;
@@ -1528,12 +1602,13 @@ BOOL DoPropfindRequest (int doc, AHTDAVContext *info, HTNetAfter * filter_handle
          * preemptive : no
          * mode : AMAYA_ASYNC | AMAYA_FLUSH_REQUEST | AMAYA_NOCACHE
          * */
-        context = DAVCreateDefaultContext (doc,url, info, \
-                      filter_handler,(TTcbf *)DAVTerminate_callback, NULL, NO,\
+        context = DAVCreateDefaultContext (doc,url, info, 
+                      filter_handler,(TTcbf *)DAVTerminate_callback, NULL, NO,
                       AMAYA_ASYNC | AMAYA_FLUSH_REQUEST | AMAYA_NOCACHE);
         
-        if (context) {
-            HTRequest *request = context->request;
+        if (context) 
+         {
+            request = context->request;
 
 #ifdef DEBUG_DAV    
             fprintf (stderr,"DoPropfindRequest.... setting request\n");
@@ -1542,19 +1617,17 @@ BOOL DoPropfindRequest (int doc, AHTDAVContext *info, HTNetAfter * filter_handle
             context->method = METHOD_PROPFIND;
 
             /* set status line */
-            TtaSetStatus (context->docid, DAV_VIEW, \
-                          TtaGetMessage (AMAYA, AM_FINDING_PROPERTIES),\
+            TtaSetStatus (context->docid, DAV_VIEW, 
+                          TtaGetMessage (AMAYA, AM_FINDING_PROPERTIES),
                           context->urlName);
 
             /* a successful propfind request always returns an xml body
              * streams: output (xml) and debug (html) */
             HTRequest_setOutputFormat (request,HTAtom_for("text/xml"));
-            HTRequest_setOutputStream(request, HTStreamToChunk (request, \
-                                               &(info->output),0));
+            HTRequest_setOutputStream(request, HTStreamToChunk (request, &(info->output),0));
     
             HTRequest_setDebugFormat (request, WWW_SOURCE);
-            HTRequest_setDebugStream (request, HTStreamToChunk (request, \
-                                               &(info->debug),0));
+            HTRequest_setDebugStream (request, HTStreamToChunk (request, &(info->debug),0));
                         
 #ifdef DEBUG_DAV    
             fprintf (stderr,"DoPropfindRequest.... executing the request\n");
@@ -1565,8 +1638,8 @@ BOOL DoPropfindRequest (int doc, AHTDAVContext *info, HTNetAfter * filter_handle
             
             /*Doing the request*/
             status = HTPROPFINDAbsolute(request,url,info->xmlbody,info->davheaders);
-        }
-    }
+         }
+     }
 
     return status;
 }
@@ -1580,7 +1653,8 @@ BOOL DoPropfindRequest (int doc, AHTDAVContext *info, HTNetAfter * filter_handle
   
   ---------------------------------------------------------------------- */
 int FilterPropfind_handler (HTRequest * request, HTResponse * response,
-                   void * param, int status)  {
+                            void * param, int status)  
+{
 
     AHTReqContext *context = (AHTReqContext *)HTRequest_context(request);
     AHTDAVContext *davctx  = (context)?context->dav_context:NULL;
@@ -1588,7 +1662,9 @@ int FilterPropfind_handler (HTRequest * request, HTResponse * response,
     char *out, *deb;
 
     out = deb = NULL;
-    if (davctx) {
+    
+    if (davctx) 
+     {
         out = (davctx->output)?HTChunk_data (davctx->output):NULL;
         deb = (davctx->debug)?HTChunk_data (davctx->debug):NULL;
 
@@ -1609,19 +1685,19 @@ int FilterPropfind_handler (HTRequest * request, HTResponse * response,
         davctx->status = status;
          
         /* if succed (status 207), set AHTDAVContext - response body tree */
-        if (status == HT_MULTI_STATUS && out) {
+        if (status == HT_MULTI_STATUS && out) 
             davctx->tree = AwParser_umountMessage(out);
-        }
+        
 
         /* **** User interface is done by the DAVTerminate_handler **** */
         
-        /* done? reset stop button */
+        /* done? reset stop button 
+         * We need this reset here to avoid problems due the pipelining */
         ResetStop (context->docid);
     }
 #ifdef DEBUG_DAV    
-    else {
-       fprintf (stderr,"FilterPropfind_handler.... Error condition: no DAV context\n");
-    }
+    else 
+       fprintf (stderr,"FilterPropfind_handler.... Error condition: no DAV context\n");    
 #endif
    
     
@@ -1633,8 +1709,9 @@ int FilterPropfind_handler (HTRequest * request, HTResponse * response,
    FilterCopyLockInfo - filter to copy the lock information from a Lock 
    discovery request in the document URL
   ---------------------------------------------------------------------- */
-int FilterCopyLockInfo_handler (HTRequest *request, HTResponse *response,\
-                                void *param, int status) {
+int FilterCopyLockInfo_handler (HTRequest *request, HTResponse *response,
+                                void *param, int status) 
+{
 
     AHTReqContext *context  = (AHTReqContext *)HTRequest_context(request);
     AHTDAVContext *davctx   = (context)?context->dav_context:NULL;
@@ -1645,7 +1722,8 @@ int FilterCopyLockInfo_handler (HTRequest *request, HTResponse *response,\
 
     out = deb = NULL;
 
-    if (davctx) {
+    if (davctx) 
+     {
         out = (davctx->output)?HTChunk_data (davctx->output):NULL;
         deb = (davctx->debug)?HTChunk_data (davctx->debug):NULL;
 
@@ -1661,9 +1739,9 @@ int FilterCopyLockInfo_handler (HTRequest *request, HTResponse *response,\
         davctx->status = status; 
       
         /* if succed (status 207), set AHTDAVContext - response body tree */ 
-        if (status == HT_MULTI_STATUS && out) {
+        if (status == HT_MULTI_STATUS && out) 
             davctx->tree = AwParser_umountMessage(out);
-        }
+        
 
         /*find lockdiscovery element*/
         if (davctx->tree)
@@ -1672,7 +1750,8 @@ int FilterCopyLockInfo_handler (HTRequest *request, HTResponse *response,\
         
         /* there is a lockdiscovery element in XML response, 
          * the resource is locked*/  
-        if (lockinfo) { 
+        if (lockinfo) 
+        { 
 #ifdef DEBUG_DAV
             fprintf (stderr,"FilterCopyLockInfo_handler.... found lock, "
                             "resource is locked to %s\n",owner);
@@ -1680,13 +1759,15 @@ int FilterCopyLockInfo_handler (HTRequest *request, HTResponse *response,\
             DAVLockIndicatorState = TRUE;
             
             /* save the lock info in local base */
-            if (!saveLockLine (davctx->absoluteURI, lockinfo)) {
+            if (!saveLockLine (davctx->absoluteURI, lockinfo)) 
+             {
                 DAVDisplayMessage (TtaGetMessage (AMAYA, AM_SAVE_LOCKBASE_FAILED), NULL);
                 davctx->showIt = NO;
-            }
+             }
             
-        }
-        else { /* the resource is unlocked */ 
+         }
+        else 
+         { /* the resource is unlocked */ 
 #ifdef DEBUG_DAV
             fprintf (stderr,"FilterFindLock_handler.... not found, "
                             "resource is unlocked\n");
@@ -1696,14 +1777,15 @@ int FilterCopyLockInfo_handler (HTRequest *request, HTResponse *response,\
 
             DAVLockIndicatorState = FALSE;
             
-        }
+         }
 
         DAVSetLockIndicator(context->docid);
 
         
-        /* we finished? reset stop button */
+        /* we finished? reset stop button 
+         * We need this reset here to avoid problems due the pipelining */
         ResetStop (context->docid);
-    }
+     }
     
     return HT_OK;
 }

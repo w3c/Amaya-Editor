@@ -14,7 +14,14 @@
  ** $Id$
  ** $Date$
  ** $Log$
- ** Revision 1.4  2002-06-04 14:51:41  kirschpi
+ ** Revision 1.5  2002-06-05 16:46:06  kirschpi
+ ** Applying Amaya code format.
+ ** Modifying some dialogs (looking for a better windows presentation)
+ ** Adding a DAVResource list, a list of resources (specially collections),
+ ** where we should do a Lock discovery.
+ ** Manuele
+ **
+ ** Revision 1.4  2002/06/04 14:51:41  kirschpi
  ** Fixing bug on InitDAV.
  ** Manuele
  **
@@ -55,10 +62,12 @@
    InitDAV - initialization function. Inits DAVHome variable pointing to
              home dir, where the lock base will be stored.   
   ----------------------------------------------------------------------*/
-void InitDAV (void) {
+void InitDAV (void) 
+{
     char *ptr = NULL;
     BOOL modified = FALSE;
     char *fqdn = NULL;
+    char *email = NULL;
     
     
     /* ******************** DAVHome ********************* */
@@ -88,46 +97,49 @@ void InitDAV (void) {
     ptr = TtaGetEnvString (DAV_USER_URL);
     if (ptr && (*ptr))   
         sprintf (DAVUserURL,ptr);
-    else {  
-        char *email = DAVDefaultEmail();
+    else 
+     {  
+        email = DAVDefaultEmail();
         sprintf (DAVUserURL,"%s%s",(email)?"mailto:":"http://", (email)?email:fqdn);
 
         /* save user URL in thot env */
         TtaSetEnvString (DAV_USER_URL,DAVUserURL,TRUE);
         modified = TRUE;
-    }
+     }
     
 
     /* getting lock scope. If there is an entry DAV_LOCK_SCOPE in
      * thot.rc and it is valid, use it. Otherwise, assume "exclusive" scope */
     ptr = NULL; 
     ptr = TtaGetEnvString (DAV_LOCK_SCOPE);
-    if (ptr && (*ptr) && \
+    if (ptr && (*ptr) && 
        (!strcmp(ptr,"exclusive") || !strcmp (ptr,"shared")))
         sprintf (DAVLockScope,ptr);
-    else { 
+    else 
+     { 
         sprintf (DAVLockScope,"exclusive");
         
         /*save lock scope in thot env*/
         TtaSetEnvString (DAV_LOCK_SCOPE,DAVLockScope,TRUE);
         modified = TRUE;
-    }
+     }
 
     
     /* getting depth option. If there is an entry DAV_DEPTH and
      * it is valid, use it/ Otherwise, assuming 0 */
     ptr = NULL;  
     ptr = TtaGetEnvString (DAV_DEPTH);
-    if (ptr && (*ptr) && \
+    if (ptr && (*ptr) &&\
        (!strcmp (ptr,"0") || !strcmp(ptr,"1") || !strcmp(ptr,"infinity")))
         sprintf (DAVDepth,ptr); 
-    else {
+    else 
+     {
         sprintf (DAVDepth,"0");
         
         /* save depth in thot env */
         TtaSetEnvString (DAV_DEPTH,DAVDepth,TRUE);
         modified = TRUE;
-    }
+     }
 
     
     /* getting timeout option. If no timeout,assuming Infinite */
@@ -135,13 +147,14 @@ void InitDAV (void) {
     ptr = TtaGetEnvString (DAV_TIMEOUT);
     if (ptr && (*ptr))
         sprintf (DAVTimeout,ptr);
-    else { 
+    else
+     { 
         sprintf (DAVTimeout,"Infinite");
 
         /* save timeout in thot env */
         TtaSetEnvString (DAV_TIMEOUT,DAVTimeout,TRUE);
         modified = TRUE;
-    }
+     }
 
     
     /************* DAVAwareness, DAVAwarenessOnExit ************ */
@@ -149,29 +162,48 @@ void InitDAV (void) {
     ptr = NULL;
     DAVAwareness = NO;
     ptr = TtaGetEnvString (DAV_AWARENESS);
-    if (ptr && (*ptr)) {
+    if (ptr && (*ptr)) 
+     {
         if (!strcasecomp (ptr,"yes"))
             DAVAwareness = YES; 
-    }
-    else {
+     }
+    else 
+     {
         TtaSetEnvString (DAV_AWARENESS,"no",TRUE);
         modified = TRUE;
-    }
+     }
     
     /* getting option about awareness information when exiting a resouce */
     ptr = NULL;
     DAVAwarenessExit = NO;
     ptr = TtaGetEnvString (DAV_AWARENESS_EXIT);
-    if (ptr && (*ptr)) {
+    if (ptr && (*ptr)) 
+     {
         if (!strcasecomp (ptr,"yes"))
             DAVAwarenessExit = YES; 
-    }    
-    else {
+     }    
+    else
+     {
         TtaSetEnvString (DAV_AWARENESS_EXIT,"no",TRUE);
         modified = TRUE;
-    }
+     }
     
     
+    /************************** DAVResources ******************** */
+    ptr = NULL;
+    ptr = TtaGetEnvString (DAV_URLS);
+    if (ptr && (*ptr))
+        sprintf (DAVResources,ptr);
+    else
+     { 
+        DAVResources[0]='\0';
+
+        /* save timeout in thot env */
+        TtaSetEnvString (DAV_URLS,DAVResources,TRUE);
+        modified = TRUE;
+     }
+
+   
 
     /* *********************** SAVING REGISTRY ***************** */
     if (modified) TtaSaveAppRegistry();
@@ -214,10 +246,12 @@ void InitDAV (void) {
    DAVFreeLock - ask to user if he/she wants to free pending locks 
                  when closing the session.   
   ----------------------------------------------------------------------*/
-void DAVFreeLock (Document docid) {
+void DAVFreeLock (Document docid) 
+{
     BOOL ok = NO;
     char *lockinfo;
     char *relURI, *absURI;
+    char label1[LINE_MAX], label2[LINE_MAX];
 
     lockinfo = relURI = absURI = NULL;
     
@@ -234,26 +268,28 @@ void DAVFreeLock (Document docid) {
     /* separing URI into hostname and relative parts */
     ok = separateUri (DocumentURLs[docid], DAVFullHostName, &absURI, &relURI);
     
-    if (ok && absURI && relURI) {
+    if (ok && absURI && relURI) 
+     {
         /* if there is a lock info in the local base,
          * user has a lock for this resource.
          */
         lockinfo = DAVFindLockToken (absURI, relURI);
-        if (lockinfo && *lockinfo) {
-            char label1[LINE_MAX], label2[LINE_MAX];
-
+        if (lockinfo && *lockinfo) 
+         {
             sprintf (label1,TtaGetMessage(AMAYA,AM_LOCKED),DocumentURLs[docid]);
             sprintf (label2,TtaGetMessage(AMAYA,AM_UNLOCK_DOCUMENT));
             
-            if (DAVConfirmDialog (docid,label1, label2, " ")) {
+            if (DAVConfirmDialog (docid,label1, label2, " ")) 
+             {
                 AHTDAVContext *new_davctx = GetUnlockInfo (docid);
-                if (new_davctx) {
+                if (new_davctx) 
+                 {
                     new_davctx->showIt = NO;    
                     DoUnlockRequest (docid, new_davctx);                    
-                }    
-            }
-        } /* lockinfo */
-    }
+                 }    
+             }
+         } /* lockinfo */
+     }
 }
 
 
@@ -277,11 +313,13 @@ void DAVLockDocument (Document document, View view)
     
     /* getting DAV context object */ 
     davctx = GetLockInfo (document);
-    if (!davctx) {
-        DAVDisplayMessage (TtaGetMessage (AMAYA, AM_DAV_UNSUPPORTED_PROTOCOL), \
+    if (!davctx) 
+     {            
+        DAVDisplayMessage (TtaGetMessage (AMAYA, AM_DAV_UNSUPPORTED_PROTOCOL), 
                            DocumentURLs[document]);
-    }
-    else {
+     }
+    else 
+     {
 #ifdef DEBUG_DAV
         char *url = DocumentURLs[document];
         fprintf (stderr,"\tabsolute: %s\n\trelative: %s\n",davctx->absoluteURI,davctx->relativeURI);
@@ -292,11 +330,10 @@ void DAVLockDocument (Document document, View view)
 #endif 
 
         /* executing the request */
-        if (!DoLockRequest (document,davctx)) {
+        if (!DoLockRequest (document,davctx)) 
             DAVDisplayMessage (TtaGetMessage (AMAYA, AM_LOCK_FAILED), NULL);
-        }
 
-    }
+     }
         
 }
 
@@ -306,7 +343,8 @@ void DAVLockDocument (Document document, View view)
    DAVUlnlocDocument - Unlock document URL
 
   ----------------------------------------------------------------------*/
-void DAVUnlockDocument (Document document, View view) {
+void DAVUnlockDocument (Document document, View view) 
+{
     AHTDAVContext *davctx = NULL;
     
 #ifdef DEBUG_DAV    
@@ -315,7 +353,8 @@ void DAVUnlockDocument (Document document, View view) {
 #endif
   
     davctx = GetUnlockInfo(document);
-    if (davctx) {
+    if (davctx) 
+     {
 #ifdef DEBUG_DAV
         fprintf (stderr,"DAVUnlockDocument..... DAV context object:\n");
         fprintf (stderr,"\tabsolute: %s\n\trelative: %s\n",davctx->absoluteURI,davctx->relativeURI);
@@ -324,15 +363,16 @@ void DAVUnlockDocument (Document document, View view) {
 #endif 
         
         /* do the request */       
-        if (!DoUnlockRequest (document,davctx)) {
+        if (!DoUnlockRequest (document,davctx)) 
             DAVDisplayMessage (TtaGetMessage (AMAYA, AM_UNLOCK_FAILED), NULL);
-        }
         
-    }
-    else {
+        
+     }
+    else 
+     {
         /* *** Should we give to the user the option to unlock a document anyway? YES *** */
         ForceUnlockRequest (document);
-    }
+     }
 }
 
 
@@ -341,7 +381,8 @@ void DAVUnlockDocument (Document document, View view) {
    DAVProfindDocument - do a Propfind request in the document URL 
    
   ----------------------------------------------------------------------*/
-void DAVProfindDocument (Document document, View view) {
+void DAVProfindDocument (Document document, View view) 
+{
     AHTDAVContext *davctx= NULL;
 
 #ifdef DEBUG_DAV
@@ -350,7 +391,8 @@ void DAVProfindDocument (Document document, View view) {
 #endif    
     
     davctx = GetPropfindInfo(document);
-    if (davctx) {
+    if (davctx) 
+     {
 #ifdef DEBUG_DAV
         fprintf (stderr,"DAVPropfindDocument..... DAV context object:\n");
         fprintf (stderr,"\tabsolute: %s\n\trelative: %s\n",davctx->absoluteURI,davctx->relativeURI);
@@ -361,20 +403,19 @@ void DAVProfindDocument (Document document, View view) {
         /* YES, show the results*/
         davctx->showIt = YES;
 
-        if (!DoPropfindRequest (document,davctx,FilterPropfind_handler,NULL)) {
+        if (!DoPropfindRequest (document,davctx,FilterPropfind_handler,NULL)) 
             DAVDisplayMessage (TtaGetMessage (AMAYA,AM_PROPFIND_FAILED), NULL);
-        }
-        
-    }
-    else {
+                
+     }
+    else 
+     {
 #ifndef _WINDOWS            
-        DAVDisplayMessage (TtaGetMessage (AMAYA, AM_DAV_UNSUPPORTED_PROTOCOL), \
+        DAVDisplayMessage (TtaGetMessage (AMAYA, AM_DAV_UNSUPPORTED_PROTOCOL), 
                            DocumentURLs[document]);                        
 #endif
         DAVLockIndicatorState = FALSE;
-    }
-    
-    
+     }   
+
 }
 
 
@@ -383,7 +424,8 @@ void DAVProfindDocument (Document document, View view) {
    DAVCopyLockInfo - do a Propfind request in the document URL 
    to discover and copy (to the local base) the lock information
   ----------------------------------------------------------------------*/
-void DAVCopyLockInfo (Document document, View view) {
+void DAVCopyLockInfo (Document document, View view) 
+{
     AHTDAVContext *davctx= NULL;
     BOOL ok = NO;
 #ifdef DEBUG_DAV
@@ -392,7 +434,8 @@ void DAVCopyLockInfo (Document document, View view) {
 #endif    
     
     davctx = GetPropfindInfo(document);
-    if (davctx) {
+    if (davctx) 
+     {
 #ifdef DEBUG_DAV
         fprintf (stderr,"DAVPropfindDocument..... DAV context object:\n");
         fprintf (stderr,"\tabsolute: %s\n\trelative: %s\n",davctx->absoluteURI,davctx->relativeURI);
@@ -403,23 +446,22 @@ void DAVCopyLockInfo (Document document, View view) {
         /* YES, show the results*/
         davctx->showIt = YES;
 
-        if (createPropfindBody (YES,davctx->xmlbody,DAV_XML_LEN)) {
+        if (createPropfindBody (YES,davctx->xmlbody,DAV_XML_LEN)) 
             ok = DoPropfindRequest (document,davctx,FilterCopyLockInfo_handler,NULL);
-        }
+        
         
         if (!ok)
             DAVDisplayMessage (TtaGetMessage (AMAYA,AM_PROPFIND_FAILED), NULL);
         
-    }
-    else {
+     }
+    else
+     {
 #ifndef _WINDOWS            
-        DAVDisplayMessage (TtaGetMessage (AMAYA, AM_DAV_UNSUPPORTED_PROTOCOL), \
+        DAVDisplayMessage (TtaGetMessage (AMAYA, AM_DAV_UNSUPPORTED_PROTOCOL), 
                            DocumentURLs[document]);                        
 #endif
         DAVLockIndicatorState = FALSE;
-    }
-    
-    
+     }        
 }
 
 
@@ -427,16 +469,15 @@ void DAVCopyLockInfo (Document document, View view) {
 /*----------------------------------------------------------------------
    DAVLockIndicator: Manipulates Lock indicator
   ----------------------------------------------------------------------*/
-void DAVLockIndicator (Document document, View view) {
+void DAVLockIndicator (Document document, View view) 
+{
         
     /* if lock indicator is TRUE, unlock the document
      * if it's FALSE, lock the document */
-    if (DAVLockIndicatorState) {
-        DAVUnlockDocument (document,view);
-    }
-    else  {
-        DAVLockDocument (document,view);
-    }
+    if (DAVLockIndicatorState) 
+        DAVUnlockDocument (document,view);    
+    else  
+        DAVLockDocument (document,view);    
 
 }
 

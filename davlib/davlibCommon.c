@@ -15,7 +15,14 @@
  ** $Id$
  ** $Date$
  ** $Log$
- ** Revision 1.3  2002-06-03 14:37:42  kirschpi
+ ** Revision 1.4  2002-06-05 16:46:06  kirschpi
+ ** Applying Amaya code format.
+ ** Modifying some dialogs (looking for a better windows presentation)
+ ** Adding a DAVResource list, a list of resources (specially collections),
+ ** where we should do a Lock discovery.
+ ** Manuele
+ **
+ ** Revision 1.3  2002/06/03 14:37:42  kirschpi
  ** The name of some public functions have been changed to avoid conflic with
  ** other libraries.
  **
@@ -34,6 +41,7 @@
 #include "davlib.h"
 
 #include "davlibCommon_f.h"
+#include "AHTLockBase_f.h"
 
 #include "query_f.h"
 #include "init_f.h"
@@ -49,7 +57,8 @@
 /*----------------------------------------------------------------------
    Returns the local hostname with full qualify domain name
   ----------------------------------------------------------------------*/
-char * DAVFQDN (void) {
+char * DAVFQDN (void) 
+{
     HTRequest *request = HTRequest_new();    
     HTUserProfile *user = HTRequest_userProfile (request);
     char *fqdn = (user)?HTUserProfile_fqdn(user):NULL;
@@ -65,7 +74,8 @@ char * DAVFQDN (void) {
 /*----------------------------------------------------------------------
    Returns the default user email
   ----------------------------------------------------------------------*/
-char * DAVDefaultEmail (void) {
+char * DAVDefaultEmail (void) 
+{
     HTRequest *request = HTRequest_new();    
     HTUserProfile *user = HTRequest_userProfile (request);
     char *email = (user)?HTUserProfile_email(user):NULL;
@@ -77,15 +87,18 @@ char * DAVDefaultEmail (void) {
 /*----------------------------------------------------------------------
    Calculates a time_t value for the timeout string
   ----------------------------------------------------------------------*/
-time_t DAVTimeoutValue (char *timeout) {
+time_t DAVTimeoutValue (char *timeout) 
+{
     time_t now,tout;
+    char *ptr = NULL;
         
     time(&now);                
     if (HTStrCaseStr(timeout,"Infinite")!=NULL) tout = now;
-    else if (HTStrCaseStr(timeout,"Second-")!=NULL) {
-        char *ptr = strchr(timeout,'-') + 1;
+    else if (HTStrCaseStr(timeout,"Second-")!=NULL) 
+     {
+        ptr = strchr(timeout,'-') + 1;
         tout = (time_t) atol(ptr);
-    }
+     }
     else tout = 0;          /*a unknown timeout notation,do not consider */
     return tout;
 }
@@ -94,13 +107,15 @@ time_t DAVTimeoutValue (char *timeout) {
 /*----------------------------------------------------------------------
    Copy the file 'filename' to a string 
   ----------------------------------------------------------------------*/
-char * DAVCopyFile (char * filename, int size) {
+char * DAVCopyFile (char * filename, int size) 
+{
     char *document = NULL;
+    FILE *fp;
+    int i = 0;
+    char c[1];
 
-    if (filename) {
-         FILE *fp;
-         int i = 0;
-         char c[1];
+    if (filename) 
+     {
          document = TtaGetMemory (size + 1);
 
          fp = fopen (filename, "r");
@@ -109,9 +124,58 @@ char * DAVCopyFile (char * filename, int size) {
          
          document[i] = '\0';     
          fclose (fp);
-    }
+     }
 
     return document;
+}
+
+
+/*----------------------------------------------------------------------
+   Verifies if a URL is a WebDAV resource used by the user.
+  ----------------------------------------------------------------------*/
+BOOL DAVAllowResource (char *davlist, char *url)  
+{
+    HTList * entries = NULL;
+    char *davurls =  NULL;
+    BOOL match = NO;
+    char *host, *rel, *next, *ptr;
+
+    host = rel = next = NULL;
+
+    if (!(url && *url))
+        return NO;
+    
+    /* verifies the server list */
+    if (davlist && *davlist)
+     {            
+        davurls = TtaStrdup (davlist);          
+        ptr = davurls;
+        while (ptr && *ptr && !match && (next = HTNextLWSToken (&davurls))!=NULL)
+            match = matchURI (url, next);            
+
+        davurls = ptr;       
+     }
+ 
+    /* if the url is not in DAVResources list
+     * verifies if it is in the lock base
+     */ 
+    if (!match && separateUri (url, DAVFullHostName, &host, &rel)) 
+     {
+        entries = searchLockBase (host, rel);
+        if (entries)
+            match = YES;
+     }   
+
+    /* free everything */
+    if (davurls)
+        TtaFreeMemory (davurls);
+    if (entries) {
+        while ((next = (char *) HTList_nextObject (entries)))
+            HT_FREE (next);
+        HT_FREE (entries);
+    }
+
+    return match;
 }
 
 
@@ -126,27 +190,31 @@ char * DAVCopyFile (char * filename, int size) {
    Returns:
         char * with the lock-token, or NULL if fails
  ----------------------------------------------------------------------*/
-char * DAVFindLockToken (char *hostname, char *relative) {
+char * DAVFindLockToken (char *hostname, char *relative)
+{
     char   *lock    = NULL;
     HTList *matches = NULL;
     LockLine *line  = NULL;
     LockLine *last  = NULL;
     time_t itime, tout;
+    time_t last_itime;
     
     /* search matches in lock base */
     matches = processLockFile ((const char*)hostname, (const char*)relative);
     if (!matches)      /* no matches, returning NULL */
         return NULL;
 
-    while (!HTList_isEmpty(matches) && \
-          (line = (LockLine *) HTList_nextObject(matches)) !=NULL ) {
+    while (!HTList_isEmpty(matches) && 
+          (line = (LockLine *) HTList_nextObject(matches)) !=NULL ) 
+     {
 
         /* verify if it is an exact match. If we already found it, use 
          * the loop to free the LockLine objects too */
-        if (strcasecomp (line->relativeURI,relative)!=0) {                    
+        if (strcasecomp (line->relativeURI,relative)!=0) 
+         {
             LockLine_delete (line); 
             continue;
-        }
+         }
         
         /* we don't need to verify if the lock token expired, because we 
          * can only unlock a resource after get it, consequently, after 
@@ -156,20 +224,20 @@ char * DAVFindLockToken (char *hostname, char *relative) {
 
         
         /* try to get the most recent token */ 
-        {
-            time_t last_itime = (last)?strtotime(last->initialTime):-1;
-            if (last_itime < itime) {
-                if (last) LockLine_delete (last);
-                last = line;
-            }
-        }
-    }
+        last_itime = (last)?strtotime(last->initialTime):-1;
+        if (last_itime < itime) 
+         {
+            if (last) LockLine_delete (last);
+            last = line;
+         }       
+    } /* while */
 
     /* we found something, return the lock-token */
-    if (last) {
+    if (last) 
+     {
        StrAllocCopy (lock,last->lockToken);
        LockLine_delete (last); 
-    }
+     }
     
 #ifdef DEBUG_DAV
     fprintf (stderr,"DAVFindLockToken.... Returning %s\n",(lock)?lock:"NULL");
@@ -188,92 +256,109 @@ char * DAVFindLockToken (char *hostname, char *relative) {
    Returns:
         LockLine *: lock information or NULL
   ----------------------------------------------------------------------*/
-LockLine * DAVGetLockFromTree (AwTree * tree, char *owner) {
+LockLine * DAVGetLockFromTree (AwTree * tree, char *owner) 
+{
     LockLine * lock;
     AwNode * Nactivelock;
     AwNode * node;
+    AwString tmp = NULL; 
+    AwString pattern = NULL;
     char *Iowner, *Itimeout, *Ilocktoken, *Idepth, *Irelative;
+    char *abs, *rel;
+    char *s = NULL;
 
     lock = NULL;
     node = NULL;
     Nactivelock = NULL;
     Iowner = Itimeout = Ilocktoken = Idepth = Irelative = NULL;
 
-    if (tree && owner) {
-        AwString tmp = NULL; 
-        AwString pattern = AwString_new (15);
+    if (tree && owner) 
+     {
+        tmp = NULL; 
+        pattern = AwString_new (15);
         
          /*look for lockdiscovery info*/
         AwString_set (pattern,"lockdiscovery");
         Nactivelock = AwTree_search (AwTree_getRoot(tree),pattern);
         
-        if (Nactivelock && AwNode_howManyChildren(Nactivelock)>0) {
+        if (Nactivelock && AwNode_howManyChildren(Nactivelock)>0) 
+         {
                 
             /* look for owner information */
             AwString_set (pattern,"owner");
             node = AwTree_search (Nactivelock,pattern);
-            if (node) {
+            if (node) 
+             {
                 AwString_set (pattern,"href");
                 node = AwTree_search (node,pattern);
                 node = (node)?AwNode_nextChild (node):NULL;
                 tmp = (node)?AwNode_getInfo (node):NULL;
-                if (tmp) {
+                if (tmp) 
+                 {
                     Iowner = AwString_get(tmp);
                     AwString_delete (tmp);
                     tmp = NULL;
-                }
-            }
-            if (Iowner && *Iowner) {
+                 }
+             }
+            if (Iowner && *Iowner) 
+             {
                strcpy (owner, Iowner);
                HT_FREE (Iowner);
-            }
+             }
 
 
             /* look for timeout information */
             AwString_set (pattern,"timeout");
             node = AwTree_search (Nactivelock,pattern);
-            if (node) {
+            if (node) 
+             {
                 node = AwNode_nextChild (node);
                 tmp = (node)?AwNode_getInfo (node):NULL;
-                if (tmp) {
+                if (tmp) 
+                 {
                     Itimeout = AwString_get(tmp);
                     AwString_delete (tmp);
                     tmp = NULL;
-                }
-            }
+                 }
+             }
 
             
             /* look for depth information */
             AwString_set (pattern,"depth");
             node = AwTree_search (Nactivelock,pattern);
-            if (node) {
+            if (node) 
+             {
                 node = AwNode_nextChild (node);
                 tmp = (node)?AwNode_getInfo (node):NULL;
-                if (tmp) {
+                if (tmp) 
+                 {
                     Idepth = AwString_get(tmp);
                     AwString_delete (tmp);
                     tmp = NULL;
-                }
-            }
+                 }
+             }
 
 
             /* look for locktoken information */
             AwString_set (pattern,"locktoken");
             node = AwTree_search (Nactivelock,pattern);
-            if (node) {
+            if (node) 
+             {
                 AwString_set (pattern,"href");
                 node = AwTree_search (node,pattern);
                 node = (node)?AwNode_nextChild (node):NULL;
                 tmp = (node)?AwNode_getInfo (node):NULL;
-                if (tmp) {
+                if (tmp) 
+                 {
                     Ilocktoken = AwString_get(tmp);
                     AwString_delete (tmp);
                     tmp = NULL;  
-                }
+                 }
 
                 /*put < and > in locktoken */
-                if (Ilocktoken && *Ilocktoken!='<') {
-                    char *s = HT_CALLOC (strlen(Ilocktoken)+3,sizeof(char));
+                if (Ilocktoken && *Ilocktoken!='<') 
+                 {
+                    s = HT_CALLOC (strlen(Ilocktoken)+3,sizeof(char));
                     sprintf (s,"<%s>",Ilocktoken);
                     HT_FREE (Ilocktoken);
                     Ilocktoken = s;
@@ -286,16 +371,18 @@ LockLine * DAVGetLockFromTree (AwTree * tree, char *owner) {
             node = AwTree_search (AwTree_getRoot(tree),pattern);
             node = (node)?AwNode_nextChild (node):NULL;
             tmp = (node)?AwNode_getInfo (node):NULL;
-            if (tmp) {          
+            if (tmp)
+             {          
                 Irelative = AwString_get(tmp);
                 AwString_delete (tmp);
                 tmp = NULL;
-            }
+             }
             /* some servers use absolute URL in href element
             * others use the relative. Try to separate it. */
-            if (Irelative) {
-               char *abs, *rel;
-               if (separateUri ((const char*) Irelative, \
+            if (Irelative) 
+             {
+               abs = rel = NULL;
+               if (separateUri ((const char*) Irelative, 
                                 (const char*)DAVFullHostName, &abs, &rel))
                {
                     HT_FREE (Irelative);
@@ -315,12 +402,12 @@ LockLine * DAVGetLockFromTree (AwTree * tree, char *owner) {
             if (Itimeout) HT_FREE (Itimeout);
                             
 #ifdef DEBUG_DAV            
-            fprintf (stderr,"DAVGetLockFromTree..... LockLine: %s Owner %s\n", \
+            fprintf (stderr,"DAVGetLockFromTree..... LockLine: %s Owner %s\n", 
                             (lock)?"OK":"NO",owner);
 #endif
-        }
+         }
 
-    }
+     }
 
     return lock;
 }
@@ -335,20 +422,24 @@ LockLine * DAVGetLockFromTree (AwTree * tree, char *owner) {
  *        char *url: destiny URL
  * 
   ----------------------------------------------------------------------*/
-void DAVAddIfHeader (AHTReqContext *context, char *url) {
+void DAVAddIfHeader (AHTReqContext *context, char *url) 
+{
     AHTDAVContext *davctx = NULL;
+    HTList * matches = NULL;
+    char *ifHeader = NULL;
     
-    if (context && url && (*url) && (context->request)) {
+    if (context && url && (*url) && (context->request)) 
+     {
         /*create DAV context*/
         davctx =  AHTDAVContext_new (url);
         
-        if (davctx) {                                                
-            char *ifHeader = NULL;
-            HTList * matches = searchLockBase (davctx->absoluteURI, \
-                                               davctx->relativeURI);
+        if (davctx) 
+         {
+            ifHeader = NULL;
+            matches = searchLockBase (davctx->absoluteURI, davctx->relativeURI);
 #ifdef DEBUG_DAV            
             fprintf (stderr,"DAVAddIfHeader..... seaching for %s\n",url);
-            fprintf (stderr,"DAVAddIfHeader..... matches? %s\n",\
+            fprintf (stderr,"DAVAddIfHeader..... matches? %s\n",
                             (matches && !HTList_isEmpty(matches))?"YES":"NO");
 #endif         
             /*search in lock base: if found something creates the header */
@@ -356,14 +447,14 @@ void DAVAddIfHeader (AHTReqContext *context, char *url) {
                 ifHeader = mountIfHeader (matches);
 
 #ifdef DEBUG_DAV
-            fprintf (stderr,"DAVAddIfHeader..... if header %s\n",\
+            fprintf (stderr,"DAVAddIfHeader..... if header %s\n",
                             (ifHeader)?ifHeader:"none");
 #endif    
             if (ifHeader) /*add If header */
                 HTRequest_addExtraHeader (context->request,"If",ifHeader);
 
-        }
-    }
+         }
+     }
 }
 
 
@@ -371,15 +462,17 @@ void DAVAddIfHeader (AHTReqContext *context, char *url) {
  * DAVRemoveIfHeader - removes an If header from the request
  * 
   ----------------------------------------------------------------------*/
-void DAVRemoveIfHeader (AHTReqContext *context) {
+void DAVRemoveIfHeader (AHTReqContext *context) 
+{
 #ifdef DEBUG_DAV            
        fprintf (stderr,"DAVRemoveIfHeader..... Request for %s\n",context->urlName);
 #endif          
-    if (context) {
+    if (context) 
+     {
        HTAssocList *headers = HTRequest_extraHeader (context->request);       
        if (headers)
            HTAssocList_removeObject (headers,"If");
-    }
+     }
 }
 
 
@@ -406,10 +499,11 @@ AHTDAVContext * AHTDAVContext_new (const char *DocURL)
     
     /* getting absolute and relative URI */
     if (!separateUri (DocURL,DAVFullHostName,
-                      &(me->absoluteURI),&(me->relativeURI))) {
+                      &(me->absoluteURI),&(me->relativeURI))) 
+     {
         HT_FREE (me);
         return NULL;
-    }
+     }
 
 #ifdef DEBUG_DAV
     fprintf (stderr,"AHTDAVContext..... Creating new AHTDAVContext object\n");    
@@ -437,7 +531,8 @@ AHTDAVContext * AHTDAVContext_new (const char *DocURL)
   ----------------------------------------------------------------------*/
 void AHTDAVContext_delete (AHTDAVContext * me) 
 {
-    if (me) {
+    if (me) 
+     {
 #ifdef DEBUG_DAV
     fprintf (stderr,"AHTDAVContext..... Deleting AHTDAVContext object\n"); 
 #endif
@@ -459,7 +554,7 @@ void AHTDAVContext_delete (AHTDAVContext * me)
          
         HT_FREE (me);
         me = NULL;
-    }
+     }
 }
 
 
@@ -489,11 +584,13 @@ AHTReqContext * DAVCreateDefaultContext (int doc, char *url, AHTDAVContext *dav,
                                       TIcbf * incremental, BOOL preemptive, int mode)  
 {
     AHTReqContext *me = AHTReqContext_new (doc);
-    if (me) {
-        if (!url || !(*url)) {
+    if (me)
+     {
+        if (!url || !(*url))
+         {
             AHTReqContext_delete (me);
             return NULL;
-        }
+         }
         
         /* WebDav context */
         me->dav_context = dav;
@@ -528,7 +625,7 @@ AHTReqContext * DAVCreateDefaultContext (int doc, char *url, AHTDAVContext *dav,
 
         /* initial status */
         me->reqStatus = HT_NEW;
-    }
+     }
 
     return me;
 }
@@ -537,16 +634,18 @@ AHTReqContext * DAVCreateDefaultContext (int doc, char *url, AHTDAVContext *dav,
 /*----------------------------------------------------------------------
    Copy an AHTDAVContext object to a new object for retry purposes
   ----------------------------------------------------------------------*/
-AHTReqContext * DAVCopyContext (AHTReqContext *context) {
+AHTReqContext * DAVCopyContext (AHTReqContext *context) 
+{
     AHTReqContext *me = NULL;
 
-    if (context) {
+    if (context) 
+     {
 #ifdef DEBUG_DAV
         fprintf (stderr,"Copycontext.... copying the request context\n");
 #endif              
-        me = DAVCreateDefaultContext (context->docid, context->urlName,NULL, NULL, \
-                                   context->terminate_cbf, context->incremental_cbf,\
-                                   HTRequest_preemptive (context->request),\
+        me = DAVCreateDefaultContext (context->docid, context->urlName,NULL, NULL, 
+                                   context->terminate_cbf, context->incremental_cbf,
+                                   HTRequest_preemptive (context->request),
                                    context->mode);
         if (!me) 
             return NULL;
@@ -570,7 +669,7 @@ AHTReqContext * DAVCopyContext (AHTReqContext *context) {
         me->context_icbf = context->context_icbf;
         
         me->error_html = context->error_html;
-    }
+     }
 
     return me;
 }
