@@ -519,10 +519,11 @@ void UpdateImageMap (Element image, Document doc, int oldWidth, int oldHeight)
 void DisplayImage (Document doc, Element el, LoadedImageDesc *desc,
 		   char *localfile, char *mime_type)
 {
-  ElementType         elType, parentType;
+  ElementType         elType;
+  ElementType         parentType;
   Element             parent;
   int                 modified, i;
-  ThotBool            is_svg, is_mml, is_html, ok;
+  ThotBool            is_svg, is_mml, is_html, htmlok;
   ThotBool            xmlDec, withDoctype, isXML, isKnown;
   DocumentType        thotType;
   int                 parsingLevel;
@@ -559,9 +560,9 @@ void DisplayImage (Document doc, Element el, LoadedImageDesc *desc,
       is_mml = FALSE;
       is_html = FALSE;
 
+      htmlok = TRUE;
       if (TtaGetPictureType (el) == unknown_type)
 	{
-	  ok = TRUE;
 	  if (!strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") &&
 	      (elType.ElTypeNum == HTML_EL_PICTURE_UNIT))
 	    {
@@ -569,50 +570,47 @@ void DisplayImage (Document doc, Element el, LoadedImageDesc *desc,
 	      parentType = TtaGetElementType (parent);
 	      if (parentType.ElTypeNum != HTML_EL_Object &&
 		  parentType.ElTypeNum != HTML_EL_Embed_)
-		ok = FALSE;
+		htmlok = FALSE;
 	    }
-	  if (ok)
+	  if (mime_type)
 	    {
-	      if (mime_type)
+	      if (!strncmp (mime_type, "image/svg", 9) ||
+		  !strcmp (mime_type, AM_SVG_MIME_TYPE))
+		is_svg = TRUE;
+	      else if (!strncmp (mime_type, "text/mathml", 11) ||
+		       !strcmp (mime_type, AM_MATHML_MIME_TYPE))
+		is_mml = TRUE;
+	      else if (!strncmp (mime_type, "text/htm", 8) ||
+		       !strcmp (mime_type, AM_XHTML_MIME_TYPE))
+		is_html = TRUE;
+	      else if (!IsImageType (mime_type))
+		/* unknown mime_type, check with another method */
+		mime_type = NULL;
+	    }
+	  if (!mime_type)
+	    {
+	      /* try the file's extension */
+	      for (i = strlen (imageName); i > 0 && imageName[i] != '.'; i--);
+	      if (imageName[i] == '.' && !strcmp (&imageName[i+1], "svg"))
+		is_svg = TRUE;
+	      else if (imageName[i] == '.' && !strcmp (&imageName[i+1], "mml"))
+		is_mml = TRUE;
+	      else if (imageName[i] == '.' && !strncmp (&imageName[i+1], "htm", 3))
+		is_html = TRUE;
+	      else /* try sniffing */
 		{
-		  if (!strncmp (mime_type, "image/svg", 9) ||
-		      !strcmp (mime_type, AM_SVG_MIME_TYPE))
+		  CheckDocHeader (tempfile, &xmlDec, &withDoctype, &isXML, &isKnown,
+				  &parsingLevel, &charset, charsetname, &thotType);
+		  if (isXML && thotType == docSVG)
 		    is_svg = TRUE;
-		  else if (!strncmp (mime_type, "text/mathml", 11) ||
-			   !strcmp (mime_type, AM_MATHML_MIME_TYPE))
+		  if (isXML && thotType == docMath)
 		    is_mml = TRUE;
-		  else if (!strncmp (mime_type, "text/htm", 8) ||
-			   !strcmp (mime_type, AM_XHTML_MIME_TYPE))
+		  if (isXML && thotType == docHTML)
 		    is_html = TRUE;
-		  else if (!IsImageType (mime_type))
-		    /* unknown mime_type, check with another method */
-		    mime_type = NULL;
-		}
-	      if (!mime_type)
-		{
-		  /* try the file's extension */
-		  for (i = strlen (imageName); i > 0 && imageName[i] != '.'; i--);
-		  if (imageName[i] == '.' && !strcmp (&imageName[i+1], "svg"))
-		    is_svg = TRUE;
-		  else if (imageName[i] == '.' && !strcmp (&imageName[i+1], "mml"))
-		    is_mml = TRUE;
-		  else if (imageName[i] == '.' && !strncmp (&imageName[i+1], "htm", 3))
-		    is_html = TRUE;
-		  else /* try sniffing */
-		    {
-		      CheckDocHeader (tempfile, &xmlDec, &withDoctype, &isXML, &isKnown,
-				      &parsingLevel, &charset, charsetname, &thotType);
-		      if (isXML && thotType == docSVG)
-			is_svg = TRUE;
-		      if (isXML && thotType == docMath)
-			is_mml = TRUE;
-		      if (isXML && thotType == docHTML)
-			is_html = TRUE;
-		    }
 		}
 	    }
 	}
-   
+
       if (is_svg)
 	{
 	  TtaSetPictureType (el, AM_SVG_MIME_TYPE);
@@ -633,7 +631,7 @@ void DisplayImage (Document doc, Element el, LoadedImageDesc *desc,
 	  ParseExternalDocument (tempfile, originalName, el, FALSE, doc, 
 				 TtaGetDefaultLanguage(), "MathML");
 	}
-      else if (is_html)
+      else if (is_html && htmlok)
 	{
 	  TtaSetPictureType (el, AM_XHTML_MIME_TYPE);
 	  if (desc)
