@@ -11,6 +11,7 @@ extern void ThotInitDisplay ( char* name,
                               int dx,
                               int dy );
 extern void InitDocContexts ( void );
+extern int ApproximateDotPerInch ( int dpi );
 
 #else /* __STDC__ */
 
@@ -19,6 +20,7 @@ extern void ThotInitDisplay ( char* name,
                                 int dx,
                                 int dy );
 extern void InitDocContexts ( void );
+extern int ApproximateDotPerInch ( int dpi );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

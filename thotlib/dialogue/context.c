@@ -51,6 +51,7 @@ static ThotColorStruct  cwhite;
 #include "picture_f.h"
 #include "registry_f.h"
 #include "textcommands_f.h"
+#include "context_f.h"
 
 
 /*----------------------------------------------------------------------
@@ -326,6 +327,7 @@ void ThotInitDisplay (char* name, int dx, int dy)
    wxDisplaySize(&display_width_px, &display_height_px);
    wxDisplaySizeMM(&display_width_mm, &display_height_mm);
    DOT_PER_INCH = (int)((((float)display_width_px)*25.4) / ((float)display_width_mm));
+   DOT_PER_INCH = ApproximateDotPerInch(DOT_PER_INCH);
 #else /* _WINDOWS */
    ScreenHDC dc;
    DOT_PER_INCH = ::GetDeviceCaps(dc, LOGPIXELSY);
@@ -402,5 +404,18 @@ void InitDocContexts ()
   InitializeOtherThings ();
 }
 
-
-
+/*----------------------------------------------------------------------
+ * Returns a dpi approximation because some server X returns bad values...
+ ----------------------------------------------------------------------*/
+int ApproximateDotPerInch( int dpi )
+{
+  static int dpi_table[] = { 75, 96, 100, 120, 120 /* terminal value is doubled */ };
+  int i = 0;
+  while ( i < sizeof(dpi_table)-1 )
+    {
+      if (dpi <= (dpi_table[i]+dpi_table[i+1])/2 )
+	return dpi_table[i];
+      i++;
+    }
+  return dpi;
+}
