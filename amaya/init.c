@@ -995,7 +995,7 @@ CHAR_T*              text;
       if (!IsW3Path (text))
 	{
 	  s = TtaAllocString (MAX_LENGTH);
-	  change = NormalizeFile (text, s);
+	  change = NormalizeFile (text, s, FALSE);
 	  if (!TtaFileExist (s))
 	    {
 	      /* It is not a valid URL */
@@ -3377,7 +3377,16 @@ void               *ctx_cbf;
 	    of normalizeFile, as the function doesn't allocate
 	    memory dynamically (note: this can generate some MAX_LENGTH
 	    problems) */
-	 NormalizeFile (pathname, tempfile);
+	 if (CE_event == CE_RELATIVE || CE_event == CE_FORM_GET
+	     || CE_event == CE_FORM_POST || CE_event == CE_MAKEBOOK
+#ifdef ANNOTATIONS
+	     || CE_event == CE_ANNOT)
+#endif /*ANNOTATIONS */
+	   /* we're following a link, so do all the convertions on
+	      the URL */
+	   NormalizeFile (pathname, tempfile, TRUE);
+	 else
+	   NormalizeFile (pathname, tempfile, FALSE);
 	 ustrcpy (pathname, tempfile);
 	 tempfile[0] = WC_EOS;
        }
@@ -3789,7 +3798,7 @@ CHAR_T*             data;
 	 {
 	   LastURLName[0] = WC_EOS;
 	   tempfile = TtaAllocString (MAX_LENGTH);
-	   change = NormalizeFile (data, tempfile);
+	   change = NormalizeFile (data, tempfile, FALSE);
 	   
 	   if (TtaCheckDirectory (tempfile))
 	     {
@@ -4036,7 +4045,7 @@ CHAR_T*             data;
        /* Document location */
        tempfile = TtaAllocString (MAX_LENGTH);
        if (!IsW3Path (data))
-	 change = NormalizeFile (data, tempfile);
+	 change = NormalizeFile (data, tempfile, FALSE);
        else
 	 ustrcpy (tempfile, data);
        
@@ -4058,7 +4067,7 @@ CHAR_T*             data;
      case ImgDirSave:
        /* Image directory */
        if (!IsW3Path (data))
-	 change = NormalizeFile (data, SaveImgsURL);
+	 change = NormalizeFile (data, SaveImgsURL, FALSE);
        else
 	 ustrcpy (SaveImgsURL, data);
        break;
@@ -4142,7 +4151,7 @@ CHAR_T*             data;
 
      case AttrHREFText:
        /* save the HREF name */
-       NormalizeFile (data, AttrHREFvalue);
+       NormalizeFile (data, AttrHREFvalue, FALSE);
        break;
 
      case ClassForm:
@@ -4677,7 +4686,7 @@ NotifyEvent        *event;
      }
    else
      {
-       NormalizeFile (s, LastURLName);
+       NormalizeFile (s, LastURLName, FALSE);
        if (TtaFileExist (LastURLName)) {
           /* check if it is an absolute or a relative name */
 #          ifdef _WINDOWS

@@ -70,6 +70,22 @@ UCHAR_T               c;
 }
 
 /*----------------------------------------------------------------------
+  UnEscapeChar
+  writes the equivalent hex code to a %xx coded char
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static CHAR_T UnEscapeChar (CHAR_T c)
+#else
+static CHAR_T UnEscapeChar (c)
+CHAR_T               c;
+#endif
+{
+    return  c >= TEXT('0') && c <= TEXT('9') ?  c - TEXT('0')
+            : c >= TEXT('A') && c <= TEXT('F') ? c - TEXT('A') + 10
+            : c - TEXT('a') + 10;   /* accept small letters just in case */
+}
+
+/*----------------------------------------------------------------------
   EscapeURL
   Takes a URL and escapes all protected chars into
   %xx sequences. Also, removes any leading white spaces
@@ -940,15 +956,17 @@ CHAR_T *text;
 /*----------------------------------------------------------------------
    CleanCopyFileURL
    Copies a file url from a src string to destination string.
-   It changes the URL_SEP into DIR_SEPs if they are not the same 
-   character.
+   If conv_dir_sep is TRUE, it changes the URL_SEP into DIR_SEPs if
+   they are not the same  character.
+   It always changes the %xx coded chars into the equivalent char
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void CleanCopyFileURL (CHAR_T *dest, CHAR_T *src)
+static void CleanCopyFileURL (CHAR_T *dest, CHAR_T *src, ThotBool conv_dir_sep)
 #else
-static void CleanCopyFileURL (dest, src)
+static void CleanCopyFileURL (dest, src, conv_dir_sep)
 CHAR_T* dest;
 CHAR_T* src;
+ThotBool conv_dir_sep;
 
 #endif /* __STDC__ */
 {
@@ -958,17 +976,38 @@ CHAR_T* src;
 	{
 #ifdef _WINDOWS
 	case WC_URL_SEP:
-	  /* make the transformation */
-	  *dest = WC_DIR_SEP;
+	  /* make DIR_SEP transformation */
+	  if (conv_dir_sep)
+	    *dest = WC_DIR_SEP;
+	  else
+	    *dest = *src;
 	  dest++;
+	  src++;
 	  break;
 #endif /* _WINDOWS */
+
+	case TEXT('%'):
+	  /* (code adapted from libwww's HTUnEscape function */
+	  src++;
+	  if (*src != WC_EOS)
+	    {
+	      *dest = UnEscapeChar (*src) * 16;
+	      src++;
+	    }
+	  if (*src != WC_EOS)
+	    {
+	      *dest = *dest + UnEscapeChar (*src);
+	      src++;
+	    }
+	  dest++;
+	  break;
+
 	default:
 	  *dest = *src;
 	  dest++;
+	  src++;
 	  break;
 	}
-      src++;
     }
   /* copy the EOS char */
   *dest = *src;
@@ -1811,15 +1850,16 @@ CHAR_T**     url;
 
 
 /*----------------------------------------------------------------------
-   NormalizeFile normalizes  local names.                             
+   NormalizeFile normalizes local names.                             
    Return TRUE if target and src differ.                           
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-ThotBool     NormalizeFile (CHAR_T* src, CHAR_T* target)
+ThotBool     NormalizeFile (CHAR_T* src, CHAR_T* target, ThotBool force_convertion)
 #else
-ThotBool     NormalizeFile (src, target)
+ThotBool     NormalizeFile (src, target, force_convertion)
 CHAR_T*              src;
 CHAR_T*              target;
+ThotBool             force_convertion;
 
 #endif
 {
@@ -1834,7 +1874,10 @@ CHAR_T*              target;
    start_index = 0;
 
    if (!src || src[0] == WC_EOS)
-     return FALSE;
+     {
+       target[0] = WC_EOS;
+       return FALSE;
+     }
 
    /* @@ do I need file: or file:/ here? */
    if (ustrncmp (src, TEXT("file:"), 5) == 0)
@@ -1862,33 +1905,28 @@ CHAR_T*              target;
        if (src[start_index] == WC_EOS)
        /* if there's nothing afterwards, add a DIR_STR */
 	 ustrcpy (target, WC_DIR_STR);
-#if 0
-       /* JK: removed the conversion of homedir in a file: url */
-#ifndef _WINDOWS
-       else if (src[start_index] == TEXT('~'))
-	 {
-	   /* replace ~ */
-	   s = TtaGetEnvString ("HOME");
-	   ustrcpy (target, s);
-	   start_index++;
-	   i = ustrlen (target);
-	   ustrcat (&target[i], &src[start_index]);
-	 }
-#endif /* _WINDOWS */
-#endif /* 0 */
        else
-	 {
-	   CleanCopyFileURL (target, &src[start_index]);
-	   change = TRUE;
-	 }
+	 CleanCopyFileURL (target, &src[start_index], TRUE);
+
+       change = TRUE;
+     }
+   else if (force_convertion)
+     {
+       /* we are following a "local" relative link, we do all the
+	  convertions except for the HOME_DIR ~ one */
+       CleanCopyFileURL (target, src, TRUE);
      }
 #ifndef _WINDOWS
    else if (src[0] == TEXT('~'))
      {
-	/* replace ~ */
+       /* it must be a URL typed in a text input field */
+       /* do the HOME_DIR ~ substitution */
 	s = TtaGetEnvString ("HOME");
 	ustrcpy (target, s);
 #if 0
+	/* JK: invalidated this part of the code as it's simpler
+	   to add the DIR_SEP whenever we have something to add
+	   to the path rather than adding it systematically */
 	if (src[1] != WC_DIR_SEP)
 	  ustrcat (target, WC_DIR_STR);
 #endif
@@ -1897,10 +1935,10 @@ CHAR_T*              target;
 	change = TRUE;
      }
 #endif /* _WINDOWS */
-
    else
+   /* leave it as it is */
      ustrcpy (target, src);
-
+   
    /* remove /../ and /./ */
    SimplifyUrl (&target);
    if (!change)

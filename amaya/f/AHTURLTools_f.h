@@ -48,7 +48,8 @@ extern CHAR_T* AmayaParseUrl ( const CHAR_T* aName,
                                int wanted );
 extern void SimplifyUrl ( CHAR_T** url );
 extern ThotBool NormalizeFile ( CHAR_T* src,
-                                CHAR_T* target );
+                                CHAR_T* target,
+				ThotBool force_convertion );
 extern STRING MakeRelativeURL ( STRING aName,
                                 STRING relatedName );
 
@@ -96,7 +97,8 @@ extern CHAR_T* AmayaParseUrl (/* const CHAR_T* aName,
                                  int wanted */);
 extern void SimplifyUrl (/* CHAR_T** url */);
 extern ThotBool NormalizeFile (/* CHAR_T* src,
-                                  CHAR_T* target */);
+                                  CHAR_T* target,
+				  ThotBool force_convertion */);
 extern STRING MakeRelativeURL (/* STRING aName,
                                   STRING relatedName */);
 

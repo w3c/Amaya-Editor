@@ -796,7 +796,7 @@ void               *extra;
 	  /* if it's not a remote URL, make any necessary file: conversions */
 	  if (!IsW3Path (pathname))
 	  {
-	    NormalizeFile (pathname, tempfile);
+	    NormalizeFile (pathname, tempfile, TRUE);
 	    ustrcpy (pathname, tempfile);
 	    tempfile[0] = EOS;
 	  }

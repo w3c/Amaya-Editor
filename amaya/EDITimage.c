@@ -293,7 +293,7 @@ STRING              data;
                  ustrcpy (LastURLImage, data);
                  ImageName[0] = WC_EOS;
 			  } else {
-                     change = NormalizeFile (data, LastURLImage);
+                     change = NormalizeFile (data, LastURLImage, FALSE);
                      if (TtaCheckDirectory (LastURLImage)) {
                         ustrcpy (DirectoryImage, LastURLImage);
                         ImageName[0] = WC_EOS;
