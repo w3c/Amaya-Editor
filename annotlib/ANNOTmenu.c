@@ -450,7 +450,7 @@ ThotBool show;
 	  break;
 	case BY_TYPE:
 	  annot_show = AnnotFilter_show (AnnotMetaData[doc].types, 
-					 (void*)annot->type);
+					 (void *) annot->type);
 	  break;
 	case BY_SERVER:
 	  annot_show = AnnotFilter_showServer (AnnotMetaData[doc].servers, 
