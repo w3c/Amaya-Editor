@@ -39,3 +39,11 @@ PRS -DUS_PAPER TextFileP TextFilePPUS
 PRS -DUS_PAPER -DLANDSCAPE TextFileP TextFileUSL
 TRA TextFileT
 APP -DGRAPHML TextFile.A
+
+SRC_DIR=$(THOTDIR)\annotlib
+DEST_DIR=$(THOTDIR)\annotlib
+
+APP -DMATHML -DGRAPHML Annot.A
+STR Annot
+PRS AnnotP
+TRA AnnotT
