@@ -490,6 +490,8 @@ PtrDocument     pDoc;
    int                  textTransBegin, textTransEnd;
    StringTransl         *pTrans;   
 
+   if (!pBufT)
+     return;
    textTransBegin = pTransAlph->AlBegin;
    textTransEnd = pTransAlph->AlEnd;
    b = 0;       /* indice dans la chaine source de la regle de traduction */
@@ -2521,18 +2523,19 @@ boolean            *removeEl;
                                         pTransTextSch = GetTransSchForContent(pEl,
                                                          LtText, &pTransAlph);
 				    pBuf = pA->AeAttrText;
-                                    if (!pTransTextSch || !pTransAlph)
-                                       /* no translation */
-				       while (pBuf != NULL)
+				    if (pBuf)
+                                      if (!pTransTextSch || !pTransAlph)
+                                        /* no translation */
+				        while (pBuf != NULL)
 				          {
 				          i = 0;
 				          while (i < pBuf->BuLength)
 					     PutChar (pBuf->BuContent[i++], fileNum, NULL, pDoc, *lineBreak);
 				          pBuf = pBuf->BuNext;
 				          }
-                                    else
-                                       /* translate the attribute value */
-                                       TranslateText (pBuf, pTransTextSch,
+                                      else
+                                        /* translate the attribute value */
+                                        TranslateText (pBuf, pTransTextSch,
                                         pTransAlph, *lineBreak, fileNum, pDoc);
 				    break;
 				 case AtReferenceAttr:
