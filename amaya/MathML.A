@@ -65,11 +65,35 @@ ATTRIBUTES
         AttrDelete.Post -> UpdateAttrID;
         END;
 
+   link:
+	AttrMenu.Pre ->    LinkAttrInMenu;
+
+   fontsize:
+        BEGIN
+        AttrCreate.Post -> MathAttrFontsizeCreated;
+        AttrModify.Post -> MathAttrFontsizeCreated;
+        AttrDelete.Pre ->  MathAttrFontsizeDelete;
+        END;
+ 
+   fontfamily:
+        BEGIN
+        AttrCreate.Post -> MathAttrFontfamilyCreated;
+        AttrModify.Post -> MathAttrFontfamilyCreated;
+        AttrDelete.Pre ->  MathAttrFontfamilyDelete;
+        END;
+
    color:
         BEGIN
         AttrCreate.Post -> MathAttrColorCreated;
         AttrModify.Post -> MathAttrColorCreated;
         AttrDelete.Pre ->  MathAttrColorDelete;
+        END;
+
+   background\240:
+        BEGIN
+        AttrCreate.Post -> MathAttrBackgroundCreated;
+        AttrModify.Post -> MathAttrBackgroundCreated;
+        AttrDelete.Pre ->  MathAttrBackgroundDelete;
         END;
 
    open:

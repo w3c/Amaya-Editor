@@ -6,17 +6,23 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern void NewTemplate (Document doc, View view);
-extern void OpenTemplateDocument (Document doc);
-extern void ReloadTemplateParams (STRING docURL, ClickEvent *method);
-extern void NewCss (Document doc, View view);
+extern void NewTemplate ( Document doc,
+                          View view );
+extern void OpenTemplateDocument ( Document doc );
+extern void ReloadTemplateParams ( STRING docURL,
+                                   ClickEvent *method );
+extern void NewCss ( Document doc,
+                     View view );
 
 #else /* __STDC__ */
 
-extern void NewTemplate (/*Document doc, View view*/);
-extern void OpenTemplateDocument (/*Document doc*/);
-extern void ReloadTemplateParams (/*STRING docURL, ClickEvent *method*/);
-extern void NewCss (/*Document doc, View view*/);
+extern void NewTemplate (/* Document doc,
+                            View view */);
+extern void OpenTemplateDocument (/* Document doc */);
+extern void ReloadTemplateParams (/* STRING docURL,
+                                     ClickEvent *method */);
+extern void NewCss (/* Document doc,
+                       View view */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

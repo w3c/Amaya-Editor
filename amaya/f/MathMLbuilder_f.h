@@ -54,6 +54,9 @@ extern void TransformMFENCED ( Element el,
                                Document doc );
 extern void MathMLElementComplete ( Element el,
                                     Document doc );
+extern void SetFontsize ( Document doc,
+                          Element el,
+                          STRING value );
 extern void MathMLAttributeComplete ( Attribute attr,
                                       Element el,
                                       Document doc );
@@ -89,15 +92,15 @@ extern void SetSingleIntHorizStretchAttr (/* Element el,
                                              Document doc,
                                              Element* selEl */);
 extern void SetIntVertStretchAttr (/* Element el,
-                                   Document doc,
-                                   int base,
-                                   Element* selEl */);
+                                      Document doc,
+                                      int base,
+                                      Element* selEl */);
 extern void CheckMTable (/* Element elMTABLE,
                             Document doc */);
 extern void SetFontstyleAttr (/* Element el,
                                  Document doc */);
 extern void SetIntAddSpaceAttr (/* Element el,
-                                Document doc */);
+                                   Document doc */);
 extern void ChangeTypeOfElement (/* Element elem,
                                     Document doc,
                                     int newTypeNum */);
@@ -110,6 +113,9 @@ extern void TransformMFENCED (/* Element el,
                                  Document doc */);
 extern void MathMLElementComplete (/* Element el,
                                       Document doc */);
+extern void SetFontsize (/* Document doc,
+                            Element el,
+                            STRING value */);
 extern void MathMLAttributeComplete (/* Attribute attr,
                                         Element el,
                                         Document doc */);

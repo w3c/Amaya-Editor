@@ -452,7 +452,7 @@ printf("width=%d%%\n", *percent);
 #ifdef __STDC__
 static void     CheckRowHeights (PtrAbstractBox table, int number, PtrAbstractBox *rowSpanCell, int *rowSpans, int frame)
 #else
-static void     CheckRowHeights (table, nmmber, rowSpanCell, rowSpans, frame)
+static void     CheckRowHeights (table, number, rowSpanCell, rowSpans, frame)
 PtrAbstractBox  table;
 int             number;
 PtrAbstractBox *crowSpanCell;

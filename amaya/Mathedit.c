@@ -2278,16 +2278,122 @@ void FenceModified(event)
 }
 
 /*----------------------------------------------------------------------
+   LinkAttrInMenu
+   Called by Thot when building the Attribute menu.
+   Prevent Thot from including attribute link in the menu
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+ThotBool            LinkAttrInMenu (NotifyAttribute * event)
+#else  /* __STDC__ */
+ThotBool            LinkAttrInMenu (event)
+NotifyAttribute    *event;
+ 
+#endif /* __STDC__ */
+{
+   return TRUE;
+}
+
+/*----------------------------------------------------------------------
+ MathAttrFontsizeCreated
+ An attribute fontsize has been created or updated by the user.
+ -----------------------------------------------------------------------*/
+#ifdef __STDC__
+void MathAttrFontsizeCreated (NotifyAttribute *event)
+#else /* __STDC__*/
+void MathAttrFontsizeCreated(event)
+     NotifyAttribute *event;
+#endif /* __STDC__*/
+{
+#define buflen 200
+  STRING           value = (STRING) TtaGetMemory (sizeof (CHAR_T) * buflen);
+  CHAR_T           css_command[buflen+20];
+  int              length;
+
+  value[0] = EOS;
+  length = TtaGetTextAttributeLength (event->attribute);
+  if (length >= buflen)
+     length = buflen - 1;
+  if (length > 0)
+     TtaGiveTextAttributeValue (event->attribute, value, &length);
+  /* associate a CSS property font-size with the element */
+  SetFontsize (event->document, event->element, value);
+}
+ 
+ 
+/*----------------------------------------------------------------------
+ MathAttrFontsizeDelete
+ The user is deleting an attribute fontsize.
+ -----------------------------------------------------------------------*/
+#ifdef __STDC__
+ThotBool MathAttrFontsizeDelete (NotifyAttribute *event)
+#else /* __STDC__*/
+ThotBool MathAttrFontsizeDelete(event)
+     NotifyAttribute *event;
+#endif /* __STDC__*/
+{
+  /* ask the CSS handler to remove the effect of the CSS property font-size */
+  /* in the statement below, "10pt" is meaningless. It's here just to
+     make the CSS parser happy */
+  ParseHTMLSpecificStyle (event->element, "font-size: 10pt", event->document,
+			  TRUE);
+  return FALSE; /* let Thot perform normal operation */
+}
+
+
+/*----------------------------------------------------------------------
+ MathAttrFontfamilyCreated
+ An attribute fontfamily has been created or modified by the user.
+ -----------------------------------------------------------------------*/
+#ifdef __STDC__
+void MathAttrFontfamilyCreated (NotifyAttribute *event)
+#else /* __STDC__*/
+void MathAttrFontfamilyCreated (event)
+     NotifyAttribute *event;
+#endif /* __STDC__*/
+{
+  STRING           value = (STRING) TtaGetMemory (sizeof (CHAR_T) * buflen);
+  int              length;
+
+  value[0] = EOS;
+  length = TtaGetTextAttributeLength (event->attribute);
+  if (length >= buflen)
+     length = buflen - 1;
+  if (length > 0)
+     TtaGiveTextAttributeValue (event->attribute, value, &length);  
+  SetFontfamily (event->document, event->element, value);
+}
+
+
+/*----------------------------------------------------------------------
+ MathAttrFontfamilyDelete
+ The user is deleting an attribute fontfamily.
+ -----------------------------------------------------------------------*/
+#ifdef __STDC__
+ThotBool MathAttrFontfamilyDelete (NotifyAttribute *event)
+#else /* __STDC__*/
+ThotBool MathAttrFontfamilyDelete (event)
+     NotifyAttribute *event;
+#endif /* __STDC__*/
+{
+  /* ask the CSS handler to remove the effect of property font-family */
+  /* in the statement below, "serif" is meaningless. It's here just to
+     make the CSS parser happy */
+  ParseHTMLSpecificStyle (event->element, "font-family: serif", event->document,
+			  TRUE);
+  return FALSE; /* let Thot perform normal operation */
+}
+
+/*----------------------------------------------------------------------
  MathAttrColorCreated
+ An attribute color has been created or modified by the user.
  -----------------------------------------------------------------------*/
 #ifdef __STDC__
 void MathAttrColorCreated (NotifyAttribute *event)
 #else /* __STDC__*/
-void MathAttrColorCreated(event)
+void MathAttrColorCreated (event)
      NotifyAttribute *event;
 #endif /* __STDC__*/
 {
-#define buflen 50
   STRING           value = (STRING) TtaGetMemory (sizeof (CHAR_T) * buflen);
   int              length;
 
@@ -2299,10 +2405,11 @@ void MathAttrColorCreated(event)
      TtaGiveTextAttributeValue (event->attribute, value, &length);  
   HTMLSetForegroundColor (event->document, event->element, value);
 }
- 
- 
+
+
 /*----------------------------------------------------------------------
  MathAttrColorDelete
+ The user is deleting an attribute color.
  -----------------------------------------------------------------------*/
 #ifdef __STDC__
 ThotBool MathAttrColorDelete (NotifyAttribute *event)
@@ -2314,8 +2421,46 @@ ThotBool MathAttrColorDelete(event)
   HTMLResetForegroundColor (event->document, event->element);
   return FALSE; /* let Thot perform normal operation */
 }
- 
 
+/*----------------------------------------------------------------------
+ MathAttrBackgroundCreated
+ An attribute background has been created or modified by the user.
+ -----------------------------------------------------------------------*/
+#ifdef __STDC__
+void MathAttrBackgroundCreated (NotifyAttribute *event)
+#else /* __STDC__*/
+void MathAttrBackgroundCreated (event)
+     NotifyAttribute *event;
+#endif /* __STDC__*/
+{
+  STRING           value = (STRING) TtaGetMemory (sizeof (CHAR_T) * buflen);
+  int              length;
+
+  value[0] = EOS;
+  length = TtaGetTextAttributeLength (event->attribute);
+  if (length >= buflen)
+     length = buflen - 1;
+  if (length > 0)
+     TtaGiveTextAttributeValue (event->attribute, value, &length);  
+  HTMLSetBackgroundColor (event->document, event->element, value);
+}
+
+
+/*----------------------------------------------------------------------
+ MathAttrBackgroundDelete
+ The user is deleting an attribute background.
+ -----------------------------------------------------------------------*/
+#ifdef __STDC__
+ThotBool MathAttrBackgroundDelete (NotifyAttribute *event)
+#else /* __STDC__*/
+ThotBool MathAttrBackgroundDelete(event)
+     NotifyAttribute *event;
+#endif /* __STDC__*/
+{
+  HTMLResetBackgroundColor (event->document, event->element);
+  return FALSE; /* let Thot perform normal operation */
+}
+ 
 /*----------------------------------------------------------------------
  AttrOpenCloseChanged
  Attribute open or close in a MFENCED element has been modified or deleted

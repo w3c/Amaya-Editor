@@ -2212,6 +2212,44 @@ Document	doc;
 }
 
 /*----------------------------------------------------------------------
+ SetFontfamily
+ -----------------------------------------------------------------------*/
+#ifdef __STDC__
+void SetFontfamily (Document doc, Element el, STRING value)
+#else /* __STDC__*/
+void SetFontfamily (doc, el, value)
+  Document doc;
+  Element el;
+  STRING value;
+#endif /* __STDC__*/
+{
+#define buflen 50
+  CHAR_T           css_command[buflen+20];
+ 
+  sprintf (css_command, "font-family: %s", value);
+  ParseHTMLSpecificStyle (el, css_command, doc, FALSE);
+}
+
+/*----------------------------------------------------------------------
+ SetFontsize
+ -----------------------------------------------------------------------*/
+#ifdef __STDC__
+void SetFontsize (Document doc, Element el, STRING value)
+#else /* __STDC__*/
+void SetFontsize (doc, el, value)
+  Document doc;
+  Element el;
+  STRING value;
+#endif /* __STDC__*/
+{
+#define buflen 50
+  CHAR_T           css_command[buflen+20];
+ 
+  sprintf (css_command, "font-size: %s", value);
+  ParseHTMLSpecificStyle (el, css_command, doc, FALSE);
+}
+
+/*----------------------------------------------------------------------
    MathMLAttributeComplete
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -2231,7 +2269,10 @@ Document	doc;
    int               length;
  
    TtaGiveAttributeType (attr, &attrType, &attrKind);
-   if (attrType.AttrTypeNum == MathML_ATTR_color)
+   if (attrType.AttrTypeNum == MathML_ATTR_color ||
+       attrType.AttrTypeNum == MathML_ATTR_background_ ||
+       attrType.AttrTypeNum == MathML_ATTR_fontsize ||
+       attrType.AttrTypeNum == MathML_ATTR_fontfamily)
       {
       value[0] = EOS;
       length = TtaGetTextAttributeLength (attr);
@@ -2240,7 +2281,21 @@ Document	doc;
       if (length > 0)
 	 {
          TtaGiveTextAttributeValue (attr, value, &length);
-         HTMLSetForegroundColor (doc, el, value);
+	 switch (attrType.AttrTypeNum)
+	    {
+	    case MathML_ATTR_color:
+               HTMLSetForegroundColor (doc, el, value);
+	       break;
+	    case MathML_ATTR_background_:
+               HTMLSetBackgroundColor (doc, el, value);
+	       break;
+	    case MathML_ATTR_fontsize:
+	       SetFontsize (doc, el, value);
+	       break;
+	    case MathML_ATTR_fontfamily:
+	       SetFontfamily (doc, el, value);
+	       break;
+	    }
 	 }
       }
 }

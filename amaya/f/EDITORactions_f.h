@@ -143,6 +143,8 @@ extern void ConfigCache ( Document doc,
                           View view );
 extern void ConfigProxy ( Document doc,
                           View view );
+extern void ConfigLanNeg ( Document doc,
+                           View view );
 extern void SaveOptions ( Document doc,
                           View view );
 
@@ -285,6 +287,8 @@ extern void ConfigCache (/* Document doc,
                             View view */);
 extern void ConfigProxy (/* Document doc,
                             View view */);
+extern void ConfigLanNeg (/* Document doc,
+                             View view */);
 extern void SaveOptions (/* Document doc,
                             View view */);
 
