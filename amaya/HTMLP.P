@@ -960,6 +960,8 @@ BOXES
 		Visibility: 0;
 	IN Alternate_view
 		Visibility: 0;
+	IN Links_view
+		Visibility: 0;
 	END;
 
  FORM_S: BEGIN
