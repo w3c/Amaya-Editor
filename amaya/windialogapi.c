@@ -115,6 +115,7 @@ static int          ChkrFormCorrect;
 static int          ChkrMenuIgnore;
 static int          ChkrCaptureNC;
 static int          ChkrSpecial;
+static int          repeatMode;
 static int          fontNum;
 static int          fontStyle;
 static int          fontWeight;
@@ -3440,7 +3441,6 @@ WPARAM wParam;
 LPARAM lParam;
 #endif /* __STDC__ */
 {
-  static int repeatMode;
     switch (msg)
       {
       case WM_INITDIALOG:
@@ -3457,6 +3457,7 @@ LPARAM lParam;
 	SetWindowText (GetDlgItem (hwnDlg, ID_CLEAR), TtaGetMessage (AMAYA, AM_CLEAR));
 	SetWindowText (GetDlgItem (hwnDlg, IDC_BROWSE), TEXT("Browse"));
 	SetWindowText (GetDlgItem (hwnDlg, IDCANCEL), TtaGetMessage (LIB, TMSG_CANCEL));
+	repeatMode = REPEAT;
 	break;
 
       case WM_COMMAND:
