@@ -1426,9 +1426,11 @@ void CreateAnchor (Document doc, View view, ThotBool createLink)
 	      /* create an attribute HREF for the new anchor */
 	      attrType.AttrSSchema = elType.ElSSchema;
 #ifdef _SVG
-	      attrType.AttrTypeNum = SVG_ATTR_xlink_href;
+	      if (!strcmp (s, "SVG"))
+		attrType.AttrTypeNum = SVG_ATTR_xlink_href;
+	      else
 #else /* _SVG */
-	      attrType.AttrTypeNum = HTML_ATTR_HREF_;
+		attrType.AttrTypeNum = HTML_ATTR_HREF_;
 #endif /* _SVG */
 	      attr = TtaGetAttribute (anchor, attrType);
 	      if (attr == NULL)
