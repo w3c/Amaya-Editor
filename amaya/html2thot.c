@@ -3616,6 +3616,16 @@ int                 entry;
 	     else
 	       ok = FALSE;
        if (ok)
+	 /* CAPTION, THEAD, TFOOT, TBODY, COLGROUP are allowed only as
+	    children of a TABLE element */
+	 if (strcmp (HTMLGIMappingTable[entry].htmlGI, "CAPTION") == 0 ||
+	     strcmp (HTMLGIMappingTable[entry].htmlGI, "THEAD") == 0 ||
+	     strcmp (HTMLGIMappingTable[entry].htmlGI, "TFOOT") == 0 ||
+	     strcmp (HTMLGIMappingTable[entry].htmlGI, "TBODY") == 0 ||
+	     strcmp (HTMLGIMappingTable[entry].htmlGI, "COLGROUP") == 0)
+	   if (strcmp (HTMLGIMappingTable[GINumberStack[StackLevel - 1]].htmlGI, "TABLE") != 0)
+	      ok = FALSE;
+       if (ok)
 	 /* only TR is allowed as a child of a THEAD, TFOOT or TBODY element */
 	 if (!strcmp (HTMLGIMappingTable[GINumberStack[StackLevel - 1]].htmlGI, "THEAD") ||
 	     !strcmp (HTMLGIMappingTable[GINumberStack[StackLevel - 1]].htmlGI, "TFOOT") ||
@@ -3759,6 +3769,7 @@ char               *GIname;
   if (Within (HTML_EL_Preformatted, HTMLSSchema))
     if (strcasecmp (GIname, "P") == 0)
       return;
+
   /* search the HTML element name in the mapping table */
   schema = HTMLSSchema;
   entry = MapGI (GIname, &schema, theDocument);
