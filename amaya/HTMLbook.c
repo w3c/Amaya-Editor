@@ -1418,6 +1418,176 @@ void ReadAsSHIFT_JIS (Document doc, View view)
   ----------------------------------------------------------------------*/
 void SectionNumbering (Document doc, View view)
 {
+  Element             el, new_, child;
+  DisplayMode         dispMode;
+  SSchema             HTMLschema;
+  ElementType         elType, childType, searchedType1, searchedType2;
+  ElementType         searchedType3, searchedType4, searchedType5;
+  Language            lang;
+  char                s[MAX_LENGTH], n[20], *text;
+  int                 nH2, nH3, nH4, nH5, nH6, length, i;
+  ThotBool            closeUndo;
+
+  /* check if there is HTML Hi elements and if the current position is
+   within a HTML Body element */
+  dispMode = TtaGetDisplayMode (doc);
+
+  /* check if there is any HTML element within the document */
+  HTMLschema = TtaGetSSchema ("HTML", doc);
+  if (HTMLschema == NULL)
+    /* no HTML element */
+    return;
+
+  if (TtaPrepareUndo (doc))
+      closeUndo = FALSE;
+  else
+    {
+      closeUndo = TRUE;
+      TtaOpenUndoSequence (doc, NULL, NULL, 0, 0);
+    }
+
+  el = TtaGetMainRoot (doc);
+  searchedType1.ElSSchema = HTMLschema;
+  searchedType1.ElTypeNum = HTML_EL_H2;
+  searchedType2.ElSSchema = HTMLschema;
+  searchedType2.ElTypeNum = HTML_EL_H3;
+  searchedType3.ElSSchema = HTMLschema;
+  searchedType3.ElTypeNum = HTML_EL_H4;
+  searchedType4.ElSSchema = HTMLschema;
+  searchedType4.ElTypeNum = HTML_EL_H5;
+  searchedType5.ElSSchema = HTMLschema;
+  searchedType5.ElTypeNum = HTML_EL_H6;
+  nH2 = nH3 = nH4 = nH5 = nH6 = 0;
+  while (el)
+    {
+      el = TtaSearchElementAmong5Types (searchedType1, searchedType2,
+					searchedType3, searchedType4,
+					searchedType5, SearchForward, el);
+      if (el)
+	{
+	  /* generate the text number */
+	  elType = TtaGetElementType (el);
+	  s[0] = EOS;
+	  switch (elType.ElTypeNum)
+	    {
+	    case HTML_EL_H2:
+	      nH2++;
+	      nH3 = nH4 = nH5 = nH6 = 0;
+	      sprintf (s, "%d.", nH2);
+	      break;
+	    case HTML_EL_H3:
+	      nH3++;
+	      nH4 = nH5 = nH6 = 0;
+	      if (nH2)
+		sprintf (s, "%d.", nH2);
+	      sprintf (n, "%d.", nH3);
+	      strcat (s, n);
+	      break;
+	    case HTML_EL_H4:
+	      nH4++;
+	      nH5 = nH6 = 0;
+	      if (nH2)
+		sprintf (s, "%d.", nH2);
+	      if (nH3)
+		{
+		  sprintf (n, "%d.", nH3);
+		  strcat (s, n);
+		}
+	      sprintf (n, "%d.", nH4);
+	      strcat (s, n);
+	      break;
+	    case HTML_EL_H5:
+	      nH5++;
+	      nH6 = 0;
+	      if (nH2)
+		sprintf (s, "%d.", nH2);
+	      if (nH3)
+		{
+		  sprintf (n, "%d.", nH3);
+		  strcat (s, n);
+		}
+	      if (nH4)
+		{
+		  sprintf (n, "%d.", nH4);
+		  strcat (s, n);
+		}
+	      sprintf (n, "%d.", nH5);
+	      strcat (s, n);
+	      break;
+	    case HTML_EL_H6:
+	      nH6++;
+	      if (nH2)
+		sprintf (s, "%d.", nH2);
+	      if (nH3)
+		{
+		  sprintf (n, "%d.", nH3);
+		  strcat (s, n);
+		}
+	      if (nH4)
+		{
+		  sprintf (n, "%d.", nH4);
+		  strcat (s, n);
+		}
+	      if (nH5)
+		{
+		  sprintf (n, "%d.", nH5);
+		  strcat (s, n);
+		}
+	      sprintf (n, "%d.", nH6);
+	      strcat (s, n);
+	      break;
+	    default: break;
+	    }
+	  strcat (s, " ");
+
+	  /* look for the first leaf child */
+	  child = el;
+	  if (child)
+	    {
+	      do
+		{
+		  child = TtaGetFirstChild (child);
+		  childType = TtaGetElementType (child);
+		}
+	      while (!TtaIsLeaf (childType) && childType.ElSSchema == HTMLschema);
+	    }
+	  if (child && childType.ElSSchema == HTMLschema &&
+	      childType.ElTypeNum == HTML_EL_TEXT_UNIT)
+	    {
+	      /* the first leaf child is a text unit */
+	      new_ = NULL;
+	      /* check the text contents */
+	      length = TtaGetTextLength (child) + 1;
+	      text = (char *)TtaGetMemory (length);
+	      TtaGiveTextContent (child, (unsigned char *)text, &length, &lang);
+	      /* remove the old number */
+	      i = 0;
+	      while (isdigit (text[i]) || text[i] == '.')
+		i++;
+	      TtaRegisterElementReplace (child, doc);
+	      TtaSetTextContent (child, (unsigned char *)s, Latin_Script, doc);
+	      TtaAppendTextContent (child, (unsigned char *)&text[i], doc);
+	    }
+	  else
+	    {
+	      /* add a new text element */
+	      elType.ElTypeNum = HTML_EL_TEXT_UNIT;
+	      new_ = TtaNewElement (doc, elType);
+	      if (child)
+		/* insert before */
+		TtaInsertSibling (new_, child, TRUE, doc);
+	      else
+		TtaInsertFirstChild (&new_, el, doc);
+	      TtaSetTextContent (new_, (unsigned char *)s, Latin_Script, doc);
+	      TtaRegisterElementCreate (new_, doc);
+	    }
+	}
+    }
+
+  if (closeUndo)
+    TtaCloseUndoSequence (doc);
+  if (dispMode == DisplayImmediately)
+    TtaSetDisplayMode (doc, dispMode);
 }
 
 /*----------------------------------------------------------------------
@@ -1594,15 +1764,6 @@ void MakeToc (Document doc, View view)
 		    TtaInsertSibling (*list, child, FALSE, doc);
 		  else
 		    TtaInsertFirstChild (list, parent, doc);
-		  /*attrType.AttrTypeNum = HTML_ATTR_BulletStyle;
-		  attr = TtaGetAttribute (el, attrType);
-		  if (!attr)
-		    {
-		      attr = TtaNewAttribute (attrType);
-		      TtaAttachAttribute (*list, attr, doc);
-		    }
-		  TtaSetAttributeValue (attr, HTML_ATTR_BulletStyle_VAL_disc,
-		  *list, doc);*/
 		  TtaRegisterElementCreate (*list, doc);
 		}
 	      /* generate the list item */
@@ -1625,7 +1786,8 @@ void MakeToc (Document doc, View view)
 	      attr = TtaNewAttribute (attrType);
 	      TtaAttachAttribute (new_, attr, doc);
 	      TtaSetAttributeText (attr, id, new_, doc);
-      
+	      TtaFreeMemory (id);
+	      id = NULL;
 	      /* get a copy of the Hi contents */
 	      srce = TtaGetFirstChild (el);
 	      prev = NULL;
