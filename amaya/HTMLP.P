@@ -956,13 +956,55 @@ BOXES
 		Visibility: 0;
 		END;
 	IN Links_view BEGIN
-		Visibility: 0;
+		Visibility: Enclosing =;
 		END;
 	IN Table_of_contents BEGIN
 		Visibility: 0;
 		END;
 	END;
 #endif
+
+ IMG_ALT: BEGIN
+	Visibility: 0;
+	Content: (ALT);
+{****	IN Links_view
+		Visibility: 7; ****}
+	IN Alternate_view
+		Visibility: 7;
+	END;
+
+ SPACE: BEGIN
+	Visibility: 0;
+	Content: Text ' ';
+	IN Links_view
+		Visibility: 7;
+	IN Alternate_view
+		Visibility: 7;
+	END;
+
+ AREA_ALT: BEGIN
+	Visibility: 0;
+	Content: (ALT);
+	IN Links_view
+		Visibility: 7;
+	IN Alternate_view BEGIN
+		Visibility: 7;
+		Underline: Underlined;
+		END;
+	END;
+
+ AREA_NO_ALT: BEGIN
+	Visibility: 0;
+	Content: Text 'area';
+	IN Links_view BEGIN
+		Visibility: Enclosing =;
+                Foreground: TAG_Color;
+	        END;
+	IN Alternate_view BEGIN
+		Visibility: Enclosing =;
+		Underline: Underlined;
+		END;
+	END;
 
  VALUE_ALT: BEGIN
 	Visibility: 0;
@@ -974,14 +1016,6 @@ BOXES
 		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
 		END;
-	IN Alternate_view BEGIN
-		Visibility: Enclosing =;
-		END;
-	IN Links_view BEGIN
-		HorizPos: Left = Previous . Right;
-		HorizRef: * . Top + 1;
-		VertPos: HRef = Previous . HRef;
-		END;	
 	END;
 
  ATTR_Hidden: BEGIN
@@ -3904,6 +3938,8 @@ RULES
 	END;
 
  PICTURE_UNIT: BEGIN
+	if ALT
+	    CreateBefore(IMG_ALT);
 	if IsInput
 		CreateBefore(IMG_in_S);
 	if not Immediately within Object and not IsInput
@@ -3939,6 +3975,8 @@ RULES
 	END;
 
  SVG_Image: BEGIN
+	if ALT
+	        CreateBefore(IMG_ALT);
 	if IsInput
 		CreateBefore(IMG_in_S);
 	if not Immediately within Object and not IsInput
@@ -4149,8 +4187,11 @@ RULES
 	IN Alternate_view BEGIN
 		Visibility: 10;
 		Width: Enclosing . Width;
+		Height: Enclosed . Height;
 		VertPos: Top = Previous . Bottom;
+		HorizPos: Left = Enclosing . Left;
 		Depth: 0;
+		Line;
 		END;
 	END;
 
@@ -4174,12 +4215,19 @@ RULES
 		Visibility: 0;
 	IN Alternate_view BEGIN
 		MarginTop: 0;
+		Width: Enclosing . Width;
 		VertPos: Top = Previous . Bottom;
+		Line;
 		END;
 	END;
 
  AREA:	BEGIN
 	CreateBefore(ElementName);
+	if ALT
+	    CreateFirst (AREA_ALT);
+	if not ALT
+	    CreateFirst (AREA_NO_ALT);
+	CreateLast (SPACE);
  	HorizPos: Left = Enclosing . Left UserSpecified;
  	VertPos: Top = Enclosing . Top UserSpecified;
 	Width: 5 pt UserSpecified;
@@ -4195,11 +4243,20 @@ RULES
 		Depth: 0;
 		END;
 	IN Alternate_view BEGIN
-		Height: 0;
-		Width: 0;
-		VertPos: Top = Previous . Top;
+		Height: Enclosed . Height;
+		Width: Enclosed . Width;
+		VertPos: HRef = Previous . HRef;
+		HorizPos: Left = Previous . Right;
+		END;
+	IN Links_view BEGIN
+		Visibility: 7;
+		VertPos : Top = Previous . Bottom;
 		HorizPos: Left = Enclosing . Left;
-		Visibility: 1;
+		Height: Enclosed . Height;
+		Width: Enclosing . Width;
+		Line;
+		MarginLeft: 2;
+		Indent: -2;
 		END;
 	END;
 
@@ -4211,6 +4268,8 @@ RULES
 	   Visibility: 0;
 	IN Alternate_view
 	   Visibility: 0;
+        IN Links_view
+           if within AREA Visibility: 0;
 	END;
 
 { ---- Table ---- }
@@ -5017,6 +5076,30 @@ ATTRIBUTES
 	if Not ALT
 	    CreateBefore(SHOW_IMG);
 	END;
+ NoImages(map):
+	BEGIN
+	Visibility: 0;
+	IN Structure_view
+		Visibility: Enclosing =;
+	IN Alternate_view
+		Visibility: 0;
+	IN Table_of_contents
+		Visibility: 0;
+	IN Links_view
+		Visibility: Enclosing =;
+	END;
+ NoImages(MAP):
+	BEGIN
+	Visibility: 0;
+	IN Structure_view
+		Visibility: Enclosing =;
+	IN Alternate_view
+		Visibility: 0;
+	IN Table_of_contents
+		Visibility: 0;
+	IN Links_view
+		Visibility: Enclosing =;
+	END;
 #endif
 
  Language:
@@ -5042,7 +5125,11 @@ ATTRIBUTES
 	   CreateLast(ATTR_HREF_LINKS_VIEW);
 	   CreateLast(VALUE_HREF_LINKS_VIEW);
 	   END;
-
+        if AREA
+	   BEGIN
+	   CreateLast(ATTR_HREF_LINKS_VIEW);
+	   CreateLast(VALUE_HREF_LINKS_VIEW);
+	   END;
 #ifdef LINK_NUMBER
         if Anchor and not InternalLink
            BEGIN
