@@ -4823,10 +4823,14 @@ void StartXmlParser (Document doc,
 	ChangeXmlParserContextDTD ("SVG");
       else if (strcmp (s, "MathML") == 0)
 	ChangeXmlParserContextDTD ("MathML");
+#ifdef ANNOTATIONS
+      else if (strcmp (s, "Annot") == 0)
+	ChangeXmlParserContextDTD ("HTML");
+#endif /* ANNOTATIONS */
       else
 #ifdef XML_GENERIC
 	{
-	  ChangeXmlParserContextDTD ("XML");
+	  ChangeXmlParserContextDTD ("HTML");
 	  XmlGeneric = TRUE;
 	}
 #else /* XML_GENERIC */
