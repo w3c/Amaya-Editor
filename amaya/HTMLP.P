@@ -60,6 +60,7 @@ PRINT
 #define VSpaceInToC 0.2
 #define LIST_INDENT 2.3
 #define LIST_NUMBER_WIDTH 2
+#define LIST_UL_WIDTH 1.5
 
 COUNTERS
    ItemCounter : Rank of List_Item init Start Reinit ItemValue;
@@ -2252,7 +2253,7 @@ BOXES
 	Height: 0.8;
 	Size: Creator =;
 	VertPos: HRef = Creator . HRef;
-	HorizPos: Right = Enclosing . Left + LIST_NUMBER_WIDTH;
+	HorizPos: Right = Enclosing . Left + LIST_UL_WIDTH;
 	Visibility: Creator =;
 	FillPattern: nopattern;
 	IN Structure_view
@@ -2265,7 +2266,7 @@ BOXES
 	Size: Creator =;
 	LineWeight: 1 px;
 	VertPos: Bottom = Creator . HRef;
-	HorizPos: Right = Enclosing . Left + LIST_NUMBER_WIDTH;
+	HorizPos: Right = Enclosing . Left + LIST_UL_WIDTH;
 	Visibility: Creator =;
 	IN Structure_view
 		Visibility: 0;
@@ -2277,7 +2278,7 @@ BOXES
 	Size: Creator =;
 	LineWeight: 1 px;
 	VertPos: Bottom = Creator . HRef;
-	HorizPos: Right = Enclosing . Left + LIST_NUMBER_WIDTH;
+	HorizPos: Right = Enclosing . Left + LIST_UL_WIDTH;
 	Visibility: Creator =;
 	IN Structure_view
 		Visibility: 0;

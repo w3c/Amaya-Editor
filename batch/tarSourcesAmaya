@@ -8,7 +8,7 @@
 #
 #       amaya-libs-$MACH-$AMAYAVERSION.tar.gz
 #
-AMAYAVERSION=1.2a
+AMAYAVERSION=1.3
 THOTDIR=/tahiti/diffusion/opera
 DEST=/tahiti/thottape
 
@@ -98,34 +98,8 @@ Thot/amaya/javaamaya.c \
 Thot/amaya/javaamaya.h \
 Thot/amaya/libwww.h \
 Thot/amaya/libjava.h \
-Thot/amaya/f/AHTBridge_f.h \
-Thot/amaya/f/AHTFWrite_f.h \
-Thot/amaya/f/AHTMemConv_f.h \
-Thot/amaya/f/AHTURLTools_f.h \
-Thot/amaya/f/EDITORactions_f.h \
-Thot/amaya/f/EDITimage_f.h \
-Thot/amaya/f/EDITstyle_f.h \
-Thot/amaya/f/HTMLactions_f.h \
-Thot/amaya/f/HTMLbook_f.h \
-Thot/amaya/f/HTMLedit_f.h \
-Thot/amaya/f/HTMLform_f.h \
-Thot/amaya/f/HTMLhistory_f.h \
-Thot/amaya/f/HTMLimage_f.h \
-Thot/amaya/f/HTMLpresentation_f.h \
-Thot/amaya/f/HTMLsave_f.h \
-Thot/amaya/f/HTMLstyle_f.h \
-Thot/amaya/f/HTMLtable_f.h \
-Thot/amaya/f/Mathedit_f.h \
-Thot/amaya/f/UIcss_f.h \
-Thot/amaya/f/answer_f.h \
-Thot/amaya/f/css_f.h \
-Thot/amaya/f/html2thot_f.h \
-Thot/amaya/f/init_f.h \
-Thot/amaya/f/javaamaya_f.h \
-Thot/amaya/f/p2css_f.h \
-Thot/amaya/f/query_f.h \
-Thot/amaya/f/trans_f.h \
-Thot/amaya/f/transparse_f.h \
+Thot/amaya/parser.h \
+Thot/amaya/f/*.h \
 Thot/amaya/greek.sgml \
 Thot/amaya/html2thot.c \
 Thot/amaya/init.c \
