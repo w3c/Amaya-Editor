@@ -1,0 +1,293 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"
+                      "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <meta name="RCS-Id" content="$Id: NOTE-SYMM-modules-19990223.html,v 1.2     
+           1999/02/23 19:58:44 renaudb Exp $">
+  <meta content="text/xhtml; charset=iso-8859-1" http-equiv="Content-Type">
+  <title>Templates installation guide - Server side</title>
+</head>
+
+<body>
+
+<div class="head">
+<h1>Templates installation guide - Server side<br>
+</h1>
+
+<table>
+  <tbody>
+    <tr valign="baseline">
+      <td>Author : Luc Bonameau (Luc.Bonameau@inrialpes.fr)<br>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<p class="copyright"><a
+href="http://www.w3.org/Consortium/Legal/ipr-notice#Copyright">Copyright</a>
+&copy; 1999 <a href="http://www.w3.org/">W3C</a> (<a
+href="http://www.lcs.mit.edu/">MIT</a>, <a
+href="http://www.inria.fr/">INRIA</a>, <a
+href="http://www.keio.ac.jp/">Keio</a>), All Rights Reserved. W3C <a
+href="http://www.w3.org/Consortium/Legal/ipr-notice#Legal_Disclaimer">liability</a>,
+<a
+href="http://www.w3.org/Consortium/Legal/ipr-notice#W3C_Trademarks">trademark</a>,
+<a href="http://www.w3.org/Consortium/Legal/copyright-documents">document
+use</a> and <a
+href="http://www.w3.org/Consortium/Legal/copyright-software">software
+licensing</a> rules apply.</p>
+</div>
+
+<p></p>
+<hr title="Separator from Header">
+
+
+<h2>Table of Contents</h2>
+<dl>
+    <dd><a href="#Introduction">1. Install template feature on a
+    server</a></dd>
+    <dd><a href="#SymmModules">2. Install intelligent publication feature</a>
+      <p><a href="#template">3. Add a template user</a></p>
+    </dd>
+    <dd><a href="#templates">4. Add templates and stylesheets</a></dd>
+    <dd><a href="#Profiles">5. Use the template feature</a></dd>
+  <dt></dt>
+</dl>
+
+<p>The required programs to install this feature are :</p>
+<ul>
+  <li>Apache version >= 1.3</li>
+  <li>Perl  version >= 5.004</li>
+  <li>gcc &amp; make</li>
+</ul>
+
+<p></p>
+
+<h2><a name="Introduction">1. Install template feature on a server</a></h2>
+<ul>
+  <li>Install the perl module XML::Parser.
+    <p><span style="color: #0000E5">tar zxvf XML-Parser-2.23.tar.gz</span></p>
+    <p><span style="color: #0000E5">perl Makefile.PL &amp;&amp; make
+    &amp;&amp; make install</span></p>
+  </li>
+  <li>Copy the 3 perl scripts createform.pl, sendtemp.pl and xmlparser.pl and
+    the modules templateconfig.pm and language.pm available in the Script
+    directory in the server script directory (/home/http/cgi-bin by default).
+    <p><span style="color: #0000E5">cp Scripts/*.pl /home/http/cgi-bin/<span
+    style="color: #0000FF"></span></span></p>
+    <p><span style="color: #5500FF">cp Scripts/*.pm
+    /home/http/cgi-bin/</span></p>
+  </li>
+  <li>Modify the file templatesconfig.pm to fit your needs:
+    <p><span style="color: #0000FF"># location of templates's files</span></p>
+    <p style="color: #0000FF"># relative location of css's files</p>
+    <p style="color: #0000FF"># file used for login/directory
+    correspondence</p>
+    <p style="color: #0000FF"># Stylesheet for the form</p>
+    <p style="color: #0000FF"># XML file</p>
+    <p><span style="color: #0000E5"># Intelligent publish</span></p>
+    <p style="color: #0000FF"># Location of the file amaya.gif used for the
+    form</p>
+    <p><span style="color: #0000FF"></span></p>
+    <p></p>
+  </li>
+  <li>Copy the index xml files (templates.xml.fr, templates.xml.en) in the
+    template directory (/home/httpd/templates by default).
+    <p><span style="color: #0000E5">cp *.xml  $temp_dir</span></p>
+  </li>
+  <li>Create the directory that will contain the templates. By default, this
+    directory is  /home/httpd/templates.
+    <p><span style="color: #0000E5">mkdir /home/httpd/templates</span></p>
+  </li>
+  <li>Copy all CSS and template files in that directory.
+    <p><span style="color: #0000E5">c</span><span style="color: #0000E5">p
+    /templates/* /home/httpd/templates/</span></p>
+  </li>
+  <li>Add the following line to the file srm.conf
+    <p><span style="color: #0000E5">Alias /templates/
+    /home/httpd/templates/</span></p>
+  </li>
+</ul>
+
+<p></p>
+
+<h2><a name="SymmModules">2. Install intelligent publication feature</a></h2>
+
+<p>This feature allows the users to publish on your server whithout having to
+know their publication directory.</p>
+
+<p></p>
+
+<h3>2.1. Install the PUT method</h3>
+
+<p></p>
+
+<p>In order to allow direct publication, Apache server must be configured to
+accept the PUT method.</p>
+
+<p>Here are the following steps to perform this :</p>
+<ul>
+  <li>Compile the program put.c (find ti on the net) and move the binary file
+    in the server script directory :
+    <p><span style="color: #0000E5">gcc -o /home/httpd/cgi-bin/put
+    PUT/put.c</span></p>
+  </li>
+  <li>Add the following line to the Apache configuration file srm.conf
+    <p><span style="color: #0000E5">Script PUT
+    /home/httpd/cgi-bin/put</span></p>
+  </li>
+</ul>
+
+<p>For more information about the put feature, follow this link</p>
+
+<p><a href="http://www.apacheweek.com/features/put">Publishing Pages with PUT
+- http://www.apacheweek.com/features/put</a></p>
+
+<p></p>
+
+<h3>2.2. Publication rights</h3>
+
+<p></p>
+
+<p>The  next step consist in allowing the server to manage publication
+rights.</p>
+<ul>
+  <li>Add the following line to the Apache configuration file access.conf
+    <p><span style="color: #0000E5">Include
+    /etc/httpd/conf/templates.conf</span></p>
+  </li>
+  <li>Copy the file templates.conf in the Apache configuration directory
+    <p><span style="color: #0000FF">cp templates.conf
+    /etc/httpd/conf/templates.conf</span></p>
+  </li>
+  <li>Modify the file to fit your configuration :
+    <p style="color: #0000E5">&lt;FilesMatch sendtemp.pl></p>
+    <p style="color: #0000E5">AuthName <span style="color:                    
+                                                                #FF0000">templates</span></p>
+    <p style="color: #0000E5">AuthType Basic</p>
+    <p style="color: #0000E5">AuthUserFile /etc/httpd/conf/passwd</p>
+    <p style="color: #0000E5">AuthGroupFile /etc/httpd/conf/groups</p>
+    <p style="color: #0000E5">Options ExecCGI</p>
+    <p style="color: #0000E5">order allow,deny allow from all</p>
+    <p style="color: #0000E5">require group public</p>
+    <p style="color: #0000E5">&lt;/FilesMatch></p>
+  </li>
+  <li>Add one or more templates users (refer to III - Add a template user
+  )</li>
+  <li>Start or restart Apache server</li>
+</ul>
+
+<p></p>
+
+<p></p>
+
+<h3><a name="template">3.  Add a template user  ( for intelligent publication
+only)</a></h3>
+
+<p></p>
+
+<p></p>
+
+<p>To add a user allowed to use direct publication on the server, follow the
+steps below :</p>
+<ul>
+  <li>Define a user password. This operation can be carried out with the
+    following command
+    <p><span style="color: #0000E5">htpasswd password_file
+    user_name</span></p>
+    <p>i.e : htpasswd passwd dupont</p>
+    <p>By default, the password file is  /etc/http/conf/passwd. If the
+    password file does not exist yet, add the prefix -c to the previous
+    command :</p>
+    <p>i.e : htpasswd -c passwd dupont</p>
+  </li>
+  <li>Create the file htuserdir in the apache configuration directory.
+    <p>This file realize the correspondence between the user login and his
+    server publication directory. So add the line like below</p>
+    <p><span style="color: #0000E5">dupont:/Jean_Dupont/</span></p>
+    <p>"dupont" is the login and "Jean_Dupont" is the relative address of the
+    publication directory. The absolute address is
+    /home/httpd/html/Jean_Dupont.</p>
+  </li>
+  <li>Create the user publication directory.
+    <p><span style="color: #0000E5">mkdir
+    /home/httpd/html/Jean_Dupont</span></p>
+  </li>
+  <li>Modify the groups configuration file (/etc/httpd/conf/groups) and inert
+    the new user.</li>
+  <li>Add the following lines to the file templates.conf previously created.
+    <p><span style="color: #0000E5">&lt;Directory
+    /home/httpd/html/Jean_Dupont></span></p>
+    <p style="color: #0000E5">AuthName <span style="color:                    
+                                                                #E50000">templates</span></p>
+    <p style="color: #0000E5">AuthType Basic</p>
+    <p style="color: #0000E5">AuthUserFile /etc/httpd/conf/<span style="color:
+                                                                                #00007F">passwd</span></p>
+    <p style="color: #0000E5">AuthGroupFile /etc/httpd/conf/<span
+    style="color: #00007F">groups</span></p>
+    <p style="color: #0000E5">Options Includes FollowSymLinks</p>
+    <p style="color: #0000E5">AllowOverride None</p>
+    <p style="color: #0000E5">order allow,deny allow from all</p>
+    <p style="color: #0000E5"><span style="color: #00007F">&lt;Limit
+    PUT></span></p>
+    <p style="color: #00007F">require user dupont</p>
+    <p style="color: #0000E5"><span style="color:                             
+                                                   #00007F">&lt;/Limit></span></p>
+    <p><span style="color: #0000E5">&lt;/Directory></span></p>
+    <p></p>
+    <p>The authentification name AuthName must be the same as the one in the
+    &lt;FilesMatch sendtemp.pl> section previously typed.</p>
+  </li>
+</ul>
+
+<p></p>
+
+<h2><a name="templates">4. Add templates and stylesheets</a></h2>
+
+<p>To add templates and CSS, copy the associated files in the templates
+directory (/home/httpd/templates/ par d&eacute;faut)and modify the file
+templates.xml as below :</p>
+
+<p></p>
+<ul>
+  <li>For each added template, add the following lines at the end of the file
+    templates.xml.
+    <p style="color: #0000FF">&lt;template file="filename.html"></p>
+    <p style="color: #0000FF">&lt;name>template_name&lt;/name></p>
+    <p style="color: #0000FF">&lt;description>   A description sentence of the
+    template  &lt;/description></p>
+    <p style="color: #0000FF">&lt;/template></p>
+  </li>
+  <li>For each added stylesheet, add the following lines at the end of the
+    file templates.xml.
+    <p style="color: #0000FF">&lt;stylesheet file="filename.css"></p>
+    <p style="color: #0000FF">&lt;name>Stylesheet_name&lt;/name></p>
+    <p style="color: #0000FF">&lt;description>    A description sentence of
+    the stylesheet  &lt;/description></p>
+    <p style="color: #0000FF">&lt;/stylesheet></p>
+  </li>
+</ul>
+
+<p>The form proposing templates and stylesheets will automatically be updated
+and displayed the next time you use the template fonctionality.</p>
+
+<p></p>
+
+<h2><a name="Profiles">5. Use the template feature</a></h2>
+
+<p></p>
+
+<p>The Amaya client browser/editor (version >= 2.1) must be told which server
+is providing templates.</p>
+
+<p>Open the templates preferences menu (Preferences -> Templates) and fill in
+the text entry :</p>
+
+<p>http://cgi.w3.org</p>
+<dl>
+  <dt></dt>
+  <dt>For problems please contact Jose Kahan  Jose.Kahan@inrialpes.fr</dt>
+  <dt></dt>
+</dl>
+</body>
+</html>

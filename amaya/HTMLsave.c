@@ -1425,6 +1425,82 @@ void                   BackUpDocs ()
     fclose (f);
 }
 
+
+
+#ifdef AMAYA_RESTART
+
+
+/*----------------------------------------------------------------------
+  BackupDocs4Restart : save all opened documents when the application restarts
+  ----------------------------------------------------------------------*/
+void                   BackupDocs4Restart ()
+{
+  Document            doc;
+  FILE                *f;
+  CHAR_T                 pathname[MAX_LENGTH];
+  CHAR_T                 docname[MAX_LENGTH];
+  STRING               ptr;
+  int                  l;
+  int                  modified;
+
+
+
+  f = NULL;
+  for (doc = 1; doc < DocumentTableLength; doc++)
+    if (DocumentURLs[doc] != NULL  && doc != W3Loading)
+      {
+	modified = TtaIsDocumentModified (doc);
+	TtaSetDocumentModified (doc);
+	
+	if (f == NULL)
+	  {
+	    /* open the restart file */
+	    usprintf (pathname, TEXT("%s%cRestart.amaya"), TempFileDirectory, DIR_SEP);
+	    f = ufopen (pathname, _WriteMODE_);
+	    if (f == NULL)
+	      return;
+	  }
+
+	/* generate the backup file name */
+
+	    SavingDocument = 0;
+	    ptr = DocumentURLs[doc];
+	    l = ustrlen (ptr) - 1;
+	    if (IsW3Path (ptr) &&  ptr[l] == URL_SEP)
+	      {
+		/* it's a directory name */
+		ptr[l] = EOS;
+		TtaExtractName (DocumentURLs[doc], pathname, docname);
+		ptr[l] = URL_SEP;
+		l = 0;
+	      }
+	    else
+	      TtaExtractName (DocumentURLs[doc], pathname, docname);
+	    if (l == 0)
+	      usprintf (pathname, TEXT("%s%c%s.html"), TempFileDirectory, DIR_SEP, docname);
+	    else
+	      usprintf (pathname, TEXT("%s%c%s"), TempFileDirectory, DIR_SEP, docname);
+	    
+	    /* register the backup file name and the original document name */
+	   
+	      fprintf (f, "%s %s %d %d\n", pathname, ptr, DocumentTypes[doc], modified);
+
+	      
+	    TtaFreeMemory (ptr);
+	    
+	    /* write the backup file */
+	    
+	    DocumentURLs[doc] = pathname;
+	    SaveDocument (doc, 1);
+	    
+      }
+  /* now close the restart file */
+  if (f != NULL)
+    fclose (f);
+}
+
+#endif /*AMAYA_RESTART*/
+
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__

@@ -25,10 +25,11 @@
  * - a function to download the default values of the environment variables
  *   (GetDefaulNetworkConf)
  *
- * In addition, each menu should be initialized in the Ini7tConfMenu
+ * In addition, each menu should be initialized in the InitConfMenu
  * function.
  *
  * Authors: J. Kahan
+ * Contributors: Luc Bonameau for profiles and templates
  *
  * To do: remove the CACHE_RESTART option from some options, once we write
  * the code that should take it into account.
@@ -3440,6 +3441,11 @@ STRING              data;
 	      GetDefaultProfileConf ();
 	      RefreshProfileMenu ();
 	      break;
+#ifdef AMAYA_RESTART
+	    case 3:
+	      RestartAmaya();
+
+#endif /* AMAYA_RESTART */
 	    default:
 	      break;
 	    }
@@ -3461,17 +3467,17 @@ STRING              data;
 	case mProfiles_File:
 	  if (data)
 	    { 
-		   /* did the profile file change ? */
+	      /* did the profile file change ? */
 	      if (ustrcmp(data, Profiles_File) !=0 ) 
 		{
-		   /* Yes : rescan the file and display the profiles */
+		   /* Yes, the profile file changed  : rescan the
+		      profile definition file and display the new
+		      profiles in the selector */
 		  ustrcpy (Profiles_File, data);
 		  Prof_RebuildProTable(Profiles_File);
-
 		  BuildProfileSelector ();
 		  RefreshProfileMenu();
 		}
-
 	    }
 	  else
 	    Profiles_File [0] = EOS;
@@ -3583,10 +3589,18 @@ STRING              pathname;
    strcpy (&s[i], TtaGetMessage (AMAYA, AM_APPLY_BUTTON));
    i += ustrlen (&s[i]) + 1;
    strcpy (&s[i], TtaGetMessage (AMAYA, AM_DEFAULT_BUTTON));
+#ifdef AMAYA_RESTART
+   i += ustrlen (&s[i]) + 1;
+   strcpy (&s[i], TEXT("RESTART"));
 
+   TtaNewSheet (ProfileBase + ProfileMenu, TtaGetViewFrame (document, view),
+		TtaGetMessage(AMAYA, AM_PROFILE_MENU), 3, s, TRUE, 1, 'L', D_DONE);
+
+#else /* NO AMAYA_RESTART */
    TtaNewSheet (ProfileBase + ProfileMenu, TtaGetViewFrame (document, view),
 		TtaGetMessage(AMAYA, AM_PROFILE_MENU), 2, s, TRUE, 1, 'L', D_DONE);
 
+#endif /*AMAYA_RESTART*/
   
    TtaNewTextForm (ProfileBase + mProfiles_File, ProfileBase + ProfileMenu,
 		   TtaGetMessage (AMAYA, AM_PROFILES_FILE),

@@ -25,9 +25,9 @@
 #include "profiles.h"
 
 
-/*-----------------------
-  Functions prototypes
------------------------*/
+/*---------------------------
+  Static Functions prototypes
+---------------------------*/
 
 
 static void ProcessElements(char * element);
@@ -337,21 +337,6 @@ void Prof_DeleteFunTable(void)
 }
 
 
-/*-----------------------------------------------------------------------
-    Prof_AddButton : Add a button if the function associated to that button
-    belongs to the user profile
-    ----------------------------------------------------------------------*/
-#ifdef __STDC__
-ThotBool Prof_AddButton(STRING FunctionName)
-#else  /* __STDC__ */
-ThotBool Prof_AddButton(FunctionName)
-STRING   FunctionName;
-#endif /* __STDC__ */
-{
-  return (Prof_BelongTable(FunctionName));
-}
-
-
 /*---------------------------------------------------------------
    Prof_GetProfilesItems :  Get the text for the profile menu items.
    Returns the number of items
@@ -379,7 +364,7 @@ STRING MenuText[];
 /*-----------------------------------------------------------------------------
   Prof_ItemNumber2Profile : Conversion between item number in the profile menu
   and the profile name
-------------------------------------------------------------------------------*/
+-----------------------------------------------------------------------------*/
 
 #ifdef __STDC__
 STRING Prof_ItemNumber2Profile(int ItemNumber)
@@ -398,7 +383,7 @@ int ItemNumber;
 /*-----------------------------------------------------------------------
   Prof_Profile2ItemNumber : Conversion between profile name and item 
   number in the menu
-  ----------------------------------------------------------------------*/
+----------------------------------------------------------------------*/
 #ifdef __STDC__
 int Prof_Profile2ItemNumber(STRING Profile)
 #else  /* !__STDC__ */
@@ -416,49 +401,70 @@ STRING Profile;
 
 
 /*----------------------------------------------------------------------
-    Prof_RemoveSeparators : Remove bad separators in the menu interface
-  ----------------------------------------------------------------------*/
+    Prof_ShowSeparator : determines if a separator must be displayed
+    in the menu interface. Two consecutive separators musn't be displayed
+----------------------------------------------------------------------*/
+
 #ifdef __STDC__
-ThotBool Prof_RemoveSeparators(Menu_Ctl *ptrmenu, int item, char LastItemType)
+ThotBool Prof_ShowSeparator(Menu_Ctl *ptrmenu, int item, char LastItemType)
 #else  /* __STDC__ */
-ThotBool Prof_RemoveSeparators(*ptrmenu, item)
+ThotBool Prof_ShowSeparator(*ptrmenu, item, LastItemType)
 Menu_Ctl *ptrmenu;
 int       item;
+char LastItemType;
 #endif /* __STDC__ */
 {  
-  return (( LastItemType ==  'S') || (item == 0) );
+  return !(( LastItemType ==  'S') || (item == 0) );
 }
 
+
+/*-----------------------------------------------------------------------
+    Prof_ShowButton : Add a button if the function associated to that button
+    belongs to the user profile
+----------------------------------------------------------------------*/
+#ifdef __STDC__
+ThotBool Prof_ShowButton(STRING FunctionName)
+#else  /* __STDC__ */
+ThotBool Prof_ShowButton(FunctionName)
+STRING   FunctionName;
+#endif /* __STDC__ */
+{
+  return (Prof_BelongTable(FunctionName));
+}
+
+
 /*----------------------------------------------------------------------
-    Prof_RemoveSubMenu : Check if a submenu has to be removed
+    Prof_ShowSubMenu : Check if a submenu has to be displayed.
+    A submenu musn't be displayed if it contains no entry
 -----------------------------------------------------------------------*/
 #ifdef __STDC__
-ThotBool   Prof_RemoveSubMenu(Menu_Ctl *ptrsubmenu)
+ThotBool   Prof_ShowSubMenu(Menu_Ctl *ptrsubmenu)
 #else  /* __STDC__ */
-ThotBool   RProf_RemoveSubMenu(ptrsubmenu)
+ThotBool   Prof_ShowSubMenu(ptrsubmenu)
 Menu_Ctl  *ptrsubmenu;
 #endif /* __STDC__ */
 {
   int      item    = 0;
-
+  
   if ((ptrsubmenu->ItemsNb == 0) || (ptrsubmenu == NULL))
-    return TRUE;
+    return FALSE;
   while (item < ptrsubmenu->ItemsNb)
     {
       if (ptrsubmenu->ItemsList[item].ItemType != TEXT('S'))
-	return FALSE;
+	return TRUE;
       item ++;
     }
-  return TRUE;
+  return FALSE;
 }
 
 /*----------------------------------------------------------------------
-    Prof_RemoveMenu : Remove a menu
+    Prof_ShowMenu : Check if a menu has to be displayed. A menu mustn't be
+    displayed if it contains no entry.
 -----------------------------------------------------------------------*/
 #ifdef __STDC__
-ThotBool   Prof_RemoveMenu(Menu_Ctl *ptrmenu)
+ThotBool   Prof_ShowMenu(Menu_Ctl *ptrmenu)
 #else  /* __STDC__ */
-ThotBool   Prof_RemoveMenu(ptrmenu)
+ThotBool   Prof_ShowMenu(ptrmenu)
 Menu_Ctl  *ptrmenu;
 #endif /* __STDC__ */
 {
@@ -466,50 +472,56 @@ Menu_Ctl  *ptrmenu;
 
   /* If profiles are not used, do not erase any menu */
   if (!defined_profile)
-    return FALSE;
+    return TRUE;
   /* this should not happen... */
   if (ptrmenu == NULL)
-    return TRUE;
+    return FALSE;
   /* check if the attr and select menu are in the profile */
   if (ptrmenu->MenuAttr)
-    return (!Prof_BelongTable(TEXT("MenuAttribute")));
+    return (Prof_BelongTable(TEXT("MenuAttribute")));
   if (ptrmenu->MenuSelect)
-    return (!Prof_BelongTable(TEXT("MenuSelection")));    
+    return (Prof_BelongTable(TEXT("MenuSelection")));    
   /* an empty menu has to be removed */
   if (ptrmenu->ItemsNb == 0)
-    return TRUE;
+    return FALSE;
   /* check if the menu is only composed of empty sub menus and separators */
   while (item < ptrmenu->ItemsNb)
     {
       if (ptrmenu->ItemsList[item].ItemType != TEXT('S'))
 	{
 	  if (ptrmenu->ItemsList[item].ItemType == TEXT('M'))
-	   {
-	     if (!Prof_RemoveSubMenu (ptrmenu->ItemsList[item].SubMenu)) 
-	       /* there is at least a non empty sub menu */
-	       return FALSE;
+	    {
+	      if (Prof_ShowSubMenu (ptrmenu->ItemsList[item].SubMenu)) 
+		/* there is at least a non empty sub menu */
+		return TRUE;
 	   } 
 	  else
 	    /* there is at least a standard item */
-	    return FALSE;
+	    return TRUE;
 	}
       item ++;
     }
-  return TRUE;
+  return FALSE;
 }
 
 
 
-/*------------------------------------------------------------------
+/*********************************************************************
   Table functions : set of functions to handle table manipulations :
-  insert, delete, search, sort
----------------------------------------------------------------------*/
+  insertions, deletions, searchs, sorts
+**********************************************************************/
+
+
+
+/*----------------------------------------------------------------------
+  InsertTable : Insert an element in a table
+----------------------------------------------------------------------*/
 
 
 #ifdef __STDC__
 static void InsertTable(STRING function, STRING  * Table, int * nbelem)
 #else  /* !__STDC__ */
-static void InsertTable(function, Table,nbelem )
+static void InsertTable(function, Table, nbelem )
 STRING         function;
 STRING        * Table;
 int           * nbelem;
@@ -521,9 +533,9 @@ int           * nbelem;
 
 
 /*----------------------------------------------------------------------
-  FileToTable : Copy a text file in a table. The lines beginning with "##"
+  FileToTable : Copy a text file in a table. The lines beginning with "#"
   are considered as comments and are not included
-  ----------------------------------------------------------------------*/
+----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 static void FileToTable(FILE * File, STRING * Table,int * nbelem, int maxelem)
@@ -539,12 +551,15 @@ int         maxelem;
   while (fgets (TempString, sizeof (TempString), File) && *nbelem < maxelem)
     {
       SkipAllBlanks(TempString);
-      if (strlen(TempString) >=2 && !(TempString[0] == MODULE_REF && TempString[1] == MODULE_REF ))
+      if (strlen(TempString) >=2 && !(TempString[0] == '#' ))
 	InsertTable (ISO2WideChar(TempString), Table, nbelem);
     }
 }
 
 
+/*-----------------------------------------------------------
+  DeleteTable : Free all memory allocated for a table
+-------------------------------------------------------------*/
 
 #ifdef __STDC__
 static void DeleteTable(STRING * Table, int  *nbelem)
@@ -557,20 +572,21 @@ int         * nbelem;
   int        i;
 
   for ( i = 0; i < *nbelem; i++)
-      TtaFreeMemory (Table[i]);
+    TtaFreeMemory (Table[i]);
   *nbelem = 0;
 }
 
 
 
 /*----------------------------------------------------------------------
-  Search a string in the table and return the number 
-  of the line of the first occurence or -1 if not found
+  Search a string in the table and return the line number of the first
+  occurence or -1 if not found. The function can perform a dichotomic search 
+  if the table given is sorted and if the boolean parameter is set TRUE.
 
   int SearchInTable(char * StringToFind, ** Researched string     
-		    STRING Table[],      ** Table in which the search is achieved
+		    STRING Table[],      ** Table in which to search 
 		    int nbelem,          ** Number of elements of the table
-		    ThotBool sort)       ** Is the table presorted ?
+		    ThotBool sort)       ** Is the table sorted ?
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static int SearchInTable(char * StringToFind, STRING  * Table,
@@ -587,11 +603,11 @@ ThotBool sort;
   ThotBool         found = FALSE;
   int              left, right, middle;
   char             temp [MAX_PRO_LENGTH];
-
+  
   if (sort)
     {
       /* Dichotomic search */
-      left = 0;
+      left = middle = 0;
       right = nbelem - 1;
       
       while (left <= right && !found)
@@ -622,10 +638,9 @@ ThotBool sort;
 }
 
 
-
-/*--------------------------------------------------
-  SortTable : Sort a table of strings
-----------------------------------------------------*/
+/*------------------------------------------------------
+  SortTable : Sort a table of strings in ascending order
+--------------------------------------------------------*/
 
 #ifdef __STDC__
 static void SortTable (STRING * Table, int nbelem)
@@ -651,9 +666,13 @@ int     nbelem;
 
 
 
-/*----------------------------------------------------------
+/*********************************************************
   String functions : set of useful functions for strings
-----------------------------------------------------------*/
+***********************************************************/
+
+/*-------------------------------------------------------------
+  SkipNewLineSymbol : Remove the EOF ('end of line') character
+------------------------------------------------------------*/
 
 #ifdef __STDC__
 static void SkipNewLineSymbol(char * Astring)
@@ -671,6 +690,10 @@ char   * Astring;
 }
 
 
+/*----------------------------------------------------
+  SkipAllBlanks :  Remove all the spaces, tabulations,
+  returns (CR) and "end of line" characters.
+-----------------------------------------------------*/
 
 #ifdef __STDC__
 static void SkipAllBlanks (char  * Astring)
@@ -690,11 +713,15 @@ char  * string;
       Astring [c] = Astring[c+nbsp];
     } 
   while (Astring [c++] != EOS);
-
   SkipNewLineSymbol(Astring);
  
 }
 
+/*--------------------------------------------------
+  AddHooks : Jsut add the opening and closing hooks
+  characters ('[' and ']') respectively at the beginning
+  and at the end of the string
+-----------------------------------------------------*/
 
 #ifdef __STDC__
 static char *  AddHooks (char * Astring)
@@ -713,15 +740,18 @@ char * Astring;
       k++;
     }
   while (Astring[k] != EOS);
-  
+ 
   TempString[k+1] = MODULE_END;
   TempString[k+2] = EOS;
-  
-  /*  strcpy (string, TempString); */
+
   return TempString;
 }
 
-
+/*--------------------------------------------------
+  RemoveHook : removes the character first which must
+  be an opening hook ('[') and goes on recopying the
+  string until the closing hook is found
+----------------------------------------------------*/
 
 #ifdef __STDC__
 static void RemoveHooks (char * string)
@@ -740,8 +770,4 @@ char * string;
     }
   new[k] = EOS;
   strcpy (string, new);
-
-
-
 }
-

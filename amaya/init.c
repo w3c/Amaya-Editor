@@ -13,6 +13,7 @@
  */
 
 /* Included headerfiles */
+
 #define THOT_EXPORT extern
 #include "amaya.h"
 #include "css.h"
@@ -2356,7 +2357,7 @@ ThotBool	    history;
 	/* reset the history of the new window */
 	InitDocHistory (newdoc);
         /* hide template entry if no template server is configured */
-      if (TtaGetEnvString (TEXT("URL_TEMPLATE")) == NULL)
+      if (TtaGetEnvString (TEXT("TEMPLATE_URL")) == NULL)
  	TtaSetItemOff (newdoc, 1, File, BTemplate);
     }
   TtaFreeMemory (tempdocument);
@@ -4033,6 +4034,7 @@ STRING              data;
   tempdoc is the name of the saved file.
   Return the new recovered document
   ----------------------------------------------------------------------*/
+
 #ifdef __STDC__
 static int       RestoreOneAmayaDoc (Document doc, STRING tempdoc, STRING docname, DocumentType docType)
 #else
@@ -4042,10 +4044,13 @@ STRING           tempdoc;
 STRING           docname;
 DocumentType     docType;
 #endif
+
+
 {
   CHAR_T              tempfile[MAX_LENGTH];
   int                 newdoc, len;
   ThotBool            stopped_flag;
+
 
   W3Loading = doc;
   BackupDocument = doc;
@@ -4083,7 +4088,6 @@ DocumentType     docType;
 	}
       W3Loading = 0;		/* loading is complete now */
       DocNetworkStatus[newdoc] = AMAYA_NET_ACTIVE;
-      TtaSetDocumentModified (newdoc);
       stopped_flag = FetchAndDisplayImages (newdoc, 0);
       if (!stopped_flag)
 	{
@@ -4098,13 +4102,87 @@ DocumentType     docType;
   return (newdoc);
 }
 
+
+#ifdef AMAYA_RESTART
+
+#ifdef __STDC__
+static int       RestoreOneAmayaDoc_restart (Document doc, STRING tempdoc, STRING docname, DocumentType docType, int modified)
+#else
+static int       RestoreOneAmayaDoc_restart (doc, tempdoc, docname, docType, modified)
+Document         doc;
+STRING           tempdoc;
+STRING           docname;
+DocumentType     docType;
+int              modified;
+#endif
+{
+  CHAR_T              tempfile[MAX_LENGTH];
+  int                 newdoc, len;
+  ThotBool            stopped_flag;
+
+
+  W3Loading = doc;
+  BackupDocument = doc;
+  TtaExtractName (tempdoc, DirectoryName, DocumentName);
+  newdoc = InitDocView (doc, DocumentName, docType, FALSE);
+  if (newdoc != 0)
+    {
+      /* load the saved file */
+      W3Loading = newdoc;
+      if (IsW3Path (docname))
+	{
+	  /* it's a remote file */
+	  if (docType == docHTML)
+	    ustrcpy (tempfile, TEXT("text/html"));
+	  else
+	    tempfile[0] = EOS;
+	  LoadHTMLDocument (newdoc, docname, NULL, CE_ABSOLUTE, 
+			    tempdoc, DocumentName, tempfile, FALSE);
+	}
+      else
+	{
+	  /* it's a local file */
+	  tempfile[0] = EOS;
+	  /* load the temporary file */
+	  LoadHTMLDocument (newdoc, tempdoc, NULL, CE_ABSOLUTE,
+			    tempfile, DocumentName, NULL, FALSE);
+	  /* change its URL */
+	  TtaFreeMemory (DocumentURLs[newdoc]);
+	  len = ustrlen (docname) + 1;
+	  DocumentURLs[newdoc] = TtaAllocString (len);
+	  ustrcpy (DocumentURLs[newdoc], docname);
+	  TtaSetTextZone (newdoc, 1, 1, docname);
+	  /* change its directory name */
+	  TtaSetDocumentDirectory (newdoc, DirectoryName);
+	}
+      W3Loading = 0;		/* loading is complete now */
+      DocNetworkStatus[newdoc] = AMAYA_NET_ACTIVE;
+      if (modified)
+	TtaSetDocumentModified (newdoc);	     
+      stopped_flag = FetchAndDisplayImages (newdoc, 0);
+      if (!stopped_flag)
+	{
+	  DocNetworkStatus[newdoc] = AMAYA_NET_INACTIVE;
+	  /* almost one file is restored */
+	  TtaSetStatus (newdoc, 1, TtaGetMessage (AMAYA, AM_DOCUMENT_LOADED), NULL);
+	}
+      /* unlink this saved file */
+      TtaFileUnlink (tempdoc);
+    }
+  BackupDocument = 0;
+  return (newdoc);
+
+}
+#endif /* AMAYA_RESTART */	
+
+
 /*----------------------------------------------------------------------
   RestoreAmayaDocs checks if Amaya has previously crashed.
   The file Crash.amaya gives the list of saved files
   ----------------------------------------------------------------------*/
 static ThotBool       RestoreAmayaDocs ()
 {
-  FILE               *f;
+  FILE              * f;
   int                 docType;
   CHAR_T              tempname[MAX_LENGTH], tempdoc[MAX_LENGTH];
   CHAR_T              docname[MAX_LENGTH];  
@@ -4148,6 +4226,82 @@ static ThotBool       RestoreAmayaDocs ()
     }
   return (aDoc);
 }
+
+#ifdef AMAYA_RESTART
+
+/*----------------------------------------------------------------------
+  RestoreAmayaDocsAfterRestart checks if Amaya has previously been restarted.
+  The file Restore.amaya gives the list of saved files
+  ----------------------------------------------------------------------*/
+static ThotBool       RestoreAmayaDocsAfterRestart ()
+{
+  FILE               *f;
+  int                 docType;
+  CHAR_T              tempname[MAX_LENGTH], tempdoc[MAX_LENGTH];
+  CHAR_T              docname[MAX_LENGTH];  
+  ThotBool            aDoc;
+  int                 modified = 1;
+  int                 EntriesNb, i;
+  char              TempString[250];
+
+  /* check if Amaya has restarted */
+  usprintf (tempname, TEXT("%s%cRestart.amaya"), TempFileDirectory, DIR_SEP);
+  /* no document is opened */
+  aDoc = FALSE;
+  if (TtaFileExist (tempname))
+    {   
+      f = ufopen (tempname, _ReadMODE_);
+    
+      if (f != NULL)
+	{
+
+	  
+	  /* how many files have to be reopened ?  */
+	  EntriesNb = 0;
+	  while ( ufgets (ISO2WideChar(TempString), sizeof(TempString), f))
+	    {
+	      EntriesNb ++;
+	    }
+	   fseek (f, 0, SEEK_SET);
+    
+	  InNewWindow = TRUE;
+	  tempdoc[0] = EOS;
+	  for (i=0; i < EntriesNb; i++)
+	    {
+	      fscanf (f, "%s %s %d %d\n", tempdoc, docname, &docType, &modified);
+	      
+	      if    ((tempdoc[0] != EOS) && TtaFileExist(tempdoc))
+		{
+		  if (RestoreOneAmayaDoc_restart (0, tempdoc, docname, (DocumentType) docType, modified))
+		    aDoc = TRUE;
+		}
+	    }
+	  InNewWindow = FALSE;	  
+	  fclose (f);
+	}
+      TtaFileUnlink (tempname);
+    }
+  return (aDoc);
+}
+
+
+/*-----------------------------------------------------------------
+  RestartAmaya 
+-------------------------------------------------------------------*/
+void RestartAmaya ()
+{
+  BackupDocs4Restart();
+
+  /* close all windows */
+
+  /* free all allocated memory */
+
+ // main(1,"/home/bonameau/src/Amaya/LINUX-ELF/bin/amaya");
+
+
+}
+#endif /* AMAYA_RESTART */
+
 
 /*----------------------------------------------------------------------
   CheckMakeDirectory verifies if a directory name exists. If it doesn't
@@ -4474,6 +4628,10 @@ NotifyEvent        *event;
    InNewWindow = FALSE;
    TtaFreeMemory (tempname);
    restoredDoc = RestoreAmayaDocs ();
+
+#ifdef AMAYA_RESTART
+   restoredDoc = RestoreAmayaDocsAfterRestart ();
+#endif /*AMAYA_RESTART  */
 
    if (appArgc % 2 == 0)
       /* The last argument in the command line is the document to be opened */

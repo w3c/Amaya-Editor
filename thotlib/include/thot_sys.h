@@ -18,10 +18,13 @@
  * thot_sys.h : system dependancies for Thot.
  */
 
+
+/* "AMAYA_RESTART" : this definition is just used to debug the Amaya restart feature
+and must be removed at the end of the debug */
+#define AMAYA_RESTART
+
 #ifndef THOT_SYS_H
 #define THOT_SYS_H
-
-
 
 #include <setjmp.h>
 #include <signal.h>

@@ -1013,7 +1013,7 @@ int                 frame;
        lg = ustrlen (ptr) + 1;
        if (ptritem[item].ItemType == TEXT('S') && i + 2 < 700  )
 	 {
-	   if (( ptrmenu != NULL ) && !( Prof_RemoveSeparators(ptrmenu, item, LastItemType)))
+	   if (( ptrmenu != NULL ) &&  Prof_ShowSeparator(ptrmenu, item, LastItemType) )
 	     {
 	       ustrcpy (&string[i], TEXT("S"));
 	       i += 2;
@@ -1113,7 +1113,7 @@ int                 doc;
 
 	   if ( ptrmenu != NULL ) 
 	     {
-	       if (!( Prof_RemoveSeparators(ptrmenu, item,LastItemType)))
+	       if ( Prof_ShowSeparator(ptrmenu, item,LastItemType))
 		 {
 		   ustrcpy (&string[i], TEXT("S"));
 		   i += 2;
@@ -1215,8 +1215,8 @@ int                 doc;
 	      {
 		if (action != 0 && item < MAX_MENU)
 		  /* creation du sous-menu */
-/* 		  if (ptrmenu->ItemsList[item].SubMenu->ItemsNb != 0) */
-		  if (!Prof_RemoveSubMenu(ptritem[item].SubMenu))
+
+		  if (Prof_ShowSubMenu(ptritem[item].SubMenu))
 		    BuildSubMenu (ptritem[item].SubMenu, ref, item, frame);
 	       }
 	  }
@@ -1491,7 +1491,7 @@ ThotBool   state;
 	  if (i < MAX_BUTTON)
 	    {
 	      /* verifie que deux séparateurs ne se suivent pas et que la fonction appartient au profile choisi */
-	      if ((procedure == NULL && LastProcedure != NULL)  || (procedure != NULL &&  Prof_AddButton(functionName)))
+	      if ((procedure == NULL && LastProcedure != NULL)  || (procedure != NULL &&  Prof_ShowButton(functionName)))
 		{
 		  
 		  LastProcedure = procedure; 
@@ -2674,7 +2674,7 @@ int                 doc;
 	     {
 	       /* saute les menus qui ne concernent pas cette vue */
 	       if (ptrmenu->MenuView == 0 || ptrmenu->MenuView == view)
-		 if (!Prof_RemoveMenu (ptrmenu))
+		 if (Prof_ShowMenu (ptrmenu))
 		   {
 		     if (menu_bar == 0)
 		       {

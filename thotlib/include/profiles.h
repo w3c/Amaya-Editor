@@ -21,6 +21,6 @@
 #define MODULE_START               '['
 #define PROFILE_END                ']'
 #define MODULE_END                 ']'
-#define MODULE_REF                 '#'
+#define MODULE_REF                 '+'
 #define EDITION_REF                '&'
 

@@ -49,7 +49,7 @@ View view;
    STRING    URLform;
  //  Document  templateSelect;
 
-   URLform = TtaGetEnvString (TEXT("URL_TEMPLATE"));
+   URLform = TtaGetEnvString (TEXT("TEMPLATE_URL"));
    if (URLform != NULL)
      {
     /*  templateSelect = GetHTMLDocument (URLform, NULL, 0, 0, CE_ABSOLUTE, FALSE, NULL, NULL);*/

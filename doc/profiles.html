@@ -3,11 +3,9 @@
 <html>
 <head>
   <meta name="RCS-Id" content="$Id: NOTE-SYMM-modules-19990223.html,v 1.2     
-                 1999/02/23 19:58:44 renaudb Exp $">
+                         1999/02/23 19:58:44 renaudb Exp $">
   <meta content="text/xhtml; charset=iso-8859-1" http-equiv="Content-Type">
   <title>Profiles in Amaya</title>
-  <link href="http://cgi.w3.org/templates/black.css" rel="stylesheet"
-  type="text/css">
 </head>
 
 <body lang="en">
@@ -33,7 +31,7 @@ src="http://www.w3.org/w3c_home.gif" alt="W3C">
       <td>12/08/1999</td>
     </tr>
     <tr valign="baseline">
-      <td>Editor:</td>
+      <td>Author:</td>
       <td><span class="author"><span class="name">Luc Bonameau</span>
         <i>(Luc.Bonameau@inrialpes.fr)</i></span><br>
         <br>
@@ -68,7 +66,10 @@ licensing</a> rules apply.</p>
     <dd><a href="#ModuleIntegration">2. How to use it</a></dd>
     <dd><a href="#Profiles">3. An example of profile configuration
     file</a></dd>
-    <dd><a href="#Issues">4. Structure of the ProfileDefs file</a></dd>
+    <dd><a href="#Issues">4. Structure of the ProfileDefs file</a>
+      <p><a href="#administra">5. How to administrate the profile
+      feature</a></p>
+    </dd>
     <dd><a href="#refs"></a></dd>
 </dl>
 
@@ -106,7 +107,10 @@ describing as much profiles as wanted.</p>
     created in order to avoid the user to choose functions one by one.</li>
   <li>Give the profile you're working on a title : Type this title between
     brackets.
-    <p>i.e : [profile 1]</p>
+    <p>Notice : Don't insert space characters in that profile name ; Adding
+    space will not cause the program to crash, they will just be removed
+    during using time..</p>
+    <p>i.e : [profile_1]</p>
   </li>
   <li>Under that title, all the modules and functions that will be added
     belong to the profile. Add modules and functions under the title (look at
@@ -128,8 +132,7 @@ isn't html.</p>
 
 <p></p>
 
-<p>A dialog box  has been added in Amaya in order to handle profile
-selection.</p>
+<p>A dialog box  was added in Amaya in order to handle profile selection.</p>
 <ul>
   <li>Open this dialog box.
     <p>Special -> Preferences -> Profile...</p>
@@ -155,18 +158,18 @@ selection.</p>
 <p>This example belows shows two profiles definitions : Amaya4Kids and
 Editor_Novice (between brackets).</p>
 
-<p>All strings preceded by a hash (#) are modules (defined in ProfileDefs) and
+<p>All strings preceded by a plus (+) are modules (defined in ProfileDefs) and
 others are functions.</p>
 
 <p></p>
 
 <p>[Amaya4Kids]             &lt;--- Profile title</p>
 
-<p>#editbase                        &lt;-- module</p>
+<p>+editbase                        &lt;-- module</p>
 
-<p>#browse                         </p>
+<p>+browse</p>
 
-<p>#templates</p>
+<p>+templates</p>
 
 <p>CreateHeading1             &lt;-- function</p>
 
@@ -178,15 +181,15 @@ others are functions.</p>
 
 <p>[Editor_Novice]        &lt;--- Profile title</p>
 
-<p>#editbase</p>
+<p>+editbase</p>
 
-<p>#basicelements</p>
+<p>+basicelements</p>
 
-<p>#links</p>
+<p>+links</p>
 
-<p>#templates</p>
+<p>+templates</p>
 
-<p>#views</p>
+<p>+views</p>
 
 <p></p>
 
@@ -195,7 +198,7 @@ others are functions.</p>
 <p></p>
 
 <p>The ProfileDefs file contain units of modules definition separated by
-comments lines beginning with several hashes '#' (like ####VIEWS). These
+comments lines beginning with one or more hashes '#' (like ####VIEWS). These
 comments are there to help you searching your module (or function).</p>
 
 <p>Beginning of module definition is set by a name between brackets (like
@@ -203,10 +206,10 @@ comments are there to help you searching your module (or function).</p>
 
 <p>All the modules or functions under this starting module element belong to
 the module as long as another starting module element starts. To insert a
-module into a module, preceed the name of the module by a hash ('#').</p>
+module into a module, preceed the name of the module by a plus ('+').</p>
 
-<p> The structure is recursive (modules contains functions and modules that
-can contain other functions and modules ...)</p>
+<p>The structure is recursive (modules contains functions and modules that can
+contain other functions and modules ...)</p>
 
 <p>WARNING : Marks '&amp;' before a function's name are marks used by internal
 profile function. You don' have to bither with it (they are used to determine
@@ -219,9 +222,9 @@ INCLUDE THIS SYMBOL IN YOUR PROFILE CONFIGURATION FILE</span>.</p>
 
 <p>[views]                                &lt;-- Module  (definition)</p>
 
-<p>#zoom                                     &lt;-- Module (insertion)</p>
+<p>+zoom                                     &lt;-- Module (insertion)</p>
 
-<p>#docviews</p>
+<p>+docviews</p>
 
 <p>TtcSwitchButtonBar              &lt;-- Function</p>
 
@@ -264,6 +267,18 @@ INCLUDE THIS SYMBOL IN YOUR PROFILE CONFIGURATION FILE</span>.</p>
 <p><span style="color: #FF6969">&amp;</span>CreateParameter     &lt;-- Edition
 function (do not include the '&amp;' symbol in your profiles definition
 file)</p>
+
+<p></p>
+
+<p></p>
+
+<h2><a name="administra">5. How to administrate the profile feature</a></h2>
+
+<p></p>
+
+<p>The file Amaya/config/ProfileDefs must be updated every time a new function
+appears in the interface. The new function must be inserted in that file in
+the correct (logical) place.</p>
 
 <p></p>
 

@@ -1,3 +1,28 @@
+## The ProfileDefs file contain units of modules definition separated
+## by comments lines beginning with one or several hashes '#' (like ####VIEWS).
+## These comments are there to help you searching your module (or function).
+
+## The structure is recursive (modules contains functions and modules which can
+## contain other functions and modules which ...)
+
+## This file can contain 3 different types of elements :
+##   ** Modules definition : 
+##      Beginning of module definition is set by a name between brackets (like [views] or [zoom])
+##      All the modules or functions between this module start and the next module start        
+##      belong to the module.            
+##   ** Module insertion :
+##      A module name (like views of the previous example) is preceded by
+##      the plus '+' symbol to mean that this module is inserted in the current module definition.
+##   ** Function insertion : 
+##      Function are inserted in module without any symbol before the
+##      name of the function or with the symbol '&'.
+
+## WARNING : Marks '&' before a function's name are marks used by internal 
+## profile function. You don't have to deal with it (they are used to determine 
+## which functions are edition functions). 
+## DO NOT INCLUDE THIS SYMBOL IN YOUR PROFILE CONFIGURATION FILE
+
+
 ################# AMAYA FUNCTIONS
 
 [set]
@@ -5,13 +30,12 @@ SetBrowserEditor
 
 [amayabase]
 HelpAmaya
-ConfigProfile
 AmayaClose
 
 ########  PRINT
 
 [print]
-#printbase
++printbase
 SetupAndPrint
 
 [printbase]
@@ -35,8 +59,8 @@ HelpConfigure
 ######### VIEWS
 
 [views]
-#zoom
-#docviews
++zoom
++docviews
 TtcSwitchButtonBar
 TtcSwitchCommands
 ShowMapAreas
@@ -61,7 +85,7 @@ HelpAmaya
 HelpAtW3C
 
 [help]
-#helpbase
++helpbase
 HelpBrowsing
 HelpSelecting
 HelpSearching
@@ -84,15 +108,15 @@ HelpConfigure
 ######### BROWSING FUNCTIONS
 
 [browsebase]
-#amayabase
++amayabase
 StopTransfer
 GoToHome
 HelpBrowsing
 
 [browse]
-#browsebase
-#reload
-#prenext
++browsebase
++reload
++prenext
 
 [reload]
 Reload
@@ -104,17 +128,17 @@ GotoNextHTML
 ########### EDITION FUNCTIONS
 
 [editbase]
-#amayabase
++amayabase
 &New
 OpenDoc
 SaveDocument
 
 [edit]
-#editbase
-#attributes
-#HTMLdoc
-#undoredo
-#ccpd
++editbase
++attributes
++HTMLdoc
++undoredo
++ccpd
 
 ###### ATTRIBUTES
 
@@ -131,9 +155,9 @@ ConfigTemplates
 ###### NEW-OPEN-SAVE
 
 [HTMLdoc]
-#new
-#open
-#save
++new
++open
++save
 TtcCloseDocument
 
 [new]
@@ -185,12 +209,12 @@ HelpChanging
 ###### ELEMENTS
 
 [elements]
-#basicelements
-#forms
-#headings
-#deflists
-#objects
-#math
++basicelements
++forms
++headings
++deflists
++objects
++math
 &CreateHorizontalRule
 &CreateIFrame
 &CreateImage
@@ -200,7 +224,7 @@ HelpChanging
 &CreateDivision
 
 [basicelements]
-#lists
++lists
 &CreateHeading1
 &CreateHeading2
 &CreateHeading3
@@ -211,7 +235,7 @@ HelpChanging
 [lists]
 &CreateList
 &CreateNumberedList
-#deflists
++deflists
 
 [deflists]
 &CreateDefinitionList
@@ -322,7 +346,7 @@ OpenCSS
 HelpStyleSheets
 
 [style]
-#char
++char
 &TtcChangeCharacters
 &TtcChangeColors
 &TtcChangeFormat
