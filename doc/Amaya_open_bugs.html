@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
@@ -43,14 +44,12 @@ h2         {  font-size: 12; }</style>
       <td></td>
     </tr>
     <tr>
-      <td>Support of gb18030
-
-        <p>This article provides good explaination and method to convert
-        gb18030 to/from unicode;</p>
-
-        <p><a
-        href="http://www-106.ibm.com/developerworks/library/u-china.html">http://www-106.ibm.com/developerworks/library/u-china.html</a></p>
-      </td>
+      <td><strong>Support of gb18030:</strong><br />
+        This article provides good explaination and method to convert gb18030
+        to/from unicode;<a
+        href="http://www-106.ibm.com/developerworks/library/u-china.html"><br
+        />
+        http://www-106.ibm.com/developerworks/library/u-china.html</a></td>
       <td>2004-01</td>
       <td>Zhang Weiwu</td>
       <td></td>
@@ -85,7 +84,7 @@ h2         {  font-size: 12; }</style>
       <td></td>
     </tr>
     <tr>
-      <td> Is it possible to create such a transformation that transforms
+      <td>Is it possible to create such a transformation that transforms
         '&lt;any_tag&gt;some text&lt;/any_tag&gt;' into 'some text'?
 
         <p>- I know how to do it for a given element, e.g.</p>
@@ -110,6 +109,16 @@ h2         {  font-size: 12; }</style>
       <td>Jakub Holý</td>
       <td></td>
     </tr>
+    <tr>
+      <td><strong>Garbage characters:</strong><br />
+        Amaya generates garbage characters and crashes at the end of a
+        paragraph immediately followed by a &lt;br/&gt; and the sequence
+        italic on / italic off (and if the text in italic is ended by a
+        space).</td>
+      <td>2003-11-08</td>
+      <td>A. Kotok</td>
+      <td></td>
+    </tr>
   </tbody>
   <tbody>
     <tr class="title">
@@ -127,7 +136,7 @@ h2         {  font-size: 12; }</style>
         box, but indented"</p>
       </td>
       <td>2003-12-11</td>
-      <td>Alan</td>
+      <td>A. Kotox</td>
       <td></td>
     </tr>
     <tr>
@@ -227,7 +236,7 @@ h2         {  font-size: 12; }</style>
         href="http://support.microsoft.com/kb/q274308/">http://support.microsoft.com/kb/q274308/</a></p>
       </td>
       <td></td>
-      <td>Juan Lanus </td>
+      <td>Juan Lanus</td>
       <td></td>
     </tr>
   </tbody>
@@ -239,7 +248,7 @@ h2         {  font-size: 12; }</style>
       <th>Fixed</th>
     </tr>
     <tr>
-      <td>Problem with deitalicizing:
+      <td><strong>Problem with deitalicizing:</strong>
 
         <p>&gt; &lt;p&gt;&lt;em&gt;= &lt;math xmlns="..."&gt; &gt;
         &lt;munder&gt; &gt; &lt;mo&gt;&amp;Sum;&lt;/mo&gt; &gt; &lt;mrow&gt;
@@ -365,6 +374,14 @@ h2         {  font-size: 12; }</style>
       </td>
       <td></td>
     </tr>
+    <tr class="fixed">
+      <td><strong>Missing xml declaration:</strong><br />
+        Amaya don't generate the xml declaration when an xml document is
+        created or modified</td>
+      <td>2004-11-16</td>
+      <td>S. Gully</td>
+      <td>2004-11-17</td>
+    </tr>
   </tbody>
   <tbody>
     <tr class="title">
@@ -372,6 +389,14 @@ h2         {  font-size: 12; }</style>
       <th>Submission</th>
       <th>Submitted By</th>
       <th>Fixed</th>
+    </tr>
+    <tr class="fixed">
+      <td><strong>Amaya frozen on Windows:</strong><br />
+        The main window stays frozen when the 'Synchronize' command is
+        executed twice from the source view with parsing errors</td>
+      <td>2004-11</td>
+      <td>L. Carcone</td>
+      <td></td>
     </tr>
   </tbody>
 </table>
