@@ -1646,6 +1646,8 @@ void FreeDocumentResource (Document doc)
 	  ANNOT_FreeDocumentResource (doc);
 #endif /* ANNOTATIONS */
 	}
+      /* remove the document from the auto save list */
+      RemoveAutoSavedDoc (doc);
       TtaFreeMemory (DocumentURLs[doc]);
       DocumentURLs[doc] = NULL;
       ReadOnlyDocument[doc] = FALSE;

@@ -673,7 +673,7 @@ ThotBool CanReplaceCurrentDocument (Document doc, View view)
 	   if (DocumentSource[doc])
 	     TtaSetDocumentUnmodified (DocumentSource[doc]);
 	   /* remove the corrsponding auto saved doc */
-	   RemoveAutoSavedDoc (doc, NULL);
+	   RemoveAutoSavedDoc (doc);
 	 }
        else
 	 ret = FALSE;
@@ -7882,6 +7882,8 @@ void CheckAmayaClosed ()
 #ifdef _SVG
       SVGLIB_FreeDocumentResource ();
 #endif /* _SVG */
+      /* remove the AutoSave file */
+      RemoveSaveList (); 
       TtaQuit ();
     }
 }
@@ -7891,31 +7893,8 @@ void CheckAmayaClosed ()
   ----------------------------------------------------------------------*/
 void CloseDocument (Document doc, View view)
 {
-  ThotBool     documentClosed;
-  char        *url = NULL;
-
-  if (DocumentURLs[doc] != NULL)
-    {
-      url = TtaGetMemory (strlen (DocumentURLs[doc]) + 1);
-      strcpy (url, DocumentURLs[doc]);
-      TtcCloseDocument (doc, view);
-      documentClosed = (DocumentURLs[doc] == NULL);
-      if (documentClosed)
-	{
-	  /* normal close */
-	  RemoveAutoSavedDoc (doc, url);
-	  if (url != NULL)
-	    TtaFreeMemory (url);
-	}
-      else
-	{
-	  /* the close has been aborted */
-	  if (url != NULL)
-	    TtaFreeMemory (url);
-	  return;
-	}
-    }
-  
+  if (DocumentURLs[doc])
+    TtcCloseDocument (doc, view);
   if (!W3Loading)
     CheckAmayaClosed ();
 
@@ -7927,10 +7906,8 @@ void AmayaClose (Document document, View view)
 {
    int          i;
    ThotBool     documentClosed;
-  char         *url = NULL;
 
    /* invalid current loading */
-
    W3Loading = 0;
 
    documentClosed = TRUE;
@@ -7938,29 +7915,10 @@ void AmayaClose (Document document, View view)
    for (i = 1; i < DocumentTableLength; i++)
       if (DocumentURLs[i] != NULL)
 	{
-	  if (url != NULL)
-	    TtaFreeMemory (url);
-	  url = TtaGetMemory (strlen (DocumentURLs[i]) + 1);
-	  strcpy (url, DocumentURLs[i]);
 	  TtcCloseDocument (i, 1);
 	  documentClosed = (DocumentURLs[i] == NULL);
-	  if (documentClosed)
-	    {
-	      /* normal close */
-	      RemoveAutoSavedDoc (i, url);
-	      if (url != NULL)
-		{
-		  TtaFreeMemory (url);
-		  url = NULL;
-		}
-	    }
-	  else
-	    {
-	      /* the close has been aborted */
-	      if (url != NULL)
-		TtaFreeMemory (url);
-	      return;
-	    }
+	  if (!documentClosed)
+	    return;
 	}
    /* remove images loaded by shared CSS style sheets */
    RemoveDocumentImages (0);
@@ -7968,8 +7926,7 @@ void AmayaClose (Document document, View view)
    SVGLIB_FreeDocumentResource ();
 #endif /* _SVG */
    /* remove the AutoSave file */
-   RemoveSaveList ();
-   
+   RemoveSaveList (); 
    TtaQuit ();
 }
 

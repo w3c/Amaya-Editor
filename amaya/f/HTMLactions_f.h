@@ -55,6 +55,7 @@ extern void GotoLine ( Document doc,
                        ThotBool selpos );
 extern ThotBool SimpleClickInLog ( NotifyElement *event );
 extern ThotBool DoubleClickInLog ( NotifyElement *event );
+extern ThotBool RightClickInLog ( NotifyElement *event );
 extern void SelectionChanged ( NotifyElement *event );
 extern void SetCharFontOrPhrase ( int document,
                                   int elemtype );
@@ -110,6 +111,7 @@ extern void GotoLine (/* Document doc,
                          ThotBool selpos */);
 extern ThotBool SimpleClickInLog (/* NotifyElement *event */);
 extern ThotBool DoubleClickInLog (/* NotifyElement *event */);
+extern ThotBool RightClickInLog (/* NotifyElement *event */);
 extern void SelectionChanged (/* NotifyElement *event */);
 extern void SetCharFontOrPhrase (/* int document,
                                     int elemtype */);
