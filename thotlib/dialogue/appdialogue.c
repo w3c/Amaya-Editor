@@ -52,6 +52,8 @@
 #include "LiteClue_f.h"
 #endif /* _WINDOWS */
 
+
+
 extern ThotBool     WithMessages;	/* partage avec le module dialog.c */
 extern Pixmap       image;
 #ifndef _WIN_PRINT
@@ -74,6 +76,7 @@ CallbackCTX;
 static PtrCallbackCTX firstCallbackAPI;
 static int          FreeMenuAction;
 static Pixmap       wind_pixmap;
+static  void *      LastProcedure;   
 
 /* LISTES DES MENUS : chaque menu pointe sur une liste d'items.  */
 /* Chaque item contient le numero d'entree dans le fichier de    */
@@ -95,6 +98,7 @@ static SchemaMenu_Ctl *SchemasMenuList;
 extern TBADDBITMAP ThotTBBitmap;
 extern HWND        currentWindow;
 extern BOOL        tbStringsInitialized;
+
 
 static WNDPROC lpfnTextZoneWndProc = (WNDPROC) 0;
 static BOOL    doSwitchButton = TRUE;
@@ -1462,6 +1466,8 @@ ThotBool   state;
 #endif /* __STDC__ */
 {
   int                 frame, i, index;
+  
+
 #ifndef _WINDOWS
   int                 n;
   XmString            title_string;
@@ -1470,7 +1476,8 @@ ThotBool   state;
 #else  /* _WINDOWS */
   TBBUTTON* w;
 #endif
-
+ 
+  
   UserErrorCode = 0;
   index = 0;
   /* verifie le parametre document */
@@ -1488,8 +1495,11 @@ ThotBool   state;
 	    i++;
 	  if (i < MAX_BUTTON)
 	    {
-	      if ( (procedure == NULL)  || Prof_AddButton(FunctionName))
+	      /* verifie que deux séparateurs ne se suivent pas et que la fonction appartient au profile choisi */
+	      if ( ((procedure == NULL) && (LastProcedure != NULL))  || ((procedure != NULL) &&  Prof_AddButton(FunctionName)) )
 		{
+		  
+		  LastProcedure = procedure; 
 
 		  /* Insere le nouveau bouton */
 #ifndef _WINDOWS

@@ -3336,6 +3336,11 @@ STRING              data;
 {
   int val;
   STRING pro;
+  int nbprofiles;
+  CHAR_T                string[200];
+
+
+  pro = TtaGetMemory ((sizeof(char) * 200));
 
   if (ref == -1)
     {
@@ -3370,19 +3375,49 @@ STRING              data;
 	case mRadioProfile:
 	  
 	  /* Get the desired profile from the item number */
-	  pro = Prof_ItemNumber2Profile(val);
-	  /* ustrcpy (pro, Prof_ItemNumber2Profile (val));  ????*/
+       
+	  ustrcpy (pro, (STRING) Prof_ItemNumber2Profile (val)); 
+    
 	  if (pro)
 	    {
-	      ustrcpy (Profile, pro);
+	      ustrcpy (Profile, ISO2WideChar(pro));
+	      RefreshProfileMenu();
 	    }
 	  else
 	    Profile [0] = EOS;
 	  break;
 
 	case mProfiles_File:
+
+	  
+
 	  if (data)
-	    ustrcpy (Profiles_File, data);
+	    { 
+	      ustrcpy (Profiles_File, data);
+/*	      if (ustrcmp(data, Profiles_File) !=0 ) 
+		{
+		  ustrcpy (Profiles_File, data);
+		  TtaDestroyDialogue (ProfileBase + mRadioProfile);
+		  Prof_RebuildProTable(Profiles_File);
+		  nbprofiles = Prof_GetProfilesItems(string);
+		    
+		      if (nbprofiles)
+			{
+			  TtaNewSubmenu (ProfileBase + mRadioProfile, ProfileBase + ProfileMenu, 0,
+					 TtaGetMessage (LIB, TMSG_PROFILE), nbprofiles, string, NULL, FALSE);
+			  TtaSetMenuForm (ProfileBase + mRadioProfile, 0);
+			  
+			}
+		      else 
+			{
+			  
+			  TtaNewLabel (ProfileBase + mProfileEmpty1, ProfileBase + ProfileMenu, TtaGetMessage (AMAYA, AM_NO_PROFILE)); 
+			}
+		      
+		      RefreshProfileMenu ();		  
+		}*/
+
+	    }
 	  else
 	    Profiles_File [0] = EOS;
 	  break;
@@ -3429,13 +3464,13 @@ STRING              pathname;
    /* Text Form : Location of the profiles configuration file */
    TtaNewTextForm (ProfileBase + mProfiles_File, ProfileBase + ProfileMenu,
 		   TtaGetMessage (AMAYA, AM_PROFILES_FILE),
-		   40, 1, FALSE);
+		   40, 1, TRUE);
 
   
    /* submenu for profile choice with radio boxes */
 
        /* get the entries of the menu */
-   nbprofiles = Prof_WhichProfiles(string);
+   nbprofiles = Prof_GetProfilesItems (string);
 
    if (nbprofiles)
      {
@@ -3518,7 +3553,7 @@ static void RefreshProfileMenu ()
 static void RefreshProfileMenu ()
 #endif /* __STDC__ */
 {
- 
+  TtaShowDialogue (ProfileBase + mRadioProfile, TRUE);
   TtaSetTextForm (ProfileBase + mProfiles_File, Profiles_File);
   TtaSetMenuForm (ProfileBase + mRadioProfile, Prof_Profile2ItemNumber(Profile));
 }
