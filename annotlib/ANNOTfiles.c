@@ -100,6 +100,8 @@ Document ANNOT_NewDocument (Document doc, AnnotMode mode)
 
       /* set the charset to be UTF-8 by default */
       TtaSetDocumentCharset (annotDoc, TtaGetCharset ("UTF-8"));
+      DocumentMeta[annotDoc]->charset = TtaStrdup ("UTF-8");
+      DocumentMeta[annotDoc]->content_type = TtaStrdup ("text/html");
       
       /* activate, remove buttons from the annot view */
       ANNOT_PrepareAnnotView (annotDoc);
@@ -237,7 +239,7 @@ void ANNOT_ReloadAnnotMeta (Document annotDoc)
      this annotation, as it is a reload */
   ANNOT_FreeDocumentResource (annotDoc);
   /* initialize the meta data */
-  if (IsW3Path (annot->annot_url))
+  if (annot->annot_url && IsW3Path (annot->annot_url))
     AnnotMetaData[annotDoc].annot_url = TtaStrdup (annot->annot_url);
   else
     AnnotMetaData[annotDoc].annot_url = TtaStrdup (annot->body_url);
@@ -262,6 +264,9 @@ void  ANNOT_InitDocumentMeta (Document doc, Document docAnnot, AnnotMeta *annot,
   char          *cdate;
   char          *mdate;
   char          *type;
+#ifdef ANNOT_ON_ANNOT
+  Document       thread_doc;
+#endif /* ANNOT_ON_ANNOT */
 
   user = annot->author;
   source_url = annot->source_url;
@@ -275,7 +280,16 @@ void  ANNOT_InitDocumentMeta (Document doc, Document docAnnot, AnnotMeta *annot,
 			  a service may forget to give us a type. */
 
   /* save the docid of the annotated document */
-  DocumentMeta[docAnnot]->source_doc = doc;
+#ifdef ANNOT_ON_ANNOT
+  /* for annotations, the source document is the document where the thread is found */
+  thread_doc = 0;
+  if (AnnotMetaData[docAnnot].thread)
+    thread_doc = AnnotThread_searchThreadDoc (DocumentURLs[docAnnot]);
+  if (thread_doc > 0)
+    DocumentMeta[docAnnot]->source_doc = thread_doc;
+  else
+#endif /* ANNOT_ON_ANNOT */
+    DocumentMeta[docAnnot]->source_doc = doc;
 
   /*
   ** initialize the METADATA 
@@ -529,7 +543,7 @@ static void ANNOT_ThreadItem_init (Element thread_item, Document doc, AnnotMeta 
   char               *tmp;
   AnnotMeta          *annot;
 
-  if (useSource)
+  if (useSource && DocumentMeta[doc]->source_doc > 0)
     annot = GetMetaData (DocumentMeta[doc]->source_doc, doc);
   else
     annot = annot_doc;

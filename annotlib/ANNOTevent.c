@@ -815,7 +815,10 @@ void ANNOT_Create (Document doc, View view, AnnotMode mode)
       /* JK: hope this works... even if we haven't saved the body */
       doc_thread =  AnnotThread_searchThreadDoc (DocumentURLs[doc_annot]);
       if (doc_thread > 0)
-	ANNOT_AddThreadItem (doc_thread, annot);
+	{
+	  DocumentMeta[doc_annot]->source_doc = doc_thread;
+	  ANNOT_AddThreadItem (doc_thread, annot);
+	}
     }
 #endif /* ANNOT_ON_ANNOT */
 
@@ -1514,12 +1517,20 @@ void ANNOT_Delete_callback (int doc, int status,
 
       if (delete_annot)
 	{
-	  /* remove the annotation metadata and the annotation icon */
-	  ANNOT_FreeAnnotResource (source_doc, annotEl, annot);
-	  /* remove the annotation from the document's annotation list and 
-	     update it */
-	  AnnotList_delAnnot (&(AnnotMetaData[source_doc].annotations),
-			      annot_url, FALSE);
+#ifdef ANNOT_ON_ANNOT
+	  if (annot->inReplyTo)
+	      AnnotList_delAnnot (&(AnnotMetaData[source_doc].thread->annotations),
+				  annot_url, FALSE);      
+	  else
+#endif /* ANNOT_ON_ANNOT */
+	    {
+	      /* remove the annotation metadata and the annotation icon */
+	      ANNOT_FreeAnnotResource (source_doc, annotEl, annot);
+	      /* remove the annotation from the document's annotation list and 
+		 update it */
+	      AnnotList_delAnnot (&(AnnotMetaData[source_doc].annotations),
+				  annot_url, FALSE);
+	    }
 	}
 
       /* update the annotation index or delete it if it's empty */
