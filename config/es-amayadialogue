@@ -37,10 +37,10 @@
 35 &Borrar doctype
 36 &Añadir doctype
 37 Cambiar a &XHTML 1.1
-38 Cambiar/Crear doctype XHTML 1.0 Transicional
+38 Cambiar a XHTML 1.0 &Transitional
 39 Cambiar a XHTML 1.0 &Strict
 40 Cambiar a XHTML 1.0 &Basic
-41 Cambiar doctype a HTML 4.01 Transicional
+41 Cambiar a HTML 4.01 T&ransitional
 42 Cambiar a HTML 4.01 Str&ict
 43 &Forzar codificación de caracteres
 44 Unicode (UTF-8)
@@ -78,8 +78,8 @@
 76 &Copiar
 77 &Pegar
 78 &Borrar
-79 **&Insert before
-80 **Insert &after
+79 Insertar &antes
+80 Insertar &después
 81 &Modo Edición
 82 &Buscar...
 83 &Verificar ortografía...
@@ -131,7 +131,7 @@
 129 Unir con celda derecha
 130 Unir con celda inferior
 131 Reducir extensión horizontal
-132 Reducir extensión horizontal
+132 Reducir extensión vertical
 133 Seleccionar fila
 134 Insertar fila delante
 135 Insertar fila detrás
@@ -209,12 +209,12 @@
 207 Sobre (mover)
 208 Paréntesis (mrow)
 209 Multiscripts (mmultiscripts)
-210 **&Matrices
+210 &Matrices
 211 Matriz (mtable)
 212 Unir con celda derecha
 213 Unir con celda inferior
 214 Reducir extensión horizontal
-215 Reducir extensión horizontal
+215 Reducir extensión vertical
 216 Seleccionar fila
 217 Insertar fila delante
 218 Insertar fila detrás
