@@ -267,6 +267,8 @@ void LINK_AddAnnotIcon (Document source_doc, Element anchor, AnnotMeta *annot)
   char          previous[MAX_LENGTH];
   char         *iconName;
   RDFStatementP iconS = (RDFStatementP) NULL;
+  int           len;
+  Language      lang;
 
   el = TtaGetFirstChild (anchor);
   
@@ -286,13 +288,18 @@ void LINK_AddAnnotIcon (Document source_doc, Element anchor, AnnotMeta *annot)
 	       TtaGetEnvString ("THOTDIR"), DIR_SEP, DIR_SEP);
       iconName = s;
     }
-  
-  
+
   /* only substitute the icon name if it has changed */
-  TtaGiveSubString (el, previous, 1, sizeof (previous) - 1);
-  if (previous[0] != EOS && strcasecmp (iconName, previous))
-    TtaSetPictureContent (el, iconName, SPACE, source_doc, "image/gif");
-  else if (previous[0] == EOS)
+  len = TtaGetVolume (el);
+  if (len > 0 && len < (int) (sizeof (previous)))
+    {
+      TtaGiveBufferContent (el, previous, len, &lang);
+      previous[len] = EOS;
+    }
+  else
+    previous[0] = EOS;
+
+  if (previous[0] == EOS || strcasecmp (iconName, previous))
     TtaSetPictureContent (el, iconName, SPACE, source_doc, "image/gif");
 }
 

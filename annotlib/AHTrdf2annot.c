@@ -339,7 +339,11 @@ static AnnotMeta* FindAnnot( List** listP, char* annot_url, ThotBool create )
 	    List_add (listP, (void *) annot);
 	  }
 	else
-	  return NULL;		/* if lookup fails, allow create next time */
+	  {
+	    if (ptr_annot_url != annot_url)
+	      TtaFreeMemory (ptr_annot_url);
+	    return NULL;		/* if lookup fails, allow create next time */
+	  }
       }
     url_length = strlen(ptr_annot_url) + 1;
     if (find_last_length < url_length)
