@@ -1723,7 +1723,6 @@ void ParseCoordAttribute (Attribute attr, Element el, Document doc)
    AttributeType        attrType;
    PresentationValue    pval;
    PresentationContext  ctxt;
-   ThotBool             important;
 
    length = TtaGetTextAttributeLength (attr) + 2;
    text = TtaGetMemory (length);
@@ -1739,7 +1738,6 @@ void ParseCoordAttribute (Attribute attr, Element el, Document doc)
 	pval.typed_data.unit = UNIT_PX;
       if (pval.typed_data.unit != UNIT_INVALID)
 	{
-	  important = FALSE;
 	  /* decide of the presentation rule to be created or updated */
 	  TtaGiveAttributeType (attr, &attrType, &attrKind);
 	  if (attrType.AttrTypeNum == SVG_ATTR_x)
@@ -1755,15 +1753,9 @@ void ParseCoordAttribute (Attribute attr, Element el, Document doc)
 	  else if (attrType.AttrTypeNum == SVG_ATTR_y1)
 	    ruleType = PRVertPos;
 	  else if (attrType.AttrTypeNum == SVG_ATTR_x2)
-	    {
-	      ruleType = PRWidth;
-	      important = TRUE;
-	    }
+	    ruleType = PRWidth;
 	  else if (attrType.AttrTypeNum == SVG_ATTR_y2)
-	    {
-	      ruleType = PRHeight;
-	      important = TRUE;
-	    }
+	    ruleType = PRHeight;
 	  else if (attrType.AttrTypeNum == SVG_ATTR_dx)
 	    ruleType = PRHorizPos;
 	  else if (attrType.AttrTypeNum == SVG_ATTR_dy)
@@ -1774,7 +1766,8 @@ void ParseCoordAttribute (Attribute attr, Element el, Document doc)
 	  /* the specific presentation is not a CSS rule */
 	  ctxt->cssSpecificity = 0;
 	  ctxt->destroy = FALSE;
-	  ctxt->important = important;
+	  ctxt->important = TRUE; /* do not allow a CSS rule to overrule the
+				     attribute */
 	  TtaSetStylePresentation (ruleType, el, NULL, ctxt, pval);
 	  TtaFreeMemory (ctxt);
 	}

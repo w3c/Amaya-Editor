@@ -1092,7 +1092,8 @@ RULES
         Height: Enclosed . Height;
 	if NOT immediately within tspan and NOT immediately within a and
            NOT immediately within text_ and NOT immediately within CDATA_line
-	Visibility: 0;
+	   and NOT immediately within tref
+	        Visibility: 0;
 	IN Structure_view BEGIN
 		Visibility: Enclosing =;
 		if NOT immediately within tspan and NOT immediately within a and
