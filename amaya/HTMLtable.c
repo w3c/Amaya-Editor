@@ -2988,11 +2988,12 @@ void RowPasted (NotifyElement * event)
 	    /* no more cells in the pasted row. Add an empty cell for this
 	       column */
 	    {
-	      prevCell = AddEmptyCellInRow (row, colhead, prevCell, FALSE, doc,
-					    inMath, FALSE, FALSE);
+	      cell = AddEmptyCellInRow (row, colhead, prevCell, FALSE, doc,
+					inMath, FALSE, FALSE);
 	      attr = NULL;
 	      colspan = 1; length = 0;
 	      cellLinked = TRUE;
+	      closeCurrentCell = TRUE;
 	    }
 	}
       else
