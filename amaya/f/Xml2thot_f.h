@@ -18,7 +18,7 @@ extern int IsWithinTable ( void );
 extern void SubWithinTable ( void );
 extern void InsertXmlElement ( Element *el );
 extern Element XmlLastLeafInElement ( Element el );
-extern void PutInXmlElement ( STRING data );
+extern void PutInXmlElement ( CHAR_T * data );
 extern void FreeXmlParserContexts ( void );
 extern ThotBool ParseXmlSubTree ( char *xmlBuffer,
                                   Element *el,
@@ -63,7 +63,7 @@ extern int IsWithinTable (/* void */);
 extern void SubWithinTable (/* void */);
 extern void InsertXmlElement (/* Element *el */);
 extern Element XmlLastLeafInElement (/* Element el */);
-extern void PutInXmlElement (/* STRING data */);
+extern void PutInXmlElement (/* CHAR_T * data */);
 extern void FreeXmlParserContexts (/* void */);
 extern ThotBool ParseXmlSubTree (/* char *xmlBuffer,
                                     Element *el,

@@ -19,16 +19,13 @@ extern void MapGraphMLAttributeValue ( CHAR_T* AttrVal,
 extern void MapGraphMLEntity ( STRING entityName,
                                STRING entityValue,
                                STRING alphabet );
-extern void MapGraphMLEntityWithExpat ( STRING entityName,
-                                        int* entityValue,
-                                        STRING alphabet );
 extern void GraphMLEntityCreated ( USTRING entityValue,
                                    Language lang,
                                    STRING entityName,
                                    Document doc );
 extern void GraphMLEntityCreatedWithExpat ( int entityValue,
-                                            Language lang,
                                             STRING entityName,
+                                            ThotBool entityFound,
                                             ParserData *XmlContext );
 extern void ParseFillStrokeAttributes ( int attrType,
                                         Attribute attr,
@@ -89,16 +86,13 @@ extern void MapGraphMLAttributeValue (/* CHAR_T* AttrVal,
 extern void MapGraphMLEntity (/* STRING entityName,
                                  STRING entityValue,
                                  STRING alphabet */);
-extern void MapGraphMLEntityWithExpat (/* STRING entityName,
-                                          int* entityValue,
-                                          STRING alphabet */);
 extern void GraphMLEntityCreated (/* USTRING entityValue,
                                      Language lang,
                                      STRING entityName,
                                      Document doc */);
 extern void GraphMLEntityCreatedWithExpat (/* int entityValue,
-                                              Language lang,
                                               STRING entityName,
+                                              ThotBool entityFound,
                                               ParserData *XmlContext */);
 extern void ParseFillStrokeAttributes (/* int attrType,
                                           Attribute attr,

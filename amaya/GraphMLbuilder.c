@@ -107,17 +107,6 @@ void   MapGraphMLEntity (STRING entityName, STRING entityValue, STRING alphabet)
 }
 
 /*----------------------------------------------------------------------
-   MapGraphMLEntityWithExpat
-   Search that entity in the entity table and return the corresponding value.
-  ----------------------------------------------------------------------*/
-void   MapGraphMLEntityWithExpat (STRING entityName,
-				  int* entityValue,
-				  STRING alphabet)
-{
-   *alphabet = EOS;
-}
-
-/*----------------------------------------------------------------------
    GraphMLEntityCreated
    A GraphML entity has been created by the XML parser.
   ----------------------------------------------------------------------*/
@@ -130,8 +119,10 @@ void    GraphMLEntityCreated (USTRING entityValue, Language lang,
    GraphMLEntityCreatedWithExpat
    A GraphML entity has been created by the XML parser.
   ----------------------------------------------------------------------*/
-void  GraphMLEntityCreatedWithExpat (int entityValue, Language lang,
-				     STRING entityName, ParserData *XmlContext)
+void  GraphMLEntityCreatedWithExpat (int         entityValue,
+				     STRING      entityName,
+				     ThotBool    entityFound,
+				     ParserData *XmlContext)
 {
 }
 

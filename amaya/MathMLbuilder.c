@@ -298,8 +298,9 @@ void    MathMLEntityCreated (USTRING entityValue, Language lang,
    A MathML entity has been created by the XML parser.
    Create an attribute EntityName containing the entity name.
   ----------------------------------------------------------------------*/
-void  MathMLEntityCreatedWithExpat (int entityValue,
-				    STRING entityName,
+void  MathMLEntityCreatedWithExpat (int         entityValue,
+				    STRING      entityName,
+				    ThotBool    entityFound,
 				    ParserData *XmlContext)
 {
   ElementType	 elType;
@@ -311,44 +312,57 @@ void  MathMLEntityCreatedWithExpat (int entityValue,
 #define MAX_ENTITY_LENGTH 80
   CHAR_T	 buffer[MAX_ENTITY_LENGTH];
   
-  if (entityValue < 255)
+  if (entityValue <= 255 && entityFound)
     {
+      /* It is an ISO latin1 character */
       buffer[0] = ((UCHAR_T) entityValue);
       buffer[1] = WC_EOS;
       lang = TtaGetLanguageIdFromAlphabet('L');
+      PutInXmlElement (buffer);
     }
   else
-    /* Try to find a fallback character */
-    GetFallbackCharacter (entityValue, buffer, &lang);
-  
-  /* Create a new text leaf */
-  elType.ElSSchema = GetMathMLSSchema (XmlContext->doc);
-  elType.ElTypeNum = MathML_EL_TEXT_UNIT; 
-  elText = TtaNewElement (XmlContext->doc, elType);
-  XmlSetElemLineNumber (elText);
-  InsertXmlElement (&elText);
-  TtaSetTextContent (elText, buffer, lang, XmlContext->doc);
-  XmlContext->lastElement = elText;
-  XmlContext->lastElementClosed = TRUE;
-  XmlContext->mergeText = FALSE; 
-  
-  /* Make that text leaf read-only */
-  TtaSetAccessRight (elText, ReadOnly, XmlContext->doc);
-  
-  /* Associate an attribute EntityName with the new text leaf */
-  attrType.AttrSSchema = GetMathMLSSchema (XmlContext->doc);
-  attrType.AttrTypeNum = MathML_ATTR_EntityName;
-  attr = TtaNewAttribute (attrType);
-  TtaAttachAttribute (elText, attr, XmlContext->doc);
-  
-  len = ustrlen (entityName);
-  if (len > MAX_ENTITY_LENGTH -3)
-    len = MAX_ENTITY_LENGTH -3;
-  buffer[0] = '&';
-  ustrncpy (&buffer[1], entityName, len);
-  buffer[len+1] = ';';
-  buffer[len+2] = WC_EOS;
-  TtaSetAttributeText (attr, buffer, elText, XmlContext->doc);
+    {
+      if (entityFound)
+	{
+	  /* try to find a fallback character */
+	  GetFallbackCharacter (entityValue, buffer, &lang);
+	}
+
+      /* Create a new text leaf */
+      elType.ElSSchema = GetXMLSSchema (MATH_TYPE, XmlContext->doc);
+      elType.ElTypeNum = MathML_EL_TEXT_UNIT; 
+      elText = TtaNewElement (XmlContext->doc, elType);
+      XmlSetElemLineNumber (elText);
+      InsertXmlElement (&elText);
+      if (buffer[0] == '?' || !entityFound)
+	/* Character not found in the fallback table or not supported */
+	/* Put the symbol '?' into the new text leaf */
+	TtaSetTextContent (elText, TEXT("?"), lang, XmlContext->doc);
+      else
+	/* Character found in the fallback table */
+	TtaSetTextContent (elText, buffer, lang, XmlContext->doc);
+      XmlContext->lastElement = elText;
+      XmlContext->lastElementClosed = TRUE;
+      XmlContext->mergeText = FALSE; 
+      
+      /* Make that text leaf read-only */
+      TtaSetAccessRight (elText, ReadOnly, XmlContext->doc);
+      
+      /* Associate an attribute EntityName with the new text leaf */
+      attrType.AttrSSchema = elType.ElSSchema;
+      attrType.AttrTypeNum = MathML_ATTR_EntityName;
+      attr = TtaNewAttribute (attrType);
+      TtaAttachAttribute (elText, attr, XmlContext->doc);
+      
+      len = ustrlen (entityName);
+      if (len > MAX_ENTITY_LENGTH -3)
+	len = MAX_ENTITY_LENGTH -3;
+      buffer[0] = '&';
+      ustrncpy (&buffer[1], entityName, len);
+      buffer[len+1] = ';';
+      buffer[len+2] = WC_EOS;
+      TtaSetAttributeText (attr, buffer, elText, XmlContext->doc);
+    }
 }
 
 /*----------------------------------------------------------------------

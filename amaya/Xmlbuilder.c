@@ -18,6 +18,7 @@
 #include "parser.h"
 #include "XML.h"
 #include "fetchHTMLname.h"
+#include "tree.h"
 
 #include "css_f.h"
 #include "fetchXMLname_f.h"
@@ -90,6 +91,7 @@ void         MapGenericXmlType (STRING XMLname, ElementType *elType,
 				ThotBool *highEnoughLevel, Document doc)
 
 {
+#ifdef XML_GEN
   int        i;
 
   printf ("\n MapGenericXmlType\n");
@@ -108,4 +110,5 @@ void         MapGenericXmlType (STRING XMLname, ElementType *elType,
     {
       /* Create a new rule for that element */
     }
+#endif  /* XML_GEN */
 }

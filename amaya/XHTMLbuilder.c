@@ -266,13 +266,14 @@ void             ParseCharset (Element el, Document doc)
    XhtmlEntityCreated
    A XTHML entity has been created by the XML parser.
   ----------------------------------------------------------------------*/
-void             XhtmlEntityCreated (int entityValue,
-				     STRING entityName,
+void             XhtmlEntityCreated (int         entityValue,
+				     STRING      entityName,
+				     ThotBool    entityFound,
 				     ParserData *context)
 
 { 
   ElementType	 elType;
-  Element	 elText;
+  Element	 elLeaf;
   AttributeType  attrType;
   Attribute	 attr;
   Language	 lang;
@@ -280,44 +281,56 @@ void             XhtmlEntityCreated (int entityValue,
   CHAR_T	 buffer[MaxEntityLength+10];
 #define MAX_ENTITY_LENGTH 80
   
-  if (entityValue < 255)
+  if (entityValue <= 255 && entityFound)
     {
+      /* It is an ISO latin1 character */
       buffer[0] = ((UCHAR_T) entityValue);
       buffer[1] = WC_EOS;
       lang = TtaGetLanguageIdFromAlphabet('L');
+      PutInXmlElement (buffer);
     }
   else
-    /* try to find a fallback character */
-    GetFallbackCharacter (entityValue, buffer, &lang);
+    {
+      if (entityFound)
+	{
+	  /* try to find a fallback character */
+	  GetFallbackCharacter (entityValue, buffer, &lang);
+	}
 
-  /* create a new text leaf */
-  elType.ElSSchema = TtaGetDocumentSSchema (context->doc);
-  elType.ElTypeNum = HTML_EL_TEXT_UNIT;
-  elText = TtaNewElement (context->doc, elType);
-  XmlSetElemLineNumber (elText);
-  InsertXmlElement (&elText);
-  TtaSetTextContent (elText, buffer, lang, context->doc);
-  context->lastElement = elText;
-  context->lastElementClosed = TRUE;
-  context->mergeText = FALSE;
-  
-  /* Make that text leaf read-only */
-  TtaSetAccessRight (elText, ReadOnly, context->doc);
-  
-  /* Associate an attribute EntityName with the new text leaf */
-  attrType.AttrSSchema = TtaGetDocumentSSchema (context->doc);
-  attrType.AttrTypeNum = HTML_ATTR_EntityName;
-  attr = TtaNewAttribute (attrType);
-  TtaAttachAttribute (elText, attr, context->doc);
+      /* Create a new text leaf */
+      elType.ElSSchema = GetXMLSSchema (XHTML_TYPE, context->doc);
+      elType.ElTypeNum = HTML_EL_TEXT_UNIT;
+      elLeaf = TtaNewElement (context->doc, elType);
+      XmlSetElemLineNumber (elLeaf);
+      InsertXmlElement (&elLeaf);
+      if (buffer[0] == '?' || !entityFound)
+	/* Character not found in the fallback table or not supported */
+	/* Put the symbol '?' into the new text leaf */
+	TtaSetTextContent (elLeaf, TEXT("?"), lang, context->doc);
+      else
+	/* Character found in the fallback table */
+	TtaSetTextContent (elLeaf, buffer, lang, context->doc);
+      context->lastElement = elLeaf;
+      context->lastElementClosed = TRUE;
+      context->mergeText = FALSE;
 
-  len = ustrlen (entityName);
-  if (len > MAX_ENTITY_LENGTH -3)
-    len = MAX_ENTITY_LENGTH -3;
-  buffer[0] = '&';
-  ustrncpy (&buffer[1], entityName, len);
-  buffer[len+1] = ';';
-  buffer[len+2] = WC_EOS;
-  TtaSetAttributeText (attr, buffer, elText, context->doc);
+      /* Make that text leaf read-only */
+      TtaSetAccessRight (elLeaf, ReadOnly, context->doc);
+
+      /* Associate an attribute EntityName with the new text leaf */
+      attrType.AttrSSchema = elType.ElSSchema;
+      attrType.AttrTypeNum = HTML_ATTR_EntityName;
+      attr = TtaNewAttribute (attrType);
+      TtaAttachAttribute (elLeaf, attr, context->doc);
+      len = ustrlen (entityName);
+      if (len > MAX_ENTITY_LENGTH -3)
+	len = MAX_ENTITY_LENGTH -3;
+      buffer[0] = '&';
+      ustrncpy (&buffer[1], entityName, len);
+      buffer[len+1] = ';';
+      buffer[len+2] = WC_EOS;
+      TtaSetAttributeText (attr, buffer, elLeaf, context->doc);
+    }
 }
 
 /*----------------------------------------------------------------------

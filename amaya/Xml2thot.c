@@ -773,7 +773,7 @@ static void  XmlGetFallbackCharacter (wchar_t wcharRead)
      }
    else
      {
-       /* The character is not found in the fallback table */
+       /* The character is found in the fallback table */
        /* Create a new text leaf */
        elType = TtaGetElementType (XMLcontext.lastElement);
        elType.ElTypeNum = 1;
@@ -1860,7 +1860,7 @@ static ThotBool  IsLeadingSpaceUseless ()
 /*----------------------------------------------------------------------
    PutInXmlElement
   ----------------------------------------------------------------------*/
-void            PutInXmlElement (STRING data)
+void            PutInXmlElement (CHAR_T * data)
 
 {
    ElementType  elType;
@@ -2296,7 +2296,7 @@ static void         EndOfXmlAttributeValue (CHAR_T *attrValue)
 static void       EndOfAttributeValue (CHAR_T *attrValue, CHAR_T *attrName)
 {
 
-   CHAR_T         msgBuffer[MaxMsgLength];
+  /* CHAR_T         msgBuffer[MaxMsgLength]; */
    unsigned char *buffer;
    unsigned char *srcbuf;
    wchar_t        wcharRead;
@@ -2304,6 +2304,8 @@ static void       EndOfAttributeValue (CHAR_T *attrValue, CHAR_T *attrName)
    int            nbBytesRead = 0;
    int            i = 0, j = 0;
    int            length;
+   CHAR_T         tmpbuf[10];
+   int            tmplen, k;
    ThotBool       isSupported;
 
    if (lastMappedAttr != NULL  || currentAttribute != NULL) 
@@ -2313,7 +2315,7 @@ static void       EndOfAttributeValue (CHAR_T *attrValue, CHAR_T *attrName)
 	   /* Actually, Amaya supports only the ISO-LATIN characters
 	      in the attribute values */
 	   length = ustrlen (attrValue);
-	   buffer = TtaAllocString (length + 1);
+	   buffer = TtaAllocString (2*length + 1);
 	   buffer[j] = WC_EOS;
 	   isSupported = TRUE;
 
@@ -2326,16 +2328,24 @@ static void       EndOfAttributeValue (CHAR_T *attrValue, CHAR_T *attrName)
 	       i += nbBytesRead;
 	       if (wcharRead < 0x100)
 		 {
-		   /* It's an 8bits character */
+		   /* It's an ISO-Latin1 character */
 		   charRead = (char) wcharRead;
 		   buffer[j++] = charRead;
 		 }
 	       else
 		 {
-		   /* It's not an 8bits character */
+		   /* It's not ISO-Latin1 character */
+		   tmplen = usprintf (tmpbuf, "%d", (int) wcharRead);
+		   buffer[j++] = (char) 128;
+		   buffer[j++] = '#';
+		   for (k = 0; k < tmplen; k++)
+		       buffer[j++] = tmpbuf[k];
+		   buffer[j++] = ';';
+		   /*
 		   usprintf (msgBuffer, TEXT("Some characters are not supported in the value of the attribute : %s"), attrName);
 		   XmlParseError (errorCharacterNotSupported, msgBuffer, 0);
 		   isSupported = FALSE;
+		   */
 		 }
 	     }
 
@@ -2381,7 +2391,7 @@ static void     CreateXmlEntity (CHAR_T *data, int length)
    ThotBool     found;
    CHAR_T       schemaName[MAX_SS_NAME_LENGTH];
       
-  /* Name of the entity without '&' or ';' */
+  /* Name of the entity without '&' and ';' */
    buffer = TtaAllocString (length);
    for (i = 0; i < length-1; i++)
        buffer[i] = data[i+1];
@@ -2398,22 +2408,23 @@ static void     CreateXmlEntity (CHAR_T *data, int length)
        if (found)
 	 {
 	   /* Creation of the entity */
-	   if (!currentAttribute)
-	     (*(currentParserCtxt->EntityCreated)) (entityValue,
-						    buffer, &XMLcontext);
+	   (*(currentParserCtxt->EntityCreated)) (entityValue, buffer,
+						  TRUE, &XMLcontext);
 	 }
        else
  	 {
-	   /* Unknown entity */
+	   /* Entity not supported */
 	   if (ustrcmp (currentParserCtxt->SSchemaName, TEXT("HTML")) == 0)
 	     ustrcpy (schemaName, "XHTML");
 	   else if (ustrcmp (currentParserCtxt->SSchemaName, TEXT("GraphML")) == 0)
 	     ustrcpy (schemaName, "SVG");
 	   else
 	     ustrcpy (schemaName, currentParserCtxt->SSchemaName);
-	   usprintf (msgBuffer, TEXT("Unknown %s entity %s"),
+	   usprintf (msgBuffer, TEXT("%s entity not supported : &%s;"),
 		     schemaName, buffer);
 	   XmlParseError (errorParsing, msgBuffer, 0);
+	   (*(currentParserCtxt->EntityCreated)) (entityValue, buffer,
+						  FALSE, &XMLcontext);
 	 }
     }
    else

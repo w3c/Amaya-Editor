@@ -10,6 +10,7 @@ extern void ParseCharset ( Element el,
                            Document doc );
 extern void XhtmlEntityCreated ( int entityValue,
                                  STRING entityName,
+                                 ThotBool entityFound,
                                  ParserData *context );
 extern void XhtmlElementComplete ( Element el,
                                    Document doc,
@@ -55,6 +56,7 @@ extern void ParseCharset (/* Element el,
                              Document doc */);
 extern void XhtmlEntityCreated (/* int entityValue,
                                    STRING entityName,
+                                   ThotBool entityFound,
                                    ParserData *context */);
 extern void XhtmlElementComplete (/* Element el,
                                      Document doc,

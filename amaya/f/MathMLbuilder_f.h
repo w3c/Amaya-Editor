@@ -23,6 +23,7 @@ extern void MathMLEntityCreated ( USTRING entityValue,
                                   Document doc );
 extern void MathMLEntityCreatedWithExpat ( int entityValue,
                                            STRING entityName,
+                                           ThotBool entityFound,
                                            ParserData *XmlContext );
 extern ThotBool ElementNeedsPlaceholder ( Element el );
 extern void SetSingleIntHorizStretchAttr ( Element el,
@@ -97,6 +98,7 @@ extern void MathMLEntityCreated (/* USTRING entityValue,
                                     Document doc */);
 extern void MathMLEntityCreatedWithExpat (/* int entityValue,
                                              STRING entityName,
+                                             ThotBool entityFound,
                                              ParserData *XmlContext */);
 extern ThotBool ElementNeedsPlaceholder (/* Element el */);
 extern void SetSingleIntHorizStretchAttr (/* Element el,
