@@ -81,6 +81,8 @@ void DefClip (int frame, int xd, int yd, int xf, int yf)
    if ((xd == xf && xd == 0 && (yd != yf || yd != 0)) ||
        (yd == yf && yd == 0 && (xd != xf || xd != 0)))
      return;
+   else if (frame == 0 || frame > MAX_FRAME)
+     return;
    else
      {
        /* exchange limits for rigth-to-left string */
@@ -97,70 +99,58 @@ void DefClip (int frame, int xd, int yd, int xf, int yf)
 	   yf = ye;
 	 }
      }
-   if (frame > 0 && frame <= MAX_FRAME)
+   pFrame = &ViewFrameTable[frame - 1];
+   scrollx = pFrame->FrXOrg;	
+   scrolly = pFrame->FrYOrg; 
+   xb = pFrame->FrClipXBegin - scrollx;
+   xe = pFrame->FrClipXEnd - scrollx - xb; 
+   yb = pFrame->FrClipYBegin - scrolly;
+   ye = pFrame->FrClipYEnd - scrolly - yb;	
+   if (xd == xf && xd == -1)
      {
-	pFrame = &ViewFrameTable[frame - 1];
-	scrollx = pFrame->FrXOrg;	
-	scrolly = pFrame->FrYOrg; 
-	xb = pFrame->FrClipXBegin - scrollx;
-	xe = pFrame->FrClipXEnd - scrollx - xb; 
-	yb = pFrame->FrClipYBegin - scrolly;
-	ye = pFrame->FrClipYEnd - scrolly - yb;	
-	/* Should we take the whole width of the frame ? */
-	if (xd == xf && xd == -1)
+       /* repaint the whole frame */
+       GetSizesFrame (frame, &width, &height);
+       pFrame->FrClipXBegin = scrollx;
+       pFrame->FrClipXEnd = width + scrollx;
+       pFrame->FrClipYBegin = scrolly;
+       pFrame->FrClipYEnd = height + scrolly;
+     }
+   else if (xd == xf && xd == 0 && yd == yf && yd == 0)
+     {
+       /* clean up */
+       pFrame->FrClipXBegin = 0;
+       pFrame->FrClipXEnd = 0;
+       pFrame->FrClipYBegin = 0;
+       pFrame->FrClipYEnd = 0;
+     }
+   else
+     {
+       if (pFrame->FrClipXBegin == pFrame->FrClipXEnd &&
+	   pFrame->FrClipXBegin == 0)
+	 {
+	   /* reinitalize the area redrawn */
+	   pFrame->FrClipXBegin = xd;
+	   pFrame->FrClipXEnd = xf;
+	 }
+       else
 	  {
-	     GetSizesFrame (frame, &width, &height);
-	     pFrame->FrClipXBegin = scrollx;
-	     pFrame->FrClipXEnd = width + scrollx;
-	  }
-	/* finish the redrawing */
-	else if (xd == xf && xd == 0 && yd == yf && yd == 0)
-	  {
-	     pFrame->FrClipXBegin = 0;
-	     pFrame->FrClipXEnd = 0;
-	  }
-	/* Should we initalize the area redrawn */
-	else if (pFrame->FrClipXBegin == pFrame->FrClipXEnd &&
-		 pFrame->FrClipXBegin == 0)
-	  {
-	     pFrame->FrClipXBegin = xd;
-	     pFrame->FrClipXEnd = xf;
-	  }
-	/* Update the coordinates of the area redrawn */
-	else
-	  {
-	    if (xd < 0)
-	      xd = 0;
+	    /* Update the coordinates of the area redrawn */
 	    if (pFrame->FrClipXBegin > xd)
 	      pFrame->FrClipXBegin = xd;
 	    if (pFrame->FrClipXEnd < xf)
 	      pFrame->FrClipXEnd = xf;
 	  }
-	/* Should we take the whole height of the frame ? */
-	if (yd == yf && yd == -1)
-	  {
-	     GetSizesFrame (frame, &width, &height);
-	     pFrame->FrClipYBegin = scrolly;
-	     pFrame->FrClipYEnd = height + scrolly;
-	     /* On termine un reaffichage */
-	  }
-	else if (xd == xf && xd == 0 && yd == yf && yd == 0)
-	  {
-	     pFrame->FrClipYBegin = 0;
-	     pFrame->FrClipYEnd = 0;
-	  }
-	/* Should we initalize the area redrawn */
-	else if (pFrame->FrClipYBegin == pFrame->FrClipYEnd &&
+
+	if (pFrame->FrClipYBegin == pFrame->FrClipYEnd &&
 		 pFrame->FrClipYBegin == 0)
 	  {
+	    /* reinitalize the area redrawn */
 	     pFrame->FrClipYBegin = yd;
 	     pFrame->FrClipYEnd = yf;
 	  }
-	/* Update the coordinates of the area redrawn */
 	else
 	  {
-	    if (yd < 0)
-	      yd = 0;
+	    /* update the coordinates of the area redrawn */
 	    if (pFrame->FrClipYBegin > yd)
 	      pFrame->FrClipYBegin = yd;
 	    if (pFrame->FrClipYEnd < yf)
@@ -2240,7 +2230,7 @@ ThotBool RedrawFrameBottom (int frame, int scroll, PtrAbstractBox subtree)
    If a part of the abstract image is selected, the
    corresponding concrete image is centered in the frame.
   ----------------------------------------------------------------------*/
-void                DisplayFrame (int frame)
+void DisplayFrame (int frame)
 {
   ViewFrame          *pFrame;
   int                 w, h;
