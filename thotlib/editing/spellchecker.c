@@ -240,8 +240,6 @@ int WordInDictionary (unsigned char *word, PtrDict dict)
      {
        /* dernier mot */
        sup = dict->DictLengths[size + 1] - 1;
-       if (sup == dict->DictNbWords)
-	 sup--;
      }
 
    while (sup >= inf)
