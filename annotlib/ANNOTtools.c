@@ -877,6 +877,35 @@ int AnnotThread_UpdateAnnotates (List *annot_list,
 #endif /* ANNOT_ON_ANNOT */
 }
 
+/*------------------------------------------------------------
+   Annot_searchDocument
+   Returns the doc reference of the document that
+   contains the body_url or NONE if not found.
+   ------------------------------------------------------------*/
+Document Annot_searchDocument (char *body_url)
+{
+  int i;
+  char *tmp;
+
+  if (IsFilePath (body_url))
+    {
+      tmp = TtaStrdup (body_url);
+      WWWToLocal (tmp);
+      }
+  else
+    tmp = body_url;
+
+  for (i = 1; i < DocumentTableLength; i++)
+    {
+      if (DocumentURLs[i] && !strcmp (DocumentURLs[i], tmp))
+	break;
+    }
+
+  if (tmp != body_url)
+    TtaFreeMemory (tmp);
+
+  return (i == DocumentTableLength) ? (Document) None : (Document) i;
+}
 
 /*------------------------------------------------------------
    AnnotThread_searchRoot
@@ -1486,6 +1515,10 @@ void AnnotList_print (List *annot_list)
 static void  Annot_dumpCommonMeta (AnnotMeta *annot, FILE *fp)
 {
   char *tmp;
+#ifdef ANNOT_ON_ANNOT
+    Document source_doc;
+    Document annot_doc;
+#endif /* ANNOT_ON_ANNOT */
 
 #ifdef ANNOT_ON_ANNOT
   if (annot->inReplyTo)
@@ -1521,10 +1554,25 @@ static void  Annot_dumpCommonMeta (AnnotMeta *annot, FILE *fp)
 	   annot->cl);
 #endif
   
-  fprintf (fp,
-	   "<a:context>%s#%s</a:context>\n",
-	   annot->source_url,
-	   annot->xptr);
+#ifdef ANNOT_ON_ANNOT
+  /* JK: A patch so that the context points to the body and not elsewhere */
+  annot_doc = Annot_searchDocument (annot->body_url);
+  if (!annot->annot_url)
+    annot->annot_url = annot->body_url;
+  source_doc = Annot_IsDocumentLoaded (annot_doc, annot->body_url, NULL);
+  if (annot->annot_url == annot->body_url)
+    annot->annot_url = NULL;
+  if (source_doc != 0 && DocumentTypes[source_doc] == docAnnot)
+    fprintf (fp,
+	     "<a:context>%s#%s</a:context>\n",
+	     DocumentURLs[source_doc],
+	     annot->xptr);
+  else
+#endif /* ANNOT_ON_ANNOT */
+    fprintf (fp,
+	     "<a:context>%s#%s</a:context>\n",
+	     annot->source_url,
+	     annot->xptr);
   
   if (annot->title)
     {
@@ -2499,10 +2547,13 @@ Document Annot_IsDocumentLoaded (Document annot_doc, char *source_annot_url, cha
   char *annot_url;
   Document doc;
   
+  if (annot_doc == 0)
+    return 0;
+
   annot_url = NULL;
   for (doc = 1; doc < DocumentTableLength; doc++)
     {
-      if (DocumentTypes[doc] != docAnnot || doc == annot_doc)
+      if (!DocumentURLs[doc] || DocumentTypes[doc] != docAnnot || doc == annot_doc)
 	continue;
       annot_url = AnnotList_searchAnnotURL (doc, DocumentURLs[annot_doc]);
       if (annot_url)
