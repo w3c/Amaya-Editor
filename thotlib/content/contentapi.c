@@ -1605,7 +1605,7 @@ int                *y;
      {
 	/* Looking for the buffer containing the point which rank is: rank */
 	pBuff = ((PtrElement) element)->ElPolyLineBuffer;
-	while (rank > pBuff->BuLength && pBuff->BuNext != NULL)
+	while (rank >= pBuff->BuLength && pBuff->BuNext != NULL)
 	  {
 	     rank -= pBuff->BuLength;
 	     pBuff = pBuff->BuNext;
