@@ -614,7 +614,7 @@ static void MenuValues (TtAttribute * pAttr, ThotBool required,
 	   {
 	     AmayaParams p;
 	     p.param1 = (void*)AmayaAttributePanel::wxATTR_ACTION_SETUPNUM;
-	     p.param2 = (void*)required;
+	     p.param2 = (void*)(required ? 0xFFFFFF : 0x000000);
 	     p.param3 = (void*)i;
 	     AmayaSubPanelManager::GetInstance()->SendDataToPanel( WXAMAYA_PANEL_ATTRIBUTE, p );
 	   }
@@ -654,7 +654,7 @@ static void MenuValues (TtAttribute * pAttr, ThotBool required,
 	   {
 	     AmayaParams p;
 	     p.param1 = (void*)AmayaAttributePanel::wxATTR_ACTION_SETUPTEXT;
-	     p.param2 = (void*)required;
+	     p.param2 = (void*)(required ? 0xFFFFFF : 0x000000);
 	     p.param3 = (void*)TextAttrValue;
 	     AmayaSubPanelManager::GetInstance()->SendDataToPanel( WXAMAYA_PANEL_ATTRIBUTE, p );
 	   }
@@ -742,7 +742,7 @@ static void MenuValues (TtAttribute * pAttr, ThotBool required,
 	   {
 	     AmayaParams p;
 	     p.param1 = (void*)AmayaAttributePanel::wxATTR_ACTION_SETUPENUM;
-	     p.param2 = (void*)required;
+	     p.param2 = (void*)(required ? 0xFFFFFF : 0x000000);
 	     p.param3 = (void*)bufMenu; /* list data */
 	     p.param4 = (void*)val; /* nb items */
 	     p.param5 = (void*)i; /* selected item */
