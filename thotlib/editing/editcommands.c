@@ -1571,14 +1571,15 @@ static void RemoveSelection (int charsDelta, int spacesDelta, int xDelta,
 	    if (pTargetBuffer == pBox->BxBuffer)
 	      pBox->BxBuffer = pSourceBuffer->BuNext;
 	    
-	    /* Si la selection courante reference le buffer libere */
 	    if (pTargetBuffer == pViewSel->VsBuffer)
 	      {
-		if (pSourceBuffer->BuNext)   /* Apres la destruction */
+	    /* the selection points to a freed buffer */
+		if (pSourceBuffer && pSourceBuffer->BuNext)
+		  /* move after the deleted part */
 		  pViewSel->VsBuffer = pSourceBuffer->BuNext;
 		else
-		  /* ElemIsBefore la destruction */
 		  {
+		    /* move before */
 		    pViewSel->VsBuffer = pTargetBuffer->BuPrevious;
 		    if (pViewSel->VsBuffer)
 		      pViewSel->VsIndBuf = pViewSel->VsBuffer->BuLength;
