@@ -3313,43 +3313,46 @@ static void         StartOfEntity (char c)
 /*----------------------------------------------------------------------
    GetFallbackCharacter
   ----------------------------------------------------------------------*/
-void GetFallbackCharacter (int code, char *fallback, Language *lang)
-{
-   int	     i;
+void GetFallbackCharacter (int code, unsigned char *fallback, Language *lang)
+{  
+  int	     i;
 
-   fallback[0] = EOS;
-   fallback[1] = EOS;
-   /* look for that code in the fallback table */
-   for (i = 0; UnicodeFallbackTable[i].unicodeVal < code &&
-	       UnicodeFallbackTable[i].unicodeVal > 0;  i++);
-   if (UnicodeFallbackTable[i].unicodeVal != code)
-      /* character is not in the fallback table */
-      {
+  fallback[0] = EOS;
+  fallback[1] = EOS;
+  /* look for that code in the fallback table */
+  for (i = 0; UnicodeFallbackTable[i].unicodeVal < code &&
+	 UnicodeFallbackTable[i].unicodeVal > 0;  i++);
+  if (UnicodeFallbackTable[i].unicodeVal != code)
+    /* character is not in the fallback table */
+    {
       /* display a question mark instead */
       *lang = TtaGetLanguageIdFromAlphabet('L');
       fallback[0]= '?';
-      }
-   else
-      /* this character is on the fallback table */
-      {
+    }
+  else
+    /* this character is on the fallback table */
+    {
+#ifdef _I18N_
+      TtaWCToMBstring (code, &fallback);
+#else /* _I18N_ */
       if (UnicodeFallbackTable[i].EightbitCode < 255)
-	 {
-	 /* Symbol character */
-	 *lang = TtaGetLanguageIdFromAlphabet('G');
-	 fallback[0] = UnicodeFallbackTable[i].EightbitCode;
-	 }
+	{
+	  /* Symbol character */
+	  *lang = TtaGetLanguageIdFromAlphabet('G');
+	  fallback[0] = UnicodeFallbackTable[i].EightbitCode;
+	}
       else if (UnicodeFallbackTable[i].EightbitCode < 2000)
-	 {
-	 /* ISO latin-1 fallback */
-	 *lang = TtaGetLanguageIdFromAlphabet('L');
-	 fallback[0]= UnicodeFallbackTable[i].EightbitCode - 1000;
-	 }
+	{
+	  /* ISO latin-1 fallback */
+	  *lang = TtaGetLanguageIdFromAlphabet('L');
+	  fallback[0]= UnicodeFallbackTable[i].EightbitCode - 1000;
+	}
       else
-	 {
-	 /* Symbol fallback */
-	 *lang = TtaGetLanguageIdFromAlphabet('G');
-	 fallback[0]= UnicodeFallbackTable[i].EightbitCode - 2000;
-	 }
+	{
+	  /* Symbol fallback */
+	  *lang = TtaGetLanguageIdFromAlphabet('G');
+	  fallback[0]= UnicodeFallbackTable[i].EightbitCode - 2000;
+	}
       /* some special cases: add a second character */
       if (code == 338)		/* OE ligature */
 	fallback[1] = 'E';
@@ -3368,7 +3371,8 @@ void GetFallbackCharacter (int code, char *fallback, Language *lang)
       else if (code == 8741)	/* parallel sign */
 	fallback[1] = '|';
       fallback[2] = EOS;
-      }
+#endif /* _I18N_ */
+    }
 }
 
 /*----------------------------------------------------------------------

@@ -45,8 +45,8 @@ typedef enum {
    WINDOWS_1258
 } CHARSET;
 
-#include <wchar.h>
 #ifdef _I18N_
+#include <wchar.h>
 typedef wchar_t  CHAR_T;
 typedef wchar_t *STRING;
 #else  /* _I18N_ */

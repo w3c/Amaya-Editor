@@ -547,14 +547,17 @@ void TtaRemoveInitialSpaces (Element element, Document document)
 
 
 /*----------------------------------------------------------------------
-   TtaRemoveFinalSpaces
+  TtaRemoveFinalSpaces
 
-   Removes spaces and NEWLINE at the end of the text element
-   Parameters:
-   element: the Text element to be modified.
-   document: the document containing that element.
+  Removes spaces and NEWLINE at the end of the text element if the
+  parameter all is TRUE, only the last space if the parameter is FALSE.
+  Parameters:
+  element: the Text element to be modified.
+  document: the document containing that element.
+  all: when TRUE removes all spaces, when FALSE only the last space.
   ----------------------------------------------------------------------*/
-void TtaRemoveFinalSpaces (Element element, Document document)
+void TtaRemoveFinalSpaces (Element element, Document document,
+			   ThotBool all)
 {
   PtrElement          pEl, pElAsc;
   PtrTextBuffer       pBuf, pPrev;
@@ -581,7 +584,7 @@ void TtaRemoveFinalSpaces (Element element, Document document)
 	{
 	  /* there is almost one space at the end of the text element */
 	  i = pBuf->BuLength - 1;
-	  while (i >= 0 &&
+	  while (i >= 0 && (delta == 0 || all) &&
 		 (pBuf->BuContent[i] == SPACE || pBuf->BuContent[i] == EOL))
 	    {
 	      i--;

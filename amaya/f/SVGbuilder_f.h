@@ -48,9 +48,6 @@ extern void UpdatePositionOfPoly ( Element el,
                                    int minY,
                                    int maxX,
                                    int maxY );
-extern void ParsePointsAttribute ( Attribute attr,
-                                   Element el,
-                                   Document doc );
 extern void ParseCoordAttribute ( Attribute attr,
                                   Element el,
                                   Document doc );
@@ -58,6 +55,9 @@ extern ThotBool ParseWidthHeightAttribute ( Attribute attr,
                                             Element el,
                                             Document doc,
                                             ThotBool delete );
+extern void ParsePointsAttribute ( Attribute attr,
+                                   Element el,
+                                   Document doc );
 extern void ParseTransformAttribute ( Attribute attr,
                                       Element el,
                                       Document doc,
@@ -113,9 +113,6 @@ extern void UpdatePositionOfPoly (/* Element el,
                                      int minY,
                                      int maxX,
                                      int maxY */);
-extern void ParsePointsAttribute (/* Attribute attr,
-                                     Element el,
-                                     Document doc */);
 extern void ParseCoordAttribute (/* Attribute attr,
                                     Element el,
                                     Document doc */);
@@ -123,6 +120,9 @@ extern ThotBool ParseWidthHeightAttribute (/* Attribute attr,
                                               Element el,
                                               Document doc,
                                               ThotBool delete */);
+extern void ParsePointsAttribute (/* Attribute attr,
+                                     Element el,
+                                     Document doc */);
 extern void ParseTransformAttribute (/* Attribute attr,
                                         Element el,
                                         Document doc,

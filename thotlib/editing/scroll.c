@@ -349,7 +349,7 @@ int PositionAbsBox (int frame, int *nbCharBegin, int *nbCharEnd, int *total)
    dans la fenetree^tre frame.                                     
    La proce'dure rend :                                            
    - Xpos : la position en X du premier cararte`re visualise'.     
-   - Ypos : la position en X du premier cararte`re visualise'.     
+   - Ypos : la position en Y du premier cararte`re visualise'.     
    - width : la largeur de la portion de l'arbre visualise'e.    
    - height : la hauteur de la portion de l'arbre visualise'e.    
   ----------------------------------------------------------------------*/

@@ -225,7 +225,6 @@ AMAYA_OBJ = \
 	trans.o \
 	transparse.o \
 	UIcss.o \
-	gtkdialogapi.o \
 	Xml2thot.o \
 	Xmlbuilder.o \
 	XHTMLbuilder.o \

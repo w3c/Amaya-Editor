@@ -45,7 +45,7 @@ extern void ANNOT_Post ( Document doc,
 extern void ANNOT_SaveDocument ( Document doc_annot,
                                  View view );
 extern void ANNOT_SelectSourceDoc ( int doc,
-                                    Element el );
+                                    Element sel );
 extern void Annot_RaiseSourceDoc_callback ( int doc,
                                             int status,
                                             char *urlName,
@@ -110,7 +110,7 @@ extern void ANNOT_Post (/* Document doc,
 extern void ANNOT_SaveDocument (/* Document doc_annot,
                                    View view */);
 extern void ANNOT_SelectSourceDoc (/* int doc,
-                                      Element el */);
+                                      Element sel */);
 extern void Annot_RaiseSourceDoc_callback (/* int doc,
                                               int status,
                                               char *urlName,

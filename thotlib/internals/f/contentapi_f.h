@@ -23,7 +23,8 @@ extern ThotBool TtaHasFinalSpace ( Element element,
 extern void TtaRemoveInitialSpaces ( Element element,
                                      Document document );
 extern void TtaRemoveFinalSpaces ( Element element,
-                                   Document document );
+                                   Document document,
+                                   ThotBool all );
 extern void TtaInsertTextContent ( Element element,
                                    int position,
                                    unsigned char *content,
@@ -137,7 +138,8 @@ extern ThotBool TtaHasFinalSpace (/* Element element,
 extern void TtaRemoveInitialSpaces (/* Element element,
                                        Document document */);
 extern void TtaRemoveFinalSpaces (/* Element element,
-                                     Document document */);
+                                     Document document,
+                                     ThotBool all */);
 extern void TtaInsertTextContent (/* Element element,
                                      int position,
                                      unsigned char *content,

@@ -94,8 +94,10 @@ extern void TtaRemoveInitialSpaces (Element element, Document document);
    Parameters:
    element: the Text element to be modified.
    document: the document containing that element.
+   all: when TRUE removes all spaces, when FALSE only the last space.
   ----------------------------------------------------------------------*/
-extern void TtaRemoveFinalSpaces (Element element, Document document);
+extern void TtaRemoveFinalSpaces (Element element, Document document,
+				  ThotBool all);
 
 /* ----------------------------------------------------------------------
    TtaInsertTextContent

@@ -723,17 +723,18 @@ static ThotBool     InsertSibling ()
   XmlGetFallbackCharacter
   Tries to find a fallback character and generates a symbol if necessary
   ----------------------------------------------------------------------*/
-static void  XmlGetFallbackCharacter (wchar_t wcharRead, Element el)
+static void XmlGetFallbackCharacter (wchar_t wcharRead, char *entityName,
+				     Element el)
 {
-   Language       lang;
-   char           fallback[5];
-   char           bufName[10];
-   char           buffer[10];
-   char          *ptr;
    ElementType    elType;
    Element        elLeaf, lastChild;
    AttributeType  attrType;
    Attribute	  attr;
+   Language       lang;
+   unsigned char  fallback[5];
+   unsigned char  bufName[10];
+   unsigned char  buffer[10];
+   unsigned char *ptr;
    int            len, i, j;
 
    GetFallbackCharacter ((int) wcharRead, fallback, &lang);
@@ -795,15 +796,22 @@ static void  XmlGetFallbackCharacter (wchar_t wcharRead, Element el)
 	 attrType.AttrTypeNum = HTML_ATTR_EntityName;
        attr = TtaNewAttribute (attrType);
        TtaAttachAttribute (elLeaf, attr, XMLcontext.doc);
-       len = sprintf (buffer, "%d", (int) wcharRead);
-       i = 0;
-       bufName[i++] = START_ENTITY;
-       bufName[i++] = '#';
-       for (j = 0; j < len; j++)
-	 bufName[i++] = buffer[j];
-       bufName[i++] = ';';
-       bufName[i] = EOS;
-       TtaSetAttributeText (attr, bufName, elLeaf, XMLcontext.doc);
+       if (entityName)
+	 /* store the given entity name */
+	 TtaSetAttributeText (attr, entityName, elLeaf, XMLcontext.doc);
+       else
+	 {
+	   /* it's a numerical entity */
+	   len = sprintf (buffer, "%d", (int) wcharRead);
+	   i = 0;
+	   bufName[i++] = START_ENTITY;
+	   bufName[i++] = '#';
+	   for (j = 0; j < len; j++)
+	     bufName[i++] = buffer[j];
+	   bufName[i++] = ';';
+	   bufName[i] = EOS;
+	   TtaSetAttributeText (attr, bufName, elLeaf, XMLcontext.doc);
+	 }
      }
 }
 
@@ -1139,7 +1147,9 @@ static ThotBool     RemoveEndingSpaces (Element el)
 #endif /* LC */
 
 /*----------------------------------------------------------------------
-   RemoveTrailingSpaces
+  RemoveTrailingSpaces
+  Removes all trailing spaces at the end of the element if the parameter
+  all is TRUE, only the last space i
   ----------------------------------------------------------------------*/
 static void      RemoveTrailingSpaces (Element el)
 {
@@ -1176,10 +1186,8 @@ static void      RemoveTrailingSpaces (Element el)
 
 	       /* Don't suppress trailing spaces for an entity element */
 	       if (attr == NULL)
-		 {
-		   if (RemoveTrailingSpace)
-		     TtaRemoveFinalSpaces (lastLeaf, XMLcontext.doc);
-		 }
+		 TtaRemoveFinalSpaces (lastLeaf, XMLcontext.doc,
+				       RemoveTrailingSpace);
 	     }
 	 }
      }
@@ -2092,10 +2100,24 @@ void PutInXmlElement (char *data, int length)
 }
 
 /*----------------------------------------------------------------------
-  HandleXMLstring handles UTF-8 characters and entities
+  HandleXMLstring handles the UTF-8 character string data and generates
+  entities when needed.
+  When handling the content of an attribute value (element = NULL) the
+  function generates a single string where entities are translated when
+  it's possible.
+  When handling the content of a standard element (element != NULL and
+  stdText == TRUE) the function generates TEXT elements and SYMBOLS
+  itself.
+  When handling the content of a comment (element != NULL and
+  stdText == FALSE) the function stops either when the whole string is
+  handled or when it has generated a fallback character for an entity
+  (or a non Iso-latin character in the non I18N version).
+  Returns
+  - the content of the TEXT element.
+  - the length of the parsed original string in *length.
   ----------------------------------------------------------------------*/
-static unsigned char *HandleXMLstring (unsigned char *data, int length,
-				       Element element)
+static unsigned char *HandleXMLstring (unsigned char *data, int *length,
+				       Element element, ThotBool stdText)
 {
   unsigned char *buffer;
   unsigned char *ptr;
@@ -2104,30 +2126,30 @@ static unsigned char *HandleXMLstring (unsigned char *data, int length,
   unsigned char  tmpbuf[10];
   int            nbBytesRead = 0;
   int            i = 0, j = 0;
-  int            tmplen;
+  int            tmplen, max;
   int            k, l, m;
   int            entityValue;	
   ThotBool       found, end;
 
-  buffer = TtaGetMemory (4 * length + 1);
-  buffer[0] = EOS;
-  while (i < length)
+  max = *length;
+  buffer = TtaGetMemory (4 * max + 1);
+  while (i < max)
     {
       if (data[i] == START_ENTITY)
 	{
 	  /* Maybe it is the beginning of an entity */
 	  end = FALSE;
-	  entityName = TtaGetMemory (length + 1);
+	  entityName = TtaGetMemory (max + 1);
 	  l = 0;
 	  entityName[l++] = START_ENTITY;
-	  for (k = i; k < length && !end; k++)
+	  for (k = i + 1; k < max && !end; k++)
 	    {
 	      if (data[k] == '&')
 		{
 		  /* An '&' inside an other '&' ?? We suppose */
 		  /* the first one doesn't belong to an entity */
-		  k = length;
-		  buffer [j++] = START_ENTITY;
+		  k = max;
+		  buffer[j++] = START_ENTITY;
 		}
 	      else if (data[k] == ';')
 		{
@@ -2136,22 +2158,40 @@ static unsigned char *HandleXMLstring (unsigned char *data, int length,
 		  entityName[l] = EOS;
 		  found = MapXMLEntity (currentParserCtxt->XMLtype,
 					&entityName[1], &entityValue);
-#ifdef _I18N_
-		  if (found)
+		  if (found && entityValue <= 255)
+		    /* store the ISO latin1 character */
+		    buffer[j++] = entityValue;
+		  else if (found && element)
 		    {
-		      /* store the UTF-8 value of the entity */
-		      ptr = &buffer[j++];
-		      TtaWCToMBstring ((wchar_t) entityValue, &ptr);
+		      if (stdText)
+			{
+			  buffer[j] = EOS;
+			  if (j > 0)
+			    {
+			      /* close the current text element */
+			      PutInXmlElement (buffer, j);
+			      XMLcontext.lastElementClosed = TRUE;
+			    }
+			  XMLcontext.mergeText = FALSE;
+			  ImmediatelyAfterTag = FALSE;
+			  element = XMLcontext.lastElement;
+			  j = 0;
+			}
+		      else
+			{
+			  /* stop the handling of the original string */
+			  max = i;
+			  *length = max;
+			}
+		      /* generate a fallback character */
+		      XmlGetFallbackCharacter ((wchar_t)entityValue,
+					       entityName, element);
+		      if (stdText)
+			{
+			  XMLcontext.lastElementClosed = TRUE;
+			  XMLcontext.mergeText = FALSE;
+			}
 		    }
-#else /* _I18N_ */
-		  if (element)
-		    XmlGetFallbackCharacter ((wchar_t)entityValue, element);
-		  else if (found && entityValue <= 255)
-		    {
-		      /* store the ISO latin1 character */
-		      buffer [j++] = entityValue;
-		    }
-#endif /* _I18N_ */
 		  else
 		    {
 		      /* store the entity name */
@@ -2180,7 +2220,34 @@ static unsigned char *HandleXMLstring (unsigned char *data, int length,
 	      /* ISO-Latin1 character */
 	    buffer[j++] = (unsigned char) wcharRead;
 	  else if (element)
-	    XmlGetFallbackCharacter (wcharRead, element);
+	    {
+	      if (stdText)
+		{
+		  buffer[j] = EOS;
+		  if (j > 0)
+		    {
+		      /* close the current text element */
+		      PutInXmlElement (buffer, j);
+		      XMLcontext.lastElementClosed = TRUE;
+		    }
+		  XMLcontext.mergeText = FALSE;
+		  ImmediatelyAfterTag = FALSE;
+		  element = XMLcontext.lastElement;
+		  j = 0;
+		}
+	      else
+		{
+		  /* stop the handling of the original string */
+		  max = i;
+		  *length = max;
+		}
+	      XmlGetFallbackCharacter (wcharRead, NULL, element);
+	      if (stdText)
+		{
+		  XMLcontext.lastElementClosed = TRUE;
+		  XMLcontext.mergeText = FALSE;
+		}
+	    }
 	  else
 	    {
 	      /* it's not an ISO-Latin1 character */
@@ -2195,6 +2262,14 @@ static unsigned char *HandleXMLstring (unsigned char *data, int length,
 	}
     }
   buffer[j] = EOS;
+  if (stdText)
+    {
+      if (j > 0)
+	PutInXmlElement (buffer, j);
+      /*XMLcontext.lastElementClosed = TRUE;
+      XMLcontext.mergeText = FALSE;
+      ImmediatelyAfterTag = FALSE;*/
+    }  
   return buffer;
 }
 /*----------------------  Data  (end)  ---------------------------*/
@@ -2645,7 +2720,8 @@ static void       EndOfAttributeValue (unsigned char *attrValue,
 
   if ((lastMappedAttr || currentAttribute) && currentParserCtxt)
     {
-      buffer = HandleXMLstring (attrValue, strlen (attrValue), NULL);
+      length = strlen (attrValue);
+      buffer = HandleXMLstring (attrValue, &length, NULL, FALSE);
       /* White-space attribute */
       if (XMLSpaceAttribute)
 	XmlWhiteSpaceInStack (buffer);
@@ -2696,55 +2772,10 @@ static void       EndOfAttributeValue (unsigned char *attrValue,
   ----------------------------------------------------------------------*/
 static void     CreateXmlEntity (char *data, int length)
 {
-   char         schemaName[MAX_SS_NAME_LENGTH];
-   char         msgBuffer[MaxMsgLength];
-   char        *buffer;
-   int          entityValue, i;	
-   ThotBool     found;
-      
-  /* Name of the entity without '&' and ';' */
-   buffer = TtaGetMemory (length);
-   for (i = 0; i < length-1; i++)
-       buffer[i] = data[i+1];
-   if (buffer[i-1] == ';')
-     buffer[i-1] = EOS;
-   else
-     buffer[i] = EOS;
+   unsigned char    *buffer;
 
-  /* Look at the current context if there is one */
-   if (currentParserCtxt != NULL)
-     {
-       found = MapXMLEntity (currentParserCtxt->XMLtype,
-			     buffer, &entityValue);
-       if (found)
-	 {
-	   /* Creation of the entity */
-	   (*(currentParserCtxt->EntityCreated)) (entityValue, buffer,
-						  TRUE, &XMLcontext);
-	 }
-       else
- 	 {
-	   /* Entity not supported */
-	   if (strcmp (currentParserCtxt->SSchemaName, "HTML") == 0)
-	     strcpy (schemaName, "XHTML");
-	   else
-	     strcpy (schemaName, currentParserCtxt->SSchemaName);
-	   sprintf (msgBuffer, "%s entity not supported : &%s;",
-		     schemaName, buffer);
-	   XmlParseError (errorParsing, msgBuffer, 0);
-	   (*(currentParserCtxt->EntityCreated)) (entityValue, buffer,
-						  FALSE, &XMLcontext);
-	 }
-    }
-   else
-     {
-       /* not found */
-       sprintf (msgBuffer,
-		 "Namespace not supported for the XML entity %s", buffer);
-       XmlParseError (errorParsing, msgBuffer, 0);
-       return;
-     }
-
+   data[0] = START_ENTITY;
+   buffer = HandleXMLstring (data, &length, XMLcontext.lastElement, TRUE);
    TtaFreeMemory (buffer);
 }
 /*--------------------  Entities  (end)  ---------------------*/
@@ -2762,15 +2793,15 @@ static void       CreateXmlComment (char *commentValue)
   char          *mappedName;
   char           cont;
   unsigned char *buffer;
-  unsigned char *srcbuf;
-  int            length, i,error;
+  unsigned char *ptr;
+  int            length, l;
+  int            i, j, error;
   ThotBool       level = TRUE;
 
   /* Create a Thot element for the comment */
   elType.ElSSchema = NULL;
   elType.ElTypeNum = 0;
-  GetXmlElType (NULL, "XMLcomment", &elType,
-		&mappedName, &cont, &level);
+  GetXmlElType (NULL, "XMLcomment", &elType, &mappedName, &cont, &level);
   if (elType.ElTypeNum > 0)
     {
       commentEl = TtaNewElement (XMLcontext.doc, elType);
@@ -2780,14 +2811,14 @@ static void       CreateXmlComment (char *commentValue)
       /* Element XMLcomment */
       elType.ElSSchema = NULL;
       elType.ElTypeNum = 0;
-      GetXmlElType (NULL, "XMLcomment_line", &elType,
-		    &mappedName, &cont, &level);
+      GetXmlElType (NULL, "XMLcomment_line", &elType, &mappedName, &cont, &level);
       commentLineEl = TtaNewElement (XMLcontext.doc, elType);
       XmlSetElemLineNumber (commentLineEl);
       TtaInsertFirstChild (&commentLineEl, commentEl, XMLcontext.doc);
       length = strlen (commentValue);
       i = 0;
-      srcbuf = &commentValue[i];
+      j = 0; /* parsed length */
+      ptr = &commentValue[i];
       while (i <= length)
 	{
 	  /* Look for line break in the comment and create as many */
@@ -2797,26 +2828,34 @@ static void       CreateXmlComment (char *commentValue)
 	    i++;
 	  else
 	    {
+	      /* get the position of the comment text */
 	      lastChild = TtaGetLastChild (commentLineEl);
+	      l = i - j;
 	      /* handles UTF-8 characters and entities in the subtree */
-	      buffer = HandleXMLstring (srcbuf, i, commentLineEl);
-	      /* Put the current content into a text comment line */
-	      elTypeLeaf.ElSSchema = elType.ElSSchema;
-	      elTypeLeaf.ElTypeNum = 1;
-	      commentLeaf = TtaNewElement (XMLcontext.doc, elTypeLeaf);
-	      XmlSetElemLineNumber (commentLeaf);
-	      if (lastChild == NULL)
-		TtaInsertFirstChild (&commentLeaf, commentLineEl,
-				     XMLcontext.doc);
-	      else
-		TtaInsertSibling (commentLeaf, lastChild,
-				  FALSE, XMLcontext.doc);	     
-	      TtaSetTextContent (commentLeaf, buffer,
-				 XMLcontext.language, XMLcontext.doc);
-	      TtaFreeMemory (buffer);
-	      if (commentValue[i] != EOS)
+	      buffer = HandleXMLstring (ptr, &l, commentLineEl, FALSE);
+	      if (buffer[0] != EOS)
 		{
-		  srcbuf = &commentValue[i];
+		  /* Put the current content into a text comment line */
+		  elTypeLeaf.ElSSchema = elType.ElSSchema;
+		  elTypeLeaf.ElTypeNum = 1;
+		  commentLeaf = TtaNewElement (XMLcontext.doc, elTypeLeaf);
+		  XmlSetElemLineNumber (commentLeaf);
+		  if (lastChild == NULL)
+		    TtaInsertFirstChild (&commentLeaf, commentLineEl,
+					 XMLcontext.doc);
+		  else
+		    TtaInsertSibling (commentLeaf, lastChild,
+				      FALSE, XMLcontext.doc);	     
+		  TtaSetTextContent (commentLeaf, buffer,
+				     XMLcontext.language, XMLcontext.doc);
+		}
+	      TtaFreeMemory (buffer);
+	      j += l;
+	      i = j;
+	      ptr = &commentValue[i];
+	      /* check if a new line has to be generated */
+	      if (commentValue[i] == EOL && commentValue[i] == __CR__)
+		{
 		  /* Create a new XMLcomment_line element */
 		  commentLineEl = TtaNewElement (XMLcontext.doc, elType);
 		  XmlSetElemLineNumber (commentLineEl);
@@ -2965,179 +3004,104 @@ static void      XmlStyleSheetPi (char *PiData)
    CreateXmlPi
    Create a Processing Instruction element into the Thot tree.
   ---------------------------------------------------------------------*/
-static void       CreateXmlPi (char *PiTarget, char *PiData)
+static void CreateXmlPi (char *piTarget, char *piData)
 {
    ElementType    elType, elTypeLeaf;
-   Element  	  PiEl, PiLineEl, PiLeaf, lastChild;
-   Language       lang;
+   Element  	  piEl, piLineEl, piLeaf, lastChild;
    char          *mappedName;
-   char          *PiValue = NULL;
+   char          *piValue = NULL;
    char           cont;
-   char           fallback[5];
    char           msgBuffer[MaxMsgLength];
    unsigned char *buffer;
-   unsigned char *srcbuf;
-   wchar_t        wcharRead;
-   int            length, i, j,error;
-   int            nbBytesRead = 0;
+   unsigned char *ptr;
+   int            length, l;
+   int            i, j, error;
    ThotBool       level = TRUE;
 
-   length = strlen (PiTarget) + strlen (PiData);
-   length++;
-   buffer = TtaGetMemory (length + 1);
-   i = 0; j = 0;
-   buffer[j] = EOS;
-   PiValue = TtaGetMemory (length + 1);
-   strcpy (PiValue, PiTarget);
-   strcat (PiValue, " ");
-   strcat (PiValue, PiData);
- 
    /* Create a Thot element for the PI */
    elType.ElSSchema = NULL;
    elType.ElTypeNum = 0;
-
    GetXmlElType (NULL, "XMLPI", &elType, &mappedName, &cont, &level);
    if (elType.ElTypeNum > 0)
      {
-       PiEl = TtaNewElement (XMLcontext.doc, elType);
-       XmlSetElemLineNumber (PiEl);
-       InsertXmlElement (&PiEl);
+       piEl = TtaNewElement (XMLcontext.doc, elType);
+       XmlSetElemLineNumber (piEl);
+       InsertXmlElement (&piEl);
        /* Create a XMLPI_line element as the first child of element XMLPI */
        elType.ElSSchema = NULL;
        elType.ElTypeNum = 0;
        GetXmlElType (NULL, "XMLPI_line", &elType, &mappedName, &cont, &level);
-       PiLineEl = TtaNewElement (XMLcontext.doc, elType);
-       XmlSetElemLineNumber (PiLineEl);
-       TtaInsertFirstChild (&PiLineEl, PiEl, XMLcontext.doc);
-
-       while (i < length && PiValue[i] != EOS)
+       piLineEl = TtaNewElement (XMLcontext.doc, elType);
+       XmlSetElemLineNumber (piLineEl);
+       TtaInsertFirstChild (&piLineEl, piEl, XMLcontext.doc);
+       length = strlen (piTarget) + strlen (piData);
+       length++;
+       piValue = TtaGetMemory (length + 2);
+       strcpy (piValue, piTarget);
+       strcat (piValue, " ");
+       strcat (piValue, piData);
+       i = 0;
+       j = 0; /* parsed length */
+       ptr = &piValue[i];
+       while (i <= length)
 	 {
-	   srcbuf = (unsigned char *) &PiValue[i];
-	   nbBytesRead = TtaGetNextWCFromString (&wcharRead,
-						 &srcbuf, UTF_8);
-	   i += nbBytesRead;
-	   
-	   if (wcharRead < 0x100)
-	     {
-	       /* Look for line break in the PI and create as many */
-	       /* XMLPI_line elements as needed */
-	       if ((int)wcharRead == EOL || (int)wcharRead == __CR__)
-		 /* New line */
-		 {
-		   /* Put the current content into a text PI line */
-		   buffer[j] = EOS;
-		   elTypeLeaf.ElSSchema = elType.ElSSchema;
-		   elTypeLeaf.ElTypeNum = 1;
-		   PiLeaf = TtaNewElement (XMLcontext.doc, elTypeLeaf);
-		   XmlSetElemLineNumber (PiLeaf);
-		   if ((lastChild = TtaGetLastChild (PiLineEl)) == NULL)
-		     TtaInsertFirstChild (&PiLeaf, PiLineEl, XMLcontext.doc);
-		   else
-		     TtaInsertSibling (PiLeaf, lastChild, FALSE, XMLcontext.doc);
-		   TtaSetTextContent (PiLeaf, &buffer[0],
-				      XMLcontext.language, XMLcontext.doc);
-		   j = 0;
-		   buffer[j] = EOS;
-		   /* Create a new XMLPI_line element */
-		   PiLineEl = TtaNewElement (XMLcontext.doc, elType);
-		   XmlSetElemLineNumber (PiLineEl);
-		   /* Inserts the new XMLPI_line after the previous one */
-		   TtaInsertSibling (PiLineEl, TtaGetParent (PiLeaf),
-				     FALSE, XMLcontext.doc);
-		 }
-	       else
-		   buffer[j++] = (char) wcharRead;
-	     }
-	   else
-	     {
-	       /* It's not an 8bits character */
-	       if (buffer[0] != EOS)
-		 {
-		   /* Put the current content into a text PI line */
-		   buffer[j] = EOS;
-		   /* Create a text element as child of element XMLPI_line */
-		   elTypeLeaf.ElSSchema = elType.ElSSchema;
-		   elTypeLeaf.ElTypeNum = 1;
-		   PiLeaf = TtaNewElement (XMLcontext.doc, elTypeLeaf);
-		   XmlSetElemLineNumber (PiLeaf);
-		   if ((lastChild = TtaGetLastChild (PiLineEl)) == NULL)
-		     TtaInsertFirstChild (&PiLeaf, PiLineEl, XMLcontext.doc);
-		   else
-		     TtaInsertSibling (PiLeaf, lastChild, FALSE, XMLcontext.doc);
-		   TtaSetTextContent (PiLeaf, &buffer[0],
-				      XMLcontext.language, XMLcontext.doc);
-		   j = 0;
-		   buffer[j] = EOS;
-		 }
-	       /* Try to find a fallback character */
-	       GetFallbackCharacter ((int) wcharRead, fallback, &lang);
-	       if (fallback[0] == '?')
-		 {
-		   /* The character is not found in the fallback table */
-		   /* Create a symbol leaf */
-		   elTypeLeaf.ElSSchema = elType.ElSSchema;
-		   elTypeLeaf.ElTypeNum = 3;
-		   PiLeaf = TtaNewElement (XMLcontext.doc, elTypeLeaf);
-		   XmlSetElemLineNumber (PiLeaf);
-		   if ((lastChild = TtaGetLastChild (PiLineEl)) == NULL)
-		     TtaInsertFirstChild (&PiLeaf, PiLineEl, XMLcontext.doc);
-		   else
-		     TtaInsertSibling (PiLeaf, lastChild, FALSE, XMLcontext.doc);
-		   /* Put the symbol '?' into the new symbol leaf */
-		   TtaSetGraphicsShape (PiLeaf, fallback[0], XMLcontext.doc);
-		   /* Changes the wide char code associated with that symbol */
-		   TtaSetSymbolCode (PiLeaf, wcharRead, XMLcontext.doc);
-		   /* Make that leaf read-only */
-		   TtaSetAccessRight (PiLeaf, ReadOnly, XMLcontext.doc);
-		 }
-	       else
-		 {
-		   /* The character is found in the fallback table */
-		   /* Create a new text leaf */
-		   elTypeLeaf.ElSSchema = elType.ElSSchema;
-		   elTypeLeaf.ElTypeNum = 1;
-		   PiLeaf = TtaNewElement (XMLcontext.doc, elTypeLeaf);
-		   XmlSetElemLineNumber (PiLeaf);
-		   if ((lastChild = TtaGetLastChild (PiLineEl)) == NULL)
-		     TtaInsertFirstChild (&PiLeaf, PiLineEl, XMLcontext.doc);
-		   else
-		     TtaInsertSibling (PiLeaf, lastChild, FALSE, XMLcontext.doc);
-		   /* Put the fallback character into the new text leaf */
-		   TtaSetTextContent (PiLeaf, fallback, lang, XMLcontext.doc);
-		 }
-	     }
+	  /* Look for line break in the pi and create as many */
+	  /* XMLpi_line elements as needed */
+	  if (piValue[i] != EOL && piValue[i] != __CR__ &&
+	      piValue[i] != EOS)
+	    i++;
+	  else
+	    {
+	      /* get the position of the text element */
+	      lastChild = TtaGetLastChild (piLineEl);
+	      l = i - j;
+	      /* handles UTF-8 characters and entities in the subtree */
+	      buffer = HandleXMLstring (ptr, &l, piLineEl, FALSE);
+	      if (buffer[0] != EOS)
+		{
+		  /* Put the current content into a text element */
+		  elTypeLeaf.ElSSchema = elType.ElSSchema;
+		  elTypeLeaf.ElTypeNum = 1;
+		  piLeaf = TtaNewElement (XMLcontext.doc, elTypeLeaf);
+		  XmlSetElemLineNumber (piLeaf);
+		  if (lastChild == NULL)
+		    TtaInsertFirstChild (&piLeaf, piLineEl, XMLcontext.doc);
+		  else
+		    TtaInsertSibling (piLeaf, lastChild,
+				      FALSE, XMLcontext.doc);	     
+		  TtaSetTextContent (piLeaf, buffer,
+				     XMLcontext.language, XMLcontext.doc);
+		}
+	      TtaFreeMemory (buffer);
+	      j += l;
+	      i = j;
+	      ptr = &piValue[i];
+	      /* check if a new line has to be generated */
+	      if (piValue[i] == EOL && piValue[i] == __CR__)
+		{
+		  /* Create a new XMLpi_line element */
+		  piLineEl = TtaNewElement (XMLcontext.doc, elType);
+		  XmlSetElemLineNumber (piLineEl);
+		  /* Inserts the new XMLpi_line after the previous one */
+		  TtaInsertSibling (piLineEl, TtaGetParent (piLeaf),
+				    FALSE, XMLcontext.doc);
+		}
+	      i++;
+	    }
 	 }
-
-       /* Process last line */
-       if (buffer[0] != EOS)
-	 {
-	   buffer[j] = EOS;
-	   elTypeLeaf.ElSSchema = elType.ElSSchema;
-	   elTypeLeaf.ElTypeNum = 1;
-	   PiLeaf = TtaNewElement (XMLcontext.doc, elTypeLeaf);
-	   XmlSetElemLineNumber (PiLeaf);
-	   if ((lastChild = TtaGetLastChild (PiLineEl)) == NULL)
-	     TtaInsertFirstChild (&PiLeaf, PiLineEl, XMLcontext.doc);
-	   else
-	     TtaInsertSibling (PiLeaf, lastChild, FALSE, XMLcontext.doc);
-	   TtaSetTextContent (PiLeaf, &buffer[0], XMLcontext.language,
-			      XMLcontext.doc);
-	 }
-       
-       (*(currentParserCtxt->ElementComplete)) (PiEl, XMLcontext.doc, &error);
+       (*(currentParserCtxt->ElementComplete)) (piEl, XMLcontext.doc, &error);
        XMLcontext.lastElementClosed = TRUE;
-       TtaFreeMemory (PiValue);
-       TtaFreeMemory (buffer);
+       TtaFreeMemory (piValue);
      }
    
    /* Call the treatment that correspond to that PI */
    /* Actually, Amaya supports only the "xml-stylesheet" PI */
-   if (!strcmp (PiTarget, "xml-stylesheet"))
-     XmlStyleSheetPi (PiData);
+   if (!strcmp (piTarget, "xml-stylesheet"))
+     XmlStyleSheetPi (piData);
    else
      {
        sprintf (msgBuffer,
-		 "Processing Instruction not supported : %s", PiTarget);
+		"Processing Instruction not supported : %s", piTarget);
        XmlParseError (errorParsing, msgBuffer, 0);
      }
 }
@@ -3181,63 +3145,18 @@ static void     Hndl_CdataEnd (void *userData)
    We have to use the length argument to deal with the end of the string.
   ----------------------------------------------------------------------*/
 static void Hndl_CharacterData (void *userData, const XML_Char *data,
-				int   length)
-
+				int length)
 {
-   unsigned char *buffer;
-   unsigned char *srcbuf;
-   wchar_t        wcharRead;
-   char           charRead;
-   int            nbBytesRead = 0;
-   int            i, j;
+  unsigned char *buffer, *ptr;
 
 #ifdef EXPAT_PARSER_DEBUG
-   printf ("\n Hndl_CharacterData - length = %d - ", length);
+  printf ("\n Hndl_CharacterData - length = %d - ", length);
 #endif /* EXPAT_PARSER_DEBUG */
-
-   buffer = TtaGetMemory (length + 1);
-   j = 0;
-   i = 0;
-   buffer[j] = EOS;
-
-   while (i < length)
-     {
-       srcbuf = (unsigned char *) &data[i];
-       nbBytesRead = TtaGetNextWCFromString (&wcharRead,
-					     &srcbuf, UTF_8);
-       i += nbBytesRead;
-
-       if (wcharRead < 0x100)
-	 {
-	   /* It's an 8bits character */
-	   charRead = (char) wcharRead;
-	   buffer[j++] = charRead;
-	 }
-       else
-	 {
-	   /* It's not an 8bits character */
-	   if (buffer[0] != EOS)
-	     {
-	       /* Put the current content of the buffer into the document */
-	       buffer[j] = EOS;
-	       PutInXmlElement (buffer, j);
-	       j = 0;
-	       buffer[j] = EOS;
-	     }
-	   /* Try to find a fallback character */
-	   XmlGetFallbackCharacter (wcharRead, XMLcontext.lastElement);
-	   XMLcontext.lastElementClosed = TRUE;
-	   XMLcontext.mergeText = FALSE;
-	   ImmediatelyAfterTag = FALSE;
-	 }
-     }
-
-   if (buffer[0] != EOS)
-     {
-       buffer[j] = EOS;
-       PutInXmlElement (buffer, j);
-     }
-   TtaFreeMemory (buffer);
+  ptr = (unsigned char *) data;
+  /* handles UTF-8 characters and entities in the subtree */
+  buffer = HandleXMLstring (ptr, &length, XMLcontext.lastElement, TRUE);
+  /* the whole content is now handled */
+  TtaFreeMemory (buffer);
 }
 
 /*----------------------------------------------------------------------
@@ -3255,32 +3174,6 @@ static void Hndl_Comment (void *userData, const XML_Char *data)
     CreateXmlComment ((char*) data);
 }
 
-#ifdef IV
-/*----------------------------------------------------------------------
-   Hndl_Default
-   Handler for any characters in the document which wouldn't
-   otherwise be handled.
-   This includes both data for which no handlers can be set
-   (like some kinds of DTD declarations) and data which could be
-   reported but which currently has no handler set.
-  ----------------------------------------------------------------------*/
-static void     Hndl_Default (void *userData,
-			      const XML_Char *data,
-			      int   length)
-
-{
-#ifdef EXPAT_PARSER_DEBUG
-  int  i;
-  printf ("\n Hndl_Default - length = %d - ", length);
-  for (i=0; i<length; i++)
-      printf ("%c", data[i]);
-#endif /* EXPAT_PARSER_DEBUG */
-
-  /* Specific treatment for the entities */
-  if (length > 1 && data[0] == '&')
-    CreateXmlEntity ((char*) data, length);
-}
-#endif /* IV */
 
 /*----------------------------------------------------------------------
    Hndl_DefaultExpand
@@ -3472,8 +3365,6 @@ static void     Hndl_NameSpaceStart (void *userData,
 				     const XML_Char *uri)
 
 {
-  int    len;
-
 #ifdef EXPAT_PARSER_DEBUG
   printf ("\n Hndl_NameSpaceStart");
   printf ("\n   prefix : %s; uri : %s", prefix, uri);

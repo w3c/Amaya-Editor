@@ -28,7 +28,7 @@ extern int MapAttrValue ( int thotAttr,
 extern void SetAttrIntItemStyle ( Element el,
                                   Document doc );
 extern void GetFallbackCharacter ( int code,
-                                   char *fallback,
+                                   unsigned char *fallback,
                                    Language *lang );
 extern void InitAutomaton ( void );
 extern void FreeHTMLParser ( void );
@@ -86,7 +86,7 @@ extern int MapAttrValue (/* int thotAttr,
 extern void SetAttrIntItemStyle (/* Element el,
                                     Document doc */);
 extern void GetFallbackCharacter (/* int code,
-                                     char *fallback,
+                                     unsigned char *fallback,
                                      Language *lang */);
 extern void InitAutomaton (/* void */);
 extern void FreeHTMLParser (/* void */);
