@@ -1114,7 +1114,7 @@ boolean		    history;
 	 content_type[i] = EOS;
 	 if (strcasecmp (content_type, "text") == 0)
 	    {
-	    if (strcasecmp (&content_type[i+1], "html") == 0)
+	    if (strncasecmp (&content_type[i+1], "html", 4) == 0)
 	       HTMLfile = TRUE;
 	    else
 	       PlainText = TRUE;
@@ -1270,7 +1270,7 @@ View                view;
        /* load the document from the Web */
 #ifdef AMAYA_JAVA
        toparse = GetObjectWWW (newdoc, pathname, NULL, tempfile, AMAYA_SYNC | AMAYA_NOCACHE,
-			       NULL, NULL, NULL, NULL, YES);
+			       NULL, NULL, NULL, NULL, YES, &content_type[0]);
 #else /* AMAYA_JAVA */
        toparse = GetObjectWWW (newdoc, pathname, NULL, tempfile, AMAYA_SYNC,
 			       NULL, NULL, NULL, NULL, YES, content_type);

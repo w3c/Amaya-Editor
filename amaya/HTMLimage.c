@@ -371,7 +371,7 @@ void               *extra;
 	      i = GetObjectWWW (doc, pathname, NULL, tempfile,
 		                AMAYA_ASYNC | flags, NULL, NULL,
 				(void *) HandleImageLoaded,
-				(void *) desc, NO);
+				(void *) desc, NO, NULL);
 #else /* !AMAYA_JAVA && !AMAYA_ILU */
 	      UpdateTransfer(doc);
 	      i = GetObjectWWW (doc, pathname, NULL, tempfile,

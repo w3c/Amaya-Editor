@@ -17,7 +17,8 @@ extern int GetObjectWWW ( int doc,
 			  void *context_icbf,
 			  void *terminate_cbf,
 			  void *context_tcbf,
-			  boolean error_html );
+                          boolean error_html,
+                          char *content_type );
 extern int PutObjectWWW ( int doc,
                           char *fileName,
                           char *urlName,
@@ -39,7 +40,8 @@ extern int GetObjectWWW (/* int doc,
                             void *context_icbf,
                             void *terminate_cbf,
                             void *context_tcbf,
-                            boolean error_html */);
+                            boolean error_html,
+                            char *content_type */);
 extern int PutObjectWWW (/* int doc,
                             char *fileName,
                             char *urlName,

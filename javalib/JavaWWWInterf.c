@@ -129,10 +129,10 @@ w3c_amaya_HTTPRequest_Callback(struct Hw3c_amaya_HTTPRequest* request,
 int GetObjectWWW (int doc, char *url, char *postString,
                   char *outputfile, int mode, void *incremental,
                   void *context, void *terminate,
-                  void *tcontext, boolean error_html)
+                  void *tcontext, boolean error_html, char *content_type)
 #else
 int GetObjectWWW (doc, url, postString, outputfile, mode, incremental,
-                  context, terminate, tcontext, error_html)
+                  context, terminate, tcontext, error_html, content_type)
 int                 doc;
 char               *urlName;
 char               *postString;
@@ -143,6 +143,7 @@ void               *context;     /* unused */
 void               *terminate;   /* unused */
 void               *tcontext;    /* unused */
 boolean             error_html;
+char               *content_type;
 #endif
 {
     struct Hw3c_amaya_HTTPRequest* request;
@@ -235,6 +236,9 @@ boolean             error_html;
 	                       &url[0], MAX_PATH);
             javaString2CString(Get_HTTPRequest_Str_filename(request),
 	                       &outputfile[0], MAX_PATH);
+            if (content_type != NULL)
+		    javaString2CString(Get_HTTPRequest_Str_mimeType(request),
+				       content_type, MAX_PATH);
 	    break;
 	case 404:
 	    /* Not found error */

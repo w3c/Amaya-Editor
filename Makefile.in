@@ -87,7 +87,7 @@ commit :
 	@(cd $(THOTDIR) ; cvs commit)
 
 stubs:
-	@(cd javalib ; make stubs)
+	@(cd javalib ; $(MAKE) stubs)
 
 classes: force
 	@(PWD=`pwd` ; PATH="$$PWD/bin:$$PATH" ; export PATH ; \
@@ -97,7 +97,7 @@ classes: force
 	  cd $(THOTDIR)/classes ; $(MAKE) )
 
 zips: force
-	@(cd javalib ;  make zips);
+	@(cd javalib ;  $(MAKE) zips);
 
 # 	@(PWD=`pwd` ; PATH="$$PWD/bin:$$PATH" ; export PATH ; \
 # 	  if test -d $$PWD/$(THOTDIR) ; then CLASSES=$$PWD/$(THOTDIR)/classes;\

@@ -365,9 +365,9 @@ DBG(fprintf(stderr, "SafeSaveFileThroughNet :  refetch %s \n", remotefile);)
   strcpy (tempURL, remotefile);
 #ifdef AMAYA_JAVA
   res = GetObjectWWW (doc, tempURL, NULL, tempfile, AMAYA_SYNC | AMAYA_NOCACHE,
-		      NULL, NULL, NULL, NULL, NO);
+		      NULL, NULL, NULL, NULL, NO, NULL);
 #else /* AMAYA_JAVA */
-  res = GetObjectWWW (doc, tempURL, NULL, tempfile, AMAYA_SYNC, NULL, NULL, NULL, NULL, YES, NO);
+  res = GetObjectWWW (doc, tempURL, NULL, tempfile, AMAYA_SYNC, NULL, NULL, NULL, NULL, YES, NULL);
 #endif /* AMAYA_JAVA */
   if (res)
     {
