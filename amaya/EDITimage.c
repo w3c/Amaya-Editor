@@ -1,3 +1,7 @@
+/***
+ *** Copyright (c) 1996 INRIA, All rights reserved
+ ***/
+
 /* Included headerfiles */
 #include "amaya.h"
 
@@ -31,9 +35,9 @@ static char    ImageName[MAX_LENGTH];
 #include "HTMLedit.h"
 #include "AHTURLTools.h"
 #include "EDITimage.h"
-/* ------------------------------------------------------------------ */
-/* |  CallbackImage manage returns of Picture form.                   | */
-/* ------------------------------------------------------------------ */
+/*----------------------------------------------------------------------
+   CallbackImage manage returns of Picture form.                   
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void           CallbackImage (int ref, int typedata, char *data)
 #else  /* __STDC__ */
@@ -116,8 +120,8 @@ char          *data;
    }
 }
 
-/* ------------------------------------------------------------------ */
-/* ------------------------------------------------------------------ */
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void           InitImage (void)
 #else  /* __STDC__ */
@@ -132,9 +136,9 @@ void           InitImage ()
 }
 
 
-/* ----------------------------------------------------------------------- */
-/* |  GetImageURL initializes the Picture form                             | */
-/* ----------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   GetImageURL initializes the Picture form                             
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 char          *GetImageURL (Document document, View view)
 #else  /* __STDC__ */
@@ -180,10 +184,10 @@ View           view;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |   ComputeSRCattribute  computes the SRC attribute value.		| */
-/* |		Get text as the proposed value for SRCattribute.	| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ComputeSRCattribute  computes the SRC attribute value.		
+   		Get text as the proposed value for SRCattribute.	
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void               ComputeSRCattribute (Element el, Document doc, Document originDocument, Attribute attr, char  *text)
 #else  /* __STDC__ */
@@ -248,10 +252,10 @@ char               *text;
 
 }
 
-/* ---------------------------------------------------------------------- */
-/* |   UpdateSRCattribute  creates or updates the SRC attribute value	| */
-/* |		when the contents of element IMG is set.		| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   UpdateSRCattribute  creates or updates the SRC attribute value	
+   		when the contents of element IMG is set.		
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                UpdateSRCattribute (NotifyElement * event)
 #else  /* __STDC__ */
@@ -289,10 +293,10 @@ NotifyElement      *event;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    SRCattrModified updates the contents of element IMG according   | */
-/* |            to the new value of attribute SRC.                      | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   SRCattrModified updates the contents of element IMG according   
+   to the new value of attribute SRC.                      
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                SRCattrModified (NotifyAttribute * event)
 #else  /* __STDC__ */
@@ -320,7 +324,7 @@ NotifyAttribute    *event;
    /* extract image name from full name */
    TtaExtractName (buf1, buf2, imageName);
    if (strlen (imageName) == 0)
-      /* full names ends with '/' */
+      /* full names ends with ''/ */
       TtaExtractName (buf2, buf1, imageName);
    if (strlen (imageName) != 0)
       TtaSetTextContent (el, imageName, TtaGetDefaultLanguage (), doc);
@@ -330,7 +334,8 @@ NotifyAttribute    *event;
 }
 
 
-/* -------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void           CreateImage (Document document, View view)
 #else  /* __STDC__ */
@@ -347,14 +352,14 @@ View           view;
    TtaCreateElement (elType, document);
 }
 
-/* ---------------------------------------------------------------------- */
-/* | AddLocalImage adds a new local image into image descriptor table   | */
-/* |      with the purpose of having it saved through the Net later.    | */
-/* |      This function copy the image in the TempFileDirectory.        | */
-/* |      fullname is the complete path to the local file.              | */
-/* |      name is the name of the local file.                           | */
-/* |      url is the complete URL of the distant location.              | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   AddLocalImage adds a new local image into image descriptor table   
+   with the purpose of having it saved through the Net later.    
+   This function copy the image in the TempFileDirectory.        
+   fullname is the complete path to the local file.              
+   name is the name of the local file.                           
+   url is the complete URL of the distant location.              
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 boolean             AddLocalImage (char *fullname, char *name, char *url, Document doc, LoadedImageDesc ** desc)
 #else  /* __STDC__ */
@@ -428,9 +433,9 @@ LoadedImageDesc   **desc;
    return (TRUE);
 }
 
-/* ---------------------------------------------------------------------- */
-/* | RemoveDocumentImages removes loaded images of the document.        | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   RemoveDocumentImages removes loaded images of the document.        
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                RemoveDocumentImages (Document doc)
 #else  /* __STDC__ */
@@ -475,10 +480,10 @@ Document            doc;
    }
 }
 
-/* ---------------------------------------------------------------------- */
-/* |	UpdateImageMap sets or updates Ref_IMG MAP attributes for the	| */
-/* |		    current image.					| */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   	UpdateImageMap sets or updates Ref_IMG MAP attributes for the	
+   		    current image.					
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void UpdateImageMap(Element image, Document document)
 #else /* __STDC__*/

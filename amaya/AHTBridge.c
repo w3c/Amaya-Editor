@@ -1,3 +1,7 @@
+/***
+ *** Copyright (c) 1996 INRIA, All rights reserved
+ ***/
+
 /*                                                                  AHTBridge.c
  *      INTERFACE BRIDGE TO XT, LIBWWW, and AMAYA
  *

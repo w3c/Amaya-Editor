@@ -1,8 +1,12 @@
-/**************************************************************************/
-/*                                                                        */
-/*      CLASS MODIFICATION : USER INTERFACE AND INNER FUNCTIONS           */
-/*                                                                        */
-/**************************************************************************/
+/***
+ *** Copyright (c) 1996 INRIA, All rights reserved
+ ***/
+
+/*----------------------------------------------------------------------
+   
+   CLASS MODIFICATION : USER INTERFACE AND INNER FUNCTIONS           
+   
+  ----------------------------------------------------------------------*/
 
 /* Included headerfiles */
 #include "amaya.h"
@@ -50,10 +54,10 @@ static Document     ADocReference;
 
 #include "f/UIcss_f.h"
 
-/* ---------------------------------------------------------------------- */
-/* |    ApplyClassChange : Change all the presentation attributes of    | */
-/* |    the selected elements to reflect their new class                | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ApplyClassChange : Change all the presentation attributes of    
+   the selected elements to reflect their new class                
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                ApplyClassChange (Document doc)
 #else  /* __STDC__ */
@@ -123,10 +127,10 @@ Document            doc;
    RedisplayDocument (doc);
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    UpdateClass : Change a class to reflect the presentation        | */
-/* |    attributes of the selected elements                             | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   UpdateClass : Change a class to reflect the presentation        
+   attributes of the selected elements                             
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                UpdateClass (Document doc)
 #else  /* __STDC__ */
@@ -173,9 +177,9 @@ Document            doc;
    RedisplayDocument (doc);
 }
 
-/* ---------------------------------------------------------------------- */
-/* |  BuildClassList : Build the whole list of HTML class names in use  | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   BuildClassList : Build the whole list of HTML class names in use  
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 int                 BuildClassList (Document doc, char *buf, int size, char *first)
 #else  /* __STDC__ */
@@ -238,10 +242,10 @@ char               *first;
    return (nb);
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    ChangeClass : Change a class to reflect the presentation        | */
-/* |    attributes of the selected element                              | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ChangeClass : Change a class to reflect the presentation        
+   attributes of the selected element                              
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                ChangeClass (Document doc, View view)
 #else  /* __STDC__ */
@@ -306,10 +310,10 @@ View                view;
    TtaShowDialogue (BaseDialog + FormClass, TRUE);
 }
 
-/* ---------------------------------------------------------------------- */
-/* |    ApplyClass : Use a class to change the presentation             | */
-/* |    attributes of the selected elements                             | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   ApplyClass : Use a class to change the presentation             
+   attributes of the selected elements                             
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                ApplyClass (Document doc, View view)
 #else  /* __STDC__ */
@@ -390,9 +394,9 @@ View                view;
    TtaShowDialogue (BaseDialog + FormAClass, TRUE);
 }
 
-/* ---------------------------------------------------------------------- */
-/* | StyleCallbackDialogue : procedure for style dialogue events        | */
-/* ---------------------------------------------------------------------- */
+/*----------------------------------------------------------------------
+   StyleCallbackDialogue : procedure for style dialogue events        
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                StyleCallbackDialogue (int ref, int typedata, char *data)
 #else  /* __STDC__ */
