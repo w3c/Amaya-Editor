@@ -50,7 +50,7 @@ clean :
 	$(RM) *.o *.h *.c EDITOR* HTML* logo.*
 
 ../bin/print : 
-	@(cd ../thotlib ; make print)
+	@(cd ../thotlib ; $(MAKE) print)
 
 include .depends
 

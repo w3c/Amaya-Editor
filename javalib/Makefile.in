@@ -54,10 +54,10 @@ depend : ../tools/mkdep/mkdep
 	../tools/mkdep/mkdep -relative -vpath $(VPATH) $(INCLUDES) *.c $(VPATH)/*.c  > .depends
 
 ../bin/kaffe ../bin/kaffeh :
-	@(cd .. ; make kaffe)
+	@(cd .. ; $(MAKE) kaffe)
 
 ../amaya/HTML.h :
-	@(cd ../amaya ; make HTML.h)
+	@(cd ../amaya ; $(MAKE) HTML.h)
 
 $(THOTDIR)/classes/w3c/thotlib :
 	-@(mkdir $(THOTDIR)/classes/w3c)

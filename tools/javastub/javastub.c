@@ -1318,19 +1318,19 @@ int main(int argc, char **argv)
                 /*
 		 * Dump the expected results.
 		 */
-		if ((out = fopen(stubCOutputFile,"w")) < 0) {
+		if ((out = fopen(stubCOutputFile,"w")) == NULL) {
 		    fprintf(stderr,"Cannot open %s\n", output);
 		    exit(1);
 		}
 		dump_stubs(out);
 		fclose(out);
-		if ((out = fopen(javaOutputFile,"w")) < 0) {
+		if ((out = fopen(javaOutputFile,"w")) == NULL) {
 		    fprintf(stderr,"Cannot open %s\n", output);
 		    exit(1);
 		}
 		dump_java(out);
 		fclose(out);
-		if ((out = fopen(stubHOutputFile,"w")) < 0) {
+		if ((out = fopen(stubHOutputFile,"w")) == NULL) {
 		    fprintf(stderr,"Cannot open %s\n", output);
 		    exit(1);
 		}
