@@ -1452,11 +1452,11 @@ PtrDocument         pDoc;
 	pAb->AbLeafType = LtText;
 	GetConstantBuffer (pAb);
 	pBu1 = pAb->AbText;
-	CopyStringToText (LT_OP, pBu1, &lg);
+	CopyStringToText ("<", pBu1, &lg);
 	CopyStringToText (pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrName,
 			  pBu1, &i);
 	lg += i;
-	CopyStringToText (GT_OP, pBu1, &i);
+	CopyStringToText (">", pBu1, &i);
 	lg += i;
 	pAb->AbVolume = lg;
 	pAb->AbCanBeModified = FALSE;

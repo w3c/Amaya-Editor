@@ -1834,7 +1834,7 @@ Display           **Dp;
 #  endif /* !_WINDOWS */
 
 #  ifdef _WINDOWS
-   iconID = _IDI_APPICONCST_;
+   iconID = TEXT("IDI_APPICON");
 
    RootShell.style         = 0;
    RootShell.lpfnWndProc   = WndProc ;
@@ -1844,7 +1844,7 @@ Display           **Dp;
    RootShell.hIcon         = LoadIcon (hInstance, iconID) ;
    RootShell.hCursor       = LoadCursor (NULL, IDC_ARROW) ;
    RootShell.hbrBackground = (HBRUSH) GetStockObject (LTGRAY_BRUSH) ;
-   RootShell.lpszMenuName  = _AmayaMainCST_ ;
+   RootShell.lpszMenuName  = TEXT("AmayaMain");
    RootShell.lpszClassName = TEXT("Amaya");
    RootShell.cbSize        = sizeof(WNDCLASSEX);
    RootShell.hIconSm       = LoadIcon (hInstance, iconID) ;
@@ -1860,7 +1860,7 @@ Display           **Dp;
    RootShell.hIcon         = LoadIcon (hInstance, iconID) ;
    RootShell.hCursor       = LoadCursor (NULL, IDC_ARROW) ;
    RootShell.hbrBackground = (HBRUSH) (COLOR_WINDOW + 1) ;
-   RootShell.lpszClassName = _ClientWndProcCST_ ;
+   RootShell.lpszClassName = TEXT("ClientWndProc") ;
    RootShell.lpszMenuName  = NULL ;
    RootShell.cbSize        = sizeof(WNDCLASSEX);
    RootShell.hIconSm       = LoadIcon (hInstance, iconID) ;
@@ -2046,7 +2046,7 @@ STRING              textmenu;
    PopShell = 0;
    FrameTable[0].WdFrame = 0;	/* widget frame */
    n = 0;
-   value = TtaGetEnvString (_GeometryCST_);
+   value = TtaGetEnvString (TEXT("geometry"));
 
 #  ifndef _WINDOWS
    if (value != NULL)
@@ -3989,7 +3989,6 @@ ThotBool            react;
    int                 eindex;
    int                 i;
    int                 ent;
-   int                 n;
    ThotBool            rebuilded;
    struct Cat_Context *catalogue;
    struct Cat_Context *parentCatalogue;
@@ -4000,6 +3999,7 @@ ThotBool            react;
    XmString            title_string;
    ThotWidget          menu;
    CHAR_T              heading[200];
+   int                 n;
 #  endif /* !_WINDOWS */
 
    ThotWidget          w;
@@ -4009,555 +4009,479 @@ ThotBool            react;
 #  ifdef _WINDOWS
    HMENU               menu;
    STRING              title_string;
-   CHAR_T                equiv_item [255];
-   CHAR_T                menu_item [1024];
-   struct Cat_Context *copyCat;
+   CHAR_T              equiv_item [255];
+   CHAR_T              menu_item [1024];
+   struct Cat_Context* copyCat;
 
    equiv_item[0] = 0;
 #  endif
 
-   if (ref == 0)
-     {
-	TtaError (ERR_invalid_reference);
-	return;
-     }
+   if (ref == 0) {
+      TtaError (ERR_invalid_reference);
+      return;
+   } 
 
    catalogue = CatEntry (ref);
    if (catalogue == NULL)
       TtaError (ERR_cannot_create_dialogue);
-   else
-     {
-	catalogue->Cat_React = react;
-	title_string = 0;
+   else {
+        catalogue->Cat_React = react;
+        title_string = 0;
 
-	/* Faut-il detruire le catalogue precedent ? */
-	rebuilded = FALSE;
-	if (catalogue->Cat_Widget != 0)
-	   if (catalogue->Cat_Type == CAT_MENU
-	       || catalogue->Cat_Type == CAT_FMENU)
-	     {
-		DestContenuMenu (catalogue);	/* Modification du catalogue */
-		rebuilded = TRUE;
-	     }
-	   else
-	      /* Modification du catalogue */
-	      TtaDestroyDialogue (ref);
+        /* Faut-il detruire le catalogue precedent ? */
+        rebuilded = FALSE;
+        if (catalogue->Cat_Widget != 0)
+           if (catalogue->Cat_Type == CAT_MENU || catalogue->Cat_Type == CAT_FMENU) {
+              DestContenuMenu (catalogue);	/* Modification du catalogue */
+              rebuilded = TRUE;
+		   } else /* Modification du catalogue */
+                  TtaDestroyDialogue (ref);
 
-	/*======================================> Recherche le catalogue parent */
-	parentCatalogue = CatEntry (ref_parent);
-	/*__________________________________ Le catalogue parent n'existe pas __*/
-	if (parentCatalogue == NULL)
-	  {
-	     TtaError (ERR_invalid_parent_dialogue);
-	     return;
-	  }
-	else if (parentCatalogue->Cat_Widget == 0)
-	  {
-	     TtaError (ERR_invalid_parent_dialogue);
-	     return;
-	  }
-	/*_________________________________________ Sous-menu d'un formulaire __*/
-	else if (parentCatalogue->Cat_Type == CAT_FORM
-		 || parentCatalogue->Cat_Type == CAT_SHEET
-		 || parentCatalogue->Cat_Type == CAT_DIALOG)
-	  {
-	     if (!rebuilded)
-	       {
-		  w = AddInFormulary (parentCatalogue, &i, &ent, &adbloc);
-
+        /*======================================> Recherche le catalogue parent */
+        parentCatalogue = CatEntry (ref_parent);
+        /*__________________________________ Le catalogue parent n'existe pas __*/
+        if (parentCatalogue == NULL) {
+           TtaError (ERR_invalid_parent_dialogue);
+           return;
+		} else if (parentCatalogue->Cat_Widget == 0) {
+               TtaError (ERR_invalid_parent_dialogue);
+               return;
+		} else if (parentCatalogue->Cat_Type == CAT_FORM  || 
+                   parentCatalogue->Cat_Type == CAT_SHEET || 
+                   parentCatalogue->Cat_Type == CAT_DIALOG) {
+        /*_________________________________________ Sous-menu d'un formulaire __*/
+               if (!rebuilded) {
+                  w = AddInFormulary (parentCatalogue, &i, &ent, &adbloc);
 #                 ifdef _WINDOWS
                   menu = w ;
 #                 else  /* _WINDOWS */
-		  /*** Cree un sous-menu d'un formulaire ***/
-		  n = 0;
-		  XtSetArg (args[n], XmNbackground, BgMenu_Color);
-		  n++;
-		  XtSetArg (args[n], XmNmarginWidth, 0);
-		  n++;
-		  XtSetArg (args[n], XmNmarginHeight, 0);
-		  n++;
-		  XtSetArg (args[n], XmNspacing, 0);
-		  n++;
-		  menu = XmCreateRowColumn (w, "Dialogue", args, n);
+                  /*** Cree un sous-menu d'un formulaire ***/
+                  n = 0;
+                  XtSetArg (args[n], XmNbackground, BgMenu_Color);
+                  n++;
+                  XtSetArg (args[n], XmNmarginWidth, 0);
+                  n++;
+                  XtSetArg (args[n], XmNmarginHeight, 0);
+                  n++;
+                  XtSetArg (args[n], XmNspacing, 0);
+                  n++;
+                  menu = XmCreateRowColumn (w, "Dialogue", args, n);
 #                 endif /* !_WINDOWS */
+                  catalogue->Cat_Ref = ref;
+                  catalogue->Cat_Type = CAT_FMENU;
+                  catalogue->Cat_Data = -1;
+                  catalogue->Cat_Widget = menu;
+                  catalogue->Cat_PtParent = parentCatalogue;
+                  adbloc->E_ThotWidget[ent] = (ThotWidget) (catalogue);
+                  adbloc->E_Free[ent] = TEXT('N');
+                  catalogue->Cat_EntryParent = i;
+                  adbloc = NewEList ();
+                  catalogue->Cat_Entries = adbloc;
+			   } else { /* Sinon on recupere le widget du menu */
+                      menu = catalogue->Cat_Widget;
+                      adbloc = catalogue->Cat_Entries;
+			   } 
 
-		  catalogue->Cat_Ref = ref;
-		  catalogue->Cat_Type = CAT_FMENU;
-		  catalogue->Cat_Data = -1;
-		  catalogue->Cat_Widget = menu;
-		  catalogue->Cat_PtParent = parentCatalogue;
-		  adbloc->E_ThotWidget[ent] = (ThotWidget) (catalogue);
-		  adbloc->E_Free[ent] = TEXT('N');
-		  catalogue->Cat_EntryParent = i;
-		  adbloc = NewEList ();
-		  catalogue->Cat_Entries = adbloc;
-	       }
-	     else
-	       {
-		  /* Sinon on recupere le widget du menu */
-		  menu = catalogue->Cat_Widget;
-		  adbloc = catalogue->Cat_Entries;
-	       }
-
-	     /*** Cree le titre du sous-menu ***/
-	     if (title != NULL)
-	       {
-#                 ifdef _WINDOWS
-#                 else  /* _WINDOWS */
-		  n = 0;
-		  title_string = XmStringCreateSimple (title);
-		  XtSetArg (args[n], XmNlabelString, title_string);
-		  n++;
+               /*** Cree le titre du sous-menu ***/
+               if (title != NULL) {
+#                 ifndef _WINDOWS
+                  n = 0;
+                  title_string = XmStringCreateSimple (title);
+                  XtSetArg (args[n], XmNlabelString, title_string);
+                  n++;
 #                 endif /* !_WINDOWS */
-		  if (!rebuilded)
-		    {
-#                      ifdef _WINDOWS
-#                      else  /* _WINDOWS */
-		       XtSetArg (args[n], XmNfontList, DefaultFont);
-		       n++;
-		       XtSetArg (args[n], XmNmarginHeight, 0);
-		       n++;
-		       XtSetArg (args[n], XmNbackground, BgMenu_Color);
-		       n++;
-		       XtSetArg (args[n], XmNforeground, FgMenu_Color);
-		       n++;
-		       w = XmCreateLabel (menu, "Dialogue", args, n);
-		       XtManageChild (w);
-#                      endif /* !_WINDOWS */
-		       adbloc->E_ThotWidget[0] = w;
-#                      ifdef _WINDOWS
-#                      else  /* _WINDOWS */
-		       n = 0;
-		       XtSetArg (args[n], XmNbackground, BgMenu_Color);
-		       n++;
-		       XtSetArg (args[n], XmNseparatorType, XmSHADOW_ETCHED_OUT);
-		       n++;
-		       w = XmCreateSeparator (menu, "Dialogue", args, n);
-		       XtManageChild (w);
-#                      endif /* !_WINDOWS */
-		       adbloc->E_ThotWidget[1] = w;
-		    }
-#                 ifdef _WINDOWS
-#                 else  /* _WINDOWS */
-		  else if (adbloc->E_ThotWidget[0] != 0)
-		     XtSetValues (adbloc->E_ThotWidget[0], args, n);
-
-		  XmStringFree (title_string);
+                  if (!rebuilded) {
+#                    ifndef _WINDOWS
+                     XtSetArg (args[n], XmNfontList, DefaultFont);
+                     n++;
+                     XtSetArg (args[n], XmNmarginHeight, 0);
+                     n++;
+                     XtSetArg (args[n], XmNbackground, BgMenu_Color);
+                     n++;
+                     XtSetArg (args[n], XmNforeground, FgMenu_Color);
+                     n++;
+                     w = XmCreateLabel (menu, "Dialogue", args, n);
+                     XtManageChild (w);
+#                    endif /* !_WINDOWS */
+                     adbloc->E_ThotWidget[0] = w;
+#                    ifndef _WINDOWS
+                     n = 0;
+                     XtSetArg (args[n], XmNbackground, BgMenu_Color);
+                     n++;
+                     XtSetArg (args[n], XmNseparatorType, XmSHADOW_ETCHED_OUT);
+                     n++;
+                     w = XmCreateSeparator (menu, "Dialogue", args, n);
+                     XtManageChild (w);
+#                    endif /* !_WINDOWS */
+                     adbloc->E_ThotWidget[1] = w;
+				  } 
+#                 ifndef _WINDOWS
+                  else if (adbloc->E_ThotWidget[0] != 0)
+                       XtSetValues (adbloc->E_ThotWidget[0], args, n);
+                  XmStringFree (title_string);
 #                 endif /* !_WINDOWS */
-	       }
+			   } 
 
-	     if (!rebuilded)
-	       {
-#                 ifdef _WINDOWS
-#                 else  /* _WINDOWS */
-		  /* Cree un Row-Column de Radio dans le Row-Column du formulaire */
-		  n = 0;
-		  XtSetArg (args[n], XmNradioAlwaysOne, TRUE);
-		  n++;
-		  XtSetArg (args[n], XmNradioBehavior, TRUE);
-		  n++;
-		  XtSetArg (args[n], XmNmarginWidth, 0);
-		  n++;
-		  XtSetArg (args[n], XmNmarginHeight, 0);
-		  n++;
-		  XtSetArg (args[n], XmNspacing, 0);
-		  n++;
-		  XtSetArg (args[n], XmNbackground, BgMenu_Color);
-		  n++;
-		  row = XmCreateRowColumn (menu, "Dialogue", args, n);
-		  XtManageChild (row);
-#                 endif /* !_WINDOWS */
-	       }
-	     else
-		/* Sinon on recupere le widget parent des entrees */
-		row = catalogue->Cat_XtWParent;
+	          if (!rebuilded) {
+#                ifndef _WINDOWS
+                 /* Cree un Row-Column de Radio dans le Row-Column du formulaire */
+                 n = 0;
+                 XtSetArg (args[n], XmNradioAlwaysOne, TRUE);
+                 n++;
+                 XtSetArg (args[n], XmNradioBehavior, TRUE);
+                 n++;
+                 XtSetArg (args[n], XmNmarginWidth, 0);
+                 n++;
+                 XtSetArg (args[n], XmNmarginHeight, 0);
+                 n++;
+                 XtSetArg (args[n], XmNspacing, 0);
+                 n++;
+                 XtSetArg (args[n], XmNbackground, BgMenu_Color);
+                 n++;
+                 row = XmCreateRowColumn (menu, "Dialogue", args, n);
+                 XtManageChild (row);
+#                endif /* !_WINDOWS */
+			  } else /* Sinon on recupere le widget parent des entrees */
+                     row = catalogue->Cat_XtWParent;
 
-#            ifndef _WINDOWS
-	     /*** Cree les differentes entrees du sous-menu ***/
-	     n = 0;
-	     XtSetArg (args[n], XmNindicatorType, XmONE_OF_MANY);
-	     n++;
-	     XtSetArg (args[n], XmNfontList, DefaultFont);
-	     n++;
-	     XtSetArg (args[n], XmNmarginWidth, 0);
-	     n++;
-	     XtSetArg (args[n], XmNmarginHeight, 0);
-	     n++;
-	     XtSetArg (args[n], XmNbackground, BgMenu_Color);
-	     n++;
-	     XtSetArg (args[n], XmNforeground, FgMenu_Color);
-	     n++;
-#            endif /* !_WINDOWS */
-	     if (equiv != NULL)
-		n++;
-	     i = 0;
-	     index = 0;
-	     eindex = 0;
-	     ent = 2;
-	     while (i < number)
-	       {
-		  count = ustrlen (&text[index]);	/* Longueur de l'intitule */
-		  /* S'il n'y a plus d'intitule -> on arrete */
-		  if (count == 0)
-		     i = number;
-		  else
-		    {
-		       /* Faut-il changer de bloc d'entrees ? */
-		       if (ent >= C_NUMBER)
-			 {
-			    adbloc->E_Next = NewEList ();
-			    adbloc = adbloc->E_Next;
-			    ent = 0;
-			 }	/*if */
+#             ifndef _WINDOWS
+              /*** Cree les differentes entrees du sous-menu ***/
+              n = 0;
+              XtSetArg (args[n], XmNindicatorType, XmONE_OF_MANY);
+              n++;
+              XtSetArg (args[n], XmNfontList, DefaultFont);
+              n++;
+              XtSetArg (args[n], XmNmarginWidth, 0);
+              n++;
+              XtSetArg (args[n], XmNmarginHeight, 0);
+              n++;
+              XtSetArg (args[n], XmNbackground, BgMenu_Color);
+              n++;
+              XtSetArg (args[n], XmNforeground, FgMenu_Color);
+              n++;
+              if (equiv != NULL)
+                 n++;
+#             endif /* !_WINDOWS */
+              i = 0;
+              index = 0;
+              eindex = 0;
+              ent = 2;
+              while (i < number) {
+                    count = ustrlen (&text[index]);	/* Longueur de l'intitule */
+                    /* S'il n'y a plus d'intitule -> on arrete */
+                    if (count == 0)
+                       i = number;
+                    else { /* Faut-il changer de bloc d'entrees ? */
+                         if (ent >= C_NUMBER) {
+                            adbloc->E_Next = NewEList ();
+                            adbloc = adbloc->E_Next;
+                            ent = 0;
+						 } /*if */
 
-		       /* On ne traite que des entrees de type bouton */
-		       adbloc->E_Type[ent] = TEXT('B');
-		       adbloc->E_Free[ent] = TEXT('Y');
+                         /* On ne traite que des entrees de type bouton */
+                         adbloc->E_Type[ent] = TEXT('B');
+                         adbloc->E_Free[ent] = TEXT('Y');
 
-		       /* Note l'accelerateur */
-		       if (equiv != NULL)
-			 {
+                         /* Note l'accelerateur */
+                         if (equiv != NULL) {
 #                           ifdef _WINDOWS
                             if (&equiv[eindex] != EOS) {
                                if (parseAccelerator (&equiv[eindex], &fVirt, &key))
                                   addAccelerator (1, fVirt, key, ref);
-                            }
+							}
                             eindex += ustrlen (&equiv[eindex]) + 1;
 #                           else  /* _WINDOWS */
-			    title_string = XmStringCreate (&equiv[eindex], XmSTRING_DEFAULT_CHARSET);
-			    XtSetArg (args[n + 1], XmNacceleratorText, title_string);
-			    eindex += ustrlen (&equiv[eindex]) + 1;
+                            title_string = XmStringCreate (&equiv[eindex], XmSTRING_DEFAULT_CHARSET);
+                            XtSetArg (args[n + 1], XmNacceleratorText, title_string);
+                            eindex += ustrlen (&equiv[eindex]) + 1;
 #                           endif /* !_WINDOWS */
-			 }
-#                      ifdef _WINDOWS
-                       copyCat = catalogue;
-                       WIN_AddFrameCatalogue (w, copyCat) ;
-#                      else  /* _WINDOWS */
-		       w = XmCreateToggleButton (row, &text[index + 1], args, n);
-		       XtManageChild (w);
-		       XtAddCallback (w, XmNarmCallback, (XtCallbackProc) CallRadio, catalogue);
-#                      endif /* !_WINDOWS */
-		       adbloc->E_ThotWidget[ent] = w;
+						 } 
+#                        ifdef _WINDOWS
+                         copyCat = catalogue;
+                         WIN_AddFrameCatalogue (w, copyCat) ;
+#                        else  /* _WINDOWS */
+                         w = XmCreateToggleButton (row, &text[index + 1], args, n);
+                         XtManageChild (w);
+                         XtAddCallback (w, XmNarmCallback, (XtCallbackProc) CallRadio, catalogue);
+#                        endif /* !_WINDOWS */
+                         adbloc->E_ThotWidget[ent] = w;
 
-		       /* liberation de la string */
-#                      ifndef _WINDOWS
-		       if (equiv != NULL)
-			  XmStringFree (title_string);
-#                      endif /* !_WINDOWS */
-		       i++;
-		       index += count + 1;
-		       ent++;
-		    }		/*else */
-	       }		/*while */
+                         /* liberation de la string */
+#                        ifndef _WINDOWS
+                         if (equiv != NULL)
+                            XmStringFree (title_string);
+#                        endif /* !_WINDOWS */
+                         i++;
+                         index += count + 1;
+                         ent++;
+					}	/*else */
+			  }  /*while */
+		} else {   
+               /*_______________________________________________ Sous-menu d'un menu __*/
+               if (parentCatalogue->Cat_Type == CAT_POPUP || 
+                   parentCatalogue->Cat_Type == CAT_PULL  || 
+                   parentCatalogue->Cat_Type == CAT_MENU) {
 
-	  }
-	/*_______________________________________________ Sous-menu d'un menu __*/
-	else
-	  {
-	     if (parentCatalogue->Cat_Type == CAT_POPUP
-		 || parentCatalogue->Cat_Type == CAT_PULL
-		 || parentCatalogue->Cat_Type == CAT_MENU)
-	       {
+                   /* Faut-il reconstruire entierement le menu */
+                   if (!rebuilded) {
+                      /*=========> Recherche l'entree du menu parent corespondante */
+                      adbloc = parentCatalogue->Cat_Entries;
+                      ent = entry + 2;		/* decalage de 2 pour le widget titre */
+                      while (ent >= C_NUMBER) {
+                            if (adbloc->E_Next == NULL) {
+                               TtaError (ERR_invalid_parent_dialogue);
+                               return;
+							} else
+                                  adbloc = adbloc->E_Next;
+                            ent -= C_NUMBER;
+					  } /*while */
 
-		  /* Faut-il reconstruire entierement le menu */
-		  if (!rebuilded)
-		    {
-		      /*=========> Recherche l'entree du menu parent corespondante */
-		       adbloc = parentCatalogue->Cat_Entries;
-		       ent = entry + 2;		/* decalage de 2 pour le widget titre */
-		       while (ent >= C_NUMBER)
-			 {
-			    if (adbloc->E_Next == NULL)
-			      {
-				 TtaError (ERR_invalid_parent_dialogue);
-				 return;
-			      }
-			    else
-			       adbloc = adbloc->E_Next;
-			    ent -= C_NUMBER;
-			 }	/*while */
+                      if ((adbloc->E_Type[ent] == TEXT('M')) && (adbloc->E_Free[ent] == TEXT('Y'))) {
+                         /* Cree un sous-menu d'un menu */
+                         w = parentCatalogue->Cat_Widget;
+#                        ifndef _WINDOWS
+                         n = 0;
+                         XtSetArg (args[n], XmNbackground, BgMenu_Color);
+                         n++;
+                         button = parentCatalogue->Cat_Button;
+                         if (button == TEXT('R'))
+                            XtSetArg (args[n], XmNwhichButton, Button3);
+                         else if (button == TEXT('M'))
+                              XtSetArg (args[n], XmNwhichButton, Button2);
+                         else 
+                              XtSetArg (args[n], XmNwhichButton, Button1);
+                         n++;
+                         XtSetArg (args[n], XmNmarginWidth, 0);
+                         n++;
+                         XtSetArg (args[n], XmNmarginHeight, 0);
+                         n++;
+                         XtSetArg (args[n], XmNspacing, 0);
+                         n++;
+                         menu = XmCreatePulldownMenu (w, "Dialogue", args, n);
+                         /*XtManageChild(menu); */
+#                        endif /* !_WINDOWS */
 
-		       if ((adbloc->E_Type[ent] == TEXT('M')) && (adbloc->E_Free[ent] == TEXT('Y')))
-			 {
-			    /* Cree un sous-menu d'un menu */
-			    w = parentCatalogue->Cat_Widget;
-#                           ifdef _WINDOWS
-#                           else  /* _WINDOWS */
-			    n = 0;
-			    XtSetArg (args[n], XmNbackground, BgMenu_Color);
-			    n++;
-			    button = parentCatalogue->Cat_Button;
-			    if (button == TEXT('R'))
-			       XtSetArg (args[n], XmNwhichButton, Button3);
-			    else if (button == TEXT('M'))
-			       XtSetArg (args[n], XmNwhichButton, Button2);
-			    else
-			       XtSetArg (args[n], XmNwhichButton, Button1);
-			    n++;
-			    XtSetArg (args[n], XmNmarginWidth, 0);
-			    n++;
-			    XtSetArg (args[n], XmNmarginHeight, 0);
-			    n++;
-			    XtSetArg (args[n], XmNspacing, 0);
-			    n++;
-			    menu = XmCreatePulldownMenu (w, "Dialogue", args, n);
-			    /*XtManageChild(menu); */
-#                           endif /* !_WINDOWS */
+                         catalogue->Cat_Ref = ref;
+                         catalogue->Cat_Type = CAT_MENU;
+                         catalogue->Cat_Button = button;
+                         catalogue->Cat_Data = -1;
+                         catalogue->Cat_Widget = menu;
+                         catalogue->Cat_PtParent = parentCatalogue;
+                         /* Memorise l'entree decalee de 2 pour le widget titre */
+                         catalogue->Cat_EntryParent = entry + 2;
 
-			    catalogue->Cat_Ref = ref;
-			    catalogue->Cat_Type = CAT_MENU;
-			    catalogue->Cat_Button = button;
-			    catalogue->Cat_Data = -1;
-			    catalogue->Cat_Widget = menu;
-			    catalogue->Cat_PtParent = parentCatalogue;
-			    /* Memorise l'entree decalee de 2 pour le widget titre */
-			    catalogue->Cat_EntryParent = entry + 2;
+                         /*** Relie le sous-menu au bouton du menu ***/
+                         w = adbloc->E_ThotWidget[ent];
+#                        ifdef _WINDOWS
+                         if (!IsMenu (catalogue->Cat_Widget))
+                            catalogue->Cat_Widget = w;
+#                        else  /* _WINDOWS */
+                         n = 0;
+                         XtSetArg (args[n], XmNsubMenuId, menu);
+                         n++;
+                         XtSetValues (w, args, n);
+                         XtManageChild (w);
+                         XtManageChild (menu);
+#                        endif /* !_WINDOWS */
+                         adbloc->E_Free[ent] = TEXT('N');
 
-			    /*** Relie le sous-menu au bouton du menu ***/
-			    w = adbloc->E_ThotWidget[ent];
-			    n = 0;
-#                           ifdef _WINDOWS
-                if (!IsMenu (catalogue->Cat_Widget))
-                   catalogue->Cat_Widget = w;
-#                           else  /* _WINDOWS */
-			    XtSetArg (args[n], XmNsubMenuId, menu);
-			    n++;
-			    XtSetValues (w, args, n);
-			    XtManageChild (w);
-			    XtManageChild (menu);
-#                           endif /* !_WINDOWS */
-			    adbloc->E_Free[ent] = TEXT('N');
+                         adbloc = NewEList ();
+                         catalogue->Cat_Entries = adbloc;
+					  } else {
+                             TtaError (ERR_invalid_parameter);
+                             return;
+					  } 
+				   } else { /* On recupere le widget du menu */
+                          menu = catalogue->Cat_Widget;
+                          adbloc = catalogue->Cat_Entries;
+				   }
+			   } else {
+                      /*____________________________________________ Sous-menu non valide __*/
+                      TtaError (ERR_invalid_parameter);
+                      return;
+			   } 
 
-			    adbloc = NewEList ();
-			    catalogue->Cat_Entries = adbloc;
-			 }
-		       else
-			 {
-			    TtaError (ERR_invalid_parameter);
-			    return;
-			 }
-		    }
-		  else
-		    {
-		       /* On recupere le widget du menu */
-		       menu = catalogue->Cat_Widget;
-		       adbloc = catalogue->Cat_Entries;
-		    }
-	       }
-	     /*____________________________________________ Sous-menu non valide __*/
-	     else
-	       {
-		  TtaError (ERR_invalid_parameter);
-		  return;
-	       }
-
-/*** Cree le titre du sous-menu ***/
-	     if (title != NULL)
-	       {
-		  n = 0;
+               /*** Cree le titre du sous-menu ***/
+               if (title != NULL) {
 #                 ifndef _WINDOWS
-		  title_string = XmStringCreateSimple (title);
-		  XtSetArg (args[n], XmNlabelString, title_string);
-		  n++;
+                  n = 0;
+                  title_string = XmStringCreateSimple (title);
+                  XtSetArg (args[n], XmNlabelString, title_string);
+                  n++;
 #                 endif /* !_WINDOWS */
-		  if (!rebuilded)
-		    {
-#                      ifdef _WINDOWS
-#                      else  /* _WINDOWS */
-		       XtSetArg (args[n], XmNfontList, DefaultFont);
-		       n++;
-		       XtSetArg (args[n], XmNmarginHeight, 0);
-		       n++;
-		       XtSetArg (args[n], XmNbackground, BgMenu_Color);
-		       n++;
-		       XtSetArg (args[n], XmNforeground, FgMenu_Color);
-		       n++;
-		       w = XmCreateLabel (menu, "Dialogue", args, n);
-		       XtManageChild (w);
-#                      endif /* !_WINDOWS */
-		       adbloc->E_ThotWidget[0] = w;
-		       n = 0;
-#                      ifdef _WINDOWS
-#                      else  /* _WINDOWS */
-		       XtSetArg (args[n], XmNbackground, BgMenu_Color);
-		       n++;
-		       XtSetArg (args[n], XmNseparatorType, XmSHADOW_ETCHED_OUT);
-		       n++;
-		       w = XmCreateSeparator (menu, "Dialogue", args, n);
-		       XtManageChild (w);
-#                      endif /* !_WINDOWS */
-		       adbloc->E_ThotWidget[1] = w;
-		    }
-#                 ifdef _WINDOWS
-#                 else  /* _WINDOWS */
-		  else if (adbloc->E_ThotWidget[0] != 0)
-		     XtSetValues (adbloc->E_ThotWidget[0], args, n);
-		  XmStringFree (title_string);
+                  if (!rebuilded) {
+#                    ifndef _WINDOWS
+                     XtSetArg (args[n], XmNfontList, DefaultFont);
+                     n++;
+                     XtSetArg (args[n], XmNmarginHeight, 0);
+                     n++;
+                     XtSetArg (args[n], XmNbackground, BgMenu_Color);
+                     n++;
+                     XtSetArg (args[n], XmNforeground, FgMenu_Color);
+                     n++;
+                     w = XmCreateLabel (menu, "Dialogue", args, n);
+                     XtManageChild (w);
+#                    endif /* !_WINDOWS */
+                     adbloc->E_ThotWidget[0] = w;
+#                    ifndef _WINDOWS
+                     n = 0;
+                     XtSetArg (args[n], XmNbackground, BgMenu_Color);
+                     n++;
+                     XtSetArg (args[n], XmNseparatorType, XmSHADOW_ETCHED_OUT);
+                     n++;
+                     w = XmCreateSeparator (menu, "Dialogue", args, n);
+                     XtManageChild (w);
+#                    endif /* !_WINDOWS */
+                     adbloc->E_ThotWidget[1] = w;
+				  }
+#                 ifndef _WINDOWS
+                  else if (adbloc->E_ThotWidget[0] != 0)
+                       XtSetValues (adbloc->E_ThotWidget[0], args, n);
+                  XmStringFree (title_string);
 #                 endif /* !_WINDOWS */
-	       }
+			   } 
 
-	     /* Cree les differentes entrees du sous-menu */
-#            ifndef _WINDOWS
-	     n = 0;
-	     XtSetArg (args[n], XmNfontList, DefaultFont);
-	     n++;
-	     XtSetArg (args[n], XmNmarginWidth, 0);
-	     n++;
-	     XtSetArg (args[n], XmNmarginHeight, 0);
-	     n++;
-	     XtSetArg (args[n], XmNbackground, BgMenu_Color);
-	     n++;
-	     XtSetArg (args[n], XmNforeground, FgMenu_Color);
-	     n++;
-#            endif /* !_WINDOWS */
-	     if (equiv != NULL)
-		n++;
-	     i = 0;
-	     index = 0;
-	     eindex = 0;
-	     ent = 2;
-	     while (i < number)
-	       {
-		  count = ustrlen (&text[index]);	/* Longueur de l'intitule */
-		  /* S'il n'y a plus d'intitule -> on arrete */
-		  if (count == 0)
-		    {
-		       i = number;
-		       TtaError (ERR_invalid_parameter);
-		       return;
-		    }
-		  else
-		    {
+               /* Cree les differentes entrees du sous-menu */
+#              ifndef _WINDOWS
+               n = 0;
+               XtSetArg (args[n], XmNfontList, DefaultFont);
+               n++;
+               XtSetArg (args[n], XmNmarginWidth, 0);
+               n++;
+               XtSetArg (args[n], XmNmarginHeight, 0);
+               n++;
+               XtSetArg (args[n], XmNbackground, BgMenu_Color);
+               n++;
+               XtSetArg (args[n], XmNforeground, FgMenu_Color);
+               n++;
+               if (equiv != NULL)
+                  n++;
+#              endif /* !_WINDOWS */
+               i = 0;
+               index = 0;
+               eindex = 0;
+               ent = 2;
+               while (i < number) {
+                     count = ustrlen (&text[index]);	/* Longueur de l'intitule */
+                     /* S'il n'y a plus d'intitule -> on arrete */
+                     if (count == 0) {
+                        i = number;
+                        TtaError (ERR_invalid_parameter);
+                        return;
+					 } else { /* Faut-il changer de bloc d'entrees ? */
+                            if (ent >= C_NUMBER) {
+                               adbloc->E_Next = NewEList ();
+                               adbloc = adbloc->E_Next;
+                               ent = 0;
+							}	/*if */
 
-		       /* Faut-il changer de bloc d'entrees ? */
-		       if (ent >= C_NUMBER)
-			 {
-			    adbloc->E_Next = NewEList ();
-			    adbloc = adbloc->E_Next;
-			    ent = 0;
-			 }	/*if */
+                            /* Recupere le type de l'entree */
+                            adbloc->E_Type[ent] = text[index];
+                            adbloc->E_Free[ent] = TEXT('Y');
 
-		       /* Recupere le type de l'entree */
-		       adbloc->E_Type[ent] = text[index];
-		       adbloc->E_Free[ent] = TEXT('Y');
+                            /* Note l'accelerateur */
+                            if (equiv != NULL) {
+#                              ifdef _WINDOWS
+                               if (&equiv[eindex] != EOS) {
+                                  if (parseAccelerator (&equiv[eindex], &fVirt, &key))
+                                     addAccelerator (currentFrame, fVirt, key, ref + i);
+                                  usprintf (equiv_item, TEXT("%s"), &equiv[eindex]);
+							   } 
+                               eindex += ustrlen (&equiv[eindex]) + 1;
+#                              else  /* !_WINDOWS */
+                               title_string = XmStringCreate (&equiv[eindex], XmSTRING_DEFAULT_CHARSET);
+                               eindex += ustrlen (&equiv[eindex]) + 1;
+                               XtSetArg (args[n - 1], XmNacceleratorText, title_string);
+#                              endif /* !_WINDOWS */
+							} 
 
-		       /* Note l'accelerateur */
-		       if (equiv != NULL)
-			 {
-#                           ifdef _WINDOWS
-                            if (&equiv[eindex] != EOS) {
-                               if (parseAccelerator (&equiv[eindex], &fVirt, &key))
-                                  addAccelerator (currentFrame, fVirt, key, ref + i);
-                               usprintf (equiv_item, TEXT("%s"), &equiv[eindex]);
-                            }
-                            eindex += ustrlen (&equiv[eindex]) + 1;
-#                           else  /* !_WINDOWS */
-			    title_string = XmStringCreate (&equiv[eindex], XmSTRING_DEFAULT_CHARSET);
-			    eindex += ustrlen (&equiv[eindex]) + 1;
-			    XtSetArg (args[n - 1], XmNacceleratorText, title_string);
+                            if (text[index] == TEXT('B')) {
+                               /*________________________________________ Creation d'un bouton __*/
+#                              ifdef _WINDOWS
+                               if (equiv_item && equiv_item[0] != 0) {
+                                  usprintf (menu_item, TEXT("%s\t%s"), &text[index + 1], equiv_item);
+                                  AppendMenu (w, MF_STRING, ref + i, menu_item);
+                                  equiv_item [0] = 0;
+							   } else 
+                                      AppendMenu (w, MF_STRING, ref + i, &text[index + 1]);
+                               adbloc->E_ThotWidget[ent] = (ThotWidget) i;
+                               copyCat = catalogue;
+                               /* WIN_AddFrameCatalogue (currentMenu, copyCat) ; */
+                               WIN_AddFrameCatalogue (FrMainRef [currentFrame], copyCat) ;
+#                              else  /* _WINDOWS */
+                               w = XmCreatePushButton (menu, &text[index + 1], args, n);
+                               XtManageChild (w);
+                               adbloc->E_ThotWidget[ent] = w;
+                               XtAddCallback (w, XmNactivateCallback, (XtCallbackProc) CallMenu, catalogue);
+#                             endif /* !_WINDOWS */
+							} else if (text[index] == TEXT('T')) {
+                                   /*________________________________________ Creation d'un toggle __*/
+#                                  ifdef _WINDOWS
+                                   if (equiv_item && equiv_item[0] != 0) {
+                                      usprintf (menu_item, TEXT("%s\t%s"), &text[index + 1], equiv_item);
+                                      AppendMenu (w, MF_STRING | MF_UNCHECKED, ref + i, menu_item);
+                                      equiv_item [0] = 0;
+								   } else 
+                                          AppendMenu (w, MF_STRING | MF_UNCHECKED, ref + i, &text[index + 1]);
+                                   adbloc->E_ThotWidget[ent] = (ThotWidget) i;
+                                   adbloc->E_ThotWidget[ent + 1] = (ThotWidget) -1;
+                                   copyCat = catalogue;
+                                   /* WIN_AddFrameCatalogue (currentMenu, copyCat) ; */
+                                   WIN_AddFrameCatalogue (FrMainRef [currentFrame], copyCat) ;
+#                                  else  /* _WINDOWS */
+                                   /* un toggle a faux */
+                                   XtSetArg (args[n], XmNvisibleWhenOff, TRUE);
+                                   XtSetArg (args[n + 1], XmNselectColor, BgMenu_Color);
+                                   w = XmCreateToggleButton (menu, &text[index + 1], args, n + 2);
+                                   XtManageChild (w);
+                                   adbloc->E_ThotWidget[ent] = w;
+                                   XtAddCallback (w, XmNvalueChangedCallback, (XtCallbackProc) CallMenu, catalogue);
+#                                  endif /* !_WINDOWS */
+							} else if (text[index] == TEXT('M')) {
+                                   /*________________________________________ Appel d'un sous-menu __*/
+#                           ifndef _WINDOWS
+                            w = XmCreateCascadeButton (menu, &text[index + 1], args, n);
+                            adbloc->E_ThotWidget[ent] = w;
 #                           endif /* !_WINDOWS */
-			 }
+							} else if (text[index] == TEXT('F')) {
+                                   /*__________________________________ Appel d'un sous-formulaire __*/
+#                                  ifndef _WINDOWS
+                                   ustrcpy (heading, &text[index + 1]);
+                                   ustrcat (heading, "...");
+                                   w = XmCreatePushButton (menu, heading, args, n);
+                                   XtManageChild (w);
+                                   adbloc->E_ThotWidget[ent] = w;
+#                                  endif /* !_WINDOWS */
+							} else if (text[index] == TEXT('S')) {
+                                   /*_________________________________ Creation d'un separateur __*/
+#                                  ifdef _WINDOWS
+                                   AppendMenu (w, MF_SEPARATOR, 0, NULL);
+                                   adbloc->E_ThotWidget[ent] = (ThotWidget) 0;
+#                                  else  /* _WINDOWS */
+                                   XtSetArg (args[n], XmNseparatorType, XmSINGLE_DASHED_LINE);
+                                   w = XmCreateSeparator (menu, "Dialogue", args, n + 1);
+                                   XtManageChild (w);
+                                   adbloc->E_ThotWidget[ent] = w;
+#                                  endif /* !_WINDOWS */
+							} else {
+                                   /*__________________________________ Une erreur de construction __*/
+                                   TtaDestroyDialogue (ref);
+                                   TtaError (ERR_invalid_parameter);	/* Type d'entree non defini */
+                                   return;
+							} 
 
-		       if (text[index] == TEXT('B'))
-			 /*________________________________________ Creation d'un bouton __*/
-			 {
-#                           ifdef _WINDOWS
-                            if (equiv_item && equiv_item[0] != 0) {
-                               usprintf (menu_item, TEXT("%s\t%s"), &text[index + 1], equiv_item);
-                               AppendMenu (w, MF_STRING, ref + i, menu_item);
-                               equiv_item [0] = 0;
-                            } else 
-                                 AppendMenu (w, MF_STRING, ref + i, &text[index + 1]);
-			    adbloc->E_ThotWidget[ent] = (ThotWidget) i;
-                            copyCat = catalogue;
-                            /* WIN_AddFrameCatalogue (currentMenu, copyCat) ; */
-                            WIN_AddFrameCatalogue (FrMainRef [currentFrame], copyCat) ;
-#                           else  /* _WINDOWS */
-			    w = XmCreatePushButton (menu, &text[index + 1], args, n);
-			    XtManageChild (w);
-			    adbloc->E_ThotWidget[ent] = w;
-			    XtAddCallback (w, XmNactivateCallback, (XtCallbackProc) CallMenu, catalogue);
+                            /* liberation de la string */
+#                           ifndef _WINDOWS
+                            if (equiv != NULL)
+                               XmStringFree (title_string);
 #                           endif /* !_WINDOWS */
-			 }
-		       else if (text[index] == TEXT('T'))
-			 /*________________________________________ Creation d'un toggle __*/
-			 {
-#                           ifdef _WINDOWS
-                            if (equiv_item && equiv_item[0] != 0) {
-                               usprintf (menu_item, TEXT("%s\t%s"), &text[index + 1], equiv_item);
-                               AppendMenu (w, MF_STRING | MF_UNCHECKED, ref + i, menu_item);
-                               equiv_item [0] = 0;
-                            } else 
-                                 AppendMenu (w, MF_STRING | MF_UNCHECKED, ref + i, &text[index + 1]);
-                            adbloc->E_ThotWidget[ent] = (ThotWidget) i;
-                            adbloc->E_ThotWidget[ent + 1] = (ThotWidget) -1;
-                            copyCat = catalogue;
-                            /* WIN_AddFrameCatalogue (currentMenu, copyCat) ; */
-                            WIN_AddFrameCatalogue (FrMainRef [currentFrame], copyCat) ;
-#                           else  /* _WINDOWS */
-			    /* un toggle a faux */
-			    XtSetArg (args[n], XmNvisibleWhenOff, TRUE);
-			    XtSetArg (args[n + 1], XmNselectColor, BgMenu_Color);
-			    w = XmCreateToggleButton (menu, &text[index + 1], args, n + 2);
-			    XtManageChild (w);
-			    adbloc->E_ThotWidget[ent] = w;
-			    XtAddCallback (w, XmNvalueChangedCallback, (XtCallbackProc) CallMenu, catalogue);
-#                           endif /* !_WINDOWS */
-			 }
-		       else if (text[index] == TEXT('M'))
-			 /*________________________________________ Appel d'un sous-menu __*/
-			 {
-#                           ifdef _WINDOWS
-#                           else  /* _WINDOWS */
-			    w = XmCreateCascadeButton (menu, &text[index + 1], args, n);
-			    adbloc->E_ThotWidget[ent] = w;
-#                           endif /* !_WINDOWS */
-			 }
-		       else if (text[index] == TEXT('F'))
-			 /*__________________________________ Appel d'un sous-formulaire __*/
-			 {
-#                           ifdef _WINDOWS
-#                           else  /* _WINDOWS */
-			    ustrcpy (heading, &text[index + 1]);
-			    ustrcat (heading, "...");
-			    w = XmCreatePushButton (menu, heading, args, n);
-			    XtManageChild (w);
-			    adbloc->E_ThotWidget[ent] = w;
-#                           endif /* !_WINDOWS */
-			 }
-		       else if (text[index] == TEXT('S'))
-			 /*_________________________________ Creation d'un separateur __*/
-			 {
-#                           ifdef _WINDOWS
-                            AppendMenu (w, MF_SEPARATOR, 0, NULL);
-                            adbloc->E_ThotWidget[ent] = (ThotWidget) 0;
-#                           else  /* _WINDOWS */
-			    XtSetArg (args[n], XmNseparatorType, XmSINGLE_DASHED_LINE);
-			    w = XmCreateSeparator (menu, "Dialogue", args, n + 1);
-			    XtManageChild (w);
-			    adbloc->E_ThotWidget[ent] = w;
-#                           endif /* !_WINDOWS */
-			 }
-		       else
-			 /*__________________________________ Une erreur de construction __*/
-			 {
-			    TtaDestroyDialogue (ref);
-			    TtaError (ERR_invalid_parameter);	/* Type d'entree non defini */
-			    return;
-			 }
-
-		       /* liberation de la string */
-#                      ifndef _WINDOWS
-		       if (equiv != NULL)
-			  XmStringFree (title_string);
-#                      endif /* !_WINDOWS */
-		       i++;
-		       index += count + 1;
-		       ent++;
-		    }
+                            i++;
+                            index += count + 1;
+                            ent++;
+			 }  
 	       }		/*while */
 
-	  }
+		 }
      }
 }
 
@@ -4982,13 +4906,6 @@ ThotBool            on;
                          WinErrorBox (NULL);
 			   }
 			}
-
-			
-			/* if (CheckMenuItem (hMenu, ref + val, MF_UNCHECKED) == 0xFFFFFFFF) {
-                  hMenu = GetMenu (owner);
-                  if (CheckMenuItem (hMenu, ref + val, MF_UNCHECKED) == 0xFFFFFFFF)
-                     WinErrorBox (NULL);
-			}*/
 		}
    }
 #  else  /* !_WINDOWS  */
@@ -5904,7 +5821,7 @@ int                 cattype;
 	     XtSetValues (form, argform, 1);
 #            else  /* _WINDOWS */
              strSize = ustrlen (TtaGetMessage (LIB, TMSG_LIB_CONFIRM)) * charWidth + 20;
-             formulary.Buttons[bIndex] = CreateWindow (_BUTTONCST_, TtaGetMessage (LIB, TMSG_LIB_CONFIRM), 
+             formulary.Buttons[bIndex] = CreateWindow (TEXT("BUTTON"), TtaGetMessage (LIB, TMSG_LIB_CONFIRM), 
                                                        WS_CHILD | BS_PUSHBUTTON | WS_VISIBLE,
                                                        bAbsBase, 300, strSize, 20, parent, 
                                                        (HMENU) IDCANCEL, hInstance, NULL) ;
@@ -5967,7 +5884,7 @@ int                 cattype;
 		       w = XmCreatePushButton (row, TtaGetMessage (LIB, TMSG_CANCEL), args, n);
 #                      else  /* _WINDOWS */
                        strSize = ustrlen (TtaGetMessage (LIB, TMSG_CANCEL)) * charWidth + 10;
-                       formulary.Buttons[bIndex] = CreateWindow (_BUTTONCST_, TtaGetMessage (LIB, TMSG_CANCEL), 
+                       formulary.Buttons[bIndex] = CreateWindow (TEXT("BUTTON"), TtaGetMessage (LIB, TMSG_CANCEL), 
                                                                  WS_CHILD | BS_PUSHBUTTON | WS_VISIBLE,
                                                                  bAbsBase, 300, strSize, 20, parent, 
                                                                  (HMENU) IDCANCEL, hInstance, NULL) ;
@@ -5980,7 +5897,7 @@ int                 cattype;
 		       w = XmCreatePushButton (row, TtaGetMessage (LIB, TMSG_DONE), args, n);
 #                      else  /* _WINDOWS */
                        strSize = ustrlen (TtaGetMessage (LIB, TMSG_DONE)) * charWidth + 10;
-                       formulary.Buttons[bIndex] = CreateWindow (_BUTTONCST_, TtaGetMessage (LIB, TMSG_DONE), 
+                       formulary.Buttons[bIndex] = CreateWindow (TEXT("BUTTON"), TtaGetMessage (LIB, TMSG_DONE), 
                                                                  WS_CHILD | BS_PUSHBUTTON | WS_VISIBLE,
                                                                  bAbsBase, 300, strSize, 20, parent, 
                                                                  (HMENU) IDCANCEL, hInstance, NULL) ;
@@ -5995,7 +5912,7 @@ int                 cattype;
 #          else  /* _WINDOWS */
 	  {
              strSize = ustrlen (ptr) * charWidth + 10;
-             formulary.Buttons[bIndex] = CreateWindow (_BUTTONCST_, ptr, 
+             formulary.Buttons[bIndex] = CreateWindow (TEXT("BUTTON"), ptr, 
                                                        WS_CHILD | BS_PUSHBUTTON | WS_VISIBLE,
                                                        bAbsBase, 300, strSize, 20, parent, 
                                                        (HMENU) (ref + bIndex), hInstance, NULL) ;
@@ -7025,7 +6942,7 @@ STRING              text;
 	w = XmCreateLabel (w, "Dialogue", args, n);
 #       else  /* _WINDOWS */
 	if (!isOnlyBlank (text)) {
-	   w = CreateWindow (_STATICCST_, text, WS_CHILD | WS_VISIBLE | SS_LEFT, 10, cyValue, 100, 30, 
+	   w = CreateWindow (TEXT("STATIC"), text, WS_CHILD | WS_VISIBLE | SS_LEFT, 10, cyValue, 100, 30, 
 			     parentCatalogue->Cat_Widget, (HMENU) ref, hInstance, NULL);
 	   cyValue += 40;
 	}
@@ -7185,7 +7102,7 @@ ThotBool            react;
 		  /*XtSetArg(args[n], XmNscrollVertical, FALSE); n++; */
 		  w = XmCreateText (row, "Dialogue", args, n);
 #                 else  /* _WINDOWS */
-		  w = CreateWindow (_EDITCST_, _EMPTYSTR_, WS_CHILD | WS_VISIBLE | ES_LEFT | WS_BORDER, 
+		  w = CreateWindow (TEXT("EDIT"), _EMPTYSTR_, WS_CHILD | WS_VISIBLE | ES_LEFT | WS_BORDER, 
 				    10, cyValue, 200, 30, parentCatalogue->Cat_Widget, (HMENU) ref, hInstance, NULL);
 		  cyValue += 40;
 #                 endif /* _WINDOWS */

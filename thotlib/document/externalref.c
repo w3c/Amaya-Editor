@@ -105,7 +105,7 @@ BinFile             file;
 	       while (label[j - 1] != EOS);
 	       break;
 	    default:
-	       DisplayPivotMessage (_S_);
+	       DisplayPivotMessage (TEXT("S"));
 	       break;
 	 }
 }
@@ -204,7 +204,7 @@ ThotBool            labelsOnly;
 	if (c != (CHAR_T) C_PIV_DOCNAME || error)
 	  {
 	     /* ce n'est pas une marque de nom */
-	     DisplayPivotMessage (_T_);
+		DisplayPivotMessage (TEXT("T"));
 	     error = TRUE;
 	  }
 	while (c == (CHAR_T) C_PIV_DOCNAME && !error)
@@ -293,7 +293,7 @@ PtrChangedReferredEl *Anchor;
 	     if (c != (CHAR_T) C_PIV_DOCNAME)
 	       {
 		  /* a name was expected */
-		  DisplayPivotMessage (_T_);
+		  DisplayPivotMessage (TEXT("T"));
 		  error = TRUE;
 	       }
 	     else
@@ -308,7 +308,7 @@ PtrChangedReferredEl *Anchor;
 		  if (c != (CHAR_T) C_PIV_DOCNAME)
 		    {
 		       /* a name was expected */
-		       DisplayPivotMessage (_T_);
+		       DisplayPivotMessage (TEXT("T"));
 		       error = TRUE;
 		    }
 		  else

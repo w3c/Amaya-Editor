@@ -280,7 +280,7 @@ STRING title	;
    MSG         msg;
    int         frame;
 
-   szAppName = _FormClassCST_ ;
+   szAppName = TEXT("FormClass") ;
    if (!wndRegistered) {
 	  wndRegistered = TRUE;
       wndFormClass.style         = CS_HREDRAW | CS_VREDRAW ;

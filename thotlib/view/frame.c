@@ -22,6 +22,10 @@
 #include "message.h"
 #include "appdialogue.h"
 
+#ifdef _WINDOWS
+#include "wininclude.h"
+#endif /* _WINDOWS */
+
 #undef THOT_EXPORT
 #define THOT_EXPORT extern
 #include "boxes_tv.h"

@@ -113,7 +113,7 @@ View                view;
 	     src = &buf[0];
 	     for (k = 1; k <= nbItems; k++)
 	       {
-		  ustrcpy (dest, _B_);
+		  ustrcpy (dest, TEXT("B"));
 		  dest++;
 		  l = ustrlen (src);
 		  ustrcpy (dest, src);

@@ -416,7 +416,7 @@ PtrDocument         pDoc;
 	      src = &BufMenu[0];
 	      for (k = 1; k <= nbitem; k++)
 		{
-		   ustrcpy (dest, _B_);
+		   ustrcpy (dest, TEXT("B"));
 		   dest++;
 		   l = ustrlen (src);
 		   ustrcpy (dest, src);
@@ -426,7 +426,7 @@ PtrDocument         pDoc;
 	      nbitem++;
 	      if (pDoc->DocPivotVersion == -1)
 		{
-		  ustrcpy (dest, _B_);
+		  ustrcpy (dest, TEXT("B"));
 		  dest++;
 		  ustrcpy (dest, TEXT("Pivot"));
 		  PivotEntryNum = nbitem;
@@ -435,7 +435,7 @@ PtrDocument         pDoc;
 	      else if (ThotLocalActions[T_xmlparsedoc] != NULL)
 		/* XML extensions are loaded add xml item */
 		{
-		  ustrcpy (dest, _B_);
+		  ustrcpy (dest, TEXT("B"));
 		  dest++;
 		  ustrcpy (dest, XML_EXT2);
 		  PivotEntryNum = nbitem;

@@ -632,7 +632,7 @@ void                SpellCheckLoadResources ()
      {
 	TteConnectAction (T_rscorrector, (Proc) CallbackCorrector);
 	TteConnectAction (T_corrector, (Proc) TtcSpellCheck);
-	CORR = TtaGetMessageTable (_CorrdialogueCST_, MSG_MAX_CHECK);
+	CORR = TtaGetMessageTable (TEXT("corrdialogue"), MSG_MAX_CHECK);
 	SpellingBase = TtaSetCallback (CallbackCorrector, ChkrMaxDialogue);
 	/* Initialisation des variables globales */
 	ParametrizeChecker ();

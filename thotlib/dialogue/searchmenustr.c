@@ -487,7 +487,7 @@ PtrDocument         pDoc;
 	lgmenu = 0;
 	for (nat = 0; nat < LgTableNaturesDoc && lgmenu < LgMaxListeTypes - MAX_NAME_LENGTH; nat++)
 	  {
-	     ustrcpy (ListeTypes + lgmenu, _B_);
+	     ustrcpy (ListeTypes + lgmenu, TEXT("B"));
 	     if (TableNaturesDoc[nat]->SsExtension)
 	       {
 		  ustrncpy (ListeTypes + lgmenu + 1, TableNaturesDoc[nat]->SsName,

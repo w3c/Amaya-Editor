@@ -177,76 +177,76 @@ STRING              name;
       return (unsigned int) THOT_KEY_Escape;
    else if (!ustrcasecmp (name, _DeleteKEY_))
       return (unsigned int) THOT_KEY_Delete;
-   else if (!ustrcasecmp (name, _F1KEY_))
+   else if (!ustrcasecmp (name, TEXT("F1")))
       return (unsigned int) THOT_KEY_F1;
-   else if (!ustrcasecmp (name, _F2KEY_))
+   else if (!ustrcasecmp (name, TEXT("F2")))
       return (unsigned int) THOT_KEY_F2;
-   else if (!ustrcasecmp (name, _F3KEY_))
+   else if (!ustrcasecmp (name, TEXT("F3")))
       return (unsigned int) THOT_KEY_F3;
-   else if (!ustrcasecmp (name, _F4KEY_))
+   else if (!ustrcasecmp (name, TEXT("F4")))
       return (unsigned int) THOT_KEY_F4;
-   else if (!ustrcasecmp (name, _F5KEY_))
+   else if (!ustrcasecmp (name, TEXT("F5")))
       return (unsigned int) THOT_KEY_F5;
-   else if (!ustrcasecmp (name, _F6KEY_))
+   else if (!ustrcasecmp (name, TEXT("F6")))
       return (unsigned int) THOT_KEY_F6;
-   else if (!ustrcasecmp (name, _F7KEY_))
+   else if (!ustrcasecmp (name, TEXT("F7")))
       return (unsigned int) THOT_KEY_F7;
-   else if (!ustrcasecmp (name, _F8KEY_))
+   else if (!ustrcasecmp (name, TEXT("F8")))
       return (unsigned int) THOT_KEY_F8;
-   else if (!ustrcasecmp (name, _F9KEY_))
+   else if (!ustrcasecmp (name, TEXT("F9")))
       return (unsigned int) THOT_KEY_F9;
-   else if (!ustrcasecmp (name, _F10KEY_))
+   else if (!ustrcasecmp (name, TEXT("F10")))
       return (unsigned int) THOT_KEY_F10;
-   else if (!ustrcasecmp (name, _F11KEY_) || !ustrcasecmp (name, TEXT("l1")))
+   else if (!ustrcasecmp (name, TEXT("F11")) || !ustrcasecmp (name, TEXT("l1")))
       return (unsigned int) THOT_KEY_F11;
-   else if (!ustrcasecmp (name, _F12KEY_) || !ustrcasecmp (name, TEXT("l2")))
+   else if (!ustrcasecmp (name, TEXT("F12")) || !ustrcasecmp (name, TEXT("l2")))
       return (unsigned int) THOT_KEY_F12;
-   else if (!ustrcasecmp (name, _F13KEY_) || !ustrcasecmp (name, TEXT("l3")))
+   else if (!ustrcasecmp (name, TEXT("F13")) || !ustrcasecmp (name, TEXT("l3")))
       return (unsigned int) THOT_KEY_F13;
-   else if (!ustrcasecmp (name, _F14KEY_) || !ustrcasecmp (name, TEXT("l4")))
+   else if (!ustrcasecmp (name, TEXT("F14")) || !ustrcasecmp (name, TEXT("l4")))
       return (unsigned int) THOT_KEY_F14;
-   else if (!ustrcasecmp (name, _F15KEY_) || !ustrcasecmp (name, TEXT("l5")))
+   else if (!ustrcasecmp (name, TEXT("F15")) || !ustrcasecmp (name, TEXT("l5")))
       return (unsigned int) THOT_KEY_F15;
-   else if (!ustrcasecmp (name, _F16KEY_) || !ustrcasecmp (name, TEXT("l6")))
+   else if (!ustrcasecmp (name, TEXT("F16")) || !ustrcasecmp (name, TEXT("l6")))
       return (unsigned int) THOT_KEY_F16;
-   else if (!ustrcasecmp (name, _F17KEY_) || !ustrcasecmp (name, TEXT("l7")))
+   else if (!ustrcasecmp (name, TEXT("F17")) || !ustrcasecmp (name, TEXT("l7")))
       return (unsigned int) THOT_KEY_F17;
-   else if (!ustrcasecmp (name, _F18KEY_) || !ustrcasecmp (name, TEXT("l8")))
+   else if (!ustrcasecmp (name, TEXT("F18")) || !ustrcasecmp (name, TEXT("l8")))
       return (unsigned int) THOT_KEY_F18;
-   else if (!ustrcasecmp (name, _F19KEY_) || !ustrcasecmp (name, TEXT("l9")))
+   else if (!ustrcasecmp (name, TEXT("F19")) || !ustrcasecmp (name, TEXT("l9")))
       return (unsigned int) THOT_KEY_F19;
-   else if (!ustrcasecmp (name, _F20KEY_) || !ustrcasecmp (name, TEXT("l10")))
+   else if (!ustrcasecmp (name, TEXT("F20")) || !ustrcasecmp (name, TEXT("l10")))
       return (unsigned int) THOT_KEY_F20;
 #ifdef THOT_KEY_R1
-   else if (!ustrcasecmp (name, _F21KEY_) || !ustrcasecmp (name, "r1"))
+   else if (!ustrcasecmp (name, TEXT("F21")) || !ustrcasecmp (name, "r1"))
       return (unsigned int) THOT_KEY_R1;
-   else if (!ustrcasecmp (name, _F22KEY_) || !ustrcasecmp (name, "r2"))
+   else if (!ustrcasecmp (name, TEXT("F22")) || !ustrcasecmp (name, "r2"))
       return (unsigned int) THOT_KEY_R2;
-   else if (!ustrcasecmp (name, _F23KEY_) || !ustrcasecmp (name, "r3"))
+   else if (!ustrcasecmp (name, TEXT("F23")) || !ustrcasecmp (name, "r3"))
       return (unsigned int) THOT_KEY_R3;
-   else if (!ustrcasecmp (name, _F24KEY_) || !ustrcasecmp (name, "r4"))
+   else if (!ustrcasecmp (name, TEXT("F24")) || !ustrcasecmp (name, "r4"))
       return (unsigned int) THOT_KEY_R4;
-   else if (!ustrcasecmp (name, _F25KEY_) || !ustrcasecmp (name, "r5"))
+   else if (!ustrcasecmp (name, TEXT("F25")) || !ustrcasecmp (name, "r5"))
       return (unsigned int) THOT_KEY_R5;
-   else if (!ustrcasecmp (name, _F26KEY_) || !ustrcasecmp (name, "r6"))
+   else if (!ustrcasecmp (name, TEXT("F26")) || !ustrcasecmp (name, "r6"))
       return (unsigned int) THOT_KEY_R6;
-   else if (!ustrcasecmp (name, _F27KEY_) || !ustrcasecmp (name, "r7"))
+   else if (!ustrcasecmp (name, TEXT("F27")) || !ustrcasecmp (name, "r7"))
       return (unsigned int) THOT_KEY_R7;
-   else if (!ustrcasecmp (name, _F28KEY_) || !ustrcasecmp (name, "r8"))
+   else if (!ustrcasecmp (name, TEXT("F28")) || !ustrcasecmp (name, "r8"))
       return (unsigned int) THOT_KEY_R8;
-   else if (!ustrcasecmp (name, _F29KEY_) || !ustrcasecmp (name, "r9"))
+   else if (!ustrcasecmp (name, TEXT("F29")) || !ustrcasecmp (name, "r9"))
       return (unsigned int) THOT_KEY_R9;
-   else if (!ustrcasecmp (name, _F30KEY_) || !ustrcasecmp (name, "r10"))
+   else if (!ustrcasecmp (name, TEXT("F30")) || !ustrcasecmp (name, "r10"))
       return (unsigned int) THOT_KEY_R10;
-   else if (!ustrcasecmp (name, _F31KEY_) || !ustrcasecmp (name, "r11"))
+   else if (!ustrcasecmp (name, TEXT("F31")) || !ustrcasecmp (name, "r11"))
       return (unsigned int) THOT_KEY_R11;
-   else if (!ustrcasecmp (name, _F32KEY_) || !ustrcasecmp (name, "r12"))
+   else if (!ustrcasecmp (name, TEXT("F32")) || !ustrcasecmp (name, "r12"))
       return (unsigned int) THOT_KEY_R12;
-   else if (!ustrcasecmp (name, _F33KEY_) || !ustrcasecmp (name, "r13"))
+   else if (!ustrcasecmp (name, TEXT("F33")) || !ustrcasecmp (name, "r13"))
       return (unsigned int) THOT_KEY_R13;
-   else if (!ustrcasecmp (name, _F34KEY_) || !ustrcasecmp (name, "r14"))
+   else if (!ustrcasecmp (name, TEXT("F34")) || !ustrcasecmp (name, "r14"))
       return (unsigned int) THOT_KEY_R14;
-   else if (!ustrcasecmp (name, _F35KEY_) || !ustrcasecmp (name, "r15"))
+   else if (!ustrcasecmp (name, TEXT("F35")) || !ustrcasecmp (name, "r15"))
       return (unsigned int) THOT_KEY_R15;
 #endif /* THOT_KEY_R1 */
    else if (!ustrcasecmp (name, _UpKEY_))

@@ -106,7 +106,7 @@ void Prof_InitTable()
 		  else
 		    {
 		      tab[nb_elem] = TtaGetMemory(sizeof string);
-		      ustrcpy(tab[nb_elem],TEXT(string));
+		      ustrcpy(tab[nb_elem],ISO2WideChar (string));
 		      tab[nb_elem][ustrlen(tab[nb_elem])-1] = EOS;
 		      nb_elem++;
 		    }

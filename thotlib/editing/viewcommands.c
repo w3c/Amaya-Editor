@@ -1233,7 +1233,7 @@ View                view;
                      for (k = 1; k <= nbPres; k++)
                        {
                           /* ajoute 'B' au debut de chaque entree */
-                          ustrcpy (dest, _B_);
+                          ustrcpy (dest, TEXT("B"));
                           dest++;
                           l = ustrlen (src);
                           ustrcpy (dest, src);

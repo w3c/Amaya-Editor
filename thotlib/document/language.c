@@ -723,7 +723,7 @@ STRING              TtaGetVarLANG ()
    name = TtaGetEnvString (_LANG_EVAR_);
    if (name == NULL)
       ustrcpy (StandardLANG, _EnLANG_);
-   else if (!ustrcmp (name, _C_) || !ustrcasecmp (name, _ISO_ID1_))
+   else if (!ustrcmp (name, TEXT("C")) || !ustrcasecmp (name, _ISO_ID1_))
       ustrcpy (StandardLANG, _FrLANG_);
    else
      {

@@ -32,6 +32,10 @@
 #include "message.h"
 #include "appdialogue.h"
 
+#ifdef _WINDOWS
+#include "wininclude.h"
+#endif /* _WINDOWS */
+
 #define THOT_EXPORT
 #include "boxes_tv.h"
 #undef THOT_EXPORT

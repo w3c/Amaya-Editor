@@ -61,7 +61,7 @@ static void           LoadAlphabet ()
     ustrcpy (alphaName, _EMPTYSTR_);
 
   ustrcat (alphaName, DIR_STR);
-  ustrcat (alphaName, _AlphabetCST_);
+  ustrcat (alphaName, TEXT("alphabet"));
   
   if ((falpha = ufopen (alphaName, _ReadMODE_)) != NULL)
     {
@@ -261,11 +261,11 @@ STRING              dictDirectory;
   int                 ret, i;
   CHAR_T                tempbuffer[THOT_MAX_CHAR];
 
-  FindCompleteName (dictName, _DicCST_, dictDirectory, tempbuffer, &i);
+  FindCompleteName (dictName, TEXT("dic"), dictDirectory, tempbuffer, &i);
   if (TtaFileExist (tempbuffer) == 0)	/* Unknown file */
     {
       /* Looks for not pre-treated dictionary */
-      FindCompleteName (dictName, _DCTCST_, dictDirectory, tempbuffer, &i);
+      FindCompleteName (dictName, TEXT("DCT"), dictDirectory, tempbuffer, &i);
       if (TtaFileExist (tempbuffer) == 0)
 	{
 	  /* File .DCT unknown: looks for a dictionary LEX not pre-treated */
@@ -436,11 +436,11 @@ ThotBool            toTreat;
   *pDictionary = NULL;
   /* Opening the file */
   if (treated)
-    FindCompleteName (dictName, _DicCST_, dictDirectory, tempbuffer, &i);
+    FindCompleteName (dictName, TEXT("dic"), dictDirectory, tempbuffer, &i);
   else
     {
       if (toTreat)
-	FindCompleteName (dictName, _DCTCST_, dictDirectory, tempbuffer, &i);
+	FindCompleteName (dictName, TEXT("DCT"), dictDirectory, tempbuffer, &i);
       else
 	FindCompleteName (dictName, _LEXCST_, dictDirectory, tempbuffer, &i);
     }

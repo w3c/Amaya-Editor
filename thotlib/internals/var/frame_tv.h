@@ -28,6 +28,7 @@ THOT_EXPORT Frame_Ctl   FrameTable[MAX_FRAME+1];
 THOT_EXPORT ThotWindow  FrRef[MAX_FRAME + 2];		/* window references */
 #ifdef _WINDOWS
 THOT_EXPORT ThotWindow  FrMainRef[MAX_FRAME + 2];	/* window references */
+THOT_EXPORT CHAR_T      wTitle [256];
 #endif /* _WINDOWS */
 THOT_EXPORT ThotColor BackgroundColor[MAX_FRAME + 2];	/* Background color */
 THOT_EXPORT int       DefaultBColor;    /* default background color index      */

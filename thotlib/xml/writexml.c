@@ -1084,9 +1084,9 @@ ThotBool        withEvent;
 		  /* write the flag indicating if it is */
 		  /* absolute or relative value */
 		  if(((PtrPRule) pRule)->PrDimRule.DrAbsolute)
-		    ok = ok && XmlWriteString(xmlFile, _A_);
+		    ok = ok && XmlWriteString(xmlFile, TEXT("A"));
 		  else
-		    ok = ok && XmlWriteString(xmlFile, _R_);
+		    ok = ok && XmlWriteString(xmlFile, TEXT("R"));
 		  ok = ok && XmlWriteString(xmlFile, TEXT(":"));
 		}
 

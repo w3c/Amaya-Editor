@@ -262,10 +262,10 @@ ThotColor* colorpixel;
 	TtaGiveRGB (value, &red, &green, &blue);
 	col = TtaGetThotColor (red, green, blue);
 	/* register the default background color */
-	if (ustrcmp (colorplace, _BackgroundColorCST_) == 0)
+	if (ustrcmp (colorplace, TEXT("BackgroundColor")) == 0)
 	   DefaultBColor = col;
 	/* register the default background color */
-	else if (ustrcmp (colorplace, _ForegroundColorCST_) == 0)
+	else if (ustrcmp (colorplace, TEXT("ForegroundColor")) == 0)
 	   DefaultFColor = col;
 #   ifdef _WINDOWS 
 	*colorpixel = col;
@@ -309,14 +309,14 @@ void TtaUpdateEditorColors ()
 
   /* background color */
 #       ifndef _WINDOWS
-  found = FindColor (0, app_name, _BackgroundColorCST_, "gainsboro",
+  found = FindColor (0, app_name, TEXT("BackgroundColor"), TEXT("gainsboro"),
 		     &White_Color);
 #       else  /* _WINDOWS */
-  found = FindColor (0, app_name, _BackgroundColorCST_, TEXT("LightGrey1"), 
+  found = FindColor (0, app_name, TEXT("BackgroundColor"), TEXT("LightGrey1"), 
 		     &White_Color);
 #       endif /* _WINDOWS */
   /* drawing color */
-  found = FindColor (0, app_name, _ForegroundColorCST_, TEXT("Black"), &Black_Color);
+  found = FindColor (0, app_name, TEXT("ForegroundColor"), TEXT("Black"), &Black_Color);
   /* color for the menu background */
   found = FindColor (0, app_name, _MenuBgColorCST_, TEXT("Grey"), &BgMenu_Color);
   /* color for the menu foregroundground */
@@ -383,10 +383,10 @@ STRING              name;
 #       ifndef _WINDOWS
 	found = FindColor (0, name, "BackgroundColor", "gainsboro", &White_Color);
 #       else  /* _WINDOWS */
-	found = FindColor (0, name, _BackgroundColorCST_, TEXT("LightGrey1"), &White_Color);
+	found = FindColor (0, name, TEXT("BackgroundColor"), TEXT("LightGrey1"), &White_Color);
 #       endif /* _WINDOWS */
 	/* drawing color */
-	found = FindColor (0, name, _ForegroundColorCST_, TEXT("Black"), &Black_Color);
+	found = FindColor (0, name, TEXT("ForegroundColor"), TEXT("Black"), &Black_Color);
 	/* color for the menu background */
 	found = FindColor (0, name, _MenuBgColorCST_, TEXT("Grey"), &BgMenu_Color);
 	/* color for the menu foregroundground */
@@ -397,21 +397,21 @@ STRING              name;
 #       ifndef _WINDOWS
 	found = FindColor (0, name, "DocSelectColor", "SteelBlue", &Select_Color);
 #       else  /* _WINDOWS */
-	found = FindColor (0, name, _DocSelectColorCST_, TEXT("Blue"), &Select_Color);
+	found = FindColor (0, name, TEXT("DocSelectColor"), TEXT("Blue"), &Select_Color);
 #       endif /* _WINDOWS */
 	/* color for borders and buttons */
 #       ifndef _WINDOWS
 	found = FindColor (0, name, "InactiveItemColor", "LightGrey", &InactiveB_Color);
 #       else  /* _WINDOWS */
-	found = FindColor (0, name, _InactiveItemColorCST_, TEXT("LightGrey1"), &InactiveB_Color);
+	found = FindColor (0, name, TEXT("InactiveItemColor"), TEXT("LightGrey1"), &InactiveB_Color);
 #       endif /* _WINDOWS */
      }
    else
       /* at least allocate the selection color */
-      found = FindColor (0, name, _DocSelectColorCST_, TEXT("White"), &Select_Color);
+      found = FindColor (0, name, TEXT("DocSelectColor"), TEXT("White"), &Select_Color);
 
    /* The reference color */
-   found = FindColor (0, name, _ActiveBoxColorCST_, TEXT("Red"), &(Box_Color));
+   found = FindColor (0, name, TEXT("ActiveBoxColor"), TEXT("Red"), &(Box_Color));
 #  ifndef _WINDOWS
    if (!found)
       Box_Color = cwhite.pixel;

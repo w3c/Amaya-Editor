@@ -383,7 +383,7 @@ PathBuffer          directory;
 		else
 		  {
 		     ustrncpy (docNameBuffer, (STRING) SSchemaName, MAX_NAME_LENGTH);
-		     ustrcat (docNameBuffer, _X_);
+		     ustrcat (docNameBuffer, TEXT("X"));
 		  }
 		if ((*pDoc)->DocSSchema != NULL)
 		   if ((*pDoc)->DocSSchema->SsPSchema != NULL)

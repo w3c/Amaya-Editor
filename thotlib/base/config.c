@@ -340,13 +340,13 @@ ThotBool           *import;
       /* le premier mot n'est pas seul dans la ligne, erreur */
       return;
 
-   if (ustrcmp (word, _DocumentCST_) == 0)
+   if (ustrcmp (word, TEXT("document")) == 0)
       *typ = CONFIG_DOCUMENT_STRUCT;
    else if (ustrcmp (word, _NatureCST_) == 0)
       *typ = CONFIG_NATURE_STRUCT;
-   else if (ustrcmp (word, _ExtensionCST_) == 0)
+   else if (ustrcmp (word, TEXT("extension")) == 0)
       *typ = CONFIG_EXTENSION_STRUCT;
-   else if (ustrcmp (word, _DocumentNatureCST_) == 0)
+   else if (ustrcmp (word, TEXT("document-nature")) == 0)
       *typ = CONFIG_EXCLUSION;
    else
       /* le premier mot du fichier est invalide */
@@ -383,7 +383,7 @@ ThotBool           *import;
    if (*typ == CONFIG_DOCUMENT_STRUCT || *typ == CONFIG_EXCLUSION)
       /* Il s'agit d'un type de document, on cherche une ligne */
       /* contenant un seul mot: "import" ou "translation" */
-      res = readUntil (file, _ImportCST_, _TranslationCST_);
+      res = readUntil (file, TEXT("import"), _TranslationCST_);
    else
       /* il s'agit d'une nature ou d'une extension, on ne cherche */
       /* que la ligne "translation" */
@@ -877,9 +877,9 @@ STRING              BufMenu;
 		     /* si la ligne contient un mot cle marquant le debut d'une autre */
 		     /* section, on a fini */
 		     if (singleWord (line))
-			if (ustrcmp (word, _ExportCST_) == 0)
+			if (ustrcmp (word, TEXT("export")) == 0)
 			   stop = TRUE;
-			else if (ustrcmp (word, _ImportCST_) == 0)
+			else if (ustrcmp (word, TEXT("import")) == 0)
 			   stop = TRUE;
 			else if (ustrcmp (word, _TranslationCST_) == 0)
 			   stop = TRUE;
@@ -1016,7 +1016,7 @@ STRING              BufMenu;
    if (file == NULL)
       return 0;
    stop = FALSE;
-   if (readUntil (file, _ExportCST_, _EMPTYSTR_))
+   if (readUntil (file, TEXT("export"), _EMPTYSTR_))
       do
 	{
 	   if (ufgets (line, MAX_TXT_LEN - 1, file) == NULL)
@@ -1032,7 +1032,7 @@ STRING              BufMenu;
 		     if (singleWord (line))
 			if (ustrcmp (word, _PresentationCST_) == 0)
 			   stop = TRUE;
-			else if (ustrcmp (word, _ImportCST_) == 0)
+			else if (ustrcmp (word, TEXT("import")) == 0)
 			   stop = TRUE;
 			else if (ustrcmp (word, _TranslationCST_) == 0)
 			   stop = TRUE;
@@ -1205,9 +1205,9 @@ PtrSSchema          pSS;
 		     if (singleWord (line))
 			if (ustrcmp (word, _PresentationCST_) == 0)
 			   stop = TRUE;
-			else if (ustrcmp (word, _ExportCST_) == 0)
+			else if (ustrcmp (word, TEXT("export")) == 0)
 			   stop = TRUE;
-			else if (ustrcmp (word, _ImportCST_) == 0)
+			else if (ustrcmp (word, TEXT("import")) == 0)
 			   stop = TRUE;
 			else
 			  {
@@ -1419,7 +1419,7 @@ STRING              line;
 		  {
 		     if (ustrcmp (word1, _OpenCST_) == 0)
 			stop = TRUE;
-		     else if (ustrcmp (word1, _GeometryCST_) == 0)
+		     else if (ustrcmp (word1, TEXT("geometry")) == 0)
 			stop = TRUE;
 		     else if (ustrcmp (word1, _PresentationCST_) == 0)
 			stop = TRUE;
@@ -1630,7 +1630,7 @@ int                *height;
 	    section "geometry" */
 	 {
 	   TtaReadClose (file);
-	   file = openConfFileAndReadUntil (pDoc->DocSSchema, _GeometryCST_);
+	   file = openConfFileAndReadUntil (pDoc->DocSSchema, TEXT("geometry"));
 	   if (file != NULL)
 	       while (!found && getNextLineInSection (file, line))
 		 {

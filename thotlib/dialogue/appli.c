@@ -1323,12 +1323,12 @@ LPARAM      lParam;
                 UpdateWindow (StatusBar);
 
                 /* Create client window */
-                hwndClient = CreateWindowEx (WS_EX_CLIENTEDGE, _ClientWndProcCST_, NULL,
+                hwndClient = CreateWindowEx (WS_EX_CLIENTEDGE, TEXT("ClientWndProc"), NULL,
                                              WS_CHILD | WS_VISIBLE | WS_BORDER, 0, 0, 0, 0,
                                              hwnd, (HMENU) 2, hInstance, NULL) ;
                 ShowWindow (hwndClient, SW_SHOWNORMAL);
                 UpdateWindow (hwndClient);
-
+                SetWindowText (hwnd, wTitle);
                 return 0;
 
            case WM_PALETTECHANGED: 
@@ -1395,7 +1395,7 @@ LPARAM      lParam;
                 if (!viewClosed) {
                    FrameToView (frame, &doc, &view);
                    viewName = TtaGetViewName (doc, view);
-                   if (!ustrcmp (viewName, _FormattedViewCST_))
+                   if (!ustrcmp (viewName, TEXT("Formatted_view")))
                       TtcCloseDocument (doc, view);
                    else
                        TtcCloseView (doc, view);

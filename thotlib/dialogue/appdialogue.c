@@ -341,11 +341,7 @@ int                 number;
 	   MenuActionList[FreeMenuAction].ActionActive[i] = TRUE;
      }
    for (i = FreeMenuAction;i < MaxMenuAction;i++) {
-#   ifdef _WINDOWS 
 	MenuActionList[i].ActionName = _EMPTYSTR_;
-#   else  /* !_WINDOWS */
-	MenuActionList[i].ActionName = "";
-#   endif /* _WINDOWS */
 	MenuActionList[i].Call_Action = NULL;
 	MenuActionList[i].User_Action = NULL;
 	MenuActionList[i].ActionEquiv = NULL;
@@ -1020,7 +1016,7 @@ int                 frame;
 	 {
 	   if (( ptrmenu != NULL ) && !( Prof_RemoveSeparators(ptrmenu, item, LastItemType)))
 	     {
-	       ustrcpy (&string[i], _S_);
+	       ustrcpy (&string[i], TEXT("S"));
 	       i += 2;
 	     }
 	 }
@@ -1120,7 +1116,7 @@ int                 doc;
 	     {
 	       if (!( Prof_RemoveSeparators(ptrmenu, item,LastItemType)))
 		 {
-		   ustrcpy (&string[i], _S_);
+		   ustrcpy (&string[i], TEXT("S"));
 		   i += 2;
 		 }
 	       else
@@ -2200,7 +2196,7 @@ void                (*procedure) ();
 #                 else  /* _WINDOWS */
 		          currentFrame = frame;
                   GetClientRect (FrMainRef [frame], &rect);
-                  w = CreateWindow (_EDITCST_, _EMPTYSTR_, WS_CHILD | WS_VISIBLE | ES_LEFT | WS_BORDER | ES_AUTOHSCROLL,
+                  w = CreateWindow (TEXT("EDIT"), _EMPTYSTR_, WS_CHILD | WS_VISIBLE | ES_LEFT | WS_BORDER | ES_AUTOHSCROLL,
                                     0, 0, 0, 0, FrMainRef[frame], (HMENU) i, hInstance, NULL);
 
                   FrameTable[frame].Text_Zone[i] = w;
@@ -2211,7 +2207,7 @@ void                (*procedure) ();
 				  else
 				     SetWindowLong (FrameTable[frame].Text_Zone[i], GWL_WNDPROC, (DWORD) textZoneProc);
 
-                  wLabel = CreateWindow (_STATICCST_, label, WS_CHILD | WS_VISIBLE | SS_LEFT, 
+                  wLabel = CreateWindow (TEXT("STATIC"), label, WS_CHILD | WS_VISIBLE | SS_LEFT, 
                                          0, 0, 0, 0, FrMainRef[frame], (HMENU) (i + MAX_TEXTZONE), hInstance, NULL);
                   FrameTable[frame].Label[i] = wLabel;
 				  /* FrameTable[frame].showLogo = TRUE ; */
@@ -2468,6 +2464,8 @@ int                 doc;
    ToolBar    = 0;
    logoFrame  = 0;
    StatusBar  = 0;
+
+   ustrcpy (wTitle, name);
 #  endif /* _WINDOWS */
 
    frame = 0;
@@ -2545,7 +2543,7 @@ int                 doc;
 #          endif /* 0 */
 
 	   Main_Wd = CreateWindowEx (0L, TEXT("Amaya"),    /* window class name */
-				     TEXT("Amaya"),	/* window caption    */
+				     NULL,	/* window caption    */
 				     WS_OVERLAPPEDWINDOW, /* window style            */
 				     X,	    /* initial x pos           */
 				     Y,	    /* initial y pos           */

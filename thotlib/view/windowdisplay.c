@@ -3481,7 +3481,7 @@ int                 y;
 	WIN_GetDeviceContext (frame);
 
 	PatBlt (TtDisplay, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, width, height, PATINVERT);
-    WIN_ReleaseDeviceContext ();
+    /* WIN_ReleaseDeviceContext (); */
 #endif /* _WINDOWS */
      }
 }

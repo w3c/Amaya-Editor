@@ -608,7 +608,7 @@ BinFile             file;
 	       break;
 	    default:
 	       PivotError (file);
-	       DisplayPivotMessage (_l_);
+	       DisplayPivotMessage (TEXT("l"));
 	       align = AlignLeft;
 	       break;
 	 }
@@ -677,7 +677,7 @@ BinFile             file;
 	       break;
 	    default:
 	       PivotError (file);
-	       DisplayPivotMessage (_C_);
+	       DisplayPivotMessage (TEXT("C"));
 	       typ = PgComputed;
 	       break;
 	 }
@@ -721,7 +721,7 @@ ThotBool            oldformat;
      {
 	PivotError (file);
 	/* tag debut de commentaire ancien format absente */
-	DisplayPivotMessage (_y_);
+	DisplayPivotMessage (TEXT("y"));
 	firstBuf = NULL;
      }
    else
@@ -811,7 +811,7 @@ ThotBool            oldformat;
 	     if (c != (CHAR_T) C_PIV_END)
 	       {
 		  PivotError (file);
-		  DisplayPivotMessage (_c_);
+		  DisplayPivotMessage (TEXT("c"));
 	       }
 	  }
      }
@@ -1206,7 +1206,7 @@ STRING              tag;
 		     if (rule == 0)
 		       {
 			  PivotError (pivFile);
-			  DisplayPivotMessage (_n_);
+			  DisplayPivotMessage (TEXT("n"));
 		       }
 		     else
 			*pSS = (*pSS)->SsRule[rule - 1].SrSSchemaNat;
@@ -1227,7 +1227,7 @@ STRING              tag;
 	{
 	   rule = 0;
 	   PivotError (pivFile);
-	   DisplayPivotMessage (_t_);
+	   DisplayPivotMessage (TEXT("t"));
 	}
 
    return rule;
@@ -1501,7 +1501,7 @@ PtrAttribute       *pAttr;
 			if (!TtaReadByte (pivFile, &c))
 			  {
 			     PivotError (pivFile);
-			     DisplayPivotMessage (_A_);
+			     DisplayPivotMessage (TEXT("A"));
 			  }
 		     while (!error && c != EOS) ;
 		  else
@@ -1516,7 +1516,7 @@ PtrAttribute       *pAttr;
 			     /* erreur de lecture */
 			    {
 			       PivotError (pivFile);
-			       DisplayPivotMessage (_A_);
+			       DisplayPivotMessage (TEXT("A"));
 			    }
 			  else
 			     /* on a lu correctement un caractere */
@@ -1810,7 +1810,7 @@ ThotBool            link;
       break;
     default:
       PivotError (pivFile);
-      DisplayPivotMessage (_p_);
+      DisplayPivotMessage (TEXT("p"));
       break;
     }
 
@@ -2193,7 +2193,7 @@ ThotBool            createDesc;
 	    }
 	}
       printf ("\n");
-      DisplayPivotMessage (_I_);	/* erreur */
+      DisplayPivotMessage (TEXT("I"));	/* erreur */
       PivotError (pivFile);
     }
   else
@@ -2373,7 +2373,7 @@ ThotBool            createDesc;
 		  /* portant ce label, erreur */
 		  {
 		    pEl->ElReferredDescr = NULL;
-		    DisplayPivotMessage (_L_);
+		    DisplayPivotMessage (TEXT("L"));
 		  }
 		else
 		  pEl->ElReferredDescr->ReReferredElem = pEl;
@@ -2440,7 +2440,7 @@ ThotBool            createDesc;
 	      if (*tag != (CHAR_T) C_PIV_REFERENCE)
 		{
 		  PivotError (pivFile);
-		  DisplayPivotMessage (_R_);	/* erreur */
+		  DisplayPivotMessage (TEXT("R"));	/* erreur */
 		}
 	      else
 		/* traitement des references : on lit la reference */
@@ -2456,7 +2456,7 @@ ThotBool            createDesc;
 	      if (*tag != (CHAR_T) C_PIV_BEGIN)
 		{
 		  PivotError (pivFile);
-		  DisplayPivotMessage (_M_);	/* erreur, pas de tag debut */
+		  DisplayPivotMessage (TEXT("M"));	/* erreur, pas de tag debut */
 		}
 	      else
 		/* traitement des paires : on lit l'identificateur */
@@ -2472,7 +2472,7 @@ ThotBool            createDesc;
 		    /* erreur, pas de tag de fin */
 		    {
 		      PivotError (pivFile);
-		      DisplayPivotMessage (_m_);
+		      DisplayPivotMessage (TEXT("m"));
 		    }
 		  else if (!TtaReadByte (pivFile, tag))
 		    PivotError (pivFile);
@@ -2653,7 +2653,7 @@ ThotBool            createDesc;
 				    if (n == THOT_MAX_CHAR - 1)
 				      {
 					PivotError (pivFile);
-					DisplayPivotMessage (_x_);
+					DisplayPivotMessage (TEXT("x"));
 				      }
 				    n++;
 				    /* range le caractere et lit le suivant */
@@ -2774,7 +2774,7 @@ ThotBool            createDesc;
 		  if (*tag != (CHAR_T) C_PIV_END)
 		    {
 		      PivotError (pivFile);
-		      DisplayPivotMessage (_F_);
+		      DisplayPivotMessage (TEXT("F"));
 		    }
 		  
 		  if (!TtaReadByte (pivFile, tag))
@@ -2789,7 +2789,7 @@ ThotBool            createDesc;
 		    if (pEl->ElTerminal)
 		      {
 			PivotError (pivFile);
-			DisplayPivotMessage (_f_);
+			DisplayPivotMessage (TEXT("f"));
 		      }
 		  /* erreur: feuille avec contenu */
 		  if (!error)
@@ -3140,7 +3140,7 @@ void (*withThisPSchema) ();
    if (SSName[i - 1] != EOS)
      {
 	PivotError (file);
-	DisplayPivotMessage (_Z_);
+	DisplayPivotMessage (TEXT("Z"));
      }
    else
      {
@@ -3300,7 +3300,7 @@ STRING              tag;
 	   if (languageName[i - 1] != EOS)
 	     {
 		PivotError (file);
-		DisplayPivotMessage (_Z_);
+		DisplayPivotMessage (TEXT("Z"));
 	     }
 	   else
 	     {
@@ -3467,7 +3467,7 @@ ThotBool		    removeExclusions
    if (!error && tag != (CHAR_T) C_PIV_NATURE)
      {
 	PivotError (file);
-	DisplayPivotMessage (_N_);	/* tag classe absente */
+	DisplayPivotMessage (TEXT("N"));	/* tag classe absente */
      }
    if (!error)
       /* lit les noms des schemas de structure et de presentation */
@@ -3530,7 +3530,7 @@ ThotBool		    removeExclusions
 	   if (i > MAX_PARAM_DOC)
 	     {
 		PivotError (file);
-		DisplayPivotMessage (_Y_);
+		DisplayPivotMessage (TEXT("Y"));
 	     }
 	   else
 	     {
@@ -3651,7 +3651,7 @@ ThotBool		    removeExclusions
 		       if (!found)
 			 {
 			    PivotError (file);
-			    DisplayPivotMessage (_a_);
+			    DisplayPivotMessage (TEXT("a"));
 			 }
 		       else
 			  /* cree l'element liste pour ce type d'elements associes */
@@ -3711,7 +3711,7 @@ ThotBool		    removeExclusions
 	      if (tag != (CHAR_T) C_PIV_STRUCTURE)
 		{
 		   PivotError (file);
-		   DisplayPivotMessage (_O_);
+		   DisplayPivotMessage (TEXT("O"));
 		}
 	      else
 		{
@@ -3720,7 +3720,7 @@ ThotBool		    removeExclusions
 		   if (tag != (CHAR_T) C_PIV_TYPE && tag != (CHAR_T) C_PIV_NATURE)
 		     {
 			PivotError (file);
-			DisplayPivotMessage (_P_);
+			DisplayPivotMessage (TEXT("P"));
 		     }
 		   else
 		     {

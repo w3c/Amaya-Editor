@@ -84,6 +84,7 @@ const STRING str;
 #   endif /* defined(_I18N_) || defined(__JIS__) */
 }
 
+#ifdef _I18N_
 #ifdef __STDC__
 void TranslateCharToUnicode(PCHAR_T pwc) 
 #else  /* !__STDC__ */
@@ -112,6 +113,7 @@ PCHAR_T pwc;
 #   else  /* !_WINDOWS */
 #   endif /* _WINDOWS */
 }
+#endif /* _I18N_ */
 
 #ifdef _I18N_
 #ifdef __STDC__
