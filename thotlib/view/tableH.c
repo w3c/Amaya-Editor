@@ -46,6 +46,7 @@ static ThotBool          Lock = FALSE;
 static ThotBool          DoUnlock1 = FALSE;
 static ThotBool          DoUnlock2 = FALSE;
 
+#include "appli_f.h"
 #include "attributes_f.h"
 #include "boxmoves_f.h"
 #include "boxrelations_f.h"
@@ -696,14 +697,18 @@ static void CheckTableWidths (PtrAbstractBox table, int frame, ThotBool freely)
     /* limit given by available space */
     width = pParent->AbBox->BxW - mbp;
   else if (percent != 0)
-    /* limit given by precent of available space */
-    width = (pParent->AbBox->BxW * percent / 100) - mbp;
+    {
+      /* inherited from the window */
+      //GetSizesFrame (frame, &delta, &i);
+      /* limit given by precent of available space */
+      width = (pParent->AbBox->BxW * percent / 100) - mbp;
+    }
 
-  if (constraint && width == 0)
+  if (constraint && width < 20)
     {
       /* limit given by available space */
       width = table->AbEnclosing->AbBox->BxW - mbp;
-      constraint = FALSE;
+      constraint = pCell == NULL;
     }
   else if (constraint && pCell && width > table->AbEnclosing->AbBox->BxW - mbp)
     {
