@@ -1104,7 +1104,7 @@ static HWND WIN_InitScrPopup (ThotWindow parent, int ref,
   GetCursorPos (&curPoint);
   menu = CreateWindow (szAppName,  NULL,
 		       WS_POPUP, curPoint.x, curPoint.y,
-		       130, (nbOptions < 15) ? 17*nbOptions : 255 ,
+		       width, height,
 		       parent, NULL, hInstance, NULL);
   if (!menu)
     return NULL;
@@ -3536,7 +3536,9 @@ void TtaNewScrollPopup (int ref, ThotWidget parent, char *title, int number,
       scr_window = gtk_scrolled_window_new (NULL, NULL);
       gtk_widget_show (scr_window);
       /* set the widget size */
-      gtk_widget_set_usize (scr_window, width, height);
+      /* (experience shows that GTK doesn't report a good font height ! Multiplying
+       it by two fixes a bit the problem)  */
+      gtk_widget_set_usize (scr_window, width, height * 2);
       GTK_WIDGET_UNSET_FLAGS (GTK_SCROLLED_WINDOW (scr_window)->hscrollbar, GTK_CAN_FOCUS);
       GTK_WIDGET_UNSET_FLAGS (GTK_SCROLLED_WINDOW (scr_window)->vscrollbar, GTK_CAN_FOCUS);
       gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scr_window), GTK_POLICY_AUTOMATIC,
