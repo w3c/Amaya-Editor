@@ -708,12 +708,6 @@ static void ANNOT_Load2 (Document doc, View view, AnnotLoadMode mode)
 	    /* @@ what shall we do with annotations and replies? */
 	    CopyAlgaeTemplateURL (&annotURL, tmp_doc_url);
 	  
-	  if (tmp_body_url != body_url)
-	    TtaFreeMemory (tmp_body_url);
-
-	  if (tmp_doc_url != doc_url)
-	    TtaFreeMemory (tmp_doc_url);
-
 	  /* launch the request */
 	  if (!is_active)
 	    {
@@ -736,6 +730,12 @@ static void ANNOT_Load2 (Document doc, View view, AnnotLoadMode mode)
 	  TtaFreeMemory (annotURL);
 	}
     }
+  if (tmp_body_url != body_url)
+    TtaFreeMemory (tmp_body_url);
+  
+  if (tmp_doc_url != doc_url)
+    TtaFreeMemory (tmp_doc_url);
+
 }
 
 /*-----------------------------------------------------------------------
