@@ -2699,6 +2699,14 @@ ThotBool DoubleClickInLog (NotifyElement *event)
 }
 
 /*----------------------------------------------------------------------
+  RightClickInLog The user has right-clicked a log message.         
+  ----------------------------------------------------------------------*/
+ThotBool RightClickInLog (NotifyElement *event)
+{
+  return (ShowLogLine (event->element, event->document));
+}
+
+/*----------------------------------------------------------------------
    A new element has been selected. Update menus accordingly.      
   ----------------------------------------------------------------------*/
 void SelectionChanged (NotifyElement *event)

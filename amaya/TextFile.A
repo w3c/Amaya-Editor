@@ -9,6 +9,7 @@ DEFAULT
 	ElemSelect.Post -> SynchronizeSourceView;
         ElemClick.Pre -> SimpleClickInLog;
 	ElemActivate.Pre -> DoubleClickInLog;
+        ElemRClick.Pre -> RightClickInLog;
    END;
 
 ATTRIBUTES
