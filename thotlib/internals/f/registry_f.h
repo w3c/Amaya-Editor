@@ -11,7 +11,6 @@ extern void TtaSetEnvString ( char *name,
                               char *value,
                               int overwrite );
 extern void TtaSaveAppRegistry ( void );
-extern char *ThotDir ( void );
 extern void TtaInitializeAppRegistry ( char *appArgv0 );
 extern int SearchFile ( char *fileName,
                         int dir,
@@ -24,7 +23,6 @@ extern void TtaSetEnvString (/* char *name,
                                 char *value,
                                 int overwrite */);
 extern void TtaSaveAppRegistry (/* void */);
-extern char *ThotDir (/* void */);
 extern void TtaInitializeAppRegistry (/* char *appArgv0 */);
 extern int SearchFile (/* char *fileName,
                           int dir,

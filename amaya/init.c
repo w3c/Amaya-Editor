@@ -67,10 +67,27 @@ char docToOpen [256];
 extern boolean viewClosed;
 #endif /* _WINDOWS */
 
-#define AMAYA_PAGE "http://www.w3.org/Amaya/"
+#define AMAYA_PAGE "/amaya/AmayaPage.html"
 #define AMAYA_PAGE_DOC "http://www.w3.org/Amaya/User/"
 
 static int          AmayaInitialized = 0;
+static char        *Manual[] = {
+"Browsing.html",
+"Selecting.html",
+"Searching.html",
+"Views.html",
+"Creating.html",
+"Links.html",
+"Changing.html",
+"Tables.html",
+"Math.html",
+"ImageMaps.html",
+"StyleSheets.html",
+"Attributes.html",
+"Publishing.html",
+"Printing.html",
+"MakeBook.html"
+};
 
 #ifndef _WINDOWS
 static Pixmap       stopR;
@@ -2371,14 +2388,21 @@ NotifyEvent        *event;
       /* No argument in the command line, no HOME_PAGE variable. Open the */
       /* default Amaya URL */
      {
-	strcpy (LastURLName, AMAYA_PAGE);
-	CallbackDialogue (BaseDialog + OpenForm, INTEGER_DATA, (char *) 1);
+       s = (char *) TtaGetEnvString ("THOTDIR");
+       if (s != NULL)
+	strcpy (LastURLName, s);
+       else
+	LastURLName[0] = EOS;
+       strcat (LastURLName, AMAYA_PAGE);
+       CallbackDialogue (BaseDialog + OpenForm, INTEGER_DATA, (char *) 1);
+       /* Amaya-page in read-only */
+       TtaSetDocumentAccessMode (1, 0);
      }
    else if (IsW3Path (s))
      {
-	/* it is a remote document */
-	strcpy (LastURLName, s);
-	CallbackDialogue (BaseDialog + OpenForm, INTEGER_DATA, (char *) 1);
+       /* it is a remote document */
+       strcpy (LastURLName, s);
+       CallbackDialogue (BaseDialog + OpenForm, INTEGER_DATA, (char *) 1);
      }
    else
      {
@@ -2526,6 +2550,39 @@ View                view;
 /*----------------------------------------------------------------------
  -----------------------------------------------------------------------*/
 #ifdef __STDC__
+static void DisplayHelp (int index)
+#else /* __STDC__*/
+static void DisplayHelp (index)
+int         index;
+#endif /* __STDC__*/
+{
+  Document    document;
+  char    localname[MAX_LENGTH];
+  char   *s;
+  
+  localname[0] = EOS;
+  s = (char *) TtaGetEnvString ("THOTDIR");
+  if (s != NULL)
+    {
+      strcat (LastURLName, s);
+      strcat (localname, "/doc/User/");
+      strcat (localname, Manual[index]);
+    }
+
+  if (!TtaFileExist (localname))
+    {
+      strcpy (localname, AMAYA_PAGE_DOC);
+      strcat (localname, Manual[index]);
+    }
+  document = GetHTMLDocument (localname, NULL, 0, 0, DC_FALSE, FALSE);
+  /* document in read-only mode */
+  if (document != 0)
+    TtaSetDocumentAccessMode (document, 0);
+}
+
+/*----------------------------------------------------------------------
+ -----------------------------------------------------------------------*/
+#ifdef __STDC__
 void HelpBrowsing (Document document, View view)
 #else /* __STDC__*/
 void HelpBrowsing (document, view)
@@ -2533,11 +2590,7 @@ void HelpBrowsing (document, view)
      View view;
 #endif /* __STDC__*/
 {
-   char    localname[MAX_LENGTH];
-
-   strcpy (localname, AMAYA_PAGE_DOC);
-   strcat (localname, "Browsing.html");
-   document = GetHTMLDocument (localname, NULL, 0, 0, DC_FALSE, TRUE);
+  DisplayHelp (0);
 }
 
 
@@ -2551,11 +2604,7 @@ void HelpSelecting (document, view)
      View view;
 #endif /* __STDC__*/
 {
-   char    localname[MAX_LENGTH];
-
-   strcpy (localname, AMAYA_PAGE_DOC);
-   strcat (localname, "Selecting.html");
-   document = GetHTMLDocument (localname, NULL, 0, 0, DC_FALSE, TRUE);
+  DisplayHelp (1);
 }
 
 
@@ -2569,11 +2618,7 @@ void HelpSearching (document, view)
      View view;
 #endif /* __STDC__*/
 {
-   char    localname[MAX_LENGTH];
-
-   strcpy (localname, AMAYA_PAGE_DOC);
-   strcat (localname, "Searching.html");
-   document = GetHTMLDocument (localname, NULL, 0, 0, DC_FALSE, TRUE);
+  DisplayHelp (2);
 }
 
 
@@ -2587,11 +2632,7 @@ void HelpViews (document, view)
      View view;
 #endif /* __STDC__*/
 {
-   char    localname[MAX_LENGTH];
-
-   strcpy (localname, AMAYA_PAGE_DOC);
-   strcat (localname, "Views.html");
-   document = GetHTMLDocument (localname, NULL, 0, 0, DC_FALSE, TRUE);
+  DisplayHelp (3);
 }
 
 
@@ -2605,11 +2646,7 @@ void HelpCreating (document, view)
      View view;
 #endif /* __STDC__*/
 {
-   char    localname[MAX_LENGTH];
-
-   strcpy (localname, AMAYA_PAGE_DOC);
-   strcat (localname, "Creating.html");
-   document = GetHTMLDocument (localname, NULL, 0, 0, DC_FALSE, TRUE);
+  DisplayHelp (4);
 }
 
 
@@ -2623,11 +2660,7 @@ void HelpLinks (document, view)
      View view;
 #endif /* __STDC__*/
 {
-   char    localname[MAX_LENGTH];
-
-   strcpy (localname, AMAYA_PAGE_DOC);
-   strcat (localname, "Links.html");
-   document = GetHTMLDocument (localname, NULL, 0, 0, DC_FALSE, TRUE);
+  DisplayHelp (5);
 }
 
 
@@ -2641,11 +2674,7 @@ void HelpChanging (document, view)
      View view;
 #endif /* __STDC__*/
 {
-   char    localname[MAX_LENGTH];
-
-   strcpy (localname, AMAYA_PAGE_DOC);
-   strcat (localname, "Changing.html");
-   document = GetHTMLDocument (localname, NULL, 0, 0, DC_FALSE, TRUE);
+  DisplayHelp (6);
 }
 
 
@@ -2659,11 +2688,7 @@ void HelpTables (document, view)
      View view;
 #endif /* __STDC__*/
 {
-   char    localname[MAX_LENGTH];
-
-   strcpy (localname, AMAYA_PAGE_DOC);
-   strcat (localname, "Tables.html");
-   document = GetHTMLDocument (localname, NULL, 0, 0, DC_FALSE, TRUE);
+  DisplayHelp (7);
 }
 
 
@@ -2677,11 +2702,7 @@ void HelpMath (document, view)
      View view;
 #endif /* __STDC__*/
 {
-   char    localname[MAX_LENGTH];
-
-   strcpy (localname, AMAYA_PAGE_DOC);
-   strcat (localname, "Math.html");
-   document = GetHTMLDocument (localname, NULL, 0, 0, DC_FALSE, TRUE);
+  DisplayHelp (8);
 }
 
 
@@ -2695,11 +2716,7 @@ void HelpImageMaps (document, view)
      View view;
 #endif /* __STDC__*/
 {
-   char    localname[MAX_LENGTH];
-
-   strcpy (localname, AMAYA_PAGE_DOC);
-   strcat (localname, "ImageMaps.html");
-   document = GetHTMLDocument (localname, NULL, 0, 0, DC_FALSE, TRUE);
+  DisplayHelp (9);
 }
 
 
@@ -2713,11 +2730,7 @@ void HelpStyleSheets (document, view)
      View view;
 #endif /* __STDC__*/
 {
-   char    localname[MAX_LENGTH];
-
-   strcpy (localname, AMAYA_PAGE_DOC);
-   strcat (localname, "StyleSheets.html");
-   document = GetHTMLDocument (localname, NULL, 0, 0, DC_FALSE, TRUE);
+  DisplayHelp (10);
 }
 
 
@@ -2731,11 +2744,7 @@ void HelpAttributes (document, view)
      View view;
 #endif /* __STDC__*/
 {
-   char    localname[MAX_LENGTH];
-
-   strcpy (localname, AMAYA_PAGE_DOC);
-   strcat (localname, "Attributes.html");
-   document = GetHTMLDocument (localname, NULL, 0, 0, DC_FALSE, TRUE);
+  DisplayHelp (11);
 }
 
 
@@ -2749,11 +2758,7 @@ void HelpPublishing (document, view)
      View view;
 #endif /* __STDC__*/
 {
-   char    localname[MAX_LENGTH];
-
-   strcpy (localname, AMAYA_PAGE_DOC);
-   strcat (localname, "Publishing.html");
-   document = GetHTMLDocument (localname, NULL, 0, 0, DC_FALSE, TRUE);
+  DisplayHelp (12);
 }
 
 
@@ -2767,11 +2772,7 @@ void HelpPrinting (document, view)
      View view;
 #endif /* __STDC__*/
 {
-   char    localname[MAX_LENGTH];
-
-   strcpy (localname, AMAYA_PAGE_DOC);
-   strcat (localname, "Printing.html");
-   document = GetHTMLDocument (localname, NULL, 0, 0, DC_FALSE, TRUE);
+  DisplayHelp (13);
 }
 
 
@@ -2785,11 +2786,7 @@ void HelpMakeBook (document, view)
      View view;
 #endif /* __STDC__*/
 {
-   char    localname[MAX_LENGTH];
-
-   strcpy (localname, AMAYA_PAGE_DOC);
-   strcat (localname, "MakeBook.html");
-   document = GetHTMLDocument (localname, NULL, 0, 0, DC_FALSE, TRUE);
+  DisplayHelp (14);
 }
 
 

@@ -34,14 +34,8 @@
 
 #include "fileaccess_f.h"
 #include "platform_f.h"
-
 /* #define DEBUG_REGISTRY enable the Registry debug messages */
 
-/*----------------------------------------------------------------------
-   									
-    Constants, types, global variable and settings for the Registry	
-   									
-  ----------------------------------------------------------------------*/
 
 /* for Marc.Baudoin@hsc.fr (Marc Baudoin) */
 #ifdef _WINDOWS
@@ -54,7 +48,6 @@
 #define THOT_CONFIG_FILENAME    "config"
 #define THOT_BIN_FILENAME	"bin"
 #define THOT_LIB_DEFAULTNAME	"thot_lib"
-
 #define MAX_REGISTRY_ENTRIES 100
 
 typedef enum
@@ -102,17 +95,10 @@ static char        *Thot_Dir;
               ((*(ptr)) != '\n') && ((*(ptr)) != '\r')) ptr++; }
 
 /*----------------------------------------------------------------------
-   									
-    First part : reading / writing values to/from the memory structures.	
-   									
+ DoVariableSubstitution : do the substitution on an input
+    string of all $(xxx) references by the values of xxx.
+   and return a modified output string.
   ----------------------------------------------------------------------*/
-
-/*
- * DoVariableSubstitution : do the substitution on an input
- *    string of all $(xxx) references by the values of xxx.
- *    and return a modified output string.
- */
-
 #ifdef __STDC__
 static void         DoVariableSubstitution (char *input, int i_len,
 					    char *output, int o_len)
@@ -122,97 +108,85 @@ char               *input;
 int                 i_len;
 char               *output;
 int                 o_len;
-
 #endif
 {
-   char               *cour = input;
-   char               *base = input;
-   char               *res = output;
-   char               *value;
-   char                save;
-
+  char               *cour = input;
+  char               *base = input;
+  char               *res = output;
+  char               *value;
+  char                save;
 #define CHECK_OVERFLOW (((cour - input) > i_len) || ((res - output) >= (o_len - 1)))
 
-   while (*cour)
-     {
-	if CHECK_OVERFLOW
-	   break;
-	if (*cour != '$')
-	  {
-	     *res++ = *cour++;
-	     continue;
-	  }
-	base = cour;		/* save the position to the $ */
-	cour++;
-	if CHECK_OVERFLOW
-	   break;
-	if (*cour != '(')
-	  {
-	     *res++ = '$';
-	     if CHECK_OVERFLOW
-		break;
-	     *res++ = *cour++;
-	     continue;
-	  }
+  while (*cour)
+    {
+      if CHECK_OVERFLOW
+	break;
+      if (*cour != '$')
+	{
+	  *res++ = *cour++;
+	  continue;
+	}
+      base = cour;		/* save the position to the $ */
+      cour++;
+      if CHECK_OVERFLOW
+	break;
+      if (*cour != '(')
+	{
+	  *res++ = '$';
+	  if CHECK_OVERFLOW
+	    break;
+	  *res++ = *cour++;
+	  continue;
+	}
 
-	/*
-	 * Ok, that the beginning of a variable name ...
-	 */
-	base += 2;		/* skip the $(  header */
-	do
-	  {
-	     cour++;
-	     if CHECK_OVERFLOW
-		break;
-	  }
-	while ((*cour != ')') && (!(IS_BLANK (cour))));
-	if CHECK_OVERFLOW
-	   break;
+      /* Ok, that the beginning of a variable name ... */
+      base += 2;		/* skip the $(  header */
+      do
+	{
+	  cour++;
+	  if CHECK_OVERFLOW
+	    break;
+	}
+      while ((*cour != ')') && (!(IS_BLANK (cour))));
+      if CHECK_OVERFLOW
+	break;
+      
+      save = *cour;
+      *cour = '\0';
+      if (save != ')')
+	fprintf (stderr, "invalid variable name %s in %s\n", base, THOT_INI_FILENAME);
 
-	save = *cour;
-	*cour = '\0';
-	if (save != ')')
-	  {
-	     fprintf (stderr, "invalid variable name %s in %s\n",
-		      base, THOT_INI_FILENAME);
-	  }
-
-	/*
-	 * We are ready to fetch the base value from the Registry.
-	 */
-	value = TtaGetEnvString (base);
-	if (value == NULL)
-	  {
-	     fprintf (stderr, "%s referencing undefined variable %s\n",
-		      THOT_INI_FILENAME, base);
-	     *cour = save;
-	     cour++;
-	     if CHECK_OVERFLOW
-		break;
-	     continue;
-	  }
-	*cour = save;
-	while (*value)
-	  {
-	     *res++ = *value++;
-	     if CHECK_OVERFLOW
-		break;
-	  }
-	cour++;
-	if CHECK_OVERFLOW
-	   break;
-     }
-   if CHECK_OVERFLOW
-     {
-	fprintf (stderr, "DoVariableSubstitution : Overflow on \"%s\"\n", input);
-     }
-   *res = '\0';
+      /* We are ready to fetch the base value from the Registry */
+      value = TtaGetEnvString (base);
+      if (value == NULL)
+	{
+	  fprintf (stderr, "%s referencing undefined variable %s\n", THOT_INI_FILENAME, base);
+	  *cour = save;
+	  cour++;
+	  if CHECK_OVERFLOW
+	    break;
+	  continue;
+	}
+      *cour = save;
+      while (*value)
+	{
+	  *res++ = *value++;
+	  if CHECK_OVERFLOW
+	    break;
+	}
+      cour++;
+      if CHECK_OVERFLOW
+	break;
+    }
+  if CHECK_OVERFLOW
+    fprintf (stderr, "DoVariableSubstitution : Overflow on \"%s\"\n", input);
+  *res = '\0';
 }
 
-/*
- * NewRegisterEntry : add a fresh new entry in the Register.
- */
 
+/*----------------------------------------------------------------------
+ NewRegisterEntry : add a fresh new entry in the Register.
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static int          NewRegisterEntry (char *appli, char *name, char *value,
 				      RegistryLevel level)
@@ -267,12 +241,11 @@ RegistryLevel       level;
    return (0);
 }
 
-/*
- * AddRegisterEntry : add an entry in the Register, we first check
- *                      that it doesn't already exist especially if the
- *                      value is empty.
- */
 
+/*----------------------------------------------------------------------
+ AddRegisterEntry : add an entry in the Register, we first check
+ that it doesn't already exist especially if the value is empty.
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static int          AddRegisterEntry (char *appli, char *name, char *value,
 				      RegistryLevel level, int overwrite)
@@ -286,313 +259,259 @@ int                 overwrite;
 
 #endif
 {
-   char                resu[2000];
-   RegistryEntry       cour;
+  char                resu[2000];
+  RegistryEntry       cour;
 
-   if (AppRegistryInitialized == 0)
-      return (-1);
+  if (AppRegistryInitialized == 0)
+    return (-1);
 
 #ifdef DEBUG_REGISTRY
-   fprintf (stderr, "AddRegisterEntry(\"%s\",\"%s\",\"%s\", %d, %d)\n",
-	    appli, name, value, level, overwrite);
+  fprintf (stderr, "AddRegisterEntry(\"%s\",\"%s\",\"%s\", %d, %d)\n",
+	   appli, name, value, level, overwrite);
 #endif
 
-   /*
-    * Lookup in the application defaults.
-    */
+  /*
+   * Lookup in the application defaults.
+   */
    cour = AppRegistryEntry;
    while (cour != NULL)
      {
-	if (!strcmp (cour->name, name))
-	  {
-
-	     /*
-	      * Cannot superseed and INSTALL value.
-	      */
-	     if (cour->level == REGISTRY_INSTALL)
-		return (0);
-	     else if ((!strcasecmp (cour->appli, appli)) &&
-		      (cour->level == level))
-		break;
-	  }
-	cour = cour->next;
+       if (!strcmp (cour->name, name))
+	 {
+	     /* Cannot superseed and INSTALL value */
+	   if (cour->level == REGISTRY_INSTALL)
+	     return (0);
+	   else if (!strcasecmp (cour->appli, appli) && cour->level == level)
+	     break;
+	 }
+       cour = cour->next;
      }
 
    if (cour != NULL)
      {
-	/*
-	 * there is aleady an entry.
-	 */
-	if (!overwrite)
-	   return (0);
+       /* there is aleady an entry */
+       if (!overwrite)
+	 return (0);
 
-	DoVariableSubstitution (value, strlen (value), resu, sizeof (resu));
-
-	if (cour->value)
-	   TtaFreeMemory (cour->value);
-	if (cour->orig)
-	   TtaFreeMemory (cour->orig);
-	cour->orig = TtaStrdup (value);
-	cour->value = TtaStrdup (resu);
-	AppRegistryModified++;
+       DoVariableSubstitution (value, strlen (value), resu, sizeof (resu));
+       if (cour->value)
+	 TtaFreeMemory (cour->value);
+       if (cour->orig)
+	 TtaFreeMemory (cour->orig);
+       cour->orig = TtaStrdup (value);
+       cour->value = TtaStrdup (resu);
+       AppRegistryModified++;
      }
    else
      {
-	/*
-	 * If the value is empty, we add it only if it's not present
-	 * in the thot library section.
-	 */
-	if ((!overwrite) && ((value == NULL) || (*value == '\0')))
-	  {
-	     cour = AppRegistryEntry;
-	     while (cour != NULL)
-	       {
-		  if ((!strcasecmp (cour->appli, THOT_LIB_DEFAULTNAME)) &&
-		      (!strcmp (cour->name, name)))
-		     return (0);
-		  cour = cour->next;
-	       }
-	  }
+       /*
+	* If the value is empty, we add it only if it's not present
+	* in the thot library section.
+	*/
+       if (!overwrite && (value == NULL || *value == '\0'))
+	 {
+	   cour = AppRegistryEntry;
+	   while (cour != NULL)
+	     {
+	       if ((!strcasecmp (cour->appli, THOT_LIB_DEFAULTNAME)) &&
+		   (!strcmp (cour->name, name)))
+		 return (0);
+	       cour = cour->next;
+	     }
+	 }
 
-	return NewRegisterEntry (appli, name, value, level);
+       return NewRegisterEntry (appli, name, value, level);
      }
    return (0);
 }
 
-/*
- * PrintEnv : print the Registry to an open File.
- */
-
+/*----------------------------------------------------------------------
+ PrintEnv : print the Registry to an open File.
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         PrintEnv (FILE * output)
 #else  /* __STDC__ */
 static void         PrintEnv (output)
 FILE               *output;
-
 #endif
 {
-   RegistryEntry       cour, next;
+  RegistryEntry       cour, next;
+  
+  if (AppRegistryInitialized == 0)
+    return;
 
-   if (AppRegistryInitialized == 0)
-      return;
+  cour = AppRegistryEntry;
+  while (cour != NULL)
+    {
+      /* don't save any system entry */
+      if (!strcasecmp (cour->appli, "System"))
+	{
+	  cour = cour->next;
+	  continue;
+	}
 
-
-   cour = AppRegistryEntry;
-   while (cour != NULL)
-     {
-	/*
-	 * don't save any system entry.
-	 */
-	if (!strcasecmp (cour->appli, "System"))
-	  {
-	     cour = cour->next;
-	     continue;
-	  }
-
-	/*
-	 * print out the section.
-	 */
-
-	fprintf (output, "[%s]\n", cour->appli);
-
-	/*
-	 * add all the entries under the same appli name.
-	 */
-
-	if (cour->level == REGISTRY_USER)
-	   fprintf (output, "%s=%s\n", cour->name, cour->orig);
-	next = cour->next;
-	while ((next != NULL) &&
-	       (!strcasecmp (next->appli, cour->appli)))
-	  {
-	     if (next->level == REGISTRY_USER)
-		fprintf (output, "%s=%s\n", next->name, next->orig);
-	     next = next->next;
-	  }
-	cour = next;
-
-	fprintf (output, "\n");
-     }
+      /* print out the section */
+      fprintf (output, "[%s]\n", cour->appli);
+      /* add all the entries under the same appli name */
+      if (cour->level == REGISTRY_USER)
+	fprintf (output, "%s=%s\n", cour->name, cour->orig);
+      next = cour->next;
+      while (next != NULL && !strcasecmp (next->appli, cour->appli))
+	{
+	  if (next->level == REGISTRY_USER)
+	    fprintf (output, "%s=%s\n", next->name, next->orig);
+	  next = next->next;
+	}
+      cour = next;
+      fprintf (output, "\n");
+    }
 }
 
-/*
- * SortEnv : sort the Registry by application and name entries.
- */
-
+/*----------------------------------------------------------------------
+ SortEnv : sort the Registry by application and name entries.
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         SortEnv (void)
 #else  /* __STDC__ */
 static void         SortEnv ()
 #endif
 {
-   RegistryEntry       prev, cour, tmp;
-   RegistryEntry      *start;
-   int                 cmp;
+  RegistryEntry       prev, cour, tmp;
+  RegistryEntry      *start;
+  int                 cmp;
 
-   if (AppRegistryInitialized == 0)
-      return;
-
+  if (AppRegistryInitialized == 0)
+    return;
 #ifdef DEBUG_REGISTRY
-   fprintf (stderr, "SortEnv()\n");
+  fprintf (stderr, "SortEnv()\n");
 #endif
 
-   start = &AppRegistryEntry;
-   while (*start != NULL)
-     {
-	prev = *start;
-	cour = prev->next;
-	if (cour == NULL)
-	   return;
-	while (cour != NULL)
-	  {
-	     /*
-	      * sorting order : First by appli name, then by entry name.
-	      */
-	     cmp = strcasecmp (cour->appli, (*start)->appli);
-	     if ((cmp <= 0) ||
-		 ((cmp == 0) &&
-		  (strcasecmp (cour->name, (*start)->name) < 0)))
-	       {
+  start = &AppRegistryEntry;
+  while (*start != NULL)
+    {
+      prev = *start;
+      cour = prev->next;
+      if (cour == NULL)
+	return;
+      while (cour != NULL)
+	{
+	  /* sorting order : First by appli name, then by entry name */
+	  cmp = strcasecmp (cour->appli, (*start)->appli);
+	  if ((cmp <= 0) ||
+	      ((cmp == 0) &&
+	       (strcasecmp (cour->name, (*start)->name) < 0)))
+	    {
+	      /* swap *start and cour */
+	      prev->next = *start;
+	      *start = cour;
+	      tmp = cour->next;
+	      cour->next = prev->next->next;
+	      prev->next->next = tmp;
+	      cour = prev->next;
+	    }
 
-		  /*
-		   * swap *start and cour.
-		   */
-		  prev->next = *start;
-		  *start = cour;
-		  tmp = cour->next;
-		  cour->next = prev->next->next;
-		  prev->next->next = tmp;
-
-		  cour = prev->next;
-	       }
-
-	     /*
-	      * next in the list
-	      */
-	     prev = cour;
-	     if (cour != NULL)
-		cour = cour->next;
-	  }
-	start = &((*start)->next);
-     }
+	  /* next in the list */
+	  prev = cour;
+	  if (cour != NULL)
+	    cour = cour->next;
+	}
+      start = &((*start)->next);
+    }
 }
 
-/*
- * TtaGetEnvString : read the value associated to an environment string
- *                  if not present return NULL.
- */
-
+/*----------------------------------------------------------------------
+  TtaGetEnvString : read the value associated to an environment string
+  if not present return NULL.
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 char               *TtaGetEnvString (char *name)
 #else  /* __STDC__ */
 char               *TtaGetEnvString (name)
 char               *name;
-
 #endif
 {
-   RegistryEntry       cour;
-   char               *value;
+  RegistryEntry       cour;
+  char               *value;
 
-   if (AppRegistryInitialized == 0)
-     {
-	return (getenv (name));
-     }
+  if (AppRegistryInitialized == 0)
+    return (getenv (name));
 
-   /*
-    * appname allows to get the application name.
-    */
-   if (!strcasecmp("appname", name)) return(AppRegistryEntryAppli);
+  /* appname allows to get the application name */
+  if (!strcasecmp("appname", name))
+    return(AppRegistryEntryAppli);
 
-   if ((!strcasecmp (name, "cwd")) || (!strcasecmp (name, "pwd"))) {
+  if ((!strcasecmp (name, "cwd")) || (!strcasecmp (name, "pwd")))
+    {
 #      ifndef _WINDOWS
-       return(getcwd(&CurrentDir[0], sizeof(CurrentDir)));
+      return(getcwd(&CurrentDir[0], sizeof(CurrentDir)));
 #      else  /* _WINDOWS */
-       return(_getcwd(&CurrentDir[0], sizeof(CurrentDir)));
+      return(_getcwd(&CurrentDir[0], sizeof(CurrentDir)));
 #      endif /* _WINDPWS */
-   }
+    }
 
-   /*
-    * First lookup in the System defaults.
-    */
-   cour = AppRegistryEntry;
-   while (cour != NULL)
-     {
-	if ((!strcasecmp (cour->appli, "System")) &&
-	    (!strcmp (cour->name, name)) &&
-	    (cour->value[0] != '\0'))
-	  {
+  /* First lookup in the System defaults */
+  cour = AppRegistryEntry;
+  while (cour != NULL)
+    {
+      if (!strcasecmp (cour->appli, "System") && !strcmp (cour->name, name) && cour->value[0] != '\0')
+	{
 #ifdef DEBUG_REGISTRY
-	     fprintf (stderr, "TtaGetEnvString(\"%s\") = %s\n", name, cour->value);
+	  fprintf (stderr, "TtaGetEnvString(\"%s\") = %s\n", name, cour->value);
 #endif
-	     return (cour->value);
-	  }
-	cour = cour->next;
-     }
+	  return (cour->value);
+	}
+      cour = cour->next;
+    }
 
-   /*
-    * Then lookup in the application defaults.
-    */
-   cour = AppRegistryEntry;
-   while (cour != NULL)
-     {
-	if ((!strcasecmp (cour->appli, AppRegistryEntryAppli)) &&
-	    (!strcmp (cour->name, name)) &&
-	    (cour->value[0] != '\0'))
-	  {
+  /* Then lookup in the application defaults */
+  cour = AppRegistryEntry;
+  while (cour != NULL)
+    {
+      if (!strcasecmp (cour->appli, AppRegistryEntryAppli) && !strcmp (cour->name, name) && cour->value[0] != '\0')
+	{
 #ifdef DEBUG_REGISTRY
-	     fprintf (stderr, "TtaGetEnvString(\"%s\") = %s\n", name, cour->value);
+	  fprintf (stderr, "TtaGetEnvString(\"%s\") = %s\n", name, cour->value);
 #endif
-	     return (cour->value);
-	  }
-	cour = cour->next;
-     }
-
-   /*
-    * Then lookup in the Thot library defaults.
-    */
-   cour = AppRegistryEntry;
-   while (cour != NULL)
-     {
-	if ((!strcasecmp (cour->appli, THOT_LIB_DEFAULTNAME)) &&
-	    (!strcmp (cour->name, name)) &&
-	    (cour->value[0] != '\0'))
-	  {
+	  return (cour->value);
+	}
+      cour = cour->next;
+    }
+  
+  /* Then lookup in the Thot library defaults */
+  cour = AppRegistryEntry;
+  while (cour != NULL)
+    {
+      if (!strcasecmp (cour->appli, THOT_LIB_DEFAULTNAME) && !strcmp (cour->name, name) && cour->value[0] != '\0')
+	{
 #ifdef DEBUG_REGISTRY
-	     fprintf (stderr, "TtaGetEnvString(\"%s\") = %s\n", name, cour->value);
+	  fprintf (stderr, "TtaGetEnvString(\"%s\") = %s\n", name, cour->value);
 #endif
-	     return (cour->value);
-	  }
-	cour = cour->next;
-     }
-
+	  return (cour->value);
+	}
+      cour = cour->next;
+    }
 
    /*
     * If still not found, look in the environment variables.
     * Hopefully this will be stored to the user registry
     * next time it will be saved.
     */
-   value = getenv (name);
-
-   if (value == NULL) {
-      TtaSetEnvString (name, "", FALSE);
-
-   }
-   else
-      TtaSetEnvString (name, value, FALSE);
-
-
+  value = getenv (name);
+  if (value == NULL)
+    TtaSetEnvString (name, "", FALSE);
+  else
+    TtaSetEnvString (name, value, FALSE);
+  
 #ifdef DEBUG_REGISTRY
-   fprintf (stderr, "TtaGetEnvString(\"%s\") = %s\n", name, value);
+  fprintf (stderr, "TtaGetEnvString(\"%s\") = %s\n", name, value);
 #endif
-
-   return (value);
+  return (value);
 }
 
-/*
- * TtaSetEnvString : set the value associated to an environment string,
- *                  for the current application.
- */
-
+/*----------------------------------------------------------------------
+ TtaSetEnvString : set the value associated to an environment string,
+*                  for the current application.
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TtaSetEnvString (char *name, char *value, int overwrite)
 #else  /* __STDC__ */
@@ -600,17 +519,12 @@ void                TtaSetEnvString (name, value, overwrite)
 CONST char         *name;
 CONST char         *value;
 int                 overwrite;
-
 #endif
 {
    AddRegisterEntry (AppRegistryEntryAppli, name, value,
 		     REGISTRY_USER, overwrite);
 }
 
-/*----------------------------------------------------------------------
-    Second part : reading / writing values from / to filesystem or	
-   		 registry.						
-  ----------------------------------------------------------------------*/
 
 /*----------------------------------------------------------------------
      IsThotDir : Check whether the given string is the THOTDIR value.    
@@ -635,17 +549,20 @@ static int          IsThotDir (CONST char *path)
 #ifdef DEBUG_REGISTRY
    fprintf (stderr, "TtaFileExist (%s)\n", filename);
 #endif
-   if (TtaFileExist (filename)) {
+   if (TtaFileExist (filename))
+     {
 #ifdef DEBUG_REGISTRY
-      fprintf (stderr, "IsThotDir(%s) : True\n", path);
+       fprintf (stderr, "IsThotDir(%s) : True\n", path);
 #endif
-      return (1);
-   } else {
+       return (1);
+     }
+   else
+     {
 #ifdef DEBUG_REGISTRY
-      fprintf (stderr, "IsThotDir(%s) : False\n", path);
+       fprintf (stderr, "IsThotDir(%s) : False\n", path);
 #endif
-      return (0);
-   }
+       return (0);
+     }
 }
 
 #ifdef WWW_MSWINDOWS
@@ -840,13 +757,6 @@ RegistryLevel       level;
    fclose (input);
 }
 
-/*
- * ThotDir returns the THOTDIR value.
- */
-char               *ThotDir ()
-{
-   return Thot_Dir;
-}
 
 /*----------------------------------------------------------------------
   InitEnviron : initialize the standard environment (i.e global	
@@ -854,11 +764,9 @@ char               *ThotDir ()
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         InitEnviron ()
-
 #else  /* __STDC__ */
 static void         InitEnviron ()
 #endif				/* __STDC__ */
-
 {
    char               *pT;
    char               *Thot_Sys_Sch;
@@ -919,266 +827,247 @@ void                TtaInitializeAppRegistry (char *appArgv0)
 #else  /* __STDC__ */
 void                TtaInitializeAppRegistry (appArgv0)
 char               *appArgv0;
-
 #endif
 {
-   char               *home_dir;
-   char                filename[MAX_PATH];
-   int                 execname_len;
-   PathBuffer          execname;
-   PathBuffer          path;
-   char               *my_path;
-   char               *dir_end = NULL;
-   char               *appName;
-#  ifndef _WINDOWS
-   char               *thot_dir_env;
-#  endif /* _WINDOWS */
-
+  PathBuffer          execname;
+  PathBuffer          path;
+  char               *home_dir;
+  char                filename[MAX_PATH];
+  char               *my_path;
+  char               *dir_end = NULL;
+  char               *appName;
 #ifdef _WINDOWS
 #ifndef __CYGWIN32__
-   extern int _fmode;
-
-   _fmode = _O_BINARY;
+  extern int _fmode;
+  _fmode = _O_BINARY;
 #endif
 #else /* ! _WINDOWS */
-   struct stat         stat_buf;
-
+  struct stat         stat_buf;
+  char               *thot_dir_env;
 #endif /* _WINDOWS */
+  int                 execname_len;
+  int                 len;
 
-   if (AppRegistryInitialized != 0)
-      return;
-   AppRegistryInitialized++;
+  if (AppRegistryInitialized != 0)
+    return;
+  AppRegistryInitialized++;
 
-   /*
-    * Sanity check on the argument given. An error here should be
-    * detected by programmers, since it's a application coding error.
-    */
-   if ((appArgv0 == NULL) || (*appArgv0 == '\0'))
-     {
-	fprintf (stderr,
-	    "TtaInitializeAppRegistry called with invalid argv[0] value\n");
-	exit (1);
-     }
+  /*
+   * Sanity check on the argument given. An error here should be
+   * detected by programmers, since it's a application coding error.
+   */
+  if ((appArgv0 == NULL) || (*appArgv0 == '\0'))
+    {
+      fprintf (stderr, "TtaInitializeAppRegistry called with invalid argv[0] value\n");
+      exit (1);
+    }
 
-   /* No this should NOT be a call to TtaGetEnvString */
-   home_dir = getenv ("HOME");
-
-   /*
-    * We are looking for the absolute pathname to the binary of the
-    * application.
-    *
-    * First case, the argv[0] indicate that it's an absolute path name.
-    * i.e. start with / on unixes or \ or ?:\ on Windows.
-    */
+  /* No this should NOT be a call to TtaGetEnvString */
+  home_dir = getenv ("HOME");
+  /*
+   * We are looking for the absolute pathname to the binary of the
+   * application.
+   *
+   * First case, the argv[0] indicate that it's an absolute path name.
+   * i.e. start with / on unixes or \ or ?:\ on Windows.
+   */
 #  ifdef _WINDOWS
-   if ((appArgv0[0] == DIR_SEP) ||
-       ((appArgv0[1] == ':') && (appArgv0[2] == DIR_SEP)))
+  if (appArgv0[0] == DIR_SEP || (appArgv0[1] == ':' && appArgv0[2] == DIR_SEP))
 #  else  /* !_WINDOWS */
-   if (appArgv0[0] == DIR_SEP)
+  if (appArgv0[0] == DIR_SEP)
 #  endif /* !_WINDOWS */
-     {
-	strncpy (&execname[0], appArgv0, sizeof (execname));
-     }
-   /*
-    * second case, the argv[0] indicate a relative path name.
-    * The exec name is obtained by appending the current directory.
-    */
-   else if (TtaFileExist (appArgv0))
-     {
+    strncpy (&execname[0], appArgv0, sizeof (execname));
+
+  /*
+   * second case, the argv[0] indicate a relative path name.
+   * The exec name is obtained by appending the current directory.
+   */
+  else if (TtaFileExist (appArgv0))
+    {
 #       ifndef _WINDOWS
-	getcwd (&execname[0], sizeof (execname));
+      getcwd (&execname[0], sizeof (execname));
 #       else  /* _WINDOWS */
-	_getcwd (&execname[0], sizeof (execname));
+      _getcwd (&execname[0], sizeof (execname));
 #       endif /* _WINDOWS */
-	strcat (execname, DIR_STR);
-	strcat (execname, appArgv0);
-     }
-   /*
-    * Last case, we were just given the application name.
-    * Use the PATH environment variable to search the exact binary location.
-    */
-   else
-     {
-	my_path = getenv ("PATH");
-	if (my_path == NULL)
-	  {
-	     fprintf (stderr,
-		"TtaInitializeAppRegistry cannot found PATH environment\n");
-	     exit (1);
-	  }
-	/*
-	 * make our own copy of the string, in order to preserve the
-	 * enviroment variables. Then search for the binary along the
-	 * PATH.
-	 */
-	strncpy (path, my_path, sizeof (path) - 1);
-	path[sizeof (path) - 1] = '\0';
+      strcat (execname, DIR_STR);
+      strcat (execname, appArgv0);
+    }
+  /*
+   * Last case, we were just given the application name.
+   * Use the PATH environment variable to search the exact binary location.
+   */
+  else
+    {
+      my_path = getenv ("PATH");
+      if (my_path == NULL)
+	{
+	  fprintf (stderr, "TtaInitializeAppRegistry cannot found PATH environment\n");
+	  exit (1);
+	}
+      /*
+       * make our own copy of the string, in order to preserve the
+       * enviroment variables. Then search for the binary along the
+       * PATH.
+       */
+      strncpy (path, my_path, sizeof (path) - 1);
+      path[sizeof (path) - 1] = '\0';
 
-	execname_len = sizeof (execname);
-#       ifdef _WINDOWS
-	MakeCompleteName (appArgv0, "EXE", path, execname, &execname_len);
-#       else
-	MakeCompleteName (appArgv0, "", path, execname, &execname_len);
-#       endif
-	if (execname[0] == '\0')
-	  {
-	     fprintf (stderr,
-		      "TtaInitializeAppRegistry internal error\n");
-	     fprintf (stderr,
-		      "\tcannot find path to binary : %s\n", appArgv0);
-	     exit (1);
-	  }
-     }
+      execname_len = sizeof (execname);
+#     ifdef _WINDOWS
+      MakeCompleteName (appArgv0, "EXE", path, execname, &execname_len);
+#     else
+      MakeCompleteName (appArgv0, "", path, execname, &execname_len);
+#     endif
+      if (execname[0] == '\0')
+	{
+	  fprintf (stderr, "TtaInitializeAppRegistry internal error\n");
+	  fprintf (stderr, "\tcannot find path to binary : %s\n", appArgv0);
+	  exit (1);
+	}
+    }
 
-   /*
-    * Now that we have a complete path up to the binary, extract the
-    * application name.
-    */
-   appName = &execname[0];
-   while (*appName)
-      appName++;		/* go to the ending NUL */
-   do
-      appName--;
-   while ((appName > &execname[0]) && (*appName != DIR_SEP));
-   if (*appName == DIR_SEP)
-      dir_end = appName++;	/* dir_end used for relative links ... */
-   appName = TtaStrdup (appName);
-   AppRegistryEntryAppli = appName;
+  /*
+   * Now that we have a complete path up to the binary, extract the
+   * application name.
+   */
+  appName = &execname[0];
+  while (*appName)
+    /* go to the ending NUL */
+    appName++;
+
+  do
+    appName--;
+  while ((appName > &execname[0]) && (*appName != DIR_SEP));
+  if (*appName == DIR_SEP)
+    /* dir_end used for relative links ... */
+    dir_end = appName++;
+  appName = TtaStrdup (appName);
+  AppRegistryEntryAppli = appName;
 
 #ifndef _WINDOWS
-   /*
-    * on Unixes, the binary path started may be a softlink
-    * to the real app in the real dir.
-    */
-   if ((lstat (execname, &stat_buf) == 0) &&
-       (S_ISLNK (stat_buf.st_mode)))
-     {
-	int                 len = readlink (execname, &filename[0], sizeof (filename));
-
-	if (len > 0)
-	  {
-	     filename[len] = 0;
-
-	     /*
-	      * Two cases : can be an absolute link to the binary
-	      * or a relative link.
-	      */
-	     if (filename[0] == DIR_SEP)
-		strcpy (execname, filename);
-	     else
-	       {
-		  strcpy (dir_end + 1, filename);
-	       }
-	  }
-     }
+  /*
+   * on Unixes, the binary path started may be a softlink
+   * to the real app in the real dir.
+   */
+  if (lstat (execname, &stat_buf) == 0 && S_ISLNK (stat_buf.st_mode))
+    {
+      len = readlink (execname, filename, sizeof (filename));
+      if (len > 0)
+	{
+	  filename[len] = 0;
+	  /*
+	   * Two cases : can be an absolute link to the binary
+	   * or a relative link.
+	   */
+	  if (filename[0] == DIR_SEP)
+	    strcpy (execname, filename);
+	  else
+	    strcpy (dir_end + 1, filename);
+	}
+    }
 #endif /* _WINDOWS */
 
 #ifdef DEBUG_REGISTRY
    fprintf (stderr, "path to binary %s : %s\n", appName, execname);
 #endif
 
-   /*
-    * get the THOTDIR for this application. It's under a bin dir.
-    */
+   /* get the THOTDIR for this application. It's under a bin dir */
    dir_end = &execname[0];
    while (*dir_end)
-      dir_end++;		/* go to the ending NUL */
+     /* go to the ending NUL */
+      dir_end++;
 
    do
       dir_end--;
    while ((dir_end > &execname[0]) && (*dir_end != DIR_SEP));
-   if (*dir_end != DIR_SEP)
-      goto thot_dir_not_found;
 
-   *dir_end = '\0';
-   /* save the binary directory in BinariesDirectory */
-   strncpy (BinariesDirectory, &execname[0], sizeof (BinariesDirectory));
+   if (*dir_end == DIR_SEP)
+     {
+       *dir_end = '\0';
+       /* save the binary directory in BinariesDirectory */
+       strncpy (BinariesDirectory, &execname[0], sizeof (BinariesDirectory));
 
 #ifndef _WINDOWS
-   /* first check the THOTDIR environment variable */
-   thot_dir_env=getenv("THOTDIR");
-   if ((thot_dir_env != NULL) && (IsThotDir (thot_dir_env)))
-     {
-       strcpy(execname, thot_dir_env);
-       AddRegisterEntry ("System", "THOTDIR", thot_dir_env, REGISTRY_INSTALL, TRUE);
-       goto load_system_settings;
-     }
-   else if (thot_dir_env != NULL) 
-     fprintf (stderr,"Invalid THOTDIR environment variable : %s\n", thot_dir_env);
+       /* first check the THOTDIR environment variable */
+       thot_dir_env = getenv("THOTDIR");
+       if (thot_dir_env != NULL && IsThotDir (thot_dir_env))
+	 {
+	   strcpy(execname, thot_dir_env);
+	   AddRegisterEntry ("System", "THOTDIR", thot_dir_env, REGISTRY_INSTALL, TRUE);
+	   goto load_system_settings;
+	 }
+       else if (thot_dir_env != NULL) 
+	 fprintf (stderr,"Invalid THOTDIR environment variable : %s\n", thot_dir_env);
 #endif
 #ifdef COMPILED_IN_THOTDIR
-   /* Check a compiled-in value */
-   if (IsThotDir (COMPILED_IN_THOTDIR))
-     {
-        strcpy(execname, COMPILED_IN_THOTDIR);
-	AddRegisterEntry ("System", "THOTDIR", COMPILED_IN_THOTDIR,
-			  REGISTRY_INSTALL, TRUE);
-	goto load_system_settings;
-     }
+       /* Check a compiled-in value */
+       if (IsThotDir (COMPILED_IN_THOTDIR))
+	 {
+	   strcpy(execname, COMPILED_IN_THOTDIR);
+	   AddRegisterEntry ("System", "THOTDIR", COMPILED_IN_THOTDIR,
+			     REGISTRY_INSTALL, TRUE);
+	   goto load_system_settings;
+	 }
 #endif /* COMPILED_IN_THOTDIR */
 #ifdef COMPILED_IN_THOTDIR2
-   /* Check a compiled-in value */
-   if (IsThotDir (COMPILED_IN_THOTDIR2))
-     {
-        strcpy(execname, COMPILED_IN_THOTDIR2);
-	AddRegisterEntry ("System", "THOTDIR", COMPILED_IN_THOTDIR2,
-			  REGISTRY_INSTALL, TRUE);
-	goto load_system_settings;
-     }
+       /* Check a compiled-in value */
+       if (IsThotDir (COMPILED_IN_THOTDIR2))
+	 {
+	   strcpy(execname, COMPILED_IN_THOTDIR2);
+	   AddRegisterEntry ("System", "THOTDIR", COMPILED_IN_THOTDIR2,
+			     REGISTRY_INSTALL, TRUE);
+	   goto load_system_settings;
+	 }
 #endif /* COMPILED_IN_THOTDIR2 */
 
-   /* if all else fails, scan up from where we found the binary */ 
+       /* if all else fails, scan up from where we found the binary */ 
+       if (IsThotDir (&execname[0]))
+	 {
+	   AddRegisterEntry ("System", "THOTDIR", execname, REGISTRY_INSTALL, TRUE);
+	   goto load_system_settings;
+	 }
+   
+       do
+	 dir_end--;
+       while (dir_end > &execname[0] && *dir_end != DIR_SEP);
 
-   if (IsThotDir (&execname[0]))
-     {
-	AddRegisterEntry ("System", "THOTDIR", execname,
-			  REGISTRY_INSTALL, TRUE);
-	goto load_system_settings;
+       if (*dir_end != DIR_SEP)
+	 goto thot_dir_not_found;
+
+       *dir_end = '\0';
+       if (IsThotDir (&execname[0]))
+	 {
+	   AddRegisterEntry ("System", "THOTDIR", execname, REGISTRY_INSTALL, TRUE);
+	   goto load_system_settings;
+	 }
+
+       do
+	 dir_end--;
+       while ((dir_end > &execname[0]) && (*dir_end != DIR_SEP));
+       if (*dir_end == DIR_SEP)
+	 {
+	   *dir_end = '\0';
+	   if (IsThotDir (&execname[0]))
+	     {
+	       AddRegisterEntry ("System", "THOTDIR", execname, REGISTRY_INSTALL, TRUE);
+	       goto load_system_settings;
+	     }
+
+	   do
+	     dir_end--;
+	   while ((dir_end > &execname[0]) && (*dir_end != DIR_SEP));
+	   if (*dir_end == DIR_SEP)
+	     {
+	       *dir_end = '\0';
+	       if (IsThotDir (&execname[0]))
+		 {
+		   AddRegisterEntry ("System", "THOTDIR", execname,
+				     REGISTRY_INSTALL, TRUE);
+		   goto load_system_settings;
+		 }
+	     }
+	 }
      }
-
-   do
-      dir_end--;
-   while ((dir_end > &execname[0]) && (*dir_end != DIR_SEP));
-
-   if (*dir_end != DIR_SEP)
-      goto thot_dir_not_found;
-
-   *dir_end = '\0';
-   if (IsThotDir (&execname[0]))
-     {
-	AddRegisterEntry ("System", "THOTDIR", execname,
-			  REGISTRY_INSTALL, TRUE);
-	goto load_system_settings;
-     }
-
-   do
-      dir_end--;
-   while ((dir_end > &execname[0]) && (*dir_end != DIR_SEP));
-   if (*dir_end != DIR_SEP)
-      goto thot_dir_not_found;
-
-   *dir_end = '\0';
-   if (IsThotDir (&execname[0]))
-     {
-	AddRegisterEntry ("System", "THOTDIR", execname,
-			  REGISTRY_INSTALL, TRUE);
-	goto load_system_settings;
-     }
-
-   do
-      dir_end--;
-   while ((dir_end > &execname[0]) && (*dir_end != DIR_SEP));
-   if (*dir_end != DIR_SEP)
-      goto thot_dir_not_found;
-
-   *dir_end = '\0';
-   if (IsThotDir (&execname[0]))
-     {
-	AddRegisterEntry ("System", "THOTDIR", execname,
-			  REGISTRY_INSTALL, TRUE);
-	goto load_system_settings;
-     }
-
  thot_dir_not_found:
 
    fprintf (stderr, "Cannot find THOTDIR\n");
@@ -1282,8 +1171,8 @@ char               *fullName;
    int                 i, j;
    int                 ret;
 
-   if (ThotDir () != NULL)
-      strcpy (fullName, ThotDir ());
+   if (Thot_Dir != NULL)
+      strcpy (fullName, Thot_Dir);
    else
       *fullName = '\0';
    switch (dir)
