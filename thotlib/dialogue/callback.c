@@ -44,15 +44,16 @@
    result is zero, the built-in action is also triggered.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean      CallAction (NotifyEvent * notifyEvent, APPevent event, boolean pre, int type, Element element, PtrSSchema schStruct)
+static boolean      CallAction (NotifyEvent * notifyEvent, APPevent event, boolean pre, int type, Element element, PtrSSchema schStruct, boolean attr)
 #else  /* __STDC__ */
-static boolean      CallAction (notifyEvent, event, pre, type, element, schStruct)
+static boolean      CallAction (notifyEvent, event, pre, type, element, schStruct, attr)
 NotifyEvent        *notifyEvent;
 APPevent            event;
 boolean             pre;
 int                 type;
-Element             element;
-PtrSSchema          schStruct;
+ment             element;
+SSchema          schStruct;
+boolean		    attr;
 
 #endif /* __STDC__ */
 {
@@ -105,8 +106,10 @@ PtrSSchema          schStruct;
 	     }
 	 }
 
-       /* See in the parent schema */
-       if (procEvent == NULL && funcEvent == NULL)
+       /* See in the parent schema, except for attributes */
+       if (attr)
+           schStruct = NULL;
+       else if (procEvent == NULL && funcEvent == NULL)
 	 {
 	   status = TRUE;	/* still in the same schema */
 	   if (element != 0)
@@ -119,7 +122,7 @@ PtrSSchema          schStruct;
 		   /* a new schema */
 		   schStruct = ((PtrElement) element)->ElStructSchema;
 		   /* do not consider specific types of the previous schema */
-		   if (type >= 8)
+		   if (type > MAX_BASIC_TYPE)
 		     type = 0;
 		 }
 	       else
@@ -248,7 +251,7 @@ boolean             pre;
 	element = notifyAttr->element;
 	schStruct = (PtrSSchema) ((notifyAttr->attributeType).AttrSSchema);
 	return CallAction ((NotifyEvent *) notifyAttr, notifyAttr->event, pre,
-		 notifyAttr->attributeType.AttrTypeNum, element, schStruct);
+	      notifyAttr->attributeType.AttrTypeNum, element, schStruct, TRUE);
      }
    else
       return FALSE;
@@ -392,5 +395,5 @@ boolean             pre;
 	       break;
 	 }
 
-   return CallAction (notifyEvent, notifyEvent->event, pre, elType, element, schStruct);
+   return CallAction (notifyEvent, notifyEvent->event, pre, elType, element, schStruct, FALSE);
 }

@@ -5392,6 +5392,8 @@ RULES
 #endif
 	Justify: No;
 	VertPos: Top = Previous NOT MAP . Bottom + 0.5;
+	if within Center
+		HorizPos: VMiddle = Enclosing . VMiddle;
 	Width: Enclosing . Width;
 	Adjust: Left;
 	CreateBefore(TABLE_S);
@@ -6250,38 +6252,93 @@ ATTRIBUTES
 	Adjust: Left;
 	END;
 
+ Align (Table) = left_:
+	BEGIN
+	HorizPos: Left = Enclosing . Left;
+	In Structure_view
+	   HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+	END;
+ Align (Table) = center_:
+	BEGIN
+	HorizPos: VMiddle = Enclosing . VMiddle;
+	In Structure_view
+	   HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+	END;
+ Align (Table) = right_:
+	BEGIN
+	HorizPos: Right = Enclosing . Right;
+	In Structure_view
+	   HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+	END;
+
+ Align (Horizontal_Rule) = left_:
+	BEGIN
+	HorizPos: Left = Enclosing . Left;
+	In Structure_view
+	   HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+	END;
+ Align (Horizontal_Rule) = center_:
+	BEGIN
+	HorizPos: VMiddle = Enclosing . VMiddle;
+	In Structure_view
+	   HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+	END;
+ Align (Horizontal_Rule) = right_:
+	BEGIN
+	HorizPos: Right = Enclosing . Right;
+	In Structure_view
+	   HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+	END;
+
  Align = left_:
 	BEGIN
 	CreateBefore(ALIGN_LEFT);
-	Adjust: Left;
+	If not Table
+	   Adjust: Left;
 	If Horizontal_Rule
 	   HorizPos: Left = Enclosing . Left;
 	If Text_Input
 	   HorizPos: Left = Enclosing . Left;
+	If Table
+	   HorizPos: Left = Enclosing . Left;
+	In Structure_view
+	   HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 	END;
 
  Align = center_:
 	BEGIN
 	CreateBefore(ALIGN_CENTER);
-	Adjust: VMiddle;	
+	If not Table
+	   Adjust: VMiddle;	
 	If Horizontal_Rule
 	   HorizPos: VMiddle = Enclosing . VMiddle;
 	If Text_Input
 	   HorizPos: VMiddle = Enclosing . VMiddle;
+	If Table
+	   HorizPos: VMiddle = Enclosing . VMiddle;
 	In Structure_view
+	   BEGIN
 	   Adjust: Left;
+	   HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+	   END;
 	END;
 
  Align = right_:
 	BEGIN
 	CreateBefore(ALIGN_RIGHT);
-	Adjust: Right;
+	If not Table
+	   Adjust: Right;
 	If Horizontal_Rule
-	   HorizPos: Left = Enclosing . Left;
+	   HorizPos: Right = Enclosing . Right;
 	If Text_Input
-	   HorizPos: Left = Enclosing . Left;
+	   HorizPos: Right = Enclosing . Right;
+	If Table
+	   HorizPos: Right = Enclosing . Right;
 	In Structure_view
+	   BEGIN
+	   HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 	   Adjust: Left;
+	   END;
 	END;
 
  cellspacing:
@@ -6549,30 +6606,6 @@ ATTRIBUTES
 	BEGIN
 	CreateBefore(ATTR_ROWSPAN);
 	CreateBefore(VALUE_ROWSPAN);
-	END;
-
- Table_align = Align_left :
-	BEGIN
-	CreateBefore(ALIGN_LEFT);
-	HorizPos: Left = Enclosing . Left;
-	IN Structure_view
-		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
-	END;
-
- Table_align = Center_ :
-	BEGIN
-	CreateBefore(ALIGN_CENTER);
-	HorizPos: VMiddle = Enclosing . VMiddle;
-	IN Structure_view
-		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
-	END;
-
- Table_align = Align_right :
-	BEGIN
-	CreateBefore(ALIGN_RIGHT);
-	HorizPos: Right = Enclosing . Right;
-	IN Structure_view
-		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 	END;
 
  Position = Position_top :

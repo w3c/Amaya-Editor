@@ -103,9 +103,9 @@ RULES
    Construct :
 	begin
 	if immediately within MSubscript
-	   create '<none/>';
+	   create '<none/>\12';
 	if immediately within MSuperscript
-	   create '<none/>';
+	   create '<none/>\12';
 	end;
    PostscriptPair :
 	if empty Remove;
@@ -113,7 +113,7 @@ RULES
 	if empty Remove;
    PrescriptPairs :
 	if not empty
-	   create '<mprescripts/>' before;
+	   create '<mprescripts/>\12' before;
 
    MF :
 	begin

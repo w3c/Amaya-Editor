@@ -32,16 +32,14 @@
 #include "over.xpm"
 #include "under.xpm"
 #include "fence.xpm"
-#include "n.xpm"
-#include "o.xpm"
-#include "id.xpm"
-#include "txt.xpm"
+#include "mscript.xpm"
+#include "greek.xpm"
 #define FormMaths 0
 #define MenuMaths 1
 #define MAX_MATHS  2
 
 static Pixmap       iconMath;
-static Pixmap       mIcons[14];
+static Pixmap       mIcons[12];
 static int          MathsDialogue;
 static boolean      InitMaths;
 
@@ -101,12 +99,12 @@ int                 index;
 }
 
 /*----------------------------------------------------------------------
-   InsertPlaceHolder
+   InsertPlaceholder
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void          InsertPlaceHolder (Element el, boolean before, Document doc)
+static void          InsertPlaceholder (Element el, boolean before, Document doc)
 #else
-static void          InsertPlaceHolder (el, before, doc)
+static void          InsertPlaceholder (el, before, doc)
 Element el;
 boolean before;
 Document doc;
@@ -126,7 +124,9 @@ boolean		createConstruct;
 	 elType.ElTypeNum == MathML_EL_MSUB ||
 	 elType.ElTypeNum == MathML_EL_MSUP ||
 	 elType.ElTypeNum == MathML_EL_MUNDER ||
-	 elType.ElTypeNum == MathML_EL_MUNDEROVER)
+	 elType.ElTypeNum == MathML_EL_MOVER ||
+	 elType.ElTypeNum == MathML_EL_MUNDEROVER ||
+	 elType.ElTypeNum == MathML_EL_MMULTISCRIPTS)
         /* this element accepts a Construct as its neighbour */
 	{
 	sibling = el;
@@ -381,16 +381,11 @@ char               *data;
 	  ParBlock = TRUE;
 	  break;
 	case 10:
-	  newType.ElTypeNum = MathML_EL_MN;
+	  newType.ElTypeNum = MathML_EL_MMULTISCRIPTS;
 	  break;
 	case 11:
-	  newType.ElTypeNum = MathML_EL_MO;
-	  break;
-	case 12:
-	  newType.ElTypeNum = MathML_EL_MI;
-	  break;
-	case 13:
-	  newType.ElTypeNum = MathML_EL_MTEXT;
+	  TtcDisplayGreekKeyboard (doc, 1);
+	  return;
 	  break;
 	default:
 	  return;
@@ -400,7 +395,9 @@ char               *data;
       /* do not check the Thot abstract tree against the structure */
       /* schema while changing the structure */
       TtaSetStructureChecking (0, doc);
-      if (elType.ElTypeNum == MathML_EL_MROW || elType.ElTypeNum == MathML_EL_MathML)
+
+      if (elType.ElTypeNum == MathML_EL_MROW ||
+	  elType.ElTypeNum == MathML_EL_MathML)
 	{
 	/* the selected element is a MROW or the MathML element */
 	  row = sibling;
@@ -457,8 +454,8 @@ char               *data;
 
       CreateParentMROW (el, doc);
 
-      InsertPlaceHolder (el, TRUE, doc);
-      InsertPlaceHolder (el, FALSE, doc);
+      InsertPlaceholder (el, TRUE, doc);
+      InsertPlaceholder (el, FALSE, doc);
 
       TtaSetDisplayMode (doc, DisplayImmediately);
       /* check the Thot abstract tree against the structure schema. */
@@ -497,12 +494,11 @@ View                view;
 		   TtaGetMessage (AMAYA, AM_BUTTON_MATH),
 		   0, NULL, TRUE, 1, 'L', D_DONE);
       TtaNewIconMenu (MathsDialogue + MenuMaths, MathsDialogue + FormMaths, 0,
-		   NULL, 14, mIcons, FALSE);
+		   NULL, 12, mIcons, FALSE);
       TtaSetMenuForm (MathsDialogue + MenuMaths, 0);
       TtaSetDialoguePosition ();
     }
   TtaShowDialogue (MathsDialogue + FormMaths, TRUE);
-  /*TtcDisplayGreekKeyboard (doc, view);*/
   KeyboardsLoadResources ();
 }
 
@@ -540,10 +536,8 @@ void                InitMathML ()
    mIcons[7] = TtaCreatePixmapLogo (over_xpm);
    mIcons[8] = TtaCreatePixmapLogo (under_xpm);
    mIcons[9] = TtaCreatePixmapLogo (fence_xpm);
-   mIcons[10] = TtaCreatePixmapLogo (n_xpm);
-   mIcons[11] = TtaCreatePixmapLogo (o_xpm);
-   mIcons[12] = TtaCreatePixmapLogo (id_xpm);
-   mIcons[13] = TtaCreatePixmapLogo (txt_xpm);
+   mIcons[10] = TtaCreatePixmapLogo (mscript_xpm);
+   mIcons[11] = TtaCreatePixmapLogo (greek_xpm);
 }
 
 
@@ -641,113 +635,119 @@ void ParseMathString (event)
   boolean	spaceBefore, before;
 
   el = event->element;	/* the element whose content has been changed */
-  doc = event->document;
-  textEl = TtaGetFirstChild (el);	/* the content of that element */
+  /* process all text elements within the modified element */
+  textEl = TtaGetFirstChild (el);
   if (textEl != NULL)
      {
-     len = TtaGetTextLength (textEl);
-     if (len > 0)
+     /* some initializations */
+     doc = event->document;
+     elType = TtaGetElementType (el);
+     curElType = 0;
+     curEl = NULL;
+     prevEl = el;
+     firstEl = NULL;
+     spaceBefore = FALSE;
+     curLen = 0;
+     newSelEl = NULL;
+     TtaSetDisplayMode (doc, DeferredDisplay);
+    TtaSetStructureChecking (0, doc);
+     while (textEl != NULL)
 	{
-	/* get the current selection */
-	TtaGiveFirstSelectedElement (doc, &selEl, &firstSelChar, &lastSelChar);
-	if (selEl != textEl && selEl != el)
-	   selEl = NULL;
-	else
-	   if (firstSelChar < 1)
-	      firstSelChar = 1;
-	/* get the content */
-	len = TXTBUFLEN;
-	TtaGiveTextContent (textEl, text, &len, &lang);
-	alphabet = TtaGetAlphabet (lang);
-	/* some initializations */
-        elType = TtaGetElementType (el);
-	curElType = 0;
-	curEl = NULL;
-	prevEl = el;
-	firstEl = NULL;
-	spaceBefore = FALSE;
-	curLen = 0;
-	newSelEl = NULL;
-	TtaSetDisplayMode (doc, DeferredDisplay);
-	TtaSetStructureChecking (0, doc);
-	/* parse the content */
-	for (i = 0; i < len; i++)
+        len = TtaGetTextLength (textEl);
+        if (len > 0)
 	  {
-	  if (text[i] == ' ')
-	    spaceBefore = TRUE;
+	  /* get the current selection */
+	  TtaGiveFirstSelectedElement (doc, &selEl, &firstSelChar, &lastSelChar);
+	  if (selEl != textEl && selEl != el)
+	     selEl = NULL;
 	  else
+	     if (firstSelChar < 1)
+	        firstSelChar = 1;
+	  /* get the content */
+	  len = TXTBUFLEN;
+	  TtaGiveTextContent (textEl, text, &len, &lang);
+	  alphabet = TtaGetAlphabet (lang);
+	  /* parse the content */
+	  for (i = 0; i < len; i++)
 	    {
-	    charType = GetCharType (text[i], alphabet);
-	    if (firstEl == NULL || charType != curElType)
-	      /* create a new element */
-	      {
-	      if (prevEl != el)
-		MathSetAttributes (prevEl, doc);
-	      elType.ElTypeNum = charType;
-	      curElType = charType;
-	      curEl = TtaNewElement (doc, elType);
-	      if (firstEl == NULL)
-		 {
-		 before = TRUE;
-		 firstEl = curEl;
-		 }
-	      else
-		 before = FALSE;
-	      TtaInsertSibling (curEl, prevEl, before, doc);
-	      elType.ElTypeNum = MathML_EL_TEXT_UNIT;
-	      textEl = TtaNewElement (doc, elType);
-	      TtaInsertFirstChild (&textEl, curEl, doc);
-	      curLen = 0;
-	      spaceBefore = FALSE;
-	      prevEl = curEl;
-	      }
-
-	    if (selEl != NULL && newSelEl == NULL)
-	      if (i >= firstSelChar - 1)
-		{
-		newSelEl = textEl;
-		newSelChar = curLen + 1;
-		}
-
-	    if (spaceBefore && curLen > 0)
-	      {
-	      newChar[0] = ' '; newChar[1] = text[i]; newChar[2] = '\0';
-	      curLen+= 2;
-	      spaceBefore = FALSE;
-	      }
+	    if (text[i] == ' ')
+	      spaceBefore = TRUE;
 	    else
 	      {
-	      newChar[0] = text[i]; newChar[1] = '\0';
-	      curLen++;
+	      charType = GetCharType (text[i], alphabet);
+	      if (firstEl == NULL || charType != curElType)
+	        /* create a new element */
+	        {
+	        if (prevEl != el)
+		  MathSetAttributes (prevEl, doc);
+	        elType.ElTypeNum = charType;
+	        curElType = charType;
+	        curEl = TtaNewElement (doc, elType);
+	        if (firstEl == NULL)
+		   {
+		   before = TRUE;
+		   firstEl = curEl;
+		   }
+	        else
+		   before = FALSE;
+	        TtaInsertSibling (curEl, prevEl, before, doc);
+	        elType.ElTypeNum = MathML_EL_TEXT_UNIT;
+	        textEl = TtaNewElement (doc, elType);
+	        TtaInsertFirstChild (&textEl, curEl, doc);
+	        TtaSetTextContent (textEl, NULL, lang, doc);
+	        curLen = 0;
+	        spaceBefore = FALSE;
+	        prevEl = curEl;
+	        }
+
+	      if (selEl != NULL && newSelEl == NULL)
+	        if (i >= firstSelChar - 1)
+		  {
+		  newSelEl = textEl;
+		  newSelChar = curLen + 1;
+		  }
+
+	      if (spaceBefore && curLen > 0)
+	        {
+	        newChar[0] = ' '; newChar[1] = text[i]; newChar[2] = '\0';
+	        curLen+= 2;
+	        spaceBefore = FALSE;
+	        }
+	      else
+	        {
+	        newChar[0] = text[i]; newChar[1] = '\0';
+	        curLen++;
+	        }
+	      TtaAppendTextContent (textEl, newChar, doc);
 	      }
-	    TtaAppendTextContent (textEl, newChar, doc);
 	    }
+	  /* end of parsing */
+	  /* the last element created is now complete. Associate the
+	     attribute that fits with its content */
+	  if (curEl != NULL)
+	    MathSetAttributes (curEl, doc);
+	  if (selEl != NULL && newSelEl == NULL)
+	     {
+	     newSelEl = textEl;
+	     newSelChar = curLen + 1;
+	     }
 	  }
-	/* end of parsing */
-	/* the last element created is now complete. Associate the
-	   attribute that fits with its content */
-	if (curEl != NULL)
-	  MathSetAttributes (curEl, doc);
-	if (selEl != NULL && newSelEl == NULL)
-	   {
-	   newSelEl = textEl;
-	   newSelChar = curLen + 1;
-	   }
-
-	/* remove the element that has been processed */
-	TtaDeleteTree (el, doc);
-
-	/* create a MROW element that encompasses the new elements
-	   if necessary */
-	CreateParentMROW (firstEl, doc);
-
-	TtaSetStructureChecking (1, doc);
-	TtaSetDisplayMode (doc, DisplayImmediately);
-
-	/* set a new selection */
-	if (newSelEl != NULL)
-	   TtaSelectString (doc, newSelEl, newSelChar, newSelChar);
+	  TtaNextSibling (&textEl);
 	}
+
+     /* remove the element that has been processed */
+     TtaDeleteTree (el, doc);
+
+     /* create a MROW element that encompasses the new elements
+	if necessary */
+     CreateParentMROW (firstEl, doc);
+
+     TtaSetStructureChecking (1, doc);
+     TtaSetDisplayMode (doc, DisplayImmediately);
+
+     /* set a new selection */
+     if (newSelEl != NULL)
+	TtaSelectString (doc, newSelEl, newSelChar, newSelChar);
      }
 }
 
@@ -764,8 +764,8 @@ void MathElementPasted(event)
 #endif /* __STDC__*/
 {
    TtaSetStructureChecking (0, event->document);
-   InsertPlaceHolder (event->element, TRUE, event->document);
-   InsertPlaceHolder (event->element, FALSE, event->document);
+   InsertPlaceholder (event->element, TRUE, event->document);
+   InsertPlaceholder (event->element, FALSE, event->document);
    TtaSetStructureChecking (1, event->document);
 }
 

@@ -780,15 +780,6 @@ ATTRIBUTES
  Border: BEGIN
 	END;
 
- Table_align = Align_left:
-		BEGIN
-		END;
- Table_align = Center_:
-		BEGIN	
-		END;	
- Table_align = Align_right:
-		BEGIN
-		END;
  cellspacing: BEGIN
 	END;
 

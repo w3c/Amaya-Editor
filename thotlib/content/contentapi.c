@@ -120,7 +120,7 @@ Document            document;
 	     /* modifies the selection if the element is within it */
 	     selOk = GetCurrentSelection (&selDoc, &firstSelection, &lastSelection, &firstChar, &lastChar);
 	     changeSelection = FALSE;
-	     if (selOk)
+	     if (selOk && content != NULL)
 		if (selDoc == LoadedDocument[document - 1])
 		   if ((PtrElement) element == firstSelection ||
 		       (PtrElement) element == lastSelection)
@@ -147,18 +147,20 @@ Document            document;
 			   lastChar = 0;
 		     }
 #endif
-	     ptr = content;
-	     length = strlen (content);
-	     delta = length - ((PtrElement) element)->ElTextLength;
-	     ((PtrElement) element)->ElTextLength = length;
-	     ((PtrElement) element)->ElVolume = length;
 	     if (((PtrElement) element)->ElLeafType == LtText)
 		((PtrElement) element)->ElLanguage = language;
-	     pPreviousBuff = NULL;
-	     pBuf = ((PtrElement) element)->ElText;
-
-	     do
+	     if (content != NULL)
 	       {
+	       ptr = content;
+	       length = strlen (content);
+	       delta = length - ((PtrElement) element)->ElTextLength;
+	       ((PtrElement) element)->ElTextLength = length;
+	       ((PtrElement) element)->ElVolume = length;
+	       pPreviousBuff = NULL;
+	       pBuf = ((PtrElement) element)->ElText;
+
+	       do
+	         {
 		  if (pBuf == NULL)
 		     GetTextBuffer (&pBuf);
 		  if (length >= THOT_MAX_CHAR)
@@ -181,12 +183,12 @@ Document            document;
 		  pPreviousBuff = pBuf;
 		  pBuf = pBuf->BuNext;
 		  pPreviousBuff->BuNext = NULL;
-	       }
-	     while (length > 0);
+	         }
+	       while (length > 0);
 
-	     while (pBuf != NULL)
-		/* Release the remaining buffers */
-	       {
+	       while (pBuf != NULL)
+		  /* Release the remaining buffers */
+	         {
 		  pNextBuff = pBuf->BuNext;
 #ifdef NODISPLAY
 		  FreeTextBuffer (pBuf);
@@ -194,21 +196,21 @@ Document            document;
 		  DeleteBuffer (pBuf, ActiveFrame);
 #endif
 		  pBuf = pNextBuff;
-	       }
-	     /* Updates the volumes of the ancestors */
-	     pEl = ((PtrElement) element)->ElParent;
-	     while (pEl != NULL)
-	       {
+	         }
+	       /* Updates the volumes of the ancestors */
+	       pEl = ((PtrElement) element)->ElParent;
+	       while (pEl != NULL)
+	         {
 		  pEl->ElVolume += delta;
 		  pEl = pEl->ElParent;
-	       }
-	     if (((PtrElement) element)->ElLeafType == LtPicture)
-	       {
+	         }
+	       if (((PtrElement) element)->ElLeafType == LtPicture)
+	         {
 		  /* Releases the  pixmap */
 		  if (((PtrElement) element)->ElPictInfo != NULL)
 		     FreePicture ((PictInfo *) (((PtrElement) element)->ElPictInfo));
-	       }
-
+	         }
+	      }
 #ifndef NODISPLAY
 	     RedisplayLeaf ((PtrElement) element, document, delta);
 	     /* Sets up a new selection if the element is within it */

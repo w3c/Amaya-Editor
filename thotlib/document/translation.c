@@ -1199,11 +1199,9 @@ PtrDocument         pDoc;
 					      while (pEl1 != NULL)
 						{
 						   if (pSS != NULL)
-						      typeOK = EquivalentSRules (Cond->TcElemType, pSS,
-										 pEl1->ElTypeNumber, pEl1->ElStructSchema, pEl1->ElParent);
+						      typeOK = EquivalentType (pEl1, Cond->TcElemType, pSS);
 						   else if (strcmp (Cond->TcElemNature, pEl1->ElStructSchema->SsName) == 0)
-						      typeOK = EquivalentSRules (Cond->TcElemType,
-										 pEl1->ElStructSchema, pEl1->ElTypeNumber, pEl1->ElStructSchema, pEl1->ElParent);
+						      typeOK = EquivalentType (pEl1, Cond->TcElemType, pEl1->ElStructSchema);
 						   else
 						      typeOK = FALSE;
 						   if (typeOK)
@@ -1220,11 +1218,9 @@ PtrDocument         pDoc;
 					      while (pEl1 != NULL)
 						{
 						   if (pSS != NULL)
-						      typeOK = EquivalentSRules (Cond->TcElemType, pSS,
-										 pEl1->ElTypeNumber, pEl1->ElStructSchema, pEl1->ElParent);
+						      typeOK = EquivalentType (pEl1, Cond->TcElemType, pSS);
 						   else if (strcmp (Cond->TcElemNature, pEl1->ElStructSchema->SsName) == 0)
-						      typeOK = EquivalentSRules (Cond->TcElemType,
-										 pEl1->ElStructSchema, pEl1->ElTypeNumber, pEl1->ElStructSchema, pEl1->ElParent);
+						      typeOK = EquivalentType (pEl1, Cond->TcElemType, pEl1->ElStructSchema);
 						   else
 						      typeOK = FALSE;
 						   if (typeOK)

@@ -302,7 +302,7 @@ STRUCT
 	END;
 
   Table (ATTR Border = Integer;
-	      Table_align = Align_left, Center_, Align_right;
+	      Align;
 	      Width__; IntWidthPercent; IntWidthPxl;
 	      cellspacing = Integer; cellpadding = Integer) =
 	BEGIN

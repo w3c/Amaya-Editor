@@ -388,9 +388,9 @@ RULES
    Construct:
 	BEGIN
 	if empty and immediately within MSubscript
-		CreateBefore (NONE_S);
+		CreateFirst (NONE_S);
 	if empty and immediately within MSuperscript
-		CreateBefore (NONE_S);
+		CreateFirst (NONE_S);
 	VertPos: HRef = Previous not MF . HRef;
 	IN Math_Structure_view BEGIN
 		Width: Enclosing . Width;

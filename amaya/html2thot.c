@@ -504,7 +504,7 @@ static AttributeMapping AttributeMappingTable[] =
    {"ALIGN", "OBJECT", 'A', HTML_ATTR_Alignment},
 #endif
    {"ALIGN", "P", 'A', HTML_ATTR_Align},
-   {"ALIGN", "TABLE", 'A', HTML_ATTR_Table_align},
+   {"ALIGN", "TABLE", 'A', HTML_ATTR_Align},
    {"ALIGN", "TD", 'A', HTML_ATTR_Cell_align},
    {"ALIGN", "TH", 'A', HTML_ATTR_Cell_align},
    {"ALIGN", "TR", 'A', HTML_ATTR_Row_align},
@@ -681,9 +681,6 @@ static AttrValueMapping AttrValueMappingTable[] =
 
    {HTML_ATTR_Position, "TOP", HTML_ATTR_Position_VAL_Position_top},
    {HTML_ATTR_Position, "BOTTOM", HTML_ATTR_Position_VAL_Position_bottom},
-   {HTML_ATTR_Table_align, "LEFT", HTML_ATTR_Table_align_VAL_Align_left},
-   {HTML_ATTR_Table_align, "CENTER", HTML_ATTR_Table_align_VAL_Center_},
-   {HTML_ATTR_Table_align, "RIGHT", HTML_ATTR_Table_align_VAL_Align_right},
 
    {HTML_ATTR_Row_valign, "TOP", HTML_ATTR_Row_valign_VAL_Row_top},
    {HTML_ATTR_Row_valign, "MIDDLE", HTML_ATTR_Row_valign_VAL_Row_middle},
@@ -4782,10 +4779,10 @@ char                c;
    Put a Math character in the document.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         PutMathChar (char c, char alphabet)
+static void         PutMathChar (unsigned char c, char alphabet)
 #else
 static void         PutMathChar (c, alphabet)
-char                c;
+unsigned char       c;
 char		    alphabet
 #endif
 {
@@ -4803,8 +4800,11 @@ char		    alphabet
       PutInBuffer (c);
       TextToMath (alphabet);
       }
-   if (c == '\0')
-      /* null character */
+   if (c == '\0' || c == ' ' ||
+       ((int)c) == 129 ||	/* thin space */
+       ((int)c) == 130 ||	/* en space */
+       ((int)c) == 160)		/* sticky space */
+      /* null character or space */
       if (LgEntityName > 0)
 	/* this character comes from an entity */
 	/* if it's the content of an operator (MO element), associate an
@@ -4852,7 +4852,7 @@ char                c;
    EntityName[LgEntityName] = EOS;
    if (MathEntityTable[EntityTableEntry].MentityName[CharRank] == EOS)
       /* the entity read matches the current entry of entity table */
-        PutMathChar ((char) (MathEntityTable[EntityTableEntry].charCode),
+        PutMathChar ((unsigned char) (MathEntityTable[EntityTableEntry].charCode),
 		     MathEntityTable[EntityTableEntry].alphabet);
    else
       /* entity not in the table. Print an error message */
@@ -4891,7 +4891,7 @@ unsigned char       c;
      {
 	/* assume that semicolon is missing and put the corresponding char */
 	EntityName[LgEntityName] = EOS;
-	PutMathChar ((char) (MathEntityTable[EntityTableEntry].charCode),
+	PutMathChar ((unsigned char) (MathEntityTable[EntityTableEntry].charCode),
 		     MathEntityTable[EntityTableEntry].alphabet);
 	if (c != SPACE)
 	   /* print an error message */

@@ -677,7 +677,8 @@ Language            lang;
    int                 len;
 
    pEl = pAb->AbElement;
-   if (pEl->ElLeafType == LtText)
+   if (pEl != NULL)
+     if (pEl->ElLeafType == LtText)
      {
 	pDoc = DocumentOfElement (pEl);
 	if (pEl->ElTextLength > 0)
@@ -704,7 +705,7 @@ Language            lang;
 	ChangeLanguage (pDoc, pEl, lang, TRUE);
 	/* met l'attribut langue sur l'element */
 	GetAttribute (&pAttr);
-	pAttr->AeAttrSSchema = pDoc->DocSSchema;
+	pAttr->AeAttrSSchema = pEl->ElStructSchema;
 	pAttr->AeAttrNum = 1;
 	pAttr->AeDefAttr = FALSE;
 	pAttr->AeAttrType = AtTextAttr;

@@ -1056,7 +1056,7 @@ View                view;
    AutoReplace = FALSE;
    strcpy (pPrecedentString, "");
 
-#  ifndef _WINDOWS */
+#  ifndef _WINDOWS
    /* efface le label "References dans le document X" */
    TtaNewLabel (NumLabelAttributeValue, NumFormSearchText, " ");
 #  endif /* _WINDOWS */

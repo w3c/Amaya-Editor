@@ -1171,13 +1171,6 @@ ATTRIBUTES
 	Create DoubleQuote;
 	END;
 
- Table_align = Align_left:
-	Create ' align=left';
- Table_align = Center_:
-	Create ' align=center';
- Table_align = Align_right:
-	Create ' align=right';
-
  cellspacing: BEGIN
 	Create ' cellspacing="';
 	Create cellspacing;

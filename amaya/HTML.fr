@@ -177,7 +177,6 @@ Checked: checked
 Area_Size: size
 MaxLength: maxlength
 Border: border
-Table_align: align
 cellspacing: cellspacing
 cellpadding: cellpadding
 Position: align
@@ -219,9 +218,6 @@ UpperRoman: I
 Get_: get
 Post_: post
 No_: no
-Align_left: left
-Center_: center
-Align_right: right
 Position_top: top
 Position_bottom: bottom
 Row_left: left
