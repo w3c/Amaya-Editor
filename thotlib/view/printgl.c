@@ -531,6 +531,7 @@ GLint GLParseFeedbackBuffer (GLfloat *current)
 	      fprintf (FILE_STREAM, "%g -%g %g P\n", 
 		       vertices[0].xyz[0], GL_HEIGHT - vertices[0].xyz[1], 0.5*psize);
 #endif /*#if defined(_MOTIF) || defined(_GTK)*/
+	      /* Call Win32 function */
 	      break;
 
 	    case GL_LINE_TOKEN :

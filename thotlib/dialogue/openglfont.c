@@ -180,6 +180,8 @@ static void FreeACharCache (Char_Cache_index *Cache)
   if (Cache->next)
     FreeACharCache (Cache->next);
   if (Cache->glyph.data)
+    /* TODO: test the cache type to avoid freeing a path
+       GL_DeleteDisplayList */
     TtaFreeMemory (Cache->glyph.data);
   TtaFreeMemory (Cache);  
 }
@@ -196,7 +198,7 @@ static GL_glyph *Char_index_lookup_cache (GL_font *font, unsigned int idx,
   if (Cache)
     while (1)
       {
-	if (Cache->index == idx)
+	if (Cache->index == idx /* && Cache->type == type (bitmap/path) */)
 	  {
 	    *glyph_index = Cache->character;
 	    return (&Cache->glyph);  

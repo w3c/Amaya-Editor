@@ -781,14 +781,17 @@ void ComputeBoundingBox (PtrBox box, int frame,
  
   if (NotFeedBackMode)
     {
+      /* display into a temporary buffer */
       glFeedbackBuffer (FEEDBUFFERSIZE, GL_2D, feedBuffer);
       NotFeedBackMode = FALSE;  
       glRenderMode (GL_FEEDBACK);
+      /* display the box with transformation and clipping */
       DisplayBox (box, frame, xmin, xmax, ymin, ymax, FALSE);
       size = glRenderMode (GL_RENDER);
       NotFeedBackMode = TRUE;
       if (size > 0)
 	{
+	  /* the box is displayed */
 	  if (size > FEEDBUFFERSIZE)
 	    size = FEEDBUFFERSIZE;
 
@@ -804,7 +807,9 @@ void ComputeBoundingBox (PtrBox box, int frame,
 	}
       else
 	{
+	  /* the box is not displayed */
 	  pFrame = &ViewFrameTable[frame - 1];
+	  /* */
 	  box->BxClipX = box->BxXOrg - (pFrame->FrXOrg?pFrame->FrXOrg:pFrame->OldFrXOrg);
 	  box->BxClipY = box->BxYOrg - (pFrame->FrYOrg?pFrame->FrYOrg:pFrame->OldFrYOrg);
 	  box->BxClipW = box->BxW;
