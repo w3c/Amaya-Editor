@@ -336,7 +336,7 @@ int CharacterWidth (unsigned char c, PtrFont font)
 	return 0;
       else
 	l = xf->per_char[c - xf->min_char_or_byte2].width;
-#endif  /* _GTK */	  
+#endif  /* _GTK */
       if (c == 244)
 	{
 	  /* a patch due to errors in standard symbol fonts */
@@ -1146,13 +1146,13 @@ static PtrFont LoadNearestFont (char script, int family, int highlight,
 	{
 	  /* initialize a new cache entry */
 	  TtFonts[i] = ptfont;
-#if !defined(_WINDOWS) && !defined(_GTK)
+#ifndef _WINDOWS
           size = LogicalPointsSizes[size];
 	  if (script == 'G' &&
 	      (size == 8 || size == 10 || size == 12 ||
 	       size == 14 || size == 24))
 	    TtPatchedFont[i] = size;
-#endif /* !_WINDOWS && !_GTK */
+#endif /* _WINDOWS */
 	  TtFontFrames[i] = 0;
 	}
     }
@@ -1185,52 +1185,6 @@ unsigned char GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset,
 	  lfont = fontset->FontIso_1;
 	  car = (char) c;
 	}
-      else if ((c >= 0x370 && c < 0x3FF)
-#ifndef _WINDOWS
-	       /* Windows quotations */
-	       || c == 0x2018|| c == 0x2019
-#endif /* _WINDOWS */
-	       )
-	{
-	  /* greek characters */
-	  if (fontset->FontIso_7 == NULL)
-	    {
-	      /* load that font */
-	      for (frame = 1; frame <= MAX_FRAME; frame++)
-		{
-		  mask = 1 << (frame - 1);
-		  if (fontset->FontMask | mask)
-		    lfont = LoadNearestFont (GreekFontScript, fontset->FontFamily,
-					     fontset->FontHighlight,
-					     fontset->FontSize,
-					     frame, TRUE, TRUE);
-		  if (GreekFontScript == '7' && lfont == NULL)
-		    {
-		      /* use symbol instead of ISO_8859_7 */
-		      GreekFontScript = 'G';
-		      lfont = LoadNearestFont (GreekFontScript, fontset->FontFamily,
-					     fontset->FontHighlight,
-					     fontset->FontSize,
-					     frame, TRUE, TRUE);
-		    }
-		}
-	      if (lfont == NULL)
-		/* font not found: avoid to retry later */
-		lfont = (void *) -1;
-	      fontset->FontIso_7 = lfont;
-	    }
-	  else
-	    lfont = fontset->FontIso_7; /* Greek */
-	  if (GreekFontScript == '7')
-#ifdef _WINDOWS
-	    car = TtaGetCharFromWC (c, WINDOWS_1253);
-#else /* _WINDOWS */
-	    car = TtaGetCharFromWC (c, ISO_8859_7);
-#endif /* _WINDOWS */
-	  else
-	    /* using the font symbol instead of ISO_8859_7 */
-	    car = TtaGetCharFromWC (c, ISO_SYMBOL);
-	}
       else if (c == 0x200D ||
 	       c == 0x200E /* lrm */ || c == 0x200F /* rlm */ ||
 	       c == 0x202A /* lre */ || c == 0x202B /* rle */ ||
@@ -1238,53 +1192,75 @@ unsigned char GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset,
 	       c == 0x202C /* pdf */ || c == 0x2061 /* ApplyFunction */ ||
 	       c == 0x2062 /* InvisibleTimes */)
 	car =  INVISIBLE_CHAR;
-      else if (c > 0x2000 && c < 0x237F &&
-	       (c < 0x2018 || c > 0x201D) /* Windows quotations */ &&
-	       c != 0x20AC /* euro */)
-	{
-	  /* symbols */
-	  if (fontset->FontSymbol == NULL)
-	    {
-	      /* load the Adobe Symbol font */
-	      for (frame = 1; frame <= MAX_FRAME; frame++)
-		{
-		  mask = 1 << (frame - 1);
-		  if (fontset->FontMask | mask)
-		    {
-		      lfont = LoadNearestFont ('G', fontset->FontFamily,
-					       fontset->FontHighlight,
-					       fontset->FontSize,
-					       frame, TRUE, TRUE);
-		    }
-		}
-	      if (lfont == NULL)
-		/* font not found: avoid to retry later */
-		lfont = (void *) -1;
-	      fontset->FontSymbol = lfont;
-	    }
-	  else
-	    lfont = fontset->FontSymbol;
-	  car = TtaGetCharFromWC (c, ISO_SYMBOL);
-	}
       else
 	{
-	  if (c == 0x152 /* OE */ || c == 0x153 /* oe */ ||
-	      c == 0x178 /* Y WITH DIAERESIS */ || c == 0x20AC /* euro */)
+	  if (c >= 0x370 && c < 0x3FF)
 	    {
-	      car = 'F'; /* Extended Latin */
-	      pfont = &(fontset->FontIso_15);
+	      /* Greek characters */
+	      car = GreekFontScript;
+	      pfont = &(fontset->FontIso_7);
+	      if (GreekFontScript == '7')
 #ifdef _WINDOWS
+		encoding = WINDOWS_1253;
+#else /* _WINDOWS */
+	        encoding = ISO_8859_7;
+#endif /* _WINDOWS */
+	      else
+		encoding = ISO_SYMBOL;
+	    }
+	  else if (c == 0x152 /*oe*/ || c == 0x153  /*OE*/ ||
+		   c == 0x178 /*ydiaeresis*/ || c == 0x20AC /*euro*/ ||
+		   c == 0x2013 /*ndash*/ || c == 0x2014 /*mdash*/ ||
+		   (c >= 0x2018 && c <= 0x201E) /*quotes*/ ||
+		   c == 0x2020 /*dagger*/ || c == 0x2021 /*ddagger*/  ||
+		   c == 0x2026 /*...*/||
+		   c == 0x2039 /*inf*/|| c == 0x203A /*sup*/)
+	    {
+#ifdef _WINDOWS
+	      car = '1'; /* West Europe Latin */
+	      pfont = &(fontset->FontIso_11);
 	      encoding = WINDOWS_1252;
 #else /* _WINDOWS */
-	      encoding = ISO_8859_15;
+	      if (c == 0x152 /*oe*/ || c == 0x153  /*OE*/ ||
+		  c == 0x178 /*ydiaeresis*/ || c == 0x20AC /*euro*/)
+		{
+		  car = 'F'; /* Extended Latin */
+		  pfont = &(fontset->FontIso_15);
+		  encoding = ISO_8859_15;
+		}
+	      else
+		{
+		  /* use an approaching character */
+		  encoding = ISO_8859_1;
+		  car = '1';
+		  pfont = &(fontset->FontIso_1);
+		  if (c == 0x2018 || c == 0x201C)
+		    c = 96;
+		  else if (c == 0x2019 || c == 0x201D)
+		    c = 39;
+		  else if (c == 0x201A || c == 0x201E)
+		    c = 44;
+		  else if (c == 0x2039)
+		    c = 60;
+		  else if (c == 0x203A)
+		    c = 62;
+		  else
+		    {
+		      car = 'G';
+		      pfont = &(fontset->FontSymbol);
+		      if (c == 0x2013)
+			c = 45;
+		      else if (c == 0x2014)
+			c = 190;
+		      else if (c == 0x2026)
+			c = 188;
+		      else if (c == 0x2020 || c == 0x2021)
+			c = 42;
+		    }
+		}
 #endif /* _WINDOWS */
 	    }
-	  else if (c < 0x17F
-#ifdef _WINDOWS
-	      /* Windows quotations */
-	      || (c >= 0x2018 && c <= 0x201D)
-#endif /* _WINDOWS */
-	      )
+	  else if (c < 0x17F)
 	    {
 	      car = '2'; /* Central Europe */
 	      pfont = &(fontset->FontIso_2);
@@ -1294,14 +1270,15 @@ unsigned char GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset,
 	      encoding = ISO_8859_2;
 #endif /* _WINDOWS */
 	    }
-#ifndef _WINDOWS
-	  else if (c == 0x201C || c == 0x201D /* Windows quotations */)
+	  else if (c > 0x2000 && c < 0x237F &&
+		   (c < 0x2018 || c > 0x201D) /* Windows quotations */ &&
+		   c != 0x20AC /* euro */)
 	    {
-	      car = 'D'; /* Latin Extended */
-	      pfont = &(fontset->FontIso_13);
-	      encoding = ISO_8859_13;
+	      /* Symbols */
+	      car = 'G';
+	      pfont = &(fontset->FontSymbol);
+	      encoding = ISO_SYMBOL;
 	    }
-#endif /* _WINDOWS */
 	  else if (c < 0x24F)
 	    {
 	      car = '3';
@@ -1370,25 +1347,35 @@ unsigned char GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset,
 	    }
 	  if (pfont)
 	  {
-	  if (*pfont == NULL)
-	    {
-	      /* load that font */
-	      for (frame = 1; frame <= MAX_FRAME; frame++)
-		{
-		  mask = 1 << (frame - 1);
-		  if (fontset->FontMask | mask)
-		    lfont = LoadNearestFont (car, fontset->FontFamily,
-					     fontset->FontHighlight,
-					     fontset->FontSize,
-					     frame, TRUE, TRUE);
-		}
-	      if (lfont == NULL)
-		/* font not found: avoid to retry later */
-		lfont = (void *) -1;
-	    *pfont = lfont;
-	    }
-	  else
-	    lfont = *pfont;
+	    if (*pfont == NULL)
+	      {
+		/* load that font */
+		for (frame = 1; frame <= MAX_FRAME; frame++)
+		  {
+		    mask = 1 << (frame - 1);
+		    if (fontset->FontMask | mask)
+		      lfont = LoadNearestFont (car, fontset->FontFamily,
+					       fontset->FontHighlight,
+					       fontset->FontSize,
+					       frame, TRUE, TRUE);
+		    if (car == GreekFontScript && car == '7' && lfont == NULL)
+		      {
+			/* use symbol instead of ISO_8859_7 */
+			GreekFontScript = 'G';
+			encoding = ISO_SYMBOL;
+			lfont = LoadNearestFont (GreekFontScript, fontset->FontFamily,
+						 fontset->FontHighlight,
+						 fontset->FontSize,
+						 frame, TRUE, TRUE);
+		      }
+		  }
+		if (lfont == NULL)
+		  /* font not found: avoid to retry later */
+		  lfont = (void *) -1;
+		*pfont = lfont;
+	      }
+	    else
+	      lfont = *pfont;
 	  }
 	  else
 	    lfont = (void *) -1;
