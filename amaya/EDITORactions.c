@@ -1439,7 +1439,7 @@ char               *shape;
 	     if (url[0] == '#')
 		map = SearchNAMEattribute (doc, &url[1], NULL);
 	  }
-	else
+	if (map == NULL)
 	  {
 	     /* create the MAP element */
 	     elType.ElTypeNum = HTML_EL_MAP;
@@ -1462,7 +1462,9 @@ char               *shape;
 	     url[0] = '#';
 	     TtaGiveTextAttributeValue (attr, &url[1], &length);
 	     attrType.AttrTypeNum = HTML_ATTR_USEMAP;
-	     attr = TtaNewAttribute (attrType);
+	     attr = TtaGetAttribute (image, attrType);
+	     if (attr == NULL)
+	       attr = TtaNewAttribute (attrType);
 	     TtaAttachAttribute (image, attr, doc);
 	     TtaSetAttributeText (attr, url, image, doc);
 

@@ -63,6 +63,7 @@ typedef struct _EventsSet
   PtrEventsSet        EvSNext;	/* Next EventsSet in the list */
 } EventsSet;
 
+extern void         GraphicssLoadResources ();
 extern void         KeyboardsLoadResources ();
 extern void         StructEditingLoadResources ();
 extern void         StructSelectLoadResources ();

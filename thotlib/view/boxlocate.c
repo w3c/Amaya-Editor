@@ -2063,8 +2063,6 @@ int                 frame;
 	x = x + pFrame->FrXOrg - pBox->BxXOrg;
 	y = y + pFrame->FrYOrg - pBox->BxYOrg;
 	NewPosition (pAb, x, y, frame, TRUE);
-	width = width - pBox->BxWidth;
-	height = height - pBox->BxHeight;
 	NewDimension (pAb, width, height, frame, TRUE);
      }
 

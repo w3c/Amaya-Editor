@@ -24,7 +24,6 @@
 #include "thot_gui.h"
 #include "thot_sys.h"
 #include "constmedia.h"
-
 #include "typemedia.h"
 #include "constmenu.h"
 #include "appdialogue.h"
@@ -33,9 +32,7 @@
 
 #undef THOT_EXPORT
 #define THOT_EXPORT extern
-
 #include "edit_tv.h"
-
 #include "frame_tv.h"
 #include "font_tv.h"
 #include "select_tv.h"
@@ -745,52 +742,57 @@ int                 nbitem;
    LoadKbd
    loads a keyboard.
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 static void         LoadKbd (int number)
-
 #else  /* __STDC__ */
 static void         LoadKbd (number)
 int                 number;
-
 #endif /* __STDC__ */
-
 {
-   ptrfont             pFontAc;
-   ptrfont             pFontIg;
+  ptrfont             pFontAc;
+  ptrfont             pFontIg;
 
-   ConfigKeyboard (&KbX, &KbY);
-   switch (number)
-	 {
-	    case 0:		/* Symboles */
-	       KbFonts[number] = SymbolIcons;	/* Symboles */
-	       CreateKeyboard (number, TtaGetMessage (LIB, TMSG_MATH_SYMBOLS), SymbolIcons, 3,
-		 KbX, KbY, Items_Symb, sizeof (Items_Symb) / sizeof (ITEM));
-	       break;
-	    case 1:		/* Graphiques */
-	       KbFonts[number] = GraphicsIcons;		/* Graphique */
-	       CreateKeyboard (number, TtaGetMessage (LIB, TMSG_GRAPHICS), GraphicsIcons, 6,
-	       KbX, KbY, Items_Graph, sizeof (Items_Graph) / sizeof (ITEM));
-	       break;
-	    case 2:		/* ISO latin 1 */
-	       pFontAc = ReadFont ('L', 'T', 0, 14, UnPoint);
-	       if (!pFontAc)
-		  pFontAc = FontDialogue;
-	       KbFonts[number] = pFontAc;	/* Latin */
-	       if (pFontAc != NULL)
-		  CreateKeyboard (number, TtaGetMessage (LIB, TMSG_LATIN_ALPHABET), pFontAc, 13,
-		  KbX, KbY, Items_Isol, sizeof (Items_Isol) / sizeof (ITEM));
-	       break;
-	    case 3:		/* Grec */
-	       pFontIg = ReadFont ('G', 'T', 0, 14, UnPoint);
-	       if (!pFontIg)
-		  pFontIg = FontDialogue;
-	       if (pFontIg != NULL)
-		  KbFonts[number] = pFontIg;	/* Grec */
-	       CreateKeyboard (number, TtaGetMessage (LIB, TMSG_GREEK_ALPHABET), pFontIg, 16,
-		 KbX, KbY, Items_Grec, sizeof (Items_Grec) / sizeof (ITEM));
-	       break;
-	 }
+  ConfigKeyboard (&KbX, &KbY);
+  switch (number)
+    {
+    case 0:		/* Symboles */
+      if (SymbolIcons != NULL)
+	{
+	  KbFonts[number] = SymbolIcons;
+	  CreateKeyboard (number, TtaGetMessage (LIB, TMSG_MATH_SYMBOLS),
+			  SymbolIcons, 3, KbX, KbY, Items_Symb,
+			  sizeof (Items_Symb) / sizeof (ITEM));
+	}
+      break;
+    case 1:		/* Graphiques */
+      if (GraphicsIcons != NULL)
+	{
+	  KbFonts[number] = GraphicsIcons;
+	  CreateKeyboard (number, TtaGetMessage (LIB, TMSG_GRAPHICS),
+			  GraphicsIcons, 6,
+			  KbX, KbY, Items_Graph,
+			  sizeof (Items_Graph) / sizeof (ITEM));
+	}
+      break;
+    case 2:		/* ISO latin 1 */
+      pFontAc = ReadFont ('L', 'T', 0, 14, UnPoint);
+      if (!pFontAc)
+	pFontAc = FontDialogue;
+      KbFonts[number] = pFontAc;
+      if (pFontAc != NULL)
+	CreateKeyboard (number, TtaGetMessage (LIB, TMSG_LATIN_ALPHABET), pFontAc, 13,
+			KbX, KbY, Items_Isol, sizeof (Items_Isol) / sizeof (ITEM));
+      break;
+    case 3:		/* Grec */
+      pFontIg = ReadFont ('G', 'T', 0, 14, UnPoint);
+      if (!pFontIg)
+	pFontIg = FontDialogue;
+      if (pFontIg != NULL)
+	KbFonts[number] = pFontIg;	/* Grec */
+      CreateKeyboard (number, TtaGetMessage (LIB, TMSG_GREEK_ALPHABET), pFontIg, 16,
+		      KbX, KbY, Items_Grec, sizeof (Items_Grec) / sizeof (ITEM));
+      break;
+    }
 }
 #endif /* _WINDOWS */
 
@@ -813,19 +815,47 @@ int                 kb;
 	/* Faut-il charger le clavier avant de l'afficher ? */
 	if (Keyboards[kb] == 0)
 	   LoadKbd (kb);
-#ifdef OLD
-	/* Affiche le clavier si necessaire */
-	if (XtIsManaged (Keyboards[kb]))
-	   XMapRaised (TtDisplay, XtWindowOfObject (Keyboards[kb]));
-	else
-	   XtManageChild (Keyboards[kb]);
-#else
-	/*    XtPopup(XtParent(Keyboards[kb]), XtGrabNonexclusive); */
-	XtPopup (Keyboards[kb], XtGrabNonexclusive);
-	XMapRaised (TtDisplay, XtWindowOfObject (Keyboards[kb]));
-#endif
+	if (Keyboards[kb] != 0)
+	  {
+	    XtPopup (Keyboards[kb], XtGrabNonexclusive);
+	    XMapRaised (TtDisplay, XtWindowOfObject (Keyboards[kb]));
+	  }
      }
 #endif /* _WINDOWS */
+}
+
+/*----------------------------------------------------------------------
+  GraphicsLoadResource
+  Initializes the keyboards.
+  ----------------------------------------------------------------------*/
+void                GraphicsLoadResources ()
+{
+   int                 i;
+
+   if (ThotLocalActions[T_keyboard] == NULL)
+     {
+	TteConnectAction (T_keyboard, (Proc) KeyboardMap);
+
+	/* Initialise la table des claviers */
+	for (i = 0; i < MAX_KEYBOARD; i++)
+	   Keyboards[i] = 0;
+	SymbolIcons = NULL;
+
+	if (SmallFontDialogue == NULL)
+	   SmallFontDialogue = ReadFont ('L', 'H', 0, 9, UnPoint);
+	if (SmallFontDialogue == NULL)
+	   SmallFontDialogue = FontDialogue;
+     }
+
+#   ifndef _WINDOWS
+   GraphicsIcons = LoadFont ("ivgraf");
+#   endif /* _WINDOWS */
+   if (GraphicsIcons == NULL)
+     {
+       /*Fonte 'ivgraf' inaccessible */
+       TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_LIB_MISSING_FILE), "ivgraf");
+       GraphicsIcons = FontDialogue;
+     }
 }
 
 /*----------------------------------------------------------------------
@@ -843,30 +873,22 @@ void                KeyboardsLoadResources ()
 	/* Initialise la table des claviers */
 	for (i = 0; i < MAX_KEYBOARD; i++)
 	   Keyboards[i] = 0;
-
-#   ifndef _WINDOWS
-	SymbolIcons = LoadFont ("ivsymb");
-#   endif /* _WINDOWS */
-	if (SymbolIcons == NULL)
-	  {
-	     /*Fonte 'ivsymb' inaccessible */
-	     TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_LIB_MISSING_FILE), "ivsymb");
-	     SymbolIcons = FontDialogue;
-	  }
-#   ifndef _WINDOWS
-	GraphicsIcons = LoadFont ("ivgraf");
-#   endif /* _WINDOWS */
-	if (GraphicsIcons == NULL)
-	  {
-	     /*Fonte 'ivgraf' inaccessible */
-	     TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_LIB_MISSING_FILE), "ivgraf");
-	     GraphicsIcons = FontDialogue;
-	  }
+	GraphicsIcons = NULL;
 
 	if (SmallFontDialogue == NULL)
 	   SmallFontDialogue = ReadFont ('L', 'H', 0, 9, UnPoint);
 	if (SmallFontDialogue == NULL)
 	   SmallFontDialogue = FontDialogue;
+     }
+
+#   ifndef _WINDOWS
+   SymbolIcons = LoadFont ("ivsymb");
+#   endif /* _WINDOWS */
+   if (SymbolIcons == NULL)
+     {
+       /*Fonte 'ivsymb' inaccessible */
+       TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_LIB_MISSING_FILE), "ivsymb");
+       SymbolIcons = FontDialogue;
      }
 }
 
