@@ -344,6 +344,8 @@ void AmayaApp::OnIdle( wxIdleEvent& event )
 #else /* _GLPRINT */
 	  /* TODO */
 #endif /* _GLPRINT */
+
+      TtaSendStatsInfo();
     }
 
 #ifdef DEBUG_FOCUS
@@ -516,6 +518,8 @@ void AmayaApp::DestroyAmayaLogDebug()
 
 #endif /* #ifdef __WXDEBUG__ */
 
+
+  
 BEGIN_EVENT_TABLE(AmayaApp, wxApp)
   EVT_IDLE( AmayaApp::OnIdle ) // Process a wxEVT_IDLE event  
   //#if defined(_WINDOWS) && !defined(_WIN_PRINT)

@@ -250,6 +250,7 @@ EDITOR_OBJ = \
 	dialogue/AmayaScrollBar.o \
 	dialogue/AmayaFileDropTarget.o \
 	dialogue/AmayaSpeCharPanel.o \
+	dialogue/AmayaStatsThread.o \
 	dialogue/appdialogue_wx.o \
 	document/docs.o \
 	document/views.o \

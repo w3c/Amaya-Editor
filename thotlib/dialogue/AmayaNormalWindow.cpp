@@ -15,6 +15,7 @@
 #include "dialog.h"
 #include "document.h"
 #include "message.h"
+#include "message_wx.h"
 #include "libmsg.h"
 #include "frame.h"
 #include "logdebug.h"
@@ -62,10 +63,9 @@ AmayaNormalWindow::AmayaNormalWindow (  int             window_id
 					,const wxPoint& pos
 					,const wxSize&  size
 					) : 
-  AmayaWindow( window_id, p_parent_window, pos, size, WXAMAYAWINDOW_NORMAL ),
-  m_pDummyMenuBar( NULL )
+  AmayaWindow( window_id, p_parent_window, pos, size, WXAMAYAWINDOW_NORMAL )
+  ,m_pDummyMenuBar( NULL )
 {
-
   // initialize default slashbar position
   TtaSetEnvInt("SLASH_PANEL_POS", 195, FALSE);
   // load slash position from registry

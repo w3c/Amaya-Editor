@@ -69,6 +69,7 @@ public:
 
   bool m_AmayaIsInit;
 
+
 #ifdef __WXDEBUG__
   static AmayaLogDebug * m_pAmayaLogDebug;
 #endif /* #ifdef __WXDEBUG__ */

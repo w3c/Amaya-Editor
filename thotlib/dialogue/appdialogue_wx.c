@@ -57,7 +57,7 @@
 #include "AmayaSubPanel.h"
 #include "AmayaXHTMLPanel.h"
 #include "AmayaSubPanelManager.h"
-
+#include "AmayaStatsThread.h"
 
 static int g_back_action_id = -1;
 static int g_forward_action_id = -1;
@@ -2423,3 +2423,39 @@ ThotBool TtaIsSpecialKey( int wx_keycode )
 }
 #endif /* _WX */
 
+/*----------------------------------------------------------------------
+  TtaSendStatsInfo()
+  send a quick and small request to a server fo statistic purposes
+  ----------------------------------------------------------------------*/
+void TtaSendStatsInfo()
+{
+#ifdef _WX
+  /* default value for SEND_STATS is "Yes" */
+  TtaSetEnvBoolean ("SEND_STATS", TRUE, FALSE);
+  
+  /* we send a request if this is the first time this amaya version is launched (for statistique purpose)
+   * ( it just send a simple http request to wam.inrialpes.fr )*/
+  ThotBool send_stats;
+  TtaGetEnvBoolean ("SEND_STATS", &send_stats);
+  char * amaya_version = TtaGetEnvString ("VERSION");
+  if ( send_stats ||
+       !amaya_version || strcmp(amaya_version, TtaGetAppVersion()) != 0 )
+    {
+      TTALOGDEBUG_0( TTA_LOG_SOCKET, _T("TtaSendStatsInfo") );
+
+      AmayaStatsThread * pThread = new AmayaStatsThread();
+      if ( pThread->Create() != wxTHREAD_NO_ERROR )
+	{
+	  TTALOGDEBUG_0( TTA_LOG_SOCKET, _T("TtaSendStatsInfo -> Cant't create thread") );      
+	}
+      if ( pThread->Run() != wxTHREAD_NO_ERROR )
+	{
+	  TTALOGDEBUG_0( TTA_LOG_SOCKET, _T("TtaSendStatsInfo -> Cant't start thread") );
+	}
+      
+      /* remember the request has been already send to stats server in oder to count
+       * only on time each users */
+      TtaSetEnvString ("VERSION", (char *)TtaGetAppVersion(), TRUE);
+    }
+#endif /* _WX */
+}

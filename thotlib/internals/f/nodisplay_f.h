@@ -37,6 +37,9 @@ extern ThotBool BothHaveNoSpecRules ( PtrElement pEl1,
                                       PtrElement pEl2 );
 extern void AddSchemaGuestViews ( PtrDocument pDoc,
                                   PtrSSchema pSS );
+extern const char * TtaGetAppVersion ( void );
+extern const char * TtaGetAppName ( void );
+extern const char * TtaGetAppDate ( void );
 
 #else /* __STDC__ */
 
@@ -71,6 +74,9 @@ extern ThotBool BothHaveNoSpecRules ( PtrElement pEl1,
                                         PtrElement pEl2 );
 extern void AddSchemaGuestViews ( PtrDocument pDoc,
                                     PtrSSchema pSS );
+extern const char * TtaGetAppVersion ( void );
+extern const char * TtaGetAppName ( void );
+extern const char * TtaGetAppDate ( void );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

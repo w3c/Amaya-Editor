@@ -493,4 +493,8 @@ void TtaRedirectFocus()
 {
 }
 
+void TtaSendStatsInfo()
+{
+}
+
 #endif /* _WX */
