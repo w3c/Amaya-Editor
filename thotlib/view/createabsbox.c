@@ -1072,7 +1072,7 @@ ThotBool CondPresentation (PtrCondition pCond, PtrElement pEl,
 	    /* la condition est satisfaite si le parent de l'element est
 	       le document lui-meme */
 	    found = (pElem->ElParent &&
-			   pElem->ElParent->ElTypeNumber ==
+		     pElem->ElParent->ElTypeNumber ==
 			   pElem->ElParent->ElStructSchema->SsDocument);
 	    break;
 

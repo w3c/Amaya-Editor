@@ -134,10 +134,12 @@ void                WriteTransCondition (TransCondition cond)
 	       break;
 	    case TcondReminderPage:
 	       TtaWriteByte (outfile, C_TR_REMINDERPAGE);
-
 	       break;
 	    case TcondEmpty:
 	       TtaWriteByte (outfile, C_TR_EMPTY);
+	       break;
+	    case TcondRoot:
+	       TtaWriteByte (outfile, C_TR_ROOT);
 	       break;
 	    case TcondExternalRef:
 	       TtaWriteByte (outfile, C_TR_EXTERNALREF);

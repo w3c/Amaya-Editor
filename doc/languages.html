@@ -16,7 +16,7 @@
 
 <h4>Translated from French by Ethan Munson</h4>
 
-<h4>Version of September 27, 2004</h4>
+<h4>Version of December 9, 2004</h4>
 
 <p>© 1996-2004 INRIA</p>
 <hr />
@@ -6679,8 +6679,8 @@ concerning an attribute or a specific presentation can apply to an ancestor.
 Conditions <tt>FirstRef</tt>, <tt>LastRef</tt>, <tt>ExternalRef</tt>,
 <tt>Script</tt>, <tt>FirstAttr</tt>, <tt>LastAttr</tt>,
 <tt>ComputedPage</tt>, <tt>StartPage</tt>, <tt>UserPage</tt>,
-<tt>ReminderPage</tt>, <tt>Empty</tt> cannot be preceded by keywords
-<tt>Parent</tt> or <tt>Ancestor</tt>.</p>
+<tt>ReminderPage</tt>, <tt>Empty</tt>, <tt>Root</tt> cannot be preceded by
+keywords <tt>Parent</tt> or <tt>Ancestor</tt>.</p>
 
 <p>In condition <tt>Referred</tt> and in the condition that applies to a
 named attribute, a symbol '<tt>*</tt>' can indicate that the condition is
@@ -6698,6 +6698,9 @@ position of the element</a></h4>
 logical structure tree. It is possible to test whether the element is the
 first (<tt>First</tt>) or last (<tt>Last</tt>) among its siblings or if it is
 not the first (<tt>NOT First</tt>) or not the last (<tt>NOT Last</tt>).</p>
+
+<p>It is possible to test if the element is the root of its document (keyword
+<code>Root</code>).</p>
 
 <p>It is also possible to test if the element is contained in an element of a
 given type (<tt>Within</tt>) or if it is not (<tt>NOT Within</tt>). If that
@@ -6923,7 +6926,7 @@ between the keywords <tt>BEGIN</tt> and <tt>END</tt>.</p>
                  'Script' '=' Script /
                  'ComputedPage' / 'StartPage' / 
                  'UserPage' / 'ReminderPage' /
-                 'Empty' /
+                 'Empty' / 'Root' /
                   ElemID /
                  'FirstAttr' / 'LastAttr' .
    CondAscend   = [ Ascend ] CondOnAscend .
@@ -8508,7 +8511,7 @@ CondElem      = 'FirstRef' / 'LastRef' /
                 'Script' '=' Script /
                 'ComputedPage' / 'StartPage' / 
                 'UserPage' / 'ReminderPage' /
-                'Empty' /
+                'Empty' / 'Root' /
                 ElemID /
                 'FirstAttr' / 'LastAttr' .
 CondAscend    = [ Ascend ] CondOnAscend .

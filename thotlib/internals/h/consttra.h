@@ -72,6 +72,7 @@
 #define C_TR_USERPAGE 'y'
 #define C_TR_REMINDERPAGE 'z'
 #define C_TR_EMPTY 'v'
+#define C_TR_ROOT 'r'
 #define C_TR_EXTERNALREF 'e'
 #define C_TR_ELEMENTTYPE 't'
 

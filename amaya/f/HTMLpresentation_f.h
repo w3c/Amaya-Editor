@@ -33,7 +33,7 @@ extern ThotBool ChangePRule ( NotifyPresentation *event );
 extern void PRuleDeleted ( NotifyPresentation * event );
 extern void AttrLangDeleted ( NotifyAttribute *event );
 extern void AttrLangCreated ( NotifyAttribute *event );
-extern void AttrLangModified ( NotifyAttribute *event );
+extern ThotBool AttrLangModified ( NotifyAttribute *event );
 extern ThotBool AttrLangShouldBeDeleted ( NotifyAttribute *event );
 
 #else /* __STDC__ */
@@ -65,7 +65,7 @@ extern ThotBool ChangePRule ( NotifyPresentation *event );
 extern void PRuleDeleted ( NotifyPresentation * event );
 extern void AttrLangDeleted ( NotifyAttribute *event );
 extern void AttrLangCreated ( NotifyAttribute *event );
-extern void AttrLangModified ( NotifyAttribute *event );
+extern ThotBool AttrLangModified ( NotifyAttribute *event );
 extern ThotBool AttrLangShouldBeDeleted ( NotifyAttribute *event );
 
 #endif /* __STDC__ */

@@ -617,13 +617,13 @@ ATTRIBUTES
 
  Language:
 	begin
-	if not TEXT_UNIT and not MathML
+	if not TEXT_UNIT and not Root
 	    begin
 	    Create ' xml:lang="';
 	    Create Language;
 	    Create '"';
 	    end;
-	if MathML and RealLang
+	if Root and RealLang
 	    begin
 	    Create ' xml:lang="';
 	    Create Language;

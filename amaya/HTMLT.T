@@ -1389,7 +1389,7 @@ ATTRIBUTES
 
  Language:
 	BEGIN
-	IF not HTML
+	IF not Root
 	    BEGIN
 #ifdef XML
 	    Create ' xml:lang="';
@@ -1402,7 +1402,7 @@ ATTRIBUTES
 	    Create DoubleQuote;
 #endif
 	    END;
-	IF HTML and RealLang
+	IF Root and RealLang
 	    BEGIN
 #ifdef XML
 	    Create ' xml:lang="';

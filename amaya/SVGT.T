@@ -1673,13 +1673,13 @@ ATTRIBUTES
 
    Language:
 	begin
-	if not TEXT_UNIT and not SVG
+	if not TEXT_UNIT and not Root
 	    begin
 	    Create ' xml:lang="';
 	    Create Language;
 	    Create DoubleQuote;
 	    end;
-	if SVG and RealLang
+	if Root and RealLang
 	    begin
 	    Create ' xml:lang="';
 	    Create Language;

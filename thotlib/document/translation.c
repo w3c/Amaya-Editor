@@ -1873,6 +1873,13 @@ static ThotBool ConditionIsTrue (PtrTRuleBlock pBlock, PtrElement pEl,
 	       ret = EmptyElement (pElem);
 	       break;
 
+	     case TcondRoot:
+	       /* la condition est satisfaite si l'element est la racine */
+	       ret = (pElem->ElParent &&
+		      pElem->ElParent->ElTypeNumber ==
+			   pElem->ElParent->ElStructSchema->SsDocument);
+	       break;
+
 	     default:
 	       break;
 	     }

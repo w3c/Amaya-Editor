@@ -51,6 +51,7 @@ typedef enum
 	TcondUserPage,
 	TcondReminderPage,
 	TcondEmpty,
+	TcondRoot,
 	TcondExternalRef,
 	TcondElementType
 } TransCondition;

@@ -1893,12 +1893,12 @@ ATTRIBUTES
 
   Language:
 	BEGIN
-	IF SVG and RealLang
+	IF Root and RealLang
 	    BEGIN
             CreateBefore(AttrName);
 	    CreateBefore(AttrValue);
 	    END;
-	IF not SVG
+	IF not Root
 	    BEGIN
             CreateBefore(AttrName);
 	    CreateBefore(AttrValue);

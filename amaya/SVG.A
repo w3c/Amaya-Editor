@@ -82,7 +82,7 @@ ATTRIBUTES
 	AttrCreate.Post -> AttrLangCreated;
 	AttrDelete.Pre  -> AttrLangShouldBeDeleted;
 	AttrDelete.Post -> AttrLangDeleted;
-	AttrModify.Post -> AttrLangModified;
+	AttrModify.Pre ->  AttrLangModified;
 	END;
 
    id:

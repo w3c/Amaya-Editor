@@ -111,6 +111,9 @@ static TransCondition ReadTransCondition (BinFile file)
 	       case C_TR_EMPTY:
 		  cond = TcondEmpty;
 		  break;
+	       case C_TR_ROOT:
+		  cond = TcondRoot;
+		  break;
 	       case C_TR_EXTERNALREF:
 		  cond = TcondExternalRef;
 		  break;

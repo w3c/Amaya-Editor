@@ -1732,12 +1732,12 @@ ATTRIBUTES
 
   Language:
 	BEGIN
-	IF MathML and RealLang
+	IF Root and RealLang
 	    BEGIN
 	    CreateBefore(AttrName);
 	    CreateBefore(AttrValue);
 	    END;
-	IF not MathML
+	IF not Root
 	    BEGIN
 	    CreateBefore(AttrName);
 	    CreateBefore(AttrValue);

@@ -785,7 +785,7 @@ void AttrLangCreated (NotifyAttribute *event)
  AttrLangModified
  A Lang attribute has been modified
  -----------------------------------------------------------------------*/
-void AttrLangModified (NotifyAttribute *event)
+ThotBool AttrLangModified (NotifyAttribute *event)
 {
   Element	elem;
   ElementType   elType;
@@ -815,6 +815,7 @@ void AttrLangModified (NotifyAttribute *event)
 				event->document);
 	}
      }  
+  return FALSE; /* let Thot perform normal operation */
 }
 
 /*----------------------------------------------------------------------
