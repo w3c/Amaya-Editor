@@ -1308,14 +1308,13 @@ STRING appArgv0;
 {
   PathBuffer execname;
   PathBuffer path;
-  STRING     home_dir;
   CHAR       app_home[MAX_PATH];
   CHAR       filename[MAX_PATH];
   STRING     my_path;
   STRING     dir_end = NULL;
   STRING appName;
-#  ifdef _WINDOWS
   CHAR      *ptr;
+#  ifdef _WINDOWS
 #  ifndef __CYGWIN32__
   extern int _fmode;
 #  endif
@@ -1560,11 +1559,8 @@ STRING appArgv0;
 #endif
 
    /* load the system settings, stored in THOTDIR/config/thot.ini */
-   ustrcpy (filename, execname);
-   ustrcat (filename, DIR_STR);
-   ustrcat (filename, THOT_CONFIG_FILENAME);
-   ustrcat (filename, DIR_STR);
-   ustrcat (filename, THOT_INI_FILENAME);
+   sprintf (filename, "%s%c%s%c%s", execname, DIR_SEP, THOT_CONFIG_FILENAME,
+	                  DIR_SEP, THOT_INI_FILENAME);
    if (TtaFileExist (filename))
      {
 #ifdef DEBUG_REGISTRY
@@ -1594,14 +1590,14 @@ STRING appArgv0;
    else
      ustrcpy (app_home, ptr);
 # else /* !_WINDOWS */
-   home_dir = getenv ("HOME");
-   sprintf (app_home, "%s%c.%s", home_dir, DIR_SEP, AppRegistryEntryAppli); 
+   ptr = getenv ("HOME");
+   sprintf (app_home, "%s%c.%s", ptr, DIR_SEP, AppRegistryEntryAppli); 
 #endif _WINDOWS
    /* store the value of APP_HOME in the registry */
    AddRegisterEntry ("System", "APP_HOME", app_home, REGISTRY_INSTALL, TRUE);
    
    /* read the user's preferences (if they exist) */
-   if (app_home != NULL)
+   if (app_home != NULL && *app_home != EOS)
      {
        sprintf (filename, "%s%c%s", app_home, DIR_SEP, THOT_RC_FILENAME);
        if (TtaFileExist (&filename[0]))
@@ -1612,26 +1608,15 @@ STRING appArgv0;
 #endif
 	   ImportRegistryFile (filename, REGISTRY_USER);
 	 }
-       else {
-	 CHAR old_filename[MAX_PATH];
-	 ustrcpy (old_filename, home_dir);
-	 ustrcat (old_filename, DIR_STR);
-	 ustrcat (old_filename, THOT_INI_FILENAME);
-	 if (TtaFileExist (old_filename)) {
 #ifdef DEBUG_REGISTRY
-	   fprintf (stderr, "reading user's %s from %s\n",
-		    THOT_INI_FILENAME, old_filename);
+       else
+	 fprintf (stderr, "User's %s not found\n", app_home);
 #endif
-	   ImportRegistryFile (old_filename, REGISTRY_USER);
-	   TtaFileUnlink(old_filename);
-	   TtaSaveAppRegistry();
-	   fprintf (stderr, "user's preferences moved from %s to %s\n",
-		    old_filename, filename);
-	 }
-       }
      }
+#ifdef DEBUG_REGISTRY
    else
-     fprintf (stderr, "User's %s not found\n", THOT_INI_FILENAME);
+     fprintf (stderr, "User's %s not found\n", THOT_RC_FILENAME);
+#endif
    
 #ifdef DEBUG_REGISTRY
    PrintEnv (stderr);
