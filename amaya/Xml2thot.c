@@ -4311,9 +4311,7 @@ ThotBool    withDoctype;
 	    el = XMLcontext.lastElement;
 	    while (el != NULL)
 	      {
-		(*(currentParserCtxt->ElementComplete)) (el,
-							 XMLcontext.doc,
-							 &error);
+		(*(currentParserCtxt->ElementComplete)) (el, XMLcontext.doc, &error);
 		el = TtaGetParent (el);
 	      }
 	  }

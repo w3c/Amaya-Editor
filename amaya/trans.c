@@ -27,6 +27,7 @@
 #include "MathML.h"
 #include "transparse_f.h"
 #include "XMLparser_f.h"
+#include "MathMLbuilder_f.h"
 
 #ifdef _WINDOWS
 #include "wininclude.h"
@@ -2481,9 +2482,10 @@ CHAR_T*             data;
 		elParent = TtaGetParent (elParent);
 	      if (elParent != NULL)
 		{
+		  int error;
 		  TtaSetStructureChecking (0, TransDoc);
 #ifdef EXPAT_PARSER
-		  /* todo: EndOfXmlElement (GIname) */
+		  MathMLElementComplete (elParent, TransDoc, &error);
 #else /* EXPAT_PARSER */
 		  XMLElementComplete (elParent, TransDoc);
 #endif /* EXPAT_PARSER */
@@ -2568,7 +2570,7 @@ CHAR_T*             data;
 }
 
 /*----------------------------------------------------------------------
-   callback of  the transform entry of special menu 
+   callback of  the transform entry of Edit menu 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TransformType (Document doc, View view)
