@@ -450,7 +450,8 @@ CHARSET TtaGetLocaleCharset ()
 	    }
 	}
     }
-  if (LocaleSystemCharset == UNSUPPORTED_CHARSET)
+  if ((LocaleSystemCharset == UNSUPPORTED_CHARSET) ||
+      (LocaleSystemCharset == UNDEFINED_CHARSET))
     /* default unix charset is iso-latin-1 */
     LocaleSystemCharset = ISO_8859_1;
 #endif /* _WINDOWS */
