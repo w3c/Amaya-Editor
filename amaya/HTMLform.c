@@ -395,7 +395,7 @@ static void ResetOption (Element option, ThotBool multipleSelects,
   ResetOptionMenu
   
   ----------------------------------------------------------------------*/
-static void        ResetOptionMenu (Element menu, Document doc)
+static void ResetOptionMenu (Element menu, Document doc)
 {
    ElementType	       elType;
    Element             option, firstOption, child;
@@ -1117,7 +1117,7 @@ void SelectCheckbox (Document doc, Element el)
    SelectOneRadio
    selects one Radio input				
   ----------------------------------------------------------------------*/
-void                SelectOneRadio (Document doc, Element el)
+void SelectOneRadio (Document doc, Element el)
 {
   ElementType         elType;
   Element             elForm;
@@ -1283,6 +1283,7 @@ void SelectOneOption (Document doc, Element el)
   SSchema	      htmlSch;
   char                text[MAX_LABEL_LENGTH + 1];
   char                buffmenu[MAX_LENGTH];
+  char               *tmp;
   Language            lang;
   int                 length, nbitems, lgmenu, i, nbsubmenus, nbsubitems;
   int                 modified;
@@ -1387,26 +1388,30 @@ void SelectOneOption (Document doc, Element el)
 		     text[0] = 'T';
 		   else
 		     text[0] = 'B';
+#ifdef _I18N_
+		   /* convert the UTF-8 string */
+		   tmp = TtaConvertMbsToIso (text, TtaGetDefaultCharset ());
+		   AddToBufferWithEOS (tmp);
+		   TtaFreeMemory (tmp);
+#else /* _I18N_ */
 		   AddToBufferWithEOS (text);
+#endif /* _I18N_ */
 		   nbitems++;
 		 }
 	       TtaNextSibling (&el);
 	     }
 
 	   if (nbitems == 0)
-	     {
-	       TtaFreeMemory (buffer);
-	     } 
+	     TtaFreeMemory (buffer);
 	   else
 	     {
 	       /* create the main menu */
-
 #if defined (_WINDOWS) || defined (_GTK)
 	       if (nbsubmenus == 0)
 		 TtaNewScrollPopup (BaseDialog + OptionMenu, TtaGetViewFrame (doc, 1),
 				    NULL, nbitems, buffer, NULL, multipleOptions, 'L');
 	       else
-#endif /* _GTK */
+#endif /* WINDOWS || _GTK */
 		 TtaNewPopup (BaseDialog + OptionMenu, TtaGetViewFrame (doc, 1),
 			      NULL, nbitems, buffer, NULL, 'L');
 
@@ -1417,7 +1422,7 @@ void SelectOneOption (Document doc, Element el)
 		   if (selected[i])
 #ifdef _WINDOWS
 		     WIN_TtaSetToggleMenu (BaseDialog + OptionMenu, i, TRUE, FrMainRef [ActiveFrame]);
-#else  /* !_WINDOWS */
+#else  /* _WINDOWS */
 	             TtaSetToggleMenu (BaseDialog + OptionMenu, i, TRUE);
 #endif /* _WINDOWS */
 		     
@@ -1473,16 +1478,26 @@ void SelectOneOption (Document doc, Element el)
 				   /* count the EOS character */
 				   text[length] = EOS;
 				   length++;
+#ifdef _I18N_
+				   /* convert the UTF-8 string */
+				   tmp = TtaConvertMbsToIso (text, TtaGetDefaultCharset ());
+				   length = strlen (tmp) + 1;
+#else /* _I18N_ */
+				   tmp = text;
+#endif /* _I18N_ */
 				   /* we have to add the 'B'or 'T' character */
 				   length++;
 				   if (lgmenu + length < MAX_LENGTH)
 				     { /* append that item to the buffer */
 				       if (multipleOptions)
-					 sprintf (&buffmenu[lgmenu], "T%s", text);
+					 sprintf (&buffmenu[lgmenu], "T%s", tmp);
 				       else
-					 sprintf (&buffmenu[lgmenu], "B%s", text);
+					 sprintf (&buffmenu[lgmenu], "B%s", tmp);
 				       nbsubitems++;
 				     } 
+#ifdef _I18N_
+				   TtaFreeMemory (tmp);
+#endif /* _I18N_ */
 				   lgmenu += length;
 				 } 
 			       /* next child of OPTGROUP */
