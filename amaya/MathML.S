@@ -160,24 +160,20 @@ STRUCT
 	  (ATTR fontsize; fontweight; fontstyle; fontfamily; color;{deprecated}
 	        mathvariant; mathsize; mathcolor; mathbackground;
 		form; fence; separator; lspace; rspace; stretchy; symmetric;
-{***   only 25 attributes can be declared...
 		maxsize; minsize; largeop; movablelimits;
-***}
 		accent;
 	        lquote; rquote; linethickness;
 		scriptlevel = TEXT;
 		scriptsizemultiplier = TEXT;
 		scriptminsize = TEXT;
 		background\240 = TEXT;
-{****	In the current version, Thot only allows 25 attributes to be declared
-	for an element type. So, the following attributes cannot be declared.
 		open = TEXT;
 		close = TEXT;
 		separators = TEXT;
 		subscriptshift = TEXT;
 		superscriptshift = TEXT;
 		accentunder = true, false;
-		align;
+		align = top_, bottom_, center, baseline, axis;
 		rowalign = TEXT;
 		columnalign = TEXT;
 		columnwidth = TEXT;
@@ -189,10 +185,10 @@ STRUCT
 		columnlines = TEXT;
 		frame = none\240, solid\240, dashed\240;
 		framespacing = TEXT;
-		equalrows = TEXT;
-		equalcolumns = TEXT;
+		equalrows = true, false;
+		equalcolumns = true, false;
 		displaystyle = true, false;
-		rowspan = INTEGER; 
+		rowspan\240 = INTEGER; 
 		columnspan = INTEGER;
 		edge = left\240, right\240;
 		actiontype = TEXT;
@@ -204,7 +200,7 @@ STRUCT
 		thickmathspace = TEXT;
 		verythickmathspace = TEXT;
 		veryverythickmathspace = TEXT;
-*****}		IntFontstyle)				{ for internal use }
+		IntFontstyle)				{ for internal use }
 	  = LIST OF (Construct);
 
       MERROR
@@ -219,9 +215,9 @@ STRUCT
 	  = LIST OF (Construct);
 
       MFENCED
-	  (ATTR open = TEXT;
-	        close = TEXT;
-	        separators = TEXT;
+	  (ATTR open;
+	        close;
+	        separators;
 		IntVertStretch)			{ for internal use }
 	  = BEGIN
 	    OpeningFence = SYMBOL with IntVertStretch = yes_;
@@ -240,7 +236,7 @@ STRUCT
 
       { pscrschema }
       MSUB
-	  (ATTR subscriptshift = TEXT; 
+	  (ATTR subscriptshift; 
 		IntVertStretch)			{ for internal use }
 	  = BEGIN
 	    Base;
@@ -248,7 +244,7 @@ STRUCT
 	    END;
 
       MSUP
-	  (ATTR superscriptshift = TEXT;
+	  (ATTR superscriptshift;
 		IntVertStretch)			{ for internal use }
 	  = BEGIN
 	    Base;
@@ -266,7 +262,7 @@ STRUCT
 	    END;
 
       MUNDER
-	  (ATTR accentunder = true, false; 
+	  (ATTR accentunder; 
 		IntVertStretch)			{ for internal use }
 	  = BEGIN
 	    UnderOverBase
@@ -317,23 +313,23 @@ STRUCT
 
       { ptabschema }
       MTABLE
-	  (ATTR align = top_, bottom_, center, baseline, axis;
+	  (ATTR align;
 		        {*** add rownumber ***}
-		rowalign = TEXT;
-		columnalign = TEXT;
-		groupalign = TEXT;
-		alignmentscope = TEXT;
-		columnwidth = TEXT;
+		rowalign;
+		columnalign;
+		groupalign;
+		alignmentscope;
+		columnwidth;
 		width\240;
-		rowspacing = TEXT;
-		columnspacing = TEXT;
-		rowlines = TEXT	; 
-		columnlines = TEXT; 
-		frame = none\240, solid\240, dashed\240;
-		framespacing = TEXT;
-		equalrows = true, false;
-		equalcolumns = true, false;
-		displaystyle = true, false;
+		rowspacing;
+		columnspacing;
+		rowlines; 
+		columnlines; 
+		frame;
+		framespacing;
+		equalrows;
+		equalcolumns;
+		displaystyle;
 	        side = left\240, right\240, leftoverlap, rightoverlap;
 		minlabelspacing = TEXT)
 	  = BEGIN
@@ -349,8 +345,8 @@ STRUCT
 
       { pactions }
       MACTION
-	  (ATTR actiontype = TEXT;
-	        selection = INTEGER)
+	  (ATTR actiontype;
+	        selection)
 	  = LIST OF (Construct);
 
       XLink;     { for annotations }
@@ -383,8 +379,8 @@ STRUCT
 		columnalign_mtd = left\240, center\240, right\240;
 		IntColAlign = IntLeft, IntCenter, IntRight; 
 		groupalign;
-		rowspan\240 = INTEGER;
-		columnspan = INTEGER;
+		rowspan\240;
+		columnspan;
 		MRef_column = REFERENCE(MColumn_head);   { for internal use }
                 MColExt = REFERENCE(MColumn_head);         { for internal use }
                 MRowExt = REFERENCE(TableRow))           { for internal use }
@@ -395,7 +391,7 @@ STRUCT
 
    { peschema }
    MALIGNMARK
-	  (ATTR edge = left\240, right\240)
+	  (ATTR edge)
 	  = CONSTANT C_Empty;
 
    MALIGNGROUP
