@@ -74,6 +74,11 @@ Amaya/amaya/TextFile.S \
 Amaya/amaya/TextFileP.P \
 Amaya/amaya/TextFileT.T \
 Amaya/amaya/TextFile.conf \
+Amaya/amaya/TimeLine.conf \
+Amaya/amaya/TimeLine.A \
+Amaya/amaya/TimeLine.P \
+Amaya/amaya/TimeLine.T \
+Amaya/amaya/TimeLine.S \
 Amaya/amaya/XLink.A \
 Amaya/amaya/XLink.S \
 Amaya/amaya/XLinkP.P \
