@@ -1566,19 +1566,42 @@ void TtaInitializeAppRegistry (char *appArgv0)
        ptr = getenv ("HOME");
        sprintf (app_home, "%s%c.%s", ptr, DIR_SEP, AppNameW); 
 #else /* _UNIX */
-#if defined(_WX) /* SG TODO : a valider */
-       wxString homedir;
-       homedir = wxGetenv(wxT("USERPROFILE"));
-       if (homedir.IsEmpty())
-         homedir = wxGetHomeDir();
-#ifdef _WINDOWS
-       sprintf (app_home, "%s%c%s", homedir.mb_str (*wxConvCurrent),
-		DIR_SEP, AppNameW);
-#else  /* _WINDOWS */
-       sprintf (app_home, "%s%c.%s", homedir.mb_str (*wxConvCurrent),
-		DIR_SEP, AppNameW);
-#endif /* _WINDOWS */
-#endif /* _WX */
+
+#if defined(_WX) && defined(_WINDOWS)
+	wxChar      buffer[MAX_PATH+1];
+	DWORD       dwSize;
+
+   typedef BOOL (STDMETHODCALLTYPE FAR * LPFNGETPROFILESDIRECTORY) (
+				LPTSTR lpProfileDir,
+				LPDWORD lpcchSize
+		  );
+   HMODULE                  g_hUserEnvLib          = NULL;
+   LPFNGETPROFILESDIRECTORY GetProfilesDirectory   = NULL;
+
+   buffer[0] = EOS;
+
+   g_hUserEnvLib = LoadLibrary (_T("userenv.dll"));
+   if (g_hUserEnvLib)
+	 {
+	   GetProfilesDirectory =
+	 (LPFNGETPROFILESDIRECTORY) GetProcAddress (g_hUserEnvLib,
+                                             "GetProfilesDirectoryW");
+	   dwSize = MAX_PATH;
+	   GetProfilesDirectory (buffer, &dwSize);
+	 }
+   if (buffer[0] == EOS)
+	 GetWindowsDirectory (buffer, dwSize);
+
+
+   wxString wx_win_profiles_dir(buffer);
+   wxGetUserName(buffer,sizeof(buffer));
+   wxString wx_win_username(buffer);
+   sprintf (app_home, "%s%c%s%c%s", 
+			wx_win_profiles_dir.mb_str(wxConvUTF8), DIR_SEP,
+			wx_win_username.mb_str(wxConvUTF8), DIR_SEP,
+			AppNameW);
+#endif /* _WX && _WINDOWS */
+
 #endif /* _UNIX */
 #endif /*_WINGUI */
      }
