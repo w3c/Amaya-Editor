@@ -292,10 +292,10 @@ View                view;
    /* updating the class name selector. */
    elHtmlName = GetHTML3Name (ClassReference, doc);
 
-   TtaNewForm (BaseDialog + FormClass, TtaGetViewFrame (doc, 1), 0, 0,
+   TtaNewForm (BaseDialog + ClassForm, TtaGetViewFrame (doc, 1), 0, 0,
 	       TtaGetMessage (AMAYA, AM_DEF_CLASS), FALSE, 2, 'L', D_DONE);
    NbClass = BuildClassList (doc, ClassList, sizeof (ClassList), elHtmlName);
-   TtaNewSelector (BaseDialog + ClassSelect, BaseDialog + FormClass,
+   TtaNewSelector (BaseDialog + ClassSelect, BaseDialog + ClassForm,
 		   TtaGetMessage (AMAYA, AM_SEL_CLASS),
 		   NbClass, ClassList, 5, NULL, TRUE, TRUE);
 
@@ -318,7 +318,7 @@ View                view;
      }
 
    /* pop-up the dialogue box. */
-   TtaShowDialogue (BaseDialog + FormClass, TRUE);
+   TtaShowDialogue (BaseDialog + ClassForm, TRUE);
 }
 
 /*----------------------------------------------------------------------
@@ -383,10 +383,10 @@ View                view;
       return;
 
    /* updating the class name selector. */
-   TtaNewForm (BaseDialog + FormAClass, TtaGetViewFrame (doc, 1), 0, 0,
+   TtaNewForm (BaseDialog + AClassForm, TtaGetViewFrame (doc, 1), 0, 0,
 	       TtaGetMessage (AMAYA, AM_APPLY_CLASS), TRUE, 2, 'L', D_DONE);
    NbAClass = BuildClassList (doc, AClassList, sizeof (AClassList), "default");
-   TtaNewSelector (BaseDialog + AClassSelect, BaseDialog + FormAClass,
+   TtaNewSelector (BaseDialog + AClassSelect, BaseDialog + AClassForm,
 		   TtaGetMessage (AMAYA, AM_SEL_CLASS),
 		   NbAClass, AClassList, 5, NULL, FALSE, TRUE);
 
@@ -409,7 +409,7 @@ View                view;
      }
 
    /* pop-up the dialogue box. */
-   TtaShowDialogue (BaseDialog + FormAClass, TRUE);
+   TtaShowDialogue (BaseDialog + AClassForm, TRUE);
 }
 
 /*----------------------------------------------------------------------
@@ -440,13 +440,13 @@ char               *data;
 
    switch (ref - BaseDialog)
 	 {
-	    case FormClass:
+	    case ClassForm:
 	       if (typedata == INTEGER_DATA)
 		 {
 		    if (val == 1)
 		       UpdateClass (DocReference);
 		 }
-	       TtaDestroyDialogue (BaseDialog + FormClass);
+	       TtaDestroyDialogue (BaseDialog + ClassForm);
 	       break;
 	    case ClassLabel:
 	       break;
@@ -456,13 +456,13 @@ char               *data;
 		    strcpy (CurrentClass, data);
 		 }
 	       break;
-	    case FormAClass:
+	    case AClassForm:
 	       if (typedata == INTEGER_DATA)
 		 {
 		    if (val == 1)
 		       ApplyClassChange (ADocReference);
 		 }
-	       TtaDestroyDialogue (BaseDialog + FormAClass);
+	       TtaDestroyDialogue (BaseDialog + AClassForm);
 	       break;
 	    case AClassLabel:
 	       break;

@@ -401,12 +401,12 @@ View                view;
 
   /**
   TtaNewLabel(BaseDialog+TextLabel, BaseDialog+FormAnswer, TtaGetMessage(AMAYA, AM_TEXT));
-  TtaNewTextForm(BaseDialog+TextAnswer, BaseDialog+FormAnswer, TtaGetMessage(AMAYA, AM_TEXT), 50, 1, FALSE);
+  TtaNewTextForm(BaseDialog+AnswerText, BaseDialog+FormAnswer, TtaGetMessage(AMAYA, AM_TEXT), 50, 1, FALSE);
   **/
 
-   TtaNewTextForm (BaseDialog + TextName, BaseDialog + FormAnswer,
+   TtaNewTextForm (BaseDialog + NameText, BaseDialog + FormAnswer,
 		   TtaGetMessage (AMAYA, AM_NAME), NAME_LENGTH, 1, FALSE);
-   TtaNewTextForm (BaseDialog + TextPassword, BaseDialog + FormAnswer,
+   TtaNewTextForm (BaseDialog + PasswordText, BaseDialog + FormAnswer,
 		   TtaGetMessage (AMAYA, AM_PASSWORD), NAME_LENGTH, 1, TRUE);
    TtaSetDialoguePosition ();
    TtaShowDialogue (BaseDialog + FormAnswer, FALSE);
@@ -426,10 +426,10 @@ char               *label;
 #endif
 {
    /* Confirm form */
-   TtaNewForm (BaseDialog + FormConfirmer, TtaGetViewFrame (document, view), 0, 0, TtaGetMessage (LIB, TMSG_LIB_CONFIRM), TRUE, 2, 'L', D_CANCEL);
-   TtaNewLabel (BaseDialog + TexteConfirmer, BaseDialog + FormConfirmer, label);
+   TtaNewForm (BaseDialog + ConfirmForm, TtaGetViewFrame (document, view), 0, 0, TtaGetMessage (LIB, TMSG_LIB_CONFIRM), TRUE, 2, 'L', D_CANCEL);
+   TtaNewLabel (BaseDialog + ConfirmText, BaseDialog + ConfirmForm, label);
    TtaSetDialoguePosition ();
-   TtaShowDialogue (BaseDialog + FormConfirmer, FALSE);
+   TtaShowDialogue (BaseDialog + ConfirmForm, FALSE);
    /* wait for an answer */
    TtaWaitShowDialogue ();
 }
@@ -457,27 +457,27 @@ View                view;
    i += strlen (&s[i]) + 1;
    strcpy (&s[i], TtaGetMessage (AMAYA, AM_CLEAR));
 
-   TtaNewSheet (BaseDialog + FormOuvrir, TtaGetViewFrame (document, view), 0, 0, TtaGetMessage (AMAYA, AM_OPEN_URL),
+   TtaNewSheet (BaseDialog + OpenForm, TtaGetViewFrame (document, view), 0, 0, TtaGetMessage (AMAYA, AM_OPEN_URL),
 		2,
 		s, TRUE, 2, 'L', D_CANCEL);
-   TtaNewTextForm (BaseDialog + NomURL, BaseDialog + FormOuvrir,
+   TtaNewTextForm (BaseDialog + URLName, BaseDialog + OpenForm,
 		   TtaGetMessage (AMAYA, AM_OPEN_URL), 50, 1, TRUE);
-   TtaNewLabel (BaseDialog + NomLocal, BaseDialog + FormOuvrir, " ");
-   TtaListDirectory (DirectoryName, BaseDialog + FormOuvrir,
+   TtaNewLabel (BaseDialog + LocalName, BaseDialog + OpenForm, " ");
+   TtaListDirectory (DirectoryName, BaseDialog + OpenForm,
 		     TtaGetMessage (LIB, TMSG_DOC_DIR),		/* std thot msg */
-		     BaseDialog + SelDir, ".html*",
-		     TtaGetMessage (AMAYA, AM_FILES), BaseDialog + SelDoc);
+		     BaseDialog + DirSelect, ".html*",
+		     TtaGetMessage (AMAYA, AM_FILES), BaseDialog + DocSelect);
    if (LastURLName[0] != EOS)
-      TtaSetTextForm (BaseDialog + NomURL, LastURLName);
+      TtaSetTextForm (BaseDialog + URLName, LastURLName);
    else
      {
 	strcpy (s, DirectoryName);
 	strcat (s, DIR_STR);
 	strcat (s, DocumentName);
-	TtaSetTextForm (BaseDialog + NomURL, s);
+	TtaSetTextForm (BaseDialog + URLName, s);
      }
    TtaSetDialoguePosition ();
-   TtaShowDialogue (BaseDialog + FormOuvrir, FALSE);
+   TtaShowDialogue (BaseDialog + OpenForm, FALSE);
    TtaFreeMemory (s);
 }
 
@@ -1191,21 +1191,21 @@ char               *data;
    val = (int) data;
    switch (ref - BaseDialog)
 	 {
-	    case MenuOption:
+	    case OptionMenu:
 	       ReturnOption = val;
-	       TtaDestroyDialogue (BaseDialog + MenuOption);
+	       TtaDestroyDialogue (BaseDialog + OptionMenu);
 	       break;
 	       /* *********Load URL or local document********* */
-	    case FormOuvrir:
+	    case OpenForm:
 	       if (val == 2)
 		  /* Clear */
 		 {
 		    LastURLName[0] = EOS;
-		    TtaSetTextForm (BaseDialog + NomURL, LastURLName);
+		    TtaSetTextForm (BaseDialog + URLName, LastURLName);
 		 }
 	       else
 		 {
-		    TtaDestroyDialogue (BaseDialog + FormOuvrir);
+		    TtaDestroyDialogue (BaseDialog + OpenForm);
 		    if (val == 1)
 		       /* OK */
 		      {
@@ -1246,7 +1246,7 @@ char               *data;
 		      }
 		 }
 	       break;
-	    case NomURL:
+	    case URLName:
 	       if (IsW3Path (data))
 		 {
 		    /* save the URL name */
@@ -1258,23 +1258,23 @@ char               *data;
 		    LastURLName[0] = EOS;
 		    change = NormalizeFile (data, tempfile);
 		    if (change)
-		       TtaSetTextForm (BaseDialog + NomURL, tempfile);
+		       TtaSetTextForm (BaseDialog + URLName, tempfile);
 
 		    if (tempfile[strlen (tempfile) - 1] == DIR_SEP)
 		      {
 			 strcpy (DirectoryName, tempfile);
 			 DocumentName[0] = EOS;
 			 /* reinitialize directories and document lists */
-			 TtaListDirectory (DirectoryName, BaseDialog + FormOuvrir,
-					   TtaGetMessage (LIB, TMSG_DOC_DIR), BaseDialog + SelDir,
-					   ".*htm*", TtaGetMessage (AMAYA, AM_FILES), BaseDialog + SelDoc);
+			 TtaListDirectory (DirectoryName, BaseDialog + OpenForm,
+					   TtaGetMessage (LIB, TMSG_DOC_DIR), BaseDialog + DirSelect,
+					   ".*htm*", TtaGetMessage (AMAYA, AM_FILES), BaseDialog + DocSelect);
 		      }
 		    else
 		       TtaExtractName (tempfile, DirectoryName, DocumentName);
 		 }
 
 	       break;
-	    case SelDir:
+	    case DirSelect:
 	       if (!strcmp (data, ".."))
 		 {
 		    /* suppress last directory */
@@ -1286,13 +1286,13 @@ char               *data;
 		    strcat (DirectoryName, DIR_STR);
 		    strcat (DirectoryName, data);
 		 }
-	       TtaSetTextForm (BaseDialog + NomURL, DirectoryName);
-	       TtaListDirectory (DirectoryName, BaseDialog + FormOuvrir,
-		     TtaGetMessage (LIB, TMSG_DOC_DIR), BaseDialog + SelDir,
-				 ".*htm*", TtaGetMessage (AMAYA, AM_FILES), BaseDialog + SelDoc);
+	       TtaSetTextForm (BaseDialog + URLName, DirectoryName);
+	       TtaListDirectory (DirectoryName, BaseDialog + OpenForm,
+		     TtaGetMessage (LIB, TMSG_DOC_DIR), BaseDialog + DirSelect,
+				 ".*htm*", TtaGetMessage (AMAYA, AM_FILES), BaseDialog + DocSelect);
 	       DocumentName[0] = EOS;
 	       break;
-	    case SelDoc:
+	    case DocSelect:
 	       if (DirectoryName[0] == EOS)
 		  /* set path on current directory */
 		  getcwd (DirectoryName, MAX_LENGTH);
@@ -1304,13 +1304,13 @@ char               *data;
 	       strcpy (tempfile, DirectoryName);
 	       strcat (tempfile, DIR_STR);
 	       strcat (tempfile, DocumentName);
-	       TtaSetTextForm (BaseDialog + NomURL, tempfile);
+	       TtaSetTextForm (BaseDialog + URLName, tempfile);
 	       break;
 
 	       /* *********Confirm********* */
-	    case FormConfirmer:
+	    case ConfirmForm:
 	       UserAnswer = (val == 1);
-	       TtaDestroyDialogue (BaseDialog + FormConfirmer);
+	       TtaDestroyDialogue (BaseDialog + ConfirmForm);
 	       break;
 
 	       /* *********Get an answer********* */
@@ -1323,15 +1323,15 @@ char               *data;
 		    Answer_password[0] = EOS;
 		 }
 	       break;
-	    case TextAnswer:
+	    case AnswerText:
 	       strncpy (Answer_text, data, MAX_LENGTH);
 	       Answer_text[MAX_LENGTH - 1] = EOS;
 	       break;
-	    case TextName:
+	    case NameText:
 	       strncpy (Answer_name, data, NAME_LENGTH);
 	       Answer_text[NAME_LENGTH - 1] = EOS;
 	       break;
-	    case TextPassword:
+	    case PasswordText:
 	       i = strlen (data);
 	       if (i < NAME_LENGTH - 1)
 		 {
@@ -1355,11 +1355,11 @@ char               *data;
 	       else
 		  Answer_password[NAME_LENGTH - 1] = EOS;
 	       if (i > 0)
-		  TtaSetTextForm (BaseDialog + TextPassword, Display_password);
+		  TtaSetTextForm (BaseDialog + PasswordText, Display_password);
 	       break;
 
 	       /* *********Save document as********* */
-	    case SauvToggle:
+	    case ToggleSave:
 	       switch (val)
 		     {
 			case 0:
@@ -1370,7 +1370,7 @@ char               *data;
 			   break;
 		     }
 	       break;
-	    case FormSauver:
+	    case SaveForm:
 	       if (val == 1)
 		 {
 		    if (SavingDocument != (Document) None)
@@ -1380,17 +1380,17 @@ char               *data;
 		 }
 	       else
 		 {
-		    TtaDestroyDialogue (BaseDialog + FormSauver);
+		    TtaDestroyDialogue (BaseDialog + SaveForm);
 		    SavingDocument = (Document) None;
 		    SavingObject = (Document) None;
 		 }
 	       break;
-	    case SauvNom:
+	    case NameSave:
 	       if (!IsW3Path (data))
 		 {
 		    change = NormalizeFile (data, tempfile);
 		    if (change)
-		       TtaSetTextForm (BaseDialog + SauvNom, tempfile);
+		       TtaSetTextForm (BaseDialog + NameSave, tempfile);
 		 }
 	       else
 		  strcpy (tempfile, data);
@@ -1400,9 +1400,9 @@ char               *data;
 		    strcpy (DirectoryName, tempfile);
 		    DocumentName[0] = EOS;
 		    /* reinitialize directories and document lists */
-		    TtaListDirectory (DirectoryName, BaseDialog + FormSauver,
-		    TtaGetMessage (LIB, TMSG_DOC_DIR), BaseDialog + SauvDir,
-				      ".*htm*", TtaGetMessage (AMAYA, AM_FILES), BaseDialog + SauvDoc);
+		    TtaListDirectory (DirectoryName, BaseDialog + SaveForm,
+		    TtaGetMessage (LIB, TMSG_DOC_DIR), BaseDialog + DirSave,
+				      ".*htm*", TtaGetMessage (AMAYA, AM_FILES), BaseDialog + DocSave);
 		 }
 	       else
 		 {
@@ -1413,10 +1413,10 @@ char               *data;
 		       TtaExtractName (tempfile, DirectoryName, ObjectName);
 		 }
 	       break;
-	    case SauvImgsDir:
+	    case ImgDirSave:
 	       strcpy (SaveImgsURL, data);
 	       break;
-	    case SauvDir:
+	    case DirSave:
 	       if (!strcmp (data, ".."))
 		 {
 		    /* suppress last directory */
@@ -1434,20 +1434,20 @@ char               *data;
 		  strcat (tempfile, DocumentName);
 	       else
 		  strcat (tempfile, ObjectName);
-	       TtaSetTextForm (BaseDialog + SauvNom, DirectoryName);
-	       TtaListDirectory (DirectoryName, BaseDialog + FormSauver,
-		    TtaGetMessage (LIB, TMSG_DOC_DIR), BaseDialog + SauvDir,
-				 ".*htm*", TtaGetMessage (AMAYA, AM_FILES), BaseDialog + SauvDoc);
+	       TtaSetTextForm (BaseDialog + NameSave, DirectoryName);
+	       TtaListDirectory (DirectoryName, BaseDialog + SaveForm,
+		    TtaGetMessage (LIB, TMSG_DOC_DIR), BaseDialog + DirSave,
+				 ".*htm*", TtaGetMessage (AMAYA, AM_FILES), BaseDialog + DocSave);
 	       break;
 	       /* *********SaveConfirm********* */
-	    case SauvConfirm:
+	    case ConfirmSave:
 	       UserAnswer = (val == 1);
-	       TtaDestroyDialogue (BaseDialog + SauvConfirm);
+	       TtaDestroyDialogue (BaseDialog + ConfirmSave);
 	       break;
 
 
 	       /* *********HREF Attribute*********** */
-	    case FormAttrHREF:
+	    case AttrHREFForm:
 	       if (val == 1)
 		 {
 		    /* create an attribute HREF for the Link_Anchor */
@@ -1463,14 +1463,14 @@ char               *data;
 		    TtaSetAttributeText (attrHREF, AttrHREFvalue, AttrHREFelement, AttrHREFdocument);
 		 }
 	       break;
-	    case TextAttrHREF:
+	    case AttrHREFText:
 	       /* save the HREF name */
 	       strcpy (AttrHREFvalue, data);
 	       break;
-	    case FormClass:
+	    case ClassForm:
 	    case ClassLabel:
 	    case ClassSelect:
-	    case FormAClass:
+	    case AClassForm:
 	    case AClassLabel:
 	    case AClassSelect:
 	       StyleCallbackDialogue (ref, typedata, data);
@@ -1635,13 +1635,13 @@ NotifyEvent        *event;
       /* default Amaya URL */
      {
 	strcpy (LastURLName, "http://www.w3.org/pub/WWW/Amaya");
-	CallbackDialogue (BaseDialog + FormOuvrir, INTEGER_DATA, (char *) 1);
+	CallbackDialogue (BaseDialog + OpenForm, INTEGER_DATA, (char *) 1);
      }
    else if (IsW3Path (s))
      {
 	/* it is a remote document */
 	strcpy (LastURLName, s);
-	CallbackDialogue (BaseDialog + FormOuvrir, INTEGER_DATA, (char *) 1);
+	CallbackDialogue (BaseDialog + OpenForm, INTEGER_DATA, (char *) 1);
      }
    else if (TtaFileExist (s))
      {
@@ -1659,7 +1659,7 @@ NotifyEvent        *event;
 	   strcpy (DocumentName, LastURLName);
 	/* start with the local document */
 	LastURLName[0] = EOS;
-	CallbackDialogue (BaseDialog + FormOuvrir, INTEGER_DATA, (char *) 1);
+	CallbackDialogue (BaseDialog + OpenForm, INTEGER_DATA, (char *) 1);
      }
    else
       /* Create a new document */

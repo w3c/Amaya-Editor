@@ -219,31 +219,31 @@ char               *pathname;
    char                buffer[3000];
 
    /* Dialogue form for saving in local */
-   TtaNewForm (BaseDialog + FormSauver, TtaGetViewFrame (document, view), 0, 0,
+   TtaNewForm (BaseDialog + SaveForm, TtaGetViewFrame (document, view), 0, 0,
 	       TtaGetMessage (AMAYA, AM_SAVE_AS), TRUE, 3, 'L', D_CANCEL);
    /* TtaGetMessage(LIB, DOCUMENT_NAME) */
    sprintf (buffer, "%s%c%s", TtaGetMessage (AMAYA, AM_BCOPY_IMAGES), EOS,
 	    TtaGetMessage (AMAYA, AM_BTRANSFORM_URL));
-   TtaNewToggleMenu (BaseDialog + SauvToggle, BaseDialog + FormSauver,
+   TtaNewToggleMenu (BaseDialog + ToggleSave, BaseDialog + SaveForm,
 		     NULL, 2, buffer, NULL, TRUE);
-   TtaSetToggleMenu (BaseDialog + SauvToggle, 0, CopyImages);
-   TtaSetToggleMenu (BaseDialog + SauvToggle, 1, UpdateURLs);
-   TtaListDirectory (DirectoryName, BaseDialog + FormSauver,
+   TtaSetToggleMenu (BaseDialog + ToggleSave, 0, CopyImages);
+   TtaSetToggleMenu (BaseDialog + ToggleSave, 1, UpdateURLs);
+   TtaListDirectory (DirectoryName, BaseDialog + SaveForm,
 		     TtaGetMessage (LIB, TMSG_DOC_DIR),		/* std thot msg */
-		     BaseDialog + SauvDir, "",
-		     TtaGetMessage (AMAYA, AM_FILES), BaseDialog + SauvDoc);
-   TtaNewTextForm (BaseDialog + SauvNom, BaseDialog + FormSauver,
+		     BaseDialog + DirSave, "",
+		     TtaGetMessage (AMAYA, AM_FILES), BaseDialog + DocSave);
+   TtaNewTextForm (BaseDialog + NameSave, BaseDialog + SaveForm,
 		   TtaGetMessage (AMAYA, AM_DOC_LOCATION), 50, 1, TRUE);
-   TtaSetTextForm (BaseDialog + SauvNom, pathname);
-   TtaNewLabel (BaseDialog + SauvLbl1, BaseDialog + FormSauver, "");
-   TtaNewLabel (BaseDialog + SauvLbl2, BaseDialog + FormSauver, "");
-   TtaNewTextForm (BaseDialog + SauvImgsDir, BaseDialog + FormSauver,
+   TtaSetTextForm (BaseDialog + NameSave, pathname);
+   TtaNewLabel (BaseDialog + Lbl1Save, BaseDialog + SaveForm, "");
+   TtaNewLabel (BaseDialog + Lbl2Save, BaseDialog + SaveForm, "");
+   TtaNewTextForm (BaseDialog + ImgDirSave, BaseDialog + SaveForm,
 		   TtaGetMessage (AMAYA, AM_IMAGES_LOCATION), 50, 1, TRUE);
-   TtaSetTextForm (BaseDialog + SauvImgsDir, SaveImgsURL);
-   TtaNewLabel (BaseDialog + SauvLbl3, BaseDialog + FormSauver, "");
-   TtaNewLabel (BaseDialog + SauvLbl4, BaseDialog + FormSauver, "");
+   TtaSetTextForm (BaseDialog + ImgDirSave, SaveImgsURL);
+   TtaNewLabel (BaseDialog + Lbl3Save, BaseDialog + SaveForm, "");
+   TtaNewLabel (BaseDialog + Lbl4Save, BaseDialog + SaveForm, "");
    TtaSetDialoguePosition ();
-   TtaShowDialogue (BaseDialog + FormSauver, FALSE);
+   TtaShowDialogue (BaseDialog + SaveForm, FALSE);
 }
 
 /*----------------------------------------------------------------------
@@ -293,10 +293,10 @@ boolean             confirm;
 
    if (confirm)
      {
-	TtaNewForm (BaseDialog + SauvConfirm, TtaGetViewFrame (document, view),
+	TtaNewForm (BaseDialog + ConfirmSave, TtaGetViewFrame (document, view),
 	 0, 0, TtaGetMessage (LIB, TMSG_LIB_CONFIRM), TRUE, 1, 'L', D_DONE);
 	/*strcpy(msg,"Saving will overwrite the following URLs :"); */
-	TtaNewLabel (BaseDialog + SauvConfirmLbl, BaseDialog + SauvConfirm, TtaGetMessage (AMAYA, AM_WARNING_SAVE_OVERWRITE));
+	TtaNewLabel (BaseDialog + ConfirmSaveLbl, BaseDialog + ConfirmSave, TtaGetMessage (AMAYA, AM_WARNING_SAVE_OVERWRITE));
 
 	strcpy (&msg[index], DocumentURLs[document]);
 	len = strlen (DocumentURLs[document]);
@@ -333,11 +333,11 @@ boolean             confirm;
 	     pImage = pImage->nextImage;
 	  }
 
-	TtaNewSelector (BaseDialog + SauvConfirmList, BaseDialog + SauvConfirm,
+	TtaNewSelector (BaseDialog + ConfirmSaveList, BaseDialog + ConfirmSave,
 			NULL, nb, &msg[0], 6, NULL, FALSE, TRUE);
 
 	TtaSetDialoguePosition ();
-	TtaShowDialogue (BaseDialog + SauvConfirm, FALSE);
+	TtaShowDialogue (BaseDialog + ConfirmSave, FALSE);
 	/* wait for an answer */
 	TtaWaitShowDialogue ();
 	if (!UserAnswer)
@@ -694,11 +694,11 @@ void                DoSaveAs ()
 	       {
 		  /* the user has to change the name of the saving file */
 		  TtaSetDialoguePosition ();
-		  TtaShowDialogue (BaseDialog + FormSauver, FALSE);
+		  TtaShowDialogue (BaseDialog + SaveForm, FALSE);
 		  return;
 	       }
 	  }
-	TtaDestroyDialogue (BaseDialog + FormSauver);
+	TtaDestroyDialogue (BaseDialog + SaveForm);
 
 	/*
 	 * change all Picture SRC to the remote URL.
@@ -737,11 +737,11 @@ void                DoSaveAs ()
 	       {
 		  /* the user has to change the name of the saving file */
 		  TtaSetDialoguePosition ();
-		  TtaShowDialogue (BaseDialog + FormSauver, FALSE);
+		  TtaShowDialogue (BaseDialog + SaveForm, FALSE);
 		  return;
 	       }
 	  }
-	TtaDestroyDialogue (BaseDialog + FormSauver);
+	TtaDestroyDialogue (BaseDialog + SaveForm);
 
 	/*
 	 * change all Picture SRC to the remote URL.
@@ -800,11 +800,11 @@ void                DoSaveAs ()
 	if (res)
 	  {
 	     TtaSetDialoguePosition ();
-	     TtaShowDialogue (BaseDialog + FormSauver, FALSE);
+	     TtaShowDialogue (BaseDialog + SaveForm, FALSE);
 	  }
 	else
 	  {
-	     TtaDestroyDialogue (BaseDialog + FormSauver);
+	     TtaDestroyDialogue (BaseDialog + SaveForm);
 	     TtaSetStatus (SavingDocument, 1, TtaGetMessage (AMAYA, AM_SAVED), tempfile);
 	     SavingDocument = (Document) None;
 	  }
@@ -848,11 +848,11 @@ void                DoSaveAs ()
 	if (res)
 	  {
 	     TtaSetDialoguePosition ();
-	     TtaShowDialogue (BaseDialog + FormSauver, FALSE);
+	     TtaShowDialogue (BaseDialog + SaveForm, FALSE);
 	  }
 	else
 	  {
-	     TtaDestroyDialogue (BaseDialog + FormSauver);
+	     TtaDestroyDialogue (BaseDialog + SaveForm);
 	     TtaSetStatus (SavingDocument, 1, TtaGetMessage (AMAYA, AM_SAVED), tempfile);
 	     SavingDocument = (Document) None;
 	  }
@@ -885,18 +885,18 @@ char               *pathname;
    strncpy (tempSavedObject, object, sizeof (tempSavedObject));
 
    /* Dialogue form for saving as */
-   TtaNewForm (BaseDialog + FormSauver, TtaGetViewFrame (document, view), 0, 0,
+   TtaNewForm (BaseDialog + SaveForm, TtaGetViewFrame (document, view), 0, 0,
 	       TtaGetMessage (AMAYA, AM_SAVE_AS), TRUE, 2, 'L', D_CANCEL);
-   TtaListDirectory (DirectoryName, BaseDialog + FormSauver,
+   TtaListDirectory (DirectoryName, BaseDialog + SaveForm,
 		     TtaGetMessage (LIB, TMSG_DOC_DIR),		/* std thot msg */
-		     BaseDialog + SauvDir, "",
-		     TtaGetMessage (AMAYA, AM_FILES), BaseDialog + SauvDoc);
-   TtaNewTextForm (BaseDialog + SauvNom, BaseDialog + FormSauver,
+		     BaseDialog + DirSave, "",
+		     TtaGetMessage (AMAYA, AM_FILES), BaseDialog + DocSave);
+   TtaNewTextForm (BaseDialog + NameSave, BaseDialog + SaveForm,
 		   TtaGetMessage (AMAYA, AM_OBJECT_LOCATION), 50, 1, TRUE);
-   TtaSetTextForm (BaseDialog + SauvNom, pathname);
+   TtaSetTextForm (BaseDialog + NameSave, pathname);
    TtaExtractName (pathname, tempdir, ObjectName);
    TtaSetDialoguePosition ();
-   TtaShowDialogue (BaseDialog + FormSauver, FALSE);
+   TtaShowDialogue (BaseDialog + SaveForm, FALSE);
 }
 
 /*----------------------------------------------------------------------
@@ -927,10 +927,10 @@ void                DoSaveObjectAs ()
 	if (res != HT_OK)
 	  {
 	     TtaSetDialoguePosition ();
-	     TtaShowDialogue (BaseDialog + FormSauver, FALSE);
+	     TtaShowDialogue (BaseDialog + SaveForm, FALSE);
 	     return;
 	  }
-	TtaDestroyDialogue (BaseDialog + FormSauver);
+	TtaDestroyDialogue (BaseDialog + SaveForm);
 	SavingObject = (Document) None;
 	SavingDocument = (Document) None;
 	return;
@@ -944,11 +944,11 @@ void                DoSaveObjectAs ()
 	  {
 	     /* the user has to change the name of the saving file */
 	     TtaSetDialoguePosition ();
-	     TtaShowDialogue (BaseDialog + FormSauver, FALSE);
+	     TtaShowDialogue (BaseDialog + SaveForm, FALSE);
 	     return;
 	  }
      }
    TtaFileCopy (tempSavedObject, tempfile);
    SavingObject = (Document) None;
-   TtaDestroyDialogue (BaseDialog + FormSauver);
+   TtaDestroyDialogue (BaseDialog + SaveForm);
 }

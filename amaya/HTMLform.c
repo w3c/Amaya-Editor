@@ -861,10 +861,10 @@ Element             el;
 	     if (nbitems > 0)
 	       {
 		  ReturnOption = -1;
-		  TtaNewPopup (BaseDialog + MenuOption, TtaGetViewFrame (doc, 1),
+		  TtaNewPopup (BaseDialog + OptionMenu, TtaGetViewFrame (doc, 1),
 			       "", nbitems, buffmenu, "", 'L');
 		  TtaSetDialoguePosition ();
-		  TtaShowDialogue (BaseDialog + MenuOption, FALSE);
+		  TtaShowDialogue (BaseDialog + OptionMenu, FALSE);
 		  /* wait for an answer */
 		  TtaWaitShowDialogue ();
 		  if (ReturnOption >= 0)

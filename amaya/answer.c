@@ -147,8 +147,8 @@ HTAlertPar         *reply;
 
    /* Wait an answer */
    UserAnswer = TRUE;
-   TtaNewLabel (BaseDialog + TexteConfirmer, BaseDialog + FormConfirmer, TtaGetMessage (AMAYA, AM_GET_USER_NAME + msgnum));
-   TtaShowDialogue (BaseDialog + FormConfirmer, FALSE);
+   TtaNewLabel (BaseDialog + ConfirmText, BaseDialog + ConfirmForm, TtaGetMessage (AMAYA, AM_GET_USER_NAME + msgnum));
+   TtaShowDialogue (BaseDialog + ConfirmForm, FALSE);
    TtaWaitShowDialogue ();
    if (UserAnswer)
      {
@@ -189,14 +189,14 @@ HTAlertPar         *reply;
 
    if (reply && msgnum >= 0)
      {
-	TtaDetachForm (BaseDialog + TextName);
-	TtaDetachForm (BaseDialog + TextPassword);
-	TtaSetTextForm (BaseDialog + TextAnswer, "");
+	TtaDetachForm (BaseDialog + NameText);
+	TtaDetachForm (BaseDialog + PasswordText);
+	TtaSetTextForm (BaseDialog + AnswerText, "");
 	TtaShowDialogue (BaseDialog + FormAnswer, FALSE);
 	TtaWaitShowDialogue ();
 	/* come back from dialogue */
-	TtaAttachForm (BaseDialog + TextName);
-	TtaAttachForm (BaseDialog + TextPassword);
+	TtaAttachForm (BaseDialog + NameText);
+	TtaAttachForm (BaseDialog + PasswordText);
 
 	/* give back the reply to the libwww */
 	if (*Answer_name)
@@ -237,14 +237,14 @@ HTAlertPar         *reply;
 	Answer_password[0] = EOS;
 	Display_password[0] = EOS;
 	TtaNewLabel (BaseDialog + TextLabel, BaseDialog + FormAnswer, TtaGetMessage (AMAYA, AM_GET_USER_NAME + msgnum));
-	TtaDetachForm (BaseDialog + TextAnswer);
-	TtaDetachForm (BaseDialog + TextName);
-	TtaSetTextForm (BaseDialog + TextPassword, "");
+	TtaDetachForm (BaseDialog + AnswerText);
+	TtaDetachForm (BaseDialog + NameText);
+	TtaSetTextForm (BaseDialog + PasswordText, "");
 	TtaShowDialogue (BaseDialog + FormAnswer, FALSE);
 	TtaWaitShowDialogue ();
 	/* come back from dialogue */
-	TtaAttachForm (BaseDialog + TextAnswer);
-	TtaAttachForm (BaseDialog + TextName);
+	TtaAttachForm (BaseDialog + AnswerText);
+	TtaAttachForm (BaseDialog + NameText);
 	if (*Answer_password)
 	  {
 	     StrAllocCopy (result, Answer_password);

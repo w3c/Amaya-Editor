@@ -1073,8 +1073,8 @@ Element             el;
 	AttrHREFelement = el;
 	AttrHREFdocument = doc;
 	/* Dialogue form to insert HREF name */
-	TtaNewForm (BaseDialog + FormAttrHREF, TtaGetViewFrame (doc, 1), 0, 0, TtaGetMessage (AMAYA, AM_ATTRIBUTE), TRUE, 2, 'L', D_DONE);
-	TtaNewTextForm (BaseDialog + TextAttrHREF, BaseDialog + FormAttrHREF,
+	TtaNewForm (BaseDialog + AttrHREFForm, TtaGetViewFrame (doc, 1), 0, 0, TtaGetMessage (AMAYA, AM_ATTRIBUTE), TRUE, 2, 'L', D_DONE);
+	TtaNewTextForm (BaseDialog + AttrHREFText, BaseDialog + AttrHREFForm,
 			TtaGetMessage (AMAYA, AM_HREF_VALUE), 50, 1, FALSE);
 	/* If the anchor has an HREF attribute, put its value in the form */
 	attrType.AttrSSchema = TtaGetDocumentSSchema (doc);
@@ -1088,10 +1088,10 @@ Element             el;
 	     /* copy the HREF attribute into the buffer */
 	     TtaGiveTextAttributeValue (attrHREF, buffer, &length);
 	     /* initialise the text field in the dialogue box */
-	     TtaSetTextForm (BaseDialog + TextAttrHREF, buffer);
+	     TtaSetTextForm (BaseDialog + AttrHREFText, buffer);
 	     TtaFreeMemory (buffer);
 	  }
-	TtaShowDialogue (BaseDialog + FormAttrHREF, FALSE);
+	TtaShowDialogue (BaseDialog + AttrHREFForm, FALSE);
      }
    else
      {
