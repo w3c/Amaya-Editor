@@ -1,9 +1,9 @@
 /* XPM */
 static char *Java_xpm[] = {
 /* width height num_colors chars_per_pixel */
-"    18    18       42            1",
+"    16 16       42            1",
 /* colors */
-". c #BFBFBFBFBFBF",
+"  c #bfbfbf",
 "# c #304d9e",
 "a c #495996",
 "b c #5975b6",
@@ -46,22 +46,19 @@ static char *Java_xpm[] = {
 "M c #a6bee7",
 "N c #7186d7",
 /* pixels */
-"..................",
-"..................",
-".....######a......",
-".bcdefghggijk#.llk",
-"mnfifo#pqrstuujiiv",
-".bgcw......wxytqcu",
-".xjhsc#qq#rsff#..f",
-"..#hhhhhhhhifr..uz",
-"...ehhhhhhftfeiujA",
-"..BChhhhhhiftDr#r.",
-".vEkjhhhhhhiFGkHI.",
-"ufhirthhhhilJgiuKA",
-"fhhhulr##cLeyhhgMN",
-".ughhhhhhhhhhgfMF.",
-"..FltiigyiiteIJq..",
-"...c########q#c...",
-"..................",
-".................."
-};
+"                ",
+"    ######a     ",
+" cdefghggijk# ll",
+"nfifo#pqrstuujii",
+"bgcw      wxytqc",
+"xjhsc#qq#rsff# f",
+" #hhhhhhhhifr  u",
+"  ehhhhhhftfeiuj",
+" BChhhhhhiftDr#r",
+" EkjhhhhhhiFGkHI",
+"fhirthhhhilJgiuK",
+"hhhulr##cLeyhhgM",
+" ghhhhhhhhhhgfMF",
+" FltiigyiiteIJq ",
+"  c########q#c  ",
+"                "};
