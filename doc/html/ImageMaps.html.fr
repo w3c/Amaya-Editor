@@ -5,7 +5,8 @@
 <head>
   <title>Images et Zones actives</title>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-  <meta name="GENERATOR" content="amaya 8.2+, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 9.0.1, see http://www.w3.org/Amaya/"
+  />
   <link href="style.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -17,11 +18,11 @@
       <td><p><img alt="W3C" src="../images/w3c_home" /> <img alt="Amaya"
         src="../images/amaya.gif" /></p>
       </td>
-      <td><p><a href="Tables.html.fr" accesskey="p"><img
-        alt="previous" src="../images/left.gif" /></a> <a
-        href="Manual.html.fr" accesskey="t"><img alt="top"
-        src="../images/up.gif" /></a> <a href="Math.html.fr"
-        accesskey="n"><img alt="next" src="../images/right.gif" /></a></p>
+      <td><p><a href="Tables.html.fr" accesskey="p"><img alt="previous"
+        src="../images/left.gif" /></a> <a href="Manual.html.fr"
+        accesskey="t"><img alt="top" src="../images/up.gif" /></a> <a
+        href="Math.html.fr" accesskey="n"><img alt="next"
+        src="../images/right.gif" /></a></p>
       </td>
     </tr>
   </tbody>
@@ -35,7 +36,7 @@
 <p>Pour insérer une image, choisissez l'entrée <strong>Image</strong> depuis
 le menu <strong>XHTML</strong> ou cliquez sur le bouton <img alt="Image "
 src="../images/Image.gif" longdesc="longdesc.htm" /> (ou encore utilisez le
-raccourci clavier control-t, control-i pour Unix). Ceci fait apparaître une
+raccourci clavier control-h, control-i pour Unix). Ceci fait apparaître une
 boîte de dialogue qui vous permet de rentrer le nom du fichier et le <a
 href="#Alternative">texte de remplacement</a> ('ALT' texte) de l'image
 désirée. Si vous souhaitez fournir une longue description (par exemple si
@@ -44,7 +45,7 @@ document séparé et la relier en donnant l'URI comme un descripteur long
 (<strong>longdesc</strong>), également disponible dans le menu
 <strong>Attributs</strong>.</p>
 
-<p> Pour faciliter la recherche d'un fichier image vous pouvez entrer une
+<p>Pour faciliter la recherche d'un fichier image vous pouvez entrer une
 valeur de <strong>filtre</strong>, et utiliser le bouton
 <strong>filtre</strong>. Ainsi le dialogue listera seulement les fichiers qui
 correspondent à votre critère.</p>

@@ -8,7 +8,7 @@
 
 # neededforbuild  autoconf automake mmcore mmbase mmslib xpm libz libpng libjpeg
 
-%define version 8.7
+%define version 9.0
 
 Vendor:       W3C World Wide Web Consortium
 Distribution: W3C
@@ -24,14 +24,7 @@ BuildRoot:    /var/tmp/%{name}-buildroot
 
 Summary:      Web Browser/Editor from the World Wide Web Consortium
 Version:      %{version}
-Source: ftp://ftp.w3.org/pub/amaya/amaya-src-%{version}.tgz
-Source1: ftp://ftp.w3.org/pub/amaya/Dutch.tgz
-Source2: ftp://ftp.w3.org/pub/amaya/Spanish.tgz
-Source3: ftp://ftp.w3.org/pub/amaya/Italian.tgz
-Source4: ftp://ftp.w3.org/pub/amaya/Swedish.tgz
-Source5: ftp://ftp.w3.org/pub/amaya/German.tgz
-Source6: ftp://ftp.w3.org/pub/amaya/Mesa-src-6.0.1.tgz
-Source7: ftp://ftp.w3.org/pub/amaya/wxGTK-src-2.5.1.tgz
+Source: ftp://ftp.w3.org/pub/amaya/amaya-fullsrc-%{version}.tgz
 # Patch: amaya-src-%{version}.diff
 %description
 
@@ -85,9 +78,10 @@ autoconf
 mkdir linux
 cd linux
 export HOME=`pwd`
-../configure --with-wx --enable-bookmarks --prefix=/usr/share --exec=/usr/share 
+../configure --with-wx --prefix=/usr/share --exec=/usr/share 
 #cp Options.orig Options
-make all
+#make all
+make
 %install
 if [ -e /usr/bin/amaya ] ; then
   rm -f /usr/bin/amaya
