@@ -424,7 +424,10 @@ static void CreateAreaMap (Document doc, View view, char *shape)
    ElementType         elType;
    AttributeType       attrType;
    Attribute           attr, attrRef, attrShape, attrRefimg;
-   char               *url, *tmp;
+   char                *url;
+#ifdef _I18N_
+   char                *tmp;
+#endif
    int                 length, w, h;
    int                 firstchar, lastchar;
    int                 docModified;
