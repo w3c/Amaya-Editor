@@ -210,7 +210,7 @@ BOXES
 	IN Structure_view
 		Visibility: 0;
 	END;
-
+{
  EmptyBox: BEGIN
 	Content: Text '<>';
 	Width : Enclosed . Width;
@@ -218,6 +218,7 @@ BOXES
 	IN Structure_view
 		Visibility: 0;
 	END;
+}
 
  CDATA_S: BEGIN
 	Content: Text '<![CDATA[';
