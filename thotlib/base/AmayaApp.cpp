@@ -416,15 +416,46 @@ void AmayaApp::RegisterOpenURLCallback( void (*callback) (void *) )
  */
 void AmayaApp::OnChar(wxKeyEvent& event)
 {
+#if defined(_WINDOWS) && !defined(_WIN_PRINT)
   wxLogDebug( _T("AmayaApp::OnChar key=")+wxString(event.GetUnicodeKey()) );
 
-#if defined(_WINDOWS) && !defined(_WIN_PRINT)
   // forward the key event to active window.
   // this code is only usfull on windows because on gtk,
   // the events are directly proceed in AmayaWindow class
   AmayaWindow * p_window = AmayaWindow::GetActiveWindow();
   if (p_window && p_window->IsActive())
-    p_window->OnChar(event);
+  {
+    if(!p_window->CheckSpecialKey(event))
+      if (!p_window->CheckShortcutKey(event))
+        if (!p_window->CheckUnicodeKey(event))
+          event.Skip();
+  }
+  else
+    event.Skip();
+#endif /* #if defined(_WINDOWS) && !defined(_WIN_PRINT) */
+}
+
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaApp
+ *      Method:  OnKeyDown
+ * Description:  manage keyboard events : CTRL+1,2,3 ... shortcuts
+ *               shortcuts with numbers are managed differently than these with letter
+ *--------------------------------------------------------------------------------------
+ */
+void AmayaApp::OnKeyDown(wxKeyEvent& event)
+{
+#if defined(_WINDOWS) && !defined(_WIN_PRINT)
+  wxLogDebug( _T("AmayaApp::OnKeyDown key=%d"),event.GetKeyCode());
+  // forward the key event to active window.
+  // this code is only usfull on windows because on gtk,
+  // the events are directly proceed in AmayaWindow class
+  AmayaWindow * p_window = AmayaWindow::GetActiveWindow();
+  if (p_window && p_window->IsActive())
+  {
+    if (!p_window->CheckShortcutKey(event))
+      event.Skip();
+  }
   else
     event.Skip();
 #endif /* #if defined(_WINDOWS) && !defined(_WIN_PRINT) */
@@ -433,7 +464,8 @@ void AmayaApp::OnChar(wxKeyEvent& event)
 BEGIN_EVENT_TABLE(AmayaApp, wxApp)
   EVT_IDLE( AmayaApp::OnIdle ) // Process a wxEVT_IDLE event  
 #if defined(_WINDOWS) && !defined(_WIN_PRINT)
-  EVT_CHAR( AmayaApp::OnChar )
+  EVT_CHAR(     AmayaApp::OnChar )
+  EVT_KEY_DOWN( AmayaApp::OnKeyDown )
 #endif /* #if defined(_WINDOWS) && !defined(_WIN_PRINT) */
 END_EVENT_TABLE()
 

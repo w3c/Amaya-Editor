@@ -583,7 +583,7 @@ void AmayaWindow::OnChar(wxKeyEvent& event)
  */
 bool AmayaWindow::CheckUnicodeKey( wxKeyEvent& event )
 {
-  if ((event.GetUnicodeKey()!=0) && !event.ControlDown() && !event.AltDown())
+  if ((event.GetUnicodeKey()!=0) && !IsSpecialKey(event.GetKeyCode()) && !event.ControlDown() && !event.AltDown())
     {
       wxWindow *       p_win_focus         = wxWindow::FindFocus();
       wxTextCtrl *     p_text_ctrl         = wxDynamicCast(p_win_focus, wxTextCtrl);
@@ -626,6 +626,8 @@ bool AmayaWindow::CheckUnicodeKey( wxKeyEvent& event )
  */
 bool AmayaWindow::CheckSpecialKey( wxKeyEvent& event )
 {
+  if ( !event.ControlDown() && !event.AltDown() && IsSpecialKey(event.GetKeyCode()))
+  {
   int thot_keysym = event.GetKeyCode();  
 
   bool proceed_key = (
@@ -694,6 +696,9 @@ bool AmayaWindow::CheckSpecialKey( wxKeyEvent& event )
     }
   else
      return false;
+  }
+  else
+	return false;
 }
 
 /*
@@ -705,15 +710,15 @@ bool AmayaWindow::CheckSpecialKey( wxKeyEvent& event )
  */
 bool AmayaWindow::CheckShortcutKey( wxKeyEvent& event )
 {
-  if ( event.ControlDown() || event.AltDown() )
-    {
-      wxChar thot_keysym = event.GetKeyCode();  
-
+  wxChar thot_keysym = event.GetKeyCode();  
 #ifdef _WINDOWS
-	  /* on windows, shortcuts values are not managed like on gtk, the keysym rang is 0-26*/
-      thot_keysym += (int)('A'-1);
+  /* on windows, shortcuts values are not managed like on gtk, the keysym rang is 0-26*/
+//  if (thot_keysym > '9')
+//    thot_keysym += (int)('A'-1);
 #endif /* _WINDOWS */
 
+  if ( (event.ControlDown() || event.AltDown()) && !IsSpecialKey(thot_keysym))
+    {
       int thotMask = 0;
       if (event.ControlDown())
 	thotMask |= THOT_MOD_CTRL;
@@ -745,6 +750,25 @@ bool AmayaWindow::CheckShortcutKey( wxKeyEvent& event )
     return false;
 }
 
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaWindow
+ *      Method:  IsSpecialKey
+ * Description:  proceed the unicode charactere if it is one
+ *--------------------------------------------------------------------------------------
+ */
+bool AmayaWindow::IsSpecialKey( int wx_keycode )
+{
+  return ( wx_keycode == WXK_BACK ||
+	       wx_keycode == WXK_TAB  ||
+           wx_keycode == WXK_RETURN ||
+           wx_keycode == WXK_ESCAPE ||
+           wx_keycode == WXK_SPACE  ||
+           wx_keycode == WXK_DELETE ||
+		   (wx_keycode >= WXK_START && wx_keycode <= WXK_COMMAND)
+  );
+}
+
 /*----------------------------------------------------------------------
  *  this is where the event table is declared
  *  the callbacks are assigned to an event type
@@ -753,7 +777,11 @@ BEGIN_EVENT_TABLE(AmayaWindow, wxFrame)
   EVT_SIZE(      AmayaWindow::OnSize )
   EVT_IDLE(      AmayaWindow::OnIdle ) // Process a wxEVT_IDLE event  
   EVT_ACTIVATE(  AmayaWindow::OnActivate )
+#ifndef _WINDOWS
   EVT_CHAR_HOOK( AmayaWindow::OnChar )
+#else /* _WINDOWS */
+  EVT_CHAR( AmayaWindow::OnChar )
+#endif /* _WINDOWS */
 END_EVENT_TABLE()
 
 #endif /* #ifdef _WX */

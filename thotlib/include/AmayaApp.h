@@ -40,6 +40,7 @@ public:
   virtual int 	OnExit();
   void OnIdle( wxIdleEvent& event );
   void OnChar( wxKeyEvent& event );
+  void OnKeyDown( wxKeyEvent& event );
 
   bool m_AmayaIsLaunched;
 
