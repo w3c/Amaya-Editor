@@ -93,6 +93,28 @@ RULES
 	create '</munderover>\12' after;
 	end;
 
+   MMULTISCRIPTS :
+	begin
+	create '<mmultiscripts>\12';
+	indent +2;
+	indent -2 after;
+	create '</mmultiscripts>\12' after;
+	end;
+   Construct :
+	begin
+	if immediately within MSubscript
+	   create '<none/>';
+	if immediately within MSuperscript
+	   create '<none/>';
+	end;
+   PostscriptPair :
+	if empty Remove;
+   PrescriptPair :
+	if empty Remove;
+   PrescriptPairs :
+	if not empty
+	   create '<mprescripts/>' before;
+
    MF :
 	begin
 	create '<mf>';

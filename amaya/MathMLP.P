@@ -167,6 +167,39 @@ BOXES
 		END;
 	END;
 
+ MMULTISCRIPTS_S: BEGIN
+	Content: Text 'MMULTISCRIPTS';
+	Visibility: 0;
+	IN Math_Structure_view BEGIN
+		Size: TAG_FONTSIZE;
+		Font: TAG_Font;
+		Style: TAG_Style;
+		Visibility: TAG_Visibility;  Foreground: TAG_Color;
+		END;
+	END;
+
+ NONE_S: BEGIN
+	Content: Text 'NONE';
+	Visibility: 0;
+	IN Math_Structure_view BEGIN
+		Size: TAG_FONTSIZE;
+		Font: TAG_Font;
+		Style: TAG_Style;
+		Visibility: TAG_Visibility;  Foreground: TAG_Color;
+		END;
+	END;
+
+ MPRESCRIPTS_S: BEGIN
+	Content: Text 'MPRESCRIPTS';
+	Visibility: 0;
+	IN Math_Structure_view BEGIN
+		Size: TAG_FONTSIZE;
+		Font: TAG_Font;
+		Style: TAG_Style;
+		Visibility: TAG_Visibility;  Foreground: TAG_Color;
+		END;
+	END;
+
  MF_S: BEGIN
 	Content: Text 'MF';
 	Visibility: 0;
@@ -354,6 +387,10 @@ RULES
 
    Construct:
 	BEGIN
+	if empty and immediately within MSubscript
+		CreateBefore (NONE_S);
+	if empty and immediately within MSuperscript
+		CreateBefore (NONE_S);
 	VertPos: HRef = Previous not MF . HRef;
 	IN Math_Structure_view BEGIN
 		Width: Enclosing . Width;
@@ -613,6 +650,104 @@ RULES
 	HorizRef: * . Top;
 	HorizPos: VMiddle = Enclosing . VMiddle;
 	VertPos: Bottom = UnderOverBase . Top;
+	IN Math_Structure_view BEGIN
+		Width: Enclosing . Width;
+		Height: Enclosed . Height;
+		END;
+	END;
+
+   MMULTISCRIPTS:
+        BEGIN
+	Gather: Yes;
+	HorizRef: Enclosed MultiscriptBase . HRef;
+	CreateBefore(MMULTISCRIPTS_S);
+	CreateWith(VerticalLine);
+	VertPos: HRef = Previous not MF . HRef;
+	IN Math_Structure_view BEGIN
+		Size: DOC_FONTSIZE;
+		Width: Enclosing . Width - STRUCT_INDENT;
+		Height: Enclosed . Height;
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+		END;
+	END;
+
+   MultiscriptBase:
+	BEGIN
+	VertPos: NIL;
+	HorizPos: NIL;
+	IN Math_Structure_view BEGIN
+		Width: Enclosing . Width;
+		Height: Enclosed . Height;
+		END;
+	END;
+
+   PostscriptPairs:
+	BEGIN
+	Size: Enclosing -2 min 1;
+	HorizRef: * . Top;
+	HorizPos: Left = MultiscriptBase . Right;
+	Height: MultiscriptBase . Height + 1;
+	VertPos: Top = MultiscriptBase . Top - 0.5;
+	IN Math_Structure_view BEGIN
+		Width: Enclosing . Width;
+		Height: Enclosed . Height;
+		END;
+	END;
+
+   PrescriptPairs:
+	BEGIN
+	CreateBefore(MPRESCRIPTS_S);
+	Size: Enclosing -2 min 1;
+	HorizRef: * . Top;
+	HorizPos: Right = MultiscriptBase . Left;
+	Height: MultiscriptBase . Height + 1;
+	VertPos: Top = MultiscriptBase . Top - 0.5;
+	IN Math_Structure_view BEGIN
+		Width: Enclosing . Width;
+		Height: Enclosed . Height;
+		END;
+	END;
+
+   PrescriptPair:
+	BEGIN
+	HorizRef: * . Top;
+	HorizPos: Left = Previous . Right + 0.2;
+	VertPos: Top = Enclosing . Top;
+	Height: Enclosing . Height;
+	IN Math_Structure_view BEGIN
+		Width: Enclosing . Width;
+		Height: Enclosed . Height;
+		END;
+	END;
+
+   PostscriptPair:
+	BEGIN
+	HorizRef: * . Top;
+	HorizPos: Left = Previous . Right + 0.2;
+	VertPos: Top = Enclosing . Top;
+	Height: Enclosing . Height;
+	IN Math_Structure_view BEGIN
+		Width: Enclosing . Width;
+		Height: Enclosed . Height;
+		END;
+	END;
+
+   MSubscript:
+	BEGIN
+	HorizRef: * . Top;
+	HorizPos: Left = Enclosing . Left;
+	VertPos: Bottom = Enclosing . Bottom;
+	IN Math_Structure_view BEGIN
+		Width: Enclosing . Width;
+		Height: Enclosed . Height;
+		END;
+	END;
+
+   MSuperscript:
+	BEGIN
+	HorizRef: * . Top;
+	HorizPos: Left = Enclosing . Left;
+	VertPos: Top = Enclosing . Top;
 	IN Math_Structure_view BEGIN
 		Width: Enclosing . Width;
 		Height: Enclosed . Height;

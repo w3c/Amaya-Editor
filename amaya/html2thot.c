@@ -188,7 +188,7 @@ typedef struct _ClosedElement
   }
 ClosedElement;
 
-#define MaxGIlength 12
+#define MaxGIlength 14
 typedef unsigned char GI[MaxGIlength];
 
 typedef struct _GIMapping
@@ -247,9 +247,11 @@ static GIMapping    MathMLGIMappingTable[] =
    {"MF", SPACE, MathML_EL_MF, NULL},
    {"MFRAC", SPACE, MathML_EL_MFRAC, NULL},
    {"MI", SPACE, MathML_EL_MI, NULL},
-   {"MO", SPACE, MathML_EL_MO, NULL},
+   {"MMULTISCRIPTS", SPACE, MathML_EL_MMULTISCRIPTS, NULL},
    {"MN", SPACE, MathML_EL_MN, NULL},
+   {"MO", SPACE, MathML_EL_MO, NULL},
    {"MOVER", SPACE, MathML_EL_MOVER, NULL},
+   {"MPRESCRIPTS", SPACE, MathML_EL_PrescriptPairs, NULL},
    {"MROOT", SPACE, MathML_EL_MROOT, NULL},
    {"MROW", SPACE, MathML_EL_MROW, NULL},
    {"MS", SPACE, MathML_EL_MS, NULL},
@@ -260,6 +262,7 @@ static GIMapping    MathMLGIMappingTable[] =
    {"MTEXT", SPACE, MathML_EL_MTEXT, NULL},
    {"MUNDER", SPACE, MathML_EL_MUNDER, NULL},
    {"MUNDEROVER", SPACE, MathML_EL_MUNDEROVER, NULL},
+   {"NONE", SPACE, MathML_EL_Construct, NULL},
    {"", SPACE, 0, NULL}	/* Last entry. Mandatory */
 };
 
@@ -2864,6 +2867,154 @@ static void	CheckMathSubExpressions (el, type1, type2, type3)
 }
 
 /*----------------------------------------------------------------------
+   BuildMultiscript
+
+   The content of a MMULTISCRIPT element has been created following
+   the original MathML structure.  Create all Thot elements defined
+   in the MathML S schema.
+ -----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void BuildMultiscript (Element elMMULTISCRIPT)
+#else /* __STDC__*/
+static void BuildMultiscript (elMMULTISCRIPT)
+  Element	elMMULTISCRIPT;
+#endif /* __STDC__*/
+{
+   Element	elem, base, next, group, pair, script, prevPair, prevScript;
+   ElementType	elType, elTypeGroup, elTypePair, elTypeScript;
+
+   base = NULL;
+   group = NULL;
+   prevPair = NULL;
+
+   elTypeGroup.ElSSchema = MathMLSSchema;
+   elTypePair.ElSSchema = MathMLSSchema;
+   elTypeScript.ElSSchema = MathMLSSchema;
+
+   /* process all children of the MMULTISCRIPT element */
+   elem = TtaGetFirstChild (elMMULTISCRIPT);
+   while (elem != NULL)
+      {
+      /* remember the element to be processed after the current one */
+      next = elem;
+      TtaNextSibling (&next);
+
+      /* remove the current element from the tree */
+      TtaRemoveTree (elem, theDocument);
+
+      if (base == NULL)
+	/* the current element is the first child of the MMULTISCRIPT
+	   element */
+	{
+	/* Create a MultiscriptBase element as the first child of
+	   MMULTISCRIPT and move the current element as the first child
+	   of the MultiscriptBase element */
+	elTypeGroup.ElTypeNum = MathML_EL_MultiscriptBase;
+	base = TtaNewElement (theDocument, elTypeGroup);
+	TtaInsertFirstChild (&base, elMMULTISCRIPT, theDocument);
+	TtaInsertFirstChild (&elem, base, theDocument);
+	}
+      else
+	/* the current element is a subscript or a superscript */
+	{
+        if (group == NULL)
+	  /* there is no PostscriptPairs element. Create one */
+	  {
+	  elTypeGroup.ElTypeNum = MathML_EL_PostscriptPairs;
+          group = TtaNewElement (theDocument, elTypeGroup);
+	  TtaInsertSibling (group, base, FALSE, theDocument);
+	  elTypePair.ElTypeNum = MathML_EL_PostscriptPair;
+	  /* create a first and a last PostscriptPair as placeholders */
+	  pair = TtaNewTree (theDocument, elTypePair, "");
+	  TtaInsertFirstChild (&pair, group, theDocument);
+	  prevPair = pair;
+	  pair = TtaNewTree (theDocument, elTypePair, "");
+	  TtaInsertSibling (pair, prevPair, FALSE, theDocument);
+	  prevScript = NULL;
+	  }
+        if (prevScript == NULL)
+	  /* the current element is the first subscript or superscript
+	     in a pair */
+	  {
+	  /* create a PostscriptPair or PrescriptPair element */
+	  pair = TtaNewElement (theDocument, elTypePair);
+	  if (prevPair == NULL)
+	     TtaInsertFirstChild (&pair, group, theDocument);
+	  else
+             TtaInsertSibling (pair, prevPair, FALSE, theDocument);
+	  prevPair = pair;
+	  /* create a MSubscript element */
+	  elTypeScript.ElTypeNum = MathML_EL_MSubscript;
+	  script = TtaNewElement (theDocument, elTypeScript);
+	  TtaInsertFirstChild (&script, pair, theDocument);
+	  prevScript = script;	  
+	  }
+        else
+	  /* the current element is a superscript in a pair */
+	  {
+	  /* create a MSuperscript element */
+	  elTypeScript.ElTypeNum = MathML_EL_MSuperscript;
+	  script = TtaNewElement (theDocument, elTypeScript);
+	  /* insert it as a sibling of the previous MSubscript element */
+	  TtaInsertSibling (script, prevScript, FALSE, theDocument);
+	  prevScript = NULL;	  
+	  }
+	/* insert the current element as a child of the new MSuperscript or
+	   MSubscript element */
+	TtaInsertFirstChild (&elem, script, theDocument);
+	}
+
+      CreatePlaceholders (elem, theDocument);
+
+      /* get next child of the MMULTISCRIPT element */
+      elem = next;
+      if (elem != NULL)
+	{
+        elType = TtaGetElementType (elem);
+        if (elType.ElSSchema == MathMLSSchema &&
+	    elType.ElTypeNum == MathML_EL_PrescriptPairs)
+	   /* the next element is a PrescriptPairs */
+	   {
+	   /* if there there is no PostscriptPairs element, create one as a
+	      placeholder */
+	   if (elTypeGroup.ElTypeNum != MathML_EL_PostscriptPairs)
+	      {
+	      elTypeGroup.ElTypeNum = MathML_EL_PostscriptPairs;
+	      group = TtaNewTree (theDocument, elTypeGroup, "");
+	      TtaInsertSibling (group, elem, TRUE, theDocument);
+	      }
+	   /* the following elements will be interpreted as sub- superscripts
+	      in PrescriptPair elements, wich will be children of this
+	      PrescriptPairs element */
+	   elTypeGroup.ElTypeNum = MathML_EL_PrescriptPairs;
+	   elTypePair.ElTypeNum = MathML_EL_PrescriptPair;
+	   group = elem;
+	   /* create a first and a last PostscriptPair as placeholders */
+	   pair = TtaNewTree (theDocument, elTypePair, "");
+	   TtaInsertFirstChild (&pair, group, theDocument);
+	   prevPair = pair;
+	   pair = TtaNewTree (theDocument, elTypePair, "");
+	   TtaInsertSibling (pair, prevPair, FALSE, theDocument);
+	   prevScript = NULL;
+	   TtaNextSibling (&elem);
+	   }
+	}
+      }
+   /* all children of element MMULTISCRIPTS have been processed */
+   /* if the last group processed is not a PrescriptPairs element,
+      create one as a placeholder */
+   if (elTypeGroup.ElTypeNum != MathML_EL_PrescriptPairs && base != NULL)
+      {
+      elTypeGroup.ElTypeNum = MathML_EL_PrescriptPairs;
+      elem = TtaNewTree (theDocument, elTypeGroup, "");
+      if (group == NULL)
+	 group = base;
+      TtaInsertSibling (elem, group, TRUE, theDocument);
+      }
+}
+
+
+/*----------------------------------------------------------------------
    SetFontslantAttr
    The content of a MI element has been created or modified.
    Create or change attribute fontslant for that element accordingly.
@@ -3068,6 +3219,11 @@ Element                 el;
 	CheckMathSubExpressions (el, MathML_EL_UnderOverBase,
 				 MathML_EL_Overscript, 0);
 	break;
+     case MathML_EL_MMULTISCRIPTS:
+	/* end of a MMULTISCRIPTS. Create all elements defined in the
+	   MathML S schema */
+	BuildMultiscript (el);
+	break;
      case MathML_EL_MROW:
 	/* end of MROW.   Create placeholders within the MROW */
 	child = TtaGetFirstChild (el);
@@ -3077,7 +3233,6 @@ Element                 el;
      default:
 	break;
      }
-
 }
 
 /*----------------------------------------------------------------------
