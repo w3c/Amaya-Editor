@@ -78,7 +78,6 @@ typedef struct sStatus {
 #define HASH(s) ((s) % SOCK_TABLE_SIZE)
 static SocketStatus persSockets[SOCK_TABLE_SIZE];
 
-boolean libDoStop = 1;
 /*--------------------------------------------------------------------
   AHTCallback_bridge
   this function acts as a bridge between Xt and libwww. From the Xt

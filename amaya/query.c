@@ -1700,10 +1700,8 @@ void                QueryInit ()
 {
 
    AmayaContextInit ();
-   
    AHTProfile_newAmaya (HTAppName, HTAppVersion);
-   
-   /* New AHTBridge stuff */
+   libDoStop = 1;   
 
 #ifdef _WINDOWS
    /*** AHTEventInit (); this was the call to my AHTEvent module HTEvtLst today***/

@@ -142,6 +142,6 @@ AHTReqContext;
 THOT_EXPORT char AmayaLastHTTPErrorMsg [MAX_LENGTH];
 THOT_EXPORT HTList      *conv;	/* List of global converters */
 THOT_EXPORT AmayaContext *Amaya;	/* Amaya's request global context    */
-
+THOT_EXPORT boolean      libDoStop;
 #endif /* AMAYA_LIBWWW_H */
 
