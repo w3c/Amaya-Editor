@@ -383,7 +383,8 @@ boolean             removeAbsBox;
 					}
 				   }
 			      }
-			    if (merge)
+			    if (merge && pEl1->ElText != NULL 
+				&& pEl2->ElText != NULL)
 			      {
 #ifndef NODISPLAY
                                  /* Si l'element est selectionne, alors annule la selection */
