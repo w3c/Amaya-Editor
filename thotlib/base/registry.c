@@ -559,7 +559,7 @@ char *TtaGetEnvString (char *name)
 
       /* appname allows to get the application name */
    if (!strcasecmp ("appname", name))
-      return(AppRegistryEntryAppli);
+      return (AppRegistryEntryAppli);
 
    if (!strcasecmp (name, "cwd") || !strcasecmp (name, "pwd"))
       return (getcwd (&CurrentDir[0], sizeof(CurrentDir)));
@@ -582,44 +582,48 @@ char *TtaGetEnvString (char *name)
    /* then lookup in the application user preferences */
    cour = AppRegistryEntry;
    while (cour != NULL)
- {
-         if (!strcasecmp (cour->appli, AppRegistryEntryAppli)      && 
-             !strcmp (cour->name, name) && cour->value[0] != EOS && 
-             cour->level == REGISTRY_USER)
- {
+     {
+       if (!strcasecmp (cour->appli, AppRegistryEntryAppli)      && 
+	   !strcmp (cour->name, name) && cour->value[0] != EOS && 
+	   cour->level == REGISTRY_USER)
+	 {
 #ifdef DEBUG_REGISTRY
-            fprintf (stderr, "TtaGetEnvString(\"%s\") = %s\n", name, cour->value);
+	   fprintf (stderr, "TtaGetEnvString(\"%s\") = %s\n", name, cour->value);
 #endif
-            return (cour->value);
-		 }
-         cour = cour->next;
-   } 
+	   return (cour->value);
+	 }
+       cour = cour->next;
+     }
 
    /* then lookup in the application defaults */
    cour = AppRegistryEntry;
-   while (cour != NULL) {
+   while (cour != NULL)
+     {
          if (!strcasecmp (cour->appli, AppRegistryEntryAppli)      && 
              !strcmp (cour->name, name) && cour->value[0] != EOS && 
-             cour->level == REGISTRY_SYSTEM) {
+             cour->level == REGISTRY_SYSTEM)
+	   {
 #ifdef DEBUG_REGISTRY
             fprintf (stderr, "TtaGetEnvString(\"%s\") = %s\n", name, cour->value);
 #endif
             return (cour->value);
-		 }
+	   }
          cour = cour->next;
-   } 
+     }
 
    /* then lookup in the Thot library defaults */
    cour = AppRegistryEntry;
-   while (cour != NULL) {
-         if (!strcasecmp (cour->appli, THOT_LIB_DEFAULTNAME) && !strcmp (cour->name, name) && cour->value[0] != EOS) {
+   while (cour != NULL)
+     {
+         if (!strcasecmp (cour->appli, THOT_LIB_DEFAULTNAME) && !strcmp (cour->name, name) && cour->value[0] != EOS)
+	   {
 #ifdef DEBUG_REGISTRY
             fprintf (stderr, "TtaGetEnvString(\"%s\") = %s\n", name, cour->value);
 #endif
             return (cour->value);
-		 }
+	   }
          cour = cour->next;
-   }
+     }
 
    /*
     * If still not found, look in the environment variables.
@@ -1177,19 +1181,19 @@ static void         InitEnviron ()
   ----------------------------------------------------------------------*/
 void TtaInitializeAppRegistry (char *appArgv0)
 {
-  char      app_home[MAX_PATH];
-  char      filename[MAX_PATH];
-  char     *my_path;
-  char     *dir_end = NULL;
-  char     *appName;
-  char     *ptr;
+  char        app_home[MAX_PATH];
+  char        filename[MAX_PATH];
+  char       *my_path;
+  char       *dir_end = NULL;
+  char       *appName;
+  char       *ptr;
 #ifdef _WINDOWS
   /* name in Windows NT 4 is 20 chars */
-  char      username[MAX_LENGTH];
-  char      windir[MAX_PATH+1];
+  char        username[MAX_LENGTH];
+  char        windir[MAX_PATH+1];
   DWORD       dwSize;
   ThotBool    status;
-  char        *ptr2, *ptr3;
+  char       *ptr2, *ptr3;
 #else /*  _WINDOWS */
   struct stat stat_buf;
   char        c_execname[MAX_LENGTH];
@@ -1472,91 +1476,100 @@ void TtaInitializeAppRegistry (char *appArgv0)
    **              or
    **             the same thing as WinNT.
    */
-   /* No this should NOT be a call to TtaGetEnvString */
-#ifdef _WINDOWS
-   /* compute the default app_home value from the username and thotdir */
-   dwSize = sizeof (username);
-   status = GetUserName (username, &dwSize);
-   if (status)
-     {
-       if (strchr (username, '*'))
-	 /* don't use a username that include stars */
-	 ptr = WIN_DEF_USERNAME;
-       else
-	 ptr = username;
-     }
-   else
-     /* under win95, there may be no user name */
-     ptr = WIN_DEF_USERNAME;
-   if (IS_NT)
-     /* winnt: apphome is windowsdir\profiles\username\appname */
-     {
-       dwSize = MAX_PATH;
-       app_home[0] = EOS;
-#if 0
-       /* JK: commented as it needs installing a SP */
-       /* this function will fail if dwSize is inferior to the buffer size.
-	  As we gave it the maximum possible value, we don't control
-	  the return code */
-       GetUserProfileDirectory (AccessTokenHandle, app_home, &dwSize);
-#endif
-       /* check if a previous app_home directory existed. If yes, use it. If it didn't
-	  exist, then we try to create it using the new conventions. */
-       GetWindowsDirectory (windir, dwSize);
-       /* the Windows NT convention */
-       sprintf (app_home, "%s\\profiles\\%s\\%s", windir, ptr, AppNameW);
-       if (!TtaDirExists (app_home))
-	 app_home[0] = EOS;
 
-       if (app_home[0] == EOS)
+   app_home[0] = EOS;
+   /* IV 18/08/2003 Check the variable AMAYA_USER_HOME first */
+   ptr = getenv ("AMAYA_USER_HOME");
+   if (ptr && TtaDirExists (ptr))
+       strncpy (app_home, ptr, MAX_PATH);
+
+   if (app_home[0] == EOS)
+     {
+#ifdef _WINDOWS
+       /* compute the default app_home value from the username and thotdir */
+       dwSize = sizeof (username);
+       status = GetUserName (username, &dwSize);
+       if (status)
 	 {
-	   /* the Windows 2000/XP convention */
-	   sprintf (app_home, "%s\\Documents and Settings\\%s\\%s", windir, ptr, AppNameW);
+	   if (strchr (username, '*'))
+	     /* don't use a username that include stars */
+	     ptr = WIN_DEF_USERNAME;
+	   else
+	     ptr = username;
+	 }
+       else
+	 /* under win95, there may be no user name */
+	 ptr = WIN_DEF_USERNAME;
+
+       if (IS_NT)
+	 /* winnt: apphome is windowsdir\profiles\username\appname */
+	 {
+	   dwSize = MAX_PATH;
+#if 0
+	   /* JK: commented as it needs installing a SP */
+	   /* this function will fail if dwSize is inferior to the buffer size.
+	      As we gave it the maximum possible value, we don't control
+	      the return code */
+	   GetUserProfileDirectory (AccessTokenHandle, app_home, &dwSize);
+#endif
+
+	   /* check if a previous app_home directory existed. If yes, use it. If
+	      it didn't exist, then we try to create it using the new conventions. */
+	   GetWindowsDirectory (windir, dwSize);
+	   /* the Windows NT convention */
+	   sprintf (app_home, "%s\\profiles\\%s\\%s", windir, ptr, AppNameW);
 	   if (!TtaDirExists (app_home))
 	     app_home[0] = EOS;
-	 }
-
-       /* At this point app_home has a value if the directory existed. Otherwise,
-	  we'll try to create a new one */
-       
-       if (app_home[0] == EOS)
-	 {
-	   /* use the HOMEDRIVE and HOMEPATH environment variables first */
-	   ptr2 = getenv ("HOMEDRIVE");
-	   ptr3 = getenv ("HOMEPATH");
-	   if (ptr2 && *ptr2 && ptr3)
+	   
+	   if (app_home[0] == EOS)
 	     {
-	       sprintf (windir, "%s%s", ptr2, ptr3);
-	       if (TtaDirExists (windir))
-		 sprintf (app_home, "%s\\%s", windir, AppNameW);
-	       else
+	       /* the Windows 2000/XP convention */
+	       sprintf (app_home, "%s\\Documents and Settings\\%s\\%s", windir, ptr, AppNameW);
+	       if (!TtaDirExists (app_home))
 		 app_home[0] = EOS;
 	     }
-	 }
 
-       if (app_home[0] == EOS)
-	 {
-	   /* try to use one of the system home dirs */
-	   GetWindowsDirectory (windir, dwSize);
-	   /* the Windows 2000/XP convention */
-	   sprintf (app_home, "%s\\Documents and Settings", windir);
-	   if (! TtaDirExists (app_home))
+	   /* At this point app_home has a value if the directory existed. Otherwise,
+	      we'll try to create a new one */       
+	   if (app_home[0] == EOS)
 	     {
-	       /* the Windows NT convention */
-	       sprintf (app_home, "%s\\profiles", windir);
+	       /* use the HOMEDRIVE and HOMEPATH environment variables first */
+	       ptr2 = getenv ("HOMEDRIVE");
+	       ptr3 = getenv ("HOMEPATH");
+	       if (ptr2 && *ptr2 && ptr3)
+		 {
+		   sprintf (windir, "%s%s", ptr2, ptr3);
+		   if (TtaDirExists (windir))
+		     sprintf (app_home, "%s\\%s", windir, AppNameW);
+		   else
+		     app_home[0] = EOS;
+		 }
 	     }
-	   /* add the end suffix */
-	   sprintf (windir, "\\%s\\%s", ptr, AppNameW);
-	   strcat (app_home, windir);
+
+	   if (app_home[0] == EOS)
+	     {
+	       /* try to use one of the system home dirs */
+	       GetWindowsDirectory (windir, dwSize);
+	       /* the Windows 2000/XP convention */
+	       sprintf (app_home, "%s\\Documents and Settings", windir);
+	       if (! TtaDirExists (app_home))
+		 {
+		   /* the Windows NT convention */
+		   sprintf (app_home, "%s\\profiles", windir);
+		 }
+	       /* add the end suffix */
+	       sprintf (windir, "\\%s\\%s", ptr, AppNameW);
+	       strcat (app_home, windir);
+	     }
 	 }
-     }
-   else
-     /* win95: apphome is  thotdir\users\username */
-     sprintf (app_home, "%s\\%s\\%s", execname, WIN_USERS_HOME_DIR, ptr);   
+       else
+	 /* win95: apphome is  thotdir\users\username */
+	 sprintf (app_home, "%s\\%s\\%s", execname, WIN_USERS_HOME_DIR, ptr);
 #else /* _WINDOWS */
-   ptr = getenv ("HOME");
-   sprintf (app_home, "%s%c.%s", ptr, DIR_SEP, AppNameW); 
+       ptr = getenv ("HOME");
+       sprintf (app_home, "%s%c.%s", ptr, DIR_SEP, AppNameW); 
 #endif /*_WINDOWS*/
+     }
    /* store the value of APP_HOME in the registry */
    AddRegisterEntry (AppRegistryEntryAppli, "APP_HOME", app_home,
 		     REGISTRY_SYSTEM, FALSE);

@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>Configurer Amaya</title>
-  <meta name="GENERATOR" content="amaya 7.2+, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 8.1a, see http://www.w3.org/Amaya/" />
 </head>
 
 <body xml:lang="fr" lang="fr">
@@ -50,8 +50,13 @@ Amaya a été installé.</p>
 
 <p>Amaya stocke les préférences de l'utilisateur ainsi que les autres
 fichiers de configuration de l'utilisateur que nous appellerons le répertoire
-<strong>AmayaHome</strong>. La table suivante montre où ce répertoire est
-stocké dans les différentes architectures :</p>
+<strong>AmayaHome</strong>. Un répertoire existant peut être sélectionné par
+l'utilisateur en utilisant la variable d'environnement
+<code>AMAYA_USER_HOME</code>. Sinon Amaya sélectionne un répertoire par
+défaut.</p>
+
+<p>La table suivante montre la position par défaut de ce répertoire dans les
+différentes architectures :</p>
 
 <table border="1" summary="directory structure">
   <thead>
@@ -62,27 +67,40 @@ stocké dans les différentes architectures :</p>
   </thead>
   <tbody>
     <tr>
-      <td>Unix</td>
-      <td>$HOME/.amaya</td>
-    </tr>
-    <tr>
-      <td>Windows 95/
-
-        <p>Windows 98</p>
+      <td valign="top"><p class="TableText">Unix</p>
       </td>
-      <td>AMAYA-INSTALL-DIR\users\username
-
-        <p>ou, si l'utilisateur ne se loge pas sur Windows,</p>
-
-        <p>AMAYA-INSTALL-DIR\users\default</p>
+      <td valign="top"><p class="TableText"><code>$HOME/.amaya</code></p>
       </td>
     </tr>
     <tr>
-      <td>Windows NT/ Windows 2000/
-
-        <p>Windows XP</p>
+      <td valign="top"><p class="TableText">Windows 95/ Windows 98</p>
       </td>
-      <td><code>$HOMEDRIVE:\$HOMEPATH\Amaya\config</code></td>
+      <td valign="top"><p
+        class="TableText"><code>AMAYA-INSTALL-DIR\users\username</code> or,
+        if the user didn't login to Windows,
+        <code>AMAYA-INSTALL-DIR\users\default</code></p>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><p class="TableText">Windows NT</p>
+      </td>
+      <td valign="top"><p
+        class="TableText"><code>$HOMEDRIVE:\$HOMEPATH\Amaya\config</code></p>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><p class="TableText">Windows 2000</p>
+      </td>
+      <td valign="top"><p
+        class="TableText"><code>$HOMEDRIVE:\$HOMEPATH\Amaya\config</code></p>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top"><p class="TableText">Windows XP</p>
+      </td>
+      <td valign="top"><p
+        class="TableText"><code>$HOMEDRIVE:\$HOMEPATH\Amaya\config</code></p>
+      </td>
     </tr>
   </tbody>
 </table>

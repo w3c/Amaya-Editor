@@ -746,23 +746,26 @@ ThotBool CloseHistorySequence (PtrDocument pDoc)
   ThotBool	result;
 
   result = FALSE;
-  /* error if no sequence open */
-  if (!pDoc->DocEditSequence)
-     HistError (9);
-  else
-     {
-     if (pDoc->DocLastEdit && pDoc->DocLastEdit->EoType == EtDelimiter)
-        /* empty sequence, remove it */
-        CancelAnEdit (pDoc->DocLastEdit, pDoc, TRUE);
-     else
-        {
-	result = TRUE;
-        /* Clear the Redo queue */
-        ClearRedoQueue (pDoc);
+  if (pDoc)
+    {
+      /* error if no sequence open */
+      if (!pDoc->DocEditSequence)
+	HistError (9);
+      else
+	{
+	  if (pDoc->DocLastEdit && pDoc->DocLastEdit->EoType == EtDelimiter)
+	    /* empty sequence, remove it */
+	    CancelAnEdit (pDoc->DocLastEdit, pDoc, TRUE);
+	  else
+	    {
+	      result = TRUE;
+	      /* Clear the Redo queue */
+	      ClearRedoQueue (pDoc);
+	    }
+	  /* sequence closed */
+	  pDoc->DocEditSequence = FALSE;
 	}
-     /* sequence closed */
-     pDoc->DocEditSequence = FALSE;
-     }
+    }
   return result;
 }
 
