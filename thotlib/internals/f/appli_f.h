@@ -6,6 +6,7 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
+extern int GetFrameNumber ( ThotWindow win );
 extern void FrameToView ( int frame,
                           int *doc,
                           int *view );
@@ -92,6 +93,7 @@ extern void UpdateScrollbars ( int frame );
 
 #else /* __STDC__ */
 
+extern int GetFrameNumber (/* ThotWindow win */);
 extern void FrameToView (/* int frame,
                             int *doc,
                             int *view */);

@@ -138,7 +138,72 @@ int         X_Pos;
 int         Y_Pos;
 int         cyToolBar;
 TBADDBITMAP ThotTBBitmap;
+static ThotWindow WIN_curWin = NULL;
 
+
+/*----------------------------------------------------------------------
+   WIN_GetDeviceContext selects a Device Context for a given
+   thot window.                                                
+  ----------------------------------------------------------------------*/
+void WIN_GetDeviceContext (int frame)
+{
+  if (frame < 0 || frame > MAX_FRAME)
+    {
+      if (TtDisplay)
+        return;
+      TtDisplay = GetDC (WIN_curWin);
+      return;
+    }
+  if (FrRef[frame])
+    {
+      /* release the previous Device Context. */
+      if (TtDisplay)
+	WIN_ReleaseDeviceContext ();
+      /* load the new Context. */
+      TtDisplay = GetDC (FrRef[frame]);
+      if (TtDisplay != NULL)
+	{
+	  WIN_curWin = FrRef[frame];
+	  SetICMMode (TtDisplay, ICM_ON);
+	}
+    }
+}
+
+/*----------------------------------------------------------------------
+   WIN_ReleaseDeviceContext :  unselect the Device Context           
+  ----------------------------------------------------------------------*/
+void WIN_ReleaseDeviceContext (void)
+{
+  /* release the previous Device Context. */
+  if (TtDisplay != NULL)
+    {     
+      SetICMMode (TtDisplay, ICM_OFF);
+      ReleaseDC (WIN_curWin, TtDisplay);
+    }
+  TtDisplay = NULL;
+}
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+ThotBool RegisterWin95 (CONST WNDCLASS* lpwc)
+{
+   WNDCLASSEX wcex;
+
+   wcex.style = lpwc->style;
+   wcex.lpfnWndProc = lpwc->lpfnWndProc;
+   wcex.cbClsExtra = lpwc->cbClsExtra;
+   wcex.cbWndExtra = lpwc->cbWndExtra;
+   wcex.hInstance = lpwc->hInstance;
+   wcex.hIcon = lpwc->hIcon;
+   wcex.hCursor = lpwc->hCursor;
+   wcex.hbrBackground = lpwc->hbrBackground;
+   wcex.lpszMenuName = lpwc->lpszMenuName;
+   wcex.lpszClassName = lpwc->lpszClassName;
+   /* Added elements for Windows 95. */
+   wcex.cbSize = sizeof(WNDCLASSEX);
+   wcex.hIconSm = LoadIcon (hInstance, IDI_APPLICATION);
+   return RegisterClassEx( &wcex );
+}
 
 #ifndef _WIN_PRINT
 #ifndef _GL
@@ -241,6 +306,20 @@ ThotBool InitToolTip (HWND hwndToolBar)
 #include "viewapi_f.h"
 #include "xwindowdisplay_f.h"
 
+
+/*----------------------------------------------------------------------
+  GetFrameNumber returns the Thot window number associated.
+  ----------------------------------------------------------------------*/
+int GetFrameNumber (ThotWindow win)
+{
+  int frame;
+
+  for (frame = 1; frame <= MAX_FRAME; frame++)
+    if (FrRef[frame] == win)
+      return (frame);
+  return (-1);
+}
+
 /*----------------------------------------------------------------------
    FrameToView retourne, sous la forme qui convient a l'API Thot, 
    les parametres identifiant le document et la vue        
@@ -307,6 +386,20 @@ gboolean KillFrameGTK (GtkWidget *widget, GdkEvent *event, gpointer f)
 #endif /* _GTK */
 
 #ifdef _WINDOWS
+/*----------------------------------------------------------------------
+  GetMainFrameNumber returns the Thot window number associated to an
+   MS-Windows window.
+  ----------------------------------------------------------------------*/
+int GetMainFrameNumber (ThotWindow win)
+{
+   int frame;
+
+   for (frame = 0; frame <= MAX_FRAME; frame++)
+       if (FrMainRef[frame] == win)
+	  return (frame);
+   return -1;
+}
+
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 static void CopyToolTipText (int frame, LPTOOLTIPTEXT lpttt)

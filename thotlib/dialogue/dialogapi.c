@@ -191,87 +191,8 @@ static BYTE     fVirt;
 static char     key;
 
 UINT subMenuID [MAX_FRAME];
-static ThotWindow WIN_curWin = NULL;
 extern int main (int, char**);
 static struct Cat_Context *CatEntry (int ref);
-
-/*----------------------------------------------------------------------
-  GetMainFrameNumber returns the Thot window number associated to an
-   MS-Windows window.
-  ----------------------------------------------------------------------*/
-int GetMainFrameNumber (ThotWindow win)
-{
-   int frame;
-
-   for (frame = 0; frame <= MAX_FRAME; frame++)
-       if (FrMainRef[frame] == win)
-	  return (frame);
-   return -1;
-}
-
-/*----------------------------------------------------------------------
-   WIN_GetDeviceContext selects a Device Context for a given
-   thot window.                                                
-  ----------------------------------------------------------------------*/
-void WIN_GetDeviceContext (int frame)
-{
-  if (frame < 0 || frame > MAX_FRAME)
-    {
-      if (TtDisplay)
-        return;
-      TtDisplay = GetDC (WIN_curWin);
-      return;
-    }
-  if (FrRef[frame])
-    {
-      /* release the previous Device Context. */
-      if (TtDisplay)
-	WIN_ReleaseDeviceContext ();
-      /* load the new Context. */
-      TtDisplay = GetDC (FrRef[frame]);
-      if (TtDisplay != NULL)
-	{
-	  WIN_curWin = FrRef[frame];
-	  SetICMMode (TtDisplay, ICM_ON);
-	}
-    }
-}
-
-/*----------------------------------------------------------------------
-   WIN_ReleaseDeviceContext :  unselect the Device Context           
-  ----------------------------------------------------------------------*/
-void WIN_ReleaseDeviceContext (void)
-{
-  /* release the previous Device Context. */
-  if (TtDisplay != NULL)
-    {     
-      SetICMMode (TtDisplay, ICM_OFF);
-      ReleaseDC (WIN_curWin, TtDisplay);
-    }
-  TtDisplay = NULL;
-}
-
-/*----------------------------------------------------------------------
-  ----------------------------------------------------------------------*/
-ThotBool RegisterWin95 (CONST WNDCLASS* lpwc)
-{
-   WNDCLASSEX wcex;
-
-   wcex.style = lpwc->style;
-   wcex.lpfnWndProc = lpwc->lpfnWndProc;
-   wcex.cbClsExtra = lpwc->cbClsExtra;
-   wcex.cbWndExtra = lpwc->cbWndExtra;
-   wcex.hInstance = lpwc->hInstance;
-   wcex.hIcon = lpwc->hIcon;
-   wcex.hCursor = lpwc->hCursor;
-   wcex.hbrBackground = lpwc->hbrBackground;
-   wcex.lpszMenuName = lpwc->lpszMenuName;
-   wcex.lpszClassName = lpwc->lpszClassName;
-   /* Added elements for Windows 95. */
-   wcex.cbSize = sizeof(WNDCLASSEX);
-   wcex.hIconSm = LoadIcon (hInstance, IDI_APPLICATION);
-   return RegisterClassEx( &wcex );
-}
 
 /*----------------------------------------------------------------------
   GetMenuParentNumber:  returns the Thot window number associated to a     
@@ -646,19 +567,6 @@ LRESULT CALLBACK ThotDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam, LPARAM lPara
 #endif /* _WINDOWS */
 
 /*----------------------------------------------------------------------
-  GetFrameNumber returns the Thot window number associated.
-  ----------------------------------------------------------------------*/
-int GetFrameNumber (ThotWindow win)
-{
-  int frame;
-
-  for (frame = 1; frame <= MAX_FRAME; frame++)
-    if (FrRef[frame] == win)
-      return (frame);
-  return (-1);
-}
-
-/*----------------------------------------------------------------------
   Procedure de retour par defaut.
   ----------------------------------------------------------------------*/
 static void CallbackError (int ref, int typedata, char *data)
@@ -822,7 +730,7 @@ static void UnmapMenu (ThotWidget w, struct Cat_Context *catalogue, caddr_t call
 #ifndef _GTK
 static void CallMenu (ThotWidget w, struct Cat_Context *catalogue, caddr_t call_d)
 #else /* _GTK */
-     static void CallMenuGTK (ThotWidget w, struct Cat_Context *catalogue)
+static void CallMenuGTK (ThotWidget w, struct Cat_Context *catalogue)
 #endif /* _GTK */
 {
   register int        i;
