@@ -1382,6 +1382,8 @@ static void  NsDeclarationEnd (char *ns_prefix)
       Ns_Uri[i] = NULL;
     }
   Ns_Level --;
+  
+  CurNs_Level = 0;
 }
 
 /*----------------------------------------------------------------------
