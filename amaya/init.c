@@ -2658,7 +2658,7 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
 	   TtaCloseDocument (doc);
 	   return (0);
 	 }
-       
+
        /* store the profile of the new document */
        /* and update the menus according to it */
        TtaSetDocumentProfile (doc, profile);
@@ -4619,7 +4619,7 @@ ThotBool ViewToClose (NotifyDialog *event)
      /* abort the command and don't let Thot perform normal operation */
      return TRUE;
 
-   if (structView != 0 && TtaIsViewOpen (document, structView))
+   if (structView!= 0 && TtaIsViewOpen (document, structView))
      TtaCloseView (document, structView);
    if (altView != 0 && TtaIsViewOpen (document, altView))
      TtaCloseView (document, altView);
@@ -4627,6 +4627,7 @@ ThotBool ViewToClose (NotifyDialog *event)
      TtaCloseView (document, linksView);
    if (tocView != 0 && TtaIsViewOpen (document, tocView))
      TtaCloseView (document, tocView);
+
    /* let Thot perform normal operation */
    return FALSE;
 }
@@ -6714,6 +6715,131 @@ ThotBool CheckMakeDirectory (char *name, ThotBool recursive)
 }
 
 /*----------------------------------------------------------------------
+   FreeAmayaIcons cleans up icons objects.
+  ----------------------------------------------------------------------*/
+void FreeAmayaIcons ()
+{
+      /* free allocated icons */
+#if defined(_WX)
+  if (stopR)
+    delete stopR;
+  if (stopN) 	
+    delete stopN;
+  if (iconSave) 	
+    delete iconSave;
+  if (iconSaveNo) 	
+    delete iconSaveNo;
+  if (iconFind) 	
+    delete iconFind;
+  if (iconReload) 	
+    delete iconReload;
+  if (iconHome) 	
+    delete iconHome;
+  if (iconI) 	
+    delete iconI;
+  if (iconINo) 	
+    delete iconINo;
+  if (iconB) 	
+    delete iconB;
+  if (iconBNo) 	
+    delete iconBNo;
+  if (iconT) 	
+    delete iconT;
+  if (iconTNo) 	
+    delete iconTNo;
+  if (iconBack) 	
+    delete iconBack;
+  if (iconBackNo) 	
+    delete iconBackNo;
+  if (iconForward) 	
+    delete iconForward;
+  if (iconForwardNo) 
+    delete iconForwardNo;
+  if (iconBrowser) 	
+    delete iconBrowser;
+  if (iconEditor) 	
+    delete iconEditor;
+  if (iconH1) 	
+    delete iconH1;
+  if (iconH1No) 	
+    delete iconH1No;
+  if (iconH2) 	
+    delete iconH2;
+  if (iconH2No) 	
+    delete iconH2No;
+  if (iconH3) 	
+    delete iconH3;
+  if (iconH3No) 	
+    delete iconH3No;
+  if (iconPrint) 	
+    delete iconPrint;
+  if (iconBullet) 	
+    delete iconBullet;
+  if (iconBulletNo) 
+    delete iconBulletNo;
+  if (iconNum) 
+    delete iconNum;
+  if (iconNumNo) 	
+    delete iconNumNo;
+  if (iconImage) 	
+    delete iconImage;
+  if (iconImageNo) 	
+    delete iconImageNo;
+  if (iconDL) 
+    delete iconDL;
+  if (iconDLNo) 
+    delete iconDLNo;
+  if (iconLink) 	
+    delete iconLink;
+  if (iconLinkNo) 
+    delete iconLinkNo;
+  if (iconTable) 	
+    delete iconTable;
+  if (iconTableNo) 	
+    delete iconTableNo;
+
+  stopR = (ThotIcon) 0;
+  stopN = (ThotIcon) 0;
+  iconSave = (ThotIcon) 0;
+  iconSaveNo = (ThotIcon) 0;
+  iconFind = (ThotIcon) 0;
+  iconReload = (ThotIcon) 0;
+  iconHome = (ThotIcon) 0;
+  iconI = (ThotIcon) 0;
+  iconINo = (ThotIcon) 0;
+  iconB = (ThotIcon) 0;
+  iconBNo = (ThotIcon) 0;
+  iconT = (ThotIcon) 0;
+  iconTNo = (ThotIcon) 0;
+  iconBack = (ThotIcon) 0;
+  iconBackNo = (ThotIcon) 0;
+  iconForward = (ThotIcon) 0;
+  iconForwardNo = (ThotIcon) 0;
+  iconBrowser = (ThotIcon) 0;
+  iconEditor = (ThotIcon) 0;
+  iconH1 = (ThotIcon) 0;
+  iconH1No = (ThotIcon) 0;
+  iconH2 = (ThotIcon) 0;
+  iconH2No = (ThotIcon) 0;
+  iconH3 = (ThotIcon) 0;
+  iconH3No = (ThotIcon) 0;
+  iconPrint = (ThotIcon) 0;
+  iconBullet = (ThotIcon) 0;
+  iconBulletNo = (ThotIcon) 0;
+  iconNum = (ThotIcon) 0;
+  iconNumNo = (ThotIcon) 0;
+  iconImage = (ThotIcon) 0;
+  iconImageNo = (ThotIcon) 0;
+  iconDL = (ThotIcon) 0;
+  iconDLNo = (ThotIcon) 0;
+  iconLink = (ThotIcon) 0;
+  iconLinkNo = (ThotIcon) 0;
+  iconTable = (ThotIcon) 0;
+  iconTableNo = (ThotIcon) 0;
+#endif /* defined(_WX) */
+}
+
+/*----------------------------------------------------------------------
    FreeAmayaStructures cleans up memory ressources.
   ----------------------------------------------------------------------*/
 void FreeAmayaStructures ()
@@ -6740,6 +6866,15 @@ void FreeAmayaStructures ()
       FreeDocHistory ();
       FreeTransform ();
       QueryClose ();
+
+      FreeAmayaIcons ();
+   
+      /* free mathml allocations */
+      FreeMathML();
+
+      /* free svg allocations */
+      FreeSVG ();
+
 #ifdef ANNOTATIONS
       XPointer_bufferFree ();
       ANNOT_Quit ();
@@ -7143,8 +7278,10 @@ void InitAmaya (NotifyEvent * event)
      }
 
    if (s == NULL || s[0] == EOS)
-      /* no argument, no Home, and no previous page: display default Amaya URL */
-     GoToHome (0, 1);
+     {
+       /* no argument, no Home, and no previous page: display default Amaya URL */
+       GoToHome (0, 1);
+     }
    else if (IsW3Path (s))
      {
        /* it's a remote document */

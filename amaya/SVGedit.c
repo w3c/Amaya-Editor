@@ -12,6 +12,10 @@
  *	   V. Quint
  */
 
+#ifdef _WX
+  #include "wx/wx.h"
+#endif /* _WX */
+
 /* Included headerfiles */
 #undef THOT_EXPORT
 #define THOT_EXPORT extern
@@ -2139,6 +2143,32 @@ static void ShowGraphicsPalette (Document doc, View view)
   
 }
 #endif /* _SVG */
+
+/*----------------------------------------------------------------------
+   FreeSVG free SVG context.
+  ----------------------------------------------------------------------*/
+void FreeSVG ()
+{
+#ifdef _SVG
+
+#if defined(_WX)
+  if (iconGraph)
+    delete iconGraph;
+  if (iconGraphNo)
+    delete iconGraphNo;
+  for (int i = 0; i < 12; i++)
+    {
+      if(mIcons[i])
+	delete mIcons[i];
+    }
+
+  iconGraph =   (ThotIcon) NULL;
+  iconGraphNo = (ThotIcon) NULL;
+  memset( mIcons, 0, 12 * sizeof(ThotIcon) );
+#endif /* defined(_WX) */
+
+#endif /* _SVG */
+}
 
 /*----------------------------------------------------------------------
    InitSVG initializes SVG context.

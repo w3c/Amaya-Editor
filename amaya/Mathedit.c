@@ -12,6 +12,10 @@
  *          R. Guetari - Windows routines.
  */
 
+#ifdef _WX
+  #include "wx/wx.h"
+#endif /* _WX */
+
 /* Included headerfiles */
 #undef THOT_EXPORT
 #define THOT_EXPORT extern
@@ -2450,6 +2454,27 @@ static ThotBool MathMoveBackward ()
       MathSelectionChanged (&event);
     }
   return (done);
+}
+/*----------------------------------------------------------------------
+   FreeMathML free MathML context.
+  ----------------------------------------------------------------------*/
+void FreeMathML ()
+{
+#if defined(_WX)
+  if (iconMath)
+    delete iconMath;
+  if (iconMathNo)
+    delete iconMathNo;
+  for (int i = 0 ; i < 14 ; i++)
+    {
+      if (mIcons[i])
+	delete mIcons[i];
+    }
+
+  iconMath =   (ThotIcon)NULL;
+  iconMathNo = (ThotIcon)NULL;
+  memset( mIcons, 0, 14 * sizeof(ThotIcon) );
+#endif /* defined(_WX) */
 }
 
 /*----------------------------------------------------------------------
