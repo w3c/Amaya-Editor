@@ -302,7 +302,6 @@ Document            doc;
    int                 i;
 
    elType->ElTypeNum = 0;
-   elType->ElSSchema = NULL;
    /* search in MathMLElemMappingTable */
    i = 0;
    do
@@ -311,7 +310,8 @@ Document            doc;
        else
 	  {
 	  elType->ElTypeNum = MathMLElemMappingTable[i].ThotType;
-	  elType->ElSSchema = GetMathMLSSchema (doc);
+	  if (elType->ElSSchema == NULL)
+	    elType->ElSSchema = GetMathMLSSchema (doc);
 	  *mappedName = MathMLElemMappingTable[i].XMLname;
 	  *content = MathMLElemMappingTable[i].XMLcontents;
 	  }

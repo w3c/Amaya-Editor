@@ -3146,8 +3146,9 @@ int                 frame;
        TypeHasException (ExcIsCell, pAb->AbElement->ElTypeNumber, pAb->AbElement->ElStructSchema))
      /* don't pack a block or a cell but transmit to enclosing box */
      WidthPack (pAb->AbEnclosing, pSourceBox, frame);
-   else if (pBox->BxType != BoGhost &&
-       (pBox->BxContentWidth || (!pDimAb->DimIsPosition && pDimAb->DimMinimum)))
+   else if (pBox->BxType == BoGhost)
+     return;
+   else if (pBox->BxContentWidth || (!pDimAb->DimIsPosition && pDimAb->DimMinimum))
      {
 	/* indique que l'englobement horizontal est en cours de traitement */
 	pBox->BxCycles += 1;
@@ -3323,12 +3324,22 @@ int                 frame;
      }
    /* Si la boite prend la largeur minimum, il faut quand meme      */
    /* evaluer la largeur du contenu et verifier la regle du minimum */
-   else if (!pDimAb->DimIsPosition && pDimAb->DimMinimum
-	    && pBox->BxType != BoGhost)
+   else if (!pDimAb->DimIsPosition && pDimAb->DimMinimum)
      {
 	GiveEnclosureSize (pAb, frame, &width, &val);
 	ChangeDefaultWidth (pBox, pSourceBox, width, 0, frame);
      }
+   /* Si la boite prend la largeur du pere qui a une regle minimum, il   */
+   /* faut evaluer la largeur du contenu et verifier la regle du minimum */
+   else if (!pDimAb->DimIsPosition && pDimAb->DimAbRef == pAb->AbEnclosing &&
+	    pAb->AbEnclosing != NULL &&
+	    !pAb->AbEnclosing->AbWidth.DimIsPosition &&
+	    pAb->AbEnclosing->AbWidth.DimMinimum)
+     {
+	GiveEnclosureSize (pAb, frame, &val, &width);
+	ChangeDefaultWidth (pAb->AbEnclosing->AbBox, pSourceBox, width, 0, frame);
+     }
+
 }
 
 /*----------------------------------------------------------------------
@@ -3346,7 +3357,7 @@ int                 frame;
 
 #endif /* __STDC__ */
 {
-   int                 val, haut;
+   int                 val, height;
    int                 y, i, j, k;
    PtrAbstractBox      pChildAb;
    PtrAbstractBox      pRelativeAb;
@@ -3368,8 +3379,9 @@ int                 frame;
    if (pBox->BxType == BoBlock)
      /* don't pack a block or a cell but transmit to enclosing box */
      HeightPack (pAb->AbEnclosing, pSourceBox, frame);
-   else if (pBox->BxType != BoGhost &&
-	    (pBox->BxContentHeight || (!pDimAb->DimIsPosition && pDimAb->DimMinimum)))
+   else if (pBox->BxType == BoGhost)
+     return;
+   else if (pBox->BxContentHeight || (!pDimAb->DimIsPosition && pDimAb->DimMinimum))
      {
 
 	/* indique que l'englobement vertical est en cours de traitement */
@@ -3384,7 +3396,7 @@ int                 frame;
 	   y = 0;
 
 	/* Initialise la position extreme basse sur le cote superieur actuel */
-	haut = y;
+	height = y;
 	/* Initialise la position extreme haute sur le cote inferieur actuel */
 	val = y + pBox->BxHeight;
 	notEmpty = FALSE;
@@ -3449,8 +3461,8 @@ int                 frame;
 			     i = y + pChildBox->BxHeight;
 			  else
 			     i = pChildBox->BxYOrg + pChildBox->BxHeight;
-			  if (i > haut)
-			     haut = i;
+			  if (i > height)
+			     height = i;
 		       }
 	       }
 	     pChildAb = pChildAb->AbNext;
@@ -3458,12 +3470,12 @@ int                 frame;
 
 	val = -val + y;		/* Decalage de la position extreme haute */
 	if (notEmpty)
-	   haut += val;		/* Nouvelle position extreme basse */
-	if (haut == y && pAb->AbVolume == 0)
-	   GiveTextSize (pAb, &y, &haut, &i);
+	   height += val;		/* Nouvelle position extreme basse */
+	if (height == y && pAb->AbVolume == 0)
+	   GiveTextSize (pAb, &y, &height, &i);
 	else
-	   haut -= y;
-	y = haut - pBox->BxHeight;	/* Difference de hauteur */
+	   height -= y;
+	y = height - pBox->BxHeight;	/* Difference de hauteur */
 
 	/* Faut-il deplacer les boites englobees ? */
 	pChildAb = pAb->AbFirstEnclosed;
@@ -3530,7 +3542,7 @@ int                 frame;
 
 	/* Faut-il changer la hauteur de la boite englobante ? */
 	if (y != 0)
-	   ChangeDefaultHeight (pBox, pSourceBox, haut, frame);
+	   ChangeDefaultHeight (pBox, pSourceBox, height, frame);
 	/* Faut-il verifier l'englobement au dessus ? */
 	else if (toMove)
 	   if (pAb->AbEnclosing == NULL)
@@ -3556,10 +3568,20 @@ int                 frame;
      }
    /* Si la boite prend la hauteur minimum, il faut quand meme      */
    /* evaluer la hauteur du contenu et verifier la regle du minimum */
-   else if (!pDimAb->DimIsPosition && pDimAb->DimMinimum
-	    && pBox->BxType != BoGhost)
+   else if (!pDimAb->DimIsPosition && pDimAb->DimMinimum)
      {
-	GiveEnclosureSize (pAb, frame, &val, &haut);
-	ChangeDefaultHeight (pBox, pSourceBox, haut, frame);
+	GiveEnclosureSize (pAb, frame, &val, &height);
+	ChangeDefaultHeight (pBox, pSourceBox, height, frame);
      }
+   /* Si la boite prend la hauteur du pere qui a une regle minimum, il   */
+   /* faut evaluer la hauteur du contenu et verifier la regle du minimum */
+   else if (!pDimAb->DimIsPosition && pDimAb->DimAbRef == pAb->AbEnclosing &&
+	    pAb->AbEnclosing != NULL &&
+	    !pAb->AbEnclosing->AbHeight.DimIsPosition &&
+	    pAb->AbEnclosing->AbHeight.DimMinimum)
+     {
+	GiveEnclosureSize (pAb, frame, &val, &height);
+	ChangeDefaultHeight (pAb->AbEnclosing->AbBox, pSourceBox, height, frame);
+     }
+
 }

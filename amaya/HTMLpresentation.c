@@ -529,6 +529,7 @@ NotifyPresentation *event;
       }
   /* set the Style_ attribute ? */
   SetStyleAttribute (doc, el);
+  TtaSetDocumentModified (doc);
   return (ret);
 }
 

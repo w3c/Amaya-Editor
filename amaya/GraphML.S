@@ -7,8 +7,6 @@ DEFPRES GraphMLP;
 
 ATTR
    lid = text;
-   align = left_, center_, right_;
-   valign = top_, middle, bottom_;
    Invalid_attribute = TEXT;
    Ghost_restruct = TEXT;
 
@@ -26,6 +24,8 @@ STRUCT
 		      linewidth = integer;
 		      linestyle_ = solid_, dashed_, dotted_;
                       arrowhead = none, start, end_, both;
+		      align = left_, center_, right_;
+		      valign = top_, middle, bottom_;
 		      depth_ = integer;
 				IntLeftDistance = integer;
 				IntRightDistance = integer;
@@ -42,6 +42,8 @@ STRUCT
 		      linewidth;
 		      linestyle_;
 				IntEmptyShape = yes_, no_;
+		      align;
+		      valign;
 		      depth_;
 				IntLeftDistance;
 				IntRightDistance;
@@ -61,6 +63,8 @@ STRUCT
 		      linewidth;
 		      linestyle_;
 				IntEmptyShape;
+		      align;
+		      valign;
 		      depth_;
 				IntLeftDistance;
 				IntRightDistance;
@@ -78,6 +82,8 @@ STRUCT
 		      linewidth;
 		      linestyle_;
 				IntEmptyShape;
+		      align;
+		      valign;
 		      depth_;
 				IntLeftDistance;
 				IntRightDistance;
@@ -97,6 +103,8 @@ STRUCT
 		      linewidth;
 		      linestyle_;
 				IntEmptyShape;
+		      align;
+		      valign;
 		      depth_;
 				IntLeftDistance;
 				IntRightDistance;
@@ -117,6 +125,8 @@ STRUCT
 		      arrowhead;
 		      linewidth;
 		      linestyle_;
+		      align;
+		      valign;
 		      depth_;
 				IntLeftDistance;
 				IntRightDistance;
@@ -134,6 +144,8 @@ STRUCT
 		      linewidth;
 		      linestyle_;
 				IntEmptyShape;
+		      align;
+		      valign;
 		      depth_;
 				IntLeftDistance;
 				IntRightDistance;
@@ -154,6 +166,8 @@ STRUCT
 		      arrowhead;
 		      linewidth;
 		      linestyle_;
+		      align;
+		      valign;
 		      depth_;
 				IntLeftDistance;
 				IntRightDistance;
@@ -171,6 +185,8 @@ STRUCT
 		      linewidth;
 		      linestyle_;
 				IntEmptyShape;
+		      align;
+		      valign;
 		      depth_;
 				IntLeftDistance;
 				IntRightDistance;
@@ -185,6 +201,8 @@ STRUCT
 				IntPosX; IntPosY;
 		      width_;
 				IntWidth;
+		      align;
+		      valign;
 		      depth_;
 				IntLeftDistance;
 				IntRightDistance;
@@ -194,6 +212,8 @@ STRUCT
             Math
                 (ATTR position;
 				IntPosX; IntPosY;
+		      align;
+		      valign;
 		      depth_;
 				IntLeftDistance;
 				IntRightDistance;
@@ -208,11 +228,14 @@ STRUCT
                       vspace = text;
 		      linewidth;
 		      linestyle_;
+		      align;
+		      valign;
 		      depth_;
 				IntLeftDistance;
 				IntRightDistance;
 				IntUpDistance;
-				IntDownDistance)
+				IntDownDistance;
+				 ShowGroup = Yes_)
                 = LIST OF (GraphicalElement);
             END;
 

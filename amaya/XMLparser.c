@@ -446,20 +446,21 @@ char                c;
 {
   stackLevel--;
   if (stackLevel < XMLrootLevel && lastTagRead)
-     /* end of the XML object. Return to the calling parser */
-     XMLrootClosed = TRUE;
+    /* end of the XML object. Return to the calling parser */
+    XMLrootClosed = TRUE;
   else
-     {
-     currentLanguage = languageStack[stackLevel - 1];
-     if (elementStack[stackLevel] != NULL)
+    {
+      if (stackLevel >= 0)
+	currentLanguage = languageStack[stackLevel - 1];
+      if (elementStack[stackLevel] != NULL)
         {
-        /* restore the parser context */
-        currentParserCtxt = parserCtxtStack[stackLevel];
-        currentElement = elementStack[stackLevel];
-        currentElementClosed = TRUE;
-        XMLElementComplete (currentElement, currentDocument);
+	  /* restore the parser context */
+	  currentParserCtxt = parserCtxtStack[stackLevel];
+	  currentElement = elementStack[stackLevel];
+	  currentElementClosed = TRUE;
+	  XMLElementComplete (currentElement, currentDocument);
         }
-     }
+    }
   immAfterTag = TRUE;
 }
 
@@ -558,26 +559,41 @@ char		   *content;
 Document            doc;
 #endif
 {
-   PtrParserCtxt	ctxt;
+  PtrParserCtxt	ctxt;
 
-   /* Look at the current context if there is one */
-   if (currentParserCtxt != NULL)
-      (*(currentParserCtxt->MapElementType)) (XMLname, elType, mappedName, content, doc);
-   /* if not found, look at other contexts */
-   if (elType->ElSSchema == NULL)
-      {
-	/* initialize all parser contexts if not done yet */
-	if (firstParserCtxt == NULL)
-	  InitParserContexts ();
-	
-	ctxt = firstParserCtxt;
-	while (ctxt != NULL && elType->ElSSchema == NULL)
-	  {
-	    if (ctxt != currentParserCtxt)
+  /* initialize all parser contexts if not done yet */
+  if (firstParserCtxt == NULL)
+    InitParserContexts ();
+
+  /* Look at the current context if there is one */
+  if (currentParserCtxt != NULL)
+    (*(currentParserCtxt->MapElementType)) (XMLname, elType, mappedName, content, doc);
+  else if (elType->ElSSchema != NULL)
+    {
+      /* The schema is known -> search the corresponding context */
+      ctxt = firstParserCtxt;
+      while (ctxt != NULL && !TtaSameSSchemas (elType->ElSSchema, ctxt->XMLSSchema))
+	  ctxt = ctxt->NextParserCtxt;
+      /* get the Thot element number */
+      if (ctxt != NULL)
+	(*(ctxt->MapElementType)) (XMLname, elType, mappedName, content, doc);
+    }
+  /* if not found, look at other contexts */
+  if (elType->ElSSchema == NULL)
+    {
+      
+      ctxt = firstParserCtxt;
+      while (ctxt != NULL && elType->ElSSchema == NULL)
+	{
+	  if (ctxt != currentParserCtxt)
+	    {
 	      (*(ctxt->MapElementType)) (XMLname, elType, mappedName, content, doc);
-	    ctxt = ctxt->NextParserCtxt;
-	  }
-      }
+	      if (elType->ElSSchema != NULL)
+		ctxt->XMLSSchema = elType->ElSSchema;
+	    }
+	  ctxt = ctxt->NextParserCtxt;
+	}
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -849,7 +865,7 @@ char                c;
 	case 3:       /* reference */
 	   break;
 	}
-     if (currentParserCtxt != NULL)
+     if (currentParserCtxt != NULL && !HTMLStyleAttribute)
         (*(currentParserCtxt->AttributeComplete)) (currentAttribute,
 					currentElement, currentDocument);
      }

@@ -173,7 +173,6 @@ Document            doc;
    int                 i;
 
    elType->ElTypeNum = 0;
-   elType->ElSSchema = NULL;
    /* search in GraphMLElemMappingTable */
    i = 0;
    do
@@ -182,7 +181,8 @@ Document            doc;
        else
 	  {
 	  elType->ElTypeNum = GraphMLElemMappingTable[i].ThotType;
-	  elType->ElSSchema = GetGraphMLSSchema (doc);
+	  if (elType->ElSSchema == NULL)
+	    elType->ElSSchema = GetGraphMLSSchema (doc);
 	  *mappedName = GraphMLElemMappingTable[i].XMLname;
 	  *content = GraphMLElemMappingTable[i].XMLcontents;
 	  }

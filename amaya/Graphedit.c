@@ -629,7 +629,10 @@ boolean    GraphicsPRuleChange (event)
   presType = event->pRuleType;
   if (presType != PRVertPos && presType != PRHorizPos &&
       presType != PRHeight && presType != PRWidth)
-    return (ret); /* let Thot perform normal operation */
+    {
+      ret = ChangePRule (event);
+      return (ret); /* let Thot perform or not normal operation */
+    }
  
   el = event->element;
   doc = event->document;
@@ -992,7 +995,7 @@ int                 construct;
 	 TtaSetStructureChecking (0, doc);
 	 TtaInsertFirstChild (&child, newEl, doc);
 	 /* add an empty element */
-	 childType.ElTypeNum = HTML_EL_Division;
+	 childType.ElTypeNum = HTML_EL_Element;
 	 elem = TtaNewElement (doc, childType);
 	 TtaInsertFirstChild (&elem, child, doc);
 	 TtaSetStructureChecking (1, doc);

@@ -852,7 +852,6 @@ RULES
 	BEGIN
 	CreateBefore (GROUP_S);
 	CreateWith (VerticalLine);
-	CreateLast (DottedBox);
 	IN Graph_Structure_view BEGIN
 		Size: DOC_FONTSIZE;
 		Width: Enclosing . Width - STRUCT_INDENT;
@@ -1051,5 +1050,8 @@ ATTRIBUTES
 	IN Graph_Structure_view
 		VertPos: Top = Previous . Bottom;
 	END;
+
+   ShowGroup (Group):
+	CreateLast (DottedBox);
 
 END
