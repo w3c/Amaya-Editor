@@ -1206,6 +1206,8 @@ boolean		    history;
       strcpy (pathname, DirectoryName);
       strcat (pathname, DIR_STR);
       strcat (pathname, tempdocument);
+      strcpy (SavePath, DirectoryName);
+      strcpy (SaveName, tempdocument);
       ResetStop (doc);
       InitSaveObjectForm (doc, 1, SavingFile, pathname);
     }
