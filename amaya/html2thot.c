@@ -367,7 +367,7 @@ MathEntity        MathEntityTable[] =
    {"zzzz", -1, ' '}		/* this last entry is required */
 };
 
-/* mapping table of HTML elements */
+/* mapping table of MathML elements */
 
 static GIMapping    MathMLGIMappingTable[] =
 {

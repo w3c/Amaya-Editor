@@ -483,6 +483,7 @@ PtrElement          pEl;
        FreeTextBuffer (pEl->ElText);
        pEl->ElText = NULL;
      }
+   pEl->ElStructSchema = NULL;
    pEl->ElNext = PtFree_Element;
    PtFree_Element = pEl;
    NbFree_Element++;

@@ -274,7 +274,7 @@ boolean             del;
 
 	/* S'il n'y a pas de pave selectionne */
 	pSelAb = *pAb;
-	if (pSelAb != NULL && moveSelection)
+	if (pSelAb != NULL && pSelAb->AbElement != NULL && moveSelection)
 	   /* signale le changement de selection a l'editeur */
 	   if (pSelAb->AbVolume == 0)
 	      ChangeSelection (*frame, pSelAb, 0, FALSE, TRUE, FALSE, FALSE);

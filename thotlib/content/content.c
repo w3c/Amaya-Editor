@@ -434,21 +434,7 @@ boolean             removeAbsBox;
 				 /* met a jour la longueur du premier element */
 				 pEl1->ElTextLength += pEl2->ElTextLength;
 				 pEl1->ElVolume = pEl1->ElTextLength;
-				 if (withAppEvent)
-				   {
-				      /* envoie l'evenement ElemTextModify.Post a qui le demande */
-				      pAsc = pEl1;
-				      while (pAsc != NULL)
-					{
-					   notifyTxt.event = TteElemTextModify;
-					   notifyTxt.document = (Document) IdentDocument (pDoc);
-					   notifyTxt.element = (Element) pAsc;
-					   notifyTxt.target = (Element) pEl1;
-					   notifyTxt.targetdocument = (Document) IdentDocument (pDoc);
-					   CallEventType ((NotifyEvent *) & notifyTxt, FALSE);
-					   pAsc = pAsc->ElParent;
-					}
-				   }
+
 				 /* reporte les references au 2eme element sur le premier */
 				 if (pEl2->ElReferredDescr != NULL)
 				    /* le 2eme element est reference */
@@ -510,9 +496,24 @@ boolean             removeAbsBox;
 				   }
 				 /* dechaine le 2eme element */
 				 RemoveElement (pEl2);
+
 				 if (withAppEvent)
+				    {
+				    /* envoie l'evenement ElemTextModify.Post a qui le demande */
+				    pAsc = pEl1;
+				    while (pAsc != NULL)
+					{
+					   notifyTxt.event = TteElemTextModify;
+					   notifyTxt.document = (Document) IdentDocument (pDoc);
+					   notifyTxt.element = (Element) pAsc;
+					   notifyTxt.target = (Element) pEl1;
+					   notifyTxt.targetdocument = (Document) IdentDocument (pDoc);
+					   CallEventType ((NotifyEvent *) & notifyTxt, FALSE);
+					   pAsc = pAsc->ElParent;
+					}
 				    /* envoie l'evenement ElemDelete.Post pour le 2eme elem. */
 				    CallEventType ((NotifyEvent *) & notifyEl, FALSE);
+				    }
 				 /* modifie la selection si l'element retire' constitue l'une */
 				 /* des extremites de cette selection */
 				 if (pEl2 == FirstSelectedElement)

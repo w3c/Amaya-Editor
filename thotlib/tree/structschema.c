@@ -1561,11 +1561,10 @@ boolean             inTree;
 				 {
 				    pEl1 = pEl->ElParent->ElFirstChild;
 				    while (pEl1 != NULL && ok)
-				       if (EquivalentSRules (typeNum, pSS,
-							     pEl1->ElTypeNumber, pEl1->ElStructSchema, pEl->ElParent))
+				      if (pRule->SrComponent[compNum-1] == pEl1->ElTypeNumber)
 					  /* il existe deja */
 					  ok = FALSE;
-				       else
+				      else
 					  pEl1 = pEl1->ElNext;
 				 }
 			    }

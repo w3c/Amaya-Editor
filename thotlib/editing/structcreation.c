@@ -400,7 +400,7 @@ PtrDocument         pDoc;
 	/* on coupe en deux l'element feuille dans l'arbre abstrait */
 	/* ce qui cree un deuxieme element feuille juste apres l'element */
 	/* initial */
-	SplitTextElement (*firstSel, *firstChar, pDoc, TRUE, &pSecond);
+	SplitTextElement (*firstSel, *firstChar, pDoc, FALSE, &pSecond);
 	if (pSecond->ElNext == NULL)
 	   /* l'element qui a ete coupe etait le dernier et ne l'est plus */
 	   ChangeFirstLast (*firstSel, pDoc, FALSE, TRUE);
@@ -474,10 +474,11 @@ PtrDocument         pDoc;
 	pNextEl = lastSel->ElNext;
 	FwdSkipPageBreak (&pNextEl);
 	/* on coupe en deux la feuille de texte dans l'arbre abstrait */
-	SplitTextElement (lastSel, lastChar, pDoc, TRUE, &pSecond);
+	SplitTextElement (lastSel, lastChar, pDoc, FALSE, &pSecond);
 	/* construit les paves de la 2eme partie et met a jours ceux de */
 	/* la premiere partie */
-	BuildAbsBoxSpliText (lastSel, pSecond, pNextEl, pDoc);
+	if (pSecond != NULL && pSecond->ElStructSchema != NULL)
+	  BuildAbsBoxSpliText (lastSel, pSecond, pNextEl, pDoc);
      }
 }
 

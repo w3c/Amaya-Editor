@@ -2373,6 +2373,8 @@ PtrDocument         pDoc;
 {
    int                 view;
 
+   if (pE == NULL || pE->ElStructSchema == NULL)
+     return;
    /* indique qu'il faut creer tous les paves sans limite de volume */
    if (!AssocView (pE))
       /* nombre de vues du document */
@@ -5967,6 +5969,9 @@ PtrElement         *pLib;
                                                               TRUE,  /* Notifier l'application => evenements */
                                                               TRUE)) /* Detruire les paves du 2eme element */
                                         return FALSE;
+				     if (pEl->ElStructSchema == NULL)
+				       /* pEl a ete libere' par l'application */
+				       return equal;
 				     /* teste si pEl est le dernier fils de son pere, */
 				     /* abstraction faite des marques de page */
 				     /* fusionne les deux elements de texte */

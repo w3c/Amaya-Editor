@@ -609,6 +609,44 @@ void                InitMathML ()
    mIcons[11] = TtaCreatePixmapLogo (greek_xpm);
 }
 
+/*----------------------------------------------------------------------
+ CheckMROW
+ If el is a MROW element with only one child, remove the MROW element
+ and replace it by its child.
+ -----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void CheckMROW (Element* el, Document doc)
+#else /* __STDC__*/
+static void CheckMROW (el, doc)
+  Element* el;
+  Document doc;
+#endif /* __STDC__*/
+{
+  Element	firstChild, child;
+  ElementType	elType;
+
+  elType = TtaGetElementType (*el);
+  if (elType.ElTypeNum == MathML_EL_MROW)
+     /* the parent of the deleted element is a MROW */
+     {
+     firstChild = TtaGetFirstChild (*el);
+     child = firstChild;
+     TtaNextSibling (&child);
+     if (child == NULL)
+       /* there is only one element in the MROW. Remove the MROW */
+       {
+       TtaSetDisplayMode (doc, DeferredDisplay);
+       TtaSetStructureChecking (0, doc);
+       TtaRemoveTree (firstChild, doc);
+       TtaInsertSibling (firstChild, *el, TRUE, doc);
+       TtaDeleteTree (*el, doc);
+       *el = NULL;
+       TtaSetStructureChecking (1, doc);
+       TtaSetDisplayMode (doc, DisplayImmediately);
+       }
+     }
+}
+
 
 /*----------------------------------------------------------------------
    GetCharType
@@ -651,6 +689,32 @@ static int GetCharType (c, alphabet)
   return ret;
 }
 
+
+/*----------------------------------------------------------------------
+   RemoveAttr
+   Remove attribute of type attrTypeNum from element el, if it exists
+ -----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void RemoveAttr (Element el, Document doc, int attrTypeNum)
+#else /* __STDC__*/
+static void RemoveAttr (el, doc, attrTypeNum)
+     Element el;
+     Document doc;
+     int attrTypeNum;
+#endif /* __STDC__*/
+{
+  ElementType	elType;
+  AttributeType attrType;
+  Attribute	attr;
+
+  elType = TtaGetElementType (el);
+  attrType.AttrSSchema = elType.ElSSchema;
+  attrType.AttrTypeNum = attrTypeNum;
+  attr = TtaGetAttribute (el, attrType);
+  if (attr != NULL)
+      TtaRemoveAttribute (el, attr, doc);
+}
+
 /*----------------------------------------------------------------------
    MathSetAttributes
    Set attributes of element el according to its content.
@@ -674,8 +738,140 @@ static void MathSetAttributes (el, doc)
      }
   if (elType.ElTypeNum == MathML_EL_MO)
      SetAddspaceAttr (el, doc);
-  else if (elType.ElTypeNum == MathML_EL_MI)
-     SetFontslantAttr (el, doc);		
+  else
+     RemoveAttr (el, doc, MathML_ATTR_addspace);
+  if (elType.ElTypeNum == MathML_EL_MI)
+     SetFontslantAttr (el, doc);
+  else
+     RemoveAttr (el, doc, MathML_ATTR_fontslant);		
+}
+
+/*----------------------------------------------------------------------
+   MergeMathEl
+   merge element el2 with element el
+ -----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void MergeMathEl (Element el, Element el2, boolean before, Document doc)
+#else /* __STDC__*/
+static void MergeMathEl (el, el2, before, doc)
+     Element el;
+     Element el2;
+     boolean before;
+     Document doc;
+#endif /* __STDC__*/
+{
+  Element	textEl2, nextEl, prevEl;
+
+  textEl2 = TtaGetFirstChild (el2);
+  if (before)
+     prevEl = NULL;
+  else
+     prevEl = TtaGetLastChild (el);
+  while (textEl2 != NULL)
+     {
+     nextEl = textEl2;
+     TtaNextSibling (&nextEl);
+     TtaRemoveTree (textEl2, doc);
+     if (prevEl == NULL)
+	TtaInsertFirstChild (&textEl2, el, doc);
+     else
+        TtaInsertSibling (textEl2, prevEl, FALSE, doc);
+     prevEl = textEl2;
+     textEl2 = nextEl;
+     }
+  TtaDeleteTree (el2, doc);
+  MathSetAttributes (el, doc);
+}
+
+/*----------------------------------------------------------------------
+   TextLength
+   return the total length of the text contained in element el.
+ -----------------------------------------------------------------------*/
+#ifdef __STDC__
+static int TextLength (Element el)
+#else /* __STDC__*/
+static int TextLength (el)
+     Element el;
+#endif /* __STDC__*/
+{
+  int len;
+  Element child;
+
+  len = 0;
+  child = TtaGetFirstChild (el);
+  while (child != NULL)
+    {
+    len += TtaGetTextLength (child);
+    TtaNextSibling (&child);
+    }
+  return len;
+}
+
+/*----------------------------------------------------------------------
+   ClosestLeaf
+   return the Closest TEXT element for element el;
+ -----------------------------------------------------------------------*/
+#ifdef __STDC__
+static Element ClosestLeaf (Element el, int* pos)
+#else /* __STDC__*/
+static Element ClosestLeaf (el, pos)
+     Element el;
+     int* pos;
+#endif /* __STDC__*/
+{
+   Element	elem, prev, next, child, leaf, parent;
+   ElementType	elType;
+
+   elem = NULL;
+   leaf = NULL;
+   prev = NULL;
+   next = NULL;
+   parent = el;
+   do
+      {
+      prev = parent;  TtaPreviousSibling (&prev);
+      if (prev == NULL)
+	 {
+	 next = parent;  TtaNextSibling (&next);
+	 if (next == NULL)
+	    {
+	    parent = TtaGetParent (parent);
+	    }
+	 }
+      }
+   while (next == NULL && prev == NULL && parent != NULL);
+   if (prev != NULL)
+      {
+      child = prev;
+      while (child != NULL)
+	{
+	leaf = child;
+	child = TtaGetLastChild (child);
+	}
+      }
+   else
+      if (next != NULL)
+        {
+	child = next;
+	while (child != NULL)
+	   {
+	   leaf = child;
+	   child = TtaGetFirstChild (child);
+	   }
+	}
+   if (leaf != NULL)
+      {
+      elem = leaf;
+      elType = TtaGetElementType (leaf);
+      if (elType.ElTypeNum == MathML_EL_TEXT_UNIT)
+	{
+	if (prev != NULL)
+	   *pos = TtaGetTextLength (leaf) + 1;
+	else
+	   *pos = 1;
+	}
+      }
+   return elem;
 }
 
 /*----------------------------------------------------------------------
@@ -690,140 +886,274 @@ void ParseMathString (event)
      NotifyOnTarget *event;
 #endif /* __STDC__*/
 {
-
-  Element	el, textEl, prevEl, curEl, firstEl, selEl, newSelEl, newTextEl;
+  Element	el, selEl, theElem, prevEl, nextEl, textEl, newEl, lastEl,
+		firstEl, newSelEl, firstTextEl, prev, next, parent;
   Document	doc;
-  ElementType	elType;
-  int		len, i, charType, curElType, curLen, firstSelChar, lastSelChar,
-		newSelChar;
-  char		newChar[3];
-#define TXTBUFLEN 200
-  unsigned char	text[TXTBUFLEN];
+  ElementType	elType, elType2;
+  SSchema	MathMLSchema;
+  int		firstSelChar, lastSelChar, newSelChar, len, totLen, i, j, start;
+  char		alphabet, c;
   Language	lang;
-  char		alphabet;
-  boolean	spaceBefore, before;
+#define TXTBUFLEN 200
+  unsigned char text[TXTBUFLEN];
+  char		language[TXTBUFLEN];
+  unsigned char	mathType[TXTBUFLEN];
 
-  el = event->element;	/* the element whose content has been changed */
-  /* process all text elements within the modified element */
-  textEl = TtaGetFirstChild (el);
-  if (textEl != NULL)
+  doc = event->document;
+  theElem = event->element;  /* the element whose content has been changed */
+  /* get the current selection */
+  TtaGiveFirstSelectedElement (doc, &selEl, &firstSelChar, &lastSelChar);
+  newSelEl = NULL;
+
+  elType = TtaGetElementType (theElem);
+  MathMLSchema = elType.ElSSchema;
+  prevEl = NULL;
+  el = theElem;
+  TtaPreviousSibling (&el);
+  if (el != NULL)
      {
-     /* some initializations */
-     doc = event->document;
      elType = TtaGetElementType (el);
-     curElType = 0;
-     curEl = NULL;
-     prevEl = el;
-     firstEl = NULL;
-     spaceBefore = FALSE;
-     curLen = 0;
-     newSelEl = NULL;
-     TtaSetDisplayMode (doc, DeferredDisplay);
-     TtaSetStructureChecking (0, doc);
-     while (textEl != NULL)
-	{
-        len = TtaGetTextLength (textEl);
-        if (len > 0)
-	  {
-	  /* get the current selection */
-	  TtaGiveFirstSelectedElement (doc, &selEl, &firstSelChar, &lastSelChar);
-	  if (selEl != textEl && selEl != el)
-	     selEl = NULL;
-	  else
-	     if (firstSelChar < 1)
-	        firstSelChar = 1;
-	  /* get the content */
-	  len = TXTBUFLEN;
-	  TtaGiveTextContent (textEl, text, &len, &lang);
-	  alphabet = TtaGetAlphabet (lang);
-	  /* parse the content */
-	  for (i = 0; i < len; i++)
-	    {
-	    if (text[i] == ' ')
-	      spaceBefore = TRUE;
-	    else
-	      {
-	      charType = GetCharType (text[i], alphabet);
-	      if (firstEl == NULL || charType != curElType)
-	        /* create a new element */
-	        {
-	        if (prevEl != el)
-		  MathSetAttributes (prevEl, doc);
-	        elType.ElTypeNum = charType;
-	        curElType = charType;
-	        curEl = TtaNewElement (doc, elType);
-	        if (firstEl == NULL)
-		   {
-		   before = TRUE;
-		   firstEl = curEl;
-		   }
-	        else
-		   before = FALSE;
-	        TtaInsertSibling (curEl, prevEl, before, doc);
-	        elType.ElTypeNum = MathML_EL_TEXT_UNIT;
-	        newTextEl = TtaNewElement (doc, elType);
-	        TtaInsertFirstChild (&newTextEl, curEl, doc);
-	        TtaSetTextContent (newTextEl, NULL, lang, doc);
-	        curLen = 0;
-	        spaceBefore = FALSE;
-	        prevEl = curEl;
-	        }
+     if (elType.ElSSchema == MathMLSchema &&
+	 (elType.ElTypeNum == MathML_EL_MTEXT ||
+	 elType.ElTypeNum == MathML_EL_MI ||
+	 elType.ElTypeNum == MathML_EL_MO ||
+	 elType.ElTypeNum == MathML_EL_MN ||
+	 elType.ElTypeNum == MathML_EL_MS))
+	prevEl = el;
+     }
+  nextEl = NULL;
+  el = theElem;
+  TtaNextSibling (&el);
+  if (el != NULL)
+     {
+     elType = TtaGetElementType (el);
+     if (elType.ElSSchema == MathMLSchema &&
+	 (elType.ElTypeNum == MathML_EL_MTEXT ||
+	 elType.ElTypeNum == MathML_EL_MI ||
+	 elType.ElTypeNum == MathML_EL_MO ||
+	 elType.ElTypeNum == MathML_EL_MN ||
+	 elType.ElTypeNum == MathML_EL_MS))
+	nextEl = el;
+     }
 
-	      if (selEl != NULL && newSelEl == NULL)
-	        if (i >= firstSelChar - 1)
-		  {
-		  newSelEl = newTextEl;
-		  newSelChar = curLen + 1;
-		  }
-
-	      if (spaceBefore && curLen > 0)
-	        {
-	        newChar[0] = ' '; newChar[1] = text[i]; newChar[2] = '\0';
-	        curLen+= 2;
-	        spaceBefore = FALSE;
-	        }
-	      else
-	        {
-	        newChar[0] = text[i]; newChar[1] = '\0';
-	        curLen++;
-	        }
-	      TtaAppendTextContent (newTextEl, newChar, doc);
-	      }
-	    }
-	  /* end of parsing */
-	  /* the last element created is now complete. Associate the
-	     attribute that fits with its content */
-	  if (curEl != NULL)
-	    MathSetAttributes (curEl, doc);
-	  if (selEl != NULL && newSelEl == NULL)
+  i = 0;
+  totLen = 0;
+  elType = TtaGetElementType (theElem);
+  firstTextEl = TtaGetFirstChild (theElem);
+  textEl = firstTextEl;
+  while (textEl != NULL)
+       {
+       len = TtaGetTextLength (textEl);
+       /* selection */
+       if (selEl == textEl)
+	 {
+	   newSelChar = totLen + firstSelChar;
+	   newSelEl = textEl;
+	   TtaUnselect (doc);
+	 }
+       /* get the content and analyze it */
+       if (len > 0)
+          {
+          len = TXTBUFLEN - totLen;
+          TtaGiveTextContent (textEl, &text[i], &len, &lang);
+          alphabet = TtaGetAlphabet (lang);
+	  for (j = 0; j < len; j++)
 	     {
-	     newSelEl = newTextEl;
-	     newSelChar = curLen + 1;
+	     language[i+j] = lang;
+	     mathType[i+j] = (unsigned char) GetCharType (text[i+j], alphabet);
 	     }
+	  i+= len;
+	  totLen += len;
 	  }
-	  TtaNextSibling (&textEl);
-	}
+       TtaNextSibling (&textEl);
+       }
 
-     /* remove the element that has been processed */
-     TtaDeleteTree (el, doc);
+  /* try to identify numbers like: 0.123  1,000,000  2.1e10 */
+  for (i = 1; i < totLen; i++)
+    {
+    if ((text[i] == ',' || text[i] == '.' || text[i] == 'e') &&
+         mathType[i-1] == MathML_EL_MN &&
+	 i < totLen-1 &&mathType[i+1] == MathML_EL_MN)
+	/* comma or point between two digits: the comma or point is part of
+	   the number */
+	  {
+	  mathType[i] = (unsigned char) MathML_EL_MN;
+	  i++;
+	  }
+    }
 
-     /* create a MROW element that encompasses the new elements
-	if necessary */
-     CreateParentMROW (firstEl, doc);
+  TtaSetDisplayMode (doc, DeferredDisplay);
+  TtaSetStructureChecking (0, doc);
+  firstEl = NULL;
+  start = 0;
+  lastEl = NULL;
+  if (totLen == 0)
+    /* the character string is empty. Remove the parent element (MI, MN, MO...)
+       if it does not contain any other element */
+    {
+    el = firstTextEl;
+    TtaPreviousSibling (&el);
+    if (el == NULL)
+       {
+       el = firstTextEl;
+       TtaNextSibling (&el);
+       if (el == NULL)
+	  /* the text element has no sibling */
+	  {
+	  if (newSelEl != NULL)
+	     newSelEl = ClosestLeaf (theElem, &newSelChar);
+	  el = TtaGetParent (theElem);
+	  TtaDeleteTree (theElem, doc);
+	  theElem = NULL;
+	  CheckMROW (&el, doc);
+	  if (el != NULL)
+	   if (TtaGetFirstChild (el) == NULL)
+	      {
+	      elType.ElTypeNum = MathML_EL_Construct;
+	      newEl = TtaNewElement (doc, elType);
+	      TtaInsertFirstChild (&newEl, el, doc);
+	      if (newSelEl != NULL)
+	         newSelEl = newEl;
+	      }
+	  firstEl = NULL;
+	  prevEl = NULL;
+	  nextEl = NULL;
+	  }
+       }
+    }
+  else
+    /* the modified character string is not empty. Parse it */
+    for (i = 1; i <= totLen; i++)
+     if (mathType[i] != mathType[i-1] ||
+	 language[i] != language[i-1] ||
+	 i == totLen)
+       /* create a new element */
+       {
+       if (lastEl == NULL)
+	  {
+	  newEl = theElem;
+	  elType = TtaGetElementType (theElem);
+	  if (elType.ElTypeNum != mathType[i-1])
+	     {
+	     prev = theElem;
+	     TtaPreviousSibling (&prev);
+	     if (prev == NULL)
+		{
+		next = theElem;
+		TtaNextSibling (&next);
+		if (next == NULL)
+		   parent = TtaGetParent (theElem);
+		}
+	     TtaRemoveTree (theElem, doc);
+	     ChangeElementType (theElem, mathType[i-1]);
+	     if (prev != NULL)
+	        TtaInsertSibling (theElem, prev, FALSE, doc);
+	     else if (next != NULL)
+	        TtaInsertSibling (theElem, next, TRUE, doc);
+	     else
+	        TtaInsertFirstChild (&theElem, parent, doc);
+	     
+	     }
+	  textEl = TtaGetFirstChild (theElem);
+	  while (textEl != NULL)
+	     /* delete all text elements except the modified element */
+	     {
+	     next = textEl;
+	     TtaNextSibling (&next);
+	     if (textEl != event->target)
+		TtaDeleteTree (textEl, doc);
+	     textEl = next;
+	     }
+	  textEl = event->target;
+	  firstEl = theElem;
+	  }
+       else
+	  {
+          elType.ElTypeNum = mathType[i-1];
+          newEl = TtaNewElement (doc, elType);
+	  TtaInsertSibling (newEl, lastEl, FALSE, doc);
+	  elType.ElTypeNum = MathML_EL_TEXT_UNIT;
+	  textEl = TtaNewElement (doc, elType);
+	  TtaInsertFirstChild (&textEl, newEl, doc);
+          }
+       while (text[start] == ' ')
+	  start++;
+       j = i - 1;
+       while (text[j] == ' ' && j > start)
+	  j--;
+       j++;
+       c = text[j];
+       text[j] = '\0';
+       TtaSetTextContent (textEl, &text[start], language[start], doc);
+       text[j] = c;
+       start = i;
+       lastEl = newEl;
+       MathSetAttributes (newEl, doc);
+       if (newSelEl != NULL)
+	  {
+	  newSelEl = textEl;
+	  if (newSelChar < j)
+	     if (newSelChar < start)
+		newSelChar = 1;
+	     else
+		newSelChar -= start;
+	  }
+       }
 
-     TtaSetStructureChecking (1, doc);
-     TtaSetDisplayMode (doc, DisplayImmediately);
+  /* try to merge the first element processed with its previous sibling */
+  if (prevEl != NULL && firstEl != NULL)
+    {
+    elType = TtaGetElementType (prevEl);
+    elType2 = TtaGetElementType (firstEl);
+    if (elType.ElTypeNum == elType2.ElTypeNum &&
+        elType.ElSSchema == elType2.ElSSchema)
+       {
+       if (newSelEl == prevEl)
+	  newSelEl = firstEl;
+       else if (newSelEl == firstEl)
+	  newSelChar += TextLength (prevEl);
+       MergeMathEl (firstEl, prevEl, TRUE, doc);
+       }
+    }
+  /* try to merge the last element processed with its next sibling */
+  if (nextEl != NULL && lastEl != NULL)
+    {
+    elType = TtaGetElementType (nextEl);
+    elType2 = TtaGetElementType (lastEl);
+    if (elType.ElTypeNum == elType2.ElTypeNum &&
+        elType.ElSSchema == elType2.ElSSchema)
+       {
+       if (newSelEl == nextEl)
+	  {
+	  newSelEl = lastEl;
+	  newSelChar += TextLength (lastEl);
+	  }
+       MergeMathEl (lastEl, nextEl, FALSE, doc);
+       }
+    }
 
-     /* set a new selection */
-     if (newSelEl != NULL)
-	TtaSelectString (doc, newSelEl, newSelChar, newSelChar-1);
+  /* Create a MROW element that encompasses the new elements if necessary */
+  if (firstEl != NULL)
+    CreateParentMROW (firstEl, doc);
+
+  TtaSetStructureChecking (1, doc);
+  TtaSetDisplayMode (doc, DisplayImmediately);
+
+  /* set a new selection */
+  if (newSelEl != NULL)
+     {
+     elType = TtaGetElementType (newSelEl);
+     if (elType.ElTypeNum == MathML_EL_TEXT_UNIT)
+        TtaSelectString (doc, newSelEl, newSelChar, newSelChar-1);
+     else
+	TtaSelectElement (doc, newSelEl);
      }
 }
 
 /*----------------------------------------------------------------------
  MathElementPasted
  An element has been pasted in a MathML structure.
- Create place holders before and after if necessary.
+ Create place holders before and after the pasted elements if necessary.
  -----------------------------------------------------------------------*/
 #ifdef __STDC__
 void MathElementPasted (NotifyElement *event)
@@ -841,7 +1171,7 @@ void MathElementPasted(event)
 
 /*----------------------------------------------------------------------
  MathElementDeleted
- An element has been deleted in a MathML structure.
+ An element has been deleed in a MathML structure.
  Remove the enclosing MROW element if it has only one child.
  -----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -851,7 +1181,7 @@ void MathElementDeleted(event)
      NotifyElement *event;
 #endif /* __STDC__*/
 {
-  /**** code to be written ****/
+   CheckMROW (&event->element, event->document);
 }
 
 #endif /* MATHML */

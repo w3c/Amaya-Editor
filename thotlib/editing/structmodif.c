@@ -677,7 +677,7 @@ Language            lang;
    int                 len;
 
    pEl = pAb->AbElement;
-   if (pEl != NULL)
+   if (pEl != NULL && pEl->ElStructSchema != NULL)
      if (pEl->ElLeafType == LtText)
      {
 	pDoc = DocumentOfElement (pEl);
@@ -697,24 +697,30 @@ Language            lang;
 	       }
 	     else if (pEl->ElTextLength > 0)
 		pEl = pNextEl;
-	     CreateAllAbsBoxesOfEl (pNextEl, pDoc);
-	     AbstractImageUpdated (pDoc);
+	     if (pNextEl != NULL && pNextEl->ElStructSchema != NULL)
+	       {
+		 CreateAllAbsBoxesOfEl (pNextEl, pDoc);
+		 AbstractImageUpdated (pDoc);
+	       }
 	  }
-	/* change la langue dans la feuille de texte */
-	ChangeLanguage (pDoc, pEl, lang, TRUE);
-	/* met l'attribut langue sur l'element */
-	GetAttribute (&pAttr);
-	pAttr->AeAttrSSchema = pEl->ElStructSchema;
-	pAttr->AeAttrNum = 1;
-	pAttr->AeDefAttr = FALSE;
-	pAttr->AeAttrType = AtTextAttr;
-	GetTextBuffer (&pAttr->AeAttrText);
-	CopyStringToText (TtaGetLanguageName (lang), pAttr->AeAttrText, &len);
-	AttachAttrWithValue (pEl, pDoc, pAttr);
-	DeleteAttribute (NULL, pAttr);
-	AbstractImageUpdated (pDoc);
-	RedisplayDocViews (pDoc);
-	SelectElement (pDoc, pEl, FALSE, FALSE);
+	if (pEl != NULL && pEl->ElStructSchema != NULL)
+	  {
+	    /* change la langue dans la feuille de texte */
+	    ChangeLanguage (pDoc, pEl, lang, TRUE);
+	    /* met l'attribut langue sur l'element */
+	    GetAttribute (&pAttr);
+	    pAttr->AeAttrSSchema = pEl->ElStructSchema;
+	    pAttr->AeAttrNum = 1;
+	    pAttr->AeDefAttr = FALSE;
+	    pAttr->AeAttrType = AtTextAttr;
+	    GetTextBuffer (&pAttr->AeAttrText);
+	    CopyStringToText (TtaGetLanguageName (lang), pAttr->AeAttrText, &len);
+	    AttachAttrWithValue (pEl, pDoc, pAttr);
+	    DeleteAttribute (NULL, pAttr);
+	    AbstractImageUpdated (pDoc);
+	    RedisplayDocViews (pDoc);
+	    SelectElement (pDoc, pEl, FALSE, FALSE);
+	  }
      }
 }
 
@@ -1448,13 +1454,14 @@ int                 lastChar;
 {
    PtrElement          pEl, pEl1, pLast, pFirstFree, pFree;
    PtrElement          SelectedEl[MAX_SEL_ELEM];
-
+   boolean             select;
    /* pointeurs sur les elements selectionnes si SelContinue est faux */
    int                 NSelectedEls, index, prevLen, len;
    boolean             discreteSelection;
 
    if (firstSel == NULL)
       return;
+   select = TRUE;
    pLast = NULL;
    pFirstFree = NULL;		/* pas d'element a liberer */
    pEl = firstSel;
@@ -1479,35 +1486,45 @@ int                 lastChar;
 	if (pEl != firstSel || firstChar <= 1)
 	   MergeTextLeaves (&pEl, &pFirstFree, &pDoc);
 
-	if (pEl1 == firstSel && pEl != pEl1)
-	   /* il y a eu fusion du premier element qui a change' d'attribut */
+	if (pEl->ElStructSchema == NULL)
+	  /* element pEl has been freed by application during merge */
 	  {
-	     firstSel = pEl;
-	     firstChar = prevLen + 1;
+	  pEl = NULL;
+	  select = FALSE;
 	  }
-
-	if (pEl1 == lastSel && pEl != pEl1)
-	   /* il y a eu fusion du dernier element qui a change' d'attribut */
+	else
 	  {
-	     lastSel = pEl;
-	     if (lastChar == 0)
-		lastChar = len + 1;
-	     lastChar += prevLen;
+	    if (pEl1 == firstSel && pEl != pEl1)
+	      /* il y a eu fusion du premier element qui a change' d'attribut */
+	      {
+		firstSel = pEl;
+		firstChar = prevLen + 1;
+	      }
+	    
+	    if (pEl1 == lastSel && pEl != pEl1)
+	      /* il y a eu fusion du dernier element qui a change' d'attribut */
+	      {
+		lastSel = pEl;
+		if (lastChar == 0)
+		  lastChar = len + 1;
+		lastChar += prevLen;
+	      }
+	    /* dernier element traite' */
+	    pLast = pEl;
+	    
+	    if (discreteSelection)
+	      /* la selection est discontinue, on met a jour la liste des */
+	      /* elements a re-selectionner */
+	      SelectedEl[NSelectedEls++] = pEl;
+	    /* cherche l'element a traiter ensuite */
+	    pEl = NextInSelection (pEl, lastSel);
 	  }
-	/* dernier element traite' */
-	pLast = pEl;
-
-	if (discreteSelection)
-	   /* la selection est discontinue, on met a jour la liste des */
-	   /* elements a re-selectionner */
-	   SelectedEl[NSelectedEls++] = pEl;
-	/* cherche l'element a traiter ensuite */
-	pEl = NextInSelection (pEl, lastSel);
      }
    /* cherche si le dernier element traite' peut fusionner avec le suivant */
    pEl1 = pLast;
-   if (pEl1->ElTerminal)
-      if (pEl1->ElLeafType == LtText)
+   if (select)
+     if (pEl1->ElTerminal)
+       if (pEl1->ElLeafType == LtText)
 	 if (lastChar == 0 || lastChar > pEl1->ElTextLength)
 	   {
 	      prevLen = pEl1->ElTextLength;
@@ -1529,28 +1546,32 @@ int                 lastChar;
    while (pEl != NULL)
      {
 	pEl1 = pEl->ElNext;
-	DeleteElement (&pEl);
+	if (pEl->ElStructSchema != NULL)
+	   DeleteElement (&pEl);
 	pEl = pEl1;
      }
-   /* retablit la selection */
-   if (lastChar > 0)
-      lastChar--;
-   if (firstChar > 1)
+   if (select)
      {
-	if (firstSel == lastSel)
-	   prevLen = lastChar;
-	else
-	   prevLen = 0;
-	SelectString (pDoc, firstSel, firstChar, prevLen);
+       /* retablit la selection */
+       if (lastChar > 0)
+	 lastChar--;
+       if (firstChar > 1)
+	 {
+	   if (firstSel == lastSel)
+	     prevLen = lastChar;
+	   else
+	     prevLen = 0;
+	   SelectString (pDoc, firstSel, firstChar, prevLen);
+	 }
+       else if ((lastChar == 0 && firstChar!=1) || lastSel != firstSel)
+	 SelectElement (pDoc, firstSel, TRUE, TRUE);
+       else
+	 SelectString (pDoc, firstSel, 1, lastChar);
+       if (lastSel != firstSel)
+	 if (discreteSelection)
+	   for (index = 1; index <= NSelectedEls; index++)
+	     AddInSelection (SelectedEl[index - 1], (index == NSelectedEls));
+	 else
+	   ExtendSelection (lastSel, lastChar, TRUE, FALSE, FALSE);
      }
-   else if ((lastChar == 0 && firstChar!=1) || lastSel != firstSel)
-      SelectElement (pDoc, firstSel, TRUE, TRUE);
-   else
-      SelectString (pDoc, firstSel, 1, lastChar);
-   if (lastSel != firstSel)
-      if (discreteSelection)
-	 for (index = 1; index <= NSelectedEls; index++)
-	    AddInSelection (SelectedEl[index - 1], (index == NSelectedEls));
-      else
-	 ExtendSelection (lastSel, lastChar, TRUE, FALSE, FALSE);
 }

@@ -622,22 +622,21 @@ void                PasteCommand ()
 		/* qui viennent d'etre colle's et reaffiche le document */
 		TtaClearViewSelections ();
 		if (NCreatedElements > 0)
-		  {
 		    if (elemIsBefore)
 		      MergeAndSelect (pDoc, CreatedElement[NCreatedElements - 1], CreatedElement[0], 0, 0);
 		    else
 		      MergeAndSelect (pDoc, CreatedElement[0], CreatedElement[NCreatedElements - 1], 0, 0);
 
-		    pDoc->DocModified = TRUE;	/* le document est modifie' */
-		    pDoc->DocNTypedChars += 20;
-		  }
+		pDoc->DocModified = TRUE;	/* le document est modifie' */
+		pDoc->DocNTypedChars += 20;
 
 		/* Reaffiche les numeros suivants qui changent */
 		for (i = 0; i < NCreatedElements; i++)
-		  {
+		  if (CreatedElement[i]->ElStructSchema)
+		     {
 		     RedisplayCopies (CreatedElement[i], pDoc, TRUE);
 		     UpdateNumbers (CreatedElement[i], CreatedElement[i], pDoc, TRUE);
-		  }
+		     }
 	     }
 	}
 }
@@ -937,8 +936,8 @@ void                TtcCreateElement (doc, view)
 			       pElDelete = pElem;
 			       createAfter = TRUE;
 			       pElReplicate = pParent;
-			       while (TtaGetParent (pElReplicate) != pListEl)
-				  pElReplicate = TtaGetParent (pElReplicate);
+			       while (pElReplicate->ElParent != pListEl)
+				  pElReplicate = pElReplicate->ElParent;
 			    }
 			  else if (pElem->ElNext != NULL && pElem->ElPrevious == NULL)
 			    {
@@ -947,8 +946,8 @@ void                TtcCreateElement (doc, view)
 			       pElDelete = pElem;
 			       createAfter = FALSE;
 			       pElReplicate = pParent;
-			       while (TtaGetParent (pElReplicate) != pListEl)
-				  pElReplicate = TtaGetParent (pElReplicate);
+			       while (pElReplicate->ElParent != pListEl)
+				  pElReplicate = pElReplicate->ElParent;
 			    }
 			  else
 			    {
@@ -1529,7 +1528,7 @@ boolean             before;
 	     }
 	   /* detruit les elements qui ont ete vide's */
 	   pPrev = NULL;
-	   while (pParent->ElFirstChild == NULL)
+	   while (pParent != NULL && pParent->ElFirstChild == NULL)
 	     {
 		pE = pParent;
 		pParent = pE->ElParent;

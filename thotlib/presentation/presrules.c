@@ -1655,7 +1655,7 @@ PtrSSchema         *pSchS;
    PtrSSchema          pSc1;
    SRule              *pSRule;
 
-   if (pEl == NULL)
+   if (pEl == NULL || pEl->ElStructSchema == NULL)
      {
 	*pSchP = NULL;
 	*pSchS = NULL;
@@ -1678,7 +1678,9 @@ PtrSSchema         *pSchS;
 		 /* cherche la regle introduisant la nature dans le schema de */
 		 /* structure de l'englobant. */
 		{
-		   pSc1 = pEl->ElParent->ElStructSchema;
+		pSc1 = pEl->ElParent->ElStructSchema;
+		if (pSc1 != NULL)
+		  {
 		   found = FALSE;
 		   i = 0;
 		   do
@@ -1698,6 +1700,7 @@ PtrSSchema         *pSchS;
 			   *indexElType = i;
 			   *pSchS = pEl->ElParent->ElStructSchema;
 			}
+		  }
 		}
      }
 }

@@ -200,6 +200,8 @@ int                 ymax;
    x = pFrame->FrXOrg;
    y = pFrame->FrYOrg;
    pBox = pAb->AbBox;
+   if (pBox == NULL)
+      return;
    if (pAb->AbPictBackground)
      DrawPicture (pBox, (PictInfo *) pAb->AbPictBackground, frame);
    else if (pAb->AbFillBox)
@@ -703,10 +705,16 @@ int                 scroll;
 	bottom = height + h;
 
 	/* Search the first visible box or the one below */
-	pBox = pFrame->FrAbstractBox->AbBox->BxNext;
-	if (pBox == NULL)
-	  /* empty document */
-	   pBox = pFrame->FrAbstractBox->AbBox;
+	if (pFrame->FrAbstractBox == NULL ||
+	    pFrame->FrAbstractBox->AbBox == NULL)
+	  pBox = NULL;
+	else
+	  {
+	  pBox = pFrame->FrAbstractBox->AbBox->BxNext;
+	  if (pBox == NULL)
+	    /* empty document */
+	    pBox = pFrame->FrAbstractBox->AbBox;
+	  }
 
 	ontop = TRUE;
 	pTopBox = NULL;

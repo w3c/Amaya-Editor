@@ -3461,7 +3461,7 @@ PtrElement         *pEl;
    boolean             ok, stop;
    PtrDocument         pDoc;
 
-   if (*pEl != NULL)
+   if (*pEl != NULL && (*pEl)->ElStructSchema != NULL)
      {
 	pEl1 = *pEl;
 	/* if its a text leaf, delete the text */
