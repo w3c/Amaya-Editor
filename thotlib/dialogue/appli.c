@@ -3349,7 +3349,10 @@ void ChangeFrameTitle (int frame, unsigned char *text, CHARSET encoding)
       TtaFreeMemory (ptr);
     }
 #else /* _WX */
+  /* Disabled for the moment, impossible to Save As otherwise */
+  /*
   wxASSERT_MSG( encoding == UTF_8, _T("Encoding should be UTF8 !") );
+  */
   title = text;
 #endif /* _WX */
 
