@@ -1275,6 +1275,7 @@ void ReadPRulePiv (PtrDocument pDoc, BinFile pivFile, PtrElement pEl,
 
   pres = (PictureScaling) 0;
   pictureType = 0;
+  deltaUnit = UnRelative;
   just = FALSE;
   sign = FALSE;
   deltaSign = FALSE;

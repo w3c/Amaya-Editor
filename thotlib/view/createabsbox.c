@@ -863,12 +863,13 @@ ThotBool CondPresentation (PtrCondition pCond, PtrElement pEl,
   PtrAttribute        pA;
   unsigned char       attrVal[MAX_TXT_LEN];
   int                 valcompt, valmaxi, valmini;
-  int                 i, j;
+  int                 i = 0, j;
   PtrSRule            pRe1;
   ThotBool            ok, found, stop, equal;
 
   /* a priori les conditions sont satisfaites */
   ok = TRUE;
+  ound = FALSE;
   /* on examine toutes les conditions de la chaine */
   while (pCond && ok)
     {
