@@ -2495,7 +2495,7 @@ void *context;
 	TtaHandlePendingEvents ();
 	/* fetch and display all images referred by the document */
 	if (res != 0)
-	  stopped_flag = FetchAndDisplayImages (res, AMAYA_NOCACHE);
+	  stopped_flag = FetchAndDisplayImages (res, AMAYA_NOCACHE | AMAYA_LOAD_IMAGE);
 	if (stopped_flag == FALSE) 
 	  {
 	    TtaResetCursor (0, 0);
@@ -3231,7 +3231,7 @@ void *context;
 	       /* fetch and display all images referred by the document */
 	       if (doc == baseDoc)
 		 /* it's not a temporary document */
-		   stopped_flag = FetchAndDisplayImages (newdoc, 0);
+		   stopped_flag = FetchAndDisplayImages (newdoc, AMAYA_LOAD_IMAGE);
 	     }
 	 }
        else
@@ -4250,7 +4250,7 @@ DocumentType     docType;
       TtaSetDocumentModified (newdoc);
       W3Loading = 0;		/* loading is complete now */
       DocNetworkStatus[newdoc] = AMAYA_NET_ACTIVE;
-      stopped_flag = FetchAndDisplayImages (newdoc, 0);
+      stopped_flag = FetchAndDisplayImages (newdoc, AMAYA_LOAD_IMAGE);
       if (!stopped_flag)
 	{
 	  DocNetworkStatus[newdoc] = AMAYA_NET_INACTIVE;

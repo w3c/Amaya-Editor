@@ -83,7 +83,7 @@ CSSInfoPtr      css;
 #ifndef AMAYA_JAVA
 	  toparse = GetObjectWWW (doc, completeURL, NULL, localfile, AMAYA_SYNC | AMAYA_LOAD_CSS, NULL, NULL, NULL, NULL, NO, NULL);
 #else
-	  toparse = GetObjectWWW (doc, completeURL, NULL, localfile, AMAYA_SYNC, NULL, NULL, NULL, NULL, NO, NULL);
+	  toparse = GetObjectWWW (doc, completeURL, NULL, localfile, AMAYA_SYNC | AMAYA_LOAD_CSS, NULL, NULL, NULL, NULL, NO, NULL);
 #endif /* ! AMAYA_JAVA */
 	  if (toparse || localfile[0] == EOS || !TtaFileExist (localfile))
 	    TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_CANNOT_LOAD), completeURL);

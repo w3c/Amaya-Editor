@@ -2398,11 +2398,11 @@ ThotBool            isHTML;
 		    {
 		      NormalizeURL (url, 0, tempname, imgname, css->url);
 		      /* fetch and display background image of element */
-		      FetchImage (context->doc, el, tempname, 0,
+		      FetchImage (context->doc, el, tempname, AMAYA_LOAD_IMAGE,
 				  ParseCSSBackgroundImageCallback, callblock);
 		    }
 		  else
-		    FetchImage (context->doc, el, url, 0,
+		    FetchImage (context->doc, el, url, AMAYA_LOAD_IMAGE,
 				ParseCSSBackgroundImageCallback, callblock);
 		}
 	    }

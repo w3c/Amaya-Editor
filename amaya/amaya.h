@@ -149,6 +149,8 @@ typedef enum _ClickEvent {
 #define AMAYA_LOAD_CSS   512
 #define AMAYA_FLUSH_REQUEST 1024
 #define AMAYA_USE_PRECONDITIONS 2048
+#define AMAYA_LOAD_IMAGE 4096
+
 #else
 #define AMAYA_ASYNC_SAFE_STOP  0
 #define AMAYA_LOAD_CSS   0
