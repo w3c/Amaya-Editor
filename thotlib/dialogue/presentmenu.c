@@ -1954,7 +1954,24 @@ void CallbackPresMenu (int ref, int val, char *txt)
       /* active the form */
       if (val > 0)
 	/* modify characters */
-	ApplyPresentMod (Apply_AllChars);
+	{
+#ifdef _WX
+	  if (val == 1)
+#endif /* _WX */
+	    ApplyPresentMod (Apply_AllChars);
+#ifdef _WX
+	  else if (val == 2)
+	    ApplyPresentMod (Apply_FontFamily);
+	  else if (val == 3)
+	    ApplyPresentMod (Apply_Underline);
+	  else if (val == 4)
+	    ApplyPresentMod (Apply_FontSize);
+	  else if (val == 5)
+	    ApplyPresentMod (Apply_FontStyle);
+	  else if (val == 6)
+	    ApplyPresentMod (Apply_FontWeight);
+#endif /* _WX */	    
+	}
       else
 	TtaDestroyDialogue (ref);
       break;
