@@ -292,7 +292,9 @@ void ApplyInherit (PRuleType ruleType, PtrAbstractBox pAb,
 					TRUE, &pAttr);
 		if (pRule != NULL)
 		   if (pRule->PrPresMode == PresInherit &&
-		       pRule->PrInheritMode == InheritCreator)
+		       pRule->PrInheritMode == InheritCreator &&
+		       /* skip list-item decoration */
+		       pAbCur->AbPresentationBox && pAbCur->AbTypeNum != 0)
 		      /* la regle de ce pave herite de son createur,
 			 on l'applique */
 		      if (ApplyRule (pRule, pSchP, pAbCur, pDoc, pAttr))
