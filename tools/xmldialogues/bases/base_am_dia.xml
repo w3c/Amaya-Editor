@@ -1918,6 +1918,10 @@
 	<message xml:lang="fi">Valmista kooste</message>
 	<message xml:lang="ru">Создат&amp;ь книгу</message>
 </label>
+<label define="BMakeToc">
+	<message xml:lang="en">&amp;Generate Table of contents</message>
+	<message xml:lang="fr">&amp;Engendrer la table des matières</message>
+</label>
 <label define="BDate">
 	<message xml:lang="en">Insert time stamp</message>
 	<message xml:lang="fr">Insérer date de mise à jour</message>

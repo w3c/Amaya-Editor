@@ -7461,7 +7461,7 @@ void SectionNumbering (Document doc, View view)
 void MakeIDMenu (Document doc, View view)
 {
 #if defined(_GTK) || defined(_WX) 
-  int i;
+  int     i;
   char    s[MAX_LENGTH];
 #endif /* #if defined(_GTK) || defined(_WX) */
 

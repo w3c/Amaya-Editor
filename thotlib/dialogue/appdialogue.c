@@ -1568,7 +1568,7 @@ int TtaAddButton (Document document, View view, ThotIcon picture,
   UserErrorCode = 0;
   index = 0;
   /* verifie le parametre document */
-  if (document == 0 && view == 0)
+  if (document == 0 || view == 0)
     TtaError (ERR_invalid_parameter);
   else
     {
@@ -3853,7 +3853,7 @@ void TtaSetMenuOff (Document document, View view, int menuID)
 #endif /* _WX */
   Menu_Ctl*           ptrmenu;
 
-  if (document == 0 && view == 0)
+  if (document == 0 || view == 0)
     frame = 0;
   else
     frame = GetWindowNumber (document, view);
@@ -3925,7 +3925,7 @@ void TtaSetMenuOn (Document document, View view, int menuID)
 #endif /* _WX */
   Menu_Ctl*           ptrmenu;
 
-  if (document == 0 && view == 0)
+  if (document == 0 || view == 0)
     frame = 0;
   else
     frame = GetWindowNumber (document, view);
@@ -3994,7 +3994,7 @@ void   TtaSetToggleItem (Document document, View view, int menuID,
    /* Check parameters */
    if (menuID == 0 || itemID == 0)
       return;
-   if (document == 0 && view == 0)
+   if (document == 0 || view == 0)
       frame = 0;
    else
       frame = GetWindowNumber (document, view);
@@ -4036,7 +4036,7 @@ void  TtaSetItemOff (Document document, View view, int menuID, int itemID)
    int                 action;
 
    /* Check parameters */
-   if (document == 0 && view == 0)
+   if (document == 0 || view == 0)
      frame = 0;
    else
      frame = GetWindowNumber (document, view);
@@ -4075,7 +4075,7 @@ void  TtaSetItemOn (Document document, View view, int menuID, int itemID)
    int                 action;
 
    /* Si les parametres sont invalides */
-   if (document == 0 && view == 0)
+   if (document == 0 || view == 0)
       frame = 0;
    else
       frame = GetWindowNumber (document, view);

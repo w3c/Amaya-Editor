@@ -1307,7 +1307,7 @@ void CreateScript (Document doc, View view)
 /*----------------------------------------------------------------------
   HTMLelementAllowed
   ----------------------------------------------------------------------*/
-static ThotBool HTMLelementAllowed (Document doc)
+ThotBool HTMLelementAllowed (Document doc)
 {
   ElementType         elType;
   Element             el, ancestor, sibling;

@@ -179,150 +179,151 @@
 177 ruby
 178 &Section numbering
 179 &Make book
-180 Insert time stamp
-181 Information type
-182 Emphasis (em)
-183 strong
-184 cite
-185 Definition (dfn)
-186 code
-187 Variable (var)
-188 Sample (samp)
-189 Keyboard (kbd)
-190 Abbreviation (abbr)
-191 acronym
-192 Insertion (ins)
-193 Deletion (del)
-194 Character element
-195 Italic (i)
-196 Bold (b)
-197 Teletype (tt)
-198 big
-199 small
-200 Subscript (sub)
-201 Superscript (sup)
-202 Quotation (q)
-203 BiDi override (bdo)
-204 New formula (math)
-205 Basic &Elements
-206 Plain text (mtext)
-207 Identifier (mi)
-208 Number (mn)
-209 Operator (mo)
-210 Space (mspace)
-211 Character (&xxx;)
-212 InvisibleTimes
-213 ApplyFunction
-214 &Constructions
-215 Root (mroot)
-216 Square root (msqrt)
-217 Enclose (menclose)
-218 Fraction (mfrac)
-219 Subscript and superscript (msubsup)
-220 Subscript (msub)
-221 Superscript (msup)
-222 Under and over (munderover)
-223 Under (munder)
-224 Over (mover)
-225 Parentheses (mrow)
-226 Multiscripts (mmultiscripts)
-227 &Matrices
-228 New matrix (mtable)
-229 Join with the cell at the right
-230 Join with the cell below
-231 Shrink horizontal extend
-232 Shrink vertical extend
-233 Select the row
-234 Insert a row
-235 Append a row
-236 Select the column
-237 Insert a column
-238 Append a column
-239 Paste before
-240 Paste after
-241 Show the graphic library
-242 Add the selected graphics in the library
-243 Comment
-244 XML elements...
-245 &Link to previous target
-246 &Create or change link...
-247 Create &target
-248 &Delete anchor
-249 &Add/Remove IDs...
-250 Show &button bar
-251 Show a&ddress
-252 Show &map areas
-253 Show &targets
-254 Zoom in
-255 Zoom out
-256 Show &structure
-257 Show so&urce
-258 Show lin&ks
-259 Show &alternate
-260 Show table &of contents
-261 Timeline
-262 C&haracter style...
-263 C&olors...
-264 &Format...
-265 &Background image...
-266 Create &rule...
-267 Apply &class...
-268 Show applied style...
-269 Lin&k...
-270 Ope&n...
-271 &Disable...
-272 &Enable...
-273 Remo&ve...
-274 Annotate selection
-275 Annotate document
-276 Move to selection
-277 Store selection as &XPointer
-278 Move to stored XPointer
-279 Reply to annotation
-280 Post to server
-281 Delete
-282 Load
-283 Customize query...
-284 Local filter...
-285 Configure...
-286 View Bookmarks
-287 New Bookmark
-288 New Topic
-289 New Separator
-290 Move Item
-291 Lock resource...
-292 Unlock resource...
-293 View resource properties...
-294 Copy lock information...
-295 Locked?
-296 Preferences...
-297 About Amaya
-298 About Amaya at W3C
-299 Index
-300 Browsing
-301 Views
-302 Selecting
-303 Document
-304 Creating elements
-305 Attributes
-306 Characters
-307 Restructuring
-308 Links
-309 Tables
-310 Image maps
-311 Math
-312 Graphics
-313 XML support
-314 Style sheets
-315 Searching
-316 Spell Checking
-317 Publishing
-318 WebDAV
-319 Printing
-320 Numbering
-321 Making books
-322 Annotations
-323 &Bookmarks
-324 Configuring Amaya
-325 ShortCuts
-326 Accessibility in Amaya
+180 &Generate Table of contents
+181 Insert time stamp
+182 Information type
+183 Emphasis (em)
+184 strong
+185 cite
+186 Definition (dfn)
+187 code
+188 Variable (var)
+189 Sample (samp)
+190 Keyboard (kbd)
+191 Abbreviation (abbr)
+192 acronym
+193 Insertion (ins)
+194 Deletion (del)
+195 Character element
+196 Italic (i)
+197 Bold (b)
+198 Teletype (tt)
+199 big
+200 small
+201 Subscript (sub)
+202 Superscript (sup)
+203 Quotation (q)
+204 BiDi override (bdo)
+205 New formula (math)
+206 Basic &Elements
+207 Plain text (mtext)
+208 Identifier (mi)
+209 Number (mn)
+210 Operator (mo)
+211 Space (mspace)
+212 Character (&xxx;)
+213 InvisibleTimes
+214 ApplyFunction
+215 &Constructions
+216 Root (mroot)
+217 Square root (msqrt)
+218 Enclose (menclose)
+219 Fraction (mfrac)
+220 Subscript and superscript (msubsup)
+221 Subscript (msub)
+222 Superscript (msup)
+223 Under and over (munderover)
+224 Under (munder)
+225 Over (mover)
+226 Parentheses (mrow)
+227 Multiscripts (mmultiscripts)
+228 &Matrices
+229 New matrix (mtable)
+230 Join with the cell at the right
+231 Join with the cell below
+232 Shrink horizontal extend
+233 Shrink vertical extend
+234 Select the row
+235 Insert a row
+236 Append a row
+237 Select the column
+238 Insert a column
+239 Append a column
+240 Paste before
+241 Paste after
+242 Show the graphic library
+243 Add the selected graphics in the library
+244 Comment
+245 XML elements...
+246 &Link to previous target
+247 &Create or change link...
+248 Create &target
+249 &Delete anchor
+250 &Add/Remove IDs...
+251 Show &button bar
+252 Show a&ddress
+253 Show &map areas
+254 Show &targets
+255 Zoom in
+256 Zoom out
+257 Show &structure
+258 Show so&urce
+259 Show lin&ks
+260 Show &alternate
+261 Show table &of contents
+262 Timeline
+263 C&haracter style...
+264 C&olors...
+265 &Format...
+266 &Background image...
+267 Create &rule...
+268 Apply &class...
+269 Show applied style...
+270 Lin&k...
+271 Ope&n...
+272 &Disable...
+273 &Enable...
+274 Remo&ve...
+275 Annotate selection
+276 Annotate document
+277 Move to selection
+278 Store selection as &XPointer
+279 Move to stored XPointer
+280 Reply to annotation
+281 Post to server
+282 Delete
+283 Load
+284 Customize query...
+285 Local filter...
+286 Configure...
+287 View Bookmarks
+288 New Bookmark
+289 New Topic
+290 New Separator
+291 Move Item
+292 Lock resource...
+293 Unlock resource...
+294 View resource properties...
+295 Copy lock information...
+296 Locked?
+297 Preferences...
+298 About Amaya
+299 About Amaya at W3C
+300 Index
+301 Browsing
+302 Views
+303 Selecting
+304 Document
+305 Creating elements
+306 Attributes
+307 Characters
+308 Restructuring
+309 Links
+310 Tables
+311 Image maps
+312 Math
+313 Graphics
+314 XML support
+315 Style sheets
+316 Searching
+317 Spell Checking
+318 Publishing
+319 WebDAV
+320 Printing
+321 Numbering
+322 Making books
+323 Annotations
+324 &Bookmarks
+325 Configuring Amaya
+326 ShortCuts
+327 Accessibility in Amaya

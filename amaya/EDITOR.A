@@ -214,6 +214,7 @@ MENUS
         Types Separator;
 	Types toggle:TSectionNumber -> SectionNumbering;
 	Types button:BMakeBook -> MakeBook;
+	Types button:BMakeToc -> MakeToc;
 	Types button:BDate -> CreateDate;
 
 	Types Separator;

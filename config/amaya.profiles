@@ -65,6 +65,7 @@ HelpAtW3C
 +list-module
 +edit-module
 +iframe-module
++makebook
 +meta-module
 +presentation-module
 +maths
@@ -89,6 +90,7 @@ HelpAtW3C
 +image-module
 +link-module
 +list-module
++makebook
 +meta-module
 +presentation-module
 +maths
@@ -110,6 +112,7 @@ HelpAtW3C
 +hypertext-module
 +image-module
 +list-module
++makebook
 +object-module
 +struct-module
 +text-module
@@ -129,6 +132,7 @@ HelpAtW3C
 +image-module
 +link-module
 +list-module
++makebook
 +meta-module
 +presentation-module
 +maths
@@ -664,6 +668,7 @@ HelpSpellChecking
 HelpMakeBook
 HelpNumbering
 &MakeBook
+&MakeToc
 &SectionNumbering
 
 [makeid]

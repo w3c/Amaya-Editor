@@ -1846,7 +1846,7 @@ void CreateRemoveIDAttribute (char *elName, Document doc, ThotBool createID,
   ElementType         elType;
   AttributeType       attrType;
   Attribute           attr;
-  char             *schema_name;
+  char               *schema_name;
   DisplayMode         dispMode;
   ThotBool            closeUndo;
   int                 i, j;

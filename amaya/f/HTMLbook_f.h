@@ -73,6 +73,8 @@ extern void ReadAsEUC_JP ( Document doc,
                            View view );
 extern void ReadAsSHIFT_JIS ( Document doc,
                               View view );
+extern void MakeToc ( Document doc,
+                      View view );
 
 #else /* __STDC__ */
 
@@ -143,6 +145,8 @@ extern void ReadAsEUC_JP ( Document doc,
                              View view );
 extern void ReadAsSHIFT_JIS ( Document doc,
                                 View view );
+extern void MakeToc ( Document doc,
+                        View view );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

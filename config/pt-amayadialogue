@@ -179,150 +179,151 @@
 177 rubi
 178 Numeração de seção
 179 Construir livro
-180 **Insert time stamp
-181 tipo de Informação
-182 Ênfase (em)
-183 Forte (strong)
-184 Citação (cite)
-185 Definição (dfn)
-186 Código (code)
-187 Variável (var)
-188 Exemplo (samp)
-189 Teclado (kbd)
-190 Abreviação (abbr)
-191 Acrônimo (acronym)
-192 Inserção (ins)
-193 Supressão (del)
-194 Elemento carácter
-195 Itálico (i)
-196 Negrito (b)
-197 Teletipo (tt)
-198 Grande (big)
-199 Pequeno (small)
-200 Índice (sub)
-201 Expoente (sup)
-202 Citação (q)
-203 Sobrepor BiDi (bdo)
-204 Nova fórmula (math)
-205 **Basic &Elements
-206 Texto puro (mtext)
-207 Identificador (mi)
-208 Número (mn)
-209 Operador (mo)
-210 Espaço (mspace)
-211 Carácter (&xxx;)
-212 Multiplicação Invisível (InvisibleTimes)
-213 Aplicar função (ApplyFunction)
-214 **&Constructions
-215 Raiz (mroot)
-216 Raiz quadrada (msqrt)
-217 Englobar (menclose)
-218 Fração (mfrac)
-219 Índice e Expoente (msubsup)
-220 Índice (msub)
-221 Expoente (msup)
-222 Sob e sobre (munderover)
-223 Sob (munder)
-224 Sobre (mover)
-225 Parêntesis (mrow)
-226 Multiscripts (mmultiscripts)
-227 &Matrices
-228 Matriz (mtable)
-229 **Join with the cell at the right
-230 **Join with the cell below
-231 **Shrink horizontal extend
-232 **Shrink vertical extend
-233 **Select the row
-234 **Insert a row
-235 **Append a row
-236 **Select the column
-237 **Insert a column
-238 **Append a column
-239 **Paste before
-240 **Paste after
-241 **Show the graphic library
-242 **Add the selected graphics in the library
-243 Comentário
-244 **XML elements...
-245 Ligar ao destino precedente
-246 Criar ou mudar enlace (link)...
-247 Create destino
-248 Apagar âncora
-249 Adicionar/Remover IDs...
-250 Exibir barra de ferramentas
-251 Exibir endereço
-252 Exibir áreas de mapa
-253 Exibir destinos
-254 Ampliar (Zoom in)
-255 Reduzir (Zoom out)
-256 Exibir estrutura
-257 Exibir fonte
-258 Exibir enlaces (links)
-259 Exibir alternativa
-260 Exibir índice de conteúdos
-261 **Timeline
-262 Estilo de carácter...
-263 Cores...
-264 Formato...
-265 Imagem de fundo...
-266 Criar regra...
-267 Aplicar classe...
-268 **Show applied style...
-269 Ligar...
-270 Abrir...
-271 Desabilitar...
-272 Habilitar...
-273 Remover...
-274 Anotar seleção
-275 Anotar documento
-276 Mover até a seleção
-277 Salvar seleção como XPointer
-278 Mover para o XPointer memorizado
-279 Responder à anotação
-280 Registrar
-281 Apagar
-282 Carregar
-283 Personalizar consulta...
-284 Filtro local...
-285 Configurar...
-286 **View Bookmarks
-287 **New Bookmark
-288 **New Topic
-289 **New Separator
-290 **Move Item
-291 Travar o recurso
-292 Destravar o recurso
-293 Exibir as propriedades do recurso
-294 Copiar a informação da trava...
-295 Travado?
-296 Preferências...
-297 Sobre Amaya
-298 Sobre Amaya no W3C
-299 Índice
-300 Navegar
-301 Vistas
-302 Selecionar
-303 Documento
-304 Criar elementos
-305 Atributos
-306 Caracteres
-307 Reestruturar
-308 Enlaces (links)
-309 Tabelas
-310 Mapas de Imagem
-311 Matemática
-312 Gráficos
-313 Suporte à XML
-314 Folhas de estilo
-315 Achar...
-316 Verificar ortografia
-317 Publicar
-318 WebDAV
-319 Imprimir
-320 Numberar
-321 Criar livros
-322 Anotações
-323 **&Bookmarks
-324 Configurar Amaya
-325 Atalhos
-326 Accessibilidade em Amaya
+180 **&Generate Table of contents
+181 **Insert time stamp
+182 tipo de Informação
+183 Ênfase (em)
+184 Forte (strong)
+185 Citação (cite)
+186 Definição (dfn)
+187 Código (code)
+188 Variável (var)
+189 Exemplo (samp)
+190 Teclado (kbd)
+191 Abreviação (abbr)
+192 Acrônimo (acronym)
+193 Inserção (ins)
+194 Supressão (del)
+195 Elemento carácter
+196 Itálico (i)
+197 Negrito (b)
+198 Teletipo (tt)
+199 Grande (big)
+200 Pequeno (small)
+201 Índice (sub)
+202 Expoente (sup)
+203 Citação (q)
+204 Sobrepor BiDi (bdo)
+205 Nova fórmula (math)
+206 **Basic &Elements
+207 Texto puro (mtext)
+208 Identificador (mi)
+209 Número (mn)
+210 Operador (mo)
+211 Espaço (mspace)
+212 Carácter (&xxx;)
+213 Multiplicação Invisível (InvisibleTimes)
+214 Aplicar função (ApplyFunction)
+215 **&Constructions
+216 Raiz (mroot)
+217 Raiz quadrada (msqrt)
+218 Englobar (menclose)
+219 Fração (mfrac)
+220 Índice e Expoente (msubsup)
+221 Índice (msub)
+222 Expoente (msup)
+223 Sob e sobre (munderover)
+224 Sob (munder)
+225 Sobre (mover)
+226 Parêntesis (mrow)
+227 Multiscripts (mmultiscripts)
+228 &Matrices
+229 Matriz (mtable)
+230 **Join with the cell at the right
+231 **Join with the cell below
+232 **Shrink horizontal extend
+233 **Shrink vertical extend
+234 **Select the row
+235 **Insert a row
+236 **Append a row
+237 **Select the column
+238 **Insert a column
+239 **Append a column
+240 **Paste before
+241 **Paste after
+242 **Show the graphic library
+243 **Add the selected graphics in the library
+244 Comentário
+245 **XML elements...
+246 Ligar ao destino precedente
+247 Criar ou mudar enlace (link)...
+248 Create destino
+249 Apagar âncora
+250 Adicionar/Remover IDs...
+251 Exibir barra de ferramentas
+252 Exibir endereço
+253 Exibir áreas de mapa
+254 Exibir destinos
+255 Ampliar (Zoom in)
+256 Reduzir (Zoom out)
+257 Exibir estrutura
+258 Exibir fonte
+259 Exibir enlaces (links)
+260 Exibir alternativa
+261 Exibir índice de conteúdos
+262 **Timeline
+263 Estilo de carácter...
+264 Cores...
+265 Formato...
+266 Imagem de fundo...
+267 Criar regra...
+268 Aplicar classe...
+269 **Show applied style...
+270 Ligar...
+271 Abrir...
+272 Desabilitar...
+273 Habilitar...
+274 Remover...
+275 Anotar seleção
+276 Anotar documento
+277 Mover até a seleção
+278 Salvar seleção como XPointer
+279 Mover para o XPointer memorizado
+280 Responder à anotação
+281 Registrar
+282 Apagar
+283 Carregar
+284 Personalizar consulta...
+285 Filtro local...
+286 Configurar...
+287 **View Bookmarks
+288 **New Bookmark
+289 **New Topic
+290 **New Separator
+291 **Move Item
+292 Travar o recurso
+293 Destravar o recurso
+294 Exibir as propriedades do recurso
+295 Copiar a informação da trava...
+296 Travado?
+297 Preferências...
+298 Sobre Amaya
+299 Sobre Amaya no W3C
+300 Índice
+301 Navegar
+302 Vistas
+303 Selecionar
+304 Documento
+305 Criar elementos
+306 Atributos
+307 Caracteres
+308 Reestruturar
+309 Enlaces (links)
+310 Tabelas
+311 Mapas de Imagem
+312 Matemática
+313 Gráficos
+314 Suporte à XML
+315 Folhas de estilo
+316 Achar...
+317 Verificar ortografia
+318 Publicar
+319 WebDAV
+320 Imprimir
+321 Numberar
+322 Criar livros
+323 Anotações
+324 **&Bookmarks
+325 Configurar Amaya
+326 Atalhos
+327 Accessibilidade em Amaya

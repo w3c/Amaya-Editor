@@ -69,6 +69,7 @@ extern void CreateDate ( Document doc,
                          View view );
 extern void CreateScript ( Document doc,
                            View view );
+extern ThotBool HTMLelementAllowed ( Document doc );
 extern void CreateParagraph ( Document document,
                               View view );
 extern void CreateHeading1 ( Document document,
@@ -335,6 +336,7 @@ extern void CreateDate ( Document doc,
                            View view );
 extern void CreateScript ( Document doc,
                              View view );
+extern ThotBool HTMLelementAllowed ( Document doc );
 extern void CreateParagraph ( Document document,
                                 View view );
 extern void CreateHeading1 ( Document document,
