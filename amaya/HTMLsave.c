@@ -2571,11 +2571,12 @@ static void UpdateImages (Document doc, ThotBool src_is_local,
 		   elType = TtaGetElementType (el);
 		   elType.ElTypeNum = SVG_EL_PICTURE_UNIT;
 		   svgpic = TtaSearchTypedElement (elType, SearchInTree, el);
-		   if (svgpic != NULL)
-		     el = svgpic;
-		   else
+		   if (svgpic == NULL)
+		     /* included image found */
 		     copyref = FALSE;
 		 }
+	       else
+		 svgpic = NULL;
 
 	       if (copyref)
 		 {
@@ -2644,7 +2645,9 @@ static void UpdateImages (Document doc, ThotBool src_is_local,
 			   TtaRegisterAttributeReplace (attr, el, doc);
 			   TtaSetAttributeText (attr, url, el, doc);
 			 }
-		       
+		       if (svgpic)
+			 /* now work with the SVG picture element */
+			 el = svgpic;
 		       /*
 			 At this point:
 			 - url gives the relative new image name
@@ -2657,7 +2660,7 @@ static void UpdateImages (Document doc, ThotBool src_is_local,
 #ifdef AMAYA_DEBUG
 			   fprintf(stderr, "     SRC from %s to %s\n", buf, url);
 #endif
-			   if ((src_is_local) && (!dst_is_local))
+			   if (src_is_local && !dst_is_local)
 			     {
 			       /* add the localfile to the images list */
 			       AddLocalImage (buf, imgname, tempname, doc, &pImage);
