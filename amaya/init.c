@@ -6247,15 +6247,16 @@ void CallbackDialogue (int ref, int typedata, char *data)
 static int RestoreOneAmayaDoc (Document doc, char *tempdoc, char *docname,
 			       DocumentType docType)
 {
-  AHTHeaders          http_headers;
-  char                content_type[MAX_LENGTH];
-  char                tempfile[MAX_LENGTH];
-  int                 newdoc, len;
-  ThotBool            stopped_flag;
+  AHTHeaders    http_headers;
+  char          content_type[MAX_LENGTH];
+  char          tempfile[MAX_LENGTH];
+  int           newdoc, len;
+  ThotBool      stopped_flag;
 
   W3Loading = doc;
   BackupDocument = doc;
   TtaExtractName (tempdoc, DirectoryName, DocumentName);
+  AddURLInCombobox (docname, NULL, TRUE);
   newdoc = InitDocAndView (doc, DocumentName, docType, 0, FALSE, L_Other,
 			   CE_ABSOLUTE);
    if (newdoc != 0)
