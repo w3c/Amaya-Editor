@@ -270,7 +270,7 @@ void  TtaSetMoveBackwardCallback (Func callbackFunc)
 static void MovingCommands (int code, Document doc, View view,
 			    ThotBool extendSel)
 {
-  PtrBox              pBox, pBoxBegin, pBoxEnd;
+  PtrBox              pBox, pBoxBegin, pBoxEnd, ibox;
   PtrElement          pEl = NULL, firstEl, lastEl;
   PtrLine             pLine;
   ViewFrame          *pFrame;
@@ -489,24 +489,31 @@ static void MovingCommands (int code, Document doc, View view,
 		      else if (pBoxBegin->BxXOrg + pViewSel->VsXPos > pFrame->FrXOrg + w)
 			HorizontalScroll (frame, pBoxBegin->BxXOrg + pViewSel->VsXPos - pFrame->FrXOrg - w, 0);
 		    }
-		  else
+		  else if (pBox->BxPrevious)
 		    {
-		      /* a new box will be selected */
-		      /* check if the box is within a line */
-		      pLine = SearchLine (pBox);
-		      if (pLine)
+		      /* a new box before will be selected */
+		      ibox = pBox->BxPrevious;
+		      while (ibox &&
+			     ibox->BxAbstractBox->AbPresentationBox)
+			ibox = ibox->BxPrevious;
+		      if (ibox)
 			{
-			  y = pBox->BxYOrg + (pBox->BxHeight / 2);
-			  x = pBox->BxXOrg + xpos;
+			  /* check if the box is within a line */
+			  pLine = SearchLine (pBox);
+			  if (pLine)
+			    {
+			      y = pBox->BxYOrg + (pBox->BxHeight / 2);
+			      x = pBox->BxXOrg + xpos;
+			    }
+			  else
+			    {
+			      /* moving outside a block of lines */
+			      y = pBox->BxYOrg - 2;
+			      x = pBox->BxXOrg + pBox->BxWidth;
+			    }
+			  xDelta = -2;
+			  LocateLeafBox (frame, view, x, y, xDelta, 0, pBox, extendSel);
 			}
-		      else
-			{
-			  /* moving outside a block of lines */
-			  y = pBox->BxYOrg - 2;
-			  x = pBox->BxXOrg + pBox->BxWidth;
-			}
-		      xDelta = -2;
-		      LocateLeafBox (frame, view, x, y, xDelta, 0, pBox, extendSel);
 		    }
 		}
 	    }
@@ -590,23 +597,31 @@ static void MovingCommands (int code, Document doc, View view,
 		      else if (pBoxEnd->BxXOrg + pViewSelEnd->VsXPos - 4 < pFrame->FrXOrg)
 			HorizontalScroll (frame, pBoxEnd->BxXOrg + pViewSelEnd->VsXPos - 4 - pFrame->FrXOrg, 0);
 		    }
-		  else
+		  else if (pBox->BxNext)
 		    {
-		      /* check if the box is within a line */
-		      pLine = SearchLine (pBox);
-		      if (pLine)
+		      /* a new box after will be selected */
+		      ibox = pBox->BxPrevious;
+		      while (ibox &&
+			     ibox->BxAbstractBox->AbPresentationBox)
+			ibox = ibox->BxPrevious;
+		      if (ibox)
 			{
-			  y = pBox->BxYOrg + (pBox->BxHeight / 2);
-			  x = pBox->BxXOrg + pBox->BxWidth;
+			  /* check if the box is within a line */
+			  pLine = SearchLine (pBox);
+			  if (pLine)
+			    {
+			      y = pBox->BxYOrg + (pBox->BxHeight / 2);
+			      x = pBox->BxXOrg + pBox->BxWidth;
+			    }
+			  else
+			    {
+			      /* moving ouside a block of lines */
+			      y = pBox->BxYOrg + pBox->BxHeight + 2;
+			      x = pBox->BxXOrg;
+			    }
+			  xDelta = 2;
+			  LocateLeafBox (frame, view, x, y, xDelta, 0, pBox, extendSel);
 			}
-		      else
-			{
-			  /* moving ouside a block of lines */
-			  y = pBox->BxYOrg + pBox->BxHeight + 2;
-			  x = pBox->BxXOrg;
-			}
-		      xDelta = 2;
-		      LocateLeafBox (frame, view, x, y, xDelta, 0, pBox, extendSel);
 		    }
 		}
 	    }

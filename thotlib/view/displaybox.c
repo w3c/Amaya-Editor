@@ -908,22 +908,20 @@ ThotBool LocateNextChar (PtrTextBuffer *adbuff, int *ind, ThotBool rtl)
   if (rtl)
     {
       /* writing right-to-left */
-      if (*ind > 0)
-	/* continue in the same buffer */
-	*ind = *ind - 1;
-      else
+      (*ind)--;
+      while (*ind < 0)
 	{
 	  /* another buffer */
 	  if ((*adbuff)->BuPrevious == NULL)
 	    return FALSE;
 	  *adbuff = (*adbuff)->BuPrevious;
-	  *ind = (*adbuff)->BuLength;
+	  *ind = (*adbuff)->BuLength - 1;
 	}
     }
   else
     {
       (*ind)++;
-      if (*ind >= (*adbuff)->BuLength)
+      while (*ind >= (*adbuff)->BuLength)
 	{
 	  /* another buffer */
 	  if ((*adbuff)->BuNext == NULL)
@@ -934,10 +932,12 @@ ThotBool LocateNextChar (PtrTextBuffer *adbuff, int *ind, ThotBool rtl)
     }
   return TRUE;
 }
+
 int GL_UnicodeDrawString (int fg, 
 			  CHAR_T *str, float x, float y, 
 			  int hyphen, int frame,
 			  void *GL_font, int end);
+
 /*----------------------------------------------------------------------
   DisplayJustifiedText display the content of a Text box tweaking
   the space sizes to ajust line length to the size of the frame.

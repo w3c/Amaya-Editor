@@ -3018,10 +3018,7 @@ void LocateClickedChar (PtrBox pBox, ThotBool extend,
 	      if (LocateNextChar (pBuffer, &ind, rtl))
 		length--;
 	      else
-		{
-		  length = -1;
-		  ind = 0;
-		}
+		length = 0;
 	    }
 	}
 

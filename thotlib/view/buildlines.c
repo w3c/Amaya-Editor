@@ -1921,32 +1921,34 @@ static void RemoveBreaks (PtrBox pBox, int frame, ThotBool *changeSelectBegin,
   PtrBox              pNextBox;
   PtrAbstractBox      pAb;
   ViewFrame          *pFrame;
-  ViewSelection      *pViewSel;
+  ViewSelection      *pViewSel, *pViewSelEnd;
   int                 x, width;
   int                 nspace;
   int                 lost;
   int                 diff, nchar;
 
   pFrame = &ViewFrameTable[frame - 1];
+  pViewSel = &pFrame->FrSelectionBegin;
+  pViewSelEnd = &pFrame->FrSelectionEnd;
   if (pBox && pBox->BxAbstractBox)
     {
       pAb = pBox->BxAbstractBox;
       if (pAb && pAb->AbLeafType == LtText)
 	{
 	  x = BoxCharacterWidth (SPACE, pBox->BxFont);
-	  if (pFrame->FrSelectionBegin.VsBox == pBox)
+	  if (pViewSel->VsBox == pBox)
 	    {
 	      /* need to update the current selection */
-	      pFrame->FrSelectionBegin.VsBox = pAb->AbBox;
-	      pFrame->FrSelectionBegin.VsIndBox += pBox->BxFirstChar;
+	      pViewSel->VsBox = pAb->AbBox;
+	      pViewSel->VsIndBox += pBox->BxFirstChar;
 	      
 	      *changeSelectBegin = TRUE;
 	    }
-	  if (pFrame->FrSelectionEnd.VsBox == pBox)
+	  if (pViewSelEnd->VsBox == pBox)
 	    {
 	      /* need to update the current selection */
-	      pFrame->FrSelectionEnd.VsBox = pAb->AbBox;
-	      pFrame->FrSelectionEnd.VsIndBox += pBox->BxFirstChar;
+	      pViewSelEnd->VsBox = pAb->AbBox;
+	      pViewSelEnd->VsIndBox += pBox->BxFirstChar;
 	      *changeSelectEnd = TRUE;
 	    }
 
@@ -2053,18 +2055,16 @@ static void RemoveBreaks (PtrBox pBox, int frame, ThotBool *changeSelectBegin,
 			}
 		      
 		      /* Prepare the new selection */
-		      pViewSel = &pFrame->FrSelectionBegin;
 		      if (pViewSel->VsBox == ibox1)
 			{
 			  pViewSel->VsBox = pAb->AbBox;
 			  pViewSel->VsIndBox += ibox1->BxFirstChar;
 			  *changeSelectBegin = TRUE;
 			}
-		      pViewSel = &pFrame->FrSelectionEnd;
-		      if (pViewSel->VsBox == ibox1)
+		      if (pViewSelEnd->VsBox == ibox1)
 			{
-			  pViewSel->VsBox = pAb->AbBox;
-			  pViewSel->VsIndBox += ibox1->BxFirstChar;
+			  pViewSelEnd->VsBox = pAb->AbBox;
+			  pViewSelEnd->VsIndBox += ibox1->BxFirstChar;
 			  *changeSelectEnd = TRUE;
 			}
 
@@ -2100,9 +2100,9 @@ static void RemoveBreaks (PtrBox pBox, int frame, ThotBool *changeSelectBegin,
       /* Pour les autres natures */
       else
 	{
-	  if (pFrame->FrSelectionBegin.VsBox == pBox)
+	  if (pViewSel->VsBox == pBox)
 	    *changeSelectBegin = TRUE;
-	  if (pFrame->FrSelectionEnd.VsBox == pBox)
+	  if (pViewSelEnd->VsBox == pBox)
 	    *changeSelectEnd = TRUE;
 	}
     }

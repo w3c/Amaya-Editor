@@ -2569,9 +2569,12 @@ void InsertChar (int frame, CHAR_T c, int keyboard)
 		      
 		      if (pBuffer == NULL)
 			return;
-		      /* La selection doit se trouver en fin de buffer */
+		      /* the selection should at the end of a buffer */
 		      if (ind < pBuffer->BuLength && pBuffer->BuPrevious)
-			pBuffer = pBuffer->BuPrevious;
+			{
+			  pBuffer = pBuffer->BuPrevious;
+			  ind = pBuffer->BuLength + 1;
+			}
 		      
 		      /* prepare le reaffichage */
 		      /* point d'insertion en x */
@@ -2639,14 +2642,17 @@ void InsertChar (int frame, CHAR_T c, int keyboard)
 				  /* free the buffer */
 				  pBuffer = DeleteBuffer (pBuffer, frame);
 				  pBuffer = pSelBox->BxBuffer;
-				  if (pSelBox->BxIndChar == 0)
+				  if (pSelBox->BxFirstChar == 1)
 				    {
-				      pBox->BxBuffer = pBuffer;
 				      pAb->AbText = pBuffer;
-				      /* Is there an empty box before? */
-				      if (pBox->BxNexChild != pSelBox &&
-					  pBox->BxNexChild)
-					pBox->BxNexChild->BxBuffer = pBuffer;
+				      if (pBox && pBox != pSelBox)
+					{
+					  pBox->BxBuffer = pBuffer;
+					  /* Is there an empty box before? */
+					  if (pBox->BxNexChild != pSelBox &&
+					      pBox->BxNexChild)
+					    pBox->BxNexChild->BxBuffer = pBuffer;
+					}
 				    }
 				  else if (pSelBox->BxPrevious->BxNChars == 0)
 				    /* update the previous box */
@@ -2678,13 +2684,16 @@ void InsertChar (int frame, CHAR_T c, int keyboard)
 				      pSelBox->BxIndChar = pBuffer->BuLength + 1;
 				      if (pSelBox->BxFirstChar == 1)
 					{
-					  /* update the split box */
-					  pBox->BxBuffer = pBuffer;
 					  pAb->AbText = pBuffer;
-					  if (pBox->BxNexChild != pSelBox &&
-					      pBox->BxNexChild)
-					    /* there is an empty box before */
-					    pBox->BxNexChild->BxBuffer = pBuffer;
+					  if (pBox && pBox != pSelBox)
+					    {
+					      /* update the split box */
+					      pBox->BxBuffer = pBuffer;
+					      if (pBox->BxNexChild != pSelBox &&
+						  pBox->BxNexChild)
+						/* there is an empty box before */
+						pBox->BxNexChild->BxBuffer = pBuffer;
+					    }
 					}
 				      else if (pSelBox->BxPrevious->BxNChars == 0)
 					/* update the previous box */
@@ -2782,15 +2791,32 @@ void InsertChar (int frame, CHAR_T c, int keyboard)
 				      {
 					/* the empty previous box is the first */
 					pBox = pAb->AbBox;
+					/*
+					  update the first position of the selected
+					  box because a space is removed before
+					*/
+					pSelBox->BxFirstChar--;
 					if (pBox->BxNChars == 1)
 					  /* the box becomes empty */
 					  xDelta = BoxCharacterWidth (109, font) - pBox->BxWidth;
 				      }
 				    else if (pBox->BxFirstChar == 1)
-				    /* recompute the whole split box */
-				      pBox = pAb->AbBox;
+				      {
+					/* recompute the whole split box */
+					pBox = pAb->AbBox;
+					/*
+					  update the first position of the selected
+					  box because a space is removed before
+					*/
+					pSelBox->BxFirstChar--;
+				      }
 				    pSelBox = pBox;
-				  }				
+				  }
+				else
+				  {
+				    pViewSel->VsIndBox--;
+				    pViewSelEnd->VsIndBox--;
+				  }
 				/* update the displayed area */
 				pFrame->FrClipXBegin += xDelta;
 			      }
