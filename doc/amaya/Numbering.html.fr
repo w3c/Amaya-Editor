@@ -27,30 +27,30 @@
 </table>
 
 <div id="Section">
-<h2><a name="L1064">Numéroter les sections</a></h2>
+<h2><a name="L1064">Numéroter une  section</a></h2>
 
 <p>Les en-têtes de section (éléments <code>Hn</code>) peuvent être
-automatiquement numérotées pour refléter la structure du document. L'élément 
+automatiquement numérotées pour refléter la structure du document. L'élément
 <code>H1</code> est supposé être le titre du document et il n'est pas
 numéroté, mais, quand la fonction est enclenchée, toutes les autres en-têtes
 (<code>H2</code> à <code>H6</code>) reçoivent un numéro estimé suivant leur
 type et leur position dans la structure du document. Ces numéros sont affichés
 en bleu et ne peuvent pas être édités directement, mais ils sont
 automatiquement mis à jour toutes les fois qu'une en-tête est créée ou
-effacée. Ils n'apparaissent pas seulement dans la vue principale, mais aussi 
-dans la Table des contenus de la vue. </p>
+effacée. Ils n'apparaissent pas seulement dans la vue principale, mais aussi
+dans la Vue table des matières. </p>
 
 <p>Quand le document est  <a href="Printing.html#L1062">imprimé</a>, les
 numéros de section apparaissent dans le document imprimé seulement si la
-fonction "numéroter"est enclenchée à ce moment là. </p>
+fonction "numéroter"est enclenchée à ce moment là.</p>
 
 <p>Quand le document est sauvé, les numéros de section ne sont pas sauvés dans
-<a href="Publishing.html#L1104">la forme HTML</a>, mais ils sont engendrés
-dans la  <a href="Publishing.html#L1105">forme du texte.</a></p>
+<a href="Publishing.html#L1104">le format HTML</a>, mais ils sont engendrés
+dans la  <a href="Publishing.html#L1105">le format texte.</a></p>
 
-<p>La commande  <strong>Numéroter les sections </strong> du menu 
-<strong>Spécial</strong> vous permet d'allumer ou d'éteindre la fonction
-numérotation. </p>
+<p>La commande  <strong>Numéroter les sections </strong> du menu
+<strong>Spécial</strong> est une bascule qui vous permet d'activer ou de
+désactiver  la fonction "numérotater".</p>
 </div>
 
 <p align="right"><a href="Printing.html"><img alt="previous" border="0"
