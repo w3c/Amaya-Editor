@@ -281,6 +281,18 @@ static void Build_path_to_image_dir(char* buffer) {
 
 
 /*----------------------------------------------------------------------
+   Build_path_to_help_dir
+   Returns path to directory where images of the interface are stored
+  ----------------------------------------------------------------------*/
+#ifdef _SVGANIM
+static void Build_path_to_help_dir(char* buffer) {
+	sprintf (buffer, "%s%cdoc%c", TtaGetEnvString ("THOTDIR"), DIR_SEP, DIR_SEP);
+}
+#endif /* _SVGANIM */
+
+
+
+/*----------------------------------------------------------------------
    Init_tmapping_animations_struct
   ----------------------------------------------------------------------*/
 #ifdef _SVGANIM
@@ -4191,29 +4203,23 @@ static void Show_timeline_help (NotifyElement *event)
 	#define h_help 300
 	Document basedoc;
 	char buffer[512];
-/*	Build_path_to_image_dir (buffer); */
-	strcpy (buffer, "../");
+	Build_path_to_help_dir (buffer);
 	strcat (buffer, ct_timeline_help_file);
 	
 	basedoc = Get_basedoc_of (event->document);
 
-	if (dt[basedoc].helpdoc) {
+	if (!dt[basedoc].helpdoc) {
+		/* open a new window to display the new document */
+		dt[basedoc].helpdoc = GetAmayaDoc (buffer, NULL, 0,0, CE_ABSOLUTE,
+			FALSE, FALSE, FALSE, TtaGetDefaultCharset ());
+		  }
+	else {
 		/* help window already shown so close help window */
 	    TtaCloseView (dt[basedoc].helpdoc, 1);
 		FreeDocumentResource (dt[basedoc].helpdoc);
+		TtaCloseDocument (dt[basedoc].helpdoc);
 		dt[basedoc].helpdoc = 0;
 		dt[basedoc].helpview = 0;
-	} else {
-		/* open a new window to display the new document */
-	
-/*		dt[basedoc].helpdoc = TtaOpenDocument ("HTML", buffer,0);
-		dt[basedoc].helpview = TtaOpenMainView (dt[basedoc].helpdoc, x_help, y_help, w_help, h_help);
-*/
-/*
-		dt[basedoc].helpdoc = InitDocAndView (0, buffer, docHTML, 0, FALSE, L_Other);
-		 res = LoadDocument (newdoc, pathname, form_data, NULL, method,
-			   tempfile, documentname, http_headers, FALSE, &InNewWindow); */
-
 	}
 }
 #endif /* _SVGANIM */
