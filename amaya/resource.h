@@ -668,6 +668,11 @@
 #define IDC_IDAPPLYTODOC                1538
 #define IDC_IDAPPLYTOSEL                1539
 #define IDC_IDSTATUS                    1540
+#define IDC_TAUTHREALM                  1542
+#define IDC_TAUTHSERVER                 1543
+#define IDC_TAUTHINFO                   1544
+#define IDC_TPASSWDEDIT                 1545
+#define IDC_TNAMEEDIT                   1546
 #define ID_BUTTON40017                  40017
 #define ID_BUTTON40018                  40018
 #define ID_BUTTON40019                  40019
@@ -714,7 +719,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        546
 #define _APS_NEXT_COMMAND_VALUE         40052
-#define _APS_NEXT_CONTROL_VALUE         1542
+#define _APS_NEXT_CONTROL_VALUE         1547
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

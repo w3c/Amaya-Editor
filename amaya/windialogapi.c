@@ -3339,6 +3339,17 @@ LPARAM lParam;
 
     switch (msg) {
     case WM_INITDIALOG:
+	  /* initialize the dialog messages */
+      SetWindowText (hwnDlg, TtaGetMessage (AMAYA, AM_GET_AUTHENTICATION));
+/*
+	  SetWindowText (GetDlgItem (hwnDlg, IDC_TAUTHREALM), TtaGetMessage (AMAYA, AM_AUTHENTICATION_REALM));
+	  SetWindowText (GetDlgItem (hwnDlg, IDC_TAUTHSERVER), TtaGetMessage (AMAYA, AM_AUTHENTICATION_SERVER));
+*/
+	  SetWindowText (GetDlgItem (hwnDlg, IDC_TNAMEEDIT), TtaGetMessage (AMAYA, AM_NAME));
+	  SetWindowText (GetDlgItem (hwnDlg, IDC_TPASSWDEDIT), TtaGetMessage (AMAYA, AM_PASSWORD));
+      SetWindowText (GetDlgItem (hwnDlg, ID_CONFIRM), TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
+      SetWindowText (GetDlgItem (hwnDlg, ID_DONE), TtaGetMessage (LIB, TMSG_DONE));
+
       hwnNameEdit = GetDlgItem (hwnDlg, IDC_NAMEEDIT);
       hwnPasswdEdit = GetDlgItem (hwnDlg, IDC_PASSWDEDIT);
 	  SetDlgItemText (hwnDlg, IDC_AUTHREALM, string_par1);
