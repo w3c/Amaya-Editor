@@ -1684,8 +1684,9 @@ void                ResetHighlightedElement ()
 {
    if (HighlightElement)
       {
-      TtaRemoveAttribute (HighlightElement, HighLightAttribute,
-			  HighlightDocument);
+      if (TtaGetElementType (HighlightElement).ElSSchema != NULL)
+         TtaRemoveAttribute (HighlightElement, HighLightAttribute,
+			     HighlightDocument);
       HighlightDocument = 0;
       HighlightElement = NULL;
       HighLightAttribute = NULL;
