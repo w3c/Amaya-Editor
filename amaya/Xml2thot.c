@@ -2888,43 +2888,43 @@ static void EndOfAttributeName (char *xmlName)
 	     }
 	 }
      }
-   else if (currentParserCtxt == NULL ||
-	    currentParserCtxt->SSchemaName == NULL ||
-	    strcmp (currentParserCtxt->SSchemaName, "SVG") ||
-	    strcmp (xmlName, "xlink:href"))
-     /* This attribute doesn't belongs to the current namespace */
+   else
      {
        if ((ptr = strrchr (nsURI, NS_COLON)) != NULL)
 	 {
+	   /* This attribute is prefixed */
 	   *ptr = EOS;
-	   sprintf ((char *)msgBuffer, 
-		    "Undefined prefix for the attribute <%s>", ptr+1);
-	   *ptr = NS_COLON;
-	   XmlParseError (errorParsing, (unsigned char *)msgBuffer, 0);
-	   TtaFreeMemory (nsURI);
-	   UnknownAttr = TRUE;
-	   return;
-	 } 
-       else
-	 {
-	   /* This attribute belongs to the same namespace than the element */
-	   TtaFreeMemory (nsURI);
-	   nsURI = NULL;
-	   attrName = (char *)TtaStrdup ((char *)xmlName);
-	   if (UnknownNS)
-	     /* The corresponding element doesn't belong to a supported namespace */ 
+	   if (strcmp (nsURI, "xml") != 0)
 	     {
-	       sprintf ((char *)msgBuffer, 
-			"Namespace not supported for the attribute \"%s\"", (char *)xmlName);
-	       XmlParseError (errorParsing, (unsigned char *)msgBuffer, 0);
-	       /* Create an unknown attribute  */
-	       UnknownXmlAttribute (attrName, NULL);
-	       UnknownAttr = TRUE;
+	       if (currentParserCtxt == NULL ||
+		     currentParserCtxt->SSchemaName == NULL ||
+		     strcmp (currentParserCtxt->SSchemaName, "SVG") ||
+		     strcmp (nsURI, "xlink"))
+		 {
+		   sprintf ((char *)msgBuffer, 
+			    "Undefined prefix for the attribute <%s>", ptr+1);
+		   XmlParseError (errorParsing, (unsigned char *)msgBuffer, 0);
+		   *ptr = NS_COLON;
+		   TtaFreeMemory (nsURI);
+		   UnknownAttr = TRUE;
+		   return;
+		 }     
 	     }
+	   *ptr = NS_COLON;
+	 }
+       /* This attribute belongs to the same namespace as the element */
+       attrName = (char *)TtaStrdup ((char *)xmlName);
+       if (UnknownNS)
+	 /* The corresponding element doesn't belong to a supported namespace */ 
+	 {
+	   sprintf ((char *)msgBuffer, 
+		    "Namespace not supported for the attribute \"%s\"", (char *)xmlName);
+	   XmlParseError (errorParsing, (unsigned char *)msgBuffer, 0);
+	   /* Create an unknown attribute  */
+	   UnknownXmlAttribute (attrName, NULL);
+	   UnknownAttr = TRUE;
 	 }
      }
-   else
-     attrName = (char *)TtaStrdup ((char *)xmlName);
    
    if (currentParserCtxt == NULL)
      {
