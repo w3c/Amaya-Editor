@@ -214,10 +214,6 @@ void *context;
    ElemImage          *ctxEl, *ctxPrev;
 
    FilesLoading[doc]--;
-#ifdef AMAYA_JAVA
-fprintf(stderr,"JavaImageLoaded(%d) called : %d\n",
-        doc, FilesLoading[doc]);
-#endif
    if (DocumentURLs[doc] != NULL)
      {
 	/* an image of the document is now loaded */
@@ -384,8 +380,6 @@ int                 flags;
 	      update = FALSE;	/* the image is not loaded yet */
 	      FilesLoading[doc]++;
 #ifdef AMAYA_JAVA
-fprintf(stderr,"FetchImage(%d) transfer started : %d\n",
-        doc, FilesLoading[doc]);
 	      i = GetObjectWWW (doc, pathname, NULL, tempfile,
 		                AMAYA_ASYNC | flags, NULL, NULL,
 				(void *) JavaImageLoaded,
@@ -459,8 +453,6 @@ int                 flags;
    if (FilesLoading[doc] == 0)
      {
 #ifndef AMAYA_JAVA
-fprintf(stderr,"FetchAndDisplayImages(%d) transfer interrupted : %d\n",
-        doc, FilesLoading[doc]);
 	/* transfer interrupted */
 	TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_LOAD_ABORT), NULL);
 #endif

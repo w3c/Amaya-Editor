@@ -620,6 +620,8 @@ retry:
     res = sscanf(msg, "%s %d %d %s", host, &addrtype, &addrlength, address);
     if (res < 4) goto dns_failed;
 
+    if ((addrtype == 0) || (addrlength == 0)) goto dns_failed;
+
     /* set up h_name in answer */
     strncpy(hostname_result, name, sizeof(hostname_result));
     gethostbyname_result.h_name = hostname_result;
@@ -803,8 +805,7 @@ void                InitJava (void)
 void                InitJava ()
 #endif
 {
-    KaffeObject* args;
-    stringClass** str;
+    struct Hjava_lang_String* str;
     char initClass[MAX_PATH];
 
     char *app_name = TtaGetEnvString ("appname");
@@ -827,20 +828,16 @@ void                InitJava ()
     /* Build the init class name */
     sprintf(initClass, "%s/%sInit", app_name, app_name);
 
-    /* Build an array of strings as the arguments */
-    args = AllocObjectArray(1, "Ljava/lang/String;");
-
     /* Build each string and put into the array */
-    str = (stringClass**)(args + 1);
-    str[0] = makeJavaString(app_name, strlen(app_name));
+    str = makeJavaString(app_name, strlen(app_name));
 
     /* lauch the init class for the application */
     do_execute_java_class_method(initClass, "main",
-                   "([Ljava/lang/String;)V", args);
+                   "(Ljava/lang/String;)V", str);
 
     /* Start the application loop of events */
     do_execute_java_class_method("thotlib.Interface", "main",
-                   "([Ljava/lang/String;)V", args);
+                   "(Ljava/lang/String;)V", str);
 }
 
 /*----------------------------------------------------------------------

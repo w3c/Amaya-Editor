@@ -33,7 +33,7 @@ struct Hamaya_HTTPRequest* CreateHTTPRequest ()
 struct Hamaya_HTTPRequest* CreateHTTPRequest ()
 #endif
 {
-    KaffeObject *obj;
+    Hjava_lang_Object *obj;
     struct Hamaya_HTTPRequest* request;
 
     obj = AllocObject("amaya/HTTPRequest");
@@ -138,7 +138,7 @@ void *arg;
     javaString2CString(unhand(request)->urlName, urlName, sizeof(urlName));
     javaString2CString(unhand(request)->filename, outputfile, sizeof(outputfile));
 
-fprintf(stderr,"GetObjectWWWCallback : %s : %d\n", urlName, status);
+/* fprintf(stderr,"GetObjectWWWCallback : %s : %d\n", urlName, status); */
 
     if (callback != NULL)
         callback(doc, status, &urlName[0], &outputfile[0], context);
@@ -262,6 +262,10 @@ boolean             error_html;
 	    do_execute_java_method(0, (void *) request, "AsyncGet", "(I)I",
 	                           0, 0, flag);
 	    break;
+	case AMAYA_FORM_POST | AMAYA_SYNC:
+	    do_execute_java_method(0, (void *) request, "Post", "(I)I",
+	                           0, 0, flag);
+	    break;
 	default:
 	    fprintf(stderr,"GetObjectWWW : unsupported mode %d\n", mode);
 	    exit(1);
@@ -282,6 +286,11 @@ boolean             error_html;
         case 203:
         case 204:
 	    /* Success */
+            javaString2CString(unhand(request)->urlName, url, MAX_PATH);
+            javaString2CString(unhand(request)->filename, outputfile, MAX_PATH);
+	    break;
+	case 404:
+	    /* Not found error */
             javaString2CString(unhand(request)->urlName, url, MAX_PATH);
             javaString2CString(unhand(request)->filename, outputfile, MAX_PATH);
 	    break;

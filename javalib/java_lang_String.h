@@ -13,18 +13,14 @@
 #define __java_lang_string_h
 
 /* From baseClasses.h */
-struct _stringClass {
-	KaffeObject base;
+typedef struct Hjava_lang_String {
+	Hjava_lang_Object	base;
 	struct {
 		HArrayOfChar*	value;
 		jint		offset;
 		jint		count;
 	} data[1];
-};
-#ifndef stringClass
-#define stringClass struct _stringClass
-#endif
-#define	Hjava_lang_String	_stringClass
+} Hjava_lang_String;
 
 /* Get length of string */
 #define	javaStringLength(_str)	(unhand(_str)->count)

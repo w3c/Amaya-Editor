@@ -246,10 +246,6 @@ Document            document;
 
 #endif
 {
-#ifdef AMAYA_JAVA
-fprintf(stderr,"ResetStop(%d) called : %d\n",
-        document, FilesLoading[document]);
-#endif
 #ifndef AMAYA_JAVA
    if (FilesLoading[document] > 0)
      {
@@ -282,10 +278,6 @@ Document            doc;
       /* this document is displayed */
       TtaChangeButton (document, 1, 1, stopR);
 #endif
-#ifdef AMAYA_JAVA
-fprintf(stderr,"ActiveTransfer(%d) called : %d\n",
-        document, FilesLoading[document]);
-#endif
 }
 
 
@@ -301,10 +293,6 @@ View                view;
 
 #endif
 {
-#ifdef AMAYA_JAVA
-fprintf(stderr,"StopTransfer(%d) called : %d\n",
-        document, FilesLoading[document]);
-#endif
    if (FilesLoading[document] != 0)
      {
 #ifndef AMAYA_JAVA
@@ -315,10 +303,6 @@ fprintf(stderr,"StopTransfer(%d) called : %d\n",
 	FilesLoading[document] = 0;
 #endif
      }
-#ifdef AMAYA_JAVA
-fprintf(stderr,"StopTransfer(%d) finished : %d\n",
-        document, FilesLoading[document]);
-#endif
 }
 
 /*----------------------------------------------------------------------
@@ -873,6 +857,7 @@ View                view;
    char                pathname[MAX_LENGTH];
    char                documentname[MAX_LENGTH];
    Document            newdoc;
+   Document            res;
    int                 toparse;
 
    if (DocumentURLs[(int) document] == NULL)
@@ -895,6 +880,17 @@ View                view;
    NormalizeURL (DocumentURLs[(int) document], 0, pathname, documentname);
    W3Loading = document;	/* this document is currently in load */
    newdoc = InitDocView (document, pathname);
+
+#ifdef AMAYA_JAVA
+   /*
+    * Check against concurrent loading on the same frame.
+    */
+   if (FilesLoading[newdoc]) {
+       return(0);
+   }
+   FilesLoading[newdoc]++;
+#endif
+
    tempfile[0] = EOS;
    toparse = 0;
    ActiveTransfer (newdoc);
@@ -910,12 +906,15 @@ View                view;
      {
         TtaSetCursorWatch (0, 0);
 	/* do we need to control the last slash here? */
-	newdoc = LoadHTMLDocument (newdoc, pathname, tempfile, documentname);
+	res = LoadHTMLDocument (newdoc, pathname, tempfile, documentname);
 	TtaHandlePendingEvents ();
 	/* fetch and display all images referred by the document */
-	FetchAndDisplayImages (newdoc, AMAYA_NOCACHE);
+	FetchAndDisplayImages (res, AMAYA_NOCACHE);
 	TtaResetCursor (0, 0);
      }
+#ifdef AMAYA_JAVA
+   FilesLoading[newdoc]--;
+#endif
 }
 
 /*----------------------------------------------------------------------
@@ -1266,10 +1265,8 @@ DoubleClickEvent    DC_event;
 	      * Check against concurrent loading on the same frame.
 	      */
 	     if (FilesLoading[newdoc]) {
-fprintf(stderr,"GetHTMLDocument(%d) : %d failed \n", newdoc, FilesLoading[newdoc]);
 	         return(0);
 	     }
-fprintf(stderr,"GetHTMLDocument(%d) : %d\n", newdoc, FilesLoading[newdoc]);
              FilesLoading[newdoc]++;
 #endif
 	     W3Loading = newdoc;	/* this document is currently in load */
@@ -1307,8 +1304,6 @@ fprintf(stderr,"GetHTMLDocument(%d) : %d\n", newdoc, FilesLoading[newdoc]);
 		  if (res == 0) {
 #ifdef AMAYA_JAVA
 		     FilesLoading[newdoc]--;
-fprintf(stderr,"LoadHTMLDocument(%d) failed : %d\n",
-        newdoc, FilesLoading[newdoc]);
 #endif
 		     return (res);
 		  }
@@ -1335,8 +1330,6 @@ fprintf(stderr,"LoadHTMLDocument(%d) failed : %d\n",
 	       }
 #ifdef AMAYA_JAVA
              FilesLoading[newdoc]--;
-fprintf(stderr,"LoadHTMLDocument(%d) completed : %d\n",
-        newdoc, FilesLoading[newdoc]);
 #endif
 	  }
      }
