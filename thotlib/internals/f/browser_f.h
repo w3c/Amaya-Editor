@@ -8,6 +8,10 @@
 
 extern void TtaExtractSuffix ( char *aName,
                                char *aSuffix );
+extern void TtaStrAddSorted ( char *new_entry,
+                              char *table,
+                              char *ptr_last,
+                              int nb_entries );
 extern void TtaListDirectory ( char *dirname,
                                int formRef,
                                char *dirTitle,
@@ -20,6 +24,10 @@ extern void TtaListDirectory ( char *dirname,
 
 extern void TtaExtractSuffix (/* char *aName,
                                  char *aSuffix */);
+extern void TtaStrAddSorted (/* char *new_entry,
+                                char *table,
+                                char *ptr_last,
+                                int nb_entries */);
 extern void TtaListDirectory (/* char *dirname,
                                  int formRef,
                                  char *dirTitle,
