@@ -413,7 +413,7 @@ int ApproximateDotPerInch( int dpi )
   int i = 0;
   while ( i < sizeof(dpi_table)-1 )
     {
-      if (dpi <= (dpi_table[i]+dpi_table[i+1])/2 )
+      if (dpi <= (dpi_table[i]+dpi_table[i+1] + 1)/2 )
 	return dpi_table[i];
       i++;
     }

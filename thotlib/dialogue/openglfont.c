@@ -350,11 +350,9 @@ static int FontFaceSize (GL_font *font, unsigned int size, unsigned int res)
   if (size == font->size)
     return 0;
   size = SUPERSAMPLINGMUL (size);
-
   err = FT_Set_Char_Size (font->face, 0, size * 64, res, res);
-  if (err) 
+  if (err)
     err = FT_Set_Char_Size (font->face, 0, size * 64, 75, 75);
-
   /*res x_resolution, res, y_resolution*/
   if (err)
     return err;
@@ -697,7 +695,7 @@ static void MakeBitmapGlyph (GL_font *font, unsigned int g,
   if (g != 0)
     /*use of FT_LOAD_DEFAULT when quality will be ok*/
   {
-    if (!FT_Load_Glyph (font->face, g, FT_LOAD_NO_HINTING))
+    if (!FT_Load_Glyph (font->face, g, FT_LOAD_DEFAULT/*FT_LOAD_NO_HINTING*/))
      {
         if (!FT_Get_Glyph (font->face->glyph, &Glyph))
 	{
