@@ -1400,8 +1400,9 @@ void TtaGetViewXYWH (Document doc, int view, int *xmm, int *ymm, int *width,
   tmpw = gtk_widget_get_toplevel (GTK_WIDGET(widget));
   w = tmpw->allocation.width;
   h = tmpw->allocation.height;
+  /* x is always 0...*/
+  gdk_window_get_root_origin (widget->parent->parent->parent->window, &x, &y);
   x = tmpw->allocation.x;
-  y = tmpw->allocation.y;
 #else /* !_GTK */
   widget = XtParent (XtParent (XtParent (widget)));
 
