@@ -3675,6 +3675,7 @@ ThotBool    plainText;
   CHAR_T          temppath[MAX_LENGTH];
   int             length, error;
   ThotBool        isHTML;
+  ThotBool        isANNOT = FALSE;
   char            www_file_name[MAX_LENGTH];
 
   XMLcontext.doc = doc;
@@ -3742,7 +3743,9 @@ ThotBool    plainText;
 	/* is the current document a HTML document */
 	isHTML = (ustrcmp (TtaGetSSchemaName (DocumentSSchema),
 			   TEXT("HTML")) == 0);	
-	if (!isHTML)
+	if (!isHTML &&
+	    !(isANNOT = (ustrcmp (TtaGetSSchemaName (DocumentSSchema),
+				  TEXT("Annot")) == 0)))
 	  {
 	    /* change the document type */
 	    TtaFreeView (doc, 1);
