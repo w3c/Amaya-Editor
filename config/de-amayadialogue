@@ -6,261 +6,262 @@
 4 Datei
 5 Bearbeiten
 6 Struktur
-7 Elemente
-8 Verweis
-9 Ansicht
-10 Formate
-11 Extras
-12 Attribute
-13 Anmerkungen
-14 Kooperation
-15 Hilfe
-16 Neu
-17 XHTML 1.1...
-18 XHTML 1.0 Transitional...
-19 XHTML 1.0 Strict...
-20 XHTML 1.0 Basic...
-21 MathML...
-22 SVG...
-23 Formatvorlage...
-24 Schablone...
-25 Öffnen...
-26 Öffnen (neues Fenster)...
-27 Aktualisieren
-28 Zurück
-29 Vorwärts
-30 Speichern
-31 Speichern unter...
-32 Synchronisieren
-33 DTD ändern
-34 DTD entfernen
-35 XHTML 1.1
-36 Dokumenttyp XHTML 1.0 Transitional zuweisen
-37 XHTML 1.0 Strict
-38 XHTML 1.0 Basic
-39 Dokumenttyp HTML 4.01 Transitional zuweisen
-40 HTML Strict
-41 XHTML 1.1 + MathML
-42 MathML
-43 SVG
-44 Kurzinfo
-45 Druckoptionen...
-46 Drucken
-47 Schließen
-48 Beenden
-49 Ansicht schließen
-50 Rückgängig
-51 Erneut
-52 Ausschneiden
-53 Kopieren
-54 Einfügen
-55 Löschen
-56 Editormodus
-57 Suchen/Ersetzen...
-58 Rechtschreibprüfung...
-59 Transformieren...
-60 Basisadresse (base)
-61 Meta-Information (meta)
-62 Verweis (link)
-63 Inline-Script (script)
-64 Inline-Style (style)
-65 Kommentar
-66 Titel ändern
-67 Autorenadresse (address)
-68 Aktiver Bildbereich (area)
-69 Kreis
-70 Polygon
-71 Rechteck
-72 Eingerücktes Zitat (blockquote)
-73 Zeilenumbruch (br)
-74 Ábschnitt (div)
-75 Formular
-76 Neues Formular (form)
-77 Knopf (button)
-78 Ankreuzkästchen (checkbox)
-79 Feld für Dateiname (file)
-80 Verborgenes Feld (hidden)
-81 Bild (image)
-82 Kennwortfeld (password)
-83 Auswahlknopf (radio)
-84 Zurücksetzen (reset)
-85 Absenden (submit)
-86 Eingabezeile (input)
-87 Feldgruppe (fieldset)
-88 Feldbeschriftung (label)
-89 Menü (option)
-90 Untermenü (optgroup)
-91 Eingabefeld (textarea)
-92 Überschrift
-93 h1 (groß)
-94 h2
-95 h3
-96 h4
-97 h5
-98 h6 (klein)
-99 Horizontale Linie (hr)
-100 Inline-Frame (iframe)
-101 Bild (img)...
-102 Liste
-103 Ungeordnete Liste (ul)
-104 Geordnete Liste (ol)
-105 Definitionsliste (dl)
-106 Begriff (dt)
-107 Definition (dd)
-108 Formel
-109 Neue Formel (math)
-110 Text (mtext)
-111 Bezeichner (mi)
-112 Zahl (mn)
-113 Operator (mo)
-114 Leerzeichen (mspace)
-115 Zeichen (&xxx;)
-116 Unsichtbare Multiplikation
-117 Angewendete Funktion
-118 Wurzel (mroot)
-119 Quadratwurzel (msqrt)
-120 Einschluß (menclose)
-121 Bruch (mfrac)
-122 Index und Exponent (msubsup)
-123 Index (msub)
-124 Exponent (msup)
-125 Unter- und Überschrift (munderover)
-126 Unterschrift (munder)
-127 Überschrift (mover)
-128 Klammern (mrow)
-129 Vierfachindex (mmultiscripts)
-130 Matrix (mtable)
-131 Matrixspalte löschen
-132 Skripalternative (noscript)
-133 Objekt
-134 Objekt (object)
-135 Parameter (param)
-136 Absatz (p)
-137 Formatierter Text (pre)
-138 Ruby
-139 Tabelle
-140 Neue Tabelle (table)
-141 Überschrift (caption)
-142 Spaltengruppe (colgroup)
-143 Spalte (col)
-144 Kopf (thead)
-145 Körper (tbody)
-146 Fußzeile (tfoot)
-147 Zeile (tr)
-148 Zelle (td)
-149 Kopfzelle (th)
-150 Spalte löschen
-151 Auf vorherigen Anker
-152 Erzeugen/Ändern...
-153 Anker erzeugen
-154 Verweis/Anker löschen
-155 Als XPointer speichern
-156 Symbolleiste anzeigen
-157 Adresszeile anzeigen
-158 Aktive Bildbereiche
-159 Anker anzeigen
-160 Schrift vergrößern
-161 Schrift verkleinern
-162 Parserfehler anzeigen
-163 Struktur
-164 Textbrowser
-165 Verweise
-166 Inhaltsverzeichnis
-167 Quelltext
-168 Schrift...
-169 Farbe...
-170 Ausrichtung...
-171 Hintergrundbild...
-172 Regel erzeugen...
-173 Klasse übernehmen...
-174 Formatvorlage
-175 Verknüpfen...
-176 Öffnen...
-177 Deaktivieren...
-178 Aktivieren...
-179 Entfernen...
-180 Inhaltsorientiert
-181 Betont (em)
-182 Hervorgehoben (strong)
-183 Zitatquelle (cite)
-184 Definition (dfn)
-185 Programmtext (code)
-186 Variable (var)
-187 Beispiel (samp)
-188 Tastatureingabe (kbd)
-189 Abkürzung (abbr)
-190 Akronym (acronym)
-191 Eingefügter Text (ins)
-192 Gelöschter Text (del)
-193 Darstellungsorientiert
-194 Kursiv (i)
-195 Fett (b)
-196 Gesperrt (tt)
-197 Groß (big)
-198 Klein (small)
-199 Tiefgestellt (sub)
-200 Hochgestellt (sup)
-201 Zitat (q)
-202 Textrichtung LTR/RTL (bdo)
-203 Abschnitte numerieren
-204 Buch erstellen
-205 Id hinzufügen/entfernen...
-206 Einstellungen
-207 Allgemein...
-208 Browser...
-209 Veröffentlichen...
-210 Cache...
-211 Proxy...
-212 Farben...
-213 Fenstergeometrie...
-214 Sprachen...
-215 Profile...
-216 Schablonen...
-217 SVG
-218 **Show SVG Library
-219 **Add selection in SVG Library
-220 Zur Markierung
-221 Zum Dokument
-222 Auf Markierung verschieben
-223 Auf XPointer verschieben
-224 Beantworten
-225 Veröffentlichen
-226 Löschen
-227 Laden
-228 Abfrage bearbeiten...
-229 Filter...
-230 Konfigurieren...
-231 Resource sperren...
-232 Resource entsperren...
-233 Resourceeigenschaften anzeigen...
-234 Sperrinformation kopieren...
-235 Gesperrt?
-236 Einstellungen...
-237 Info
-238 Über Amaya
-239 Index
-240 Browsen
-241 Ansichten
-242 Markieren
-243 Dokument
-244 Elemente
-245 Attribute
-246 Zeichen
-247 Transformieren
-248 Verweise
-249 Tabellen
-250 Aktive Bildbereiche
-251 Formeln
-252 SVG
-253 XML
-254 Formate/Formatvorlagen
-255 Suchen/Ersetzen
-256 Rechtschreibprüfung
-257 Speichern/Veröffentlichen
-258 Drucken
-259 Abschnitte numerieren
-260 Buch erstellen
-261 Anmerkungen
-262 Konfiguration
-263 Tastenkürzel
-264 Benutzerfreundlichkeit
+7 Xhtml
+8 Xml
+9 Verweis
+10 Ansicht
+11 Formate
+12 Extras
+13 Attribute
+14 Anmerkungen
+15 Kooperation
+16 Hilfe
+17 Neu
+18 XHTML 1.1...
+19 XHTML 1.0 Transitional...
+20 XHTML 1.0 Strict...
+21 XHTML 1.0 Basic...
+22 MathML...
+23 SVG...
+24 Formatvorlage...
+25 Schablone...
+26 Öffnen...
+27 Öffnen (neues Fenster)...
+28 Aktualisieren
+29 Zurück
+30 Vorwärts
+31 Speichern
+32 Speichern unter...
+33 Synchronisieren
+34 DTD ändern
+35 DTD entfernen
+36 XHTML 1.1
+37 Dokumenttyp XHTML 1.0 Transitional zuweisen
+38 XHTML 1.0 Strict
+39 XHTML 1.0 Basic
+40 Dokumenttyp HTML 4.01 Transitional zuweisen
+41 HTML Strict
+42 XHTML 1.1 + MathML
+43 MathML
+44 SVG
+45 Kurzinfo
+46 Druckoptionen...
+47 Drucken
+48 Schließen
+49 Beenden
+50 Ansicht schließen
+51 Rückgängig
+52 Erneut
+53 Ausschneiden
+54 Kopieren
+55 Einfügen
+56 Löschen
+57 Editormodus
+58 Suchen/Ersetzen...
+59 Rechtschreibprüfung...
+60 Transformieren...
+61 Basisadresse (base)
+62 Meta-Information (meta)
+63 Verweis (link)
+64 Inline-Script (script)
+65 Inline-Style (style)
+66 Kommentar
+67 Titel ändern
+68 Autorenadresse (address)
+69 Aktiver Bildbereich (area)
+70 Kreis
+71 Polygon
+72 Rechteck
+73 Eingerücktes Zitat (blockquote)
+74 Zeilenumbruch (br)
+75 Ábschnitt (div)
+76 Formular
+77 Neues Formular (form)
+78 Knopf (button)
+79 Ankreuzkästchen (checkbox)
+80 Feld für Dateiname (file)
+81 Verborgenes Feld (hidden)
+82 Bild (image)
+83 Kennwortfeld (password)
+84 Auswahlknopf (radio)
+85 Zurücksetzen (reset)
+86 Absenden (submit)
+87 Eingabezeile (input)
+88 Feldgruppe (fieldset)
+89 Feldbeschriftung (label)
+90 Menü (option)
+91 Untermenü (optgroup)
+92 Eingabefeld (textarea)
+93 Überschrift
+94 h1 (groß)
+95 h2
+96 h3
+97 h4
+98 h5
+99 h6 (klein)
+100 Horizontale Linie (hr)
+101 Inline-Frame (iframe)
+102 Bild (img)...
+103 Liste
+104 Ungeordnete Liste (ul)
+105 Geordnete Liste (ol)
+106 Definitionsliste (dl)
+107 Begriff (dt)
+108 Definition (dd)
+109 Skripalternative (noscript)
+110 Objekt
+111 Objekt (object)
+112 Parameter (param)
+113 Absatz (p)
+114 Formatierter Text (pre)
+115 Ruby
+116 Tabelle
+117 Neue Tabelle (table)
+118 Überschrift (caption)
+119 Spaltengruppe (colgroup)
+120 Spalte (col)
+121 Kopf (thead)
+122 Körper (tbody)
+123 Fußzeile (tfoot)
+124 Zeile (tr)
+125 Zelle (td)
+126 Kopfzelle (th)
+127 Spalte löschen
+128 Inhaltsorientiert
+129 Betont (em)
+130 Hervorgehoben (strong)
+131 Zitatquelle (cite)
+132 Definition (dfn)
+133 Programmtext (code)
+134 Variable (var)
+135 Beispiel (samp)
+136 Tastatureingabe (kbd)
+137 Abkürzung (abbr)
+138 Akronym (acronym)
+139 Eingefügter Text (ins)
+140 Gelöschter Text (del)
+141 Darstellungsorientiert
+142 Kursiv (i)
+143 Fett (b)
+144 Gesperrt (tt)
+145 Groß (big)
+146 Klein (small)
+147 Tiefgestellt (sub)
+148 Hochgestellt (sup)
+149 Zitat (q)
+150 Textrichtung LTR/RTL (bdo)
+151 Formel
+152 Neue Formel (math)
+153 Text (mtext)
+154 Bezeichner (mi)
+155 Zahl (mn)
+156 Operator (mo)
+157 Leerzeichen (mspace)
+158 Zeichen (&xxx;)
+159 Unsichtbare Multiplikation
+160 Angewendete Funktion
+161 Wurzel (mroot)
+162 Quadratwurzel (msqrt)
+163 Einschluß (menclose)
+164 Bruch (mfrac)
+165 Index und Exponent (msubsup)
+166 Index (msub)
+167 Exponent (msup)
+168 Unter- und Überschrift (munderover)
+169 Unterschrift (munder)
+170 Überschrift (mover)
+171 Klammern (mrow)
+172 Vierfachindex (mmultiscripts)
+173 Matrix (mtable)
+174 Matrixspalte löschen
+175 SVG
+176 **Show SVG Library
+177 **Add selection in SVG Library
+178 Elemente XML...
+179 Auf vorherigen Anker
+180 Erzeugen/Ändern...
+181 Anker erzeugen
+182 Verweis/Anker löschen
+183 Als XPointer speichern
+184 Symbolleiste anzeigen
+185 Adresszeile anzeigen
+186 Aktive Bildbereiche
+187 Anker anzeigen
+188 Schrift vergrößern
+189 Schrift verkleinern
+190 Parserfehler anzeigen
+191 Struktur
+192 Textbrowser
+193 Verweise
+194 Inhaltsverzeichnis
+195 Quelltext
+196 Schrift...
+197 Farbe...
+198 Ausrichtung...
+199 Hintergrundbild...
+200 Regel erzeugen...
+201 Klasse übernehmen...
+202 Verknüpfen...
+203 Öffnen...
+204 Deaktivieren...
+205 Aktivieren...
+206 Entfernen...
+207 Abschnitte numerieren
+208 Buch erstellen
+209 Id hinzufügen/entfernen...
+210 Einstellungen
+211 Allgemein...
+212 Browser...
+213 Veröffentlichen...
+214 Cache...
+215 Proxy...
+216 Farben...
+217 Fenstergeometrie...
+218 Sprachen...
+219 Profile...
+220 Schablonen...
+221 Zur Markierung
+222 Zum Dokument
+223 Auf Markierung verschieben
+224 Auf XPointer verschieben
+225 Beantworten
+226 Veröffentlichen
+227 Löschen
+228 Laden
+229 Abfrage bearbeiten...
+230 Filter...
+231 Konfigurieren...
+232 Resource sperren...
+233 Resource entsperren...
+234 Resourceeigenschaften anzeigen...
+235 Sperrinformation kopieren...
+236 Gesperrt?
+237 Einstellungen...
+238 Info
+239 Über Amaya
+240 Index
+241 Browsen
+242 Ansichten
+243 Markieren
+244 Dokument
+245 Elemente
+246 Attribute
+247 Zeichen
+248 Transformieren
+249 Verweise
+250 Tabellen
+251 Aktive Bildbereiche
+252 Formeln
+253 SVG
+254 XML
+255 Formate/Formatvorlagen
+256 Suchen/Ersetzen
+257 Rechtschreibprüfung
+258 Speichern/Veröffentlichen
+259 Drucken
+260 Abschnitte numerieren
+261 Buch erstellen
+262 Anmerkungen
+263 Konfiguration
+264 Tastenkürzel
+265 Benutzerfreundlichkeit

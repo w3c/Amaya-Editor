@@ -6,261 +6,262 @@
 4 File
 5 Edita
 6 Struttura
-7 Elementi
-8 Collegamenti
-9 Viste
-10 Stile
-11 Speciale
-12 Attributi
-13 Annotazioni
-14 **Cooperation
-15 Aiuto
-16 Nuovo
-17 Nuovo documento XHTML 1.1...
-18 Nuovo documento XHTML 1.0 Transitional...
-19 Nuovo documento XHTML 1.0 Strict...
-20 Nuovo documento XHTML 1.0 Basic...
-21 Nuovo documento MathML...
-22 Nuovo documento SVG...
-23 Nuovo stile CSS...
-24 Modello
-25 Apri documento...
-26 Apri in una nuova finestra...
-27 Ricarica documento
-28 Precedente
-29 Successivo
-30 Salva
-31 Salva con nome...
-32 Sincronizza
-33 Modifica doctype
-34 Elimina doctype
-35 Cambia/Crea doctype XHTML 1.1
-36 Cambia/Crea doctype XHTML 1.0 Transitional
-37 Cambia/Crea doctype XHTML 1.0 Strict
-38 Cambia/Crea doctype XHTML 1.0 Basic
-39 Cambia/Crea doctype HTML 4.01 Transitional
-40 Cambia/Crea doctype HTML 4.01 Strict
-41 Cambia/Crea doctype XHTML 1.1 + MathML 2.0
-42 Cambia/Crea doctype MathML 2.0
-43 Cambia/Crea doctype SVG 1.0
-44 Informazioni sul documento
-45 Imposta e stampa...
-46 Stampa
-47 Chiudi
-48 Esci
-49 Chiudi vista
-50 Ritratta
-51 Rifai
-52 Taglia
-53 Copia
-54 Incolla
-55 Cancella
-56 Modo Editor
-57 Trova...
-58 Controllo ortografico...
-59 Trasforma...
-60 base
-61 meta
-62 link
-63 script
-64 style
-65 Commento
-66 Cambia Titolo...
-67 Indirizzo (address)
-68 Zona attiva (area)
-69 Cerchio
-70 Poligono
-71 Rettangolo
-72 blockquote
-73 A capo (br)
-74 Divisione (div)
-75 Modulo
-76 form
-77 Pulsante (input)
-78 Checkbox (input)
-79 Selettore di file (input)
-80 Controllo nascosto (input)
-81 Immagine (input)...
-82 Password (input)
-83 Pulsante radio (input)
-84 Reset (input)
-85 Invia (input)
-86 Testo (input)
-87 Gruppo di campi (fieldset)
-88 Etichetta (label)
-89 Menu (option)
-90 Sottomenu (optgroup)
-91 Area testo (textarea)
-92 Intestazione
-93 h1
-94 h2
-95 h3
-96 h4
-97 h5
-98 h6
-99 Riga orizzontale (hr)
-100 Cornice (iframe)
-101 Immagine (img)...
-102 Lista
-103 Lista puntata (ul)
-104 Lista numerata (ol)
-105 Lista di definizioni (dl)
-106 Termine (dt)
-107 Definizione (dd)
-108 Math
-109 Nuova formula (math)
-110 Testo (mtext)
-111 Identificatore (mi)
-112 Numero (mn)
-113 Operatore (mo)
-114 Spazio (mspace)
-115 Carattere (&xxx;)
-116 InvisibleTimes
-117 ApplyFunction
-118 Radice (mroot)
-119 Radice quadrata (msqrt)
-120 Ingloba (menclose)
-121 Frazione (mfrac)
-122 Pedice e indice (msubsup)
-123 Pedice (msub)
-124 Indice (msup)
-125 Sotto e sopra (munderover)
-126 Sotto (munder)
-127 Sopra (mover)
-128 Parentesi (mrow)
-129 Multiscript (mmultiscripts)
-130 Matrice (mtable)
-131 Cancella colonna della matrice
-132 noscript
-133 Oggetto
-134 Oggetto (object)
-135 Parametro (param)
-136 Paragrafo (p)
-137 Preformattato (pre)
-138 ruby
-139 Tabella
-140 Tabella (table)
-141 Legenda (caption)
-142 colgroup
-143 col
-144 Intestazione (thead)
-145 Corpo (tbody)
-146 Piede (tfoot)
-147 Linea (tr)
-148 Cella dati (td)
-149 Cella intestazione (th)
-150 Cancella colonna della tabella
-151 Collega al precedente obiettivo
-152 Crea o cambia collegamento...
-153 Crea obiettivo
-154 Cancella ancora
-155 Salva la selezione come XPointer
-156 Mostra barra dei pulsanti
-157 Mostra indirizzo
-158 Mostra le zone attive
-159 Mostra obiettivi
-160 Ingrandisci
-161 Rimpicciolisci
-162 Mostra le errore
-163 Mostra struttura
-164 Mostra la vista alternativa
-165 Mostra collegamenti
-166 Mostra sommario
-167 Mostra sorgente
-168 Stile dei caratteri...
-169 Colori...
-170 Formattazione...
-171 Immagine di sfondo...
-172 Crea una regola...
-173 Applica una classe...
-174 Fogli di stile
-175 Collegamento...
-176 Apri...
-177 Disabilita...
-178 Abilita...
-179 Rimuovi...
-180 Tipo di informazione
-181 Enfasi (em)
-182 Forte (strong)
-183 Cita (cite)
-184 Definizione (dfn)
-185 Codice (code)
-186 Variabile (var)
-187 Sample (samp)
-188 Tastiera (kbd)
-189 Abbreviazione (abbr)
-190 Acronimo (acronym)
-191 Inserzione (ins)
-192 Cancellazione (del)
-193 Elementi carattere
-194 Italico (i)
-195 Grassetto (b)
-196 Macchina da scrivere (tt)
-197 Grande (big)
-198 Piccolo (small)
-199 Pedice (sub)
-200 Indice (sup)
-201 Citazione (q)
-202 BiDi (bdo)
-203 Numerazione delle sezioni
-204 Crea libro
-205 Aggiungi/Togli ID...
-206 Preferenze
-207 Generali...
-208 **Browsing...
-209 Pubblicazione...
-210 Cache...
-211 Proxy...
-212 Colori...
-213 Dimensioni della finestra...
-214 Negoziazione della lingua...
-215 Profili...
-216 Modelli...
-217 SVG
-218 **Show SVG Library
-219 **Add selection in SVG Library
-220 Annota la selezione
-221 Annota il documento
-222 Muovi sulla selezione
-223 Muovi sull'Xpointer memorizzato
-224 Rispondi all'annotazione
-225 Registra
-226 Elimina
-227 Carica
-228 Personalizza la richiesta
-229 Filtro locale...
-230 Configurazione...
-231 **Lock resource...
-232 **Unlock resource...
-233 **View resource properties...
-234 **Copy lock information...
-235 **Locked?
-236 **Preferences...
-237 Informazioni su Amaya
-238 Informazioni su Amaya al W3C
-239 Indice
-240 Navigazione
-241 Viste
-242 Selezione
-243 Documento
-244 Creazione elementi
-245 Attributi
-246 Caratteri
-247 Ristrutturazione
-248 Collegamenti
-249 Tabelle
-250 Zone attive
-251 Matematica
-252 Graphics
-253 Supporto XML
-254 Fogli di stile
-255 Ricerca
-256 Controllo ortografico
-257 Pubblicazione
-258 Stampa
-259 Numerazione
-260 Creare un libro
-261 Annotazioni
-262 Configurazione di Amaya
-263 Scelte rapide
-264 Accessibilità in Amaya
+7 Xhtml
+8 Xml
+9 Collegamenti
+10 Viste
+11 Stile
+12 Speciale
+13 Attributi
+14 Annotazioni
+15 **Cooperation
+16 Aiuto
+17 Nuovo
+18 Nuovo documento XHTML 1.1...
+19 Nuovo documento XHTML 1.0 Transitional...
+20 Nuovo documento XHTML 1.0 Strict...
+21 Nuovo documento XHTML 1.0 Basic...
+22 Nuovo documento MathML...
+23 Nuovo documento SVG...
+24 Nuovo stile CSS...
+25 Modello
+26 Apri documento...
+27 Apri in una nuova finestra...
+28 Ricarica documento
+29 Precedente
+30 Successivo
+31 Salva
+32 Salva con nome...
+33 Sincronizza
+34 Modifica doctype
+35 Elimina doctype
+36 Cambia/Crea doctype XHTML 1.1
+37 Cambia/Crea doctype XHTML 1.0 Transitional
+38 Cambia/Crea doctype XHTML 1.0 Strict
+39 Cambia/Crea doctype XHTML 1.0 Basic
+40 Cambia/Crea doctype HTML 4.01 Transitional
+41 Cambia/Crea doctype HTML 4.01 Strict
+42 Cambia/Crea doctype XHTML 1.1 + MathML 2.0
+43 Cambia/Crea doctype MathML 2.0
+44 Cambia/Crea doctype SVG 1.0
+45 Informazioni sul documento
+46 Imposta e stampa...
+47 Stampa
+48 Chiudi
+49 Esci
+50 Chiudi vista
+51 Ritratta
+52 Rifai
+53 Taglia
+54 Copia
+55 Incolla
+56 Cancella
+57 Modo Editor
+58 Trova...
+59 Controllo ortografico...
+60 Trasforma...
+61 base
+62 meta
+63 link
+64 script
+65 style
+66 Commento
+67 Cambia Titolo...
+68 Indirizzo (address)
+69 Zona attiva (area)
+70 Cerchio
+71 Poligono
+72 Rettangolo
+73 blockquote
+74 A capo (br)
+75 Divisione (div)
+76 Modulo
+77 form
+78 Pulsante (input)
+79 Checkbox (input)
+80 Selettore di file (input)
+81 Controllo nascosto (input)
+82 Immagine (input)...
+83 Password (input)
+84 Pulsante radio (input)
+85 Reset (input)
+86 Invia (input)
+87 Testo (input)
+88 Gruppo di campi (fieldset)
+89 Etichetta (label)
+90 Menu (option)
+91 Sottomenu (optgroup)
+92 Area testo (textarea)
+93 Intestazione
+94 h1
+95 h2
+96 h3
+97 h4
+98 h5
+99 h6
+100 Riga orizzontale (hr)
+101 Cornice (iframe)
+102 Immagine (img)...
+103 Lista
+104 Lista puntata (ul)
+105 Lista numerata (ol)
+106 Lista di definizioni (dl)
+107 Termine (dt)
+108 Definizione (dd)
+109 noscript
+110 Oggetto
+111 Oggetto (object)
+112 Parametro (param)
+113 Paragrafo (p)
+114 Preformattato (pre)
+115 ruby
+116 Tabella
+117 Tabella (table)
+118 Legenda (caption)
+119 colgroup
+120 col
+121 Intestazione (thead)
+122 Corpo (tbody)
+123 Piede (tfoot)
+124 Linea (tr)
+125 Cella dati (td)
+126 Cella intestazione (th)
+127 Cancella colonna della tabella
+128 Tipo di informazione
+129 Enfasi (em)
+130 Forte (strong)
+131 Cita (cite)
+132 Definizione (dfn)
+133 Codice (code)
+134 Variabile (var)
+135 Sample (samp)
+136 Tastiera (kbd)
+137 Abbreviazione (abbr)
+138 Acronimo (acronym)
+139 Inserzione (ins)
+140 Cancellazione (del)
+141 Elementi carattere
+142 Italico (i)
+143 Grassetto (b)
+144 Macchina da scrivere (tt)
+145 Grande (big)
+146 Piccolo (small)
+147 Pedice (sub)
+148 Indice (sup)
+149 Citazione (q)
+150 BiDi (bdo)
+151 Math
+152 Nuova formula (math)
+153 Testo (mtext)
+154 Identificatore (mi)
+155 Numero (mn)
+156 Operatore (mo)
+157 Spazio (mspace)
+158 Carattere (&xxx;)
+159 InvisibleTimes
+160 ApplyFunction
+161 Radice (mroot)
+162 Radice quadrata (msqrt)
+163 Ingloba (menclose)
+164 Frazione (mfrac)
+165 Pedice e indice (msubsup)
+166 Pedice (msub)
+167 Indice (msup)
+168 Sotto e sopra (munderover)
+169 Sotto (munder)
+170 Sopra (mover)
+171 Parentesi (mrow)
+172 Multiscript (mmultiscripts)
+173 Matrice (mtable)
+174 Cancella colonna della matrice
+175 SVG
+176 **Show SVG Library
+177 **Add selection in SVG Library
+178 Elementi XML...
+179 Collega al precedente obiettivo
+180 Crea o cambia collegamento...
+181 Crea obiettivo
+182 Cancella ancora
+183 Salva la selezione come XPointer
+184 Mostra barra dei pulsanti
+185 Mostra indirizzo
+186 Mostra le zone attive
+187 Mostra obiettivi
+188 Ingrandisci
+189 Rimpicciolisci
+190 Mostra le errore
+191 Mostra struttura
+192 Mostra la vista alternativa
+193 Mostra collegamenti
+194 Mostra sommario
+195 Mostra sorgente
+196 Stile dei caratteri...
+197 Colori...
+198 Formattazione...
+199 Immagine di sfondo...
+200 Crea una regola...
+201 Applica una classe...
+202 Collegamento...
+203 Apri...
+204 Disabilita...
+205 Abilita...
+206 Rimuovi...
+207 Numerazione delle sezioni
+208 Crea libro
+209 Aggiungi/Togli ID...
+210 Preferenze
+211 Generali...
+212 **Browsing...
+213 Pubblicazione...
+214 Cache...
+215 Proxy...
+216 Colori...
+217 Dimensioni della finestra...
+218 Negoziazione della lingua...
+219 Profili...
+220 Modelli...
+221 Annota la selezione
+222 Annota il documento
+223 Muovi sulla selezione
+224 Muovi sull'Xpointer memorizzato
+225 Rispondi all'annotazione
+226 Registra
+227 Elimina
+228 Carica
+229 Personalizza la richiesta
+230 Filtro locale...
+231 Configurazione...
+232 **Lock resource...
+233 **Unlock resource...
+234 **View resource properties...
+235 **Copy lock information...
+236 **Locked?
+237 **Preferences...
+238 Informazioni su Amaya
+239 Informazioni su Amaya al W3C
+240 Indice
+241 Navigazione
+242 Viste
+243 Selezione
+244 Documento
+245 Creazione elementi
+246 Attributi
+247 Caratteri
+248 Ristrutturazione
+249 Collegamenti
+250 Tabelle
+251 Zone attive
+252 Matematica
+253 Graphics
+254 Supporto XML
+255 Fogli di stile
+256 Ricerca
+257 Controllo ortografico
+258 Pubblicazione
+259 Stampa
+260 Numerazione
+261 Creare un libro
+262 Annotazioni
+263 Configurazione di Amaya
+264 Scelte rapide
+265 Accessibilità in Amaya

@@ -2857,11 +2857,11 @@ Document InitDocAndView (Document doc, char *docname, DocumentType docType,
 #endif  /* DAV */
 
 #ifdef _SVGLIB
-     TtaSetItemOn (doc, 1, Special, BShowLibrary);
-     TtaSetItemOn (doc, 1, Special, BAddNewModel);
+     TtaSetItemOn (doc, 1, XML, BShowLibrary);
+     TtaSetItemOn (doc, 1, XML, BAddNewModel);
 #else /* !_SVGLIB */
-     TtaSetItemOff (doc, 1, Special, BShowLibrary);
-     TtaSetItemOff (doc, 1, Special, BAddNewModel); 
+     TtaSetItemOff (doc, 1, XML, BShowLibrary);
+     TtaSetItemOff (doc, 1, XML, BAddNewModel); 
 #endif /* _SVGLIB */
    
    return (doc);

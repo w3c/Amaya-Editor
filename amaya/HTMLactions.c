@@ -1723,19 +1723,19 @@ void UpdateContextSensitiveMenus (Document doc)
 	  {
 	     TtaSetItemOff (doc, 1, Types, BImage);
 	     TtaSetItemOff (doc, 1, Types, BObject);
-	     TtaSetItemOff (doc, 1, Style, TBig);
-	     TtaSetItemOff (doc, 1, Style, TSmall);
-	     TtaSetItemOff (doc, 1, Style, TSub);
-	     TtaSetItemOff (doc, 1, Style, TSup);
+	     TtaSetItemOff (doc, 1, Types, TBig);
+	     TtaSetItemOff (doc, 1, Types, TSmall);
+	     TtaSetItemOff (doc, 1, Types, TSub);
+	     TtaSetItemOff (doc, 1, Types, TSup);
 	  }
 	else
 	  {
 	     TtaSetItemOn (doc, 1, Types, BImage);
 	     TtaSetItemOn (doc, 1, Types, BObject);
-	     TtaSetItemOn (doc, 1, Style, TBig);
-	     TtaSetItemOn (doc, 1, Style, TSmall);
-	     TtaSetItemOn (doc, 1, Style, TSub);
-	     TtaSetItemOn (doc, 1, Style, TSup);
+	     TtaSetItemOn (doc, 1, Types, TBig);
+	     TtaSetItemOn (doc, 1, Types, TSmall);
+	     TtaSetItemOn (doc, 1, Types, TSub);
+	     TtaSetItemOn (doc, 1, Types, TSup);
 	  }
      }
    /* 
@@ -1774,7 +1774,7 @@ void UpdateContextSensitiveMenus (Document doc)
    if (SelectionInEM != NewSelInElem)
      {
 	SelectionInEM = NewSelInElem;
-	TtaSetToggleItem (doc, 1, Style, TEmphasis, NewSelInElem);
+	TtaSetToggleItem (doc, 1, Types, TEmphasis, NewSelInElem);
 	TtaSwitchButton (doc, 1, iI);
      }
 
@@ -1792,7 +1792,7 @@ void UpdateContextSensitiveMenus (Document doc)
    if (SelectionInSTRONG != NewSelInElem)
      {
 	SelectionInSTRONG = NewSelInElem;
-	TtaSetToggleItem (doc, 1, Style, TStrong, NewSelInElem);
+	TtaSetToggleItem (doc, 1, Types, TStrong, NewSelInElem);
 	TtaSwitchButton (doc, 1, iB);
      }
 
@@ -1810,7 +1810,7 @@ void UpdateContextSensitiveMenus (Document doc)
    if (SelectionInCITE != NewSelInElem)
      {
 	SelectionInCITE = NewSelInElem;
-	TtaSetToggleItem (doc, 1, Style, TCite, NewSelInElem);
+	TtaSetToggleItem (doc, 1, Types, TCite, NewSelInElem);
      }
 
    if (firstSel == NULL)
@@ -1827,7 +1827,7 @@ void UpdateContextSensitiveMenus (Document doc)
    if (SelectionInABBR != NewSelInElem)
      {
 	SelectionInABBR = NewSelInElem;
-	TtaSetToggleItem (doc, 1, Style, TAbbreviation, NewSelInElem);
+	TtaSetToggleItem (doc, 1, Types, TAbbreviation, NewSelInElem);
      }
 
    if (firstSel == NULL)
@@ -1844,7 +1844,7 @@ void UpdateContextSensitiveMenus (Document doc)
    if (SelectionInACRONYM != NewSelInElem)
      {
 	SelectionInACRONYM = NewSelInElem;
-	TtaSetToggleItem (doc, 1, Style, TAcronym, NewSelInElem);
+	TtaSetToggleItem (doc, 1, Types, TAcronym, NewSelInElem);
      }
 
    if (firstSel == NULL)
@@ -1861,7 +1861,7 @@ void UpdateContextSensitiveMenus (Document doc)
    if (SelectionInINS != NewSelInElem)
      {
 	SelectionInINS = NewSelInElem;
-	TtaSetToggleItem (doc, 1, Style, TInsertion, NewSelInElem);
+	TtaSetToggleItem (doc, 1, Types, TInsertion, NewSelInElem);
      }
 
    if (firstSel == NULL)
@@ -1878,7 +1878,7 @@ void UpdateContextSensitiveMenus (Document doc)
    if (SelectionInDEL != NewSelInElem)
      {
 	SelectionInDEL = NewSelInElem;
-	TtaSetToggleItem (doc, 1, Style, TDeletion, NewSelInElem);
+	TtaSetToggleItem (doc, 1, Types, TDeletion, NewSelInElem);
      }
 
    if (firstSel == NULL)
@@ -1895,7 +1895,7 @@ void UpdateContextSensitiveMenus (Document doc)
    if (SelectionInDFN != NewSelInElem)
      {
 	SelectionInDFN = NewSelInElem;
-	TtaSetToggleItem (doc, 1, Style, TDefinition, NewSelInElem);
+	TtaSetToggleItem (doc, 1, Types, TDefinition, NewSelInElem);
      }
 
    if (firstSel == NULL)
@@ -1912,7 +1912,7 @@ void UpdateContextSensitiveMenus (Document doc)
    if (SelectionInCODE != NewSelInElem)
      {
 	SelectionInCODE = NewSelInElem;
-	TtaSetToggleItem (doc, 1, Style, TCode, NewSelInElem);
+	TtaSetToggleItem (doc, 1, Types, TCode, NewSelInElem);
 	TtaSwitchButton (doc, 1, iT);
      }
 
@@ -1930,7 +1930,7 @@ void UpdateContextSensitiveMenus (Document doc)
    if (SelectionInVAR != NewSelInElem)
      {
 	SelectionInVAR = NewSelInElem;
-	TtaSetToggleItem (doc, 1, Style, TVariable, NewSelInElem);
+	TtaSetToggleItem (doc, 1, Types, TVariable, NewSelInElem);
      }
 
    if (firstSel == NULL)
@@ -1947,7 +1947,7 @@ void UpdateContextSensitiveMenus (Document doc)
    if (SelectionInSAMP != NewSelInElem)
      {
 	SelectionInSAMP = NewSelInElem;
-	TtaSetToggleItem (doc, 1, Style, TSample, NewSelInElem);
+	TtaSetToggleItem (doc, 1, Types, TSample, NewSelInElem);
      }
 
    if (firstSel == NULL)
@@ -1964,7 +1964,7 @@ void UpdateContextSensitiveMenus (Document doc)
    if (SelectionInKBD != NewSelInElem)
      {
 	SelectionInKBD = NewSelInElem;
-	TtaSetToggleItem (doc, 1, Style, TKeyboard, NewSelInElem);
+	TtaSetToggleItem (doc, 1, Types, TKeyboard, NewSelInElem);
      }
 
    if (firstSel == NULL)
@@ -1981,7 +1981,7 @@ void UpdateContextSensitiveMenus (Document doc)
    if (SelectionInI != NewSelInElem)
      {
 	SelectionInI = NewSelInElem;
-	TtaSetToggleItem (doc, 1, Style, TItalic, NewSelInElem);
+	TtaSetToggleItem (doc, 1, Types, TItalic, NewSelInElem);
      }
 
    if (firstSel == NULL)
@@ -1998,7 +1998,7 @@ void UpdateContextSensitiveMenus (Document doc)
    if (SelectionInB != NewSelInElem)
      {
 	SelectionInB = NewSelInElem;
-	TtaSetToggleItem (doc, 1, Style, TBold, NewSelInElem);
+	TtaSetToggleItem (doc, 1, Types, TBold, NewSelInElem);
      }
 
    if (firstSel == NULL)
@@ -2015,7 +2015,7 @@ void UpdateContextSensitiveMenus (Document doc)
    if (SelectionInTT != NewSelInElem)
      {
 	SelectionInTT = NewSelInElem;
-	TtaSetToggleItem (doc, 1, Style, TTeletype, NewSelInElem);
+	TtaSetToggleItem (doc, 1, Types, TTeletype, NewSelInElem);
      }
 
    if (firstSel == NULL)
@@ -2032,7 +2032,7 @@ void UpdateContextSensitiveMenus (Document doc)
    if (SelectionInBIG != NewSelInElem)
      {
 	SelectionInBIG = NewSelInElem;
-	TtaSetToggleItem (doc, 1, Style, TBig, NewSelInElem);
+	TtaSetToggleItem (doc, 1, Types, TBig, NewSelInElem);
      }
 
    if (firstSel == NULL)
@@ -2049,7 +2049,7 @@ void UpdateContextSensitiveMenus (Document doc)
    if (SelectionInSMALL != NewSelInElem)
      {
 	SelectionInSMALL = NewSelInElem;
-	TtaSetToggleItem (doc, 1, Style, TSmall, NewSelInElem);
+	TtaSetToggleItem (doc, 1, Types, TSmall, NewSelInElem);
      }
 
    if (firstSel == NULL)
@@ -2066,7 +2066,7 @@ void UpdateContextSensitiveMenus (Document doc)
    if (SelectionInSub != NewSelInElem)
      {
 	SelectionInSub = NewSelInElem;
-	TtaSetToggleItem (doc, 1, Style, TSub, NewSelInElem);
+	TtaSetToggleItem (doc, 1, Types, TSub, NewSelInElem);
      }
 
    if (firstSel == NULL)
@@ -2083,7 +2083,7 @@ void UpdateContextSensitiveMenus (Document doc)
    if (SelectionInSup != NewSelInElem)
      {
 	SelectionInSup = NewSelInElem;
-	TtaSetToggleItem (doc, 1, Style, TSup, NewSelInElem);
+	TtaSetToggleItem (doc, 1, Types, TSup, NewSelInElem);
      }
 
    if (firstSel == NULL)
@@ -2100,7 +2100,7 @@ void UpdateContextSensitiveMenus (Document doc)
    if (SelectionInQuote != NewSelInElem)
      {
 	SelectionInQuote = NewSelInElem;
-	TtaSetToggleItem (doc, 1, Style, TQuotation, NewSelInElem);
+	TtaSetToggleItem (doc, 1, Types, TQuotation, NewSelInElem);
      }
 
    if (firstSel == NULL)
@@ -2117,7 +2117,7 @@ void UpdateContextSensitiveMenus (Document doc)
    if (SelectionInBDO != NewSelInElem)
      {
 	SelectionInBDO = NewSelInElem;
-	TtaSetToggleItem (doc, 1, Style, TBDO, NewSelInElem);
+	TtaSetToggleItem (doc, 1, Types, TBDO, NewSelInElem);
      }
 }
 

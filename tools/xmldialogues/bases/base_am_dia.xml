@@ -82,14 +82,24 @@
 	<message xml:lang="fi">Rakenne</message>
 </label>
 <label define="Types">
-	<message xml:lang="en">Types</message>
-	<message xml:lang="fr">Éléments</message>
-	<message xml:lang="de">Elemente</message>
-	<message xml:lang="it">Elementi</message>
-	<message xml:lang="tr">Tipler</message>
-	<message xml:lang="es">Tipos</message>
-	<message xml:lang="pt">Tipos</message>
-	<message xml:lang="fi">Mallit</message>
+	<message xml:lang="en">Xhtml</message>
+	<message xml:lang="fr">Xhtml</message>
+	<message xml:lang="de">Xhtml</message>
+	<message xml:lang="it">Xhtml</message>
+	<message xml:lang="tr">Xhtml</message>
+	<message xml:lang="es">Xhtml</message>
+	<message xml:lang="pt">Xhtml</message>
+	<message xml:lang="fi">Xhtml</message>
+</label>
+<label define="XMLTypes">
+	<message xml:lang="en">Xml</message>
+	<message xml:lang="fr">Xml</message>
+	<message xml:lang="de">Xml</message>
+	<message xml:lang="it">Xml</message>
+	<message xml:lang="tr">Xml</message>
+	<message xml:lang="es">Xml</message>
+	<message xml:lang="pt">Xml</message>
+	<message xml:lang="fi">Xml</message>
 </label>
 <label define="Links">
 	<message xml:lang="en">Links</message>
@@ -1051,6 +1061,419 @@
 	<message xml:lang="pt">Definição (dd)</message>
 	<message xml:lang="fi">Määrittely (dd)</message>
 </label>
+<label define="BNoScript">
+	<message xml:lang="en">noscript</message>
+	<message xml:lang="fr">noscript</message>
+	<message xml:lang="de">Skripalternative (noscript)</message>
+	<message xml:lang="it">noscript</message>
+	<message xml:lang="tr">noscript</message>
+	<message xml:lang="es">noscript</message>
+	<message xml:lang="pt">noscript</message>
+	<message xml:lang="fi">ei skriptiä</message>
+</label>
+<label define="Object">
+	<message xml:lang="en">Object</message>
+	<message xml:lang="fr">Objet</message>
+	<message xml:lang="de">Objekt</message>
+	<message xml:lang="it">Oggetto</message>
+	<message xml:lang="tr">Nesne</message>
+	<message xml:lang="es">Objeto</message>
+	<message xml:lang="pt">Objeto</message>
+	<message xml:lang="fi">Objekti</message>
+</label>
+<label define="BObject">
+	<message xml:lang="en">object</message>
+	<message xml:lang="fr">Objet (object)</message>
+	<message xml:lang="de">Objekt (object)</message>
+	<message xml:lang="it">Oggetto (object)</message>
+	<message xml:lang="tr">object</message>
+	<message xml:lang="es">objeto</message>
+	<message xml:lang="pt">objeto</message>
+	<message xml:lang="fi">objekti</message>
+</label>
+<label define="BParameter">
+	<message xml:lang="en">Parameter (param)</message>
+	<message xml:lang="fr">Paramètre (param)</message>
+	<message xml:lang="de">Parameter (param)</message>
+	<message xml:lang="it">Parametro (param)</message>
+	<message xml:lang="tr">Parametre (param)</message>
+	<message xml:lang="es">Parámetro (param)</message>
+	<message xml:lang="pt">Parâmetro (param)</message>
+	<message xml:lang="fi">Parametri (param)</message>
+</label>
+<label define="BParagraph">
+	<message xml:lang="en">Paragraph (p)</message>
+	<message xml:lang="fr">Paragraphe (p)</message>
+	<message xml:lang="de">Absatz (p)</message>
+	<message xml:lang="it">Paragrafo (p)</message>
+	<message xml:lang="tr">Paragraf (p)</message>
+	<message xml:lang="es">Párrafo (p)</message>
+	<message xml:lang="pt">Parágrafo (p)</message>
+	<message xml:lang="fi">Pykälä (p)</message>
+</label>
+<label define="BPreformatted">
+	<message xml:lang="en">Preformatted (pre)</message>
+	<message xml:lang="fr">Préformaté (pre)</message>
+	<message xml:lang="de">Formatierter Text (pre)</message>
+	<message xml:lang="it">Preformattato (pre)</message>
+	<message xml:lang="tr">Preformatted (pre)</message>
+	<message xml:lang="es">Preformateado (pre)</message>
+	<message xml:lang="pt">Preformatado (pre)</message>
+	<message xml:lang="fi">Valmiiksi muotoiltu (pre)</message>
+</label>
+<label define="BRuby">
+	<message xml:lang="en">ruby</message>
+	<message xml:lang="fr">ruby</message>
+	<message xml:lang="de">Ruby</message>
+	<message xml:lang="it">ruby</message>
+	<message xml:lang="tr">ruby</message>
+	<message xml:lang="es">ruby</message>
+	<message xml:lang="pt">rubi</message>
+	<message xml:lang="fi">ruby</message>
+</label>
+<label define="Table">
+	<message xml:lang="en">Table</message>
+	<message xml:lang="fr">Table</message>
+	<message xml:lang="de">Tabelle</message>
+	<message xml:lang="it">Tabella</message>
+	<message xml:lang="tr">Tablo</message>
+	<message xml:lang="es">Tabla</message>
+	<message xml:lang="pt">Tabela</message>
+	<message xml:lang="fi">Taulukko</message>
+</label>
+<label define="BTable">
+	<message xml:lang="en">table</message>
+	<message xml:lang="fr">table</message>
+	<message xml:lang="de">Neue Tabelle (table)</message>
+	<message xml:lang="it">Tabella (table)</message>
+	<message xml:lang="tr">table</message>
+	<message xml:lang="es">tabla</message>
+	<message xml:lang="pt">tabela</message>
+	<message xml:lang="fi">taulukko</message>
+</label>
+<label define="BCaption">
+	<message xml:lang="en">caption</message>
+	<message xml:lang="fr">Légende (caption)</message>
+	<message xml:lang="de">Überschrift (caption)</message>
+	<message xml:lang="it">Legenda (caption)</message>
+	<message xml:lang="tr">Altyazý (caption)</message>
+	<message xml:lang="es">título</message>
+	<message xml:lang="pt">Legenda (caption)</message>
+	<message xml:lang="fi">nimike</message>
+</label>
+<label define="BColgroup">
+	<message xml:lang="en">colgroup</message>
+	<message xml:lang="fr">colgroup</message>
+	<message xml:lang="de">Spaltengruppe (colgroup)</message>
+	<message xml:lang="it">colgroup</message>
+	<message xml:lang="tr">colgroup</message>
+	<message xml:lang="es">colgroup</message>
+	<message xml:lang="pt">Grupo de colunas (colgroup)</message>
+	<message xml:lang="fi">pystyriviryhmä</message>
+</label>
+<label define="BCol">
+	<message xml:lang="en">col</message>
+	<message xml:lang="fr">Colonne (col)</message>
+	<message xml:lang="de">Spalte (col)</message>
+	<message xml:lang="it">col</message>
+	<message xml:lang="tr">col</message>
+	<message xml:lang="es">col</message>
+	<message xml:lang="pt">Coluna (col)</message>
+	<message xml:lang="fi">pystyrivi</message>
+</label>
+<label define="BTHead">
+	<message xml:lang="en">thead</message>
+	<message xml:lang="fr">Têtière (thead)</message>
+	<message xml:lang="de">Kopf (thead)</message>
+	<message xml:lang="it">Intestazione (thead)</message>
+	<message xml:lang="tr">thead</message>
+	<message xml:lang="es">thead</message>
+	<message xml:lang="pt">Cabeçalho (thead)</message>
+	<message xml:lang="fi">Taulukon otsikko</message>
+</label>
+<label define="BTBody">
+	<message xml:lang="en">tbody</message>
+	<message xml:lang="fr">Corps (tbody)</message>
+	<message xml:lang="de">Körper (tbody)</message>
+	<message xml:lang="it">Corpo (tbody)</message>
+	<message xml:lang="tr">tbody</message>
+	<message xml:lang="es">tbody</message>
+	<message xml:lang="pt">Corpo (tbody)</message>
+	<message xml:lang="fi">Taulukon sisältö</message>
+</label>
+<label define="BTFoot">
+	<message xml:lang="en">tfoot</message>
+	<message xml:lang="fr">Pied (tfoot)</message>
+	<message xml:lang="de">Fußzeile (tfoot)</message>
+	<message xml:lang="it">Piede (tfoot)</message>
+	<message xml:lang="tr">tfoot</message>
+	<message xml:lang="es">tfoot</message>
+	<message xml:lang="pt">Rodapé (tfoot)</message>
+	<message xml:lang="fi">Taulukon alaotsikko</message>
+</label>
+<label define="BRow">
+	<message xml:lang="en">Row (tr)</message>
+	<message xml:lang="fr">Ligne (tr)</message>
+	<message xml:lang="de">Zeile (tr)</message>
+	<message xml:lang="it">Linea (tr)</message>
+	<message xml:lang="tr">Sýra (tr)</message>
+	<message xml:lang="es">Fila (tr)</message>
+	<message xml:lang="pt">Linha (tr)</message>
+	<message xml:lang="fi">Rivi solu (tr)</message>
+</label>
+<label define="BDataCell">
+	<message xml:lang="en">Data cell (td)</message>
+	<message xml:lang="fr">Cellule (td)</message>
+	<message xml:lang="de">Zelle (td)</message>
+	<message xml:lang="it">Cella dati (td)</message>
+	<message xml:lang="tr">Veri hücresi (td)</message>
+	<message xml:lang="es">Celda datos (td)</message>
+	<message xml:lang="pt">Célula de dados (td)</message>
+	<message xml:lang="fi">Sisältö solu (td)</message>
+</label>
+<label define="BHeadingCell">
+	<message xml:lang="en">Heading cell (th)</message>
+	<message xml:lang="fr">Cellule de tête (th)</message>
+	<message xml:lang="de">Kopfzelle (th)</message>
+	<message xml:lang="it">Cella intestazione (th)</message>
+	<message xml:lang="tr">Baþlýk hücresi (th)</message>
+	<message xml:lang="es">Celda cabecera (th)</message>
+	<message xml:lang="pt">Célula de cabeçalho (th)</message>
+	<message xml:lang="fi">Otsake solu (th)</message>
+</label>
+<label define="BDeleteColumn">
+	<message xml:lang="en">Delete table column</message>
+	<message xml:lang="fr">Détruire colonne de table</message>
+	<message xml:lang="de">Spalte löschen</message>
+	<message xml:lang="it">Cancella colonna della tabella</message>
+	<message xml:lang="es">Eliminar columna de tabla</message>
+	<message xml:lang="pt">Elminar coluna da tabela</message>
+	<message xml:lang="fi">Poista taulukon pystyrivi</message>
+</label>
+<label define="Phrase">
+	<message xml:lang="en">Information type</message>
+	<message xml:lang="fr">Types information</message>
+	<message xml:lang="de">Inhaltsorientiert</message>
+	<message xml:lang="it">Tipo di informazione</message>
+	<message xml:lang="tr">Bilgi türü</message>
+	<message xml:lang="es">Tipo de Información</message>
+	<message xml:lang="pt">tipo de Informação</message>
+	<message xml:lang="fi">Tiedon tyyppi</message>
+</label>
+<label define="TEmphasis">
+	<message xml:lang="en">Emphasis (em)</message>
+	<message xml:lang="fr">Accent (em)</message>
+	<message xml:lang="de">Betont (em)</message>
+	<message xml:lang="it">Enfasi (em)</message>
+	<message xml:lang="tr">Vurgu (em)</message>
+	<message xml:lang="es">Enfasis (em)</message>
+	<message xml:lang="pt">Ênfase (em)</message>
+	<message xml:lang="fi">Korostus (em)</message>
+</label>
+<label define="TStrong">
+	<message xml:lang="en">strong</message>
+	<message xml:lang="fr">Force (strong)</message>
+	<message xml:lang="de">Hervorgehoben (strong)</message>
+	<message xml:lang="it">Forte (strong)</message>
+	<message xml:lang="tr">Kuvvetli (strong)</message>
+	<message xml:lang="es">strong</message>
+	<message xml:lang="pt">Forte (strong)</message>
+	<message xml:lang="fi">voimakas</message>
+</label>
+<label define="TCite">
+	<message xml:lang="en">cite</message>
+	<message xml:lang="fr">Citation (cite)</message>
+	<message xml:lang="de">Zitatquelle (cite)</message>
+	<message xml:lang="it">Cita (cite)</message>
+	<message xml:lang="tr">Cite (cite)</message>
+	<message xml:lang="es">cite</message>
+	<message xml:lang="pt">Citação (cite)</message>
+	<message xml:lang="fi">siteeraus</message>
+</label>
+<label define="TDefinition">
+	<message xml:lang="en">Definition (dfn)</message>
+	<message xml:lang="fr">Définition (dfn)</message>
+	<message xml:lang="de">Definition (dfn)</message>
+	<message xml:lang="it">Definizione (dfn)</message>
+	<message xml:lang="tr">Taným (dfn)</message>
+	<message xml:lang="es">Definición (dfn)</message>
+	<message xml:lang="pt">Definição (dfn)</message>
+	<message xml:lang="fi">Määrittely (dfn)</message>
+</label>
+<label define="TCode">
+	<message xml:lang="en">code</message>
+	<message xml:lang="fr">Code (code)</message>
+	<message xml:lang="de">Programmtext (code)</message>
+	<message xml:lang="it">Codice (code)</message>
+	<message xml:lang="tr">Kod (code)</message>
+	<message xml:lang="es">código</message>
+	<message xml:lang="pt">Código (code)</message>
+	<message xml:lang="fi">koodi</message>
+</label>
+<label define="TVariable">
+	<message xml:lang="en">Variable (var)</message>
+	<message xml:lang="fr">Variable (var)</message>
+	<message xml:lang="de">Variable (var)</message>
+	<message xml:lang="it">Variabile (var)</message>
+	<message xml:lang="tr">Deðiþken (var)</message>
+	<message xml:lang="es">Variable (var)</message>
+	<message xml:lang="pt">Variável (var)</message>
+	<message xml:lang="fi">Muuttuja (var)</message>
+</label>
+<label define="TSample">
+	<message xml:lang="en">Sample (samp)</message>
+	<message xml:lang="fr">Exemple (samp)</message>
+	<message xml:lang="de">Beispiel (samp)</message>
+	<message xml:lang="it">Sample (samp)</message>
+	<message xml:lang="tr">Örnek (samp)</message>
+	<message xml:lang="es">Ejemplo (samp)</message>
+	<message xml:lang="pt">Exemplo (samp)</message>
+	<message xml:lang="fi">Malli (samp)</message>
+</label>
+<label define="TKeyboard">
+	<message xml:lang="en">Keyboard (kbd)</message>
+	<message xml:lang="fr">Clavier (kbd)</message>
+	<message xml:lang="de">Tastatureingabe (kbd)</message>
+	<message xml:lang="it">Tastiera (kbd)</message>
+	<message xml:lang="tr">Tuþtakýmý (kbd)</message>
+	<message xml:lang="es">Teclado (kbd)</message>
+	<message xml:lang="pt">Teclado (kbd)</message>
+	<message xml:lang="fi">Näppäimistä (kbd)</message>
+</label>
+<label define="TAbbreviation">
+	<message xml:lang="en">Abbreviation (abbr)</message>
+	<message xml:lang="fr">Abréviation (abbr)</message>
+	<message xml:lang="de">Abkürzung (abbr)</message>
+	<message xml:lang="it">Abbreviazione (abbr)</message>
+	<message xml:lang="es">Abreviatura (abbr)</message>
+	<message xml:lang="pt">Abreviação (abbr)</message>
+	<message xml:lang="fi">Lyhenne (abbr)</message>
+</label>
+<label define="TAcronym">
+	<message xml:lang="en">acronym</message>
+	<message xml:lang="fr">Acronyme (acronym)</message>
+	<message xml:lang="de">Akronym (acronym)</message>
+	<message xml:lang="it">Acronimo (acronym)</message>
+	<message xml:lang="es">acrónimo</message>
+	<message xml:lang="pt">Acrônimo (acronym)</message>
+	<message xml:lang="fi">kirjainsana</message>
+</label>
+<label define="TInsertion">
+	<message xml:lang="en">Insertion (ins)</message>
+	<message xml:lang="fr">Insertion (ins)</message>
+	<message xml:lang="de">Eingefügter Text (ins)</message>
+	<message xml:lang="it">Inserzione (ins)</message>
+	<message xml:lang="es">Inserción (ins)</message>
+	<message xml:lang="pt">Inserção (ins)</message>
+	<message xml:lang="fi">Lisäys (ins)</message>
+</label>
+<label define="TDeletion">
+	<message xml:lang="en">Deletion (del)</message>
+	<message xml:lang="fr">Suppression (del)</message>
+	<message xml:lang="de">Gelöschter Text (del)</message>
+	<message xml:lang="it">Cancellazione (del)</message>
+	<message xml:lang="es">Borrado (del)</message>
+	<message xml:lang="pt">Supressão (del)</message>
+	<message xml:lang="fi">Poisto (del)</message>
+</label>
+<label define="Font">
+	<message xml:lang="en">Character element</message>
+	<message xml:lang="fr">Éléments caractères</message>
+	<message xml:lang="de">Darstellungsorientiert</message>
+	<message xml:lang="it">Elementi carattere</message>
+	<message xml:lang="tr">Karakter birimi</message>
+	<message xml:lang="es">Elemento carácter</message>
+	<message xml:lang="pt">Elemento carácter</message>
+	<message xml:lang="fi">Kirjainmerkki</message>
+</label>
+<label define="TItalic">
+	<message xml:lang="en">Italic (i)</message>
+	<message xml:lang="fr">Italique (i)</message>
+	<message xml:lang="de">Kursiv (i)</message>
+	<message xml:lang="it">Italico (i)</message>
+	<message xml:lang="tr">Ýtalik (i)</message>
+	<message xml:lang="es">Itálica (i)</message>
+	<message xml:lang="pt">Itálico (i)</message>
+	<message xml:lang="fi">Kursivoitu (i)</message>
+</label>
+<label define="TBold">
+	<message xml:lang="en">Bold (b)</message>
+	<message xml:lang="fr">Gras (b)</message>
+	<message xml:lang="de">Fett (b)</message>
+	<message xml:lang="it">Grassetto (b)</message>
+	<message xml:lang="tr">Kalýn (b)</message>
+	<message xml:lang="es">Negrita (b)</message>
+	<message xml:lang="pt">Negrito (b)</message>
+	<message xml:lang="fi">Lihavoitu (b)</message>
+</label>
+<label define="TTeletype">
+	<message xml:lang="en">Teletype (tt)</message>
+	<message xml:lang="fr">Télétype (tt)</message>
+	<message xml:lang="de">Gesperrt (tt)</message>
+	<message xml:lang="it">Macchina da scrivere (tt)</message>
+	<message xml:lang="tr">Teletype (tt)</message>
+	<message xml:lang="es">Teletipo (tt)</message>
+	<message xml:lang="pt">Teletipo (tt)</message>
+	<message xml:lang="fi">Teletyyppi (tt)</message>
+</label>
+<label define="TBig">
+	<message xml:lang="en">big</message>
+	<message xml:lang="fr">Gros (big)</message>
+	<message xml:lang="de">Groß (big)</message>
+	<message xml:lang="it">Grande (big)</message>
+	<message xml:lang="tr">Büyük (big)</message>
+	<message xml:lang="es">grande</message>
+	<message xml:lang="pt">Grande (big)</message>
+	<message xml:lang="fi">iso</message>
+</label>
+<label define="TSmall">
+	<message xml:lang="en">small</message>
+	<message xml:lang="fr">Petit (small)</message>
+	<message xml:lang="de">Klein (small)</message>
+	<message xml:lang="it">Piccolo (small)</message>
+	<message xml:lang="tr">Küçük (small)</message>
+	<message xml:lang="es">pequeña</message>
+	<message xml:lang="pt">Pequeno (small)</message>
+	<message xml:lang="fi">pieni</message>
+</label>
+<label define="TSub">
+	<message xml:lang="en">Subscript (sub)</message>
+	<message xml:lang="fr">Indice (sub)</message>
+	<message xml:lang="de">Tiefgestellt (sub)</message>
+	<message xml:lang="it">Pedice (sub)</message>
+	<message xml:lang="tr">Alt (sub)</message>
+	<message xml:lang="es">Subíndice (sub)</message>
+	<message xml:lang="pt">Índice (sub)</message>
+	<message xml:lang="fi">Alaindeksi (sub)</message>
+</label>
+<label define="TSup">
+	<message xml:lang="en">Superscript (sup)</message>
+	<message xml:lang="fr">Exposant (sup)</message>
+	<message xml:lang="de">Hochgestellt (sup)</message>
+	<message xml:lang="it">Indice (sup)</message>
+	<message xml:lang="tr">Üst (sup)</message>
+	<message xml:lang="es">Superíndice (sup)</message>
+	<message xml:lang="pt">Expoente (sup)</message>
+	<message xml:lang="fi">Yläindeksi (sup)</message>
+</label>
+<label define="TQuotation">
+	<message xml:lang="en">Quotation (q)</message>
+	<message xml:lang="fr">Citation (q)</message>
+	<message xml:lang="de">Zitat (q)</message>
+	<message xml:lang="it">Citazione (q)</message>
+	<message xml:lang="es">Remarcado (Quotation q)</message>
+	<message xml:lang="pt">Citação (q)</message>
+	<message xml:lang="fi">Lainaus/Siteeraus (q)</message>
+</label>
+<label define="TBDO">
+	<message xml:lang="en">BiDi override (bdo)</message>
+	<message xml:lang="fr">BiDi (bdo)</message>
+	<message xml:lang="de">Textrichtung LTR/RTL (bdo)</message>
+	<message xml:lang="it">BiDi (bdo)</message>
+	<message xml:lang="es">BiDi override (bdo)</message>
+	<message xml:lang="pt">Sobrepor BiDi (bdo)</message>
+	<message xml:lang="fi">BiDi syrjäyttävänä (bdo)</message>
+</label>
 <label define="Math">
 	<message xml:lang="en">Math</message>
 	<message xml:lang="fr">Math</message>
@@ -1281,194 +1704,29 @@
 	<message xml:lang="pt">eliminar coluna de matriz</message>
 	<message xml:lang="fi">Poista matriisin pystyrivi</message>
 </label>
-<label define="BNoScript">
-	<message xml:lang="en">noscript</message>
-	<message xml:lang="fr">noscript</message>
-	<message xml:lang="de">Skripalternative (noscript)</message>
-	<message xml:lang="it">noscript</message>
-	<message xml:lang="tr">noscript</message>
-	<message xml:lang="es">noscript</message>
-	<message xml:lang="pt">noscript</message>
-	<message xml:lang="fi">ei skriptiä</message>
+<label define="SVG_">
+	<message xml:lang="en">SVG</message>
+	<message xml:lang="fr">SVG</message>
+	<message xml:lang="de">SVG</message>
+	<message xml:lang="it">SVG</message>
+	<message xml:lang="tr">SVG</message>
+	<message xml:lang="es">SVG</message>
+	<message xml:lang="pt">SVG</message>
+	<message xml:lang="fi">SVG</message>
 </label>
-<label define="Object">
-	<message xml:lang="en">Object</message>
-	<message xml:lang="fr">Objet</message>
-	<message xml:lang="de">Objekt</message>
-	<message xml:lang="it">Oggetto</message>
-	<message xml:lang="tr">Nesne</message>
-	<message xml:lang="es">Objeto</message>
-	<message xml:lang="pt">Objeto</message>
-	<message xml:lang="fi">Objekti</message>
+<label define="BShowLibrary">
+	<message xml:lang="en">Show SVG Library</message>
+	<message xml:lang="fr">Montrer la librairie SVG</message>
 </label>
-<label define="BObject">
-	<message xml:lang="en">object</message>
-	<message xml:lang="fr">Objet (object)</message>
-	<message xml:lang="de">Objekt (object)</message>
-	<message xml:lang="it">Oggetto (object)</message>
-	<message xml:lang="tr">object</message>
-	<message xml:lang="es">objeto</message>
-	<message xml:lang="pt">objeto</message>
-	<message xml:lang="fi">objekti</message>
+<label define="BAddNewModel">
+	<message xml:lang="en">Add selection in SVG Library</message>
+	<message xml:lang="fr">Ajouter la sélection dans une librairie</message>
 </label>
-<label define="BParameter">
-	<message xml:lang="en">Parameter (param)</message>
-	<message xml:lang="fr">Paramètre (param)</message>
-	<message xml:lang="de">Parameter (param)</message>
-	<message xml:lang="it">Parametro (param)</message>
-	<message xml:lang="tr">Parametre (param)</message>
-	<message xml:lang="es">Parámetro (param)</message>
-	<message xml:lang="pt">Parâmetro (param)</message>
-	<message xml:lang="fi">Parametri (param)</message>
-</label>
-<label define="BParagraph">
-	<message xml:lang="en">Paragraph (p)</message>
-	<message xml:lang="fr">Paragraphe (p)</message>
-	<message xml:lang="de">Absatz (p)</message>
-	<message xml:lang="it">Paragrafo (p)</message>
-	<message xml:lang="tr">Paragraf (p)</message>
-	<message xml:lang="es">Párrafo (p)</message>
-	<message xml:lang="pt">Parágrafo (p)</message>
-	<message xml:lang="fi">Pykälä (p)</message>
-</label>
-<label define="BPreformatted">
-	<message xml:lang="en">Preformatted (pre)</message>
-	<message xml:lang="fr">Préformaté (pre)</message>
-	<message xml:lang="de">Formatierter Text (pre)</message>
-	<message xml:lang="it">Preformattato (pre)</message>
-	<message xml:lang="tr">Preformatted (pre)</message>
-	<message xml:lang="es">Preformateado (pre)</message>
-	<message xml:lang="pt">Preformatado (pre)</message>
-	<message xml:lang="fi">Valmiiksi muotoiltu (pre)</message>
-</label>
-<label define="BRuby">
-	<message xml:lang="en">ruby</message>
-	<message xml:lang="fr">ruby</message>
-	<message xml:lang="de">Ruby</message>
-	<message xml:lang="it">ruby</message>
-	<message xml:lang="tr">ruby</message>
-	<message xml:lang="es">ruby</message>
-	<message xml:lang="pt">rubi</message>
-	<message xml:lang="fi">ruby</message>
-</label>
-<label define="Table">
-	<message xml:lang="en">Table</message>
-	<message xml:lang="fr">Table</message>
-	<message xml:lang="de">Tabelle</message>
-	<message xml:lang="it">Tabella</message>
-	<message xml:lang="tr">Tablo</message>
-	<message xml:lang="es">Tabla</message>
-	<message xml:lang="pt">Tabela</message>
-	<message xml:lang="fi">Taulukko</message>
-</label>
-<label define="BTable">
-	<message xml:lang="en">table</message>
-	<message xml:lang="fr">table</message>
-	<message xml:lang="de">Neue Tabelle (table)</message>
-	<message xml:lang="it">Tabella (table)</message>
-	<message xml:lang="tr">table</message>
-	<message xml:lang="es">tabla</message>
-	<message xml:lang="pt">tabela</message>
-	<message xml:lang="fi">taulukko</message>
-</label>
-<label define="BCaption">
-	<message xml:lang="en">caption</message>
-	<message xml:lang="fr">Légende (caption)</message>
-	<message xml:lang="de">Überschrift (caption)</message>
-	<message xml:lang="it">Legenda (caption)</message>
-	<message xml:lang="tr">Altyazý (caption)</message>
-	<message xml:lang="es">título</message>
-	<message xml:lang="pt">Legenda (caption)</message>
-	<message xml:lang="fi">nimike</message>
-</label>
-<label define="BColgroup">
-	<message xml:lang="en">colgroup</message>
-	<message xml:lang="fr">colgroup</message>
-	<message xml:lang="de">Spaltengruppe (colgroup)</message>
-	<message xml:lang="it">colgroup</message>
-	<message xml:lang="tr">colgroup</message>
-	<message xml:lang="es">colgroup</message>
-	<message xml:lang="pt">Grupo de colunas (colgroup)</message>
-	<message xml:lang="fi">pystyriviryhmä</message>
-</label>
-<label define="BCol">
-	<message xml:lang="en">col</message>
-	<message xml:lang="fr">Colonne (col)</message>
-	<message xml:lang="de">Spalte (col)</message>
-	<message xml:lang="it">col</message>
-	<message xml:lang="tr">col</message>
-	<message xml:lang="es">col</message>
-	<message xml:lang="pt">Coluna (col)</message>
-	<message xml:lang="fi">pystyrivi</message>
-</label>
-<label define="BTHead">
-	<message xml:lang="en">thead</message>
-	<message xml:lang="fr">Têtière (thead)</message>
-	<message xml:lang="de">Kopf (thead)</message>
-	<message xml:lang="it">Intestazione (thead)</message>
-	<message xml:lang="tr">thead</message>
-	<message xml:lang="es">thead</message>
-	<message xml:lang="pt">Cabeçalho (thead)</message>
-	<message xml:lang="fi">Taulukon otsikko</message>
-</label>
-<label define="BTBody">
-	<message xml:lang="en">tbody</message>
-	<message xml:lang="fr">Corps (tbody)</message>
-	<message xml:lang="de">Körper (tbody)</message>
-	<message xml:lang="it">Corpo (tbody)</message>
-	<message xml:lang="tr">tbody</message>
-	<message xml:lang="es">tbody</message>
-	<message xml:lang="pt">Corpo (tbody)</message>
-	<message xml:lang="fi">Taulukon sisältö</message>
-</label>
-<label define="BTFoot">
-	<message xml:lang="en">tfoot</message>
-	<message xml:lang="fr">Pied (tfoot)</message>
-	<message xml:lang="de">Fußzeile (tfoot)</message>
-	<message xml:lang="it">Piede (tfoot)</message>
-	<message xml:lang="tr">tfoot</message>
-	<message xml:lang="es">tfoot</message>
-	<message xml:lang="pt">Rodapé (tfoot)</message>
-	<message xml:lang="fi">Taulukon alaotsikko</message>
-</label>
-<label define="BRow">
-	<message xml:lang="en">Row (tr)</message>
-	<message xml:lang="fr">Ligne (tr)</message>
-	<message xml:lang="de">Zeile (tr)</message>
-	<message xml:lang="it">Linea (tr)</message>
-	<message xml:lang="tr">Sýra (tr)</message>
-	<message xml:lang="es">Fila (tr)</message>
-	<message xml:lang="pt">Linha (tr)</message>
-	<message xml:lang="fi">Rivi solu (tr)</message>
-</label>
-<label define="BDataCell">
-	<message xml:lang="en">Data cell (td)</message>
-	<message xml:lang="fr">Cellule (td)</message>
-	<message xml:lang="de">Zelle (td)</message>
-	<message xml:lang="it">Cella dati (td)</message>
-	<message xml:lang="tr">Veri hücresi (td)</message>
-	<message xml:lang="es">Celda datos (td)</message>
-	<message xml:lang="pt">Célula de dados (td)</message>
-	<message xml:lang="fi">Sisältö solu (td)</message>
-</label>
-<label define="BHeadingCell">
-	<message xml:lang="en">Heading cell (th)</message>
-	<message xml:lang="fr">Cellule de tête (th)</message>
-	<message xml:lang="de">Kopfzelle (th)</message>
-	<message xml:lang="it">Cella intestazione (th)</message>
-	<message xml:lang="tr">Baþlýk hücresi (th)</message>
-	<message xml:lang="es">Celda cabecera (th)</message>
-	<message xml:lang="pt">Célula de cabeçalho (th)</message>
-	<message xml:lang="fi">Otsake solu (th)</message>
-</label>
-<label define="BDeleteColumn">
-	<message xml:lang="en">Delete table column</message>
-	<message xml:lang="fr">Détruire colonne de table</message>
-	<message xml:lang="de">Spalte löschen</message>
-	<message xml:lang="it">Cancella colonna della tabella</message>
-	<message xml:lang="es">Eliminar columna de tabla</message>
-	<message xml:lang="pt">Elminar coluna da tabela</message>
-	<message xml:lang="fi">Poista taulukon pystyrivi</message>
+<label define="BXMLElement">
+	<message xml:lang="en">XML elements...</message>
+	<message xml:lang="fr">Éléments XML...</message>
+	<message xml:lang="de">Elemente XML...</message>
+	<message xml:lang="it">Elementi XML...</message>
 </label>
 <label define="BLinkTarget">
 	<message xml:lang="en">Link to previous target</message>
@@ -1695,16 +1953,6 @@
 	<message xml:lang="pt">Aplicar classe...</message>
 	<message xml:lang="fi">Käytä luokkaa...</message>
 </label>
-<label define="StyleSheet">
-	<message xml:lang="en">Style sheets</message>
-	<message xml:lang="fr">Feuilles de style</message>
-	<message xml:lang="de">Formatvorlage</message>
-	<message xml:lang="it">Fogli di stile</message>
-	<message xml:lang="tr">Tarzý tanýmlarý</message>
-	<message xml:lang="es">Hojas de estilos</message>
-	<message xml:lang="pt">Folhas de estilo</message>
-	<message xml:lang="fi">Tyylitiedostot</message>
-</label>
 <label define="BLinkCSS">
 	<message xml:lang="en">Link...</message>
 	<message xml:lang="fr">Ajouter...</message>
@@ -1749,230 +1997,6 @@
 	<message xml:lang="es">Eliminar...</message>
 	<message xml:lang="pt">Remover...</message>
 	<message xml:lang="fi">Poista...</message>
-</label>
-<label define="Phrase">
-	<message xml:lang="en">Information type</message>
-	<message xml:lang="fr">Types information</message>
-	<message xml:lang="de">Inhaltsorientiert</message>
-	<message xml:lang="it">Tipo di informazione</message>
-	<message xml:lang="tr">Bilgi türü</message>
-	<message xml:lang="es">Tipo de Información</message>
-	<message xml:lang="pt">tipo de Informação</message>
-	<message xml:lang="fi">Tiedon tyyppi</message>
-</label>
-<label define="TEmphasis">
-	<message xml:lang="en">Emphasis (em)</message>
-	<message xml:lang="fr">Accent (em)</message>
-	<message xml:lang="de">Betont (em)</message>
-	<message xml:lang="it">Enfasi (em)</message>
-	<message xml:lang="tr">Vurgu (em)</message>
-	<message xml:lang="es">Enfasis (em)</message>
-	<message xml:lang="pt">Ênfase (em)</message>
-	<message xml:lang="fi">Korostus (em)</message>
-</label>
-<label define="TStrong">
-	<message xml:lang="en">strong</message>
-	<message xml:lang="fr">Force (strong)</message>
-	<message xml:lang="de">Hervorgehoben (strong)</message>
-	<message xml:lang="it">Forte (strong)</message>
-	<message xml:lang="tr">Kuvvetli (strong)</message>
-	<message xml:lang="es">strong</message>
-	<message xml:lang="pt">Forte (strong)</message>
-	<message xml:lang="fi">voimakas</message>
-</label>
-<label define="TCite">
-	<message xml:lang="en">cite</message>
-	<message xml:lang="fr">Citation (cite)</message>
-	<message xml:lang="de">Zitatquelle (cite)</message>
-	<message xml:lang="it">Cita (cite)</message>
-	<message xml:lang="tr">Cite (cite)</message>
-	<message xml:lang="es">cite</message>
-	<message xml:lang="pt">Citação (cite)</message>
-	<message xml:lang="fi">siteeraus</message>
-</label>
-<label define="TDefinition">
-	<message xml:lang="en">Definition (dfn)</message>
-	<message xml:lang="fr">Définition (dfn)</message>
-	<message xml:lang="de">Definition (dfn)</message>
-	<message xml:lang="it">Definizione (dfn)</message>
-	<message xml:lang="tr">Taným (dfn)</message>
-	<message xml:lang="es">Definición (dfn)</message>
-	<message xml:lang="pt">Definição (dfn)</message>
-	<message xml:lang="fi">Määrittely (dfn)</message>
-</label>
-<label define="TCode">
-	<message xml:lang="en">code</message>
-	<message xml:lang="fr">Code (code)</message>
-	<message xml:lang="de">Programmtext (code)</message>
-	<message xml:lang="it">Codice (code)</message>
-	<message xml:lang="tr">Kod (code)</message>
-	<message xml:lang="es">código</message>
-	<message xml:lang="pt">Código (code)</message>
-	<message xml:lang="fi">koodi</message>
-</label>
-<label define="TVariable">
-	<message xml:lang="en">Variable (var)</message>
-	<message xml:lang="fr">Variable (var)</message>
-	<message xml:lang="de">Variable (var)</message>
-	<message xml:lang="it">Variabile (var)</message>
-	<message xml:lang="tr">Deðiþken (var)</message>
-	<message xml:lang="es">Variable (var)</message>
-	<message xml:lang="pt">Variável (var)</message>
-	<message xml:lang="fi">Muuttuja (var)</message>
-</label>
-<label define="TSample">
-	<message xml:lang="en">Sample (samp)</message>
-	<message xml:lang="fr">Exemple (samp)</message>
-	<message xml:lang="de">Beispiel (samp)</message>
-	<message xml:lang="it">Sample (samp)</message>
-	<message xml:lang="tr">Örnek (samp)</message>
-	<message xml:lang="es">Ejemplo (samp)</message>
-	<message xml:lang="pt">Exemplo (samp)</message>
-	<message xml:lang="fi">Malli (samp)</message>
-</label>
-<label define="TKeyboard">
-	<message xml:lang="en">Keyboard (kbd)</message>
-	<message xml:lang="fr">Clavier (kbd)</message>
-	<message xml:lang="de">Tastatureingabe (kbd)</message>
-	<message xml:lang="it">Tastiera (kbd)</message>
-	<message xml:lang="tr">Tuþtakýmý (kbd)</message>
-	<message xml:lang="es">Teclado (kbd)</message>
-	<message xml:lang="pt">Teclado (kbd)</message>
-	<message xml:lang="fi">Näppäimistä (kbd)</message>
-</label>
-<label define="TAbbreviation">
-	<message xml:lang="en">Abbreviation (abbr)</message>
-	<message xml:lang="fr">Abréviation (abbr)</message>
-	<message xml:lang="de">Abkürzung (abbr)</message>
-	<message xml:lang="it">Abbreviazione (abbr)</message>
-	<message xml:lang="es">Abreviatura (abbr)</message>
-	<message xml:lang="pt">Abreviação (abbr)</message>
-	<message xml:lang="fi">Lyhenne (abbr)</message>
-</label>
-<label define="TAcronym">
-	<message xml:lang="en">acronym</message>
-	<message xml:lang="fr">Acronyme (acronym)</message>
-	<message xml:lang="de">Akronym (acronym)</message>
-	<message xml:lang="it">Acronimo (acronym)</message>
-	<message xml:lang="es">acrónimo</message>
-	<message xml:lang="pt">Acrônimo (acronym)</message>
-	<message xml:lang="fi">kirjainsana</message>
-</label>
-<label define="TInsertion">
-	<message xml:lang="en">Insertion (ins)</message>
-	<message xml:lang="fr">Insertion (ins)</message>
-	<message xml:lang="de">Eingefügter Text (ins)</message>
-	<message xml:lang="it">Inserzione (ins)</message>
-	<message xml:lang="es">Inserción (ins)</message>
-	<message xml:lang="pt">Inserção (ins)</message>
-	<message xml:lang="fi">Lisäys (ins)</message>
-</label>
-<label define="TDeletion">
-	<message xml:lang="en">Deletion (del)</message>
-	<message xml:lang="fr">Suppression (del)</message>
-	<message xml:lang="de">Gelöschter Text (del)</message>
-	<message xml:lang="it">Cancellazione (del)</message>
-	<message xml:lang="es">Borrado (del)</message>
-	<message xml:lang="pt">Supressão (del)</message>
-	<message xml:lang="fi">Poisto (del)</message>
-</label>
-<label define="Font">
-	<message xml:lang="en">Character element</message>
-	<message xml:lang="fr">Éléments caractères</message>
-	<message xml:lang="de">Darstellungsorientiert</message>
-	<message xml:lang="it">Elementi carattere</message>
-	<message xml:lang="tr">Karakter birimi</message>
-	<message xml:lang="es">Elemento carácter</message>
-	<message xml:lang="pt">Elemento carácter</message>
-	<message xml:lang="fi">Kirjainmerkki</message>
-</label>
-<label define="TItalic">
-	<message xml:lang="en">Italic (i)</message>
-	<message xml:lang="fr">Italique (i)</message>
-	<message xml:lang="de">Kursiv (i)</message>
-	<message xml:lang="it">Italico (i)</message>
-	<message xml:lang="tr">Ýtalik (i)</message>
-	<message xml:lang="es">Itálica (i)</message>
-	<message xml:lang="pt">Itálico (i)</message>
-	<message xml:lang="fi">Kursivoitu (i)</message>
-</label>
-<label define="TBold">
-	<message xml:lang="en">Bold (b)</message>
-	<message xml:lang="fr">Gras (b)</message>
-	<message xml:lang="de">Fett (b)</message>
-	<message xml:lang="it">Grassetto (b)</message>
-	<message xml:lang="tr">Kalýn (b)</message>
-	<message xml:lang="es">Negrita (b)</message>
-	<message xml:lang="pt">Negrito (b)</message>
-	<message xml:lang="fi">Lihavoitu (b)</message>
-</label>
-<label define="TTeletype">
-	<message xml:lang="en">Teletype (tt)</message>
-	<message xml:lang="fr">Télétype (tt)</message>
-	<message xml:lang="de">Gesperrt (tt)</message>
-	<message xml:lang="it">Macchina da scrivere (tt)</message>
-	<message xml:lang="tr">Teletype (tt)</message>
-	<message xml:lang="es">Teletipo (tt)</message>
-	<message xml:lang="pt">Teletipo (tt)</message>
-	<message xml:lang="fi">Teletyyppi (tt)</message>
-</label>
-<label define="TBig">
-	<message xml:lang="en">big</message>
-	<message xml:lang="fr">Gros (big)</message>
-	<message xml:lang="de">Groß (big)</message>
-	<message xml:lang="it">Grande (big)</message>
-	<message xml:lang="tr">Büyük (big)</message>
-	<message xml:lang="es">grande</message>
-	<message xml:lang="pt">Grande (big)</message>
-	<message xml:lang="fi">iso</message>
-</label>
-<label define="TSmall">
-	<message xml:lang="en">small</message>
-	<message xml:lang="fr">Petit (small)</message>
-	<message xml:lang="de">Klein (small)</message>
-	<message xml:lang="it">Piccolo (small)</message>
-	<message xml:lang="tr">Küçük (small)</message>
-	<message xml:lang="es">pequeña</message>
-	<message xml:lang="pt">Pequeno (small)</message>
-	<message xml:lang="fi">pieni</message>
-</label>
-<label define="TSub">
-	<message xml:lang="en">Subscript (sub)</message>
-	<message xml:lang="fr">Indice (sub)</message>
-	<message xml:lang="de">Tiefgestellt (sub)</message>
-	<message xml:lang="it">Pedice (sub)</message>
-	<message xml:lang="tr">Alt (sub)</message>
-	<message xml:lang="es">Subíndice (sub)</message>
-	<message xml:lang="pt">Índice (sub)</message>
-	<message xml:lang="fi">Alaindeksi (sub)</message>
-</label>
-<label define="TSup">
-	<message xml:lang="en">Superscript (sup)</message>
-	<message xml:lang="fr">Exposant (sup)</message>
-	<message xml:lang="de">Hochgestellt (sup)</message>
-	<message xml:lang="it">Indice (sup)</message>
-	<message xml:lang="tr">Üst (sup)</message>
-	<message xml:lang="es">Superíndice (sup)</message>
-	<message xml:lang="pt">Expoente (sup)</message>
-	<message xml:lang="fi">Yläindeksi (sup)</message>
-</label>
-<label define="TQuotation">
-	<message xml:lang="en">Quotation (q)</message>
-	<message xml:lang="fr">Citation (q)</message>
-	<message xml:lang="de">Zitat (q)</message>
-	<message xml:lang="it">Citazione (q)</message>
-	<message xml:lang="es">Remarcado (Quotation q)</message>
-	<message xml:lang="pt">Citação (q)</message>
-	<message xml:lang="fi">Lainaus/Siteeraus (q)</message>
-</label>
-<label define="TBDO">
-	<message xml:lang="en">BiDi override (bdo)</message>
-	<message xml:lang="fr">BiDi (bdo)</message>
-	<message xml:lang="de">Textrichtung LTR/RTL (bdo)</message>
-	<message xml:lang="it">BiDi (bdo)</message>
-	<message xml:lang="es">BiDi override (bdo)</message>
-	<message xml:lang="pt">Sobrepor BiDi (bdo)</message>
-	<message xml:lang="fi">BiDi syrjäyttävänä (bdo)</message>
 </label>
 <label define="TSectionNumber">
 	<message xml:lang="en">Section numbering</message>
@@ -2098,24 +2122,6 @@
 	<message xml:lang="es">Plantillas...</message>
 	<message xml:lang="pt">Templates...</message>
 	<message xml:lang="fi">Mallit...</message>
-</label>
-<label define="SVG_">
-	<message xml:lang="en">SVG</message>
-	<message xml:lang="fr">SVG</message>
-	<message xml:lang="de">SVG</message>
-	<message xml:lang="it">SVG</message>
-	<message xml:lang="tr">SVG</message>
-	<message xml:lang="es">SVG</message>
-	<message xml:lang="pt">SVG</message>
-	<message xml:lang="fi">SVG</message>
-</label>
-<label define="BShowLibrary">
-	<message xml:lang="en">Show SVG Library</message>
-	<message xml:lang="fr">Montrer la librairie SVG</message>
-</label>
-<label define="BAddNewModel">
-	<message xml:lang="en">Add selection in SVG Library</message>
-	<message xml:lang="fr">Ajouter la sélection dans une librairie</message>
 </label>
 <label define="BAnnotateSelection">
 	<message xml:lang="en">Annotate selection</message>

@@ -145,33 +145,6 @@ MENUS
 	Types.Lists button:BTerm -> CreateDefinitionTerm;
 	Types.Lists button:BDefinition -> CreateDefinitionDef;
 
-	Types.Math button:BDisplayMath -> CreateMath;
-	Types.Math Separator;
-	Types.Math button:BMText -> CreateMTEXT;
-	Types.Math button:BMIdentifier -> CreateMI;
-	Types.Math button:BMNumber -> CreateMN;
-	Types.Math button:BMOperator -> CreateMO;
-	Types.Math button:BMSpace -> CreateMSPACE;
-	Types.Math button:BMEntity -> CreateMathEntity;
-	Types.Math button:BMInvisibleTimes -> CreateInvisibleTimes;
-	Types.Math button:BMApplyFunction -> CreateApplyFunction;
-	Types.Math Separator;
-        Types.Math button:BNthRoot -> CreateMROOT;
-        Types.Math button:BSquareRoot -> CreateMSQRT;
-        Types.Math button:BEnclose -> CreateMENCLOSE;
-        Types.Math button:BFraction -> CreateMFRAC;
-        Types.Math button:BSubscriptAndSuperscript -> CreateMSUBSUP;
-        Types.Math button:BSubscript -> CreateMSUB;
-        Types.Math button:BSuperscript -> CreateMSUP;
-        Types.Math button:BUnderAndOver -> CreateMUNDEROVER;
-        Types.Math button:BUnder -> CreateMUNDER;
-        Types.Math button:BOver -> CreateMOVER;
-        Types.Math button:BParentheses -> CreateMROW;
-        Types.Math button:BMultiscripts -> CreateMMULTISCRIPTS;
-        Types.Math button:BMatrix -> CreateMTABLE;
-	Types.Math Separator;
-	Types.Math button:BDeleteMColumn -> DeleteMColumn;
-
 	Types button:BNoScript -> CreateNOSCRIPT;
 
 	Types.Object button:BObject -> CreateObject;
@@ -194,6 +167,60 @@ MENUS
 	Types.Table button:BHeadingCell -> CreateHeadingCell;
 	Types.Table Separator;
 	Types.Table button:BDeleteColumn -> DeleteColumn;
+	Types Separator;
+        Types.Phrase toggle:TEmphasis -> SetOnOffEmphasis;
+        Types.Phrase toggle:TStrong -> SetOnOffStrong;
+        Types.Phrase toggle:TCite -> SetOnOffCite;
+        Types.Phrase toggle:TDefinition -> SetOnOffDefinition;
+        Types.Phrase toggle:TCode -> SetOnOffCode;
+        Types.Phrase toggle:TVariable -> SetOnOffVariable;
+        Types.Phrase toggle:TSample -> SetOnOffSample;
+        Types.Phrase toggle:TKeyboard -> SetOnOffKeyboard;
+	Types.Phrase toggle:TAbbreviation -> SetOnOffAbbr;
+	Types.Phrase toggle:TAcronym -> SetOnOffAcronym;
+	Types.Phrase toggle:TInsertion -> SetOnOffINS;
+	Types.Phrase toggle:TDeletion -> SetOnOffDEL;
+
+        Types.Font toggle:TItalic -> SetOnOffItalic;
+        Types.Font toggle:TBold -> SetOnOffBold;
+        Types.Font toggle:TTeletype -> SetOnOffTeletype;
+        Types.Font toggle:TBig -> SetOnOffBig;
+        Types.Font toggle:TSmall -> SetOnOffSmall;
+        Types.Font toggle:TSub -> SetOnOffSub;
+        Types.Font toggle:TSup -> SetOnOffSup;
+        Types.Font toggle:TQuotation -> SetOnOffQuotation;
+        Types.Font toggle:TBDO -> SetOnOffBDO;
+
+	XMLTypes.Math button:BDisplayMath -> CreateMath;
+	XMLTypes.Math Separator;
+	XMLTypes.Math button:BMText -> CreateMTEXT;
+	XMLTypes.Math button:BMIdentifier -> CreateMI;
+	XMLTypes.Math button:BMNumber -> CreateMN;
+	XMLTypes.Math button:BMOperator -> CreateMO;
+	XMLTypes.Math button:BMSpace -> CreateMSPACE;
+	XMLTypes.Math button:BMEntity -> CreateMathEntity;
+	XMLTypes.Math button:BMInvisibleTimes -> CreateInvisibleTimes;
+	XMLTypes.Math button:BMApplyFunction -> CreateApplyFunction;
+	XMLTypes.Math Separator;
+        XMLTypes.Math button:BNthRoot -> CreateMROOT;
+        XMLTypes.Math button:BSquareRoot -> CreateMSQRT;
+        XMLTypes.Math button:BEnclose -> CreateMENCLOSE;
+        XMLTypes.Math button:BFraction -> CreateMFRAC;
+        XMLTypes.Math button:BSubscriptAndSuperscript -> CreateMSUBSUP;
+        XMLTypes.Math button:BSubscript -> CreateMSUB;
+        XMLTypes.Math button:BSuperscript -> CreateMSUP;
+        XMLTypes.Math button:BUnderAndOver -> CreateMUNDEROVER;
+        XMLTypes.Math button:BUnder -> CreateMUNDER;
+        XMLTypes.Math button:BOver -> CreateMOVER;
+        XMLTypes.Math button:BParentheses -> CreateMROW;
+        XMLTypes.Math button:BMultiscripts -> CreateMMULTISCRIPTS;
+        XMLTypes.Math button:BMatrix -> CreateMTABLE;
+	XMLTypes.Math Separator;
+	XMLTypes.Math button:BDeleteMColumn -> DeleteMColumn;
+
+        XMLTypes.SVG_ button:BShowLibrary -> ShowLibrary;
+	XMLTypes.SVG_ button:BAddNewModel -> AddNewModelIntoLibraryForm;	
+	XMLTypes button:BXMLElement -> CreateXMLElement;
 
 	view:1 Links button:BLinkTarget -> LinkToPreviousTarget;
 	view:1 Links button:BCreateLink -> CreateOrChangeLink;
@@ -223,34 +250,12 @@ MENUS
 
 	view:1 Style button:BCreateClass -> CreateClass;
 	view:1 Style button:BApplyClass -> ApplyClass;
-	view:1 Style.StyleSheet button:BLinkCSS -> LinkCSS;
-	view:1 Style.StyleSheet button:BOpenCSS -> OpenCSS;
-	view:1 Style.StyleSheet button:BDisableCSS -> DisableCSS;
-	view:1 Style.StyleSheet button:BEnableCSS -> EnableCSS;
-	view:1 Style.StyleSheet button:BRemoveCSS -> RemoveCSS;
         view:1 Style Separator;
-        view:1 Style.Phrase toggle:TEmphasis -> SetOnOffEmphasis;
-        view:1 Style.Phrase toggle:TStrong -> SetOnOffStrong;
-        view:1 Style.Phrase toggle:TCite -> SetOnOffCite;
-        view:1 Style.Phrase toggle:TDefinition -> SetOnOffDefinition;
-        view:1 Style.Phrase toggle:TCode -> SetOnOffCode;
-        view:1 Style.Phrase toggle:TVariable -> SetOnOffVariable;
-        view:1 Style.Phrase toggle:TSample -> SetOnOffSample;
-        view:1 Style.Phrase toggle:TKeyboard -> SetOnOffKeyboard;
-	view:1 Style.Phrase toggle:TAbbreviation -> SetOnOffAbbr;
-	view:1 Style.Phrase toggle:TAcronym -> SetOnOffAcronym;
-	view:1 Style.Phrase toggle:TInsertion -> SetOnOffINS;
-	view:1 Style.Phrase toggle:TDeletion -> SetOnOffDEL;
-
-        view:1 Style.Font toggle:TItalic -> SetOnOffItalic;
-        view:1 Style.Font toggle:TBold -> SetOnOffBold;
-        view:1 Style.Font toggle:TTeletype -> SetOnOffTeletype;
-        view:1 Style.Font toggle:TBig -> SetOnOffBig;
-        view:1 Style.Font toggle:TSmall -> SetOnOffSmall;
-        view:1 Style.Font toggle:TSub -> SetOnOffSub;
-        view:1 Style.Font toggle:TSup -> SetOnOffSup;
-        view:1 Style.Font toggle:TQuotation -> SetOnOffQuotation;
-        view:1 Style.Font toggle:TBDO -> SetOnOffBDO;
+	view:1 Style button:BLinkCSS -> LinkCSS;
+	view:1 Style button:BOpenCSS -> OpenCSS;
+	view:1 Style button:BDisableCSS -> DisableCSS;
+	view:1 Style button:BEnableCSS -> EnableCSS;
+	view:1 Style button:BRemoveCSS -> RemoveCSS;
 
 	view:1 Special toggle:TSectionNumber -> SectionNumbering;
 	view:1 Special button:BMakeBook -> MakeBook;
@@ -266,9 +271,6 @@ MENUS
 	view:1 Special.Coptions button:BConfigLanNeg -> ConfigLanNeg;
 	view:1 Special.Coptions button:BConfigProfile -> ConfigProfile;
 	view:1 Special.Coptions button:BConfigTemplates -> ConfigTemplates;
-
-        view:1 Special.SVG_ button:BShowLibrary -> ShowLibrary;
-	view:1 Special.SVG_ button:BAddNewModel -> AddNewModelIntoLibraryForm;	
 
 	Attributes_;
 

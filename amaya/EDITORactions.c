@@ -2668,6 +2668,16 @@ void SaveOptions (Document doc, View view)
 }
 
 /*----------------------------------------------------------------------
+  CreateXMLElement
+  Create an XML element
+  ----------------------------------------------------------------------*/
+void CreateXMLElement (Document doc, View view)
+{
+#ifdef XML_GENERIC
+#endif /* XML_GENERIC */
+}
+
+/*----------------------------------------------------------------------
   ConfigAnnot
   A frontend to the Templates configuration menu
   ----------------------------------------------------------------------*/
