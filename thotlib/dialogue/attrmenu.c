@@ -92,7 +92,6 @@ extern LRESULT CALLBACK textZoneProc ();
 
 static CHAR_T       WIN_Lab[1024];
 static CHAR_T       formRange[100];
-static CHAR_T       Attr_text[LgMaxAttrText];
 static STRING       szAppName;
 static ThotWindow   hwnEdit;
 static TtAttribute *WIN_pAttr1;
@@ -281,11 +280,6 @@ LRESULT CALLBACK InitFormDialogWndProc (ThotWindow hwnd, UINT iMsg, WPARAM wPara
   switch (iMsg)
     {
     case WM_CREATE:
-      if (WIN_currAttr)
-	usprintf (Attr_text, WIN_currAttr->AeAttrText->BuContent);
-      else
-	Attr_text[0] = EOS;
-
       /* Create static window for the title */
       hwnTitle = CreateWindow (TEXT("STATIC"), WIN_pAttr1->AttrName, 
 			       WS_CHILD | WS_VISIBLE | SS_LEFT,
@@ -293,7 +287,7 @@ LRESULT CALLBACK InitFormDialogWndProc (ThotWindow hwnd, UINT iMsg, WPARAM wPara
 			       ((LPCREATESTRUCT) lParam)->hInstance, NULL); 
       
       /* Create Edit Window autoscrolled */
-      hwnEdit = CreateWindow (TEXT("EDIT"), Attr_text, 
+      hwnEdit = CreateWindow (TEXT("EDIT"), TextAttrValue, 
 			      WS_CHILD | WS_VISIBLE | WS_BORDER | ES_LEFT |
 			         ES_AUTOHSCROLL,
 			      10, 25, 320, 20, hwnd, (HMENU) 1,
@@ -331,13 +325,13 @@ LRESULT CALLBACK InitFormDialogWndProc (ThotWindow hwnd, UINT iMsg, WPARAM wPara
       txtLength = GetWindowTextLength (hwnEdit);
       if (txtLength >= LgMaxAttrText)
 	txtLength = LgMaxAttrText - 1;
-      GetWindowText (hwnEdit, Attr_text, txtLength + 1);
+      GetWindowText (hwnEdit, TextAttrValue, txtLength + 1);
       i = 0;
-      while (i < txtLength && Attr_text[i] != __CR__)
+      while (i < txtLength && TextAttrValue[i] != __CR__)
 	i++;
       if (i < txtLength)
-	Attr_text[i] = EOS;
-      ThotCallback (NumMenuAttrTextNeeded, STRING_DATA, Attr_text);
+	TextAttrValue[i] = EOS;
+      ThotCallback (NumMenuAttrTextNeeded, STRING_DATA, TextAttrValue);
       ThotCallback (NumMenuAttrRequired, INTEGER_DATA, (STRING) 1);
       DestroyWindow (hwnd);
       break;
@@ -349,13 +343,13 @@ LRESULT CALLBACK InitFormDialogWndProc (ThotWindow hwnd, UINT iMsg, WPARAM wPara
 	  txtLength = GetWindowTextLength (hwnEdit);
 	  if (txtLength >= LgMaxAttrText)
 	    txtLength = LgMaxAttrText - 1;
-	  GetWindowText (hwnEdit, Attr_text, txtLength + 1);
+	  GetWindowText (hwnEdit, TextAttrValue, txtLength + 1);
 	  i = 0;
-	  while (i < txtLength && Attr_text[i] != __CR__)
+	  while (i < txtLength && TextAttrValue[i] != __CR__)
 	    i++;
 	  if (i < txtLength)
-	    Attr_text[i] = EOS;
-	  ThotCallback (NumMenuAttrTextNeeded, STRING_DATA, Attr_text);
+	    TextAttrValue[i] = EOS;
+	  ThotCallback (NumMenuAttrTextNeeded, STRING_DATA, TextAttrValue);
 	  ThotCallback (NumMenuAttrRequired, INTEGER_DATA, (STRING) 1);
 	  DestroyWindow (hwnd);
 	  break;
@@ -454,19 +448,14 @@ LPARAM     lParam;
   switch (iMsg)
     {
     case WM_CREATE:
-      if (WIN_currAttr) 
-	usprintf (Attr_text, TEXT("%s"), WIN_currAttr->AeAttrText->BuContent);
-      else
-	Attr_text[0] = EOS;
-
-      /* Create static window for the title */
+     /* Create static window for the title */
       hwnTitle = CreateWindow (TEXT("STATIC"), WIN_pAttr1->AttrName, 
 			       WS_CHILD | WS_VISIBLE | SS_LEFT,
 			       10, 5, 100, 15, hwnd, (HMENU) 99, 
 			       ((LPCREATESTRUCT) lParam)->hInstance, NULL); 
       
       /* Create Edit Window autoscrolled */
-      hwnEdit = CreateWindow (TEXT("EDIT"), Attr_text, 
+      hwnEdit = CreateWindow (TEXT("EDIT"), TextAttrValue, 
 			      WS_CHILD | WS_VISIBLE | WS_BORDER | ES_LEFT |
 			        ES_AUTOHSCROLL | WS_TABSTOP,
 			      10, 25, 310, 20, hwnd, (HMENU) 1,
@@ -505,13 +494,13 @@ LPARAM     lParam;
       txtLength = GetWindowTextLength (hwnEdit);
       if (txtLength >= LgMaxAttrText)
 	txtLength = LgMaxAttrText - 1;
-      GetWindowText (hwnEdit, Attr_text, txtLength + 1);
+      GetWindowText (hwnEdit, TextAttrValue, txtLength + 1);
       i = 0;
-      while (i < txtLength && Attr_text[i] != __CR__)
+      while (i < txtLength && TextAttrValue[i] != __CR__)
 	i++;
       if (i < txtLength)
-	Attr_text[i] = EOS;
-      ThotCallback (NumMenuAttrText, STRING_DATA, Attr_text);
+	TextAttrValue[i] = EOS;
+      ThotCallback (NumMenuAttrText, STRING_DATA, TextAttrValue);
       ThotCallback (NumMenuAttr, INTEGER_DATA, (STRING) 1);
       ThotCallback (NumMenuAttr, INTEGER_DATA, (STRING) 0);
       DestroyWindow (hwnd);
@@ -528,27 +517,17 @@ LPARAM     lParam;
 	  txtLength = GetWindowTextLength (hwnEdit);
 	  if (txtLength >= LgMaxAttrText)
 	    txtLength = LgMaxAttrText - 1;
-	  GetWindowText (hwnEdit, Attr_text, txtLength + 1);
+	  GetWindowText (hwnEdit, TextAttrValue, txtLength + 1);
 	  i = 0;
-	  while (i < txtLength && Attr_text[i] != __CR__)
+	  while (i < txtLength && TextAttrValue[i] != __CR__)
 	    i++;
 	  if (i < txtLength)
-	    Attr_text[i] = EOS;
-	  ThotCallback (NumMenuAttrText, STRING_DATA, Attr_text);
+	    TextAttrValue[i] = EOS;
+	  ThotCallback (NumMenuAttrText, STRING_DATA, TextAttrValue);
 	  ThotCallback (NumMenuAttr, INTEGER_DATA, (STRING) 1);
 	  break;
 	  
 	case ID_DELETE:
-	  txtLength = GetWindowTextLength (hwnEdit);
-	  if (txtLength >= LgMaxAttrText)
-	    txtLength = LgMaxAttrText - 1;
-	  GetWindowText (hwnEdit, Attr_text, txtLength + 1);
-	  i = 0;
-	  while (i < txtLength && Attr_text[i] != __CR__)
-	    i++;
-	  if (i < txtLength)
-	    Attr_text[i] = EOS;
-	  ThotCallback (NumMenuAttrText, STRING_DATA, Attr_text);
 	  ThotCallback (NumMenuAttr, INTEGER_DATA, (STRING) 2);
 	  DestroyWindow (hwnd);
 	  break;
@@ -633,7 +612,6 @@ LPARAM     lParam;
 #endif /* __STDC__ */
 {
   ThotWindow        hwnTitle;
-  ThotWindow        hwnRange;
   ThotWindow        applyButton;
   ThotWindow        deleteButton;
   ThotWindow        doneButton;
@@ -809,10 +787,8 @@ int                 view;
    int                 form, subform;
    Document            doc;
    CHAR_T              bufMenu[MAX_TXT_LEN];
-   CHAR_T              TxtAttrValue[LgMaxAttrText];
-#ifndef _WINDOWS
    CHAR_T              title[MAX_NAME_LENGTH + 2];
-#else  /* _WINDOWS */
+#ifdef _WINDOWS
    WIN_pAttr1 = pAttr1;
    WIN_currAttr	= currAttr;
 #endif /* _WINDOWS */
@@ -887,20 +863,17 @@ int                 view;
        
      case AtTextAttr: /* attribut a valeur textuelle */
        subform = form + 2;
+       if (currAttr != NULL && currAttr->AeAttrText != NULL)
+	 {
+	   i = LgMaxAttrText - 2;
+	   CopyTextToString (currAttr->AeAttrText, TextAttrValue, &i);
+	 }
+		else
+	   TextAttrValue[0] = WC_EOS;
 #ifndef _WINDOWS
        TtaNewTextForm (subform, form, title, 40, 1, FALSE);
        TtaAttachForm (subform);
-       if (currAttr == NULL)
-	 TtaSetTextForm (subform, "");
-       else if (currAttr->AeAttrText == NULL)
-	 TtaSetTextForm (subform, "");
-       else
-	 {
-	   i = LgMaxAttrText - 2;
-	   CopyTextToString (currAttr->AeAttrText, TxtAttrValue, &i);
-	   TtaSetTextForm (subform, TxtAttrValue);
-	 }
-       
+	   TtaSetTextForm (subform, TextAttrValue);       
 #else  /* _WINDOWS */
        WIN_AtNumAttr  = FALSE;
        WIN_AtTextAttr = TRUE;
@@ -917,17 +890,16 @@ int                 view;
        while (val < pAttr1->AttrNEnumValues)
 	 {
 #ifdef _WINDOWS 
-	   i = ustrlen (pAttr1->AttrEnumValue[val]) + 1; /* for 'B' and EOS */
-#else  /* !_WINDOWS */
-	   i = ustrlen (pAttr1->AttrEnumValue[val]) + 2; /* for 'B' and EOS */
-#endif /* _WINDOWS */
+	   i = ustrlen (pAttr1->AttrEnumValue[val]) + 1; /* for EOS */
 	   if (lgmenu + i < MAX_TXT_LEN)
 	     {
-#ifndef _WINDOWS
+	       ustrcpy (&WIN_buffMenu[lgmenu], pAttr1->AttrEnumValue[val]);
+#else  /* !_WINDOWS */
+	   i = ustrlen (pAttr1->AttrEnumValue[val]) + 2; /* for 'B' and EOS */
+	   if (lgmenu + i < MAX_TXT_LEN)
+	     {
 	       bufMenu[lgmenu] = 'B';
 	       ustrcpy (&bufMenu[lgmenu + 1], pAttr1->AttrEnumValue[val]);
-#else  /* _WINDOWS */
-	       ustrcpy (&WIN_buffMenu[lgmenu], pAttr1->AttrEnumValue[val]);
 #endif /* _WINDOWS */
 	       val++;
 	     } 
@@ -1657,8 +1629,7 @@ STRING              valtext;
 			GetTextBuffer (&(pAttrNew->AeAttrText));
 		      else
 			ClearText (pAttrNew->AeAttrText);
-		      CopyStringToText (TextAttrValue, pAttrNew->AeAttrText,
-					&lg);
+		      CopyStringToText (TextAttrValue, pAttrNew->AeAttrText, &lg);
 		    }
 		  /* applique les attributs a la partie selectionnee */
 		  AttachAttrToRange (pAttrNew, lastChar, firstChar, lastSel,
@@ -1828,25 +1799,23 @@ int                 frame;
 		/* memorise l'attribut concerne' par le formulaire */
 		SchCurrentAttr = AttrStruct[att];
 		NumCurrentAttr = AttrNumber[att];
-		/* restaure l'etat courant du toggle */
+		/* register the current attribut */
+		CurrentAttr = att;
+		/* restore the toggle state */
 #ifndef _WINDOWS 
 		if (ActiveAttr[item] == 0)
 		  TtaSetToggleMenu (refmenu, item, FALSE);
 		else
 		  TtaSetToggleMenu (refmenu, item, TRUE);
-#endif /* _WINDOWS */
-		/* et memorise l'attribut en cours de traitement */
-		CurrentAttr = att;
-		/* affiche le formulaire */
-#ifndef _WINDOWS
+		/* display the form */
 		TtaShowDialogue (NumMenuAttr, TRUE);
-#else  /* _WINDOWS */
+#else /* _WINDOWS */
 		if (WIN_AtNumAttr) 
 		  WIN_InitNumAttrDialog (TtaGetViewFrame (doc, view));
 		else if (WIN_AtTextAttr && !isForm) 
 		  WIN_InitSheetDialog (TtaGetViewFrame (doc, view));
 		else if (WIN_AtEnumAttr) 
-                  CreateAttributeDlgWindow (title, currAttrVal, nbDlgItems);
+                  CreateAttributeDlgWindow (pAttr->AttrName, currAttrVal, nbDlgItems);
 #endif /* _WINDOWS */
 	      }
 	    DeleteAttribute (NULL, pAttrNew);
@@ -1865,7 +1834,6 @@ void                CallbackLanguageMenu (ref, val, txt)
 int                 ref;
 int                 val;
 STRING              txt;
-
 #endif /* __STDC__ */
 {
   Language		i;
