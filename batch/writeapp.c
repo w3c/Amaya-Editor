@@ -750,7 +750,10 @@ char               *fname;
 	menuAction = ActionsUsed;
 	while (menuAction != NULL)
 	  {
-	     fprintf (AppFile, "  TteAddMenuAction(TEXT(\"%s\"), (Proc)%s);\n",
+	     if (menuAction->AppFunction)
+	       fprintf (AppFile, "  TteAddMenuAction(TEXT(\"%s\"), (Proc)%s, TRUE);\n",
+		      menuAction->AppNameValue, menuAction->AppNameValue);
+	       fprintf (AppFile, "  TteAddMenuAction(TEXT(\"%s\"), (Proc)%s, FALSE);\n",
 		      menuAction->AppNameValue, menuAction->AppNameValue);
 	     if (!menuAction->AppStandardName)
 		/* ecrit les fonctions non standard des menus dans XXXaction.c */

@@ -84,6 +84,7 @@ ZoomOut
 
 ######### BROWSING
 [browsing]
+DoAction
 HelpSearching
 HelpSelecting
 GoToHome

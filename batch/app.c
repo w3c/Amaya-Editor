@@ -96,7 +96,7 @@ static ThotBool      PreEvent;
 static ThotBool      DefaultSection;	/* within the section DEFAULT        */
 static ThotBool      ElementsSection;	/* within the section ELEMENTS       */
 static ThotBool      AttributesSection;	/* within the section ATTRIBUTES     */
-static ThotBool      MenusSection;	/* within the section MENUS          */
+static ThotBool      FunctionsSection;	/* within the section FUNCTIONS      */
 static PtrAppMenu  *MenuList;
 static int          ViewNumber;
 static CHAR_T         MenuName[100];
@@ -210,7 +210,7 @@ STRING              RegisteredAppEvents[] =
 #endif /* _WINDOWS */
 
 /*----------------------------------------------------------------------
-   MenuActionList adds into the list ActionsUsed actions        
+  MenuActionList adds into the list ActionsUsed actions        
    used by the new set of menus pointed by firstMenu.   
    If actions already exist in the list, they are not added.
    In the same way this function adds menu names used in the set into the
@@ -331,6 +331,7 @@ PtrAppMenu          firstMenu;
 		    {
 		       curAction = (PtrAppName) TtaGetMemory (sizeof (AppName));
 		       curAction->AppNameValue = TtaStrdup (item->AppItemActionName);
+		       curAction->AppFunction = False;
 		       curAction->AppStandardName = item->AppStandardAction;
 		       curAction->AppNextName = NULL;
 		       if (prevAction == NULL)
@@ -698,7 +699,6 @@ indLine             wi;
 	       DefaultSection = False;
 	       ElementsSection = False;
 	       AttributesSection = False;
-	       MenusSection = False;
 	       break;
 
 	    case KWD_USES:
@@ -718,12 +718,14 @@ indLine             wi;
 	    case KWD_ELEMENTS:
 	       ElementsSection = True;
 	       DefaultSection = False;
+	       FunctionsSection = False;
 	       break;
 
 	    case KWD_ATTRIBUTES:
 	       AttributesSection = True;
 	       DefaultSection = False;
 	       ElementsSection = False;
+	       FunctionsSection = False;
 	       break;
 
 	    case KWD_MENUS:
@@ -731,7 +733,18 @@ indLine             wi;
 	       DefaultSection = False;	/* la section DEFAULT est donc finie */
 	       ElementsSection = False;
 	       AttributesSection = False;
-	       MenusSection = True;
+	       if (ustrcmp (fileName, TEXT("EDITOR")) != 0)
+		  /* ce n'est pas EDITOR.A qu'on compile, refus */
+		  CompilerMessage (wi, APP, FATAL, FORBIDDEN_OUTSIDE_EDITOR_I,
+				 inputLine, LineNum);
+	       break;
+
+	    case KWD_FUNCTIONS:
+	       /* begining of the section FUNTIONS */
+	       FunctionsSection = True;
+	       DefaultSection = False;	/* la section DEFAULT est donc finie */
+	       ElementsSection = False;
+	       AttributesSection = False;
 	       if (ustrcmp (fileName, TEXT("EDITOR")) != 0)
 		  /* ce n'est pas EDITOR.A qu'on compile, refus */
 		  CompilerMessage (wi, APP, FATAL, FORBIDDEN_OUTSIDE_EDITOR_I,
@@ -817,10 +830,12 @@ indLine             wi;
 
 #endif /* __STDC__ */
 {
+   PtrAppName          curAction, prevAction;
    int                 i;
    Name                name;
    PtrAppDocType       docType, newDocType;
    PtrAppName          schUsed, newSchUsed;
+   ThotBool             found;
 
    if (wl > MAX_NAME_LENGTH - 1)
       CompilerMessage (wi, COMPIL, FATAL, INVALID_WORD_SIZE, inputLine, LineNum);
@@ -1009,6 +1024,40 @@ indLine             wi;
 		    /* action associee a un evenement */
 		    eventAction = TtaStrdup (name);
 		    TteAddAction (eventAction, 0);
+		 }
+	       else
+		 {
+		   /* a simple list of functions */
+		  curAction = ActionsUsed;
+		  found = False;
+		  prevAction = NULL;
+		  while (!found && curAction != NULL)
+		    {
+		       if (curAction->AppNameValue != NULL &&
+			   ustrcmp (curAction->AppNameValue, name) == 0)
+			  /* the action is already in the list */
+			  found = True;
+		       else
+			 {
+			    prevAction = curAction;
+			    /* passe a l'action suivante de la liste */
+			    curAction = curAction->AppNextName;
+			 }
+		    }
+		  if (!found)
+		     /* l'action de l'item n'est pas in the list, on l'y met */
+		    {
+		       curAction = (PtrAppName) TtaGetMemory (sizeof (AppName));
+		       curAction->AppNameValue = TtaStrdup (name);
+		       curAction->AppStandardName = False;
+		       curAction->AppFunction = FunctionsSection;
+		       curAction->AppNextName = NULL;
+		       if (prevAction == NULL)
+			  ActionsUsed = curAction;
+		       else
+			  prevAction->AppNextName = curAction;
+		    }
+		   
 		 }
 	       break;
 

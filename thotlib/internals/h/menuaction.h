@@ -27,6 +27,8 @@ typedef struct _AppName
   STRING     AppNameValue;
   PtrAppName AppNextName;
   ThotBool   AppStandardName;
+  /* TRUE when that action is declared in the section FUNCTION */
+  ThotBool   AppFunction;
 } AppName;
 
 /* description d'un item de menu */

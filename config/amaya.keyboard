@@ -64,7 +64,7 @@ Shift Ctrl <Key>Y:	TtcRedo()
 # Alt commands
 Alt <Key>-:	ZoomOut()
 Alt <Key>r:	Reload()
-
+Alt <Key>Return:	DoAction() 
 Shift Alt <Key>+:	ZoomIn()
 Shift Alt <Key>!:	CreateMSUBSUP()
 Shift Alt <Key>_:	CreateMUNDEROVER()

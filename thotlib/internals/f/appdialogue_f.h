@@ -9,7 +9,8 @@
 extern void TteInitMenus ( char* name,
                            int number );
 extern void TteAddMenuAction ( char* actionName,
-                               Proc procedure );
+                               Proc procedure,
+                               ThotBool state );
 extern int TteAddUserMenuAction ( char* actionName,
                                   UserProc procedure,
                                   void *arg );
@@ -124,7 +125,8 @@ extern void ThotCallback ( int ref,
 extern void TteInitMenus (/* char* name,
                              int number */);
 extern void TteAddMenuAction (/* char* actionName,
-                                 Proc procedure */);
+                                 Proc procedure,
+                                 ThotBool state */);
 extern int TteAddUserMenuAction (/* char* actionName,
                                     UserProc procedure,
                                     void *arg */);
@@ -146,7 +148,7 @@ extern void TteAddMenuItem (/* WindowType windowtype,
                                int menuID,
                                int subMenu,
                                int itemID,
-                               STRING actionName,
+                               char* actionName,
                                char itemType */);
 extern void TteOpenMainWindow (/* STRING name,
                                   Pixmap logo,
@@ -159,7 +161,7 @@ extern int TtaAddButton (/* Document document,
                             View view,
                             ThotIcon picture,
                             void (*procedure) (),
-                            STRING functionName,
+                            char* functionName,
                             STRING info,
                             BYTE type,
                             ThotBool state */);

@@ -44,8 +44,8 @@
 /* automata structure for the keys */
 typedef struct _key
 {
-  int                 K_EntryCode;    /* input key                           */
-  short               K_Command;      /* index in the command list or -1     */
+  unsigned int        K_EntryCode;    /* input key                           */
+  int                 K_Command;      /* index in the command list or -1     */
   int                 K_Value;	      /* return key if command = -1          */
   struct _key        *K_Other;	      /* next entry at the same level        */
   union
@@ -690,10 +690,10 @@ int                 key;
 				{
                    if (ptr != NULL) {
                       if (ptr->K_EntryCode == key) {
-#                        ifdef _WINDOWS
+#ifdef _WINDOWS
                          endOfSearch = TRUE;
                          if (specialKey) {
-#                           endif /* _WINDOWS */
+#endif /* _WINDOWS */
                             /* On entre dans un automate */
                             found = TRUE;
                             Automata_current = ptr->K_Next;
@@ -702,9 +702,9 @@ int                 key;
                                value = (UCHAR_T) ptr->K_Value;
                                command = ptr->K_Command;
 							}
-#                        ifdef _WINDOWS
+#ifdef _WINDOWS
 						 }
-#                        endif /* _WINDOWS */
+#endif /* _WINDOWS */
 					  } else
                             ptr = ptr->K_Other;
 				   } 

@@ -977,12 +977,12 @@ Document            document;
 }
 
 /*----------------------------------------------------------------------
-  ActivateFromKeyboard         
+  DoAction         
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void            ActivateFromKeyboard (Document doc, View view)
+void            DoAction (Document doc, View view)
 #else  /* __STDC__ */
-void            ActivateFromKeyboard (doc, view)
+void            DoAction (doc, view)
 Document        doc;
 View            view;
 #endif /* __STDC__ */

@@ -12,7 +12,8 @@ number
 		   < >  : optional and repeatable part
 		   /    : choice
 	
-		   V. Quint	May 1989      }
+		   V. Quint	May 1989
+		   I. Vatton    October 1999     }
 	
     1	AppliModel = 		'APPLICATION' ElemIdent ';'
 				['USES' SchemaList]
@@ -20,57 +21,61 @@ number
 		   		['ELEMENTS' ElemActionsList ]
 		   		['ATTRIBUTES' AttrActionList ]
 		   		['MENUS' Menus]
+				['FUNCTIONS' ActionList]
 		   		'END' .
 	
     3	SchemaList =		DocumentType < ',' DocumentType > ';' .
+	
     4	EvtActionList =	 	EvtAction /
 				'BEGIN' EvtAction < EvtAction > 'END' ';' .
-    9	EvtAction = 		EvtIdent [ '.' PostPre ] '-' '>' ActionIdent ';' .
-   11	PostPre =               'Post' / 'Pre' .
+   10	EvtAction = 		EvtIdent [ '.' PostPre ] '-' '>' ActionIdent ';' .
+   12	PostPre =               'Post' / 'Pre' .
 	
     5	ElemActionsList =	ElemActions < ElemActions > .
 	
-   13	ElemActions = 		[ FirstSec ] ElemIdent ':' EvtActionList .
+   14	ElemActions = 		[ FirstSec ] ElemIdent ':' EvtActionList .
 	
-   14	FirstSec =		'First' / 'Second' .
+   15	FirstSec =		'First' / 'Second' .
 	
     6	AttrActionList =        AttrActions < AttrActions > .
 	
-   15	AttrActions = 		AttrIdent ':' EvtActionList .
+   16	AttrActions = 		AttrIdent ':' EvtActionList .
 	
     7	Menus =			[ 'Main' 'Window' ':' MenuList ]
 				[ 'Document' 'Windows' ':' MenuList ]
 				< DocumentType 'Windows' ':' MenuList > .
 	
-   17	MenuList =		'BEGIN' NewMenu < NewMenu > 'END' ';' /
+   18	MenuList =		'BEGIN' NewMenu < NewMenu > 'END' ';' /
 				NewMenu .
 	
-   18	NewMenu =		[ 'view' ':' ViewNum ] MenuIdent
+   19	NewMenu =		[ 'view' ':' ViewNum ] MenuIdent
 				[ '.' SubmenuIdent] [ ItemCascade ] ';' .
 	
-   22	ItemCascade =		'Separator' / 'Button' ':' ItemAction /
+   23	ItemCascade =		'Separator' / 'Button' ':' ItemAction /
 				'Toggle' ':' ItemAction /
 				'Dynamic' ':' ItemIdent .
 	
-   23	ItemAction = 		ItemIdent '-' '>' ActionIdent .
+   24	ItemAction = 		ItemIdent '-' '>' ActionIdent .
 	
-    8	DocumentType =		NAME .
+    8	ActionList =		ActionIdent < ',' ActionIdent > ';' .
 	
-   20	MenuIdent = 		NAME .
+    9	DocumentType =		NAME .
 	
-   21	SubmenuIdent = 		NAME .
+   21	MenuIdent = 		NAME .
 	
-   24	ItemIdent = 		NAME .
+   22	SubmenuIdent = 		NAME .
 	
-   12	ActionIdent =		NAME .
+   25	ItemIdent = 		NAME .
+	
+   13	ActionIdent =		NAME .
 	
     2	ElemIdent = 		NAME .
 	
-   10	EvtIdent = 		NAME .
+   11	EvtIdent = 		NAME .
 	
-   16	AttrIdent = 		NAME .
+   17	AttrIdent = 		NAME .
 	
-   19	ViewNum =		NUMBER .
+   20	ViewNum =		NUMBER .
 	
 	END
 	
@@ -80,12 +85,12 @@ number
 
 code  character  numbers of rules using the key-word
 
-1001      ;       1   3   4   9  17  18
-1002      ,       3
-1003      .       9  18
-1004      -       9  23
-1005      >       9  23
-1006      :      13  15   7   7   7  18  22  22  22
+1001      ;       1   3   4  10  18  19   8
+1002      ,       3   8
+1003      .      10  19
+1004      -      10  24
+1005      >      10  24
+1006      :      14  16   7   7   7  19  23  23  23
 
 
 
@@ -99,21 +104,22 @@ code  key-word      numbers of rules using the key-word
 1104  ELEMENTS      1
 1105  ATTRIBUTES    1
 1106  MENUS         1
-1107  END           1   4  17
-1108  BEGIN         4  17
-1109  Post         11
-1110  Pre          11
-1111  First        14
-1112  Second       14
-1113  Main          7
-1114  Window        7
-1115  Document      7
-1116  Windows       7   7
-1117  view         18
-1118  Separator    22
-1119  Button       22
-1120  Toggle       22
-1121  Dynamic      22
+1107  FUNCTIONS     1
+1108  END           1   4  18
+1109  BEGIN         4  18
+1110  Post         12
+1111  Pre          12
+1112  First        15
+1113  Second       15
+1114  Main          7
+1115  Window        7
+1116  Document      7
+1117  Windows       7   7
+1118  view         19
+1119  Separator    23
+1120  Button       23
+1121  Toggle       23
+1122  Dynamic      23
 
 
 
@@ -127,39 +133,40 @@ right part.
  code  symbol        rule numbers
 
     1  AppliModel     
-    2  ElemIdent         1  13
+    2  ElemIdent         1  14
     3  SchemaList        1
-    4  EvtActionList     1  13  15
+    4  EvtActionList     1  14  16
     5  ElemActionsList   1
     6  AttrActionList    1
     7  Menus             1
-    8  DocumentType      3   3   7
-    9  EvtAction         4   4   4
-   10  EvtIdent          9
-   11  PostPre           9
-   12  ActionIdent       9  23
-   13  ElemActions       5   5
-   14  FirstSec         13
-   15  AttrActions       6   6
-   16  AttrIdent        15
-   17  MenuList          7   7   7
-   18  NewMenu          17  17  17
-   19  ViewNum          18
-   20  MenuIdent        18
-   21  SubmenuIdent     18
-   22  ItemCascade      18
-   23  ItemAction       22  22
-   24  ItemIdent        22  23
+    8  ActionList        1
+    9  DocumentType      3   3   7
+   10  EvtAction         4   4   4
+   11  EvtIdent         10
+   12  PostPre          10
+   13  ActionIdent      10  24   8   8
+   14  ElemActions       5   5
+   15  FirstSec         14
+   16  AttrActions       6   6
+   17  AttrIdent        16
+   18  MenuList          7   7   7
+   19  NewMenu          18  18  18
+   20  ViewNum          19
+   21  MenuIdent        19
+   22  SubmenuIdent     19
+   23  ItemCascade      19
+   24  ItemAction       23  23
+   25  ItemIdent        23  24
 
 
 
 *** REFERENCES TO BASIC TYPES ***
 
 Numbers of the rules using NAME
-   8  20  21  24  12   2  10  16
+   9  21  22  25  13   2  11  17
 
 Numbers of the rules using NUMBER
-  19
+  20
 
 Numbers of the rules using STRING
 

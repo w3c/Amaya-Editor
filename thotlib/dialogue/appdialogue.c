@@ -41,7 +41,6 @@
 #endif /* _WINDOWS */
 
 #define MAX_ARGS	20
-#define MAX_USER_ACTION	100
 
 #undef THOT_EXPORT
 #define THOT_EXPORT extern
@@ -297,8 +296,6 @@ int                 number;
 
    /* Il faut ajouter les actions internes liees a la structure */
    number += MAX_INTERNAL_CMD;
-   /* as well as space for new User's defined actions */
-   number += MAX_USER_ACTION;
 
    MaxMenuAction = number;
    MenuActionList = (Action_Ctl *) TtaGetMemory (number * sizeof (Action_Ctl));
@@ -426,13 +423,13 @@ int                 number;
    actions d'interface.                                            
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                TteAddMenuAction (char* actionName, Proc procedure)
+void                TteAddMenuAction (char* actionName, Proc procedure, ThotBool state)
 
 #else  /* __STDC__ */
-void                TteAddMenuAction (actionName, procedure)
+void                TteAddMenuAction (actionName, procedure, state)
 char*               actionName;
 Proc                procedure;
-
+ThotBool            state;
 #endif /* __STDC__ */
 {
    char*               ptr;
@@ -455,7 +452,7 @@ Proc                procedure;
 	MenuActionList[FreeMenuAction].ActionEquiv = NULL;
 	/* Cette nouvelle action n'est active pour aucune frame */
 	for (i = 0; i < MAX_FRAME; i++)
-	   MenuActionList[FreeMenuAction].ActionActive[i] = FALSE;
+	   MenuActionList[FreeMenuAction].ActionActive[i] = state;
 	FreeMenuAction++;
      }
 }
@@ -483,7 +480,7 @@ void               *arg;
    /*
     * We need a name !
     */
-   if (actionName == NULL)
+   if (actionName == NULL || procedure == NULL)
       return(-1);
    lg = strlen (actionName);
    if (lg == 0) return(-1);
@@ -501,7 +498,6 @@ void               *arg;
 	   return(0);
        }
    }
-   if (procedure == NULL) return(-1);
 
    /*
     * This action is not registered, try to allocate a new one.

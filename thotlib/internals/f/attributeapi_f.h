@@ -71,7 +71,7 @@ extern void TtaSetAttributeValue (/* Attribute attribute,
                                      Element element,
                                      Document document */);
 extern void TtaSetAttributeText (/* Attribute attribute,
-                                    char* buffer,
+                                    STRING buffer,
                                     Element element,
                                     Document document */);
 extern void TtaNextAttribute (/* Element element,

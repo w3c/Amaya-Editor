@@ -15,8 +15,8 @@ extern void FollowTheLink_callback ( int targetDocument,
                                      STRING outputfile,
                                      STRING content_type,
                                      void * context );
-extern void ActivateFromKeyboard ( Document doc,
-                                   View view );
+extern void DoAction ( Document doc,
+                       View view );
 extern ThotBool DoubleClick ( NotifyElement *event );
 extern ThotBool SimpleClick ( NotifyElement *event );
 extern void UpdateTitle ( Element el,
@@ -42,8 +42,8 @@ extern void FollowTheLink_callback (/* int targetDocument,
                                        STRING outputfile,
                                        STRING content_type,
                                        void * context */);
-extern void ActivateFromKeyboard (/* Document doc,
-                                     View view */);
+extern void DoAction (/* Document doc,
+                         View view */);
 extern ThotBool DoubleClick (/* NotifyElement *event */);
 extern ThotBool SimpleClick (/* NotifyElement *event */);
 extern void UpdateTitle (/* Element el,

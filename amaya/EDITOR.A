@@ -251,4 +251,6 @@ MENUS
 	view:1 Help_ button:BHelpConfigure -> HelpConfigure;
 	END;
 
+FUNCTIONS
+  DoAction;
 END

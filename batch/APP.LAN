@@ -6,7 +6,8 @@
 	   < >  : optional and repeatable part
 	   /    : choice
 
-	   V. Quint	May 1989      }
+	   V. Quint	May 1989
+	   I. Vatton    October 1999     }
 
 AppliModel = 		'APPLICATION' ElemIdent ';'
 			['USES' SchemaList]
@@ -14,9 +15,11 @@ AppliModel = 		'APPLICATION' ElemIdent ';'
 	   		['ELEMENTS' ElemActionsList ]
 	   		['ATTRIBUTES' AttrActionList ]
 	   		['MENUS' Menus]
+			['FUNCTIONS' ActionList]
 	   		'END' .
 
 SchemaList =		DocumentType < ',' DocumentType > ';' .
+
 EvtActionList =	 	EvtAction /
 			'BEGIN' EvtAction < EvtAction > 'END' ';' .
 EvtAction = 		EvtIdent [ '.' PostPre ] '-' '>' ActionIdent ';' .
@@ -47,6 +50,8 @@ ItemCascade =		'Separator' / 'Button' ':' ItemAction /
 			'Dynamic' ':' ItemIdent .
 
 ItemAction = 		ItemIdent '-' '>' ActionIdent .
+
+ActionList =		ActionIdent < ',' ActionIdent > ';' .
 
 DocumentType =		NAME .
 
