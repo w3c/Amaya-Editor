@@ -922,69 +922,6 @@ int                 bg;
 
    return (PicMask);
 }
-#  else  /* _WINDOWS */
-#if 0
-Pixmap WIN_MakeMask (char* pixelindex, int w, int h, int bg)
-{
-
-   unsigned char      *iptr;
-   char                value;
-   char               *data;
-   int                 bpl, y;
-   unsigned char      *data_ptr, *max_data;
-   int                 diff, count, width, height;
-
-   HBITMAP             newmask;
-   HBITMAP             oldMask; 
-   HDC                 memDC;
-
-   width  = w;
-   height = h;
-
-   memDC = CreateCompatibleDC (TtDisplay);
-   SetMapMode (memDC, GetMapMode (TtDisplay));
-   newmask = CreateBitmap (width, height, 1, 1, NULL);
-   oldMask = SelectObject (memDC, newmask);
-
-   bpl = width / 8;
-   if (bpl % 2)
-	   bpl ++;
-   data = (char *) TtaGetMemory (bpl * height);
-
-   iptr = pixelindex; 
-   diff = width & 7;
-   width >>= 3;
-
-      for (y = 0; y < height; y++) {
-	  data_ptr = data;
-	  max_data = data_ptr + width;
-	  while (data_ptr < max_data) {
-		value = 0;
-		value = (value << 1) | (*(iptr++) != bg);
-		value = (value << 1) | (*(iptr++) != bg);
-		value = (value << 1) | (*(iptr++) != bg);
-		value = (value << 1) | (*(iptr++) != bg);
-		value = (value << 1) | (*(iptr++) != bg);
-		value = (value << 1) | (*(iptr++) != bg);
-		value = (value << 1) | (*(iptr++) != bg);
-		value = (value << 1) | (*(iptr++) != bg);
-		*(data_ptr++) = value;
-	  }
-	  if (diff) {
-	     value = 0;
-	     for (count = 0; count < diff; count++)
-		 if (*(iptr++) != bg)
-		    value |= (0x80 >> count);
-	     *(data_ptr++) = value;
-	  }
-	  data += bpl; 
-   }
-
-   SetBitmapBits (newmask, h * w, data);
-   BitBlt (TtDisplay, 0, 0, w, h, memDC, 0, 0, SRCCOPY);
-   return (newmask);
-}
-#endif /* 0 */
 #  endif /* _WINDOWS */
 
 #ifdef _WINDOWS

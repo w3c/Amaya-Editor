@@ -466,6 +466,7 @@ PictInfo           *imageDesc;
 	       XSetClipOrigin (TtDisplay, TtGraphicGC, 0, 0);
 	     }
 #         else /* _WINDOWS */
+	case RealSize:
 	  WIN_InitSystemColors ();
 		 
 	  SelectPalette (TtDisplay, TtCmap, FALSE);
@@ -494,11 +495,12 @@ PictInfo           *imageDesc;
 #         endif /* _WINDOWS */
 	  break;
 	  
-	case RealSize:
 	case FillFrame:
 	case XRepeat:
 	case YRepeat:
 #         ifndef _WINDOWS
+	case RealSize:
+
           valuemask = GCTile | GCFillStyle | GCTileStipXOrigin | GCTileStipYOrigin;
 	  values.fill_style = FillTiled;
           values.tile = pixmap;
@@ -641,12 +643,23 @@ PictInfo           *imageDesc;
                   if (!BitBlt (hMemDC, x, y, imageDesc->PicWArea, imageDesc->PicHArea, hOrigDC, 0, 0, SRCCOPY))
                      WinErrorBox (NULL);
 
-          BitBlt (TtDisplay, xFrame, yFrame, w, h, hMemDC, 0, 0, SRCCOPY);
+	  if (imageDesc->bgRed == -1 && imageDesc->bgGreen == -1 && imageDesc->bgBlue == -1) {
+	     BitBlt (TtDisplay, xFrame, yFrame, w, h, hMemDC, 0, 0, SRCCOPY);
           DeleteObject (hMemDC);
           DeleteObject (hOrigDC);
           DeleteObject (hBkgBmp);
           DeleteObject (TtCmap); 
           peInitialized = FALSE;
+	  } else {
+          DeleteObject (hMemDC);
+          DeleteObject (hOrigDC);
+          DeleteObject (TtCmap); 
+          peInitialized = FALSE;
+	        WIN_LayoutTransparentPicture (hBkgBmp, xFrame, yFrame, w, h, imageDesc->bgRed, imageDesc->bgGreen, imageDesc->bgBlue);
+	  }
+		 
+		  
+		  /* BitBlt (TtDisplay, xFrame, yFrame, w, h, hMemDC, 0, 0, SRCCOPY); */
 #         endif /* _WINDOWS */
 	  break;
 	}
