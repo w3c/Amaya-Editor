@@ -184,6 +184,8 @@ static AttributeMapping* lastMappedAttr = NULL;
 static ThotBool      ExtraPI = FALSE;
                      /* the document DOCTYPE is currently parsed */
 static ThotBool      WithinDoctype = FALSE;
+                     /* the content of a buffer is being parsed */
+static ThotBool      PARSING_BUFFER = FALSE;
                      /* parsing errors are not reported for external resources */
 static ThotBool      ShowParsingErrors = FALSE;;
 static ThotBool	     ParsingSubTree = FALSE;
@@ -4141,9 +4143,12 @@ static void     Hndl_ElementEnd (void *userData, const XML_Char *name)
      {
        EndOfXmlElement ((char*) name); 
        /* Is it the end tag of the root element ? */
-       if (!strcmp (XMLRootName, (char*) name) && stackLevel == 1)
-	   XMLrootClosed = TRUE;
+       if (!strcmp (XMLRootName, (char*) name) &&
+	   stackLevel == 1 && !PARSING_BUFFER)
+	 XMLrootClosed = TRUE;
      }
+   if (!strncmp ((char*) name, "SUBTREE_ROOT", 12) && PARSING_BUFFER)
+     XMLrootClosed = TRUE;
 }
 
 /*----------------------------------------------------------------------
@@ -4639,6 +4644,7 @@ static void  InitializeXmlParsingContext (Document doc,
   VirtualDoctype = FALSE;
   ShowParsingErrors =  TRUE;
   IgnoreCommentAndPi = FALSE;
+  PARSING_BUFFER = FALSE;
 
   htmlLineRead = 0;
   htmlCharRead = 0;
@@ -5195,13 +5201,15 @@ ThotBool       ParseXmlBuffer (char     *xmlBuffer,
       strcat (transBuffer, xmlBuffer);
       strcat (transBuffer, "</SUBTREE_ROOT>");
       tmpLen = strlen (transBuffer);
-      
+
+      PARSING_BUFFER = TRUE;    
       if (!XML_Parse (Parser, transBuffer, tmpLen, 1))
 	{
 	  if (!XMLrootClosed)
 	    XmlParseError (errorNotWellFormed,
 			   (char *) XML_ErrorString (XML_GetErrorCode (Parser)), 0);
 	}
+      PARSING_BUFFER = FALSE;    
       if (transBuffer != NULL)   
 	TtaFreeMemory (transBuffer);   
     }
