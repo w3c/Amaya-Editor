@@ -83,80 +83,6 @@ static int          NbWhiteSp;
 #include "units_f.h"
 #include "psdisplay_f.h"
 
-/*----------------------------------------------------------------------
-   WriteCar writes s1 or s2 depending on encoding.
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         WriteCar (FILE * fout, int encoding, STRING s1, STRING s2)
-#else  /* __STDC__ */
-static void         WriteCar (fout, encoding, s1, s2)
-FILE               *fout;
-int                 encoding;
-STRING              s1;
-STRING              s2;
-#endif /* __STDC__ */
-{
-   if (encoding == 0)
-      fputs (s1, fout);
-   else
-      fputs (s2, fout);
-}
-/*----------------------------------------------------------------------
-  DrawChar draw a char at location (x, y) in frame and with font.
-  RO indicates whether it's a read-only box active
-  indicates if the box is active parameter fg indicates the drawing color
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                DrawChar (UCHAR_T car, int frame, int x, int y, ptrfont font, int RO, int active, int fg)
-#else  /* __STDC__ */
-void                DrawChar (car, frame, x, y, font, RO, active, fg)
-UCHAR_T       car;
-int                 frame;
-int                 x;
-int                 y;
-ptrfont             font;
-int                 RO;
-int                 active;
-int                 fg;
-
-#endif /* __STDC__ */
-{
-}
-
-/*----------------------------------------------------------------------
-   Transcode emit the Poscript code for the given char.
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         Transcode (FILE * fout, int encoding, CHAR_T car)
-#else  /* __STDC__ */
-static void         Transcode (fout, encoding, car)
-FILE               *fout;
-int                 encoding;
-CHAR_T                car;
-#endif /* __STDC__ */
-{
-  if (car >= ' ' && car <= '~' && car != '(' && car != ')' && car != '\\')
-    fprintf (fout, "%c", car);
-  else
-    switch (car)
-      {
-      case '(':
-	fputs ("\\(", fout);
-	break;
-      case ')':
-	fputs ("\\)", fout);
-	break;
-      case '*':
-	WriteCar (fout, encoding, "*", "\\267");	/* bullet */
-	break;
-      case '\\':
-	fputs ("\\\\", fout);
-	break;
-      default:
-	fprintf (fout, "\\%o", (UCHAR_T) car);
-      }
-}
-
 
 /*----------------------------------------------------------------------
    CurrentColor compares the last RGB Postscript color loaded
@@ -191,58 +117,6 @@ int                 num;
 	}
       ColorPs = num;
     }
-}
-
-/*----------------------------------------------------------------------
-   FillWithPattern fills in the current stroke with a black and white
-   pattern, or the drawing color, or the background color,
-   or keep it transparent, depending on pattern value.
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         FillWithPattern (FILE * fout, int fg, int bg, int pattern)
-#else  /* __STDC__ */
-static void         FillWithPattern (fout, fg, bg, pattern)
-FILE               *fout;
-int                 fg;
-int                 bg;
-int                 pattern;
-#endif /* __STDC__ */
-{
-   unsigned short      red;
-   unsigned short      green;
-   unsigned short      blue;
-   float               fact;
-
-   fact = 255;
-   /* Do the current stroke need to be filled ? */
-   if (pattern == 0)
-      /* no filling */
-      fprintf (fout, "0\n");
-   else if (pattern == 1)
-     {
-	/* Ask for the RedGreenBlue values */
-	TtaGiveThotRGB (fg, &red, &green, &blue);
-	/* Emit the Poscript command */
-	fprintf (fout, "%f %f %f -1\n", ((float) red) / fact,
-		 ((float) green) / fact, ((float) blue) / fact);
-     }
-   else if (pattern == 2)
-     {
-	/* Ask for the RedGreenBlue values */
-	TtaGiveThotRGB (bg, &red, &green, &blue);
-	/* Emit the Poscript command */
-	fprintf (fout, "%f %f %f -1\n", ((float) red) / fact,
-		 ((float) green) / fact, ((float) blue) / fact);
-     }
-   else if (pattern >= 10)
-     {
-	/* Use of a fill pattern */
-	/*fprintf(fout, "<d1e3c5885c3e1d88> 8 "); */
-	fprintf (fout, "<%s> 8\n", Patterns_PS[pattern - 10]);
-     }
-   else
-      /* Shade of grey */
-      fprintf (fout, "%d\n", pattern - 2);
 }
 
 
@@ -298,6 +172,135 @@ ptrfont             font;
     return (1);
   else
     return (0);
+}
+
+/*----------------------------------------------------------------------
+  DrawChar draw a char at location (x, y) in frame and with font.
+  RO indicates whether it's a read-only box active
+  indicates if the box is active parameter fg indicates the drawing color
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void          DrawChar (UCHAR_T car, int frame, int x, int y, ptrfont font, int RO, int active, int fg)
+#else  /* __STDC__ */
+void          DrawChar (car, frame, x, y, font, RO, active, fg)
+UCHAR_T       car;
+int           frame;
+int           x;
+int           y;
+ptrfont       font;
+int           RO;
+int           active;
+int           fg;
+#endif /* __STDC__ */
+{
+   FILE               *fout;
+   int                 w;
+
+   fout = (FILE *) FrRef[frame];
+   if (y < 0)
+      return;
+   y += FrameTable[frame].FrTopMargin;
+   x = PixelToPoint (x);
+   y = PixelToPoint (y + FontBase (font));
+   if (fg >= 0)
+     {
+       /* Do we need to change the current color ? */
+       CurrentColor (fout, fg);
+       w = CharacterWidth (car, font);
+       /* Do we need to change the current font ? */
+       CurrentFont (fout, font);
+       fprintf (fout, "(%c) %d %d -%d s\n", car, PixelToPoint (w), x, y);
+     }
+}
+
+/*----------------------------------------------------------------------
+   Transcode emit the Poscript code for the given char.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void         Transcode (FILE * fout, int encoding, CHAR_T car)
+#else  /* __STDC__ */
+static void         Transcode (fout, encoding, car)
+FILE               *fout;
+int                 encoding;
+CHAR_T              car;
+#endif /* __STDC__ */
+{
+  if (car >= ' ' && car <= '~' && car != '(' && car != ')' && car != '\\')
+    fprintf (fout, "%c", car);
+  else
+    switch (car)
+      {
+      case '(':
+	fputs ("\\(", fout);
+	break;
+      case ')':
+	fputs ("\\)", fout);
+	break;
+      case '*':
+	if (encoding == 0)
+	  fputs ("*", fout);
+	else
+	  fputs ("\\267", fout);
+	break;
+      case '\\':
+	fputs ("\\\\", fout);
+	break;
+      default:
+	fprintf (fout, "\\%o", (UCHAR_T) car);
+      }
+}
+
+
+/*----------------------------------------------------------------------
+   FillWithPattern fills in the current stroke with a black and white
+   pattern, or the drawing color, or the background color,
+   or keep it transparent, depending on pattern value.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void         FillWithPattern (FILE * fout, int fg, int bg, int pattern)
+#else  /* __STDC__ */
+static void         FillWithPattern (fout, fg, bg, pattern)
+FILE               *fout;
+int                 fg;
+int                 bg;
+int                 pattern;
+#endif /* __STDC__ */
+{
+   unsigned short      red;
+   unsigned short      green;
+   unsigned short      blue;
+   float               fact;
+
+   fact = 255;
+   /* Do the current stroke need to be filled ? */
+   if (pattern == 0)
+      /* no filling */
+      fprintf (fout, "0\n");
+   else if (pattern == 1)
+     {
+	/* Ask for the RedGreenBlue values */
+	TtaGiveThotRGB (fg, &red, &green, &blue);
+	/* Emit the Poscript command */
+	fprintf (fout, "%f %f %f -1\n", ((float) red) / fact,
+		 ((float) green) / fact, ((float) blue) / fact);
+     }
+   else if (pattern == 2)
+     {
+	/* Ask for the RedGreenBlue values */
+	TtaGiveThotRGB (bg, &red, &green, &blue);
+	/* Emit the Poscript command */
+	fprintf (fout, "%f %f %f -1\n", ((float) red) / fact,
+		 ((float) green) / fact, ((float) blue) / fact);
+     }
+   else if (pattern >= 10)
+     {
+	/* Use of a fill pattern */
+	/*fprintf(fout, "<d1e3c5885c3e1d88> 8 "); */
+	fprintf (fout, "<%s> 8\n", Patterns_PS[pattern - 10]);
+     }
+   else
+      /* Shade of grey */
+      fprintf (fout, "%d\n", pattern - 2);
 }
 
 /*----------------------------------------------------------------------
