@@ -363,7 +363,7 @@ void ANNOT_Quit ()
     TtaFreeMemory (annotUser);
   /* remove all the annotServers */
   if (annotServers)  
-      List_delAll (&annotServers);
+      List_delAll (&annotServers, List_delCharObj);
   if (annotPostServer)  
     TtaFreeMemory (annotPostServer);
   if (annotAlgaeText)

@@ -67,16 +67,31 @@ void List_delFirst (List **me)
 }
 
 /* ------------------------------------------------------------
+   List_delCharObj
+   Deletes all the elements in a list and the list structure
+   ------------------------------------------------------------*/
+ThotBool List_delCharObj (void *obj)
+{
+  if (!obj)
+    return FALSE;
+
+  TtaFreeMemory ((CHAR_T *) obj);
+  return TRUE;
+}
+
+/* ------------------------------------------------------------
    List_delAll
    Deletes all the elements in a list and the list structure
    ------------------------------------------------------------*/
-void List_delAll (List **me)
+void List_delAll (List **me, ThotBool (*del_function)(void *))
 {
   List *ptr;
 
   while (*me)
     {
       ptr = (List *) (*me)->next;
+      if (del_function && (*me)->object)
+	(*del_function) ((*me)->object);
       free (*me);
       *me = ptr;
     }

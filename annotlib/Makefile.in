@@ -107,10 +107,7 @@ AMAYA_ANNOT_SCHEMA= \
 	Annot.STR \
 	Annot.h \
 	AnnotP.PRS \
-	AnnotT.TRA \
-	XmlStr.STR \
-	XmlStrT.TRA \
-	XmlStr.h
+	AnnotT.TRA
 
 AMAYA_ANNOT_OBJ= \
 	AnnotAPP.o \
@@ -128,12 +125,6 @@ Annot.h : Annot.A
 	THOTDIR=`pwd`/../.. ;export THOTDIR; \
 	cd `dirname $<`; \
 	$$APP $(ALL_AMAYA_OPTIONS) `basename $<`)
-
-XmlStr.h : XmlStr.S
-	@(PRINTSTR=`pwd`/../bin/app;\
-	THOTDIR=`pwd`/../.. ; export THOTDIR; \
-	cd `dirname $<`; \
-	$$PRINTSTR -h XmlStr > XmlStr.h)
 
 #
 # dependencies

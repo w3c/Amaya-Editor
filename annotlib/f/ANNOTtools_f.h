@@ -9,7 +9,9 @@
 extern void List_add ( List **me,
                        CHAR_T *object );
 extern void List_delFirst ( List **me );
-extern void List_delAll ( List **me );
+extern ThotBool List_delCharObj ( void *obj );
+extern void List_delAll ( List **me,
+                          ThotBool (*del_function)(void *) );
 extern void List_delObject ( List **list,
                              char *object );
 extern int List_count ( List *list );
@@ -74,7 +76,9 @@ extern CHAR_T * ANNOT_MakeFileURL ( CHAR_T *path );
 extern void List_add (/* List **me,
                          CHAR_T *object */);
 extern void List_delFirst (/* List **me */);
-extern void List_delAll (/* List **me */);
+extern ThotBool List_delCharObj (/* void *obj */);
+extern void List_delAll (/* List **me,
+                            ThotBool (*del_function)(void *) */);
 extern void List_delObject (/* List **list,
                                char *object */);
 extern int List_count (/* List *list */);

@@ -780,7 +780,7 @@ static void BuildAnnotTypesSelector ()
   RDFClassP		annotClass;
 
   nb_entries = 0;
-  List_delAll (&typesList);
+  List_delAll (&typesList, List_delCharObj);
   ustrcpy (s, TEXT(""));
   i = 0;
 
