@@ -1014,8 +1014,8 @@ boolean             subTree;
 					      }
 		    }
 		  while (!stop);
-		  /* restore the pEl1 value */
-		  pEl1 = *pEl;
+		  /* update pEl value */
+		  *pEl = pEl1;
 		  TtaWriteByte (pivFile, '\0');
 		  break;
 		case LtReference:
