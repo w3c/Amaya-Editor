@@ -134,9 +134,8 @@ view                view;
    strcpy(&BufMenu[indx], TtaGetMessage(CORR, Replace_With));
   ----------------------------------------------------------------------*/
    /* ne pas afficher cette feuille maintenant */
-   TtaNewSheet (BaseCorrector + ChkrFormCorrect, TtaGetViewFrame (doc, view),
-		0, 0, TtaGetMessage (CORR, Correct),
-		2, BufMenu, FALSE, 4, 'L', D_DONE);
+   TtaNewSheet (BaseCorrector + ChkrFormCorrect, TtaGetViewFrame (doc, view), 0, 0,
+		TtaGetMessage (CORR, Correct), 2, BufMenu, FALSE, 4, 'L', D_DONE);
 
    /* initialise le champ langue de correction courante */
    TtaNewLabel (BaseCorrector + ChkrLabelLanguage, BaseCorrector + ChkrFormCorrect, " ");

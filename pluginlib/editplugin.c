@@ -18,6 +18,7 @@
 #include "view.h"
 #include "document.h"
 #include "app.h"
+#include "plugin.h"
 
 #define PLUGIN_MAX_REF	   4
 
@@ -26,7 +27,6 @@
 #define PLUGIN_INFO        3   /* Displaying plugin's information */
 
 char*                 pluginPath;
-
 static int            BasePlugin = 0;
 static char           buffer [800]; /* A REVOIR $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ */
 
@@ -34,6 +34,8 @@ extern PluginInfo*    pluginTable [100];
 extern int            pluginCounter ;
 extern int            currentPlugin;
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void CallbackFormPlugin (int ref, int dataType, char* data)
 #else  /* __STDC__ */
@@ -66,10 +68,12 @@ char* data;
    }
 }
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__ 
-void CreateFormPlugin (Document document, View view)
+void TtaCreateFormPlugin (Document document, View view)
 #else  /* __STDC__ */
-void CreateFormPlugin (document, view) 
+void TTaCreateFormPlugin (document, view) 
 Document document; 
 View     view;
 #endif /* __STDC__ */

@@ -390,59 +390,44 @@ char               *fileName;
 
 #endif /* __STDC__ */
 {
-   int                 i;
-   int                 l = 0;
+  int                 i;
+  int                 l = 0;
 
-   /* i = MAX_PICT_FORMATS - 1; */
-   i = HandlersCounter - 1 ;
+  /* i = MAX_PICT_FORMATS - 1; */
+  i = HandlersCounter - 1 ;
 #ifdef AMAYA_PLUGIN
-   currentPlugin = HandlersCounter - InlineHandlers - 1;
+  currentPlugin = HandlersCounter - InlineHandlers - 1;
 #endif
-   l = strlen (fileName);
-   if (l > 4)
-     {
-	if (strcmp (fileName + l - 4, ".pic") == 0 || strcmp (fileName + l - 4, ".xbm") == 0)
-	  {
-	     return XBM_FORMAT;
-	  }
-	if (strcmp (fileName + l - 4, ".eps") == 0 || strcmp (fileName + l - 3, ".ps") == 0)
-	  {
-	     return EPS_FORMAT;
-	  }
-	if (strcmp (fileName + l - 4, ".xpm") == 0)
-	  {
-	     return XPM_FORMAT;
-	  }
-	if ((strcmp (fileName + l - 4, ".gif") == 0) || (strcmp (fileName + l - 4, ".GIF") == 0))
-	  {
-	     return GIF_FORMAT;
-	  }
-	if ((strcmp (fileName + l - 4, ".jpg") == 0) || (strcmp (fileName + l - 5, ".jpeg") == 0))
-	  {
-	     return JPEG_FORMAT;
-	  }
-	if (strcmp (fileName + l - 4, ".png") == 0)
-	  {
-	     return PNG_FORMAT;
-	  }
-     }
-
-   while (i > UNKNOWN_FORMAT)
-     {
-	if (Match_Format (i, fileName))
-	  {
-	     return i;
-	  }
-	else
-	  {
-	     i--;
+  l = strlen (fileName);
+  if (l > 4)
+    {
+      if (strcmp (fileName + l - 4, ".pic") == 0 || strcmp (fileName + l - 4, ".xbm") == 0)
+	return XBM_FORMAT;
+      if (strcmp (fileName + l - 4, ".eps") == 0 || strcmp (fileName + l - 3, ".ps") == 0)
+	return EPS_FORMAT;
+      if (strcmp (fileName + l - 4, ".xpm") == 0)
+	return XPM_FORMAT;
+      if ((strcmp (fileName + l - 4, ".gif") == 0) || (strcmp (fileName + l - 4, ".GIF") == 0))
+	return GIF_FORMAT;
+      if ((strcmp (fileName + l - 4, ".jpg") == 0) || (strcmp (fileName + l - 5, ".jpeg") == 0))
+	return JPEG_FORMAT;
+      if (strcmp (fileName + l - 4, ".png") == 0)
+	return PNG_FORMAT;
+    }
+  
+  while (i > UNKNOWN_FORMAT)
+    {
+      if (Match_Format (i, fileName))
+	return i;
+      else
+	{
+	  i--;
 #ifdef AMAYA_PLUGIN
-             currentPlugin--;
+	  currentPlugin--;
 #endif /* AMAYA_PLUGIN */
-	  }
-     }
-   return UNKNOWN_FORMAT;
-
+	}
+    }
+  return UNKNOWN_FORMAT;
 }
 
 

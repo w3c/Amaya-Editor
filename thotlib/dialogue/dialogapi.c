@@ -129,12 +129,11 @@ static int          ShowReturn;
 static int          ShowX, ShowY;
 static struct Cat_Context *ShowCat = NULL;
 
-#ifdef WWW_XWINDOWS
+#ifndef WINDOWS
 static XtAppContext Def_AppCont;
 static Display     *GDp;
 static XtTranslations TextTranslations;
-
-#endif /* WWW_XWINDOWS */
+#endif
 static ThotWidget   MainShell;
 
 #include "memory_f.h"
@@ -144,10 +143,7 @@ static ThotWidget   MainShell;
 void                DebugBreak (void)
 {
 }
-#endif /* _WINDOWS */
-
-#ifdef _WINDOWS
-
+#else
 typedef struct struct_winerror
 {
    WORD                errNo;
@@ -160,7 +156,6 @@ struct struct_winerror win_errtab[] =
 };
 
 #define NB_WIN_ERROR (sizeof(win_errtab) / sizeof(struct struct_winerror))
-
 /*
  * MS-Windows Specific part.
  */
@@ -235,7 +230,6 @@ void                terminate__Fv (void)
    GetFen :  returns the Thot window number associated to an         
    X-Window window.                                            
   ----------------------------------------------------------------------*/
-
 int                 GetFen (ThotWindow win)
 {
    int                 frame;
@@ -253,7 +247,6 @@ int                 GetFen (ThotWindow win)
    WIN_GetFen :  returns the Thot window number associated to an     
    MS-Windows window.                                          
   ----------------------------------------------------------------------*/
-
 int                 WIN_GetFen (ThotWindow win)
 {
    int                 frame;
@@ -271,7 +264,6 @@ int                 WIN_GetFen (ThotWindow win)
    WIN_GetDeviceContext :  select a Device Context for a given       
    thot window.                                                
   ----------------------------------------------------------------------*/
-
 HDC                 WIN_curHdc = 0;
 ThotWindow          WIN_curWin = -1;
 
@@ -324,28 +316,23 @@ void                WIN_GetDeviceContext (int frame)
 	DebugBreak ();
      }
    else
-     {
-	WIN_curWin = win;
-     }
+     WIN_curWin = win;
 }
 
 /*----------------------------------------------------------------------
    WIN_GetWinDeviceContext :  select a Device Context for a given    
    MS-Windows window.                                          
   ----------------------------------------------------------------------*/
-
 void                WIN_GetWinDeviceContext (ThotWindow win)
 {
    if (win == 0)
-     {
-	return;
-     }
+     return;
 
    /*
     * if the correct Device Context is already selected, returns.
     */
    if ((WIN_curWin == win) && (WIN_curHdc != 0))
-      return;
+     return;
 
    /*
     * release the previous Device Context.
@@ -365,15 +352,12 @@ void                WIN_GetWinDeviceContext (ThotWindow win)
 	DebugBreak ();
      }
    else
-     {
-	WIN_curWin = win;
-     }
+     WIN_curWin = win;
 }
 
 /*----------------------------------------------------------------------
    WIN_ReleaseDeviceContext :  unselect the Device Context           
   ----------------------------------------------------------------------*/
-
 void                WIN_ReleaseDeviceContext (void)
 {
    /*
@@ -422,10 +406,10 @@ static struct Cat_Context *WinLookupCatEntry (int ref)
 	       }
 
 	     icat++;
-	  }			/*while */
+	  }
 
 	adlist = adlist->Cat_Next;
-     }				/*while */
+     }
 
    return (catval);
 }
@@ -434,7 +418,6 @@ static struct Cat_Context *WinLookupCatEntry (int ref)
    WinErrorBox :  Pops-up a message box when an MS-Window error      
    occured.                                                    
   ----------------------------------------------------------------------*/
-
 void                WinErrorBox (void)
 {
    int                 msg;
@@ -526,7 +509,6 @@ static struct E_List *NewEList ()
    /* verifies if there is a free block */
    if (PtrFreeE_List == NULL)
       adbloc = (struct E_List *) TtaGetMemory (sizeof (struct E_List));
-
    else
      {
 	adbloc = PtrFreeE_List;
@@ -538,12 +520,10 @@ static struct E_List *NewEList ()
    NbOccE_List++;
    adbloc->E_Next = NULL;
    for (i = 0; i < C_NUMBER; i++)
-     {
-	adbloc->E_ThotWidget[i] = 0;
-     }
+     adbloc->E_ThotWidget[i] = 0;
+ 
    return (adbloc);
-
-}				/*NewEList */
+}
 
 
 /*----------------------------------------------------------------------
@@ -551,11 +531,9 @@ static struct E_List *NewEList ()
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         FreeEList (struct E_List *adbloc)
-
 #else  /* __STDC__ */
 static void         FreeEList (adbloc)
 struct E_List      *adbloc;
-
 #endif /* __STDC__ */
 {
    struct E_List      *cebloc;
@@ -581,13 +559,11 @@ struct E_List      *adbloc;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         UnmapMenu (ThotWidget w, struct Cat_Context *catalogue, caddr_t call_d)
-
 #else  /* __STDC__ */
 static void         UnmapMenu (w, catalogue, call_d)
 ThotWidget          w;
 struct Cat_Context *catalogue;
 caddr_t             call_d;
-
 #endif /* __STDC__ */
 {
    struct Cat_Context *icatal;
@@ -607,13 +583,11 @@ caddr_t             call_d;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         CallMenu (ThotWidget w, struct Cat_Context *catalogue, caddr_t call_d)
-
 #else  /* __STDC__ */
 static void         CallMenu (w, catalogue, call_d)
 ThotWidget          w;
 struct Cat_Context *catalogue;
 caddr_t             call_d;
-
 #endif /* __STDC__ */
 {
    register int        i;
@@ -633,8 +607,8 @@ caddr_t             call_d;
    /* A menu entry is selected */
    if (catalogue->Cat_Widget != 0)
       if ((int) catalogue->Cat_Widget == -1)
-/*** back to a simple button ***/
-	 (*CallbackDialogue) (catalogue->Cat_Ref, INTEGER_DATA, 0);
+	/*** back to a simple button ***/
+	(*CallbackDialogue) (catalogue->Cat_Ref, INTEGER_DATA, 0);
       else
 	{
 	   adbloc = catalogue->Cat_Entries;
@@ -666,13 +640,11 @@ caddr_t             call_d;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         CallRadio (ThotWidget w, struct Cat_Context *catalogue, caddr_t call_d)
-
 #else  /* __STDC__ */
 static void         CallRadio (w, catalogue, call_d)
 ThotWidget          w;
 struct Cat_Context *catalogue;
 caddr_t             call_d;
-
 #endif /* __STDC__ */
 {
    register int        i;
@@ -715,13 +687,11 @@ caddr_t             call_d;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         CallToggle (ThotWidget w, struct Cat_Context *catalogue, caddr_t call_d)
-
 #else  /* __STDC__ */
 static void         CallToggle (w, catalogue, call_d)
 ThotWidget          w;
 struct Cat_Context *catalogue;
 caddr_t             call_d;
-
 #endif /* __STDC__ */
 {
    register int        i;
@@ -769,11 +739,9 @@ caddr_t             call_d;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         ReturnTogglevalues (struct Cat_Context *catalogue)
-
 #else  /* __STDC__ */
 static void         ReturnTogglevalues (catalogue)
 struct Cat_Context *catalogue;
-
 #endif /* __STDC__ */
 {
    register int        i;
@@ -829,7 +797,6 @@ caddr_t             call_d;
    register int        n;
    int                 ent;
    struct E_List      *adbloc;
-
 #ifndef _WINDOWS
    Arg                 args[MAX_ARGS];
 
@@ -1282,7 +1249,6 @@ Display           **Dp;
 #endif /* _WINDOWS */
 {
    int                 n;
-
 #ifdef _WINDOWS
    ATOM                res;
 
@@ -1371,7 +1337,7 @@ Display           **Dp;
 }
 
 
-#ifdef WWW_XWINDOWS
+#ifndef _WINDOWS
 /*----------------------------------------------------------------------
    TtaInitDialogueTranslations initialise les translations du         
    dialogue. Ce sont tous les racoursis claviers.                     
@@ -1386,7 +1352,7 @@ XtTranslations      translations;
 {
    TextTranslations = translations;
 }
-#endif /* WWW_XWINDOWS */
+#endif /* ! _WINDOWS */
 
 
 /*----------------------------------------------------------------------
@@ -1398,7 +1364,6 @@ void                TtaChangeDialogueFonts (char *menufont, char *formfont)
 void                TtaChangeDialogueFonts (menufont, formfont)
 char               *menufont;
 char               *formfont;
-
 #endif /* __STDC__ */
 {
 #ifdef _WINDOWS

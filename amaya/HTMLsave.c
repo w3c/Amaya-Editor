@@ -336,8 +336,8 @@ boolean             confirm;
 
    if (confirm)
      {
-	TtaNewForm (BaseDialog + ConfirmSave, TtaGetViewFrame (document, view),
-	 0, 0, TtaGetMessage (LIB, TMSG_LIB_CONFIRM), TRUE, 1, 'L', D_CANCEL);
+	TtaNewForm (BaseDialog + ConfirmSave, TtaGetViewFrame (document, view), 0, 0,
+	            TtaGetMessage (LIB, TMSG_LIB_CONFIRM), TRUE, 1, 'L', D_CANCEL);
 	/*strcpy(msg,"Saving will overwrite the following URLs :"); */
 	TtaNewLabel (BaseDialog + ConfirmSaveLbl, BaseDialog + ConfirmSave, TtaGetMessage (AMAYA, AM_WARNING_SAVE_OVERWRITE));
 

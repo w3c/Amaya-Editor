@@ -38,7 +38,7 @@
 #include "DL.xpm"
 #include "Link.xpm"
 #include "Table.xpm"
-#ifdef AMAY_PLUGIN
+#ifdef AMAYA_PLUGIN
 #include "Plugin.xpm"
 #endif
 
@@ -75,7 +75,7 @@ static Pixmap       iconNum;
 static Pixmap       iconDL;
 static Pixmap       iconLink;
 static Pixmap       iconTable;
-#ifdef AMAY_PLUGIN
+#ifdef AMAYA_PLUGIN
 #include "plugin.h"
 static Pixmap       iconPlugin;
 #endif
@@ -649,7 +649,7 @@ char               *pathname;
 	     TtaAddButton (doc, 1, iconLink, CreateOrChangeLink, TtaGetMessage (AMAYA, AM_BUTTON_LINK));
 	     TtaAddButton (doc, 1, iconTable, CreateTable, TtaGetMessage (AMAYA, AM_BUTTON_TABLE));
 #ifdef AMAYA_PLUGIN
-	     TtaAddButton (doc, 1, iconPlugin, CreateFormPlugin, TtaGetMessage (AMAYA, AM_BUTTON_PLUGIN));
+	     TtaAddButton (doc, 1, iconPlugin, TtaCreateFormPlugin, TtaGetMessage (AMAYA, AM_BUTTON_PLUGIN));
 #endif
 	     TtaAddTextZone (doc, 1, TtaGetMessage (AMAYA, AM_LOCATION), TRUE, TextURL);
 	     TtaAddTextZone (doc, 1, TtaGetMessage (AMAYA, AM_TITLE), TRUE, TextTitle);

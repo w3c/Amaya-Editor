@@ -268,18 +268,18 @@ int                 delta;
 			     vol += pBo1->BxAbstractBox->AbVolume;
 		       if (pBo1->BxPrevious == NULL)
 			  isbelow = FALSE;
-#ifdef AMAYA_PLUGIN */
-                       else {
+#ifdef AMAYA_PLUGIN
+                       else
+			 {
 			   if ((pBox->BxType == BoPicture) &&
                                !((y >= pFrame->FrYOrg)     &&
                                  (pBox->BxYOrg <= (pFrame->FrYOrg + h)) &&
                                  (x >= pFrame->FrXOrg)                  &&
-                                 (pBox->BxXOrg <= (pFrame->FrXOrg + l)))) {
-                              UnmapImage (pBox->BxPictInfo);
-                           } else {
-                                  DisplayBox (pBox, frame);
-                           }
-                       }
+                                 (pBox->BxXOrg <= (pFrame->FrXOrg + l))))
+			     UnmapImage (pBox->BxPictInfo);
+			   else
+			     DisplayBox (pBox, frame);
+			 }
 #endif /* AMAYA_PLUGIN */
 		       pBox = pBo1->BxPrevious;
 		    }
@@ -316,22 +316,23 @@ int                 delta;
 				 min = pBox;
 			      }
 #ifdef AMAYA_PLUGIN
-                            if (pBox->BxType == BoPicture) {
-                               if (!((y >= pFrame->FrYOrg) &&
-                                     (pBox->BxYOrg <= (pFrame->FrYOrg + h)) &&
-                                     (x >= pFrame->FrXOrg) &&
-                                     (pBox->BxXOrg <= (pFrame->FrXOrg + l)))) {
-                                  UnmapImage (pBox->BxPictInfo);
-                               } else {
-                                      DisplayBox (pBox, frame);
-                               }
-                            } else 
+                            if (pBox->BxType == BoPicture)
+			      {
+				if (!((y >= pFrame->FrYOrg) &&
+				      (pBox->BxYOrg <= (pFrame->FrYOrg + h)) &&
+				      (x >= pFrame->FrXOrg) &&
+				      (pBox->BxXOrg <= (pFrame->FrXOrg + l))))
+				  UnmapImage (pBox->BxPictInfo);
+				else
+				  DisplayBox (pBox, frame);
+			      }
+			    else 
 #endif /* AMAYA_PLUGIN */
-			           if (y >= frameymin
-				       && pBo1->BxYOrg <= frameymax
-				       && x >= framexmin
-				       && pBo1->BxXOrg <= framexmax)
-			              DisplayBox (pBox, frame);
+			      if (y >= frameymin
+				  && pBo1->BxYOrg <= frameymax
+				  && x >= framexmin
+				  && pBo1->BxXOrg <= framexmax)
+				DisplayBox (pBox, frame);
 
 			    /* Skip to next box */
 			    pBox = pBo1->BxPrevious;
