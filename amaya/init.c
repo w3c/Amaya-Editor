@@ -7591,12 +7591,26 @@ void InitAmaya (NotifyEvent * event)
        TtaFreeMemory (ptr);
        return;
      }
+#ifdef _WX
+   int arg_doc_id = 1;
+   while (arg_doc_id < appArgc)
+     {
+       s = appArgv[arg_doc_id];
+       OpenNewDocFromArgv(s);
+       arg_doc_id++;
+     }
+   /* load the homepage if nothing has been found in the command line */
+   if (arg_doc_id == 1)
+     OpenNewDocFromArgv(NULL);
+#else /* _WX */
    if (appArgc % 2 == 0)
      /* The last argument in the command line is the document to be opened */
      s = appArgv[appArgc - 1];
 
    // load the document with its url (s)
    OpenNewDocFromArgv(s);
+#endif /* _WX */
+
 
    TtaFreeMemory (ptr);
    ptr = NULL;

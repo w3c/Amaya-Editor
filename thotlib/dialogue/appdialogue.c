@@ -356,7 +356,8 @@ void TteInitMenus (char *name, int number)
 	else if (!strcmp (appArgv[i], "-profile"))
 	  /* the profile name is the following argument */
 	  profile = appArgv[++i];
-      i++;
+	else
+	  i++;
     }
   /* Init the profile table */
   Prof_InitTable (profile);
