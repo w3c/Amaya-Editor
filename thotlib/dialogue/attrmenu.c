@@ -1027,7 +1027,7 @@ static int BuildAttrMenu (char *bufMenu, PtrDocument pDoc, int *nbEvent,
 			  char *bufEventAttr)
 {
   PtrDocument         SelDoc;
-  PtrElement          firstSel, lastSel, pEl;
+  PtrElement          firstSel, lastSel;
   PtrSSchema          pSS;
   PtrSSchema          pSchExt;
   PtrAttribute        pAttrNew;
@@ -1049,74 +1049,61 @@ static int BuildAttrMenu (char *bufMenu, PtrDocument pDoc, int *nbEvent,
       firstSel->ElParent == NULL)
     /* the Document element is selected. It can't accept any attribute */
     selectionOK = FALSE;
-  if (selectionOK && SelDoc == pDoc)
+  if (selectionOK && SelDoc == pDoc && firstSel)
     /* il y a une selection et elle est dans le document traite' */
     {
-      /* cherche les attributs globaux definis dans les differents schemas */
-      /* de structure */
-      pSS = NULL;
-      pEl = firstSel;
-      /* cherche tous les schemas de structure utilises par les ascendants */
-      /* du premier element selectionne' (lui-meme compris) */
-      while (pEl != NULL)
+      /* cherche les attributs globaux definis dans le schema de structure */
+      /* du premier element selectionne' et dans les extrensions de ce schema*/
+      pSS = firstSel->ElStructSchema;/* schema de struct de l'element courant*/
+      if (pSS)
 	{
-	  /* schema de struct de l'element courant */
-	  pSS = pEl->ElStructSchema;
-	  if (pSS == NULL)
-	    pEl = NULL;
-	  else
+	  /* on parcourt toutes les extensions de ce schema de structure */
+	  do
 	    {
-	      /* on parcourt toutes les extensions de schema de ce schema */
-	      do
+	      /* on a deja traite' ce schema de structure ? */
+	      isNew = TRUE;
+	      for (i = 0; i < nbOfEntries; i++)
+		if (pSS == AttrStruct[i])
+		  /* already known */
+		  isNew = FALSE;
+	      
+	      if (isNew)
+		/* the element uses a new structure schema */
+		/* add all global attributes of this schema in the table */
 		{
-		  /* on a deja traite' ce schema de structure ? */
-		  isNew = TRUE;
-		  for (i = 0; i < nbOfEntries; i++)
-		    if (pSS == AttrStruct[i])
-		      /* already known */
-		      isNew = FALSE;
-
-		  if (isNew)
-		    /* the element uses a new structure schema */
-		    /* add all global attributes of this schema in the table */
+		  att = 0;
+		  while (att < pSS->SsNAttributes &&
+			 nbOfEntries - *nbEvent < MAX_MENU)
 		    {
-		      att = 0;
-		      while (att < pSS->SsNAttributes &&
-			     nbOfEntries - *nbEvent < MAX_MENU)
-			{
-			  att++;
-			  /* skip local attributes */
-			  if (pSS->SsAttribute[att - 1].AttrGlobal &&
-			    /* and invisible attributes */
-			    !AttrHasException (ExcInvisible, att, pSS))
-			    /* skip the attribute Langue execpt the first time */
-			    if (nbOfEntries == 0 || att != 1)
-			      if (TteItemMenuAttr (pSS, att, firstSel, SelDoc))
-				{
-				  /* keep in mind the structure schema and */
-				  /* the attribute number of this new entry */
-				  AttrStruct[nbOfEntries] = pSS;
-				  AttrNumber[nbOfEntries] = att;
-				  AttrOblig[nbOfEntries] = FALSE;
-				  /* is it an event attribute */
-				  AttrEvent[nbOfEntries] =
-				     AttrHasException (ExcEventAttr, att, pSS);
-				  if (AttrEvent[nbOfEntries])
-				    (*nbEvent)++;
-				  nbOfEntries++;
-				}
-			}
+		      att++;
+		      /* skip local attributes */
+		      if (pSS->SsAttribute[att - 1].AttrGlobal &&
+			  /* and invisible attributes */
+			  !AttrHasException (ExcInvisible, att, pSS))
+			/* skip the attribute Langue execpt the first time */
+			if (nbOfEntries == 0 || att != 1)
+			  if (TteItemMenuAttr (pSS, att, firstSel, SelDoc))
+			    {
+			      /* keep in mind the structure schema and */
+			      /* the attribute number of this new entry */
+			      AttrStruct[nbOfEntries] = pSS;
+			      AttrNumber[nbOfEntries] = att;
+			      AttrOblig[nbOfEntries] = FALSE;
+			      /* is it an event attribute */
+			      AttrEvent[nbOfEntries] =
+				AttrHasException (ExcEventAttr, att, pSS);
+			      if (AttrEvent[nbOfEntries])
+				(*nbEvent)++;
+			      nbOfEntries++;
+			    }
 		    }
-		  /* next extension schema */
-		  pSS = pSS->SsNextExtens;
 		}
-	      while (pSS != NULL);
-
-	      /***** pEl = pEl->ElParent; *****/
-	      pEl = NULL;
+	      /* next extension schema */
+	      pSS = pSS->SsNextExtens;
 	    }
+	  while (pSS != NULL);
 	}
-      
+
       /* cherche les attributs locaux du premier element selectionne' */
       pSS = firstSel->ElStructSchema;
       if (pSS != NULL)
