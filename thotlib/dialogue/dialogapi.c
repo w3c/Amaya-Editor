@@ -1867,13 +1867,14 @@ void TtaInitDialogue (char *server, ThotAppContext *app_context)
 
    /* initialize everything needed to operate the toolkit and parses some standard command line options */
    if (!gtk_init_check (&appArgc, &appArgv))
-     printf ("GUI can't be initialized\n");
+       gdk_init (&appArgc, &appArgv);
+   DefaultFont = gdk_font_load ("fixed");
    /* initilize the imlib, gtkv2.0 dont use imlib , it uses gdkpixbuf */
-   /* _GTK2 gdk_rgb_init(); */
 #ifndef _GL
    gdk_imlib_init ();
 #endif /* _GL */
-#endif /* _GTK */
+   TtDisplay = GDK_DISPLAY ();
+#else /* _GTK */
    CurrentWait = 0;
    ShowReturn = 0;
    ShowX = 100;
@@ -1946,7 +1947,6 @@ void TtaInitDialogue (char *server, ThotAppContext *app_context)
    RootShell.hIconSm = LoadIcon (hInstance, iconID);
    RegisterClassEx (&RootShell);
 #else /* _WINDOWS */
-#ifndef _GTK
    /* Ouverture de l'application pour le serveur X-ThotWindow */
    RootShell = 0;
    XtToolkitInitialize ();
@@ -1968,11 +1968,8 @@ void TtaInitDialogue (char *server, ThotAppContext *app_context)
    DefaultFont = XmFontListCreate (XLoadQueryFont (GDp, "fixed"),
 				   XmSTRING_DEFAULT_CHARSET);
    XmSetColorCalculation ((XmColorProc) ThotXmColorProc);
-#else /* _GTK */
-   DefaultFont = gdk_font_load ("fixed");
-   TtDisplay = GDK_DISPLAY ();
-#endif /* _GTK */
 #endif /* _WINDOWS */
+#endif /* _GTK */
 }
 
 /*----------------------------------------------------------------------
