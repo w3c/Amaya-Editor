@@ -3193,18 +3193,14 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
 		/* sinon, elle ne s'applique qu'a la vue pour laquelle */
 		/* elle est definie */
 		if (pPRule->PrViewNum == 1 || pPRule->PrViewNum == viewSch)
-		  {
-		    pAb->AbInLine = TRUE;		      
-		    appl = TRUE;
-		  }
+		  pAb->AbInLine = TRUE;		      
+	      appl = TRUE;
 	      break;
 	    case FnNoLine:
 	      if (pAb->AbLeafType == LtCompound &&
 		  pPRule->PrViewNum == viewSch)
-		{
-		  pAb->AbInLine = FALSE;
-		  appl = TRUE;
-		}
+		pAb->AbInLine = FALSE;
+	      appl = TRUE;
 	      break;
 	    case FnPage:
 	      /* ignore the Page rule when working for the editor (as opposed
@@ -3217,16 +3213,14 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
 	      appl = TRUE;
 	      break;
 	    case FnColumn:
-	      break;
 	    case FnSubColumn:
-		break;
+	      appl = TRUE;
+	      break;
 	    case FnCopy:
 	      /* on n'applique pas la regle copie a un element holophraste'*/
 	      if (!pAb->AbElement->ElHolophrast)
-		{
-		  ApplyCopy (pDoc, pPRule, pAb, TRUE);
-		  appl = TRUE;
-		}
+		ApplyCopy (pDoc, pPRule, pAb, TRUE);
+	      appl = TRUE;
 	      break;
 	    case FnContentRef:
 	      ConstantCopy (pPRule->PrPresBox[0], pSchP, pAb);
@@ -3235,10 +3229,8 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
 	    case FnShowBox:
 	      if (pAb->AbLeafType == LtCompound &&
 		  pPRule->PrViewNum == viewSch)
-		{
-		  pAb->AbFillBox = TRUE;
-		  appl = TRUE;
-		}
+		pAb->AbFillBox = TRUE;
+	      appl = TRUE;
 	      break;
 	    case FnBackgroundPicture:
 	      appl = TRUE;
@@ -3296,7 +3288,6 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
 			NewPictInfo (pAb, "", UNKNOWN_FORMAT);
 		      ((ThotPictInfo *) (pAb->AbElement->ElPictInfo))->PicPresent =
 			(PictureScaling)pPRule->PrPresBox[0];
-		      appl = TRUE;
 		    }
 		  else if (pAb->AbPresentationBox)
 		    {
@@ -3304,7 +3295,6 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
 			NewPictInfo (pAb, "", UNKNOWN_FORMAT);
 		      ((ThotPictInfo *) (pAb->AbPictInfo))->PicPresent =
 			(PictureScaling)pPRule->PrPresBox[0];
-		      appl = TRUE;
 		    }
 		  else if (pAb->AbLeafType == LtCompound)
 		    {
@@ -3312,18 +3302,17 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
 			NewPictInfo (pAb, "", UNKNOWN_FORMAT);
 		      ((ThotPictInfo *) (pAb->AbPictBackground))->PicPresent =
 			(PictureScaling)pPRule->PrPresBox[0];
-		      appl = TRUE;
 		    }
 		}
+	      appl = TRUE;
 	      break;
 	    case FnNotInLine:
 	      if (pPRule->PrViewNum == viewSch)
-		{
-		  pAb->AbNotInLine = TRUE;
-		  appl = TRUE;
-		}
+		pAb->AbNotInLine = TRUE;
+	      appl = TRUE;
 	      break;
 	    default:
+	      appl = TRUE;
 	      break;
 	    }	    
 	  break;
