@@ -55,7 +55,7 @@ static XmString     null_string;
 #endif
 
 #ifdef _WINDOWS
-#include "wininc.h"
+/* #include "wininc.h" */
 
 #define _MAX_PATH   500
 #define _MAX_FNAME  100
@@ -68,14 +68,13 @@ static XmString     null_string;
 #define ToolBar_GetItemRect(hwnd, idButton, lprc) \
     (BOOL)SendMessage((hwnd), TB_GETITEMRECT, (WPARAM)idButton, (LPARAM)(LPRECT)lprc)
 
-extern HWND        hwndClient ;
-extern HWND        ToolBar    ;
-extern HWND        StatusBar  ;
-extern HINSTANCE   hInstance  ;
+extern HWND      hwndClient ;
+extern HWND      ToolBar    ;
+extern HWND      StatusBar  ;
+extern HINSTANCE hInstance  ;
 
-static HWND        hwndHead   ;
-
-static char*       txtZoneLabel;
+static HWND      hwndHead   ;
+static char*     txtZoneLabel;
 
 int    cyToolBar ;
 HWND   hwndTB ;
@@ -390,81 +389,87 @@ int                 value;
 #endif /* __STDC__ */
 
 {
-   int                 delta;
-   int                 n;
-   int                 h, y;
-   int                 start, end, total;
-   float               charperpix;
-   Document            doc;
+   int      delta;
+   int      n;
+   int      h, y;
+   int      start, end, total;
+   float    charperpix;
+   Document doc;
+
+   /* HDC      hdc = GetDC (FrameTable[frame].WdScrollV); */
 
    /* do not redraw it if in NoComputedDisplay mode */
    if (documentDisplayMode[FrameTable[frame].FrDoc - 1] == NoComputedDisplay)
       return;
 
-   WIN_GetDeviceContext (frame);
+   n = PositionAbsBox (frame, &start, &end, &total);
 
-   switch (reason)
-	 {
-	    case SB_TOP:
+   /* SetScrollRange (FrameTable[frame].WdScrollV, SB_CTL, 0, total, FALSE); */
+   switch (reason) {
+	  case SB_TOP:
 	       JumpIntoView (frame, 0);
 	       break;
-	    case SB_BOTTOM:
+
+          case SB_BOTTOM:
 	       JumpIntoView (frame, 100);
-	       break;
-	    case SB_LINEUP:
+               break;
+
+          case SB_LINEUP:
 	       delta = -13;
 	       VerticalScroll (frame, delta, TRUE);
 	       break;
-	    case SB_LINEDOWN:
+
+          case SB_LINEDOWN:
 	       delta = 13;
 	       VerticalScroll (frame, delta, TRUE);
 	       break;
-	    case SB_PAGEUP:
+
+          case SB_PAGEUP:
 	       delta = -FrameTable[frame].FrHeight;
 	       VerticalScroll (frame, delta, TRUE);
 	       break;
-	    case SB_PAGEDOWN:
+
+          case SB_PAGEDOWN:
 	       delta = FrameTable[frame].FrHeight;
 	       VerticalScroll (frame, delta, TRUE);
 	       break;
-	       /*
-	          case SB_THUMBPOSITION:
-	          fprintf(stderr,"SB_THUMBPOSITION\n");
-	          JumpIntoView(frame, value);
-	          break;
-	        */
-	    case SB_THUMBTRACK:
+
+	  case SB_THUMBPOSITION:
+	  case SB_THUMBTRACK:
 	       JumpIntoView (frame, value);
 	       break;
-	 }
+   }
 
-   /*
-    * get some information on the position of the displayed part
-    * for this document.
-    */
+   /* get some information on the position of the displayed part
+    * for this document. */
 
-   n = PositionAbsBox (frame, &start, &end, &total);
+   SetScrollPos (FrameTable[frame].WdScrollV, SB_CTL, (start * 100) / total, TRUE) ;
+
+   /* n = PositionAbsBox (frame, &start, &end, &total); */
+#ifdef RAMZI
    switch (n)
 	 {
 	    case -1:
 	       /* No abstract Picture, strange */
-	       SetScrollPos (WIN_curHdc, SB_VERT, 0, TRUE);
+	       SetScrollPos (FrameTable[frame].WdScrollV, SB_VERT, 0, TRUE);
 	       break;
 	    case 0:
 	       /* Abstract Picture fully shown */
 	    case 1:
 	       /* Abstract Picture at the top */
-	       SetScrollPos (WIN_curHdc, SB_VERT, 0, TRUE);
+	       SetScrollPos (FrameTable[frame].WdScrollV, SB_VERT, 0, TRUE);
 	       break;
 	    case 2:
 	       /* Abstract Picture at the end */
-	       SetScrollPos (WIN_curHdc, SB_VERT, 100, TRUE);
+	       SetScrollPos (FrameTable[frame].WdScrollV, SB_VERT, 100, TRUE);
 	       break;
 	    case 3:
 	       /* Abstract Picture at the end */
-	       SetScrollPos (WIN_curHdc, SB_VERT, (100 * total) / start, TRUE);
+	       SetScrollPos (FrameTable[frame].WdScrollV, SB_VERT, (100 * total) / start, TRUE);
 	       break;
 	 }
+#endif /* RAMZI */
+   /* ReleaseDC (FrameTable[frame].WdScrollV, hdc); */
 }
 #endif /* _WINDOWS */
 
@@ -1056,12 +1061,6 @@ LPARAM      lParam;
                  UpdateWindow (StatusBar);
 
                  /* Create client window (contains notify list). */
-		 /*
-                 hwndClient = CreateWindowEx (WS_EX_CLIENTEDGE, "ClientWndProc", NULL,
-                                              WS_CHILD | WS_VISIBLE | WS_HSCROLL | WS_BORDER | 
-                                              WS_VSCROLL, 0, 0, 0, 0,
-                                              hwnd, (HMENU) 2, hInstance, NULL) ;
-		 */
                  hwndClient = CreateWindowEx (WS_EX_CLIENTEDGE, "ClientWndProc", NULL,
                                               WS_CHILD | WS_VISIBLE | WS_BORDER, 0, 0, 0, 0,
                                               hwnd, (HMENU) 2, hInstance, NULL) ;
@@ -1070,12 +1069,12 @@ LPARAM      lParam;
 
                  return 0 ;
 	    }
-	    /*
-            case WM_DESTROY:
-                 SendMessage (FrRef [frame], "WM_DESTROY", (WPARAM) 0, (LPARAM) 0) ;
-                 DestroyWindow (hwnd) ;
-                 return 0;
-	    */
+
+	   case WM_VSCROLL:
+	        WIN_ChangeVScroll (frame, LOWORD (wParam), HIWORD (wParam));
+	        WIN_ReleaseDeviceContext ();
+	        return (0);
+
 	    case WM_KEYDOWN:
                  SendMessage (FrRef [frame], WM_KEYDOWN, wParam, lParam);
                  return 0;
@@ -1349,10 +1348,7 @@ LPARAM lParam;
      }
 
      switch (mMsg) {
-          case WM_PAINT:
-	       /*
-	        * Some part of the Client Area has to be repaint.
-	        */
+          case WM_PAINT: /* Some part of the Client Area has to be repaint. */
 	       saveHdc = WIN_curHdc;
 	       WIN_HandleExpose (hwnd, frame, wParam, lParam);
 	       WIN_ReleaseDeviceContext ();
@@ -1364,89 +1360,74 @@ LPARAM lParam;
                int  cx         = LOWORD (lParam) ;
                int  cy         = HIWORD (lParam) ;
 
-               /* Ignore if notification window is absent. */
-               /* if (hwndNotify != NULL)
-		    MoveWindow (hwndNotify, 0, 0, cx, cy, TRUE) ; */
                WIN_ChangeTaille (frame, cx, cy, 0, 0) ;
 
 	       WIN_ReleaseDeviceContext ();
                return 0 ;
 	  }
-
+	  /*
 	  case WM_VSCROLL:
 	       WIN_ChangeVScroll (frame, LOWORD (wParam), HIWORD (wParam));
 	       WIN_ReleaseDeviceContext ();
 	       return (0);
-
+	  */
 	  case WM_KEYDOWN:
 	  case WM_CHAR:
 	       TtaAbortShowDialogue ();
 	       WIN_CharTranslation (FrRef[frame], frame, mMsg, wParam, lParam);
 	       return 0;
 
-	  case WM_LBUTTONDOWN:
-	       /* stop any current insertion of text */
+	  case WM_LBUTTONDOWN: /* stop any current insertion of text */
 	       CloseInsertion ();
 
 	       /* if the CTRL key is pressed this is a geometry change */
-	       if (GetKeyState (VK_CONTROL))
-		 {
-		    /* changes the box position */
-		    ApplyDirectTranslate (frame, LOWORD (lParam), HIWORD (lParam));
+	       if (GetKeyState (VK_CONTROL)) {
+		  /* changes the box position */
+		  ApplyDirectTranslate (frame, LOWORD (lParam), HIWORD (lParam));
 
 		    /* This is the beginning of a selection */
-		 }
-	       else
-		 {
-		    ClickFrame = frame;
-		    ClickX = LOWORD (lParam);
-		    ClickY = HIWORD (lParam);
-		    LocateSelectionInView (frame, ClickX, ClickY, 2);
-		 }
+	       } else {
+		     ClickFrame = frame;
+		     ClickX = LOWORD (lParam);
+		     ClickY = HIWORD (lParam);
+		     LocateSelectionInView (frame, ClickX, ClickY, 2);
+	       }
 	       return (0);
 
-	  case WM_MOUSEMOVE:
-	       {
-		  WPARAM              mMask = wParam & (MK_LBUTTON | MK_MBUTTON | MK_RBUTTON |
-						     MK_SHIFT | MK_CONTROL);
+	  case WM_MOUSEMOVE: {
+	       WPARAM mMask = wParam & (MK_LBUTTON | MK_MBUTTON | MK_RBUTTON |
+					MK_SHIFT | MK_CONTROL);
 
-		  if (mMask == MK_LBUTTON)
-		    {
-		       LocateSelectionInView (frame, LOWORD (lParam), HIWORD (lParam), 0);
-		       return (0);
-		    }
-		  break;
+	       if (mMask == MK_LBUTTON) {
+		  LocateSelectionInView (frame, LOWORD (lParam), HIWORD (lParam), 0);
+		  return (0);
 	       }
+	       break;
+	  }
 
-	  case WM_LBUTTONDBLCLK:
-	       /* left double click handling */
+	  case WM_LBUTTONDBLCLK:/* left double click handling */
 	       TtaAbortShowDialogue ();
 
 	       /* memorise la position de la souris */
 	       ClickFrame = frame;
-	       ClickX = LOWORD (lParam);
-	       ClickY = HIWORD (lParam);
+	       ClickX     = LOWORD (lParam);
+	       ClickY     = HIWORD (lParam);
 	       LocateSelectionInView (frame, ClickX, ClickY, 3);
 	       return (0);
-
 
 	  case WM_MBUTTONDOWN:
 	       /* stop any current insertion of text */
 	       CloseInsertion ();
 
 	       /* if the CTRL key is pressed this is a size change */
-	       if (GetKeyState (VK_CONTROL))
-		 {
-		    /* changes the box size */
-		    ApplyDirectResize (frame, LOWORD (lParam), HIWORD (lParam));
-
-		    /* memorize the click position */
-		 }
-	       else
-		 {
-		    TtaAbortShowDialogue ();
-		    LocateSelectionInView (frame, LOWORD (lParam), HIWORD (lParam), 0);
-		 }
+	       if (GetKeyState (VK_CONTROL)) {
+		  /* changes the box size */
+		  ApplyDirectResize (frame, LOWORD (lParam), HIWORD (lParam));
+		  /* memorize the click position */
+	       } else {
+		     TtaAbortShowDialogue ();
+		     LocateSelectionInView (frame, LOWORD (lParam), HIWORD (lParam), 0);
+	       }
 	       return (0);
 
           case WM_DESTROY: 
@@ -1457,6 +1438,64 @@ LPARAM lParam;
                return (DefWindowProc (hwnd, mMsg, wParam, lParam)) ;
      }
 }
+
+#ifdef RAMZI
+/* -------------------------------------------------------------------
+   WIN_HScrollProc
+   ------------------------------------------------------------------- */
+#ifdef __STDC__
+LRESULT CALLBACK WIN_HScrollProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lParam)
+#else  /* !__STDC__ */
+LRESULT CALLBACK WIN_HScrollProc (hwnd, mMsg, wParam, lParam)
+HWND   hwnd; 
+UINT   mMsg; 
+WPARAM wParam; 
+LPARAM lParam;
+#endif /* __STDC__ */
+{
+   int i = GetWindowLong (hwnd, GWL_ID) ;
+   int frame = GetHScrollParentNumber (hwnd) ;
+
+   if (frame != -1) {
+      switch (mMsg) {
+             case WM_SETFOCUS:
+                  iFocus = i;
+                  break ;
+      }
+   
+      return CallWindowProc (FrameTable[frame].fnOldHScroll, hwnd, mMsg, wParam, lParam) ;
+   }
+   return DefWindowProc (hwnd, mMsg, wParam, lParam) ;
+}
+
+/* -------------------------------------------------------------------
+   WIN_VScrollProc
+   ------------------------------------------------------------------- */
+#ifdef __STDC__
+LRESULT CALLBACK WIN_VScrollProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lParam)
+#else  /* !__STDC__ */
+LRESULT CALLBACK WIN_VScrollProc (hwnd, mMsg, wParam, lParam)
+HWND   hwnd; 
+UINT   mMsg; 
+WPARAM wParam; 
+LPARAM lParam;
+#endif /* __STDC__ */
+{
+   int i = GetWindowLong (hwnd, GWL_ID) ;
+   int frame = GetVScrollParentNumber (hwnd) ;
+
+   if (frame != - 1) {
+      switch (mMsg) {
+             case WM_SETFOCUS:
+                  iFocus = i;
+                  break ;
+      }
+   
+      return CallWindowProc (FrameTable[frame].fnOldVScroll, hwnd, mMsg, wParam, lParam) ;
+   }
+   return DefWindowProc (hwnd, mMsg, wParam, lParam) ;
+}
+#endif /* RAMZI */
 #endif /* _WINDOWS */
 
 #ifndef _WINDOWS

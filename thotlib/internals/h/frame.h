@@ -27,6 +27,10 @@ typedef struct _Frame_Ctl
   int		FrView;		/* Vue du document affichee		  */
   ThotWidget	WdScrollV;	/* Le widget Scroll Vertical              */
   ThotWidget 	WdScrollH;	/* Le widget Scroll Horizontal            */
+#ifdef _WINDOWS
+  WNDPROC      fnOldVScroll;    /* For verticall scroll callback          */
+  WNDPROC      fnOldHScroll;    /* For horizontal scroll callback         */
+#endif /* _WINDOWS */
   ThotWidget 	WdFrame;	/* Le widget de la fenetre                */
   ThotWidget	WdStatus;	/* Le widget de status courant            */
   struct _Menu_Ctl *FrMenus;	/* Contexte du premier menu		  */

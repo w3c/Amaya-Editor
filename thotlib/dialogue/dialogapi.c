@@ -150,7 +150,7 @@ static ThotWidget   MainShell;
 #include "thotmsg_f.h"
 
 #ifndef _WINDOWS
-void                DebugBreak (void)
+void DebugBreak (void)
 {
 }
 #else
@@ -185,11 +185,17 @@ char* thotargv[] = {
 
 int                 thotargc = 1;
 
-
+#ifdef __STDC__
 LRESULT CALLBACK WndProc        (HWND, UINT, WPARAM, LPARAM) ;
 LRESULT CALLBACK ClientWndProc  (HWND, UINT, WPARAM, LPARAM) ;
 LRESULT CALLBACK ThotDlgProc    (HWND, UINT, WPARAM, LPARAM) ;
 LRESULT CALLBACK TxtZoneWndProc (HWND, UINT, WPARAM, LPARAM) ;
+#else  /* !__STDC__ */
+LRESULT CALLBACK WndProc        () ;
+LRESULT CALLBACK ClientWndProc  () ;
+LRESULT CALLBACK ThotDlgProc    () ;
+LRESULT CALLBACK TxtZoneWndProc () ;
+#endif /* __STDC__ */
 
 /* following variables are declared as extern in frame_tv.h */
 HINSTANCE           hInstance = 0;
@@ -239,7 +245,7 @@ static WIN_Form formulary ;
 #endif /* _WINDOWS */
 
 /*----------------------------------------------------------------------
-   GetFen :  returns the Thot window number associated to an         
+   GetFrameNumber :  returns the Thot window number associated to an         
    X-Window window.                                            
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -261,7 +267,7 @@ ThotWindow win;
 
 #ifdef _WINDOWS
 /*----------------------------------------------------------------------
-   GetClientFen :  returns the Thot window number associated to an     
+   GetMainFrameNumber :  returns the Thot window number associated to an     
    MS-Windows window.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -282,13 +288,13 @@ ThotWindow win ;
 }
 
 /*----------------------------------------------------------------------
-   GetMenuFrameNumber :  returns the Thot window number associated to a     
+   GetMenuParentNumber :  returns the Thot window number associated to a     
    given menu.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-int GetMenuFrameNumber (ThotWidget menu)
+int GetMenuParentNumber (ThotWidget menu)
 #else  /* !__STDC__ */
-int GetMenuFrameNumber (win)
+int GetMenuParentNumber (win)
 ThotWindow win ;
 #endif /* __STDC__ */
 {
@@ -309,6 +315,48 @@ ThotWindow win ;
             frameIndex++ ;
    }
    return frame ;
+}
+
+/*----------------------------------------------------------------------
+   GetVScrollParentNumber :  returns the Thot window number associated to a     
+   given menu.                                          
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+int GetVScrollParentNumber (ThotWidget vScroll)
+#else  /* !__STDC__ */
+int GetVScrollParentNumber (vScroll)
+ThotWindow vScroll ;
+#endif /* __STDC__ */
+{
+   int     frame = 0;
+  
+   while (frame < MAX_FRAME) {
+         if (FrameTable[frame].fnOldVScroll == vScroll)
+            return frame ;
+         frame++ ;
+   }
+   return -1;
+}
+
+/*----------------------------------------------------------------------
+   GetHScrollParentNumber :  returns the Thot window number associated to a     
+   given menu.                                          
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+int GetHScrollParentNumber (ThotWidget hScroll)
+#else  /* !__STDC__ */
+int GetHScrollParentNumber (hScroll)
+ThotWindow hScroll ;
+#endif /* __STDC__ */
+{
+   int     frame = 0;
+  
+   while (frame < MAX_FRAME) {
+         if (FrameTable[frame].fnOldHScroll == hScroll)
+            return frame ;
+         frame++ ;
+   }
+   return -1;
 }
 
 /*----------------------------------------------------------------------
@@ -425,7 +473,7 @@ ThotWidget          parent;
 struct Cat_Context* catalogue;
 #endif /* __STDC__ */
 {
-   int frame = GetMenuFrameNumber (parent) ;
+   int frame = GetMenuParentNumber (parent) ;
    if (frame != -1) {
       int found = FALSE ;
       int i = 0;

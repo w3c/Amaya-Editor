@@ -99,6 +99,15 @@ static HWND hwndTB;
 TBADDBITMAP tbStdLarge[] = {
             HINST_COMMCTRL, IDB_STD_SMALL_COLOR,
 };
+
+#ifdef __STDC__
+LRESULT CALLBACK WIN_HScrollProc (HWND, UINT, WPARAM, LPARAM) ;
+LRESULT CALLBACK WIN_VScrollProc (HWND, UINT, WPARAM, LPARAM) ;
+#else /* !__STDC__ */
+LRESULT CALLBACK WIN_HScrollProc () ;
+LRESULT CALLBACK WIN_VScrollProc () ;
+#endif /* __STDC__ */
+
 #endif /* _WINDOWS */
 
 #include "appli_f.h"
@@ -1871,6 +1880,7 @@ int                 doc;
    MSG                 msg;
    RECT                rect;
    struct Cat_Context *catalogue;
+   int                 start, end, total;
 #else  /* _WINDOWS */
    ThotWidget          menu_bar;
    ThotWidget          w, row1, row2, rowv;
@@ -2154,7 +2164,7 @@ int                 doc;
              hscrl = CreateWindow ("scrollbar", NULL, WS_CHILD | WS_VISIBLE | WS_TABSTOP | SBS_HORZ,
                                    0, 0, 0, 0, Main_Wd, (HMENU) frame, hInstance, NULL) ;
 
-             SetScrollRange (hscrl, SB_CTL, 0, 255, FALSE);
+             SetScrollRange (hscrl, SB_CTL, 0, 100, FALSE);
              SetScrollPos (hscrl, SB_CTL, 0, FALSE) ;
 #endif /* _WINDOWS */
 	     /*** La barre de scroll verticale ***/
@@ -2181,7 +2191,7 @@ int                 doc;
              vscrl = CreateWindow ("scrollbar", NULL, WS_CHILD | WS_VISIBLE | WS_TABSTOP | SBS_VERT,
                                    0, 0, 0, 0, Main_Wd, (HMENU) frame + 1, hInstance, NULL) ;
 
-             SetScrollRange (vscrl, SB_CTL, 0, 255, FALSE);
+             SetScrollRange (vscrl, SB_CTL, 0, 100, FALSE);
              SetScrollPos (vscrl, SB_CTL, 0, FALSE) ;
 #endif /* _WINDOWS */
 
@@ -2382,6 +2392,7 @@ int                 doc;
 #endif /* !_WINDOWS */
 	     FrameTable[frame].WdScrollH = hscrl;
 	     FrameTable[frame].WdScrollV = vscrl;
+
 #ifndef _WINDOWS
 	     n = 0;
 	     XtSetArg (args[n], XmNwidth, &dx);
@@ -2393,7 +2404,7 @@ int                 doc;
 	     FrameTable[frame].FrWidth  = (int) dx;
 	     FrameTable[frame].FrHeight = (int) dy;
 #else /* _WINDOWS */
-	     FrameTable[frame].FrWidth = (int) large;
+	     FrameTable[frame].FrWidth  = (int) large;
 	     FrameTable[frame].FrHeight = (int) haut;
 #endif /* _WINDOWS */
 	     FrameTable[frame].WdFrame = w;
