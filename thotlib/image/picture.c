@@ -586,7 +586,7 @@ static void LayoutPicture (Pixmap pixmap, Drawable drawable,
   PictureScaling    picPresent;
   int               x, y, clipWidth, clipHeight;
   int               delta, i, j, iw, jh;
-
+  
   if (picXOrg < 0)
     {
       xFrame = xFrame - picXOrg;
@@ -602,103 +602,103 @@ static void LayoutPicture (Pixmap pixmap, Drawable drawable,
     {
       /* the default presentation depends on the box type */
       picPresent = imageDesc->PicPresent;
-     if (picPresent == DefaultPres)
-	 {
+      if (picPresent == DefaultPres)
+	{
 	  if (box->BxType == BoPicture)
 	    /* an image is rescaled */
 	    picPresent = ReScale;
 	  else
 	    /* a background image is repeated */
 	    picPresent = FillFrame;
-	 }
-    switch (picPresent)
+	}
+      switch (picPresent)
 	{
-		case ReScale:
-	        GL_TextureMap (imageDesc, xFrame, yFrame, w ,h);
-			break;
-		case RealSize:
-			GL_TextureMap (imageDesc, xFrame, yFrame, w ,h);
-			break;
-		case FillFrame:
-		case XRepeat:
-		case YRepeat:
-		  x          = pFrame->FrClipXBegin;
+	case ReScale:
+	  GL_TextureMap (imageDesc, xFrame, yFrame, w ,h);
+	  break;
+	case RealSize:
+	  GL_TextureMap (imageDesc, xFrame, yFrame,
+			 imageDesc->PicWidth, imageDesc->PicHeight);
+	  break;
+	case FillFrame:
+	case XRepeat:
+	case YRepeat:
+	  x          = pFrame->FrClipXBegin;
           y          = pFrame->FrClipYBegin;
           clipWidth  = pFrame->FrClipXEnd - x;
           clipHeight = pFrame->FrClipYEnd - y;
           x          -= pFrame->FrXOrg;
           y          -= pFrame->FrYOrg;
           if (picPresent == FillFrame || picPresent == YRepeat)
-			{
-				/* clipping height is done by the box height */
-				if (y < yFrame)
-				{
-				  /* reduce the height in delta value */
-				 clipHeight = clipHeight + y - yFrame;
-				 y = yFrame;
-				}
-				if (clipHeight > h)
-					clipHeight = h;
-			}
-			else
-			{
-				/* clipping height is done by the image height */
-				delta = yFrame + imageDesc->PicHArea - y;
-				if (delta <= 0)
-					clipHeight = 0;
-				else
-					clipHeight = delta;
-			}
-	  
+	    {
+	      /* clipping height is done by the box height */
+	      if (y < yFrame)
+		{
+		  /* reduce the height in delta value */
+		  clipHeight = clipHeight + y - yFrame;
+		  y = yFrame;
+		}
+	      if (clipHeight > h)
+		clipHeight = h;
+	    }
+	  else
+	    {
+	      /* clipping height is done by the image height */
+	      delta = yFrame + imageDesc->PicHArea - y;
+	      if (delta <= 0)
+		clipHeight = 0;
+	      else
+		clipHeight = delta;
+	    }	  
           if (picPresent == FillFrame || picPresent == XRepeat)
-			{
-				/* clipping width is done by the box width */
-				if (x < xFrame)
-				{
-				 /* reduce the width in delta value */
-				 clipWidth = clipWidth + x - xFrame;
-				x = xFrame;
-				}
-				if (clipWidth > w)
-					clipWidth = w;
-			}
+	    {
+	      /* clipping width is done by the box width */
+	      if (x < xFrame)
+		{
+		  /* reduce the width in delta value */
+		  clipWidth = clipWidth + x - xFrame;
+		  x = xFrame;
+		}
+	      if (clipWidth > w)
+		clipWidth = w;
+	    }
+	  else
+	    {
+	      /* clipping width is done by the image width */
+	      delta = xFrame + imageDesc->PicWArea - x;
+	      if (delta <= 0)
+		clipWidth = 0;
+	      else
+		clipWidth = delta;
+	    }          
+	  j = 0;
+	  do
+	    {
+	      i = 0;
+	      do
+		{
+		  /* check if the limits of the copied zone */
+		  if (i + imageDesc->PicWArea <= w)
+		    iw = imageDesc->PicWArea;
 		  else
-			{
-			/* clipping width is done by the image width */
-			delta = xFrame + imageDesc->PicWArea - x;
-			if (delta <= 0)
-				clipWidth = 0;
-			else
-				clipWidth = delta;
-			}          
-        j = 0;
-		do
-		 {
-			i = 0;
-			do
-			{
-				/* check if the limits of the copied zone */
-				if (i + imageDesc->PicWArea <= w)
-				    iw = imageDesc->PicWArea;
-				else
-				    iw = w - i;
-				if (j + imageDesc->PicHArea <= h)
-					jh = imageDesc->PicHArea;
-				else
-				    jh = h - j;
-				GL_TextureMap (imageDesc, xFrame, yFrame, iw ,jh);
-				/*BitBlt (hMemDC, i, j, iw, jh, hOrigDC, 0, 0, SRCCOPY);*/
-				i += imageDesc->PicWArea;
-			} 
-			while (i < w);
-			j += imageDesc->PicHArea;
+		    iw = w - i;
+		  if (j + imageDesc->PicHArea <= h)
+		    jh = imageDesc->PicHArea;
+		  else
+		    jh = h - j;
+		  GL_TextureMap (imageDesc, xFrame, yFrame, iw ,jh);
+		  /*BitBlt (hMemDC, i, j, iw, jh, hOrigDC, 0, 0, SRCCOPY);*/
+		  i += imageDesc->PicWArea;
 		} 
-		while (j < h);
-		break;  
+	      while (i < w);
+	      j += imageDesc->PicHArea;
+	    } 
+	  while (j < h);
+	  break;  
 	default: 
-			break;
+	  break;
 	}
-   }
+    }
 }
 
 #else /*_GL*/
