@@ -5626,9 +5626,9 @@ static int DestForm (int ref)
 		  XtRemoveCallback (catalogue->Cat_Widget, XmNdestroyCallback,
 				    (XtCallbackProc) formKill, catalogue);
 #else /* _GTK */
-		  gtk_signal_disconnect_by_func(GTK_OBJECT(catalogue->Cat_Widget)
+		  /*gtk_signal_disconnect_by_func(GTK_OBJECT(catalogue->Cat_Widget)
 						, GTK_SIGNAL_FUNC(formKillGTK),
-						catalogue);
+						catalogue);*/
 #endif /* !_GTK */
 #endif /* _WINDOWS */
 		}
@@ -5841,11 +5841,9 @@ void TtaDestroyDialogue (int ref)
 				  *
 				  *
 				  */
-	     if (PopShell != 0)
-	       {
-		 gtk_widget_destroy (GTK_WIDGET(PopShell));
-		 PopShell = 0;
-	       }
+	     if (PopShell != 0 && GTK_IS_WIDGET (PopShell))
+	       gtk_widget_destroy (GTK_WIDGET (PopShell));
+	     PopShell = 0;
 
 #endif /* !_GTK */
 #endif /* _WINDOWS */
@@ -5998,12 +5996,12 @@ static void NewSheet (int ref, ThotWidget parent, char *title, int number,
 	    /*PopShell->style->font=DefaultFont;*/
 	    gtk_widget_realize (PopShell);
 	    gtk_window_set_title (GTK_WINDOW (PopShell), TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
-	    gtk_window_set_position (GTK_WINDOW (PopShell), GTK_WIN_POS_MOUSE);
-	    gtk_widget_set_uposition(GTK_WIDGET(PopShell), ShowX, ShowY);
-	    gtk_container_set_border_width (GTK_CONTAINER(PopShell), 10);
-	    ConnectSignalGTK (GTK_OBJECT(PopShell),
+	    /*gtk_window_set_position (GTK_WINDOW (PopShell), GTK_WIN_POS_MOUSE);*/
+	    gtk_widget_set_uposition (GTK_WIDGET (PopShell), ShowX, ShowY);
+	    gtk_container_set_border_width (GTK_CONTAINER (PopShell), 10);
+	    ConnectSignalGTK (GTK_OBJECT (PopShell),
 			      "delete_event",
-			      GTK_SIGNAL_FUNC(gtk_true),
+			      GTK_SIGNAL_FUNC (gtk_true),
 			      (gpointer)NULL);
 #endif /* !_GTK */
 	  }

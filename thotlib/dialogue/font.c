@@ -699,6 +699,9 @@ int FontPointSize (int size)
   ----------------------------------------------------------------------*/
 PtrFont LoadFont (char *name)
 {
+#ifdef _I18N_
+  printf (name);
+#endif /* _I18N_ */
 #ifdef _GTK
   GdkFont *result;
 
@@ -1080,7 +1083,7 @@ unsigned char GetFontAndIndexFromSpec (CHAR_T c,
   lfont = NULL;
   if (fontset)
     {
-      if (c < 0xFF)
+      if (c <= 0xFF)
 	{
 	  /* 0 -> FF */
 	  lfont = fontset->FontIso_1;
@@ -1326,7 +1329,7 @@ static SpecFont LoadFontSet (char alphabet, int family, int highlight,
 	  fontset->specificFont = specificFont;
 	  fontset->FontFamily = family;
 	  fontset->FontHighlight = highlight;
-	  fontset->FontSize = size;
+	  fontset->FontSize = index;
 	  fontset->FontIso_1 = LoadNearestFont (alphabet, family, highlight,
 						index, frame, TRUE, TRUE);
 	  /* link this new fontset */
