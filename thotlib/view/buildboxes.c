@@ -40,6 +40,10 @@
 #include "frame_tv.h"
 #include "appdialogue_tv.h"
 
+#define MAX_BOX_INWORK 10
+static PtrAbstractBox  BoxInWork[MAX_BOX_INWORK];
+static int             BiwIndex = 0;
+
 #include "abspictures_f.h"
 #include "appli_f.h"
 #include "applicationapi_f.h"
@@ -1252,6 +1256,7 @@ int                *carIndex;
 	pCurrentBox = GetBox (pAb);
 	pAb->AbBox = pCurrentBox;
      }
+   pAb->AbNew = FALSE;	/* la regle de creation est interpretee */
 
    if (pCurrentBox != NULL)
      {
@@ -1495,7 +1500,6 @@ int                *carIndex;
 	       SetPositionConstraint (HorizRef, pCurrentBox, &i);
 	  }
 
-	pAb->AbNew = FALSE;	/* la regle de creation est interpretee */
 	/* manage table exceptions */
 	if (tableType == BoTable && ThotLocalActions[T_checktable])
 	  (*ThotLocalActions[T_checktable]) (pAb, NULL, NULL, frame);
@@ -3099,160 +3103,177 @@ int                 frame;
    PtrBox              pBox;
    PtrBox              pCurrentBox;
    Propagation         propStatus;
+   int                 index;
    boolean             toUpdate;
    boolean             result;
    boolean             change;
 
    change = FALSE;
-   if (pAb->AbDead && (pAb->AbNew || pAb->AbBox == NULL))
-      result = FALSE;
-   else if (pAb->AbDead || pAb->AbNew)
-     {
-	result = ComputeUpdates (pAb, frame);
-	propStatus = Propagate;
-	Propagate = ToAll;	/* On passe en mode normal de propagation */
-	CheckDefaultPositions (pAb, frame);
-	Propagate = propStatus;
-     }
-   /* On traite tous les paves descendants modifies avant le pave lui-meme */
+   /* avoid to manage two times the same box update */
+   for (index = 0; index < BiwIndex; index++)
+     if (BoxInWork[index] == pAb)
+       break;
+   if (index < BiwIndex)
+     result = FALSE;
    else
      {
-	/* On limite l'englobement a la boite courante */
-	pBox = PackBoxRoot;
-	PackBoxRoot = pAb->AbBox;
-
-	/* Traitement des creations */
-	pChildAb = pAb->AbFirstEnclosed;
-	pNewAb = NULL;
-	toUpdate = FALSE;
-	while (pChildAb != NULL)
-	  {
-	     if (pChildAb->AbNew)
-	       {
-		  /* On marque le pave qui vient d'etre cree */
-		  /* pour eviter sa reinterpretation         */
-		  pChildAb->AbNum = 1;
-		  change = IsAbstractBoxUpdated (pChildAb, frame);
-		  /* Une modification a repercurter sur l'englobante */
-		  if (change && !toUpdate)
-		    {
+       if (pAb->AbDead && (pAb->AbNew || pAb->AbBox == NULL))
+	 result = FALSE;
+       else if (pAb->AbDead || pAb->AbNew)
+	 {
+	   /* work in progress in this new abstract box (index = BiwIndex) */
+	   BoxInWork[BiwIndex++] = pAb;
+	   result = ComputeUpdates (pAb, frame);
+	   /* work is done */
+	   BoxInWork[BiwIndex--] = NULL;
+	   propStatus = Propagate;
+	   Propagate = ToAll;	/* On passe en mode normal de propagation */
+	   CheckDefaultPositions (pAb, frame);
+	   Propagate = propStatus;
+	 }
+       /* On traite tous les paves descendants modifies avant le pave lui-meme */
+       else
+	 {
+	   /* On limite l'englobement a la boite courante */
+	   pBox = PackBoxRoot;
+	   PackBoxRoot = pAb->AbBox;
+	   
+	   /* Traitement des creations */
+	   pChildAb = pAb->AbFirstEnclosed;
+	   pNewAb = NULL;
+	   toUpdate = FALSE;
+	   while (pChildAb != NULL)
+	     {
+	       if (pChildAb->AbNew)
+		 {
+		   /* On marque le pave qui vient d'etre cree */
+		   /* pour eviter sa reinterpretation         */
+		   pChildAb->AbNum = 1;
+		   change = IsAbstractBoxUpdated (pChildAb, frame);
+		   /* Une modification a repercurter sur l'englobante */
+		   if (change && !toUpdate)
+		     {
 		       toUpdate = TRUE;
 		       pNewAb = pChildAb;
-		    }
-	       }
-	     else
-		pChildAb->AbNum = 0;
-	     pChildAb = pChildAb->AbNext;
-	  }
+		     }
+		 }
+	       else
+		 pChildAb->AbNum = 0;
+	       pChildAb = pChildAb->AbNext;
+	     }
+	   
+	   /* Traitement des autres modifications */
+	   pChildAb = pAb->AbFirstEnclosed;
+	   pFirstAb = NULL;
+	   while (pChildAb != NULL)
+	     {
+	       /* On evite la reinterpretation des paves crees */
+	       if (pChildAb->AbNum == 0)
+		 change = IsAbstractBoxUpdated (pChildAb, frame);
 
-	/* Traitement des autres modifications */
-	pChildAb = pAb->AbFirstEnclosed;
-	pFirstAb = NULL;
-	while (pChildAb != NULL)
-	  {
-	     /* On evite la reinterpretation des paves crees */
-	     if (pChildAb->AbNum == 0)
-		change = IsAbstractBoxUpdated (pChildAb, frame);
-
-	     /* On enregistre le premier pave cree ou modifie */
-	     if (pNewAb == pChildAb && pFirstAb == NULL)
-		pFirstAb = pNewAb;
-	     else if (change)
-	       {
-		  /* Une modification a repercuter sur l'englobante */
-		  toUpdate = TRUE;
-		  if (pFirstAb == NULL)
+	       /* On enregistre le premier pave cree ou modifie */
+	       if (pNewAb == pChildAb && pFirstAb == NULL)
+		 pFirstAb = pNewAb;
+	       else if (change)
+		 {
+		   /* Une modification a repercuter sur l'englobante */
+		   toUpdate = TRUE;
+		   if (pFirstAb == NULL)
 		     pFirstAb = pChildAb;
-	       }
+		 }
 
-	     pChildAb = pChildAb->AbNext;
-	  }
-	/* Les liens entre boites filles ont peut-etre ete modifies */
-	if (toUpdate)
-	  {
-	     pChildAb = pAb->AbFirstEnclosed;
-	     while (pChildAb != NULL)
-	       {
-		  if (pChildAb->AbBox != NULL)
-		    {
+	       pChildAb = pChildAb->AbNext;
+	     }
+	   /* Les liens entre boites filles ont peut-etre ete modifies */
+	   if (toUpdate)
+	     {
+	       pChildAb = pAb->AbFirstEnclosed;
+	       while (pChildAb != NULL)
+		 {
+		   if (pChildAb->AbBox != NULL)
+		     {
 		       pCurrentBox = pChildAb->AbBox;
 		       pCurrentBox->BxHorizInc = NULL;
 		       pCurrentBox->BxVertInc = NULL;
-		    }
+		     }
 
-		  pChildAb = pChildAb->AbNext;
-	       }
-	  }
+		   pChildAb = pChildAb->AbNext;
+		 }
+	     }
 
-	/* On restaure l'ancienne limite de l'englobement */
-	PackBoxRoot = pBox;
+	   /* On restaure l'ancienne limite de l'englobement */
+	   PackBoxRoot = pBox;
 
-	/* Faut-il reevaluer la boite composee ? */
-	result = ComputeUpdates (pAb, frame);
-	if (toUpdate || result)
-	  {
-	     pCurrentBox = pAb->AbBox;
-	     result = TRUE;
-	     /* Mise a jour d'un bloc de lignes */
-	     if (pCurrentBox->BxType == BoBlock && pFirstAb != NULL)
-	       {
-		  if (pFirstAb == pNewAb || pFirstAb->AbDead)
-		    {
+	   /* Faut-il reevaluer la boite composee ? */
+	   /* work in progress in this new abstract box (index = BiwIndex) */
+	   BoxInWork[BiwIndex++] = pAb;
+	   result = ComputeUpdates (pAb, frame);
+	   /* work is done */
+	   BoxInWork[BiwIndex--] = NULL;
+	   if (toUpdate || result)
+	     {
+	       pCurrentBox = pAb->AbBox;
+	       result = TRUE;
+	       /* Mise a jour d'un bloc de lignes */
+	       if (pCurrentBox->BxType == BoBlock && pFirstAb != NULL)
+		 {
+		   if (pFirstAb == pNewAb || pFirstAb->AbDead)
+		     {
 		       /* On prend la derniere boite avant */
 		       pFirstAb = pFirstAb->AbPrevious;
 		       if (pFirstAb == NULL)
-			  pLine = NULL;		/* toutes les lignes */
+			 pLine = NULL;		/* toutes les lignes */
 		       else
 			 {
-			    pBox = pFirstAb->AbBox;
-			    if (pBox != NULL)
-			      {
-				 /* S'il s'agit d'une boite de texte coupee */
-				 /* on recherche la derniere boite de texte */
-				 if (pBox->BxType == BoSplit)
-				    while (pBox->BxNexChild != NULL)
-				       pBox = pBox->BxNexChild;
-				 pLine = SearchLine (pBox);
-			      }
-			    else
-			       pLine = NULL;
+			   pBox = pFirstAb->AbBox;
+			   if (pBox != NULL)
+			     {
+			       /* S'il s'agit d'une boite de texte coupee */
+			       /* on recherche la derniere boite de texte */
+			       if (pBox->BxType == BoSplit)
+				 while (pBox->BxNexChild != NULL)
+				   pBox = pBox->BxNexChild;
+			       pLine = SearchLine (pBox);
+			     }
+			   else
+			     pLine = NULL;
 			 }
-		    }
-		  else
-		    {
+		     }
+		   else
+		     {
 		       /* On prend la derniere boite avant */
 		       pBox = pFirstAb->AbBox;
 		       if (pBox != NULL)
 			 {
-			    if (pBox->BxType == BoSplit && pBox->BxNexChild != NULL)
-			       pBox = pBox->BxNexChild;
-			    pLine = SearchLine (pBox);
+			   if (pBox->BxType == BoSplit && pBox->BxNexChild != NULL)
+			     pBox = pBox->BxNexChild;
+			   pLine = SearchLine (pBox);
 			 }
 		       else
-			  pLine = NULL;
-		    }
-
-		  RecomputeLines (pAb, pLine, pAb->AbBox, frame);
-	       }
-	     /* Mise a jour d'une boite composee */
-	     else if (!pAb->AbInLine
-		      && pAb->AbBox->BxType != BoGhost
-		      && pAb->AbLeafType == LtCompound)
-	       {
-		 if (Propagate == ToAll)
-		   {
-		     WidthPack (pAb, pAb->AbBox, frame);
-		     HeightPack (pAb, pAb->AbBox, frame);
-		   }
-		 else
-		   {
-		     RecordEnclosing (pAb->AbBox, TRUE);
-		     RecordEnclosing (pAb->AbBox, FALSE);
-		   }
-	       }
-	  }
+			 pLine = NULL;
+		     }
+		   
+		   RecomputeLines (pAb, pLine, pAb->AbBox, frame);
+		 }
+	       /* Mise a jour d'une boite composee */
+	       else if (!pAb->AbInLine
+			&& pAb->AbBox->BxType != BoGhost
+			&& pAb->AbLeafType == LtCompound)
+		 {
+		   if (Propagate == ToAll)
+		     {
+		       WidthPack (pAb, pAb->AbBox, frame);
+		       HeightPack (pAb, pAb->AbBox, frame);
+		     }
+		   else
+		     {
+		       RecordEnclosing (pAb->AbBox, TRUE);
+		       RecordEnclosing (pAb->AbBox, FALSE);
+		     }
+		 }
+	     }
+	 }
      }
-
    /* On signale s'il y a eu modification du pave */
    return result;
 }

@@ -722,6 +722,10 @@ Document	doc;
   ElementType		elType;
   
   elType = TtaGetElementType (el);
+  if (!TtaSameSSchemas (elType.ElSSchema, TtaGetSSchema ("HTML", doc)))
+    /* it's not an HTML element */
+    return;
+
   if (elType.ElTypeNum == HTML_EL_Pseudo_paragraph)
     /* the element is a Pseudo_paragraph */
     {

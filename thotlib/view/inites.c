@@ -67,7 +67,7 @@ ThotColorStruct    *colr;
    NumCells = 0;
    if (match == 0)
      {
-	NumCells = DisplayCells (dsp, TtScreen);
+	NumCells = XDisplayCells (dsp, TtScreen);
 	if (!have_colors)
 	  {
 	     for (i = 0; i < NumCells; i++)

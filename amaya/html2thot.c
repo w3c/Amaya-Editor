@@ -7258,6 +7258,8 @@ boolean	            PlainText;
    gzFile              stream = NULL;
 #endif
    Element             el, oldel;
+   AttributeType       attrType;
+   Attribute           attr;
    int		       length;
    char               *s;
    char                tempname[MAX_LENGTH];
@@ -7334,6 +7336,16 @@ boolean	            PlainText;
 #ifndef INCR_DISPLAY
 	   TtaSetDisplayMode (theDocument, NoComputedDisplay);
 #endif /* INCR_DISPLAY */
+	   /* add the default attribute HTML_ATTR_PrintURL */
+	   attrType.AttrSSchema = HTMLSSchema;
+	   attrType.AttrTypeNum = HTML_ATTR_PrintURL;
+	   attr = TtaGetAttribute (rootElement, attrType);
+	   if (attr == 0)
+	     {
+	       attr = TtaNewAttribute (attrType);
+	       TtaAttachAttribute (rootElement, attr, theDocument);
+	     }
+
 	   /* delete all element except the root element */
 	   el = TtaGetFirstChild (rootElement);
 	   while (el != NULL)

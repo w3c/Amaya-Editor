@@ -174,6 +174,8 @@ NotifyElement      *event;
 	      TtaGiveTextAttributeValue (attr, buff, &length);
 	      ptr = strstr (buff, "amaya");
 	      if (ptr == NULL)
+		ptr = strstr (buff, "Amaya");
+	      if (ptr == NULL)
 		/* it's not a pure Amaya document -> remove the meta element */
 		return TRUE;
 	      else
@@ -376,7 +378,7 @@ char               *pathname;
 	    TtaGetMessage (AMAYA, AM_BCOPY_IMAGES), EOS,
 	    TtaGetMessage (AMAYA, AM_BTRANSFORM_URL));
    TtaNewToggleMenu (BaseDialog + ToggleSave, BaseDialog + SaveForm,
-		     "Output format", 6, buffer, NULL, TRUE);
+		     TtaGetMessage (LIB, TMSG_DOCUMENT_FORMAT), 6, buffer, NULL, TRUE);
    SaveAsHTML = TRUE;
    SaveAsXML = FALSE;
    SaveAsText = FALSE;

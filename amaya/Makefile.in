@@ -18,16 +18,20 @@ LIBS	=  $(LIBWWW_LIBS) $(AMAYA_JAVA_LIBS) $(AMAYA_PLUGIN_LIBS) \
 	  $(MOTIF_LIBRARIES) $(XMLIB) $(X_LIBS) -lXt $(X_PRE_LIBS) \
 	  -lXext -lX11 $(X_EXTRA_LIBS) @LIBS@ @EXTRA_LIBS@ -lm
 
-CONFIGFILES=XKeysymDB thot.ini amaya.keyboard en-amayadialogue \
-            en-printdialogue en-amayamsg en-javamsg en-libdialogue \
-	    en-transdialogue en-corrdialogue fr-amayadialogue \
-            fr-printdialogue fr-amayamsg fr-javamsg fr-libdialogue \
-	    fr-transdialogue fr-corrdialogue java.properties
+CONFIGFILES=XKeysymDB thot.ini amaya.keyboard \
+	    en-amayadialogue en-amayamsg en-libdialogue \
+	    en-transdialogue en-corrdialogue \
+	    fr-amayadialogue fr-amayamsg fr-libdialogue \
+	    fr-transdialogue fr-corrdialogue \
+	    de-amayadialogue de-amayamsg de-libdialogue \
+	    tr-transdialogue tr-corrdialogue \
+	    tr-amayadialogue tr-amayamsg tr-libdialogue \
+	    tr-transdialogue tr-corrdialogue
 
-DICOFILES= *.ptn alphabet clavier
+DICOFILES= *.ptn *.dic alphabet clavier
 
 AMAYAFILES= HTML.STR HTML.conf HTML.trans HTML.en HTML.fr\
-           HTML*.PRS HTML*.TRA
+           HTML*.PRS HTML*.TRA Amaya
 
 FONTSFILES=Families.list fonts.dir icones*
 
@@ -296,6 +300,7 @@ install : all ../bin/print $(AMAYA_JAVA_INSTALL) $(AMAYA_PLUGIN_INSTALL)
 	@(if test ! -d $(datadir)/thot/config ; then $(MKDIR) $(datadir)/thot/config ; fi)
 	@(if test ! -d $(datadir)/thot/fonts ; then $(MKDIR) $(datadir)/thot/fonts ; fi)
 	@(if test ! -d $(datadir)/thot/dicopar ; then $(MKDIR) $(datadir)/thot/dicopar ; fi)
+	@(if test ! -d $(datadir)/thot/doc ; then $(MKDIR) $(datadir)/thot/doc ; fi)
 	@(if test ! -d $(datadir)/thot/applis ; then $(MKDIR) $(datadir)/thot/applis ; fi)
 	@(if test ! -d $(datadir)/thot/applis/bin ; then $(MKDIR) $(datadir)/thot/applis/bin ; fi)
 	$(INSTALL_BIN) ../bin/amaya $(datadir)/thot/applis/bin
@@ -314,13 +319,14 @@ install : all ../bin/print $(AMAYA_JAVA_INSTALL) $(AMAYA_PLUGIN_INSTALL)
 	  for file in `$(ECHO) $(THOTDIR)/dicopar/$$i` ; do \
 	    $(INSTALL_DATA) $$file $(datadir)/thot/dicopar ; \
 	  done ; done)
+	$(CP) -r $(THOTDIR)/doc/Icons $(datadir)/thot/doc
+	$(CP) -r $(THOTDIR)/doc/amaya $(datadir)/thot/doc
 	(for i in $(FONTSFILES) ; do \
 	  for file in `$(ECHO) $(THOTDIR)/fonts/$$i` ; do \
 	    $(INSTALL_DATA) $$file $(datadir)/thot/fonts ; \
 	  done ; done)
 
-uninstall : $(AMAYA_JAVA_UNINSTALL) $(AMAYA_PLUGIN_UNINSTALL) \
-	   $(AMAYA_LIBWWW_UNINSTALL)
+uninstall : $(AMAYA_JAVA_UNINSTALL) $(AMAYA_PLUGIN_UNINSTALL)
 	$(RM) -rf $(datadir)/thot
 
 CEXTRACT= ../bin/cextract

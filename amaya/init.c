@@ -1157,9 +1157,19 @@ View                view;
 		   TtaGetMessage (AMAYA, AM_NAME), NAME_LENGTH, 1, FALSE);
    TtaNewTextForm (BaseDialog + PasswordText, BaseDialog + FormAnswer,
 		   TtaGetMessage (AMAYA, AM_PASSWORD), NAME_LENGTH, 1, TRUE);
+   TtaSetTextForm (BaseDialog + NameText, NameText);
+   TtaSetTextForm (BaseDialog + PasswordText, Answer_password);
    TtaSetDialoguePosition ();
    TtaShowDialogue (BaseDialog + FormAnswer, FALSE);
    TtaWaitShowDialogue ();
+   if (Answer_password[0] == EOS)
+     {
+       /* no password, retry */
+       TtaSetTextForm (BaseDialog + NameText, NameText);
+       TtaSetTextForm (BaseDialog + PasswordText, Answer_password);
+       TtaShowDialogue (BaseDialog + FormAnswer, FALSE);
+       TtaWaitShowDialogue ();
+     }
 #  else /* _WINDOWS */
    CreateAuthenticationDlgWindow (TtaGetViewFrame (document, view));
 #  endif /* _WINDOWS */
@@ -2800,10 +2810,13 @@ void               *ctx_cbf;
 	     }
 	   else
 	     {
+	       newdoc = doc;
 	       /* stop current transfer for previous document */
 	       if (CE_event != CE_MAKEBOOK)
 		 StopTransfer (baseDoc, 1);
-	       newdoc = doc;
+	       else
+		 /* temporary docs to make a book are not in ReadOnly mode */
+		 DocumentTypes[newdoc] = docHTML;
 	     }
 
 #if defined(AMAYA_JAVA) || defined(AMAYA_ILU)

@@ -1027,6 +1027,9 @@ PtrAttribute        pNewAttr;
    boolean             suppress, compare, inherit, mandatory, create;
    NotifyAttribute     notifyAttr;
 
+   if (pNewAttr == NULL || pNewAttr->AeAttrNum == 0)
+     /* it's not a valid attribute */
+     return;
    mandatory = FALSE;
    pAttrNext = NULL;
    /* l'element porte-t-il deja un attribut du meme type ? */

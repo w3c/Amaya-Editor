@@ -234,13 +234,12 @@ int                 lastCharacter;
 	ok = GetCurrentSelection (&pDoc, &firstSelection, &lastSelection, &firstChar, &lastChar);
 	dispMode = TtaGetDisplayMode (document);
 	if (dispMode == DisplayImmediately || dispMode == DeferredDisplay)
-	   /* The document is with an immediat display mode */
+	   /* The command can be executed */
 	  {
 	     if (ok)
 		/* verifies that the selection is into the document */
 		ok = (pDoc == LoadedDocument[document - 1]);
 	  }
-	/* The document is with deferred display mode */
 	/* verifies if a selection is applied */
 	else if (DemandeSelEnregistree (document, &abort))
 	   /* There is an application, the extension is accepted if there is 
@@ -252,7 +251,7 @@ int                 lastCharacter;
 	   TtaError (ERR_no_selection_in_document);
 	else
 	  {
-	    if (dispMode == DisplayImmediately)
+	    if (dispMode == DisplayImmediately || dispMode == DeferredDisplay)
 	      ExtendSelection ((PtrElement) element, lastCharacter, FALSE, FALSE, FALSE);
 	    else
 	      NewSelectionExtension (document, element, lastCharacter);

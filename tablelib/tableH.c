@@ -1147,7 +1147,7 @@ int             frame;
   int                 attrVSpan, attrHSpan;
   int                 attrHeight, cellWidth;
   int                 tabWidth, tabPercent, minsize;
-  boolean             skip;
+  boolean             skip, statusColInWork;
   boolean             foundH, foundV;
   boolean             modified;
 
@@ -1174,6 +1174,7 @@ int             frame;
     return;
 
   /* Enter a critical section */
+  statusColInWork = ComputeColInWork;
   ComputeColInWork = TRUE;
   /* register widths of each columns */
   pTabRel = table->AbBox->BxColumns;
@@ -1598,8 +1599,8 @@ int             frame;
   /* Now check row heights */
   CheckRowHeights (table, rspanNumber, rowSpanCell, rowSpans, frame);
   pDoc->DocModified = modified;
-  /* Exit a critical section */
-  ComputeColInWork = FALSE;
+  /* Perhaps exit the critical section */
+  ComputeColInWork = statusColInWork;
 }
 
 
@@ -1617,6 +1618,9 @@ int             frame;
 {
   PtrTabUpdate pTabUpdate, pPrevTabUpdate;
   boolean      found;
+
+  if (table == NULL)
+    return;
 
   pPrevTabUpdate = NULL;
   pTabUpdate = FirstColUpdate;
@@ -1659,11 +1663,14 @@ static void     ComputeColUpdates (document)
 Document        document;
 #endif
 {
-  PtrTabUpdate pTabUpdate, pPrevTabUpdate, pOldTabUpdate;
+  PtrTabUpdate pTabUpdate, pPrevTabUpdate, pNextTabUpdate;
 
   /* check if we are executing a ComputeColWidth */
   if (ComputeColInWork)
     return;
+  else
+    /* avoid to re-execute two times the same work */
+    ComputeColInWork = TRUE;
 
   pPrevTabUpdate = NULL;
   pTabUpdate = FirstColUpdate;
@@ -1671,14 +1678,17 @@ Document        document;
     {
       if (FrameTable[pTabUpdate->TaUFrame].FrDoc == document)
 	{
-	  ComputeColWidth (pTabUpdate->TaUColumn, pTabUpdate->TaUTable, pTabUpdate->TaUFrame);
+	  pNextTabUpdate = pTabUpdate->TaUNext;
+	  /* update the list of column updates */
 	  if (pPrevTabUpdate == NULL)
-	    FirstColUpdate = pTabUpdate->TaUNext;
+	    FirstColUpdate = pNextTabUpdate;
 	  else
-	    pPrevTabUpdate->TaUNext = pTabUpdate->TaUNext;
-	  pOldTabUpdate = pTabUpdate->TaUNext;
+	    pPrevTabUpdate->TaUNext = pNextTabUpdate;
+	  /* execute the update */
+	  ComputeColWidth (pTabUpdate->TaUColumn, pTabUpdate->TaUTable, pTabUpdate->TaUFrame);
+	  /* free the context and move to the next one */
 	  TtaFreeMemory (pTabUpdate);
-	  pTabUpdate = pOldTabUpdate;
+	  pTabUpdate = pNextTabUpdate;
 	}
       else
 	{
@@ -1686,6 +1696,7 @@ Document        document;
 	  pTabUpdate = pTabUpdate->TaUNext;
 	}
     }
+  ComputeColInWork = FALSE;
 }
 
 /*----------------------------------------------------------------------

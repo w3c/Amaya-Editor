@@ -613,6 +613,7 @@ void                InitPrint ()
 
    PageSize = PP_A4;
    PaperPrint = PP_PRINTER;
+   printURL = TRUE;
    TtaSetPrintParameter (PP_Destination, PaperPrint);
    TtaSetPrintParameter (PP_PaperSize, PageSize);
    TtaSetPrintCommand (pPrinter);

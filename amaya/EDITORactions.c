@@ -1767,15 +1767,45 @@ int                 attrNum;
 	if (x1 + x2 > w)
 	  {
 	    /* out of right side */
-	    x2 = w - x1;
-	    TtaSetAttributeValue (attrW, x2, element, document);	    
+	    if (x1 > w - 4)
+	      {
+		if (x2 < w)
+		  x1 = w - x2;
+		else
+		  {
+		    x1 = 0;
+		    x2 = w;
+		    TtaSetAttributeValue (attrW, x2, element, document);
+		  }
+		TtaSetAttributeValue (attrX, x1, element, document);	    
+	      }
+	    else
+	      {
+		x2 = w - x1;
+		TtaSetAttributeValue (attrW, x2, element, document);
+	      }	    
 	  }
 	y2 = TtaGetAttributeValue (attrH);
 	if (y1 + y2 > h)
 	  {
 	    /* out of bottom side */
-	    y2 = h - y1;
-	    TtaSetAttributeValue (attrH, y2, element, document);	    
+	    if (y1 > h - 4)
+	      {
+		if (y2 < h)
+		  y1 = h - y2;
+		else
+		  {
+		    y1 = 0;
+		    y2 = h;
+		    TtaSetAttributeValue (attrH, y2, element, document);
+		  }
+		TtaSetAttributeValue (attrY, y1, element, document);	    
+	      }
+	    else
+	      {
+		y2 = h - y1;
+		TtaSetAttributeValue (attrH, y2, element, document);
+	      }    
 	  }
 	if (shape == HTML_ATTR_shape_VAL_rectangle)
 	   sprintf (text, "%d,%d,%d,%d", x1, y1, x1 + x2, y1 + y2);
@@ -1852,10 +1882,6 @@ char               *shape;
 
    dispMode = TtaGetDisplayMode (doc);
    url = NULL;
-   /* ask Thot to stop displaying changes made in the document */
-   if (dispMode == DisplayImmediately)
-     TtaSetDisplayMode (doc, DeferredDisplay);
-
    /* get the first selected element */
    TtaGiveFirstSelectedElement (doc, &el, &firstchar, &lastchar);
    if (el == NULL)
@@ -1866,7 +1892,12 @@ char               *shape;
    if (strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") != 0)
      /* not within HTML element */
      return;
-   else if (elType.ElTypeNum == HTML_EL_PICTURE_UNIT)
+
+   /* ask Thot to stop displaying changes made in the document */
+   if (dispMode == DisplayImmediately)
+     TtaSetDisplayMode (doc, DeferredDisplay);
+
+   if (elType.ElTypeNum == HTML_EL_PICTURE_UNIT)
      {
         url = (char*) TtaGetMemory (MAX_LENGTH);
 	/* The selection is on a IMG */
@@ -1936,8 +1967,12 @@ char               *shape;
 	else if (elType.ElTypeNum == HTML_EL_MAP)
 	   map = el;
 	else
+	  {
 	   /* cannot create the AREA */
+	    /* ask Thot to display changes made in the document */
+	    TtaSetDisplayMode (doc, dispMode);
 	   return;
+	  }
 
 	/* Search the Ref_IMG attribute */
 	attrType.AttrSSchema = elType.ElSSchema;
@@ -2008,6 +2043,9 @@ char               *shape;
 	/* FrameUpdating creation of Area and selection of destination */
 	SelectDestination (doc, el);
      }
+   else
+     /* ask Thot to display changes made in the document */
+     TtaSetDisplayMode (doc, dispMode);
 }
 
 /*----------------------------------------------------------------------
