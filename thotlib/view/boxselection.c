@@ -138,35 +138,35 @@ void ClearViewSelection (int frame)
 			pAb1->AbLeafType == LtPath)
 		      {
 			/* the whole box is selected */
-#ifndef _GLTRANSFORMATION
+#ifndef _GL
 			x1 = pBox1->BxXOrg;
 			x2 = pBox1->BxXOrg + pBox1->BxWidth;
-#else /* _GLTRANSFORMATION */
+#else /* _GL */
 			x1 = pBox1->BxClipX;
 			x2 = pBox1->BxClipX + pBox1->BxClipW;
-#endif /* _GLTRANSFORMATION */
+#endif /* _GL */
 		      }
 		    else
 		      {
-#ifndef _GLTRANSFORMATION
+#ifndef _GL
 			x1 = pBox1->BxXOrg + pFrame->FrSelectionBegin.VsXPos;
 			x2 = pBox1->BxXOrg + pFrame->FrSelectionEnd.VsXPos;
-#else /* _GLTRANSFORMATION */
+#else /* _GL */
 			x1 = pBox1->BxClipX + pFrame->FrSelectionBegin.VsXPos;
 			x2 = pBox1->BxClipX + pFrame->FrSelectionEnd.VsXPos;
-#endif /* _GLTRANSFORMATION */
+#endif /* _GL */
 		      }
 		    if (x1 == x2)
 		      /* removing the caret at the end of a text */
 		      x2 = x1 + 2;
 
-#ifndef _GLTRANSFORMATION
+#ifndef _GL
 			DefClip (frame, x1, pBox1->BxYOrg, x2,
 			     pBox1->BxYOrg + pBox1->BxHeight);
-#else /* _GLTRANSFORMATION */
+#else /* _GL */
 			DefRegion (frame, x1, pBox1->BxClipY, x2,
 			     pBox1->BxClipY + pBox1->BxClipH);
-#endif /* _GLTRANSFORMATION */
+#endif /* _GL */
 
 		  }
 	      }
@@ -174,45 +174,45 @@ void ClearViewSelection (int frame)
 	      {
 		/* several pieces of a split box are selected */
 		/* the first one */
-#ifndef _GLTRANSFORMATION
+#ifndef _GL
 		x1 = pBox1->BxXOrg + pFrame->FrSelectionBegin.VsXPos;
 		x2 = pBox1->BxXOrg + pBox1->BxWidth;
 		DefClip (frame, x1, pBox1->BxYOrg, x2,
 			 pBox1->BxYOrg + pBox1->BxHeight);
-#else /* _GLTRANSFORMATION */
+#else /* _GL */
 		x1 = pBox1->BxClipX + pFrame->FrSelectionBegin.VsXPos;
 		x2 = pBox1->BxClipX + pBox1->BxClipW;
 		DefRegion (frame, x1, pBox1->BxClipY, x2,
 			 pBox1->BxClipY + pBox1->BxClipH);
-#endif /* _GLTRANSFORMATION */
+#endif /* _GL */
 		
 		/* intermediate boxes */
 		pBox1 = pBox1->BxNexChild;
 		while (pBox1 != pBox2)
 		  {
-#ifndef _GLTRANSFORMATION
+#ifndef _GL
 		    DefClip (frame, pBox1->BxXOrg, pBox1->BxYOrg,
 			     pBox1->BxXOrg + pBox1->BxWidth,
 			     pBox1->BxYOrg + pBox1->BxHeight);
-#else /* _GLTRANSFORMATION */
+#else /* _GL */
 		    DefRegion (frame, pBox1->BxClipX, pBox1->BxClipY,
 			     pBox1->BxClipX + pBox1->BxClipW,
 			     pBox1->BxClipY + pBox1->BxClipH);
-#endif /* _GLTRANSFORMATION */
+#endif /* _GL */
 		    pBox1 = pBox1->BxNexChild;
 		  }
 		/* the last one */
-#ifndef _GLTRANSFORMATION
+#ifndef _GL
 		x1 = pBox2->BxXOrg;
 		x2 = pBox2->BxXOrg + pFrame->FrSelectionEnd.VsXPos;
 		DefClip (frame, x1, pBox2->BxYOrg, x2,
 			 pBox2->BxYOrg + pBox2->BxHeight);
-#else /* _GLTRANSFORMATION */
+#else /* _GL */
 		x1 = pBox2->BxClipX;
 		x2 = pBox2->BxClipX + pFrame->FrSelectionEnd.VsXPos;
 		DefRegion (frame, x1, pBox2->BxClipY, x2,
 			 pBox2->BxClipY + pBox2->BxClipH);
-#endif /* _GLTRANSFORMATION */
+#endif /* _GL */
 	      }
 	    else
 	      {
@@ -230,31 +230,31 @@ void ClearViewSelection (int frame)
 		    if (pFrame->FrSelectionBegin.VsIndBox == 0)
 		      {
 			/* the whole box is selected */
-#ifndef _GLTRANSFORMATION
+#ifndef _GL
 			x1 = pBox1->BxXOrg;
 			x2 = pBox1->BxXOrg + pBox1->BxWidth;
-#else /* _GLTRANSFORMATION */
+#else /* _GL */
 			x1 = pBox1->BxClipX;
 			x2 = pBox1->BxClipX + pBox1->BxClipW;
-#endif /* _GLTRANSFORMATION */
+#endif /* _GL */
 		      }
 		    else
 		      {
-#ifndef _GLTRANSFORMATION
+#ifndef _GL
 			x1 = pBox1->BxXOrg + pFrame->FrSelectionBegin.VsXPos;
 			x2 = pBox1->BxXOrg + pBox1->BxWidth;
-#else /* _GLTRANSFORMATION */
+#else /* _GL */
 			x1 = pBox1->BxClipX + pFrame->FrSelectionBegin.VsXPos;
 			x2 = pBox1->BxClipX + pBox1->BxClipW;
-#endif /* _GLTRANSFORMATION */
+#endif /* _GL */
 		      }
-#ifndef _GLTRANSFORMATION
+#ifndef _GL
 		    DefClip (frame, x1, pBox1->BxYOrg, x2,
 			     pBox1->BxYOrg + pBox1->BxHeight);
-#else /* _GLTRANSFORMATION */
+#else /* _GL */
 		    DefRegion (frame, x1, pBox1->BxYOrg, x2,
 			     pBox1->BxClipY + pBox1->BxClipH);
-#endif /* _GLTRANSFORMATION */
+#endif /* _GL */
 
 		    if (pBox1->BxType == BoPiece ||
 			pBox1->BxType == BoScript ||
@@ -264,15 +264,15 @@ void ClearViewSelection (int frame)
 			pBox = pBox1->BxNexChild;
 			while (pBox)
 			  {
-#ifndef _GLTRANSFORMATION
+#ifndef _GL
 			    DefClip (frame, pBox->BxXOrg, pBox->BxYOrg,
 				     pBox->BxXOrg + pBox->BxWidth,
 				     pBox->BxYOrg + pBox->BxHeight);
-#else /* _GLTRANSFORMATION */
+#else /* _GL */
 			    DefRegion (frame, pBox->BxClipX, pBox->BxClipY,
 				     pBox->BxClipX + pBox->BxClipW,
 				     pBox->BxClipY + pBox->BxClipH);
-#endif /* _GLTRANSFORMATION */
+#endif /* _GL */
 			    pBox = pBox->BxNexChild;
 			  }
 		      }
@@ -292,31 +292,31 @@ void ClearViewSelection (int frame)
 		    if (pFrame->FrSelectionEnd.VsIndBox == 0)
 		      {
 			/* the whole box is selected */
-#ifndef _GLTRANSFORMATION
+#ifndef _GL
 			x1 = pBox2->BxXOrg;
 			x2 = pBox2->BxXOrg + pBox2->BxWidth;
-#else /* _GLTRANSFORMATION */
+#else /* _GL */
 			x1 = pBox2->BxClipX;
 			x2 = pBox2->BxClipX + pBox2->BxClipW;
-#endif /* _GLTRANSFORMATION */
+#endif /* _GL */
 		      }
 		    else
 		      {
-#ifndef _GLTRANSFORMATION
+#ifndef _GL
 			x1 = pBox2->BxXOrg;
 			x2 = pBox2->BxXOrg + pFrame->FrSelectionEnd.VsXPos;
-#else /* _GLTRANSFORMATION */
+#else /* _GL */
 			x1 = pBox2->BxClipX;
 			x2 = pBox2->BxClipX + pFrame->FrSelectionEnd.VsXPos;
-#endif /* _GLTRANSFORMATION */
+#endif /* _GL */
 		      }
-#ifndef _GLTRANSFORMATION
+#ifndef _GL
 		    DefClip (frame, x1, pBox2->BxYOrg, x2,
 			     pBox2->BxYOrg + pBox2->BxHeight);
-#else /* _GLTRANSFORMATION */
+#else /* _GL */
 		    DefRegion (frame, x1, pBox2->BxYOrg, x2,
 			     pBox2->BxClipY + pBox2->BxClipH);
-#endif /* _GLTRANSFORMATION */
+#endif /* _GL */
 
 		    if (pBox2->BxType == BoPiece ||
 			pBox2->BxType == BoScript ||
@@ -326,15 +326,15 @@ void ClearViewSelection (int frame)
 			pBox =  pAb2->AbBox->BxNexChild;
 			while (pBox && pBox != pBox2)
 			  {
-#ifndef _GLTRANSFORMATION
+#ifndef _GL
 			    DefClip (frame, pBox->BxXOrg, pBox->BxYOrg,
 				     pBox->BxXOrg + pBox->BxWidth,
 				     pBox->BxYOrg + pBox->BxHeight);
-#else /* _GLTRANSFORMATION */
+#else /* _GL */
 			    DefRegion (frame, pBox->BxClipX, pBox->BxClipY,
 				     pBox->BxClipX + pBox->BxClipW,
 				     pBox->BxClipY + pBox->BxClipH);
-#endif /* _GLTRANSFORMATION */
+#endif /* _GL */
 			    pBox = pBox->BxNexChild;
 			  }
 		      }
@@ -734,102 +734,102 @@ void InsertViewSelMarks (int frame, PtrAbstractBox pAb, int firstChar,
 		      if (rtl)
 			{
 			  /* the first one */
-#ifndef _GLTRANSFORMATION
+#ifndef _GL
 			  DefClip (frame,
 				   pBox->BxXOrg,
 				   pBox->BxYOrg,
 				   pBox->BxXOrg + pViewSel->VsXPos,
 				   pBox->BxYOrg + pBox->BxHeight);
-#else /*  _GLTRANSFORMATION */
+#else /*  _GL */
 			  DefRegion (frame,
 				   pBox->BxClipX,
 				   pBox->BxClipY,
 				   pBox->BxClipX + pViewSel->VsXPos,
 				   pBox->BxClipY + pBox->BxClipH);
-#endif  /*  _GLTRANSFORMATION */
+#endif  /*  _GL */
 			  /* the last one */
 			  pBox = pViewSelEnd->VsBox;
-#ifndef _GLTRANSFORMATION
+#ifndef _GL
 			  DefClip (frame, pBox->BxXOrg + pViewSel->VsXPos,
 				   pBox->BxYOrg,
 				   pBox->BxXOrg + pBox->BxWidth,
 				   pBox->BxYOrg + pBox->BxHeight);
-#else /*  _GLTRANSFORMATION */
+#else /*  _GL */
 			  DefRegion (frame, pBox->BxClipX + pViewSel->VsXPos,
 				   pBox->BxClipY,
 				   pBox->BxClipX + pBox->BxClipW,
 				   pBox->BxClipY + pBox->BxClipH);
-#endif  /*  _GLTRANSFORMATION */
+#endif  /*  _GL */
 			}
 		      else
 			{
 			  /* the first one */
-#ifndef _GLTRANSFORMATION
+#ifndef _GL
 			  DefClip (frame,
 				   pBox->BxXOrg + pViewSel->VsXPos,
 				   pBox->BxYOrg,
 				   pBox->BxXOrg + pBox->BxWidth,
 				   pBox->BxYOrg + pBox->BxHeight);
-#else /*  _GLTRANSFORMATION */
+#else /*  _GL */
 			  DefRegion (frame,
 				   pBox->BxClipX + pViewSel->VsXPos,
 				   pBox->BxClipY,
 				   pBox->BxClipX + pBox->BxClipW,
 				   pBox->BxClipY + pBox->BxClipH);
-#endif  /*  _GLTRANSFORMATION */
+#endif  /*  _GL */
 			  /* the last one */
 			  pBox = pViewSelEnd->VsBox;
-#ifndef _GLTRANSFORMATION
+#ifndef _GL
 			  DefClip (frame, pBox->BxXOrg,
 				   pBox->BxYOrg,
 				   pBox->BxXOrg + pViewSel->VsXPos,
 				   pBox->BxYOrg + pBox->BxHeight);
-#else /*  _GLTRANSFORMATION */
+#else /*  _GL */
 			  DefRegion (frame, pBox->BxClipX,
 				   pBox->BxClipY,
 				   pBox->BxClipX + pViewSel->VsXPos,
 				   pBox->BxClipY + pBox->BxClipH);
-#endif  /*  _GLTRANSFORMATION */
+#endif  /*  _GL */
 			}
 		      /* intermediate boxes */
 		      pBox = pViewSel->VsBox->BxNexChild;
 		      while (pBox != pViewSelEnd->VsBox)
 			{
-#ifndef _GLTRANSFORMATION
+#ifndef _GL
 			  DefClip (frame, pBox->BxXOrg, pBox->BxYOrg,
 				   pBox->BxXOrg + pBox->BxWidth,
 				   pBox->BxYOrg + pBox->BxHeight);
-#else /*_GLTRANSFORMATION */
+#else /*_GL */
 			  DefRegion (frame, pBox->BxClipX, pBox->BxClipY,
 				   pBox->BxClipX + pBox->BxClipW,
 				   pBox->BxClipY + pBox->BxClipH);
-#endif /*_GLTRANSFORMATION */
+#endif /*_GL */
 			  pBox = pBox->BxNexChild;
 			}
 		    }
 		  else if (graphSel /* && firstChar > 0*/)
-#ifndef _GLTRANSFORMATION
+#ifndef _GL
 		    DefClip (frame, pBox->BxXOrg, pBox->BxYOrg,
 			     pBox->BxXOrg + pBox->BxWidth,
 			     pBox->BxYOrg + pBox->BxHeight);
-#else /*_GLTRANSFORMATION */
+#else /*_GL */
 		  DefRegion (frame, pBox->BxClipX, pBox->BxClipY,
 			   pBox->BxClipX + pBox->BxClipW,
 			   pBox->BxClipY + pBox->BxClipH);
-#endif /*_GLTRANSFORMATION */
+#endif /*_GL */
 		  else
 		    /* a substring or a point of the box is selected */
-#ifndef _GLTRANSFORMATION
+#ifndef _GL
 		    DefClip (frame,
 			     pBox->BxXOrg + pViewSel->VsXPos,
 			     pBox->BxYOrg, pBox->BxXOrg + pViewSelEnd->VsXPos,
 			     pBox->BxYOrg + pBox->BxHeight);
-#else /*_GLTRANSFORMATION */
+#else /*_GL */
 		    DefRegion (frame,
 			     pBox->BxClipX + pViewSel->VsXPos,
 			     pBox->BxClipY, pBox->BxClipX + pViewSelEnd->VsXPos,
 			     pBox->BxClipY + pBox->BxClipH);
-#endif /*_GLTRANSFORMATION */
+#endif /*_GL */
 		}
 	    }
 	  else if (endSelection)
@@ -847,41 +847,41 @@ void InsertViewSelMarks (int frame, PtrAbstractBox pAb, int firstChar,
 		{
 		  if (pViewSelEnd->VsIndBox == 0)
 		    /* the whole box is selected */
-#ifndef _GLTRANSFORMATION
+#ifndef _GL
 		    DefClip (frame, pBox->BxXOrg, pBox->BxYOrg,
 			     pBox->BxXOrg + pBox->BxWidth,
 			     pBox->BxYOrg + pBox->BxHeight);
-#else /*_GLTRANSFORMATION */
+#else /*_GL */
 		  DefRegion (frame, pBox->BxClipX, pBox->BxClipY,
 			   pBox->BxClipX + pBox->BxClipW,
 			   pBox->BxClipY + pBox->BxClipH);
-#endif /*_GLTRANSFORMATION */
+#endif /*_GL */
 		  else if (rtl)
 		    /* a substring or a point of the box is selected */
-#ifndef _GLTRANSFORMATION
+#ifndef _GL
 		    DefClip (frame, pBox->BxXOrg + pViewSelEnd->VsXPos, 
 			     pBox->BxYOrg,
 			     pBox->BxXOrg + pBox->BxWidth,
 			     pBox->BxYOrg + pBox->BxHeight);
-#else /*_GLTRANSFORMATION */
+#else /*_GL */
 		  DefRegion (frame, pBox->BxClipX + pViewSelEnd->VsXPos, 
 			   pBox->BxClipY,
 			   pBox->BxClipX + pBox->BxClipW,
 			   pBox->BxClipY + pBox->BxClipH);
-#endif /*_GLTRANSFORMATION */
+#endif /*_GL */
 		  else
 		    /* a substring or a point of the box is selected */
-#ifndef _GLTRANSFORMATION
+#ifndef _GL
 		    DefClip (frame, pBox->BxXOrg,
 			     pBox->BxYOrg,
 			     pBox->BxXOrg + pViewSelEnd->VsXPos,
 			     pBox->BxYOrg + pBox->BxHeight);
-#else /*_GLTRANSFORMATION */
+#else /*_GL */
 		  DefRegion (frame, pBox->BxClipX,
 			   pBox->BxClipY,
 			   pBox->BxClipX + pViewSelEnd->VsXPos,
 			   pBox->BxClipY + pBox->BxClipH);
-#endif /*_GLTRANSFORMATION */
+#endif /*_GL */
 		  if (pBox->BxType == BoPiece ||
 		      pBox->BxType == BoScript ||
 		      pBox->BxType == BoDotted)
@@ -890,15 +890,15 @@ void InsertViewSelMarks (int frame, PtrAbstractBox pAb, int firstChar,
 		      pBox = pAb->AbBox->BxNexChild;
 		      while (pBox != pViewSelEnd->VsBox)
 			{
-#ifndef _GLTRANSFORMATION
+#ifndef _GL
 			  DefClip (frame, pBox->BxXOrg, pBox->BxYOrg,
 				   pBox->BxXOrg + pBox->BxWidth,
 				   pBox->BxYOrg + pBox->BxHeight);
-#else /*_GLTRANSFORMATION */
+#else /*_GL */
 			  DefRegion (frame, pBox->BxClipX, pBox->BxClipY,
 				   pBox->BxClipX + pBox->BxClipW,
 				   pBox->BxClipY + pBox->BxClipH);
-#endif /*_GLTRANSFORMATION */
+#endif /*_GL */
 			  pBox = pBox->BxNexChild;
 			}
 		    }
@@ -919,41 +919,41 @@ void InsertViewSelMarks (int frame, PtrAbstractBox pAb, int firstChar,
 		{
 		  if (pViewSel->VsIndBox == 0)
 		    /* the whole box is selected */
-#ifndef _GLTRANSFORMATION
+#ifndef _GL
 		    DefClip (frame, pBox->BxXOrg, pBox->BxYOrg,
 			     pBox->BxXOrg + pBox->BxWidth,
 			     pBox->BxYOrg + pBox->BxHeight);
-#else /*_GLTRANSFORMATION */
+#else /*_GL */
 		  DefRegion (frame, pBox->BxClipX, pBox->BxClipY,
 			   pBox->BxClipX + pBox->BxClipW,
 			   pBox->BxClipY + pBox->BxClipH);
-#endif /*_GLTRANSFORMATION */
+#endif /*_GL */
 		  else if (rtl)
 		    /* a substring or a point of the box is selected */
-#ifndef _GLTRANSFORMATION
+#ifndef _GL
 		    DefClip (frame, pBox->BxXOrg, 
 			     pBox->BxYOrg,
 			     pBox->BxXOrg + pViewSel->VsXPos,
 			     pBox->BxYOrg + pBox->BxHeight);
-#else /*_GLTRANSFORMATION */
+#else /*_GL */
 		  DefRegion (frame, pBox->BxClipX, 
 			   pBox->BxClipY,
 			   pBox->BxClipX + pViewSelEnd->VsXPos,
 			   pBox->BxClipY + pBox->BxClipH);
-#endif /*_GLTRANSFORMATION */
+#endif /*_GL */
 		  else
 		    /* a substring or a point of the box is selected */
-#ifndef _GLTRANSFORMATION
+#ifndef _GL
 		    DefClip (frame, pBox->BxXOrg + pViewSelEnd->VsXPos, 
 			     pBox->BxYOrg,
 			     pBox->BxXOrg + pBox->BxWidth,
 			     pBox->BxYOrg + pBox->BxHeight);
-#else /*_GLTRANSFORMATION */
+#else /*_GL */
 		  DefRegion (frame, pBox->BxClipX + pViewSelEnd->VsXPos, 
 			   pBox->BxClipY,
 			   pBox->BxClipX + pBox->BxClipW,
 			   pBox->BxClipY + pBox->BxClipH);
-#endif /*_GLTRANSFORMATION */
+#endif /*_GL */
 		  if (pBox->BxType == BoPiece ||
 		      pBox->BxType == BoScript ||
 		      pBox->BxType == BoDotted)
@@ -962,15 +962,15 @@ void InsertViewSelMarks (int frame, PtrAbstractBox pAb, int firstChar,
 		      pBox = pBox->BxNexChild;
 		      while (pBox)
 			{			  
-#ifndef _GLTRANSFORMATION
+#ifndef _GL
 			  DefClip (frame, pBox->BxXOrg, pBox->BxYOrg,
 				   pBox->BxXOrg + pBox->BxWidth,
 				   pBox->BxYOrg + pBox->BxHeight);
-#else /*_GLTRANSFORMATION */
+#else /*_GL */
 			  DefRegion (frame, pBox->BxClipX, pBox->BxClipY,
 				   pBox->BxClipX + pBox->BxClipW,
 				   pBox->BxClipY + pBox->BxClipH);
-#endif /*_GLTRANSFORMATION */
+#endif /*_GL */
 			  pBox = pBox->BxNexChild;
 			}
 		    }

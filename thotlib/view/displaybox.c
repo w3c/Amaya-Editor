@@ -38,6 +38,7 @@
 #include <GL/gl.h>
 #include "glwindowdisplay.h"
 #include "frame_f.h"
+#include "appli_f.h"
 #include "glgradient_f.h"
 #endif /*_GL*/
 
@@ -2148,7 +2149,6 @@ static void GetRelativeBoundingBox (PtrAbstractBox pAb, int *x, int *y, int *wid
     }
 }
 
-#ifdef _GLTRANSFORMATION
 /*----------------------------------------------------------------------
   LimitBoundingBoxToClip : prevent accessing out of screen memory
   ----------------------------------------------------------------------*/
@@ -2186,7 +2186,6 @@ static ThotBool LimitBoundingBoxToClip (int *x, int *y,
   else
     return FALSE;  
 }
-#endif
 
 /*----------------------------------------------------------------------
   GetBoundingBox : Get Bounding box of a group in absolute coord
@@ -2201,8 +2200,6 @@ static ThotBool GetAbsoluteBoundingBox (PtrAbstractBox pAb,
 
   pFrame = &ViewFrameTable[frame - 1];
 
-#ifdef _GLTRANSFORMATION
-
   *x = pAb->AbBox->BxClipX;
   *y = pAb->AbBox->BxClipY;
   *width = pAb->AbBox->BxClipW;
@@ -2212,80 +2209,12 @@ static ThotBool GetAbsoluteBoundingBox (PtrAbstractBox pAb,
 			      width, height, 
 			      0, 0,
 			      FrameTable[frame].FrWidth, 
-FrameTable[frame].FrHeight))
+			      FrameTable[frame].FrHeight))
     return LimitBoundingBoxToClip (x, y,
 				   width, height, 
 				   xmin - pFrame->FrXOrg, ymin - pFrame->FrYOrg,
 				   xmax - xmin, ymax - ymin);
   return FALSE;    
-
-#else /* _GLTRANSFORMATION */
-
-  pAb = pAb->AbFirstEnclosed;
-  *x = -1;
-  *y = -1;  
-  *width = 0;  
-  *height = 0;  
-  GetRelativeBoundingBox (pAb, x, y, width, height);   
-  if (!((*x+*width) >= xmin && *x <= xmax && 
-	(*y+*height) >= ymin && *y <= ymax))
-    return FALSE;  
-  *x -= pFrame->FrXOrg;
-  *y -= pFrame->FrYOrg;
-  xmin -= pFrame->FrXOrg;
-  xmax -= pFrame->FrXOrg;
-  ymin -= pFrame->FrYOrg;
-  ymax -= pFrame->FrYOrg;
-  if (*x < 0)
-    {
-      *width += *x;
-      *x = 0; 
-    }
-  if (*y < 0)
-    {
-      *height += *y;
-      *y = 0;
-    }
-  if (*x > FrameTable[frame].FrWidth)
-    return FALSE;      
-  if (*y > FrameTable[frame].FrHeight)
-    return FALSE;
-  if ((*x + *width) > FrameTable[frame].FrWidth)
-    {
-      *width = FrameTable[frame].FrWidth - *x;
-    }
-  if ((*y + *height) > FrameTable[frame].FrHeight)
-    {
-      *height = FrameTable[frame].FrHeight - *y;  
-    }
-  if (*x >= 0 && *y >= 0 && 
-      *width > 0 && *height > 0)
-    {      
-      if (*x < xmin)
-	{
-	  *width += *x - xmin; 
-	  *x = xmin; 
-	  /* *width =xmax; */	  
-	}
-      if (*y < ymin)
-	{
-	  *height += *y - ymin; 
-	  *y = ymin;
-	  /* 	  *height = ymax; */
-	}
-      if ((*x + *width) > xmax)
-	{
-	  *width = xmax - *x;
-	}
-      if ((*y + *height) > ymax)
-	{
-	  *height = ymax - *y;  
-	}
-      return FALSE;  
-    }  
-  else 
-    return FALSE;
-#endif /* _GLTRANSFORMATION */
 }
 
 /*----------------------------------------------------------------------
@@ -2479,7 +2408,7 @@ void DisplayBox (PtrBox box, int frame, int xmin, int xmax, int ymin, int ymax)
   int                x, y;
   int                xd, yd, width, height;
   ThotBool           selected;
- 
+
   pFrame = &ViewFrameTable[frame - 1];
   pAb = box->BxAbstractBox;
   x = ViewFrameTable[frame - 1].FrXOrg;
@@ -2532,43 +2461,44 @@ void DisplayBox (PtrBox box, int frame, int xmin, int xmax, int ymin, int ymax)
 #ifdef _GL 
   /*does box need to be recomputed 
     in a new display list*/
-
-#ifndef _GLTRANSFORMATION
- box->VisibleModification = TRUE;
-#endif/*  _GLTRANSFORMATION */
-
-  if (pAb->AbLeafType == LtPolyLine ||
-      pAb->AbLeafType == LtGraphics ||
-      pAb->AbLeafType == LtPath)
+  if (FrameTable[frame].FrView == 1)
     {
-      if (!(box->VisibleModification) &&
-	  !selected &&
-	  glIsList (box->DisplayList))
+
+      box->VisibleModification = TRUE;
+
+      if (pAb->AbLeafType == LtPolyLine ||
+	  pAb->AbLeafType == LtGraphics ||
+	  pAb->AbLeafType == LtPath)
 	{
-	  glCallList (box->DisplayList);
-	  return;
-	}
-      else
-	{      
-	  if (glIsList (box->DisplayList))
+	  if (!(box->VisibleModification) &&
+	      !selected &&
+	      glIsList (box->DisplayList))
 	    {
-	      glDeleteLists (box->DisplayList, 1);
+	      glCallList (box->DisplayList);
+	      return;
 	    }
-	  box->DisplayList = glGenLists (1);
-	  glNewList(box->DisplayList,
-		    GL_COMPILE_AND_EXECUTE);
+	  else
+	    {      
+	      if (glIsList (box->DisplayList))
+		{
+		  glDeleteLists (box->DisplayList, 1);
+		}
+	      box->DisplayList = glGenLists (1);
+	      glNewList(box->DisplayList,
+			GL_COMPILE_AND_EXECUTE);
+	    }
 	}
-    }
-  GL_SetFillOpacity (pAb->AbFillOpacity);
-  GL_SetStrokeOpacity (pAb->AbStrokeOpacity);
-  if ((pAb->AbLeafType == LtPolyLine ||
-       pAb->AbLeafType == LtGraphics ||
-       pAb->AbLeafType == LtGraphics) &&
-      (pAb->AbElement->ElParent) &&
-      (pAb->AbElement->ElParent->gradient))
-    {
-      if (DisplayGradient (pAb, box, frame, selected))
-	return;          
+      GL_SetFillOpacity (pAb->AbFillOpacity);
+      GL_SetStrokeOpacity (pAb->AbStrokeOpacity);
+      if ((pAb->AbLeafType == LtPolyLine ||
+	   pAb->AbLeafType == LtGraphics ||
+	   pAb->AbLeafType == LtPath) &&
+	  (pAb->AbElement->ElParent) &&
+	  (pAb->AbElement->ElParent->gradient))
+	{
+	  if (DisplayGradient (pAb, box, frame, selected))
+	    return;          
+	}
     }
 #endif /*_GL*/
       
@@ -2618,13 +2548,16 @@ void DisplayBox (PtrBox box, int frame, int xmin, int xmax, int ymin, int ymax)
     DisplayPath (box, frame, selected);
 
 #ifdef _GL
-  GL_SetFillOpacity (1000);
-  GL_SetStrokeOpacity (1000);
-  box->VisibleModification = FALSE;  
-  if (pAb->AbLeafType == LtPolyLine ||
-      pAb->AbLeafType == LtGraphics ||
-      pAb->AbLeafType == LtPath)
-    glEndList ();
+  if (FrameTable[frame].FrView == 1)
+    {
+      GL_SetFillOpacity (1000);
+      GL_SetStrokeOpacity (1000);
+      box->VisibleModification = FALSE;  
+      if (pAb->AbLeafType == LtPolyLine ||
+	  pAb->AbLeafType == LtGraphics ||
+	  pAb->AbLeafType == LtPath)
+	glEndList ();
+    }
 #endif /*_GL*/
 
   /* then display borders */

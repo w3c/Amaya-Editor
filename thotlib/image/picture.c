@@ -2035,21 +2035,21 @@ static void ClipAndBoxUpdate (PtrAbstractBox pAb, PtrBox box,
 			      int left, int right, 
 			      int frame)   
 {
-#ifndef _GLTRANSFORMATION
+#ifndef _GL
    if (pAb->AbLeafType == LtCompound)
     DefClip (frame, box->BxXOrg, box->BxYOrg,
 	     box->BxXOrg + w, box->BxYOrg + h);
   else
     DefClip (frame, box->BxXOrg - left, box->BxYOrg - top,
 	     box->BxXOrg + right + w, box->BxYOrg + bottom + h);
-#else/*  _GLTRANSFORMATION */
+#else/*  _GL */
       if (pAb->AbLeafType == LtCompound)
 	DefRegion (frame, box->BxClipX, box->BxClipY,
 		 box->BxClipX + w, box->BxClipY + h);
       else
 	DefRegion (frame, box->BxClipX - left, box->BxClipY - top,
 		 box->BxClipX + right + w, box->BxClipY + bottom + h);
-#endif /*  _GLTRANSFORMATION */
+#endif /*  _GL */
 
   if (pAb->AbLeafType == LtPicture)
     {
@@ -2595,9 +2595,13 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
 		ChangeHeight (box,
 			      box, NULL,
 			      (h + top + bottom + top + bottom) - box->BxH, frame);
-	      
+#ifndef _GL
 	      DefClip (frame, box->BxXOrg, box->BxYOrg,
 		       box->BxXOrg + w, box->BxYOrg + h);
+#else /* _GL */
+	      DefRegion (frame, box->BxClipX, box->BxClipY,
+			 box->BxClipX + w, box->BxClipY + h);
+#endif /* _GL    */
 	    }
 	}
       if (!Printing)
@@ -2749,10 +2753,13 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
 		    ChangeHeight (box,
 				  box, NULL,
 				  (h + top + bottom + top + bottom) - box->BxH, frame);
-
+#ifndef _GL
 		  DefClip (frame, box->BxXOrg, box->BxYOrg,
 			   box->BxXOrg + w, box->BxYOrg + h);
-	  
+#else /* _GL */
+		  DefRegion (frame, box->BxClipX, box->BxClipY,
+			   box->BxClipX + w, box->BxClipY + h);
+#endif /* _GL    */
 		  /* Force Image rescaling by making box 
 		     size different of image info size*/
 		  w = w / 2;

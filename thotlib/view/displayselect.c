@@ -463,15 +463,15 @@ void DrawBoxSelection (int frame, PtrBox pBox)
 	}
       else
 	/* display other elements */
-#ifndef _GLTRANSFORMATION
+#ifndef _GL
 	DefClip (frame, pBox->BxXOrg, pBox->BxYOrg,
 		 pBox->BxXOrg + pBox->BxWidth,
 		 pBox->BxYOrg + pBox->BxHeight);
-#else/*  _GLTRANSFORMATION */
+#else/*  _GL */
 	DefRegion (frame, pBox->BxClipX, pBox->BxClipY,
 		 pBox->BxClipX + pBox->BxClipW,
 		 pBox->BxClipY + pBox->BxClipH);
-#endif /* _GLTRANSFORMATION */
+#endif /* _GL */
     }
 }
 

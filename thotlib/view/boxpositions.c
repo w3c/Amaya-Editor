@@ -20,6 +20,7 @@
 #include "appdialogue.h"
 
 #ifdef _GL
+#include "frame.h"
 #include "content.h"
 #endif /* _GL */
 
@@ -27,6 +28,9 @@
 #include "appdialogue_tv.h"
 #include "boxes_tv.h"
 #include "platform_tv.h"
+#ifdef _GL
+#include "frame_tv.h"
+#endif /* _GL */
 
 #include "memory_f.h"
 #include "absboxes_f.h"
@@ -421,8 +425,9 @@ void AddBoxTranslations (PtrAbstractBox pAb, int visibility, int frame,
 
   /* Origine de la boite du pave le plus englobant */
   pBox = pAb->AbBox;
-#ifdef _GLTRANSFORMATION 
-  if ((pBox->BxXOrg || pBox->BxYOrg) &&
+#ifdef _GL 
+  if (FrameTable[frame].FrView == 1 &&
+      (pBox->BxXOrg || pBox->BxYOrg) &&
       pAb->AbElement->ElSystemOrigin)
     {
       x = 0;
@@ -437,10 +442,10 @@ void AddBoxTranslations (PtrAbstractBox pAb, int visibility, int frame,
   pBox->BxClipY = y;
   pBox->BxClipW = pBox->BxW;
   pBox->BxClipH = pBox->BxH;
-#else /* _GLTRANSFORMATION */
+#else /* _GL */
   x = pBox->BxXOrg;
   y = pBox->BxYOrg;
-#endif /* _GLTRANSFORMATION */
+#endif /* _GL */
 
   width = pBox->BxW;
   height = pBox->BxH;
@@ -473,16 +478,16 @@ void AddBoxTranslations (PtrAbstractBox pAb, int visibility, int frame,
 		    if (horizRef)
 		      {
 			box1->BxXOrg += x;
-#ifdef _GLTRANSFORMATION
+#ifdef _GL
 			box1->BxClipX += x;
-#endif /* _GLTRANSFORMATION */
+#endif /* _GL */
 		      }
 		    if (vertRef)
 		      {
 			box1->BxYOrg += y;
-#ifdef _GLTRANSFORMATION
+#ifdef _GL
 			box1->BxClipY += y;
-#endif /* _GLTRANSFORMATION */
+#endif /* _GL */
 		      }
 		    box1 = box1->BxNexChild;
 		  }
@@ -751,7 +756,7 @@ void AddBoxTranslations (PtrAbstractBox pAb, int visibility, int frame,
 		  AddBoxTranslations (pChildAb, visibility, frame, placeenX, placeenY);
 	      }
 	  }
-#ifdef _GLTRANSFORMATION
+#ifdef _GL
 	/*if no transformation, make clipx, clipy OK*/
 	pChildBox->BxClipX = pChildBox->BxXOrg + pBox->BxLMargin + pBox->BxLBorder +
            pBox->BxLPadding;
@@ -759,7 +764,7 @@ void AddBoxTranslations (PtrAbstractBox pAb, int visibility, int frame,
            pBox->BxTPadding;
 	pChildBox->BxClipW = pChildBox->BxW;
 	pChildBox->BxClipH = pChildBox->BxH;
-#endif /* _GLTRANSFORMATION */
+#endif /* _GL */
 
 	/* passe au suivant */
 	pChildAb = pChildAb->AbNext;

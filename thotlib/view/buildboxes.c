@@ -34,9 +34,9 @@
 #include "frame_tv.h"
 #include "appdialogue_tv.h"
 
-#ifdef _GLANIM
+#ifdef _GL
 #include "animbox_f.h"
-#endif /* _GLANIM */
+#endif /* _GL */
 extern Frame_Ctl   FrameTable[MAX_FRAME+1];
 
 #define MAX_BOX_INWORK 10
@@ -2137,7 +2137,7 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLine,
 	    SetPositionConstraint (HorizRef, pCurrentBox, &i);
 	}
      
-#ifdef _GLANIM
+#ifdef _GL
       if (pAb->AbElement->animation)
 	{
 	  i = ActiveFrame;
@@ -2146,7 +2146,7 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLine,
 	  ActiveFrame = i;
 	}
       
-#endif /* _GLANIM */
+#endif /* _GL */
 
       pAb->AbNew = FALSE;	/* la regle de creation est interpretee */
       /* manage table exceptions */
@@ -2159,14 +2159,14 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLine,
       else if (tableType == BoCell && ThotLocalActions[T_checkcolumn])
 	(*ThotLocalActions[T_checkcolumn]) (pAb, NULL, frame);
     }
-#ifdef _GLTRANSFORMATION
+#ifdef _GL
   pCurrentBox->BxClipX = pCurrentBox->BxXOrg + pCurrentBox->BxLMargin 
     + pCurrentBox->BxLBorder + pCurrentBox->BxLPadding;
   pCurrentBox->BxClipY = pCurrentBox->BxYOrg + pCurrentBox->BxTMargin 
     + pCurrentBox->BxTBorder + pCurrentBox->BxTPadding;
   pCurrentBox->BxClipW = pCurrentBox->BxWidth;/*  - pCurrentBox->BxLMargin - pCurrentBox->BxRMargin; */
   pCurrentBox->BxClipH = pCurrentBox->BxHeight; /* - pCurrentBox->BxTMargin - pCurrentBox->BxBMargin; */
-#endif /* _GLTRANSFORMATION */
+#endif /* _GL */
   return (pCurrentBox);
 }
 
@@ -2434,7 +2434,7 @@ void BoxUpdate (PtrBox pBox, PtrLine pLine, int charDelta, int spaceDelta,
      {
      /* Si la largeur de la boite ne depend pas de son contenu  */
      /* on doit forcer le reaffichage jusqua la fin de la boite */
-#ifndef _GLTRANSFORMATION
+#ifndef _GL
      if (pBox->BxLMargin < 0)
        DefClip (frame, pBox->BxXOrg + pBox->BxLMargin, pBox->BxYOrg,
 		pBox->BxXOrg + pBox->BxWidth + pBox->BxLMargin,
@@ -2442,10 +2442,10 @@ void BoxUpdate (PtrBox pBox, PtrLine pLine, int charDelta, int spaceDelta,
      else
        DefClip (frame, pBox->BxXOrg, pBox->BxYOrg,
 		pBox->BxXOrg + pBox->BxWidth, pBox->BxYOrg + pBox->BxHeight);
-#else /*  _GLTRANSFORMATION */      
+#else /*  _GL */      
      DefRegion (frame, pBox->BxClipX, pBox->BxClipY,
 	      pBox->BxClipX + pBox->BxClipW, pBox->BxClipY + pBox->BxClipH);
-#endif /* _GLTRANSFORMATION */
+#endif /* _GL */
      }
    Propagate = savpropage;
 #ifdef _GL
@@ -2780,7 +2780,7 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 				    pAb->AbElement->ElStructSchema))
 		DefClip (frame, -1, -1, -1, -1);
 	      else
-#ifndef _GLTRANSFORMATION
+#ifndef _GL
 		if (pCurrentBox->BxLMargin < 0)
 		  DefClip (frame, pCurrentBox->BxXOrg + pBox->BxLMargin,
 			   pCurrentBox->BxYOrg,
@@ -2790,12 +2790,12 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 		  DefClip (frame, pCurrentBox->BxXOrg - k, pCurrentBox->BxYOrg - k,
 			   pCurrentBox->BxXOrg + pCurrentBox->BxWidth + k,
 			   pCurrentBox->BxYOrg + pCurrentBox->BxHeight + k);
-#else /* _GLTRANSFORMATION */
+#else /* _GL */
 	      DefRegion (frame, pCurrentBox->BxClipX - k,
 			 pCurrentBox->BxClipY - k,
 			 pCurrentBox->BxClipX + pCurrentBox->BxClipW + k,
 			 pCurrentBox->BxClipY + pCurrentBox->BxClipH + k);
-#endif /* _GLTRANSFORMATION */
+#endif /* _GL */
 	    }
 	}
 #ifdef _GL
@@ -2904,7 +2904,7 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 	  /* On prepare le reaffichage */
 	  if (!inLine)
 	    {
-#ifndef _GLTRANSFORMATION
+#ifndef _GL
 	      if (pBox->BxLMargin < 0)
 		DefClip (frame, pBox->BxXOrg + pBox->BxLMargin, pBox->BxYOrg,
 			 pBox->BxXOrg + pBox->BxWidth + pBox->BxLMargin,
@@ -2913,11 +2913,11 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 		DefClip (frame, pBox->BxXOrg, pBox->BxYOrg,
 			 pBox->BxXOrg + pBox->BxWidth,
 			 pBox->BxYOrg + pBox->BxHeight);
-#else /* _GLTRANSFORMATION */
+#else /* _GL */
 	      DefRegion (frame, pBox->BxClipX, pBox->BxClipY,
 		       pBox->BxClipX + pBox->BxClipW,
 		       pBox->BxClipY + pBox->BxClipH);
-#endif /* _GLTRANSFORMATION */
+#endif /* _GL */
 	    }
 	  
 	  /* On verifie la coherence des positions par defaut */
@@ -3902,7 +3902,7 @@ static void ClearFlexibility (PtrAbstractBox pAb, int frame)
 	/* Faut-il reevaluer les regles d'une boite elastique */
 	if (pBox->BxHorizFlex && pAb->AbWidthChange)
 	  {
-#ifndef _GLTRANSFORMATION
+#ifndef _GL
 	    if (pBox->BxLMargin < 0)
 	     DefClip (frame, pBox->BxXOrg + pBox->BxLMargin, pBox->BxYOrg,
 		      pBox->BxXOrg + pBox->BxWidth + pBox->BxLMargin,
@@ -3910,10 +3910,10 @@ static void ClearFlexibility (PtrAbstractBox pAb, int frame)
 	    else
 	     DefClip (frame, pBox->BxXOrg, pBox->BxYOrg,
 		      pBox->BxXOrg + pBox->BxWidth, pBox->BxYOrg + pBox->BxHeight);
-#else  /* _GLTRANSFORMATION */
+#else  /* _GL */
 	    DefRegion (frame, pBox->BxClipX, pBox->BxClipY,
 		      pBox->BxClipX + pBox->BxClipW, pBox->BxClipY + pBox->BxClipH);
-#endif /*  _GLTRANSFORMATION */
+#endif /*  _GL */
 	     /* Annulation de la position */
 	     if (pAb->AbHorizPosChange)
 	       {
@@ -3931,7 +3931,7 @@ static void ClearFlexibility (PtrAbstractBox pAb, int frame)
 	  {
 	     if (!pBox->BxHorizFlex || !pAb->AbWidthChange)
 	       {
-#ifndef _GLTRANSFORMATION
+#ifndef _GL
 		 if (pBox->BxLMargin < 0)
 		   DefClip (frame, pBox->BxXOrg + pBox->BxLMargin, pBox->BxYOrg,
 			    pBox->BxXOrg + pBox->BxWidth,
@@ -3940,10 +3940,10 @@ static void ClearFlexibility (PtrAbstractBox pAb, int frame)
 		   DefClip (frame, pBox->BxXOrg, pBox->BxYOrg,
 			    pBox->BxXOrg + pBox->BxWidth,
 			    pBox->BxYOrg + pBox->BxHeight);
-#else  /* _GLTRANSFORMATION */
+#else  /* _GL */
 	    DefRegion (frame, pBox->BxClipX, pBox->BxClipY,
 		      pBox->BxClipX + pBox->BxClipW, pBox->BxClipY + pBox->BxClipH);
-#endif /*  _GLTRANSFORMATION */
+#endif /*  _GL */
 	       }
 	     /* Annulation et reevaluation de la position */
 	     if (pAb->AbVertPosChange)

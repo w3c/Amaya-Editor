@@ -204,9 +204,9 @@ void FreeAbView (PtrAbstractBox pAb, int frame)
       /* dechaine pAb de son element */
       if (pAb->AbElement != NULL)
 	{
-#ifdef _GLANIM
+#ifdef _GL
 	  AnimatedBoxDel (pAb->AbElement);	  
-#endif/*  _GLANIM */
+#endif/*  _GL */
 	  if (pAb->AbElement->ElAbstractBox[pAb->AbDocView - 1] == pAb)
 	    {
 	      if (pAb->AbNext != NULL)

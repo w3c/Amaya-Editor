@@ -252,10 +252,10 @@ void LocateSelectionInView (int frame, int x, int y, int button)
       /* check if a leaf box is selected */
       pFrame = &ViewFrameTable[frame - 1];
       pViewSel = &pFrame->FrSelectionBegin;
-#ifndef _GLTRANSFORMATION
+#ifndef _GL
       x += pFrame->FrXOrg;
       y += pFrame->FrYOrg;
-#endif /*_GLTRANSFORMATION*/
+#endif /*_GL*/
       pAb = pFrame->FrAbstractBox;
       nChars = 0;
       if (button == 6 && SelectedPointInPolyline != 0 &&
@@ -285,12 +285,12 @@ void LocateSelectionInView (int frame, int x, int y, int button)
 	      if (pAb->AbLeafType == LtText &&
 		  (!pAb->AbPresentationBox || pAb->AbCanBeModified))
 		{
-#ifndef _GLTRANSFORMATION
+#ifndef _GL
 		  pos = x - pBox->BxXOrg - pBox->BxLMargin - pBox->BxLBorder
 		    - pBox->BxLPadding;
-#else /* _GLTRANSFORMATION */
+#else /* _GL */
 		  pos = x - pBox->BxClipX;
-#endif /* _GLTRANSFORMATION */
+#endif /* _GL */
 		  LocateClickedChar (pBox, extend, &pBuffer, &pos, &index,
 				     &nChars, &nSpaces);
 		  nChars = pBox->BxFirstChar + nChars;
@@ -370,15 +370,15 @@ void LocateSelectionInView (int frame, int x, int y, int button)
 		    /* the application asks Thot to do nothing */
 		    return;
 		  /* check if the curseur is within the box */
-#ifndef _GLTRANSFORMATION
+#ifndef _GL
 		  xOrg =  pBox->BxXOrg + pBox->BxLMargin + pBox->BxLBorder +
 		    pBox->BxLPadding;
 		  yOrg =  pBox->BxYOrg + pBox->BxTMargin + pBox->BxTBorder +
 		    pBox->BxTPadding;
-#else /* _GLTRANSFORMATION */
+#else /* _GL */
 		  xOrg =  pBox->BxClipX;
 		  yOrg =  pBox->BxClipY;
-#endif /* _GLTRANSFORMATION */
+#endif /* _GL */
 		  if (x >= xOrg && x <= xOrg + pBox->BxW &&
 		      y >= yOrg && y <= yOrg + pBox->BxH)
 		    {		      
@@ -393,15 +393,15 @@ void LocateSelectionInView (int frame, int x, int y, int button)
 		  break;
 		case 5:
 		  /* check if the curseur is within the box */
-#ifndef _GLTRANSFORMATION
+#ifndef _GL
 		  xOrg =  pBox->BxXOrg + pBox->BxLMargin + pBox->BxLBorder +
 		    pBox->BxLPadding;
 		  yOrg =  pBox->BxYOrg + pBox->BxTMargin + pBox->BxTBorder +
 		    pBox->BxTPadding;
-#else /* _GLTRANSFORMATION */
+#else /* _GL */
 		  xOrg =  pBox->BxClipX;
 		  yOrg =  pBox->BxClipY;
-#endif /* _GLTRANSFORMATION */
+#endif /* _GL */
 		  if (x >= xOrg && x <= xOrg + pBox->BxW &&
 		      y >= yOrg && y <= yOrg + pBox->BxH)
 		    {
@@ -420,15 +420,15 @@ void LocateSelectionInView (int frame, int x, int y, int button)
 		  break;
 		case 6:
 		  /* check if the curseur is within the box */
-#ifndef _GLTRANSFORMATION
+#ifndef _GL
 		  xOrg =  pBox->BxXOrg + pBox->BxLMargin + pBox->BxLBorder +
 		    pBox->BxLPadding;
 		  yOrg =  pBox->BxYOrg + pBox->BxTMargin + pBox->BxTBorder +
 		    pBox->BxTPadding;
-#else /* _GLTRANSFORMATION */
+#else /* _GL */
 		  xOrg =  pBox->BxClipX;
 		  yOrg =  pBox->BxClipY;
-#endif /* _GLTRANSFORMATION */
+#endif /* _GL */
 		  if (x >= xOrg && x <= xOrg + pBox->BxW &&
 		      y >= yOrg && y <= yOrg + pBox->BxH)
 		    {
@@ -1443,17 +1443,17 @@ static ThotBool IsInShape (PtrAbstractBox pAb, int x, int y)
   int                 width, height;
 
   box = pAb->AbBox;
-#ifndef _GLTRANSFORMATION
+#ifndef _GL
   x -= box->BxXOrg;
   y -= box->BxYOrg;
   width = box->BxWidth;
   height = box->BxHeight;
-#else /* _GLTRANSFORMATION */
+#else /* _GL */
   x -= box->BxClipX;
   y -= box->BxClipY;
   width = box->BxClipW;
   height = box->BxClipH;
-#endif /* _GLTRANSFORMATION */
+#endif /* _GL */
   max = 0;
 
   /* Is there a characteristic point of the drawing? */
@@ -1615,17 +1615,17 @@ static PtrBox IsOnShape (PtrAbstractBox pAb, int x, int y, int *selpoint)
   int                 width, height;
   /* relative coords of the box (easy work) */
   pBox = pAb->AbBox;
-#ifndef _GLTRANSFORMATION
+#ifndef _GL
   x -= pBox->BxXOrg;
   y -= pBox->BxYOrg;
   width = pBox->BxWidth;
   height = pBox->BxHeight;
-#else /* _GLTRANSFORMATION */
+#else /* _GL */
   x -= pBox->BxClipX;
   y -= pBox->BxClipY;
   width = pBox->BxClipW;
   height = pBox->BxClipH;
-#endif /* _GLTRANSFORMATION */
+#endif /* _GL */
   *selpoint = 0;
   /* Keep in mind the selected caracteristic point       */
   /*            1-------------2-------------3            */
@@ -1882,13 +1882,13 @@ PtrAbstractBox      GetClickedAbsBox (int frame, int xRef, int yRef)
   pFrame = &ViewFrameTable[frame - 1];
   pBox = NULL;
   if (pFrame->FrAbstractBox != NULL)
-#ifndef _GLTRANSFORMATION
+#ifndef _GL
     GetClickedBox (&pBox, pFrame->FrAbstractBox, frame, xRef + pFrame->FrXOrg,
 		   yRef + pFrame->FrYOrg, Y_RATIO, &pointselect);
-#else/*  _GLTRANSFORMATION */
+#else/*  _GL */
     GetClickedBox (&pBox, pFrame->FrAbstractBox, frame, xRef,
 		   yRef, Y_RATIO, &pointselect);
-#endif /*  _GLTRANSFORMATION */
+#endif /*  _GL */
   if (pBox == NULL)
     return (NULL);
   else
@@ -1922,19 +1922,19 @@ PtrBox GetEnclosingClickedBox (PtrAbstractBox pAb, int higherX,
 	{
 	  for (pBox = pBox->BxNexChild; pBox != NULL; pBox = pBox->BxNexChild)
 	    {
-#ifndef _GLTRANSFORMATION
+#ifndef _GL
 	      if (pBox->BxNChars > 0 &&
 		  pBox->BxXOrg <= lowerX &&
 		  pBox->BxXOrg + pBox->BxWidth >= higherX &&
 		  pBox->BxYOrg <= y &&
 		  pBox->BxYOrg + pBox->BxHeight >= y)
-#else /*  _GLTRANSFORMATION */
+#else /*  _GL */
 		if (pBox->BxNChars > 0 &&
 		    pBox->BxClipX <= lowerX &&
 		    pBox->BxClipX + pBox->BxClipW >= higherX &&
 		    pBox->BxClipY <= y &&
 		    pBox->BxClipY + pBox->BxClipH >= y)
-#endif  /* _GLTRANSFORMATION */
+#endif  /* _GL */
 		return (pBox);
 
 	    }
@@ -1953,17 +1953,17 @@ PtrBox GetEnclosingClickedBox (PtrAbstractBox pAb, int higherX,
       else if (pAb->AbLeafType == LtPolyLine || pAb->AbLeafType == LtPath ||
 	       /* If the box is not a polyline or a path, it must include
 		  the point */
-#ifndef _GLTRANSFORMATION
+#ifndef _GL
 	       (pBox->BxXOrg <= lowerX &&
 		pBox->BxXOrg + pBox->BxWidth >= higherX &&
 		pBox->BxYOrg <= y &&
 		pBox->BxYOrg + pBox->BxHeight >= y))
-#else /*  _GLTRANSFORMATION */ 
+#else /*  _GL */ 
 	(pBox->BxClipX <= lowerX &&
 	 pBox->BxClipX + pBox->BxClipW >= higherX &&
 	 pBox->BxClipY <= y &&
 	 pBox->BxClipY + pBox->BxClipH >= y))
-#endif  /* _GLTRANSFORMATION */
+#endif  /* _GL */
 	{
 	  pParent = pAb->AbElement->ElParent;
 	  if (pAb->AbLeafType == LtGraphics && pAb->AbVolume != 0)
@@ -2229,17 +2229,17 @@ int GetShapeDistance (int xRef, int yRef, PtrBox pBox, int value)
   int                 x, y, width, height;
 
   /* centrer la boite */
-#ifndef _GLTRANSFORMATION
+#ifndef _GL
   width = pBox->BxWidth / 2;
   x = pBox->BxXOrg + width;
   height = pBox->BxHeight / 2;
   y = pBox->BxYOrg + height;
-#else /* _GLTRANSFORMATION */
+#else /* _GL */
   width = pBox->BxClipW / 2;
   x = pBox->BxClipX + width;
   height = pBox->BxClipH / 2;
   y = pBox->BxClipY + height;
-#endif/* _GLTRANSFORMATION */
+#endif/* _GL */
   distance = 1000;
 
   switch (value)
@@ -2416,13 +2416,13 @@ PtrBox GetClickedLeafBox (int frame, int xRef, int yRef)
 		       /* empty or compound box */
 		       (pAb->AbLeafType == LtCompound &&
 			pAb->AbVolume == 0))
-#ifndef _GLTRANSFORMATION
+#ifndef _GL
 		d = GetBoxDistance (xRef, yRef, Y_RATIO, pBox->BxXOrg, pBox->BxYOrg,
 				    pBox->BxWidth, pBox->BxHeight);
-#else /*_GLTRANSFORMATION */
+#else /*_GL */
 		d = GetBoxDistance (xRef, yRef, Y_RATIO, pBox->BxClipX, pBox->BxClipY,
 				    pBox->BxClipW, pBox->BxClipH);
-#endif /*_GLTRANSFORMATION */
+#endif /*_GL */
 	      else
 		d = max + 1;
 
@@ -2825,17 +2825,17 @@ void ApplyDirectTranslate (int frame, int xm, int ym)
 			}
 		    }
 		  /* redisplay the box */
-#ifndef _GLTRANSFORMATION
+#ifndef _GL
 		  DefClip (frame, pBox->BxXOrg - EXTRA_GRAPH,
 			   pBox->BxYOrg - EXTRA_GRAPH,
 			   pBox->BxXOrg + width + EXTRA_GRAPH,
 			   pBox->BxYOrg + height + EXTRA_GRAPH);
-#else /* _GLTRANSFORMATION */
+#else /* _GL */
 		  DefRegion (frame, pBox->BxClipX - EXTRA_GRAPH,
 			   pBox->BxClipY - EXTRA_GRAPH,
 			   pBox->BxClipX + width + EXTRA_GRAPH,
 			   pBox->BxClipY + height + EXTRA_GRAPH);
-#endif /* _GLTRANSFORMATION */
+#endif /* _GL */
 		  RedrawFrameBottom (frame, 0, NULL);
 		}
 	      else
@@ -3278,15 +3278,15 @@ void                DirectCreation (PtrBox pBox, int frame)
 	NewDimension (pAb, width, 0, frame, TRUE);
       else
 	NewDimension (pAb, width, height, frame, TRUE);
-#ifndef _GLTRANSFORMATION		  
+#ifndef _GL		  
       DefClip (frame, pBox->BxXOrg, pBox->BxYOrg,
 	       pBox->BxXOrg + width, pBox->BxYOrg + height);
-#else /* _GLTRANSFORMATION */
+#else /* _GL */
       DefRegion (frame, pBox->BxClipX,
 	       pBox->BxClipY,
 	       pBox->BxClipX + width,
 	       pBox->BxClipY + height);
-#endif /* _GLTRANSFORMATION */
+#endif /* _GL */
 
       pAb->AbHorizPos.PosUserSpecified = FALSE;
       pAb->AbVertPos.PosUserSpecified = FALSE;

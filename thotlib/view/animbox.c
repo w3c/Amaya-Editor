@@ -59,7 +59,7 @@
 #endif /* _GL */
 #include <math.h>
 
-#ifdef _GLANIM
+#ifdef _GL
 static int Animated_Frame = 0;
 static int Clipx, Clipy, ClipxMax, ClipyMax;
 
@@ -106,8 +106,7 @@ static void UpdateClipping (PtrAbstractBox pAb)
 	  Max (ClipyMax, pAb->AbBox->BxYOrg + pAb->AbBox->BxHeight);
 
 	}
-      else
-	UpdateClipping (pAb->AbFirstEnclosed);
+      UpdateClipping (pAb->AbFirstEnclosed);
       
       pAb = pAb->AbNext;
     }
@@ -356,12 +355,12 @@ static void animate_box_transformation (PtrElement El,
 					Animated_Element *animated,
 					AnimTime current_time)
 {
-  int doc, view;
-  float result;
-  int trans_type;
-  PtrAbstractBox pAb = NULL;
-  PtrTransform Trans = NULL;
-  
+  int              doc, view;
+  float            fx, fy, tx, ty, rotf, rott;
+  float            result;
+  int              trans_type;
+  PtrAbstractBox   pAb = NULL;
+  PtrTransform     Trans = NULL;
   
   if (animated->AttrName == NULL)
     return;
@@ -373,17 +372,38 @@ static void animate_box_transformation (PtrElement El,
     {
     case 1 : /*TRANSLATE*/
       FrameToView (Animated_Frame, &doc, &view);
-      result = (float) interpolate_double_value (atof ((char *) animated->from), 
-						 atof ((char *) animated->to),
-						 current_time,
-						 animated->duration);
+      if (strstr ((char *) animated->to, ","))
+	{
+	  tx = atof ((char *) animated->to);
+	  ty =  atof (strstr ((char *) animated->to, ",") + 1);
+	}
+      else
+	tx = ty =  atof ((char *) animated->to);
+
+      if (strstr ((char *) animated->from, ","))
+	{
+	  fx = atof ((char *) animated->from);
+	  fy = atof (strstr ((char *) animated->from, ",") + 1);
+	}
+      else
+	fx = fy =  atof ((char *) animated->from);
+
+      tx = (float) interpolate_double_value (fx, 
+					     tx,
+					     current_time,
+					     animated->duration);
+      ty = (float) interpolate_double_value (fy, 
+					     ty,
+					     current_time,
+					     animated->duration);
+
       if (El->ElTransform)
 	Trans = GetTransformation (El->ElTransform, 
 				   PtElTranslate); 
       
       if (Trans == NULL)
 	{
-	  Trans = TtaNewTransformTranslate (result, result, FALSE);
+	  Trans = TtaNewTransformTranslate (tx, ty, FALSE);
 	  TtaReplaceTransform ((Element) El, Trans, doc); 
 	  /* TtaAppendTransform ((Element) El, Trans, doc); */	  
 	}
@@ -391,11 +411,11 @@ static void animate_box_transformation (PtrElement El,
       if (pAb)
 	if (pAb->AbFirstEnclosed)
 	  {
-	    	    UpdateClipping (pAb->AbFirstEnclosed);
+	    UpdateClipping (pAb->AbFirstEnclosed);
 
-	    Trans->XScale = result;
-	    Trans->YScale = result;
-	    Trans->Angle = (float) result;
+	    Trans->XScale = tx;
+	    Trans->YScale = ty;
+	    /* Trans->Angle = (float) ty; */
 
 	    ComputeBoundingBox (pAb->AbFirstEnclosed->AbBox, 
 				Animated_Frame, 
@@ -409,10 +429,31 @@ static void animate_box_transformation (PtrElement El,
 
     case 2 : /*SCALE*/
       FrameToView (Animated_Frame, &doc, &view);
-      result = (float)interpolate_double_value (atof ((char *) animated->from), 
-						atof ((char *) animated->to),
-						current_time,
-						animated->duration);
+
+      if (strstr ((char *) animated->to, ","))
+	{
+	  tx = atof ((char *) animated->to);
+	  ty =  atof (strstr ((char *) animated->to, ",") + 1);
+	}
+      else
+	tx = ty =  atof ((char *) animated->to);
+
+      if (strstr ((char *) animated->from, ","))
+	{
+	  fx = atof ((char *) animated->from);
+	  fy = atof (strstr ((char *) animated->from, ",") + 1);
+	}
+      else
+	fx = fy =  atof ((char *) animated->from);
+
+      tx = (float) interpolate_double_value (fx, 
+					     tx,
+					     current_time,
+					     animated->duration);
+      ty = (float) interpolate_double_value (fy, 
+					     ty,
+					     current_time,
+					     animated->duration);
       
       if (El->ElTransform)
 	Trans = GetTransformation (El->ElTransform, 
@@ -420,7 +461,7 @@ static void animate_box_transformation (PtrElement El,
       
       if (Trans == NULL)
 	{
-	  Trans = TtaNewTransformScale (result, result, FALSE);
+	  Trans = TtaNewTransformScale (tx, ty, FALSE);
 	  TtaReplaceTransform ((Element) El, Trans, doc); 
 	  /* TtaAppendTransform ((Element) El, Trans, doc);	   */
 	}
@@ -429,8 +470,8 @@ static void animate_box_transformation (PtrElement El,
 	if (pAb->AbFirstEnclosed)
 	  {
 	    UpdateClipping (pAb->AbFirstEnclosed);
-	    Trans->XScale = result;
-	    Trans->YScale = result;
+	    Trans->XScale = tx;
+	    Trans->YScale = ty;
 	    ComputeBoundingBox (pAb->AbFirstEnclosed->AbBox, 
 				Animated_Frame, 
 				0, FrameTable[Animated_Frame].FrWidth, 
@@ -442,18 +483,53 @@ static void animate_box_transformation (PtrElement El,
 
     case 3 :/*Rotate*/
       FrameToView (Animated_Frame, &doc, &view);
-      result = (float)interpolate_double_value (atof ((char *) animated->from), 
-						atof ((char *) animated->to),
-						current_time,
-						animated->duration);
-      
+      tx = ty = fx = fy = 0;
+      if (strstr ((char *) animated->to, ","))
+	{
+	  rott = atof ((char *) animated->to);
+	  if (strstr (strstr ((char *) animated->to, ",") + 1, ","))
+	    {
+	      tx =  atof (strstr ((char *) animated->to, ",") + 1);
+	      ty =  atof (strstr (strstr ((char *) animated->to, ",") + 1, ",") + 1);
+	    }
+	  else
+	    tx = ty = atof (strstr ((char *) animated->to, ",") + 1);
+	}
+      else
+	rott =  atof ((char *) animated->to);
+      if (strstr ((char *) animated->from, ","))
+	{
+	  rotf = atof ((char *) animated->from);
+	  if (strstr (strstr ((char *) animated->from, ",") + 1, ","))
+	    {
+	      fx =  atof (strstr ((char *) animated->from, ",") + 1);
+	      fy =  atof (strstr (strstr ((char *) animated->from, ",") + 1, ",") + 1);
+	    }
+	  else
+	    fx = fy = atof (strstr ((char *) animated->from, ",") + 1);
+	}
+      else
+	rotf =  atof ((char *) animated->from);
+      if (tx && fx)
+	tx = (float) interpolate_double_value (fx, 
+					       tx,
+					       current_time,
+					       animated->duration);
+      if (ty && fy)
+	ty = (float) interpolate_double_value (fy, 
+					       ty,
+					       current_time,
+					       animated->duration);
+      rott = (float)interpolate_double_value (rotf, 
+					      rott,
+					      current_time,
+					      animated->duration);      
       if (El->ElTransform)
 	Trans = GetTransformation (El->ElTransform, 
-				   PtElRotate); 
-      
+				   PtElRotate);       
       if (Trans == NULL)
 	{
-	  Trans = TtaNewTransformRotate (result, 0, 0);
+	  Trans = TtaNewTransformRotate (rott, tx, ty);
 	  TtaReplaceTransform ((Element) El, Trans, doc); 
 	  /* TtaAppendTransform ((Element) El, Trans, doc);	  */ 
 	}
@@ -461,7 +537,7 @@ static void animate_box_transformation (PtrElement El,
       if (pAb)
 	if (pAb->AbFirstEnclosed)
 	  {
-	    	    UpdateClipping (pAb->AbFirstEnclosed);
+	    UpdateClipping (pAb->AbFirstEnclosed);
 	    
 	    Trans->Angle = result;
 	    ComputeBoundingBox (pAb->AbFirstEnclosed->AbBox, 
@@ -478,12 +554,10 @@ static void animate_box_transformation (PtrElement El,
       result = (float)interpolate_double_value (atof ((char *) animated->from), 
 						atof ((char *) animated->to),
 						current_time,
-						animated->duration);
-      
+						animated->duration);      
       if (El->ElTransform)
 	Trans = GetTransformation (El->ElTransform, 
-				   PtElSkewX); 
-      
+				   PtElSkewX);       
       if (Trans == NULL)
 	{
 	  Trans = TtaNewTransformSkewX (result);
@@ -494,16 +568,14 @@ static void animate_box_transformation (PtrElement El,
       if (pAb)
 	if (pAb->AbFirstEnclosed)
 	  {
-	    	    UpdateClipping (pAb->AbFirstEnclosed);
-	    
+	    UpdateClipping (pAb->AbFirstEnclosed);	    
 	    Trans->Factor = result;
 	    ComputeBoundingBox (pAb->AbFirstEnclosed->AbBox, 
 				Animated_Frame, 
 				0, FrameTable[Animated_Frame].FrWidth, 
 				0, FrameTable[Animated_Frame].FrHeight);
 	    UpdateClipping (pAb->AbFirstEnclosed);
-	  }
-      
+	  }      
       break;
      
     case 5 :/*SKEWY*/
@@ -511,12 +583,10 @@ static void animate_box_transformation (PtrElement El,
       result = (float)interpolate_double_value (atof ((char *) animated->from), 
 						atof ((char *) animated->to),
 						current_time,
-						animated->duration);
-      
+						animated->duration);      
       if (El->ElTransform)
 	Trans = GetTransformation (El->ElTransform, 
-				   PtElSkewY); 
-      
+				   PtElSkewY);       
       if (Trans == NULL)
 	{
 	  Trans = TtaNewTransformSkewY (result);
@@ -564,13 +634,14 @@ static void animate_box_color (PtrElement El,
   FrameToView (Animated_Frame, &doc, &view);
   pAb = El->ElAbstractBox[view - 1];
   if (pAb)
-    {	    	
-      if (strcasecmp (animated->AttrName, "fill") == 0)
-	ApplyFillColorToAllBoxes (pAb, result);
-      else if (strcasecmp (animated->AttrName, "stroke") == 0)
-	ApplyStrokeColorToAllBoxes (pAb, result);	   
-      UpdateClipping (pAb);
-    }
+    if (pAb->AbFirstEnclosed)
+      {	    	
+	if (strcasecmp (animated->AttrName, "fill") == 0)
+	  ApplyFillColorToAllBoxes (pAb->AbFirstEnclosed, result);
+	else if (strcasecmp (animated->AttrName, "stroke") == 0)
+	  ApplyStrokeColorToAllBoxes (pAb->AbFirstEnclosed, result);	   
+	UpdateClipping (pAb->AbFirstEnclosed);
+      }
 }
 /*----------------------------------------------------------------------
   animate_box_motion : Animate the position of a box using a path
@@ -682,13 +753,13 @@ static void animate_box (PtrElement El,
       }
     
 }
-#endif /* _GLANIM */
+#endif /* _GL */
 /*----------------------------------------------------------------------
   AnimatedBoxAdd : Add a reference to animated element in the frame
   ----------------------------------------------------------------------*/
 void AnimatedBoxAdd (PtrElement element)
 {
-#ifdef _GLANIM 
+#ifdef _GL 
   Animated_Cell *current;
 
   if (FrameTable[ActiveFrame].Animated_Boxes == NULL)
@@ -712,14 +783,14 @@ void AnimatedBoxAdd (PtrElement element)
   current->Next = NULL;
   current->El = element;
   /* current->El = element->ElParent; */
-#endif /* _GLANIM */
+#endif /* _GL */
 }
 /*----------------------------------------------------------------------
   AnimatedBoxDel : Delete a reference to an animated element
   ----------------------------------------------------------------------*/
 void AnimatedBoxDel (PtrElement element)
 {
-#ifdef _GLANIM 
+#ifdef _GL 
   Animated_Cell *current, *previous;
   ThotBool not_found = TRUE;
   
@@ -755,18 +826,18 @@ void AnimatedBoxDel (PtrElement element)
 	  TtaFreeMemory (current);
 	}
     }
-#endif /* _GLANIM */
+#endif /* _GL */
 }
 /*----------------------------------------------------------------------
   FreeAnimatedBox : Free Allocated resources
   ----------------------------------------------------------------------*/
 void FreeAnimatedBox (Animated_Cell *current)
 {
-#ifdef _GLANIM 
+#ifdef _GL 
   if (current->Next)
     FreeAnimatedBox (current->Next);
   TtaFreeMemory (current);  
-#endif /* _GLANIM */
+#endif /* _GL */
 }
 /*----------------------------------------------------------------------
   Animate_boxes : Animate All animated boxe 
@@ -775,7 +846,7 @@ and define region that need redisplay
 void Animate_boxes (int frame, 
 		    AnimTime current_time)
 {
-#ifdef _GLANIM 
+#ifdef _GL 
   Animated_Cell *current = FrameTable[frame].Animated_Boxes;
 
   /* Time update
@@ -794,5 +865,5 @@ void Animate_boxes (int frame,
     }
   DefRegion (frame, Clipx, Clipy, ClipxMax, ClipyMax);
   FrameTable[frame].DblBuffNeedSwap = TRUE;
-#endif /* _GLANIM */
+#endif /* _GL */
 }

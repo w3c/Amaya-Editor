@@ -375,17 +375,15 @@ extern void TtaFreeTransform (void *transform);
 extern void TtaSetElCoordinateSystem (Element element);
 
 extern void TtaPlay (Document doc, View view);
+extern void TtaNoPlay (int frame);
 /*----------------------------------------------------------------------
    TtaAppendTransform
    Copy a Linked List of transform into another struct
   ----------------------------------------------------------------------*/
-void *TtaCopyTransform(void *pPa);
-
-
+void *TtaCopyTransform (void *pPa);
 /*----------------------------------------------------------------------
    TtaAnim
   ----------------------------------------------------------------------*/
-
 extern void *TtaNewAnimInfo ();
 
 extern void *TtaCopyTransform ( void *pPa );

@@ -1307,11 +1307,11 @@ static void LoadShape (char c, PtrLine pLine, ThotBool defaultHeight,
 	    }
 
 	  /* on force le reaffichage de la boite (+ les points de selection) */
-#ifndef _GLTRANSFORMATION
+#ifndef _GL
 	  DefClip (frame, pBox->BxXOrg - EXTRA_GRAPH, pBox->BxYOrg - EXTRA_GRAPH, pBox->BxXOrg + width + EXTRA_GRAPH, pBox->BxYOrg + height + EXTRA_GRAPH);
-#else/* _GLTRANSFORMATION */  
+#else/* _GL */  
 	  DefRegion (frame, pBox->BxClipX - EXTRA_GRAPH, pBox->BxClipY - EXTRA_GRAPH, pBox->BxClipX + width + EXTRA_GRAPH, pBox->BxClipY + height + EXTRA_GRAPH);
-#endif /* _GLTRANSFORMATION */
+#endif /* _GL */
 
 	  break;
 
@@ -2276,13 +2276,13 @@ static void ContentEditing (int editType)
 			  pViewSel->VsIndBox = charsDelta;
 			  /* on force le reaffichage de la boite
 			     (+ les points de selection) */
-#ifndef _GLTRANSFORMATION
+#ifndef _GL
 			  DefClip (frame, pBox->BxXOrg - EXTRA_GRAPH, pBox->BxYOrg - EXTRA_GRAPH, 
 				   pBox->BxXOrg + pBox->BxWidth + EXTRA_GRAPH, pBox->BxYOrg + pBox->BxHeight + EXTRA_GRAPH);
-#else/* _GLTRANSFORMATION */  
+#else/* _GL */  
 			  DefRegion (frame, pBox->BxClipX - EXTRA_GRAPH, pBox->BxClipY - EXTRA_GRAPH, 
 				   pBox->BxClipX + pBox->BxClipW + EXTRA_GRAPH, pBox->BxClipY + pBox->BxClipH + EXTRA_GRAPH);			  
-#endif /* _GLTRANSFORMATION */
+#endif /* _GL */
 			}
 		    }
 		}
@@ -2321,27 +2321,27 @@ static void ContentEditing (int editType)
 	      if (pBox->BxType == BoSplit)
 		{
 		  pSelBox = pBox->BxNexChild;
-#ifndef _GLTRANSFORMATION
+#ifndef _GL
 		  DefClip (frame, pSelBox->BxXOrg, pSelBox->BxYOrg,
 			   pSelBox->BxXOrg + pSelBox->BxWidth,
 			   pSelBox->BxYOrg + pSelBox->BxHeight);
-#else /* _GLTRANSFORMATION */
+#else /* _GL */
 		  DefRegion (frame, pSelBox->BxClipX, pSelBox->BxClipY,
 			   pSelBox->BxClipX + pSelBox->BxClipW,
 			   pSelBox->BxClipY + pSelBox->BxClipH);
-#endif /* _GLTRANSFORMATION */
+#endif /* _GL */
 		}
 	      else
 		{
-#ifndef _GLTRANSFORMATION
+#ifndef _GL
 		  DefClip (frame, pBox->BxXOrg, pBox->BxYOrg,
 			   pBox->BxXOrg + pBox->BxWidth,
 			   pBox->BxYOrg + pBox->BxHeight);
-#else /* _GLTRANSFORMATION */
+#else /* _GL */
 		  DefRegion (frame, pBox->BxClipX, pBox->BxClipY,
 			   pBox->BxClipX + pBox->BxClipW,
 			   pBox->BxClipY + pBox->BxClipH);
-#endif /* _GLTRANSFORMATION */
+#endif /* _GL */
 		}
 	      
 	      /* Est-ce que les dimensions de la boite dependent du contenu */
@@ -2426,15 +2426,15 @@ static void ContentEditing (int editType)
 		      pBox = pViewSel->VsBox;
 		      if (pBox != NULL)
 			{
-#ifndef _GLTRANSFORMATION
+#ifndef _GL
 			  DefClip (frame, pBox->BxXOrg, pBox->BxYOrg,
 				   pBox->BxXOrg + pBox->BxWidth,
 				   pBox->BxYOrg + pBox->BxHeight);
-#else /* _GLTRANSFORMATION */
+#else /* _GL */
 			  DefRegion (frame, pBox->BxClipX, pBox->BxClipY,
 				   pBox->BxClipX + pBox->BxClipW,
 				   pBox->BxClipY + pBox->BxClipH);
-#endif /* _GLTRANSFORMATION */
+#endif /* _GL */
 			  pAb = pBox->BxAbstractBox;
 			}
 		      else
@@ -2675,7 +2675,7 @@ void InsertChar (int frame, CHAR_T c, int keyboard)
 			  pBuffer = pBuffer->BuPrevious;
 			  ind = pBuffer->BuLength;
 			}
-#ifndef _GLTRANSFORMATION
+#ifndef _GL
 		      /* prepare le reaffichage */
 		      /* point d'insertion en x */
 		      xx += pSelBox->BxXOrg;
@@ -2683,7 +2683,7 @@ void InsertChar (int frame, CHAR_T c, int keyboard)
 		      topY = pSelBox->BxYOrg;
 		      /* point d'insertion inferieur en y */
 		      bottomY = topY + pSelBox->BxHeight;
-#else /* _GLTRANSFORMATION */
+#else /* _GL */
 		      /* prepare le reaffichage */
 		      /* point d'insertion en x */
 		      xx += pSelBox->BxClipX;
@@ -2691,7 +2691,7 @@ void InsertChar (int frame, CHAR_T c, int keyboard)
 		      topY = pSelBox->BxClipY;
 		      /* point d'insertion inferieur en y */
 		      bottomY = topY + pSelBox->BxClipH;
-#endif /*  _GLTRANSFORMATION */
+#endif /*  _GL */
 		      DefClip (frame, xx, topY, xx, bottomY);
 		      /* Est-on au debut d'une boite entiere ou coupee ? */
 		      pBox = pAb->AbBox->BxNexChild;
@@ -2855,11 +2855,11 @@ void InsertChar (int frame, CHAR_T c, int keyboard)
 				    {
 				      /* the box becomes empty */
 				      xDelta = BoxCharacterWidth (109, font);
-#ifndef _GLTRANSFORMATION
+#ifndef _GL
 				      pFrame->FrClipXBegin = pSelBox->BxXOrg;
-#else /* _GLTRANSFORMATION */
+#else /* _GL */
 				      pFrame->FrClipXBegin = pSelBox->BxClipX;
-#endif  /* _GLTRANSFORMATION */
+#endif  /* _GL */
 				      /* update selection marks */
 				      pSelBox = pAb->AbBox;
 				      pViewSel->VsXPos = 0;
@@ -2982,13 +2982,13 @@ void InsertChar (int frame, CHAR_T c, int keyboard)
 			       pSelBox->BxScript != script)
 			    {
 			      /* update the clipping */
-#ifndef _GLTRANSFORMATION
+#ifndef _GL
 			      DefClip (frame, pSelBox->BxXOrg, topY,
 				       pSelBox->BxXOrg + pSelBox->BxWidth, bottomY);
-#else /* _GLTRANSFORMATION */
+#else /* _GL */
 			      DefRegion (frame, pSelBox->BxClipX, topY,
 				       pSelBox->BxClipX + pSelBox->BxClipWidth, bottomY);
-#endif /* _GLTRANSFORMATION */
+#endif /* _GL */
 			      /* split the current box */
 			      pBox = SplitForScript (pSelBox, pAb, pSelBox->BxScript,
 						     previousChars,
@@ -3104,15 +3104,15 @@ void InsertChar (int frame, CHAR_T c, int keyboard)
 				  toSplit = TRUE;
 				  xDelta = 0;
 				}
-#ifndef _GLTRANSFORMATION
+#ifndef _GL
 			      DefClip (frame, pSelBox->BxXOrg, pSelBox->BxYOrg,
 				       pSelBox->BxXOrg + pSelBox->BxWidth,
 				       pSelBox->BxYOrg + pSelBox->BxHeight);
-#else /* _GLTRANSFORMATION */
+#else /* _GL */
 			      DefRegion (frame, pSelBox->BxClipX, pSelBox->BxClipY,
 				       pSelBox->BxClipX + pSelBox->BxClipW,
 				       pSelBox->BxClipY + pSelBox->BxClipH);
-#endif /* _GLTRANSFORMATION */
+#endif /* _GL */
 			      
 			      /* Prepare la mise a jour de la boite */
 			      xDelta -= pSelBox->BxWidth;

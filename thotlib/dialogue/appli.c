@@ -2287,15 +2287,15 @@ gboolean GtkLiningSelection (gpointer data)
       /* generate a scroll if necessary */
       if (Motion_y > FrameTable[frame].FrHeight)
 	{
-#ifndef _GLTRANSFORMATION
+#ifndef _GL
 	  if (pFrame->FrAbstractBox &&
 	      pFrame->FrAbstractBox->AbBox &&
 	      pFrame->FrYOrg + FrameTable[frame].FrHeight < pFrame->FrAbstractBox->AbBox->BxHeight)
-#else /* _GLTRANSFORMATION */
+#else /* _GL */
 	    if (pFrame->FrAbstractBox &&
 		pFrame->FrAbstractBox->AbBox &&
 		pFrame->FrYOrg + FrameTable[frame].FrHeight < pFrame->FrAbstractBox->AbBox->BxClipH)
-#endif /* _GLTRANSFORMATION */
+#endif /* _GL */
 	      TtcLineDown (doc, view);
 	    else
 	      {

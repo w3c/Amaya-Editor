@@ -1639,7 +1639,7 @@ static void wrtext (char *Text, FILE *fileDescriptor)
    fprintf (fileDescriptor, "%s", Text);
 }
 
-#ifdef _GLTRANSFORMATION
+#ifdef _GL
 
 static void PrintTransformation(PtrTransform Trans,  FILE *fileDescriptor)
 {
@@ -1700,7 +1700,7 @@ static void PrintTransformation(PtrTransform Trans,  FILE *fileDescriptor)
       Trans = Trans->Next;
     }  
 }
-#endif /* _GLTRANSFORMATION */ 
+#endif /* _GL */ 
 
 /*----------------------------------------------------------------------
    ListBoxTree
@@ -1755,7 +1755,7 @@ static void ListBoxTree (PtrAbstractBox pAb, int Indent, FILE *fileDescriptor)
 	     else
 		wrnumber (pBox->BxYOrg, fileDescriptor);
 
-#ifdef _GLTRANSFORMATION 
+#ifdef _GL 
 	     fprintf (fileDescriptor, " ClipX:");
 	     wrnumber (pBox->BxClipX, fileDescriptor);
 	     fprintf (fileDescriptor, " ClipY:");
@@ -1776,7 +1776,7 @@ static void ListBoxTree (PtrAbstractBox pAb, int Indent, FILE *fileDescriptor)
                  PrintTransformation (pAb->AbElement->ElTransform ,fileDescriptor);
 	       }
 	     
-#endif /* _GLTRANSFORMATION */
+#endif /* _GL */
 #ifdef _GL
 	     if (pAb->AbElement->gradient)
 	       fprintf (fileDescriptor, " Holding Gradient");

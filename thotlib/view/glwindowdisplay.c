@@ -599,9 +599,6 @@ static int x_previous_clip = 0;
 static int y_previous_clip = 0;
 static int width_previous_clip = 0;
 static int height_previous_clip = 0;
-
-
-
 /*----------------------------------------------------------------------
   GL_DestroyFrame :
   Close Opengl pipeline
@@ -1315,7 +1312,7 @@ ThotBool IsTransformed (void *v_trans)
   return FALSE;
 }
 
-#ifdef _GLTRANSFORMATION
+#ifdef _GL
 /*---------------------------------------------------
   DisplayBoxTransformation :
   ----------------------------------------------------*/
@@ -1375,7 +1372,7 @@ static void DisplayViewBoxTransformation (PtrTransform Trans, int Width, int Hei
   if (is_translated)
     glTranslatef (-x_trans, -y_trans, (float) 0.0f);
 }
-#endif /* _GLTRANSFORMATION */
+#endif /* _GL */
 /*---------------------------------------------------
   DisplayTransformation :
   Modify the current transformation matrix
@@ -1390,7 +1387,7 @@ static void DisplayViewBoxTransformation (PtrTransform Trans, int Width, int Hei
   ----------------------------------------------------*/
 void DisplayTransformation (PtrTransform Trans, int Width, int Height)
 {
-#ifdef _GLTRANSFORMATION
+#ifdef _GL
   double trans_matrix[16];
     
   if (IsTransformed (Trans))
@@ -1501,16 +1498,16 @@ void DisplayTransformation (PtrTransform Trans, int Width, int Height)
 	  Trans = Trans->Next;
 	}
     }
-#endif /* _GLTRANSFORMATION */
+#endif /* _GL */
 }
 /*---------------------------------------------------
   DisplayTransformationExit :
   ----------------------------------------------------*/
 void DisplayTransformationExit ()
 {
-#ifdef _GLTRANSFORMATION
+#ifdef _GL
   glPopMatrix ();
-#endif /* _GLTRANSFORMATION */
+#endif /* _GL */
 }
 /*-------------------------------
  print2DVertex: Write contents of one vertex to stdout
@@ -1809,7 +1806,6 @@ void GL_ActivateDrawing(int frame)
 #define FPS_INTERVAL 0.030 /* FPS_INTERVAL*/
 #define FRAME_TIME 25 /* milliseconds */
 
-#define IDT_ANIMATION 1
 
 /*----------------------------------------------------------------------
   TtaPlay : Activate Animation
@@ -1817,7 +1813,6 @@ void GL_ActivateDrawing(int frame)
 void TtaPlay (Document doc, View view)
 {
  int frame;
-
  
  for (frame = 0; frame <= MAX_FRAME; frame++)
    if (FrameTable[frame].Animated_Boxes)
@@ -1843,19 +1838,19 @@ void TtaPlay (Document doc, View view)
 #ifdef _WINDOWS
        if (FrameTable[frame].Anim_play)
 	 {
-		 SetTimer(FrMainRef[frame],                
-					IDT_ANIMATION,               
-					FRAME_TIME,                     
-					(TIMERPROC) MyTimerProc); 
+	   SetTimer(FrMainRef[frame],                
+		    frame,               
+		    FRAME_TIME,                     
+		    (TIMERPROC) MyTimerProc); 
 
-	   FrameTable[frame].Timer = IDT_ANIMATION; 	      
+	   FrameTable[frame].Timer = frame; 	      
 	   FrameTable[frame].BeginTime = 0;
 	   FrameTable[frame].LastTime = 0;
 	 }
        else
 	 if (FrameTable[frame].Timer)
 	   {
-	     KillTimer(FrMainRef[frame], IDT_ANIMATION); 
+	     KillTimer(FrMainRef[frame], frame); 
 	     FrameTable[frame].Timer = 0;
 	   }
 #endif /*_WINDOWS*/
@@ -1863,6 +1858,39 @@ void TtaPlay (Document doc, View view)
      }  
 }
 
+/*----------------------------------------------------------------------
+  TtaNoPlay : Deactivate Animation
+  ----------------------------------------------------------------------*/
+void TtaNoPlay (int Frame_par)
+{
+ int frame;
+
+ 
+ for (frame = 0; frame <= MAX_FRAME; frame++)
+   if (FrameTable[frame].Animated_Boxes)
+     {
+       FrameTable[frame].Anim_play = 0;
+#ifdef _GTK
+       if (FrameTable[frame].Timer)
+	 {
+	   gtk_timeout_remove (FrameTable[frame].Timer);
+	   FrameTable[frame].Timer = 0;	      
+	   FrameTable[frame].BeginTime = 0;
+	   FrameTable[frame].LastTime = 0;
+	 }	
+#else /*_GTK*/
+#ifdef _WINDOWS
+       if (FrameTable[frame].Timer)
+	 {
+	   KillTimer(FrMainRef[frame], frame); 
+	   FrameTable[frame].Timer = 0;	      
+	   FrameTable[frame].BeginTime = 0;
+	   FrameTable[frame].LastTime = 0;
+	 }
+#endif /*_WINDOWS*/
+#endif /*_GTK*/
+     }  
+}
 #ifdef NOtENOUGHTIMEPRECIsION
 /*if get tick count gets is more than 50 ms precise...*/
 			  {
@@ -1898,14 +1926,14 @@ void TtaPlay (Document doc, View view)
 ThotBool GL_DrawAll ()
 {  
   int frame;
-#ifdef _GLANIM
+#ifdef _GL
 #ifdef _GTK
   /* draw and calculate draw time 
      bench that helps finding bottlenecks...*/
   struct timeb	after;
 #endif /*_GTK*/
   AnimTime current_time; 
-#endif /* _GLANIM */
+#endif /* _GL */
   static ThotBool frame_animating = FALSE;  
   
   if (!FrameUpdating )
@@ -1921,22 +1949,19 @@ ThotBool GL_DrawAll ()
 	    {
 	      if (FrRef[frame] != 0)
 		{
-#ifdef _GLANIM
+#ifdef _GL
 		  if (FrameTable[frame].Anim_play &&
 		      FrameTable[frame].Animated_Boxes)
 		    {		      
 #ifdef _GTK
-
 		      while (gtk_events_pending ())
-			gtk_main_iteration ();     
-
+			gtk_main_iteration ();
 		      ftime (&after);
 		      current_time = after.time + (((double)after.millitm)/1000);
-		      
 		      if (FrameTable[frame].BeginTime == 0)
 			FrameTable[frame].BeginTime = current_time;
 		      current_time -= FrameTable[frame].BeginTime;   
-#else
+#else /* _GTK */
 #ifdef _WINDOWS
 			  current_time = ((double) GetTickCount ()) / 1000; 
 		      /*current_time = after.time + (((double)after.millitm)/1000);*/
@@ -1953,7 +1978,7 @@ ThotBool GL_DrawAll ()
 			  FrameTable[frame].LastTime = current_time;
 			}	
 		    }
-#endif /* _GLANIM */		    
+#endif /* _GL */		    
 		  if (FrameTable[frame].DblBuffNeedSwap)
 		    {
 		      if (documentDisplayMode[FrameTable[frame].FrDoc - 1] 

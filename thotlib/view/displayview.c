@@ -74,9 +74,10 @@
 #include "undo_f.h"
 #include "views_f.h"
 
-#ifdef _GLANIM
+#ifdef _GL
 #include "animbox_f.h"
-#endif /* _GLANIM */
+#include "content.h"
+#endif /* _GL */
 
 /* descriptor of the selection to do after redosplaying */
 typedef struct _SelectionDescriptor
@@ -496,13 +497,14 @@ static void CleanImageView (int View, PtrDocument pDoc, ThotBool complete)
 	SetDeadAbsBox (pAbbRoot);
 	ChangeConcreteImage (frame, &h, pAbbRoot);
 	CloseDocumentView (pDoc, View, TRUE);
-#ifdef _GLANIM
+#ifdef _GL
+	TtaNoPlay (frame);
 	if (FrameTable[frame].Animated_Boxes)
 	  {	    
 	    FreeAnimatedBox (FrameTable[frame].Animated_Boxes);
 	    FrameTable[frame].Animated_Boxes = NULL;
 	  }	
-#endif /* _GLANIM */
+#endif /* _GL */
 	FrameTable[frame].FrDoc = 0;
 	/* selection is no more displayed */
 	ViewFrameTable[frame - 1].FrSelectShown = FALSE;

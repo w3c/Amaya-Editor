@@ -1560,13 +1560,13 @@ void TtaGiveSelectPosition (Document document, Element element, View view,
 	       {
 		  while (pAb->AbPresentationBox && pAb->AbNext != NULL)
 		     pAb = pAb->AbNext;
-#ifndef _GLTRANSFORMATION
+#ifndef _GL
 		  *X = ClickX + pFrame->FrXOrg - pAb->AbBox->BxXOrg;
 		  *Y = ClickY + pFrame->FrYOrg - pAb->AbBox->BxYOrg;
-#else /* _GLTRANSFORMATION */
+#else /* _GL */
 		  *X = ClickX - pAb->AbBox->BxClipX;
 		  *Y = ClickY - pAb->AbBox->BxClipY;
-#endif /* _GLTRANSFORMATION */
+#endif /* _GL */
 	       }
 	  }
      }

@@ -2097,7 +2097,7 @@ void ParseviewBoxAttribute (Attribute attr, Element el, Document doc,
        TtaFreeMemory (text);
      }
 }
-#ifdef _GLTRANSFORMATION
+#ifdef _GL
 /*----------------------------------------------------------------------
    ParseTransformAttribute
    Parse the value of a transform attribute
@@ -2345,7 +2345,7 @@ void ParseTransformAttribute (Attribute attr, Element el, Document doc,
        TtaFreeMemory (text);
      }
 }
-#else /* _GLTRANSFORMATION */
+#else /* _GL */
 void ParseTransformAttribute (Attribute attr, Element el, Document doc,
 			      ThotBool delete)
 {
@@ -2624,7 +2624,7 @@ void ParseTransformAttribute (Attribute attr, Element el, Document doc,
      }
 }
 
-#endif /* _GLTRANSFORMATION */
+#endif /* _GL */
 /*----------------------------------------------------------------------
    ParsePathDataAttribute
    Parse the value of a path data attribute
