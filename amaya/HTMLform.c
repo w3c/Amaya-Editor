@@ -78,11 +78,40 @@ boolean DeleteText (event)
      NotifyElement *event;
 #endif /* __STDC__*/
 {
+  ElementType         elType;
   Element             parent;
+  boolean             done;
 
   parent = TtaGetParent (event->element);
-  TtaDeleteTree (parent, event->document);
-  return TRUE;                /* don't let Thot perform normal operation */
+  /* let Thot perform normal operation */
+  done = FALSE;
+  if (parent != NULL)
+    {
+      elType = TtaGetElementType (parent);
+      if (elType.ElTypeNum == HTML_EL_Text_Input
+	  || elType.ElTypeNum == HTML_EL_Text_Area)
+	{
+	  TtaDeleteTree (parent, event->document);
+	  /* don't let Thot perform normal operation */
+	  done = FALSE;
+	}
+      else
+	{
+	  parent = TtaGetParent (parent);
+	  if (parent != NULL)
+	    {
+	      elType = TtaGetElementType (parent);
+	      if (elType.ElTypeNum == HTML_EL_Text_Input
+		  || elType.ElTypeNum == HTML_EL_Text_Area)
+		{
+		  TtaDeleteTree (parent, event->document);
+		  /* don't let Thot perform normal operation */
+		  done = FALSE;
+		}
+	    }
+	}
+    }
+  return (done);
 }
 
 /*----------------------------------------------------------------------

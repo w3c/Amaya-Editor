@@ -30,6 +30,11 @@ ELEMENTS
       	ElemGraphModify.Post -> GraphicsModified;
       	END;
 
+   TEXT_UNIT:
+	BEGIN
+	ElemDelete.Pre -> DeleteText;
+	END;
+
    Text_Input:
 	BEGIN
 	ElemTextModify.Pre -> SaveDocumentStatus;
@@ -49,11 +54,6 @@ ELEMENTS
 	ElemTextModify.Pre -> SaveDocumentStatus;
 	ElemTextModify.Post -> RestoreDocumentStatus;
 	ElemSelect.Pre -> SelectIncludedText;
-	END;
-
-   Text_With_Frame:
-	BEGIN
-	ElemDelete.Pre -> DeleteText;
 	END;
 
    TITLE:

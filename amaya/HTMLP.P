@@ -5133,8 +5133,10 @@ RULES
 	CreateBefore(Text_Space);
 	LineBreak: No;
 	Visibility: 1;
-	In Structure_view
+	In Structure_view BEGIN
 		Visibility: Enclosing =;
+		Height: DOC_FONTSIZE;
+		END;
 	END;
 
  Radio_Input: BEGIN
@@ -5143,8 +5145,10 @@ RULES
 	CreateBefore(Text_Space);
 	LineBreak: No;
 	Visibility: 1;
-	In Structure_view
+	In Structure_view BEGIN
 		Visibility: Enclosing =;
+		Height: DOC_FONTSIZE;
+		END;
 	END;
 
  Text_Input: BEGIN
@@ -5213,6 +5217,7 @@ RULES
 	IN Structure_view BEGIN
 		Visibility: 1;
 		Width: 1 pt;
+		Height: DOC_FONTSIZE;
 		END;
 	END;
 
@@ -5233,6 +5238,7 @@ RULES
 	IN Structure_view BEGIN
 		Visibility: 1;
 		Width: 1 pt;
+		Height: DOC_FONTSIZE;
 		END;
 	END;
 

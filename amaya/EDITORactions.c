@@ -1295,16 +1295,22 @@ View                view;
    el = InsertForm (doc, view, &withinP);
    if (el != NULL)
      {
-       /* the element can be created */
-       el = GetEnclosingForm (doc, view);
-       elType.ElSSchema = TtaGetDocumentSSchema (doc);
-       if (strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)
+       elType = TtaGetElementType (el);
+       if (elType.ElTypeNum == HTML_EL_TEXT_UNIT)
 	 {
-	   elType.ElTypeNum = HTML_EL_Option;
-	   TtaInsertElement (elType, doc);
-	   TtaGiveFirstSelectedElement (doc, &el, &firstchar, &lastchar);
-	   OnlyOneOptionSelected (el, doc, FALSE);
+	   el = TtaGetParent (el);
+	   elType = TtaGetElementType (el);
 	 }
+       /*el = GetEnclosingForm (doc, view);*/
+       if (elType.ElTypeNum != HTML_EL_Option)
+	 {
+	   elType.ElTypeNum = HTML_EL_Option_Menu;
+	   TtaInsertElement (elType, doc);
+ 	 }
+       elType.ElTypeNum = HTML_EL_Option;
+       TtaInsertElement (elType, doc);
+       TtaGiveFirstSelectedElement (doc, &el, &firstchar, &lastchar);
+       OnlyOneOptionSelected (el, doc, FALSE);
      }
 }
 

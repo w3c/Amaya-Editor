@@ -245,7 +245,8 @@ STRUCT
   Option (ATTR Selected = Yes_; DefaultSelected = Yes_; !Value_ = Text) =
 	TEXT;
 
-  Toggle_Menu = LIST OF (Toggle_Item) - (Text_Input_Line, Command_Line, Toggle_Menu, Radio_Menu);
+  Toggle_Menu = LIST OF (Toggle_Item)
+	- (Text_Input_Line, Command_Line, Toggle_Menu, Radio_Menu);
   Toggle_Item = BEGIN
 	Basic_Set;
 	Checkbox_Input (ATTR !NAME; 
@@ -255,7 +256,8 @@ STRUCT
 	Basic_Set;
 	END;
 
-  Radio_Menu (ATTR !NAME) = LIST OF (Radio_Item) - (Text_Input_Line, Command_Line, Toggle_Menu, Radio_Menu);
+  Radio_Menu (ATTR !NAME) = LIST OF (Radio_Item)
+	- (Text_Input_Line, Command_Line, Toggle_Menu, Radio_Menu);
   Radio_Item = BEGIN
 	Basic_Set;
 	Radio_Input (ATTR !NAME; Checked; DefaultChecked; !Value_) =
@@ -289,6 +291,8 @@ STRUCT
 	File_Input (ATTR !NAME) = CONSTANT C_Empty;
 	Reset_Input;
 	Submit_Input;
+	Option_Menu;
+	Text_Area;
 	END;
 
   Text_With_Frame = BEGIN
