@@ -85,6 +85,7 @@ extern ThotBool     PrintURL;
 extern ThotBool     IgnoreCSS;
 
 static CHAR_T       urlToOpen [MAX_LENGTH];
+static CHAR_T       HrefUrl [MAX_LENGTH];
 static CHAR_T       tmpDocName [MAX_LENGTH];
 static CHAR_T       altText [MAX_LENGTH];
 static CHAR_T       message [300];
@@ -520,7 +521,95 @@ LPARAM lParam;
     }
   return FALSE;
 }
+
+/*-----------------------------------------------------------------------
+ HRefDlgProc
+ ------------------------------------------------------------------------*/
+#ifdef __STDC__
+LRESULT CALLBACK HRefDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam, LPARAM lParam)
+#else  /* !__STDC__ */
+LRESULT CALLBACK HRefDlgProc (hwnDlg, msg, wParam, lParam)
+ThotWindow   hwndParent;
+UINT   msg;
+WPARAM wParam;
+LPARAM lParam;
+#endif /* __STDC__ */
+{
+  switch (msg)
+    {
+    case WM_INITDIALOG:
+      SetWindowText (hwnDlg, TtaGetMessage (AMAYA, AM_ATTRIBUTE));
+      SetWindowText (GetDlgItem (hwnDlg, IDC_URLMESSAGE), TtaGetMessage (AMAYA, AM_LOCATION));
+      SetWindowText (GetDlgItem (hwnDlg, ID_CONFIRM), TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
+      SetWindowText (GetDlgItem (hwnDlg, IDC_BROWSE), TEXT("Browse"));
+      SetWindowText (GetDlgItem (hwnDlg, IDCANCEL), TtaGetMessage (LIB, TMSG_CANCEL));
+
+      EditURLWnd = GetDlgItem (hwnDlg, IDC_GETURL);
+      SetDlgItemText (hwnDlg, IDC_GETURL, tmpDocName);
+      HrefUrl [0] = 0;
+      break;
+
+    case WM_COMMAND:
+      if (HIWORD (wParam) == EN_UPDATE)
+	{
+	  if (LOWORD (wParam) == IDC_GETURL)
+	    {
+	      GetDlgItemText (hwnDlg, IDC_GETURL, HrefUrl, sizeof (HrefUrl) - 1);
+	      if (HrefUrl[0] != 0)
+		ThotCallback (BaseDialog + AttrHREFText, STRING_DATA, HrefUrl);
+	    }
+	}
+
+    switch (LOWORD (wParam))
+      {
+      case ID_CONFIRM:
+	ThotCallback (BaseDialog + AttrHREFForm, INTEGER_DATA, (CHAR_T*)1);
+	EndDialog (hwnDlg, ID_CONFIRM);
+	break;
+
+      case IDC_BROWSE:
+	OpenFileName.lStructSize       = sizeof (OPENFILENAME);
+	OpenFileName.hwndOwner         = hwnDlg;
+	OpenFileName.hInstance         = hInstance;
+	OpenFileName.lpstrFilter       = (LPTSTR) szFilter;
+	OpenFileName.lpstrCustomFilter = (LPTSTR) NULL;
+	OpenFileName.nMaxCustFilter    = 0L;
+	OpenFileName.nFilterIndex      = 1L;
+	OpenFileName.lpstrFile         = (LPTSTR) szFileName;
+	OpenFileName.nMaxFile          = 256;
+	OpenFileName.lpstrInitialDir   = NULL;
+	OpenFileName.lpstrTitle        = TEXT ("Select");
+	OpenFileName.nFileOffset       = 0;
+	OpenFileName.nFileExtension    = 0;
+	OpenFileName.lpstrDefExt       = TEXT ("html");
+	OpenFileName.lCustData         = 0;
+	OpenFileName.Flags             = OFN_SHOWHELP | OFN_HIDEREADONLY;
 	
+	if (GetOpenFileName (&OpenFileName))
+	  ustrcpy (HrefUrl, OpenFileName.lpstrFile);
+      
+	SetDlgItemText (hwnDlg, IDC_GETURL, HrefUrl);
+	if (HrefUrl[0] != 0)
+	  {
+	    ThotCallback (BaseDialog + AttrHREFText, STRING_DATA, HrefUrl);
+	    EndDialog (hwnDlg, ID_CONFIRM);
+	    ThotCallback (BaseDialog + AttrHREFForm, INTEGER_DATA, (CHAR_T*) 1);
+	  }
+	break;
+      
+      case IDCANCEL:
+	ThotCallback (BaseDialog + AttrHREFForm, INTEGER_DATA, (CHAR_T*) 0);
+	HrefUrl [0] = 0;
+	EndDialog (hwnDlg, IDCANCEL);
+	break;      
+      }
+    break;
+    default:
+      return FALSE;
+    } 
+  return TRUE;
+}
+		
 /*-----------------------------------------------------------------------
  HelpDlgProc
  ------------------------------------------------------------------------*/
@@ -1973,7 +2062,6 @@ LPARAM lParam;
       case IDC_UNDERLINE:
 	ThotCallback (NumMenuUnderlineType, INTEGER_DATA, (CHAR_T*) 1);
 	break;
-      case IDC_OVERLINE:
 	ThotCallback (NumMenuUnderlineType, INTEGER_DATA, (CHAR_T*) 2);
 	break;
       case IDC_CROSSOUT:
@@ -3527,23 +3615,32 @@ STRING     title;
   DialogBox (hInstance, MAKEINTRESOURCE (LINKDIALOG), parent, (DLGPROC) TextDlgProc);
 }
 
-
 /*-----------------------------------------------------------------------
- CreateTextDlgWindow
+ CreateHRefDlgWindow
  ------------------------------------------------------------------------*/
 #ifdef __STDC__
-void       CreateTextDlgWindow (ThotWindow parent, STRING attrHref)
+void   CreateHRefDlgWindow (ThotWindow parent, STRING HRefValue, int doc_select, int dir_select, int doc_type)
 #else  /* !__STDC__ */
-void       CreateTextDlgWindow (parent, attrHref)
-ThotWindow parent;
-STRING     attrHref;
+void   CreateHReflgWindow (parent, HRefValue, doc_select, dir_select, doc_type)
+ThotWindow   parent;
+STRING HRefValue;
+int    doc_select;
+int    dir_select;
+int    doc_type;
 #endif /* __STDC__ */
-{  
-  ustrcpy (urlToOpen, attrHref);
-  ReleaseFocus = FALSE;
-  isHref = TRUE;
-  text[0] = 0;
-  DialogBox (hInstance, MAKEINTRESOURCE (LINKDIALOG), parent, (DLGPROC) TextDlgProc);
+{  	
+  docSelect = doc_select;
+  dirSelect = dir_select;
+  ustrcpy (tmpDocName, HRefValue);
+    
+  if (doc_type == TEXT_FILE)
+    szFilter = APPFILENAMEFILTER;
+  else if (doc_type == IMG_FILE)
+    szFilter = APPIMAGENAMEFILTER;
+  else 
+    szFilter = APPALLFILESFILTER;
+
+  DialogBox (hInstance, MAKEINTRESOURCE (OPENDOCDIALOG), parent, (DLGPROC) HRefDlgProc);
 }
 
 /*-----------------------------------------------------------------------

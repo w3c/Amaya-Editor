@@ -492,7 +492,7 @@ ThotBool	    withUndo;
    STRING              buffer = NULL;
    int                 length;
    ThotBool            isHTML;
-   CHAR_T              bufMenu[MAX_LENGTH];
+   CHAR_T              s[MAX_LENGTH];
    int                 i;
 
    /* ask the user to select target document and target anchor */
@@ -572,14 +572,14 @@ ThotBool	    withUndo;
 #ifndef _WINDOWS
 	/* Dialogue form for open URL or local */
 	i = 0;
-	ustrcpy (&bufMenu[i], TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
-	i += ustrlen (&bufMenu[i]) + 1;
-	ustrcpy (&bufMenu[i], TtaGetMessage (AMAYA, AM_CLEAR));
-	i += ustrlen (&bufMenu[i]) + 1;
-	ustrcpy (&bufMenu[i], TtaGetMessage (AMAYA, AM_PARSE));
+	ustrcpy (&s[i], TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
+	i += ustrlen (&s[i]) + 1;
+	ustrcpy (&s[i], TtaGetMessage (AMAYA, AM_CLEAR));
+	i += ustrlen (&s[i]) + 1;
+	ustrcpy (&s[i], TtaGetMessage (AMAYA, AM_PARSE));
 	
 	TtaNewSheet (BaseDialog + AttrHREFForm, TtaGetViewFrame (doc, 1),
-		     TtaGetMessage (AMAYA, AM_ATTRIBUTE), 3, bufMenu,
+		     TtaGetMessage (AMAYA, AM_ATTRIBUTE), 3, s,
 		     TRUE, 2, 'L', D_CANCEL);
 	TtaNewTextForm (BaseDialog + AttrHREFText, BaseDialog + AttrHREFForm,
 			TtaGetMessage (AMAYA, AM_LOCATION), 50, 1, TRUE);
@@ -606,20 +606,12 @@ ThotBool	    withUndo;
 	TtaSetTextForm (BaseDialog + HREFFilterText, ScanFilter);
 	TtaSetDialoguePosition ();
 	TtaShowDialogue (BaseDialog + AttrHREFForm, FALSE);
-
-	/* Old attribute form */
-	/*
-	TtaNewForm (BaseDialog + AttrHREFForm, TtaGetViewFrame (doc, 1),
-		    TtaGetMessage (AMAYA, AM_ATTRIBUTE), TRUE, 2, 'L',
-		    D_CANCEL);
-	TtaNewTextForm (BaseDialog + AttrHREFText, BaseDialog + AttrHREFForm,
-			TtaGetMessage (AMAYA, AM_HREF_VALUE), 50, 1, FALSE);
-	TtaSetTextForm (BaseDialog + AttrHREFText, AttrHREFvalue);
-	TtaSetDialoguePosition ();
-	TtaShowDialogue (BaseDialog + AttrHREFForm, FALSE);
-	*/
 #else  /* _WINDOWS */
-	CreateTextDlgWindow (currentWindow, AttrHREFvalue);
+    if (AttrHREFvalue[0] != WC_EOS)
+       usprintf (s, TEXT("%s"), AttrHREFvalue);
+    else
+      usprintf (s, TEXT("%s%c%s"), DirectoryName, DIR_SEP, DocumentName);
+    CreateHRefDlgWindow (currentWindow, s, DocSelect, DirSelect, 2);
 #endif  /* _WINDOWS */
      }
 }
