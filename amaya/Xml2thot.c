@@ -3959,8 +3959,8 @@ ThotBool       ParseXmlSubTree (char     *xmlBuffer,
       svgEl = ChangeSvgImageType (el, doc);
       if (svgEl == NULL)
 	return FALSE;
-      ChangeXmlParserContextDTD ("GraphML");
       InitializeXmlParsingContext (doc, svgEl, isclosed, TRUE);
+      ChangeXmlParserContextDTD ("GraphML");
       /* When we parse an external xml file, we don't consider comments and PI */
       IgnoreCommentAndPi = TRUE;
     }
@@ -3974,8 +3974,8 @@ ThotBool       ParseXmlSubTree (char     *xmlBuffer,
       else
 	elType = TtaGetElementType (el);
       schemaName = TtaGetSSchemaName(elType.ElSSchema);
-      ChangeXmlParserContextDTD (schemaName);
       InitializeXmlParsingContext (doc, el, isclosed, TRUE);
+      ChangeXmlParserContextDTD (schemaName);
     }
 
   /* specific Initialization */
