@@ -1,6 +1,6 @@
 	{ Presentation Schema for XLink.
 
-	  V. Quint		June 2000	}
+	  V. Quint		June 2000 }
 
 
 PRESENTATION XLink;
@@ -56,7 +56,7 @@ DEFAULT
 BOXES
 
   ATTR_type_simple: BEGIN
-        Content: Text ' type=simple';
+        Content: Text ' xlink:type=simple';
         Visibility: 0;
         IN Structure_view BEGIN
                 HorizPos: Left = Previous . Right;
@@ -67,7 +67,7 @@ BOXES
                 END;
 	END;
   ATTR_type_extended: BEGIN
-        Content: Text ' type=extended';
+        Content: Text ' xlink:type=extended';
         Visibility: 0;
         IN Structure_view BEGIN
                 HorizPos: Left = Previous . Right;
@@ -78,7 +78,7 @@ BOXES
                 END;
 	END;
   ATTR_type_locator: BEGIN
-        Content: Text ' type=locator';
+        Content: Text ' xlink:type=locator';
         Visibility: 0;
         IN Structure_view BEGIN
                 HorizPos: Left = Previous . Right;
@@ -89,7 +89,7 @@ BOXES
                 END;
 	END;
   ATTR_type_arc: BEGIN
-        Content: Text ' type=arc';
+        Content: Text ' xlink:type=arc';
         Visibility: 0;
         IN Structure_view BEGIN
                 HorizPos: Left = Previous . Right;
@@ -100,7 +100,7 @@ BOXES
                 END;
 	END;
   ATTR_type_resource: BEGIN
-        Content: Text ' type=resource';
+        Content: Text ' xlink:type=resource';
         Visibility: 0;
         IN Structure_view BEGIN
                 HorizPos: Left = Previous . Right;
@@ -111,7 +111,7 @@ BOXES
                 END;
 	END;
   ATTR_type_title: BEGIN
-        Content: Text ' type=title';
+        Content: Text ' xlink:type=title';
         Visibility: 0;
         IN Structure_view BEGIN
                 HorizPos: Left = Previous . Right;
@@ -122,7 +122,7 @@ BOXES
                 END;
 	END;
   ATTR_type_none: BEGIN
-        Content: Text ' type=none';
+        Content: Text ' xlink:type=none';
         Visibility: 0;
         IN Structure_view BEGIN
                 HorizPos: Left = Previous . Right;
@@ -134,7 +134,7 @@ BOXES
 	END;
 
   ATTR_href: BEGIN
-        Content: Text ' href=';
+        Content: Text ' xlink:href=';
         Visibility: 0;
         IN Structure_view BEGIN
                 HorizPos: Left = Previous . Right;

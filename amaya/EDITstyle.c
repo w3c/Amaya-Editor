@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT MIT and INRIA, 1996.
+ *  (c) COPYRIGHT MIT and INRIA, 1996-2000
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -230,9 +230,10 @@ NotifyAttribute    *event;
 
    /*  A rule applying to BODY is really meant to address HTML */
    elType = TtaGetElementType (event->element);
-   isHTML = (ustrcmp (TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")) == 0);
+   isHTML = (ustrcmp (TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")) ==0);
    if (elType.ElTypeNum == HTML_EL_BODY && isHTML)
-     TtaCleanStylePresentation (TtaGetParent (event->element), NULL, event->document);
+     TtaCleanStylePresentation (TtaGetParent (event->element), NULL,
+				event->document);
   TtaCleanStylePresentation (event->element, NULL, event->document);
   return FALSE;  /* let Thot perform normal operation */
 }
@@ -308,7 +309,8 @@ NotifyAttribute    *event;
 	    braces++;
 	  if (i > 0 &&
 	      (OldBuffer[i-1] == TEXT('}') ||
-           ((OldBuffer[i-1] == TEXT(';') || OldBuffer[i-1] == TEXT('>')) && braces == 0)))
+	       ((OldBuffer[i-1] == TEXT(';') || OldBuffer[i-1] == TEXT('>')) &&
+		braces == 0)))
 	    {
 	      if (OldBuffer[i-1] == TEXT('}'))
 		braces--;
@@ -367,7 +369,8 @@ NotifyAttribute    *event;
 			url1 = GetCSSBackgroundURL (ptr1);
 			if (url1 != NUL)
 			{
-			sprintf (path, "%s%s%d%s", TempFileDirectory, DIR_STR, event->document, DIR_STR, url1);
+			sprintf (path, "%s%s%d%s", TempFileDirectory, DIR_STR,
+			         event->document, DIR_STR, url1);
 			pImage = SearchLoadedImage (path, event->document);
 			
 			}
@@ -426,7 +429,7 @@ NotifyAttribute    *event;
    el = event->element;
    doc = event->document;
 
-   /* First remove all the presentation specific rules applied to the element. */
+   /* First remove all presentation specific rules applied to the element. */
    UpdateStyleDelete (event);
 
    len = TtaGetTextAttributeLength (event->attribute);
@@ -796,7 +799,8 @@ int        *len;
 	  if (*len > 0)
 	    ustrcat(buf, TEXT(";"));
 	  *len = ustrlen (buf);
-	  TtaApplyAllSpecificSettings (el, doc, SpecificSettingsToCSS, &buf[*len]);
+	  TtaApplyAllSpecificSettings (el, doc, SpecificSettingsToCSS,
+				       &buf[*len]);
 	  *len = ustrlen (buf);
 	}
       else if (elType.ElTypeNum == HTML_EL_BODY)
@@ -807,7 +811,8 @@ int        *len;
 	  if (*len > 0)
 	    ustrcat(buf, TEXT(";"));
 	  *len = ustrlen (buf);
-	  TtaApplyAllSpecificSettings (el, doc, SpecificSettingsToCSS, &buf[*len]);
+	  TtaApplyAllSpecificSettings (el, doc, SpecificSettingsToCSS,
+				       &buf[*len]);
 	  *len = ustrlen (buf);
 	}
     }
@@ -1218,6 +1223,9 @@ STRING              first;
         }
      }
 #endif
+  /* look for all class names that are used in the STYLE element and in
+     all style sheets currently associated with the document */
+  /*** TODO ***/
   return (nb);
 }
 	    
@@ -1317,16 +1325,16 @@ View                view;
 	{
 	  len = 50;
 	  TtaGiveTextAttributeValue (attr, a_class, &len);
-#     ifndef _WINDOWS
+#ifndef _WINDOWS
 	  TtaSetSelector (BaseDialog + ClassSelect, -1, a_class);
-#     endif /* _WINDOWS */
+#endif /* _WINDOWS */
 	  ustrcpy (CurrentClass, a_class);
 	}
       else
 	{
-#     ifndef _WINDOWS
+#ifndef _WINDOWS
 	  TtaSetSelector (BaseDialog + ClassSelect, 0, NULL);
-#     endif /* _WINDOWS */
+#endif /* _WINDOWS */
 	  ustrcpy (CurrentClass, elHtmlName);
 	}
   
@@ -1371,18 +1379,18 @@ View                view;
   ApplyClassDoc = doc;
 
   /* updating the class name selector. */
-#  ifndef _WINDOWS
+#ifndef _WINDOWS
    ustrcpy (bufMenu, TtaGetMessage (LIB, TMSG_APPLY));
    TtaNewSheet (BaseDialog + AClassForm, TtaGetViewFrame (doc, 1), 
 		TtaGetMessage (AMAYA, AM_APPLY_CLASS), 1,
 		bufMenu, FALSE, 2, 'L', D_DONE);
-#  endif /* !_WINDOWS */
+#endif /* !_WINDOWS */
   NbClass = BuildClassList (doc, ListBuffer, MAX_CSS_LENGTH, TEXT("default"));
-#  ifndef _WINDOWS
+#ifndef _WINDOWS
   TtaNewSelector (BaseDialog + AClassSelect, BaseDialog + AClassForm,
 		  TtaGetMessage (AMAYA, AM_SEL_CLASS),
 		  NbClass, ListBuffer, 5, NULL, FALSE, TRUE);
-#  endif /* !_WINDOWS */
+#endif /* !_WINDOWS */
 
   /* preselect the entry corresponding to the class of the first selected
      element. */
@@ -1411,25 +1419,25 @@ View                view;
     {
       len = 50;
       TtaGiveTextAttributeValue (attr, a_class, &len);
-#     ifndef _WINDOWS
+#ifndef _WINDOWS
       TtaSetSelector (BaseDialog + AClassSelect, -1, a_class);
-#     endif /* !_WINDOWS */
+#endif /* !_WINDOWS */
       ustrcpy (CurrentClass, a_class);
     }
   else
     {
-#     ifndef _WINDOWS
+#ifndef _WINDOWS
       TtaSetSelector (BaseDialog + AClassSelect, 0, NULL);
-#     endif /* !_WINDOWS */
+#endif /* !_WINDOWS */
       ustrcpy (CurrentClass, TEXT("default"));
     }
 
    /* pop-up the dialogue box. */
-#  ifndef _WINDOWS
+#ifndef _WINDOWS
   TtaShowDialogue (BaseDialog + AClassForm, TRUE);
-#  else  /* _WINDOWS */
+#else  /* _WINDOWS */
   CreateApplyClassDlgWindow (TtaGetViewFrame (doc, 1), NbClass, ListBuffer);
-#  endif /* _WINDOWS */
+#endif /* _WINDOWS */
 }
 
 /*----------------------------------------------------------------------

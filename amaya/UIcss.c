@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT MIT and INRIA, 1996.
+ *  (c) COPYRIGHT MIT and INRIA, 1996-2000
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -75,9 +75,12 @@ CSSInfoPtr      css;
 	{
 	  /* the document is not loaded yet */
 	  /* changed this to doc */
-	  toparse = GetObjectWWW (doc, completeURL, NULL, localfile, AMAYA_SYNC | AMAYA_LOAD_CSS, NULL, NULL, NULL, NULL, NO, NULL);
+	  toparse = GetObjectWWW (doc, completeURL, NULL, localfile,
+				  AMAYA_SYNC | AMAYA_LOAD_CSS, NULL, NULL,
+				  NULL, NULL, NO, NULL);
 	  if (toparse || localfile[0] == EOS || !TtaFileExist (localfile))
-	    TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_CANNOT_LOAD), completeURL);
+	    TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_CANNOT_LOAD),
+			  completeURL);
 	  else
 	    {
 	      /* store a copy of the remote CSS in .amaya/0 */
@@ -369,7 +372,8 @@ STRING              printdir;
 	  el = head;
 	  while (el != NULL)
 	    {
-	      el = TtaSearchTypedElementInTree (elType, SearchForward, head, el);
+	      el = TtaSearchTypedElementInTree (elType, SearchForward,
+						head, el);
 	      if (el)
 		{
 		  if (!file)
@@ -440,7 +444,8 @@ STRING              data;
 	    {
 	    case 1:
 	      /* display the CSS file */
-	      GetHTMLDocument (CSSpath, NULL, 0, 0, CE_ABSOLUTE, FALSE, NULL, NULL);
+	      GetHTMLDocument (CSSpath, NULL, 0, 0, CE_ABSOLUTE, FALSE,
+			       NULL, NULL);
 	      break;
 	    case 2:
 	      /* disable the CSS file, but not remove */
@@ -454,7 +459,8 @@ STRING              data;
 	      if (!ustrcmp (CSSpath, UserCSS))
 		LoadUserStyleSheet (CSSdocument);
 	      else
-		LoadStyleSheet (CSSpath, CSSdocument, NULL, NULL, css->media[CSSdocument]);
+		LoadStyleSheet (CSSpath, CSSdocument, NULL, NULL,
+				css->media[CSSdocument]);
       	      break;
 	    case 4:
 	      /* remove the link to this file */
@@ -545,12 +551,11 @@ STRING              s;
   index = 0;
   nb = 0;
   size = 400;
-#  ifndef _WINDOWS
+#ifndef _WINDOWS
   /* create the form */
-  TtaNewSheet (BaseCSS + CSSForm, TtaGetViewFrame (doc, 1),
-	       s, 1,
+  TtaNewSheet (BaseCSS + CSSForm, TtaGetViewFrame (doc, 1), s, 1,
 	       TtaGetMessage(LIB, TMSG_LIB_CONFIRM), TRUE, 1, 'L', D_DONE);
-#  endif /* !_WINDOWS */
+#endif /* !_WINDOWS */
   select = -1;
   i = 0;
   while (css != NULL)
@@ -606,7 +611,8 @@ STRING              s;
 
   /* display the form */
 #  ifdef _WINDOWS
-  CreateCSSDlgWindow (TtaGetViewFrame (doc, 1), nb, buf, s, TtaGetMessage (AMAYA, AM_NO_CCS_FILE));
+  CreateCSSDlgWindow (TtaGetViewFrame (doc, 1), nb, buf, s,
+		      TtaGetMessage (AMAYA, AM_NO_CCS_FILE));
 #  else  /* !_WINDOWS */
   if (nb > 0)
     TtaNewSelector (BaseCSS + CSSSelect, BaseCSS + CSSForm,
