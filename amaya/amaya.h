@@ -215,7 +215,7 @@ typedef char        AmayaReadChar ();
 
 #define MAX_LENGTH     512
 #define NAME_LENGTH     32
-#define HTAppName "Amaya"
+#define HTAppName "amaya"
 #define HTAppVersion "V0.95b Beta"
 
 THOT_EXPORT int          appArgc;
