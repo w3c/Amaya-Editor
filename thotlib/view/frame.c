@@ -194,7 +194,7 @@ void DefBoxRegion (int frame, PtrBox pBox, int xstart, int xstop,
 		pClipAb = pAb;
 	      pAb = pAb->AbEnclosing;
 	    }
-	  if (pBox != pClipAb->AbBox)
+	  if (pClipAb != pBox->BxAbstractBox)
 	    {
 	      /* clip the enclosing limits */
 	      xstart = xstop = ystart = ystop = -1;
@@ -295,7 +295,7 @@ void UpdateBoxRegion (int frame, PtrBox pBox, int dx, int dy, int dw, int dh)
 		pClipAb = pAb;
 	      pAb = pAb->AbEnclosing;
 	    }
-	  if (pBox != pClipAb->AbBox)
+	  if (pClipAb != pBox->BxAbstractBox)
 	    {
 	      /* clip the enclosing limits */
 	      dx = dy = dw = dh = 0;
