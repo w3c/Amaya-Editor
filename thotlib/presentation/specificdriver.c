@@ -144,7 +144,6 @@ PresentationValue   v;
    *	Function used to update the rendering for a given element.	*
    *									*
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 int                 SpecificUpdatePresentation (PresentationTarget t, PresentationContext c,
 					       PresentationValue v)
@@ -198,65 +197,70 @@ int                 extra;
 
 #endif
 {
-    PtrPRule cur, prev, pRule;
+   PtrPSchema          pSPR;
+   PtrSSchema          pSSR;
+   PtrAttribute        pAttr;
+   PtrPRule        cur, prev, pRule, stdRule;
     
-    prev = NULL;
-    cur = ((PtrElement) el)->ElFirstPRule;
+   cur = ((PtrElement) el)->ElFirstPRule;
+   stdRule = NULL;
+   pRule = NULL;
+   prev = NULL;
+   while (cur != NULL)
+     {
+       /* shortcut : rules are sorted by type and view number */
+       if (cur->PrType > type)
+	 cur = NULL;
+       else
+	 {
+	   /* last specific rule */
+	   prev = cur;
+	   if ((cur->PrViewNum == 1) &&
+	       ((cur->PrType == type && extra <= 0) ||
+		/* check for extra specification in case of function rule */
+		(cur->PrType == PRFunction && cur->PrPresFunction == extra)))
+	     {
+	       /* this specific rule already exists */
+	       pRule = cur;
+	       cur = NULL;
+	     }
+	   else 
+	     cur = cur->PrNextPRule;
+	 }
+     }
 
-    while (cur != NULL) {
-	/* shortcut : rules are sorted by type and view number */
-	if ((cur->PrType > type) ||
-	    ((cur->PrType == type) && (cur->PrViewNum > 1)) ||
-	    (((cur->PrType == type) && (type == PRFunction) &&
-	     (cur->PrPresFunction > extra))))
-	  {
-	     cur = NULL;
-	     break;
-	  }
-	
-	/* check for extra specification in case of function rule */
-	if ((type == PRFunction) && (cur->PrPresFunction != extra)) {
-	    prev = cur;
-	    cur = cur->PrNextPRule;
-	    continue;
-	}
-
-	/* check this rule */
-	if (type == cur->PrType)
-	   break;
-
-	/* jump to next and keep track of previous */
-	prev = cur;
-	cur = cur->PrNextPRule;
-    }
-    if (cur != NULL)
-	return (cur);
-
-    /* not found, allocate it, fill it and insert it */
-    GetPresentRule (&pRule);
     if (pRule == NULL)
-     {
-	TtaDisplaySimpleMessage (FATAL, LIB, TMSG_NO_MEMORY);
-	return (NULL);
-     }
-    pRule->PrType = type;
-    pRule->PrCond = NULL;
-    pRule->PrViewNum = 1;
-    pRule->PrSpecifAttr = 0;
-    pRule->PrSpecifAttrSSchema = NULL;
+      {
+	/* not found, allocate it, fill it and insert it */
+	GetPresentRule (&pRule);
+	if (pRule != NULL)
+	  {
+	    stdRule = GlobalSearchRulepEl ((PtrElement)el, &pSPR, &pSSR, 0, NULL, 1, type, extra, FALSE, TRUE, &pAttr);
+	    if (stdRule != NULL)
+	      /* copy the standard rule */
+	      *pRule = *stdRule;
+	    else
+		pRule->PrType = type;
+	    pRule->PrCond = NULL;
+	    pRule->PrSpecifAttr = 0;
+	    pRule->PrSpecifAttrSSchema = NULL;
+	    /* set it specific to view 1 */
+	    pRule->PrViewNum = 1;
 
-    /* Add the order / conditions .... */
-    /* chain in the rule */
-    if (prev == NULL)
-     {
-	pRule->PrNextPRule = ((PtrElement) el)->ElFirstPRule;
-	((PtrElement) el)->ElFirstPRule = pRule;
-     }
-    else
-     {
-	pRule->PrNextPRule = prev->PrNextPRule;
-	prev->PrNextPRule = pRule;
-     }
+	    /* Add the order / conditions .... */
+	    /* chain in the rule */
+	    if (prev == NULL)
+	      {
+		pRule->PrNextPRule = ((PtrElement) el)->ElFirstPRule;
+		((PtrElement) el)->ElFirstPRule = pRule;
+	      }
+	    else
+	      {
+		pRule->PrNextPRule = prev->PrNextPRule;
+		prev->PrNextPRule = pRule;
+	      }
+	  }
+      }
     return (pRule);
 }
 
@@ -403,7 +407,7 @@ int                 specific;
 {
    PtrPRule            rule = (PtrPRule) pRule;
 
-   PresentationValueToPRule (val, rule->PrType, pRule, specific);
+   PresentationValueToPRule (val, rule->PrType, pRule, specific, FALSE);
    /*** RedisplayNewPRule (doc, el, pRule); ***/
    return (0);
 }

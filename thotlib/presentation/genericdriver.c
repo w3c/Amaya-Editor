@@ -1036,35 +1036,34 @@ int                 extra;
     {
       /* not found, allocate it, fill it and insert it */
       GetPresentRule (&pRule);
-      if (pRule == NULL)
-	{
-	  TtaDisplaySimpleMessage (FATAL, LIB, TMSG_NO_MEMORY);
-	  return (NULL);
-	}
-      pRule->PrType = pres;
-      pRule->PrCond = NULL;
-      pRule->PrViewNum = 1;
-      pRule->PrSpecifAttr = 0;
-      pRule->PrSpecifAttrSSchema = NULL;
-      
-      /* In case of an attribute rule, add the SurElem condition */
-      if ((ctxt->attr || ctxt->class) && ctxt->attrelem != 0)
-	PresRuleAddSurElemCond (pRule, ctxt->attrelem);
-      /* add the ancesters conditions ... */
-      for (i = 0; i < MAX_ANCESTORS; i++)
-	{
-	  if (ctxt->ancestors[i] != 0)
-	    PresRuleAddAncestorCond (pRule, ctxt->ancestors[i], ctxt->ancestors_nb[i]);
-	  else
-	    break;
-	}
 
-      /* Add the order / conditions .... */
-      /* chain in the rule */
-      if (chain != NULL)
+      if (pRule != NULL)
 	{
-	  pRule->PrNextPRule = *chain;
-	  *chain = pRule;
+	  pRule->PrType = pres;
+	  pRule->PrCond = NULL;
+	  pRule->PrViewNum = 1;
+	  pRule->PrSpecifAttr = 0;
+	  pRule->PrSpecifAttrSSchema = NULL;
+      
+	  /* In case of an attribute rule, add the SurElem condition */
+	  if ((ctxt->attr || ctxt->class) && ctxt->attrelem != 0)
+	    PresRuleAddSurElemCond (pRule, ctxt->attrelem);
+	  /* add the ancesters conditions ... */
+	  for (i = 0; i < MAX_ANCESTORS; i++)
+	    {
+	      if (ctxt->ancestors[i] != 0)
+		PresRuleAddAncestorCond (pRule, ctxt->ancestors[i], ctxt->ancestors_nb[i]);
+	      else
+		break;
+	    }
+
+	  /* Add the order / conditions .... */
+	  /* chain in the rule */
+	  if (chain != NULL)
+	    {
+	      pRule->PrNextPRule = *chain;
+	      *chain = pRule;
+	    }
 	}
       return (pRule);
     }
@@ -1375,11 +1374,10 @@ int                 specific;
 
 #endif /* !__STDC__ */
 {
-   PresentationValueToPRule (val1, rule->PrType, (PRule) rule, specific);
+   PresentationValueToPRule (val1, rule->PrType, (PRule) rule, specific, FALSE);
    rule->PrViewNum = 1;
-   if ((ctxt->box != 0) && (rule->PrPresMode == PresFunction)) {
-      BuildBoxName(ctxt, &rule->PrPresBoxName);
-   }
+   if ((ctxt->box != 0) && (rule->PrPresMode == PresFunction))
+     BuildBoxName(ctxt, &rule->PrPresBoxName);
 }
 
 #define DRIVERG_CTXT_MAGIC1	((unsigned long) 0x23F45dA9L)

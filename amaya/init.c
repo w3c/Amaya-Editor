@@ -1187,7 +1187,7 @@ View                view;
    TtaSetDialoguePosition ();
    TtaShowDialogue (BaseDialog + FormAnswer, FALSE);
    TtaWaitShowDialogue ();
-   if (Answer_password[0] == EOS)
+   if (Answer_password[0] == EOS && Answer_name[0] != EOS)
      {
        /* no password, retry */
        TtaSetTextForm (BaseDialog + NameText, Answer_name);

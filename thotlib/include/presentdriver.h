@@ -285,7 +285,8 @@ typedef int         (*PresentationGet2Function) (PresentationTarget target,
 #ifdef __STDC__
 void                PresentationValueToPRule (PresentationValue val,
                                               int type, PRule pRule,
-					      int specific);
+					      int specific,
+					      boolean absolute);
 PresentationValue   PRuleToPresentationValue (PRule pRule);
 void                PRuleToPresentationSetting (PRule pRule,
                                                 PresentationSetting setting,
@@ -294,7 +295,8 @@ void                PRuleToPresentationSetting (PRule pRule,
 #else
 void                PresentationValueToPRule (	/* PresentationValue val,
                                                    int type, PRule pRule,
-						   int specific */ );
+						   int specific,
+					           boolean absolute */ );
 PresentationValue   PRuleToPresentationValue ( /* PRule pRule */ );
 void                PRuleToPresentationSetting ( /* PRule pRule,
                                                     PresentationSetting setting,

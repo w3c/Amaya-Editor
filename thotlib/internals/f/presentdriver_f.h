@@ -9,7 +9,8 @@
 extern void PresentationValueToPRule ( PresentationValue val,
                                        int type,
                                        PRule pRule,
-                                       int specific );
+                                       int specific,
+                                       boolean absolute );
 extern PresentationValue PRuleToPresentationValue ( PRule pRule );
 extern void PRuleToPresentationSetting ( PRule pRule,
                                          PresentationSetting setting,
@@ -22,7 +23,8 @@ extern int PresConstInsert ( PSchema tcsh,
 extern void PresentationValueToPRule (/* PresentationValue val,
                                          int type,
                                          PRule pRule,
-                                         int specific */);
+                                         int specific,
+                                         boolean absolute */);
 extern PresentationValue PRuleToPresentationValue (/* PRule pRule */);
 extern void PRuleToPresentationSetting (/* PRule pRule,
                                            PresentationSetting setting,

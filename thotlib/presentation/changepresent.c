@@ -1251,8 +1251,20 @@ boolean             display;
 		       pPRule->PrSpecifAttrSSchema = pAttr->AeAttrSSchema;
 		     }
 		 }
+	       else if (pAb->AbLeafType == LtPicture &&
+			pAb->AbBox->BxWidth != 0 &&
+			pPRule->PrDimRule.DrValue == 0)
+		 {
+		   /* specific case for pictures:
+		      the rule is NULL but the width is not */
+		   if (pRStd->PrDimRule.DrUnit == UnPercent)
+		     dx = LogicalValue (width, UnPercent, (PtrAbstractBox) widthRef, 0);
+		   else
+		     dx = LogicalValue (width, pAb->AbWidth.DimUnit, pAb, ViewFrameTable[frame - 1].FrMagnification);
+		 }
 	       else
 		 dx += pPRule->PrDimRule.DrValue;
+
 	       /* put the absolute value into the rule for the application */
 	       value = pPRule->PrDimRule.DrValue;
 	       pPRule->PrDimRule.DrValue = dx;
@@ -1411,8 +1423,20 @@ boolean             display;
 		       pPRule->PrSpecifAttrSSchema = pAttr->AeAttrSSchema;
 		     }
 		 }
+	       else if (pAb->AbLeafType == LtPicture &&
+			pAb->AbBox->BxHeight != 0 &&
+			pPRule->PrDimRule.DrValue == 0)
+		 {
+		   /* specific case for pictures:
+		      the rule is NULL but the height is not */
+		   if (pRStd->PrDimRule.DrUnit == UnPercent)
+		     dy = LogicalValue (height, UnPercent, (PtrAbstractBox) heightRef, 0);
+		   else
+		     dy = LogicalValue (height, pAb->AbHeight.DimUnit, pAb, ViewFrameTable[frame - 1].FrMagnification);
+		 }
 	       else
 		 dy += pPRule->PrDimRule.DrValue;
+
 	       /* put the absolute value into the rule for the application */
 	       value = pPRule->PrDimRule.DrValue;
 	       pPRule->PrDimRule.DrValue = dy;

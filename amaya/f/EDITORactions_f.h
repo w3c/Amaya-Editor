@@ -18,12 +18,12 @@ extern void CreateMeta ( Document document,
                          View view );
 extern void CreateLinkInHead ( Document document,
                                View view );
-extern void CreateScript ( Document document,
-                           View view );
 extern void CreateStyle ( Document document,
                           View view );
 extern void CreateComment ( Document document,
                             View view );
+extern void CreateScript ( Document document,
+                           View view );
 extern void CreateParagraph ( Document document,
                               View view );
 extern void CreateHeading1 ( Document document,
@@ -60,6 +60,10 @@ extern void CreateTable ( Document document,
                           View view );
 extern void CreateCaption ( Document document,
                             View view );
+extern void CreateColgroup ( Document document,
+                             View view );
+extern void CreateCol ( Document document,
+                        View view );
 extern void CreateTHead ( Document document,
                           View view );
 extern void CreateTBody ( Document document,
@@ -153,12 +157,12 @@ extern void CreateMeta (/* Document document,
                            View view */);
 extern void CreateLinkInHead (/* Document document,
                                  View view */);
-extern void CreateScript (/* Document document,
-                             View view */);
 extern void CreateStyle (/* Document document,
                             View view */);
 extern void CreateComment (/* Document document,
                               View view */);
+extern void CreateScript (/* Document document,
+                             View view */);
 extern void CreateParagraph (/* Document document,
                                 View view */);
 extern void CreateHeading1 (/* Document document,
@@ -195,6 +199,10 @@ extern void CreateTable (/* Document document,
                             View view */);
 extern void CreateCaption (/* Document document,
                               View view */);
+extern void CreateColgroup (/* Document document,
+                               View view */);
+extern void CreateCol (/* Document document,
+                          View view */);
 extern void CreateTHead (/* Document document,
                             View view */);
 extern void CreateTBody (/* Document document,

@@ -1168,9 +1168,9 @@ PRule              *pRule;
    Parameters:
    element: the element of interest.
    presentationType: type of the desired presentation rule. Available
-   values are RSize, PtStyle, RFont, RUnderline, RThickness, PtIndent,
-   RLineSpacing, RDepth, RAdjust, RJustify, RLineStyle, RLineWeight,
-   RFillPattern, RBackground, RForeground, RHyphenate, PRShowBox,
+   values are PRSize, PtStyle, PRFont, PRUnderline, PRThickness, PRIndent,
+   PRLineSpacing, PRDepth, PRAdjust, PRJustify, PRLineStyle, PRLineWeight,
+   PRFillPattern, PRBackground, PRForeground, PRHyphenate, PRShowBox,
    PRNotInLine.
 
    Return value:
@@ -1208,8 +1208,8 @@ int                 presentationType;
       pPres = ((PtrElement) element)->ElFirstPRule;
       found = FALSE;
       while (pPres != NULL && !found)
-	if (pPres->PrType == presentationType
-	    || (pPres->PrType == PtFunction && pPres->PrPresFunction == func))
+	if ((pPres->PrType == presentationType && func == -1) ||
+	    (pPres->PrType == PtFunction && pPres->PrPresFunction == func))
 	  {
 	    pRule = pPres;
 	    found = TRUE;

@@ -33,13 +33,14 @@
  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                PresentationValueToPRule (PresentationValue val, int type, PRule pRule,
-					      int specific)
+					      int specific, boolean absolute)
 #else
-void                PresentationValueToPRule (val, type, pRule, specific)
+void                PresentationValueToPRule (val, type, pRule, specific, absolute)
 PresentationValue   val;
 int                 type;
 PRule               pRule;
 int                 specific;
+boolean             absolute;
 #endif
 {
   int                 value;
@@ -131,77 +132,9 @@ int                 specific;
     case PtFillPattern:
     case PtBackground:
     case PtForeground:
-      break;
-    case PtFont:
-    case PtStyle:
-    case PtUnderline:
-    case PtThickness:
-    case PtLineStyle:
-      break;
-    case PtBreak1:
-    case PtBreak2:
-    case PtIndent:
-    case PtSize:
-    case PtLineSpacing:
-    case PtLineWeight:
-      rule->PrMinUnit = int_unit;
-      rule->PrMinValue = value;
-      rule->PrMinAttr = FALSE;
-      break;
-    case PtVertRef:
-    case PtHorizRef:
-    case PtVertPos:
-    case PtHorizPos:
-      rule->PrPosRule.PoDistUnit = int_unit;
-      rule->PrPosRule.PoDistance = value;
-      break;
-    case PtHeight:
-    case PtWidth:
-      rule->PrDimRule.DrUnit = int_unit;
-      rule->PrDimRule.DrValue = value;
-      break;
-    case PtJustify:
-      break;
-    case PtAdjust:
-      break;
-    case PtPictInfo:
-      break;
-    }
-
-  /*
-   * Fill up all the other fields.
-   * If this is not a value but a predefined constant, translate
-   * between external and internal value.
-   */
-  rule->PrType = (PRuleType) type;
-  switch (type)
-    {
-    case PtHorizPos:
       rule->PrPresMode = PresImmediate;
-      rule->PrPosRule.PoPosRef = Left;
-      rule->PrPosRule.PoPosDef = Left;
-      rule->PrPosRule.PoDistAttr = FALSE;
-      rule->PrPosRule.PoRelation = RlEnclosing;
-      rule->PrPosRule.PoNotRel = FALSE;
-      rule->PrPosRule.PoUserSpecified = FALSE;
-      rule->PrPosRule.PoRefKind = RkPresBox;
-      rule->PrPosRule.PoRefIdent = 0;
-      break;
-    case PtVertPos:
-      rule->PrPresMode = PresImmediate;
-      rule->PrPosRule.PoPosRef = Bottom;
-      rule->PrPosRule.PoPosDef = Top;
-      rule->PrPosRule.PoDistAttr = FALSE;
-      rule->PrPosRule.PoRelation = RlPrevious;
-      rule->PrPosRule.PoNotRel = FALSE;
-      rule->PrPosRule.PoUserSpecified = FALSE;
-      rule->PrPosRule.PoRefKind = RkPresBox;
-      rule->PrPosRule.PoRefIdent = 0;
-      break;
-    case PtHeight:
-    case PtWidth:
-      rule->PrDimRule.DrPosition = FALSE;
-      rule->PrDimRule.DrAbsolute = TRUE;
+      rule->PrAttrValue = 0;
+      rule->PrIntValue = value;
       break;
     case PtFont:
       rule->PrPresMode = PresImmediate;
@@ -257,6 +190,32 @@ int                 specific;
 	  break;
 	}
       break;
+    case PtThickness:
+    case PtLineStyle:
+      break;
+    case PtBreak1:
+    case PtBreak2:
+    case PtIndent:
+    case PtSize:
+    case PtLineSpacing:
+    case PtLineWeight:
+      rule->PrPresMode = PresImmediate;
+      rule->PrMinUnit = int_unit;
+      rule->PrMinValue = value;
+      rule->PrMinAttr = FALSE;
+      break;
+    case PtJustify:
+      rule->PrPresMode = PresImmediate;
+      switch (value)
+	{
+	case DRIVERP_JUSTIFIED:
+	  rule->PrJustify = TRUE;
+	  break;
+	case DRIVERP_NOTJUSTIFIED:
+	  rule->PrJustify = FALSE;
+	  break;
+	}
+      break;
     case PtAdjust:
       rule->PrPresMode = PresImmediate;
       switch (value)
@@ -278,18 +237,6 @@ int                 specific;
 	  break;
 	}
       break;
-    case PtJustify:
-      rule->PrPresMode = PresImmediate;
-      switch (value)
-	{
-	case DRIVERP_JUSTIFIED:
-	  rule->PrJustify = TRUE;
-	  break;
-	case DRIVERP_NOTJUSTIFIED:
-	  rule->PrJustify = FALSE;
-	  break;
-	}
-      break;
     case PtHyphenate:
       rule->PrPresMode = PresImmediate;
       switch (value)
@@ -302,30 +249,22 @@ int                 specific;
 	  break;
 	}
       break;
-    case PtIndent:
-    case PtBreak1:
-    case PtBreak2:
-    case PtLineSpacing:
-    case PtLineWeight:
+    case PtVertRef:
+    case PtHorizRef:
+    case PtVertPos:
+    case PtHorizPos:
       rule->PrPresMode = PresImmediate;
-      rule->PrMinAttr = 0;
-      rule->PrMinUnit = int_unit;
-      rule->PrMinValue = value;
+      rule->PrPosRule.PoDistUnit = int_unit;
+      rule->PrPosRule.PoDistance = value;
       break;
-    case PtSize:
-      rule->PrMinUnit = int_unit;
-      rule->PrPresMode = PresImmediate;
-      rule->PrMinAttr = 0;
-      rule->PrMinValue = value;
+    case PtHeight:
+    case PtWidth:
+      rule->PrDimRule.DrUnit = int_unit;
+      rule->PrDimRule.DrValue = value;
+      if (absolute)
+	rule->PrDimRule.DrAbsolute = TRUE;
       break;
-    case PtVisibility:
-    case PtDepth:
-    case PtFillPattern:
-    case PtBackground:
-    case PtForeground:
-      rule->PrPresMode = PresImmediate;
-      rule->PrAttrValue = 0;
-      rule->PrIntValue = value;
+    case PtPictInfo:
       break;
     case PtFunction:
       rule->PrPresMode = PresFunction;
@@ -379,12 +318,8 @@ int                 specific;
 	      rule->PrPresBox[0] = RealSize;
 	    }
 	  break;
-	default:
-	  fprintf (stderr, "Presentation GenericDriver : unsupported PtFunction %d\n", specific);
 	}
       break;
-    default:
-      fprintf (stderr, "PresentationValueToPRule : unsupported PrType %d\n", rule->PrType);
     }
 }
 
@@ -416,8 +351,56 @@ PRule               pRule;
       value = rule->PrIntValue;
       break;
     case PtFont:
+      switch (rule->PrChrValue)
+	{
+	case 'H':
+	  value = DRIVERP_FONT_HELVETICA;
+	  break;
+	case 'T':
+	  value = DRIVERP_FONT_TIMES;
+	  break;
+	case 'C':
+	  value = DRIVERP_FONT_COURIER;
+	  break;
+	}
+      break;
     case PtStyle:
+      switch (rule->PrChrValue)
+	{
+	case 'B':
+	  value = DRIVERP_FONT_BOLD;
+	  break;
+	case 'R':
+	  value = DRIVERP_FONT_ROMAN;
+	  break;
+	case 'I':
+	  value = DRIVERP_FONT_ITALICS;
+	  break;
+	case 'G':
+	  value = DRIVERP_FONT_BOLDITALICS;
+	  break;
+	case 'O':
+	  value = DRIVERP_FONT_OBLIQUE;
+	  break;
+	case 'Q':
+	  value = DRIVERP_FONT_BOLDOBLIQUE;
+	  break;
+	}
+      break;
     case PtUnderline:
+      switch (rule->PrChrValue)
+	{
+	case 'U':
+	  value = DRIVERP_UNDERLINE;
+	  break;
+	case 'O':
+	  value = DRIVERP_OVERLINE;
+	  break;
+	case 'C':
+	  value = DRIVERP_CROSSOUT;
+	  break;
+	}
+      break;
     case PtThickness:
     case PtLineStyle:
       break;
@@ -429,6 +412,38 @@ PRule               pRule;
     case PtLineWeight:
       int_unit = rule->PrMinUnit;
       value = rule->PrMinValue;
+      break;
+    case PtJustify:
+      if (rule->PrJustify)
+	value = DRIVERP_JUSTIFIED;
+      else
+	value = DRIVERP_NOTJUSTIFIED;
+      break;
+    case PtAdjust:
+      switch (rule->PrAdjust)
+	{
+	case AlignLeft:
+	  value = DRIVERP_ADJUSTLEFT;
+	  break;
+	case AlignRight:
+	  value = DRIVERP_ADJUSTRIGHT;
+	  break;
+	case AlignCenter:
+	  value = DRIVERP_ADJUSTCENTERED;
+	  break;
+	case AlignLeftDots:
+	  value = DRIVERP_ADJUSTLEFTWITHDOTS;
+	  break;
+	default:
+	  value = DRIVERP_ADJUSTLEFT;
+	  break;
+	}
+      break;
+    case PtHyphenate:
+      if (rule->PrJustify)
+	value = DRIVERP_HYPHENATE;
+      else
+	value = DRIVERP_NOHYPHENATE;
       break;
     case PtVertRef:
     case PtHorizRef:
@@ -445,13 +460,57 @@ PRule               pRule;
 
       value = rule->PrDimRule.DrValue;
       break;
-    case PtJustify:
-    case PtAdjust:
     case PtPictInfo:
-    case PtFunction:
-    case PtHyphenate:
     case PtVertOverflow:
     case PtHorizOverflow:
+      break;
+    case PtFunction:
+      switch (rule->PrPresFunction)
+	{
+	case FnLine:
+	  value = DRIVERP_INLINE;
+	  break;
+	case FnNoLine:
+	  value = DRIVERP_NOTINLINE;
+	  break;
+	case FnCreateBefore:
+	case FnCreateWith:
+	case FnCreateFirst:
+	case FnCreateLast:
+	case FnCreateAfter:
+	case FnCreateEnclosing:
+	  value = rule->PrNPresBoxes;
+	  unit = DRIVERP_UNIT_BOX;
+	  break;
+	case FnShowBox:
+	  value = rule->PrNPresBoxes;
+	  unit = DRIVERP_UNIT_REL;
+	  break;
+	case FnBackgroundPicture:
+	  value = rule->PrPresBox[0];
+	  unit = DRIVERP_UNIT_REL;
+	  break;
+	case FnPictureMode:
+	  unit = DRIVERP_UNIT_REL;
+	  value = DRIVERP_REALSIZE;
+	  switch (rule->PrPresBox[0])
+	    {
+	    case RealSize:
+	      value = DRIVERP_REALSIZE; break;
+	    case ReScale:
+	      value = DRIVERP_SCALE; break;
+	    case FillFrame:
+	      value = DRIVERP_REPEAT; break;
+	    case XRepeat:
+	      value = DRIVERP_HREPEAT; break;
+	    case YRepeat:
+	      value = DRIVERP_VREPEAT; break;
+	    default:
+	      unit = DRIVERP_UNIT_INVALID;
+	      value = 0;
+	    }
+	  break;
+	}
       break;
     }
 
@@ -506,145 +565,6 @@ PRule               pRule;
       break;
     }
 
-  /* Specific case for converting between internal and external value */
-  switch (rule->PrType)
-    {
-    case PtFont:
-      switch (rule->PrChrValue)
-	{
-	case 'H':
-	  value = DRIVERP_FONT_HELVETICA;
-	  break;
-	case 'T':
-	  value = DRIVERP_FONT_TIMES;
-	  break;
-	case 'C':
-	  value = DRIVERP_FONT_COURIER;
-	  break;
-	}
-      break;
-    case PtStyle:
-      switch (rule->PrChrValue)
-	{
-	case 'B':
-	  value = DRIVERP_FONT_BOLD;
-	  break;
-	case 'R':
-	  value = DRIVERP_FONT_ROMAN;
-	  break;
-	case 'I':
-	  value = DRIVERP_FONT_ITALICS;
-	  break;
-	case 'G':
-	  value = DRIVERP_FONT_BOLDITALICS;
-	  break;
-	case 'O':
-	  value = DRIVERP_FONT_OBLIQUE;
-	  break;
-	case 'Q':
-	  value = DRIVERP_FONT_BOLDOBLIQUE;
-	  break;
-	}
-      break;
-    case PtUnderline:
-      switch (rule->PrChrValue)
-	{
-	case 'U':
-	  value = DRIVERP_UNDERLINE;
-	  break;
-	case 'O':
-	  value = DRIVERP_OVERLINE;
-	  break;
-	case 'C':
-	  value = DRIVERP_CROSSOUT;
-	  break;
-	}
-      break;
-    case PtAdjust:
-      switch (rule->PrAdjust)
-	{
-	case AlignLeft:
-	  value = DRIVERP_ADJUSTLEFT;
-	  break;
-	case AlignRight:
-	  value = DRIVERP_ADJUSTRIGHT;
-	  break;
-	case AlignCenter:
-	  value = DRIVERP_ADJUSTCENTERED;
-	  break;
-	case AlignLeftDots:
-	  value = DRIVERP_ADJUSTLEFTWITHDOTS;
-	  break;
-	default:
-	  value = DRIVERP_ADJUSTLEFT;
-	  break;
-	}
-      break;
-    case PtJustify:
-      if (rule->PrJustify)
-	value = DRIVERP_JUSTIFIED;
-      else
-	value = DRIVERP_NOTJUSTIFIED;
-      break;
-    case PtHyphenate:
-      if (rule->PrJustify)
-	value = DRIVERP_HYPHENATE;
-      else
-	value = DRIVERP_NOHYPHENATE;
-      break;
-    case PtFunction:
-      switch (rule->PrPresFunction)
-	{
-	case FnLine:
-	  value = DRIVERP_INLINE;
-	  break;
-	case FnNoLine:
-	  value = DRIVERP_NOTINLINE;
-	  break;
-	case FnCreateBefore:
-	case FnCreateWith:
-	case FnCreateFirst:
-	case FnCreateLast:
-	case FnCreateAfter:
-	case FnCreateEnclosing:
-	  value = rule->PrNPresBoxes;
-	  unit = DRIVERP_UNIT_BOX;
-	  break;
-	case FnShowBox:
-	  value = rule->PrNPresBoxes;
-	  unit = DRIVERP_UNIT_REL;
-	  break;
-	case FnBackgroundPicture:
-	  value = rule->PrPresBox[0];
-	  unit = DRIVERP_UNIT_REL;
-	  break;
-	case FnPictureMode:
-	  unit = DRIVERP_UNIT_REL;
-	  value = DRIVERP_REALSIZE;
-	  switch (rule->PrPresBox[0])
-	    {
-	    case RealSize:
-	      value = DRIVERP_REALSIZE; break;
-	    case ReScale:
-	      value = DRIVERP_SCALE; break;
-	    case FillFrame:
-	      value = DRIVERP_REPEAT; break;
-	    case XRepeat:
-	      value = DRIVERP_HREPEAT; break;
-	    case YRepeat:
-	      value = DRIVERP_VREPEAT; break;
-	    default:
-	      unit = DRIVERP_UNIT_INVALID;
-	      value = 0;
-	    }
-	  break;
-	default:
-	  fprintf (stderr, "Presentation GenericDriver : unsupported PtFunction %d\n", rule->PrPresFunction);
-	}
-      break;
-    default:
-      break;
-    }
   val.typed_data.value = value;
   val.typed_data.unit = unit;
   return (val);
@@ -672,6 +592,54 @@ int                 extra;
     case PtVisibility:
       setting->type = DRIVERP_SHOW;
       break;
+    case PtFont:
+      setting->type = DRIVERP_FONT_FAMILY;
+      break;
+    case PtStyle:
+      setting->type = DRIVERP_FONT_STYLE;
+      break;
+    case PtUnderline:
+      setting->type = DRIVERP_TEXT_UNDERLINING;
+      break;
+    case PtIndent:
+      setting->type = DRIVERP_INDENT;
+      break;
+    case PtSize:
+      setting->type = DRIVERP_FONT_SIZE;
+      break;
+    case PtLineSpacing:
+      setting->type = DRIVERP_LINE_SPACING;
+      break;
+    case PtJustify:
+      setting->type = DRIVERP_JUSTIFICATION;
+      break;
+    case PtAdjust:
+      setting->type = DRIVERP_ALIGNMENT;
+      break;
+    case PtHyphenate:
+      setting->type = DRIVERP_HYPHENATION;
+      break;
+    case PtFillPattern:
+      setting->type = DRIVERP_FILL_PATTERN;
+      break;
+    case PtBackground:
+      setting->type = DRIVERP_BACKGROUND_COLOR;
+      break;
+    case PtForeground:
+      setting->type = DRIVERP_FOREGROUND_COLOR;
+      break;
+    case PtVertPos:
+      setting->type = DRIVERP_VERTICAL_POSITION;
+      break;
+    case PtHorizPos:
+      setting->type = DRIVERP_HORIZONTAL_POSITION;
+      break;
+    case PtHeight:
+      setting->type = DRIVERP_HEIGHT;
+      break;
+    case PtWidth:
+      setting->type = DRIVERP_WIDTH;
+      break;
     case PtFunction:
       switch (extra)
 	{
@@ -692,54 +660,6 @@ int                 extra;
 	  setting->type = DRIVERP_NONE;
 	  return;
 	}
-      break;
-    case PtSize:
-      setting->type = DRIVERP_FONT_SIZE;
-      break;
-    case PtStyle:
-      setting->type = DRIVERP_FONT_STYLE;
-      break;
-    case PtFont:
-      setting->type = DRIVERP_FONT_FAMILY;
-      break;
-    case PtUnderline:
-      setting->type = DRIVERP_TEXT_UNDERLINING;
-      break;
-    case PtIndent:
-      setting->type = DRIVERP_INDENT;
-      break;
-    case PtLineSpacing:
-      setting->type = DRIVERP_LINE_SPACING;
-      break;
-    case PtAdjust:
-      setting->type = DRIVERP_ALIGNMENT;
-      break;
-    case PtJustify:
-      setting->type = DRIVERP_JUSTIFICATION;
-      break;
-    case PtFillPattern:
-      setting->type = DRIVERP_FILL_PATTERN;
-      break;
-    case PtBackground:
-      setting->type = DRIVERP_BACKGROUND_COLOR;
-      break;
-    case PtForeground:
-      setting->type = DRIVERP_FOREGROUND_COLOR;
-      break;
-    case PtHyphenate:
-      setting->type = DRIVERP_HYPHENATION;
-      break;
-    case PtVertPos:
-      setting->type = DRIVERP_VERTICAL_POSITION;
-      break;
-    case PtHorizPos:
-      setting->type = DRIVERP_HORIZONTAL_POSITION;
-      break;
-    case PtHeight:
-      setting->type = DRIVERP_HEIGHT;
-      break;
-    case PtWidth:
-      setting->type = DRIVERP_WIDTH;
       break;
     default:
       /* not yet supported by the driver */

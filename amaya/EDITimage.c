@@ -587,6 +587,7 @@ char               *text;
   else
     {
       /* local target document */
+      NormalizeURL (text, sourceDocument, pathimage, imagename, NULL);
       if (!IsHTTPPath (pathimage))
 	{
 	  /* load a local image into a local document */

@@ -46,10 +46,13 @@ typedef int        *PRule;
 #define PRBackground 21
 #define PRForeground 22
 #define PRHyphenate 23
-#define PRNoBreak1 24
-#define PRNoBreak2 25
-#define PRShowBox 26
-#define PRNotInLine 27
+/* 24 and 25 reserved */
+#define PRNoBreak1 26
+#define PRNoBreak2 27
+/* 28 reserved */
+#define PRNotInLine 29
+#define PRShowBox 30
+#define PRBackgroundPicture 31
 
 /* values for rule PRStyle */
 #define StyleRoman 1
