@@ -27,6 +27,9 @@
 
 #include "awparser.h"
 
+/* thotlib header for TtaFileUnlink, a portable version
+ * of unlink */
+#include "sysdep.h"
 
 #define  BREAK_CHAR    '\t'
 #define  LINE_MAX      1024

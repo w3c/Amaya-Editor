@@ -967,8 +967,8 @@ PUBLIC BOOL removeFromBase (char *filename, LockLine *line)
             
             /* try to remove the old file, to write a new one.
              * if remove failed, we force the creation of a new empty file.
-             * if we have something to write, create a new file */
-            if ((remove(path)<0) || (list && !HTList_isEmpty (list))) 
+             * if we have something to write, create a new file. */
+            if ((TtaFileUnlink(path)<0) || (list && !HTList_isEmpty (list))) 
                 fp = fopen (path,"w");
 
             if (fp)
