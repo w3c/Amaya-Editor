@@ -5646,6 +5646,17 @@ char ReadCSSRules (Document docRef, CSSInfoPtr css, char *buffer, char *url,
 			      cssRule[-1] = EOS;
 			      quoted = FALSE;
 			    }
+			  else
+			    {
+			      /* remove extra spaces */
+			      if (cssRule[-1] == SPACE)
+				{
+				  *cssRule = SPACE;
+				  cssRule--;
+				  while (cssRule[-1] == SPACE)
+				    cssRule--;
+				}
+			    }
 			  *cssRule = EOS;
 			}
 		    }
