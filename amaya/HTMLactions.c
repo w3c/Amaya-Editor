@@ -644,19 +644,21 @@ static ThotBool FollowTheLink (Element anchor, Element elSource, Document doc)
        attrType.AttrSSchema = elType.ElSSchema;
        attrType.AttrTypeNum = GraphML_ATTR_xlink_href;
      }
-   else
+   HrefAttr = TtaGetAttribute (anchor, attrType);
+   if (!HrefAttr)
      {
        attrType.AttrSSchema = TtaGetSSchema ("XLink", doc);
        attrType.AttrTypeNum = XLink_ATTR_href_;
 #ifdef ANNOTATIONS
        /* is it an annotation link? */
-       if (elType.ElSSchema == attrType.AttrSSchema
-	   && elType.ElTypeNum == XLink_EL_XLink)
+       if (elType.ElSSchema == attrType.AttrSSchema &&
+	   elType.ElTypeNum == XLink_EL_XLink)
 	 isAnnotLink = TRUE;
 #endif /* ANNOTATIONS */
+       if (attrType.AttrSSchema)
+	 HrefAttr = TtaGetAttribute (anchor, attrType);
      }
 
-   HrefAttr = TtaGetAttribute (anchor, attrType);
    if (HrefAttr != NULL)
      {
        targetDocument = 0;
