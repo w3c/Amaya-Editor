@@ -5450,7 +5450,7 @@ static void MergePseudoParagraph (Element el, Document doc)
   CheckBlocksInCharElem
   handle character-level elements which contain block-level elements
   ----------------------------------------------------------------------*/
-static void CheckBlocksInCharElem (Document doc)
+void CheckBlocksInCharElem (Document doc)
 {
   Element             el, parent, child, first, last, next, copy;
   Element             newparent, elem, prev, firstNotCharElem;
@@ -6478,6 +6478,10 @@ void ParseSubTree (char* HTMLbuf, Element lastelem, Language language,
        /* We set number line with 0 when we are parsing a sub-tree */
        NumberOfLinesRead = 0;
        HTMLparse (NULL, HTMLbuf);
+       /* Handle character-level elements which contain block-level elements */
+       TtaSetStructureChecking (0, doc);
+       CheckBlocksInCharElem (doc);
+       TtaSetStructureChecking (1, doc);
      }
    else
      {
@@ -6487,7 +6491,7 @@ void ParseSubTree (char* HTMLbuf, Element lastelem, Language language,
        if (!ParseXmlSubTree (InputText, NULL, lastelem, isclosed,
 			     doc, language, NULL))
 	 StopParsing (doc);
-      }
+     }
 }
 
 /*----------------------------------------------------------------------

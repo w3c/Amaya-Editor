@@ -53,6 +53,7 @@ extern void CheckDocHeader ( char *fileName,
 extern void CheckCharsetInMeta ( char *fileName,
                                  CHARSET *charset,
                                  char *charsetname );
+extern void CheckBlocksInCharElem ( Document doc );
 extern void CheckAbstractTree ( char* pathURL,
                                 Document doc );
 extern void ParseIncludedHTML ( Element elem,
@@ -118,6 +119,7 @@ extern void CheckDocHeader (/* char *fileName,
 extern void CheckCharsetInMeta (/* char *fileName,
                                    CHARSET *charset,
                                    char *charsetname */);
+extern void CheckBlocksInCharElem (/* Document doc */);
 extern void CheckAbstractTree (/* char* pathURL,
                                   Document doc */);
 extern void ParseIncludedHTML (/* Element elem,

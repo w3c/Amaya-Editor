@@ -4403,7 +4403,7 @@ ThotBool       ParseXmlSubTree (char     *xmlBuffer,
 {
   int          tmpLen = 0;
   char        *transBuffer = NULL;
-  char        *schemaName;
+  char        *schemaName = NULL;
   ElementType  elType;
   Element      parent;
   CHARSET      charset;
@@ -4579,6 +4579,15 @@ ThotBool       ParseXmlSubTree (char     *xmlBuffer,
   /* Free expat parser */ 
   FreeXmlParserContexts ();
   FreeExpatParser ();
+
+  /* Handle character-level elements which contain block-level elements */
+  if ((schemaName != NULL) &&
+      (strcmp (schemaName, "HTML") == 0))
+    {
+      TtaSetStructureChecking (0, doc);
+      CheckBlocksInCharElem (doc);
+      TtaSetStructureChecking (1, doc);
+    }
 
   if (extEl != NULL)
     {
