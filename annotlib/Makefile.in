@@ -12,10 +12,12 @@ ANNOTLIB= $(THOTDIR)/annotlib
 
 include ../Options
 
-INCLUDES= -DHAVE_CONFIG_H -I.. -I../amaya  -I@srcdir@/f -I@top_srcdir@/amaya \
+INCLUDES= -DHAVE_CONFIG_H -DANNOTATIONS \
+	  -I.. -I../amaya  -I@srcdir@/f -I@top_srcdir@/amaya \
 	  -I@top_srcdir@/amaya/f -I../libwww \
 	  -I@top_srcdir@/../libwww/Library/src \
 	  -I@top_srcdir@/../expat/xmlparse @THOTINCLUDES@ $(X_FLAGS)
+
 
 OPTIONS	= @AMAYA_OPTIONS@ @AMAYA_ANNOT_OPTIONS@ 
 

@@ -19,6 +19,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include "annotlib.h"
+#include "fileaccess.h"
+#include "AHTURLTools_f.h"
 
 #ifdef _WINDOWS
 #define TMPDIR "TMP"
@@ -92,8 +94,6 @@ void AnnotList_free (List *annot_list)
   while (list_ptr)
     {
       annot = (AnnotMeta *) list_ptr->object;
-      if (annot->about) 
-	free (annot->about);
       if (annot->source_url) 
 	free (annot->source_url);
       if (annot->author) 
@@ -127,8 +127,6 @@ void AnnotList_print (List *annot_list)
     {
       annot = (AnnotMeta *) annot_ptr->object;
       printf("\n=====annotation meta data =========\n");  
-      if (annot->about)
-	printf ("annot about URL = %s\n", annot->about);
       if (annot->source_url)
 	printf ("annot source URL = %s\n", annot->source_url);
       if (annot->labf)
@@ -167,7 +165,8 @@ void AnnotList_writeIndex (CHAR_T *indexFile, List *annot_list)
 
   fp = fopen (indexFile, "w");
   /* write the prologue */
-  fprintf (fp, 
+  fprintf (fp,
+	  "<?xml version=\"1.0\" ?>\n" 
 	  "<r:RDF xmlns:r=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\"\n"
 	  "xmlns:a=\"http://www.w3.org/1999/xx/annotation-ns#\"\n"
 	  "xmlns:xlink=\"http://www.w3.org/1999/xx/xlink#\"\n"
@@ -179,39 +178,157 @@ void AnnotList_writeIndex (CHAR_T *indexFile, List *annot_list)
   while (annot_ptr)
     {
       annot = (AnnotMeta *) annot_ptr->object;
-
-      fprintf (fp, 
-	       "<a:Annotation about=\"%s\">\n",
-	       annot->about);
-
-      fprintf (fp,
+     
+      /* only save the local annotations */
+      if (IsFilePath (annot->body_url))
+	{
+	  fprintf (fp, 
+		   "<a:Annotation about=\"%s\">\n",
+		   annot->source_url);
+	  
+	  fprintf (fp,
 	      "<xlink:href r:resource=\"%s#id(%s|%d|%s|%d)\" />\n",
-	       annot->source_url,
-	       annot->labf
-,	       annot->c1,
-	       annot->labl,
-	       annot->cl);
-
-      fprintf (fp,
-	       "<d:creator>%s</d:creator>\n",
-	       annot->author);
-
-      fprintf (fp,
-	       "<d:date>%s</d:date>\n",
-	       annot->date);
-
-      fprintf (fp,
-	       "<a:body r:resource=\"%s\" />\"\n",
-	       annot->body_url);
-
-      fprintf (fp, 
-	       "</a:Annotation>\n");
+		   annot->source_url,
+		   annot->labf
+		   ,	       annot->c1,
+		   annot->labl,
+		   annot->cl);
+	  
+	  fprintf (fp,
+		   "<d:creator>%s</d:creator>\n",
+		   annot->author);
+	  
+	  fprintf (fp,
+		   "<d:date>%s</d:date>\n",
+		   annot->date);
+	  
+	  fprintf (fp,
+		   "<a:body r:resource=\"%s\" />\n",
+		   annot->body_url);
+	  
+	  fprintf (fp, 
+		   "</a:Annotation>\n");
+	}
       annot_ptr = annot_ptr->next;
     }
   /* write the epiloge */
   fprintf (fp, 
 	   "</r:RDF>\n");
   fclose (fp);
+}
+
+/* ------------------------------------------------------------
+   AnnotList_preparePostBody
+   Writes an RDF file made from an annotations metadata
+   and the annotations HTML body. 
+   Stores the result in /tmp/rdf.tmp.
+   ------------------------------------------------------------*/
+#ifdef __STDC__
+void ANNOT_PreparePostBody (Document doc)
+#else
+void ANNOT_PreparePostBody (doc)
+Document doc;
+
+#endif /* __STDC__ */
+{
+  FILE *fp;
+  FILE *fp2;
+  char tmp_str[80];
+  char *ptr;
+  
+  char *proto;
+
+  AnnotMeta *annot;
+  long content_length;
+
+  /* we get the metadata associated to DocAnnot */
+  annot = GetMetaData (DocumentMeta[doc]->source_doc, doc);
+
+  if (!annot)
+    return;
+
+  /* @@ add a file: prefix if it's missing ... I could have
+     called normalize URL! */
+  if (!IsW3Path (annot->source_url) &&
+      !IsFilePath (annot->source_url))
+    proto = "file://";
+  else
+    proto = "";
+
+  content_length = GetFileSize (DocumentURLs[doc]);
+  fp = fopen ("/tmp/rdf.tmp", "w");
+  /* write the prologue */
+  /* write the prologue */
+  fprintf (fp,
+	  "<?xml version=\"1.0\" ?>\n" 
+	  "<r:RDF xmlns:r=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\"\n"
+	  "xmlns:a=\"http://www.w3.org/1999/xx/annotation-ns#\"\n"
+	  "xmlns:xlink=\"http://www.w3.org/1999/xx/xlink#\"\n"
+	  "xmlns:http=\"http://www.w3.org/1999/xx/http#\"\n"
+ 	  "xmlns:d=\"http://purl.org/dc/elements/1.0/\">\n");
+
+  /* beginning of the annotation's  metadata  */
+  fprintf (fp,
+	   "<a:Annotation>\n");
+  /* the pointer to the source doc */
+  fprintf (fp,
+	   "<xlink:href r:resource=\"%s%s#id(%s|%d|%s|%d)\" />\n",
+	       proto,
+	       annot->source_url,
+	       annot->labf,
+	       annot->c1,
+	       annot->labl,
+	       annot->cl);
+
+  /* the rest of the metadata */
+  fprintf (fp,
+	   "<d:creator>%s</d:creator>\n"
+	   "<d:date>%s</d:date>\n"
+	   "<a:body>\n"
+	   "<a:AnnotationBody>\n"
+	   "<http:ContentType>%s</http:ContentType>\n"
+	   "<http:ContentLength>%ld</http:ContentLength>\n"
+	   "<http:Body parseType=\"literal\">\n",
+	   annot->author,
+	   annot->date, 
+	   "text/html",
+	   content_length);
+
+ /* insert the HTML body */
+  ptr = DocumentURLs[doc];
+  /* skip any file: prefix */
+  if (!ustrncmp (ptr, "file:", 5))
+      ptr = ptr + 5;
+  fp2 = fopen (ptr, "r");
+  if (fp2)
+    {
+      /* skip the first 3 lines (to have a valid XML doc )*/
+      /* ahem, skip the first 3 lines, in the hard way! */
+      {
+	int i;
+	char c;
+	for (i = 0; i<3; i++)
+	  {
+	    while ((c = getc (fp2)) != '\n');
+	  }
+      }
+      fgets (tmp_str, 79, fp2);
+      while (!feof (fp2)) {
+	fprintf (fp, "  %s", tmp_str);
+	fgets (tmp_str, 79, fp2);
+      }
+      fclose (fp2);
+    }
+
+  /* finish writing the annotation */
+  fprintf (fp, 
+	   "</http:Body>\n"
+	   "</a:AnnotationBody>\n"
+	   "</a:body>\n"
+	   "</a:Annotation>\n"
+	   "</r:RDF>\n");
+
+  fclose (fp);  
 }
 
 /***************************************************
@@ -416,6 +533,28 @@ const char *prefix;
       /* TtaFreeMemory (tmpdir); */
     }
   return (name);
+}
+
+#ifdef __STDC__
+long GetFileSize (CHAR_T *filename)
+#else
+long GetFileSize (filename)
+CHAR_T *filename;
+
+#endif /* __STDC__ */
+{
+  ThotFileHandle      handle = ThotFile_BADHANDLE;
+  ThotFileInfo        info;
+ 
+  handle = TtaFileOpen (filename, ThotFile_READWRITE);
+  if (handle == ThotFile_BADHANDLE)
+    /* ThotFile_BADHANDLE */
+    return 0L;
+   if (TtaFileStat (handle, &info) == 0)
+     /* bad stat */
+     return 0L;
+
+   return (info.size);
 }
 
 /***************************************************

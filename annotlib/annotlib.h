@@ -40,21 +40,23 @@
 /* the info we're interested in in an annotation */
 typedef struct _AnnotMeta {
   int     annotNum;
-  CHAR_T *about;
-  CHAR_T *source_url;
-  CHAR_T labf[10];
+  CHAR_T *source_url; /* document that was annotated */
+  /* the internal Amaya Xpath */
+  CHAR_T labf[10]; 
   int     c1;
   CHAR_T labl[10];
   int     cl;
-  CHAR_T *date;
-  CHAR_T *author;
-  CHAR_T *annotFile;
-  CHAR_T *type;
-  CHAR_T *content_type;
-  CHAR_T *content_length;
-  CHAR_T *body;
-  CHAR_T *body_url;
-  struct _AnnotMeta *next;
+  CHAR_T *date; /* date of the anntation */
+  CHAR_T *author; /* author of the annotation */
+  CHAR_T *type; /* type of annotation */
+  CHAR_T *content_type; /*content type of the body of the annotation,
+			  only used while posting */
+  CHAR_T *content_length; /* content length of the body, only used while
+			     posting */
+  CHAR_T *body; /* when reading an annotation with an embedded body,
+		   the body is stored in this variable */
+  CHAR_T *body_url; /* if the body isn't embedded, this has the URL
+		       to the body (only used for local files for the moment */
 } AnnotMeta;
 
 /* basic linked list structure */

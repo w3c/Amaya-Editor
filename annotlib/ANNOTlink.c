@@ -143,9 +143,9 @@ int cN;
 
   annotName = TtaGetMemory (20);
   strcpy (annotName, TtaGetDocumentName (docAnnot));
-  document  = AnnotationTargetDocument (docAnnot);
-  view      = TtaGetViewFromName (document, "Formatted_view");
-  element   = TtaSearchElementByLabel(tabRefAnnot[docAnnot].labf, TtaGetMainRoot (source_doc));
+  document = AnnotationTargetDocument (docAnnot);
+  view = TtaGetViewFromName (document, "Formatted_view");
+  element = TtaSearchElementByLabel(tabRefAnnot[docAnnot].labf, TtaGetMainRoot (source_doc));
 
   /* Si le lien d'annotation n'existe, on le rajoute dans le document et 
      dans le fichier de liens */
@@ -269,8 +269,10 @@ void LINK_SaveLink (source_doc, annot_doc, annotName, labf, c1, labl, cl)
   annot =  AnnotMeta_new ();
   annot_list = AnnotMetaDataList[source_doc];
   List_add (&annot_list, (void *) annot);
+  if (! AnnotMetaDataList[source_doc])
+    AnnotMetaDataList[source_doc] = annot_list;
 
-  annot->about = TtaStrdup (DocumentURLs[source_doc]);
+  annot->source_url = TtaStrdup (DocumentURLs[source_doc]);
   ustrcpy (annot->labf, labf);
   annot->c1 = c1;
   ustrcpy (annot->labl, labl);
@@ -320,37 +322,6 @@ void LINK_DelMetaFromMemory (Document doc)
 
   AnnotList_free (AnnotMetaDataList[doc]);
   AnnotMetaDataList[doc] = NULL;
-}
-
-/*-----------------------------------------------------------------------
-   Procedure LINK_AddMetaToMemory
-  -----------------------------------------------------------------------
-  Copies the parsed metadata to memory
-  -----------------------------------------------------------------------*/
-void LINK_AddMetaToMemory (Document doc, CHAR_T *annotUser, CHAR_T *annotDate, CHAR_T *annotType, CHAR_T *annotFile)
-{
-  AnnotMeta *me;
-
-  /* create a new element */
-  me = TtaGetMemory (sizeof (AnnotMeta));
-  me->author = TtaStrdup (annotUser);
-  me->date = TtaStrdup (annotDate);
-  me->type = TtaStrdup (annotType);
-  me->annotFile = TtaStrdup (annotFile);
-
-  /* add it to the list structure */
-  if (!AnnotMetaDataList[doc]) 
-    {
-      /* the list was empty */
-      me->next = NULL;
-      AnnotMetaDataList[doc] = me;
-    }
-  else
-    {
-      /* adding new elements to the list */
-      me->next = AnnotMetaDataList[doc];
-      AnnotMetaDataList[doc] = me;
-    }
 }
 
 /*-----------------------------------------------------------------------
@@ -746,11 +717,36 @@ void LINK_UpdateAnnotations (document)
 #endif
 }
 
+#if 0
+/*-----------------------------------------------------------------------
+   Procedure LINK_AddMetaToMemory
+  -----------------------------------------------------------------------
+  Copies the parsed metadata to memory
+  -----------------------------------------------------------------------*/
+void LINK_AddMetaToMemory (Document doc, CHAR_T *annotUser, CHAR_T *annotDate, CHAR_T *annotType, CHAR_T *body_url)
+{
+  AnnotMeta *me;
 
+  /* create a new element */
+  me = TtaGetMemory (sizeof (AnnotMeta));
+  me->author = TtaStrdup (annotUser);
+  me->date = TtaStrdup (annotDate);
+  me->type = TtaStrdup (annotType);
+  me->body_url = TtaStrdup (body_url);
 
+  /* add it to the list structure */
+  if (!AnnotMetaDataList[doc]) 
+    {
+      /* the list was empty */
+      me->next = NULL;
+      AnnotMetaDataList[doc] = me;
+    }
+  else
+    {
+      /* adding new elements to the list */
+      me->next = AnnotMetaDataList[doc];
+      AnnotMetaDataList[doc] = me;
+    }
+}
 
-
-
-
-
-
+#endif

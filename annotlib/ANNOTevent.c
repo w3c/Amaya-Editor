@@ -17,6 +17,7 @@
  */
 
 #include "annotlib.h"
+#include "AHTURLTools_f.h"
 
 /* some state variables */
 static CHAR_T *annotUser; /* user id for saving the annotation */
@@ -216,10 +217,10 @@ View view;
 {
   ElementType elType;
   char *annotIndex;
-  char *annotUrl;
+  char *annotURL;
+  char *proto;
   REMOTELOAD_context *ctx;
   int res;
-  List *annot_list;
 
   /* only HTML documents can be annotated */
   elType.ElSSchema = TtaGetDocumentSSchema (doc);
@@ -229,13 +230,6 @@ View view;
   /*
    * Parsing test!
   */
-
-#if 0  
-  annot_list = RDF_parseFile ("/tmp/rdf.tmp", ANNOT_SINGLE);
-  AnnotList_print (annot_list);
-  AnnotList_free (annot_list);
-  return;
-#endif
 
   /*
    * load the local annotations 
@@ -258,12 +252,17 @@ View view;
       /* make some space to store the remote file name */
       ctx->remoteAnnotIndex = TtaGetMemory (MAX_LENGTH);
       /* "compute" the url we're looking up in the annotation server */
-      annotUrl = TtaGetMemory (MAX_LENGTH);
-      sprintf (annotUrl, "%s%s.index", annotServer, TtaGetDocumentName (doc));
+      annotURL = TtaGetMemory (MAX_LENGTH);
+      if (!IsW3Path (DocumentURLs[doc]) &&
+	  !IsFilePath (DocumentURLs[doc]))
+	proto = "file://";
+      else
+	proto = "";
+      sprintf (annotURL, "w3c_xlink=%s%s", proto, DocumentURLs[doc]);
       /* launch the request */
       res = GetObjectWWW (doc,
-			  annotUrl,
-			  NULL,
+			  annotServer,
+			  annotURL,
 			  ctx->remoteAnnotIndex,
 			  AMAYA_ASYNC | AMAYA_FLUSH_REQUEST,
 			  NULL,
@@ -271,8 +270,8 @@ View view;
 			  (void *)  RemoteLoad_callback,
 			  (void *) ctx,
 			  NO,
-			  NULL);
-      TtaFreeMemory (annotUrl);
+			  TEXT("application/xml"));
+      TtaFreeMemory (annotURL);
 
       if (res)
 	{
@@ -339,99 +338,6 @@ void ANNOT_Create (doc, view)
 #endif
 }
 
-#ifdef __STDC__
-void CreateRDF (int doc)
-#else  /* __STDC__ */
-void CreateRDF (doc)
-int doc;
-#endif
-{
-  FILE *fp;
-  FILE *fp2;
-  char tmp_str[80];
-
-  char *source_doc ="http://www.w3.org";
-  char *author;
-  char *date;
-  char *type;
-  char *xpath = "id(shouldBeDoneSomeday)";
-  char *ptr;
-
-  /* @@@ should be long */
-  int length = 0;
-  AnnotMeta *annot_metadata;
-
-  /* @@ grr, how can I find the orig doc? I need to store this info */
-  annot_metadata = GetMetaData (1, doc);
-
-  if (annot_metadata) 
-    {
-      /* existing annotation, we reuse the existing data */
-      author = annot_metadata->author;
-      date = annot_metadata->date;
-      type = annot_metadata->type;
-    }
-  else
-    {
-      /* what happened? */
-      author = "";
-      date = "";
-      type = "";
-    }
-
-  fp = fopen ("/tmp/rdf.tmp", "w");
-  fprintf (fp,
-	   "<?xml version=\"1.0\" ?>\n"
- 	   "<r:RDF xmlns:r=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\"\n"
-	   "xmlns:a=\"http://www.w3.org/1999/xx/annotation-ns#\"\n"
-	   "xmlns:d=\"http://purl.org/dc/elements/1.0/\">\n"
-	   "<r:Description>\n"
-	   "<xlink:href r:resource=\"%s#%s\"/>\n"
-	   "<d:creator>%s</d:creator>\n"
-	   "<d:date>%s</d:date>\n"
-	   "<a:body>\n"
-	   "<r:Description>\n"
-	   "<http:ContentType>text/html</http:ContentType>\n"
-	   "<http:ContentLength>%d</http:ContentLength>\n"
-	   "<http:Body parseType=\"literal\">\n",
-	   source_doc, xpath, author, date, length);
-
-  /* insert the HTML body */
-  ptr = DocumentURLs[doc];
-  /* skip any file: prefix */
-  if (!ustrncmp (ptr, "file:", 5))
-      ptr = ptr + 5;
-  fp2 = fopen (ptr, "r");
-  if (fp2)
-    {
-      /* skip the first 3 lines (to have a valid XML doc )*/
-      /* ahem, skip the first 3 lines, in the hard way! */
-      {
-	int i;
-	char c;
-	for (i = 0; i<3; i++)
-	  {
-	    while ((c = getc (fp2)) != '\n');
-	  }
-      }
-      fgets (tmp_str, 79, fp2);
-      while (!feof (fp2)) {
-	fprintf (fp, "  %s", tmp_str);
-	fgets (tmp_str, 79, fp2);
-      }
-      fclose (fp2);
-    }
-
-  /* finish writing the annotation */
-  fprintf (fp, 
-	   "</http:Body>\n"
-	   "</r:Description>\n"
-	   "</a:body>\n"
-	   "</r:Description>\n"
-	   "</r:RDF>\n");
-
-  fclose (fp);
-}
 /*-----------------------------------------------------------------------
    Procedure ANNOT_Post_callback
   -----------------------------------------------------------------------
@@ -512,10 +418,8 @@ View view;
   ANNOT_SaveDocument (doc);
 
   /* create the RDF container */
-  CreateRDF (doc);
+  ANNOT_PreparePostBody (doc);
 
-  /* post it */
-  
   /* create the context for the callback */
   ctx = TtaGetMemory (sizeof (REMOTELOAD_context));
   /* make some space to store the remote file name */

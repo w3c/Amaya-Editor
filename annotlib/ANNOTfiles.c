@@ -69,9 +69,8 @@ Document ANNOT_NewDocument (doc)
   TtaFreeMemory (tmpname);
   fname = urlname + 5;
 
-  /* @@ 10 should be docAnnot, but I have a problem to set it up */
   /* "annot is the title of the window */
-  annotDoc = InitDocView (0, "annot", 10, 0, FALSE);
+  annotDoc = InitDocView (0, "annot", docAnnot, 0, FALSE);
 
   if (annotDoc == 0) 
     {
@@ -93,6 +92,7 @@ Document ANNOT_NewDocument (doc)
       DocumentMeta[annotDoc]->form_data = NULL;
       DocumentMeta[annotDoc]->method = CE_ABSOLUTE;
       DocumentSource[annotDoc] = 0;
+
       ANNOT_PrepareAnnotView (annotDoc);
       ANNOT_InitDocumentStructure (annotDoc, doc);      
     }  
@@ -113,9 +113,8 @@ AnnotMeta *GetMetaData (Document doc, Document annotDoc)
   AnnotMeta *annot = NULL;
   STRING annotFile;
 
-  /* @@@ why I can't use docAnnot??? what is interfering? */
-  if (DocumentTypes[doc] == 10
-      && DocumentTypes[doc] == 11)
+  if (DocumentTypes[doc] == docAnnot
+      && DocumentTypes[doc] == docAnnotRO)
     return (NULL);
 
   /* get a pointer to the annot list */
@@ -129,7 +128,7 @@ AnnotMeta *GetMetaData (Document doc, Document annotDoc)
       if (ustrcasecmp (DocumentURLs[annotDoc], annot->body_url) ||
 	  ustrcasecmp (DocumentURLs[annotDoc], annot->body_url + 5))
 	break;
-      ptr->next;
+      ptr = ptr->next;
     }
 
   if (ptr)
@@ -165,6 +164,9 @@ void  ANNOT_InitDocumentMeta (docAnnot, document)
   STRING      annot_source;
   CHAR_T      tempfile[MAX_LENGTH];
   AnnotMeta   *annot_metadata;
+
+  /* save the docid of the annotated document */
+  DocumentMeta[docAnnot]->source_doc = document;
 
   /* if it's a new annotation, we compute the stuff, otherwise,
      we copy it from the existing metadata */

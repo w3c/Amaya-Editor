@@ -129,7 +129,7 @@ static void start_hndl(void *data, const char *el, const char **attr)
       annot =  AnnotMeta_new ();
       List_add (&annot_list, (void *) annot);
       if (attr[0] && !strcmp (attr[0], "about"))
-	  annot->about = strdup ((char *) attr[1]);
+	  annot->source_url = strdup ((char *) attr[1]);
     }
   else if (!strcmp (el, "xlink:href")) 
     {
@@ -256,8 +256,10 @@ List *RDF_parseFile (char *file_name, AnnotFileType type)
       /* we're parsing a single annotation. We create the element
 	 where we'll store it (in a list on annotations, the elements
 	 are created automatically) */
+#if 0 /* @@ removed after talking with ERIC */
       annot =  AnnotMeta_new ();
       List_add (&annot_list, (void *) annot);
+#endif
     }
   else if (type != ANNOT_LIST)
     {
