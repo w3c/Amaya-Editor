@@ -262,6 +262,69 @@ NotifyAttribute    *event;
 }
 
 /*----------------------------------------------------------------------
+  CheckValidID
+  A NAME attribute is about to be saved. If the output format is XHTML
+  and the current element does not have an ID attribute, check if
+  the value of the NAME attribute is a valid XML ID and if not,
+  generate an ID attribute with a valid value.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+ThotBool            CheckValidID (NotifyAttribute * event)
+#else  /* __STDC__ */
+ThotBool            CheckValidID (event)
+NotifyAttribute    *event;
+
+#endif /* __STDC__ */
+{
+  AttributeType     attrType;
+  Attribute         attr;
+  STRING            value;
+  int               length, i;
+
+  if (!SaveAsXHTML)
+     /* we are not saving the document in XHTML */
+     return FALSE;  /* let Thot perform normal operation */
+
+  attrType = event->attributeType;
+  attrType.AttrTypeNum = HTML_ATTR_ID;
+  attr = TtaGetAttribute (event->element, attrType);
+  if (!attr)
+     /* this element does not have an ID attribute */
+     {
+     /* get the value of the NAME attribute */
+     length = TtaGetTextAttributeLength (event->attribute);
+     length+= 10;
+     value = TtaAllocString (length);
+     length--;
+     TtaGiveTextAttributeValue (event->attribute, &value[1], &length);
+     if (value[1] >= '0' && value[1] <= '9')
+        /* the value of the NAME attribute starts with a digit */
+        {
+	/* insert an underscore at the beginning and create an ID attribute
+	   with that value */
+	value[0] = '_';
+	length++;
+	/* check that this value is not already used by another ID attribute
+           in the document and add a number at the end if it's the case */
+        i = 0;
+	while (SearchNAMEattribute (event->document, value, NULL))
+	   /* this value is already used in the document */
+	   {
+	   i++;
+	   usprintf (&value[length], TEXT("%d"), i);
+	   }
+	/* Create the ID attr. */
+	attr = TtaNewAttribute (attrType);
+	TtaAttachAttribute (event->element, attr, event->document);
+	TtaSetAttributeText (attr, value, event->element, event->document);
+	}
+     TtaFreeMemory (value);
+     }
+  return FALSE;  /* let Thot perform normal operation */
+}
+
+
+/*----------------------------------------------------------------------
    SetRelativeURLs: try to make relative URLs within an HTML document.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -429,7 +492,7 @@ STRING              pathname;
    TtaNewToggleMenu (BaseDialog + ToggleSave, BaseDialog + SaveForm,
 		     TtaGetMessage (LIB, TMSG_DOCUMENT_FORMAT), 6, buffer,
 		     NULL, TRUE);
-    TtaSetToggleMenu (BaseDialog + ToggleSave, 0, SaveAsHTML);
+   TtaSetToggleMenu (BaseDialog + ToggleSave, 0, SaveAsHTML);
    TtaSetToggleMenu (BaseDialog + ToggleSave, 1, SaveAsXHTML);
    TtaSetToggleMenu (BaseDialog + ToggleSave, 2, SaveAsText);
    TtaSetToggleMenu (BaseDialog + ToggleSave, 4, CopyImages);

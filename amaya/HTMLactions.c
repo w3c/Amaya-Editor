@@ -354,8 +354,8 @@ ThotBool            remove;
 }
 
 /*----------------------------------------------------------------------
-   SearchNAMEattribute
-   Search in document doc an element having an attribut of type attrType
+   GetElemWithAttr
+   Search in document doc an element having an attribute of type attrType
    whose value is nameVal.
    Return that element or NULL if not found.
    If ignore is not NULL, it is an attribute that should be ignored when

@@ -166,8 +166,10 @@ ATTRIBUTES
 	END;
 
    NAME:
+	BEGIN
 	AttrMenu.Pre ->    AttrNAMEinMenu;
-
+	AttrExport.Pre ->  CheckValidID;	
+	END;
     
    Height_:
    	BEGIN
