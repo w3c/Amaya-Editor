@@ -64,7 +64,7 @@ extern void       CreateSpellCheckDlgWindow (ThotWindow, STRING, STRING, int, in
 extern void       CreateMathAttribDlgWindow (int);
 extern void       CreateInitConfirmDlgWindow (ThotWindow, int, STRING, STRING);
 extern void       CreateInitConfirm3LDlgWindow (ThotWindow, int, STRING, STRING, STRING, STRING, ThotBool withCancel);
-extern void       CreateChangeFormatDlgWindow (int, int, int, int, int, int, int, int);
+extern void       CreateChangeFormatDlgWindow (int, int, int, int, int, int, int);
 extern void       CreateGreekKeyboardDlgWindow (ThotWindow);
 extern void       CreateAuthenticationDlgWindow (ThotWindow, const STRING, STRING);
 extern void       CreateBackgroundImageDlgWindow (ThotWindow parent, STRING image_location);
