@@ -2208,6 +2208,22 @@ BOXES
 		Visibility: 0;
 	END;
 
+ RadicalSymbol:
+	BEGIN
+	LineWeight: 1 pt;
+	Height: Creator . Height;
+	Width: Creator . Width + ROOT_OFFSET;
+	VertPos: Top = Creator . Top;
+	HorizPos: Left = Creator . Left;
+	Content: Symbol 'r';		{ root symbol }
+	LineStyle: Solid;
+	Depth: Creator + 1;
+	Background: Creator =;
+	Foreground: Creator =;
+	IN Math_Structure_view
+		Visibility: 0;
+	END;
+
  OpeningQuote: BEGIN
  	Content: Text '"';
 	IN Math_Structure_view
@@ -3379,11 +3395,47 @@ ATTRIBUTES
 	CreateBefore(ATTR_beveled_false);
 
   notation = longdiv:
+	BEGIN
 	CreateBefore(ATTR_notation_longdiv);
+	BorderTopWidth: 1 pt;
+	BorderLeftWidth: 1 pt;
+	BorderTopStyle: Solid;
+	BorderLeftStyle: Solid;
+	PaddingLeft: 0.2;
+	MarginLeft: 0.2;
+	IN Math_Structure_view
+		BEGIN
+		BorderTopWidth: Enclosing =;
+		BorderLeftWidth: Enclosing =;
+		PaddingLeft: Enclosing =;
+		MarginLeft: Enclosing =;
+		END;
+	END;
   notation = actuarial:
+	BEGIN
 	CreateBefore(ATTR_notation_actuarial);
+	BorderTopWidth: 1 pt;
+	BorderRightWidth: 1 pt;
+	BorderTopStyle: Solid;
+	BorderRightStyle: Solid;
+	PaddingRight: 0.2;
+	MarginRight: 0.2;
+	IN Math_Structure_view
+		BEGIN
+		BorderTopWidth: Enclosing =;
+		BorderRightWidth: Enclosing =;
+		PaddingRight: Enclosing =;
+		MarginLeft: Enclosing =;
+		END;
+	END;
   notation = radical:
+	BEGIN
 	CreateBefore(ATTR_notation_radical);
+	CreateBefore(RadicalSymbol);
+	PaddingLeft: ROOT_OFFSET;
+	VertPos: HRef = Previous not RadicalSymbol . HRef;
+	Gather: Yes;
+	END;
 
   scriptlevel:
 	BEGIN
