@@ -247,3 +247,104 @@ void InsertCssInXml (Document doc, View view)
  
   return;
 }
+
+/*----------------------------------------------------------------------
+   IsXmlStyleSheet                                           
+  ----------------------------------------------------------------------*/
+static Element IsXmlStyleSheet (Element el)
+{
+   Element	 parent;
+   ElementType	 parentType;
+   int           piLineNum, piNum;
+   char         *s;
+
+   parent = NULL;
+
+   parent = TtaGetParent (el);
+   if (parent != NULL)
+     {
+       parentType = TtaGetElementType (parent);
+       s = TtaGetSSchemaName (parentType.ElSSchema);
+       if (strcmp (s, "MathML") == 0)
+	 {
+	   piLineNum = MathML_EL_XMLPI_line;
+	   piNum = MathML_EL_XMLPI;
+	 }
+       else if (strcmp (s, "SVG") == 0)
+	 {
+	   piLineNum = SVG_EL_XMLPI_line;
+	   piNum = SVG_EL_XMLPI;
+	 }
+       else
+	 {
+	   piLineNum = XML_EL_xmlpi_line;
+	   piNum = XML_EL_xmlpi;
+	 }
+       if (parentType.ElTypeNum == piLineNum)
+	 {
+	   /* We are treating an xml pi */
+	   parent = TtaGetParent (parent);
+	   parentType = TtaGetElementType (parent);
+	   if (parentType.ElTypeNum != piNum)
+	     parent = NULL;
+	 }
+     }
+
+   return parent;
+}
+
+/*----------------------------------------------------------------------
+   XmlStyleSheetDeleted                                              
+  ----------------------------------------------------------------------*/
+ThotBool XmlStyleSheetDeleted (NotifyElement * event)
+{
+   Element	 parent;
+   char          buffer[MAX_LENGTH];
+   char         *ptr = NULL;
+   int           length;
+   Language      lang;
+ 
+   parent = IsXmlStyleSheet (event->element);
+   if (parent != NULL)
+     {
+       length = MAX_LENGTH - 1;
+       TtaGiveTextContent (event->element, buffer, &length, &lang);
+       buffer[length++] = EOS;
+       /* Is it an xml stylesheet ? */
+       ptr = strstr (buffer, "xml-stylesheet");
+       if (ptr != NULL)
+	 RemoveLink (parent, event->document);
+     }
+   /* let Thot perform normal operation */
+   return FALSE;
+}
+
+/*----------------------------------------------------------------------
+   XmlStyleSheetPasted
+  ----------------------------------------------------------------------*/
+void XmlStyleSheetPasted (NotifyElement *event)
+{
+   Element	 parent;
+   int           oldStructureChecking;
+   char          buffer[MAX_LENGTH];
+   char         *ptr = NULL;
+   int           length;
+   Language      lang;
+
+   parent = IsXmlStyleSheet (event->element);
+   if (parent != NULL)
+     {
+       length = MAX_LENGTH - 1;
+       TtaGiveTextContent (event->element, buffer, &length, &lang);
+       buffer[length++] = EOS;
+       /* Is it an xml stylesheet ? */
+       ptr = strstr (buffer, "xml-stylesheet");
+       if (ptr != NULL)
+	 {
+	   oldStructureChecking = TtaGetStructureChecking (event->document);
+	   TtaSetStructureChecking (0, event->document);
+	   XmlStyleSheetPi (buffer, parent);
+	   TtaSetStructureChecking ((ThotBool)oldStructureChecking, event->document);
+	 }
+     }
+}

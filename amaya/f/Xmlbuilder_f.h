@@ -33,6 +33,8 @@ extern void MapGenericXmlElement ( char *XMLName,
                                    Document doc );
 extern void InsertCssInXml ( Document doc,
                              View view );
+extern ThotBool XmlStyleSheetDeleted ( NotifyElement * event );
+extern void XmlStyleSheetPasted ( NotifyElement *event );
 
 #else /* __STDC__ */
 
@@ -63,6 +65,8 @@ extern void MapGenericXmlElement (/* char *XMLName,
                                      Document doc */);
 extern void InsertCssInXml (/* Document doc,
                                View view */);
+extern ThotBool XmlStyleSheetDeleted (/* NotifyElement * event */);
+extern void XmlStyleSheetPasted (/* NotifyElement *event */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

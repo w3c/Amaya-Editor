@@ -8,6 +8,14 @@ DEFAULT
         ElemRClick.Pre -> SimpleRClick;
    END;
 
+ELEMENTS
+
+   TEXT_UNIT:
+	BEGIN
+	ElemPaste.Post -> XmlStyleSheetPasted;
+	ElemDelete.Pre -> XmlStyleSheetDeleted;
+	END;
+
 ATTRIBUTES
 
    Language:

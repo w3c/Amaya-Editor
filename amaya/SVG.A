@@ -52,6 +52,11 @@ ELEMENTS
 	ElemDelete.Post ->      GraphLeafDeleted;
    PICTURE_UNIT:
 	ElemPaste.Pre ->        PastePicture;
+   TEXT_UNIT:
+	BEGIN
+	ElemPaste.Post -> XmlStyleSheetPasted;
+	ElemDelete.Pre -> XmlStyleSheetDeleted;
+	END;
 
  {Timeline & edition of animations, 
  when the bug of Amaya pre value = post value will be fixed,

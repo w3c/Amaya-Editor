@@ -20,6 +20,8 @@ extern void InsertXmlElement ( Element *el );
 extern Element XmlLastLeafInElement ( Element el );
 extern void PutInXmlElement ( char *data,
                               int length );
+extern void XmlStyleSheetPi ( char *PiData,
+                              Element piEl );
 extern void FreeXmlParserContexts ( void );
 extern ThotBool ParseExternalXmlResource ( char *fileName,
                                            Element el,
@@ -73,6 +75,8 @@ extern void InsertXmlElement (/* Element *el */);
 extern Element XmlLastLeafInElement (/* Element el */);
 extern void PutInXmlElement (/* char *data,
                                 int length */);
+extern void XmlStyleSheetPi (/* char *PiData,
+                                Element piEl */);
 extern void FreeXmlParserContexts (/* void */);
 extern ThotBool ParseExternalXmlResource (/* char *fileName,
                                              Element el,

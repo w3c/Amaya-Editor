@@ -234,7 +234,6 @@ void RemoveLink (Element el, Document doc)
 	      length = MAX_LENGTH - 1;
 	      TtaGiveTextContent (elText, buffer, &length, &lang);
 	      buffer[length++] = EOS;
-	      printf ("\ncss buffer : '%s'\n", buffer);
 	      /* Search the name of the stylesheet */
 	      ptr = strstr (buffer, "href");
 	      if (ptr != NULL)
@@ -247,8 +246,7 @@ void RemoveLink (Element el, Document doc)
 		  end = strstr (ptr, "\"");
 		  *end = EOS;
 		  strcpy (cssname, ptr);
-		}
-			
+		}		
 	      NormalizeURL (cssname, doc, pathname, documentname, NULL);
 	      RemoveStyleSheet (pathname, doc, TRUE, TRUE, NULL);
 	    }
@@ -296,7 +294,7 @@ void SetREFattribute (Element element, Document doc, char *targetURL,
    else
      isHTML = FALSE;
 
-   /* Ii isn't a link to an xml stylesheet */
+   /* It isn't a link to an xml stylesheet */
    if (!LinkAsXmlCSS)
      {
        if (isHTML)

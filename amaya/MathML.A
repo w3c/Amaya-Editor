@@ -54,7 +54,11 @@ ELEMENTS
    MTABLE:
 	ElemNew.Post -> TableCreated;
    TEXT_UNIT:
+	BEGIN
 	ElemNew.Post -> NewMathString;
+	ElemPaste.Post -> XmlStyleSheetPasted;
+	ElemDelete.Pre -> XmlStyleSheetDeleted;
+	END;
 
 ATTRIBUTES
 

@@ -3450,7 +3450,7 @@ static void      CreateXmlComment (char *commentValue)
 /*----------------------------------------------------------------------
    XmlStyleSheetPi
   ---------------------------------------------------------------------*/
-static void      XmlStyleSheetPi (char *PiData, Element piEl)
+void      XmlStyleSheetPi (char *PiData, Element piEl)
 {
    int           length, i, j;
    char         *ptr, *end;
