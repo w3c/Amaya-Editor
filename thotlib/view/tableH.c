@@ -450,7 +450,8 @@ static void CheckRowHeights (PtrAbstractBox table, int frame)
   int                 attrHeight = 0;
   ThotBool            modified;
 
-  if (table->AbBox->BxCycles != 0 || table->AbBox->BxSpans == NULL)
+  if (table->AbBox == NULL ||
+      table->AbBox->BxCycles != 0 || table->AbBox->BxSpans == NULL)
     /* the table formatting is currently in process */
     return;
   doc = FrameTable[frame].FrDoc;
@@ -1182,12 +1183,12 @@ void GetCellSpans (PtrElement cell, int *colspan, int *rowspan)
 	      if (pAttr->AeAttrNum == attrVSpan && pAttr->AeAttrSSchema == pSS)
 		{
 		  /* rowspan on this cell */
-		  if (pAttr->AeAttrValue > 1)
+		  if (pAttr->AeAttrValue != 1)
 		    *rowspan = pAttr->AeAttrValue;
 		}
 	      else if (pAttr->AeAttrNum == attrHSpan && pAttr->AeAttrSSchema == pSS)
 		{
-		  if (pAttr->AeAttrValue > 1)
+		  if (pAttr->AeAttrValue != 1)
 		    *colspan = pAttr->AeAttrValue;
 		}
 	      pAttr = pAttr->AeNext;
@@ -1342,7 +1343,10 @@ static ThotBool SetTableWidths (PtrAbstractBox table, int frame)
 				  if (pAttr->AeAttrType == AtEnumAttr || pAttr->AeAttrType == AtNumAttr)
 				    {
 				      /* rowspan on this cell */
-				      colVSpan[cRef] = pAttr->AeAttrValue - 1;
+				      if (pAttr->AeAttrValue == 0)
+					colVSpan[cRef] = 9999; /*****/
+				      else
+					colVSpan[cRef] = pAttr->AeAttrValue - 1;
 				      if (colVSpan[cRef] > 0 && rspanNumber < MAX_COLROW)
 					{
 					  /* register current cell and span value */
@@ -1360,7 +1364,10 @@ static ThotBool SetTableWidths (PtrAbstractBox table, int frame)
 					      pTabSpan = pTabSpan->TaSpanNext;
 					      memset (pTabSpan, 0, sizeof (TabSpan));
 					    }
-					  pTabSpan->TaSpanNumber[rspanNumber] = pAttr->AeAttrValue;
+					  if (pAttr->AeAttrValue == 0)
+					    pTabSpan->TaSpanNumber[rspanNumber] = 999;
+					  else
+					    pTabSpan->TaSpanNumber[rspanNumber] = pAttr->AeAttrValue;
 					  pTabSpan->TaSpanCell[rspanNumber++] = pAb;
 					  foundV = TRUE;
 					}
@@ -1372,14 +1379,16 @@ static ThotBool SetTableWidths (PtrAbstractBox table, int frame)
 				  foundH = TRUE;
 				  if (pAttr->AeAttrType == AtEnumAttr ||
 				      pAttr->AeAttrType == AtNumAttr)
-				     /* ignore values less or equal to 1 */
-				     if (pAttr->AeAttrValue > 1)
-				       {
-				         span = pAttr->AeAttrValue;
-				         /* it could be an invalid span */
-				         if (cRef + span > cNumber)
-					   span = cNumber - cRef;
-				       }
+				    {
+				      if (pAttr->AeAttrValue == 0)
+					span = cNumber - cRef;
+				      else if (pAttr->AeAttrValue > 1)
+					/* ignore values equal to 1 */
+					span = pAttr->AeAttrValue;
+				      /* it could be an invalid span */
+				      if (cRef + span > cNumber)
+					span = cNumber - cRef;
+				    }
 				}
 			      pAttr = pAttr->AeNext;
 			    }
@@ -1664,7 +1673,13 @@ static void UpdateCellHeight (PtrAbstractBox cell, int frame)
   if (FrameTable[frame].FrView != 1)
     return;
 
-  if (!Lock)
+  if (Lock)
+    /* the table formatting is locked */
+    DifferFormatting (table, cell, frame);
+  else if (IsDifferredTable (table, NULL))
+    /* the table will be managed later */
+    return;
+  else
     {
       /* get row and table elements */
       row = SearchEnclosingType (cell, BoRow, BoRow);
@@ -1929,8 +1944,11 @@ static void    UnlockTableFormatting ()
 		    {
 		      /* there is a change within a specific cell */
 		      if (!SetCellWidths (cell, table, pLockRel->LockRFrame[i]))
-			/* nothing to do more on this table */
-			pLockRel->LockRTable[i] = NULL;
+			{
+			   CheckRowHeights (table, pLockRel->LockRFrame[i]);
+			   /* nothing to do more on this table */
+			   pLockRel->LockRTable[i] = NULL;
+			}
 		    }
 		  else
 		    /* there is a change within a specific cell */
