@@ -26,7 +26,7 @@ unsigned long offset[6] = {
 };
 
 typedef struct {
-  char        ISOCode [50];
+  char       *ISOCode;
   CHARSET     Charset;
 } CharsetCode;
 
@@ -429,7 +429,7 @@ char *TtaGetCharsetName (CHARSET charset)
   while (CharsetCodeTable[index].Charset != UNDEFINED_CHARSET)
     {
       if (CharsetCodeTable[index].Charset == charset)
-	return &(CharsetCodeTable[index].ISOCode);
+	return (CharsetCodeTable[index].ISOCode);
       index++;
     }
   return NULL;
