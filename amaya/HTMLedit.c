@@ -494,9 +494,9 @@ ThotBool	    withUndo;
    int                 length;
 #ifndef _WINDOWS
    int                 i;
+   CHAR_T              s[MAX_LENGTH];
 #endif
    ThotBool            isHTML;
-   CHAR_T              s[MAX_LENGTH];
 
    /* ask the user to select target document and target anchor */
    TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_SEL_TARGET), NULL);
@@ -596,11 +596,7 @@ ThotBool	    withUndo;
 	TtaSetDialoguePosition ();
 	TtaShowDialogue (BaseDialog + AttrHREFForm, TRUE);
 #else  /* _WINDOWS */
-    if (AttrHREFvalue[0] != WC_EOS)
-       usprintf (s, TEXT("%s"), AttrHREFvalue);
-    else
-      usprintf (s, TEXT("%s%c%s"), DirectoryName, DIR_SEP, DocumentName);
-    CreateHRefDlgWindow (currentWindow, s, DocSelect, DirSelect, 2);
+    CreateHRefDlgWindow (currentWindow, AttrHREFvalue, DocSelect, DirSelect, 2);
 #endif  /* _WINDOWS */
      }
 }

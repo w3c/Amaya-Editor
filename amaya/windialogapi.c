@@ -536,7 +536,10 @@ LPARAM lParam;
       SetWindowText (GetDlgItem (hwnDlg, IDCANCEL), TtaGetMessage (LIB, TMSG_CANCEL));
       
       EditURLWnd = GetDlgItem (hwnDlg, IDC_GETURL);
-      SetDlgItemText (hwnDlg, IDC_GETURL, tmpDocName);
+	  if (tmpDocName[0] != WC_EOS)
+		  SetDlgItemText (hwnDlg, IDC_GETURL, tmpDocName);
+	  else
+		  SetDlgItemText (hwnDlg, IDC_GETURL, TEXT(""));
       HrefUrl [0] = 0;
       break;
       
