@@ -45,10 +45,9 @@
 #include "frame_tv.h"
 #include "font_tv.h"
 #include "platform_tv.h"
-
 #ifdef _WINGUI 
-  #include "units_tv.h"
-  #include "wininclude.h"
+#include "units_tv.h"
+#include "wininclude.h"
 #endif /* _WINGUI */
 
 #include "appli_f.h"
@@ -69,11 +68,10 @@
 #include "views_f.h"
 #include "xbmhandler_f.h"
 #include "xpmhandler_f.h"
-
 #ifdef _GL
-  #include "displaybox_f.h"
-  #include "glgradient_f.h"
-  #include "glprint.h"
+#include "displaybox_f.h"
+#include "glgradient_f.h"
+#include "glprint.h"
 #endif /* _GL */
 
 
@@ -121,20 +119,17 @@ static unsigned char MirrorBytes[0x100] = {
    0x0f, 0x8f, 0x4f, 0xcf, 0x2f, 0xaf, 0x6f, 0xef,
    0x1f, 0x9f, 0x5f, 0xdf, 0x3f, 0xbf, 0x7f, 0xff
 };
+
 #ifdef _GL
-
 static ThotBool PrintingGL = FALSE;
-
 #include "glwindowdisplay.h"
-
 #ifdef _GTK
-  #include <gtkgl/gtkglarea.h>
+#include <gtkgl/gtkglarea.h>
 #endif /*_GTK*/
 
 #include <GL/gl.h>
-
 #ifdef GL_MESA_window_pos
-  #define MESA
+#define MESA
 #endif
 /* For now not software optimised but quality optimized...
  if too sloooooow we'll revert*/
@@ -305,6 +300,7 @@ static int LookupInPicCache (PictInfo *Image, int frame)
   FreeGlTexture (Image);
   return 0;  
 }
+
 /*----------------------------------------------------------------------
  FreeGlTextureNoCache : Free video card memory from this texture.
   ----------------------------------------------------------------------*/
@@ -328,42 +324,43 @@ void FreeGlTextureNoCache (void *ImageDesc)
       Image->RGBA = False;
     }
 }
+
 /*----------------------------------------------------------------------
  FreeGlTexture : Free amaya Picture cache 
  and video card memory from this texture.
   ----------------------------------------------------------------------*/
-void FreeGlTexture (void *ImageDesc)
+void FreeGlTexture (void *imagedesc)
 {
-  PictInfo *Image;
+  PictInfo *img;
   
-  Image = (PictInfo *)ImageDesc;
+  img = (PictInfo *)imagedesc;
 #ifdef _TRACE_GL_BUGS_GLISTEXTURE
-  if (Image->TextureBind) printf ( "GLBUG - FreeGlTexture : glIsTexture=%s (pose prb sur certaines machines)\n", glIsTexture (Image->TextureBind) ? "yes" : "no" );
+  if (img->TextureBind) printf ( "GLBUG - FreeGlTexture : glIsTexture=%s (pose prb sur certaines machines)\n", glIsTexture (img->TextureBind) ? "yes" : "no" );
 #endif /* _TRACE_GL_BUGS_GLISTEXTURE */
-  if (Image->TextureBind
+  if (img->TextureBind
       /* ce patch permet de fixer le probleme des images qui ne s'affichent pas */
       /* opengl dit que la texture n'en est pas une alors que s'en est bien une */
       /* il y a peutetre un probleme en amont : peutetre que la texture est desalouee misterieusement par une autre fonction ... sous mandrake opengl dit que la texture est ok et sous debian is dit qu'elle n'est pas valide */
-      /* && glIsTexture (Image->TextureBind) */ )
+      /* && glIsTexture (img->TextureBind) */ )
     {
 #ifdef _TRACE_GL_PICTURE
 	  printf ( "FreeGlTexture :\n\tfilename=%s\n\twidth=%d\n\theight=%d\n\tTexU=%f\n\tTexV=%f\n\tTexBind=%d\n\tglIsTexture=%s (pose prb sur certaines machines)\n", 
-		   Image->PicFileName,
-		   Image->PicWidth,
-		   Image->PicHeight,
-		   Image->TexCoordW,
-		   Image->TexCoordH,
-		   Image->TextureBind );
+		   img->PicFileName,
+		   img->PicWidth,
+		   img->PicHeight,
+		   img->TexCoordW,
+		   img->TexCoordH,
+		   img->TextureBind );
 #endif /* _TRACE_GL_PICTURE */
-      if (FreeAPicCache (Image->TextureBind,
+      if (FreeAPicCache (img->TextureBind,
 			 ActiveFrame) == 0)
 			/*not found in cache, we free it manually.*/
-			glDeleteTextures (1,  &(Image->TextureBind));
+			glDeleteTextures (1, &(img->TextureBind));
 #ifdef _PCLDEBUG
-      printf ("\n Image %s Freed", Image->PicFileName);      
+      printf ("\n img %s Freed", img->PicFileName);      
 #endif /*_PCLDEBUG*/
-      Image->TextureBind = 0;
-      Image->RGBA = False;
+      img->TextureBind = 0;
+      img->RGBA = False;
     }
 }
 
@@ -406,42 +403,41 @@ but VERY VERY VERY slower
 return 1 << (int) ceilf(logf((float) p) / M_LN2);
 } 
 */
+
 #ifdef POWER2TEXSUBIMAGE
 /*----------------------------------------------------------------------
   GL_MakeTextureSize : Texture sizes must be power of two
   ----------------------------------------------------------------------*/
-static void GL_MakeTextureSize(PictInfo *Image, 
-			       int GL_w, int GL_h)
+static void GL_MakeTextureSize (PictInfo *img, int GL_w, int GL_h)
 {
   unsigned char      *data, *ptr1, *ptr2;
   int                 xdiff, x, y, nbpixel;
 
 
-  if (Image->PicPixmap != None)
+  if (img->PicPixmap != None)
     {
-      nbpixel = GL_w * GL_h * ((Image->RGBA)?4:3);
+      nbpixel = GL_w * GL_h * ((img->RGBA)?4:3);
       /* In this algo, just remember that a 
 	 RGB pixel value is a list of 3 value in source data
 	 and 4 for destination RGBA texture */
       data = TtaGetMemory (sizeof (unsigned char) * nbpixel);
       /* Black transparent filling */
       memset (data, 0, sizeof (unsigned char) * nbpixel);
-      ptr1 = Image->PicPixmap;
+      ptr1 = img->PicPixmap;
       ptr2 = data;
-      nbpixel = ((Image->RGBA)?4:3);
-      xdiff = (GL_w - Image->PicWidth) * nbpixel;
-      x = nbpixel * Image->PicWidth;
-      for (y = 0; y < Image->PicHeight; y++)
+      nbpixel = ((img->RGBA)?4:3);
+      xdiff = (GL_w - img->PicWidth) * nbpixel;
+      x = nbpixel * img->PicWidth;
+      for (y = 0; y < img->PicHeight; y++)
 	{
 	  /* copy R,G,B,A */
 	  memcpy (ptr2, ptr1, x); 
 	  /* jump over the black transparent zone*/
 	  ptr1 += x;
 	  ptr2 += x + xdiff;
-	}	
-      if (Image->PicPixmap != PictureLogo)
-	TtaFreeMemory (Image->PicPixmap);      
-      Image->PicPixmap = data;
+	}
+      FreePixmap (img->PicPixmap);
+      img->PicPixmap = data;
     }
 }
 #endif /* POWER2TEXSUBIMAGE */
@@ -451,34 +447,34 @@ static void GL_MakeTextureSize(PictInfo *Image,
  GL_TextureBind : Put Texture in video card's Memory at
  a power of 2 size for height and width 
   ----------------------------------------------------------------------*/
-static void GL_TextureBind (PictInfo *Image, ThotBool IsPixmap)
+static void GL_TextureBind (PictInfo *img, ThotBool IsPixmap)
 {
   int           p2_w, p2_h;
   GLfloat       GL_w, GL_h;   
   GLint		Mode;
   
 #ifdef _TRACE_GL_BUGS_GLISTEXTURE
-  if (Image->TextureBind) printf ( "GLBUG - GL_TextureBind : glIsTexture=%s (pose prb sur certaines machines)\n", glIsTexture (Image->TextureBind) ? "yes" : "no" );
+  if (img->TextureBind) printf ( "GLBUG - GL_TextureBind : glIsTexture=%s (pose prb sur certaines machines)\n", glIsTexture (img->TextureBind) ? "yes" : "no" );
 #endif /* _TRACE_GL_BUGS_GLISTEXTURE */
   /* Put texture in 3d card memory */
-  if (!glIsTexture (Image->TextureBind) &&
-      Image->PicWidth && Image->PicHeight &&
-      (Image->PicPixmap || !IsPixmap))
+  if (!glIsTexture (img->TextureBind) &&
+      img->PicWidth && img->PicHeight &&
+      (img->PicPixmap || !IsPixmap))
     {
       /* Another way is to split texture in 256x256 
 	 pieces and render them on different quads
 	 Declared to be the faster  */
-      p2_w = p2 (Image->PicWidth);
-      p2_h = p2 (Image->PicHeight);
+      p2_w = p2 (img->PicWidth);
+      p2_h = p2 (img->PicHeight);
       /* We have resized the picture to match a power of 2
 	 We don't want to see all the picture, just the w and h 
 	 portion*/
-      GL_w = (GLfloat) Image->PicWidth/p2_w;
-      GL_h = (GLfloat) Image->PicHeight/p2_h;
+      GL_w = (GLfloat) img->PicWidth/p2_w;
+      GL_h = (GLfloat) img->PicHeight/p2_h;
       /* We give te texture to opengl Pipeline system */	    
-      Mode = (Image->RGBA)?GL_RGBA:GL_RGB;
-      glGenTextures (1, &(Image->TextureBind));
-      glBindTexture (GL_TEXTURE_2D, Image->TextureBind);
+      Mode = (img->RGBA)?GL_RGBA:GL_RGB;
+      glGenTextures (1, &(img->TextureBind));
+      glBindTexture (GL_TEXTURE_2D, img->TextureBind);
       /*Texture Parameter : Here Faster ones...*/
       glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
       glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);	    
@@ -495,18 +491,18 @@ static void GL_TextureBind (PictInfo *Image, ThotBool IsPixmap)
 			GL_UNSIGNED_BYTE, NULL);
 	  /* Map the texture wich isn't a power of two*/
 	  glTexSubImage2D (GL_TEXTURE_2D, 0, 0, 0, 
-			   Image->PicWidth, Image->PicHeight, 
+			   img->PicWidth, img->PicHeight, 
 			   Mode, GL_UNSIGNED_BYTE,
-			   (GLvoid *) Image->PicPixmap);    
-	  if (Image->PicPixmap != PictureLogo && !Printing)
-	    TtaFreeMemory (Image->PicPixmap);
+			   (GLvoid *) img->PicPixmap);    
+	  if (img->PicPixmap != PictureLogo && !Printing)
+	    TtaFreeMemory (img->PicPixmap);
 
 #else/*  POWER2TEXSUBIMAGE */
-	  GL_MakeTextureSize (Image, p2_w, p2_h);
+	  GL_MakeTextureSize (img, p2_w, p2_h);
 	  glTexImage2D (GL_TEXTURE_2D, 0, Mode, p2_w, p2_h,
 			0, Mode, GL_UNSIGNED_BYTE,
-			(GLvoid *) Image->PicPixmap);
-	  TtaFreeMemory (Image->PicPixmap);
+			(GLvoid *) img->PicPixmap);
+	  TtaFreeMemory (img->PicPixmap);
 #endif /* POWER2TEXSUBIMAGE */ 
 	}
       else
@@ -516,18 +512,18 @@ static void GL_TextureBind (PictInfo *Image, ThotBool IsPixmap)
 			GL_UNSIGNED_BYTE, NULL);
 	}
       if (!Printing)
-	Image->PicPixmap = None;
-      Image->TexCoordW = GL_w;
-      Image->TexCoordH = GL_h;
+	img->PicPixmap = None;
+      img->TexCoordW = GL_w;
+      img->TexCoordH = GL_h;
 
 #ifdef _TRACE_GL_PICTURE
 	  printf ( "GL_TextureBind :\n\tfilename=%s\n\twidth=%d\n\theight=%d\n\tTexU=%f\n\tTexV=%f\n\tTexBind=%d\n\tIsPixMap=%s\n", 
-		   Image->PicFileName,
-		   Image->PicWidth,
-		   Image->PicHeight,
-		   Image->TexCoordW,
-		   Image->TexCoordH,
-		   Image->TextureBind,
+		   img->PicFileName,
+		   img->PicWidth,
+		   img->PicHeight,
+		   img->TexCoordW,
+		   img->TexCoordH,
+		   img->TextureBind,
 		   IsPixmap ? "yes" : "no" );
 #endif /* _TRACE_GL_PICTURE */
     }  
@@ -535,23 +531,23 @@ static void GL_TextureBind (PictInfo *Image, ThotBool IsPixmap)
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-static void PrintPoscriptImage (PictInfo *Image, int x, int y, 
+static void PrintPoscriptImage (PictInfo *img, int x, int y, 
 				int w, int h, int frame)
 {
   unsigned char *pixels;  
   GLenum        Mode;
-  int           xBox,yBox,wBox,hBox,width, height;
+  int           xBox, yBox, wBox, hBox, width, height;
   
-  if (Image->PicFileName)
+  if (img->PicFileName)
     {
     pixels = NULL;
-    if (Image->PicPixmap == NULL)
+    if (img->PicPixmap == NULL)
       {
 	xBox = yBox = wBox = hBox = width = height = 0;
-	Image->PicPixmap = (ThotPixmap) 
-		  (*(PictureHandlerTable[Image->PicType].Produce_Picture)) (
-			(void *)Image->PicFileName,
-			(void *)Image,
+	img->PicPixmap = (ThotPixmap) 
+		  (*(PictureHandlerTable[img->PicType].Produce_Picture)) (
+			(void *)img->PicFileName,
+			(void *)img,
 			(void *)&xBox,
 			(void *)&yBox,
 			(void *)&wBox,
@@ -561,22 +557,22 @@ static void PrintPoscriptImage (PictInfo *Image, int x, int y,
 			(void *)&height,
 			(void *)0 );
       }
-    if (w != Image->PicWidth || h != Image->PicHeight)
-      pixels = ZoomPicture ((unsigned char*)Image->PicPixmap, 
-			    Image->PicWidth, Image->PicHeight, 
-			    w, h, (Image->RGBA?4:3));
+    if (w != img->PicWidth || h != img->PicHeight)
+      pixels = ZoomPicture ((unsigned char*)img->PicPixmap, 
+			    img->PicWidth, img->PicHeight, 
+			    w, h, (img->RGBA?4:3));
     else
-      pixels = (unsigned char*)Image->PicPixmap;
+      pixels = (unsigned char*)img->PicPixmap;
     if (pixels)
       {
 
-	Mode = (Image->RGBA)?GL_RGBA:GL_RGB;
+	Mode = (img->RGBA)?GL_RGBA:GL_RGB;
 	GLDrawPixelsPoscript (w, h, x, y, Mode, Mode, pixels, 
 			      0.0f, 0.0f);
-	if (w != Image->PicWidth || h != Image->PicHeight)
+	if (w != img->PicWidth || h != img->PicHeight)
 	  TtaFreeMemory (pixels);
-	TtaFreeMemory (Image->PicPixmap);
-	Image->PicPixmap = NULL;
+	FreePixmap (img->PicPixmap);
+	img->PicPixmap = NULL;
       }
     }
 }
@@ -1127,10 +1123,9 @@ static void TransparentPicture (HBITMAP pixmap, int xFrame, int yFrame,
 }
 #endif /* _WINGUI */
 
-/*--------------------------------------------------
- Free All pics in video card memory and empty cache list
- in GL
- ---------------------------------------------------*/
+/*----------------------------------------------------------------------
+ Free All pics in video card memory and empty cache list in GL
+  ----------------------------------------------------------------------*/
 void FreeAllPicCache ()
 {
 #ifdef _GL
@@ -1138,10 +1133,10 @@ void FreeAllPicCache ()
     FreePicCache (PicCache);  
 #endif /* _GL */
 }
-/*--------------------------------------------------
-  FreePicsCacheFromFrame : index Cache freeing  
- upon a frame destroy event
- ---------------------------------------------------*/
+
+/*----------------------------------------------------------------------
+  FreePicsCacheFromFrame : index Cache freeing upon a frame destroy event
+  ----------------------------------------------------------------------*/
 void FreeAllPicCacheFromFrame (int frame)
 {
 #ifdef _GL
@@ -1201,37 +1196,23 @@ static ThotBool Match_Format (int typeImage, char *fileName)
   ----------------------------------------------------------------------*/
 void FreePixmap (ThotPixmap pixmap)
 {
-#ifdef _GL
   if (pixmap != None 
       && pixmap != (ThotPixmap) PictureLogo 
       && pixmap != EpsfPictureLogo)
+#ifdef _GL
     TtaFreeMemory ((void *)pixmap);
 #else /*_GL*/
-
 #ifdef _MOTIF
-  if (pixmap != None 
-      && pixmap != (ThotPixmap) PictureLogo 
-      && pixmap != EpsfPictureLogo)
     XFreePixmap (TtDisplay, pixmap);
 #endif /* _MOTIF */
-    
 #ifdef _GTK 
-  if (pixmap != None 
-      && pixmap != (ThotPixmap) PictureLogo 
-      && pixmap != EpsfPictureLogo)  
     gdk_imlib_free_pixmap ((ThotPixmap) pixmap);
 #endif /* _GTK */
-    
 #ifdef _WINGUI
-  if (pixmap != None 
-      && pixmap != (ThotPixmap) PictureLogo 
-      && pixmap != EpsfPictureLogo)
     if (!DeleteObject ((HBITMAP)pixmap))
       WinErrorBox (WIN_Main_Wd, "FreePixmap");
 #endif /* _WINGUI */
-
 #endif /*_GL*/
-
 }
 
 
@@ -1343,15 +1324,12 @@ static void LayoutPicture (ThotPixmap pixmap, ThotDrawable drawable, int picXOrg
   int               i, j, iw, jh;
   HRGN              hrgn;
 #endif /* _WINGUI */
-
 #if defined(_MOTIF) || defined(_GTK)
-
   XRectangle        rect;
 #ifdef _MOTIF
   XGCValues         values;
   unsigned int      valuemask;
 #endif /* _MOTIF */
-  
 #endif /* #if defined(_MOTIF) || defined(_GTK) */
 
 #ifdef _GL
@@ -1383,7 +1361,6 @@ static void LayoutPicture (ThotPixmap pixmap, ThotDrawable drawable, int picXOrg
       nbPalColors = RealizePalette (TtDisplay);
     }
 #endif /* _WINGUI */
-
 #endif /* _GL */
 
   pFrame = &ViewFrameTable[frame - 1];
@@ -1412,7 +1389,6 @@ static void LayoutPicture (ThotPixmap pixmap, ThotDrawable drawable, int picXOrg
 #ifdef _GL
       GL_TextureMap (imageDesc, xFrame, yFrame, w, h, frame);
 #else /*_GL*/
-
 #ifdef _MOTIF
       if (imageDesc->PicMask)
 	{
@@ -1446,7 +1422,6 @@ static void LayoutPicture (ThotPixmap pixmap, ThotDrawable drawable, int picXOrg
 	  gdk_gc_set_clip_origin (TtGraphicGC, 0, 0);
 	}
 #endif /* _GTK */
-      
 #ifdef _WINGUI
       if (imageDesc->PicBgMask != -1 && imageDesc->PicType != -1)
 	{
@@ -1472,7 +1447,6 @@ static void LayoutPicture (ThotPixmap pixmap, ThotDrawable drawable, int picXOrg
 	    DeleteDC (hMemDC);
 	}
 #endif /* _WINGUI */
-      
 #endif /* _GL */
     }
   else
@@ -1616,7 +1590,6 @@ static void LayoutPicture (ThotPixmap pixmap, ThotDrawable drawable, int picXOrg
       rect.y = y;
       rect.width = clipWidth + dx;
       rect.height = clipHeight + dy;
-
 #ifdef _MOTIF
       valuemask = GCTile | GCFillStyle | GCTileStipXOrigin | GCTileStipYOrigin;
       values.tile = pixmap;
@@ -1640,7 +1613,6 @@ static void LayoutPicture (ThotPixmap pixmap, ThotDrawable drawable, int picXOrg
 	  XSetClipOrigin (TtDisplay, tiledGC, 0, 0);
 	}
 #endif /* _MOTIF */
-      
 #ifdef _GTK
       /*if (picPresent == RealSize)
 	printf ("Display RealSize x=%d y=%d w=%d+%d h=%d+%d img=%d\n", x, y, clipWidth, dx, clipHeight, dy, imageDesc->PicHArea);*/
@@ -1723,7 +1695,6 @@ static void LayoutPicture (ThotPixmap pixmap, ThotDrawable drawable, int picXOrg
       if (hrgn)
 	DeleteObject (hrgn);
 #endif /* _WINGUI */
-
 #endif /* _GL */
     }
 }
@@ -1796,7 +1767,6 @@ Picture_Report PictureFileOk (char *fileName, int *typeImage)
 void CreateGifLogo ()
 {
 #if defined (_GTK) || defined (_WINGUI)
-
 #if defined(_WINGUI) || defined (_GL) 
   PictInfo            *imageDesc;
   unsigned long       Bgcolor = 0;
@@ -1822,7 +1792,6 @@ void CreateGifLogo ()
   TtaFreeMemory (imageDesc);
   PictureLogo = drw;
 #else /* #if defined(_WINGUI) || defined (_GL)  */
-
 #ifdef _GTK  
   GdkImlibImage      *im;
 
@@ -1831,9 +1800,7 @@ void CreateGifLogo ()
   PictureLogo = gdk_imlib_copy_image (im);
   TtaFreeMemory (im);
 #endif /*_GTK*/
- 
 #endif /*_WIN && _GL*/
-
 #endif /*_GTK && _WIN*/
 }
 
@@ -1842,7 +1809,6 @@ void CreateGifLogo ()
   ----------------------------------------------------------------------*/
 void InitPictureHandlers (ThotBool printing)
 {
-
 #ifdef _GTK
   if (!printing)
     {
@@ -2229,7 +2195,7 @@ void DrawPicture (PtrBox box, PictInfo *imageDesc, int frame,
   PictureScaling      pres;
   ThotDrawable        drawable;
   int                 typeImage;
-  int                 picXArea, picYArea, picWArea, picHArea;
+  int                 picWArea, picHArea;
   int                 xTranslate, yTranslate, picXOrg, picYOrg;
   int                 xFrame, yFrame;
   int                 bgColor;
@@ -2288,8 +2254,6 @@ void DrawPicture (PtrBox box, PictInfo *imageDesc, int frame,
       imageDesc->PicWArea = w;
       imageDesc->PicHArea = h;
     }
-  picXArea = imageDesc->PicXArea;
-  picYArea = imageDesc->PicYArea;
   picWArea = imageDesc->PicWArea;
   picHArea = imageDesc->PicHArea;
   bgColor = box->BxAbstractBox->AbBackground;
@@ -2327,19 +2291,7 @@ void DrawPicture (PtrBox box, PictInfo *imageDesc, int frame,
 			    pres, &xTranslate, &yTranslate,
 			    &picXOrg, &picYOrg);
 	  
-	  if (typeImage >= InlineHandlers)
-	    {
-	      if (PictureHandlerTable[typeImage].DrawPicture != NULL)
-		(*(PictureHandlerTable[typeImage].DrawPicture)) (
-			(void *)box,
-		       	(void *)imageDesc,
-		        (void *)(x + xTranslate),
-		       	(void *)(y + yTranslate),
-		       	(void *)0,
-		       	(void *)0,
-		       	(void *)0 );
-	    }
-	  else
+	  if (typeImage < InlineHandlers)
 	    LayoutPicture ((ThotPixmap) imageDesc->PicPixmap, drawable,
 			   picXOrg, picYOrg, w, h, 
 			   x + xTranslate, y + yTranslate, frame,
@@ -2609,8 +2561,6 @@ void *PutTextureOnImageDesc (unsigned char *pattern, int width, int height)
   imageDesc->RGBA = TRUE;
   imageDesc->PicWidth = width;
   imageDesc->PicHeight = height;
-  imageDesc->PicXArea = 0;
-  imageDesc->PicYArea = 0;
   imageDesc->PicWArea = width;
   imageDesc->PicHArea = height;
   imageDesc->PicPixmap = (ThotPixmap)pattern;   
@@ -2633,8 +2583,14 @@ ThotBool Ratio_Calculate (PtrAbstractBox pAb, PictInfo *imageDesc,
   
   imageDesc->PicWidth = width;
   imageDesc->PicHeight = height;
-  imageDesc->PicWArea = w;
-  imageDesc->PicHArea = h;
+  if (w == 0)
+    imageDesc->PicWArea = width;
+  else
+    imageDesc->PicWArea = w;
+  if (h == 0)
+    imageDesc->PicHArea = height;
+  else
+    imageDesc->PicHArea = h;
   change = FALSE;
   box = pAb->AbBox;
   if (width && height && box && box->BxType == BoPicture)
@@ -2658,6 +2614,7 @@ ThotBool Ratio_Calculate (PtrAbstractBox pAb, PictInfo *imageDesc,
 	    {
 	      change = TRUE;
 	      imageDesc->PicWArea = w;
+	      /* update the box size */
 	      ResizeWidth (box, box, NULL, w - box->BxW,
 			   0, 0, 0, frame);		  
 	    }
@@ -2669,12 +2626,15 @@ ThotBool Ratio_Calculate (PtrAbstractBox pAb, PictInfo *imageDesc,
 	    {
 	      change = TRUE;
 	      imageDesc->PicHArea = h;
+	      /* update the box size */
 	      ResizeHeight (box, box, NULL, h - box->BxH,
 			    0, 0, frame);
 	    }
 	}
       if (change)
 	{
+	  w = w + box->BxWidth - box->BxW;
+	  h = h + box->BxHeight - box->BxH;
 #ifndef _GL
 	  DefClip (frame, box->BxXOrg, box->BxYOrg,
 		   box->BxXOrg + w, box->BxYOrg + h);
@@ -2714,7 +2674,7 @@ static void ClipAndBoxUpdate (PtrAbstractBox pAb, PtrBox box,
   if (pAb->AbLeafType == LtPicture)
     {
       /* transmit picture dimensions */
-      if (!(pAb->AbWidth.DimIsPosition))
+      if (!pAb->AbWidth.DimIsPosition)
 	{
 	  if (pAb->AbWidth.DimMinimum)
 	    /* the rule min is applied to this box */
@@ -2727,13 +2687,13 @@ static void ClipAndBoxUpdate (PtrAbstractBox pAb, PtrBox box,
 			 pAb->AbEnclosing->AbBox, NULL,
 			 w + left + right, 0, frame);
 	}
-      if (!(pAb->AbHeight.DimIsPosition))
+      if (!pAb->AbHeight.DimIsPosition)
 	{
 	  if (pAb->AbHeight.DimMinimum)
 	    /* the rule min is applied to this box */
 	    ChangeDefaultHeight (box, box, h, frame);
 	  else if (pAb->AbEnclosing &&
-		   pAb->AbWidth.DimAbRef == pAb->AbEnclosing &&
+		   pAb->AbHeight.DimAbRef == pAb->AbEnclosing &&
 		   pAb->AbNext == NULL && pAb->AbPrevious == NULL)
 	    /* the parent box should inherit the picture height */
 	    ChangeHeight (pAb->AbEnclosing->AbBox,
@@ -2757,8 +2717,6 @@ void *Group_shot (int x, int y, int width, int height, int frame, ThotBool is_rg
       imageDesc->RGBA = TRUE;
       imageDesc->PicWidth = width;
       imageDesc->PicHeight = height;
-      imageDesc->PicXArea = 0;
-      imageDesc->PicYArea = 0;
       imageDesc->PicWArea = width;
       imageDesc->PicHArea = height; 
       imageDesc->TextureBind = 0; 
@@ -2809,6 +2767,7 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
   int                 w, h;
   int                 width, height;
   int                 left, right, top, bottom;
+  ThotBool            redo = FALSE;
 
   left = box->BxLMargin + box->BxLBorder + box->BxLPadding;
   right = box->BxRMargin + box->BxRBorder + box->BxRPadding;
@@ -2821,8 +2780,6 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
       /* the picture is not visible */
       imageDesc->PicWidth = 0;
       imageDesc->PicHeight = 0;      
-      imageDesc->PicXArea = 0;
-      imageDesc->PicYArea = 0;
       imageDesc->PicWArea = 0;
       imageDesc->PicHArea = 0;
       /* ignore explicit height amd width */
@@ -2842,6 +2799,7 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
  if (frame != ActiveFrame)
      GL_prepare (frame); 
 #endif /* _NOSHARELIST */
+#ifdef IV
  typeImage = LookupInPicCache (imageDesc, frame); 
  if (typeImage)
    {  
@@ -2871,7 +2829,7 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
 	 /* draw within the inside box */
 	 w = box->BxW;
 	 h = box->BxH;
-	}
+       }
 
       /* xBox and yBox get the box size if picture is */
       /* rescaled and receives the position of the picture */
@@ -2886,10 +2844,8 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
 	    xBox = w;
 	  if(box->BxH != 0)
 	    yBox = h;
-	  width = imageDesc->PicWidth;
-	  height = imageDesc->PicHeight;	      
-	  Ratio_Calculate (pAb, imageDesc, width, height, w, h, frame);
 	}
+
       if (w == 0 || h == 0)
 	{
 	  /* one of box size is unknown, keep the image size */
@@ -2902,23 +2858,13 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
 	  imageDesc->PicHArea = h;
 	}
 
-      if (pAb->AbLeafType == LtCompound)
-	{
-	  /* it's a background image */
-	  xBox = 0;
-	  yBox = 0;
-	}
       if (pres != ReScale || Printing)
 	{
-	  imageDesc->PicXArea = xBox;
-	  imageDesc->PicYArea = yBox;
 	  imageDesc->PicWArea = wBox;
 	  imageDesc->PicHArea = hBox;
 	}
       else
 	{
-	  imageDesc->PicXArea = xBox;
-	  imageDesc->PicYArea = yBox;
 	  imageDesc->PicWArea = w;
 	  imageDesc->PicHArea = h;
 	}
@@ -2929,23 +2875,20 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
 	imageDesc->RGBA = FALSE;
       else
 	imageDesc->RGBA = TRUE;
-
       /*
 	We succesfully get 
 	image from the cache so..
       */
       return;      
     }
-
+#endif
   typeImage = imageDesc->PicType;
+  if (typeImage >= InlineHandlers)
+    return;
   status = PictureFileOk (fileName, &typeImage);
   w = 0;
   h = 0;
   Bgcolor = ColorPixel (pAb->AbBackground);
-
-  /* clean up the current image descriptor */
-  /*CleanPictInfo (imageDesc);*/
-
   if (status == Supported_Format)
     {
       /* Supported format */
@@ -2977,87 +2920,40 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
 	  /* draw within the inside box */
 	}
       
-      if (PictureHandlerTable[typeImage].Produce_Picture != NULL)
+      if (PictureHandlerTable[typeImage].Produce_Picture)
 	{
-	  if (typeImage >= InlineHandlers)
+	  /* xBox and yBox get the box size if picture is */
+	  /* rescaled and receives the position of the picture */
+	  if (pres != ReScale || Printing)
 	    {
-	      /* Plugins are displayed in RealSize */
-	      imageDesc->PicPresent = RealSize;
-	      imageDesc->PicWArea = wBox = w;
-	      imageDesc->PicHArea = hBox = h;
-
-	      imageDesc->PicPixmap = (ThotPixmap) 
-		(*(PictureHandlerTable[typeImage].Produce_Picture)) (
-			(void *)frame,
-		       	(void *)imageDesc,
-		       	(void *)fileName,
-			(void *)0,
-			(void *)0,
-			(void *)0,
-			(void *)0,
-			(void *)0,
-			(void *)0,
-			(void *)0 );
-      
-	      xBox = imageDesc->PicXArea;
-	      yBox = imageDesc->PicYArea;
+	      xBox = 0;
+	      yBox = 0;
 	    }
 	  else
 	    {
-	      /* xBox and yBox get the box size if picture is */
-	      /* rescaled and receives the position of the picture */
-	      if (pres != ReScale || Printing)
-		{
-		  xBox = 0;
-		  yBox = 0;
-		}
-	      else
-		{
-		  if (box->BxW != 0)
-		    xBox = w;
-		  if(box->BxH != 0)
-		    yBox = h;
-		}
-	      imageDesc->PicPixmap = (ThotPixmap) 
-		  (*(PictureHandlerTable[typeImage].Produce_Picture)) (
-		   (void *)fileName,
-		   (void *)imageDesc,
-		   (void *)&xBox,
-		   (void *)&yBox,
-		   (void *)&wBox,
-		   (void *)&hBox,
-#ifndef _WX		   
-		   (void *)Bgcolor,
-#else /* #ifdef _WX */
-		   (void *)&Bgcolor,
-#endif /* #ifdef _WX */		   
-		   (void *)&width,
-		   (void *)&height,
-		   (void *)ViewFrameTable[frame - 1].FrMagnification );
-	      if  (width == 0 && height == 0)
-		{
-		  imageDesc->PicPixmap = (ThotPixmap) 
-		    (*(PictureHandlerTable[typeImage].Produce_Picture)) (
-			(void *)fileName,
-		       	(void *)imageDesc,
-		       	(void *)&xBox,
-		       	(void *)&yBox,
-		       	(void *)&wBox,
-		       	(void *)&hBox,
-#ifndef _WX		   
-	    	   	(void *)Bgcolor,
-#else /* #ifdef _WX */
-		        (void *)&Bgcolor,
-#endif /* #ifdef _WX */		   
-		       	(void *)&width,
-		       	(void *)&height,
-			(void *)ViewFrameTable[frame - 1].FrMagnification);
-		  imageDesc->TextureBind = 0;
-		}     
-
+	      if (box->BxW)
+		xBox = w;
+	      if(box->BxH)
+		yBox = h;
 	    }
+	  imageDesc->PicPixmap = (ThotPixmap) 
+	    (*(PictureHandlerTable[typeImage].Produce_Picture)) (
+			 (void *)fileName,
+			 (void *)imageDesc,
+			 (void *)&xBox,
+			 (void *)&yBox,
+			 (void *)&wBox,
+			 (void *)&hBox,
+#ifndef _WX		   
+			 (void *)Bgcolor,
+#else /* #ifdef _WX */
+			 (void *)&Bgcolor,
+#endif /* #ifdef _WX */		   
+			 (void *)&width,
+			 (void *)&height,
+			 (void *)ViewFrameTable[frame - 1].FrMagnification );
 	  /* intrinsic width and height */
-	  Ratio_Calculate (pAb, imageDesc, width, height, w, h, frame);
+	  redo = Ratio_Calculate (pAb, imageDesc, width, height, w, h, frame);
 	}
     }
 
@@ -3066,8 +2962,7 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
 #endif /* _TRACE_GL_BUGS_GLISTEXTURE */
   /* Picture didn't load (corrupted, don't exists...)
      or format isn't supported*/
-  if (imageDesc->PicPixmap == None 
-      && !glIsTexture (imageDesc->TextureBind))
+  if (imageDesc->PicPixmap == None && !glIsTexture (imageDesc->TextureBind))
     {
       if (PictureLogo == None)
 	/* create a special logo for lost pictures */
@@ -3078,15 +2973,6 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
       imageDesc->PicPresent = RealSize;
       imageDesc->PicPixmap = PictureLogo;
       typeImage = GIF_FORMAT;
-      /*TtaGetMemory (sizeof (unsigned char) * 6400);
-	memcpy (imageDesc->PicPixmap, PictureLogo, sizeof (unsigned char) * 6400);*/
-
-      /* convert logo into a texture map 
-	 GL_w = (GLfloat) Image->PicWidth/p2_w;
-	 GL_h = (GLfloat) Image->PicHeight/p2_h; 
-	 We give te texture to opengl Pipeline system 
-	 GL_MakeTextureSize (Image, p2_w, p2_h);
-      */
       wBox = w = 40;
       hBox = h = 40;
       imageDesc->PicWidth = w;
@@ -3102,25 +2988,18 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
       ClipAndBoxUpdate (pAb, box, w, h, top, bottom, left, right, frame);
     }
 
-  if (pAb->AbLeafType == LtCompound)
+  if (imageDesc->PicWArea == 0 || imageDesc->PicHArea == 0)
     {
-      /* it's a background image */
-      xBox = 0;
-      yBox = 0;
-    }
-  if (pres != ReScale || Printing)
-    {
-      imageDesc->PicXArea = xBox;
-      imageDesc->PicYArea = yBox;
-      imageDesc->PicWArea = wBox;
-      imageDesc->PicHArea = hBox;
-    }
-  else
-    {
-      imageDesc->PicXArea = xBox;
-      imageDesc->PicYArea = yBox;
-      imageDesc->PicWArea = w;
-      imageDesc->PicHArea = h;
+      if (pres != ReScale || Printing)
+	{
+	  imageDesc->PicWArea = wBox;
+	  imageDesc->PicHArea = hBox;
+	}
+      else
+	{
+	  imageDesc->PicWArea = w;
+	  imageDesc->PicHArea = h;
+	}
     }
   /* Gif and Png handles transparency 
      so picture format is RGBA, 
@@ -3137,12 +3016,14 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
     AddInPicCache (imageDesc, frame, TRUE); 
   else
     AddInPicCache (imageDesc, frame, FALSE); 
-      
 #ifdef _NOSHARELIST
   /* For the Sync Image*/
   if (frame != ActiveFrame)
     GL_prepare (ActiveFrame); 
 #endif /* _NOSHARELIST */
+  if (redo)
+    /* a ratio applied need to regenerate the image */
+    LoadPicture (frame, box, imageDesc);
 }
 
 #else /* _GL */
@@ -3154,24 +3035,12 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
   PathBuffer          fileName;
   PictureScaling      pres;
 #ifdef _GTK
-  #ifndef _GTK2
-    GdkImlibImage      *im = None;
-    ThotPixmap		drw = None;
-  #else /* _GTK2 */
-    GdkPixbuf          *im = None;
-    GError             *error=NULL;
-  #endif /* _GTK2 */
+  GdkImlibImage      *im = None;
 #endif /* _GTK */
-#if defined(_MOTIF) || defined(_WINGUI) || defined(_WX) || defined(_NOGUI)
-  ThotPixmap          drw = None;
-#endif /* #if defined(_MOTIF) || defined(_WINGUI) || defined(_WX) || defined(_NOGUI) */
+  ThotPixmap		drw = None;
   PtrAbstractBox      pAb;
   Picture_Report      status;
-#ifndef _WX
   unsigned long       Bgcolor;
-#else /* #ifndef _WX */  
-  ThotColor           Bgcolor;
-#endif /* #ifndef _WX */
   int                 typeImage;
   int                 xBox = 0;
   int                 yBox = 0;
@@ -3180,10 +3049,11 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
   int                 w, h;
   int                 width, height;
   int                 left, right, top, bottom;
-  
 #ifdef _WINGUI
   ThotBool            releaseDC = FALSE;
 #endif
+  ThotBool            redo = FALSE;
+
   left = box->BxLMargin + box->BxLBorder + box->BxLPadding;
   right = box->BxRMargin + box->BxRBorder + box->BxRPadding;
   top = box->BxTMargin + box->BxTBorder + box->BxTPadding;
@@ -3194,8 +3064,6 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
       /* the picture is not visible */
       imageDesc->PicWidth = 0;
       imageDesc->PicHeight = 0;      
-      imageDesc->PicXArea = 0;
-      imageDesc->PicYArea = 0;
       imageDesc->PicWArea = 0;
       imageDesc->PicHArea = 0;
       /* ignore explicit height amd width */
@@ -3208,6 +3076,8 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
 
   GetPictureFileName (imageDesc->PicFileName, fileName);
   typeImage = imageDesc->PicType;
+  if (typeImage >= InlineHandlers)
+    return;
   status = PictureFileOk (fileName, &typeImage);
   w = 0;
   h = 0;
@@ -3222,7 +3092,6 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
 	/* create a special logo for lost pictures */
 	CreateGifLogo ();
 #endif 
-      
 #ifdef _WINGUI
 #ifdef _WIN_PRINT
       if (TtDisplay == NULL)
@@ -3239,7 +3108,6 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
       drw = PictureLogo;
 #endif /* _WIN_PRINT */
 #endif  /* _WINGUI */
-      
 #ifdef _GTK 
       imageDesc->PicType = 3;
       imageDesc->PicPresent = pres;
@@ -3247,12 +3115,10 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
       imageDesc->PicWidth = 40;
       drw = (ThotPixmap) PictureLogo;
 #endif /*_GTK*/
-
 #ifdef _MOTIF
       drw = PictureLogo;
       imageDesc->PicType = -1;
 #endif /* _MOTIF */
-
       wBox = w = 40;
       hBox = h = 40;
     }
@@ -3277,9 +3143,9 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
 	{
 	  if (pres == ReScale)
 	  {
-	  /* a background image, draw over the whole box */
-	  w = box->BxWidth;
-	  h = box->BxHeight;
+	    /* a background image, draw over the whole box */
+	    w = box->BxWidth;
+	    h = box->BxHeight;
 	  }
 	}
       else
@@ -3288,15 +3154,9 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
 	  w = box->BxW;
 	  h = box->BxH;
 	}
-      if (imageDesc->PicWidth && imageDesc->PicHeight)
-	{
-	  width = imageDesc->PicWidth;
-	  height = imageDesc->PicHeight;
-	  Ratio_Calculate (pAb, imageDesc, width, height, w, h, frame);
-	}
+
       if (!Printing)
 	{
-
 #ifdef _MOTIF
 	  /* set the colors of the  graphic context GC */
 	  if (TtWDepth == 1)
@@ -3325,147 +3185,81 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
 			      ColorPixel (pAb->AbBackground));
 	    }
 #endif /* _MOTIF */
-
 	}
-#if defined(_MOTIF) || defined(_WINGUI)
-      if (PictureHandlerTable[typeImage].Produce_Picture != NULL)
-	{
-#endif /* #if defined(_MOTIF) || defined(_WINGUI) */
-    
-	  if (typeImage >= InlineHandlers)
-	    {
-	      /* Plugins are displayed in RealSize */
-	      imageDesc->PicPresent = RealSize;
-#if defined(_MOTIF) || defined(_WINGUI)
-	      imageDesc->PicWArea = wBox = w;
-	      imageDesc->PicHArea = hBox = h;
-	      drw = (*(PictureHandlerTable[typeImage].Produce_Picture)) (
-			(void *)frame,
-		       	(void *)imageDesc,
-		       	(void *)fileName,
-			(void *)0,
-			(void *)0,
-			(void *)0,
-			(void *)0,
-			(void *)0,
-			(void *)0,
-			(void *)0 );
-#endif /* #if defined(_MOTIF) || defined(_WINGUI) */
-        
-#ifdef _GTK
-	      imageDesc->PicWArea = wBox = w;
-	      imageDesc->PicHArea = hBox = h;
-#ifndef _GTK2
-	      im = gdk_imlib_load_image (fileName);
-	      gdk_imlib_render(im, w, h);
-	      drw = gdk_imlib_move_image (im);
-	      imageDesc->PicMask = (ThotPixmap) gdk_imlib_move_mask (im);
 
-#else /* _GTK2 */
-	      im = gdk_pixbuf_new_from_file(fileName, &error);
-#endif /* _GTK2 */
-#endif /* _GTK */
-        
-	      xBox = imageDesc->PicXArea;
-	      yBox = imageDesc->PicYArea;
+      /* xBox and yBox get the box size if picture is */
+      /* rescaled and receives the position of the picture */
+      if (pres != ReScale || Printing)
+	{
+	  xBox = 0;
+	  yBox = 0;
+	}
+      else
+	{
+	  if (box->BxW)
+	    xBox = w;
+	  if(box->BxH)
+	    yBox = h;
+	}
+
+#if defined(_MOTIF) || defined(_WINGUI)
+      drw = (*(PictureHandlerTable[typeImage].Produce_Picture)) (
+			(void *)fileName,
+			(void *)imageDesc,
+			(void *)&xBox,
+			(void *)&yBox,
+			(void *)&wBox,
+			(void *)&hBox,
+			(void *)Bgcolor,
+			(void *)&width,
+			(void *)&height,
+			(void *)ViewFrameTable[frame - 1].FrMagnification);
+#endif /* #if defined(_MOTIF) || defined(_WINGUI) */
+#ifdef _GTK
+      if (typeImage == EPS_FORMAT)
+	drw = (ThotPixmap) (*(PictureHandlerTable[typeImage].Produce_Picture)) (
+			(void *)fileName,
+			(void *)imageDesc,
+			(void *)&xBox,
+			(void *)&yBox,
+			(void *)&wBox,
+			(void *)&hBox,
+			(void *)Bgcolor,
+			(void *)&width,
+			(void *)&height,
+			(void *)ViewFrameTable[frame - 1].FrMagnification);
+      else
+	{
+	  /* load the picture using ImLib */
+	  im = gdk_imlib_load_image (fileName);	      
+	  if (pres == RealSize)
+	    {
+	      /* if it's a background, dont rescale the picture */
+	      wBox = im->rgb_width;
+	      hBox = im->rgb_height;
 	    }
 	  else
 	    {
-	      /* xBox and yBox get the box size if picture is */
-	      /* rescaled and receives the position of the picture */
-	      if (pres != ReScale || Printing)
-		{
-		  xBox = 0;
-		  yBox = 0;
-		}
-	      else
-		{
-		  if (box->BxW != 0)
-		    xBox = w;
-		  if(box->BxH != 0)
-		    yBox = h;
-		}
-#if defined(_MOTIF) || defined(_WINGUI) || defined(_WX)
-	      drw = (*(PictureHandlerTable[typeImage].Produce_Picture)) (
-			(void *)fileName,
-			(void *)imageDesc,
-			(void *)&xBox,
-			(void *)&yBox,
-			(void *)&wBox,
-			(void *)&hBox,
-#ifndef _WX			
-			(void *)Bgcolor,
-#else /* #ifndef _WX */
-			(void *)&Bgcolor,
-#endif /* #ifndef _WX */
-			(void *)&width,
-			(void *)&height,
-			(void *)ViewFrameTable[frame - 1].FrMagnification);
-#endif /* #if defined(_MOTIF) || defined(_WINGUI) || defined(_WX) */
-
-#ifdef _GTK
-	      if (typeImage == EPS_FORMAT)
-		drw = (ThotPixmap) (*(PictureHandlerTable[typeImage].Produce_Picture)) (
-			(void *)fileName,
-			(void *)imageDesc,
-			(void *)&xBox,
-			(void *)&yBox,
-			(void *)&wBox,
-			(void *)&hBox,
-			(void *)Bgcolor,
-			(void *)&width,
-			(void *)&height,
-			(void *)ViewFrameTable[frame - 1].FrMagnification);
-	      else
-		{
-		  /* load the picture using ImLib */
-		  im = gdk_imlib_load_image (fileName);	      
-		  if (pres == RealSize)
-		    {
-		      /* if it's a background, dont rescale the picture */
-		      wBox = im->rgb_width;
-		      hBox = im->rgb_height;
-		      /*if only one info interpolate 
-			the other with a correct ratio*/
-		      if (xBox == 0)
-			xBox = im->rgb_width;
-		      if (yBox == 0)
-			yBox = im->rgb_height;
-		    }
-		  else
-		    {
-		      if (wBox == 0)
-			wBox = im->rgb_width;
-		      if (hBox == 0)
-			hBox = im->rgb_height;
-		      /*if only one info interpolate 
-			the other with a correct ratio*/
-		      if (xBox == 0)
-			xBox = im->rgb_width;
-		      if (yBox == 0)
-			  yBox = im->rgb_height;
-		    }
-
-		  gdk_imlib_render(im, (gint) xBox, (gint) yBox);
-		  drw = (ThotPixmap) gdk_imlib_move_image (im);
-		  imageDesc->PicMask = (ThotPixmap) gdk_imlib_move_mask (im);
-
-		}
-	      width = (gint) wBox;
-	      height = (gint) hBox;
-#endif /* _GTK */
-	      /* intrinsic width and height */
-	      if (Ratio_Calculate (pAb, imageDesc, width, height, w, h, frame))
-		{
-		  /* Force Image rescaling by making box 
-		     size different of image info size
-		     w = w / 2;
-		     h = h / 2;*/
-		}
+	      if (wBox == 0)
+		wBox = im->rgb_width;
+	      if (hBox == 0)
+		hBox = im->rgb_height;
 	    }
-#if defined(_MOTIF) || defined(_WINGUI)
+	  /*if only one info interpolate 
+	    the other with a correct ratio*/
+	  if (xBox == 0)
+	    xBox = im->rgb_width;
+	  if (yBox == 0)
+	    yBox = im->rgb_height;
+	  
+	  gdk_imlib_render(im, (gint) xBox, (gint) yBox);
+	  drw = (ThotPixmap) gdk_imlib_move_image (im);
+	  imageDesc->PicMask = (ThotPixmap) gdk_imlib_move_mask (im);	  
 	}
-#endif /* #if defined(_MOTIF) || defined(_WINGUI) */
+      width = (gint) wBox;
+      height = (gint) hBox;
+#endif /* _GTK */
+      redo = Ratio_Calculate (pAb, imageDesc, width, height, w, h, frame);
        
       if (drw == None)
 	{
@@ -3474,7 +3268,6 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
 	    /* create a special logo for lost pictures */
 	    CreateGifLogo ();
 #endif 
-    
 #ifdef _WINGUI
 #ifdef _WIN_PRINT
 	  if (TtDisplay == NULL)
@@ -3489,19 +3282,16 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
 	  drw = PictureLogo;
 #endif /* _WIN_PRINT */
 #endif  /* _WINGUI */
-    
 #ifdef _GTK 
 	  imageDesc->PicType = 3;
 	  imageDesc->PicPresent = pres;
 	  imageDesc->PicFileName = TtaStrdup (LostPicturePath);
 	  drw = (ThotPixmap) PictureLogo;
-#endif /*_GTK*/
-    
+#endif /*_GTK*/   
 #ifdef _MOTIF
 	  drw = PictureLogo;
 	  imageDesc->PicType = -1;
 #endif /* #ifdef _MOTIF */
-
 	  wBox = w = 40;
 	  hBox = h = 40;
 	}
@@ -3509,45 +3299,40 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
 	{
 	  /* one of box size is unknown, keep the image size */
 	  if (w == 0)
-	      w = wBox;
+	    w = wBox = imageDesc->PicWidth;
 	  if (h == 0)
-	    h = hBox;
+	    h = hBox = imageDesc->PicHeight;
 	  ClipAndBoxUpdate (pAb, box, w, h, top, bottom, left, right, frame);
 	}
     }
 
-  if (pAb->AbLeafType == LtCompound)
+  if (imageDesc->PicWArea == 0 || imageDesc->PicHArea == 0)
     {
-      /* it's a background image */
-      xBox = 0;
-      yBox = 0;
-    }
-   if (pres != ReScale || Printing)
-    {
-      imageDesc->PicXArea = xBox;
-      imageDesc->PicYArea = yBox;
-      imageDesc->PicWArea = wBox;
-      imageDesc->PicHArea = hBox;
-    }
-  else
-    {
-      imageDesc->PicXArea = xBox;
-      imageDesc->PicYArea = yBox;
-      imageDesc->PicWArea = w;
-      imageDesc->PicHArea = h;
+      /* need to initialize these values */
+      if (pres != ReScale || Printing)
+	{
+	  imageDesc->PicWArea = wBox;
+	  imageDesc->PicHArea = hBox;
+	}
+      else
+	{
+	  imageDesc->PicWArea = w;
+	  imageDesc->PicHArea = h;
+	}
     }
   imageDesc->PicPixmap = drw;
-
 #ifdef _GTK
   if (im)
     imageDesc->im = im;
 #endif /*_GTK*/
-
 #ifdef _WIN_PRINT
   if (releaseDC)
     /* release the device context into TtDisplay */
     WIN_ReleaseDeviceContext ();
 #endif /* _WIN_PRINT */
+  if (redo)
+    /* a ratio applied need to regenerate the image */
+    LoadPicture (frame, box, imageDesc);
 }
 #endif /*_GL*/
 

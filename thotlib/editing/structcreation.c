@@ -829,8 +829,6 @@ void RedisplayNewContent (PtrElement pEl, PtrDocument pDoc, int dVol,
 			     picture2->PicType = picture1->PicType;
 			     picture2->PicPresent = picture1->PicPresent;
 			     picture2->PicPixmap = picture1->PicPixmap;
-			     picture2->PicXArea = picture1->PicXArea;
-			     picture2->PicYArea = picture1->PicYArea;
 			     picture2->PicWArea = picture1->PicWArea;
 			     picture2->PicHArea = picture1->PicHArea;
 			     picture2->PicWidth = picture1->PicWidth;

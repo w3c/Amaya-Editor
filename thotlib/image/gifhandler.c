@@ -1579,7 +1579,7 @@ ThotDrawable GifCreate (char *fn, PictInfo *imageDesc, int *xif, int *yif,
       return ((ThotDrawable) NULL);
     }
 
-  if (zoom != 0 && *xif == 0 && *yif == 0)
+  if (zoom && *xif == 0 && *yif == 0)
     {
       /* take zoom into account */
       *xif = PixelValue (w, UnPixel, NULL, zoom);
@@ -1595,7 +1595,7 @@ ThotDrawable GifCreate (char *fn, PictInfo *imageDesc, int *xif, int *yif,
 
 #ifndef _WIN_PRINT
 #ifndef _GL
-  if ((*xif != 0 && *yif != 0) && (w != *xif || h != *yif))
+  if (*xif != 0 && *yif != 0 && (w != *xif || h != *yif))
     {
       /* xif and yif contain width and height of the box */	  
       if ((*xif * *yif) > 4000000 )

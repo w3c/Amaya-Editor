@@ -78,10 +78,11 @@ void DefClip (int frame, int xd, int yd, int xf, int yf)
    int                 xb, xe, yb, ye;
    int                 scrollx, scrolly;
 
-   /****if (xd == xf && xd == 0 && yd == yf && yd == 0)
-	printf ("RAZ DefClip\n");
-	else
-	printf ("DefClip xd=%d xf=%d -- yd=%d yf=%d\n", xd, xf, yd, yf);****/
+   /* force valid clipping values */
+   if (xd < -1)
+     xd = 0;
+   if (yd < -1)
+     yd = 0;
    if ((xd == xf && xd == 0 && (yd != yf || yd != 0)) ||
        (yd == yf && yd == 0 && (xd != xf || xd != 0)))
      return;
@@ -103,6 +104,7 @@ void DefClip (int frame, int xd, int yd, int xf, int yf)
 	   yf = ye;
 	 }
      }
+
    pFrame = &ViewFrameTable[frame - 1];
    scrollx = pFrame->FrXOrg;	
    scrolly = pFrame->FrYOrg; 

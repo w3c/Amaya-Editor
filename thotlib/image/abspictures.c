@@ -41,38 +41,29 @@ void CleanPictInfo (PictInfo *imageDesc)
 #ifndef _GL
       if (imageDesc->PicPixmap != None)
 	{
-
+	  FreePixmap (imageDesc->PicPixmap);
+	  imageDesc->PicPixmap = None;
 #if defined(_MOTIF) || defined(_WINGUI)
 	  FreePixmap (imageDesc->PicMask);
-	  FreePixmap (imageDesc->PicPixmap);
 #endif /* #if defined(_MOTIF) || defined(_WINGUI)    */ 
-
 #ifdef _GTK
 	  /*Frees imlib struct that contains the real ref to pics */
 	  if (imageDesc->im)
 	    gdk_imlib_destroy_image (imageDesc->im);
 #endif /* _GTK */
-
-    imageDesc->PicMask = None;
-	  imageDesc->PicPixmap = None;
+	  imageDesc->PicMask = None;
 	}
 
 #ifdef _WINGUI
 	imageDesc->PicBgMask = -1;
 #endif /* _WINGUI */
-
 #else /*_GL*/
-    FreeGlTexture (imageDesc);
+	FreeGlTexture (imageDesc);
 #endif /*_GL*/
-	imageDesc->PicXArea = 0;
-	imageDesc->PicYArea = 0;
 	imageDesc->PicWArea = 0;
 	imageDesc->PicHArea = 0;
 	imageDesc->PicWidth = 0;
 	imageDesc->PicHeight = 0;
-      if (imageDesc->PicType >= InlineHandlers &&
-	  PictureHandlerTable[imageDesc->PicType].FreePicture)
-	(*(Proc1)(PictureHandlerTable[imageDesc->PicType].FreePicture)) (imageDesc);
     }
 }
 
@@ -191,8 +182,6 @@ void CopyPictInfo (int *Imdcopie, int *Imdsource)
 
    imagec = (PictInfo *) Imdcopie;
    images = (PictInfo *) Imdsource;
-   imagec->PicXArea = images->PicXArea;
-   imagec->PicYArea = images->PicYArea;
    imagec->PicWArea = images->PicWArea;
    imagec->PicHArea = images->PicHArea;
    imagec->PicWidth = images->PicWidth;

@@ -893,7 +893,7 @@ void Externalise (BinFile pivFile, PtrElement *pEl, PtrDocument pDoc,
   /*****TO BE CHANGED**** */
   /* write a specific rule for each picture element */
   if (pEl1->ElTerminal && pEl1->ElLeafType == LtPicture &&
-      pEl1->ElPictInfo != NULL)
+      pEl1->ElPictInfo)
     {
       /* write the rule mark */
       TtaWriteByte (pivFile, (char) C_PIV_PRESENT);
@@ -906,8 +906,6 @@ void Externalise (BinFile pivFile, PtrElement *pEl, PtrDocument pDoc,
       PutShort (pivFile, 0);
       /* write the specific rule and its parameters */
       TtaWriteByte (pivFile, C_PR_PICTURE);
-      PutShort (pivFile, 0);
-      PutShort (pivFile, 0);
       PutShort (pivFile, 0);
       PutShort (pivFile, 0);
       switch (((PictInfo *)(pEl1->ElPictInfo))->PicPresent)

@@ -1431,10 +1431,9 @@ void TtaGetViewXYWH (Document doc, int view, int *xmm, int *ymm, int *width,
 
   frame =  GetWindowNumber (doc, view);
   widget = (ThotWidget) FrameTable[frame].WdFrame;
-
 #ifdef _GTK
-  tmpw = GTK_WIDGET(widget);
-  /*tmpw = gtk_widget_get_toplevel (GTK_WIDGET(widget));*/
+  /*tmpw = GTK_WIDGET (widget);*/
+  tmpw = gtk_widget_get_toplevel (GTK_WIDGET (widget));
   /* values of w h are not realy exact, there too much pixel (2 or 3) */
   w = tmpw->allocation.width;
   h = tmpw->allocation.height;
@@ -1445,7 +1444,6 @@ void TtaGetViewXYWH (Document doc, int view, int *xmm, int *ymm, int *width,
   *width = w;
   *height = h;
 #endif /* _GTK */
-
 #ifdef _MOTIF  
   widget = XtParent (XtParent (XtParent (widget)));
 
@@ -1460,7 +1458,6 @@ void TtaGetViewXYWH (Document doc, int view, int *xmm, int *ymm, int *width,
   XtSetArg (args[n], XmNheight, &h);
   n++;
   XtGetValues (widget, args, n);
-
   /* convert the result into mm */
   *xmm = x;
   /* take into account the window manager headband */
@@ -1468,9 +1465,7 @@ void TtaGetViewXYWH (Document doc, int view, int *xmm, int *ymm, int *width,
   *width = w;
   *height = h;
 #endif /* _MOTIF */
-  
 #endif /* #if defined(_MOTIF) || defined(_GTK) */
-
 #ifdef _WINGUI
   int  frame;
   HWND hWnd;

@@ -1346,9 +1346,8 @@ void ListAbsBoxes (PtrAbstractBox pAb, int Indent, FILE *fileDescriptor)
 	      image = (PictInfo *) pAb->AbPictBackground;
 	      if (image != NULL)
 		 {
-		 fprintf (fileDescriptor, "Picture: x = %d, y = %d, w = %d, h = %d, name = \"",
-			  image->PicXArea, image->PicYArea, image->PicWArea,
-			  image->PicHArea);
+		 fprintf (fileDescriptor, "Picture: w = %d h = %d, name = \"",
+			  image->PicWArea, image->PicHArea);
 		 if (image->PicFileName)
 		    fprintf (fileDescriptor, "%s\" ", image->PicFileName);
 		 else
@@ -1379,8 +1378,8 @@ void ListAbsBoxes (PtrAbstractBox pAb, int Indent, FILE *fileDescriptor)
 	      if (image == NULL)
 		 fprintf (fileDescriptor, "AbPictInfo = NULL");
 	      else
-		 fprintf (fileDescriptor, "Picture: x = %d, y = %d, w = %d, h = %d, name =  \"%s \"",
-			  image->PicXArea, image->PicYArea, image->PicWArea,
+		 fprintf (fileDescriptor, "Picture: w = %d, h = %d, name =  \"%s \"",
+			  image->PicWArea,
 			  image->PicHArea, image->PicFileName);
 	      fprintf (fileDescriptor, " Mode:");
 	      if (image->PicPresent == ReScale)
@@ -1958,8 +1957,7 @@ static void ListBoxTree (PtrAbstractBox pAb, int Indent, FILE *fileDescriptor)
 			 if (image == NULL)
 			    fprintf (fileDescriptor, "PictInfo = NULL");
 			 else
-			    fprintf (fileDescriptor, "x = %d, y = %d, w = %d, h = %d, name = %s",
-				     image->PicXArea, image->PicYArea,
+			    fprintf (fileDescriptor, " w = %d, h = %d, name = %s",
 				     image->PicWArea, image->PicHArea,
 				     image->PicFileName);
 			 break;

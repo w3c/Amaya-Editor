@@ -12,7 +12,6 @@
 #ifdef _WINGUI
 #include <windows.h>
 #endif /* _WINGUI */
-
 #ifndef _PICTURE_h
 #define _PICTURE_h
 
@@ -45,8 +44,6 @@ enum ThotPictFormat
 
 typedef struct 
 {
-  int            PicXArea;
-  int            PicYArea;
   int            PicWArea;
   int            PicHArea;
   int            PicWidth;

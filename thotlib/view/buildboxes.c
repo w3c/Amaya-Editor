@@ -655,8 +655,8 @@ static void GivePictureSize (PtrAbstractBox pAb, int zoom, int *width,
     }
   else
     {
-      *width = PixelValue (picture->PicWidth, UnPixel, pAb, zoom);
-      *height = PixelValue (picture->PicHeight, UnPixel, pAb, zoom);
+      *width = PixelValue (picture->PicWArea, UnPixel, pAb, zoom);
+      *height = PixelValue (picture->PicHArea, UnPixel, pAb, zoom);
     }
 }
 
@@ -3073,12 +3073,13 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
   PtrBox              pLastBox;
   PtrBox              pBox;
   TypeUnit            unit;
+  PictInfo           *imageDesc;
   Propagation         savpropage;
   ViewFrame          *pFrame;
   AbDimension        *pDimAb;
   AbPosition         *pPosAb;
   int                 width, height;
-  int                 nSpaces;
+  int                 nSpaces, savedW, savedH;
   int                 i, k, charDelta, adjustDelta;
   ThotBool            condition, inLine, inLineFloat;
   ThotBool            result, isCell, uniqueChild;
@@ -3086,7 +3087,7 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
   ThotBool            orgYComplete;
 #ifdef _GL
   ThotBool            FrameUpdatingStatus;
- 
+
   FrameUpdatingStatus = FrameUpdating;
   FrameUpdating = TRUE;  
 #endif /* _GL */
@@ -3842,16 +3843,16 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 	      else if (pDimAb->DimAbRef || pDimAb->DimValue >= 0)
 		width = 0;
 	      else
-		width -= pBox->BxW;	/* ecart de largeur */
+		width -= pBox->BxW;	/* width delta */
 	      pDimAb = &pAb->AbHeight;
 	      if (pDimAb->DimIsPosition)
 		height = 0;
 	      else if (pDimAb->DimAbRef != NULL || pDimAb->DimValue >= 0)
 		height = 0;
 	      else
-		height -= pBox->BxH;	/* ecart de hauteur */
+		height -= pBox->BxH;	/* height delta */
 	      pLine = NULL;
-	      /* the internal width of a picture updated the box but not the
+	      /* the picture box width changed but not the
 		 block of lines */
 	      if (pAb->AbLeafType == LtPicture || width || height)
 		{
@@ -3889,6 +3890,8 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
       if (pAb->AbWidthChange)
 	{
 	  AnyWidthUpdate = TRUE;
+	  savedW = pBox->BxW;
+	  savedH = pBox->BxH;
 	  /* Remove the old value */
 	  ClearDimRelation (pBox, TRUE, frame);
 	  /* New width */
@@ -3902,7 +3905,15 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 		  GiveTextSize (pAb, pMainBox, &width, &height, &i);
 		  break;
 		case LtPicture:
-		  LoadPicture (frame, pBox, (PictInfo *) pBox->BxPictInfo);
+		  imageDesc = (PictInfo *) pBox->BxPictInfo;
+		  pBox->BxW = 0;
+		  if (!pAb->AbHeightChange &&
+		      !pAb->AbHeight.DimIsPosition &&
+		      pAb->AbHeight.DimValue == -1 &&
+		      pAb->AbHeight.DimAbRef == NULL)
+		    /* due to hte ration, the height changes too */
+		    pBox->BxH = 0;
+		  LoadPicture (frame, pBox, imageDesc);
 		  GivePictureSize (pAb, ViewFrameTable[frame - 1].FrMagnification,
 				   &width, &height);
 		  break;
@@ -3933,11 +3944,14 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 		}
 	      
 	      /* Change the width of the contents */
-	      result = width != pBox->BxW;
+	      result = width != savedW;
 	      ChangeDefaultWidth (pBox, NULL, width, 0, frame);
-	      if (pAb->AbLeafType == LtPicture && height != pBox->BxH)
+	      if (pAb->AbLeafType == LtPicture && height != savedH)
+		{
 		/* clear the ratio */
-		ChangeDefaultHeight (pBox, NULL, height, frame);
+		  pBox->BxH = savedH;
+		  ChangeDefaultHeight (pBox, NULL, height, frame);
+		}
 	    }
 	  else
 	    {
@@ -3995,7 +4009,9 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 		  GiveTextSize (pAb, pMainBox, &width, &height, &i);
 		  break;
 		case LtPicture:
-		  LoadPicture (frame, pBox, (PictInfo *) pBox->BxPictInfo);
+		  imageDesc = (PictInfo *) pBox->BxPictInfo;
+		  pBox->BxH = 0;
+		  LoadPicture (frame, pBox, imageDesc);
 		  GivePictureSize (pAb, ViewFrameTable[frame -1].FrMagnification, &width, &height);
 		  break;
 		case LtSymbol:

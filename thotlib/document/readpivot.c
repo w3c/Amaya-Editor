@@ -82,7 +82,7 @@ extern HWND         WIN_Main_Wd;
 /*----------------------------------------------------------------------
   SetImageRule updates or creates the picture descriptor of an element.
   ----------------------------------------------------------------------*/
-static void SetImageRule (PtrElement pEl, int x, int y, int w, int h,
+static void SetImageRule (PtrElement pEl, int w, int h,
 			  int typeimage, PictureScaling presimage)
 {
   PictInfo           *image;
@@ -103,8 +103,6 @@ static void SetImageRule (PtrElement pEl, int x, int y, int w, int h,
 #endif /* #if ( defined(_GTK) || defined(_MOTIF) ) && !defined(_GL) */
       image->PicType = typeimage;
       image->PicPresent = presimage;
-      image->PicXArea = x;
-      image->PicYArea = y;
       image->PicWArea = w;
       image->PicHArea = h;
       image->PicWidth = 0;
@@ -1267,7 +1265,7 @@ void ReadPRulePiv (PtrDocument pDoc, BinFile pivFile, PtrElement pEl,
   RefKind             refKind;
   Level               rel;
   int                 pictureType, val, delta, view, box, specificity;
-  int                 PicXArea, PicYArea, PicWArea, PicHArea;
+  int                 PicWArea, PicHArea;
   int                 red, green, blue, refIdent;
   char                ch;
   ThotBool            absolute, sign, deltaSign, just, immed, notRel,
@@ -1595,8 +1593,6 @@ void ReadPRulePiv (PtrDocument pDoc, BinFile pivFile, PtrElement pEl,
 	just = ReadBoolean (pivFile);
 	break;
       case PtPictInfo:
-	TtaReadShort (pivFile, &PicXArea);
-	TtaReadShort (pivFile, &PicYArea);
 	TtaReadShort (pivFile, &PicWArea);
 	TtaReadShort (pivFile, &PicHArea);
 	pres = ReadPicturePresentation (pivFile);
@@ -1604,7 +1600,7 @@ void ReadPRulePiv (PtrDocument pDoc, BinFile pivFile, PtrElement pEl,
 	/* Pour assurer la compatibilite avec Linux et autre machine */
 	if (pictureType == 255)
 	  pictureType = -1;
-	SetImageRule (pEl, PicXArea, PicYArea, PicWArea, PicHArea, pictureType, pres);
+	SetImageRule (pEl, PicWArea, PicHArea, pictureType, pres);
 	create = FALSE;
 	break;
       default:
