@@ -3429,8 +3429,8 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
       /* CHANGE FLOAT/CLEAR */
       if (pAb->AbFloatChange)
 	{
-	  UpdateFloat (pAb, pParent, inLine || inLineFloat, frame);
 	  pAb->AbFloatChange = FALSE;
+	  UpdateFloat (pAb, pParent, inLine || inLineFloat, frame);
 	}
       /* CHANGE THE CONTENTS */
       if (pAb->AbChange || pAb->AbSizeChange)
