@@ -1508,6 +1508,7 @@ NotifyElement      *event;
       child = TtaGetFirstChild (cell);
       TtaSelectElement (doc, child);
     }
+  CurrentColumn = NULL;
   CurrentRow = NULL;
 }
 

@@ -13,27 +13,182 @@ alt="W3C"></a> <a href="../"><img src="../Icons/amaya.gif" alt="Amaya"
 border="0"></a> <a href="Manual.html"><img border="0"
 src="../Icons/doc48x.gif" alt="Doc"></a></p>
 
-<h1 style="text-align : center">Using Amaya</h1>
+<h1 style="text-align : center">Amaya User Manual<span style="font-size:
+30pt"></span></h1>
 <hr>
 
-<p><strong>Version:</strong>  3.0 - March 2000</p>
+<p><strong>Version:</strong>  3.1 - April 2000</p>
 <dl>
   <dt><strong>Authors:</strong></dt>
     <dd>Irène Vatton, Vincent Quint, José Kahan</dd>
   <dt><strong>Contributors:</strong></dt>
     <dd>Charles McCathieNevile, John Russell</dd>
 </dl>
-<hr>
 
-<p>This document is a short introduction to the user interface of
-<strong>Amaya</strong>. It is not a complete user manual. Its purpose is only
-to help users to discover the main features of the software. This document is
-organized as a book and you can use the "<a href="MakeBook.html#L1065">Make
-Book</a>" command to build and print the whole manual.</p>
+<p>This manual presents the Amaya user interface for Unix platforms. The
+Windows user interface could be a little different in some cases. It is not a
+complete user manual. Its purpose is only to help users to discover the main
+features of the software. This document is organized as a book and you can use
+the "<a href="MakeBook.html#L1065">Make Book</a>" command to build and print
+the whole manual.</p>
 
 <p>Many commands in <strong>Amaya</strong> are the same as those provided by
 common word processors and editors. They are not presented here. Only
 <strong>Amaya</strong> specific aspects are described.</p>
+<hr>
+
+<h1>Table of contents</h1>
+<ul>
+  <li>Starting Amaya</li>
+  <li>Editing Web pages with Amaya
+    <ul>
+      <li><a href="Browsing.html#Browsing">Browsing with Amaya</a>
+        <ul>
+          <li><a href="Browsing.html#Activating">Activating a link</a></li>
+          <li><a href="Browsing.html#L515">Target anchors</a></li>
+          <li><a href="Browsing.html#Opening">Opening documents</a></li>
+          <li><a href="Browsing.html#Moving">Moving backward and
+          forward</a></li>
+          <li><a href="Browsing.html#Reloading">Reloading a page</a></li>
+          <li><a href="Browsing.html#Keyboard">Keyboard control</a></li>
+        </ul>
+      </li>
+      <li><a href="Selecting.html#Selecting">Selecting</a>
+        <ul>
+          <li><a href="Selecting.html#Selecting1">Selecting by
+          Structure</a></li>
+          <li><a href="Selecting.html#Selecting2">Selecting images</a></li>
+        </ul>
+      </li>
+      <li><a href="Searching.html#Searching">Searching and replacing
+      text</a></li>
+      <li><a href="Views.html#Views">Displaying Views</a>
+        <ul>
+          <li><a href="Views.html#Opening">Opening a view</a></li>
+          <li><a href="Views.html#Closing">Closing a view</a></li>
+          <li><a href="Views.html#Using">Using views</a></li>
+        </ul>
+      </li>
+      <li><a href="Creating.html#Creating">Creating new elements</a>
+        <ul>
+          <li><a href="Keyboard.html#Keyboard">Entering ISO-Latin-1
+            characters</a></li>
+          <li><a href="Keyboard.html#Standard">Standard multi-key
+          support</a></li>
+          <li><a href="Keyboard.html#Optional">Optional Multi-key
+          support</a></li>
+          <li><a href="Creating.html#Types">Buttons and types menu</a></li>
+          <li><a href="Creating.html#Structure">Structure menu</a></li>
+          <li><a href="Creating.html#L906">The Enter (or Return) key</a></li>
+          <li><a href="Creating.html#Changing">Changing the document
+          Title</a></li>
+        </ul>
+      </li>
+      <li><a href="Links.html#Creating">Creating and changing links and
+        anchors</a>
+        <ul>
+          <li><a href="Links.html#L557">Creating a target anchor</a></li>
+          <li><a href="Links.html#target1">Creating a target element</a></li>
+          <li><a href="Links.html#L245">Creating a link</a></li>
+          <li><a href="Links.html#Removing">Removing a link or a target
+            anchor</a></li>
+          <li><a href="Links.html#Changing">Changing a link</a></li>
+        </ul>
+      </li>
+      <li><a href="Changing.html#Changing">Editing the document structure</a>
+        <ul>
+          <li><a href="Changing.html#L653">Changing element type</a></li>
+          <li><a href="Changing.html#L631">Changing the document
+          structure</a></li>
+          <li><a href="Changing.html#L141">The Transform command</a></li>
+          <li><a href="Changing.html#Inserting">Inserting a Division</a></li>
+          <li><a href="Changing.html#Back">The Back Space and Delete
+          keys</a></li>
+        </ul>
+      </li>
+      <li><a href="Tables.html#Editing">Editing tables</a>
+        <ul>
+          <li><a href="Tables.html#Creating">Creating a new table</a></li>
+          <li><a href="Tables.html#Adding">Adding a new column</a></li>
+          <li><a href="Tables.html#Adding1">Adding a new row, a new
+          tbody</a></li>
+          <li><a href="Tables.html#Removing">Removing a column</a></li>
+          <li><a href="Tables.html#Adding2">Adding something after a
+          table</a></li>
+        </ul>
+      </li>
+      <li><a href="Math.html#Math">Editing mathematics</a>
+        <ul>
+          <li><a href="Math.html#Creating">Creating a mathematical
+            expression</a></li>
+          <li><a href="Math.html#Entering1">Entering characters</a></li>
+          <li><a href="Math.html#Structure">Structure editing</a></li>
+          <li><a href="Math.html#Math_Struc">Math_Structure view</a></li>
+          <li><a href="Math.html#Links">Links in MathML</a></li>
+          <li><a href="Math.html#Current">Current limitations</a></li>
+        </ul>
+      </li>
+      <li><a href="ImageMaps.html#Client-sid">Creating and using client-side
+        image maps</a>
+        <ul>
+          <li><a href="ImageMaps.html#Adding">Adding an image</a></li>
+          <li><a href="ImageMaps.html#Alternative">Alternative Text and Long
+            Descriptions</a></li>
+          <li><a href="ImageMaps.html#Using">Using client-side image
+          maps</a></li>
+          <li><a href="ImageMaps.html#Creating">Creating client-side image
+            maps</a></li>
+          <li><a href="ImageMaps.html#L11711">Moving image map areas</a></li>
+          <li><a href="ImageMaps.html#L1171">Resizing image map areas</a></li>
+        </ul>
+      </li>
+      <li><a href="StyleSheets.html#Style">Style Sheets</a>
+        <ul>
+          <li><a href="StyleSheets.html#Creating">Creating and updating a
+            style attribute</a></li>
+          <li><a href="StyleSheets.html#Creating,">Creating, a generic style
+            for an element or a class</a></li>
+          <li><a href="StyleSheets.html#Managing">Managing external CSS style
+            sheets</a></li>
+          <li><a href="StyleSheets.html#L1371">Style through HTML
+          elements</a></li>
+        </ul>
+      </li>
+      <li><a href="Attributes.html#Attributes">Editing attributes</a>
+        <ul>
+          <li><a href="Attributes.html#L1073">Editing attributes through the
+            menu Attributes</a></li>
+          <li><a href="Attributes.html#Copying">Copying  attributes</a></li>
+          <li><a href="Attributes.html#Editing">Editing attributes in the
+            Structure view</a></li>
+        </ul>
+      </li>
+      <li><a href="SpellChecking.html#Spell">Spell checking</a></li>
+      <li><a href="Publishing.html#Saving">Saving and publishing documents</a>
+        <ul>
+          <li><a href="Publishing.html#L1104">Saving documents in
+          HTML</a></li>
+          <li><a href="Publishing.html#L1105">Saving documents as
+          text</a></li>
+        </ul>
+      </li>
+      <li><a href="Printing.html#Printing">Printing documents</a></li>
+      <li><a href="Numbering.html#Section">Section numbering</a></li>
+      <li><a href="MakeBook.html#Assembling">Assembling large
+      documents</a></li>
+    </ul>
+  </li>
+  <li><a href="Configure.html#Configuring">Configuring Amaya</a>
+    <ul>
+      <li><a href="Configure.html#L979">The Amaya/Config directory</a></li>
+      <li><a href="Configure.html#AmayaHome">The AmayaHome Directory</a></li>
+      <li><a href="Configure.html#AmayaTemp">The AmayaTemp Directory</a></li>
+      <li><a href="Configure.html#preferences">Preferences Menus</a></li>
+      <li><a href="Configure.html#shortcuts">Keyboard shortcuts</a></li>
+    </ul>
+  </li>
+</ul>
+<hr>
 
 <h2><a name="L920">Starting Amaya</a></h2>
 
@@ -75,8 +230,8 @@ Amaya functionality.</p>
   elements</a></li>
   <li><a rel="Chapter" href="Links.html#Creating">Creating and changing links
     and anchors</a></li>
-  <li><a rel="Chapter" href="Changing.html#Changing">Changing element type or
-    the document structure</a></li>
+  <li><a rel="Chapter" href="Changing.html#Changing">Editing the document
+    structure</a></li>
   <li><a rel="Chapter" href="Tables.html#Editing">Editing tables</a></li>
   <li><a href="Math.html#Math" rel="Chapter">Editing mathematics</a></li>
   <li><a rel="Chapter" href="ImageMaps.html#Client-sid">Creating and using
@@ -89,40 +244,40 @@ Amaya functionality.</p>
     documents</a></li>
   <li><a rel="Chapter" href="Printing.html#Printing">Printing
   documents</a></li>
-  <li><p><a rel="Chapter" href="Numbering.html#Section">Section
-    numbering</a></p>
-  </li>
-  <li><p><a rel="Chapter" href="MakeBook.html#Assembling">Assembling large
-    documents</a></p>
-  </li>
+  <li><a rel="Chapter" href="Numbering.html#Section">Section
+  numbering</a></li>
+  <li><a rel="Chapter" href="MakeBook.html#Assembling">Assembling large
+    documents</a></li>
 </ul>
 
 <p>It is also possible to change the default options (refer to the section
 that explains how to <a href="Configure.html#Configuring"
 rel="Chapter">Configure Amaya</a>).</p>
 
-<p>The page about <a href="Access.html" rel="Chapter">Accessibility in
+<p>The page about <a href="Access.html#Access" rel="Chapter">Accessibility in
 Amaya</a> describes the accessibility of Amaya itself, and how to use it to
 produce pages that can be used by people with disabilities as well as people
 without disabilities.</p>
+<hr>
 
 <p><a name="There">There is also a brief introduction </a> which explains some
 of the different types that can be used in Amaya such as headings, lists, and
 quotations, and how to use them.</p>
 <ul>
-  <li><a href="HTML-elements/infoTypes.html" rel="Chapter">Information types
-    in HTML</a></li>
-  <li><a href="HTML-elements/structure.html" rel="Chapter">HTML Document
+  <li><a href="HTML-elements/infoTypes.html#Informatio"
+    rel="Chapter">Information types in HTML</a></li>
+  <li><a href="HTML-elements/structure.html#HTML" rel="Chapter">HTML Document
     Structure</a></li>
-  <li><a href="HTML-elements/headings.html" rel="Chapter">Headers</a></li>
-  <li><a href="HTML-elements/lists.html" rel="Chapter">Lists</a></li>
-  <li><a href="HTML-elements/address.html" rel="Chapter">About the
-  author</a></li>
-  <li><a href="HTML-elements/inline.html" rel="Chapter">Inline definitions,
-    quotations, sample code, insertions and deletions, abbreviations,
-  etc</a></li>
-  <li><a href="HTML-elements/40styling.html" rel="Chapter">Style elements
-    (what not to do and how it should be done...)</a></li>
+  <li><a href="HTML-elements/headings.html#Heading"
+  rel="Chapter">Headers</a></li>
+  <li><a href="HTML-elements/lists.html#List" rel="Chapter">Lists</a></li>
+  <li><a href="HTML-elements/address.html#About" rel="Chapter">About the
+    author</a></li>
+  <li><a href="HTML-elements/inline.html#Inline3" rel="Chapter">Inline
+    definitions, quotations, sample code, insertions and deletions,
+    abbreviations, etc</a></li>
+  <li><a href="HTML-elements/40styling.html#Character" rel="Chapter">Style
+    elements (what not to do and how it should be done...)</a></li>
 </ul>
 <hr>
 <address>
