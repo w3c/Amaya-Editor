@@ -362,6 +362,9 @@ void LocateSelectionInView (int frame, int x, int y, int button)
 				       TRUE);
 		  break;
 		case 4:
+		  if (SkipClickEvent)
+		    /* the application asks Thot to do nothing */
+		    return;
 		  /* check if the curseur is within the box */
 		  xOrg =  pBox->BxXOrg + pBox->BxLMargin + pBox->BxLBorder +
 		    pBox->BxLPadding;
