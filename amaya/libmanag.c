@@ -748,7 +748,7 @@ void CreateLibraryFile ()
   -------------------------------------------------------------------*/
 char *GetLibraryFileTitle (char *url)
 {
-  char               *reTitle;
+  char               *reTitle = NULL;
 #ifdef _SVGLIB
   Document             res, libraryDoc;
   /*  char        *pathname, *documentname;*/
@@ -1424,7 +1424,13 @@ Element PasteLibraryGraphicElement (Element sourceEl, Document sourceDoc, int Me
 
   /* check destination document */
   destDoc = TtaGetSelectedDocument();
-  if (destDoc == 0)
+  if (destDoc == 0 ||
+      (DocumentTypes[destDoc] == docLibrary ||
+       DocumentTypes[destDoc] == docMath ||
+       DocumentTypes[destDoc] == docText ||
+       DocumentTypes[destDoc] == docCSS ||
+       DocumentTypes[destDoc] == docSource ||
+       DocumentTypes[destDoc] == docAnnot))
     /* there is no selection. Nothing to do */
     return NULL;
 
@@ -1650,35 +1656,24 @@ Element PasteLibraryGraphicElement (Element sourceEl, Document sourceDoc, int Me
 void CopyOrReference (Document doc, View view)
 {
 #ifdef _SVGLIB
-  Document       docSel;
 #ifndef _WINDOWS
   char           bufButton[MAX_LENGTH];
   int            i;
 #endif /* _WINDOWS */
 
-  docSel = TtaGetSelectedDocument();
-  if (docSel &&
-      DocumentTypes[docSel] != docLibrary &&
-      DocumentTypes[docSel] != docMath &&
-      DocumentTypes[docSel] != docText &&
-      DocumentTypes[docSel] != docCSS &&
-      DocumentTypes[docSel] != docSource &&
-      DocumentTypes[docSel] != docAnnot)
-    {
-      /* Initialize Structure if it's not yet done */
-      InitSVGLibraryManagerStructure();
-      
-      /* Create the dialogue form */
-      i = 0;
-      strcpy (&bufButton[i], TtaGetMessage (AMAYA, AM_SVGLIB_COPY_SELECTION));
-      i += strlen (&bufButton[i]) + 1;
-      strcpy (&bufButton[i], TtaGetMessage (AMAYA, AM_SVGLIB_REF_SELECTION));
-      
-      TtaNewSheet (BaseLibrary + FormLibrary, TtaGetViewFrame (doc, view), 
-		   TtaGetMessage (AMAYA, AM_SVGLIB_DIALOG1), 2/*bouton supplementaire*/,
-		   bufButton, FALSE, 3, 'L', D_CANCEL);
-      /* activates the Library Dialogue 1 */
-      TtaShowDialogue (BaseLibrary+FormLibrary, TRUE);
-    }
+  /* Initialize Structure if it's not yet done */
+  InitSVGLibraryManagerStructure();
+  
+  /* Create the dialogue form */
+  i = 0;
+  strcpy (&bufButton[i], TtaGetMessage (AMAYA, AM_SVGLIB_COPY_SELECTION));
+  i += strlen (&bufButton[i]) + 1;
+  strcpy (&bufButton[i], TtaGetMessage (AMAYA, AM_SVGLIB_REF_SELECTION));
+  
+  TtaNewSheet (BaseLibrary + FormLibrary, TtaGetViewFrame (doc, view), 
+	       TtaGetMessage (AMAYA, AM_SVGLIB_DIALOG1), 2/*bouton supplementaire*/,
+	       bufButton, FALSE, 3, 'L', D_CANCEL);
+  /* activates the Library Dialogue 1 */
+  TtaShowDialogue (BaseLibrary+FormLibrary, TRUE);
 #endif /* _SVGLIB */
 }
