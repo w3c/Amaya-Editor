@@ -525,8 +525,7 @@ Document            doc;
 			      if (attr != NULL)
 				TtaSetAttributeReference (attr, cell, doc, colElement[cRef], doc);
 			    }
-			  else
-			    cRef++;
+			  cRef++;
 			}
 		      else
 			cRef++;
