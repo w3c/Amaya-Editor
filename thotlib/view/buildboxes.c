@@ -2825,9 +2825,10 @@ int                 frame;
 	    /* Check if the changes affect the inside or the outside width */
 	    if (i != 0 || j != 0)
 	      if (pAb->AbHeight.DimIsPosition ||
+		  pAb->AbHeight.DimAbRef != 0 ||
 		  pAb->AbHeight.DimAbRef == pAb->AbEnclosing)
 		/* the outside height is constrained */
-		ResizeHeight (pBox, pBox, NULL, - i - j, 0, 0, frame);
+		ResizeHeight (pBox, pBox, NULL, - i - j, i, j, frame);
 	      else
 		/* the inside height is constrained */
 		ResizeHeight (pBox, pBox, NULL, 0, i, j, frame);
@@ -2842,9 +2843,10 @@ int                 frame;
 	    if (i != 0 || j != 0)
 	      {
 		if (pAb->AbWidth.DimIsPosition ||
+		    pAb->AbWidth.DimAbRef != 0 ||
 		    pAb->AbWidth.DimAbRef == pAb->AbEnclosing)
 		  /* the outside width is constrained */
-		  ResizeWidth (pBox, pBox, NULL, - i - j, 0, 0, 0, frame);
+		  ResizeWidth (pBox, pBox, NULL, - i - j, i, j, 0, frame);
 		else
 		  /* the inside width is constrained */
 		  ResizeWidth (pBox, pBox, NULL, 0, i, j, 0, frame);
@@ -3006,7 +3008,7 @@ int                 frame;
 	     if (pDimRel->DimRTable[i] == NULL)
 		i = MAX_RELAT_DIM;
 	     else if (pDimRel->DimRTable[i]->BxAbstractBox == NULL)
-		;		/* /* doesn't exist anymore */
+		;		/* doesn't exist anymore */
 	     else if (pDimRel->DimRSame[i])
 		WidthPack (pDimRel->DimRTable[i]->BxAbstractBox, NULL, frame);
 	     else

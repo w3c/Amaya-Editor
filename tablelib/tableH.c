@@ -2077,7 +2077,11 @@ void    TtaUnlockTableFormatting ()
 	     if (pLockRel->LockRTable[i] == NULL)
 		i = MAX_RELAT_DIM;
 	     else if (pLockRel->LockRTable[i]->AbElement != NULL)
-	       ComputeColWidth (NULL, pLockRel->LockRTable[i], pLockRel->LockRFrame[i]);
+	       {
+		 ComputeColWidth (NULL, pLockRel->LockRTable[i], pLockRel->LockRFrame[i]);
+		 ComputeEnclosing (pLockRel->LockRFrame[i]);
+		 DisplayFrame (pLockRel->LockRFrame[i]);
+	       }
 	     /* next entry */
 	     i++;
 	  }
