@@ -197,10 +197,6 @@ sub start_hndl {
 
 #	use the result 
 	if ( $element eq "message" ) {
-		if (defined ($attributes {"last_update"}) ) { ##there was at the begining this attribute no more used yet
-			delete $attributes {"last_update"} ;
-		}
-		
 		if (	defined ($attributes{"xml:lang"}) ) {
 			$current_language = $attributes{"xml:lang"};
 			print OUT "\t";	
@@ -235,12 +231,7 @@ sub start_hndl {
 			print "==> The <$element> at line " . $expat->current_line () . 
 					"don'thave a version attribute\n";
 		}
-		if (defined ($attributes {"last_update"}) ) {
-				$attributes {"last_update"} = $date; #take the date
-		} else {
-			print "==> The <$element> at line " . $expat->current_line () . 
-					"don'thave a last_update attribute\n";
-		}
+
 		addbegintag ( $element, %attributes );		
 		print OUT "\n";#	small things necessary for presentation 
 	}
@@ -303,7 +294,7 @@ sub end_hndl { #	do the modification if necessary
 			$found = 0;
 		}
         else { # there is no translation for this label within the base
-# print 'label=' . "$labels{$current_label}";
+#print '==> ' . "NOTRASLATE-- $current_label". "\n";
 			if ($texts{ $labels{$current_label}}) {
 				print OUT "\t<message xml:lang=\"$language_code\">";
 				print OUT $texts{ $labels{$current_label}};
@@ -327,6 +318,7 @@ sub end_hndl { #	do the modification if necessary
 	elsif ($end_tag eq "message") {
 		if ($current_language eq "en" ) {
 			$english_text = $text;
+#print '==> ' . "TRACE-- $current_label". "\n";
 		}
 		elsif ($current_language eq $language_code) {			
 		    if (defined ($labels{$current_label} )
@@ -352,11 +344,14 @@ sub end_hndl { #	do the modification if necessary
 		    }
 		    else {
 			#no problem they are the same or it's a new translation
-#			print "label->$current_label val->$labels{$current_label}\n";
-#			print "Text:    \"$text\"\n";
-#			print "Current: \"$texts{$labels{$current_label}}\"\n";
+			#print "label->$current_label val->$labels{$current_label} . "\n";
+			#print "Text:    \"$text\"\n";
+#print "Correct: \"$texts{$labels{$current_label}}\"\n";
 		    }
 		}
+		else {
+#print '==> ' . "SKIP-- $current_language". "\n";
+                }
 		#always
 		recopy ( $text );
 		$current_language = $current_tag = undef;

@@ -198,7 +198,7 @@
 196 Citação (q)
 197 Sobrepor BiDi (bdo)
 198 Nova fórmula (math)
-199 **Basic math &Elements
+199 **Basic &Elements
 200 Texto puro (mtext)
 201 Identificador (mi)
 202 Número (mn)
@@ -207,7 +207,7 @@
 205 Carácter (&&xxx;)
 206 Multiplicação Invisível (InvisibleTimes)
 207 Aplicar função (ApplyFunction)
-208 **Math &Constructs
+208 **&Constructions
 209 Raiz (mroot)
 210 Raiz quadrada (msqrt)
 211 Englobar (menclose)

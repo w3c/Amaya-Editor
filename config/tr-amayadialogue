@@ -198,7 +198,7 @@
 196 Alıntılama (q)
 197 BiDi (bdo)
 198 Yeni formül (math)
-199 **Basic math &Elements
+199 **Basic &Elements
 200 Düz yazı (mtext)
 201 Teşhis eden (mi)
 202 Numara (mn)
@@ -207,7 +207,7 @@
 205 Karakter (&&xxx;)
 206 Kayip zaman
 207 Fonksiyonu onayla
-208 **Math &Constructs
+208 **&Constructions
 209 Kök (mroot)
 210 Karekök (msqrt)
 211 Kapsamak (menclose)

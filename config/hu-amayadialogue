@@ -39,29 +39,29 @@
 37 &HTML 4.01 átmenetivé tétel
 38 HTML 4.01 &kötötté tétel
 39 Kényszerített karakter &kódolás
-40 Unicode	(UTF-8)
-41 Nyugat-európai	(ISO-8859-1)
-42 Nyugat-európai	(ISO-8859-15)
-43 Nyugat-európai	(Windows-1252)
-44 Közép-európai	(ISO-8859-2)
-45 Közép-európai	(Windows-1250)
-46 Dél-európai	(ISO-8859-3)
-47 Balti	(ISO-8859-4)
-48 Balti	(Windows-1257)
-49 Cirill	(ISO-8859-5)
-50 Cirill	(Windows-1251)
-51 Cirill	(KOI8-R)
-52 Arab	(ISO-8859-6)
-53 Arab	(Windows-1256)
-54 Görög	(ISO-8859-7)
-55 Görög	(Windows-1253)
-56 Héber	(ISO-8859-8)
-57 Héber	(Windows-1255)
-58 Török	(ISO-8859-9)
-59 Török	(Windows-1254)
-60 Japán	(ISO-2022-JP)
-61 Japán	(EUC-JP)
-62 Japán	(Shift-JIS)
+40 Unicode (UTF-8)
+41 Nyugat-európai (ISO-8859-1)
+42 Nyugat-európai (ISO-8859-15)
+43 Nyugat-európai (Windows-1252)
+44 Közép-európai (ISO-8859-2)
+45 Közép-európai (Windows-1250)
+46 Dél-európai (ISO-8859-3)
+47 Balti (ISO-8859-4)
+48 Balti (Windows-1257)
+49 Cirill (ISO-8859-5)
+50 Cirill (Windows-1251)
+51 Cirill (KOI8-R)
+52 Arab (ISO-8859-6)
+53 Arab (Windows-1256)
+54 Görög (ISO-8859-7)
+55 Görög (Windows-1253)
+56 Héber (ISO-8859-8)
+57 Héber (Windows-1255)
+58 Török (ISO-8859-9)
+59 Török (Windows-1254)
+60 Japán (ISO-2022-JP)
+61 Japán (EUC-JP)
+62 Japán (Shift-JIS)
 63 Elemzési &hibák mutatása
 64 Dokumentum &adatai
 65 &Beállítás és nyomtatás...
@@ -93,48 +93,48 @@
 91 &Együttműködés
 92 Cím &cseréje...
 93 &Címsor
-94 1. szint	(h1)
-95 2. szint	(h2)
-96 3. szint	(h3)
-97 4. szint	(h4)
-98 5. szint	(h5)
-99 6. szint	(h6)
+94 1. szint (h1)
+95 2. szint (h2)
+96 3. szint (h3)
+97 4. szint (h4)
+98 5. szint (h5)
+99 6. szint (h6)
 100 &Lista
-101 Listajeles lista	(ul)
-102 Számozott lista	(ol)
-103 Meghatározás lista	(dl)
-104 Szócikk	(dt)
-105 Meghatározás	(dd)
+101 Listajeles lista (ul)
+102 Számozott lista (ol)
+103 Meghatározás lista (dl)
+104 Szócikk (dt)
+105 Meghatározás (dd)
 106 &Űrlap
 107 Űrlap beillesztése
-108 Gomb	(input)
-109 Jelölőnégyzet	(input)
-110 Fájlválasztó	(input)
-111 Rejtett	(input)
-112 Kép	(input)...
-113 Jelszó	(input)
-114 Választógomb	(input)
-115 Alaphelyzet	(input)
-116 Küldés	(input)
-117 Szöveg	(input)
-118 Mező	(fieldset)
-119 Címke	(label)
-120 Menü	(option)
-121 Almenü	(optgroup)
-122 Szövegmező	(textarea)
+108 Gomb (input)
+109 Jelölőnégyzet (input)
+110 Fájlválasztó (input)
+111 Rejtett (input)
+112 Kép (input)...
+113 Jelszó (input)
+114 Választógomb (input)
+115 Alaphelyzet (input)
+116 Küldés (input)
+117 Szöveg (input)
+118 Mező (fieldset)
+119 Címke (label)
+120 Menü (option)
+121 Almenü (optgroup)
+122 Szövegmező (textarea)
 123 &Objektum
-124 Objektum	(object)
-125 Paraméter	(param)
+124 Objektum (object)
+125 Paraméter (param)
 126 &Táblázat
-127 &Táblázat	(table)
-128 Táblázat&név	(caption)
-129 Oszlop&csoport	(colgroup)
-130 &Oszlop	(col)
-131 Táblázat&fejléc	(thead)
-132 Táblázat &szöveg	(tbody)
-133 Táblázat&lábléc	(tfoot)
-134 &Adatcellává tétel	(td)
-135 &Fejléccé tétel	(th)
+127 &Táblázat (table)
+128 Táblázat&név (caption)
+129 Oszlop&csoport (colgroup)
+130 &Oszlop (col)
+131 Táblázat&fejléc (thead)
+132 Táblázat &szöveg (tbody)
+133 Táblázat&lábléc (tfoot)
+134 &Adatcellává tétel (td)
+135 &Fejléccé tétel (th)
 136 Egyesítés a &jobbra lévő cellával
 137 Egyesítés az &alatta lévő cellával
 138 Shrink &horizontal extend
@@ -153,75 +153,75 @@
 151 &Sokszög
 152 &Téglalap
 153 &Szerkezet
-154 &Stílus	(style)
+154 &Stílus (style)
 155 &Megjegyzés
-156 &Alap	(base)
+156 &Alap (base)
 157 &meta
-158 &Kapocs	(link)
+158 &Kapocs (link)
 159 &script
 160 &noscript
-161 &Bekezdés	(p)
-162 &Előformázott	(pre)
-163 &Cím	(address)
-164 &Vízszintes vonal	(hr)
-165 &Kép	(img)...
-166 &Sortörés	(br)
-167 Fel&osztás	(div)
-168 &Blokkidézet	(blockquote)
-169 &Sorbeli keret	(iframe)
+161 &Bekezdés (p)
+162 &Előformázott (pre)
+163 &Cím (address)
+164 &Vízszintes vonal (hr)
+165 &Kép (img)...
+166 &Sortörés (br)
+167 Fel&osztás (div)
+168 &Blokkidézet (blockquote)
+169 &Sorbeli keret (iframe)
 170 &Ruby
 171 &Szakasz számozás
 172 &Tartalomjegyzék létrehozása
 173 Időbélyeg beilesztése
 174 &Kötet létrehozása
 175 Adat &fajtája
-176 &Hangsúlyos	(em)
-177 &Vastag	(strong)
-178 &Idézet	(cite)
-179 &Definíció	(dfn)
-180 &Kód	(code)
-181 &Változó	(var)
-182 &Minta	(samp)
-183 &Billentyű	(kbd)
-184 &Rövidítés	(abbr)
-185 &Betűszó	(acronym)
-186 &Beillesztés	(ins)
-187 &Törlés	(del)
+176 &Hangsúlyos (em)
+177 &Vastag (strong)
+178 &Idézet (cite)
+179 &Definíció (dfn)
+180 &Kód (code)
+181 &Változó (var)
+182 &Minta (samp)
+183 &Billentyű (kbd)
+184 &Rövidítés (abbr)
+185 &Betűszó (acronym)
+186 &Beillesztés (ins)
+187 &Törlés (del)
 188 &Karakter &elem
-189 &Dőlt	(i)
-190 &Félkövér	(b)
-191 &Írógép	(tt)
-192 &Nagy	(big)
-193 &Kicsi	(small)
-194 &Alsó index	(sub)
-195 &Felső index	(sup)
-196 &Idézet	(q)
-197 &Kétirányúság felülbírálása	(bdo)
-198 Új &képlet	(math)
+189 &Dőlt (i)
+190 &Félkövér (b)
+191 &Írógép (tt)
+192 &Nagy (big)
+193 &Kicsi (small)
+194 &Alsó index (sub)
+195 &Felső index (sup)
+196 &Idézet (q)
+197 &Kétirányúság felülbírálása (bdo)
+198 Új &képlet (math)
 199 &Alapelemek
-200 &Közönséges szöveg	(mtext)
-201 &Azonosító	(mi)
-202 &Szám	(mn)
-203 &Műveleti jel	(mo)
-204 &Szóköz	(mspace)
-205 &Karakter	(&&xxx;)
+200 &Közönséges szöveg (mtext)
+201 &Azonosító (mi)
+202 &Szám (mn)
+203 &Műveleti jel (mo)
+204 &Szóköz (mspace)
+205 &Karakter (&&xxx;)
 206 &InvisibleTimes
 207 &ApplyFunction
 208 &Szerkezetek
-209 &Gyök	(mroot)
-210 &Négyzetgyök	(msqrt)
-211 &Enclose	(menclose)
-212 &Tört	(mfrac)
-213 Alsó és felső &index	(msubsup)
-214 &Alsó index	(msub)
-215 &Felső index	(msup)
-216 &Alá és fölé	(munderover)
-217 &Alá	(munder)
-218 &Fölé	(mover)
-219 &Zárójel	(mrow)
-220 &Multiscripts	(mmultiscripts)
-221 &Mátrixok
-222 Új &mátrix	(mtable)
+209 &Gyök (mroot)
+210 &Négyzetgyök (msqrt)
+211 &Enclose (menclose)
+212 &Tört (mfrac)
+213 Alsó és felső &index (msubsup)
+214 &Alsó index (msub)
+215 &Felső index (msup)
+216 &Alá és fölé (munderover)
+217 &Alá (munder)
+218 &Fölé (mover)
+219 &Zárójel (mrow)
+220 &Multiscripts (mmultiscripts)
+221 **&Matrices
+222 Új &mátrix (mtable)
 223 Egyesítés a &jobbra lévő cellával
 224 Egyesítés az &alatta lévő cellával
 225 Shrink &horizontal extend
@@ -242,7 +242,7 @@
 240 &Kapocs létrehozása vagy megváltoztatása...
 241 &Célpont létrehozása
 242 &Horgony törlése
-243 &Azonosítók	(id) hozzáadása/törlése...
+243 &Azonosítók (id) hozzáadása/törlése...
 244 &Eszközsor mutatása
 245 &Teljes képenyő
 246 &Gombsor mutatása

@@ -1,14 +1,14 @@
 # encoding= utf8
 0 Fájlok
 1 megnyitás
-2 Új XHTML 1.1 dokumentum...         
+2 Új XHTML 1.1 dokumentum...
 3 Új XHTML 1.0 átmeneti dokumentum...
-4 Új XHTML 1.0 kötött dokumentum...  
-5 Új XHTML 1.0 alap dokumentum...    
-6 Új MathML dokumentum...            
-7 Új SVG dokumentum...               
-8 Új CSS stíluslap...                
-9 Sablonból                          
+4 Új XHTML 1.0 kötött dokumentum...
+5 Új XHTML 1.0 alap dokumentum...
+6 Új MathML dokumentum...
+7 Új SVG dokumentum...
+8 Új CSS stíluslap...
+9 Sablonból
 10 Dokumentum megnyitása
 11 Új lapon
 12 Új ablakban
@@ -76,7 +76,7 @@
 74 Háttérkép itt nem engedélyezett
 75 CSS
 76 A mentés az alábbi képeket is menti?
-77 Az URL-be mentés nem sikerült 
+77 Az URL-be mentés nem sikerült
 78 Lemezre mentés?
 79 Képek másolása
 80 URL-ek átalakítása
@@ -253,9 +253,9 @@
 251 Adja meg a karakter kódolást
 252 Adja meg a MIME típust
 253 karakter kódolás megváltoztatása
-254 MIME típus megváltoztatása 
+254 MIME típus megváltoztatása
 255 Változtatás
-256 Ez a dokumentumtípus nem támogatja a  karakterkészleteteket
+256 Ez a dokumentumtípus nem támogatja a karakterkészleteteket
 257 A célpont HTTP URL kell legyen
 258 Hiba: érvénytelen MIME típus
 259 Ismeretlen
@@ -272,13 +272,13 @@
 270 A dokumentum (%s) zárolva!
 271 A dokumentumot (%s) zárolta: %s (időtúllépés: %s)
 272 Felülírjuk a zárolási adatokat?
-273 Másoljuk a zárolási adatokat? 
+273 Másoljuk a zárolási adatokat?
 274 Előbb próbálja meg felszabadítani a dokumentumot...
 275 A felszabadítás sikeres!
 276 A felszabadítás sikertelen!
 277 %s felszabadítása...
 278 A dokumentum (%s) felszabadítva!
-279 Felszabadítsuk a dokumentumot? 
+279 Felszabadítsuk a dokumentumot?
 280 A dokumentum tulajdonságai
 281 A dokumentum tulajdonságai nem elérhetők
 282 A dokumentum tulajdonságai jelenleg nem elérhetők. Próbálja később...
@@ -289,7 +289,7 @@
 287 Ez a művelet nem tiltott (%s)
 288 A kérés sikertelen! Ok: sikertelen függőség
 289 A kérés sikertelen! Ok: %s
-290 Újra próbálja? 
+290 Újra próbálja?
 291 WebDAV
 292 User's Personal Reference (URL)
 293 User's WebDAV erőforrás listája (URL URL)

@@ -198,7 +198,7 @@
 196 Quotation (q)
 197 BiDi override (bdo)
 198 New formula (math)
-199 Basic math &Elements
+199 Basic &Elements
 200 Plain text (mtext)
 201 Identifier (mi)
 202 Number (mn)
@@ -207,7 +207,7 @@
 205 Character (&&xxx;)
 206 InvisibleTimes
 207 ApplyFunction
-208 Math &Constructs
+208 &Constructions
 209 Root (mroot)
 210 Square root (msqrt)
 211 Enclose (menclose)

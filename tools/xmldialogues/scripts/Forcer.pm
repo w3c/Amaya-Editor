@@ -154,20 +154,16 @@ sub start {
 	my ($p, $element, %attributes ) = @_;
 	
 	if ( $element eq "base" ) {
-		if ( 	defined ( $attributes{"version"}) 
-				&& defined ( $attributes{"last_update"}) ) {
+		if ( 	defined ( $attributes{"version"}) ) {
 			#to increment the information	
 			$attributes{"version"} += 1;
-			$_ = `date`; chomp;
-			$attributes{"last_update"} = $_;
 			#and store them
 			$base_tag = "<base version=\"". $attributes{"version"} 
-							."\" last_update=\"" . $attributes{"last_update"}
 							."\">\n";
 		}
 		else {
 			print "The old base isn't well-formed (line :". $p->current_line()."): the tag must be like :\n"
-					. "\t<$element version =\"\" last_update=\"\">\n";
+					. "\t<$element version =\"\">\n";
 		}
 	}
 	elsif ( $element eq "control" ) {

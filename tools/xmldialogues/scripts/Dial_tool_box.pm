@@ -242,8 +242,6 @@ sub start_  {
 	elsif ($tag eq "base") { #into $head_line
 		$base_message = "\n<$tag";
 		$argument{ "version" } += 1;
-		$_ = `date`;chomp;
-		$argument{ "last_update" } = $_;
 		foreach ( keys (%argument)) {
 			$base_message .= " $_=\"" . $argument{ $_ } . "\"";
 		}
