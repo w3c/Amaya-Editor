@@ -504,18 +504,8 @@ void InitPngColors ()
 /*----------------------------------------------------------------------
    	ReadPngToData decompresses and return the main picture info     
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-unsigned char* ReadPngToData (STRING datafile, int* w, int* h, int* ncolors, int* cpp, ThotColorStruct colrs[256], int* bg)
-#else /* __STDC__ */
-unsigned char* ReadPngToData (datafile, w, h, ncolors, cpp, colrs, bg)
-STRING           datafile;
-int*            w;
-int*            h;
-int*            ncolors;
-int*            cpp;
-ThotColorStruct colrs[256];
-int*            bg;
-#endif /* __STDC__ */
+unsigned char* ReadPngToData (STRING datafile, int *w, int *h, int *ncolors,
+			      int *cpp, ThotColorStruct colrs[256], int *bg)
 {
      unsigned char* bit_data;
      FILE*          fp;
@@ -542,22 +532,9 @@ int*            bg;
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-Drawable       PngCreate (STRING fn, PictInfo *imageDesc, int* xif, int* yif, int* wif, int* hif, unsigned long BackGroundPixel, ThotBitmap *mask1, int *width, int *height, int zoom)
-#else /* __STDC__ */
-Drawable       PngCreate (fn, imageDesc, xif, yif, wif, hif, BackGroundPixel, mask1, width, height, zoom)
-STRING         fn;
-PictInfo      *imageDesc;
-int*           xif;
-int*           yif;
-int*           wif;
-int*           hif;
-unsigned long  BackGroundPixel;
-ThotBitmap    *mask1;
-int           *width;
-int           *height;
-int            zoom;
-#endif /* __STDC__ */
+Drawable PngCreate (STRING fn, PictInfo *imageDesc, int *xif, int *yif,
+		    int *wif, int *hif, unsigned long BackGroundPixel,
+		    ThotBitmap *mask1, int *width, int *height, int zoom)
 {
   int             w, h;
   Pixmap          pixmap = (Pixmap) 0;
@@ -654,23 +631,7 @@ int            zoom;
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void PngPrint (STRING fn, PictureScaling pres, int xif, int yif, int wif, int hif, int PicXArea, int PicYArea, int PicWArea, int PicHArea, FILE *fd, unsigned long BackGroundPixel)
-#else /* __STDC__ */
-void PngPrint (fn, pres, xif, yif, wif, hif, PicXArea, PicYArea, PicWArea, PicHArea, fd, BackGroundPixel)
-STRING          fn;
-PictureScaling pres;
-int            xif;
-int            yif;
-int            wif;
-int            hif;
-int            PicXArea;
-int            PicYArea;
-int            PicWArea;
-int            PicHArea;
-FILE          *fd;
-unsigned long  BackGroundPixel;
-#endif /* __STDC__ */
 {
 #ifdef _WINDOWS
   return;
@@ -774,12 +735,7 @@ unsigned long  BackGroundPixel;
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 ThotBool IsPngFormat(CHAR_T* fn)
-#else /* __STDC__ */
-ThotBool IsPngFormat(fn)
-CHAR_T*  fn;
-#endif /* __STDC__ */
 {
   
    FILE *fp;

@@ -1917,14 +1917,7 @@ void                GetPictureHandlersList (int *count, char* buffer)
 /*----------------------------------------------------------------------
    LittleXBigEndian allows conversion between big and little endian  
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                LittleXBigEndian (register unsigned char *b, register long n)
-#else  /* __STDC__ */
-void                LittleXBigEndian (b, n)
-register unsigned char *b;
-register long       n;
-
-#endif /* __STDC__ */
 {
    do
      {
