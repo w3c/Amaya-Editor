@@ -424,7 +424,7 @@ static int	    BufferLineNumber = 0; /* line number in the source file of
 
 /* information about the Thot document under construction */
 /* global data used by the HTML parser */
-static ParserData   HTMLcontext = {0, 0, NULL, 0, FALSE, FALSE, FALSE, FALSE, FALSE};
+static ParserData   HTMLcontext = {0, ISO_8859_1, 0, NULL, 0, FALSE, FALSE, FALSE, FALSE, FALSE};
 
 static SSchema      DocumentSSchema = NULL;  /* the HTML structure schema */
 static Element      rootElement;	  /* root element of the document */
@@ -5097,7 +5097,107 @@ ThotBool*       endOfFile;
 	{
 	  if (*endOfFile == FALSE)
 	    {
-	      charRead = FileBuffer[(*index)++];
+	      if (currentState == 0 && HTMLcontext.encoding == UTF_8)
+		{
+		  /* We are reading a UTF8-coded character data */
+		  unsigned char *srcbuf;
+		  wchar_t        wcharRead;
+		  int            nbBytesRead = 0;
+		  char           fallback[5];
+		  Language       lang;
+		  ElementType    elType;
+		  Element        elLeaf;
+   
+		  srcbuf = (unsigned char *) &FileBuffer[(*index)];
+		  nbBytesRead=TtaGetNumberOfBytesToRead (&srcbuf, UTF_8);
+
+		  if (nbBytesRead > 1 &&
+		      ((*index + nbBytesRead) > LastCharInFileBuffer))
+		    {
+		      char extrabuf[7];
+		      unsigned char *ptrextrabuf;
+		      int  i;
+		      for (i=0; (*index + i) <= LastCharInFileBuffer; i++)
+			{
+			  extrabuf[i] = FileBuffer[(*index + i)];
+			}
+		      while (i < nbBytesRead && !*endOfFile)
+			{
+			  res = gzread (infile, &extrabuf[i], nbBytesRead-i);
+			  if (res <= 0)
+			    {
+			      /* error or end of file */
+			      *endOfFile = TRUE;
+			      charRead = WC_EOS;
+			    }
+			  i++;
+			}
+		      ptrextrabuf = (unsigned char *) &extrabuf[0];
+		      nbBytesRead = TtaGetNextWideCharFromMultibyteString
+			(&wcharRead, &ptrextrabuf, UTF_8);
+		      *index = 0;
+		    }
+		  else
+		    {
+		      nbBytesRead = TtaGetNextWideCharFromMultibyteString
+			(&wcharRead, &srcbuf, UTF_8);
+		      (*index) += nbBytesRead;
+		    }
+		  if (wcharRead < 0x100)
+		    {
+		      /* It's an 8bits character */
+		      charRead = (char) wcharRead;
+		    }
+		  else
+		    {
+		      /* It's not an 8bits character */
+		      /* Put the current content of the buffer */
+		      /* into the document */
+		      TextToDocument ();
+		      /* Try to find a fallback character */
+		      GetFallbackCharacter ((int) wcharRead, fallback, &lang);
+		      if (fallback[0] == '?')
+			{
+			  /* Character not found in the fallback table */
+			  /* Create a symbol leaf */
+			  elType = TtaGetElementType (HTMLcontext.lastElement);
+			  elType.ElTypeNum = 3;
+			  elLeaf = TtaNewElement (HTMLcontext.doc, elType);
+			  TtaSetElementLineNumber (elLeaf, NumberOfLinesRead);
+			  InsertElement (&elLeaf);
+			  HTMLcontext.lastElement = elLeaf;
+			  HTMLcontext.lastElementClosed = TRUE;
+			  /* Put the symbol '?' into the new symbol leaf */
+			  TtaSetGraphicsShape (elLeaf, fallback[0],
+					       HTMLcontext.doc);
+			  /* Change the wide char code associated with that symbol */
+			  TtaSetSymbolCode (elLeaf, wcharRead, HTMLcontext.doc);
+			  /* Make that leaf read-only */
+			  TtaSetAccessRight (elLeaf, ReadOnly, HTMLcontext.doc);
+			}
+		      else
+			{
+			  /* Character found in the fallback table */
+			  /* Create a new text leaf */
+			  elType = TtaGetElementType (HTMLcontext.lastElement);
+			  elType.ElTypeNum = 1;
+			  elLeaf = TtaNewElement (HTMLcontext.doc, elType);
+			  TtaSetElementLineNumber (elLeaf, NumberOfLinesRead);
+			  InsertElement (&elLeaf);
+			  HTMLcontext.lastElement = elLeaf;
+			  HTMLcontext.lastElementClosed = TRUE;
+			  /* Put the fallback character into the new text leaf */
+			  TtaSetTextContent (elLeaf, fallback,
+					     lang, HTMLcontext.doc);
+			  HTMLcontext.mergeText = FALSE;
+			}
+		    }
+		}
+	      else
+		{
+		  charRead = FileBuffer[(*index)++];
+		}
+
 	      if (*index > LastCharInFileBuffer)
 		*index = 0;
 	    }
@@ -7126,6 +7226,7 @@ ThotBool            plainText;
   LgEntityName = 0;
   EntityTableEntry = 0;
   CharRank = 0;
+  HTMLcontext.encoding = TtaGetDocumentCharset (doc);
 
   wc2iso_strcpy (www_file_name, htmlFileName);
   stream = gzopen (www_file_name, "r");
