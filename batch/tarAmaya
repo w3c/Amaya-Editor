@@ -7,7 +7,7 @@
 AMAYAVERSION=1.1
 THOTDIR=/tahiti/diffusion/opera
 DEST=/tahiti/thottape
-PLATFORMS="solaris2 LINUX-ELF LINUX-SPARC SUN4 SGI RS6000 osf1"
+PLATFORMS="solaris2 LINUX-ELF SUN4 SGI RS6000 osf1"
 
 TAR="tar cvbfh 200"
 COMPRESS="gzip -9"
@@ -56,6 +56,7 @@ do
    Thot/amaya/HTML.fr \
    Thot/amaya/HTML*.PRS \
    Thot/amaya/HTML*.TRA \
+   Thot/amaya/*.gif \
    Thot/amaya/MathML.STR \
    Thot/amaya/MathML*.PRS \
    Thot/amaya/MathML*.TRA \
