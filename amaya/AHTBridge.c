@@ -681,6 +681,7 @@ void *TimerCallback (XtPointer cdata, XtIntervalId *id)
 #else  /* _GTK */
 /*----------------------------------------------------------------------
   TimerCallbackGTK
+  The callback returns FALSE to destroy the timer that called it.
   ----------------------------------------------------------------------*/
 gboolean TimerCallbackGTK (gpointer id)
 {
@@ -693,7 +694,7 @@ gboolean TimerCallbackGTK (gpointer id)
 
   if (!AmayaIsAlive () 
       || Timers == NULL)
-    return (0);
+    return (FALSE);
 
   /* find the timer from the uid */
   last = cur = Timers;
