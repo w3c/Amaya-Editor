@@ -420,7 +420,7 @@ void SpellCheck (Document document, View view)
 /*----------------------------------------------------------------------
   CreateBreak
   ----------------------------------------------------------------------*/
-void                CreateBreak (Document document, View view)
+void CreateBreak (Document document, View view)
 {
    ElementType         elType;
    Element             el, br, parent;

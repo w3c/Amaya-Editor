@@ -782,7 +782,7 @@ void SetPageHeight (PtrAbstractBox pAb, int *ht, int *pos, int *nChars)
 	       {
 		  *nChars = box->BxFirstChar;
 		  /* Il ne faut pas couper le dernier mot d'une page     */
-		  /* donc si la boite precedente est de type BtAvectrait */
+		  /* donc si la boite precedente est de type BoDotted */
 		  /* la limite de la page est deplacee sur le blanc qui  */
 		  /* precede ce mot */
 		  if (*nChars != 0 &&

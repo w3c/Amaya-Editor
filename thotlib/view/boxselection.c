@@ -393,8 +393,7 @@ void ComputeViewSelMarks (ViewSelection *selMark)
 	/* select the first child */
 	pBox = pBox->BxNexChild;
       /* look for the right box */
-      while (pBox->BxNexChild && pBox->BxNexChild->BxFirstChar <= pos &&
-	     (pBox->BxNexChild->BxNChars > 0 || pBox->BxNexChild->BxNexChild))
+      while (pBox->BxNexChild && pBox->BxNexChild->BxFirstChar <= pos)
 	pBox = pBox->BxNexChild;
       pos -= pBox->BxFirstChar;
       selMark->VsIndBox = pos;
@@ -413,7 +412,7 @@ void ComputeViewSelMarks (ViewSelection *selMark)
       selMark->VsBuffer = pBuffer;
 
       /* update number of spaces and the position */
-      if (pos > pBox->BxNChars)
+      if (pos >= pBox->BxNChars)
 	{
 	  /* selection at the end of the box? */
 	  if (pBox->BxScript == 'A' || pBox->BxScript == 'H')

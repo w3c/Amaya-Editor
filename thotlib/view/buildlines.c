@@ -19,6 +19,8 @@
 
 #define THOT_EXPORT extern
 #include "boxes_tv.h"
+#include "select_tv.h"
+
 
 #include "boxmoves_f.h"
 #include "boxlocate_f.h"
@@ -177,6 +179,8 @@ static void Adjust (PtrBox pParentBox, PtrLine pLine, int frame,
   nSpaces = 0;	/* number of spaces */
   width = 0;	/* text width without spaces */
   baseline = pLine->LiYOrg + pLine->LiHorizRef;
+  if (orgYComplete)
+    baseline += pParentBox->BxYOrg;
   
   /* get the list of boxes displayed in the line */
   if (pLine->LiFirstPiece)
@@ -190,7 +194,9 @@ static void Adjust (PtrBox pParentBox, PtrLine pLine, int frame,
 	pBox = pBoxInLine->BxNexChild;
       else
 	pBox = pBoxInLine;
-      if (!pBox->BxAbstractBox->AbNotInLine)
+      if (!pBox->BxAbstractBox->AbHorizEnclosing)
+	pBox->BxYOrg = baseline - pBox->BxHorizRef;
+      else if (!pBox->BxAbstractBox->AbNotInLine)
 	{
 	  boxes[max++] = pBox;
 	  pBox->BxSpaceWidth = 0;
@@ -235,12 +241,10 @@ static void Adjust (PtrBox pParentBox, PtrLine pLine, int frame,
       pLine->LiMinLength = width;
     }
 
-  /* Update the position, the baseline and the width of each included box */
+  /* Update the position and the width of each included box */
   x = pLine->LiXOrg;
   if (orgXComplete)
     x += pParentBox->BxXOrg;
-  if (orgYComplete)
-    baseline += pParentBox->BxYOrg;
   nSpaces = pLine->LiNPixels;
 
   for (i = 0; i < max; i++)
@@ -363,7 +367,9 @@ void Align (PtrBox pParentBox, PtrLine pLine, int delta, int frame,
 	pBox = pBoxInLine->BxNexChild;
       else
 	pBox = pBoxInLine;
-      if (!pBox->BxAbstractBox->AbNotInLine)
+      if (!pBox->BxAbstractBox->AbHorizEnclosing)
+	pBox->BxYOrg = baseline - pBox->BxHorizRef;
+      else if (!pBox->BxAbstractBox->AbNotInLine)
 	{
 	  boxes[max++] = pBox;
 	  pBox->BxSpaceWidth = 0;
@@ -766,7 +772,7 @@ static int SearchBreak (PtrLine pLine, PtrBox pBox, int max, SpecFont font,
   spaceAdjust = spaceWidth;
   language = pBox->BxAbstractBox->AbLang;
 
-  if (max != pBox->BxWidth - 1)
+  if (max < pBox->BxWidth)
     {
       /* we are not just removing extra spaces at the end of the line */
       pParentBox = pBox->BxAbstractBox->AbEnclosing->AbBox;
@@ -893,12 +899,11 @@ static int SearchBreak (PtrLine pLine, PtrBox pBox, int max, SpecFont font,
 		  /* end of the box */
 		  still = FALSE;
 		  /* Select the first character after the break */
-		  *pNewBuff = pBuffer;
+		  *pNewBuff = NULL;
 		  *newIndex = charIndex;
 		  *boxWidth = pBox->BxW;
 		  *boxLength = pBox->BxNChars;
 		  *nSpaces = pBox->BxNSpaces;
-		  charIndex--;
 		}
 	      else
 		{
@@ -1517,6 +1522,9 @@ static int FillLine (PtrLine pLine, PtrAbstractBox pRootAb,
 	  }
 	pBox = pLine->LiFirstPiece;
 	xi += pBox->BxWidth;
+	/* take into account the minimum width */
+	if (!toCut && minWidth < wordWidth)
+	  minWidth = wordWidth;
      }
    else
       /* the line is empty */
@@ -1528,17 +1536,30 @@ static int FillLine (PtrLine pLine, PtrAbstractBox pRootAb,
        if (!pNextBox->BxAbstractBox->AbHorizEnclosing)
 	 {
 	   /* that box is not concerned */
-	   *full = TRUE;
-	   still = FALSE;
-	   
-	   if (pBox == NULL)
-	     /* it's the first box in the line */
-	     pLine->LiLastPiece = pLine->LiFirstPiece;
-	   else if (pBox->BxType == BoPiece ||
-		    pBox->BxType == BoScript ||
-		    pBox->BxType == BoDotted)
-	     /* break the last word of the previous box */
-	     pLine->LiLastPiece = pLine->LiFirstPiece;
+	   if (pNextBox->BxAbstractBox->AbElement->ElTypeNumber == PageBreak + 1)
+	     {
+	       *full = TRUE;
+	       still = FALSE;
+	       wordWidth = 0;
+	       if (pBox == NULL)
+		 /* it's the first box in the line */
+		 pLine->LiLastPiece = pLine->LiFirstPiece;
+	       else if (pBox->BxType == BoPiece ||
+			pBox->BxType == BoScript ||
+			pBox->BxType == BoDotted)
+		 /* break the last word of the previous box */
+		 pLine->LiLastPiece = pLine->LiFirstPiece;
+	     }
+	   else
+	     {
+	       /* skip over the box */
+	       pNextBox = GetNextBox (pNextBox->BxAbstractBox);
+	       if (pNextBox == NULL)
+		 {
+		   *full = FALSE;
+		   still = FALSE;
+		 }
+	     }
 	 }
        else if (pNextBox->BxAbstractBox->AbNotInLine)
 	 {
@@ -1648,7 +1669,8 @@ static int FillLine (PtrLine pLine, PtrAbstractBox pRootAb,
 		     lastbox = GetNextBox (lastbox->BxAbstractBox);
 		     if (lastbox == NULL)
 		       still = FALSE;
-		     else if (!lastbox->BxAbstractBox->AbNotInLine)
+		     else if (!lastbox->BxAbstractBox->AbNotInLine &&
+			      lastbox->BxAbstractBox->AbHorizEnclosing)
 		       still = FALSE;
 		     else
 		       pBox = lastbox;
@@ -1709,6 +1731,7 @@ static int FillLine (PtrLine pLine, PtrAbstractBox pRootAb,
 
 	       if (pNextBox->BxAbstractBox->AbLeafType == LtText &&
 		   !pNextBox->BxAbstractBox->AbNotInLine &&
+		   pNextBox->BxAbstractBox->AbHorizEnclosing &&
 		   pNextBox->BxW != 0 &&
 		   pNextBox->BxAbstractBox->AbAcceptLineBreak &&
 		   pNextBox->BxNSpaces != 0)
@@ -1827,7 +1850,7 @@ static int FillLine (PtrLine pLine, PtrAbstractBox pRootAb,
       pLine->LiLastBox = pBox;
 
    /* teste s'il reste des boites a mettre en ligne */
-   if ((pBox->BxNexChild == NULL || pBox->BxNexChild->BxNChars == 0) &&
+   if ((pBox->BxNexChild == NULL) &&
        GetNextBox (pBox->BxAbstractBox) == NULL)
       *full = FALSE;
 
@@ -2231,10 +2254,10 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
 	  if (pBoxToBreak)
 	    {
 	      pBoxToBreak = pBoxToBreak->BxNexChild;
-	      /* Cas particulier de la derniere boite coupee */
-	      if (pBoxToBreak)
+	      /* special case of the last box */
 		{
 		  pNextBox = pPreviousLine->LiLastBox;
+#ifdef IV
 		  /* is it empty ? */
 		  if (pBoxToBreak->BxNChars == 0)
 		    do
@@ -2245,6 +2268,7 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
 		      else
 			pNextBox = GetNextBox (pNextBox->BxAbstractBox);
 		    while (pNextBox && pNextBox->BxAbstractBox->AbNotInLine);
+#endif /* IV */
 		}
 	    }
 	  
@@ -2310,7 +2334,7 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
 	    }
 	  else if (!pNextBox->BxAbstractBox->AbNotInLine)
 	    {
-	      /* Indentation des lignes */
+	      /* line indent */
 	      pLine->LiXOrg = left;
 	      if (pPreviousLine || pAb->AbTruncatedHead)
 		{
@@ -2978,7 +3002,6 @@ void RecomputeLines (PtrAbstractBox pAb, PtrLine pFirstLine, PtrBox ibox,
 		 /* Si la selection a encore un sens */
 		 if (pSelEnd->VsBox->BxAbstractBox)
 		   {
-		     
 		     if (pSelEnd->VsBuffer == pSelBegin->VsBuffer
 			 && pSelEnd->VsIndBuf == pSelBegin->VsIndBuf)
 		       {
@@ -2995,10 +3018,9 @@ void RecomputeLines (PtrAbstractBox pAb, PtrLine pFirstLine, PtrBox ibox,
 		     pSelBox = pSelEnd->VsBox;
 		     if (pSelBox->BxAbstractBox->AbLeafType != LtText)
 		       pSelEnd->VsXPos += pSelBox->BxW;
-		     else if (pSelBox->BxNChars == 0 &&
-			      pSelBox->BxType == BoComplete)
-		       pSelEnd->VsXPos += pSelBox->BxW;
-		     else if (pSelEnd->VsIndBox == pSelBox->BxNChars)
+		     else if (SelPosition)
+		       pSelEnd->VsXPos += 2;
+		     else if (pSelEnd->VsIndBox >= pSelBox->BxNChars)
 		       pSelEnd->VsXPos += 2;
 		     else
 		       {

@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA 1996-2001
+ *  (c) COPYRIGHT INRIA 1996-2002
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -151,7 +151,7 @@ void IsolateSelection (PtrDocument pDoc, PtrElement *pFirstSel,
       }
   done = FALSE;
   if (createEmpty)
-    if (*firstChar == 1 && *lastChar == 1 && *pFirstSel == *pLastSel)
+    if (*firstChar == 1 && *lastChar <= 1 && *pFirstSel == *pLastSel)
       if ((*pLastSel)->ElTerminal && (*pLastSel)->ElLeafType == LtText)
 	{
 	  pEl = NewSubtree ((*pFirstSel)->ElTypeNumber,
@@ -173,7 +173,7 @@ void IsolateSelection (PtrDocument pDoc, PtrElement *pFirstSel,
 	  done = TRUE;
 	}
   if (!done)
-    if (*lastChar > 0 && *pLastSel != NULL)
+    if (*lastChar > 0 && *pLastSel)
       if ((*pLastSel)->ElTerminal && (*pLastSel)->ElLeafType == LtText)
 	SplitAfterSelection (*pLastSel, *lastChar, pDoc);
 }
@@ -788,157 +788,155 @@ static void SaveElement (PtrElement pEl, PtrElement pParent)
 /*----------------------------------------------------------------------
    CopyCommand traite la commande COPY				
   ----------------------------------------------------------------------*/
-void                CopyCommand ()
+void CopyCommand ()
 {
-   PtrElement          firstSel, lastSel, pEl, pCopy, pE, pElAttr, pSecond;
-   PtrPasteElem        pSave;
-   PtrDocument         pSelDoc;
-   PtrAttribute        pAttrLang, pAttrHerit;
-   int                 firstChar, lastChar;
-   ThotBool            cancopy;
+  PtrElement          firstSel, lastSel, pEl, pCopy, pE, pElAttr, pSecond;
+  PtrPasteElem        pSave;
+  PtrDocument         pSelDoc;
+  PtrAttribute        pAttrLang, pAttrHerit;
+  int                 firstChar, lastChar;
+  ThotBool            cancopy;
 
-   pCopy = NULL;
-   /* y-a-t'il une selection courante ? */
-   if (!GetCurrentSelection (&pSelDoc, &firstSel, &lastSel, &firstChar,
-			     &lastChar))
-      return;
-   else
-     {
-	if (ThotLocalActions[T_cancopyorcut] != NULL)
-	   ThotLocalActions[T_cancopyorcut] (&cancopy, pSelDoc, firstSel,
-					     lastSel, firstChar, lastChar);
-	else
-	   cancopy = TRUE;
-	if (cancopy)
-	   /* on sauve les elements selectionnes */
-	  {
-	     if (firstSel->ElTerminal
-		 && firstSel->ElLeafType == LtText
-		 && firstSel->ElTextLength > 0
-		 && firstSel->ElTextLength < firstChar)
-		/* la selection commence apres l'element complet */
-	       {
-		  firstSel = NextElement (firstSel);
-		  firstChar = 0;
-	       }
-	     if (firstSel != NULL)
-		if (firstSel != lastSel || firstChar < lastChar - 1 ||
-		    firstChar == 0)
-		   /* il y a plus d'un caractere selectionne' */
-		  {
-		     /* libere la sauvegarde de l'Editeur */
-		     /* sauvegarde la partie selectionnee */
-		     FreeSavedElements ();
-		     /* document d'ou vient la partie sauvee */
-		     DocOfSavedElements = pSelDoc;
-		     /* tell the application what document the saved elements
-			come from */
-		     if (CopyAndCutFunction)
-		       (*CopyAndCutFunction) (IdentDocument (DocOfSavedElements));
-		     pEl = firstSel;
-		     /* premier element selectionne */
-
-		     while (pEl != NULL)
-			/* pEl : pointeur sur l'element a sauver */
-		       {
-			  /* copie l'element courant avec ses attributs */
-			  /* S'il est reference', perd le lien avec la
-			     reference */
-			  if (IsolatedPairedElem (pEl, firstSel, lastSel))
-			     pCopy = NULL;
-			  else
-			     /* envoie l'evenement ElemCopy.Pre et demande a
-			        l'application si elle est d'accord pour copier
-			        l'element */
-			  if (SendEventSubTree (TteElemCopy, pSelDoc, pEl, 0))
-			    /* l'application ne veut pas que l'editeur copie
-			       cet element */
-			    pCopy = NULL;
-			  else
-			    /* pas d'objection de l'application */
-			    /* cree une copie de l'element */
-			    pCopy = CopyTree (pEl, pSelDoc, pEl->ElStructSchema,
-					      pSelDoc, NULL, FALSE, TRUE, FALSE);
-			  if (pCopy != NULL)
-			     /* met la copie de l'element courant dans la 
-			        chaine des elements sauvegardes */
+  pCopy = NULL;
+  /* y-a-t'il une selection courante ? */
+  if (!GetCurrentSelection (&pSelDoc, &firstSel, &lastSel, &firstChar,
+			    &lastChar))
+    return;
+  else
+    {
+      if (ThotLocalActions[T_cancopyorcut] != NULL)
+	ThotLocalActions[T_cancopyorcut] (&cancopy, pSelDoc, firstSel,
+					  lastSel, firstChar, lastChar);
+      else
+	cancopy = TRUE;
+      if (cancopy)
+	/* on sauve les elements selectionnes */
+	{
+	  if (firstSel->ElTerminal
+	      && firstSel->ElLeafType == LtText
+	      && firstSel->ElTextLength > 0
+	      && firstSel->ElTextLength < firstChar)
+	    /* la selection commence apres l'element complet */
+	    {
+	      firstSel = NextElement (firstSel);
+	      firstChar = 0;
+	    }
+	  if (firstSel &&
+	      (firstSel != lastSel || firstChar < lastChar - 1 ||
+	       firstChar == 0))
+	    /* il y a plus d'un caractere selectionne' */
+	    {
+	      /* libere la sauvegarde de l'Editeur */
+	      /* sauvegarde la partie selectionnee */
+	      FreeSavedElements ();
+	      /* document d'ou vient la partie sauvee */
+	      DocOfSavedElements = pSelDoc;
+	      /* tell the application what document the saved elements
+		 come from */
+	      if (CopyAndCutFunction)
+		(*CopyAndCutFunction) (IdentDocument (DocOfSavedElements));
+	      pEl = firstSel;
+	      /* premier element selectionne */
+	      while (pEl != NULL)
+		/* pEl : pointeur sur l'element a sauver */
+		{
+		  /* copie l'element courant avec ses attributs */
+		  /* S'il est reference', perd le lien avec la
+		     reference */
+		  if (IsolatedPairedElem (pEl, firstSel, lastSel))
+		    pCopy = NULL;
+		  else if (SendEventSubTree (TteElemCopy, pSelDoc, pEl, 0))
+		    /* envoie l'evenement ElemCopy.Pre et demande a
+		       l'application si elle est d'accord pour copier
+		       l'element */
+		    /* l'application ne veut pas que l'editeur copie
+		       cet element */
+		    pCopy = NULL;
+		  else
+		    /* pas d'objection de l'application */
+		    /* cree une copie de l'element */
+		    pCopy = CopyTree (pEl, pSelDoc, pEl->ElStructSchema,
+				      pSelDoc, NULL, FALSE, TRUE, FALSE);
+		  if (pCopy != NULL)
+		    /* met la copie de l'element courant dans la 
+		       chaine des elements sauvegardes */
+		    {
+		      if (pEl == firstSel && firstChar > 1)
+			/* coupe le premier element sauve' */
+			{
+			  pE = pCopy;
+			  SplitTextElement (pCopy, firstChar,
+					    pSelDoc, FALSE,
+					    &pSecond, FALSE);
+			  pCopy = pSecond;
+			  /* supprime la premiere partie */
+			  DeleteElement (&pE, pSelDoc);
+			  if (firstSel == lastSel)
+			    /* la fin de la selection est dans le
+			       nouvel element */
+			    lastChar = lastChar - firstChar + 1;
+			}
+		      if (pEl == lastSel &&
+			  lastChar > 0 &&
+			  lastChar <= pCopy->ElTextLength)
+			/* coupe le dernier element sauve' */
+			{
+			  SplitTextElement (pCopy, lastChar,
+					    pSelDoc, FALSE, &pE,
+					    FALSE);
+			  /* supprime la deuxieme partie */
+			  DeleteElement (&pE, pSelDoc);
+			}
+		      SaveElement (pCopy, pEl->ElParent);
+		      /* met l'attribut langue sur la copie s'il n'y
+			 est pas deja */
+		      if (GetTypedAttrForElem (pCopy, 1, NULL) == NULL)
+			/* la copie ne possede pas d'attribut Langue,
+			   on le met */
+			{
+			  /* cherche d'abord la valeur heritee par
+			     l'original */
+			  pAttrHerit = GetTypedAttrAncestor (pEl, 1,
+							     NULL, &pElAttr);
+			  if (pAttrHerit != NULL)
 			    {
-			       if (pEl == firstSel && firstChar > 1)
-				  /* coupe le premier element sauve' */
-				 {
-				    pE = pCopy;
-				    SplitTextElement (pCopy, firstChar,
-						      pSelDoc, FALSE,
-						      &pSecond, FALSE);
-				    pCopy = pSecond;
-				    /* supprime la premiere partie */
-				    DeleteElement (&pE, pSelDoc);
-				    if (firstSel == lastSel)
-				       /* la fin de la selection est dans le
-				          nouvel element */
-				       lastChar = lastChar - firstChar + 1;
-				 }
-			       if (pEl == lastSel)
-				  if (lastChar > 0 &&
-				      lastChar <= pCopy->ElTextLength)
-				     /* coupe le dernier element sauve' */
-				    {
-				       SplitTextElement (pCopy, lastChar,
-							 pSelDoc, FALSE, &pE,
-							 FALSE);
-				       /* supprime la deuxieme partie */
-				       DeleteElement (&pE, pSelDoc);
-				    }
-			       SaveElement (pCopy, pEl->ElParent);
-			       /* met l'attribut langue sur la copie s'il n'y
-			          est pas deja */
-			       if (GetTypedAttrForElem (pCopy, 1, NULL) == NULL)
-				  /* la copie ne possede pas d'attribut Langue,
-				     on le met */
-				 {
-				    /* cherche d'abord la valeur heritee par
-				       l'original */
-				    pAttrHerit = GetTypedAttrAncestor (pEl, 1,
-							    NULL, &pElAttr);
-				    if (pAttrHerit != NULL)
-				      {
-					 pAttrLang = AddAttrToElem (pCopy, pAttrHerit, NULL);
-					 if (pAttrLang != NULL)
-					    pAttrLang->AeAttrSSchema = pCopy->ElStructSchema;
-				      }
-				 }
+			      pAttrLang = AddAttrToElem (pCopy, pAttrHerit, NULL);
+			      if (pAttrLang != NULL)
+				pAttrLang->AeAttrSSchema = pCopy->ElStructSchema;
 			    }
-
-			  /* cherche l'element a traiter apres l'element
-			     courant */
-			  pEl = NextInSelection (pEl, lastSel);
-		       }
-		  }
-	     /* parmi les elements de la copie, cherche et traite tous ceux */
-	     /* qui sont reference's */
-	     pSave = FirstSavedElement;
-	     while (pSave != NULL)
-	       {
-		  /* traite un sous-arbre */
-		  ChangeReferences (pSave->PeElement, &pSelDoc);
-		  /* passe au sous-arbre suivant */
-		  pSave = pSave->PeNext;
-	       }
-	     /* il faudra changer les labels des elements insere's par la */
-	     /* prochaine commande coller */
-	     ChangeLabel = TRUE;
-
-	     /* envoie l'evenement ElemCopy.Post pour tous les sous-arbres */
-	     /* copie's */
-	     pSave = FirstSavedElement;
-	     while (pSave != NULL)
-	       {
-		  NotifySubTree (TteElemCopy, pSelDoc, pSave->PeElement, 0);
-		  /* passe au sous-arbre suivant */
-		  pSave = pSave->PeNext;
-	       }
-	  }
-     }
+			}
+		    }
+		  
+		  /* cherche l'element a traiter apres l'element
+		     courant */
+		  pEl = NextInSelection (pEl, lastSel);
+		}
+	    }
+	  /* parmi les elements de la copie, cherche et traite tous ceux */
+	  /* qui sont reference's */
+	  pSave = FirstSavedElement;
+	  while (pSave != NULL)
+	    {
+	      /* traite un sous-arbre */
+	      ChangeReferences (pSave->PeElement, &pSelDoc);
+	      /* passe au sous-arbre suivant */
+	      pSave = pSave->PeNext;
+	    }
+	  /* il faudra changer les labels des elements insere's par la */
+	  /* prochaine commande coller */
+	  ChangeLabel = TRUE;
+	  
+	  /* envoie l'evenement ElemCopy.Post pour tous les sous-arbres */
+	  /* copie's */
+	  pSave = FirstSavedElement;
+	  while (pSave != NULL)
+	    {
+	      NotifySubTree (TteElemCopy, pSelDoc, pSave->PeElement, 0);
+	      /* passe au sous-arbre suivant */
+	      pSave = pSave->PeNext;
+	    }
+	}
+    }
 }
 
 
@@ -1074,7 +1072,7 @@ void ProcessFirstLast (PtrElement pPrev, PtrElement pNext, PtrDocument pDoc)
    Si save est vrai, on sauvegarde la partie selectionnee pour     
    pouvoir la coller ensuite (voir PasteCommand).                  
   ----------------------------------------------------------------------*/
-void                CutCommand (ThotBool save)
+void CutCommand (ThotBool save)
 {
   PtrElement          firstSel, lastSel, pEl, pE, pPrev, pNext, pParent,
                       pS, pSS, pParentEl, pFree, pF, pF1, pPrevPage, pSave,
@@ -1632,7 +1630,7 @@ void                CutCommand (ThotBool save)
 			      i = 0;
 			    SelectString (pSelDoc, firstSelInit, firstCharInit, i);
 			  }
-			else if ((lastCharInit == 0 && firstCharInit!=1) ||
+			else if ((lastCharInit == 0 && firstCharInit != 1) ||
 				 lastSelInit != firstSelInit)
 			  SelectElement (pSelDoc, firstSelInit, TRUE, TRUE);
 			else
@@ -2565,7 +2563,7 @@ void CreateNewElement (int typeNum, PtrSSchema pSS, PtrDocument pDoc,
       InsertionPoint = (firstSel == lastSel  &&
 			firstSel->ElTerminal &&
 			((firstSel->ElLeafType == LtText && firstChar > 0 &&
-			  firstChar == lastChar)            ||
+			  SelPosition)                      ||
 			 firstSel->ElLeafType == LtPicture  ||
 			 firstSel->ElLeafType == LtGraphics ||
 			 firstSel->ElLeafType == LtPolyLine ||
@@ -2573,23 +2571,21 @@ void CreateNewElement (int typeNum, PtrSSchema pSS, PtrDocument pDoc,
 			 firstSel->ElLeafType == LtSymbol     ));
       /* Peut-on considerer la selection courante comme un simple point */
       /* d'insertion ? */
-      if (!InsertionPoint)
-	if (firstSel == lastSel)
+      if (!InsertionPoint && firstSel == lastSel &&
 	  /* un seul element selectionne' */
-	  if (GetElementConstruct (firstSel, &nComp) == CsConstant)
-	    /* c'est une constante, on va creer le nouvel element devant */
-	    {
-	      InsertionPoint = TRUE;
-	      elConst = TRUE;
-	    }
-      if (!InsertionPoint)
-	if (firstSel == lastSel)
-	  if (EmptyElement (firstSel))
-	    /* c'est un element vide unique */
-	    {
-	      InsertionPoint = TRUE;
-	      empty = TRUE;
-	    }
+	  GetElementConstruct (firstSel, &nComp) == CsConstant)
+	/* c'est une constante, on va creer le nouvel element devant */
+	{
+	  InsertionPoint = TRUE;
+	  elConst = TRUE;
+	}
+      if (!InsertionPoint && firstSel == lastSel &&
+	  EmptyElement (firstSel))
+	/* c'est un element vide unique */
+	{
+	  InsertionPoint = TRUE;
+	  empty = TRUE;
+	}
 
       if (!InsertionPoint)
 	/* il n'y a pas un simple point d'insertion, mais du texte et/ou */
