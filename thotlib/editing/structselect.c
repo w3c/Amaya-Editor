@@ -2065,7 +2065,16 @@ void SelectElement (PtrDocument pDoc, PtrElement pEl, ThotBool begin, ThotBool c
       if ((pEl->ElTerminal &&
 	   (pEl->ElVolume == 0 || pEl->ElLeafType == LtPicture)) ||
 	  (!pEl->ElTerminal && pEl->ElFirstChild == NULL))
-	SelPosition = TRUE;
+	{
+	  SelPosition = TRUE;
+	  if (pEl->ElTerminal && pEl->ElLeafType == LtPicture)
+	    {
+	      if (begin)
+		SelectedPictureEdge = 0;
+	      else
+		SelectedPictureEdge = 1;
+	    }
+	}
       else
 	SelPosition = FALSE;
       elVisible = SelectAbsBoxes (FirstSelectedElement, TRUE);

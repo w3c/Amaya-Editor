@@ -5299,6 +5299,7 @@ ATTRIBUTES
 	IN Links_view
 		Visibility: Enclosing =;
 	END;
+
  NoObjects(PICTURE_UNIT*):
 	BEGIN
 	if within Object

@@ -533,7 +533,7 @@ static void SetAttrOnElement ( Document doc, Element el, int attrNum, int value 
     {
     /* the element does not have that attribute. Create it */
       attr = TtaNewAttribute (attrType);
-      TtaSetAttributeValue (attr, value, el, doc);
+      TtaSetAttributeValue (attr, value, NULL, doc);
       TtaAttachAttribute (el, attr, doc);
     }
   else
@@ -658,10 +658,10 @@ void DisplayImage (Document doc, Element el, LoadedImageDesc *desc,
 	  if (parentType.ElTypeNum == HTML_EL_Object ||
 	      parentType.ElTypeNum == HTML_EL_Embed_)
 	     /* it's an image into an object -> display object content */
-	    SetAttrOnElement ( doc, parent, HTML_ATTR_NoObjects, 1 );
+	    SetAttrOnElement (doc, parent, HTML_ATTR_NoObjects, 1);
 	  else
 	    /* it's an image -> display image alt text */
-	    SetAttrOnElement ( doc, el, HTML_ATTR_NoImages, 1 );		
+	    SetAttrOnElement (doc, el, HTML_ATTR_NoImages, 1);
        }
 
       if (is_svg)
@@ -1166,10 +1166,10 @@ ThotBool FetchAndDisplayImages (Document doc, int flags, Element elSubTree)
   TtaGetEnvBoolean ("LOAD_IMAGES", &loadImages);
   TtaGetEnvBoolean ("LOAD_OBJECTS", &loadObjects);
 
-  if ( !loadObjects )
+  if (!loadObjects)
      ChangeAttrOnRoot (doc, HTML_ATTR_NoObjects);
 
-  if ( !loadImages )
+  if (!loadImages)
      ChangeAttrOnRoot (doc, HTML_ATTR_NoImages);
     
   /* JK: verify if StopTransfer was previously called */

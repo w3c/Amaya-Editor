@@ -519,7 +519,7 @@ void TtaSetAttributeValue (Attribute attribute, int value,
     TtaError (ERR_invalid_parameter);
   else if (pAttr->AeAttrType != AtEnumAttr && pAttr->AeAttrType != AtNumAttr)
     TtaError (ERR_invalid_attribute_value);
-  else if (AttrOfElement (attribute, element))
+  else if (pAttr->AeAttrValue == 0 || AttrOfElement (attribute, element))
     {
       if (pAttr->AeAttrType == AtNumAttr)
 	{

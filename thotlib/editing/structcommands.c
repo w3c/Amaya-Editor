@@ -3288,8 +3288,17 @@ void CreateNewElement (int typeNum, PtrSSchema pSS, PtrDocument pDoc,
 			      /* Replace la selection */
 			      pEl = SearchTypedElementInSubtree (pNew, typeNum,
 								 pSS);
-			      SelectElementWithEvent (pSelDoc, FirstLeaf (pEl),
-						      TRUE, TRUE);
+			      if (pEl->ElTerminal &&
+				  pEl->ElLeafType == LtPicture)
+				/* we have created a picture element */
+				/* select its end (right edge) */
+				SelectElementWithEvent (pSelDoc, pEl, FALSE,
+							TRUE);
+			      else
+				/* select the beginning of the first leaf of
+				   the created element */
+				SelectElementWithEvent (pSelDoc,
+						  FirstLeaf (pEl), TRUE, TRUE);
 			    }
 			}
 		    }
