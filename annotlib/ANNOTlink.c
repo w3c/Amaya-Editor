@@ -185,6 +185,7 @@ ThotBool LINK_AddLinkToSource (Document source_doc, AnnotMeta *annot)
   char       *annot_user;
   char       *docSchemaName;
   int          c1, cN;
+  int          check_mode;
   SSchema      XLinkSchema;
 
   annot_user = GetAnnotUser ();
@@ -253,7 +254,10 @@ ThotBool LINK_AddLinkToSource (Document source_doc, AnnotMeta *annot)
 	    break;
 	  el = TtaGetParent (el);
 	}
+      check_mode = TtaGetStructureChecking (source_doc);
+      TtaSetStructureChecking (FALSE, source_doc);
       TtaInsertFirstChild (&anchor, el, source_doc);
+      TtaSetStructureChecking (check_mode, source_doc);
     }
   else if (!strcmp (docSchemaName, "GraphML"))
     {
@@ -268,7 +272,10 @@ ThotBool LINK_AddLinkToSource (Document source_doc, AnnotMeta *annot)
 	    break;
 	  el = TtaGetParent (el);
 	}
+      check_mode = TtaGetStructureChecking (source_doc);
+      TtaSetStructureChecking (FALSE, source_doc);
       TtaInsertFirstChild (&anchor, el, source_doc);
+      TtaSetStructureChecking (check_mode, source_doc);
     }
   else 
     {
