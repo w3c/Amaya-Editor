@@ -544,10 +544,24 @@ void UpdateStylePost (NotifyAttribute * event)
 	AttrToSpan (el, event->attribute, doc);
 	newParent = TtaGetParent (el);
 	if (newParent != oldParent)
-	   /* a new SPAN element has been created. Generate the PRules
-	      for the SPAN element */
-	   el = newParent;
+	  {
+	    /* a new SPAN element has been created. Generate the PRules
+	       for the SPAN element */
+	    el = newParent;
+	    TtaSetElementLineNumber (el, TtaGetElementLineNumber (oldParent));
+	  }
 	ParseHTMLSpecificStyle (el, style, doc, 1, FALSE);
+	if (CSSErrorsFound)
+	  {
+	    /* the CSS parser detected an error */
+	    fclose (ErrFile);
+	    ErrFile = NULL;
+	    TtaSetItemOn (doc, 1, Views, BShowLogFile);
+	    CSSErrorsFound = FALSE;
+	    InitInfo ("", TtaGetMessage (AMAYA, AM_XML_CHARACTER_ERROR));
+	  }
+	else
+	  TtaSetItemOn (doc, 1, Views, BShowLogFile);
 	TtaFreeMemory (style);
      }
 }

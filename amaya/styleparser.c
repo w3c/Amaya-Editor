@@ -188,14 +188,15 @@ static void  CSSParseError (char *msg, char *value)
 	  fprintf (ErrFile, "*** CSS Errors/Warnings in %s\n", DocURL);
 	  /* set to NULL as long as the CSS file doesn't change */
 	  DocURL = NULL;
-	  CSSErrorsFound = TRUE;
 	}
+      CSSErrorsFound = TRUE;
       if (LineNumber < 0)
 	fprintf (ErrFile, "  In Style attribute %s %s\n", msg, value);
       else
 	fprintf (ErrFile, "  line %d: %s %s\n", LineNumber, msg, value);
     }
 }
+
 
 /*----------------------------------------------------------------------
    SkipProperty:                                                  
@@ -2916,6 +2917,12 @@ static void  ParseCSSRule (Element element, PSchema tsch,
   while (*cssRule != EOS)
     {
       cssRule = SkipBlanksAndComments (cssRule);
+      if (*cssRule == '{')
+	{
+	  cssRule++;
+	  CSSParseError ("Invalid character", "{");
+	  cssRule = SkipBlanksAndComments (cssRule);
+	}
       
       found = FALSE;
       /* look for the type of property */
@@ -2952,8 +2959,15 @@ static void  ParseCSSRule (Element element, PSchema tsch,
 	  else
 	    cssRule = SkipProperty (cssRule);
 	}
+
       /* next property */
       cssRule = SkipBlanksAndComments (cssRule);
+      if (*cssRule == '}')
+	{
+	  cssRule++;
+	  CSSParseError ("Invalid character", "}");
+	  cssRule = SkipBlanksAndComments (cssRule);
+	}
       if (*cssRule == ',' || *cssRule == ';')
 	{
 	  cssRule++;
@@ -3275,8 +3289,18 @@ void  ParseHTMLSpecificStyle (Element el, char *cssRule, Document doc,
 
    /*  A rule applying to BODY is really meant to address HTML */
    elType = TtaGetElementType (el);
+
    /* store the current line for eventually reported errors */
    LineNumber = TtaGetElementLineNumber (el);
+   if (destroy)
+     /* no reported errors */
+     ParsedDoc = 0;
+   else if (ParsedDoc != doc)
+     {
+       /* update the context for reported errors */
+       ParsedDoc = doc;
+       DocURL = DocumentURLs[doc];
+     }
    isHTML = (strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0);
    /* create the context of the Specific presentation driver */
    context = TtaGetSpecificStyleContext (doc);
@@ -4120,3 +4144,4 @@ char ReadCSSRules (Document docRef, CSSInfoPtr css, char *buffer,
   LineNumber = -1;
   return (c);
 }
+

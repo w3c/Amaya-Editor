@@ -1233,7 +1233,7 @@ void InitFormAnswer (Document document, View view, const char *auth_realm, char 
   InitInfo
   Displays a message box with the given info text
   ----------------------------------------------------------------------*/
-void       InitInfo (char *label, char *info)
+void InitInfo (char *label, char *info)
 {
   if (!info || *info == EOS)
     return;
@@ -1246,9 +1246,8 @@ void       InitInfo (char *label, char *info)
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-void      InitConfirm3L (Document document, View view,
-			 char *label1, char *label2,
-			 char *label3, ThotBool withCancel)
+void InitConfirm3L (Document document, View view, char *label1, char *label2,
+		    char *label3, ThotBool withCancel)
 {
 #ifndef _WINDOWS
   /* Confirm form */
