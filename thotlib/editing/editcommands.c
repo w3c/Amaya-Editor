@@ -3212,7 +3212,7 @@ void                PasteXClipboard (USTRING Xbuffer, int nbytes)
 /*----------------------------------------------------------------------
    TtcInsertChar insert a character
   ----------------------------------------------------------------------*/
-void                TtcInsertChar (Document doc, View view, CHAR_T c)
+void TtcInsertChar (Document doc, View view, CHAR_T c)
 {
   ViewSelection      *pViewSel;
   PtrAbstractBox      pAb;
@@ -3232,9 +3232,14 @@ void                TtcInsertChar (Document doc, View view, CHAR_T c)
 	{
 	  /* yes close the previous insertion */
 	  CloseTextInsertion ();
-	  /* work in the right document */
-	  frame = ActiveFrame;
-	  doc =  FrameTable[ActiveFrame].FrDoc;
+	  if (ActiveFrame > 0 && FrameTable[ActiveFrame].FrDoc != doc)
+	    return;
+	  else
+	    /* use the right frame */
+	    ActiveFrame = frame;
+	  /* work in the right document
+	     frame = ActiveFrame;
+	     doc =  FrameTable[ActiveFrame].FrDoc;*/
 	}
       pViewSel = &ViewFrameTable[frame - 1].FrSelectionBegin;
       if (pViewSel->VsBox != NULL &&
@@ -3361,7 +3366,11 @@ void                TtcCutSelection (Document doc, View view)
      {
        /* yes close the previous insertion */
        CloseTextInsertion ();
-       ActiveFrame = frame;
+       if (ActiveFrame > 0 && FrameTable[ActiveFrame].FrDoc != doc)
+	 return;
+       else
+	 /* use the right frame */
+	 ActiveFrame = frame;
      }
 #ifdef _WINDOWS
    TtcCopyToClipboard (doc, view);
@@ -3411,9 +3420,14 @@ void                TtcDeletePreviousChar (Document doc, View view)
 	{
 	  /* yes close the previous insertion */
 	  CloseTextInsertion ();
-	  /* work in the right document */
-	  frame = ActiveFrame;
-	  doc =  FrameTable[ActiveFrame].FrDoc;
+	  if (ActiveFrame > 0 && FrameTable[ActiveFrame].FrDoc != doc)
+	    return;
+	  else
+	    /* use the right frame */
+	    ActiveFrame = frame;
+	  /* work in the right document
+	     frame = ActiveFrame;
+	     doc =  FrameTable[ActiveFrame].FrDoc;*/
 	}
       delPrev = (StructSelectionMode || ViewFrameTable[frame - 1].FrSelectOnePosition);
       pViewSel = &ViewFrameTable[frame - 1].FrSelectionBegin;
@@ -3604,38 +3618,35 @@ void TtcInsert (Document document, View view)
 
 
 /*----------------------------------------------------------------------
-   copy                                                               
+    TtcCopySelection
   ----------------------------------------------------------------------*/
-void TtcCopySelection (Document document, View view)
+void TtcCopySelection (Document doc, View view)
 {
+  int                frame;
 #ifdef _WINDOWS
-  HANDLE hMem   = 0;
-  CHAR_T* lpData = 0;
-  /* CHAR_T* ptrData; */
-  CHAR_T* pBuff;
-  int    frame;
-  HWND   activeWnd;
+  HANDLE             hMem   = 0;
+  CHAR_T            *lpData = 0;
+  CHAR_T            *pBuff;
+  HWND               activeWnd;
+#endif /* _WINDOW */
 
-  frame = GetWindowNumber (document, view);
-  activeWnd = GetFocus ();
-  if (activeWnd != FrRef [frame])
+  if (doc == 0)
+    return;
+  frame = GetWindowNumber (doc, view);
+  if (frame != ActiveFrame)
     {
-      frame = -1;
-      if (!OpenClipboard (activeWnd))
-	WinErrorBox (FrRef [frame], TEXT("TtcCopySelection (1)"));
-      else {
-	EmptyClipboard ();
-	SendMessage (activeWnd, WM_COPY, 0, 0);
-	CloseClipboard ();
-	SwitchPaste (NULL, TRUE);
-      } 
-    }
-  else
-    {
-      TtcCopyToClipboard (document, view);
-      if (!OpenClipboard (FrRef[frame]))
-	WinErrorBox (FrRef [frame], TEXT("TtcCopySelection (2)"));
+      if (ActiveFrame > 0 && FrameTable[ActiveFrame].FrDoc != doc)
+	return;
       else
+	/* use the right frame */
+	ActiveFrame = frame;
+    }
+#ifdef _WINDOWS
+  activeWnd = GetFocus ();
+  if (activeWnd == FrRef [frame])
+    {
+      TtcCopyToClipboard (doc, view);
+      if (OpenClipboard (FrRef[frame]))
 	{
 	  EmptyClipboard ();
 	  /* if the clipboard buffer is empty, don't copy anything into it */
@@ -3645,12 +3656,6 @@ void TtcCopySelection (Document document, View view)
 	      lpData = GlobalLock (hMem);
 	      pBuff  = Xbuffer;
 	      lstrcpy (lpData, Xbuffer);
-	      /* 
-		 ptrData = lpData;
-		 for (ndx = 0; ndx < ClipboardLength; ndx++)
-		 *ptrData++ = *pBuff++;
-		 *ptrData = 0;
-		 */
 	      GlobalUnlock (hMem);
 	      if (!SetClipboardData (CF_TEXT, hMem))
 		WinErrorBox (NULL, TEXT(""));
@@ -3664,9 +3669,9 @@ void TtcCopySelection (Document document, View view)
 
 
 /*----------------------------------------------------------------------
-   TtcPaste                                                           
+   TtcPaste
   ----------------------------------------------------------------------*/
-void                TtcPaste (Document document, View view)
+void TtcPaste (Document doc, View view)
 {
   DisplayMode         dispMode;
   PtrAbstractBox      pAb;
@@ -3683,20 +3688,31 @@ void                TtcPaste (Document document, View view)
   int                 frame;
   ThotBool            lock = TRUE;
 
-  if (document != 0)
+  if (doc != 0)
     {
-      frame = GetWindowNumber (document, view);
+      frame = GetWindowNumber (doc, view);
       CloseTextInsertion ();
-      pViewSel = &ViewFrameTable[frame - 1].FrSelectionBegin;
+      if (frame != ActiveFrame)
+	{
+	  if (ActiveFrame > 0 && FrameTable[ActiveFrame].FrDoc != doc)
+	    return;
+	  else
+	    /* use the right frame */
+	    ActiveFrame = frame;
+	  /* work in the right document
+	     frame = ActiveFrame;
+	     doc =  FrameTable[ActiveFrame].FrDoc;*/
+	}
 
+      pViewSel = &ViewFrameTable[frame - 1].FrSelectionBegin;
       /* start the undo sequence */
       GetCurrentSelection (&pDoc, &firstEl, &lastEl, &firstChar, &lastChar);
       if (pDoc)
 	{
 	  /* avoid to redisplay step by step */
-	  dispMode = TtaGetDisplayMode (document);
+	  dispMode = TtaGetDisplayMode (doc);
 	  if (dispMode == DisplayImmediately)
-	    TtaSetDisplayMode (document, DeferredDisplay);
+	    TtaSetDisplayMode (doc, DeferredDisplay);
 
 	  /* start the undo sequence */
 	  OpenHistorySequence (pDoc, firstEl, lastEl, firstChar, lastChar);
@@ -3723,7 +3739,7 @@ void                TtcPaste (Document document, View view)
 				     pAb->AbLeafType == LtGraphics))
 		    ContentEditing (TEXT_SUP);
 		  else if (pAb->AbLeafType != LtCompound || pAb->AbVolume != 0)
-		    TtcPreviousChar (document, view);
+		    TtcPreviousChar (doc, view);
 		}
 	    }
 #ifdef _WINDOWS
@@ -3751,7 +3767,7 @@ void                TtcPaste (Document document, View view)
 	  /* close the undo sequence */
 	  CloseHistorySequence (pDoc);
 	  if (dispMode == DisplayImmediately)
-	    TtaSetDisplayMode (document, dispMode);
+	    TtaSetDisplayMode (doc, dispMode);
 	}
     }
 }

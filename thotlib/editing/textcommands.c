@@ -1027,21 +1027,20 @@ static int          CopyXClipboard (USTRING *buffer, View view)
 }
 
 /*----------------------------------------------------------------------
-   TtcCopyToClipboard                                              
+   TtcCopyToClipboard
   ----------------------------------------------------------------------*/
-void                TtcCopyToClipboard (Document document, View view)
+void TtcCopyToClipboard (Document doc, View view)
 {
 #ifndef _WINDOWS
-   int                 frame;
-
-   ThotWindow          w, wind;
+   int                  frame;
+   ThotWindow           w, wind;
    XSelectionClearEvent clear;
 
    /* Signale que l'on prend la selection */
-   if (document == 0)
+   if (doc == 0)
       frame = (int)FrRef[0];
    else
-      frame = GetWindowNumber (document, view);
+      frame = GetWindowNumber (doc, view);
 
    /* Signale que l'on prend la selection */
    w = XGetSelectionOwner (TtDisplay, XA_PRIMARY);
