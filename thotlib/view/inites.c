@@ -437,6 +437,7 @@ unsigned short      blue;
 #ifndef _WINDOWS
    ThotColorStruct     col;
 #endif /* _WINDOWS */
+   boolean             new;
 
    /*
     * lookup for the color number among the color set allocated
@@ -477,7 +478,7 @@ unsigned short      blue;
 	       }
 	   }
        else if (prev == 256)
-	 /* this is the first empty entry */
+	 /* get the first empty entry */
 	 prev = i;
 
        if (prev == 256)
@@ -499,10 +500,23 @@ unsigned short      blue;
 	   FindOutColor (TtDisplay, TtCmap, &col);
 	   ExtColor[prev] = col.pixel;
 #endif /* _WINDOWS */
-	   best = prev + NColors;
-	   ExtCount_Table[prev] = 1;
-	   if (prev == NbExtColors)
-	     NbExtColors++;
+	   /* check if this color is already in the table */
+	   new = TRUE;
+	   for (i = 0; i < NColors && new; i++)
+	     new = (ExtColor[prev] != Pix_Color[i]);
+	       
+	   for (i = 0; i < NbExtColors && new; i++)
+	     new = (ExtColor[prev] != ExtColor[i]);
+	   if (new)
+	     {
+	       best = prev + NColors;
+	       ExtCount_Table[prev] = 1;
+	       if (prev == NbExtColors)
+		 NbExtColors++;
+	     }
+	   else if (best > NColors)
+	     /* it's an already allocated extended color */
+	     ExtCount_Table[best - NColors]++;
 	 }
        else
 	 ExtCount_Table[best - NColors]++;
