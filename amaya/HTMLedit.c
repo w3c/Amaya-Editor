@@ -69,21 +69,21 @@ void SetTargetContent (Document doc, Attribute attrNAME)
    int                 length;
 
    /* the document that issues the command Set target becomes the target doc */
-   if (TargetDocumentURL != NULL)
+   if (TargetDocumentURL)
       TtaFreeMemory (TargetDocumentURL);
-   if (doc != 0)
+   if (doc)
       {
        length = strlen (DocumentURLs[doc]);
        TargetDocumentURL = TtaGetMemory (length + 1);
        strcpy (TargetDocumentURL, DocumentURLs[doc]);
      }
 
-   if (TargetName != NULL)
+   if (TargetName)
      {
 	TtaFreeMemory (TargetName);
 	TargetName = NULL;
      }
-   if (attrNAME != NULL)
+   if (attrNAME)
      {
 	/* get a buffer for the NAME */
 	length = TtaGetTextAttributeLength (attrNAME);
@@ -793,7 +793,7 @@ Attribute GetNameAttr (Document doc, Element selectedElement)
    SSchema	       HTMLSSchema;
 
    attr = NULL;		/* no NAME attribute yet */
-   if (selectedElement != NULL)
+   if (selectedElement)
      {
         elType = TtaGetElementType (selectedElement);
 	HTMLSSchema = TtaGetSSchema ("HTML", doc);
@@ -808,12 +808,17 @@ Attribute GetNameAttr (Document doc, Element selectedElement)
 	    el = TtaGetTypedAncestor (selectedElement, elType);
 	  }
 
-	if (el != NULL)
+	if (el)
 	  {
 	     /* the ascending Anchor element has been found */
 	     /* get the NAME attribute of element Anchor */
 	     attrType.AttrTypeNum = HTML_ATTR_NAME;
 	     attr = TtaGetAttribute (el, attrType);
+	     if (attr == NULL)
+	       {
+		 attrType.AttrTypeNum = HTML_ATTR_ID;
+		 attr = TtaGetAttribute (el, attrType);
+	       }
 	  }
 	else
 	  {
