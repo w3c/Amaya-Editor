@@ -46,16 +46,68 @@ extern boolean     TtaIsBlank (char *ptr);
 extern void         TtaInitializeAppRegistry (char *appArgv0);
 
 /*
+ * TtaGetEnvInt : read the integer value associated to an 
+ * environment string.
+ * Returns TRUE if the env variables exists or FALSE if it isn't the case.
+ */
+extern boolean      TtaGetEnvInt (char *name, int *value);
+
+/*
+ *  TtaGetEnvBoolean : read the boolean value associated to an 
+ * environment string.
+ * Returns TRUE if the env variables exists or FALSE if it isn't the case.
+ */
+extern boolean      TtaGetEnvBoolean (char *name, boolean *value);
+
+/*
  * TtaGetEnvString : read the value associated to an environment string
  *                  if not present return NULL.
  */
 extern char        *TtaGetEnvString (char *name);
 
 /*
+ * TtaClearEnvString : clears the value associated with an environment
+ *                     string, in the user registry.
+ */
+extern void         TtaClearEnvString (char *name);
+
+/*
+ * TtaSetEnvInt : set the value associated to an environment string,
+ *                  for the current application.
+ */
+extern void         TtaSetEnvInt (char *name, int value, int overwrite);
+
+/*
+ * TtaSetEnvBoolean : set the value associated to an environment string,
+ *                  for the current application.
+ */
+extern void         TtaSetEnvBoolean (char *name, boolean value, int overwrite);
+
+/*
  * TtaSetEnvString : set the value associated to an environment string,
  *                  for the current application.
  */
 extern void         TtaSetEnvString (char *name, char *value, int overwrite);
+
+/*
+ * TtaGetDefEnvInt : read the default integer value associated to an 
+ * environment string.
+ * Returns TRUE if the env variables exists or FALSE if it isn't the case.
+ */
+extern boolean      TtaGetDefEnvInt (char *name, int *value);
+
+/*
+ *  TtaGetDefEnvBoolean : read the default boolean value associated to an 
+ * environment string.
+ * Returns TRUE if the env variables exists or FALSE if it isn't the case.
+ */
+extern boolean      TtaGetDefEnvBoolean (char *name, boolean *value);
+
+/*
+ * TtaGetDefEnvString : read the default value associated to an environment 
+ *                   string. If not present, return NULL.
+ */
+extern char        *TtaGetDefEnvString (char *name);
 
 /*
  * TtaSaveAppRegistry : Save the Registry in the THOT_RC_FILENAME located
@@ -67,10 +119,23 @@ extern void         TtaSaveAppRegistry (void);
 extern char        *TtaSkipBlanks (/* char *ptr */);
 extern boolean     TtaIsBlank (/* char *ptr */);
 extern void         TtaInitializeAppRegistry ( /* char *appArgv0 */ );
+extern boolean      TtaGetEnvBoolean ( /* char *name, boolean *value */ );
+extern boolean      TtaGetEnvInt ( /* char *name, int *value */ );
 extern char        *TtaGetEnvString ( /* char *name */ );
+extern void         TtaClearEnvString ( /* char *name */ );
+extern void         TtaSetEnvInt ( /* char *name, int value, int overwrite */ );
+extern void         TtaSetEnvBoolean ( /* char *name, boolean value, int overwrite */ );
 extern void         TtaSetEnvString ( /* char *name, char *value, int overwrite */ );
+extern boolean      TtaGetDefEnvBoolean ( /* char *name, boolean *value */ );
+extern boolean      TtaGetDefEnvInt ( /* char *name, int *value */ );
+extern char        *TtaGetDefEnvString ( /* char *name */ );
 extern void         TtaSaveAppRegistry ( /* void */ );
 
 #endif /* __STDC__ */
 
 #endif	/* THOT_REGISTRY_H */
+
+
+
+
+

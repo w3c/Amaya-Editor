@@ -64,7 +64,7 @@
 #include "views_f.h"
 
 
-static STRING         Enable_Multikey;
+static boolean       Enable_Multikey;
 static UCHAR previous_value = 0;
 static int           mk_state = 0;
 static int           TtaKeyboardMapInstalled = 0;
@@ -672,10 +672,14 @@ int                 keycode;
  */
 void                TtaInstallMultiKey ()
 {
+  STRING ptr;
+
 # ifdef _WINDOWS 
-  Enable_Multikey = TtaGetEnvString ("ENABLE_MULTIKEY");
-  if (Enable_Multikey != NULL && !ustrcasecmp (Enable_Multikey, "no"))
-      Enable_Multikey = NULL;
+  ptr = TtaGetEnvString ("ENABLE_MULTIKEY");
+  if (ptr != NULL && !ustrcasecmp (ptr, "no"))
+    Enable_Multikey = FALSE;
+  else
+    Enable_Multikey = TRUE;
    TtaKeyboardMapInstalled = 1;
 # else  /* _WINDOWS */
   KeySym             *keymap;
@@ -691,9 +695,11 @@ void                TtaInstallMultiKey ()
 
   TtaDisplay = dpy;
   /* check whether multi-key is enabled */
-  Enable_Multikey = TtaGetEnvString ("ENABLE_MULTIKEY");
-  if (Enable_Multikey != NULL && !ustrcasecmp (Enable_Multikey, "no"))
-      Enable_Multikey = NULL;
+  ptr = TtaGetEnvString ("ENABLE_MULTIKEY");
+  if (ptr != NULL && !ustrcasecmp (ptr, "no"))
+    Enable_Multikey = FALSE;
+  else
+    Enable_Multikey = TRUE;
 
   /* load the current keyboard mapping */
   XDisplayKeycodes (dpy, &TtaMinKeyCode, &TtaMaxKeyCode);
@@ -958,7 +964,7 @@ ThotEvent             *event;
        event->xkey.state = previous_state;
        return (1);
      }
-   else if (Enable_Multikey == NULL)
+   else if (!Enable_Multikey)
      /* no multi-key allowed */
      return (1);
    else if (KS == XK_grave ||
@@ -997,7 +1003,7 @@ int*   k;
    CHAR         KS;
    unsigned int state;
 
-   if (Enable_Multikey == NULL) /* no multi-key allowed */
+   if (!Enable_Multikey) /* no multi-key allowed */
       return 1;
 
    if (msg == WM_CHAR)
@@ -1540,4 +1546,26 @@ int                *Y;
      }
 }
 
+/*----------------------------------------------------------------------
+   TtaSetMultiKey
+
+   Enables or disables the multikey support
+
+   Parameters:
+   value : TRUE/FALSE
+
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void TtaSetMultikey (boolean value)
+#else
+void TtaSetMultikey (value)
+boolean value;
+#endif /*__STDC__*/
+{
+  Enable_Multikey = value;
+}
 /* End Of Module */
+
+
+
+

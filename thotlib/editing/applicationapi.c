@@ -273,7 +273,11 @@ STRING              applicationName;
   ----------------------------------------------------------------------*/
 void                TtaQuit ()
 {
+ /***JK: 25/Feb/1999 removed this systematic call. Applications now must
+   explicitly call this function to save the user options */
+  /* 
    TtaSaveAppRegistry ();
+  */
 
 #  ifndef NODISPLAY
 #  ifdef _WINDOWS

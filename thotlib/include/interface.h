@@ -369,6 +369,17 @@ extern Pixmap       TtaLoadImage ( STRING name, STRING path );
   ----------------------------------------------------------------------*/
 extern Pixmap       TtaGetImage ( STRING name ); 
 
+/*----------------------------------------------------------------------
+   TtaSetMultiKey
+
+   Enables or disables the multikey support
+
+   Parameters:
+   value : TRUE/FALSE
+
+  ----------------------------------------------------------------------*/
+extern void         TtaSetMultikey ( boolean value );
+
 #else  /* __STDC__ */
 
 extern void         TtaSetMainLoop ( /* ExternalInitMainLoop init,
@@ -415,7 +426,7 @@ extern void         TtaGiveSelectPosition ( /* Document document, Element elemen
 extern void         TtaRegisterPixmap (/* STRING name, Pixmap pix */);
 extern Pixmap       TtaLoadImage (/* STRING name, STRING path */);
 extern Pixmap       TtaGetImage (/* STRING name */);
-
+extern void         TtaSetMultikey (/* boolean value*/);
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */
 

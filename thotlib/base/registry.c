@@ -461,6 +461,82 @@ static void         SortEnv ()
 }
 
 /*----------------------------------------------------------------------
+  TtaGetEnvInt : read the integer value associated to an 
+  environment string.
+  Returns TRUE if the env variables exists or FALSE if it isn't the case.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+boolean TtaGetEnvInt (CHAR *name, int *value)
+#else
+boolean TtaGetEnvInt (name, value)
+CHAR *name;
+int *value;
+#endif /* __STDC__ */
+{
+ CHAR *strptr;
+
+ if (!name || *name == EOS)
+   {
+     *value = 0;
+     return FALSE;
+   }
+
+ strptr = TtaGetEnvString (name);
+
+ /* the name entry doesn't exist */
+ if (!strptr || *strptr == EOS)
+   {
+     *value = 0;
+     return FALSE;
+   }
+
+ /* make the convertion */
+ *value = atoi (strptr);
+
+ return TRUE;
+}
+
+/*----------------------------------------------------------------------
+  TtaGetEnvBoolean : read the boolean value associated to an 
+  environment string.
+  Returns TRUE if the env variables exists or FALSE if it isn't the case.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+boolean TtaGetEnvBoolean (CHAR *name, boolean *value)
+#else
+boolean TtaGetEnvBoolean (name, value)
+CHAR *name;
+boolean *value;
+#endif /* __STDC__ */
+{
+ CHAR *strptr;
+
+ if (!name || *name == EOS)
+   {
+     *value = FALSE;
+     return FALSE;
+   }
+
+ strptr = TtaGetEnvString (name);
+
+ /* the name entry doesn't exist */
+ if (!strptr || *strptr == EOS)
+   {
+     *value = FALSE;
+     return FALSE;
+   }
+
+ /* make the convertion */
+ if ( ustrcasecmp (strptr, "yes"))
+   *value = FALSE;
+ else
+   *value = TRUE;
+
+ return TRUE;
+}
+
+
+/*----------------------------------------------------------------------
   TtaGetEnvString : read the value associated to an environment string
   if not present return NULL.
   ----------------------------------------------------------------------*/
@@ -550,8 +626,72 @@ STRING name;
 }
 
 /*----------------------------------------------------------------------
+ TtaClearEnvString : clears the value associated with an environment
+                     string, in the user registry.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                TtaClearEnvString (STRING name)
+#else  /* __STDC__ */
+void                TtaClearEnvString (name)
+CONST STRING        name;
+CONST STRING        value;
+int                 overwrite;
+#endif
+{
+   AddRegisterEntry (AppRegistryEntryAppli, name, "",
+		     REGISTRY_USER, TRUE);
+}
+
+/*----------------------------------------------------------------------
+ TtaSetEnvInt : set the value associated to an environment string,
+                for the current application.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                TtaSetEnvInt (STRING name, int value, int overwrite)
+#else  /* __STDC__ */
+void                TtaSetEnvInt (name, value, overwrite)
+CONST STRING        name;
+CONST int           value;
+int                 overwrite;
+#endif
+{
+  /* hardcoded so that the biggest integer value has 5 digits:
+     65535 */
+  CHAR ptr[6];
+  int  r_val;
+
+  r_val = value % 65537;
+    sprintf (ptr, "%d", r_val);
+  AddRegisterEntry (AppRegistryEntryAppli, name, ptr,
+		    REGISTRY_USER, overwrite);
+}
+
+/*----------------------------------------------------------------------
+ TtaSetEnvBoolean : set the value associated to an environment string,
+                    for the current application.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                TtaSetEnvBoolean (STRING name, boolean value, int overwrite)
+#else  /* __STDC__ */
+void                TtaSetEnvBoolean (name, value, overwrite)
+CONST STRING        name;
+CONST boolean       value;
+int                 overwrite;
+#endif
+{
+  CHAR *ptr;
+
+  if (value)
+    ptr = "Yes";
+  else
+    ptr = "No";
+  AddRegisterEntry (AppRegistryEntryAppli, name, ptr,
+		    REGISTRY_USER, overwrite);
+}
+
+/*----------------------------------------------------------------------
  TtaSetEnvString : set the value associated to an environment string,
-*                  for the current application.
+                   for the current application.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TtaSetEnvString (STRING name, STRING value, int overwrite)
@@ -562,10 +702,179 @@ CONST STRING        value;
 int                 overwrite;
 #endif
 {
+  STRING tmp = value;
+  
+  if (!tmp)
+    tmp = "";
+
    AddRegisterEntry (AppRegistryEntryAppli, name, value,
 		     REGISTRY_USER, overwrite);
 }
 
+/*----------------------------------------------------------------------
+  TtaGetDefEnvInt : read the default integer value associated to an 
+  environment string.
+  Returns TRUE if the env variables exists or FALSE if it isn't the case.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+boolean TtaGetDefEnvInt (CHAR *name, int *value)
+#else
+boolean TtaGetDefEnvInt (name, value)
+CHAR *name;
+int *value;
+#endif /* __STDC__ */
+{
+ CHAR *strptr;
+
+ if (!name || *name == EOS)
+   {
+     *value = 0;
+     return FALSE;
+   }
+
+ strptr = TtaGetDefEnvString (name);
+
+ /* the name entry doesn't exist */
+ if (!strptr || *strptr == EOS)
+   {
+     *value = 0;
+     return FALSE;
+   }
+
+ /* make the convertion */
+ *value = atoi (strptr);
+
+ return TRUE;
+}
+
+/*----------------------------------------------------------------------
+  TtaGetDefEnvBoolean : read the boolean value associated to an 
+  environment string.
+  Returns TRUE if the env variables exists or FALSE if it isn't the case.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+boolean TtaGetDefEnvBoolean (CHAR *name, boolean *value)
+#else
+boolean TtaGetDefEnvBoolean (name, value)
+CHAR *name;
+boolean *value;
+#endif /* __STDC__ */
+{
+ CHAR *strptr;
+
+ if (!name || *name == EOS)
+   {
+     *value = FALSE;
+     return FALSE;
+   }
+
+ strptr = TtaGetDefEnvString (name);
+
+ /* the name entry doesn't exist */
+ if (!strptr || *strptr == EOS)
+   {
+     *value = FALSE;
+     return FALSE;
+   }
+
+ /* make the convertion */
+ if ( ustrcasecmp (strptr, "yes"))
+   *value = FALSE;
+ else
+   *value = TRUE;
+
+ return TRUE;
+}
+
+/*----------------------------------------------------------------------
+  TtaGetDefEnvString : read the default value associated to an 
+  environment string. If not present, returns NULL.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+STRING TtaGetDefEnvString (STRING name)
+#else  /* __STDC__ */
+STRING TtaGetDefEnvString (name)
+STRING name;
+#endif
+{
+  RegistryEntry       cour;
+  STRING value;
+
+  if (AppRegistryInitialized == 0)
+    return (getenv (name));
+
+  /* appname allows to get the application name */
+  if (!ustrcasecmp("appname", name))
+    return(AppRegistryEntryAppli);
+
+  if ((!ustrcasecmp (name, "cwd")) || (!ustrcasecmp (name, "pwd")))
+    {
+#      ifndef _WINDOWS
+      return(getcwd(&CurrentDir[0], sizeof(CurrentDir)));
+#      else  /* _WINDOWS */
+      return(_getcwd(&CurrentDir[0], sizeof(CurrentDir)));
+#      endif /* _WINDPWS */
+    }
+
+  /* First lookup in the System defaults */
+  cour = AppRegistryEntry;
+  while (cour != NULL)
+    {
+      if (!ustrcasecmp (cour->appli, "System") && !ustrcmp (cour->name, name) 
+	  && cour->level == REGISTRY_SYSTEM && cour->value[0] != EOS)
+	{
+#ifdef DEBUG_REGISTRY
+	  fprintf (stderr, "TtaGetDefEnvString(\"%s\") = %s\n", name, cour->value);
+#endif
+	  return (cour->value);
+	}
+      cour = cour->next;
+    }
+
+  /* Then lookup in the application defaults */
+  cour = AppRegistryEntry;
+  while (cour != NULL)
+    {
+      if (!ustrcasecmp (cour->appli, AppRegistryEntryAppli) 
+	  && !ustrcmp (cour->name, name) 
+	  && cour->level == REGISTRY_SYSTEM && cour->value[0] != EOS)
+	{
+#ifdef DEBUG_REGISTRY
+	  fprintf (stderr, "TtaGetDefEnvString(\"%s\") = %s\n", name, cour->value);
+#endif
+	  return (cour->value);
+	}
+      cour = cour->next;
+    }
+  
+  /* Then lookup in the Thot library defaults */
+  cour = AppRegistryEntry;
+  while (cour != NULL)
+    {
+      if (!ustrcasecmp (cour->appli, THOT_LIB_DEFAULTNAME) 
+	  && !ustrcmp (cour->name, name) 
+	  && cour->level == REGISTRY_SYSTEM && cour->value[0] != EOS)
+	{
+#ifdef DEBUG_REGISTRY
+	  fprintf (stderr, "TtaGetDefEnvString(\"%s\") = %s\n", name, cour->value);
+#endif
+	  return (cour->value);
+	}
+      cour = cour->next;
+    }
+
+   /*
+    * If still not found, look in the environment variables.
+    * Hopefully this will be stored to the user registry
+    * next time it will be saved.
+    */
+  value = getenv (name);
+  
+#ifdef DEBUG_REGISTRY
+  fprintf (stderr, "TtaGetDefEnvString(\"%s\") = %s\n", name, value);
+#endif
+  return (value);
+}
 
 /*----------------------------------------------------------------------
      IsThotDir : Check whether the given string is the THOTDIR value.    
@@ -706,6 +1015,8 @@ void                TtaSaveAppRegistry ()
    SortEnv ();
    PrintEnv (output);
    AppRegistryModified = 0;
+
+   fclose (output);
 #endif /* !WWW_MSWINDOWS */
 }
 
