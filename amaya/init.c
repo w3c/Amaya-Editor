@@ -4673,6 +4673,9 @@ static int RestoreOneAmayaDoc (Document doc, char *tempdoc, char *docname,
       if (IsW3Path (docname))
 	{
 	  /* it's a remote file */
+
+	  /* clear the headers */
+	  memset ((void *) &http_headers, 0, sizeof (AHTHeaders));
 	  if (docType == docHTML)
 	    {
 	      strcpy (content_type, "text/html");
@@ -4680,8 +4683,6 @@ static int RestoreOneAmayaDoc (Document doc, char *tempdoc, char *docname,
 	    }
 	  else
 	      http_headers.content_type = NULL;
-	  /* we don't know yet how to recover the charset */
-	  http_headers.charset = NULL;
 	  LoadDocument (newdoc, docname, NULL, NULL, CE_ABSOLUTE, 
 			tempdoc, DocumentName, &http_headers, FALSE);
 	}
