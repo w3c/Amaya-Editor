@@ -3,12 +3,12 @@
 #include "wx/wx.h"
 #include "wx/xrc/xmlres.h"              // XRC XML resouces
 
+#include "AmayaApp.h"
+#include "OpenDocDlgWX.h"
+
 #define THOT_EXPORT extern
 #include "amaya.h"
 #include "wxinclude.h"
-
-#include "AmayaApp.h"
-#include "OpenDocDlgWX.h"
 
 //-----------------------------------------------------------------------------
 // Event table: connect the events to the handler functions to process them
