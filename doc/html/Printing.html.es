@@ -6,13 +6,12 @@
 <head>
   <meta name="GENERATOR" content="amaya 5.1" />
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-  <title>Printing Documents in Amaya</title>
-  <style type="text/css">
-  </style>
+  <title>Imprimir documentos</title>
+  
   <link href="style.css" rel="stylesheet" type="text/css" />
 </head>
 
-<body xml:lang="en" lang="en">
+<body xml:lang="es" lang="es">
 
 <table border="0" summary="toc">
   <tbody>
@@ -20,10 +19,10 @@
       <td><p><img alt="W3C" src="../images/w3c_home" /> <img alt="Amaya"
         src="../images/amaya.gif" /></p>
       </td>
-      <td><p><a href="Publishing.html.es" accesskey="p"><img alt="previous"
+      <td><p><a href="Publishing.html.es" accesskey="p"><img alt="anterior"
         src="../images/left.gif" /></a> <a href="Manual.html.es"
-        accesskey="t"><img alt="top" src="../images/up.gif" /></a> <a
-        href="Numbering.html.es" accesskey="n"><img alt="next"
+        accesskey="t"><img alt="superior" src="../images/up.gif" /></a> <a
+        href="Numbering.html.es" accesskey="n"><img alt="siguiente"
         src="../images/right.gif" /></a></p>
       </td>
     </tr>
@@ -32,22 +31,18 @@
 
 <div id="page_body">
 
-<h1>Printing Documents in Amaya</h1>
+<h1>Imprimir documentos</h1>
 
-<p>The following topics are covered in this section:</p>
+<p>En esta sección se tratan los temas siguientes:</p>
 <ul>
-  <li><a href="printing/printing_documents.html.es#page_body" rel="subdocument">Printing
-    Documents</a></li>
+  <li><a href="printing/printing_documents.html.es#page_body" rel="subdocument">Imprimir documentos</a></li>
   <li><a href="printing/using_the_setup_and_print_command.html.es#page_body"
-    rel="subdocument">Using the Setup and Print Command</a></li>
-  <li><a href="printing/windows_platforms.html.es#page_body" rel="subdocument">Printing on
-    Windows Platforms</a></li>
-  <li><a href="printing/unix_platforms.html.es#page_body" rel="subdocument">Printing on
-    UNIX Platforms</a></li>
-  <li><a href="printing/print_command.html.es#page_body" rel="subdocument">The Print
-    Command</a></li>
+    rel="subdocument">El comando Configurar e imprimir</a></li>
+  <li><a href="printing/windows_platforms.html.es#page_body" rel="subdocument">Imprimir en Windows</a></li>
+  <li><a href="printing/unix_platforms.html.es#page_body" rel="subdocument">Imprimir en Unix</a></li>
+  <li><a href="printing/print_command.html.es#page_body" rel="subdocument">El comando Imprimir</a></li>
   <li><a href="printing/about_controlling_printing_with_css.html.es#page_body"
-    rel="subdocument">About Controlling Printing with CSS</a></li>
+    rel="subdocument">Controlar la impresión con CSS</a></li>
 </ul>
 </div>
 

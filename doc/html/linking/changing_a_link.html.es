@@ -3,14 +3,12 @@
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta name="GENERATOR" content="amaya 6.4, see http://www.w3.org/Amaya/" />
-  <title>Cambiando un enlace</title>
-  <style type="text/css">
-  </style>
+  <meta name="GENERATOR" content="amaya 6.4+, see http://www.w3.org/Amaya/" />
+  <title>Cambiar un enlace</title>
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
-<body xml:lang="en" lang="en">
+<body xml:lang="es" lang="es">
 
 <table border="0" summary="toc">
   <tbody>
@@ -18,8 +16,8 @@
       <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
         src="../../images/amaya.gif" /></td>
       <td><p><a href="removing_a_link_or_a_target_anchor.html.es"
-        accesskey="p"><img alt="previous" src="../../images/left.gif" /></a>
-        <a href="../Links.html.es" accesskey="t"><img alt="top"
+        accesskey="p"><img alt="anterior" src="../../images/left.gif" /></a>
+        <a href="../Links.html.es" accesskey="t"><img alt="superior"
         src="../../images/up.gif" /></a></p>
       </td>
     </tr>
@@ -27,36 +25,35 @@
 </table>
 
 <div id="page_body">
-<h1>Cambiando un enlace</h1>
+<h1>Cambiar un enlace</h1>
 
-<p>Use this procedure to change the target of a link without changing its
-anchor.</p>
+<p>Utiliza este procedimiento para cambiar el destino de un enlace sin
+cambiar el ancla.</p>
 
-<p class="ProcedureCaption">To change a link:</p>
+<p class="ProcedureCaption">Para cambiar el enlace:</p>
 <ol>
-  <li>Click inside the anchor, and then click the <b>Link</b> button <img
-    src="../../images/Link.gif" alt="Link Button" />.&nbsp; The cursor
-    changes from an arrow to a hand. 
+  <li>haz clic en el interior del ancla y a continuación haz clic en el botón
+    <b>Enlace</b> <img src="../../images/Link.gif" alt="Botón Enlace"
+    />.&nbsp; El cursor cambiará de tener forma de flecha a tener forma de
+    mano. 
     <p></p>
   </li>
-  <li>To update the link target, do one of the following: 
+  <li>Para modificar el destino, haz una de estas dos cosas: 
     <p></p>
     <ul>
-      <li>If the target document is displayed in another Amaya window, click
-        anywhere within that window to create the link. 
+      <li>Si el documento destino se muestra en otra ventana de Amaya, haz
+        clic en cualquier parte de la ventana para crear el enlace. 
         <p></p>
       </li>
-      <li>If the target document is not displayed in another Amaya window,
-        press any key.&nbsp; A dialog prompts you for the location of the
-        target document. Type the URI of the target document and then click
-        <b>Confirm</b> to create the link. 
+      <li>Si el documento destino no se muestra en otra ventana de Amaya,
+        pulsa cualquier tecla. Una ventana de diálogo te solicitará el camino
+        del documento destino. Escribe el URI del documento destino y haz
+        clic en <strong>Confirme</strong> para crear el enlace. 
         <p></p>
       </li>
     </ul>
-    <p class="ProcedureNote"><b>Note:&nbsp;&nbsp;&nbsp;<br />
-    </b>You can also manually edit the <code>HREF</code> attribute of the
-    anchor in the Structure view, or use the <strong>Attributes</strong> menu
-    from the Links view.</p>
+    <p class="ProcedureNote"><strong>Nota:</strong> También puedes editar
+    manualmente el atributo <code>HREF</code> del ancla en la vista Estructura, o utilizar el menú <strong>Atributos</strong> de la vista Enlaces.</p>
   </li>
 </ol>
 </div>

@@ -1,81 +1,76 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-	
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-  <meta name="GENERATOR" content="amaya 5.2" />
-  <title>Painting Graphics</title>
-  <style type="text/css">  </style>
+  <meta name="GENERATOR" content="amaya 6.4+, see http://www.w3.org/Amaya/" />
+  <title>Colorear gráficos</title>
+  
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
-<body xml:lang="en" lang="en">
+<body xml:lang="es" lang="es">
 
 <table border="0" summary="toc">
   <tbody>
     <tr>
       <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
         src="../../images/amaya.gif" /></td>
-      <td><p><a href="resizing_graphics.html.es" accesskey="p"><img alt="previous"
-        src="../../images/left.gif" /></a> 
-		<a href="../SVG.html.es" accesskey="t"><img alt="top" src="../../images/up.gif" /></a> 
-		</p>
+      <td><p><a href="resizing_graphics.html.es" accesskey="p"><img
+        alt="anterior" src="../../images/left.gif" /></a> <a
+        href="../SVG.html.es" accesskey="t"><img alt="superior"
+        src="../../images/up.gif" /></a></p>
       </td>
     </tr>
   </tbody>
 </table>
 
 <div id="page_body">
-<h1>Painting Graphics</h1>
+<h1>Colorear gráficos</h1>
 
-<p>With Amaya, you can paint (fill or stroke) SVG graphic elements with a
-single color. The default fill color is black and the default stroke color is
-transparent, but you can change these values.</p>
+<p>Con Amaya puedes dibujar elementos gráficos SVG de un sólo color (con
+relleno o sin él). El color de relleno por omisión es el negro y el color del
+trazo por omisión es transparente, pero puedes cambiar estos valores.</p>
 
-<p>There are two ways to change the default fill and stroke value: by editing
-the SVG attributes from the <strong>Attributes</strong> menu, or by editing
-the SVG attribute style with CSS properties</p>
+<p>Hay dos maneras de cambiar los colores de trazo y relleno por omisión:
+editando los atributos SVG mediante el menú <strong>Atributos</strong> o
+editando el estilo de atributo SVG mediante propiedades CSS.</p>
 
-<p class="ProcedureCaption">To edit the SVG attributes:</p>
+<p class="ProcedureCaption">Para editar los atributos SVG:</p>
 <ol>
-  <li>Select the graphic.</li>
-  <li>Open the <strong>Attributes</strong> menu. You will see both of the
-    attributes<strong> Fill </strong>and <strong>Stroke.</strong></li>
-  <li>Select the attribute you want to edit.</li>
-  <li>In the dialog, change the attribute (for example,<kbd> fill=&quot;
-    #C8ff95&quot;; stroke=&quot;#000000&quot;</kbd>), click <strong>Apply</strong>, then
-    click <strong>Close</strong>.
+  <li>Selecciona el gráfico.</li>
+  <li>Abre el menú <strong>Atributos</strong>. En él se encuentran los
+    atributos <strong>Fill</strong> y <strong>Stroke.</strong></li>
+  <li>Selecciona el atributo que quiers editar.</li>
+  <li>En el diálogo, cambia el atributo (por ejemplo, <kbd>fill=" #C8ff95";
+    stroke="#000000"</kbd>), haz clic en <strong>Aplicar</strong> y a
+    continuación en <strong>Cerrar</strong>. 
     <p></p>
-    <p class="Note"><strong>Note:</strong>  You can use either
-    a hexidecimal number for colors, or use a specific basic color names such
-    as black, white, blue, green, red, pink, purple, violet or yellow.</p>
+    <p class="Note"><strong>Nota:</strong> Puedes especificar el color
+    mediante valores hexadecimales o utilizando nombres de colores como
+    black, white, blue, green, red, pink, purple, violet or yellow.</p>
   </li>
 </ol>
 
-<p class="ProcedureCaption">To edit the SVG attribute style with CSS
-properties:</p>
+<p class="ProcedureCaption">Para editar el estilo de atributo SVG mediantes
+propiedades SVG:</p>
 <ol>
-  <li>Select the graphic.</li>
-  <li>Open the <strong>Style</strong> menu and select
-    <strong>Colors</strong>. The color palette will open.</li>
-  <li>Select the desired color from the color palette. When you click the
-    mouse, you generate the <kbd>stroke</kbd> property, and when you
-    right-click the mouse, you generate the <code>fill</code> property.
+  <li>Selecciona el gráfico.</li>
+  <li>Elige el comando de menú <strong>Estilo &gt; Colores</strong>. Se
+    abrirá la paleta de colores.</li>
+  <li>Elige el color deseado de la paleta de colores. Al hacer clic con el
+    botón izquierdo, generas la propiedad <kbd>stroke</kbd> y al hacer clic
+    con el botón derecho, generas la propiedad <kbd>fill</kbd>. 
     <p></p>
-    <p class="Note"><strong>Note:</strong>    SVG text is
-    considered as a graphic shape, so the <kbd>fill</kbd> property paints
-    the character contents and the <kbd>stroke</kbd> property paints the
-    character border. Amaya applies the <kbd>fill</kbd> property to
-    characters, but not the <kbd>stroke</kbd> property. Therefore, a click
-    with the left mouse button has no immediate effect, while a click with
-    the middle or right mouse button paints the text element.</p>
+    <p class="Note"><strong>Nota:</strong> El texto SVG se considera un
+    gráfico, por lo que la propiedad <kbd>fill</kbd> colorea el interior del
+    carácter y la propiedad <kbd>stroke</kbd> colorea el borde del carácter.
+    Amaya aplica la propiedad <kbd>fill</kbd> a los caracteres, pero no la
+    propiedad <kbd>stroke</kbd>. Así que el hacer clic con el botón izquierdo
+    no tiene un efecto inmediato, mientras que al hacer clic con el botón
+    derecho o central colorea el elemento de texto.</p>
   </li>
 </ol>
-
-
 </div>
-
 </body>
 </html>

@@ -1,110 +1,115 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-	
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-  <title>About Producing Accessible Content</title>
-  <style type="text/css">  </style>
-  <meta name="GENERATOR" content="amaya 5.2" />
+  <title>Crear contenido accesible</title>
+  <meta name="GENERATOR" content="amaya 6.4+, see http://www.w3.org/Amaya/" />
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
-<body xml:lang="en" lang="en">
+<body xml:lang="es" lang="es">
 
 <table border="0" summary="toc">
   <tbody>
     <tr>
       <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
         src="../../images/amaya.gif" /></td>
-      <td><p><a href="about_amayas_accessibility_features.html.es" accesskey="p"><img alt="previous"
-        src="../../images/left.gif" /></a> 
-		<a href="../Access.html.es" accesskey="t"><img alt="top" src="../../images/up.gif" /></a> 
-		</p>
+      <td><p><a href="about_amayas_accessibility_features.html.es"
+        accesskey="p"><img alt="anterior" src="../../images/left.gif" /></a>
+        <a href="../Access.html.es" accesskey="t"><img alt="superior"
+        src="../../images/up.gif" /></a></p>
       </td>
     </tr>
   </tbody>
 </table>
 
 <div id="page_body">
-<h1>About Producing Accessible Content</h1>
+<h1>Crear contenido accesible</h1>
 
-<p>You can use Amaya to produce content that conforms to the W3C's Web
-Content Accessibility Guidelines. Some <span class="Link0"><a
-href="about_amayas_accessibility_features.html.es">accessibility
-features</a></span> are already built in. For example, you cannot add an
-image until you specify the alternative text because of the requirement for
-an <code>alt</code> attribute for images and imagemap areas.</p>
+<p>Con Amaya puedes crear contenido conforme con la Guía de accesibilidad de
+contenido Web del W3C. Algunas <span class="Link0"><a
+href="about_amayas_accessibility_features.html.es">características de
+accesibilidad</a></span> ya están implementadas. Por ejemplo, no puedes
+incluir una imagen sin especificar el texto alternativo, debido a la
+obligatoriedad del atributo <code>alt</code> en imágenes y áreas de mapas de
+imágenes.</p>
 
-<p>Amaya also automatically produces valid W3C-compliant markup. However, you
-control other features, such as appropriate long descriptions and captioning,
-through the <strong>Attributes</strong> menu (Formatted view) or
-<strong>Structure</strong> menu (Structure view).</p>
+<p>Por otro lado, Amaya crea automáticamente un marcado que cumple las normas
+del W3C. Y al mismo tiempo puedes controlar otras características, como por
+ejemplo descripciones largas y títulos, a través del menú
+<strong>Atributos</strong> (vista Formateada) o del menú
+<strong>Estructura</strong> (vista Estructura).</p>
 
-<p>The Amaya Help currently describes how to use some HTML elements. As
-additional documentation is written, it will include information on ensuring
-accessibility for any pages that you produce.</p>
+<p>La ayuda de Amaya describe cómo utilizar algunos elementos HTML. A medida
+que se añada más documentación, se incluirá información para asegurar la
+accesibilidad de las páginas que escribas.</p>
 
-<p>The most thorough guidelines are the W3C's Web Content Accessibility
-Guidelines. The W3C's Web Accessibility Initiative also publishes the
-following quick tips for making accessible Web sites:</p>
+<p>Las mejores guías son las Guías de accesibilidad de contenido Web del W3C.
+La Iniciativa de accesibilidad Web del W3C señala unas cuantas ideas para
+hacer accesibles los sitios Web:</p>
 <ul>
-  <li><strong>Images &amp; animations</strong>. Use the <code>alt</code>
-    attribute to describe the function of each visual. For more information,
-    see <span class="Link0">Working with Graphics</span>.
+  <li><strong>Imágenes y animaciones</strong>. Utiliza el atributo
+    <code>alt</code> para describir la función de cada elemento visual. Para
+    más información ver <span class="Link0"><a
+    href="../using_graphics/working_with_graphics.html.es">Trabajar con
+    gráficos</a></span>. 
     <p></p>
   </li>
-  <li><strong>Image maps</strong>. Use client-side MAP and text for hotspots.
-    For more information, see <span class="Link0">Working with Image
-    Maps</span>.
-    <p></p>
-  </li>
-  <li><strong>Multimedia</strong>. Provide captioning and transcripts of
-    audio, and descriptions of video.
-    <p></p>
-  </li>
-  <li><strong>Hypertext links</strong>. Use text that makes sense when read
-    out of context. For example, avoid using &quot;click here&quot; as the link text.
-    <p></p>
-  </li>
-  <li><strong>Page organization</strong>. Use headings, lists, and a
-    consistent structure. Use CSS for layout and style where possible. For
-    more information, see <span class="Link0"><a
-    href="../style_sheets/working_with_styles.html.es">Working with Style
-    Sheets</a></span>.
-    <p></p>
-  </li>
-  <li><strong>Graphs and charts</strong>. Summarize the data or use the <span
-    class="Link0"><span style="font-family: courier">longdesc</span>
-    attribute</span>. For more information, see <span class="Link0"><a
-    href="../using_graphics/working_with_graphics.html.es">Working with
-    Graphics</a></span>.
-    <p></p>
-  </li>
-  <li><strong>Scripts, applets, and plug-ins</strong>. Provide alternative
-    content in case active features are inaccessible or unsupported.
-    <p></p>
-  </li>
-  <li><strong>Tables</strong>. Use tables to make line-by-line reading
-    sensible and to summarize data. For more information, see <span
+  <li><strong>Mapas de imágenes</strong>. Utiliza mapas de imágenes clientes
+    y texto alternativo para las áreas. para más información, ver <span
     class="Link0"><a
-    href="../editing_tables/working_with_tables.html.es">Working with
-    Tables</a></span>.
+    href="../using_image_maps/working_with_image_maps.html.es">Trabajar con
+    mapas de imagen</a></span>. 
     <p></p>
   </li>
-  <li><strong>Frames</strong>.  Display pages without frames, using
-    <code>NOFRAMES</code> and meaningful titles.
+  <li><strong>Multimedia</strong>. Proporciona capturas y transcripciones del
+    audio y descripciones del video.
     <p></p>
   </li>
-  <li><strong>Check your work</strong>. Validate your documents prior to
+  <li><strong>Enlaces de hipertexto</strong>. Utiliza texto que tenga sentido
+    al ser leido fuera de contexto. Por ejemplo, evita utilizar  "haz clic
+    aquí" como texto del enlace. 
+    <p></p>
+  </li>
+  <li><strong>Organización de página</strong>. Utiliza encabezados, listas y
+    una estructura consistente. Utiliza CSS para el diseño y el estilo
+    siempre que sea posible. Para más información ver <span class="Link0"><a
+    href="../style_sheets/working_with_styles.html.es">Trabajar con
+    estilos</a></span>. 
+    <p></p>
+  </li>
+  <li><strong>Gráficos y diagramas</strong>. Resume los datos o utiliza el
+    atribute <span class="Link0">longdesc</span>. para más información, ver
     <span class="Link0"><a
-    href="../saving_and_publishing_documents/saving_and_publishing_documents.html.es">publishing</a></span>.
-    You can use the W3C tools, checklist, and guidelines at:
-    <p><span class="Link0"><a href="http://www.w3.org/TR/WAI-WEBCONTENT">http://www.w3.org/TR/WAI-WEBCONTENT.</a></span></p>
+    href="../using_graphics/working_with_graphics.html.es">Trabajar con
+    gráficos</a></span>. 
+    <p></p>
+  </li>
+  <li><strong>Scripts, applets y plug-ins</strong>. Proporciona contenido
+    alternativo para cuando las características activas no son accesibles o
+    no están soportadas.
+    <p></p>
+  </li>
+  <li><strong>Tablas</strong>. Utiliza tablas para resumir datos. Para más
+    información, ver <span class="Link0"><a
+    href="../editing_tables/working_with_tables.html.es">Trabajar con
+    tablas</a></span>. 
+    <p></p>
+  </li>
+  <li><strong>Marcos (frames)</strong>. Muestra páginas sin marcos utilizando
+    <code>NOFRAMES</code> y títulos con sentido.
+    <p></p>
+  </li>
+  <li><strong>Comprueba tu trabajo</strong>. Valida tus documentos antes de
+    <span class="Link0"><a
+    href="../saving_and_publishing_documents/saving_and_publishing_documents.html.es">publicarlo</a></span>.
+    Puedes utilizar las herramientas, consejos y guías del W3C disponibles
+    en: 
+    <p><span class="Link0"><a
+    href="http://www.w3.org/TR/WAI-WEBCONTENT">http://www.w3.org/TR/WAI-WEBCONTENT.</a></span></p>
   </li>
 </ul>
 </div>
-
 </body>
 </html>

@@ -3,14 +3,13 @@
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta name="generator" content="amaya 6.4, see http://www.w3.org/Amaya/" />
+  <meta name="generator" content="amaya 6.4+, see http://www.w3.org/Amaya/" />
   <title>Crear un Elemento Destino</title>
-  <style type="text/css">
-  </style>
+  
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
-<body xml:lang="en" lang="en">
+<body xml:lang="es" lang="es">
 
 <table border="0" summary="toc">
   <tbody>
@@ -18,11 +17,11 @@
       <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
         src="../../images/amaya.gif" /></td>
       <td><p><a href="creating_a_target_anchor.html.es" accesskey="p"><img
-        alt="previous" src="../../images/left.gif" /></a> <a
-        href="../Links.html.es" accesskey="t"><img alt="top"
+        alt="anterior" src="../../images/left.gif" /></a> <a
+        href="../Links.html.es" accesskey="t"><img alt="superior"
         src="../../images/up.gif" /></a> <a
         href="removing_a_link_or_a_target_anchor.html.es" accesskey="n"><img
-        alt="next" src="../../images/right.gif" /></a></p>
+        alt="siguiente" src="../../images/right.gif" /></a></p>
       </td>
     </tr>
   </tbody>
@@ -40,29 +39,27 @@ convertirlo en elemento destino.</p>
 <ol>
   <li>Selecciona una cadena de caracteres en el elemento o pulsa
     <strong>Escape</strong> (Unix) o <strong>F2</strong> (Windows) para
-    seleccionar el elemento completo.
+    seleccionar el elemento completo. 
     <p></p>
   </li>
-  <li>Abre el menú <strong>Enlaces</strong> y elige <strong>Crear
-    destino.</strong> El elemento seleccionado tiene ahora un atributo
-    <code>ID</code> que lo identifica como elemento destino. Amaya genera
-    automáticamente un valor <code>ID</code> único. En la Vista formateada,
-    si <strong>Mostrar destinos</strong> está activada, el elemento destino
-    está precedido por un icono. En la Vista enlaces, los iconos que
-    identifican los destinos se muestran siempre.
+  <li>Elige el comando de menú <strong>Enlaces &gt; Crear
+    destino</strong><strong>.</strong> El elemento seleccionado tiene ahora
+    un atributo <code>ID</code> que lo identifica como elemento destino.
+    Amaya genera automáticamente un valor <code>ID</code> único. En la vista Formateada, si <strong>Mostrar destinos</strong> está activada, el
+    elemento destino está precedido por un icono. En la vista Enlaces, los
+    iconos que identifican los destinos se muestran siempre. 
     <p></p>
-    <p class="ProcedureNote"><strong>Nota:<br />
-    </strong>También puedes crear directamente el atributo <code>ID</code>
-    seleccionado el elemento y utilizando el menú <strong>Atributos</strong>.
-    Cuando escribe el valor del atributo, Amaya comprueba que sea único y lo
-    cambia si ya está siendo utilizando por otros atributo <code>NAME</code>
-    o <code>ID</code> en el mismo documento. Otro método para crear atributos
-    <code>ID</code> es utilizar el comando  <strong>Crear/Suprimir atributos
-    ID</strong> del menú <strong>Especial</strong>. Al elegir este comando se
-    añade automáticamente un atributo  <code>ID</code> a todos los elemntos
-    con un nombre determinado en el documento o en la parte seleccionada.
-    Simplemente escribe el nombre del elemento y haz clic en el botón
-    <strong>Crear ID</strong>.</p>
+    <p class="ProcedureNote"><strong>Nota:</strong> También puedes crear
+    directamente el atributo <code>ID</code> seleccionado el elemento y
+    utilizando el menú <strong>Atributos</strong>. Cuando escribe el valor
+    del atributo, Amaya comprueba que sea único y lo cambia si ya está siendo
+    utilizando por otros atributo <code>NAME</code> o <code>ID</code> en el
+    mismo documento. Otro método para crear atributos <code>ID</code> es
+    utilizar el comando de menú <strong>Especial &gt; Crear/Suprimir
+    atributos ID</strong>. Al elegir este comando se añade automáticamente un
+    atributo <code>ID</code> a todos los elemntos con un nombre determinado
+    en el documento o en la parte seleccionada. Simplemente escribe el nombre
+    del elemento y haz clic en el botón <strong>Crear ID</strong>.</p>
   </li>
 </ol>
 </div>

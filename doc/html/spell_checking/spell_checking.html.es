@@ -1,132 +1,122 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-	
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-  <meta name="GENERATOR" content="amaya 5.2" />
-  <title>Spell Checking</title>
-  <style type="text/css"></style>
+  <meta name="GENERATOR" content="amaya 6.4+, see http://www.w3.org/Amaya/" />
+  <title>Corrector ortográfico</title>
+  
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
-<body xml:lang="en" lang="en">
+<body xml:lang="es" lang="es">
 
 <table border="0" summary="toc">
   <tbody>
     <tr>
       <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
         src="../../images/amaya.gif" /></td>
-      <td><p> 
-		<a href="../SpellChecking.html.es" accesskey="t"><img alt="top" src="../../images/up.gif" /></a> 
-		</p>
+      <td><p><a href="../SpellChecking.html.es" accesskey="t"><img
+        alt="superior" src="../../images/up.gif" /></a></p>
       </td>
     </tr>
   </tbody>
 </table>
 
 <div id="page_body">
-<h1>Spell Checking</h1>
+<h1>Corrector ortográfico</h1>
 
-<p>Amaya provides a multilingual spell checker, and selects the appropriate
-language according to the <code>LANG</code> attribute. The <code>LANG</code>
-attribute can be associated with any element in a document, even with a
-single word, by choosing <strong>Language</strong> from the
-<strong>Attributes</strong> menu.</p>
+<p>Amaya contiene un corrector ortográfico para varios idiomas y delecciona
+el lenguaje apropiado de acuerdo con el atributo <code>LANG</code>. El
+atributo <code>LANG</code> puede asociarse a cualquier lemento en un
+documento, incluso a una sola palabra, eligiendo el comando de menú
+<strong>Atributos &gt; lang</strong>.</p>
 
-<p>To spell check a document, choose <strong>Spell Check</strong> from the
-<strong>Edit</strong> menu.</p>
+<p>Para corregir un documento, elige el comando de menú <strong>Editar &gt;
+Verificar ortografía</strong>.</p>
 
-<h2>The Personal Dictionary</h2>
+<h2>El diccionario personal</h2>
 
-<p>When you register a new word, the spell checker creates or updates the
-<b>user's personal dictionary</b>. A user's personal dictionary is located in
-the <code>AmayaHome/dictionary.DCT</code> file. In read-write mode, the spell
-checker employs the user dictionary when reviewing all documents, in addition
-to the language-specific dictionary. When you click the <strong>Skip
-(+dic)</strong> and <strong>Replace (+dic)</strong> buttons in the
-<strong>Spell Checking</strong> dialog, the user dictionary is created and
-automatically updated by the spelling checker.</p>
+<p>Al registrar una nueva palabra, el corrector ortográfico crea o actualiza
+el <b>diccionario personal de usuario</b>. El diccionario personal de usuario
+se encuentra en el archivo <code>AmayaHome/dictionary.DCT</code>. En modo de
+lectura y escritura, el corrector ortográfico utiliza el diccionario de
+usuario al revisar cualquier documento, además del diccionario específico.
+Cuando haces clic en los botones <strong>Saltar (+dic)</strong> y
+<strong>Reemplazar (+dic)</strong> de la caja de diálogo <strong>Corrector
+ortográfico</strong>, el corrector ortográfico crea y actualiza
+automáticamente el diccionario de usuario.</p>
 
-<h2>The Spell Check Dialog</h2>
+<h2>La caja de diálogo del corrector ortográfico</h2>
 
-<p>The <strong>Spell Check</strong> option on the <strong>Edit</strong> menu
-displays a dialog that enables you to choose parameters and interact with the
-spell checker. These parameters are defined below.</p>
+<p>El comando de menú <strong>Editar &gt; Verificar ortografía</strong> abre
+una caja de diálogo que te permite elegir los parámetros e interactuar con el
+corrector ortográfico. Los parámetros son los siguientes:</p>
 <ul>
-  <li><strong>Number of proposals</strong> field defines the maximum number
-    of proposed corrections: any value between 1 and 10, the default value is
-    3. When an error is detected, any change made to this value immediately
-    displays a new list of corrections.
+  <li>El campo <strong>Número de propuestas</strong> define el número máximo
+    de correcciones propuestas: puede tomar cualquier valor entre 1 y 10, el
+    valor por omisión es 3. Cuando se detecta un error, al modificar este
+    valor se actualiza la lista de correcciones. 
     <p></p>
   </li>
-  <li>The <strong>Ignore</strong> section tells the spell checker to ignore
-    certain words, for example, words that contain capital letters, digits,
-    Roman numerals or special characters.
+  <li>La sección <strong>Ignorar</strong> le pide al corrector ortográfico
+    ignorar ciertas palabras, por ejemplo, las palabras que contienen
+    mayúsculas, dígitos, número romanos o caracteres especiales.&#x20ac; 
     <p></p>
   </li>
-  <li>The <strong>Checking</strong> section, similar to that in the Search
-    dialog, enables you to specify the part of document on which the checker
-    will work.
+  <li>El grupo de opciones <strong>Buscar dónde</strong>, similar al de
+    <strong>Buscar</strong>, te permite especificar la parte del documento
+    que comprobará el corrector ortográfico. 
     <p></p>
   </li>
-  <li>The <strong>Spell Checking</strong> field displays incorrect words. The
-    list of proposed corrections is displayed in the selector field located
-    below the incorrect word. By default, Amaya selects the first proposed
-    correction. To select another correction, simply click it. The selected
-    correction is displayed below the selector field. This correction can be
-    directly edited on the form. The correction is made when you click the
-    <strong>Replace and next</strong> or <strong>Replace (+dic)</strong>
-    buttons.
+  <li>El campo <strong>Verificando ortografía</strong> muestra las palabras
+    incorrectas. Las palabras propuestas por el corrector se muestran en el
+    campo selector situado justo debajo de la palabra incorrecta. Por omisión, Amaya selecciona la primera palabra propuesta. Para seleccionar
+    otra, haz clic cobre la palabra preferida. Esa palabra se seleccionará.
+    Esta corrección puede editarse directamente en este formulario. La
+    corrección se realiza cuando haces clic en el botón <strong>Reemplazar y
+    siguiente</strong> o en <strong>Reemplazar (+dic)</strong>. 
     <p></p>
   </li>
-  <li>The <strong>language</strong> in which the correction is made is
-    specified in the top left corner of the form. To change the language,
-    apply a Language attribute to the text with the
-    <strong>Attributes</strong> menu, and restart the spell-check
-  procedure.</li>
+  <li>El <strong>idioma</strong> en el que se realiza la correción se
+    especifica en la esquina superior izquierda de la caja de diálogo. para
+    cambiar el idioma, aplica el atributo Language al texto mediante el menú
+    <strong>Atributos</strong>, y reinicia el corrector ortográfico.</li>
 </ul>
 
-<h2>Running the Spell Checker</h2>
+<h2>Utilizar el corrector ortográfico</h2>
 
-<p>To start the checker, click the <strong>Search/Skip</strong> button at the
-bottom of the form. If an error is found, the incorrect word is selected and
-highlighted in the document. If no error was detected, Amaya displays the
-<b>Not found</b> message in the bottom right corner of the form.</p>
+<p>Para iniciar el corrector, haz clic en el botón
+<strong>Buscar/Saltar</strong> de la caja de diálogo. Si se encuentra un
+error, la palabra incorrecta se selecciona e ilumina en el documento. Si no
+se detecta ningún error, Amaya muestra el mensaje <b>No encontrado</b>.</p>
 
-<p>When an incorrect word is detected, you can use a button on the form to
-perform the following operations:</p>
+<p>Cuando se detecta una palabra incorrecta, pulsa el botón correspondiente
+para realizar las operaciones siguientes:</p>
 <ul>
-  <li><strong>Done</strong>: Amaya closes the form and stops spell checking.
-    Previous corrections are not canceled.
+  <li><strong>Hecho</strong>: Amaya cierra la caja de diálogo y detiene el
+    corrector ortográfico. Las correcciones anteriores no se deshacen. 
     <p></p>
   </li>
-  <li><strong>Search/Skip</strong>: Amaya considers the incorrect word as
-    acceptable. No change is made in the text or in the dictionaries. The
-    checker searches for the next error.
+  <li><strong>Buscar/Saltar</strong>: Amaya considera la palabra incorrecta
+    aceptable. No se realiza ningún cambio ni en el texto ni en los
+    diccionarios. El corrector busca el siguiente error. 
     <p></p>
   </li>
-  <li><strong>Skip+Next</strong>: Amaya considers the incorrect word as
-    acceptable, and the checker moves on to the next word.
+  <li><strong>Saltar (+dic)</strong>: Amaya considera la palabra incorrecta
+    aceptable y además la añade al diccionario, por lo que el corrector
+    ignorará cualquier aparición posterior de la palabra. 
     <p></p>
   </li>
-  <li><strong>Skip (+dic)</strong>: Performs the same action as the
-    <strong>Skip+Next</strong> button, except that the word considered
-    incorrect is added to the  document dictionary, and the checker will
-    ignore any subsequent occurrence of this word.
+  <li><strong>Reemplazar y siguiente</strong>: Amaya sustituye la palabra
+    incorrecta por la palabra correcta (que puede haber sido editada por el
+    usuario). El corrector busca el siguiente error. 
     <p></p>
   </li>
-  <li><strong>Replace and Next</strong>: Amaya replaces the incorrect word
-    with the correct word (optionally edited by the user) and the checker
-    searches for the next error.
-    <p></p>
-  </li>
-  <li><strong>Replace (+dic):</strong> Performs the same action as the
-    <strong>Replace and Next</strong> button, except that the replacement
-    word is added to the document dictionary.</li>
+  <li><strong>Reemplazar (+dic):</strong> Amaya sustituye la palabra
+    incorrecta por la palabra correcta (que puede haber sido editada por el
+    usuario), pero además la palabra correcta se añade al diccionario.</li>
 </ul>
 </div>
-
 </body>
 </html>

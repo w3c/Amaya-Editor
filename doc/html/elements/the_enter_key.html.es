@@ -3,15 +3,12 @@
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-  <meta name="generator" content="amaya 6.0, see http://www.w3.org/Amaya/" />
-  <title>The Enter (or Return) Key</title>
-  <style type="text/css">
- </style>
+  <meta name="generator" content="amaya 6.4+, see http://www.w3.org/Amaya/" />
+  <title>The Intro Key</title>
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
-<body xml:lang="en" lang="en">
+<body xml:lang="es" lang="es">
 
 <table border="0" summary="toc">
   <tbody>
@@ -19,44 +16,48 @@
       <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
         src="../../images/amaya.gif" /></td>
       <td><p><a href="the_structure_menu.html.es" accesskey="p"><img
-        alt="previous" src="../../images/left.gif" /></a> <a
-        href="../Creating.html.es" accesskey="t"><img alt="top"
+        alt="anterior" src="../../images/left.gif" /></a> <a
+        href="../Creating.html.es" accesskey="t"><img alt="superior"
         src="../../images/up.gif" /></a> <a href="exiting_anchors.html.es"
-        accesskey="n"><img alt="next" src="../../images/right.gif" /></a></p>
+        accesskey="n"><img alt="siguiente" src="../../images/right.gif"
+        /></a></p>
       </td>
     </tr>
   </tbody>
 </table>
 
 <div id="page_body">
-<h1>The Enter (or Return) Key</h1>
+<h1>La tecla Intro</h1>
 
-<p>When you are writing a new document or a new part in a document, you can
-create elements sequentially by pressing the <strong>ENTER</strong> (or
-<strong>RETURN</strong>) key. The current element is terminated and a new one
-is created immediately after.</p>
+<p>Cuando escribes un nuevo documento o una nueva parte de un documento,
+puedes crear documentos uno detrás de otro pulsando la tecla
+<strong>Intro</strong>. El elemento actual se cierra y se abre uno nuevo
+inmediatamente después.</p>
 
-<p>Most often, the new element created is simply a paragraph, whatever the
-type of the previous element. You can change the element type by selecting
-the desired type from the <strong>Types</strong> menu or by clicking the
-corresponding button.</p>
+<p>Normalmente el nuevo elemento que se crea es un simple párrafo, sea cual
+sea el tipo del elemento anterior. Puedes cambiar el tipo del elemento
+eligiendo el tipo deseado del menú <strong>Xhtml</strong> o haciendo clic en
+el botón correspondiente.</p>
 
-<p>When a &lt;pre&gt;formatted element is at the end of the document and the
-cursor is at the end of that element, hitting the Enter key creates a new
-line in the &lt;pre&gt;. To create another element, say a paragraph, after
-the &lt;pre&gt;, you have to select the whole &lt;pre&gt; element with the
-ESC key (Linux) or the F2 key (Windows) and to press Enter.</p>
+<p>Cuando un elemento formateado como <code>&lt;pre&gt;</code> está al final
+de un documento y el cursor está al final de dicho elemento, al pulsar
+<strong>Intro</strong> se crea una nueva línea dentro del
+<code>&lt;pre&gt;</code>. Para crear otro elemento, por ejemplo un párrafo, a
+continuación del <code>&lt;pre&gt;</code>, selecciona todo el elemento
+<code>&lt;pre&gt;</code> pulsando <b>Escape</b> (en Unix) o <b>F2</b> (En
+Windows) y a continuación <b>Intro</b>.</p>
 
-<p>In the same way, you can create a new paragraph after the table by
-selecting the whole table and pressing Enter.</p>
+<p>Igualmente, puedes crear un nuevo párrafo después de una tabla
+seleccionando toda la tabla y pulsando <strong>Intro</strong>.</p>
 
-<p>When a whole element like &lt;h2&gt; or &lt;li&gt; is selected the Enter
-key creates a new &lt;h2&gt; or &lt;li&gt; after.</p>
+<p>Cuando seleccionas un elemento completo como &lt;h2&gt; o &lt;li&gt;, al
+pulsar la tecla <strong>Intro</strong> se crea un nuevo &lt;h2&gt; o
+&lt;li&gt; a continuación.</p>
 
-<h2>See Also:</h2>
+<h2>Ver también:</h2>
 <ul>
-  <li><a href="../Creating.html.es">Creating Nested Structures</a></li>
-  <li><a href="../Creating.html.es">Creating Elements</a></li>
+  <li><a href="../Creating.html.es">Crear estructuras anidadas</a></li>
+  <li><a href="../Creating.html.es">Crear nuevos elementos</a></li>
 </ul>
 </div>
 </body>

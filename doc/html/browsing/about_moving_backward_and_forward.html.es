@@ -4,13 +4,11 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>Acerca de Ir Adelante o Atrás</title>
-  <style type="text/css">
-  </style>
-  <meta name="GENERATOR" content="amaya 6.4, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 6.4+, see http://www.w3.org/Amaya/" />
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
-<body xml:lang="en" lang="en">
+<body xml:lang="es" lang="es">
 
 <table border="0" summary="toc">
   <tbody>
@@ -18,10 +16,11 @@
       <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
         src="../../images/amaya.gif" /></td>
       <td><p><a href="about_target_anchors.html.es" accesskey="p"><img
-        alt="previous" src="../../images/left.gif" /></a> <a
-        href="../Browsing.html.es" accesskey="t"><img alt="top"
+        alt="anterior" src="../../images/left.gif" /></a> <a
+        href="../Browsing.html.es" accesskey="t"><img alt="superior"
         src="../../images/up.gif" /></a> <a href="reloading_a_page.html.es"
-        accesskey="n"><img alt="next" src="../../images/right.gif" /></a></p>
+        accesskey="n"><img alt="siguiente" src="../../images/right.gif"
+        /></a></p>
       </td>
     </tr>
   </tbody>
@@ -68,11 +67,11 @@ adelante o atrás en esa lista de varias maneras:</p>
     <tr>
       <td><p>Barra de botones</p>
       </td>
-      <td><p>Haz clic en el botón  <img alt="Back"
+      <td><p>Haz clic en el botón <img alt="Atrás"
         src="../../images/Back.gif" /> para ver la página visitada
         anteriormente</p>
 
-        <p>Haz clic en el botón  <img alt="Forward"
+        <p>Haz clic en el botón <img alt="Adelante"
         src="../../images/Forward.gif" /> para ver la página visitada
         posteriormente</p>
       </td>

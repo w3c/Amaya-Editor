@@ -3,14 +3,13 @@
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta name="GENERATOR" content="amaya 6.4, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 6.4+, see http://www.w3.org/Amaya/" />
   <title>Crear un Destino</title>
-  <style type="text/css">
-  </style>
+  
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
-<body xml:lang="en" lang="en">
+<body xml:lang="es" lang="es">
 
 <table border="0" summary="toc">
   <tbody>
@@ -18,11 +17,11 @@
       <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
         src="../../images/amaya.gif" /></td>
       <td><p><a href="creating_an_internal_link.html.es" accesskey="p"><img
-        alt="previous" src="../../images/left.gif" /></a> <a
-        href="../Links.html.es" accesskey="t"><img alt="top"
+        alt="anterior" src="../../images/left.gif" /></a> <a
+        href="../Links.html.es" accesskey="t"><img alt="superior"
         src="../../images/up.gif" /></a> <a
         href="creating_a_target_element.html.es" accesskey="n"><img
-        alt="next" src="../../images/right.gif" /></a></p>
+        alt="siguiente" src="../../images/right.gif" /></a></p>
       </td>
     </tr>
   </tbody>
@@ -40,12 +39,11 @@ destino.</p>
   <li>Haz clic y selecciona la cadena de texto. 
     <p></p>
   </li>
-  <li>Elige <strong>Crear destino</strong> en el menú
-    <strong>Enlaces</strong>. El texto seleccionado es ahora un destino. En
-    la Vista formateada, si está activada la opción <strong>Vistas &gt;
-    Mostrar destinos</strong>, el texto destino está precedido por un icono.
-    En la Vista enlaces, los iconos que identifican los destinos se muestran
-    siempre. 
+  <li>Elige el comando de menú <strong>Enlaces &gt; Crear destino</strong>.
+    El texto seleccionado es ahora un destino. En la vista Formateada, si
+    está activada la opción <strong>Vistas &gt; Mostrar destinos</strong>, el
+    texto destino está precedido por un icono. En la vista Enlaces, los
+    iconos que identifican los destinos se muestran siempre. 
     <p></p>
   </li>
   <li>Cuando se crea un destino, Amaya genera automáticamente un atributo

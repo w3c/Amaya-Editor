@@ -3,96 +3,93 @@
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-  <title>Configuring Annotation Settings</title>
-  <style type="text/css">
-  </style>
-  <meta name="GENERATOR" content="amaya 5.2" />
+  <title>Configuración de anotaciones</title>
+  <meta name="GENERATOR" content="amaya 6.4+, see http://www.w3.org/Amaya/" />
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
-<body xml:lang="en" lang="en">
+<body xml:lang="es" lang="es">
 
 <table border="0" summary="toc">
   <tbody>
     <tr>
       <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
         src="../../images/amaya.gif" /></td>
-      <td><p><a href="annotation_menu.html.es" accesskey="p"><img alt="previous"
-        src="../../images/left.gif" /></a> <a href="../Annotations.html.es"
-        accesskey="t"><img alt="top" src="../../images/up.gif" /></a> <a
-        href="creating_an_annotation.html.es" accesskey="n"><img alt="next"
-        src="../../images/right.gif" /></a></p>
+      <td><p><a href="annotation_menu.html.es" accesskey="p"><img
+        alt="anterior" src="../../images/left.gif" /></a> <a
+        href="../Annotations.html.es" accesskey="t"><img alt="superior"
+        src="../../images/up.gif" /></a> <a
+        href="creating_an_annotation.html.es" accesskey="n"><img
+        alt="siguiente" src="../../images/right.gif" /></a></p>
       </td>
     </tr>
   </tbody>
 </table>
 
 <div id="page_body">
-<h1>Configuring Annotation Settings</h1>
+<h1>Configuración de anotaciones</h1>
 
-<p>You open the <strong>Configuration for annotations</strong> dialog by
-choosing <strong>Configure</strong> from the <strong>Annotations</strong>
-menu. The following figure shows the Windows version of this dialog:</p>
+<p>La opción de menú <strong>Anotaciones &gt; Configurar</strong> abre la
+caja de diálogo <strong>Configuración para anotaciones</strong>. En Windows,
+la caja de diálogo es la siguiente:</p>
 
-<p><img alt="Configuring Annotations Dialog"
-src="../../images/configuration_for_annotations.png" /></p>
+<p><img alt="Caja de diálogo Configuración para anotaciones"
+src="../../images/configuration_for_annotations-es.png" /></p>
 
-<p>The Unix version has a slightly different user interface, but the same
-functions.</p>
+<p>La versión de Unix tiene un interface ligeramente distinto, pero las misma
+funciones.</p>
 <dl>
-  <dt><strong>Annotation user</strong></dt>
-    <dd>The author of the annotation. By default, Amaya uses the login name
-      of the user. This field enables you to change your user name to
-      something more meaningful.</dd>
-  <dt><strong>Annotation post server</strong></dt>
-    <dd>This setting defines the server to which the annotations are posted.
-      Local annotations are always saved to the local repository, and by
-      default, this setting is empty. The post server is not automatically
-      included in the list of servers, so you should enter the post server
-      name in both places.</dd>
-  <dt><strong>Annotation servers</strong></dt>
-    <dd>A list of servers Amaya should contact when looking for annotations.
-      You can specify one or more servers. The reserved server name
-      <strong>localhost</strong> tells Amaya to search the local annotations,
-      but does not necessarily mean that a local annotation server is running
-      (or it would show a complete URL ).</dd>
-    <dd>Under Unix, the annotation servers are specified as a space separated
-      list. Under Windows, you can add a new server name by clicking in the
-      Annotations servers list, pressing the <strong>Enter</strong> key, and
-      then typing the server name . By default, this list is initialized to
+  <dt><strong>Anotación de usuario</strong></dt>
+    <dd>Autor de la anotación. Por omisión, Amaya utiliza el nombre de
+      usuario actual. En este campo puedes cambiar el nombre del usuario.</dd>
+  <dt><strong>Servidor de publicación</strong></dt>
+    <dd>Este campo indica el servidor al que se envían las anotaciones. Las
+      anotaciones locales se guardan siempre en el repositorio local y, por
+      omisión, el campo está vacío. El servidor de publicación no se añade
+      automáticamente a la lista de servidores, así que debes incluir el
+      servidor de publicación en ambos lugraes.</dd>
+  <dt><strong>Servidores de anotación</strong></dt>
+    <dd>Lista de servidores que Amaya debe contactar al buscar anotaciones.
+      Puedes especificar uno o más servidores. El nombre reservado
+      <strong>localhost</strong> hace que Amaya busque anotaciones locales,
+      pero no significa que haya un servidor de anotaciones local en
+      funcionamiento (en ese caso, mostraía su URL completa).</dd>
+    <dd>En Unix, los servidores de anotaciones se especifican en forma de una
+      lista separada por espacios. En Windows, puedes añadir un nuevo nombre
+      de servidor haciendo clic en la lista de servidores de anotaciones,
+      pulsando <strong>Intro</strong> y escribiendo a continuación el nombre
+      del servidor. Por omisión, la lista inicial está limitada a
       <code>localhost</code>. 
       <p></p>
-      <p class="ProcedureNote"><strong>Tip</strong>:<br />
-      To temporarily disable an annotation server, add a "-" char before its
-      URL. Amaya will ignore it.</p>
+      <p class="ProcedureNote"><strong>Nota:</strong> Para desactivar
+      temporalmente un servidor de anotaciones, añade el carácter "-" antes
+      de su URL. Amaya lo ignorará.</p>
     </dd>
-  <dt><strong>Autoload local annotations/Autoload remote
-  annotations</strong></dt>
-    <dd>Whether Amaya should request annotations automatically (by querying
-      the annotation server) every time you browse any URL. If it is not
-      checked, then you can manually choose <strong>Load annotations</strong>
-      from the <strong>Annotations</strong> menu. 
+  <dt><strong>Autocargar anotaciones locales / Autocargar anotaciones
+  remotas</strong></dt>
+    <dd>Indica si Amaya debe solicitar las anotciones automáticamente (al
+      servidor de anotaciones) cada vez que abres un URL. Si la casilla no
+      está marcada, puedes en cualquier momento elegir el comando
+      <strong>Anotaciones &gt; Cargar</strong>. 
       <p></p>
-      <p class="Note"><strong>Note:</strong><br />
-      If you check the <strong>Autoload remote annotations</strong> option,
-      you may experience a delay in resolving the DNS name of the annotation
-      servers. By default, both these options are turned off.</p>
+      <p class="Note"><strong>Nota:</strong> Si marcas la casilla
+      <strong>Autocargar anotaciones remotas</strong>, puedes experimentar
+      retrasos en la resolución del nombre de DNS de los servidores de
+      anotaciones. Por omisión, ambas opciones están desmarcadas.</p>
     </dd>
-  <dt><strong>Disable remote autoload at each startup (for offline
-  work)</strong></dt>
-    <dd>Whether Amaya should reset the <strong>autoload remote
-      annotations</strong>option at launch time. This option can be useful if
-      you are working offline, but still want to autoload the local
-      annotations as well as the remote ones.</dd>
+  <dt><strong>Deshabilitar autocarga remota en cada inicio (para trabajar
+  desconectado)</strong></dt>
+    <dd>Indica si Amaya debe reiniciar el valor de la opción
+      <strong>Autocargar anotaciones remotas</strong> al iniciar el programa.
+      Está opción puede serte útil si trabajas descoenctado, pero quieres
+      autocargar tanto las anotaciones locales como las remotas.</dd>
 </dl>
 
-<h2>See Also:</h2>
+<h2>Ver también:</h2>
 <ul>
-  <li><span class="Link"><a href="creating_an_annotation.html.es">Creating an
-    Annotation</a></span></li>
+  <li><span class="Link"><a href="creating_an_annotation.html.es">Crear una
+    anotación</a></span></li>
 </ul>
 </div>
-
 </body>
 </html>

@@ -3,15 +3,13 @@
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <title>Inline elements</title>
-  <meta name="GENERATOR" content="amaya 6.1, see http://www.w3.org/Amaya/" />
-  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-  <style type="text/css">
-  </style>
+  <title>Marcado en línea</title>
+  <meta name="GENERATOR" content="amaya 6.4+, see http://www.w3.org/Amaya/" />
+  
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
-<body xml:lang="en" lang="en">
+<body xml:lang="es" lang="es">
 
 <table border="0" width="100%" summary="toc">
   <tbody>
@@ -21,145 +19,146 @@
       </td>
       <td><p align="right"><a href="../Manual.html.es"></a></p>
 
-        <p align="right"><a href="address.html.es"><img alt="previous"
+        <p align="right"><a href="address.html.es"><img alt="anterior"
         border="0" src="../../images/left.gif" /></a> <a
-        href="../HTML.html.es"><img alt="top" border="0"
+        href="../HTML.html.es"><img alt="superior" border="0"
         src="../../images/up.gif" /></a> <a href="40styling.html.es"><img
-        alt="next" border="0" src="../../images/right.gif" /></a></p>
+        alt="siguiente" border="0" src="../../images/right.gif" /></a></p>
       </td>
     </tr>
   </tbody>
 </table>
 
 <div id="Inline3">
-<h1>Inline markup</h1>
+<h1>Marcado en línea</h1>
 
-<p>Text within a paragraph, heading, or other block element can be marked up
-in a variety of ways, for example to emphasise it, or to highlight text that
-should be entered by a user into a computer. Most of these inline elements
-are described in this page, although links, which are inline elements, are
-described separately.</p>
+<p>El texto contenido en un párrafo, encabezado u otro elemento de bloque
+puede ser marcado de muchas maneras, por ejemplo, para enfatizarlo, o para
+resaltar texto que tiene que ser introducido por el usuario en el ordenador.
+La mayoría de estos elementos "en línea" se describen en esta página, aunque
+los enlaces, que son elementos en línea, se describen en otro lugar.</p>
 
 <div>
-<h2><a name="Inline21"></a><a name="Definition">Definitions</a></h2>
+<h2><a name="Inline21"></a><a name="Definition">Definiciones</a></h2>
 
-<p>The <a
-href="http://www.w3.org/TR/REC-html40/struct/text.html.es#edef-DFN"><code>DFN</code></a>element
-is used to mark an <dfn>inline definition</dfn> (a word which is given as a
-defining instance)</p>
+<p>Utiliza el elemento <a
+href="http://www.w3.org/TR/REC-html40/struct/text.html#edef-DFN"><code>dfn</code></a>
+para marcar una <dfn>definición en línea</dfn>.</p>
 
-<p><a href="../StyleSheets.html.es">Style sheets</a> can be used to change the
-presentation of inline definitions.</p>
+<p>Puedes utilizar <a href="../StyleSheets.html.es">hojas de estilo</a> para
+modificar el formato de los elementos en línea.</p>
 </div>
 
 <div>
-<h2><a name="Inline1">Inline Quotations</a></h2>
+<h2><a name="Inline1">Citas en línea</a></h2>
 
-<p>Quotations which are inline can be marked using the information type
-"quotation" - the HTML element <a
-href="http://www.w3.org/TR/REC-html40/struct/text.html.es#edef-Q"><code>Q</code></a>.
-This element is selected from the character elements submenu of the Style
-menu, or in linux with the keyboard shortcut Alt-t, Alt-q. It is possible to
-give a URI source for the quotation, using the <code>cite</code>
-attribute.</p>
+<p>Puedes marcar las citas insertadas en el texto con el elemento <a
+href="http://www.w3.org/TR/REC-html40/struct/text.html#edef-Q"><code>q</code></a>.
+Este elemento se encuentra en el comando de menú <strong>Estilo &gt; Elemento
+carácter &gt; Remarcado (Quotation q)</strong>, y también puedes utilizar el
+atajo de teclado Alt-t, Alt-q. Puedes hacer referencia a la fuente dando el
+URI en el atributo <code>cite</code>.</p>
 
-<p><a href="../StyleSheets.html.es">Style sheets</a> can be used to change the
-presentation of inline quotations. The HTML specification states that inline
-quotation should be rendered with the appropriate punctuation marks for the
-language being represented.</p>
+<p>Puedes utilizar <a href="../StyleSheets.html.es">hojas de estilo</a> para
+modificar el formato de las citas en línea. La recomendación HTML establece
+que las citas en línea deben mostrarse con los signos de puntuación
+correspondiente al lenguaje representado.</p>
 </div>
 
 <div>
-<h2><a name="Sample">Sample input, output and computer code</a></h2>
+<h2><a name="Sample">Muestra de entrada, salida y código de ordenador</a></h2>
 
-<p>Elements are provided to mark computer code, such as
-<code>statement:do-something</code>, with separate markup for
-<var>variables</var>, as well as <kbd>user input</kbd> and <samp>program
-output</samp> - the elements <a
-href="http://www.w3.org/TR/REC-html40/struct/text.html.es#edef-CODE"><code>CODE</code></a>,
+<p>Los elementos para marcar código de ordenador, bien sea código (por
+ejemplo, <code>statement:do-something</code>), <var>variables</var>,
+<kbd>entrada del usuario</kbd> o <samp>salida de un programa</samp> son los
+elementos <a
+href="http://www.w3.org/TR/REC-html40/struct/text.html#edef-CODE"><code>code</code></a>,
 <a
-href="http://www.w3.org/TR/REC-html40/struct/text.html.es#edef-VAR"><code>VAR</code></a>,
+href="http://www.w3.org/TR/REC-html40/struct/text.html#edef-VAR"><code>var</code></a>,
 <a
-href="http://www.w3.org/TR/REC-html40/struct/text.html.es#edef-KBD"><code>KBD</code></a>
-and <a
-href="http://www.w3.org/TR/REC-html40/struct/text.html.es#edef-SAMP"><code>SAMP</code></a>.
-These elements are found in the information types submenu of the Style menu,
-and there are keyboard shortcuts in Unix for all of them - Alt-t followed by
-Alt-c for code, Alt-v for variables, Alt-k for user input and Alt-s for
-sample output.</p>
+href="http://www.w3.org/TR/REC-html40/struct/text.html#edef-KBD"><code>kbd</code></a>
+y <a
+href="http://www.w3.org/TR/REC-html40/struct/text.html#edef-SAMP"><code>samp</code></a>.
+Estos elementos se encuentran en el submenú <strong>Estilo &gt; Tipo de
+información</strong> y sus atajos de teclado correspondiente empiezan todos
+por Alt-t y siguen con Alt-c para código, Alt-v para variables, Alt-k para la
+entrada del usuario y Alt-s para la salida del programa.</p>
 
-<p><a href="../StyleSheets.html.es">Style sheets</a> can be used to change the
-presentation of these elements.</p>
+<p>Puedes utilizar <a href="../StyleSheets.html.es">hojas de estilo</a> para
+modificar el formato de estos elementos.</p>
 </div>
 
 <div>
-<h2><a name="Inline">Acronyms and abbreviations</a></h2>
+<h2><a name="Inline">Acrónimos y abreviaturas</a></h2>
 
-<p>Acronyms and abbreviations should be marked as such, using the <a
-href="http://www.w3.org/TR/REC-html40/struct/text.html.es#edef-ABBR"><code>ABBR</code></a>
-and <a
-href="http://www.w3.org/TR/REC-html40/struct/text.html.es#edef-ACRONYM"><code>ACRONYM</code></a>
-elements available in the information types submenu of the Style menu. For
-unix there is also the shortcut Alt-t, Alt-a for acronym. This allows
-recognition for different types of systems. The <code>title</code> attribute
-can also be used to specify the expansion of the acronym. Select the text to
-be marked, for example <acronym
-title="World Wide Web Consortium">W3C</acronym>, select the Style menu, the
-information types submenu, and the option acronym. Then select the entire
-element (<kbd>Escape key</kbd> on Unix, <kbd>F2 key</kbd> on windows), open
-the Attributes menu, select title, enter <kbd>World Wide Web
-Consortium</kbd>, and apply it.</p>
+<p>Los acrónimos y abreviaturas deben marcarse como tales, utilizando los
+elementos <a
+href="http://www.w3.org/TR/REC-html40/struct/text.html#edef-ABBR"><code>abbr</code></a>
+y <a
+href="http://www.w3.org/TR/REC-html40/struct/text.html#edef-ACRONYM"><code>acronym</code></a>
+que se encuentran en el submenú <strong>Estilo &gt; Tipo de
+información</strong>. El atajo de teclado para Acronym es Alt-t, Alt-a. Estos
+elementos pueden ser reconocidos por diferentes tipos de sistemas. Puedes
+utilizar el atributo <code>title</code> para indicar el significado de un
+acrónimo. Selecciona el texto a marcar (por ejemplo, W3C) y selecciona el
+comando de menú <strong>Estilo &gt; Tipo de información &gt;
+Acrónimo</strong>. A continuación selecciona el elemento completo (con
+<kbd>Escape</kbd> en Unix y con <kbd>F2</kbd> en Windows), elige el comando
+de menú <strong>Atributos &gt; Título</strong>, escribe <kbd>World Wide Web
+Consortium</kbd> y finalmente pulsa Aplicar.</p>
 
-<p><a href="../StyleSheets.html.es">Style sheets</a> can be used to change the
-presentation of acronyms or abbreviations.</p>
+<p>Puedes utilizar <a href="../StyleSheets.html.es">hojas de estilo</a> para
+modificar el formato de acrónimos y abreviaturas.</p>
 </div>
 
 <div>
-<h2><a name="Inline2">Insertions and deletions</a></h2>
+<h2><a name="Inline2">Añadidos y eliminaciones</a></h2>
 
-<p>The <a href="http://www.w3.org/TR/REC-html40/struct/text.html.es#edef-del"
-name="DEL"><code>DEL</code></a> and <a
-href="http://www.w3.org/TR/REC-html40/struct/text.html.es#edef-ins"><code>INS</code></a>
-elements are available in the information types submenu of the Style menu to
-mark text <del>which ought</del>to be deleted or which has <ins>already</ins>
-been inserted.</p>
+<p>Los elementos <a
+href="http://www.w3.org/TR/REC-html40/struct/text.html#edef-del"
+name="DEL"><code>del</code></a> e <a
+href="http://www.w3.org/TR/REC-html40/struct/text.html#edef-ins"><code>INS</code></a>se
+encuentran en el submenú <strong>Estilo &gt; Tipo de información</strong>
+para marcar el texto <del>que será eliminado</del> o que<ins>ya ha sido
+añadido.</ins></p>
 
-<p><a href="../StyleSheets.html.es">Style sheets</a> can be used to change the
-presentation of insertions and deletions.</p>
+<p>Puedes utilizar <a href="../StyleSheets.html.es">hojas de estilo</a> para
+modificar el formato de añadidos y eliminaciones.</p>
 </div>
 
 <div>
-<h2><a name="Emphasis">Emphasis elements</a></h2>
+<h2><a name="Emphasis">Elementos enfatizadores</a></h2>
 
-<p>HTML has elements to define two levels of emphasis:</p>
+<p>En HTML existen elementos para indicar dos niveles de énfasis:</p>
 <ol>
-  <li><em>Ordinary emphasis</em>, using the <a
-    href="http://www.w3.org/TR/REC-html40/struct/text.html.es#edef-EM">EM</a>
-    element and</li>
-  <li><strong>Strong emphasis</strong>, using the <code><a
-    href="http://www.w3.org/TR/REC-html40/struct/text.html.es#edef-STRONG">STRONG</a></code>
-    element.</li>
+  <li><em>Énfasis normal</em>, mediante el elemento <a
+    href="http://www.w3.org/TR/REC-html40/struct/text.html#edef-EM"><code>em</code></a>
+    y</li>
+  <li><strong>Énfasis fuerte</strong>, mediante el elemento <code><a
+    href="http://www.w3.org/TR/REC-html40/struct/text.html#edef-STRONG">strong</a></code></li>
 </ol>
 
-<p>Both types of emphasis can be applied from the toolbar using the <img
-src="../../images/Em.gif" alt="Emphasis" /> and <img
-src="../../images/Strong.gif" alt="Strong" /> buttons, or from the
-Information type submenu of the Style menu. There are also standard keyboard
-shortcuts - <kbd>Shift-control-I</kbd> for emphasis (because the default
-rendering is often italicised text) and <kbd>Shift-control-B</kbd> for strong
-emphasis (becuase the default rendering is often bold text). If there is a
-current selection, the emphaisis is applied to that, otherwise the
-appropriate element is created, as a child of the current element.</p>
+<p>Puedes aplicar ambos tipos de énfasis mediante los botones <img
+src="../../images/Em.gif" alt="Emphasis" /> y <img
+src="../../images/Strong.gif" alt="Strong" /> de la barra de botones, o
+mediante el submenú <strong>Estilo &gt; Tipo de información</strong>. Los
+atajos de teclado correspondientes son <kbd>Shift-control-I</kbd> para el
+énfasis normal (el énfasis se suele mostrar a menudo mediante itálicas) y
+<kbd>Shift-control-B</kbd> para el énfasis fuerte (el énfasis fuerte se suele
+mostrar mediante negrita). Si hay texto seleccionado, el énfasis se aplica al
+texto seleccionado, y si no, se crea el elemento como hijo del elemento
+actual.</p>
 
-<p>The emphasis elements are toggled in Amaya - to remove an emphasis select
-the element and reapply the appropriate emphasis. For example place the
-cursor somewhere in a <code>STRONG</code> element, use the <kbd>F2</kbd>
-(windows) or <kbd>Escape</kbd> (Unix) key to select the element, and then use
-the keyboard shortcut, menu item, or the <img src="../../images/Strong.gif"
-alt="Strong" /> button - the <code>STRONG</code> element will be removed.</p>
+<p>Los elementos de énfasis conmutan, es decir, puedes eliminar el énfasis de
+un elemento seleccionando el elemento y aplicando el énfasis correspondiente.
+Por ejemplo, sitúa el cursor en el interior de un elemento
+<code>strong</code>, pulsa <kbd>F2</kbd> (Windows) o <kbd>Escape</kbd> (Unix)
+para seleccionar el elemento, y utiliza el atajo de teclado, la opción del
+menú o el botón <img src="../../images/Strong.gif" alt="Strong" /> para
+eliminar el elemento <code>strong</code>.</p>
 
-<p><a href="../StyleSheets.html.es">Style sheets</a> can be used to change the
-presentation of both types of emphasis.</p>
+<p>Puedes utilizar <a href="../StyleSheets.html.es">hojas de estilo</a> para
+modificar el formato de ambos tipos de énfasis.</p>
 </div>
 </div>
 </body>

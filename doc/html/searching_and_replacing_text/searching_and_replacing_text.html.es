@@ -1,110 +1,106 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-	
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-  <meta name="GENERATOR" content="amaya 5.2" />
-  <title>Searching and Replacing Text</title>
-  <style type="text/css"></style>
+  <meta name="GENERATOR" content="amaya 6.4+, see http://www.w3.org/Amaya/" />
+  <title>Buscar y reemplazar texto</title>
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
-<body xml:lang="en" lang="en">
+<body xml:lang="es" lang="es">
 
 <table border="0" summary="toc">
   <tbody>
     <tr>
       <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
         src="../../images/amaya.gif" /></td>
-      <td><p> 
-		<a href="../Searching.html.es" accesskey="t"><img alt="top" src="../../images/up.gif" /></a> 
-		</p>
+      <td><p><a href="../Searching.html.es" accesskey="t"><img alt="superior"
+        src="../../images/up.gif" /></a></p>
       </td>
     </tr>
   </tbody>
 </table>
 
 <div id="page_body">
-<h1>Searching and Replacing Text</h1>
+<h1>Buscar y reemplazar texto</h1>
 
-<p>You can search and replace text with the <strong>Search</strong> dialog by
-choosing <strong>Find</strong> from the <strong>Edit</strong> menu or
-clicking the <strong>Search</strong> button <img src="../../images/find.gif"
-alt="Search button" />. You can also use the keyboard shortcut:
-<code>Control-Shift-%</code> in Unix, or <code>Control-F </code>in
-Windows.</p>
+<p>Puedes buscar y reemplazar texto con la caja de diálogo
+<strong>Buscar</strong> que se abre con el comando de menú <strong>Editar
+&gt; Buscar</strong> o al hacer clic en el botón <strong>Buscar</strong> <img
+src="../../images/find.gif" alt="Botón Buscar" />. También puedes utilizar el
+atajo de teclado <code>Control-Shift-%</code> en Unix, or
+<code>Control+F</code> en Windows.</p>
 
-<p>This dialog enables you to search or replace text using different
-criteria:</p>
+<p>Esta caja de diálogo te permite buscar o reemplazar texto utilizando
+diferentes criterios:</p>
 <ul type="disc">
-  <li>You must enter the character string for which you want to search in the
-    <strong>Search for</strong> field.
+  <li>Escribe la cadena de caracteres que quieres buscar en el campo
+    <strong>Buscar</strong>. 
     <p></p>
   </li>
-  <li>If the <strong>UPPER=lower</strong> button is selected, a
-    case-insensitive search is performed; otherwise, the string is searched
-    for as it appears within the <strong>Search for</strong> field.
+  <li>Si activas la casilla de verificación
+    <strong>MAYÚSCULAS=minúsculas</strong>, en la búsqueda no se distinguirá
+    entre mayúsculas y minúsculas; si no, se buscará la cadena tal y como
+    aparece en el campo <strong>Buscar</strong>. 
     <p></p>
   </li>
-  <li>Strings can also be replaced using the same operation. You enter the
-    replacement text in the <strong>Replace by</strong> field and select a
-    replacement mode from the <strong>Replace</strong> box. The replacement
-    modes are:
+  <li>Puedes sustituir cadenas al mismo tiempo. Escribe el texto que
+    reemplazará en el campo <strong>Sustituir por</strong> y elige la forma
+    de sustitución en el grupo de opciones <strong>Sustituir</strong>. Las
+    formas de sustitución son: 
     <ul>
-      <li><strong>No replace</strong>: No replacement occurs even if the
-        Replace field contains a character string. It is just a simple
-      search.</li>
-      <li><strong>Replace on request</strong>: When the string is found,
-        Amaya selects it. The user can then click one of the following
-        buttons:
+      <li><strong>No sustituir</strong>: No se realiza ninguna sustitutción
+        aunque el campo <strong>Sustituir</strong> contenga una cadena de
+        caracteres. Se realiza simplemente a búsqueda.</li>
+      <li><strong>Sustituir a solicitud</strong>: Cuando se encuentra la
+        cadena, Amaya la selecciona. Puedes entonces hacer clic en uno de los
+        siguientes botones: 
         <ul>
-          <li><strong>Confirm</strong> to replace and carry out the search
-            again.</li>
-          <li><strong>Do not replace</strong> to search for the next instance
-            without replacing the string that was found.</li>
+          <li><strong>Confirme</strong> para sustituir y repetir la
+          búsqueda.</li>
+          <li><strong>No sustituir</strong> para realizar una nueva búsqueda
+            sin sustituir la cadena encontrada.</li>
         </ul>
       </li>
-      <li><strong>Automatic replace</strong>: All instances of the
-        searched-for string are automatically replaced within the portion of
-        document defined in the <strong>Search where</strong> box.
+      <li><strong>Sustitución automática</strong>: Se realizan todas las
+        sustituciones automáticamente en la porción de documento definida por
+        el grupo de opciones <strong>Buscar dónde</strong> 
         <p></p>
       </li>
     </ul>
   </li>
-  <li>The <strong>Search where</strong> box enables you to specify the part
-    of document in which the search will occur:
+  <li>El grupod e opciones <strong>Buscar dónde</strong> te permite
+    especificar la parte del documento en la que se realizará la búsqueda: 
     <ul>
-      <li><strong>Before selection</strong>: The search starts at the
-        beginning of the selected part and moves backward to the beginning of
-        the document.</li>
-      <li><strong>Within selection</strong>: The search only occurs within
-        the selected part, from its beginning to its end.</li>
-      <li><strong>After selection</strong>: The search starts at the end of
-        the selected part and moves forward to the end of the document.</li>
-      <li><strong>In the whole document</strong>: The search is carried out
-        in the whole document from the beginning to the end regardless of
-        which part is selected.</li>
+      <li><strong>Antes selección</strong>: La búsqueda comienza al principio
+        de la parte seleccionada y busca hacia atrás hasta el principio del
+        documento.</li>
+      <li><strong>En selección</strong>: La búsqueda se realiza únicamente en
+        al parte seleccionada, desde el principio hasta el final.</li>
+      <li><strong>Tras selección</strong>: La búsqueda empieza al final de la
+        parte seleccionada y busca hacia adelante hasta el final del
+        documento.</li>
+      <li><strong>En todo el documento</strong>: La búsqueda se realiza en
+        todo el documento desde el principio hasta el final,
+        independientemente de la parte seleccionada.</li>
     </ul>
   </li>
 </ul>
 
-<p>To initiate the search operation, click the <strong>Confirm</strong>
-button at the bottom of the dialog. If Amaya finds the searched-for string,
-it is selected and the document is positioned so as to make this string
-visible. You can then search for the next instance of this string by clicking
-the <strong>Confirm</strong> button again. If the string is not found, Amaya
-displays a <strong>Not found</strong> message in the bottom right corner of
-the dialog.</p>
+<p>Para empezar la búsqueda, haz clic en el botón <strong>Confirme</strong>.
+Si Amaya encuentra la cabena buscada, se selecciona y el documento se
+desplaza de manera que la cadena sea visible. Puedes buscar la siguiente
+aparición de la cadena haciendo nuevamente clic en el botón
+<strong>Confirme</strong>. Si la cadena no se encuentra, Amaya muestra un
+mensaje <strong>No encontrado</strong>.</p>
 
-<p>Search or replace can be abandoned at any time by clicking the
-<strong>Done</strong> button.</p>
+<p>Puedes dejar de buscar y sustituir en cualquier momento haciendo clic en
+el botón <strong>Hecho</strong>.</p>
 
-<p>Replacement operations can be undone by choosing <strong>Undo</strong>
-from the <strong>Edit</strong> menu, or by using the keyboard shortcut
+<p>Puedes deshacer las sustituciones eligiendo el comando de menú
+<strong>Editar &gt; Deshacer</strong>, o mediante el atajo de teclado
 <code>Control-Z</code>.</p>
 </div>
-
 </body>
 </html>

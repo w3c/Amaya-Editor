@@ -3,14 +3,13 @@
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta name="GENERATOR" content="amaya 6.4, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 6.4+, see http://www.w3.org/Amaya/" />
   <title>Abrir documentos</title>
-  <style type="text/css">
- </style>
+  
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
-<body xml:lang="en" lang="en">
+<body xml:lang="es" lang="es">
 
 <table border="0" summary="toc">
   <tbody>
@@ -18,10 +17,11 @@
       <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
         src="../../images/amaya.gif" /></td>
       <td><p><a href="working_with_the_amaya_browser_and_editor.html.es"
-        accesskey="p"><img alt="previous" src="../../images/left.gif" /></a>
-        <a href="../Browsing.html.es" accesskey="t"><img alt="top"
+        accesskey="p"><img alt="anterior" src="../../images/left.gif" /></a>
+        <a href="../Browsing.html.es" accesskey="t"><img alt="superior"
         src="../../images/up.gif" /></a> <a href="activating_a_link.html.es"
-        accesskey="n"><img alt="next" src="../../images/right.gif" /></a></p>
+        accesskey="n"><img alt="siguiente" src="../../images/right.gif"
+        /></a></p>
       </td>
     </tr>
   </tbody>
@@ -43,15 +43,13 @@ formas.</p>
 
 <p>Para abrir un documento en la misma ventana:</p>
 <ol>
-  <li>Elige <strong>Abrir Documento</strong> del menu
-    <strong>Archivo</strong>. 
-    <p class="Note"><strong>Nota:</strong> <br />
-    También puedes utilizar un atajo de teclado para abrir un documento. En
-    Windows, teclea <kbd>Control-o</kbd>. En Unix, teclea <kbd>Control-x
-    Control-f</kbd>.</p>
+  <li>Elige la opción de menú <strong>Archivo &gt; Abrir Documento</strong>. 
+    <p class="Note"><strong>Nota:</strong> También puedes utilizar un atajo
+    de teclado para abrir un documento. En Windows, teclea
+    <kbd>Control-o</kbd>. En Unix, teclea <kbd>Control-x Control-f</kbd>.</p>
   </li>
   <li>En el diálogo <strong>Abrir Documento</strong>, escribe el camino
-    completo o el URI del archivo que quieres abrir, o haz clic  en
+    completo o el URI del archivo que quieres abrir, o haz clic en
     <strong>Buscar</strong> para abrir una ventana de selección de
   archivo.</li>
   <li>Cuando el documento está correctamente especificado, haz clic en
@@ -60,16 +58,16 @@ formas.</p>
 
 <p>Para abrir un documento en una ventana nueva:</p>
 <ol>
-  <li>Elige <strong>Abrir en ventana nueva</strong> del menú
-    <strong>Archivo</strong>. 
-    <p class="Note"><b>Nota:</b> <br />
-    También puedes utilizar un atajo de teclado para abrir un documento. En
-    Windows, teclea <kbd>Control-Shift-o</kbd>. En Unix, teclea
-    <kbd>Control-x Control-f</kbd>.<br />
+  <li>Elige la opción de menú <strong>Archivo &gt; Abrir en ventana
+    nueva</strong>. 
+    <p class="Note"><strong>Nota:</strong> También puedes utilizar un atajo
+    de teclado para abrir un documento. En Windows, teclea
+    <kbd>Control-Shift-o</kbd>. En Unix, teclea <kbd>Control-x
+    Control-f</kbd>.<br />
     </p>
   </li>
   <li>En el diálogo de lección de archivo, escribe el camino completo o el
-    URI del archivo que quieres abrir, o haz clic  en <strong>Buscar</strong>
+    URI del archivo que quieres abrir, o haz clic en <strong>Buscar</strong>
     para abrir una ventana de selección de archivo.</li>
   <li>Cuando el documento está correctamente especificado, haz clic en
     Confirme.</li>
@@ -78,7 +76,7 @@ formas.</p>
 <p>Para abrir un archivo desde el campo <strong>Abrir</strong>:</p>
 <ol>
   <li>Haz clic en el campo <strong>Abrir</strong> y selecciona con el ratón
-    en nombre completo o URI del documento actual. </li>
+    en nombre completo o URI del documento actual.</li>
   <li>Pulsa la tecla <strong>Suprimir</strong>, y a continuación escribe el
     camino completo o el URI del archivo que quieres abrir y pulsa
     <strong>Intro</strong>.</li>

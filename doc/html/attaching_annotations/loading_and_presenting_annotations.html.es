@@ -1,97 +1,94 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-	
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-  <meta name="GENERATOR" content="amaya 5.2" />
-  <title>Loading and Presenting Annotations</title>
-  <style type="text/css">  </style>
+  <meta name="GENERATOR" content="amaya 6.4+, see http://www.w3.org/Amaya/" />
+  <title>Cargar y mostrar anotaciones</title>
+  
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
-<body xml:lang="en" lang="en">
+<body xml:lang="es" lang="es">
 
 <table border="0" summary="toc">
   <tbody>
     <tr>
       <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
         src="../../images/amaya.gif" /></td>
-      <td><p><a href="deleting_an_annotation.html.es" accesskey="p">
-	       <img alt="previous" src="../../images/left.gif" /></a> <a
-        href="../Annotations.html.es" accesskey="t">
-		   <img alt="top" src="../../images/up.gif" /></a> 
-		<a href="navigating_annotations.html.es" accesskey="n">
-		   <img alt="next" src="../../images/right.gif" /></a></p>
+      <td><p><a href="deleting_an_annotation.html.es" accesskey="p"><img
+        alt="anterior" src="../../images/left.gif" /></a> <a
+        href="../Annotations.html.es" accesskey="t"><img alt="superior"
+        src="../../images/up.gif" /></a> <a
+        href="navigating_annotations.html.es" accesskey="n"><img
+        alt="siguiente" src="../../images/right.gif" /></a></p>
       </td>
     </tr>
   </tbody>
 </table>
 
 <div id="page_body">
-<h1>Loading and Presenting Annotations</h1>
+<h1>Cargar y mostrar anotaciones</h1>
 
-<p>The <strong>Load Annotations</strong> command tells Amaya to load the
-annotations that are associated with the URL of the current document. Amaya
-will query the annotation servers, using the settings from the
-<strong>Configuration for annotations</strong> dialog, and ask for any
-relevant annotation.</p>
+<p>El comando de menú <strong>Anotaciones &gt; Cargar</strong> hace que Amaya
+cargue las anotaciones asociadas al URL del documento actual. Amaya
+solicitará las anotaciones correspondientes a los servidores de anotaciones,
+utilizando la configuración definida en la caja de diálogo
+<strong>Configuración para anotaciones</strong>.</p>
 
-<p>Annotations can also be loaded automatically whenever a new page is viewed by selecting the
-<strong>Autoload Annotations</strong> check box in the <strong>Configuration
-for annotations</strong> dialog. </p>
+<p>Las anotaciones pueden cargarse automáticamente cada vez que se abre una
+página marcando la casilla de verificación <strong>Autocargar
+anotaciones</strong>de la caja de diálogo <strong>Configuración para
+anotaciones</strong>.</p>
 
-<p>In this version of Amaya, querying an annotation server will return all
-the annotations that are associated with a document. In a future version, it
-may be possible to use a customized query menu to refine the query string
-that is sent to the servers.</p>
+<p>En esta versión de Amaya, al acceder a un servidor de anotaciones se
+obtienen todas las anotaciones asociadas al documento. En el futuro, podrá
+ser posible enviar una solicitud personalizada a los servidores.</p>
 
-<h1>The Annotation Local Filter Menu</h1>
+<h1>Menú Filtro local de anotaciones</h1>
 
-<p>Choose <strong>Local filter</strong> from the <strong>Annotations</strong>
-menu to show or hide the annotation icons in the document window. You can
-show or hide annotations by three types of metadata: the name of the
-annotation's author, the type of annotation, and the annotation server
-name.</p>
+<p>En el menú <strong> Anotaciones &gt; Filtro local</strong> puedes elegir
+si los iconos de anotación tienen que mostrarse o no en la ventana del
+documento. Puedes filtrar qué anotaciones se muestran por tres criterios de
+metadatos: nombre del autor de la anotación, tipo de anotación y nombre del
+servidor de anotaciones.</p>
 
-<p class="ProcedureCaption">To apply any of these filters:</p>
+<p class="ProcedureCaption">Para aplicar cualquiera de estos filtros:</p>
 <ol>
-  <li>Click the text box to select an annotation type.
+  <li>Haz clic en el botón radio correspondiente para seleccionar el tipo de
+    anotación.
     <p></p>
   </li>
-  <li>Click the corresponding action button. The <strong>Show all</strong>
-    and <strong>Hide all</strong> buttons apply to all the annotations.
+  <li>Haz clic en el botón correspondiente. Los botones <strong>Mostrar
+    todos</strong> y <strong>Ocultar todos</strong> se aplican a todas las
+    anotaciones. 
     <p></p>
   </li>
-  <li>A small prefix character indicates the status of a given entry. This
-    character can be a space (' '), a star ('*'), or a signet ('-') to
-    indicate that the annotations belonging to this given entry are all
-    visible, all hidden, or partially visible, respectively.</li>
+  <li>El estado de una entrada determinada se indica por un carácter inicial.
+    El carácter puede ser un espacio (' '), una estrella ('*'), o un guión
+    ('-') que indican que la entrada está visible, oculta o parcialmente
+    visible, respectivamente.</li>
 </ol>
 
-<p class="Note"><strong>Note:</strong><br />
-The <strong>Annotation Local Filter Menu</strong> dialog only shows you the
-annotations it knows about at the moment it is opened. If new annotations are
-added, you will need to reload the menu again.</p>
+<p class="Note"><strong>Nota:</strong>
+La caja de diálogo <strong>Filtro local de anotaciones</strong> muestra
+únicamente las anotaciones conocidas en el momento de abrir la caja. Si se
+añaden nuevas anotaciones, necesitarás abrir de nuevo la caja de diálogo.</p>
 
-<p>The annotation author shows the author's name added to the name of the
-annotation server where the annotation is stored.</p>
+<p>El campo autor de la anotación muestra el nombre del autor y el nombre del
+servidor de anotaciones en la que se encuentra la anotación.</p>
 
-<h2>See Also:</h2>
+<h2>Ver también:</h2>
 <ul>
-  <li><span class="Link"><a href="creating_an_annotation.html.es">Creating an
-    Annotation</a></span></li>
-  <li><span class="Link"><a href="deleting_an_annotation.html.es">Deleting an
-    Annotation</a></span></li>
-  <li><span class="Link"><a href="moving_annotations.html.es">Moving
-    Annotations</a></span></li>
-  <li><span class="Link"><a href="navigating_annotations.html.es">Navigating
-    Annotations</a></span></li>
+  <li><span class="Link"><a href="creating_an_annotation.html.es">Crear una
+    anotación</a></span></li>
+  <li><span class="Link"><a href="deleting_an_annotation.html.es">Borrar una
+    anotación</a></span></li>
+  <li><span class="Link"><a href="moving_annotations.html.es">Mover anotaciones</a></span></li>
+  <li><span class="Link"><a href="navigating_annotations.html.es">Navegar por las anotaciones</a></span></li>
 </ul>
 
-<p> </p>
+<p>&nbsp;</p>
 </div>
-
 </body>
 </html>

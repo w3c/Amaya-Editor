@@ -1,77 +1,78 @@
 <html>
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
-  <title>The Math Palette and the Types/Math Menu</title>
-  <style type="text/css">
-  </style>
-  <meta name="GENERATOR" content="amaya 5.2">
+  <title>La paleta Matemáticas y el menú Xml &gt; Matemáticas</title>
+  <meta name="GENERATOR" content="amaya 6.4+, see http://www.w3.org/Amaya/">
   <link href="../style.css" rel="stylesheet" type="text/css">
 </head>
 
-<body xml:lang="en" lang="en">
+<body lang="es">
 
 <table border="0" summary="toc">
   <tbody>
     <tr>
       <td><img alt="W3C" src="../../images/w3c_home"> <img alt="Amaya"
         src="../../images/amaya.gif"></td>
-      <td><p><a href="about_entering_math_constructs_using_the_keyboard.html.es"
-        accesskey="p"><img alt="previous" src="../../images/left.gif"></a> <a
-        href="../Math.html.es" accesskey="t"><img alt="top"
+      <td><p><a
+        href="about_entering_math_constructs_using_the_keyboard.html.es"
+        accesskey="p"><img alt="anterior" src="../../images/left.gif"></a> <a
+        href="../Math.html.es" accesskey="t"><img alt="superior"
         src="../../images/up.gif"></a> <a
         href="about_entering_math_characters.html.es" accesskey="n"><img
-        alt="next" src="../../images/right.gif"></a></p>
+        alt="siguiente" src="../../images/right.gif"></a></p>
       </td>
     </tr>
   </tbody>
 </table>
 
 <div id="page_body">
-<h1>The Math Palette and the Types &gt; Math Menu</h1>
+<h1>La paleta Matemáticas y el menú <strong>Xml &gt; Matemáticas</strong></h1>
 
-<p>To create a mathematical expression in a document, move the mouse cursor
-to the position where you want to insert an expression, and then click the
-<strong>Math</strong> button, or choose <strong>Math</strong> from the
-<strong>Types</strong> menu.</p>
+<p>Para crear una expresión matemática en un documento, sitía el cursor en la
+posición en la que quieres insertar una expresión y haz clic en el botón
+<strong>Matemáticas</strong>, o elige el menú <strong>Xml &gt;
+Matemáticas</strong>.</p>
 
-<h2>Accessing Commands</h2>
+<h2>Acceder a los comandos</h2>
 
-<p>Mathematical expressions can be inserted into a document using either the
-<strong>Math</strong> submenu of the <strong>Types</strong> menu, or by
-choosing an expression from the <strong>Math</strong> palette.</p>
+<p>Las expresiones matemáticas pueden insertarse en un documento mediante el
+menú <strong>Xml &gt; Matemámticas</strong> o eligiendo una expresión de la
+paleta <strong>Matemáticas</strong>.</p>
 
-<p>Click the <strong>Math</strong> button <img alt="Math Button"
-src="../../images/Math.gif"> on the button bar to display the
-<strong>Math</strong> palette. Close the palette by clicking the
-<strong>Done</strong> button.</p>
+<p>Haz clic en el botón <strong>Matemáticas</strong> <img
+alt="Botón Matemáticas" src="../../images/Math.gif"> de la barra de botones
+para abrir la paleta <strong>Matemáticas</strong>. Cierra la paleta haciendo
+clic en el botón <strong>Hecho</strong>.</p>
 
-<p>You can also display the Math menu by clicking the <strong>Math</strong>
-item on the <strong>Types</strong> menu.</p>
+<p>También puedes mostrar el menú <strong>Matemáticas</strong> haciendo clic
+en el menú <strong>Xml &gt; Matemáticas</strong>.</p>
 
-<h2>Math Menu and Palette Commands</h2>
+<h2>Menú Matemáticas y comandos de la paleta</h2>
 
-<p>On the <strong>Math</strong> palette or menu, the first item, <strong>New
-Formula</strong>, allows you to create a new formula when the cursor is in a
-HTML or SVG element, but not within a MathML element.</p>
+<p>En la paleta o en el menú <strong>Matemáticas</strong>, el primer item,
+<strong>Fórmula nueva</strong>, te permite crear una nueva fórmula cuando el
+cursor se encuentra en un elemento HTML o SVG, pero no en un elemento
+MathML.</p>
 
-<p>The <strong>Math</strong> menu also contains elements which are not
-available from the palette. These items include: Plain text
-(<code>mtext</code>), Identifier (<code>mi</code>), Number (<code>mn</code>),
-Operator (<code>mo</code>). These commands can also change the type of a
-single element or a sequence of elements.</p>
+<p>El menú <strong>Matemáticas</strong> contiene también elementos no
+disponibles en la paleta. Estos elementos son: Texto simple
+(<code>mtext</code>), Identificador (<code>mi</code>), Número
+(<code>mn</code>), Operador (<code>mo</code>). Estos comandos también pueden
+cambiar el tipo de un elemento o de una secuencia de elementos.</p>
 
-<p>The Character (<code>&amp;xxx;</code>) item enables you to enter a
-character that is not available on the keyboard. It displays a dialog where
-you have to enter the character name (for instance alpha for the Greek
-character a).</p>
+<p>La opción Carácter (<code>&amp;xxx;</code>) te permite escribir caracteres
+no disponibles en el teclado. Muestra una caja de diálogo en la que debes
+escribir el nombre del carácter (por ejemplo, alpha para mostrar el carácter
+griego a).</p>
 
-<p>The next items of the <strong>Math</strong> menu or palette enable you to
-create new constructs within a formula. If the insertion point is not in a
-formula, Amaya first creates a Math element to accept the new construct. The
-available constructs are:</p>
+<p>Las siguientes opciones del menú o de la paleta
+<strong>Matemáticas</strong> te permiten crear nuevas expesiones dentro de
+una fórmula. Si el punto de inserción no se encuentra en una fórmula, Amaya
+crea primero el elemento Math que acepte la expresión. Las expresiones
+disponibles son:</p>
 <ul>
-  <li>Root with index, <code>mroot</code> in MathML: 
-    <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <li>Raíz n-ésima, <code>mroot</code> en MathML: <math
+    xmlns="http://www.w3.org/1998/Math/MathML">
       <mroot>
         <mrow>
           <mi>x</mi>
@@ -82,8 +83,8 @@ available constructs are:</p>
       </mroot>
     </math>
   </li>
-  <li>Square root, <code>msqrt</code>: 
-    <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <li>Raíz cuadrada, <code>msqrt</code>: <math
+    xmlns="http://www.w3.org/1998/Math/MathML">
       <msqrt>
         <mrow>
           <mi>x</mi>
@@ -93,15 +94,15 @@ available constructs are:</p>
       </msqrt>
     </math>
   </li>
-  <li>Enclose, <code>menclose</code>: 
-    <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <li>Enclose, <code>menclose</code>: <math
+    xmlns="http://www.w3.org/1998/Math/MathML">
       <menclose>
         <mn>1234</mn>
       </menclose>
     </math>
   </li>
-  <li>Fraction, <code>mfrac</code>: 
-    <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <li>Fración, <code>mfrac</code>: <math
+    xmlns="http://www.w3.org/1998/Math/MathML">
       <mfrac>
         <mn>1</mn>
         <mrow>
@@ -112,8 +113,8 @@ available constructs are:</p>
       </mfrac>
     </math>
   </li>
-  <li>Expression with subscript and superscript, <code>msubsup</code>: 
-    <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <li>Expresion con subíndice y superíndice, <code>msubsup</code>: <math
+    xmlns="http://www.w3.org/1998/Math/MathML">
       <msubsup>
         <mi>x</mi>
         <mrow>
@@ -124,8 +125,7 @@ available constructs are:</p>
         <mi>n</mi>
       </msubsup>
     </math>
-     or 
-    <math xmlns="http://www.w3.org/1998/Math/MathML">
+     or <math xmlns="http://www.w3.org/1998/Math/MathML">
       <mrow>
         <msubsup>
           <mo>&Integral;</mo>
@@ -136,24 +136,24 @@ available constructs are:</p>
       </mrow>
     </math>
   </li>
-  <li>Expression with a subscript, <code>msub</code>: 
-    <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <li>Expresión con subíndice, <code>msub</code>: <math
+    xmlns="http://www.w3.org/1998/Math/MathML">
       <msub>
         <mi>x</mi>
         <mi>i</mi>
       </msub>
     </math>
   </li>
-  <li>Expression with a superscript, <code>msup</code>: 
-    <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <li>Expresión con superíndice, <code>msup</code>: <math
+    xmlns="http://www.w3.org/1998/Math/MathML">
       <msup>
         <mi>x</mi>
         <mi>n</mi>
       </msup>
     </math>
   </li>
-  <li>Expression with under- and overscript, <code>munderover</code>: 
-    <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <li>Expresión con expresión encima o abajo, <code>munderover</code>: <math
+    xmlns="http://www.w3.org/1998/Math/MathML">
       <munderover>
         <mo>&Sum;</mo>
         <mrow>
@@ -165,16 +165,16 @@ available constructs are:</p>
       </munderover>
     </math>
   </li>
-  <li>Expression with underscript, <code>munder</code>: 
-    <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <li>Expresión con expresión abajo, <code>munder</code>: <math
+    xmlns="http://www.w3.org/1998/Math/MathML">
       <munder>
         <mi>x</mi>
         <mo>&OverBar;</mo>
       </munder>
     </math>
   </li>
-  <li>Expression with overscript, <code>mover</code>: 
-    <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <li>Expresión con expresión encima, <code>mover</code>: <math
+    xmlns="http://www.w3.org/1998/Math/MathML">
       <mrow>
         <mi>x</mi>
         <mover>
@@ -185,8 +185,8 @@ available constructs are:</p>
       </mrow>
     </math>
   </li>
-  <li>Expression within parentheses, <code>mrow</code>: 
-    <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <li>Expresión entre paréntesis, <code>mrow</code>: <math
+    xmlns="http://www.w3.org/1998/Math/MathML">
       <mrow>
         <mo fence="true">(</mo>
         <mrow>
@@ -198,9 +198,8 @@ available constructs are:</p>
       </mrow>
     </math>
   </li>
-  <li>Expression with prescripts and tensor
-    indices,<code>mmultiscripts</code>: 
-    <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <li>Expresión con índices de tensor,<code>mmultiscripts</code>: <math
+    xmlns="http://www.w3.org/1998/Math/MathML">
       <mmultiscripts>
         <mi>X</mi>
         <mi>i</mi>
@@ -211,8 +210,8 @@ available constructs are:</p>
       </mmultiscripts>
     </math>
   </li>
-  <li>Matrix or table, <code>mtable</code>: 
-    <math xmlns="http://www.w3.org/1998/Math/MathML">
+  <li>Matriz o tabla, <code>mtable</code>: <math
+    xmlns="http://www.w3.org/1998/Math/MathML">
       <mtable>
         <mtr>
           <mtd>
@@ -235,17 +234,20 @@ available constructs are:</p>
   </li>
 </ul>
 
-<p>The last item of the <strong>Math</strong> palette
- ( <math xmlns="http://www.w3.org/1998/Math/MathML">  <mi>&alpha;&beta;&gamma;</mi></math> )
- displays another palette from which you can insert mathematical symbols and greek characters.</p>
+<p>El último elemento de la paleta <strong>Matemáticas</strong> ( <math
+xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>&alpha;&beta;&gamma;</mi>
+</math>
+ ) abre otra paleta de la que puedes extraer símbolos matemáticos y
+caracteres griegos.</p>
 
-<h2>See Also:</h2>
+<h2>Ver también:</h2>
 <ul>
-  <li><a href="editing_math_expressions.html.es">Editing Mathematics</a></li>
-  <li><a href="about_entering_math_characters.html.es">Creating a Mathematical
-    Expression</a></li>
+  <li><a href="editing_math_expressions.html.es">Editar expresiones
+    matemáticas</a></li>
+  <li><a href="about_entering_math_characters.html.es">Escribir caracteres
+    matemáticos</a></li>
 </ul>
 </div>
-
 </body>
 </html>

@@ -4,11 +4,11 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>Activar un Enlace</title>
-  <meta name="GENERATOR" content="amaya 6.4, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 6.4+, see http://www.w3.org/Amaya/" />
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
-<body xml:lang="en" lang="en">
+<body xml:lang="es" lang="es">
 
 <table border="0" summary="toc">
   <tbody>
@@ -16,11 +16,11 @@
       <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
         src="../../images/amaya.gif" /></td>
       <td><p><a href="opening_documents.html.es" accesskey="p"><img
-        alt="previous" src="../../images/left.gif" /></a> <a
-        href="../Browsing.html.es" accesskey="t"><img alt="top"
+        alt="anterior" src="../../images/left.gif" /></a> <a
+        href="../Browsing.html.es" accesskey="t"><img alt="superior"
         src="../../images/up.gif" /></a> <a
-        href="about_target_anchors.html.es" accesskey="n"><img alt="next"
-        src="../../images/right.gif" /></a></p>
+        href="about_target_anchors.html.es" accesskey="n"><img
+        alt="siguiente" src="../../images/right.gif" /></a></p>
       </td>
     </tr>
   </tbody>
@@ -43,20 +43,21 @@ distinta según que hagas clic, doble clic o clic derecho en un enlace.</p>
     misma ventana y con el mismo modo (editor o navegador) que el documento
     original. Si habías modificado el documento original y todavía no lo
     habías guardado, se mostará un aviso indicándote que "se perderán todos
-    los cambios".
+    los cambios". 
     <p></p>
   </li>
   <li>Hax clic derecho en un enlace para activar el enlace y abrir el
     documento destino en una nueva ventana. El documento original permanece
-    abierto en la primera ventana.
+    abierto en la primera ventana. 
     <p></p>
-    <p class="Note"><strong>Nota:</strong> <br />
+    <p class="Note"><strong>Nota:</strong> 
     Puedes modificar este comportamiento en la ventana de diálogo
-    <strong>Navegación</strong> del menú Especial &gt; Preferencias &gt;
-    Navegación. Desactivando la casilla de verificación <strong>Doble clic
-    activa enlaces</strong>, puedes navegar documentos con un clic como se
-    suele hacer en los navegadores Web. Sin embargo, ya no podrás editar un
-    enlace haciendo clic en él.</p>
+    <strong>Navegación</strong> que se abre con la opción de menú
+    <strong>Especial &gt; Preferencias &gt; Navegación</strong>. Desactivando
+    la casilla de verificación <strong>Doble clic activa enlaces</strong>,
+    puedes navegar documentos con un clic como se suele hacer en los
+    navegadores Web. Sin embargo, ya no podrás editar un enlace haciendo clic
+    en él.</p>
   </li>
 </ul>
 </div>

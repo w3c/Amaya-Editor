@@ -3,14 +3,13 @@
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <title>About Keyboard Shortcuts</title>
-  <style type="text/css">
-  </style>
-  <meta name="GENERATOR" content="amaya 6.2, see http://www.w3.org/Amaya/" />
+  <title>Atajos de teclado</title>
+  
+  <meta name="GENERATOR" content="amaya 6.4+, see http://www.w3.org/Amaya/" />
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
-<body xml:lang="en" lang="en">
+<body xml:lang="es" lang="es">
 
 <table border="0" summary="toc">
   <tbody>
@@ -18,8 +17,8 @@
       <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
         src="../../images/amaya.gif" /></td>
       <td><p><a href="menu_preferences.html.es" accesskey="p"><img
-        alt="previous" src="../../images/left.gif" /></a> <a
-        href="../Configure.html.es" accesskey="t"><img alt="top"
+        alt="anterior" src="../../images/left.gif" /></a> <a
+        href="../Configure.html.es" accesskey="t"><img alt="superior"
         src="../../images/up.gif" /></a></p>
       </td>
     </tr>
@@ -27,14 +26,14 @@
 </table>
 
 <div id="page_body">
-<h1>About Keyboard Shortcuts</h1>
+<h1>Atajos de teclado</h1>
 
-<p>It is useful to invoke menu commands directly from the keyboard. The Thot
-toolkit enables you accomplish this using an application keyboard shortcuts
-file. This file defines a list of associations between an invoked command and
-a keyboard sequence.</p>
+<p>Resulta útil poder acceder a los comandos de menú directamente desde el
+teclado. El kit de herramientas Thot te permite hacerlo mediante atajos de
+teclado definidos en un archivo. Este archivo define la lista de asociaciones
+entre el comando y sus teclas asociadas.</p>
 
-<p>The syntax used to define an association is:</p>
+<p>La sintaxis utilizada para definir una asociación es:</p>
 
 <p><code>Directive = KeySeq ':' IdentCommand ;<br />
 &nbsp;KeysSeq = KeySet [ ',' KeySet ] ;<br />
@@ -44,7 +43,7 @@ a keyboard sequence.</p>
 &nbsp;KeyValue = 'a' / 'b' / ... ;<br />
 &nbsp;SpecialKey = 'Escape' / 'Delete' / 'Space' / 'BackSpace' /<br />
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-'Enter' / 'Up' / 'Down' / 'Left' / 'Right' /<br />
+'Intro' / 'Up' / 'Down' / 'Left' / 'Right' /<br />
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 'Home' / 'End' / 'F1' / ... / 'L1' / ... / 'R1' / ... ;<br />
 &nbsp;IdentCommand = 'TtcInsertChar(' Char ')' / NAME '()' ;<br />
@@ -54,60 +53,61 @@ Entity = DecEntity / HexaEntity ; <br />
 DecEntity = '&amp;' '#' NUMBER ';' ; <br />
 HexaEntity = '&amp;' '#' 'x' HEXADECIMAL ';' ;</code></p>
 
-<p>To view an example, see the standard files amaya.keyboard (for Unix
-platforms) and amaya.kb (for Windows platforms), which are located in the
-<span class="Link0">Amaya/config directory</span>.</p>
+<p>Para ver ejemplos, consulta los archivos estándar amaya.keyboard (en Unix)
+y amaya.kb (en Windows), que se encuentran en el directorio <span
+class="Link0">Amaya/config</span>.</p>
 
-<p>The list of available commands is:</p>
+<p>La lista de comandos disponibles es:</p>
 <ul>
-  <li>Moving commands: 
+  <li>Comandos de desplazamiento: 
     <ul>
-      <li>Move character by character: <code>TtcNextChar</code>,
+      <li>Moverse carácter a carácter: <code>TtcNextChar</code>,
         <code>TtcPreviousChar</code></li>
-      <li>Move word by word: <code>TtcNextWord</code>,
+      <li>Moverse palabra a palabra: <code>TtcNextWord</code>,
         <code>TtcPreviousWord</code></li>
-      <li>Move to then beginning/end of the current line:
+      <li>Moverse al principio/final de la línea actual:
         <code>TtcStartOfLine</code>, <code>TtcEndOfLine</code></li>
-      <li>Move line by
-        line:<code>TtcNextLine</code>,<code>TtcPreviousLine</code></li>
-      <li>Move element by element:
+      <li>Moverse línea a
+        línea:<code>TtcNextLine</code>,<code>TtcPreviousLine</code></li>
+      <li>Moverse elemento a elemento:
         <code>TtcNextElement</code>,<code>TtcPreviousElement</code>,
         <code>TtcChildElement</code>, <code>TtcParentElement</code></li>
-      <li>Scroll from page to page: <code>TtcPageDown</code>,
+      <li>Desplazar un página: <code>TtcPageDown</code>,
         <code>TtcPageUp</code>,<code>TtcPageTop</code>,<code>TtcPageEnd</code></li>
-      <li>Scroll one line up or one line down: <code>TtcLineUp</code>,
+      <li>Desplazar una línea: <code>TtcLineUp</code>,
         <code>TtcLineDown</code> 
         <p></p>
       </li>
     </ul>
   </li>
-  <li>Selection extension commands: 
+  <li>Comandos de selección: 
     <ul>
-      <li>Select character by character: <code>TtcNextSelChar</code>,
+      <li>Selección carácter a carácter: <code>TtcNextSelChar</code>,
         <code>TtcPreviousSelChar</code></li>
-      <li>Select word by word: <code>TtcNextSelWord</code>,
+      <li>Selección palabra a palabra: <code>TtcNextSelWord</code>,
         <code>TtcPreviousSelWord</code></li>
-      <li>Select to then beginning/end of the current line:
+      <li>Seleccionar hasta el principio/final de la línea actual:
         cStartOfLine<code>TtcSelStartOfLine</code>,
         <code>TtcSelEndOfLine</code></li>
-      <li>Select line by
-        line:<code>TtcNextSelLine</code>,<code>TtcPreviousSelLine</code></li>
+      <li>Seleccionar línea a
+        línea:<code>TtcNextSelLine</code>,<code>TtcPreviousSelLine</code></li>
     </ul>
     <p></p>
   </li>
-  <li>Follow a link or activate an HTML form element (menu, button, etc.):
-    <code>DoAction</code>. 
+  <li>Abrir un enlace a activar un elemento de formulario HTML (menú, botón,
+    etc.): <code>DoAction</code>. 
     <p></p>
   </li>
-  <li>Skip to the next (or the first if there is selection) link or HTML form
-    element in the document: <code>NextLinkOrFormElement</code>. 
+  <li>Moverse al siguiente (o al primero si hay algo seleccionado) enlace o
+    elemento de formulario HTML del documento:
+    <code>NextLinkOrFormElement</code>. 
     <p></p>
   </li>
-  <li>Skip to the previous link or HTML form element in the document:
+  <li>Moverse al anterior enlace o elemento de formulario HTML del documento:
     <code>PreviousLinkOrFormElement</code>. 
     <p></p>
   </li>
-  <li>In File menu: <code>New</code>, <code>NewTemplate</code>,
+  <li>Menú Archivo: <code>New</code>, <code>NewTemplate</code>,
     <code>NewCss</code>, <code>OpenDoc</code>,
     <code>OpenDocInNewWindow</code>, <code>Reload</code>,
     <code>GotoPreviousHTML</code>, <code>GotoNextHTML</code>,
@@ -117,19 +117,19 @@ platforms) and amaya.kb (for Windows platforms), which are located in the
     <code>CloseDocument</code>, <code>AmayaClose</code> 
     <p></p>
   </li>
-  <li>In Edit menu: <code>TtcUndo</code>, <code>TtcRedo</code>,
+  <li>Menú Editar: <code>TtcUndo</code>, <code>TtcRedo</code>,
     <code>TtcCutSelection</code>, <code>TtcCopySelection</code>,
     <code>TtcPaste</code>, <code>TtcDeleteSelection</code>,
     <code>SetBrowserEditor</code>, <code>TtcSearchText</code>,
     <code>SpellCheck</code>, <code>TransformType</code>. 
     <p></p>
   </li>
-  <li>In Structure menu: <code>CreateBase</code>, <code>CreateMeta</code>,
+  <li>Menú Estructura: <code>CreateBase</code>, <code>CreateMeta</code>,
     <code>CreateLinkInHead</code>, <code>CreateScript</code>,
     <code>CreateStyle</code>, <code>CreateComment.</code> 
     <p></p>
   </li>
-  <li>In Types menu: 
+  <li>Menú Xhtml: 
     <ul>
       <li>Main Menu: <code>ChangeTitle</code>, <code>CreateAddress</code>
         <code>CreateParagraph</code>, <code>CreateImage</code>,
@@ -172,38 +172,14 @@ platforms) and amaya.kb (for Windows platforms), which are located in the
         <code>CreateTBody</code>, <code>CreateTFoot</code>,
         <code>CreateRow</code>, <code>CreateDataCell</code>,
         <code>CreateHeadingCell</code>, <code>DeleteColumn</code></li>
-    </ul>
-    <p></p>
-  </li>
-  <li>In Links menu: <code>LinkToPreviousTarget</code>,
-    <code>CreateOrChangeLink</code>, <code>CreateTarget</code>,
-    <code>DeleteAnchor</code>. 
-    <p></p>
-  </li>
-  <li>In Views menu: <code>ShowButtons</code>, <code>ShowAddress</code>,
-    <code>ShowMapAreas</code>, <code>ShowTargets</code>, <code>ZoomIn</code>,
-    <code>ZoomOut</code>, <code>ShowStructure</code>,
-    <code>ShowAlternate</code>, <code>ShowLinks</code>, <code>ShowToC</code>,
-    <code>ShowSource</code> 
-    <p></p>
-  </li>
-  <li>In Style menu: 
-    <ul>
-      <li>Main Menu: <code>TtcChangeCharacters</code>,
-        <code>TtcChangeColors</code>, <code>TtcChangeFormat</code>,
-        <code>ChangeBackgroundImage</code>, <code>CreateClass</code>,
-        <code>ApplyClass</code>.</li>
-      <li>Style Sheets submenu: <code>LinkCSS</code>, <code>OpenCSS</code>,
-        <code>DisableCSS</code>, <code>EnableCSS</code>,
-        <code>RemoveCSS</code>.</li>
-      <li>Information Types submenu: <code>SetOnOffEmphasis</code>,
+      <li>Submenú Tipo de información: <code>SetOnOffEmphasis</code>,
         <code>SetOnOffStrong</code>, <code>SetOnOffCite</code>,
         <code>SetOnOffDefinition</code>, <code>SetOnOffCode</code>,
         <code>SetOnOffVariable</code>, <code>SetOnOffSample</code>,
         <code>SetOnOffKeyboard</code>, <code>SetOnOffAbbr</code>,
         <code>SetOnOffAcronym</code>, <code>SetOnOffINS</code>,
         <code>SetOnOffDEL</code>.</li>
-      <li>Character Element submenu: <code>SetOnOffItalic</code>,
+      <li>Submenú Elemento carácter: <code>SetOnOffItalic</code>,
         <code>SetOnOffBold</code>, <code>SetOnOffTeletype</code>,
         <code>SetOnOffBig</code>, <code>SetOnOffSmall</code>,
         <code>SetOnOffSub</code>, <code>SetOnOffSup</code>,
@@ -211,8 +187,32 @@ platforms) and amaya.kb (for Windows platforms), which are located in the
         <p></p>
       </li>
     </ul>
+    <p></p>
   </li>
-  <li>In Special menu: <code>MakeBook</code>, <code>MakeID</code>,
+  <li>Menú Enlaces: <code>LinkToPreviousTarget</code>,
+    <code>CreateOrChangeLink</code>, <code>CreateTarget</code>,
+    <code>DeleteAnchor</code>. 
+    <p></p>
+  </li>
+  <li>Menú Vistas: <code>ShowButtons</code>, <code>ShowAddress</code>,
+    <code>ShowMapAreas</code>, <code>ShowTargets</code>, <code>ZoomIn</code>,
+    <code>ZoomOut</code>, <code>ShowStructure</code>,
+    <code>ShowAlternate</code>, <code>ShowLinks</code>, <code>ShowToC</code>,
+    <code>ShowSource</code> 
+    <p></p>
+  </li>
+  <li>Menú Estilo: 
+    <ul>
+      <li>Menú principal: <code>TtcChangeCharacters</code>,
+        <code>TtcChangeColors</code>, <code>TtcChangeFormat</code>,
+        <code>ChangeBackgroundImage</code>, <code>CreateClass</code>,
+        <code>ApplyClass</code>.</li>
+      <li>Submenú Hojas de estilo: <code>LinkCSS</code>,
+        <code>OpenCSS</code>, <code>DisableCSS</code>,
+        <code>EnableCSS</code>, <code>RemoveCSS</code>.</li>
+    </ul>
+  </li>
+  <li>Menú Especial: <code>MakeBook</code>, <code>MakeID</code>,
     <code>ShowLogFile</code>, <code>ConfigGeneral</code>,
     <code>ConfigPublish</code>, <code>ConfigCache</code>,
     <code>ConfigProxy</code>, <code>ConfigColor</code>,
@@ -220,13 +220,13 @@ platforms) and amaya.kb (for Windows platforms), which are located in the
     <code>ConfigProfile</code>, <code>ConfigTemplates</code>. 
     <p></p>
   </li>
-  <li>In Annotations Menu:<code>AnnotateSelection</code>,
+  <li>Menú Anotaciones:<code>AnnotateSelection</code>,
     <code>AnnotateDocument</code>, <code>LoadAnnotations</code>,
     <code>PostAnnotation</code>, <code>DeleteAnnotation</code>,
     <code>FilterAnnot</code>, <code>ConfigAnnot</code>. 
     <p></p>
   </li>
-  <li>In Help Menu: <code>HelpAmaya</code>, <code>HelpAtW3C</code>,
+  <li>Menú Ayuda: <code>HelpAmaya</code>, <code>HelpAtW3C</code>,
     <code>HelpBrowsing</code>, <code>HelpSelecting</code>,
     <code>HelpSearching</code>, <code>HelpViews</code>,
     <code>HelpCreating</code>, <code>HelpLinks</code>,

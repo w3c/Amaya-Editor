@@ -3,14 +3,12 @@
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <title>Menu Preferences</title>
-  <style type="text/css">
-  </style>
-  <meta name="GENERATOR" content="amaya 6.2, see http://www.w3.org/Amaya/" />
+  <title>Menú Preferencias</title>
+  <meta name="GENERATOR" content="amaya 6.4+, see http://www.w3.org/Amaya/" />
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
-<body xml:lang="en" lang="en">
+<body xml:lang="es" lang="es">
 
 <table border="0" summary="toc">
   <tbody>
@@ -19,348 +17,317 @@
         src="../../images/amaya.gif" /></td>
       <td><p><a
         href="about_configuration_directory_and_file_conventions.html.es"
-        accesskey="p"><img alt="previous" src="../../images/left.gif" /></a>
-        <a href="../Configure.html.es" accesskey="t"><img alt="top"
+        accesskey="p"><img alt="anterior" src="../../images/left.gif" /></a>
+        <a href="../Configure.html.es" accesskey="t"><img alt="superior"
         src="../../images/up.gif" /></a> <a
-        href="about_keyboard_shortcuts.html.es" accesskey="n"><img alt="next"
-        src="../../images/right.gif" /></a></p>
+        href="about_keyboard_shortcuts.html.es" accesskey="n"><img
+        alt="siguiente" src="../../images/right.gif" /></a></p>
       </td>
     </tr>
   </tbody>
 </table>
 
 <div id="page_body">
-<h1>Menu Preferences</h1>
+<h1>Menú Preferencias</h1>
 
-<p>These dialogs are found under the <strong>Preferences</strong> submenu on
-the <strong>Special</strong> menu. Nine preferences dialogs are available:
-<strong>general</strong>, <strong>publishing</strong>,
-<strong>cache</strong>, <strong>proxy</strong>, <strong>colors</strong>,
-<strong>Window geometry</strong>, <strong>language negotiation</strong>,
-<strong>profiles</strong>, and <strong>templates</strong>.</p>
+<p>Las cajas de diálogo se sencuentran en el menú <strong>Especial &gt;
+Preferencias</strong>. Hay diez cajas de diálogos: <strong>General</strong>,
+<strong>Navegación</strong>, <strong>Publicar</strong>,
+<strong>Cache</strong>, <strong>Proxy</strong>, <strong>Colors</strong>,
+<strong>Geometría de la ventana</strong>, <strong>Negociación de
+idioma</strong>, <strong>Perfiles</strong>, y <strong>Plantillas</strong>.</p>
 
-<p>Each of these dialogs contains three action buttons:</p>
+<p>Cada una de estas cajas de diálogo contienen tres botones:</p>
 
-<table border="1" cellspacing="0" cellpadding="0" width="581"
-style="width:435.75pt;  margin-left:3.75pt;border-collapse:collapse;border:none;">
+<table>
   <tbody>
     <tr>
-      <td width="65"
-      style="width:48.75pt;border-top:solid .75pt;   border-left:none;border-bottom:double 1.5pt;border-right:solid black .5pt;   padding:3.75pt 3.75pt 3.75pt 3.75pt"><p
-        class="TableHead"><b>Button</b></p>
+      <td><p class="TableHead"><b>Botón</b></p>
       </td>
-      <td width="516"
-      style="width:387.0pt;border-top:solid .75pt;   border-left:none;border-bottom:double 1.5pt;border-right:none;padding:3.75pt 3.75pt 3.75pt 3.75pt"><p
-        class="TableHead"><b>Action</b></p>
+      <td><p class="TableHead"><b>Efecto</b></p>
       </td>
     </tr>
     <tr>
-      <td width="65"
-      style="width:48.75pt;border-top:none;border-left:none;   border-bottom:solid black .5pt;border-right:solid black .5pt;padding:3.75pt 3.75pt 3.75pt 3.75pt"><p
-        class="TableText">Apply</p>
+      <td><p class="TableText">Aplicar</p>
       </td>
-      <td width="516"
-      style="width:387.0pt;border:none;border-bottom:solid black .5pt;   padding:3.75pt 3.75pt 3.75pt 3.75pt"><p
-        class="TableText">Validates and stores the options shown in the
-        menu.</p>
+      <td><p class="TableText">Confirma y almacena las opciones que se
+        muestran en la caja.</p>
       </td>
     </tr>
     <tr>
-      <td width="65"
-      style="width:48.75pt;border-top:none;border-left:none;   border-bottom:solid black .5pt;border-right:solid black .5pt;padding:3.75pt 3.75pt 3.75pt 3.75pt"><p
-        class="TableText">Defaults</p>
+      <td><p class="TableText">Por omisión</p>
       </td>
-      <td width="516"
-      style="width:387.0pt;border:none;border-bottom:solid black .5pt;   padding:3.75pt 3.75pt 3.75pt 3.75pt"><p
-        class="TableText">Restores, but does not save, the default values.
-        Use the <strong>Apply</strong> button to validate the options.</p>
+      <td><p class="TableText">Restaura, sin guardar, los valores por
+        omisión. Utiliza el botón <strong>Aplicar</strong> para guardar estas
+        opciones.</p>
       </td>
     </tr>
     <tr>
-      <td width="65"
-      style="width:48.75pt;border-top:none;border-left:none;   border-bottom:solid 1.5pt;border-right:solid black .5pt;padding:3.75pt 3.75pt 3.75pt 3.75pt"><p
-        class="TableText">Done</p>
+      <td><p class="TableText">Hecho</p>
       </td>
-      <td width="516"
-      style="width:387.0pt;border:none;border-bottom:solid 1.5pt;   padding:3.75pt 3.75pt 3.75pt 3.75pt"><p
-        class="TableText">Dismisses the menu.</p>
+      <td><p class="TableText">Cierra la caja de diálogo.</p>
       </td>
     </tr>
   </tbody>
 </table>
 
-<h2>General Preferences</h2>
+<h2>Preferencias generales</h2>
 
-<p>To open the <strong>General Preferences</strong> dialog, choose
-<strong>General</strong> from the <strong>Preferences</strong> submenu.</p>
+<p>Para abrir la caja de diálogo <strong>Preferencias generales</strong>,
+elige el menú <strong>Preferencias &gt; General</strong>.</p>
 
-<p><img alt="General Preferences Dialog"
-src="../../images/general_preferences.png" /></p>
+<p><img alt="Caja de diálogo Preferencias generales"
+src="../../images/general_preferences-es.png" /></p>
 
-<h3>Specified directories</h3>
+<h3>Carpetas específicas</h3>
 
-<p>The <strong>General Preferences</strong> dialog displays the user
-directory, the temporary directory, and the default home page. These options
-are explained below.</p>
+<p>La caja de diálogo <strong>Preferencias generales</strong> muestra el
+directorio de usuario, el directorio temporal y la página web por omisión.
+Estas opciones se explican a continuación.</p>
 
-<p><strong>Amaya user directory.</strong> Applies to Windows platforms only,
-not shown in the included figure. Specifies the directory where the user
-preferences are stored.</p>
+<p><strong>Directorio de usuario de Amaya.</strong> Sólo en Windows.
+Especifica el directorio en el que se almacenan las preferencias del
+usuario.</p>
 
-<p class="Note"><strong>Note:</strong> <br />
-You can't change the location of this directory.</p>
-
-<p><strong><br />
-Amaya temporary directory.</strong>Windows platforms only, not shown in the
-figure. Specifies the directory where Amaya stores its temporary files, for
-example, while printing a document. If not specified, the default temporary
-directory is<code>c:\temp</code>.</p>
-
-<p class="Note"><strong>Note:</strong> <br />
-Changing this directory does not erase the previous one. You must remove the
-old directory manually. If the <strong>cache</strong> was located under the
-previous temporary directory, a new cache will be created under the new
-directory.</p>
+<p class="Note"><strong>Nota:</strong> La ubicación de este directorio no se
+puede modificar.</p>
 
 <p><strong><br />
-Home Page.</strong> Specifies the URI that Amaya will load when launched or
-when the user clicks the home page button. An example is <code><a
+Directorio temporal.</strong> Sólo en Windows. Especifica el directorio en el
+que Amaya almacena los archivos temporales, por ejemplo, al imprimir un
+documento. Si no se especifica, el directorio por omisión es
+<code>c:\temp</code>.</p>
+
+<p class="Note"><strong>Nota:</strong> Al cambiar el directorio, el
+directorio actual no se borra. Debes borrarlo manualmente. Si la
+<strong>cache</strong> se encontraba en el directorio temporal anterior, se
+creará una nueva cache en el nuevo directorio.</p>
+
+<p><strong><br />
+Página principal.</strong> Especifica el URI que Amaya cargará al abrir el
+programa o cuando el usuario haga clic en el botón Principal. Por ejemplo, la
+página principal podría ser: <code><a
 href="http://www.w3.org/">http://www.w3.org</a></code></p>
 
-<p class="Note"><strong>Note:</strong> A complete URI must be used.</p>
+<p class="Note"><strong>Nota:</strong> Debes escribir la URI completa.</p>
 
-<h3>Check boxes</h3>
+<h3>Casillas de verificación</h3>
 
-<p>The options below can be toggled on or off by clicking the check box next
-to an option name. A mark in the box indicates that the option is active.</p>
+<p>Las opciones comentadas a continuación pueden activarse o desactivarse
+haciendo clic en la casilla de verificación que se encuentra a la izquierda
+de cada opción. Una casilla marcada indica que la opción está activada.</p>
 
-<p><strong>Enable multi-key.</strong> Enables or disables the optional
-multi-key input method, which is based on a two key sequence beginning with
-the "accent" followed by the "letter". For example, to obtain an 'ã', first
-press '~' then type 'a'. To obtain a tilde '~', you must press '~' twice.
-Character sequences used by the standard multi-key input method and the
-optional multi-key input method are summarized in two different tables.</p>
+<p><strong>Activar las combinaciones de teclas opcionales.</strong> Habilita
+o deshabilita las combinaciones de teclas opcionales, que se basan en
+combinaciones de dos teclas que comienzan por un acento seguido de una letra.
+Por ejemplo, para obtener 'ã', pulsa '~' (o ALT+126) y a continuación pulsa
+'a'. Para obtener la tilde '~', debes pulsar '~' dos veces. Las combinaciones
+de tecla estándar y opcionales se detallan en sendas tablas.</p>
 
-<p><strong>Show background images.</strong> Controls whether background
-images should be shown. This option is only effective when loading a new
-document.</p>
+<p><strong>Mostrar imágenes de fondo.</strong> Controla la presentación de
+las imágenes de fondo. Esta opción se tiene en cuenta al cargar un
+documento.</p>
 
-<p><strong>Show button bar.</strong> Controls whether the button bar should
-be shown in all document main views.</p>
+<p><strong>Mostrar barra de botones.</strong> Controla si se muestra la barra
+de botones en las vistas principales del documento.</p>
 
-<p><strong>Show address.</strong> Controls whether the address should be
-shown in all document main views.</p>
+<p><strong>Mostrar dirección.</strong> Controla si se muestra la barra de
+dirección en las vistas principales del documento.</p>
 
-<p><strong>Show targets.</strong> Controls whether link targets should be
-shown in all document main views.</p>
+<p><strong>Mostrar destinos.</strong> Controla si se muestran los destinos de
+enlaces en las vistas principales del documento.</p>
 
-<p><strong>Section numbering.</strong> Controls whether headings are numbered
-in all document main views.</p>
+<p><strong>Numeración de secciones.</strong> Controla si se numeran los
+encabezados en las vistas principales del documento.</p>
 
-<p><strong>Access keys.</strong> Specifies the key (<code>Alt</code> or
-<code>Control</code>) used to implement the document <a
-href="..\Browsing.html.es#Access">access keys</a>, or specifies that access keys
-defined in documents are ignored.</p>
+<p><strong>Atajos de teclado.</strong> Especifica la tecla (<code>Alt</code>
+o <code>Control</code>) utilizada en las <a
+href="..\Browsing.html.es#Access">teclas de acceso</a>, o especifica que se
+ignoren las teclas de acceso definidas en el documento</p>
 
-<h2>Unix-only options</h2>
+<h2>Opciones exclusivas de Unix</h2>
 
-<p>Two options in the <strong>General Preferences</strong> dialog are only
-available under the Unix operating system: <strong>Menu Font Size</strong>
-and <strong>Double-click Delay</strong>. These options are explained
-below.</p>
+<p>Hay dos opciones de la cja de diálogo <strong>Preferencias
+generales</strong> que sólo están disponibles en Unix: <strong>Tamaño de
+fuente en menús</strong> y <strong>Retardo de doble clic</strong>. Estas
+opciones se explican a continuación.</p>
 
-<p><strong>Menu Font size</strong>. Specifies the font size of all the Amaya
-menus. This option is only taken into account at launch time.</p>
+<p><strong>Tamaño de fuente en menús</strong>. Especifica el tamaño de fuente
+en todos los menús de Amaya. Esta opción se tiene en cuenta al iniciar
+Amaya.</p>
 
-<p><strong>Double-click Delay</strong>. This option enables you to control
-the delay by which two mouse clicks are classed as a double-click. This
-option is only taken into account at launch time.</p>
+<p><strong>Retardo de doble clic</strong>. Esta opción te permite controlar
+el retardo entre dos clics para que se consideren un doble clic. Esta opción
+se tiene en cuenta al iniciar Amaya.</p>
 
-<h2>Font and language options</h2>
+<h2>Opciones de fuente e idioma</h2>
 
-<p>This section of the <strong>General Preferences</strong> dialog lets you
-choose the font zoom level and define the dialogue language used in Amaya.
-These options are explained below.</p>
+<p>Esta sección de la caja de diálogo <strong>Preferencias generales</strong>
+te permite elegir el zoom de fuente y el idioma de diálogo utilizado por
+Amaya. Estas opciones se explican a continuación.</p>
 
-<p><strong>Font Zoom.</strong>You can zoom in and out, document window by
-document window. Each document (text and images) displayed within a zoomed
-window will be displayed larger or smaller than its real size according to
-the current zoom. This option enables you to change the default font zoom for
-all windows. This change affects only font sizes but not image sizes, and is
-reflected immediately in all open document windows.</p>
+<p><strong>Zoom de fuente</strong>. Puedes aumentar o reducir el zoom en las
+ventanas. Cada documento se mostrará ampliado o reducido con respecto a su
+tamaño real de acuerdo con el valor de zoom establecido. Esta opción te
+permite cambiar el zoom por omisión de todas las ventanas. Este cambio afecta
+únicamente al tamaño de fuente, pero no al tamaño de las imágenes y se
+refleja inmediatamente en todas las ventanas abiertas.</p>
 
-<p><strong>Dialogue language.</strong> Specifies the language for all of
-Amaya's menus and dialogue messages. The default language is American English
-(value: <code>en_US</code>). At the present time, only three alternate
-languages are available: English (<code>en</code>), French (<code>fr</code>),
-and German (<code>de</code>). When launched, Amaya loads dialogue files
-according to the current dialogue language: en-, fr-, or de- files. These
-dialogue files are located in the <strong>Amaya/config</strong> directory.</p>
+<p><strong>Idioma de diálogo.</strong>Especifica el idioma en todos los menús
+y mensajes de diálogo. El idioma por omisión es el inglés americano (valor:
+<code>en_US</code>). Actualmente, sólo hay cuatro idiomas disponibles: inglés
+(<code>en</code>), francés (<code>fr</code>), alemán (<code>de</code>) y
+castellano (<code>es</code>). Al inicar Amaya, se cargan los archivos de
+diálogo correspondiente al idioma de diálogo especificado: en-, fr-, de- o
+es-. Estos archivos de diálogos se encuentran en la carpeta
+<strong>Amaya/config</strong>.</p>
 
-<p>In Thot, a document is specified according to a schema. In Amaya, the
-dialogue messages that are displayed when parsing a document or when saving
-it under a specific schema are located in the
-<strong>Amaya/amaya/HTML.</strong><em><strong>code</strong></em> file, where
-the <em>code</em> suffix is a language abbreviation (e.g. <code><span
-xml:lang="EN" lang="EN"
-style="font-family:&#34;Courier New&#34;;">en</span></code><span
-xml:lang="EN" lang="EN">or</span><code><span xml:lang="EN" lang="EN"
-style="font-family:&#34;Courier New&#34;;">fr</span></code><span
-xml:lang="EN" lang="EN">). This file has 4 sections:</span></p>
+<p>En Thot, un documento está especificado por un esquema. En Amaya, los
+mensajes de diálogo que se muestran al analizar un documento o al guardarlos
+según un esquema específico se encuentran en el archivo
+<strong>Amaya/amaya/HTML.</strong><em><strong>code</strong></em>, en el que
+el sufijo <em>code</em> es la abreviatura del idioma (por ejemplo,
+<code>en</code> o <code>fr</code>). Este archivo tiene 4 secciones:</p>
+<ul>
+  <li><strong>extension:</strong> No utilizada por Amaya</li>
+  <li><strong>presentation:</strong> No utilizada por Amaya</li>
+  <li><strong>export</strong>: Identifica el texto mostrado en cada esquema
+    de traducción (comando <strong>Guardar como</strong>)</li>
+  <li><strong>translation</strong>: Identifica el texto mostrado en cada
+    elemento y atributo en la estructura HTML de Thot.</li>
+</ul>
 
-<p class="Bullet"><span xml:lang="EN" lang="EN"
-style="font-family:Symbol;">·<span
-style="font:7.0pt &#34;Times New Roman&#34;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></span><strong><span
-xml:lang="EN" lang="EN">extension:</span></strong><span xml:lang="EN"
-lang="EN">Not used by Amaya</span></p>
+<p>Es posible adaptar Amaya a nuevos idiomas ISO-Latin-1 escribiendo los
+archivos de diálogo correspondientes. Estos archivos de diálogo deben
+ubicarse en la misma carpeta (por ejemplo, Amaya/config) y deben utilizar el
+código ISO 639 correcto como prefijo (it- para italiano, de- para alemásm,
+etc.). También debes crear el archivo HTML.code específico.</p>
 
-<p class="Bullet"><span xml:lang="EN" lang="EN"
-style="font-family:Symbol;">·<span
-style="font:7.0pt &#34;Times New Roman&#34;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></span><strong><span
-xml:lang="EN" lang="EN">presentation:</span></strong><span xml:lang="EN"
-lang="EN">Not used by Amaya</span></p>
+<h2>Navegación</h2>
 
-<p class="Bullet"><span xml:lang="EN" lang="EN"
-style="font-family:Symbol;">·<span
-style="font:7.0pt &#34;Times New Roman&#34;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></span><strong><span
-xml:lang="EN" lang="EN">export</span></strong><span xml:lang="EN" lang="EN">:
-Identifies the text displayed for each translation schema (<strong>Save
-As</strong> command)</span></p>
+<p>La caja de diálogo <strong>Preferencias de navegación</strong> te
+permite...</p>
 
-<p class="Bullet"><span xml:lang="EN" lang="EN"
-style="font-family:Symbol;">·<span
-style="font:7.0pt &#34;Times New Roman&#34;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></span><strong><span
-xml:lang="EN" lang="EN">translation</span></strong><span xml:lang="EN"
-lang="EN">: Identifies the text displayed for each element and attribute in
-the Thot HTML structure.</span></p>
+<p><img alt="Caja de diálogo Preferencias de navegación"
+src="../../images/browsing_preferences-es.png" /></p>
 
-<p><span xml:lang="EN" lang="EN">It is possible to adapt Amaya to new
-ISO-Latin-1 languages by writing corresponding dialogue files. These dialogue
-files must be located in the same directory (for example, Amaya/config) and
-must use the correct ISO 639 code as a prefix (it- for Italian, de- for
-German, and so on). You must also create the specific HTML.code
-file.</span></p>
+<h3>Casillas de verificación</h3>
 
-<h2>Browsing Preferences</h2>
+<p>Las opciones siguientes se pueden activar o desactivar haciendo clic en la
+casilla de verificación situada a la izquierda de cada opción. Una casilla
+marcada indica que la opción está activada.</p>
 
-<p>The <strong>Publishing Preferences</strong> dialog lets you set ...</p>
+<p><strong>Cargar imágenes.</strong> Controla si las imágenes deben cargarse.
+Esta opción se utiliza al cargar nuevos documentos.</p>
 
-<p><img alt="Browsing Preferences Dialog"
-src="../../images/browsing_preferences.png" /></p>
+<p><strong>Doble clic activa enlaces.</strong> Desde la primera versión de
+Amaya, para activar un enlace hay que hacer doble clic en él. Eso te permite
+elegir entre editar o activar un enlace. Puedes deshabilitar este
+comportamiento desactivarte esta opción.</p>
 
-<h3>Check boxes</h3>
+<p><strong>Activar FTP.</strong> Permite a Amaya abrir URLs de FTP. Este
+soporte es experimental y todavía tiene errores. Por ejemplo, los URLs de FTP
+que necesitan autentificar al usuario, la información de autentificación no
+se memoriza siempre. Además, si pulsas el botón <strong>Detener</strong>
+durante una descarga FTP puede bloquer a Amaya. Debido a estos problemas,
+esta opción se añadió para que otros desarrolladores pudieran ayudar a
+resolver los problemas. Por omisión, esta opción está desactivada.</p>
 
-<p>The options below can be toggled on or off by clicking the check box next
-to an option name. A mark in the box indicates that the option is active.</p>
+<h2>Publicación</h2>
 
-<p><strong>Load images.</strong> Controls whether images should be laoded.
-This option is only effective for new loaded documents.</p>
+<p>La caja de diálogo de <strong>Preferencias de publicación</strong> te
+permite establecer las preferencias de ETAGS y precondiciones, tanto para
+verificar cada comando PUT con un comando GET, como para definir el nombre
+por omisión de los URLs que acaban en barra, y permitir redicrecciones PUT en
+dominios específicos. Estas opciones se explican a continuación.</p>
 
-<p><strong>Double-click activates link.</strong> Since the first version of
-Amaya, users double-click a link to activate it. This enables you to choose
-whether to edit a link or activate it. You can override this behavior by
-deactivating this option.</p>
+<p><img alt="Caja de diálogo Preferencias de publicación"
+src="../../images/publishing_preferences-es.png" /></p>
 
-<p><strong>Enable FTP.</strong> Enables Amaya to follow FTP URLs. This
-support is experimental and is not yet fully debugged. For example, for FTP
-URLs needing user authentication, the authentication information is not
-always memorized. Also, pressing the <strong>Stop</strong> button during an
-FTP download may crash Amaya. Because of these problems, this option was
-added to Amaya so that other developers may help to debug it faster. By
-default, this option is turned off.</p>
+<p><strong>Para documentos XHTML utilice el tipo MIME
+application/xhtml+xml.</strong> Esta opción, si está activada, asocia el
+nuevo tipo MIME oficial XHTML a todos los documentos XTHML nuevos que se
+publican en la Web. Esta opción está deshabilita por omisión porque no todos
+los servidores pueden gestionar este tipo MIME en el momento de escribir esta
+página. Fíjate en que esta opción requiere un cambio en la configuración del
+servidor, si no está almacenando en algún sitio los metadatos asociados con
+cada documento. Esta opción no modifica el tipo MIME de los documentos ya
+existentes: el mismo tipo MIME que se recibe se utiliza al guardar el
+documento, salvo si <strong>Guardas como</strong>, evidentemente.</p>
 
-<h2>Publishing Preferences</h2>
+<p><strong>Usar ETAGS y precondiciones.</strong> HTTP/1.1 introduce nuevos
+encabezados que resuelven el problema de las <a
+href="http://www.w3.org/WinCom/NoMoreLostUpdates.html">actualizaciones
+perdidas</a> al publicar. Con esta opción, puedes detectar conflicto sentre
+dos usuarios que están editando el mismo documento.</p>
 
-<p>The <strong>Publishing Preferences</strong> dialog lets you set
-preferences for ETAGS and preconditions, whether to verify each PUT command
-with a GET, set the default name for URLs ending with a slash, and enable PUT
-redirections on specified domains. These options are explained below.</p>
+<p><strong>Verificar cada PUT con un GET.</strong> Si no confías en tu
+servidor, esta opción hace que Amaya descargue cada documento nada más ser
+publicado y que lo compare con la copia almacenada en tu ordenador. Si hay
+diferencias entre ambos documentos, Amayas te avisará.</p>
 
-<p><img alt="Publishing Preferences Dialog"
-src="../../images/publishing_preferences.png" /></p>
+<p><strong>Exportar CR/LF</strong> (sólo en Windows). Esta opción, si está
+seleccionada, coloca un retorno de carro delante de cada salto de línea.</p>
 
-<p><strong>Use the application/xhtml+xml MIME type for XHTML
-documents.</strong> This option, if enabled, associated the new, official
-XHTML MIME type to all new XTHML documents that are published on the Web.
-This option is disabled by default because not all servers can handle this
-MIME type at the time of this release, Note that this requires also a change
-in your server configuration, if it's not storing somewhere the metadata
-associated with each document. This option does not modify the MIME type of
-existing documents: the MIME type that is received is the same one that will
-be used when saving the document, except if you do a <strong>SaveAs</strong>
-operation, of course.</p>
+<p><strong>El nombre por omisión de URL termina en '/'.</strong> Los
+servidores HTTP suelen asociar los URLs que acaban en '/' con un nombre
+determinado, por ejemplo, Overview.html. Esta opción te permite especificar
+el nombre por omisión que Amaya debe utilizar al publicar tal URL. Pregunta
+al webmaster cuál es el nombre por omisión en tu servidor.</p>
 
-<p><strong>Use ETAGS and preconditions.</strong> HTTP/1.1 introduces new
-headers that avoid the <a
-href="http://www.w3.org/WinCom/NoMoreLostUpdates.html.es">lost updates</a>
-problem when publishing. With this option, you can detect conflicts when two
-users are publishing the same document.</p>
+<p><strong>Permitir redirecciones PUT autómaticas en estos dominios.</strong>
+De acuerdo con la especificación HTTP/1.1 , las operaciones PUT no se deben
+redirigir automáticamente a menos que pueda ser confirmado por el usuario,
+puesto que esto puede cambiar las condiciones bajo las que se hizo la
+petición. Puedes evitar que Amaya muestre un aviso de redirección PUT
+escribiendo el nombre de dominio del servidor en el que estás publicando.
+Puedes especificar uno o más dominios, separándolos por un espacio, por
+ejemplo, <code>www.w3.org groucho.marx.edu</code>.</p>
 
-<p><strong>Verify each PUT with a GET.</strong> If you don't trust your
-server, this option tells Amaya to retrieve each document as soon as it has
-been published and compare it with the copy stored in your workstation. If
-the documents differ, Amaya will warn you.</p>
+<h2>Caché</h2>
 
-<p><strong>Export CR/LF</strong> (Windows platforms only). This option, if
-enabled, precedes each line feed by a carriage return.</p>
+<p>Amaya incluye una caché mediante libwww. La caché está activada por
+omisión y se almacena en la carpeta AmayaTemp/libwww-cache. Este menú también
+contiene un botón <strong>Vaciar caché</strong> para borrar la carpeta
+caché.</p>
 
-<p><strong>Default name for URLs finishing in '/'.</strong> An HTTP server
-usually associates URLs that finish in '/' with a default name, for example,
-Overview.html. This option enables you to specify the default name that Amaya
-should use when publishing such a URL. Ask your Webmaster for the default
-name for your server.</p>
+<p><img alt="Caja de diálogo Preferencias de Caché"
+src="../../images/cache_preferences-es.png" /></p>
 
-<p><strong>Allow automatic PUT redirections on these domains.</strong>
-According to the HTTP/1.1 specification, PUT operations should not be
-automatically redirected unless it can be confirmed by the user, because this
-might change the conditions under which the request was issued. You can avoid
-having Amaya prompt with a PUT redirection warning by entering the name of
-the server's domain to which you are publishing. You may specify one or more
-domains, each separated with a space, e.g., <code>www.w3.org
-groucho.marx.edu</code>.</p>
+<p><strong>Activar caché.</strong> Activa o desactiva la caché.</p>
 
-<h2>Cache Preferences</h2>
+<p><strong>Documentos protegidos de la Caché.</strong> Por omisión, los
+documentos protegidos por contraseña se almacenan en la caché. Utiliza esta
+opción para evitarlo.</p>
 
-<p>Amaya provides a cache through libwww. The cache is enabled by default and
-is stored in the AmayaTemp/libwww-cache directory. This menu also provides a
-<strong>Flush Cache</strong> button for erasing the cache directory.</p>
+<p><strong>Modo desconectado.</strong> Siempre recupera los documentos de la
+caché.</p>
 
-<p><img alt="Cache Preferences Dialog"
-src="../../images/cache_preferences.png" /></p>
+<p><strong>Ignorar Expires: cabecera.</strong> Las entradas de caché no
+expiran.</p>
 
-<p><strong>Enable cache.</strong> Activates or deactivates the cache.</p>
+<p><strong>Directorio Caché.</strong> Identifica el directorio padre del
+directorio libwww-cache directory. Al cambiar este directorio no se borra el
+contenido del directorio anterior. Debes eliminarlo tú mismo.</p>
 
-<p><strong>Cache protected documents.</strong> By default, documents which
-are protected by a password are stored in the cache. Use this option to
-override this behavior.</p>
+<p class="Note"><strong>Nota:</strong> Los mecanismos de protección de
+archivos impiden el uso de directorios NFS (Network File System) como
+directorio caché, ya que NFS permite el uso compartido por múltiples
+procesadores o usuarios. Utiliza un directorio local para la caché.</p>
 
-<p><strong>Disconnected mode.</strong> Always retrieves documents from the
-cache.</p>
+<p><strong>Tamaño de caché.</strong> Indica el tamaño, en megabytes, de la
+caché.</p>
 
-<p><strong>Ignore Expires: header.</strong> Does not expire cache entries.</p>
+<p><strong>Límite de tamaño de entrada de caché.</strong> Indica el tamaño
+máximo de una entrada de caché.</p>
 
-<p><strong>Cache directory.</strong> Identifies the parent directory for the
-libwww-cache directory. Changing this directory does not erase the contents
-of the previous one. You must remove it yourself.</p>
+<h2>Proxy</h2>
 
-<p class="Note"><strong>Note:</strong> <br />
-File protection mechanisms prevent the use of NFS (Network File System)
-directories for the cache directory as NFS allows reuse by multiple processes
-or users. Use a local directory for the cache.</p>
+<p>En esta caja de diálogo puedes especificar un proxy y un conjunto de
+domuinios en el que el proxy debe o no utilizarse.</p>
 
-<p><strong>Cache size.</strong> Gives the size, in megabytes, of the cache
-repository.</p>
-
-<p><strong>Cache entry size limit.</strong> Gives the maximum size for a
-cache entry.</p>
-
-<h2>Proxy Preferences</h2>
-
-<p>You can use this dialog to specify a proxy and a set of domains where the
-proxy should or should not be used.</p>
-
-<p><img alt="Proxy Preferences Dialog"
-src="../../images/proxy_preferences.png" /></p>
+<p><img alt="Caja de diálogo Preferencias de proxy"
+src="../../images/proxy_preferences-es.png" /></p>
 
 <p><strong>HTTP proxy.</strong>Identifies the proxy to be used for HTTP
 requests. You must specify the full name of the server. If the server is
@@ -371,195 +338,144 @@ two examples.</p>
 <table border="1">
   <tbody>
     <tr>
-      <td>
-        <table border="1">
-          <tbody>
-            <tr>
-              <td>
-                <table border="1">
-                  <tbody>
-                    <tr>
-                      <td>
-                        <table border="1" cellspacing="0" cellpadding="0"
-                        style="margin-left:.2in;border-collapse:  collapse;border:none;">
-                          <tbody>
-                            <tr>
-                              <td width="194" valign="top"
-                              style="width:145.85pt;border-top:solid green 1.5pt;   border-left:none;border-bottom:solid green .75pt;border-right:none;   padding:0in 5.4pt 0in 5.4pt"><p
-                                class="TableHead"><span xml:lang="EN"
-                                lang="EN"
-                                style="font-weight:   normal"><b>HTTP Proxy
-                                Entry</b></span></p>
-                              </td>
-                              <td width="377" valign="top"
-                              style="width:282.55pt;border-top:solid green 1.5pt;   border-left:none;border-bottom:solid green .75pt;border-right:none;   padding:0in 5.4pt 0in 5.4pt"><p
-                                class="TableHead"><span xml:lang="EN"
-                                lang="EN"
-                                style="font-weight:   normal"><b>Result</b></span></p>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td width="194" valign="top"
-                              style="width:145.85pt;border:none;padding:0in 5.4pt 0in 5.4pt"><p
-                                class="Code0"><span xml:lang="EN"
-                                lang="EN">&nbsp;&nbsp;
-                                groucho.marx.edu</span></p>
-
-                                <p class="Code0"><span xml:lang="EN"
-                                lang="EN">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></p>
-                              </td>
-                              <td width="377" valign="top"
-                              style="width:282.55pt;border:none;padding:0in 5.4pt 0in 5.4pt"><p
-                                class="TableText"><span xml:lang="EN"
-                                lang="EN">Declares a proxy called
-                                groucho.marx.edu running at the default port
-                                80.</span></p>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td width="194" valign="top"
-                              style="width:145.85pt;border:none;border-bottom:   solid green 1.5pt;padding:0in 5.4pt 0in 5.4pt"><p
-                                class="Code0"><span xml:lang="EN"
-                                lang="EN">&nbsp;&nbsp;
-                                groucho.marx.edu:1234</span></p>
-
-                                <p class="Code0"><span xml:lang="EN"
-                                lang="EN">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></p>
-                              </td>
-                              <td width="377" valign="top"
-                              style="width:282.55pt;border:none;border-bottom:   solid green 1.5pt;padding:0in 5.4pt 0in 5.4pt"><p
-                                class="TableText"><span xml:lang="EN"
-                                lang="EN">Declares a proxy called
-                                groucho.marx.edu, running at port
-                                1234.</span></p>
-                              </td>
-                            </tr>
-                          </tbody>
-                        </table>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+      <td><p class="TableHead">Entrada HTTP Proxy</p>
+      </td>
+      <td><p class="TableHead">Resultado</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p>groucho.marx.edu</p>
+      </td>
+      <td><p>Declara un proxy llamado groucho.marx.edu que funciona el el
+        puerto 80.</p>
+      </td>
+    </tr>
+    <tr>
+      <td><p>groucho.marx.edu:1234</p>
+      </td>
+      <td><p>Declara un proxy llamado groucho.marx.edu que funciona en el
+        puerto 1234.</p>
       </td>
     </tr>
   </tbody>
 </table>
 
-<p><strong>Proxy domain list.</strong> Lists space-separated domains where
-you want to use your proxy. Use the switch buttons to specify if the proxy
-should or shouldn't be used with this domain list. For example:</p>
+<p><strong>Lista de dominios proxy.</strong> Lista de dominios separados por
+espacios con los que quieres utilizar el proxy. Utiliza los botones radio
+para especificar si el proxy debe o no debe utilizarse con esta lista de
+dominios.Por ejemplo:</p>
 <pre style="margin-left:.5in"><code>harpo.marx.edu zeppo.marx.edu chico.marx.edu</code></pre>
-<pre style="margin-left:.5in">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &nbsp;&nbsp; ^----------------^----&gt; space separated entries</pre>
-<pre style="margin-left:.5in">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </pre>
+<pre style="margin-left:.5in">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ^----------------------^----&gt; entradas separadas por espacios</pre>
 
-<h2>Color Preferences</h2>
+<h2>Color</h2>
 
-<p>This dialog lets you select the default foreground and background colors
-for documents. It enables you to control the colors used by Amaya to display
-the current selection.</p>
+<p>Esta caja de diálogo te permite definir los colores de texto y fondo de
+los documentos. También te permite definir los colores utilizados por Amaya
+para mostrar la selección actual.</p>
 
-<p><img alt="Color Preferences Dialog"
-src="../../images/color_preferences.png" /></p>
+<p><img alt="Caja de diálogo Preferencias de color"
+src="../../images/color_preferences-es.png" /></p>
 <ul>
-  <li><strong>Caret color</strong> is the foreground color that shows the
-    selection when it's limited to an insert point. 
+  <li><strong>Color del cursor</strong> es el color de fondo de la selección
+    cuando ésta se limita al punto de inserción. 
     <p></p>
   </li>
-  <li><strong>Selection color</strong> is the background color that shows the
-    current selection when it's extended.</li>
+  <li><strong>Color de selección</strong> es el color de fondo de la
+    selección.</li>
 </ul>
 
-<p>The Unix version also provides entries for changing the menu colors. To
-change menu colors in Windows, you must use the standard Windows
-configuration control, found in the Control Panel folder.</p>
+<p>La versión Unix también proporciona entradas para modificar los colores
+del menú. Para cambiar los colores del menú en Windows, debes utilizar el
+control estándard de configuración de pantalla que se encuentra en el Panel
+de Control.</p>
 
-<p>All these colors may be selected by name, hex code, or RGB format:</p>
+<p>Los siguientes colores pueden seleccionarse por su nombre, código
+hexadecimal o RGBt:</p>
 <ul>
   <li>Valid names are: Aqua, Black, Blue, Fuchsia, Gray, Green, Lime, Maroon,
     Navy, Olive, Purple, Red, Silver, Teal, Yellow, and White. 
     <p></p>
   </li>
-  <li>Valid hexcode format is #FF00F, for example. 
+  <li>El formato válido de un código hexadecimal es #FF00F, por ejemplo. 
     <p></p>
   </li>
-  <li>Valid RGB format is rgb(255, 0, 255), for example.</li>
+  <li>El formato válido de un código RGB es rgb(255, 0, 255), por
+  ejemplo.</li>
 </ul>
 
-<p>If you enter an invalid color, the default colors are used instead. In
-Windows, you can also select colors with a color palette.</p>
+<p>Si escribes un color invalido, los colores por omisión se utilizan en su
+lugar. En Windows también puedes elegir colores con la paleta de color.</p>
 
-<p class="Note"><strong>Note:</strong> <br />
-Color changes will be effective when you open a new document window or when
-you reload a document.</p>
+<p class="Note"><strong>Nota:</strong> Los cambios de colroes se harán
+efectivos al abrir una nueva ventana de documento o al recargar un
+documento.</p>
 
-<p>Setting or changing colors for links, visited links, and active links is
-done through the Amaya.css style sheet.</p>
+<p>Los colores de los enlaces, los enlaces visitados y los enlaces activos se
+definen en la hoja de estilo Amaya.css.</p>
 
-<h2>Window Geometry Preferences</h2>
+<h2>Geometría de ventana</h2>
 
-<p>This dialog enables you to save the current window position and size of
-the different views of a document (formatted, structure, alternate, links,
-and Table of Contents) or to restore the default values.</p>
+<p>La caja de diálogo te permite guardar la posición y tamaño actual de las
+distintas ventanas de vistas de un documento (formateada, estructura,
+alternativa, enlaces, and tabla de contenidos) o restaurar los valores por
+omisión.</p>
 
-<p><img alt="Geometry Preferences Dialog"
-src="../../images/geometry_preferences.png" /></p>
+<p><img alt="Caja de diálogo Preferencias de geometría"
+src="../../images/geometry_preferences-es.png" /></p>
 
-<p>The values that are saved are those belonging to the views of the document
-where you called this dialog. These changes take affect when you open new
-document windows.</p>
+<p>Los valores que se guardan son los de la ventana de la vista desde la que
+has abierto la caja de diálogo. Estos cambios se aplican al abrir nuevas
+ventanas de documentos.</p>
 
-<h2>Language Negotiation Preferences</h2>
+<h2>Negociación de idioma</h2>
 
-<p>If a document exists in different languages and your server is configured
-to do language negotiation, you can use this dialog to enter your language
-preferences (the first one has the highest priority).</p>
+<p>Si un documento existe en distintos idiomas y tu servidor está configurado
+para establecer una negociación de idioma, puedes utilizar esta caja de
+diálogo para escribir tus preferencias de idiomas (el primer idioma tiene la
+máxima prioridad).</p>
 
-<p><img alt="Language Negotiation Dialog"
-src="../../images/language_negotiation.png" /></p>
+<p><img alt="Caja de diálogo Negociación de idioma"
+src="../../images/language_negotiation-es.png" /></p>
 
-<p>Try browsing this <a
-href="http://www.w3.org/1999/05/WCAG-RECPressRelease.html.es">press release</a>,
-which is available in French, English, and Japanese versions. By changing the
-language negotiation to the ISO codes for the above languages
-(<strong>fr</strong>, <strong>en</strong>, or <strong>ja</strong>) you can
-transparently request any of these versions.</p>
+<p>Consulta esta <a
+href="http://www.w3.org/1999/05/WCAG-RECPressRelease.html">nota de
+prensa</a>, disponible en francés, inglés y japonés. Escribiendo los códigos
+ISO de estos idiomas (<strong>fr</strong>, <strong>en</strong>, o
+<strong>ja</strong>), puedes consultar de forma transparente cualquiera de
+estas versiones.</p>
 
-<h2>Profiles</h2>
+<h2>Perfiles</h2>
 
-<p>In Amaya, a <em>profile</em> defines the look and feel of the user
-interface. You can use profiles to hide or display the Amaya buttons and
-menus. This dialog enables you to choose a profile definition file and select
-any of the profiles proposed by that file. Amaya proposes two editor profiles
-(<em>editor and mini-editor)</em> and two browser profiles (<em>browser and
-mini-browser</em>). Any profile change will be effective on the next launch
-of Amaya.</p>
+<p>En Amaya, un <em>perfil</em> define el aspecto del interface de usuario.
+Puedes utilizar perfiles para mostrar u ocultar los botones y menús de Amaya.
+Esta caja de diálogo te permite elegir el archivo de definición de perfil y
+seleccionar cualqueira de los perfiles contenidos en el archivo. Amaya
+propone dos perfiles de editor (<em>editor y mini-editor)</em> y dos perfiles
+de navegador (<em>browser y mini-browser</em>). Cualquier cambio de perfil se
+tomará en cuenta la próxima que inicies Amaya.</p>
 
-<p><img alt="Profiles Preferences Dialog"
-src="../../images/profiles_preferences.png" /></p>
+<p><img alt="Caja de diálogo Preferencias de perfiles"
+src="../../images/profiles_preferences-es.png" /></p>
 
-<h2>Templates</h2>
+<h2>Plantillas</h2>
 
-<p>A <strong>template</strong> is a model, or skeleton, of a document that
-you may use for creating your own documents. This dialog enables you to
-specify the URL of a template server, which may be either local to your
-workstation or stored on a server.</p>
-<img alt="Template Preferences Dialog"
-src="../../images/templates_preferences.png" /> 
+<p>Una <strong>plantilla</strong> es un modelo o esqueleto de un documento,
+que puedes utilizar para crear tus propios documentos. Esta caja de diálogo
+te permite especificar el URL de un servidor de plantillas, que puede ser
+local en tu ordenador o almacenado en un servidor.</p>
+<img alt="Caja de diálogo Preferencias de plantillas"
+src="../../images/templates_preferences-es.png" /> 
 
-<p>You must quit Amaya to validate this option. When you launch Amaya again,
-the File menu will contain a <strong>New &gt; From Template</strong> option.
-Choose this entry to open a new document showing the results of browsing the
-template URL. This page acts as an index to the templates available in your
-workstation or on the template server. A sample template server is available
-at <a
+<p>Debes cerrar Amaya para validar esta opción. Al iniciar Amaya de nuevo, el
+menú Archivo contendrá la opción <strong>Nuevo &gt; Desde plantilla</strong>.
+Elige este comando para abrir un nuevo documento mostrando el URL de las
+plantillas. Esta página es un índice de las plantillas disponibles en tu
+ordenador o en el servidor de plantillas. Está disponible un ejemplo de
+servidor de plantillas en <a
 href="http://cgi.w3.org/cgi-bin/createform.pl">http://cgi.w3.org/cgi-bin/createform.pl</a>.
-For more information, see the <a
-href="http://www.w3.org/Amaya/User/Templates.html">Using Templates with
-Amaya</a> page.</p>
+Más información en la página <a
+href="http://www.w3.org/Amaya/User/Templates.html">Utilizar plantilla en
+Amaya</a>.</p>
 </div>
 </body>
 </html>

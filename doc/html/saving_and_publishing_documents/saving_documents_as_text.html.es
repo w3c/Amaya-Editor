@@ -4,15 +4,13 @@
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-  <title>Saving documents as Text</title>
-  <meta name="GENERATOR" content="amaya 5.3, see http://www.w3.org/Amaya/" />
-  <style type="text/css">
-  </style>
+  <title>Guardar documentos como texto</title>
+  <meta name="GENERATOR" content="amaya 6.4+, see http://www.w3.org/Amaya/" />
+  
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
-<body xml:lang="en" lang="en">
+<body xml:lang="es" lang="es">
 
 <table border="0" summary="toc">
   <tbody>
@@ -20,8 +18,8 @@
       <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
         src="../../images/amaya.gif" /></td>
       <td><p><a href="the_saveas_command.html.es" accesskey="p"><img
-        alt="previous" src="../../images/left.gif" /></a> <a
-        href="../Publishing.html.es" accesskey="t"><img alt="top"
+        alt="anterior" src="../../images/left.gif" /></a> <a
+        href="../Publishing.html.es" accesskey="t"><img alt="superior"
         src="../../images/up.gif" /></a></p>
       </td>
     </tr>
@@ -29,30 +27,29 @@
 </table>
 
 <div id="page_body">
-<h1>Saving Documents as Text</h1>
+<h1>Guardar documentos como texto</h1>
 
-<p>You san save your document as text using the <strong>Save As</strong>
-command from the <strong>File</strong> menu. HTML mark-up is replaced by
-spaces, new lines, and so on. A list of all URIs used in the document is
-appended to the file.</p>
+<p>Puedes guardar tus documentos como texto mediante el comando de menú
+<strong>Archivo &gt; Guardar como</strong>. El marcado HTML se sustituye por
+espacios, saltos de línea, etc. Al archivo se le añade una lista de lor URIs
+utilizados en el documento.</p>
 
-<p class="ProcedureCaption">To save your document as text:</p>
+<p class="ProcedureCaption">Para guardar el documento como texto:</p>
 <ol>
-  <li>Choose <strong>Save As</strong> from the <strong>File</strong> menu to
-    open the <strong>Save As</strong> dialog. 
+  <li>Elige el comando de menú <strong>Archivo &gt; Guardar como</strong>
+    para abrir la caja de diálogo <strong>Guardar como</strong>. 
     <p></p>
   </li>
-  <li>Click the <strong>Text</strong> button in the <strong>Document
-    format</strong> section to save the document in text format to a local
-    file.</li>
+  <li>Haz clic en el botón radio <strong>Texto</strong> del grupo
+    <strong>Formato del documento</strong> para guardar el documento en
+    formato texto en un archivo local.</li>
 </ol>
 
-<h2>See Also:</h2>
+<h2>Ver también:</h2>
 <ul>
-  <li><a href="the_save_command.html.es">The Save Command</a></li>
-  <li><a href="the_saveas_command.html.es">The Save As Command</a></li>
+  <li><a href="the_save_command.html.es">El comando Guardar</a></li>
+  <li><a href="the_saveas_command.html.es">El comando Guardar como</a></li>
 </ul>
 </div>
-
 </body>
 </html>

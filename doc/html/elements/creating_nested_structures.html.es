@@ -1,105 +1,106 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-	
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-   <meta content="text/html; charset=iso-8859-1" />
-   <meta name="GENERATOR" content="amaya 5.1" />
-  <title>Creating Nested Structures</title>
-  <style type="text/css"></style>
-   <link href="../style.css" rel="stylesheet" type="text/css" />
+  <meta content="text/html; charset=iso-8859-1" />
+  <meta name="GENERATOR" content="amaya 6.4+, see http://www.w3.org/Amaya/" />
+  <title>Crear estructuras anidadas</title>
+  
+  <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
-<body xml:lang="en" lang="en">
+<body xml:lang="es" lang="es">
 
 <table border="0" summary="toc">
   <tbody>
     <tr>
       <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
         src="../../images/amaya.gif" /></td>
-      <td><p><a href="exiting_anchors.html.es" accesskey="p"><img alt="previous"
-        src="../../images/left.gif" /></a> 
-		<a href="../Creating.html.es" accesskey="t"><img alt="top" src="../../images/up.gif" /></a> 
-		<a href="changing_the_document_title.html.es" accesskey="n"><img alt="next"
-        src="../../images/right.gif" /></a></p>
+      <td><p><a href="exiting_anchors.html.es" accesskey="p"><img
+        alt="anterior" src="../../images/left.gif" /></a> <a
+        href="../Creating.html.es" accesskey="t"><img alt="superior"
+        src="../../images/up.gif" /></a> <a
+        href="changing_the_document_title.html.es" accesskey="n"><img
+        alt="siguiente" src="../../images/right.gif" /></a></p>
       </td>
     </tr>
   </tbody>
 </table>
 
 <div id="page_body">
-<h1>Creating Nested Structures</h1>
+<h1>Crear estructuras anidadas</h1>
 
-<p>When the insertion point is in an empty element, pressing the
-<strong>ENTER</strong> key replaces that element by another empty element at
-the next higher level in the document structure. This feature allows you to
-create complex, nested structures very quickly.</p>
+<p>Cuando el punto de inserción está situado en un elemento vacío, al pulsar
+<strong>Intro</strong> se sustituye ese elemento por otro elemento vacío del
+nivel inmediatamente superior en la estructura del documento. Esta
+característica te permite crear estructuras anidadas complejas muy
+rápidamente.</p>
 
-<p>As an example, consider the following structure:</p>
+<p>Por ejemplo, considera la estructura siguiente:</p>
 <ul>
-  <li>The first item in the list
-    <p>A paragraph in the first item</p>
+  <li>El primer elemento de la lista 
+    <p>Un párrafo en el primer elemento</p>
   </li>
-  <li>The second item in the list.
+  <li>El segundo elemento de la lista 
     <ul>
-      <li>First item in the nested list.</li>
-      <li>Second item in the nested list.</li>
+      <li>Primer elemento de una lista anidada</li>
+      <li>Segundo elemento de la lista anidada</li>
     </ul>
   </li>
-  <li>Last item in the list</li>
+  <li>Último elemento de la lista</li>
 </ul>
 <ul>
- <li><p class="ProcedureCaption">To create the above structure:</p></li>
+  <li><p class="ProcedureCaption">Para crear la estructura anterior:</p>
+  </li>
 </ul>
 <ol>
-  <li>Click the <strong>Bullet List</strong> button to create the first item
-    in the list.
+  <li>Haz clic en el botón <strong>Lista con boliche</strong> para crear el
+    primer elemento de la lista. 
     <p></p>
   </li>
-  <li>Type in the list item text, and press the <strong>ENTER</strong> key
-    once. Amaya creates a new paragraph within the list item.
+  <li>Escribe el texto correspondiente y pulsa <strong>Intro</strong> una
+    vez. Amaya crea un nuevo párrafo dentro del elemento. 
     <p></p>
   </li>
-  <li>Type the paragraph text, and press the <strong>ENTER</strong> key
-    twice. The first <strong>ENTER</strong> creates another paragraph
-    element, but the second <strong>ENTER</strong> removes that paragraph and
-    creates a second bullet list item in the original list.
+  <li>Escribe el párrafo y pulsa <strong>Intro</strong> dos veces. El primer
+    <strong>Intro</strong> crea un nuevo párrafo, pero el segundo elimina ese
+    párrafo y crea un segundo elemento de la lista con boliche inicial. 
     <p></p>
   </li>
-  <li>Type the second list item.
+  <li>Escribe el texto correpsondiente al segundo elemento de la lista 
     <p></p>
   </li>
-  <li>Click the <strong>Bullet List</strong> button to create a new list. The
-    new list is automatically nested within the first list.
+  <li>Haz clic en el botón <strong>Lista con boliche</strong> para crear una
+    nueva lista. La nueva lista se anida automáticamente dentro de la primera
+    lista. 
     <p></p>
   </li>
-  <li>Type the text for the first item in the new list, and press the
-    <strong>ENTER</strong> key twice to create a new item in the nested list.
+  <li>Escribe el texto del primer elemento de la nueva lista, y pulsa
+    <strong>Intro</strong> dos veces para crear un nuevo elemento en la lista
+    anidada. 
     <p></p>
   </li>
-  <li>Type the text for the second list item, and press the
-    <strong>ENTER</strong> key four times to create a new list item in the
-    original list.
+  <li>Escribe el texto del segundo elemento y pulsa <strong>Intro</strong>
+    cuatro veces para crear un nuevo elemento de la lista inicial. 
     <p></p>
   </li>
-  <li>Type the final list item, and then press the <strong>ENTER</strong> key
-    three times to close the original list and start a new paragraph.
+  <li>Escribe el último elemento de la lista y pulsa <strong>Intro</strong>
+    tres veces para cerrar la lista original y empezar un nuevo párrafo. 
     <p></p>
   </li>
 </ol>
 
-<p>The <strong>ENTER</strong> key works in the same way when the insertion
-point is at the beginning of an element, but it creates new elements before
-the current element. For example, to add a list item between the first two
-items in the above structure, place the cursor at the beginning of the second
-list item, and press the <strong>ENTER</strong> key twice.</p>
+<p>La tecla <strong>Intro</strong> funciona de la misma manera cuando el
+punto de inserción está al principio de un elemento, pero crea el nuevo
+elemento antes del elemento actual. Por ejemplo, para añadir un elemento de
+lista entre los dos primeros elementos de la estructura anterio, sitúa el
+cursor al comienzo del segundo elemento de la lista y pulsa
+<strong>Intro</strong> dos veces.</p>
 
-<p class="Note"><b>Note</b>:  This use of the <strong>ENTER</strong> key does
-not apply only to lists and paragraphs, but to all elements. For example, it
-is very helpful for creating tables.</p>
+<p class="Note"><strong>Nota:</strong> El funcionamiento de la tecla
+<strong>Intro</strong> no se limita a listas y párrafos, sino que se aplica a
+todos los elementos. Por ejemplo, resulta muy útil para crear tablas.</p>
 </div>
-
 </body>
 </html>

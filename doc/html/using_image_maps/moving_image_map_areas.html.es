@@ -1,61 +1,59 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-	
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-  <meta name="GENERATOR" content="amaya 5.2" />
-  <title>Moving Image Map Areas</title>
-  <style type="text/css"></style>
+  <meta name="GENERATOR" content="amaya 6.4+, see http://www.w3.org/Amaya/" />
+  <title>Mover áreas de mapas de imagen</title>
+  
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
-<body xml:lang="en" lang="en">
+<body xml:lang="es" lang="es">
 
 <table border="0" summary="toc">
   <tbody>
     <tr>
       <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
         src="../../images/amaya.gif" /></td>
-      <td><p> <a href="using_clientside_image_maps.html.es" accesskey="p"><img alt="previous"
-        src="../../images/left.gif" /></a>
-		<a href="../ImageMaps.html.es" accesskey="t"><img alt="top" src="../../images/up.gif" /></a> 
-		<a href="resizing_image_map_areas.html.es" accesskey="n"><img alt="next"
-        src="../../images/right.gif" /></a></p>
+      <td><p><a href="using_clientside_image_maps.html.es" accesskey="p"><img
+        alt="anterior" src="../../images/left.gif" /></a> <a
+        href="../ImageMaps.html.es" accesskey="t"><img alt="superior"
+        src="../../images/up.gif" /></a> <a
+        href="resizing_image_map_areas.html.es" accesskey="n"><img
+        alt="siguiente" src="../../images/right.gif" /></a></p>
       </td>
     </tr>
   </tbody>
 </table>
 
 <div id="page_body">
-<h1>Moving Image Map Areas</h1>
+<h1>Mover áreas de mapas de imagen</h1>
 
-<p class="ProcedureDescription">After you have <a
-href="creating_clientside_image_maps.html.es">defined an area</a> within an
-image map, you can move that area somewhere else within the image:</p>
+<p class="ProcedureDescription">Una vez has <a
+href="creating_clientside_image_maps.html.es">definido un área</a> dentro de
+un mapa de imagen, puedes mover el área a otro lugar de la imagen.</p>
 
-<p class="ProcedureCaption">To move the area directly from the keyboard</p>
+<p class="ProcedureCaption">Para mover un área utilizando el teclado</p>
 <ol>
-  <li>Move the cursor into an area of the image map.</li>
-  <li>Press the <code>Control</code> key and click the mouse. This will
-    highlight the image map area.</li>
-  <li>Release the <code>Control</code> key but continue to hold down the
-    mouse button. Use the mouse to move the highlighted image area to its new
-    location.</li>
+  <li>Sitúa el cursor sobre un área del mapa de imagen</li>
+  <li>Mantén pulsada la tecla <code>Control</code> y haz clic con el ratón.
+    Se resaltará el área del mapa de imagen.</li>
+  <li>Suelta la tecla <code>Control</code>, pero mantén pulsado el ratón. Al
+    desplazar el ratón, se desplazará el área resaltada.</li>
 </ol>
 
-<p class="ProcedureCaption">To move the area using the Structure view</p>
+<p class="ProcedureCaption">Para mover un área utilizando la vista Estructura</p>
 <ol>
-  <li>Select <strong>Show Structure</strong> from the <strong>Views</strong>
-    menu (or press<code> Alt + v</code> then <code>Alt + s</code>). The
-    structure view of the document will open in another window.</li>
-  <li>Edit the <code>coords</code> attribute manually. Example:
+  <li>Elige el comando de menú <strong>Vistas &gt; Mostrar
+    estructura</strong> (o pulsa <code>Alt+v</code> y a continuación
+    <code>Alt+s</code>). La vista Estructura del documento se mostrará en una
+    nueva ventana.</li>
+  <li>Edita el atributo <code>coords</code> manualmente. Por ejemplo,
     <code>coords=28,5,55,33.</code></li>
-  <li>The image map area will move accordingly in the open browser
-  window.</li>
+  <li>El mapa de imagen se desplazará al valor indicado en la ventana del
+    navegador.</li>
 </ol>
 </div>
-
 </body>
 </html>

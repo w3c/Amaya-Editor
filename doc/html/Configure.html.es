@@ -5,12 +5,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-  <title>Configuring Amaya</title>
-  <style type="text/css">  </style>
+  <title>Configurar Amaya</title>
+  
   <link href="style.css" rel="stylesheet" type="text/css" />
 </head>
 
-<body xml:lang="en" lang="en">
+<body xml:lang="es" lang="es">
 
 <table border="0" summary="toc">
   <tbody>
@@ -18,10 +18,10 @@
       <td><p><img alt="W3C" src="../images/w3c_home" /> <img alt="Amaya"
         src="../images/amaya.gif" /></p>
       </td>
-      <td><p><a href="Annotations.html.es" accesskey="p"><img alt="previous"
+      <td><p><a href="Annotations.html.es" accesskey="p"><img alt="anterior"
         src="../images/left.gif" /></a> <a href="Manual.html.es"
-        accesskey="t"><img alt="top" src="../images/up.gif" /></a> <a
-        href="ShortCuts.html.es" accesskey="n"><img alt="next"
+        accesskey="t"><img alt="superior" src="../images/up.gif" /></a> <a
+        href="ShortCuts.html.es" accesskey="n"><img alt="siguiente"
         src="../images/right.gif" /></a></p>
       </td>
     </tr>
@@ -29,19 +29,19 @@
 </table>
 
 <div id="Configuring">
-<h1>Configuring Amaya</h1>
+<h1>Configurar Amaya</h1>
 
-<p>The following topics are covered in this section:</p>
+<p>En esta sección se tratan los temas siguientes:</p>
 <ul>
   <li><a href="configuring_amaya/configuring_amaya.html.es#page_body"
-    rel="subdocument">Configuring Amaya</a></li>
+    rel="subdocument">Configurar Amaya</a></li>
   <li><a
     href="configuring_amaya/about_configuration_directory_and_file_conventions.html.es#page_body"
-    rel="subdocument">About Configuration Directory and File Conventions</a></li>  
+    rel="subdocument">Directorio de configuración y convenciones de archivo</a></li>  
   <li><a href="configuring_amaya/menu_preferences.html.es#page_body"
-    rel="subdocument">Menu Preferences</a></li>
+    rel="subdocument">Menú Preferencias</a></li>
   <li><a href="configuring_amaya/about_keyboard_shortcuts.html.es#page_body"
-    rel="subdocument">About Keyboard Shortcuts</a></li>
+    rel="subdocument">Atajos de teclado</a></li>
 </ul>
 
 </div>

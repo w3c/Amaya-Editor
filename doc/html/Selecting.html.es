@@ -3,15 +3,13 @@
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta name="GENERATOR" content="amaya 5.4, see http://www.w3.org/Amaya/" />
-  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-  <title>Selecting</title>
-  <style type="text/css">
-  </style>
+  <meta name="GENERATOR" content="amaya 6.4, see http://www.w3.org/Amaya/" />
+  <title>Seleccionar</title>
+  
   <link href="style.css" rel="stylesheet" type="text/css" />
 </head>
 
-<body xml:lang="en" lang="en">
+<body xml:lang="es" lang="es">
 
 <table border="0" summary="toc">
   <tbody>
@@ -19,10 +17,10 @@
       <td><p><img alt="W3C" src="../images/w3c_home" /> <img alt="Amaya"
         src="../images/amaya.gif" /></p>
       </td>
-      <td><p><a href="Browsing.html.es" accesskey="p"><img alt="previous"
+      <td><p><a href="Browsing.html.es" accesskey="p"><img alt="anterior"
         src="../images/left.gif" /></a> <a href="Manual.html.es"
-        accesskey="t"><img alt="top" src="../images/up.gif" /></a> <a
-        href="Views.html.es" accesskey="n"><img alt="next"
+        accesskey="t"><img alt="superior" src="../images/up.gif" /></a> <a
+        href="Views.html.es" accesskey="n"><img alt="siguiente"
         src="../images/right.gif" /></a></p>
       </td>
     </tr>
@@ -30,16 +28,16 @@
 </table>
 
 <div id="page_body">
-<h1>Selecting</h1>
+<h1>Seleccionar</h1>
 
-<p>The following topics are covered in this section:</p>
+<p>En esta sección se tratan los temas siguientes: </p>
 <ul>
   <li><a href="selecting/selecting_with_keyboard_and_mouse.html.es#page_body"
-    rel="subdocument">Selecting with the Keyboard and Mouse</a></li>
+    rel="subdocument">Seleccionar con el Teclado y el Ratón</a></li>
   <li><a href="selecting/selecting_by_structure.html.es#page_body"
-    rel="subdocument">Selecting by Structure</a></li>
+    rel="subdocument">Seleccionar por Estructura</a></li>
   <li><a href="selecting/selecting_images.html.es#page_body"
-    rel="subdocument">Selecting Images</a></li>
+    rel="subdocument">Seleccionar imágenes</a></li>
 </ul>
 </div>
 </body>

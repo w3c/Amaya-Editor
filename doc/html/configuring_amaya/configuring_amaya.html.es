@@ -1,51 +1,50 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-	
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-   <meta name="GENERATOR" content="amaya 5.2" />
-   <title>Configuring Amaya</title>
-  <style type="text/css">  </style>
+  <meta name="GENERATOR" content="amaya 6.4+, see http://www.w3.org/Amaya/" />
+  <title>Configurar Amaya</title>
+  
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
-<body xml:lang="en" lang="en">
+<body xml:lang="es" lang="es">
 
 <table border="0" summary="toc">
   <tbody>
     <tr>
       <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
         src="../../images/amaya.gif" /></td>
-      <td><p> 
-		<a href="../Configure.html.es" accesskey="t"><img alt="top" src="../../images/up.gif" /></a> 
-		<a href="about_configuration_directory_and_file_conventions.html.es" accesskey="n"><img alt="next"
-        src="../../images/right.gif" /></a></p>
+      <td><p><a href="../Configure.html.es" accesskey="t"><img alt="superior"
+        src="../../images/up.gif" /></a> <a
+        href="about_configuration_directory_and_file_conventions.html.es"
+        accesskey="n"><img alt="siguiente" src="../../images/right.gif"
+        /></a></p>
       </td>
     </tr>
   </tbody>
 </table>
 
 <div id="page_body">
-<h1>Configuring Amaya</h1>
+<h1>Configurar Amaya</h1>
 
-<p>Amaya uses different configuration files to get initial values for global
-parameters, dialogs, shortcuts, window size and position, user's style sheet,
-and so on. You can change most configuration parameters with various
-preferences menus.</p>
+<p>Amaya utiliza varioas archivos de configuración para obtener los valores
+iniciales de los parámetros blobales, cajas de diálogo, atajos de teclado,
+tamaño y posición de la ventana, hoja de estilo de usuario, etc. Puedes
+cambiar la mayoría de parámetros de configuración con los menús de
+preferencias.</p>
 
-<h2>See also:</h2>
+<h2>Ver también:</h2>
 <ul>
-  <li><span class="Link0"><a href="menu_preferences.html.es">Menu
-    Preferences</a></span></li>
+  <li><span class="Link0"><a href="menu_preferences.html.es">Menú
+    Preferencias</a></span></li>
   <li><span class="Link0"><a
-    href="about_configuration_directory_and_file_conventions.html.es">About
-    Configuration Directory and File Conventions</a></span></li>
-  <li><span class="Link0"><a href="about_keyboard_shortcuts.html.es">About
-    Configuring Keyboard Shortcuts</a></span></li>
+    href="about_configuration_directory_and_file_conventions.html.es">Directorio
+    de configuración y convenciones de archivo</a></span></li>
+  <li><span class="Link0"><a href="about_keyboard_shortcuts.html.es">Atajos
+    de teclado</a></span></li>
 </ul>
 </div>
-
 </body>
 </html>

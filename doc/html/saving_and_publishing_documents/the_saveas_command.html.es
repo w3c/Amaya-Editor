@@ -3,15 +3,13 @@
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-  <meta name="GENERATOR" content="amaya 5.3, see http://www.w3.org/Amaya/" />
-  <title>The Save As Command</title>
-  <style type="text/css">
-  </style>
+  <meta name="GENERATOR" content="amaya 6.4+, see http://www.w3.org/Amaya/" />
+  <title>El comando Guardar como</title>
+  
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
-<body xml:lang="en" lang="en">
+<body xml:lang="es" lang="es">
 
 <table border="0" summary="toc">
   <tbody>
@@ -19,102 +17,105 @@
       <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
         src="../../images/amaya.gif" /></td>
       <td><p><a href="the_save_command.html.es" accesskey="p"><img
-        alt="previous" src="../../images/left.gif" /></a> <a
-        href="../Publishing.html.es" accesskey="t"><img alt="top"
+        alt="anterior" src="../../images/left.gif" /></a> <a
+        href="../Publishing.html.es" accesskey="t"><img alt="superior"
         src="../../images/up.gif" /></a> <a
-        href="saving_documents_as_text.html.es" accesskey="n"><img alt="next"
-        src="../../images/right.gif" /></a></p>
+        href="saving_documents_as_text.html.es" accesskey="n"><img
+        alt="siguiente" src="../../images/right.gif" /></a></p>
       </td>
     </tr>
   </tbody>
 </table>
 
 <div id="page_body">
-<h1>The Save As Command</h1>
+<h1>El comando Guardar como</h1>
 
-<p>Choosing <strong>Save As</strong> from the <strong>File</strong> menu
-opens the <strong>Save As</strong> dialog, where you can: save the document
-as XML, HTML, or as a text file to a local disk or a remote URI; save
-embedded images into the same document directory or a different location; and
-transform embedded URIs.</p>
+<p>Al elegir el comando de menú <strong>Archivo &gt; Guardar como</strong> se
+abre la caja de diálogo <strong>Guardar como</strong>, con la que puedes:
+guardar el documento como XML, HTML o como archivo de texto en un disco local
+o en un URI remoto; guardar las imágenes incrustadas en la misma carpeta que
+el documento o en otro lugar, y transformar los URIs incrustados.</p>
 
-<h2>The Save As Dialog</h2>
+<h2>La caja de diálogo Guardar como</h2>
 
-<p>The items in the dialog box, from top to bottom, left to right are used as
-follows:</p>
+<p>Los elementos de esta caja de diálogo se utilizan así:</p>
 <ul>
-  <li>The <strong>Document format</strong> offers a choice between
-    <strong>HTML</strong>, <strong>XML</strong> (XHTML) and
-    <strong>Text</strong> for HTML documents. This submenu is not shown when
-    saving a SVG, a MathML, a CSS, or any other document type. By default,
-    Amaya keeps the current document format. The entry <strong>Text</strong>
-    removes the HTML mark-up and replaces it by spaces, newlines, and so on. 
+  <li>El <strong>Formato de documento</strong> permite elegir entre
+    <strong>HTML</strong>, <strong>XML</strong> (XHTML) y
+    <strong>Texto</strong> para los documentos HTML. Este submenú no se
+    muestra cuando guardas SVG, MathML, CSS o cualquier otro tipo de
+    documento. Por omisión, Amaya mantiene el formato del documento actual.
+    Si eliges <strong>Text</strong> se elimina todo el marcado HTML y se
+    sutituye por espacios, slatos de línea, etc. 
     <p></p>
   </li>
-  <li>The <strong>Document location</strong> field indicates where the file
-    is to be written. This can be a file in the local file system (for
-    example, <code>/pub/html/welcome.html</code>) or the name of a remote URI
-    (for example, <code>http://www.w3.org/pub/WWW/Welcome.html</code>). 
+  <li>El campo <strong>Ubicación de documento</strong> indica dónde se
+    guardará el archivo. Puede ser un archivo local (por ejemplo,
+    <code>/pub/html/welcome.html</code>) o un URI remoto (por ejemplo,
+    <code>http://www.w3.org/pub/WWW/Welcome.html</code>). 
     <p></p>
-    <p class="Note"><strong>Note:   </strong><span xml:lang="EN" lang="EN"
-    style="font-weight:normal">Use</span><strong><span></span></strong>a
-    complete path for the URL. You should also make sure that you have the
-    rights to do a <code>PUT</code>method if it is a remote location. Refer
-    to the page on <a
-    href="http://www.w3.org/Amaya/User/Put.html">configuring your server to
-    accept the PUT method</a> or ask your Web administrator.</p>
+    <p class="Note"><strong>Nota:</strong> Escribe el camino completo para el
+    URL. Asímismo, debes estar seguro de que tiene derecho a ejecutar un
+    método <code>PUT</code> si se trata de un lugar remoto. Consulta la
+    página <a href="http://www.w3.org/Amaya/User/Put.html">configurar el
+    servidor para aceptar el método PUT</a> o pregunta al administrador de tu
+    Web.</p>
     <p></p>
   </li>
 </ul>
 <ul>
-  <li>The <strong>Copy Images</strong> toggle indicates whether the images
-    embedded in the current document must be copied along with the document
-    to the new location. It's generally better to keep this switch on as
-    otherwise you will not be sure that the corresponding images will be
-    found when opening the document later. However, switching it off is
-    useful when you have only changed the text of the document and the
-    document is stored on the same server. When images are copied, Amaya will
-    automatically update all <strong>SRC</strong> attributes to point new
-    image locations. New locations will be relative URIs. 
+  <li>La casilla de verificación <strong>Copiar imágenes</strong> indica si
+    las imágenes incrustadas en el documento actual se debn copiar junto con
+    el documento a la nueva ubicación. Normalmente es mejor tener esta
+    casilla marcada porque si no no estarías seguro de que las imágenes se
+    encontraran al abrir el documento posteriormente. Sin embargo, es útil
+    tener esta casilla desmarcada cuando simplemente as cambiado el texto del
+    documento y vas a guardar el documento en el mismo servidor. Al copiar
+    las imágenes, Amaya actualizará automáticamente todos los atributos
+    <strong>SRC</strong> para que apunten a la nueva ubicación de las
+    imágenes. Las nuevas ubicaciones se escribirán como URIs relativos. 
     <p></p>
   </li>
-  <li>The <strong>Transform URIs</strong> toggle transforms all current URIs
-    into relative URIs when possible. Of course, if the document is saved in
-    a local file and URIs point to remote files, URIs will be absolute. This
-    ensures that all the links in the document remain correct after the copy.
-    However, if you have several document linked together with relative URIs
-    and you plan to move them to a remote location, you must disable URI
-    conversion to avoid referencing the initial locations. 
+  <li>La casilla de verificación <strong>Transformar URIs</strong> transforma
+    los URIs actuales en URIs relativos siempre que sea posible. Por
+    supuesto, si el documento se guarda en un archivo local y los URIs
+    apuntan a archivos remotos, los URIs serán absolutos. when possible. Of
+    course, if the document is saved in a local file and URIs point to remote
+    files, URIs will be absolute. This ensures that all the links in the
+    document remain correct after the copy. However, if you have several
+    document linked together with relative URIs and you plan to move them to
+    a remote location, you must disable URI conversion to avoid referencing
+    the initial locations. 
     <p></p>
   </li>
-  <li>The <strong>Images location</strong> field allows you to save images
-    (if <strong>Copy Images</strong> has been selected) to a different place
-    than the HTML file. This field should contain the name of a directory on
-    the local file system or a location on the remote server. 
+  <li>El campo <strong>Directorio de imágenes</strong> te permite guardar
+    imágenes (si la casilla <strong>Copiar imágenes</strong> está activada)
+    en un lugar distinto al del archivo HTML. Este campo debe contener el
+    nombre de una carpeta del sistema de archivos local o la ubicación en el
+    servidor remoto. 
     <p></p>
     <ul>
-      <li>Using a relative path, the images are stored at a location relative
-        to the document directory. For example, if the document location is
-        <code><a
-        href="http://www.w3.org/pub/WWW/Welcome.html.es">http://www.w3.org/pub/WWW/Welcome.html</a><a
-        href="http://www.w3.org/pub/WWW/Welcome.html.es"></a></code> and the
-        images location is "Images", an image "W3C.png" contained in the
-        document is stored at the URI <code><a
+      <li>Al utilizar caminos relativos, las imágenes se guardan en una
+        ubicación relativa a la carpeta del documento. Por ejemplo, si la
+        ubicación del documento es <code><a
+        href="http://www.w3.org/pub/WWW/Welcome.html">http://www.w3.org/pub/WWW/Welcome.html</a></code>
+        y la ubicación de las imágenes es "Images", la imagen "W3C.png"
+        contenida en el documento se almacenaría con el URI <code><a
         href="http://www.w3.org/pub/WWW/Images/W3C.png">http://www.w3.org/pub/WWW/Images/W3C.png</a></code>
-        and the HTML file is modified to reference it as: 
+        y el archivo HTML se modificará para que la referencia sea: 
         <p></p>
         <p><code>&lt;img src="Images/W3C.png"&gt;</code></p>
         <p></p>
-        <p>This is similar in the case of a document location on the local
-        file system.</p>
+        <p>Sucedería lo mismo en caso de que la ubicación del documento fuera
+        en el sistema de archivo local.</p>
         <p></p>
       </li>
-      <li>Using an absolute path, the images are stored at this exact
-        location, independently of the document location. In the previous
-        example, if the specified images location is
-        <code>http://pub/WWW/Images</code>, the image is stored at
-        <code>http://www.w3.org/pub/WWW/Images/W3C.png</code> and the
-        corresponding HTML file is modified in the following way: 
+      <li>Al utilizar caminos absolutos, las imágenes se almacenan en la
+        ubicación exacta, independientemente de la ubicación del documento.
+        En el ejemplo previo, si la ubicación especificada de las imágenes es
+        <code>http://pub/WWW/Images</code>, la imagen se almacena en
+        <code>http://www.w3.org/pub/WWW/Images/W3C.png</code> y el archivo
+        HTML se modificará para que la referencia sea: 
         <p></p>
         <p><code>&lt;img src="Images/W3C.png"&gt;</code></p>
       </li>
@@ -122,69 +123,70 @@ follows:</p>
   </li>
 </ul>
 
-<p>Several buttons are at the bottom:</p>
+<p>En la parte inferior hay catro botones:</p>
 <ul>
-  <li>Clicking <strong>Confirm</strong> starts the process of transforming
-    the document. A dialog asks for confirmation in both of the following
-    cases: 
+  <li>Al hacer clic en <strong>Confirme</strong> se pone en marcha la
+    transformación del documento. Una caja de diálogo solicita confirmación
+    en los siguientes casos: 
     <ul>
-      <li>The document has to be saved on a remote server. Amaya displays the
-        complete URI to be written to for verification.</li>
-      <li>The document has to be saved locally and the file already exists. 
+      <li>El documento debe guardarse en un servidor remoto. Amaya muestra el
+        URI completo para que lo compruebes.</li>
+      <li>El documento debe guardarse localmente y el archivo ya existe. 
         <p></p>
       </li>
     </ul>
   </li>
-  <li>When saving to a remote location, check that the http_proxy is not set,
-    or that the proxy server and the <a
-    href="http://www.w3.org/Amaya/User/Put.html">target server are configured
-    to work with the PUT</a> method. 
+  <li>Al guardar en una ubicación remota, comprueba que no está activado el
+    http_proxy, o que el servidor proxy y el <a
+    href="http://www.w3.org/Amaya/User/Put.html">servidor destino están
+    configurados para trabajar con el método PUT</a>. 
     <p></p>
   </li>
-  <li>Amaya does not currently contact the remote server (in case of an
-    <code>http://...</code> destination) to check whether such a document
-    already exists. 
+  <li>En estos momentos Amaya no contacta con el servidor remoto (en caso de
+    ser <code>http://...</code> destino) para comprobar si este documento ya
+    existe. 
     <p></p>
   </li>
-  <li>Clicking <strong>Browse</strong> lets you select a local directory and
-    file name: 
+  <li>Al hacer clic en <strong>Buscar</strong> puedes seleccionar una carpeta
+    y un nombre de archivo locales: 
     <ul>
-      <li>The <strong>Document directories</strong> field shows the
-        directories contained in the current directory. It should be used to
-        save a file on the local file system.</li>
-      <li>The <strong>Files</strong> field shows the files contained in the
-        current local directory. 
+      <li>El campo <strong>Directorios de documentos</strong> muestra los
+        directorios existentes en el directorio local actual. Debes
+        utilizarlo para guardar un archivo en el sistema de archivo
+      local.</li>
+      <li>El campo <strong>Archivos</strong> muestra los archivos existentes
+        en el directorio local actual. 
         <p></p>
       </li>
     </ul>
   </li>
-  <li>Clicking <strong>Clear</strong> removes the current contents of both
-    the <strong>Document location</strong> field and the <strong>Images
-    location</strong> field. 
+  <li>Al hacer clic en <strong>Limpiar</strong> eliminas el contenido actual
+    del campo <strong>Ubicación del documento</strong> y del campo
+    <strong>Directorio de imágenes</strong>. 
     <p></p>
   </li>
-  <li>Clicking <strong>Change Charset</strong> opens a pop-up window that
-    enables you to change the charset of the document. This option only works
-    with documents that support the notion of charset, such as HTML and XML
-    ones. This option is available when saving both remote and local
-    documents. 
+  <li>Al hacer clic en <strong>Cambiar Charset</strong> se abre una caja de
+    diálogo en la que puedes cambiar el juego de caracteres del documento.
+    Esta opción sólo funciona en los documentos que permiten definir su juego
+    de caracteres, como HTML, XML. Esta opción está disponible tanto para
+    guardar archivos remotos como locales. 
     <p></p>
   </li>
-  <li>Clicking <strong>Change Mime Type</strong> opens a pop-up window where
-    you can select the MIME type of the document. If the MIME type you're
-    looking for is not listed, you can type it in yourself. This button is
-    only active when saving a document to a server (local file systems don't
-    store the MIME metadata information.). 
+  <li>Al hacer clic en <strong>Cambiar Mime Type</strong> se abre una caja de
+    diálogo en la que puedes seleccionar de tipo MIME del documento. Si el
+    tipo MIME que buscas no está en la lista, puedes escribirlo tú mismo.
+    Este botón está activo únicamente cuando guardas un documento en un
+    servidor (los sistemas de archivo local no almacenan la información de
+    metadatos MIME). 
     <p></p>
   </li>
-  <li>Clicking <strong>Cancel</strong> terminates the command.</li>
+  <li>Al hacer clic en <strong>Cancelar</strong>, anulas el comando.</li>
 </ul>
 
-<h2>See also:</h2>
+<h2>Ver también:</h2>
 <ul>
-  <li><a href="the_save_command.html.es">The Save Command</a></li>
+  <li><a href="the_save_command.html.es">El comando Guardar</a></li>
 </ul>
 </div>
-
 </body>
 </html>

@@ -3,15 +3,13 @@
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <title>Creating elements</title>
-  <meta name="GENERATOR" content="amaya 6.1, see http://www.w3.org/Amaya/" />
-  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-  <style type="text/css">
-  </style>
+  <title>Elementos de estilo de carácter en HTML</title>
+  <meta name="GENERATOR" content="amaya 6.4+, see http://www.w3.org/Amaya/" />
+  
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
-<body xml:lang="en" lang="en">
+<body xml:lang="es" lang="es">
 
 <table border="0" width="100%" summary="toc">
   <tbody>
@@ -19,9 +17,9 @@
       <td><p><img border="0" alt="W3C" src="../../images/w3c_home" /> <img
         border="0" alt="Amaya" src="../../images/amaya.gif" /></p>
       </td>
-      <td><p align="right"><a href="inline.html.es"><img alt="previous"
+      <td><p align="right"><a href="inline.html.es"><img alt="anterior"
         border="0" src="../../images/left.gif" /></a> <a
-        href="../HTML.html.es"><img alt="top" border="0"
+        href="../HTML.html.es"><img alt="superior" border="0"
         src="../../images/up.gif" /></a></p>
       </td>
     </tr>
@@ -29,43 +27,43 @@
 </table>
 
 <div id="Character">
-<h1>Character style elements in HTML</h1>
+<h1>Elementos de estilo de carácter en HTML</h1>
 
-<h2>What <strong>NOT</strong> to do and how it <strong>should</strong> be
-done...</h2>
+<h2>Lo que <strong>NO</strong> debes hacer y lo que <strong>SÍ</strong> que
+debes hacer...</h2>
 
-<p>HTML 4.0 (Strict) includes some elements which provide character styles.
-These elements should be replaced by the use of structural elements or style
-sheets wherever possible.</p>
+<p>En HTML 4.0 (Strict) existen algunos elementos que proporcionan estilos de
+carácter. En su lugar debes emplear elementos estructurales u hojas de estilo
+siempre que sea posible.</p>
 
-<p>All the elements in question except <code>PRE</code> are found in the
-<strong>Character Element</strong> submenu of the <strong>Style</strong>
-menu:</p>
+<p>Todos estos elementos, salvo el elemento <code>pre</code>, se encuentran
+en el menú <strong>XHTML &gt; Elemento carácter</strong>.</p>
 <dl>
-  <dt><code>B</code> and <code>I</code></dt>
-    <dd>These should be replaced by use of the <code></code><a
-      href="inline.html.es#Emphasis">STRONG and EM elements</a> where they are
-      used to provide emphasis for a word or phrase. There are <a
-      href="infoTypes.html.es">special elements</a> to denote headings, terms
-      that are being defined, and certain special uses, such as a quotation,
-      piece of computer code, etc. If the elements are simply being used to
-      provide heavier font <a href="../StyleSheets.html.es">style sheets</a>
-      should be used instead</dd>
-  <dt><code>BIG</code>and <code>SMALL</code></dt>
-    <dd>In general these effects should be achieved with <a
-      href="../StyleSheets.html.es">style sheets</a>. Where they are used to
-      denote specific types of information such as the source of a quotation,
-      sample computer input or output, etc, there are <a
-      href="inline.html.es">appropriate HTML elements</a> that should be
-    used.</dd>
-  <dt><code>SUB</code> and <code>SUP</code></dt>
-    <dd><a href="../StyleSheets.html.es">Style sheets</a> should be used to
-      achieve the presentation effects of these elements. In cases such as
-      mathematical expressions, an appropriate markup language such as <a
-      href="../Math.html.es">MathML</a> should be used where possible.</dd>
-  <dt><code>TT</code> and <code>PRE</code></dt>
-    <dd>Authors should use <a href="../StyleSheets.html.es">style sheets</a> to
-      achieve these effects.</dd>
+  <dt><code>b</code> e <code>i</code></dt>
+    <dd>En su lugar debes emplear los elementos <code></code><a
+      href="inline.html.es#Emphasis">strong y em</a> cuando quieras enfatizar
+      una palabra o frase. Existen <a href="infoTypes.html.es">otros
+      elementos</a> para indicar encabezados, términos que se están
+      definiendo, y otras situaciones especiales como citas, porciones de
+      programas de ordenador, etc. Si simplemente utilizas esos elementos
+      para conseguir un tipo de letra más fuerte, utiliza en su lugar <a
+      href="../StyleSheets.html.es">hojas de estilo</a>.</dd>
+  <dt><code>big</code> y <code>small</code></dt>
+    <dd>En general, debes conseguir estos efectos mediante <a
+      href="../StyleSheets.html.es">hojas de estilo</a>. Cuando quieras
+      indicar tipos de información específicos como fuentes de citas,
+      muestras de entrada o salida de programas de ordenador, etc, utiliza
+      los <a href="inline.html.es">elementos HTML</a> diseñados para
+    ello.</dd>
+  <dt><code>sub</code> y <code>sup</code></dt>
+    <dd>Para conseguir el formato que proporcionan estos elementos, utiliza
+      <a href="../StyleSheets.html.es">hojas de estilo</a>. Si quieres
+      escribir expresiones matemáticas, utiliza siempre que sea posible el
+      lenguaje de marcado adecuado para tal fin, el <a
+      href="../Math.html.es">MathML</a>.</dd>
+  <dt><code>tt</code> y <code>pre</code></dt>
+    <dd>Utiliza <a href="../StyleSheets.html.es">hojas de estilo</a> para
+      conseguir estos formatos.</dd>
 </dl>
 </div>
 </body>

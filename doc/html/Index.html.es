@@ -9,7 +9,7 @@
   <link rel="stylesheet" href="index.css" />
 </head>
 
-<body xml:lang="en" lang="en">
+<body xml:lang="es" lang="es">
 <a name="HTMLIndexerTop" id="HTMLIndexerTop"></a> 
 
 <h1>Index</h1>
@@ -246,7 +246,7 @@ creating</div>
 <a href="Configure.html.es">dialogues, configuring</a></div>
 
 <div class="level1">
-<a href="Changing.html.es#Inserting">DIV element</a></div>
+<a href="Changing.html.es#Inserting">div element</a></div>
 
 <div class="level1">
 <a href="MakeBook.html.es">document collections</a></div>
@@ -361,7 +361,7 @@ elements</div>
 <a href="Creating.html.es#Changing">TITLE</a></div>
 
 <div class="level1">
-<a href="Creating.html.es#L906">Enter key</a></div>
+<a href="Creating.html.es#L906">Intro key</a></div>
 
 <div class="level1">
 <a href="#mathematics">expressions, see mathematics</a></div>
@@ -383,10 +383,10 @@ elements</div>
 <a href="Searching.html.es">find and replace</a></div>
 
 <div class="level1">
-<a href="Configure.html.es#preferences">DIV size, menu</a></div>
+<a href="Configure.html.es#preferences">div size, menu</a></div>
 
 <div class="level1">
-<a href="Configure.html.es#preferences">DIV zooming</a></div>
+<a href="Configure.html.es#preferences">div zooming</a></div>
 
 <div class="level1">
 <a href="Configure.html.es#preferences">foregound color</a></div>
@@ -732,7 +732,7 @@ printing</div>
 <a href="Printing.html.es">documents</a></div>
 
 <div class="level2">
-<a href="Numbering.html.es">section numbering</a></div>
+<a href="Numbering.html.es">Numeración de secciones</a></div>
 
 <div class="level1">
 <a href="Configure.html.es#preferences">profiles preferences</a></div>
@@ -800,7 +800,7 @@ saving</div>
 <a href="Publishing.html.es#L1104">documents in HTML</a></div>
 
 <div class="level2">
-<a href="Numbering.html.es">section numbering</a></div>
+<a href="Numbering.html.es">Numeración de secciones</a></div>
 
 <div class="level2">
 <a href="Views.html.es#Using">synchronization when</a></div>
@@ -809,7 +809,7 @@ saving</div>
 <a href="Searching.html.es">searching and replacing text</a></div>
 
 <div class="level1">
-<a href="Numbering.html.es">section numbering</a></div>
+<a href="Numbering.html.es">Numeración de secciones</a></div>
 
 <div class="level1">
 selecting</div>

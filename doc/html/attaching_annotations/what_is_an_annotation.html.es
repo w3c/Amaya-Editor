@@ -1,69 +1,62 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-	
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-  <title>What is an Annotation?</title>
-  <style type="text/css">  </style>
-  <meta name="GENERATOR" content="amaya 5.2" />
+  <title>¿Qué es una anotación?</title>
+  <meta name="GENERATOR" content="amaya 6.4+, see http://www.w3.org/Amaya/" />
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
-<body xml:lang="en" lang="en">
+<body xml:lang="es" lang="es">
 
 <table border="0" summary="toc">
   <tbody>
     <tr>
       <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
         src="../../images/amaya.gif" /></td>
-      <td><p>
-		<a href="../Annotations.html.es" accesskey="t"><img alt="top" src="../../images/up.gif" /></a> 
-		<a href="about_reading_annotations.html.es" accesskey="n"><img alt="next"
-        src="../../images/right.gif" /></a></p>
+      <td><p><a href="../Annotations.html.es" accesskey="t"><img
+        alt="superior" src="../../images/up.gif" /></a> <a
+        href="about_reading_annotations.html.es" accesskey="n"><img
+        alt="siguiente" src="../../images/right.gif" /></a></p>
       </td>
     </tr>
   </tbody>
 </table>
 
 <div id="page_body">
-<h1><a name="What">What is an Annotation?</a></h1>
+<h1><a name="What">¿Qué es una anotación?</a></h1>
 
-<p>Annotations are comments, notes, explanations, or other types of external
-remarks that can be attached to a Web document or a selected part of the
-document. As they are external, it is possible to annotate any Web document
-independently, without needing to edit that document. From the technical
-point of view, annotations are usually seen as <strong>metadata,</strong> as
-they give additional information about an existing piece of data. In this
-project, we use a special <strong><a
-href="http://www.w3.org/RDF/">RDF</a></strong> <a
-href="http://www.w3.org/2000/10/annotation-ns">annotation schema</a> for
-describing annotations.</p>
+<p>Las anotaciones son observaciones, notas, explciaciones u otros tipos de
+comentarios externos que pueden adjuntarse a un documento Web o an una parte
+de un documento. Puesto que son externos, puedes anotar cualquier documento
+Web, sin necesidad de editarlo. Desde un punto de vista técnico, las
+anotaciones se consideran <strong>metadatoa,</strong> puesto que proporcionan
+información adicional a un dato ya existente. En este proyecto, empleamos un
+<strong><a href="http://www.w3.org/RDF/">esquema de anotaciones
+RDF</a></strong> especial para describir las anotaciones.</p>
 
-<p>Annotations can be stored locally or in one or more <strong>annotation
-servers</strong>. When a document is browsed, Amaya queries each of these
-servers, requesting the annotations related to that document. Currently Amaya
-presents annotations with pencil annotation icons ( <img
-src="../../images/annot.png" alt="Annotation pencil icon" /> )that are visually
-embedded in the document, as shown in the figure below. If the user
-single-clicks on an annotation icon, the text that was annotated is
-highlighted. If the user double-clicks on this icon, the annotation text and
-other metadata are presented in a separate window.</p>
+<p>Puedes almacenar las anotaciones localmente o en uno o más
+<strong>servidores de anotaciones</strong>. Al mostrar un documento, Amaya
+consulta a cada uno de estos servidores, solicitando las anotaciones de este
+documento. Actualmente Amaya muestra las anotaciones mediante un icono de
+lápiz ( <img src="../../images/annot.png" alt="Icono de lápiz de anotación"
+/> ) incrustado en el documento, como puedes ver en la imagen siguiente. Si
+el usuario hace clic en un icono de anotación, el texto anotado se resalta.
+Si el usuario hace doble clic en el icono, el texto de la anotación y otros
+metadatos se muestran en una ventana aparte.</p>
 
-<p style="text-align: center"><img src="../../images/annotationicon.png"
-alt="annotation icon (= pencil)" /></p>
+<p style="text-align: center"><img src="../../images/annotationicon-es.png"
+alt="Icono de anotación (lápiz)" /></p>
 
-<p>An annotation has many properties including:</p>
+<p>Una anotación tiene varias propiedades, por ejemplo:</p>
 <ul>
-  <li>Physical location: is the annotation stored in a local file system or
-    in an annotation server</li>
-  <li>Scope: is the annotation associated to a whole document or just to a
-    fragment of this document</li>
-  <li>Annotation type: 'Annotation', 'Comment', 'Query', ...</li>
+  <li>Ubicación física: indica si la anotación se almacena localmente o en un
+    servidor de anotaciones.</li>
+  <li>Objeto: indica si la anotación está asociada al documento completo o
+    simplemente a un fragmento del documento.</li>
+  <li>Tipo de anotación: 'Anotación', 'Observación', 'Solicitud', ...</li>
 </ul>
-
 </div>
-
 </body>
 </html>

@@ -3,69 +3,70 @@
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-  <title>Entering ISO-Latin and Unicode Characters in Amaya</title>
-  <style type="text/css">
-  </style>
-  <meta name="GENERATOR" content="amaya 6.0, see http://www.w3.org/Amaya/" />
+  <title>Escribir caracteres</title>
+  
+  <meta name="GENERATOR" content="amaya 6.4+, see http://www.w3.org/Amaya/" />
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
-<body xml:lang="en" lang="en">
+<body xml:lang="es" lang="es">
 
 <table border="0" summary="toc">
   <tbody>
     <tr>
       <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
         src="../../images/amaya.gif" /></td>
-      <td><p><a href="../EditChar.html.es" accesskey="t"><img alt="top"
+      <td><p><a href="../EditChar.html.es" accesskey="t"><img alt="superior"
         src="../../images/up.gif" /></a> <a
         href="about_optional_multikey_support.html.es" accesskey="n"><img
-        alt="next" src="../../images/right.gif" /></a></p>
+        alt="siguiente" src="../../images/right.gif" /></a></p>
       </td>
     </tr>
   </tbody>
 </table>
 
 <div id="page_body" class="Section1">
-<h1>Entering Characters in Amaya</h1>
+<h1>Escribir caracteres</h1>
 
-<p>To enter ISO-Latin characters that are not directly available from the
-keyboard, Amaya uses the standard support provided by the Operating System.
-An optional multi-key support is also provided for Motif versions and Windows
-versions.</p>
+<p>Para escribir caracteres ISO-Latin que no están disponibles directamente
+desde el teclado, Amaya utiliza el soporte estándar que proporciona el
+Sistema Operativo. Amaya incluye un soporte opcional para múltiples teclados
+en las versiones Motif y Windows.</p>
 
-<p>Amaya provides a mechanism for assigning <a
-href="../ShortCuts.html.es">Keyboard Shortcuts</a> to characters that are not
-directly available from the keyboard. Some of them are pre-defined:</p>
+<p>Amaya dispone de un mecanismo para asignar <a
+href="../ShortCuts.html.es">Atajos de teclado</a> a los caracteres que no
+están disponibles directamente desde el teclado. Algunos están
+predefinidos:</p>
 <ul>
-  <li>To enter a non-breaking space, press <code>Control - space</code>. This
-    character will be saved as an entity (<span class="code"><span
-    style='font-size: 11.0pt;font-family:"Courier New";'><code>&amp;nbsp;</code></span></span>).</li>
-  <li>To enter a &euro; (euro) character, press <code>Alt - e</code>.</li>
-  <li>To enter a &oelig; (oelig), press <code>Control - o</code> the
-    <code>Control - e</code>.</li>
-  <li>To enter a &OElig; (OElig), press <code>Shift - Control - O</code> then
-    <code>Shift - Control - e</code>.</li>
-  <li>To enter a «, press either <code>Control - &lt;</code> or Shift -
-    <code>Control - &lt;</code> (it depends on your keyboard).</li>
-  <li>To enter a », press <code>Shift - Control - &gt;</code>.</li>
+  <li>Para escribir un carácter nulo, pulsa <code>Control - space</code>.
+    Este carácter se guarda como la entidad de carácter <span
+    class="code"><span
+    style="font-size: 11.0pt;font-family:"Courier New";"><code>&amp;nbsp;</code></span></span>.</li>
+  <li>Para escribir el símbolo de euro (&euro;), pulsa <code>Alt -
+  e</code>.</li>
+  <li>Para escribir &#x153; (oelig), pulsa <code>Control - o</code> y a
+    continuación <code>Control - e</code>.</li>
+  <li>para escribir &#x152; (OElig), pulsa <code>Shift - Control - O</code> y
+    a continuación <code>Shift - Control - e</code>.</li>
+  <li>Para escribir «, pulsa <code>Control - &lt;</code> o Shift -
+    <code>Control - &lt;</code> (depende del teclado que tengas).</li>
+  <li>Para escribir », pulsa <code>Shift - Control - &gt;</code>.</li>
 </ul>
 
-<p>See the description of two multi-key input methods:</p>
+<p>Ver también la descripción de dos métodos de entrada de teclados
+múltiples:</p>
 <ul>
-  <li><a href="about_standard_multikey_support.html.es">Standard multi-key for
-    Motif and GTK versions</a></li>
-  <li><a href="about_optional_multikey_support.html.es">Optional multi-key for
-    Motif versions and Windows versions</a></li>
+  <li><a href="about_standard_multikey_support.html.es">Combinaciones de
+    teclas en las versiones Motif y GTK</a></li>
+  <li><a href="about_optional_multikey_support.html.es">Combinaciones de
+    teclas en las versiones Motif y Windows</a></li>
 </ul>
 
-<p>When two methods are available, you choose the method you want to use by
-selecting <strong>Enable multi-key</strong> in the <strong>General
-Preferences</strong> dialog box, available from the <span
-class="Link0"><strong>Special</strong></span> menu. When enabled, Amaya
-activates the optional multi-key support, and deactivates the standard
-multi-key support.</p>
+<p>Cuando los dos métodos están disponibles, puedes elegir el método que
+prefieras eligiendo <strong>Enable multi-key</strong> en la ventana de
+diálogo <strong>Especial &gt; Preferencias generales</strong>. Al marcar esta
+opción, Amaya activa el soporte opcional para teclados múltiples y desactiva
+el soporte estándar para teclados múltiples.</p>
 </div>
 </body>
 </html>

@@ -4,13 +4,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta name="GENERATOR" content="amaya 6.4, see http://www.w3.org/Amaya/" />
-  <title>Viendo documentos en Amaya</title>
-  <style type="text/css">
-  </style>
+  <title>Ver documentos en Amaya</title>
+  
   <link href="style.css" rel="stylesheet" type="text/css" />
 </head>
 
-<body xml:lang="en" lang="en">
+<body xml:lang="es" lang="es">
 
 <table border="0" summary="toc">
   <tbody>
@@ -18,10 +17,10 @@
       <td><p><img alt="W3C" src="../images/w3c_home" /> <img alt="Amaya"
         src="../images/amaya.gif" /></p>
       </td>
-      <td><p><a href="Selecting.html.es" accesskey="p"><img alt="previous"
+      <td><p><a href="Selecting.html.es" accesskey="p"><img alt="anterior"
         src="../images/left.gif" /></a> <a href="Manual.html.es"
-        accesskey="t"><img alt="top" src="../images/up.gif" /></a> <a
-        href="Changing.html.es" accesskey="n"><img alt="next"
+        accesskey="t"><img alt="superior" src="../images/up.gif" /></a> <a
+        href="Changing.html.es" accesskey="n"><img alt="siguiente"
         src="../images/right.gif" /></a></p>
       </td>
     </tr>
@@ -29,7 +28,7 @@
 </table>
 
 <div id="page_body">
-<h1>Viendo documentos en Amaya</h1>
+<h1>Ver documentos en Amaya</h1>
 
 <p>En esta sección se tratan los temas siguientes:</p>
 <ul>

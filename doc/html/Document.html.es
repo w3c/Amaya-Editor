@@ -3,15 +3,13 @@
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-  <meta name="GENERATOR" content="amaya 5.4, see http://www.w3.org/Amaya/" />
-  <title>Editing Documents in Amaya</title>
-  <style type="text/css">
- </style>
+  <meta name="GENERATOR" content="amaya 6.4, see http://www.w3.org/Amaya/" />
+  <title>Editar Documentos</title>
+  
   <link href="style.css" rel="stylesheet" type="text/css" />
 </head>
 
-<body xml:lang="en" lang="en">
+<body xml:lang="es" lang="es">
 
 <table border="0" summary="toc">
   <tbody>
@@ -19,21 +17,21 @@
       <td><p><img alt="W3C" src="../images/w3c_home" /> <img alt="Amaya"
         src="../images/amaya.gif" /></p>
       </td>
-      <td><p><a href="Manual.html.es" accesskey="t"><img alt="top"
+      <td><p><a href="Manual.html.es" accesskey="t"><img alt="superior"
         src="../images/up.gif" /></a> <a href="Creating.html.es"
-        accesskey="n"><img alt="next" src="../images/right.gif" /></a></p>
+        accesskey="n"><img alt="siguiente" src="../images/right.gif" /></a></p>
       </td>
     </tr>
   </tbody>
 </table>
 
 <div id="Changing">
-<h1>Editing Documents</h1>
+<h1>Editar Documentos</h1>
 
-<p>The following topics are covered in this section:</p>
+<p>En esta sección se tratan los temas siguientes:</p>
 <ul>
   <li><a href="editing_documents/creating_new_documents.html.es"
-    rel="subdocument">Creating New document</a></li>
+    rel="subdocument">Crear nuevos documentos</a></li>
 </ul>
 </div>
 </body>

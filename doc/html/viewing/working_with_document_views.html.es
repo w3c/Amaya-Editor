@@ -5,19 +5,20 @@
 <head>
   <title>Utilizar las vistas de Documento</title>
   <link href="../style.css" rel="stylesheet" type="text/css" />
-  <meta name="GENERATOR" content="amaya 6.4, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 6.4+, see http://www.w3.org/Amaya/" />
 </head>
 
-<body xml:lang="en" lang="en">
+<body xml:lang="es" lang="es">
 
 <table border="0" summary="toc">
   <tbody>
     <tr>
       <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
         src="../../images/amaya.gif" /></td>
-      <td><p><a href="../Views.html.es" accesskey="t"><img alt="top"
+      <td><p><a href="../Views.html.es" accesskey="t"><img alt="superior"
         src="../../images/up.gif" /></a> <a href="opening_a_view.html.es"
-        accesskey="n"><img alt="next" src="../../images/right.gif" /></a></p>
+        accesskey="n"><img alt="siguiente" src="../../images/right.gif"
+        /></a></p>
       </td>
     </tr>
   </tbody>
@@ -41,9 +42,9 @@ elegida.</p>
   <tbody>
     <tr>
       <td><p><img width="109" height="122"
-        src="../../images/formattedview.jpg" alt="formatted view" /></p>
+        src="../../images/formattedview.jpg" alt="vista Formateada" /></p>
       </td>
-      <td><p><strong>Vista Formateada</strong> (por defecto)</p>
+      <td><p><strong>Vista Formateada</strong> (por omisión)</p>
 
         <p>Esta vista es similar a la que se obtiene en otros navegadores
         gráficos. Es una vista dinámica, que permite la manipulación directa.
@@ -53,11 +54,11 @@ elegida.</p>
       </td>
     </tr>
     <tr>
-      <td><p><img width="108" height="98" alt="structure view"
+      <td><p><img width="108" height="98" alt="vista Estructura"
         src="../../images/structureview.jpg" /></p>
       </td>
-      <td><p><strong>Vista Estructura</strong> (Vista &gt; Mostrar
-        estructura)</p>
+      <td><p><strong>Vista Estructura</strong> (comando de menú <strong>Vista
+        &gt; Mostrar estructura</strong>)</p>
 
         <p>Esta vista muestra la estructura actual del documento. Cada
         elemento se representa mediante el nombre de su etiqueta, seguido de
@@ -69,8 +70,8 @@ elegida.</p>
         él y escribiendo. Debes utilizar los comandos de edición para cambiar
         el texto azul.</p>
 
-        <p>La vista estructura muestra todos los elementos del documento,
-        incluso aquellos que no se muestran en la vista formateada, por
+        <p>La vista Estructura muestra todos los elementos del documento,
+        incluso aquellos que no se muestran en la vista Formateada, por
         ejemplo los comentarios, el tipo de documento, instrucciones de
         procesado o los elementos de la sección de encabezado.</p>
 
@@ -80,11 +81,11 @@ elegida.</p>
       </td>
     </tr>
     <tr>
-      <td><p><img width="108" height="102" alt="alternate view"
+      <td><p><img width="108" height="102" alt="vista Alternativa"
         src="../../images/alternateview.jpg" /></p>
       </td>
-      <td><p><strong>Vista Alternativa</strong> (Vistas &gt; Mostrar
-        alternativo)</p>
+      <td><p><strong>Vista Alternativa</strong> (comando de menú
+        <strong>Vistas &gt; Mostrar alternativo</strong>)</p>
 
         <p>Esta vista muestra cómo se vería el documento en un navegador de
         modo texto. Esta vista es útil para comprobar la accesibilidad de tus
@@ -92,10 +93,11 @@ elegida.</p>
       </td>
     </tr>
     <tr>
-      <td><p><img width="109" height="122" alt="links view"
+      <td><p><img width="109" height="122" alt="vista Enlaces"
         src="../../images/linksview.jpg" /></p>
       </td>
-      <td><p><strong>Vista Enlaces</strong> (Vistas &gt; Mostrar enlaces)</p>
+      <td><p><strong>Vista Enlaces</strong> (comando de menú <strong>Vistas
+        &gt; Mostrar enlaces</strong>)</p>
 
         <p>Esta lista muestra una lista de todas las anclas del documento y
         los elementos que contiene cada ancla. Puedes apuntar sobre ellas
@@ -103,22 +105,23 @@ elegida.</p>
       </td>
     </tr>
     <tr>
-      <td><p><img width="111" height="168" alt="table of contents view"
+      <td><p><img width="111" height="168" alt="vista Contenido"
         src="../../images/tocview.jpg" /></p>
       </td>
-      <td><p><strong>Vista Contenido</strong> (Vistas &gt; Mostrar tabla de
-        contenidos)</p>
+      <td><p><strong>Vista Contenido</strong> (comando de menú <strong>Vistas
+        &gt; Mostrar tabla de contenidos</strong>)</p>
 
         <p>Esta vista muestra la lista de todos los encabezados (elementos
-        Hn) del documentos. Si el documento está bien estructurado, muestra
+        hn) del documentos. Si el documento está bien estructurado, muestra
         un resumen del documento.</p>
       </td>
     </tr>
     <tr>
-      <td><p><img width="109" height="115" alt="source view"
+      <td><p><img width="109" height="115" alt="vista Fuente"
         src="../../images/sourceview.jpg" /></p>
       </td>
-      <td><p><strong>Vista Fuente</strong> (Vistas &gt; Mostrar fuente)</p>
+      <td><p><strong>Vista Fuente</strong> (comando de menú <strong>Vistas
+        &gt; Mostrar fuente</strong>)</p>
 
         <p>Esta vista muestra el código fuente actual del documento. Puedes
         utilizarla para editar la sintaxis del documento.</p>

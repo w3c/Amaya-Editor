@@ -5,13 +5,12 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
   <meta name="GENERATOR" content="amaya 5.4, see http://www.w3.org/Amaya/" />
-  <title>Searching and Replacing Text</title>
-  <style type="text/css">
-  </style>
+  <title>Buscar y reemplazar texto</title>
+  
   <link href="style.css" rel="stylesheet" type="text/css" />
 </head>
 
-<body xml:lang="en" lang="en">
+<body xml:lang="es" lang="es">
 
 <table border="0" summary="toc">
   <tbody>
@@ -19,10 +18,10 @@
       <td><p><img alt="W3C" src="../images/w3c_home" /> <img alt="Amaya"
         src="../images/amaya.gif" /></p>
       </td>
-      <td><p><a href="StyleSheets.html.es" accesskey="p"><img alt="previous"
+      <td><p><a href="StyleSheets.html.es" accesskey="p"><img alt="anterior"
         src="../images/left.gif" /></a> <a href="Manual.html.es"
-        accesskey="t"><img alt="top" src="../images/up.gif" /></a> <a
-        href="SpellChecking.html.es" accesskey="n"><img alt="next"
+        accesskey="t"><img alt="superior" src="../images/up.gif" /></a> <a
+        href="SpellChecking.html.es" accesskey="n"><img alt="siguiente"
         src="../images/right.gif" /></a></p>
       </td>
     </tr>
@@ -30,13 +29,13 @@
 </table>
 
 <div id="page_body">
-<h1>Searching and Replacing Text</h1>
+<h1>Buscar y reemplazar texto</h1>
 
-<p>The following topics are covered in this section:</p>
+<p>En esta sección se tratan los temas siguientes:</p>
 <ul>
   <li><a
     href="searching_and_replacing_text/searching_and_replacing_text.html.es#page_body"
-    rel="subdocument">Searching and Replacing Text</a></li>
+    rel="subdocument">Buscar y reemplazar texto</a></li>
 </ul>
 </div>
 </body>

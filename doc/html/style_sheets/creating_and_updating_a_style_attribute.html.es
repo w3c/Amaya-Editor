@@ -1,70 +1,69 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-	
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-  <meta name="GENERATOR" content="amaya 5.2" />
-  <title>Creating and Updating a Style Attribute</title>
-  <style type="text/css"></style>
+  <meta name="GENERATOR" content="amaya 6.4, see http://www.w3.org/Amaya/" />
+  <title>Crear y actualizar un atributo de estilo</title>
+  
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
-<body xml:lang="en" lang="en">
+<body xml:lang="es" lang="es">
 
 <table border="0" summary="toc">
   <tbody>
     <tr>
       <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
         src="../../images/amaya.gif" /></td>
-      <td><p><a href="working_with_styles.html.es" accesskey="p"><img alt="previous"
-        src="../../images/left.gif" /></a> 
-		<a href="../StyleSheets.html.es" accesskey="t"><img alt="top" src="../../images/up.gif" /></a> 
-		<a href="creating_generic_style_for_an_element_or_a_class.html.es" accesskey="n"><img alt="next"
-        src="../../images/right.gif" /></a></p>
+      <td><p><a href="working_with_styles.html.es" accesskey="p"><img
+        alt="anterior" src="../../images/left.gif" /></a> <a
+        href="../StyleSheets.html.es" accesskey="t"><img alt="superior"
+        src="../../images/up.gif" /></a> <a
+        href="creating_generic_style_for_an_element_or_a_class.html.es"
+        accesskey="n"><img alt="siguiente" src="../../images/right.gif" /></a></p>
       </td>
     </tr>
   </tbody>
 </table>
 
 <div id="page_body">
-<h1>Creating and Updating a Style Attribute</h1>
+<h1>Crear y actualizar un atributo de estilo</h1>
 
-<p>The first four entries of the <strong>Style</strong> menu open a dialog
-that lets you associate a style attribute with the currently selected
-elements:</p>
+<p>Las primeras cuatro opciones del menú <strong>Estilo</strong> abren una
+caja de diálogo que te permiten aplicar un estilo a los elementos
+seleccionados.</p>
 <ul>
-  <li><strong>Character style</strong> lets you choose the font family, the
-    character style, the body size, and the underline style.
+  <li><strong>Estilo de carácter</strong> te permite elegir una familia de
+    fuentes, el estilo de carácter, el tamaño de la fuente y el estilo de
+    subrayado.
     <p></p>
   </li>
-  <li><strong>Colors</strong> let you choose the foreground and background
-    colors from a palette. Click a palette cell with the left button to set
-    the foreground color, and click with the middle button to set the
-    background color.
+  <li><strong>Colores</strong> te permite elegir de una paleta de colores el
+    color de fondo y el color del texto. Haz clic con el botón izqueirdo en
+    una celda de la paleta para elegir el color de texto, y haz clic con el
+    botón central para elegir el color de fondo.
     <p></p>
   </li>
-  <li><strong>Format</strong> enables you to set alignment, indentation,
-    justification, and line spacing.
+  <li><strong>Formato</strong> te permite elegir la alineación, el sangrado y
+    el espaciado.
     <p></p>
   </li>
-  <li><strong>Background image</strong> enables you to choose a background
-    image and its repeat mode.</li>
+  <li><strong>Imagen de fondo</strong> te permite elegir una imagen de fondo
+    y su modo de repetición.</li>
 </ul>
 
-<p>In all these dialogs, Default options enable you to remove any
-corresponding style information for the selected elements.</p>
+<p>En todos estos diálogos, si escoges la opción por omisión se eliminará
+cualqueir información de estilo en los elementos seleccionados.</p>
 
-<p>All modifications made with these dialogs can be viewed immediately in the
-Formatted and Structure views.</p>
+<p>Cualquier modificación realizada con estos comandos se muestran
+inmediatamente en las vistas formateada y estructura.</p>
 
-<h2>See Also:</h2>
+<h2>Ver también:</h2>
 <ul>
-  <li><span class="Link"><a href="working_with_styles.html.es">Working with
-    Styles</a></span></li>
+  <li><span class="Link"><a href="working_with_styles.html.es">Trabajar con
+    estilos</a></span></li>
 </ul>
 </div>
-
 </body>
 </html>

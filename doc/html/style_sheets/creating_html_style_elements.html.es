@@ -3,15 +3,12 @@
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-  <meta name="GENERATOR" content="amaya 5.4, see http://www.w3.org/Amaya/" />
-  <title>Creating HTML Style Elements</title>
-  <style type="text/css">
- </style>
+  <meta name="GENERATOR" content="amaya 6.4+, see http://www.w3.org/Amaya/" />
+  <title>Crear elementos de estilo HTML</title>
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
-<body xml:lang="en" lang="en">
+<body xml:lang="es" lang="es">
 
 <table border="0" summary="toc">
   <tbody>
@@ -19,60 +16,62 @@
       <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
         src="../../images/amaya.gif" /></td>
       <td><p><a href="about_applying_style_using_html_elements.html.es"
-        accesskey="p"><img alt="previous" src="../../images/left.gif" /></a>
-        <a href="../StyleSheets.html.es" accesskey="t"><img alt="top"
+        accesskey="p"><img alt="anterior" src="../../images/left.gif" /></a>
+        <a href="../StyleSheets.html.es" accesskey="t"><img alt="superior"
         src="../../images/up.gif" /></a> <a href="removing_style.html.es"
-        accesskey="n"><img alt="next" src="../../images/right.gif" /></a></p>
+        accesskey="n"><img alt="siguiente" src="../../images/right.gif"
+        /></a></p>
       </td>
     </tr>
   </tbody>
 </table>
 
 <div id="page_body" class="Section1">
-<h1>Creating HTML Style Elements</h1>
+<h1>Crear elementos de estilo HTML</h1>
 
-<p>Two submenus on the <strong>Style</strong> menu enable you to add HTML
-elements to your CSS style sheet: <strong>Information Type</strong> and
-<strong>Character Elements</strong>.</p>
+<p>Los dos submenús del menú <strong>Xhtml</strong> que te permiten añadir
+elementos HTML son <strong>Tipo de Información</strong> y <strong>Elemento
+carácter</strong>.</p>
 
-<h2>Information Types</h2>
+<h2>Tipo de información</h2>
 
-<p>The <strong>Information Type</strong> submenu lists HTML elements that
-define abstract styles. Three of these styles are also available through
-buttons: <em>emphasis</em> <img src="../../images/Em.gif"
-alt="Emphasis button" />, <strong>strong</strong> <img
-src="../../images/Strong.gif" alt="Strong button" /> and <code>code</code>
-<img src="../../images/code.gif" alt="Code button" />.</p>
+<p>El submenú <strong>Tipo de Información</strong> muestra los elementos HTML
+que representan estilos abstractos. Tres de estos estilos cuentan con botones
+en la barra de botones: <em>énfasis</em> <img src="../../images/Em.gif"
+alt="Botón em" />, <strong>strong</strong> <img src="../../images/Strong.gif"
+alt="Botón strong" /> and <code>code</code> <img src="../../images/code.gif"
+alt="Botón code" />.</p>
 
-<p class="ProcedureCaption">To apply an information type:</p>
+<p class="ProcedureCaption">Para aplicar un tipo de información:</p>
 <ol>
-  <li>Select a character string in your page. 
+  <li>Selecciona una cadena de caracteres en el documento. 
     <p></p>
   </li>
-  <li>Choose an option from the <strong>Information Types</strong> submenu. 
-    <p>The selected character string displays in the chosen style.</p>
+  <li>Elige una opción del submenu <strong>Tipo de Información</strong>. 
+    <p>La cadena seleccionada se mostrará en el estilo elegido.</p>
   </li>
 </ol>
 
-<h2>Character Elements</h2>
+<h2>Elemento carácter</h2>
 
-<p>The <strong>Character Elements</strong> submenu enables you to change the
-style of the text to italic, bold, teletype, superscript, subscript, and so
-on (these are included to complete the HTML 3.2 implementation).</p>
+<p>El submenú <strong>Elemento carácter</strong> te permite cambiar el estilo
+del texto a itálica, negrita, teletipo, superíndice, subíndice, y otros
+(estas opciones se incluyen para cubrir la recomendación HTML 3.2).</p>
 
-<p class="ProcedureCaption">To apply a character element:</p>
+<p class="ProcedureCaption">Para aplicar un elemento carácter:</p>
 <ol>
-  <li>Select a character string in your page. 
+  <li>Selecciona una cadena de carácteres del documento. 
     <p></p>
   </li>
-  <li>Choose an option from the <strong>Character Elements</strong> submenu. 
-    <p>The selected character string displays the chosen style.</p>
+  <li>Elige una opción del submenú <strong>Elemento carácter</strong>. 
+    <p>La cadena de caracteres seleccionada se mostrará en el estilo
+    elegido.</p>
   </li>
 </ol>
 
-<h2>See Also:</h2>
+<h2>Ver también:</h2>
 <ul>
-  <li><a href="working_with_styles.html.es">Working with Styles</a></li>
+  <li><a href="working_with_styles.html.es">Trabajar con estilos</a></li>
 </ul>
 </div>
 </body>

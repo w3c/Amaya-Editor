@@ -1,29 +1,26 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-	
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
+  <meta name="GENERATOR" content="amaya 6.4+, see http://www.w3.org/Amaya/" />
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-  <meta name="GENERATOR" content="amaya 5.2" />
-  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-  <title>Keyboard Shortcuts in Amaya</title>
-  <style type="text/css">
-  </style>
+  <title>Atajos de teclado</title>
+  
   <link href="style.css" rel="stylesheet" type="text/css" />
 </head>
 
-<body xml:lang="en" lang="en">
+<body xml:lang="es" lang="es">
 
 <table border="0" summary="toc">
   <tbody>
     <tr>
       <td><img alt="W3C" src="../images/w3c_home" /> <img alt="Amaya"
         src="../images/amaya.gif" /></td>
-      <td><p><a href="Configure.html.es" accesskey="p"><img alt="previous"
+      <td><p><a href="Configure.html.es" accesskey="p"><img alt="anterior"
         src="../images/left.gif" /></a> <a href="Manual.html.es"
-        accesskey="t"><img alt="top" src="../images/up.gif" /></a> <a
-        href="Access.html.es" accesskey="n"><img alt="next"
+        accesskey="t"><img alt="superior" src="../images/up.gif" /></a> <a
+        href="Access.html.es" accesskey="n"><img alt="siguiente"
         src="../images/right.gif" /></a></p>
       </td>
     </tr>
@@ -31,17 +28,14 @@
 </table>
 
 <div id="page_body">
+<h1>Atajos de teclado</h1>
 
-<h1>Keyboard Shortcuts in Amaya</h1>
-
-<p>It is useful to be able to invoke menu commands directly from the
-keyboard. Click on the topic below for more information about keyboard shortcuts within Amaya.</p>
+<p>Resulta útil poder acceder directamente a los comandos de menú mediante
+atajos de teclado, como se explica en el apartado siguiente.</p>
 <ul>
-	<li><a href="configuring_amaya/about_keyboard_shortcuts.html.es#page_body" rel="subdocument">About Keyboard Shortcuts</a></li>
-
+  <li><a href="configuring_amaya/about_keyboard_shortcuts.html.es#page_body"
+    rel="subdocument">Atajos de teclado</a></li>
 </ul>
-
 </div>
-
 </body>
 </html>

@@ -2,57 +2,58 @@
     "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-  <meta name="generator" content="amaya 5.2" />
-  <title>Editing Math Expressions</title>
-  <style type="text/css">  </style>
-  <link href="../style.css" rel="stylesheet" type="text/css" />
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="amaya 6.4+, see http://www.w3.org/Amaya/">
+  <title>Editar expresiones matemáticas</title>
+  
+  <link href="../style.css" rel="stylesheet" type="text/css">
 </head>
 
-<body xml:lang="en" lang="en">
+<body lang="es">
 
 <table border="0" summary="toc">
   <tbody>
     <tr>
-      <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
-        src="../../images/amaya.gif" /></td>
-      <td><p><a href="about_entering_math_characters.html.es" accesskey="p"><img alt="previous"
-        src="../../images/left.gif" /></a> 
-		<a href="../Math.html.es" accesskey="t"><img alt="top" src="../../images/up.gif" /></a> 
-		<a href="viewing_structure_in_mathml.html.es" accesskey="n"><img alt="next"
-        src="../../images/right.gif" /></a></p>
+      <td><img alt="W3C" src="../../images/w3c_home"> <img alt="Amaya"
+        src="../../images/amaya.gif"></td>
+      <td><p><a href="about_entering_math_characters.html.es"
+        accesskey="p"><img alt="anterior" src="../../images/left.gif"></a> <a
+        href="../Math.html.es" accesskey="t"><img alt="superior"
+        src="../../images/up.gif"></a> <a
+        href="viewing_structure_in_mathml.html.es" accesskey="n"><img
+        alt="siguiente" src="../../images/right.gif"></a></p>
       </td>
     </tr>
   </tbody>
 </table>
 
 <div id="page_body">
-<h1>Editing Math Expressions</h1>
+<h1>Editar expresiones matemáticas</h1>
 
-<p>Amaya provides the same method to create and edit matrices as to edit HTML
-tables. Similar to tables, a specific command (<strong>Delete matrix
-column</strong>) deletes a column in a matrix, even if it's not empty. This
-command is located at the end of the <strong>Math</strong> submenu on the
-<strong>Types</strong> menu.</p>
+<p>En Amaya puedes crear y editar matrices de la misma manera que editas
+tablas HTML. Como en las tablas, un comando específico (<strong>Eliminar
+columna de matriz</strong>) elimina una columna de una matriz, aunque no esté
+vacía. Este comando se encuentra al final del menú <strong>Xml &gt;
+Matemáticas</strong>.</p>
 
-<h2>Changing the Expression Structure</h2>
+<h2>Cambiar la estructura de una expresión</h2>
 
-<p>You may want to change the structure of an existing expression, such as
-appending a superscript or putting parentheses around an expression. To do
-that, select the expression and enter the new construct with the palette, the
-<strong>Math</strong> menu or the keyboard. You can also use
-<strong>Transform</strong> on the <strong>Edit</strong> menu. Select the
-expression you want to transform and <strong>Transform</strong> will display
-a menu with all possible changes.</p>
+<p>Puedes querer modificar la estructura de una expresión ya existente, como
+por ejemplo añadir un superíndice o unos paréntesis a un expresión. Para
+ello, selecciona la expresión y añade la nueva construcción con la paleta, el
+menú <strong>Matemáticas</strong> o el teclado. También puedes utilizar el
+comando de menú <strong>Editar &gt; Transformar</strong>. Selecciona la
+expresión que quieres transformar y  el comando <strong>Transformar</strong>
+mostrará un menú con los cambios posibles.</p>
 
-<h2>See Also:</h2>
+<h2>Ver también:</h2>
 <ul>
-  <li><span class="Link"><a href="working_with_math_expressions.html.es">Working
-    with Mathematical Expressions</a></span></li>
-  <li><span class="Link"><a href="the_math_palette_and_the_types.html.es">Math
-    Palette and the Types/Math Menu</a></span></li>
+  <li><span class="Link"><a
+    href="working_with_math_expressions.html.es">Trabajar con expresiones
+    matemáticas</a></span></li>
+  <li><span class="Link"><a href="the_math_palette_and_the_types.html.es">La
+    paleta Matemáticas y el menú Xml &gt; Matemáticas</a></span></li>
 </ul>
 </div>
-
 </body>
 </html>

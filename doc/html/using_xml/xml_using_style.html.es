@@ -1,15 +1,13 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-  <meta name="GENERATOR" content="amaya 5.4, see http://www.w3.org/Amaya/" />
-  <title>Using style in Xml</title>
-  <style type="text/css">
-  </style>
+  <meta name="GENERATOR" content="amaya 6.4+, see http://www.w3.org/Amaya/" />
+  <title>Utilizar estilos en Xml</title>
+  
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
-<body xml:lang="en" lang="en">
+<body xml:lang="es" lang="es">
 
 <table border="0" summary="toc">
   <tbody>
@@ -17,29 +15,30 @@
       <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
         src="../../images/amaya.gif" /></td>
       <td><p><a href="loading_xml_document.html.es" accesskey="p"><img
-        alt="previous" src="../../images/left.gif" /></a> <a
-        href="../Xml.html.es" accesskey="t"><img alt="top"
-        src="../../images/up.gif" /></a> <a href="editing_xml_document.html.es"
-        accesskey="n"><img alt="next" src="../../images/right.gif" /></a></p>
+        alt="anterior" src="../../images/left.gif" /></a> <a
+        href="../Xml.html.es" accesskey="t"><img alt="superior"
+        src="../../images/up.gif" /></a> <a
+        href="editing_xml_document.html.es" accesskey="n"><img alt="siguiente"
+        src="../../images/right.gif" /></a></p>
       </td>
     </tr>
   </tbody>
 </table>
 
 <div id="page_body">
-<h1>Using Style in Xml</h1>
+<h1>Utilizar estilos en XML</h1>
 
-<p>If the document is associated to a DTD that Amaya does not understand, the
-content of the document will be formatted and displayed in a way that
-reflects the structure of the document. If there is no style indication, the
-content of each element will be shown as a <strong>block</strong>. However,
-for clarity, the elements that have at least one child of type "texte" are
-considered to be of type <strong>inline</strong> and displayed accordingly.
-Amaya can use associate a CSS style sheet. You can also modify the
-presentation of the document if you associate a CSS style sheet to it by
-means of a <strong><a
+<p>Si el documento está asociado a una DTD que Amaya no entiende, el
+contenido del documento se formateará y mostrará de manera que refleje la
+estructura del documento. Si no hay indicaciones de estilo, el contenido de
+cada elemento se mostrará como <strong>bloque</strong>. Sin embargo, para ser
+más claro, los elementos que tienen al menos un hiojo de tipo "texto" se
+consideran de tipo <strong>en línea</strong> y se muestran como tal. Amaya
+puede asociar y utilizar una hoja de estilo CSS. También puedes modificar la
+presentación del documento asociando una hoja de estilo CSS mediante una
+orden <strong><a
 href="http://www.w3.org/1999/06/REC-xml-stylesheet-19990629/">xml-stylesheet
-PI</a></strong> (processing instruction) statement.</p>
+PI</a></strong> (instrucción de procesamiento).</p>
 </div>
 </body>
 </html>

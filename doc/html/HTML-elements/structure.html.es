@@ -3,15 +3,13 @@
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <title>HTML Document Structure</title>
-  <meta name="GENERATOR" content="amaya 6.1, see http://www.w3.org/Amaya/" />
-  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-  <style type="text/css">
-  </style>
+  <title>Estructura de un documento HTML</title>
+  <meta name="GENERATOR" content="amaya 6.4+, see http://www.w3.org/Amaya/" />
+  
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
-<body xml:lang="en" lang="en">
+<body xml:lang="es" lang="es">
 
 <table border="0" width="100%" summary="toc">
   <tbody>
@@ -19,40 +17,40 @@
       <td><p><img border="0" alt="W3C" src="../../images/w3c_home" /> <img
         border="0" alt="Amaya" src="../../images/amaya.gif" /></p>
       </td>
-      <td><p align="right"><a href="infoTypes.html.es"><img alt="previous"
+      <td><p align="right"><a href="infoTypes.html.es"><img alt="anterior"
         border="0" src="../../images/left.gif" /></a> <a
-        href="../HTML.html.es"><img alt="top" border="0"
+        href="../HTML.html.es"><img alt="superior" border="0"
         src="../../images/up.gif" /></a> <a href="headings.html.es"><img
-        alt="next" border="0" src="../../images/right.gif" /></a></p>
+        alt="siguiente" border="0" src="../../images/right.gif" /></a></p>
       </td>
     </tr>
   </tbody>
 </table>
 
 <div id="HTML">
-<h1>HTML Document Structure</h1>
+<h1>Estructura de un documento HTML</h1>
 
-<p>HTML documents are fairly flat in structure - rather than having sections
-that contain subsections, division of text is usually marked by different
-level <a href="headings.html.es">heading elements</a> which are alongside
-paragraph and other block elements. There is the <code>DIV</code> element
-which is provided to group together a section into a single division - to use
-it select the section (including its heading) you want to form part of the
-group and then select the option <strong>DIV</strong> from the
-<strong>Types</strong> menu (or use the keyboard shortcut <kbd>Ctrl-t,
-Ctrl-v</kbd> in unix).</p>
+<p>Los documentos HTML no tienen una estructura muy complicada, en vez de
+secciones que contienen subsecciones, las divisiones del texto se señalan
+normalmente mediante <a href="headings.html.es">elementos de encabezado</a>
+que se encuentran junto con los párrafos y el resto de elementos de bloque.
+Existe también el elemento <code>div</code> que agrupa varios elementos en
+una misma división. Para definirlo, selecciona la sección (incluyendo su
+encabezado) que quieres que forme parte del grupo y a continuación elige el
+comando de menú <strong>Xhtml &gt; div</strong> (o pulsa el atajo de teclado
+<kbd>Ctrl-t, Ctrl-v</kbd> en Unix).</p>
 
-<p>There is a special structure in HTML - the link, which makes the Web a
-web. Further information about <a href="../Links.html.es">how to create
-links</a>, and <a href="../Tables.html.es">how to create tables</a>, is provided
-in the <a href="../Manual.html.es">user manual section</a> of the
-documentation.</p>
+<p>En HTML existe una estructura especial, el enlace, que hace que la Web sea
+una red. En el <a href="../Manual.html.es">manual de usuario</a> encontrarás
+más información sobre <a href="../Links.html.es">cómo crear enlace</a> y <a
+href="../Tables.html.es">cómo crear tablas</a>.</p>
 
-<p>A normal HTML page should include <a href="../Creating.html.es#Changing">a
-title</a>, <a href="headings.html.es">a level one heading</a>, and <a
-href="address.html.es">an address or some information about the author</a>. It
-may also include paragraphs, lists, images, tables, and content organised
-into subsections with different levels of headings.</p>
+<p>Una página normal y corriente en HTML debe incluir <a
+href="../Creating.html.es#Changing">un título</a>, <a
+href="headings.html.es">un encabezado de nivel 1</a> y <a
+href="address.html.es">la dirección u otra información sobre el autor</a>.
+También puede incluir párrafos, listas, imágenes, tablas y contenido
+organizado en subsecciones con diferentes niveles de encabezado.</p>
 </div>
 </body>
 </html>

@@ -3,12 +3,12 @@
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta name="GENERATOR" content="amaya 6.4, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 6.4+, see http://www.w3.org/Amaya/" />
   <title>Acerca de Destinos</title>
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
-<body xml:lang="en" lang="en">
+<body xml:lang="es" lang="es">
 
 <table border="0" summary="toc">
   <tbody>
@@ -16,11 +16,11 @@
       <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
         src="../../images/amaya.gif" /></td>
       <td><p><a href="activating_a_link.html.es" accesskey="p"><img
-        alt="previous" src="../../images/left.gif" /></a> <a
-        href="../Browsing.html.es" accesskey="t"><img alt="top"
+        alt="anterior" src="../../images/left.gif" /></a> <a
+        href="../Browsing.html.es" accesskey="t"><img alt="superior"
         src="../../images/up.gif" /></a> <a
         href="about_moving_backward_and_forward.html.es" accesskey="n"><img
-        alt="next" src="../../images/right.gif" /></a></p>
+        alt="siguiente" src="../../images/right.gif" /></a></p>
       </td>
     </tr>
   </tbody>
@@ -34,14 +34,14 @@ name. Identifican posibles destinos de un enlace.</p>
 
 <p>Para poder reconocer fácilmente los destinos, puedes activar la
 visualización de los iconos de destino <img src="../../images/target.gif"
-alt="Target icon" />. Estos iconos no forman parte del documentos y se pueden
-mostrar u ocultar de dos maneras:</p>
+alt="Icono destino" />. Estos iconos no forman parte del documentos y se
+pueden mostrar u ocultar de dos maneras:</p>
 <ul>
-  <li>Eligiendo <strong>Mostrar destinos</strong> en el menú
-    <strong>Vistas</strong>. 
+  <li>Eligiendo el comando de menú <strong>Vistas &gt; Mostrar
+    destinos</strong> 
     <p></p>
   </li>
-  <li>utilizando atajos de teclado (por defecto, <kbd>Control-v
+  <li>utilizando atajos de teclado (por omisión, <kbd>Control-v
     Control-t</kbd> en Unix, <kbd>Alt-v Alt-l</kbd> en Windows).</li>
 </ul>
 
@@ -53,10 +53,10 @@ consulta:</p>
   <li><a href="../linking/creating_a_target_element.html.es">Crear un
     Elemento Destino</a></li>
   <li><a
-    href="../linking/removing_a_link_or_a_target_anchor.html.es">Eliminando
-    un Enlace o Destino</a></li>
-  <li><a href="../elements/exiting_anchors.html.es">Exiting Anchors or Styled
-    Character Strings</a></li>
+    href="../linking/removing_a_link_or_a_target_anchor.html.es">Eliminar un
+    Enlace o Destino</a></li>
+  <li><a href="../elements/exiting_anchors.html.es">Salir de anclas, cadenas
+    con estilo, etc</a></li>
 </ul>
 
 <p></p>

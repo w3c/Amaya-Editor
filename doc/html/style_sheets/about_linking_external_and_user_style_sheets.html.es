@@ -3,50 +3,50 @@
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-  <meta name="GENERATOR" content="amaya 5.1" />
-  <title>About Linking External and User Style Sheets</title>
-  <style type="text/css">
- </style>
+  <meta name="GENERATOR" content="amaya 6.4, see http://www.w3.org/Amaya/" />
+  <title>Enlazar hojas de estilo externas y de usuario</title>
+  
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
-<body xml:lang="en" lang="en">
+<body xml:lang="es" lang="es">
 
 <table border="0" summary="toc">
   <tbody>
     <tr>
       <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
         src="../../images/amaya.gif" /></td>
-      <td><p><a href="creating_generic_style_for_an_element_or_a_class.html.es"
-        accesskey="p"><img alt="previous" src="../../images/left.gif" /></a>
-        <a href="../StyleSheets.html.es" accesskey="t"><img alt="top"
-        src="../../images/up.gif" /></a> <a href="handling_external_css.html.es"
-        accesskey="n"><img alt="next" src="../../images/right.gif" /></a></p>
+      <td><p><a
+        href="creating_generic_style_for_an_element_or_a_class.html.es"
+        accesskey="p"><img alt="anterior" src="../../images/left.gif" /></a>
+        <a href="../StyleSheets.html.es" accesskey="t"><img alt="superior"
+        src="../../images/up.gif" /></a> <a
+        href="handling_external_css.html.es" accesskey="n"><img alt="siguiente"
+        src="../../images/right.gif" /></a></p>
       </td>
     </tr>
   </tbody>
 </table>
 
 <div id="page_body">
-<h1>About Linking External and User Style Sheets</h1>
+<h1>Enlazar hojas de estilo externas y de usuario</h1>
 
-<p>A document can link to several external style sheets that are downloaded
-with the document and applied to it.</p>
+<p>Un documento pueda enlazar a varias hojas de estilo externas que se
+descargan junto con el documento y se aplican a él.</p>
 
-<p>An external style sheet can apply to multiple documents. When the same
-style sheet applies to several displayed documents, Amaya loads only one
-instance of the style sheet.</p>
+<p>Una hoja de estilo externa se puede aplicar a varios documentos. Cuando la
+misma hoja de estilo se aplica a varios documentos, Amaya sólo carga la hoja
+de estilo una vez.</p>
 
-<p>Any user can define a specific style sheet that applies to all documents
-loaded on their system. This style sheet is called the <b>user's</b> style
-sheet. It is stored in the user's local environment, in the <span
-class="Link0"><code>AmayaHome</code> directory</span> as the local file
-<code>amaya.css</code>.</p>
+<p>El usuario puede definir una hoja de estilo específica que se aplicará a
+todos los documentos abiertos por Amaya en su ordenador. Esta hoja de estilo
+se llama hoja de estilo <b>de usuario</b>. Se guarda en el ordenador del
+usuario, en la carpeta <span class="Link0"><code>AmayaHome</code></span>, en
+el archivo <code>amaya.css</code>.</p>
 
-<p>For example, if you prefer to display documents in Helvetica on your
-screen and print them in small size, you can create a user's style sheet with
-following CSS rules:</p>
+<p>Por ejemplo, si prefieres mostrar los documentos en Helvética en la
+pantalla e imprimirlos en un tipo de letra pequeño,  puedes crear una hoja de
+estilo de usuario con las siguientes rglas CSS:</p>
 
 <p><code>@media print {<br />
 body {font-size: 10pt}<br />
@@ -55,6 +55,5 @@ body {font-size: 10pt}<br />
 body {font-family: Helvetica}<br />
 }</code></p>
 </div>
-
 </body>
 </html>

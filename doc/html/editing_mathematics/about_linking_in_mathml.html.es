@@ -3,14 +3,13 @@
 <html>
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
-  <title>About Linking in MathML</title>
-  <style type="text/css">
-  </style>
-  <meta name="generator" content="amaya 5.3, see http://www.w3.org/Amaya/">
+  <title>Enlazar en MathML</title>
+  
+  <meta name="generator" content="amaya 6.4+, see http://www.w3.org/Amaya/">
   <link href="../style.css" rel="stylesheet" type="text/css">
 </head>
 
-<body xml:lang="en" lang="en">
+<body lang="es">
 
 <table border="0" summary="toc">
   <tbody>
@@ -18,26 +17,26 @@
       <td><img alt="W3C" src="../../images/w3c_home"> <img alt="Amaya"
         src="../../images/amaya.gif"></td>
       <td><p><a href="viewing_structure_in_mathml.html.es" accesskey="p"><img
-        alt="previous" src="../../images/left.gif"></a> <a
-        href="../Math.html.es" accesskey="t"><img alt="top"
+        alt="anterior" src="../../images/left.gif"></a> <a
+        href="../Math.html.es" accesskey="t"><img alt="superior"
         src="../../images/up.gif"></a> <a href="math_issues.html.es"
-        accesskey="n"><img alt="next" src="../../images/right.gif"></a></p>
+        accesskey="n"><img alt="siguiente"
+        src="../../images/right.gif"></a></p>
       </td>
     </tr>
   </tbody>
 </table>
 
 <div id="page_body" class="Section1">
-<h1>About Linking in MathML</h1>
+<h1>Enlazar en MathML</h1>
 
-<p>You can create and use links in mathematical expressions. These links are
-represented using a draft version of the XML Linking Language (XLink). Only
-simple unidirectional hyperlinks are available, but you can associate a link
-with any part of a formula. For example, the fraction in the formula below is
-a link to the W3C home page:</p>
+<p>Puedes crear y utilizar enlaces en expresiones matemáticas. Estos enlaces
+se basan en una versión preliminar del Lenguage de Enlaces XML (XLink).
+ünicamente están disponibles hiperenlaces unidireccionales, pero puedes
+asociar un enlace a cualquier parte de una fórmula. Por ejemplo, la fracción
+de la fórmula siguiente es un enlace a la página de inicio del W3C:</p>
 
-<p>
-<math xmlns="http://www.w3.org/1998/Math/MathML">
+<p><math xmlns="http://www.w3.org/1998/Math/MathML">
   <mrow>
     <mi>y</mi>
     <mo>=</mo>
@@ -57,22 +56,20 @@ a link to the W3C home page:</p>
       </msqrt>
     </mfrac>
   </mrow>
-</math>
-</p>
+</math></p>
 
-<p>Double-clicking any character within the fraction loads the W3C home
-page.</p>
+<p>Al hacer doble clic en cualquier carácter de la fracción se carga la
+página de inicio del W3C.</p>
 
-<p>To create such a link, select a math expression (the fraction in the above
-example), click the <strong>Link</strong> button (or choose <strong>Create or
-change link</strong> from the <strong>Links</strong> menu), and click the
-desired target.</p>
+<p>Para crear un enlace así, selecciona una expresión matemática (en el caso
+anterior, la fracción), haz clic en el <strong>Enlace</strong> (elige el menú
+<strong>Enlaces &gt; Crear o cambiar enlaces</strong>), y haz clic en el
+destino deseado.</p>
 
-<p>If the target is an expression in a formula, you must first turn the
-expression into a target. Select the expression and choose <strong>Create
-target</strong> from the <strong>Links</strong> menu  to create an
-<code>id</code> attribute for the target expression.</p>
-
+<p>Si el destino es una expresión de una fórmula, primero debes conertir la
+expresión en un destino. Selecciona la expresión y elige el comando
+<strong>Enlaces &gt; Crear destino</strong> para crear un atributo
+<code>id</code> para la expresión destino.</p>
 </div>
 </body>
 </html>

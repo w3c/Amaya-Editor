@@ -4,13 +4,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-  <title>Numbering Sections</title>
-  <style type="text/css">
- </style>
+  <title>Numeración de secciones</title>
+  
   <link href="style.css" rel="stylesheet" type="text/css" />
 </head>
 
-<body xml:lang="en" lang="en">
+<body xml:lang="es" lang="es">
 
 <table border="0" summary="toc">
   <tbody>
@@ -18,10 +17,10 @@
       <td><p><img alt="W3C" src="../images/w3c_home" /> <img alt="Amaya"
         src="../images/amaya.gif" /></p>
       </td>
-      <td><p><a href="Printing.html.es" accesskey="p"><img alt="previous"
+      <td><p><a href="Printing.html.es" accesskey="p"><img alt="anterior"
         src="../images/left.gif" /></a> <a href="Manual.html.es"
-        accesskey="t"><img alt="top" src="../images/up.gif" /></a> <a
-        href="MakeBook.html.es" accesskey="n"><img alt="next"
+        accesskey="t"><img alt="superior" src="../images/up.gif" /></a> <a
+        href="MakeBook.html.es" accesskey="n"><img alt="siguiente"
         src="../images/right.gif" /></a></p>
       </td>
     </tr>
@@ -30,12 +29,12 @@
 
 <div id="page_body">
 
-<h1>Numbering Sections</h1>
+<h1>Numeración de secciones</h1>
 
-<p>The following topics are covered in this section:</p>
+<p>En esta sección se tratan los temas siguientes:</p>
 <ul>
   <li><a href="numbering_sections/numbering_sections.html.es#page_body"
-    rel="subdocument">Numbering Sections</a></li>
+    rel="subdocument">Numeración de secciones</a></li>
 </ul>
 </div>
 

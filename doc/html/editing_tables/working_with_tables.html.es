@@ -1,50 +1,45 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-	
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-  <title>Working with Tables</title>
-  <style type="text/css">
-  </style>
-  <meta name="GENERATOR" content="amaya 5.2" />
+  <title>Trabajar con tablas</title>
+  <meta name="GENERATOR" content="amaya 6.4+, see http://www.w3.org/Amaya/" />
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
-<body xml:lang="en" lang="en">
+<body xml:lang="es" lang="es">
 
 <table border="0" summary="toc">
   <tbody>
     <tr>
       <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
         src="../../images/amaya.gif" /></td>
-      <td><p>
-		<a href="../Tables.html.es" accesskey="t"><img alt="top" src="../../images/up.gif" /></a> 
-		<a href="create_table.html.es" accesskey="n"><img alt="next"
-        src="../../images/right.gif" /></a></p>
+      <td><p><a href="../Tables.html.es" accesskey="t"><img alt="superior"
+        src="../../images/up.gif" /></a> <a href="create_table.html.es"
+        accesskey="n"><img alt="siguiente" src="../../images/right.gif"
+        /></a></p>
       </td>
     </tr>
   </tbody>
-</table> 
+</table>
 
 <div id="page_body">
-<h1>Working with Tables</h1>
+<h1>Trabajar con tablas</h1>
 
-<p>Amaya does not contain a separate table editor. To Amaya, a table is
-simply a structure described by the HTML document type definition (DTD) and
-it is edited as such. The same commands apply to tables as to other HTML
-structures, with a few additional ones.</p>
+<p>Amaya no incluye un editor de tablas específico. Para Amaya, una tabla es
+simplemente una estructura descrita en la definición de tipo de doumento
+(DTD) HTML, y se edita como tal. Se aplican a las tablas los mismos comandos
+que a otras estructuras HTML y algunos comandos más.</p>
 
-<p>For more information on working with tables, see the following:</p>
+<p>Ver también:</p>
 <ul>
-  <li><a href="create_table.html.es">Creating a Table</a></li>
-  <li><a href="add_column.html.es">Adding a Column to a Table</a></li>
-  <li><a href="add_row.html.es">Adding a Row to a Table</a></li>
-  <li><a href="add_tbody.html.es">Adding a Table Body to a Table</a></li>
-  <li><a href="remove_column.html.es">Removing a Column from a Table</a></li>
+  <li><a href="create_table.html.es">Crear una tabla</a></li>
+  <li><a href="add_column.html.es">Añadir columnas a una tabla</a></li>
+  <li><a href="add_row.html.es">Añadir filas a una tabla</a></li>
+  <li><a href="add_tbody.html.es">Añadir cuerpos de tabla a una tabla</a></li>
+  <li><a href="remove_column.html.es">Eliminar columnas de una tabla</a></li>
 </ul>
 </div>
-
 </body>
 </html>

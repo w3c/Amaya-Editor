@@ -2,275 +2,184 @@
     "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-  <title>About Entering Math Constructs using the Keyboard</title>
-  <style type="text/css">
-  </style>
-  <meta name="GENERATOR" content="amaya 5.1" />
-  <link href="../style.css" rel="stylesheet" type="text/css" />
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <title>Crear expresiones matemáticas con el teclado</title>
+  
+  <meta name="GENERATOR" content="amaya 6.4+, see http://www.w3.org/Amaya/">
+  <link href="../style.css" rel="stylesheet" type="text/css">
 </head>
 
-<body xml:lang="en" lang="en">
+<body lang="es">
 
 <table border="0" summary="toc">
   <tbody>
     <tr>
-      <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
-        src="../../images/amaya.gif" /></td>
-      <td><p><a href="working_with_math_expressions.html.es" accesskey="p"><img alt="previous"
-        src="../../images/left.gif" /></a> 
-		<a href="../Math.html.es" accesskey="t"><img alt="top" src="../../images/up.gif" /></a> 
-		<a href="the_math_palette_and_the_types.html.es" accesskey="n"><img alt="next"
-        src="../../images/right.gif" /></a></p>
+      <td><img alt="W3C" src="../../images/w3c_home"> <img alt="Amaya"
+        src="../../images/amaya.gif"></td>
+      <td><p><a href="working_with_math_expressions.html.es"
+        accesskey="p"><img alt="anterior" src="../../images/left.gif"></a> <a
+        href="../Math.html.es" accesskey="t"><img alt="superior"
+        src="../../images/up.gif"></a> <a
+        href="the_math_palette_and_the_types.html.es" accesskey="n"><img
+        alt="siguiente" src="../../images/right.gif"></a></p>
       </td>
     </tr>
   </tbody>
 </table>
 
 <div id="page_body">
-<h1>About Entering Math Constructs using the Keyboard</h1>
+<h1>Crear expresiones matemáticas con el teclado</h1>
 
-<p>You are not required to use the Math menu or palette to create and edit
-mathematical expressions. You can enter mathematical constructs directly from
-the keyboard because each item in the Math menu has a keyboard equivalent.
-These shortcuts are listed on the menu and in the table below. You can also
-use the keyboard arrow keys to move the insertion point from one math
-construct to another. The right and left arrows move the insertion point
-according to the structure of the mathematical expression. For example, in a
-fraction when the insertion point is at the end of a numerator, the right
-arrow key moves the insertion point to the beginning of the denominator.</p>
+<p>No es imprescindible que utilices el menú o la paleta Matmáticas para
+crear o editar expresiones matemáticas. Puedes escribir expresiones
+matemáticas directamente con el teclado, pues cada elemento del menú
+Matemáticas tiene un atajo de teclado asociado. Los atajos se indican en el
+propio menú y en la tabla siguiente. También puedes utilizar las teclas de
+desplazamiento para desplazar el punto de inserción de un lugar a otro. Las
+flechas derecha e izquierda mueven el punto de inserción de acuerdo con la
+estructura de la expresión matemática. Por ejemplo, en una fracción cuando el
+punto de inserción se encuentra al final del numerador, la flecha derecha
+mueve el punto de inserción al principio del denominador.</p>
 
-<table border="1" cellspacing="0" cellpadding="0"
-style="border-collapse:collapse;  border:none;">
-  <tbody>
+<table border="1" class="TableText">
+  <tbody class="TableText">
     <tr>
-      <td width="283" valign="top"
-      style="width:2.95in;border:solid .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
-        class="TableHead"><b>Action</b></p>
+      <td valign="top"><p class="TableHead"><b>Comando</b></p>
       </td>
-      <td width="120" valign="top"
-      style="width:1.25in;border:solid .5pt;   border-left:none;padding:0in 5.4pt 0in 5.4pt"><p
-        class="TableHead"><b>Shortcut</b></p>
+      <td valign="top"><p class="TableHead"><b>Atajo</b></p>
       </td>
     </tr>
     <tr>
-      <td width="283" valign="top"
-      style="width:2.95in;border:solid .5pt;   border-top:none;padding:0in 5.4pt 0in 5.4pt"><p
-        class="TableText">New formula (math)</p>
+      <td valign="top"><p class="TableText">Fórmula nueva (math)</p>
       </td>
-      <td width="120" valign="top"
-      style="width:1.25in;border-top:none;border-left:   none;border-bottom:solid .5pt;border-right:solid .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
-        class="TableText">Ctrl-m Ctrl-m</p>
+      <td valign="top"><p class="TableText">Ctrl-m Ctrl-m</p>
       </td>
     </tr>
     <tr>
-      <td width="283" valign="top"
-      style="width:2.95in;border:solid .5pt;   border-top:none;padding:0in 5.4pt 0in 5.4pt"><p
-        class="TableText">Plain text (mtext)</p>
+      <td valign="top"><p class="TableText">Texto simple (mtext)</p>
       </td>
-      <td width="120" valign="top"
-      style="width:1.25in;border-top:none;border-left:   none;border-bottom:solid .5pt;border-right:solid .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
-        class="TableText">Ctrl-m Ctrl-x</p>
+      <td valign="top"><p class="TableText">Ctrl-m Ctrl-x</p>
       </td>
     </tr>
     <tr>
-      <td width="283" valign="top"
-      style="width:2.95in;border:solid .5pt;   border-top:none;padding:0in 5.4pt 0in 5.4pt"><p
-        class="TableText">Identifier (mi)</p>
+      <td valign="top"><p class="TableText">Identificador (mi)</p>
       </td>
-      <td width="120" valign="top"
-      style="width:1.25in;border-top:none;border-left:   none;border-bottom:solid .5pt;border-right:solid .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
-        class="TableText">Ctrl-m Ctrl-d</p>
+      <td valign="top"><p class="TableText">Ctrl-m Ctrl-d</p>
       </td>
     </tr>
     <tr>
-      <td width="283" valign="top"
-      style="width:2.95in;border:solid .5pt;   border-top:none;padding:0in 5.4pt 0in 5.4pt"><p
-        class="TableText">Number (mn)</p>
+      <td valign="top"><p class="TableText">Número (mn)</p>
       </td>
-      <td width="120" valign="top"
-      style="width:1.25in;border-top:none;border-left:   none;border-bottom:solid .5pt;border-right:solid .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
-        class="TableText">Ctrl-m Ctrl-n</p>
+      <td valign="top"><p class="TableText">Ctrl-m Ctrl-n</p>
       </td>
     </tr>
     <tr>
-      <td width="283" valign="top"
-      style="width:2.95in;border:solid .5pt;   border-top:none;padding:0in 5.4pt 0in 5.4pt"><p
-        class="TableText">Operator (mo)</p>
+      <td valign="top"><p class="TableText">Operador (mo)</p>
       </td>
-      <td width="120" valign="top"
-      style="width:1.25in;border-top:none;border-left:   none;border-bottom:solid .5pt;border-right:solid .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
-        class="TableText">Ctrl-m Ctrl-=</p>
+      <td valign="top"><p class="TableText">Ctrl-m Ctrl-=</p>
       </td>
     </tr>
     <tr>
-      <td width="283" valign="top"
-      style="width:2.95in;border:solid .5pt;   border-top:none;padding:0in 5.4pt 0in 5.4pt"><p
-        class="TableText">Space (mspace)</p>
+      <td valign="top"><p class="TableText">Espacio (mspace)</p>
       </td>
-      <td width="120" valign="top"
-      style="width:1.25in;border-top:none;border-left:   none;border-bottom:solid .5pt;border-right:solid .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
-        class="TableText">Ctrl-m Ctrl-Space</p>
+      <td valign="top"><p class="TableText">Ctrl-m Ctrl-Space</p>
       </td>
     </tr>
     <tr>
-      <td width="283" valign="top"
-      style="width:2.95in;border:solid .5pt;   border-top:none;padding:0in 5.4pt 0in 5.4pt"><p
-        class="TableText">Character (xxx;)</p>
+      <td valign="top"><p class="TableText">Carácter (xxx;)</p>
       </td>
-      <td width="120" valign="top"
-      style="width:1.25in;border-top:none;border-left:   none;border-bottom:solid .5pt;border-right:solid .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
-        class="TableText">Ctrl-m Ctrl-e</p>
+      <td valign="top"><p class="TableText">Ctrl-m Ctrl-e</p>
       </td>
     </tr>
     <tr>
-      <td width="283" valign="top"
-      style="width:2.95in;border:solid .5pt;   border-top:none;padding:0in 5.4pt 0in 5.4pt"><p
-        class="TableText">Invisible Times</p>
+      <td valign="top"><p class="TableText">Invisible Times</p>
       </td>
-      <td width="120" valign="top"
-      style="width:1.25in;border-top:none;border-left:   none;border-bottom:solid .5pt;border-right:solid .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
-        class="TableText">Ctrl-m Ctrl-i</p>
+      <td valign="top"><p class="TableText">Ctrl-m Ctrl-i</p>
       </td>
     </tr>
     <tr>
-      <td width="283" valign="top"
-      style="width:2.95in;border:solid .5pt;   border-top:none;padding:0in 5.4pt 0in 5.4pt"><p
-        class="TableText">ApplyFunction</p>
+      <td valign="top"><p class="TableText">ApplyFunction</p>
       </td>
-      <td width="120" valign="top"
-      style="width:1.25in;border-top:none;border-left:   none;border-bottom:solid .5pt;border-right:solid .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
-        class="TableText">Ctrl-m Ctrl-a</p>
+      <td valign="top"><p class="TableText">Ctrl-m Ctrl-a</p>
       </td>
     </tr>
     <tr>
-      <td width="283" valign="top"
-      style="width:2.95in;border:solid .5pt;   border-top:none;padding:0in 5.4pt 0in 5.4pt"><p
-        class="TableText">Root (mroot)</p>
+      <td valign="top"><p class="TableText">Raíz (mroot)</p>
       </td>
-      <td width="120" valign="top"
-      style="width:1.25in;border-top:none;border-left:   none;border-bottom:solid .5pt;border-right:solid .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
-        class="TableText">Ctrl-m Ctrl-r</p>
+      <td valign="top"><p class="TableText">Ctrl-m Ctrl-r</p>
       </td>
     </tr>
     <tr>
-      <td width="283" valign="top"
-      style="width:2.95in;border:solid .5pt;   border-top:none;padding:0in 5.4pt 0in 5.4pt"><p
-        class="TableText">Square root (msqrt)</p>
+      <td valign="top"><p class="TableText">Raíz cuadrada (msqrt)</p>
       </td>
-      <td width="120" valign="top"
-      style="width:1.25in;border-top:none;border-left:   none;border-bottom:solid .5pt;border-right:solid .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
-        class="TableText">Ctrl-m Ctrl-q</p>
+      <td valign="top"><p class="TableText">Ctrl-m Ctrl-q</p>
       </td>
     </tr>
     <tr>
-      <td width="283" valign="top"
-      style="width:2.95in;border:solid .5pt;   border-top:none;padding:0in 5.4pt 0in 5.4pt"><p
-        class="TableText">Enclose (menclose)</p>
+      <td valign="top"><p class="TableText">Enclose (menclose)</p>
       </td>
-      <td width="120" valign="top"
-      style="width:1.25in;border-top:none;border-left:   none;border-bottom:solid .5pt;border-right:solid .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
-        class="TableText">Ctrl-m Ctrl-c</p>
+      <td valign="top"><p class="TableText">Ctrl-m Ctrl-c</p>
       </td>
     </tr>
     <tr>
-      <td width="283" valign="top"
-      style="width:2.95in;border:solid .5pt;   border-top:none;padding:0in 5.4pt 0in 5.4pt"><p
-        class="TableText">Fraction (mfrac)</p>
+      <td valign="top"><p class="TableText">Fracción (mfrac)</p>
       </td>
-      <td width="120" valign="top"
-      style="width:1.25in;border-top:none;border-left:   none;border-bottom:solid .5pt;border-right:solid .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
-        class="TableText">Ctrl-m Ctrl-f</p>
+      <td valign="top"><p class="TableText">Ctrl-m Ctrl-f</p>
       </td>
     </tr>
     <tr>
-      <td width="283" valign="top"
-      style="width:2.95in;border:solid .5pt;   border-top:none;padding:0in 5.4pt 0in 5.4pt"><p
-        class="TableText">Subscript and superscript (msubsup)</p>
+      <td valign="top"><p class="TableText">Subíndice y superíndice
+        (msubsup)</p>
       </td>
-      <td width="120" valign="top"
-      style="width:1.25in;border-top:none;border-left:   none;border-bottom:solid .5pt;border-right:solid .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
-        class="TableText">Ctrl-m Ctrl-b</p>
+      <td valign="top"><p class="TableText">Ctrl-m Ctrl-b</p>
       </td>
     </tr>
     <tr>
-      <td width="283" valign="top"
-      style="width:2.95in;border:solid .5pt;   border-top:none;padding:0in 5.4pt 0in 5.4pt"><p
-        class="TableText">Subscript (msub)</p>
+      <td valign="top"><p class="TableText">Subíndice (msub)</p>
       </td>
-      <td width="120" valign="top"
-      style="width:1.25in;border-top:none;border-left:   none;border-bottom:solid .5pt;border-right:solid .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
-        class="TableText">Ctrl-m Ctrl-v</p>
+      <td valign="top"><p class="TableText">Ctrl-m Ctrl-v</p>
       </td>
     </tr>
     <tr>
-      <td width="283" valign="top"
-      style="width:2.95in;border:solid .5pt;   border-top:none;padding:0in 5.4pt 0in 5.4pt"><p
-        class="TableText">Superscript (msup)</p>
+      <td valign="top"><p class="TableText">Superíndice (msup)</p>
       </td>
-      <td width="120" valign="top"
-      style="width:1.25in;border-top:none;border-left:   none;border-bottom:solid .5pt;border-right:solid .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
-        class="TableText">Ctrl-m Ctrl-6</p>
+      <td valign="top"><p class="TableText">Ctrl-m Ctrl-6</p>
       </td>
     </tr>
     <tr>
-      <td width="283" valign="top"
-      style="width:2.95in;border:solid .5pt;   border-top:none;padding:0in 5.4pt 0in 5.4pt"><p
-        class="TableText">Under and over (munderover)</p>
+      <td valign="top"><p class="TableText">Bajo y sobre (munderover)</p>
       </td>
-      <td width="120" valign="top"
-      style="width:1.25in;border-top:none;border-left:   none;border-bottom:solid .5pt;border-right:solid .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
-        class="TableText">Ctrl-m Ctrl-k</p>
+      <td valign="top"><p class="TableText">Ctrl-m Ctrl-k</p>
       </td>
     </tr>
     <tr>
-      <td width="283" valign="top"
-      style="width:2.95in;border:solid .5pt;   border-top:none;padding:0in 5.4pt 0in 5.4pt"><p
-        class="TableText">Under (munder)</p>
+      <td valign="top"><p class="TableText">Bajo (munder)</p>
       </td>
-      <td width="120" valign="top"
-      style="width:1.25in;border-top:none;border-left:   none;border-bottom:solid .5pt;border-right:solid .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
-        class="TableText">Ctrl-m Ctrl-u</p>
+      <td valign="top"><p class="TableText">Ctrl-m Ctrl-u</p>
       </td>
     </tr>
     <tr>
-      <td width="283" valign="top"
-      style="width:2.95in;border:solid .5pt;   border-top:none;padding:0in 5.4pt 0in 5.4pt"><p
-        class="TableText">Over (mover)</p>
+      <td valign="top"><p class="TableText">Sobre (mover)</p>
       </td>
-      <td width="120" valign="top"
-      style="width:1.25in;border-top:none;border-left:   none;border-bottom:solid .5pt;border-right:solid .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
-        class="TableText">Ctrl-m Ctrl-o</p>
+      <td valign="top"><p class="TableText">Ctrl-m Ctrl-o</p>
       </td>
     </tr>
     <tr>
-      <td width="283" valign="top"
-      style="width:2.95in;border:solid .5pt;   border-top:none;padding:0in 5.4pt 0in 5.4pt"><p
-        class="TableText">Parentheses (mrow)</p>
+      <td valign="top"><p class="TableText">Paréntesis (mrow)</p>
       </td>
-      <td width="120" valign="top"
-      style="width:1.25in;border-top:none;border-left:   none;border-bottom:solid .5pt;border-right:solid .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
-        class="TableText">Ctrl-m Ctrl-p</p>
+      <td valign="top"><p class="TableText">Ctrl-m Ctrl-p</p>
       </td>
     </tr>
     <tr>
-      <td width="283" valign="top"
-      style="width:2.95in;border:solid .5pt;   border-top:none;padding:0in 5.4pt 0in 5.4pt"><p
-        class="TableText">Multiscripts (mmultiscripts)</p>
+      <td valign="top"><p class="TableText">Multiscripts (mmultiscripts)</p>
       </td>
-      <td width="120" valign="top"
-      style="width:1.25in;border-top:none;border-left:   none;border-bottom:solid .5pt;border-right:solid .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
-        class="TableText">Ctrl-m Ctrl-s</p>
+      <td valign="top"><p class="TableText">Ctrl-m Ctrl-s</p>
       </td>
     </tr>
     <tr>
-      <td width="283" valign="top"
-      style="width:2.95in;border:solid .5pt;   border-top:none;padding:0in 5.4pt 0in 5.4pt"><p
-        class="TableText">Matrix (mtable)</p>
+      <td valign="top"><p class="TableText">Matriz (mtable)</p>
       </td>
-      <td width="120" valign="top"
-      style="width:1.25in;border-top:none;border-left:   none;border-bottom:solid .5pt;border-right:solid .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
-        class="TableText">Ctrl-m Ctrl-t</p>
+      <td valign="top"><p class="TableText">Ctrl-m Ctrl-t</p>
       </td>
     </tr>
   </tbody>
@@ -278,6 +187,5 @@ style="border-collapse:collapse;  border:none;">
 
 <p></p>
 </div>
-
 </body>
 </html>

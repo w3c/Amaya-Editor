@@ -3,14 +3,12 @@
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-  <title>Botones y Menú Tipos</title>
-  <style type="text/css">
- </style>
+  <title>Navegar formularios</title>
+  
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
-<body xml:lang="en" lang="en">
+<body xml:lang="es" lang="es">
 
 <table border="0" summary="toc">
   <tbody>
@@ -18,8 +16,8 @@
       <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
         src="../../images/amaya.gif" /></td>
       <td><p><a href="about_access_keys.html.es" accesskey="p"><img
-        alt="previous" src="../../images/left.gif" /></a> <a
-        href="../Browsing.html.es" accesskey="t"><img alt="top"
+        alt="anterior" src="../../images/left.gif" /></a> <a
+        href="../Browsing.html.es" accesskey="t"><img alt="superior"
         src="../../images/up.gif" /></a></p>
       </td>
     </tr>
@@ -27,41 +25,43 @@
 </table>
 
 <div id="page_body">
-<h1>Browsing forms</h1>
+<h1>Navegar formularios</h1>
 
-<p>As Amaya is a browser/editor, some of the widgets associated with HTMl
-form elements are different from those you are used to in browsers. This
-section mentions the most notable differences.</p>
+<p>Como Amaya es al mismo tiempo navegador y editor, algunos de los controles
+asociados con los elementos de formularios HTML son distintos de los que
+suelen utilizarse en los navegadores. Esta sección comenta las diferencias
+más notables.</p>
 
-<h2>Form input selector, single selection (GTK and WIN32 only)</h2>
+<h2>Selector de entrada de formulario, selección simple (sólo para GTK  y
+WIN32)</h2>
 
-<p>To activate the selector, the user has to click twice on the entry. This
-will result in a popup widget appearing showing all the entries. The widget
-supports a user interaction both with the keyboard as well as with the
-mouse.</p>
+<p>Para activar el selector, el usuario tiene que hacer doble clic en la
+entrada. Aparecerá entonces un control que mostrará todas las entradas. El
+control permite que el usuario utilice tanto el ratón como el teclado.</p>
 
-<p>With the keyboard, you must first select an entry using the arrow keys.
-Pressing the Enter key will validate the choice. the Page Up and Page Down
-keys allow the user to quickly scroll amont the list entries. You can abort
-the action of this widget by pressing the Escape key anytime.</p>
+<p>Con el teclado, debes seleccionar primero una entrada utilizando las
+flechas de desplazamiento. Al pulsar la tecla Intro, validarás la elección.
+Las teclas de Avanzar página y Retroceder página permiten desplazarse
+rápidamente por las entradas de la lista. En cualquier momento puedes abortar
+la acción del control pulsando Escape.</p>
 
-<p>With the mouse, there are two kinds of behavior. A single click allows the
-user to select an entry, whereas a double click on an entry means that the
-user wants to activate the selection. To abort the action of the widget, you
-just need to click in any area outside of the pop-up widget (N.B., this
-option doesn't work yet on GTK). You can also use the scroll bar to quickly
-navigate thru the widget entries.</p>
+<p>Con el ratón, hay dos formas de utilización. Al hacer clic se selecciona
+una entrada, mientras que el doble clic significa que el usuario quiere
+activar la selección. para abortar la acción del control, haz clic en
+cualquier área fuera del control (N.B., esta opción todavía no funciona en
+GTK). También puedes utilizar la barra de desplazamiento para navegar
+rápidamente entre las entradas del control.</p>
 
-<h2>Form input selector, multiple selection</h2>
+<h2>Selector de entrada de formulario, selección múltiple</h2>
 
-<p>The behavior of this widget is similar to the single selection one. That
-is, the widget supports only one toggle of a selection state at the time. You
-need to invoke it as many times as toggle changes you need. When the widget
-is activated, it will show the current state of selections. On WIN32, this is
-currently done by appending a '&gt;' character to the selected entries. On
-GTK, this is done by means of a blue color bar. As before, you can abort the
-widget by using either the Escape key or clicking elsewhere (only on WIN32
-systems).</p>
+<p>El comportamiento de este control es similar al de la selección simple. Es
+decir, el control admite únicamente un cambio en el estado de la selección
+cada vez. Debes invocarlo tantas veces como cambios necesites. Cuando el
+control está activado, mostrará el estado actual de la selección. En WIN32,
+normalemente se añade el carácter '&gt;' a las entradas seleccionadas. En
+GTK, se muestra una barra azul en las entradas seleccionadas. Como antes,
+puedes abortar el control mediante la tacla Escape o haciendo clic en
+cualquier otro sitio (sólo en WIN32).</p>
 </div>
 </body>
 </html>

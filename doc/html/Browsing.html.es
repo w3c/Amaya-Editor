@@ -3,13 +3,12 @@
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <title>Navegando con Amaya</title>
-  <style type="text/css">
-  </style>
+  <title>Navegar con Amaya</title>
+  
   <link href="style.css" rel="stylesheet" type="text/css" />
 </head>
 
-<body xml:lang="en" lang="en">
+<body xml:lang="es" lang="es">
 
 <table border="0">
   <tbody>
@@ -19,14 +18,14 @@
       </td>
       <td><p><a href="Manual.html.es" accesskey="t"><img alt=""
         src="../images/up.gif" /></a> <a href="Selecting.html.es"
-        accesskey="n"><img alt="next" src="../images/right.gif" /></a></p>
+        accesskey="n"><img alt="siguiente" src="../images/right.gif" /></a></p>
       </td>
     </tr>
   </tbody>
 </table>
 
 <div id="Browsing">
-<h1>Navegando con Amaya</h1>
+<h1>Navegar con Amaya</h1>
 
 <p>En esta sección se tratan los temas siguientes:</p>
 <ul>
@@ -36,7 +35,7 @@
   <li><a href="browsing/opening_documents.html.es#page_body"
     rel="subdocument">Abrir documentos</a></li>
   <li><a href="browsing/activating_a_link.html.es#page_body"
-    rel="subdocument">Activando un enlace</a></li>
+    rel="subdocument">Activar un Enlace</a></li>
   <li><a href="browsing/about_target_anchors.html.es#page_body"
     rel="subdocument">Acerca de Destinos</a></li>
   <li><a href="browsing/about_moving_backward_and_forward.html.es#page_body"
@@ -45,8 +44,8 @@
     rel="subdocument">Recargar una página</a></li>
   <li><a href="browsing/about_access_keys.html.es#page_body"
     rel="subdocument">Acerca de las Teclas de Acceso</a></li>
-  <li><a href="browsing/forms.html.es" rel="subdocument#page_body">Browsing
-    forms</a></li>
+  <li><a href="browsing/forms.html.es" rel="subdocument#page_body">Navegar
+    formularios</a></li>
 </ul>
 </div>
 </body>

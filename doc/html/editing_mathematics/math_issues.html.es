@@ -3,14 +3,13 @@
 <html>
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
-  <title>Known Issues With MathML</title>
-  <style type="text/css">
-  </style>
-  <meta name="generator" content="amaya 6.4, see http://www.w3.org/Amaya/">
+  <title>Problemas conocidos en relación con MathML</title>
+  
+  <meta content="amaya 6.4+, see http://www.w3.org/Amaya/">
   <link href="../style.css" rel="stylesheet" type="text/css">
 </head>
 
-<body lang="en">
+<body lang="es">
 
 <table border="0" summary="toc">
   <tbody>
@@ -18,8 +17,8 @@
       <td><img alt="W3C" src="../../images/w3c_home"> <img alt="Amaya"
         src="../../images/amaya.gif"></td>
       <td><p><a href="about_linking_in_mathml.html.es" accesskey="p"><img
-        alt="previous" src="../../images/left.gif"></a> <a
-        href="../Math.html.es" accesskey="t"><img alt="top"
+        alt="anterior" src="../../images/left.gif"></a> <a
+        href="../Math.html.es" accesskey="t"><img alt="superior"
         src="../../images/up.gif"></a></p>
       </td>
     </tr>
@@ -27,34 +26,34 @@
 </table>
 
 <div id="page_body">
-<h1>Known Issues With MathML</h1>
+<h1>Problemas conocidos en relación con MathML</h1>
 
-<p>The following are known Amaya MathML issues:</p>
+<p>Amaya presenta problemas en relación con MathML:</p>
 <ul>
-  <li>Amaya implements only the Presentation Tags from MathML 2.0, not the
-    Content Markup. All presentation elements and attributes are available,
-    but only the following attributes are rendered on the screen:
+  <li>Amaya implementa únicamente las etiquetas de presentación de MathML
+    2.0, no el marcado de contenido. Todos los elementos y atributos de
+    presentación están disponibles, pero únicamente se muestran en la
+    pantalla los siguientes atributos: 
     <p><code>display, alttext, mathvariant, mathsize, mathcolor,
     mathbackground, fontsize, fontweight, fontstyle, fontfamily, color,
     linethickness, numalign, denomalign, bevelled, notation, lquote, rquote,
     lspace, rspace, largeop, movablelimits, subscriptshift, superscriptshift,
-    form, width </code>(mspace only), <code>height</code> (mspace only),
-    <code>depth</code> (mspace only), <code>align, rowalign, columnalign,
-    frame, framespacing, displaystyle, side, rowspan, columnspan, rowspacing,
-    columnspacing, rowlines, columnlines</code>.</p>
+    form, width </code>(mspace únicamente), <code>height</code> (mspace
+    únicamente), <code>depth</code> (mspace únicamente), <code>align,
+    rowalign, columnalign, frame, framespacing, displaystyle, side, rowspan,
+    columnspan, rowspacing, columnspacing, rowlines, columnlines</code>.</p>
   </li>
-  <li><span><span>The <code>class</code>, <code>id</code>, and
-    <code>style</code> attributes are available, with the same semantics as
-    in HTML: you can associate CSS styles with MathML elements
-    (<code>class</code> and <code>style</code> attributes) and a MathML
-    element can be the target of a link (<code>id
-    </code>attribute).</span></span></li>
-  <li><span><span>Due to the lack of mathematical fonts in the current
-    version, only a limited set of entities representing math symbols are
-    recognized, mainly those available in the Symbol font. The current
-    version supports the following:</span></span>
-    <p><span><code>Therefore, SuchThat, DownTee, Or, And, Not, Exists,
-    ForAll, Element, NotElement, NotSubset, Subset, SubsetEqual, Superset,
+  <li>Los atributos <code>class</code>, <code>id</code> y <code>style</code>
+    están disponibles, con la misma semántica que en HTML: puedes asociar
+    estilos CSS a elementos MathML (atributos <code>class</code> y
+    <code>style</code>) y un elemento MathML puede ser el destino de un
+    enlace (atributo <code>id</code>).</li>
+  <li>Dada la falta de fuentes matemáticas en la versión actual, tan sólo se
+    reconocen un subconjunto limitado de entidades que representan símbolos
+    matemáticos, básicamente los disponibles en la fuente Symbol. La versión
+    actual soporta las siguientes entidades:
+    <p><code>Therefore, SuchThat, DownTee, Or, And, Not, Exists, ForAll,
+    Element, NotElement, NotSubset, Subset, SubsetEqual, Superset,
     SupersetEqual, DoubleLeftArrow, DoubleLeftRightArrow, DoubleRightArrow,
     LeftArrow, LeftRightArrow, RightArrow, Congruent, GreaterEqual, le,
     NotEqual, Proportional, VerticalBar, Union, Intersection, PlusMinus,
@@ -62,7 +61,7 @@
     PartialD, DoubleDownArrow, DoubleUpArrow, DownArrow, UpArrow,
     ApplyFunction, TripleDot, DifferentialD, ImaginaryI, ExponentialE,
     InvisibleComma, UnderBar, OverBar, ThinSpace, ThickSpace, Hat, OverBar,
-    UnderBar, prime, Prime.</code></span></p>
+    UnderBar, prime, Prime.</code></p>
   </li>
 </ul>
 </div>

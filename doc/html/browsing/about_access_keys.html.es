@@ -3,14 +3,13 @@
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta name="GENERATOR" content="amaya 6.4, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 6.4+, see http://www.w3.org/Amaya/" />
   <title>Acerca de las Teclas de Acceso</title>
-  <style type="text/css">
- </style>
+  
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
-<body xml:lang="en" lang="en">
+<body xml:lang="es" lang="es">
 
 <table border="0" summary="toc">
   <tbody>
@@ -18,10 +17,11 @@
       <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
         src="../../images/amaya.gif" /></td>
       <td><p><a href="reloading_a_page.html.es" accesskey="p"><img
-        alt="previous" src="../../images/left.gif" /></a> <a
-        href="../Browsing.html.es" accesskey="t"><img alt="top"
-        src="../../images/up.gif" /></a> <a href="types.html.es"
-        accesskey="n"><img alt="next" src="../../images/right.gif" /></a></p>
+        alt="anterior" src="../../images/left.gif" /></a> <a
+        href="../Browsing.html.es" accesskey="t"><img alt="superior"
+        src="../../images/up.gif" /></a> <a
+        href="../elements/buttons_and_types_menu.html.es" accesskey="n"><img
+        alt="siguiente" src="../../images/right.gif" /></a></p>
       </td>
     </tr>
   </tbody>
@@ -60,11 +60,12 @@ teclas de acceso:</p>
 <p>Si hubieras asignado el atajo <kbd>Alt-p</kbd> a algún comando de Amaya,
 no podrías utilizar este atajo en las páginas de ayuda de Amaya.</p>
 
-<p>Por defecto, Amaya utiliza la tecla <kbd>Alt</kbd> como modificador de las
-teclas de acceso. Pero puedes cambiar esta configuración por defecto mediante
-la ventana de diálogo <strong>Especial &gt; Preferencias &gt;
-General</strong>. Puedes elegir la tecla  <kbd>Control</kbd> en lugar de la
-tecla <kbd>Alt</kbd>, o incluso desactivar los atajos de teclado.</p>
+<p>Por omisión, Amaya utiliza la tecla <kbd>Alt</kbd> como modificador de las
+teclas de acceso. Pero puedes cambiar esta configuración por omisión mediante
+la ventana de diálogo que se abre con la opción de menú <strong>Especial &gt;
+Preferencias &gt; General</strong>. Puedes elegir la tecla <kbd>Control</kbd>
+en lugar de la tecla <kbd>Alt</kbd>, o incluso desactivar los atajos de
+teclado.</p>
 </div>
 </body>
 </html>

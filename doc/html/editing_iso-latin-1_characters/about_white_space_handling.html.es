@@ -3,15 +3,13 @@
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-  <meta name="generator" content="amaya 5.4, see http://www.w3.org/Amaya/" />
-  <title>About White Space Handling</title>
-  <style type="text/css">
-  </style>
+  <meta name="generator" content="amaya 6.4, see http://www.w3.org/Amaya/" />
+  <title>Acerca de los espacios en blanco</title>
+  
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
-<body xml:lang="en" lang="en">
+<body xml:lang="es" lang="es">
 
 <table border="0" summary="toc">
   <tbody>
@@ -19,8 +17,8 @@
       <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
         src="../../images/amaya.gif" /></td>
       <td><p><a href="about_standard_multikey_support.html.es"
-        accesskey="p"><img alt="previous" src="../../images/left.gif" /></a>
-        <a href="../EditChar.html.es" accesskey="t"><img alt="top"
+        accesskey="p"><img alt="anterior" src="../../images/left.gif" /></a>
+        <a href="../EditChar.html.es" accesskey="t"><img alt="superior"
         src="../../images/up.gif" /></a></p>
       </td>
     </tr>
@@ -28,73 +26,75 @@
 </table>
 
 <div id="page_body">
-<h1>About White Space Handling</h1>
+<h1>Acerca de los espacios en blanco</h1>
 
-<p>Amaya removes insignificant white-space characters when it loads a
-document unless they must be explicitly preserved. This is true for XHTML,
-MathML, and SVG documents, as well as MathML or SVG elements included in a
-HTML document,</p>
+<p>Amaya relimina los espacios en blanco no significativos cuando abre un
+documento, a menos de que deban ser explícitamente conservados. Esto ocurre
+tanto en los documentos XHTML, MathML y SVG, como en los elementos MathML o
+SVG incluidos en un documento HTML.</p>
 
-<p>The following are considered as insignificant white-space characters:</p>
+<p>Estos espacios en blanco se consideran no significativos:</p>
 <ul>
-  <li>End of line characters (<code>#xD</code> and <code>#xA</code>)</li>
-  <li>Tab characters (<code>#X9</code>)</li>
-  <li>Leading spaces of an element</li>
-  <li>Trailing spaces of an element</li>
-  <li>Contiguous spaces (one space is preserved)</li>
+  <li>espacios en blanco al final de un línea (<code>#xD</code> and
+    <code>#xA</code>)</li>
+  <li>tabulaciones (<code>#X9</code>)</li>
+  <li>espacios en blanco al principio de un elemento</li>
+  <li>espacios en blanco al final de un elemento</li>
+  <li>espacios en blanco contiguos (se conserva un único espacio)</li>
 </ul>
 
-<p>To preserve all the characters for some elements, use the
-<code>xml:space</code> attribute or the <code>PRE</code> element (only valid
-for XHTML documents). The possible values for the <code>xml:space</code>
-attribute are <code>default</code> and <code>preserve</code>.</p>
+<p>Para conservar todos los caracteres en algunos elementos, utiliza el
+atributo <code>xml:space</code> o el elemento <code>pre</code> (que sólo es
+válido en documentos XHTML). Los posibles valores del atributo
+<code>xml:space</code> son <code>default</code> y <code>preserve</code>.</p>
 <ul>
-  <li>The value <code>default</code> means that an applications' default
-    white-space treatment is acceptable for these elements. In Amaya, the
-    default treatment removes the insignificant white-space characters for
-    all supported DTDs (see above). 
+  <li>El valor <code>default</code> significa que el tratamiento por omisión
+    de los espacios en blanco de la aplicación es aceptable. En el caso de
+    Amaya, el tratamiento por omisión elimina los espacios en blanco no
+    significativos en todas las DTD soportadas, como se indica en el primer
+    párrafo. 
     <p></p>
   </li>
-  <li>The value <code>preserve</code> indicates that applications will
-    preserve all the characters, except the first one that immediately
-    follows the end tag of the element where it is specified, if that element
-    is an end of line.</li>
+  <li>El valor <code>preserve</code> significa que la aplicación debe
+    conservar todos los caracteres, excepto el primer carácter que sigue a la
+    etiqueta de cierre del elemento, si el emento se encuentra al final de
+    una línea.</li>
 </ul>
 
-<p>You apply the <code>xml:space</code> attribute to all elements within the
-content of the element where it is specified, unless it is overriden with
-another instance of the <code>xml:space</code> attribute.</p>
+<p>El atributo <code>xml:space</code> se aplica a todos los elementos
+incluidos en el elemento en el que aparece el atributo, a menos que sea
+anulada por otra instancia del atributo <code>xml:space</code>.</p>
 
-<p>In an XHTML DTD, the <code>PRE</code> element causes the same behavior as
-the <code>xml:space</code> attribute with the value <code>preserve</code>.</p>
+<p>En la DTD XHTML, el elemento <code>pre</code> se comporta como el atributo
+<code>xml:space</code> con el valor <code>preserve</code>.</p>
 
-<p>Amaya applies white space handling when it loads a document, not during
-editing. A consequence is that if you type insignificant white-space
-characters, they will be visible and saved but will be removed the next time
-the document is loaded. For example, the following source code:</p>
+<p>Amaya trata los espacios en blanco cuando abre el documento, no mientras
+se edita. Por tanto, si escribes espacios en blanco no significativos, serán
+visibles y se guardarán como tales, pero se eliminarán cuando Amaya abra de
+nuevo el documento. Por ejemplo, el código fuente siguiente:</p>
 
-<p><code>&lt;p&gt;Amaya removes the &lt;strong&gt; insignificant white-space
-&lt;/strong&gt;when it loads ...&lt;/p&gt;</code></p>
+<p><code>&lt;p&gt;Amaya elimina los&lt;strong&gt; espacios en blanco no
+significativos &lt;/strong&gt;cuando abre...&lt;/p&gt;</code></p>
 
-<p>displays as follows during editing:</p>
+<p>se muestra así al editarse:</p>
 
-<p><code>Amaya removes the <strong>insignificant white-space</strong> when it
-loads...</code></p>
+<p><code>Amaya elimina los <strong>espacios en blanco no
+significativos</strong> cuando abre...</code></p>
 
-<p>The text will be saved with that syntax. However, the next time the
-document is loaded, the text will display as:</p>
+<p>El texto se guardará tal y como se ha escrito. Sin embargo, cuando el
+documento se abra de nuevo, el texto se mostrará así::</p>
 
-<p><code>Amaya removes the<strong>insignificant white-space</strong>when it
-loads...</code></p>
+<p><code>Amaya elimina los<strong>espacios en blanco no
+significativos</strong>cuando abre...</code></p>
 
-<p>because the leading and trailing spaces of the element
-<code>&lt;strong&gt;</code> are considered to be insignificant and are
-removed.</p>
+<p>porque los espacios al principio y al final del elemento
+<code>&lt;strong&gt;</code> se consideran no significativos y son
+eliminados.</p>
 
-<p>The correct source code would be:</p>
+<p>El código fuente correcto sería:</p>
 
-<p><code>&lt;p&gt;Amaya removes the &lt;strong&gt;insignificant
-white-space&lt;/strong&gt; when it loads ...&lt;/p&gt;</code></p>
+<p><code>&lt;p&gt;Amaya elimina los &lt;strong&gt;espacios en blanco no
+significativos&lt;/strong&gt; cuando abre...&lt;/p&gt;</code></p>
 </div>
 </body>
 </html>

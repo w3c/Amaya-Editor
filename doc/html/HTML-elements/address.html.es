@@ -3,15 +3,13 @@
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <title>About the author</title>
-  <meta name="GENERATOR" content="amaya 6.1, see http://www.w3.org/Amaya/" />
-  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-  <style type="text/css">
-  </style>
+  <title>Acerca del autor</title>
+  <meta name="GENERATOR" content="amaya 6.4, see http://www.w3.org/Amaya/" />
+  
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
-<body xml:lang="en" lang="en">
+<body xml:lang="es" lang="es">
 
 <table border="0" width="100%" summary="toc">
   <tbody>
@@ -19,29 +17,32 @@
       <td><p><img border="0" alt="W3C" src="../../images/w3c_home" /> <img
         border="0" alt="Amaya" src="../../images/amaya.gif" /></p>
       </td>
-      <td><p align="right"><a href="lists.html.es"><img alt="previous"
+      <td><p align="right"><a href="lists.html.es"><img alt="anterior"
         border="0" src="../../images/left.gif" /></a> <a
-        href="../HTML.html.es"><img alt="top" border="0"
+        href="../HTML.html.es"><img alt="superior" border="0"
         src="../../images/up.gif" /></a> <a href="inline.html.es"><img
-        alt="next" border="0" src="../../images/right.gif" /></a></p>
+        alt="siguiente" border="0" src="../../images/right.gif" /></a></p>
       </td>
     </tr>
   </tbody>
 </table>
 
 <div id="About">
-<h1>About the author</h1>
+<h1>Acerca del autor</h1>
 
-<p>A web page should always contain some information which enables a reader
-to find out who wrote it or is responsible for it. This can include an email
-address (which can be linked), a URI, or even a physical address. The type <a
-href="http://www.w3.org/TR/REC-html40/struct/global.html.es#edef-ADDRESS"><code>ADDRESS</code></a>
-is used to identify this information, and it can contain other block-level
-elements such as paragraphs, headings, and lists.</p>
-
-<p>There is a default style for address elements in most browsers but the
-author can also use <a href="../StyleSheets.html.es">style sheets</a> to provide
-a suggested presentation.</p>
+<p>Una página web debe siempre contener la información que permita al lector
+saber quién la escribió o quién es responsable de su contenido. Esa
+información puede consistir en una dirección de correo electrónico (que puede
+ser un enlace), un URI o incluso una dirección física. El tipo <a
+href="http://www.w3.org/TR/REC-html40/struct/global.html#edef-ADDRESS"><code>address</code></a>
+se utiliza para identificar ese tipo de información y puede contener otros
+elementos de tipo bloque como párrafos, encabezados y listas.</p>
 </div>
+
+<p>La mayoría de navegadores utilizan un estilo por omisión para identificar
+los elementos address, pero el autor puede también utilizar <a
+href="../StyleSheets.html.es">hojas de estilo</a> para definir su formato.</p>
+
+<p></p>
 </body>
 </html>

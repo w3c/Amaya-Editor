@@ -3,15 +3,13 @@
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <title>Section Numbering</title>
-  <meta name="GENERATOR" content="amaya 5.2" />
-  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-  <style type="text/css">
-  </style>
+  <title>Numeración de secciones</title>
+  <meta name="GENERATOR" content="amaya 6.4+, see http://www.w3.org/Amaya/" />
+  
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
-<body xml:lang="en" lang="en">
+<body xml:lang="es" lang="es">
 
 <table border="0" summary="toc">
   <tbody>
@@ -19,7 +17,7 @@
       <td><p><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
         src="../../images/amaya.gif" /></p>
       </td>
-      <td><p><a href="../Numbering.html.es" accesskey="t"><img alt="top"
+      <td><p><a href="../Numbering.html.es" accesskey="t"><img alt="superior"
         src="../../images/up.gif" /></a></p>
       </td>
     </tr>
@@ -27,30 +25,28 @@
 </table>
 
 <div id="Section">
-<h1><a name="L1064">Section Numbering</a></h1>
+<h1><a name="L1064">Numeración de secciones</a></h1>
 
-<p>Section headings (<code>Hn</code> elements) can be automatically numbered
-to reflect the document structure. Element <code>H1</code> is supposed to be
-the document title and is not numbered, but, when this function is on, all
-other headings (<code>H2</code> to <code>H6</code>) receive a number that is
-computed according to their type and their position in the document
-structure. These numbers are displayed in blue and cannot be edited directly,
-but they are updated automatically whenever a heading is created or deleted.
-They appear not only in the main view, but also in the Table of contents
-view.</p>
+<p>Los encabezados de secciones (los elementos <code>hn</code>) pueden
+numerarse automáticamente para reflejar la estructura del documento. Se
+supone que el elemento <code>h1</code> es el título del documento y no se
+numera, pero el resto de encabezados (<code>h2</code> to <code>h6</code>)
+recibe un número que se calcula de acuerdo con su tipo y posición en la
+estructura del documento. Estos números se muestran en azul y no se pueden
+editar directamente, pero se actualizan cada vez que se crea o elimina un
+encabezado. Se muestran en la vista Formateada y en la vista Tabla de
+contenidos.</p>
 
-<p>When the document is <a href="../Printing.html.es#L1062">printed</a>, section
-numbers appear in the printed document only if the numbering function is on
-at that time.</p>
+<p>Al <a href="../Printing.html.es#L1062">imprimir</a> el documento, la
+numeración de las secciones se imprime solamente si la función está activada
+en ese momento.</p>
 
-<p>When the document is saved, section numbers are not saved in the <a
-href="../Publishing.html.es#L1104">HTML form</a>, but they are generated in the
-<a href="../Publishing.html.es#L1105">text form</a>.</p>
+<p>Al guardar el documento, la numeración de secciones no se guarda si se
+guarda <a href="../Publishing.html.es#L1104">como HTML</a>, pero sí si se
+guarda <a href="../Publishing.html.es#L1105">como texto</a>.</p>
 
-<p>The <strong>Section Numbering</strong> command from the
-<strong>Special</strong> menu is a toggle that allows you to switch the
-numbering function on or off.</p>
-
+<p>El comando de menú <strong>Especial &gt; Numeración de sección</strong> te
+permite activar o desactivar la numeración de secciones.</p>
 </div>
 </body>
 </html>

@@ -3,64 +3,66 @@
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-  <title>Buttons and Types Menu</title>
-  <style type="text/css">
-  </style>
-  <meta name="generator" content="amaya 5.4, see http://www.w3.org/Amaya/" />
+  <title>Botones y Menús Xhtml y Xml</title>
+  <meta name="generator" content="amaya 6.4+, see http://www.w3.org/Amaya/" />
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
-<body xml:lang="en" lang="en">
+<body xml:lang="es" lang="es">
 
 <table border="0" summary="toc">
   <tbody>
     <tr>
       <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
         src="../../images/amaya.gif" /></td>
-      <td><p> <a href="../Creating.html.es" accesskey="t"><img alt="top"
+      <td><p><a href="../Creating.html.es" accesskey="t"><img alt="superior"
         src="../../images/up.gif" /></a> <a href="the_structure_menu.html.es"
-        accesskey="n"><img alt="next" src="../../images/right.gif" /></a></p>
+        accesskey="n"><img alt="siguiente" src="../../images/right.gif"
+        /></a></p>
       </td>
     </tr>
   </tbody>
 </table>
 
 <div id="page_body">
-<h1>Buttons and Types Menu</h1>
+<h1>Botones y Menús Xhtml y Xml</h1>
 
-<p>The commands on the <strong>Types</strong> menu, and the corresponding
-buttons, let you create new elements at the insertion point within the
-document. To use the commands from the <strong>Types</strong> menu, place the
-cursor at the desired position and choose the element type from
-the<strong>Types</strong> menu.</p>
+<p>Los comandos de los menús <strong>Xhtml</strong> y <strong>Xml</strong> y
+los botones correspondientes te permiten crear nuevos elementos en el punto
+de inserción dentro del documento. Para utilizar los comandos de los menús
+<strong>Xhtml</strong> y <strong>Xml</strong>, sitúa el cursor en la posición
+deseada y elige el tipo de elemento del menú <strong>Xhtml</strong> o
+<strong>Xml</strong> .</p>
 
-<h2>Insertion points</h2>
+<h2>Puntos de inserción</h2>
 
-<p>When creating new elements, it is important to select an <em>insertion
-point</em>, not some text nor a single character: if the current selection is
-not empty, Amaya tries to <em>transform</em> the selected part into the
-element type chosen.</p>
+<p>Al crear nuevos elementos, es importante seleccionar un <strong>punto de
+inserción</strong>, no una porción de texto ni un único carácter. Si hay algo
+seleccionado, Amaya intenta <strong>transformar</strong> el elemento
+seleccionado en el elemento elegido.</p>
 
-<h2>Element Locations</h2>
+<h2>Posición de los elementos</h2>
 
-<p>Sometimes elements cannot be created at the chosen chosen because of the
-constraints imposed by the HTML DTD. Amaya then tries to create the element
-at the closest position. For example, if the insertion point is at the end of
-the last line of a paragraph when you click on the Heading 2 button <img
-src="../../images/H2.gif" alt="H2 Button" />, Amaya creates the new heading
-after the paragraph.</p>
+<p>A veces no se puede crear un elemento en la posición elegida debido a las
+restricciones impuestas por la DTD del HTML. Amaya intenta entonces crear el
+elemento lo más cerca posible. Por ejemplo, si el punto de inserción está al
+final de la última línea de un párrafo cuando haces clic en el botón de
+Encabezado de segundo nivel <img src="../../images/H2.gif" alt="Botón h2" />,
+Amaya crea el nuevo encabezado después del párrafo.</p>
 
-<p>In some other cases, Amaya changes the existing structure for creating the
-desired element. If the insertion point is somewhere within a list item
-(<kbd>li</kbd>) when you create a second level heading, the list item and its
-enclosing list are automatically split, in order to create the requested
-heading at the chosen position and to comply with the HTML DTD.</p>
+<p>En otros casos, Amaya cambia la estructura para crear el elemento deseado.
+Si el punto de inserción está en algún lugar en el interior de un elemento de
+lista (<code>li</code>) cuando creas un encabezado de segundo nivel, el
+elemento de lista y la lista que lo contiene se divide en dos partes para
+poder crear el encabezado solicitado en la posición elegida y cumplir la DTD
+del HTML.</p>
 
-<h2>See Also:</h2>
+<h2>Ver también:</h2>
 <ul>
-  <li><a href="../HTML-elements/infoTypes.html.es">Cómo utilizar los Tipos de Elementos</a></li>
-  <li><a href="../HTML.html.es">List of all HTML 4.0 elements</a></li>
+  <li><a href="../HTML-elements/infoTypes.html.es">Cómo utilizar los Tipos de
+    Elementos</a> <img alt="Tipos de elementos" src="../../images/H2.gif"
+  /></li>
+  <li><a href="../HTML.html.es">Lista de todos los elementos HTML 4.0</a></li>
 </ul>
 </div>
 </body>

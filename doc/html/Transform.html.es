@@ -3,14 +3,13 @@
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta name="GENERATOR" content="amaya 6.2, see http://www.w3.org/Amaya/" />
-  <title>Using the HTML.trans File</title>
-  <style type="text/css">
-  </style>
+  <meta name="GENERATOR" content="amaya 6.4+, see http://www.w3.org/Amaya/" />
+  <title>Utilizar el archivo HTML.trans</title>
+  
   <link href="style.css" rel="stylesheet" type="text/css" />
 </head>
 
-<body xml:lang="en" lang="en">
+<body xml:lang="es" lang="es">
 
 <table border="0" summary="toc">
   <tbody>
@@ -19,8 +18,8 @@
         src="../images/amaya.gif" /></p>
       </td>
       <td><p><a href="editing_documents/about_merging_elements.html.es"
-        accesskey="p"><img alt="previous" src="../images/left.gif" /></a> <a
-        href="Changing.html.es" accesskey="t"><img alt="top"
+        accesskey="p"><img alt="anterior" src="../images/left.gif" /></a> <a
+        href="Changing.html.es" accesskey="t"><img alt="superior"
         src="../images/up.gif" /></a></p>
       </td>
     </tr>
@@ -28,204 +27,203 @@
 </table>
 
 <div id="page_body">
-<h1>Using the HTML.trans File</h1>
+<h1>Utilizar el archivo HTML.trans</h1>
 
-<p>This document is an introduction to the structure transformation mechanism
-provided by <strong>Amaya</strong>. It describes the syntax of the
-transformation language and the way transformations are performed in the
-editor.</p>
+<p>Este documento es una introducción al mecanismo de
+transformaciónestructural incluido en Amaya. Describe la sintaxis del
+lenguaje de transformación y la manera en que esas transformaciones se
+efectúan en el editor.</p>
 
-<p>The file <code>amaya/HTML.trans</code> contains the description of
-available transformations. This file can be edited during an
-<strong>Amaya</strong> session. It is dynamically parsed when the
-transformation procedure is called by the editor,so new transformations can
-be added during an editing session.</p>
+<p>El archivo <code>amaya/HTML.trans</code> contiene la descripción de las
+transformaciones disponibles. Puedes editar este archivo mientras estás
+utilizando Amaya. El archivo se analiza cada vez que solicitas una
+transformación, así que puedes añadir transformaciones mientras estás
+editando un documento.</p>
 
-<p><strong>Warning</strong>: As the description of transformations may
-contain tags, do<strong>not</strong>edit the <code>HTML.trans</code> file
-with <strong>Amaya</strong>. You can use any text editor.</p>
+<p><strong>Atención:</strong> Puesto que la descripción de las
+transformaciones puede incluir etiquetas, <strong>no</strong> edites el
+archivo <code>HTML.trans</code> con Amaya. Puedes utilizar cualqueir otro
+editor de texto.</p>
 <hr />
 
-<h2>Syntax of the Amaya transformation language</h2>
+<h2>Sintáxis del lenguaje de transformación de Amaya</h2>
 
-<p>Comments begin with<code><strong>!</strong></code>and continue until the
-end of the line.</p>
+<p>Los comentarios comienzan por <code><strong>!</strong></code> y continúan
+hasta el final de la línea.</p>
 
-<p>The file consists of a list of transformation descriptions. Each
-transformation is described by three parts :</p>
+<p>El archivo consiste en un lista de descripciones de tranformaciones. Cada
+transformación se describe en tres partes:</p>
 <ul>
-  <li>a <em>name</em>terminated by a colon
-  <strong><code>:</code></strong></li>
-  <li>a <em>source pattern</em> terminated by a semi-colon
+  <li>un <em>nombre</em> terminado con dos
+    puntos<strong><code>:</code></strong></li>
+  <li>un <em>patrón origen</em> terminado con punto y coma
     <strong><code>;</code></strong></li>
-  <li>and a list of <em>rules</em> between braces <strong><code>{
-    }</code></strong> , each rule terminated by a semi-colon
+  <li>y una lista de <em>reglas</em> entre llaves <strong><code>{
+    }</code></strong> en la que cada regla se termina por un punto y coma
     <strong><code>;</code></strong></li>
 </ul>
 
-<p>The name appears in the <strong>Transform</strong> menu and identifies the
-transformation for the end-user.</p>
+<p>El nombre aparece en el menú <strong>Transformar</strong> e identifica la
+transformación de cara al usuario.</p>
 
-<h3>The pattern</h3>
+<h3>El patrón</h3>
 
-<p>The pattern describes a specific organization of the elements to be
-transformed. It acts as a filter over the HTML dtd. The purpose of the
-pattern is to identify a particular combination of elements to which the
-transformation can be applied. In a pattern it is possible to express
-conditions on sequence of tags, on the content of a tag and on the existence
-and value of attributes.</p>
+<p>El patrón describe la organización específica de los elementos a
+transformar. Actúa como filtro de la DTD HTML. El patrón identifica la
+combinación de elementos a la que puede aplicarse la transformación. El
+patrón puede incluir condiciones sobre la secuencia de etiquetas, sobre el
+contenido de una etiqueta y sobre la existencia y valor de los atributos.</p>
 
-<p>Formally, a pattern contains HTML tags (possibly with attributes) and some
-composition operators:</p>
+<p>Formalmente un patrón contiene etiquetas HTML (en su caso, con atributos)
+y algunos operadores:</p>
 
-<p><strong><code>|</code></strong>for choice</p>
+<p><strong><code>|</code></strong> indica elección</p>
 
-<p><strong><code>,</code></strong>for sibling</p>
+<p><strong><code>,</code></strong> indica hermano</p>
 
-<p><strong><code>+</code></strong>for sequence</p>
+<p><strong><code>+</code></strong> indica secuencia</p>
 
-<p><strong><code>?</code></strong>for option</p>
+<p><strong><code>?</code></strong> indica elección</p>
 
-<p><strong><code>( )</code></strong> for grouping nodes</p>
+<p><strong><code>( )</code></strong> indica agrupación de nodos</p>
 
-<p>The braces <code><strong>{</strong></code> <code><strong>}</strong></code>
-define the content of a node.</p>
+<p>Las llaves <code><strong>{</strong></code> <code><strong>}</strong></code>
+definen el contenido de un nodo.</p>
 
-<p>The symbol <strong><code>*</code></strong> is a token that matches any
-element type.</p>
+<p>El símbolo <strong><code>*</code></strong> inidca que se seleccionará
+cualquier tipo de elemento.</p>
 
-<p>It is possible to rename a tag by preceding it with a name followed by a
-colon (<strong><code>:</code></strong>).</p>
+<p>Puedes renombrar una etiqueta escribiendo antes de ella un nombre seguido
+de dos puntos (<strong><code>:</code></strong>).</p>
 
-<p>The tag may have attributes. If no value is given for an attribute, an
-element is matched if the attribute is present. If a value is specified for
-the attribute, an element is matched if the attribute is present and have the
-specified value.</p>
+<p>La etiqueta puede tener atributos. Si no se especifica ningún valor para
+un atributo, se seleccionará cualquier elemento que tenga el atributo. Si se
+especifica un valor para un atributo, tan sólo se seleccionarán los elementos
+que contengan el atributo y el valor especificado.</p>
 
-<p><a href="#L235">Examples</a>of patterns are given at the end of the
-document.</p>
+<p>Al final del documento puedes consultar <a href="#L235">ejemplos</a> de
+patrones.</p>
 
-<h3>The rules</h3>
+<h3>Las reglas</h3>
 
-<p>A rule expresses how some elements identified in the pattern are
-transformed. A rule has two parts separated by the symbol
+<p>Una regla expresa cómo se transformarán los elementos identificados por el
+patrón. Una regla tiene dos partes separadas por el símbolo
 <strong><code>&gt;</code></strong>:</p>
 <ul>
-  <li>a source tag or a name defined in the pattern,</li>
-  <li>a target tag list, giving the tags to be generated, and the place where
-    they are inserted when transforming the source element.</li>
+  <li>una etiqueta origen o un nombre definido en el patrón,</li>
+  <li>una lista de etiquetas destino, que indica las etiquetas que deben
+    generarse y el lugar en que se insertan al transformar el elemento
+  origen.</li>
 </ul>
 
-<p>The target tag list is itself divided into two parts separated by a colon
-(<strong><code>:</code></strong>):</p>
+<p>La lista de etiquetas destino se divide a su vez en dos partes separadas
+por dos puntos (<strong><code>:</code></strong>):</p>
 <ul>
-  <li>the generation location path (identifies the place where new tags have
-    to be inserted)</li>
-  <li>the list of tags to be generated</li>
+  <li>el camino de generación (que identifica el lugar en que se insertan las
+    nuevas etiquetas)</li>
+  <li>la lista de etiquetas a generar</li>
 </ul>
 
-<p>The generation location path is searched in the leftmost branch of the
-document tree, starting from the parent of the element matching the highest
-symbol of the pattern.</p>
+<p>El camino de generación se recorre a partir de la rama situada más a la
+izquierda en el árbol del documento, comenzando en el padre del elemento que
+coincide con el símbolo más alto del patrón.</p>
 
-<p>In the target tag list, the dot symbol (<code><strong>.</strong></code>)
-is used for descending in the tree structure.</p>
+<p>En la lista de etiquetas destino, el símbolo punto
+(<code><strong>.</strong></code>) se emplea para bajar en la estructura del
+árbol.</p>
 
-<p>If the special token star (<code><strong>*</strong></code>) ends the list
-of tags to be generated, the source element tag is not changed, but it can be
-moved to a different place in the destination.</p>
+<p>Si el símbolo especial asterisco (<code><strong>*</strong></code>)
+completa la lista de etiquetas a generar, la etiqueta origen no cambia, pero
+puede situarse en otro lugar en el destino.</p>
 
-<p>If the source tag or the name in the left part of a rules is present more
-than once in the pattern, the rule transforms all the elements matching an
-occurrence of the tag in the pattern.</p>
-<hr />
+<p>Si la etiqueta origen o el nombre situado en la parte izquierda de una
+regla aparece más de una vez en el patrón, la regla transforma todos los
+elementos del patrón que coincidan.</p>
 
-<h2>Transformation process</h2>
+<h2>Proceso de transformación</h2>
 
-<p>When the user chooses the <strong>Transform</strong> command from the
-<strong>Types</strong> menu, Amaya parses the <code>HTML.trans</code> file.
-Then the selected elements are matched with the pattern of each
-transformation. The names of the matched transformations are proposed to the
-user in a pop-up menu.</p>
+<p>Cuando el usuario elige el comando <strong>Transformar</strong> del menú
+<strong>Editar</strong>, Amaya analiza el archivo <code>HTML.trans</code>. A
+continuación, los elementos seleccionados se comparan con el patrón de cada
+transformación. Los nombres de las trasnformaciones coincidentes se proponen
+al usuario en un menú emergente.</p>
 
-<p>If several transformations with the same name match the selected elements,
-the higher-level matching transformation is proposed to the user. If several
-transformations match at the same level, the first one declared in the
-<code>HTML.trans</code> file is proposed. As a consequence, it is recommended
-to specify the transformations with specific patterns before the more general
-ones.</p>
+<p>Si se pueden aplicar varias transformaciones con el mismo nombre a los
+elementos seleccionados, se propone al usuario la transformación que coincide
+al nivel más alto. Si se pueden aplicar varias transformaciones del mismo
+nivel, se propone la que aparezca primero en el archivo
+<code>HTML.trans</code>. En consecuencia, se recomienda especificar antes las
+transformaciones específicas que las generales.</p>
 
-<p>Once a transformation has been chosen by the user, the destination
-structure is built according to the rules while selected elements are
-traversed.</p>
+<p>Una vez que el usuario ha elegido un transformación, la estructura de
+destino se construye siguiendo las reglas mientras se recorren los elementos
+seleccionados.</p>
 
-<p>Finally, the contents of the source elements (text and pictures, but also
-structured elements) are moved into the produced elements.</p>
+<p>Finalmente, el contenido de los elementos origen (texto e imágenes, pero
+también contenido estructurado) se sitúa en los elementos generados.</p>
 
-<p>This transformation process for HTML documents is fully described in <a
-href="http://opera.inrialpes.fr/opera/papers9696.html.es"><em>Interactively
-Restructuring HTML Documents</em></a>, a paper presented at the <a
-href="http://www5conf.inria.fr/">5th international WWW conference</a> in
-Paris, May 96, by Cécile Roisin and Stéphane Bonhomme.</p>
-<hr />
+<p>Este proceso de transformación de los documentos HTML se describe en
+detalle en el artículo <a
+href="http://opera.inrialpes.fr/opera/papers9696.html">Reestructurar
+interactivamente documentos HTML</a>, presentado en la <a
+href="http://www5conf.inria.fr/">5ª conferencia internacional WWW</a> en
+Paris, Mayo 1996, por Cécile Roisin y Stéphane Bonhomme.</p>
 
-<h2><a name="L235" id="L235">Examples</a></h2>
+<h2><a name="L235" id="L235">Ejemplos</a></h2>
 <ul>
-  <li>The first example merges several consecutive unnumbered lists (UL) into
-    an unique list. 
-    <pre>Merge Lists: (UL{LI+})+;
+  <li>El primer ejemplo une varias listas no ordenadas (ul) consecutivas en
+    una única lista. 
+    <pre>Merge Lists: (ul{li+})+;
     { 
-    LI &gt; UL:LI; 
+    li &gt; ul:li; 
     }</pre>
-    <p>The pattern matches a sequence of unnumbered lists (UL), that contain
-    a sequence of items (LI).</p>
-    <p>The rule expresses that each time an item is encountered when
-    traversing the matched elements, a new LI tag is created within an UL.
-    When the rule is first applied, the resulting structure is empty, so
-    there is no UL element in which the LI can be created. Therefore an UL is
-    first created, then the rule can be applied.</p>
+    <p>El patrón coincide con una secuencia de listas no ordenadas (ul), que
+    contengan items (li).</p>
+    <p>La regla significa que cada vez que se encuentra un item al recorrer
+    los elementos seleccionados, se crea una nueva etiqueta li dentro de un
+    ul. Cuando se aplica la regla por primera vez, la estructura resultante
+    está vacía, por lo que no existe elemento ul en el que crear el li. Una
+    vez se ha cereado el ul, se puede aplicar la regla.</p>
   </li>
-  <li>The second example transforms a definition list into a table. 
-    <pre>Table: DL{(DT|DD)+}; 
+  <li>El segundo ejemplo transforma una lista de definición en una tabla. 
+    <pre>Table: dl{(dt|dd)+}; 
    { 
-   DT &gt; &lt;TABLE border=1&gt;.TBODY:TR.TD; 
-   DD &gt; &lt;TABLE border=1&gt;.TBODY.TR:TD; 
+   dt &gt; &lt;table border=1&gt;.tbody:tr.td; 
+   dd &gt; &lt;table border=1&gt;.tbody.tr:td; 
    }</pre>
-    <p>The pattern matches any Definition List element (DL).</p>
-    <p>The rules explain how the table is incrementally built when the
-    structure of the selected definition list is traversed :</p>
+    <p>El patrón coincide con cualquier elemento lista definición (dl).</p>
+    <p>Las reglas explican cómo se crea la tabla al recorrer la estructura de
+    las listas de definición seleccionadas.</p>
     <ul>
-      <li>Each DT involves the creation of a new row (TR) in the table
-      body.</li>
-      <li>Each DD involves the creation of a new cell (TD) in the last
-        existing row of the table. 
-        <p></p>
-      </li>
+      <li>Cada dt implica la creación de una nueva fila (TR) en el cuerpo de
+        la tabla.</li>
+      <li>Cada dd implica la creación de una nueva celda (TD) en la última
+        fila de la tabla.</li>
     </ul>
   </li>
-  <li>The third example removes a table element, keeping its content
-    unchanged but extracted from the table. 
+  <li>El tercer ejemplo elimina una tabla, manteniendo su contenido sin
+    cambios, pero fuera de la tabla. 
     <pre>Remove Table:
-TABLE{?CAPTION,?(body:*{(TR{(TD{(?cell_content:*)+}|
-                             TH{(?cell_content:*)+}
+table{?caption,?(body:*{(tr{(td{(?cell_content:*)+}|
+                             th{(?cell_content:*)+}
                            )})+})+};
      { 
-     CAPTION&gt;H3; 
+     caption&gt;h3; 
      cell_content&gt;:*;
      }</pre>
-    <p>The pattern matches any table and identifies the content of each cell
-    of the table (cell_content).</p>
-    <p>The second rule expresses that the contents of each cell have to be
-    moved to the place of the original table.</p>
+    <p>El patrón coincide con cualqueir tabla e identifica el contenido de
+    cada celda de la tabla (cell_content).</p>
+    <p>La segunda regla significa que el contenido de cada celda se situará
+    en el lugar donde se encontraba la tabla original.</p>
   </li>
-  <li>See the file <kbd>amaya/HTML.trans</kbd> for more transformation
-    examples.</li>
+  <li>Ver el archivo <kbd>amaya/HTML.trans</kbd> para consultar otros
+    ejemplos de transformaciones.</li>
 </ul>
 </div>
 <hr />
 <address>
   <a href="mailto:Stephane.Bonhomme@inrialpes.fr">Stéphane Bonhomme</a> <br />
-  $Date$
+  $Fecha: 2002/09/10 07:07:21 $
 </address>
 </body>
 </html>

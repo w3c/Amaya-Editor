@@ -3,129 +3,105 @@
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta name="GENERATOR" content="amaya 6.2, see http://www.w3.org/Amaya/" />
-  <title>Creating client-side image maps</title>
-  <style type="text/css">
-  </style>
+  <meta name="GENERATOR" content="amaya 6.4+, see http://www.w3.org/Amaya/" />
+  <title>Crear mapas de imagen cliente</title>
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
-<body xml:lang="en" lang="en">
+<body xml:lang="es" lang="es">
 
 <table border="0" summary="toc">
   <tbody>
     <tr>
       <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
         src="../../images/amaya.gif" /></td>
-      <td><p><a href="adding_an_image.html.es" accesskey="p"><img alt="previous"
-        src="../../images/left.gif" /></a> <a href="../ImageMaps.html.es"
-        accesskey="t"><img alt="top" src="../../images/up.gif" /></a> <a
-        href="using_clientside_image_maps.html.es" accesskey="n"><img alt="next"
-        src="../../images/right.gif" /></a></p>
+      <td><p><a href="adding_an_image.html.es" accesskey="p"><img
+        alt="anterior" /></a> <a href="../ImageMaps.html.es"
+        accesskey="t"><img alt="superior" src="../../images/up.gif" /></a> <a
+        href="using_clientside_image_maps.html.es" accesskey="n"><img
+        alt="siguiente" src="../../images/right.gif" /></a></p>
       </td>
     </tr>
   </tbody>
 </table>
 
 <div id="page_body">
-<h1>Creating client-side image maps</h1>
+<h1>Crear mapas de imagen cliente</h1>
 
-<p>Amaya enables you to use client-side image maps that link an image to one
-or multiple URIs.</p>
+<p>Amaya te permite crear mapas de imagen cliente que enlazan una imagen a
+uno o múltiples URIs.</p>
 
-<p class="ProcedureCaption">To create a new image map</p>
+<p class="ProcedureCaption">Para crear un nuevo mapa de imagen</p>
 <ol>
-  <li>Insert an image into the document by choosing <strong>Image</strong>
-    from the <strong>Types</strong> menu. 
+  <li>Inserta una imagen en el documento eligiendo el comando de menú
+    <strong>Xhtml &gt; Imagen</strong>. 
     <p></p>
-    <p class="ProcedureNote"><strong>Note:</strong>&nbsp;&nbsp;&nbsp; You can
-    also insert an image by clicking the <img src="../../images/Image.gif"
-    alt="Image Button" /> icon on the toolbar, or directly from the keyboard
-    by pressing <code>Control + t</code> in Windows or <code>Control +
-    i</code> in Unix.</p>
+    <p class="ProcedureNote"><strong>Nota:</strong> También puedes insertar
+    una imagen haciendo clic en el icono <img src="../../images/Image.gif"
+    alt="Botón Imagen" /> de la barra de botones, o mediante el altajo de
+    teclado <code>Control + t</code> en Windows o <code>Control + i</code> en
+    Unix.</p>
     <p></p>
   </li>
-  <li>Select <strong>Area</strong> from the <strong>Types</strong> menu. Then
-    choose <strong>Circle</strong>, <strong>Polygon</strong>, or
-    <strong>Rectangle</strong>, depending on the shape of the area within the
-    image that you want to create. The following table indicates how to
-    define an area depending on the shape you select. 
-    <p class="ProcedureStep"
-    style="margin-left:.75in;text-indent:0in;">&nbsp;</p>
-    <p class="TableTitle" style="margin-left:0in"><strong>Table 1: Defining
-    shapes</strong></p>
+  <li>Elige el comando de menú <strong>Xhtml &gt; área</strong>. A
+    continuación elige <strong>Círculo</strong>, <strong>Polígono</strong> o
+    <strong>Rectángulo</strong>, en función de la forma del área que quieres
+    crear en la imagen. La tabla siguiente indica cómo definir el área según
+    la forma elegida. 
+    <p class="TableTitle" style="margin-left:0in"><strong>Tabla 1: Definir
+    formas</strong></p>
 
-    <table border="1" cellspacing="0" cellpadding="0"
-    style="margin-left:0in;  border-collapse:collapse;border:none;">
+    <table border="1" cellspacing="0" cellpadding="0">
       <tbody>
         <tr>
-          <td width="147" valign="top"
-          style="width:110.0pt;border-top:solid 1.5pt;                border-left:none;border-bottom:solid 1.5pt;             border-right:solid .5pt;                padding:0in 5.4pt 0in 5.4pt"><p
-            class="TableTitle"><strong>Shape</strong></p>
+          <td><p class="TableTitle"><strong>Forma</strong></p>
           </td>
-          <td width="257" valign="top"
-          style="width:192.4pt;border-top:solid 1.5pt;             border-left:none;border-bottom:solid 1.5pt;             border-right:none;padding:0in 5.4pt 0in 5.4pt"><p
-            class="TableTitle"><strong>Defining the Area</strong></p>
+          <td><p class="TableTitle"><strong>Definir el área</strong></p>
           </td>
         </tr>
         <tr>
-          <td width="147" valign="top"
-          style="width:110.0pt;border-top:none;border-left: none;             border-bottom:solid .5pt;border-right:             solid .5pt;padding:0in 5.4pt 0in 5.4pt"><p
-            class="TableText">Circle</p>
+          <td><p class="TableText">Círculo</p>
           </td>
-          <td valign="top"
-          style="width:192.4pt;border:none;border-bottom:solid .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
-            class="TableText">Click the left mouse button to select the
-            position of one corner of the circle. Hold down the button, move
-            your cursor to the opposite corner, then release the button.</p>
+          <td><p class="TableText">Haz clic con el botón izquierdo del ratón
+            para indicar la posición de un punto de la circunferencia.
+            Arrastra el ratón hasta el punto diametralmente opuesto y
+            entonces, suelta el botón.</p>
             <p></p>
           </td>
         </tr>
         <tr>
-          <td width="147" valign="top"
-          style="width:110.0pt;border-top:none;border-left:   none;border-bottom:solid .5pt;border-right:solid .5pt;padding:0in 5.4pt 0in 5.4pt"><p
-            class="TableText">Polygon</p>
+          <td><p class="TableText">Polígono</p>
           </td>
-          <td width="257" valign="top"
-          style="width:192.4pt;border:none;border-bottom:solid .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
-            class="TableText">Click the left mouse button at each point that
-            you want to be a corner of the polygon. Right-click to indicate
-            when you have reached the last point.</p>
+          <td><p class="TableText">Haz clic con el botón izquierdo en cada
+            punto que quieras que sea un vértice del polígono. Haz clic con
+            el botón derecho para indicar que marcas el último vértice.</p>
             <p></p>
           </td>
         </tr>
-        <tr style="height:63.4pt">
-          <td width="147" valign="top"
-          style="width:110.0pt;border-top:none;border-left:   none;border-bottom:solid 1.5pt;border-right:solid .5pt;padding:0in 5.4pt 0in 5.4pt;   height:63.4pt"><p
-            class="TableText">Rectangle</p>
-          </td>
-          <td width="257" valign="top"
-          style="width:192.4pt;border:none;border-bottom:solid 1.5pt;   padding:0in 5.4pt 0in 5.4pt;height:63.4pt"><p
-            class="TableText">Click the left mouse button to select the
-            position of one corner of the circle. Hold down the button, move
-            your cursor to the opposite corner, then release the button.</p>
-          </td>
-        </tr>
         <tr>
-          <td></td>
-          <td></td>
+          <td><p class="TableText">Rectángulo</p>
+          </td>
+          <td><p class="TableText">Haz clic con el botón izquierdo para
+            indicar la posición de una esquina del rectángulo. Arrastra el
+            ratón hasta la esquina opuesta y entonces, suelta el botón.</p>
+          </td>
         </tr>
       </tbody>
     </table>
   </li>
-  <li>When you finish defining the area of the image map, a dialog will
-    display so you can enter the Alternate Text. Alternate text is required
-    for any graphic or image map. 
+  <li>Cuando termines de definir el área del mapa de imagen, se mostrará una
+    caja de diálogo para que escribas su texto alternativo. El texto
+    alternativo es obligatorio en cualquier imagen o mapa de imagen. 
     <p></p>
   </li>
-  <li>Click anywhere within the image map area. Another dialog displays so
-    you can input the URI or target to which you want to link the image.
-    Enter the target of the link associated with the defined area, or
-    <strong>Browse</strong> for the link. 
+  <li>Haz clic en cualquier punto en el interior del área del mapa de imagen.
+    Se abrirá otra caja de diálogo para que escriba el URI o destino al que
+    quieres enlazar el área. Escribe el destino o haz clic en
+    <strong>Buscar</strong> para buscar el destino.. 
     <p></p>
-    <p><b>Tip:</b>&nbsp;&nbsp;&nbsp;&nbsp; To see an outline of each existing
-    area in the image map, select <strong>Show map areas</strong> from the
-    <strong>Views</strong> menu.</p>
+    <p><b>Consejo:</b> Para ver el contorno de las áreas ya definidas en el
+    mapa de imagen, elige el comando de menú <strong>Vistas &gt; Mostrar
+    áreas de mapas</strong>.</p>
   </li>
 </ol>
 </div>

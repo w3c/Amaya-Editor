@@ -1,52 +1,48 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-	
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-  <title>Accessibility in Amaya</title>
-  <style type="text/css">
-  </style>
-  <meta name="GENERATOR" content="amaya 5.2" />
+  <title>Accesibilidad en Amaya</title>
+  <meta name="GENERATOR" content="amaya 6.4+, see http://www.w3.org/Amaya/" />
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
-<body xml:lang="en" lang="en">
+<body xml:lang="es" lang="es">
 
 <table border="0" summary="toc">
   <tbody>
     <tr>
       <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
         src="../../images/amaya.gif" /></td>
-      <td><p>
-		<a href="../Access.html.es" accesskey="t"><img alt="top" src="../../images/up.gif" /></a> 
-		<a href="about_amayas_accessibility_features.html.es" accesskey="n"><img alt="next"
-        src="../../images/right.gif" /></a></p>
+      <td><p><a href="../Access.html.es" accesskey="t"><img alt="superior"
+        src="../../images/up.gif" /></a> <a
+        href="about_amayas_accessibility_features.html.es" accesskey="n"><img
+        alt="siguiente" src="../../images/right.gif" /></a></p>
       </td>
     </tr>
   </tbody>
 </table>
 
 <div id="page_body">
-<h1>Accessibility in Amaya</h1>
+<h1>Accesibilidad en Amaya</h1>
 
-<p>The Amaya user population is extremely diverse. In addition to speaking a
-variety of languages and operating on several platforms, the population
-contains users with visual, aural, and motor disabilities.</p>
+<p>Los usuarios de Amaya son muy diversos. Además de hablar en numerosos
+idiomas y utilizar diferentes plataformas, también existen usuarios con
+discapacidades visuales, auditivas y motoras.</p>
 
-<p>Because Amaya is an Open Source project, it is important to produce
-documents that are accessible to all members of the user base. Amaya provides
-a number of accessibility features to assist you with achieving this goal.</p>
+<p>Ya que Amaya es un proyecto de Código Abierto, es importante que permita
+producir documentos accesibles a todos los usuarios. Amaya proporciona
+algunas características de accesibilidad que te ayudarán a conseguir este
+objetivo.</p>
 
-<h2>See also:</h2>
+<h2>Ver también:</h2>
 <ul>
-  <li><span class="Link"><a href="about_amayas_accessibility_features.html.es">About Amaya&rsquo;s
-    Accessibility Features</a></span></li>
-  <li><span class="Link"><a href="about_producing_accessible_content.html.es">About Producing
-    Accessible Content</a></span></li>
+  <li><span class="Link"><a
+    href="about_amayas_accessibility_features.html.es">Acerca de las características de accesibilidad de Amaya</a></span></li>
+  <li><span class="Link"><a
+    href="about_producing_accessible_content.html.es">Crear contenido accesible</a></span></li>
 </ul>
 </div>
-
 </body>
 </html>

@@ -3,15 +3,12 @@
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta name="GENERATOR" content="amaya 5.4, see http://www.w3.org/Amaya/" />
-  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-  <title>Editing Tables</title>
-  <style type="text/css">
-  </style>
+  <meta name="GENERATOR" content="amaya 6.4+, see http://www.w3.org/Amaya/" />
+  <title>Editar tablas</title>
   <link href="style.css" rel="stylesheet" type="text/css" />
 </head>
 
-<body xml:lang="en" lang="en">
+<body xml:lang="es" lang="es">
 
 <table border="0" summary="toc">
   <tbody>
@@ -19,10 +16,10 @@
       <td><p><img alt="W3C" src="../images/w3c_home" /> <img alt="Amaya"
         src="../images/amaya.gif" /></p>
       </td>
-      <td><p><a href="Links.html.es" accesskey="p"><img alt="previous"
+      <td><p><a href="Links.html.es" accesskey="p"><img alt="anterior"
         src="../images/left.gif" /></a> <a href="Manual.html.es"
-        accesskey="t"><img alt="top" src="../images/up.gif" /></a> <a
-        href="ImageMaps.html.es" accesskey="n"><img alt="next"
+        accesskey="t"><img alt="superior" src="../images/up.gif" /></a> <a
+        href="ImageMaps.html.es" accesskey="n"><img alt="siguiente"
         src="../images/right.gif" /></a></p>
       </td>
     </tr>
@@ -30,22 +27,22 @@
 </table>
 
 <div id="page_body">
-<h1>Editing Tables</h1>
+<h1>Editar tablas</h1>
 
-<p>The following topics are covered in this section:</p>
+<p>En esta sección se tratan los temas siguientes:</p>
 <ul>
   <li><a href="editing_tables/working_with_tables.html.es#page_body"
-    rel="subdocument">Working with Tables</a></li>
+    rel="subdocument">Trabajar con tablas</a></li>
   <li><a href="editing_tables/create_table.html.es#page_body"
-    rel="subdocument">Creating a Table</a></li>
+    rel="subdocument">Crear una tabla</a></li>
   <li><a href="editing_tables/add_column.html.es#page_body"
-    rel="subdocument">Adding Columns</a></li>
+    rel="subdocument">Añadir columnas a una tabla</a></li>
   <li><a href="editing_tables/add_row.html.es#page_body"
-    rel="subdocument">Adding Rows</a></li>
+    rel="subdocument">Añadir filas a una tabla</a></li>
   <li><a href="editing_tables/add_tbody.html.es#page_body"
-    rel="subdocument">Adding a New tbody</a></li>
+    rel="subdocument">Añadir cuerpos de tabla</a></li>
   <li><a href="editing_tables/remove_column.html.es#page_body"
-    rel="subdocument">Removing Columns</a></li>
+    rel="subdocument">Eliminar columnas de una tabla</a></li>
 </ul>
 </div>
 </body>

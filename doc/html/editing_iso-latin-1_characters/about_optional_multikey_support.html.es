@@ -3,15 +3,13 @@
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-  <title>About Optional Multi-key Support</title>
-  <style type="text/css">
-  </style>
-  <meta name="generator" content="amaya 5.4, see http://www.w3.org/Amaya/" />
+  <title>Combinaciones de teclas en las versiones Motif y Windows</title>
+  
+  <meta name="generator" content="amaya 6.4, see http://www.w3.org/Amaya/" />
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
-<body xml:lang="en" lang="en">
+<body xml:lang="es" lang="es">
 
 <table border="0" summary="toc">
   <tbody>
@@ -19,40 +17,39 @@
       <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
         src="../../images/amaya.gif" /></td>
       <td><p><a href="entering_ISOLatin1_characters_in_amaya.html.es"
-        accesskey="p"><img alt="previous" src="../../images/left.gif" /></a>
-        <a href="../EditChar.html.es" accesskey="t"><img alt="top"
+        accesskey="p"><img alt="anterior" src="../../images/left.gif" /></a>
+        <a href="../EditChar.html.es" accesskey="t"><img alt="superior"
         src="../../images/up.gif" /></a> <a
         href="about_standard_multikey_support.html.es" accesskey="n"><img
-        alt="next" src="../../images/right.gif" /></a></p>
+        alt="siguiente" src="../../images/right.gif" /></a></p>
       </td>
     </tr>
   </tbody>
 </table>
 
 <div id="page_body">
-<h1>About Optional Multi-key Support for Motif and Windows</h1>
+<h1>Combinaciones de teclas en las versiones Motif y Windows</h1>
 
-<p>Amaya provides an optional multi-key input method based on a two-key
-sequence beginning with the accent and followed by the letter to be accented.
-For example, to obtain an a-tilde (<code>ã</code>), you first press
-<code>~</code> then type <code>a</code>. To obtain a tilde (<code>~</code>),
-press <code>~</code> twice.</p>
+<p>Amaya permite las combinaciones de dos teclas para obtener caracteres
+acentuados. Por ejemplo, para obtener la a-tilde (<code>ã</code>), pulsa
+<code>~</code> y a continuación  <code>a</code>. Para obtener una tilde
+(<code>~</code>), pulsa <code>~</code> dos veces seguidas.</p>
 
-<p>See the table below for the keys used to insert various ISO-Latin
-characters.</p>
+<p>En la tabla siguiente se indican las teclas que insertan algunos
+caracteres ISO-Latin. </p>
 
 <table class="characters">
   <thead>
     <tr>
-      <td><p class="TableHead"><strong>Name</strong></p>
+      <td><p class="TableHead"><strong>Nombre</strong></p>
       </td>
-      <td><p class="TableHead"><strong>Code</strong></p>
+      <td><p class="TableHead"><strong>Código</strong></p>
       </td>
-      <td><p class="TableHead"><strong>First key</strong></p>
+      <td><p class="TableHead"><strong>Primera tecla</strong></p>
       </td>
-      <td><p class="TableHead"><strong>Second key</strong></p>
+      <td><p class="TableHead"><strong>Segunda tecla</strong></p>
       </td>
-      <td><p class="TableHead"><strong>Output</strong></p>
+      <td><p class="TableHead"><strong>Resultado</strong></p>
       </td>
     </tr>
   </thead>
@@ -62,7 +59,7 @@ characters.</p>
       </td>
       <td><p class="TableText">193</p>
       </td>
-      <td><p class="TableText">quote</p>
+      <td><p class="TableText">apóstrofo</p>
       </td>
       <td><p class="TableText">&lt;Shift&gt; A</p>
       </td>
@@ -74,7 +71,7 @@ characters.</p>
       </td>
       <td><p class="TableText">194</p>
       </td>
-      <td><p class="TableText">circumflex</p>
+      <td><p class="TableText">circunflejo</p>
       </td>
       <td><p class="TableText">&lt;Shift&gt; A</p>
       </td>
@@ -86,7 +83,7 @@ characters.</p>
       </td>
       <td><p class="TableText">192</p>
       </td>
-      <td><p class="TableText">backquote</p>
+      <td><p class="TableText">acento grave</p>
       </td>
       <td><p class="TableText">&lt;Shift&gt; A</p>
       </td>
@@ -98,7 +95,7 @@ characters.</p>
       </td>
       <td><p class="TableText">197</p>
       </td>
-      <td><p class="TableText">star</p>
+      <td><p class="TableText">multiplicación</p>
       </td>
       <td><p class="TableText">&lt;Shift&gt; A</p>
       </td>
@@ -122,7 +119,7 @@ characters.</p>
       </td>
       <td><p class="TableText">196</p>
       </td>
-      <td><p class="TableText">double quote</p>
+      <td><p class="TableText">comillas</p>
       </td>
       <td><p class="TableText">&lt;Shift&gt; A</p>
       </td>
@@ -134,7 +131,7 @@ characters.</p>
       </td>
       <td><p class="TableText">199</p>
       </td>
-      <td><p class="TableText">backquote</p>
+      <td><p class="TableText">acento grave</p>
       </td>
       <td><p class="TableText">&lt;Shift&gt; C</p>
       </td>
@@ -146,7 +143,7 @@ characters.</p>
       </td>
       <td><p class="TableText">201</p>
       </td>
-      <td><p class="TableText">quote</p>
+      <td><p class="TableText">apóstrofo</p>
       </td>
       <td><p class="TableText">&lt;Shift&gt; E</p>
       </td>
@@ -158,7 +155,7 @@ characters.</p>
       </td>
       <td><p class="TableText">202</p>
       </td>
-      <td><p class="TableText">circumflex</p>
+      <td><p class="TableText">circunflejo</p>
       </td>
       <td><p class="TableText">&lt;Shift&gt; E</p>
       </td>
@@ -170,7 +167,7 @@ characters.</p>
       </td>
       <td><p class="TableText">200</p>
       </td>
-      <td><p class="TableText">backquote</p>
+      <td><p class="TableText">acento grave</p>
       </td>
       <td><p class="TableText">&lt;Shift&gt; E</p>
       </td>
@@ -182,7 +179,7 @@ characters.</p>
       </td>
       <td><p class="TableText">203</p>
       </td>
-      <td><p class="TableText">double quote</p>
+      <td><p class="TableText">comillas</p>
       </td>
       <td><p class="TableText">&lt;Shift&gt; E</p>
       </td>
@@ -194,7 +191,7 @@ characters.</p>
       </td>
       <td><p class="TableText">205</p>
       </td>
-      <td><p class="TableText">quote</p>
+      <td><p class="TableText">apóstrofo</p>
       </td>
       <td><p class="TableText">&lt;Shift&gt; I</p>
       </td>
@@ -206,7 +203,7 @@ characters.</p>
       </td>
       <td><p class="TableText">206</p>
       </td>
-      <td><p class="TableText">circumflex</p>
+      <td><p class="TableText">circunflejo</p>
       </td>
       <td><p class="TableText">&lt;Shift&gt; I</p>
       </td>
@@ -218,7 +215,7 @@ characters.</p>
       </td>
       <td><p class="TableText">204</p>
       </td>
-      <td><p class="TableText">backquote</p>
+      <td><p class="TableText">acento grave</p>
       </td>
       <td><p class="TableText">&lt;Shift&gt; I</p>
       </td>
@@ -230,7 +227,7 @@ characters.</p>
       </td>
       <td><p class="TableText">207</p>
       </td>
-      <td><p class="TableText">double quote</p>
+      <td><p class="TableText">comillas</p>
       </td>
       <td><p class="TableText">&lt;Shift&gt; I</p>
       </td>
@@ -254,7 +251,7 @@ characters.</p>
       </td>
       <td><p class="TableText">211</p>
       </td>
-      <td><p class="TableText">quote</p>
+      <td><p class="TableText">apóstrofo</p>
       </td>
       <td><p class="TableText">&lt;Shift&gt; O</p>
       </td>
@@ -266,7 +263,7 @@ characters.</p>
       </td>
       <td><p class="TableText">212</p>
       </td>
-      <td><p class="TableText">circumflex</p>
+      <td><p class="TableText">circunflejo</p>
       </td>
       <td><p class="TableText">&lt;Shift&gt; O</p>
       </td>
@@ -278,7 +275,7 @@ characters.</p>
       </td>
       <td><p class="TableText">210</p>
       </td>
-      <td><p class="TableText">backquote</p>
+      <td><p class="TableText">acento grave</p>
       </td>
       <td><p class="TableText">&lt;Shift&gt; O</p>
       </td>
@@ -290,7 +287,7 @@ characters.</p>
       </td>
       <td><p class="TableText">216</p>
       </td>
-      <td><p class="TableText">star</p>
+      <td><p class="TableText">multiplicación</p>
       </td>
       <td><p class="TableText">&lt;Shift&gt; O</p>
       </td>
@@ -314,7 +311,7 @@ characters.</p>
       </td>
       <td><p class="TableText">214</p>
       </td>
-      <td><p class="TableText">double quote</p>
+      <td><p class="TableText">comillas</p>
       </td>
       <td><p class="TableText">&lt;Shift&gt; O</p>
       </td>
@@ -326,7 +323,7 @@ characters.</p>
       </td>
       <td><p class="TableText">205</p>
       </td>
-      <td><p class="TableText">quote</p>
+      <td><p class="TableText">apóstrofo</p>
       </td>
       <td><p class="TableText">&lt;Shift&gt; U</p>
       </td>
@@ -338,7 +335,7 @@ characters.</p>
       </td>
       <td><p class="TableText">206</p>
       </td>
-      <td><p class="TableText">circumflex</p>
+      <td><p class="TableText">circunflejo</p>
       </td>
       <td><p class="TableText">&lt;Shift&gt; U</p>
       </td>
@@ -350,7 +347,7 @@ characters.</p>
       </td>
       <td><p class="TableText">204</p>
       </td>
-      <td><p class="TableText">backquote</p>
+      <td><p class="TableText">acento grave</p>
       </td>
       <td><p class="TableText">&lt;Shift&gt; U</p>
       </td>
@@ -362,7 +359,7 @@ characters.</p>
       </td>
       <td><p class="TableText">207</p>
       </td>
-      <td><p class="TableText">double quote</p>
+      <td><p class="TableText">comillas</p>
       </td>
       <td><p class="TableText">&lt;Shift&gt; U</p>
       </td>
@@ -374,7 +371,7 @@ characters.</p>
       </td>
       <td><p class="TableText">221</p>
       </td>
-      <td><p class="TableText">quote</p>
+      <td><p class="TableText">apóstrofo</p>
       </td>
       <td><p class="TableText">&lt;Shift&gt; Y</p>
       </td>
@@ -386,7 +383,7 @@ characters.</p>
       </td>
       <td><p class="TableText">225</p>
       </td>
-      <td><p class="TableText">quote</p>
+      <td><p class="TableText">apóstrofo</p>
       </td>
       <td><p class="TableText">a</p>
       </td>
@@ -398,7 +395,7 @@ characters.</p>
       </td>
       <td><p class="TableText">226</p>
       </td>
-      <td><p class="TableText">circumflex</p>
+      <td><p class="TableText">circunflejo</p>
       </td>
       <td><p class="TableText">a</p>
       </td>
@@ -410,7 +407,7 @@ characters.</p>
       </td>
       <td><p class="TableText">224</p>
       </td>
-      <td><p class="TableText">backquote</p>
+      <td><p class="TableText">acento grave</p>
       </td>
       <td><p class="TableText">a</p>
       </td>
@@ -422,7 +419,7 @@ characters.</p>
       </td>
       <td><p class="TableText">229</p>
       </td>
-      <td><p class="TableText">star</p>
+      <td><p class="TableText">multiplicación</p>
       </td>
       <td><p class="TableText">a</p>
       </td>
@@ -446,7 +443,7 @@ characters.</p>
       </td>
       <td><p class="TableText">228</p>
       </td>
-      <td><p class="TableText">double quote</p>
+      <td><p class="TableText">comillas</p>
       </td>
       <td><p class="TableText">a</p>
       </td>
@@ -458,7 +455,7 @@ characters.</p>
       </td>
       <td><p class="TableText">231</p>
       </td>
-      <td><p class="TableText">backquote</p>
+      <td><p class="TableText">acento grave</p>
       </td>
       <td><p class="TableText">c</p>
       </td>
@@ -470,7 +467,7 @@ characters.</p>
       </td>
       <td><p class="TableText">233</p>
       </td>
-      <td><p class="TableText">quote</p>
+      <td><p class="TableText">apóstrofo</p>
       </td>
       <td><p class="TableText">e</p>
       </td>
@@ -482,7 +479,7 @@ characters.</p>
       </td>
       <td><p class="TableText">234</p>
       </td>
-      <td><p class="TableText">circumflex</p>
+      <td><p class="TableText">circunflejo</p>
       </td>
       <td><p class="TableText">e</p>
       </td>
@@ -494,7 +491,7 @@ characters.</p>
       </td>
       <td><p class="TableText">232</p>
       </td>
-      <td><p class="TableText">backquote</p>
+      <td><p class="TableText">acento grave</p>
       </td>
       <td><p class="TableText">e</p>
       </td>
@@ -506,7 +503,7 @@ characters.</p>
       </td>
       <td><p class="TableText">235</p>
       </td>
-      <td><p class="TableText">double quote</p>
+      <td><p class="TableText">comillas</p>
       </td>
       <td><p class="TableText">e</p>
       </td>
@@ -518,7 +515,7 @@ characters.</p>
       </td>
       <td><p class="TableText">237</p>
       </td>
-      <td><p class="TableText">quote</p>
+      <td><p class="TableText">apóstrofo</p>
       </td>
       <td><p class="TableText">i</p>
       </td>
@@ -530,7 +527,7 @@ characters.</p>
       </td>
       <td><p class="TableText">238</p>
       </td>
-      <td><p class="TableText">circumflex</p>
+      <td><p class="TableText">circunflejo</p>
       </td>
       <td><p class="TableText">i</p>
       </td>
@@ -542,7 +539,7 @@ characters.</p>
       </td>
       <td><p class="TableText">236</p>
       </td>
-      <td><p class="TableText">backquote</p>
+      <td><p class="TableText">acento grave</p>
       </td>
       <td><p class="TableText">i</p>
       </td>
@@ -566,7 +563,7 @@ characters.</p>
       </td>
       <td><p class="TableText">243</p>
       </td>
-      <td><p class="TableText">quote</p>
+      <td><p class="TableText">apóstrofo</p>
       </td>
       <td><p class="TableText">o</p>
       </td>
@@ -578,7 +575,7 @@ characters.</p>
       </td>
       <td><p class="TableText">244</p>
       </td>
-      <td><p class="TableText">circumflex</p>
+      <td><p class="TableText">circunflejo</p>
       </td>
       <td><p class="TableText">o</p>
       </td>
@@ -590,7 +587,7 @@ characters.</p>
       </td>
       <td><p class="TableText">242</p>
       </td>
-      <td><p class="TableText">backquote</p>
+      <td><p class="TableText">acento grave</p>
       </td>
       <td><p class="TableText">o</p>
       </td>
@@ -602,7 +599,7 @@ characters.</p>
       </td>
       <td><p class="TableText">248</p>
       </td>
-      <td><p class="TableText">star</p>
+      <td><p class="TableText">multiplicación</p>
       </td>
       <td><p class="TableText">o</p>
       </td>
@@ -626,7 +623,7 @@ characters.</p>
       </td>
       <td><p class="TableText">246</p>
       </td>
-      <td><p class="TableText">double quote</p>
+      <td><p class="TableText">comillas</p>
       </td>
       <td><p class="TableText">o</p>
       </td>
@@ -638,7 +635,7 @@ characters.</p>
       </td>
       <td><p class="TableText">250</p>
       </td>
-      <td><p class="TableText">quote</p>
+      <td><p class="TableText">apóstrofo</p>
       </td>
       <td>u</td>
       <td><p class="TableText">ú</p>
@@ -649,7 +646,7 @@ characters.</p>
       </td>
       <td><p class="TableText">251</p>
       </td>
-      <td><p class="TableText">circumflex</p>
+      <td><p class="TableText">circunflejo</p>
       </td>
       <td><p class="TableText">u</p>
       </td>
@@ -661,7 +658,7 @@ characters.</p>
       </td>
       <td><p class="TableText">249</p>
       </td>
-      <td><p class="TableText">backquote</p>
+      <td><p class="TableText">acento grave</p>
       </td>
       <td><p class="TableText">u</p>
       </td>
@@ -673,7 +670,7 @@ characters.</p>
       </td>
       <td><p class="TableText">252</p>
       </td>
-      <td><p class="TableText">double quote</p>
+      <td><p class="TableText">comillas</p>
       </td>
       <td><p class="TableText">u</p>
       </td>
@@ -685,7 +682,7 @@ characters.</p>
       </td>
       <td><p class="TableText">253</p>
       </td>
-      <td><p class="TableText">quote</p>
+      <td><p class="TableText">apóstrofo</p>
       </td>
       <td><p class="TableText">y</p>
       </td>
@@ -697,7 +694,7 @@ characters.</p>
       </td>
       <td><p class="TableText">255</p>
       </td>
-      <td><p class="TableText">double quote</p>
+      <td><p class="TableText">comillas</p>
       </td>
       <td><p class="TableText">y</p>
       </td>

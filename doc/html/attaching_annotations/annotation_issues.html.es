@@ -1,109 +1,104 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-	
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-  <title>Known Issues with Annotations and Modified Documents</title>
-  <style type="text/css">
-  </style>
-  <meta name="GENERATOR" content="amaya 5.2" />
+  <title>Problemas conocidos con las anotaciones y los documentos
+  modificados</title>
+  <meta name="GENERATOR" content="amaya 6.4+, see http://www.w3.org/Amaya/" />
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
-<body xml:lang="en" lang="en">
+<body xml:lang="es" lang="es">
 
 <table border="0" summary="toc">
   <tbody>
     <tr>
-      <td><img alt="W3C" src="../../images/w3c_home" /> 
-	      <img alt="Amaya" src="../../images/amaya.gif" /></td>
-      <td><p><a href="configuring_icons.html.es" accesskey="p">
-	  		<img alt="previous" src="../../images/left.gif" /></a> 
-		<a href="../Annotations.html.es" accesskey="t">
-		   <img alt="top" src="../../images/up.gif" /></a> 
-	</p>
+      <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
+        src="../../images/amaya.gif" /></td>
+      <td><p><a href="configuring_icons.html.es" accesskey="p"><img
+        alt="anterior" src="../../images/left.gif" /></a> <a
+        href="../Annotations.html.es" accesskey="t"><img alt="superior"
+        src="../../images/up.gif" /></a></p>
       </td>
     </tr>
   </tbody>
 </table>
 
 <div id="page_body">
-<h1>Known Issues with Annotations and Modified Documents</h1>
+<h1>Problemas conocidos con las anotaciones y los documentos modificados</h1>
 
-<p>When you use annotations with live documents (documents whose contents can
-be modified), you may encounter two kinds of problems: <strong>orphan annotations</strong> and
-<strong>misleading annotations</strong>. To explain these problems, we must first describe how
-Amaya attaches annotations to documents.</p>
+<p>Cuando utilizas anotaciones en documentos en elaboración (documentos cuyo
+contenido puede cambiar), puedes encontrar dos tipo de problemas:
+<strong>anotaciones huérfanas</strong> y <strong>anotaciones
+equívocas</strong>. Para explicar estos problemas, describiremos primero cómo
+Amaya asocia anotaciones a los documentos.</p>
 
-<p>Amaya uses <strong><a
-href="http://www.w3.org/XML/Linking">XPointer</a></strong> to indicate where an annotation should be attached to
-a document. XPointers are based in the structure of the document. To build an
-XPointer for a selection, for example, Amaya starts from the first point of
-the selection and walk backwards through the document's structure, until it
-finds the root of the document. If an element has an ID attribute, Amaya
-stops building the XPointer and considers the element with the ID attribute
-value to be the beginning of that XPointer.</p>
+<p>Amaya utiliza <strong><a
+href="http://www.w3.org/XML/Linking">XPointer</a></strong> para indicar el
+lugar en el que la anotación debe adjuntarse al documento. Los XPointers se
+basan en la estructura del documento. Para construir un XPointer para una
+selección, por ejemplo, Amaya empieza en el comienzo de la selección y sube
+en la estructura del documento hasta la raíz. Si un elemento tiene un
+atributo ID, Amaya deja de construir el XPointer y considera el elemento con
+atributo ID el inicio del XPointer.</p>
 
-<p>For example, if you look at the HTML source for this document, you'll notice
-that this section is enclosed within a DIV
-element that has an ID attribute with the value "Issues" Here's an extract
-of the source code:</p>
-<pre>  &lt;div id="Issues"&gt;
-  &lt;h1&gt;Issues with ....&lt;/h1&gt;
-  &lt;p&gt;If you are using...&lt;/p&gt;
-  &lt;p&gt;Amaya uses &lt;strong&gt;XPointer&lt;/strong&gt;...&lt;/p&gt;
+<p>Por ejemplo, si miras al código fuente HTML de este documento, te darás
+cuenta de que esta sección forma parte de un elemento div cuyo atributo ID
+tiene el valor "Problemas". Este es el código fuente:</p>
+<pre>  &lt;div id="Problemas"&gt;
+  &lt;h1&gt;Problemas conocidos con...&lt;/h1&gt;
+  &lt;p&gt;Cuando utilizas...&lt;/p&gt;
+  &lt;p&gt;Amaya utiliza &lt;strong&gt;XPointer&lt;/strong&gt;...&lt;/p&gt;
   ...
   &lt;/div&gt;</pre>
 
-<p>This XPointer points to the second paragraph:
-<code>xpointer(id("Issues")/p[2])</code></p>
+<p>Este XPointer apunta al segundo párrafo:
+<code>xpointer(id("Problemas")/p[2])</code></p>
 
-<p>The above XPointer points to the second <code>p</code> element, from the
-element parent having an ID attribute with value "Issues".</p>
+<p>El XPointer anterior apunta al segunda elemento <code>p</code>, a partir
+del elemento padre cuyo atributo ID tiene el valor "Problemas".</p>
 
-<p>Note that the use of the ID attribute enables the document author to move
-the entire reference by the XPointer to another location within the document,
-without needing to update the XPointer. The XPointer does not depend on the
-elements that precede it.</p>
+<p>Fíjate en que la utilización del atributo ID permite al autor del
+documento mover la referencia del XPointer a cualquier lugar del documento
+sin necesidad de actualizar el XPointer. El XPointer no depende de los
+elementos que lo preceden.</p>
 
-<h2>Orphan Annotations</h2>
-<p>An annotation becomes an &quot;orphan&quot; when it can no longer be attached to a
-document, that is, when the XPointer does not resolve to any element in the
-structure. This happens when a document's structure is modified. Amaya
-displays a warning if it detects any orphan annotations while downloading a
-set of annotations from an annotation server. All orphan annotations are
-visible from the Links view and are associated with an icon that shows a
-question mark superimposed on the annotation pencil <img src="../../images/annotorp.png"
-alt="Orphan annotation icon" />.</p>
+<h2>Anotaciones huérfanas</h2>
 
-<h2>Misleading Annotations</h2>
+<p>Una anotación se vuelve "huérfana" cuando ya no puede adjuntarse al
+documento, es decir, cuando el XPointer no encuentra su elemento en la
+estructura. Esto ocurre cuando se modifca la estructura del documento.Amaya
+muestra un aviso cuando detecta anotaciones huérfanas al descargar
+anotaciones de un servidor de anotaciones. Todas las anotaciones huérfanas
+son visibles en la vista Enlaces y el icono asociado es un signo de
+interrogación superpuesto al lápiz de anotación <img
+src="../../images/annotorp.png" alt="Icono de anotación huérfana" />.</p>
 
-<p>An annotation becomes &quot;misleading&quot; when it points to a wrong piece of
-information. This problem is common when you annotate a portion of text that
-may change. In the first release, Amaya does not warn the user if an
-annotation is misleading. A future release may notify users of the potential
-for an annotation to be misleading.</p>
+<h2>Anotaciones equívocas</h2>
 
-<h2>What can you do to avoid this?</h2>
+<p>Una anotación es "equívoca" cuando apunta a una información que no le
+corresponde. Esto suele suceder cuando anotas una porción de texto que
+posteriormente se modifca. En esta versión, Amaya no avisa al usuario si una
+anotación es equívoca. En futuras versiones, puede que se notifique a los
+usuarios cuando una anotación pueda ser equívoca.</p>
 
-<p>As the author of a document, try to use the <code>ID</code> attribute in
-strategic places, for example, inside <code>&lt;DIV&gt;</code> and <code>p</code> 
-elements. For example:</p>
+<h2>¿Qué puedes hacer para evitarlo?</h2>
 
-<pre>  &lt;p id="Amaya"&gt;Amaya uses...&lt;/p&gt;</pre>
+<p>Como autor de un documento, intenta utilizar el atributo <code>ID</code>
+en lugares estatégicos, por ejemplo en los elementos <code>&lt;div&gt;</code>
+y <code>p</code>. Por ejemplo:</p>
+<pre>  &lt;p id="Amaya"&gt;Amaya utiliza...&lt;/p&gt;</pre>
 
-<p>An XPointer that points to this paragraph is: <code>xpointer(id("Amaya"))</code></p>
+<p>Un XPointer que apunta a este párrafo sería:
+<code>xpointer(id("Amaya"))</code></p>
 
-<p>Thus, the Xpointer will point to the same paragraph, regardless of its
-position in the document's structure.</p>
+<p>Por tanto, el Xpointer apuntará al mismo párrafo, sea cual sea su posición
+en la estructura.</p>
 
-<p>Amaya enables you to automatically associate with or remove an
-<code>ID</code> attribute to/from a set of elements by choosing
-<strong>Add/Remove ID</strong> from the <strong>Special</strong> menu.</p>
+<p>Amaya te permite crear o eliminar automáticamente los atributos
+<code>ID</code> en un conjunto de elementos eligiendo el comando de menú
+<strong>Especial &gt; Crear/Suprimir atributos ID</strong>.</p>
 </div>
-
 </body>
 </html>
-

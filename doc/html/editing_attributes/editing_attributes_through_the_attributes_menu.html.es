@@ -3,15 +3,13 @@
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-  <title>Editing Attributes Through the Attributes Menu</title>
-  <style type="text/css">
-  </style>
-  <meta name="GENERATOR" content="amaya 5.1" />
+  <title>Editar atributos con el menú Atributos</title>
+  
+  <meta name="GENERATOR" content="amaya 6.4, see http://www.w3.org/Amaya/" />
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
-<body xml:lang="en" lang="en">
+<body xml:lang="es" lang="es">
 
 <table border="0" summary="toc">
   <tbody>
@@ -19,74 +17,72 @@
       <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
         src="../../images/amaya.gif" /></td>
       <td><p><a href="working_with_attributes.html.es" accesskey="p"><img
-        alt="previous" src="../../images/left.gif" /></a> <a
-        href="../Attributes.html.es" accesskey="t"><img alt="top"
+        alt="anterior" src="../../images/left.gif" /></a> <a
+        href="../Attributes.html.es" accesskey="t"><img alt="superior"
         src="../../images/up.gif" /></a> <a href="copying_attributes.html.es"
-        accesskey="n"><img alt="next" src="../../images/right.gif" /></a></p>
+        accesskey="n"><img alt="siguiente" src="../../images/right.gif" /></a></p>
       </td>
     </tr>
   </tbody>
 </table>
 
 <div id="page_body">
-<h1>Editing Attributes Through the Attributes Menu</h1>
+<h1>Editar atributos con el menú Atributos</h1>
 
-<p>The <strong>Attributes</strong> menu lists all attributes that can be
-associated with the selected element. It can be used to create an attribute,
-change the value of an existing attribute, or delete an attribute.</p>
+<p>El menú <strong>Atributos</strong> muestra todos los atributos que pueden
+asociarse con el elemento seleccionado. Puede utilizarse para crear un
+atributo, cambiar el valor de un atributo ya existente o para borrar un
+atributo.</p>
 
-<p>To edit an attribute:</p>
+<p>Para editar un atributo:</p>
 <ol>
-  <li>Select the entire element with the mouse, or by pressing the
-    <kbd>Esc</kbd> key on Unix platforms or <kbd>F2</kbd> key on Windows
-    platforms. 
+  <li>Selecciona el elemento completo con el ratón o pulsando
+    <strong>Escape</strong> (en Unix) o <strong>F2</strong> (en Windows). 
     <p></p>
   </li>
-  <li>Once the element is selected, choose the attribute to be edited from
-    the <strong>Attributes</strong> menu. 
+  <li>Una vez seleccionado el elemento, elige el atributo a editar en el menú
+    <strong>Atributos</strong>. 
     <p></p>
   </li>
-  <li>Amaya acts according to the chosen attribute: 
+  <li>Amaya actúa de acuerdo con el atributo elegido: 
     <ul>
-      <li>For boolean attributes (such as <code>ismap</code> for an image),
-        the command is finished. Choosing that attribute in the menu removes
-        the attribute from the selected element if it is present, or adds it
-        if not. 
+      <li>En el caso de atributos booleanos (como <code>ismap</code> en una
+        imagen), el comando se ejecuta inmediatamente. Si el atributo estaba
+        definido, el atributo se elmina, y si no estaba definido, se crea. 
         <p></p>
       </li>
-      <li>For attributes with a limited set of values (such as
-        <code>align</code> for a paragraph or a heading), Amaya displays a
-        dialog containing a menu of the available values and three buttons. 
+      <li>En el caso de atributos con un conjunto limitado de valores
+        posibles, (como <code>align</code> en un párrafo o en un encabezado),
+        Amaya muestra un diálogo con los valores posibles y tres botones. 
         <p></p>
         <ul>
-          <li>To create the attribute or change its value, choose the desired
-            value from the menu and click the <strong>Apply</strong> button. 
+          <li>Para crear el atributo o modificar su valor, elige el valor
+            deseado y haz clic en el botón <strong>Aplicar</strong>. 
             <p></p>
           </li>
-          <li>To remove that attribute, click the <strong>Delete</strong>
-            button. 
+          <li>Para eliminar el atributo, haz clic en el botón
+            <strong>Eliminar atributos</strong>. 
             <p></p>
           </li>
-          <li><span><span>For attributes with a free value (such as <span
-            style='font-size:9.0pt;font-family:"Courier New";'><code>href</code></span>
-            for an anchor), a dialog opens so you can edit the attribute
-            value or terminate the command with the <strong>Apply</strong>
-            button. To remove the attribute, click the
-            <strong>Delete</strong> button.</span></span></li>
         </ul>
       </li>
+      <li>En el caso de atributos con valor libre (como <code>href</code> en
+        un ancla), se abre un diálogo para que edites el atributo o ejecutes
+        el comando con el botón  <strong>Aplicar</strong>. Para eliminar el
+        atributo, haz clic en el botón <strong>Eliminar
+      atributos</strong>.</li>
     </ul>
   </li>
 </ol>
 
-<h2>See also:</h2>
+<h2>Ver también:</h2>
 <ul>
-  <li><a href="working_with_attributes.html.es">Working with Attributes</a></li>
-  <li><a href="copying_attributes.html.es">Copying Attributes</a></li>
-  <li><a href="editing_attributes_in_the_structure_view.html.es">Editing
-    Attributes in the Structure View</a></li>
+  <li><a href="working_with_attributes.html.es">Trabajar con
+  atributos</a></li>
+  <li><a href="copying_attributes.html.es">Copiar atributos</a></li>
+  <li><a href="editing_attributes_in_the_structure_view.html.es">Editar
+    atributos en la vista Estructura</a></li>
 </ul>
 </div>
-
 </body>
 </html>

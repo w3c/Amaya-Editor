@@ -3,15 +3,13 @@
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-  <title>About Stored Annotations</title>
-  <style type="text/css">
-  </style>
-  <meta name="GENERATOR" content="amaya 5.3, see http://www.w3.org/Amaya/" />
+  <title>Anotaciones remotas</title>
+  
+  <meta name="GENERATOR" content="amaya 6.4+, see http://www.w3.org/Amaya/" />
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
-<body xml:lang="en" lang="en">
+<body xml:lang="es" lang="es">
 
 <table border="0" summary="toc">
   <tbody>
@@ -19,40 +17,42 @@
       <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
         src="../../images/amaya.gif" /></td>
       <td><p><a href="about_storing_local_annotations.html.es"
-        accesskey="p"><img alt="previous" src="../../images/left.gif" /></a>
-        <a href="../Annotations.html.es" accesskey="t"><img alt="top"
+        accesskey="p"><img alt="anterior" src="../../images/left.gif" /></a>
+        <a href="../Annotations.html.es" accesskey="t"><img alt="superior"
         src="../../images/up.gif" /></a> <a href="annotation_menu.html.es"
-        accesskey="n"><img alt="next" src="../../images/right.gif" /></a></p>
+        accesskey="n"><img alt="siguiente" src="../../images/right.gif"
+        /></a></p>
       </td>
     </tr>
   </tbody>
 </table>
 
 <div id="page_body">
-<h1>About Remote Annotations</h1>
+<h1>Anotaciones remotas</h1>
 
-<p>Amaya can store annotation data in a <span style="color: blue"><a
-href="about_storing_local_annotations.html.es">local file system</a></span>
-(often called "local annotations") or it can store annotations remotely, in
-Annotations Servers accessed through the World Wide Web (called "remote
-annotations").</p>
+<p>Amaya puede almacenar anotaciones en el <span style="color: blue"><a
+href="about_storing_local_annotations.html.es">sistema de archivos
+local</a></span> ("anotaciones locales") o puede almacenarlas remotamente, en
+servidores de anotaciones a los que se accede a través de la World Wide Web
+("anotaciones remotas").</p>
 
-<p>You can store remote annotations in annotation servers so that the
-annotations can be downloaded by anyone having the correct access rights,
-such as is the case of other HTML documents.</p>
+<p>Puedes almacenar anotaciones remotas en servidores de anotaciones, de
+manera que cualquier persona con los derechos de acceso correctos puede
+descargarlas, como sucede con otros documentos HTML.</p>
 
-<p>Remote annotations are referred to as shared or public annotations,
-because they can be seen by other people. If you wish to install your own
-annotation server, please refer to <span style="color:blue"><a
-href="http://www.w3.org/1999/02/26-modules/User/Annotations-HOWTO.html.es">Annotation-Server-HOWTO</a></span>.</p>
+<p>Las anotaciones remotas también se denominan anotaciones compartidas o
+pública, ya que pueden ser consultadas por otras personas. Si quieres
+instalar tu propio servidor de anotaciones, consulta el <span
+style="color:blue"><a
+href="http://www.w3.org/1999/02/26-modules/User/Annotations-HOWTO.html">Servidor
+de anotaciones - Cómo</a></span>.</p>
 
-<h2>See also:</h2>
+<h2>Ver también:</h2>
 <ul>
   <li><span class="Link0"><a
-    href="about_storing_local_annotations.html.es">About Local
-    Annotations</a></span></li>
+    href="about_storing_local_annotations.html.es">Anotaciones
+    locales</a></span></li>
 </ul>
 </div>
-
 </body>
 </html>

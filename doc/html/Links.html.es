@@ -4,13 +4,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta name="GENERATOR" content="amaya 6.4, see http://www.w3.org/Amaya/" />
-  <title>Enlazando</title>
-  <style type="text/css">
-  </style>
+  <title>Enlazar</title>
+  
   <link href="style.css" rel="stylesheet" type="text/css" />
 </head>
 
-<body xml:lang="en" lang="en">
+<body xml:lang="es" lang="es">
 
 <table border="0" summary="toc">
   <tbody>
@@ -18,10 +17,10 @@
       <td><p><img alt="W3C" src="../images/w3c_home" /> <img alt="Amaya"
         src="../images/amaya.gif" /></p>
       </td>
-      <td><p><a href="Changing.html.es" accesskey="p"><img alt="previous"
+      <td><p><a href="Changing.html.es" accesskey="p"><img alt="anterior"
         src="../images/left.gif" /></a> <a href="Manual.html.es"
-        accesskey="t"><img alt="top" src="../images/up.gif" /></a> <a
-        href="Tables.html.es" accesskey="n"><img alt="next"
+        accesskey="t"><img alt="superior" src="../images/up.gif" /></a> <a
+        href="Tables.html.es" accesskey="n"><img alt="siguiente"
         src="../images/right.gif" /></a></p>
       </td>
     </tr>
@@ -29,7 +28,7 @@
 </table>
 
 <div id="page_body">
-<h1>Enlazando</h1>
+<h1>Enlazar</h1>
 
 <p>En esta sección se tratan los temas siguientes::</p>
 <ul>
@@ -42,9 +41,9 @@
   <li><a href="linking/creating_a_target_element.html.es#page_body"
     rel="subdocument">Crear un Elemento Destino</a></li>
   <li><a href="linking/removing_a_link_or_a_target_anchor.html.es#page_body"
-    rel="subdocument">Removing a Link or a Target Anchor</a></li>
+    rel="subdocument">Eliminar un Enlace o Destino</a></li>
   <li><a href="linking/changing_a_link.html.es#page_body"
-    rel="subdocument">Cambiando un enlace</a></li>
+    rel="subdocument">Cambiar un enlace</a></li>
 </ul>
 </div>
 </body>

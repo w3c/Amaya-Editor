@@ -3,15 +3,13 @@
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-  <title>About Inserting a Division</title>
-  <style type="text/css">
-  </style>
-  <meta name="GENERATOR" content="amaya 5.4, see http://www.w3.org/Amaya/" />
+  <title>Insertar una división</title>
+  
+  <meta name="GENERATOR" content="amaya 6.4+, see http://www.w3.org/Amaya/" />
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
-<body xml:lang="en" lang="en">
+<body xml:lang="es" lang="es">
 
 <table border="0" summary="toc">
   <tbody>
@@ -19,23 +17,23 @@
       <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
         src="../../images/amaya.gif" /></td>
       <td><p><a href="the_transform_command.html.es" accesskey="p"><img
-        alt="previous" src="../../images/left.gif" /></a> <a
-        href="../Changing.html.es" accesskey="t"><img alt="top"
+        alt="anterior" src="../../images/left.gif" /></a> <a
+        href="../Changing.html.es" accesskey="t"><img alt="superior"
         src="../../images/up.gif" /></a> <a
-        href="about_merging_elements.html.es" accesskey="n"><img alt="next"
-        src="../../images/right.gif" /></a></p>
+        href="about_merging_elements.html.es" accesskey="n"><img
+        alt="siguiente" src="../../images/right.gif" /></a></p>
       </td>
     </tr>
   </tbody>
 </table>
 
 <div id="page_body">
-<h1>About Inserting a Division</h1>
+<h1>Insertar una división</h1>
 
-<p>You can easily group a set of paragraphs, headings, lists, tables, and so
-on within a division. To do this, select the elements you want to group, and
-then select <strong>Division (div)</strong> from the <strong>Types</strong>
-menu.</p>
+<p>Puedes agrupar fácilmente un grupo de párrafos, encabezados, listas,
+tablas y otros elementos en una misma división. Para ello, selecciona los
+elementos que quieras agrupar y elige el comando de menú <strong>Xhtml &gt;
+División (div)</strong><strong>.</strong></p>
 </div>
 </body>
 </html>

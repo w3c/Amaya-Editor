@@ -3,61 +3,58 @@
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-  <meta name="GENERATOR" content="amaya 5.3, see http://www.w3.org/Amaya/" />
-  <title>Printing Documents</title>
-  <style type="text/css">
-  </style>
+  <meta name="GENERATOR" content="amaya 6.4+, see http://www.w3.org/Amaya/" />
+  <title>Imprimir documentos</title>
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
-<body xml:lang="en" lang="en">
+<body xml:lang="es" lang="es">
 
 <table border="0" summary="toc">
   <tbody>
     <tr>
       <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
         src="../../images/amaya.gif" /></td>
-      <td><p><a href="../Printing.html.es" accesskey="t"><img alt="top"
+      <td><p><a href="../Printing.html.es" accesskey="t"><img alt="superior"
         src="../../images/up.gif" /></a> <a
         href="using_the_setup_and_print_command.html.es" accesskey="n"><img
-        alt="next" src="../../images/right.gif" /></a></p>
+        alt="siguiente" src="../../images/right.gif" /></a></p>
       </td>
     </tr>
   </tbody>
 </table>
 
 <div id="page_body">
-<h1>Printing Documents</h1>
+<h1>Imprimir documentos</h1>
 
-<p>Amaya can print documents with or without CSS style sheets, on both Unix
-and Windows platforms.</p>
+<p>Amaya puede imprimir documentos con o sin hojas de estilo CSS, tanto en
+Unix como en Windows</p>
 
-<p class="Note"><b>Important</b>: On Unix platforms, Amaya can only generate
-a Postscript description, so you must have a PostScript printer or use an
-application to translate the PostScript into your specific printer
-language.</p>
+<p class="Note"><b>Importante</b>:<br />
+En Unix, Amaya sólo genera Postscript, así que debes tener una impresora
+Postscript o utilizar una aplicación que traduzca Postscript al lenguaje
+específico de tu impresora.</p>
 
-<p>You can print a document in three ways:</p>
+<p>Puedes imprimir un documento de tres maneras distintas:</p>
 <ul>
-  <li><span class="Link0"><strong>Setup and Print</strong></span>
-    (<strong>File&gt; Setup and Print</strong>), which enables you to set
-    some parameters and options before printing. 
+  <li><span class="Link0"><strong>Configurar e imprimir</strong></span>
+    (<strong>Archivo &gt; Configurar e imprimir</strong>), te permite definir
+    algunos parámetros y opciones antes de imprimir. 
     <p></p>
   </li>
-  <li><span class="Link0"><strong>Print</strong></span> (<strong>File
-    &gt;Print</strong>), which prints a document using the current print
-    configuration (defined using the Setup and Print command).</li>
-  <li>The <img src="../../images/print.gif" alt="Print Button" /> button on
-    the button bar. On Unix platforms, this is a shortcut to the
-    <strong>Print</strong> command. On Windows platforms, this is a shortcut
-    to the <strong>Setup and Print</strong> command, due to a problem with
-    the use of DLLs on Windows 95.</li>
+  <li><span class="Link0"><strong>Imprimir</strong></span> (<strong>Archivo
+    &gt; Imprimir</strong>), imprime con la configuración de impresora actual
+    (definida mediante en comando Configurar e imprimir).</li>
+  <li>El botón <img src="../../images/print.gif" alt="Botón Imprimir" /> de
+    la barra de botones. En Unix este botón ejecuta el comando
+    <strong>Imprimir</strong>. En Windows este botón ejecuta el comando
+    <strong>Configurar e imprimir</strong>, debido a un problema con las DLL
+    en Windows 95.</li>
 </ul>
 
-<p>For more information on printing with style sheets, see <span
-class="Link0">About Controlling Printing with CSS</span>.</p>
+<p>Para obtener más información sobre la impresión con hojas de estilo, ver
+<a href="about_controlling_printing_with_css.html.es">Controlar la impresión
+con CSS</a>.</p>
 </div>
-
 </body>
 </html>

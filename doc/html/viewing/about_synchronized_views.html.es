@@ -3,14 +3,13 @@
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta name="GENERATOR" content="amaya 6.4, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 6.4+, see http://www.w3.org/Amaya/" />
   <title>Acerca de las Vistas sincronizadas</title>
-  <style type="text/css">
-  </style>
+  
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
-<body xml:lang="en" lang="en">
+<body xml:lang="es" lang="es">
 
 <table border="0" summary="toc">
   <tbody>
@@ -18,8 +17,8 @@
       <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
         src="../../images/amaya.gif" /></td>
       <td><p><a href="closing_a_view.html.es" accesskey="p"><img
-        alt="previous" src="../../images/left.gif" /></a> <a
-        href="../Views.html.es" accesskey="t"><img alt="top"
+        alt="anterior" src="../../images/left.gif" /></a> <a
+        href="../Views.html.es" accesskey="t"><img alt="superior"
         src="../../images/up.gif" /></a></p>
       </td>
     </tr>
@@ -29,7 +28,7 @@
 <div id="page_body">
 <h1>Acerca de las Vistas sincronizadas</h1>
 
-<p>Todas las vistas excepto la vista fuente se sincronizan automáticamente.
+<p>Todas las vistas excepto la vista Fuente se sincronizan automáticamente.
 Cuando seleccionas caracteres o elementosen una vista de un documento, Amaya
 desplaza automáticamente las otras vistas del documento para mnostrar los
 elementos elegidos.</p>
@@ -45,20 +44,19 @@ extiende al sub-árbol mínimo que incluye a ambos elementos, aunque algunos
 elementos no sean visibles en esa vista. Los comandos aplicados a dicha
 selección (por ejemplo, borrar) actúan sobre todo lo seleccionado.</p>
 
-<p>La Vista fuente no se sincroniza automáticamente. Si efectúas cambios en
-el documento en la Vista fuente, para actualizar las otras vistas debes
-seleccionar Archivo &gt; Sincronizar. De la misma manera, si efectúas cambios
-en otras vistas, selecciona Archivo &gt; Sincronizar para actualizar la Vista
-fuente.</p>
+<p>La vista Fuente no se sincroniza automáticamente. Si efectúas cambios en
+el documento en la vista Fuente, para actualizar las otras vistas debes
+seleccionar el comando de menú <strong>Archivo &gt; Sincronizar</strong>. De
+la misma manera, si efectúas cambios en otras vistas, selecciona
+<strong>Archivo &gt; Sincronizar</strong> para actualizar la vista Fuente.</p>
 
 <p>Cuando sincronizas un documento, Amaya lo validará de nuevo. Si has
-introducido errores en el marcado al editar en Vista fuente, Amaya intentará
-corregirlo lo mejor que pueda. Tras editar en la Vista fuente, comprueba el
-documento en la Vista formateada o en la Vista estructura para asegurarte de
+introducido errores en el marcado al editar en vista Fuente, Amaya intentará
+corregirlo lo mejor que pueda. Tras editar en la vista Fuente, comprueba el
+documento en la vista Formateada o en la vista Estructura para asegurarte de
 que la sincronización ha producido el resultado deseado.</p>
 
-<p>Cuando guardas un documento desde la Vista fuente o desde la Vista
-formateada (local o remotamente), se produce la sincronización
+<p>Cuando guardas un documento desde la vista Fuente o desde la vista Formateada (local o remotamente), se produce la sincronización
 automáticamente. Todas las vistas reflejan el estado del documento en el
 momento en que se guarda.</p>
 

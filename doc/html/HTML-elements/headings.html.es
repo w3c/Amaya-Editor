@@ -3,15 +3,12 @@
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <title>Heading elements</title>
-  <meta name="GENERATOR" content="amaya 6.1, see http://www.w3.org/Amaya/" />
-  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-  <style type="text/css">
-  </style>
+  <title>Elementos de encabezado</title>
+  <meta name="GENERATOR" content="amaya 6.4+, see http://www.w3.org/Amaya/" />
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
-<body xml:lang="en" lang="en">
+<body xml:lang="es" lang="es">
 
 <table border="0" width="100%" summary="toc">
   <tbody>
@@ -19,39 +16,40 @@
       <td><p><img border="0" alt="W3C" src="../../images/w3c_home" /> <img
         border="0" alt="Amaya" src="../../images/amaya.gif" /></p>
       </td>
-      <td><p align="right"><a href="structure.html.es"><img alt="previous"
+      <td><p align="right"><a href="structure.html.es"><img alt="anterior"
         border="0" src="../../images/left.gif" /></a> <a
-        href="../HTML.html.es"><img alt="top" border="0"
-        src="../../images/up.gif" /></a> <a href="lists.html.es"><img alt="next"
-        border="0" src="../../images/right.gif" /></a></p>
+        href="../HTML.html.es"><img alt="superior" border="0"
+        src="../../images/up.gif" /></a> <a href="lists.html.es"><img
+        alt="siguiente" border="0" src="../../images/right.gif" /></a></p>
       </td>
     </tr>
   </tbody>
 </table>
 
 <div id="Heading">
-<h1>Heading elements</h1>
+<h1>Elementos de encabezado</h1>
 
-<p>HTML provides 6 levels of headings: <a
-href="http://www.w3.org/TR/REC-html40/struct/global.html.es#edef-H1"><code>H1,
-H2, H3, H4, H5, and H6</code></a>. These should be used to mark headings
-according to their relative importance, with <code>H1</code> being the most
-important. Headings are block elements, and can only be created as children
-of elements that have block-type content. Note that for tables of data there
-are special elements to mark headings.</p>
+<p>HTML proporciona 6 niveles de encabezado: <a
+href="http://www.w3.org/TR/REC-html40/struct/global.html#edef-H1"><code>h1,
+h2, h3, h4, h5, y h6</code></a>. Se deben emplear para marcar los encabezados
+de acuerdo con su importancia relativa, siendo <code>h1</code> el más
+importante. Los encabezados son elementos de bloque y sólo pueden crearse
+como hijos de elementos cuyo contenido pueda ser de tipo bloque. Fíjate en
+que las tablas tienen elementos especiales para marcar los encabezados.</p>
 
-<p>The first three levels of heading can be created from the toolbar using
-the heading images <img src="../../images/H1.gif" alt="H1 button" />, <img
-src="../../images/H2.gif" alt="H2 button" />, <img src="../../images/H3.gif"
-alt="H3 button" />. All levels of heading can be created from the Types menu,
-or using keyboard shortcuts. The default keyboard shortcuts are
-<kbd>control-1</kbd> for <code>H1</code>, <kbd>control-2</kbd> for
-<code>H2</code>, and so on to <kbd>control-6</kbd> for <code>H6</code>.</p>
+<p>Los tres primeros niveles de encabezado pueden crearse con la barra de
+botones mediante los botones <img src="../../images/H1.gif" alt="Botón h1"
+/>, <img src="../../images/H2.gif" alt="Botón h2" />, <img
+src="../../images/H3.gif" alt="Botón h3" />. Desde el menú
+<strong>Xhtml</strong>, o mediante atajos de teclado, puede crearse cualquier
+nivel de encabezado. Los atajos de teclado por omisión son
+<kbd>control-1</kbd> para <code>h1</code>, <kbd>control-2</kbd> para
+<code>h2</code>, y así sucesivamente hasta <kbd>control-6</kbd> para
+<code>h6</code>.</p>
 
-<p>There are default styles for headings in most browsers to give some idea
-of their relative importance, but the author can also use <a
-href="../StyleSheets.html.es">style sheets</a> to provide a suggested
-presentation.</p>
+<p>La mayoría de navegadores utilizan estilos por omisión para distinguir los
+diferentes encabezamientos, pero el autor puede también utilizar <a
+href="../StyleSheets.html.es">hojas de estilo</a> para definir su formato.</p>
 </div>
 </body>
 </html>

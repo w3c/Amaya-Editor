@@ -3,65 +3,63 @@
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-  <title>The Transform Command</title>
-  <style type="text/css">
-  </style>
-  <meta name="GENERATOR" content="amaya 5.4, see http://www.w3.org/Amaya/" />
+  <title>El comando Transformar</title>
+  
+  <meta name="GENERATOR" content="amaya 6.4+, see http://www.w3.org/Amaya/" />
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
-<body xml:lang="en" lang="en">
+<body xml:lang="es" lang="es">
 
 <table border="0" summary="toc">
   <tbody>
     <tr>
       <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
         src="../../images/amaya.gif" /></td>
-      <td><a href="changing_the_document_structure.html.es" accesskey="p"><img
-        alt="previous" src="../../images/left.gif" /></a> <a
-        href="../Changing.html.es" accesskey="t"><img alt="top"
+      <td><a href="changing_the_document_structure.html.es"
+        accesskey="p"><img alt="anterior" src="../../images/left.gif" /></a>
+        <a href="../Changing.html.es" accesskey="t"><img alt="superior"
         src="../../images/up.gif" /></a> <a
-        href="about_inserting_a_division.html.es" accesskey="n"><img alt="next"
-        src="../../images/right.gif" /></a></td>
+        href="about_inserting_a_division.html.es" accesskey="n"><img
+        alt="siguiente" src="../../images/right.gif" /></a></td>
     </tr>
   </tbody>
 </table>
 
 <div id="page_body">
-<h1>The Transform Command</h1>
+<h1>El comando Transformar</h1>
 
-<p>The <strong>Transform</strong> command performs complex structure
-transformations, based on a language that specifies how a given structural
-pattern can be transformed into different structures. For example, nested
-lists can be transformed into a table and back again.</p>
+<p>El comando <strong>Transformar</strong> realiza transformaciones
+estructurales complejas, basándose en un lenguaje que especifica como un
+determinada estructura se transforma en otra. Por ejemplo, las listas
+anidadas pueden transformase en tablas y viceversa.</p>
 
-<h2>Available Transformations</h2>
+<h2>Transformaciones disponibles</h2>
 
-<p>The available transformations are defined in the file
-<kbd>Amaya/amaya/HTML.trans</kbd>. Please refer to the document "<a
-href="../Transform.html.es">Use of the file HTML.trans</a>" for a description of
-the language in which the transformation rules are written.</p>
+<p>Las transformaciones disponibles están definidas en el archivo
+<kbd>Amaya/amaya/HTML.trans</kbd>. El lenguaje en el que se escriben las
+reglas de transformación se describe en <a
+href="../Transform.html.es">Utilizar el archivo HTML.trans</a>.</p>
 
-<p>Additional transformations may be specified in the HTML.trans file. Some
-transformations are provided in the HTML.trans file as examples.</p>
+<p>Puedes especificar más transformaciones en el archivo HTML.trans. En el
+archivo HTML.trans se incluyen algunas transformaciones como ejemplo.</p>
 
-<h2>Using the Transform Command</h2>
+<h2>Utilizar el comando Transformar</h2>
 
-<p>To use this command:</p>
+<p>Para utilizar este comando:</p>
 <ol>
-  <li>Choose <strong>Transform</strong> from the <strong>Edit</strong> menu. 
-    <p>Amaya displays a menu that lists all the transformations that can be
-    applied to the current selection.</p>
+  <li>Elige el comando de menú <strong>Editar &gt; Transformar</strong>. 
+    <p>Amaya muestra un menú con todas las transformaciones que pueden
+    aplicarse a la selección actual.</p>
     <p></p>
   </li>
-  <li>Choose the transformation you want.</li>
+  <li>Elige la transformación que desees.</li>
 </ol>
 
-<h2>See Also:</h2>
+<h2>Ver también:</h2>
 <ul>
-  <li><a href="../Changing.html.es">Editing the Document Structure</a></li>
-  <li><a href="../Transform.html.es">Using the HTML.trans File</a></li>
+  <li><a href="../Changing.html.es">Reestructurar documentos</a></li>
+  <li><a href="../Transform.html.es">Utilizar el archivo HTML.trans</a></li>
 </ul>
 </div>
 </body>

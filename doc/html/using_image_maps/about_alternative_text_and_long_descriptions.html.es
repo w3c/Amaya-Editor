@@ -1,67 +1,66 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-	
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-  <meta name="GENERATOR" content="amaya 5.2" />
-  <title>About Alternative Text and Long Descriptions</title>
-  <style type="text/css">  </style>
+  <meta name="GENERATOR" content="amaya 6.4+, see http://www.w3.org/Amaya/" />
+  <title>Texto alternativo y descripciones largas</title>
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
-<body xml:lang="en" lang="en">
+<body xml:lang="es" lang="es">
 
 <table border="0" summary="toc">
   <tbody>
     <tr>
       <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
         src="../../images/amaya.gif" /></td>
-      <td><p> <a href="resizing_image_map_areas.html.es" accesskey="p"><img alt="previous"
-        src="../../images/left.gif" /></a>
-		<a href="../ImageMaps.html.es" accesskey="t"><img alt="top" src="../../images/up.gif" /></a> 
-		</p>
+      <td><p><a href="resizing_image_map_areas.html.es" accesskey="p"><img
+        alt="anterior" src="../../images/left.gif" /></a> <a
+        href="../ImageMaps.html.es" accesskey="t"><img alt="superior"
+        src="../../images/up.gif" /></a></p>
       </td>
     </tr>
   </tbody>
 </table>
 
 <div id="page_body">
-<h1>About Alternative Text and Long Descriptions</h1>
+<h1>Texto alternativo y descripciones largas</h1>
 
-<p>Without useful alternative text for images, many web pages become
-difficult or even impossible to navigate, and users are left &quot;feeling their
-way in the dark.&quot;</p>
+<p>Sin texto alternativo en las imágenes, muchas páginas web resultan
+difíciles o incluso imposibles de navegar, y lo usuario deben "encontrar su
+camino en la oscuridad".</p>
 
-<p>To prevent this problem, you must provide alternative text for elements
-such as images and other multimedia objects. The alternative text is usually
-presented instead of the image by a browser with a voice output system, or on
-a Braille display used by many people who are blind. It is also common for
-users with low-quality connections to request the alternate view, because
-text is transmitted much faster than images.</p>
+<p>Para evitar este problema, debes incluir texto alternativo para elementos
+como imágenes y otros objetos multimedia. Un navegador con sistema de salida
+por voz o en una pantalla Braille, como los utilizados por los ciegos,
+muestra normalmente el texto alternativo en lugar de la imagen También puede
+ocurrir que personas con conexiones a Internet de baja calidad soliciten la
+vista Alternativa, ya que el texto se transmite mucho más rápido que las
+imágenes.</p>
 
-<p>The alternative text should replace the image in function as well. For
-example, if you use the image as an icon that links to a reference point,
-then the title of the reference itself is a good alternative text.</p>
+<p>El texto alternativo debe poder sustituir también a la imagen en su
+función. Por ejemplo, si la imagen es un icono que enlaza con un lugar,
+entonces el título del destino es una buena elección como texto
+alternativo.</p>
 
-<p>There are cases where an image is used for purely visual effect, and does
-not add any information value to the page. In this case, it is appropriate to
-use a blank alternative text, although you must still define it by entering
-two double quotes for the alternative text (for example,
+<p>En algunos casos las imágenes se utilizan para conseguir simplemente
+efectos visuales y no añaden ninguna información útil a la página. En estos
+casos es conveniente que el texto alternativo esté vacío, aunque aún así
+debes definirlo escribiendo dos comillas como texto alternativo (por ejemplo,
 <code>alt=""</code>).</p>
 
-<p>When the image conveys important information that is not available from
-the text of the document, you must provide a description of the information.
-The <code>longdesc</code> option (<strong>Attributes &gt; longdesc</strong>)
-enables you to link a description to the image. This description can be a URI
-(a separate document), or named part of the current document.</p>
+<p>Cuando la imagen contiene información importante que no está disponible en
+forma de texto en el doumento, debes proporcionar una descripción de esa
+información. El atributo <code>longdesc</code> (<strong>Atributos &gt;
+longdesc</strong>) te permite enlazar una descripción con la imagen. Esta
+descripción puede ser un URI (es decir, un documento aparte) o una parte del
+documento actual.</p>
 
-<p>To view how a page might be presented without the images, use Show
-Alternate (<span class="Link0"><strong>Views &gt;Show
-Alternate</strong></span>). If the page is spoken by a voice output system,
-then the alternate view might simply be read out.</p>
+<p>Para ver cómo se representaría la página sin imágenes, utiliza la vista
+Alternativa (<span class="Link0"><strong>Vistas &gt; Mostrar
+alternativa</strong></span>). Si la página es leída por un sistema de salida
+por voz, entonces basta con leer la vista Alternativa.</p>
 </div>
-
 </body>
 </html>

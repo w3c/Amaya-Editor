@@ -3,44 +3,43 @@
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-  <title>Changing the Document Structure</title>
-  <style type="text/css">
-  </style>
-  <meta name="GENERATOR" content="amaya 5.4, see http://www.w3.org/Amaya/" />
+  <title>Cambiar la estructura del documento</title>
+  <meta name="GENERATOR" content="amaya 6.4+, see http://www.w3.org/Amaya/" />
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
-<body xml:lang="en" lang="en">
+<body xml:lang="es" lang="es">
 
 <table border="0" summary="toc">
   <tbody>
     <tr>
       <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
         src="../../images/amaya.gif" /></td>
-      <td><p> <a href="../Changing.html.es" accesskey="t"><img alt="top"
-        src="../../images/up.gif" /></a> <a href="the_transform_command.html.es"
-        accesskey="n"><img alt="next" src="../../images/right.gif" /></a></p>
+      <td><p><a href="../Changing.html.es" accesskey="t"><img alt="superior"
+        src="../../images/up.gif" /></a> <a
+        href="the_transform_command.html.es" accesskey="n"><img
+        alt="siguiente" src="../../images/right.gif" /></a></p>
       </td>
     </tr>
   </tbody>
 </table>
 
 <div id="page_body">
-<h1>Changing the Document Structure</h1>
+<h1>Cambiar la estructura del documento</h1>
 
-<p>Simple structure transformations can be achieved using the
-<strong>Types</strong> menu. More complex transformations can be obtained by
-other means.</p>
+<p>Las transformaciones estructurales sencillas se pueden conseguir con los
+menús <strong>Xhtml</strong> y <strong>Xml</strong>. Las transformaciones más
+complejas se pueden conseguir de otras maneras.</p>
 
-<h2>See Also:</h2>
+<h2>Ver también:</h2>
 <ul>
-  <li><a href="../elements/the_structure_menu.html.es">Structure Menu</a></li>
+  <li><a href="../elements/the_structure_menu.html.es">Menú
+  Estructura</a></li>
   <li><span class="Link0"><a
-    href="../elements/buttons_and_types_menu.html.es">Button and Types
-    Menu</a></span></li>
-  <li><a href="../HTML-elements/infoTypes.html.es">Information types in
-  HTML</a></li>
+    href="../elements/buttons_and_types_menu.html.es">Botones y Menús Xhtml y
+    Xml</a></span></li>
+  <li><a href="../HTML-elements/infoTypes.html.es">Tipos de información en
+    HTML</a></li>
 </ul>
 </div>
 </body>

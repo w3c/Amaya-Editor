@@ -1,47 +1,45 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-	
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-  <meta name="GENERATOR" content="amaya 5.1" /> 
-  <title>About Controlling Printing with CSS</title>
-  <style type="text/css">  </style>
+  <meta name="GENERATOR" content="amaya 6.4+, see http://www.w3.org/Amaya/" />
+  <title>Controlar la impresión con CSS</title>
+  
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
-<body xml:lang="en" lang="en">
+<body xml:lang="es" lang="es">
 
 <table border="0" summary="toc">
   <tbody>
     <tr>
       <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
         src="../../images/amaya.gif" /></td>
-      <td><p><a href="print_command.html.es" accesskey="p"><img alt="previous"
-        src="../../images/left.gif" /></a> 
-		<a href="../Printing.html.es" accesskey="t"><img alt="top" src="../../images/up.gif" /></a></p>
+      <td><p><a href="print_command.html.es" accesskey="p"><img
+        alt="anterior" src="../../images/left.gif" /></a> <a
+        href="../Printing.html.es" accesskey="t"><img alt="superior"
+        src="../../images/up.gif" /></a></p>
       </td>
     </tr>
   </tbody>
 </table>
 
 <div id="page_body">
-<h1>About Controlling Printing with CSS</h1>
+<h1>Controlar la impresión con CSS</h1>
 
-<p>Amaya does not print links as underlined. To make this happen, add the
-following line to your user style sheet (amaya.css, located in the <span
-class="Link0">Amaya home directory</span>):</p>
+<p>Amaya no imprime los enlace subrayándolos. Para que se subrayen, añade la
+línea siguiente a la hoja de estilo de usuario (amaya.css, ubicada en la
+carpeta raíz de Amaya):</p>
 
 <p><code>@media print {a:link {text-decoration: underline} ... }</code></p>
 
-<p>Amaya supports the CSS page break property <code>page-break-before:
-always</code>. When you attach this property to a specific element using an
-attribute style, Amaya generates a page break before that element. When you
-attach this property to an element type within the style element of the
-document or within an external CSS style sheet, Amaya generates a page break
-before each instance of that element.</p>
+<p>Amaya soporta la propiedad de salto de página CSS <code>page-break-before:
+always</code>. Cuando asignas esta propiedad a un elemento específico
+mediante un atributo style, Amaya genera un salto de página antes de este
+elemento. Cuando asignas esta propiedad a un tipo de elemento en el elemento
+style del documento o en una hoja de estilo CSS externa, Amaya genera un
+salto de página antes de cada aparición de dicho elemento.</p>
 </div>
-
 </body>
 </html>

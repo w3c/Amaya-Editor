@@ -1,159 +1,133 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-	
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-  <title>Configuring Annotation Icons</title>
-  <style type="text/css">
-  </style>
-  <meta name="GENERATOR" content="amaya 5.2" />
+  <title>Configurar los iconos de anotación</title>
+  
+  <meta name="GENERATOR" content="amaya 6.4+, see http://www.w3.org/Amaya/" />
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
-<body xml:lang="en" lang="en">
+<body xml:lang="es" lang="es">
 
 <table border="0" summary="toc">
   <tbody>
     <tr>
-      <td><img alt="W3C" src="../../images/w3c_home" /> 
-	      <img alt="Amaya" src="../../images/amaya.gif" /></td>
-      <td><p><a href="replying_to_annotations.html.es" accesskey="p">
-	  		<img alt="previous" src="../../images/left.gif" /></a> 
-		<a href="../Annotations.html.es" accesskey="t">
-		   <img alt="top" src="../../images/up.gif" /></a> 
-		<a href="annotation_issues.html.es" accesskey="n">
-		   <img alt="next" src="../../images/right.gif" /></a>
-	</p>
+      <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
+        src="../../images/amaya.gif" /></td>
+      <td><p><a href="replying_to_annotations.html.es" accesskey="p"><img
+        alt="anterior" src="../../images/left.gif" /></a> <a
+        href="../Annotations.html.es" accesskey="t"><img alt="superior"
+        src="../../images/up.gif" /></a> <a href="annotation_issues.html.es"
+        accesskey="n"><img alt="siguiente" src="../../images/right.gif"
+        /></a></p>
       </td>
     </tr>
   </tbody>
 </table>
 
 <div id="page_body">
-<h1>Configuring Annotation Icons</h1>
+<h1>Configurar los iconos de anotación</h1>
 
-<h2>User-definable icons by Annotation type (aka "dynamic icons")</h2>
+<h2>Iconos definibles por el usuario por el tipo de anotación (también
+llamados "iconos dinámicos")</h2>
 
-<p>
-As of Release 6.2, the icon used to mark the location of
-an annotation within an annotated document may be changed
-by the user.</p>
+<p>En la versión 6.2, puedes modificar el icono utilizado para indicar la
+ubicación de una anoación en un documento anotado.</p>
 
-<p>
-In release 6.2 the icon that denotes an annotation is chosen
-as a property of the annotation type.  By including an RDF
-property of each annotation type you wish to use, you select
-the icon associated with annotations of that type.</p>
+<p>En la versión 6.2, el icono que indica la anotación se elige como
+propiedad del tipo de anotación. Al incluir una propiedad RDF de cada tipo de
+anotación que quieres utilizar, puedes el icono asociado a las anotaciones de
+dicho tipo.</p>
 
-<p>
-The sample configuration that is shipped with release 6.2
-associates the following icons:</p>
+<p>La configuración de ejemplo incluida en la versión 6.2 asocia los
+siguientes iconos:</p>
 
 <table>
- <tr>
-  <td width="35"><img src="../../../amaya/advice.png" alt="Advice"/></td>
-  <td>Advice</td>
- </tr>
-
- <tr>
-  <td width="35"><img src="../../../amaya/change.png" alt="Change"/></td>
-  <td>Change</td>
- </tr>
-
- <tr>
-  <td width="35"><img src="../../../amaya/annot.png" alt="Comment"/></td>
-  <td>Comment</td>
- </tr>
-
- <tr>
-  <td width="35"><img src="../../../amaya/example.png" alt="Example"/></td>
-  <td>Example</td>
- </tr>
-
- <tr>
-  <td width="35"><img src="../../../amaya/explanation.png" alt="Explanation"/></td>
-  <td>Explanation</td>
- </tr>
-
- <tr>
-  <td width="35"><img src="../../../amaya/question.png" alt="Question"/></td>
-  <td>Question</td>
- </tr>
-
- <tr>
-  <td width="35"><img src="../../../amaya/seealso.png" alt="SeeAlso"/></td>
-  <td>SeeAlso</td>
- </tr>
-
+  <tbody>
+    <tr>
+      <td width="35"><img src="../../../amaya/advice.png" alt="Advice (Consejo)" /></td>
+      <td>Advice (Consejo)</td>
+    </tr>
+    <tr>
+      <td width="35"><img src="../../../amaya/change.png" alt="Change (Cambio)" /></td>
+      <td>Change (Cambio)</td>
+    </tr>
+    <tr>
+      <td width="35"><img src="../../../amaya/annot.png" alt="Comment (Comentario)" /></td>
+      <td>Comment (Comentario)</td>
+    </tr>
+    <tr>
+      <td width="35"><img src="../../../amaya/example.png" alt="Example (Ejemplo)"
+      /></td>
+      <td>Example (Ejemplo)</td>
+    </tr>
+    <tr>
+      <td width="35"><img src="../../../amaya/explanation.png"
+        alt="Explanation (Explicación)" /></td>
+      <td>Explanation (Explicación)</td>
+    </tr>
+    <tr>
+      <td width="35"><img src="../../../amaya/question.png" alt="Question (Pregunta)"
+      /></td>
+      <td>Question (Pregunta)</td>
+    </tr>
+    <tr>
+      <td width="35"><img src="../../../amaya/seealso.png" alt="SeeAlso (Ver también)"
+      /></td>
+      <td>See also (VerTambién)</td>
+    </tr>
+  </tbody>
 </table>
 
-<p>
-The property name for adding annotation icons is
-<a href="http://www.w3.org/2001/10/typeIcon#usesIcon"
->http://www.w3.org/2001/10/typeIcon#usesIcon</a>.
-For instance, to specify an icon named
-file:///home/question-icon.jpg for annotations that have type 
-<a href="http://www.w3.org/2000/10/annotationType#Question"
->http://www.w3.org/2000/10/annotationType#Question</a>
-you would enter the following RDF/XML into a file that
-Amaya reads at startup is:</p>
-
-<pre>
-&lt;rdf:RDF
+<p>El nombre de la propiedad que añade iconos de anotación es <a
+href="http://www.w3.org/2001/10/typeIcon#usesIcon">http://www.w3.org/2001/10/typeIcon#usesIcon</a>.
+Por ejemplo, para especificar un archivo de icono llamado
+file:///home/question-icon.jpg para las anotaciones que tienen el tipo <a
+href="http://www.w3.org/2000/10/annotationType#Question">http://www.w3.org/2000/10/annotationType#Question</a>
+escribirías el RDF/XML siguiente en un archivo que Amaya lee al iniciarse:</p>
+<pre>&lt;rdf:RDF
    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-   xmlns:i = "http://www.w3.org/2001/10/typeIcon#">
-&lt;rdf:Description rdf:about="http://www.w3.org/2000/10/annotationType#Question">
-  &lt;i:usesIcon rdf:resource="file:///home/question-icon.jpg" />
-&lt;/rdf:Description>
-&lt;/rdf:RDF>
-</pre>
+   xmlns:i = "http://www.w3.org/2001/10/typeIcon#"&gt;
+&lt;rdf:Description rdf:about="http://www.w3.org/2000/10/annotationType#Question"&gt;
+  &lt;i:usesIcon rdf:resource="file:///home/question-icon.jpg" /&gt;
+&lt;/rdf:Description&gt;
+&lt;/rdf:RDF&gt;</pre>
 
-<p>
-The simplest way to get such RDF loaded into Amaya at startup is
-to include the file in the config/annot.schemas file in the Amaya
-program directory.  In order to preserve this file so that it will
-not be overwritten when you install a new version of Amaya, you
-should copy the config/annot.schemas file into your personal
-Amaya home directory; ~/.amaya/annot.schemas (on Unix systems)
-or /winnt/profiles/&lt;username>/amaya/annot.schemas (on Microsoft
-Windows systems).  You may list as many RDF files as you want
-in annot.schemas.  See the comments in the file included in the
-Amaya kit for more details.</p>
+<p>La forma más sencilla de que Amaya cargue este RDF al iniciarse, es
+incluir este archivo en el archivo config/annot.schemas del directorio de
+Amaya. para conservar este archivo de manera que no se sobreescriba al
+instalar una nueva versión de Amaya, debes copiar el archivo
+config/annot.schemas en tu directorio personal de Amaya;
+~/.amaya/annot.schemas (en Unix) o
+/winnt/profiles/&lt;username&gt;/amaya/annot.schemas (en Microsoft Windows).
+Puedes listas tantos archivos RDF como quieras en annot.schemas. Para obtener
+más detalles, consulta los comentarios incluidos en el propio archivo.</p>
 
-<p>
-Release 6.2 includes a sample file named "typeIcon.rdf" that
-declares unique icons for each annotation type declared in the
-<a href="http://www.w3.org/2000/10/annotationType#"
->http://www.w3.org/2000/10/annotationType#</a> namespace.  To experiment
-with user-defined icons, it may be easiest to copy this typeIcon.rdf
-into another directory and modify it.  Copy annot.schemas to your
-Amaya home directory and change the line near the end to point to
-your revised icon definition file.</p>
+<p>La versión 6.2 incluye un archivo de ejemplo llamado "typeIcon.rdf" que
+declara iconos únicos para cada tipo de anotación declarado en el espacio de
+nombres <a
+href="http://www.w3.org/2000/10/annotationType#">http://www.w3.org/2000/10/annotationType#</a>.
+Para experimentar con los iconos definidos por el usuario, puede ser más
+fácil copiar este archivo typeIcon.rdf en otro directorio y modificarlo.
+Copia annot.schemas en tu directorio raíz de Amaya y cambia la línea situada
+cerca del final para que apunte a tu archivo de icono.</p>
 
-<p>
-To revert to the previous behavior prior to release 6.2, edit
-the config/annot.schemas in the Amaya installation directory and
-add a comment character ("#") at the beginning of the line near
-the end that refers to typeIcon.rdf:</p>
+<p>Para volver al comportamiento previo a la versión 6.2, edita el archivo 
+config/annot.schemas del directorio de instalación de Amaya y añade un
+carácter de comentario  ("#") al principio de la línea situada cerca del
+final que hace referencia al archivo typeIcon.rdf:</p>
+<pre>#user-defined icons
+#http://www.w3.org/2001/10/typeIcon# $THOTDIR/config/typeIcon.rdf</pre>
 
-<pre>
-#user-defined icons
-#http://www.w3.org/2001/10/typeIcon# $THOTDIR/config/typeIcon.rdf
-</pre>
-
-<p>
-Amaya supports JPEG, PNG, and GIF bitmap graphics formats for icon
-images.  In release 6.2 the icon URI may only be a file: URI; that
-is, the icon must appear in a local or mounted directory to Amaya.
-Two special forms of non-file: URIs are supported.  If the file path
-name starts with "$THOTDIR" or "$APP_HOME" then the corresponding
-Amaya installation directory or personal Amaya home directory is
-substituted into the pathname.</p>
-
+<p>Amaya admite como formatos para los iconos imágenes de bitmap JPEG, PNG o
+GIF. En la versión 6.2 el URI del icono puede ser un archivo: URI; es decir,
+el icono debe aparecer en un directorio local o montado para Amaya. Amaya
+admite dos formas especiales de no-archivos: URI. Si la ubicación empieza por
+"$THOTDIR" o "$APP_HOME", entonces el directorio de instalación de Amaya o el
+directorio raíz personal de Amaya se sustituye en el nombre de la
+ubicación</p>
 </div>
-
 </body>
 </html>
-

@@ -3,15 +3,12 @@
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-  <title>Adding an Image</title>
-  <style type="text/css">
-  </style>
-  <meta name="GENERATOR" content="amaya 5.1" />
+  <title>Insertar imágenes</title>
+  <meta name="GENERATOR" content="amaya 6.4+, see http://www.w3.org/Amaya/" />
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
-<body xml:lang="en" lang="en">
+<body xml:lang="es" lang="es">
 
 <table border="0" summary="toc">
   <tbody>
@@ -19,43 +16,42 @@
       <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
         src="../../images/amaya.gif" /></td>
       <td><p><a href="working_with_image_maps.html.es" accesskey="p"><img
-        alt="previous" src="../../images/left.gif" /></a> <a
-        href="../ImageMaps.html.es" accesskey="t"><img alt="top"
+        alt="anterior" src="../../images/left.gif" /></a> <a
+        href="../ImageMaps.html.es" accesskey="t"><img alt="superior"
         src="../../images/up.gif" /></a> <a
         href="creating_clientside_image_maps.html.es" accesskey="n"><img
-        alt="next" src="../../images/right.gif" /></a></p>
+        alt="siguiente" src="../../images/right.gif" /></a></p>
       </td>
     </tr>
   </tbody>
 </table>
 
 <div id="page_body">
-<h1>Adding an Image</h1>
+<h1>Insertar imágenes</h1>
 
-<p>To insert an image, choose <strong>Image</strong> from the
-<strong>Types</strong> menu, click the <strong>Graphics</strong> <img
-src="../../images/Graph.gif" alt="graphics button" /> button, or use the
-keyboard shortcut (<code>Control-t</code> in Windows, <code>Control-i</code>
-in Unix). The resulting dialog lets you enter the file name and alternative
-text ('ALT' text) of the desired image.</p>
+<p>Para insertar una imagen, elige el comando de menú <strong>Xhtml &gt;
+Imagen</strong>, haz clic en el botón <strong>Gráficos</strong> <img
+src="../../images/Image.gif" alt="Botón Gráficos" />, o utiliza el atajo de
+teclado (<code>Control-t</code> en Windows, <code>Control-i</code> en Unix).
+La caja de diálogo que se abre te permite escribir el nombre del archivo y su
+texto aternativo (ALT) de la imagen que quieres insertar.</p>
 
-<p>To provide a long description for an image presenting complex information,
-you should do so in a separate document and link it by giving the URI as a
-<span
-style='font-size:9.0pt;font-family:"Courier New";'><code>longdesc</code>.</span>
-This command is also available on the <strong>Attributes</strong> menu.</p>
+<p>Para suministrar una descripción larga de una imagen que represente una
+información compleja, debes hacerlo en un archivo distinto y enlazarlo
+proporcionando el URI en el atributo <code>longdesc</code>. Este comando se
+encuentra también en el menú <strong>Atributos</strong>.</p>
 
-<p>To help find an image file you can enter a filter field, and use the
-filter button, and the dialog will list only the files that match your
-pattern.</p>
+<p>Para que te sea más fácil encontrar una imagen, puedes elegir el tipo de
+archivo para que la caja de siálogo de selección de archivo muestre
+únicamente los archivos del tipo indicado.</p>
 
-<h2>See Also:</h2>
+<h2>Ver también:</h2>
 <ul>
-  <li><a href="working_with_image_maps.html.es">Working with Image Maps</a></li>
-  <li><a href="../using_graphics/working_with_graphics.html.es">Working with
-    Graphics</a></li>
+  <li><a href="working_with_image_maps.html.es">Trabajar con mapas de
+    imagen</a></li>
+  <li><a href="../using_graphics/working_with_graphics.html.es">Trabajar con
+    gráficos</a></li>
 </ul>
 </div>
-
 </body>
 </html>

@@ -3,13 +3,12 @@
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-  <title>About Standard Multi-key Support</title>
-  <meta name="GENERATOR" content="amaya 5.4, see http://www.w3.org/Amaya/" />
+  <title>Combinaciones de teclas en las versiones Motif y GTK</title>
+  <meta name="GENERATOR" content="amaya 6.4+, see http://www.w3.org/Amaya/" />
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
-<body xml:lang="en" lang="en">
+<body xml:lang="es" lang="es">
 
 <table border="0" summary="toc">
   <tbody>
@@ -17,55 +16,45 @@
       <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
         src="../../images/amaya.gif" /></td>
       <td><p><a href="about_optional_multikey_support.html.es"
-        accesskey="p"><img alt="previous" src="../../images/left.gif" /></a>
-        <a href="../EditChar.html.es" accesskey="t"><img alt="top"
+        accesskey="p"><img alt="anterior" src="../../images/left.gif" /></a>
+        <a href="../EditChar.html.es" accesskey="t"><img alt="superior"
         src="../../images/up.gif" /></a> <a
-        href="about_white_space_handling.html.es" accesskey="n"><img alt="next"
-        src="../../images/right.gif" /></a></p>
+        href="about_white_space_handling.html.es" accesskey="n"><img
+        alt="siguiente" src="../../images/right.gif" /></a></p>
       </td>
     </tr>
   </tbody>
 </table>
 
 <div id="page_body">
-<h1>About Standard Multi-key Support of Motif and GTK</h1>
+<h1>Combinaciones de teclas en las versiones Motif y GTK</h1>
 
-<p>If an ISO-Latin character is unavailable on the standard keyboard, you can
-insert the character by pressing the special <code>Compose</code> key
-followed by a sequence of two other keys. See the table below for the keys
-used to insert various ISO-Latin characters. Note that in Amaya, you can
-switch the position of the first key and the second one.</p>
+<p>Si un carácter ISO-Latin no existe en un teclado estándar, puedes insertar
+el carácter pulsando la tecla especial <code>Compose</code> seguida de dos
+teclas más. En la tabla inferior se describen varios caracteres ISO_latin. En
+Amaya puedes intercambiar la primera y segunda tecla.</p>
 
-<p>If your keyboard doesn't contain the <code>Compose</code> key, you can
-attach it to an existing key such as <code>Alt-Gr</code> with the following
-<code>xmodmap</code> command:</p>
+<p>Si tu teclado no dispone de la tecla <code>Compose</code>, puedes
+asociarla a una tecla como <code>Alt-Gr</code> mediante el comando
+<code>xmodmap</code> siguiente:</p>
 
 <p><code>keycode 113 = Multi_key</code></p>
 
-<p>You can place this command in the <code>$HOME/.Xmodmap</code> file (in
-Unix), and Amaya will apply it when you will launch your X server.</p>
+<p>Puedes incluir este comando en el archivo <code>$HOME/.Xmodmap</code> (en
+Unix), y Amaya lo aplicará cuando inicies tu servidor X.</p>
 
 <table border="0" cellspacing="0" cellpadding="0" class="characters">
   <thead>
     <tr>
-      <td style="border:solid .5pt; padding:0in 5.4pt 0in 5.4pt"><p
-        class="TableHead"><strong>Name</strong></p>
+      <td><p class="TableHead"><strong>Nombre</strong></p>
       </td>
-      <td
-      style="border:solid .5pt;  border-left:none;padding:0in 5.4pt 0in 5.4pt"><p
-        class="TableHead"><strong>Code</strong></p>
+      <td><p class="TableHead"><strong>Código</strong></p>
       </td>
-      <td
-      style="border:solid .5pt;  border-left:none;padding:0in 5.4pt 0in 5.4pt"><p
-        class="TableHead"><strong>First/Second key</strong></p>
+      <td><p class="TableHead"><strong>Primera/Segunda tecla</strong></p>
       </td>
-      <td
-      style="border:solid .5pt;  border-left:none;padding:0in 5.4pt 0in 5.4pt"><p
-        class="TableHead"><strong>Second/First key</strong></p>
+      <td><p class="TableHead"><strong>Segunda/Primera tecla</strong></p>
       </td>
-      <td
-      style="border:solid .5pt;  border-left:none;padding:0in 5.4pt 0in 5.4pt"><p
-        class="TableHead"><strong>Output</strong></p>
+      <td><p class="TableHead"><strong>Resultado</strong></p>
       </td>
     </tr>
   </thead>
@@ -89,7 +78,7 @@ Unix), and Amaya will apply it when you will launch your X server.</p>
       </td>
       <td><p class="TableText">&lt;Shift&gt; A</p>
       </td>
-      <td><p class="TableText">quote</p>
+      <td><p class="TableText">apóstrofo</p>
       </td>
       <td><p class="TableText">Á</p>
       </td>
@@ -101,7 +90,7 @@ Unix), and Amaya will apply it when you will launch your X server.</p>
       </td>
       <td><p class="TableText">&lt;Shift&gt; A</p>
       </td>
-      <td><p class="TableText">circumflex</p>
+      <td><p class="TableText">circunflejo</p>
       </td>
       <td><p class="TableText">Â</p>
       </td>
@@ -113,7 +102,7 @@ Unix), and Amaya will apply it when you will launch your X server.</p>
       </td>
       <td><p class="TableText">&lt;Shift&gt; A</p>
       </td>
-      <td><p class="TableText">backquote</p>
+      <td><p class="TableText">acento grave</p>
       </td>
       <td><p class="TableText">À</p>
       </td>
@@ -125,7 +114,7 @@ Unix), and Amaya will apply it when you will launch your X server.</p>
       </td>
       <td><p class="TableText">&lt;Shift&gt; A</p>
       </td>
-      <td><p class="TableText">star</p>
+      <td><p class="TableText">multiplicación</p>
       </td>
       <td><p class="TableText">Å</p>
       </td>
@@ -149,7 +138,7 @@ Unix), and Amaya will apply it when you will launch your X server.</p>
       </td>
       <td><p class="TableText">&lt;Shift&gt; A</p>
       </td>
-      <td><p class="TableText">double quote</p>
+      <td><p class="TableText">comillas</p>
       </td>
       <td><p class="TableText">Ä</p>
       </td>
@@ -161,7 +150,7 @@ Unix), and Amaya will apply it when you will launch your X server.</p>
       </td>
       <td><p class="TableText">&lt;Shift&gt; C</p>
       </td>
-      <td><p class="TableText">comma</p>
+      <td><p class="TableText">coma</p>
       </td>
       <td><p class="TableText">Ç</p>
       </td>
@@ -185,7 +174,7 @@ Unix), and Amaya will apply it when you will launch your X server.</p>
       </td>
       <td><p class="TableText">&lt;Shift&gt; E</p>
       </td>
-      <td><p class="TableText">quote</p>
+      <td><p class="TableText">apóstrofo</p>
       </td>
       <td><p class="TableText">É</p>
       </td>
@@ -197,7 +186,7 @@ Unix), and Amaya will apply it when you will launch your X server.</p>
       </td>
       <td><p class="TableText">&lt;Shift&gt; E</p>
       </td>
-      <td><p class="TableText">circumflex</p>
+      <td><p class="TableText">circunflejo</p>
       </td>
       <td><p class="TableText">Ê</p>
       </td>
@@ -209,7 +198,7 @@ Unix), and Amaya will apply it when you will launch your X server.</p>
       </td>
       <td><p class="TableText">&lt;Shift&gt; E</p>
       </td>
-      <td><p class="TableText">backquote</p>
+      <td><p class="TableText">acento grave</p>
       </td>
       <td><p class="TableText">È</p>
       </td>
@@ -221,7 +210,7 @@ Unix), and Amaya will apply it when you will launch your X server.</p>
       </td>
       <td><p class="TableText">&lt;Shift&gt; E</p>
       </td>
-      <td><p class="TableText">double quote</p>
+      <td><p class="TableText">comillas</p>
       </td>
       <td><p class="TableText">Ë</p>
       </td>
@@ -233,7 +222,7 @@ Unix), and Amaya will apply it when you will launch your X server.</p>
       </td>
       <td><p class="TableText">&lt;Shift&gt; I</p>
       </td>
-      <td><p class="TableText">quote</p>
+      <td><p class="TableText">apóstrofo</p>
       </td>
       <td><p class="TableText">Í</p>
       </td>
@@ -245,7 +234,7 @@ Unix), and Amaya will apply it when you will launch your X server.</p>
       </td>
       <td><p class="TableText">&lt;Shift&gt; I</p>
       </td>
-      <td><p class="TableText">circumflex</p>
+      <td><p class="TableText">circunflejo</p>
       </td>
       <td><p class="TableText">Î</p>
       </td>
@@ -257,7 +246,7 @@ Unix), and Amaya will apply it when you will launch your X server.</p>
       </td>
       <td><p class="TableText">&lt;Shift&gt; I</p>
       </td>
-      <td><p class="TableText">backquote</p>
+      <td><p class="TableText">acento grave</p>
       </td>
       <td><p class="TableText">Ì</p>
       </td>
@@ -269,7 +258,7 @@ Unix), and Amaya will apply it when you will launch your X server.</p>
       </td>
       <td><p class="TableText">&lt;Shift&gt; I</p>
       </td>
-      <td><p class="TableText">double quote</p>
+      <td><p class="TableText">comillas</p>
       </td>
       <td><p class="TableText">Ï</p>
       </td>
@@ -293,7 +282,7 @@ Unix), and Amaya will apply it when you will launch your X server.</p>
       </td>
       <td><p class="TableText">&lt;Shift&gt; O</p>
       </td>
-      <td><p class="TableText">quote</p>
+      <td><p class="TableText">apóstrofo</p>
       </td>
       <td><p class="TableText">Ó</p>
       </td>
@@ -305,7 +294,7 @@ Unix), and Amaya will apply it when you will launch your X server.</p>
       </td>
       <td><p class="TableText">&lt;Shift&gt; O</p>
       </td>
-      <td><p class="TableText">circumflex</p>
+      <td><p class="TableText">circunflejo</p>
       </td>
       <td><p class="TableText">Ô</p>
       </td>
@@ -317,7 +306,7 @@ Unix), and Amaya will apply it when you will launch your X server.</p>
       </td>
       <td><p class="TableText">&lt;Shift&gt; O</p>
       </td>
-      <td><p class="TableText">backquote</p>
+      <td><p class="TableText">acento grave</p>
       </td>
       <td><p class="TableText">Ò</p>
       </td>
@@ -353,7 +342,7 @@ Unix), and Amaya will apply it when you will launch your X server.</p>
       </td>
       <td><p class="TableText">&lt;Shift&gt; O</p>
       </td>
-      <td><p class="TableText">double quote</p>
+      <td><p class="TableText">comillas</p>
       </td>
       <td><p class="TableText">Ö</p>
       </td>
@@ -377,7 +366,7 @@ Unix), and Amaya will apply it when you will launch your X server.</p>
       </td>
       <td><p class="TableText">&lt;Shift&gt; U</p>
       </td>
-      <td><p class="TableText">quote</p>
+      <td><p class="TableText">apóstrofo</p>
       </td>
       <td><p class="TableText">Ú</p>
       </td>
@@ -389,7 +378,7 @@ Unix), and Amaya will apply it when you will launch your X server.</p>
       </td>
       <td><p class="TableText">&lt;Shift&gt; U</p>
       </td>
-      <td><p class="TableText">circumflex</p>
+      <td><p class="TableText">circunflejo</p>
       </td>
       <td><p class="TableText">Û</p>
       </td>
@@ -401,7 +390,7 @@ Unix), and Amaya will apply it when you will launch your X server.</p>
       </td>
       <td><p class="TableText">&lt;Shift&gt; U</p>
       </td>
-      <td><p class="TableText">backquote</p>
+      <td><p class="TableText">acento grave</p>
       </td>
       <td><p class="TableText">Ù</p>
       </td>
@@ -413,7 +402,7 @@ Unix), and Amaya will apply it when you will launch your X server.</p>
       </td>
       <td><p class="TableText">&lt;Shift&gt; U</p>
       </td>
-      <td><p class="TableText">double quote</p>
+      <td><p class="TableText">comillas</p>
       </td>
       <td><p class="TableText">Ü</p>
       </td>
@@ -425,7 +414,7 @@ Unix), and Amaya will apply it when you will launch your X server.</p>
       </td>
       <td><p class="TableText">&lt;Shift&gt; Y</p>
       </td>
-      <td><p class="TableText">quote</p>
+      <td><p class="TableText">apóstrofo</p>
       </td>
       <td><p class="TableText">Ý</p>
       </td>
@@ -449,7 +438,7 @@ Unix), and Amaya will apply it when you will launch your X server.</p>
       </td>
       <td><p class="TableText">a</p>
       </td>
-      <td><p class="TableText">quote</p>
+      <td><p class="TableText">apóstrofo</p>
       </td>
       <td><p class="TableText">á</p>
       </td>
@@ -461,7 +450,7 @@ Unix), and Amaya will apply it when you will launch your X server.</p>
       </td>
       <td><p class="TableText">a</p>
       </td>
-      <td><p class="TableText">circumflex</p>
+      <td><p class="TableText">circunflejo</p>
       </td>
       <td><p class="TableText">â</p>
       </td>
@@ -473,7 +462,7 @@ Unix), and Amaya will apply it when you will launch your X server.</p>
       </td>
       <td><p class="TableText">a</p>
       </td>
-      <td><p class="TableText">backquote</p>
+      <td><p class="TableText">acento grave</p>
       </td>
       <td><p class="TableText">à</p>
       </td>
@@ -485,7 +474,7 @@ Unix), and Amaya will apply it when you will launch your X server.</p>
       </td>
       <td><p class="TableText">a</p>
       </td>
-      <td><p class="TableText">star</p>
+      <td><p class="TableText">multiplicación</p>
       </td>
       <td><p class="TableText">å</p>
       </td>
@@ -509,7 +498,7 @@ Unix), and Amaya will apply it when you will launch your X server.</p>
       </td>
       <td><p class="TableText">a</p>
       </td>
-      <td><p class="TableText">double quote</p>
+      <td><p class="TableText">comillas</p>
       </td>
       <td><p class="TableText">ä</p>
       </td>
@@ -533,7 +522,7 @@ Unix), and Amaya will apply it when you will launch your X server.</p>
       </td>
       <td><p class="TableText">c</p>
       </td>
-      <td><p class="TableText">comma</p>
+      <td><p class="TableText">coma</p>
       </td>
       <td><p class="TableText">ç</p>
       </td>
@@ -579,11 +568,11 @@ Unix), and Amaya will apply it when you will launch your X server.</p>
       </td>
       <td><p class="TableText">176</p>
       </td>
-      <td><p class="TableText">circumflex</p>
+      <td><p class="TableText">circunflejo</p>
       </td>
-      <td><p class="TableText">0 (zero)</p>
+      <td><p class="TableText">0 (cero)</p>
       </td>
-      <td><p class="TableText">°</p>
+      <td><p class="TableText">&deg;</p>
       </td>
     </tr>
     <tr>
@@ -593,7 +582,7 @@ Unix), and Amaya will apply it when you will launch your X server.</p>
       </td>
       <td><p class="TableText">e</p>
       </td>
-      <td><p class="TableText">quote</p>
+      <td><p class="TableText">apóstrofo</p>
       </td>
       <td><p class="TableText">é</p>
       </td>
@@ -605,7 +594,7 @@ Unix), and Amaya will apply it when you will launch your X server.</p>
       </td>
       <td><p class="TableText">e</p>
       </td>
-      <td><p class="TableText">circumflex</p>
+      <td><p class="TableText">circunflejo</p>
       </td>
       <td><p class="TableText">ê</p>
       </td>
@@ -617,7 +606,7 @@ Unix), and Amaya will apply it when you will launch your X server.</p>
       </td>
       <td><p class="TableText">e</p>
       </td>
-      <td><p class="TableText">backquote</p>
+      <td><p class="TableText">acento grave</p>
       </td>
       <td><p class="TableText">è</p>
       </td>
@@ -629,7 +618,7 @@ Unix), and Amaya will apply it when you will launch your X server.</p>
       </td>
       <td><p class="TableText">e</p>
       </td>
-      <td><p class="TableText">double quote</p>
+      <td><p class="TableText">comillas</p>
       </td>
       <td><p class="TableText">ë</p>
       </td>
@@ -687,7 +676,7 @@ Unix), and Amaya will apply it when you will launch your X server.</p>
       </td>
       <td><p class="TableText">173</p>
       </td>
-      <td><p class="TableText">- (minus)</p>
+      <td><p class="TableText">- (menos)</p>
       </td>
       <td><p class="TableText">-</p>
       </td>
@@ -701,7 +690,7 @@ Unix), and Amaya will apply it when you will launch your X server.</p>
       </td>
       <td><p class="TableText">i</p>
       </td>
-      <td><p class="TableText">quote</p>
+      <td><p class="TableText">apóstrofo</p>
       </td>
       <td><p class="TableText">í</p>
       </td>
@@ -713,7 +702,7 @@ Unix), and Amaya will apply it when you will launch your X server.</p>
       </td>
       <td><p class="TableText">i</p>
       </td>
-      <td><p class="TableText">circumflex</p>
+      <td><p class="TableText">circunflejo</p>
       </td>
       <td><p class="TableText">î</p>
       </td>
@@ -725,7 +714,7 @@ Unix), and Amaya will apply it when you will launch your X server.</p>
       </td>
       <td><p class="TableText">i</p>
       </td>
-      <td><p class="TableText">backquote</p>
+      <td><p class="TableText">acento grave</p>
       </td>
       <td><p class="TableText">ì</p>
       </td>
@@ -735,7 +724,7 @@ Unix), and Amaya will apply it when you will launch your X server.</p>
       </td>
       <td><p class="TableText">161</p>
       </td>
-      <td><p class="TableText">! (exclaim)</p>
+      <td><p class="TableText">! (exclamación)</p>
       </td>
       <td><p class="TableText">!</p>
       </td>
@@ -747,7 +736,7 @@ Unix), and Amaya will apply it when you will launch your X server.</p>
       </td>
       <td><p class="TableText">191</p>
       </td>
-      <td><p class="TableText">? (question)</p>
+      <td><p class="TableText">? (interrogación)</p>
       </td>
       <td><p class="TableText">?</p>
       </td>
@@ -771,9 +760,9 @@ Unix), and Amaya will apply it when you will launch your X server.</p>
       </td>
       <td><p class="TableText">175</p>
       </td>
-      <td><p class="TableText">- (minus)</p>
+      <td><p class="TableText">- (menos)</p>
       </td>
-      <td><p class="TableText">circumflex</p>
+      <td><p class="TableText">circunflejo</p>
       </td>
       <td><p class="TableText">¯</p>
       </td>
@@ -797,7 +786,7 @@ Unix), and Amaya will apply it when you will launch your X server.</p>
       </td>
       <td><p class="TableText">.</p>
       </td>
-      <td><p class="TableText">circumflex</p>
+      <td><p class="TableText">circunflejo</p>
       </td>
       <td><p class="TableText">·</p>
       </td>
@@ -809,7 +798,7 @@ Unix), and Amaya will apply it when you will launch your X server.</p>
       </td>
       <td><p class="TableText">&lt;Ctrl&gt; space</p>
       </td>
-      <td><p class="TableText">(none)</p>
+      <td><p class="TableText">(ninguna)</p>
       </td>
       <td><p class="TableText">&nbsp;</p>
       </td>
@@ -819,9 +808,9 @@ Unix), and Amaya will apply it when you will launch your X server.</p>
       </td>
       <td><p class="TableText">172</p>
       </td>
-      <td><p class="TableText">- (minus)</p>
+      <td><p class="TableText">- (menos)</p>
       </td>
-      <td><p class="TableText">comma</p>
+      <td><p class="TableText">coma</p>
       </td>
       <td><p class="TableText">¬</p>
       </td>
@@ -845,7 +834,7 @@ Unix), and Amaya will apply it when you will launch your X server.</p>
       </td>
       <td><p class="TableText">o</p>
       </td>
-      <td><p class="TableText">quote</p>
+      <td><p class="TableText">apóstrofo</p>
       </td>
       <td><p class="TableText">ó</p>
       </td>
@@ -857,7 +846,7 @@ Unix), and Amaya will apply it when you will launch your X server.</p>
       </td>
       <td><p class="TableText">o</p>
       </td>
-      <td><p class="TableText">circumflex</p>
+      <td><p class="TableText">circunflejo</p>
       </td>
       <td><p class="TableText">ô</p>
       </td>
@@ -869,7 +858,7 @@ Unix), and Amaya will apply it when you will launch your X server.</p>
       </td>
       <td><p class="TableText">o</p>
       </td>
-      <td><p class="TableText">backquote</p>
+      <td><p class="TableText">acento grave</p>
       </td>
       <td><p class="TableText">ò</p>
       </td>
@@ -905,7 +894,7 @@ Unix), and Amaya will apply it when you will launch your X server.</p>
       </td>
       <td><p class="TableText">o</p>
       </td>
-      <td><p class="TableText">double quote</p>
+      <td><p class="TableText">comillas</p>
       </td>
       <td><p class="TableText">ö</p>
       </td>
@@ -917,7 +906,7 @@ Unix), and Amaya will apply it when you will launch your X server.</p>
       </td>
       <td><p class="TableText">a</p>
       </td>
-      <td><p class="TableText">_ (underscore)</p>
+      <td><p class="TableText">_ (subrayado)</p>
       </td>
       <td><p class="TableText">ª</p>
       </td>
@@ -929,7 +918,7 @@ Unix), and Amaya will apply it when you will launch your X server.</p>
       </td>
       <td><p class="TableText">o</p>
       </td>
-      <td><p class="TableText">_ (underscore)</p>
+      <td><p class="TableText">_ (subrayado)</p>
       </td>
       <td><p class="TableText">º</p>
       </td>
@@ -941,7 +930,7 @@ Unix), and Amaya will apply it when you will launch your X server.</p>
       </td>
       <td><p class="TableText">&lt;Shift&gt; P</p>
       </td>
-      <td><p class="TableText">! (exclam)</p>
+      <td><p class="TableText">! (exclamación)</p>
       </td>
       <td><p class="TableText">¶</p>
       </td>
@@ -953,7 +942,7 @@ Unix), and Amaya will apply it when you will launch your X server.</p>
       </td>
       <td><p class="TableText">+</p>
       </td>
-      <td><p class="TableText">- (minus)</p>
+      <td><p class="TableText">- (menos)</p>
       </td>
       <td><p class="TableText">±</p>
       </td>
@@ -965,7 +954,7 @@ Unix), and Amaya will apply it when you will launch your X server.</p>
       </td>
       <td><p class="TableText">l</p>
       </td>
-      <td><p class="TableText">- (minus)</p>
+      <td><p class="TableText">- (menos)</p>
       </td>
       <td><p class="TableText">£</p>
       </td>
@@ -1001,7 +990,7 @@ Unix), and Amaya will apply it when you will launch your X server.</p>
       </td>
       <td><p class="TableText">s</p>
       </td>
-      <td><p class="TableText">! (exclam)</p>
+      <td><p class="TableText">! (exclamación)</p>
       </td>
       <td><p class="TableText">§</p>
       </td>
@@ -1073,7 +1062,7 @@ Unix), and Amaya will apply it when you will launch your X server.</p>
       </td>
       <td><p class="TableText">u</p>
       </td>
-      <td><p class="TableText">quote</p>
+      <td><p class="TableText">apóstrofo</p>
       </td>
       <td><p class="TableText">ú</p>
       </td>
@@ -1085,7 +1074,7 @@ Unix), and Amaya will apply it when you will launch your X server.</p>
       </td>
       <td><p class="TableText">u</p>
       </td>
-      <td><p class="TableText">circumflex</p>
+      <td><p class="TableText">circunflejo</p>
       </td>
       <td><p class="TableText">û</p>
       </td>
@@ -1097,7 +1086,7 @@ Unix), and Amaya will apply it when you will launch your X server.</p>
       </td>
       <td><p class="TableText">u</p>
       </td>
-      <td><p class="TableText">backquote</p>
+      <td><p class="TableText">acento grave</p>
       </td>
       <td><p class="TableText">ù</p>
       </td>
@@ -1109,7 +1098,7 @@ Unix), and Amaya will apply it when you will launch your X server.</p>
       </td>
       <td><p class="TableText">u</p>
       </td>
-      <td><p class="TableText">double quote</p>
+      <td><p class="TableText">comillas</p>
       </td>
       <td><p class="TableText">ü</p>
       </td>
@@ -1121,7 +1110,7 @@ Unix), and Amaya will apply it when you will launch your X server.</p>
       </td>
       <td><p class="TableText">y</p>
       </td>
-      <td><p class="TableText">quote</p>
+      <td><p class="TableText">apóstrofo</p>
       </td>
       <td><p class="TableText">ý</p>
       </td>
@@ -1133,7 +1122,7 @@ Unix), and Amaya will apply it when you will launch your X server.</p>
       </td>
       <td><p class="TableText">y</p>
       </td>
-      <td><p class="TableText">- (minus)</p>
+      <td><p class="TableText">- (menos)</p>
       </td>
       <td><p class="TableText">¥</p>
       </td>
@@ -1145,7 +1134,7 @@ Unix), and Amaya will apply it when you will launch your X server.</p>
       </td>
       <td><p class="TableText">y</p>
       </td>
-      <td><p class="TableText">double quote</p>
+      <td><p class="TableText">comillas</p>
       </td>
       <td><p class="TableText">ÿ</p>
       </td>

@@ -3,14 +3,13 @@
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta name="generator" content="amaya 6.4, see http://www.w3.org/Amaya/" />
-  <title>Eliminando un Enlace o Destino</title>
-  <style type="text/css">
-  </style>
+  <meta name="generator" content="amaya 6.4+, see http://www.w3.org/Amaya/" />
+  <title>Eliminar un Enlace o Destino</title>
+  
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
-<body xml:lang="en" lang="en">
+<body xml:lang="es" lang="es">
 
 <table border="0" summary="toc">
   <tbody>
@@ -18,30 +17,31 @@
       <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
         src="../../images/amaya.gif" /></td>
       <td><p><a href="creating_a_target_element.html.es" accesskey="p"><img
-        alt="previous" src="../../images/left.gif" /></a> <a
-        href="../Links.html.es" accesskey="t"><img alt="top"
+        alt="anterior" src="../../images/left.gif" /></a> <a
+        href="../Links.html.es" accesskey="t"><img alt="superior"
         src="../../images/up.gif" /></a> <a href="changing_a_link.html.es"
-        accesskey="n"><img alt="next" src="../../images/right.gif" /></a></p>
+        accesskey="n"><img alt="siguiente" src="../../images/right.gif"
+        /></a></p>
       </td>
     </tr>
   </tbody>
 </table>
 
 <div id="page_body">
-<h1>Eliminando un Enlace o Destino</h1>
+<h1>Eliminar un Enlace o Destino</h1>
 
-<p>El comando <strong>Borrar ancla</strong> del menú <strong>Enlaces</strong>
-elimina el ancla de la posición del cursor. Para utilizar este comando, sitúa
-el cursor dentro del ancla que quieras eliminar y elige <strong>Borrar
-ancla</strong>. El ancla se elimina, pero el contenido permanece.</p>
+<p>El comando de menú <strong>Enlaces &gt; Borrar ancla</strong> elimina el
+ancla de la posición del cursor. Para utilizar este comando, sitúa el cursor
+dentro del ancla que quieras eliminar y elige <strong>Borrar ancla</strong>.
+El ancla se elimina, pero el contenido permanece.</p>
 
 <h2>Ver también:</h2>
 <ul>
   <li><a href="creating_a_target_anchor.html.es">Crear un Destino</a></li>
   <li><a href="creating_an_external_link.html.es">Crear un Enlace
-    Externo</a></li>
+  Externo</a></li>
   <li><a href="creating_an_internal_link.html.es">Crear un Enlace
-    Interno</a></li>
+  Interno</a></li>
 </ul>
 </div>
 </body>

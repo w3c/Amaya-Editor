@@ -3,15 +3,12 @@
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-  <title>About Amaya&rsquo;s Accessibility Features</title>
-  <style type="text/css">
-  </style>
-  <meta name="GENERATOR" content="amaya 5.3, see http://www.w3.org/Amaya/" />
+  <title>Acerca de las características de accesibilidad de Amaya</title>
+  <meta name="GENERATOR" content="amaya 6.4+, see http://www.w3.org/Amaya/" />
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
-<body xml:lang="en" lang="en">
+<body xml:lang="es" lang="es">
 
 <table border="0" summary="toc">
   <tbody>
@@ -19,56 +16,59 @@
       <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
         src="../../images/amaya.gif" /></td>
       <td><p><a href="accessibility_in_amaya.html.es" accesskey="p"><img
-        alt="previous" src="../../images/left.gif" /></a> <a
-        href="../Access.html.es" accesskey="t"><img alt="top"
+        alt="anterior" src="../../images/left.gif" /></a> <a
+        href="../Access.html.es" accesskey="t"><img alt="superior"
         src="../../images/up.gif" /></a> <a
         href="about_producing_accessible_content.html.es" accesskey="n"><img
-        alt="next" src="../../images/right.gif" /></a></p>
+        alt="siguiente" src="../../images/right.gif" /></a></p>
       </td>
     </tr>
   </tbody>
 </table>
 
 <div id="page_body">
-<h1>About Amaya&rsquo;s Accessibility Features</h1>
+<h1>Acerca de las características de accesibilidad de Amaya</h1>
 
-<p>Accessibility for people with disabilities is being improved with each
-release. Currently, you can perform most Amaya functions without using a
-mouse, and carry out most editing functions (except entering text) without
-using the keyboard.</p>
+<p>La accesibilidad para la genete con discapacidades se está mejorando en
+cada versión. Actualmente, puedes realizar la mayoría de funciones de Amaya
+sin utilizar el ratón y llevar a cabo la mayoría de funciones de edcición
+(salvo introducir texto) sin utilizar el teclado.</p>
 
-<p>Accessibility features in the current version include the ability to:</p>
+<p>Las características de accesibilidad en la versión actual incluyen la
+posibilidad de:</p>
 <ul>
-  <li>Navigate and edit in Alternate, Link, Structure, and Table of Contents
-    views of a document, which are all synchronized with the default
-    Formatted view. See <span class="Link0"><a
-    href="../viewing/working_with_document_views.html.es">Working with Document
-    Views</a></span>. 
+  <li>Navegar y editar en las vistas Alternativa, Enlace, Estructura y Tabla
+    de contenidos, que están sincronizadas con la vista por omisión, la vista
+    Formateada. Ver <span class="Link0"><a
+    href="../viewing/working_with_document_views.html.es">Utilizar las Vistas
+    de Documento</a></span>. 
     <p></p>
   </li>
-  <li>Edit in the Source view, and manually synchronize it with other views.
-    For more information, see <span class="Link0"><a
-    href="../viewing/working_with_document_views.html.es">Working with Document
-    Views</a></span>. 
+  <li>Editar en la vista Fuente y sincronizar manualmente con las otras
+    vistas. Ver <span class="Link0"><a
+    href="../viewing/working_with_document_views.html.es">Utilizar las Vistas
+    de Documento</a></span>. 
     <p></p>
   </li>
-  <li>Dynamically add, remove, and edit multiple style sheets, including a
-    user style sheet. See <span class="Link0"><a
-    href="../style_sheets/working_with_styles.html.es">Working with Style
-    Sheets</a></span>. 
+  <li>Añadir, eliminar y editar dinámincamente múltiples hojas de estilo,
+    incluso la hoja de estilo de usuario. Ver <span class="Link0"><a
+    href="../style_sheets/working_with_styles.html.es">Trabajar con
+    estilos</a></span>. 
     <p></p>
   </li>
-  <li>Assign access keys for form fields, areas, or links. See <span
-    class="Link0"><a href="../browsing/about_access_keys.html.es">Acerca de las Teclas de Acceso</a></span>. 
+  <li>Asociar teclas de acceso a los campos de formularios, áreas o enlaces.
+    Ver <span class="Link0"><a
+    href="../browsing/about_access_keys.html.es">Acerca de las Teclas de
+    Acceso</a></span>. 
     <p></p>
   </li>
-  <li>Use keyboard shortcuts for menu options, links, and form controls. See
-    <a href="../selecting/selecting_with_keyboard_and_mouse.html.es">Selecting
-    from the Keyboard</a> and <span class="Link0"><a
-    href="../configuring_amaya/configuring_amaya.html.es">About Keyboard
-    Shortcuts</a></span>.</li>
+  <li>Utilizar atajos de teclado para las opicones de menús, enlaces y
+    controles de formularios. Ver <a
+    href="../selecting/selecting_with_keyboard_and_mouse.html.es">Seleccionar
+    con el Teclado y el Ratón</a> y <span class="Link0"><a
+    href="../configuring_amaya/configuring_amaya.html.es">Atajos de
+    teclado</a></span>.</li>
 </ul>
 </div>
-
 </body>
 </html>

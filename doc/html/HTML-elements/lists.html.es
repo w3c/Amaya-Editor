@@ -3,15 +3,12 @@
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <title>Heading elements</title>
-  <meta name="GENERATOR" content="amaya 6.1, see http://www.w3.org/Amaya/" />
-  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-  <style type="text/css">
-  </style>
+  <title>Elementos de lista</title>
+  <meta name="GENERATOR" content="amaya 6.4+, see http://www.w3.org/Amaya/" />
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
-<body xml:lang="en" lang="en">
+<body xml:lang="es" lang="es">
 
 <table border="0" width="100%" summary="toc">
   <tbody>
@@ -19,69 +16,72 @@
       <td><p><img border="0" alt="W3C" src="../../images/w3c_home" /> <img
         border="0" alt="Amaya" src="../../images/amaya.gif" /></p>
       </td>
-      <td><p align="right"><a href="headings.html.es"><img alt="previous"
+      <td><p align="right"><a href="headings.html.es"><img alt="anterior"
         border="0" src="../../images/left.gif" /></a> <a
-        href="../HTML.html.es"><img alt="top" border="0"
+        href="../HTML.html.es"><img alt="superior" border="0"
         src="../../images/up.gif" /></a> <a href="address.html.es"><img
-        alt="next" border="0" src="../../images/right.gif" /></a></p>
+        alt="siguiente" border="0" src="../../images/right.gif" /></a></p>
       </td>
     </tr>
   </tbody>
 </table>
 
 <div id="List">
-<h1>List elements</h1>
+<h1>Elementos de lista</h1>
 
-<p>There are three types of list in HTML. The two simple types are ordered
-and unordered lists, and there is also a definition list. Lists are
-block-type structures, but they can be created within other lists.</p>
+<p>Existen tres tipos de listas en HTML. Los dos tipos simples son las listas
+ordenadas y las listas no ordenadoas. Las listas son estructura de tipo
+bloque, pero pueden crearse en el interior de otras listas.</p>
 
-<p>Example:</p>
+<p>Ejemplos:</p>
 <dl>
-  <dt>Definition list</dt>
-    <dd>This is a definition list - it has definition terms (<code><a
-      href="http://www.w3.org/TR/REC-html40/struct/lists.html.es#edef-DT">DT</a></code>)
-      and definitions (<code><a
-      href="http://www.w3.org/TR/REC-html40/struct/lists.html.es#edef-DD">DD</a></code>)
-      as children.</dd>
-    <dd>One definition term can be followed by a number of deifintiions.</dd>
-  <dt>Ordered lists</dt>
-    <dd>There are three types of list 
+  <dt>Lista de definición</dt>
+    <dd>Esta es una lista de definición. Tiene como hijos el término
+      (<code><a
+      href="http://www.w3.org/TR/REC-html40/struct/lists.html#edef-DT">dt</a></code>)
+      y la definición (<code><a
+      href="http://www.w3.org/TR/REC-html40/struct/lists.html#edef-DD">dd</a></code>).</dd>
+    <dd>Un término puede estar seguido de varias definiciones.</dd>
+  <dt>Listas ordenadas</dt>
+    <dd>Existen tres tipos de lista 
       <ol>
-        <li>Ordered Lists (<code><a
-          href="http://www.w3.org/TR/REC-html40/struct/lists.html.es#edef-OL">OL</a></code>)</li>
-        <li>Unordered Lists (<code><a
-          href="http://www.w3.org/TR/REC-html40/struct/lists.html.es#edef-UL"
-          name="UL" id="UL">UL</a></code>)</li>
-        <li>Definition lists (<code><a
-          href="http://www.w3.org/TR/REC-html40/struct/lists.html.es#edef-DL">DL</a></code>)</li>
+        <li>Listas ordenadas (<code><a
+          href="http://www.w3.org/TR/REC-html40/struct/lists.html#edef-OL">ol</a></code>)</li>
+        <li>Listas no ordenadas (<code><a
+          href="http://www.w3.org/TR/REC-html40/struct/lists.html#edef-UL"
+          name="UL" id="UL">ul</a></code>)</li>
+        <li>Listas de definición (<code><a
+          href="http://www.w3.org/TR/REC-html40/struct/lists.html#edef-DL">dl</a></code>)</li>
       </ol>
     </dd>
-  <dt>Unordered Lists</dt>
-    <dd>Unordered lists and ordered lists share some characteristics: 
+  <dt>Listas no ordenadas</dt>
+    <dd>Las listas no ordenadas y las listas ordenadas comparten ciertas
+      características: 
       <ul>
-        <li>Simple lists</li>
-        <li>Both types have children which are list items (<code><a
-          href="http://www.w3.org/TR/REC-html40/struct/lists.html.es#edef-LI">LI</a></code>
-          elements)</li>
+        <li>Listas simples</li>
+        <li>Ambos tipos tienen hijos que son items de listas (elementos
+          <code><a
+          href="http://www.w3.org/TR/REC-html40/struct/lists.html#edef-LI">li</a></code>)</li>
       </ul>
     </dd>
 </dl>
 
-<p>The three types of list can all be created from the toolbar using the list
-buttons <img src="../../images/OList.gif" alt="Bulleted List" />, <img
-src="../../images/NumList.gif" alt="Numbered List" />, <img
-src="../../images/DL.gif" alt="Definition List" />. All types of list can be
-created from the <strong>Types</strong> menu, or using keyboard shortcuts.
-The default keyboard shortcuts for unix systems are <kbd>control-l
-control-o</kbd> for an ordered list, <kbd>control-l control-u</kbd> for an
-unordered list, and <kbd>control-l control-d</kbd> for a definition list.</p>
+<p>Los tres tipos de lista pueden crearse con la barra de botones mediante
+los botones de lista <img src="../../images/OList.gif"
+alt="Lista con boliche" />, <img src="../../images/NumList.gif"
+alt="Lista numerada" />, <img src="../../images/DL.gif"
+alt="Lista de definición" />. Todos los tipos de lista pueden crearse desde
+el menú <strong>Xhtml &gt; Lista</strong> o mediante atajos de teclado. Los
+atajos de teclado por omisión en unix son <kbd>control-l control-o</kbd> para
+crear una lista ordenada, <kbd>control-l control-u</kbd> para crear una lista
+no ordenada y <kbd>control-l control-d</kbd> para crear una lista de
+definición.</p>
 
-<p><a href="../StyleSheets.html.es">Style sheets</a> can be used to change the
-presentation of lists, including changing the style of list bullets or using
-an image as a bullet, and changing the style of text, for example using a
-different font for definition terms and the actual definitions.</p>
-<hr />
+<p>Puedes utilizar <a href="../StyleSheets.html.es">hojas de estilo</a> para
+cambiar el formato de las listas (puedes cambiar el estilo de las viñetas o
+utilizar una imagen como viñeta) o el formato del texto (por ejemplo,
+utilizando en una lista de definición una fuente diferente para los términos
+y las definiciones.</p>
 </div>
 </body>
 </html>

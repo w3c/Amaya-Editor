@@ -3,22 +3,20 @@
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-  <meta name="GENERATOR" content="amaya 5.1" />
-  <title>Assembling Large Document Collections</title>
-  <style type="text/css">
-  </style>
+  <meta name="GENERATOR" content="amaya 6.4+, see http://www.w3.org/Amaya/" />
+  <title>Unir varios documentos</title>
+  
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
-<body xml:lang="en" lang="en">
+<body xml:lang="es" lang="es">
 
 <table border="0" summary="toc">
   <tbody>
     <tr>
       <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
         src="../../images/amaya.gif" /></td>
-      <td><p><a href="../MakeBook.html.es" accesskey="t"><img alt="top"
+      <td><p><a href="../MakeBook.html.es" accesskey="t"><img alt="superior"
         src="../../images/up.gif" /></a></p>
       </td>
     </tr>
@@ -26,70 +24,68 @@
 </table>
 
 <div id="page_body">
-<h1>Assembling Large Document Collections</h1>
+<h1>Unir varios documentos</h1>
 
-<p>Amaya enables you to handle document collections. Such a collection may,
-for example, represent a set of technical documentation made up of several
-web pages. One of the web pages contains the title of the entire
-documentation set (an <code>&lt;h1&gt;</code> element), an introduction (some
-other elements), and a list <code>&lt;ol&gt;</code> or
-<code>&lt;ul&gt;</code> whose items <code>&lt;li&gt;</code> contain links to
-each chapter. Chapters are separate documents that can have a similar
-structure.</p>
+<p>Amaya te permite gestionar colecciones de documentos. Una colección puede,
+por ejemplo, ser una documentación técnica dividida en varias páginas web.
+Una de las páginas web contiene el título de la documentación completa (un
+elemento <code>&lt;h1&gt;</code>), una introducción (otros elementos) y una
+lista <code>&lt;ol&gt;</code> o <code>&lt;ul&gt;</code> cuyos items
+<code>&lt;li&gt;</code> contienen enlaces a cada capítulo. Los capítulos son
+documentos separados que pueden tener una estructura similar.</p>
 
-<p>This organization is useful for browsing, but has several drawbacks when
-the entire documentation set must be printed. Amaya addresses this problem
-with the Make book function (<strong>Special &gt; Make book</strong>).</p>
+<p>Esta organización es adecuada para su navegación, pero resulta incómoda
+cuando quieres imprimir toda la documentación. Amaya resuelve el problema con
+el comando Hacer libro (<strong>Especial &gt; Hacer libro</strong>).</p>
 
-<p>You use typed links for linking chapters, by associating a
-<code>rel="chapter"</code> or <code>rel="subdocument"</code> attribute with
-the anchor that refers to a chapter (to do this, select the <code>A</code>
-element and use the <strong>Attributes</strong> menu).</p>
+<p>Para enlazar capítulos, tipifica los enlaces asociándoles el atributo
+<code>rel="chapter"</code> o <code>rel="subdocument"</code> al ancla que
+apunta al capítulo (para ello, selecciona el elemento <code>a</code> y utliza
+el menú <strong>Atributos</strong>.</p>
 
-<p>Each referred chapter or sub-document can be:</p>
+<p>Cada capítulo o subdocumento enlazado puede ser:</p>
 <ul>
-  <li>an external document</li>
-  <li>a subset of a larger external document</li>
+  <li>un documento externo</li>
+  <li>un subconjunto de un documento externo mayor</li>
 </ul>
 
-<p>To refer to a document subset, you usually define a <code>div</code>
-element to identify the part of the target document you want to include, and
-to link to this target element.</p>
+<p>Para hacer referencia a un subconjunto de un documento, normalmente debe
+definir un elemento <code>div</code> para identificar la parte del documento
+destino que quieres incluir y enlazar a este elemento.</p>
 
-<p>Then, when you activate the Make book function, all blocks
-(<code>&lt;li&gt;</code> elements in the above example) containing a typed
-link to a chapter will be replaced by the corresponding actual web pages (or
-web page subsets), and Amaya will display a unique document containing the
-whole collection:</p>
+<p>Al utilizar el comando Hacer libro, los bloques (los elementos
+<code>&lt;li&gt;</code> en el ejemplo anterior) que contienen un enlace
+tipificado a un capítulo se sustituirán por las páginas web correspondientes
+(o por los subconjuntos de páginas web) y Amaya mostrará un único documento
+que contiene toda la colección</p>
 <ul>
-  <li>If the link refers to a web page, Amaya includes all the
-    <code>body</code> content of the target document.</li>
-  <li>If the link refers to a target element, Amaya includes this element
-    with its content.</li>
-  <li>If the link refers to a target anchor, Amaya includes the content of
-    the anchor, but not the anchor itself.</li>
+  <li>Si el enlace apunta a una página web, Amaya incluye todo el contenido
+    de <code>body</code> del documento destino.</li>
+  <li>Si el enlace apunta a un elemento destino, Amaya incluye el elemento y
+    su contenido.</li>
+  <li>Si el enlace apunta a un ancla destino, Amaya incluye el contenido del
+    ancla, pero no la propia ancla.</li>
 </ul>
 
-<p>Before each replacement, the Make book function generates a new
-<code>div</code> element with an <code>id</code> attribute to clearly
-separate each added piece.</p>
+<p>Antes de cada sustitución, el comando Hacer libro genera un nuevo elemento
+<code>div</code> con su atributo <code>id</code> para separar claramente cada
+porción añadida.</p>
 
-<p>Pieces of the new generated document can contain normal links, target
-anchors, and target elements. During the Make book operation, Amaya ensures
-that each <code>name</code>and <code>id</code> attribute value remains unique
-in the new document. As needed, Amaya changes these values and updates any
-relative links.</p>
+<p>Las porciones añadidas en el documento generado pueden contener enlaces
+normales, anclas destino y elementos destino. Mientras se hace el libro,
+Amaya se asegura de que cada atributo <code>name</code> e <code>id</code>
+tienen un valor único en el nuevo documento. Cuando es necesario, Amaya
+cambia esos valores y actualiza los enlaces.</p>
 
-<p>At the same time, Amaya automatically updates external links from
-referring to an external document or document subset, to referring to the
-text that is now included. For example, if the link originally pointed to an
-external document, the link will now refer to the <code>div</code>-enclosed
-element after the Make book operation. This ensures that the new unique
-document containing the whole collection remains coherent.</p>
+<p>Al mismo tiempo, Amaya actualiza automáticamente los enlaces externos a
+los documentos o subdocumentos incluidos, cambiándolos a enlaces internos al
+texto incluido. Por ejemplo, si un enlace apuntaba a un documento externo, el
+enlace apuntará ahora al elemento <code>div</code> creado con el comando
+Hacer libro. Esto asegura que el documento que contiene toda la documentación
+es coherente.</p>
 
-<p>This large document can then be numbered and printed with a complete table
-of contents and a list of all links.</p>
+<p>Este documento puede a continuación numerarse e imprimirse con su tabla de
+contenido y la lista de todos los enlaces.</p>
 </div>
-
 </body>
 </html>

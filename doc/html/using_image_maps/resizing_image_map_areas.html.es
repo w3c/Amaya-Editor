@@ -1,60 +1,63 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-	
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-  <meta name="GENERATOR" content="amaya 5.2" />
-  <title>Resizing Image Map Areas</title>
-  <style type="text/css"> </style>
+  <meta name="GENERATOR" content="amaya 6.4+, see http://www.w3.org/Amaya/" />
+  <title>Cambiar el tamaño de las áreas de mapa de imagen</title>
+  
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
-<body xml:lang="en" lang="en">
+<body xml:lang="es" lang="es">
 
 <table border="0" summary="toc">
   <tbody>
     <tr>
       <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
         src="../../images/amaya.gif" /></td>
-      <td><p> <a href="moving_image_map_areas.html.es" accesskey="p"><img alt="previous"
-        src="../../images/left.gif" /></a>
-		<a href="../ImageMaps.html.es" accesskey="t"><img alt="top" src="../../images/up.gif" /></a> 
-		<a href="about_alternative_text_and_long_descriptions.html.es" accesskey="n"><img alt="next"
-        src="../../images/right.gif" /></a></p>
+      <td><p><a href="moving_image_map_areas.html.es" accesskey="p"><img
+        alt="anterior" src="../../images/left.gif" /></a> <a
+        href="../ImageMaps.html.es" accesskey="t"><img alt="superior"
+        src="../../images/up.gif" /></a> <a
+        href="about_alternative_text_and_long_descriptions.html.es"
+        accesskey="n"><img alt="siguiente" src="../../images/right.gif"
+        /></a></p>
       </td>
     </tr>
   </tbody>
 </table>
 
 <div id="page_body">
-<h1>Resizing Image Map Areas</h1>
+<h1>Cambiar el tamaño de las áreas de mapa de imagen</h1>
 
-<p>After you have <a href="creating_clientside_image_maps.html.es">defined an
-area</a> within an image map, you may need to resize that area.</p>
+<p>Una vez <a href="creating_clientside_image_maps.html.es">definida un
+área</a> en un mapa de imagen, puedes querer cambiar su tamaño.</p>
 
-<p class="ProcedureCaption">To resize the image map area directly from the
-keyboard</p>
+<p class="ProcedureCaption">Para cambiar el tamaño un área utilizando el
+teclado</p>
 <ol>
-  <li>Move the cursor into an area of the image map.</li>
-  <li>Press the <code>Control</code> key and right-click the mouse. This will
-    highlight the image map area.</li>
-  <li>Release the Control key but continue to hold down the right-button of
-    the mouse. Use the mouse to drag the image area to the size you want.</li>
+  <li>Sitúa el cursor en un área de un mapa de imagen.</li>
+  <li>Mantén pulsada la tecla <code>Control</code> y haz clic con el botón
+    derecho del ratón. Se resaltará el área del mapa de imagen.</li>
+  <li>Suelta la tecla <code>Control</code>, pero mantén pulsado el botón
+    derecho del ratón. Al desplazar el ratón, modificarás el tamaño del
+  área.</li>
 </ol>
 
-<p class="ProcedureCaption">To resize the area using the Structure view</p>
+<p class="ProcedureCaption">Para cambiar el tamaño de un área utilizando la
+vista Estructura</p>
 <ol>
-  <li>Select <strong>Show Structure</strong> from the Select Show Structure
-    menu (or press <code>Alt + v</code> then <code>Alt + s</code>). The
-    structure view of the document will open in another window.</li>
-  <li>Edit the <code>coords</code> attribute manually. For example,
-    <code>coords=25,29,16</code> might become
-  <code>coords=25,28,24.</code></li>
-  <li>The image map area will resize in the open browser window.</li>
+  <li>Elige el comando de menú <strong>Vistas &gt; Mostrar
+    estructura</strong> (o pulsa <code>Alt+v</code>y a continuación
+    <code>Alt+s</code>). La vista Estructura del documento se mostrará en una
+    nueva ventana.</li>
+  <li>Edita el atributo <code>coords</code> manualmente. Por ejemplo,
+    <code>coords=25,29,16</code> puede convertirse en
+    <code>coords=25,28,24.</code></li>
+  <li>El área del mapa de imagen cambiará de tamaño en la ventana del
+    navegador.</li>
 </ol>
 </div>
-
 </body>
 </html>

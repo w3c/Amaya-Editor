@@ -3,14 +3,12 @@
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta name="GENERATOR" content="amaya 6.2, see http://www.w3.org/Amaya/" />
-  <title>Structure Menu</title>
-  <style type="text/css">
-  </style>
+  <meta name="GENERATOR" content="amaya 6.4+, see http://www.w3.org/Amaya/" />
+  <title>Menú Estructura</title>
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
-<body xml:lang="en" lang="en">
+<body xml:lang="es" lang="es">
 
 <table border="0" summary="toc">
   <tbody>
@@ -18,49 +16,54 @@
       <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
         src="../../images/amaya.gif" /></td>
       <td><p><a href="buttons_and_types_menu.html.es" accesskey="p"><img
-        alt="previous" src="../../images/left.gif" /></a> <a
-        href="../Creating.html.es" accesskey="t"><img alt="top"
+        alt="anterior" src="../../images/left.gif" /></a> <a
+        href="../Creating.html.es" accesskey="t"><img alt="superior"
         src="../../images/up.gif" /></a> <a href="the_enter_key.html.es"
-        accesskey="n"><img alt="next" src="../../images/right.gif" /></a></p>
+        accesskey="n"><img alt="siguiente" src="../../images/right.gif"
+        /></a></p>
       </td>
     </tr>
   </tbody>
 </table>
 
 <div id="page_body">
-<h1>Structure Menu</h1>
+<h1>Menú Estructura</h1>
 
-<p>The <strong>Types</strong> menu enables you to create only elements that
-are part of the document <code>&lt;BODY&gt;</code>. To create elements in the
-document <code>HEAD</code>, use the <strong>Structure</strong> menu from the
-Structure view. This menu works in the same way as the <strong>Types</strong>
-menu: put the cursor at the desired position and choose the element type from
-the <strong>Structure</strong> menu.</p>
+<p>Los menús <strong>Xhtml</strong> y <strong>Xml</strong> te permiten
+únicamente crear elementos que formen parte del <code>&lt;BODY&gt;</code> del
+documento. Para crear elementos en el <code>HEAD</code> del documento,
+utilize el menú <strong>Estructura</strong> de la vista Estructura. Este menú
+funciona como en los menús <strong>Xhtml</strong> y <strong>Xml</strong>:
+sitúa el cursor en la posición deseada y elige el tipo de elemento en el menú
+<strong>Estructura</strong>.</p>
 
-<p>The <strong>Structure</strong> menu also enables you to create comments,
-using <strong>Comments</strong>. Comments are shown only in the Structure
-view, but they can be inserted at any position in the document.</p>
+<p>El menú <strong>Estructura</strong> te permite también crear comentarios
+mediante el comando <strong>Comentario</strong>. Los comentario se muestran
+únicamente en la vista Estructura, pero pueden crearse en cualquier lugar del
+documento.</p>
 
-<h2>Generated elements</h2>
+<h2>Elementos generados</h2>
 
-<p>Some HTML elements are constituted by several other elements of different
-types. For instance, a table usually contains a caption
-(<code>CAPTION</code>), several rows (<code>TR</code>), and several cells
-(<code>TD</code> or <code>TH</code>) in each row.</p>
+<p>Algunos elementos HTML están constituidos for varios elementos de
+diferentes tipos. Por ejemplo, una tabla normalmente contiene un título
+(<code>CAPTION</code>), varias filas (<code>TR</code>) y varias celdas
+(<code>TD</code> or <code>TH</code>) en cada fila.</p>
 
-<p>When Amaya creates such elements, it also creates their components. A
-table is created with a caption and a row containing a single cell. The
-insertion point is placed automatically in the first of these components. You
-can enter the content of that component immediately or later. You can move to
-the next (empty) component with the mouse or with the arrow keys.</p>
+<p>Cuando Amaya crea ese tipo de elementos, crea también sus componentes. Una
+tabla se crea con el título y una fila que contiene una única celda. El punto
+de inserción se sitúa automáticamente en el primero de los componentes.
+Puedes escribir el contenido de ese componente en ese momento o más tarde.
+Puedes desplazarte al siguiente componente (vacío) con el ratón o con las
+flechas de desplazamiento.</p>
 
-<h2>See Also</h2>
+<h2>Ver también</h2>
 <ul>
-  <li><a href="../editing_documents/creating_new_documents.html.es">Creating New
-    Documents</a></li>
-  <li><a href="buttons_and_types_menu.html.es">Buttons and Types Menu</a></li>
-  <li><a href="../HTML-elements/infoTypes.html.es">Information types in
-  HTML</a></li>
+  <li><a href="../editing_documents/creating_new_documents.html.es">Crear
+    nuevos documentos</a></li>
+  <li><a href="buttons_and_types_menu.html.es">Botones y Menús Xhtml y
+  Xml</a></li>
+  <li><a href="../HTML-elements/infoTypes.html.es">Tipos de información en
+    HTML</a></li>
 </ul>
 </div>
 </body>

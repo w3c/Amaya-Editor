@@ -3,14 +3,13 @@
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta name="GENERATOR" content="amaya 6.4, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 6.4+, see http://www.w3.org/Amaya/" />
   <title>Recargar una página</title>
-  <style type="text/css">
- </style>
+  
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
-<body xml:lang="en" lang="en">
+<body xml:lang="es" lang="es">
 
 <table border="0" summary="toc">
   <tbody>
@@ -18,10 +17,11 @@
       <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
         src="../../images/amaya.gif" /></td>
       <td><p><a href="about_moving_backward_and_forward.html.es"
-        accesskey="p"><img alt="previous" src="../../images/left.gif" /></a>
-        <a href="../Browsing.html.es" accesskey="t"><img alt="top"
+        accesskey="p"><img alt="anterior" src="../../images/left.gif" /></a>
+        <a href="../Browsing.html.es" accesskey="t"><img alt="superior"
         src="../../images/up.gif" /></a> <a href="about_access_keys.html.es"
-        accesskey="n"><img alt="next" src="../../images/right.gif" /></a></p>
+        accesskey="n"><img alt="siguiente" src="../../images/right.gif"
+        /></a></p>
       </td>
     </tr>
   </tbody>
@@ -32,8 +32,8 @@
 
 <p>Puedes recargar documentos:</p>
 <ul>
-  <li>Eligiendo <strong>Recargar documento</strong> en el menú
-    <strong>Archivo</strong>.</li>
+  <li>Eligiendo el comando de menú <strong>Archivo &gt; Recargar
+    documento</strong>.</li>
   <li>Usando el atajo de teclado <kbd>Alt-r</kbd> en Unix y
     <kbd>Control-r</kbd> en Windows.</li>
   <li>Haciendo clic en el botón <strong>Recargar</strong> de la barra de

@@ -3,24 +3,22 @@
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-  <title>Editing Mathematics in Amaya</title>
+  <title>Editar matemáticas</title>
   <link href="style.css" rel="stylesheet" type="text/css" />
-  <style type="text/css">
-  </style>
+  
 </head>
 
-<body xml:lang="en" lang="en">
+<body xml:lang="es" lang="es">
 
 <table border="0" summary="toc">
   <tbody>
     <tr>
       <td><img alt="W3C" src="../images/w3c_home" /> <img alt="Amaya"
         src="../images/amaya.gif" /></td>
-      <td><p><a href="ImageMaps.html.es" accesskey="p"><img alt="previous"
+      <td><p><a href="ImageMaps.html.es" accesskey="p"><img alt="anterior"
         src="../images/left.gif" /></a> <a href="Manual.html.es"
-        accesskey="t"><img alt="top" src="../images/up.gif" /></a> <a
-        href="SVG.html.es" accesskey="n"><img alt="next"
+        accesskey="t"><img alt="superior" src="../images/up.gif" /></a> <a
+        href="SVG.html.es" accesskey="n"><img alt="siguiente"
         src="../images/right.gif" /></a></p>
       </td>
     </tr>
@@ -28,32 +26,33 @@
 </table>
 
 <div id="page_body">
-<h1>Editing Mathematics in Amaya</h1>
+<h1>Editar matemáticas</h1>
 
-<p>The following topics are covered in this section:</p>
+<p>En esta sección se tratan los temas siguientes:</p>
 <ul>
   <li><a
     href="editing_mathematics/working_with_math_expressions.html.es#page_body"
-    rel="subdocument">Working with Math Expressions</a></li>
+    rel="subdocument">Trabajar con expresiones matemáticas</a></li>
   <li><a
     href="editing_mathematics/the_math_palette_and_the_types.html.es#page_body"
-    rel="subdocument">The Math Palette and the Types Menu</a></li>
+    rel="subdocument">La paleta Matemáticas y el menú <strong>Xml &gt;
+    Matemáticas</strong></a></li>
   <li><a
     href="editing_mathematics/about_entering_math_constructs_using_the_keyboard.html.es#page_body"
-    rel="subdocument">About Entering Math Constructs Using the
-  Keyboard</a></li>
+    rel="subdocument">Crear expresiones matemáticas con el teclado</a></li>
   <li><a
     href="editing_mathematics/about_entering_math_characters.html.es#page_body"
-    rel="subdocument">About Entering Math Characters</a></li>
-  <li><a href="editing_mathematics/editing_math_expressions.html.es#page_body"
-    rel="subdocument">Editing Math Expressions</a></li>
+    rel="subdocument">Escribir caracteres matemáticos</a></li>
+  <li><a
+    href="editing_mathematics/editing_math_expressions.html.es#page_body"
+    rel="subdocument">Editar expresiones matemáticas</a></li>
   <li><a
     href="editing_mathematics/viewing_structure_in_mathml.html.es#page_body"
-    rel="subdocument">Viewing Structure in MathML</a></li>
+    rel="subdocument">Ver la estructura en MathML</a></li>
   <li><a href="editing_mathematics/about_linking_in_mathml.html.es#page_body"
-    rel="subdocument">About Linking in MathML</a></li>
+    rel="subdocument">Enlazar en MathML</a></li>
   <li><a href="editing_mathematics/math_issues.html.es#page_body"
-    rel="subdocument">Math Issues</a></li>
+    rel="subdocument">Problemas conocidos en relación con MathML</a></li>
 </ul>
 </div>
 </body>

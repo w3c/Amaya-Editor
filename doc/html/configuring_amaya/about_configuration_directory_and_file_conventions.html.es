@@ -3,15 +3,13 @@
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-  <title>About Configuration Directory and File Conventions</title>
-  <style type="text/css">
-  </style>
-  <meta name="GENERATOR" content="amaya 5.3, see http://www.w3.org/Amaya/" />
+  <title>Directorio de configuración y convenciones de archivo</title>
+  
+  <meta name="GENERATOR" content="amaya 6.4+, see http://www.w3.org/Amaya/" />
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
-<body xml:lang="en" lang="en">
+<body xml:lang="es" lang="es">
 
 <table border="0" summary="toc">
   <tbody>
@@ -19,181 +17,149 @@
       <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
         src="../../images/amaya.gif" /></td>
       <td><p><a href="configuring_amaya.html.es" accesskey="p"><img
-        alt="previous" src="../../images/left.gif" /></a> <a
-        href="../Configure.html.es" accesskey="t"><img alt="top"
+        alt="anterior" src="../../images/left.gif" /></a> <a
+        href="../Configure.html.es" accesskey="t"><img alt="superior"
         src="../../images/up.gif" /></a> <a href="menu_preferences.html.es"
-        accesskey="n"><img alt="next" src="../../images/right.gif" /></a></p>
+        accesskey="n"><img alt="siguiente" src="../../images/right.gif"
+        /></a></p>
       </td>
     </tr>
   </tbody>
 </table>
 
 <div id="page_body">
-<h1>About Configuration Directory and File Conventions</h1>
+<h1>Directorio de configuración y convenciones de archivo</h1>
 
-<p>Amaya uses a number of default directories to store configuration
-information.</p>
+<p>Amaya utiliza una serie de directorios por omisión para almacenar la
+información de configuración.</p>
 
-<h2>The config Directory</h2>
+<h2>El directorio config</h2>
 
-<p>Amaya stores most of the default values and all of the dialog messages in
-the config directory. This directory's parent is the one in which Amaya was
-installed (the default is <code>Amaya/config</code> on Unix; see the table
-below for the location on Windows).</p>
+<p>Amaya almacena la mayoría de valores por omisión y todos los mensajes de
+las cajas de diálogo en el directorio config. Este directorio se encuentra
+dentro del directorio en el que se ha instalado Amaya (por omisión, el
+directorio es <code>Amaya/config</code> en Unix; consulta la tabla inferior
+con su ubicación en Windows).</p>
 
-<h2>The AmayaHome Directory</h2>
+<h2>El directorio AmayaHome</h2>
 
-<p>Amaya stores the user preferences and other user configuration files in a
-directory called AmayaHome. The following table shows where this directory is
-stored in different architectures:</p>
+<p>Amaya almacena las preferencias de usuario y otros archivos de
+configuración del usuario en un directorio llamado AmayaHome. La tabla
+siguiente indica dónde se encuentra el directorio en los diferentes sistemas
+operativos.</p>
 
-<table border="1" cellspacing="0" cellpadding="0"
-style="border-collapse:collapse;  border:none;">
+<table border="1">
   <tbody>
     <tr>
-      <td width="139" valign="top"
-      style="width:1.45in;border:solid .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
-        class="TableHead"><b>Architecture</b></p>
+      <td><p class="TableHead"><b>Sistema operativo</b></p>
       </td>
-      <td width="300" valign="top"
-      style="width:225.0pt;border:solid .5pt;   border-left:none;padding:0in 5.4pt 0in 5.4pt"><p
-        class="TableHead"><b>AmayaHome Directory Location</b></p>
+      <td><p class="TableHead"><b>Ubicación del directorio AmayaHome</b></p>
       </td>
     </tr>
     <tr>
-      <td width="139" valign="top"
-      style="width:1.45in;border:solid .5pt;   border-top:none;padding:0in 5.4pt 0in 5.4pt"><p
-        class="TableText">Unix</p>
+      <td><p class="TableText">Unix</p>
       </td>
-      <td width="300" valign="top"
-      style="width:225.0pt;border-top:none;border-left:   none;border-bottom:solid .5pt;border-right:solid .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
-        class="TableText"><code>$HOME/.amaya</code></p>
+      <td><p class="TableText"><code>$HOME/.amaya</code></p>
       </td>
     </tr>
     <tr>
-      <td width="139" valign="top"
-      style="width:1.45in;border:solid .5pt;   border-top:none;padding:0in 5.4pt 0in 5.4pt"><p
-        class="TableText">Windows 95/ Windows 98</p>
+      <td><p class="TableText">Windows 95/ Windows 98</p>
       </td>
-      <td width="300" valign="top"
-      style="width:225.0pt;border-top:none;border-left:   none;border-bottom:solid .5pt;border-right:solid .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
-        class="TableText"><code>AMAYA-INSTALL-DIR\users\username</code> or,
-        if the user didn't login to Windows,
+      <td><p class="TableText"><code>AMAYA-INSTALL-DIR\users\username</code>
+        o, si el usuario no está definido,
         <code>AMAYA-INSTALL-DIR\users\default</code></p>
       </td>
     </tr>
     <tr>
-      <td width="139" valign="top"
-      style="width:1.45in;border:solid .5pt;   border-top:none;padding:0in 5.4pt 0in 5.4pt"><p
-        class="TableText">Windows NT</p>
+      <td><p class="TableText">Windows NT</p>
       </td>
-      <td width="300" valign="top"
-      style="width:225.0pt;border-top:none;border-left:   none;border-bottom:solid .5pt;border-right:solid .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+      <td><p
         class="TableText"><code>C:\winnt\profiles\username\Amaya</code></p>
       </td>
     </tr>
     <tr>
-      <td width="139" valign="top"
-      style="width:1.45in;border:solid .5pt;   border-top:none;padding:0in 5.4pt 0in 5.4pt"><p
-        class="TableText">Windows 2000</p>
+      <td><p class="TableText">Windows 2000</p>
       </td>
-      <td width="300" valign="top"
-      style="width:225.0pt;border-top:none;border-left:   none;border-bottom:solid .5pt;border-right:solid .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
-        class="TableText"><code>C:\Program Files\Amaya\config</code></p>
+      <td><p class="TableText"><code>C:\Program Files\Amaya\config</code></p>
       </td>
     </tr>
     <tr>
-      <td width="139" valign="top"
-      style="width:1.45in;border:solid .5pt;   border-top:none;padding:0in 5.4pt 0in 5.4pt"><p
-        class="TableText">Windows XP</p>
+      <td><p class="TableText">Windows XP</p>
       </td>
-      <td width="300" valign="top"
-      style="width:225.0pt;border-top:none;border-left:   none;border-bottom:solid .5pt;border-right:solid .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
+      <td><p
         class="TableText"><code>C:\WINDOWS\profiles\username\amaya</code></p>
       </td>
     </tr>
   </tbody>
 </table>
 
-<p>This directory is preserved even when installing new versions of Amaya. It
-may contain the following files:</p>
+<p>Este diredctorio se conserva incluso cuando se instalan nuevas versiones
+de Amaya. Contiene los siguientes archivos:</p>
 <ul>
-  <li><strong>thot.rc</strong>: Contains the user preferences, changed
-    through the <strong>Preferences</strong> submenus on the
-    <strong>Special</strong> menu. 
+  <li><strong>thot.rc</strong>: Contiene las preferencias de usuario,
+    modificadas a través del menú <strong>Especial &gt;
+    Preferencias</strong>. 
     <p></p>
   </li>
-  <li><strong>amaya.keyboard</strong> (Unix) or <strong>amaya.kb</strong>
-    (Windows): Defines Amaya keyboard shortcuts. 
+  <li><strong>amaya.keyboard</strong> (Unix) o <strong>amaya.kb</strong>
+    (Windows): Define los atajos de teclado de Amaya. 
     <p></p>
   </li>
-  <li><strong>amaya.css</strong>: Contains the user's style sheet. 
+  <li><strong>amaya.css</strong>: Hoja de estilo de usuario. 
     <p></p>
   </li>
-  <li><strong>dictionary.DCT</strong>: Amaya provides a multilingual spell
-    checker. By default, the spell checker works with two dictionaries:
-    English and French (you can download these dictionaries from the W3C
-    servers). When you want to register a new word, the spell checker creates
-    or updates your personal dictionary.</li>
+  <li><strong>dictionary.DCT</strong>: Amaya proporciona un corrector
+    ortográfico multilingüe. Por omisión, el corrector ortográfico trabaja
+    con dos diccionarios: inglés y francés (puedes descargar estas
+    diccionarios de los servidores W3C). Cuando quieres registrar una nueva
+    palabra, el corrector ortográfico crea o actualiza el diccionario
+    personal.</li>
 </ul>
 
-<p class="Note"><strong>Note</strong>:<br />
-The <code>amaya.keyboard</code>, <code>amaya.kb</code>, and
-<code>amaya.css</code> files are loaded at launch time. If you change them,
-you must quit and restart Amaya to take the changes into account.</p>
+<p class="Note"><strong>Nota:</strong>  Los archivos
+<code>amaya.keyboard</code>, <code>amaya.kb</code>, y <code>amaya.css</code>
+files se cargan al iniciar Amaya. Si los cambias, debes cerrar y reiniciar
+Amaya para que los cambios tengan efecto.</p>
 
-<h2>The AmayaTemp Directory</h2>
+<h2>El directorio AmayaTemp</h2>
 
-<p>Amaya stores all the temporary files it creates in a directory called the
-AmayaTemp directory. The following table shows where this directory is stored
-within different architectures:</p>
+<p>Amaya almacena todos los archivos temporales que crea en un directorio
+llamado AmayaTemp. La tabla siguiente indica dónde se encuentra el directorio
+en los diferentes sistemas operativos:</p>
 
-<table border="1" cellspacing="0" cellpadding="0"
-style="border-collapse:collapse;  border:none;">
+<table border="1">
   <tbody>
     <tr>
-      <td width="98" valign="top"
-      style="width:73.45pt;border:solid .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
-        class="TableHead"><b>Architecture</b></p>
+      <td><p class="TableHead"><b>Sistema operativo</b></p>
       </td>
-      <td width="257" valign="top"
-      style="width:192.95pt;border:solid .5pt;   border-left:none;padding:0in 5.4pt 0in 5.4pt"><p
-        class="TableHead"><b>AmayaTemp Directory</b></p>
+      <td><p class="TableHead"><b>Directorio AmayaTemp</b></p>
       </td>
     </tr>
     <tr>
-      <td width="98" valign="top"
-      style="width:73.45pt;border:solid .5pt;   border-top:none;padding:0in 5.4pt 0in 5.4pt"><p
-        class="TableText">Unix</p>
+      <td><p class="TableText">Unix</p>
       </td>
-      <td width="257" valign="top"
-      style="width:192.95pt;border-top:none;border-left:   none;border-bottom:solid .5pt;border-right:solid .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
-        class="TableText"><code>$HOME/.amaya</code></p>
+      <td><p class="TableText"><code>$HOME/.amaya</code></p>
       </td>
     </tr>
     <tr>
-      <td width="98" valign="top"
-      style="width:73.45pt;border:solid .5pt;   border-top:none;padding:0in 5.4pt 0in 5.4pt"><p
-        class="TableText">Windows</p>
+      <td><p class="TableText">Windows</p>
       </td>
-      <td width="257" valign="top"
-      style="width:192.95pt;border-top:none;border-left:   none;border-bottom:solid .5pt;border-right:solid .5pt;   padding:0in 5.4pt 0in 5.4pt"><p
-        class="TableText"><code>c:\temp\amaya</code> (default value)</p>
+      <td><p class="TableText"><code>c:\temp\amaya</code> (valor por
+        omisión)</p>
       </td>
     </tr>
   </tbody>
 </table>
 
-<p>Amaya creates files in this directory when browsing remote documents or
-printing a document. The cache is also stored in this directory. You can
-change the AmayaTemp and cache directories by using the General and Cache
-preferences (<span class="Link0">choose <strong>Preferences &gt;
-General</strong> or <strong>Preferences &gt; Cache</strong> from the
-<strong>Special</strong></span><span class="Link0">menu</span>).</p>
+<p>Amaya crea archivos en este directorio al navegar documentos remotos o al
+imprimir un documento. La caché también se guarda en este directorio. Puedes
+modificar los directorios AmayaTemp y caché mediante los menús <span
+class="Link0"><strong>Preferencias &gt; General</strong> y
+<strong>Preferencias &gt; Caché</strong></span>.</p>
 
-<p>Amaya always tries to delete the temporary files it creates. However, if
-Amaya crashes, the temporary files are not deleted. This will not impact
-subsequent executions of Amaya.</p>
+<p>Amaya siempre intenta borrar los archivos temporales que crea. Sin embargo
+si Amaya se bloquea, los archivos temperales no se borran. Este hecho no
+tiene ninguna consecuencia en posteriores sesiones.</p>
 </div>
 </body>
 </html>

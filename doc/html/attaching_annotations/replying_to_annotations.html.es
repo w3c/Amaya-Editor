@@ -3,15 +3,13 @@
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-  <title>Known Issues with Annotations and Modified Documents</title>
-  <style type="text/css">
-  </style>
-  <meta name="GENERATOR" content="amaya 5.3, see http://www.w3.org/Amaya/" />
+  <title>Problemas conocidos con las anotaciones y los documentos
+  modificados</title>
+  <meta name="GENERATOR" content="amaya 6.4+, see http://www.w3.org/Amaya/" />
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
-<body xml:lang="en" lang="en">
+<body xml:lang="es" lang="es">
 
 <table border="0" summary="toc">
   <tbody>
@@ -19,67 +17,71 @@
       <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
         src="../../images/amaya.gif" /></td>
       <td><p><a href="moving_annotations.html.es" accesskey="p"><img
-        alt="previous" src="../../images/left.gif" /></a> <a
-        href="../Annotations.html.es" accesskey="t"><img alt="top"
+        alt="anterior" src="../../images/left.gif" /></a> <a
+        href="../Annotations.html.es" accesskey="t"><img alt="superior"
         src="../../images/up.gif" /></a> <a href="configuring_icons.html.es"
-        accesskey="n"><img alt="next" src="../../images/right.gif" /></a></p>
+        accesskey="n"><img alt="siguiente" src="../../images/right.gif"
+        /></a></p>
       </td>
     </tr>
   </tbody>
 </table>
 
 <div id="page_body">
-<h1>Replying to Annotations / Discussion Threads</h1>
+<h1>Contestar anotaciones / Hilos de discusión</h1>
 
-<p>Annotations can be seen as comments to pages. The <strong>Annotation /
-Replies</strong> feature enhances the collaborative workspace by allowing
-users to reply to annotations or to other replies.</p>
+<p>Una anotación puede considerarse como un comentario a una página. La
+opción de menú <strong>Anotaciones &gt; Responder a anotación</strong> mejora
+el espacio virtual de colaboración al permitir a los usuarioes contestar a
+las anotaciones o a otras respuestas.</p>
 
-<p>The <strong>Annotations / Reply to annotation</strong> menu command lets
-you to create a reply to an existing annotation or to a reply. You can invoke
-this command from an open annotation or a reply window. As a result a new
-reply window opens. The fields in a reply window can be edited just like in
-an annotation window as explained under <strong>Creating an
-annotation</strong>.</p>
+<p>La opción de menú <strong>Anotaciones &gt; Responder a anotación</strong>
+te permite crear una respuesta a una anotación existente o a una respuesta.
+Puedes elegir este comando desde una anotación abierta o desde una ventana de
+respuesta. Este comando abre una nueva ventana de respuesta. Puedes editar
+los campos de una ventana de respuesta como en una ventana de anotación, tal
+y como se explica en <a href="creating_an_annotation.html.es">Crear una
+anotación</a>.</p>
 
-<p>When the reply is ready, you can post it to a server with
-<strong>Annotations / Post to Server</strong> menu command or save it locally
-using the <strong>File / Save</strong> menu command. To delete a reply, you
-can use the <strong>Annotations / Delete</strong> menu command.</p>
+<p>Cuando la respuesta está preparada, puedes enviarla a un servidor con la
+opción de menú <strong>Anotaciones &gt; Salvar en el servidor</strong> o
+guardarla localmente con la opción de menú <strong>Archivo &gt;
+Guardar</strong>. Para borrar una respuesta, puedes utilizar la opción de
+menú <strong>Anotaciones &gt; Borrar</strong>.</p>
 
-<p>Replies can also be annotated like any other document, as explained in <a
-href="creating_an_annotation.html.es">Creating an annotation</a>.</p>
+<p>Las respuestas también pueden anotarse, como cualquier otro documento,
+como se explica en <a href="creating_an_annotation.html.es">Crear una
+anotación</a>.</p>
 
-<h2>The user interface</h2>
+<h2>El interface de usuario</h2>
 
-<p><img alt="An annotation with a discussion thread"
+<p><img alt="Una anotación con un hilo de discusión"
 src="../../images/threads.png" /></p>
 
-<p>In the current user interface, all replies related to an annotation are
-shown at the bottom of this annotation, in a thread section. Each item in the
-thread gives the date of the reply, the author, and the title of the reply.
-The content of any of these replies can be retrieved by double clicking the
-replies in the thread. The selected reply will be highlighted and presented
-in a reply window. When another selection is made the same reply window is
-used.</p>
+<p>En el interface de usuario actual, todas las respuestas relacionadas con
+una anotación se muestran al pie de la anotación en una sección organizada en
+hilos. Cada elemento en el hilo muestra la fecha de respuesta, el autor y el
+título de la respuesta. El contenido de cualquiera de estas respuestas puede
+consultarse haciendo doble clic en la respuesta. La respuesta seleccionada se
+resaltará y presentará en una ventana de respuesta. Al seleccionar otra
+respuesta, se muestra en la misma ventana.</p>
 
-<h2>Known issues: Incomplete threads</h2>
+<h2>Problemas conocidos: hilos incompletos</h2>
 
-<p>There is no control yet for controlling which replies should be posted. In
-an ideal world, it should not be possible to save a reply to a reply if the
-previous reply was not saved in the same server. Likewise, if you delete a
-reply, you should delete all replies to this annotation. Not doing leads to
-having fragments of threads that cannot be correctly attached in the thread.
-For example, let R1 be the reply to annotation A1 and R2 a reply to R1. If
-you post R1, and let R2 be stored locally, then when you browse A1 and only
-download its local annotations, you will only see R2. At this point, Amaya
-does not know that R1 exists, so it assumes that R2 has lost its parent. We
-identify these "orphan" threads by putting a question mark symbol
-<strong>?</strong> in front of them. If later one, Amaya finds new thread
-items, for example, if you download R1, Amaya will then sort the thread view,
-inserting the threads as appropriately. In our example, R2 will become a
-child of R1, as expected.</p>
+<p>No existe por el momento ninguna manera de controlar qué respuestas deben
+enviarse. En principio no debería ser posible guardar una respuesta a una
+respuesta en servidores diferentes. De la misma manera, al borrar una
+respuesta se deberían borrar todas las respuestas relacionadas. En caso
+contrario, existitrían fragmentos de hilos de discusión que no podrían
+relacionarse correctamente. Por ejemplo, sea R1 una respuesta a la anotación
+A1 y R2 una respuesta a R1. Si envías R1 y almacenas R2 localmente, al
+consultar A1 desacargando únicamente sus anotaciones locales, sólo verás R2.
+Como Amaya no sabe que R1 existe, supone que R2 ha perdido a su padre. Estos
+hilos "huérfanos" se identifican en Amaya mediante un signo de interrogación
+<strong>?</strong> delante de ellos.Si posteriormente Amaya encuentra nuevos
+elementos del hilo, por ejemplo, si descargas R1, Amaya reordenará la vista
+de los hilos, insertando los hilos como corresponda. En el ejemplo, R2 se
+convertiría en hijo de R1, como sería de esperar.</p>
 </div>
-
 </body>
 </html>
