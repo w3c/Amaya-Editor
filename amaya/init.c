@@ -3161,7 +3161,7 @@ void ParseAsHTML (Document document, View view)
    CheckParsingErrors (document);
 
    /* Consider the document as modified */
-   TtaSetDocumentModified (document);
+   /*TtaSetDocumentModified (document);*/
 
    TtaFreeMemory (tempdocument);
 }

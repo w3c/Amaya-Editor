@@ -2514,6 +2514,7 @@ static ThotBool ShowError (Element el, Document doc)
 		}
 	    }
 	}
+
       TtaFreeMemory (buffer);
       /* get the error string */
       if (el && otherDoc && otherDoc < MAX_DOCUMENTS)
@@ -2544,6 +2545,7 @@ static ThotBool ShowError (Element el, Document doc)
 		     ShowSource (otherDoc, 1);
 		   doc = DocumentSource[otherDoc];
 		 }
+	       TtaRaiseView (doc, 1);
 	       /* look for an element with the same line number in the other doc */
 	       /* line numbers are increasing in document order */
 	       el = TtaGetMainRoot (doc);

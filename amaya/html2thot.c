@@ -2805,7 +2805,6 @@ static void        EndOfEndTag (char c)
 		{
 		  if (strlen (inputBuffer) > MaxMsgLength - 10)
 		    inputBuffer[MaxMsgLength - 10] = EOS;
-		  sprintf (msgBuffer, "</%s", inputBuffer);
 		  InsertInvalidEl (msgBuffer, TRUE);
 		  /* print an error message... */
 		  sprintf (msgBuffer, "Invalid end tag </%s> (removed if saving)",
@@ -3367,7 +3366,7 @@ static void EndOfEntity (unsigned char c)
 	PutInBuffer (EntityName[i]);
       PutInBuffer (';');
       /* print an error message */
-      sprintf (msgBuffer, "Entity not supported");
+      sprintf (msgBuffer, "Unknown entity");
       HTMLParseError (HTMLcontext.doc, msgBuffer);
     }
   LgEntityName = 0;
@@ -3493,7 +3492,7 @@ static void EntityChar (unsigned char c)
 	      /* print an error message */
 	      EntityName[LgEntityName++] = c;
 	      EntityName[LgEntityName++] = EOS;
-	      sprintf (msgBuffer, "Entity not supported");
+	      sprintf (msgBuffer, "Unknown entity");
 	      HTMLParseError (HTMLcontext.doc, msgBuffer);
 	    }
 	  /* next state is the return state from the entity subautomaton,
