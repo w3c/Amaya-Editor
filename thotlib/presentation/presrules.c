@@ -1767,16 +1767,10 @@ boolean            *appl;
 	     if (PPos->PosUserSpecified)
 		PPos->PosUserSpecified = CheckPPosUser (pAbb1, pDoc);
 	     *appl = TRUE;
-	     /* a priori, l'englobement est respecte' */
-	     if (pPRule->PrType == PtHorizPos)
-		pAbb1->AbHorizEnclosing = TRUE;
-	     else if (pPRule->PrType == PtVertPos)
-		pAbb1->AbVertEnclosing = TRUE;
 	     /* verifie si le pave deroge a la regle d'englobement */
 	     if (pPosRule->PoRelation == RlRoot)
 		if (PPos->PosAbRef != pAbb1->AbEnclosing)
 		   /* ce pave deroge a la regle d'englobement */
-
 		   if (pPRule->PrType == PtHorizPos)
 		      pAbb1->AbHorizEnclosing = FALSE;
 		   else if (pPRule->PrType == PtVertPos)
@@ -1919,7 +1913,7 @@ boolean            *appl;
 	       )
 	   )
 	   /* c'est une regle de positionnement vertical en dessous du
-	      precedent et on n'a pas found' le precedent. On remplace par
+	      precedent et on n'a pas trouve' le precedent. On remplace par
 	      un positionnement en haut de l'englobant */
 	  {
 	     PPos->PosAbRef = pAbb1->AbEnclosing;

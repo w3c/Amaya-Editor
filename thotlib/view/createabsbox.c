@@ -327,8 +327,6 @@ int                 Visib;
    pAb->AbLineStyle = 'S';
    pAb->AbLineWeight = 1;
    pAb->AbLineWeightUnit = UnPoint;
-   pAb->AbHorizEnclosing = TRUE;	/* ce pave respecte les regles d'englobement */
-   pAb->AbVertEnclosing = TRUE;
    /* les copies de parametres ou d'elements inclus ne sont pas */
    /* modifiables par l'utilisateur */
    pAb->AbCanBeModified = !pEl->ElIsCopy;

@@ -2754,7 +2754,6 @@ int                 frame;
    return result;
 }
 
-
 /*----------------------------------------------------------------------
    ChangeConcreteImage traite la mise a jour d'une hierachie de paves 
    Pendant la creation d'une arborescence de boites on     
