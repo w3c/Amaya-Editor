@@ -3,12 +3,13 @@
  ***/
 
 /*----------------------------------------------------------------------
-   Ce programme compile un schema de structure contenu dans un fichier
-   de type .S.
-   Il est dirige' par la grammaire du langage de structure
-   contenue, sous forme codee, dans le fichier STRUCT.GRM.
-   Il produit un fichier de type .STR qui sera ensuite utilise'
-   par l'editeur Thot.
+   Structure schema compiler:
+
+   Source file name must have the suffix .S
+   This compiler is directed by the structure language grammar (see file
+   STRUCT.GRM)
+   It provides compiled files with suffix .STR which are used by the
+   Thot library.
   ----------------------------------------------------------------------*/
 
 #include "thot_sys.h"
@@ -24,10 +25,8 @@
 #include "thotfile.h"
 #include "thotdir.h"
 
-#define MAX_SRULE_RECURS 15	/* nombre maximuimum de niveaux de
-				   definition de regles dans une regle */
-#define MAX_EXTERNAL_TYPES 20	/* nombre max. de types de documents
-				   externes */
+#define MAX_SRULE_RECURS 15	/* maximum of included rule levels in a rule */
+#define MAX_EXTERNAL_TYPES 20	/* maximum of different external document types */
 typedef enum
   {
      AttrRef, ElemRef, ElContent
@@ -42,93 +41,65 @@ ContStrExt;
 #define EXPORT extern
 #include "analsynt_tv.h"
 
-int                 LineNum;	/* compteur de lignes du fichier source */
+int                 LineNum;	 /* lines counter in source file */
 
-static Name         srceFileName;	/* nom du fichier a compiler */
-static PtrSSchema   pSSchema;	/* pointeur sur le schema de structure en cours
-
-				   de construction */
-static int          TextConstPtr;
-
-				/* index courant dans le buffer des const */
-static boolean      CompilAttr;	/* on est en train d'analyser les attributs
-
-				   globaux */
-static boolean      CompilLocAttr;	/* on est en train d'analyser des attributs
-
-					   locaux */
-static boolean      CompilParam;	/* on est en train d'analyser les parametres */
-static boolean      CompilAssoc;	/* on analyse les elements associes */
-static boolean      CompilUnits;	/* on analyse les unites exportees */
-static boolean      RootRule;	/* on attend la regle racine */
-static boolean      Rules;	/* on est dans les Rules */
-static boolean      CompilExtens;	/* on est dans les regles d'extension */
-static boolean      ExceptExternalType;		/* on a rencontre' "EXTERN" avant un nom */
-
-				/* de type dans la section EXCEPT */
-static SRule       *CurExtensRule;	/* regle d'extension en cours de traitement */
-static boolean      Minimum;	/* nombre minimum d'elements d'une liste */
-static boolean      Maximum;	/* nombre maximum d'elements d'une liste */
-static boolean      RRight[MAX_SRULE_RECURS];	/* on est dans la partie droite de la regle */
-
-static int          RecursLevel;	/* niveau de recursivite' */
-static int          CurRule[MAX_SRULE_RECURS];	/* numero de la regle courante */
-static Name         CurName;	/* symbole gauche de la derniere regle
-
-				   rencontree */
-static int          CurNum;	/* indice de ce nom dans la table des
-
-				   identificateurs */
-static int          CurNLocAttr;	/* nombre d'attributs locaux asocies a CurName */
-static int          CurLocAttr[MAX_LOCAL_ATTR];		/* les attributs  locaux
-
-							   associes a CurName */
-static boolean      CurReqAttr[MAX_LOCAL_ATTR];		/* les booleens 'Required' des
-
-							   attributs locaux associes a CurName */
-static boolean      CurParam;	/* la derniere regle rencontree est un param */
-static boolean      CurAssoc;	/* la derniere regle rencontree est un associe' */
-static boolean      CurUnit;	/* la derniere regle rencontree est une unite
-
-				   exportee */
-static boolean      Equal;	/* c'est une regle d'egalite */
-static boolean      Option;	/* c'est un composant facultatif  d'agregat */
-static boolean      MandatoryAttr;	/* c'est un attribut obligatoire */
-static int          Sign;	/* -1 ou 1 selon le signe de la derniere valeur 
-
-				 * d'attribut rencontree */
-static PtrSSchema   pExternSSchema;	/* pointeur sur le schema de structure externe */
-static int          RuleExportWith;	/* element dont on traite le contenu exporte' */
-static Name         ReferredTypeName;	/* dernier nom d'un type reference' */
-static int          BeginReferredTypeName;	/* position de ce nom dans la ligne */
-static ContStrExt   ExternalStructContext;	/* contexte ou est utilise' une structure externe */
-static boolean      UnknownContent;	/* indique que le contenu d'un element exporte 
-
-					   n'est pas declare dans le schema */
-static Name         PreviousIdent;	/* Name du dernier identificateur de type rencontre' */
+static Name         srceFileName;/* file name of the schema cpp processed */
+static PtrSSchema   pSSchema;	 /* pointer to the structure schema */
+static int          TextConstPtr;/* current index in constants buffer */
+static SRule       *CurExtensRule;/* current extension rule */
+static boolean      CompilAttr;	 /* we are parsing global attributes */
+static boolean      CompilLocAttr;/* we are parsing local attributes */
+static boolean      CompilParam; /* we are parsing parameters */
+static boolean      CompilAssoc; /* we are parsing associed elements */
+static boolean      CompilUnits; /* we are parsing exported units */
+static boolean      RootRule;	 /* we are waiting for the root rule */
+static boolean      Rules;	 /* we are parsing rules */
+static boolean      CompilExtens;/* on we are parsing extension rules */
+static boolean      ExceptExternalType;/* we met "EXTERN" before a type name */
+				 /* in section EXCEPT */
+static boolean      Minimum;	 /* minimum elements in a list */
+static boolean      Maximum;	 /* maximum elements in a list */
+static boolean      RRight[MAX_SRULE_RECURS];/* in the right side of the rule */
+static int          RecursLevel;	/* recursivity level */
+static int          CurRule[MAX_SRULE_RECURS];	/* rule number */
+static Name         CurName;	 /* left name of the last met rule */
+static int          CurNum;	 /* index of this name in the identifiers table */
+static int          CurNLocAttr; /* number of local attributes attached to CurName */
+static int          CurLocAttr[MAX_LOCAL_ATTR];/* local attributes attached to CurName */
+static boolean      CurReqAttr[MAX_LOCAL_ATTR];/* 'Required' booleans of local
+						  attributes associated to CurName */
+static boolean      CurParam;	 /* the last met rule is a parameter */
+static boolean      CurAssoc;	 /* the last met rule is a associated element */
+static boolean      CurUnit;	 /* the last met rule is a exported unit */
+static boolean      Equal;	 /* it is the equality rule*/
+static boolean      Option;	 /* it is an aggregate optional component */
+static boolean      MandatoryAttr;/* it is a mandatory attribute */
+static int          Sign;	 /* -1 or 1 to give the sign of the last attribute value */
+static PtrSSchema   pExternSSchema;/* pointer to the external structure schema */
+static int          RuleExportWith;/* current exported element to be managed */
+static Name         ReferredTypeName;/* last name of the reference type */
+static int          BeginReferredTypeName;/* position of this name in the line */
+static ContStrExt   ExternalStructContext;/* context used by the external structure */
+static boolean      UnknownContent;/* the content of exported element
+				      is not defined in the schema */
+static Name         PreviousIdent;/* name of the last met type identifier */
 static int          PreviousRule;
 
-static int          NExternalTypes;	/* nombre de types declares comme externes */
-static Name         ExternalType[MAX_EXTERNAL_TYPES];	/* table des noms de types
-
-							   declares comme externes */
-static boolean      IncludedExternalType[MAX_EXTERNAL_TYPES];	/* table des noms de */
-
-				/* types declares comme externes inclus */
-static boolean      CompilExcept;	/* on est dans les declarations d'exceptions */
-static int          ExceptType;	/* numero du type d'element dont on traite les exceptions */
-static int          ExceptAttr;	/* Numero de l'attribut dont on traite les exceptions */
-static int          CurBasicElem;	/* numero du type de base courant */
-static int          NAlias;	/* nombre d'alias definis dans le schema */
-static int          Alias[MAX_RULES_SSCHEMA];	/* les regles du schema qui definissent
-
-						   des alias */
-static boolean      FirstInPair;	/* on a rencontre' le mot-cle "First" */
-static boolean      SecondInPair;	/* on a rencontre' le mot-cle "Second" */
-static boolean      ReferenceAttr;	/* on traite une reference attribut */
-static boolean      ImportExcept;	/* on rencontre' une exception ImportLine ou
-
-					   ImportParagraph */
+static int          NExternalTypes;/* number of types declared as external */
+static Name         ExternalType[MAX_EXTERNAL_TYPES];/* table of type names
+							declared as external */
+static boolean      IncludedExternalType[MAX_EXTERNAL_TYPES];/* table of type names */
+				 /* declared as included external */
+static boolean      CompilExcept;/* we are parsing exceptions */
+static int          ExceptType;	 /* element type concerned by exceptions */
+static int          ExceptAttr;	 /* attribute concerned by exceptions */
+static int          CurBasicElem;/* current basic type */
+static int          NAlias;	 /* number of aliases defined in the schema */
+static int          Alias[MAX_RULES_SSCHEMA];/* rules which define aliases */
+static boolean      FirstInPair; /* we met the keyword "First" */
+static boolean      SecondInPair;/* we met the keyword "Second" */
+static boolean      ReferenceAttr;/* we manage a reference attribute */
+static boolean      ImportExcept;/* we met exception ImportLine or ImportParagraph */
 
 #include "platform_f.h"
 #include "parser_f.h"
@@ -137,32 +108,20 @@ static boolean      ImportExcept;	/* on rencontre' une exception ImportLine ou
 #include "fileaccess_f.h"
 #include "message_f.h"
 #include "compilmsg_f.h"
+#include "registry_f.h"
 
-#ifdef __STDC__
-extern void         TtaInitializeAppRegistry (char *);
-extern void         TtaSaveAppRegistry (void);
-
-#else
-extern void         TtaInitializeAppRegistry ();
-extern void         TtaSaveAppRegistry ();
-
-#endif /* __STDC__ */
 
 /*----------------------------------------------------------------------
    InitBasicType                                                  
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 static void         InitBasicType (SRule * pRule, char *name, BasicType typ)
-
 #else  /* __STDC__ */
 static void         InitBasicType (pRule, name, typ)
 SRule              *pRule;
 char               *name;
 BasicType           typ;
-
 #endif /* __STDC__ */
-
 {
    strncpy (pRule->SrName, name, MAX_NAME_LENGTH);
    pRule->SrConstruct = CsBasicElement;
@@ -188,11 +147,9 @@ BasicType           typ;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         Initialize ()
-
 #else  /* __STDC__ */
 static void         Initialize ()
-#endif				/* __STDC__ */
-
+#endif /* __STDC__ */
 {
    int                 i;
    TtAttribute        *pAttr;
@@ -209,14 +166,14 @@ static void         Initialize ()
 	pAttr = &pSSchema->SsAttribute[i];
 	pAttr->AttrOrigName[0] = '\0';
 	pAttr->AttrGlobal = True;
-	/* tous les attributs sont globaux */
+	/* all attributes are global */
 	pAttr->AttrFirstExcept = 0;
-	/* pas d'exception pour l'attribut */
+	/* no exception for the attribute */
 	pAttr->AttrLastExcept = 0;
 	pAttr->AttrType = AtEnumAttr;
 	pAttr->AttrNEnumValues = 0;
      }
-   /* cree un attribut Langue */
+   /* create the Language attribute */
    pAttr = &pSSchema->SsAttribute[0];
    strncpy (pAttr->AttrName, "Langue", MAX_NAME_LENGTH);
    pAttr->AttrOrigName[0] = '\0';
@@ -225,8 +182,7 @@ static void         Initialize ()
    pSSchema->SsNAttributes++;
 
    pSSchema->SsNRules = 0;
-   /* les premieres regles de structure du schema sont celles qui */
-   /* definissent les types de base */
+   /* first rules of the structure schema are those that define basic types */
    pRule = &pSSchema->SsRule[CharString];
    InitBasicType (pRule, "TEXT_UNIT", CharString);
 
@@ -294,14 +250,11 @@ static void         Initialize ()
    table des regles est deja utilise' dans une autre regle de	
    la meme table des regles. Retourne Vrai si oui.			
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 static boolean      RuleNameExist ()
-
 #else  /* __STDC__ */
 static boolean      RuleNameExist ()
-#endif				/* __STDC__ */
-
+#endif /* __STDC__ */
 {
    int                 r;
    boolean             ret;
@@ -2866,73 +2819,99 @@ static void         ListNotCreated ()
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 int                 main (int argc, char **argv)
-
 #else  /* __STDC__ */
 int                 main (argc, argv)
 int                 argc;
 char              **argv;
-
 #endif /* __STDC__ */
-
 {
    FILE               *inputFile;
+   char                buffer[200], cmd[800];
+   char               *pwd, *ptr;
+   indLine             i;	/* current position in current line */
+   indLine             wi;	/* start position of current word in the line */
+   indLine             wl;	/* word length */
+   SyntacticType       wn;	/* syntactic type of current word */
+   SyntRuleNum         r;	/* rule number */
+   SyntRuleNum         pr;	/* previous rule number */
+   SyntacticCode       c;	/* grammatical code of found word */
+   int                 nb;	/* identifier index of found word if it is
+				   an indentifier */
    boolean             fileOK;
-   char                buffer[200];
-   indLine             i;	/* position courante dans la ligne en cours */
-   indLine             wi;	/* position du debut du mot courant dans la
-
-				   ligne en cours */
-   indLine             wl;	/* longueur du mot courant */
-   SyntacticType       wn;	/* SyntacticType du mot courant */
-   SyntRuleNum         r;	/* numero de regle */
-   SyntRuleNum         pr;	/* numero de la regle precedente */
-   SyntacticCode       c;	/* code grammatical du mot trouve */
-   int                 nb;	/* indice dans Identifier du mot trouve, si
-
-				   c'est un identificateur */
 
    TtaInitializeAppRegistry (argv[0]);
    COMPIL = TtaGetMessageTable ("compildialogue", COMP_MSG_MAX);
    STR = TtaGetMessageTable ("strdialogue", STR_MSG_MAX);
    error = False;
-   /* initialise l'analyseur syntaxique */
+   /* initialize the parser */
    InitParser ();
    InitSyntax ("STRUCT.GRM");
    if (!error)
      {
-	/* teste les arguments d'appel du programme */
+	/* check program arguments */
 	if (argc != 2)
 	   TtaDisplaySimpleMessage (FATAL, STR, STR_NO_SUCH_FILE);
 	else
 	  {
-	     /* recupere le nom du fichier a compiler */
-	     strncpy (srceFileName, argv[1], MAX_NAME_LENGTH - 1);
-	     i = strlen (srceFileName);
-	     /* ajoute le suffixe .SCH */
-	     strcat (srceFileName, ".SCH");
-	     /* teste si le fichier a compiler existe */
+	     /* get the name of the file to be compiled */
+	     strncpy (srceFileName, argv[1], MAX_NAME_LENGTH - 5);
+	     strcpy (buffer, srceFileName);
+	     /* check if the name contains a suffix */
+	     ptr = strrchr(buffer, '.');
+	     nb = strlen (srceFileName);
+	     if (!ptr)
+	       /* there is no suffix */
+	       strcat (srceFileName, ".S");
+	     else if (strcmp(ptr, ".S"))
+	       {
+		 /* it's not the valid suffix */
+		 TtaDisplayMessage (FATAL, TtaGetMessage (STR, STR_INVALID_FILE), srceFileName);
+		 exit (1);
+	       }
+	     else
+	       {
+		 /* it's the valid suffix, cut the srcFileName here */
+		 ptr[0] = '\0';
+		 nb -= 2; /* length without the suffix */
+	       }
+	     /* add the suffix .SCH in srceFileName */
+	     strcat (buffer, ".SCH");
+
+	     /* does the file to compile exist */
 	     if (ThotFile_exist (srceFileName) == 0)
 		TtaDisplaySimpleMessage (FATAL, STR, STR_NO_SUCH_FILE);
 	     else
-		/* le fichier d'entree existe, on l'ouvre */
 	       {
-		  inputFile = BIOreadOpen (srceFileName);
-		  /* supprime le suffixe ".SCH" */
-		  srceFileName[i] = '\0';
-		  /* acquiert la memoire pour le schema de structure */
+		 /* provide the real source file */
+		 unlink (buffer);
+		 pwd = TtaGetEnvString ("PWD");
+		 if (pwd != NULL)
+		   sprintf (cmd, "cpp -I%s -C %s > %s", pwd, srceFileName, buffer);
+		 else
+		   sprintf (cmd, "cpp -C %s > %s", srceFileName, buffer);
+		 i = system (cmd);
+		 if (i == -1)
+		   /* cpp is not available, copy directely the file */
+		   ThotCopyFile (srceFileName, buffer);
+		 /* open the resulting file */
+		  inputFile = BIOreadOpen (buffer);
+		  /* suppress the suffix ".SCH" */
+		  srceFileName[nb] = '\0';
+		  /* get memory for structure schema */
 		  if ((pSSchema = (PtrSSchema) malloc (sizeof (StructSchema))) == NULL)
 		     TtaDisplaySimpleMessage (FATAL, STR, STR_NOT_ENOUGH_MEM);
-		  /* memoire pour un schema de structure externe */
+		  /* get memory for external structure schema */
 		  if ((pExternSSchema = (PtrSSchema) malloc (sizeof (StructSchema))) == NULL)
 		     TtaDisplaySimpleMessage (FATAL, STR, STR_NOT_ENOUGH_MEM);
-
-		  NIdentifiers = 0;	/* table des identificateurs vide */
+		  /* table of identifiers is empty */
+		  NIdentifiers = 0;
 		  LineNum = 0;
-		  Initialize ();	/* prepare la generation */
-		  /* lit tout le fichier et fait l'analyse */
+		  /* start the generation */
+		  Initialize ();
+		  /* read the whole file and parse */
 		  fileOK = True;
 		  while (fileOK && !error)
-		     /* lit une ligne */
+		     /* read a line */
 		    {
 		       i = 0;
 		       do
@@ -2941,35 +2920,36 @@ char              **argv;
 			    i++;
 			 }
 		       while (i < LINE_LENGTH && inputLine[i - 1] != '\n' && fileOK);
-		       /* marque la fin reelle de la ligne */
+		       /* mark the real end of line */
 		       inputLine[i - 1] = '\0';
-		       /* incremente le compteur de lignes */
+		       /* increment lines counter */
 		       LineNum++;
 		       if (i >= LINE_LENGTH)
 			  CompilerError (1, STR, FATAL, STR_LINE_TOO_LONG,
 					 inputLine, LineNum);
 		       else if (inputLine[0] == '#')
-			  /* cette ligne contient une directive du preprocesseur */
+			  /* this line contains a cpp directive */
 			 {
 			    sscanf (inputLine, "# %d %s", &LineNum, buffer);
 			    LineNum--;
 			 }
 		       else
-			  /* traduit les caracteres de la ligne */
+			  /* translate line characters */
 			 {
 			    OctalToChar ();
-			    /* analyse la ligne */
+			    /* analyse the line */
 			    wi = 1;
 			    wl = 0;
 			    /* analyse tous les mots de la ligne courante */
 			    do
 			      {
 				 i = wi + wl;
-				 GetNextToken (i, &wi, &wl, &wn);	/* mot suivant */
+				 /* mot suivant */
+				 GetNextToken (i, &wi, &wl, &wn);
 				 if (wi > 0)
 				    /* on a trouve un mot */
 				   {
-				      /* on analyse le mot */
+				      /* we parse le mot */
 				      AnalyzeToken (wi, wl, wn, &c, &r, &nb, &pr);
 				      if (!error)
 					 /* on le traite */
@@ -2981,10 +2961,10 @@ char              **argv;
 			 }
 		    }
 		  if (!error)
-		     ParserEnd ();	/* fin d'analyse */
+		    /* stop the parser */
+		     ParserEnd ();
 		  if (!error)
-		     /* met les bons numeros de regle si ca n'a pas deja ete fait */
-		     /* lorsqu'on a rencontre' le mot-cle' EXPORT */
+		     /* set right rule number when we met the keyword EXPORT */
 		     if (!pSSchema->SsExport)
 			ChangeRules ();
 		  if (!error)
@@ -3005,6 +2985,8 @@ char              **argv;
 		       SchemaPath[0] = '\0';	/* utilise le directory courant */
 		       if (!error)
 			 {
+			    /* remove temporary file */
+			    unlink (buffer);
 			    strcat (srceFileName, ".STR");
 			    fileOK = WriteStructureSchema (srceFileName, pSSchema, 0);
 			    if (!fileOK)

@@ -61,7 +61,7 @@
 #define STR_IS_A_TEMPORARY_ELEM	                     56
 #define STR_WON_T_BE_CREATED	                     57
 #define STR_WON_T_BE_CREATED_AND_IS_REFD	     58
-#define STR_FILE_NAME_WITHOUT_SCH	             59
+#define STR_INVALID_FILE		             59
 
 #define STR_CANNOT_BE_INCLUDED	                     60
 #define STR_CANNOT_BE_EXTERN	                     61

@@ -1,4 +1,4 @@
-/***
+***
  *** Copyright (c) 1996 INRIA, All rights reserved
  ***/
 
@@ -208,51 +208,6 @@ char               *aSuffix;
 	     aName[i - 1] = EOS;
 	     if (i != lg)
 		strcpy (aSuffix, oldptr);
-	  }
-     }
-}
-
-/*----------------------------------------------------------------------
-   ThotCopyFile copies a source file into a target file.              
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                ThotCopyFile (char *sourceFileName, char *targetFileName)
-#else
-void                ThotCopyFile (sourceFileName, targetFileName)
-char               *sourceFileName;
-char               *targetFileName;
-
-#endif
-{
-   FILE               *targetf;
-   FILE               *sourcef;
-   int                 size;
-   char                buffer[8192];
-
-   if (strcmp (sourceFileName, targetFileName) != 0)
-     {
-	if ((targetf = fopen (targetFileName, "w")) == NULL)
-	   /* cannot write into the target file */
-	   return;
-	else
-	  {
-	     if ((sourcef = fopen (sourceFileName, "r")) == NULL)
-	       {
-		  /* cannot read the source file */
-		  /* JK: We close and remove targetf */
-		  fclose (targetf);
-		  unlink (targetFileName);
-		  return;
-	       }
-	     else
-	       {
-		  /* copy the file contents */
-		  while ((size = fread (buffer, 1, 8192, sourcef)) != 0)
-		     fwrite (buffer, 1, size, targetf);
-
-		  fclose (sourcef);
-	       }
-	     fclose (targetf);
 	  }
      }
 }

@@ -11,8 +11,6 @@ extern void ExtractParameters ( char *aName,
                                 char *parameters );
 extern void ExtractSuffix ( char *aName,
                             char *aSuffix );
-extern void ThotCopyFile ( char *sourceFileName,
-                           char *targetFileName );
 extern void ResetStop ( Document document );
 extern void ActiveTransfer ( Document document );
 extern void StopTransfer ( Document document,
@@ -63,8 +61,6 @@ extern void ExtractParameters (/* char *aName,
                                   char *parameters */);
 extern void ExtractSuffix (/* char *aName,
                               char *aSuffix */);
-extern void ThotCopyFile (/* char *sourceFileName,
-                             char *targetFileName */);
 extern void ResetStop (/* Document document */);
 extern void ActiveTransfer (/* Document document */);
 extern void StopTransfer (/* Document document,
