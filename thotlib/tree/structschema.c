@@ -1312,8 +1312,8 @@ boolean             inTree;
 	{
 	   /* on peut inserer une marque de page n'importe ou` */
 	   /* OK si c'est une inclusion pour l'un des ascendants */
-	   if (typeNum == PageBreak + 1 || AllowedIncludedElem(pEl->ElParent,typeNum,pSS))
-	      isPageBrOrIncl = TRUE;
+	   isPageBrOrIncl = (typeNum == PageBreak + 1 ||
+			     AllowedIncludedElem(pEl->ElParent, typeNum, pSS));
 	   if ( isPageBrOrIncl || AllowedIncludedElem (pEl->ElParent, pEl->ElTypeNumber, pEl->ElStructSchema)) 
               /* dans le cas d'une inclusion ou d'une marque de page */
 	      /* on ne peut quand meme pas inserer comme descendant direct */

@@ -2864,10 +2864,10 @@ the section counter is declared:</P>
 SectionCtr : RANK OF Section;
 </PRE>
 <P>
-and the display of the section number before the section title isobtained by a
-<A href="#creation"><TT>CreateBefore</TT> rule</A>attached the
-<TT>Section_Title</TT>type, which creates a presentationbox whose content is
-the value of the <TT>SectionCtr</TT>counter (seethe <A
+and the display of the section number before the section title is obtained by a
+<A href="#creation"><TT>CreateBefore</TT> rule</A> attached the
+<TT>Section_Title</TT> type, which creates a presentation box whose content is
+the value of the <TT>SectionCtr</TT> counter (see the <A
 href="#content"><TT>Content</TT> instruction</A>).</P>
 <P>
 In order to number the formulas separately within each chapter, the formula
@@ -2876,10 +2876,10 @@ counter is declared:</P>
 FormulaCtr : SET 0 ON Chapter ADD 1 ON Formula;
 </PRE>
 <P>
-and the display of the formula number in the right margin, alongsideeach
-formula, is obtained by a <TT>CreateAfter</TT>instruction attachedto the
-<TT>Formula</TT>type, which creates a presentation box whosecontent is the
-value of the <TT>FormulaCtr</TT>counter.</P>
+and the display of the formula number in the right margin, alongside each
+formula, is obtained by a <TT>CreateAfter</TT> instruction attached to the
+<TT>Formula</TT> type, which creates a presentation box whose content is the
+value of the <TT>FormulaCtr</TT> counter.</P>
 <P>
 To number the page chapter by chapter, with the first page of each chapter
 having the number 1, the counter definition would be</P>
@@ -2892,7 +2892,7 @@ If there is also a chapter counter</P>
 ChapterCtr : RANK OF Chapter;
 </PRE>
 <P>
-the <A href="#content">content</A>of a presentation box createdat the top of
+the <A href="#content">content</A> of a presentation box created at the top of
 each page could be defined as:</P>
 <PRE>
 Content : (VALUE(ChapterCtr, URoman) TEXT '-'
@@ -2900,8 +2900,8 @@ Content : (VALUE(ChapterCtr, URoman) TEXT '-'
 </PRE>
 <P>
 Thus, the presentation box contains the number of the chapter inupper-case
-romannumerals followed by a hyphen and the number of the page within
-thechapter in arabic numerals.</P>
+roman numerals followed by a hyphen and the number of the page within
+the chapter in arabic numerals.</P>
 </BLOCKQUOTE>
 <BLOCKQUOTE class="example">
 <P>
@@ -3091,7 +3091,7 @@ COUNTERS
      SectionCtr : RANK OF Section;
 </PRE>
 <P>
-and the Section_Title element must create a presentation box whosecontent is
+and the Section_Title element must create a presentation box whose content is
 the variable</P>
 <PRE>
 VAR
@@ -3388,7 +3388,7 @@ ATTR
      Language = TEXT;
 </PRE>
 <P>
-The following rules would make French text be displayed in romancharacters and
+The following rules would make French text be displayed in roman characters and
 English text be displayed in italics:</P>
 <PRE>
 ATTRIBUTES
@@ -3398,9 +3398,9 @@ ATTRIBUTES
               Style : Italics;
 </PRE>
 <P>
-Using these rules, when the user puts the Language attribute with thevalue
-'English' on the summary of a document, every character string(terminal
-elements) contained in the summary are displayed in italics.See the <A
+Using these rules, when the user puts the Language attribute with the value
+'English' on the summary of a document, every character string (terminal
+elements) contained in the summary are displayed in italics.  See the <A
 href="#style"><TT>Style</TT> rule</A>.</P>
 </BLOCKQUOTE>
 <BLOCKQUOTE class="example">
@@ -3414,7 +3414,7 @@ ATTR
      Importance = INTEGER;
 </PRE>
 <P>
-In the presentation schema, the importance of an element is reflectedin the
+In the presentation schema, the importance of an element is reflected in the
 choice of character size, using the following rules.</P>
 <PRE>
 ATTRIBUTES
@@ -3428,7 +3428,7 @@ ATTRIBUTES
               Size : 4;
 </PRE>
 <P>
-Thus, the character size corresponds to the value of the Importanceattribute;
+Thus, the character size corresponds to the value of the Importance attribute;
 its value is</P>
 <UL>
 <LI>the value of the Importance attribute when the value is between 2 and 4
@@ -3438,9 +3438,9 @@ its value is</P>
 <LI>5, when the value of the Importance attribute is 10.
 </UL>
 <P>
-The last case (value 5) must be defined before the case which handlesall
-Importance values greater than 4, because the two rules are notdisjoint and
-the first one defined will have priority.  Otherwise,when the Importance
+The last case (value 5) must be defined before the case which handles all
+Importance values greater than 4, because the two rules are not disjoint and
+the first one defined will have priority.  Otherwise, when the Importance
 attribute has value 10, the font size will be 4.</P>
 </BLOCKQUOTE>
 <BLOCKQUOTE class="example">
@@ -3455,8 +3455,8 @@ STRUCT
          = LIST OF (list_item = TEXT);
 </PRE>
 <P>
-Then, the presentation schema could use the attribute placed on thelist
-element to put either a dash or a number before the each elementof the
+Then, the presentation schema could use the attribute placed on the list
+element to put either a dash or a number before the each element of the
 list:</P>
 <PRE>
 ATTRIBUTES
@@ -3487,10 +3487,10 @@ STRUCT
 ...
 </PRE>
 <P>
-These attributes can be used in the presentation schema to placechange bars in
-the margin next to elements whose version attributehas a value equal to the
-Document_version attribute of the root andto place a star in margin of
-elements whose version attribute is lessthan the value of the root's
+These attributes can be used in the presentation schema to place change bars in
+the margin next to elements whose version attribute has a value equal to the
+Document_version attribute of the root and to place a star in margin of
+elements whose version attribute is less than the value of the root's
 Document_version attribute:</P>
 <PRE>
 ATTRIBUTES
@@ -4858,9 +4858,9 @@ Summary :
    END;
 </PRE>
 <P>
-then the paragraphs appearing in sections are justified with a simpleline
-spacing while those appearing in summaries are centered and notjustified and
-have a larger line spacing.  These are nevertheless thevery same type of
+then the paragraphs appearing in sections are justified with a simple line
+spacing while those appearing in summaries are centered and not justified and
+have a larger line spacing.  These are nevertheless the very same type of
 paragraph defined in the logical structure schema.</P>
 </BLOCKQUOTE>
 </DIV>
@@ -5198,8 +5198,8 @@ Summary :
      Size : Enclosing - 1;
 </PRE>
 <P>
-Thus, the character sizes in the entire document can be changed bychanging the
-size parameter of the Report element, while preservingthe relationships
+Thus, the character sizes in the entire document can be changed by changing the
+size parameter of the Report element, while preserving the relationships
 between the sizes of the different elements.</P>
 </BLOCKQUOTE>
 </DIV>
@@ -5590,7 +5590,7 @@ BOXES
           END;
 </PRE>
 <P>
-<TT>Note</TT>is defined as an associated element in the structure schemaand
+<TT>Note</TT>is defined as an associated element in the structure schema and
 NotesFooterBox is created by a page box of the primary view.</P>
 </BLOCKQUOTE>
 </DIV>
@@ -5906,9 +5906,9 @@ RULES
       END;
 </PRE>
 <P>
-which makes the number of the chapter designated by the referenceappear in
-uppercase roman numerals, in place of the reference to achapter itself.
-Alternatively, the chapter title can be made toappear in place of the
+which makes the number of the chapter designated by the reference appear in
+uppercase roman numerals, in place of the reference to a chapter itself.
+Alternatively, the chapter title can be made to appear in place of the
 reference by writing this <TT>Copy</TT>rule:</P>
 <PRE>
       Copy (ChapterTitle);
@@ -6267,7 +6267,7 @@ Chapter_Body = LIST OF
 </PRE>
 <P>
 (sections are defined recursively), a counter can be defined giving the <A
-name="sectnum">number of a section</A>within its level in the hierarchy:</P>
+name="sectnum">number of a section</A> within its level in the hierarchy:</P>
 <PRE>
 COUNTERS
    SectionNumber : Rank of Section;
@@ -6278,7 +6278,7 @@ A counter holding the hierarchic level of a section:</P>
    SectionLevel : Rlevel of Section;
 </PRE>
 <P>
-A <A name="uniquenum">counter</A>which sequentially numbers all thedocument's
+A <A name="uniquenum">counter</A>which sequentially numbers all the document's
 sections, whatever their hierarchic level:</P>
 <PRE>
    UniqueSectNum : Set 0 on Document Add 1 on Section;
@@ -6443,9 +6443,9 @@ files might be defined by the following variable:</P>
                     Extension;
 </PRE>
 <P>
-If <TT>output.txt</TT>is the name of the <A name="varoutputfile">output
-file</A>specified when starting the translation program, translatedsections
-are written in files <TT>output1.txt</TT>, <TT>output2.txt</TT>,etc.</P>
+If <TT>output.txt</TT> is the name of the <A name="varoutputfile">output
+file</A> specified when starting the translation program, translated sections
+are written in files <TT>output1.txt</TT>, <TT>output2.txt</TT>, etc.</P>
 </BLOCKQUOTE>
 </DIV>
 
@@ -7327,8 +7327,8 @@ command), prompts are not displayed.</P>
 <P>
 <STRONG>Example:</STRONG></P>
 <P>
-The <TT>Article</TT>structure schema uses the
-<TT>Formula </TT>external structure, defined by another structure schema, for
+The <TT>Article</TT> structure schema uses the
+<TT>Formula</TT> external structure, defined by another structure schema, for
 mathematical formulas:</P>
 <PRE>
 STRUCTURE Article;
@@ -7344,7 +7344,7 @@ END
 <P>
 Suppose that it would be useful to use the <TT>FormulaT</TT> translation schema
 for the formulas of an article.  This can be expressed in two different ways in
-the <TT>Article</TT>class translation schema, using the rules:</P>
+the <TT>Article</TT> class translation schema, using the rules:</P>
 <PRE>
 RULES
     Article :

@@ -1899,6 +1899,7 @@ Document            doc;
    row = TtaGetParent (cell);
    prevcell = cell;
    prevcolhead = NULL;
+   colhead = NULL;
    TtaPreviousSibling (&prevcell);
    if (prevcell == NULL)
      {
@@ -1949,6 +1950,8 @@ Document            doc;
 	       }
 	  }
      }
+   if (colhead == NULL)
+     return;
    /* if some cell above the new cell has an attribute rowspan, the new cell */
    /* must be shifted on the right */
    rowspanshift = ShiftByRowSpan (cell, row, colhead);
