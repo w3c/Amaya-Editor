@@ -1176,7 +1176,7 @@ STRING              txt;
       break;
     case NumMenuReplaceMode:
       /* sous-menu mode de remplacement */
-      if (searchDomain->SDocument->DocReadOnly)
+      if (searchDomain->SDocument == NULL || searchDomain->SDocument->DocReadOnly)
 	val = 0;
       switch (val)
 	{

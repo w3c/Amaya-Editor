@@ -1570,10 +1570,10 @@ int             frame;
   ThotBool            reformat;
 
   box = cell->AbBox;
-  if (width && width < min)
-    width = min;
   GiveCellWidths (cell, &min, &max, &width, &percent);
-  /* a constrained width it must be greater than the minimum */
+  if (width && width < min)
+    /* a constrained width it must be greater than the minimum */
+    width = min;
   if (width)
     /* when there is a constrained width the maximum is forced */
     max = width;
