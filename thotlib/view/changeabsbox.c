@@ -3004,9 +3004,10 @@ void UpdateBoxesCounter (PtrElement pElBegin, PtrDocument pDoc, int counter,
 
 /*----------------------------------------------------------------------
    SetChange marque dans le pave pAbb que la regle de type typeRule a 
-   change'.                                                
+   change'. S'il s'agit d'une regle de type fonction, func indique
+   la fonction.
   ----------------------------------------------------------------------*/
-void SetChange (PtrAbstractBox pAb, PRuleType typeRule)
+void SetChange (PtrAbstractBox pAb, PRuleType typeRule, FunctionType func)
 {
   switch (typeRule)
     {
@@ -3016,6 +3017,13 @@ void SetChange (PtrAbstractBox pAb, PRuleType typeRule)
       pAb->AbHorizPosChange = TRUE;
       pAb->AbVertPosChange = TRUE;
       pAb->AbChange = TRUE;
+      break;
+    case PtFunction:
+      if (func == FnBackgroundPicture || func == FnPictureMode ||
+	  func == FnShowBox)
+	pAb->AbAspectChange = TRUE;
+      else
+	pAb->AbChange = TRUE;
       break;
     case PtWidth:
       pAb->AbWidthChange = TRUE;
@@ -3141,7 +3149,7 @@ static void ApplyInheritPresRule (PtrAbstractBox pAb, PRuleType typeRule,
 	   if (ApplyRule (pRPres, pSPR, pAb, pDoc, pA))
 	      /* le pave est modifie' */
 	     {
-	       SetChange (pAb, typeRule);
+	       SetChange (pAb, typeRule, 0);
 	       /* traite les paves fils */
 	       pAbbChild = pAb->AbFirstEnclosed;
 	       while (pAbbChild != NULL)
@@ -3649,7 +3657,7 @@ void                UpdatePresAttr (PtrElement pEl, PtrAttribute pAttr,
 			    /* le pave est toujours visible, mais a change' */
 			    {
 			      pReaff = pAb;
-			      SetChange (pAb, typeRule);
+			      SetChange (pAb, typeRule, func);
 			      /* le parametre de presentation qui vient
 				 d'etre change' peut se transmettre par
 				 heritage. */
