@@ -283,16 +283,17 @@ int                 cross;
   ThotBool     ok;
 
   /* y between nextY and prevY */
+  i = cross;
   if ((ok = (prevX >= x)) == (nextX >= x))
     {
       /* x on the same side of both extremities */
       if (ok)
 	/* nextX et prevX >= x */
-	i = cross + 1;
+	i = i + 1;
     }
-  else
+  else if ((prevX - (prevY - y) * (nextX - prevX) / (nextY - prevY)) >= x)
     /* x between the extremities */
-    i = cross + ((prevX - (prevY - y) * (nextX - prevX) / (nextY - prevY)) >= x);
+    i = i + 1;
   return i;
 }
 
