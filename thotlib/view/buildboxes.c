@@ -3920,12 +3920,30 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 	  if (pAb->AbSizeChange)
 	    pAb->AbSizeChange = FALSE;
 	}
+
+      /* keep in memory previous width and height of the box */
+      savedW = pBox->BxW;
+      savedH = pBox->BxH;
+      if (pAb->AbLeafType == LtPicture &&
+	  (pAb->AbWidthChange || pAb->AbHeightChange))
+	{
+	  if (pAb->AbWidthChange &&
+	      !pAb->AbWidth.DimIsPosition &&
+	      pAb->AbWidth.DimValue == -1 &&
+	      pAb->AbWidth.DimAbRef == NULL)
+	    /* due to the ration, the width changes */
+	    pBox->BxW = 0;
+	  if (!pAb->AbHeightChange &&
+	      !pAb->AbHeight.DimIsPosition &&
+	      pAb->AbHeight.DimValue == -1 &&
+	      pAb->AbHeight.DimAbRef == NULL)
+	    /* due to the ration, the height changes */
+	    pBox->BxH = 0;
+	}
       /* CHANGE WIDTH */
       if (pAb->AbWidthChange)
 	{
 	  AnyWidthUpdate = TRUE;
-	  savedW = pBox->BxW;
-	  savedH = pBox->BxH;
 	  /* Remove the old value */
 	  ClearDimRelation (pBox, TRUE, frame);
 	  /* New width */
@@ -3941,12 +3959,6 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 		case LtPicture:
 		  imageDesc = (PictInfo *) pBox->BxPictInfo;
 		  pBox->BxW = 0;
-		  if (!pAb->AbHeightChange &&
-		      !pAb->AbHeight.DimIsPosition &&
-		      pAb->AbHeight.DimValue == -1 &&
-		      pAb->AbHeight.DimAbRef == NULL)
-		    /* due to hte ration, the height changes too */
-		    pBox->BxH = 0;
 		  LoadPicture (frame, pBox, imageDesc);
 		  GivePictureSize (pAb, ViewFrameTable[frame - 1].FrMagnification,
 				   &width, &height);
@@ -4030,8 +4042,6 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
       /* CHANGE HEIGHT */
       if (pAb->AbHeightChange)
 	{
-	  savedW = pBox->BxW;
-	  savedH = pBox->BxH;
 	  /* Remove the old value */
 	  ClearDimRelation (pBox, FALSE, frame);
 	  /* New height */
@@ -4047,11 +4057,6 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 		case LtPicture:
 		  imageDesc = (PictInfo *) pBox->BxPictInfo;
 		  pBox->BxH = 0;
-		  if (!pAb->AbWidth.DimIsPosition &&
-		      pAb->AbWidth.DimValue == -1 &&
-		      pAb->AbWidth.DimAbRef == NULL)
-		    /* due to hte ration, the height changes too */
-		    pBox->BxW = 0;
 		  LoadPicture (frame, pBox, imageDesc);
 		  GivePictureSize (pAb, ViewFrameTable[frame -1].FrMagnification, &width, &height);
 		  break;

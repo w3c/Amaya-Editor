@@ -13,6 +13,7 @@ ENABLE_GRAPH_ANTI_ALIASING=yes
 HOME_PAGE=
 ENABLE_CACHE=Yes
 THOTSYSSCH=$(THOTDIR)/amaya:$(THOTDIR)/annotlib
+#TEMPLATE_URL=$(THOTDIR)/templates
 LANG=en
 # AMAYA_PLUGIN_DIR=$(THOTDIR)/plugintest/$(MACHINE)
 # URL of your HTTP proxy server  (server.address:port :port is optional)

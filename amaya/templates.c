@@ -25,7 +25,6 @@
 #define META_TEMPLATE_NAME "AMAYA_TEMPLATE"
 /* URL of the script providing templates (for reload) */
 static char   *script_URL;
-
 #include "init_f.h"
 
 
@@ -34,12 +33,19 @@ static char   *script_URL;
   ----------------------------------------------------------------------*/
 void NewTemplate (Document doc, View view)
 {
-  char      *url;
+  char       *url;
 
   url = TtaGetEnvString ("TEMPLATE_URL");
-  if (url)
-    GetAmayaDoc (url, NULL, 0, 0, CE_ABSOLUTE, FALSE, NULL, NULL);
+  if (url && TtaCheckDirectory (url))
+    {
+      /*TtaNewScrollPopup (BaseDialog + xxx, TtaGetViewFrame (doc, 1),
+			 NULL, nbitems, FormBuf, NULL, multipleOptions, 'L');
+      InitOpenDocForm (doc, view, "New.html",
+      "xxx", docHTML);*/
+      /*GetAmayaDoc (url, NULL, 0, 0, CE_ABSOLUTE, FALSE, NULL, NULL);*/
+    }
 }
+
 /*----------------------------------------------------------------------
    OpenTemplateDocument: Process the meta of a template document,
      changes the URL, try to save it and warn the user if it cannot be

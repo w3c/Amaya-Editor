@@ -27,6 +27,9 @@
 #define THOT_EXPORT extern
 #include "amaya.h"
 #define PARAM_INCREMENT 50
+#define MAX_OPTIONS 200
+#define MAX_SUBOPTIONS 20
+#define MAX_LABEL_LENGTH 50
 
 #ifdef _WINGUI
   #include "wininclude.h"
@@ -47,12 +50,12 @@ static int          FormLength;  /* size of the temporary buffer */
 static int          FormBufIndex; /* gives the index of the last char + 1 added to
 					 the buffer (only used in AddBufferWithEos) */
 static int          documentStatus;
+static Element      Option [MAX_OPTIONS];
 
 #ifdef _WINGUI 
 extern HWND         FrMainRef [12];
 extern int          ActiveFrame;
 Document            opDoc;
-Element             opOption [200];
 #endif /* _WINGUI */
 
 /*----------------------------------------------------------------------
@@ -1233,23 +1236,16 @@ void SelectOneOption (Document doc, Element el)
 #ifdef _WINGUI
   int                 nbOldEntries = 20;
 #endif /* _WINGUI */
-#define MAX_OPTIONS MAX_SUBMENUS
-#define MAX_SUBOPTIONS 20
-#define MAX_LABEL_LENGTH 50
-  ElementType         elType, childType;
-  Element	      elText, menuEl, child;
-  Element             option[MAX_OPTIONS];
-  Element	      subOptions[MAX_SUBMENUS][MAX_SUBOPTIONS];
+  ElementType         elType;
+  Element	      elText, menuEl, parent;
   ThotBool	      selected[MAX_OPTIONS];
-  ThotBool            subSelected[MAX_SUBMENUS][MAX_SUBOPTIONS];
   AttributeType       attrType;
   Attribute	      attr;
   SSchema	      htmlSch;
   char                text[MAX_LABEL_LENGTH + 1];
-  char                buffmenu[MAX_LENGTH];
   char               *tmp;
   Language            lang;
-  int                 length, nbitems, lgmenu, i, nbsubmenus, nbsubitems;
+  int                 length, nbitems, i;
   int                 modified;
   ThotBool	      multipleOptions, sel;
 
@@ -1274,10 +1270,10 @@ void SelectOneOption (Document doc, Element el)
      {
        /* create the option menu */
        nbitems = 0;
-       nbsubmenus = 0;
+       parent = NULL;
        elType.ElTypeNum = HTML_EL_Option_Menu;
        menuEl = TtaGetTypedAncestor (el, elType);
-       if (menuEl != NULL)
+       if (menuEl)
 	 {
 	   attrType.AttrSSchema = htmlSch;
 	   attrType.AttrTypeNum = HTML_ATTR_Multiple;
@@ -1300,24 +1296,11 @@ void SelectOneOption (Document doc, Element el)
 	   while (el && nbitems < MAX_OPTIONS)
 	     {
 	       elType = TtaGetElementType (el);
-	       if (elType.ElTypeNum == HTML_EL_OptGroup &&
-		   elType.ElSSchema == htmlSch)
-		 {
-		   /* It's an OptGroup.A submenu has to be created later on */
-		   if (nbsubmenus < MAX_SUBMENUS)
-		     nbsubmenus++;
-		   else
-		     /* too many submenus. Ignore that OptGroup */
-		     elType.ElTypeNum = 0;
-		 }
 	       if ((elType.ElTypeNum == HTML_EL_Option ||
 		    elType.ElTypeNum == HTML_EL_OptGroup) &&
 		   elType.ElSSchema == htmlSch)
 		 {
-		   option[nbitems] = el;
-#ifdef _WINGUI 
-		   opOption[nbitems] = el;
-#endif /* _WINGUI */
+		   Option[nbitems] = el;
 		   if (multipleOptions)
 		     {
 		       attrType.AttrTypeNum = HTML_ATTR_Selected;
@@ -1347,18 +1330,36 @@ void SelectOneOption (Document doc, Element el)
 		   /* add an item */
 		   /* we have to add the 'B', 'T' or 'M' character */
 		   if (elType.ElTypeNum == HTML_EL_OptGroup)
-		     text[0] = 'M';
-		   else if (multipleOptions)
-		     text[0] = 'T';
+		     {
+		       /* add the sub-list items */
+		       parent = el;
+		       el = TtaGetFirstChild (parent);
+		       text[0] = 'M';
+		     }
 		   else
-		     text[0] = 'B';
+		     {
+		       /* get next element in the current list */
+		       TtaNextSibling (&el);
+		       if (multipleOptions)
+			 text[0] = 'T';
+		       else
+			 text[0] = 'B';
+		     }
 		   /* convert the UTF-8 string */
 		   tmp = (char *)TtaConvertMbsToByte ((unsigned char *)text, TtaGetDefaultCharset ());
 		   AddToBufferWithEOS (tmp);
 		   TtaFreeMemory (tmp);
 		   nbitems++;
 		 }
-	       TtaNextSibling (&el);
+	       else
+		 TtaNextSibling (&el);
+	       if (el == NULL && parent)
+		 {
+		   /* continue with the sisbling of the parent */
+		   el = parent;
+		   parent = NULL;
+		   TtaNextSibling (&el);
+		 }
 	     }
 
 	   if (nbitems == 0)
@@ -1367,171 +1368,39 @@ void SelectOneOption (Document doc, Element el)
 	     {
 	       /* create the main menu */
 #if defined (_WINGUI) || defined (_GTK)
-	       if (nbsubmenus == 0)
-		 TtaNewScrollPopup (BaseDialog + OptionMenu, TtaGetViewFrame (doc, 1),
-				    NULL, nbitems, FormBuf, NULL, multipleOptions, 'L');
-	       else
+	       TtaNewScrollPopup (BaseDialog + OptionMenu, TtaGetViewFrame (doc, 1),
+				  NULL, nbitems, FormBuf, NULL, multipleOptions, 'L');
 #endif /* WINDOWS || _GTK */
-		 TtaNewPopup (BaseDialog + OptionMenu, TtaGetViewFrame (doc, 1),
-			      NULL, nbitems, FormBuf, NULL, 'L');
-
 	       TtaFreeMemory (FormBuf);
-
 #ifdef _WINGUI
-  if (multipleOptions)
-    for (i = 0; i < nbitems; i++)
-		  if (selected[i])         
-		    WIN_TtaSetToggleMenu (BaseDialog + OptionMenu, i, TRUE, FrMainRef [ActiveFrame]);
+	       if (multipleOptions)
+		 for (i = 0; i < nbitems; i++)
+		   if (selected[i])         
+		     WIN_TtaSetToggleMenu (BaseDialog + OptionMenu,
+					   i, TRUE, FrMainRef [ActiveFrame]);
 #endif /* _WINGUI */
+#if defined(_MOTIF) || defined(_GTK)
+	       if (multipleOptions)
+		 for (i = 0; i < nbitems; i++)
+		   if (selected[i])         
+		     TtaSetToggleMenu (BaseDialog + OptionMenu, i, TRUE);
+#endif /* #if defined(_MOTIF) || defined(_GTK) */
 
-#if defined(_MOTIF) || defined(_GTK)
-  if (multipleOptions)
-    for (i = 0; i < nbitems; i++)
-      if (selected[i])         
-        TtaSetToggleMenu (BaseDialog + OptionMenu, i, TRUE);
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
-		     
-	       if (nbsubmenus > 0)
-		 {
-		   /* There ia at least 1 OPTGROUP. Create submenus corresponding to OPTGROUPs */
-		   nbitems = 0;	/* item number in main (SELECT) menu */
-		   /* check all children of element SELECT */
-		   el = TtaGetFirstChild (menuEl);
-		   nbsubmenus = 0;
-		   while (nbsubmenus < MAX_SUBMENUS && el)
-		     {
-		       elType = TtaGetElementType (el);
-		       if (elType.ElTypeNum == HTML_EL_Option &&
-			   elType.ElSSchema == htmlSch)
-			 /* this is an OPTION */
-			 nbitems++;	/* item number in the main menu */
-		       else if (elType.ElTypeNum == HTML_EL_OptGroup &&
-				elType.ElSSchema == htmlSch)
-			 {
-			   /* this is an OPTGROUP.  Create the corresponding sub menu */
-			   /* First, check all children of OPTGROUP */
-			   child = TtaGetFirstChild (el);
-			   lgmenu = 0;
-			   nbsubitems = 0;
-			   while (nbsubitems < MAX_SUBOPTIONS && child)
-			     {
-			       childType = TtaGetElementType (child);
-			       if (childType.ElTypeNum == HTML_EL_Option &&
-				   childType.ElSSchema == htmlSch)
-				 {
-				   /* it's an OPTION. Create a submenu item */
-				   subOptions[nbsubmenus][nbsubitems] = child;
-				   if (multipleOptions)
-				     {
-				       attrType.AttrTypeNum = HTML_ATTR_Selected;
-				       subSelected[nbsubmenus][nbsubitems] = (TtaGetAttribute (child, attrType) != NULL);
-				     }
-				   /* get the item label */
-				   attrType.AttrTypeNum = HTML_ATTR_label;
-				   attr = TtaGetAttribute (child, attrType);
-				   length = MAX_LABEL_LENGTH - 1;
-				   if (attr) /* there is a label attribute. Take it */
-				     TtaGiveTextAttributeValue (attr, text, &length);
-				   else
-				     { /* take the element's content */
-				       elText = TtaGetFirstChild (child);
-				       if (elText)
-					 TtaGiveTextContent (elText, (unsigned char *)text, &length, &lang);
-				       else
-					 length = 0;
-				     } 
-				   /* count the EOS character */
-				   text[length] = EOS;
-				   length++;
-				   /* convert the UTF-8 string */
-				   tmp = (char *)TtaConvertMbsToByte ((unsigned char *)text, TtaGetDefaultCharset ());
-				   length = strlen (tmp) + 1;
-				   /* we have to add the 'B'or 'T' character */
-				   length++;
-				   if (lgmenu + length < MAX_LENGTH)
-				     { /* append that item to the buffer */
-				       if (multipleOptions)
-					 sprintf (&buffmenu[lgmenu], "T%s", tmp);
-				       else
-					 sprintf (&buffmenu[lgmenu], "B%s", tmp);
-				       nbsubitems++;
-				     } 
-				   TtaFreeMemory (tmp);
-				   lgmenu += length;
-				 } 
-			       /* next child of OPTGROUP */
-			       TtaNextSibling (&child);
-			     }
-			   /* All children of OPTGROUP have been checked. */
-			   /* create the submenu */
-#ifdef _WINGUI
-			   TtaNewSubmenu (BaseDialog + OptionMenu + (nbsubmenus * nbOldEntries) + 1, BaseDialog+OptionMenu, nbitems, NULL, nbsubitems, buffmenu, NULL, FALSE);
-#endif  /* !_WINGUI */
-         
-#if defined(_MOTIF) || defined(_GTK)         
-			   TtaNewSubmenu (BaseDialog+OptionMenu+nbsubmenus+1, BaseDialog+OptionMenu, nbitems, NULL, nbsubitems, buffmenu, NULL, FALSE);
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
-         
-#ifdef _WINGUI
-			   if (multipleOptions)
-			     for (i = 0; i < nbsubitems; i++)
-			       if (subSelected[nbsubmenus][i])
-               WIN_TtaSetToggleMenu (BaseDialog + OptionMenu + (nbsubmenus * nbOldEntries) + 1, i, TRUE, FrMainRef [ActiveFrame]);
-#endif  /* !_WINGUI */
-         
-#if defined(_MOTIF) || defined(_GTK)
-			   if (multipleOptions)
-			     for (i = 0; i < nbsubitems; i++)
-			       if (subSelected[nbsubmenus][i])
-               TtaSetToggleMenu (BaseDialog+OptionMenu+nbsubmenus+1, i, TRUE);
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
-             
-			   nbsubmenus++;
-			   nbitems++;	/* item number in the main menu */
-			 }  
-		       /* Next child of SELECT */
-		       TtaNextSibling (&el);
-		     }
-		 }
 	       /* activate the menu that has just been created */
 	       ReturnOption = -1;
-	       ReturnOptionMenu = -1;
-
 #if defined(_MOTIF) || defined(_GTK)
 	       TtaSetDialoguePosition ();
 #endif /* #if defined(_MOTIF) || defined(_GTK) */
-         
 	       TtaShowDialogue (BaseDialog + OptionMenu, FALSE);
 	       /* wait for an answer from the user */
-	       if (nbsubmenus == 0)
-		 TtaWaitShowProcDialogue ();
-	       else
-		 TtaWaitShowDialogue ();
+	       TtaWaitShowProcDialogue ();
 	       /* destroy the dialogue */
 	       TtaDestroyDialogue (BaseDialog + OptionMenu);
-
-	       if (ReturnOption >= 0 && ReturnOptionMenu >= 0)
+	       if (ReturnOption >= 0)
 		 {
 		   /* make the returned option selected */
-		   if (ReturnOptionMenu == 0)
-		     { /* an item in the main (SELECT) menu */
-		       el = option[ReturnOption];
-		       sel = selected[ReturnOption];
-		     }
-		   else
-		     { /* an item in a submenu */
-
-#ifdef _WINGUI
-		       el = subOptions[ReturnOptionMenu / nbOldEntries ][ReturnOption];
-		       sel = subSelected[ReturnOptionMenu / nbOldEntries][ReturnOption];
-#endif  /* _WINGUI */
-           
-#if defined(_MOTIF) || defined(_GTK)           
-		       el = subOptions[ReturnOptionMenu - 1][ReturnOption];
-		       sel = subSelected[ReturnOptionMenu - 1][ReturnOption];
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
-           
-		     }
+		   el = Option[ReturnOption];
+		   sel = selected[ReturnOption];
 		   modified = TtaIsDocumentModified (doc);	  
 		   if (!multipleOptions)
 		     OnlyOneOptionSelected (el, doc, FALSE);

@@ -6432,7 +6432,10 @@ ATTRIBUTES
 
  ShowMe:
 	BEGIN
-	Visibility: Enclosing =;
+	if within OptGroup
+		Visibility: GrandFather =;
+	if not within OptGroup
+		Visibility: Enclosing =;
 	END;
 
  Selected:
@@ -6440,7 +6443,10 @@ ATTRIBUTES
 	CreateBefore(AttrNameOnly);
 	IF inherited Multiple
 	        CreateFirst (SelectedInAltView);
-	Visibility: Enclosing =;
+	if within OptGroup
+		Visibility:GrandFather =;
+	if not within OptGroup
+		Visibility: Enclosing =;
 	IN Structure_view
 		Visibility: Enclosing =;
 	IN Links_view

@@ -2481,7 +2481,7 @@ void TtaNewScrollPopup (int ref, ThotWidget parent, char *title, int number,
 		      strcpy (equiv_item, &equiv[eindex]); 
 		    eindex += strlen (&equiv[eindex]) + 1;
 		  }
-		if (text[index] == 'T' || text[index] == 'B')
+		if (text[index] == 'T' || text[index] == 'B' || text[index] == 'M')
 		  /*__________________________________________ Creation d'un bouton __*/
 		  {
 

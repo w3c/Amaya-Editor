@@ -1448,48 +1448,48 @@ static ThotBool     InsertElement (Element * el)
 }
 
 /*----------------------------------------------------------------------
-   	ProcessOptionElement
-	If multiple is FALSE, remove the SELECTED attribute from the
-	option element, except if it's element el.
-	If parsing is TRUE, associate a DefaultSelected attribute with
-        element option if it has a SELECTED attribute.
+  ProcessOptionElement
+  If multiple is FALSE, remove the SELECTED attribute from the
+  option element, except if it's element el.
+  If parsing is TRUE, associate a DefaultSelected attribute with
+  element option if it has a SELECTED attribute.
   ----------------------------------------------------------------------*/
-static void        ProcessOptionElement (Element option, Element el,
-					 Document doc, ThotBool multiple,
-					 ThotBool parsing)
+static void ProcessOptionElement (Element option, Element el,
+				  Document doc, ThotBool multiple,
+				  ThotBool parsing)
 {
-   ElementType	   elType;
-   AttributeType   attrType;
-   Attribute	   attr;
+  ElementType	   elType;
+  AttributeType   attrType;
+  Attribute	   attr;
 
-   elType = TtaGetElementType (option);
-   attrType.AttrSSchema = elType.ElSSchema;
-   attrType.AttrTypeNum = HTML_ATTR_Selected;
-   if (!multiple && option != el)
-      {
+  elType = TtaGetElementType (option);
+  attrType.AttrSSchema = elType.ElSSchema;
+  attrType.AttrTypeNum = HTML_ATTR_Selected;
+  if (!multiple && option != el)
+    {
       /* Search the SELECTED attribute */
       attr = TtaGetAttribute (option, attrType);
       /* remove it if it exists */
-      if (attr != NULL)
-	 TtaRemoveAttribute (option, attr, doc);
-      }
-   if (parsing)
-      {
+      if (attr)
+	TtaRemoveAttribute (option, attr, doc);
+    }
+  if (parsing)
+    {
       attr = TtaGetAttribute (option, attrType);
       if (attr != NULL)
-	 {
-	 attrType.AttrTypeNum = HTML_ATTR_DefaultSelected;
-	 attr = TtaGetAttribute (option, attrType);
-	 if (!attr)
+	{
+	  attrType.AttrTypeNum = HTML_ATTR_DefaultSelected;
+	  attr = TtaGetAttribute (option, attrType);
+	  if (!attr)
 	    {
-	    /* create the DefaultSelected attribute */
-	    attr = TtaNewAttribute (attrType);
-	    TtaAttachAttribute (option, attr, doc);
-	    TtaSetAttributeValue (attr, HTML_ATTR_DefaultSelected_VAL_Yes_,
-				  option, doc);
+	      /* create the DefaultSelected attribute */
+	      attr = TtaNewAttribute (attrType);
+	      TtaAttachAttribute (option, attr, doc);
+	      TtaSetAttributeValue (attr, HTML_ATTR_DefaultSelected_VAL_Yes_,
+				    option, doc);
 	    }
-	 }
-      }
+	}
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -1501,11 +1501,11 @@ static void        ProcessOptionElement (Element option, Element el,
   If parsing is TRUE, associate an attribute DefaultSelected with
   each option having an attribute Selected.
   ----------------------------------------------------------------------*/
-void        OnlyOneOptionSelected (Element el, Document doc, ThotBool parsing)
+void OnlyOneOptionSelected (Element el, Document doc, ThotBool parsing)
 {
   ElementType      elType;
   Element          option, menu, child, firstOption;
-  AttributeType    attrType;
+  AttributeType    attrType, attrshowMeType;
   Attribute        attr, showMeAttr;
   ThotBool         multiple;
 
@@ -1516,14 +1516,15 @@ void        OnlyOneOptionSelected (Element el, Document doc, ThotBool parsing)
   attr = NULL;
   firstOption = NULL;
   elType = TtaGetElementType (el);
-
+  attrType.AttrSSchema = elType.ElSSchema;
+  attrType.AttrTypeNum = HTML_ATTR_Selected;
+  attrshowMeType.AttrSSchema = elType.ElSSchema;
+  attrshowMeType.AttrTypeNum = HTML_ATTR_ShowMe;
   if (elType.ElTypeNum == HTML_EL_Option_Menu)
     {
       /* it's a menu (SELECT) */
       menu = el;
       /* search the first OPTION element having an attribute SELECTED */
-      attrType.AttrSSchema = elType.ElSSchema;
-      attrType.AttrTypeNum = HTML_ATTR_Selected;
       option = TtaGetFirstChild (el);
       while (option && !attr)
 	{
@@ -1559,7 +1560,6 @@ void        OnlyOneOptionSelected (Element el, Document doc, ThotBool parsing)
     }
   else
     {
-      menu = NULL;
       option = NULL;
       do
 	{
@@ -1580,18 +1580,6 @@ void        OnlyOneOptionSelected (Element el, Document doc, ThotBool parsing)
 
   if (el)
     {
-      /* set this option SELECTED */
-      attrType.AttrSSchema = elType.ElSSchema;
-      attrType.AttrTypeNum = HTML_ATTR_Selected;
-      attr = TtaGetAttribute (el, attrType);
-      if (attr == NULL)
-	{
-	  /* create the SELECTED attribute */
-	  attr = TtaNewAttribute (attrType);
-	  TtaSetAttributeValue (attr, HTML_ATTR_Selected_VAL_Yes_, el,doc);
-	  TtaAttachAttribute (el, attr, doc);
-	}
-
       if (menu)
 	{
 	  /* Remove the SELECTED attribute from other options in the menu */
@@ -1608,7 +1596,8 @@ void        OnlyOneOptionSelected (Element el, Document doc, ThotBool parsing)
 		  elType = TtaGetElementType (option);
 		  if (elType.ElTypeNum == HTML_EL_Option)
 		    {
-		      ProcessOptionElement (option, el, doc, multiple,parsing);
+		      ProcessOptionElement (option, el, doc, multiple,
+					    parsing);
 		      if (!firstOption)
 			firstOption = option;
 		    }
@@ -1632,12 +1621,22 @@ void        OnlyOneOptionSelected (Element el, Document doc, ThotBool parsing)
 		}
 	    }
 	}
+
+      /* set this option SELECTED */
+      attrType.AttrTypeNum = HTML_ATTR_Selected;
+      attr = TtaGetAttribute (el, attrType);
+      if (attr == NULL)
+	{
+	  /* create the SELECTED attribute */
+	  attr = TtaNewAttribute (attrType);
+	  TtaSetAttributeValue (attr, HTML_ATTR_Selected_VAL_Yes_, el,doc);
+	  TtaAttachAttribute (el, attr, doc);
+	}
     }
 
   if (firstOption)
     {
-      attrType.AttrTypeNum = HTML_ATTR_ShowMe;
-      showMeAttr = TtaGetAttribute (firstOption, attrType);
+      showMeAttr = TtaGetAttribute (firstOption, attrshowMeType);
       if (attr)
 	/* there is at least one option element with a selected attribute.
 	   Remove the ShowMe attribute from the first option element */
