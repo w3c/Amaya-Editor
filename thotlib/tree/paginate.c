@@ -44,7 +44,6 @@
 #include "font_f.h"
 #include "structmodif_f.h"
 #include "absboxes_f.h"
-#include "absboxlist_f.h"
 #include "changeabsbox_f.h"
 #include "changepresent_f.h"
 #include "presrules_f.h"

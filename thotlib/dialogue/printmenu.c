@@ -48,7 +48,6 @@
 
 #include "viewcommands_f.h"
 #include "exceptions_f.h"
-#include "absboxlist_f.h"
 #include "structmodif_f.h"
 #include "presentmenu_f.h"
 #include "printmenu_f.h"

@@ -120,7 +120,6 @@ int                 NbFree_Dict;
 int                 NbUsed_Dict;
 PtrDict             PtFree_Dict;
 
-#include "absboxlist_f.h"
 #include "memory_f.h"
 #include "fileaccess_f.h"
 

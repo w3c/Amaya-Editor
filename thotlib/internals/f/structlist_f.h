@@ -14,10 +14,12 @@ extern void TtaListAbstractTree ( Element root,
 extern void TtaListView ( Document document,
                           View view,
                           FILE * fileDescriptor );
-extern void NumberAbsBox ( PtrAbstractBox pP );
-extern void ListAbsBox ( PtrAbstractBox pAb,
+extern void NumberAbsBoxes ( PtrAbstractBox pP );
+extern void ListAbsBoxes ( PtrAbstractBox pAb,
                          int Indent,
                          FILE * outfile );
+extern void ListBoxes ( Name fname,
+                        int frame );
 
 #else /* __STDC__ */
 
@@ -29,10 +31,12 @@ extern void TtaListAbstractTree (/* Element root,
 extern void TtaListView (/* Document document,
                             View view,
                             FILE * fileDescriptor */);
-extern void NumberAbsBox (/* PtrAbstractBox pP */);
-extern void ListAbsBox (/* PtrAbstractBox pAb,
+extern void NumberAbsBoxes (/* PtrAbstractBox pP */);
+extern void ListAbsBoxes (/* PtrAbstractBox pAb,
                            int Indent,
                            FILE * outfile */);
+extern void ListBoxes (/* Name fname,
+                          int frame */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */
