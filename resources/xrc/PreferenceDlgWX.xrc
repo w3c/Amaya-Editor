@@ -579,6 +579,134 @@
               </object>
             </object>
           </object>
+          <object class="notebookpage">
+            <label>COLOR</label>
+            <object class="wxPanel" name="wxID_PAGE_COLOR">
+              <object class="wxBoxSizer">
+                <orient>wxVERTICAL</orient>
+                <object class="sizeritem">
+                  <object class="wxFlexGridSizer">
+                    <cols>3</cols>
+                    <rows>4</rows>
+                    <object class="sizeritem">
+                      <object class="wxStaticText" name="wxID_LABEL_TEXTCOLOR">
+                        <label>Couleur du texte</label>
+                      </object>
+                      <flag>wxALIGN_CENTRE_VERTICAL</flag>
+                    </object>
+                    <object class="sizeritem">
+                      <object class="wxComboBox" name="wxID_COMBO_TEXTCOLOR">
+                        <content>
+                          <item>Black</item>
+                          <item>White</item>
+                          <item>Grey</item>
+                          <item>Red</item>
+                        </content>
+                        <size></size>
+                      </object>
+                      <flag>wxEXPAND</flag>
+                    </object>
+                    <object class="sizeritem">
+                      <object class="wxBitmapButton" name="wxID_BUTTON_TEXTCOLOR">
+                        <bitmap>../icons/nouvelles/colorize.png</bitmap>
+                        <style>wxNO_BORDER</style>
+                      </object>
+                      <flag>wxALIGN_CENTRE_VERTICAL</flag>
+                    </object>
+                    <object class="sizeritem">
+                      <object class="wxStaticText" name="wxID_LABEL_BACKCOLOR">
+                        <label>Couleur de fond</label>
+                      </object>
+                      <flag>wxALIGN_CENTRE_VERTICAL</flag>
+                    </object>
+                    <object class="sizeritem">
+                      <object class="wxComboBox" name="wxID_COMBO_BACKCOLOR">
+                        <content>
+                          <item>Black</item>
+                          <item>White</item>
+                          <item>Grey</item>
+                          <item>Red</item>
+                        </content>
+                        <size></size>
+                      </object>
+                      <flag>wxEXPAND</flag>
+                    </object>
+                    <object class="sizeritem">
+                      <object class="wxBitmapButton" name="wxID_BUTTON_BACKCOLOR">
+                        <bitmap>../icons/nouvelles/colorize.png</bitmap>
+                        <style>wxNO_BORDER</style>
+                      </object>
+                      <flag>wxALIGN_CENTRE_VERTICAL</flag>
+                    </object>
+                    <object class="sizeritem">
+                      <object class="wxStaticText" name="wxID_LABEL_SELCOLOR">
+                        <label>Couleur de selection</label>
+                      </object>
+                      <flag>wxALIGN_CENTRE_VERTICAL</flag>
+                    </object>
+                    <object class="sizeritem">
+                      <object class="wxComboBox" name="wxID_COMBO_SELCOLOR">
+                        <content>
+                          <item>Black</item>
+                          <item>White</item>
+                          <item>Grey</item>
+                          <item>Red</item>
+                        </content>
+                        <size></size>
+                      </object>
+                      <flag>wxEXPAND</flag>
+                    </object>
+                    <object class="sizeritem">
+                      <object class="wxBitmapButton" name="wxID_BUTTON_SELCOLOR">
+                        <bitmap>../icons/nouvelles/colorize.png</bitmap>
+                        <style>wxNO_BORDER</style>
+                      </object>
+                      <flag>wxALIGN_CENTRE_VERTICAL</flag>
+                    </object>
+                    <object class="sizeritem">
+                      <object class="wxStaticText" name="wxID_LABEL_SELBACKCOLOR">
+                        <label>Couleur de fond de selection</label>
+                      </object>
+                      <flag>wxALIGN_CENTRE_VERTICAL</flag>
+                    </object>
+                    <object class="sizeritem">
+                      <object class="wxComboBox" name="wxID_COMBO_SELBACKCOLOR">
+                        <content>
+                          <item>Black</item>
+                          <item>White</item>
+                          <item>Grey</item>
+                          <item>Red</item>
+                        </content>
+                        <size></size>
+                      </object>
+                      <flag>wxEXPAND</flag>
+                    </object>
+                    <object class="sizeritem">
+                      <object class="wxBitmapButton" name="wxID_BUTTON_SELBACKCOLOR">
+                        <bitmap>../icons/nouvelles/colorize.png</bitmap>
+                        <style>wxNO_BORDER</style>
+                      </object>
+                      <flag>wxALIGN_CENTRE_VERTICAL</flag>
+                    </object>
+                    <vgap>10</vgap>
+                    <hgap>5</hgap>
+                    <growablecols>1</growablecols>
+                  </object>
+                  <option>0</option>
+                  <flag>wxALL|wxEXPAND</flag>
+                  <border>10</border>
+                </object>
+                <object class="sizeritem">
+                  <object class="wxStaticText">
+                    <label>Ces changements seront effectifs lors de l ouverture d une fenetre</label>
+                  </object>
+                  <option>0</option>
+                  <flag>wxALL|wxEXPAND</flag>
+                  <border>10</border>
+                </object>
+              </object>
+            </object>
+          </object>
         </object>
         <option>1</option>
         <flag>wxALL|wxEXPAND</flag>
