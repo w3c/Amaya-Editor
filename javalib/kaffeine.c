@@ -321,7 +321,8 @@ ThotEvent *ev;
     InJavaSelect = 1;
 
     if ((DoJavaSelectPoll) && (BreakJavaSelectPoll) &&
-        (n >= x_window_socket) && (FD_ISSET(x_window_socket, readfds)))  {
+        (n >= x_window_socket) && (readfds != NULL) &&
+	(FD_ISSET(x_window_socket, readfds)))  {
 	/*
 	 * We must interrupt the poll on the X-Window socket.
 	 */

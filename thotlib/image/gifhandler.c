@@ -984,6 +984,7 @@ ThotColorStruct    *colrs;
 				(width + linepad), height, 8, bytesperline);
 	       break;
 
+	    case 15:
 	    case 16:
 	       bit_data = (unsigned char *) TtaGetMemory (width * height * 2);
 	       bitp = bit_data;

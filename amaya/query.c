@@ -1130,12 +1130,6 @@ void                QueryInit ()
 #endif
 {
 
-#ifdef AMAYA_JAVA
-   extern void W3ContinueRequest (SOCKET sock, int event);
-
-   JavaSetSelectCallback(W3ContinueRequest);
-#endif
-
    AmayaIsAlive = TRUE;
    AHTProfile_newAmaya (HTAppName, HTAppVersion);
 
