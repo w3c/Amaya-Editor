@@ -414,7 +414,7 @@ int CharacterHeight (unsigned char c, PtrFont font)
 
 #ifdef _GL
   else
-    return gl_font_char_height (font, &c);
+    return gl_font_char_height (font, (CHAR_T *) &c);
 #else /*_GL*/
 #ifdef _WINDOWS
   else
@@ -461,7 +461,7 @@ int CharacterAscent (unsigned char c, PtrFont font)
     return (0);
 #ifdef _GL
 else
-   ascent = gl_font_char_ascent (font, &c);
+   ascent = gl_font_char_ascent (font, (CHAR_T *) &c);
 #ifndef _WINDOWS
   if (c == 244)
     {
