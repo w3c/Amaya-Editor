@@ -141,7 +141,7 @@
 140 **Apply
 141 **Defaults
 142 **Flush cache
-143 **Cache Configuration
+143 **Cache Preferences
 144 **Enable cache
 145 **Cache protected documents
 146 **Disconnected mode
@@ -149,10 +149,10 @@
 148 **Cache Directory
 149 **Cache size (Mb)
 150 **Cache entry size limit (Mb)
-151 **Proxy Configuration
+151 **Proxy Preferences
 152 **HTTP proxy
 153 **No proxy on these domains
-154 **General Configuration
+154 **General Preferences
 155 **Home Page
 156 **ToolTip delay (ms)
 157 **Double click delay (ms)
@@ -162,15 +162,15 @@
 161 **Enable multikey
 162 **Show background images
 163 **Double click activates link
-164 **Publishing Configuration
+164 **Publishing Preferences
 165 **Use ETAGS and preconditions
 166 **Verify each PUT with a GET
 167 **Default name for URLs finishing in '/'
-168 **Geometry Configuration
+168 **Geometry Preferences
 169 **Save current geometry
 170 **Restore default geometry
 171 **The change will be effective when you open a new window.
-172 **Color Configuration
+172 **Color Preferences
 173 **Document foreground color
 174 **Document background color
 175 **Menu foreground color
