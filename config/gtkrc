@@ -3,6 +3,5 @@ style "gtk-amaya"
     {
         fontset = "-*-helvetica-medium-r-*-*-12-*-*-*-*-*-*-*,\
                    -*-arial-medium-r-*-*-12-*-*-*-*-*-*-*"
-  GtkButton::default_spacing = { 1, 1, 1, 1 }
     }
     widget_class "*GtkWidget"	style "gtk-amaya"

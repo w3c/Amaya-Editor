@@ -305,7 +305,7 @@ static void DisplaySymbol (PtrBox pBox, int frame, ThotBool selected,
 #endif /*_WINGUI*/
 #endif
       if (StixExist)
-	  if (pBox->BxH > 0) 
+	if (pBox->BxH > 0)
 	    {
 	      GetMathFontFromChar (pBox->BxAbstractBox->AbShape,
 				   pBox->BxFont,

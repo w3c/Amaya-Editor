@@ -1899,23 +1899,13 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
 		   pAb->AbEnclosing->AbWidth.DimAbRef == NULL &&
 		   pAb->AbEnclosing->AbWidth.DimValue == -1)
 	    {
-	      /* the boxe width depends on the parent
-		 and the parent width depends on the contents */
+	      /* the box width cannot depend on the parent width
+		 when the parent width depends on its contents */
 	      pDimAb->DimAbRef = NULL;
 	      pDimAb->DimValue = -1;
 	    }
-	  else if (pAb->AbLeafType == LtCompound &&
-		   !horizRef && pDimAb->DimAbRef &&
-		   pDimAb->DimUnit != UnAuto &&
-		   pDimAb->DimAbRef == pAb->AbEnclosing &&
-		   pAb->AbEnclosing->AbHeight.DimAbRef == NULL &&
-		   pAb->AbEnclosing->AbHeight.DimValue == -1)
-	    {
-	      /* the boxe height depends on the parent
-		 and the parent height depends on the contents */
-	      pDimAb->DimAbRef = NULL;
-	      pDimAb->DimValue = -1;
-	    }
+	  /* the box height can depend on the parent height
+	     when the parent height depends on its contents */
 
 	  GetExtraMargins (pBox, NULL, &t, &b, &l, &r);
 	  dx = pBox->BxLMargin + pBox->BxLBorder + pBox->BxLPadding + pBox->BxRMargin + pBox->BxRBorder + pBox->BxRPadding + l + r;
