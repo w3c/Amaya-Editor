@@ -2479,9 +2479,7 @@ void ResizeHeight (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
 
 	  /* inside height */
 	  pBox->BxH += delta;
-#ifdef _GL
-	  /*pBox->BxClipH += delta;*/
-#endif /* _GL */
+
 	  /* outside height */
 	  pBox->BxHeight = pBox->BxHeight + delta + diff;
 	  pBox->BxYOrg += orgTrans;
@@ -2828,6 +2826,13 @@ void ResizeHeight (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
 			HeightPack (pAb, pSourceBox, frame);
 		    }
 		}
+	      else if ((pBox->BxType == BoBlock ||
+			pBox->BxType == BoFloatBlock) &&
+		       (pAb->AbBox->BxType == BoBlock ||
+			pAb->AbBox->BxType == BoGhost ||
+			pAb->AbBox->BxType == BoFloatBlock))
+		/* Within a block of line */
+		EncloseInLine (pBox, frame, pAb);
 	      else if (pCurrentAb->AbFloat == 'N' &&
 		       !IsSiblingBox (pBox, pFromBox) &&
 		       !IsSiblingBox (pBox, pSourceBox))
