@@ -87,6 +87,7 @@ ThotBool AddLoadedImage (char *name, char *pathname,
    pImage->originalName = TtaGetMemory (strlen (pathname) + 1);
    strcpy (pImage->originalName, pathname);
    pImage->localName = TtaStrdup (localname);
+   pImage->tempfile = NULL;
    pImage->prevImage = previous;
    if (previous)
       previous->nextImage = pImage;
@@ -102,7 +103,8 @@ ThotBool AddLoadedImage (char *name, char *pathname,
      {
 	/* the image file exist for a different document */
 	pImage->status = IMAGE_LOADED;
-	TtaFileCopy (sameImage->localName, pImage->localName);
+	pImage->tempfile = GetLocalPath (doc, sameImage->tempfile);
+	TtaFileCopy (sameImage->tempfile, pImage->tempfile);
 	if (sameImage->content_type)
 	  pImage->content_type = TtaStrdup (sameImage->content_type);
 	else
@@ -515,7 +517,7 @@ void UpdateImageMap (Element image, Document doc, int oldWidth, int oldHeight)
 /*----------------------------------------------------------------------
   DisplayImage
   ----------------------------------------------------------------------*/
-void DisplayImage (Document doc, Element el, char *imageName, char *mime_type)
+void DisplayImage (Document doc, Element el, LoadedImageDesc  *desc,  char *localfile, char *mime_type)
 {
   ElementType         elType;
   int                 modified, i;
@@ -525,6 +527,19 @@ void DisplayImage (Document doc, Element el, char *imageName, char *mime_type)
   int                 parsingLevel;
   CHARSET             charset;
   char                charsetname[MAX_LENGTH];
+  char               *imageName;
+  char               *tempfile;
+
+  if (desc)
+    {
+      imageName = desc->localName;
+      tempfile = desc->tempfile;
+    }
+  else
+    {
+      imageName = localfile;
+      tempfile = localfile;
+    }
 
   modified = TtaIsDocumentModified (doc);
   elType = TtaGetElementType (el);
@@ -562,7 +577,7 @@ void DisplayImage (Document doc, Element el, char *imageName, char *mime_type)
 		is_mml = TRUE;
 	      else /* try sniffing */
 		{
-		  CheckDocHeader (imageName, &xmlDec, &withDoctype, &isXML, &isKnown,
+		  CheckDocHeader (tempfile, &xmlDec, &withDoctype, &isXML, &isKnown,
 				  &parsingLevel, &charset, charsetname, &thotType);
 		  if (isXML && thotType == docSVG)
 		    is_svg = TRUE;
@@ -577,21 +592,21 @@ void DisplayImage (Document doc, Element el, char *imageName, char *mime_type)
 	  TtaSetPictureType (el,  AM_SVG_MIME_TYPE);
 	  /* parse the SVG file and include the parsed tree at the
 	     position of the image element */
-	  ParseExternalXmlResource (imageName, el, FALSE, doc, 
+	  ParseExternalXmlResource (tempfile, el, FALSE, doc, 
 				    TtaGetDefaultLanguage(), "SVG");
 	}
       else if (is_mml)
 	{
 	  /* parse the MathML file and include the parsed tree at the
 	     position of the image element */
-	  ParseExternalXmlResource (imageName, el, FALSE, doc, 
+	  ParseExternalXmlResource (tempfile, el, FALSE, doc, 
 				    TtaGetDefaultLanguage(), "MathML");
 	}
       else
 	{
 	  /* svg images don't use Image Maps */
 	  /* display the content of a picture element */
-	  TtaSetPictureContent (el, imageName, SPACE, doc, mime_type);
+	  TtaSetPictureContent (el, tempfile, SPACE, doc, mime_type);
 	  UpdateImageMap (el, doc, -1, -1);
 	}
     }
@@ -601,7 +616,7 @@ void DisplayImage (Document doc, Element el, char *imageName, char *mime_type)
     {
       /* parse the SVG file and include the parsed sub-tree at the
 	 position of the use element */
-      ParseExternalXmlResource (imageName, el, FALSE, doc, 
+      ParseExternalXmlResource (tempfile, el, FALSE, doc, 
 				TtaGetDefaultLanguage(), "SVG");
     }
   else  
@@ -638,6 +653,8 @@ static void HandleImageLoaded (int doc, int status, char *urlName,
    char               *tempfile;
    char               *base_url;
    char               *ptr;
+   char               *dir;
+   char               *prefix;
    ElemImage          *ctxEl, *ctxPrev;
    ElementType         elType;
 
@@ -667,10 +684,12 @@ static void HandleImageLoaded (int doc, int status, char *urlName,
 	/* the image could not be loaded */
 	if ((status != 200) && (status != 0))
 	   return;
-	tempfile = TtaGetMemory (MAX_LENGTH);
-	/* rename the local file of the image */
-	strcpy (tempfile, desc->localName);
 	
+	/* compute the tempfile name */
+	if (desc->tempfile)
+	  TtaFreeMemory (desc->tempfile);
+	tempfile = TtaGetMemory (MAX_LENGTH);
+	strcpy (tempfile, desc->localName);
 	/* If this is an image document, point to the correct files */
 	if (DocumentTypes[doc] == docImage)
 	  {
@@ -684,18 +703,36 @@ static void HandleImageLoaded (int doc, int status, char *urlName,
 	      }
 	    else
 	      strcat (tempfile, ".html");
-	    TtaFreeMemory (desc->localName);
-	    desc->localName = TtaStrdup (tempfile);
-
+	    desc->tempfile = tempfile;
 	  }
 	else
 	  {
-	    TtaFileUnlink (tempfile);	
+	    /* make a unique name */
+	    ptr = strrchr (tempfile, DIR_SEP);
+	    if (ptr)
+	      {
+		*ptr = EOS;
+		ptr++;
+	      }
+	    dir = tempfile;
+	    if (ptr)
+	      {
+		prefix = ptr;
+		ptr = strchr (prefix, '.');
+		if (ptr) 
+		  *ptr = EOS;
+	      }
+	    else
+	      prefix = "";
+	    desc->tempfile = GetTempName (dir, prefix);
+	    TtaFreeMemory (tempfile);
+
+	    TtaFileUnlink (desc->tempfile);	
 #ifndef _WINDOWS
-	    rename (outputfile, tempfile);
+	    rename (outputfile, desc->tempfile);
 #else /* _WINDOWS */
-	    if (rename (outputfile, tempfile) != 0)
-	      sprintf (tempfile, "%s", outputfile); 
+	    if (rename (outputfile, desc->tempfile) != 0)
+	      sprintf (desc->tempfile, "%s", outputfile); 
 #endif /* _WINDOWS */
 	  }
 
@@ -730,9 +767,9 @@ static void HandleImageLoaded (int doc, int status, char *urlName,
 		 (elType.ElTypeNum == SVG_EL_PICTURE_UNIT ||
 		  elType.ElTypeNum == SVG_EL_use_ ||
 		  elType.ElTypeNum == SVG_EL_tref)))
-	      DisplayImage (doc, ctxEl->currentElement, tempfile, ptr);
+	      DisplayImage (doc, ctxEl->currentElement, desc, NULL, ptr);
 	    else if (ctxEl->callback != NULL)
-	      ctxEl->callback(doc, ctxEl->currentElement, tempfile, ctxEl->extra);
+	      ctxEl->callback(doc, ctxEl->currentElement, desc->tempfile, ctxEl->extra);
 	    /* get image type */
 	    if (desc->imageType == unknown_type)
 	      desc->imageType = TtaGetPictureType (ctxEl->currentElement);
@@ -741,7 +778,6 @@ static void HandleImageLoaded (int doc, int status, char *urlName,
 	    ctxEl = ctxEl->nextElement;
 	    TtaFreeMemory ( ctxPrev);
 	  }
-	TtaFreeMemory (tempfile);
      }
 }
 
@@ -957,16 +993,16 @@ void FetchImage (Document doc, Element el, char *URL, int flags,
 		      callback(doc, el, &pathname[0], extra);
 		  }
 		else
-		  DisplayImage (doc, el, pathname, NULL);
+		  DisplayImage (doc, el, NULL, pathname, NULL);
 		}
 	      else
-		if (TtaFileExist (desc->localName))
+		if (TtaFileExist (desc->tempfile))
 		  {
 		    /* remote image, but already here */
 		    if (callback)
-		      callback (doc, el, desc->localName, extra);
+		      callback (doc, el, desc->tempfile, extra);
 		    else
-		      DisplayImage (doc, el, desc->localName, NULL);
+		      DisplayImage (doc, el, desc, NULL, NULL);
 		    /* get image type */
 		    desc->imageType = TtaGetPictureType (el);
 		  }

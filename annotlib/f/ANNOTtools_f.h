@@ -95,8 +95,6 @@ extern char *SearchAttributeInEl ( Document doc,
 extern void SubstituteCharInString ( char *buffer,
                                      char old,
                                      char new );
-extern char *GetTempName ( const char *dir,
-                           const char *prefix );
 extern void GetServerName ( char *url,
                             char *server );
 extern char * ANNOT_GetHTMLTitle ( Document doc );
@@ -215,8 +213,6 @@ extern char *SearchAttributeInEl (/* Document doc,
 extern void SubstituteCharInString (/* char *buffer,
                                        char old,
                                        char new */);
-extern char *GetTempName (/* const char *dir,
-                             const char *prefix */);
 extern void GetServerName (/* char *url,
                               char *server */);
 extern char * ANNOT_GetHTMLTitle (/* Document doc */);

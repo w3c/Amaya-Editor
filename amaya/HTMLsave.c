@@ -1256,7 +1256,7 @@ static ThotBool SaveDocumentLocally (Document doc, char *directoryName,
 	      if (pImage)
 		{
 		  /* copy the file */
-		  TtaFileCopy (pImage->localName, tempname);
+		  TtaFileCopy (pImage->tempfile, tempname);
 		  /* remove the old file (note that it's the local name that
 		   we have to free, because we're using an HTML container
 		   to show the image */
@@ -2220,11 +2220,12 @@ static void DeleteDocImageContext (Document doc, char *url)
     pImage->prevImage->nextImage = pImage->nextImage;
 
   /* delete the local copy of the image */
-  TtaFileUnlink (pImage->localName);
+  TtaFileUnlink (pImage->tempfile);
 
   /* free all associated memory */
   TtaFreeMemory (pImage->originalName);
   TtaFreeMemory (pImage->localName);
+  TtaFreeMemory (pImage->tempfile);
   TtaFreeMemory (pImage);
 }
 
@@ -2344,7 +2345,6 @@ static ThotBool UpdateDocImage (Document doc, ThotBool src_is_local,
 	  ImageURLs = pImage;
 	  pImage->document = doc;
 	  pImage->elImage = NULL;
-	  /* @@ JK: initialize the image type here */
 	  pImage->imageType = TtaGetPictureType (el);
 	}
 	  pImage->status = IMAGE_LOADED;
@@ -2506,9 +2506,12 @@ static void UpdateImages (Document doc, ThotBool src_is_local,
 				   /*
 				     it was a remote image:
 				     we use the local temporary name to do the copy
-				     */
+				     */  
 				   strcpy (oldname, localpath);
 				   strcat (oldname, imgname);
+				   pImage = SearchLoadedImage (oldname, doc);
+				   if (pImage && pImage->tempfile)
+				     strcpy (oldname, pImage->tempfile);
 				 }
 			       
 			       if (imgbase[0] != EOS)
@@ -2523,8 +2526,8 @@ static void UpdateImages (Document doc, ThotBool src_is_local,
 				   strcat (tempfile, DIR_STR);
 				   strcat (tempfile, imgname);
 				 }
-			       
-			       TtaFileCopy (oldname, tempfile);
+			       if (oldname)
+				 TtaFileCopy (oldname, tempfile);
 			     }
 			   else
 			     {
@@ -2694,6 +2697,9 @@ static void UpdateImages (Document doc, ThotBool src_is_local,
 			       */
 			       strcpy (buf, localpath);
 			       strcat (buf, imgname);
+			       pImage = SearchLoadedImage (buf, doc);
+			       if (pImage)
+				 strcpy (buf, pImage->tempfile);
 			     }
 			   
 			   if (imgbase[0] != EOS)
@@ -2726,7 +2732,7 @@ static void UpdateImages (Document doc, ThotBool src_is_local,
 				   if (pImage->originalName != NULL)
 				     TtaFreeMemory (pImage->originalName);
 				   pImage->originalName = TtaStrdup (tempname);
-				   if (TtaFileExist(pImage->localName))
+				   if (TtaFileExist(pImage->tempfile))
 				     pImage->status = IMAGE_MODIFIED;
 				   else
 				     pImage->status = IMAGE_NOT_LOADED;

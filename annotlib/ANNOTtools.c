@@ -43,11 +43,13 @@
 #include "Annot.h"
 #include "XLink.h"
 
+#if 0
 #ifdef _WINDOWS
 #define TMPDIR "TMP"
 #else
 #define TMPDIR "TMPDIR"
 #endif /* _WINDOWS */
+#endif
 
 /****************************************************************
  ** 
@@ -2085,7 +2087,7 @@ void SubstituteCharInString (char *buffer, char old, char new)
     }
 }
 
-
+#if 0
 /*-----------------------------------------------------------------------
   GetTempName
   Front end to the Unix tempnam function, which is independent of the
@@ -2149,6 +2151,7 @@ char *GetTempName (const char *dir, const char *prefix)
     }
   return (name);
 }
+#endif
 
 /*-----------------------------------------------------------------------
   -----------------------------------------------------------------------*/

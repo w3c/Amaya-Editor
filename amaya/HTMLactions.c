@@ -418,6 +418,9 @@ Element GetElemWithAttr (Document doc, AttributeType attrType,
    int                 length;
    ThotBool            found;
 
+   if (!nameVal)
+     return NULL;
+
    elFound = NULL;
    el = TtaGetMainRoot (doc);
    found = FALSE;

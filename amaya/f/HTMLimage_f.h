@@ -23,7 +23,8 @@ extern void UpdateImageMap ( Element image,
                              int oldHeight );
 extern void DisplayImage ( Document doc,
                            Element el,
-                           char *imageName,
+                           LoadedImageDesc *desc,
+                           char *localfile,
                            char *mime_type );
 extern char *GetActiveImageInfo ( Document document,
                                   Element element );
@@ -58,7 +59,8 @@ extern void UpdateImageMap (/* Element image,
                                int oldHeight */);
 extern void DisplayImage (/* Document doc,
                              Element el,
-                             char *imageName,
+                             LoadedImageDesc *desc,
+                             char *localfile,
                              char *mime_type */);
 extern char *GetActiveImageInfo (/* Document document,
                                     Element element */);

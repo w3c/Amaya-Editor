@@ -889,8 +889,8 @@ void ComputeSRCattribute (Element el, Document doc, Document sourceDocument,
 	  TtaSetAttributeText (attr, imagename, el, doc);
 
 	  /* set contents of the picture element */
-	  TtaSetTextContent (pict, desc->localName, SPACE, doc);
-	  DisplayImage (doc, pict, desc->localName, NULL);
+	  TtaSetTextContent (pict, desc->tempfile, SPACE, doc);
+	  DisplayImage (doc, pict, desc, NULL, NULL);
 	}
       else
 	{
@@ -920,7 +920,7 @@ void ComputeSRCattribute (Element el, Document doc, Document sourceDocument,
 	  TtaFreeMemory (value);
 	  /* set the element content */
 	  TtaSetTextContent (pict, pathimage, SPACE, doc);
-	  DisplayImage (doc, pict, pathimage, NULL);
+	  DisplayImage (doc, pict, NULL, pathimage, NULL);
 	}
       else
 	{
@@ -1230,6 +1230,7 @@ ThotBool AddLocalImage (char *fullname, char *name, char *url, Document doc,
 	  strcpy (pImage->originalName, url);
 	  pImage->localName = TtaGetMemory (strlen (localname) + 1);
 	  strcpy (pImage->localName, localname);
+	  pImage->tempfile = TtaStrdup (pImage->localName);
 	  pImage->prevImage = previous;
 	  if (previous != NULL)
 	    previous->nextImage = pImage;
@@ -1269,7 +1270,7 @@ void                RemoveDocumentImages (Document doc)
 	  {
 	     pImage->status = IMAGE_NOT_LOADED;
 	     /* remove the image */
-	     TtaFileUnlink (pImage->localName);
+	     TtaFileUnlink (pImage->tempfile);
 	     if (!strncmp (pImage->originalName, "internal:", sizeof ("internal:") - 1)
 		 && IsHTTPPath (pImage->originalName + sizeof ("internal:") - 1))
 	       {
@@ -1283,6 +1284,8 @@ void                RemoveDocumentImages (Document doc)
 		TtaFreeMemory (pImage->originalName);
 	     if (pImage->localName != NULL)
 		TtaFreeMemory (pImage->localName);
+	     if (pImage->tempfile != NULL)
+		TtaFreeMemory (pImage->tempfile);
 	     if (pImage->content_type != NULL)
 	       TtaFreeMemory (pImage->content_type);
 	     if (pImage->elImage)

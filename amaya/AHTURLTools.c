@@ -32,6 +32,11 @@ typedef struct _HTURI
     char *fragment;
 } HTURI;
 
+#ifdef _WINDOWS
+#define TMPDIR "TMP"
+#else
+#define TMPDIR "TMPDIR"
+#endif /* _WINDOWS */
 
 /*----------------------------------------------------------------------
   ConvertToLowerCase
@@ -2275,4 +2280,68 @@ ThotBool AM_UseXHTMLMimeType (void)
   TtaGetEnvBoolean ("ENABLE_XHTML_MIMETYPE", &xhtml_mimetype);
 
   return (xhtml_mimetype);
+}
+
+/*-----------------------------------------------------------------------
+  GetTempName
+  Front end to the Unix tempnam function, which is independent of the
+  value of the TMPDIR env value 
+  Returns a dynamically allocated string with a tempname. The user
+  must free this memory.
+  -----------------------------------------------------------------------*/
+char *GetTempName (const char *dir, const char *prefix)
+{
+  char *tmpdir;
+  char *tmp;
+  char *name = NULL;
+
+  /* save the value of TMPDIR */
+  tmp = getenv (TMPDIR);
+
+  if (tmp)
+    {
+      tmpdir = TtaStrdup (tmp);
+    }
+  else
+    tmpdir = NULL;
+
+  /* remove TMPDIR from the environment */
+  if (tmpdir)
+    {
+      tmp = TtaGetMemory (strlen (tmpdir) + 2);
+      sprintf (tmp, "%s=", TMPDIR);
+#ifdef _WINDOWS
+      _putenv (tmp);
+#else
+      putenv (tmp);
+#endif /* _WINDOWS */
+    }
+
+  /* create the tempname */
+#ifdef _WINDOWS
+  /* Under Windows, _tempnam returns the same name until the file is created */
+  {
+    char *altprefix;
+    name = tmpnam (NULL);	/* get a possibly unique string */
+    altprefix = TtaGetMemory(strlen (prefix) + strlen(name) + 1);
+    sprintf (altprefix, "%s%s", prefix, name + strlen(_P_tmpdir));
+    name = _tempnam (dir, altprefix); /* get a name that isn't yet in use */
+    TtaFreeMemory (altprefix);
+  }
+#else
+  name = tempnam (dir, prefix);
+#endif /* _WINDOWS */
+
+  /* restore the value of TMPDIR */
+  if (tmpdir)
+    {
+#ifdef _WINDOWS
+      _putenv (tmpdir);
+#else
+      putenv (tmpdir);
+#endif /* _WINDOWS */
+      /* Shouldn't be free (see man for putenv ()) */
+      /* TtaFreeMemory (tmpdir); */
+    }
+  return (name);
 }

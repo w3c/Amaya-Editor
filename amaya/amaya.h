@@ -543,7 +543,8 @@ ElemImage;
 typedef struct _LoadedImageDesc
   {
      char               *originalName;  /* complete URL of the image                */
-     char               *localName;     /* local name (without path) of the image   */
+     char               *localName;     /* relative name (without path) of the image   */
+     char               *tempfile;      /* name of the file that stores the image    */ 
      char               *content_type;  /* the MIME type as sent by the server      */
      struct _LoadedImageDesc *prevImage;/* double linked list                       */
      struct _LoadedImageDesc *nextImage;/* easier to unchain                        */
