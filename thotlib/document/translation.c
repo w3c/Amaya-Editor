@@ -3458,3 +3458,85 @@ char               *TSchemaName;
    fflush (stdout);
    fflush (stderr);
 }
+
+/*----------------------------------------------------------------------
+   ExportTree   exporte le sous arbre pointe par pEl du document 
+   pointe' par pDoc, selon le schema de traduction de nom TSchemaName 
+   et produit le resultat dans le fichier de nom fName ou dans le buffer.					
+  ----------------------------------------------------------------------*/
+
+#ifdef __STDC__
+void                ExportTree (PtrElement pEl, PtrDocument pDoc, char *fName, char *TSchemaName)
+
+#else  /* __STDC__ */
+void                ExportTree (pEl, pDoc, fName, TSchemaName)
+PtrElement	    pEl;
+PtrDocument         pDoc;
+char               *fName;
+char               *TSchemaName;
+#endif /* __STDC__ */
+
+{
+  int                 i;
+
+  /* fichier de sortie principal */
+  FILE               *outputFile;
+
+ 
+  /* cree le fichier de sortie principal */
+  outputFile = fopen (fName, "w");
+  
+  if (outputFile == NULL)
+    TtaDisplayMessage (CONFIRM, TtaGetMessage (LIB, TMSG_CREATE_FILE_IMP), fName);
+  else
+    /* le fichier de sortie principal a ete cree' */
+    {
+      /* separe nom de directory et nom de fichier */
+      strncpy (fileDirectory, fName, MAX_PATH);
+      fileDirectory[MAX_PATH - 1] = '\0';
+      i = strlen (fileDirectory);
+      while (i > 0 && fileDirectory[i] != DIR_SEP)
+	i--;
+      if (fileDirectory[i] == DIR_SEP)
+	{
+	  strcpy (fileName, &fileDirectory[i + 1]);
+	  fileDirectory[i + 1] = '\0';
+	}
+      else
+	{
+	  strcpy (fileName, &fileDirectory[i]);
+	  fileDirectory[i] = '\0';
+	}
+      /* charge le schema de traduction du document */
+      if (!LoadTranslationSchema (TSchemaName, pDoc->DocSSchema) != 0 ||
+	  !GetTranslationSchema (pEl->ElStructSchema) != 0)
+	/* echec au chargement du schema de traduction */
+	fclose (outputFile);
+      else
+	{
+	  /* separe nom de fichier et extension */
+	  fileExtension[0] = '\0';
+	  i = strlen (fileName);
+	  i--;
+	  while (i > 0 && fileName[i] != '.')
+	    i--;
+	  if (fileName[i] == '.')
+	    {
+	      strncpy (fileExtension, &fileName[i], MAX_PATH);
+	      fileName[i] = '\0';
+	    }
+	  InitOutputFiles (outputFile, pDoc);
+	  /* remet a zero les indicateurs "deja traduit" de tous les elements */
+	  /* de l'arbre a traduire */
+	  ResetTranslTags (pEl);
+	  /* traduit l'arbre */
+	  TranslateTree (pEl, pDoc, TRUE, TRUE, FALSE);
+	  /* vide ce qui traine dans les buffers de sortie */
+	  /* et ferme ces fichiers */
+	  FlushOutputFiles (pDoc);
+	}
+    }
+  ClearTranslationSchemasTable ();
+  fflush (stdout);
+  fflush (stderr);
+}

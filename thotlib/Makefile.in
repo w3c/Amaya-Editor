@@ -114,6 +114,9 @@ THOTK_OBJ = \
 	document/schtrad.o \
 	document/translation.o \
 	tree/draw.o \
+	tree/res.o \
+	tree/resmatch.o \
+	tree/resgen.o \
 	tree/exceptions.o \
 	tree/references.o \
 	tree/structschema.o \

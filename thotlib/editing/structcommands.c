@@ -36,6 +36,7 @@
 #include "dialog.h"
 #include "tree.h"
 #include "content.h"
+#include "registry.h"
 
 #undef THOT_EXPORT
 #define THOT_EXPORT extern
@@ -74,7 +75,11 @@ static PtrIsomorphDesc firstIsomorphDesc = NULL;
 static int          NChangeTypeItems;
 static int          ChangeTypeTypeNum[MAX_ITEMS_CHANGE_TYPE];
 static PtrSSchema   ChangeTypeSSchema[MAX_ITEMS_CHANGE_TYPE];
+static int          ChangeTypeMethod[MAX_ITEMS_CHANGE_TYPE];
+#define M_EQUIV 1
+#define M_RESDYN 2
 
+#include "res_f.h"
 #include "appli_f.h"
 #include "applicationapi_f.h"
 #include "tree_f.h"
@@ -255,6 +260,7 @@ int                 typeNum;
    int                 choice;
    boolean             found;
    int                 i;
+   char		      *strResDyn;
 
    /* on ne propose pas le type qu'a deja l'element */
    if (pEl->ElTypeNumber != typeNum ||
@@ -269,20 +275,34 @@ int                 typeNum;
 		 if (pSS->SsCode == ChangeTypeSSchema[i]->SsCode)
 		    found = TRUE;
 	   if (!found)
-	      /* ce type n'est pas deja dans la table */
-	      if (IsomorphicTypes (pEl->ElStructSchema, pEl->ElTypeNumber,
-				   pSS, typeNum))
+	     {
+	       strResDyn = TtaGetEnvString ("RESDYN");
+	       /* ce type n'est pas deja dans la table */
+	       if (IsomorphicTypes (pEl->ElStructSchema, pEl->ElTypeNumber,
+				    pSS, typeNum))
 		 /* ce type est isomorphe au type de l'element */
 		 /* on le met dans la table */
-		{
+		 {
 		   ChangeTypeTypeNum[NChangeTypeItems] = typeNum;
 		   ChangeTypeSSchema[NChangeTypeItems] = pSS;
+		   ChangeTypeMethod[NChangeTypeItems] = M_EQUIV;
 		   NChangeTypeItems++;
-		}
-	      else
+		 }
+	       /* existe-t-il une relation facteur ou massif */
+	       else if (strResDyn != NULL &&
+			!strcmp (strResDyn, "YES") &&
+			RestMatchElements ((Element)pEl, (Element)pEl, 
+					   (SSchema)pSS, typeNum))
+		 {
+		   ChangeTypeTypeNum[NChangeTypeItems] = typeNum;
+		   ChangeTypeSSchema[NChangeTypeItems] = pSS;
+		   ChangeTypeMethod[NChangeTypeItems] = M_RESDYN;
+		   NChangeTypeItems++;
+		 }
+	       else
 		 /* ce type n'est pas isomorphe, mais c'est peut-etre un
 		    Choix */
-		{
+		 {
 		   pSRule = &pSS->SsRule[typeNum - 1];
 		   if (pSRule->SrConstruct == CsChoice)
 		      /* c'est un CsChoix. On essaie de mettre chacune de */
@@ -290,7 +310,8 @@ int                 typeNum;
 		      for (choice = 0; choice < pSRule->SrNChoices &&
 		      NChangeTypeItems < MAX_ITEMS_CHANGE_TYPE - 1; choice++)
 			 RegisterIfIsomorphic (pEl, pSS, pSRule->SrChoice[choice]);
-		}
+		 }
+	     }
 	}
 }
 
@@ -2087,6 +2108,7 @@ PtrElement          pEl;
    PtrSSchema          pSSasc;
    PtrElement          pAncest, pPrev;
    int                 choice, typeNum;
+   char		      *strResDyn;
 
    NChangeTypeItems = 0;	/* la table est vide pour l'instant */
    if (pEl != NULL)
@@ -2109,8 +2131,12 @@ PtrElement          pEl;
 		     pIsoD = pNextIsoD;
 		  }
 		firstIsomorphDesc = NULL;
+		strResDyn = TtaGetEnvString ("RESDYN");
+		if (strResDyn!= NULL && !strcmp (strResDyn, "YES"))
+		  /* on initialise la transformation automatique */
+		  RestInitMatch ((Element)pEl, (Element)pEl);
 
-		/* on commence par remplir la table des types a proposer dans
+ 		/* on commence par remplir la table des types a proposer dans
 		   le menu de changement de types */
 		/* on parcourt la liste des regles choix trouvees */
 		pChoiceD = pChoicesFound;
@@ -2202,7 +2228,7 @@ PtrSSchema          newSSchema;
    PtrElement          pEl;
    Element             El;
    ElementType         elType;
-   int                 ent, firstChar, lastChar;
+   int                 ent, method, firstChar, lastChar;
    boolean             ok;
    boolean             done = FALSE;
 
@@ -2260,13 +2286,25 @@ PtrSSchema          newSSchema;
 			       if (newTypeNum == ChangeTypeTypeNum[ent])
 				  if (newSSchema->SsCode ==
 				      ChangeTypeSSchema[ent]->SsCode)
-				     ok = TRUE;
+				    {
+                                      method = ChangeTypeMethod[ent];
+				      ok = TRUE;
+				    }
 			    }
 			  if (ok)
 			     /* le type est dans la table, on effectue le
 			        changement */
-			     done = DoChangeType (pEl, pDoc, newTypeNum,
-						  newSSchema);
+			    switch (method)
+			      {
+			      case M_EQUIV :
+				done = DoChangeType (pEl, pDoc, newTypeNum,
+						     newSSchema);
+				break;
+			      case M_RESDYN :
+				done = RestChangeType((Element)pEl, IdentDocument (pDoc),
+						      newTypeNum, (SSchema)newSSchema);
+				break;
+                              }
 		       }
 		     if (!done)
 			/* on essaie de changer le type du pere si on est sur
@@ -3318,8 +3356,19 @@ int                 entree;
 
    GetCurrentSelection (&pDoc, &pEl, &lastEl, &firstChar, &lastChar);
    if (pEl == NULL)
-      return;
-   DoChangeType (pEl, pDoc, ChangeTypeTypeNum[entree], ChangeTypeSSchema[entree]);
+
+     return;
+   switch (ChangeTypeMethod[entree])
+     {
+     case M_EQUIV :
+       DoChangeType (pEl, pDoc, ChangeTypeTypeNum[entree],
+		     ChangeTypeSSchema[entree]);
+       break;
+     case M_RESDYN :
+       RestChangeType((Element)pEl,IdentDocument (pDoc), ChangeTypeTypeNum[entree],
+		      (SSchema)ChangeTypeSSchema[entree]);
+       break;
+     }
 }
 
 /*----------------------------------------------------------------------
