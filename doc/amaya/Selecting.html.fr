@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title>Selecting</title>
+  <meta name="GENERATOR" content="amaya V3.2" />
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+</head>
+
+<body xml:lang="en" lang="en">
+
+<table border="0" width="100%" summary="toc">
+  <tbody>
+    <tr>
+      <td><p><img border="0" alt="W3C" src="../../Icons/WWW/w3c_home" /> <img
+        border="0" alt="Amaya" src="../Icons/amaya.gif" /></p>
+      </td>
+      <td><p align="right"><a href="Browsing.html"><img alt="previous"
+        border="0" src="../Icons/left.gif" /></a> <a href="Manual.html"><img
+        alt="top" border="0" src="../Icons/up.gif" /></a> <a
+        href="Searching.html"><img alt="next" border="0"
+        src="../Icons/right.gif" /></a></p>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<div id="Selecting">
+<h2>Selecting</h2>
+
+<p>Many commands in <strong>Amaya</strong> act on the current selection.  The
+current selection can be changed in different ways.</p>
+<dl>
+  <dt>Selecting with the mouse</dt>
+    <dd>As usual, you can click with the left mouse button for moving the
+      insertion point.
+      <p>To select some text, drag a region - move the mouse with the left
+      button pressed down and release it when the desired part is
+      selected.</p>
+      <p>You can also extend the selection by clicking with the left button
+      combined with the Shift key.</p>
+      <p>You can select a whole element, such as a list item by clicking on
+      its bullet or its number.</p>
+    </dd>
+  <dt>Selecting with the arrow keys</dt>
+    <dd>The four arrow keys on the keyboard move the insertion point in the
+      four directions. If there is no visible selection in that document, up
+      and down arrows allow you to scroll the document one line up or one line
+      down.</dd>
+</dl>
+
+<p>Whatever the way you change the current selection, the type of the first
+selected element is displayed at the bottom of the window. It is followed by
+the types of the enclosing elements in the structure. This may be helpful when
+the document structure is complex.</p>
+
+<h3><a name="Selecting1">Selecting by Structure</a></h3>
+
+<p>The structure view is especially convenient for quickly selecting large
+elements. Just click on the blue label that represents the element, or on the
+name of any of its attributes, or even on its blue vertical line. A large
+element like a complex table or a long list can be selected with a single
+click.</p>
+
+<p>Clicking on a black character in the Structure view selects only that
+character.</p>
+
+<p>A bold text in the structure view represents the value of an attribute that
+can be edited directly from the keyboard. A selection in such an attribute
+value cannot be extended outside the attribute.</p>
+
+<p>It is also possible to use the Keyboard for selecting by structure in any
+view. Pressing the Esc (F2 on Windows) key selects the parent element in the
+document structure. Pressing the Esc (F2 on Windows) key several times allows
+you to select containers (and everything in them) up the structure the
+structure towards the root. It is also possible to select child elements: the
+default shortcut key is ctrl-minus ("-"). To select the next or previous
+element at the same level (or at the level of the parent element if there is
+no next/previous child of the current parent) use control-k (for next) and
+control-j (for previous).</p>
+
+<h3><a name="Selecting2">Selecting images</a></h3>
+
+<p>If you click on the left hand part of an image, the insertion point is
+moved to the left edge of that image. This allows you to type text before the
+image. If you click on the right hand part of an image, the insertion point is
+moved to the right side of that image. This allows you to type text after the
+image.</p>
+
+<p>When using the arrow keys to move, the cursor will move from one side of
+the image to the image itself (selecting it)and then to the other side</p>
+
+<p>If you want to select the whole image, click anywhere within the image and
+move a bit with the button pressed down. Do not leave the image before
+releasing the button. The whole image is then selected. You can use the copy,
+cut and paste commands to move or duplicate the image element along with all
+its attributes.</p>
+</div>
+
+<p align="right"><a href="Browsing.html"><img alt="previous" border="0"
+src="../Icons/left.gif" /></a> <a href="Manual.html"><img alt="top" border="0"
+src="../Icons/up.gif" /></a> <a href="Searching.html"><img alt="next"
+border="0" src="../Icons/right.gif" /></a></p>
+<hr />
+</body>
+</html>
