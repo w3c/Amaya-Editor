@@ -434,6 +434,17 @@ void UpdateStyleSheet (char *url, char *tempdoc)
 				LoadStyleSheet (refcss->url, doc, refInfo->PiLink, NULL,
 						(CSSmedia)refInfo->PiMedia,
 						refInfo->PiCategory == CSS_USER_STYLE);
+			      if (CSSErrorsFound)
+				{
+				  /* the CSS parser detected an error */
+				  TtaWriteClose (ErrFile);
+				  ErrFile = NULL;
+				  TtaSetItemOn (doc, 1, File, BShowLogFile);
+				  CSSErrorsFound = FALSE;
+				  InitInfo ("", TtaGetMessage (AMAYA, AM_CSS_ERROR));
+				}
+			      else
+				TtaSetItemOff (doc, 1, File, BShowLogFile);
 			      /* Restore the display mode */
 			      if (dispMode == DisplayImmediately)
 				TtaSetDisplayMode (doc, dispMode);

@@ -542,7 +542,7 @@ void UpdateStylePost (NotifyAttribute * event)
 	if (CSSErrorsFound)
 	  {
 	    /* the CSS parser detected an error */
-	    fclose (ErrFile);
+	    TtaWriteClose (ErrFile);
 	    ErrFile = NULL;
 	    TtaSetItemOn (doc, 1, File, BShowLogFile);
 	    CSSErrorsFound = FALSE;
