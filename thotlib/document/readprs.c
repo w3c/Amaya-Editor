@@ -864,8 +864,11 @@ static CounterStyle ReadCounterStyle (BinFile file)
      }
    switch (c)
 	 {
-	    case C_NUM_ARABIC:
-	       countstyle = CntArabic;
+	    case C_NUM_DECIMAL:
+	       countstyle = CntDecimal;
+	       break;
+	    case C_NUM_ZLDECIMAL:
+	       countstyle = CntZLDecimal;
 	       break;
 	    case C_NUM_ROMAN:
 	       countstyle = CntURoman;
@@ -879,9 +882,15 @@ static CounterStyle ReadCounterStyle (BinFile file)
 	    case C_NUM_LOWERCASE:
 	       countstyle = CntLowercase;
 	       break;
+	    case C_NUM_GREEK:
+	       countstyle = CntLGreek;
+	       break;
+	    case C_NUM_UPPER_GREEK:
+	       countstyle = CntUGreek;
+	       break;
 	    default:
 	       error = True;
-	       countstyle = CntArabic;
+	       countstyle = CntDecimal;
 	       break;
 	 }
    return countstyle;

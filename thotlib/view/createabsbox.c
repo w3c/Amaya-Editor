@@ -1432,21 +1432,21 @@ ThotBool ComputeListItemNumber (PtrAbstractBox pAb)
       pPrev = pPrev->ElPrevious;
     }
   if (pAb->AbListStyleType == '1')
-    countStyle = CntArabic;
+    countStyle = CntDecimal;
   else if (pAb->AbListStyleType == 'Z')
-    countStyle = CntArabic;      /******/
+    countStyle = CntZLDecimal;
   else if (pAb->AbListStyleType == 'i')
     countStyle = CntLRoman;
   else if (pAb->AbListStyleType == 'I')
     countStyle = CntURoman;
   else if (pAb->AbListStyleType == 'g')
-    countStyle = CntLowercase;   /******/
+    countStyle = CntLGreek;
   else if (pAb->AbListStyleType == 'a')
     countStyle = CntLowercase;
   else if (pAb->AbListStyleType == 'A')
     countStyle = CntUppercase;
   else
-    countStyle = CntArabic;
+    countStyle = CntDecimal;
   GetCounterValue (count, countStyle, number, &length);
   number[length++] = '.';
   number[length] = EOS;

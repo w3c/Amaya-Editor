@@ -897,11 +897,12 @@ ThotBool PresAbsBoxUserEditable (PtrAbstractBox pAb)
 
 /*----------------------------------------------------------------------
    	GetCounterValue	converts the value number into a character	
-   	string according to a given style (arabic, roman, letter).	
+   	string according to a given style (decimal, roman, latin, greek...).
   ----------------------------------------------------------------------*/
 void GetCounterValue (int number, CounterStyle style, char *string, int *len)
 {
-   int                 c, i, begin;
+   int                 c, i, begin, digit;
+   unsigned char*      ptr;
 
    *len = 0;
    if (number < 0)
@@ -911,7 +912,8 @@ void GetCounterValue (int number, CounterStyle style, char *string, int *len)
      }
    switch (style)
      {
-     case CntArabic:
+     case CntDecimal:
+     case CntZLDecimal:
        if (number >= 100000)
 	 {
 	   string[(*len)++] = '?';
@@ -927,6 +929,8 @@ void GetCounterValue (int number, CounterStyle style, char *string, int *len)
 	 c = 2;
        else
 	 c = 1;
+       if (style == CntZLDecimal)
+	 c++;
        *len += c;
        i = *len;
        do
@@ -936,6 +940,8 @@ void GetCounterValue (int number, CounterStyle style, char *string, int *len)
 	   number = number / 10;
 	 }
        while (number > 0);
+       if (style == CntZLDecimal && i > 0)
+	 string[i - 1] = '0';
        break;
      case CntURoman:
      case CntLRoman:
@@ -1052,6 +1058,43 @@ void GetCounterValue (int number, CounterStyle style, char *string, int *len)
 	 }
        while (c > 0);
        break;
+     case CntLGreek:
+     case CntUGreek:
+       if (number > 346200)
+	 {
+	   string[(*len)++] = '?';
+	   number = number % 346200;
+	 }
+       if (number > 14424)
+	 c = 4;
+       else if (number > 600)
+	 c = 3;
+       else if (number > 24)
+	 c = 2;
+       else
+	 c = 1;
+       *len += c * 2;
+       i = *len;
+       do
+	 {
+	   number --;
+	   digit = number % 24;
+	   /* skip final sigma */
+	   if (digit >= 17)
+	     digit++;
+	   i -= 2;
+	   (unsigned char**) ptr = &string[i];
+	   if (style == CntUGreek)
+	     TtaWCToMBstring ((wchar_t) (digit + 0x0391), &ptr);
+	   else
+	     TtaWCToMBstring ((wchar_t) (digit + 0x03b1), &ptr);
+	   c --;
+	   number = number / 24;
+	 }
+       while (c > 0);
+       string[*len] = EOS;
+       (*len)++;
+       break;
      default:
        break;
      }
@@ -1082,7 +1125,7 @@ ThotBool NewVariable (int varNum, PtrSSchema pSS, PtrPSchema pSchP,
    PresVariable       *pPr1;
    PresVarItem        *pVa1;
    PresConstant       *pPres1;
-   PtrTtAttribute         pAttr1;
+   PtrTtAttribute      pAttr1;
    PtrElement          pEl;
    Counter            *pCo1;
    char                number[20];
@@ -1225,17 +1268,17 @@ ThotBool NewVariable (int varNum, PtrSSchema pSS, PtrPSchema pSchP,
 	    pt = &tod;
 	    *pt = time (NULL);
 	    ptm = localtime (pt);
-	    GetCounterValue (ptm->tm_year, CntArabic, number, &l);
+	    GetCounterValue (ptm->tm_year, CntDecimal, number, &l);
 	    CopyStringToBuffer ((unsigned char *)number, pAb->AbText, &l);
 	    pAb->AbVolume += l;
 	    CopyStringToBuffer ((unsigned char *)"/", pAb->AbText, &l);
 	    pAb->AbVolume += l;
-	    GetCounterValue (ptm->tm_mon + 1, CntArabic, number, &l);
+	    GetCounterValue (ptm->tm_mon + 1, CntDecimal, number, &l);
 	    CopyStringToBuffer ((unsigned char *)number, pAb->AbText, &l);
 	    pAb->AbVolume += l;
 	    CopyStringToBuffer ((unsigned char *)"/", pAb->AbText, &l);
 	    pAb->AbVolume += l;
-	    GetCounterValue (ptm->tm_mday, CntArabic, number, &l);
+	    GetCounterValue (ptm->tm_mday, CntDecimal, number, &l);
 	    CopyStringToBuffer ((unsigned char *)number, pAb->AbText, &l);
 	    pAb->AbVolume += l;
 	    break;
@@ -1245,17 +1288,17 @@ ThotBool NewVariable (int varNum, PtrSSchema pSS, PtrPSchema pSchP,
 	    pt = &tod;
 	    *pt = time (NULL);
 	    ptm = localtime (pt);
-	    GetCounterValue (ptm->tm_mday, CntArabic, number, &l);
+	    GetCounterValue (ptm->tm_mday, CntDecimal, number, &l);
 	    CopyStringToBuffer ((unsigned char *)number, pAb->AbText, &l);
 	    pAb->AbVolume += l;
 	    CopyStringToBuffer ((unsigned char *)"/", pAb->AbText, &l);
 	    pAb->AbVolume += l;
-	    GetCounterValue (ptm->tm_mon + 1, CntArabic, number, &l);
+	    GetCounterValue (ptm->tm_mon + 1, CntDecimal, number, &l);
 	    CopyStringToBuffer ((unsigned char *)number, pAb->AbText, &l);
 	    pAb->AbVolume += l;
 	    CopyStringToBuffer ((unsigned char *)"/", pAb->AbText, &l);
 	    pAb->AbVolume += l;
-	    GetCounterValue (ptm->tm_year, CntArabic, number, &l);
+	    GetCounterValue (ptm->tm_year, CntDecimal, number, &l);
 	    CopyStringToBuffer ((unsigned char *)number, pAb->AbText, &l);
 	    pAb->AbVolume += l;
 	    break;

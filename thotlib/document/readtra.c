@@ -511,8 +511,11 @@ static CounterStyle ReadCounterStyle (BinFile file)
      }
    switch (c)
 	 {
-	    case C_NUM_ARABIC:
-	       style = CntArabic;
+	    case C_NUM_DECIMAL:
+	       style = CntDecimal;
+	       break;
+	    case C_NUM_ZLDECIMAL:
+	       style = CntZLDecimal;
 	       break;
 	    case C_NUM_ROMAN:
 	       style = CntURoman;
@@ -526,9 +529,15 @@ static CounterStyle ReadCounterStyle (BinFile file)
 	    case C_NUM_LOWERCASE:
 	       style = CntLowercase;
 	       break;
+	    case C_NUM_GREEK:
+	       style = CntLGreek;
+	       break;
+	    case C_NUM_UPPER_GREEK:
+	       style = CntUGreek;
+	       break;
 	    default:
 	       TSchemaError (16);
-	       style = CntArabic;
+	       style = CntDecimal;
 	       break;
 	 }
    return style;

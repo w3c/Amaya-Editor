@@ -1756,7 +1756,7 @@ static void ProcessToken (indLine wi, indLine wl, SyntacticCode c, SyntacticCode
 	   case KWD_ARABIC:
 	     pTransVar = &pTSchema->TsVariable[pTSchema->TsNVariables - 1];
 	     pTransVar->TrvItem[pTransVar->TrvNItems - 1].TvCounterStyle =
-	       CntArabic;
+	       CntDecimal;
 	     break;
 	     
 	   case KWD_UROMAN:
@@ -2521,7 +2521,7 @@ static void ProcessToken (indLine wi, indLine wl, SyntacticCode c, SyntacticCode
 		       pTransVar->TrvItem[pTransVar->TrvNItems - 1].TvLength =
 			 0;
 		       pTransVar->TrvItem[pTransVar->TrvNItems - 1].
-			 TvCounterStyle = CntArabic;
+			 TvCounterStyle = CntDecimal;
 		     }
 		   else if (pr == RULE_RuleB)
 		     /* un compteur dans une instruction Set ou Add */

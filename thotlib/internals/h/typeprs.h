@@ -252,7 +252,8 @@ typedef enum
 /* counter styles */
 typedef enum
 {
-  CntArabic, CntURoman, CntLRoman, CntUppercase, CntLowercase
+  CntDecimal, CntZLDecimal, CntURoman, CntLRoman, CntUppercase, CntLowercase,
+  CntLGreek, CntUGreek
 } CounterStyle;
 
 /* types of a presentation variable */

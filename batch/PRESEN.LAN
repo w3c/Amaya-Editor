@@ -70,8 +70,10 @@ Function =	  'DATE' / 'FDATE' /
 		  ConstName / AttrName .
 CounterAttrPage = 'PageNumber' [ '(' ViewName ')' ] /
 		  [ MaxMinValue ] CounterName / AttrName .
-CounterStyle =	  'ARABIC' / 'UROMAN' / 'LROMAN' / 'UPPERCASE' /
-		  'LOWERCASE' .
+CounterStyle =	  'Arabic' / 'Decimal' / 'DecimalLeadingZero' /
+		  'URoman' / 'UpperRoman' / 'LRoman' / 'LowerRoman' /
+		  'Uppercase' / 'UpperLatin' / 'Lowercase' / 'LowerLatin' /
+                  'LowerGreek' / 'UpperGreek' .
 
 BoxList =	  Box < Box > .
 Box =		  'FORWARD' BoxName ';' /

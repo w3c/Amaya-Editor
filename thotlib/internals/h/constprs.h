@@ -151,11 +151,14 @@
 #define C_PF_NOTINLINE        'n'
 
 /* counters presentation style */
-#define C_NUM_ARABIC          'A'
+#define C_NUM_DECIMAL         'D'
+#define C_NUM_ZLDECIMAL       'Z'
 #define C_NUM_ROMAN           'R'
 #define C_NUM_LOWER_ROMAN     'r'
 #define C_NUM_UPPERCASE       'L'
 #define C_NUM_LOWERCASE       'l'
+#define C_NUM_GREEK           'g'
+#define C_NUM_UPPER_GREEK     'G'
 
 /* presentation variables type */
 #define C_VAR_TEXT            'C'

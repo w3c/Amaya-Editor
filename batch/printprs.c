@@ -1044,8 +1044,11 @@ static void         WriteCounterStyle (CounterStyle St)
 {
    switch (St)
 	 {
-	    case CntArabic:
-	       printf (",Arabic)");
+	    case CntDecimal:
+	       printf (",Decimal)");
+	       break;
+	    case CntZLDecimal:
+	       printf (",ZeroLeadingDecimal)");
 	       break;
 	    case CntURoman:
 	       printf (",URoman)");
@@ -1058,6 +1061,12 @@ static void         WriteCounterStyle (CounterStyle St)
 	       break;
 	    case CntLowercase:
 	       printf (",Lowercase)");
+	       break;
+	    case CntUGreek:
+	       printf (",UGreek)");
+	       break;
+	    case CntLGreek:
+	       printf (",LGreek)");
 	       break;
 	 }
 }

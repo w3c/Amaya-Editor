@@ -2935,7 +2935,7 @@ static void ProcessLongKeyWord (int x, SyntacticCode gCode, indLine wi)
 	pPresVar = &pPSchema->PsVariable[pPSchema->PsNVariables - 1];
 	NewVarListItem (pPresVar, wi);
 	pPresVar->PvItem[pPresVar->PvNItems - 1].ViType = VarAttrValue;
-	pPresVar->PvItem[pPresVar->PvNItems - 1].ViStyle = CntArabic;
+	pPresVar->PvItem[pPresVar->PvNItems - 1].ViStyle = CntDecimal;
 	pPresVar->PvItem[pPresVar->PvNItems - 1].ViAttr = 0;
 	break;
       case KWD_VALUE:
@@ -2944,28 +2944,95 @@ static void ProcessLongKeyWord (int x, SyntacticCode gCode, indLine wi)
 	pPresVar = &pPSchema->PsVariable[pPSchema->PsNVariables - 1];
 	NewVarListItem (pPresVar, wi);
 	pPresVar->PvItem[pPresVar->PvNItems - 1].ViType = VarPageNumber;
-	pPresVar->PvItem[pPresVar->PvNItems - 1].ViStyle = CntArabic;
+	pPresVar->PvItem[pPresVar->PvNItems - 1].ViStyle = CntDecimal;
 	pPresVar->PvItem[pPresVar->PvNItems - 1].ViView = 1;
 	break;
-      case KWD_ARABIC /* ARABIC */ :
+      case KWD_Arabic:
 	pPresVar = &pPSchema->PsVariable[pPSchema->PsNVariables - 1];
-	pPresVar->PvItem[pPresVar->PvNItems - 1].ViStyle = CntArabic;
+	pPresVar->PvItem[pPresVar->PvNItems - 1].ViStyle = CntDecimal;
 	break;
-      case KWD_UROMAN /* UROMAN */ :
+      case KWD_Decimal:
+	if (gCode == RULE_CounterStyle)
+	  {
+	    pPresVar = &pPSchema->PsVariable[pPSchema->PsNVariables - 1];
+	    pPresVar->PvItem[pPresVar->PvNItems - 1].ViStyle = CntDecimal;
+	  }
+        else if (gCode == RULE_ListStyleType)
+	  CurRule->PrChrValue = '1';
+	break;
+      case KWD_DecimalLeadingZero:
+	if (gCode == RULE_CounterStyle)
+	  {
+	    pPresVar = &pPSchema->PsVariable[pPSchema->PsNVariables - 1];
+	    pPresVar->PvItem[pPresVar->PvNItems - 1].ViStyle = CntZLDecimal;
+	  }
+        else if (gCode == RULE_ListStyleType)
+	  CurRule->PrChrValue = 'Z';
+	break;
+      case KWD_URoman:
 	pPresVar = &pPSchema->PsVariable[pPSchema->PsNVariables - 1];
 	pPresVar->PvItem[pPresVar->PvNItems - 1].ViStyle = CntURoman;
 	break;
-      case KWD_LROMAN /* LROMAN */ :
+      case KWD_UpperRoman:
+	if (gCode == RULE_CounterStyle)
+	  {
+	    pPresVar = &pPSchema->PsVariable[pPSchema->PsNVariables - 1];
+	    pPresVar->PvItem[pPresVar->PvNItems - 1].ViStyle = CntURoman;
+	  }
+        else if (gCode == RULE_ListStyleType)
+	  CurRule->PrChrValue = 'I';
+	break;
+      case KWD_LRoman:
 	pPresVar = &pPSchema->PsVariable[pPSchema->PsNVariables - 1];
 	pPresVar->PvItem[pPresVar->PvNItems - 1].ViStyle = CntLRoman;
 	break;
-      case KWD_UPPERCASE /* UPPERCASE */ :
+      case KWD_LowerRoman:
+	if (gCode == RULE_CounterStyle)
+	  {
+	    pPresVar = &pPSchema->PsVariable[pPSchema->PsNVariables - 1];
+	    pPresVar->PvItem[pPresVar->PvNItems - 1].ViStyle = CntLRoman;
+	  }
+	else if (gCode == RULE_ListStyleType)
+	  CurRule->PrChrValue = 'i';
+	break;
+      case KWD_Uppercase:
 	pPresVar = &pPSchema->PsVariable[pPSchema->PsNVariables - 1];
 	pPresVar->PvItem[pPresVar->PvNItems - 1].ViStyle = CntUppercase;
 	break;
-      case KWD_LOWERCASE /* LOWERCASE */ :
+      case KWD_UpperLatin:
+	if (gCode == RULE_CounterStyle)
+	  {
+	    pPresVar = &pPSchema->PsVariable[pPSchema->PsNVariables - 1];
+	    pPresVar->PvItem[pPresVar->PvNItems - 1].ViStyle = CntUppercase;
+	  }
+	else if (gCode == RULE_ListStyleType)
+	  CurRule->PrChrValue = 'A';
+	break;
+      case KWD_Lowercase:
 	pPresVar = &pPSchema->PsVariable[pPSchema->PsNVariables - 1];
 	pPresVar->PvItem[pPresVar->PvNItems - 1].ViStyle = CntLowercase;
+	break;
+      case KWD_LowerLatin:
+	if (gCode == RULE_CounterStyle)
+	  {
+	    pPresVar = &pPSchema->PsVariable[pPSchema->PsNVariables - 1];
+	    pPresVar->PvItem[pPresVar->PvNItems - 1].ViStyle = CntLowercase;
+	  }
+	else if (gCode == RULE_ListStyleType)
+	  CurRule->PrChrValue = 'a';
+	break;
+      case KWD_LowerGreek:
+	if (gCode == RULE_CounterStyle)
+	  {
+	    pPresVar = &pPSchema->PsVariable[pPSchema->PsNVariables - 1];
+	    pPresVar->PvItem[pPresVar->PvNItems - 1].ViStyle = CntLGreek;
+	  }
+	else if (gCode == RULE_ListStyleType)
+	  CurRule->PrChrValue = 'g';
+	break;
+      case KWD_UpperGreek:
+	pPresVar = &pPSchema->PsVariable[pPSchema->PsNVariables - 1];
+	pPresVar->PvItem[pPresVar->PvNItems - 1].ViStyle = CntUGreek;
 	break;
       case KWD_FORWARD:
 	/* forward */
@@ -3509,27 +3576,6 @@ static void ProcessLongKeyWord (int x, SyntacticCode gCode, indLine wi)
 	break;
       case KWD_Square:
 	CurRule->PrChrValue = 'S';
-	break;
-      case KWD_Decimal:
-	CurRule->PrChrValue = '1';
-	break;
-      case KWD_DecimalLeadingZero:
-	CurRule->PrChrValue = 'Z';
-	break;
-      case KWD_LowerRoman:
-	CurRule->PrChrValue = 'i';
-	break;
-      case KWD_UpperRoman:
-	CurRule->PrChrValue = 'I';
-	break;
-      case KWD_LowerGreek:
-	CurRule->PrChrValue = 'g';
-	break;
-      case KWD_LowerLatin:
-	CurRule->PrChrValue = 'a';
-	break;
-      case KWD_UpperLatin:
-	CurRule->PrChrValue = 'A';
 	break;
       case KWD_Inside:
 	CurRule->PrChrValue = 'I';
@@ -4727,7 +4773,7 @@ static void ProcessName (SyntacticCode gCode, int identnum, SyntacticCode prevRu
 		pPresVar = &pPSchema->PsVariable[pPSchema->PsNVariables - 1];
 		NewVarListItem (pPresVar, wi);
 		pPresVar->PvItem[pPresVar->PvNItems - 1].ViType = VarAttrValue;
-		pPresVar->PvItem[pPresVar->PvNItems - 1].ViStyle = CntArabic;
+		pPresVar->PvItem[pPresVar->PvNItems - 1].ViStyle = CntDecimal;
 		pPresVar->PvItem[pPresVar->PvNItems - 1].ViAttr = i;
 		}
 	     }
@@ -4859,7 +4905,7 @@ static void ProcessName (SyntacticCode gCode, int identnum, SyntacticCode prevRu
 	  pPresVar = &pPSchema->PsVariable[pPSchema->PsNVariables - 1];
 	  NewVarListItem (pPresVar, wi);
 	  pPresVar->PvItem[pPresVar->PvNItems - 1].ViType = VarAttrValue;
-	  pPresVar->PvItem[pPresVar->PvNItems - 1].ViStyle = CntArabic;
+	  pPresVar->PvItem[pPresVar->PvNItems - 1].ViStyle = CntDecimal;
 	  pPresVar->PvItem[pPresVar->PvNItems - 1].ViAttr = i;
 	  }
        else if (prevRule == RULE_Attr)

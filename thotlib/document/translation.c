@@ -2632,7 +2632,7 @@ static void PutVariable (PtrElement pEl, PtrAttribute pAttr,
 	   /* valeur du compteur pour l'element meme */
 	   i = Counter_Val (varItem->TvItem, pTSch, pSS, pEl);
 	 /* produit quelques 0 si c'est demande' */
-	 if (varItem->TvCounterStyle == CntArabic && varItem->TvLength > 0)
+	 if (varItem->TvCounterStyle == CntDecimal && varItem->TvLength > 0)
 	   {
 	     j = 1;
 	     for (k = 0; k < varItem->TvLength - 1; k++)

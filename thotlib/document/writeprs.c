@@ -813,8 +813,11 @@ static void         WriteCounterStyle (CounterStyle style)
 {
    switch (style)
 	 {
-	    case CntArabic:
-	       TtaWriteByte (outfile, C_NUM_ARABIC);
+	    case CntDecimal:
+	       TtaWriteByte (outfile, C_NUM_DECIMAL);
+	       break;
+	    case CntZLDecimal:
+	       TtaWriteByte (outfile, C_NUM_ZLDECIMAL);
 	       break;
 	    case CntURoman:
 	       TtaWriteByte (outfile, C_NUM_ROMAN);
@@ -827,6 +830,12 @@ static void         WriteCounterStyle (CounterStyle style)
 	       break;
 	    case CntLowercase:
 	       TtaWriteByte (outfile, C_NUM_LOWERCASE);
+	       break;
+	    case CntLGreek:
+	       TtaWriteByte (outfile, C_NUM_GREEK);
+	       break;
+	    case CntUGreek:
+	       TtaWriteByte (outfile, C_NUM_UPPER_GREEK);
 	       break;
 	    default:
 	       fprintf (stderr, "Invalid style %X\n", style);
