@@ -2129,14 +2129,15 @@ ThotBool            check;
 	if (FirstSelectedElement != NULL)
 	   if (FirstSelectedElement->ElTerminal)
 	     {
-		if (FirstSelectedElement->ElLeafType == LtSymbol)
-		   /* a symbol is selected, display the symbol palette */
+		/* if a symbol is selected, display the symbol palette */
+/******		if (FirstSelectedElement->ElLeafType == LtSymbol)
 		   TtaSetCurrentKeyboard (0);
-		else if (FirstSelectedElement->ElLeafType == LtGraphics)
-		   /* a graphic shape is selected, display the graphic palette */
+******/
+		/* if a graphic shape is selected, display the graphic palette */
+		if (FirstSelectedElement->ElLeafType == LtGraphics)
 		   TtaSetCurrentKeyboard (1);
+		/* if a polyline is selected, display the graphic palette */
 		else if (FirstSelectedElement->ElLeafType == LtPolyLine)
-		   /* a polyline is selected, display the graphic palette */
 		   TtaSetCurrentKeyboard (1);
 	     }
 	/* update all the menus that depend on the current selection */

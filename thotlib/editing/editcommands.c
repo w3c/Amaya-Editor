@@ -656,7 +656,8 @@ ThotBool            del;
 	  /* deplace l'insertion avant ou apres le pave selectionne */
 	  else if (!pSelAb->AbCanBeModified ||
 		   pSelAb->AbLeafType == LtCompound ||
-		   (pSelAb->AbLeafType != nat && nat != LtReference))
+		   (pSelAb->AbLeafType != nat && nat != LtReference &&
+		    !(pSelAb->AbLeafType == LtSymbol && nat == LtText)))
 	    {
 	      moveSelection = TRUE;
 	      if (pViewSel->VsXPos > 0)
@@ -3234,7 +3235,36 @@ int                 keyboard;
 	      break;
 	      /* Saisie d'un caractere de symbole ou graphique */
 	    case LtSymbol:
-	      if (keyboard == 0)
+	      if (keyboard == 3)
+		/* From Greek palette (Adobe Symbol font) */
+		/* convert the character into its Thot symbol equivalent */
+		{
+		  switch ((int) c)
+		    {
+		    case 40: c = '('; break; /* ( */
+		    case 41: c = ')'; break; /* ) */
+		    case 80: c = 'P'; break; /* Pi */
+		    case 83: c = 'S'; break; /* Sigma */
+		    case 91: c = '['; break; /* [ */
+		    case 93: c = ']'; break; /* ] */
+		    case 123: c = '{'; break; /* { */
+		    case 125: c = '}'; break; /* } */
+		    case 172: c = '<'; break; /* Left arrow */
+		    case 173: c = '^'; break; /* Top arrow */
+		    case 174: c = '>'; break; /* Right arrow */
+		    case 175: c = 'V'; break; /* bottom arrow */
+		    case 199: c = 'I'; break; /* Inter */
+		    case 200: c = 'U'; break; /* Union */
+		    case 213: c = 'P'; break; /* Pi */
+		    case 214: c = 'r'; break; /* Root */
+		    case 229: c = 'S'; break; /* Sigma */
+		    case 242: c = 'i'; break; /* Integral */
+		    default: c = ' '; break;
+		    }
+		  keyboard = -1;   /* simulate keyboard input */
+		}
+	      if (keyboard == -1 || keyboard == 0)
+		/* saisie au clavier ou par la palette Math symbols */
 		{
 		  FromKeyboard = TRUE;
 		  ContentEditing ((int) c);
