@@ -53,7 +53,6 @@ THOT_EXPORT ThotColor InactiveB_Color;  /* Disabled button color          */
 THOT_EXPORT ThotBool  TtIsTrueColor;
 
 #ifdef _WINDOWS
-THOT_EXPORT int          TtPatchedFont[MAX_FONT];/* size of the patched font */
 THOT_EXPORT HACCEL       hAccel[MAX_FRAME + 2];
 THOT_EXPORT WNDCLASSEX   RootShell;
 THOT_EXPORT HFONT        DefaultFont;  /* default Font                 */
