@@ -375,13 +375,13 @@ static void DrawFilledBox (PtrAbstractBox pAb, int frame, int xmin,
 /*----------------------------------------------------------------------
  OpacityAndTransformNext : Test before going on to a next Box
   ----------------------------------------------------------------------*/
-static void OpacityAndTransformNext (PtrAbstractBox pAb, int plane, 
-				     int frame, int xmin, int xmax, int ymin, int ymax)
+static void OpacityAndTransformNext (PtrAbstractBox pAb, int plane, int frame,
+				     int xmin, int xmax, int ymin, int ymax)
 {
 #ifdef _GL
   if (pAb->AbElement && pAb->AbDepth == plane)
     {
-      if (pAb->AbBox->Pre_computed_Pic == NULL)
+      if (pAb->AbBox && pAb->AbBox->Pre_computed_Pic == NULL)
 	{
 	if (TypeHasException (ExcIsGroup, pAb->AbElement->ElTypeNumber,
 				pAb->AbElement->ElStructSchema) && 
@@ -618,7 +618,7 @@ PtrBox DisplayAllBoxes (int frame, int xmin, int xmax, int ymin, int ymax,
 				}
 			    }
 			}
-		    }		  
+		    }  
 #ifdef _GL
 		}
 #endif /* _GL */	      
@@ -636,7 +636,7 @@ PtrBox DisplayAllBoxes (int frame, int xmin, int xmax, int ymin, int ymax,
 	  if (pAb->AbLeafType == LtCompound && 
 	      pAb->AbFirstEnclosed
 #ifdef _GL
-	      && pAb->AbBox->Pre_computed_Pic == NULL)
+	      && pAb->AbBox && pAb->AbBox->Pre_computed_Pic == NULL)
 #else /*  _GL */
 	    )
 #endif /* _GL */
