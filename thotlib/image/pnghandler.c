@@ -109,23 +109,6 @@ char  *typecouleur[] = {"grayscale", "undefined type", "RGB",
 			"colormap", "grayscale+alpha",
 			"undefined type", "RGB+alpha"};
 
-/*----------------------------------------------------------------------
-  ----------------------------------------------------------------------*/
-static void PError (png_struct *png_ptr, char *message)
-{
-   fprintf(stderr,"libpng error: %s\n", message);
-   longjmp(png_ptr->jmpbuf, 1);
-}
-
-/*----------------------------------------------------------------------
-  ----------------------------------------------------------------------*/
-static void PWarning (png_struct *png_ptr, char *message)
-{
-   if (!png_ptr)
-     return;
-   fprintf(stderr,"libpng warning: %s\n", message);
-}
-
 #ifdef _GL
 /*----------------------------------------------------------------------
   ReadPng : reads from a file pointer a png file into a RGBA buffer
@@ -241,6 +224,23 @@ static unsigned char *ReadPng (FILE *pfFile, unsigned int *width, unsigned int *
 }
 
 #else /* _GL */
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+static void PError (png_struct *png_ptr, char *message)
+{
+   fprintf(stderr,"libpng error: %s\n", message);
+   longjmp(png_ptr->jmpbuf, 1);
+}
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+static void PWarning (png_struct *png_ptr, char *message)
+{
+   if (!png_ptr)
+     return;
+   fprintf(stderr,"libpng warning: %s\n", message);
+}
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
