@@ -41,12 +41,7 @@
    	feuille.							
    	Retourne un pointeur sur le nouveau buffer.			
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 PtrTextBuffer       NewTextBuffer (PtrTextBuffer pBuf)
-#else  /* __STDC__ */
-PtrTextBuffer       NewTextBuffer (pBuf)
-PtrTextBuffer       pBuf;
-#endif /* __STDC__ */
 {
    PtrTextBuffer       pNewBuf;
 
@@ -65,12 +60,7 @@ PtrTextBuffer       pBuf;
    	element feuille							
    	pEl est l'element feuille qui doit etre de type texte.		
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                CreateTextBuffer (PtrElement pEl)
-#else  /* __STDC__ */
-void                CreateTextBuffer (pEl)
-PtrElement          pEl;
-#endif /* __STDC__ */
 {
    PtrTextBuffer       pBuf;
 
@@ -84,12 +74,7 @@ PtrElement          pEl;
    	DeleteTextBuffer  supprime un buffer de texte dont le pointeur est	
    	passe' en parametre.						
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                DeleteTextBuffer (PtrTextBuffer * pBuf)
-#else  /* __STDC__ */
-void                DeleteTextBuffer (pBuf)
-PtrTextBuffer      *pBuf;
-#endif /* __STDC__ */
 {
    if (*pBuf != NULL)
      {
@@ -114,17 +99,7 @@ PtrTextBuffer      *pBuf;
 	pSecondPart: l'element de texte correspondant a la partie
 		     apres la coupure.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                SplitTextElement (PtrElement pEl, int rank, PtrDocument pDoc, ThotBool withAppEvent, PtrElement *pSecondPart, ThotBool elBreak)
-#else  /* __STDC__ */
-void                SplitTextElement (pEl, rank, pDoc, withAppEvent, pSecondPart, elBreak)
-PtrElement          pEl;
-int                 rank;
-PtrDocument         pDoc;
-ThotBool            withAppEvent;
-PtrElement	    *pSecondPart;
-ThotBool            elBreak;
-#endif /* __STDC__ */
 {
    PtrTextBuffer       pBuf;
    int                 i, len;
@@ -293,17 +268,8 @@ ThotBool            elBreak;
         Cette fonction retourne TRUE si la fusion a lieu,
                                 FALSE sinon.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 ThotBool            MergeTextElements (PtrElement pEl, PtrElement * pFreeEl, PtrDocument pDoc,
 				       ThotBool withAppEvent, ThotBool removeAbsBox)
-#else  /* __STDC__ */
-ThotBool            MergeTextElements (pEl, pFreeEl, pDoc, withAppEvent, removeAbsBox)
-PtrElement          pEl;
-PtrElement         *pFreeEl;
-PtrDocument         pDoc;
-ThotBool            withAppEvent;
-ThotBool            removeAbsBox;
-#endif /* __STDC__ */
 {
    PtrElement          pEl1, pEl2;
    PtrElement          pSibling;
@@ -523,13 +489,7 @@ ThotBool            removeAbsBox;
    	de buffers de texte pointee par pBuf et retourne un pointeur	
    	sur le premier buffer de la copie realisee.			
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 PtrTextBuffer       CopyText (PtrTextBuffer pBuf, PtrElement pEl)
-#else  /* __STDC__ */
-PtrTextBuffer       CopyText (pBuf, pEl)
-PtrTextBuffer       pBuf;
-PtrElement          pEl;
-#endif /* __STDC__ */
 {
    PtrTextBuffer       pBufSource1, pBufSource2, pBufCopy1, pBufCopy2,
                        ret;
@@ -561,12 +521,7 @@ PtrElement          pEl;
    create a copy of the string of path elements pointed to by firstPathEl
    and return a pointer to the first element of the copy.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 PtrPathSeg       CopyPath (PtrPathSeg firstPathEl)
-#else  /* __STDC__ */
-PtrPathSeg       CopyPath (firstPathEl)
-PtrPathSeg firstPathEl;
-#endif /* __STDC__ */
 {
    PtrPathSeg    pSourcePa, pPrevPa, pPa, first;
 
@@ -598,13 +553,7 @@ PtrPathSeg firstPathEl;
    un texte contenu dans une suite de buffers. Retourne TRUE si    
    les contenus sont egaux.                                        
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 ThotBool            StringAndTextEqual (STRING String, PtrTextBuffer pBuf)
-#else  /* __STDC__ */
-ThotBool            StringAndTextEqual (String, pBuf)
-STRING              String;
-PtrTextBuffer       pBuf;
-#endif /* __STDC__ */
 {
    ThotBool            equal;
    int                 l, lenRest;
@@ -655,13 +604,7 @@ PtrTextBuffer       pBuf;
    TextsEqual compare deux textes contenus dans des suites de     
    buffers. Retourne TRUE si les deux textes sont egaux.		
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 ThotBool            TextsEqual (PtrTextBuffer pBuf1, PtrTextBuffer pBuf2)
-#else  /* __STDC__ */
-ThotBool            TextsEqual (pBuf1, pBuf2)
-PtrTextBuffer       pBuf1;
-PtrTextBuffer       pBuf2;
-#endif /* __STDC__ */
 {
    ThotBool            equal;
    PtrTextBuffer       pTB1, pTB2;
@@ -730,18 +673,7 @@ PtrTextBuffer       pBuf2;
    pCopyBuf.							
    Retourne dans len le nombre de caracteres copie's.		
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 void                CopyTextToText (PtrTextBuffer pSrceBuf, PtrTextBuffer pCopyBuf, int *len)
-
-#else  /* __STDC__ */
-void                CopyTextToText (pSrceBuf, pCopyBuf, len)
-PtrTextBuffer       pSrceBuf;
-PtrTextBuffer       pCopyBuf;
-int                *len;
-
-#endif /* __STDC__ */
-
 {
    PtrTextBuffer       pTBSrce, pTBDest;
 
@@ -764,7 +696,8 @@ int                *len;
 		     /* pour copier tout le texte du buffer source, on */
 		     /* prend un nouveau buffer destination */
 		     pTBDest = NewTextBuffer (pTBDest);
-		  ustrcpy (pTBDest->BuContent + pTBDest->BuLength, pTBSrce->BuContent);
+		  ustrcpy (pTBDest->BuContent + pTBDest->BuLength,
+			   pTBSrce->BuContent);
 		  pTBDest->BuLength += pTBSrce->BuLength;
 		  *len += pTBSrce->BuLength;
 	       }
@@ -782,14 +715,7 @@ int                *len;
    de buffers.                                                     
    Retourne dans LgCopiee le nombre de caracteres copie's.         
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                CopyStringToText (CHAR_T* srceStrn, PtrTextBuffer pCopyBuf, int *LgCopiee)
-#else  /* __STDC__ */
-void                CopyStringToText (srceStrn, pCopyBuf, LgCopiee)
-CHAR_T*             srceStrn;
-PtrTextBuffer       pCopyBuf;
-int                *LgCopiee;
-#endif /* __STDC__ */
 {
    PtrTextBuffer       pTBDest;
    CHAR_T*             pSrce;
@@ -842,14 +768,7 @@ int                *LgCopiee;
    A l'appel, len contient la longueur maximum a copier.           
    Au retour, len contient le nombre de caracteres copie's.        
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                CopyTextToString (PtrTextBuffer pSrceBuf, CHAR_T* pStrCpy, int *len)
-#else  /* __STDC__ */
-void                CopyTextToString (pSrceBuf, pStrCpy, len)
-PtrTextBuffer       pSrceBuf;
-CHAR_T*             pStrCpy;
-int                *len;
-#endif /* __STDC__ */
 {
    int                 LgMax;
    int                 l;
@@ -888,22 +807,12 @@ int                *len;
    ClearText annule le texte contenu dans le buffer pBuf  
    et libere les buffers suivants.                                 
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 void                ClearText (PtrTextBuffer pBuf)
-
-#else  /* __STDC__ */
-void                ClearText (pBuf)
-PtrTextBuffer       pBuf;
-
-#endif /* __STDC__ */
-
 {
    PtrTextBuffer       pNextBuf;
 
    if (pBuf != NULL)
      {
-	pBuf = pBuf;
 	pBuf->BuLength = 0;
 	pBuf->BuContent[0] = EOS;
 	pNextBuf = pBuf->BuNext;
@@ -923,15 +832,7 @@ PtrTextBuffer       pBuf;
    des points de contro^le de la polyline.                 
    On saute le point 0 (coordonnees du point limite).      
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                AddPointInPolyline (PtrTextBuffer firstBuffer, int rank, int x, int y)
-#else  /* __STDC__ */
-void                AddPointInPolyline (firstBuffer, rank, x, y)
-PtrTextBuffer       firstBuffer;
-int                 rank;
-int                 x;
-int                 y;
-#endif /* __STDC__ */
 {
    PtrTextBuffer       pBuf, pNextBuf;
    int                 i, j;
@@ -1027,13 +928,7 @@ int                 y;
    Le pointeur firstBuffer peut e^tre modifie' par la      
    proce'dure.                                             
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                DeletePointInPolyline (PtrTextBuffer * firstBuffer, int rank)
-#else  /* __STDC__ */
-void                DeletePointInPolyline (firstBuffer, rank)
-PtrTextBuffer      *firstBuffer;
-int                 rank;
-#endif /* __STDC__ */
 {
    PtrTextBuffer       pBuf;
    int                 j;
@@ -1074,15 +969,7 @@ int                 rank;
    de la polyline.
    On saute le point 0 (coordonnees du point limite).      
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                ModifyPointInPolyline (PtrTextBuffer firstBuffer, int rank, int x, int y)
-#else  /* __STDC__ */
-void                ModifyPointInPolyline (firstBuffer, rank, x, y)
-PtrTextBuffer       firstBuffer;
-int                 rank;
-int                 x;
-int                 y;
-#endif /* __STDC__ */
 {
    PtrTextBuffer       pBuf;
 
@@ -1123,12 +1010,7 @@ int                 y;
    contained in the element.
 
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 int                 TtaGetTextLength (Element element)
-#else  /* __STDC__ */
-int                 TtaGetTextLength (element)
-Element             element;
-#endif /* __STDC__ */
 {
    int                 textLength;
 
@@ -1163,16 +1045,7 @@ Element             element;
    language: language of the text.
 
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                TtaGiveTextContent (Element element, STRING buffer, int *length, Language * language)
-#else  /* __STDC__ */
-void                TtaGiveTextContent (element, buffer, length, language)
-Element             element;
-STRING              buffer;
-int                *length;
-Language           *language;
-
-#endif /* __STDC__ */
 {
    PtrTextBuffer       pBuf;
    STRING              ptr;

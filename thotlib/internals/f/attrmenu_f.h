@@ -21,6 +21,7 @@ extern void CallbackAttrMenu ( int refmenu,
 extern void CallbackLanguageMenu ( int ref,
                                    int val,
                                    STRING txt );
+extern void CloseAttributeDialogues ( PtrDocument pDoc );
 extern void AttributeMenuLoadResources ( void );
 
 #else /* __STDC__ */
@@ -40,6 +41,7 @@ extern void CallbackAttrMenu (/* int refmenu,
 extern void CallbackLanguageMenu (/* int ref,
                                      int val,
                                      STRING txt */);
+extern void CloseAttributeDialogues (/* PtrDocument pDoc */);
 extern void AttributeMenuLoadResources (/* void */);
 
 #endif /* __STDC__ */

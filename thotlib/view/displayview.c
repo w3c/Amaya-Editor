@@ -40,6 +40,7 @@
 #include "appdialogue_f.h"
 #include "appli_f.h"
 #include "applicationapi_f.h"
+#include "attrmenu_f.h"
 #include "attrpresent_f.h"
 #include "attributes_f.h"
 #include "boxselection_f.h"
@@ -93,13 +94,7 @@ static SelectionDescriptor documentNewSelection[MAX_DOCUMENTS];
    RedisplayDocViews demande le reaffichage de toutes les vues du	
    document pDoc.						
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                RedisplayDocViews (PtrDocument pDoc)
-#else  /* __STDC__ */
-void                RedisplayDocViews (pDoc)
-PtrDocument         pDoc;
-
-#endif /* __STDC__ */
 {
   DisplayMode       displayMode;
   int                 i;
@@ -124,13 +119,7 @@ PtrDocument         pDoc;
    AbstractImageUpdated	signale les modifications de l'image	
    abstraite du document pDoc.				
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                AbstractImageUpdated (PtrDocument pDoc)
-#else  /* __STDC__ */
-void                AbstractImageUpdated (pDoc)
-PtrDocument         pDoc;
-
-#endif /* __STDC__ */
 {
   DisplayMode       displayMode;
   PtrAbstractBox    pAb;
@@ -181,13 +170,7 @@ PtrDocument         pDoc;
    Returns TRUE if all abstract boxes in view v corresponding to
    ancestors of element pEl are allowed to be incomplete.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static ThotBool	EnclosingAbsBoxesBreakable (PtrElement pEl, int v)
-#else  /* __STDC__ */
-static ThotBool	EnclosingAbsBoxesBreakable (pEl, v)
-PtrElement	pEl;
-int		v;
-#endif /* __STDC__ */
 {
    PtrAbstractBox	pAb;
 
@@ -206,14 +189,7 @@ int		v;
    Delete from a given view all abstract boxes associated with elements
    that follow pEl (following siblings of pEl and its ancestors).
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void SupprFollowingAbsBoxes (PtrElement pEl, PtrDocument pDoc, int view)
-#else  /* __STDC__ */
-static void SupprFollowingAbsBoxes (pEl, pDoc, view)
-PtrElement	pEl;
-PtrDocument	pDoc;
-int		view;
-#endif /* __STDC__ */
 {
    PtrAbstractBox	pAb, pNextAb, pParentAb, pAbbRedisp, pAbbR;
 
@@ -287,14 +263,7 @@ int		view;
    Cree dans toutes les vues ouvertes du document pDoc les paves qui
    correspondent a l'element pEl, dans la limite de la capacite' des vues.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void BuildAbstractBoxes (PtrElement pEl, PtrDocument pDoc)
-#else  /* __STDC__ */
-void BuildAbstractBoxes (pEl, pDoc)
-PtrElement pEl;
-PtrDocument pDoc;
-#endif /* __STDC__ */
-
 {
    PtrAbstractBox      pAb;
    int                 view;
@@ -383,16 +352,10 @@ PtrDocument pDoc;
    RedisplayNewElement affiche un element qui vient d'etre ajoute'    
    dans un arbre abstrait.                                         
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                RedisplayNewElement (Document document, PtrElement newElement, PtrElement sibling, ThotBool first, ThotBool creation)
-#else  /* __STDC__ */
-void                RedisplayNewElement (document, newElement, sibling, first, creation)
-Document            document;
-PtrElement          newElement;
-PtrElement          sibling;
-ThotBool            first;
-ThotBool            creation;
-#endif /* __STDC__ */
+void                RedisplayNewElement (Document document,
+					 PtrElement newElement,
+					 PtrElement sibling, ThotBool first,
+					 ThotBool creation)
 {
    PtrDocument         pDoc;
 
@@ -423,7 +386,6 @@ ThotBool            creation;
      }
 }
 
-
 /*----------------------------------------------------------------------
    TCloseDocument ferme toutes les vue d'un document et decharge ce	
    document. Si pDoc est NULL, demande a` l'utilisateur de 
@@ -432,12 +394,7 @@ ThotBool            creation;
    a` fermer.                                              
    Detruit egalement le fichier .BAK du document.          
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                TCloseDocument (PtrDocument pDoc)
-#else  /* __STDC__ */
-void                TCloseDocument (pDoc)
-PtrDocument         pDoc;
-#endif /* __STDC__ */
 {
   NotifyDialog      notifyDoc;
   Document          document;
@@ -456,6 +413,10 @@ PtrDocument         pDoc;
 	    (*ThotLocalActions[T_rscorrector]) (-1, 0, (STRING) pDoc);
 	  if (ThotLocalActions[T_clearhistory] != NULL)
 	    (*ThotLocalActions[T_clearhistory]) (pDoc);
+	  /* if some dialog boxes for attribute input are displayed
+             for that document, close them */
+          CloseAttributeDialogues (pDoc);
+          TtaHandlePendingEvents ();
 	  /* detruit toutes les vues ouvertes du document */
 	  CloseAllViewsDoc (pDoc);
 	  /* free document contents */
@@ -473,13 +434,7 @@ PtrDocument         pDoc;
    NumberOfOpenViews retourne le nombre de vues qui existent pour	
    le document pDoc					
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 int                 NumberOfOpenViews (PtrDocument pDoc)
-#else  /* __STDC__ */
-int                 NumberOfOpenViews (pDoc)
-PtrDocument         pDoc;
-
-#endif /* __STDC__ */
 {
    int                 view, assoc, result;
 
@@ -499,14 +454,7 @@ PtrDocument         pDoc;
    FreeView libere les paves et le contexte de la vue view du	
    document pDoc.						
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                FreeView (PtrDocument pDoc, DocViewNumber view)
-#else  /* __STDC__ */
-void                FreeView (pDoc, view)
-PtrDocument         pDoc;
-DocViewNumber       view;
-
-#endif /* __STDC__ */
 {
    PtrGuestViewDescr  guestView, next;
 
@@ -541,16 +489,8 @@ DocViewNumber       view;
    Si assoc est vrai, detruit la vue des elements associes de numero view
    du document.	
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                CloseDocumentView (PtrDocument pDoc, int view, ThotBool assoc, ThotBool closeDoc)
-#else  /* __STDC__ */
-void                CloseDocumentView (pDoc, view, assoc, closeDoc)
-PtrDocument         pDoc;
-int                 view;
-ThotBool            assoc;
-ThotBool            closeDoc;
-
-#endif /* __STDC__ */
+void                CloseDocumentView (PtrDocument pDoc, int view,
+				       ThotBool assoc, ThotBool closeDoc)
 {
   if (pDoc != NULL)
     /* on detruit la vue */
@@ -560,7 +500,8 @@ ThotBool            closeDoc;
       else
 	{
 	  view--;
-	  FreeAbView (pDoc->DocAssocRoot[view]->ElAbstractBox[0], pDoc->DocViewFrame[view]);
+	  FreeAbView (pDoc->DocAssocRoot[view]->ElAbstractBox[0],
+		      pDoc->DocViewFrame[view]);
 	  pDoc->DocAssocRoot[view]->ElAbstractBox[0] = NULL;
 	  pDoc->DocAssocFrame[view] = 0;
 	}
@@ -578,12 +519,7 @@ ThotBool            closeDoc;
 /*----------------------------------------------------------------------
    CloseAllViewsDoc ferme toutes les vues ouvertes du document pDoc 
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                CloseAllViewsDoc (PtrDocument pDoc)
-#else  /* __STDC__ */
-void                CloseAllViewsDoc (pDoc)
-PtrDocument         pDoc;
-#endif /* __STDC__ */
 {
   int                 view, assoc;
 
@@ -611,15 +547,8 @@ PtrDocument         pDoc;
    View = view number or assoc. elem. number if assoc. view.      
    complete = TRUE if the window is completely cleaned.           
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         CleanImageView (int View, ThotBool Assoc, PtrDocument pDoc, ThotBool complete)
-#else  /* __STDC__ */
-static void         CleanImageView (View, Assoc, pDoc, complete)
-int                 View;
-ThotBool            Assoc;
-PtrDocument         pDoc;
-ThotBool            complete;
-#endif /* __STDC__ */
+static void         CleanImageView (int View, ThotBool Assoc, PtrDocument pDoc,
+				    ThotBool complete)
 {
    PtrAbstractBox      pAb;
    int                 h;
@@ -666,11 +595,12 @@ ThotBool            complete;
 	/* Releases all dead abstract boxes of the view */
 	FreeDeadAbstractBoxes (pAbbRoot, frame);
 
-	/* Shows that one must apply presentation rules of the root abstract box, for example
-	   to rebuild presentaion boxes, created by the root and destroyed */
+	/* Shows that one must apply presentation rules of the root abstract
+	   box, for example to rebuild presentaion boxes, created by the
+	   root and destroyed */
 	pAbbRoot->AbSize = -1;
-	/* The complete root abstract box is marked. This allows  AbsBoxesCreate */
-	/* to generate presentation abstract boxes created at the begenning */
+	/* The complete root abstract box is marked. This allows AbsBoxesCreate
+	   to generate presentation abstract boxes created at the begenning */
 	if (pAbbRoot->AbLeafType == LtCompound)
 	   pAbbRoot->AbTruncatedHead = FALSE;
      }
@@ -681,13 +611,7 @@ ThotBool            complete;
    DestroyImage detruit l'image abstraite de toutes les vues          
    ouvertes dudocument pDoc                                     
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         DestroyImage (PtrDocument pDoc)
-#else  /* __STDC__ */
-static void         DestroyImage (pDoc)
-PtrDocument         pDoc;
-
-#endif /* __STDC__ */
 {
   int                 view, frame;
   int                 assoc;
@@ -722,14 +646,8 @@ PtrDocument         pDoc;
    Vue = numero d'elt assoc si vue associee sinon                 
    Vue = numero de vue si vue d'arbre principal                   
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         RebuildViewImage (int view, ThotBool Assoc, PtrDocument pDoc)
-#else  /* __STDC__ */
-static void         RebuildViewImage (view, Assoc, pDoc)
-int                 view;
-ThotBool            Assoc;
-PtrDocument         pDoc;
-#endif /* __STDC__ */
+static void         RebuildViewImage (int view, ThotBool Assoc,
+				      PtrDocument pDoc)
 {
    PtrElement          pElRoot;
    PtrAbstractBox      pAbbRoot;
@@ -737,27 +655,30 @@ PtrDocument         pDoc;
    int                 frame, h, w;
    ThotBool            complete;
 
-   if (Assoc) {
-      pDoc->DocAssocFreeVolume[view - 1] = pDoc->DocAssocVolume[view - 1];
-      pElRoot = pDoc->DocAssocRoot[view - 1];
-      pAbbRoot = pElRoot->ElAbstractBox[0];
-      frame = pDoc->DocAssocFrame[view - 1];
-      AbsBoxesCreate (pElRoot, pDoc, 1, TRUE, TRUE, &complete);
-      if (pAbbRoot == NULL)
+   if (Assoc)
+     {
+       pDoc->DocAssocFreeVolume[view - 1] = pDoc->DocAssocVolume[view - 1];
+       pElRoot = pDoc->DocAssocRoot[view - 1];
+       pAbbRoot = pElRoot->ElAbstractBox[0];
+       frame = pDoc->DocAssocFrame[view - 1];
+       AbsBoxesCreate (pElRoot, pDoc, 1, TRUE, TRUE, &complete);
+       if (pAbbRoot == NULL)
          pAbbRoot = pElRoot->ElAbstractBox[0];
-      h = 0;
-      ChangeConcreteImage (frame, &h, pAbbRoot);
-   } else {
-          pElRoot = pDoc->DocRootElement;
-          pDoc->DocViewFreeVolume[view - 1] = pDoc->DocViewVolume[view - 1];
-          pAbbRoot = pDoc->DocViewRootAb[view - 1];
-          frame = pDoc->DocViewFrame[view - 1];
-          AbsBoxesCreate (pElRoot, pDoc, view, TRUE, TRUE, &complete);
-          if (pAbbRoot == NULL)
-             pAbbRoot = pDoc->DocViewRootAb[view - 1] = pElRoot->ElAbstractBox[view - 1];
-          h = 0;
-          ChangeConcreteImage (frame, &h, pAbbRoot);
-   } 
+       h = 0;
+       ChangeConcreteImage (frame, &h, pAbbRoot);
+     }
+   else 
+     {
+       pElRoot = pDoc->DocRootElement;
+       pDoc->DocViewFreeVolume[view - 1] = pDoc->DocViewVolume[view - 1];
+       pAbbRoot = pDoc->DocViewRootAb[view - 1];
+       frame = pDoc->DocViewFrame[view - 1];
+       AbsBoxesCreate (pElRoot, pDoc, view, TRUE, TRUE, &complete);
+       if (pAbbRoot == NULL)
+	 pAbbRoot = pDoc->DocViewRootAb[view - 1] = pElRoot->ElAbstractBox[view - 1];
+       h = 0;
+       ChangeConcreteImage (frame, &h, pAbbRoot);
+     } 
    /* force to redraw all the frame */
    pFrame = &ViewFrameTable[frame - 1];
    GetSizesFrame (frame, &w, &h);
@@ -769,12 +690,7 @@ PtrDocument         pDoc;
    RebuildImage recree l'image abstraite de toutes les vues            
    ouvertes du document pDoc                                      
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         RebuildImage (PtrDocument pDoc)
-#else  /* __STDC__ */
-static void         RebuildImage (pDoc)
-PtrDocument         pDoc;
-#endif /* __STDC__ */
 {
    int                 view;
    int                 assoc;
@@ -795,15 +711,9 @@ PtrDocument         pDoc;
    vue. newAbsModif donne la nouvelle valeur de AbCanBeModified,          
    reaffiche indique si on veut reafficher.                        
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         ChangeAbsBoxModifAttrIntoView (PtrElement pEl, int view, ThotBool newAbsModif, ThotBool redisplay)
-#else  /* __STDC__ */
-static void         ChangeAbsBoxModifAttrIntoView (pEl, view, newAbsModif, redisplay)
-PtrElement          pEl;
-int                 view;
-ThotBool            newAbsModif;
-ThotBool            redisplay;
-#endif /* __STDC__ */
+static void         ChangeAbsBoxModifAttrIntoView (PtrElement pEl, int view,
+						   ThotBool newAbsModif,
+						   ThotBool redisplay)
 {
    PtrAbstractBox      pAb, pAbbChild;
    ThotBool            stop;
@@ -856,14 +766,8 @@ ThotBool            redisplay;
    ChangeAbsBoxModif change les booleens AbCanBeModified et AbReadOnly dans 
    tous les paves existants de l'element pEl et de sa descendance. 
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                ChangeAbsBoxModif (PtrElement pEl, Document document, ThotBool newAbsModif)
-#else  /* __STDC__ */
-void                ChangeAbsBoxModif (pEl, document, newAbsModif)
-PtrElement          pEl;
-Document            document;
-ThotBool            newAbsModif;
-#endif /* __STDC__ */
+void                ChangeAbsBoxModif (PtrElement pEl, Document document,
+				       ThotBool newAbsModif)
 {
    PtrDocument         pDoc;
    int                 view;
@@ -887,7 +791,8 @@ ThotBool            newAbsModif;
 	   /* on traite tous les paves de l'element dans cette vue */
 	   ChangeAbsBoxModifAttrIntoView (pEl, view, newAbsModif, TRUE);
 	   if (pEl->ElAbstractBox[view - 1] != NULL)
-	      RedispAbsBox (pEl->ElAbstractBox[view - 1], LoadedDocument[document - 1]);
+	      RedispAbsBox (pEl->ElAbstractBox[view - 1],
+			    LoadedDocument[document - 1]);
 	}
    else
       /* View of associated elements */
@@ -914,20 +819,14 @@ ThotBool            newAbsModif;
 }
 
 
-
 /*----------------------------------------------------------------------
    RedisplayDefaultPresentation                                              
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                RedisplayDefaultPresentation (Document document, PtrElement pEl, PRuleType typeRuleP, FunctionType funcType, int view)
-#else  /* __STDC__ */
-void                RedisplayDefaultPresentation (document, pEl, typeRuleP, funcType, view)
-Document            document;
-PtrElement          pEl;
-PRuleType           typeRuleP;
-FunctionType        funcType;
-int                 view;
-#endif /* __STDC__ */
+void                RedisplayDefaultPresentation (Document document,
+						  PtrElement pEl,
+						  PRuleType typeRuleP,
+						  FunctionType funcType,
+						  int view)
 {
 
    if (LoadedDocument[document - 1] == NULL)
@@ -955,13 +854,7 @@ int                 view;
    HideElement "desaffiche" un element qui devient invisible       
    mais n'est pas detruit.                                         
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                HideElement (PtrElement pEl, Document document)
-#else  /* __STDC__ */
-void                HideElement (pEl, document)
-PtrElement          pEl;
-Document            document;
-#endif /* __STDC__ */
 {
    PtrDocument         pDoc;
    PtrElement          pChild;
@@ -1004,15 +897,8 @@ Document            document;
 /*----------------------------------------------------------------------
    RedisplayNewPRule                                               
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-void                RedisplayNewPRule (Document document, PtrElement pEl, PtrPRule pRule)
-#else  /* __STDC__ */
-void                RedisplayNewPRule (document, pEl, pRule)
-Document            document;
-PtrElement          pEl;
-PtrPRule            pRule;
-#endif /* __STDC__ */
+void                RedisplayNewPRule (Document document, PtrElement pEl,
+				       PtrPRule pRule)
 {
    if (LoadedDocument[document - 1] == NULL)
       return;
@@ -1034,15 +920,8 @@ PtrPRule            pRule;
 /*----------------------------------------------------------------------
    UndisplayAttribute                                              
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-void                UndisplayAttribute (PtrElement pEl, PtrAttribute pAttr, Document document)
-#else  /* __STDC__ */
-void                UndisplayAttribute (pEl, pAttr, document)
-PtrElement          pEl;
-PtrAttribute        pAttr;
-Document            document;
-#endif /* __STDC__ */
+void                UndisplayAttribute (PtrElement pEl, PtrAttribute pAttr,
+					Document document)
 {
    ThotBool            inheritance, comparaison;
    PtrAttribute        pAttrAsc;
@@ -1086,22 +965,16 @@ Document            document;
    RedisplayCommand (document);
    /* le nouvel attribut doit etre pris en compte dans */
    /* les copies-inclusions de l'element */
-   RedisplayCopies (pEl, LoadedDocument[document - 1], (ThotBool)(documentDisplayMode[document - 1] == DisplayImmediately));
+   RedisplayCopies (pEl, LoadedDocument[document - 1],
+		    (ThotBool)(documentDisplayMode[document - 1] == DisplayImmediately));
 }
 
 
 /*----------------------------------------------------------------------
    DisplayAttribute                                                
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-void                DisplayAttribute (PtrElement pEl, PtrAttribute pAttr, Document document)
-#else  /* __STDC__ */
-void                DisplayAttribute (pEl, pAttr, document)
-PtrElement          pEl;
-PtrAttribute        pAttr;
-Document            document;
-#endif /* __STDC__ */
+void                DisplayAttribute (PtrElement pEl, PtrAttribute pAttr,
+				      Document document)
 {
    PtrElement          pElChild;
    ThotBool            inheritance, comparaison, reDisp;
@@ -1149,12 +1022,7 @@ Document            document;
    RedisplayCommand        Selon le mode d'affichage, execute ou   
    met en attente une commande de reaffichage secondaire.          
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void         RedisplayCommand (Document document)
-#else  /* __STDC__ */
-void         RedisplayCommand (document)
-Document     document;
-#endif /* __STDC__ */
 {
    if (documentDisplayMode[document - 1] == DisplayImmediately)
      {
@@ -1166,16 +1034,10 @@ Document     document;
 
 
 /*----------------------------------------------------------------------
+  NewSelection
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                NewSelection (Document document, Element element, int firstCharacter, int lastCharacter)
-#else  /* __STDC__ */
-void                NewSelection (document, element, firstCharacter, lastCharacter)
-Document            document;
-Element             element;
-int                 firstCharacter;
-int                 lastCharacter;
-#endif /* __STDC__ */
+void                NewSelection (Document document, Element element,
+				  int firstCharacter, int lastCharacter)
 {
 
    /* annule l'extension precedente */
@@ -1189,15 +1051,10 @@ int                 lastCharacter;
 }
 
 /*----------------------------------------------------------------------
+  NewSelectionExtension
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                NewSelectionExtension (Document document, Element element, int lastCharacter)
-#else  /* __STDC__ */
-void                NewSelectionExtension (document, element, lastCharacter)
-Document            document;
-Element             element;
-int                 lastCharacter;
-#endif /* __STDC__ */
+void                NewSelectionExtension (Document document, Element element,
+					   int lastCharacter)
 {
    /* enregistre cette nouvelle extension de selection */
    documentNewSelection[document - 1].SDElemExt = element;
@@ -1207,21 +1064,15 @@ int                 lastCharacter;
 /*----------------------------------------------------------------------
    TtaFreeView
 
-   frees the view of the document. The window continues to exist but the document
-   is no longer displayed in this window.
+   frees the view of the document. The window continues to exist but the
+   document is no longer displayed in this window.
 
    Parameters:
    document: the document for which a view must be closed.
    view: the view to be closed.
 
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                TtaFreeView (Document document, View view)
-#else  /* __STDC__ */
-void                TtaFreeView (document, view)
-Document            document;
-View                view;
-#endif /* __STDC__ */
 {
    PtrDocument         pDoc;
    int                 numAssoc;
@@ -1257,13 +1108,7 @@ View                view;
 /*----------------------------------------------------------------------
   IsSelectionRegistered
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 ThotBool            IsSelectionRegistered (Document document, ThotBool * abort)
-#else  /* __STDC__ */
-ThotBool            IsSelectionRegistered (document, abort)
-Document            document;
-ThotBool           *abort;
-#endif /* __STDC__ */
 {
    ThotBool            ret;
 
@@ -1304,13 +1149,7 @@ ThotBool           *abort;
    document: the document.
    NewDisplayMode: new display mode for that document.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                TtaSetDisplayMode (Document document, DisplayMode newDisplayMode)
-#else  /* __STDC__ */
-void                TtaSetDisplayMode (document, newDisplayMode)
-Document            document;
-DisplayMode         newDisplayMode;
-#endif /* __STDC__ */
 {
   DisplayMode       oldDisplayMode;
   PtrDocument       pDoc;
@@ -1452,12 +1291,7 @@ DisplayMode         newDisplayMode;
    Return value:
    current display mode for that document.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 DisplayMode         TtaGetDisplayMode (Document document)
-#else  /* __STDC__ */
-DisplayMode         TtaGetDisplayMode (document)
-Document            document;
-#endif /* __STDC__ */
 {
    DisplayMode         result;
 

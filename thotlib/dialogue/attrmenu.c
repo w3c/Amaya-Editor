@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2000
+ *  (c) COPYRIGHT INRIA, 1996-2001
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -47,6 +47,7 @@ static ThotBool     AttrOblig[MAX_MENU * 2];
 static ThotBool     AttrEvent[MAX_MENU* 2];
 static CHAR_T       TextAttrValue[LgMaxAttrText];
 static PtrSSchema   SchCurrentAttr = NULL;
+static PtrDocument  DocCurrentAttr = NULL;
 static int          EventMenu[MAX_FRAME];
 static int          NumCurrentAttr = 0;
 static int          CurrentAttr;
@@ -58,9 +59,9 @@ static int          ActiveAttr[MAX_MENU * 2];
 static int          AttrEventNumber[MAX_MENU];
 static int          ActiveEventAttr[MAX_MENU];
 
-
 /* required attributs context */
 static PtrAttribute PtrReqAttr;
+static PtrDocument  PtrDocOfReqAttr;
 
 #ifdef _WINDOWS
 #define ID_CONFIRM   1000
@@ -125,21 +126,13 @@ extern UINT      subMenuID[MAX_FRAME];
 #include "tree_f.h"
 #include "ustring_f.h"
 
-
 /*----------------------------------------------------------------------
   InitFormLangue
   initializes a form for capturing the values of the Language attribute.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         InitFormLanguage (Document doc, View view, PtrElement firstSel, PtrAttribute currAttr)
-#else  /* __STDC__ */
-static void         InitFormLanguage (doc, view, firstSel, currAttr)
-Document            doc;
-View                view;
-PtrElement          firstSel;
-PtrAttribute        currAttr;
-
-#endif /* __STDC__ */
+static void         InitFormLanguage (Document doc, View view,
+				      PtrElement firstSel,
+				      PtrAttribute currAttr)
 {
 #ifndef _WINDOWS
    CHAR_T              bufMenu[MAX_TXT_LEN];
@@ -255,11 +248,7 @@ PtrAttribute        currAttr;
 /*----------------------------------------------------------------------
  InitFormDialogWndProc
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 LRESULT CALLBACK InitFormDialogWndProc (ThotWindow hwnd, UINT iMsg, WPARAM wParam, LPARAM lParam)
-#else  /* __STDC__ */
-LRESULT CALLBACK InitFormDialogWndProc (ThotWindow hwnd, UINT iMsg, WPARAM wParam, LPARAM lParam)
-#endif /* __STDC__ */
 {
   ThotWindow          hwnTitle;
   ThotWindow          confirmButton;
@@ -358,13 +347,7 @@ LRESULT CALLBACK InitFormDialogWndProc (ThotWindow hwnd, UINT iMsg, WPARAM wPara
 /*----------------------------------------------------------------------
   WIN_InitFormDialog
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static ThotBool WIN_InitFormDialog (ThotWindow parent, STRING title)
-#else  /* __STDC__ */
-static ThotBool WIN_InitFormDialog (parent, title)
-ThotWindow      parent;
-STRING          title;
-#endif /* __STDC__ */
 {
    WNDCLASS    wndFormClass;
    STRING      szAppName; 
@@ -418,15 +401,7 @@ STRING          title;
 /*----------------------------------------------------------------------
   InitSheetDialogWndProc
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 LRESULT CALLBACK InitSheetDialogWndProc (ThotWindow hwnd, UINT iMsg, WPARAM wParam, LPARAM lParam)
-#else  /* __STDC__ */
-LRESULT CALLBACK InitSheetDialogWndProc (hwnd, iMsg, wParam, lParam)
-ThotWindow hwnd;
-UINT       iMsg;
-WPARAM     wParam;
-LPARAM     lParam;
-#endif /* __STDC__ */
 {
   ThotWindow          hwnTitle;
   ThotWindow          applyButton;
@@ -535,12 +510,7 @@ LPARAM     lParam;
 /*----------------------------------------------------------------------
   WIN_InitSheetDialog
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static ThotBool WIN_InitSheetDialog (ThotWindow parent)
-#else  /* __STDC__ */
-static ThotBool WIN_InitSheetDialog (parent)
-ThotWindow      parent;
-#endif /* __STDC__ */
 {
    WNDCLASSEX    wndSheetClass;
    STRING        szAppName;
@@ -591,15 +561,7 @@ ThotWindow      parent;
 /*----------------------------------------------------------------------
   InitNumAttrDialogWndProc
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 LRESULT CALLBACK InitNumAttrDialogWndProc (ThotWindow hwnd, UINT iMsg, WPARAM wParam, LPARAM lParam)
-#else  /* __STDC__ */
-LRESULT CALLBACK InitNumAttrDialogWndProc (hwnd, iMsg, wParam, lParam)
-ThotWindow hwnd;
-UINT       iMsg;
-WPARAM     wParam;
-LPARAM     lParam;
-#endif /* __STDC__ */
 {
   ThotWindow        hwnTitle;
   ThotWindow        applyButton;
@@ -701,12 +663,7 @@ LPARAM     lParam;
 /*----------------------------------------------------------------------
   WIN_InitNumAttrDialog
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static ThotBool WIN_InitNumAttrDialog (ThotWindow parent)
-#else  /* __STDC__ */
-static ThotBool WIN_InitNumAttrDialog (parent)
-ThotWindow      parent;
-#endif /* __STDC__ */
 {
    WNDCLASSEX    wndNumAttrClass;
    ThotWindow    hwnNumAttrDialog;
@@ -756,22 +713,14 @@ ThotWindow      parent;
 
 /*----------------------------------------------------------------------
    MenuValues
-   builds the sheet for capturing the values of the attribute defined
+   builds the dialog box for capturing the values of the attribute defined
    by the pAttr1 rule.
    required specifies if it's a required attribute
    currAttr gives the current value of the attribute
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         MenuValues (TtAttribute * pAttr1, ThotBool required, PtrAttribute currAttr,
+static void         MenuValues (TtAttribute * pAttr1, ThotBool required,
+				PtrAttribute currAttr,
 				PtrDocument pDoc, int view)
-#else  /* __STDC__ */
-static void         MenuValues (pAttr1, required, currAttr, pDoc, view)
-TtAttribute        *pAttr1;
-ThotBool            required;
-PtrAttribute        currAttr;
-PtrDocument         pDoc;
-int                 view;
-#endif /* __STDC__ */
 {
    int                 i, lgmenu, val;
    int                 form, subform;
@@ -924,18 +873,10 @@ int                 view;
    CallbackReqAttrMenu
    handles the callback of the menu which captures the required attributes.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                CallbackReqAttrMenu (int ref, int val, STRING txt)
-#else  /* __STDC__ */
-void                CallbackReqAttrMenu (ref, val, txt)
-int                 ref;
-int                 val;
-STRING              txt;
-
-#endif /* __STDC__ */
 {
   int                 length;
-  
+
   switch (ref)
     {
     case NumMenuAttrRequired:
@@ -978,18 +919,12 @@ STRING              txt;
    builds the form for capturing the value of the required
    attribute as defined by the pRuleAttr rule.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                BuildReqAttrMenu (PtrAttribute pAttr, PtrDocument pDoc)
-#else  /* __STDC__ */
-void                BuildReqAttrMenu (pAttr, pDoc)
-PtrAttribute        pAttr;
-PtrDocument         pDoc;
-
-#endif /* __STDC__ */
 {
    TtAttribute        *pRuleAttr;
 
    PtrReqAttr = pAttr;
+   PtrDocOfReqAttr = pDoc;
    pRuleAttr = &pAttr->AeAttrSSchema->SsAttribute[pAttr->AeAttrNum - 1];
    /* toujours lie a la vue 1 du document */
    MenuValues (pRuleAttr, TRUE, NULL, pDoc, 1);
@@ -999,7 +934,6 @@ PtrDocument         pDoc;
 #endif /* !_WINDOWS */
 }
 
-
 /*----------------------------------------------------------------------
    TteItemMenuAttr 
    sends the AttrMenu.Pre message which indicates that the editor
@@ -1007,16 +941,8 @@ PtrDocument         pDoc;
    of an attribute of type (pSS, att) for the pEl element. It 
    returns the answer from the application.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static ThotBool     TteItemMenuAttr (PtrSSchema pSS, int att, PtrElement pEl, PtrDocument pDoc)
-#else  /* __STDC__ */
-static ThotBool     TteItemMenuAttr (pSS, att, pEl, pDoc)
-PtrSSchema          pSS;
-int                 att;
-PtrElement          pEl;
-PtrDocument         pDoc;
-
-#endif /* __STDC__ */
+static ThotBool     TteItemMenuAttr (PtrSSchema pSS, int att, PtrElement pEl,
+				     PtrDocument pDoc)
 {
    NotifyAttribute     notifyAttr;
    ThotBool            OK;
@@ -1039,15 +965,8 @@ PtrDocument         pDoc;
    Returns also the number of events attibutes and updates the corresponding
    buffer.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static int    BuildAttrMenu (STRING bufMenu, PtrDocument pDoc, int *nbEvent, STRING bufEventAttr)
-#else  /* __STDC__ */
-static int    BuildAttrMenu (bufMenu, pDoc, nbEvent, bufEventAttr)
-STRING        bufMenu;
-PtrDocument   pDoc;
-int          *nbEvent;
-STRING        bufEventAttr;
-#endif /* __STDC__ */
+static int    BuildAttrMenu (STRING bufMenu, PtrDocument pDoc, int *nbEvent,
+			     STRING bufEventAttr)
 {
   PtrDocument         SelDoc;
   PtrElement          firstSel, lastSel, pEl;
@@ -1249,13 +1168,7 @@ STRING        bufEventAttr;
    Updates the Attributes menu of all open frames belonging to document
    pDoc.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                UpdateAttrMenu (PtrDocument pDoc)
-#else  /* __STDC__ */
-void                UpdateAttrMenu (pDoc)
-PtrDocument         pDoc;
-
-#endif /* __STDC__ */
 {
 #ifndef _GTK
   Document            document;
@@ -1390,15 +1303,7 @@ PtrDocument         pDoc;
 /*----------------------------------------------------------------------
    AttachAttrToElem attachs the attribute to the element
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void	AttachAttrToElem (PtrAttribute pAttr, PtrElement pEl, PtrDocument pDoc)
-#else  /* __STDC__ */
-static void	AttachAttrToElem (pAttr, pEl, pDoc)
-PtrAttribute pAttr;
-PtrElement pEl;
-PtrDocument pDoc;
-
-#endif /* __STDC__ */
 {
    Language            lang;
    PtrAttribute        pAttrAsc;
@@ -1448,18 +1353,7 @@ PtrDocument pDoc;
 /*----------------------------------------------------------------------
    AttachAttrToRange applique l'attribut pAttr a une partie de document
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         AttachAttrToRange (PtrAttribute pAttr, int lastChar, int firstChar, PtrElement pLastSel, PtrElement pFirstSel, PtrDocument pDoc, ThotBool reDisplay)
-#else  /* __STDC__ */
-static void         AttachAttrToRange (pAttr, lastChar, firstChar, pLastSel, pFirstSel, pDoc, reDisplay)
-PtrAttribute        pAttr;
-int                 lastChar;
-int                 firstChar;
-PtrElement          pLastSel;
-PtrElement          pFirstSel;
-PtrDocument         pDoc;
-ThotBool		    reDisplay;
-#endif /* __STDC__ */
 {
    PtrElement          pEl;
    int                 i;
@@ -1509,15 +1403,7 @@ ThotBool		    reDisplay;
    valmenu: selected or captured value in this dialogue element
    valtexte: pointer to the captured text in this dialogue element
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                CallbackValAttrMenu (int ref, int valmenu, STRING valtext)
-#else  /* __STDC__ */
-void                CallbackValAttrMenu (ref, valmenu, valtext)
-int                 ref;
-int                 valmenu;
-STRING              valtext;
-
-#endif /* __STDC__ */
 {
   PtrDocument         SelDoc;
   PtrElement          firstSel, lastSel;
@@ -1579,7 +1465,7 @@ STRING              valtext;
 		      dispMode = TtaGetDisplayMode (doc);
 		      if (dispMode == DisplayImmediately)
 			TtaSetDisplayMode (doc, DeferredDisplay);
-		      /* table formatting is not loked, lock it now */
+		      /* table formatting is not locked, lock it now */
 		      (*ThotLocalActions[T_lock]) ();
 		    }
 		}
@@ -1647,26 +1533,18 @@ STRING              valtext;
 		}
 	      UpdateAttrMenu (SelDoc);
 	    }
+	  DocCurrentAttr = NULL;
 	  DeleteAttribute (NULL, pAttrNew);
 	}
     }
 }
-
 
 /*----------------------------------------------------------------------
    CallbackAttrMenu 
    handles the callbacks of the "Attributes" menu: creates a
    form to capture the value of the chosen attribute.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                CallbackAttrMenu (int refmenu, int att, int frame)
-#else  /* __STDC__ */
-void                CallbackAttrMenu (refmenu, att, frame)
-int                 refmenu;
-int                 att;
-int                 frame;
-
-#endif /* __STDC__ */
 {
   TtAttribute        *pAttr;
   PtrAttribute        pAttrNew, currAttr;
@@ -1741,11 +1619,13 @@ int                 frame;
 	      currAttrVal = currAttr->AeAttrValue;
 #endif /* _WINDOWS */
 	    if (pAttrNew->AeAttrNum == 1)
+	      /* that's the language attribute */
 	      {
 		InitFormLanguage (doc, view, firstSel, currAttr);
 		/* memorise l'attribut concerne' par le formulaire */
 		SchCurrentAttr = pAttrNew->AeAttrSSchema;
 		NumCurrentAttr = 1;
+		DocCurrentAttr = LoadedDocument[doc - 1];
 		/* restaure l'etat courant du toggle */
 #ifdef _WINDOWS
 		CreateLanguageDlgWindow (TtaGetViewFrame (doc, view), 
@@ -1783,6 +1663,7 @@ int                 frame;
 		/* memorise l'attribut concerne' par le formulaire */
 		SchCurrentAttr = AttrStruct[att];
 		NumCurrentAttr = AttrNumber[att];
+		DocCurrentAttr = LoadedDocument[doc - 1];
 		/* register the current attribut */
 		CurrentAttr = att;
 		/* restore the toggle state */
@@ -1811,14 +1692,7 @@ int                 frame;
    CallbackLanguageMenu
    handles the callbacks of the Language form.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                CallbackLanguageMenu (int ref, int val, STRING txt)
-#else  /* __STDC__ */
-void                CallbackLanguageMenu (ref, val, txt)
-int                 ref;
-int                 val;
-STRING              txt;
-#endif /* __STDC__ */
 {
   Language		i;
 
@@ -1856,6 +1730,37 @@ STRING              txt;
 }
 
 /*----------------------------------------------------------------------
+   CloseAttributeDialogues
+   Closes all dialogue boxes related with attribute input that are
+   associated with document pDoc.
+  ----------------------------------------------------------------------*/
+void                CloseAttributeDialogues (PtrDocument pDoc)
+{
+ if (PtrDocOfReqAttr == pDoc)
+   {
+     TtaUnmapDialogue (NumMenuAttrRequired);
+     TtaDestroyDialogue (NumMenuAttrRequired);
+     PtrReqAttr = NULL;
+     PtrDocOfReqAttr = NULL;
+   }
+ if (DocCurrentAttr == pDoc)
+   {
+     if (NumCurrentAttr == 1)
+       {
+	 TtaUnmapDialogue (NumFormLanguage);
+	 TtaDestroyDialogue (NumFormLanguage);
+       }
+     else
+       {
+	 TtaUnmapDialogue (NumMenuAttr);
+	 TtaDestroyDialogue (NumMenuAttr);
+       }
+     SchCurrentAttr = NULL;
+     DocCurrentAttr = NULL;
+   }
+}
+
+/*----------------------------------------------------------------------
    AttributeMenuLoadResources
    connects the local actions.
   ----------------------------------------------------------------------*/
@@ -1876,4 +1781,3 @@ void                AttributeMenuLoadResources ()
 	EventMenu[i] = 0;
     }
 }
-

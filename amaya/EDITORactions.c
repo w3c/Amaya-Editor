@@ -504,7 +504,8 @@ int              elementT;
        new = TtaNewTree (document, elType, "");
        TtaInsertSibling (new, el, before, document);
        /* register this element in the editing history */
-       TtaOpenUndoSequence (document, firstSel, lastSel, firstChar, lastChar);
+       TtaOpenUndoSequence (document, firstSel, lastSel, firstChar,
+			    lastChar);
        TtaRegisterElementCreate (new, document);
        TtaCloseUndoSequence (document);
        return (new);

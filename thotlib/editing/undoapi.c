@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA 1996.
+ *  (c) COPYRIGHT INRIA 1996-2001
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -11,6 +11,7 @@
  * Authors: I. Vatton, S. Bonhomme (INRIA)
  *          
  */
+
 #include "thot_sys.h"
 #include "constmedia.h"
 #include "typemedia.h"
@@ -30,12 +31,7 @@
 /* ----------------------------------------------------------------------
    TtaPrepareUndo returns TRUE if a undo sequence is opened
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 ThotBool      TtaPrepareUndo (Document document)
-#else  /* __STDC__ */
-ThotBool      TtaPrepareUndo (document)
-Document document;
-#endif /* __STDC__ */
 {
 
   if (document < 1 || document > MAX_DOCUMENTS)
@@ -63,20 +59,15 @@ Document document;
    lastSelChar: indicate the selection that must be set when the operation 
    will be undone.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void          TtaOpenUndoSequence (Document document, Element firstSel, Element lastSel, int firstSelChar, int lastSelChar)
-#else  /* __STDC__ */
-void          TtaOpenUndoSequence (document, firstSel, lastSel, firstSelChar, lastSelChar)
-Document      document;
-Element       firstSel;
-Element       lastSel;
-int           firstSelChar;
-int           lastSelChar;
-#endif /* __STDC__ */
+void          TtaOpenUndoSequence (Document document, Element firstSel,
+				   Element lastSel, int firstSelChar,
+				   int lastSelChar)
 {
   int i;
 
   if (document < 1 || document > MAX_DOCUMENTS)
+      TtaError (ERR_invalid_document_parameter);
+  else if (LoadedDocument [document - 1] == NULL)
       TtaError (ERR_invalid_document_parameter);
   else 
     {
@@ -108,25 +99,17 @@ int           lastSelChar;
    Return value:
        FALSE if the closed sequence is empty, TRUE otherwise
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 ThotBool      TtaCloseUndoSequence (Document document)
-#else /* __STDC__ */
-ThotBool      TtaCloseUndoSequence (document)
-Document document;
-#endif /* __STDC__ */
-
 {
   ThotBool	result;
 
   result = FALSE;
   if (document < 1 || document > MAX_DOCUMENTS)
-    {
       TtaError (ERR_invalid_document_parameter);
-    }
+  else if (LoadedDocument [document - 1] == NULL)
+      TtaError (ERR_invalid_document_parameter);
   else 
-    {
       result = CloseHistorySequence (LoadedDocument [document - 1]);	     
-    }
   return result;
 }
 
@@ -141,18 +124,17 @@ Document document;
    element: the created element
    document: the concerned document
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void         TtaRegisterElementCreate (Element element, Document document)
-#else /* __STDC__ */
-void         TtaRegisterElementCreate (element, document)
-Element element;
-Document document;
-#endif /* __STDC__ */
 {
-  AddEditOpInHistory ((PtrElement)element, LoadedDocument [document - 1], 
-		      FALSE, /* the element does not have to be saved */ 
-		      TRUE   /* the element will be removed when undoing */
- 		      );
+  if (document < 1 || document > MAX_DOCUMENTS)
+    TtaError (ERR_invalid_document_parameter);
+  else if (LoadedDocument [document - 1] == NULL)
+    TtaError (ERR_invalid_document_parameter);
+  else 
+    AddEditOpInHistory ((PtrElement)element, LoadedDocument [document - 1], 
+			FALSE, /* the element does not have to be saved */ 
+			TRUE   /* the element will be removed when undoing */
+			);
 }
 
 /* ----------------------------------------------------------------------
@@ -167,18 +149,17 @@ Document document;
    element: the element to be deleted
    document: the concerned document
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void         TtaRegisterElementDelete (Element element, Document document)
-#else /* __STDC__ */
-void         TtaRegisterElementDelete (element, document)
-Element element;
-Document document;
-#endif /* __STDC__ */
 {
-  AddEditOpInHistory ((PtrElement)element, LoadedDocument [document - 1], 
-		      TRUE, /* the element has to be saved */ 
-		      FALSE  /* the element wont be removed when undoing */
- 		      );
+  if (document < 1 || document > MAX_DOCUMENTS)
+    TtaError (ERR_invalid_document_parameter);
+  else if (LoadedDocument [document - 1] == NULL)
+    TtaError (ERR_invalid_document_parameter);
+  else 
+    AddEditOpInHistory ((PtrElement)element, LoadedDocument [document - 1], 
+			TRUE, /* the element has to be saved */ 
+			FALSE  /* the element wont be removed when undoing */
+			);
 }
 
 /* ----------------------------------------------------------------------
@@ -192,18 +173,17 @@ Document document;
    element: the replaced element
    document: the concerned document
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void         TtaRegisterElementReplace (Element element, Document document)
-#else /* __STDC__ */
-void         TtaRegisterElementReplace (element, document)
-Element element;
-Document document;
-#endif /* __STDC__ */
 {
-  AddEditOpInHistory ((PtrElement)element, LoadedDocument [document - 1], 
-		      TRUE,  /* the element has to be saved */ 
-		      TRUE   /* the element has to be removed when undoing */
- 		      );
+  if (document < 1 || document > MAX_DOCUMENTS)
+    TtaError (ERR_invalid_document_parameter);
+  else if (LoadedDocument [document - 1] == NULL)
+    TtaError (ERR_invalid_document_parameter);
+  else 
+    AddEditOpInHistory ((PtrElement)element, LoadedDocument [document - 1], 
+			TRUE,  /* the element has to be saved */ 
+			TRUE   /* the element has to be removed when undoing */
+			);
 }
 
 /* ----------------------------------------------------------------------
@@ -217,20 +197,19 @@ Document document;
    element: the element to which the attribute has been attached
    document: the concerned document
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void         TtaRegisterAttributeCreate (Attribute attribute, Element element, Document document)
-#else /* __STDC__ */
-void         TtaRegisterAttributeCreate (attribute, element, document)
-Attribute attribute;
-Element element;
-Document document;
-#endif /* __STDC__ */
+void         TtaRegisterAttributeCreate (Attribute attribute, Element element,
+					 Document document)
 {
-  AddAttrEditOpInHistory ((PtrAttribute)attribute, (PtrElement)element,
-                      LoadedDocument[document-1], 
-		      FALSE, /* the attribute does not have to be saved */ 
-		      TRUE   /* the attribute will be removed when undoing */
- 		      );
+  if (document < 1 || document > MAX_DOCUMENTS)
+    TtaError (ERR_invalid_document_parameter);
+  else if (LoadedDocument [document - 1] == NULL)
+    TtaError (ERR_invalid_document_parameter);
+  else 
+    AddAttrEditOpInHistory ((PtrAttribute)attribute, (PtrElement)element,
+			LoadedDocument[document-1], 
+			FALSE, /* the attribute does not have to be saved */
+			TRUE   /* the attribute will be removed when undoing */
+			);
 }
 
 /* ----------------------------------------------------------------------
@@ -245,16 +224,15 @@ Document document;
    element: the element to which this attribute is attached
    document: the concerned document
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void         TtaRegisterAttributeDelete (Attribute attribute, Element element, Document document)
-#else /* __STDC__ */
-void         TtaRegisterAttributeDelete (attribute, element, document)
-Attribute attribute;
-Element element;
-Document document;
-#endif /* __STDC__ */
+void         TtaRegisterAttributeDelete (Attribute attribute, Element element,
+					 Document document)
 {
-  AddAttrEditOpInHistory ((PtrAttribute)attribute, (PtrElement)element,
+  if (document < 1 || document > MAX_DOCUMENTS)
+    TtaError (ERR_invalid_document_parameter);
+  else if (LoadedDocument [document - 1] == NULL)
+    TtaError (ERR_invalid_document_parameter);
+  else 
+    AddAttrEditOpInHistory ((PtrAttribute)attribute, (PtrElement)element,
                       LoadedDocument[document-1],
 		      TRUE, /* the attribute has to be saved */ 
 		      FALSE  /* the attribute wont be removed when undoing */
@@ -273,16 +251,15 @@ Document document;
    element: the element to which the attribute is attached
    document: the concerned document
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void         TtaRegisterAttributeReplace (Attribute attribute, Element element, Document document)
-#else /* __STDC__ */
-void         TtaRegisterAttributeReplace (attribute, element, document)
-Attribute attribute;
-Element element;
-Document document;
-#endif /* __STDC__ */
+void         TtaRegisterAttributeReplace (Attribute attribute, Element element,
+					  Document document)
 {
-  AddAttrEditOpInHistory ((PtrAttribute)attribute,(PtrElement)element,
+  if (document < 1 || document > MAX_DOCUMENTS)
+    TtaError (ERR_invalid_document_parameter);
+  else if (LoadedDocument [document - 1] == NULL)
+    TtaError (ERR_invalid_document_parameter);
+  else 
+    AddAttrEditOpInHistory ((PtrAttribute)attribute,(PtrElement)element,
                       LoadedDocument[document-1], 
 		      TRUE,  /* the attribute has to be saved */ 
 		      TRUE   /* the attribute has to be removed when undoing */
@@ -294,14 +271,14 @@ Document document;
 
    Clears all editing operations registered in the editing history of document.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void         TtaClearUndoHistory (Document document)
-#else /* __STDC__ */
-void         TtaClearUndoHistory (document)
-Document document;
-#endif /* __STDC__ */
 {
-   ClearHistory (LoadedDocument [document - 1]);
+  if (document < 1 || document > MAX_DOCUMENTS)
+    TtaError (ERR_invalid_document_parameter);
+  else if (LoadedDocument [document - 1] == NULL)
+    TtaError (ERR_invalid_document_parameter);
+  else 
+    ClearHistory (LoadedDocument [document - 1]);
 }
 
 /* ----------------------------------------------------------------------
@@ -310,14 +287,14 @@ Document document;
    Cancel the latest sequence of editing operations registered in the
    editing history of document.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void         TtaCancelLastRegisteredSequence (Document document)
-#else /* __STDC__ */
-void         TtaCancelLastRegisteredSequence (document)
-Document document;
-#endif /* __STDC__ */
 {
-   CancelLastSequenceFromHistory (LoadedDocument [document - 1]);
+  if (document < 1 || document > MAX_DOCUMENTS)
+    TtaError (ERR_invalid_document_parameter);
+  else if (LoadedDocument [document - 1] == NULL)
+    TtaError (ERR_invalid_document_parameter);
+  else 
+    CancelLastSequenceFromHistory (LoadedDocument [document - 1]);
 }
 
 /* ----------------------------------------------------------------------
@@ -327,18 +304,18 @@ Document document;
    of document, only if it's an attribute operation for element oldEl.
    In that case, make it related to element newEl and attribute newAttr.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void         TtaChangeLastRegisteredAttr (Element oldEl, Element newEl, Attribute oldAttr, Attribute newAttr, Document document)
-#else /* __STDC__ */
-void         TtaChangeLastRegisteredAttr (oldEl, newEl, oldAttr, newAttr, document)
-Element oldEl;
-Element newEl;
-Attribute oldAttr;
-Attribute newAttr;
-Document document;
-#endif /* __STDC__ */
+void         TtaChangeLastRegisteredAttr (Element oldEl, Element newEl,
+					  Attribute oldAttr, Attribute newAttr,
+					  Document document)
 {
-   ChangeLastRegisteredAttr ((PtrElement)oldEl, (PtrElement)newEl, (PtrAttribute)oldAttr, (PtrAttribute)newAttr, LoadedDocument [document - 1]);
+  if (document < 1 || document > MAX_DOCUMENTS)
+    TtaError (ERR_invalid_document_parameter);
+  else if (LoadedDocument [document - 1] == NULL)
+    TtaError (ERR_invalid_document_parameter);
+  else 
+    ChangeLastRegisteredAttr ((PtrElement)oldEl, (PtrElement)newEl,
+			      (PtrAttribute)oldAttr, (PtrAttribute)newAttr,
+			      LoadedDocument [document - 1]);
 }
 
 /* ----------------------------------------------------------------------
@@ -347,14 +324,14 @@ Document document;
    Replace the latest operation registered in the editing history of document
    from an attribute value modification to an attribute value deletion.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void         TtaReplaceLastRegisteredAttr (Document document)
-#else /* __STDC__ */
-void         TtaReplaceLastRegisteredAttr (document)
-Document document;
-#endif /* __STDC__ */
 {
-   ReplaceLastRegisteredAttr (LoadedDocument [document - 1]);
+  if (document < 1 || document > MAX_DOCUMENTS)
+    TtaError (ERR_invalid_document_parameter);
+  else if (LoadedDocument [document - 1] == NULL)
+    TtaError (ERR_invalid_document_parameter);
+  else 
+    ReplaceLastRegisteredAttr (LoadedDocument [document - 1]);
 }
 
 /* ----------------------------------------------------------------------
@@ -362,14 +339,14 @@ Document document;
 
    Cancel the latest operation registered in the editing history of document.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void         TtaCancelLastRegisteredOperation (Document document)
-#else /* __STDC__ */
-void         TtaCancelLastRegisteredOperation (document)
-Document document;
-#endif /* __STDC__ */
 {
-   CancelLastEditFromHistory (LoadedDocument [document - 1]);
+  if (document < 1 || document > MAX_DOCUMENTS)
+    TtaError (ERR_invalid_document_parameter);
+  else if (LoadedDocument [document - 1] == NULL)
+    TtaError (ERR_invalid_document_parameter);
+  else 
+    CancelLastEditFromHistory (LoadedDocument [document - 1]);
 }
 
 /* ----------------------------------------------------------------------
@@ -379,12 +356,12 @@ Document document;
    of document and forget about this sequence: it won't be redone by
    the next Redo command issued by the user.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void         TtaUndoNoRedo (Document document)
-#else /* __STDC__ */
-void         TtaUndoNoRedo (document)
-Document document;
-#endif /* __STDC__ */
 {
-   UndoNoRedo (document);
+  if (document < 1 || document > MAX_DOCUMENTS)
+    TtaError (ERR_invalid_document_parameter);
+  else if (LoadedDocument [document - 1] == NULL)
+    TtaError (ERR_invalid_document_parameter);
+  else 
+    UndoNoRedo (document);
 }
