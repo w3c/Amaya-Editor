@@ -4,11 +4,10 @@
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
   <title>Ein Bild einfügen</title>
   <style type="text/css">
   </style>
-  <meta name="GENERATOR" content="amaya 6.1, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 6.2, see http://www.w3.org/Amaya/" />
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -35,15 +34,15 @@ summary="Inhaltsverzeichnis">
 
 <p>Um ein Bild hinzuzufügen aus dem Menü <strong>Elemente</strong> den Befehl
 <strong>Bild</strong> wählen, den Knopf <strong>Bild</strong> <img
-alt="Bild einf?gen" src="../../images/image_button.gif" /> der Knopfleiste
-drücken oder das Tastenkürzel (<code>Strg t</code> in Windows oder <code>Strg
+alt="Bild einf?gen" src="../../images/Image.gif" /> der Knopfleiste drücken
+oder das Tastenkürzel (<code>Strg t</code> in Windows oder <code>Strg
 i</code> in Unix) verwenden. Im folgenden Dialog muss der Dateiname und der
 alternative Text eingegeben werden.</p>
 
 <p>Um eine lange Beschreibung für ein Bild zu erstellen, welches komplexe
 Informationen enthält, sollte man ein separates Dokument erzeugen und dessen
 URI mittels <span
-style='font-size:9.0pt;font-family:"Courier New";'><code>longdesc</code>
+style="font-size:9.0pt;font-family:&#34;Courier New&#34;;"><code>longdesc</code>
 verknüpfen.</span> Dieser Befehl ist im Menü <strong>Attribute</strong>
 verfügbar.</p>
 
