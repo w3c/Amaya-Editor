@@ -2548,6 +2548,7 @@ void CreateNewElement (int typeNum, PtrSSchema pSS, PtrDocument pDoc,
   ThotBool            InsertionPoint, ok, createAfter, splitElem, elConst;
   ThotBool            empty, selHead, selTail, done, deleted;
 
+  nAncest = 0;
   NSiblings = 0;
   if (!GetCurrentSelection (&pSelDoc, &firstSel, &lastSel, &firstChar, &lastChar))
     return;
