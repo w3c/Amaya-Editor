@@ -2165,6 +2165,11 @@ Element             el;
    PtrElemToBeChecked  elTBC;
    Element             parent;
 
+   if (LastElemToBeChecked != NULL)
+      if (LastElemToBeChecked->Elem == el)
+	 /* this element is already in the queue */
+	 return;
+
    parent = TtaGetParent (el);
    if (parent != NULL)
      if (IsCharacterLevelElement (parent))
@@ -6383,7 +6388,7 @@ Document            doc;
 {
    Element             el, parent, child, first, last, next, copy, newparent,
 		       elem, prev, firstNotCharElem;
-   PtrElemToBeChecked  elTBC, nextElTBC;
+   PtrElemToBeChecked  elTBC, nextElTBC, TBC;
    ElementType	       elType;
 
    /* check all block-level elements whose parent was a character-level
@@ -6495,6 +6500,14 @@ Document            doc;
 		   while (child != NULL);
 		   if (elem == el)
 		      el = NULL;
+		   /* if this element is in the queue, remove it from the queue */
+		   TBC = elTBC->nextElemToBeChecked;
+		   while (TBC != NULL)
+		      {
+		      if (TBC->Elem == elem)
+			 TBC->Elem = NULL;
+		      TBC = TBC->nextElemToBeChecked;
+		      }
 		   TtaDeleteTree (elem, doc);
 		}
 	     elem = next;	     
