@@ -9,7 +9,7 @@
 #define _APPLICATION_H_
 #define HTAppName     "amaya"
 #ifdef _WX
-#define HTAppVersion  "9.0-pre4"
+#define HTAppVersion  "9.0"
 #else /* _WX */
 #define HTAppVersion  "8.7.1"
 #endif /* _WX */
