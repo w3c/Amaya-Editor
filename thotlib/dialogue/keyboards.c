@@ -1,19 +1,10 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996.
+ *  (c) COPYRIGHT INRIA, 1996-2000
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
 
-/*
- * Warning:
- * This module is part of the Thot library, which was originally
- * developed in French. That's why some comments are still in
- * French, but their translation is in progress and the full module
- * will be available in English in the next release.
- * 
- */
- 
 /*
  * Latin, Greek, Math keyboards
  *
@@ -331,16 +322,20 @@ static ITEM         Items_Symb[] =
    {99, 'c', NULL},		/* circle integral */
    {100, 'd', NULL},		/* double integral */
    {114, 'r', NULL},		/* root */
-   {60, '<', NULL},		/* < arrow */
-   {62, '>', NULL},		/* > arrow */
-   {118, 'V', NULL},		/* V arrow */
-   {94, '^', NULL},		/* ^ arrow */
-   {91, '[', NULL},		/* */
-   {93, ']', NULL},		/* */
-   {40, '(', NULL},		/* */
-   {41, ')', NULL},		/* */
-   {123, '{', NULL},		/* */
-   {125, '}', NULL},		/* */
+   {82, 'R', NULL},             /* right arrow */
+   {76, 'L', NULL},             /* left arrow */
+   {118, 'V', NULL},		/* down arrow */
+   {94, '^', NULL},		/* up arrow */
+   {91, '[', NULL},		/* [ */
+   {93, ']', NULL},		/* ] */
+   {40, '(', NULL},		/* ( */
+   {41, ')', NULL},		/* ) */
+   {123, '{', NULL},		/* { */
+   {125, '}', NULL},		/* } */
+   {124, '|', NULL},            /* | */
+   {68, 'D', NULL},             /* || */
+   {60, '<', NULL},		/* < */
+   {62, '>', NULL},		/* > */
 };
 
 

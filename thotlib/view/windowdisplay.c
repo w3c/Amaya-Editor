@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996.
+ *  (c) COPYRIGHT INRIA, 1996-2000
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -1741,6 +1741,93 @@ int                 fg;
 }
 
 /*----------------------------------------------------------------------
+  DrawPointyBracket draw an opening or closing pointy bracket (depending
+  on direction)
+  RO indicates whether it's a read-only box
+  active indicates if the box is active
+  parameter fg indicates the drawing color
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                DrawPointyBracket (int frame, int thick, int x, int y, int l, int h, int direction, ptrfont font, int RO, int active, int fg)
+
+#else  /* __STDC__ */
+void                DrawPointyBracket (frame, thick, x, y, l, h, direction, font, RO, active, fg)
+int                 frame;
+int                 thick;
+int                 x;
+int                 y;
+int                 l;
+int                 h;
+int                 direction;
+ptrfont             font;
+int                 RO;
+int                 active;
+int                 fg;
+
+#endif /* __STDC__ */
+
+{
+   int                 xm, yf, yend;
+
+   if (fg < 0)
+     return;
+   if (FontHeight (font) >= h)
+     {
+	/* With only one glyph */
+	if (direction == 0)
+	  {
+	     /* Draw a opening bracket */
+	     xm = x + ((l - CharacterWidth ('[', font)) / 2);
+	     yf = y + ((h - CharacterHeight ('[', font)) / 2) -
+		FontAscent (font) + CharacterAscent ('[', font);
+	     DrawChar (TEXT('['), frame, xm, yf, font, RO, active, fg);
+	  }
+	else
+	  {
+	     /* Draw a closing bracket */
+	     xm = x + ((l - CharacterWidth (']', font)) / 2);
+	     yf = y + ((h - CharacterHeight (']', font)) / 2) -
+		FontAscent (font) + CharacterAscent (']', font);
+	     DrawChar (TEXT(']'), frame, xm, yf, font, RO, active, fg);
+	  }
+     }
+   else
+     {
+	/* Need more than one glyph */
+	if (direction == 0)
+	  {
+	     /* Draw a opening bracket */
+	     xm = x + ((l - CharacterWidth ('\351', font)) / 2);
+	     yf = y - FontAscent (font) + CharacterAscent ('\351', font);
+	     DrawChar (TEXT('\351'), frame, xm, yf, font, RO, active, fg);
+	     yend = y + h - CharacterHeight ('\353', font) -
+		FontAscent (font) + CharacterAscent ('\353', font);
+	     DrawChar (TEXT('\353'), frame, xm, yend, font, RO, active, fg);
+	     for (yf = yf + CharacterHeight ('\351', font) -
+		  FontAscent (font) + CharacterAscent ('\352', font);
+		  yf < yend;
+		  yf += CharacterHeight ('\352', font))
+		DrawChar (TEXT('\352'), frame, xm, yf, font, RO, active, fg);
+	  }
+	else
+	  {
+	     /* Draw a closing bracket */
+	     xm = x + ((l - CharacterWidth ('\371', font)) / 2);
+	     yf = y - FontAscent (font) + CharacterAscent ('\371', font);
+	     DrawChar (TEXT('\371'), frame, xm, yf, font, RO, active, fg);
+	     yend = y + h - CharacterHeight ('\373', font) -
+		FontAscent (font) + CharacterAscent ('\373', font);
+	     DrawChar (TEXT('\373'), frame, xm, yend, font, RO, active, fg);
+	     for (yf = yf + CharacterHeight ('\371', font) -
+		  FontAscent (font) + CharacterAscent ('\372', font);
+		  yf < yend;
+		  yf += CharacterHeight ('\372', font))
+		DrawChar (TEXT('\372'), frame, xm, yf, font, RO, active, fg);
+	  }
+     }
+}
+
+/*----------------------------------------------------------------------
   DrawParenthesis draw a closing or opening parenthesis (direction).
   RO indicates whether it's a read-only box
   active indicates if the box is active
@@ -3309,7 +3396,7 @@ int                 pattern;
 }
 
 /*----------------------------------------------------------------------
-  DrawVerticalLine draw a vertical line aligned top center or bottom
+  DrawHorizontalLine draw a vertical line aligned top center or bottom
   depending on align value.
   RO indicates whether it's a read-only box
   active indicates if the box is active
@@ -3320,6 +3407,55 @@ void                DrawHorizontalLine (int frame, int thick, int style, int x, 
 
 #else  /* __STDC__ */
 void                DrawHorizontalLine (frame, thick, style, x, y, l, h, align, RO, active, fg)
+int                 frame;
+int                 thick;
+int                 style;
+int                 x;
+int                 y;
+int                 l;
+int                 h;
+int                 align;
+int                 RO;
+int                 active;
+int                 fg;
+#endif /* __STDC__ */
+{
+   int        Y;
+
+   y += FrameTable[frame].FrTopMargin;
+   if (thick <= 0)
+     return;
+   if (align == 1)
+      Y = y + (h - thick) / 2;
+   else if (align == 2)
+      Y = y + h - thick / 2;
+   else
+      Y = y + thick / 2;
+   x = x + thick / 2;
+   l = l - thick;
+#ifdef _WIN_PRINT 
+   if (y < 0)
+     return;
+   if (TtPrinterDC)
+      DoPrintOneLine (fg, x, Y, x + l, Y, thick, style);
+#else /* _WIN_PRINT */
+   InitDrawing (0, style, thick, RO, active, fg);
+   DoDrawOneLine (frame, x, Y, x + l, Y);
+#endif /* _WIN_PRINT */
+}
+
+/*----------------------------------------------------------------------
+  DrawHorizontalBrace draw a horizontal brace aligned top
+  or bottom depending on align value.
+  RO indicates whether it's a read-only box
+  active indicates if the box is active
+  parameter fg indicates the drawing color
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                DrawHorizontalBrace (int frame, int thick, int style, int x, int y, int l, int h, int align, int RO, int active, int fg)
+
+#else  /* __STDC__ */
+void                DrawHorizontalBrace (frame, thick, style, x, y, l, h, align, RO, active, fg)
 int                 frame;
 int                 thick;
 int                 style;
@@ -3369,6 +3505,57 @@ void                DrawVerticalLine (int frame, int thick, int style, int x, in
 
 #else  /* __STDC__ */
 void                DrawVerticalLine (frame, thick, style, x, y, l, h, align, RO, active, fg)
+int                 frame;
+int                 thick;
+int                 style;
+int                 x;
+int                 y;
+int                 l;
+int                 h;
+int                 align;
+int                 RO;
+int                 active;
+int                 fg;
+
+#endif /* __STDC__ */
+
+{
+   int        X;
+
+   y += FrameTable[frame].FrTopMargin;
+   if (thick <= 0)
+      return;
+   if (align == 1)
+      X = x + (l - thick) / 2;
+   else if (align == 2)
+      X = x + l - thick / 2;
+   else
+      X = x + thick / 2;
+   y = y + thick / 2;
+   h = h - thick;
+#ifdef _WIN_PRINT
+   if (y < 0)
+      return;
+   if (TtPrinterDC)
+     DoPrintOneLine (fg, X, y, X, y + h, thick, style);
+#else  /* _WIN_PRINT */
+   InitDrawing (0, style, thick, RO, active, fg);
+   DoDrawOneLine (frame, X, y, X, y + h);
+#endif /* _WIN_PRINT */
+}
+
+/*----------------------------------------------------------------------
+  DrawDoubleVerticalLine draw a double vertical line aligned left center or
+  right depending on align value.
+  RO indicates whether it's a read-only box
+  active indicates if the box is active
+  parameter fg indicates the drawing color
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                DrawDoubleVerticalLine (int frame, int thick, int style, int x, int y, int l, int h, int align, int RO, int active, int fg)
+
+#else  /* __STDC__ */
+void                DrawDoubleVerticalLine (frame, thick, style, x, y, l, h, align, RO, active, fg)
 int                 frame;
 int                 thick;
 int                 style;

@@ -87,6 +87,7 @@ XmlEntity  MathEntityTable[] =
    {TEXT("Omega"), 87, 'G'},
    {TEXT("Or"), 218, 'G'},
    {TEXT("OverBar"), 45, 'G'},
+   {TEXT("OverBrace"), 132, 'G'},    /* 132?? */
    {TEXT("PI"), 213, 'G'},
    {TEXT("PartialD"), 182, 'G'},
    {TEXT("Phi"), 70, 'G'},
@@ -118,6 +119,7 @@ XmlEntity  MathEntityTable[] =
    {TEXT("Tilde"), 126, 'L'},
    {TEXT("TripleDot"), 188, 'G'},
    {TEXT("UnderBar"), 45, 'G'},
+   {TEXT("UnderBrace"), 133, 'G'},    /* 133?? */
    {TEXT("Union"), 200, 'G'},
    {TEXT("UpArrow"), 173, 'G'},
    {TEXT("Upsi"), 85, 'G'},
@@ -253,7 +255,7 @@ XmlEntity  MathEntityTable[] =
    {TEXT("therefore"), 92, 'G'},
    {TEXT("theta"), 113, 'G'},
    {TEXT("thetav"), 74, 'G'},
-   {TEXT("thickspace"), 32, 'L'},
+   {TEXT("thickspace"), 130, 'L'},
    {TEXT("times"), 180, 'G'},
    {TEXT("trade"), 212, 'G'},
    {TEXT("tradesf"), 212, 'G'},
@@ -1002,8 +1004,9 @@ void SetSingleIntHorizStretchAttr (el, doc, selEl)
 		if (alphabet == 'G')
 		   /* a single Symbol character */
 		   if ((int)text[0] == 172 || (int)text[0] == 174 ||
-		       (int)text[0] == 45)
-		      /* horizontal arrow or horizontal bar */
+		       (int)text[0] == 45  ||
+		       (int)text[0] == 132 || (int)text[0] == 133)
+		      /* horizontal arrow, horizontal bar, horizontal brace */
 		      {
 		      c = EOS;
 		      /* attach a IntHorizStretch attribute */
@@ -1021,12 +1024,16 @@ void SetSingleIntHorizStretchAttr (el, doc, selEl)
 			  *selEl = symbolEl;
 		      TtaDeleteTree (textEl, doc);
 		      if ((int)text[0] == 172)
-			c = '<';  /* arrow left */
-		      if ((int)text[0] == 174)
-			c = '>';  /* arrow right */
-		      if ((int)text[0] == 45)    /* - (minus) */
+			c = 'L';  /* arrow left */
+		      else if ((int)text[0] == 174)
+			c = 'R';  /* arrow right */
+		      else if ((int)text[0] == 45)    /* - (minus) */
 			/* a horizontal line in the middle of the box */
 			c = 'h'; 
+		      else if ((int)text[0] == 132)
+			c = 'o';  /* Over brace */
+		      else if ((int)text[0] == 133)
+			c = 'u';  /* Under brace */
 		      if (c != EOS)
 			TtaSetGraphicsShape (symbolEl, c, doc);
 		      }

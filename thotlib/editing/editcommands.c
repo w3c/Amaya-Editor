@@ -3257,25 +3257,34 @@ int                 keyboard;
 		{
 		  switch ((int) c)
 		    {
-		    case 40: c = '('; break; /* ( */
-		    case 41: c = ')'; break; /* ) */
-		    case 80: c = 'P'; break; /* Pi */
-		    case 83: c = 'S'; break; /* Sigma */
-		    case 91: c = '['; break; /* [ */
-		    case 93: c = ']'; break; /* ] */
+		    case 40:  c = '('; break; /* ( */
+		    case 41:  c = ')'; break; /* ) */
+		    case 45:  c = 'h'; break; /* - horizontal bar */
+		    case 60:  c = '<'; break; /* pointy bracket */
+		    case 62:  c = '>'; break; /* pointy bracket */
+		    case 80:  c = 'P'; break; /* Pi */
+		    case 83:  c = 'S'; break; /* Sigma */
+		    case 91:  c = '['; break; /* [ */
+		    case 93:  c = ']'; break; /* ] */
+		    case 95:  c = 'h'; break; /* _ horizontal bar */
 		    case 123: c = '{'; break; /* { */
+		    case 124: c = '|'; break; /* | */
 		    case 125: c = '}'; break; /* } */
-		    case 172: c = '<'; break; /* Left arrow */
+		    case 172: c = 'L'; break; /* Left arrow */
 		    case 173: c = '^'; break; /* Top arrow */
-		    case 174: c = '>'; break; /* Right arrow */
+		    case 174: c = 'R'; break; /* Right arrow */
 		    case 175: c = 'V'; break; /* bottom arrow */
+		    case 189: c = '|'; break; /* | */
+		    case 190: c = 'h'; break; /* - horizontal bar */
 		    case 199: c = 'I'; break; /* Inter */
 		    case 200: c = 'U'; break; /* Union */
 		    case 213: c = 'P'; break; /* Pi */
 		    case 214: c = 'r'; break; /* Root */
+		    case 225: c = '<'; break; /* pointy bracket */
 		    case 229: c = 'S'; break; /* Sigma */
+		    case 241: c = '>'; break; /* pointy bracket */
 		    case 242: c = 'i'; break; /* Integral */
-		    default: c = ' '; break;
+		    default:  c = ' '; break;
 		    }
 		  keyboard = -1;   /* simulate keyboard input */
 		}

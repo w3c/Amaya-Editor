@@ -1186,6 +1186,78 @@ int                 fg;
 }
 
 /*----------------------------------------------------------------------
+  DrawPointyBracket draw an opening or closing pointy bracket (depending
+  on direction)
+  RO indicates whether it's a read-only box
+  active indicates if the box is active
+  parameter fg indicates the drawing color
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                DrawPointyBracket (int frame, int thick, int x, int y, int l, int h, int direction, ptrfont font, int RO, int active, int fg)
+
+#else  /* __STDC__ */
+void                DrawPointyBracket (frame, thick, x, y, l, h, direction, font, RO, active, fg)
+int                 frame;
+int                 thick;
+int                 x;
+int                 y;
+int                 l;
+int                 h;
+int                 direction;
+ptrfont             font;
+int                 RO;
+int                 active;
+int                 fg;
+
+#endif /* __STDC__ */
+
+{
+   int                 xm, yf, yend;
+
+   if (fg < 0)
+     return;
+   if (FontHeight (font) >= h)
+     {
+	/* With only one glyph */
+	if (direction == 0)
+	  {
+	     /* Draw a opening bracket */
+	     xm = x + ((l - CharacterWidth ('\341', font)) / 2);
+	     yf = y + ((h - CharacterHeight ('\341', font)) / 2) -
+		FontAscent (font) + CharacterAscent ('\341', font);
+	     DrawChar (TEXT('\341'), frame, xm, yf, font, RO, active, fg);
+	  }
+	else
+	  {
+	     /* Draw a closing bracket */
+	     xm = x + ((l - CharacterWidth ('\361', font)) / 2);
+	     yf = y + ((h - CharacterHeight ('\361', font)) / 2) -
+		FontAscent (font) + CharacterAscent ('\361', font);
+	     DrawChar (TEXT('\361'), frame, xm, yf, font, RO, active, fg);
+	  }
+     }
+   else
+     {
+	/* Need more than one glyph */
+       y += FrameTable[frame].FrTopMargin;
+       InitDrawing (0, 5, 0, RO, active, fg);
+       if (direction == 0)
+	 {
+	   /* Draw a opening bracket */
+	   DoDrawOneLine (frame, x + l, y, x, y + (h / 2));
+	   DoDrawOneLine (frame, x, y + (h / 2), x + l, y + h);
+	 }
+       else
+	 {
+	   /* Draw a closing bracket */
+	   DoDrawOneLine (frame, x, y, x + l, y + (h / 2));
+	   DoDrawOneLine (frame, x + l, y + (h / 2), x, y + h);
+	 }
+       FinishDrawing (0, RO, active);
+     }
+}
+
+/*----------------------------------------------------------------------
   DrawParenthesis draw a closing or opening parenthesis (direction).
   RO indicates whether it's a read-only box
   active indicates if the box is active
@@ -2448,7 +2520,7 @@ int                 pattern;
 }
 
 /*----------------------------------------------------------------------
-  DrawVerticalLine draw a horizontal line aligned top center or bottom
+  DrawHorizontalLine draw a horizontal line aligned top center or bottom
   depending on align value.
   RO indicates whether it's a read-only box.
   active indicates if the box is active.
@@ -2487,6 +2559,59 @@ int                 fg;
     {
       InitDrawing (0, style, thick, RO, active, fg);
       DoDrawOneLine (frame, x, Y, x + l, Y);
+      FinishDrawing (0, RO, active);
+    }
+}
+
+/*----------------------------------------------------------------------
+  DrawHorizontalBrace draw a horizontal brace aligned top or bottom
+  depending on align value.
+  RO indicates whether it's a read-only box.
+  active indicates if the box is active.
+  The parameter fg indicates the drawing color.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                DrawHorizontalBrace (int frame, int thick, int style, int x, int y, int l, int h, int align, int RO, int active, int fg)
+
+#else  /* __STDC__ */
+void                DrawHorizontalBrace (frame, thick, style, x, y, l, h, align, RO, active, fg)
+int                 frame;
+int                 thick;
+int                 style;
+int                 x;
+int                 y;
+int                 l;
+int                 h;
+int                 align;
+int                 RO;
+int                 active;
+int                 fg;
+
+#endif /* __STDC__ */
+
+{
+  int        Y;
+
+  if (thick > 0 && fg >= 0)
+    {
+      y += FrameTable[frame].FrTopMargin;
+      Y = y + (h - thick) / 2;
+      InitDrawing (0, style, thick, RO, active, fg);
+      DoDrawOneLine (frame, x, Y, x + l, Y);
+      if (align == 0)
+	/* Over brace */
+	{
+	  DoDrawOneLine (frame, x, Y, x, y + h);
+	  DoDrawOneLine (frame, x + (l / 2), Y, x + (l / 2), y);
+	  DoDrawOneLine (frame, x + l - thick, Y, x + l - thick, y + h);
+	}
+      else
+	/* Underbrace */
+	{
+	  DoDrawOneLine (frame, x, Y, x, y);
+	  DoDrawOneLine (frame, x + (l / 2), Y, x + (l / 2), y + h);
+	  DoDrawOneLine (frame, x + l - thick, Y, x + l - thick, y);
+	}
       FinishDrawing (0, RO, active);
     }
 }
@@ -2532,6 +2657,52 @@ int                 fg;
     {
       InitDrawing (0, style, thick, RO, active, fg);
       DoDrawOneLine (frame, X, y, X, y + h);
+      FinishDrawing (0, RO, active);
+    }
+}
+
+/*----------------------------------------------------------------------
+  DrawDoubleVerticalLine draw a double vertical line aligned left center or
+  right depending on align value.
+  RO indicates whether it's a read-only box
+  active indicates if the box is active
+  parameter fg indicates the drawing color
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                DrawDoubleVerticalLine (int frame, int thick, int style, int x, int y, int l, int h, int align, int RO, int active, int fg)
+
+#else  /* __STDC__ */
+void                DrawDoubleVerticalLine (frame, thick, style, x, y, l, h, align, RO, active, fg)
+int                 frame;
+int                 thick;
+int                 style;
+int                 x;
+int                 y;
+int                 l;
+int                 h;
+int                 align;
+int                 RO;
+int                 active;
+int                 fg;
+
+#endif /* __STDC__ */
+
+{
+  int        X;
+
+  if (align == 1)
+    X = x + (l - thick) / 2;
+  else if (align == 2)
+    X = x + l - (thick + 1) / 2;
+  else
+    X = x + thick / 2;
+
+  y += FrameTable[frame].FrTopMargin;
+  if (thick > 0 && fg >= 0)
+    {
+      InitDrawing (0, style, thick, RO, active, fg);
+      DoDrawOneLine (frame, X, y, X, y + h);
+      DoDrawOneLine (frame, X + (3 * thick), y, X + (3 * thick), y + h);
       FinishDrawing (0, RO, active);
     }
 }

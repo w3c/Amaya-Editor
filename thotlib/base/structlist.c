@@ -1454,7 +1454,7 @@ FILE               *fileDescriptor;
 	   case LtGraphics:
 	      fprintf (fileDescriptor, " alphabet=%c", pAb->AbGraphAlphabet);
 	      fprintf (fileDescriptor, "\'%c\'", pAb->AbShape);
-	      if (pAb->AbShape == 'C')
+	      if (pAb->AbLeafType == LtGraphics && pAb->AbShape == 'C')
 		{
 		  fprintf (fileDescriptor, " rx:%d", pAb->AbRx);
 		  wrTypeUnit (pAb->AbRxUnit, fileDescriptor);

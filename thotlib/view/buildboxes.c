@@ -1,19 +1,10 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996.
+ *  (c) COPYRIGHT INRIA, 1996-2000
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
 
-/*
- * Warning:
- * This module is part of the Thot library, which was originally
- * developed in French. That's why some comments are still in
- * French, but their translation is in progress and the full module
- * will be available in English in the next release.
- * 
- */
- 
 /* 
  * This module computes Concrete Images.
  *
@@ -496,14 +487,14 @@ int                *height;
   hfont = FontHeight (font);
   if (pAb->AbVolume == 0)
     {
-      /* Symbol vide */
+      /* empty Symbol */
       *width = CharacterWidth (SPACE, font);
       *height = hfont * 2;
     }
   else
     {
       *height = hfont * 2;
-      value = 1 + ((float) (pAb->AbBox->BxH * 0.6) / (float) hfont);
+      value = 1 + ((float) (pAb->AbBox->BxH * 0.3) / (float) hfont);
       switch (pAb->AbShape)
 	{
 	case 'c':	/*integrale curviligne */
@@ -522,16 +513,19 @@ int                *height;
 	case 'P':	/*pi */
 	case 'I':	/*intersection */
 	case 'U':	/*union */
-	  /* width := CharacterWidth(229, font) + 4; */
 	  *width = CharacterWidth (229, font);
-	  /* height := FontHeight(font); */
 	  *height = hfont;
 	  break;
-	case '<':
-	case 'h':
-	case '>':
+	case 'L':       /* left arrow */
+	case 'h':       /* horizontal bar */
+	case 'R':       /* right arrow */
 	  *width = *height;
 	  *height = hfont / 3;
+	  break;
+	case 'o':       /* overbrace */
+	case 'u':       /* underbrace */
+	  *width = *height;
+	  *height = hfont / 2;
 	  break;
 	case '(':
 	case ')':
@@ -539,13 +533,23 @@ int                *height;
 	case ']':
 	case '{':
 	case '}':
+	case '<':
+	case '>':
 	  *width = (int) ((float) CharacterWidth (230, font) * value);
 	  *height = hfont;
+	  break;
+	case '|':       /* vertical bar */
+	  *width = CharacterWidth (124, font);  /* | */
+	  *height = hfont;	  
+	  break;
+        case 'D':       /* double vertical bar */
+	  *width = 2 * CharacterWidth (124, font);  /* | */
+	  *height = hfont;	  
 	  break;
 	case '^':
 	case 'v':
 	case 'V':
-	  *width = CharacterWidth (109, font);	/*'m' */
+	  *width = CharacterWidth (109, font);	/* 'm' */
 	  break;
 	default:
 	  *width = CharacterWidth (SPACE, font);

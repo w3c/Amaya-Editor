@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996.
+ *  (c) COPYRIGHT INRIA, 1996-2000
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -207,19 +207,25 @@ ThotBool            selected;
 	    case 'U':
 	      DrawUnion (frame, xd, yd, width, height, font, RO, op, fg);
 	      break;
+            case 'o':
+	      DrawHorizontalBrace (frame, i, 5, xd, yd, width, height, 0, RO, op, fg);
+	      break;
+            case 'u':
+	      DrawHorizontalBrace (frame, i, 5, xd, yd, width, height, 1, RO, op, fg);
+	      break;
 	    case 'h':
 	      DrawHorizontalLine (frame, i, 5, xd, yd, width, height, 1, RO, op, fg);
 	      break;
 	    case 'v':
 	      DrawVerticalLine (frame, i, 5, xd, yd, width, height, 1, RO, op, fg);
 	      break;
-	    case '>':
+	    case 'R':
 	      DrawArrow (frame, i, 5, xd, yd, width, height, 0, RO, op, fg);
 	      break;
 	    case '^':
 	      DrawArrow (frame, i, 5, xd, yd, width, height, 90, RO, op, fg);
 	      break;
-	    case '<':
+	    case 'L':
 	      DrawArrow (frame, i, 5, xd, yd, width, height, 180, RO, op, fg);
 	      break;
 	    case 'V':
@@ -242,6 +248,18 @@ ThotBool            selected;
 	      break;
 	    case ']':
 	      DrawBracket (frame, i, xd, yd, width, height, 1, font, RO, op, fg);
+	      break;
+	    case '<':
+	      DrawPointyBracket (frame, i, xd, yd, width, height, 0, font, RO, op, fg);
+	      break;
+	    case '>':
+	      DrawPointyBracket (frame, i, xd, yd, width, height, 1, font, RO, op, fg);
+	      break;
+	    case '|':
+	      DrawVerticalLine (frame, i, 5, xd, yd, width, height, 1, RO, op, fg);
+	      break;
+	    case 'D':
+	      DrawDoubleVerticalLine (frame, i, 5, xd, yd, width, height, 1, RO, op, fg);
 	      break;
 	    default:
 	      break;

@@ -960,6 +960,69 @@ int                 fg;
 
 
 /*----------------------------------------------------------------------
+   DrawPointyBracket draw an opening or closing pointy bracket (depending
+   on direction)
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                DrawPointyBracket (int frame, int thick, int x, int y, int l, int h, int direction, ptrfont font, int RO, int func, int fg)
+#else  /* __STDC__ */
+void                DrawPointyBracket (frame, thick, x, y, l, h, direction, font, RO, func, fg)
+int                 frame;
+int                 thick;
+int                 x;
+int                 y;
+int                 l;
+int                 h;
+int                 direction;
+ptrfont             font;
+int                 RO;
+int                 func;
+int                 fg;
+#endif /* __STDC__ */
+{
+   int                 ey, yf;
+   FILE               *fout;
+
+   fout = (FILE *) FrRef[frame];
+  if (y < 0)
+    return;
+
+   y += FrameTable[frame].FrTopMargin;
+   /* Do we need to change the current color ? */
+   CurrentColor (fout, fg);
+
+   /* Do we need to change the current font ? */
+   CurrentFont (fout, font);
+
+   l--;
+   h--;
+   ey = FontHeight (font);
+   h -= ey;
+   y += FontBase (font);
+   x = PixelToPoint (x + (l / 2));
+   yf = PixelToPoint (y + h);
+   y = PixelToPoint (y) + 1;
+
+   if (h < ey / 4)
+     {
+	/* Made of only one glyph */
+	if (direction == 0)
+	   fprintf (fout, "-%d %d ([) c\n", yf, x);
+	else
+	   fprintf (fout, "-%d %d (])c\n", yf, x);
+     }
+   else
+     {
+	/* Drawn with more than one glyph */
+	if (direction == 0)	/* Trace un crochet ouvrant */
+	   fprintf (fout, "%d -%d -%d %s (\\351) (\\352) (\\353) s3\n", x + 1, yf, y, Scale);
+	else
+	   fprintf (fout, "%d -%d -%d %s (\\371) (\\372) (\\373) s3\n", x, yf, y, Scale);
+     }
+}
+
+
+/*----------------------------------------------------------------------
    DrawParenthesis draw a closing or opening parenthesis (direction).
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -1841,13 +1904,61 @@ int                 pattern;
 
 
 /*----------------------------------------------------------------------
-   DrawHorizontalLine draw a vertical line aligned top center or bottom
+   DrawHorizontalLine draw a horizontal line aligned top center or bottom
    depending on align value.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                DrawHorizontalLine (int frame, int thick, int style, int x, int y, int l, int h, int align, int RO, int func, int fg)
 #else  /* __STDC__ */
 void                DrawHorizontalLine (frame, thick, style, x, y, l, h, align, RO, func, fg)
+int                 frame;
+int                 thick;
+int                 style;
+int                 x;
+int                 y;
+int                 l;
+int                 h;
+int                 align;
+int                 RO;
+int                 func;
+int                 fg;
+#endif /* __STDC__ */
+{
+   int                 xf, Y;
+   FILE               *fout;
+
+   if (y < 0)
+     return;
+   y += FrameTable[frame].FrTopMargin;
+   if (thick <= 0 || fg < 0)
+     return;
+
+   fout = (FILE *) FrRef[frame];
+   /* Do we need to change the current color ? */
+   CurrentColor (fout, fg);
+
+   if (align == 1)
+     Y = y + (h - thick) / 2;
+   else if (align == 2)
+     Y = y + h - thick / 2;
+   else
+     Y = y + thick / 2;
+   xf = PixelToPoint (x + l);
+   x = PixelToPoint (x);
+   Y = PixelToPoint (Y);
+   thick = PixelToPoint (thick);
+   fprintf (fout, "%d -%d %d -%d %d %d %d Seg\n", xf, Y, x, Y, style, thick, 2);
+}
+
+
+/*----------------------------------------------------------------------
+   DrawHorizontalBrace draw a horizontal brace aligned top or bottom
+   depending on align value.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                DrawHorizontalBrace (int frame, int thick, int style, int x, int y, int l, int h, int align, int RO, int func, int fg)
+#else  /* __STDC__ */
+void                DrawHorizontalBrace (frame, thick, style, x, y, l, h, align, RO, func, fg)
 int                 frame;
 int                 thick;
 int                 style;
@@ -1896,6 +2007,54 @@ int                 fg;
 void                DrawVerticalLine (int frame, int thick, int style, int x, int y, int l, int h, int align, int RO, int func, int fg)
 #else  /* __STDC__ */
 void                DrawVerticalLine (frame, thick, style, x, y, l, h, align, RO, func, fg)
+int                 frame;
+int                 thick;
+int                 style;
+int                 x;
+int                 y;
+int                 l;
+int                 h;
+int                 align;
+int                 RO;
+int                 func;
+int                 fg;
+#endif /* __STDC__ */
+{
+   int                 X, yf;
+   FILE               *fout;
+
+   if (y < 0)
+      return;
+
+   y += FrameTable[frame].FrTopMargin;
+   if (thick <= 0 || fg < 0)
+      return;
+
+   fout = (FILE *) FrRef[frame];
+   /* Do we need to change the current color ? */
+   CurrentColor (fout, fg);
+   if (align == 1)
+      X = x + (l - thick) / 2;
+   else if (align == 2)
+      X = x + l - thick / 2;
+   else
+      X = x + thick / 2;
+   yf = PixelToPoint (y + h);
+   y = PixelToPoint (y);
+   X = PixelToPoint (X);
+   thick = PixelToPoint (thick);
+      fprintf (fout, "%d -%d %d -%d %d %d %d Seg\n", X, yf, X, y, style, thick, 2);
+}
+
+
+/*----------------------------------------------------------------------
+   DrawDoubleVerticalLine draw a doubled vertical line aligned left center
+   or right depending on align value.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                DrawDoubleVerticalLine (int frame, int thick, int style, int x, int y, int l, int h, int align, int RO, int func, int fg)
+#else  /* __STDC__ */
+void                DrawDoubleVerticalLine (frame, thick, style, x, y, l, h, align, RO, func, fg)
 int                 frame;
 int                 thick;
 int                 style;
