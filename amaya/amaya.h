@@ -136,6 +136,9 @@ typedef struct _AHTReqContext
      XtInputId           except_xtinput_id;	/* The except xt event id assocciated with
 						   the request */
 #endif				/* WWW_XWINDOWS */
+     SOCKET             read_sock;              /* read socket associated with the request */
+     SOCKET             write_sock;             /* write socket associated with the request */
+     SOCKET             except_sock;            /* except socket associated with the request */
      char               *outputfile;	/* file to receive incoming data         */
      FILE               *output;	/* file pointer to outputfile            */
      int                 mode;	/* Mode of request: SYNC/ASYNC/IASYNC/FORM POST/FORM GET   */
@@ -155,8 +158,6 @@ typedef struct _AHTReqContext
      int                 put_counter;	/* number of bytes already put           */
      char               *mem_ptr;	/* ptr to a struct in mem which contains a copy */
      /* of the file to put                           */
-/* For debugging */
-     int                *s;	/* socket number                                */
      char               *error_stream;        /* pointer to an error message associated with the
 						 request */
      int                 error_stream_size;   /* size of the above message */

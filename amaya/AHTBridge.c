@@ -70,6 +70,151 @@ static const SockOps WriteBits = FD_WRITE | FD_CONNECT;
 static const SockOps ExceptBits = FD_OOB;
 
 /*
+ * Experimental functions
+ */
+
+/*--------------------------------------------------------------------
+  W3ContinueRequest
+  -------------------------------------------------------------------*/
+
+#ifdef __STDC__
+void W3ContinueRequest (SOCKET sock, int event)
+#else
+void W3ContinueRequest (SOCKET sock, int event)
+SOCKET              socket;
+int                 event;
+#endif /* __STDC__ */
+{
+   int                 status;  /* the status result of the libwwww call */
+   HTRequest          *rqp = NULL;
+   AHTReqContext      *me;
+   SockOps             ops;	
+
+   /* Libwww 5.0a does not take into account the ops parameter
+      in the invocation of for this function call */
+
+#ifdef HACK_WWW
+   HTEventCallback    *cbf;
+
+#else
+   HTEventCallback    *cbf;
+
+   ops = FD_WRITE;
+   cbf = (HTEventCallback *) __RetrieveCBF (sock, ops, &rqp);
+#endif
+
+   me = HTRequest_context (rqp);
+   if (THD_TRACE)
+     fprintf (stderr, "AHTBridge: Processing url %s \n", me->urlName);
+
+   /* verify if there's any callback associated with the request */
+   if (!cbf || !rqp || rqp->priority == HT_PRIORITY_OFF)
+     {
+	if (THD_TRACE)
+	   HTTrace ("Callback.... No callback found\n");
+	/* experimental */
+	/* Do some error processing */
+	/* put some more code to correctly destroy this request ?*/
+	return;
+     }
+
+#ifdef WWW_XWINDOWS
+   switch (event)
+	 {
+	    case 1:
+	       ops = me->read_ops;
+	       ops = FD_READ;
+	       break;
+	    case 2:
+	       ops = me->write_ops;
+	       ops = FD_WRITE;
+	       break;
+	    case 4:
+	       ops = me->except_ops;
+	       ops = FD_OOB;
+	       break;
+	 }			/* switch */
+#endif /* WWW_XWINDOWS */
+
+     /* Invokes the callback associated to the requests */
+     
+     /* first we change the status of the request, to say it
+	has entered a critical section */
+
+     if((HTRequest_outputStream(me->request) == (HTStream *) NULL))
+       fprintf(stderr,"\n **ERROR** opening %s\n\n",me->urlName);
+
+     me->reqStatus = HT_BUSY;
+     if ((status = (*cbf) (sock, rqp, ops)) != HT_OK)
+       HTTrace ("Callback.... received != HT_OK");
+
+   /* Several states can happen after this callback. They
+    * are indicated by the me->reqStatus structure member and
+    * the fds external variables. The following lines examine
+    * the states and correspondly update the Xt event register
+    *
+    * Regarding the me->reqStatus member, we have the following
+    * possible states:
+    *   
+    * HT_BUSY:    Request has blocked
+    * HT_WAITING: Request has been reissued
+    * HT_ABORT:   Request has been stopped
+    * HT_END:     Request has ended
+    */
+
+#ifdef WWW_XWINDOWS
+   if (me->reqStatus == HT_ABORT)
+   /* Has the user stopped the request? */
+     {
+	me->reqStatus = HT_WAITING;
+	StopRequest (me->docid);
+	return;
+     }
+#endif /* WWW_XWINDOWS */
+
+   if (me->reqStatus == HT_WAITING)
+   /* the request is being reissued */
+     {
+	/*
+	 * (1) The old request has ended and the library
+	 * assigned the old socket number to a pending
+	 * request.
+	 *
+	 * (2) The request has been reissued after an 
+	 * authentication or redirection directive and
+	 * we are using the same old socket number.
+	 */
+       
+       if (THD_TRACE)
+	 fprintf (stderr, "*** detected a reissue of request \n");
+       return;
+     }
+
+    /* we verify if the request exists. If it has ended, we will have
+       a reqStatus with an HT_END value */
+
+   if ((me->request->net == (HTNet *) NULL) || (me->reqStatus == HT_END || me->reqStatus == HT_ERR))
+     /* request has ended */
+     {
+	if ((me->mode & AMAYA_ASYNC) || (me->mode & AMAYA_IASYNC))
+	  /* free the memory allocated for async requests */
+	  {
+	     AHTPrintPendingRequestStatus (me->docid, YES);
+	     AHTReqContext_delete (me);
+	  }
+	else if (me->reqStatus != HT_END && HTError_hasSeverity (HTRequest_error (me->request), ERR_NON_FATAL))
+	  /* did the SYNC request end because of an error? If yes, report it back to the caller */
+	   me->reqStatus = HT_ERR;
+	return;
+     }
+
+   /* The request is still alive, so change it's status to indicate it's out of the
+      critical section */
+   me->reqStatus = HT_WAITING;
+   return;
+}
+
+/*
  * Private functions
  */
 
@@ -136,6 +281,10 @@ XtInputId          *id;
 #ifdef WWW_XWINDOWS
    switch ((XtInputId) cd)
 	 {
+	    case XtInputReadMask:
+	       ops = me->read_ops;
+	       ops = FD_READ;
+	       break;
 	    case XtInputWriteMask:
 	       ops = me->write_ops;
 	       ops = FD_WRITE;
@@ -145,13 +294,10 @@ XtInputId          *id;
 	       ops = FD_OOB;
 	       break;
 	 default:
-	    case XtInputReadMask:
-	       ops = me->read_ops;
-	       ops = FD_READ;
-	       break;
+	   break;
 	 }			/* switch */
-
 #endif /* WWW_XWINDOWS */
+
      /* Invokes the callback associated to the requests */
      
      /* first we change the status of the request, to say it
@@ -184,8 +330,6 @@ XtInputId          *id;
      {
 	me->reqStatus = HT_WAITING;
 	StopRequest (me->docid);
-	if (THD_TRACE)
-	   fprintf (stderr, "(BF) removing Xtinput %lu !RWE (Stop buttonl), sock %d\n", me->read_xtinput_id, *s);
 	return (0);
      }
 #endif /* WWW_XWINDOWS */
@@ -497,6 +641,7 @@ SOCKET sock;
 
 #ifdef AMAYA_JAVA
   JavaFdSetState (sock, 1);
+  me->read_sock = sock;
 #endif
 }
 
@@ -523,7 +668,8 @@ AHTReqContext      *me;
 #endif /* WWW_XWINDOWS */
 
 #ifdef AMAYA_JAVA
-  JavaFdResetState (sock, 1);
+  JavaFdResetState (me->read_sock, 1);
+  me->read_sock = INVSOC;
 #endif
 }
 
@@ -562,6 +708,7 @@ SOCKET              sock;
 
 #ifdef AMAYA_JAVA
   JavaFdSetState (sock, 2);
+  me->write_sock = sock;
 #endif
 }
 
@@ -589,7 +736,8 @@ AHTReqContext      *me;
 #endif /* WWW_XWINDOWS */
 
 #ifdef AMAYA_JAVA
-  JavaFdResetState (sock, 2);
+  JavaFdResetState (me->write_sock, 2);
+  me->write_sock = INVSOC;
 #endif
 }
 
@@ -629,6 +777,7 @@ SOCKET              sock;
 
 #ifdef AMAYA_JAVA
   JavaFdSetState (sock, 4);
+  me->except_sock = sock;
 #endif
 
 }
@@ -657,7 +806,8 @@ AHTReqContext      *me;
 #endif /* WWW_XWINDOWS */
 
 #ifdef AMAYA_JAVA
-  JavaFdResetState (sock, 4);
+  JavaFdResetState (me->except_sock, 4);
+  me->except_sock = INVSOC;
 #endif
 }
 
