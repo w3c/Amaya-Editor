@@ -2814,6 +2814,7 @@ static void EndOfEndTag (char c)
 		     {
 		       if (strlen (inputBuffer) > MaxMsgLength - 10)
 			 inputBuffer[MaxMsgLength - 10] = EOS;
+		       sprintf (msgBuffer, "</%s", inputBuffer);
 		       InsertInvalidEl (msgBuffer, TRUE);
 		       /* print an error message... */
 		       sprintf (msgBuffer, "Invalid end tag </%s> (removed if saving)",
