@@ -1474,8 +1474,6 @@ ATTRIBUTES
 	create 'xml:space="preserve"';
 	end;
 
-#include "Text_SGML.inc"
-
 TextTRANSLATE Grec
  
 	BEGIN

@@ -1155,7 +1155,7 @@ static ThotBool     RemoveEndingSpaces (Element el)
    int              length, nbspaces;
    ElementType      elType;
    Element          lastLeaf;
-   char           lastChar[2];
+   char             lastChar[2];
    ThotBool         endingSpacesDeleted;
 
    endingSpacesDeleted = FALSE;
@@ -1215,7 +1215,7 @@ static void      RemoveTrailingSpaces (Element el)
    Element       lastLeaf;
    AttributeType attrType;
    Attribute     attr = NULL;
-   char        lastChar[2];
+   char          lastChar[2];
 
    /* Search the last leaf in the element's tree */
    lastLeaf = XmlLastLeafInElement (el);
@@ -1284,7 +1284,7 @@ static void      RemoveTrailingSpaces (Element el)
    XmlCloseElement
    Terminate the corresponding Thot element.
   ----------------------------------------------------------------------*/
-static ThotBool XmlCloseElement (unsigned char *mappedName)
+static ThotBool XmlCloseElement (char *mappedName)
 {
    int                 i, error;
    Element             el, parent;
@@ -2017,9 +2017,9 @@ static void          EndOfXhtmlAttributeName (char *attrName,
  AttributeType       attrType;
  ElementType         elType;
  Attribute           attr;
- char              translation;
+ char                translation;
  ThotBool            highEnoughLevel = TRUE;
- char              msgBuffer[MaxMsgLength];
+ char                msgBuffer[MaxMsgLength];
 
 
    UnknownAttr = FALSE;
@@ -2129,9 +2129,9 @@ static void       EndOfXmlAttributeName (char  *attrName,
 {
  AttributeType    attrType;
  Attribute        attr;
- char           msgBuffer[MaxMsgLength];
+ char             msgBuffer[MaxMsgLength];
  ThotBool         level = TRUE;
- char          schemaName[MAX_SS_NAME_LENGTH];
+ char            schemaName[MAX_SS_NAME_LENGTH];
 
    attrType.AttrTypeNum = 0;
 
@@ -2260,7 +2260,7 @@ static void         EndOfXmlAttributeValue (char *attrValue)
 {
    AttributeType    attrType;
    int		    attrKind, val;
-   unsigned char          msgBuffer[MaxMsgLength];
+   unsigned char    msgBuffer[MaxMsgLength];
 
    TtaGiveAttributeType (currentAttribute, &attrType, &attrKind);
    switch (attrKind)
@@ -2313,10 +2313,10 @@ static void       EndOfAttributeValue (char *attrValue, char *attrName)
    int            nbBytesRead = 0;
    int            i = 0, j = 0;
    int            length;
-   char         tmpbuf[10];
+   char           tmpbuf[10];
    int            tmplen;
    int            k, l;
-   char        *entityName;
+   char          *entityName;
    int            entityValue;	
    ThotBool       found;
 
@@ -3092,7 +3092,7 @@ static void     Hndl_Default (void *userData,
       printf ("%c", data[i]);
 #endif /* EXPAT_PARSER_DEBUG */
 
-  /* Speceific treatment for the entities */
+  /* Specific treatment for the entities */
   if (length > 1 && data[0] == '&')
     CreateXmlEntity ((char*) data, length);
 }
@@ -3158,13 +3158,13 @@ static void       Hndl_ElementStart (void *userData,
 
 {
    int            nbatts = 0;
-   char        *buffer = NULL;
-   char        *attrName = NULL;
-   char        *attrValue = NULL;
-   char        *bufName = NULL;
-   char        *ptr;
+   char          *buffer = NULL;
+   char          *attrName = NULL;
+   char          *attrValue = NULL;
+   char          *bufName = NULL;
+   char          *ptr;
    PtrParserCtxt  elementParserCtxt = NULL;
-   char         msgBuffer[MaxMsgLength];
+   char           msgBuffer[MaxMsgLength];
    Element        savCurrentElement = NULL;
    ThotBool       isRoot = FALSE;
 
@@ -3223,6 +3223,8 @@ static void       Hndl_ElementStart (void *userData,
        /* We assign generic Thot XML schema if the context is null */ 
        if (currentParserCtxt == NULL)
 	 ChangeXmlParserContextDTD ("XML");
+       else
+	 elementParserCtxt = currentParserCtxt;
 #else /* XML_GEN */
        /* We stop parsing if the context is null, ie,
 	  if Thot doesn't know the corresponding namespaces */ 
@@ -3234,9 +3236,9 @@ static void       Hndl_ElementStart (void *userData,
 	   DisableExpatParser ();
 	   return;
 	 }
-#endif /* XML_GEN */
        else
 	 elementParserCtxt = currentParserCtxt;
+#endif /* XML_GEN */
 
       /* Ignore the virtual root of a XML sub-tree when */
       /* we are parsing the result of a transformation */
@@ -3579,7 +3581,7 @@ static void  InitializeExpatParser (CHARSET charset)
 
 {  
   int        paramEntityParsing;
-  char     msgBuffer[MaxMsgLength];
+  char       msgBuffer[MaxMsgLength];
 
   /* Enable parsing of parameter entities */
   paramEntityParsing = XML_PARAM_ENTITY_PARSING_UNLESS_STANDALONE;
@@ -3758,8 +3760,8 @@ ThotBool       ParseXmlSubTree (char     *xmlBuffer,
 
 {
   int          tmpLen = 0;
-  char      *transBuffer = NULL;
-  char      *schemaName;
+  char        *transBuffer = NULL;
+  char        *schemaName;
   ElementType  elType;
   Element      parent;
   CHARSET      charset;
@@ -3865,13 +3867,14 @@ ThotBool ParseIncludedXml (FILE     *infile,
 			   Language  lang)
 {
   ThotBool     endOfParsing = FALSE;
+  ThotBool     found;
   int          res = 0;
   int          tmpLen = 0;
   int          offset = 0;
   int          i;
   ElementType  elType;
-  char      *schemaName;
-  char      *tmpBuffer = NULL;
+  char        *schemaName;
+  char        *tmpBuffer = NULL;
   CHARSET      charset;
 
   if (infile == NULL && htmlBuffer == NULL)
@@ -4016,8 +4019,25 @@ ThotBool ParseIncludedXml (FILE     *infile,
 	}
     }
 
+  /* We look for the '>' character of the XML end tag */
   offset = XML_GetCurrentByteIndex (parser) - extraOffset - 1;
-  *index += offset;
+  found = FALSE;
+  i = offset;
+  while (i >= 0 && !found)
+    {
+      if (tmpBuffer[i] == '>')
+	found = TRUE;
+      else
+	i--;
+    }
+  if (found)
+    {
+      i++;
+      *index += i;
+    }
+  else
+    *index += offset;
+
   *el = XMLcontext.lastElement;
   *isclosed = XMLcontext.lastElementClosed;
 

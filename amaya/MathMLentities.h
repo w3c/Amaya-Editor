@@ -491,7 +491,8 @@ XmlEntity  MathEntityTable[] =
 	{"Tfr", 120087},
 	{"Therefore", 8756},
 	{"Theta", 920},
-	{"ThickSpace", 8201},
+	/* {"ThickSpace", 8201}, */
+	{"ThickSpace", 8194},
 	{"ThinSpace", 8201},
 	{"Tilde", 8764},
 	{"TildeEqual", 8771},

@@ -721,6 +721,4 @@ ATTRIBUTES
 	create DoubleQuote;
 	END;
 
-#include "Text_SGML.inc"
-
 END
