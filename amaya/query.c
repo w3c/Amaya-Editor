@@ -989,6 +989,7 @@ int                 status;
   AHTReqContext      *me = (AHTReqContext *) HTRequest_context (request);
   boolean             error_flag;
   char               *content_type;
+  HTParentAnchor     *anchor;
 
   if (!me)
     return HT_ERROR;		/* not an Amaya request */
@@ -1081,8 +1082,9 @@ int                 status;
    /* copy the content_type */
    if (!me->content_type)
      {
-       if (response && HTResponse_format (response))
-	 content_type = HTAtom_name (HTResponse_format (response));
+       anchor = HTRequest_anchor (request);
+       if (anchor && HTAnchor_format (anchor))
+	 content_type = HTAtom_name (HTAnchor_format (anchor));
        else
 	 content_type = "www/unknown";
 
