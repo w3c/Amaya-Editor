@@ -2697,10 +2697,10 @@ boolean         remove;
 		   pAb = pAb->AbNext;
 		if (pAb)
 		   enclosed = TRUE;
-		else
+		else if (pParent)
 		   {
 		   pAb = pParent->AbNext;
-		   if (pAb->AbElement != pEl)
+		   if (pAb && pAb->AbElement != pEl)
 		      pAb = NULL;
 		   }
 		}
