@@ -188,17 +188,21 @@ HTMLAPP.o : HTMLAPP.c
 	$(CC) $(CFLAGS) $(AMAYA_OPTIONS) $(INCLUDES) -c HTMLAPP.c -o $@
 
 HTML.h HTMLAPP.c : @srcdir@/HTML.STR @srcdir@/HTML.A
-	$(CP) @srcdir@/HTML.A . ; THOTDIR=$(THOTDIR) ; export THOTDIR ; \
+	$(CP) @srcdir@/HTML.A . 
+	$(CP) @srcdir@/HTML.STR . 
+	THOTDIR=$(THOTDIR) ; export THOTDIR ; \
 	../bin/app $(AMAYA_OPTIONS) HTML.A
 
 EDITORAPP.o : EDITORAPP.c
 	$(CC) $(CFLAGS) $(AMAYA_OPTIONS) $(INCLUDES) -c EDITORAPP.c -o $@
 
 EDITORAPP.c : @srcdir@/EDITOR.A
-	$(CP) @srcdir@/EDITOR.A . ; THOTDIR=$(THOTDIR) ; export THOTDIR ; \
+	$(CP) @srcdir@/EDITOR.A . 
+	$(CP) @srcdir@/logo.xpm . 
+	THOTDIR=$(THOTDIR) ; export THOTDIR ; \
 	../bin/app $(AMAYA_OPTIONS) EDITOR.A
 
-../bin/amaya : $(AMAYA_SCHEMAS) $(AMAYA_OBJ) $(AMAYA_OPTION_OBJ) $(AMAYA_LIBS)
+../bin/amaya : $(AMAYA_LIBS) $(AMAYA_SCHEMAS) $(AMAYA_OBJ) $(AMAYA_OPTION_OBJ)
 	@(if test ! -d ../bin ; then $(MKDIR) ../bin ; fi)
 	$(CC) $(LDFLAGS) -o ../bin/amaya $(AMAYA_OBJ) $(AMAYA_OPTION_OBJ) $(LIBS)
 	@$(ECHO) "====>" amaya is done

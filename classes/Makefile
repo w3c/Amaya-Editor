@@ -3,10 +3,11 @@
 .java.class : 
 	javac $*.java
 
+CLASSROOT=`pwd`
 ZIP=zip -0
 COMPRESS=zip -9
 
-SUBDIRS=thotlib amaya thot
+SUBDIRS=thotlib amaya thot external biss
 
 all : http subdir
 
@@ -23,7 +24,9 @@ zips :
 	       w3c/file.make w3c/package.make Makefile
 
 subdir :
-	@(for subdir in $(SUBDIRS) ; do \
+	@(CLASSROOT="$(CLASSROOT)" ; export CLASSROOT; \
+	  CLASSPATH="$(CLASSPATH):$(CLASSROOT)/external" ; export CLASSPATH; \
+	  for subdir in $(SUBDIRS) ; do \
 	  if [ -d $$subdir ] ; \
 	  then \
 	      cd $$subdir ; make ; cd .. ; \

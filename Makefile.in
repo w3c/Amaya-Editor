@@ -19,7 +19,7 @@ LINKS	= schemas schemasOPERA config
 SUBDIRS	= tools tablelib thotlib batch drawlib indexlib thot amaya
 EXTRA_SUBDIRS= misc
 
-srcdir	= @top_srcdir@
+srcdir	= $(THOTDIR)
 
 @SET_MAKE@
 
@@ -60,6 +60,31 @@ install : rebuild
 	  $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" install ; \
 	  cd .. ; fi ;done )
 
+update :
+	@(cd $(THOTDIR) ; cvs update)
+
+commit :
+	@(cd $(THOTDIR) ; cvs commit)
+
+stubs:
+	@(cd javalib ; make stubs)
+
+classes: force
+	@(PWD=`pwd` ; PATH="$$PWD/bin:$$PATH" ; export PATH ; \
+	  if test -d $$PWD/$(THOTDIR) ; then CLASSES=$$PWD/$(THOTDIR)/classes;\
+	  else CLASSES=$(THOTDIR)/classes ; fi ; \
+	  CLASSPATH=".:$$CLASSES:$$CLASSES/classes.zip:$$CLASSES/thotlib.zip:\
+$$CLASSES/jigsaw.zip:$$CLASSES/amaya.zip:$$CLASSES/biss.zip";export CLASSPATH;\
+	  cd $(THOTDIR)/classes ; make)
+
+zips: force
+	@(PWD=`pwd` ; PATH="$$PWD/bin:$$PATH" ; export PATH ; \
+	  if test -d $$PWD/$(THOTDIR) ; then CLASSES=$$PWD/$(THOTDIR)/classes;\
+	  else CLASSES=$(THOTDIR)/classes ; fi ; \
+	  CLASSPATH=".:$$CLASSES:$$CLASSES/classes.zip:$$CLASSES/thotlib.zip:\
+$$CLASSES/jigsaw.zip:$$CLASSES/amaya.zip:$$CLASSES/biss.zip";export CLASSPATH;\
+	  cd $(THOTDIR)/classes ; make zips)
+
 tools/mkdep/mkdep :
 	@(cd tools/mkdep ; $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" mkdep)
 
@@ -77,7 +102,7 @@ bin/str : force
 	@(cd batch ; $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" str prs tra printstr)
 
 schemas : rebuild bin/str
-	@(bindir=`pwd`/bin ; cd @top_srcdir@/schemas ; \
+	@(bindir=`pwd`/bin ; cd $(THOTDIR)/schemas ; \
 	  $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" THOTDIR=".." THOTSCH="../schemas:../schemasOPERA" \
 	  COMPSCH="."  COMPSTR="$$bindir/str" COMPPRS="$$bindir/prs" \
 	  COMPTRA="$$bindir/tra" PRINTSTR="$$bindir/printstr" all)
@@ -87,18 +112,18 @@ schemas : rebuild bin/str
 #
 
 libwww libwww.a :
-	@(if [ ! -d @top_srcdir@/$(LIBWWW) ] ; \
+	@(if [ ! -d $(THOTDIR)/$(LIBWWW) ] ; \
 	  then \
-	      cd @top_srcdir@ ; cvs update -d $(LIBWWW) ; \
+	      cd $(THOTDIR) ; cvs update -d $(LIBWWW) ; \
 	  fi)
 	@(if test ! -d $(LIBWWW) ; then $(MKDIR) $(LIBWWW) ;  fi)
-	@(localdir=`pwd` ; libwwwdir="@top_srcdir@/$(LIBWWW)" ; cd $(LIBWWW) ; \
+	@(localdir=`pwd` ; libwwwdir="$(THOTDIR)/$(LIBWWW)" ; cd $(LIBWWW) ; \
 	  unset LANG; if [ -x $$libwwwdir/configure ] ; then \
 	      $$libwwwdir/configure ; \
 	  else \
 	      ../$$libwwwdir/configure ; \
 	  fi)
-	-@(cd @top_srcdir@/$(LIBWWW)/Library/src ; \
+	-@(cd $(THOTDIR)/$(LIBWWW)/Library/src ; \
 	   touch *.html ; touch *.h ; touch *.c)
 	@(cd $(LIBWWW)/Library/src ; $(MAKE) CC=$(CC) CFLAGS="-O" libwww.a)
 	@($(CP) $(LIBWWW)/Library/src/libwww.a libwww.a)
@@ -109,7 +134,7 @@ libwww libwww.a :
 #
 
 libjpeg libjpeg.a : force
-	@($(RM) @top_srcdir@/libjpeg/*.o)
+	@($(RM) $(THOTDIR)/libjpeg/*.o)
 	@(cd libjpeg ; $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)")
 
 #
@@ -117,7 +142,7 @@ libjpeg libjpeg.a : force
 #
 
 libpng libpng.a : force
-	@($(RM) @top_srcdir@/libpng/*.o)
+	@($(RM) $(THOTDIR)/libpng/*.o)
 	@(cd libpng ; $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)")
 
 #
@@ -125,7 +150,7 @@ libpng libpng.a : force
 #
 
 libz libz.a : force
-	@($(RM) @top_srcdir@/libpng/libz/*.o)
+	@($(RM) $(THOTDIR)/libpng/libz/*.o)
 	@(cd libpng/libz ; $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)")
 
 #
@@ -133,17 +158,17 @@ libz libz.a : force
 #
 
 kaffe_get :
-	@(if [ ! -d @top_srcdir@/$(KAFFE) ] ; \
+	@(if [ ! -d $(THOTDIR)/$(KAFFE) ] ; \
 	  then \
-	      cd @top_srcdir@ ; cvs get $(KAFFE) ; \
+	      cd $(THOTDIR) ; cvs get $(KAFFE) ; \
 	  fi)
-	@(if [ ! -d @top_srcdir@/classes ] ; \
+	@(if [ ! -d $(THOTDIR)/classes ] ; \
 	  then \
-	      cd @top_srcdir@ ; cvs get classes ; \
+	      cd $(THOTDIR) ; cvs get classes ; \
 	  fi)
-	@(if [ ! -d @top_srcdir@/javalib ] ; \
+	@(if [ ! -d $(THOTDIR)/javalib ] ; \
 	  then \
-	      cd @top_srcdir@ ; cvs get javalib ; \
+	      cd $(THOTDIR) ; cvs get javalib ; \
 	  fi)
 	@(if [ ! -d $(KAFFE) ] ; \
 	  then \
@@ -154,7 +179,7 @@ kaffe_clean :
 	@($(RM) -f libkaffe*)
 
 kaffe_config :
-	@(localdir=`pwd` ; kaffedir="@top_srcdir@/$(KAFFE)" ; cd $(KAFFE) ; \
+	@(localdir=`pwd` ; kaffedir="$(THOTDIR)/$(KAFFE)" ; cd $(KAFFE) ; \
 	  unset LANG; if [ -x $$kaffedir/configure ] ; then \
 	      $$kaffedir/configure --prefix=$$localdir --libdir=$$localdir \
 	      --bindir=$$localdir/bin  --enable-staticlib --with-x ; \
@@ -168,19 +193,19 @@ kaffe_make :
 
 kaffe_install:
 	@(cd $(KAFFE) ; $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" install)
-	@(if [ ! -d @top_srcdir@/classes ] ; \
+	@(if [ ! -d $(THOTDIR)/classes ] ; \
 	  then \
-	      $(MKDIR) @top_srcdir@/classes ; \
+	      $(MKDIR) $(THOTDIR)/classes ; \
 	  fi)
-	@(if [ ! -d @top_srcdir@/classes/lib ] ; \
+	@(if [ ! -d $(THOTDIR)/classes/lib ] ; \
 	  then \
-	      $(MKDIR) @top_srcdir@/classes/lib ; \
+	      $(MKDIR) $(THOTDIR)/classes/lib ; \
 	  fi)
-	@($(MV) include/kaffe/StubPreamble.h @top_srcdir@/javalib)
-	@($(MV) include/kaffe/jtypes.h @top_srcdir@/javalib)
-	@($(MV) include/kaffe/native.h @top_srcdir@/javalib)
-	@($(MV) include/kaffe/java_lang_String.h @top_srcdir@/javalib)
-	@($(CP) -R share/kaffe/. @top_srcdir@/classes)
+	@($(MV) include/kaffe/StubPreamble.h $(THOTDIR)/javalib)
+	@($(MV) include/kaffe/jtypes.h $(THOTDIR)/javalib)
+	@($(MV) include/kaffe/native.h $(THOTDIR)/javalib)
+	@($(MV) include/kaffe/java_lang_String.h $(THOTDIR)/javalib)
+	@($(CP) -R share/kaffe/. $(THOTDIR)/classes)
 	@$(ECHO) Cleaning temp $(KAFFE) files
 	@($(RM) -r share include man )
 
@@ -194,22 +219,20 @@ kaffe : kaffe_get kaffe_clean kaffe_config kaffe_make kaffe_install
 
 MAKEFILE_IN= \
 @EXTRA_MAKEFILE_IN@ \
-@top_srcdir@/Options.in \
-@top_srcdir@/configure.in \
-@top_srcdir@/Makefile.in \
-@top_srcdir@/libjpeg/Makefile.in \
-@top_srcdir@/batch/Makefile.in \
-@top_srcdir@/libjpeg/Makefile.in \
-@top_srcdir@/libpng/Makefile.in \
-@top_srcdir@/libpng/zlib/Makefile.in \
-@top_srcdir@/drawlib/Makefile.in \
-@top_srcdir@/indexlib/Makefile.in \
-@top_srcdir@/tablelib/Makefile.in \
-@top_srcdir@/thotlib/Makefile.in \
-@top_srcdir@/thotlib/include/Makefile.in \
-@top_srcdir@/tools/Makefile.in \
-@top_srcdir@/tools/mkdep/Makefile.in \
-@top_srcdir@/tools/cextract-1.7/Makefile.in
+$(THOTDIR)/Options.in \
+$(THOTDIR)/configure.in \
+$(THOTDIR)/Makefile.in \
+$(THOTDIR)/libjpeg/Makefile.in \
+$(THOTDIR)/batch/Makefile.in \
+$(THOTDIR)/libjpeg/Makefile.in \
+$(THOTDIR)/libpng/Makefile.in \
+$(THOTDIR)/libpng/zlib/Makefile.in \
+$(THOTDIR)/tablelib/Makefile.in \
+$(THOTDIR)/thotlib/Makefile.in \
+$(THOTDIR)/thotlib/include/Makefile.in \
+$(THOTDIR)/tools/Makefile.in \
+$(THOTDIR)/tools/mkdep/Makefile.in \
+$(THOTDIR)/tools/cextract-1.7/Makefile.in
 
 rebuild : tools/mkdep/mkdep Makefile
 
