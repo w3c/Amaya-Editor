@@ -1345,15 +1345,13 @@ static void  NsStartProcessing (Element newElement)
   if (CurNs_Level == 0)
     return;
 
-  if (newElement == 0)
-    return;
-
   /* Update the Namespace Document informations */
   /* and remove the useless declarations */
   for (i = 0; i < CurNs_Level; i++)
     {
-      TtaSetNamespaceDeclaration (XMLcontext.doc, newElement,
-				  CurNs_Prefix[i], CurNs_Uri[i]);
+      if (newElement != NULL)
+	TtaSetNamespaceDeclaration (XMLcontext.doc, newElement,
+				    CurNs_Prefix[i], CurNs_Uri[i]);
       if (CurNs_Prefix[i] != NULL)
 	{
 	  TtaFreeMemory (CurNs_Prefix[i]);
@@ -1369,28 +1367,119 @@ static void  NsStartProcessing (Element newElement)
 }
 
 /*----------------------------------------------------------------------
-  NsGiveName
-  Give a name to the namespace declaration
+  NsGetPrefix
+  Get the prefix associated with an uri
   ----------------------------------------------------------------------*/
-static void  NsGiveName (char *ns_uri, char **ns_name)
+static char*  NsGetPrefix (char *ns_uri)
 
 {
-  int i;
+  int     i;
+  char   *ns_prefix;
 
-  *ns_name = NULL;
+  ns_prefix = NULL;
   if (ns_uri == NULL)
-    return;
-
-  for (i = 0; i < Ns_Level; i++)
+    return (ns_prefix);
+  
+  for (i = Ns_Level - 1; i >= 0; i--)
     {
-      if ((Ns_Uri[i] != NULL) && 
+      if ((ns_uri != NULL) && (Ns_Uri[i] != NULL) &&
 	  (strcmp (ns_uri, Ns_Uri[i]) == 0))
 	{
-	  *ns_name = Ns_Prefix[i];
-	  i = Ns_Level;
+	  ns_prefix = Ns_Prefix[i];
+	  i = 0;
 	}
     }
-  return;
+  return (ns_prefix);
+}
+
+/*----------------------------------------------------------------------
+  UnknownXmlNsElement
+  Create an Unknown_Namespace element according to the current context
+  ----------------------------------------------------------------------*/
+static void   UnknownXmlNsElement (char *ns_uri, char *elemName, ThotBool startElem)
+{
+  Element     newElement;
+  int         i, lg, tmplg;
+  char       *ns_prefix;
+#define       MAX_BUFFER_SIZE    1024
+  char        elemBuffer[MAX_BUFFER_SIZE];
+
+  if (elemName == NULL)
+    return;
+
+  strcpy (elemBuffer, "<");
+  lg = 1;
+
+  if (!startElem)
+    {
+      strcat (elemBuffer, "/");
+      lg ++;
+    }
+
+  /* Is that namespace associated with an uri ? */
+  ns_prefix = NsGetPrefix (ns_uri);
+
+  if (ns_prefix != NULL)
+    {
+      strcat (elemBuffer, ns_prefix);	  
+      lg += strlen (ns_prefix);
+      strcat (elemBuffer, ":");
+      lg ++;
+    }
+  strcat (elemBuffer, elemName);	  
+  lg += strlen (elemName);
+
+  /* Search all namespace declarations for this element */
+  if (startElem && CurNs_Level > 0)
+    {
+      for (i = 0; i < CurNs_Level; i++)
+	{
+	  /* Check if we don't overflow the buffer */
+	  tmplg = 8;
+	  if (CurNs_Prefix[i] != NULL)
+	    {
+	      tmplg += strlen (CurNs_Prefix[i]);
+	      tmplg ++;
+	    }
+	  if (CurNs_Uri[i] != NULL)
+	    tmplg += strlen (CurNs_Uri[i]);
+	  tmplg +=2;
+
+	  if ((lg + tmplg) < MAX_BUFFER_SIZE)
+	    {
+	      /* We can add this declaration */	  
+	      strcat (elemBuffer, " xmlns");
+	      lg += 6;
+	      if (CurNs_Prefix[i] != NULL)
+		{
+		  strcat (elemBuffer, ":");
+		  lg ++;
+		  strcat (elemBuffer, CurNs_Prefix[i]);
+		  lg += strlen (CurNs_Prefix[i]);
+		}
+	      strcat (elemBuffer, "=\"");
+	      lg += 2;
+	      if (CurNs_Uri[i] != NULL)
+		{
+		  strcat (elemBuffer, CurNs_Uri[i]);
+		  lg += strlen (CurNs_Uri[i]);
+		}
+	      strcat (elemBuffer, "\"");
+	      lg ++;
+	    }
+	  else
+	    i = CurNs_Level;
+	}
+    }
+
+  /* Create the Unknown element */
+  newElement = NULL;
+  (*(currentParserCtxt->UnknownNameSpace))
+    (&XMLcontext, &newElement, elemBuffer);
+  /* Store the current namespace declarations for this element */
+  if (CurNs_Level > 0)
+    NsStartProcessing (newElement);
+
 }
 
 /*--------------------  Namespaces procedures  (end)  --------------*/
@@ -1562,7 +1651,7 @@ static void   GetXmlElType (char *ns_uri, char *elementName,
 		  strcmp (elementName, "xmlpi") &&
 		  strcmp (elementName, "xmlpi_line"))
 		{
-		  NsGiveName (ns_uri, &ns_name);
+		  ns_name = NsGetPrefix (ns_uri);
 		  if (ns_name != NULL)
 		    TtaChangeGenericSchemaNames (ns_uri, ns_name, XMLcontext.doc);
 		  else
@@ -1577,7 +1666,7 @@ static void   GetXmlElType (char *ns_uri, char *elementName,
 		  elType->ElSSchema = GetGenericXMLSSchemaByUri (ns_uri, XMLcontext.doc, &isnew);
 		  if (isnew)
 		    {
-		      NsGiveName (ns_uri, &ns_name);
+		      ns_name = NsGetPrefix (ns_uri);
 		      if (ns_name != NULL)
 			TtaChangeGenericSchemaNames (ns_uri, ns_name, XMLcontext.doc);
 		      else
@@ -1714,16 +1803,7 @@ static void       StartOfXmlStartElement (char *name)
 		   "Namespace not supported for the element <%s>", name);
 	  XmlParseError (errorParsing, msgBuffer, 0);
 	  /* create an Unknown_namespace element */
-	  newElement = NULL;
-	  if (nsURI != NULL)
-	    sprintf (msgBuffer, "<%s", elementName);	  
-	  else
-	    sprintf (msgBuffer, "<%s", elementName);	  
-	  (*(currentParserCtxt->UnknownNameSpace))
-	    (&XMLcontext, &newElement, msgBuffer);
-	  /* Store the current namespace declarations for this element */
-	  if (CurNs_Level > 0)
-	    NsStartProcessing (newElement);
+	  UnknownXmlNsElement (nsURI, elementName, TRUE);
 	}
       else
 	{
@@ -1908,7 +1988,6 @@ static void       EndOfXmlStartElement (char *name)
 static void       EndOfXmlElement (char *name)
 {
    ElementType    elType;
-   Element        newElement;
    char          *nsURI, *elementName;
    char          *buffer;
    char          *ptr;
@@ -1989,16 +2068,8 @@ static void       EndOfXmlElement (char *name)
   elType.ElTypeNum = 0;
   currentElementName[0] = EOS;
   if (UnknownNS)
-    {
-      /* create an Unknown_namespace element */
-      newElement = NULL;
-      if (nsURI != NULL)
-	sprintf (msgBuffer, "</%s", elementName);	  
-      else
-	sprintf (msgBuffer, "</%s", elementName);	  
-      (*(currentParserCtxt->UnknownNameSpace))
-	(&XMLcontext, &newElement, msgBuffer);
-    }
+    /* create an Unknown_namespace element */
+    UnknownXmlNsElement (nsURI, elementName, FALSE);
   else
     {
       GetXmlElType (nsURI, elementName, &elType, &mappedName,
@@ -2452,19 +2523,23 @@ static unsigned char *HandleXMLstring (unsigned char *data, int *length,
 /*--------------------  Attributes  (start)  ---------------------*/
 /*----------------------------------------------------------------------
   UnknownXmlAttribute
-  Creation of filling of an "unknown_attr" attribute
+  Creation and filling of an "unknown_attr" attribute
   ----------------------------------------------------------------------*/
-static void      UnknownXmlAttribute (char *xmlAttr)
+static void      UnknownXmlAttribute (char *xmlAttr, char *ns_uri)
      
 {
    AttributeType attrType;
    Attribute     attr;
-   char         *buffer;
+   char         *buffer, *ns_prefix = NULL;
    ThotBool      level = TRUE;
    int           length;
 
    if (currentParserCtxt != NULL)
      {
+       /* If the uri associated with a prefix ? */
+       if (ns_uri != NULL)
+	 ns_prefix = NsGetPrefix (ns_uri);
+
        /* Attach an Invalid_attribute to the current element */
        attrType.AttrSSchema = currentParserCtxt->XMLSSchema;
        if (currentParserCtxt == XhtmlParserCtxt)
@@ -2481,9 +2556,21 @@ static void      UnknownXmlAttribute (char *xmlAttr)
 	       attr = TtaNewAttribute (attrType);
 	       TtaAttachAttribute (XMLcontext.lastElement, attr, XMLcontext.doc);
 	       length = strlen (xmlAttr);
-	       buffer = TtaGetMemory (length + 2);
-	       strcpy (buffer, " ");
-	       strcat (buffer, xmlAttr);
+	       if (ns_prefix != NULL)
+		 {
+		   length += strlen (ns_prefix);
+		   buffer = TtaGetMemory (length + 3);
+		   strcpy (buffer, " ");
+		   strcat (buffer, ns_prefix);
+		   strcat (buffer, ":");
+		   strcat (buffer, xmlAttr);
+		 }
+	       else
+		 {
+		   buffer = TtaGetMemory (length + 2);
+		   strcpy (buffer, " ");
+		   strcat (buffer, xmlAttr);
+		 }
 	       TtaSetAttributeText (attr, buffer,
 				    XMLcontext.lastElement,
 				    XMLcontext.doc);
@@ -2493,12 +2580,24 @@ static void      UnknownXmlAttribute (char *xmlAttr)
 	     {
 	       /* Copy the name of the attribute as the content */
 	       /* of the Invalid_attribute attribute. */
-	       length = strlen (xmlAttr) + 2;
+	       length = strlen (xmlAttr);
 	       length += TtaGetTextAttributeLength (attr);
-	       buffer = TtaGetMemory (length + 1);
-	       TtaGiveTextAttributeValue (attr, buffer, &length);
-	       strcat (buffer, " ");
-	       strcat (buffer, xmlAttr);
+	       if (ns_prefix != NULL)
+		 {
+		   length += strlen (ns_prefix);
+		   buffer = TtaGetMemory (length + 4);
+		   strcat (buffer, " ");
+		   strcat (buffer, ns_prefix);
+		   strcat (buffer, ":");
+		   strcat (buffer, xmlAttr);
+		 }
+	       else
+		 {
+		   buffer = TtaGetMemory (length + 3);
+		   TtaGiveTextAttributeValue (attr, buffer, &length);
+		   strcat (buffer, " ");
+		   strcat (buffer, xmlAttr);
+		 }
 	       TtaSetAttributeText (attr, buffer,
 				    XMLcontext.lastElement,
 				    XMLcontext.doc);
@@ -2613,7 +2712,7 @@ static void EndOfXhtmlAttributeName (char *attrName, Element el,
 
 /*----------------------------------------------------------------------
    XmlEndOfAttrName
-   End of a XML attribute that doesn't belongs to the XHTML DTD
+   End of a XML attribute that doesn't belong to the XHTML DTD
   ----------------------------------------------------------------------*/
 static void EndOfXmlAttributeName (char *attrName, char *uriName,
 				   Element  el, Document doc)
@@ -2666,7 +2765,7 @@ static void EndOfXmlAttributeName (char *attrName, char *uriName,
        XmlParseError (errorParsing, msgBuffer, 0);
        /* Attach an Invalid_attribute to the current element */
        /* It may be a valid attribute that is not yet defined in Amaya tables */
-       UnknownXmlAttribute (attrName);
+       UnknownXmlAttribute (attrName, NULL);
        UnknownAttr = TRUE;
      }
    else
@@ -2734,6 +2833,8 @@ static void      EndOfAttributeName (char *xmlName)
 	 {
 	   attrName = TtaGetMemory (strlen (ptr) + 1);
 	   strcpy (attrName, ptr);
+	   if (UnknownNS)
+	     currentParserCtxt = NULL;
 	   if (currentParserCtxt != NULL &&
 	       strcmp (buffer, currentParserCtxt->UriName))
 	     ChangeXmlParserContextByUri (buffer);
@@ -2751,7 +2852,7 @@ static void      EndOfAttributeName (char *xmlName)
 		    "Namespace not supported for the attribute \"%s\"", xmlName);
 	   XmlParseError (errorParsing, msgBuffer, 0);
 	   /* Create an unknown attribute  */
-	   UnknownXmlAttribute (attrName);
+	   UnknownXmlAttribute (attrName, NULL);
 	   UnknownAttr = TRUE;
 	 }
      }
@@ -2773,11 +2874,7 @@ static void      EndOfAttributeName (char *xmlName)
 		    "Namespace not supported for the attribute \"%s\"",
 		    xmlName);
 	   XmlParseError (errorParsing, msgBuffer, 0);
-	   if (nsURI != NULL)
-	     sprintf (msgBuffer, "%s", attrName);
-	   else
-	     sprintf (msgBuffer, "%s", attrName);
-	   UnknownXmlAttribute (msgBuffer);
+	   UnknownXmlAttribute (attrName, nsURI);
 	   UnknownAttr = TRUE;
 	 }
        else
@@ -2790,8 +2887,7 @@ static void      EndOfAttributeName (char *xmlName)
 		xmlName);
        XmlParseError (errorParsing, msgBuffer, 0);
        /* Create an unknown attribute  */
-       sprintf (msgBuffer, attrName);
-       UnknownXmlAttribute (msgBuffer);
+       UnknownXmlAttribute (attrName, nsURI);
        UnknownAttr = TRUE;
 #endif /* XML_GENERIC */  
      }
