@@ -14,8 +14,7 @@
 
 <body xml:lang="de" lang="de">
 
-<table border="0" cellspacing="5" cellpadding="5"
-summary="Inhaltsverzeichnis">
+<table border="0" cellspacing="5" cellpadding="5">
   <tbody>
     <tr>
       <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
@@ -36,14 +35,14 @@ summary="Inhaltsverzeichnis">
 Zelle zu erzeugen:</p>
 <ol>
   <li>Den Cursor an den Anfang der Zelle positionieren. </li>
-  <li>Die Taste <b>Eingabe</b> dreimal drücken</li>
+  <li>Die Taste <kbd>Eingabe</kbd> dreimal drücken</li>
 </ol>
 
 <p class="ProcedureCaption">Um eine neue Zeile unterhalb einer existierenden
 Zelle zu erzeugen:</p>
 <ol>
   <li>Den Cursor an das Ende der Zelle positionieren. </li>
-  <li>Die Taste <b>Eingabe</b> dreimal drücken</li>
+  <li>Die Taste <kbd>Eingabe</kbd> dreimal drücken</li>
 </ol>
 </div>
 </body>

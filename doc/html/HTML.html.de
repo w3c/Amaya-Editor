@@ -22,7 +22,7 @@ summary="Inhaltsverzeichnis">
         border="0" alt="Amaya" src="../images/amaya.gif" /></p>
       </td>
       <td><p align="right"><a href="EditChar.html.de"><img
-        alt="vorherige Seite" src="../images/left.gif" /> <img
+        alt="vorherige Seite" src="./images/left.gif" /> <img
         alt="erste Seite" border="0" src="../images/up.gif" /></a> <a
         href="Changing.html.de"><img alt="nächste Seite" border="0"
         src="../images/right.gif" /></a></p>

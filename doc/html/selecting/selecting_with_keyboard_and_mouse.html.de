@@ -5,7 +5,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-  <meta name="GENERATOR" content="amaya 6.1, see http://www.w3.org/Amaya/" />
+  <meta name="generator" content="amaya 6.1, see http://www.w3.org/Amaya/" />
   <title>Mit Maus und Tastatur markieren</title>
   <style type="text/css">
  </style>
@@ -14,8 +14,7 @@
 
 <body xml:lang="de" lang="de">
 
-<table border="0" cellspacing="5" cellpadding="5"
-summary="Inhaltsverzeichnis">
+<table border="0" cellspacing="5" cellpadding="5">
   <tbody>
     <tr>
       <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
@@ -31,7 +30,7 @@ summary="Inhaltsverzeichnis">
 <div id="page_body">
 <h1>Mit Maus und Tastatur markieren</h1>
 
-<p>In Amaya arbeiten viele Befehle auf der derzeitigen Markierung. Eine
+<p>In Amaya arbeiten viele Befehle auf der momentanen Markierung. Eine
 Markierung kann man mit der Maus oder mit der Tastatur setzen.</p>
 
 <p>Unabhängig davon, wie man eine Markierung macht, zeigt Amaya in der
@@ -41,7 +40,7 @@ sein.</p>
 
 <p>Die markierte Stelle im Dokument wird farblich hervorgehoben. Die
 Markierungsfarbe kann man im Menü <strong>Extras</strong>, Untermenü
-<strong>Einstellungen</strong>, Dialog <strong>Farben</strong> festlegen. </p>
+<strong>Einstellungen</strong>, Dialog <strong>Farben</strong> festlegen.</p>
 
 <h2>Mit der Maus markieren</h2>
 <ul>
@@ -52,10 +51,11 @@ Markierungsfarbe kann man im Menü <strong>Extras</strong>, Untermenü
   </li>
   <li>Ein Wort wird durch Doppelklick markiert.<br />
   </li>
-  <li>Ein Element wird durch Doppelklick markiert.<br />
+  <li>Ein Element wird durch Doppelklick markiert (außer bei einem
+    Verweis).<br />
   </li>
   <li>Eine Markierung wird durch Ziehen mit gedrücker linker Maustaste und
-    gedrückter <code>Umschalttaste</code> erweitert.</li>
+    gedrückter <kbd>Umschalttaste</kbd> erweitert.</li>
 </ul>
 
 <h2>Mit der Tastatur positionieren und markieren</h2>
@@ -63,47 +63,36 @@ Markierungsfarbe kann man im Menü <strong>Extras</strong>, Untermenü
   <li>Der Cursor wird mit den vier Pfeiltasten bewegt. Gibt es im
     Dokumentenfenster noch keine sichtbare Markierung (nach dem Laden), dann
     erzeugt Amaya dadurch eine Markierung in der linken oberen Ecke des
-    Fensters.<br />
-  </li>
-  <li>Die Taste <code>Pos1</code> setzt den Cursor an den Zeilenanfang.<br />
-  </li>
-  <li>Die Taste <code>Ende</code> setzt den Cursor an das Zeilenende.<br />
-  </li>
-  <li>Die Tastenkombination <code>Strg Pfeil links</code> bewegt den Cursor
-    an den Wortanfang.<br />
-  </li>
-  <li>Die Tastenkombination <code>Strg Pfeil rechts</code> bewegt den Cursor
-    an den Anfang des nächsten Wortes.<br />
-  </li>
-  <li>Die Tastenkombination <code>Strg Pfeil hoch</code> bewegt das Dokument
-    eine Zeile nach oben.<br />
-  </li>
-  <li>Die Tastenkombination <code>Strg Pfeil runter</code> bewegt das
-    Dokument eine Zeile nach unten.<br />
-  </li>
-  <li>Die Tastenkombination <code>Strg Pos1</code> bewegt das Dokument an
-    seinen Anfang.<br />
-  </li>
-  <li>Die Tastenkombination <code>Strg Ende</code> bewegt das Dokument an
-    sein Ende.</li>
+    Fensters.</li>
+  <li><kbd>Pos1</kbd> setzt den Cursor an den Zeilenanfang.</li>
+  <li><kbd>Ende</kbd> setzt den Cursor an das Zeilenende.</li>
+  <li><kbd>Strg &larr;</kbd> bewegt den Cursor an den Wortanfang.</li>
+  <li><kbd>Strg &rarr;</kbd> bewegt den Cursor an den Anfang des nächsten
+    Wortes.</li>
+  <li><kbd>Strg &uarr;</kbd> bewegt das Dokument eine Zeile nach oben.</li>
+  <li><kbd>Strg &darr;</kbd> bewegt das Dokument eine Zeile nach unten.</li>
+  <li><kbd>Strg Pos1</kbd> bewegt das Dokument an seinen Anfang.</li>
+  <li><kbd>Strg Ende</kbd> bewegt das Dokument an sein Ende.</li>
+  <li><kbd>Bild &uarr;</kbd> bewegt im Fenster eine Seite nach oben.</li>
+  <li><kbd>Bild &darr;</kbd> bewegt im Fenster eine Seite nach unten.</li>
   <li>Eine Markierung wird durch Drücken einer Pfeiltaste, bei gedrückter
-    <code>Umschalttaste</code> in die gewünschte Richtung erzeugt oder
+    <kbd>Umschalttaste</kbd> in die gewünschte Richtung erzeugt oder
     erweitert.<br />
   </li>
-  <li>Die Tastenkombination <code>Alt Eingabe</code> markiert ein Wort.
-    Befindet sich das Wort in einem aktiven Verweis, so wird dieser damit
-    aktiviert.<br />
-  </li>
-  <li>Die Tastenkombination <code>Umschalt Strg Pfeil links</code> markiert
-    vom Cursor bis zum Wortanfang.<br />
-  </li>
-  <li>Die Tastenkombination <code>Umschalt Strg Pfeil rechts</code> markiert
-    vom Cursor bis zum Ende des nächsten Wortes.<br />
-  </li>
+  <li><kbd>Alt Eingabe</kbd> markiert ein Wort. Befindet sich das Wort in
+    einem aktiven Verweis, so wird dieser aktiviert.</li>
+  <li><kbd>Umsch Strg &larr;</kbd> markiert vom Cursor bis zum
+  Wortanfang.</li>
+  <li><kbd>Umsch Strg &rarr;</kbd> markiert vom Cursor bis zum Ende des
+    nächsten Wortes.</li>
+  <li><kbd>Esc</kbd> (Unix) oder <kbd>F2</kbd> (Windows) markiert das
+    gesammte Element, in dem sich der Cursor befindet.</li>
+  <li>Wiederholtes Drücken dieser Tasten erweitert die Markierung auf die
+    übergeordneten Elemente.</li>
 </ul>
 
-<p class="ProcedureNote"><strong>Hinweis</strong>: man kann Elemente auch
-über die Strukturansicht markieren.</p>
+<p class="Note"><strong>Hinweis</strong>: Man kann Elemente auch über die
+Strukturansicht markieren.</p>
 </div>
 </body>
 </html>

@@ -13,8 +13,7 @@
 
 <body xml:lang="de" lang="de">
 
-<table border="0" cellspacing="5" cellpadding="5"
-summary="Inhaltsverzeichnis">
+<table border="0" cellspacing="5" cellpadding="5">
   <tbody>
     <tr>
       <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
@@ -33,8 +32,8 @@ summary="Inhaltsverzeichnis">
 <h1>Die Eingabetaste</h1>
 
 <p>Wenn man ein neues Dokument oder einen neuen Teil eines Dokuments
-schreibt, dann kann man Elemente sequentiell durch Drücken der
-<strong>Eingabetaste</strong> erzeugen. Das derzeitige Element wird beendet
+schreibt, dann kann man Elemente sequenziell durch Drücken der
+<kbd>Eingabetaste</kbd> erzeugen. Das derzeitige Element wird beendet
 und hinter diesem direkt ein neues erzeugt.</p>
 
 <p>Am häufigsten ist das neue Element einfach ein Absatz. Man kann den Typ
@@ -42,18 +41,18 @@ des neuen Elements ändern, indem man den gewünschten Typ aus dem Menü
 <strong>Elemente</strong> wählt oder den entsprechenden Knopf in der
 Knopfleiste anklickt.</p>
 
-<p>Befindet sich ein &lt;pre&gt;-formatiertes Element am Ende eines Dokuments
-und steht der Cursor am Ende dieses Elements, so bewirkt das Drücken der
+<p>Befindet sich das Element <code>pre</code> am Ende eines Dokuments und
+steht der Cursor am Ende dieses Elements, so bewirkt das Drücken der
 Eingabetaste, dass innerhalb des Elements eine neue Zeile eingefügt wird. Um
-hinter dem Element ein neues zu erzeugen, muss man das ganze
-&lt;pre&gt;-Element markieren und dann die Eingabetaste drücken.</p>
+hinter diesem Element ein neues zu erzeugen, muss man das ganze Element
+markieren und dann die Eingabetaste drücken.</p>
 
 <p>In der gleichen Weise kann man einen neuen Absatz hinter einer Tabelle
 erzeugen.</p>
 
-<p>Ist ein ganzes Element, wie etwa &lt;h2&gt; oder &lt;li&gt; markiert, dann
-bewirkt das Drücken der Eingabetaste, dass das gleiche Element dahinter
-erzeugt wird.</p>
+<p>Ist ein ganzes Element, wie etwa <code>h2</code> oder <code>li</code>
+markiert, dann bewirkt das Drücken der Eingabetaste, dass das gleiche Element
+dahinter erzeugt wird.</p>
 </div>
 </body>
 </html>

@@ -5,7 +5,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-  <meta name="GENERATOR" content="amaya 6.1, see http://www.w3.org/Amaya/" />
+  <meta name="generator" content="amaya 6.1, see http://www.w3.org/Amaya/" />
   <title>Der Befehl Speichern unter</title>
   <style type="text/css">
   </style>
@@ -14,8 +14,7 @@
 
 <body xml:lang="de" lang="de">
 
-<table border="0" cellspacing="5" cellpadding="5"
-summary="Inhaltsverzeichnis">
+<table border="0" cellspacing="5" cellpadding="5">
   <tbody>
     <tr>
       <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
@@ -42,17 +41,19 @@ Dokument entsprechend transformiert werden.</p>
 
 <h2>Der Dialog Speichern unter</h2>
 
-<p>Die Felder dieses Dialogs werden folgendermaßen benutzt:</p>
+<p><img alt="Dialog Speichern unter" src="../../images/dialog_save_as-de.png"
+/></p>
+
+<p>Die Felder und Optionen dieses Dialogs werden folgendermaßen benutzt:</p>
 <ul>
   <li><strong>Dokument</strong> gibt an, wohin das Dokument geschrieben
     werden soll. Dies kann der Pfad zu einer lokalen Datei (wie etwa
-    <code>/pub/html/welcome.html</code>) oder eine entfernte URI (wie etwa
-    <code>http://www.w3.org/pub/WWW/Welcome.html</code>) sein. 
-    <p class="Note"><strong>Anmerkung:</strong> der <span xml:lang="de"
-    lang="de" style="font-weight:normal">URI</span> muss vollständig
+    <samp>/pub/html/welcome.html</samp>) oder eine entfernte URI (wie etwa
+    <samp>http://www.w3.org/pub/WWW/Welcome.html</samp>) sein.
+    <p class="Note"><strong>Anmerkung:</strong> Der URI muss vollständig
     angegeben werden und es muss sichergestellt sein, dass man auf dem Server
-    die Methode <code>PUT</code> verwenden darf. Unter <a
-    href="http://www.w3.org/Amaya/User/Put.html.de">http://www.w3.org/Amaya/User/Put.html</a>
+    die Methode <strong>PUT</strong> verwenden darf. Unter <a
+    href="http://www.w3.org/Amaya/User/Put.html">http://www.w3.org/Amaya/User/Put.html</a>
     wird erklärt, wie man einen Server dementsprechend konfiguriert.</p>
   </li>
   <li><strong>Format</strong> bietet die Auswahl zwischen
@@ -72,8 +73,8 @@ Dokument entsprechend transformiert werden.</p>
     Dokument später geladen wird. Das Deaktivieren dieser Option ist
     nützlich, wenn man nur den Text des Dokuments geändert hat und dieses auf
     den selben Server gespeichert wird. Werden die Bilder kopiert, so werden
-    alle <strong>src</strong>-Attribute von Amaya entsprechend transformiert.
-    Die neuen URIs sind relativ.</li>
+    alle <code>src</code>-Attribute von Amaya entsprechend transformiert. Die
+    neuen URIs sind relativ.</li>
   <li><strong>URIs transformieren</strong> transformiert, wenn möglich, alle
     URIs des Dokuments in relative URIs. Wird das Dokument im lokalen
     Dateisystem gespeichert und zeigen URIs auf entfernte Dateien, dann
@@ -86,27 +87,28 @@ Dokument entsprechend transformiert werden.</p>
     (wenn man <strong>Bilder kopieren</strong> gewählt hat, Bilder also nicht
     in das selbe Verzeichnis wie das Dokument gespeichert werden sollen).
     Hier wird der Pfad zu einem Verzeichnis im lokalen Dateisystem oder der
-    URI zu einem entfernten Server eingegeben. 
+    URI zu einem entfernten Server eingegeben.
     <ul>
       <li>Wird ein relativer Pfad angegeben, so werden die Bilder relativ zu
-        dem Verzeichnis des Dokuments gespeichert. Beispiel: enthält
+        dem Verzeichnis des Dokuments gespeichert. Beispiel: enthält Feld
         <strong>Dokument</strong>
-        <code>http://www.w3.org/pub/WWW/Welcome.html</code> und enthält
-        <strong>Bilder</strong> <code>Images</code>, dann wird ein Bild mit
-        dem Attribut <code>src="W3C.png"</code> im Dokument auf den URI
+        <code>http://www.w3.org/pub/WWW/Welcome.html</code> und enthält das
+        Feld <strong>Bilder</strong> <code>Images</code>, dann wird ein Bild
+        mit dem Attribut <code>src="W3C.png"</code> im Dokument auf den URI
         <code>http://www.w3.org/pub/WWW/Images/W3C.png</code> gespeichert und
-        die HTML-Datei wird wiefolgt geändert: 
+        die HTML-Datei wird wiefolgt geändert:
         <p><code>&lt;img src="Images/W3C.png"&gt;</code></p>
         <p>Entsprechendes gilt, wenn das Dokument auf das lokale Dateisystem
         gespeichert wird.</p>
       </li>
       <li>Gibt man einen absoluten Pfad an, dann werden die Bilder,
         unabhängig vom Pfad des Dokuments, an genau diese Stelle gespeichert.
-        Zum vorherigen Beispiel: ist Bilderlokation
+        Zum vorherigen Beispiel: steht im Feld <strong>Bilder</strong>
         <code>http://pub/WWW/Images</code>, dann wird das Bild auf
         <code>http://www.w3.org/pub/WWW/Images/W3C.png</code> gespeichert und
-        die HTML-Datei folgendermaßen modifiziert: 
-        <p><code>&lt;img src="Images/W3C.png"&gt;</code></p>
+        die HTML-Datei folgendermaßen modifiziert:
+        <p><code>&lt;img
+        src="http://www.w3.org/pub/WWW/Images/W3C.png"&gt;</code></p>
       </li>
     </ul>
   </li>
@@ -116,7 +118,7 @@ Dokument entsprechend transformiert werden.</p>
 <ul>
   <li><strong>OK</strong> startet den Transformationsprozess für das
     Dokument. In folgenden beiden Fällen erscheint nocheinmal ein Dialog zur
-    Bestätigung: 
+    Bestätigung:
     <ul>
       <li>Das Dokument soll auf einen entfernten Server gespeichert werden.
         Amaya zeigt den vollständigen URI zur Verifikation an.</li>
@@ -125,20 +127,13 @@ Dokument entsprechend transformiert werden.</p>
     </ul>
   </li>
   <li><strong>Durchsuchen</strong> zeigt einen Dialog, mit dem man ein
-    lokales Verzeichnis auswählen kann: 
-    <ul>
-      <li>Das Feld <strong>Verzeichnis</strong> zeigt die Verzeichnisse im
-        derzeitigen Verzeichnis.</li>
-      <li>Das Feld <strong>Dateien</strong> zeigt die Dateien im derzeitigen
-        Verzeichnis.</li>
-    </ul>
-  </li>
-  <li><strong>Zurücksetzen</strong> löscht die Einträge in den Feldern
+    lokales Verzeichnis auswählen kann:</li>
+  <li><strong>Zurücksetzen</strong> löscht die Einträge in den Felder
     <strong>Dokument</strong> und <strong>Bilder</strong>.</li>
   <li><strong>Ändern Zeichensatz</strong> öffnet ein Popup-Fenster, in dem
     man den Zeichensatz des Dokuments wählen kann. Diese Option arbeitet nur
     bei Dokumenten, welche einen Zeichensatz unterstützen, wie HTML- oder
-    XML-Dokumente und steht sowohl beim Seichern auf das lokale Dateisystem
+    XML-Dokumente und steht sowohl beim Speichern auf das lokale Dateisystem
     als auch auf einen entfernten Server zur Verfügung.</li>
   <li><strong>Ändern MIME Type</strong> öffnet ein Popup-Fenster, in dem man
     den MIME-Type des Dokuments wählen kann. Wird der gewünschte MIME-Type

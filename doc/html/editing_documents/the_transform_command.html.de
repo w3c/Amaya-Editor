@@ -8,14 +8,13 @@
   <title>Ein Dokument transformieren</title>
   <style type="text/css">
   </style>
-  <meta name="GENERATOR" content="amaya 6.1, see http://www.w3.org/Amaya/" />
+  <meta name="generator" content="amaya 6.1, see http://www.w3.org/Amaya/" />
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
 <body xml:lang="de" lang="de">
 
-<table border="0" cellspacing="5" cellpadding="5"
-summary="Inhaltsverzeichnis">
+<table border="0" cellspacing="5" cellpadding="5">
   <tbody>
     <tr>
       <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
@@ -42,7 +41,7 @@ können beispielsweise Listen in Tabellen umgeformt werden.</p>
 <h2>Verfügbare Transformationen</h2>
 
 <p>Die verfügbaren Transformationen werden in der Datei
-<kbd>Amaya/amaya/HTML.trans</kbd> definiert. Man sollte das Dokument <a
+<samp>HTML.trans</samp> definiert. Man sollte das Dokument <a
 href="Transform.html.de">Die Datei HTML.trans benutzen</a> lesen, in dem die
 Sprache beschrieben wird, mit der Transformationsregeln erstellt werden.</p>
 
@@ -53,8 +52,10 @@ werden. Einige Transformationen liegen dort als Beispiele bereit.</p>
 
 <p class="ProcedureCaption">Um diesen Befehl anzuwenden:</p>
 <ol>
+  <li>Den Bereich markieren, auf den die Transformation angewendet werden
+    soll.</li>
   <li><strong>Transformieren</strong> Im Menü <strong>Bearbeiten</strong>
-    wählen. 
+    wählen.
     <p>Amaya zeigt ein Menü aller Transformationen, welche auf die gewählte
     Markierung angewendet werden können.</p>
   </li>

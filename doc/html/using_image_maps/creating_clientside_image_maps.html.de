@@ -5,7 +5,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-  <meta name="GENERATOR" content="amaya 6.1, see http://www.w3.org/Amaya/" />
+  <meta name="generator" content="amaya 6.1, see http://www.w3.org/Amaya/" />
   <title>Clientseitige aktive Bildbereiche erzeugen</title>
   <style type="text/css">
   </style>
@@ -14,8 +14,7 @@
 
 <body xml:lang="de" lang="de">
 
-<table border="0" cellspacing="5" cellpadding="5"
-summary="Inhaltsverzeichnis">
+<table border="0" cellspacing="5" cellpadding="5">
   <tbody>
     <tr>
       <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
@@ -34,91 +33,42 @@ summary="Inhaltsverzeichnis">
 <h1>Clientseitige aktive Bildbereiche erzeugen</h1>
 
 <p>Mit Amaya kann man clientseitige aktive Bildbereiche, die einen Verweis
-beinhalten erzeugen.</p>
+beinhalten erzeugen. Hierbei gegebenenfalls <strong>Aktive
+Bildbereiche</strong> im Menü <strong>Ansichten</strong> aktivieren, damit
+man sieht, was bei der Erzeugen eines aktiven Bildbereichs passiert, also der
+Umriss des Bereichs sichtbar wird.</p>
 
 <p class="ProcedureCaption">Um einen aktiven Bildreich zu erzeugen:</p>
 <ol>
-  <li><strong>Bild</strong> im Menü <strong>Elemente</strong> auswählen. 
-    <p class="ProcedureNote"><strong>Anmerkung:</strong>&nbsp;das kann man
-    auch mit dem Knopf <img src="../../images/image_button.gif"
-    alt="Knopf Grafik" /> der Knopfleiste oder mit dem Tastenkürzel
-    <code>Strg t</code> <code>Strg i </code>in Windows oder <code>Strg i
-    </code>in Unix machen.</p>
-  </li>
+  <li>Das gewünschte Bild markieren.</li>
   <li>Aus dem Menü <strong>Elemente</strong>, Untermenü <strong>Aktiver
     Bildbereich</strong> die gewünschte Gestalt, <strong>Kreis</strong>,
-    <strong>Polygon</strong> oder <strong>Rechteck</strong>, wählen. Die
-    folgende Tabelle erklärt wie man den aktiven Bereich in Abhängigkeit von
-    der gewählten Form definiert. 
-    <p class="TableTitle" style="margin-left:0in"><strong>Tabelle 1: Formen
-    definieren</strong></p>
-
-    <table border="0">
-      <tbody>
-        <tr>
-          <td valign="top"
-          style="                     border-top:solid 1.5pt;                     border-left:none;                     border-bottom:solid 1.5pt;                     border-right:solid .5pt;                     padding:0in 5.4pt 0in 5.4pt"><p
-            class="TableTitle"><strong>Form</strong></p>
-          </td>
-          <td valign="top"
-          style="width:192.4pt;                     border-top:solid 1.5pt;                     border-left:none;                     border-bottom:solid 1.5pt;                     border-right:none;                     padding:0in 5.4pt 0in 5.4pt"><p
-            class="TableTitle"><strong>Bereich definieren</strong></p>
-          </td>
-        </tr>
-        <tr>
-          <td valign="top"
-          style="                     border-top:none;                     border-left: none;                     border-bottom:solid .5pt;                     border-right:             solid .5pt;                     padding:0in 5.4pt 0in 5.4pt"><p
-            class="TableText">Kreis</p>
-          </td>
-          <td valign="top"
-          style="width:192.4pt;                     border:none;                     border-bottom:solid .5pt;                     padding:0in 5.4pt 0in 5.4pt"><p
-            class="TableText">Der Kreis wird innerhalb eines Quadrats
-            gezeichnet. Mit der linken Maustaste die linke obere Ecke des
-            Quadrats positionieren und bei gedrückter Maustaste zur rechten
-            unteren Ecke ziehen. Die linke Maustaste loslassen.</p>
-          </td>
-        </tr>
-        <tr>
-          <td valign="top"
-          style="                     border-top:none;                     border-left:   none;                     border-bottom:solid .5pt;                     border-right:solid .5pt;                     padding:0in 5.4pt 0in 5.4pt"><p
-            class="TableText">Polygon</p>
-          </td>
-          <td valign="top"
-          style="width:192.4pt;                     border:none;                     border-bottom:solid .5pt;                     padding:0in 5.4pt 0in 5.4pt"><p
-            class="TableText">Mit der linken Maustaste jeden Punkt des
-            Polygons markieren. Der letzte Punkt wird mit der rechten
-            Maustaste gesetzt.</p>
-          </td>
-        </tr>
-        <tr>
-          <td valign="top"
-          style="                     border-top:none;                     border-left:   none;                     border-bottom:solid 1.5pt;                     border-right:solid .5pt;                     padding:0in 5.4pt 0in 5.4pt;                     "><p
-            class="TableText">Rechteck</p>
-          </td>
-          <td valign="top"
-          style="width:192.4pt;                     border:none;                     border-bottom:solid 1.5pt;                     padding:0in 5.4pt 0in 5.4pt;                     "><p
-            class="TableText">Funktioniert wie beim Kreis.</p>
-          </td>
-        </tr>
-        <tr>
-          <td></td>
-          <td></td>
-        </tr>
-      </tbody>
-    </table>
+    <strong>Polygon</strong> oder <strong>Rechteck</strong>, wählen. Der
+    Cursor hat jetzt die Gestalt eines Fadenkreuzes.Die folgende Liste
+    erklärt wie man den aktiven Bereich in Abhängigkeit von der gewählten
+    Form definiert.
+    <p> </p>
+    <dl>
+      <dt>Kreis</dt>
+        <dd>Der Kreis wird innerhalb eines Quadrats gezeichnet. Mit der
+          linken Maustaste die linke obere Ecke des Quadrats positionieren
+          und bei gedrückter Maustaste zur rechten unteren Ecke ziehen. Die
+          linke Maustaste loslassen.</dd>
+      <dt>Polygon</dt>
+        <dd>Mit der linken Maustaste jeden Punkt des Polygons markieren. Der
+          letzte Punkt wird mit der rechten Maustaste gesetzt.</dd>
+      <dt>Rechteck</dt>
+        <dd>Funktioniert wie beim Kreis.</dd>
+    </dl>
   </li>
   <li>Hat man die Definition des Bereichs beendet, so wird noch in einem
     Dialog nach dem alternativen Text gefragt. Dieser muss bei einem Bild
-    oder einem Bildbereich eingegeben werden.</li>
-  <li>Danach das Bild anklicken. Ein weiterer Dialog erscheint, in dem man
-    den URI des Ziels, auf den dieser Bereich verweisen soll, eingeben muss.
-    Hier das Ziel eingeben oder über den Knopf <strong>Durchsuchen</strong>
-    ein Zieldokument suchen. 
-    <p></p>
-    <p class="ProcedureNote"><b>Hinweis:</b>&nbsp;Um den Umriss eines aktiven
-    Bildbereiches zu sehen, im Menü <strong>Ansicht</strong> den Befehl
-    <strong>Aktive Bildbereiche</strong> wählen.</p>
-  </li>
+    oder einem Bildbereich eingegeben werden. Danach nimmt der Cursor die
+    Gestalt einer Hand an.</li>
+  <li>Das Bild anklicken. Ein weiterer Dialog erscheint, in dem man den URI
+    des Ziels, auf den dieser Bereich verweisen soll, eingeben muss. Hier das
+    Ziel eingeben oder über den Knopf <strong>Durchsuchen</strong> ein
+    Zieldokument suchen.</li>
 </ol>
 </div>
 </body>

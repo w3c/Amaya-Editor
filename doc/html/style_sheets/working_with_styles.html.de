@@ -5,7 +5,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-  <meta name="GENERATOR" content="amaya 6.1, see http://www.w3.org/Amaya/" />
+  <meta name="generator" content="amaya 6.1, see http://www.w3.org/Amaya/" />
   <title>Mit Formaten und Formatvorlagen arbeiten</title>
   <style type="text/css">
  </style>
@@ -14,8 +14,7 @@
 
 <body xml:lang="de" lang="de">
 
-<table border="0" cellspacing="5" cellpadding="5"
-summary="Inhaltsverzeichnis">
+<table border="0" cellspacing="5" cellpadding="5">
   <tbody>
     <tr>
       <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
@@ -36,33 +35,33 @@ summary="Inhaltsverzeichnis">
 eines Dokuments auf zwei Arten veränderen:</p>
 <ul>
   <li>Durch die Verwendung von Formatvorlagen (Cascading Style Sheets
-  CSS)</li>
+  (CSS))</li>
   <li>Durch die Verwendung von Elementen und Attributen aus HTML</li>
 </ul>
 
-<p>Die mittleren Elemente des Menüs <strong>Formate</strong> finden bei den
-Formatvorlagen und die unteren beiden bei den Elementen Verwendung.</p>
+<p>Die oberen Einträge des Menüs <strong>Formate</strong> erzeugen
+Formatattribute zu einem Element, die mittleren werden bei den
+Formatvorlagenangewendet und die unteren beiden öffnen ein weiteres Menü, aus
+denen man Formatelemente in den Text einfügen kann.</p>
 
-<p>Siehe hierzu:</p>
+<p>Weitere Informationen erhält man unter:</p>
 <ul>
-  <li><a href="creating_and_updating_a_style_attribute.html.de#page_body"
-    rel="subdocument">Ein Formatattribut erzeugen und aktualisieren</a> <a
-    href="" rel="subdocument"></a></li>
+  <li><a href="creating_and_updating_a_style_attribute.html.de#page_body">Ein
+    Formatattribut erzeugen oder ändern</a></li>
   <li><a
-    href="creating_generic_style_for_an_element_or_a_class.html.de#page_body"
-    rel="subdocument">Ein generisches Format für ein Element oder eine Klasse
+    href="creating_generic_style_for_an_element_or_a_class.html.de#page_body">Ein
+    generisches Format für ein Element oder eine Klasse erzeugen</a></li>
+  <li><a
+    href="about_linking_external_and_user_style_sheets.html.de#page_body">Über
+    die Verknüpfung externer und benutzerdefinierter Formatvorlagen</a></li>
+  <li><a href="handling_external_css.html.de#page_body">Externe Formatvorlagen
+    handhaben</a></li>
+  <li><a
+    href="about_applying_style_using_html_elements.html.de#page_body">Zeichenketten
+    formatieren</a></li>
+  <li><a href="creating_html_style_elements.html.de#page_body">Formatelemente
     erzeugen</a></li>
-  <li><a href="about_linking_external_and_user_style_sheets.html.de#page_body"
-    rel="subdocument">Über die Verknüpfung externer und benutzerdefinierter
-    Formatvorlagen</a></li>
-  <li><a href="handling_external_css.html.de#page_body"
-    rel="subdocument">Externe Formatvorlagen handhaben</a></li>
-  <li><a href="about_applying_style_using_html_elements.html.de#page_body"
-    rel="subdocument">Ein Format erzeugen</a></li>
-  <li><a href="creating_html_style_elements.html.de#page_body"
-    rel="subdocument">Formatelemente erzeugen</a></li>
-  <li><a href="removing_style.html.de#page_body" rel="subdocument">Formate
-    entfernen</a></li>
+  <li><a href="removing_style.html.de#page_body">Formate entfernen</a></li>
 </ul>
 </div>
 </body>

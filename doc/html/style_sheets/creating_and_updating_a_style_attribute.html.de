@@ -5,8 +5,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-  <meta name="GENERATOR" content="amaya 6.1, see http://www.w3.org/Amaya/" />
-  <title>Ein Formatattribut erzeugen oder aktualisieren</title>
+  <meta name="generator" content="amaya 6.1, see http://www.w3.org/Amaya/" />
+  <title>Ein Formatattribut erzeugen oder ändern</title>
   <style type="text/css">
   </style>
   <link href="../style.css" rel="stylesheet" type="text/css" />
@@ -14,8 +14,7 @@
 
 <body xml:lang="de" lang="de">
 
-<table border="0" cellspacing="5" cellpadding="5"
-summary="Inhaltsverzeichnis">
+<table border="0" cellspacing="5" cellpadding="5">
   <tbody>
     <tr>
       <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
@@ -32,28 +31,43 @@ summary="Inhaltsverzeichnis">
 </table>
 
 <div id="page_body">
-<h1>Ein Formatattribut erzeugen oder aktualisieren</h1>
+<h1>Ein Formatattribut erzeugen oder ändern</h1>
 
 <p>Die ersten vier Einträge im Menü <strong>Formate</strong> öffnen einen
-Dialog, mir dem man das Format eins markierten Elements festlegen kann.</p>
+Dialog, mir dem man das Format eines markierten Elements oder Textabschnitts
+festlegen kann. Hierbei wird einem Element das Attribut <code>style</code>
+zugewiesen und der Textabschnitt in das Element <code>span</code>
+eingeschlossen und diesem das Attribut <code>style</code> zugewiesen.</p>
 <ul>
-  <li><strong>Schrift</strong> legt Schriftart, Schriftgröße, Schriftschräge,
-    Schriftstärke und die Darstellung (unterstrichenen, überstrichenen oder
-    durchgetrichenen) fest.</li>
-  <li><strong>Farbe</strong> erlaubt die Auswahl der Vorder- und
-    Hintergrundfarbe aus einer Palette. Mit der linken Maustaste wählt man
-    die Vordergrundfarbe und mit der rechten Maustaste die
-  Hintergrundfarbe.</li>
-  <li><strong>Ausrichtung</strong> setzt die Textausrichtung, die
-    Texteinrückung und den Zeilenabstand fest.</li>
-  <li><strong>Hintergrundbild</strong> erlaubt die Auswahl eines
-    Hintergrundbildes und dessen Wiederholung.</li>
+  <li> <strong>Schrift</strong>
+    <p><img alt="Dialog Schrift" src="../../images/font-de.png" /></p>
+    <p>legt Schriftfamilie, Schriftgröße, Schriftschräge, Schriftstärke und
+    die Darstellung fest.</p>
+  </li>
+  <li><strong>Farbe</strong>
+    <p><img alt="Dialog Farbe" src="../../images/color-de.png" /></p>
+    <p>erlaubt die Auswahl der Vorder- und Hintergrundfarbe aus einer
+    Palette. Mit der linken Maustaste wählt man die Vordergrundfarbe und mit
+    der rechten Maustaste die Hintergrundfarbe.</p>
+  </li>
+  <li><strong>Ausrichtung</strong>
+    <p><img alt="Dialog Ausrichtung" src="../../images/align-de.png" /></p>
+    <p>legt die Textausrichtung, die Texteinrückung und den Zeilenabstand
+    fest.</p>
+  </li>
+  <li><strong>Hintergrundbild</strong>
+    <p><img alt="Dialog Hintergrundbild" src="../../images/background-de.png"
+    /></p>
+    <p> erlaubt die Auswahl eines Hintergrundbildes und dessen
+    Wiederholung.</p>
+  </li>
 </ul>
 
-<p>In all diesen Dialogen kann man über die Option Fehlwert das entsprechende
-Format zurücksetzen.</p>
+<p>In einigen Dialogen kann man über Fehlwert das entsprechende Format
+zurücksetzen.</p>
 
-<p>Alle Modifukationen wirken sich sofort aus.</p>
+<p class="Note"><strong>Hinweis</strong>: Diese Modifikationen sind sofort im
+Browserfenster sichtbar.</p>
 </div>
 </body>
 </html>

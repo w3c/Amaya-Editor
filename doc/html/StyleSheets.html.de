@@ -3,7 +3,7 @@
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta name="GENERATOR" content="amaya 6.1, see http://www.w3.org/Amaya/" />
+  <meta name="generator" content="amaya 6.1, see http://www.w3.org/Amaya/" />
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
   <title>Formate und Formatvorlagen</title>
   <style type="text/css">
@@ -13,14 +13,13 @@
 
 <body xml:lang="de" lang="de">
 
-<table border="0" cellspacing="5" cellpadding="5"
-summary="Inhaltsverzeichnis">
+<table border="0" cellspacing="5" cellpadding="5">
   <tbody>
     <tr>
-      <td><p><img alt="W3C" src="../images/w3c_home" /> <img alt="Amaya"
-        src="../images/amaya.gif" /></p>
+      <td><img alt="W3C" src="../images/w3c_home" /> <img alt="Amaya"
+        src="../images/amaya.gif" />
       </td>
-      <td><a href="Xml.html.de" accesskey="p"><img alt="vorherige Seite"
+      <td><a href="XML.html.de" accesskey="p"><img alt="vorherige Seite"
         src="../images/left.gif" /></a> <a href="Manual.html.de"
         accesskey="t"><img alt="erste Seite" src="../images/up.gif" /></a> <a
         href="Searching.html.de" accesskey="n"><img alt="nächste Seite"
@@ -29,7 +28,6 @@ summary="Inhaltsverzeichnis">
   </tbody>
 </table>
 
-<div id="page_body">
 <h1>Formate und Formatvorlagen</h1>
 
 <p>Folgende Themen werden in diesem Abschnitt behandelt:</p>
@@ -38,7 +36,7 @@ summary="Inhaltsverzeichnis">
     rel="subdocument">Mit Formaten und Formatvorlagen arbeiten</a></li>
   <li><a
     href="style_sheets/creating_and_updating_a_style_attribute.html.de#page_body"
-    rel="subdocument">Ein Formatattribut erzeugen und aktualisieren</a></li>
+    rel="subdocument">Ein Formatattribut erzeugen oder ändern</a></li>
   <li><a
     href="style_sheets/creating_generic_style_for_an_element_or_a_class.html.de#page_body"
     rel="subdocument">Ein generisches Format für ein Element oder eine Klasse
@@ -51,12 +49,11 @@ summary="Inhaltsverzeichnis">
     rel="subdocument">Externe Formatvorlagen handhaben</a></li>
   <li><a
     href="style_sheets/about_applying_style_using_html_elements.html.de#page_body"
-    rel="subdocument">Ein Format erzeugen</a></li>
+    rel="subdocument">Zeichenketten formatieren</a></li>
   <li><a href="style_sheets/creating_html_style_elements.html.de#page_body"
     rel="subdocument">Formatelemente erzeugen</a></li>
   <li><a href="style_sheets/removing_style.html.de#page_body"
     rel="subdocument">Formate entfernen</a></li>
 </ul>
-</div>
 </body>
 </html>

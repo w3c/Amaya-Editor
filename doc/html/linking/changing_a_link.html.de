@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-  <meta name="GENERATOR" content="amaya 6.1, see http://www.w3.org/Amaya/" />
+  <meta name="generator" content="amaya 6.1, see http://www.w3.org/Amaya/" />
   <title>Einen Verweis ändern</title>
   <style type="text/css">
   </style>
@@ -13,8 +13,7 @@
 
 <body xml:lang="de" lang="de">
 
-<table border="0" cellspacing="5" cellpadding="5"
-summary="Inhaltsverzeichnis">
+<table border="0" cellspacing="5" cellpadding="5">
   <tbody>
     <tr>
       <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
@@ -30,33 +29,32 @@ summary="Inhaltsverzeichnis">
 <div id="page_body">
 <h1>Einen Verweis ändern</h1>
 
-<p>Diese Prozedur wird verwendet um das Ziel eines Verweises, nicht aber
-dessen Anker zu ändern.</p>
+<p>Diese Prozedur wird verwendet um einen Verweis, nicht aber dessen Anker zu
+ändern.</p>
 
-<p class="ProcedureCaption">Um dies zu tun:</p>
+<p class="ProcedureCaption">Um einen Verweis zu ändern:</p>
 <ol>
-  <li>Den Cursor innerhalb des Ankers plazieren und den Knopf
-    <strong>Verweis</strong> <img src="../../images/Link.gif"
-    alt="Knopg Verweis" /> in der Knopfleiste anklicken oder im Menü
+  <li>Den Cursor innerhalb des Ankers plazieren.</li>
+  <li>Den Knopf <strong>Verweis</strong> <img src="../../images/Link.gif"
+    alt="Knopf Verweis" /> in der Knopfleiste anklicken oder im Menü
     <strong>Verweis</strong> den Befehl <strong>Verweis
-    erzeugen/ändern</strong> wählen oder das Tastenkürzel <kbd>Umsdhalt Strg
-    L</kbd> verwenden. Der Cursor nimmt die Gestalt einer Hand an.</li>
-  <li>&nbsp; 
+    erzeugen/ändern</strong> wählen oder das Tastenkürzel <kbd>Umsch Strg
+    L</kbd> verwenden.
+    <p>Der Cursor nimmt die Gestalt einer Hand an.</p>
     <ul>
       <li>Befindet sich das Zieldokument in einem anderen Amayafenster, dann
         auf dieses Fenster klicken.</li>
       <li>Ist dies nicht der Fall, irgend eine Taste drücken oder in das
         Fenster klicken. Es wird ein Dialog geöffnet. Hier den URI des
         Zieldokuments eingeben oder <strong>Durchsuchen</strong> anklicken um
-        das Dokument zu suchen. Dann den Knopf <strong>Übernehmen</strong>
-        anklicken.</li>
+        das Dokument zu suchen, auf das verwiesen werden soll. Dann den Knopf
+        <strong>Übernehmen</strong> anklicken.</li>
     </ul>
-    <p class="ProcedureNote"><strong>Anmerkung:</strong> Man kann das
-    Attribut <code>href</code> eines Ankers auch manuell in der
-    Strukturansicht editieren oder in der Verweisansicht ändern, indem man
-    dort im Menü <strong>Attribute</strong> den Befehl <strong>href</strong>
-    auswählt.</p>
   </li>
+
+  <p class="ProcedureNote"><strong>Anmerkung:</strong> Man kann das Attribut
+  <code>href</code> eines Ankers auch manuell editieren, indem man im Menü
+  <strong>Attribute</strong> das Attribut <strong>href</strong> auswählt.</p>
 </ol>
 </div>
 </body>

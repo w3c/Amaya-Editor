@@ -13,8 +13,7 @@
 
 <body xml:lang="de" lang="de">
 
-<table border="0" cellspacing="5" cellpadding="5"
-summary="Inhaltsverzeichnis">
+<table border="0" cellspacing="5" cellpadding="5">
   <tbody>
     <tr>
       <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
@@ -51,7 +50,7 @@ Amaya das markierte Teil auf den gewählten Elementtyp zu transformieren.</p>
 durch Zwänge, welche durch die DTD von HTML auferlegt werden, nicht möglich
 ist. Befindet sich beispielsweise der Cursor am Ende der letzten Zeile in
 einem Absatz wenn man den Knopf <img src="../../images/H2.gif"
-alt="Kopf Überschrift Ebene 2" /> drückt, dann erzeugt Amaya eine neue
+alt="Kopf Überschrift Ebene 2" /> in der Knopfleiste drückt, dann erzeugt Amaya eine neue
 Überschrift der Ebene 2 hinter diesem Absatz.</p>
 
 <p>In anderen Fällen ändert Amaya die existierende Struktur um das gewünschte

@@ -5,7 +5,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-  <meta name="GENERATOR" content="amaya 6.1, see http://www.w3.org/Amaya/" />
+  <meta name="generator" content="amaya 6.1, see http://www.w3.org/Amaya/" />
   <title>Formatelemente erzeugen</title>
   <style type="text/css">
  </style>
@@ -14,8 +14,7 @@
 
 <body xml:lang="de" lang="de">
 
-<table border="0" cellspacing="5" cellpadding="5"
-summary="Inhaltsverzeichnis">
+<table border="0" cellspacing="5" cellpadding="5">
   <tbody>
     <tr>
       <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
@@ -30,8 +29,6 @@ summary="Inhaltsverzeichnis">
   </tbody>
 </table>
 
-<div class="Section1">
-
 <div id="page_body">
 <h1>Formatelemente erzeugen</h1>
 
@@ -43,15 +40,17 @@ man einem Dokument Formatelemente hinzufügen.</p>
 
 <p>Das Untermenü <strong>Inhaltsorientiert</strong> listet Elemente, welche
 abstrakte Formate definieren. Drei dieser Formate sind auch über die Knöpfe
-<img src="../../images/Em.gif" alt="Knopf Betonung" /> für Betonung (em),
-<img src="../../images/strong.gif" alt="Kopf starke Betonung" /> für
-Hervorhebung (strong) und <img src="../../images/code.gif"
-alt="Knopf feste Schriftbreite" /> für Programmcode (code) erreichbar.</p>
+<img src="../../images/Em.gif" alt="Knopf Betonung" /> für Betonung
+(<code>em</code>), <img src="../../images/strong.gif"
+alt="Kopf starke Betonung" /> für Hervorhebung (<code>strong</code>) und <img
+src="../../images/code.gif" alt="Knopf feste Schriftbreite" /> für
+Programmcode (<code>code</code>) erreichbar.</p>
 
 <p class="ProcedureCaption">Um diese anzuwenden:</p>
 <ol>
   <li>Die Zeichenkette markieren.</li>
-  <li>Das entsprechende Element im Menü auswählen. 
+  <li>Das entsprechende Element im Menü auswählen oder den entsprechenden
+    Knopf drücken.
     <p>Die Zeichenkette wird entsprechend formatiert dargestellt.</p>
   </li>
 </ol>
@@ -60,8 +59,9 @@ alt="Knopf feste Schriftbreite" /> für Programmcode (code) erreichbar.</p>
 
 <p>Das Untermenü <strong>Darstellungsorientiert</strong> gestattet es Text in
 den veralteten Formaten aus HTML 3.2 zu formatieren. Diese werden wie oben
-beschrieben angewendet.</p>
-</div>
+beschrieben angewendet. Diese sollten, wann immer möglich, durch
+inhaltsorientierte Formate oder die Verwendung von Formatvorlagen ersetzt
+werden.</p>
 </div>
 </body>
 </html>

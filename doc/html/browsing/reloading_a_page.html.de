@@ -5,7 +5,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-  <meta name="GENERATOR" content="amaya 6.1, see http://www.w3.org/Amaya/" />
+  <meta name="generator" content="amaya 6.1, see http://www.w3.org/Amaya/" />
   <title>Ein Dokument aktualisieren</title>
   <style type="text/css">
  </style>
@@ -14,8 +14,7 @@
 
 <body xml:lang="de" lang="de">
 
-<table border="0" cellspacing="5" cellpadding="5"
-summary="Inhaltsverzeichnis">
+<table border="0" cellspacing="5" cellpadding="5">
   <tbody>
     <tr>
       <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
@@ -36,10 +35,11 @@ summary="Inhaltsverzeichnis">
 <p>Dokumente können aktualisiert werden durch:</p>
 <ul>
   <li><strong>Aktualisieren</strong> im Menü <strong>Datei.</strong></li>
-  <li>Das Tastenkürzel <kbd>Alt r</kbd> unter Unix und <kbd>Strg r</kbd>
-    unter Windows.</li>
-  <li>Klick auf den Knopf <strong>Aktualisieren</strong> in der
-  Knopfleiste.</li>
+  <li>Das Tastenkürzel <kbd>Alt r</kbd> (Unix) oder <kbd>Strg r</kbd>
+    (Windows).</li>
+  <li>Klick auf den Knopf <strong>Aktualisieren</strong> <img
+    alt="Knopf Aktualisieren" src="../../images/Reload.ng" /><img
+    alt="Reload button" src="../../images/Reload.gif" /> in der Knopfleiste.</li>
 </ul>
 </div>
 </body>

@@ -17,11 +17,11 @@
     <tr>
       <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
         src="../../images/amaya.gif" /></td>
-      <td><a href="about_configuration_directory_and_file_conventions.html"
+      <td><a href="about_configuration_directory_and_file_conventions.html.de"
         accesskey="p"><img alt="vorherige Seite" src="../../images/left.gif"
-        /></a> <a href="../Configure.html" accesskey="t"><img
+        /></a> <a href="../Configure.html.de" accesskey="t"><img
         alt="erste Seite" src="../../images/up.gif" /></a> <a
-        href="about_keyboard_shortcuts.html" accesskey="n"><img
+        href="about_keyboard_shortcuts.html.de" accesskey="n"><img
         alt="nächste Seite" src="../../images/right.gif" /></a></td>
     </tr>
   </tbody>
@@ -31,10 +31,10 @@
 <h1>Das Untermenü Einstellungen</h1>
 
 <p>Die Konfigurationsdialoge findet man unter dem Menü
-<strong>Extras</strong> Untermenü <strong>Einstellungen</strong>. Neun
+<strong>Extras</strong> Untermenü <strong>Einstellungen</strong>. Zehn
 Dialoge stehen zur Verfügung: <strong>Allgemein</strong>,
-<strong>Veröffentlichen</strong>, <strong>Cache</strong>,
-<strong>Proxy</strong>, <strong>Farben</strong>,
+<strong>Browser</strong>, <strong>Veröffentlichen</strong>,
+<strong>Cache</strong>, <strong>Proxy</strong>, <strong>Farben</strong>,
 <strong>Fenstergeometrie</strong>, <strong>Sprachen</strong>,
 <strong>Profile</strong> und <strong>Vorlagen</strong>.</p>
 
@@ -55,7 +55,7 @@ Dialoge stehen zur Verfügung: <strong>Allgemein</strong>,
 Einstellungen vorgenommen.</p>
 
 <p><img alt="Der Dialog allgemeine Einstellungen"
-src="../../images/general_preferences.png" /></p>
+src="../../images/general_preferences-de.png" /></p>
 
 <h3>Spezielle Verzeichnisse</h3>
 
@@ -65,7 +65,7 @@ fehlwertmäßig dargestellt wird an.</p>
 <dl>
   <dt>Heimatverzeichnis</dt>
     <dd>Wird nur auf Windowsplattformen benutzt. Spezifiziert das
-      Verzeichnis, in dem die Benutzereinstellungen gespeichert werden. 
+      Verzeichnis, in dem die Benutzereinstellungen gespeichert werden.
       <p class="Note"><strong>Anmerkung:</strong> Dieses Verzeichnis kann
       nicht verlagert werden.</p>
     </dd>
@@ -73,7 +73,7 @@ fehlwertmäßig dargestellt wird an.</p>
     <dd>Wird nur auf Windowsplattformen benutzt. Spezifiziert das
       Verzeichnis, in dem Amaya seine temporären Dateien ablegt,
       beispielsweise während des Druckens. Der Fehlwert ist
-      <code>c:\temp</code>. 
+      <code>c:\temp</code>.
       <p class="Note"><strong>Anmerkung:</strong> Wird dieses Verzeichnis
       verlagert, dann wird das vorhergehende nicht entfernt. Das alte
       Verzeichnis muss manuell gelöscht werden. Wurde der
@@ -84,7 +84,7 @@ fehlwertmäßig dargestellt wird an.</p>
     <dd>Spezifiziert die Startseite, die angezeigt wird, wenn Amaya startet
       oder wenn der Benutzer auf den Knopf <strong>Startseite</strong>
       klickt. Eine Beispiel wäre: <code><a
-      href="http://www.w3.org/">http://www.w3.org</a></code> 
+      href="http://www.w3.org/">http://www.w3.org</a></code>
       <p class="Note"><strong>Anmerkung:</strong> Es muss ein vollständiger
       URI angegeben werden.</p>
     </dd>
@@ -110,7 +110,7 @@ an, dass die Option aktiv ist.</p>
   <dt>Hintergrundbild anzeigen</dt>
     <dd>Kontrolliert ob Hintergrundbilder angezeigt werden sollen. Diese
       Option ist nur wirksam, wenn ein neues Dokument geladen wird.</dd>
-  <dt>Knopfleiste anzeigen</dt>
+  <dt>Symbolleiste anzeigen</dt>
     <dd>Kontrolliert ob die Knopfleiste in der Browseransicht eines Dokuments
       angezeigt werden soll.</dd>
   <dt>Adresszeile zeigen</dt>
@@ -126,7 +126,7 @@ an, dass die Option aktiv ist.</p>
   <dt>Zugriffstasten</dt>
     <dd>Spezifiziert den Modifikator der benutzt werden soll (<kbd>Alt</kbd>
       oder <kbd>Strg</kbd>), um die, in einem Dokument definierten <a
-      href="..\Browsing.html#Access">Zugriffstasten</a>, zu aktivieren oder
+      href="..\Browsing.html.de#Access">Zugriffstasten</a>, zu aktivieren oder
       legt fest, das die Zugriffstasten, welche in einem Dokument definiert
       sind ignoriert werden sollen.</dd>
 </dl>
@@ -166,7 +166,7 @@ einstellen.</p>
       und Deutsch (<code>de</code>). Wenn Amaya gestartet wird, werden die
       Dateien der entsprechenden Sprache geladen. Diese beginnen mit:
       <code>en</code>-, <code>fr</code>- oder <code>de</code>- und befinden
-      sich im Verzeichnis <strong>Amaya/config</strong>. 
+      sich im Verzeichnis <strong>Amaya/config</strong>.
       <p>In Thot wird ein Dokument über ein Schema spezifiziert. In Amaya
       werden die Dialogmeldungen, die angezeigt werden, wenn ein Dokument
       geparst oder über ein bestimmtes Schema abgespeichert wird, in einer
@@ -201,10 +201,12 @@ einstellen.</p>
 <p>Die folgenden Optionen können ein- oder ausgeschaltet werden, indem man in
 das Kästchen neben der Option klickt. Eine Markierung in dem Kästchen zeigt
 an, dass die Option aktiv ist.</p>
+<img alt="Dialog für Browsereinstellungen"
+src="../../images/browser_preferences-de.png" />
 <dl>
-  <dt>Hintergrundbilder anzeigen</dt>
-    <dd>Kontrolliert ob Hintergrundbilder angezeigt werden sollen. Diese
-      Option ist nur wirksam, wenn ein neues Dokument geladen wird.</dd>
+  <dt>Bilder laden</dt>
+    <dd>Kontrolliert ob Bilder angezeigt werden sollen. Diese Option ist nur
+      wirksam, wenn ein neues Dokument geladen wird.</dd>
   <dt>Doppelklick aktiviert Verweis</dt>
     <dd>Seit der ersten Version von Amaya aktivieren die Benutzer Verweise
       mit einem Doppelklick. Mit dieser Option ist man in der Lage zu wählen,
@@ -233,7 +235,7 @@ spezifische Domänen angeben. Diese Optionen werden von dem Befehl
 Die Optionen werden nachfolgend erklärt.</p>
 
 <p><img alt="Der Dialog Einstellungen fpr Veröffentlichen"
-src="../../images/publishing_preferences.png" /></p>
+src="../../images/publishing_preferences-de.png" /></p>
 <dl>
   <dt>Für XHTML application/xhtml+xml verwenden</dt>
     <dd>Diese Option verknüpft den neuen offiziellen MIME-Typ
@@ -283,7 +285,7 @@ im Temporärverzeichnis. In dem Menü befindet sich zusätzlich noch der Knopf
 Cache leeren, womit der Inhalt des Cache-Verzeichnisses gelöscht wird.</p>
 
 <p><img alt="Der Dialog Einstellungen für Cache"
-src="../../images/cache_preferences.png" /></p>
+src="../../images/cache_preferences-de.png" /></p>
 <dl>
   <dt>Cache aktivieren</dt>
     <dd>Aktiviert oder deaktiviert den Cache.</dd>
@@ -298,7 +300,7 @@ src="../../images/cache_preferences.png" /></p>
   <dt>Verzeichnis</dt>
     <dd>Identifiziert das Verzeichnis in dem der Cache gehalten wird. Bei
       einer Verlagerung wird der Inhalt des alten Verzeichnisses nicht
-      gelöscht. Das muss man selber erledigen. 
+      gelöscht. Das muss man selber erledigen.
       <p class="Note"><strong>Anmerkung:</strong> Mechanismen zum Schutz von
       Dateien verhindern, dass man den Cache auf ein Verzeichnis im NFS
       (Network File System) legen kann (nur bei Unix). Der Cache sollte auf
@@ -316,7 +318,7 @@ src="../../images/cache_preferences.png" /></p>
 auf denen ein Proxy benutzt oder nicht benutzt werden soll.</p>
 
 <p><img alt="Der Dialog Einstellungen für Proxy"
-src="../../images/proxy_preferences.png" /></p>
+src="../../images/proxy_preferences-de.png" /></p>
 <dl>
   <dt>HTTP Proxy</dt>
     <dd>Identifiziert den Proxy, welcher für HTTP-Requests benutzt werden
@@ -336,7 +338,7 @@ Textfarbe für ein Dokument, die Cursorfarbe und die Markierungsfarbe
 bestimmen.</p>
 
 <p><img alt="Der Dialog Einstellungen für Farben"
-src="../../images/color_preferences.png" /></p>
+src="../../images/color_preferences-de.png" /></p>
 <dl>
   <dt>Schrift</dt>
     <dd>Dies ist die Farbe der Schrift im Dokument.</dd>
@@ -378,7 +380,7 @@ verschiedenen momentan geöffneten Ansichtenfenster eines Dokuments speichern
 oder deren Fehlwerte laden.</p>
 
 <p><img alt="Der Dialig Einstellungen für Geometrie"
-src="../../images/geometry_preferences.png" /></p>
+src="../../images/geometry_preferences-de.png" /></p>
 
 <p>Die Werte, welche gespeichert werden, gehören zum jeweiligen Fenster einer
 Dokumentenansicht von dem dieser Dialog aufgerufen wurde. Die Änderungen
@@ -392,7 +394,7 @@ hier die Sprachen für diese Verhandlung, in der Reihenfolge ihrer Priorität
 angeben beispielsweise <code>en</code> <code>de</code> <code>fr</code>).</p>
 
 <p><img alt="Der Dialog Einstellungen für Sprache"
-src="../../images/language_negotiation.png" /></p>
+src="../../images/language_negotiation-de.png" /></p>
 
 <p>Man kann diese <a
 href="http://www.w3.org/1999/05/WCAG-RECPressRelease.html">Pressemitteilung</a>
@@ -409,7 +411,7 @@ Profilverzeichnisses und der dort enthaltenen Profildateien. Die Änderung des
 Profils wird erst beim nächsten Start von Amaya wirksam.</p>
 
 <p><img alt="Der Dialog Einstellungen für Profile"
-src="../../images/profiles_preferences.png" /></p>
+src="../../images/profiles_preferences-de.png" /></p>
 
 <h2>Schablonen</h2>
 
@@ -418,7 +420,7 @@ man dazu verwenden kann um seine eigenen Dokumente zu erstellen. In diesem
 Dialog kann man den URI eines Schablonenservers spezifizieren, der sowohl
 lokal, als auch entfernt sein kann.</p>
 <img alt="Der Dialog Einstellungen für Vorlagen"
-src="../../images/templates_preferences.png" /> 
+src="../../images/templates_preferences-de.png" />
 
 <p>Man muss Amaya beenden um diese Option zu validieren. Startet man danach
 Amaya wieder, dann enthällt das Menü <strong>Datei</strong>, Untermenü

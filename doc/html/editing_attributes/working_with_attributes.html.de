@@ -8,14 +8,13 @@
   <title>Mit Attributen arbeiten</title>
   <style type="text/css">
   </style>
-  <meta name="GENERATOR" content="amaya 6.1, see http://www.w3.org/Amaya/" />
+  <meta name="generator" content="amaya 6.1, see http://www.w3.org/Amaya/" />
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
 <body xml:lang="de" lang="de">
 
-<table border="0" cellspacing="5" cellpadding="5"
-summary="Inhaltsverzeichnis">
+<table border="0" cellspacing="5" cellpadding="5">
   <tbody>
     <tr>
       <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
@@ -39,24 +38,23 @@ automatisch in das Element <strong>span</strong> eingeschlossen.</p>
 
 <p>Attribute kann man auf zwei Arten editieren:</p>
 <ul>
-  <li>über das Menü <span class="Link0"><strong>Attribute</strong></span></li>
-  <li>in der Strukturansicht.</li>
+  <li>Über das Menü <strong>Attribute</strong></li>
+  <li>In der Strukturansicht.</li>
 </ul>
 
-<p>Zusätzlich kann man <span class="Link0">Attribute von einem Element auf
-ein anderes kopieren</span>.</p>
+<p>Zusätzlich kann man Attribute von einem Element auf ein anderes
+kopieren.</p>
 
 <p>Im Menü <strong>Attribute</strong> werden immer nur die für ein Element
 verfügbaren Attribute angezeigt.</p>
 
 <p>Weitere Informationen findet man unter:</p>
 <ul>
-  <li><a href="editing_attributes_through_the_attributes_menu.html.de"
-    rel="subdocument">Attribute über das Menü editieren</a></li>
-  <li><a href="copying_attributes.html.de" rel="subdocument">Attribute
-    kopieren</a></li>
-  <li><a href="editing_attributes_in_the_structure_view.html.de"
-    rel="subdocument">Attribute in der Strukturansicht editieren</a></li>
+  <li><a href="editing_attributes_through_the_attributes_menu.html.de">Attribute
+    über das Menü Attribute editieren</a></li>
+  <li><a href="copying_attributes.html.de">Attribute kopieren</a></li>
+  <li><a href="editing_attributes_in_the_structure_view.html.de">Attribute in
+    der Strukturansicht editieren</a></li>
 </ul>
 </div>
 </body>

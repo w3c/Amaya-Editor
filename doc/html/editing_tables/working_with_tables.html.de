@@ -8,14 +8,13 @@
   <title>Mit Tabellen arbeiten</title>
   <style type="text/css">
   </style>
-  <meta name="GENERATOR" content="amaya 6.1, see http://www.w3.org/Amaya/" />
+  <meta name="generator" content="amaya 6.1, see http://www.w3.org/Amaya/" />
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
 <body xml:lang="de" lang="de">
 
-<table border="0" cellspacing="5" cellpadding="5"
-summary="Inhaltsverzeichnis">
+<table border="0" cellspacing="5" cellpadding="5">
   <tbody>
     <tr>
       <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
@@ -32,10 +31,10 @@ summary="Inhaltsverzeichnis">
 <h1>Mit Tabellen arbeiten</h1>
 
 <p>Amaya enthält keinen separaten Tabelleneditor. Für Amaya ist eine Tabelle
-einfach eine Struktur, welche in der Document Type Definition (DTD) von HTML
-beschrieben wird und als solche editiert wird. Man kann auf eine Tabelle die
-gleichen Befehle, die auch auf andere Strukturen zutreffen, und ein paar
-mehr, anwenden.</p>
+einfach eine Struktur, welche in der <strong>Document Type
+Definition</strong> (DTD) von HTML beschrieben wird und als solche editiert
+wird. Man kann auf eine Tabelle die gleichen Befehle, die auch auf andere
+Strukturen zutreffen, und einige mehr, anwenden.</p>
 
 <p>Weitere Informationen findet man unter:</p>
 <ul>

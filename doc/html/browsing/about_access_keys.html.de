@@ -5,7 +5,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-  <meta name="GENERATOR" content="amaya 6.1, see http://www.w3.org/Amaya/" />
+  <meta name="generator" content="amaya 6.1, see http://www.w3.org/Amaya/" />
   <title>Über Zugriffstasten</title>
   <style type="text/css">
  </style>
@@ -14,8 +14,7 @@
 
 <body xml:lang="de" lang="de">
 
-<table border="0" cellspacing="5" cellpadding="5"
-summary="Inhaltsverzeichnis">
+<table border="0" cellspacing="5" cellpadding="5">
   <tbody>
     <tr>
       <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
@@ -38,7 +37,7 @@ einen aktiven Bildbereich oder einen Verweis. Dieser Zugriff kann für
 Menschen mit motorischen Behinderungen entscheident sein. Es gibt aber noch
 andere Bedingungen, wo dies nötig oder hilfreich sein kann.</p>
 
-<p>Wenn man ein Web-Dokument entwickelt, dann kann man das Attribut
+<p>Wenn man ein Dokument erstellt, dann kann man das Attribut
 <code>accesskey</code> bestimmten Elementen zuweisen.</p>
 
 <p>Beispiel: weist man das Attribut <code>accesskey</code> einem Verweis
@@ -60,10 +59,10 @@ Hilfeseiten von Amaya deklarieren folgende Zufriffstasten:</p>
 
 <p>Hat man das Tastenkürzel <kbd>Alt p</kbd> einem Befehl von Amaya
 zugewiesen, dann steht dieses Kürzel, wenn Hilfeseiten von Amaya angezeigt
-werden nicht zur Verfügung.</p>
+werden, nicht zur Verfügung.</p>
 
 <p>Fehlwertmäßig benutzt Amaya die Taste <kbd>Alt</kbd> als Modifikator für
-Zugriffstasten. Das kann man jedoch über das Menü <strong>Extras</strong>
+Zugriffstasten. Das kann man jedoch über das Menü <strong>Extras</strong>,
 Untermenü <strong>Einstellungen</strong>, Dialog <strong>Allgemein</strong>
 ändern. Man kann dort die Taste <kbd>Strg</kbd> als Modifikator wählen oder
 Zugriffstasten überhaupt deaktivieren.</p>

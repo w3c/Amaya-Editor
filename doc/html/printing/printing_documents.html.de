@@ -5,7 +5,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-  <meta name="GENERATOR" content="amaya 6.1, see http://www.w3.org/Amaya/" />
+  <meta name="generator" content="amaya 6.1, see http://www.w3.org/Amaya/" />
   <title>Dokumente drucken</title>
   <style type="text/css">
   </style>
@@ -14,8 +14,7 @@
 
 <body xml:lang="de" lang="de">
 
-<table border="0" cellspacing="5" cellpadding="5"
-summary="Inhaltsverzeichnis">
+<table border="0" cellspacing="5" cellpadding="5">
   <tbody>
     <tr>
       <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
@@ -34,23 +33,24 @@ summary="Inhaltsverzeichnis">
 <p>Amaya kann Dokumente mit oder ohne Formatvorlagen auf Unix- und auf
 Windowsplattformen drucken.</p>
 
-<p class="Note"><b>Wichtig:</b>&nbsp;Auf Unixplattformen kann nur Postscript
+<p class="Note"><strong>Wichtig:</strong> Auf Unixplattformen kann nur Postscript
 erzeugt werden. Daher braucht man hier einen postscriptfähigen Drucker oder
 man muss das Dokument mit einem geeigneten Programm konvertieren.</p>
 
 <p>Man kann Dokumente auf drei verschiedene Arten drucken:</p>
 <ul>
-  <li><span class="Link0">Über <strong>Druckoptionen</strong> im Menü
-    <strong>Datei</strong></span>. Hier kann man vor dem Drucken noch einige
+  <li>Über <strong>Druckoptionen</strong> im Menü
+    <strong>Datei</strong>. Hier kann man vor dem Drucken noch einige
     Parameter einstellen.</li>
-  <li><span class="Link0">Über <strong>Drucken</strong> im Menü
-    <strong>Datei</strong></span>. Hier wird das Dokument mit den derzeitigen
+  <li>Über <strong>Drucken</strong> im Menü
+    <strong>Datei</strong>. Hier wird das Dokument mit den derzeitigen
     Druckoptionen ausgedruckt.</li>
-  <li>Über den Knopf <img src="../../images/print.gif" alt="Knopf Drucken" />
-    auf der Knopfleiste. Auf Unixplattformen ist dies ein Kürzel für den
-    Befehl <strong>Drucken</strong>. Auf Windowsplattformen ist dies ein
-    Kürzel für den Befehl <strong>Druckoptionen</strong>, wegen Problemen mit
-    den DLLs von Windows 95.</li>
+  <li>Über den Knopf <strong>Drucken</strong> <img
+    src="../../images/print.gif" alt="Knopf Drucken" /> in der Knopfleiste
+    oder das Tastenkürzel <kbd>Strg p</kbd>. Auf Unixplattformen ist dies ein
+    Kürzel für den Befehl <strong>Drucken</strong>. Auf Windowsplattformen
+    ist dies ein Kürzel für den Befehl <strong>Druckoptionen</strong>, wegen
+    Problemen mit den DLLs von Windows 95.</li>
 </ul>
 </div>
 </body>

@@ -4,14 +4,13 @@
   <title>Die Palette Mathematik und das Menü Elemente</title>
   <style type="text/css">
   </style>
-  <meta name="GENERATOR" content="amaya 6.1, see http://www.w3.org/Amaya/">
+  <meta name="generator" content="amaya 6.3, see http://www.w3.org/Amaya/">
   <link href="../style.css" rel="stylesheet" type="text/css">
 </head>
 
-<body lang="de">
+<body lang="de" ="de">
 
-<table border="0" cellspacing="5" cellpadding="5"
-summary="Inhaltsverzeichnis">
+<table border="0" cellspacing="5" cellpadding="5">
   <tbody>
     <tr>
       <td><img alt="W3C" src="../../images/w3c_home"> <img alt="Amaya"
@@ -31,15 +30,20 @@ summary="Inhaltsverzeichnis">
 
 <p>Um einen mathematischen Ausdruck in einem Dokument zu erzeugen, bewegt man
 den Cursor an die entsprechende Stelle und klickt dann auf den Knopf
-<strong>Formel</strong> in der Knopfleiste oder wählt aus dem Menü
-<strong>Elemente</strong> das Untermenü <strong>Formel</strong>.</p>
+<strong>Formel</strong> <img alt="Knopf Formel" src="../../images/Math.gif">
+in der Knopfleiste oder wählt aus dem Menü <strong>Elemente</strong> das
+Untermenü <strong>Formel</strong>.</p>
 
 <h2>Auf Konstrukte zugreifen</h2>
 
 <p>Ein Klick auf den Knopf <strong>Formel</strong> <img alt="Knopf Formel"
 src="../../images/Math.gif"> in der Knopfleiste öffnet eine Palette von
-Symbolen mathematischer Kunstrukte. Diese wird mit dem Knopf
-<strong>Beenden</strong> geschlossen.</p>
+Symbolen mathematischer Kunstrukte: </p>
+
+<p><img alt="Palette Mathematik" src="../../images/math_palette-de.png"></p>
+
+<p>Diese bleibt solange geöffnet, bis man den Knopf <strong>Beenden</strong>
+drückt.</p>
 
 <p>Die Konstrukte sind auch über das Menü <strong>Elemente</strong>,
 Untermenü <strong>Formel</strong> erreichbar.</p>
@@ -96,8 +100,8 @@ in welches das Konstrukt eingefügt wird. Die verfügbaren Konstrukte sind:</p>
       </menclose>
     </math></p>
   </li>
-  <li>Bruch (<code>mfrac</code>): <math
-    xmlns="http://www.w3.org/1998/Math/MathML">
+  <li>Bruch (<code>mfrac</code>):
+    <p><math xmlns="http://www.w3.org/1998/Math/MathML">
       <mfrac>
         <mn>1</mn>
         <mrow>
@@ -106,7 +110,8 @@ in welches das Konstrukt eingefügt wird. Die verfügbaren Konstrukte sind:</p>
           <mn>1</mn>
         </mrow>
       </mfrac>
-    </math></li>
+    </math></p>
+  </li>
   <li>Ausdruck Subscript und Superscript (<code>msubsup</code>):
     <p><math xmlns="http://www.w3.org/1998/Math/MathML">
       <msubsup>
@@ -117,12 +122,6 @@ in welches das Konstrukt eingefügt wird. Die verfügbaren Konstrukte sind:</p>
           <mn>1</mn>
         </mrow>
         <mi>n</mi>
-      </msubsup>
-    </math>oder <math xmlns="http://www.w3.org/1998/Math/MathML">
-      <msubsup>
-        <mo>&Integral;</mo>
-        <mn>0</mn>
-        <mo>&infin;</mo>
       </msubsup>
     </math></p>
   </li>
@@ -169,7 +168,7 @@ in welches das Konstrukt eingefügt wird. Die verfügbaren Konstrukte sind:</p>
         <mi>x</mi>
         <mover>
           <mo>&RightArrow;</mo>
-          <mtext>maps to</mtext>
+          <mtext>wird abgebildet auf</mtext>
         </mover>
         <mi>y</mi>
       </mrow>
@@ -229,6 +228,14 @@ xmlns="http://www.w3.org/1998/Math/MathML">
   <mi>&alpha;&beta;&gamma;</mi>
 </math>) zeigt eine weitere Palette an, aus der man mathematische Symbole und
 griechische Buchstaben wählen kann.</p>
+
+<p><img alt="Mathematische Symbole" src="../../images/MathSymbols-de.png"></p>
+
+<p>Dieser Dialog bleibt solange geöffnet, bis man den Knopf
+<strong>Beenden</strong> drückt.</p>
+
+<p class="Note"><strong>Hinweis</strong>: Die Symbole können auch in den
+normalen Fließtext eingegeben werden.</p>
 </div>
 </body>
 </html>

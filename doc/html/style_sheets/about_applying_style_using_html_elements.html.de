@@ -5,8 +5,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-  <meta name="GENERATOR" content="amaya 6.1, see http://www.w3.org/Amaya/" />
-  <title>Ein Format erzeugen</title>
+  <meta name="generator" content="amaya 6.1, see http://www.w3.org/Amaya/" />
+  <title>Zeichenketten formatieren</title>
   <style type="text/css">
   </style>
   <link href="../style.css" rel="stylesheet" type="text/css" />
@@ -14,8 +14,7 @@
 
 <body xml:lang="de" lang="de">
 
-<table border="0" cellspacing="5" cellpadding="5"
-summary="Inhaltsverzeichnis">
+<table border="0" cellspacing="5" cellpadding="5">
   <tbody>
     <tr>
       <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
@@ -31,7 +30,7 @@ summary="Inhaltsverzeichnis">
 </table>
 
 <div id="page_body">
-<h1>Ein Format erzeugen</h1>
+<h1>Zeichenketten formatieren</h1>
 
 <p>HTML stellt einige Elemente zur Verfügung, mit denen man Zeichenketten ein
 Format zuweisen kann. Zwei Untermenüs stehen dazu im Menü
@@ -64,106 +63,103 @@ Knopfleiste.</p>
       </td>
     </tr>
     <tr>
-      <td valign="top"><p class="TableText">Betonung (em)</p>
+      <td valign="top"><p class="TableText">Betont (<code>em</code>)</p>
       </td>
-      <td valign="top"><p class="TableText"><code>Umschalt Ctrl-I</code></p>
+      <td valign="top"><p class="TableText"><kbd>Umsch Strg I</kbd></p>
       </td>
-      <td valign="top"><img src="../../images/Em.gif" alt="Emphasis button"
-      /></td>
+      <td valign="top"><p><img src="../../images/Em.gif"
+        alt="Emphasis button" /></p>
+      </td>
     </tr>
     <tr>
-      <td valign="top"><p class="TableText">Hervorhebung (strong)</p>
+      <td valign="top"><p class="TableText">Hervorgehoben
+        (<code>strong</code>)</p>
       </td>
-      <td valign="top"><p class="TableText"><code>Umschalt Ctrl-B</code></p>
+      <td valign="top"><p class="TableText"><kbd>Umsch Strg B</kbd></p>
       </td>
-      <td valign="top"><img src="../../images/Strong.gif" alt="Strong button"
-        /></td>
+      <td valign="top"><p><img src="../../images/Strong.gif"
+        alt="Strong button" /></p>
+      </td>
     </tr>
     <tr>
-      <td valign="top"><p class="TableText">Zitatquelle (cite)</p>
+      <td valign="top"><p class="TableText">Zitatquelle
+        (<code>cite</code>)</p>
       </td>
-      <td valign="top"><p class="TableText"><code>Alt t</code><code>Alt
-        w</code></p>
+      <td valign="top"><p class="TableText"><kbd>Alt t Alt w</kbd></p>
       </td>
       <td></td>
     </tr>
     <tr>
       <td valign="top"><p class="TableText">Definition (dfn)</p>
       </td>
-      <td valign="top"><p class="TableText"><code>Alt t</code> <code>Alt
-        d</code></p>
+      <td valign="top"><p class="TableText"><kbd>Alt t Alt d</kbd></p>
       </td>
       <td></td>
     </tr>
     <tr>
-      <td valign="top"><p class="TableText">Programmcode (code)</p>
+      <td valign="top"><p class="TableText">Programmcode
+        (<code>code</code>)</p>
       </td>
-      <td valign="top"><p class="TableText"><code>Alt t</code> <code>Alt
-        c</code></p>
+      <td valign="top"><p class="TableText"><kbd>Alt t Alt c</kbd></p>
       </td>
-      <td valign="top"><img src="../../images/code.gif" alt="Code button"
-      /></td>
+      <td valign="top"><p><img src="../../images/code.gif" alt="Code button"
+        /></p>
+      </td>
     </tr>
     <tr>
-      <td valign="top"><p class="TableText">Variable (var)</p>
+      <td valign="top"><p class="TableText">Variable (<code>var</code>)</p>
       </td>
-      <td valign="top"><p class="TableText"><code>Alt t</code> <code>Alt
-        v</code></p>
+      <td valign="top"><p class="TableText"><kbd>Alt t Alt v</kbd></p>
       </td>
       <td></td>
     </tr>
     <tr>
-      <td valign="top"><p class="TableText">Beispiel (samp)</p>
+      <td valign="top"><p class="TableText">Beispiel (<code>samp</code>)</p>
       </td>
-      <td valign="top"><p class="TableText"><code>Alt t</code> <code>Alt
-        s</code></p>
+      <td valign="top"><p class="TableText"><kbd>Alt t Alt s</kbd></p>
+      </td>
+      <td><code></code></td>
+    </tr>
+    <tr>
+      <td valign="top"><p class="TableText">Tastatureingabe
+        (<code>kbd</code>)</p>
+      </td>
+      <td valign="top"><p class="TableText"><kbd>Alt t Alt k</kbd></p>
       </td>
       <td></td>
     </tr>
     <tr>
-      <td valign="top"><p class="TableText">Tastatureingabe (kbd)</p>
+      <td valign="top"><p class="TableText">Abkürzung (<code>abbr</code>)</p>
       </td>
-      <td valign="top"><p class="TableText"><code>Alt t</code> <code>Alt
-        k</code></p>
-      </td>
-      <td></td>
-    </tr>
-    <tr>
-      <td valign="top"><p class="TableText">Abkürzung (abbr)</p>
-      </td>
-      <td valign="top"><p class="TableText"><code>Alt t</code> <code>Alt
-        a</code></p>
+      <td valign="top"><p class="TableText"><kbd>Alt t Alt a</kbd></p>
       </td>
       <td></td>
     </tr>
     <tr>
-      <td valign="top"><p class="TableText">Akronym (acronym)</p>
+      <td valign="top"><p class="TableText">Akronym (<code>acronym</code>)</p>
       </td>
-      <td valign="top"><p class="TableText"><code>Alt t</code> <code>Alt
-        z</code></p>
-      </td>
-      <td></td>
-    </tr>
-    <tr>
-      <td valign="top"><p class="TableText">Eingefügter Text (ins)</p>
-      </td>
-      <td valign="top"><p class="TableText"><code>Alt t</code> <code>Alt
-        i</code></p>
+      <td valign="top"><p class="TableText"><kbd>Alt t Alt z</kbd></p>
       </td>
       <td></td>
     </tr>
     <tr>
-      <td valign="top"><p class="TableText">Gelöschter Text (del)</p>
+      <td valign="top"><p class="TableText">Eingefügter Text
+        (<code>ins</code>)</p>
       </td>
-      <td valign="top"><p class="TableText"><code>Alt t</code> <code>Alt
-        Delete</code></p>
+      <td valign="top"><p class="TableText"><kbd>Alt t Alt i</kbd></p>
+      </td>
+      <td></td>
+    </tr>
+    <tr>
+      <td valign="top"><p class="TableText">Gelöschter Text
+        (<code>del</code>)</p>
+      </td>
+      <td valign="top"><p class="TableText"><kbd>Alt t Alt Entf</kbd></p>
       </td>
       <td></td>
     </tr>
   </tbody>
 </table>
-
-<p></p>
 </div>
 </body>
 </html>

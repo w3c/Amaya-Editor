@@ -5,7 +5,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>Über Darstellungsorientierte Formate</title>
-  <meta name="GENERATOR" content="amaya 6.1, see http://www.w3.org/Amaya/" />
+  <meta name="generator" content="amaya 6.1, see http://www.w3.org/Amaya/" />
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
   <style type="text/css">
   </style>
@@ -14,23 +14,20 @@
 
 <body xml:lang="de" lang="de">
 
-<table cellspacing="5" cellpadding="5" summary="Inhaltsverzeichnis"
-width="100%">
+<table cellspacing="5" cellpadding="5">
   <tbody>
     <tr>
-      <td><p><img border="0" alt="W3C" src="../../images/w3c_home" /> <img
-        border="0" alt="Amaya" src="../../images/amaya.gif" /></p>
+      <td><img alt="W3C" src="../../images/w3c_home" /> <img
+        alt="Amaya" src="../../images/amaya.gif" />
       </td>
-      <td><p align="right"><a href="inline.html.de"><img
-        alt="vorherige Seite" border="0" src="../../images/left.gif" /></a>
-        <a href="../HTML.html.de"><img alt="erste Seite" border="0"
-        src="../../images/up.gif" /></a></p>
+      <td><a href="inline.html.de"><img alt="vorherige Seite"
+        src="../../images/left.gif" /></a> <a
+        href="../Document.html.de"><img alt="erste Seite"
+        src="../../images/up.gif" /></a>
       </td>
     </tr>
   </tbody>
 </table>
-
-<div id="Character">
 
 <div id="page_body">
 <h1>Über darstellungsorientierte Formate</h1>
@@ -55,30 +52,26 @@ strukturierter Elemente ersetzt werden.</p>
       Begriffe, welche definiert werden sollen und andere, zu kennzeichnen .
       Auch stehen andere Elemente zu Verfügung um beispielsweise ein Zitat
       oder einen Ausschnitt eines Programms hervorzuheben. Werden die o. g.
-      Elemente nur dazu verwendet um eine Zeichenkette fett darzustellen,
-      dann sollte man dazu <a
+      Elemente nur dazu verwendet um eine Zeichenkette fett oder kursiv
+      darzustellen, dann sollte man dazu <a
       href="../StyleSheets.html.de">Formatvorlagen</a> verwenden.</dd>
-  <dt></dt>
   <dt><code>big</code> und <code>small</code></dt>
     <dd>Dieser Effekt sollte generell mit Hilfe von <a
       href="../StyleSheets.html.de">Formatvorlagen</a> erzielt werden. Werden
       sie verwendet um einen spezifischen Typ einer Information, wie z. B.
       die Quelle eines Zitats, Benutzereingaben oder Computerausgaben zu
-      kennzeichnen, dann sollte man die dazu <a
-      href="inline.html.de">passenden HTML-Elemente</a> verwenden.</dd>
-  <dt></dt>
+      kennzeichnen, dann sollte man die dazu <a href="inline.html.de">passenden
+      HTML-Elemente</a> verwenden.</dd>
   <dt><code>sub</code> und <code>sup</code></dt>
     <dd>Man sollte <a href="../StyleSheets.html.de">Formatvorlagen</a>
       verwenden, um diesen Effekt zu erzielen. Handelt es sich dabei um
       mathematische Ausdrücke, dann steht dazu eine passende
-      Markierungssprache, <a href="../Math.html.de">MathML</a>, bereit,
-      welche wann immer möglich verwenden werden sollte.</dd>
-  <dt></dt>
+      Auszeichnungssprache, <a href="../Math.html.de">MathML</a>, bereit, welche
+      man, wann immer möglich, verwenden werden sollte.</dd>
   <dt><code>tt</code> und <code>pre</code></dt>
     <dd>Um diesen Effekt zu erzielen sollte man <a
       href="../StyleSheets.html.de">Formatvorlagen</a> verwenden.</dd>
 </dl>
-</div>
 </div>
 </body>
 </html>

@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-  <meta name="GENERATOR" content="amaya 6.1, see http://www.w3.org/Amaya/" />
+  <meta name="generator" content="amaya 6.1, see http://www.w3.org/Amaya/" />
   <title>Formate entfernen</title>
   <style type="text/css">
   </style>
@@ -13,8 +13,7 @@
 
 <body xml:lang="de">
 
-<table border="0" cellspacing="5" cellpadding="5"
-summary="Inhaltsverzeichnis">
+<table border="0" cellspacing="5" cellpadding="5">
   <tbody>
     <tr>
       <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
@@ -37,19 +36,15 @@ werden.</p>
 <p class="ProcedureCaption">Um ein Format von einer Zeichenkette zu
 entfernen</p>
 <ol>
-  <li>Dieses im Dokument markieren.</li>
+  <li>Die Zeichenkette im Dokument markieren.</li>
   <li>Im Menü <strong>Formate</strong> das Untermenü
-    <strong>Inhaltsorientiert</strong> wählen.</li>
-  <li>Das zu entfernende Format auswählen. 
-    <p></p>
-  </li>
+    <strong>Inhaltsorientiert</strong> oder
+    <strong>Darstellungsorientiert</strong> wählen.</li>
+  <li>Das zu entfernende Format auswählen.</li>
 </ol>
 
-<p class="ProcedureNote"><strong>Anmerkung:</strong> man kann Formate auch
-direkt über die Tastatur oder die entsprechenden Knöpfe der Knopfleiste
-löschen. Die Formate, deren Tastenkürzel und die entsprechenden Knöpfe werden
-in der folgenden Tabelle aufgelistet. Die Formate werden von allen Elementen
-im markierten Text entfernt-</p>
+<p class="Note"><strong>Anmerkung:</strong> Man kann Formate auch direkt über
+die Tastatur oder die entsprechenden Knöpfe der Knopfleiste löschen.</p>
 </div>
 </body>
 </html>

@@ -5,7 +5,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-  <meta name="GENERATOR" content="amaya 6.1, see http://www.w3.org/Amaya/" />
+  <meta name="generator" content="amaya 6.1, see http://www.w3.org/Amaya/" />
   <title>Der Befehl Druckoptionen</title>
   <style type="text/css">
   </style>
@@ -14,8 +14,7 @@
 
 <body xml:lang="de" lang="de">
 
-<table border="0" cellspacing="5" cellpadding="5"
-summary="Inhaltsverzeichnis">
+<table border="0" cellspacing="5" cellpadding="5">
   <tbody>
     <tr>
       <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
@@ -33,10 +32,11 @@ summary="Inhaltsverzeichnis">
 <div id="page_body">
 <h1>Der Befehl Druckoptionen</h1>
 
-<p><strong>Druckoptionen</strong> im Menü <strong>Datei</strong> erlaubt
-verschiedene Optionen für das Drucken einzustellen. In Abhängigkeit vom
-verwendeten Betriebssystem werden einige Optionen auf ihre Fehlwerte gesetzt,
-wenn man ein neues Dokument browst.</p>
+<p><strong>Druckoptionen</strong> im Menü <strong>Datei</strong> oder das
+Tastenkürzel <kbd>Umsch Strg p</kbd> erlaubt verschiedene Optionen für das
+Drucken einzustellen. In Abhängigkeit vom verwendeten Betriebssystem werden
+einige Optionen auf ihre Fehlwerte gesetzt, wenn man ein neues Dokument
+browst.</p>
 
 <p>Die einzelnen Optionen werden unter</p>
 <ul>

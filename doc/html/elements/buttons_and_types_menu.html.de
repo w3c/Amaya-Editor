@@ -14,8 +14,7 @@
 
 <body xml:lang="de" lang="de">
 
-<table border="0" cellspacing="5" cellpadding="5"
-summary="Inhaltsverzeichnis">
+<table border="0" cellspacing="5" cellpadding="5">
   <tbody>
     <tr>
       <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
@@ -41,7 +40,7 @@ Position plazieren und das gewünschte Element aus dem Memü auswählen.</p>
 
 <p>Wenn man neue Elemente erzeugt, dann ist es wichtig einen
 <em>Einfügepunkt</em> auszuwählen und nicht eine Markierung zu verwenden. Ist
-eine Markierung nicht leer, dann versucht Amaya das Element, was zu der
+eine Markierung vorhanden, dann versucht Amaya das Element, was zu der
 Markierung gehört in das gewählte Element zu <em>transformieren</em>.</p>
 
 <h2>Positionen von Elementen</h2>
@@ -50,7 +49,7 @@ Markierung gehört in das gewählte Element zu <em>transformieren</em>.</p>
 weil die DTD von HTML das nicht zulässt. Amaya versucht dann das Element an
 der nächst möglichen Stelle zu plaziern. Beispiel: befindet sich der Cursor
 am Ende der letzten Zeile eines Absatzes und drückt man auf den Knopf <img
-src="../../images/H2.gif" alt="Knopf Überschrift Ebene 2" /> , dann erzeugt
+src="../../images/H2.gif" alt="Knopf Überschrift Ebene 2" /> in der Knopfleiste, dann erzeugt
 Amaya die Überschrift unterhalb des Absatzes.</p>
 
 <p>In einigen anderen Fällen ändert Amaya die existierende Struktur um das

@@ -4,17 +4,17 @@
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
   <title>Ein Bild einfügen</title>
   <style type="text/css">
   </style>
-  <meta name="GENERATOR" content="amaya 6.2, see http://www.w3.org/Amaya/" />
+  <meta name="generator" content="amaya 6.1, see http://www.w3.org/Amaya/" />
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
 <body xml:lang="de" lang="de">
 
-<table border="0" cellspacing="5" cellpadding="5"
-summary="Inhaltsverzeichnis">
+<table border="0" cellspacing="5" cellpadding="5">
   <tbody>
     <tr>
       <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
@@ -32,19 +32,31 @@ summary="Inhaltsverzeichnis">
 <div id="page_body">
 <h1>Ein Bild einfügen</h1>
 
-<p>Um ein Bild hinzuzufügen aus dem Menü <strong>Elemente</strong> den Befehl
-<strong>Bild</strong> wählen, den Knopf <strong>Bild</strong> <img
-alt="Bild einf?gen" src="../../images/Image.gif" /> der Knopfleiste drücken
-oder das Tastenkürzel (<code>Strg t</code> in Windows oder <code>Strg
-i</code> in Unix) verwenden. Im folgenden Dialog muss der Dateiname und der
-alternative Text eingegeben werden.</p>
+<p>Bilder können an jede beliebige Stelle im Dokument eingefügt werden. Amaya
+unterstützt zur Zeit folgende Bildformate:</p>
+<ul>
+  <li>GIF</li>
+  <li>JPEG</li>
+  <li>PNG</li>
+  <li>BMP</li>
+</ul>
+
+<p class="ProcedureCaption">Um ein Bild in ein Dokument einzufügen:</p>
+<ol>
+  <li>Den Cursor an die gewünschte Stelle im Dokument plazieren.</li>
+  <li>Aus dem Menü <strong>Elemente</strong> den Befehl <strong>Bild</strong>
+    wählen, den Knopf <strong>Bild</strong> <img alt="Bild einf?gen"
+    src="../../images/image_button.gif" /> der Knopfleiste drücken oder das
+    Tastenkürzel <kbd>Strg t Strg i</kbd> verwenden.</li>
+  <li>Im darauffolgenden Dialog muss der Dateiname und der alternative Text
+    eingegeben werden. <strong>Durchsuchen</strong> öffnet einen Dialog um
+    die Bilddatei zu suchen.</li>
+</ol>
 
 <p>Um eine lange Beschreibung für ein Bild zu erstellen, welches komplexe
 Informationen enthält, sollte man ein separates Dokument erzeugen und dessen
-URI mittels <span
-style="font-size:9.0pt;font-family:&#34;Courier New&#34;;"><code>longdesc</code>
-verknüpfen.</span> Dieser Befehl ist im Menü <strong>Attribute</strong>
-verfügbar.</p>
+URI mit dem Attribut <code>longdesc</code> des Bildes verknüpfen. Dieser
+Befehl ist im Menü <strong>Attribute</strong> verfügbar.</p>
 
 <p>Um eine Bilddatei besser zu finden kann man im Feld
 <strong>Filter</strong> einen Filter spezifizieren, und den Knopf

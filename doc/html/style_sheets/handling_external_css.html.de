@@ -5,7 +5,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-  <meta name="GENERATOR" content="amaya 6.1, see http://www.w3.org/Amaya/" />
+  <meta name="generator" content="amaya 6.1, see http://www.w3.org/Amaya/" />
   <title>Externe Formatvorlagen handhaben</title>
   <style type="text/css">
   </style>
@@ -14,8 +14,7 @@
 
 <body xml:lang="de" lang="de">
 
-<table border="0" cellspacing="5" cellpadding="5"
-summary="Inhaltsverzeichnis">
+<table border="0" cellspacing="5" cellpadding="5">
   <tbody>
     <tr>
       <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
@@ -44,24 +43,26 @@ externe und benutzerdefinierte Formatvorlagen zu handhaben.</p>
     angezeigt, so braucht man dieses nur anzuklicken. Wird die Formatvorlage
     nicht angezeigt, muss man auf das derzeitige Dokument klicken um einen
     Dialog anzuzeigen, in dem man den URI der Formatvorlage eingeben kann.
-    Dieser Befehl fügt das Element <strong>link</strong> im Kopf des
-    Dokuments ein. </li>
+    Dieser Befehl fügt das Element <code>link</code> mit dem Attribut
+    <code>rel="styleshhet"</code> im Kopf des Dokuments ein.</li>
   <li><strong>Öffnen</strong> zeigt einen Dialog an, mit dem man ein dem
-    Dokument zugeordnete Formatvorlage öffnen kann. </li>
+    Dokument zugeordnete Formatvorlage öffnen kann. Diese werden in den
+    Texteditor geladen und können dort editiert werden.</li>
   <li><strong>Deaktivieren</strong> entfernt alle Effekte, welche durch die
     zugeordnete Formatvorlage erzeugt werden. Hierbei wird der Verweis im
-    Kopf des Dokuments nicht entfernt. </li>
+    Kopf des Dokuments nicht entfernt.</li>
   <li><strong>Aktivieren</strong> ist das Gegenteil zu
-    <strong>Deaktivieren</strong>. </li>
+    <strong>Deaktivieren</strong>.</li>
   <li><strong>Entfernen</strong> macht das gleiche wie
-    <strong>Deaktivieren</strong>. Hierbei wird aber zusätzlich noch der
-    Verweis aus dem Kopf des Dokuments entfernt.</li>
+    <strong>Deaktivieren</strong>. Hierbei wird aber zusätzlich noch das
+    Element <code>link</code> aus dem Kopf des Dokuments entfernt.</li>
 </ul>
 
 <p>Die Befehle <strong>Öffnen</strong>, <strong>Aktivieren</strong> und
-<strong>Deaktivieren</strong> können auf eine benutzerdefinierte
+<strong>Deaktivieren</strong> können auch auf die benutzerdefinierte
 Formatvorlage angewendet werden. Die Befehle <strong>Verknüpfen</strong> und
-<strong>Entfernen</strong> gelten nur bei verknüpften Formatvorlagen.</p>
+<strong>Entfernen</strong> gelten nur bei zu verknüpfenden oder verknüpften
+Formatvorlagen.</p>
 
 <p>Im Dialog der zu öffnenden Vorlagen wird ein Hinweis angezeigt, wenn
 momentan keine Formatvorlage mit dem Dokument verknüpft ist.</p>

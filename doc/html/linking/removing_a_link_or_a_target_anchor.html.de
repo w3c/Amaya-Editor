@@ -14,8 +14,7 @@
 
 <body xml:lang="de" lang="de">
 
-<table border="0" cellspacing="5" cellpadding="5"
-summary="Inhaltsverzeichnis">
+<table border="0" cellspacing="5" cellpadding="5">
   <tbody>
     <tr>
       <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
@@ -34,11 +33,20 @@ summary="Inhaltsverzeichnis">
 <h1>Einen Verweis oder Anker entfernen</h1>
 
 <p>Der Befehl <strong>Verweis/Anker löschen</strong> im Menü
-<strong>Verweis</strong> oder das Tastenkürzel <kbd>Umschalt Strg D</kbd>
-entfernt an der Markierung einen Verweis oder Anker. Um dies zu tun, muss man
-den Verweis oder Anker markieren oder den Cursor an die Stelle positionieren
-und den Befehl ausführen. Der Verweis oder der Anker wird entfernt, dessen
-Inhalt bleibt aber erhalten.</p>
+<strong>Verweis</strong> oder das Tastenkürzel <kbd>Umsch Strg D</kbd>
+entfernt an der Markierung einen Verweis oder Anker.</p>
+
+<p class="ProcedureCaption">Um dies zu tun:</p>
+<ol>
+  <li>Den Verweis oder Anker markieren oder den Cursor an die Stelle
+    positionieren.</li>
+  <li><strong>Verweis/Anker löschen</strong> im Menü<strong>
+    <strong>Verweis</strong> </strong>wählen oder <kbd>Umsch Strg D
+    drücken.</kbd>
+    <p>Der Verweis oder der Anker wird entfernt, dessen Inhalt bleibt aber
+    erhalten.</p>
+  </li>
+</ol>
 </div>
 </body>
 </html>

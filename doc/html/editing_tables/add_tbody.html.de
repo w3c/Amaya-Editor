@@ -8,14 +8,13 @@
   <title>Einen Tabellenkörper hinzufügen</title>
   <style type="text/css">
   </style>
-  <meta name="GENERATOR" content="amaya 6.1, see http://www.w3.org/Amaya/" />
+  <meta name="generator" content="amaya 6.1, see http://www.w3.org/Amaya/" />
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
 <body xml:lang="de" lang="de">
 
-<table border="0" cellspacing="5" cellpadding="5"
-summary="Inhaltsverzeichnis">
+<table border="0" cellspacing="5" cellpadding="5">
   <tbody>
     <tr>
       <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
@@ -36,14 +35,14 @@ summary="Inhaltsverzeichnis">
 existierenden Tabelle zu erzeugen:</p>
 <ol>
   <li>Den Cursor an den Anfang der ersten Zelle positionieren. </li>
-  <li>Die Taste <strong>Eingabe</strong> viermal drücken.</li>
+  <li>Die Taste <kbd>Eingabe</kbd> viermal drücken.</li>
 </ol>
 
 <p class="ProcedureCaption">Um einen neuen Tabellenkörper unterhalb einer
 existierenden Tabelle zu erzeugen:</p>
 <ol>
   <li>Den Cursor an das Ende der letzten Zelle positionieren. </li>
-  <li>Die Taste <strong>Eingabe</strong> viermal drücken.</li>
+  <li>Die Taste <kbd>Eingabe</kbd> viermal drücken.</li>
 </ol>
 </div>
 </body>

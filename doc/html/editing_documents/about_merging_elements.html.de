@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -8,14 +7,13 @@
   <title>Über das Verschachteln von Elementen</title>
   <style type="text/css">
   </style>
-  <meta name="GENERATOR" content="amaya 6.1, see http://www.w3.org/Amaya/" />
+  <meta name="generator" content="amaya 6.1, see http://www.w3.org/Amaya/" />
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
 <body xml:lang="de" lang="de">
 
-<table border="0" cellspacing="5" cellpadding="5"
-summary="Inhaltsverzeichnis">
+<table border="0" cellspacing="5" cellpadding="5">
   <tbody>
     <tr>
       <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
@@ -40,12 +38,12 @@ Dokumentstruktur befinden, indem man die Tasten <kbd>Backspace</kbd> und
 dann drückt man die Taste <kbd>Entf</kbd> um es zu verschachteln. Wenn er
 sich am Anfang eines Elements befindet, dann drückt man die Taste
 <kbd>Backspace</kbd>. In beiden Fällen wird dadurch kein Zeichen gelöscht,
-sondern die Elemente, welche vorher durch eine Strukturgrenze getrennt waren
-verschachtelt.</p>
+sondern die Elemente, welche vorher durch eine Strukturgrenze getrennt waren,
+werden verschachtelt.</p>
 
-<p class="ProcedureNote"><strong>Beachte</strong>: wenn sich der Cursor
-innerhalb eines Elements befindet, dann wird das entsprechende Zeichen durch
-die Taste <kbd>Backspace</kbd> oder <kbd>Entf</kbd> gelöscht.</p>
+<p class="Note"><strong>Beachte</strong>: Wenn sich der Cursor innerhalb
+eines Elements befindet, dann wird das entsprechende Zeichen durch die Taste
+<kbd>Backspace</kbd> oder <kbd>Entf</kbd> gelöscht.</p>
 </div>
 </body>
 </html>

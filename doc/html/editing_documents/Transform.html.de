@@ -4,7 +4,7 @@
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta name="GENERATOR" content="amaya 6.1, see http://www.w3.org/Amaya/" />
+  <meta name="generator" content="amaya 6.1, see http://www.w3.org/Amaya/" />
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
   <title>Die Datei HTML.trans benutzen</title>
   <style type="text/css">
@@ -14,12 +14,11 @@
 
 <body xml:lang="de" lang="de">
 
-<table border="0" cellspacing="5" cellpadding="5"
-summary="Inhaltsverzeichnis">
+<table border="0" cellspacing="5" cellpadding="5">
   <tbody>
     <tr>
-      <td><p><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
-        src="../../images/amaya.gif" /></p>
+      <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
+        src="../../images/amaya.gif" />
       </td>
       <td><a href="about_merging_elements.html.de" accesskey="p"><img
         alt="vorherige Seite" src="../../images/left.gif" /></a> <a
@@ -37,18 +36,19 @@ bereitgestellten Mechanismus der strukturierten Transformation. Es beschreibt
 die Syntax der Transformationssprache und wie Transformationen im Editor
 durchgeführt werden.</p>
 
-<p>Die Datei <code>amaya/HTML.trans</code> enthält die Beschreibung der
-verfügbaren Transformationen. Diese Datei kann während einer Sitzung in
-<strong>Amaya</strong> editiert werden. Sie wird dynamisch geparst wenn die
+<p>Die Datei <code>HTML.trans</code> im Verzeichnis <code>amaya</code>
+enthält die Beschreibung der Transformationen. Diese Datei wird während einer
+Sitzung mit <strong>Amaya</strong> dynamisch geparst wenn die
 Transformationsprozedur vom Editor aufgerufen wird, sodass neue
-Transformationen während einer Editiersitzung hinzugefügt werden können.</p>
+Transformationen während einer Editiersitzung hinzugefügt werden können. Die
+Datei kann, während man mit Amaya arbeitet, editiert werden.</p>
 
-<p class="ProcedureNote"><strong>Warnung</strong>: da die Beschreibung der
-Transformationen Tags enthalten kann, sollte diese Datei
+<p class="Note"><strong>Warnung</strong>: Da die Beschreibung der
+Transformationen HTML-Tags enthalten kann, sollte diese Datei
 <strong>nicht</strong> mit Amaya editiert werden. Man muss irgend einen
 anderen Editor benutzen.</p>
 
-<h2>Syntax der Amaya-Transformationssprache</h2>
+<h2>Syntax der Transformationssprache</h2>
 
 <p>Kommentare beginnen mit <code><strong>!</strong></code> und gehen bis zum
 Zeilenende.</p>
@@ -129,9 +129,9 @@ entsprach.</p>
 <p>In der Tagliste wird der Punkt (<code><strong>.</strong></code>) benutzt
 um in der Baumstruktur hinabzuwandern</p>
 
-<p>Wenn das Spezialsymbol Stern (<code><strong>*</strong></code>) am Ende der
-zu generierenden Tagliste steht, so wird das ursprüngliche Tag nicht
-verändert, kann aber an eine andere Stelle verschoben werden.</p>
+<p>Wenn das Symbol Stern (<code><strong>*</strong></code>) am Ende der zu
+generierenden Tagliste steht, so wird das ursprüngliche Tag nicht verändert,
+kann aber an eine andere Stelle verschoben werden.</p>
 
 <p>Taucht ein Tag oder ein Name im linken Teil der Regel mehrmals in einem
 Muster auf, dann transformiert die Regel alle die Elemente, welche im Muster
@@ -160,7 +160,7 @@ aber auch strukturierte Elemente) in die transformierten Elemente
 verschoben.</p>
 
 <p>Der Transformationsprozess für HTML-Elemente ist vollständig in <a
-href="http://opera.inrialpes.fr/opera/papers9696.html.de"><em>Interactively
+href="http://opera.inrialpes.fr/opera/papers9696.html"><em>Interactively
 Restructuring HTML Documents</em></a> beschrieben, ein Dokument, welches auf
 der <a href="http://www5conf.inria.fr/">fünften internationalen
 WWW-Konferenz</a> in Paris im Mai 96 von Cécile Roisin und Stéphane Bonhomme
@@ -168,14 +168,14 @@ vorgestellt wurde.</p>
 
 <h2><a name="L235" id="L235">Beispiele:</a></h2>
 <ul>
-  <li>Das erste Beispiel vereinigt mehrere unsortierte Listen (ul). 
+  <li>Das erste Beispiel vereinigt mehrere unsortierte Listen (ul).
     <p></p>
     <pre>    Merge Lists: (ul{li+})+;
     {
     li &gt; ul:li;
     }</pre>
     <p>Das Muster trifft auf eine Sequenz von unsortierten Listen zu, welche
-    eine Sequenz von Listenelementen (li) enthalten.</p>
+    eine Sequenz von Listenelementen (li+) enthalten.</p>
     <p>Die Regel besagt, dass jedesmal, wenn ein Element beim Durchgang über
     die passenden Elemente angetroffen wird, ein neues li-Tag innerhalb einer
     ul erzeugt werden soll. Wird die Regel das erste Mal angewendet, dann ist
@@ -184,7 +184,7 @@ vorgestellt wurde.</p>
     erzeugt damit die Regel angewendet werden kann.</p>
   </li>
   <li>Das zweite Beispiel transformiert eine Definitionsliste in eine
-    Tabelle. 
+    Tabelle.
     <p></p>
     <pre>    Table: dl{(dt|dd)+};
     {
@@ -203,7 +203,7 @@ vorgestellt wurde.</p>
     </ul>
   </li>
   <li>Das dritte Beispiel entfernt ein Tabellenelement, lässt dessen Inhalt
-    aber unverändert. 
+    aber unverändert.
     <p></p>
     <pre>    Remove Table:
     table{?caption,?(body:*{(tr{(td{(?cell_content:*)+}|
@@ -215,8 +215,8 @@ vorgestellt wurde.</p>
     }</pre>
     <p>Das Muster passt auf eine beliebige Tabelle und identifiziert den
     Inhalt einer jeglichen Tabellenzelle (cell_content).</p>
-    <p>Die zweite Regel besagt, dass der Inhalt jeder Zelle an die Stelle in
-    der ursprünglichen Tabelle verschoben werden soll.</p>
+    <p>Die zweite Regel besagt, dass der Inhalt jeder Zelle an die
+    ursprüngliche Stelle im Dokument verschoben werden soll.</p>
   </li>
   <li>Die Datei <code>amaya/HTML.trans</code> enthält weitere Beispiele.</li>
 </ul>

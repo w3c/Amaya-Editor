@@ -1,45 +1,48 @@
+body {
+  background: white;
+}
 H1{
-	font-family : Arial, Helvetica, sans-serif;
-	font-weight : bold;
-	font-variant : normal;
-	font-style : normal;
-	font-size : 24px;
+  font-family : Arial, Helvetica, sans-serif;
+  font-weight : bold;
+  font-variant : normal;
+  font-style : normal;
+  font-size : 24px;
 }
 
 .letters{
-	font-variant : normal;
-	font-weight : bold;
-	font-style : normal;
-	font-size : small;
-	font-family : Arial, Helvetica, sans-serif;
-	padding-bottom : 12px;
+  font-variant : normal;
+  font-weight : bold;
+  font-style : normal;
+  font-size : small;
+  font-family : Arial, Helvetica, sans-serif;
+  padding-bottom : 12px;
 }
 
 .level1{
-	font-family : Arial, Helvetica, sans-serif;
-	font-style : normal;
-	font-variant : normal;
-	font-weight : normal;
-	padding-bottom : -4px;
-	padding-top : -4px;
+  font-family : Arial, Helvetica, sans-serif;
+  font-style : normal;
+  font-variant : normal;
+  font-weight : normal;
+  padding-bottom : -4px;
+  padding-top : -4px;
 }
 
 .level2{
-	font-family : Arial, Helvetica, sans-serif;
-	font-style : normal;
-	font-variant : normal;
-	font-weight : normal;
-	text-indent : 15px;
-	padding-bottom : -4px;
-	padding-top : -4px;
+  font-family : Arial, Helvetica, sans-serif;
+  font-style : normal;
+  font-variant : normal;
+  font-weight : normal;
+  text-indent : 15px;
+  padding-bottom : -4px;
+  padding-top : -4px;
 }
 
 .backtotop{
-	font-family : Arial, Helvetica, sans-serif;
-	font-style : italic;
-	font-variant : normal;
-	font-weight : normal;
-	padding-bottom : 12px;
-	padding-top : 18px;
-	font-size : smaller;
+  font-family : Arial, Helvetica, sans-serif;
+  font-style : italic;
+  font-variant : normal;
+  font-weight : normal;
+  padding-bottom : 12px;
+  padding-top : 18px;
+  font-size : smaller;
 }

@@ -8,13 +8,12 @@
   <link href="../style.css" rel="stylesheet" type="text/css" />
   <style type="text/css">
   </style>
-  <meta name="GENERATOR" content="amaya 6.1, see http://www.w3.org/Amaya/" />
+  <meta name="generator" content="amaya 6.1, see http://www.w3.org/Amaya/" />
 </head>
 
 <body xml:lang="de">
 
-<table border="0" cellspacing="5" cellpadding="5"
-summary="Inhaltsverzeichnis">
+<table border="0" cellspacing="5" cellpadding="5">
   <tbody>
     <tr>
       <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
@@ -44,8 +43,8 @@ Dokument zu bewegen. Klickt man beispielsweise in der Ansicht
 <table border="0" cellspacing="8">
   <tbody>
     <tr>
-      <td valign="top"><img width="109" height="142"
-        src="../../images/formattedview-de.jpg" alt="Browseransicht" /></td>
+      <td valign="top" class="TableText"><img width="106" height="117"
+        src="../../images/formattedview.jpg" alt="Browseransicht" /></td>
       <td valign="top"><p class="TableHead">Browser (Fehlwert)</p>
 
         <p class="TableText">Diese Ansicht entspricht der anderer grafischer
@@ -59,24 +58,24 @@ Dokument zu bewegen. Klickt man beispielsweise in der Ansicht
     </tr>
     <tr>
       <td valign="top"><p class="TableText"><img width="108" height="98"
-        alt="Strukturansicht" src="../../images/structureview-de.jpg" /></p>
+        alt="Strukturansicht" src="../../images/structureview.jpg" /></p>
       </td>
       <td valign="top"><p class="TableHead">Struktur</p>
 
         <p class="TableText">Diese Ansicht zeigt die Struktur des Dokuments.
         Jedes Element wird durch seinen Tagnamen repräsentiert, dem in der
         gleichen Zeile seine Attribute folgen. Elemente, welche in einem
-        Element enthalten sind werden unterhalb davon neben einer blauen,
-        vertikalen Linie dargestellt.</p>
+        Element enthalten sind werden unterhalb von diesem neben einer
+        blauen, vertikalen Linie dargestellt.</p>
 
         <p class="TableText">Jeder in schwarz dargestellte Text kann direkt
         editiet werden. Um blau dargestellten Text zu editieren muss man die
-        Editierbefehle benutzen.</p>
+        entsprechenden Menübefehle benutzen.</p>
       </td>
     </tr>
     <tr>
       <td valign="top"><p class="TableText"><img width="108" height="102"
-        alt="Textbrowseransicht" src="../../images/alternateview-de.jpg" /></p>
+        alt="Textbrowseransicht" src="../../images/alternateview.jpg" /></p>
       </td>
       <td valign="top"><p class="TableHead">Textbrowser</p>
 
@@ -88,18 +87,19 @@ Dokument zu bewegen. Klickt man beispielsweise in der Ansicht
     </tr>
     <tr>
       <td valign="top"><p class="TableText"><img width="109" height="122"
-        alt="Verweisansicht" src="../../images/linksview-de.jpg" /></p>
+        alt="Verweisansicht" src="../../images/linksview.jpg" /></p>
       </td>
       <td valign="top"><p class="TableHead">Verweise</p>
 
-        <p class="TableText">Diese Ansicht zeigt eine Liste aller verwendeter
-        Verweise und das Element, in denen diese enthalten sind. Dies ist bei
-        der Bearbeitung von Verweisen hilfreich.</p>
+        <p class="TableText">Diese Ansicht zeigt eine Liste aller in einem
+        Dokument verwendeter Verweise und die Elemente, in denen diese
+        enthalten sind. Dies ist bei der Bearbeitung von Verweisen
+        hilfreich.</p>
       </td>
     </tr>
     <tr>
       <td valign="top"><p class="TableText"><img width="111" height="168"
-        alt="Inhaltsverzeichnisansicht" src="../../images/tocview-de.jpg" /></p>
+        alt="Inhaltsverzeichnisansicht" src="../../images/tocview.jpg" /></p>
       </td>
       <td valign="top"><p class="TableHead">Inhaltsverzeichnis</p>
 
@@ -110,19 +110,20 @@ Dokument zu bewegen. Klickt man beispielsweise in der Ansicht
     </tr>
     <tr>
       <td valign="top"><p class="TableText"><img width="109" height="115"
-        alt="Quellcodeansicht" src="../../images/sourceview-de.jpg" /></p>
+        alt="Quellcodeansicht" src="../../images/sourceview.jpg" /></p>
       </td>
       <td valign="top"><p class="TableHead">Quellcode</p>
 
-        <p class="TableText">Diese Ansicht zeigt den aktuellen Quellcode.
-        Hier kann man die Syntax des Dokuments editieren.</p>
+        <p class="TableText">Diese Ansicht zeigt den Quellcode des Dokuments.
+        Hier kann man die Syntax editieren.</p>
       </td>
     </tr>
   </tbody>
 </table>
 
-<p>Man kann jede Ansicht zu jeder Zeit öffnen oder schließen. Schließt man
-aber die Browseransicht, dann werden alle anderen auch geschlossen.</p>
+<p class="Note"><strong>Hinweis</strong>: Man kann jede Ansicht zu jeder Zeit
+öffnen oder schließen. Schließt man aber die Browseransicht, dann werden alle
+anderen auch geschlossen.</p>
 </div>
 </body>
 </html>

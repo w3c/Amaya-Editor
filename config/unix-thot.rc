@@ -1,5 +1,5 @@
 [thot_lib]
-THOTSYSSCH=$(THOTDIR)/schemas:$(THOTDIR)/amaya:$(THOTDIR)/annotlib
+THOTSYSSCH=$(THOTDIR)/amaya:$(THOTDIR)/annotlib
 THOTFONT=$(THOTDIR)/fonts
 THOTCONFIG=
 DICOPAR=$(THOTDIR)/dicopar
@@ -14,7 +14,6 @@ ENABLE_CACHE=Yes
 THOTSYSSCH=$(THOTDIR)/amaya:$(THOTDIR)/annotlib
 LANG=en
 # AMAYA_PLUGIN_DIR=$(THOTDIR)/plugintest/$(MACHINE)
-AMAYA_APPLET_DIR=$(THOTDIR)/classes/org/w3c/amaya/applets
 # URL of your HTTP proxy server  (server.address:port :port is optional)
 # ex: HTTP_PROXY=http://www.imag.fr:3128
 HTTP_PROXY=
@@ -29,7 +28,3 @@ Profile=Editor
 ACCESSKEY_MOD=Alt
 SHOW_ADDRESS=Yes
 SHOW_BUTTONS=Yes
-[annotations]
-ANNBASE=$(THOTDIR)/misc/annotations/documents/base
-PERSOANNDIR=$(THOTDIR)/misc/annotations/documents
-THOTSYSSCH=$(THOTDIR)/schemas:$(THOTDIR)/schemasOPERA:$(THOTDIR)/misc/annotations/schemas

@@ -6,14 +6,13 @@
   <title>Über Verweise in MathML</title>
   <style type="text/css">
   </style>
-  <meta name="generator" content="amaya 6.1, see http://www.w3.org/Amaya/">
+  <meta name="generator" content="amaya 6.3, see http://www.w3.org/Amaya/">
   <link href="../style.css" rel="stylesheet" type="text/css">
 </head>
 
-<body lang="de">
+<body lang="de" ="de">
 
-<table border="0" cellspacing="5" cellpadding="5"
-summary="Inhaltsverzeichnis">
+<table border="0" cellspacing="5" cellpadding="5">
   <tbody>
     <tr>
       <td><img alt="W3C" src="../../images/w3c_home"> <img alt="Amaya"
@@ -28,27 +27,25 @@ summary="Inhaltsverzeichnis">
   </tbody>
 </table>
 
-<div class="Section1">
-
 <div id="page_body">
 <h1>Über Verweise in MathML</h1>
 
 <p>In mathematischen Ausdrücken kann man Verweise erzeugen und verwenden.
-Diese Verweise werden durch eine Entwurfsversion der XML Linking Language
-(XLink) repräsentiert. Es sind nur einfache unidirektionale Hyperlinks
-verfügbar. Diese kann man aber mit jedem Teil einer Formel verknüpfen.
-Beispielsweise ist die Wurzel der unten stehenden Formel ein Verweis auf die
-Homepage des W3C:</p>
+Diese Verweise werden durch eine Entwurfsversion der <strong>XML Linking
+Language</strong> (XLink) repräsentiert. Es sind nur einfache unidirektionale
+Hyperlinks verfügbar. Diese kann man aber mit jedem Teil einer Formel
+verknüpfen. Beispielsweise ist die Wurzel der unten stehenden Formel ein
+Verweis auf die Homepage des W3C:</p>
 
 <p><math xmlns="http://www.w3.org/1998/Math/MathML">
   <mrow>
     <mi>y</mi>
     <mo>=</mo>
     <mi></mi>
-    <mfrac xmlns:xlink="http://www.w3.org/1999/xlink"
-    xlink:href="http://www.w3.org/">
+    <mfrac>
       <mn>1</mn>
-      <msqrt>
+      <msqrt xmlns:xlink="http://www.w3.org/1999/xlink"
+      xlink:href="http://www.w3.org/">
         <mrow>
           <msup>
             <mi>x</mi>
@@ -66,7 +63,8 @@ Homepage des W3C:</p>
 des W3C.</p>
 
 <p>Um solch einen Verweis zu erzeugen, muss man die entsprechende Stelle
-markieren und den Knopf <strong>Verweis</strong> drücken oder aus dem Menü
+markieren und den Knopf <strong>Verweis</strong> <img alt="Knopf Verweis"
+src="../../images/Link.gif"> in der Knopfleiste drücken oder aus dem Menü
 <strong>Verweis</strong> den Befehl <strong>Erzeugen/Ändern</strong> wählen
 und das entsprechende Ziel anklicken.</p>
 
@@ -74,7 +72,6 @@ und das entsprechende Ziel anklicken.</p>
 zunächst in ein Ziel umwandeln. Man markiert die Formel und wählt im Menü
 <strong>Verweis</strong> den Befehl <strong>Anker erzeugen</strong> um für
 die Formel ein id-Attribut zu erstellen.</p>
-</div>
 </div>
 </body>
 </html>

@@ -12,29 +12,27 @@
 
 <body xml:lang="de" lang="de">
 
-<table border="0" width="100%">
+<table border="0" cellspacing="5" cellpadding="5">
   <tbody>
     <tr>
-      <td><p><img alt="W3C" src="../images/w3c_home" /> <img alt="Amaya"
-        src="../images/amaya.gif" /></p>
+      <td><img alt="W3C" src="../images/w3c_home" /> <img alt="Amaya"
+        src="../images/amaya.gif" />
       </td>
-      <td><p align="right"><a href="Manual.html.de" accesskey="t"><img alt=""
+      <td><a href="Manual.html.de" accesskey="t"><img alt=""
         src="../images/up.gif" /></a> <a href="Selecting.html.de"
         accesskey="n"><img alt="nächste Seite" src="../images/right.gif"
-        /></a></p>
-      </td>
+        /></a></td>
     </tr>
   </tbody>
 </table>
 
-<div id="page_body">
 <h1>Browsen und editieren</h1>
 
 <p>Folgende Themen werden in diesem Abschnitt behandelt:</p>
 <ul>
   <li><a
     href="browsing/working_with_the_amaya_browser_and_editor.html.de#page_body"
-    rel="subdocument">Mit Browser und Editor arbeiten</a></li>
+    rel="subdocument">Mit dem Browser und Editor arbeiten</a></li>
   <li><a href="browsing/opening_documents.html.de#page_body"
     rel="subdocument">Ein Dokument öffnen</a></li>
   <li><a href="browsing/activating_a_link.html.de#page_body"
@@ -49,6 +47,5 @@
     rel="subdocument">Über Zugriffstasten</a></li>
   <li><a href="browsing/forms.html.de#page_body">Über Formulare</a></li>
 </ul>
-</div>
 </body>
 </html>

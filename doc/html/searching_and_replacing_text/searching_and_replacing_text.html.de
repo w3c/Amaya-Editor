@@ -5,7 +5,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-  <meta name="GENERATOR" content="amaya 6.1, see http://www.w3.org/Amaya/" />
+  <meta name="generator" content="amaya 6.1, see http://www.w3.org/Amaya/" />
   <title>Text suchen und ersetzen</title>
   <style type="text/css">
   </style>
@@ -14,8 +14,7 @@
 
 <body xml:lang="de" lang="de">
 
-<table border="0" cellspacing="5" cellpadding="5"
-summary="Inhaltsverzeichnis">
+<table border="0" cellspacing="5" cellpadding="5">
   <tbody>
     <tr>
       <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
@@ -32,8 +31,11 @@ summary="Inhaltsverzeichnis">
 <p>Der Dialog <strong>Suchen und Ersetzen</strong> wird über das Menü
 <strong>Bearbeiten</strong>, den Knopf <img src="../../images/find.gif"
 alt="Knopf Suchen/Ersetzen" /> in der Knopfleiste oder das Tastenkürzel
-<code>Strg Umschalt %</code> in Unix oder <code>Strg f</code> in Windows
-aufgerufen.</p>
+<kbd>Strg Umsch %</kbd> (Unix) oder <kbd>Strg f</kbd> (Windows)
+aufgerufen. Es wird folgender Dialog angezeigt:</p>
+
+<p><img alt="Dialog Suchen und ersetzen"
+src="../../images/search_and_replace-de.png" /></p>
 
 <p>Hier kann man Text nach verschiedenen Kriterien suchen und ersetzen:</p>
 <ul type="disc">
@@ -45,18 +47,19 @@ aufgerufen.</p>
     Schreibweise im Feld <strong>Suche nach</strong> entspricht.</li>
   <li>Der gefundene Text kann durch den Text, welcher im Feld <strong>Ersetze
     durch</strong> eingegeben wurde ausgetauscht werden. Hierbei ist noch der
-    Modus der Ersetzung anzugeben: 
+    Modus der Ersetzung anzugeben:
     <ul>
       <li><strong>Nicht ersetzen</strong>: der gefundenen Text wird nicht
         ersetzt, auch wenn das Feld <strong>Ersetze durch</strong> eine
         Zeichenkette enthält. Es ist ein einfacher Suchvorgang.</li>
       <li><strong>Bestätigen</strong>: wird die Zeichenkette gefunden, so
         wird diese von Amaya markiert. Man kann dann einen der folgenden
-        Knöpfe anklicken: 
+        Knöpfe anklicken:
         <ul>
           <li><strong>OK</strong> um den Text zu ersetzen und mit der Suche
             fortzufahren.</li>
-          <li><strong>Überspringen</strong> um mit der Suche fortzufahren</li>
+          <li><strong>Überspringen</strong> um den Text nicht zu ersetzen und
+            mit der Suche fortzufahren</li>
         </ul>
       </li>
       <li><strong>Alle ersetzen</strong>: alle Textstellen werden automatisch
@@ -65,7 +68,7 @@ aufgerufen.</p>
     </ul>
   </li>
   <li>Die Optionen im Feld <strong>Suchraum</strong> legen fest, wo im
-    Dokument gesucht werden soll. 
+    Dokument gesucht werden soll.
     <ul>
       <li><strong>Oberhalb der Markierung</strong>: die Suche beginnt am
         Anfang der Markierung und bewegt sich bis zum Anfang des

@@ -5,7 +5,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-  <meta name="GENERATOR" content="amaya 6.1, see http://www.w3.org/Amaya/" />
+  <meta name="generator" content="amaya 6.1, see http://www.w3.org/Amaya/" />
   <title>Über synchronisierte Ansichten</title>
   <style type="text/css">
   </style>
@@ -14,8 +14,7 @@
 
 <body xml:lang="de" lang="de">
 
-<table border="0" cellspacing="5" cellpadding="5"
-summary="Inhaltsverzeichnis">
+<table border="0" cellspacing="5" cellpadding="5">
   <tbody>
     <tr>
       <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
@@ -45,7 +44,8 @@ anderen Ansichten dargestellt.</p>
 <p>Die Ansicht <strong>Quelltext</strong> wird nicht automatisch
 synchronisiert. Hat man eine Reihe von Änderungen vorgenommen, dann muss man
 im Menü <strong>Datei</strong> den Befehl <strong>Synchronisieren</strong>
-ausführen um die anderen Ansichten des Dokuments zu aktualisieren. Umgekehrt
+ausführen oder das Tastenkürzel <kbd>Alt v Alt w</kbd> benutzen, um die anderen
+Ansichten des Dokuments zu aktualisieren. Umgekehrt
 muss man in den den anderen Ansichten ebenfalls diesen Befehl ausführen um
 die Ansicht des Quelltexts zu synchronisieren.</p>
 
@@ -60,7 +60,7 @@ was man erwartet.</p>
 <p>Wenn man ein Dokument aus der Browseransicht oder der Quelltextansicht
 speichert (lokal oder entfernt), dann wird die Synchronisation automatisch
 ausgefüht. Alle Ansichten geben dann den Status des Dokuments zur Zeit der
-Speicherung wider.</p>
+Speicherung wieder.</p>
 </div>
 </body>
 </html>

@@ -8,14 +8,13 @@
   <title>Über das Speichern auf einem Server</title>
   <style type="text/css">
  </style>
-  <meta name="GENERATOR" content="amaya 6.1, see http://www.w3.org/Amaya/" />
+  <meta name="generator" content="amaya 6.1, see http://www.w3.org/Amaya/" />
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
 <body xml:lang="de" lang="de">
 
-<table border="0" cellspacing="5" cellpadding="5"
-summary="Inhaltsverzeichnis">
+<table border="0" cellspacing="5" cellpadding="5">
   <tbody>
     <tr>
       <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
@@ -36,9 +35,8 @@ summary="Inhaltsverzeichnis">
 <p>Amaya zeigt keinerlei globale Übersicht der auf einem Server gespeicherten
 Dokumente. Man kann aber Dokumente in der gleichen Weise auf einen entfernten
 Sever speichern, wie man dies im lokalen Dateisystem macht, in dem man die
-Befehle <span class="Link"><strong>Speichern</strong></span> oder <span
-class="link"><strong>Speichern unter</strong></span> verwendet. Hierbei
-werden auch neu hinzugefügte Bilder gespeichert.</p>
+Befehle <strong>Speichern</strong> oder <strong>Speichern unter</strong>
+verwendet. Hierbei werden auch neu hinzugefügte Bilder gespeichert.</p>
 </div>
 </body>
 </html>

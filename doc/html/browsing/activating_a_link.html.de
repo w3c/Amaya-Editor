@@ -6,14 +6,13 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
   <title>Einen Verweis aktivieren</title>
-  <meta name="GENERATOR" content="amaya 6.1, see http://www.w3.org/Amaya/" />
+  <meta name="generator" content="amaya 6.1, see http://www.w3.org/Amaya/" />
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
 <body xml:lang="de" lang="de">
 
-<table border="0" cellspacing="5" cellpadding="5"
-summary="Inhaltsverzeichnis">
+<table border="0" cellspacing="5" cellpadding="5">
   <tbody>
     <tr>
       <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
@@ -32,27 +31,29 @@ summary="Inhaltsverzeichnis">
 <h1>Einen Verweis aktivieren</h1>
 
 <p>Verweise werden bei vielen Browsern als blauer oder unterstrichener Text
-gekennzeichnet. Da Amaya sowohl Editor als auch Browser ist, erhält man
-unterschiedliche Ergebnisse, je nach dem ob man den Verweis anklickt, doppelt
-anklickt oder mit der rechten Maustaste anklickt.</p>
+gekennzeichnet. In Amaya werden Verweise normalerweise blau und nicht
+unterstrichen dargestellt. Da Amaya sowohl Editor als auch Browser ist,
+erhält man unterschiedliche Ergebnisse, je nach dem ob man den Verweis
+anklickt, doppelt anklickt oder mit der rechten Maustaste anklickt.</p>
 <ul>
   <li>Ein Klick bewegt den Cursor an die Stelle im Dokument. In der
-    Statuszeile ist der expandierte URI des Verweises zu sehen.</li>
-  <li>ein Doppelklick auf einen Verweis aktiviert diesen. Das Dokument, das
-    durch diese Operation geholt wird ersetzt das derzeitige Dokument im
-    selben Fenster und im selben Modus (Editor oder Browser). Wurde das
-    ursprüngliche Dokument modifiziert, so erscheint eine Sicherheitsabfrage. 
-    <p class="Note"><strong>Anmerkung:</strong> <br />
-    Dieses Verhalten kann im Menü <strong>Extras</strong>, Untermenü
-    <strong>Einstellungen</strong> mit der Option <strong>Doppelklick
-    aktiviert Verweis</strong> geändert werden. Wird diese Option
-    deaktiviert, dann kann der Verweis mit einem Klick, wie bei den
-    traditionellen Browsern aktiviert werden. Dadurch kann man den Cursor
-    aber nicht mehr auf den Verweis plazieren, um diesen zu editieren.</p>
+    Statuszeile ist der expandierte URI des Verweises zu sehen. Der Verweis
+    kann jetzt editiert werden</li>
+  <li>Ein Doppelklick aktiviert den Verweis. Das Dokument, das durch diese
+    Operation geholt wird, ersetzt das derzeitige Dokument in diesem Fenster
+    im gleichen Modus (Editor oder Browser). Wurde das ursprüngliche Dokument
+    modifiziert, so erscheint eine Sicherheitsabfrage.
+    <p class="Note"><strong>Anmerkung:</strong> Dieses Verhalten kann im Menü
+    <strong>Extras</strong>, Untermenü <strong>Einstellungen</strong> mit der
+    Option <strong>Doppelklick aktiviert Verweis</strong> geändert werden.
+    Wird diese Option deaktiviert, dann kann der Verweis mit einem Klick, wie
+    bei den traditionellen Browsern aktiviert werden. Dadurch kann man den
+    Cursor aber nicht mehr auf den Verweis plazieren, um diesen zu
+    editieren.</p>
   </li>
   <li>Wird ein Verweis mit der rechten Maustaste aktiviert, dann wird das
     gewünschte Dokument in einem neuen Fenster geöffnet. Das ursprüngliche
-    Dokument bleibt im ersten Fenster erhalten. </li>
+    Dokument bleibt im ersten Fenster erhalten.</li>
 </ul>
 </div>
 </body>

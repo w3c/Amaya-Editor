@@ -5,7 +5,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-  <meta name="GENERATOR" content="amaya 6.1, see http://www.w3.org/Amaya/" />
+  <meta name="generator" content="amaya 6.1, see http://www.w3.org/Amaya/" />
   <title>Ein Dokument öffnen</title>
   <style type="text/css">
  </style>
@@ -14,8 +14,7 @@
 
 <body xml:lang="de" lang="de">
 
-<table border="0" cellspacing="5" cellpadding="5"
-summary="Inhaltsverzeichnis">
+<table border="0" cellspacing="5" cellpadding="5">
   <tbody>
     <tr>
       <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
@@ -33,8 +32,8 @@ summary="Inhaltsverzeichnis">
 <div id="page_body">
 <h1>Ein Dokument öffnen</h1>
 
-<p>Man kann sowohl lokale als auch entfernte Dokumente auf verschiedene Arten
-öffnen:</p>
+<p>Man kann Dokumente, die sich sowohl auf dem lokalen Dateisystem als auch
+auf einem entfernten Server befinden, auf verschiedene Arten öffnen:</p>
 <ul>
   <li>Ein Dokument im derzeitigen Fenster öffnen.</li>
   <li>Ein Dokument in einem neuen Fenster öffnen.</li>
@@ -45,24 +44,23 @@ summary="Inhaltsverzeichnis">
 öffnen:</p>
 <ol>
   <li><strong>Öffnen</strong> im Menü <strong>Datei</strong> wählen.
-    Alternativ kann man auch ein Tastenkürzel verwenden. Unter Windows
-    <kbd>Strg o</kbd> <kbd>Strg o</kbd> und unter Unix <kbd>Strg x Strg
-    f</kbd> drücken. Es wird der Dialog <strong>Öffnen</strong>
-  angezeigt.</li>
+    Alternativ kann man auch ein Tastenkürzel verwenden. <kbd>Strg o</kbd>
+    <kbd>Strg o</kbd> (Windows) oder <kbd>Strg x Strg f</kbd> (Unix) drücken.
+    Es wird der Dialog <strong>Öffnen</strong> angezeigt.</li>
   <li>Im Dialog <strong>Öffnen</strong> den vollen Pfadnamen oder den URI des
     gewünschten Dokuments eingeben oder <strong>Durchsuchen</strong> drücken
     um einen Dialog zur Auswahl einer lokalen Datei zu öffnen.</li>
   <li>Ist das Dokument richtig spezifiziert,
-    <strong>OK</strong><strong></strong>anklicken</li>
+    <strong></strong><strong>OK</strong> anklicken</li>
 </ol>
 
 <p class="ProcedureCaption">Um ein Dokument in einem neuen Fenster zu
 öffnen:</p>
 <ol>
   <li><strong>Öffnen (neues Fenster)</strong> im Menü <strong>Datei</strong>
-    wählen. Alternativ kann man auch ein Tastenkürzel verwenden. Unter
-    Windows <kbd>Strg Umschalt o</kbd> und unter Unix <kbd>Strg x Strg
-    f</kbd>. Es wird ein Dialog geöffnet.</li>
+    wählen. Alternativ kann man auch ein Tastenkürzel verwenden. <kbd>Umsch
+    Strg O</kbd> (Windows) oder <kbd>Strg x Strg o</kbd> (Unix) drücken Es
+    wird der Dialog <strong>Öffnen</strong> angezeigt.</li>
   <li>Im Dialog <strong>Öffnen</strong> den vollen Pfadnamen oder den URI des
     gewünschten Dokuments eingeben oder <strong>Durchsuchen</strong> drücken
     um einen Dialog zur Auswahl einer lokalen Datei zu öffnen.</li>
@@ -75,7 +73,7 @@ summary="Inhaltsverzeichnis">
 <ol>
   <li>Den Dateinamen oder URI markieren.</li>
   <li>Die Taste <strong>Entf</strong> drücken, den neuen Dateinamen oder URI
-    eingeben und die Taste <strong>Eingabe</strong> betätigen. </li>
+    eingeben und die <kbd>Eingabetaste</kbd> drücken.</li>
 </ol>
 </div>
 </body>

@@ -8,14 +8,13 @@
   <title>Über Standardmehrfachtasten</title>
   <style type="text/css">
   </style>
-  <meta name="GENERATOR" content="amaya 6.1, see http://www.w3.org/Amaya/" />
+  <meta name="generator" content="amaya 6.1, see http://www.w3.org/Amaya/" />
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
 <body xml:lang="de" lang="de">
 
-<table border="0" cellspacing="5" cellpadding="5"
-summary="Inhaltsverzeichnis">
+<table border="0" cellspacing="5" cellpadding="5">
   <tbody>
     <tr>
       <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
@@ -31,14 +30,14 @@ summary="Inhaltsverzeichnis">
 </table>
 
 <div id="page_body">
-<h1>Über Standardmehrfachtasten</h1>
+<h1>Über Standardmehrfachtasten (Unix)</h1>
 
-<p>Wenn ein Zeichen des Zeichensatzes ISO-Latin (iso-8859-1) nicht über die Tastatur
-direkt eingegeben werden kann, so kann dieses Zeichen durch Drücken der
-speziellen Taste <code>Compose</code>, gefolgt von einer Sequenz von zwei
+<p>Wenn ein Zeichen des Zeichensatzes ISO-Latin (iso-8859-1) nicht über die
+Tastatur direkt eingegeben werden kann, so kann dieses Zeichen durch Drücken
+der speziellen Taste <code>Compose</code>, gefolgt von einer Sequenz von zwei
 anderen Tasten, eingegeben werden. Die folgende Tabelle benennt die Tasten
-zur Erzeugung eines Zeichen aus ISO-Latin (iso-8859-1). Beachte, dass man in Amaya die
-Position des ersten und zweiten Zeichen umschalten kann.</p>
+zur Erzeugung eines Zeichen aus ISO-Latin. Man kann in Amaya die Position des
+ersten und zweiten Zeichens umschalten.</p>
 
 <p>Gibt es auf einer Tastsatur die Taste <code>Compose</code> nicht, dann
 kann man deren Funktionalität einer anderen Taste, wie z. B. <code>Alt
@@ -49,9 +48,7 @@ zuweisen:</p>
 
 <p>Diese Zeile kann man in <code>$HOME/.Xmodmap</code> einfügen.</p>
 
-<p>Wie das unter Windows funktioniert ist leider nicht bekannt:-(</p>
-
-<table border="0" cellspacing="0" cellpadding="0" class="characters">
+<table class="characters" style="border: none" border="0">
   <thead>
     <tr>
       <td style="border:solid .5pt; padding:0in 5.4pt 0in 5.4pt"><p
@@ -1145,21 +1142,24 @@ zuweisen:</p>
       </td>
     </tr>
     <tr>
-      <td><p class="TableText">yuml</p>
+      <td style="border-bottom: thin solid"><p class="TableText">yuml</p>
       </td>
-      <td><p class="TableText">255</p>
+      <td style="border-bottom: thin solid"><p class="TableText">255</p>
       </td>
-      <td><p class="TableText">y</p>
+      <td style="border-bottom: thin solid"><p class="TableText">y</p>
       </td>
-      <td><p class="TableText">Anführungszeichen</p>
+      <td style="border-bottom: thin solid"><p
+        class="TableText">Anführungszeichen</p>
       </td>
-      <td><p class="TableText">ÿ</p>
+      <td style="border-bottom: thin solid"><p class="TableText">ÿ</p>
       </td>
     </tr>
   </tbody>
 </table>
 
-<p class="keytabletabs">&nbsp;</p>
+<p class="Note"><strong>Hinweis</strong>: Werden in der Tabelle
+Großbuchstaben angegeben, dann ist dabei vorher die Umschalttaste zu
+drücken.</p>
 </div>
 </body>
 </html>

@@ -12,11 +12,11 @@
 
 <body xml:lang="de" lang="de">
 
-<table border="0" cellspacing="5" cellpadding="5" summary="Inhaltsverzeichnis">
+<table border="0" cellspacing="5" cellpadding="5">
   <tbody>
     <tr>
-      <td><p><img alt="W3C" src="../images/w3c_home" /> <img alt="Amaya"
-        src="../images/amaya.gif" /></p>
+      <td><img alt="W3C" src="../images/w3c_home" /> <img alt="Amaya"
+        src="../images/amaya.gif" />
       </td>
       <td><a href="Printing.html.de" accesskey="p"><img alt="vorherige Seite"
         src="../images/left.gif" /></a> <a href="Manual.html.de"
@@ -28,7 +28,6 @@
   </tbody>
 </table>
 
-<div id="page_body">
 <h1>Abschnitte numerieren</h1>
 
 <p>Folgende Themen werden in diesem Abschnitt behandelt:</p>
@@ -36,6 +35,5 @@
   <li><a href="numbering_sections/numbering_sections.html.de#page_body"
     rel="subdocument">Abschnitte numerieren</a></li>
 </ul>
-</div>
 </body>
 </html>

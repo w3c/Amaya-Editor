@@ -8,14 +8,13 @@
   <title>Über das Einfügen eines Abschnitts</title>
   <style type="text/css">
   </style>
-  <meta name="GENERATOR" content="amaya 6.1, see http://www.w3.org/Amaya/" />
+  <meta name="generator" content="amaya 6.1, see http://www.w3.org/Amaya/" />
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
 <body xml:lang="de" lang="de">
 
-<table border="0" cellspacing="5" cellpadding="5"
-summary="Inhaltsverzeichnis">
+<table border="0" cellspacing="5" cellpadding="5">
   <tbody>
     <tr>
       <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
@@ -33,10 +32,28 @@ summary="Inhaltsverzeichnis">
 <div id="page_body">
 <h1>Über das Einfügen eines Abschnitts</h1>
 
+<p>Mit Hilfe des Elements <code>div</code> kann man ein Dokument in logische
+Abschnitte unterteilen. Hierbei werden Blockelemente in dieses Element
+eingeschlossen, welches selbst ein Blockelement ist. Dieses Element hat
+selbst keinen Einfluß auf die Darstellung eines Dokuments. Es dient vielmehr
+dazu seinen Inhalt logisch zu gruppieren (um etwa eine Formatvorlage darauf
+anzuwenden).</p>
+
 <p>Man kann einen Bereich von Absätzen, Überschriften, Listen, Tabellen und
-dergleichen leicht zu einem Abschnitt gruppieren: die Elemente, welche
-gruppiert werden sollen, markieren und im Menü <strong>Elemente</strong> den
-Befehl <strong>Abschnitt (div)</strong> wählen.</p>
+dergleichen leicht zu einem Abschnitt gruppieren.</p>
+
+<p class="ProcedureCaption">Um dies zu tun:</p>
+<ol>
+  <li>Die Elemente des Bereichs markieren.</li>
+  <li>Im Menü <strong>Elemente</strong> den Befehl <strong>Abschnitt
+    (div)</strong> wählen.</li>
+</ol>
+
+<p class="Note"><strong>Anmerkung</strong>: Für einen Textbereich (der keine
+Blockelemente enthält) steht hierzu normalerweise das Element
+<code>span</code> zur Verfügung. Dieses Element wird aber im Menü Elemente
+nicht aufgeführt, weil es über die Zuweisung eines Attributs an einen
+Textbereich automatisch eingefügt wird.</p>
 </div>
 </body>
 </html>

@@ -5,7 +5,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-  <meta name="GENERATOR" content="amaya 6.1, see http://www.w3.org/Amaya/" />
+  <meta name="generator" content="amaya 6.1, see http://www.w3.org/Amaya/" />
   <title>In der Strukturansicht markieren</title>
   <style type="text/css">
  </style>
@@ -14,8 +14,7 @@
 
 <body xml:lang="de" lang="de">
 
-<table border="0" cellspacing="5" cellpadding="5"
-summary="Inhaltsverzeichnis">
+<table border="0" cellspacing="5" cellpadding="5">
   <tbody>
     <tr>
       <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
@@ -31,8 +30,10 @@ summary="Inhaltsverzeichnis">
 <div id="page_body">
 <h1>In der Strukturansicht markieren</h1>
 
-<p>In der Strukturansicht kann man bequem und schnell große Elemente oder
-Gruppen von Elementen markieren.</p>
+<p><span class="ProcedureCaption">In der Strukturansicht kann man bequem und
+schnell große Elemente oder Gruppen von Elementen markieren.</span></p>
+
+<p class="ProcedureCaption">Strukturelemente mit der Maus markieren:</p>
 <ul>
   <li>Um ein großes Element, wie beispielsweise eine komplexe Tabelle, zu
     markieren klickt man entweder auf dessen blau dargestelltes Tag, auf den
@@ -52,17 +53,17 @@ Gruppen von Elementen markieren.</p>
 
 <p class="ProcedureCaption">Strukturelemente mit der Tastatur markieren:</p>
 <ul>
-  <li>Ein Element wird mit der Taste <code>Esc</code> (Unix) oder
-    <code>F2</code> (Windows) markiert. Drückt man diese Taste mehrmals, dann
-    werden auch dessen übergeordneten Elemente (und deren Inhalt)
-  markiert.</li>
-  <li><code>Strg -</code> (Minus) markiert ein Kindelement.</li>
-  <li><code>Strg k</code> markiert das nächste Element auf der gleichen Ebene
+  <li>Ein Element wird mit der Taste <kbd>Esc</kbd> (Unix) oder <kbd>F2</kbd>
+    (Windows) markiert. Drückt man diese Taste mehrmals, dann werden auch
+    dessen übergeordneten Elemente (und deren Inhalt) markiert.</li>
+  <li><kbd>Alt c</kbd> markiert ein Kindelement.</li>
+  <li><kbd>Alt n</kbd> markiert das nächste Element auf der gleichen Ebene
     oder das übergeordnete Element wenn es kein Element auf der gleichen
     Ebene gibt.</li>
-  <li><code>Strg j</code> markiert das vorhergehende Element auf der gleichen
+  <li><kbd>Alt p</kbd> markiert das vorhergehende Element auf der gleichen
     Ebene oder das übergeordnete Element wenn es kein Element auf der
     gleichen Ebene gibt.</li>
+  <li><kbd>Alt b</kbd> markiert das Elternelement.</li>
 </ul>
 </div>
 </body>

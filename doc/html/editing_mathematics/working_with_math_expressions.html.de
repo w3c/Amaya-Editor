@@ -3,17 +3,16 @@
 <html>
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
-  <meta name="generator" content="amaya 6.1, see http://www.w3.org/Amaya/">
+  <meta name="generator" content="amaya 6.3, see http://www.w3.org/Amaya/">
   <title>Mit mathematischen Ausdrücken arbeiten</title>
   <style type="text/css">
   </style>
   <link href="../style.css" rel="stylesheet" type="text/css">
 </head>
 
-<body lang="de">
+<body lang="de" ="de">
 
-<table border="0" cellspacing="5" cellpadding="5"
-summary="Inhaltsverzeichnis">
+<table border="0" cellspacing="5" cellpadding="5">
   <tbody>
     <tr>
       <td><img alt="W3C" src="../../images/w3c_home"> <img alt="Amaya"
@@ -27,21 +26,19 @@ summary="Inhaltsverzeichnis">
   </tbody>
 </table>
 
-<div class="Section1">
-
 <div id="page_body">
 <h1>Mit mathematischen Ausdrücken arbeiten</h1>
 
-<p>Mit Amaya ist man in der Lage mathematische Ausdrücke in Web-Seiten
+<p>Mit Amaya ist man in der Lage mathematische Ausdrücke in Dokumente
 einzufügen. Hierbei wird die Spezifikation der <strong>Mathematical Markup
 Language</strong> (<a href="http://www.w3.org/TR/MathML2/">MathML</a>)
-herangezogen.</p>
+verwendet.</p>
 
 <p>Mathematische Ausdrücke werden als strukturierte Komponenten behandelt,
-genau so wie HTML-Elemente. Dadurch kann man mathematische Ausdrücke genau
+genau so wie HTML-Elemente. Dadurch kann man mathematische Ausdrücke genau so
 wie andere Teile eines HTML-Dokuments auch manipulieren. Alle Möglichkeiten
-von Amaya zum Editieren von Text stehen auch bei matematischen Ausdrücken zur
-Verfügung. Darüberhinaus gibt es einige Eingabeelemente für mathematische
+von Amaya zum Editieren von Text stehen auch bei mathematischen Ausdrücken
+zur Verfügung. Darüberhinaus gibt es weitere Elemente für mathematische
 Konstrukte.</p>
 
 <p>Folgende Informationen über die Bearbeitung mathematischer Ausdrücke
@@ -51,12 +48,12 @@ stehen bereit:</p>
     editieren</a></li>
   <li><a href="about_entering_math_characters.html.de">Über die Eingabe
     mathematischer Zeichen</a></li>
-  <li><a href="about_entering_math_constructs_using_the_keyboard.html.de">Über
-    die Eingabe mathematischer Konstrukte mit der Tastsatur</a></li>
+  <li><a
+    href="about_entering_math_constructs_using_the_keyboard.html.de">Über die
+    Eingabe mathematischer Konstrukte mit der Tastsatur</a></li>
   <li><a href="the_math_palette_and_the_types.html.de">Die Palette Mathematik
     und das Menü Elemente</a></li>
 </ul>
-</div>
 </div>
 </body>
 </html>

@@ -5,7 +5,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>Amaya Benutzerhandbuch</title>
-  <meta name="GENERATOR" content="amaya 6.2, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 6.3, see http://www.w3.org/Amaya/" />
   <link href="style.css" rel="stylesheet" type="text/css" />
   <style type="text/css">
   </style>
@@ -25,7 +25,7 @@
 
 <h1 style="text-align: center">Benutzerhandbuch</h1>
 
-<h4 style="text-align: center">Version 6.2&nbsp;&nbsp;&nbsp;&nbsp; July
+<h4 style="text-align: center">Version 6.3&nbsp;&nbsp;&nbsp;&nbsp; September
 2002</h4>
 <hr />
 <dl>
@@ -200,8 +200,7 @@ href="../../amaya/AmayaPage.html.de">Begrüßungsseite</a></strong> von
         rel="subdocument">Über Standardmehrfachtasten</a></li>
       <li><a
         href="editing_ISO-Latin-1_characters/about_white_space_handling.html.de#page_body"
-        rel="subdocument">Über die Behandlung von Leerzeichen (white
-        spaces)</a></li>
+        rel="subdocument">Über die Behandlung von Leerzeichen</a></li>
     </ul>
   </li>
   <li><a href="HTML.html.de#page_body">HTML-Elemente</a> 
@@ -369,7 +368,7 @@ href="../../amaya/AmayaPage.html.de">Begrüßungsseite</a></strong> von
         rel="subdocument">Externe Formatvorlagen handhaben</a></li>
       <li><a
         href="style_sheets/about_applying_style_using_html_elements.html.de#page_body"
-        rel="subdocument">Ein Format erzeugen</a></li>
+        rel="subdocument">Zeichenketten formatieren</a></li>
       <li><a
         href="style_sheets/creating_html_style_elements.html.de#page_body"
         rel="subdocument">Formatelemente erzeugen</a></li>
@@ -473,6 +472,8 @@ href="../../amaya/AmayaPage.html.de">Begrüßungsseite</a></strong> von
       <li><a
         href="attaching_annotations/replying_to_annotations.html.de#page_body"
         rel="subdocument">Eine Anmerkung beantworten</a></li>
+      <li><a href="attaching_annotations/configuring_icons.html.de#page_body"
+        rel="subdocument">Icons für Anmerkungen konfigurieren</a></li>
       <li><a href="attaching_annotations/annotation_issues.html.de#page_body"
         rel="subdocument">Bekannte Probleme</a></li>
     </ul>
@@ -506,11 +507,11 @@ href="../../amaya/AmayaPage.html.de">Begrüßungsseite</a></strong> von
         rel="subdocument">Über benutzerfreundlichen Inhalt</a></li>
     </ul>
   </li>
-  <li><a href="tans_annot.html.de">Anmerkungen des Übersetzers</a></li>
 </ul>
 <hr />
 <address>
-  <a href="mailto:vatton@w3.org">I. Vatton</a>
+  <a href="mailto:vatton@w3.org">I. Vatton</a> Originalfassung, <a
+  href="mailto:rudolf.troeller@dwd.de">R. Tröller</a> deutsche Übersetzung
 </address>
 
 <p><small><a

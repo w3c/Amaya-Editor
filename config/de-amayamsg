@@ -166,8 +166,8 @@
 164 Optionale Mehrfachtasten verwenden
 165 Hintergrundbild anzeigen
 166 CR/LF exportieren
-167 **Browsing Preferences
-168 **Load images
+167 Browser
+168 Bilder laden
 169 Doppelklick aktiviert Verweis
 170 Veröffentlichen
 171 ETAGS und Preconditions verwenden
@@ -269,66 +269,66 @@
 267 Beim Einfügen oder Ändern des Dokumenttyps wird das Dokument neu geparst. Nicht gespeicherte Änderungen bleiben dabei erhalten.
 268 Für XHTML application/xhtml+xml verwenden
 269 MIME-Typ application/xhtml+xml für XHTML-Dokumente verwenden
-270 **Lock succeed!
-271 **Lock failed!
-272 **Locking %s...
-273 **Document %s is locked!
-274 **Document %s is locked by %s (timeout %s)
-275 **Overwrite lock information?
-276 **Copy the lock information? 
-277 **Try to unlock the document before...
-278 **Unlock succeed!
-279 **Unlock failed!
-280 **Unlocking %s...
-281 **Document %s is unlocked!
-282 **Unlock the document? 
-283 **Document properties
-284 **Document properties are not available
-285 **Document properties are temporarily unavailable. Try again later...
-286 **Looking for document properties...
-287 **Sorry, no WebDAV support for URLs of this type %s
-288 **Failed to save lock info in the local base
-289 **Failed to remove lok info from local base
-290 **Sorry, this operation is not allowed for %s
-291 **Request failed! Reason: Failed Dependency
-292 **Request failed! Reason: %s
-293 **Try again? 
-294 **WebDAV Preferences
-295 **User's Personal Reference (URL)
-296 **User's WebDAV Resource List (URL URL)
-297 **Lock Depth
-298 **infinity
-299 **Lock Timeout
-300 **Infinite
-301 **Other
-302 **Seconds
-303 **Lock Scope
-304 **exclusive
-305 **shared
-306 **Awarenees
-307 **General awareness
-308 **Awareness on exit
-309 **Timeline
-310 **SVG Library
-311 **Copy option
-312 **Copy selection
-313 **Refer to selection
-314 **Add new model into library
-315 **URL of the new SVG file ...
-316 **Library title
-317 **Library URL
-318 **Create library
-319 **Browse library
-320 **Create or search library
-321 **The current selection not contain only SVG elements. Please reselect
-322 **The library title is mandatory
-323 **Static copy
-324 **Dynamic copy
-325 **Move the position cursor in edited document to define a new key position...
-326 **Key position defined. Move the slider to define animation duration...
-327 **Select starting color of element...
-328 **Starting color defined. Move the slider to define animation duration...
-329 **Select ending color...
-330 **Animation defined.
-331 **Animated attribute
-332 **Element without id
+270 Sperrung erfolgreich
+271 Sperrung fehlgeschlagen
+272 Sperre %s...
+273 Dokument %s ist gesperrt
+274 Dokument %s wurde von %s gesperrt (timeout %s)
+275 Sperrinformation überschreiben?
+276 Sperrinformation kopieren?
+277 Versuche Dokument zu entsperren...
+278 Entsperrung erfolgreich
+279 Entsperrung fehlgeschlagen
+280 Entsperre %s...
+281 Dokument ist entsperrt
+282 Dokument entsperren?
+283 Dokumenteigenschaften
+284 Dokumenteigenschaften nicht verfügbar
+285 Dokumenteigenschaften momentan nicht verfügbar. Versuchen Sie es später...
+286 Suche nach Dokumenteigenschaften...
+287 Keine WebDAV-Unterstützung für URLs vom Typ %s
+288 Konnte Sperrinformation lokal nicht speichern
+289 Konnte Sperrinformation lokal nicht entfernen
+290 Operation nicht erlaubt für %s
+291 Anforderung fehlgeschlagen: keine Abhängigkeit
+292 Anforderung fehlgeschlagen: %s
+293 Erneut versuchen?
+294 WebDAV Einstellungen
+295 Persönliche Benutzerreferenzen (URL)
+296 WebDAV Resourcenliste des Benutzers (URL)
+297 Sperrtiefe
+298 Unendlich
+299 Sperrzeitüberschreitung
+300 Unendlich
+301 Andere
+302 Sekunden
+303 Sperrbereich
+304 Exklusiv
+305 Gemeinsam
+306 Benachrichtigung
+307 Immer benachrichtigen
+308 Am Ende benachrichtigen
+309 Zeitliche Reihenfolge
+310 SVG Bibliothek
+311 Option kopieren
+312 Markierung kopieren
+313 Auf Markierung beziehen
+314 Neues Modell zu Bibliothek hinzufügen
+315 URL der neuen SVG-Datei ...
+316 Titel der Bibliothek
+317 URL der Bibliothek
+318 Bibliothek erzeugen
+319 Bibliothek durchsuchen
+320 Bibliothek erzeugen oder suchen
+321 Die Markierung enthält nicht nur SVG-Elemente. Bitte neu markieren
+322 Der Titel der Bibliothek muss angegeben werden
+323 Statisch kopieren
+324 Dynamisch kopieren
+325 Den Cursor an die neue Schlüsselposition bewegen...
+326 Schlüsselposition definiert. Schieber bewegen um die Dauer der Animation festzulegen...
+327 Anfangsfarbe des Elements wählen...
+328 Anfangsfarbe definiert. Schieber bewegen um die Dauer der Animation festzulegen...
+329 Endfarbe wählen...
+330 Animation definiert.
+331 Animiertes Attribut
+332 Element ohne id

@@ -4,14 +4,13 @@
   <title>Über die Eingabe mathematischer Zeichen</title>
   <style type="text/css">
   </style>
-  <meta name="GENERATOR" content="amaya 6.1, see http://www.w3.org/Amaya/">
+  <meta name="generator" content="amaya 6.3, see http://www.w3.org/Amaya/">
   <link href="../style.css" rel="stylesheet" type="text/css">
 </head>
 
 <body lang="de">
 
-<table border="0" cellspacing="5" cellpadding="5"
-summary="Inhaltsverzeichnis">
+<table border="0" cellspacing="5" cellpadding="5">
   <tbody>
     <tr>
       <td><img alt="W3C" src="../../images/w3c_home"> <img alt="Amaya"
@@ -30,86 +29,83 @@ summary="Inhaltsverzeichnis">
 <h1>Über die Eingabe mathematischer Zeichen</h1>
 
 <p>Wenn man in einem MathML-Element eine Zeichenkette eingibt, so wird diese
-von Amaya geparst und automatisch die Elemente <span class="code"><span
-style='font-size:11.0pt;font-family:"Courier New";'><strong>mo</strong></span></span>
-(operator), <span class="code"><span
-style='font-size:11.0pt;font-family:"Courier New";'><strong>mn</strong></span></span>
-(number), <span class="code"><span
-style='font-size:11.0pt;font-family:"Courier New";'><strong>mi</strong></span></span>
-(identifier) und <span class="code"><span
-style='font-size:11.0pt;font-family:"Courier New";'><strong>mtext</strong></span></span>
+von Amaya geparst und automatisch die Elemente <code>mo</code> (operator),
+<code>mn</code> (number), <code>mi</code> (identifier) und <code>mtext</code>
 (text) generiert.</p>
 
-<p>Man möchte beispielsweise die Formel <code>x=2a+b</code> eingeben:</p>
+<p class="ProcedureCaption">Um die die Formel <code>x=2a+b</code>
+einzugeben:</p>
 <ol>
   <li>Befindet man sich nicht innerhalb eines mathematischen Ausdrucks, so
-    muss man zunächst den Knopf Formel <img alt="Knopf Mathematik"
-    src="../../images/Math.gif"> in der Knopfleiste anklicken, und mit dem
-    Knopf Math ein neues MathML-Element erzeugen.</li>
-  <li>Danach die Sequenz dieser 6 Zeichen eintippen:
-  <strong>x=2a+b</strong></li>
+    muss man zunächst den Knopf <strong>Formel</strong> <img
+    alt="Knopf Mathematik" src="../../images/Math.gif"> in der Knopfleiste
+    anklicken, und mit dem Knopf <strong>Math</strong> ein neues
+    MathML-Element erzeugen.</li>
+  <li>Danach die Sequenz dieser 6 Zeichen eintippen: <kbd>x=2a+b</kbd></li>
 </ol>
 
-<p>In derStrukturansicht wird die folgende, von Amaya generierte Struktur
+<p>In der Quelltextansicht wird die folgende, von Amaya generierte Struktur
 angezeigt:</p>
 
 <p><code>&lt;mi&gt;x&lt;/mi&gt;&lt;mo&gt;=&lt;/mo&gt;&lt;mn&gt;2&lt;/mn&gt;&lt;mi&gt;a&lt;/mi&gt;&lt;mo&gt;+&lt;/mo&gt;&lt;mi&gt;b&lt;/mi&gt;</code></p>
 
 <p>Entspricht dies nicht dem, was man erwartet, dann muss man die Zeichen,
 welche fehlinterpretiert wurden, markieren und deren Typ mit dem
-entsprechenden Befehl, wie etwa <strong>Text</strong> (<code>mtext</code>),
-<strong>Bezeichner</strong> (<code>mi</code>) oder <strong>Zahl</strong>
-(<code>mnmo</code>) im Untermenü <strong>Formel</strong> des Menüs
-<strong>Elemente</strong> ändern.</p>
+entsprechenden Befehl, wie etwa <strong>Text</strong> (mtext),
+<strong>Bezeichner</strong> (mi) oder <strong>Zahl</strong> (mn) im Untermenü
+<strong>Formel</strong> des Menüs <strong>Elemente</strong> ändern.</p>
 
 <h2>Zeichenabstand</h2>
 
 <p>Amaya kümmert sich um die Leerzeichen in mathematischen Ausdrücken. Es
 kann aber manchmal nötig sein zusätzliche Leerzeichen einzufügen. Hierzu den
 Cursor an die gewünschte Stelle positionieren und
-<strong>Leerzeichen</strong> im Untermenü <strong>Formel</strong> auswählen.
-Dies erzeugt ein fehlwertmäßiges horizontales Leerzeichen. Danach kann man
-dessen Attribut <strong>width</strong> änderen um die Größe des Leerzeichens
-anzupassen. Hier können auch andere Attribute (height, depth oder linebreak)
-geändert werden um den vertikalen Abstand anzupassen. Details findet man
-unter der<a href="http://www.w3.org/TR/MathML2/chapter3.html.de#N9197">
-MathML-Spezifikation</a> beim W3C.</p>
+<strong>Leerzeichen</strong> im Untermenü <strong>Formel</strong> des Menüs
+<strong>Elemente</strong> auswählen. Dies erzeugt ein fehlwertmäßiges
+horizontales Leerzeichen. Danach kann man dessen Attribut <code>width</code>
+änderen um die Größe des Leerzeichens anzupassen. Hier können auch andere
+Attribute (<code>height</code>, <code>depth</code> oder
+<code>linebreak</code>) geändert werden um den vertikalen Abstand anzupassen.
+Details findet man unter der Spezifikation von <a
+href="http://www.w3.org/TR/MathML2/chapter3.html#N9197">MathML</a> beim
+W3C.</p>
 
 <h2>Größe von Klammern</h2>
 
-<p>Gibt man, wie im folgenden Ausdruck:</p>
+<p>Die Eingabe der Sequenz  <kbd>Strg m Strg m f(x) = Strg m Strg f 1
+&#x2192; x</kbd>   führt zunächst zu <math
+xmlns="http://www.w3.org/1998/Math/MathML">
+  <mi>f</mi>
+  <mo>(</mo>
+  <mi>x</mi>
+  <mo>)</mo>
+  <mi></mi>
+  <mo>=</mo>
+  <mfrac>
+    <mn>1</mn>
+    <mi>x</mi>
+  </mfrac>
+</math></p>
 
-<p><math xmlns="http://www.w3.org/1998/Math/MathML">
+<p>Hier muss man <code>(x)</code> markieren und im Menü
+<strong>Elemente</strong>, Untermenü <strong>Formel</strong> das Element
+<strong>Klammern</strong> wählen um die Klammern in geeigneter Weise
+darzustellen. Damit ergibt sich dann <math
+xmlns="http://www.w3.org/1998/Math/MathML">
   <mi>f</mi>
   <mrow>
     <mo>(</mo>
     <mi>x</mi>
     <mo>)</mo>
   </mrow>
+  <mi></mi>
   <mo>=</mo>
+  <mi></mi>
   <mfrac>
     <mn>1</mn>
     <mi>x</mi>
   </mfrac>
-</math></p>
-
-<p>Klammern ein, dann führt das Tippen der Sequenz <code>f(x)=</code> zu:</p>
-
-<p><math xmlns="http://www.w3.org/1998/Math/MathML">
-  <mi>f</mi>
-  <mo>(</mo>
-  <mi>x</mi>
-  <mo>)</mo>
-  <mo>=</mo>
-  <mfrac>
-    <mn>1</mn>
-    <mi>x</mi>
-  </mfrac>
-</math></p>
-
-<p>Hier muss man daher im Menü <strong>Elemente</strong>, Untermenü
-<strong>Formel</strong> das Element <strong>Klammern</strong> wählen um die
-Klammern in geeigneter Weise darzustellen.</p>
+</math>.</p>
 </div>
 </body>
 </html>

@@ -5,7 +5,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-  <meta name="GENERATOR" content="amaya 6.1, see http://www.w3.org/Amaya/" />
+  <meta name="generator" content="amaya 6.1, see http://www.w3.org/Amaya/" />
   <title>Die Größe eines aktiven Bildbereichs ändern</title>
   <style type="text/css">
  </style>
@@ -14,8 +14,7 @@
 
 <body xml:lang="de" lang="de">
 
-<table border="0" cellspacing="5" cellpadding="5"
-summary="Inhaltsverzeichnis">
+<table border="0" cellspacing="5" cellpadding="5">
   <tbody>
     <tr>
       <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
@@ -34,25 +33,26 @@ summary="Inhaltsverzeichnis">
 <div id="page_body">
 <h1>Die Größe eines aktiven Bildbereichs ändern</h1>
 
-<p>Nachdem man <a href="creating_clientside_image_maps.html.de">einen aktiven
-Bildbereich erzeugt</a> hat, kann es sein, dass man diesen vergrößern
-möchte.</p>
+<p>Nachdem man einen aktiven Bildbereich erzeugt hat, kann es sein, dass man
+diesen vergrößern möchte. Hierzu zunächst im Menü <strong>Ansicht</strong>
+den Befehl <strong>Aktive Bildbereiche</strong> auswählen um die Bildbereiche
+sichtbar zu machen.</p>
 
 <p class="ProcedureCaption">Um dies mit der Maus zu tun:</p>
 <ol>
   <li>Den Cursor in einen aktiven Bereich plazieren.</li>
-  <li>Die Taste <code>Strg</code> und die rechte Maustaste drücken um den
+  <li>Die Taste <kbd>Strg</kbd> und die rechte Maustaste drücken um den
     Bereich zu markieren.</li>
-  <li>Die Taste <code>Strg</code> loslassen, die rechte Maustaste aber
-    gedrückt halten. Die Maus ziehen um den Bereich auf die gewünschte Größe
-    zu bringen.</li>
+  <li>Die Taste <kbd>Strg</kbd> loslassen, die rechte Maustaste aber gedrückt
+    halten. Die Maus ziehen um den Bereich auf die gewünschte Größe zu
+    bringen.</li>
 </ol>
 
 <p class="ProcedureCaption">Um dies in der Strukturansicht zu tun:</p>
 <ol>
   <li>den Cursor in einen aktiven Bereich plazieren.</li>
   <li>Im Menü <strong>Ansicht</strong> den Befehl <strong>Struktur</strong>
-    wählen (Tastenkürzel <code>Alt v Alt s</code>) und dort das Attribut
+    wählen (Tastenkürzel <kbd>Alt v Alt s</kbd>) und dort das Attribut
     <code>coords</code> editieren. Beispielsweise soll
     <code>coords=25,29,16</code> zu <code>coords=25,28,24</code> werden.</li>
   <li>Der Bildbereich wird im Browserfenster entsprechend angepasst.</li>

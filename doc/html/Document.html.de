@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-  <meta name="GENERATOR" content="amaya 6.1, see http://www.w3.org/Amaya/" />
+  <meta name="generator" content="amaya 6.1, see http://www.w3.org/Amaya/" />
   <title>Dokumente editieren</title>
   <style type="text/css">
  </style>
@@ -13,24 +13,21 @@
 
 <body xml:lang="de" lang="de">
 
-<table border="0" cellspacing="5" cellpadding="5"
-summary="Inhaltsverzeichnis" width="100%">
+<table border="0" cellspacing="5" cellpadding="5">
   <tbody>
     <tr>
-      <td><p><img alt="W3C" src="../images/w3c_home" /> <img alt="Amaya"
-        src="../images/amaya.gif" /></p>
+      <td><img alt="W3C" src="../images/w3c_home" /> <img alt="Amaya"
+        src="../images/amaya.gif" />
       </td>
-      <td><p align="right"><a href="Views.html.de"><img alt="vorherige Seite"
+      <td><a href="Views.html.de"><img alt="vorherige Seite"
         src="../images/left.gif" /></a> <a href="Manual.html.de"
         accesskey="t"><img alt="erste Seite" src="../images/up.gif" /></a> <a
         href="Creating.html.de" accesskey="n"><img alt="nächste Seite"
-        src="../images/right.gif" /></a></p>
-      </td>
+        src="../images/right.gif" /></a></td>
     </tr>
   </tbody>
 </table>
 
-<div id="page_body">
 <h1>Dokumente editieren</h1>
 
 <p>Folgende Themen werden in diesem Abschnitt behandelt:</p>
@@ -40,18 +37,16 @@ summary="Inhaltsverzeichnis" width="100%">
   <li><a href="HTML-elements/structure.html.de#page_body">Die
     Dokumentstruktur</a></li>
   <li><a
-    href="HTML-elements/infoTypes.html.de#page_body">Informationstypen</a></li>
+  href="HTML-elements/infoTypes.html.de#page_body">Informationstypen</a></li>
   <li><a href="HTML-elements/HTML.html.de#page_body">HTML-Elemente</a></li>
-  <li><a
-  href="HTML-elements/headings.html.de#page_body">Überschriften</a></li>
+  <li><a href="HTML-elements/headings.html.de#page_body">Überschriften</a></li>
   <li><a href="HTML-elements/lists.html.de#page_body">Listen</a></li>
-  <li><a href="HTML-elements/address.html.de#page_body">Informationen über
-    den Autor</a></li>
-  <li><a href="HTML-elements/inline.html.de#page_body">Über
-    inhaltsorientierte Formate</a></li>
+  <li><a href="HTML-elements/address.html.de#page_body">Informationen über den
+    Autor</a></li>
+  <li><a href="HTML-elements/inline.html.de#page_body">Über inhaltsorientierte
+    Formate</a></li>
   <li><a href="HTML-elements/40styling.html.de#page_body">Über
     darstellungsorientierte Formate</a></li>
 </ul>
-</div>
 </body>
 </html>

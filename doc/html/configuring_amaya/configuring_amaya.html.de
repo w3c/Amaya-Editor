@@ -5,7 +5,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-  <meta name="GENERATOR" content="amaya 6.1, see http://www.w3.org/Amaya/" />
+  <meta name="generator" content="amaya 6.1, see http://www.w3.org/Amaya/" />
   <title>Amaya konfigurieren</title>
   <style type="text/css">
   </style>
@@ -14,8 +14,7 @@
 
 <body xml:lang="de" lang="de">
 
-<table border="0" cellspacing="5" cellpadding="5"
-summary="Inhaltsverzeichnis">
+<table border="0" cellspacing="5" cellpadding="5">
   <tbody>
     <tr>
       <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
@@ -39,13 +38,12 @@ meisten dieser Konfigurationsparameter in verschiedenen Dialogen ändern.</p>
 
 <p>Weitere Informationen findet man unter:</p>
 <ul>
-  <li><span class="Link0"><a href="menu_preferences.html.de">Das Untermenü
-    Einstellungen</a></span></li>
-  <li><span class="Link0"><a
-    href="about_configuration_directory_and_file_conventions.html.de">Über das
-    Konfigurationsverzeichnis und Dateikonventinen</a></span></li>
-  <li><span class="Link0"><a href="about_keyboard_shortcuts.html.de">Über
-    Tastenkürzel</a></span></li>
+  <li><a href="menu_preferences.html.de">Das Untermenü
+    Einstellungen</a></li>
+  <li><a href="about_configuration_directory_and_file_conventions.html.de">Über das
+    Konfigurationsverzeichnis und Dateikonventinen</a></li>
+  <li><a href="about_keyboard_shortcuts.html.de">Über
+    Tastenkürzel</a></li>
 </ul>
 </div>
 </body>

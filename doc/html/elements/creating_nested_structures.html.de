@@ -6,7 +6,7 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
   <meta content="text/html; charset=iso-8859-1" />
-  <meta name="GENERATOR" content="amaya 6.1, see http://www.w3.org/Amaya/" />
+  <meta name="generator" content="amaya 6.1, see http://www.w3.org/Amaya/" />
   <title>Verschachtelte Strukturen erzeugen</title>
   <style type="text/css">
   </style>
@@ -15,8 +15,7 @@
 
 <body xml:lang="de" lang="de">
 
-<table border="0" cellspacing="5" cellpadding="5"
-summary="Inhaltsverzeichnis">
+<table border="0" cellspacing="5" cellpadding="5">
   <tbody>
     <tr>
       <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
@@ -35,60 +34,62 @@ summary="Inhaltsverzeichnis">
 <h1>Verschachtelte Strukturen erzeugen</h1>
 
 <p>Befindet sich der Cursor in einem leeren Element, dann bewirkt das Drücken
-der <strong>Eingabetaste</strong>, dass das Element durch ein Element der
-nächst höheren Ebene ersetzt wird. Damit kann man seht schnell komplexe,
+der <kbd>Eingabetaste</kbd>, dass das Element durch ein Element der nächst
+höheren Ebene ersetzt wird. Damit kann man sehr schnell komplexe,
 verschachtelte Strukturen erstellen.</p>
 
 <p>Man stelle sich beispielsweise folgende Struktur vor:</p>
 <ul>
-  <li>das erste Element einer Liste 
-    <p>ein Absatz im ersten Element</p>
+  <li>Das erste Element einer Liste
+    <p>Ein Absatz im ersten Element</p>
   </li>
-  <li>das zweite Element dieser Liste 
+  <li>Das zweite Element dieser Liste
     <ul>
-      <li>das erste Element einer weiteren Liste</li>
-      <li>das zweite Element dieser Liste</li>
+      <li>Das erste Element einer weiteren Liste</li>
+      <li>Das zweite Element dieser Liste</li>
     </ul>
   </li>
-  <li>das letzte Element der ersten Liste</li>
+  <li>Das letzte Element der ersten Liste</li>
 </ul>
 
-<p class="ProcedureCaption">Diese Struktur erzeugt man wiefolgt:</p>
+<p class="ProcedureCaption">Um diese Struktur zu erzeugen:</p>
 <ol>
-  <li>Den Knopf <strong>Ungeordnete Liste</strong> in der Knopfleiste
-    anklicken um das erste Element der Liste zu erzeugen. </li>
+  <li>Den Knopf <strong>Ungeordnete Liste</strong> <img
+    alt="ungeordnete Liste" src="../../images/OList.gif" /> in der
+    Knopfleiste anklicken um das erste Element der Liste zu erzeugen.</li>
   <li>Den Text dieses Elements eintippen und die
-    <strong>Eingabetaste</strong> einmal drücken. Amaya erzeugt innerhalb
-    dieses Listenelements eine neuen Absatz. </li>
+    <kbd>Eingabetaste</kbd> einmal drücken. Amaya erzeugt innerhalb
+    dieses Listenelements eine neuen Absatz.</li>
   <li>Den Text des Absatzes eintippen und zweimal die
-    <strong>Eingabetaste</strong> drücken. Der erste Tastendruck erzeugt
+    <kbd>Eingabetaste</kbd> drücken. Der erste Tastendruck erzeugt
     einen weiteren Absatz, aber der zweite Tastendruck ersetzt diesen durch
-    ein weiteres Element der Liste. </li>
-  <li>Den Text des zweiten Listenelements eintippen. </li>
-  <li>Den Knopf <strong>Ungeordnete Liste</strong> anklicken. Die neue Liste
-    wird automatisch innerhalb der ersten erzeugt. </li>
+    ein weiteres Element der Liste.</li>
+  <li>Den Text des zweiten Listenelements eintippen.</li>
+  <li>Den Knopf <strong>Ungeordnete Liste</strong> <img
+    alt="ungeordnete Liste" src="../../images/OList.gif" /> in der Knopfleiste anklicken. Die
+    neue Liste wird automatisch innerhalb der ersten erzeugt.</li>
   <li>Den Text des ersten Listenelements der zweiten Liste eintippen. Die
-    <strong>Eingabetaste</strong> zweimal drücken um das zweite Element der
-    zweiten Liste zu erzeugen. </li>
+    <kbd>Eingabetaste</kbd> zweimal drücken um das zweite Element der
+    zweiten Liste zu erzeugen.</li>
   <li>Den Text des zweiten Elements der zweiten Liste eintippen und die
-    <strong>Eingabetaste</strong> viermal drücken um ein neues Element in der
-    ersten Liste zu erzeugen. </li>
+    <kbd>Eingabetaste</kbd> viermal drücken um ein neues Element in der
+    ersten Liste zu erzeugen.</li>
   <li>Den Text des letzten Elements der ersten Liste eintippen und die
-    <strong>Eingabetaste</strong> dreimal drücken um diese Liste
-    abzuschließen und einen neuen Absatz zu beginnen. </li>
+    <kbd>Eingabetaste</kbd> dreimal drücken um diese Liste
+    abzuschließen und einen neuen Absatz zu beginnen.</li>
 </ol>
 
-<p>Die <strong>Eingabetaste</strong> arbeitet in der gleichen Weise, wenn
+<p>Die <kbd>Eingabetaste</kbd> arbeitet in der gleichen Weise, wenn
 sich der Cursor am Anfang eines Elements befindet. Hier werden aber die neuen
 Elemente vor dem betroffenen Element erzeugt. Beispiel: um ein Listenelement
 zwischen den ersten beiden Elementen der ersten Liste zu erzeugen, den Cursor
-vor das zweite Element plazieren und die <strong>Eingabetaste</strong>
+vor das zweite Element plazieren und die <kbd>Eingabetaste</kbd>
 zweimal drücken.</p>
 
-<p class="Note"><b>Anmerkung:</b> Dieses Verhalten der
-<strong>Eingabetaste</strong> beschränkt sich nicht nur auf Listen und
-Absätze, sondern kann bei allen Elementen angewendet werden. Das ist bei
-Tabellen sehr hilfreich.</p>
+<p class="Note"><strong>Anmerkung:</strong> Dieses Verhalten der
+<kbd>Eingabetaste</kbd> beschränkt sich nicht nur auf Listen und
+Absätze, sondern kann bei allen verschachtelten Elementen angewendet werden.
+Das ist bei Tabellen sehr hilfreich.</p>
 </div>
 </body>
 </html>

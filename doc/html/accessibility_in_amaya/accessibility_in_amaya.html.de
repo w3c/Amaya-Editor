@@ -8,13 +8,13 @@
   <title>Benutzerfreundlichkeit in Amaya</title>
   <style type="text/css">
   </style>
-  <meta name="GENERATOR" content="amaya 6.1, see http://www.w3.org/Amaya/" />
+  <meta name="generator" content="amaya 6.1, see http://www.w3.org/Amaya/" />
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
 <body xml:lang="de" lang="de">
 
-<table border="0" cellspacing="5" cellpadding="5" summary="Inhaltsverzeichnis">
+<table border="0" cellspacing="5" cellpadding="5">
   <tbody>
     <tr>
       <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
@@ -40,7 +40,6 @@ auch Benutzer mit visuellen, auralen und motorischen Behinderungen.</p>
 damit Dokumente zu erzeugen, die von allen Mitgliedern gelesen und benutzt
 werden können. Amaya stellt einige Besonderheiten zur Verfügung um zu helfen
 dieses Ziel zu erreichen.</p>
-
 </div>
 </body>
 </html>

@@ -5,7 +5,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-  <meta name="GENERATOR" content="amaya 6.1, see http://www.w3.org/Amaya/" />
+  <meta name="generator" content="amaya 6.1, see http://www.w3.org/Amaya/" />
   <title>Einen Anker erzeugen</title>
   <style type="text/css">
   </style>
@@ -14,8 +14,7 @@
 
 <body xml:lang="de" lang="de">
 
-<table border="0" cellspacing="5" cellpadding="5"
-summary="Inhaltsverzeichnis">
+<table border="0" cellspacing="5" cellpadding="5">
   <tbody>
     <tr>
       <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
@@ -41,18 +40,18 @@ einen Anker umgewandelt werden.</p>
 <ol>
   <li>Die gewünschte Zeichenkette markieren.</li>
   <li>Aus dem Menü <strong>Verweis</strong> den Befehl <strong>Anker
-    erzeugen</strong> auswählen oder Das Tastenkürzel <kbd>Umschalt Strg
-    T</kbd> verwenden. Der markierte Text ist jetzt ein Anker. Ist im Menü
-    <strong>Ansicht</strong> die Option <strong>Anker anzeigen</strong>
-    aktiviert, dann wird in der Browseransicht dem Anker ein Icon
-    vorangestellt. In der Verweisansicht werden Anker immer mit diesem Icon
-    angezeigt.</li>
+    erzeugen</strong> auswählen oder Das Tastenkürzel <kbd>Umsch Strg T</kbd>
+    verwenden. Der markierte Text ist jetzt ein Anker. Ist im Menü
+    <strong>Ansicht</strong> der Befehl <strong>Anker anzeigen</strong>
+    aktiviert, dann wird in der Browseransicht dem Anker das Icon <img
+    alt="Zielanker" src="../../images/target.gif" /> vorangestellt. In der
+    Verweisansicht werden Anker immer mit diesem Icon angezeigt.</li>
   <li>Wenn ein Anker erzeugt wird, weist Amaya diesem immer das Attribut
-    <strong>name</strong> zu, dessen Wert wiefolgt gebildet wird: 
+    <code>name</code> zu, dessen Wert wiefolgt gebildet wird:
     <ul>
-      <li>Es wird ein Wort, welches länger als drei Zeichen ist aus der
+      <li>es wird ein Wort, welches länger als drei Zeichen ist aus der
         Markierung extrahiert oder</li>
-      <li>es wird Zeichen, gefolgt von einer Zahl generiert.</li>
+      <li>es wird ein Zeichen, gefolgt von einer Zahl generiert.</li>
     </ul>
     <p>In beiden Fällen wird von Amaya sichergestellt, dass der Wert nur ein
     einziges Mal im Dokument vorkommt.</p>

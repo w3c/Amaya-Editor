@@ -12,11 +12,11 @@
 
 <body xml:lang="de" lang="de">
 
-<table border="0" cellspacing="5" cellpadding="5" summary="Inhaltsverzeichnis">
+<table border="0" cellspacing="5" cellpadding="5">
   <tbody>
     <tr>
-      <td><p><img alt="W3C" src="../images/w3c_home" /> <img alt="Amaya"
-        src="../images/amaya.gif" /></p>
+      <td><img alt="W3C" src="../images/w3c_home" /> <img alt="Amaya"
+        src="../images/amaya.gif" />
       </td>
       <td><a href="Numbering.html.de" accesskey="p"><img
         alt="vorherige Seite" src="../images/left.gif" /></a> <a
@@ -29,7 +29,6 @@
   </tbody>
 </table>
 
-<div id="page_body">
 <h1>Eine Dokumentensammlung erstellen</h1>
 
 <p>Folgende Themen werden in diesem Abschnitt behandelt:</p>
@@ -38,6 +37,5 @@
     href="using_the_makebook_function/assembling_large_document_collections.html.de#page_body"
     rel="subdocument">Eine Dokumentensammlung erstellen</a></li>
 </ul>
-</div>
 </body>
 </html>

@@ -5,7 +5,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>Überschriften</title>
-  <meta name="GENERATOR" content="amaya 6.1, see http://www.w3.org/Amaya/" />
+  <meta name="generator" content="amaya 6.1, see http://www.w3.org/Amaya/" />
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
   <style type="text/css">
   </style>
@@ -14,40 +14,36 @@
 
 <body xml:lang="de" lang="de">
 
-<table border="0" width="100%" cellspacing="5" cellpadding="5"
-summary="Inhaltsverzeichnis">
+<table border="0" cellspacing="5" cellpadding="5">
   <tbody>
     <tr>
-      <td><p><img border="0" alt="W3C" src="../../images/w3c_home" /> <img
-        border="0" alt="Amaya" src="../../images/amaya.gif" /></p>
+      <td><img alt="W3C" src="../../images/w3c_home" /> <img
+        alt="Amaya" src="../../images/amaya.gif" />
       </td>
-      <td><p align="right"><a href="structure.html.de"><img
-        alt="vorherige Seite" border="0" src="../../images/left.gif" /></a>
-        <a href="../HTML.html.de"><img alt="erste Seite" border="0"
+      <td><a href="HTML.html.de"><img alt="vorherige Seite"
+        src="../../images/left.gif" /></a> <a
+        href="../Document.html.de"><img alt="erste Seite"
         src="../../images/up.gif" /></a> <a href="lists.html.de"><img
-        alt="nächste Seite" border="0" src="../../images/right.gif" /></a></p>
+        alt="nächste Seite" src="../../images/right.gif" /></a>
       </td>
     </tr>
   </tbody>
 </table>
 
-<div id="Heading">
-
 <div id="page_body">
 <h1>Überschriften</h1>
 
 <p>HTML stellt 6 Ebenen von Überschriften bereit: <a
-href="http://www.w3.org/TR/REC-html40/struct/global.html.de#edef-H1"><code>h1,
-h2, h3, h4, h5 und h6</code></a>. Diese sollten zu Markierung von
-Überschriften, gemäß ihrer Rangordnung, wobei <code>h1</code> die höchste
-hat, verwendet werden. Überschriften sind Blockelemente und können nur
-innerhalb solcher Elemente benutzt werden, deren Inhalt Blockcharakter hat.
-Man beachte, dass es für Tabellen spezielle Elemente gibt um Überschriften zu
-markieren.</p>
+href="http://www.w3.org/TR/REC-html40/struct/global.html#edef-H1"><code>h1, h2, h3, h4, h5
+und h6</code></a>. Diese sollten zu Markierung von Überschriften, gemäß ihrer
+Rangordnung, wobei <code>h1</code> die höchste hat, verwendet werden.
+Überschriften sind Blockelemente und können nur innerhalb solcher Elemente
+benutzt werden, deren Inhalt Blockcharakter hat. Man beachte, dass es für
+Tabellen spezielle Elemente gibt um Überschriften zu markieren.</p>
 
 <p>Die ersten drei Überschriftsebenen können mit Knöpfen der Knopfleiste,
 <img src="../../images/H1.gif" alt="Knopf Überschrift Ebene 1" />, <img
-src="../../images/H2.gif" alt="Knopf Überschrift Ebene 2" />, <img
+src="../../images/H2.gif" alt="Knopf Überschrift Ebene 2" /> und <img
 src="../../images/H3.gif" alt="Knopf Überschrift Ebene 3" />, erzeugt werden.
 Alle Überschriften können aus dem Menü <strong>Elemente</strong> oder über
 Tastenkürzel (<kbd>Strg 1</kbd> für <code>h1</code>, <kbd>Strg 2</kbd> für
@@ -57,7 +53,6 @@ Tastenkürzel (<kbd>Strg 1</kbd> für <code>h1</code>, <kbd>Strg 2</kbd> für
 Bedeutung anzuzeigen. Der Autor hat aber die Möglichkeit mittels <a
 href="../StyleSheets.html.de">Formatvorlagen</a> eine eigene Darstellung zu
 wählen.</p>
-</div>
 </div>
 </body>
 </html>

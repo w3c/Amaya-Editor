@@ -5,7 +5,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-  <meta name="GENERATOR" content="amaya 6.1, see http://www.w3.org/Amaya/" />
+  <meta name="generator" content="amaya 6.1, see http://www.w3.org/Amaya/" />
   <title>Auf Windowsplattformen drucken</title>
   <style type="text/css">
  </style>
@@ -14,8 +14,7 @@
 
 <body xml:lang="de" lang="de">
 
-<table border="0" cellspacing="5" cellpadding="5"
-summary="Inhaltsverzeichnis">
+<table border="0" cellspacing="5" cellpadding="5">
   <tbody>
     <tr>
       <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
@@ -33,18 +32,25 @@ summary="Inhaltsverzeichnis">
 <div id="page_body">
 <h1>Auf Windowsplattformen drucken</h1>
 
-<p>Auf diesen Plattformen kann man im ersten Dialog festlegen, ob man</p>
+<p>Der Befehl <strong>Druckoptionen</strong> im Menü <strong>Datei</strong>
+zeigt folgenden Dialog:</p>
+
+<p><img alt="Dialog Druckoptionen" src="../../images/printoptions_w32-de.png"
+/></p>
+
+<p>Hier kann man festlegen, ob man</p>
 <ul>
-  <li>ein Inhaltsverzeichnis oder</li>
-  <li>eine Tabelle von Verweisen generieren,</li>
-  <li>den URI des Dokuments auf jeder Seite ausdrucken oder</li>
-  <li>das Dokument mit oder ohne Formatvorlagen ausdrucken</li>
+  <li>Ein Inhaltsverzeichnis generieren und dieses mit ausdrucken möchte.</li>
+  <li>Eine Tabelle von Verweisen generieren und dieses mit ausdrucken
+  möchte.</li>
+  <li>Den URI des Dokuments auf jeder Seite ausdrucken möchte.</li>
+  <li>Das Dokument mit oder ohne Formatvorlagen ausdrucken möchte.</li>
 </ul>
 
-<p>möchte.</p>
-
-<p>Der nächste Dialog ist der Standarddruckdialog von Windows, mit dem man
-die anderen Druckparameter einstellen kann.</p>
+<p>Drückt man auf den Knopf <strong>Drucken</strong><img alt="Knopf Drucken"
+src="../../images/Print.gif" /> in der Knopfleiste, dann wird als nächstes
+der Standarddruckdialog von Windows angezeigt, mit dem man die anderen
+Druckerparameter einstellen kann.</p>
 </div>
 </body>
 </html>

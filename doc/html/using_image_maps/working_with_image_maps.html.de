@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-  <meta name="GENERATOR" content="amaya 6.1, see http://www.w3.org/Amaya/" />
+  <meta name="generator" content="amaya 6.1, see http://www.w3.org/Amaya/" />
   <title>Mit aktiven Bildbereichen arbeiten</title>
   <style type="text/css">
   </style>
@@ -13,16 +13,15 @@
 
 <body xml:lang="de" lang="de">
 
-<table border="0" cellspacing="5" cellpadding="5"
-summary="Inhaltsverzeichnis">
+<table border="0" cellspacing="5" cellpadding="5">
   <tbody>
     <tr>
       <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
         src="../../images/amaya.gif" /></td>
-      <td><p><a href="../ImageMaps.html.de" accesskey="t"><img alt="erste Seite"
+      <td><a href="../ImageMaps.html.de" accesskey="t"><img alt="erste Seite"
         src="../../images/up.gif" /></a> <a href="adding_an_image.html.de"
         accesskey="n"><img alt="nächste Seite" src="../../images/right.gif"
-        /></a></p>
+        /></a>
       </td>
     </tr>
   </tbody>
@@ -32,7 +31,12 @@ summary="Inhaltsverzeichnis">
 <h1>Mit aktiven Bildbereichen arbeiten</h1>
 
 <p>Mit Amaya kann man Bilder und clientseitige aktive Bildbereiche in ein
-Web-Dokument einfügen. Informationen hierzu findet man unter:</p>
+Dokument einfügen. Hierzu muss zunächst ein Bild in das Dokument eingefügt
+und dieses dann als aktiver Bildbereich definiert werden. Damit kann man
+Bereiche von Bildern als Verweise definieren. "Clientseitig" bedeutet
+hierbei, dass die Informationen vom Browser ausgewertet werden (im Gegensatz
+zu den serverseitigen aktiven Bildbereichen, welche vom Server ausgewertet
+werden). Informationen hierzu findet man unter:</p>
 <ul>
   <li><a href="adding_an_image.html.de">Ein Bild hinzufügen</a></li>
   <li><a href="creating_clientside_image_maps.html.de">Clientseitige aktive

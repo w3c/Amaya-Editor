@@ -5,7 +5,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-  <meta name="GENERATOR" content="amaya 6.1, see http://www.w3.org/Amaya/" />
+  <meta name="generator" content="amaya 6.1, see http://www.w3.org/Amaya/" />
   <title>Rechtschreibprüfung</title>
   <style type="text/css">
   </style>
@@ -14,8 +14,7 @@
 
 <body xml:lang="de" lang="de">
 
-<table border="0" cellspacing="5" cellpadding="5"
-summary="Inhaltsverzeichnis">
+<table border="0" cellspacing="5" cellpadding="5">
   <tbody>
     <tr>
       <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
@@ -33,7 +32,7 @@ summary="Inhaltsverzeichnis">
 selektiert die passende Sprache anhand des Attributs <code>lang</code>. Diese
 Attribut kann jedem Element eines Dokuments zugeordnet werden, auch dann,
 wenn es nur ein Wort enthält, indem man aus dem Menü
-<strong>Attribute</strong> die Option <strong>lang</strong> wählt.</p>
+<strong>Attribute</strong> das Attribut <strong>lang</strong> wählt.</p>
 
 <p>Um ein Dokument zu prüfen muss man im Menü <strong>Bearbeiten</strong> den
 Befehl <strong>Rechtschreibprüfung</strong> wählen.</p>
@@ -54,6 +53,11 @@ Wörterbuch automatisch erzeugt oder aktualisiert.</p>
 <p>Der Befehl <strong>Rechtschreibprüfung</strong> im Menü
 <strong>Bearbeiten</strong> öffnet einen Dialog in dem man mit der
 Rechtschreibprüfung interagieren und Parameter dafür setzen kann.</p>
+
+<p><img alt="Dialog Rechtschreibpr?fung" src="../../images/spellchecking-de.png"
+/></p>
+
+<p></p>
 <ul>
   <li>Das Feld <strong>Anzahl Vorschläge</strong> definiert die maximale
     Anzahl von Korrekturvorschlägen. Wird ein Fehler entdeckt und dieser
@@ -65,14 +69,14 @@ Rechtschreibprüfung interagieren und Parameter dafür setzen kann.</p>
     fehlerhaft anzuzeigen.</li>
   <li>Der Abschnitt <strong>Überprüfe</strong> gibt an, wo die Prüfung im
     Dokument erfolgen soll.</li>
-  <li>Das Feld <strong>Fehler</strong> enthält die gefundenen falschen Worte.
-    Die Korrekturvorschläge werden im Auswahlfeld darunter angezeigt.
-    Fehlwertmäßig wählt Amaya das erste vorgeschlagene Wort. Um eine andere
-    Korrektur zu wählen, wird diese einfach angeklickt. Die gewählte
-    Korrektur wird im Feld darunter dargestellt und kann dort editiert
-    werden. Die eigentliche Korrektur wird erst durch Anklicken der Knöpfe
-    <strong>Ersetzen</strong> oder <strong>Ersetzen (PW)</strong>
-  ausgeführt.</li>
+  <li>Das Feld <strong>Rechtschreibprüfung</strong> enthält ein als falsch
+    erachtetes Wort. Die Korrekturvorschläge werden im Auswahlfeld darunter
+    angezeigt. Fehlwertmäßig wählt Amaya das erste vorgeschlagene Wort. Um
+    eine andere Korrektur zu wählen, wird diese einfach angeklickt. Die
+    gewählte Korrektur wird im Feld darunter dargestellt und kann dort
+    editiert werden. Die eigentliche Korrektur wird erst durch Anklicken der
+    Knöpfe <strong>Ersetzen</strong> oder <strong>Ersetzen (PW)</strong>
+    ausgeführt.</li>
   <li>Die bei der Rechtschreibprüfung verwendete Sprache wird in der linken
     oberen Ecke angezeigt. Um die Sprache zu ändern, muss man die
     entsprechenden Attribute im Dokument ändern und die Rechtschreibprufung
@@ -84,18 +88,18 @@ Rechtschreibprüfung interagieren und Parameter dafür setzen kann.</p>
 <p>Um die Rechtschreibprüfung zu beginnen muss man den Knopf
 <strong>Suchen</strong> anklicken. Wird ein Fehler gefunden, so wird das Wort
 im Dokument markiert. Wird kein Fehler gefunden, so wird die Nachricht
-<strong>Nicht gefunden</strong> in der Statuszeile ausgegeben.</p>
+<strong>Rechtschreibprüfung beendet</strong> ausgegeben.</p>
 
 <p>Wird ein falsches Wort gefunden, dann kann man folgendes tun:</p>
 <ul>
   <li><strong>Beenden</strong> anklicken: Amaya schließt den Dialog.
     Vorhergehende Korrekturen werden nicht zurückgenommen.</li>
-  <li><strong>Suchen</strong> anklicken: Amaya akzeptiert das als falsche
+  <li><strong>Suchen</strong> anklicken: Amaya akzeptiert das als falsch
     erachtete Wort. Im Text und in den Wörterbücher wird keine Korrektur
     vorgenommen. Die Suche wird fortgesetzt.</li>
   <li><strong>Überspringen (PW)</strong> anklicken: Amaya akzeptiert das als
     falsch erachtete Wort, fügt dieses in das persönliche Wörterbuch ein und
-    ignoriert diese nachfolgende Worte im Dokument.</li>
+    ignoriert diese nachfolgenden Worte im Dokument.</li>
   <li><strong>Ersetzen</strong> anklicken: Amaya ersetzt das Wort durch den
     gewählten Vorschlag (optional durch den Benutzer editiert) und die Suche
     wird fortgesetzt.</li>

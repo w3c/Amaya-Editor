@@ -12,12 +12,11 @@
 
 <body xml:lang="de" lang="de">
 
-<table border="0" cellspacing="5" cellpadding="5"
-summary="Inhaltsverzeichnis">
+<table border="0" cellspacing="5" cellpadding="5">
   <tbody>
     <tr>
-      <td><p><img alt="W3C" src="../images/w3c_home" /> <img alt="Amaya"
-        src="../images/amaya.gif" /></p>
+      <td><img alt="W3C" src="../images/w3c_home" /> <img alt="Amaya"
+        src="../images/amaya.gif" />
       </td>
       <td><a href="Tables.html.de" accesskey="p"><img alt="vorherige Seite"
         src="../images/left.gif" /></a> <a href="Manual.html.de"
@@ -28,7 +27,6 @@ summary="Inhaltsverzeichnis">
   </tbody>
 </table>
 
-<div id="page_body">
 <h1>Aktive Bildbereiche</h1>
 
 <p>Folgende Themen werden in diesem Abschnitt behandelt:</p>
@@ -50,6 +48,5 @@ summary="Inhaltsverzeichnis">
     href="using_image_maps/about_alternative_text_and_long_descriptions.html.de#page_body"
     rel="subdocument">Über alternativen Text und lange Beschreibungen</a></li>
 </ul>
-</div>
 </body>
 </html>

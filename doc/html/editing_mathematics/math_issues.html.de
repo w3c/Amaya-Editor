@@ -3,68 +3,65 @@
 <html>
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
-  <title>Bekannte Probleme bei MathML</title>
+  <title>Known Issues With MathML</title>
   <style type="text/css">
   </style>
-  <meta name="generator" content="amaya 6.2, see http://www.w3.org/Amaya/">
+  <meta name="generator" content="amaya 6.3, see http://www.w3.org/Amaya/">
   <link href="../style.css" rel="stylesheet" type="text/css">
 </head>
 
-<body lang="de">
+<body lang="en">
 
-<table border="0" cellspacing="5" cellpadding="5"
-summary="Inhaltsverzeichnis">
+<table border="0" summary="toc">
   <tbody>
     <tr>
       <td><img alt="W3C" src="../../images/w3c_home"> <img alt="Amaya"
         src="../../images/amaya.gif"></td>
-      <td><a href="about_linking_in_mathml.html.de" accesskey="p"><img
-        alt="vorherige Seite" src="../../images/left.gif"></a> <a
-        href="../Math.html.de" accesskey="t"><img alt="erste Seite"
-        src="../../images/up.gif"></a></td>
+      <td><p><a href="about_linking_in_mathml.html.de" accesskey="p"><img
+        alt="previous" src="../../images/left.gif"></a> <a
+        href="../Math.html.de" accesskey="t"><img alt="top"
+        src="../../images/up.gif"></a></p>
+      </td>
     </tr>
   </tbody>
 </table>
 
 <div id="page_body">
-<h1>Bekannte Probleme bei MathML</h1>
+<h1>Known Issues With MathML</h1>
 
-<p>Es folgen bekannte Probleme über MathML in Amaya:</p>
+<p>The following are known Amaya MathML issues:</p>
 <ul>
-  <li>In Amaya sind nur die Präsentationstags von MathML 2.0 implementiert,
-    nicht aber deren Content Markup. Alle Präsentationselemente und Attribute
-    sind verfügbar, es werden aber nur die folgenden Attribute am Bildschirm
-    dargestellt: 
+  <li>Amaya implements only the Presentation Tags from MathML 2.0, not the
+    Content Markup. All presentation elements and attributes are available,
+    but only the following attributes are rendered on the screen:
     <p><code>alttext, mathvariant, mathsize, mathcolor, mathbackground,
     fontsize, fontweight, fontstyle, fontfamily, color, linethickness,
     numalign, denomalign, bevelled, notation, lquote, rquote, lspace, rspace,
     subscriptshift, superscriptshift, form, width </code>(mspace only),
-    <code>height</code> (mspace only),  <code>depth</code> (mspace only),
+    <code>height</code> (mspace only), <code>depth</code> (mspace only),
     <code>align, rowalign, columnalign, frame, framespacing, side, rowspan,
     columnspan, rowspacing, columnspacing, rowlines, columnlines</code> .</p>
   </li>
-  <li><span><span>Die Attribute <code>class</code>, <code>id</code> und
-    <code>style</code> sind mit der gleichen Semantik wie in HTML verfügbar:
-    man kann Formatvorlagen mit MathML-Elementen verknüpfen (Attribut
-    <code>class</code> und <code>style</code>) und ein MathMl-Element kann
-    Ziel eines Verweises sein (Attribut <code>id</code>).</span></span></li>
-  <li><span><span>Weil in der derzeitigen Version mathematische Zeichensätze
-    nicht ausreichend zur Verfügung stehen, wird nur eine begrenzte Anzahl
-    von Symbolen erkannt, in der Hauptsache die, welche im Zeichensatz Symbol
-    zur Verfügung stehen. Derzeit werden folgende Zeichen
-    unterstützt:</span></span>
-    <p><code>folglich, sodass, senkrecht, oder, und, nicht, existiert, für
-    alle, Element, nicht Element, nicht Untermenge, Untermenge, Untermenge
-    gleich, Obermenge, Obermenge gleich, Doppelpfeil links, Doppelpfeil
-    links-rechts, Doppelfeil rechts, Pfeil links, Pfeil links-rechts, Pfeil
-    rechts, Kongruent, größer gleich, kleiner gleich, ungleich, proportional,
-    Senkrechtstrich, Vereinigungsmenge, Schnittmenge, Plus-Minus, Kreis-Plus,
-    Summer, Integral, Krei-Mal, Produkt, Mittelpunkt, Diamand, partielles
-    Differential, Doppelpfeil unten, Doppelpfeil oben, Pfeil unten, Pfeil
-    oben, angewendete Funktion, Dreifachpunkt, Differntial, imaginäres i,
-    exponentielles e, unsichtbares Komma, Unterstrich, Überstrich, kleines
-    Leerzeichen, großes Leerzeichen, Hut, Hochstrich, Tiefstrich, primzahl,
-    Primzahl</code></p>
+  <li><span><span>The <code>class</code>, <code>id</code>, and
+    <code>style</code> attributes are available, with the same semantics as
+    in HTML: you can associate CSS styles with MathML elements
+    (<code>class</code> and <code>style</code> attributes) and a MathML
+    element can be the target of a link (<code>id
+    </code>attribute).</span></span></li>
+  <li><span><span>Due to the lack of mathematical fonts in the current
+    version, only a limited set of entities representing math symbols are
+    recognized, mainly those available in the Symbol font. The current
+    version supports the following:</span></span>
+    <p><span><code>Therefore, SuchThat, DownTee, Or, And, Not, Exists,
+    ForAll, Element, NotElement, NotSubset, Subset, SubsetEqual, Superset,
+    SupersetEqual, DoubleLeftArrow, DoubleLeftRightArrow, DoubleRightArrow,
+    LeftArrow, LeftRightArrow, RightArrow, Congruent, GreaterEqual, le,
+    NotEqual, Proportional, VerticalBar, Union, Intersection, PlusMinus,
+    CirclePlus, Sum, Integral, CircleTimes, Product, CenterDot, Diamond,
+    PartialD, DoubleDownArrow, DoubleUpArrow, DownArrow, UpArrow,
+    ApplyFunction, TripleDot, DifferentialD, ImaginaryI, ExponentialE,
+    InvisibleComma, UnderBar, OverBar, ThinSpace, ThickSpace, Hat, OverBar,
+    UnderBar, prime, Prime.</code></span></p>
   </li>
 </ul>
 </div>

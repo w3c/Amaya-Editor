@@ -5,7 +5,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-  <meta name="GENERATOR" content="amaya 6.1, see http://www.w3.org/Amaya/" />
+  <meta name="generator" content="amaya 6.1, see http://www.w3.org/Amaya/" />
   <title>Das Menü Struktur</title>
   <style type="text/css">
   </style>
@@ -14,8 +14,7 @@
 
 <body xml:lang="de" lang="de">
 
-<table border="0" cellspacing="5" cellpadding="5"
-summary="Inhaltsverzeichnis">
+<table border="0" cellspacing="5" cellpadding="5">
   <tbody>
     <tr>
       <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
@@ -34,27 +33,27 @@ summary="Inhaltsverzeichnis">
 <h1>Das Menü Struktur</h1>
 
 <p>Mit dem Menü <strong>Elemente</strong> ist man nur in der Lage Elemente
-innerhalb des Dokumentenkörpers einzufügen. Um Elemente im Element
-<code>&lt;HEAD</code>&gt; einzufügen (im Dokumentenkopf), muss man das Menü
-<strong>Struktur</strong> der Strukturansicht benutzen.</p>
+innerhalb des Dokumentenkörpers einzufügen. Um Elemente im Dokumentenkopf
+einzufügen, muss man das Menü <strong>Struktur</strong> der Strukturansicht
+benutzen.</p>
 
 <p>Dieses Menü steht nur in der Strukturansicht zur Verfügung.</p>
 
 <p>Das Menü <strong>Struktur</strong> arbeitet genau so wie das Menü
-<strong>Elemente</strong> in der Browseransicht: den Cursor positionieren und
-ein Element auswählen.</p>
+<strong>Elemente</strong>: den Cursor positionieren und ein Element
+auswählen.</p>
 
 <p>Über das Menü <strong>Struktur</strong> kann man auch
 <strong>Kommentar</strong> eingeben. Kommentare werden nur in der
-Strukturansicht angezeigt und können an jeder beliebigen Position im Dokument
-eigefügt werden.</p>
+Strukturansicht angezeigt und können an jeder beliebigen Stelle im Dokument
+eingefügt werden.</p>
 
 <h2>Generierte Elemente</h2>
 
 <p>Einige HTML-Elemente sind aus verschiedenen anderen Elementen
-zusammengestellt. Beispielsweise besteht eine Tabelle aus einer Überschrift
+zusammengesetzt. Beispielsweise besteht eine Tabelle aus einer Überschrift
 (<code>caption</code>), mehreren Zeilen (<code>tr</code>) und mehreren Zellen
-(<code>td</code> oder <code>th</code>) in jeder Zeile.</p>
+(<code>td</code> oder <code>th</code>) pro Zeile.</p>
 
 <p>Wenn Amaya diese Elemente generiert, dann erzeugt es auch dessen
 Komponenten. Eine Tabelle wird mit einem Überschriftselement und einer Zeile,

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -8,14 +7,13 @@
   <title>Die Struktur eines Dokuments ändern</title>
   <style type="text/css">
   </style>
-  <meta name="GENERATOR" content="amaya 6.1, see http://www.w3.org/Amaya/" />
+  <meta name="generator" content="amaya 6.1, see http://www.w3.org/Amaya/" />
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
 <body xml:lang="de" lang="de">
 
-<table border="0" cellspacing="5" cellpadding="5"
-summary="Inhaltsverzeichnis">
+<table border="0" cellspacing="5" cellpadding="5">
   <tbody>
     <tr>
       <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
@@ -32,20 +30,24 @@ summary="Inhaltsverzeichnis">
 <h1>Die Struktur eines Dokuments ändern</h1>
 
 <p>Einfache Strukturänderungen können über das Menü <strong>Elemente</strong>
-durchgeführt werden. Komplexere Transformationen müssen mit anderen Mittel
-erreicht werden.</p>
+durchgeführt werden. Weiterhin kann man Elemente mit den Befehlen
+<strong>Ausschneiden</strong>, <strong>Kopieren</strong> und
+<strong>Einfügen</strong> aus dem Menü <strong>Bearbeiten</strong> verlagern.
+Komplexere Transformationen müssen mit anderen Mittel erreicht werden. Hierzu
+wurde eine spezielle Transformationssprache geschaffen, mit der man komplexe
+Strukturen ändern kann.</p>
 
 <p>Weitere Informationen findet man unter:</p>
 <ul>
   <li><a href="../elements/the_structure_menu.html.de">Das Menü Struktur</a></li>
-  <li><a href="the_transform_command.html.de#page_body" rel="subdocument">Ein
-    Dokument transformieren</a></li>
-  <li><a href="about_inserting_a_division.html.de#page_body"
-    rel="subdocument">Über das Einfügen eines Abschnitts</a></li>
-  <li><a href="about_merging_elements.html.de#page_body" rel="subdocument">Über
-    das Verschachteln von Elementen</a></li>
-  <li><a href="Transform.html.de#page_body" rel="subdocument">Die Datei
-    HTML.trans benutzen</a></li>
+  <li><a href="the_transform_command.html.de#page_body">Ein Dokument
+    transformieren</a></li>
+  <li><a href="about_inserting_a_division.html.de#page_body">Über das Einfügen
+    eines Abschnitts</a></li>
+  <li><a href="about_merging_elements.html.de#page_body">Über das Verschachteln
+    von Elementen</a></li>
+  <li><a href="Transform.html.de#page_body">Die Datei HTML.trans
+  benutzen</a></li>
 </ul>
 
 <p><a></a></p>

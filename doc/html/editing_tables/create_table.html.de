@@ -14,8 +14,7 @@
 
 <body xml:lang="de" lang="de">
 
-<table border="0" cellspacing="5" cellpadding="5"
-summary="Inhaltsverzeichnis">
+<table border="0" cellspacing="5" cellpadding="5">
   <tbody>
     <tr>
       <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
@@ -36,18 +35,19 @@ summary="Inhaltsverzeichnis">
 <p class="ProcedureCaption">Um eine neue Tabelle zu erzeugen:</p>
 <ol>
   <li>Den Cursor an die Stelle im Dokument plazieren, an der die Tabelle
-    erzeugt werden soll. </li>
-  <li>Den Knopf <strong>Tabelle</strong> in der Knopfleiste anklicken oder im
-    Menü <strong>Elemente</strong>, Untermenü <strong>Tabelle</strong> die
-    Option <strong>Neue Tabelle</strong> wählen. Der Dialog
-    <strong>NeueTabelle</strong> wird angezeigt. </li>
+    erzeugt werden soll.</li>
+  <li>Den Knopf <strong>Tabelle</strong> <img alt="Icon Tabelle"
+    src="../../images/table.gif" /> in der Knopfleiste anklicken oder im Menü
+    <strong>Elemente</strong>, Untermenü <strong>Tabelle</strong> den Befehl
+    <strong>Neue Tabelle</strong> wählen. Der Dialog
+    <strong>NeueTabelle</strong> wird angezeigt.</li>
   <li>Hier die Anzahl der Zeilen und Spalten, sowie die Breite des Rahmens
-    eingeben. </li>
-  <li>Den Knopf <strong>Erzeugen</strong> anklicken. Amaya generiert eine
-    grafische Repräsentation der Tabelle. </li>
+    eingeben.</li>
+  <li>Den Knopf <strong>OK</strong> anklicken. Amaya generiert eine grafische
+    Repräsentation der Tabelle.</li>
   <li>Der Cursor wird automatisch oberhalb der Tabelle positioniert, wo man
     die Tabellenüberschrift eingeben kann. Wird keine Überschrift gewünscht,
-    muss man die Taste <kbd>Entf</kbd> drücken. </li>
+    muss man die Taste <kbd>Entf</kbd> drücken.</li>
   <li>Die neue Tabelle enthält leere Zellen. In diese kann man Text oder
     andere Elemente einfügen. Mit den Pfeiltasten kann man sich von einer
     Zelle zur anderen bewegen.</li>

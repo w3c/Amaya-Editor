@@ -5,7 +5,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-  <meta name="GENERATOR" content="amaya 6.1, see http://www.w3.org/Amaya/" />
+  <meta name="generator" content="amaya 6.1, see http://www.w3.org/Amaya/" />
   <title>Grafiken verschieben</title>
   <style type="text/css">
  </style>
@@ -14,8 +14,7 @@
 
 <body xml:lang="de" lang="de">
 
-<table border="0" cellspacing="5" cellpadding="5"
-summary="Inhaltsverzeichnis">
+<table border="0" cellspacing="5" cellpadding="5">
   <tbody>
     <tr>
       <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
@@ -33,26 +32,25 @@ summary="Inhaltsverzeichnis">
 <div id="page_body">
 <h1>Grafiken verschieben</h1>
 
-<p>Nachdem man <a href="creating_graphics_with_the_palette.html.de">eine Grafik
-erzeugt</a> hat, kann man diese an eine beliebige Stelle im Dokument
-verschieben.</p>
+<p>Nachdem man eine Grafik erzeugt hat, kann man diese an eine beliebige
+Stelle im Dokument verschieben.</p>
 
-<p class="ProcedureCaption">Um eine Grafik mit der Tastatur zu
+<p class="ProcedureCaption">Um eine Grafik mit Maus und Tastatur zu
 verschieben:</p>
 <ol>
   <li>Den Cursor in einen Bereich der Grafik positionieren.</li>
-  <li>Die Taste <code>Strg</code> und die linke Maustaste drücken. Die Grafik
+  <li>Die Taste <kbd>Strg</kbd> und die linke Maustaste drücken. Die Grafik
     wird markiert.</li>
-  <li>Die Taste <code>Strg</code> loslassen, die Maustaste gedrückt halten
-    und die Grafik an die gewünschte Stelle verschieben.</li>
+  <li>Die Taste <kbd>Strg</kbd> loslassen, die Maustaste gedrückt halten und
+    die Grafik an die gewünschte Stelle verschieben.</li>
 </ol>
 
-<p class="ProcedureCaption">Um Grafik durch Editierung ihrer Attribute zu
+<p class="ProcedureCaption">Um die Grafik durch Editierung ihrer Attribute zu
 verschieben:</p>
 <ol>
   <li>Die Grafik markieren.</li>
   <li>Das Menü <strong>Attribute</strong> öffnen und das gewünschte Attribut
-    auswählen.</li>
+    (<code>x</code>, <code>y</code>) auswählen.</li>
   <li>Im Dialog das Attribut editieren, <strong>Übernehmen</strong> und
     danach <strong>Beenden</strong> anklicken.</li>
 </ol>

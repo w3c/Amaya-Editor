@@ -3,7 +3,7 @@
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta name="GENERATOR" content="amaya 6.1, see http://www.w3.org/Amaya/" />
+  <meta name="generator" content="amaya 6.1, see http://www.w3.org/Amaya/" />
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
   <title>Rechtschreibprüfung</title>
   <style type="text/css">
@@ -13,11 +13,11 @@
 
 <body xml:lang="de" lang="de">
 
-<table border="0" cellspacing="5" cellpadding="5" summary="Inhaltsverzeichnis">
+<table border="0" cellspacing="5" cellpadding="5">
   <tbody>
     <tr>
-      <td><p><img alt="W3C" src="../images/w3c_home" /> <img alt="Amaya"
-        src="../images/amaya.gif" /></p>
+      <td><img alt="W3C" src="../images/w3c_home" /> <img alt="Amaya"
+        src="../images/amaya.gif" />
       </td>
       <td><a href="Searching.html.de" accesskey="p"><img
         alt="vorherige Seite" src="../images/left.gif" /></a> <a
@@ -30,7 +30,6 @@
   </tbody>
 </table>
 
-<div id="page_body">
 <h1>Rechtschreibprüfung</h1>
 
 <p>Folgende Themen werden in diesem Abschnitt behandelt:</p>
@@ -38,6 +37,5 @@
   <li><a href="spell_checking/spell_checking.html.de#page_body"
     rel="subdocument">Rechtschreibprüfung</a></li>
 </ul>
-</div>
 </body>
 </html>

@@ -8,14 +8,13 @@
   <title>Über die Besonderheiten der Benutzerfreundlichkeit</title>
   <style type="text/css">
   </style>
-  <meta name="GENERATOR" content="amaya 6.1, see http://www.w3.org/Amaya/" />
+  <meta name="generator" content="amaya 6.1, see http://www.w3.org/Amaya/" />
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
 <body xml:lang="de" lang="de">
 
-<table border="0" cellspacing="5" cellpadding="5"
-summary="Inhaltsverzeichnis">
+<table border="0" cellspacing="5" cellpadding="5">
   <tbody>
     <tr>
       <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
@@ -43,28 +42,25 @@ beinhalten:</p>
 <ul>
   <li>Navigation und Textbearbeitung in den Ansichten Textbrowser, Verweise,
     Struktur und Inhaltsverzeichnis, welche alle mit der normalen
-    Browseransicht synchronisiert werden. Siehe <span class="Link0"><a
+    Browseransicht synchronisiert werden. Siehe <a
     href="../viewing/working_with_document_views.html.de">Mit Ansichten
-    arbeiten</a></span>.</li>
+    arbeiten</a>.</li>
   <li>Textbearbeitung in der Ansicht Quellcode und manuelles Synchronisieren
-    mit jeder anderen Ansicht. Weitere Informationen findet man unter <span
-    class="Link0"><a href="../viewing/working_with_document_views.html.de">Mit
-    Ansichten arbeiten</a></span>.</li>
+    mit jeder anderen Ansicht. Weitere Informationen findet man unter
+    <a href="../viewing/working_with_document_views.html.de">Mit
+    Ansichten arbeiten</a>.</li>
   <li>Dynamisches Hinzufügen, Entfernen und Editieren mehrerer
     Formatvorlagen, inklusive einer benutzerdefinierten Formatvorlage. Siehe
-    <span class="Link0"><a
-    href="../style_sheets/working_with_styles.html.de">Mit Ansichten
-    arbeiten</a></span>.</li>
+    <a href="../style_sheets/working_with_styles.html.de">Mit Formatvorlagen
+    arbeiten</a>.</li>
   <li>Zuordnung von Zugriffstasten an Formularfelder, aktive Bildbereiche
-    oder Verweise. Siehe <span class="Link0"><a
-    href="../browsing/about_access_keys.html.de">Über
-  Zugriffstasten</a></span>.</li>
+    oder Verweise. Siehe <a href="../browsing/about_access_keys.html.de">Über
+  Zugriffstasten</a>.</li>
   <li>Die Benutzung von Tastenkürzel für Menüoptionen, Verweise und
     Formularfelder. Siehe <a
     href="../selecting/selecting_with_keyboard_and_mouse.html.de">Mit Maus und
-    Tastatur markieren</a> und <span class="Link0"><a
-    href="../configuring_amaya/configuring_amaya.html.de">Über
-    Zugriffstasten</a></span>.</li>
+    Tastatur markieren</a> und <a href="../configuring_amaya/configuring_amaya.html.de">Amaya
+    konfigurieren</a>.</li>
 </ul>
 </div>
 </body>

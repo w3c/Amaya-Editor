@@ -4,17 +4,17 @@
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
   <title>Über Tastenkürzel</title>
   <style type="text/css">
   </style>
-  <meta name="GENERATOR" content="amaya 6.2, see http://www.w3.org/Amaya/" />
+  <meta name="generator" content="amaya 6.1, see http://www.w3.org/Amaya/" />
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
 <body xml:lang="de" lang="de">
 
-<table border="0" cellspacing="5" cellpadding="5"
-summary="Inhaltsverzeichnis">
+<table border="0" cellspacing="5" cellpadding="5">
   <tbody>
     <tr>
       <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
@@ -31,38 +31,42 @@ summary="Inhaltsverzeichnis">
 <h1>Über Tastenkürzel</h1>
 
 <p>Es ist nützlich Menübefehle direkt über die Tastatur zu aktivieren. Das
-Thot Toolkit bewerkstelligt das durch die Verwendung einer Datei für
-Tastenkürzel. Diese Datei definiert eine Liste von Verbindungen zwischen
-einen auszuführenden Befehl und einer Tastensequenz.</p>
+Thot Toolkit,welches in Amaya benutzt wird, bewerkstelligt das durch die
+Verwendung einer Datei für Tastenkürzel (amaya.kb oder amaya.keyboard im
+Verzeichnis config). Diese Datei definiert eine Liste von Verbindungen
+zwischen einen auszuführenden Befehl und einer Tastensequenz.</p>
 
 <p>Die Syntax, um solch eine Verbindung zu definieren ist:</p>
 
-<p><code>Directive = KeySeq ':' IdentCommand ;<br />
-&nbsp;KeysSeq = KeySet [ ',' KeySet ] ;<br />
-&nbsp;KeySet = [ Modifier ] [ 'Shift' ] Key ;<br />
-&nbsp;Key = '&lt;Key&gt;' KeyValue / '&lt;Key&gt;' SpecialKey ;<br />
-&nbsp;Modifier = 'Ctrl' / 'Alt' / 'Meta' ;<br />
-&nbsp;KeyValue = 'a' / 'b' / ... ;<br />
-&nbsp;SpecialKey = 'Escape' / 'Delete' / 'Space' / 'BackSpace' /<br />
+<p><code>KeySeq ':' IdentCommand ;<br />
+&nbsp;KeysSeq = KeySet [ ',' KeySet ]<br />
+&nbsp;KeySet = [ Modifier ] [ 'Shift' ] Key<br />
+&nbsp;Modifier = 'Ctrl' | 'Alt' | 'Meta'<br />
+&nbsp;Key = '&lt;Key&gt;' KeyValue | '&lt;Key&gt;' SpecialKey<br />
+&nbsp;KeyValue = 'a' | 'b' | ...<br />
+&nbsp;SpecialKey = 'Escape' | 'Delete' | 'Space' | 'BackSpace' |<br />
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-'Enter' / 'Up' / 'Down' / 'Left' / 'Right' /<br />
+'Enter' | 'Up' | 'Down' | 'Left' | 'Right' |<br />
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-'Home' / 'End' / 'F1' / ... / 'L1' / ... / 'R1' / ... ;<br />
-&nbsp;IdentCommand = 'TtcInsertChar(' Char ')' / NAME '()' ;<br />
-&nbsp;Char = KeyValue / OctalValue ;&nbsp; OctalValue = '\' NUMBER
-;</code></p>
+'Home' | 'End' | 'F1' | ... | 'L1' | ... | 'R1' | ...<br />
+&nbsp;IdentCommand = Cmd_from_List | 'TtcInsertChar('Char')' | NAME '()'<br />
+&nbsp;Cmd_from_List = see List below<br />
+&nbsp;Char = entity | decValue | hexValue<br />
+&nbsp;entity = '&amp;ccc;'<br />
+&nbsp;decValue = '&amp;#ddd;'<br />
+&nbsp;hexValue = '&amp;#xhhh;'</code></p>
 
 <p>Als Beispiel sehe man sich die Standarddateien amaya.keyboard (Unix) oder
-amaya.kb (Windows) an, die sich im Verzeichnis <span
-class="Link0">Amaya/config</span> befinden.</p>
+amaya.kb (Windows) an, die sich im Verzeichnis <code>config</code>
+befinden.</p>
 
 <p>Liste der verfügbaren Befehle:</p>
 <ul>
-  <li>Cursorbewegung: 
+  <li>Cursorbewegung:
     <ul>
       <li>zeichenweise:
       <code>TtcNextChar</code>,<code>TtcPreviousChar</code></li>
-      <li>zeilenweise:<code>TtcNextLine</code>,<code>TtcPreviousLine</code>,
+      <li>zeilenweise: <code>TtcNextLine</code>,<code>TtcPreviousLine</code>,
         <code>TtcStartOfLine</code>, <code>TtcEndOfLine</code></li>
       <li>elementweise:
         <code>TtcNextElement</code>,<code>TtcPreviousElement</code>,
@@ -96,7 +100,7 @@ class="Link0">Amaya/config</span> befinden.</p>
   <li>Menü Struktur: <code>CreateBase</code>, <code>CreateMeta</code>,
     <code>CreateLinkInHead</code>, <code>CreateScript</code>,
     <code>CreateStyle</code>, <code>CreateComment.</code></li>
-  <li>Menü Elemente: 
+  <li>Menü Elemente:
     <ul>
       <li>Hauptmenü: <code>ChangeTitle</code>, <code>CreateAddress</code>
         <code>CreateParagraph</code>, <code>CreateImage</code>,
@@ -141,21 +145,21 @@ class="Link0">Amaya/config</span> befinden.</p>
         <code>CreateHeadingCell</code>, <code>DeleteColumn</code></li>
     </ul>
   </li>
-  <li>Menü Verweise <code>LinkToPreviousTarget</code>,
+  <li>Menü Verweise: <code>LinkToPreviousTarget</code>,
     <code>CreateOrChangeLink</code>, <code>CreateTarget</code>,
     <code>DeleteAnchor</code>.</li>
-  <li>Menü Ansichten: <code>ShowButtons</code>, <code>ShowAddress</code>,
-    <code>ShowMapAreas</code>, <code>ShowTargets</code>, <code>ZoomIn</code>,
-    <code>ZoomOut</code>, <code>ShowStructure</code>,
-    <code>ShowAlternate</code>, <code>ShowLinks</code>, <code>ShowToC</code>,
-    <code>ShowSource</code></li>
-  <li>Menü Formate: 
+  <li>Menü Ansichten: <code>TtcSwitchButtonBar</code>,
+    <code>TtcSwitchCommands</code>, <code>ShowMapAreas</code>,
+    <code>ShowTargets</code>, <code>ZoomIn</code>, <code>ZoomOut</code>,
+    <code>ShowStructure</code>, <code>ShowAlternate</code>,
+    <code>ShowLinks</code>, <code>ShowToC</code>, <code>ShowSource</code></li>
+  <li>Menü Formate:
     <ul>
       <li>Hauptmenü: <code>TtcChangeCharacters</code>,
         <code>TtcChangeColors</code>, <code>TtcChangeFormat</code>,
         <code>ChangeBackgroundImage</code>, <code>CreateClass</code>,
         <code>ApplyClass</code>.</li>
-      <li>Untermenü Formatvorlagen: <code>LinkCSS</code>,
+      <li>Untermenü Formatvorlage: <code>LinkCSS</code>,
         <code>OpenCSS</code>, <code>DisableCSS</code>,
         <code>EnableCSS</code>, <code>RemoveCSS</code>.</li>
       <li>Untermenü Inhaltsorientiert: <code>SetOnOffEmphasis</code>,
@@ -178,7 +182,7 @@ class="Link0">Amaya/config</span> befinden.</p>
     <code>ConfigProxy</code>, <code>ConfigColor</code>,
     <code>ConfigGeometry</code>, <code>ConfigLanNeg</code>,
     <code>ConfigProfile</code>, <code>ConfigTemplates</code>.</li>
-  <li>Menü Anmerkungen:<code>AnnotateSelection</code>,
+  <li>Menü Anmerkungen: <code>AnnotateSelection</code>,
     <code>AnnotateDocument</code>, <code>LoadAnnotations</code>,
     <code>PostAnnotation</code>, <code>DeleteAnnotation</code>,
     <code>FilterAnnot</code>, <code>ConfigAnnot</code>.</li>

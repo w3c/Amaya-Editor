@@ -8,14 +8,13 @@
   <title>Eine Ansicht öffnen</title>
   <style type="text/css">
   </style>
-  <meta name="GENERATOR" content="amaya 6.1, see http://www.w3.org/Amaya/" />
+  <meta name="generator" content="amaya 6.1, see http://www.w3.org/Amaya/" />
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
 <body xml:lang="de" lang="de">
 
-<table border="0" cellspacing="5" cellpadding="5"
-summary="Inhaltsverzeichnis">
+<table border="0" cellspacing="5" cellpadding="5">
   <tbody>
     <tr>
       <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
@@ -38,85 +37,23 @@ Ansicht wird in einem separaten Fenter angezeigt. Damit ist man in der Lage
 klar zu erkennen, was passiert, wenn man komplexe Dokumente bearbeitet. Das
 ist auch hilfreich, wenn man sich in einem Dokument hin- und herbewegt.</p>
 
-<p class="ProcedureNote"><strong>Anmerkung:</strong> Die verschiedenen
-Ansichten können nur aus der Browseransicht heraus aktiviert werden.</p>
+<p class="Note"><strong>Anmerkung:</strong> Die verschiedenen Ansichten
+können nur aus der Browseransicht heraus aktiviert werden.</p>
 
 <p class="ProcedureCaption">Um eine Ansicht zu öffnen:</p>
 <ul>
-  <li>im Menü <strong>Ansicht</strong> die gewünschte Ansicht auswählen.</li>
-  <li>oder das entsprechende Tastenkürzel benutzen, welche in der folgenden
-    Tabelle aufgelistet werden: 
-    <p></p>
-
-    <table border="0" cellspacing="0" cellpadding="0"
-    style="border-collapse:collapse;border:none; width: 5.15in">
-      <tbody>
-        <tr>
-          <td valign="top"
-          style="border-top:solid 1.5pt;                  border-left:none;                  border-bottom:solid 1.5pt;                  border-right:solid .5pt;                  padding:0in 5.4pt 0in 5.4pt"><p
-            class="TableTitle"><strong>Ansicht</strong></p>
-          </td>
-          <td valign="top"
-          style="border-top:solid 1.5pt;                  border-left:none;                  border-bottom:solid 1.5pt;                  border-right:none;                  padding:0in 5.4pt 0in 5.4pt"><p
-            class="TableTitle"><strong>Tastenkürzel</strong></p>
-          </td>
-        </tr>
-        <tr>
-          <td valign="top"
-          style="border-top:none;                  border-left:none;                  border-bottom:solid .5pt;                  border-right:solid .5pt;                  padding:0in 5.4pt 0in 5.4pt"><p
-            class="TableText">Struktur</p>
-          </td>
-          <td valign="top"
-          style="border:none;                  border-bottom:solid .5pt;                  padding:0in 5.4pt 0in 5.4pt"><p
-            class="TableText"><code>Alt v Alt s</code></p>
-          </td>
-        </tr>
-        <tr>
-          <td valign="top"
-          style="border-top:none;                  border-left:none;                  border-bottom:solid .5pt;                  border-right:solid .5pt;                  padding:0in 5.4pt 0in 5.4pt"><p
-            class="TableText">Textbrowser</p>
-          </td>
-          <td valign="top"
-          style="border:none;                 border-bottom:solid .5pt;                 padding:0in 5.4pt 0in 5.4pt"><p
-            class="TableText"><code>Alt v Alt i</code></p>
-          </td>
-        </tr>
-        <tr>
-          <td valign="top"
-          style="border-top:none;                  border-left:none;                  border-bottom:solid .5pt;                  border-right:solid .5pt;                  padding:0in 5.4pt 0in 5.4pt"><p
-            class="TableText">Verweise</p>
-          </td>
-          <td valign="top"
-          style="border:none;                  border-bottom:solid .5pt;                  padding:0in 5.4pt 0in 5.4pt"><p
-            class="TableText"><code>Alt v Alt l</code></p>
-          </td>
-        </tr>
-        <tr>
-          <td valign="top"
-          style="border-top:none;                  border-left:none;                  border-bottom:solid .5pt;                  border-right:solid .5pt;                  padding:0in 5.4pt 0in 5.4pt"><p
-            class="TableText">Inhaltsverzeichnis</p>
-          </td>
-          <td valign="top"
-          style="border:none;                  border-bottom:solid .5pt;                  padding:0in 5.4pt 0in 5.4pt"><p
-            class="TableText"><code>Alt v Alt c</code></p>
-          </td>
-        </tr>
-        <tr>
-          <td valign="top"
-          style="border-top:none;                  border-left:none;                  border-bottom:solid 1.5pt;                  border-right:solid .5pt;                  padding:0in 5.4pt 0in 5.4pt"><p
-            class="TableText">Quelltext</p>
-          </td>
-          <td valign="top"
-          style="border:none;                  border-bottom:solid 1.5pt;                  padding:0in 5.4pt 0in 5.4pt"><p
-            class="TableText"><code>Alt v Alt h</code></p>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-    <p>&nbsp;</p>
-    <p class="Note"><strong>Anmerkung:</strong>&nbsp;Diese Befehle können
-    auch dazu benutzt werden ein verstecktes Fenster einer Ansicht in den
-    Vordergrund zu bringen.</p>
+  <li>Im Menü <strong>Ansicht</strong> die gewünschte Ansicht auswählen.</li>
+  <li>Das entsprechende Tastenkürzel benutzen:
+    <ul>
+      <li><strong>Struktur</strong>: <kbd>Alt v Alt s</kbd></li>
+      <li><strong>Textbrowser</strong>: <kbd>Alt v Alt i</kbd></li>
+      <li><strong>Verweise</strong>: <kbd>Alt v Alt l</kbd></li>
+      <li><strong>Inhaltsverzeichnis</strong>: <kbd>Alt v Alt c</kbd></li>
+      <li><strong>Quelltext</strong>: <kbd>Alt v Alt h</kbd></li>
+    </ul>
+    <p class="ProcedureNote"><strong>Anmerkung:</strong>&nbsp;Diese Befehle
+    können auch dazu benutzt werden um ein verstecktes Fenster einer Ansicht
+    in den Vordergrund zu bringen.</p>
   </li>
 </ul>
 </div>

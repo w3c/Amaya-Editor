@@ -6,7 +6,7 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
   <meta name="generator" content="amaya 6.1, see http://www.w3.org/Amaya/" />
-  <title>Über die Behandlung von Leerzeichen (white spaces)</title>
+  <title>Über die Behandlung von Leerzeichen</title>
   <style type="text/css">
   </style>
   <link href="../style.css" rel="stylesheet" type="text/css" />
@@ -14,8 +14,7 @@
 
 <body xml:lang="de" lang="de">
 
-<table border="0" cellspacing="5" cellpadding="5"
-summary="Inhaltsverzeichnis">
+<table border="0" cellspacing="5" cellpadding="5">
   <tbody>
     <tr>
       <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
@@ -29,34 +28,33 @@ summary="Inhaltsverzeichnis">
 </table>
 
 <div id="page_body">
-<h1>Über die Behandlung von Leerzeichen (white spaces)</h1>
+<h1>Über die Behandlung von Leerzeichen</h1>
 
-<p>Amaya entfernt bedeutungslose Leerzeichen (white spaces) wenn ein Dokument
-geladen wird, es sei denn diese müssen explizit erhalten werden. Dies gilt
-bei XHTML-, MathML-, und SVG-Dokumenten und auch bei HTML-Dokumenten, welche
-MathML- oder SVG-Elemente enthalten.</p>
+<p>Amaya entfernt <strong>bedeutungslose Leerzeichen</strong> (white spaces)
+wenn ein Dokument geladen wird, es sei denn diese müssen explizit erhalten
+werden. Dies gilt bei XHTML-, MathML-, und SVG-Dokumenten und auch bei
+HTML-Dokumenten, welche MathML- oder SVG-Elemente enthalten.</p>
 
 <p>Folgende Leerzeichen werden als bedeutungslos erachtet:</p>
 <ul>
   <li>Zeilenendezeichen <code>(hex 0D</code> und/oder <code>hex
   0A</code>),</li>
   <li>TAB-Zeichen (<code>hex 09</code>),</li>
-  <li>Leerzeichen vor einem Element,</li>
-  <li>Leezeichen hinter einem Element,</li>
+  <li>Leerzeichen hinter dem Start-Tag eines Elements,</li>
+  <li>Leezeichen vor dem Ende-Tag eines Elements,</li>
   <li>aufeinanderfolgende Leerzeichen (werden durch ein Leerzeichen
   ersetzt).</li>
 </ul>
 
 <p>Um alle Leerzeichen für ein Element zu bewahren, sollte man das Attribut
-<code>xml:space</code> oder das Element <code>PRE</code> (nur in XHTML
+<code>xml:space</code> oder das Element <code>pre</code> (nur in XHTML
 gültig) verwenden. Die möglichen Werte des Attributs <code>xml:space</code>
 sind: <code>default</code> und <code>preserve</code>.</p>
 <ul>
   <li>Der Wert <code>default</code> bedeutet, dass die fehlwertmäßige
-    Behandlung von Leerzeichen einer Applikation für diese Elemente
-    akzeptabel ist. In Amaya ist diese fehlwertmäßige Behandlung das
-    Entfernen bedeutungsloser Leerzeichen für alle unterstützten DTDs (siehe
-    oben).</li>
+    Behandlung von Leerzeichen einer Applikation für diese Elemente verwendet
+    werden soll. In Amaya ist diese fehlwertmäßige Behandlung das Entfernen
+    bedeutungsloser Leerzeichen für alle unterstützten DTDs.</li>
   <li>Der Wert <code>preserve</code> zeigt an, dass Applikationen all diese
     Zeichen unangetastet lassen mussen, mit Ausnahme des ersten Zeichens,
     welches direkt dem Ende-Tag eines Elementes folgt und am Ende einer Zeile
@@ -68,7 +66,7 @@ Elements, in dem es spezifiziert wurde angewendet, also auch auf eingebettete
 Elemente. Das gilt solange, bis dort dieses Verhalten durch ein anderes
 Attrribut überschrieben wird.</p>
 
-<p>In der DTD von XHTML erzeugt das Element <code>PRE</code> das gleiche
+<p>In der DTD von XHTML erzeugt das Element <code>pre</code> das gleiche
 Verhalten wie das Attribut <code>xml:space</code> mit dem Wert
 <code>preserve</code>.</p>
 
@@ -77,19 +75,19 @@ wird und nicht während man das Dokument editiert. Eine Konsequenz daraus ist,
 dass diese sichtbar sind und mit abgespeichert werden, aber beim nächsten
 Laden des Dokuments verschwinden. Beispiel: der folgende Quellcode</p>
 
-<p><code>&lt;p&gt;Amaya removes the&lt;strong&gt; insignificant white-space
-&lt;/strong&gt;when it loads ...&lt;/p&gt;</code></p>
+<p><code>&lt;p&gt;Amaya entfernt&lt;strong &gt;bedeutungslose Leerzeichen&lt;
+/strong&gt;(white spaces) wenn ein...&lt;/p&gt;</code></p>
 
 <p>erscheint während der Edition folgendermaßen:</p>
 
-<p><code>Amaya removes the <strong>insignificant white-space</strong> when it
-loads...</code></p>
+<p><code>Amaya entfernt <strong>bedeutungslose Leerzeichen</strong> (white
+spaces) wenn ein...</code></p>
 
 <p>Der Text wird mit dieser Syntax gespeichert. Wenn das Dokument jedoch das
 nächste Mal geladen wird, dann sieht er so aus:</p>
 
-<p><code>Amaya removes the<strong>insignificant white-space</strong>when it
-loads...,</code></p>
+<p><code>Amaya entfernt</code><strong><code>bedeutungslose
+Leerzeichen</code></strong><code>(white spaces) wenn ein...</code></p>
 
 <p>weil die führenden und nachfolgenden Leerzeichen des Elements
 <code>&lt;strong&gt;</code> als bedeutungslos angesehen und entfernt
@@ -97,8 +95,8 @@ werden.</p>
 
 <p>Der korrekte Quellcode würde so aussehen:</p>
 
-<p><code>&lt;p&gt;Amaya removes the &lt;strong&gt;insignificant
-white-space&lt;/strong&gt; when it loads ...&lt;/p&gt;</code></p>
+<p><code>&lt;p&gt;Amaya entfernt &lt;strong&gt;bedeutungslose
+Leerzeichen&lt;/strong&gt; (white spaces) wenn ein...&lt;/p&gt;</code></p>
 </div>
 </body>
 </html>

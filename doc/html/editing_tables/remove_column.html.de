@@ -7,14 +7,13 @@
   <title>Eine Spalte entfernen</title>
   <style type="text/css">
   </style>
-  <meta name="GENERATOR" content="amaya 6.1, see http://www.w3.org/Amaya/" />
+  <meta name="generator" content="amaya 6.1, see http://www.w3.org/Amaya/" />
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
 <body xml:lang="de" lang="de">
 
-<table border="0" cellspacing="5" cellpadding="5"
-summary="Inhaltsverzeichnis">
+<table border="0" cellspacing="5" cellpadding="5">
   <tbody>
     <tr>
       <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
@@ -38,7 +37,7 @@ die nicht leer sind löschen.</p>
 <ol>
   <li>Den Cursor in die Spalte plazieren. </li>
   <li>Im Menü <strong>Elemente</strong>, Untermenü <strong>Tabelle</strong>
-    die Option <strong>Spalte löschen</strong> wählen.</li>
+    den Befehl <strong>Spalte löschen</strong> wählen.</li>
 </ol>
 </div>
 </body>
