@@ -647,7 +647,7 @@ char*    filename;
     
     pluginInstance = (NPP) malloc (sizeof (NPP_t));
 
-    (*(pluginTable [currentPlugin]->pluginFunctionsTable->newp)) (pluginType, pluginInstance, NP_EMBED, argc, argn, argv, /* saved */ NULL);
+    (*(pluginTable [currentPlugin]->pluginFunctionsTable->newp)) (pluginTable [currentPlugin]->pluginType, pluginInstance, NP_EMBED, argc, argn, argv, /* saved */ NULL);
 
     stream      = (NPStream*) malloc (sizeof (NPStream));
     stream->url = filename;
