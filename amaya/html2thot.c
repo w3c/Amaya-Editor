@@ -2268,9 +2268,9 @@ Element             el;
    Language            lang;
    STRING              text;
    CHAR_T              lastChar[2];
-   STRING              name1, name2;
+   STRING              name1;
 #ifdef STANDALONE
-   STRING              imageName;
+   STRING              imageName, name2;
 #endif
    int                 length;
 
