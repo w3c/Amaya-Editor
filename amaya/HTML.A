@@ -86,8 +86,11 @@ ELEMENTS
   Numbered_List:
 	ElemChange.Post -> ListChangedType;
 
-  Frame:
-	ElemSelect.Pre -> FrameToSelect;
+  Text_Input:
+	ElemSelect.Pre -> SelectIncludedText;
+
+  Text_Area:
+	ElemSelect.Pre -> SelectIncludedText;
 
 ATTRIBUTES
 

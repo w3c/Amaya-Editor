@@ -1605,7 +1605,7 @@ Element             parent;
      	      }
 	  }
      }
-   else if (IsCharacterLevelElement (*el))
+   if (elType.ElTypeNum == HTML_EL_TEXT_UNIT || IsCharacterLevelElement (*el))
       /* it is a character level element */
      {
 	parentType = TtaGetElementType (parent);

@@ -768,25 +768,33 @@ Element             el;
 
 
 /*----------------------------------------------------------------------
-  FrameToSelect
+  SelectIncludedText
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             FrameToSelect (NotifyElement * event)
+boolean             SelectIncludedText (NotifyElement * event)
 #else  /* __STDC__ */
-boolean             FrameToSelect (event)
+boolean             SelectIncludedText (event)
 NotifyElement      *event;
 
 #endif /* __STDC__ */
 {
    ElementType         elType;
    Element             el;
+   int		       length;
 
-   /* search the previous text */
+   /* search the first text leaf */
    elType = TtaGetElementType (event->element);
    elType.ElTypeNum = HTML_EL_TEXT_UNIT;
-   el = TtaSearchTypedElement (elType, SearchBackward, event->element);
-   TtaSelectString (event->document, el, 0, 0);
-   return True;			/* refuse to select the frame */
+   el = TtaSearchTypedElement (elType, SearchForward, event->element);
+   if (el != NULL && TtaIsAncestor(el, event->element))
+     {
+	length = TtaGetTextLength (el);
+        TtaSelectString (event->document, el, length+1, length);
+	/* refuse to select the clicked element */
+        return True;
+     }
+   else
+	return False;
 }
 
 /*----------------------------------------------------------------------
