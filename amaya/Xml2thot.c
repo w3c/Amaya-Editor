@@ -979,7 +979,6 @@ static void       GetXmlElType (STRING       XMLname,
 				Document     doc)
 #else
 static void       GetXmlElType (XMLname, elType, mappedName, content, doc)
-
 STRING         XMLname;
 ElementType   *elType;
 STRING        *mappedName;

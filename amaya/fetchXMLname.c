@@ -173,9 +173,21 @@ Document           doc;
    if (XMLtype == XHTML_TYPE)
      ptr = XHTMLElemMappingTable;
    else if (XMLtype == MATH_TYPE)
-     ptr = MathMLElemMappingTable;
+     {
+       if (ParsingLevel[doc] == L_Basic && DocumentTypes[doc] == docHTML)
+	 /* Maths are not allowed in this document */
+	 ptr = NULL;
+       else
+	 ptr = MathMLElemMappingTable;
+     }
    else if (XMLtype == GRAPH_TYPE)
-     ptr = GraphMLElemMappingTable;
+     {
+       if (ParsingLevel[doc] == L_Basic && DocumentTypes[doc] == docHTML)
+	 /* Graphics are not allowed in this document */
+	 ptr = NULL;
+       else
+	 ptr = GraphMLElemMappingTable;
+     }
    else
      ptr = NULL;
    *mappedName = NULL;

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-<base last_update="Wed Sep 27 08:29:40 CEST 2000" version="14">
+<base last_update="Tue Oct 31 11:01:28 CET 2000" version="16">
 <control>
 	<language encoding="latin1">en</language>
 	<language encoding="latin1">fr</language>
@@ -211,7 +211,7 @@
 </label>
 <label define="AM_PROG_WRITE">
 	<message xml:lang="en">Writing %s</message>
-	<message xml:lang="fr">criture %s</message>
+	<message xml:lang="fr">Ecriture %s</message>
 	<message xml:lang="de">Schreibe: %s</message>
 	<message xml:lang="it">Sto scrivendo %s</message>
 	<message xml:lang="tr">%s yazýlýyor</message>
@@ -1041,14 +1041,14 @@
 </label>
 <label define="AM_RELOAD_FILES">
 	<message xml:lang="en">Your previous Amaya session failed. Do you want to reload backup documents?</message>
-	<message xml:lang="fr">Votre précédente session Amaya a planté. Voulez-vous recharger les documents modifiés ?</message>
+	<message xml:lang="fr">La précédente session Amaya s'est mal terminée. Voulez-vous recharger les documents modifiés ?</message>
 	<message xml:lang="de">Ihr letzter Amaya-Prozeß wurde abgebrochen. Möchten Sie Sicherungskopien laden?</message>
 	<message xml:lang="it">La precedente sessione con Amaya è fallita. Vuoi ricaricare i documenti di backup?</message>
 	<message xml:lang="es">Su sesión previa de amaya falló. ¿Quiere recargar la copia de seguridad de los documentos?</message>
 </label>
 <label define="AM_AUTHENTICATION_CONFIRM">
 	<message xml:lang="en">Authentication failed. Retry?</message>
-	<message xml:lang="fr">chec de l'authentification. Voulez-vous réessayer ?</message>
+	<message xml:lang="fr">Echec de l'authentification. Voulez-vous réessayer ?</message>
 	<message xml:lang="de">Login gescheitert. Wiederholen?</message>
 	<message xml:lang="it">Autenticazione fallita. Vuoi riprovare?</message>
 	<message xml:lang="es">Fallo de autenticacion. ¿Reintentar?</message>
@@ -1596,9 +1596,11 @@
 </label>
 <label define="AM_NOT_AVAILABLE">
 	<message xml:lang="en">Not available</message>
+	<message xml:lang="fr">Non disponible</message>
 </label>
 <label define="AM_UNKNOWN_ENCODING">
 	<message xml:lang="en">The encoding of this document is not supported by Amaya. If you edit it, you may loose some information</message>
+	<message xml:lang="fr">L'encodage de ce document n'est pas supporté par Amaya. Si vous l'éditez, vous pouvez perdre des informations.</message>
 </label>
 <label define="AM_BROWSE">
 	<message xml:lang="en">Browse</message>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-<base version="20" last_update="Wed Oct 25 12:02:06 CEST 2000">
+<base version="25" last_update="Tue Oct 31 11:02:34 CET 2000">
 <control>
 	<language encoding="latin1">en</language>
 	<language encoding="latin1">fr</language>
@@ -1500,10 +1500,12 @@
 	<message xml:lang="es">Plantillas...</message>
 </label>
 <label define="BAnnotateSel">
-	<message xml:lang="en">Annotate Selection</message>
+	<message xml:lang="en">Annotate selection</message>
+	<message xml:lang="fr">Annoter la séléction</message>
 </label>
 <label define="BAnnotateDocument">
 	<message xml:lang="en">Annotate document</message>
+	<message xml:lang="fr">Annoter le document</message>
 </label>
 <label define="BPostAnnot">
 	<message xml:lang="en">Post annotation</message>
@@ -1514,6 +1516,7 @@
 </label>
 <label define="BDeleteAnnot">
 	<message xml:lang="en">Delete annotation</message>
+	<message xml:lang="fr">Détruire l'annotation</message>
 </label>
 <label define="BLoadAnnots">
 	<message xml:lang="en">Load annotations</message>
