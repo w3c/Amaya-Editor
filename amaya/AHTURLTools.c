@@ -886,7 +886,8 @@ CHAR_T*      target;
 /*----------------------------------------------------------------------
    ConvertFileURL
    If the URL starts with file: prefix, it removes the protocol so that we
-   can use it as a local filename
+   can use it as a local filename. It also changes the URL_SEP into
+   DIR_SEPs if they are not the same character.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void ConvertFileURL (CHAR_T* url)
@@ -895,8 +896,27 @@ void ConvertFileURL (url)
 CHAR_T* url
 #endif /* __STDC__ */
 {
+  CHAR_T *src, *dest;
+
   if (!ustrncasecmp (url, TEXT("file:"), 5))
-     ustrcpy (url, url + 5);
+    {
+      /* skip the file prefix */
+      dest = url;
+      src = url + 5;
+      while (*src)
+	{
+#ifdef _WINDOWS
+	  if (*dest == URL_SEP)
+	    /* make the transformation */
+	    *dest = DIR_SEP;
+	  else
+#endif /* _WINDOWS */
+	    *dest = *src;
+	  src++;
+	  dest++;
+	}
+      *src = WC_EOS;
+    }
 }
 
 /*----------------------------------------------------------------------
