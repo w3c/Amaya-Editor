@@ -35,7 +35,8 @@ typedef int     *PathSegment;
    language: language of that Text element.
    document: the document containing that element.
   ----------------------------------------------------------------------*/
-extern void TtaSetTextContent (Element element, unsigned char *content, Language language, Document document);
+extern void TtaSetTextContent (Element element, unsigned char *content,
+			       Language language, Document document);
 
 /*----------------------------------------------------------------------
    TtaSetPictureContent
@@ -51,7 +52,8 @@ extern void TtaSetTextContent (Element element, unsigned char *content, Language
    document: the document containing that element.
    mime_type: MIME type of the picture, if known. NULL, otherwise
   ----------------------------------------------------------------------*/
-extern void TtaSetPictureContent (Element element, unsigned char *content, Language language, Document document, char *mime_type);
+extern void TtaSetPictureContent (Element element, unsigned char *content,
+				  Language language, Document document, char *mime_type);
 
 /*----------------------------------------------------------------------
    TtaAppendTextContent
@@ -62,7 +64,8 @@ extern void TtaSetPictureContent (Element element, unsigned char *content, Langu
    content: the character string to be appended coded in ISO-Latin or UTF-8.
    document: the document containing that element.
   ----------------------------------------------------------------------*/
-extern void TtaAppendTextContent (Element element, unsigned char *content, Document document);
+extern void TtaAppendTextContent (Element element, unsigned char *content,
+				  Document document);
 
 /*----------------------------------------------------------------------
    TtaInsertTextContent
@@ -75,7 +78,8 @@ extern void TtaAppendTextContent (Element element, unsigned char *content, Docum
    content: the character string to be inserted coded in ISO-Latin or UTF-8.
    document: the document containing the text element.
   ----------------------------------------------------------------------*/
-extern void TtaInsertTextContent (Element element, int position, unsigned char *content, Document document);
+extern void TtaInsertTextContent (Element element, int position,
+				  unsigned char *content, Document document);
 
 /*----------------------------------------------------------------------
    TtaDeleteTextContent
@@ -87,7 +91,8 @@ extern void TtaInsertTextContent (Element element, int position, unsigned char *
    length: length of the character string to be deleted.
    document: the document containing the text element.
   ----------------------------------------------------------------------*/
-extern void TtaDeleteTextContent (Element element, int position, int length, Document document);
+extern void TtaDeleteTextContent (Element element, int position, int length,
+				  Document document);
 
 /*----------------------------------------------------------------------
    TtaSplitText
@@ -154,7 +159,8 @@ extern void TtaSetSymbolCode (Element element, wchar_t code, Document document);
    must be positive or null.
    unit: UnPixel or UnPoint.
   ----------------------------------------------------------------------*/
-extern void TtaAddPointInPolyline (Element element, int rank, TypeUnit unit, int x, int y, Document document);
+extern void TtaAddPointInPolyline (Element element, int rank, TypeUnit unit,
+				   int x, int y, Document document);
 
 /*----------------------------------------------------------------------
    TtaDeletePointInPolyline
@@ -186,7 +192,8 @@ extern void TtaDeletePointInPolyline (Element element, int rank, Document docume
    document: the document containing the polyline element.
    unit: UnPixel or UnPoint.
   ----------------------------------------------------------------------*/
-extern void TtaModifyPointInPolyline (Element element, int rank, TypeUnit unit, int x, int y, Document document);
+extern void TtaModifyPointInPolyline (Element element, int rank, TypeUnit unit,
+				      int x, int y, Document document);
 
 /*----------------------------------------------------------------------
    TtaChangeLimitOfPolyline
@@ -203,7 +210,8 @@ extern void TtaModifyPointInPolyline (Element element, int rank, TypeUnit unit, 
    points of the polyline.
    document: the document containing the polyline element.
   ----------------------------------------------------------------------*/
-extern void TtaChangeLimitOfPolyline (Element element, TypeUnit unit, int x, int y, Document document);
+extern void TtaChangeLimitOfPolyline (Element element, TypeUnit unit, int x,
+				      int y, Document document);
 
 /*----------------------------------------------------------------------
    TtaTransformCurveIntoPath
@@ -230,7 +238,8 @@ extern char *TtaTransformCurveIntoPath (Element el);
    Return value:
    the created path segment.
    ---------------------------------------------------------------------- */
-extern PathSegment TtaNewPathSegLine (int xstart, int ystart, int xend, int yend, ThotBool newSubpath);
+extern PathSegment TtaNewPathSegLine (int xstart, int ystart, int xend,
+				      int yend, ThotBool newSubpath);
 
 /*----------------------------------------------------------------------
    TtaNewPathSegCubic
@@ -249,7 +258,9 @@ extern PathSegment TtaNewPathSegLine (int xstart, int ystart, int xend, int yend
    Return value:
    the created path segment.
    ---------------------------------------------------------------------- */
-extern PathSegment TtaNewPathSegCubic (int xstart, int ystart, int xend, int yend, int xctrl1, int yctrl1, int xctrl2, int yctrl2, ThotBool newSubpath);
+extern PathSegment TtaNewPathSegCubic (int xstart, int ystart, int xend,
+				       int yend, int xctrl1, int yctrl1,
+				       int xctrl2, int yctrl2, ThotBool newSubpath);
 
 /*----------------------------------------------------------------------
    TtaNewPathSegQuadratic
@@ -269,7 +280,9 @@ extern PathSegment TtaNewPathSegCubic (int xstart, int ystart, int xend, int yen
    the created path segment.
 
    ---------------------------------------------------------------------- */
-extern PathSegment   TtaNewPathSegQuadratic (int xstart, int ystart, int xend, int yend, int xctrl, int yctrl, ThotBool newSubpath);
+extern PathSegment TtaNewPathSegQuadratic (int xstart, int ystart, int xend,
+					   int yend, int xctrl, int yctrl,
+					   ThotBool newSubpath);
 
 /*----------------------------------------------------------------------
    TtaNewPathSegArc
@@ -290,7 +303,10 @@ extern PathSegment   TtaNewPathSegQuadratic (int xstart, int ystart, int xend, i
    Return value:
    the created path segment.
    ---------------------------------------------------------------------- */
-extern PathSegment TtaNewPathSegArc (int xstart, int ystart, int xend, int yend, int xradius, int yradius, int angle, ThotBool largearc, ThotBool sweep, ThotBool newSubpath);
+extern PathSegment TtaNewPathSegArc (int xstart, int ystart, int xend, int yend,
+				     int xradius, int yradius, int angle,
+				     ThotBool largearc, ThotBool sweep,
+				     ThotBool newSubpath);
 
 /*----------------------------------------------------------------------
    TtaAppendPathSeg
@@ -301,7 +317,8 @@ extern PathSegment TtaNewPathSegArc (int xstart, int ystart, int xend, int yend,
    segment: the path segment to be appended.
    document: the document containing the element.
   ----------------------------------------------------------------------*/
-extern void TtaAppendPathSeg (Element element, PathSegment segment, Document document);
+extern void TtaAppendPathSeg (Element element, PathSegment segment,
+			      Document document);
 
 /*----------------------------------------------------------------------
    TtaCopyPage
@@ -376,7 +393,8 @@ extern int TtaGetTextLength (Element element);
    language: language of the text.
    In _I18N mode returns a UTF-8 string.
   ----------------------------------------------------------------------*/
-extern void TtaGiveTextContent (Element element, unsigned char *buffer, int *length, Language *language);
+extern void TtaGiveTextContent (Element element, unsigned char *buffer,
+				int *length, Language *language);
 
 /*----------------------------------------------------------------------
    TtaGiveSubString
@@ -435,7 +453,8 @@ extern int TtaGetPolylineLength (Element element);
    x, y: coordinates of the point, in unit, relatively to
    the upper left corner of the enclosing rectangle.
   ----------------------------------------------------------------------*/
-extern void TtaGivePolylinePoint (Element element, int rank, TypeUnit unit, /*OUT*/ int *x, /*OUT*/ int *y);
+extern void TtaGivePolylinePoint (Element element, int rank, TypeUnit unit,
+				  /*OUT*/ int *x, /*OUT*/ int *y);
 
 /*----------------------------------------------------------------------
    TtaGetPageNumber

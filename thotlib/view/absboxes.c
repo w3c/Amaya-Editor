@@ -44,7 +44,7 @@
 
 
 #define MaxAsc 100
-
+static char BoxTypeName[MAX_TXT_LEN];
 
 /*----------------------------------------------------------------------
    AbsBoxType  rend un pointeur sur un buffer qui contient           
@@ -54,27 +54,28 @@
 char *AbsBoxType (PtrAbstractBox pAb, ThotBool origName)
 {
   PtrElement       pEl;
-  CHAR_T*          text;
 
-  text = TtaAllocString (MAX_TXT_LEN);
   if (pAb == NULL)
-    ustrcpy (text, " ");
+    strcpy (BoxTypeName, " ");
   else
     {
       pEl = pAb->AbElement;
       /* copie le nom du type d'element structure auquel appartient la boite */
       if (origName)
-	ustrcpy (text, pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrOrigName);
+	strcpy (BoxTypeName,
+		pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrOrigName);
       else
-	ustrcpy (text, pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrName);
+	strcpy (BoxTypeName,
+		pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrName);
       if (pAb->AbPresentationBox)
 	/* Ajoute le nom du type de boite de presentation */
 	{
-	  ustrcat (text, ".");
-	  ustrcat (text, pAb->AbPSchema->PsPresentBox[pAb->AbTypeNum - 1].PbName);
+	  strcat (BoxTypeName, ".");
+	  strcat (BoxTypeName,
+		  pAb->AbPSchema->PsPresentBox[pAb->AbTypeNum - 1].PbName);
 	}
     }
-  return (text);
+  return (BoxTypeName);
 }
 
 
@@ -83,7 +84,7 @@ char *AbsBoxType (PtrAbstractBox pAb, ThotBool origName)
    FreeAbView libere, pour une seule vue, tous les paves englobes par le
    pave pointe par pAb, lui-meme compris.
   ----------------------------------------------------------------------*/
-void                FreeAbView (PtrAbstractBox pAb, int frame)
+void FreeAbView (PtrAbstractBox pAb, int frame)
 {
   PtrAbstractBox      pAbb, pAbbNext;
   PtrTextBuffer       pBT, pNextBT;

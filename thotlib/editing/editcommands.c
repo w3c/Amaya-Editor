@@ -1045,7 +1045,7 @@ static ThotBool IsLineBreakInside (PtrTextBuffer pBuffer, int ind, int charWidth
 /*----------------------------------------------------------------------
    TtcInsertGraph insert a graphics                                
   ----------------------------------------------------------------------*/
-void  TtcInsertGraph (Document document, View view, UCHAR_T c)
+void  TtcInsertGraph (Document document, View view, unsigned char c)
 {
    DisplayMode         dispMode;
    int                 frame;
@@ -3185,7 +3185,7 @@ void                PasteXClipboard (USTRING Xbuffer, int nbytes)
 /*----------------------------------------------------------------------
    TtcInsertChar insert a character
   ----------------------------------------------------------------------*/
-void TtcInsertChar (Document doc, View view, UCHAR_T c)
+void TtcInsertChar (Document doc, View view, unsigned char c)
 {
   ViewSelection      *pViewSel;
   PtrAbstractBox      pAb;

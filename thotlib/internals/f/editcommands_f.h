@@ -8,7 +8,7 @@
 
 extern void TtcInsertGraph ( Document document,
                              View view,
-                             UCHAR_T c );
+                             unsigned char c );
 extern void CloseTextInsertion ( void );
 extern void CloseParagraphInsertion ( PtrAbstractBox pAb,
                                       int frame );
@@ -20,7 +20,7 @@ extern void PasteXClipboard ( USTRING Xbuffer,
                               int nbytes );
 extern void TtcInsertChar ( Document doc,
                             View view,
-                            UCHAR_T c );
+                            unsigned char c );
 extern void TtcCutSelection ( Document doc,
                               View view );
 extern void TtcDeletePreviousChar ( Document doc,
@@ -43,7 +43,7 @@ extern void EditingLoadResources ( void );
 
 extern void TtcInsertGraph (/* Document document,
                                View view,
-                               UCHAR_T c */);
+                               unsigned char c */);
 extern void CloseTextInsertion (/* void */);
 extern void CloseParagraphInsertion (/* PtrAbstractBox pAb,
                                         int frame */);
@@ -55,7 +55,7 @@ extern void PasteXClipboard (/* USTRING Xbuffer,
                                 int nbytes */);
 extern void TtcInsertChar (/* Document doc,
                               View view,
-                              UCHAR_T c */);
+                              unsigned char c */);
 extern void TtcCutSelection (/* Document doc,
                                 View view */);
 extern void TtcDeletePreviousChar (/* Document doc,

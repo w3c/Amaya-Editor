@@ -794,7 +794,7 @@ int CopyMBs2Buffer (unsigned char *src, PtrTextBuffer pBuf, int pos, int max)
 int CopyBuffer2MBs (PtrTextBuffer pBuf, int pos, unsigned char *des, int max)
 {
 #ifdef _I18N_
-  char                s[10], *ptr;
+  unsigned char       s[10], *ptr;
 #endif /* _I18N_ */
   int                 l, length;
 

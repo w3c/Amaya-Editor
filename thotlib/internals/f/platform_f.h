@@ -8,11 +8,11 @@
 
 extern int TtaFileExist ( CONST char *filename );
 extern int TtaFileUnlink ( CONST char *filename );
+extern int ThotDirBrowse_next ( ThotDirBrowse * me );
 extern int ThotDirBrowse_first ( ThotDirBrowse *me,
                                  char *dir,
                                  char *name,
                                  char *ext );
-extern int ThotDirBrowse_next ( ThotDirBrowse * me );
 extern int ThotDirBrowse_close ( ThotDirBrowse * me );
 extern ThotFileHandle TtaFileOpen ( CONST char *name,
                                     ThotFileMode mode );
@@ -37,11 +37,11 @@ extern ThotBool TtaCompareFiles ( CONST char *file1,
 
 extern int TtaFileExist (/* CONST char *filename */);
 extern int TtaFileUnlink (/* CONST char *filename */);
+extern int ThotDirBrowse_next (/* ThotDirBrowse * me */);
 extern int ThotDirBrowse_first (/* ThotDirBrowse *me,
                                    char *dir,
                                    char *name,
                                    char *ext */);
-extern int ThotDirBrowse_next (/* ThotDirBrowse * me */);
 extern int ThotDirBrowse_close (/* ThotDirBrowse * me */);
 extern ThotFileHandle TtaFileOpen (/* CONST char *name,
                                       ThotFileMode mode */);

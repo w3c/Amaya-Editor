@@ -1122,11 +1122,11 @@ void TtaChangeLimitOfPolyline (Element element, TypeUnit unit, int x, int y,
    Return value:
    the SVG path expression
    ---------------------------------------------------------------------- */
-STRING  TtaTransformCurveIntoPath (Element el)
+char *TtaTransformCurveIntoPath (Element el)
 {
-  STRING          path = NULL;
+  char           *path = NULL;
 #ifndef NODISPLAY
-  C_points        *ctrlPoints;
+  C_points       *ctrlPoints;
   PtrBox          pBox;
   PtrAbstractBox  pAb;
   PtrElement      pEl;
@@ -1486,7 +1486,7 @@ int TtaGetVolume (Element element)
    Returns a pointer to the  PictInfo structure that's associated with
    element. Returns NULL if element doesn't have such structure.
   ----------------------------------------------------------------------*/
-static PictInfo * GetImageDesc (Element element)
+static PictInfo *GetImageDesc (Element element)
 {
    PtrAbstractBox   pAb;
    PictInfo        *imageDesc;

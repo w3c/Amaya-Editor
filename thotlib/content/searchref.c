@@ -288,8 +288,9 @@ void                FindReferredEl ()
 	     {
 		pRefTable[nMenuItems] = firstSel->ElReference;
 		nMenuItems++;
-		ustrcpy (menuBuf + menuBufLen, firstSel->ElStructSchema->SsRule[firstSel->ElTypeNumber - 1].SrName);
-		menuBufLen += ustrlen (menuBuf) + 1;
+		strcpy (menuBuf + menuBufLen,
+			firstSel->ElStructSchema->SsRule[firstSel->ElTypeNumber - 1].SrName);
+		menuBufLen += strlen (menuBuf) + 1;
 	     }
 	if (firstSel->ElSource != NULL)
 	   /* la selection est un element inclus */
@@ -311,8 +312,9 @@ void                FindReferredEl ()
 		     {
 			pRefTable[nMenuItems] = pAttr->AeAttrReference;
 			nMenuItems++;
-			ustrcpy (menuBuf + menuBufLen, pAttr->AeAttrSSchema->SsAttribute[pAttr->AeAttrNum - 1].AttrName);
-			menuBufLen += ustrlen (pAttr->AeAttrSSchema->SsAttribute[pAttr->AeAttrNum - 1].AttrName) + 1;
+			strcpy (menuBuf + menuBufLen,
+				pAttr->AeAttrSSchema->SsAttribute[pAttr->AeAttrNum - 1].AttrName);
+			menuBufLen += strlen (pAttr->AeAttrSSchema->SsAttribute[pAttr->AeAttrNum - 1].AttrName) + 1;
 		     }
 	     pAttr = pAttr->AeNext;
 	  }

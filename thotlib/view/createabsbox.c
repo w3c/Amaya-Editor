@@ -1870,14 +1870,16 @@ PtrPRule AttrPresRule (PtrAttribute pAttr, PtrElement pEl,
 		       ThotBool inheritRule, PtrAttribute pAttrComp,
 		       PtrPSchema pSchP, int *valueNum)
 {
-  int                 i, len;
   ThotBool            found;
   PtrPRule            pRule;
   PtrAttribute        pAt2;
   PtrElement          pElAttr;
   AttributePres      *pAPRule, *pPRdef, *pPRinherit;
   NumAttrCase        *pCase;
+  char                buffer[100];
   char               *attrValue, *ptr;
+  unsigned int        len;
+  int                 i;
 
   pRule = NULL;
   if (pSchP == NULL)
@@ -1897,7 +1899,11 @@ PtrPRule AttrPresRule (PtrAttribute pAttr, PtrElement pEl,
   else
     {
     if (pAttr->AeAttrText)
-      attrValue = &pAttr->AeAttrText->BuContent[0];
+      {
+	len = 100;
+	CopyBuffer2MBs (pAttr->AeAttrText, 0, buffer, len);
+	attrValue = buffer;
+      }
     else
       attrValue = NULL;
     if (!AttrHasException (ExcCssClass, pAttr->AeAttrNum,pAttr->AeAttrSSchema))

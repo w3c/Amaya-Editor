@@ -10,12 +10,12 @@ extern int AttrValue ( PtrAttribute pAttr );
 extern ThotBool BoolRule ( PtrPRule pPRule,
                            PtrElement pEl,
                            DocViewNumber view,
-                           ThotBool * ok );
+                           ThotBool *ok );
 extern int IntegerRule ( PtrPRule pPRule,
                          PtrElement pEl,
                          DocViewNumber view,
-                         ThotBool * ok,
-                         TypeUnit * unit,
+                         ThotBool *ok,
+                         TypeUnit *unit,
                          PtrAttribute pAttr,
                          PtrAbstractBox pAb );
 extern void GetConstantBuffer ( PtrAbstractBox pAb );
@@ -28,9 +28,9 @@ extern FunctionType TypeCreatedRule ( PtrDocument pDoc,
                                       PtrAbstractBox pAbbCreator,
                                       PtrAbstractBox pAbbCreated );
 extern void SearchPresSchema ( PtrElement pEl,
-                               PtrPSchema * pSchP,
+                               PtrPSchema *pSchP,
                                int *indexElType,
-                               PtrSSchema * pSchS,
+                               PtrSSchema *pSchS,
                                PtrDocument pDoc );
 extern void ApplyCopy ( PtrDocument pDoc,
                         PtrPRule pPRule,
@@ -44,7 +44,7 @@ extern ThotBool ApplyRule ( PtrPRule pPRule,
 extern PtrPRule SearchPresRule ( PtrElement pEl,
                                  PRuleType ruleType,
                                  FunctionType funcType,
-                                 ThotBool * isNew,
+                                 ThotBool *isNew,
                                  PtrDocument pDoc,
                                  int view );
 extern void RedispAbsBox ( PtrAbstractBox pAb,
@@ -56,12 +56,12 @@ extern int AttrValue (/* PtrAttribute pAttr */);
 extern ThotBool BoolRule (/* PtrPRule pPRule,
                              PtrElement pEl,
                              DocViewNumber view,
-                             ThotBool * ok */);
+                             ThotBool *ok */);
 extern int IntegerRule (/* PtrPRule pPRule,
                            PtrElement pEl,
                            DocViewNumber view,
-                           ThotBool * ok,
-                           TypeUnit * unit,
+                           ThotBool *ok,
+                           TypeUnit *unit,
                            PtrAttribute pAttr,
                            PtrAbstractBox pAb */);
 extern void GetConstantBuffer (/* PtrAbstractBox pAb */);
@@ -74,9 +74,9 @@ extern FunctionType TypeCreatedRule (/* PtrDocument pDoc,
                                         PtrAbstractBox pAbbCreator,
                                         PtrAbstractBox pAbbCreated */);
 extern void SearchPresSchema (/* PtrElement pEl,
-                                 PtrPSchema * pSchP,
+                                 PtrPSchema *pSchP,
                                  int *indexElType,
-                                 PtrSSchema * pSchS,
+                                 PtrSSchema *pSchS,
                                  PtrDocument pDoc */);
 extern void ApplyCopy (/* PtrDocument pDoc,
                           PtrPRule pPRule,
@@ -90,7 +90,7 @@ extern ThotBool ApplyRule (/* PtrPRule pPRule,
 extern PtrPRule SearchPresRule (/* PtrElement pEl,
                                    PRuleType ruleType,
                                    FunctionType funcType,
-                                   ThotBool * isNew,
+                                   ThotBool *isNew,
                                    PtrDocument pDoc,
                                    int view */);
 extern void RedispAbsBox (/* PtrAbstractBox pAb,
