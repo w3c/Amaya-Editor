@@ -101,7 +101,6 @@ CLEAN :
 	-@erase "$(INTDIR)\structschema.obj"
 	-@erase "$(INTDIR)\Style.obj"
 	-@erase "$(INTDIR)\tree.obj"
-	-@erase "$(INTDIR)\uaccess.obj"
 	-@erase "$(INTDIR)\uconvert.obj"
 	-@erase "$(INTDIR)\Uio.obj"
 	-@erase "$(INTDIR)\units.obj"
@@ -188,7 +187,6 @@ LIB32_OBJS= \
 	"$(INTDIR)\structschema.obj" \
 	"$(INTDIR)\Style.obj" \
 	"$(INTDIR)\tree.obj" \
-	"$(INTDIR)\uaccess.obj" \
 	"$(INTDIR)\uconvert.obj" \
 	"$(INTDIR)\Uio.obj" \
 	"$(INTDIR)\units.obj" \
@@ -275,7 +273,6 @@ CLEAN :
 	-@erase "$(INTDIR)\structschema.obj"
 	-@erase "$(INTDIR)\Style.obj"
 	-@erase "$(INTDIR)\tree.obj"
-	-@erase "$(INTDIR)\uaccess.obj"
 	-@erase "$(INTDIR)\uconvert.obj"
 	-@erase "$(INTDIR)\Uio.obj"
 	-@erase "$(INTDIR)\units.obj"
@@ -362,7 +359,6 @@ LIB32_OBJS= \
 	"$(INTDIR)\structschema.obj" \
 	"$(INTDIR)\Style.obj" \
 	"$(INTDIR)\tree.obj" \
-	"$(INTDIR)\uaccess.obj" \
 	"$(INTDIR)\uconvert.obj" \
 	"$(INTDIR)\Uio.obj" \
 	"$(INTDIR)\units.obj" \
@@ -6441,15 +6437,16 @@ DEP_CPP_STYLE=\
 	"..\..\thotlib\internals\f\changepresent_f.h"\
 	"..\..\thotlib\internals\f\context_f.h"\
 	"..\..\thotlib\internals\f\exceptions_f.h"\
+	"..\..\thotlib\internals\f\inites_f.h"\
 	"..\..\thotlib\internals\f\memory_f.h"\
 	"..\..\thotlib\internals\f\style_f.h"\
-	"..\..\thotlib\internals\f\uaccess_f.h"\
 	"..\..\thotlib\internals\h\constint.h"\
 	"..\..\thotlib\internals\h\constmedia.h"\
 	"..\..\thotlib\internals\h\constprs.h"\
 	"..\..\thotlib\internals\h\conststr.h"\
 	"..\..\thotlib\internals\h\consttra.h"\
 	"..\..\thotlib\internals\h\htmlstylecolor.h"\
+	"..\..\thotlib\internals\h\thotcolor.h"\
 	"..\..\thotlib\internals\h\thotkey.h"\
 	"..\..\thotlib\internals\h\typecorr.h"\
 	"..\..\thotlib\internals\h\typeint.h"\
@@ -6458,6 +6455,7 @@ DEP_CPP_STYLE=\
 	"..\..\thotlib\internals\h\typestr.h"\
 	"..\..\thotlib\internals\h\typetra.h"\
 	"..\..\thotlib\internals\var\edit_tv.h"\
+	"..\..\thotlib\internals\var\thotcolor_tv.h"\
 	
 
 "$(INTDIR)\Style.obj" : $(SOURCE) $(DEP_CPP_STYLE) "$(INTDIR)"
@@ -6497,7 +6495,6 @@ DEP_CPP_STYLE=\
 	"..\..\thotlib\internals\f\exceptions_f.h"\
 	"..\..\thotlib\internals\f\memory_f.h"\
 	"..\..\thotlib\internals\f\style_f.h"\
-	"..\..\thotlib\internals\f\uaccess_f.h"\
 	"..\..\thotlib\internals\h\constint.h"\
 	"..\..\thotlib\internals\h\constmedia.h"\
 	"..\..\thotlib\internals\h\constprs.h"\
@@ -6512,6 +6509,9 @@ DEP_CPP_STYLE=\
 	"..\..\thotlib\internals\h\typestr.h"\
 	"..\..\thotlib\internals\h\typetra.h"\
 	"..\..\thotlib\internals\var\edit_tv.h"\
+	
+NODEP_CPP_STYLE=\
+	"..\..\thotlib\internals\f\uaccess_f.h"\
 	
 
 "$(INTDIR)\Style.obj" : $(SOURCE) $(DEP_CPP_STYLE) "$(INTDIR)"
@@ -6659,32 +6659,6 @@ DEP_CPP_TREE_=\
 	
 
 "$(INTDIR)\tree.obj" : $(SOURCE) $(DEP_CPP_TREE_) "$(INTDIR)"
-	$(CPP) $(CPP_PROJ) $(SOURCE)
-
-
-!ENDIF 
-
-SOURCE=..\..\thotlib\unicode\uaccess.c
-
-!IF  "$(CFG)" == "printlib - Win32 Release"
-
-DEP_CPP_UACCE=\
-	"..\..\thotlib\include\uaccess.h"\
-	"..\..\thotlib\include\ustring.h"\
-	
-
-"$(INTDIR)\uaccess.obj" : $(SOURCE) $(DEP_CPP_UACCE) "$(INTDIR)"
-	$(CPP) $(CPP_PROJ) $(SOURCE)
-
-
-!ELSEIF  "$(CFG)" == "printlib - Win32 Debug"
-
-DEP_CPP_UACCE=\
-	"..\..\thotlib\include\uaccess.h"\
-	"..\..\thotlib\include\ustring.h"\
-	
-
-"$(INTDIR)\uaccess.obj" : $(SOURCE) $(DEP_CPP_UACCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 

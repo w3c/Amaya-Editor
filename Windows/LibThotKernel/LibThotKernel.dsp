@@ -215,10 +215,6 @@ SOURCE=..\..\thotlib\tree\treeapi.c
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\thotlib\unicode\uaccess.c
-# End Source File
-# Begin Source File
-
 SOURCE=..\..\thotlib\unicode\uconvert.c
 # End Source File
 # Begin Source File

@@ -81,7 +81,6 @@ CLEAN :
 	-@erase "$(INTDIR)\structschema.obj"
 	-@erase "$(INTDIR)\tree.obj"
 	-@erase "$(INTDIR)\treeapi.obj"
-	-@erase "$(INTDIR)\uaccess.obj"
 	-@erase "$(INTDIR)\uconvert.obj"
 	-@erase "$(INTDIR)\Uio.obj"
 	-@erase "$(INTDIR)\units.obj"
@@ -144,7 +143,6 @@ LIB32_OBJS= \
 	"$(INTDIR)\structschema.obj" \
 	"$(INTDIR)\tree.obj" \
 	"$(INTDIR)\treeapi.obj" \
-	"$(INTDIR)\uaccess.obj" \
 	"$(INTDIR)\uconvert.obj" \
 	"$(INTDIR)\Uio.obj" \
 	"$(INTDIR)\units.obj" \
@@ -208,7 +206,6 @@ CLEAN :
 	-@erase "$(INTDIR)\structschema.obj"
 	-@erase "$(INTDIR)\tree.obj"
 	-@erase "$(INTDIR)\treeapi.obj"
-	-@erase "$(INTDIR)\uaccess.obj"
 	-@erase "$(INTDIR)\uconvert.obj"
 	-@erase "$(INTDIR)\Uio.obj"
 	-@erase "$(INTDIR)\units.obj"
@@ -271,7 +268,6 @@ LIB32_OBJS= \
 	"$(INTDIR)\structschema.obj" \
 	"$(INTDIR)\tree.obj" \
 	"$(INTDIR)\treeapi.obj" \
-	"$(INTDIR)\uaccess.obj" \
 	"$(INTDIR)\uconvert.obj" \
 	"$(INTDIR)\Uio.obj" \
 	"$(INTDIR)\units.obj" \
@@ -812,7 +808,7 @@ DEP_CPP_CHECK=\
 	"..\..\thotlib\include\document.h"\
 	"..\..\thotlib\include\fileaccess.h"\
 	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\labelAllocator.h"\
+	"..\..\thotlib\include\labelallocator.h"\
 	"..\..\thotlib\include\language.h"\
 	"..\..\thotlib\include\libmsg.h"\
 	"..\..\thotlib\include\message.h"\
@@ -851,7 +847,7 @@ DEP_CPP_CHECK=\
 	"..\..\thotlib\internals\h\frame.h"\
 	"..\..\thotlib\internals\h\res.h"\
 	"..\..\thotlib\internals\h\resdynmsg.h"\
-	"..\..\thotlib\internals\h\SelectRestruct.h"\
+	"..\..\thotlib\internals\h\selectrestruct.h"\
 	"..\..\thotlib\internals\h\thotkey.h"\
 	"..\..\thotlib\internals\h\typecorr.h"\
 	"..\..\thotlib\internals\h\typeint.h"\
@@ -882,7 +878,7 @@ DEP_CPP_CHECK=\
 	"..\..\thotlib\include\document.h"\
 	"..\..\thotlib\include\fileaccess.h"\
 	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\labelAllocator.h"\
+	"..\..\thotlib\include\labelallocator.h"\
 	"..\..\thotlib\include\language.h"\
 	"..\..\thotlib\include\libmsg.h"\
 	"..\..\thotlib\include\message.h"\
@@ -920,7 +916,7 @@ DEP_CPP_CHECK=\
 	"..\..\thotlib\internals\h\frame.h"\
 	"..\..\thotlib\internals\h\res.h"\
 	"..\..\thotlib\internals\h\resdynmsg.h"\
-	"..\..\thotlib\internals\h\SelectRestruct.h"\
+	"..\..\thotlib\internals\h\selectrestruct.h"\
 	"..\..\thotlib\internals\h\thotkey.h"\
 	"..\..\thotlib\internals\h\typecorr.h"\
 	"..\..\thotlib\internals\h\typeint.h"\
@@ -1772,7 +1768,7 @@ DEP_CPP_LABEL=\
 	"..\..\thotlib\include\attribute.h"\
 	"..\..\thotlib\include\document.h"\
 	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\labelAllocator.h"\
+	"..\..\thotlib\include\labelallocator.h"\
 	"..\..\thotlib\include\language.h"\
 	"..\..\thotlib\include\presentation.h"\
 	"..\..\thotlib\include\pschema.h"\
@@ -1812,7 +1808,7 @@ DEP_CPP_LABEL=\
 	"..\..\thotlib\include\attribute.h"\
 	"..\..\thotlib\include\document.h"\
 	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\labelAllocator.h"\
+	"..\..\thotlib\include\labelallocator.h"\
 	"..\..\thotlib\include\language.h"\
 	"..\..\thotlib\include\presentation.h"\
 	"..\..\thotlib\include\pschema.h"\
@@ -2266,7 +2262,7 @@ DEP_CPP_PIVOT=\
 	"..\..\thotlib\include\document.h"\
 	"..\..\thotlib\include\fileaccess.h"\
 	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\labelAllocator.h"\
+	"..\..\thotlib\include\labelallocator.h"\
 	"..\..\thotlib\include\language.h"\
 	"..\..\thotlib\include\presentation.h"\
 	"..\..\thotlib\include\pschema.h"\
@@ -2326,7 +2322,7 @@ DEP_CPP_PIVOT=\
 	"..\..\thotlib\include\document.h"\
 	"..\..\thotlib\include\fileaccess.h"\
 	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\labelAllocator.h"\
+	"..\..\thotlib\include\labelallocator.h"\
 	"..\..\thotlib\include\language.h"\
 	"..\..\thotlib\include\presentation.h"\
 	"..\..\thotlib\include\pschema.h"\
@@ -2582,7 +2578,7 @@ DEP_CPP_READP=\
 	"..\..\thotlib\include\document.h"\
 	"..\..\thotlib\include\fileaccess.h"\
 	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\labelAllocator.h"\
+	"..\..\thotlib\include\labelallocator.h"\
 	"..\..\thotlib\include\language.h"\
 	"..\..\thotlib\include\libmsg.h"\
 	"..\..\thotlib\include\message.h"\
@@ -2662,7 +2658,7 @@ DEP_CPP_READP=\
 	"..\..\thotlib\include\document.h"\
 	"..\..\thotlib\include\fileaccess.h"\
 	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\labelAllocator.h"\
+	"..\..\thotlib\include\labelallocator.h"\
 	"..\..\thotlib\include\language.h"\
 	"..\..\thotlib\include\libmsg.h"\
 	"..\..\thotlib\include\message.h"\
@@ -3834,7 +3830,7 @@ DEP_CPP_TREE_=\
 	"..\..\thotlib\include\document.h"\
 	"..\..\thotlib\include\fileaccess.h"\
 	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\labelAllocator.h"\
+	"..\..\thotlib\include\labelallocator.h"\
 	"..\..\thotlib\include\language.h"\
 	"..\..\thotlib\include\libmsg.h"\
 	"..\..\thotlib\include\message.h"\
@@ -3877,7 +3873,7 @@ DEP_CPP_TREE_=\
 	"..\..\thotlib\internals\h\picture.h"\
 	"..\..\thotlib\internals\h\res.h"\
 	"..\..\thotlib\internals\h\resdynmsg.h"\
-	"..\..\thotlib\internals\h\SelectRestruct.h"\
+	"..\..\thotlib\internals\h\selectrestruct.h"\
 	"..\..\thotlib\internals\h\thotkey.h"\
 	"..\..\thotlib\internals\h\typecorr.h"\
 	"..\..\thotlib\internals\h\typeint.h"\
@@ -3909,7 +3905,7 @@ DEP_CPP_TREE_=\
 	"..\..\thotlib\include\document.h"\
 	"..\..\thotlib\include\fileaccess.h"\
 	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\labelAllocator.h"\
+	"..\..\thotlib\include\labelallocator.h"\
 	"..\..\thotlib\include\language.h"\
 	"..\..\thotlib\include\libmsg.h"\
 	"..\..\thotlib\include\message.h"\
@@ -3951,7 +3947,7 @@ DEP_CPP_TREE_=\
 	"..\..\thotlib\internals\h\picture.h"\
 	"..\..\thotlib\internals\h\res.h"\
 	"..\..\thotlib\internals\h\resdynmsg.h"\
-	"..\..\thotlib\internals\h\SelectRestruct.h"\
+	"..\..\thotlib\internals\h\selectrestruct.h"\
 	"..\..\thotlib\internals\h\thotkey.h"\
 	"..\..\thotlib\internals\h\typecorr.h"\
 	"..\..\thotlib\internals\h\typeint.h"\
@@ -3982,7 +3978,7 @@ DEP_CPP_TREEA=\
 	"..\..\thotlib\include\document.h"\
 	"..\..\thotlib\include\fileaccess.h"\
 	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\labelAllocator.h"\
+	"..\..\thotlib\include\labelallocator.h"\
 	"..\..\thotlib\include\language.h"\
 	"..\..\thotlib\include\presentation.h"\
 	"..\..\thotlib\include\pschema.h"\
@@ -4055,7 +4051,7 @@ DEP_CPP_TREEA=\
 	"..\..\thotlib\include\document.h"\
 	"..\..\thotlib\include\fileaccess.h"\
 	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\labelAllocator.h"\
+	"..\..\thotlib\include\labelallocator.h"\
 	"..\..\thotlib\include\language.h"\
 	"..\..\thotlib\include\presentation.h"\
 	"..\..\thotlib\include\pschema.h"\
@@ -4113,16 +4109,6 @@ DEP_CPP_TREEA=\
 
 
 !ENDIF 
-
-SOURCE=..\..\thotlib\unicode\uaccess.c
-DEP_CPP_UACCE=\
-	"..\..\thotlib\include\uaccess.h"\
-	"..\..\thotlib\include\ustring.h"\
-	
-
-"$(INTDIR)\uaccess.obj" : $(SOURCE) $(DEP_CPP_UACCE) "$(INTDIR)"
-	$(CPP) $(CPP_PROJ) $(SOURCE)
-
 
 SOURCE=..\..\thotlib\unicode\uconvert.c
 
@@ -4345,7 +4331,7 @@ DEP_CPP_WRITE=\
 	"..\..\thotlib\include\document.h"\
 	"..\..\thotlib\include\fileaccess.h"\
 	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\labelAllocator.h"\
+	"..\..\thotlib\include\labelallocator.h"\
 	"..\..\thotlib\include\language.h"\
 	"..\..\thotlib\include\libmsg.h"\
 	"..\..\thotlib\include\message.h"\
@@ -4422,7 +4408,7 @@ DEP_CPP_WRITE=\
 	"..\..\thotlib\include\document.h"\
 	"..\..\thotlib\include\fileaccess.h"\
 	"..\..\thotlib\include\interface.h"\
-	"..\..\thotlib\include\labelAllocator.h"\
+	"..\..\thotlib\include\labelallocator.h"\
 	"..\..\thotlib\include\language.h"\
 	"..\..\thotlib\include\libmsg.h"\
 	"..\..\thotlib\include\message.h"\
