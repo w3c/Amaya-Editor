@@ -712,13 +712,13 @@
 	<message xml:lang="fi">Etsi</message>
 </label>
 <label define="TMSG_UPPERCASE_EQ_LOWERCASE">
-	<message xml:lang="en">UPPERCASE = lowercase</message>
-	<message xml:lang="es">MAYÚSCULAS = minúsculas</message>
-	<message xml:lang="fr">MAJUSCULES = minuscules</message>
+	<message xml:lang="en">Ignore case</message>
+	<message xml:lang="es">No haga caso del caso</message>
+	<message xml:lang="fr">Ignorer la casse</message>
 	<message xml:lang="de">Buchstabenlage ignorieren</message>
-	<message xml:lang="it">MAIUSCOLE = minuscole</message>
+	<message xml:lang="it">Ignori il caso</message>
 	<message xml:lang="tr">BÜYÜK HARF = küçük harf</message>
-	<message xml:lang="pt">MAIÚSCULAS = minúsculas</message>
+	<message xml:lang="pt">Ignore o caso </message>
 	<message xml:lang="fi">ISOLLA = pienellä</message>
 </label>
 <label define="TMSG_REPLACE_BY">
