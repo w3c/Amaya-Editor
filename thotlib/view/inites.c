@@ -254,15 +254,14 @@ static void ApproximateColors ()
 void         FreeDocColors ()
 {
 #ifndef _WIN_PRINT
-  int        i;
-
 #ifdef _WINDOWS
-
   /* free extended colors */
   if (!TtIsTrueColor && TtCmap && !DeleteObject (TtCmap))
     WinErrorBox (WIN_Main_Wd);
   TtCmap = 0;
 #else /* _WINDOWS */
+  int        i;
+
 #ifdef _GTK
   /* free standard colors */
   gdk_colors_free (TtCmap, &Pix_Color[0], NColors, (gulong)0 );
@@ -743,15 +742,15 @@ STRING              name;
    the drawing color, background color and the pattern.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-unsigned long       CreatePattern (int disp, int RO, int active, int fg, int bg, int motif)
+Pixmap      CreatePattern (int disp, int RO, int active, int fg, int bg, int motif)
 #else  /* __STDC__ */
-unsigned long       CreatePattern (disp, RO, active, fg, bg, motif)
-int                 disp;
-int                 RO;
-int                 active;
-int                 fg;
-int                 bg;
-int                 motif;
+Pixmap      CreatePattern (disp, RO, active, fg, bg, motif)
+int         disp;
+int         RO;
+int         active;
+int         fg;
+int         bg;
+int         motif;
 
 #endif /* __STDC__ */
 {

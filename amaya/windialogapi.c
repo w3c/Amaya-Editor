@@ -92,8 +92,8 @@ static CHAR_T       winCurLang [100];
 static CHAR_T       currentFileToPrint [MAX_PATH];
 static CHAR_T       attDlgTitle [100];
 static STRING       lpPrintTemplateName = (STRING) 0;
-static int          currentDoc ;
-static int          currentView ;
+static int          currentDoc;
+static int          currentView;
 static int          currentRef;
 static int          currentParentRef;
 static int          SpellingBase; 
@@ -176,8 +176,8 @@ static HDC          hDC;
 static HDC          hMemDC;
 static HFONT        hFont;
 static HFONT        hOldFont;
-static BOOL	        saveBeforeClose ;
-static BOOL         closeDontSave ;
+static BOOL	        saveBeforeClose;
+static BOOL         closeDontSave;
 static OPENFILENAME OpenFileName;
 static STRING       szFilter;
 static CHAR_T       szFileName[256];
@@ -311,9 +311,9 @@ void WinInitPrinterColors ()
 
    palSize = GetDeviceCaps (TtPrinterDC, SIZEPALETTE);
    if (palSize == 0)
-      TtIsPrinterTrueColor = TRUE ;
+      TtIsPrinterTrueColor = TRUE;
    else  
-       TtIsPrinterTrueColor = FALSE ;
+       TtIsPrinterTrueColor = FALSE;
    initialized = TRUE;
 }
 
@@ -1091,7 +1091,7 @@ int   chkrSpecial;
 {  
 	SpellingBase    = spellingBase; 
 	ChkrSelectProp  = chkrSelectProp;
-	ChkrMenuOR      = chkrMenuOR ;
+	ChkrMenuOR      = chkrMenuOR;
 	ChkrFormCorrect = chkrFormCorrect;
 	ChkrMenuIgnore  = chkrMenuIgnore;
 	ChkrCaptureNC   = chkrCaptureNC;
@@ -1318,7 +1318,7 @@ LPARAM lParam;
 				}
 				break;
 				default: return FALSE;
-	return TRUE ;
+	return TRUE;
 	}
 }
 
@@ -1394,7 +1394,7 @@ LPARAM lParam;
 				break;
 				default: return FALSE;
 	}
-	return TRUE ;
+	return TRUE;
 }
 
 /*-----------------------------------------------------------------------
@@ -1439,7 +1439,7 @@ LPARAM lParam;
 				}
 				break;
 
-           default: return (FALSE) ;
+           default: return (FALSE);
     }
 	return TRUE;
 }
@@ -1487,7 +1487,7 @@ LPARAM lParam;
 				}
 				break;
 
-           default: return (FALSE) ;
+           default: return (FALSE);
     }
 	return TRUE;
 }
@@ -1577,7 +1577,7 @@ LPARAM lParam;
 				SetFocus (parentWnd);
 				break;
 
-           default: return (FALSE) ;
+           default: return (FALSE);
     }
 	return TRUE;
 }
@@ -1658,7 +1658,7 @@ LPARAM lParam;
 				break;
 				default: return FALSE;
 	}
-	return TRUE ;
+	return TRUE;
 }
 
 /*-----------------------------------------------------------------------
@@ -1857,7 +1857,7 @@ LPARAM lParam;
 
 				default: return FALSE;
 	}
-	return TRUE ;
+	return TRUE;
 }
 /*-----------------------------------------------------------------------
  Align1DlgProc
@@ -1959,7 +1959,7 @@ LPARAM lParam;
 
 				default: return FALSE;
 	}
-	return TRUE ;
+	return TRUE;
 }
 
 /*-----------------------------------------------------------------------
@@ -2073,7 +2073,7 @@ LPARAM lParam;
 
 				default: return FALSE;
 	}
-	return TRUE ;
+	return TRUE;
 }
 
 /*-----------------------------------------------------------------------
@@ -2200,7 +2200,7 @@ LPARAM lParam;
 
 				default: return FALSE;
 	}
-	return TRUE ;
+	return TRUE;
 }
 
 /*-----------------------------------------------------------------------
@@ -2219,7 +2219,7 @@ LPARAM lParam;
 	static int iMode, iLocation;
 	static CHAR_T textToSearch [255];
 	static CHAR_T newText [255];
-	static BOOL upper_lower = FALSE ;
+	static BOOL upper_lower = FALSE;
     static HWND WndSearchEdit;
 
     switch (msg) {
@@ -2227,8 +2227,8 @@ LPARAM lParam;
 			    SetDlgItemText (hwnDlg, IDC_SEARCHEDIT, _EMPTYSTR_);
 			    SetDlgItemText (hwnDlg, IDC_REPLACEDIT, _EMPTYSTR_);
 
-				iMode     = 0 ;
-				iLocation = 3 ;
+				iMode     = 0;
+				iLocation = 3;
 
 				CheckRadioButton (hwnDlg, IDC_NOREPLACE, IDC_AUTOMATIC, IDC_NOREPLACE);
 				CheckRadioButton (hwnDlg, IDC_BEFORE, IDC_WHOLEDOC, IDC_WHOLEDOC);
@@ -2280,17 +2280,17 @@ LPARAM lParam;
 							break;
 
 					   case IDC_NOREPLACE:
-						    iMode = 0 ;
+						    iMode = 0;
 							CheckRadioButton (hwnDlg, IDC_NOREPLACE, IDC_AUTOMATIC, LOWORD (wParam));
 							break;
 
 					   case IDC_ONREQUEST:
-						    iMode = 1 ;
+						    iMode = 1;
 							CheckRadioButton (hwnDlg, IDC_NOREPLACE, IDC_AUTOMATIC, LOWORD (wParam));
 							break;
 
 					   case IDC_AUTOMATIC:
-						    iMode = 2 ;
+						    iMode = 2;
 							CheckRadioButton (hwnDlg, IDC_NOREPLACE, IDC_AUTOMATIC, LOWORD (wParam));
 							break;
 
@@ -2321,7 +2321,7 @@ LPARAM lParam;
 				break;
 				default: return FALSE;
 	}
-	return TRUE ;
+	return TRUE;
 }
 
 /*-----------------------------------------------------------------------
@@ -2439,7 +2439,7 @@ LPARAM lParam;
 
 				default: return FALSE;
 	}
-	return TRUE ;
+	return TRUE;
 }
 
 /*-----------------------------------------------------------------------
@@ -2455,86 +2455,85 @@ WPARAM wParam;
 LPARAM lParam;
 #endif /* __STDC__ */
 {
-	int         ndx;
-	static HWND EditURLWnd;
+  static HWND EditURLWnd;
+  
+  switch (msg) {
+  case WM_INITDIALOG:
+    EditURLWnd = GetDlgItem (hwnDlg, IDC_GETURL);
+    SetWindowText (hwnDlg, wndTitle);
+    SetDlgItemText (hwnDlg, IDC_GETURL, tmpDocName);
+    urlToOpen [0] = 0;
+    break;
 
-    switch (msg) {
-	       case WM_INITDIALOG:
-                EditURLWnd = GetDlgItem (hwnDlg, IDC_GETURL);
-                SetWindowText (hwnDlg, wndTitle);
-			    SetDlgItemText (hwnDlg, IDC_GETURL, tmpDocName);
-				urlToOpen [0] = 0;
-				break;
+  case WM_COMMAND:
+    if (HIWORD (wParam) == EN_UPDATE) {
+      if (LOWORD (wParam) == IDC_GETURL) {
+	GetDlgItemText (hwnDlg, IDC_GETURL, urlToOpen, sizeof (urlToOpen) - 1);
+	if (urlToOpen[0] != 0)
+	  ThotCallback (baseDoc + urlName, STRING_DATA, urlToOpen);
+      }
+    }
 
-		   case WM_COMMAND:
-                if (HIWORD (wParam) == EN_UPDATE) {
-                   if (LOWORD (wParam) == IDC_GETURL) {
-                      GetDlgItemText (hwnDlg, IDC_GETURL, urlToOpen, sizeof (urlToOpen) - 1);
-					  if (urlToOpen[0] != 0)
-                         ThotCallback (baseDoc + urlName, STRING_DATA, urlToOpen);
-				   }
-				}
+    switch (LOWORD (wParam)) {
+    case ID_CONFIRM:
+      ThotCallback (baseDoc + formDoc, INTEGER_DATA, (STRING)1);
+      EndDialog (hwnDlg, ID_CONFIRM);
+      break;
 
-				switch (LOWORD (wParam)) {
-                       case ID_CONFIRM:
-                            ThotCallback (baseDoc + formDoc, INTEGER_DATA, (STRING)1);
-					        EndDialog (hwnDlg, ID_CONFIRM);
-							break;
-
-				       case IDC_BROWSE:
-                            OpenFileName.lStructSize       = sizeof (OPENFILENAME); 
-                            OpenFileName.hwndOwner         = hwnDlg; 
-                            OpenFileName.hInstance         = hInstance ; 
-                            OpenFileName.lpstrFilter       = (LPTSTR) szFilter; 
-                            OpenFileName.lpstrCustomFilter = (LPTSTR) NULL; 
-                            OpenFileName.nMaxCustFilter    = 0L; 
-                            OpenFileName.nFilterIndex      = 1L; 
-                            OpenFileName.lpstrFile         = (LPTSTR) szFileName; 
-                            OpenFileName.nMaxFile          = 256; 
-                            OpenFileName.lpstrInitialDir   = NULL; 
-                            OpenFileName.lpstrTitle        = TEXT ("Select"); 
-                            OpenFileName.nFileOffset       = 0; 
-                            OpenFileName.nFileExtension    = 0; 
-                            OpenFileName.lpstrDefExt       = TEXT ("*.html"); 
-                            OpenFileName.lCustData         = 0; 
-                            OpenFileName.Flags             = OFN_SHOWHELP | OFN_HIDEREADONLY; 
- 
-                            if (GetOpenFileName (&OpenFileName)) {
-	                           ustrcpy (urlToOpen, OpenFileName.lpstrFile);
-	                        }
-
-                            SetDlgItemText (hwnDlg, IDC_GETURL, urlToOpen);
-                            if (urlToOpen[0] != 0)
-							{
-                               ThotCallback (baseDoc + urlName, STRING_DATA, urlToOpen);
-                               EndDialog (hwnDlg, ID_CONFIRM);
-                               ThotCallback (baseDoc + formDoc, INTEGER_DATA, (STRING)1);
-							}
-							break;
-
-				       case IDCANCEL:
-                            ThotCallback (baseDoc + formDoc, INTEGER_DATA, (STRING) 0);
-                            urlToOpen [0] = 0;
-					        EndDialog (hwnDlg, IDCANCEL);
-							break;
-
-#                      if 0   /* @@@@@@@@@ 000 @@@@@@@@@ */
-                       case IDC_GETURL:
-						    if (firstInit) {
-                               SetFocus (EditURLWnd);
-                               ndx = GetWindowTextLength (EditURLWnd);
-                               /* PostMessage (EditURLWnd, EM_SETSEL, (WPARAM)ndx, (LPARAM)ndx); */
-                               PostMessage (EditURLWnd, EM_SETSEL, 0, MAKELONG (0, ndx));
-                               /* firstInit = FALSE; */
-							}
-                            break;
-#                       endif /* @@@@@@@@@ 000 @@@@@@@@@ */
-
-				}
-				break;
-				default: return FALSE;
-	} 
-	return TRUE ;
+    case IDC_BROWSE:
+      OpenFileName.lStructSize       = sizeof (OPENFILENAME); 
+      OpenFileName.hwndOwner         = hwnDlg; 
+      OpenFileName.hInstance         = hInstance; 
+      OpenFileName.lpstrFilter       = (LPTSTR) szFilter; 
+      OpenFileName.lpstrCustomFilter = (LPTSTR) NULL; 
+      OpenFileName.nMaxCustFilter    = 0L; 
+      OpenFileName.nFilterIndex      = 1L; 
+      OpenFileName.lpstrFile         = (LPTSTR) szFileName; 
+      OpenFileName.nMaxFile          = 256; 
+      OpenFileName.lpstrInitialDir   = NULL; 
+      OpenFileName.lpstrTitle        = TEXT ("Select"); 
+      OpenFileName.nFileOffset       = 0; 
+      OpenFileName.nFileExtension    = 0; 
+      OpenFileName.lpstrDefExt       = TEXT ("*.html"); 
+      OpenFileName.lCustData         = 0; 
+      OpenFileName.Flags             = OFN_SHOWHELP | OFN_HIDEREADONLY; 
+      
+      if (GetOpenFileName (&OpenFileName)) {
+	ustrcpy (urlToOpen, OpenFileName.lpstrFile);
+      }
+      
+      SetDlgItemText (hwnDlg, IDC_GETURL, urlToOpen);
+      if (urlToOpen[0] != 0)
+	{
+	  ThotCallback (baseDoc + urlName, STRING_DATA, urlToOpen);
+	  EndDialog (hwnDlg, ID_CONFIRM);
+	  ThotCallback (baseDoc + formDoc, INTEGER_DATA, (STRING)1);
+	}
+      break;
+      
+    case IDCANCEL:
+      ThotCallback (baseDoc + formDoc, INTEGER_DATA, (STRING) 0);
+      urlToOpen [0] = 0;
+      EndDialog (hwnDlg, IDCANCEL);
+      break;
+      
+#if 0   /* @@@@@@@@@ 000 @@@@@@@@@ */
+    case IDC_GETURL:
+      if (firstInit) {
+	SetFocus (EditURLWnd);
+	ndx = GetWindowTextLength (EditURLWnd);
+	/* PostMessage (EditURLWnd, EM_SETSEL, (WPARAM)ndx, (LPARAM)ndx); */
+	PostMessage (EditURLWnd, EM_SETSEL, 0, MAKELONG (0, ndx));
+	/* firstInit = FALSE; */
+      }
+      break;
+#endif /* @@@@@@@@@ 000 @@@@@@@@@ */
+      
+    }
+    break;
+  default: return FALSE;
+  } 
+  return TRUE;
 }
 
 /*-----------------------------------------------------------------------
@@ -2576,7 +2575,7 @@ LPARAM lParam;
 				       case IDC_BROWSE:
                             OpenFileName.lStructSize       = sizeof (OPENFILENAME); 
                             OpenFileName.hwndOwner         = hwnDlg; 
-                            OpenFileName.hInstance         = hInstance ; 
+                            OpenFileName.hInstance         = hInstance; 
                             OpenFileName.lpstrFilter       = (LPTSTR) szFilter; 
                             OpenFileName.lpstrCustomFilter = (LPTSTR) NULL; 
                             OpenFileName.nMaxCustFilter    = 0L; 
@@ -2609,7 +2608,7 @@ LPARAM lParam;
 				break;
 				default: return FALSE;
 	}
-	return TRUE ;
+	return TRUE;
 }
 
 /*-----------------------------------------------------------------------
@@ -2688,7 +2687,7 @@ LPARAM lParam;
 				}
 				break;
 
-           default: return (FALSE) ;
+           default: return (FALSE);
     }
 	return TRUE;
 }
@@ -2749,7 +2748,7 @@ LPARAM lParam;
 				break;     
 				default: return FALSE;
 	}
-	return TRUE ;
+	return TRUE;
 
 }
 
@@ -2797,7 +2796,7 @@ LPARAM lParam;
 				break;
 				default: return FALSE;
 	}
-	return TRUE ;
+	return TRUE;
 }
 
 static HWND wndLangList;
@@ -3195,7 +3194,7 @@ LPARAM lParam;
 				break;
 				default: return FALSE;
 	}
-	return TRUE ;
+	return TRUE;
 }
 
 /*-----------------------------------------------------------------------
@@ -3268,7 +3267,7 @@ LPARAM lParam;
 				break;
 				default: return FALSE;
 	}
-	return TRUE ;
+	return TRUE;
 }
 
 /*-----------------------------------------------------------------------
@@ -3428,7 +3427,7 @@ LPARAM lParam;
 						    break;
 
 					   case IDC_WORDBUTTON:
-                            GetWindowText (wordButton, currentWord, MAX_WORD_LEN) ;
+                            GetWindowText (wordButton, currentWord, MAX_WORD_LEN);
                             SetWindowText (hwndCurrentWord, currentWord);
 						    break;
 
@@ -4460,7 +4459,7 @@ LPARAM lParam;
 					   case IDC_BROWSE:
                             OpenFileName.lStructSize       = sizeof (OPENFILENAME); 
                             OpenFileName.hwndOwner         = hwnDlg; 
-                            OpenFileName.hInstance         = hInstance ; 
+                            OpenFileName.hInstance         = hInstance; 
                             OpenFileName.lpstrFilter       = (LPTSTR) szFilter; 
                             OpenFileName.lpstrCustomFilter = (LPTSTR) NULL; 
                             OpenFileName.nMaxCustFilter    = 0L; 

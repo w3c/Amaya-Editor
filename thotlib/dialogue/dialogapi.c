@@ -6948,13 +6948,12 @@ STRING              text;
 }
 
 /*----------------------------------------------------------------------
-   TtaNewTextForm cre'e une feuille de saisie de texte :              
-   Le parame`tre ref donne la re'fe'rence pour l'application.         
-   Le parame`tre title donne le titre du catalogue.                   
-   Les parame`tres width et height indiquent la taille en caracte`ree 
-   de la feuille de saisie de texte.                                  
-   Quand le parame`tre react est vrai, tout changement dans la        
-   feuille de saisie est imme'diatement signale' a` l'application.    
+   TtaNewTextForm creates a dialogue element to input text:   
+   Parameter ref gives the Thot reference.
+   Parameter title gives the dialogue title.
+   Parameters width and height give the box size. 
+   If the parameter react is TRUE, any change in the input box generates a
+   callback to the application.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TtaNewTextForm (int ref, int ref_parent, STRING title, int width, int height, ThotBool react)
@@ -6966,7 +6965,6 @@ STRING              title;
 int                 width;
 int                 height;
 ThotBool            react;
-
 #endif /* __STDC__ */
 {
    int                 ent;
@@ -6976,11 +6974,11 @@ ThotBool            react;
    struct E_List      *adbloc;
    ThotWidget          w;
    ThotWidget          row;
-#  ifndef _WINDOWS
+#ifndef _WINDOWS
    Arg                 args[MAX_ARGS];
    XmString            title_string;
    int                 n;
-#  endif  /* !_WINDOWS */
+#endif  /* !_WINDOWS */
 
    if (ref == 0)
      {
@@ -7025,7 +7023,7 @@ ThotBool            react;
 	  {
 	     /* Cree a l'interieur Row-Column du formulaire */
 	     row = AddInFormulary (parentCatalogue, &i, &ent, &adbloc);
-#            ifndef _WINDOWS
+#ifndef _WINDOWS
 	     row = AddInFormulary (parentCatalogue, &i, &ent, &adbloc);
 	     n = 0;
 	     XtSetArg (args[n], XmNbackground, BgMenu_Color);
@@ -7077,52 +7075,52 @@ ThotBool            react;
 	     if (TextTranslations != NULL)
 		XtSetArg (args[n], XmNtranslations, TextTranslations);
 	     n++;
-#            endif /* !_WINDOWS */
+#endif /* !_WINDOWS */
 
 	     if (height < 2)
 	       {
-#                 ifndef _WINDOWS 
+#ifndef _WINDOWS 
 		  XtSetArg (args[n], XmNeditMode, XmSINGLE_LINE_EDIT);
 		  n++;
 		  /*XtSetArg(args[n], XmNscrollVertical, FALSE); n++; */
 		  w = XmCreateText (row, "Dialogue", args, n);
-#                 else  /* _WINDOWS */
+#else  /* _WINDOWS */
 		  w = CreateWindow (TEXT("EDIT"), _EMPTYSTR_, WS_CHILD | WS_VISIBLE | ES_LEFT | WS_BORDER, 
 				    10, cyValue, 200, 30, parentCatalogue->Cat_Widget, (HMENU) ref, hInstance, NULL);
 		  cyValue += 40;
-#                 endif /* _WINDOWS */
+#endif /* _WINDOWS */
 	       }
 	     else
 	       {
-#                 ifndef _WINDOWS 
+#ifndef _WINDOWS 
 		  XtSetArg (args[n], XmNeditMode, XmMULTI_LINE_EDIT);
 		  n++;
 		  XtSetArg (args[n], XmNrows, (short) height);
 		  n++;
 		  w = XmCreateScrolledText (row, "Dialogue", args, n);
-#                 else  /* _WINDOWS */
+#else  /* _WINDOWS */
 		  /* Create a multi-line edit windows *
 		   * TODO TODO TODO TODO TODO TODO    */
-#                 endif /* !_WINDOWS */
+#endif /* !_WINDOWS */
 	       }
-#            ifndef _WINDOWS 
+#ifndef _WINDOWS 
 	     XtManageChild (w);
 	     /* Si la feuille de saisie est reactive */
 	     if (react)
 		XtAddCallback (w, XmNvalueChangedCallback, (XtCallbackProc) CallTextChange, catalogue);
-#            else  /* _WINDOWS */
+#else  /* _WINDOWS */
 	     ShowWindow (w, SW_SHOWNORMAL);
 	     UpdateWindow (w);
-#            endif /* _WINDOWS */
+#endif /* _WINDOWS */
 	     catalogue->Cat_Ref = ref;
 	     catalogue->Cat_Type = CAT_TEXT;
 	     /* L'entree Cat_Entries contient le numero du widget texte */
 	     catalogue->Cat_Entries = (struct E_List *) w;
-#            ifndef _WINDOWS
+#ifndef _WINDOWS
 	     catalogue->Cat_Widget = row;
-#            else  /* _WINDOWS */
+#else  /* _WINDOWS */
 	     catalogue->Cat_Widget = w;
-#            endif /* _WINDOWS */
+#endif /* _WINDOWS */
 	     catalogue->Cat_PtParent = parentCatalogue;
 	     adbloc->E_ThotWidget[ent] = (ThotWidget) catalogue;
 	     adbloc->E_Free[ent] = TEXT('N');

@@ -12,6 +12,8 @@ extern void Prof_FreeTable ( void );
 extern void TtaRebuildProTable ( char *prof_file );
 extern void TtaGetProfileFileName ( STRING name,
                                     int length );
+extern void TtaGetDefProfileFileName ( STRING name,
+                                       int length );
 extern int TtaGetProfilesItems ( STRING *listEntries,
                                  int length );
 extern ThotBool Prof_ShowSeparator ( Menu_Ctl *ptrmenu,
@@ -29,6 +31,8 @@ extern void Prof_FreeTable (/* void */);
 extern void TtaRebuildProTable (/* char *prof_file */);
 extern void TtaGetProfileFileName (/* STRING name,
                                       int length */);
+extern void TtaGetDefProfileFileName (/* STRING name,
+                                         int length */);
 extern int TtaGetProfilesItems (/* STRING *listEntries,
                                    int length */);
 extern ThotBool Prof_ShowSeparator (/* Menu_Ctl *ptrmenu,

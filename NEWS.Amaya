@@ -31,9 +31,11 @@ Fixed bugs 2.1a:
 
 * Amaya could get stuck when creating an anchor.
 
-* It was impossible to cancel the creation of a link. Now the second
-  button in the creation popup is 'Cancel' instead of 'Done', and when
-  that button is pressed, the action is cancelled.
+* UI:
+  - It was impossible to cancel the creation of a link. Now the second
+    button in the creation popup is 'Cancel' instead of 'Done', and when
+    that button is pressed, the action is cancelled.
+  - Improvement of attribute menus.
 
 * CSS:
   - When the color was invalid Amaya used the black. Now the CSS rule is

@@ -125,7 +125,6 @@ STRING              printdir;
   CSSInfoPtr          css;
   STRING              ptr, text;
   CHAR_T              tempfile[MAX_LENGTH];
-  CHAR_T              tempdir[MAX_LENGTH];
   int                 length, i;
 
   css = CSSList;

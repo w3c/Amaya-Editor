@@ -1351,12 +1351,11 @@ void                TtaHandlePendingEvents ()
 void                  TtaMainLoop ()
 {
   NotifyEvent         notifyEvt;
-#  ifdef _WINDOWS
+#ifdef _WINDOWS
   MSG                 msg;
-  int                 frame;
-#  else /* ! _WINDOWS */
+#else /* ! _WINDOWS */
   ThotEvent           ev;
-#  endif /* _WINDOWS */
+#endif /* _WINDOWS */
 
   if (NewInitMainLoop)
     NewInitMainLoop(app_cont);
@@ -1388,14 +1387,8 @@ void                  TtaMainLoop ()
       TtaFetchOneEvent (&ev);
       TtaHandleOneEvent (&ev);
 #else  /* !_WINDOWS */
-      if (GetMessage (&msg, NULL, 0, 0)) {			
-         /* frame = GetFrameNumber (msg.hwnd);
-         if (frame != -1) {
-            if (!hAccel[frame] || !TranslateAccelerator (FrMainRef[frame], hAccel[frame], &msg))
-               TtaHandleOneWindowEvent (&msg);
-		 } else */
-               TtaHandleOneWindowEvent (&msg);
-	}
+      if (GetMessage (&msg, NULL, 0, 0))
+	TtaHandleOneWindowEvent (&msg);
 #endif /* _WINDOWS */
     }
 #else /* _GTK */

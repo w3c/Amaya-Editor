@@ -3787,7 +3787,7 @@ ThotBool            withUndo;
 #endif
 {
   CHAR_T              c;
-  STRING              cssRule, base, cur;
+  STRING              cssRule, base;
   DisplayMode         dispMode;
   int                 index;
   int                 CSSindex;

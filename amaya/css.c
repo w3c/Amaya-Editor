@@ -621,7 +621,6 @@ CSSInfoPtr          css;
   struct stat         buf;
   FILE               *res;
   CHAR_T              tempfile[MAX_LENGTH];
-  CHAR_T              tempname[MAX_LENGTH];
   CHAR_T              tempURL[MAX_LENGTH];
   STRING              buffer = NULL;
   int                 len;

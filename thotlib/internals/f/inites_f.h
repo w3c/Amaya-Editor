@@ -23,12 +23,12 @@ extern int ColorNumber ( STRING name );
 extern int NumberOfPatterns ( void );
 extern STRING PatternName ( int num );
 extern int PatternNumber ( STRING name );
-extern unsigned long CreatePattern ( int disp,
-                                     int RO,
-                                     int active,
-                                     int fg,
-                                     int bg,
-                                     int motif );
+extern Pixmap CreatePattern ( int disp,
+                              int RO,
+                              int active,
+                              int fg,
+                              int bg,
+                              int motif );
 
 #else /* __STDC__ */
 
@@ -49,12 +49,12 @@ extern int ColorNumber (/* STRING name */);
 extern int NumberOfPatterns (/* void */);
 extern STRING PatternName (/* int num */);
 extern int PatternNumber (/* STRING name */);
-extern unsigned long CreatePattern (/* int disp,
-                                       int RO,
-                                       int active,
-                                       int fg,
-                                       int bg,
-                                       int motif */);
+extern Pixmap CreatePattern (/* int disp,
+                                int RO,
+                                int active,
+                                int fg,
+                                int bg,
+                                int motif */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

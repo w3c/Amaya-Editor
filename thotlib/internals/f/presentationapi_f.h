@@ -67,6 +67,17 @@ extern void TtaGiveBoxPosition ( Element element,
                                  TypeUnit unit,
                                  int *xCoord,
                                  int *yCoord );
+extern void TtaGiveBoxAbsPosition ( Element element,
+                                    Document document,
+                                    View view,
+                                    TypeUnit unit,
+                                    int *xCoord,
+                                    int *yCoord );
+extern void TtaGiveWindowSize ( Document document,
+                                View view,
+                                TypeUnit unit,
+                                int *width,
+                                int *height );
 extern PRule TtaGetPRule ( Element element,
                            int presentationType );
 extern int TtaGetPRuleType ( PRule pRule );
@@ -139,6 +150,17 @@ extern void TtaGiveBoxPosition (/* Element element,
                                    TypeUnit unit,
                                    int *xCoord,
                                    int *yCoord */);
+extern void TtaGiveBoxAbsPosition (/* Element element,
+                                      Document document,
+                                      View view,
+                                      TypeUnit unit,
+                                      int *xCoord,
+                                      int *yCoord */);
+extern void TtaGiveWindowSize (/* Document document,
+                                  View view,
+                                  TypeUnit unit,
+                                  int *width,
+                                  int *height */);
 extern PRule TtaGetPRule (/* Element element,
                              int presentationType */);
 extern int TtaGetPRuleType (/* PRule pRule */);

@@ -46,12 +46,11 @@
 static ThotBool     AttrFormExists = FALSE;
 static ThotBool     MandatoryAttrFormExists = FALSE;
 #ifdef _WINDOWS
-static ThotBool     dlgInitialized = FALSE; 
-static CHAR_T       WIN_Lab [1024];
+static CHAR_T       WIN_Lab[1024];
 static int          WIN_nbItem;
-static CHAR_T       WIN_title [MAX_NAME_LENGTH + 2];
+static CHAR_T       WIN_title[MAX_NAME_LENGTH + 2];
 
-CHAR_T              WIN_buffMenu [MAX_TXT_LEN];
+CHAR_T              WIN_buffMenu[MAX_TXT_LEN];
 #endif /* _WINDOWS */
 
 
@@ -85,24 +84,25 @@ static PtrAttribute PtrReqAttr;
 #define ID_DELETE    1003
 #define ID_EDITVALUE 1004
 
-static TtAttribute* WIN_pAttr1;
+static HWND         hwnEdit;
+static TtAttribute *WIN_pAttr1;
 static BOOL         wndRegistered;
 static BOOL         wndSheetRegistered;
 static BOOL         wndNumAttrRegistered;
 static BOOL         WIN_AtNumAttr  = FALSE;
 static BOOL         WIN_AtTextAttr = FALSE;
 static BOOL         WIN_AtEnumAttr = FALSE;
-static BOOL         isForm         = FALSE ;
+static BOOL         isForm         = FALSE;
 static PtrAttribute WIN_currAttr;
-static CHAR_T         formRange [100];
-static CHAR_T         attr_text [500];
+static CHAR_T       formRange[100];
+static CHAR_T       Attr_text[LgMaxAttrText];
 static int          formValue;
-static int          nbDlgItems ;
+static int          nbDlgItems;
 static int          WIN_Language;
 
 extern HINSTANCE hInstance;
 extern LPCTSTR   iconID;
-extern UINT      subMenuID [MAX_FRAME];
+extern UINT      subMenuID[MAX_FRAME];
 #ifdef __STDC__
 extern BOOL RegisterWin95 (CONST WNDCLASS*);
 
@@ -178,7 +178,7 @@ PtrAttribute        currAttr;
 
    /* cree le formulaire avec les deux boutons Appliquer et Supprimer */
 #ifdef _WINDOWS
-   ptr = &WIN_buffMenu [0];
+   ptr = &WIN_buffMenu[0];
 #else  /* _WINDOWS */
    ustrcpy (bufMenu, TtaGetMessage (LIB, TMSG_APPLY));
    i = ustrlen (bufMenu) + 1;
@@ -277,25 +277,25 @@ HWND  parent;
 STRING title	;
 #endif /* __STDC__ */
 {
-   WNDCLASS    wndFormClass ;
-   static STRING szAppName; 
+   WNDCLASS    wndFormClass;
+   STRING      szAppName; 
    HWND        hwnFromDialog;
    MSG         msg;
    int         frame;
 
-   szAppName = TEXT("FormClass") ;
+   szAppName = TEXT("FormClass");
    if (!wndRegistered) {
 	  wndRegistered = TRUE;
-      wndFormClass.style         = CS_HREDRAW | CS_VREDRAW ;
-      wndFormClass.lpfnWndProc   = InitFormDialogWndProc ;
-      wndFormClass.cbClsExtra    = 0 ;
-      wndFormClass.cbWndExtra    = 0 ;
-      wndFormClass.hInstance     = hInstance ;
-      wndFormClass.hIcon         = LoadIcon (NULL, IDI_APPLICATION) ;
-      wndFormClass.hCursor       = LoadCursor (NULL, IDC_ARROW) ;
-      wndFormClass.hbrBackground = (HBRUSH) GetStockObject (LTGRAY_BRUSH) ;
-      wndFormClass.lpszClassName = szAppName ;
-      wndFormClass.lpszMenuName  = NULL ;
+      wndFormClass.style         = CS_HREDRAW | CS_VREDRAW;
+      wndFormClass.lpfnWndProc   = InitFormDialogWndProc;
+      wndFormClass.cbClsExtra    = 0;
+      wndFormClass.cbWndExtra    = 0;
+      wndFormClass.hInstance     = hInstance;
+      wndFormClass.hIcon         = LoadIcon (NULL, IDI_APPLICATION);
+      wndFormClass.hCursor       = LoadCursor (NULL, IDC_ARROW);
+      wndFormClass.hbrBackground = (HBRUSH) GetStockObject (LTGRAY_BRUSH);
+      wndFormClass.lpszClassName = szAppName;
+      wndFormClass.lpszMenuName  = NULL;
 
       if (IS_WIN95) {
          if (!RegisterWin95 (&wndFormClass))
@@ -308,29 +308,18 @@ STRING title	;
                                  DS_MODALFRAME | WS_POPUP | 
                                  WS_VISIBLE | WS_CAPTION | WS_SYSMENU,
                                  ClickX, ClickY,
-                                 335, 200,
-                                 parent, NULL, hInstance, NULL) ;
+                                 340, 100,
+                                 parent, NULL, hInstance, NULL);
 
-   ShowWindow (hwnFromDialog, SW_SHOWNORMAL) ;
-   UpdateWindow (hwnFromDialog) ;
+   ShowWindow (hwnFromDialog, SW_SHOWNORMAL);
+   UpdateWindow (hwnFromDialog);
 
-   while (GetMessage (&msg, NULL, 0, 0)) {
-#        if 0
-         TranslateMessage (&msg) ;
-         DispatchMessage (&msg) ;
-#        endif /* 0 */
-         frame = GetFrameNumber (msg.hwnd);
-		 /*@@@@@@@@@@@@@@@@@@@@*/
-         /* if (frame != -1) {
-            if (!hAccel[frame] || !TranslateAccelerator (FrMainRef[frame], hAccel[frame], &msg)) {
-               TranslateMessage (&msg) ;
-               DispatchMessage (&msg) ;
-			}
-		 } else { */
-                TranslateMessage (&msg) ;
-                DispatchMessage (&msg) ;
-		 /* } */
-   }
+   while (GetMessage (&msg, NULL, 0, 0))
+     {
+       frame = GetFrameNumber (msg.hwnd);
+       TranslateMessage (&msg);
+       DispatchMessage (&msg);
+     }
    return TRUE;
 }
 
@@ -343,52 +332,47 @@ LRESULT CALLBACK InitFormDialogWndProc (HWND hwnd, UINT iMsg, WPARAM wParam, LPA
 LRESULT CALLBACK InitFormDialogWndProc (HWND hwnd, UINT iMsg, WPARAM wParam, LPARAM lParam)
 #endif /* __STDC__ */
 {
-  HWND        hwnTitle;
-  HWND        confirmButton;
-  HWND        doneButton;
-  STRING       pBuffer;
-  int         i, index;
-  static STRING pWinBuffer;
-  static int    txtLength;
-  static HWND   hwnEdit ;
+  HWND          hwnTitle;
+  HWND          confirmButton;
+  HWND          doneButton;
+  int           i;
+  int           txtLength;
   
-  if (WIN_currAttr)
-    usprintf (attr_text, WIN_currAttr->AeAttrText->BuContent);
-  else
-    attr_text [0] = EOS ;
-
   switch (iMsg)
     {
     case WM_CREATE:
+      if (WIN_currAttr)
+	usprintf (Attr_text, WIN_currAttr->AeAttrText->BuContent);
+      else
+	Attr_text[0] = EOS;
+
       /* Create static window for the title */
       hwnTitle = CreateWindow (TEXT("STATIC"), WIN_pAttr1->AttrName, 
 			       WS_CHILD | WS_VISIBLE | SS_LEFT,
-			       10, 10, 100, 15, hwnd, (HMENU) 99, 
+			       10, 5, 100, 15, hwnd, (HMENU) 99, 
 			       ((LPCREATESTRUCT) lParam)->hInstance, NULL); 
       
       /* Create Edit Window autoscrolled */
-      hwnEdit = CreateWindow (TEXT("EDIT"), attr_text, 
-			      WS_CHILD | WS_VISIBLE | WS_HSCROLL | WS_VSCROLL |
-			      WS_BORDER | ES_LEFT | ES_MULTILINE |
-			      ES_AUTOHSCROLL | ES_AUTOVSCROLL,
-			      10, 30, 310, 110, hwnd, (HMENU) 1, ((LPCREATESTRUCT) lParam)->hInstance, NULL);
-				/* Create Confirm button */
+      hwnEdit = CreateWindow (TEXT("EDIT"), Attr_text, 
+			      WS_CHILD | WS_VISIBLE | WS_BORDER | ES_LEFT | ES_AUTOHSCROLL,
+			      10, 25, 320, 20, hwnd, (HMENU) 1, ((LPCREATESTRUCT) lParam)->hInstance, NULL);
+      /* Create Confirm button */
       confirmButton = CreateWindow (TEXT("BUTTON"), TtaGetMessage (LIB, TMSG_LIB_CONFIRM), 
 				    WS_CHILD | BS_PUSHBUTTON | WS_VISIBLE,
-				    50, 150, 100, 20, hwnd, 
-				    (HMENU) ID_CONFIRM, ((LPCREATESTRUCT) lParam)->hInstance, NULL) ;
+				    65, 50, 100, 20, hwnd, 
+				    (HMENU) ID_CONFIRM, ((LPCREATESTRUCT) lParam)->hInstance, NULL);
       
-				/* Create Done Button */
+      /* Create Done Button */
       doneButton = CreateWindow (TEXT("BUTTON"), TtaGetMessage (LIB, TMSG_DONE), 
 				 WS_CHILD | BS_PUSHBUTTON | WS_VISIBLE,
-				 185, 150, 100, 20, hwnd, 
-				 (HMENU) ID_DONE, ((LPCREATESTRUCT) lParam)->hInstance, NULL) ;
+				 185, 50, 100, 20, hwnd, 
+				 (HMENU) ID_DONE, ((LPCREATESTRUCT) lParam)->hInstance, NULL);
 
       SetFocus (hwnEdit);
       break;
       
     case WM_DESTROY :
-      PostQuitMessage (0) ;
+      PostQuitMessage (0);
       break;
       
     case WM_COMMAND:
@@ -396,24 +380,15 @@ LRESULT CALLBACK InitFormDialogWndProc (HWND hwnd, UINT iMsg, WPARAM wParam, LPA
 	{
 	case ID_CONFIRM:
 	  txtLength = GetWindowTextLength (hwnEdit);
-	  if ((pWinBuffer = (STRING) TtaGetMemory (txtLength + 1)))
-	    {
-	      GetWindowText (hwnEdit, pWinBuffer, txtLength + 1);
-	      index = 0;
-	      pBuffer = (STRING) TtaGetMemory (txtLength + 1);
-	      for (i = 0; i < txtLength; i ++) 
-		if (pWinBuffer [i] != __CR__)
-		  pBuffer [index++] = pWinBuffer[i];
-	      
-	      pBuffer [index] = EOS;
-	    }
-	  else
-	    {
-	      pWinBuffer = _EMPTYSTR_;	  
-	      pBuffer = _EMPTYSTR_;
-	    }
-
-	  ThotCallback (NumMenuAttrTextNeeded, STRING_DATA, pBuffer);
+	  if (txtLength >= LgMaxAttrText)
+		txtLength = LgMaxAttrText - 1;
+	  GetWindowText (hwnEdit, Attr_text, txtLength + 1);
+	  i = 0;
+	  while (i < txtLength && Attr_text[i] != __CR__)
+	    i++;
+	  if (i < txtLength)
+	    Attr_text[i] = EOS;
+	  ThotCallback (NumMenuAttrTextNeeded, STRING_DATA, Attr_text);
 	  ThotCallback (NumMenuAttrRequired, INTEGER_DATA, (STRING) 1);
 	  DestroyWindow (hwnd);
 	  break;
@@ -426,7 +401,7 @@ LRESULT CALLBACK InitFormDialogWndProc (HWND hwnd, UINT iMsg, WPARAM wParam, LPA
 	}
       break;
     }
-  return DefWindowProc (hwnd, iMsg, wParam, lParam) ;
+  return DefWindowProc (hwnd, iMsg, wParam, lParam);
 }
 
 /*----------------------------------------------------------------------
@@ -440,27 +415,27 @@ HWND  parent;
 STRING title	;
 #endif /* __STDC__ */
 {
-   WNDCLASSEX    wndSheetClass ;
-   static STRING szAppName;
+   WNDCLASSEX    wndSheetClass;
+   STRING        szAppName;
    HWND          hwnSheetDialog;
    MSG           msg;
    int           frame;
 
-   szAppName = _SheetClassCST_ ;
+   szAppName = _SheetClassCST_;
    if (!wndSheetRegistered) {
 	  wndSheetRegistered = TRUE;
-      wndSheetClass.style         = CS_HREDRAW | CS_VREDRAW ;
-      wndSheetClass.lpfnWndProc   = InitSheetDialogWndProc ;
-      wndSheetClass.cbClsExtra    = 0 ;
-      wndSheetClass.cbWndExtra    = 0 ;
-      wndSheetClass.hInstance     = hInstance ;
-      wndSheetClass.hIcon         = LoadIcon (NULL, IDI_APPLICATION) ;
-      wndSheetClass.hCursor       = LoadCursor (NULL, IDC_ARROW) ;
-      wndSheetClass.hbrBackground = (HBRUSH) GetStockObject (LTGRAY_BRUSH) ;
-      wndSheetClass.lpszMenuName  = NULL ;
-      wndSheetClass.lpszClassName = szAppName ;
+      wndSheetClass.style         = CS_HREDRAW | CS_VREDRAW;
+      wndSheetClass.lpfnWndProc   = InitSheetDialogWndProc;
+      wndSheetClass.cbClsExtra    = 0;
+      wndSheetClass.cbWndExtra    = 0;
+      wndSheetClass.hInstance     = hInstance;
+      wndSheetClass.hIcon         = LoadIcon (NULL, IDI_APPLICATION);
+      wndSheetClass.hCursor       = LoadCursor (NULL, IDC_ARROW);
+      wndSheetClass.hbrBackground = (HBRUSH) GetStockObject (LTGRAY_BRUSH);
+      wndSheetClass.lpszMenuName  = NULL;
+      wndSheetClass.lpszClassName = szAppName;
       wndSheetClass.cbSize        = sizeof(WNDCLASSEX);
-      wndSheetClass.hIconSm       = LoadIcon (hInstance, iconID) ;
+      wndSheetClass.hIconSm       = LoadIcon (hInstance, iconID);
 
 	  if (!RegisterClassEx (&wndSheetClass))
          return (FALSE);
@@ -470,34 +445,23 @@ STRING title	;
                                  DS_MODALFRAME | WS_POPUP | 
                                  WS_VISIBLE | WS_CAPTION | WS_SYSMENU,
                                  ClickX, ClickY,
-                                 335, 280,
-                                 parent, NULL, hInstance, NULL) ;
+                                 340, 100,
+                                 parent, NULL, hInstance, NULL);
 
-   ShowWindow (hwnSheetDialog, SW_SHOWNORMAL) ;
-   UpdateWindow (hwnSheetDialog) ;
+   ShowWindow (hwnSheetDialog, SW_SHOWNORMAL);
+   UpdateWindow (hwnSheetDialog);
 
-   while (GetMessage (&msg, NULL, 0, 0)) {
-#        if 0
-         TranslateMessage (&msg) ;
-         DispatchMessage (&msg) ;
-#        endif /* 0 */
+   while (GetMessage (&msg, NULL, 0, 0))
+     {
          frame = GetFrameNumber (msg.hwnd);
-		 /*@@@@@@@@@@@@@@@@@@@@*/
-         /* if (frame != -1) {
-            if (!hAccel[frame] || !TranslateAccelerator (FrMainRef[frame], hAccel[frame], &msg)) {
-               TranslateMessage (&msg) ;
-               DispatchMessage (&msg) ;
-			}
-		 } else { */
-                TranslateMessage (&msg) ;
-                DispatchMessage (&msg) ;
-		 /* } */
+	 TranslateMessage (&msg);
+	 DispatchMessage (&msg);
    }
    return TRUE;
 }
 
 /*----------------------------------------------------------------------
- InitSheetDialogWndProc
+  InitSheetDialogWndProc
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 LRESULT CALLBACK InitSheetDialogWndProc (HWND hwnd, UINT iMsg, WPARAM wParam, LPARAM lParam)
@@ -509,59 +473,50 @@ LRESULT CALLBACK InitSheetDialogWndProc (HWND hwnd, UINT iMsg, WPARAM wParam, LP
   HWND          applyButton;
   HWND          deleteButton;
   HWND          doneButton;
-  STRING        pBuffer;
-  int           i, index;
-  static STRING pWinBuffer;
-  static int    txtLength;
-  static HWND   hwnEdit ;
-
-  if (!dlgInitialized)
-    {
-      if (WIN_currAttr) 
-	usprintf (attr_text, TEXT("%s"), WIN_currAttr->AeAttrText->BuContent);
-      else
-	attr_text [0] = EOS ;
-      dlgInitialized = TRUE;
-    }
+  int           i;
+  int           txtLength;
 
   switch (iMsg)
     {
     case WM_CREATE:
+      if (WIN_currAttr) 
+	usprintf (Attr_text, TEXT("%s"), WIN_currAttr->AeAttrText->BuContent);
+      else
+	Attr_text[0] = EOS;
+
       /* Create static window for the title */
       hwnTitle = CreateWindow (TEXT("STATIC"), WIN_pAttr1->AttrName, 
 			       WS_CHILD | WS_VISIBLE | SS_LEFT,
-			       10, 10, 100, 20, hwnd, (HMENU) 99, 
+			       10, 5, 100, 15, hwnd, (HMENU) 99, 
 			       ((LPCREATESTRUCT) lParam)->hInstance, NULL); 
       
       /* Create Edit Window autoscrolled */
-      hwnEdit = CreateWindow (TEXT("EDIT"), attr_text, 
-			      WS_CHILD | WS_VISIBLE | WS_HSCROLL | WS_VSCROLL |
-			      WS_BORDER | ES_LEFT | ES_MULTILINE |
-			      ES_AUTOHSCROLL | ES_AUTOVSCROLL,
-			      10, 40, 310, 110, hwnd, (HMENU) 1, ((LPCREATESTRUCT) lParam)->hInstance, NULL);
+      hwnEdit = CreateWindow (TEXT("EDIT"), Attr_text, 
+			      WS_CHILD | WS_VISIBLE | WS_BORDER | ES_LEFT | ES_AUTOHSCROLL,
+			      10, 25, 310, 20, hwnd, (HMENU) 1, ((LPCREATESTRUCT) lParam)->hInstance, NULL);
 				
       /* Create Apply button */
       applyButton = CreateWindow (TEXT("BUTTON"), TtaGetMessage (LIB, TMSG_APPLY), 
 				  WS_CHILD | BS_PUSHBUTTON | WS_VISIBLE,
-				  10, 170, 70, 30, hwnd, 
-				  (HMENU) ID_APPLY, ((LPCREATESTRUCT) lParam)->hInstance, NULL) ;
+				  10, 50, 80, 20, hwnd, 
+				  (HMENU) ID_APPLY, ((LPCREATESTRUCT) lParam)->hInstance, NULL);
       
       /* Create Delete Button */
       deleteButton = CreateWindow (TEXT("BUTTON"), TtaGetMessage (LIB, TMSG_DEL_ATTR), 
 				   WS_CHILD | BS_PUSHBUTTON | WS_VISIBLE,
-				   90, 170, 150, 30, hwnd, 
-				   (HMENU) ID_DELETE, ((LPCREATESTRUCT) lParam)->hInstance, NULL) ;
+				   100, 50, 120, 20, hwnd, 
+				   (HMENU) ID_DELETE, ((LPCREATESTRUCT) lParam)->hInstance, NULL);
       
       /* Create Done Button */
       doneButton = CreateWindow (TEXT("BUTTON"), TtaGetMessage (LIB, TMSG_DONE), 
 				 WS_CHILD | BS_PUSHBUTTON | WS_VISIBLE,
-				 250, 170, 70, 30, hwnd, 
-				 (HMENU) ID_DONE, ((LPCREATESTRUCT) lParam)->hInstance, NULL) ;
+				 230, 50, 80, 20, hwnd, 
+				 (HMENU) ID_DONE, ((LPCREATESTRUCT) lParam)->hInstance, NULL);
       SetFocus (hwnEdit);
       break;
       
     case WM_DESTROY :
-      PostQuitMessage (0) ;
+      PostQuitMessage (0);
       break;
 
     case WM_COMMAND:
@@ -569,45 +524,29 @@ LRESULT CALLBACK InitSheetDialogWndProc (HWND hwnd, UINT iMsg, WPARAM wParam, LP
 	{
 	case ID_APPLY:
 	  txtLength = GetWindowTextLength (hwnEdit);
-	  if ((pWinBuffer = (STRING) TtaGetMemory (txtLength + 1)))
-	    {
-	      GetWindowText (hwnEdit, pWinBuffer, txtLength + 1);
-	      index = 0;
-	      pBuffer = (STRING) TtaGetMemory (txtLength + 1);
-	      for (i = 0; i < txtLength; i ++) 
-		if (pWinBuffer [i] != __CR__)
-		  pBuffer [index++] = pWinBuffer[i];
-	      pBuffer [index] = EOS;
-	    }
-	  else
-	    {
-	      pWinBuffer = _EMPTYSTR_;	  
-	      pBuffer = _EMPTYSTR_;
-	    }
-	  
-	  ThotCallback (NumMenuAttrText, STRING_DATA, pBuffer);
+	  if (txtLength >= LgMaxAttrText)
+		txtLength = LgMaxAttrText - 1;
+	  GetWindowText (hwnEdit, Attr_text, txtLength + 1);
+	  i = 0;
+	  while (i < txtLength && Attr_text[i] != __CR__)
+	    i++;
+	  if (i < txtLength)
+	    Attr_text[i] = EOS;
+	  ThotCallback (NumMenuAttrText, STRING_DATA, Attr_text);
 	  ThotCallback (NumMenuAttr, INTEGER_DATA, (STRING) 1);
 	  break;
 	  
 	case ID_DELETE:
 	  txtLength = GetWindowTextLength (hwnEdit);
-	  if ((pWinBuffer = (STRING) TtaGetMemory (txtLength + 1)))
-	    {
-	      GetWindowText (hwnEdit, pWinBuffer, txtLength + 1);
-	      index = 0;
-	      pBuffer = (STRING) TtaGetMemory (txtLength + 1);
-	      for (i = 0; i < txtLength; i ++) 
-		if (pWinBuffer [i] != __CR__)
-		  pBuffer [index++] = pWinBuffer[i];
-	      pBuffer [index] = EOS;
-	    }
-	  else
-	    {
-	      pWinBuffer = _EMPTYSTR_;	  
-	      pBuffer = _EMPTYSTR_;
-	    }
-
-	  ThotCallback (NumMenuAttrText, STRING_DATA, pBuffer);
+	  if (txtLength >= LgMaxAttrText)
+		txtLength = LgMaxAttrText - 1;
+	  GetWindowText (hwnEdit, Attr_text, txtLength + 1);
+	  i = 0;
+	  while (i < txtLength && Attr_text[i] != __CR__)
+	    i++;
+	  if (i < txtLength)
+	    Attr_text[i] = EOS;
+	  ThotCallback (NumMenuAttrText, STRING_DATA, Attr_text);
 	  ThotCallback (NumMenuAttr, INTEGER_DATA, (STRING) 2);
 	  DestroyWindow (hwnd);
 	  break;
@@ -615,12 +554,11 @@ LRESULT CALLBACK InitSheetDialogWndProc (HWND hwnd, UINT iMsg, WPARAM wParam, LP
 	case ID_DONE:
 	  ThotCallback (NumMenuAttr, INTEGER_DATA, (STRING) 0);
 	  DestroyWindow (hwnd);
-	  dlgInitialized = FALSE;
 	  break;
 	}
       break;
     }
-  return DefWindowProc (hwnd, iMsg, wParam, lParam) ;
+  return DefWindowProc (hwnd, iMsg, wParam, lParam);
 }
 
 /*----------------------------------------------------------------------
@@ -634,27 +572,27 @@ HWND  parent;
 STRING title	;
 #endif /* __STDC__ */
 {
-   WNDCLASSEX    wndNumAttrClass ;
+   WNDCLASSEX    wndNumAttrClass;
    static STRING szAppName;
    HWND          hwnNumAttrDialog;
    MSG           msg;
    int           frame;
 
-   szAppName = _NumAttrClassCST_ ;
+   szAppName = _NumAttrClassCST_;
    if (!wndNumAttrRegistered) {
 	  wndNumAttrRegistered = TRUE;
-      wndNumAttrClass.style         = CS_HREDRAW | CS_VREDRAW ;
-      wndNumAttrClass.lpfnWndProc   = InitNumAttrDialogWndProc ;
-      wndNumAttrClass.cbClsExtra    = 0 ;
-      wndNumAttrClass.cbWndExtra    = 0 ;
-      wndNumAttrClass.hInstance     = hInstance ;
-      wndNumAttrClass.hIcon         = LoadIcon (NULL, IDI_APPLICATION) ;
-      wndNumAttrClass.hCursor       = LoadCursor (NULL, IDC_ARROW) ;
-      wndNumAttrClass.hbrBackground = (HBRUSH) GetStockObject (LTGRAY_BRUSH) ;
-      wndNumAttrClass.lpszMenuName  = NULL ;
-      wndNumAttrClass.lpszClassName = szAppName ;
+      wndNumAttrClass.style         = CS_HREDRAW | CS_VREDRAW;
+      wndNumAttrClass.lpfnWndProc   = InitNumAttrDialogWndProc;
+      wndNumAttrClass.cbClsExtra    = 0;
+      wndNumAttrClass.cbWndExtra    = 0;
+      wndNumAttrClass.hInstance     = hInstance;
+      wndNumAttrClass.hIcon         = LoadIcon (NULL, IDI_APPLICATION);
+      wndNumAttrClass.hCursor       = LoadCursor (NULL, IDC_ARROW);
+      wndNumAttrClass.hbrBackground = (HBRUSH) GetStockObject (LTGRAY_BRUSH);
+      wndNumAttrClass.lpszMenuName  = NULL;
+      wndNumAttrClass.lpszClassName = szAppName;
       wndNumAttrClass.cbSize        = sizeof(WNDCLASSEX);
-      wndNumAttrClass.hIconSm       = LoadIcon (hInstance, iconID) ;
+      wndNumAttrClass.hIconSm       = LoadIcon (hInstance, iconID);
 
       if (!RegisterClassEx (&wndNumAttrClass))
          return (FALSE);
@@ -664,34 +602,23 @@ STRING title	;
                                     DS_MODALFRAME | WS_POPUP | 
                                     WS_VISIBLE | WS_CAPTION | WS_SYSMENU,
                                     ClickX, ClickY,
-                                    275, 180,
-                                    parent, NULL, hInstance, NULL) ;
+                                    275, 80,
+                                    parent, NULL, hInstance, NULL);
 
-   ShowWindow (hwnNumAttrDialog, SW_SHOWNORMAL) ;
-   UpdateWindow (hwnNumAttrDialog) ;
+   ShowWindow (hwnNumAttrDialog, SW_SHOWNORMAL);
+   UpdateWindow (hwnNumAttrDialog);
 
-   while (GetMessage (&msg, NULL, 0, 0)) {
-#        if 0
-         TranslateMessage (&msg) ;
-         DispatchMessage (&msg) ;
-#        endif /* 0 */
-		 /*@@@@@@@@@@@@@@@@@@@@*/
-         frame = GetFrameNumber (msg.hwnd);
-         /* if (frame != -1) {
-            if (!hAccel[frame] || !TranslateAccelerator (FrMainRef[frame], hAccel[frame], &msg)) {
-               TranslateMessage (&msg) ;
-               DispatchMessage (&msg) ;
-			}
-		 } else { */
-                TranslateMessage (&msg) ;
-                DispatchMessage (&msg) ;
-		 /* } */
-   }
+   while (GetMessage (&msg, NULL, 0, 0))
+     {
+       frame = GetFrameNumber (msg.hwnd);
+       TranslateMessage (&msg);
+       DispatchMessage (&msg);
+     }
    return TRUE;
 }
 
 /*----------------------------------------------------------------------
- InitSheetDialogWndProc
+  InitNumAttrDialogWndProc
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 LRESULT CALLBACK InitNumAttrDialogWndProc (HWND hwnd, UINT iMsg, WPARAM wParam, LPARAM lParam)
@@ -706,9 +633,6 @@ LRESULT CALLBACK InitNumAttrDialogWndProc (HWND hwnd, UINT iMsg, WPARAM wParam, 
   HWND        doneButton;
   BOOL        ok;
   int         val;
-  static PSTR pWinBuffer;
-  static int  txtLength;
-  static HWND hwnEdit ;
 
   switch (iMsg)
     {
@@ -730,27 +654,27 @@ LRESULT CALLBACK InitNumAttrDialogWndProc (HWND hwnd, UINT iMsg, WPARAM wParam, 
 			      10, 80, 250, 30, hwnd, (HMENU) ID_EDITVALUE, ((LPCREATESTRUCT) lParam)->hInstance, NULL);
       SetDlgItemInt (hwnd, ID_EDITVALUE, formValue, TRUE);
     
-				/* Create Apply button */
+      /* Create Apply button */
       applyButton = CreateWindow (TEXT("BUTTON"), TtaGetMessage (LIB, TMSG_APPLY), 
 				  WS_CHILD | BS_PUSHBUTTON | WS_VISIBLE,
 				  10, 120, 80, 25, hwnd, 
-				  (HMENU) ID_APPLY, ((LPCREATESTRUCT) lParam)->hInstance, NULL) ;
+				  (HMENU) ID_APPLY, ((LPCREATESTRUCT) lParam)->hInstance, NULL);
       
-				/* Create Delete Button */
+      /* Create Delete Button */
       deleteButton = CreateWindow (TEXT("BUTTON"), TtaGetMessage (LIB, TMSG_DEL_ATTR), 
 				   WS_CHILD | BS_PUSHBUTTON | WS_VISIBLE,
 				   95, 120, 80, 25, hwnd, 
-				   (HMENU) ID_DELETE, ((LPCREATESTRUCT) lParam)->hInstance, NULL) ;
+				   (HMENU) ID_DELETE, ((LPCREATESTRUCT) lParam)->hInstance, NULL);
       
-				/* Create Done Button */
+      /* Create Done Button */
       doneButton = CreateWindow (TEXT("BUTTON"), TtaGetMessage (LIB, TMSG_DONE), 
 				 WS_CHILD | BS_PUSHBUTTON | WS_VISIBLE,
 				 180, 120, 80, 25, hwnd, 
-				 (HMENU) ID_DONE, ((LPCREATESTRUCT) lParam)->hInstance, NULL) ;
+				 (HMENU) ID_DONE, ((LPCREATESTRUCT) lParam)->hInstance, NULL);
       break;
       
     case WM_DESTROY :
-      PostQuitMessage (0) ;
+      PostQuitMessage (0);
       break;
     
     case WM_COMMAND:
@@ -758,10 +682,11 @@ LRESULT CALLBACK InitNumAttrDialogWndProc (HWND hwnd, UINT iMsg, WPARAM wParam, 
 	{
 	case ID_APPLY:
 	  val = GetDlgItemInt (hwnd, ID_EDITVALUE, &ok, TRUE);
-	  if (ok) {
-	    ThotCallback (NumMenuAttrNumber, INTEGER_DATA, (STRING) val);
-	    ThotCallback (NumMenuAttr, INTEGER_DATA, (STRING) 1);
-	  }
+	  if (ok)
+	    {
+	      ThotCallback (NumMenuAttrNumber, INTEGER_DATA, (STRING) val);
+	      ThotCallback (NumMenuAttr, INTEGER_DATA, (STRING) 1);
+	    }
 	  break;
       
 	case ID_DELETE:
@@ -781,7 +706,7 @@ LRESULT CALLBACK InitNumAttrDialogWndProc (HWND hwnd, UINT iMsg, WPARAM wParam, 
 	}
       break;
     }
-  return DefWindowProc (hwnd, iMsg, wParam, lParam) ;
+  return DefWindowProc (hwnd, iMsg, wParam, lParam);
 }
 #endif /* _WINDOWS */
 
@@ -810,12 +735,12 @@ int                 view;
   int                 form, subform;
   CHAR_T                bufMenu[MAX_TXT_LEN];
   Document            doc;
-# ifndef _WINDOWS
+#ifndef _WINDOWS
   CHAR_T                title[MAX_NAME_LENGTH + 2];
-# else  /* _WINDOWS */
+#else  /* _WINDOWS */
   WIN_pAttr1 = pAttr1;
   WIN_currAttr	= currAttr;
-# endif /* _WINDOWS */
+#endif /* _WINDOWS */
 
   doc = (Document) IdentDocument (pDoc);
   /* detruit la feuille de dialogue et la recree */
@@ -834,7 +759,7 @@ int                 view;
       TtaNewForm (NumMenuAttrRequired, TtaGetViewFrame (doc, view), 
 		  TtaGetMessage (LIB, TMSG_ATTR), FALSE, 2, 'L', D_DONE);
 #else  /* _WINDOWS */
-      isForm = TRUE ;
+      isForm = TRUE;
       WIN_InitFormDialog (TtaGetViewFrame (doc, view), TtaGetMessage (LIB, TMSG_ATTR));
 #endif /* _WINDOWS */
       MandatoryAttrFormExists = TRUE;
@@ -851,7 +776,7 @@ int                 view;
       TtaNewSheet (NumMenuAttr, TtaGetViewFrame (doc, view), 
 		   TtaGetMessage (LIB, TMSG_ATTR), 2, bufMenu, FALSE, 2, 'L', D_DONE);
 #else  /* _WINDOWS */
-      isForm = FALSE ;
+      isForm = FALSE;
 #endif /* _WINDOWS */
       AttrFormExists = TRUE;
     }
@@ -890,7 +815,7 @@ int                 view;
        /* attribut a valeur textuelle */
        subform = form + 2;
 #ifndef _WINDOWS
-       TtaNewTextForm (subform, form, title, 40, 3, FALSE);
+       TtaNewTextForm (subform, form, title, 40, 1, FALSE);
        TtaAttachForm (subform);
        if (currAttr == NULL)
 	 TtaSetTextForm (subform, "");
@@ -1333,7 +1258,7 @@ PtrDocument         pDoc;
 	    {
 #ifdef _WINDOWS
 	      int nbOldItems = GetMenuItemCount (FrameTable[frame].WdMenus[menu]);
-		  for (i = 0; i < nbOldItems ; i ++) {
+		  for (i = 0; i < nbOldItems; i ++) {
               if (!DeleteMenu (FrameTable[frame].WdMenus[menu], ref + i, MF_BYCOMMAND))
                  DeleteMenu (FrameTable[frame].WdMenus[menu], i, MF_BYPOSITION);
 		  }
@@ -1343,10 +1268,10 @@ PtrDocument         pDoc;
 		  /* destroy the submenu event */
 		  TtaDestroyDialogue (EventMenu[frame - 1]);
 #         ifdef _WINDOWS
-          if (subMenuID [frame]) {
-			  DeleteMenu (FrameTable[frame].WdMenus[menu], subMenuID [frame], MF_BYCOMMAND);
+          if (subMenuID[frame]) {
+			  DeleteMenu (FrameTable[frame].WdMenus[menu], subMenuID[frame], MF_BYCOMMAND);
           } else 
-               subMenuID [frame] = 0;
+               subMenuID[frame] = 0;
 
 #         endif /* _WINDOWS */
 		  EventMenu[frame - 1] = 0;
@@ -1361,7 +1286,7 @@ PtrDocument         pDoc;
 		  /* post active attributes */
 		  for (i = 0; i < nbEvent; i++)
 #ifdef _WINDOWS
-		    WIN_TtaSetToggleMenu (EventMenu[frame - 1], i, (ThotBool) (ActiveEventAttr[i] == 1), FrMainRef [frame]);
+		    WIN_TtaSetToggleMenu (EventMenu[frame - 1], i, (ThotBool) (ActiveEventAttr[i] == 1), FrMainRef[frame]);
 #           else  /* !_WINDOWS */
 		    TtaSetToggleMenu (EventMenu[frame - 1], i, (ActiveEventAttr[i] == 1));
 #endif /* _WINDOWS */
@@ -1374,7 +1299,7 @@ PtrDocument         pDoc;
 		max--;
 	      for (i = 0; i < max; i++)
 #ifdef _WINDOWS
-		WIN_TtaSetToggleMenu (ref, i, (ThotBool) (ActiveAttr[i] == 1), FrMainRef [frame]);
+		WIN_TtaSetToggleMenu (ref, i, (ThotBool) (ActiveAttr[i] == 1), FrMainRef[frame]);
 #else  /* !_WINDOWS */
 	        TtaSetToggleMenu (ref, i, (ActiveAttr[i] == 1));
 #endif /* _WINDOWS */
@@ -1405,7 +1330,7 @@ PtrDocument         pDoc;
 	      /* marque les attributs actifs */
 	      for (i = 0; i < nbItemAttr; i++)
 #ifdef _WINDOWS
-             WIN_TtaSetToggleMenu (ref, i, (ThotBool)(ActiveAttr[i] == 1), FrMainRef [frame]);
+             WIN_TtaSetToggleMenu (ref, i, (ThotBool)(ActiveAttr[i] == 1), FrMainRef[frame]);
 #else  /* !_WINDOWS */
 	      TtaSetToggleMenu (ref, i, (ActiveAttr[i] == 1));
 #endif /* _WINDOWS */
@@ -1674,144 +1599,144 @@ int                 frame;
 
 #endif /* __STDC__ */
 {
-   TtAttribute        *pAttr;
-   PtrAttribute        pAttrNew, currAttr;
-   PtrDocument         SelDoc;
-   PtrElement          firstSel, lastSel, AssocCreated;
-   PtrReference        Ref;
-   Document            doc;
-   View                view;
-   int                 item, i;
-   int                 firstChar, lastChar;
-#  ifdef _WINDOWS
-   int                 currAttrVal = -1;
-#  endif /* _WINDOWS */
+  TtAttribute        *pAttr;
+  PtrAttribute        pAttrNew, currAttr;
+  PtrDocument         SelDoc;
+  PtrElement          firstSel, lastSel, AssocCreated;
+  PtrReference        Ref;
+  Document            doc;
+  View                view;
+  int                 item, i;
+  int                 firstChar, lastChar;
+#ifdef _WINDOWS
+  int                 currAttrVal = -1;
+#endif /* _WINDOWS */
 
-   FrameToView (frame, &doc, &view);
-   item = att;
-     /* get the right entry in the attributes list */
-   if (refmenu == EventMenu[frame - 1])
-     att = AttrEventNumber[att];
-   else
-     {
-       i = 0;
-       while (i <= att)
-	 {
-	   if (AttrEvent[i])
-	     att++;
-	   i++;
-	 }
-     }
-   if (att >= 0)
-      if (GetCurrentSelection (&SelDoc, &firstSel, &lastSel, &firstChar, &lastChar))
+  FrameToView (frame, &doc, &view);
+  item = att;
+  /* get the right entry in the attributes list */
+  if (refmenu == EventMenu[frame - 1])
+    att = AttrEventNumber[att];
+  else
+    {
+      i = 0;
+      while (i <= att)
 	{
-	   GetAttribute (&pAttrNew);
-	   pAttrNew->AeAttrSSchema = AttrStruct[att];
-	   pAttrNew->AeAttrNum = AttrNumber[att];
-	   pAttrNew->AeDefAttr = FALSE;
-	   pAttr = &AttrStruct[att]->SsAttribute[AttrNumber[att] - 1];
-	   pAttrNew->AeAttrType = pAttr->AttrType;
-	   if (pAttr->AttrType == AtReferenceAttr)
-	     {
-		AssocCreated = NULL;
-		/* attache un bloc reference a l'attribut */
-		GetReference (&Ref);
-		pAttrNew->AeAttrReference = Ref;
-		pAttrNew->AeAttrReference->RdElement = NULL;
-		pAttrNew->AeAttrReference->RdAttribute = pAttrNew;
-		/* demande a l'utilisateur l'element reference' */
-		if (LinkReference (firstSel, pAttrNew, SelDoc, &AssocCreated))
-		   if (ThotLocalActions[T_checkextens] != NULL)
-		      (*ThotLocalActions[T_checkextens])
-			 (pAttrNew, firstSel, lastSel, FALSE);
-		if (AssocCreated != NULL)
-		  {
-		     CreateAllAbsBoxesOfEl (AssocCreated, SelDoc);
-		     AbstractImageUpdated (SelDoc);
-		  }
-		/* applique l'attribut a la partie selectionnee */
+	  if (AttrEvent[i])
+	    att++;
+	  i++;
+	}
+    }
+  if (att >= 0)
+    if (GetCurrentSelection (&SelDoc, &firstSel, &lastSel, &firstChar, &lastChar))
+      {
+	GetAttribute (&pAttrNew);
+	pAttrNew->AeAttrSSchema = AttrStruct[att];
+	pAttrNew->AeAttrNum = AttrNumber[att];
+	pAttrNew->AeDefAttr = FALSE;
+	pAttr = &AttrStruct[att]->SsAttribute[AttrNumber[att] - 1];
+	pAttrNew->AeAttrType = pAttr->AttrType;
+	if (pAttr->AttrType == AtReferenceAttr)
+	  {
+	    AssocCreated = NULL;
+	    /* attache un bloc reference a l'attribut */
+	    GetReference (&Ref);
+	    pAttrNew->AeAttrReference = Ref;
+	    pAttrNew->AeAttrReference->RdElement = NULL;
+	    pAttrNew->AeAttrReference->RdAttribute = pAttrNew;
+	    /* demande a l'utilisateur l'element reference' */
+	    if (LinkReference (firstSel, pAttrNew, SelDoc, &AssocCreated))
+	      if (ThotLocalActions[T_checkextens] != NULL)
+		(*ThotLocalActions[T_checkextens])
+		  (pAttrNew, firstSel, lastSel, FALSE);
+	    if (AssocCreated != NULL)
+	      {
+		CreateAllAbsBoxesOfEl (AssocCreated, SelDoc);
+		AbstractImageUpdated (SelDoc);
+	      }
+	    /* applique l'attribut a la partie selectionnee */
+	    AttachAttrToRange (pAttrNew, lastChar, firstChar, lastSel,
+			       firstSel, SelDoc, TRUE);
+	    UpdateAttrMenu (SelDoc);
+	  }
+	else
+	  {
+	    /* cherche la valeur de cet attribut pour le premier element */
+	    /* selectionne' */
+	    currAttr = AttributeValue (firstSel, pAttrNew);
+#ifdef _WINDOWS
+	    if (currAttr == NULL)
+	      currAttrVal = -1;
+	    else 
+	      currAttrVal = currAttr->AeAttrValue;
+#endif /* _WINDOWS */
+	    if (pAttrNew->AeAttrNum == 1)
+	      {
+		InitFormLanguage (doc, view, firstSel, currAttr);
+		/* memorise l'attribut concerne' par le formulaire */
+		SchCurrentAttr = pAttrNew->AeAttrSSchema;
+		NumCurrentAttr = 1;
+		/* restaure l'etat courant du toggle */
+#ifdef _WINDOWS
+		CreateLanguageDlgWindow (TtaGetViewFrame (doc, view), 
+					 TtaGetMessage (LIB, TMSG_LANGUAGE),
+					 TtaGetMessage (LIB, TMSG_LANG_OF_EL), 
+					 WIN_nbItem, WIN_buffMenu, WIN_Lab, 
+					 (int)WIN_Language, TtaGetLanguageName (WIN_Language));
+#else /* _WINDOWS */
+		if (ActiveAttr[item] == 0)
+		  TtaSetToggleMenu (refmenu, item, FALSE);
+		else
+		  TtaSetToggleMenu (refmenu, item, TRUE);
+#endif /* _WINDOWS */
+	      }
+	    else if (pAttr->AttrType == AtEnumAttr &&
+		     pAttr->AttrNEnumValues == 1)
+	      /* attribut enumere' a une seule valeur(attribut booleen) */
+	      {
+		if (currAttr == NULL)
+		  /* le premier element selectionne' n'a pas cet */
+		  /* attribut. On le lui met */
+		  pAttrNew->AeAttrValue = 1;
+		else
+		  /* suppression de l'attribut */
+		  pAttrNew->AeAttrValue = 0;
+		/* applique l'operation a la partie selectionnee */
 		AttachAttrToRange (pAttrNew, lastChar, firstChar, lastSel,
 				   firstSel, SelDoc, TRUE);
-		UpdateAttrMenu (SelDoc);
-	     }
-	   else
-	     {
-		/* cherche la valeur de cet attribut pour le premier element */
-		/* selectionne' */
-		currAttr = AttributeValue (firstSel, pAttrNew);
-#ifdef _WINDOWS
-        if (currAttr == NULL)
-           currAttrVal = -1;
-        else 
-            currAttrVal = currAttr->AeAttrValue;
-#endif /* _WINDOWS */
-		if (pAttrNew->AeAttrNum == 1)
-		  {
-		     InitFormLanguage (doc, view, firstSel, currAttr);
-		     /* memorise l'attribut concerne' par le formulaire */
-		     SchCurrentAttr = pAttrNew->AeAttrSSchema;
-		     NumCurrentAttr = 1;
-		     /* restaure l'etat courant du toggle */
-#ifdef _WINDOWS
-             CreateLanguageDlgWindow (TtaGetViewFrame (doc, view), 
-				      TtaGetMessage (LIB, TMSG_LANGUAGE),
-	                              TtaGetMessage (LIB, TMSG_LANG_OF_EL), 
-				      WIN_nbItem, WIN_buffMenu, WIN_Lab, 
-				      (int)WIN_Language, TtaGetLanguageName (WIN_Language));
-#else /* _WINDOWS */
-		     if (ActiveAttr[item] == 0)
-			TtaSetToggleMenu (refmenu, item, FALSE);
-		     else
-			TtaSetToggleMenu (refmenu, item, TRUE);
-#endif /* _WINDOWS */
-		  }
-		else if (pAttr->AttrType == AtEnumAttr &&
-			 pAttr->AttrNEnumValues == 1)
-		   /* attribut enumere' a une seule valeur(attribut booleen) */
-		  {
-		     if (currAttr == NULL)
-			/* le premier element selectionne' n'a pas cet */
-			/* attribut. On le lui met */
-			pAttrNew->AeAttrValue = 1;
-		     else
-			/* suppression de l'attribut */
-			pAttrNew->AeAttrValue = 0;
-		     /* applique l'operation a la partie selectionnee */
-		     AttachAttrToRange (pAttrNew, lastChar, firstChar, lastSel,
-					firstSel, SelDoc, TRUE);
-		  }
+	      }
+	    else
+	      {
+		/* construit le formulaire de saisie de la valeur de */
+		/* l'attribut */
+		MenuValues (pAttr, FALSE, currAttr, SelDoc, view);
+		/* memorise l'attribut concerne' par le formulaire */
+		SchCurrentAttr = AttrStruct[att];
+		NumCurrentAttr = AttrNumber[att];
+		/* restaure l'etat courant du toggle */
+#ifndef _WINDOWS 
+		if (ActiveAttr[item] == 0)
+		  TtaSetToggleMenu (refmenu, item, FALSE);
 		else
-		  {
-		     /* construit le formulaire de saisie de la valeur de */
-		     /* l'attribut */
-		     MenuValues (pAttr, FALSE, currAttr, SelDoc, view);
-		     /* memorise l'attribut concerne' par le formulaire */
-		     SchCurrentAttr = AttrStruct[att];
-		     NumCurrentAttr = AttrNumber[att];
-		     /* restaure l'etat courant du toggle */
-#            ifndef _WINDOWS 
-		     if (ActiveAttr[item] == 0)
-                TtaSetToggleMenu (refmenu, item, FALSE);
-		     else
-                TtaSetToggleMenu (refmenu, item, TRUE);
-#            endif /* _WINDOWS */
-		     /* et memorise l'attribut en cours de traitement */
-		     CurrentAttr = att;
-		     /* affiche le formulaire */
-#            ifndef _WINDOWS
-		     TtaShowDialogue (NumMenuAttr, TRUE);
-#            else  /* _WINDOWS */
-			 if (WIN_AtNumAttr) 
-		        WIN_InitNumAttrDialog (TtaGetViewFrame (doc, view), TtaGetMessage (LIB, TMSG_ATTR));
-			 else if (WIN_AtTextAttr && !isForm) 
-		          WIN_InitSheetDialog (TtaGetViewFrame (doc, view), TtaGetMessage (LIB, TMSG_ATTR));
-			 else if (WIN_AtEnumAttr) 
+		  TtaSetToggleMenu (refmenu, item, TRUE);
+#endif /* _WINDOWS */
+		/* et memorise l'attribut en cours de traitement */
+		CurrentAttr = att;
+		/* affiche le formulaire */
+#ifndef _WINDOWS
+		TtaShowDialogue (NumMenuAttr, TRUE);
+#else  /* _WINDOWS */
+		if (WIN_AtNumAttr) 
+		  WIN_InitNumAttrDialog (TtaGetViewFrame (doc, view), TtaGetMessage (LIB, TMSG_ATTR));
+		else if (WIN_AtTextAttr && !isForm) 
+		  WIN_InitSheetDialog (TtaGetViewFrame (doc, view), TtaGetMessage (LIB, TMSG_ATTR));
+		else if (WIN_AtEnumAttr) 
                   CreateAttributeDlgWindow (WIN_title, currAttrVal, nbDlgItems);
-#            endif /* _WINDOWS */
-		  }
-		DeleteAttribute (NULL, pAttrNew);
-	     }
-	}
+#endif /* _WINDOWS */
+	      }
+	    DeleteAttribute (NULL, pAttrNew);
+	  }
+      }
 }
 
 /*----------------------------------------------------------------------

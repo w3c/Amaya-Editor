@@ -1739,6 +1739,10 @@ ThotBool            state;
 	    {
 	      /* Insere le nouvel icone */
 #ifdef _WINDOWS
+	      if (FrameTable[frame].Button[i]->iBitmap != picture)
+		{
+		  w->iBitmap = picture;
+		}
 	      SendMessage (WinToolBar[frame], TB_ENABLEBUTTON, (WPARAM) FrameTable[frame].ButtonId[index], (LPARAM) MAKELONG (state, 0));
 #else  /* !_WINDOWS */
 	      n = 0;
@@ -1791,73 +1795,6 @@ BOOL                state;
      }
 }
 
-#ifdef __STDC__
-void                WIN_TtaShowButton (Document document, View view, int index)
-#else  /* __STDC__ */
-void                WIN_TtaShowButton (document, view, index)
-Document            document;
-View                view;
-int                 index;
-#endif /* __STDC__ */
-{
-   int                 frame;
-
-   UserErrorCode = 0;
-   /* verifie le parametre document */
-   if (document == 0 && view == 0)
-      TtaError (ERR_invalid_parameter);
-   else
-     {
-	frame = GetWindowNumber (document, view);
-	if (frame == 0 || frame > MAX_FRAME)
-	   TtaError (ERR_invalid_parameter);
-	else if (FrameTable[frame].WdFrame != 0)
-	  {
-	     if (index >= MAX_BUTTON || index <= 0
-		 || FrameTable[frame].Button[index] == 0)
-		TtaError (ERR_invalid_parameter);
-	     else
-	       {
-		  /* Insere le nouvel icone */
-          SendMessage (WinToolBar[frame], TB_HIDEBUTTON, (WPARAM) FrameTable[frame].ButtonId[index], (LPARAM) MAKELONG (FALSE, 0));
-	       }
-	  }
-     }
-}
-
-#ifdef __STDC__
-void                WIN_TtaHideButton (Document document, View view, int index)
-#else  /* __STDC__ */
-void                WIN_TtaHideButton (document, view, index)
-Document            document;
-View                view;
-int                 index;
-#endif /* __STDC__ */
-{
-   int                 frame;
-
-   UserErrorCode = 0;
-   /* verifie le parametre document */
-   if (document == 0 && view == 0)
-      TtaError (ERR_invalid_parameter);
-   else
-     {
-	frame = GetWindowNumber (document, view);
-	if (frame == 0 || frame > MAX_FRAME)
-	   TtaError (ERR_invalid_parameter);
-	else if (FrameTable[frame].WdFrame != 0)
-	  {
-	     if (index >= MAX_BUTTON || index <= 0
-		 || FrameTable[frame].Button[index] == 0)
-		TtaError (ERR_invalid_parameter);
-	     else
-	       {
-		  /* Insere le nouvel icone */
-          SendMessage (WinToolBar[frame], TB_HIDEBUTTON, (WPARAM) FrameTable[frame].ButtonId[index], (LPARAM) MAKELONG (TRUE, 0));
-	       }
-	  }
-     }
-}
 #endif /* _WINDOWS */
 /*----------------------------------------------------------------------
    TtcSwitchButtonBar
@@ -1879,14 +1816,13 @@ View                view;
 #endif /* __STDC__ */
 {
    int                 frame;
-#  ifndef _WINDOWS
+#ifndef _WINDOWS
    Dimension           dy;
    Arg                 args[MAX_ARGS];
    ThotWidget          row;
-#  endif
-#  ifdef _WINDOWS
-   RECT r;
-#  endif /* _WINDOWS */
+#else /* _WINDOWS */
+   RECT                r;
+#endif /* _WINDOWS */
 
    UserErrorCode = 0;
    frame = 0;
@@ -1905,7 +1841,7 @@ View                view;
 	   return;
      }
 
-#  ifndef _WINDOWS
+#ifndef _WINDOWS
    row = FrameTable[frame].Button[0];
    XtSetArg (args[0], XmNheight, &dy);
    if (row != 0)
@@ -1928,7 +1864,7 @@ View                view;
 	XtManageChild (XtParent (row));
 	XtManageChild (XtParent (XtParent (row)));
      }
-#  else  /* _WINDOWS */
+#else  /* _WINDOWS */
    if (WinToolBar[frame] && IsWindowVisible (WinToolBar[frame])) {
       hmenu = WIN_GetMenu (frame); 
       CheckMenuItem (hmenu, menu_item, MF_BYCOMMAND | MF_UNCHECKED); 
@@ -1941,7 +1877,7 @@ View                view;
    /* Resize other windows */
    GetClientRect (FrMainRef [frame], &r);
    PostMessage (FrMainRef [frame], WM_SIZE, 0, MAKELPARAM (r.right, r.bottom));
-#  endif /* _WINDOWS */
+#endif /* _WINDOWS */
    /* force la mise a jour de la fenetre */
    TtaHandlePendingEvents ();
 }				/*TtcSwitchButtonBar */
