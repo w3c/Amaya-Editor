@@ -851,7 +851,7 @@ printf ("Specific Widths ...\n");
 	}
       else
 	addExtra = FALSE;
-      if (max > 0 && max < delta)
+      if (max < delta)
 	{
 	  /* extend the maximum of each stretchable column */
 	  useMax = TRUE;
@@ -888,7 +888,10 @@ printf ("Specific Widths ...\n");
 	    i = colWidth[cRef];
 	  else if (useMax)
 	    {
-	      var = delta * box->BxMaxWidth / max;
+	      if (max)
+		var = delta * box->BxMaxWidth / max;
+	      else
+		var = delta / n;
 	      i = box->BxMaxWidth + var;
 	    }
 	  else
