@@ -922,8 +922,8 @@ void ComputeSRCattribute (Element el, Document doc, Document sourceDocument,
 }
 
 /*----------------------------------------------------------------------
-   UpdateSRCattribute  creates or updates the SRC attribute value	
-   		when the contents of element IMG is set.		
+  UpdateSRCattribute  creates or updates the SRC attribute value	
+  when the contents of element IMG is set.		
   ----------------------------------------------------------------------*/
 void UpdateSRCattribute (NotifyOnTarget *event)
 {
@@ -952,9 +952,10 @@ void UpdateSRCattribute (NotifyOnTarget *event)
     {
       if (CreateNewImage)
 	/* We were creating a new image. Delete the empty PICTURE element */
-	TtaDeleteTree (el, doc);
+	TtcUndo (doc, 1);
       return;
     }
+
   elSRC = TtaGetParent (el);
   if (elSRC != NULL)
     elSRC = el;
@@ -1022,6 +1023,7 @@ void UpdateSRCattribute (NotifyOnTarget *event)
 
    if (!CreateNewImage && newAttr)
      TtaRegisterAttributeCreate (attr, elSRC, doc);
+
 }
 
 /*----------------------------------------------------------------------
@@ -1096,15 +1098,15 @@ void SvgImageCreated (NotifyElement *event)
    SRCattrModified updates the contents of element IMG according   
    to the new value of attribute SRC.                      
   ----------------------------------------------------------------------*/
-void                SRCattrModified (NotifyAttribute *event)
+void  SRCattrModified (NotifyAttribute *event)
 {
-   Element             el;
-   Attribute           attr;
-   Document            doc;
-   int                 length;
-   char               *buf1, *buf2;
-   char               *localname, *imageName;
-   LoadedImageDesc    *desc;
+   Element          el;
+   Attribute        attr;
+   Document         doc;
+   int              length;
+   char            *buf1, *buf2;
+   char            *localname, *imageName;
+   LoadedImageDesc *desc;
 
    doc = event->document;
    el = event->element;
