@@ -34,6 +34,9 @@
 #include "frame_tv.h"
 #include "appdialogue_tv.h"
 
+#ifdef _GLANIM
+#include "animbox_f.h"
+#endif /* _GLANIM */
 extern Frame_Ctl   FrameTable[MAX_FRAME+1];
 
 #define MAX_BOX_INWORK 10
@@ -2085,7 +2088,18 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLines,
 	    /* the real position of the box depends of its horizontal reference axis */
 	    SetPositionConstraint (HorizRef, pCurrentBox, &i);
 	}
+     
+#ifdef _GLANIM
+      if (pAb->AbElement->animation)
+	{
+	  i = ActiveFrame;
+	  ActiveFrame = frame;
+	  AnimatedBoxAdd ((PtrElement)pAb->AbElement);
+	  ActiveFrame = i;
+	}
       
+#endif /* _GLANIM */
+
       pAb->AbNew = FALSE;	/* la regle de creation est interpretee */
       /* manage table exceptions */
       if (tableType == BoTable && ThotLocalActions[T_checktable])
@@ -2097,6 +2111,14 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLines,
       else if (tableType == BoCell && ThotLocalActions[T_checkcolumn])
 	(*ThotLocalActions[T_checkcolumn]) (pAb, NULL, frame);
     }
+#ifdef _GLTRANSFORMATION
+  pCurrentBox->BxClipX = pCurrentBox->BxXOrg + pCurrentBox->BxLMargin 
+    + pCurrentBox->BxLBorder + pCurrentBox->BxLPadding;
+  pCurrentBox->BxClipY = pCurrentBox->BxYOrg + pCurrentBox->BxTMargin 
+    + pCurrentBox->BxTBorder + pCurrentBox->BxTPadding;
+  pCurrentBox->BxClipW = pCurrentBox->BxWidth;/*  - pCurrentBox->BxLMargin - pCurrentBox->BxRMargin; */
+  pCurrentBox->BxClipH = pCurrentBox->BxHeight; /* - pCurrentBox->BxTMargin - pCurrentBox->BxBMargin; */
+#endif /* _GLTRANSFORMATION */
   return (pCurrentBox);
 }
 
@@ -2604,63 +2626,61 @@ void RecordEnclosing (PtrBox pBox, ThotBool horizRef)
   ----------------------------------------------------------------------*/
 ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 {
-  PtrLine             pLine;
-  PtrAbstractBox      pCurrentAb, pCell, pBlock, pParent;
-  PtrBox              pNextBox;
-  PtrBox              pCurrentBox = NULL;
-  PtrBox              pMainBox;
-  PtrBox              pLastBox;
-  PtrBox              pBox;
-  TypeUnit            unit;
-  Propagation         savpropage;
-  ViewFrame          *pFrame;
-  AbDimension        *pDimAb;
-  AbPosition         *pPosAb;
-  int                 width, height;
-  int                 nSpaces;
-  int                 i, k, charDelta, adjustDelta;
-  ThotBool            condition;
-  ThotBool            result, isCell;
-  ThotBool            orgXComplete;
-  ThotBool            orgYComplete;
+    PtrLine             pLine;
+    PtrAbstractBox      pCurrentAb, pCell, pBlock, pParent;
+    PtrBox              pNextBox;
+    PtrBox              pCurrentBox = NULL;
+    PtrBox              pMainBox;
+    PtrBox              pLastBox;
+    PtrBox              pBox;
+    TypeUnit            unit;
+    Propagation         savpropage;
+    ViewFrame          *pFrame;
+    AbDimension        *pDimAb;
+    AbPosition         *pPosAb;
+    int                 width, height;
+    int                 nSpaces;
+    int                 i, k, charDelta, adjustDelta;
+    ThotBool            condition;
+    ThotBool            result, isCell;
+    ThotBool            orgXComplete;
+    ThotBool            orgYComplete;
 #ifdef _GL
-  ThotBool FrameUpdatingStatus;
-  
-  FrameUpdatingStatus = FrameUpdating;
-  FrameUpdating = TRUE;
-  
+    ThotBool            FrameUpdatingStatus;
+ 
+    FrameUpdatingStatus = FrameUpdating;
+    FrameUpdating = TRUE;  
 #endif /* _GL */
-
-  pFrame = &ViewFrameTable[frame - 1];
-  pLastBox = NULL;
-  nSpaces = 0;			/* nombre de blancs */
-  charDelta = 0;		/* nombre de caracteres */
-  adjustDelta = 0;		/* largeur avec des blancs justifies */
-  width = 0;
-  height = 0;
-  pMainBox = pFrame->FrAbstractBox->AbBox;	/* boite de la racine */
-  pBox = pAb->AbBox;		/* boite du pave */
-  result = FALSE;
-  condition = FALSE;
-  /* On prepare le reaffichage */
-  if (pAb->AbNew || pAb->AbDead || pAb->AbChange || pAb->AbMBPChange ||
-      pAb->AbWidthChange || pAb->AbHeightChange ||
-      pAb->AbHorizPosChange || pAb->AbVertPosChange ||
-      pAb->AbHorizRefChange || pAb->AbVertRefChange ||
-      pAb->AbAspectChange || pAb->AbSizeChange)
-    {
-      /* look at if the box or an enclosing box has a background */
-      if (pAb->AbNew || pAb->AbDead ||
-	  pAb->AbHorizPosChange || pAb->AbVertPosChange)
+    pFrame = &ViewFrameTable[frame - 1];
+    pLastBox = NULL;
+    nSpaces = 0;			/* nombre de blancs */
+    charDelta = 0;		/* nombre de caracteres */
+    adjustDelta = 0;		/* largeur avec des blancs justifies */
+    width = 0;
+    height = 0;
+    pMainBox = pFrame->FrAbstractBox->AbBox;	/* boite de la racine */
+    pBox = pAb->AbBox;		/* boite du pave */
+    result = FALSE;
+    condition = FALSE;
+    /* On prepare le reaffichage */
+    if (pAb->AbNew || pAb->AbDead || pAb->AbChange || pAb->AbMBPChange ||
+	pAb->AbWidthChange || pAb->AbHeightChange ||
+	pAb->AbHorizPosChange || pAb->AbVertPosChange ||
+	pAb->AbHorizRefChange || pAb->AbVertRefChange ||
+	pAb->AbAspectChange || pAb->AbSizeChange)
 	{
-	  pCurrentAb = pAb->AbEnclosing;	   
-	  while (pCurrentAb != NULL &&
-		 pCurrentAb->AbPictBackground == NULL &&
-		 !pCurrentAb->AbFillBox)
-	    pCurrentAb = pCurrentAb->AbEnclosing;
-	}
-      else
-	pCurrentAb = pAb;
+	    /* look at if the box or an enclosing box has a background */
+	    if (pAb->AbNew || pAb->AbDead ||
+		pAb->AbHorizPosChange || pAb->AbVertPosChange)
+		{
+		    pCurrentAb = pAb->AbEnclosing;	   
+		    while (pCurrentAb != NULL &&
+			   pCurrentAb->AbPictBackground == NULL &&
+			   !pCurrentAb->AbFillBox)
+			pCurrentAb = pCurrentAb->AbEnclosing;
+		}
+	    else
+		pCurrentAb = pAb;
 
       if (pCurrentAb == NULL || pCurrentAb->AbEnclosing == NULL)
 	/* no background found: clip the current box */
@@ -2710,6 +2730,10 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 #endif /* _GLTRANSFORMATION */
 	    }
 	}
+#ifdef _GL
+	    if (pCurrentBox)
+		pCurrentBox->VisibleModification = TRUE;      
+#endif /* _GL */
     }
 
   /* NOUVEAU AbstractBox */
@@ -2866,11 +2890,10 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 	  pAb->AbChange = FALSE;
 	  pAb->AbMBPChange = FALSE;
 	}
-
     }
   /* AbstractBox MORT */
   else if (pAb->AbDead)
-    {
+      {
       AnyWidthUpdate = TRUE;
       if (pAb->AbLeafType == LtPolyLine)
 	FreePolyline (pBox);	/* libere la liste des buffers de la boite */
@@ -2989,6 +3012,10 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 		(!pAb->AbNext->AbDead && !pAb->AbNext->AbNew)))
 	(*ThotLocalActions[T_checkcolumn]) (pCell, NULL, frame);
       result = TRUE;
+#ifdef _GL
+      if (pBox)
+	  pBox->VisibleModification = TRUE;   
+#endif /* _GL */
     }
   else
     {
@@ -3118,6 +3145,10 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 		    SetMainWindowBackgroundColor (frame, DefaultBColor);
 		}
 	    }
+#ifdef _GL
+      if (pBox)
+	  pBox->VisibleModification = TRUE;   
+#endif /* _GL */
 	}
       /* CHANGE CHARACTER SIZE */
       if (pAb->AbSizeChange)
@@ -3143,6 +3174,10 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 	    
 	  pAb->AbHorizRefChange = (pAb->AbHorizRef.PosUnit == UnRelative);
 	  pAb->AbVertRefChange = (pAb->AbVertRef.PosUnit == UnRelative);
+#ifdef _GL
+      if (pBox)
+	  pBox->VisibleModification = TRUE;   
+#endif /* _GL */
 	}
       /* CHANGE THE CONTENTS */
       if (pAb->AbChange || pAb->AbSizeChange)
@@ -3376,6 +3411,10 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 	    pAb->AbChange = FALSE;
 	  if (pAb->AbSizeChange)
 	    pAb->AbSizeChange = FALSE;
+#ifdef _GL
+      if (pBox)
+	  pBox->VisibleModification = TRUE;   
+#endif /* _GL */
 	}
       /* CHANGE WIDTH */
       if (pAb->AbWidthChange)
@@ -3448,6 +3487,10 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 		RecomputeLines (pBlock, NULL, NULL, frame);
 	      (*ThotLocalActions[T_checkcolumn]) (pCell, NULL, frame);
 	    }
+#ifdef _GL
+      if (pBox)
+	  pBox->VisibleModification = TRUE;   
+#endif /* _GL */
 	}
       /* CHANGE HEIGHT */
       if (pAb->AbHeightChange)
@@ -3503,6 +3546,10 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 	      pAb->AbRyUnit == UnPercent)
 	    /* update radius of the rectangle with rounded corners */
 	    ComputeRadius (pAb, frame, FALSE);
+#ifdef _GL
+      if (pBox)
+	  pBox->VisibleModification = TRUE;   
+#endif /* _GL */
 	}
       /* MARGIN PADDING BORDER */
       if (pAb->AbMBPChange)
@@ -3556,6 +3603,10 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 	    }
 	  Propagate = savpropage;	/* Restaure la regle de propagation */
 	  result = TRUE;
+#ifdef _GL
+      if (pBox)
+	  pBox->VisibleModification = TRUE;   
+#endif /* _GL */
 	}
       /* CHANGEMENT DE POSITION HORIZONTALE */
       if (pAb->AbHorizPosChange)
@@ -3596,6 +3647,10 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 	    }
 	  else
 	    pAb->AbHorizPosChange = FALSE;
+#ifdef _GL
+      if (pBox)
+	  pBox->VisibleModification = TRUE;   
+#endif /* _GL */
 	}
       /* CHANGEMENT DE POSITION VERTICALE */
       if (pAb->AbVertPosChange)
@@ -3648,6 +3703,10 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 	    }
 	  else
 	    pAb->AbVertPosChange = FALSE;
+#ifdef _GL
+      if (pBox)
+	  pBox->VisibleModification = TRUE;   
+#endif /* _GL */
 	}
       /* CHANGEMENT D'AXE HORIZONTAL */
       if (pAb->AbHorizRefChange)
@@ -3657,10 +3716,18 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 	  /* Nouvel axe horizontal */
 	  ComputeAxisRelation (pAb->AbHorizRef, pBox, frame, FALSE);
 	  result = TRUE;
+#ifdef _GL
+      if (pBox)
+	  pBox->VisibleModification = TRUE;   
+#endif /* _GL */
 	}
       /* CHANGEMENT D'AXE VERTICAL */
       if (pAb->AbVertRefChange)
 	{
+#ifdef _GL
+      if (pBox)
+	  pBox->VisibleModification = TRUE;   
+#endif /* _GL */
 	  /* Annulation ancien axe verticale */
 	  ClearAxisRelation (pBox, TRUE);
 	  /* Nouvel axe vertical */
