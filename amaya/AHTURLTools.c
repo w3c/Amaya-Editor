@@ -1245,7 +1245,7 @@ void NormalizeURL (char *orgName, Document doc, char *newName,
 		   while (length >= 0 && newName[length] != used_sep)
 		     length--;
 		   if (strncmp (&newName[length+1], "//", 2))
-		     /* don't remove server name */
+   		     /* don't remove server name */
                      newName[length+1] = EOS;
 		 }
 	       else if (!strncmp (&newName[length+1], ".", 1))
@@ -1873,38 +1873,12 @@ void         SimplifyUrl (char **url)
 	    p++;
 	}
     }
-
     /*
     **  Check for host/../.. kind of things
     */
     if (*path == used_sep && *(path+1) == '.' && *(path+2) == '.' 
 	&& (!*(path+3) || *(path+3) == used_sep))
 	*(path+1) = EOS;
-
- /*  In case of a user typed url without protocol specification
-      and filepath like url (the ~ or / url beginning), 
-      we add the http:// (more conveniant when you often type urls)
-      so that you can now enter w3.org directly  */
-  if (**url != DIR_SEP 
-	   && **url != '~'
-#ifdef _WINDOWS
-	   && (*url)[1] != ':'
-#endif /* _WINDOWS */
-	   && !IsW3Path (*url) 
-	   && !IsFilePath (*url)
-	   && (strlen (*url) + 8) < MAX_LENGTH)
-   {
-       if (TtaFileExist (*url) == 0)
-       {
-	   newptr = TtaGetMemory (strlen (*url) + 8);
-	   *newptr = EOS;
-	   strcat (newptr, "http://");
-	   strcat (newptr, *url);
-	   **url = EOS;
-	   strcpy (*url, newptr);
-	   TtaFreeMemory (newptr);
-       }
-    }
   return;
 }
 

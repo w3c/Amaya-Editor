@@ -1266,6 +1266,33 @@ void StopTransfer (Document document, View view)
     }
 }
 
+static void CompleteUrl(char **url)
+{
+    char *s;
+
+  if (**url != DIR_SEP 
+      && **url != '~'
+#ifdef _WINDOWS
+      && **(url +1) != ':'
+#endif /* _WINDOWS */
+      && !IsW3Path (*url) 
+      && !IsFilePath (*url)
+      && (strlen (*url) + 8) < MAX_LENGTH)
+  {
+      if (TtaFileExist (*url) == 0)
+      {
+	  s = TtaGetMemory (MAX_LENGTH);
+	  /*  In case of a user typed url without protocol specification
+	      and filepath like url (the ~ or / url beginning), 
+	      we add the http:// (more conveniant when you often type urls)
+	      so that you can now enter w3.org directly in the url bar */
+	  strcpy (s, "http://");
+	  strcat (s, *url);
+	  *url = s;
+      }
+  }
+}
+
 
 /*----------------------------------------------------------------------
    TextURL                                                      
@@ -1290,6 +1317,7 @@ static void         TextURL (Document doc, View view, char *text)
       else
 	{
 	  s = TtaGetMemory (MAX_LENGTH);
+	  CompleteUrl(&text);
 	  change = NormalizeFile (text, s, AM_CONV_NONE);
 	  url = s;
 	}
@@ -4258,9 +4286,14 @@ void CallbackDialogue (int ref, int typedata, char *data)
 	   TtaDestroyDialogue (BaseDialog + FileBrowserForm);
 	   if (LastURLName[0] != EOS)
 	     {
+	       CompleteUrl(&LastURLName); 
+	       TtaSetStatus (CurrentDocument, 1,
+			   TtaGetMessage (AMAYA, AM_CANNOT_LOAD),
+			   DocumentName);
+	
 	       if (NewFile)
 		 InitializeNewDoc (LastURLName, NewDocType, 0);
-	       /* load an URL */
+	       /* load an URL */ 
 	       else if (InNewWindow)
 		 GetHTMLDocument (LastURLName, NULL, 0, 0, Loading_method,
 				  FALSE, NULL, NULL);
@@ -4304,11 +4337,20 @@ void CallbackDialogue (int ref, int typedata, char *data)
 		   InitializeNewDoc (tempfile, NewDocType, CurrentDocument);
 		 }
 	     }
-	   else if (DocumentName[0] != EOS)
-	     TtaSetStatus (CurrentDocument, 1,
-			   TtaGetMessage (AMAYA, AM_CANNOT_LOAD),
-			   DocumentName);
-	   else if (DirectoryName[0] != EOS)
+	   else if (DocumentName[0] != EOS){
+	       CompleteUrl(&DocumentName);  
+	       if (InNewWindow)
+		   GetHTMLDocument (DocumentName, NULL, 0, 0, Loading_method,
+				    FALSE, NULL, NULL);
+	       else
+		   GetHTMLDocument (DocumentName, NULL, CurrentDocument,
+				    CurrentDocument, Loading_method, TRUE,
+				    NULL, NULL);
+	      /*  TtaSetStatus (CurrentDocument, 1, */
+/* 			   TtaGetMessage (AMAYA, AM_CANNOT_LOAD), */
+/* 			   DocumentName); */
+	   }
+	      else if (DirectoryName[0] != EOS)
 	     TtaSetStatus (CurrentDocument, 1,
 			   TtaGetMessage (AMAYA, AM_CANNOT_LOAD),
 			   DirectoryName);
