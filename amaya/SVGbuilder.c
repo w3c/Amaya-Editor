@@ -492,12 +492,7 @@ void  CopyUseContent (Element el, Document doc, char *href)
 	  TtaNextSibling (&nextChild);
 	  if (TtaIsTranscludedElement (child))
 	    /* that's an old copy. remove it */
-	    {
-	      /* if there is a style element in the transcluded tree, release
-		 the corresponding CSS rules */
-	      /***** @@@@@ *****/
-	      TtaRemoveTree (child, doc);
-	    }
+	    TtaRemoveTree (child, doc);
 	  child = nextChild;
 	}
 
@@ -519,9 +514,6 @@ void  CopyUseContent (Element el, Document doc, char *href)
 	    TtaInsertSibling (copy, child, FALSE, doc);
 	  else
 	    TtaInsertFirstChild (&copy, el, doc);
-	  /* if there is a style element in the copy, generate the
-	     corresponding CSS rules */
-	  /***** @@@@@ *****/
 	}
       else
 	/* it's a tref element. Copy all the contents of the source element */
