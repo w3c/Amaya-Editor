@@ -198,7 +198,23 @@ void AmayaTextGraber::OnKeyDown(wxKeyEvent& event)
       // Call the generic function for key events management
       ThotInput (m_AmayaFrameId, thot_keysym, 0, m_ThotMask, thot_keysym);
     }
-  else if (  thot_keysym == WXK_INSERT ||
+  else if (
+         thot_keysym == WXK_F2 	   ||
+         thot_keysym == WXK_F3 	   ||
+         thot_keysym == WXK_F4 	   ||
+         thot_keysym == WXK_F5 	   ||
+         thot_keysym == WXK_F6 	   ||
+         thot_keysym == WXK_F7 	   ||
+         thot_keysym == WXK_F8 	   ||
+         thot_keysym == WXK_F9 	   ||
+         thot_keysym == WXK_F10    ||
+         thot_keysym == WXK_F11    ||
+         thot_keysym == WXK_F12    ||
+         thot_keysym == WXK_F13    ||
+         thot_keysym == WXK_F14    ||
+         thot_keysym == WXK_F15    ||
+         thot_keysym == WXK_F16    ||
+	     thot_keysym == WXK_INSERT ||
 	     thot_keysym == WXK_DELETE ||
 	     thot_keysym == WXK_HOME   ||
 	     thot_keysym == WXK_PRIOR  ||
