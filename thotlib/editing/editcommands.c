@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996.
+ *  (c) COPYRIGHT INRIA, 1996-2000
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -3177,7 +3177,8 @@ int                 keyboard;
 			  pBlock = SearchEnclosingType (pAb, BoBlock);
 			  if (pBlock != NULL)
 			    RecomputeLines (pBlock, NULL, NULL, frame);
-			  (*ThotLocalActions[T_checkcolumn]) (LastInsertCell, NULL, frame);
+			  (*ThotLocalActions[T_checkcolumn]) (LastInsertCell,
+							      NULL, frame);
 			  /* restore propagate mode */
 			  Propagate = savePropagate;
 			}
@@ -3198,11 +3199,17 @@ int                 keyboard;
 				/* largeur du caractere ajoute/detruit */
 				if (xDelta < 0)
 				  xDelta = -xDelta;
-				if (pFrame->FrClipYBegin == topY && pFrame->FrClipYEnd == bottomY
-				    && xDelta >= charsDelta && (pFrame->FrClipXBegin == xx || pFrame->FrClipXEnd == xx))
+				/* This test was used with the old selection
+				if (pFrame->FrClipYBegin == topY &&
+				    pFrame->FrClipYEnd == bottomY &&
+				    xDelta >= charsDelta &&
+				    (pFrame->FrClipXBegin == xx ||
+				     pFrame->FrClipXEnd == xx))
 				  ;
+				end of old text */
 			      }
-				  DefClip (frame, pFrame->FrClipXBegin, topY, pFrame->FrClipXEnd + 2, bottomY);
+			    DefClip (frame, pFrame->FrClipXBegin, topY,
+				     pFrame->FrClipXEnd + 2, bottomY);
 			    RedrawFrameBottom (frame, 0, NULL);
 			  }
 		      
