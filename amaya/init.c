@@ -2735,16 +2735,16 @@ void *context;
 	   newdoc = res;
 	   /* restore the initial_url */
 	   DocumentMeta[newdoc]->initial_url = initial_url;
-#ifdef ANNOTATIONS
-	   /* if it's an annotation, add the existing metadata */
-	   if (DocumentTypes[newdoc] == docAnnot)
-	     ANNOT_ReloadAnnotMeta (newdoc);
-#endif /* ANNOTATIONS */
 	 }
        
        if (newdoc)
 	 {
 	   W3Loading = 0;		/* loading is complete now */
+#ifdef ANNOTATIONS
+	   /* if it's an annotation, add the existing metadata */
+	   if (DocumentTypes[newdoc] == docAnnot)
+	     ANNOT_ReloadAnnotMeta (newdoc);
+#endif /* ANNOTATIONS */
 	   TtaHandlePendingEvents ();
 	   /* fetch and display all images referred by the document */
 	   stopped_flag = FetchAndDisplayImages (newdoc, AMAYA_NOCACHE | AMAYA_LOAD_IMAGE);
