@@ -2227,11 +2227,76 @@ boolean             Hyphenate;
      }
 }
 
+/*----------------------------------------------------------------------
+  ApplyPRuleAndRedisplay: apply a presentation rule, update the view
+  and apply the inheritance of the rule.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void         ApplyPRuleAndRedisplay (PtrAbstractBox pAb, PtrDocument pDoc, PtrAttribute pAttr, PtrPRule pRP, PtrPSchema pSPR)
+#else  /* __STDC__ */
+static void         ApplyPRuleAndRedisplay (pAb, pDoc, pAttr, pRP, pSPR)
+PtrAbstractBox      pAb;
+PtrDocument         pDoc;
+PtrAttribute        pAttr;
+PtrPRule            pRP;
+PtrPSchema          pSPR;
+
+#endif /* __STDC__ */
+{
+#ifdef __COLPAGE__
+  boolean           bool;
+
+  ApplyRule (pRP, pSPR, pAb, pDoc, pAttr, &bool);
+#else  /* __COLPAGE__ */
+  ApplyRule (pRP, pSPR, pAb, pDoc, pAttr);
+#endif /* __COLPAGE__ */
+  /* marque que le pave a change' et doit etre reaffiche' */
+  switch (pRP->PrType)
+    {
+    case PtVertRef:
+      pAb->AbVertRefChange = TRUE;
+      break;
+    case PtHorizRef:
+      pAb->AbHorizRefChange = TRUE;
+      break;
+    case PtHeight:
+      pAb->AbHeightChange = TRUE;
+      break;
+    case PtWidth:
+      pAb->AbWidthChange = TRUE;
+      break;
+    case PtVertPos:
+      pAb->AbVertPosChange = TRUE;
+      break;
+    case PtHorizPos:
+      pAb->AbHorizPosChange = TRUE;
+      break;
+    case PtSize:
+      pAb->AbSizeChange = TRUE;
+      break;
+    case PtDepth:
+    case PtLineStyle:
+    case PtLineWeight:
+    case PtFillPattern:
+    case PtBackground:
+    case PtForeground:
+      pAb->AbAspectChange = TRUE;
+      break;
+    default:
+      pAb->AbChange = TRUE;
+      break;
+    }
+  
+  RedispAbsBox (pAb, pDoc);
+  /* applique la regle de meme type aux paves environnants */
+  /* s'ils heritent de ce parametre de presentation */
+  ApplyInherit (pRP->PrType, pAb, pDoc);
+}
 
 /*----------------------------------------------------------------------
-   	ApplyStandardRule	applique a l'element pEl du document	
-   	pDoc la regle de presentation standard de type ruleType	
-   	pour la view viewSch.						
+  ApplyStandardRule	applique a l'element pEl du document	
+  pDoc la regle de presentation standard de type ruleType	
+  pour la view viewSch.						
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                ApplyStandardRule (PtrElement pEl, PtrDocument pDoc, PRuleType ruleType, int viewSch)
@@ -2244,104 +2309,179 @@ int                 viewSch;
 
 #endif /* __STDC__ */
 {
-   PtrPRule            pRP;
-   PtrAbstractBox      pAb;
-   PtrPSchema          pSPR;
-   PtrAttribute        pAttr;
-   boolean             stop;
-   int                 view;
+  PtrPRule            pRP;
+  PtrAbstractBox      pAb;
+  PtrPSchema          pSPR;
+  PtrAttribute        pAttr;
+  boolean             stop;
+  int                 view;
 
 #ifdef __COLPAGE__
-   boolean             bool;
+  boolean             bool;
 
 #endif /* __COLPAGE__ */
-
-   /* applique la regle standard de meme type que la regle courante */
-   /* aux paves de l'element qui existent dans les vues de meme type */
-   /* que la view active. */
-   pRP = NULL;
-   /* on n'a pas encore cherche' la regle standard */
-   if (viewSch > 0)
-      /* il y a une view active */
-      /* parcourt toutes les vues du document */
-      for (view = 1; view <= MAX_VIEW_DOC; view++)
-	 if (pEl->ElAbstractBox[view - 1] != NULL)
-	    /* l'element traite' a un pave dans cette view */
-	    if (pDoc->DocView[view - 1].DvSSchema == pDoc->DocSSchema &&
-		pDoc->DocView[view - 1].DvPSchemaView == viewSch)
-	       /* c'est une view de meme type que la view traitee, on */
-	       /* traite le pave de l'element dans cette view */
+  /* applique la regle standard de meme type que la regle courante */
+  /* aux paves de l'element qui existent dans les vues de meme type */
+  /* que la view active. */
+  pRP = NULL;
+  /* on n'a pas encore cherche' la regle standard */
+  if (viewSch > 0)
+    /* il y a une view active */
+    /* parcourt toutes les vues du document */
+    for (view = 1; view <= MAX_VIEW_DOC; view++)
+      if (pEl->ElAbstractBox[view - 1] != NULL)
+	/* l'element traite' a un pave dans cette view */
+	if (pDoc->DocView[view - 1].DvSSchema == pDoc->DocSSchema &&
+	    pDoc->DocView[view - 1].DvPSchemaView == viewSch)
+	  /* c'est une view de meme type que la view traitee, on */
+	  /* traite le pave de l'element dans cette view */
+	  {
+	    pAb = pEl->ElAbstractBox[view - 1];
+	    /* saute les paves de presentation */
+	    stop = FALSE;
+	    do
+	      if (pAb == NULL)
+		stop = TRUE;
+	      else if (!pAb->AbPresentationBox)
+		stop = TRUE;
+	      else
+		pAb = pAb->AbNext;
+	    while (!stop);
+	    if (pAb != NULL)
 	      {
-		 pAb = pEl->ElAbstractBox[view - 1];
-		 /* saute les paves de presentation */
-		 stop = FALSE;
-		 do
-		    if (pAb == NULL)
-		       stop = TRUE;
-		    else if (!pAb->AbPresentationBox)
-		       stop = TRUE;
-		    else
-		       pAb = pAb->AbNext;
-		 while (!stop);
-		 if (pAb != NULL)
-		   {
-		      /* cherche la regle standard si on ne l'a pas encore */
-		      if (pRP == NULL)
-			 pRP = SearchRulepAb (pDoc, pAb, &pSPR, ruleType, TRUE, &pAttr);
-#ifdef __COLPAGE__
-		      ApplyRule (pRP, pSPR, pAb, pDoc, pAttr, &bool);
-#else  /* __COLPAGE__ */
-		      ApplyRule (pRP, pSPR, pAb, pDoc, pAttr);
-#endif /* __COLPAGE__ */
-		      /* marque que le pave a change' et doit etre reaffiche' */
-		      switch (ruleType)
-			    {
-			       case PtVertRef:
-				  pAb->AbVertRefChange = TRUE;
-				  break;
-			       case PtHorizRef:
-				  pAb->AbHorizRefChange = TRUE;
-				  break;
-			       case PtHeight:
-				  pAb->AbHeightChange = TRUE;
-				  break;
-			       case PtWidth:
-				  pAb->AbWidthChange = TRUE;
-				  break;
-			       case PtVertPos:
-				  pAb->AbVertPosChange = TRUE;
-				  break;
-			       case PtHorizPos:
-				  pAb->AbHorizPosChange = TRUE;
-				  break;
-			       case PtSize:
-				  pAb->AbSizeChange = TRUE;
-				  break;
-			       case PtDepth:
-			       case PtLineStyle:
-			       case PtLineWeight:
-			       case PtFillPattern:
-			       case PtBackground:
-			       case PtForeground:
-				  pAb->AbAspectChange = TRUE;
-				  break;
-			       default:
-				  pAb->AbChange = TRUE;
-				  break;
-			    }
-
-		      RedispAbsBox (pAb, pDoc);
-		      /* applique la regle de meme type aux paves environnants */
-		      /* s'ils heritent de ce parametre de presentation */
-		      ApplyInherit (ruleType, pAb, pDoc);
-		   }
+		/* cherche la regle standard si on ne l'a pas encore */
+		if (pRP == NULL)
+		  pRP = SearchRulepAb (pDoc, pAb, &pSPR, ruleType, TRUE, &pAttr);
+		ApplyPRuleAndRedisplay(pAb, pDoc, pAttr, pRP, pSPR);
 	      }
+	  }
 }
 
 /*----------------------------------------------------------------------
-   	RemoveSpecPresTree supprime les regles de presentation specifiques	
-   		contenues dans 'RulesS' attachees aux elements du	
-   		sous-arbre de racine pElRoot				
+  NextAbstractBox: search the next abstract box.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static PtrAbstractBox     NextAbstractBox (PtrAbstractBox pAb)
+#else  /* __STDC__ */
+static PtrAbstractBox     NextAbstractBox (pAb)
+PtrAbstractBox     pAb;
+#endif /* __STDC__ */
+
+{
+  PtrAbstractBox      pNextAb;
+
+  /* Il y a un premier fils different du pave reference ? */
+  if (pAb->AbFirstEnclosed != NULL)
+    pNextAb = pAb->AbFirstEnclosed;
+  /* Il y a un frere different du pave reference ? */
+  else if (pAb->AbNext != NULL)
+    pNextAb = pAb->AbNext;
+  /* Sinon on remonte dans la hierarchie */
+  else
+    {
+      while (pAb != NULL && pAb->AbEnclosing != NULL && pAb->AbEnclosing->AbNext == NULL)
+	pAb = pAb->AbEnclosing;
+
+      if (pAb != NULL)
+	pNextAb = pAb->AbNext;
+      else
+	pNextAb = NULL;
+    }
+  return pNextAb;
+}
+
+/*----------------------------------------------------------------------
+  ApplyPRules applies a set of PRules to all abstract boxes concerned by
+  the given element type or the given attribute type or the given
+  presentation box.
+  For each displayed abstract box check and each new presention rule
+  check if it is concerned by this new pRule.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void               ApplyPRules (Document doc, PtrSSchema pSS, int elType, int attrType, int presBox, PtrPRule pRule, boolean remove)
+#else  /* __STDC__ */
+void               ApplyPRules (doc, pSS, elType, attrType, presBox, pRule, remove)
+Document           doc;
+PtrSSchema         pSS;
+int                elType;
+int                attrType;
+int                presBox;
+PtrPRule           pRule;
+boolean            remove;
+#endif /* __STDC__ */
+
+{
+  PtrPRule        pCurrentRule, pRP;
+  PtrPSchema      pSPR;
+  PtrAttribute    pAttr;
+  PtrDocument     pDoc;
+  PtrAbstractBox  pAb;
+  PRuleType       ruleType;
+  int             viewSch;
+  int             view;
+  boolean         found;
+
+  pDoc = LoadedDocument[doc - 1];
+  /* examine all abstract boxes of elements */
+  for (view = 0; view < MAX_VIEW_DOC; view++)
+    {
+      /* the abstract box of the root element */
+      pAb = pDoc->DocViewRootAb[view];
+      /* the schema view associatde with the current view */
+      viewSch = pDoc->DocView[view].DvPSchemaView;
+      while (pAb != NULL)
+	{
+	  found = FALSE;
+	  if (elType > 0)
+	    /* new presentation rules are attached to an element type */
+	    found = (pAb->AbElement->ElTypeNumber == elType &&
+	      pAb->AbElement->ElStructSchema->SsCode == pSS->SsCode);
+	  else if (attrType > 0)
+	    {
+	      /* new presentation rules are attached to an attribute type */
+	      pAttr = pAb->AbElement->ElFirstAttr;
+	      while (!found && pAttr != NULL)
+		{
+		  found = (pAttr->AeAttrNum == attrType && pAttr->AeAttrSSchema->SsCode == pSS->SsCode);
+		  pAttr = pAttr->AeNext;
+		}
+	    }
+	  else if (presBox > 0)
+	    /* new presentation rules are attached to a presentation box */
+	    found = (pAb->AbPresentationBox && pAb->AbTypeNum == presBox && pAb->AbPSchema == pSS->SsPSchema);
+	  if (found)
+	    {
+	      /* examine each presentation rule */
+	      pCurrentRule = pRule;
+	      while (pCurrentRule != NULL)
+		{
+		  /* is the view concerned by the presentation rule ? */
+		  ruleType = pCurrentRule->PrType;
+		  if (pCurrentRule->PrViewNum == 1 || pCurrentRule->PrViewNum == viewSch)
+		    {
+		      /* checks if the abstract box is concerned by the new rule */
+		      pRP = SearchRulepAb (pDoc, pAb, &pSPR, ruleType, TRUE, &pAttr);
+		      if (pRP == pCurrentRule || remove)
+			ApplyPRuleAndRedisplay (pAb, pDoc, pAttr, pRP, pSPR);
+		    }
+		  pCurrentRule = pCurrentRule->PrNextPRule;
+		}
+	    }
+	  /* get the next abstract box */
+	  pAb = NextAbstractBox (pAb);
+	  if (pAb != NULL)
+	    if (presBox == 0 && pAb->AbPresentationBox)
+	      pAb = NextAbstractBox (pAb);
+	    else if (presBox > 0 && !pAb->AbPresentationBox)
+	      pAb = NextAbstractBox (pAb);
+	}
+    }
+}
+
+/*----------------------------------------------------------------------
+  RemoveSpecPresTree supprime les regles de presentation specifiques	
+  contenues dans 'RulesS' attachees aux elements du	
+  sous-arbre de racine pElRoot				
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                RemoveSpecPresTree (PtrElement pElRoot, PtrDocument pDoc, RuleSet RulesS, int viewToApply)

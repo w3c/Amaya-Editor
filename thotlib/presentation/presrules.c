@@ -1564,19 +1564,16 @@ FunctionType       *TypeCreation;
 
 
 /*----------------------------------------------------------------------
-   	TypeCreatedRule retourne le type de la regle de presentation appelee	
-   		par le pave pAbbCreator et qui a cree le pave pAbbCreated.	
+  TypeCreatedRule retourne le type de la regle de presentation appelee	
+  par le pave pAbbCreator et qui a cree le pave pAbbCreated.	
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 FunctionType        TypeCreatedRule (PtrDocument pDoc, PtrAbstractBox pAbbCreator, PtrAbstractBox pAbbCreated)
-
 #else  /* __STDC__ */
 FunctionType        TypeCreatedRule (pDoc, pAbbCreator, pAbbCreated)
 PtrDocument         pDoc;
 PtrAbstractBox      pAbbCreator;
 PtrAbstractBox      pAbbCreated;
-
 #endif /* __STDC__ */
 
 {

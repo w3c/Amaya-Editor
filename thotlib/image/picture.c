@@ -302,7 +302,8 @@ PictInfo           *imageDesc;
   XRectangle        rect;
   XGCValues         values;
   unsigned int      valuemask;
-# endif /* _WINDOWS */
+#endif /* _WINDOWS */
+  int               delta;
 
   if (picXOrg < 0)
     {
@@ -359,14 +360,11 @@ PictInfo           *imageDesc;
 	  else
 	    {
 	      /* clipping height is done by the image height */
-	      if (rect.y < picYOrg)
-		{
-		  /* reduce the height in delta value */
-		  rect.height = rect.height +rect.y - picYOrg;
-		  rect.y = picYOrg;
-		}
-	      if (rect.height > imageDesc->PicHArea - picYOrg)
-		rect.height = imageDesc->PicHArea - picYOrg;
+	      delta = yFrame + imageDesc->PicHArea - rect.y;
+	      if (delta <= 0)
+		rect.height = 0;
+	      else
+		rect.height = delta;
 	    }
 	  
 	  if (imageDesc->PicPresent != YRepeat)
@@ -384,14 +382,11 @@ PictInfo           *imageDesc;
 	  else
 	    {
 	      /* clipping width is done by the image width */
-	      if (rect.x < picXOrg)
-		{
-		  /* reduce the width in delta value */
-		  rect.width = rect.width +rect.x - picXOrg;
-		  rect.x = picXOrg;
-		}
-	      if (rect.width > imageDesc->PicWArea - picXOrg)
-		rect.width = imageDesc->PicWArea - picXOrg;
+	      delta = xFrame + imageDesc->PicWArea - rect.x;
+	      if (delta <= 0)
+		rect.width = 0;
+	      else
+		rect.width = delta;
 	    }
 	  
 	  XSetClipRectangles (TtDisplay, tiledGC, 0, 0, &rect, 1, Unsorted);

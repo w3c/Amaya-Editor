@@ -3345,16 +3345,18 @@ void *extra;
     */
    image.pointer = file;
    if (context->drv->SetBgImage)
-       context->drv->SetBgImage (target, context, image);
-   if (context->drv->GetPictureMode) {
-       if (context->drv->GetPictureMode (target, context, &repeat)) {
-	   if (context->drv->SetPictureMode) {
+     context->drv->SetBgImage (target, context, image);
+   if (context->drv->GetPictureMode)
+     {
+       if (context->drv->GetPictureMode (target, context, &repeat))
+	 {
+	   if (context->drv->SetPictureMode && repeat.typed_data.value == 0)
+	     {
 	       repeat.typed_data.value = DRIVERP_VREPEAT;
-	       if (context->drv->SetPictureMode (target, context, repeat))
-	           context->drv->SetPictureMode (target, context, repeat);
-	   }
-       }
-   }
+	       context->drv->SetPictureMode (target, context, repeat);
+	     }
+	 }
+     }
    TtaFreeMemory(callblock);
    RedisplayDocument (doc);
 }
