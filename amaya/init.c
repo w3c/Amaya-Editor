@@ -8489,8 +8489,7 @@ void SaveGeometryOnExit (int document, const char * view_name)
 }
 
 /*----------------------------------------------------------------------
-  SaveGeometryOnExit
-  save the current document geometry only if "Save geometry on exit" is enable
+  LoadDefaultOpeningLocation()
   ----------------------------------------------------------------------*/
 void LoadDefaultOpeningLocation()
 {

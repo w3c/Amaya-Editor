@@ -859,6 +859,7 @@ void HelpAtW3C (Document document, View view)
   strcpy (localname, AMAYA_PAGE_DOC);
   strcat (localname, "BinDist.html");
 #ifdef _WX
+  LoadDefaultOpeningLocation();
   document = GetAmayaDoc (localname, NULL, document, document, (ClickEvent)CE_HELP,
 			  FALSE, NULL, NULL);
 #else /* _WX */
