@@ -4413,9 +4413,8 @@ static void HTMLparse (FILE * infile, char* HTMLbuf)
 		      (currentState == 0 &&
 		       !Within (HTML_EL_Preformatted, DocumentSSchema) &&
 		       !Within (HTML_EL_STYLE_, DocumentSSchema) &&
-		       !Within (HTML_EL_SCRIPT_, DocumentSSchema)))
-		    /* reading text in a comment or in an element
-		       that is not preformatted text */
+		       !Within (HTML_EL_SCRIPT_, DocumentSSchema) &&
+		       !Within (HTML_EL_Text_Area, DocumentSSchema)))
 		    /* ignore spaces at the beginning of an input line */
 		    if (EmptyLine)
 		      charRead = EOS;
