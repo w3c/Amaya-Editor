@@ -37,7 +37,7 @@ char *strdup(const char *s)
     char *str;
 
     if (s == NULL) return(NULL);
-    str = malloc(strlen(s) + 1);
+    str = (char *)malloc(strlen(s) + 1);
     if (str == NULL) return(NULL);
     strcpy(str, s);
     return(str);
@@ -385,7 +385,7 @@ static void do_depend(void)
 	res = munmap(mmap_map, (size_t) mmap_mapsize);
         if (res < 0) perror("unmap failed");
 #else
-        mmap_map = malloc(mmap_mapsize);
+        mmap_map = (char *)malloc(mmap_mapsize);
 	if (mmap_map == NULL) {
 	    perror("malloc failed");
 	    exit(1);
