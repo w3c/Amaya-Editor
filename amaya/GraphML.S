@@ -356,7 +356,7 @@ EXCEPT
    Ghost_restruct:      Invisible;
    Namespace:	        Invisible;
    IntEmptyShape:       Invisible;
-   SVG_Image:           Hidden;
+   SVG_Image:           Hidden, SelectParent;
 
 END
 
