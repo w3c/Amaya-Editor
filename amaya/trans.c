@@ -568,7 +568,7 @@ Element             elem;
    boolean             result;
    strAttrDesc        *pAttr = NULL;
    AttributeType       AttrTyp;
-   Attribute           attr;
+   Attribute           attr = NULL;
    char               *buf;
    int                 AttrKind, length;
 

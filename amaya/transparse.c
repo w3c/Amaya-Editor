@@ -2209,7 +2209,9 @@ BinFile               infile;
    boolean             match, readOk;
    PtrTransition       trans;
 
-   /* initialize automaton *//* parse the input file    */
+   /* initialize automaton */
+   /* parse the input file    */
+   readOk = FALSE;
    numberOfCharRead = 0;
    numberOfLinesRead = 1;
    currentState = 0;
