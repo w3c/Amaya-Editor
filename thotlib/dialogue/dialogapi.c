@@ -594,6 +594,8 @@ int        ref;
       return NULL;
 
    catalogue = Nearestcatalogue = FrameCatList[frame].Cat_Table [0];
+   if (catalogue == NULL)
+	 return catalogue;
    while (icat < MAX_FRAMECAT) {
          if (catalogue) {
             if (catalogue->Cat_Ref == ref)
