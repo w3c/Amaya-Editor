@@ -57,7 +57,7 @@ LINK32=link.exe
 # SUBTRACT LINK32 /pdb:none
 # Begin Special Build Tool
 SOURCE="$(InputPath)"
-PostBuild_Cmds=..\bin\Compilers.exe
+PostBuild_Cmds=echo " Before running Compilers.exe"	..\bin\Compiliers.exe	echo "After running Compilers.exe"
 # End Special Build Tool
 
 !ELSEIF  "$(CFG)" == "Compilers - Win32 Debug"
@@ -88,7 +88,7 @@ LINK32=link.exe
 # SUBTRACT LINK32 /pdb:none
 # Begin Special Build Tool
 SOURCE="$(InputPath)"
-PostBuild_Cmds=..\bin\Compilers.exe
+PostBuild_Cmds=echo " Before running Compilers.exe"	..\bin\Compiliers.exe	echo "After running Compilers.exe"
 # End Special Build Tool
 
 !ENDIF 

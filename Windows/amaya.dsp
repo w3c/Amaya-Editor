@@ -123,6 +123,10 @@ SOURCE=..\amaya\answer.c
 # End Source File
 # Begin Source File
 
+SOURCE=..\amaya\appicon.ico
+# End Source File
+# Begin Source File
+
 SOURCE=..\amaya\css.c
 # End Source File
 # Begin Source File
@@ -264,6 +268,10 @@ SOURCE=..\amaya\transparse.c
 # Begin Source File
 
 SOURCE=..\amaya\UIcss.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\amaya\wincurso.cur
 # End Source File
 # Begin Source File
 
