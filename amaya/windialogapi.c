@@ -157,7 +157,7 @@ static ThotBool     isHref;
 static ThotBool     WithEdit;
 static ThotBool     WithCancel;
 static ThotBool     WithBorder;
-static ThotBool     upper_lower = FALSE;
+static ThotBool     UpperLower = TRUE;
 static ThotBool     HTMLFormat;
 
 static OPENFILENAME OpenFileName;
@@ -1156,6 +1156,10 @@ LPARAM lParam;
 	    CheckRadioButton (hwnDlg, IDC_BEFORE, IDC_WHOLEDOC, IDC_WHOLEDOC);
 	    iLocation = 3;
 	  }
+	/* initialize the ignore case button */
+	CheckDlgButton (hwnDlg, IDC_UPPERLOWER, (UpperLower)
+		  ? BST_CHECKED : BST_UNCHECKED);
+
 	SetFocus (GetDlgItem (hwnDlg, IDC_SEARCHEDIT));
 	break;
 
