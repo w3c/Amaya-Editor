@@ -1922,12 +1922,12 @@ static void BrowserForm (Document doc, View view, char *urlname)
   The parameter name gives a proposed document name.
   The parameter title gives the title of the the form.
   ----------------------------------------------------------------------*/
-static void InitOpenDocForm (Document doc, View view, char *name, char *title)
+static void InitOpenDocForm (Document doc, View view, char *name, char *title,
+							 DocumentType docType)
 {
   char              s[MAX_LENGTH];
   ThotBool          remote;
 #ifndef _WINDOWS
-
   int               i;
 
   /* Dialogue form for open URL or local */
@@ -1964,28 +1964,26 @@ static void InitOpenDocForm (Document doc, View view, char *name, char *title)
   else
     {
       /* check if it's the default Welcome page */
-      if (name[0] == EOS && !WelcomePage)
-	strcpy (s, DocumentURLs[doc]);
-      else
-	{
 #ifndef _WINDOWS
 	  if (WelcomePage)
 	    getcwd (s, MAX_LENGTH);
+	  else
 #endif /* _WINDOWS */
+      if (name[0] == EOS)
+	strcpy (s, DocumentURLs[doc]);
+      else
+	{
 	  strcpy (DirectoryName, s);
-	  if (name[0] != EOS)
-	    {
-	      strcpy (DocumentName, name);
-	      strcat (s, DIR_STR);
-	      strcat (s, name);
-	    }
+	  strcpy (DocumentName, name);
+	  strcat (s, DIR_STR);
+	  strcat (s, name);
 	}
       strcpy (LastURLName, s);
     }
 
 #ifdef  _WINDOWS
-  CreateOpenDocDlgWindow (TtaGetViewFrame (doc, view), title, s,
-			  DocSelect, DirSelect, 2);
+  CreateOpenDocDlgWindow (TtaGetViewFrame (doc, view), title, s, name,
+			  DocSelect, DirSelect, docType);
 #else /* WINDOWS */
   TtaSetTextForm (BaseDialog + URLName, s);
   TtaSetDialoguePosition ();
@@ -2001,7 +1999,8 @@ void  OpenDoc (Document doc, View view)
      {
        /* load the new document */
        InNewWindow = FALSE;
-       InitOpenDocForm (doc, view, "", TtaGetMessage (1, BOpenDoc));
+	   /* no specific type requested */
+       InitOpenDocForm (doc, view, "", TtaGetMessage (1, BOpenDoc), docText);
      }
 }
 
@@ -2010,7 +2009,9 @@ void  OpenDoc (Document doc, View view)
 void OpenDocInNewWindow (Document document, View view)
 {
    InNewWindow = TRUE;
-   InitOpenDocForm (document, view, "", TtaGetMessage (1, BOpenInNewWindow));
+   /* no specific type requested */
+   InitOpenDocForm (document, view, "", TtaGetMessage (1, BOpenInNewWindow),
+	   docText);
 }
 
 
@@ -2028,20 +2029,20 @@ void OpenNew (Document document, View view, int docType, int docProfile)
   if (NewDocType == docHTML)
     {
       if (docProfile == L_Basic)
-	InitOpenDocForm (document, view, "New.html", TtaGetMessage (1, BHtmlBasic));
+	InitOpenDocForm (document, view, "New.html", TtaGetMessage (1, BHtmlBasic), docHTML);
       else if (docProfile == L_Strict)
-	InitOpenDocForm (document, view, "New.html", TtaGetMessage (1, BHtmlStrict));
+	InitOpenDocForm (document, view, "New.html", TtaGetMessage (1, BHtmlStrict), docHTML);
       else if (docProfile == L_Xhtml11)
-	InitOpenDocForm (document, view, "New.html", TtaGetMessage (1, BHtml11));
+	InitOpenDocForm (document, view, "New.html", TtaGetMessage (1, BHtml11), docHTML);
       else
-	InitOpenDocForm (document, view, "New.html", TtaGetMessage (1, BHtmlTransitional));
+	InitOpenDocForm (document, view, "New.html", TtaGetMessage (1, BHtmlTransitional), docHTML);
    }
   else if (NewDocType == docMath)
-    InitOpenDocForm (document, view, "New.mml", TtaGetMessage (1, BMathml));
+    InitOpenDocForm (document, view, "New.mml", TtaGetMessage (1, BMathml), docMath);
   else if (NewDocType == docSVG)
-    InitOpenDocForm (document, view, "New.svg", TtaGetMessage (1, BSvg));
+    InitOpenDocForm (document, view, "New.svg", TtaGetMessage (1, BSvg), docSVG);
   else
-    InitOpenDocForm (document, view, "New.css", TtaGetMessage (1, BCss));
+    InitOpenDocForm (document, view, "New.css", TtaGetMessage (1, BCss), docCSS);
 }
 
 /*----------------------------------------------------------------------

@@ -81,9 +81,9 @@ extern ThotBool     NumberLinks;
 extern ThotBool     PrintURL;
 extern ThotBool     IgnoreCSS;
 
-static char       urlToOpen [MAX_LENGTH];
+static char       UrlToOpen [MAX_LENGTH];
 static char       HrefUrl [MAX_LENGTH];
-static char       tmpDocName [MAX_LENGTH];
+static char       TmpDocName [MAX_LENGTH];
 static char       altText [MAX_LENGTH];
 static char       message [300];
 static char       message2 [300];
@@ -363,7 +363,7 @@ LRESULT CALLBACK TextDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
       SetWindowText (GetDlgItem (hwnDlg, ID_CONFIRM), 
 		  TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
       SetWindowText (GetDlgItem (hwnDlg, ID_DONE), TtaGetMessage (LIB, TMSG_CANCEL));
-      SetDlgItemText (hwnDlg, IDC_URLEDIT, urlToOpen);      
+      SetDlgItemText (hwnDlg, IDC_URLEDIT, UrlToOpen);      
       SetFocus (GetDlgItem (hwnDlg, IDC_URLEDIT));
       break;
       
@@ -376,16 +376,16 @@ LRESULT CALLBACK TextDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
       switch (LOWORD (wParam))
 	{
 	case ID_CONFIRM:
-	  GetDlgItemText (hwnDlg, IDC_URLEDIT, urlToOpen, sizeof (urlToOpen) - 1);
+	  GetDlgItemText (hwnDlg, IDC_URLEDIT, UrlToOpen, sizeof (UrlToOpen) - 1);
 	  if (isHref)
 	    {
-	      AttrHREFvalue = TtaGetMemory (strlen (urlToOpen) + 1);
-	      strcpy (AttrHREFvalue, urlToOpen);
+	      AttrHREFvalue = TtaGetMemory (strlen (UrlToOpen) + 1);
+	      strcpy (AttrHREFvalue, UrlToOpen);
 	      ThotCallback (BaseDialog + AttrHREFForm, INTEGER_DATA, (char*) 1);
 	    }
 	  else
 	    {
-	      ThotCallback (BaseDialog + TitleText, STRING_DATA, urlToOpen);
+	      ThotCallback (BaseDialog + TitleText, STRING_DATA, UrlToOpen);
 	      ThotCallback (BaseDialog + TitleForm, INTEGER_DATA, (char*) 1);
 	    }
 	  EndDialog (hwnDlg, ID_CONFIRM);
@@ -425,8 +425,8 @@ LRESULT CALLBACK HRefDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
       SetWindowText (GetDlgItem (hwnDlg, IDC_CLEAR), TtaGetMessage (AMAYA, AM_CLEAR));
       SetWindowText (GetDlgItem (hwnDlg, IDCANCEL), TtaGetMessage (LIB, TMSG_CANCEL));
       
-	  if (tmpDocName[0] != EOS)
-		  SetDlgItemText (hwnDlg, IDC_GETURL, tmpDocName);
+	  if (TmpDocName[0] != EOS)
+		  SetDlgItemText (hwnDlg, IDC_GETURL, TmpDocName);
 	  else
 		  SetDlgItemText (hwnDlg, IDC_GETURL, "");
       HrefUrl [0] = 0;
@@ -486,7 +486,7 @@ LRESULT CALLBACK HRefDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
 	  
 	case IDC_CLEAR:
 	  ThotCallback (BaseDialog + AttrHREFForm, INTEGER_DATA, (char*) 3);
-	  tmpDocName[0] = 0;
+	  TmpDocName[0] = 0;
 	  SetDlgItemText (hwnDlg, IDC_GETURL, "");
 	  break;
 	  
@@ -1295,13 +1295,13 @@ LRESULT CALLBACK SaveAsDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
 	{
 	  if (LOWORD (wParam) == IDC_EDITDOCSAVE)
 	    {
-	      GetDlgItemText (hwnDlg, IDC_EDITDOCSAVE, urlToOpen, sizeof (urlToOpen) - 1);
-	      ThotCallback (BaseDialog + NameSave, STRING_DATA, urlToOpen);
+	      GetDlgItemText (hwnDlg, IDC_EDITDOCSAVE, UrlToOpen, sizeof (UrlToOpen) - 1);
+	      ThotCallback (BaseDialog + NameSave, STRING_DATA, UrlToOpen);
 	    }
 	  else if (LOWORD (wParam) == IDC_EDITIMGSAVE)
 	    {
-	      GetDlgItemText (hwnDlg, IDC_EDITIMGSAVE, urlToOpen, sizeof (urlToOpen) - 1);
-	      ThotCallback (BaseDialog + ImgDirSave, STRING_DATA, urlToOpen);
+	      GetDlgItemText (hwnDlg, IDC_EDITIMGSAVE, UrlToOpen, sizeof (UrlToOpen) - 1);
+	      ThotCallback (BaseDialog + ImgDirSave, STRING_DATA, UrlToOpen);
 	    }
 	}
 
@@ -1363,11 +1363,11 @@ LRESULT CALLBACK SaveAsDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
 	  
 	case IDC_BROWSE:
       /* by default keep the same document name */
-      TtaExtractName (urlToOpen, SavePath, DocumentName);
-	  strcpy (urlToOpen, DocumentName);
-	  WIN_ListSaveDirectory (BaseDialog + SaveForm, TtaGetMessage (AMAYA, AM_SAVE_AS), urlToOpen);
-	  SetDlgItemText (hwnDlg, IDC_EDITDOCSAVE, urlToOpen);
-	  ThotCallback (BaseDialog + NameSave, STRING_DATA, urlToOpen);
+      TtaExtractName (UrlToOpen, SavePath, DocumentName);
+	  strcpy (UrlToOpen, DocumentName);
+	  WIN_ListSaveDirectory (BaseDialog + SaveForm, TtaGetMessage (AMAYA, AM_SAVE_AS), UrlToOpen);
+	  SetDlgItemText (hwnDlg, IDC_EDITDOCSAVE, UrlToOpen);
+	  ThotCallback (BaseDialog + NameSave, STRING_DATA, UrlToOpen);
 	  break;
 	  
 	case IDCANCEL:
@@ -1409,8 +1409,7 @@ LRESULT CALLBACK OpenDocDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
       SetWindowText (GetDlgItem (hwnDlg, IDCANCEL), TtaGetMessage (LIB, TMSG_CANCEL));
 
       SetWindowText (hwnDlg, wndTitle);
-      SetDlgItemText (hwnDlg, IDC_GETURL, tmpDocName);
-      urlToOpen [0] = 0;
+      SetDlgItemText (hwnDlg, IDC_GETURL, UrlToOpen);
 	  /* put the focus on the first dialog item */
 	  SetFocus (GetDlgItem (hwnDlg, IDC_GETURL));
 	  return FALSE;
@@ -1421,9 +1420,9 @@ LRESULT CALLBACK OpenDocDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
 	{
 	  if (LOWORD (wParam) == IDC_GETURL)
 	    {
-	      GetDlgItemText (hwnDlg, IDC_GETURL, urlToOpen, sizeof (urlToOpen) - 1);
-	      if (urlToOpen[0] != 0)
-		ThotCallback (BaseDialog + URLName, STRING_DATA, urlToOpen);
+	      GetDlgItemText (hwnDlg, IDC_GETURL, UrlToOpen, sizeof (UrlToOpen) - 1);
+	      if (UrlToOpen[0] != 0)
+		ThotCallback (BaseDialog + URLName, STRING_DATA, UrlToOpen);
 	    }
 	}
 
@@ -1435,6 +1434,7 @@ LRESULT CALLBACK OpenDocDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
 	break;
 
       case IDC_BROWSE:
+		  strncpy (szFileName, TmpDocName, 256);
 	OpenFileName.lStructSize       = sizeof (OPENFILENAME);
 	OpenFileName.hwndOwner         = hwnDlg;
 	OpenFileName.hInstance         = hInstance;
@@ -1453,26 +1453,28 @@ LRESULT CALLBACK OpenDocDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
 	OpenFileName.Flags             = OFN_SHOWHELP | OFN_HIDEREADONLY;
 	
 	if (GetOpenFileName (&OpenFileName))
-	  strcpy (urlToOpen, OpenFileName.lpstrFile);
+	{
+	  strcpy (UrlToOpen, OpenFileName.lpstrFile);
       
-	SetDlgItemText (hwnDlg, IDC_GETURL, urlToOpen);
-	if (urlToOpen[0] != 0)
+	SetDlgItemText (hwnDlg, IDC_GETURL, UrlToOpen);
+	if (UrlToOpen[0] != 0)
 	  {
-	    ThotCallback (BaseDialog + URLName, STRING_DATA, urlToOpen);
+	    ThotCallback (BaseDialog + URLName, STRING_DATA, UrlToOpen);
 	    EndDialog (hwnDlg, ID_CONFIRM);
 	    ThotCallback (BaseDialog + OpenForm, INTEGER_DATA, (char*) 1);
 	  }
+	}
 	break;
 
       case IDC_CLEAR:
 	ThotCallback (BaseDialog + OpenForm, INTEGER_DATA, (char*) 3);
-	tmpDocName[0] = 0;
+	TmpDocName[0] = 0;
 	SetDlgItemText (hwnDlg, IDC_GETURL, "");
 	break;
       
       case IDCANCEL:
 	ThotCallback (BaseDialog + OpenForm, INTEGER_DATA, (char*) 0);
-	urlToOpen [0] = 0;
+	UrlToOpen [0] = 0;
 	EndDialog (hwnDlg, IDCANCEL);
 	break;      
       }
@@ -1502,7 +1504,7 @@ LRESULT CALLBACK OpenImgDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
 	SetWindowText (GetDlgItem (hwnDlg, IDCANCEL), TtaGetMessage (LIB, TMSG_CANCEL));
 	
 	SetDlgItemText (hwnDlg, IDC_GETURL, "");
-	urlToOpen [0] = 0;
+	UrlToOpen [0] = 0;
 	SetDlgItemText (hwnDlg, IDC_GETALT, "");
 	altText [0] = 0;
 	break;
@@ -1517,7 +1519,7 @@ LRESULT CALLBACK OpenImgDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
 	switch (LOWORD (wParam))
 	  {
 	  case ID_CONFIRM:
-	    GetDlgItemText (hwnDlg, IDC_GETURL, urlToOpen, sizeof (urlToOpen) - 1);
+	    GetDlgItemText (hwnDlg, IDC_GETURL, UrlToOpen, sizeof (UrlToOpen) - 1);
 	    GetDlgItemText (hwnDlg, IDC_GETALT, altText, sizeof (altText) - 1);
 	    if (!altText || altText [0] == 0)
 	      MessageBox (hwnDlg, TtaGetMessage (AMAYA, AM_ALT_MISSING),
@@ -1526,7 +1528,7 @@ LRESULT CALLBACK OpenImgDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
 	    else 
 	      {
 		ThotCallback (BaseImage + ImageAlt, STRING_DATA, altText);
-		ThotCallback (BaseImage + ImageURL, STRING_DATA, urlToOpen);
+		ThotCallback (BaseImage + ImageURL, STRING_DATA, UrlToOpen);
 		ThotCallback (BaseImage + FormImage, INTEGER_DATA, (char*) 1);
 		EndDialog (hwnDlg, ID_CONFIRM);
 	      }
@@ -1551,16 +1553,16 @@ LRESULT CALLBACK OpenImgDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
 	    OpenFileName.Flags             = OFN_SHOWHELP | OFN_HIDEREADONLY;
 	    
 	    if (GetOpenFileName (&OpenFileName))
-	      strcpy (urlToOpen, OpenFileName.lpstrFile);
+	      strcpy (UrlToOpen, OpenFileName.lpstrFile);
 	    
-	    SetDlgItemText (hwnDlg, IDC_GETURL, urlToOpen);
+	    SetDlgItemText (hwnDlg, IDC_GETURL, UrlToOpen);
 	    if (altText [0] != 0)
 	      EndDialog (hwnDlg, ID_CONFIRM);
 	    break;
 
 	  case IDCANCEL:
 	    ThotCallback (BaseImage + FormImage, INTEGER_DATA, (char*) 0);
-	    urlToOpen [0] = 0;
+	    UrlToOpen [0] = 0;
 	    EndDialog (hwnDlg, IDCANCEL);
 	    break;
 	  }
@@ -3244,8 +3246,8 @@ LRESULT CALLBACK BackgroundImageDlgProc (ThotWindow hwnDlg, UINT msg,
       case WM_COMMAND:
 	if (HIWORD (wParam) == EN_UPDATE)
 	  {
-	    GetDlgItemText (hwnDlg, IDC_BGLOCATION, urlToOpen, sizeof (urlToOpen) - 1);
-	    ThotCallback (BaseImage + ImageURL, STRING_DATA, urlToOpen);
+	    GetDlgItemText (hwnDlg, IDC_BGLOCATION, UrlToOpen, sizeof (UrlToOpen) - 1);
+	    ThotCallback (BaseImage + ImageURL, STRING_DATA, UrlToOpen);
 	  }
 
 	switch (LOWORD (wParam))
@@ -3297,9 +3299,9 @@ LRESULT CALLBACK BackgroundImageDlgProc (ThotWindow hwnDlg, UINT msg,
 	    OpenFileName.Flags             = OFN_SHOWHELP | OFN_HIDEREADONLY;
 	    
 	    if (GetOpenFileName (&OpenFileName))
-	      strcpy (urlToOpen, OpenFileName.lpstrFile);
+	      strcpy (UrlToOpen, OpenFileName.lpstrFile);
 	    
-	    SetDlgItemText (hwnDlg, IDC_BGLOCATION, urlToOpen);
+	    SetDlgItemText (hwnDlg, IDC_BGLOCATION, UrlToOpen);
 	    EndDialog (hwnDlg, ID_CONFIRM);
 	    ThotCallback (BaseImage + RepeatImage, INTEGER_DATA, (char*)repeatMode);
 	    ThotCallback (BaseImage + FormBackground, INTEGER_DATA, (char*)1);
@@ -3546,7 +3548,7 @@ void CreateCSSDlgWindow (ThotWindow parent, int nb_item, char *buffer,
  ------------------------------------------------------------------------*/
 void       CreateTitleDlgWindow (ThotWindow parent, char *title)
 {  
-  strcpy (urlToOpen, title);
+  strcpy (UrlToOpen, title);
   ReleaseFocus = FALSE;
   isHref = FALSE;
   text[0] = 0;
@@ -3562,7 +3564,7 @@ void CreateHRefDlgWindow (ThotWindow parent, char *HRefValue,
 {  	
   docSelect = doc_select;
   dirSelect = dir_select;
-  strcpy (tmpDocName, HRefValue);
+  strcpy (TmpDocName, HRefValue);
     
   if (doc_type == TEXT_FILE)
     szFilter = APPFILENAMEFILTER;
@@ -3690,21 +3692,29 @@ void  CreateSaveAsDlgWindow (ThotWindow parent, char *path_name)
 /*-----------------------------------------------------------------------
  CreateOpenDocDlgWindow
  ------------------------------------------------------------------------*/
-void  CreateOpenDocDlgWindow (ThotWindow parent, char *title, char *docName,
-			      int doc_select, int dir_select, int doc_type)
-{  
+void  CreateOpenDocDlgWindow (ThotWindow parent, char *title, char *url,
+			char *docName, int doc_select, int dir_select, DocumentType doc_type)
+{
   docSelect = doc_select;
   dirSelect = dir_select;
   strcpy (wndTitle, title);
-  strcpy (tmpDocName, docName);
-  strcpy ( urlToOpen, docName);
-    
-  if (doc_type == TEXT_FILE)
-    szFilter = APPFILENAMEFILTER;
-  else if (doc_type == IMG_FILE)
+  strcpy (TmpDocName, docName);
+  strcpy ( UrlToOpen, url);
+  
+  if (doc_type == docHTML)
+    szFilter = APPHTMLNAMEFILTER;
+  else if (doc_type == docMath)
+    szFilter = APPMATHNAMEFILTER;
+  else if (doc_type == docSVG)
+    szFilter = APPSVGNAMEFILTER;
+  else if (doc_type == docCSS)
+    szFilter = APPCSSNAMEFILTER;
+  else if (doc_type == docImage)
+    szFilter = APPIMAGENAMEFILTER;
+  else if (doc_type == docImage)
     szFilter = APPIMAGENAMEFILTER;
   else 
-    szFilter = APPALLFILESFILTER;
+    szFilter = APPFILENAMEFILTER;
 
   DialogBox (hInstance, MAKEINTRESOURCE (OPENDOCDIALOG), parent,
 	  (DLGPROC) OpenDocDlgProc);
@@ -3718,7 +3728,7 @@ void CreateOpenImgDlgWindow (ThotWindow parent, char *imgName, int doc_select,
 {  
   docSelect = doc_select;
   dirSelect = dir_select;
-  strcpy ( urlToOpen, imgName);
+  strcpy ( UrlToOpen, imgName);
     
   if (doc_type == TEXT_FILE)
     szFilter = APPFILENAMEFILTER;
