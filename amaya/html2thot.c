@@ -23,8 +23,9 @@
 #include "amaya.h"
 #include "css.h"
 #include "fetchHTMLname.h"
-#include "zlib.h"
 #include "parser.h"
+#include "zlib.h"
+
 #include "css_f.h"
 #include "fetchHTMLname_f.h"
 #include "fetchXMLname_f.h"
@@ -34,6 +35,7 @@
 #include "HTMLimage_f.h"
 #include "HTMLtable_f.h"
 #include "HTMLimage_f.h"
+#include "init_f.h"
 #include "styleparser_f.h"
 #include "templates_f.h"
 #include "XMLparser_f.h"

@@ -57,9 +57,10 @@ static ThotBool PaletteDisplayed = FALSE;
 #endif /* _WINDOWS */
 
 #include "fetchXMLname_f.h"
-#include "html2thot_f.h"
 #include "GraphMLbuilder_f.h"
+#include "html2thot_f.h"
 #include "HTMLpresentation_f.h"
+#include "XLinkedit_f.h"
 
 /*----------------------------------------------------------------------
  SetEmptyShapeAttrSubTree
@@ -550,8 +551,10 @@ void AttrSpaceModified(event)
 
 /*----------------------------------------------------------------------
  GraphElemPasted
- An element has been pasted.  If its parent is a Group with an
- attribute "direction", create the corresponding internal attributes.
+ An element has been pasted.
+ If the element is an XLink, update the link.
+ If its parent is a Group with an attribute "direction", create the
+ corresponding internal attributes.
  -----------------------------------------------------------------------*/
 #ifdef __STDC__
 void GraphElemPasted (NotifyElement *event)
@@ -563,10 +566,26 @@ void GraphElemPasted(event)
   Element	parent;
   ElementType	elType;
 
-  parent = TtaGetParent (event->element);
-  elType = TtaGetElementType (parent);
-  if (elType.ElTypeNum == GraphML_EL_Group)
-     ParseDirAndSpaceAttributes (parent, event->element, event->document);
+  XLinkPasted (event);
+  elType = TtaGetElementType (event->element);
+  if (elType.ElTypeNum == GraphML_EL_Rectangle ||
+      elType.ElTypeNum == GraphML_EL_Line_ ||
+      elType.ElTypeNum == GraphML_EL_RoundRect ||
+      elType.ElTypeNum == GraphML_EL_Circle ||
+      elType.ElTypeNum == GraphML_EL_Oval ||
+      elType.ElTypeNum == GraphML_EL_Polyline ||
+      elType.ElTypeNum == GraphML_EL_Spline ||
+      elType.ElTypeNum == GraphML_EL_ClosedSpline ||
+      elType.ElTypeNum == GraphML_EL_Text_ ||
+      elType.ElTypeNum == GraphML_EL_Math ||
+      elType.ElTypeNum == GraphML_EL_Group ||
+      elType.ElTypeNum == GraphML_EL_Polygon )
+     {
+     parent = TtaGetParent (event->element);
+     elType = TtaGetElementType (parent);
+     if (elType.ElTypeNum == GraphML_EL_Group)
+        ParseDirAndSpaceAttributes (parent, event->element, event->document);
+     }
 }
 
 /*----------------------------------------------------------------------

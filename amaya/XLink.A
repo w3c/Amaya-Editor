@@ -1,0 +1,10 @@
+APPLICATION XLink;
+
+ATTRIBUTES
+
+   { This is just to make the APP compiler happy: it would not compile an empty
+     file. This should be deleted when more useful statements are added }
+   Langue:
+	AttrMenu.Pre ->    GlobalAttrInMenu;
+
+END

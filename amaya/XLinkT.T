@@ -5,30 +5,46 @@
 
 TRANSLATION XLink;
 
-RULES
-
-   XLink:
-	begin
-	end;
+CONST
+   nsdcl = ' xmlns:xlink="http://www.w3.org/1999/xlink"';
 
 ATTRIBUTES
 
-   type:
-        create ' xmlns:xlink="http://www.w3.org/1999/xlink"';
    type = simple:
+	begin
+        create nsdcl;
 	create ' xlink:type="simple"';
+	end;
    type = extended:
+	begin
+        create nsdcl;
 	create ' xlink:type="extended"';
+	end;
    type = locator:
+	begin
+        create nsdcl;
 	create ' xlink:type="locator"';
+	end;
    type = arc:
+	begin
+        create nsdcl;
 	create ' xlink:type="arc"';
+	end;
    type = resource:
+	begin
+        create nsdcl;
 	create ' xlink:type="resource"';
+	end;
    type = title_:
+	begin
+        create nsdcl;
 	create ' xlink:type="title"';
+	end;
    type = none_:
+	begin
+        create nsdcl;
 	create ' xlink:type="none"';
+	end;
 
    href_:
 	begin

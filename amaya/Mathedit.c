@@ -55,8 +55,8 @@ static ThotBool	InitMaths;
 static ThotBool	IsLastDeletedElement = FALSE;
 static Element	LastDeletedElement = NULL;
 
-#include "html2thot_f.h"
 #include "fetchXMLname_f.h"
+#include "html2thot_f.h"
 #include "HTMLtable_f.h"
 #include "HTMLpresentation_f.h"
 #include "MathMLbuilder_f.h"
@@ -65,6 +65,7 @@ static Element	LastDeletedElement = NULL;
 #ifdef _WINDOWS
 #include "wininclude.h"
 #endif /* _WINDOWS */
+#include "XLinkedit_f.h"
 
 /* Function name table */
 typedef CHAR_T     functName[10];
@@ -3157,6 +3158,7 @@ void NewMathString(event)
  MathElementPasted
  An element has been pasted in a MathML structure.
  Create placeholders before and after the pasted elements if necessary.
+ If the element is an XLink, update the link.
  -----------------------------------------------------------------------*/
 #ifdef __STDC__
 void MathElementPasted (NotifyElement *event)
@@ -3169,7 +3171,7 @@ void MathElementPasted(event)
    ElementType	elType, elTypeParent;
    int          oldStructureChecking;
 
-
+   XLinkPasted (event);
    elType = TtaGetElementType (event->element);
    oldStructureChecking = TtaGetStructureChecking (event->document);
    TtaSetStructureChecking (0, event->document);

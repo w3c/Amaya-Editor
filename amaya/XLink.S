@@ -21,11 +21,9 @@ ATTR
    from = TEXT;
 
    to = TEXT;
-
-STRUCT
-
-   {  The next definition is just to make the str compiler happy.
-      No XLink element is supposed to be ever created }
-   XLink = TEXT;
+	
+   { generic attributes for internal use }
+   Invalid_attribute = TEXT;	{ to store an unknown attribute }
+   Ghost_restruct = TEXT;	{ to help structure transformation }
 
 END

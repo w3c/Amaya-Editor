@@ -15,7 +15,6 @@ StructModel =	   'STRUCTURE' [ 'EXTENSION' ] ElemName ';'
 		 [ 'CONST' ConstList ]
 		 [ 'PARAM' RuleList ]
 		 [ 'STRUCT' RuleList ]
-		 { section STRUCT is optional only for extensions }
 		 [ 'EXTENS' ExtensList ]
 		 [ 'ASSOC' RuleList ]
 		 [ 'UNITS' RuleList ]

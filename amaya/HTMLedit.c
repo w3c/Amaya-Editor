@@ -28,24 +28,25 @@ static int          OldWidth;
 static int          OldHeight;
 #define buflen 50
 
-#include "css_f.h"
-#include "init_f.h"
-#include "html2thot_f.h"
 #include "AHTURLTools_f.h"
+#include "css_f.h"
 #include "EDITimage_f.h"
 #include "EDITORactions_f.h"
+#ifdef GRAPHML
+#include "GraphMLbuilder_f.h"
+#endif
 #include "HTMLactions_f.h"
 #include "HTMLedit_f.h"
 #include "HTMLimage_f.h"
 #include "HTMLpresentation_f.h"
 #include "HTMLimage_f.h"
+#include "html2thot_f.h"
+#include "init_f.h"
 #include "MathMLbuilder_f.h"
 #include "Mathedit_f.h"
-#ifdef GRAPHML
-#include "GraphMLbuilder_f.h"
-#endif
 #include "styleparser_f.h"
 #include "tree.h"
+#include "XLinkedit_f.h"
 
 #ifdef _WINDOWS
 extern HWND currentWindow;
@@ -208,45 +209,6 @@ NotifyElement      *event;
 }
 
 /*----------------------------------------------------------------------
-   SetXLinkTypeSimple attach an attribute xlink:type="simple" to element el
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         SetXLinkTypeSimple (Element el, Document doc, ThotBool withUndo)
-#else  /* __STDC__ */
-static void         SetXLinkTypeSimple (el, doc, withUndo)
-Element		    el;
-Document            doc;
-ThotBool		    withUndo;
-
-#endif /* __STDC__ */
-{
-  AttributeType	attrType;
-  Attribute	attr;
-  SSchema       XLinkSchema;
-  ThotBool	new;
-
-  XLinkSchema = TtaGetSSchema (TEXT("XLink"), doc);
-  attrType.AttrSSchema = XLinkSchema;
-  attrType.AttrTypeNum = XLink_ATTR_type;
-  attr = TtaGetAttribute (el, attrType);
-  if (attr == NULL)
-    {
-      attr = TtaNewAttribute (attrType);
-      TtaAttachAttribute (el, attr, doc);
-      new = TRUE;
-    }
-  else
-    {
-      new = FALSE;
-      if (withUndo)
-	TtaRegisterAttributeReplace (attr, el, doc);
-    }
-  TtaSetAttributeValue (attr, XLink_ATTR_type_VAL_simple, el, doc);
-  if (new && withUndo)
-    TtaRegisterAttributeCreate (attr, el, doc);
-}
-
-/*----------------------------------------------------------------------
    SetREFattribute  sets the HREF or CITE attribue of the element to      
    the concatenation of targetURL and targetName.
   ----------------------------------------------------------------------*/
@@ -289,11 +251,15 @@ STRING              targetName;
      }
    else
      {
+       /* the origin of the link is not a HTML element */
+       /* create a XLink link */
        attrType.AttrSSchema = TtaGetSSchema (TEXT("XLink"), doc);
        if (!attrType.AttrSSchema)
 	  attrType.AttrSSchema = TtaNewNature (TtaGetDocumentSSchema (doc),
 					       TEXT("XLink"), TEXT("XLinkP"));
        attrType.AttrTypeNum = XLink_ATTR_href_;
+       /* create a xlink:type attribute with value "simple" */
+       SetXLinkTypeSimple (element, doc, AttrHREFundoable);
      }
    attr = TtaGetAttribute (element, attrType);
    if (attr == 0)
@@ -349,17 +315,12 @@ STRING              targetName;
 
    /* register the new value of the HREF attribute in the undo queue */
    if (AttrHREFundoable && new)
-       TtaRegisterAttributeCreate (attr, element, doc);
-
-   if (!isHTML)
-      /* the origin of the link is not a HTML element */
-      /* create an XLink attribute */
-      SetXLinkTypeSimple (element, doc, AttrHREFundoable);
+      TtaRegisterAttributeCreate (attr, element, doc);
 
    /* is it a link to a CSS file? */
    if (tempURL[0] != EOS)
-       if (elType.ElTypeNum == HTML_EL_LINK && isHTML &&
-	   (LinkAsCSS || IsCSSName (targetURL)))
+      if (elType.ElTypeNum == HTML_EL_LINK && isHTML &&
+	  (LinkAsCSS || IsCSSName (targetURL)))
 	 {
 	   LinkAsCSS = FALSE;
 	   LoadStyleSheet (targetURL, doc, element, NULL, CSS_ALL);
@@ -451,14 +412,16 @@ View                view;
        TtaGiveTextContent (child, Answer_text, &length, &lang);
        CurrentDocument = doc;
 #ifndef _WINDOWS 
-       TtaNewForm (BaseDialog + TitleForm, TtaGetViewFrame (doc, 1), TtaGetMessage (1, BTitle), TRUE, 2, 'L', D_CANCEL);
-       TtaNewTextForm (BaseDialog + TitleText, BaseDialog + TitleForm, "", 50, 1, FALSE);
-	/* initialise the text field in the dialogue box */
-	TtaSetTextForm (BaseDialog + TitleText, Answer_text);
-	TtaSetDialoguePosition ();
-	TtaShowDialogue (BaseDialog + TitleForm, FALSE);
+       TtaNewForm (BaseDialog + TitleForm, TtaGetViewFrame (doc, 1),
+		   TtaGetMessage (1, BTitle), TRUE, 2, 'L', D_CANCEL);
+       TtaNewTextForm (BaseDialog + TitleText, BaseDialog + TitleForm, "",
+		       50, 1, FALSE);
+       /* initialise the text field in the dialogue box */
+       TtaSetTextForm (BaseDialog + TitleText, Answer_text);
+       TtaSetDialoguePosition ();
+       TtaShowDialogue (BaseDialog + TitleForm, FALSE);
 #else /* _WINDOWS */
-	CreateTextDlgWindow (TtaGetViewFrame (doc, view), Answer_text);
+       CreateTextDlgWindow (TtaGetViewFrame (doc, view), Answer_text);
 #endif /* _WINDOWS */
      }
 }
@@ -494,7 +457,8 @@ Document            doc;
 	 {
 	    TtaOpenUndoSequence (doc, NULL, NULL, 0, 0);
 	    TtaRegisterElementReplace (el, doc);
-	    TtaSetTextContent (child, Answer_text, TtaGetDefaultLanguage (), doc);
+	    TtaSetTextContent (child, Answer_text, TtaGetDefaultLanguage (),
+			       doc);
 	    TtaCloseUndoSequence (doc);
 	    TtaSetDocumentModified (doc);
 	    SetWindowTitle (doc, doc, 0);
@@ -513,7 +477,7 @@ void                SelectDestination (Document doc, Element el, ThotBool withUn
 void                SelectDestination (doc, el, withUndo)
 Document            doc;
 Element             el;
-ThotBool		    withUndo;
+ThotBool	    withUndo;
 
 #endif /* __STDC__ */
 {
@@ -566,8 +530,6 @@ ThotBool		    withUndo;
      {
 	TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_INVALID_TARGET), NULL);
 	/* Dialogue form to insert HREF name */
-#ifndef _WINDOWS 
-#endif /* !__WINDOWS */
 
 	/* If the anchor has an HREF attribute, put its value in the form */
 	elType = TtaGetElementType (el);
@@ -720,7 +682,7 @@ Boolean		    withUndo;
    ThotBool            withinHTML, new;
 
    elType = TtaGetElementType (el);
-   withinHTML = (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")) == 0);
+   withinHTML = !ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML"));
 
    /* get a NAME or ID attribute */
    HTMLSSchema = TtaGetSSchema (TEXT("HTML"), doc);
@@ -1113,7 +1075,7 @@ ThotBool            createLink;
 
 /*----------------------------------------------------------------------
    MakeUniqueName
-   Check attribute NAME or ID in order to make sure that its value unique
+   Check attribute NAME or ID in order to make sure that its value is unique
    in the document.
    If the NAME or ID is already used, add a number at the end of the value.
   ----------------------------------------------------------------------*/
@@ -1140,76 +1102,78 @@ Document     doc;
   elType = TtaGetElementType (el);
   isHTML = (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")) == 0);
   attrType.AttrSSchema = HTMLSSchema;
-   if (isHTML &&
-       (elType.ElTypeNum == HTML_EL_Anchor || elType.ElTypeNum == HTML_EL_MAP))
-     attrType.AttrTypeNum = HTML_ATTR_NAME;
-   else
-     {
-     if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("MathML")) == 0)
-       {
-       attrType.AttrSSchema = elType.ElSSchema;
-       attrType.AttrTypeNum = MathML_ATTR_id;
-       }
-     else
+  if (isHTML &&
+      (elType.ElTypeNum == HTML_EL_Anchor || elType.ElTypeNum == HTML_EL_MAP))
+    attrType.AttrTypeNum = HTML_ATTR_NAME;
+  else
+    {
+      if (!ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("MathML")))
+	{
+	  attrType.AttrSSchema = elType.ElSSchema;
+	  attrType.AttrTypeNum = MathML_ATTR_id;
+	}
+      else
 #ifdef GRAPHML
-     if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("GraphML")) == 0)
-       {
-       attrType.AttrSSchema = elType.ElSSchema;
-       attrType.AttrTypeNum = GraphML_ATTR_id;
-       }
-     else
+	if (!ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("GraphML")))
+	  {
+	    attrType.AttrSSchema = elType.ElSSchema;
+	    attrType.AttrTypeNum = GraphML_ATTR_id;
+	  }
+	else
 #endif
        attrType.AttrTypeNum = HTML_ATTR_ID;
-     }
-   attr = TtaGetAttribute (el, attrType);
-
-   if (attr != 0)
-     {
-       /* the element has an attribute NAME or ID */
-       length = TtaGetTextAttributeLength (attr) + 10;
-       value = TtaAllocString (length);
-       change = FALSE;
-       if (value != NULL)
-	 {
-	   TtaGiveTextAttributeValue (attr, value, &length);
-	   i = 0;
-	   while (SearchNAMEattribute (doc, value, attr) != NULL)
-	     {
-	       /* Yes. Avoid duplicate NAMEs */
-	       change = TRUE;
-	       i++;
-	       usprintf (&value[length], TEXT("%d"), i);
-	     }
-
-	   if (change)
-	     {
-	       /* copy the element Label into the NAME attribute */
-	       TtaSetAttributeText (attr, value, el, doc);
-	       if (isHTML && elType.ElTypeNum == HTML_EL_MAP)
-		 {
-		   /* Search backward the refered image */
-		   attrType.AttrTypeNum = HTML_ATTR_USEMAP;
-		   TtaSearchAttribute (attrType, SearchBackward, el, &image, &attr);
-		   if (attr != NULL && image != NULL)
-		     /* Search forward the refered image */
-		     TtaSearchAttribute (attrType, SearchForward, el, &image, &attr);
-		   if (attr != NULL && image != NULL)
-		     {
-		       i = MAX_LENGTH;
-		       TtaGiveTextAttributeValue (attr, url, &i);
-		       if (i == length+1 && ustrncmp (&url[1], value, length) == 0)
-			 {
-			   /* Change the USEMAP of the image */
-			   attr = TtaGetAttribute (image, attrType);
-			   ustrcpy (&url[1], value);
-			   TtaSetAttributeText (attr, url, image, doc);
-			 }
-		     }
-		 }
-	     }
-	 }
+    }
+  attr = TtaGetAttribute (el, attrType);
+  
+  if (attr != 0)
+    {
+      /* the element has an attribute NAME or ID */
+      length = TtaGetTextAttributeLength (attr) + 10;
+      value = TtaAllocString (length);
+      change = FALSE;
+      if (value != NULL)
+	{
+	  TtaGiveTextAttributeValue (attr, value, &length);
+	  i = 0;
+	  while (SearchNAMEattribute (doc, value, attr) != NULL)
+	    {
+	      /* Yes. Avoid duplicate NAMEs */
+	      change = TRUE;
+	      i++;
+	      usprintf (&value[length], TEXT("%d"), i);
+	    }
+	  
+	  if (change)
+	    {
+	      /* copy the element Label into the NAME attribute */
+	      TtaSetAttributeText (attr, value, el, doc);
+	      if (isHTML && elType.ElTypeNum == HTML_EL_MAP)
+		{
+		  /* Search backward the refered image */
+		  attrType.AttrTypeNum = HTML_ATTR_USEMAP;
+		  TtaSearchAttribute (attrType, SearchBackward, el,
+				      &image, &attr);
+		  if (attr != NULL && image != NULL)
+		    /* Search forward the refered image */
+		    TtaSearchAttribute (attrType, SearchForward, el,
+					&image, &attr);
+		  if (attr != NULL && image != NULL)
+		    {
+		      i = MAX_LENGTH;
+		      TtaGiveTextAttributeValue (attr, url, &i);
+		      if (i == length+1 && !ustrncmp (&url[1], value, length))
+			{
+			  /* Change the USEMAP of the image */
+			  attr = TtaGetAttribute (image, attrType);
+			  ustrcpy (&url[1], value);
+			  TtaSetAttributeText (attr, url, image, doc);
+			}
+		    }
+		}
+	    }
+	}
        TtaFreeMemory (value);
-     }
+    }
 }
 
 
@@ -1388,6 +1352,8 @@ void ElementDeleted(event)
 
 /*----------------------------------------------------------------------
    ElementPasted
+   This function is called for each element pasted by the user, and for
+   each element within the pasted element.
    An element has been pasted in a HTML document.
    Check Pseudo paragraphs.
    If the pasted element has a NAME attribute, change its value if this
@@ -1405,7 +1371,7 @@ NotifyElement      *event;
 {
   Document            originDocument, doc;
   Language            lang;
-  Element             el, anchor, next, child, previous, nextchild, parent;
+  Element             el, anchor, child, previous, nextchild, parent;
   ElementType         elType, parentType;
   AttributeType       attrType;
   Attribute           attr;
@@ -1422,6 +1388,10 @@ NotifyElement      *event;
   doc = event->document;
   HTMLschema = TtaGetSSchema (TEXT("HTML"), doc);
   CheckPseudoParagraph (el, doc);
+  /* Check attribute NAME or ID in order to make sure that its value */
+  /* is unique in the document */
+  MakeUniqueName (el, doc);
+  
   elType = TtaGetElementType (el);
   anchor = NULL;
   if (elType.ElSSchema == HTMLschema && elType.ElTypeNum == HTML_EL_Anchor)
@@ -1434,12 +1404,13 @@ NotifyElement      *event;
   else if (elType.ElSSchema == HTMLschema &&
 	   elType.ElTypeNum == HTML_EL_STYLE_)
     {
-      /* The pasted element is a STYLE element in the HEAD.
-         Read the text in a buffer */
+      /* The pasted element is a STYLE element in the HEAD */
+      /* Get its content */
       child = TtaGetFirstChild (el);
       length = TtaGetTextLength (child);
       value = TtaAllocString (length + 1);
       TtaGiveTextContent (child, value, &length, &lang);
+      /* parse the content */
       css = AddCSS (doc, doc, CSS_DOCUMENT_STYLE, NULL, NULL);
       ReadCSSRules (doc, css, value, FALSE);
       TtaFreeMemory (value);
@@ -1450,7 +1421,7 @@ NotifyElement      *event;
       parentType = TtaGetElementType (parent);
       if (TtaSameSSchemas (parentType.ElSSchema, HTMLschema) &&
           parentType.ElTypeNum == HTML_EL_TITLE)
-         /* the parent of the pasted text is a TITLE */
+         /* the parent of the pasted text is the TITLE element */
          /* That's probably the result of undoing a change in the TITLE */
          UpdateTitle (parent, doc);
     }
@@ -1494,15 +1465,6 @@ NotifyElement      *event;
 	      }
 	  }
      }
-  else
-    {
-      /* Check attribute NAME or ID in order to make sure that its value */
-      /* unique in the document */
-      MakeUniqueName (el, doc);
-      elType.ElSSchema = HTMLschema;
-      elType.ElTypeNum = HTML_EL_Anchor;
-      anchor = TtaSearchTypedElement (elType, SearchInTree, el);
-    }
 
   if (anchor != NULL)
     {
@@ -1512,117 +1474,104 @@ NotifyElement      *event;
       TtaSetDisplayMode (doc, DeferredDisplay);
       oldStructureChecking = TtaGetStructureChecking (doc);
       TtaSetStructureChecking (0, doc);
-      /* Is there a parent anchor */
+      /* Is there a parent anchor? */
       parent = TtaGetTypedAncestor (el, elType);
-      while (anchor != NULL)
+      if (parent != NULL)
 	{
-	  /* look for the next pasted anchor */
-	  if (anchor != el)
-	    next = TtaSearchTypedElementInTree (elType, SearchForward, el,
-						anchor);
-	  else
-	    next = NULL;
+	  /* Move anchor children and delete the anchor element */
+	  child = TtaGetFirstChild (anchor);
+	  previous = child;
+	  TtaPreviousSibling (&previous);
 	  
-	  if (parent != NULL)
+	  while (child != NULL)
 	    {
-	      /* Move anchor children and delete the anchor element */
-	      child = TtaGetFirstChild (anchor);
-	      previous = child;
-	      TtaPreviousSibling (&previous);
-	      
-	      while (child != NULL)
-		{
-		  nextchild = child;
-		  TtaNextSibling (&nextchild);
-		  TtaRemoveTree (child, doc);
-		  TtaInsertSibling (child, anchor, TRUE, doc);
-		  /* if anchor is the pasted element, it has been registered
-		     in the editing history for the Undo command.  It will be
-		     deleted, so its children have to be registered too. */
-		  if (anchor == el)
-		     TtaRegisterElementCreate (child, doc);
-		  child = nextchild;
-		}
-	      TtaDeleteTree (anchor, doc);
+	      nextchild = child;
+	      TtaNextSibling (&nextchild);
+	      TtaRemoveTree (child, doc);
+	      TtaInsertSibling (child, anchor, TRUE, doc);
+	      /* if anchor is the pasted element, it has been registered
+		 in the editing history for the Undo command.  It will be
+		 deleted, so its children have to be registered too. */
+	      if (anchor == el)
+		TtaRegisterElementCreate (child, doc);
+	      child = nextchild;
 	    }
-	  else
+	  TtaDeleteTree (anchor, doc);
+	}
+      else
+	{
+	  /* Change attributes HREF if the element comes from another */
+	  /* document */
+	  originDocument = (Document) event->position;
+	  if (originDocument > 0 && originDocument != doc)
 	    {
-	      /* Check attribute NAME in order to make sure its value unique */
-	      /* in the document */
-	      MakeUniqueName (anchor, doc);
-	      /* Change attributes HREF if the element comes from another */
-	      /* document */
-	      originDocument = (Document) event->position;
-	      if (originDocument > 0 && originDocument != doc)
+	      /* the anchor has moved from one document to another */
+	      /* get the HREF attribute of element Anchor */
+	      attrType.AttrSSchema = elType.ElSSchema;
+	      attrType.AttrTypeNum = HTML_ATTR_HREF_;
+	      attr = TtaGetAttribute (anchor, attrType);
+	      if (attr != NULL)
 		{
-		  /* the anchor has moved from one document to another */
-		  /* get the HREF attribute of element Anchor */
-		  attrType.AttrSSchema = elType.ElSSchema;
-		  attrType.AttrTypeNum = HTML_ATTR_HREF_;
-		  attr = TtaGetAttribute (anchor, attrType);
-		  if (attr != NULL)
+		  /* get a buffer for the URL */
+		  length = TtaGetTextAttributeLength (attr) + 1;
+		  value = TtaAllocString (length);
+		  if (value != NULL)
 		    {
-		      /* get a buffer for the URL */
-		      length = TtaGetTextAttributeLength (attr) + 1;
-		      value = TtaAllocString (length);
-		      if (value != NULL)
+		      /* get the URL itself */
+		      TtaGiveTextAttributeValue (attr, value, &length);
+		      if (value[0] == '#')
 			{
-			  /* get the URL itself */
-			  TtaGiveTextAttributeValue (attr, value, &length);
-			  if (value[0] == '#')
+			  /* the target element is local in the document */
+			  /* origin convert internal link into external
+			     link */
+			  ustrcpy (tempURL, DocumentURLs[originDocument]);
+			  iName = 0;
+			}
+		      else
+			{
+			  /* the target element is in another document */
+			  ustrcpy (documentURL, value);
+			  /* looks for a '#' in the value */
+			  i = length;
+			  while (value[i] != '#' && i > 0)
+			    i--;
+			  if (i == 0)
 			    {
-			      /* the target element is local in the document */
-			      /* origin convert internal link into external
-				 link */
-			      ustrcpy (tempURL, DocumentURLs[originDocument]);
+			      /* there is no '#' in the URL */
+			      value[0] = EOS;
 			      iName = 0;
 			    }
 			  else
 			    {
-			      /* the target element is in another document */
-			      ustrcpy (documentURL, value);
-			      /* looks for a '#' in the value */
-			      i = length;
-			      while (value[i] != '#' && i > 0)
-				i--;
-			      if (i == 0)
-				{
-				  /* there is no '#' in the URL */
-				  value[0] = EOS;
-				  iName = 0;
-				}
-			      else
-				{
-				  /* there is a '#' character in the URL */
-				  /* separate document name and element name */
-				  documentURL[i] = EOS;
-				  iName = i;
-				}
-			      /* get the complete URL of the referred document */
-			      /* Add the  base content if necessary */
-			      NormalizeURL (documentURL, originDocument,
-					    tempURL, path, NULL);
+			      /* there is a '#' character in the URL */
+			      /* separate document name and element name */
+			      documentURL[i] = EOS;
+			      iName = i;
 			    }
-			  if (value[iName] == '#')
-			    {
-			      if (!ustrcmp (tempURL, DocumentURLs[doc]))
-				/* convert external link into internal link */
-				ustrcpy (tempURL, &value[iName]);
-			      else
-				ustrcat (tempURL, &value[iName]);
-			    }
-			  TtaFreeMemory (value);
-			  /* set the relative value or URL in attribute HREF */
-			  base = GetBaseURL (doc);
-			  value = MakeRelativeURL (tempURL, base);
-			  TtaSetAttributeText (attr, value, anchor, doc);
-			  TtaFreeMemory (base);
-			  TtaFreeMemory (value);
+			  /* get the complete URI of the referred
+			     document */
+			  /* Add the base if necessary */
+			  NormalizeURL (documentURL, originDocument,
+					tempURL, path, NULL);
 			}
+		      if (value[iName] == '#')
+			{
+			  if (!ustrcmp (tempURL, DocumentURLs[doc]))
+				/* convert external link into internal link */
+			    ustrcpy (tempURL, &value[iName]);
+			  else
+			    ustrcat (tempURL, &value[iName]);
+			}
+		      TtaFreeMemory (value);
+		      /* set the relative value or URL in attribute HREF */
+		      base = GetBaseURL (doc);
+		      value = MakeRelativeURL (tempURL, base);
+		      TtaSetAttributeText (attr, value, anchor, doc);
+		      TtaFreeMemory (base);
+		      TtaFreeMemory (value);
 		    }
 		}
 	    }
-	  anchor = next;
 	}
       TtaFreeMemory (path);
       TtaFreeMemory (documentURL);
@@ -1729,7 +1678,8 @@ NotifyAttribute    *event;
    if (event->event == TteAttrDelete)
       /* if the element is a SPAN without any other attribute, remove the SPAN
          element */
-      DeleteSpanIfNoAttr (event->element, event->document, &firstChild, &lastChild);
+      DeleteSpanIfNoAttr (event->element, event->document, &firstChild,
+			  &lastChild);
    else
       {
       MakeUniqueName (event->element, event->document);
@@ -1791,7 +1741,8 @@ NotifyAttribute    *event;
 	   attr = TtaGetAttribute (el, attrType);
 	   if (attr)
 	      {
-	      usprintf (buffer, TEXT("%d"), TtaGetAttributeValue (event->attribute));
+	      usprintf (buffer, TEXT("%d"),
+			TtaGetAttributeValue (event->attribute));
 	      TtaSetAttributeText (attr, buffer, el, event->document);
 	      }
 	 }
@@ -1829,7 +1780,7 @@ NotifyAttribute    *event;
 
   elType = TtaGetElementType (event->element);
   if (elType.ElTypeNum == HTML_EL_PICTURE_UNIT)
-    TtaGiveBoxSize (event->element, event->document, 1, UnPixel, &OldWidth, &h);
+    TtaGiveBoxSize (event->element, event->document, 1, UnPixel, &OldWidth,&h);
   else
     OldWidth = -1;
   return FALSE;		/* let Thot perform normal operation */
@@ -1851,7 +1802,8 @@ NotifyAttribute    *event;
 
   elType = TtaGetElementType (event->element);
   if (elType.ElTypeNum == HTML_EL_PICTURE_UNIT)
-    TtaGiveBoxSize (event->element, event->document, 1, UnPixel, &w, &OldHeight);
+    TtaGiveBoxSize (event->element, event->document, 1, UnPixel, &w,
+		    &OldHeight);
   else
      OldHeight = -1;
    return FALSE;		/* let Thot perform normal operation */
@@ -1905,7 +1857,8 @@ NotifyAttribute    *event;
    length = buflen - 1;
    buffer = TtaAllocString (buflen);
    TtaGiveTextAttributeValue (event->attribute, buffer, &length);
-   CreateAttrWidthPercentPxl (buffer, event->element, event->document, OldWidth);
+   CreateAttrWidthPercentPxl (buffer, event->element, event->document,
+			      OldWidth);
    TtaFreeMemory (buffer);
    OldWidth = -1;
 }
@@ -1995,7 +1948,8 @@ NotifyAttribute    *event;
    if (event->attributeType.AttrTypeNum == HTML_ATTR_BackgroundColor)
       HTMLSetBackgroundColor (event->document, event->element, value);
    else if (event->attributeType.AttrTypeNum == HTML_ATTR_background_)
-      HTMLSetBackgroundImage (event->document, event->element, STYLE_REPEAT, value);
+      HTMLSetBackgroundImage (event->document, event->element, STYLE_REPEAT,
+			      value);
    else if (event->attributeType.AttrTypeNum == HTML_ATTR_color ||
 	    event->attributeType.AttrTypeNum == HTML_ATTR_TextColor)
       HTMLSetForegroundColor (event->document, event->element, value);
@@ -2328,6 +2282,7 @@ View                view;
 }
 
 /*----------------------------------------------------------------------
+  SetOnOffCite
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                SetOnOffCite (Document document, View view)
@@ -2343,6 +2298,7 @@ View                view;
 
 
 /*----------------------------------------------------------------------
+  SetOnOffDefinition
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                SetOnOffDefinition (Document document, View view)
@@ -2389,6 +2345,7 @@ View                view;
 
 
 /*----------------------------------------------------------------------
+  SetOnOffVariable
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                SetOnOffVariable (Document document, View view)
@@ -2404,6 +2361,7 @@ View                view;
 
 
 /*----------------------------------------------------------------------
+  SetOnOffSample
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                SetOnOffSample (Document document, View view)
@@ -2419,6 +2377,7 @@ View                view;
 
 
 /*----------------------------------------------------------------------
+  SetOnOffKeyboard
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                SetOnOffKeyboard (Document document, View view)
@@ -2434,6 +2393,7 @@ View                view;
 
 
 /*----------------------------------------------------------------------
+  SetOnOffAbbr
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                SetOnOffAbbr (Document document, View view)
@@ -2449,6 +2409,7 @@ View                view;
 
 
 /*----------------------------------------------------------------------
+  SetOnOffAcronym
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                SetOnOffAcronym (Document document, View view)
@@ -2464,6 +2425,7 @@ View                view;
 
 
 /*----------------------------------------------------------------------
+  SetOnOffINS
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                SetOnOffINS (Document document, View view)
@@ -2479,6 +2441,7 @@ View                view;
 
 
 /*----------------------------------------------------------------------
+  SetOnOffDEL
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                SetOnOffDEL (Document document, View view)
@@ -2494,6 +2457,7 @@ View                view;
 
 
 /*----------------------------------------------------------------------
+  SetOnOffItalic
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                SetOnOffItalic (Document document, View view)
@@ -2509,6 +2473,7 @@ View                view;
 
 
 /*----------------------------------------------------------------------
+  SetOnOffBold
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                SetOnOffBold (Document document, View view)
@@ -2524,6 +2489,7 @@ View                view;
 
 
 /*----------------------------------------------------------------------
+  SetOnOffTeletype
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                SetOnOffTeletype (Document document, View view)
@@ -2539,6 +2505,7 @@ View                view;
 
 
 /*----------------------------------------------------------------------
+  SetOnOffBig
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                SetOnOffBig (Document document, View view)
@@ -2554,6 +2521,7 @@ View                view;
 
 
 /*----------------------------------------------------------------------
+  SetOnOffSmall
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                SetOnOffSmall (Document document, View view)
@@ -2569,6 +2537,7 @@ View                view;
 
 
 /*----------------------------------------------------------------------
+  SetOnOffSub
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                SetOnOffSub (Document document, View view)
@@ -2584,6 +2553,7 @@ View                view;
 
 
 /*----------------------------------------------------------------------
+  SetOnOffSup
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                SetOnOffSup (Document document, View view)
@@ -2599,6 +2569,7 @@ View                view;
 
 
 /*----------------------------------------------------------------------
+  SetOnOffQuotation
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                SetOnOffQuotation (Document document, View view)
@@ -2614,6 +2585,7 @@ View                view;
 
 
 /*----------------------------------------------------------------------
+  SetOnOffBDO
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                SetOnOffBDO (Document document, View view)

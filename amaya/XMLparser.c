@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT MIT and INRIA, 1996.
+ *  (c) COPYRIGHT MIT and INRIA, 1996-2000
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -37,7 +37,7 @@ static EntityDictEntry XMLpredifinedEntities[] =
    {TEXT("lt"), 60},
    {TEXT("quot"), 34},
 
-   {TEXT("zzzz"), 0}			/* this last entry is required */
+   {TEXT("zzzz"), 0}		/* this last entry is required */
 };
 
 typedef int         state;	/* a state of the parser automaton */
@@ -78,19 +78,21 @@ XMLparserContext;
 /* information about XML languages */
 /* All parser contexts describing known XML DTDs constitute a chain */
 static PtrParserCtxt	firstParserCtxt = NULL;	/* first context in the chain*/
-static PtrParserCtxt	currentParserCtxt = NULL;	/* current context */
+static PtrParserCtxt	currentParserCtxt = NULL;    /* current context */
+static PtrParserCtxt    XLinkParserCtxt = NULL;      /* XLink parser context */
 
 /* information about the input file */
-static ThotBool     immAfterTag = FALSE;  /* A tag has just been read */	
+static ThotBool     immAfterTag = FALSE;  /* A tag has just been read */
+
 /* input buffer */
 #define MAX_BUFFER_LENGTH 1000
 #define ALLMOST_FULL_BUFFER 700
 static UCHAR_T inputBuffer[MAX_BUFFER_LENGTH];
-static int   bufferLength = 0;	  /* actual length of text in input
+static int     bufferLength = 0;	  /* actual length of text in input
 					     buffer */
 
 /* information about the Thot document under construction */
-static Document     currentDocument = 0;	  /* the Thot document */
+static Document     currentDocument = 0;  /* the Thot document */
 static Language     currentLanguage;	  /* language used in the document */
 static Element	    currentElement = NULL;
 static ThotBool	    currentElementClosed = FALSE;
@@ -102,6 +104,7 @@ static STRING	    XMLrootClosingTag = NULL;
 static int	    XMLrootLevel = 0;
 static ThotBool	    lastTagRead = FALSE;
 static ThotBool     XMLabort = FALSE;
+static ThotBool     XlinkAttribute = FALSE;
 
 /* parser stack */
 #define MAX_STACK_HEIGHT 200		  /* maximum stack height */
@@ -120,7 +123,7 @@ static ThotBool     normalTransition;
 
 /* information about an entity being read */
 #define MAX_ENTITY_LENGTH 80
-static CHAR_T         entityName[MAX_ENTITY_LENGTH]; /* name of entity being
+static CHAR_T       entityName[MAX_ENTITY_LENGTH]; /* name of entity being
 					     read */
 static int          entityNameLength = 0; /* length of entity name read so
 					     far */
@@ -132,6 +135,7 @@ static Element	    commentText = NULL;	  /* Text element representing the
 #ifdef GRAPHML
 #include "GraphMLbuilder_f.h"
 #endif
+#include "XLinkbuilder_f.h"
 #include "fetchXMLname_f.h"
 #include "html2thot_f.h"
 #include "styleparser_f.h"
@@ -153,13 +157,9 @@ static void            InitParserContexts ()
    prevCtxt = NULL;
    ctxt = NULL;
 
+   /* create and initialize a context for the MathML parser */
    ctxt = TtaGetMemory (sizeof (XMLparserContext));
-   if (prevCtxt == NULL)
-      firstParserCtxt = ctxt;
-   else
-      prevCtxt->NextParserCtxt = ctxt;
-
-   /* initialize MathML parser */
+   firstParserCtxt = ctxt;
    ctxt->NextParserCtxt = NULL;	/* last context */
    ctxt->SSchemaName = TtaAllocString (MAX_SS_NAME_LENGTH);
    ustrcpy (ctxt->SSchemaName, TEXT("MathML"));
@@ -174,13 +174,9 @@ static void            InitParserContexts ()
    ctxt->GetDTDName = (Proc) MathMLGetDTDName;
    prevCtxt = ctxt;
 #ifdef GRAPHML
+   /* create and initialize a context for the GraphML parser */
    ctxt = TtaGetMemory (sizeof (XMLparserContext));
-   if (prevCtxt == NULL)
-      firstParserCtxt = ctxt;
-   else
-      prevCtxt->NextParserCtxt = ctxt;
-
-   /* initialize GraphML parser */
+   prevCtxt->NextParserCtxt = ctxt;
    ctxt->NextParserCtxt = NULL;	/* last context */
    ctxt->SSchemaName = TtaAllocString (MAX_SS_NAME_LENGTH);
    ustrcpy (ctxt->SSchemaName, TEXT("GraphML"));
@@ -195,6 +191,23 @@ static void            InitParserContexts ()
    ctxt->GetDTDName = (Proc) GraphMLGetDTDName;
    prevCtxt = ctxt;
 #endif /* GRAPHML */
+   /* create and initialize a context for the XLink parser */
+   ctxt = TtaGetMemory (sizeof (XMLparserContext));
+   prevCtxt->NextParserCtxt = ctxt;
+   ctxt->NextParserCtxt = NULL;	/* last context */
+   ctxt->SSchemaName = TtaAllocString (MAX_SS_NAME_LENGTH);
+   ustrcpy (ctxt->SSchemaName, TEXT("XLink"));
+   ctxt->XMLSSchema = NULL;
+   ctxt->XMLtype = XLINK_TYPE;
+   ctxt->MapAttribute = (Proc) MapXLinkAttribute;
+   ctxt->MapAttributeValue = (Proc) MapXLinkAttributeValue;
+   ctxt->MapEntity = NULL;
+   ctxt->EntityCreated = NULL;
+   ctxt->ElementComplete = NULL;
+   ctxt->AttributeComplete = (Proc) XLinkAttributeComplete;
+   ctxt->GetDTDName = NULL;
+   XLinkParserCtxt = ctxt;
+   prevCtxt = ctxt;
 }
 
 /*----------------------------------------------------------------------
@@ -235,8 +248,11 @@ Document doc;
    int                  error;
 
    elType = TtaGetElementType (el);
-   if (currentParserCtxt != NULL)
-      (*(currentParserCtxt->ElementComplete)) (el, doc, &error);
+   if (currentParserCtxt)
+      {
+      if (currentParserCtxt->ElementComplete)
+         (*(currentParserCtxt->ElementComplete)) (el, doc, &error);
+      }
    else
       {
       /* initialize all parser contexts if not done yet */
@@ -248,7 +264,8 @@ Document doc;
 	    ustrcmp (ctxt->SSchemaName, TtaGetSSchemaName (elType.ElSSchema)))
 	 ctxt = ctxt->NextParserCtxt;
       if (ctxt != NULL)
-	 (*(ctxt->ElementComplete)) (el, doc, &error);
+	 if (ctxt->ElementComplete)
+	    (*(ctxt->ElementComplete)) (el, doc, &error);
       }
    if (error)
       {
@@ -390,12 +407,14 @@ STRING              DTDname;
 #endif
 {
   currentParserCtxt = firstParserCtxt;
-  while (currentParserCtxt != NULL && ustrcmp (DTDname, currentParserCtxt->SSchemaName))
+  while (currentParserCtxt != NULL &&
+	 ustrcmp (DTDname, currentParserCtxt->SSchemaName))
      currentParserCtxt = currentParserCtxt->NextParserCtxt;
 
   /* initialize the corresponding entry */
   if (currentParserCtxt != NULL && currentParserCtxt->XMLSSchema == NULL)
-       currentParserCtxt->XMLSSchema = GetXMLSSchema (currentParserCtxt->XMLtype, currentDocument);
+     currentParserCtxt->XMLSSchema = GetXMLSSchema (currentParserCtxt->XMLtype,
+						    currentDocument);
 }
 
 
@@ -427,18 +446,20 @@ Document            doc;
     {
       /* by default we're looking at in the current schema */
       elType->ElSSchema = currentParserCtxt->XMLSSchema;
-      MapXMLElementType (currentParserCtxt->XMLtype, XMLname, elType, mappedName, content, doc);
+      MapXMLElementType (currentParserCtxt->XMLtype, XMLname, elType,
+			 mappedName, content, doc);
     }
   else if (elType->ElSSchema != NULL)
     {
       /* The schema is known -> search the corresponding context */
       ctxt = firstParserCtxt;
       while (ctxt != NULL &&
-	     ustrcmp (TtaGetSSchemaName (elType->ElSSchema), ctxt->SSchemaName))
+	     ustrcmp (TtaGetSSchemaName(elType->ElSSchema), ctxt->SSchemaName))
 	  ctxt = ctxt->NextParserCtxt;
       /* get the Thot element number */
       if (ctxt != NULL)
-	MapXMLElementType (ctxt->XMLtype, XMLname, elType, mappedName, content, doc);
+	MapXMLElementType (ctxt->XMLtype, XMLname, elType, mappedName,
+			   content, doc);
     }
 
   /* if not found, look at other contexts */
@@ -451,7 +472,8 @@ Document            doc;
 	  elType->ElSSchema = NULL;
 	  if (ctxt != currentParserCtxt)
 	    {
-	      MapXMLElementType (ctxt->XMLtype, XMLname, elType, mappedName, content, doc);
+	      MapXMLElementType (ctxt->XMLtype, XMLname, elType, mappedName,
+				 content, doc);
 	      if (elType->ElSSchema != NULL)
 		ctxt->XMLSSchema = elType->ElSSchema;
 	    }
@@ -515,7 +537,9 @@ CHAR_T                c;
      /* ask the concerned builder about the DTD to be used */
      DTDname[0] = EOS;
      if (XMLelementType[stackLevel-1] != NULL)
-        (*(currentParserCtxt->GetDTDName))(DTDname, XMLelementType[stackLevel-1]);
+        if (currentParserCtxt->GetDTDName)
+           (*(currentParserCtxt->GetDTDName)) (DTDname,
+					       XMLelementType[stackLevel-1]);
      if (ustrcmp (DTDname, TEXT("HTML")) == 0)
 	{
 	ParseIncludedHTML (currentElement, XMLelementType[stackLevel-1]);
@@ -527,11 +551,12 @@ CHAR_T                c;
 	{
         if (DTDname[0] == EOS)
 	   {
-	     if (XMLelementType[stackLevel - 1])
-	        s = XMLelementType[stackLevel - 1];
-	     else
-	        s = inputBuffer;
-	   usprintf (msgBuffer, TEXT("Don't know what DTD to use for element %s"), s);
+	   if (XMLelementType[stackLevel - 1])
+	     s = XMLelementType[stackLevel - 1];
+	   else
+	     s = inputBuffer;
+	   usprintf (msgBuffer,
+		     TEXT("Don't know what DTD to use for element %s"), s);
 	   ParseHTMLError (currentDocument, msgBuffer);
 	   }
         else
@@ -615,7 +640,8 @@ CHAR_T                c;
 	  i = 0;
        elType.ElSSchema = NULL;
        elType.ElTypeNum = 0;
-       GetXMLElementType (&inputBuffer[i], &elType, &mappedName, &currentElementContent, currentDocument);
+       GetXMLElementType (&inputBuffer[i], &elType, &mappedName,
+			  &currentElementContent, currentDocument);
        if (elType.ElTypeNum <= 0)
 	  {
 	  usprintf (msgBuffer, TEXT("Unknown XML element %s"), inputBuffer);
@@ -698,11 +724,11 @@ CHAR_T                c;
          ustrcasecmp (&inputBuffer[i], XMLrootClosingTag))
 	/* wrong closing tag */
 	{
-	  usprintf (msgBuffer, TEXT("Unexpected end tag </%s> instead of </%s>"),
-		    inputBuffer, XMLrootClosingTag);
-	  ParseHTMLError (currentDocument, msgBuffer);
-	  normalTransition = FALSE;
-	  XMLabort = TRUE;
+	usprintf (msgBuffer, TEXT("Unexpected end tag </%s> instead of </%s>"),
+		  inputBuffer, XMLrootClosingTag);
+	ParseHTMLError (currentDocument, msgBuffer);
+	normalTransition = FALSE;
+	XMLabort = TRUE;
 	}
      }
   else
@@ -712,8 +738,9 @@ CHAR_T                c;
           /* the end tag does not close the current element */
           {
           /* print an error message */
-          usprintf (msgBuffer, TEXT("Unexpected XML end tag </%s> instead of </%s>"),
-	           inputBuffer, XMLelementType[stackLevel - 1]);
+          usprintf (msgBuffer,
+		    TEXT("Unexpected XML end tag </%s> instead of </%s>"),
+		    inputBuffer, XMLelementType[stackLevel - 1]);
           ParseHTMLError (currentDocument, msgBuffer);
 	  normalTransition = FALSE;
 	  XMLabort = TRUE;
@@ -768,21 +795,49 @@ CHAR_T                c;
      i = 0;
      if (ustrncmp (inputBuffer, TEXT("xml:"), 4) == 0)
         /* special xml attributes */
-        (*(currentParserCtxt->MapAttribute)) (&inputBuffer[4], &attrType,
-					      XMLelementType[stackLevel-1],
-					      currentDocument);
+        {
+        if (currentParserCtxt->MapAttribute)
+           (*(currentParserCtxt->MapAttribute)) (&inputBuffer[4], &attrType,
+						 XMLelementType[stackLevel-1],
+						 currentDocument);
+	}
      else
 	{
-        /* look for a colon in the attribute name (namespaces) and ignore the
-	   prefix if there is one */
+        /* look for a colon in the attribute name and ignore the namespace
+	   prefix that precedes if there is one */
         for (i = 0; i < bufferLength && inputBuffer[i] != ':'; i++);
         if (inputBuffer[i] == ':')
+	   /* there is a namespace prefix */
+	   {
+	   inputBuffer[i] = EOS;
 	   i++;
+	   /****** this is wrong: the prefix for the XLink namespace may be
+	      anything else. This is a trick, waiting for a full
+	      implementation of namespaces in this XML parser */
+	   if (ustrcmp(&inputBuffer[0], TEXT("xlink")) == 0)
+	      /* this attribute is in the XLink namespace */
+	      {
+	      XlinkAttribute = TRUE;
+              (*(XLinkParserCtxt->MapAttribute)) (&inputBuffer[i], &attrType,
+						  XMLelementType[stackLevel-1],
+						  currentDocument);
+	      }
+	   else
+	      /* this attribute is supposed to be in the current namespace */
+	      if (currentParserCtxt->MapAttribute)
+                 (*(currentParserCtxt->MapAttribute)) (&inputBuffer[i],
+						  &attrType,
+						  XMLelementType[stackLevel-1],
+						  currentDocument);
+	   }
         else
+	   {
 	   i = 0;
-        (*(currentParserCtxt->MapAttribute)) (&inputBuffer[i], &attrType,
-					      XMLelementType[stackLevel-1],
-					      currentDocument);
+	   if (currentParserCtxt->MapAttribute)
+              (*(currentParserCtxt->MapAttribute)) (&inputBuffer[i], &attrType,
+					          XMLelementType[stackLevel-1],
+					          currentDocument);
+	   }
 	}
      if (attrType.AttrTypeNum <= 0)
         /* not found. Is it a HTML attribute (style, class, id for instance) */
@@ -801,7 +856,8 @@ CHAR_T                c;
         if (oldAttr != NULL)
 	   {
            /* this attribute already exists for the current element */
-           usprintf (msgBuffer, TEXT("Duplicate XML attribute %s"), inputBuffer);
+           usprintf (msgBuffer, TEXT("Duplicate XML attribute %s"),
+		     inputBuffer);
            ParseHTMLError (currentDocument, msgBuffer);	
 	   normalTransition = FALSE;
 	   XMLabort = TRUE;
@@ -863,22 +919,31 @@ CHAR_T                c;
      switch (attrKind)
 	{
 	case 0:       /* enumerate */
-	   (*(currentParserCtxt->MapAttributeValue)) (inputBuffer, attrType,
-						      &val);
+	   val = 0;
+	   if (XlinkAttribute)
+	         (*(XLinkParserCtxt->MapAttributeValue)) (inputBuffer,
+							  attrType, &val);
+	   else
+	      if (currentParserCtxt->MapAttributeValue)
+	         (*(currentParserCtxt->MapAttributeValue)) (inputBuffer,
+							    attrType, &val);
 	   if (val <= 0)
 	      {
-	      usprintf (msgBuffer, TEXT("Unknown XML attribute value: %s"), inputBuffer);
+	      usprintf (msgBuffer, TEXT("Unknown XML attribute value: %s"),
+			inputBuffer);
 	      ParseHTMLError (currentDocument, msgBuffer);	
 	      }
 	   else
 	      TtaSetAttributeValue (currentAttribute, val, currentElement,
 				    currentDocument);
 	   break;
+
 	case 1:       /* integer */
 	   usscanf (inputBuffer, TEXT("%d"), &val);
 	   TtaSetAttributeValue (currentAttribute, val, currentElement,
 				 currentDocument);
 	   break;
+
 	case 2:       /* text */
 	   TtaSetAttributeText (currentAttribute, inputBuffer, currentElement,
 				currentDocument);
@@ -886,17 +951,20 @@ CHAR_T                c;
 	      ParseHTMLSpecificStyle (currentElement, inputBuffer,
 				      currentDocument, FALSE);
 	   break;
+
 	case 3:       /* reference */
 	   break;
 	}
      if (currentParserCtxt != NULL && !HTMLStyleAttribute)
-        (*(currentParserCtxt->AttributeComplete)) (currentAttribute,
-					currentElement, currentDocument);
+        if (currentParserCtxt->AttributeComplete)
+           (*(currentParserCtxt->AttributeComplete)) (currentAttribute,
+					      currentElement, currentDocument);
      }
 
    HTMLStyleAttribute = FALSE;
    currentAttribute = NULL;
- 
+   XlinkAttribute = FALSE;
+
    /* the input buffer is now empty */
    bufferLength = 0;
 }
@@ -948,8 +1016,10 @@ CHAR_T                c;
       /* entity not in the predifined table */
       {
       /* look in the entity table for the current DTD */
-      (*(currentParserCtxt->MapEntity)) (entityName, entityValue,
-					 MAX_ENTITY_LENGTH-1, &alphabet);
+      alphabet = EOS;
+      if (currentParserCtxt->MapEntity)
+         (*(currentParserCtxt->MapEntity)) (entityName, entityValue,
+					    MAX_ENTITY_LENGTH-1, &alphabet);
       lang = 0;
       if (alphabet == EOS)
 	 /* Unknown entity */
@@ -971,8 +1041,9 @@ CHAR_T                c;
 	}
       else
 	/* entity in an element */
-	(*(currentParserCtxt->EntityCreated)) (entityValue, lang, entityName,
-					       currentDocument);
+	if (currentParserCtxt->EntityCreated)
+	   (*(currentParserCtxt->EntityCreated)) (entityValue, lang,
+						  entityName, currentDocument);
       }
    entityNameLength = 0;
 }
@@ -1046,8 +1117,9 @@ CHAR_T                c;
 	PutInBuffer ('?');
       else
 	/* entity in an element */
-	(*(currentParserCtxt->EntityCreated)) (entityValue, -1, buffer,
-					       currentDocument);
+	if (currentParserCtxt->EntityCreated)
+	   (*(currentParserCtxt->EntityCreated)) (entityValue, -1, buffer,
+						  currentDocument);
       }
    entityNameLength = 0;
 }
@@ -1125,8 +1197,9 @@ CHAR_T                c;
 	PutInBuffer ('?');
       else
 	/* entity in an element */
-	(*(currentParserCtxt->EntityCreated)) (entityValue, -1, buffer,
-					       currentDocument);
+	if (currentParserCtxt->EntityCreated)
+	   (*(currentParserCtxt->EntityCreated)) (entityValue, -1, buffer,
+						  currentDocument);
       }
    entityNameLength = 0;
 }
@@ -1229,7 +1302,8 @@ CHAR_T                c;
    /* create a Thot element for the comment */
    elType.ElSSchema = NULL;
    elType.ElTypeNum = 0;
-   GetXMLElementType (TEXT("XMLcomment"), &elType, &mappedName, &cont, currentDocument);
+   GetXMLElementType (TEXT("XMLcomment"), &elType, &mappedName, &cont,
+		      currentDocument);
    if (elType.ElTypeNum <= 0)
      {
        usprintf (msgBuffer, TEXT("Unknown XML element %s"), inputBuffer);
@@ -1249,12 +1323,13 @@ CHAR_T                c;
        commentLineEl = TtaNewElement (currentDocument, elType);
        SetElemLineNumber (commentLineEl);
        TtaInsertFirstChild (&commentLineEl, commentEl, currentDocument);
-       /* create a TEXT element as the first child of element XMLcomment_line */
+       /* create a TEXT element as the first child of element XMLcomment_line*/
        elType.ElTypeNum = 1;
        commentText = TtaNewElement (currentDocument, elType);
        SetElemLineNumber (commentText);
        TtaInsertFirstChild (&commentText, commentLineEl, currentDocument);
-       TtaSetTextContent (commentText, TEXT(""), currentLanguage, currentDocument);
+       TtaSetTextContent (commentText, TEXT(""), currentLanguage,
+			  currentDocument);
      }
    /* the input buffer is now empty */
    bufferLength = 0;
@@ -1274,7 +1349,7 @@ UCHAR_T       c;
 {
    ElementType	elType;
    Element	commentLineEl;
-   USTRING      mappedName;
+   STRING      mappedName;
    CHAR_T	cont;
 
    if (c != EOS)
@@ -1288,13 +1363,15 @@ UCHAR_T       c;
 	 /* create a new XMLcomment_line element */
 	 elType.ElSSchema = NULL;
 	 elType.ElTypeNum = 0;
-	 GetXMLElementType (TEXT("XMLcomment_line"), &elType, &mappedName, &cont, currentDocument);
+	 GetXMLElementType (TEXT("XMLcomment_line"), &elType, &mappedName,
+			    &cont, currentDocument);
 	 commentLineEl = TtaNewElement (currentDocument, elType);
          SetElemLineNumber (commentLineEl);
 	 /* inserts the new XMLcomment_line after the previous one */
 	 TtaInsertSibling (commentLineEl, TtaGetParent (commentText), FALSE,
 			   currentDocument);
-	 /* create a TEXT element as the first child of element XMLcomment_line */
+	 /* create a TEXT element as the first child of element
+	    XMLcomment_line */
 	 elType.ElTypeNum = 1;
 	 commentText = TtaNewElement (currentDocument, elType);
          SetElemLineNumber (commentText);
@@ -1424,7 +1501,7 @@ CHAR_T                c;
 static void         Do_nothing (CHAR_T c)
 #else
 static void         Do_nothing (c)
-CHAR_T                c;
+CHAR_T              c;
 
 #endif
 {
@@ -1437,37 +1514,37 @@ typedef struct _Transition *PtrTransition;
 /* a transition of the automaton in "executable" form */
 typedef struct _Transition
   {
-     UCHAR_T       trigger;	/* the imput character that triggers
-					   the transition */
-     Proc                action;	/* the procedure to be called when
-					   the transition occurs */
-     state               newState;	/* the new state of the automaton
-					   after the transition */
-     PtrTransition       nextTransition;/* next transition from the same state*/
+     UCHAR_T	    trigger;	      /* the imput character that triggers the
+				         transition */
+     Proc           action;	      /* the procedure to be called when the
+				         transition occurs */
+     state          newState;	      /* the new state of the automaton after
+				         the transition */
+     PtrTransition  nextTransition;   /* next transition from the same state */
   }
 Transition;
 
 /* a state of the automaton */
 typedef struct _StateDescr
   {
-     state               automatonState;	/* the state */
-     PtrTransition       firstTransition;	/* first transition from that state */
+     state          automatonState;   /* the state */
+     PtrTransition  firstTransition;  /* first transition from that state */
   }
 StateDescr;
 
 /* the automaton that drives the XML parser */
 #define MAX_STATE 40
-static StateDescr	XMLautomaton[MAX_STATE];
+static StateDescr   XMLautomaton[MAX_STATE];
 
 /* a transition of the automaton in "source" form */
 typedef struct _sourceTransition
   {
-     state               initState;	/* initial state of transition */
-     CHAR_T                trigger;	/* the imput character that triggers
-					   the transition */
-     Proc                transitionAction;/* the procedure to be called when
-					   the transition occurs */
-     state               newState;	/* final state of the transition */
+     state          initState;	      /* initial state of transition */
+     CHAR_T         trigger;	      /* the imput character that triggers the
+					 transition */
+     Proc           transitionAction; /* the procedure to be called when the
+					 transition occurs */
+     state          newState;	      /* final state of the transition */
   }
 sourceTransition;
 
@@ -1796,7 +1873,8 @@ CHAR_T*   closingTag;
 		  /* new line in ordinary text */
 		  {
 		    /* suppress all spaces preceding the end of line */
-		    while (bufferLength > 0 && inputBuffer[bufferLength - 1] == SPACE)
+		    while (bufferLength > 0 &&
+			   inputBuffer[bufferLength - 1] == SPACE)
 		      bufferLength--;
 		    /* ignore newlines immediately after end of tag */
 		    if (immAfterTag)

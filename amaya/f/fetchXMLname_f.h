@@ -8,6 +8,7 @@
 
 extern SSchema GetMathMLSSchema ( Document doc );
 extern SSchema GetGraphMLSSchema ( Document doc );
+extern SSchema GetXLinkSSchema ( Document doc );
 extern SSchema GetXMLSSchema ( int XMLtype,
                                Document doc );
 extern void MapXMLElementType ( int XMLtype,
@@ -23,6 +24,7 @@ extern void GetXMLElementName ( ElementType elType,
 
 extern SSchema GetMathMLSSchema (/* Document doc */);
 extern SSchema GetGraphMLSSchema (/* Document doc */);
+extern SSchema GetXLinkSSchema (/* Document doc */);
 extern SSchema GetXMLSSchema (/* int XMLtype,
                                  Document doc */);
 extern void MapXMLElementType (/* int XMLtype,

@@ -10,6 +10,7 @@
 
 #define MATH_TYPE 1
 #define GRAPH_TYPE 2
+#define XLINK_TYPE 3
 
 #define MaxTypeNameLength 16
 typedef CHAR_T typeName[MaxTypeNameLength];

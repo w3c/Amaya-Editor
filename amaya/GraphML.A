@@ -2,6 +2,7 @@ APPLICATION GraphML;
 
 DEFAULT
    BEGIN
+   ElemPaste.Post -> GraphElemPasted;
    PRuleCreate.Pre -> GraphicsPRuleChange;
    PRuleModify.Pre -> GraphicsPRuleChange;
    ElemExtendSelect.Pre -> ExtendSelectGraphMLElement;
@@ -11,47 +12,16 @@ ELEMENTS
 
    GraphML:
 	ElemExport.Pre -> SetEmptyShapeAttribute;
-   Rectangle:
-	ElemPaste.Post -> GraphElemPasted;
    Line_:
-	BEGIN
-	ElemPaste.Post -> GraphElemPasted;
 	ElemGraphModify.Post -> ControlPointChanged;
-	END;
-   Rectangle:
-	ElemPaste.Post -> GraphElemPasted;
-   RoundRect:
-	ElemPaste.Post -> GraphElemPasted;
-   Circle:
-	ElemPaste.Post -> GraphElemPasted;
-   Oval:
-	ElemPaste.Post -> GraphElemPasted;
    Polyline:
-	BEGIN
-	ElemPaste.Post -> GraphElemPasted;
 	ElemGraphModify.Post -> ControlPointChanged;
-	END;
    Polygon:
-	BEGIN
-	ElemPaste.Post -> GraphElemPasted;
 	ElemGraphModify.Post -> ControlPointChanged;
-	END;
    Spline:
-	BEGIN
-	ElemPaste.Post -> GraphElemPasted;
 	ElemGraphModify.Post -> ControlPointChanged;
-	END;
    ClosedSpline:
-	BEGIN
-	ElemPaste.Post -> GraphElemPasted;
 	ElemGraphModify.Post -> ControlPointChanged;
-	END;
-   Text_:
-	ElemPaste.Post -> GraphElemPasted;
-   Math:
-	ElemPaste.Post -> GraphElemPasted;
-   Group:
-	ElemPaste.Post -> GraphElemPasted;
    GRAPHICS_UNIT:
 	ElemDelete.Post -> GraphLeafDeleted;
 

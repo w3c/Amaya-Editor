@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT MIT and INRIA, 1996.
+ *  (c) COPYRIGHT MIT and INRIA, 1996-2000
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -29,8 +29,8 @@ static ElemMapping    MathMLElemMappingTable[] =
    {TEXT("mchar"), 'E', MathML_EL_MCHAR},
    {TEXT("menclose"), SPACE, MathML_EL_MENCLOSE},
    {TEXT("merror"), SPACE, MathML_EL_MERROR},
-   {TEXT("mf"), SPACE, MathML_EL_MF},  /* for compatibility with an old version of
-				    MathML: WD-math-970704 */
+   {TEXT("mf"), SPACE, MathML_EL_MF},  /* for compatibility with an old version
+					  of MathML: WD-math-970704 */
    {TEXT("mfenced"), SPACE, MathML_EL_MFENCED},
    {TEXT("mfrac"), SPACE, MathML_EL_MFRAC},
    {TEXT("mglyph"), 'E', MathML_EL_MGLYPH},
@@ -74,16 +74,16 @@ static ElemMapping    GraphMLElemMappingTable[] =
    {TEXT("circle"), SPACE, GraphML_EL_Circle},
    {TEXT("closedspline"), SPACE, GraphML_EL_ClosedSpline},
    {TEXT("group"), SPACE, GraphML_EL_Group},
-   {TEXT("label"), 'X', GraphML_EL_Label},	/* see function GraphMLGetDTDName */
+   {TEXT("label"), 'X', GraphML_EL_Label}, /* see function GraphMLGetDTDName */
    {TEXT("line"), 'E', GraphML_EL_Line_},
-   {TEXT("math"), 'X', GraphML_EL_Math},	/* see function GraphMLGetDTDName */
+   {TEXT("math"), 'X', GraphML_EL_Math},   /* see function GraphMLGetDTDName */
    {TEXT("oval"), SPACE, GraphML_EL_Oval},
    {TEXT("polygon"), SPACE, GraphML_EL_Polygon},
    {TEXT("polyline"), 'E', GraphML_EL_Polyline},
    {TEXT("rect"), SPACE, GraphML_EL_Rectangle},
    {TEXT("roundrect"), SPACE, GraphML_EL_RoundRect},
    {TEXT("spline"), 'E', GraphML_EL_Spline},
-   {TEXT("text"), 'X', GraphML_EL_Text_},      /* see function GraphMLGetDTDName */
+   {TEXT("text"), 'X', GraphML_EL_Text_},  /* see function GraphMLGetDTDName */
    {TEXT(""), SPACE, 0}	/* Last entry. Mandatory */
 };
 #else /* GRAPHML */
@@ -107,10 +107,11 @@ Document	   doc;
 {
   SSchema	MathMLSSchema;
 
-   MathMLSSchema = TtaGetSSchema (TEXT("MathML"), doc);
-   if (MathMLSSchema == NULL)
-      MathMLSSchema = TtaNewNature(TtaGetDocumentSSchema(doc), TEXT("MathML"), TEXT("MathMLP"));
-   return (MathMLSSchema);
+  MathMLSSchema = TtaGetSSchema (TEXT("MathML"), doc);
+  if (MathMLSSchema == NULL)
+     MathMLSSchema = TtaNewNature(TtaGetDocumentSSchema(doc), TEXT("MathML"),
+				  TEXT("MathMLP"));
+  return (MathMLSSchema);
 }
 
 /*----------------------------------------------------------------------
@@ -128,12 +129,33 @@ Document	   doc;
 
   GraphMLSSchema = TtaGetSSchema (TEXT("GraphML"), doc);
   if (GraphMLSSchema == NULL)
-    GraphMLSSchema = TtaNewNature(TtaGetDocumentSSchema(doc), TEXT("GraphML"), TEXT("GraphMLP"));
+    GraphMLSSchema = TtaNewNature(TtaGetDocumentSSchema(doc), TEXT("GraphML"),
+				  TEXT("GraphMLP"));
   return (GraphMLSSchema);
 }
 
 /*----------------------------------------------------------------------
-   GetXMLSSchema returns the XMLML Thot schema for document doc.
+   GetXLinkSSchema returns the XLink Thot schema for document doc.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+SSchema            GetXLinkSSchema (Document doc)
+#else
+SSchema            GetXLinkSSchema (doc)
+Document	   doc;
+
+#endif
+{
+  SSchema	XLinkSSchema;
+
+  XLinkSSchema = TtaGetSSchema (TEXT("XLink"), doc);
+  if (XLinkSSchema == NULL)
+    XLinkSSchema = TtaNewNature(TtaGetDocumentSSchema(doc), TEXT("XLink"),
+				TEXT("XLinkP"));
+  return (XLinkSSchema);
+}
+
+/*----------------------------------------------------------------------
+   GetXMLSSchema returns the XML Thot schema for document doc.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 SSchema            GetXMLSSchema (int XMLtype, Document doc)
@@ -143,12 +165,14 @@ Document	   doc;
 int                XMLtype;
 #endif
 {
-   if (XMLtype == MATH_TYPE)
-     return GetMathMLSSchema (doc);
-   else if (XMLtype == GRAPH_TYPE)
-     return GetGraphMLSSchema (doc);
-   else
-     return NULL;
+  if (XMLtype == MATH_TYPE)
+    return GetMathMLSSchema (doc);
+  else if (XMLtype == GRAPH_TYPE)
+    return GetGraphMLSSchema (doc);
+  else if (XMLtype == XLINK_TYPE)
+    return GetGraphMLSSchema (doc);
+  else
+    return NULL;
 }
 
 

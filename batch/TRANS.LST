@@ -22,7 +22,7 @@ number
 	              [ 'Counters' SeqOfCounter ]
 	              [ 'Const' SeqOfConst ]
 	              [ 'Var' SeqOfVariable ]
-	                'Rules' TheRules
+	              [ 'Rules' TheRules ]
 	              [ 'Attributes' SeqOfAttr ]
 	              [ 'Presentation' SeqOfPres ]
 	              < 'TextTranslate' TSeqOfTransl >
