@@ -1718,7 +1718,9 @@ void ExtendSelection (PtrElement pEl, int rank, ThotBool fixed, ThotBool begin,
 	  oldLastEl = LastSelectedElement;
 	  oldFirstChar = FirstSelectedChar;
 	  oldLastChar = LastSelectedChar;
-	  if (oldLastChar == 0 && oldFirstEl == oldLastEl && oldFirstChar == oldLastChar)
+	  if (oldFirstEl->ElTerminal && oldFirstEl->ElLeafType != LtPicture &&
+	      oldLastChar == 0 && oldFirstEl == oldLastEl &&
+	      oldFirstChar == oldLastChar)
 	    {
 	      /* the whole element was selected */
 	      oldFirstChar = 1;
