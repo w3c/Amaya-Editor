@@ -412,48 +412,6 @@ STRING              parameters;
 
 
 /*----------------------------------------------------------------------
-   ExtractTarget extract the target name from document nane.        
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         ExtractTarget (STRING aName, STRING target)
-#else
-static void         ExtractTarget (aName, target)
-STRING              aName;
-STRING              target;
-#endif
-{
-   int                 lg, i;
-   STRING              ptr, oldptr;
-
-   if (!target || !aName)
-     /* bad target */
-     return;
-
-   target[0] = EOS;
-   lg = ustrlen (aName);
-   if (lg)
-     {
-	/* the name is not empty */
-	oldptr = ptr = &aName[0];
-	do
-	  {
-	     ptr = ustrrchr (oldptr, TEXT('#'));
-	     if (ptr)
-		oldptr = &ptr[1];
-	  }
-	while (ptr);
-
-	i = (int) (oldptr) - (int) (aName);	/* name length */
-	if (i > 1)
-	  {
-	     aName[i - 1] = EOS;
-	     if (i != lg)
-		ustrcpy (target, oldptr);
-	  }
-     }
-}
-
-/*----------------------------------------------------------------------
   SetArrowButton
   Change the appearance of the Back (if back == TRUE) or Forward button
   for a given document.
@@ -3343,6 +3301,7 @@ void               *ctx_cbf;
    documentname = TtaAllocString (MAX_LENGTH);
    parameters = TtaAllocString (MAX_LENGTH);
    tempfile = TtaAllocString (MAX_LENGTH);
+   tempfile[0] = EOS;
    pathname = TtaAllocString (MAX_LENGTH);
 
    ustrcpy (tempdocument, documentPath);
@@ -3368,7 +3327,11 @@ void               *ctx_cbf;
      {
        newdoc = IsDocumentLoaded (pathname, form_data);
        if (newdoc != 0)
-	 TtaRaiseView (newdoc, 1);
+	 {
+	   TtaRaiseView (newdoc, 1);
+	   /* don't add it to the doc's historic */
+	   history = FALSE;
+	 }
      }
    else
      {
@@ -3421,7 +3384,6 @@ void               *ctx_cbf;
 	 }
        else    
 	 {
-	   tempfile[0] = EOS;
 	   toparse = 0;
 	   /* In case of initial document, open the view before loading */
 	   if (doc == 0)

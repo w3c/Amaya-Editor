@@ -16,6 +16,7 @@
 
 #include "HTMLhistory_f.h"
 #include "init_f.h"
+#include "AHTURLTools_f.h"
 
 #define DOC_HISTORY_SIZE 32
 
@@ -41,6 +42,7 @@ typedef struct _GotoHistory_context
   Document             doc;
   int                  prevnext;
   ThotBool	       last;
+  ThotBool             next_doc_loaded;
 } GotoHistory_context;
 
 /* the history of all windows */
@@ -184,6 +186,63 @@ int             RelativePosition (doc, distance)
 }
 
 /*----------------------------------------------------------------------
+  IsNextDocLoaded
+  A IsDocumentLoaded frontend which returns TRUE if a given URL is already
+  being displayed in another window. 
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static ThotBool IsNextDocLoaded (const Document baseDoc, const STRING url, const STRING form_data, const ClickEvent CE_event)
+#else
+static ThotBool IsNextDocLoaded (Document baseDoc, url, form_data, CE_event)
+STRING url;
+STRING form_data;
+ClickEvent  CE_event;
+#endif
+{
+  STRING              tempdocument;
+  STRING              target;
+  STRING              documentname;
+  STRING              parameters;
+  STRING              pathname;
+  ThotBool loaded;
+
+  if (url == (STRING) NULL)
+    return FALSE;
+
+  tempdocument = TtaAllocString (MAX_LENGTH);
+  target = TtaAllocString (MAX_LENGTH);
+  documentname = TtaAllocString (MAX_LENGTH);
+  parameters = TtaAllocString (MAX_LENGTH);
+  pathname = TtaAllocString (MAX_LENGTH);
+
+  ustrcpy (tempdocument, url);
+  ExtractParameters (tempdocument, parameters);
+  /* Extract the target if necessary */
+  ExtractTarget (tempdocument, target);
+
+  /* Add the  base content if necessary */
+  if (CE_event == CE_RELATIVE || CE_event == CE_FORM_GET
+      || CE_event == CE_FORM_POST || CE_event == CE_MAKEBOOK)
+    NormalizeURL (tempdocument, baseDoc, pathname, documentname, NULL);
+  else
+    NormalizeURL (tempdocument, 0, pathname, documentname, NULL);
+
+  /* if it's a file: url, we remove the protocol, as it
+     is a local file */
+  ConvertFileURL (pathname);
+  
+  loaded = IsDocumentLoaded (pathname, form_data);
+
+  TtaFreeMemory (pathname);
+  TtaFreeMemory (tempdocument);
+  TtaFreeMemory (target);
+  TtaFreeMemory (documentname);
+  TtaFreeMemory (parameters);
+
+  return (loaded != 0);
+}
+
+/*----------------------------------------------------------------------
    GotoPreviousHTML_callback
    This function is called when the document is loaded
   ----------------------------------------------------------------------*/
@@ -223,7 +282,7 @@ void *context;
       TtaShowElement (doc, 1, el, DocHistory[doc][prev].HistDistance);
 
       /* set the Forward button on if it was the last document in the history */
-      if (ctx->last)
+      if (!ctx->next_doc_loaded && ctx->last)
 	SetArrowButton (doc, FALSE, TRUE);
     }
   TtaFreeMemory (ctx);
@@ -248,6 +307,7 @@ View                view;
    int                 method;
    ThotBool	       last, hist;
    ThotBool            same_form_data;
+   ThotBool            next_doc_loaded = FALSE;
 
    if (doc < 0 || doc >= DocumentTableLength)
       return;
@@ -282,51 +342,68 @@ View                view;
    /* if the document has been edited, ask the user to confirm, except
       if it's simply a jump in the same document */
    if (DocumentURLs[doc] != NULL)
-     if (ustrcmp(DocumentURLs[doc], url)
-	 || !same_form_data)
-       if (!CanReplaceCurrentDocument (doc, view))
-         return;
+     {
+       if (ustrcmp(DocumentURLs[doc], url)
+	   || !same_form_data)
+	 {
+	   /* is the next document already loaded? */
+	   next_doc_loaded = IsNextDocLoaded (doc, url, form_data, method);
+	   if (!next_doc_loaded && !CanReplaceCurrentDocument (doc, view))
+	     return;
+	 }
+     }
 
-   /* the current document must be put in the history if it's the last one */
-   hist = FALSE;
-   last = FALSE;
-   if (DocHistory[doc][DocHistoryIndex[doc]].HistUrl == NULL)
+
+   if (!next_doc_loaded)
      {
-       last = TRUE;
-       hist = TRUE;
-     }
-   else
-     {
-       i = DocHistoryIndex[doc];
-       i++;
-       i %= DOC_HISTORY_SIZE;
-       if (DocHistory[doc][i].HistUrl == NULL)
-	 last = TRUE;
-     }
+       /* the current document must be put in the history if it's the last one */
+       hist = FALSE;
+       last = FALSE;
+       if (DocHistory[doc][DocHistoryIndex[doc]].HistUrl == NULL)
+	 {
+	   last = TRUE;
+	   hist = TRUE;
+	 }
+       else
+	 {
+	   i = DocHistoryIndex[doc];
+	   i++;
+	   i %= DOC_HISTORY_SIZE;
+	   if (DocHistory[doc][i].HistUrl == NULL)
+	     last = TRUE;
+	 }
 
    /* set the Back button off if there is no previous document in history */
-   i = prev;
-   if (i ==  0)
-      i = DOC_HISTORY_SIZE - 1;
-   else
-      i--;
-   if (DocHistory[doc][i].HistUrl == NULL)
-      /* there is no previous document, set the Back button OFF */
-      SetArrowButton (doc, TRUE, FALSE);
+       i = prev;
+       if (i ==  0)
+	 i = DOC_HISTORY_SIZE - 1;
+       else
+	 i--;
+       if (DocHistory[doc][i].HistUrl == NULL)
+	 /* there is no previous document, set the Back button OFF */
+	 SetArrowButton (doc, TRUE, FALSE);
+     }
 
    /* save the context */
    ctx = TtaGetMemory (sizeof (GotoHistory_context));
    ctx->prevnext = prev;
    ctx->last = last;
    ctx->doc = doc;
+   ctx->next_doc_loaded = next_doc_loaded;
 
-   /* load the previous document */
-   if (hist)
-     /* record the current position in the history */
-     AddDocHistory (doc, DocumentURLs[doc], DocumentMeta[doc]->form_data,
-		    DocumentMeta[doc]->method);
+   /* 
+   ** load (or jump to) the previous document 
+   */
+   if (!next_doc_loaded)
+     {
+     if (hist)
+       /* record the current position in the history */
+       AddDocHistory (doc, DocumentURLs[doc], DocumentMeta[doc]->form_data,
+		      DocumentMeta[doc]->method);
+     
+     DocHistoryIndex[doc] = prev;
+     }
 
-   DocHistoryIndex[doc] = prev;
    /* is it the current document ? */     
    if (DocumentURLs[doc] && !ustrcmp (url, DocumentURLs[doc]) && same_form_data)
      {
@@ -402,6 +479,7 @@ View                view;
    int           method;
    int		 next, i;
    ThotBool      same_form_data;
+   ThotBool      next_doc_loaded = FALSE;
 
    if (doc < 0 || doc >= DocumentTableLength)
       return;
@@ -418,6 +496,11 @@ View                view;
    if (DocHistory[doc][next].HistUrl == NULL)
       return;
 
+   /* Get the next document information */
+   url = DocHistory[doc][next].HistUrl;
+   form_data = DocHistory[doc][next].form_data;
+   method = DocHistory[doc][next].method;
+
    /* is the form_data the same? */
    if (!form_data && (!DocumentMeta[doc] || !DocumentMeta[doc]->form_data))
      same_form_data = TRUE;
@@ -430,41 +513,51 @@ View                view;
    /* if the document has been edited, ask the user to confirm, except
       if it's simply a jump in the same document */
    if (DocumentURLs[doc] != NULL)
-     if (ustrcmp(DocumentURLs[doc], DocHistory[doc][next].HistUrl)
-	 || !same_form_data)
-       if (!CanReplaceCurrentDocument (doc, view))
-         return;
+     {
+       if (ustrcmp (DocumentURLs[doc], DocHistory[doc][next].HistUrl)
+	   || !same_form_data)
+	 {
+	   /* is the next document already loaded? */
+	   next_doc_loaded = IsNextDocLoaded (doc, url, form_data, method);
+	   if (!CanReplaceCurrentDocument (doc, view))
+	     return;
+	 }
+     }
 
-   /* set the Back button on if it's off */
-   i = DocHistoryIndex[doc];
-   if (i ==  0)
-      i = DOC_HISTORY_SIZE - 1;
-   else
-      i--;
-   if (DocHistory[doc][i].HistUrl == NULL)
-      /* there is no document before the current one. The Back button is
-         normally OFF */
-      /* set the Back button ON */
-      SetArrowButton (doc, TRUE, TRUE);
+   if (!next_doc_loaded)
+     {
+       /* set the Back button on if it's off */
+       i = DocHistoryIndex[doc];
+       if (i ==  0)
+	 i = DOC_HISTORY_SIZE - 1;
+       else
+	 i--;
+       if (DocHistory[doc][i].HistUrl == NULL)
+	 /* there is no document before the current one. The Back button is
+	    normally OFF */
+	 /* set the Back button ON */
+	 SetArrowButton (doc, TRUE, TRUE);
 
-   /* set the Forward button off if the next document is the last one
-      in the history */
-   i = next;
-   i++;
-   i %= DOC_HISTORY_SIZE;
-   if (DocHistory[doc][i].HistUrl == NULL)
-      SetArrowButton (doc, FALSE, FALSE);
-
-   /* load the next document */
-   DocHistoryIndex[doc] = next;
-   url = DocHistory[doc][next].HistUrl;
-   form_data = DocHistory[doc][next].form_data;
-   method = DocHistory[doc][next].method;
+       /* set the Forward button off if the next document is the last one
+	  in the history */
+       i = next;
+       i++;
+       i %= DOC_HISTORY_SIZE;
+       if (DocHistory[doc][i].HistUrl == NULL)
+	 SetArrowButton (doc, FALSE, FALSE);
+     }
+   
+   /*
+   ** load the next document
+   */
+   if (!next_doc_loaded)
+     DocHistoryIndex[doc] = next;
 
    /* save the context */
    ctx = TtaGetMemory (sizeof (GotoHistory_context));
    ctx->prevnext = next;
    ctx->doc = doc;
+   ctx->next_doc_loaded = next_doc_loaded;
 
    /* is it the current document ? */
    if (DocumentURLs[doc] && !ustrcmp (url, DocumentURLs[doc]) && same_form_data)

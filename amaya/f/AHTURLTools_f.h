@@ -30,6 +30,8 @@ extern ThotBool IsValidProtocol ( const STRING url );
 extern STRING GetBaseURL ( Document doc );
 extern STRING GetLocalPath ( Document doc,
                              STRING url );
+extern void ExtractTarget ( STRING aName, 
+			    STRING target );
 extern void ConvertFileURL ( STRING url );
 extern void NormalizeURL ( STRING orgName,
                            Document doc,
@@ -76,6 +78,8 @@ extern ThotBool IsValidProtocol (/* const STRING url */);
 extern STRING GetBaseURL (/* Document doc */);
 extern STRING GetLocalPath (/* Document doc,
                                STRING url */);
+extern void ExtractTarget (/*  STRING aName, 
+			       STRING target */);
 extern void ConvertFileURL (/* STRING url */);
 extern void NormalizeURL (/* STRING orgName,
                              Document doc,

@@ -773,7 +773,7 @@ STRING              action;
 		      ustrcat (urlName, buffer);
 		      ***/
 		    GetHTMLDocument (urlName, buffer, doc, doc,
-				     CE_FORM_GET, TRUE, FALSE, FALSE);
+				     CE_FORM_GET, TRUE, NULL, NULL);
 		    TtaFreeMemory (urlName);
 		 }
 	       break;

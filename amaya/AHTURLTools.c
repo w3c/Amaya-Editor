@@ -830,6 +830,48 @@ STRING     url;
 }
 
 /*----------------------------------------------------------------------
+   ExtractTarget extract the target name from document nane.        
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void         ExtractTarget (STRING aName, STRING target)
+#else
+void         ExtractTarget (aName, target)
+STRING              aName;
+STRING              target;
+#endif
+{
+   int                 lg, i;
+   STRING              ptr, oldptr;
+
+   if (!target || !aName)
+     /* bad target */
+     return;
+
+   target[0] = EOS;
+   lg = ustrlen (aName);
+   if (lg)
+     {
+	/* the name is not empty */
+	oldptr = ptr = &aName[0];
+	do
+	  {
+	     ptr = ustrrchr (oldptr, TEXT('#'));
+	     if (ptr)
+		oldptr = &ptr[1];
+	  }
+	while (ptr);
+
+	i = (int) (oldptr) - (int) (aName);	/* name length */
+	if (i > 1)
+	  {
+	     aName[i - 1] = EOS;
+	     if (i != lg)
+		ustrcpy (target, oldptr);
+	  }
+     }
+}
+
+/*----------------------------------------------------------------------
    ConvertFileURL
    If the URL starts with file: prefix, it removes the protocol so that we
    can use it as a local filename
