@@ -557,9 +557,6 @@ HTRequest           *request;
   if (!me)
       return HT_ERROR;
 
-  if (me->method == METHOD_PUT)
-    return HT_OK;
-
 #ifdef DEBUG_LIBWWW
   fprintf(stderr, "AHTOpen_file: start for object : %p\n", me);
 #endif /* DEBUG_LIBWWW */
@@ -570,6 +567,12 @@ HTRequest           *request;
       fprintf(stderr, "AHTOpen_file: caught an abort request, skipping it\n");
 #endif /* DEBUG_LIBWWW */
 
+      return HT_OK;
+    }
+
+  if (me->method == METHOD_PUT)
+    {
+      me->reqStatus = HT_WAITING;
       return HT_OK;
     }
 
@@ -898,7 +901,6 @@ int                 status;
 			    (me->method == METHOD_PUT)))
      {
        PrintTerminateStatus (me, status);
-       
      } 
 
    ProcessTerminateRequest (request, response, context, status);
@@ -1135,7 +1137,11 @@ static void         AHTProtocolInit (void)
   HTTransport_add("buffered_tcp", HT_TP_SINGLE, HTReader_new, 
 		  HTBufferWriter_new);
   HTProtocol_add ("http", "buffered_tcp", HTTP_PORT, NO, HTLoadHTTP, NULL);
+#ifdef _WINDOWS
+  HTProtocol_add ("file", "local", 0, YES, HTLoadFile, NULL);
+#else
   HTProtocol_add ("file", "local", 0, NO, HTLoadFile, NULL);
+#endif _WINDOWS
 #ifdef AMAYA_WWW_CACHE
    HTProtocol_add("cache",  "local", 0, YES, HTLoadCache, NULL);
 #endif /* AMAYA_WWW_CACHE */
@@ -1760,10 +1766,10 @@ void                QueryInit ()
 #endif
 }
 
-#ifndef _WINDOWS
 /*----------------------------------------------------------------------
   LoopForStop
-  a copy of the Thop event loop so we can handle the stop button in Unix.
+  a copy of the Thop event loop so we can handle the stop button in Unix
+  and preemptive requests under Windows
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static int          LoopForStop (AHTReqContext * me)
@@ -1771,7 +1777,32 @@ static int          LoopForStop (AHTReqContext * me)
 static int          LoopForStop (AHTReqContext * me)
 #endif
 {
+#ifdef _WINDOWS
+  MSG msg;
+  unsigned long libwww_msg;
+  HWND old_active_window, libwww_window;
+  int  status_req = HT_OK;
 
+  old_active_window = GetActiveWindow ();
+  libwww_window = HTEventList_getWinHandle (&libwww_msg);
+
+  while (GetMessage (&msg, libwww_window, 0, 0)
+	 && me->reqStatus != HT_END && me->reqStatus != HT_ERR
+	 && me->reqStatus != HT_ABORT && AmayaIsAlive ())
+    {
+      if (msg.message != WM_QUIT)
+	{
+	  TranslateMessage (&msg);
+	  DispatchMessage (&msg);
+	}
+      else
+	break;
+      
+    }
+  if (!AmayaIsAlive ())
+    /* Amaya was killed by one of the callback handlers */
+    exit (0);
+#else /* _WINDOWS */
    extern ThotAppContext app_cont;
    XEvent                ev;
    XtInputMask           status;
@@ -1797,7 +1828,7 @@ static int          LoopForStop (AHTReqContext * me)
 	       TtaHandleOneEvent (&ev);
 	 }
    }
-
+#endif /* _WINDOWS */
    switch (me->reqStatus) {
 	  case HT_ERR:
           case HT_ABORT:
@@ -1813,7 +1844,6 @@ static int          LoopForStop (AHTReqContext * me)
    }
    return (status_req);
 }
-#endif /* _WINDOWS */
 
 /*----------------------------------------------------------------------
   QueryClose
@@ -2166,7 +2196,6 @@ char 	     *content_type;
        me->outputfile = outputfile;
        me->urlName = urlName;
        /* force windows SYNC requests to always be non preemptive */
-       /* @@@ verify this */
        HTRequest_setPreemptive (me->request, YES);
      }
 #else /* !_WINDOWS */
@@ -2175,8 +2204,8 @@ char 	     *content_type;
        me->urlName = urlName;
      }
    /***
-     Change for taking into account the stop button:
-     The requests will be always asynchronous, however, if mode=AMAYA_SYNC,
+     In order to take into account the stop button, 
+     the requests will be always asynchronous, however, if mode=AMAYA_SYNC,
      we will loop until the document has been received or a stop signal
      generated
      ****/
@@ -2259,26 +2288,22 @@ char 	     *content_type;
 	 InvokeGetObjectWWW_callback (docid, urlName, outputfile, 
 				      terminate_cbf, context_tcbf, HT_ERROR);
        /* terminate_handler wasn't called */
-       if (mode & AMAYA_SYNC || mode & AMAYA_ISYNC)
-	 AHTReqContext_delete (me);
+       AHTReqContext_delete (me);
      }
    else
-   /* end treatment for SYNC requests */
+     /* end treatment for SYNC requests */
      if ((mode & AMAYA_SYNC) || (mode & AMAYA_ISYNC))
        {
-#ifndef _WINDOWS
-	 /* part of the UNIX stop button handler */
+	 /* wait here untilt the asynchronous request finishes */
 	 status = LoopForStop (me);
-#endif /* _!WINDOWS */
-	 /* if status returns HT_ERROR, maybe we should invoke the callback
-	    too */
+	 /* if status returns HT_ERROR, should we invoke the callback? */
 	 /* @@@ this doesn't seem correct ... me->request may not exist ... */
 	 if (!HTRequest_kill (me->request))
 	   AHTReqContext_delete (me);
        }
 
-   /* an interface problem!!! */
-   return (status == YES ? 0 : -1);
+    /* an interface problem!!! */
+    return (status == YES ? 0 : -1);
 }
 
 /*----------------------------------------------------------------------
@@ -2432,13 +2457,13 @@ void               *context_tcbf;
 
    /* define other request characteristics */
 #ifdef _WINDOWS
-   HTRequest_setPreemptive (me->request, YES);
+   HTRequest_setPreemptive (me->request, NO);
 #else
    HTRequest_setPreemptive (me->request, NO);
 #endif /* _WINDOWS */
 
-   if (mode & AMAYA_NOCACHE)
-     HTRequest_setReloadMode (me->request, HT_CACHE_FLUSH);
+   /* don't use the cache while saving a document */
+   HTRequest_setReloadMode (me->request, HT_CACHE_FLUSH);
 
    /* prepare the URLname that will be displayed in teh status bar */
    ChopURL (me->status_urlName, me->urlName);
@@ -2451,20 +2476,11 @@ void               *context_tcbf;
      {
 	/* part of the stop button handler */
 	if ((mode & AMAYA_SYNC) || (mode & AMAYA_ISYNC))
-	  {
-#ifndef _WINDOWS
-	     status = LoopForStop (me);
-#endif /* _WINDOWS */
-	     if (!HTRequest_kill (me->request))
-	       AHTReqContext_delete (me);
-	  }
+	    status = LoopForStop (me);
      }
-   else
-     {
-      if (! HTRequest_kill (me->request))
-        AHTReqContext_delete (me);
-     }
- 
+   if (!HTRequest_kill (me->request))
+     AHTReqContext_delete (me);
+
    TtaHandlePendingEvents ();
 
    return (status == YES ? 0 : -1);
