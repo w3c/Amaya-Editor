@@ -37,12 +37,13 @@
 /*----------------------------------------------------------------------
   GetLineWeight computes the line weight of an abstract box.
   ----------------------------------------------------------------------*/
-static int GetLineWeight (PtrAbstractBox pAb)
+static int GetLineWeight (PtrAbstractBox pAb, int frame)
 {
   if (pAb == NULL)
     return (0);
   else
-    return PixelValue (pAb->AbLineWeight, pAb->AbLineWeightUnit, pAb, 0);
+    return PixelValue (pAb->AbLineWeight, pAb->AbLineWeightUnit, pAb,
+		       ViewFrameTable[frame - 1].FrMagnification);
 }
 
 
@@ -146,7 +147,7 @@ static void    DisplaySymbol (PtrBox pBox, int frame, ThotBool selected)
 	    DisplayStringSelection (frame, 0, pBox->BxW, pBox);
 	  
 	  /* Line thickness */
-	  i = GetLineWeight (pBox->BxAbstractBox);
+	  i = GetLineWeight (pBox->BxAbstractBox, frame);
 	  
 	  switch (pBox->BxAbstractBox->AbShape)
 	    {
@@ -371,7 +372,7 @@ void  DisplayGraph (PtrBox pBox, int frame, ThotBool selected)
 	  height = 0;
 
 	/* Style and thickness of drawing */
-	i = GetLineWeight (pAb);
+	i = GetLineWeight (pAb, frame);
 	switch (pAb->AbLineStyle)
 	  {
 	  case 'S':
@@ -678,7 +679,7 @@ void DisplayPolyLine (PtrBox pBox, int frame, ThotBool selected)
 	width = 0;
       
       /* Style and thickness of the line */
-      i = GetLineWeight (pAb);
+      i = GetLineWeight (pAb, frame);
       switch (pAb->AbLineStyle)
 	{
 	case 'S':
@@ -802,7 +803,7 @@ void DisplayPath (PtrBox pBox, int frame, ThotBool selected)
 	   pBox->BxTPadding - pFrame->FrYOrg;
       
       /* Style and thickness of the line */
-      i = GetLineWeight (pAb);
+      i = GetLineWeight (pAb, frame);
       switch (pAb->AbLineStyle)
 	{
 	case 'S':
