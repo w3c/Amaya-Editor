@@ -6,6 +6,20 @@
 #include "wx/wx.h"
 #include "wx/panel.h"
 
+class AmayaPopupL : public wxListBox
+{
+ public:
+  DECLARE_DYNAMIC_CLASS(AmayaPopupL)
+
+  AmayaPopupL( wxWindow * parent = NULL );
+  virtual ~AmayaPopupL();
+
+ protected:
+  DECLARE_EVENT_TABLE()
+  void OnKillFocus( wxFocusEvent & event );
+  void OnSetFocus( wxFocusEvent & event );
+};
+
 /*
  * =====================================================================================
  *        Class:  AmayaURLBar
@@ -31,7 +45,7 @@ class AmayaPopupList : public wxPanel
   void OnKillFocus( wxFocusEvent & event );
 
  protected:
-  wxListBox * m_pList;
+  AmayaPopupL * m_pList;
 
 };
 

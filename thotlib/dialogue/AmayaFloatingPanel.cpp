@@ -65,7 +65,7 @@ void AmayaFloatingPanel::OnClose( wxCloseEvent& event )
   wxLogDebug(_T("AmayaFloatingPanel - OnClose") );
 
   m_pPanelContent->Reparent(m_pPanelContentParent);
-  m_pPanel->DoUnstick();
+  m_pPanel->DoUnfloat();
 
   event.Skip();
 }

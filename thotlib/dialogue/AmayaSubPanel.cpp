@@ -24,6 +24,7 @@
 #include "frame_tv.h"
 
 #include "message_wx.h"
+#include "registry_wx.h"
 #include "paneltypes_wx.h"
 #include "appdialogue_wx.h"
 #include "appdialogue_wx_f.h"
@@ -32,8 +33,7 @@
 #include "AmayaSubPanel.h"
 #include "AmayaFloatingPanel.h"
 #include "AmayaNormalWindow.h"
-
-#include "registry_wx.h"
+#include "AmayaSubPanelManager.h"
 
 IMPLEMENT_DYNAMIC_CLASS(AmayaSubPanel, wxPanel)
 
@@ -55,27 +55,27 @@ AmayaSubPanel::AmayaSubPanel( wxWindow *      p_parent_window
 			      )
   :  wxPanel( p_parent_window, id, pos, size, style )
      ,m_pPanel(NULL)
-     ,m_IsExpanded(true)
-     ,m_IsFloating(false)
-     ,m_DoUnstick_Lock(false)
+     ,m_State( (wxAMAYA_SPANEL_EXPANDED & ~wxAMAYA_SPANEL_FLOATING) )
+     ,m_DoUnfloat_Lock(false)
      ,m_pParentNWindow(p_parent_nwindow)
+     ,m_PanelType(panel_xrcid)
 {
-  wxLogDebug( _T("AmayaSubPanel::AmayaSubPanel: ")+panel_xrcid );
+  wxLogDebug( _T("AmayaSubPanel::AmayaSubPanel: ")+m_PanelType);
+
+  // keep a reference on my manager
+  m_pManager = AmayaSubPanelManager::GetInstance();
 
   // load resource
-  m_pPanel = wxXmlResource::Get()->LoadPanel(this, panel_xrcid);
+  m_pPanel = wxXmlResource::Get()->LoadPanel(this, m_PanelType);
   m_pTopSizer = new wxBoxSizer( wxVERTICAL );
   SetSizer(m_pTopSizer);
   m_pTopSizer->Add( m_pPanel, 1, wxALL | wxEXPAND , 0 );
   m_pTopSizer->Fit(this);
   GetParent()->Layout();
 
-  // remember the size of the content part .. used to size the expand/unexpand stats
+  // get reference of these usefull childs
   m_pPanelContent = XRCCTRL(*this, "wxID_PANEL_CONTENT", wxPanel);
-  m_pPanelTitle   = XRCCTRL(*this, "wxID_PANEL_TITLE", wxPanel);
-  m_ContentSize = m_pPanelContent->GetSize();
-  m_TitleSize   = m_pPanelTitle->GetSize();
-
+  
   // load bitmaps
   m_Bitmap_DetachOn  = wxBitmap( TtaGetResourcePathWX(WX_RESOURCES_ICON, "detach_floating.gif" ) );
   m_Bitmap_DetachOff = wxBitmap( TtaGetResourcePathWX(WX_RESOURCES_ICON, "detach.gif" ) );
@@ -84,8 +84,8 @@ AmayaSubPanel::AmayaSubPanel( wxWindow *      p_parent_window
 
   // setup labels
   XRCCTRL(*this, "wxID_BUTTON_DETACH", wxBitmapButton)->SetToolTip(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_ATTACHDETACH)));
-
-  DebugPanelSize(_T("AmayaSubPanel()"));
+  // register myself to the manager, so I will be avertised that another panel is floating ...
+  m_pManager->RegisterSubPanel( this );
 }
 
 /*
@@ -98,7 +98,8 @@ AmayaSubPanel::AmayaSubPanel( wxWindow *      p_parent_window
  */
 AmayaSubPanel::~AmayaSubPanel()
 {
-  
+  // unregister myself to the manager, so nothing should be asked to me in future
+  m_pManager->UnregisterSubPanel( this );  
 }
 
 /*----------------------------------------------------------------------
@@ -111,7 +112,7 @@ void AmayaSubPanel::UnExpand()
   wxLogDebug( _T("AmayaSubPanel::UnExpand") );
 
   // do nothing if the content is allready unexpanded or if it is floating
-  if (!m_IsExpanded || m_IsFloating)
+  if ( !m_pManager->CanChangeState(this, (m_State & ~wxAMAYA_SPANEL_EXPANDED)) )
     return;
 
   // setup bitmaps
@@ -125,11 +126,8 @@ void AmayaSubPanel::UnExpand()
   wxSizer * p_sizer = m_pPanelContent->GetContainingSizer();
   p_sizer->Show(m_pPanelContent,false);
   GetParent()->Layout();
-
-  //  m_pPanelContent->SetClientSize( wxSize(-1, 0) );
-  DebugPanelSize( _T("UnExpand") );
   
-  m_IsExpanded = false;
+  m_State = (m_State & ~wxAMAYA_SPANEL_EXPANDED);
 }
 
 /*----------------------------------------------------------------------
@@ -142,7 +140,7 @@ void AmayaSubPanel::Expand()
   wxLogDebug( _T("AmayaSubPanel::Expand") );
 
   // do nothing if the content is allready expanded or if it is floating
-  if (m_IsExpanded || m_IsFloating)
+  if ( !m_pManager->CanChangeState(this, (m_State | wxAMAYA_SPANEL_EXPANDED)) )
     return;
 
   // setup bitmaps
@@ -157,86 +155,31 @@ void AmayaSubPanel::Expand()
   p_sizer->Show(m_pPanelContent,true);
   GetParent()->Layout();
 
-  //m_pPanelContent->SetClientSize( wxSize(-1, m_ContentSize.y) );
-  DebugPanelSize( _T("Expand") );
-
-  m_IsExpanded = true;
+  m_State = (m_State | wxAMAYA_SPANEL_EXPANDED);
   
   // call the update callback only if it has been requested
   if (m_ShouldBeUpdated)
     DoUpdate();
 }
+
 /*----------------------------------------------------------------------
-  OnExpand is called when the user click on the expand button
+  DoFloat detach the subpanel from the AmayaWindow
   params:
   returns:
   ----------------------------------------------------------------------*/
-void AmayaSubPanel::OnExpand( wxCommandEvent& event )
+void AmayaSubPanel::DoFloat()
 {
-  wxLogDebug( _T("AmayaSubPanel::OnExpand") );
+  wxLogDebug( _T("AmayaSubPanel::DoFloat") );
 
-  // switch the expand state
-  if (m_IsExpanded)
-    UnExpand();
-  else
-    Expand();
+  // can stick ?
+  if ( !m_pManager->CanChangeState(this, (m_State | wxAMAYA_SPANEL_FLOATING)) )
+    return;
 
-  DebugPanelSize( _T("After-OnExpand") );
-}
+  // save the expand state to be able to restore it when reattaching the panel
+  m_IsExpBeforeDetach = IsExpanded();
+  // force the panel to unexpand
+  UnExpand();
 
-/*----------------------------------------------------------------------
-  OnDetach is called when the user click on the detach button
-  params:
-  returns:
-  ----------------------------------------------------------------------*/
-void AmayaSubPanel::OnDetach( wxCommandEvent& event )
-{
-  wxLogDebug( _T("AmayaSubPanel::OnDetach") );
-
-  if (m_IsFloating)
-    {
-      // the panel is floating, we must reattach it
-      DoUnstick();
-
-      // restore the old expand state
-      if (m_IsExpBeforeDetach)
-	Expand();
-      else
-	UnExpand();
-    }
-  else
-    {
-      // the panel is attached
-
-      // save the expand state to be able to restore it when reattaching the panel
-      m_IsExpBeforeDetach = m_IsExpanded;
-      // force the panel to unexpand
-      UnExpand();
-
-      // detach the panel
-      DoStick();
-    }
-}
-
-/*----------------------------------------------------------------------
-  only for debug purpose
-  params:
-  returns:
-  ----------------------------------------------------------------------*/
-void AmayaSubPanel::DebugPanelSize( const wxString & prefix )
-{
-  wxLogDebug( _T("AmayaSubPanel::DebugPanelSize[")+prefix+_T("] this=(%d,%d)"), GetSize().x, GetSize().y );
-  wxLogDebug( _T("AmayaSubPanel::DebugPanelSize[")+prefix+_T("] title=(%d,%d)"), m_pPanelTitle->GetSize().x, m_pPanelTitle->GetSize().y );
-  wxLogDebug( _T("AmayaSubPanel::DebugPanelSize[")+prefix+_T("] content=(%d,%d)"), m_pPanelContent->GetSize().x, m_pPanelContent->GetSize().y );
-}
-
-/*----------------------------------------------------------------------
-  DoStick detach the subpanel from the AmayaWindow
-  params:
-  returns:
-  ----------------------------------------------------------------------*/
-void AmayaSubPanel::DoStick()
-{
   // disable the expand button
   wxBitmapButton* p_button_exp = XRCCTRL(*this, "wxID_BUTTON_EXPAND", wxBitmapButton);
   p_button_exp->Disable();
@@ -254,7 +197,7 @@ void AmayaSubPanel::DoStick()
   // open a new floating window
   m_pFloatingPanel = new AmayaFloatingPanel( this, -1, wxGetMousePosition() );
   m_pFloatingPanel->Show();
-  m_IsFloating = true;
+  m_State = (m_State | wxAMAYA_SPANEL_FLOATING);
 
   Refresh();
   GetParent()->Layout();
@@ -265,15 +208,21 @@ void AmayaSubPanel::DoStick()
 }
 
 /*----------------------------------------------------------------------
-  DoUnstick attach the subpanel to AmayaWindow
+  DoUnfloat attach the subpanel to AmayaWindow
   params:
   returns:
   ----------------------------------------------------------------------*/
-void AmayaSubPanel::DoUnstick()
+void AmayaSubPanel::DoUnfloat()
 {
-  if (m_DoUnstick_Lock)
+  wxLogDebug( _T("AmayaSubPanel::DoUnfloat") );
+
+  // can unstick ?
+  if ( !m_pManager->CanChangeState(this, (m_State & ~wxAMAYA_SPANEL_FLOATING)) )
     return;
-  m_DoUnstick_Lock = true;
+
+  if (m_DoUnfloat_Lock)
+    return;
+  m_DoUnfloat_Lock = true;
 
   // enable the expand button
   wxBitmapButton* p_button_exp = XRCCTRL(*this, "wxID_BUTTON_EXPAND", wxBitmapButton);
@@ -281,7 +230,7 @@ void AmayaSubPanel::DoUnstick()
 
   // setup bitmaps
   wxBitmapButton* p_button = XRCCTRL(*this, "wxID_BUTTON_DETACH", wxBitmapButton);
-  p_button->SetBitmapLabel(    m_Bitmap_DetachOff );
+  p_button->SetBitmapLabel( m_Bitmap_DetachOff );
 //  p_button->SetBitmapSelected( wxBitmap() );
 //  p_button->SetBitmapFocus(    wxBitmap() );
 
@@ -289,7 +238,7 @@ void AmayaSubPanel::DoUnstick()
   if (m_pFloatingPanel)
     m_pFloatingPanel->Close();
   m_pFloatingPanel = NULL;
-  m_IsFloating = false;
+  m_State = (m_State & ~wxAMAYA_SPANEL_FLOATING);
 
   // setup panel style
   wxPanel* p_panel_detach = XRCCTRL(*this, "wxID_PANEL_CONTENT_DETACH", wxPanel);
@@ -298,7 +247,50 @@ void AmayaSubPanel::DoUnstick()
   GetParent()->Layout();
   Refresh();
 
-  m_DoUnstick_Lock = false;
+  m_DoUnfloat_Lock = false;
+
+  // restore the old expand state
+  if (m_IsExpBeforeDetach)
+    Expand();
+  else
+    UnExpand();
+}
+
+/*----------------------------------------------------------------------
+  OnExpand is called when the user click on the expand button
+  params:
+  returns:
+  ----------------------------------------------------------------------*/
+void AmayaSubPanel::OnExpand( wxCommandEvent& event )
+{
+  wxLogDebug( _T("AmayaSubPanel::OnExpand") );
+
+  // switch the expand state
+  if (IsExpanded())
+    UnExpand();
+  else
+    Expand();
+}
+
+/*----------------------------------------------------------------------
+  OnDetach is called when the user click on the detach button
+  params:
+  returns:
+  ----------------------------------------------------------------------*/
+void AmayaSubPanel::OnDetach( wxCommandEvent& event )
+{
+  wxLogDebug( _T("AmayaSubPanel::OnDetach") );
+
+  if (IsFloating())
+    {
+      // the panel is floating, we must reattach it
+      DoUnfloat();
+    }
+  else
+    {
+      // the panel is attached, detach the panel
+      DoFloat();
+    }
 }
 
 /*
@@ -346,7 +338,7 @@ void AmayaSubPanel::RefreshToolTips()
  */
 bool AmayaSubPanel::IsExpanded()
 {
-  return m_IsExpanded;
+  return (m_State & wxAMAYA_SPANEL_EXPANDED);
 }
 
 /*
@@ -358,7 +350,31 @@ bool AmayaSubPanel::IsExpanded()
  */
 bool AmayaSubPanel::IsFloating()
 {
-  return m_IsFloating;
+  return (m_State & wxAMAYA_SPANEL_FLOATING);
+}
+
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaSubPanel
+ *      Method:  GetState
+ * Description:  
+ *--------------------------------------------------------------------------------------
+ */
+int AmayaSubPanel::GetState()
+{
+  return m_State;
+}
+
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaSubPanel
+ *      Method:  GetPanelType
+ * Description:  
+ *--------------------------------------------------------------------------------------
+ */
+wxString AmayaSubPanel::GetPanelType()
+{
+  return m_PanelType;
 }
 
 /*
@@ -399,6 +415,22 @@ void AmayaSubPanel::DoUpdate()
 {
   wxLogDebug( _T("AmayaSubPanel::DoUpdate") );
   m_ShouldBeUpdated = false;
+}
+
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaSubPanel
+ *      Method:  Raise
+ * Description:  override the top wxWindows::Raise methode. this must raise the floating panel if it exists
+ *               or raise the current panel window and give focus to this panel
+ *--------------------------------------------------------------------------------------
+ */
+void AmayaSubPanel::Raise()
+{
+  if (m_pFloatingPanel)
+    m_pFloatingPanel->Raise();
+  else
+    wxWindow::Raise();
 }
 
 /*----------------------------------------------------------------------

@@ -8,6 +8,7 @@
 
 class AmayaFloatingPanel;
 class AmayaNormalWindow;
+class AmayaSubPanelManager;
 
 /*
  *  Description:  - AmayaSubPanel contains a sub-panel (xhtml, ...)
@@ -18,6 +19,13 @@ class AmayaNormalWindow;
 
 class AmayaSubPanel : public wxPanel
 {
+ public:
+  typedef enum
+    {
+      wxAMAYA_SPANEL_EXPANDED  = 1
+      ,wxAMAYA_SPANEL_FLOATING  = 2
+    } wxAMAYA_SPANEL_STATE;
+
  public:
   DECLARE_DYNAMIC_CLASS(AmayaSubPanel)
 
@@ -31,10 +39,13 @@ class AmayaSubPanel : public wxPanel
 	      );
   virtual ~AmayaSubPanel();
 
+  wxString GetPanelType();
+
   void UnExpand();
   void Expand();
-  void DoStick();
-  void DoUnstick();
+  void DoFloat();
+  void DoUnfloat();
+  int  GetState();
 
   bool IsExpanded();
   bool IsFloating();
@@ -46,6 +57,8 @@ class AmayaSubPanel : public wxPanel
   virtual void RefreshCheckButtonState( bool * p_checked_array );
   virtual void RefreshToolTips();
 
+  void Raise();
+
  protected:
   DECLARE_EVENT_TABLE()
   void OnExpand( wxCommandEvent& event );
@@ -53,24 +66,21 @@ class AmayaSubPanel : public wxPanel
 
   virtual void DoUpdate();
 
-  void DebugPanelSize( const wxString & prefix = _T("") );
+ protected:
+  AmayaNormalWindow * m_pParentNWindow;
+  wxBoxSizer *        m_pTopSizer;
+  AmayaSubPanelManager * m_pManager;
 
-  wxBoxSizer * m_pTopSizer;
-
+  wxString             m_PanelType;
   wxPanel *            m_pPanel;
   wxPanel *            m_pPanelContent;
   wxPanel *            m_pPanelTitle;
   AmayaFloatingPanel * m_pFloatingPanel;
 
-  AmayaNormalWindow * m_pParentNWindow;
+  unsigned int m_State; /* bit field of wxAMAYA_SPANEL_STATE */  
+  bool         m_IsExpBeforeDetach; /* wxAMAYA_SPANEL_FLOATING == true && wxAMAYA_SPANEL_EXPANDED == true */
 
-  wxSize    m_ContentSize;
-  wxSize    m_TitleSize;
-  bool      m_IsExpanded;
-  bool      m_IsFloating;
-  bool      m_IsExpBeforeDetach;
-
-  bool m_DoUnstick_Lock;
+  bool m_DoUnfloat_Lock;
   bool m_ShouldBeUpdated;
 
   wxBitmap m_Bitmap_DetachOn;
