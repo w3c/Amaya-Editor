@@ -1579,20 +1579,21 @@ static void TextURL (Document doc, View view, char *text)
       else
 	{
 	  s = (char *)TtaGetMemory (MAX_LENGTH);
-	  updated = CompleteUrl(&text);
+	  updated = CompleteUrl (&text);
 	  change = NormalizeFile (text, s, AM_CONV_NONE);
 	  if (updated)
 	    /* free the allocated string */
 	    TtaFreeMemory (text);
 	  url = s;
 	}
+
       if (!InNewWindow && !CanReplaceCurrentDocument (doc, view))
 	{
 	  /* restore the previous value @@ */
 	  AddURLInCombobox (DocumentURLs[doc], NULL, FALSE);
 	  TtaSetTextZone (doc, view, URL_list);
 	  /* cannot load the new document */
-	  TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_CANNOT_LOAD), text);
+	  TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_CANNOT_LOAD), url);
 	  /* abort the command */
 	  TtaFreeMemory (s);
 	  return;
@@ -1600,6 +1601,7 @@ static void TextURL (Document doc, View view, char *text)
       else
 	/* do the same thing as a callback form open document form */
 	CallbackDialogue (BaseDialog + URLName, STRING_DATA, url);
+
       TtaFreeMemory (s);
       InNewWindow = FALSE;
       CurrentDocument = doc;

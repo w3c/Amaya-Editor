@@ -2674,15 +2674,20 @@ static ThotBool ShowLogLine (Element el, Document doc)
 	   otherDoc = DocumentSource[doc];
 	   if (ptr == NULL)
 	     {
-	       TtaFreeMemory (utf8value);
 	       otherEl = TtaSearchText (doc, el, FALSE, "***", ISO_8859_1);
-	       len = TtaGetTextLength (otherEl);
-	       utf8value = (char *)TtaGetMemory (len + 1);
-	       TtaGiveTextContent (otherEl, (unsigned char *)utf8value, &len, &lang);
-	       ptr = strstr (utf8value, " in ");
-	       if (ptr)
-		 ptr += 4;
+	       if (otherEl)
+		 {
+		   TtaFreeMemory (utf8value);
+		   len = TtaGetTextLength (otherEl);
+		   utf8value = (char *)TtaGetMemory (len + 1);
+		   TtaGiveTextContent (otherEl, (unsigned char *)utf8value,
+				       &len, &lang);
+		   ptr = strstr (utf8value, " in ");
+		   if (ptr)
+		     ptr += 4;
+		 }
 	     }
+
 	   if (ptr)
 	     s = (char *)TtaConvertMbsToByte ((unsigned char *)ptr,
 					      TtaGetDefaultCharset ());
