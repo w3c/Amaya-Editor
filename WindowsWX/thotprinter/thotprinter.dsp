@@ -144,6 +144,10 @@ SOURCE=..\..\thotlib\view\psdisplay.c
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\thotlib\base\registry_wx.c
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\Amaya\styleparser.c
 # End Source File
 # Begin Source File
