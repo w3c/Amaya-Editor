@@ -16,6 +16,10 @@ extern void ExplodeURL ( char *url,
                          char **dir,
                          char **file );
 extern char *PicTypeToMIME ( PicType contentType );
+extern ThotBool ImageElement ( Document doc,
+                               char **url,
+                               Element *image );
+extern char *DocImageMimeType ( Document doc );
 extern void ExtractSuffix ( char *aName,
                             char *aSuffix );
 extern ThotBool IsHTMLName ( const char *path );
@@ -71,6 +75,10 @@ extern void ExplodeURL (/* char *url,
                            char **dir,
                            char **file */);
 extern char *PicTypeToMIME (/* PicType contentType */);
+extern ThotBool ImageElement (/* Document doc,
+                                 char **url,
+                                 Element *image */);
+extern char *DocImageMimeType (/* Document doc */);
 extern void ExtractSuffix (/* char *aName,
                               char *aSuffix */);
 extern ThotBool IsHTMLName (/* const char *path */);

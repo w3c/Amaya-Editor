@@ -303,6 +303,92 @@ char *PicTypeToMIME (PicType contentType)
 }
 
 /*----------------------------------------------------------------------
+   ImageElement
+   Returns the element (image parameter) and URL (url parameter) of an
+   image in a docImage document. The user must free the memory associated
+   with the url parameter if the function is succesful.
+   Returns TRUE if succesful, FALSE otherwise.
+  ----------------------------------------------------------------------*/
+ThotBool ImageElement (Document doc, char **url, Element *image)
+{
+  Element             el, imgEl;
+  Attribute           attr, srcAttr;
+  AttributeType       attrType;
+  int                 length;
+  char               *value;
+
+  if (DocumentTypes[doc] != docImage)
+    return FALSE;
+
+  /* find the value of the src attribute */
+  attrType.AttrSSchema = TtaGetSSchema ("HTML", doc);
+  attrType.AttrTypeNum = HTML_ATTR_SRC;
+  el = TtaGetRootElement (doc);
+  TtaSearchAttribute (attrType, SearchInTree, el, &imgEl, &srcAttr);
+
+  if (!imgEl)
+    return FALSE;
+
+  attr = TtaGetAttribute (imgEl, attrType);
+  length = TtaGetTextAttributeLength (srcAttr) + 1;
+  value = TtaGetMemory (length);
+  TtaGiveTextAttributeValue (srcAttr, value, &length);
+  
+  *url = value;
+  *image = imgEl;
+
+  return TRUE;
+}
+
+/*----------------------------------------------------------------------
+   DocImageMimeType
+   Returns the MIME type of a docImage document.
+  ----------------------------------------------------------------------*/
+char *DocImageMimeType (Document doc)
+{
+  char *mime_type;
+  LoadedImageDesc *pImage;
+  PicType type;
+  char *url;
+  Element image;
+
+  if (DocumentTypes[doc] != docImage)
+    return NULL;
+
+  mime_type = NULL;
+  if (!IsHTTPPath (DocumentURLs[doc]))
+    {
+      /* it is a local image */
+      if (ImageElement (doc, &url, &image))
+	{
+	  TtaFreeMemory (url);
+	  type = TtaGetPictureType (image);
+	  mime_type = PicTypeToMIME (type);
+	}
+    }
+  else
+    {
+      /* find the value of the src attribute */
+      pImage = ImageURLs;
+      while (pImage != NULL)
+	{
+	  if (pImage->document == doc)
+	    {
+	      if (pImage->content_type)
+		mime_type = pImage->content_type;
+	      else if (pImage->elImage && pImage->elImage->currentElement)
+		{
+		  type = TtaGetPictureType (pImage->elImage->currentElement);
+		  mime_type = PicTypeToMIME (type);
+		}
+	      break;
+	    }  
+	}
+    }
+  return (mime_type);
+}
+
+/*----------------------------------------------------------------------
    ExtractSuffix extract suffix from document nane.                
   ----------------------------------------------------------------------*/
 void ExtractSuffix (char *aName, char *aSuffix)

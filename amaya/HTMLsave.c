@@ -735,6 +735,8 @@ void SaveDocumentAs (Document doc, View view)
    /* if there's no MIME type for this document, infer one */
    if (DocumentMeta[doc] && DocumentMeta[doc]->content_type)
      strcpy (UserMimeType, DocumentMeta[doc]->content_type);
+   else if (DocumentTypes[doc] == docImage)
+     strcpy (UserMimeType, DocImageMimeType (doc));
    else
      {
        if (DocumentTypes[doc] == docHTML)
