@@ -3,7 +3,7 @@
 2 Line too long\n
 3 Unknown type\n
 4 Cannot load structure schema\n
-5 Invalid file, usage: app file[.A]\n
+5 Invalid file, usage: app [- file[.A]\n
 6 Unknown message\n
 7 Only in EDITOR.I\n
 8 Unknown attribute\n
@@ -16,4 +16,6 @@
 15 Only .PRE is allowed here\n
 16 Too many cascade levels\n
 17 Invalid suffix: %s\n
+18 cpp not found\n
+
 

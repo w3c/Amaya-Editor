@@ -32,4 +32,5 @@
 #define ONLY_IF_PRE_ALLOWED	             15
 #define MULTIPLE_CASCADE_LEVELS	             16
 #define INVALID_FILE			     17
-#define MSG_MAX_APP		             18
+#define APP_CPP_NOT_FOUND		     18
+#define MSG_MAX_APP		             19

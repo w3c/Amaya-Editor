@@ -2769,9 +2769,9 @@ char              **argv;
    SyntRuleNum         r;	/* rule number */
    SyntRuleNum         pr;	/* previous rule number */
    SyntacticCode       c;	/* grammatical code of found word */
+   boolean             fileOK;
    int                 nb;	/* identifier index of found word if it is
 				   an indentifier */
-   boolean             fileOK;
    int                 libtable; /* index of table libdialogue */
    int                 param;
 

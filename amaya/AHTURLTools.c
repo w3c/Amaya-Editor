@@ -173,7 +173,7 @@ char               *path;
        (strcmp (nsuffix, "shtml")))
      return (FALSE);
    else if ((!strcmp (nsuffix, "gz")) ||
-	    (!strcmp (nsuffix, "Z")))
+	    (!strcmp (nsuffix, "z")))
      {
        /* take in account compressed files */
        ExtractSuffix (temppath, suffix);       
@@ -271,7 +271,7 @@ char               *path;
        (strcmp (nsuffix, "xpd")) && (strcmp (nsuffix, "ps")) &&
        (strcmp (nsuffix, "au")))
       return (TRUE);
-   else if ((!strcmp (nsuffix, "gz")) || (!strcmp (nsuffix, "Z")))
+   else if ((!strcmp (nsuffix, "gz")) || (!strcmp (nsuffix, "z")))
      {
        /* take in account compressed files */
        ExtractSuffix (temppath, suffix);       
@@ -417,51 +417,46 @@ char               *docName;
    if (ptr)
       *ptr = EOS;
 
-   if (IsW3Path (tempname))
+   if (IsW3Path (tempname) || doc == 0)
      /* the name is complete */
      strcpy (newName, tempname);
    else
      {
-       if (doc)
-	 {
-	   /* take into account the BASE element. */
-	   length = MAX_LENGTH;
-	   /* get the root element    */
-	   el = TtaGetMainRoot (doc);
+       /* take into account the BASE element. */
+       length = MAX_LENGTH;
+       /* get the root element    */
+       el = TtaGetMainRoot (doc);
 	   
-	   /* search the BASE element */
-	   elType.ElSSchema = TtaGetDocumentSSchema (doc);
-	   elType.ElTypeNum = HTML_EL_BASE;
-	   el = TtaSearchTypedElement (elType, SearchInTree, el);
-	   if (el)
+       /* search the BASE element */
+       elType.ElSSchema = TtaGetDocumentSSchema (doc);
+       elType.ElTypeNum = HTML_EL_BASE;
+       el = TtaSearchTypedElement (elType, SearchInTree, el);
+       if (el)
+	 {
+	   /* 
+	   ** The document has a BASE element 
+	   ** Get the HREF attribute of the BASE Element 
+	   */
+	   attrType.AttrSSchema = elType.ElSSchema;
+	   attrType.AttrTypeNum = HTML_ATTR_HREF_;
+	   attrHREF = TtaGetAttribute (el, attrType);
+	   if (attrHREF)
 	     {
-	       /* 
-	       ** The document has a BASE element 
-	       ** Get the HREF attribute of the BASE Element 
-	       */
-	       attrType.AttrSSchema = elType.ElSSchema;
-	       attrType.AttrTypeNum = HTML_ATTR_HREF_;
-	       attrHREF = TtaGetAttribute (el, attrType);
-	       if (attrHREF)
+	       /* Use the base path of the document */
+	       TtaGiveTextAttributeValue (attrHREF, basename, &length);
+	       /* base and orgName have to be separated by a DIR_SEP */
+	       if (basename[strlen (basename) - 1] != DIR_SEP)
 		 {
-		   /* Use the base path of the document */
-		   TtaGiveTextAttributeValue (attrHREF, basename, &length);
-		   /* base and orgName have to be separated by a DIR_SEP */
-		   if (basename[strlen (basename) - 1] != DIR_SEP)
+		   if (IsHTMLName (basename))
 		     {
-		       if (IsHTMLName (basename))
-			 {
-			   /* remove the document name from basename */
-			   length = strlen (basename) - 1;
-			   while (basename[length] != DIR_SEP)
-			     basename[length--] = EOS;
-			 }
-		       else if (tempname[0] != DIR_SEP)
-			 strcat (basename, DIR_STR);
+		       /* remove the document name from basename */
+		       length = strlen (basename) - 1;
+		       while (basename[length] != DIR_SEP)
+			 basename[length--] = EOS;
 		     }
+		   else if (tempname[0] != DIR_SEP)
+		     strcat (basename, DIR_STR);
 		 }
-	       else
-		 basename[0] = EOS;
 	     }
 	   else
 	     basename[0] = EOS;
@@ -488,8 +483,11 @@ char               *docName;
 	   basename_ptr = HTParse (basename, "", PARSE_ALL);
 	   basename_flag = TRUE;
 	 }
-       
-       ptr = HTParse (tempname, basename_ptr, PARSE_ALL);
+
+       if (tempname[0] == '/')
+	 ptr = HTParse (tempname, basename_ptr, PARSE_ACCESS | PARSE_PUNCTUATION | PARSE_HOST);
+       else
+	 ptr = HTParse (tempname, basename_ptr, PARSE_ALL);
        if (basename_flag)
 	 HT_FREE (basename_ptr);
        if (ptr)

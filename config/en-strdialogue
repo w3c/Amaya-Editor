@@ -41,7 +41,7 @@
 40 Not allowed here\n
 41 This element has local attributes\n
 42 Not enough memory\n
-43 Invalid file, usage: str file[.S]\n
+43 Invalid file, usage: str [-Dname] file[.S]\n
 44 Only for reference attributes\n
 45 Root cannot be a pair\n
 46 "First" or "Second" forbidden for this type\n

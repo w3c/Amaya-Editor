@@ -610,7 +610,7 @@ char*    filename;
     int16 argc    = 3;
     
     /* Prepare window information and "instance" structure */
-
+printf ("Creation d'une instance: %d\n", indexPlug);
     pwindow                  = (NPWindow*) malloc (sizeof (NPWindow));
     pwindow->x               = 0;
     pwindow->y               = 0;

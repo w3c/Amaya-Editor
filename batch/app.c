@@ -1525,7 +1525,8 @@ char              **argv;
 {
    FILE               *filedesc;
    boolean             fileOK;
-   char                buffer[200], *ptr;
+   char                buffer[200], cmd[800];
+   char               *pwd, *ptr;
    Name                srceFileName;
    int                 i;
    int                 wi;	/* position du debut du mot courant dans la ligne */
@@ -1535,8 +1536,8 @@ char              **argv;
    SyntRuleNum         pr;	/* numero de la regle precedente */
    SyntacticCode       c;	/* code grammatical du mot trouve */
    int                 idNum;	/* indice dans Identifier du mot trouve, si */
-
-   /* identificateur */
+   int                 nb;
+   int                 param;
 
    TtaInitializeAppRegistry (argv[0]);
    /* no external action declared at that time */
@@ -1544,24 +1545,37 @@ char              **argv;
    APP = TtaGetMessageTable ("appdialogue", MSG_MAX_APP);
    COMPIL = TtaGetMessageTable ("compildialogue", COMP_MSG_MAX);
    error = False;
-   /* initialise l'analyseur syntaxique */
+   /* initialize the parser */
    InitParser ();
-   /* charge la grammaire du langage a compiler */
    InitSyntax ("APP.GRM");
    if (!error)
      {
-	if (argc != 2)
+        /* prepare the cpp command */
+	strcpy (cmd, "cpp ");
+        param = 1;
+	while (param < argc && argv[param][0] == '-')
+	  {
+	    /* keep cpp params */
+	    strcat (cmd, argv[param]);
+	    strcat (cmd, " ");
+	    param++;
+	  }
+	/* keep the name of the schema to be compile */
+	if (param >= argc)
 	  {
 	     TtaDisplaySimpleMessage (FATAL, APP, FILE_NOT_FOUND);
 	     exit (1);
 	  }
 	else
 	  {
-	     /* recupere le nom du schema a compiler */
-	     strncpy (srceFileName, argv[1], MAX_NAME_LENGTH - 1);
+	     /* get the name of the file to be compiled */
+	     strncpy (srceFileName, argv[param], MAX_NAME_LENGTH - 1);
 	     srceFileName[MAX_NAME_LENGTH - 1] = '\0';
+	     param++;
 	     strcpy (fileName, srceFileName);
+	     /* check if the name contains a suffix */
 	     ptr = strrchr(fileName, '.');
+	     nb = strlen (srceFileName);
 	     if (!ptr)
 	       /* there is no suffix */
 	       strcat (srceFileName, ".A");
@@ -1575,86 +1589,116 @@ char              **argv;
 	       {
 		 /* it's the valid suffix, cut the srcFileName here */
 		 ptr[0] = '\0';
+		 nb -= 2; /* length without the suffix */
 	       }
-	     /* ouvre le fichier a compiler */
-	     filedesc = fopen (srceFileName, "r");
-	     if (filedesc == 0)
-		TtaDisplaySimpleMessage (FATAL, APP, FILE_NOT_FOUND);
+
+	     /* add the suffix .SCH in srceFileName */
+	     strcat (fileName, ".SCH");
+	     
+	     /* does the file to compile exist */
+	     if (TtaFileExist (srceFileName) == 0)
+	       TtaDisplaySimpleMessage (FATAL, APP, FILE_NOT_FOUND);
 	     else
 	       {
-		  /* save the file name without extension */
-		  strcpy (srceFileName, fileName);
-		  /* le fichier a compiler est ouvert */
-		  NIdentifiers = 0;
-		  /* table des identificateurs vide */
-		  LineNum = 0;
-		  /* encore aucune ligne lue */
-		  pSSchema = NULL;
-		  /* pas (encore) de schema de structure */
-		  fileOK = True;
-		  /* lit tout le fichier et fait l'analyse */
-		  while (fileOK && !error)
-		     /* lit une ligne */
-		    {
-		       i = 0;
-		       do
-			  fileOK = TtaReadByte (filedesc, &inputLine[i++]);
-		       while (i < LINE_LENGTH && inputLine[i - 1] != '\n' && fileOK);
-		       /* marque la fin reelle de la ligne */
-		       inputLine[i - 1] = '\0';
-		       /* incremente le compteur de lignes lues */
-		       LineNum++;
-		       if (i >= LINE_LENGTH)
-			  /* ligne trop longue */
-			  CompilerMessage (1, APP, FATAL, MAX_LINE_SIZE_EXCEEDED, inputLine, LineNum);
-		       else if (inputLine[0] == '#')
-			  /* cette ligne contient une directive du preprocesseur cpp */
-			 {
-			    sscanf (inputLine, "# %d %s", &LineNum, buffer);
-			    LineNum--;
-			 }
-		       else
-			  /* traduit tous les caracteres de la ligne */
-			 {
-			    OctalToChar ();
-			    /* analyse la ligne */
-			    wi = 1;
-			    wl = 0;
-			    /* analyse tous les mots de la ligne courante */
-			    do
-			      {
+		 /* provide the real source file */
+		 TtaFileUnlink (fileName);
+		 pwd = TtaGetEnvString ("PWD");
+		 i = strlen (cmd);
+		 if (pwd != NULL)
+		   sprintf (&cmd[i], "-I%s -C %s > %s", pwd, srceFileName, fileName);
+		 else
+		   sprintf (&cmd[i], "-C %s > %s", srceFileName, fileName);
+		 i = system (cmd);
+		 if (i == -1)
+		   {
+		     /* cpp is not available, copy directely the file */
+		     TtaDisplaySimpleMessage (INFO, APP, APP_CPP_NOT_FOUND);
+		     TtaFileCopy (srceFileName, fileName);
+		   }
+
+		 /* open the resulting file */
+		 filedesc = TtaReadOpen (fileName);
+		 /* ouvre le fichier a compiler */
+		 if (filedesc == 0)
+		   TtaDisplaySimpleMessage (FATAL, APP, FILE_NOT_FOUND);
+		 else
+		   {
+		     /* suppress the suffix ".SCH" */
+		     srceFileName[nb] = '\0';
+		     fileName[nb] = '\0';
+		     /* le fichier a compiler est ouvert */
+		     NIdentifiers = 0;
+		     /* table des identificateurs vide */
+		     LineNum = 0;
+		     /* encore aucune ligne lue */
+		     pSSchema = NULL;
+		     /* pas (encore) de schema de structure */
+		     fileOK = True;
+		     /* lit tout le fichier et fait l'analyse */
+		     while (fileOK && !error)
+		       /* lit une ligne */
+		       {
+			 i = 0;
+			 do
+			   fileOK = TtaReadByte (filedesc, &inputLine[i++]);
+			 while (i < LINE_LENGTH && inputLine[i - 1] != '\n' && fileOK);
+			 /* marque la fin reelle de la ligne */
+			 inputLine[i - 1] = '\0';
+			 /* incremente le compteur de lignes lues */
+			 LineNum++;
+			 if (i >= LINE_LENGTH)
+			   /* ligne trop longue */
+			   CompilerMessage (1, APP, FATAL, MAX_LINE_SIZE_EXCEEDED, inputLine, LineNum);
+			 else if (inputLine[0] == '#')
+			   /* cette ligne contient une directive du preprocesseur cpp */
+			   {
+			     sscanf (inputLine, "# %d %s", &LineNum, buffer);
+			     LineNum--;
+			   }
+			 else
+			   /* traduit tous les caracteres de la ligne */
+			   {
+			     OctalToChar ();
+			     /* analyse la ligne */
+			     wi = 1;
+			     wl = 0;
+			     /* analyse tous les mots de la ligne courante */
+			     do
+			       {
 				 i = wi + wl;
 				 GetNextToken (i, &wi, &wl, &wn);
 				 /* mot suivant */
 				 if (wi > 0)
-				    /* on a trouve un mot */
+				   /* on a trouve un mot */
 				   {
-				      AnalyzeToken (wi, wl, wn, &c, &r, &idNum, &pr);
-				      /* on analyse le mot */
-				      if (!error)
-					 ProcessToken (wi, wl, c, r, pr);	/* on le traite */
+				     AnalyzeToken (wi, wl, wn, &c, &r, &idNum, &pr);
+				     /* on analyse le mot */
+				     if (!error)
+				       /* on le traite */
+				       ProcessToken (wi, wl, c, r, pr);
 				   }
-			      }
-			    while (wi != 0 && !error);
-			    /* il n'y a plus de mots a analyser dans la ligne */
-			 }
-		    }
-		  /* fin du fichier */
-		  if (!error)
-		     ParserEnd ();
-		  /* fin d'analyse */
-		  if (!error)
-		    {
-		       MakeMenusAndActionList ();
-		       /* ecrit le schema compile' dans le fichier de sortie     */
-		       /* le directory des schemas est le directory courant      */
-		       SchemaPath[0] = '\0';
-		       strcpy (srceFileName, fileName);
-		       GenerateApplication (srceFileName, pAppli);
-		       strcpy (srceFileName, fileName);
-		       if (strcmp (srceFileName, "EDITOR") != 0)
-			  WriteDefineFile (srceFileName);
-		    }
+			       }
+			     while (wi != 0 && !error);
+			     /* il n'y a plus de mots a analyser dans la ligne */
+			   }
+		       }
+		     /* fin du fichier */
+		     if (!error)
+		       ParserEnd ();
+		     /* fin d'analyse */
+		     if (!error)
+		       {
+			 MakeMenusAndActionList ();
+			 /* ecrit le schema compile' dans le fichier de sortie     */
+			 /* le directory des schemas est le directory courant      */
+			 SchemaPath[0] = '\0';
+			 strcpy (srceFileName, fileName);
+			 GenerateApplication (srceFileName, pAppli);
+			 strcpy (srceFileName, fileName);
+			 if (strcmp (srceFileName, "EDITOR") != 0)
+			   WriteDefineFile (srceFileName);
+		       }
+		   }
 	       }
 	  }
      }
