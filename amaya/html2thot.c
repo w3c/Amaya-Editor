@@ -3155,7 +3155,8 @@ CHAR_T              c;
 	    StopParsing (HTMLcontext.doc);   /* the XML parser raised an error */
 #else /* OLD_XML_PARSER */
 	  if (!ParseIncludedXml (stream, FileBuffer, INPUT_FILE_BUFFER_SIZE,
-				 &EndOfHtmlFile, &NotToReadFile, PreviousFileBuffer,
+				 &EndOfHtmlFile, &NotToReadFile,
+				 PreviousFileBuffer, &LastCharInFileBuffer,
 				 InputText, &CurrentBufChar,
 				 &NumberOfLinesRead, &NumberOfCharRead,
 				 schemaName, HTMLcontext.doc,

@@ -3832,6 +3832,7 @@ ThotBool    ParseIncludedXml (FILE     *infile,
 			      ThotBool *infileEnd,
 			      ThotBool *infileNotToRead,
 			      char     *infilePreviousBuffer,
+			      int      *infileLastChar,
 			      char     *htmlBuffer,
 			      int      *index,
 			      int      *nbLineRead,
@@ -3843,7 +3844,8 @@ ThotBool    ParseIncludedXml (FILE     *infile,
 			      Language  lang)
 #else
 ThotBool    ParseIncludedXml (infile, infileBuffer, infileBufferLength,
-			      infileEnd, infileNotToRead, infilePreviousBuffer,
+			      infileEnd, infileNotToRead,
+			      infilePreviousBuffer, infileLastChar,
 			      htmlBuffer, index, nbLineRead, nbCharRead,
 			      DTDname, doc, el, isclosed, lang)
 
@@ -3853,6 +3855,7 @@ int       infileBufferLength;
 ThotBool *infileEnd;
 ThotBool *infileNotToRead;
 char     *infilePreviousBuffer;
+int      *infileLastChar;
 char     *htmlBuffer;
 int      *index;
 int      *nbLineRead;
@@ -3958,7 +3961,12 @@ Language  lang;
 		  if (res < infileBufferLength)
 		      endOfParsing = TRUE;
 		  if (res <= 0)
+		    {
 		      *infileEnd = TRUE;
+		      *infileLastChar = 0;
+		    }
+		  else
+		      *infileLastChar = res - 1;
 		}
 	    }
 
