@@ -290,7 +290,7 @@ PRINT_OBJ= \
 	view/psdisplay.o \
 	editing/print.o
 
-tree/paginatePP.o : @srcdir@/tree/paginate.c
+tree/paginatePP.o : @srcdir@/tree/paginate.c @srcdir@/include/thot_sys.h
 	$(CC) $(CFLAGS) $(INCLUDES) -DPAGINEETIMPRIME -c @srcdir@/tree/paginate.c -o $@
 
 print : ../bin ../bin/print

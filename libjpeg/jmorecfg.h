@@ -222,21 +222,9 @@ typedef unsigned int JDIMENSION;
  * specific header files that you want to include together with these files.
  * Defining HAVE_BOOLEAN before including jpeglib.h should make it work.
  */
-
-#ifdef _WINDOWS
-#include <windows.h>
-#else /* !_WINDOWS */
-#ifndef HAVE_BOOLEAN
-typedef int boolean;
-#endif
-#endif /* _WINDOWS */
-#ifndef FALSE			/* in case these macros already exist */
-#define FALSE	0		/* values of boolean */
-#endif
-#ifndef TRUE
-#define TRUE	1
-#endif
-
+/* need compatibility with Thot definitions */
+#include "thot_sys.h"
+#include "typebase.h"
 
 /*
  * The remaining options affect code selection within the JPEG library,

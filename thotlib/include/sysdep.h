@@ -85,21 +85,10 @@
    Hounslow <P.M.Hounslow@reading.ac.uk>, and a lot of other PC people.
 
  */
-#if defined(_WINDOWS) || defined(_CONSOLE)
-#define WWW_MSWINDOWS
-#endif
-
-#if defined(_WINDOWS) && !defined (_CONSOLE)
-#define WWW_WIN_WINDOW
-#endif
-
-#if defined(_CONSOLE)
-#define WWW_WIN_CONSOLE
-#endif
-
-#ifdef WWW_MSWINDOWS
+#ifdef _WINDOWS
 #include <windows.h>
 #include <fcntl.h>
+
 #ifdef __GNUC__
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -108,9 +97,13 @@
 #include <netinet/in.h>
 #include <netdb.h>
 #include <errno.h>
+#include <io.h>
+#include <direct.h>
+
 #else /* __GNUC__ */
 #include <sys\types.h>
 #include <sys\stat.h>
+#define HAVE_STDIO_H
 #endif /* __GNUC__ */
 
 #define NETREAD(s,b,l)  recv((s),(b),(l),0)
@@ -126,19 +119,10 @@
 #undef TTY_IS_SELECTABLE
 #endif
 
-#ifndef __GNUC__
-#include <io.h>
-#include <direct.h>
-#endif /* __GNUC__ */
-
 #include <string.h>
 #include <process.h>
 #include <time.h>
 
-
-#ifndef __GNUC__
-#define HAVE_STDIO_H
-#endif /* __GNUC__ */
 
 #include <stdlib.h>
 #ifndef __GNUC__
@@ -149,11 +133,11 @@
 #define NO_STDIO
 #endif
 
-
 #undef HAVE_GETPASS
 #undef HAVE_ALTZONE
 #define NO_GETWD
 #define NO_FCNTL
+
 #ifndef __GNUC__
 #define HAVE_GETCWD
 #define BOOLEAN			/* Windows have BOOLEAN defined */

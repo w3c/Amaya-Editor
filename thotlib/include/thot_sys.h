@@ -31,8 +31,6 @@
 #include <math.h>
 #define M_PI            3.14159265358979323846  /* pi */
 #define M_PI_2          1.57079632679489661923  /* pi/2 */
-#include "sysdep.h"
-
 /**********************************************************/
 #if defined(_WINDOWS) || defined(_CONSOLE)
 #include <errno.h>
@@ -47,6 +45,7 @@
 #endif /* !_WINDOWS */
 #endif /* !(defined(_WINDOWS) || defined(_CONSOLE)) */
 /**********************************************************/
+#include "sysdep.h"
 
 /* If const does work, or hasn't been redefined before */
 #ifndef CONST
@@ -135,7 +134,7 @@ typedef BOOL        Boolean;	/* X11/Intrinsic.h */
 #else /* _WINDOWS *//***********************************WINDOWS**/
 
 #ifndef HAVE_BOOLEAN
-typedef unsigned int boolean;
+typedef unsigned char boolean;
 #endif
 #define ThotPid_get()	getpid()
 #define ThotPid		pid_t

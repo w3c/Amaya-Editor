@@ -4,12 +4,14 @@
 # Daniel Veillard, 1997
 #
 
+.SUFFIXES: .c .o
+
 @VPATHOPT@= @srcdir@
 THOTDIR = @top_srcdir@
 
 include ../Options
 
-INCLUDES= -I.. -I@srcdir@
+INCLUDES= -I.. -I@srcdir@  @THOTINCLUDES@
 
 prefix = @prefix@
 exec_prefix = @exec_prefix@
@@ -96,5 +98,6 @@ JPEG_OBJ = \
 ../libjpeg.a : $(JPEG_OBJ)
 	$(AR) ../libjpeg.a $(JPEG_OBJ)
 	$(RANLIB) ../libjpeg.a
+	@$(ECHO) "====>" libjpeg is done
 
 
