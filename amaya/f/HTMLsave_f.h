@@ -28,7 +28,8 @@ extern void SaveDocument ( Document doc,
                            View view );
 extern void BackUpDocs ( void );
 extern ThotBool DocumentToSave ( NotifyDialog *event );
-extern void DoSaveAs ( void );
+extern void DoSaveAs ( char *user_charset,
+                       char *user_mimetype );
 
 #else /* __STDC__ */
 
@@ -54,7 +55,8 @@ extern void SaveDocument (/* Document doc,
                              View view */);
 extern void BackUpDocs (/* void */);
 extern ThotBool DocumentToSave (/* NotifyDialog *event */);
-extern void DoSaveAs (/* void */);
+extern void DoSaveAs (/* char *user_charset,
+                         char *user_mimetype */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

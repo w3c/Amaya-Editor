@@ -1437,6 +1437,94 @@ void             InitConfirm (Document document, View view, char *label)
 #endif /* _WINDOWS */
 }
 
+/*----------------------------------------------------------------------
+  InitCharset
+  Asks the user for the charset  of a given URL. Used when saving a
+  document with an unknown charset.
+  ----------------------------------------------------------------------*/
+void InitCharset (Document document, View view, char *url)
+{
+#ifndef _WINDOWS
+   char *charset_list = "Bus-ascii\0"
+     "BUTF-8\0"
+     "Biso-8859-1\0"
+     "Biso-8859-2\0";
+
+   int nbcharset = 4;
+
+   TtaNewForm (BaseDialog + CharsetForm, TtaGetViewFrame (document, view),
+	       "Charset query", FALSE, 3, 'L', D_CANCEL);
+   TtaNewLabel (BaseDialog + MimeTypeFormL1, BaseDialog + CharsetForm,
+		"Please select the charset for the following resource:");
+   TtaNewLabel (BaseDialog + MimeTypeFormL2, BaseDialog + MimeTypeForm,
+		DocumentURLs[document]);
+   /* radio buttons */
+   TtaNewSubmenu (BaseDialog + CharsetSel, BaseDialog + CharsetForm, 0,
+		  NULL, nbcharset, charset_list, NULL, FALSE);
+   TtaSetMenuForm (BaseDialog + CharsetSel, 0);
+
+   TtaSetDialoguePosition ();
+   TtaShowDialogue (BaseDialog + CharsetForm, FALSE);
+   /* wait for an answer */
+   TtaWaitShowDialogue ();
+#endif /* _WINDOWS */
+}
+
+/*----------------------------------------------------------------------
+  InitMimeType
+  Asks the user for the MIME type of a given URL. Used when saving a
+  document with an unknown MIME type.
+  ----------------------------------------------------------------------*/
+void InitMimeType (Document document, View view, char *url)
+{
+#ifndef _WINDOWS
+   char *mimetypes_list;
+   int nbmimetypes;
+   if (DocumentTypes[document] == docImage)
+     {
+       mimetypes_list = "image/png\0"
+	 "image/jpeg\0"
+	 "image/gif\0"
+	 "application/x-bitmap\0";
+       nbmimetypes = 3;
+     }
+   else if (DocumentTypes[document] == docSVG)
+     {
+       mimetypes_list = "text/xml+svg\0"
+	 "image/svg\0";
+       nbmimetypes = 2;
+     }
+   else 
+     {
+       mimetypes_list = "text/html\0"
+	 "text/xml\0"
+	 "text/xml+mathml\0"
+	 "text/plain\0"
+	 "text/css\0";
+       nbmimetypes = 5;
+     }
+
+   TtaNewForm (BaseDialog + MimeTypeForm, TtaGetViewFrame (document, view),
+	       "MIME type query", FALSE, 4, 'L', D_CANCEL);
+   TtaNewLabel (BaseDialog + MimeTypeFormL1, BaseDialog + MimeTypeForm,
+		"Please give the MIME type for the following resource:");
+   TtaNewLabel (BaseDialog + MimeTypeFormL2, BaseDialog + MimeTypeForm,
+		url);
+   /* selector */
+   TtaNewSelector (BaseDialog + MimeTypeSel, BaseDialog + MimeTypeForm, NULL,
+		   nbmimetypes, mimetypes_list, 4, NULL, TRUE, FALSE);
+   /* status */
+   TtaNewLabel (BaseDialog + MimeFormStatus,
+		BaseDialog + MimeTypeForm,
+		"jose");
+   TtaSetSelector (BaseDialog + MimeTypeSel, -1, UserMimeType);
+
+   TtaSetDialoguePosition ();
+   TtaShowDialogue (BaseDialog + MimeTypeForm, FALSE);
+   /* wait for an answer */
+   TtaWaitShowDialogue ();
+#endif /* _WINDOWS */
+}
 
 #ifndef _WINDOWS
 /*-------------------------------------------------------------------------
@@ -4293,9 +4381,25 @@ void CallbackDialogue (int ref, int typedata, char *data)
        if (val == 1)
 	 /* "Confirm" Button */
 	 {
+	   /* protect against saving without a MIME type */
+	   if (SavingDocument != 0)
+	     {
+	       if ((!DocumentMeta[SavingDocument] 
+		    || !DocumentMeta[SavingDocument]->content_type
+		    || !DocumentMeta[SavingDocument]->content_type[0] == EOS)
+		   && (UserMimeType[0] == EOS))
+		 {
+#ifndef _WINDOWS
+		   TtaNewLabel (BaseDialog + SaveFormStatus,
+				BaseDialog + SaveForm,
+				"Error: invalid MIME type");
+#endif /* _WINDOWS */
+		   break;
+		 }
+	     }
 	   TtaDestroyDialogue (BaseDialog + SaveForm);
 	   if (SavingDocument != 0)
-	     DoSaveAs ();
+	     DoSaveAs (UserCharset, UserMimeType);
 	   else if (SavingObject != 0)
 	     DoSaveObjectAs ();
 
@@ -4329,23 +4433,76 @@ void CallbackDialogue (int ref, int typedata, char *data)
 	     }
 	 }
        else if (val == 3)
-	 /* "Filter" button */
+	 /* "Charset" button */
 	 {
-	   /* reinitialize directories and document lists */
 	   if (SavingDocument != 0)
-	     TtaListDirectory (SavePath, BaseDialog + SaveForm,
-			       TtaGetMessage (LIB, TMSG_DOC_DIR),
-			       BaseDialog + DirSave, ScanFilter,
-			       TtaGetMessage (AMAYA, AM_FILES),
-			       BaseDialog + DocSave);
+	     {
+	       if (DocumentTypes[SavingDocument] != docImage)
+		 {
+		   /* clear the status message */
+#ifndef _WINDOWS
+		   TtaNewLabel (BaseDialog + SaveFormStatus,
+				BaseDialog + SaveForm,
+				" ");
+#endif /* _WINDOWS */
+		   InitCharset (SavingDocument, 1, SavePath);
+		   if (UserCharset[0] != EOS)
+		     {
+#ifndef _WINDOWS
+		       TtaNewLabel (BaseDialog + CharsetSave,  
+				    BaseDialog + SaveForm, UserCharset);
+#endif /* _WINDOWS */
+		     }
+		 }
+	       else
+		 {
+#ifndef _WINDOWS
+		   TtaNewLabel (BaseDialog + SaveFormStatus,
+				BaseDialog + SaveForm,
+				"This type of document doesn't support charsets");
+#endif /* _WINDOWS */
+		 }
+	     }
+	 }
+       else if (val == 4)
+	 /* "MIME type" button */
+	 {
+	   if (SavingDocument != 0)
+	     {
+	       if (SavePath[0] && IsW3Path (SavePath))
+		 {
+		   /* clear the status message */
+#ifndef _WINDOWS
+		   TtaNewLabel (BaseDialog + SaveFormStatus,
+				BaseDialog + SaveForm,
+				" ");
+#endif /* _WINDOWS */
+		   InitMimeType (SavingDocument, 1, SavePath);
+		   if (UserMimeType[0] != EOS)
+		     {
+#ifndef _WINDOWS
+		     TtaNewLabel (BaseDialog + MimeTypeSave,  
+				  BaseDialog + SaveForm, UserMimeType);
+#endif /* _WINDOWS */
+		     }
+		 }
+	       else
+		 {
+#ifndef _WINDOWS
+		   TtaNewLabel (BaseDialog + SaveFormStatus,
+				BaseDialog + SaveForm,
+			      "The target must be an HTTP URL to use this option");
+#endif /* _WINDOWS */
+		 }
+	     }
 	 }
        else
 	 /* "Cancel" button */
 	 {
 	   TtaDestroyDialogue (BaseDialog + SaveForm);
 	   if (SavingObject != 0)
-	      /* delete temporary file */
-	      DeleteTempObjectFile ();
+	     /* delete temporary file */
+	     DeleteTempObjectFile ();
 	   SavingDocument = 0;
 	   SavingObject = 0;
 	 }
@@ -4741,6 +4898,97 @@ void CallbackDialogue (int ref, int typedata, char *data)
        break;
      case mIdUseSelection:
        IdApplyToSelection = val;
+       break;
+       /* Charset Save As menu */
+     case CharsetForm:
+       {
+	 switch (val)
+	   {
+	   case 0:
+	     UserCharset[0] = EOS;
+	     TtaDestroyDialogue (ref);
+	     break;
+	   case 1:
+	     TtaDestroyDialogue (ref);
+	     break;
+	   }
+       }
+       break;
+     case CharsetSel:
+       switch (val)
+	 {
+	 case 0:
+	   strcpy (UserCharset, "us-ascii");
+	   break;
+	 case 1:
+	   strcpy (UserCharset, "UTF-8");
+	   break;
+	 case 2:
+	   strcpy (UserCharset, "iso-8859-1");
+	   break;
+	 case 3:
+	   strcpy (UserCharset, "iso-8859-2");
+	   break;
+	 }
+       break;
+
+       /* MIME type Save As menu */
+     case MimeTypeForm:
+       {
+	 switch (val)
+	   {
+	   case 0:
+	     UserMimeType[0] = EOS;
+	     TtaDestroyDialogue (ref);
+	     break;
+	   case 1:
+	     {
+	       char *src, *dst;
+	       /* filter the UserMimeType */
+	       src = dst = UserMimeType;
+	       while (*src)
+		 {
+		   if (!isascii (*src) 
+		       || (!isalnum (*src) && *src != '/' && *src != '-'
+			   && *src != '+'))
+		     {
+		       /* skip the character */
+		       src++;
+		       continue;;
+		     }
+
+		   if (isupper (*src))
+		       /* convert to lower case */
+		     *dst = tolower (*src);
+		   else
+		     *dst = *src;
+		   src++;
+		   dst++;
+		 }
+	       *dst = EOS;
+	       /* validate the mime type */
+	       if (UserMimeType[0] == EOS ||!strchr (UserMimeType, '/'))
+		 {
+		   InitMimeType (SavingDocument, 1, 
+				 SavePath);
+#ifndef _WINDOWS
+		   TtaNewLabel (BaseDialog + SaveFormStatus,
+				BaseDialog + MimeTypeForm,
+				"Error: invalid MIME type");
+#endif /* _WINDOWS */
+		 }
+	       else
+		 TtaDestroyDialogue (ref);
+	     }
+	     break;
+	   }
+       }
+       break;
+     case MimeTypeSel:
+       if (data)
+	 strcpy (UserMimeType, data);
+       else
+	 UserMimeType[0] = EOS;
        break;
      }
 }

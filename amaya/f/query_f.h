@@ -45,8 +45,8 @@ extern int GetObjectWWW ( int docid,
 extern int PutObjectWWW ( int docid,
                           char *fileName,
                           char *urlName,
+                          char *contentType,
                           int mode,
-                          PicType contentType,
                           TTcbf *terminate_cbf,
                           void *context_tcbf );
 extern void StopRequest ( int docid );
@@ -99,8 +99,8 @@ extern int GetObjectWWW (/* int docid,
 extern int PutObjectWWW (/* int docid,
                             char *fileName,
                             char *urlName,
+                            char *contentType,
                             int mode,
-                            PicType contentType,
                             TTcbf *terminate_cbf,
                             void *context_tcbf */);
 extern void StopRequest (/* int docid */);

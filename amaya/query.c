@@ -255,7 +255,7 @@ AHTDocId_Status    *GetDocIdStatus (int docid, HTList * documents)
   AHTGuessAtom_for
   Converts an Amaya type descriptor into the equivalent MIME type.
   ----------------------------------------------------------------------*/
-static  HTAtom *AHTGuessAtom_for (char *urlName, PicType contentType)
+static  HTAtom *AHTGuessAtom_for (char *urlName, char *contentType)
 {
  HTAtom           *atom;
  char *          filename;
@@ -264,45 +264,26 @@ static  HTAtom *AHTGuessAtom_for (char *urlName, PicType contentType)
  HTLanguage        lang = NULL;
  double            quality = 1.0;
 
- switch (contentType)
+ /* we already have a MIME type, we jsut return the atom */
+ if (contentType && *contentType)
+   atom = HTAtom_for (contentType);
+ else
    {
-    case xbm_type:
-      atom = HTAtom_for("image/xbm");
-      break;
-    case eps_type:
-      atom = HTAtom_for("application/postscript");
-      break;
-   case xpm_type:
-      atom = HTAtom_for("image/xpm");
-     break;
-    case gif_type:
-      atom = HTAtom_for("image/gif");
-      break;
-    case jpeg_type:
-      atom = HTAtom_for("image/jpeg");
-      break;
-    case png_type:
-      atom = HTAtom_for("image/png");
-      break;
-   case unknown_type:
-   default:
-     /* 
-     ** Amaya could not detect the type, so 
-     ** we try to use the filename's suffix to do so.
-     */
+     /* we don't have the MIME type, so
+	we try to use the filename's suffix to infer it */
      filename = AmayaParseUrl (urlName, "", 
 			       AMAYA_PARSE_PATH | AMAYA_PARSE_PUNCTUATION);
      HTBind_getFormat (filename, &atom, &enc, &cte, &lang, &quality);
      TtaFreeMemory (filename);
      if (atom ==  WWW_UNKNOWN)
+       {
 	 /*
-	 ** we could not identify the suffix, so we assign it
-	 ** a default type
+	 ** we could not identify the suffix, so we give it a default type.
+	 ** (we should ask the user, but we're not ready for that yet).
 	 */
 	 atom = HTAtom_for ("text/html");
-     break;
+       }
    }
-   
  return atom;
 }
 
@@ -1447,9 +1428,10 @@ static void           AHTAcceptTypesInit (HTList *c)
    HTFileInit ();
 
    /* Register additional bindings */
+   HTBind_add("htm", "text/html",  NULL, "8bit", NULL, 1.0);
    HTBind_add("tgz", "application/gnutar",  NULL, "binary", NULL, 1.0);
    HTBind_add("mml", "text/xml",  NULL, "8bit", NULL, 1.0);
-   HTBind_add("svg", "text/xml",  NULL, "8bit", NULL, 1.0);
+   HTBind_add("svg", "image/xml+svg",  NULL, "8bit", NULL, 1.0);
    HTBind_add("xsl", "text/xml",  NULL, "8bit", NULL, 1.0);
    /* Don't do any case distinction */
    HTBind_caseSensitive (FALSE);
@@ -3042,8 +3024,8 @@ int GetObjectWWW (int docid, char *urlName, char *formdata,
    HT_ERROR
    HT_OK
   ----------------------------------------------------------------------*/
-int PutObjectWWW (int docid, char *fileName, char *urlName, int mode,
-		  PicType contentType,
+int PutObjectWWW (int docid, char *fileName, char *urlName, 
+		  char *contentType, int mode,
 		  TTcbf *terminate_cbf, void *context_tcbf)
 {
    AHTReqContext      *me;
@@ -3171,16 +3153,20 @@ int PutObjectWWW (int docid, char *fileName, char *urlName, int mode,
    /* we try to use any content-type previosuly associated
       with the parent. If it doesn't exist, we try to guess it
       from the URL */
+   /* @@ JK: trying to use the content type we stored */
+   /*
    tmp2 = HTAtom_name (HTAnchor_format (dest_anc_parent));
+   */
+   tmp2 = NULL;
    if (!tmp2 || !strcmp (tmp2, "www/unknown"))
      {
        HTAtom *tmp_atom;
-
+       
        tmp_atom = AHTGuessAtom_for (me->urlName, contentType);
-       if (!strcmp (HTAtom_name (tmp_atom), "www/unknown"))
-	   {
-	     /* ask user for a MIME type */
-	   }
+       if (!tmp_atom || !strcmp (HTAtom_name (tmp_atom), "www/unknown"))
+	 {
+	   /* ask the user for a MIME type */
+	 }
        HTAnchor_setFormat (dest_anc_parent, tmp_atom);
        tmp2 = HTAtom_name (HTAnchor_format (dest_anc_parent));
      }

@@ -262,6 +262,45 @@ void ExplodeURL (char *url, char **proto, char **host, char **dir,
 
 }
 
+/*----------------------------------------------------------------------
+   PicTypeToMime
+   Converts a Thot PicType into the equivalent MIME type. If no convertion
+   is possible, it returns NULL.
+  ----------------------------------------------------------------------*/
+char *PicTypeToMIME (PicType contentType)
+{
+  char *mime_type;
+  
+  switch (contentType)
+    {
+    case xbm_type:
+      mime_type ="image/x-xbitmap";
+      break;
+    case eps_type:
+      mime_type ="application/postscript";
+      break;
+   case xpm_type:
+      mime_type ="image/x-xpicmap";
+     break;
+    case gif_type:
+      mime_type ="image/gif";
+      break;
+    case jpeg_type:
+      mime_type ="image/jpeg";
+      break;
+    case png_type:
+      mime_type ="image/png";
+      break;
+    case svg_type:
+      mime_type ="image/svg";
+      break;
+   case unknown_type:
+   default:
+     mime_type = NULL;
+   }
+
+  return mime_type;
+}
 
 /*----------------------------------------------------------------------
    ExtractSuffix extract suffix from document nane.                

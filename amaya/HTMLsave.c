@@ -424,6 +424,8 @@ static void InitSaveForm (Document document, View view, char *pathname)
    char             buffer[3000];
    char             s[MAX_LENGTH];
    int              i;
+   char             *mimeType;
+   char             *charset;
 #endif /* WINDOWS */
 
   if (TextFormat)
@@ -449,15 +451,34 @@ static void InitSaveForm (Document document, View view, char *pathname)
     }
   
 #ifndef _WINDOWS
-   /* Dialogue form for saving a document */
+   /* destroy any previous instance of the Save as form */
+   TtaDestroyDialogue (BaseDialog + SaveForm);
+
+   /* mime type */
+   if (DocumentMeta[document] && DocumentMeta[document]->content_type)
+     mimeType = DocumentMeta[document]->content_type;
+   else if (UserMimeType[0] != EOS)
+     mimeType = UserMimeType;
+   else
+     mimeType = "UNKNOWN";
+
+   /* charset */
+   if (DocumentMeta[document] && DocumentMeta[document]->charset)
+     charset = DocumentMeta[document]->charset;
+   else
+       charset = "UNKNOWN";
+   
+   /* dialogue form for saving a document */
    i = 0;
    strcpy (&s[i], TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
    i += strlen (&s[i]) + 1;
    strcpy (&s[i], TtaGetMessage (AMAYA, AM_CLEAR));
    i += strlen (&s[i]) + 1;
-   strcpy (&s[i], TtaGetMessage (AMAYA, AM_PARSE));
+   strcpy (&s[i], "Change Charset");
+   i += strlen (&s[i]) + 1;
+   strcpy (&s[i], "Change MIME type");
    TtaNewSheet (BaseDialog + SaveForm, TtaGetViewFrame (document, view), 
-		TtaGetMessage (AMAYA, AM_SAVE_AS), 3, s, TRUE, 3, 'L',
+		TtaGetMessage (AMAYA, AM_SAVE_AS), 4, s, TRUE, 3, 'L',
 		D_CANCEL);
 
    /* choice between html, xhtml and text */
@@ -502,11 +523,22 @@ static void InitSaveForm (Document document, View view, char *pathname)
        TtaNewLabel (BaseDialog + Label3, BaseDialog + SaveForm, "");
        TtaNewLabel (BaseDialog + Label4, BaseDialog + SaveForm, "");
      }
-   TtaNewTextForm (BaseDialog + FilterText, BaseDialog + SaveForm,
-		   TtaGetMessage (AMAYA, AM_PARSE), 10, 1, TRUE);
-   TtaSetTextForm (BaseDialog + FilterText, ScanFilter);
+   /* fourth line */
+   TtaNewLabel (BaseDialog + CharsetSaveL, BaseDialog + SaveForm,
+		"Charset:  ");
+   TtaNewLabel (BaseDialog + Label5, BaseDialog + SaveForm, "  ");
+   TtaNewLabel (BaseDialog + CharsetSave,  BaseDialog + SaveForm, charset);
+   /* fifth line */
+   TtaNewLabel (BaseDialog + MimeTypeSaveL, BaseDialog + SaveForm, 
+		"MIME type:");
+   TtaNewLabel (BaseDialog + Label6, BaseDialog + SaveForm, "");
+   TtaNewLabel (BaseDialog + MimeTypeSave,  BaseDialog + SaveForm, 
+		mimeType);
+   /* sixth line  (status) */
+   TtaNewLabel (BaseDialog + SaveFormStatus, BaseDialog + SaveForm, 
+		" ");
 
-   TtaShowDialogue (BaseDialog + SaveForm, FALSE);
+   TtaShowDialogue (BaseDialog + SaveForm, TRUE);
 #else /* _WINDOWS */
    CreateSaveAsDlgWindow (TtaGetViewFrame (document, view), pathname);
 #endif /* _WINDOWS */
@@ -563,34 +595,41 @@ void                DoSaveObjectAs (void)
 {
    char           tempfile[MAX_LENGTH];
    char           msg[MAX_LENGTH];
-   ThotBool         dst_is_local;
-   int              res;
+   ThotBool       dst_is_local;
+   int            res;
+   
+   if (SavingObject == 0)
+     return;
 
+   /* @@ JK Testing to see if this part of the function is used elsewhere */
+#if 0
    dst_is_local = !IsW3Path (SavePath);
+#else
+   dst_is_local = FALSE;
+#endif
 
    strcpy (tempfile, SavePath);
    strcat (tempfile, DIR_STR);
    strcat (tempfile, ObjectName);
 
-
    if (!dst_is_local)
      {
 	/* @@ We need to check the use of AMAYA_PREWRITE_VERIFY in this function*/
-	res = PutObjectWWW (SavingObject, tempSavedObject, tempfile,
-			    unknown_type,
-			    AMAYA_SYNC | AMAYA_NOCACHE |  AMAYA_FLUSH_REQUEST 
-			    | AMAYA_USE_PRECONDITIONS, NULL, NULL);
-	if (res)
-	  {
+       /* @@ JK: add mime type  */
+       res = PutObjectWWW (SavingObject, tempSavedObject, tempfile, NULL,
+			   AMAYA_SYNC | AMAYA_NOCACHE |  AMAYA_FLUSH_REQUEST 
+			   | AMAYA_USE_PRECONDITIONS, NULL, NULL);
+       if (res)
+	 {
 #ifndef _WINDOWS
-	     TtaSetDialoguePosition ();
-	     TtaShowDialogue (BaseDialog + SaveForm, FALSE);
+	   TtaSetDialoguePosition ();
+	   TtaShowDialogue (BaseDialog + SaveForm, FALSE);
 #endif /* !_WINDOWS */
-	     return;
-	  }
-	SavingObject = 0;
-	SavingDocument = 0;
-	return;
+	   return;
+	 }
+       SavingObject = 0;
+       SavingDocument = 0;
+       return;
      }
    if (TtaFileExist (tempfile))
      {
@@ -599,12 +638,12 @@ void                DoSaveObjectAs (void)
 	InitConfirm (SavingObject, 1, msg);
 	if (!UserAnswer)
 	  {
-	     /* the user has to change the name of the saving file */
+	    /* the user has to change the name of the saving file */
 #ifndef _WINDOWS
-	     TtaSetDialoguePosition ();
-	     TtaShowDialogue (BaseDialog + SaveForm, FALSE);
+	    TtaSetDialoguePosition ();
+	    TtaShowDialogue (BaseDialog + SaveForm, FALSE);
 #endif /* !_WINDOWS */
-	     return;
+	    return;
 	  }
      }
    TtaFileCopy (tempSavedObject, tempfile);
@@ -623,12 +662,36 @@ void                SaveDocumentAs (Document doc, View view)
    char           tempname[MAX_LENGTH];
    int              i;
 
+   /* Protection against multiple invocations of this function */
    if ((SavingDocument != 0 && SavingDocument != doc) ||
        SavingObject != 0)
       return;
+
    TextFormat = (DocumentTypes[doc] == docText ||
 		 DocumentTypes[doc] == docCSS ||
 		 DocumentTypes[doc] == docSource);
+
+   /*
+   ** initialize the user MIME type and charset global variables 
+   */
+
+   /* if there's no MIME type for this document, infer one */
+   if (!DocumentMeta[doc] || !DocumentMeta[doc]->content_type)
+     {
+       if (DocumentTypes[doc] == docHTML)
+	 strcpy (UserMimeType, "text/html");
+       else if (DocumentTypes[doc] == docText)
+	 strcpy (UserMimeType, "text/plain");
+       else if (DocumentTypes[doc] == docSVG)
+	 strcpy (UserMimeType, "text/xml+svg");
+       else if (DocumentTypes[doc] == docMath)
+	 strcpy (UserMimeType, "text/xml+mathml");
+       else if (DocumentTypes[doc] == docXml)
+	 strcpy (UserMimeType, "text/xml");
+     }
+   else
+     UserMimeType[0] = EOS;
+   UserCharset[0] = EOS;
 
    /* memorize the current document */
    if (SavingDocument == 0)
@@ -1167,7 +1230,7 @@ static ThotBool AddNoName (Document document, View view, char *url,
   Return 0 if the file has been saved
   ----------------------------------------------------------------------*/
 static int SafeSaveFileThroughNet (Document doc, char *localfile,
-				   char *remotefile, PicType filetype,
+				   char *remotefile, char *content_type,
 				   ThotBool use_preconditions)
 {
   char              msg[MAX_LENGTH];
@@ -1184,7 +1247,7 @@ static int SafeSaveFileThroughNet (Document doc, char *localfile,
   
   
 #ifdef AMAYA_DEBUG
-  fprintf(stderr, "SafeSaveFileThroughNet :  %s to %s type %d\n", localfile, remotefile, filetype);
+  fprintf(stderr, "SafeSaveFileThroughNet :  %s to %s type %s\n", localfile, remotefile, content_type);
 #endif
 
   /* Save */
@@ -1193,7 +1256,7 @@ static int SafeSaveFileThroughNet (Document doc, char *localfile,
   mode = AMAYA_SYNC | AMAYA_NOCACHE | AMAYA_FLUSH_REQUEST;
   mode = mode | ((use_preconditions) ? AMAYA_USE_PRECONDITIONS : 0);
 
-  res = PutObjectWWW (doc, localfile, tempfile, mode, filetype, NULL, NULL);
+  res = PutObjectWWW (doc, localfile, tempfile, content_type, mode, NULL, NULL);
   if (res != 0)
     /* The HTTP PUT method failed ! */
     return (res);
@@ -1252,6 +1315,7 @@ static ThotBool SaveObjectThroughNet (Document document, View view,
 {
   char            *tempname;
   char            *msg;
+  char            *content_type;
   int              remainder = 500;
   int              res;
 
@@ -1272,7 +1336,13 @@ static ThotBool SaveObjectThroughNet (Document document, View view,
 
   ActiveTransfer (document);
   TtaHandlePendingEvents ();
-  res = SafeSaveFileThroughNet (document, tempname, url, unknown_type,
+  
+  if (DocumentMeta[document])
+    content_type = DocumentMeta[document]->content_type;
+  else
+    content_type = NULL;
+
+  res = SafeSaveFileThroughNet (document, tempname, url, content_type,
 				use_preconditions);
   if (res != 0)
     {
@@ -1322,9 +1392,10 @@ static ThotBool SaveDocumentThroughNet (Document doc, View view, char *url,
   LoadedImageDesc *pImage;
   char            *tempname;
   char            *msg;
+  char            *content_type;
   int              remainder = 10000;
   int              index = 0, len, nb = 0;
-  int              imageType, res;
+  int              res;
 
   msg = TtaGetMemory (remainder);
   if (msg == NULL)
@@ -1419,7 +1490,9 @@ static ThotBool SaveDocumentThroughNet (Document doc, View view, char *url,
       TtaHandlePendingEvents ();
       pImage = NULL;
 
-      res = SafeSaveFileThroughNet (doc, tempname, url, unknown_type, use_preconditions);
+      if (DocumentMeta[doc])
+	content_type = DocumentMeta[doc]->content_type;
+      res = SafeSaveFileThroughNet (doc, tempname, url, content_type, use_preconditions);
       if (res != 0)
 	{
 	  DocNetworkStatus[doc] |= AMAYA_NET_ERROR;
@@ -1452,9 +1525,15 @@ static ThotBool SaveDocumentThroughNet (Document doc, View view, char *url,
 	{
 	  if (pImage->document == doc && pImage->status == IMAGE_MODIFIED)
 	    {
-	      imageType = pImage->imageType;
+	      /* we get the MIME type of the image. We reuse whatever the
+		 server sent if we have it, otherwise, we try to infer it from
+		 the image type as discovered by the handler */
+	      if (pImage->content_type)
+		content_type = pImage->content_type;
+	      else
+		content_type = PicTypeToMIME (pImage->imageType);
 	      res = SafeSaveFileThroughNet(doc, pImage->localName,
-					   pImage->originalName, imageType,
+					   pImage->originalName, content_type,
 					   use_preconditions);
 	      if (res)
 		{
@@ -2300,7 +2379,7 @@ static void UpdateImages (Document doc, ThotBool src_is_local,
   parameters, whether initial and final location are local or remote
   and recomputes URLs accordingly.
   ----------------------------------------------------------------------*/
-void DoSaveAs (void)
+void DoSaveAs (char *user_charset, char *user_mimetype)
 {
   NotifyElement       event;
   Document            doc;
@@ -2322,12 +2401,21 @@ void DoSaveAs (void)
   ThotBool	      docModified, toUndo;
   ThotBool            new_put_def_name;
   ThotBool            old_put_def_name;
+  char               *old_charset = NULL;
+  char               *old_mimetype = NULL;
+  CHARSET             charset;
+
+  if (SavingDocument == 0)
+    return;
 
   src_is_local = !IsW3Path (DocumentURLs[SavingDocument]);
   dst_is_local = !IsW3Path (SavePath);
   ok = TRUE;
   toUndo = FALSE;
   base = NULL;
+
+  /* save the context */
+  doc = SavingDocument;
 
 #ifdef AMAYA_DEBUG
   fprintf(stderr, "DoSaveAs : from %s to %s/%s , with images %d\n",
@@ -2498,6 +2586,23 @@ void DoSaveAs (void)
       oldLocal = GetLocalPath (doc, DocumentURLs[doc]);
       newLocal = GetLocalPath (doc, SavePath);
 
+      /* adjust the charset and MIME type */
+      if (user_charset && *user_charset)
+	{
+	  if (DocumentMeta[doc]->charset)
+	    old_charset = DocumentMeta[doc]->charset;
+	  DocumentMeta[doc]->charset = TtaStrdup (user_charset);
+	  /* change the charset of the doc itself */
+	  charset = TtaGetCharset (user_charset);
+	  TtaSetDocumentCharset (doc, charset);
+	}
+      if (user_mimetype && *user_mimetype)
+	{
+	  if (DocumentMeta[doc]->content_type)
+	    old_mimetype = DocumentMeta[doc]->content_type;
+	  DocumentMeta[doc]->content_type = TtaStrdup (user_mimetype);
+	}
+
       /* change display mode to avoid flicker due to callbacks executed when
 	 saving some elements, for instance META */
       dispMode = TtaGetDisplayMode (doc);
@@ -2627,6 +2732,11 @@ void DoSaveAs (void)
 	  if (oldLocal && !SaveAsText && strcmp (oldLocal, newLocal))
 	    /* free the previous temporary file */
 	    TtaFileUnlink (oldLocal);
+	  /* free the previous mime type and charset */
+	  if (old_charset)
+	    TtaFreeMemory (old_charset);
+	  if (old_mimetype)
+	    TtaFreeMemory (old_mimetype);
 	}
       else
 	{
@@ -2645,6 +2755,15 @@ void DoSaveAs (void)
 	      DocStatusUpdate (doc, docModified);
 	    }
 	  DocumentMeta[doc]->put_default_name = old_put_def_name;
+	  /* restore the previous charset and mime type */
+	  if (user_charset && DocumentMeta[doc]->charset)
+	    TtaFreeMemory (DocumentMeta[doc]->charset);
+	  DocumentMeta[doc]->charset = old_charset;
+	  charset = TtaGetCharset (old_charset);
+	  TtaSetDocumentCharset (doc, charset);
+	  if (user_mimetype && DocumentMeta[doc]->content_type)
+	    TtaFreeMemory (DocumentMeta[doc]->content_type);
+	  DocumentMeta[doc]->content_type = old_mimetype;
 	  /* propose to save a second time */
 	  SaveDocumentAs(doc, 1);
 	}

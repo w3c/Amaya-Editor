@@ -54,6 +54,12 @@ extern void InitConfirm3L ( Document document,
 extern void InitConfirm ( Document document,
                           View view,
                           char *label );
+extern void InitCharset ( Document document,
+                          View view,
+                          char *url );
+extern void InitMimeType ( Document document,
+                           View view,
+                           char *url );
 extern void OpenDoc ( Document doc,
                       View view );
 extern void OpenDocInNewWindow ( Document document,
@@ -226,6 +232,12 @@ extern void InitConfirm3L (/* Document document,
 extern void InitConfirm (/* Document document,
                             View view,
                             char *label */);
+extern void InitCharset (/* Document document,
+                            View view,
+                            char *url */);
+extern void InitMimeType (/* Document document,
+                             View view,
+                             char *url */);
 extern void OpenDoc (/* Document doc,
                         View view */);
 extern void OpenDocInNewWindow (/* Document document,
