@@ -1462,7 +1462,7 @@ boolean             logFile;
 	   TtaAddButton (doc, 1, iconSave, SaveDocument,
 			 TtaGetMessage (AMAYA, AM_BUTTON_SAVE),
 			 TBSTYLE_BUTTON, TRUE);
-	   TtaAddButton (doc, 1, iconPrint, TtcPrint,
+	   TtaAddButton (doc, 1, iconPrint, PrintAs,
 			 TtaGetMessage (AMAYA, AM_BUTTON_PRINT),
 			 TBSTYLE_BUTTON, TRUE);
 	   TtaAddButton (doc, 1, iconFind, TtcSearchText,

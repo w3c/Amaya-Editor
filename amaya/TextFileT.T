@@ -13,7 +13,7 @@ RULES
         Remove;
 	END;
 
- Line_: BEGIN
+ Line\240: BEGIN
 	Create '\12' After;
 	END;
 

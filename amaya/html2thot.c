@@ -688,7 +688,7 @@ static int          CharLevelElement[] =
    HTML_EL_Input,
    HTML_EL_Option, HTML_EL_OptGroup, HTML_EL_Option_Menu,
    HTML_EL_Text_Input, HTML_EL_Password_Input, HTML_EL_File_Input,
-   HTML_EL_Text_With_Frame, HTML_EL_Inserted_Text,
+   HTML_EL_Text_With_Frame, HTML_EL_Inserted_Text, HTML_EL_Text_Area,
    HTML_EL_Button_Input, HTML_EL_BUTTON,
    HTML_EL_LABEL,
    HTML_EL_BR,
@@ -2298,7 +2298,7 @@ UCHAR               c;
   int                 len;
 
   /* put the character into the buffer if it is not an ignored char. */
-  if ((int) c == 9)		/* HT */
+  if ((int) c == TAB)		/* HT */
     len = 8;			/* HT = 8 spaces */
   else
     len = 1;
@@ -5875,7 +5875,7 @@ STRING              HTMLbuf;
 	     else
 		/* it's not an end of line */
 	       {
-		  if ((int) charRead == 9)
+		  if ((int) charRead == TAB)
 		     /* HT = Horizontal tabulation */
 		    {
 		       if (currentState != 0)
@@ -5905,7 +5905,7 @@ STRING              HTMLbuf;
 		    }
 		  else if ((charRead < SPACE || (int) charRead >= 254 ||
 			    ((int) charRead >= 127 && (int) charRead <= 159))
-			   && (int) charRead != 9)
+			   && (int) charRead != TAB)
 		     /* it's not a printable character, ignore it */
 		     charRead = EOS;
 		  else
@@ -5935,7 +5935,7 @@ STRING              HTMLbuf;
 			  match = TRUE;
 		       else if (trans->trigger == SPACE)
 			  /* any space is a trigger */
-			  if ((int) charRead == 9 || (int) charRead == 10 ||
+			  if ((int) charRead == TAB || (int) charRead == 10 ||
 			      (int) charRead == 12)
 			     /* a delimiter has been read */
 			     match = TRUE;
@@ -6117,7 +6117,7 @@ STRING	           pathURL;
 	}
       else if ((charRead < SPACE || (int) charRead >= 254 ||
 		((int) charRead >= 127 && (int) charRead <= 159))
-	       && (int) charRead != 9)
+	       && (int) charRead != TAB)
 	/* it's not an end of line */
 	/* Ignore non printable characters except HT, LF, FF. */
 	/* it's not a printable character, ignore it */

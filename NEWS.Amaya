@@ -18,7 +18,7 @@ Extensions 1.5a:
 * CSS properties "left-margin", "top-margin", and "display: none" are
   now interpreted.
 
-* Loading, Editing, Printing and Saving of CSS files or simple Text files.
+* Amaya is now able to load, edit, print  and save CSS files or simple Text files.
 
 * Publication thru the net now uses the HTTP/1.1 etags and conditional
   headers to avoid the lost updates problem.
@@ -36,6 +36,14 @@ Extensions 1.5a:
   - Changing of TtaAddButton and TtaChangeButton to merge Windows and Unix
     dialogue API.
   - New functions: TtaGiveNextElement, TtaGetFirstLeaf, TtaGetLastLeaf
+
+* The Amaya CVS base is now available in read-only mode at
+  http://dev.w3.org/
+  The Root directory is now Amaya instead of Thot and the libwww is no longer
+  considered as a part of the Amaya code. The source tar file includes the
+  libwww code (libwww is a directory next to Amaya) and one who acceedes
+  the CVS base needs to get the libwww code (cvs get libwww/Library/src) to
+  compile Amaya.
 
 Fixed bugs 1.5a:
 ---------------
@@ -55,7 +63,7 @@ Fixed bugs 1.5a:
 * Copying an image from a remote document to a local document didn't work.
 
 * When following a link which had a "?foo" ending, Amaya treated that
-  ending as a query string
+  ending as a query string.
 
 * Some attributes values appeared with strange names in the
   Attribute menu.
@@ -70,6 +78,8 @@ Fixed bugs 1.5a:
 
 * CSS selectors like "PRE SPAN.test" didn't work.
 
+* The CSS parser didn't parse well the rule url("...").
+
 * SMALL elements could be displayed too small.
 
 * <basefont face="...."> was saved as <basefont facee="....">
@@ -81,3 +91,6 @@ Fixed bugs 1.5a:
 
 * Amaya crashed when loading an isolated image with a filename without
   a suffix.
+
+* People who compiled Amaya on windows platforms couldn't display jpeg images.
+  The problem is fixed now.

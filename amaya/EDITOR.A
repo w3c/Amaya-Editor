@@ -35,7 +35,7 @@ MENUS
 	view:1 File button:BSaveAs -> SaveDocumentAs;
 	view:1 File Separator;
 	view:1 File button:BSetUpandPrint -> SetupAndPrint;
-	view:1 File button:BPrint -> TtcPrint;
+	view:1 File button:BPrint -> PrintAs;
 	view:1 File Separator;
 	view:1 File button:BClose -> TtcCloseDocument;
 	view:1 File button:BExit -> AmayaClose;
@@ -149,9 +149,8 @@ MENUS
 	Types.Table Separator;
 	Types.Table button:BDeleteColumn -> DeleteColumn;
 
-	view:1 Links button:BCreateLink -> CreateLink;
+	view:1 Links button:BCreateLink -> CreateOrChangeLink;
 	view:1 Links button:BCreateTarget -> CreateTarget;
-	view:1 Links button:BChangeLink -> ChangeLink;
 	view:1 Links button:BDeleteAnchor -> DeleteAnchor;
 
 	view:1 Views toggle:TShowButtonbar -> TtcSwitchButtonBar;

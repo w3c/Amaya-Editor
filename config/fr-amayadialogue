@@ -114,76 +114,75 @@
 113 Cellule (TD)
 114 Cellule de t\352te (TH)
 115 D\351truire colonne de table
-116 Cr\351er lien...
+116 Cr\351er/changer lien...
 117 Cr\351er cible
-118 Changer lien...
-119 D\351truire ancre
-120 Montrer boutons
-121 Montrer adresse et titre
-122 Montrer les zones actives
-123 Montrer les cibles
-124 Grossir
-125 R\351duire
-126 Montrer la structure
-127 Montrer la vue altern\351e
-128 Montrer les liens
-129 Montrer la table des mati\350res
-130 Style de caract\350res...
-131 Couleurs...
-132 Format...
-133 Image de fond...
-134 Cr\351er une r\350gle...
-135 Appliquer une classe...
-136 Feuilles de style
-137 Types information
-138 Emphase
-139 Strong
-140 Cite
-141 D\351finition
-142 Code
-143 Variable
-144 Sample
-145 Keyboard
-146 Abr\351viation
-147 Acronyme
-148 Insertion
-149 Suppression
-150 El\351ments caract\350res
-151 Italique
-152 Gras
-153 T\351l\351type
-154 Gros
-155 Petit
-156 Indice
-157 Exposant
-158 Citation (Q)
-159 BiDi (BDO)
-160 Num\351roter les sections
-161 Construire un livre
-162 Ouvrir fichier log
-163 Options
-164 Nettoyer le cache
-165 Options d'affichage...
-166 Options d'edition/navigation...
-167 Options r\351seau...
-168 Sauver les options
-169 A propos de Amaya
-170 A propos de Amaya au W3C
-171 Naviguation
-172 S\351lection
-173 Chercher
-174 Vues
-175 Cr\351ation
-176 Liens
-177 Transformer
-178 Tables
-179 Math
-180 Zones actives
-181 Feuilles de style
-182 Attributs
-183 Corriger
-184 Publier
-185 Imprimer
-186 Num\351roter
-187 Construire un livre
-188 Configurer Amaya
+118 D\351truire ancre
+119 Montrer boutons
+120 Montrer adresse et titre
+121 Montrer les zones actives
+122 Montrer les cibles
+123 Grossir
+124 R\351duire
+125 Montrer la structure
+126 Montrer la vue altern\351e
+127 Montrer les liens
+128 Montrer la table des mati\350res
+129 Style de caract\350res...
+130 Couleurs...
+131 Format...
+132 Image de fond...
+133 Cr\351er une r\350gle...
+134 Appliquer une classe...
+135 Feuilles de style
+136 Types information
+137 Emphase
+138 Strong
+139 Cite
+140 D\351finition
+141 Code
+142 Variable
+143 Sample
+144 Keyboard
+145 Abr\351viation
+146 Acronyme
+147 Insertion
+148 Suppression
+149 El\351ments caract\350res
+150 Italique
+151 Gras
+152 T\351l\351type
+153 Gros
+154 Petit
+155 Indice
+156 Exposant
+157 Citation (Q)
+158 BiDi (BDO)
+159 Num\351roter les sections
+160 Construire un livre
+161 Ouvrir fichier log
+162 Options
+163 Nettoyer le cache
+164 Options d'affichage...
+165 Options d'edition/navigation...
+166 Options r\351seau...
+167 Sauver les options
+168 A propos de Amaya
+169 A propos de Amaya au W3C
+170 Naviguation
+171 S\351lection
+172 Chercher
+173 Vues
+174 Cr\351ation
+175 Liens
+176 Transformer
+177 Tables
+178 Math
+179 Zones actives
+180 Feuilles de style
+181 Attributs
+182 Corriger
+183 Publier
+184 Imprimer
+185 Num\351roter
+186 Construire un livre
+187 Configurer Amaya

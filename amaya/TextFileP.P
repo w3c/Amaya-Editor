@@ -156,9 +156,7 @@ BOXES
 RULES
 
  Document_URL:	BEGIN
-#ifndef PAGE
-	Visibility: 0;
-#endif
+	Visibility: 1;
 	END;
 
  TextFile: BEGIN
@@ -191,7 +189,7 @@ RULES
 #endif
 	END;
 
- Line_: BEGIN
+ Line\240: BEGIN
 	Line;
 	LineBreak: Yes;
 #ifdef PAGE

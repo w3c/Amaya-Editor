@@ -80,7 +80,7 @@
 79 Il y a %d requêtes en cours
 80 Netoyage du cache persistant - cela peut prendre quelques secondes ...
 81 Interrompre le chargement
-82 Document pr\351c\351dent
+82 Document precedent
 83 Document suivant
 84 Recharger
 85 Sauver
@@ -95,8 +95,8 @@
 94 Titre niveau 2
 95 Titre niveau 3
 96 Liste
-97 Liste num\351rot\351e
-98 Liste de d\351finitions
+97 Liste numerotee
+98 Liste de definitions
 99 Lien
 100 Table
 101 Le document n'a pas de nom. Sauv\351 en :

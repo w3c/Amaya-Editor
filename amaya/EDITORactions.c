@@ -2473,28 +2473,6 @@ View                view;
      }
 }
 
-/*----------------------------------------------------------------------
-   ChangeLink selects the new destination of the Link anchor.      
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                ChangeLink (Document doc, View view)
-#else  /* __STDC__ */
-void                ChangeLink (doc, view)
-Document            doc;
-View                view;
-
-#endif /* __STDC__ */
-{
-   Element             el;
-   int                 firstSelectedChar, i;
-
-   TtaGiveFirstSelectedElement (doc, &el, &firstSelectedChar, &i);
-   /* Search the anchor element */
-   el = SearchAnchor (doc, el, TRUE);
-   /* Select a new destination */
-   if (el != NULL)
-      SelectDestination (doc, el);
-}
 
 /*----------------------------------------------------------------------
    CreateOrChangeLink

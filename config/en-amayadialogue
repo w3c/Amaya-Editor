@@ -114,76 +114,75 @@
 113 Data cell (TD)
 114 Heading cell (TH)
 115 Delete table column
-116 create Link...
-117 create Target
-118 Change link...
-119 Delete anchor
-120 Show buttonbar
-121 Show address & title
-122 Show map areas
-123 Show targets
-124 Zoom in
-125 Zoom out
-126 Show structure
-127 Show alternate
-128 Show links
-129 Show table of contents
-130 Character style...
-131 Colors...
-132 Format...
-133 Background image...
-134 Create rule...
-135 Apply class...
-136 Style sheets
-137 Information type
-138 Emphasis
-139 Strong
-140 Cite
-141 Definition
-142 Code
-143 Variable
-144 Sample
-145 Keyboard
-146 Abbreviation
-147 Acronym
-148 Insertion
-149 Deletion
-150 Character element
-151 Italic
-152 Bold
-153 Teletype
-154 Big
-155 Small
-156 Subscript
-157 Superscript
-158 Quotation
-159 BiDi override
-160 Section numbering
-161 Make book
-162 Show log file
-163 Options
-164 Flush cache
-165 Appearance options...
-166 Browsing/Editing options...
-167 Networking options...
-168 Save the options
-169 About Amaya
-170 About Amaya at W3C
-171 Browsing
-172 Selecting
-173 Searching
-174 Views
-175 Creating elements
-176 Links
-177 Restructuring
-178 Tables
-179 Math
-180 Image maps
-181 Style sheets
-182 Attributes
-183 Spell Checking
-184 Publishing
-185 Printing
-186 Numbering
-187 Making books
-188 Configuring Amaya
+116 Create or change link...
+117 Create target
+118 Delete anchor
+119 Show buttonbar
+120 Show address & title
+121 Show map areas
+122 Show targets
+123 Zoom in
+124 Zoom out
+125 Show structure
+126 Show alternate
+127 Show links
+128 Show table of contents
+129 Character style...
+130 Colors...
+131 Format...
+132 Background image...
+133 Create rule...
+134 Apply class...
+135 Style sheets
+136 Information type
+137 Emphasis
+138 Strong
+139 Cite
+140 Definition
+141 Code
+142 Variable
+143 Sample
+144 Keyboard
+145 Abbreviation
+146 Acronym
+147 Insertion
+148 Deletion
+149 Character element
+150 Italic
+151 Bold
+152 Teletype
+153 Big
+154 Small
+155 Subscript
+156 Superscript
+157 Quotation
+158 BiDi override
+159 Section numbering
+160 Make book
+161 Show log file
+162 Options
+163 Flush cache
+164 Appearance options...
+165 Browsing/Editing options...
+166 Networking options...
+167 Save the options
+168 About Amaya
+169 About Amaya at W3C
+170 Browsing
+171 Selecting
+172 Searching
+173 Views
+174 Creating elements
+175 Links
+176 Restructuring
+177 Tables
+178 Math
+179 Image maps
+180 Style sheets
+181 Attributes
+182 Spell Checking
+183 Publishing
+184 Printing
+185 Numbering
+186 Making books
+187 Configuring Amaya

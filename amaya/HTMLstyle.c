@@ -2826,7 +2826,7 @@ boolean             isHTML;
   PresentationValue     image, value;
   STRING                url;
   STRING                bg_image;
-  CHAR                  sauve;
+  CHAR                  saved;
   STRING                base;
   CHAR                  tempname[MAX_LENGTH];
   CHAR                  imgname[MAX_LENGTH];
@@ -2878,10 +2878,13 @@ boolean             isHTML;
 	      while (*cssRule != EOS && *cssRule != ')')
 		cssRule++;
 	    }
-	  sauve = *cssRule;
+	  saved = *cssRule;
 	  *cssRule = EOS;
 	  url = TtaStrdup (base);
-	  *cssRule = sauve;
+	  *cssRule = saved;
+	  if (saved == '"')
+	    /* we need to skip two characters */
+	    cssRule++;	    
 	}
       cssRule++;
 
@@ -3624,8 +3627,8 @@ boolean             destroy;
   STRING              decl_end;
   STRING              sel_end;
   STRING              selector;
-  CHAR                sauve1;
-  CHAR                sauve2;
+  CHAR                saved1;
+  CHAR                saved2;
 
   /* separate the selectors string */
   cssRule = TtaSkipBlanks (cssRule);
@@ -3640,7 +3643,7 @@ boolean             destroy;
 	 *sel_end == EOL || *sel_end == '\r')
     sel_end--;
   sel_end++;
-  sauve1 = *sel_end;
+  saved1 = *sel_end;
   *sel_end = EOS;
   selector = cssRule;
 
@@ -3654,7 +3657,7 @@ boolean             destroy;
       fprintf (stderr, "Invalid STYLE declaration : %s\n", cssRule);
       return;
     }
-  sauve2 = *decl_end;
+  saved2 = *decl_end;
   *decl_end = EOS;
 
   /*
@@ -3671,8 +3674,8 @@ boolean             destroy;
   FreeGenericContext (ctxt);
 
   /* restore the string to its original form ! */
-  *sel_end = sauve1;
-  *decl_end = sauve2;
+  *sel_end = saved1;
+  *decl_end = saved2;
 }
 
 /************************************************************************

@@ -116,74 +116,73 @@
 115 **Delete table column
 116 Baðlantý yarat...
 117 Hedef yarat
-118 Baðlantý yarat...
-119 <A> tanýmý sil
-120 Tuþlarý göster
-121 Adres ve baþlýðý göster
-122 Yakýnlaþtýr
-123 **Show Targets
-124 Uzaklaþtýr
-125 Harita alanlarýný göster
-126 Yapýyý göster
-127 Alternatif gösterim
-128 Baðlantýlarý göster
-129 Ýçindekileri göster
-130 Karakter tarzý...
-131 Renkler...
-132 Biçim...
-133 Arkaplan görüntüsü...
-134 Kural yarat...
-135 \'class\' uygula...
-136 Tarzý tanýmlarý
-137 Bilgi türü
-138 Vurgu
-139 Kuvvetli
-140 Cite
-141 Taným
-142 Kod
-143 Deðiþken
-144 Örnek
-145 Tuþtakýmý
-146 **Abbreviation
-147 **Acronym
-148 **Insertion
-149 **Deletion
-150 Karakter birimi
-151 Ýtalik
-152 Kalýn
-153 Teletype
-154 Büyük
-155 Küçük
-156 Alt
-157 Üst
-158 **Quotation
-159 **BDO
-160 Bölüm numaralandýrmasý
-161 Kitap yap
-162 **Show log file
-163 **Options
-164 **Purge cache
-165 **Appearance options...
-166 **Browsing/Editing options...
-167 **Networking options...
-168 **Save the options
-169 Amaya hakkýnda
-170 **About Amaya at W3C
-171 Tarama
-172 Seçme
-173 Arama
-174 Görünümler
-175 Birim yaratma
-176 Baðlantýlar
-177 Yeniden yapýlandýrma
-178 Tablolar
-179 Matematik
-180 Görüntü haritalarý
-181 Tarz tanýmlarý
-182 Özellikler
-183 Yazým hatalarý aranýyor
-184 Sayfa yerleþtirme
-185 Bastýrma
-186 Numaralandýrmasý
-187 Kitap oluþturma
-188 Amaya yapýlandýrmasý
+118 <A> tanýmý sil
+119 Tuþlarý göster
+120 Adres ve baþlýðý göster
+121 Yakýnlaþtýr
+122 **Show Targets
+123 Uzaklaþtýr
+124 Harita alanlarýný göster
+125 Yapýyý göster
+126 Alternatif gösterim
+127 Baðlantýlarý göster
+128 Ýçindekileri göster
+129 Karakter tarzý...
+130 Renkler...
+131 Biçim...
+132 Arkaplan görüntüsü...
+133 Kural yarat...
+134 \'class\' uygula...
+135 Tarzý tanýmlarý
+136 Bilgi türü
+137 Vurgu
+138 Kuvvetli
+139 Cite
+140 Taným
+141 Kod
+142 Deðiþken
+143 Örnek
+144 Tuþtakýmý
+145 **Abbreviation
+146 **Acronym
+147 **Insertion
+148 **Deletion
+149 Karakter birimi
+150 Ýtalik
+151 Kalýn
+152 Teletype
+153 Büyük
+154 Küçük
+155 Alt
+156 Üst
+157 **Quotation
+158 **BDO
+159 Bölüm numaralandýrmasý
+160 Kitap yap
+161 **Show log file
+162 **Options
+163 **Purge cache
+164 **Appearance options...
+165 **Browsing/Editing options...
+166 **Networking options...
+167 **Save the options
+168 Amaya hakkýnda
+169 **About Amaya at W3C
+170 Tarama
+171 Seçme
+172 Arama
+173 Görünümler
+174 Birim yaratma
+175 Baðlantýlar
+176 Yeniden yapýlandýrma
+177 Tablolar
+178 Matematik
+179 Görüntü haritalarý
+180 Tarz tanýmlarý
+181 Özellikler
+182 Yazým hatalarý aranýyor
+183 Sayfa yerleþtirme
+184 Bastýrma
+185 Numaralandýrmasý
+186 Kitap oluþturma
+187 Amaya yapýlandýrmasý

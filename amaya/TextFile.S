@@ -8,7 +8,7 @@ STRUCT
    TextFile (ATTR PrintURL = Yes_;) =
 	AGGREGATE
 	Document_URL = TEXT;
-	BODY = List of (Line_ =
+	BODY = List of (Line\240 =
 				BEGIN
 				TEXT;
 				END);
