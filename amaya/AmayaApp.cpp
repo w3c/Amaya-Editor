@@ -9,7 +9,7 @@
 
 #define THOT_EXPORT extern
 #include "amaya.h"
-
+#include "appdialogue_wx.h"
 
 #include "wxAmayaSocketEventLoop.h"
 #include "wxAmayaSocketEvent.h"
@@ -103,16 +103,13 @@ bool AmayaApp::OnInit()
   // into one giant XRC file if you wanted, but then they become more 
   // diffcult to manage, and harder to reuse in later projects.   
 
-  // this is the amaya directory (need to be called after amaya_main or
+  // Now it's possible to load all the dialogs (need to be called after amaya_main or
   // TtaGetEnvString will return bad strings)
-  wxString amaya_directory( TtaGetEnvString ("THOTDIR"), *wxConvCurrent );
-
-  // Now it's possible to load all the dialogs
-  wxXmlResource::Get()->Load( amaya_directory+_T("/resources/xrc/InitConfirmDlgWX.xrc") );
-  wxXmlResource::Get()->Load( amaya_directory+_T("/resources/xrc/OpenDocDlgWX.xrc") );
-  wxXmlResource::Get()->Load( amaya_directory+_T("/resources/xrc/TitleDlgWX.xrc") );
-  wxXmlResource::Get()->Load( amaya_directory+_T("/resources/xrc/SearchDlgWX.xrc") );
-  wxXmlResource::Get()->Load( amaya_directory+_T("/resources/xrc/PrintDlgWX.xrc") );
+  wxXmlResource::Get()->Load( TtaGetResourcePathWX( WX_RESOURCES_XRC, "InitConfirmDlgWX.xrc" ) );
+  wxXmlResource::Get()->Load( TtaGetResourcePathWX( WX_RESOURCES_XRC, "OpenDocDlgWX.xrc" ) );
+  wxXmlResource::Get()->Load( TtaGetResourcePathWX( WX_RESOURCES_XRC, "TitleDlgWX.xrc") );
+  wxXmlResource::Get()->Load( TtaGetResourcePathWX( WX_RESOURCES_XRC, "SearchDlgWX.xrc") );
+  wxXmlResource::Get()->Load( TtaGetResourcePathWX( WX_RESOURCES_XRC, "PrintDlgWX.xrc") );
   // TODO: rajouter ici toutes les autres ressources a charger
   
   // just call amaya main from EDITORAPP.c

@@ -17,6 +17,7 @@
 #include "message.h"
 #include "libmsg.h"
 #include "frame.h"
+#include "appdialogue_wx.h"
 
 #undef THOT_EXPORT
 #define THOT_EXPORT extern
@@ -82,9 +83,8 @@ AmayaPage::AmayaPage( wxWindow * p_parent_window )
 
   // Split button creation
   // this button is used to quickly split the page 
-  wxString amaya_directory( TtaGetEnvString ("THOTDIR"), *wxConvCurrent );
-  wxBitmap button_split_icon1( amaya_directory + _T("/resources/icons/split_black.xpm"), wxBITMAP_TYPE_XPM );
-  wxBitmap button_split_icon2( amaya_directory + _T("/resources/icons/split_red.xpm"), wxBITMAP_TYPE_XPM );
+  wxBitmap button_split_icon1( TtaGetResourcePathWX( WX_RESOURCES_ICON, "split_black.xpm"), wxBITMAP_TYPE_XPM );
+  wxBitmap button_split_icon2( TtaGetResourcePathWX( WX_RESOURCES_ICON, "split_red.xpm"), wxBITMAP_TYPE_XPM );
   m_pSplitButton = new wxBitmapButton( this
 				       ,-1
 				       ,button_split_icon1
