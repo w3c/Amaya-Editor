@@ -4688,7 +4688,8 @@ void                TtaChangeMenuEntry (int ref, int entry, STRING text)
    TtaRedrawMenuEntry modifie la couleur et/ou la police de l'entre'e 
    entry du menu de'signe' par sa re'fe'rence ref.                    
   ----------------------------------------------------------------------*/
-void                TtaRedrawMenuEntry (int ref, int entry, STRING fontname, Pixel color, int activate)
+void                TtaRedrawMenuEntry (int ref, int entry, STRING fontname,
+					Pixel color, int activate)
 {
 #ifndef _GTK
    ThotWidget          w;
@@ -4753,7 +4754,7 @@ void                TtaRedrawMenuEntry (int ref, int entry, STRING fontname, Pix
 	     XtSetArg (args[n], XmNfontList, font);
 	     n++;
 
-	     if (color != -1)
+	     if ((int) color != -1)
 	       {
 		  /* La couleur imposee par l'application */
 		  XtSetArg (args[n], XmNforeground, color);

@@ -134,7 +134,8 @@ void                ClearViewSelection (int frame)
 		else
 		  {
 		    if (pFrame->FrSelectionBegin.VsIndBox == 0 ||
-			pAb1->AbLeafType == LtPolyLine)
+			pAb1->AbLeafType == LtPolyLine ||
+			pAb1->AbLeafType == LtPath)
 		      {
 			/* the whole box is selected */
 			x1 = pBox1->BxXOrg;
@@ -568,6 +569,7 @@ void InsertViewSelMarks (int frame, PtrAbstractBox pAb, int firstChar,
 	  pBox = pAb->AbBox;
 	  adline = SearchLine (pBox);
 	  graphSel = (pAb->AbLeafType == LtPolyLine ||
+		      pAb->AbLeafType == LtPath ||
 		      pAb->AbLeafType == LtGraphics);
 
 	  /* verifie la coherence des indices de caracteres */
@@ -593,8 +595,8 @@ void InsertViewSelMarks (int frame, PtrAbstractBox pAb, int firstChar,
 	  /* et si elle indique seulement une position */
 	  pFrame->FrSelectOnePosition = SelPosition;
 	  
-	  /* La selection porte sur le pave complet ou un point de controle */
-	  /* de pave polyline */
+	  /* La selection porte sur le pave complet ou un point d'un path */
+	  /* ou d'une polyline */
 	  if (firstChar == 0 || pAb->AbVolume == 0 ||
 	      graphSel || pAb->AbLeafType == LtPicture)
 	    {

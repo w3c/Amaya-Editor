@@ -2002,7 +2002,8 @@ static void         ContentEditing (int editType)
 	  else
 	    pAb = pBox->BxAbstractBox;
 	  if (pAb->AbReadOnly &&
-	      (editType == TEXT_CUT || editType == TEXT_INSERT || editType == TEXT_PASTE))
+	      (editType == TEXT_CUT || editType == TEXT_INSERT ||
+	       editType == TEXT_PASTE))
 	    return;
 	}
       /*-- La commande coller concerne le mediateur --*/
@@ -2012,7 +2013,8 @@ static void         ContentEditing (int editType)
 
       pFrame = &ViewFrameTable[frame - 1];
       pViewSel = &pFrame->FrSelectionBegin;
-      show = (documentDisplayMode[FrameTable[frame].FrDoc - 1] == DisplayImmediately);
+      show = (documentDisplayMode[FrameTable[frame].FrDoc - 1] ==
+	                                                  DisplayImmediately);
       if (pBox && editType == TEXT_SUP)
 	{
 	  /* don't remove the selection if it is at the end of the text */
@@ -2029,22 +2031,23 @@ static void         ContentEditing (int editType)
 	    {
 	      if (pAb->AbLeafType == LtPolyLine)
 		{
+		  /* ignore single segments (with or without arrow head(s)) */
 		  if (pAb->AbPolyLineShape != 'w' &&
 		      pAb->AbPolyLineShape != 'x' &&
 		      pAb->AbPolyLineShape != 'y' &&
 		      pAb->AbPolyLineShape != 'z')
+		    /* Add a point to a polyline */
 		    {
-		      /* Ajout de points dans une polyline */
-		      still = (pAb->AbPolyLineShape == 'p' ||
-			       pAb->AbPolyLineShape == 's');
+		      still = (pAb->AbPolyLineShape == 'p' || /* plygon */
+			       pAb->AbPolyLineShape == 's');  /* closed curve*/
 		      if (!APPgraphicModify (pAb->AbElement,
 					     pAb->AbPolyLineShape, frame,TRUE))
 			{
 			  x = pBox->BxXOrg - pFrame->FrXOrg;
 			  y = pBox->BxYOrg - pFrame->FrYOrg;
 			  i = pViewSel->VsIndBox;
-			  pBox->BxNChars = PolyLineExtension (frame, &x, &y, pBox,
-							      pBox->BxNChars, i, still);
+			  pBox->BxNChars = PolyLineExtension (frame, &x, &y,
+					       pBox, pBox->BxNChars, i, still);
 			  graphEdit = TRUE;
 			  pAb->AbVolume = pBox->BxNChars;
 			  if (pBox->BxPictInfo != NULL)
@@ -2062,7 +2065,8 @@ static void         ContentEditing (int editType)
 	      else
 		{
 		  if (ThotLocalActions[T_insertpaste] != NULL)
-		    (*ThotLocalActions[T_insertpaste]) (TRUE, FALSE, TEXT('L'), &ok);
+		    (*ThotLocalActions[T_insertpaste]) (TRUE, FALSE,
+							TEXT('L'), &ok);
 		  else
 		    ok = FALSE;
 		  if (ok)
@@ -2073,7 +2077,8 @@ static void         ContentEditing (int editType)
 	  else if (pAb->AbLeafType != LtPicture)
 	    {
 	      if (ThotLocalActions[T_insertpaste] != NULL)
-		(*ThotLocalActions[T_insertpaste]) (TRUE, FALSE, TEXT('L'), &ok);
+		(*ThotLocalActions[T_insertpaste]) (TRUE, FALSE,
+						    TEXT('L'), &ok);
 	      else
 		ok = FALSE;
 	      if (ok)
@@ -2104,9 +2109,11 @@ static void         ContentEditing (int editType)
 	    {
 	      /* take in account another box */
 	      if (ThotLocalActions[T_deletenextchar] != NULL &&
-		  (editType == TEXT_CUT || editType == TEXT_DEL || editType == TEXT_SUP))
+		  (editType == TEXT_CUT || editType == TEXT_DEL ||
+		   editType == TEXT_SUP))
 		{
-		  (*ThotLocalActions[T_deletenextchar]) (frame, pAb->AbElement, FALSE);
+		  (*ThotLocalActions[T_deletenextchar]) (frame, pAb->AbElement,
+							 FALSE);
 		  return;
 		}
 	      else
@@ -2119,13 +2126,14 @@ static void         ContentEditing (int editType)
 	    {
 	      if (pAb != pLastAb	/* il y a plus d'un pave */
 		  || (pAb->AbLeafType == LtText && editType == TEXT_INSERT)
-		  || pAb->AbLeafType == LtCompound	/* le pave est compose */
+		  || pAb->AbLeafType == LtCompound    /* le pave est compose */
 		  || pAb->AbLeafType == LtPageColBreak)	/* c'est une marque de page */
 		pAb = NULL;
 	      else if ((editType == TEXT_CUT || editType == TEXT_DEL ||
 			editType == TEXT_SUP || editType == TEXT_COPY) &&
 		       (pAb->AbVolume == 0 || pAb->AbLeafType == LtGraphics ||
-			pAb->AbLeafType == LtPath || pAb->AbLeafType == LtPicture))
+			pAb->AbLeafType == LtPath ||
+			pAb->AbLeafType == LtPicture))
 		/* coupe ou copie un pave vide ou graphique ou une image */
 		pAb = NULL;
 	      else if ((editType == TEXT_CUT || editType == TEXT_COPY) &&
@@ -2153,7 +2161,8 @@ static void         ContentEditing (int editType)
 	    CutCommand (FALSE);	/* Couper sans sauver */
 	  else if (editType == TEXT_CUT || editType == TEXT_COPY)
 	    {
-	      SaveInClipboard (&charsDelta, &spacesDelta, &x, 0, NULL, pAb, frame, &ClipboardThot);
+	      SaveInClipboard (&charsDelta, &spacesDelta, &x, 0, NULL, pAb,
+			       frame, &ClipboardThot);
 	      /* vide le clipboard du Mediateur */
 	      if (editType == TEXT_CUT && !FromKeyboard)
 		CutCommand (TRUE);
@@ -2172,18 +2181,22 @@ static void         ContentEditing (int editType)
 	      if (pViewSel->VsIndBox != 0)
 		{
 		  if (pBox->BxNChars <= 3)
-		    TtaDisplaySimpleMessage (INFO, LIB, TMSG_TWO_POINTS_IN_POLYLINE_NEEDED);
+		    TtaDisplaySimpleMessage (INFO, LIB,
+					   TMSG_TWO_POINTS_IN_POLYLINE_NEEDED);
 		  else if (pAb->AbPolyLineShape != 'w' &&
 			   pAb->AbPolyLineShape != 'x' &&
 			   pAb->AbPolyLineShape != 'y' &&
 			   pAb->AbPolyLineShape != 'z')
 		    {
 		      charsDelta = pViewSel->VsIndBox;
-		      if (!APPgraphicModify (pAb->AbElement, pAb->AbPolyLineShape, frame, TRUE))
+		      if (!APPgraphicModify (pAb->AbElement,
+					     pAb->AbPolyLineShape, frame,TRUE))
 			{
 			  /* Destruction du point courant de la polyline */
-			  DeletePointInPolyline (&(pAb->AbPolyLineBuffer), charsDelta);
-			  DeletePointInPolyline (&(pBox->BxBuffer), charsDelta);
+			  DeletePointInPolyline (&(pAb->AbPolyLineBuffer),
+						 charsDelta);
+			  DeletePointInPolyline (&(pBox->BxBuffer),
+						 charsDelta);
 			  graphEdit = TRUE;
 			  (pBox->BxNChars)--;
 			  if (pBox->BxPictInfo != NULL)
@@ -2195,15 +2208,20 @@ static void         ContentEditing (int editType)
 			  (pAb->AbVolume)--;
 			  if (charsDelta == pBox->BxNChars)
 			    {
-			      /* on vient de detruire le dernier point de la polyline */
+			      /* on vient de detruire le dernier point
+				 de la polyline */
 			      if (charsDelta == 1)
 				charsDelta = 0;
 			      else
 				charsDelta = 1;
 			    }
 			  pViewSel->VsIndBox = charsDelta;
-			  /* on force le reaffichage de la boite (+ les points de selection) */
-			  DefClip (frame, pBox->BxXOrg - EXTRA_GRAPH, pBox->BxYOrg - EXTRA_GRAPH, pBox->BxXOrg + pBox->BxWidth + EXTRA_GRAPH, pBox->BxYOrg + pBox->BxHeight + EXTRA_GRAPH);
+			  /* on force le reaffichage de la boite
+			     (+ les points de selection) */
+			  DefClip (frame, pBox->BxXOrg - EXTRA_GRAPH,
+				   pBox->BxYOrg - EXTRA_GRAPH,
+				   pBox->BxXOrg + pBox->BxWidth + EXTRA_GRAPH,
+				  pBox->BxYOrg + pBox->BxHeight + EXTRA_GRAPH);
 			}
 		    }
 		}
@@ -2274,37 +2292,47 @@ static void         ContentEditing (int editType)
 		defaultHeight = FALSE;
 		
 	      /* Traitement */
-	      if (editType == TEXT_INSERT && pAb->AbLeafType == LtPicture && !FromKeyboard)
-		LoadPictFile (pLine, defaultHeight, defaultWidth, pBox, pAb, frame);
+	      if (editType == TEXT_INSERT && pAb->AbLeafType == LtPicture &&
+		  !FromKeyboard)
+		LoadPictFile (pLine, defaultHeight, defaultWidth, pBox, pAb,
+			      frame);
 	      else if (editType == TEXT_CUT && !FromKeyboard)
 		{
-		  SaveInClipboard (&charsDelta, &spacesDelta, &x, i, pBuffer, pAb, frame, &ClipboardThot);
+		  SaveInClipboard (&charsDelta, &spacesDelta, &x, i, pBuffer,
+				   pAb, frame, &ClipboardThot);
 		  if (ClipboardThot.BuLength == 0)
 		    {
 		      if (ThotLocalActions[T_deletenextchar] != NULL)
-			(*ThotLocalActions[T_deletenextchar]) (frame, pAb->AbElement, FALSE);
+			(*ThotLocalActions[T_deletenextchar]) (frame,
+							pAb->AbElement, FALSE);
 		      else
 			{
-			  TtaDisplaySimpleMessage (INFO, LIB, TMSG_NOTHING_TO_DEL);
+			  TtaDisplaySimpleMessage (INFO, LIB,
+						   TMSG_NOTHING_TO_DEL);
 			  /* Pas de reaffichage */
 			  DefClip (frame, 0, 0, 0, 0);
 			}
-		      /* Il n'est pas necessaire de mettre a jour la selection */
+		      /* Inutile de mettre a jour la selection */
 		      pAb = NULL;
 		    }
 		  else
-		    RemoveSelection (charsDelta, spacesDelta, x, defaultHeight, defaultWidth, pLine, pBox, pAb, frame);
+		    RemoveSelection (charsDelta, spacesDelta, x, defaultHeight,
+				     defaultWidth, pLine, pBox, pAb, frame);
 		}
-	      else if ((editType == TEXT_DEL || editType == TEXT_SUP) && !FromKeyboard)
+	      else if ((editType == TEXT_DEL || editType == TEXT_SUP) &&
+		       !FromKeyboard)
 		if (pAb->AbVolume == 0 ||
-		    pViewSel->VsIndBox + pViewSel->VsBox->BxIndChar == pAb->AbVolume)
+		    pViewSel->VsIndBox + pViewSel->VsBox->BxIndChar ==
+		                                                 pAb->AbVolume)
 		  {
 		    /* current selection is at the element end */
 		    if (ThotLocalActions[T_deletenextchar] != NULL)
-		      (*ThotLocalActions[T_deletenextchar]) (frame, pAb->AbElement, FALSE);
+		      (*ThotLocalActions[T_deletenextchar]) (frame,
+						       pAb->AbElement, FALSE);
 		    else
 		      {
-			TtaDisplaySimpleMessage (INFO, LIB, TMSG_NOTHING_TO_DEL);
+			TtaDisplaySimpleMessage (INFO, LIB,
+						 TMSG_NOTHING_TO_DEL);
 			/* Pas de reaffichage */
 			DefClip (frame, 0, 0, 0, 0);
 		      }
@@ -2313,15 +2341,18 @@ static void         ContentEditing (int editType)
 		    pAb = NULL;
 		  }
 		else
-		  DeleteSelection (defaultHeight, defaultWidth, pLine, pBox, pAb, frame);
+		  DeleteSelection (defaultHeight, defaultWidth, pLine, pBox,
+				   pAb, frame);
 	      else if (editType == TEXT_PASTE && !FromKeyboard)
 		{
-		  /* Verifie que l'alphabet du clipboard correspond a celui du pave */
+		  /* Verifie que l'alphabet du clipboard correspond a celui
+		     du pave */
 		  if (ClipboardLanguage == 0)
 		    ClipboardLanguage = TtaGetDefaultLanguage ();
 		  if (pAb->AbLeafType != LtText && pAb->AbLanguage != ClipboardLanguage)
 		    {
-		      /* charsDelta contient le nombre de carateres qui precedent dans la boite */
+		      /* charsDelta contient le nombre de carateres qui
+			 precedent dans la boite */
 		      NewTextLanguage (pAb, charsDelta + pBox->BxIndChar + 1, ClipboardLanguage, TRUE);
 		      pBox = pViewSel->VsBox;
 		      if (pBox != NULL)
@@ -2337,13 +2368,15 @@ static void         ContentEditing (int editType)
 
 		  if (pAb != NULL)
 		    {
-		      PasteClipboard (defaultHeight, defaultWidth, pLine, pBox, pAb, frame, &ClipboardThot);
+		      PasteClipboard (defaultHeight, defaultWidth, pLine, 
+				      pBox, pAb, frame, &ClipboardThot);
 		      textPasted = TRUE;
 		    }
 		}
 	      else if (editType == TEXT_COPY && !FromKeyboard)
 		{
-		  SaveInClipboard (&charsDelta, &spacesDelta, &x, i, pBuffer, pAb, frame, &ClipboardThot);
+		  SaveInClipboard (&charsDelta, &spacesDelta, &x, i, pBuffer,
+				   pAb, frame, &ClipboardThot);
 		  /* Reset the clipping */
 		  DefClip (frame, 0, 0, 0, 0);
 		  /* the selection is not changed */
@@ -2351,16 +2384,21 @@ static void         ContentEditing (int editType)
 		}
 	      else if (editType == TEXT_X_PASTE && !FromKeyboard)
 		{
-		  PasteClipboard (defaultHeight, defaultWidth, pLine, pBox, pAb, frame, &XClipboard);
+		  PasteClipboard (defaultHeight, defaultWidth, pLine, pBox,
+				  pAb, frame, &XClipboard);
 		  textPasted = TRUE;
 		}
 	      else if (pAb->AbLeafType == LtPicture && FromKeyboard)
-		LoadPictFile (pLine, defaultHeight, defaultWidth, pBox, pAb, frame);
+		LoadPictFile (pLine, defaultHeight, defaultWidth, pBox, pAb,
+			      frame);
 	      else if (pAb->AbLeafType == LtSymbol && FromKeyboard)
-		LoadSymbol ((char) editType, pLine, defaultHeight, defaultWidth, pBox, pAb, frame);
-	      else if ((pAb->AbLeafType == LtGraphics || pAb->AbLeafType == LtPolyLine) &&
+		LoadSymbol ((char) editType, pLine, defaultHeight,
+			    defaultWidth, pBox, pAb, frame);
+	      else if ((pAb->AbLeafType == LtGraphics ||
+			pAb->AbLeafType == LtPolyLine) &&
 		       FromKeyboard)
-		LoadShape ((char) editType, pLine, defaultHeight, defaultWidth, pBox, pAb, frame);
+		LoadShape ((char) editType, pLine, defaultHeight, defaultWidth,
+			   pBox, pAb, frame);
 	    }
 	}
       
@@ -2581,7 +2619,8 @@ void                InsertChar (int frame, UCHAR_T c, int keyboard)
 			  {
 			    CloseTextInsertion ();
 			    if (ThotLocalActions[T_deletenextchar] != NULL)
-			      (*ThotLocalActions[T_deletenextchar]) (frame, pAb->AbElement, TRUE);
+			      (*ThotLocalActions[T_deletenextchar]) (frame,
+							 pAb->AbElement, TRUE);
 			    pFrame->FrReady = TRUE;
 			    return;
 			  }
@@ -2604,8 +2643,10 @@ void                InsertChar (int frame, UCHAR_T c, int keyboard)
 					{
 					  pBox->BxBuffer = pBuffer;
 					  pAb->AbText = pBuffer;
-					  /* S'il y a une boite vide avant pSelBox */
-					  if (pBox->BxNexChild != pSelBox && pBox->BxNexChild != NULL)
+					  /* S'il y a une boite vide avant
+					     pSelBox */
+					  if (pBox->BxNexChild != pSelBox &&
+					      pBox->BxNexChild != NULL)
 					    pBox->BxNexChild->BxBuffer = pBuffer;
 					}
 				      /* MAJ de la boite precedente */
@@ -2631,7 +2672,8 @@ void                InsertChar (int frame, UCHAR_T c, int keyboard)
 				      pBox->BxBuffer = pBuffer;
 				      pAb->AbText = pBuffer;
 				      /* S'il y a une boite vide avant pSelBox */
-				      if (pBox->BxNexChild != pSelBox && pBox->BxNexChild != NULL)
+				      if (pBox->BxNexChild != pSelBox &&
+					  pBox->BxNexChild != NULL)
 					pBox->BxNexChild->BxBuffer = pBuffer;
 				    }
 				  /* MAJ de la boite precedente */
@@ -2670,7 +2712,8 @@ void                InsertChar (int frame, UCHAR_T c, int keyboard)
 					  pBox->BxBuffer = pBuffer;
 					  pAb->AbText = pBuffer;
 					  /* S'il y a une boite vide avant pSelBox */
-					  if (pBox->BxNexChild != pSelBox && pBox->BxNexChild != NULL)
+					  if (pBox->BxNexChild != pSelBox &&
+					      pBox->BxNexChild != NULL)
 					    pBox->BxNexChild->BxBuffer = pBuffer;
 					}
 				      /* MAJ de la boite precedente */

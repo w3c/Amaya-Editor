@@ -379,7 +379,8 @@ ThotBool  GetCurrentSelection (PtrDocument * pDoc, PtrElement * firstEl, PtrElem
 		/* empty element. The whole element is selected */
 		FirstSelectedChar = 0;
 	  }
-	if (pEl->ElTerminal && pEl->ElLeafType == LtPolyLine)
+	if (pEl->ElTerminal &&
+	    (pEl->ElLeafType == LtPolyLine || pEl->ElLeafType == LtPath))
 	  {
 	     *firstChar = SelectedPointInPolyline;
 	     *lastChar = SelectedPointInPolyline;
@@ -1026,6 +1027,7 @@ static void   DisplaySel (PtrElement pEl, int view, int frame, ThotBool *abExist
 	    /* the text leaf is partly selected */
 	    partialSel = TRUE;
 	  else if ((pEl->ElLeafType == LtPolyLine ||
+		    pEl->ElLeafType == LtPath ||
 		    pEl->ElLeafType == LtGraphics) &&
 		   SelectedPointInPolyline > 0)
 	    partialSel = TRUE;
@@ -1061,6 +1063,7 @@ static void   DisplaySel (PtrElement pEl, int view, int frame, ThotBool *abExist
 	    /* that text leaf is partly selected */
 	    partialSel = TRUE;
 	  else if ((pEl->ElLeafType == LtPolyLine ||
+		    pEl->ElLeafType == LtPath ||
 		    pEl->ElLeafType == LtGraphics) &&
 		   SelectedPointInPolyline > 0)
 	    partialSel = TRUE;
@@ -1104,6 +1107,7 @@ static void   DisplaySel (PtrElement pEl, int view, int frame, ThotBool *abExist
 	  if (pEl->ElLeafType == LtText)
 	    firstChar = FirstSelectedChar;
 	  else if (pEl->ElLeafType == LtPolyLine ||
+		   pEl->ElLeafType == LtPath ||
 		   pEl->ElLeafType == LtGraphics)
 	    firstChar = SelectedPointInPolyline;
 	  else if (pEl->ElLeafType == LtPicture)
@@ -1119,6 +1123,7 @@ static void   DisplaySel (PtrElement pEl, int view, int frame, ThotBool *abExist
 	  if (pEl->ElLeafType == LtText)
 	    lastChar = LastSelectedChar;
 	  else if (pEl->ElLeafType == LtPolyLine ||
+		   pEl->ElLeafType == LtPath ||
 		   pEl->ElLeafType == LtGraphics)
 	    lastChar = SelectedPointInPolyline;
 	  else if (pEl->ElLeafType == LtPicture)
@@ -1494,6 +1499,7 @@ static void SelectStringOrPosition (PtrDocument pDoc, PtrElement pEl, int firstC
 
 	   LastSelectedElement = FirstSelectedElement;
 	   if (pEl->ElLeafType == LtPolyLine ||
+	       pEl->ElLeafType == LtPath ||
 	       pEl->ElLeafType == LtGraphics)
 	     {
 		SelectedPointInPolyline = firstChar;
@@ -1733,10 +1739,9 @@ void SelectElement (PtrDocument pDoc, PtrElement pEl, ThotBool begin, ThotBool c
 		      TtaSetCurrentKeyboard (0);
 	    ******/
 	    /* if a graphic shape is selected, display the graphic palette */
-	    if (FirstSelectedElement->ElLeafType == LtGraphics)
-	      TtaSetCurrentKeyboard (1);
-	    /* if a polyline is selected, display the graphic palette */
-	    else if (FirstSelectedElement->ElLeafType == LtPolyLine)
+	    if (FirstSelectedElement->ElLeafType == LtGraphics ||
+		FirstSelectedElement->ElLeafType == LtPolyLine ||
+		FirstSelectedElement->ElLeafType == LtPath)
 	      TtaSetCurrentKeyboard (1);
 	  }
 	/* update all the menus that depend on the current selection */
@@ -2045,9 +2050,11 @@ void           AddInSelection (PtrElement pEl, ThotBool last)
 	      if (FirstSelectedElement->ElTerminal &&
 		  ((FirstSelectedElement->ElLeafType == LtText &&
 		    FirstSelectedChar > 1) ||
-		   (FirstSelectedElement->ElLeafType == LtPolyLine &&
+		   ((FirstSelectedElement->ElLeafType == LtPolyLine ||
+		     FirstSelectedElement->ElLeafType == LtPath) &&
 		    SelectedPointInPolyline > 0)))
-		SelectElement (SelectedDocument, FirstSelectedElement, TRUE, TRUE);
+		SelectElement (SelectedDocument, FirstSelectedElement, TRUE,
+			       TRUE);
 	      SelectedElement[0] = FirstSelectedElement;
 	      NSelectedElements = 1;
 	    }
@@ -2284,6 +2291,7 @@ ThotBool ChangeSelection (int frame, PtrAbstractBox pAb, int rank,
   error = FALSE;
   doubleClickRef = FALSE;
   graphSel = (pAb->AbElement->ElLeafType == LtPolyLine ||
+	      pAb->AbElement->ElLeafType == LtPath ||
 	      (pAb->AbElement->ElLeafType == LtGraphics &&
 	       pAb->AbElement->ElGraph == 'g'));
   /* process double clicks and extensions for polyline vertices */
@@ -2581,6 +2589,7 @@ ThotBool ChangeSelection (int frame, PtrAbstractBox pAb, int rank,
 	   else if (rank > 0 && pEl->ElTerminal &&
 		    (pEl->ElLeafType == LtText ||
 		     pEl->ElLeafType == LtPolyLine ||
+		     pEl->ElLeafType == LtPath ||
 		     pEl->ElLeafType == LtGraphics ||
 		     pEl->ElLeafType == LtPicture))
 	     SelectPositionWithEvent (pDoc, pEl, rank);

@@ -166,6 +166,17 @@ static ThotBool     IsSiblingBox (PtrBox pBox, PtrBox pRefBox)
 
 
 /*----------------------------------------------------------------------
+  MirrorPath inverts horizontally and/or vertically all points of a path.
+  The parameter inAbtractBox is TRUE when the invertion concerns the
+  abstract box instead of the box.
+  ----------------------------------------------------------------------*/
+static void MirrorPath (PtrAbstractBox pAb, ThotBool horizRef,
+			ThotBool vertRef, ThotBool inAbtractBox)
+{
+  /* todo */
+}
+
+/*----------------------------------------------------------------------
   MirrorPolyline inverts horizontally and/or vertically points in the polyline.
   The parameter inAbtractBox is TRUE when the invertion concerns the
   abstract box instead of the box.
@@ -267,15 +278,18 @@ void MirrorShape (PtrAbstractBox pAb, ThotBool horizRef, ThotBool vertRef,
       pChildAb = pAb->AbFirstEnclosed;
       while (pChildAb != NULL)
 	{
-	  if (pChildAb->AbLeafType == LtGraphics
-	      || pChildAb->AbLeafType == LtPolyLine
-	      || pChildAb->AbLeafType == LtCompound)
+	  if (pChildAb->AbLeafType == LtGraphics ||
+	      pChildAb->AbLeafType == LtPolyLine ||
+	      pChildAb->AbLeafType == LtPath ||
+	      pChildAb->AbLeafType == LtCompound)
 	    MirrorShape (pChildAb, horizRef, vertRef, inAbtractBox);
 	  pChildAb = pChildAb->AbNext;
 	}
     }
   else if (pAb->AbLeafType == LtPolyLine)
     MirrorPolyline (pAb, horizRef, vertRef, inAbtractBox);
+  else if (pAb->AbLeafType == LtPath)
+    MirrorPath (pAb, horizRef, vertRef, inAbtractBox);
   else if (pAb->AbLeafType == LtGraphics)
     {
       /* Ajuste le graphique de la boite */
@@ -951,7 +965,8 @@ void XMoveAllEnclosed (PtrBox pBox, int delta, int frame)
 	{
 	  /* stretched box not already handled */
 	  if (pBox->BxHorizFlex &&
-	      (!pBox->BxAbstractBox->AbLeafType == LtCompound || pBox->BxPacking == 0))
+	      (!pBox->BxAbstractBox->AbLeafType == LtCompound ||
+	       pBox->BxPacking == 0))
 	    MoveBoxEdge (pBox, NULL, OpHorizDep, delta, frame, TRUE);
 	  else
 	    {
@@ -1100,7 +1115,8 @@ void YMoveAllEnclosed (PtrBox pBox, int delta, int frame)
 	{
 	  if (pBox->BxVertFlex &&
 	  /* stretched box not already handled */
-	      (!pBox->BxAbstractBox->AbLeafType == LtCompound || pBox->BxPacking == 0))
+	      (!pBox->BxAbstractBox->AbLeafType == LtCompound ||
+	       pBox->BxPacking == 0))
 	    MoveBoxEdge (pBox, NULL, OpVertDep, delta, frame, FALSE);
 	  else
 	    {
@@ -1693,7 +1709,8 @@ void ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
 	    pBox->BxMoved = NULL;
 	  
 	  /* Force the reevaluation of polyline control points */
-	  if (pCurrentAb->AbLeafType == LtPolyLine && pBox->BxPictInfo != NULL)
+	  if (pCurrentAb->AbLeafType == LtPolyLine &&
+	      pBox->BxPictInfo != NULL)
 	    {
 	      /* free control points */
 	      free ((STRING) pBox->BxPictInfo);
@@ -1702,12 +1719,14 @@ void ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
 	    
 	  /* Check the validity of dependency rules */
 	  toMove = TRUE;
-	  if (pCurrentAb->AbEnclosing != NULL && pCurrentAb->AbEnclosing->AbBox != NULL)
+	  if (pCurrentAb->AbEnclosing != NULL &&
+	      pCurrentAb->AbEnclosing->AbBox != NULL)
 	    toMove = (pCurrentAb->AbEnclosing->AbBox->BxType != BoGhost &&
 		      pCurrentAb->AbEnclosing->AbBox->BxType != BoBlock);
 	  
 	  /* check positionning constraints */
-	  if (!toMove || pBox->BxHorizEdge == Left || pBox->BxHorizEdge == VertRef)
+	  if (!toMove || pBox->BxHorizEdge == Left ||
+	      pBox->BxHorizEdge == VertRef)
 	    {
 	      /*====> The left is fixed */
 	      /* Move the middle and the right */
@@ -1778,7 +1797,8 @@ void ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
 		    j += endTrans;
 		}
 	      
-	      DefClip (frame, i - k, pBox->BxYOrg - k, j + k, pBox->BxYOrg + pBox->BxHeight + k);
+	      DefClip (frame, i - k, pBox->BxYOrg - k, j + k,
+		       pBox->BxYOrg + pBox->BxHeight + k);
 	    }
 	  
 	  /* Moving sibling boxes and the parent? */
@@ -2168,7 +2188,8 @@ void ResizeHeight (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
 	    pBox->BxMoved = NULL;
 	  
 	  /* Force the reevaluation of polyline control points */
-	  if (pCurrentAb->AbLeafType == LtPolyLine && pBox->BxPictInfo != NULL)
+	  if (pCurrentAb->AbLeafType == LtPolyLine &&
+	      pBox->BxPictInfo != NULL)
 	    {
 	      /* free control points */
 	      free ((STRING) pBox->BxPictInfo);
@@ -2181,7 +2202,8 @@ void ResizeHeight (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
 	    if (pCurrentAb->AbEnclosing->AbBox != NULL)
 	      toMove = pCurrentAb->AbEnclosing->AbBox->BxType != BoGhost;
 	  /* Check the validity of dependency rules */
-	  if (!toMove || pBox->BxVertEdge == Top || pBox->BxVertEdge == HorizRef)
+	  if (!toMove || pBox->BxVertEdge == Top ||
+	      pBox->BxVertEdge == HorizRef)
 	    {
 	      /*====> The top is fixed */
 	      /* Move the middle and the bottom */
@@ -2251,7 +2273,8 @@ void ResizeHeight (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
 		  if (endTrans > 0)
 		    j += endTrans;
 		}
-	      DefClip (frame, pBox->BxXOrg - k, i - k, pBox->BxXOrg + pBox->BxWidth + k, j + k);
+	      DefClip (frame, pBox->BxXOrg - k, i - k,
+		       pBox->BxXOrg + pBox->BxWidth + k, j + k);
 	    }
 	  
 	  /* Moving sibling boxes and the parent? */
@@ -2321,8 +2344,8 @@ void ResizeHeight (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
 			    {
 			      if (pRelation->ReBox == pBox)
 				{
-				  if (pCurrentAb->AbLeafType == LtText
-				      && pCurrentAb->AbHorizRef.PosAbRef == NULL)
+				  if (pCurrentAb->AbLeafType == LtText &&
+				      pCurrentAb->AbHorizRef.PosAbRef == NULL)
 				    j = FontBase (pBox->BxFont) + pBox->BxTMargin + pBox->BxTBorder + pBox->BxTPadding - pBox->BxHorizRef;
 				  else
 				    j = delta;

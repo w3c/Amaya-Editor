@@ -33,22 +33,14 @@
 
 extern ThotColorStruct cblack;
 extern int             ColorPs;
+extern BOOL            autoScroll;
+extern int             LastPageNumber, LastPageWidth, LastPageHeight;
 
-#define	MAX_STACK      50
-#define	MIDDLE_OF(v1, v2) (((v1)+(v2))/2.0)
-#define SEG_SPLINE     5
-#define ALLOC_POINTS   300
+int                    X, Y;
 
-typedef struct stack_point
-  {
-     float               x1, y1, x2, y2, x3, y3, x4, y4;
-  }
-StackPoint;
-static StackPoint   stack[MAX_STACK];
-static int          stack_deep;
-extern int          LastPageNumber, LastPageWidth, LastPageHeight;
-
-int                 X, Y;
+static DWORD           fontLangInfo = -1;
+static int             SameBox = 0; /* 1 if the text is in the same box */
+static int             NbWhiteSp;
 
 #include "buildlines_f.h"
 #include "context_f.h"
@@ -1485,128 +1477,6 @@ void DrawPolygon (int frame, int thick, int style, int x, int y,
 }
 
 /*----------------------------------------------------------------------
-  PolyNewPoint : add a new point to the current polyline.
-  ----------------------------------------------------------------------*/
-static ThotBool PolyNewPoint (int x, int y,ThotPoint **points,
-			      int *npoints, int *maxpoints)
-{
-  ThotPoint          *tmp;
-  int                 size;
-
-  if (*npoints >= *maxpoints)
-    {
-      size = *maxpoints + ALLOC_POINTS;
-      if ((tmp = (ThotPoint *) realloc (*points, size * sizeof (ThotPoint))) == 0)
-	return (FALSE);
-      else
-	{
-	  /* la reallocation a reussi */
-	  *points = tmp;
-	  *maxpoints = size;
-	}
-    }
-
-  /* ignore identical points */
-  if (*npoints > 0 &&
-      (*points)[*npoints - 1].x == x && (*points)[*npoints - 1].y == y)
-    return (FALSE);
-  
-  (*points)[*npoints].x = x;
-  (*points)[*npoints].y = y;
-  (*npoints)++;
-  return (TRUE);
-}
-
-/*----------------------------------------------------------------------
-  PushStack : push a spline on the stack.
-  ----------------------------------------------------------------------*/
-static void PushStack (float x1, float y1, float x2, float y2, float x3,
-		       float y3, float x4, float y4)
-{
-   StackPoint         *stack_ptr;
-
-   if (stack_deep == MAX_STACK)
-      return;
-
-   stack_ptr = &stack[stack_deep];
-   stack_ptr->x1 = x1;
-   stack_ptr->y1 = y1;
-   stack_ptr->x2 = x2;
-   stack_ptr->y2 = y2;
-   stack_ptr->x3 = x3;
-   stack_ptr->y3 = y3;
-   stack_ptr->x4 = x4;
-   stack_ptr->y4 = y4;
-   stack_deep++;
-}
-
-/*----------------------------------------------------------------------
-  PopStack : pop a spline from the stack.
-  ----------------------------------------------------------------------*/
-static ThotBool PopStack (float *x1, float *y1, float *x2, float *y2,
-			  float *x3, float *y3, float *x4, float *y4)
-{
-   StackPoint         *stack_ptr;
-
-   if (stack_deep == 0)
-      return (FALSE);
-
-   stack_deep--;
-   stack_ptr = &stack[stack_deep];
-   *x1 = stack_ptr->x1;
-   *y1 = stack_ptr->y1;
-   *x2 = stack_ptr->x2;
-   *y2 = stack_ptr->y2;
-   *x3 = stack_ptr->x3;
-   *y3 = stack_ptr->y3;
-   *x4 = stack_ptr->x4;
-   *y4 = stack_ptr->y4;
-   return (TRUE);
-}
-
-
-/*----------------------------------------------------------------------
-  PolySplit : split a poly line and push the results on the stack.
-  ----------------------------------------------------------------------*/
-static void PolySplit (float a1, float b1, float a2, float b2,
-		       float a3, float b3, float a4, float b4,
-		       ThotPoint **points, int *npoints, int *maxpoints)
-{
-   register float      tx, ty;
-   float               x1, y1, x2, y2, x3, y3, x4, y4;
-   float               sx1, sy1, sx2, sy2;
-   float               tx1, ty1, tx2, ty2, xmid, ymid;
-
-   stack_deep = 0;
-   PushStack (a1, b1, a2, b2, a3, b3, a4, b4);
-
-   while (PopStack (&x1, &y1, &x2, &y2, &x3, &y3, &x4, &y4))
-     {
-	if (fabs (x1 - x4) < SEG_SPLINE && fabs (y1 - y4) < SEG_SPLINE)
-	   PolyNewPoint (FloatToInt (x1), FloatToInt (y1), points, npoints,
-			 maxpoints);
-	else
-	  {
-	     tx   = (float) MIDDLE_OF (x2, x3);
-	     ty   = (float) MIDDLE_OF (y2, y3);
-	     sx1  = (float) MIDDLE_OF (x1, x2);
-	     sy1  = (float) MIDDLE_OF (y1, y2);
-	     sx2  = (float) MIDDLE_OF (sx1, tx);
-	     sy2  = (float) MIDDLE_OF (sy1, ty);
-	     tx2  = (float) MIDDLE_OF (x3, x4);
-	     ty2  = (float) MIDDLE_OF (y3, y4);
-	     tx1  = (float) MIDDLE_OF (tx2, tx);
-	     ty1  = (float) MIDDLE_OF (ty2, ty);
-	     xmid = (float) MIDDLE_OF (sx2, tx1);
-	     ymid = (float) MIDDLE_OF (sy2, ty1);
-
-	     PushStack (xmid, ymid, tx1, ty1, tx2, ty2, x4, y4);
-	     PushStack (x1, y1, sx1, sy1, sx2, sy2, xmid, ymid);
-	  }
-     }
-}
-
-/*----------------------------------------------------------------------
   DrawCurve draw an open curve.
   Parameter buffer is a pointer to the list of control points.
   nb indicates the number of points.
@@ -1623,19 +1493,20 @@ void DrawCurve (int frame, int thick, int style, int x, int y,
 		PtrTextBuffer buffer, int nb, int fg, int arrow,
 		C_points *controls)
 {
-  ThotPoint           *points;
-  int                 npoints, maxpoints;
   PtrTextBuffer       adbuff;
   int                 i, j;
   float               x1, y1, x2, y2;
   float               cx1, cy1, cx2, cy2;
+  POINT               ptCurve[3];
+  HDC                 display;
   HPEN                hPen;
   HPEN                hOldPen;
 
-  /* alloue la liste des points */
-  npoints = 0;
-  maxpoints = ALLOC_POINTS;
-  points = (ThotPoint *) TtaGetMemory (sizeof (ThotPoint) * maxpoints);
+  if (fg < 0)
+    thick = 0;
+  if (thick <= 0)
+    return;
+
   adbuff = buffer;
   y += FrameTable[frame].FrTopMargin;
   j = 1;
@@ -1659,12 +1530,42 @@ void DrawCurve (int frame, int thick, int style, int x, int y,
 
   /* backward arrow  */
   if (arrow == 2 || arrow == 3)
-      DrawArrowHead (frame, FloatToInt (cx1), FloatToInt (cy1), (int) x1, (int) y1, thick, fg);
+      DrawArrowHead (frame, FloatToInt (cx1), FloatToInt (cy1), (int) x1,
+		     (int) y1, thick, fg);
 
+#ifdef _WIN_PRINT
+  display = TtPrinterDC;
+#else  /* _WIN_PRINT */
+  WIN_GetDeviceContext (frame);
+  display = TtDisplay;
+  SelectClipRgn (display, clipRgn);
+#endif /* _WIN_PRINT */
+
+  switch (style)
+    {
+    case 3:
+      hPen = CreatePen (PS_DOT, thick, ColorPixel (fg));
+      break;
+    case 4:
+      hPen = CreatePen (PS_DASH, thick, ColorPixel (fg)); 
+      break;
+    default:
+      hPen = CreatePen (PS_SOLID, thick, ColorPixel (fg));   
+      break;
+    }
+  hOldPen = SelectObject (display, hPen);
+
+  MoveToEx (display, x1, y1, NULL);
   for (i = 2; i < nb; i++)
     {
-      PolySplit (x1, y1, cx1, cy1, cx2, cy2, x2, y2, &points, &npoints,
-		 &maxpoints);
+      ptCurve[0].x = cx1;
+      ptCurve[0].y = cy1;
+      ptCurve[1].x = cx2;
+      ptCurve[1].y = cy2;
+      ptCurve[2].x = x2;
+      ptCurve[2].y = y2;
+      PolyBezierTo (display, &ptCurve[0], 3);
+
       /* skip to next points */
       x1 = x2;
       y1 = y2;
@@ -1681,12 +1582,10 @@ void DrawCurve (int frame, int thick, int style, int x, int y,
 	      adbuff = adbuff->BuNext;
 	      j = 0;
 	    }
-	  x2 = (float) (x + PixelValue (adbuff->BuPoints[j].XCoord,
-					UnPixel, NULL,
-					ViewFrameTable[frame - 1].FrMagnification));
-	  y2 = (float) (y + PixelValue (adbuff->BuPoints[j].YCoord,
-					UnPixel, NULL,
-					ViewFrameTable[frame - 1].FrMagnification));
+	  x2 = (float) (x + PixelValue (adbuff->BuPoints[j].XCoord, UnPixel,
+			     NULL, ViewFrameTable[frame - 1].FrMagnification));
+	  y2 = (float) (y + PixelValue (adbuff->BuPoints[j].YCoord, UnPixel,
+                             NULL, ViewFrameTable[frame - 1].FrMagnification));
 	  if (i == nb - 2)
 	    {
 	      cx1 = (controls[i].rx * 3 + x1 - x) / 4 + x;
@@ -1701,56 +1600,16 @@ void DrawCurve (int frame, int thick, int style, int x, int y,
 	    }
 	}
     }
-  PolyNewPoint ((int) x2, (int) y2, &points, &npoints, &maxpoints);
 
-   if (fg < 0)
-     thick = 0;
-   /* how to stroke the polygone */
-   if (thick == 0)
-     hPen = CreatePen (PS_NULL, thick, ColorPixel (fg));
-   else
-     {
-       switch (style)
-	 {
-	 case 3:
-	   hPen = CreatePen (PS_DOT, thick, ColorPixel (fg));
-	   break;
-	 case 4:
-	   hPen = CreatePen (PS_DASH, thick, ColorPixel (fg)); 
-	   break;
-	 default:
-	   hPen = CreatePen (PS_SOLID, thick, ColorPixel (fg));   
-	   break;
-	 }
-     }
-#ifdef _WIN_PRINT
-   /* fill the polygone */
-   hOldPen = SelectObject (TtPrinterDC, hPen);
-
-   /* draw the border */
-   if (thick > 0)
-     Polyline (TtPrinterDC, points, nb);
-   SelectObject (TtPrinterDC, hOldPen);
-#else  /* _WIN_PRINT */
-   WIN_GetDeviceContext (frame);
-   SelectClipRgn (TtDisplay, clipRgn);
-
-   /* fill the polygone */
-   hOldPen = SelectObject (TtDisplay, hPen);
-   /* draw the border */
-    if (thick > 0)
-     Polyline (TtDisplay, points, nb);
-   SelectObject (TtDisplay, hOldPen);
-   WIN_ReleaseDeviceContext ();
+  SelectObject (display, hOldPen);
+  DeleteObject (hPen);
+#ifndef _WIN_PRINT
+  WIN_ReleaseDeviceContext ();
 #endif /* _WIN_PRINT */
-
-   DeleteObject (hPen);
   /* Forward arrow */
   if (arrow == 1 || arrow == 3)
-    DrawArrowHead (frame, FloatToInt (cx2), FloatToInt (cy2), (int) x2, (int) y2, thick, fg);
-
-   /* free the table of points */
-   free (points);
+    DrawArrowHead (frame, FloatToInt (cx2), FloatToInt (cy2), (int) x2,
+		   (int) y2, thick, fg);
 }
 
 /*----------------------------------------------------------------------
@@ -1766,25 +1625,66 @@ void DrawSpline (int frame, int thick, int style, int x, int y,
 		 PtrTextBuffer buffer, int nb, int fg, int bg,
 		 int pattern, C_points *controls)
 {
-  ThotPoint     *points;
-  int           npoints, maxpoints;
   PtrTextBuffer adbuff;
   int           i, j;
   float         x1, y1, x2, y2;
   float         cx1, cy1, cx2, cy2;
   Pixmap        pat = (Pixmap) 0;
+  HDC           display;
   HPEN          hPen;
   HPEN          hOldPen;
   LOGBRUSH      logBrush;
   HBRUSH        hBrush;
   HBRUSH        hOldBrush;
+  POINT         ptCurve[3];
 
-  /* allocate the list of points */
-  npoints = 0;
-  maxpoints = ALLOC_POINTS;
-  points = (ThotPoint *) TtaGetMemory (sizeof (ThotPoint) * maxpoints);
-  adbuff = buffer;
+  if (fg < 0)
+    /* the outline is transparent. Don't draw it */
+    thick = 0;
+  if (thick <= 0 && bg < 0)
+    return;
+
+#ifdef _WIN_PRINT
+   display = TtPrinterDC;
+#else  /* _WIN_PRINT */
+   WIN_GetDeviceContext (frame);
+   display = TtDisplay;
+   SelectClipRgn (display, clipRgn);
+#endif /* _WIN_PRINT */
+  /* how to fill the polygon */
+  pat = (Pixmap) CreatePattern (0, fg, bg, pattern);
+  if (pat == 0)
+    logBrush.lbStyle = BS_NULL;
+  else
+    {
+      logBrush.lbColor = ColorPixel (bg);
+      logBrush.lbStyle = BS_SOLID;
+    } 
+  hBrush = CreateBrushIndirect (&logBrush);
+  if (hBrush)
+    hOldBrush = SelectObject (display, hBrush);
+  /* how to stroke the polygon */
+  if (thick == 0)
+    hPen = CreatePen (PS_NULL, thick, ColorPixel (fg));
+  else
+    {
+      switch (style)
+	{
+	case 3:
+	  hPen = CreatePen (PS_DOT, thick, ColorPixel (fg));
+	  break;
+	case 4:
+	  hPen = CreatePen (PS_DASH, thick, ColorPixel (fg)); 
+	  break;
+	default:
+	  hPen = CreatePen (PS_SOLID, thick, ColorPixel (fg));   
+	  break;
+	}
+    }
+  hOldPen = SelectObject (display, hPen);
+
   y += FrameTable[frame].FrTopMargin;
+  adbuff = buffer;
   j = 1;
   x1 = (float) (x + PixelValue (adbuff->BuPoints[j].XCoord,
 				UnPixel, NULL,
@@ -1804,18 +1704,24 @@ void DrawSpline (int frame, int thick, int style, int x, int y,
   cx2 = controls[j].lx + x;
   cy2 = controls[j].ly + y;
 
+  BeginPath (display);
+  MoveToEx (display, x1, y1, NULL);
+
   for (i = 2; i < nb; i++)
     {
-      PolySplit (x1, y1, cx1, cy1, cx2, cy2, x2, y2, &points, &npoints,
-		 &maxpoints);
+      ptCurve[0].x = cx1;
+      ptCurve[0].y = cy1;
+      ptCurve[1].x = cx2;
+      ptCurve[1].y = cy2;
+      ptCurve[2].x = x2;
+      ptCurve[2].y = y2;
+      PolyBezierTo (display, &ptCurve[0], 3);
+
       /* next points */
-      x1 = x2;
-      y1 = y2;
       cx1 = controls[i].rx + x;
       cy1 = controls[i].ry + y;
       if (i < nb - 1)
 	{
-	  /* not the last loop */
 	  j++;
 	  if (j >= adbuff->BuLength &&
 	      adbuff->BuNext != NULL)
@@ -1825,111 +1731,57 @@ void DrawSpline (int frame, int thick, int style, int x, int y,
 	      j = 0;
 	    }
 	  x2 = (float) (x + PixelValue (adbuff->BuPoints[j].XCoord,
-					UnPixel, NULL,
-					ViewFrameTable[frame - 1].FrMagnification));
+				   UnPixel, NULL,
+				   ViewFrameTable[frame - 1].FrMagnification));
 	  y2 = (float) (y + PixelValue (adbuff->BuPoints[j].YCoord,
-					UnPixel, NULL,
-					ViewFrameTable[frame - 1].FrMagnification));
+				   UnPixel, NULL,
+				   ViewFrameTable[frame - 1].FrMagnification));
 	  cx2 = controls[i + 1].lx + x;
 	  cy2 = controls[i + 1].ly + y;
 	}
       else
 	{
-	  /* loop around the origin point */
+	  /* last point. The next one is the first */
 	  x2 = (float) (x + PixelValue (buffer->BuPoints[1].XCoord,
-					UnPixel, NULL,
-					ViewFrameTable[frame - 1].FrMagnification));
+				   UnPixel, NULL,
+				   ViewFrameTable[frame - 1].FrMagnification));
 	  y2 = (float) (y + PixelValue (buffer->BuPoints[1].YCoord,
-					UnPixel, NULL,
-					ViewFrameTable[frame - 1].FrMagnification));
+				   UnPixel, NULL,
+				   ViewFrameTable[frame - 1].FrMagnification));
 	  cx2 = controls[1].lx + x;
 	  cy2 = controls[1].ly + y;
 	}
     }
 
   /* close the polyline */
-  PolySplit (x1, y1, cx1, cy1, cx2, cy2, x2, y2, &points, &npoints, &maxpoints);
-  PolyNewPoint ((int) x2, (int) y2, &points, &npoints, &maxpoints);
+  ptCurve[0].x = cx1;
+  ptCurve[0].y = cy1;
+  ptCurve[1].x = cx2;
+  ptCurve[1].y = cy2;
+  ptCurve[2].x = x2;
+  ptCurve[2].y = y2;
+  PolyBezierTo (display, &ptCurve[0], 3);
+  EndPath (display);
+  /* draw the curve */
+  StrokeAndFillPath (display);
 
-   if (fg < 0)
-     thick = 0;
-   /* how to stroke the polygone */
-   if (thick == 0)
-     hPen = CreatePen (PS_NULL, thick, ColorPixel (fg));
-   else
-     {
-       switch (style)
-	 {
-	 case 3:
-	   hPen = CreatePen (PS_DOT, thick, ColorPixel (fg));
-	   break;
-	 case 4:
-	   hPen = CreatePen (PS_DASH, thick, ColorPixel (fg)); 
-	   break;
-	 default:
-	   hPen = CreatePen (PS_SOLID, thick, ColorPixel (fg));   
-	   break;
-	 }
-     }
-   /* how to fill the polygone */
-   pat = (Pixmap) CreatePattern (0, fg, bg, pattern);
-   if (pat == 0)
-     logBrush.lbStyle = BS_NULL;
-   else
-     {
-       logBrush.lbColor = ColorPixel (bg);
-       logBrush.lbStyle = BS_SOLID;
- 
-     } 
-   hBrush = CreateBrushIndirect (&logBrush);
-
-#ifdef _WIN_PRINT
-   /* fill the polygone */
-   hOldPen = SelectObject (TtPrinterDC, hPen);
-   if (hBrush)
-     {
-       hOldBrush = SelectObject (TtPrinterDC, hBrush);
-       Polygon (TtPrinterDC, points, nb);
-       SelectObject (TtPrinterDC, hOldBrush);
-     }
-
-   /* draw the border */
-   if (thick > 0)
-     Polyline (TtPrinterDC, points, nb);
-   SelectObject (TtPrinterDC, hOldPen);
-#else  /* _WIN_PRINT */
-   WIN_GetDeviceContext (frame);
-   SelectClipRgn (TtDisplay, clipRgn);
-
-   /* fill the polygone */
-   hOldPen = SelectObject (TtDisplay, hPen);
-   if (hBrush)
-     {
-       hOldBrush = SelectObject (TtDisplay, hBrush);
-       Polygon (TtDisplay, points, nb);
-       SelectObject (TtDisplay, hOldBrush);
-     }
-
-   /* draw the border */
-    if (thick > 0)
-     Polyline (TtDisplay, points, nb);
-   SelectObject (TtDisplay, hOldPen);
-   WIN_ReleaseDeviceContext ();
+  if (hBrush)
+    {
+      SelectObject (display, hOldBrush);
+      DeleteObject (hBrush);
+    }
+  if (pat != 0)
+    if (!DeleteObject ((HGDIOBJ) pat))
+      WinErrorBox (NULL, TEXT("Pattern"));
+  SelectObject (display, hOldPen);
+  DeleteObject (hPen);
+#ifndef _WIN_PRINT
+  WIN_ReleaseDeviceContext ();
 #endif /* _WIN_PRINT */
-
-   if (hBrush)
-     DeleteObject (hBrush);
-   DeleteObject (hPen);
-   if (pat != 0)
-     if (!DeleteObject ((HGDIOBJ) pat))
-       WinErrorBox (NULL, TEXT("Pattern"));
-
-   /* free the table of points */
-   free (points);
 }
 
 /*----------------------------------------------------------------------
-  DrawPath draws a path.
+  SetPath draws a path.
   Parameter path is a pointer to the list of path segments
   fg indicates the drawing color
   ----------------------------------------------------------------------*/
@@ -2054,7 +1906,7 @@ void DrawPath (int frame, int thick, int style, int x, int y,
 	  SetPath (frame, display, x, y, path);
 	  EndPath (display);
 	  FillPath (display);
-      SelectObject (display, hOldBrush);
+	  SelectObject (display, hOldBrush);
 	  DeleteObject (hBrush);
 	  DeleteObject ((HGDIOBJ) pat);
 	}
@@ -2075,7 +1927,7 @@ void DrawPath (int frame, int thick, int style, int x, int y,
 	    }
 	  hOldPen = SelectObject (display, hPen);
 	  SetPath (frame, display, x, y, path);
-      SelectObject (display, hOldPen);
+	  SelectObject (display, hOldPen);
 	  DeleteObject (hPen);
 	}
 #ifndef _WIN_PRINT

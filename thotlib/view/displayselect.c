@@ -423,6 +423,7 @@ void         DisplayBgBoxSelection (int frame, PtrBox pBox)
 	}
       else if (pAb->AbLeafType == LtPicture ||
 	       pAb->AbLeafType == LtGraphics ||
+	       pAb->AbLeafType == LtPath ||
 	       pAb->AbLeafType == LtPolyLine)
 	DisplayPointSelection (frame, pBox, 0);
       else
