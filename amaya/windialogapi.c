@@ -93,6 +93,7 @@ static CHAR_T       winCurLang [100];
 static CHAR_T       currentFileToPrint [MAX_PATH];
 static CHAR_T       attDlgTitle [100];
 static STRING       lpPrintTemplateName = (STRING) 0;
+static int          numFormClose;
 static int          currentDoc;
 static int          currentView;
 static int          currentRef;
@@ -822,18 +823,20 @@ int   confirm_save;
  CreateCloseDocDlgWindow
  ------------------------------------------------------------------------*/
 #ifdef __STDC__
-void CreateCloseDocDlgWindow (HWND parent, STRING title, STRING msg, ThotBool* save_befor, ThotBool* close_dont_save)
+void CreateCloseDocDlgWindow (HWND parent, STRING title, STRING msg, int num_form_close, ThotBool* save_befor, ThotBool* close_dont_save)
 #else  /* !__STDC__ */
-void CreateCloseDocDlgWindow (parent, title, msg, save_befor, close_dont_save)
-HWND  parent;
-STRING title;
-STRING msg;
+void CreateCloseDocDlgWindow (parent, title, msg, num_form_close, save_befor, close_dont_save)
+HWND      parent;
+STRING    title;
+STRING    msg;
+int       num_form_close;
 ThotBool* save_befor;
 ThotBool* close_dont_save;
 #endif /* __STDC__ */
 {  
 	usprintf (message, msg);
 	usprintf (wndTitle, title);
+	numFormClose = num_form_close;
 
 	switch (app_lang) {
            case FR_LANG:
@@ -2754,22 +2757,25 @@ LPARAM lParam;
 				break;
 		   case WM_COMMAND:
 			    switch (LOWORD (wParam)) {
+				       case IDCANCEL:
+                            ThotCallback (numFormClose, INTEGER_DATA, (STRING)0);
+			                closeDontSave = TRUE;
+                            saveBeforeClose = FALSE;
+					        EndDialog (hwnDlg, IDCANCEL);
+							break;
+
 				       case ID_SAVEDOC:
+                            ThotCallback (numFormClose, INTEGER_DATA, (STRING)1);
 			                closeDontSave   = FALSE;
 	                        saveBeforeClose = TRUE;
 							EndDialog (hwnDlg, ID_SAVEDOC);
 							break;
 
 				       case IDC_DONTSAVE:
+                            ThotCallback (numFormClose, INTEGER_DATA, (STRING)2);
 			                closeDontSave   = FALSE;
                             saveBeforeClose = FALSE;
 					        EndDialog (hwnDlg, IDC_DONTSAVE);
-							break;
-
-				       case IDCANCEL:
-			                closeDontSave = TRUE;
-                            saveBeforeClose = FALSE;
-					        EndDialog (hwnDlg, IDCANCEL);
 							break;
 				}
 				break;
