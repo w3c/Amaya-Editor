@@ -60,11 +60,7 @@ do
    Thot/classes/jigsaw.zip \
    Thot/classes/sources.zip \
    Thot/classes/thotlib.zip \
-   Thot/classes/lib/biss \
-   Thot/classes/lib/biss.awt \
-   Thot/classes/lib/biss.awt.kernel \
-   Thot/classes/lib/javac.properties \
-   Thot/classes/lib/appletviewer.properties \
+   Thot/classes/lib \
    Thot/batch/MachineType \
    Thot/amaya/COPYRIGHT \
    Thot/amaya/COPYRIGHT.html \

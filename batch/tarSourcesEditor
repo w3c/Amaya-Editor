@@ -6,7 +6,7 @@
 #
 # And the associated Librairies for supported versions.
 #
-EDITORVERSION=2.1b
+EDITORVERSION=2.1d
 THOTDIR=/tahiti/diffusion/opera
 DEST=/tahiti/thottape
 
@@ -264,6 +264,8 @@ schemas/Text_SGML.inc \
 schemas/exc_matrix.h \
 schemas/Math.h \
 schemas/Rapport.h \
+schemas/Paragraphe.trans \
+schemas/Rapport.trans \
 schemas/Arbre2.S \
 schemas/Draw2.S \
 schemas/Draw3.S \
@@ -377,7 +379,13 @@ schemas/Table.en \
 thot/EDITOR.A \
 thot/EDITORactions.c \
 thot/EDITORactions.h \
+thot/TransParser.c \
+thot/TransPmatch.c \
+thot/trans.h \
 thot/f/EDITORAPP_f.h \
 thot/f/EDITORactions_f.h \
+thot/f/Trans_f.h \
+thot/f/TransParser_f.h \
+thot/f/TransPmatch_f.h \
  | $COMPRESS  > $DEST/thoteditor-src-$EDITORVERSION.tar.gz
 

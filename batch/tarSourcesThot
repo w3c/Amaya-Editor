@@ -13,7 +13,7 @@
 #       English.tar.gz
 # and   French.tar.gz
 #
-THOTVERSION=2.1c
+THOTVERSION=2.1d
 THOTDIR=/tahiti/diffusion/opera
 DEST=/tahiti/thottape
 PLATFORMS="solaris2 LINUX-ELF LINUX-SPARC SUN4 SGI RS6000 osf1"
@@ -638,6 +638,9 @@ Thot/thotlib/internals/f/referenceapi_f.h \
 Thot/thotlib/internals/f/references_f.h \
 Thot/thotlib/internals/f/regexp_f.h \
 Thot/thotlib/internals/f/registry_f.h \
+Thot/thotlib/internals/f/res_f.h \
+Thot/thotlib/internals/f/resgen_f.h \
+Thot/thotlib/internals/f/resmatch_f.h \
 Thot/thotlib/internals/f/savedoc_f.h \
 Thot/thotlib/internals/f/schemas_f.h \
 Thot/thotlib/internals/f/schemastr_f.h \
@@ -717,6 +720,7 @@ Thot/thotlib/internals/h/constpiv.h \
 Thot/thotlib/internals/h/constprs.h \
 Thot/thotlib/internals/h/conststr.h \
 Thot/thotlib/internals/h/consttra.h \
+Thot/thotlib/internals/h/constres.h \
 Thot/thotlib/internals/h/copyright.xbm \
 Thot/thotlib/internals/h/corrmenu.h \
 Thot/thotlib/internals/h/corrmsg.h \
@@ -798,6 +802,9 @@ Thot/thotlib/tree/pagecommands.c \
 Thot/thotlib/tree/paginate.c \
 Thot/thotlib/tree/referenceapi.c \
 Thot/thotlib/tree/references.c \
+Thot/thotlib/tree/res.c \
+Thot/thotlib/tree/resgen.c \
+Thot/thotlib/tree/resmatch.c \
 Thot/thotlib/tree/structschema.c \
 Thot/thotlib/tree/tree.c \
 Thot/thotlib/tree/treeapi.c \
