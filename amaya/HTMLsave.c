@@ -1412,19 +1412,6 @@ void RestartParser (Document doc, char *localFile,
   /* Remove the previous namespaces declaration */
   TtaFreeNamespaceDeclarations (doc);
   TtaSetDisplayMode (doc, NoComputedDisplay);
-  for (i = 1; i < DocumentTableLength; i++)
-    if (DocumentURLs[i] != NULL)
-      if (DocumentSource[i] == doc && DocumentTypes[i] == docLog)
-	{
-	  /* remove the log file attached to the current document */
-	  TtaCloseDocument (i);
-	  /* remove the log file */
-	  TtaFileUnlink (DocumentURLs[i]);
-	  TtaFreeMemory (DocumentURLs[i]);
-	  DocumentURLs[i] = NULL;
-	  /* switch off the button Show Parsing errors file */
-	  TtaSetItemOff (doc, 1, File, BShowLogFile);
-	}
 
   /* check if there is an XML declaration with a charset declaration */
   charsetname[0] = EOS;
@@ -1493,6 +1480,8 @@ void RestartParser (Document doc, char *localFile,
   /* check parsing errors */
   if (show_errors)
     CheckParsingErrors (doc);
+  else
+    CloseLogs (doc);
 }
 
 /*----------------------------------------------------------------------
@@ -2197,8 +2186,6 @@ void DoSynchronize (Document doc, View view, NotifyElement *event)
        tempdoc = GetLocalPath (doc, DocumentURLs[doc]);
        if (saveBefore)
 	 {
-	   /* close log files */
-	   CloseLogs (doc);
 	   /* save the current state of the document into the temporary file */
 	   SetNamespacesAndDTD (doc);
 	   if (DocumentTypes[doc] == docLibrary || DocumentTypes[doc] == docHTML)
@@ -2234,8 +2221,6 @@ void DoSynchronize (Document doc, View view, NotifyElement *event)
      {
        if (saveBefore)
 	 {
-	   /* close log files */
-	   CloseLogs (otherDoc);
 	   /* get the current position in the document */
 	   position = RelativePosition (otherDoc, &distance);
 	   TtaClearUndoHistory (otherDoc);

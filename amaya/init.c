@@ -1212,6 +1212,9 @@ void ShowLogFile (Document doc, View view)
   char     fileName [100];
   int      newdoc;
 
+  /* Close the logs file */
+  CloseLogs (doc);
+
   sprintf (fileName, "%s%c%d%cPARSING.ERR",
 	   TempFileDirectory, DIR_SEP, doc, DIR_SEP);
   newdoc = GetAmayaDoc (fileName, NULL, 0, doc, (ClickEvent)CE_LOG, FALSE,
@@ -1289,6 +1292,9 @@ void CheckParsingErrors (Document doc)
   int        prof;
 #endif /*_PARSING*/
 
+  /* Close the Log file */
+  CloseLogs (doc);
+  
   if (BADMimeType)
     {
       /* the mime type doesn't match the doctype */
