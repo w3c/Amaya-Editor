@@ -669,8 +669,11 @@ printf("<<<<<<<<<<<<<<<%d\n", table->AbBox->BxWidth);
       pBox = colBox[cRef]->AbBox;
       /* add padding and border space */
       if (pOldBox == NULL)
-	remainder += pBox->BxXOrg - table->AbBox->BxXOrg;
-      else
+	{
+	  if (pBox->BxXOrg - table->AbBox->BxXOrg > 0)
+	    remainder += pBox->BxXOrg - table->AbBox->BxXOrg;
+	}
+      else if (pBox->BxXOrg - pOldBox->BxXOrg - pOldBox->BxWidth > 0)
 	remainder += pBox->BxXOrg - pOldBox->BxXOrg - pOldBox->BxWidth;
 
       if (pBox->BxWidth > 0)
@@ -881,7 +884,7 @@ printf ("Width[%d]=%d\n", cRef, pBox->BxWidth);
 			px = 0;
 		      if (pBox->BxMaxWidth > minsize && j < delta)
 			{
-			  /* now this column takes its maximum width */
+			  /* now this column gets the maximum width */
 			  colWidth[cRef] = -1;
 			  still = TRUE;
 			  var = var + j;

@@ -1174,12 +1174,13 @@ void BackupAll()
 {
   int             doc;
 
+  perror (TtaGetMessage (LIB, TMSG_DEBUG_SAV_FILES));
   /* parcourt la table des documents */
   for (doc = 0; doc < MAX_DOCUMENTS; doc++)
     if (LoadedDocument[doc] != NULL)
       /* il y a un document pour cette entree de la table */
       if (LoadedDocument[doc]->DocModified)
-	WriteDocument(LoadedDocument[doc], 3);
+	  WriteDocument(LoadedDocument[doc], 3);
 }
 
 /*----------------------------------------------------------------------

@@ -123,7 +123,6 @@ static void         ErrorHandler ()
 
    if (ThotLocalActions [T_backuponfatal] != NULL)
      {
-       perror (TtaGetMessage (LIB, TMSG_DEBUG_SAV_FILES));
        (*ThotLocalActions [T_backuponfatal]) ();
      }
    exit (1);
