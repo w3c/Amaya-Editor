@@ -36,10 +36,13 @@ extern void Annot_free ( AnnotMeta *annot );
 extern void AnnotList_print ( List *annot_list );
 extern void AnnotList_writeIndex ( CHAR_T *indexFile,
                                    List *annot_list );
-extern CHAR_T *ANNOT_PreparePostBody ( Document doc );
+extern CHAR_T * ANNOT_PreparePostBody ( Document doc );
 extern CHAR_T *StrdupDate ( void );
 extern Element SearchAnnotation ( Document doc,
                                   STRING annotDoc );
+extern ThotBool ReplaceLinkToAnnotation ( Document doc,
+                                          STRING annotName,
+                                          STRING newAnnotURL );
 extern Element SearchElementInDoc ( Document doc,
                                     int elTypeNum );
 extern STRING SearchAttributeInEl ( Document doc,
@@ -95,10 +98,13 @@ extern void Annot_free (/* AnnotMeta *annot */);
 extern void AnnotList_print (/* List *annot_list */);
 extern void AnnotList_writeIndex (/* CHAR_T *indexFile,
                                      List *annot_list */);
-extern CHAR_T *ANNOT_PreparePostBody (/* Document doc */);
+extern CHAR_T * ANNOT_PreparePostBody (/* Document doc */);
 extern CHAR_T *StrdupDate (/* void */);
 extern Element SearchAnnotation (/* Document doc,
                                     STRING annotDoc */);
+extern ThotBool ReplaceLinkToAnnotation (/* Document doc,
+                                            STRING annotName,
+                                            STRING newAnnotURL */);
 extern Element SearchElementInDoc (/* Document doc,
                                       int elTypeNum */);
 extern STRING SearchAttributeInEl (/* Document doc,
@@ -110,7 +116,7 @@ extern void SubstituteCharInString (/* char *buffer,
                                        char new */);
 extern char *GetTempName (/* const char *dir,
                              const char *prefix */);
-extern long GetFileSize (/* CHAR_T *filename */);
+extern long AGetFileSize (/* CHAR_T *filename */);
 extern void GetServerName (/* CHAR_T *url,
                               CHAR_T *server */);
 extern CHAR_T *ANNOT_GetHTMLTitle (/* Document doc */);

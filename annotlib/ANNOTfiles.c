@@ -88,6 +88,7 @@ Document ANNOT_NewDocument (doc)
       DocumentURLs[annotDoc] = fname;
       DocumentMeta[annotDoc] = (DocumentMetaDataElement *) TtaGetMemory (sizeof (DocumentMetaDataElement));
       DocumentMeta[annotDoc]->form_data = NULL;
+      DocumentMeta[annotDoc]->initial_url = NULL;
       DocumentMeta[annotDoc]->method = CE_ABSOLUTE;
       DocumentSource[annotDoc] = 0;
 
@@ -680,12 +681,15 @@ void  ANNOT_CheckEmptyDoc (docAnnot)
 
 
 /*----------------------------------------------------------------------
+  ANNOT_LocalSave
+  Saves the annotation document doc_annot to the local filesystem
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-ThotBool            ANNOT_SaveDocument (Document doc_annot)
+ThotBool            ANNOT_LocalSave (Document doc_annot, View view)
 #else  /* __STDC__ */
-ThotBool            ANNOT_SaveDocument (doc_annot)
+ThotBool            ANNOT_LocalSave (doc_annot, view)
 Document            doc_annot;
+View                view;
 
 #endif /* __STDC__ */
 {
@@ -694,13 +698,10 @@ Document            doc_annot;
   ElementType elType;
   AnnotMeta *annot;
 
-  if (!TtaIsDocumentModified (doc_annot))
-    return TRUE; /* prevent Thot from performing normal save operation */
-
   annot = GetMetaData (DocumentMeta[doc_annot]->source_doc, doc_annot);
   if (!annot)
     {
-      fprintf (stderr, "?oops! missing annot struct for document\n");
+      fprintf (stderr, "ANNOT_LocalSaveDocument: missing annot struct for document\n");
       return TRUE;
     }
 
@@ -734,8 +735,5 @@ Document            doc_annot;
 
   return TRUE; /* prevent Thot from performing normal save operation */
 }
-
-
-
 
 

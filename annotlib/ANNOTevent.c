@@ -716,7 +716,7 @@ View view;
   */
 
   /* output the HTML body */
-  ANNOT_SaveDocument (doc);
+  ANNOT_LocalSave (doc, view);
 
   /* create the RDF container */
   rdf_file = ANNOT_PreparePostBody (doc);
@@ -745,6 +745,35 @@ View view;
      error */
   if (res)
     fprintf (stderr, "Failed to post the annotation!\n");
+}
+
+/*----------------------------------------------------------------------
+  ANNOT_Save
+  Decides if an annotation should be saved and if it should be saved
+  remotely or locally. It then calls the appropriate function to do this
+  operation.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                ANNOT_SaveDocument (Document doc_annot, View view)
+#else  /* __STDC__ */
+void                ANNOT_SaveDocument (doc_annot, view)
+Document            doc_annot;
+View                view;
+
+#endif /* __STDC__ */
+{
+  CHAR_T *filename;
+  Element el;
+  ElementType elType;
+  AnnotMeta *annot;
+
+  if (!TtaIsDocumentModified (doc_annot))
+    return; /* prevent Thot from performing normal save operation */
+
+  if (IsW3Path (DocumentURLs[doc_annot]))
+    ANNOT_Post (doc_annot, view);
+  else
+    ANNOT_LocalSave (doc_annot, view);
 }
 
 /*-----------------------------------------------------------------------
