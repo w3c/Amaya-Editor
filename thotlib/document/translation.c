@@ -1926,6 +1926,7 @@ static void ApplyAttrRulesToElem (TOrder position, PtrElement pEl,
    notifyAttr.event = TteAttrExport;
    notifyAttr.document = (Document) IdentDocument (pDoc);
    notifyAttr.element = (Element) pEl;
+   notifyAttr.info = 0; /* not sent by undo */
    notifyAttr.attribute = (Attribute) pAttr;
    notifyAttr.attributeType.AttrTypeNum = pAttr->AeAttrNum;
    notifyAttr.attributeType.AttrSSchema = (SSchema) (pAttr->AeAttrSSchema);
@@ -2010,6 +2011,7 @@ static void ApplyAttrRulesToElem (TOrder position, PtrElement pEl,
    notifyAttr.event = TteAttrExport;
    notifyAttr.document = (Document) IdentDocument (pDoc);
    notifyAttr.element = (Element) pEl;
+   notifyAttr.info = 0; /* not sent by undo */
    notifyAttr.attribute = (Attribute) pAttr;
    notifyAttr.attributeType.AttrTypeNum = pAttr->AeAttrNum;
    notifyAttr.attributeType.AttrSSchema = (SSchema) (pAttr->AeAttrSSchema);
@@ -3401,6 +3403,7 @@ static void TranslateTree (PtrElement pEl, PtrDocument pDoc,
      notifyEl.event = TteElemExport;
      notifyEl.document = (Document) IdentDocument (pDoc);
      notifyEl.element = (Element) pEl;
+     notifyEl.info = 0; /* not sent by undo */
      notifyEl.elementType.ElTypeNum = elemType;
      notifyEl.elementType.ElSSchema = (SSchema) pSS;
      notifyEl.position = 0;
@@ -3540,6 +3543,7 @@ static void TranslateTree (PtrElement pEl, PtrDocument pDoc,
        notifyEl.event = TteElemExport;
        notifyEl.document = (Document) IdentDocument (pDoc);
        notifyEl.element = (Element) pEl;
+       notifyEl.info = 0; /* not sent by undo */
        notifyEl.elementType.ElTypeNum = pEl->ElTypeNumber;
        notifyEl.elementType.ElSSchema = (SSchema) (pEl->ElStructSchema);
        notifyEl.position = 0;

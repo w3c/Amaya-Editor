@@ -784,7 +784,7 @@ void    DeactivateView (PtrDocument pDoc, int view)
 
    return TRUE if abstract box pAB is in the subtree of abstract box pRootAb.
   ----------------------------------------------------------------------*/
-static ThotBool   WithinAbsBox (PtrAbstractBox pAb, PtrAbstractBox pRootAb)
+static ThotBool WithinAbsBox (PtrAbstractBox pAb, PtrAbstractBox pRootAb)
 {
   ThotBool            ret;
 
@@ -2238,6 +2238,7 @@ void SelectElementWithEvent (PtrDocument pDoc, PtrElement pEl,
        notifyEl.event = TteElemSelect;
        notifyEl.document = doc;
        notifyEl.element = (Element) pEl;
+       notifyEl.info = 0; /* not sent by undo */
        notifyEl.elementType.ElTypeNum = pEl->ElTypeNumber;
        notifyEl.elementType.ElSSchema = (SSchema) (pEl->ElStructSchema);
        notifyEl.position = 0;
@@ -2247,6 +2248,7 @@ void SelectElementWithEvent (PtrDocument pDoc, PtrElement pEl,
 	   notifyEl.event = TteElemSelect;
 	   notifyEl.document = doc;
 	   notifyEl.element = (Element) pEl;
+	   notifyEl.info = 0; /* not sent by undo */
 	   notifyEl.elementType.ElTypeNum = pEl->ElTypeNumber;
 	   notifyEl.elementType.ElSSchema = (SSchema) (pEl->ElStructSchema);
 	   notifyEl.position = 0;
@@ -2273,6 +2275,7 @@ void SelectPositionWithEvent (PtrDocument pDoc, PtrElement pEl, int first)
 	notifyEl.event = TteElemSelect;
 	notifyEl.document = doc;
 	notifyEl.element = (Element) pEl;
+	notifyEl.info = 0; /* not sent by undo */
 	notifyEl.elementType.ElTypeNum = pEl->ElTypeNumber;
 	notifyEl.elementType.ElSSchema = (SSchema) (pEl->ElStructSchema);
 	notifyEl.position = 0;
@@ -2282,6 +2285,7 @@ void SelectPositionWithEvent (PtrDocument pDoc, PtrElement pEl, int first)
 	     notifyEl.event = TteElemSelect;
 	     notifyEl.document = doc;
 	     notifyEl.element = (Element) pEl;
+	     notifyEl.info = 0; /* not sent by undo */
 	     notifyEl.elementType.ElTypeNum = pEl->ElTypeNumber;
 	     notifyEl.elementType.ElSSchema = (SSchema) (pEl->ElStructSchema);
 	     notifyEl.position = 0;
@@ -2311,6 +2315,7 @@ void SelectStringWithEvent (PtrDocument pDoc, PtrElement pEl, int firstChar,
 	notifyEl.event = TteElemSelect;
 	notifyEl.document = doc;
 	notifyEl.element = (Element) pEl;
+	notifyEl.info = 0; /* not sent by undo */
 	notifyEl.elementType.ElTypeNum = pEl->ElTypeNumber;
 	notifyEl.elementType.ElSSchema = (SSchema) (pEl->ElStructSchema);
 	notifyEl.position = 0;
@@ -2320,6 +2325,7 @@ void SelectStringWithEvent (PtrDocument pDoc, PtrElement pEl, int firstChar,
 	     notifyEl.event = TteElemSelect;
 	     notifyEl.document = doc;
 	     notifyEl.element = (Element) pEl;
+	     notifyEl.info = 0; /* not sent by undo */
 	     notifyEl.elementType.ElTypeNum = pEl->ElTypeNumber;
 	     notifyEl.elementType.ElSSchema = (SSchema) (pEl->ElStructSchema);
 	     notifyEl.position = 0;
@@ -2372,6 +2378,7 @@ ThotBool ChangeSelection (int frame, PtrAbstractBox pAb, int rank,
 	  notifyEl.event = TteElemActivate;
 	  notifyEl.document = doc;
 	  notifyEl.element = (Element) pEl;
+	  notifyEl.info = 0; /* not sent by undo */
 	  notifyEl.elementType.ElTypeNum = pEl->ElTypeNumber;
 	  notifyEl.elementType.ElSSchema = (SSchema) (pEl->ElStructSchema);
 	  notifyEl.position = 0;
@@ -2567,6 +2574,7 @@ ThotBool ChangeSelection (int frame, PtrAbstractBox pAb, int rank,
 		  notifyEl.event = TteElemExtendSelect;
 		  notifyEl.document = doc;
 		  notifyEl.element = (Element) pEl;
+		  notifyEl.info = 0; /* not sent by undo */
 		  notifyEl.elementType.ElTypeNum = pEl->ElTypeNumber;
 		  notifyEl.elementType.ElSSchema = (SSchema) (pEl->ElStructSchema);
 		  notifyEl.position = 0;
@@ -2582,6 +2590,7 @@ ThotBool ChangeSelection (int frame, PtrAbstractBox pAb, int rank,
 		      notifyEl.document = doc;
 		      notifyEl.element = (Element) pEl;
 		      notifyEl.elementType.ElTypeNum = pEl->ElTypeNumber;
+		      notifyEl.info = 0; /* not sent by undo */
 		      notifyEl.elementType.ElSSchema = (SSchema) (pEl->ElStructSchema);
 		      notifyEl.position = 0;
 		      CallEventType ((NotifyEvent *) & notifyEl, FALSE);
@@ -2614,6 +2623,7 @@ ThotBool ChangeSelection (int frame, PtrAbstractBox pAb, int rank,
 	   notifyEl.event = TteElemActivate;
 	   notifyEl.document = doc;
 	   notifyEl.element = (Element) pEl;
+	   notifyEl.info = 0; /* not sent by undo */
 	   notifyEl.elementType.ElTypeNum = pEl->ElTypeNumber;
 	   notifyEl.elementType.ElSSchema = (SSchema) (pEl->ElStructSchema);
 	   notifyEl.position = 0;

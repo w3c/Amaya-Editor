@@ -94,6 +94,7 @@ static void AttachMandatoryAttrSRule (PtrElement pEl, PtrDocument
 	      notifyAttr.event = TteAttrCreate;
 	      notifyAttr.document = (Document) IdentDocument (pDoc);
 	      notifyAttr.element = (Element) pEl;
+	      notifyAttr.info = 0; /* not sent by undo */
 	      notifyAttr.attribute = NULL;
 	      notifyAttr.attributeType.AttrSSchema = (SSchema) pSS;
 	      notifyAttr.attributeType.AttrTypeNum = att;
@@ -142,6 +143,7 @@ static void AttachMandatoryAttrSRule (PtrElement pEl, PtrDocument
 	      notifyAttr.event = TteAttrModify;
 	      notifyAttr.document = (Document) IdentDocument (pDoc);
 	      notifyAttr.element = (Element) pEl;
+	      notifyAttr.info = 0; /* not sent by undo */
 	      notifyAttr.attribute = (Attribute) pAttr;
 	      notifyAttr.attributeType.AttrSSchema = (SSchema) pSS;
 	      notifyAttr.attributeType.AttrTypeNum = att;
@@ -194,6 +196,7 @@ static void AttachMandatoryAttrSRule (PtrElement pEl, PtrDocument
 		      notifyAttr.event = TteAttrModify;
 		      notifyAttr.document = (Document) IdentDocument (pDoc);
 		      notifyAttr.element = (Element) pEl;
+		      notifyAttr.info = 0; /* not sent by undo */
 		      notifyAttr.attribute = (Attribute) pAttr;
 		      notifyAttr.attributeType.AttrSSchema = (SSchema) pSS;
 		      notifyAttr.attributeType.AttrTypeNum = att;
@@ -206,6 +209,7 @@ static void AttachMandatoryAttrSRule (PtrElement pEl, PtrDocument
 		  notifyAttr.event = TteAttrCreate;
 		  notifyAttr.document = (Document) IdentDocument (pDoc);
 		  notifyAttr.element = (Element) pEl;
+		  notifyAttr.info = 0; /* not sent by undo */
 		  notifyAttr.attribute = (Attribute) pAttr;
 		  notifyAttr.attributeType.AttrSSchema = (SSchema) pSS;
 		  notifyAttr.attributeType.AttrTypeNum = att;

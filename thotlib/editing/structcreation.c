@@ -121,15 +121,15 @@ void NotifySubTree (APPevent appEvent, PtrDocument pDoc, PtrElement pEl,
   notifyEl.elementType.ElTypeNum = pEl->ElTypeNumber;
   notifyEl.elementType.ElSSchema = (SSchema) (pEl->ElStructSchema);
   if (origDoc < 0)
-    /* called by Undo */
     {
+      /* called by Undo */
       notifyEl.position = 0;
-      notifyEl.info = 1;
+      notifyEl.info = 1; /* sent by undo */
     }
   else
     {
       notifyEl.position = origDoc;
-      notifyEl.info = 0;
+      notifyEl.info = 0; /* not sent by undo */
     }
   CallEventType ((NotifyEvent *) & notifyEl, FALSE);
   if (pDoc->DocNotifyAll)
@@ -570,6 +570,7 @@ PtrAbstractBox CreateALeaf (PtrAbstractBox pAB, int *frame, LeafType leafType,
 		      notifyEl.event = TteElemNew;
 		      notifyEl.document = doc;
 		      notifyEl.element = (Element) (pEl->ElParent);
+		      notifyEl.info = 0; /* not sent by undo */
 		      notifyEl.elementType.ElTypeNum = lType;
 		      notifyEl.elementType.ElSSchema = (SSchema) (pEl->ElStructSchema);
 		      nSiblings = 0;
@@ -626,6 +627,7 @@ PtrAbstractBox CreateALeaf (PtrAbstractBox pAB, int *frame, LeafType leafType,
 				notifyEl.event = TteElemNew;
 				notifyEl.document = doc;
 				notifyEl.element = (Element) (pEl->ElParent);
+				notifyEl.info = 0; /* not sent by undo */
 				notifyEl.elementType.ElTypeNum = ruleNum;
 				notifyEl.elementType.ElSSchema = (SSchema) pSS;
 				notifyEl.position = nSiblings;
@@ -668,6 +670,7 @@ PtrAbstractBox CreateALeaf (PtrAbstractBox pAB, int *frame, LeafType leafType,
 		    notifyEl.event = TteElemNew;
 		    notifyEl.document = doc;
 		    notifyEl.element = (Element) (pEl->ElParent);
+		    notifyEl.info = 0; /* not sent by undo */
 		    notifyEl.elementType.ElTypeNum = lType;
 		    notifyEl.elementType.ElSSchema = (SSchema) (pEl->ElStructSchema);
 		    notifyEl.position = 0;
@@ -1235,6 +1238,7 @@ static ThotBool TteItemMenuInsert (PtrSSchema pSS, int typeNum, PtrElement pEl,
       notifyEl.element = (Element) pEl;
    else
       notifyEl.element = (Element) (pEl->ElParent);
+   notifyEl.info = 0; /* not sent by undo */
    notifyEl.elementType.ElTypeNum = typeNum;
    notifyEl.elementType.ElSSchema = (SSchema) (pSS);
    pSibling = pEl;
@@ -1539,6 +1543,7 @@ static ThotBool CreeChoix (PtrDocument pDoc, PtrElement *pEl, PtrElement *pLeaf,
 		  notifyEl.event = TteElemNew;
 		  notifyEl.document = (Document) IdentDocument (pDoc);
 		  notifyEl.element = (Element) (*pEl);
+		  notifyEl.info = 0; /* not sent by undo */
 		  notifyEl.elementType.ElTypeNum = ChosenTypeNum;
 		  notifyEl.elementType.ElSSchema = (SSchema) ChosenTypeSSchema;
 		  notifyEl.position = 0;
@@ -1666,6 +1671,7 @@ PtrElement CreateSibling (PtrDocument pDoc, PtrElement pEl, ThotBool before,
 		notifyEl.event = TteElemNew;
 	     notifyEl.document = (Document) IdentDocument (pDoc);
 	     notifyEl.element = (Element) (pEl->ElParent);
+	     notifyEl.info = 0; /* not sent by undo */
 	     notifyEl.elementType.ElTypeNum = typeNum;
 	     notifyEl.elementType.ElSSchema = (SSchema) pSS;
 	     pSibling = pEl;
@@ -1837,6 +1843,7 @@ PtrElement CreateSibling (PtrDocument pDoc, PtrElement pEl, ThotBool before,
 				    notifyEl.event = TteElemInclude;
 				    notifyEl.document = (Document) IdentDocument (pDoc);
 				    notifyEl.element = (Element) pNew;
+				    notifyEl.info = 0; /* not sent by undo */
 				    notifyEl.elementType.ElTypeNum = pNew->ElTypeNumber;
 				    notifyEl.elementType.ElSSchema = (SSchema) (pNew->ElStructSchema);
 				    notifyEl.position = 0;
@@ -2044,6 +2051,7 @@ PtrElement CreateWithinElement (PtrDocument pDoc, PtrElement pEl,
 		      notifyEl.event = TteElemNew;
 		      notifyEl.document = (Document) IdentDocument (pDoc);
 		      notifyEl.element = (Element) pEl;
+		      notifyEl.info = 0; /* not sent by undo */
 		      notifyEl.elementType.ElTypeNum = pSRule->SrComponent[i];
 		      notifyEl.elementType.ElSSchema = (SSchema) (pEl->ElStructSchema);
 		      nSiblings = 0;
@@ -2167,6 +2175,7 @@ PtrElement CreateWithinElement (PtrDocument pDoc, PtrElement pEl,
 		    notifyEl.event = TteElemNew;
 		    notifyEl.document = (Document) IdentDocument (pDoc);
 		    notifyEl.element = (Element) pEl;
+		    notifyEl.info = 0; /* not sent by undo */
 		    notifyEl.elementType.ElTypeNum = pSRule->SrListItem;
 		    notifyEl.elementType.ElSSchema = (SSchema) (pEl->ElStructSchema);
 		    nSiblings = 0;
@@ -2281,6 +2290,7 @@ PtrElement CreateWithinElement (PtrDocument pDoc, PtrElement pEl,
 		  notifyEl.event = TteElemNew;
 		  notifyEl.document = (Document) IdentDocument (pDoc);
 		  notifyEl.element = (Element) pEl;
+		  notifyEl.info = 0; /* not sent by undo */
 		  notifyEl.elementType.ElTypeNum = pSRule->SrIdentRule;
 		  notifyEl.elementType.ElSSchema = (SSchema) (pEl->ElStructSchema);
 		  notifyEl.position = 0;
@@ -3550,6 +3560,7 @@ static void InsertSecondPairedElem (PtrElement pEl, PtrDocument pDoc,
 	notifyEl.event = TteElemNew;
 	notifyEl.document = (Document) IdentDocument (pDoc);
 	notifyEl.element = (Element) (pElem->ElParent);
+	notifyEl.info = 0; /* not sent by undo */
 	notifyEl.elementType.ElTypeNum = typeNum;
 	notifyEl.elementType.ElSSchema = (SSchema) pSS;
 	nSiblings = 0;

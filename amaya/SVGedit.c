@@ -1314,11 +1314,8 @@ ThotBool GraphicsPRuleChange (NotifyPresentation *event)
 	  sibling = el;
 	  TtaPreviousSibling (&sibling);
 	}
-      if (sibling && MakeASpan (el, &span, doc))
-	{
-	  MovePRule (presRule, el, span, doc, FALSE);
-	  el = span;
-	}
+      if (sibling && MakeASpan (el, &span, doc, presRule))
+	el = span;
       else
 	{
 	  el = TtaGetParent (el);

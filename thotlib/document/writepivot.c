@@ -863,6 +863,7 @@ void Externalise (BinFile pivFile, PtrElement *pEl, PtrDocument pDoc,
       notifyAttr.event = TteAttrSave;
       notifyAttr.document = (Document) IdentDocument (pDoc);
       notifyAttr.element = (Element) pEl1;
+      notifyAttr.info = 0; /* not sent by undo */
       notifyAttr.attribute = (Attribute) pAttr;
       notifyAttr.attributeType.AttrTypeNum = pAttr->AeAttrNum;
       notifyAttr.attributeType.AttrSSchema = (SSchema) (pAttr->AeAttrSSchema);
@@ -875,6 +876,7 @@ void Externalise (BinFile pivFile, PtrElement *pEl, PtrDocument pDoc,
 	  notifyAttr.event = TteAttrSave;
 	  notifyAttr.document = (Document) IdentDocument (pDoc);
 	  notifyAttr.element = (Element) pEl1;
+	  notifyAttr.info = 0; /* not sent by undo */
 	  notifyAttr.attribute = (Attribute) pAttr;
 	  notifyAttr.attributeType.AttrTypeNum = pAttr->AeAttrNum;
 	  notifyAttr.attributeType.AttrSSchema = (SSchema) (pAttr->AeAttrSSchema);
@@ -1188,6 +1190,7 @@ void Externalise (BinFile pivFile, PtrElement *pEl, PtrDocument pDoc,
 		notifyEl.event = TteElemSave;
 		notifyEl.document = (Document) IdentDocument (pDoc);
 		notifyEl.element = (Element) pChild;
+		notifyEl.info = 0; /* not sent by undo */
 		notifyEl.elementType.ElTypeNum = pChild->ElTypeNumber;
 		notifyEl.elementType.ElSSchema = (SSchema) (pChild->ElStructSchema);
 		notifyEl.position = 0;
@@ -1206,6 +1209,7 @@ void Externalise (BinFile pivFile, PtrElement *pEl, PtrDocument pDoc,
 		    notifyEl.event = TteElemSave;
 		    notifyEl.document = (Document) IdentDocument (pDoc);
 		    notifyEl.element = (Element) pChild;
+		    notifyEl.info = 0; /* not sent by undo */
 		    notifyEl.elementType.ElTypeNum = pChild->ElTypeNumber;
 		    notifyEl.elementType.ElSSchema = (SSchema) (pChild->ElStructSchema);
 		    notifyEl.position = 0;
@@ -1347,6 +1351,7 @@ void SauveDoc (BinFile pivFile, PtrDocument pDoc)
 	notifyEl.event = TteElemSave;
 	notifyEl.document = (Document) IdentDocument (pDoc);
 	notifyEl.element = (Element) pEl;
+	notifyEl.info = 0; /* not sent by undo */
 	notifyEl.elementType.ElTypeNum = pEl->ElTypeNumber;
 	notifyEl.elementType.ElSSchema = (SSchema) (pEl->ElStructSchema);
 	notifyEl.position = 0;
@@ -1361,6 +1366,7 @@ void SauveDoc (BinFile pivFile, PtrDocument pDoc)
 	     notifyEl.event = TteElemSave;
 	     notifyEl.document = (Document) IdentDocument (pDoc);
 	     notifyEl.element = (Element) pEl;
+	     notifyEl.info = 0; /* not sent by undo */
 	     notifyEl.elementType.ElTypeNum = pEl->ElTypeNumber;
 	     notifyEl.elementType.ElSSchema = (SSchema) (pEl->ElStructSchema);
 	     notifyEl.position = 0;

@@ -155,6 +155,7 @@ static ThotBool NotifyClick (int event, ThotBool pre, PtrElement pEl, int doc)
   notifyEl.document = doc;
   notifyEl.position = 0;
   notifyEl.element = (Element) pAsc;
+  notifyEl.info = 0; /* not sent by undo */
   notifyEl.elementType.ElTypeNum = pAsc->ElTypeNumber;
   notifyEl.elementType.ElSSchema = (SSchema)(pAsc->ElStructSchema);
   ok = CallEventType ((NotifyEvent *) &notifyEl, pre);

@@ -743,6 +743,7 @@ static ThotBool TteItemMenuAttr (PtrSSchema pSS, int att, PtrElement pEl,
    notifyAttr.document = (Document) IdentDocument (pDoc);
    notifyAttr.element = (Element) pEl;
    notifyAttr.attribute = NULL;
+   notifyAttr.info = 0; /* not sent by undo */
    notifyAttr.attributeType.AttrSSchema = (SSchema) pSS;
    notifyAttr.attributeType.AttrTypeNum = att;
    OK = !CallEventAttribute (&notifyAttr, TRUE);
@@ -1188,7 +1189,12 @@ static void AttachAttrToRange (PtrAttribute pAttr, int lastChar,
    /* elements voisins de meme type ayant les memes attributs, reaffiche */
    /* toutes les vues et retablit la selection */
    if (reDisplay)
-     SelectRange (pDoc, pFirstSel, pLastSel, firstChar, lastChar);
+     {
+       GetCurrentSelection (&pDoc, &pFirstSel, &pLastSel, &firstChar,
+			    &lastChar);
+       if (pFirstSel && pFirstSel->ElStructSchema)
+	 SelectRange (pDoc, pFirstSel, pLastSel, firstChar, lastChar);
+     }
 }
 
 /*----------------------------------------------------------------------

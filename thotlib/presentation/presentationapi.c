@@ -243,6 +243,7 @@ void NewPosition (PtrAbstractBox pAb, int X, int xref, int Y, int yref,
 		  notifyAttr.event = TteAttrModify;
 		  notifyAttr.document = doc;
 		  notifyAttr.element = (Element) pEl;
+		  notifyAttr.info = 0; /* not sent by undo */
 		  notifyAttr.attribute = (Attribute) pAttrV;
 		  notifyAttr.attributeType.AttrSSchema =
 		    (SSchema) (pAttrV->AeAttrSSchema);
@@ -390,6 +391,7 @@ void NewPosition (PtrAbstractBox pAb, int X, int xref, int Y, int yref,
 		  notifyAttr.event = TteAttrModify;
 		  notifyAttr.document = doc;
 		  notifyAttr.element = (Element) pEl;
+		  notifyAttr.info = 0; /* not sent by undo */
 		  notifyAttr.attribute = (Attribute) pAttrH;
 		  notifyAttr.attributeType.AttrSSchema =
 		    (SSchema) (pAttrH->AeAttrSSchema);
@@ -634,6 +636,7 @@ void NewDimension (PtrAbstractBox pAb, int width, int height, int frame,
 		  notifyAttrH.event = TteAttrModify;
 		  notifyAttrH.document = doc;
 		  notifyAttrH.element = (Element) pEl;
+		  notifyAttrH.info = 0; /* not sent by undo */
 		  notifyAttrH.attribute = (Attribute) pAttrH;
 		  notifyAttrH.attributeType.AttrSSchema = (SSchema) (pAttrH->AeAttrSSchema);
 		  notifyAttrH.attributeType.AttrTypeNum = pAttrH->AeAttrNum;
@@ -803,6 +806,7 @@ void NewDimension (PtrAbstractBox pAb, int width, int height, int frame,
 		   notifyAttrV.event = TteAttrModify;
 		   notifyAttrV.document = doc;
 		   notifyAttrV.element = (Element) pEl;
+		   notifyAttrV.info = 0; /* not sent by undo */
 		   notifyAttrV.attribute = (Attribute) pAttrV;
 		   notifyAttrV.attributeType.AttrSSchema =
 		     (SSchema) (pAttrV->AeAttrSSchema);

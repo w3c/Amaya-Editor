@@ -688,6 +688,7 @@ ThotBool CompleteElement (PtrElement pEl, PtrDocument pDoc)
 		     notifyEl.event = TteElemNew;
 		     notifyEl.document = doc;
 		     notifyEl.element = (Element) pEl;
+		     notifyEl.info = 0; /* not sent by undo */
 		     notifyEl.elementType.ElTypeNum = pSRule->SrComponent[comp];
 		     notifyEl.elementType.ElSSchema = (SSchema) (pEl->ElStructSchema);
 		     NSiblings = 0;
@@ -810,6 +811,7 @@ ThotBool CompleteElement (PtrElement pEl, PtrDocument pDoc)
 		   notifyEl.event = TteElemNew;
 		   notifyEl.document = doc;
 		   notifyEl.element = (Element) pEl;
+		   notifyEl.info = 0; /* not sent by undo */
 		   notifyEl.elementType.ElTypeNum = pSRule->SrListItem;
 		   notifyEl.elementType.ElSSchema = (SSchema) (pEl->ElStructSchema);
 		   NSiblings = 0;
@@ -952,6 +954,7 @@ ThotBool BreakElement (PtrElement pElReplicate, PtrElement pSplitEl,
 	  notifyEl.event = TteElemNew;
 	  notifyEl.document = (Document) IdentDocument (pDoc);
 	  notifyEl.element = (Element) (pElReplicate->ElParent);
+	  notifyEl.info = 0; /* not sent by undo */
 	  notifyEl.elementType.ElTypeNum = pElReplicate->ElTypeNumber;
 	  notifyEl.elementType.ElSSchema = (SSchema) pElReplicate->ElStructSchema;
 	  pSibling = pElReplicate;
@@ -1053,6 +1056,7 @@ ThotBool BreakElement (PtrElement pElReplicate, PtrElement pSplitEl,
 		  notifyEl.event = TteElemDelete;
 		  notifyEl.document = (Document) IdentDocument (pDoc);
 		  notifyEl.element = (Element) pE;
+		  notifyEl.info = 0; /* not sent by undo */
 		  notifyEl.elementType.ElTypeNum = pE->ElTypeNumber;
 		  notifyEl.elementType.ElSSchema = (SSchema)pE->ElStructSchema;
 		  pSibling = pE;
@@ -1063,7 +1067,6 @@ ThotBool BreakElement (PtrElement pElReplicate, PtrElement pSplitEl,
 		      pSibling = pSibling->ElPrevious;
 		    }
 		  notifyEl.position = TTE_TOOLKIT_DELETE;
-		  notifyEl.info = 0;
 		  if (CallEventType ((NotifyEvent *) (&notifyEl), TRUE))
 		    /* l'application refuse de continuer */
 		    return (ret);
@@ -1076,7 +1079,7 @@ ThotBool BreakElement (PtrElement pElReplicate, PtrElement pSplitEl,
 		    {
 		      notifyEl.element = (Element) pPrev->ElParent;
 		      notifyEl.position = NSiblings;
-		      notifyEl.info = 0;
+		      notifyEl.info = 0; /* not sent by undo */
 		      CallEventType ((NotifyEvent *) (&notifyEl), FALSE);
 		    }
 		  if (pPrevEl != NULL)
@@ -1105,6 +1108,7 @@ ThotBool BreakElement (PtrElement pElReplicate, PtrElement pSplitEl,
 		  notifyEl.event = TteElemNew;
 		  notifyEl.document = (Document) IdentDocument (pDoc);
 		  notifyEl.element = (Element) (pE->ElParent);
+		  notifyEl.info = 0; /* not sent by undo */
 		  notifyEl.elementType.ElTypeNum = pE->ElTypeNumber;
 		  notifyEl.elementType.ElSSchema = (SSchema)pE->ElStructSchema;
 		  pSibling = pE;
@@ -1139,6 +1143,7 @@ ThotBool BreakElement (PtrElement pElReplicate, PtrElement pSplitEl,
 			  notifyEl.event = TteElemDelete;
 			  notifyEl.document = (Document) IdentDocument (pDoc);
 			  notifyEl.element = (Element) pClose;
+			  notifyEl.info = 0; /* not sent by undo */
 			  notifyEl.elementType.ElTypeNum =pClose->ElTypeNumber;
 			  notifyEl.elementType.ElSSchema = (SSchema) pClose->ElStructSchema;
 			  pSibling = pClose;
@@ -1149,17 +1154,15 @@ ThotBool BreakElement (PtrElement pElReplicate, PtrElement pSplitEl,
 			      pSibling = pSibling->ElPrevious;
 			    }
 			  notifyEl.position = TTE_TOOLKIT_DELETE;
-			  notifyEl.info = 0;
 			  if (CallEventType ((NotifyEvent *) (&notifyEl),TRUE))
 			    /* l'application refuse de continuer */
 			    return (ret);
 			  
 			  RemoveElement (pClose);
-			  /* signale a l'application qu'on a retire' un
-			     element */
+			  /* notify the removed element */
 			  notifyEl.element = (Element) (pE->ElParent);
 			  notifyEl.position = NSiblings;
-			  notifyEl.info = 2;
+			  notifyEl.info = 2; /* element removed */
 			  CallEventType ((NotifyEvent *) (&notifyEl), FALSE);
 			  InsertElementAfter (pPrevEl, pClose);
 			  pPrevEl = pClose;

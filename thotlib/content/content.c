@@ -123,6 +123,7 @@ void SplitTextElement (PtrElement pEl, int rank, PtrDocument pDoc,
 	     notifyEl.event = TteElemNew;
 	     notifyEl.document = (Document) IdentDocument (pDoc);
 	     notifyEl.element = (Element) (pEl->ElParent);
+	     notifyEl.info = 0; /* not sent by undo */
 	     notifyEl.elementType.ElTypeNum = pEl->ElTypeNumber;
 	     notifyEl.elementType.ElSSchema = (SSchema) (pEl->ElStructSchema);
 	     pSibling = pEl;
@@ -249,6 +250,7 @@ void SplitTextElement (PtrElement pEl, int rank, PtrDocument pDoc,
 	     notifyEl.event = TteElemNew;
 	     notifyEl.document = (Document) IdentDocument (pDoc);
 	     notifyEl.element = (Element) pEl2;
+	     notifyEl.info = 0; /* not sent by undo */
 	     notifyEl.elementType.ElTypeNum = pEl2->ElTypeNumber;
 	     notifyEl.elementType.ElSSchema = (SSchema) (pEl2->ElStructSchema);
 	     notifyEl.position = 0;
@@ -308,6 +310,7 @@ ThotBool MergeTextElements (PtrElement pEl, PtrElement *pFreeEl, PtrDocument pDo
 	      notifyEl.event = TteElemDelete;
 	      notifyEl.document = (Document) IdentDocument (pDoc);
 	      notifyEl.element = (Element) pEl2;
+	      notifyEl.info = 0; /* not sent by undo */
 	      notifyEl.elementType.ElTypeNum = pEl2->ElTypeNumber;
 	      notifyEl.elementType.ElSSchema = (SSchema) (pEl2->ElStructSchema);
 	      notifyEl.position = TTE_MERGE_DELETE_ITEM;
@@ -434,6 +437,7 @@ ThotBool MergeTextElements (PtrElement pEl, PtrElement *pFreeEl, PtrDocument pDo
 		  notifyEl.event = TteElemDelete;
 		  notifyEl.document = (Document) IdentDocument (pDoc);
 		  notifyEl.element = (Element) (pEl2->ElParent);
+		  notifyEl.info = 0; /* not sent by undo */
 		  notifyEl.elementType.ElTypeNum = pEl2->ElTypeNumber;
 		  notifyEl.elementType.ElSSchema = (SSchema) (pEl2->ElStructSchema);
 		  nSiblings = 0;
@@ -444,7 +448,6 @@ ThotBool MergeTextElements (PtrElement pEl, PtrElement *pFreeEl, PtrDocument pDo
 		      pSibling = pSibling->ElPrevious;
 		    }
 		  notifyEl.position = nSiblings;
-		  notifyEl.info = 0;
 		}
 	      /* dechaine le 2eme element */
 	      RemoveElement (pEl2);

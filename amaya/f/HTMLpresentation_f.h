@@ -8,7 +8,8 @@
 
 extern ThotBool MakeASpan ( Element elem,
                             Element *span,
-                            Document doc );
+                            Document doc,
+                            PRule presRule );
 extern void DeleteSpanIfNoAttr ( Element el,
                                  Document doc,
                                  Element *firstChild,
@@ -17,7 +18,7 @@ extern void AttrToSpan ( Element elem,
                          Attribute attr,
                          Document doc );
 extern void GlobalAttrCreated ( NotifyAttribute * event );
-extern void GlobalAttrDeleted ( NotifyAttribute * event );
+extern void GlobalAttrDeleted ( NotifyAttribute *event );
 extern void AttrClassChanged ( NotifyAttribute * event );
 extern void MovePRule ( PRule presRule,
                         Element fromEl,
@@ -37,7 +38,8 @@ extern ThotBool AttrLangShouldBeDeleted ( NotifyAttribute *event );
 
 extern ThotBool MakeASpan (/* Element elem,
                               Element *span,
-                              Document doc */);
+                              Document doc,
+                              PRule presRule */);
 extern void DeleteSpanIfNoAttr (/* Element el,
                                    Document doc,
                                    Element *firstChild,
@@ -46,7 +48,7 @@ extern void AttrToSpan (/* Element elem,
                            Attribute attr,
                            Document doc */);
 extern void GlobalAttrCreated (/* NotifyAttribute * event */);
-extern void GlobalAttrDeleted (/* NotifyAttribute * event */);
+extern void GlobalAttrDeleted (/* NotifyAttribute *event */);
 extern void AttrClassChanged (/* NotifyAttribute * event */);
 extern void MovePRule (/* PRule presRule,
                           Element fromEl,

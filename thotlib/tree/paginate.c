@@ -241,7 +241,7 @@ static void SuppressPageMark (PtrElement pPage, PtrDocument pDoc, PtrElement * p
    notifyEl.elementType.ElTypeNum = pPage->ElTypeNumber;
    notifyEl.elementType.ElSSchema = (SSchema) (pPage->ElStructSchema);
    notifyEl.position = TTE_STANDARD_DELETE_LAST_ITEM;
-   notifyEl.info = 0;
+   notifyEl.info = 0; /* not sent by undo */
    if (!CallEventType ((NotifyEvent *) & notifyEl, TRUE))
      {
 	/* traitement de la suppression des pages dans les structures avec */
@@ -253,6 +253,7 @@ static void SuppressPageMark (PtrElement pPage, PtrDocument pDoc, PtrElement * p
 	notifyEl.event = TteElemDelete;
 	notifyEl.document = (Document) IdentDocument (pDoc);
 	notifyEl.element = (Element) (pPage->ElParent);
+	notifyEl.info = 0; /* not sent by undo */
 	notifyEl.elementType.ElTypeNum = pPage->ElTypeNumber;
 	notifyEl.elementType.ElSSchema = (SSchema) (pPage->ElStructSchema);
 	NSiblings = 0;
@@ -271,7 +272,6 @@ static void SuppressPageMark (PtrElement pPage, PtrDocument pDoc, PtrElement * p
 	       }
 	  }
 	notifyEl.position = NSiblings;
-	notifyEl.info = 0;
 	CallEventType ((NotifyEvent *) & notifyEl, FALSE);
      }
 }
@@ -657,6 +657,7 @@ static PtrElement InsertMark (PtrAbstractBox pAb, int frame, int nbView,
    /* envoie l'evenement ElemNew.Pre */
    notifyEl.event = TteElemNew;
    notifyEl.document = (Document) IdentDocument (pDoc);
+   notifyEl.info = 0; /* not sent by undo */
    NSiblings = 0;
    if (ElemIsChild)
      notifyEl.element = (Element) (pP->AbElement);
@@ -1492,6 +1493,7 @@ PtrElement AddLastPageBreak (PtrElement pRootEl, int schView, PtrDocument pDoc,
 	     notifyEl.event = TteElemNew;
 	     notifyEl.document = (Document) IdentDocument (pDoc);
 	     notifyEl.element = (Element) (pEl->ElParent);
+	     notifyEl.info = 0; /* not sent by undo */
 	     notifyEl.elementType.ElTypeNum = PageBreak + 1;
 	     notifyEl.elementType.ElSSchema = (SSchema) (pRootEl->ElStructSchema);
 	     notifyEl.position = NSiblings;

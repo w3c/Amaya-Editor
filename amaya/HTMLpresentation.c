@@ -31,12 +31,15 @@
 #include "XHTMLbuilder_f.h"
 
 /*----------------------------------------------------------------------
- MakeASpan
- if element elem is a text string that is not the single child of a
- Span element, create a span element that contains that text string
- and return TRUE; span contains then the created Span element.
+  MakeASpan
+  if element elem is a text string that is not the single child of a
+  Span element, create a span element that contains that text string
+  and return TRUE; span contains then the created Span element.
+  if the parameter presRule is not NULL and a span is generated, the
+  the presRule should be moved to the new span.
  -----------------------------------------------------------------------*/
-ThotBool MakeASpan (Element elem, Element *span, Document doc)
+ThotBool MakeASpan (Element elem, Element *span, Document doc,
+		    PRule presRule)
 {
   ElementType	elType;
   Element	parent, sibling;
@@ -88,8 +91,13 @@ ThotBool MakeASpan (Element elem, Element *span, Document doc)
 	      elType.ElTypeNum = SVG_EL_tspan;
 	   *span = TtaNewElement (doc, elType);
 	   TtaInsertSibling (*span, elem, FALSE, doc);
+	   TtaRegisterElementCreate (*span, doc);
+	   if (presRule)
+	     MovePRule (presRule, elem, *span, doc, TRUE);
+	   TtaRegisterElementDelete (elem, doc);
 	   TtaRemoveTree (elem, doc);
 	   TtaInsertFirstChild (&elem, *span, doc);
+	   TtaRegisterElementCreate (elem, doc);
 	   /* mark the document as modified */
 	   TtaSetDocumentModified (doc);
 	   ret = TRUE;
@@ -127,6 +135,7 @@ void DeleteSpanIfNoAttr (Element el, Document doc, Element *firstChild,
      TtaNextAttribute (span, &attr);
      if (attr == NULL)
         {
+	TtaRegisterElementDelete (span, doc);
 	child = TtaGetFirstChild (span);
 	while (child != NULL)
 	   {
@@ -134,18 +143,14 @@ void DeleteSpanIfNoAttr (Element el, Document doc, Element *firstChild,
 	   TtaNextSibling (&next);
 	   TtaRemoveTree (child, doc);
 	   TtaInsertSibling (child, span, TRUE, doc);
+	   TtaRegisterElementCreate (child, doc);
 	   if (*firstChild == NULL)
 	      *firstChild = child;
 	   *lastChild = child;
 	   child = next;
 	   }
-	/* The standard Thot command has registered the operation that
- 	   removed the attribute from the SPAN element.  Cancel this operation
-	   from the editing history and register the removal for the TEXT
-	   element instead */
-	if (*firstChild)
-	   TtaChangeLastRegisteredAttr (span, *firstChild, NULL, NULL, doc);
 	TtaDeleteTree (span, doc);
+	TtaSelectElement (doc, *firstChild);
 	}
      }
 }
@@ -174,8 +179,8 @@ void  AttrToSpan (Element elem, Attribute attr, Document doc)
       elType = TtaGetElementType (parent);
       if (strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)
         /* the parent element is an HTML element */
-	/* Create a Span element and move to attribute to this Span element */
-        MakeASpan (elem, &span, doc);
+	/* Create a Span element and move the attribute to this Span element */
+        MakeASpan (elem, &span, doc, NULL);
       else
         /* move the attribute to the parent element */
 	span = parent;
@@ -192,12 +197,10 @@ void  AttrToSpan (Element elem, Attribute attr, Document doc)
           len = ATTRLEN - 1;
           TtaGiveTextAttributeValue (attr, oldValue, &len);
 	  TtaSetAttributeText (newAttr, oldValue, span, doc);
-	  /* The standard Thot command has registered the operation that
- 	     added the attribute to the TEXT element.  Cancel this operation
-	     from the editing history and register the new attribute on the
-	     span element instead */
-	  TtaChangeLastRegisteredAttr (elem, span, attr, newAttr, doc);
+	  TtaRegisterAttributeCreate (newAttr, span, doc);
+	  TtaRegisterAttributeDelete (attr, elem, doc);
           TtaRemoveAttribute (elem, attr, doc);
+	  TtaSelectElement (doc, elem);
           TtaFreeMemory (oldValue);
         }
     }
@@ -208,6 +211,9 @@ void  AttrToSpan (Element elem, Attribute attr, Document doc)
   ----------------------------------------------------------------------*/
 void GlobalAttrCreated (NotifyAttribute * event)
 {
+   if (event->info == 1)
+     /* undo will do the job */
+     return;
    /* if the attribute is on a text string, create a SPAN element that encloses
       this text string and move the attribute to that SPAN element */
    AttrToSpan (event->element, event->attribute, event->document);
@@ -216,10 +222,13 @@ void GlobalAttrCreated (NotifyAttribute * event)
 /*----------------------------------------------------------------------
   GlobalAttrDeleted: the user has removed a global attribute
   ----------------------------------------------------------------------*/
-void GlobalAttrDeleted (NotifyAttribute * event)
+void GlobalAttrDeleted (NotifyAttribute *event)
 {
    Element	firstChild, lastChild;
 
+   if (event->info == 1)
+     /* undo will do the job */
+     return;
    /* if the element is a SPAN without any other attribute, remove the SPAN
       element */
    DeleteSpanIfNoAttr (event->element, event->document, &firstChild, &lastChild);
@@ -233,6 +242,9 @@ void AttrClassChanged (NotifyAttribute * event)
 {
    Element	firstChild, lastChild;
 
+   if (event->info == 1)
+     /* undo will do the job */
+     return;
    if (event->event == TteAttrDelete)
       /* if the element is a SPAN without any other attribute, remove the SPAN
          element */
@@ -274,7 +286,8 @@ void MovePRule (PRule presRule, Element fromEl, Element toEl, Document doc,
 	}
    /* this PRule applies to view 1 (main view) */
    TtaSetPRuleView (newPRule, 1);
-   TtaRemovePRule (fromEl, presRule, doc);
+   if (fromEl)
+     TtaRemovePRule (fromEl, presRule, doc);
    TtaAttachPRule (toEl, newPRule, doc);
    if (addShow)
      {
@@ -569,12 +582,11 @@ ThotBool ChangePRule (NotifyPresentation *event)
 		MovePRule (presRule, event->element, el, doc, TRUE);
 		ret = TRUE; /* don't let Thot perform normal operation */
 	      }
-	    else if (MakeASpan (el, &span, doc))
+	    else if (MakeASpan (el, &span, doc, presRule))
 	      /* if it is a new PRule on a text string, create a SPAN element
 		 that encloses this text string and move the PRule to that
 		 SPAN element */
 	      {
-		MovePRule (presRule, el, span, doc, TRUE);
 		el = span;
 		ret = TRUE; /* don't let Thot perform normal operation */
 	      }
@@ -613,7 +625,8 @@ void AttrLangDeleted (NotifyAttribute *event)
   elType = TtaGetElementType (elem);
   /* if the element is a SPAN without any other attribute, remove the SPAN
      element */
-  if (strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)
+  if (event->info == 0 &&
+      strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)
     DeleteSpanIfNoAttr (elem, event->document, &firstChild,&lastChild);
   /* if it's the root (HTML, SVG, MathML) element, delete the RealLang
      attribute */
@@ -660,7 +673,8 @@ void AttrLangCreated (NotifyAttribute *event)
        a SPAN element that encloses this text string and move the LANG
        attribute to that SPAN element */
     {
-      if (strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)
+      if (event->info == 0 &&
+	  strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)
 	AttrToSpan (elem, event->attribute, event->document);
     }
   /* if it's the root (HTML, SVG, MathML) element, create a RealLang

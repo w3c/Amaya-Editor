@@ -986,6 +986,7 @@ void AttachAttrWithValue (PtrElement pEl, PtrDocument pDoc,
     notifyAttr.event = TteAttrModify;
   notifyAttr.document = (Document) IdentDocument (pDoc);
   notifyAttr.element = (Element) pEl;
+  notifyAttr.info = 0; /* not sent by undo */
   notifyAttr.attribute = (Attribute) pAttr;
   notifyAttr.attributeType.AttrSSchema = (SSchema) (pNewAttr->AeAttrSSchema);
   notifyAttr.attributeType.AttrTypeNum = pNewAttr->AeAttrNum;

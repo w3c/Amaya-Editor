@@ -811,7 +811,7 @@ static void DoApplyClass (Document doc)
 	      else
 	        /* we are in a HTML element. Create an enclosing SPAN element*/
 	        {
-		  MakeASpan (curEl, &span, doc);
+		  MakeASpan (curEl, &span, doc, NULL);
 		  if (span)
 		    /* a SPAN element was created */
 		    {

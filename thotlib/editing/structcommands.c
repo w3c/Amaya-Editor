@@ -486,13 +486,13 @@ ThotBool SendEventSubTree (APPevent AppEvent, PtrDocument pDoc, PtrElement pEl,
    notifyEl.event = AppEvent;
    notifyEl.document = (Document) IdentDocument (pDoc);
    notifyEl.element = (Element) pEl;
+   notifyEl.info = 0; /* not sent by undo */
    notifyEl.elementType.ElTypeNum = pEl->ElTypeNumber;
    notifyEl.elementType.ElSSchema = (SSchema) (pEl->ElStructSchema);
    if (AppEvent == TteElemDelete)
       notifyEl.position = end;
    else
       notifyEl.position = 0;
-   notifyEl.info = 0;
    cancel = CallEventType ((NotifyEvent *) (&notifyEl), TRUE);
    if (pDoc->DocNotifyAll && !cancel)
       /* le document demande un evenement pour chaque element du sous-arbre */
@@ -526,6 +526,7 @@ static ThotBool DoChangeType (PtrElement pEl, PtrDocument pDoc, int newTypeNum,
    notifyEl.event = TteElemChange;
    notifyEl.document = (Document) IdentDocument (pDoc);
    notifyEl.element = (Element) pEl;
+   notifyEl.info = 0; /* not sent by undo */
    notifyEl.elementType.ElTypeNum = newTypeNum;
    notifyEl.elementType.ElSSchema = (SSchema) newSSchema;
    notifyEl.position = 0;
@@ -566,6 +567,7 @@ static ThotBool DoChangeType (PtrElement pEl, PtrDocument pDoc, int newTypeNum,
 	     notifyEl.event = TteElemChange;
 	     notifyEl.document = (Document) IdentDocument (pDoc);
 	     notifyEl.element = (Element) pEl;
+	     notifyEl.info = 0; /* not sent by undo */
 	     notifyEl.position = 0;
 	     CallEventType ((NotifyEvent *) (&notifyEl), FALSE);
 	     /* cree les paves de l'element et reaffiche */
@@ -1412,6 +1414,7 @@ void CutCommand (ThotBool save)
 				notifyEl.event = TteElemDelete;
 				notifyEl.document = doc;
 				notifyEl.element = (Element) pParentEl;
+				notifyEl.info = 0; /* not sent by undo */
 				notifyEl.elementType.ElTypeNum = pE->ElTypeNumber;
 				notifyEl.elementType.ElSSchema = (SSchema) (pE->ElStructSchema);
 				NSiblings = 0;
@@ -1422,7 +1425,6 @@ void CutCommand (ThotBool save)
 				    pF = pF->ElPrevious;
 				  }
 				notifyEl.position = NSiblings;
-				notifyEl.info = 0;
 
 				if (!recorded)
 				  /* record that deletion in the history */
@@ -1920,6 +1922,7 @@ static ThotBool DoSurround (PtrElement firstEl, PtrElement lastEl,
    notifyEl.event = TteElemNew;
    notifyEl.document = (Document) IdentDocument (pDoc);
    notifyEl.element = (Element) (pEl1->ElParent);
+   notifyEl.info = 0; /* not sent by undo */
    notifyEl.elementType.ElTypeNum = typeNum;
    notifyEl.elementType.ElSSchema = (SSchema) pSS;
    pSibling = pEl1;
@@ -1944,6 +1947,7 @@ static ThotBool DoSurround (PtrElement firstEl, PtrElement lastEl,
 	     notifyEl.event = TteElemMove;
 	     notifyEl.document = (Document) IdentDocument (pDoc);
 	     notifyEl.element = (Element) pEl;
+	     notifyEl.info = 0; /* not sent by undo */
 	     notifyEl.elementType.ElTypeNum = pEl->ElTypeNumber;
 	     notifyEl.elementType.ElSSchema = (SSchema) (pEl->ElStructSchema);
 	     notifyEl.position = 0;
@@ -2059,6 +2063,7 @@ static ThotBool DoSurround (PtrElement firstEl, PtrElement lastEl,
 	     notifyEl.event = TteElemMove;
 	     notifyEl.document = (Document) IdentDocument (pDoc);
 	     notifyEl.element = (Element) pEl;
+	     notifyEl.info = 0; /* not sent by undo */
 	     notifyEl.elementType.ElTypeNum = pEl->ElTypeNumber;
 	     notifyEl.elementType.ElSSchema = (SSchema) (pEl->ElStructSchema);
 	     notifyEl.position = 0;
@@ -2082,6 +2087,7 @@ static ThotBool DoSurround (PtrElement firstEl, PtrElement lastEl,
 	     notifyEl.event = TteElemNew;
 	     notifyEl.document = (Document) IdentDocument (pDoc);
 	     notifyEl.element = (Element) pElSurround;
+	     notifyEl.info = 0; /* not sent by undo */
 	     notifyEl.elementType.ElTypeNum = pElSurround->ElTypeNumber;
 	     notifyEl.elementType.ElSSchema = (SSchema) (pElSurround->ElStructSchema);
 	     notifyEl.position = 0;
@@ -2805,6 +2811,7 @@ void CreateNewElement (int typeNum, PtrSSchema pSS, PtrDocument pDoc,
 	      notifyEl.event = TteElemNew;
 	      notifyEl.document = (Document) IdentDocument (pSelDoc);
 	      notifyEl.element = (Element) (pEl->ElParent);
+	      notifyEl.info = 0; /* not sent by undo */
 	      notifyEl.elementType.ElTypeNum = typeNum;
 	      notifyEl.elementType.ElSSchema = (SSchema) pSS;
 	      pF = pEl;
@@ -2974,11 +2981,11 @@ void CreateNewElement (int typeNum, PtrSSchema pSS, PtrDocument pDoc,
 			notifyEl.event = TteElemDelete;
 			notifyEl.document = (Document) IdentDocument (pSelDoc);
 			notifyEl.element = (Element) (pEl->ElParent);
+			notifyEl.info = 0; /* not sent by undo */
 			notifyEl.elementType.ElTypeNum = pEl->ElTypeNumber;
 			notifyEl.elementType.ElSSchema =
 			                       (SSchema) (pEl->ElStructSchema);
 			notifyEl.position = NSiblings + 1;
-			notifyEl.info = 0;
 			pSibling = NextElement (pEl);
 			/* retire l'element de l'arbre abstrait */
 			RemoveElement (pEl);

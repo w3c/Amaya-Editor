@@ -293,6 +293,7 @@ static PtrElement PasteAnElement (PtrElement pEl, PtrPasteElem pSavedEl,
 		   notifyEl.event = TteElemNew;
 		   notifyEl.document = (Document) IdentDocument (pDoc);
 		   notifyEl.element = (Element) (pParent);
+		   notifyEl.info = 0; /* not sent by undo */
 		   notifyEl.elementType.ElTypeNum = pSavedEl->PeAscendTypeNum[asc];
 		   notifyEl.elementType.ElSSchema = (SSchema) (pSS);
 		   notifyEl.position = NSiblings;
@@ -315,6 +316,7 @@ static PtrElement PasteAnElement (PtrElement pEl, PtrPasteElem pSavedEl,
 			   notifyEl.event = TteElemNew;
 			   notifyEl.document = (Document) IdentDocument (pDoc);
 			   notifyEl.element = (Element) pAncest;
+			   notifyEl.info = 0; /* not sent by undo */
 			   notifyEl.elementType.ElTypeNum =
 			                                 pAncest->ElTypeNumber;
 			   notifyEl.elementType.ElSSchema =
@@ -364,6 +366,7 @@ static PtrElement PasteAnElement (PtrElement pEl, PtrPasteElem pSavedEl,
 			       notifyEl.event = TteElemNew;
 			       notifyEl.document = (Document) IdentDocument (pDoc);
 			       notifyEl.element = (Element) (pParent);
+			       notifyEl.info = 0; /* not sent by undo */
 			       notifyEl.elementType.ElTypeNum = pSavedEl->PeAscendTypeNum[asc];
 			       notifyEl.elementType.ElSSchema = (SSchema) pSS;
 			       notifyEl.position = NSiblings;
@@ -387,6 +390,7 @@ static PtrElement PasteAnElement (PtrElement pEl, PtrPasteElem pSavedEl,
 				   notifyEl.event = TteElemNew;
 				   notifyEl.document = (Document) IdentDocument (pDoc);
 				   notifyEl.element = (Element) pE;
+				   notifyEl.info = 0; /* not sent by undo */
 				   notifyEl.elementType.ElTypeNum = pE->ElTypeNumber;
 				   notifyEl.elementType.ElSSchema = (SSchema) (pE->ElStructSchema);
 				   notifyEl.position = 0;
@@ -1472,6 +1476,7 @@ void TtcCreateElement (Document doc, View view)
 	  notifyEl.event = TteElemNew;
 	  notifyEl.document = (Document) IdentDocument (pDoc);
 	  notifyEl.element = (Element) (pElReplicate->ElParent);
+	  notifyEl.info = 0; /* not sent by undo */
 	  notifyEl.elementType.ElTypeNum = typeNum;
 	  notifyEl.elementType.ElSSchema = (SSchema) pSS;
 	  pSibling = pElReplicate;
@@ -1520,6 +1525,7 @@ void TtcCreateElement (Document doc, View view)
 		  notifyEl.event = TteElemDelete;
 		  notifyEl.document = (Document) IdentDocument (pDoc);
 		  notifyEl.element = (Element) (pElDelete->ElParent);
+		  notifyEl.info = 0; /* not sent by undo */
 		  notifyEl.elementType.ElTypeNum = pElDelete->ElTypeNumber;
 		  notifyEl.elementType.ElSSchema =
 		                        (SSchema) (pElDelete->ElStructSchema);
@@ -1531,7 +1537,6 @@ void TtcCreateElement (Document doc, View view)
 		      pSibling = pSibling->ElPrevious;
 		    }
 		  notifyEl.position = NSiblings;
-		  notifyEl.info = 0;
 		  pClose = NextElement (pElDelete);
 		  /* retire l'element de l'arbre abstrait */
 		  RemoveElement (pElDelete);
@@ -2000,6 +2005,7 @@ void DeleteNextChar (int frame, PtrElement pEl, ThotBool before)
 		   notifyEl.event = TteElemDelete;
 		   notifyEl.document = doc;
 		   notifyEl.element = (Element) (pElem->ElParent);
+		   notifyEl.info = 0; /* not sent by undo */
 		   notifyEl.elementType.ElTypeNum = pElem->ElTypeNumber;
 		   notifyEl.elementType.ElSSchema =
 		                          (SSchema) (pElem->ElStructSchema);
@@ -2011,7 +2017,6 @@ void DeleteNextChar (int frame, PtrElement pEl, ThotBool before)
 		       pS = pS->ElPrevious;
 		     }
 		   notifyEl.position = nSiblings;
-		   notifyEl.info = 0;
 		 }
 	       pSuccessor = NextElement (pElem);
 	       /* record the element to be deleted in the history */
@@ -2091,6 +2096,7 @@ void DeleteNextChar (int frame, PtrElement pEl, ThotBool before)
        	     notifyEl.event = TteElemDelete;
        	     notifyEl.document = doc;
        	     notifyEl.element = (Element) pParent;
+	     notifyEl.info = 0; /* not sent by undo */
        	     notifyEl.elementType.ElTypeNum = pE->ElTypeNumber;
        	     notifyEl.elementType.ElSSchema = (SSchema) (pE->ElStructSchema);
        	     nSiblings = 0;
@@ -2101,7 +2107,6 @@ void DeleteNextChar (int frame, PtrElement pEl, ThotBool before)
        		  pS = pS->ElPrevious;
        	       }
        	     notifyEl.position = nSiblings;
-	     notifyEl.info = 0;
        	     /* record the element the element that will be deleted */
        	     AddEditOpInHistory (pE, pDoc, TRUE, FALSE);
        	     /* retire l'element courant de l'arbre */

@@ -857,6 +857,7 @@ static void UndoOperation (ThotBool undo, Document doc, ThotBool reverse)
         notifyEl.event = TteElemSelect;
         notifyEl.document = doc;
         notifyEl.element = (Element) (editOp->EoFirstSelectedEl);
+	notifyEl.info = 1; /* sent by undo */
         notifyEl.elementType.ElTypeNum =
 			editOp->EoFirstSelectedEl->ElTypeNumber;
         notifyEl.elementType.ElSSchema =
@@ -896,6 +897,7 @@ static void UndoOperation (ThotBool undo, Document doc, ThotBool reverse)
         notifyEl.event = TteElemSelect;
         notifyEl.document = doc;
         notifyEl.element = (Element) (editOp->EoFirstSelectedEl);
+	notifyEl.info = 1; /* sent by undo */
         notifyEl.elementType.ElTypeNum =
 			editOp->EoFirstSelectedEl->ElTypeNumber;
         notifyEl.elementType.ElSSchema =
@@ -908,6 +910,7 @@ static void UndoOperation (ThotBool undo, Document doc, ThotBool reverse)
           notifyEl.event = TteElemExtendSelect;
           notifyEl.document = doc;
           notifyEl.element = (Element)(editOp->EoLastSelectedEl);
+	  notifyEl.info = 1; /* sent by undo */
           notifyEl.elementType.ElTypeNum =
 			editOp->EoLastSelectedEl->ElTypeNumber;
           notifyEl.elementType.ElSSchema =
@@ -919,6 +922,7 @@ static void UndoOperation (ThotBool undo, Document doc, ThotBool reverse)
           /* Send event TteElemExtendSelect. Post */
           notifyEl.event = TteElemExtendSelect;
           notifyEl.document = doc;
+	  notifyEl.info = 1; /* sent by undo */
           notifyEl.element = (Element)(editOp->EoLastSelectedEl);
           notifyEl.elementType.ElTypeNum =
 			editOp->EoLastSelectedEl->ElTypeNumber;
@@ -938,6 +942,7 @@ static void UndoOperation (ThotBool undo, Document doc, ThotBool reverse)
 
       notifyAttr.document = doc;
       notifyAttr.element = (Element) (editOp->EoElement);
+      notifyAttr.info = 1; /* sent by undo */
       /* delete the attribute that has to be removed from the element */
       if (editOp->EoElement && editOp->EoCreatedAttribute)
          {
@@ -986,6 +991,7 @@ static void UndoOperation (ThotBool undo, Document doc, ThotBool reverse)
             /* tell the application that an attribute will be created */
             notifyAttr.event = TteAttrCreate;
             notifyAttr.attribute = NULL;
+	    notifyAttr.info = 1; /* sent by undo */
             notifyAttr.attributeType.AttrSSchema =
 				    (SSchema) (SavedAttribute->AeAttrSSchema);
             notifyAttr.attributeType.AttrTypeNum = SavedAttribute->AeAttrNum;
@@ -1031,6 +1037,7 @@ static void UndoOperation (ThotBool undo, Document doc, ThotBool reverse)
          notifyEl.event = TteElemDelete;
          notifyEl.document = doc;
          notifyEl.element = (Element) (pEl->ElParent);
+	 notifyEl.info = 1; /* sent by undo */
          notifyEl.elementType.ElTypeNum = pEl->ElTypeNumber;
          notifyEl.elementType.ElSSchema = (SSchema) (pEl->ElStructSchema);
          nSiblings = 0;
@@ -1041,9 +1048,6 @@ static void UndoOperation (ThotBool undo, Document doc, ThotBool reverse)
             pSibling = pSibling->ElPrevious;
             }
          notifyEl.position = nSiblings;
-	 /* tell the application that this element is deleted by the Undo
-	    command */
-	 notifyEl.info = 1;
          /* remove the element */
 	 if (!reverse)
             TtaDeleteTree ((Element)pEl, doc);

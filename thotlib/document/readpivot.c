@@ -1879,6 +1879,7 @@ void         SendEventAttrRead (PtrElement pEl, PtrDocument pDoc)
        notifyAttr.document = (Document) IdentDocument (pDoc);
        notifyAttr.element = (Element) pEl;
        notifyAttr.attribute = NULL;
+       notifyAttr.info = 0; /* not sent by undo */
        notifyAttr.attributeType.AttrTypeNum = pAttr->AeAttrNum;
        notifyAttr.attributeType.AttrSSchema = (SSchema) (pAttr->AeAttrSSchema);
        pNextAttr = pAttr->AeNext;
@@ -1895,6 +1896,7 @@ void         SendEventAttrRead (PtrElement pEl, PtrDocument pDoc)
 	   notifyAttr.event = TteAttrRead;
 	   notifyAttr.document = (Document) IdentDocument (pDoc);
 	   notifyAttr.element = (Element) pEl;
+	   notifyAttr.info = 0; /* not sent by undo */
 	   notifyAttr.attribute = (Attribute) pAttr;
 	   notifyAttr.attributeType.AttrTypeNum = pAttr->AeAttrNum;
 	   notifyAttr.attributeType.AttrSSchema =
@@ -2068,6 +2070,7 @@ static  LabelString         label;
 	      notifyEl.event = TteElemRead;
 	      notifyEl.document = (Document) IdentDocument (pDoc);
 	      notifyEl.element = (Element) pParent;
+	      notifyEl.info = 0; /* not sent by undo */
 	      notifyEl.elementType.ElTypeNum = *typeRead;
 	      notifyEl.elementType.ElSSchema = (SSchema) (*pSSRead);
 	      notifyEl.position = 0;
@@ -2795,6 +2798,7 @@ static  LabelString         label;
 	  notifyEl.event = TteElemRead;
 	  notifyEl.document = (Document) IdentDocument (pDoc);
 	  notifyEl.element = (Element) pEl;
+	  notifyEl.info = 0; /* not sent by undo */
 	  notifyEl.elementType.ElTypeNum = pEl->ElTypeNumber;
 	  notifyEl.elementType.ElSSchema = (SSchema) (pEl->ElStructSchema);
 	  notifyEl.position = 0;

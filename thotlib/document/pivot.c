@@ -381,6 +381,7 @@ void TtaWriteTree (BinFile pivotFile, Element element, Document document)
 	notifyEl.event = TteElemSave;
 	notifyEl.document = document;
 	notifyEl.element = element;
+	notifyEl.info = 0; /* not sent by undo */
 	notifyEl.elementType.ElTypeNum = pEl->ElTypeNumber;
 	notifyEl.elementType.ElSSchema = (SSchema) (pEl->ElStructSchema);
 	notifyEl.position = 0;
@@ -399,6 +400,7 @@ void TtaWriteTree (BinFile pivotFile, Element element, Document document)
 	     notifyEl.event = TteElemSave;
 	     notifyEl.document = document;
 	     notifyEl.element = element;
+	     notifyEl.info = 0; /* not sent by undo */
 	     notifyEl.elementType.ElTypeNum = pEl->ElTypeNumber;
 	     notifyEl.elementType.ElSSchema = (SSchema) (pEl->ElStructSchema);
 	     notifyEl.position = 0;
@@ -442,6 +444,7 @@ void TtaWriteElement (BinFile pivotFile, Element element, Document document)
 	notifyEl.event = TteElemSave;
 	notifyEl.document = document;
 	notifyEl.element = element;
+	notifyEl.info = 0; /* not sent by undo */
 	notifyEl.elementType.ElTypeNum = pEl->ElTypeNumber;
 	notifyEl.elementType.ElSSchema = (SSchema) (pEl->ElStructSchema);
 	notifyEl.position = 0;
@@ -460,6 +463,7 @@ void TtaWriteElement (BinFile pivotFile, Element element, Document document)
 	     notifyEl.event = TteElemSave;
 	     notifyEl.document = document;
 	     notifyEl.element = element;
+	     notifyEl.info = 0; /* not sent by undo */
 	     notifyEl.elementType.ElTypeNum = pEl->ElTypeNumber;
 	     notifyEl.elementType.ElSSchema = (SSchema) (pEl->ElStructSchema);
 	     notifyEl.position = 0;

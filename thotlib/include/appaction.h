@@ -106,6 +106,7 @@ typedef struct
      Element             element;
      Attribute           attribute;
      AttributeType       attributeType;
+     int		 info; /* 1 if event sent by undo/redo */
   }
 NotifyAttribute;
 
@@ -116,7 +117,7 @@ typedef struct
      Element             element;
      ElementType         elementType;
      int                 position;
-     int		 info;
+     int		 info; /* 1 if event sent by undo/redo */
   }
 NotifyElement;
 
