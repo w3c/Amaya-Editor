@@ -3386,8 +3386,6 @@ static void  ApplyPresRules (PtrElement pEl, PtrDocument pDoc,
       schemaOfSelectedRule[i] = NULL;
       attrOfSelectedRule[i] = NULL;
     }
-if (!strcmp (pEl->ElLabel, "L134"))
-  printf ("ApplyPresRules\n");
 
   /* get all rules associated with the element type in the main presentation */
   /* schema (default stylesheet of the user agent in CSS terms) */
