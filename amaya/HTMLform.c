@@ -437,8 +437,7 @@ static void        ResetOptionMenu (Element menu, Document doc)
    traverses the tree of element, applying the parse_input 
    function to each element with an attribute NAME                    
   ----------------------------------------------------------------------*/
-static void ParseForm (Document doc, Element ancestor, Element el,
-		       int mode, ThotBool withinForm)
+static void ParseForm (Document doc, Element ancestor, Element el, int mode)
 {
   ElementType         elType;
   Element             elForm;
@@ -452,232 +451,232 @@ static void ParseForm (Document doc, Element ancestor, Element el,
   int                 length;
   int                 modified = FALSE;
 
-  if (el)
+  if (!el || !ancestor)
+    return;
+
+  if (mode == HTML_EL_Reset_Input)
     {
-      if (mode == HTML_EL_Reset_Input)
+      /* save current status of the document */
+      modified = TtaIsDocumentModified (doc);
+      /* change display mode to avoid flicker due to callbacks executed 
+	 when resetting the elements */
+      dispMode = TtaGetDisplayMode (doc);
+      if (dispMode == DisplayImmediately)
+	TtaSetDisplayMode (doc, DeferredDisplay);
+    }
+  
+  lang = TtaGetDefaultLanguage ();      
+  attrType.AttrSSchema = TtaGetSSchema ("HTML", doc);
+  attrType.AttrTypeNum = HTML_ATTR_NAME;
+  attrTypeS.AttrSSchema = attrType.AttrSSchema;
+  TtaSearchAttribute (attrType, SearchForward, ancestor, &el, &attr);
+  while (el && TtaIsAncestor(el, ancestor))
+    {
+      if (attr)
 	{
-	  /* save current status of the document */
-	  modified = TtaIsDocumentModified (doc);
-	  /* change display mode to avoid flicker due to callbacks executed 
-	     when resetting the elements */
-	  dispMode = TtaGetDisplayMode (doc);
-	  if (dispMode == DisplayImmediately)
-	    TtaSetDisplayMode (doc, DeferredDisplay);
-	}
-      
-      lang = TtaGetDefaultLanguage ();      
-      attrType.AttrSSchema = TtaGetSSchema ("HTML", doc);
-      attrType.AttrTypeNum = HTML_ATTR_NAME;
-      attrTypeS.AttrSSchema = attrType.AttrSSchema;
-      TtaSearchAttribute (attrType, SearchForward, ancestor, &el, &attr);
-      while (el && (!withinForm || TtaIsAncestor(el, ancestor)))
-	{
-	  if (attr)
+	  elType = TtaGetElementType (el);
+	  switch (elType.ElTypeNum)
 	    {
-	      elType = TtaGetElementType (el);
-	      switch (elType.ElTypeNum)
+	    case HTML_EL_Option_Menu:
+	      if (mode == HTML_EL_Submit_Input)
+		SubmitOptionMenu (el, attr, doc);
+	      else if (mode == HTML_EL_Reset_Input)
+		ResetOptionMenu (el, doc);
+	      break;
+	      
+	    case HTML_EL_Checkbox_Input:
+	      if (mode == HTML_EL_Submit_Input)
 		{
-		case HTML_EL_Option_Menu:
-		  if (mode == HTML_EL_Submit_Input)
-		    SubmitOptionMenu (el, attr, doc);
-		  else if (mode == HTML_EL_Reset_Input)
-		    ResetOptionMenu (el, doc);
-		  break;
-		  
-		case HTML_EL_Checkbox_Input:
-		  if (mode == HTML_EL_Submit_Input)
+		  /* Get the element's current status */
+		  attrTypeS.AttrTypeNum = HTML_ATTR_Checked;
+		  attrS = TtaGetAttribute (el, attrTypeS);
+		  if (attrS != NULL &&
+		      TtaGetAttributeValue (attrS) == HTML_ATTR_Checked_VAL_Yes_)
 		    {
-		      /* Get the element's current status */
-		      attrTypeS.AttrTypeNum = HTML_ATTR_Checked;
-		      attrS = TtaGetAttribute (el, attrTypeS);
-		      if (attrS != NULL &&
-			  TtaGetAttributeValue (attrS) == HTML_ATTR_Checked_VAL_Yes_)
-			{
-			  /* save the NAME attribute of the element el */
-			  length = MAX_LENGTH - 1;
-			  TtaGiveTextAttributeValue (attr, name, &length);
-			  /* get the "value" attribute */
-			  attrTypeS.AttrTypeNum = HTML_ATTR_Value_;
-			  attrS = TtaGetAttribute (el, attrTypeS);
-			  if (attrS != NULL)
-			    {
-			      /* save the Value attribute of the element el */
-			      length = TtaGetTextAttributeLength (attrS) + 1;
-			      value = TtaGetMemory (length);
-			      TtaGiveTextAttributeValue (attrS, value, &length);
-			      AddNameValue (name, value);
-			      TtaFreeMemory (value);
-			      value = NULL;
-			    }
-			  else
-			    /* give a default checkbox value (On) */
-			    AddNameValue (name, "on");
-			}
-		    }
-		  else if (mode == HTML_EL_Reset_Input)
-		    {
-		      /* Reset according to the default attribute */
-		      attrTypeS.AttrTypeNum = HTML_ATTR_DefaultChecked;
-		      def = TtaGetAttribute (el, attrTypeS);
-		      /* remove previous checked attribute */
-		      attrTypeS.AttrTypeNum = HTML_ATTR_Checked;
-		      attrS = TtaGetAttribute (el, attrTypeS);
-		      if (attrS != NULL)
-			TtaRemoveAttribute (el, attrS, doc);
-		      /* create a new checked attribute */
-		      attrS = TtaNewAttribute (attrTypeS);
-		      TtaAttachAttribute (el, attrS, doc);
-		      if (def != NULL)
-			TtaSetAttributeValue (attrS, HTML_ATTR_Checked_VAL_Yes_, el, doc);
-		      else
-			TtaSetAttributeValue (attrS, HTML_ATTR_Checked_VAL_No_, el, doc);
-		    }
-		  break;
-		  
-		case HTML_EL_Radio_Input:
-		  if (mode == HTML_EL_Submit_Input)
-		    {
-		      /* Get the element's current status */
-		      attrTypeS.AttrTypeNum = HTML_ATTR_Checked;
-		      attrS = TtaGetAttribute (el, attrTypeS);
-		      if (attrS != NULL &&
-			  TtaGetAttributeValue (attrS) == HTML_ATTR_Checked_VAL_Yes_)
-			{
-			  /* get the Value attribute */
-			  attrTypeS.AttrTypeNum = HTML_ATTR_Value_;
-			  attrS = TtaGetAttribute (el, attrTypeS);
-			  if (attrS != NULL)
-			    {
-			      /* save the NAME attribute of the element el */
-			      length = MAX_LENGTH - 1;
-			      TtaGiveTextAttributeValue (attr, name, &length);
-			      /* save the Value attribute of the element el */
-			      length = TtaGetTextAttributeLength (attrS) + 1;
-			      value = TtaGetMemory (length);
-			      TtaGiveTextAttributeValue (attrS, value, &length);
-			      AddNameValue (name, value);
-			      TtaFreeMemory (value);
-			      value = NULL;
-			    }
-			}
-		    }
-		  else if (mode == HTML_EL_Reset_Input)
-		    {
-		      /* Reset according to the default attribute */
-		      attrTypeS.AttrTypeNum = HTML_ATTR_DefaultChecked;
-		      def = TtaGetAttribute (el, attrTypeS);
-		      /* remove previous checked attribute */
-		      attrTypeS.AttrTypeNum = HTML_ATTR_Checked;
-		      attrS = TtaGetAttribute (el, attrTypeS);
-		      if (attrS != NULL)
-			TtaRemoveAttribute (el, attrS, doc);
-		      /* create a new checked attribute */
-		      attrS = TtaNewAttribute (attrTypeS);
-		      TtaAttachAttribute (el, attrS, doc);
-		      if (def != NULL)
-			TtaSetAttributeValue (attrS, HTML_ATTR_Checked_VAL_Yes_, el, doc);
-		      else
-			TtaSetAttributeValue (attrS, HTML_ATTR_Checked_VAL_No_, el, doc);
-		    }
-		  break;
-		  
-		case HTML_EL_Text_Area:
-		case HTML_EL_Text_Input:
-		case HTML_EL_File_Input:
-		case HTML_EL_Password_Input:
-		  if (mode == HTML_EL_Submit_Input)
-		    {
-		      /* search the value in the Text_With_Frame element */
-		      elType.ElTypeNum = HTML_EL_TEXT_UNIT;
-		      elForm = TtaSearchTypedElement (elType, SearchInTree, el);
 		      /* save the NAME attribute of the element el */
 		      length = MAX_LENGTH - 1;
 		      TtaGiveTextAttributeValue (attr, name, &length);
-		      AddElement (name);
-		      AddToBuffer ("=");
-		      while (elForm)
+		      /* get the "value" attribute */
+		      attrTypeS.AttrTypeNum = HTML_ATTR_Value_;
+		      attrS = TtaGetAttribute (el, attrTypeS);
+		      if (attrS != NULL)
 			{
-			  length = TtaGetTextLength (elForm) + 1;
-			  text = TtaGetMemory (length);
-			  TtaGiveTextContent (elForm, text, &length, &lang);
-			  AddElement (text);
-			  TtaFreeMemory (text);
-			  elForm = TtaSearchTypedElementInTree (elType, SearchForward, el, elForm);
-			}
-		      AddToBuffer ("&");
-		    }
-		  else if (mode == HTML_EL_Reset_Input)
-		    {
-		      /* Reset according to the default attribute*/
-		      /* gets the default value */
-		      attrTypeS.AttrTypeNum = HTML_ATTR_Default_Value;
-		      def = TtaGetAttribute (el, attrTypeS);
-		      if (def != NULL)
-			{
-			  length = TtaGetTextAttributeLength (def) + 1;
+			  /* save the Value attribute of the element el */
+			  length = TtaGetTextAttributeLength (attrS) + 1;
 			  value = TtaGetMemory (length);
-			  TtaGiveTextAttributeValue (def, value, &length);
+			  TtaGiveTextAttributeValue (attrS, value, &length);
+			  AddNameValue (name, value);
+			  TtaFreeMemory (value);
+			  value = NULL;
 			}
 		      else
-			{
-			  /* there's no default value */
-			  value = TtaGetMemory (1);
-			  value[0] = EOS;
-			}
-		      /* search the value in the Text_With_Frame element */
-		      elType.ElTypeNum = HTML_EL_TEXT_UNIT;
-		      elForm = TtaSearchTypedElement (elType, SearchInTree, el);
-		      /* reset the value of the element */
-		      if (elForm != NULL) 
-			TtaSetTextContent (elForm, value, lang, doc);
-		      TtaFreeMemory (value);
-		      value = NULL;
+			/* give a default checkbox value (On) */
+			AddNameValue (name, "on");
 		    }
-		  break;
-		  
-		case HTML_EL_Hidden_Input:
-		  if (mode == HTML_EL_Submit_Input)
+		}
+	      else if (mode == HTML_EL_Reset_Input)
+		{
+		  /* Reset according to the default attribute */
+		  attrTypeS.AttrTypeNum = HTML_ATTR_DefaultChecked;
+		  def = TtaGetAttribute (el, attrTypeS);
+		  /* remove previous checked attribute */
+		  attrTypeS.AttrTypeNum = HTML_ATTR_Checked;
+		  attrS = TtaGetAttribute (el, attrTypeS);
+		  if (attrS != NULL)
+		    TtaRemoveAttribute (el, attrS, doc);
+		  /* create a new checked attribute */
+		  attrS = TtaNewAttribute (attrTypeS);
+		  TtaAttachAttribute (el, attrS, doc);
+		  if (def != NULL)
+		    TtaSetAttributeValue (attrS, HTML_ATTR_Checked_VAL_Yes_, el, doc);
+		  else
+		    TtaSetAttributeValue (attrS, HTML_ATTR_Checked_VAL_No_, el, doc);
+		}
+	      break;
+	      
+	    case HTML_EL_Radio_Input:
+	      if (mode == HTML_EL_Submit_Input)
+		{
+		  /* Get the element's current status */
+		  attrTypeS.AttrTypeNum = HTML_ATTR_Checked;
+		  attrS = TtaGetAttribute (el, attrTypeS);
+		  if (attrS != NULL &&
+		      TtaGetAttributeValue (attrS) == HTML_ATTR_Checked_VAL_Yes_)
 		    {
-		      /* the value is in the default value attribute */
+		      /* get the Value attribute */
 		      attrTypeS.AttrTypeNum = HTML_ATTR_Value_;
-		      attrS = TtaGetAttribute (el, attrType);
-		      def = TtaGetAttribute (el, attrTypeS);
-		      if (def != NULL)
+		      attrS = TtaGetAttribute (el, attrTypeS);
+		      if (attrS != NULL)
 			{
 			  /* save the NAME attribute of the element el */
 			  length = MAX_LENGTH - 1;
 			  TtaGiveTextAttributeValue (attr, name, &length);
-			  /* save of the element content */
-			  length = TtaGetTextAttributeLength (def) + 1;
+			  /* save the Value attribute of the element el */
+			  length = TtaGetTextAttributeLength (attrS) + 1;
 			  value = TtaGetMemory (length);
-			  TtaGiveTextAttributeValue (def, value, &length);
+			  TtaGiveTextAttributeValue (attrS, value, &length);
 			  AddNameValue (name, value);
 			  TtaFreeMemory (value);
 			  value = NULL;
 			}
 		    }
-		  break;
-		  
-		default:
-		  break;
 		}
+	      else if (mode == HTML_EL_Reset_Input)
+		{
+		  /* Reset according to the default attribute */
+		  attrTypeS.AttrTypeNum = HTML_ATTR_DefaultChecked;
+		  def = TtaGetAttribute (el, attrTypeS);
+		  /* remove previous checked attribute */
+		  attrTypeS.AttrTypeNum = HTML_ATTR_Checked;
+		  attrS = TtaGetAttribute (el, attrTypeS);
+		  if (attrS != NULL)
+		    TtaRemoveAttribute (el, attrS, doc);
+		  /* create a new checked attribute */
+		  attrS = TtaNewAttribute (attrTypeS);
+		  TtaAttachAttribute (el, attrS, doc);
+		  if (def != NULL)
+		    TtaSetAttributeValue (attrS, HTML_ATTR_Checked_VAL_Yes_, el, doc);
+		  else
+		    TtaSetAttributeValue (attrS, HTML_ATTR_Checked_VAL_No_, el, doc);
+		}
+	      break;
+	      
+	    case HTML_EL_Text_Area:
+	    case HTML_EL_Text_Input:
+	    case HTML_EL_File_Input:
+	    case HTML_EL_Password_Input:
+	      if (mode == HTML_EL_Submit_Input)
+		{
+		  /* search the value in the Text_With_Frame element */
+		  elType.ElTypeNum = HTML_EL_TEXT_UNIT;
+		  elForm = TtaSearchTypedElement (elType, SearchInTree, el);
+		  /* save the NAME attribute of the element el */
+		  length = MAX_LENGTH - 1;
+		  TtaGiveTextAttributeValue (attr, name, &length);
+		  AddElement (name);
+		  AddToBuffer ("=");
+		  while (elForm)
+		    {
+		      length = TtaGetTextLength (elForm) + 1;
+		      text = TtaGetMemory (length);
+		      TtaGiveTextContent (elForm, text, &length, &lang);
+		      AddElement (text);
+		      TtaFreeMemory (text);
+		      elForm = TtaSearchTypedElementInTree (elType, SearchForward, el, elForm);
+		    }
+		  AddToBuffer ("&");
+		}
+	      else if (mode == HTML_EL_Reset_Input)
+		{
+		  /* Reset according to the default attribute*/
+		  /* gets the default value */
+		  attrTypeS.AttrTypeNum = HTML_ATTR_Default_Value;
+		  def = TtaGetAttribute (el, attrTypeS);
+		  if (def != NULL)
+		    {
+		      length = TtaGetTextAttributeLength (def) + 1;
+		      value = TtaGetMemory (length);
+		      TtaGiveTextAttributeValue (def, value, &length);
+		    }
+		  else
+		    {
+		      /* there's no default value */
+		      value = TtaGetMemory (1);
+		      value[0] = EOS;
+		    }
+		  /* search the value in the Text_With_Frame element */
+		  elType.ElTypeNum = HTML_EL_TEXT_UNIT;
+		  elForm = TtaSearchTypedElement (elType, SearchInTree, el);
+		  /* reset the value of the element */
+		  if (elForm != NULL) 
+		    TtaSetTextContent (elForm, value, lang, doc);
+		  TtaFreeMemory (value);
+		  value = NULL;
+		}
+	      break;
+	      
+	    case HTML_EL_Hidden_Input:
+	      if (mode == HTML_EL_Submit_Input)
+		{
+		  /* the value is in the default value attribute */
+		  attrTypeS.AttrTypeNum = HTML_ATTR_Value_;
+		  attrS = TtaGetAttribute (el, attrType);
+		  def = TtaGetAttribute (el, attrTypeS);
+		  if (def != NULL)
+		    {
+		      /* save the NAME attribute of the element el */
+		      length = MAX_LENGTH - 1;
+		      TtaGiveTextAttributeValue (attr, name, &length);
+		      /* save of the element content */
+		      length = TtaGetTextAttributeLength (def) + 1;
+		      value = TtaGetMemory (length);
+		      TtaGiveTextAttributeValue (def, value, &length);
+		      AddNameValue (name, value);
+		      TtaFreeMemory (value);
+		      value = NULL;
+		    }
+		}
+	      break;
+	      
+	    default:
+	      break;
 	    }
-	  TtaSearchAttribute (attrType, SearchForward, el, &el, &attr);
 	}
+      TtaSearchAttribute (attrType, SearchForward, el, &el, &attr);
+    }
+  
+  if (mode == HTML_EL_Reset_Input)
+    {
+      /* restore original display mode */
+      if (dispMode == DisplayImmediately)
+	TtaSetDisplayMode (doc, dispMode);
       
-      if (mode == HTML_EL_Reset_Input)
+      /* restore status of the document */
+      if (!modified)
 	{
-	  /* restore original display mode */
-	  if (dispMode == DisplayImmediately)
-	    TtaSetDisplayMode (doc, dispMode);
-
-	  /* restore status of the document */
-	  if (!modified)
-	    {
-	      TtaSetDocumentUnmodified (doc);
-	      /* switch Amaya buttons and menus */
-	      DocStatusUpdate (doc, modified);
-	    }
+	  TtaSetDocumentUnmodified (doc);
+	  /* switch Amaya buttons and menus */
+	  DocStatusUpdate (doc, modified);
 	}
     }
 }
@@ -757,8 +756,8 @@ void SubmitForm (Document doc, Element element)
    int                 method;
    ThotBool	       found, withinForm;
 
-   buffer = NULL;
-   action = NULL;
+   action = (char *) NULL;
+   buffer = (char *) NULL;
 
    /* find out the characteristics of the button which was pressed */
    found = FALSE;
@@ -928,21 +927,21 @@ void SubmitForm (Document doc, Element element)
      method = HTML_ATTR_METHOD_VAL_Get_;
 
    /* search the subtree for the form elements */
-   elForm  = TtaGetFirstChild(elForm);
+   element  = TtaGetFirstChild(elForm);
 
    /* process the form */
    if (button_type == HTML_EL_Submit_Input)
      {
        if (action)
 	 {
-	   ParseForm (doc, elForm, elForm, button_type, withinForm);
+	   ParseForm (doc, elForm, element, button_type);
 	   DoSubmit (doc, method, action);
 	 }
        else
 	 InitConfirm3L (doc, 1, "No action", NULL, NULL, NO);
      }
    else
-     ParseForm (doc, elForm, elForm, button_type, withinForm);   
+     ParseForm (doc, elForm, element, button_type);
    
    if (action)
      TtaFreeMemory (action);
@@ -1086,7 +1085,8 @@ ThotBool HandleReturn (NotifyOnTarget *event)
 	     {
 	       action = TtaGetMemory (length + 1);
 	       TtaGiveTextAttributeValue (attr, action, &length);
-	       ParseForm (event->document, elForm, elForm, HTML_EL_Submit_Input, TRUE);
+	       ParseForm (event->document, elForm, elForm, 
+			  HTML_EL_Submit_Input);
 	       DoSubmit (event->document, method, action);
 	       TtaFreeMemory (action);
 	     }
