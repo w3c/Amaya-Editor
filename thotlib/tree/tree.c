@@ -1,10 +1,7 @@
-
-/* -- Copyright (c) 1996 Inria -- All rights reserved -- */
-
 /*
-   Ce module effectue les manipulations des arbres abstraits
-   des documents traites par l'editeur Thot.
- */
+   This module implements the operations on the abstract trees used
+   by the Thot editor.
+*/
 
 #include "libmsg.h"
 #include "thot_sys.h"
@@ -34,10 +31,9 @@
 #include "refext.f"
 #include "res.f"		/* PCS resdyn */
 
-/* ---------------------------------------------------------------------- */
-/* |    DocumentOfElement retourne un pointeur sur le document auquel          | */
-/* |            appartient l'element pEl.                               | */
-/* ---------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------
+   DocumentOfElement returns the document to which a pEl element belongs.
+   ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
 PtrDocument         DocumentOfElement (PtrElement pEl)
@@ -57,25 +53,25 @@ PtrElement          pEl;
       return NULL;
 
    pE = pEl;
-   /* remonte a la racine de l'arbre auquel appartient l'element */
+   /* finds the root of the tree to which the element belongs */
    while (pE->ElParent != NULL)
       pE = pE->ElParent;
 
-   /* cherche parmi les racines des documents existants
-      et de leurs elements associes et parametres */
+   /* searchs among the roots of existing documents as well as among
+      the associated elements and parameters of those documents */
    for (i = 0; i < MAX_DOCUMENTS; i++)
      {
 	pDoc = TabDocuments[i];
 	if (pDoc != NULL)
 	  {
 	     if (pDoc->DocRootElement == pE)
-		/* c'est la racine de l'arbre principal */
+              /* it's the root of the principal tree */
 		return pDoc;
-	     /* cherche parmi les elements associes */
+             /* searchs among the associate elements */
 	     for (j = 0; j < MAX_ASSOC_DOC; j++)
 		if (pDoc->DocAssocRoot[j] == pE)
 		   return pDoc;
-	     /* cherche parmi les parametres */
+             /* searchs among the parameters */
 	     for (j = 0; j < MAX_PARAM_DOC; j++)
 		if (pDoc->DocParameters[j] == pE)
 		   return pDoc;
