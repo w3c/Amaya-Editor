@@ -1337,8 +1337,8 @@ static ThotBool SetTableWidths (PtrAbstractBox table, int frame)
 		      else
 			{
 			  /* diff between the column and cell widths */
-			  delta = colBox[cRef]->AbBox->BxWidth - box->BxWidth;
-			  if (delta < 0)
+			  /*delta = colBox[cRef]->AbBox->BxWidth - box->BxWidth;
+			    if (delta < 0)*/
 			    delta = 0;
 			  if (colBox[cRef]->AbBox->BxMinWidth < min + delta)
 			    colBox[cRef]->AbBox->BxMinWidth = min + delta;
