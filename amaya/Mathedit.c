@@ -3015,9 +3015,9 @@ static void SetAttrParseMe (Element el, Document doc)
  -----------------------------------------------------------------------*/
 static void SetContentAfterEntity (char *entityName, Element el, Document doc)
 {
-  char	        bufEntity[10], *ptr;
+  char	        bufEntity[10];
   ThotBool      found;
-  int           value, i;
+  int           value;
   Language      lang;
 
   found = MapXMLEntity (MATH_TYPE, entityName, &value);
@@ -3064,7 +3064,7 @@ static void InsertMathEntity (unsigned char *entityName, Document document)
   Attribute     attr;
   AttributeType attrType;
   int           firstChar, lastChar, i, len;
-  ThotBool      before, done, found;
+  ThotBool      before, done;
   char	        *ptr;
   char          buffer[MAX_LENGTH+2];
 
@@ -3877,7 +3877,7 @@ void FenceModified (NotifyOnValue *event)
   ElementType	elType;
   AttributeType	attrType;
   Attribute	attr;
-  unsigned char         text[2];
+  unsigned char text[2];
 
   mfencedEl = TtaGetParent (event->element);
   elType = TtaGetElementType (event->element);
@@ -3926,7 +3926,7 @@ void MathEntityModified (NotifyAttribute *event)
 {
 #define buflen 200
   char          *value;
-  int            length, i, code;
+  int            length, i;
   ThotBool       changed;
 
   value = TtaGetMemory (buflen);

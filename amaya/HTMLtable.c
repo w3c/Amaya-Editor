@@ -17,9 +17,10 @@
 #include "fetchXMLname_f.h"
 #include "undo.h"
 #include "MathML.h"
+#include "HTMLedit_f.h"
+#include "HTMLtable_f.h"
 #include "MathMLbuilder_f.h"
 #include "Mathedit_f.h"
-#include "HTMLtable_f.h"
 
 static Element      CurrentRow = NULL;
 static Element      CurrentDeletedRow = NULL;

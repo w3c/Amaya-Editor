@@ -2499,10 +2499,12 @@ void SetCharFontOrPhrase (int document, int elemtype)
 		  done = (elFont != NULL);
 		if (!done)
 		  /* process the text leaf */
-		  if (remove)
-		    ResetFontOrPhraseOnText (document, selectedEl, elemtype);
-		  else
-		    SetFontOrPhraseOnText (document, selectedEl, elemtype);
+		  {
+		    if (remove)
+		      ResetFontOrPhraseOnText (document, selectedEl, elemtype);
+		    else
+		      SetFontOrPhraseOnText (document, selectedEl, elemtype);
+		  }
 	      }
 	  }
 	/* next selected element */
