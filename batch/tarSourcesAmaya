@@ -1,5 +1,5 @@
 #!/bin/sh
-VERSION=0.95a
+AMAYAVERSION=0.95a
 THOTDIR=$HOME/opera
 DEST=/tahiti/thottape
 PLATFORMS="solaris2 LINUX LINUX-ELF SUN4 SGI RS6000"
@@ -808,7 +808,7 @@ w3c-libwww-5.0a/config/install-sh \
 w3c-libwww-5.0a/config/makedefs.pl \
 w3c-libwww-5.0a/config/makexprt.pl \
 w3c-libwww-5.0a/config/mkinstalldirs \
- | $COMPRESS  > $DEST/amaya-src-$VERSION.tar.gz
+ | $COMPRESS  > $DEST/amaya-src-$AMAYAVERSION.tar.gz
 
 for MACH in $PLATFORMS
 do
@@ -819,6 +819,6 @@ do
     $MACH/libjpeg.a \
     $MACH/libpng.a \
     $MACH/libz.a \
-    | $COMPRESS  > $DEST/amaya-libs-$MACH-$VERSION.tar.gz
+    | $COMPRESS  > $DEST/amaya-libs-$MACH-$AMAYAVERSION.tar.gz
 done
 

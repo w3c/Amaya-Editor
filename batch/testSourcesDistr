@@ -1,0 +1,36 @@
+#!/bin/sh
+AMAYAVERSION=0.95a
+THOTVERSION=2.0a
+
+CC=gcc
+CFLAGS=-O2
+THOTTAPE=/tahiti/thottape
+THOTDIR=/tahiti/diffusion/opera
+MACHINE=`$THOTDIR/batch/MachineType`
+TESTDIR=$HOME/tmp
+
+if [ -f $TESTDIR/Thot ]
+then
+    echo Removing Old $TESTDIR/Thot
+    echo mv $TESTDIR/Thot $TESTDIR/Thot.old
+    echo rm -rf $TESTDIR/Thot.old
+fi
+
+echo Creating the Test directory
+echo mkdir -p $TESTDIR
+echo cd $TESTDIR
+echo Extracting Thot sources $THOTVERSION
+echo tar xvzf $THOTTAPE/thot-src-$THOTVERSION.tar.gz
+echo Extracting Thot libs $THOTVERSION for $MACHINE
+echo tar xvzf $THOTTAPE/thot-libs-$MACHINE-$THOTVERSION.tar.gz
+echo cd Thot
+echo Extracting Amaya sources $THOTVERSION
+echo tar xzf $THOTTAPE/amaya-src-$AMAYAVERSION.tar.gz
+echo Extracting Amaya libs $THOTVERSION for $MACHINE
+echo tar xzf $THOTTAPE/amaya-libs-$MACHINE-$AMAYAVERSION.tar.gz
+echo Going to $MACHINE specific directory
+echo cd $MACHINE
+echo Setting up Makefile
+echo 'sed -e "s+/\^THOTDIR.*$+$HOME/tmp/Thot+" < Makefile.orig > Makefile'
+echo Starting compile with CC=$CC CFLAGS=$CFLAGS
+echo make CC=$CC CFLAGS=$CFLAGS amaya thot
