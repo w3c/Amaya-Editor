@@ -18,13 +18,12 @@ copy it. */
 	/* begin body type */	/* 1 - humanist sans a */
 
 BODY	{	
-	font-size:	12 pt;
 	font-weight:	normal;
 	word-spacing:	normal;
 	letter-spacing:	normal;
 	text-transform:	none;
 	font-family:	Verdana, Myriad Web, Syntax, sans-serif;
-	font-size-adjust:	.58;
+	/*font-size-adjust:	.58;*/
 	}	
 
 P, BLOCKQUOTE, UL, OL, DL, DD, LI, DIR, MENU	{
@@ -70,13 +69,11 @@ TABLE, TBODY, TR, TD	{
 PRE, CODE, TT	{ font-size:	1.17em; }
 
 BODY	{
-	font-size:0.8em;
 	font-weight:normal;
 	word-spacing:normal;
 	letter-spacing:normal;
 	text-transform:none;
 	font-family:Verdana, Myriad Web, Syntax, sans-serif;
-	font-size-adjust:.58;
 }	
 
 p.ProcedureCaption, li.ProcedureCaption, div.ProcedureCaption
@@ -404,10 +401,6 @@ U, ABBR, ACRONYM, BDO, BUTTON, FIELDSET, INS, LABEL	{
 	border-top:	0;
 	border-bottom:	0;
 	vertical-align:	baseline;
-	}	
-		
-BODY	{	
-	line-height:	1.58em;
 	}	
 		
 DIV > P:first-child, BODY > P:first-child, TD > P:first-child	{	
@@ -1615,10 +1608,6 @@ LI.kadov-P {
 /*}}end!kadov=======================================================*/ 
 
 
-
-BODY {
-	line-height: 1.58em;
-}
 
 DIV \003e P:first-child,
 BODY \003e P:first-child,
