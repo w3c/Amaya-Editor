@@ -20,7 +20,7 @@ COMPRESS="gzip -9"
 
 cd $THOTDIR
 rm LINUX-ELF
-ln -s LINUX-ELF-www LINUX-ELF
+ln -s LINUX-ELF-lib6 LINUX-ELF
 cd ..
 
 for MACH in $PLATFORMS
@@ -118,9 +118,8 @@ done
 tar cvzf $DEST/amaya-solaris2.6-$AMAYAVERSION.tar.gz  \
    Amaya/README.amaya \
    Amaya/config/XKeysymDB \
-   Amaya/config/thot.ini \
    Amaya/config/amaya.keyboard \
-   Amaya/config/thot.rc \
+   Amaya/config/*thot.rc \
    Amaya/config/amaya.kb \
    Amaya/config/en-amayadialogue \
    Amaya/config/en-amayamsg \
