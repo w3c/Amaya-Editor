@@ -389,8 +389,8 @@ ViewSelection      *selMark;
 
 	/* Boucle tant que le caractere designe se trouve dans */
 	/* le buffer suivant ou dans la boite suivante */
-	while (!stop && (pBuffer != pSelBuffer || max - beginInd <= i - dummy))
-	   if (max - beginInd <= i - dummy)
+	while (!stop && (pBuffer != pSelBuffer || max - beginInd + dummy <= i))
+	   if (max - beginInd + dummy <= i || pBuffer == NULL)
 	     {
 		/* Box de coupure GetNextBox */
 		/* Cas particulier des blancs supprimes en fin de boite */
@@ -401,7 +401,7 @@ ViewSelection      *selMark;
 		else if (pBox->BxNexChild->BxNChars == 0 && SearchLine (pBox->BxNexChild) == NULL)
 		   stop = TRUE;
 		else
-		   stop = max - beginInd + dummy > i && pBuffer == pSelBuffer;
+		   stop = FALSE;
 
 		/* Est-ce que la selection est en fin de boite ? */
 		if (stop)

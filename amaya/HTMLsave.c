@@ -779,17 +779,27 @@ void                   BackUpDocs ()
   Document             doc;
   char                 pathname[MAX_LENGTH];
   char                 docname[MAX_LENGTH];
+  char                *ptr;
+  int                  l;
 
   /* check all modified documents */
   for (doc = 1; doc < DocumentTableLength; doc++)
     if (DocumentURLs[doc] != NULL && TtaIsDocumentModified (doc))
       {
 	SavingDocument = 0;
+	ptr = DocumentURLs[doc];
+	l = strlen (ptr) - 1;
+	if (ptr[l] == DIR_SEP || ptr[l] == URL_SEP)
+	  {
+	    /* it's a directory name */
+	    ptr[l] = EOS;
+	    l = 0;
+	  }
 	TtaExtractName (DocumentURLs[doc], pathname, docname);
-	if (docname[0] == EOS)
-	  sprintf (pathname, "%s%c#%d.html", TempFileDirectory, DIR_SEP, doc);
+	if (l == 0)
+	  sprintf (pathname, "%s%c%%%s.html", TempFileDirectory, DIR_SEP, docname);
 	else
-	  sprintf (pathname, "%s%c#%s", TempFileDirectory, DIR_SEP, docname);
+	  sprintf (pathname, "%s%c%%%s", TempFileDirectory, DIR_SEP, docname);
  	DocumentURLs[doc] = pathname;
 	SaveDocument (doc, 1);
       }

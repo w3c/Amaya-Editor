@@ -72,6 +72,7 @@ LoadedImageDesc   **desc;
 	     if (pImage->document == doc)
 	       {
 		  *desc = pImage;
+		  TtaFreeMemory (localname);
 		  return (FALSE);
 	       }
 	     else

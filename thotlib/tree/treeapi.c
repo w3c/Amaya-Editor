@@ -796,7 +796,8 @@ Document            document;
 		if (pDoc->DocRootElement == pEl)
 		   /* The whole main tree is destroyed */
 		   pDoc->DocRootElement = NULL;
-		else if (pDoc->DocAssocRoot[pEl->ElAssocNum - 1] == pEl)
+		else if (pEl->ElAssocNum > 0 &&
+			 pDoc->DocAssocRoot[pEl->ElAssocNum - 1] == pEl)
 		   pDoc->DocAssocRoot[pEl->ElAssocNum - 1] = NULL;
 	     DeleteElement (&pEl);
 	  }

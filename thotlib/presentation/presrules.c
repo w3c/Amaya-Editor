@@ -557,8 +557,8 @@ PtrAttribute        pAttr;
 #endif /* __STDC__ */
 {
    PtrAbstractBox      pAbb;
-   int                 val, i;
    PtrElement          pElInherit;
+   int                 val, i;
 
    val = 0;
    *ok = TRUE;
@@ -1796,11 +1796,11 @@ PtrDocument         pDoc;
    		rend vrai dans appl si la regle a ete appliquee.	
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         ApplyPos (AbPosition * PPos, PosRule positionRule, PtrPRule pPRule, PtrAttribute pAttr, PtrPSchema pSchP, PtrAbstractBox pAbb1, PtrDocument pDoc, boolean * appl)
+static void         ApplyPos (AbPosition * PPos, PosRule *positionRule, PtrPRule pPRule, PtrAttribute pAttr, PtrPSchema pSchP, PtrAbstractBox pAbb1, PtrDocument pDoc, boolean * appl)
 #else  /* __STDC__ */
 static void         ApplyPos (PPos, positionRule, pPRule, pAttr, pSchP, pAbb1, pDoc, appl)
 AbPosition         *PPos;
-PosRule             positionRule;
+PosRule            *positionRule;
 PtrPRule            pPRule;
 PtrAttribute        pAttr;
 PtrPSchema          pSchP;
@@ -1827,7 +1827,7 @@ boolean            *appl;
    if (pAbb1->AbElement->ElTerminal && pAbb1->AbElement->ElLeafType == LtPageColBreak)
       if (pAbb1->AbLeafType != LtCompound && !pAbb1->AbPresentationBox)
 	 pageBreak = TRUE;
-   pPosRule = &positionRule;
+   pPosRule = positionRule;
    if (pPosRule->PoPosDef == NoEdge || pageBreak)
       /* position flottante: regle VertPos=NULL ou HorizPos=NULL */
      {
@@ -2112,7 +2112,7 @@ PtrDocument         pDoc;
      {
 	/* Box elastique, la dimension est definie comme une position */
 	/* applique la regle */
-	ApplyPos (&pdimAb->DimPosition, pDRule->DrPosRule, pPRule, pAttr, pSchP, pAb, pDoc, appl);
+	ApplyPos (&(pdimAb->DimPosition), &(pDRule->DrPosRule), pPRule, pAttr, pSchP, pAb, pDoc, appl);
 	/* si la regle a pu etre appliquee, le boite est reellement elastique */
 	if (*appl)
 	   pdimAb->DimIsPosition = TRUE;
@@ -3495,16 +3495,15 @@ PtrAttribute        pAttr;
 #endif /* __STDC__ */
 #endif /* __COLPAGE__ */
 {
-  boolean             appl;
   TypeUnit            unit;
   AbPosition          Posit;
+  PtrAbstractBox      pAbb1;
+  PresConstant	     *pConst;
+  PathBuffer	      directoryName;
+  char		      fname[MAX_PATH];
   char                c;
   int                 viewSch, i;
-  PtrAbstractBox      pAbb1;
-  PresConstant	      *pConst;
-  char		       fname[MAX_PATH];
-  PathBuffer	       directoryName;
-
+  boolean             appl;
 #ifdef __COLPAGE__
   *destroyedAb = FALSE;
 #else  /* __COLPAGE__ */
@@ -3767,13 +3766,13 @@ PtrAttribute        pAttr;
 	    break;
 	  case PtVertRef:
 	    Posit = pAbb1->AbVertRef;
-	    ApplyPos (&Posit, pPRule->PrPosRule, pPRule, pAttr, pSchP, pAb,
+	    ApplyPos (&Posit, &(pPRule->PrPosRule), pPRule, pAttr, pSchP, pAb,
 		      pDoc, &appl);
 	    pAbb1->AbVertRef = Posit;
 	    break;
 	  case PtHorizRef:
 	    Posit = pAbb1->AbHorizRef;
-	    ApplyPos (&Posit, pPRule->PrPosRule, pPRule, pAttr, pSchP, pAb,
+	    ApplyPos (&Posit, &(pPRule->PrPosRule), pPRule, pAttr, pSchP, pAb,
 		      pDoc, &appl);
 	    pAbb1->AbHorizRef = Posit;
 	    break;
@@ -3787,7 +3786,7 @@ PtrAttribute        pAttr;
 	    /* ses regles */
 	    /* applique la regle de positionnement de l'element */
 	    Posit = pAbb1->AbVertPos;
-	    ApplyPos (&Posit, pPRule->PrPosRule, pPRule, pAttr, pSchP, pAb,
+	    ApplyPos (&Posit, &(pPRule->PrPosRule), pPRule, pAttr, pSchP, pAb,
 		      pDoc, &appl);
 	    pAbb1->AbVertPos = Posit;
 	    /* traitement special pour le debordement vertical des cellules */
@@ -3878,7 +3877,7 @@ PtrAttribute        pAttr;
 		  /* applique la regle de positionnement de l'element */
 		  {
 		    Posit = pAbb1->AbVertPos;
-		    ApplyPos (&Posit, pPRule->PrPosRule, pPRule, pAttr,
+		    ApplyPos (&Posit, &(pPRule->PrPosRule), pPRule, pAttr,
 			      pSchP, pAb, pDoc, &appl);
 		    pAbb1->AbVertPos = Posit;
 		  }
@@ -3891,7 +3890,7 @@ PtrAttribute        pAttr;
 #endif /* __COLPAGE__ */
 	  case PtHorizPos:
 	    Posit = pAbb1->AbHorizPos;
-	    ApplyPos (&Posit, pPRule->PrPosRule, pPRule, pAttr, pSchP,
+	    ApplyPos (&Posit, &(pPRule->PrPosRule), pPRule, pAttr, pSchP,
 		      pAb, pDoc, &appl);
 	    pAbb1->AbHorizPos = Posit;
 	    break;

@@ -199,8 +199,6 @@ typedef struct _GETHTMLDocument_context {
   char *target;
   char *documentname;
   char *tempdocument;
-  char *sourceDocUrl;
-  Element anchor;
   TTcbf *cbf;
   void *ctx_cbf;
 } GETHTMLDocument_context;
@@ -1718,8 +1716,6 @@ void *context;
    boolean             ok;
    boolean             local_link;
    GETHTMLDocument_context *ctx;
-   char               *sourceDocUrl;
-   Element             anchor;
    TTcbf              *cbf;
    void               *ctx_cbf;
 
@@ -1736,8 +1732,6 @@ void *context;
    target = ctx->target;
    documentname = ctx->documentname;
    tempdocument = ctx->tempdocument;
-   sourceDocUrl = ctx->sourceDocUrl;
-   anchor = ctx->anchor;
    cbf = ctx->cbf;
    ctx_cbf = ctx->ctx_cbf;
    local_link = ctx->local_link;

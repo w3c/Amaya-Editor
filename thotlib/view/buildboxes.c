@@ -2014,11 +2014,18 @@ int                 frame;
        || pAb->AbAspectChange || pAb->AbSizeChange)
      {
        /* look at if the box or an enclosing box has a background */
-       pCurrentAb = pAb;
        if (pAb->AbNew || pAb->AbDead || pAb->AbHorizPosChange || pAb->AbVertPosChange)
-	 while (pCurrentAb != NULL && pCurrentAb->AbPictBackground == NULL && !pCurrentAb->AbFillBox)
-	   pCurrentAb = pCurrentAb->AbEnclosing;
-       if (pCurrentAb == NULL)
+	 {
+	 pCurrentAb = pAb->AbEnclosing;	   
+	   while (pCurrentAb != NULL &&
+		  pCurrentAb->AbPictBackground == NULL &&
+		  !pCurrentAb->AbFillBox)
+	     pCurrentAb = pCurrentAb->AbEnclosing;
+	 }
+       else
+	 pCurrentAb = pAb;
+
+       if (pCurrentAb == NULL || pCurrentAb->AbEnclosing == NULL)
 	 /* no background found: clip the current box */
 	 pCurrentBox = pBox;
        else

@@ -404,7 +404,8 @@ boolean             createLink;
 	  /* stop displaying changes that will be made in the document */
 	  if (dispMode == DisplayImmediately)
 	    TtaSetDisplayMode (doc, DeferredDisplay);
-	  
+	  /* remove selection before modifications */
+	  TtaUnselect (doc);
 	  /* process the first selected element */
 	  elType = TtaGetElementType (first);
 	  if (c1 > 1 && elType.ElTypeNum == HTML_EL_TEXT_UNIT)

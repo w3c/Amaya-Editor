@@ -578,7 +578,9 @@ char               *docName;
    char               *basename;
    char                tempOrgName[MAX_LENGTH];
    char               *ptr;
+   char                used_sep;
    int                 length;
+   boolean             check;
 
 #  ifdef _WINDOWS
    int ndx;
@@ -602,17 +604,6 @@ char               *docName;
    while ((*ptr == ' ' || *ptr == EOL) && *ptr++ != EOS);
    strncpy (tempOrgName, ptr, MAX_LENGTH -1);
    tempOrgName[MAX_LENGTH -1] = EOS;
-   /* clean trailing white space */
-#  ifndef _WINDOWS
-   ptr = strchr (tempOrgName, ' ');
-   if (ptr)
-      *ptr = EOS;
-#  endif /* !_WINDOWS */
-   /* clean trailing new lines */
-   ptr = strchr (tempOrgName, EOL);
-   if (ptr)
-      *ptr = EOS;
-
    /*
     * Make orgName a complete URL
     * If the URL does not include a protocol, then try to calculate
@@ -624,7 +615,19 @@ char               *docName;
        TtaFreeMemory (basename);
        return;
      }
-   else if (IsW3Path (tempOrgName))
+
+   /* clean trailing white space */
+   length = strlen (tempOrgName) - 1;
+   while (tempOrgName[length] == SPACE && tempOrgName[length] == EOL)
+     {
+       tempOrgName[length] = EOS;
+       length--;
+     }
+   /* remove extra dot */
+   if (tempOrgName[length] == '.')
+     tempOrgName[length] = EOS;
+
+   if (IsW3Path (tempOrgName))
      {
        /* the name is complete, go to the Sixth Step */
        strcpy (newName, tempOrgName);
@@ -674,11 +677,33 @@ char               *docName;
        length = strlen (newName) - 1;
        if (newName[length] == URL_SEP || newName[length] == DIR_SEP)
 	 {
+	   used_sep = newName[length];
+	   check = TRUE;
+	   while (check)
+	     {
+	       length--;
+	       while (length >= 0 && newName[length] != used_sep)
+		 length--;
+	       if (!strncmp (&newName[length+1], "..", 2))
+		 {
+		   newName[length+1] = EOS;
+		   /* remove also previous directory */
+		   length--;
+		   while (length >= 0 && newName[length] != used_sep)
+		     length--;
+		   if (strncmp (&newName[length+1], "//", 2))
+		     /* don't remove server name */
+		     newName[length+1] = EOS;
+		 }
+	       else if (!strncmp (&newName[length+1], ".", 1))
+		 newName[length+1] = EOS;
+	       else
+		 check = FALSE;
+	     }
+	     strcpy (docName, "noname.html");	       
 	   /* docname was not comprised inside the URL, so let's */
 	   /* assign the default ressource name */
 	   strcpy (docName, "noname.html");
-	   /* remove DIR_SEP at the end of complete path */
-	   /* newName[length] = EOS; */
 	 }
        else
 	 {
@@ -688,7 +713,7 @@ char               *docName;
 	   if (length < 0)
 	     strcpy (docName, newName);
 	   else
-	     strcpy (docName, &newName[length+1]);
+	       strcpy (docName, &newName[length+1]);
 	 }
      }
    else

@@ -3481,7 +3481,7 @@ PtrElement         *pEl;
 		       DeleteTextBuffer (&pBuf);
 		       pBuf = pNextBuf;
 		    }
-		  while (c < pEl1->ElTextLength && pBuf != NULL);
+		  while (/*c < pEl1->ElTextLength &&*/ pBuf != NULL);
 		  pEl1->ElText = NULL;
 		  pEl1->ElTextLength = 0;
 

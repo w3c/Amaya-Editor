@@ -5147,20 +5147,20 @@ boolean            *complete;
    PtrElement          pElChild, pElParent, pAsc;
    PtrAbstractBox      pAbb, pAbbChild, pNewAbbox, pAbbReturn, pAbbPres;
    PtrAbstractBox      pPRP, pAbbParentAssoc;
-   int                 vis, typePres;
-   int                 viewSch;
-   int                 index;
+   PtrAbstractBox      pAb1;
+   PtrSSchema          pSchS;
+   PtrAttribute        pAttr;
    PtrPRule            queuePR[MAX_QUEUE_LEN];
    PtrAbstractBox      queuePP[MAX_QUEUE_LEN];
    PtrPSchema          queuePS[MAX_QUEUE_LEN];
    PtrAttribute        queuePA[MAX_QUEUE_LEN];
+   int                 vis, typePres;
+   int                 viewSch;
+   int                 index;
    int                 lqueue, pqueue;
+   boolean             completeChild;
    boolean             stop, ok, crAbsBox, truncate, notBreakable, ignoreDescent;
    boolean             Creation, ApplyRules, PcFirst, PcLast;
-   PtrSSchema          pSchS;
-   PtrAttribute        pAttr;
-   PtrAbstractBox      pAb1;
-   boolean             completeChild;
 #ifdef __COLPAGE__
    int                 view;
    boolean             bool;
@@ -5170,6 +5170,8 @@ boolean            *complete;
 #endif /* __COLPAGE__ */
 
    pAbbReturn = NULL;
+   lqueue = 0;
+   pqueue = 0;
    /* Abstract boxes of the element are not created */
    *complete = FALSE;
    if (pEl != NULL && pEl->ElStructSchema != NULL)
