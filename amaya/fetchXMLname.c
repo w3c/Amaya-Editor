@@ -107,7 +107,9 @@ static ElemMapping    XHTMLElemMappingTable[] =
    {TEXT("style"), SPACE, HTML_EL_STYLE_, L_Transitional},
    {TEXT("sub"), SPACE, HTML_EL_Subscript, L_Transitional},
    {TEXT("sup"), SPACE, HTML_EL_Superscript, L_Transitional},
+#ifdef GRAPHML
    {TEXT("svg"), SPACE, HTML_EL_XMLGraphics, L_Transitional},
+#endif
    {TEXT("table"), SPACE, HTML_EL_Table, L_Basic},
    {TEXT("tbody"), SPACE, HTML_EL_tbody, L_Basic},
    {TEXT("td"), SPACE, HTML_EL_Data_cell, L_Basic},
@@ -121,6 +123,9 @@ static ElemMapping    XHTMLElemMappingTable[] =
    {TEXT("u"), SPACE, HTML_EL_Underlined_text, L_Transitional},
    {TEXT("ul"), SPACE, HTML_EL_Unnumbered_List, L_Basic},
    {TEXT("var"), SPACE, HTML_EL_Variable, L_Basic},
+#ifdef GRAPHML
+   {TEXT("xmlgraphics"), SPACE, HTML_EL_XMLGraphics, L_Transitional},
+#endif
    {TEXT("xmp"), SPACE, HTML_EL_Preformatted, L_Transitional},  /* converted to PRE */
    {TEXT(""), SPACE, 0, L_Basic}	/* Last entry. Mandatory */
 };

@@ -1019,7 +1019,7 @@ CHAR_T                c;
       alphabet = EOS;
       if (currentParserCtxt->MapEntity)
          (*(currentParserCtxt->MapEntity)) (entityName, entityValue,
-					    MAX_ENTITY_LENGTH-1, &alphabet);
+					    &alphabet);
       lang = 0;
       if (alphabet == EOS)
 	 /* Unknown entity */
