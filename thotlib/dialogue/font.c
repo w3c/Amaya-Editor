@@ -442,7 +442,10 @@ int CharacterHeight (unsigned char c, PtrFont font)
 int CharacterAscent (unsigned char c, PtrFont font)
 {
 #ifdef _GL
-  int               ascent, i;
+  int               ascent;
+#ifndef _WINDOWS
+  int				i;
+#endif /*_WINDOWS*/
 #else /*_GL*/
 #ifndef _WINDOWS
 #ifdef _GTK
@@ -460,6 +463,7 @@ int CharacterAscent (unsigned char c, PtrFont font)
 #ifdef _GL
 else
    ascent = gl_font_char_ascent (font, &c);
+#ifndef _WINDOWS
   if (c == 244)
     {
       i = 0;
@@ -468,6 +472,7 @@ else
       if (TtPatchedFont[i])
 	ascent -= 2;
     }
+#endif /*_WINDOWS*/
   return (ascent);
 #else /*_GL*/
 #ifdef _WINDOWS
@@ -970,7 +975,8 @@ static PtrFont LoadNearestFont (char script, int family, int highlight,
   int                 i, j, deb;
   int                 mask;
   char                text[10], PsName[10], textX[100];
-#ifdef _WINDOWS
+#if defined (_WINDOWS) && !defined (_GL)
+
   SIZE                wsize;
   TEXTMETRIC          textMetric;
   int                 c;

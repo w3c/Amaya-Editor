@@ -511,11 +511,11 @@ void  EllipticSplit (int frame, int x, int y,
 
   if (xradius == 0 || yradius == 0)
       return;
-  xradius = (xradius<0)?abs (xradius):xradius;
-  yradius = (yradius<0)?abs (yradius):yradius;
+  xradius = (xradius<0)? fabs (xradius):xradius;
+  yradius = (yradius<0)? fabs (yradius):yradius;
   
   /*local var init*/
-
+ 
   Phicos = cos (DEG_TO_RAD(Phi));
   Phisin = sin (DEG_TO_RAD(Phi));
   
@@ -1069,17 +1069,17 @@ static ThotPoint*  BuildPolygonForPath (PtrPathSeg pPa, int frame,
 	  break;
 
 	case PtEllipticalArc:
-	  x1 = pPa->XStart;
-	  y1 = pPa->YStart;
-	  x2 = pPa->XEnd;
-	  y2 = pPa->YEnd;
-	  cx1 = pPa->XRadius; 
-	  cy1 = pPa->YRadius; 	  
+	  x1 = (float) pPa->XStart;
+	  y1 = (float) pPa->YStart;
+	  x2 = (float) pPa->XEnd;
+	  y2 = (float) pPa->YEnd;
+	  cx1 = (float) pPa->XRadius; 
+	  cy1 = (float) pPa->YRadius; 	  
 	  EllipticSplit ( frame, 0, 0,
 			  (double) x1, (double) y1, 
 			  (double) x2, (double) y2, 
 			  (double) cx1, (double) cy1,
-			  fmod(pPa->XAxisRotation, 360), 
+			  (int) fmod(pPa->XAxisRotation, 360), 
 			  pPa->LargeArc, pPa->Sweep,
 			  &points, npoints, &maxpoints);
 	  x2 = (float) (PixelValue (pPa->XEnd, UnPixel, NULL,

@@ -319,8 +319,8 @@ void InitDrawing (int style, int thick, int fg)
 	}
        else
 	 {
-	   glLineWidth (0.1); 
-	   glPointSize (0.1); 
+	   glLineWidth ((GLfloat) 0.1); 
+	   glPointSize ((GLfloat) 0.1); 
 	 }
     }
   else
@@ -340,8 +340,8 @@ void InitDrawing (int style, int thick, int fg)
 	}
       else
 	{
-	  glLineWidth (0.1); 
-	  glPointSize (0.1); 
+	  glLineWidth ((GLfloat) 0.1); 
+	  glPointSize ((GLfloat) 0.1); 
 	}
      glEnable (GL_LINE_STIPPLE);
      glLineStipple (2, *((int *) (&dash[0]))); 
@@ -845,8 +845,18 @@ void GL_DrawUnicodeChar (CHAR_T const c, float x, float y, void *GL_font, int fg
 
 
 #define REALY(A) (A + FrameTable[frame].FrTopMargin)
+
 /*----------------------------------------------------------------------
   CharacterWidth returns the width of a char in a given font.
+  ----------------------------------------------------------------------*/
+int CharacterWidth (char *c, PtrFont font)
+{
+	UnicodeCharacterWidth ((CHAR_T *) c, font);
+}
+
+
+/*----------------------------------------------------------------------
+  UnicodeCharacterWidth returns the width of a char in a given font.
   ----------------------------------------------------------------------*/
 int UnicodeCharacterWidth (CHAR_T c, PtrFont font)
 {
