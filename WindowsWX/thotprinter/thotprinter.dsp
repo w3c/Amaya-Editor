@@ -91,7 +91,7 @@ LINK32=link.exe
 # Name "thotprinter - Win32 Debug"
 # Begin Source File
 
-SOURCE=..\..\amaya\amaya.rc
+SOURCE=..\..\amaya\wxdialog\amaya.rc
 # End Source File
 # Begin Source File
 
