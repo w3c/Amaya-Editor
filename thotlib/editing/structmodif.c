@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996.
+ *  (c) COPYRIGHT INRIA, Grif, 1996.
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -15,7 +15,12 @@
  */
  
 /*
-   This module handles structure modifications.
+ * This module handles structure modifications.
+ *
+ * Authors: V. Quint (INRIA)
+ *          S. Bonhomme (INRIA) - Separation between structured and
+ *                                unstructured editing modes
+ *
  */
 
 #include "thot_gui.h"

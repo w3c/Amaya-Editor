@@ -15,7 +15,12 @@
  */
  
 /* 
-   locate what is designated in Concret Image in structured mode.
+ * locate what is designated in Concret Image in structured mode.
+ *
+ * Authors: I. Vatton (INRIA)
+ *          S. Bonhomme (INRIA) - Separation between structured and
+ *                                unstructured editing modes
+ *
  */
 
 #include "libmsg.h"

@@ -7,7 +7,11 @@
  
 /*
  * windowdisplay.c : handling of low level drawing routines, both for
- *      X-Window and MS-Windows (incomplete).
+ *                   X-Window and MS-Windows (incomplete).
+ *
+ * Authors: I. Vatton (INRIA)
+ *          D. Veillard (INRIA) - MS-Windows routines
+ *
  */
 
 #include "thot_sys.h"

@@ -15,7 +15,10 @@
  */
  
 /*
- * thotmsg.c : affichage des messages d'erreur de different niveau 
+ * thotmsg.c : display API error messages
+ *
+ * Author: V. Quint (INRIA)
+ *
  */
 
 #include "thot_sys.h"

@@ -16,6 +16,9 @@
 
 /*
  * psdisplay.c : All the Postscript generation routines.
+ *
+ * Author: I. Vatton (INRIA)
+ *
  */
 
 #include "thot_sys.h"

@@ -15,9 +15,10 @@
  */
 
 /*
-
-  presentmenu.c : Functions to modify the specific presentation
-
+ * presentmenu.c : Functions to modify the specific presentation
+ *
+ * Author: I. Vatton (INRIA)
+ *
  */
 
 #include "thot_gui.h"
@@ -881,7 +882,7 @@ View                view;
 	     TtaSetMenuForm (NumMenuStyleChar, pAb->AbHighlight);
 	     TtaSetMenuForm (NumMenuUnderlineType, pAb->AbUnderline);
 	     /* initialise le catalogue 'Epaisseur du souligne' */
-	     TtaSetMenuForm (NumMenuUnderlineWeight, pAb->AbThickness);
+	     /*TtaSetMenuForm (NumMenuUnderlineWeight, pAb->AbThickness);*/
 	     /* initialise le sous-menu 'Corps des caracteres' */
 	     if (pAb->AbSizeUnit == UnPoint)
 		/* convertit la taille */

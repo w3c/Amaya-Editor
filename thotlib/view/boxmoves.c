@@ -15,8 +15,10 @@
  */
  
 /*
-   gestion des deplacements des boites
-   I. Vatton
+ * This module maintains constraints between boxes
+ *
+ * Author: I. Vatton (INRIA)
+ *
  */
 
 #include "thot_sys.h"

@@ -14,14 +14,14 @@
  * 
  */
  
-/*----------------------------------------------------------------------
-   
-   Module for keyboard input handling.
-   
-  ----------------------------------------------------------------------*/
-
-/* D.V. : Removed X remapping of keys, lead to crash in some configurations  */
-								      /* #define WITH_X_REBIND_KEYSYMS *//* old X remapping for 1 key translations */
+/*
+ * 
+ * Module for keyboard input handling.
+ * Authors: I. Vatton (INRIA)
+ *          D. Veillard (INRIA) - Removed X remapping of keys,
+ *                                lead to crash in some configurations
+ *
+ */
 
 #include "thot_gui.h"
 #include "thot_sys.h"

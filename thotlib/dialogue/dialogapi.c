@@ -14,15 +14,13 @@
  * 
  */
  
-/*----------------------------------------------------------------------
-   
-   Module de gestion des catalogues de dialogue.         
-   
-   
-   I. Vatton       Novembre 89                     
-   
-   
-  ----------------------------------------------------------------------*/
+/*
+ * 
+ * This module handles dialogue items         
+ *
+ * Author: I. Vatton (INRIA)
+ *
+ */
 
 #include "thot_gui.h"
 #include "thot_sys.h"

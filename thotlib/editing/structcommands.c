@@ -15,7 +15,11 @@
  */
  
 /*
-   This module handles the ChangeType, Surround, Copy, Cut, and Paste commands
+ * This module handles the ChangeType, Surround, Copy, Cut, and Paste commands
+ *
+ * Authors: V. Quint (INRIA)
+ *          S. Bonhomme (INRIA) - Separation between structured and
+ *                                unstructured editing modes
  */
 
 #include "thot_sys.h"

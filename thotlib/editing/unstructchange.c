@@ -15,10 +15,11 @@
  */
  
 /*
-   This module handles the Paste command in unstructured mode.
+ * This module handles the Paste command in unstructured mode.
  *
- * Author: I. Vatton (INRIA)
- * Separation between structured and unstructured mode : S. Bonhomme (INRIA)
+ * Authors: I. Vatton (INRIA)
+ *          S. Bonhomme (INRIA) - Separation between structured and
+ *                                unstructured editing modes
  *
  */
 

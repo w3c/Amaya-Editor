@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996.
+ *  (c) COPYRIGHT INRIA, Grif, 1996.
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -15,7 +15,11 @@
  */
  
 /* 
-   gestion des Images abstraites
+ * This module computes Concrete Images.
+ *
+ * Authors: I. Vatton (INRIA)
+ *          C. Roisin (INRIA) - Columns and pages
+ *
  */
 
 #include "thot_sys.h"

@@ -1,12 +1,15 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996.
+ *  (c) COPYRIGHT INRIA, Grif, 1996.
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
 
 /*
  * displaybox.c : all the stuff needed to display boxes in frames.
+ *
+ * Author: I. Vatton (INRIA)
+ *
  */
 
 #include "thot_sys.h"
@@ -1026,8 +1029,9 @@ int                 frame;
 			/* Finished */
 			x += DrawString (adbuff->BuContent, dc, nbcar, frame, x, y, pBox->BxFont,
 			width, bl, withline, blockbegin, RO, op, fg);
-			DisplayUnderline (frame, x, y, pBox->BxFont, pBox->BxUnderline,
-			      pBox->BxThickness, width, RO, op, fg);
+			if (pBox->BxUnderline != 0)
+			   DisplayUnderline (frame, x, y, pBox->BxFont, pBox->BxUnderline,
+			        pBox->BxThickness, pBox->BxWidth, RO, op, fg);
 			/* Next char lookup */
 			if ((unsigned char) adbuff->BuContent[indbuff - 1] == BREAK_LINE && !ShowSpace)
 			   DrawChar (SHOWN_BREAK_LINE, frame, x, y, pBox->BxFont, RO, op, fg);

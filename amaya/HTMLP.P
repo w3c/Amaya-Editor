@@ -4600,6 +4600,13 @@ RULES
 		END;
 	END;
 
+#ifdef PAGE
+ PAGE_BREAK:
+	BEGIN
+	HorizOverflow : Yes;
+	END;
+#endif
+
  MAP:	BEGIN
 	CreateBefore(MAP_S);
 	CreateWith(VerticalLine);
