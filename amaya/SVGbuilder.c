@@ -824,12 +824,13 @@ static void SetTextAnchorTree (Element el, PresentationContext ctxt,
       if (elType.ElSSchema == SvgSSchema &&
 	  (elType.ElTypeNum == SVG_EL_text_ ||
 	   elType.ElTypeNum == SVG_EL_tspan ||
-	   elType.ElTypeNum == SVG_EL_tref /**** ||
+	   elType.ElTypeNum == SVG_EL_tref  ||
 	   elType.ElTypeNum == SVG_EL_altGlyph ||
-	   elType.ElTypeNum == SVG_EL_textPath ****/))
+	   elType.ElTypeNum == SVG_EL_textPath))
 	/* this element is interested */
 	{
 	  v.data = 0;
+	  v.typed_data.mainValue = TRUE;
 	  TtaSetStylePresentation (PRHorizPos, el, NULL, ctxt, v);
 	}
       else
@@ -1696,6 +1697,7 @@ void UpdatePositionOfPoly (Element el, Document doc, int minX, int minY,
 	 x = 0;
        pval.typed_data.value = x+minX;
        pval.typed_data.real = FALSE;
+       pval.typed_data.mainValue = TRUE;
        TtaSetStylePresentation (PRHorizPos, el, NULL, ctxt, pval);
      }
 
@@ -1711,6 +1713,7 @@ void UpdatePositionOfPoly (Element el, Document doc, int minX, int minY,
 	 y = 0;
        pval.typed_data.value = y+minY;
        pval.typed_data.real = FALSE;
+       pval.typed_data.mainValue = TRUE;
        TtaSetStylePresentation (PRVertPos, el, NULL, ctxt, pval);
      }
 
@@ -1753,6 +1756,7 @@ void ParseCoordAttribute (Attribute attr, Element el, Document doc)
       if (pval.typed_data.unit != UNIT_INVALID)
 	{
 	  important = FALSE;
+	  pval.typed_data.mainValue = TRUE;
 	  /* decide of the presentation rule to be created or updated */
 	  TtaGiveAttributeType (attr, &attrType, &attrKind);
 	  if (attrType.AttrTypeNum == SVG_ATTR_x)
@@ -1778,9 +1782,15 @@ void ParseCoordAttribute (Attribute attr, Element el, Document doc)
 	      important = TRUE;
 	    }
 	  else if (attrType.AttrTypeNum == SVG_ATTR_dx)
-	    ruleType = PRHorizPos;
+	    {
+	      ruleType = PRHorizPos;
+	      pval.typed_data.mainValue = FALSE;
+	    }
 	  else if (attrType.AttrTypeNum == SVG_ATTR_dy)
-	    ruleType = PRVertPos;
+	    {
+	      ruleType = PRVertPos;
+	      pval.typed_data.mainValue = FALSE;
+	    }
 	  else
 	    return;
 	  ctxt = TtaGetSpecificStyleContext (doc);
@@ -2428,6 +2438,7 @@ void ParseTransformAttribute (Attribute attr, Element el, Document doc,
 		       pval.typed_data.value = 0;
 		       pval.typed_data.unit = UNIT_PX;
 		       pval.typed_data.real = FALSE;
+		       pval.typed_data.mainValue = TRUE;
 		       ctxt = TtaGetSpecificStyleContext (doc);
 		       ctxt->cssSpecificity = 0; /* this is not a CSS rule */
 		       ctxt->destroy = delete;
@@ -2467,6 +2478,7 @@ void ParseTransformAttribute (Attribute attr, Element el, Document doc,
 		   pval.typed_data.unit = UNIT_PX;
 		   pval.typed_data.real = FALSE;
 		   pval.typed_data.value = x;
+		   pval.typed_data.mainValue = TRUE;
 		   ctxt = TtaGetSpecificStyleContext (doc);
 		   ctxt->cssSpecificity = 0;     /* this is not a CSS rule */
 		   ctxt->destroy = delete;

@@ -90,6 +90,8 @@ typedef union _PresentationValue
      int               value;         /* the value */
      int               unit;          /* the unit */
      ThotBool          real;          /* the value is float like 115.5 */
+     ThotBool          mainValue;     /* FALSE: value is an increment (only
+					 for position rules) */
    } typed_data;
    void               *pointer;       /* A pointer */
 }

@@ -4,7 +4,7 @@
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
- 
+
 /*
  * Set of functions to style Thot documents: it's the style API.
  *
@@ -1753,8 +1753,16 @@ static void PresentationValueToPRule (PresentationValue val, int type,
       rule->PrPresMode = PresImmediate;
       if (funcType == 0)
 	{
-	  rule->PrPosRule.PoDistUnit = int_unit;
-	  rule->PrPosRule.PoDistance = value;
+	  if (val.typed_data.mainValue)
+	    {
+	      rule->PrPosRule.PoDistUnit = int_unit;
+	      rule->PrPosRule.PoDistance = value;
+	    }
+	  else
+	    {
+	      rule->PrPosRule.PoDeltaUnit = int_unit;
+	      rule->PrPosRule.PoDistDelta = value;
+	    }
 	}
       else
 	/* funcType represents the axis used for positionning */
@@ -1791,8 +1799,16 @@ static void PresentationValueToPRule (PresentationValue val, int type,
       rule->PrPresMode = PresImmediate;
       if (funcType == 0)
 	{
-	  rule->PrPosRule.PoDistUnit = int_unit;
-	  rule->PrPosRule.PoDistance = value;
+	  if (val.typed_data.mainValue)
+	    {
+	      rule->PrPosRule.PoDistUnit = int_unit;
+	      rule->PrPosRule.PoDistance = value;
+	    }
+	  else
+	    {
+	      rule->PrPosRule.PoDeltaUnit = int_unit;
+	      rule->PrPosRule.PoDistDelta = value;
+	    }
 	}
       else
 	/* funcType represents the axis used for positionning */
@@ -1999,6 +2015,7 @@ static PresentationValue PRuleToPresentationValue (PtrPRule rule)
   int                 unit = -1;
   int                 type;
   ThotBool            real = FALSE;
+  ThotBool            main = TRUE;
 
   /* read the value */
   switch (rule->PrType)
@@ -2432,6 +2449,7 @@ static PresentationValue PRuleToPresentationValue (PtrPRule rule)
   val.typed_data.value = value;
   val.typed_data.unit = unit;
   val.typed_data.real = real;
+  val.typed_data.mainValue = main;
   return (val);
 }
 
@@ -2708,6 +2726,7 @@ int TtaSetStylePresentation (unsigned int type, Element el, PSchema tsch,
 	      v.typed_data.unit = UNIT_REL;
 	      v.typed_data.value = cst;
 	      v.typed_data.real = FALSE;
+	      v.typed_data.mainValue = TRUE;
 	    }
 	  /* avoid to override an important rule by a non-important rule */
 	  if (ctxt->important || !pRule->PrImportant)

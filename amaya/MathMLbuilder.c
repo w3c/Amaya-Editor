@@ -2575,6 +2575,7 @@ void MathMLScriptShift (Document doc, Element el, char *value, int attr)
 	  {
 	    if (pval.typed_data.unit == UNIT_BOX)
 	      pval.typed_data.unit = UNIT_EM;
+	    pval.typed_data.mainValue = TRUE;
 	    /* the specific presentation to be created is not a CSS rule */
 	    ctxt->cssSpecificity = 0;
 	    if (attr == MathML_ATTR_superscriptshift)

@@ -794,6 +794,7 @@ static void TimelineParseCoordAttribute (Attribute attr, Element el, Document do
 	{
 	  if (pval.typed_data.unit == UNIT_BOX)
 	    pval.typed_data.unit = UNIT_PX;
+	  pval.typed_data.mainValue = TRUE;
 	  /* decide of the presentation rule to be created or updated */
 	  TtaGiveAttributeType (attr, &attrType, &attrKind);
 	  if (attrType.AttrTypeNum == Timeline_ATTR_x)
@@ -3571,6 +3572,7 @@ static int Apply_hpos_mini (Document basedoc, Element el, int xmin)
   AttributeType attrType;
   ElementType elType;
   PRule         presRuleX;
+
   presRuleX = TtaGetPRule (el, PRHorizPos);
   if (presRuleX)
     x = TtaGetPRuleValue (presRuleX);
