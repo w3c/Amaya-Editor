@@ -161,6 +161,10 @@ void AmayaSubPanel::Expand()
   DebugPanelSize( _T("Expand") );
 
   m_IsExpanded = true;
+  
+  // call the update callback only if it has been requested
+  if (m_ShouldBeUpdated)
+    DoUpdate();
 }
 /*----------------------------------------------------------------------
   OnExpand is called when the user click on the expand button
@@ -254,6 +258,10 @@ void AmayaSubPanel::DoStick()
 
   Refresh();
   GetParent()->Layout();
+
+  // call the update callback only if it has been requested
+  if (m_ShouldBeUpdated)
+    DoUpdate();
 }
 
 /*----------------------------------------------------------------------
@@ -326,6 +334,71 @@ void AmayaSubPanel::RefreshCheckButtonState( bool * p_checked_array )
  */
 void AmayaSubPanel::RefreshToolTips()
 {
+}
+
+
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaSubPanel
+ *      Method:  IsExpanded
+ * Description:  
+ *--------------------------------------------------------------------------------------
+ */
+bool AmayaSubPanel::IsExpanded()
+{
+  return m_IsExpanded;
+}
+
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaSubPanel
+ *      Method:  IsFloating
+ * Description:  
+ *--------------------------------------------------------------------------------------
+ */
+bool AmayaSubPanel::IsFloating()
+{
+  return m_IsFloating;
+}
+
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaSubPanel
+ *      Method:  IsVisible
+ * Description:  used to know if the panel should be updated or not
+ *--------------------------------------------------------------------------------------
+ */
+bool AmayaSubPanel::IsVisible()
+{
+  return (IsFloating() || IsExpanded());
+}
+
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaSubPanel
+ *      Method:  ShouldBeUpdated
+ * Description:  call this method to setup a flag used to force DoUpdate call when the
+ *               sub panel is ready to be updated (when it is visible)
+ *--------------------------------------------------------------------------------------
+ */
+void AmayaSubPanel::ShouldBeUpdated( bool should_update )
+{
+  m_ShouldBeUpdated = should_update;
+}
+
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaSubPanel
+ *      Method:  DoUpdate
+ * Description:  this method is called when the sub-panel is ready to be updated
+ *               it should be redefined into inherited classes but do not forget to call
+ *               AmayaSubPanel::DoUpdate() in order to update the flags
+ *--------------------------------------------------------------------------------------
+ */
+void AmayaSubPanel::DoUpdate()
+{
+  wxLogDebug( _T("AmayaSubPanel::DoUpdate") );
+  m_ShouldBeUpdated = false;
 }
 
 /*----------------------------------------------------------------------

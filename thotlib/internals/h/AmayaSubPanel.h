@@ -36,6 +36,11 @@ class AmayaSubPanel : public wxPanel
   void DoStick();
   void DoUnstick();
 
+  bool IsExpanded();
+  bool IsFloating();
+  bool IsVisible();
+  void ShouldBeUpdated( bool should_update = true );
+  
   void SetTopAmayaWindow( AmayaNormalWindow * p_parent_window );
 
   virtual void RefreshCheckButtonState( bool * p_checked_array );
@@ -45,6 +50,8 @@ class AmayaSubPanel : public wxPanel
   DECLARE_EVENT_TABLE()
   void OnExpand( wxCommandEvent& event );
   void OnDetach( wxCommandEvent& event );
+
+  virtual void DoUpdate();
 
   void DebugPanelSize( const wxString & prefix = _T("") );
 
@@ -64,7 +71,7 @@ class AmayaSubPanel : public wxPanel
   bool      m_IsExpBeforeDetach;
 
   bool m_DoUnstick_Lock;
-
+  bool m_ShouldBeUpdated;
 
   wxBitmap m_Bitmap_DetachOn;
   wxBitmap m_Bitmap_DetachOff;

@@ -30,7 +30,7 @@ public:
   bool IsFreezed();
   void SelectAttribute( int position );
 
- private:
+ protected:
   // Any class wishing to process wxWindows events must use this macro
   DECLARE_EVENT_TABLE()
   void OnListSelectItem( wxCommandEvent& event );
@@ -38,6 +38,8 @@ public:
   void OnApply( wxCommandEvent& event );
   void OnCancel( wxCommandEvent& event );
   void OnAutoRefresh( wxCommandEvent& event );
+
+  virtual void DoUpdate();
 
  public:
   typedef enum

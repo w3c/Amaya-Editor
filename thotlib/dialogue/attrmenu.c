@@ -1090,8 +1090,14 @@ void UpdateAttrMenu (PtrDocument pDoc)
 #ifdef _WX
   /* do nothing if the attribute dialog is not updatable (auto refresh checkbox activate) */
   AmayaAttributePanel * p_dlg = TtaGetAttributePanel();
-  if (!p_dlg || p_dlg->IsFreezed())
+  if (!p_dlg)
     return;
+  if(p_dlg->IsFreezed() || !p_dlg->IsVisible())
+    {
+      p_dlg->ShouldBeUpdated();
+      return;
+    }
+    
 #endif /* _WX */
 
   /* Compose le menu des attributs */

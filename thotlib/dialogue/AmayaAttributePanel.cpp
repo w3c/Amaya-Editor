@@ -499,8 +499,23 @@ void AmayaAttributePanel::ForceAttributeUpdate()
   int         view;
 
   GetDocAndView( TtaGiveActiveFrame(), &pDoc, &view );
-  UpdateAttrMenu( pDoc );
+  if (pDoc)
+    UpdateAttrMenu( pDoc );
 }
+
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaAttributePanel
+ *      Method:  DoUpdate
+ * Description:  force a refresh when the user expand or detach this panel
+ *--------------------------------------------------------------------------------------
+ */
+void AmayaAttributePanel::DoUpdate()
+{
+  AmayaSubPanel::DoUpdate();
+  ForceAttributeUpdate();  
+}
+
 /*----------------------------------------------------------------------
  *  this is where the event table is declared
  *  the callbacks are assigned to an event type
