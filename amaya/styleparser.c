@@ -2322,7 +2322,7 @@ static char *ParseCSSHeight (Element element, PSchema tsch,
        val.typed_data.unit == UNIT_BOX))
     {
       CSSParseError ("height value", ptr, cssRule);
-      val.typed_data.unit == UNIT_PX;
+      val.typed_data.unit = UNIT_PX;
     }
   if (DoApply)
     {
@@ -2362,7 +2362,7 @@ static char *ParseCSSWidth (Element element, PSchema tsch,
        val.typed_data.unit == UNIT_BOX))
     {
       CSSParseError ("Invalid width value", ptr, cssRule);
-      val.typed_data.unit == UNIT_PX;
+      val.typed_data.unit = UNIT_PX;
     }
   if (DoApply)
     {
