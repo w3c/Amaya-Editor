@@ -2905,7 +2905,7 @@ static void ApplyTRule (PtrTRule pTRule, PtrTSchema pTSch, PtrSSchema pSSch,
 	      fclose (OutFile[1].OfFileDesc);
 	      /* on bascule sur le nouveau fichier */
 	      OutFile[1].OfBufferLen = 0;
-	      OutFile[fnum].OfLineLen = 0;
+	      OutFile[1].OfLineLen = 0;
 	      OutFile[1].OfIndent = 0;
 	      OutFile[1].OfPreviousIndent = 0;
 	      OutFile[1].OfLineNumber = 0;
