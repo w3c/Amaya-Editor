@@ -1760,11 +1760,22 @@ LRESULT CALLBACK ClientWndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lPar
 	  wParam == VK_UP     ||
 	  wParam == VK_DOWN)
 	{
-	  key = (int) wParam;
 	  if (wParam >= 48 && wParam <= 57)
+	    {
+	    /* handling Ctrl 0-9 or Alt 0-9 */
+	      key = GetKeyState (VK_CONTROL);
+	      if (HIBYTE (key))
 		isSpecial = FALSE;
+	      key = GetKeyState (VK_MENU);
+	      if (HIBYTE (key))
+		isSpecial = FALSE;
+	      else
+		/* don't handle a simple 0-9 */
+		return 0;
+	    }
 	  else
-		isSpecial = TRUE;
+	    isSpecial = TRUE;
+	  key = (int) wParam;
 	  if (WIN_TtaHandleMultiKeyEvent (mMsg, wParam, lParam, (int *)&key))
 	    WIN_CharTranslation (FrRef[frame], frame, mMsg, (WPARAM) key,
                              lParam, isSpecial);
