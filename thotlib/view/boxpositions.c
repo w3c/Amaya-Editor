@@ -42,6 +42,7 @@
 #include "boxpositions_f.h"
 #include "font_f.h"
 #include "units_f.h"
+#include "exceptions_f.h"
 
 
 /*----------------------------------------------------------------------

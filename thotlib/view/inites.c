@@ -29,6 +29,10 @@
 #include "registry_f.h"
 #include "context_f.h"
 
+#ifdef _WINDOWS
+#include "win_f.h"
+#endif /* _WINDOW S*/
+
 static ThotColorStruct def_colrs[256];
 static int          allocation_index[256];
 static int          have_colors = 0;

@@ -55,6 +55,10 @@ static int          stack_deep;
 #include "inites_f.h"
 #include "buildlines_f.h"
 
+#ifdef _WINDOWS 
+#include "win_f.h"
+#endif /* _WINDOWS */
+
 /*----------------------------------------------------------------------
   FontOrig update and (x, y) location before DrawString
   accordingly to the ascent of the font used.

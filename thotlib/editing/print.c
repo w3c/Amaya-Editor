@@ -2334,7 +2334,8 @@ PtrDocument         pDoc;
       Rect.bottom = ySize;
       Rect.right  = xSize;
 
-      /* ... and inform the driver */
+      /* ... and inf
+	  orm the driver */
       Escape (TtPrinterDC, SET_BOUNDS, sizeof (RECT), (LPSTR)&Rect, NULL);
 
       if (!InitPrinting (TtPrinterDC, ghwndMain, hCurrentInstance, NULL))

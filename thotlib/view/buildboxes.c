@@ -194,25 +194,25 @@ C_points           *cp;
 {
    float               s, theta, r;
 
-   r = 1.0 - 0.45;
+   r = (float) (1.0 - 0.45);
    /* 0 <= theta1, theta2 < 2PI */
    theta = (theta1 + theta2) / 2;
 
    if (theta1 > theta2)
      {
-	s = sin ((double) (theta - theta2));
-	theta1 = theta + M_PI_2;
-	theta2 = theta - M_PI_2;
+	s = (float) sin ((double) (theta - theta2));
+	theta1 = theta + (float) M_PI_2;
+	theta2 = theta - (float) M_PI_2;
      }
    else
      {
-	s = sin ((double) (theta2 - theta));
-	theta1 = theta - M_PI_2;
-	theta2 = theta + M_PI_2;
+	s = (float) sin ((double) (theta2 - theta));
+	theta1 = theta - (float) M_PI_2;
+	theta2 = theta + (float) M_PI_2;
      }
 
    if (s > _1dSQR2)
-      s = _SQR2 - s;
+      s = (float) _SQR2 - s;
    s *= r;
    l1 *= s;
    l2 *= s;

@@ -49,7 +49,7 @@
 #include "memory_f.h"
 #include "boxselection_f.h"
 #include "displayselect_f.h"
-
+#include "viewapi_f.h"
 
 /*----------------------------------------------------------------------
    ClearAbstractBoxSelection parcours l'arborescence pour annuler  
