@@ -30,9 +30,6 @@
 #include "edit_tv.h"
 #include "thotcolor_tv.h"
 
-static ThotColorStruct cblack;
-
-
 #define	MAX_STACK	50
 #define	MIDDLE_OF(v1, v2)	(((v1)+(v2))/2.0)
 #define SEG_SPLINE      5
