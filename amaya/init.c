@@ -897,6 +897,24 @@ static void  UpdateBrowserMenus (Document doc)
 #endif /* XML_GENERIC */
       DocumentTypes[doc] == docImage)
     {
+      TtaSetItemOn (doc, 1, Views, TShowMapAreas);
+      TtaSetItemOn (doc, 1, Views, TShowTargets);
+      TtaSetItemOn (doc, 1, Views, BShowAlternate);
+      TtaSetItemOn (doc, 1, Views, BShowToC);
+      TtaSetItemOn (doc, 1, Views, BShowStructure);
+      TtaSetItemOn (doc, 1, Views, BShowLinks);
+      TtaSetItemOn (doc, 1, Views, BShowSource);
+#ifdef XML_GENERIC      
+      if (DocumentTypes[doc] == docXml)
+	{
+	  TtaSetMenuOff (doc, 1, Annotations_);
+	  TtaSetItemOff (doc, 1, Views, TShowMapAreas);
+	  TtaSetItemOff (doc, 1, Views, TShowTargets);
+	  TtaSetItemOff (doc, 1, Views, BShowAlternate);
+	  TtaSetItemOff (doc, 1, Views, BShowToC);
+	}
+#endif /* XML_GENERIC */
+
       TtaChangeButton (doc, 1, iI, iconINo, FALSE);
       TtaChangeButton (doc, 1, iB, iconBNo, FALSE);
       TtaChangeButton (doc, 1, iT, iconTNo, FALSE);
@@ -990,6 +1008,9 @@ static void  UpdateEditorMenus (Document doc)
   if (DocumentTypes[doc] == docHTML ||
       DocumentTypes[doc] == docSVG ||
       DocumentTypes[doc] == docMath ||
+#ifdef XML_GENERIC      
+      DocumentTypes[doc] == docXml ||
+#endif /* XML_GENERIC */
       DocumentTypes[doc] == docImage)
     {
       TtaSetItemOn (doc, 1, Edit_, BSpellCheck);
@@ -1001,11 +1022,21 @@ static void  UpdateEditorMenus (Document doc)
 
       TtaSetItemOn (doc, 1, Views, TShowMapAreas);
       TtaSetItemOn (doc, 1, Views, TShowTargets);
-      TtaSetItemOn (doc, 1, Views, BShowStructure);
       TtaSetItemOn (doc, 1, Views, BShowAlternate);
-      TtaSetItemOn (doc, 1, Views, BShowLinks);
       TtaSetItemOn (doc, 1, Views, BShowToC);
+      TtaSetItemOn (doc, 1, Views, BShowStructure);
+      TtaSetItemOn (doc, 1, Views, BShowLinks);
       TtaSetItemOn (doc, 1, Views, BShowSource);
+#ifdef XML_GENERIC      
+      if (DocumentTypes[doc] == docXml)
+	{
+	  TtaSetMenuOff (doc, 1, Annotations_);
+	  TtaSetItemOff (doc, 1, Views, TShowMapAreas);
+	  TtaSetItemOff (doc, 1, Views, TShowTargets);
+	  TtaSetItemOff (doc, 1, Views, BShowAlternate);
+	  TtaSetItemOff (doc, 1, Views, BShowToC);
+	}
+#endif /* XML_GENERIC */
 
       if ( DocumentTypes[doc] == docMath)
 	TtaSetItemOff (doc, 1, Links, BDeleteAnchor);
@@ -1044,6 +1075,13 @@ static void  UpdateEditorMenus (Document doc)
 	  TtaSetItemOn (doc, view, Edit_, BTransform);
 	  TtaSetMenuOn (doc, view, StructTypes);
 	  TtaSetMenuOn (doc, view, Types);
+#ifdef XML_GENERIC      
+	  if (DocumentTypes[doc] == docXml)
+	    {
+	      TtaSetMenuOff (doc, view, StructTypes);
+	      TtaSetMenuOff (doc, view, Types);
+	    }
+#endif /* XML_GENERIC */
 	}
       view = TtaGetViewFromName (doc, "Alternate_view");
       if (view != 0 && TtaIsViewOpen (doc, view))
@@ -1064,6 +1102,10 @@ static void  UpdateEditorMenus (Document doc)
 	  TtaSetItemOn (doc, view, Edit_, BSpellCheck);
 	  TtaSetItemOn (doc, view, Edit_, BTransform);
 	  TtaSetMenuOn (doc, view, Types);
+#ifdef XML_GENERIC      
+	  if (DocumentTypes[doc] == docXml)
+	    TtaSetMenuOff (doc, view, Types);
+#endif /* XML_GENERIC */
 	}
       view = TtaGetViewFromName (doc, "Table_of_contents");
       if (view != 0 && TtaIsViewOpen (doc, view))
@@ -3908,7 +3950,7 @@ void ShowSource (Document document, View view)
 
 /*----------------------------------------------------------------------
   ShowStructure
-  Open the structure view(s) of an HTML document.
+  Open the structure view(s) of a document.
   ----------------------------------------------------------------------*/
 void ShowStructure (Document document, View view)
 {
@@ -3940,6 +3982,14 @@ void ShowStructure (Document document, View view)
 	       TtaSetMenuOff (document, structView, Types);
 	       TtaSetMenuOff (document, structView, Attributes_);
 	     }
+#ifdef XML_GENERIC      
+	   if (DocumentTypes[document] == docXml)
+	     {
+	       TtaSetMenuOff (document, structView, StructTypes);
+	       TtaSetMenuOff (document, structView, Types);
+	       TtaSetItemOff (document, structView, Edit_, BTransform);
+	     }
+#endif /* XML_GENERIC */
 	 }
      }
    SetWindowTitle (document, document, 0);
@@ -3947,7 +3997,7 @@ void ShowStructure (Document document, View view)
 
 /*----------------------------------------------------------------------
   ShowAlternate
-  Open the Alternate view of an HTML document.
+  Open the Alternate view of a document.
   ----------------------------------------------------------------------*/
 void ShowAlternate (Document document, View view)
 {
@@ -3985,7 +4035,7 @@ void ShowAlternate (Document document, View view)
 
 /*----------------------------------------------------------------------
   ShowLinks
-  Open the Links view of an HTML document
+  Open the Links view of a document
   ----------------------------------------------------------------------*/
 void ShowLinks (Document document, View view)
 {
@@ -4016,6 +4066,13 @@ void ShowLinks (Document document, View view)
 		TtaSetMenuOff (document, linksView, Types);
 		TtaSetMenuOff (document, linksView, Attributes_);
 	      }
+#ifdef XML_GENERIC      
+	    if (DocumentTypes[document] == docXml)
+	      {
+		TtaSetMenuOff (document, linksView, Types);
+		TtaSetItemOff (document, linksView, Edit_, BTransform);
+	      }
+#endif /* XML_GENERIC */
 	  }
      }
 }
@@ -4023,7 +4080,7 @@ void ShowLinks (Document document, View view)
 
 /*----------------------------------------------------------------------
   ShowToC
-  Open the Table of content view of an HTML document
+  Open the Table of content view of a document
   ----------------------------------------------------------------------*/
 void ShowToC (Document document, View view)
 {
