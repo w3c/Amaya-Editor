@@ -99,23 +99,53 @@ ATTRIBUTES
 	AttrModify.Post -> AttrWidthHeightChanged;
 	AttrDelete.Pre ->  AttrWidthHeightDelete;
 	END;
+   font_family:
+        BEGIN
+	AttrModify.Post -> AttrCSSequivModified;
+	AttrCreate.Post -> AttrCSSequivModified;
+	AttrDelete.Pre ->  AttrCSSequivDelete;
+	END;
+   font_size:
+        BEGIN
+	AttrModify.Post -> AttrCSSequivModified;
+	AttrCreate.Post -> AttrCSSequivModified;
+	AttrDelete.Pre ->  AttrCSSequivDelete;
+	END;
+   font_style:
+        BEGIN
+	AttrModify.Post -> AttrCSSequivModified;
+	AttrCreate.Post -> AttrCSSequivModified;
+	AttrDelete.Pre ->  AttrCSSequivDelete;
+	END;
+   font_variant:
+        BEGIN
+	AttrModify.Post -> AttrCSSequivModified;
+	AttrCreate.Post -> AttrCSSequivModified;
+	AttrDelete.Pre ->  AttrCSSequivDelete;
+	END;
+   font_weight:
+        BEGIN
+	AttrModify.Post -> AttrCSSequivModified;
+	AttrCreate.Post -> AttrCSSequivModified;
+	AttrDelete.Pre ->  AttrCSSequivDelete;
+	END;
    fill:
         BEGIN
-	AttrModify.Post -> AttrFillStrokeModified;
-	AttrCreate.Post -> AttrFillStrokeModified;
-	AttrDelete.Pre ->  AttrFillStrokeDelete;
+	AttrModify.Post -> AttrCSSequivModified;
+	AttrCreate.Post -> AttrCSSequivModified;
+	AttrDelete.Pre ->  AttrCSSequivDelete;
 	END;
    stroke:
         BEGIN
-	AttrModify.Post -> AttrFillStrokeModified;
-	AttrCreate.Post -> AttrFillStrokeModified;
-	AttrDelete.Pre ->  AttrFillStrokeDelete;
+	AttrModify.Post -> AttrCSSequivModified;
+	AttrCreate.Post -> AttrCSSequivModified;
+	AttrDelete.Pre ->  AttrCSSequivDelete;
 	END;
    stroke_width:
         BEGIN
-	AttrModify.Post -> AttrFillStrokeModified;
-	AttrCreate.Post -> AttrFillStrokeModified;
-	AttrDelete.Pre ->  AttrFillStrokeDelete;
+	AttrModify.Post -> AttrCSSequivModified;
+	AttrCreate.Post -> AttrCSSequivModified;
+	AttrDelete.Pre ->  AttrCSSequivDelete;
 	END;
    transform:
 	BEGIN

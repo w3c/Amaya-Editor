@@ -863,6 +863,133 @@ ATTRIBUTES
 	   CreateLast (IndexBox);
 	END;
 
+  font_family:
+	BEGIN
+	CreateBefore(AttrName);
+	CreateBefore(AttrValue);
+	END;
+
+  font_size:
+	BEGIN
+	CreateBefore(AttrName);
+	CreateBefore(AttrValue);
+	END;
+
+  font_style = normal_:
+	BEGIN
+	CreateBefore(AttrNameAndValue);
+	Style: roman;
+	END;
+  font_style = italic:
+	BEGIN
+	CreateBefore(AttrNameAndValue);
+	Style: italics;
+	IN Structure_view
+	   Style: Enclosing =;
+	END;
+  font_style = oblique_:
+	BEGIN
+	CreateBefore(AttrNameAndValue);
+	Style: oblique;
+	IN Structure_view
+	   Style: Enclosing =;
+	END;
+  font_style = inherit:
+	BEGIN
+	CreateBefore(AttrNameAndValue);
+	Style: Enclosing =;
+	END;
+
+  font_variant = normal_:
+	BEGIN
+	CreateBefore(AttrNameAndValue);
+	END;
+  font_variant = small_caps:
+	BEGIN
+	CreateBefore(AttrNameAndValue);
+	END;
+  font_variant = inherit:
+	BEGIN
+	CreateBefore(AttrNameAndValue);
+	END;
+
+  font_weight = normal_:
+	BEGIN
+	CreateBefore(AttrNameAndValue);
+	Weight: normal;
+	END;
+  font_weight = bold_:
+	BEGIN
+	CreateBefore(AttrNameAndValue);
+	Weight: bold;
+	IN Structure_view
+	   Weight: Enclosing =;
+	END;
+  font_weight = bolder:
+	BEGIN
+	CreateBefore(AttrNameAndValue);
+	Weight: bold;
+	IN Structure_view
+	   Weight: Enclosing =;
+	END;
+  font_weight = lighter:
+	BEGIN
+	CreateBefore(AttrNameAndValue);
+	IN Structure_view
+	   Weight: Enclosing =;
+	END;
+  font_weight = w100:
+	BEGIN
+	CreateBefore(AttrNameAndValue);
+	END;
+  font_weight = w200:
+	BEGIN
+	CreateBefore(AttrNameAndValue);
+	END;
+  font_weight = w300:
+	BEGIN
+	CreateBefore(AttrNameAndValue);
+	END;
+  font_weight = w400:
+	BEGIN
+	CreateBefore(AttrNameAndValue);
+        Weight: normal;
+	END;
+  font_weight = w500:
+	BEGIN
+	CreateBefore(AttrNameAndValue);
+	END;
+  font_weight = w600:
+	BEGIN
+	CreateBefore(AttrNameAndValue);
+	END;
+  font_weight = w700:
+	BEGIN
+	CreateBefore(AttrNameAndValue);
+	Weight: bold;
+	IN Structure_view
+	   Weight: Enclosing =;
+	END;
+  font_weight = w800:
+	BEGIN
+	CreateBefore(AttrNameAndValue);
+	Weight: bold;
+	IN Structure_view
+	   Weight: Enclosing =;
+	END;
+  font_weight = w900:
+	BEGIN
+	CreateBefore(AttrNameAndValue);
+	Weight: bold;
+	IN Structure_view
+	   Weight: Enclosing =;
+	END;
+  font_weight = inherit:
+	BEGIN
+	CreateBefore(AttrNameAndValue);
+	Weight: Enclosing =;
+	END;
+
   viewBox:
         BEGIN
         CreateBefore(AttrName);

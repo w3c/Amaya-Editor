@@ -23,11 +23,11 @@ extern void SVGEntityCreated ( unsigned char *entityValue,
                                Language lang,
                                char *entityName,
                                Document doc );
-extern void ParseFillStrokeAttributes ( int attrType,
-                                        Attribute attr,
-                                        Element el,
-                                        Document doc,
-                                        ThotBool delete );
+extern void ParseCSSequivAttribute ( int attrType,
+				     Attribute attr,
+				     Element el,
+				     Document doc,
+				     ThotBool delete );
 extern void SetGraphicDepths ( Document doc,
                                Element el );
 extern void CopyUseContent ( Element el,
@@ -84,11 +84,11 @@ extern void SVGEntityCreated (/* unsigned char *entityValue,
                                  Language lang,
                                  char *entityName,
                                  Document doc */);
-extern void ParseFillStrokeAttributes (/* int attrType,
-                                          Attribute attr,
-                                          Element el,
-                                          Document doc,
-                                          ThotBool delete */);
+extern void ParseCSSequivAttribute (/* int attrType,
+				       Attribute attr,
+				       Element el,
+				       Document doc,
+				       ThotBool delete */);
 extern void SetGraphicDepths (/* Document doc,
                                  Element el */);
 extern void CopyUseContent (/* Element el,

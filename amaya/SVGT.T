@@ -475,6 +475,130 @@ ATTRIBUTES
         create DoubleQuote;
 	end;
 
+   font_family:
+	BEGIN
+	create SAN;
+	create 'font-family="';
+	create font_family;
+	create DoubleQuote;
+	END;
+
+   font_size:
+	BEGIN
+	create SAN;
+	create 'font-size="';
+	create font_size;
+	create DoubleQuote;
+	END;
+
+   font_style = normal_:
+	BEGIN
+	create SAN;
+	create 'font-style="normal"';
+	END;
+   font_style = italic:
+	BEGIN
+	create SAN;
+	create 'font-style="italic"';
+	END;
+   font_style = oblique_:
+	BEGIN
+	create SAN;
+	create 'font-style="oblique"';
+	END;
+   font_style = inherit:
+	BEGIN
+	create SAN;
+	create 'font-style="inherit"';
+	END;
+
+   font_variant = normal_:
+	BEGIN
+	create SAN;
+	create 'font-variant="normal"';
+	END;
+   font_variant = small_caps:
+	BEGIN
+	create SAN;
+	create 'font-variant="small-caps"';
+	END;
+   font_variant = inherit:
+	BEGIN
+	create SAN;
+	create 'font-variant="inherit"';
+	END;
+
+   font_weight = normal_:
+	BEGIN
+	create SAN;
+	create 'font-weight="normal"';
+	END;
+   font_weight = bold_:
+	BEGIN
+	create SAN;
+	create 'font-weight="bold"';
+	END;
+   font_weight = bolder:
+	BEGIN
+	create SAN;
+	create 'font-weight="bolder"';
+	END;
+   font_weight = lighter:
+	BEGIN
+	create SAN;
+	create 'font-weight="lighter"';
+	END;
+   font_weight = w100:
+	BEGIN
+	create SAN;
+	create 'font-weight="100"';
+	END;
+   font_weight = w200:
+	BEGIN
+	create SAN;
+	create 'font-weight="200"';
+	END;
+   font_weight = w300:
+	BEGIN
+	create SAN;
+	create 'font-weight="300"';
+	END;
+   font_weight = w400:
+	BEGIN
+	create SAN;
+	create 'font-weight="400"';
+	END;
+   font_weight = w500:
+	BEGIN
+	create SAN;
+	create 'font-weight="500"';
+	END;
+   font_weight = w600:
+	BEGIN
+	create SAN;
+	create 'font-weight="600"';
+	END;
+   font_weight = w700:
+	BEGIN
+	create SAN;
+	create 'font-weight="700"';
+	END;
+   font_weight = w800:
+	BEGIN
+	create SAN;
+	create 'font-weight="800"';
+	END;
+   font_weight = w900:
+	BEGIN
+	create SAN;
+	create 'font-weight="900"';
+	END;
+   font_weight = inherit:
+	BEGIN
+	create SAN;
+	create 'font-weight="inherit"';
+	END;
+
    viewBox:
 	BEGIN
 	create SAN;

@@ -29,3 +29,21 @@ style__: style
 title_: title
 
 Language: lang
+font_family: font-family
+font_size: font-size
+font_style: font-style
+normal_: normal
+oblique_: oblique
+font_variant: font-variant
+small_caps: small-caps
+font_weight: font-weight
+bold_: bold
+w100: 100
+w200: 200
+w300: 300
+w400: 400
+w500: 500
+w600: 600
+w700: 700
+w800: 800
+w900: 900

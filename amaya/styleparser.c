@@ -1684,10 +1684,16 @@ static char *ParseCSSFontStyle (Element element, PSchema tsch,
 	style.typed_data.value = STYLE_FONT_ROMAN;
 	cssRule = SkipWord (cssRule);
      }
+   else if (!strncasecmp (cssRule, "inherit", 7))
+     {
+       /* not implemented */
+       cssRule = SkipWord (cssRule);
+       return (cssRule);
+     }
    else
      {
        /* invalid font style */
-	return (cssRule);
+       return (cssRule);
      }
 
    /*

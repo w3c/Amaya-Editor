@@ -736,24 +736,24 @@ static void UpdateWidthHeightAttribute (Element el, Document doc, int dim, ThotB
 }
 
 /*----------------------------------------------------------------------
- AttrFillStrokeModified
+ AttrCSSequivModified
  -----------------------------------------------------------------------*/
-void             AttrFillStrokeModified(NotifyAttribute *event)
+void             AttrCSSequivModified(NotifyAttribute *event)
 {
-  ParseFillStrokeAttributes (event->attributeType.AttrTypeNum,
-			     event->attribute, event->element,
-			     event->document, FALSE);
+  ParseCSSequivAttribute (event->attributeType.AttrTypeNum,
+			  event->attribute, event->element,
+			  event->document, FALSE);
 }
  
 /*----------------------------------------------------------------------
-   AttrFillStrokeDelete : attribute fill, stroke or stroke-width will be
+   AttrCSSequivDelete : attribute fill, stroke or stroke-width will be
    deleted. Remove the corresponding style presentation.
   ----------------------------------------------------------------------*/
-ThotBool            AttrFillStrokeDelete (NotifyAttribute * event)
+ThotBool            AttrCSSequivDelete (NotifyAttribute * event)
 {
-  ParseFillStrokeAttributes (event->attributeType.AttrTypeNum,
-			     event->attribute, event->element,
-			     event->document, TRUE);
+  ParseCSSequivAttribute (event->attributeType.AttrTypeNum,
+			  event->attribute, event->element,
+			  event->document, TRUE);
   return FALSE; /* let Thot perform normal operation */
 }
 
@@ -1494,8 +1494,8 @@ void         CreateGraphicElement (int entry)
 	      attr = TtaNewAttribute (attrType);
 	      TtaAttachAttribute (newEl, attr, doc);
 	      TtaSetAttributeText (attr, "black", newEl, doc);
-	      ParseFillStrokeAttributes (attrType.AttrTypeNum, attr, newEl,
-					 doc, FALSE);
+	      ParseCSSequivAttribute (attrType.AttrTypeNum, attr, newEl,
+				      doc, FALSE);
 	    }
 	  if (newType.ElTypeNum != SVG_EL_line_)
 	    {
@@ -1506,8 +1506,8 @@ void         CreateGraphicElement (int entry)
 		  attr = TtaNewAttribute (attrType);
 		  TtaAttachAttribute (newEl, attr, doc);
 		  TtaSetAttributeText (attr, "none", newEl, doc);
-		  ParseFillStrokeAttributes (attrType.AttrTypeNum, attr, newEl,
-					     doc, FALSE);
+		  ParseCSSequivAttribute (attrType.AttrTypeNum, attr, newEl,
+					  doc, FALSE);
 		}
 	    }
 	}

@@ -1541,7 +1541,7 @@ ATTRIBUTES
 	BEGIN
 	CreateBefore(AttrName);
 	CreateBefore(AttrValue);
-	{ aspect set by function MathAttrFontsizeCreated }
+	{ aspect set by function MathMLAttrToStyleProperty }
 	IN Structure_view
 		Size: Enclosing =;
 	END;

@@ -26,11 +26,17 @@ ATTR
 STRUCT
 
    SVG
-	(ATTR viewBox = text;
+	(ATTR font_family = text;
+	      font_size = text;
+	      font_style = normal_, italic, oblique_, inherit;
+	      font_variant = normal_, small_caps, inherit;
+	      font_weight = normal_, bold_, bolder, lighter, w100, w200, w300,
+			    w400, w500, w600, w700, w800, w900, inherit;
+	      viewBox = text;
 	      x = text;
               y = text;
-	      height_ = text;
 	      width_ = text;
+	      height_ = text;
 	      Charset = text)
         = LIST OF (GraphicsElement) + (XMLcomment, XMLPI, Unknown_namespace);
 
@@ -38,6 +44,7 @@ STRUCT
         (ATTR fill = text;
 	      stroke = text;
 	      stroke_width = text;
+	      font_family; font_size; font_style; font_variant; font_weight;
 	      transform = text)
         = LIST OF (GraphicsElement);
 
@@ -49,6 +56,7 @@ STRUCT
 	      fill;
 	      stroke;
 	      stroke_width;
+	      font_family; font_size; font_style; font_variant; font_weight;
 	      transform;
 	      { graphicsElementEvents })
         = LIST OF (GraphicsElement);
@@ -150,13 +158,15 @@ STRUCT
 	      END;
 
    text_
-        (ATTR transform;
+        (ATTR font_family; font_size; font_style; font_variant; font_weight;
+	      transform;
 	      x;
 	      y)
          = LIST OF (TextComponent);
 
    tspan
-	(ATTR x;
+	(ATTR font_family; font_size; font_style; font_variant; font_weight;
+	      x;
               y;
 	      dx = text;
 	      dy = text)
@@ -166,7 +176,8 @@ STRUCT
    { textPath }
    { altGlyph }
    { altGlyphDef }
-   { glyphSub }
+   { altGlyphItem }
+   { glyphRef }
    { font }
    { glyph }
    { missing-glyph }
@@ -180,6 +191,7 @@ STRUCT
 	      fill;
 	      stroke;
 	      stroke_width;
+	      font_family; font_size; font_style; font_variant; font_weight;
 	      transform;
 	      { graphicsElementEvents }
 	      x; 
@@ -208,6 +220,7 @@ STRUCT
 	      fill;
 	      stroke;
 	      stroke_width;
+	      font_family; font_size; font_style; font_variant; font_weight;
 	      viewBox;
 	      preserveAspectRatio = text; 
 	      { graphicsElementEvents })
@@ -233,6 +246,7 @@ STRUCT
 	      fill;
               stroke;
 	      stroke_width;
+	      font_family; font_size; font_style; font_variant; font_weight;
 	      transform;
 	      { graphicsElementEvents }
 	      target_ = text)
@@ -272,6 +286,7 @@ STRUCT
 	(ATTR requiredFeatures; requiredExtensions; systemLanguage;
 	      externalResourcesRequired;
 	      { PresentationAttributes-All }
+	      font_family; font_size; font_style; font_variant; font_weight;
 	      transform;
 	      { graphicsElementEvents })
 	= LIST OF (CASE OF
@@ -285,7 +300,8 @@ STRUCT
               width_;
               height_; 
               fill;
-              stroke)
+              stroke;
+	      font_family; font_size; font_style; font_variant; font_weight)
 	= BEGIN CASE OF
 	      HTML; MathML;
 	      END;

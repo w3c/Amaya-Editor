@@ -28,6 +28,30 @@ static AttrValueMapping SVGAttrValueMappingTable[] =
    {SVG_ATTR_xml_space, "default", SVG_ATTR_xml_space_VAL_xml_space_default},
    {SVG_ATTR_xml_space, "preserve", SVG_ATTR_xml_space_VAL_xml_space_preserve},
 
+   {SVG_ATTR_font_style, "inherit", SVG_ATTR_font_style_VAL_inherit},
+   {SVG_ATTR_font_style, "italic", SVG_ATTR_font_style_VAL_italic},
+   {SVG_ATTR_font_style, "normal", SVG_ATTR_font_style_VAL_normal_},
+   {SVG_ATTR_font_style, "oblique", SVG_ATTR_font_style_VAL_oblique_},
+
+   {SVG_ATTR_font_variant, "inherit", SVG_ATTR_font_variant_VAL_inherit},
+   {SVG_ATTR_font_variant, "normal", SVG_ATTR_font_variant_VAL_normal_},
+   {SVG_ATTR_font_variant, "small-caps", SVG_ATTR_font_variant_VAL_small_caps},
+
+   {SVG_ATTR_font_weight, "100", SVG_ATTR_font_weight_VAL_w100},
+   {SVG_ATTR_font_weight, "200", SVG_ATTR_font_weight_VAL_w200},
+   {SVG_ATTR_font_weight, "300", SVG_ATTR_font_weight_VAL_w300},
+   {SVG_ATTR_font_weight, "400", SVG_ATTR_font_weight_VAL_w400},
+   {SVG_ATTR_font_weight, "500", SVG_ATTR_font_weight_VAL_w500},
+   {SVG_ATTR_font_weight, "600", SVG_ATTR_font_weight_VAL_w600},
+   {SVG_ATTR_font_weight, "700", SVG_ATTR_font_weight_VAL_w700},
+   {SVG_ATTR_font_weight, "800", SVG_ATTR_font_weight_VAL_w800},
+   {SVG_ATTR_font_weight, "900", SVG_ATTR_font_weight_VAL_w900},
+   {SVG_ATTR_font_weight, "bold", SVG_ATTR_font_weight_VAL_bold_},
+   {SVG_ATTR_font_weight, "bolder", SVG_ATTR_font_weight_VAL_bolder},
+   {SVG_ATTR_font_weight, "inherit", SVG_ATTR_font_weight_VAL_inherit},
+   {SVG_ATTR_font_weight, "lighter", SVG_ATTR_font_weight_VAL_lighter},
+   {SVG_ATTR_font_weight, "normal", SVG_ATTR_font_weight_VAL_normal_},
+
    {SVG_ATTR_externalResourcesRequired, "false", SVG_ATTR_externalResourcesRequired_VAL_false},
    {SVG_ATTR_externalResourcesRequired, "true", SVG_ATTR_externalResourcesRequired_VAL_true},
 
@@ -113,34 +137,126 @@ void    SVGEntityCreated (unsigned char *entityValue, Language lang,
 }
 
 /*----------------------------------------------------------------------
-   ParseFillStrokeAttributes
+   ParseCSSequivAttribute
    Create or update a specific presentation rule for element el that reflects
-   the value of attribute attr, which is fill, stroke or stroke-width
+   the value of attribute attr, which is equivalent to a CSS property (fill,
+   stroke, stroke-width, font-family, font-size, font-style, font-variant,
+   font-weight).
   ----------------------------------------------------------------------*/
-void   ParseFillStrokeAttributes (int attrType, Attribute attr, Element el, Document doc, ThotBool delete)
+void   ParseCSSequivAttribute (int attrType, Attribute attr, Element el,
+			       Document doc, ThotBool delete)
 {
-#define buflen 50
-   char               css_command[buflen+20];
-   int                  length;
-   char *              text;
+#define buflen 200
+  char               css_command[buflen+20];
+  int                length, val;
+  char *             text;
 
-   length = TtaGetTextAttributeLength (attr) + 2;
-   text = TtaGetMemory (length);
-   if (text != NULL)
-      {
-      /* get the value of the attribute */
-      TtaGiveTextAttributeValue (attr, text, &length);
-      /* builds the equivalent CSS rule */
-      if (attrType == SVG_ATTR_fill)
-	  sprintf (css_command, "fill: %s", text);
-      else if (attrType == SVG_ATTR_stroke)
-          sprintf (css_command, "stroke: %s", text);
-      else if (attrType == SVG_ATTR_stroke_width)
-          sprintf (css_command, "stroke-width: %s", text);
-      /* parse the CSS rule */
-      ParseHTMLSpecificStyle (el, css_command, doc, 0, delete);
-      TtaFreeMemory (text);
-      }
+  text = NULL;
+  /* get the value of the attribute */
+  if (attrType == SVG_ATTR_font_style ||
+      attrType == SVG_ATTR_font_variant ||
+      attrType == SVG_ATTR_font_weight)
+    /* enumerated value */
+    val = TtaGetAttributeValue (attr);
+  else
+    /* the attribute value is a character string */
+    {
+      length = TtaGetTextAttributeLength (attr) + 2;
+      text = TtaGetMemory (length);
+      if (text != NULL)
+	TtaGiveTextAttributeValue (attr, text, &length);
+    }
+
+  /* builds the equivalent CSS rule */
+  switch (attrType)
+    {
+    case SVG_ATTR_fill:
+      sprintf (css_command, "fill: %s", text);
+      break;
+    case SVG_ATTR_stroke:
+      sprintf (css_command, "stroke: %s", text);
+      break;
+    case SVG_ATTR_stroke_width:
+      sprintf (css_command, "stroke-width: %s", text);
+      break;
+    case SVG_ATTR_font_family:
+      sprintf (css_command, "font-family: %s", text);
+      break;
+    case SVG_ATTR_font_size:
+      sprintf (css_command, "font-size: %s", text);
+      break;
+    case SVG_ATTR_font_style:
+      switch (val)
+	{
+	case SVG_ATTR_font_style_VAL_normal_:
+	  sprintf (css_command, "font-style: normal");
+	  break;
+	case SVG_ATTR_font_style_VAL_italic:
+	  sprintf (css_command, "font-style: italic");
+	  break;
+	case SVG_ATTR_font_style_VAL_oblique_:
+	  sprintf (css_command, "font-style: oblique");
+	  break;
+	case SVG_ATTR_font_style_VAL_inherit:
+	  sprintf (css_command, "font-style: inherit");
+	  break;
+	}
+      break;
+    case SVG_ATTR_font_variant:
+      switch (val)
+	{
+	case SVG_ATTR_font_variant_VAL_normal_:
+	  sprintf (css_command, "font-variant: normal");
+	  break;
+	case SVG_ATTR_font_variant_VAL_small_caps:
+	  sprintf (css_command, "font-variant: small-caps");
+	  break;
+	case SVG_ATTR_font_variant_VAL_inherit:
+	  sprintf (css_command, "font-variant: inherit");
+	  break;
+	}
+      break;
+    case SVG_ATTR_font_weight:
+      switch (val)
+	{
+	case SVG_ATTR_font_weight_VAL_normal_:
+	  sprintf (css_command, "font-weight: normal");
+	  break;
+	case SVG_ATTR_font_weight_VAL_bold_:
+	  sprintf (css_command, "font-weight: bold");
+	case SVG_ATTR_font_weight_VAL_bolder:
+	  sprintf (css_command, "font-weight: bolder");
+	case SVG_ATTR_font_weight_VAL_lighter:
+	  sprintf (css_command, "font-weight: lighter");
+	case SVG_ATTR_font_weight_VAL_w100:
+	  sprintf (css_command, "font-weight: 100");
+	case SVG_ATTR_font_weight_VAL_w200:
+	  sprintf (css_command, "font-weight: 200");
+	case SVG_ATTR_font_weight_VAL_w300:
+	  sprintf (css_command, "font-weight: 300");
+	case SVG_ATTR_font_weight_VAL_w400:
+	  sprintf (css_command, "font-weight: 400");
+	case SVG_ATTR_font_weight_VAL_w500:
+	  sprintf (css_command, "font-weight: 500");
+	case SVG_ATTR_font_weight_VAL_w600:
+	  sprintf (css_command, "font-weight: 600");
+	case SVG_ATTR_font_weight_VAL_w700:
+	  sprintf (css_command, "font-weight: 700");
+	case SVG_ATTR_font_weight_VAL_w800:
+	  sprintf (css_command, "font-weight: 800");
+	case SVG_ATTR_font_weight_VAL_w900:
+	  sprintf (css_command, "font-weight: 900");
+	case SVG_ATTR_font_weight_VAL_inherit:
+	  sprintf (css_command, "font-weight: inherit");
+	  break;
+	}
+      break;
+    }
+
+  /* parse the equivalent CSS rule */
+  ParseHTMLSpecificStyle (el, css_command, doc, 0, delete);
+  if (text)
+    TtaFreeMemory (text);
 }
 
 /*----------------------------------------------------------------------
@@ -1611,10 +1727,15 @@ void      SVGAttributeComplete (Attribute attr, Element el, Document doc)
      case SVG_ATTR_r:
 	ParseWidthHeightAttribute (attr, el, doc, FALSE);
 	break;
+     case SVG_ATTR_font_family:
+     case SVG_ATTR_font_size:
+     case SVG_ATTR_font_style:
+     case SVG_ATTR_font_variant:
+     case SVG_ATTR_font_weight:
      case SVG_ATTR_fill:
      case SVG_ATTR_stroke:
      case SVG_ATTR_stroke_width:
-        ParseFillStrokeAttributes (attrType.AttrTypeNum, attr, el, doc, FALSE);
+        ParseCSSequivAttribute (attrType.AttrTypeNum, attr, el, doc, FALSE);
 	break;
      case SVG_ATTR_transform:
         ParseTransformAttribute (attr, el, doc, FALSE);
