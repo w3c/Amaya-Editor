@@ -190,8 +190,8 @@
 189 **(separate each entry with a space)
 190 **No proxy on these domains
 191 **Only proxy these domains
-192 **Amaya user directory
-193 **Temporary directory
-194 **Character name
+192 **Character name
+193 **Amaya user directory
+194 **Temporary directory
 195 **Use palette
 196 **Language Negotiation
