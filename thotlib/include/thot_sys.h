@@ -36,6 +36,7 @@
 #include <errno.h>
 #include <limits.h>
 #include <fcntl.h>
+#include <io.h>
  /* MS-Windows platform */
 #ifndef WWW_MSWINDOWS
 #define WWW_MSWINDOWS

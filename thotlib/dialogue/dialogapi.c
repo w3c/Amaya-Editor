@@ -347,10 +347,12 @@ int frame;
    if (frame == -1) {
       if (TtDisplay != 0)
          return;
+
       for (frame = 0; frame <= MAX_FRAME; frame++)
 	  if (FrRef[frame] != 0)
 	     break;
    }
+
    if ((frame < 0) || (frame > MAX_FRAME)) {
       TtDisplay = GetDC (WIN_curWin = NULL);
       return;

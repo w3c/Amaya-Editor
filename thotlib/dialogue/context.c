@@ -428,7 +428,7 @@ STRING              name;
    else if (TtWDepth == 1)
       RO_Color = cblack.pixel;
 #  else  /* _WINDOWS */
-   TtDisplay = GetDC (WIN_Main_Wd) ;
+   /* TtDisplay = GetDC (WIN_Main_Wd) ; */
    WinInitColors ();
 #  endif /* _WINDOWS */
 }
