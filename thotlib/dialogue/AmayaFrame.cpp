@@ -243,6 +243,7 @@ AmayaCanvas * AmayaFrame::GetCanvas()
  */
 void AmayaFrame::HideScrollbar( int scrollbar_id )
 {
+  wxLogDebug( _T("AmayaFrame::HideScrollbar = %d"), scrollbar_id );
   switch( scrollbar_id )
    {
     case 1:
@@ -278,6 +279,7 @@ void AmayaFrame::HideScrollbar( int scrollbar_id )
  */
 void AmayaFrame::ShowScrollbar( int scrollbar_id )
 {
+  wxLogDebug( _T("AmayaFrame::ShowScrollbar = %d"), scrollbar_id );
   switch( scrollbar_id )
    {
     case 1:
