@@ -185,10 +185,17 @@ typedef unsigned int JDIMENSION;
 #define DLLXPRT
 #endif
 
+#ifdef __GNUC__
+#define METHODDEF static	/* a function called through method pointers */
+#define LOCAL	  static	/* a function used only in its module */
+#define GLOBAL	         	/* a function referenced thru EXTERNs */
+#define EXTERN	  extern        /* a reference to a GLOBAL function */
+#else /* ! __GNUC__ */
 #define METHODDEF static	/* a function called through method pointers */
 #define LOCAL	  static	/* a function used only in its module */
 #define GLOBAL	  DLLXPRT	/* a function referenced thru EXTERNs */
 #define EXTERN	  extern DLLXPRT /* a reference to a GLOBAL function */
+#endif
 
 
 /* Here is the pseudo-keyword for declaring pointers that must be "far"
