@@ -1282,7 +1282,6 @@ ThotBool        addID;
     TtaSetDisplayMode (doc, DeferredDisplay);
   /* remove selection before modifications */
   TtaUnselect (doc);
-  TtaOpenUndoSequence (doc, NULL, NULL, 0, 0);
   
   /* browse the tree and add the ID if it's missing */
   el = TtaGetMainRoot (doc);
@@ -1292,16 +1291,15 @@ ThotBool        addID;
       attr = TtaGetAttribute (el, attrType);
       if (!attr && addID)
 	{
-	  attr = TtaNewAttribute (attrType);
-	  TtaRegisterAttributeCreate (attr, el, doc);
-	  TtaAttachAttribute (el, attr, doc);
-	  TtaSetAttributeText (attr, "ID", el, doc);
-	  MakeUniqueName (el, doc);
+	  /* we reuse an existing Amaya function */
+	  CreateTargetAnchor (doc, el, TRUE);
 	}
       else if (attr && !addID)
 	{
-	  TtaRegisterAttributeDelete (attr, el, doc);
+	  TtaOpenUndoSequence (doc, NULL, NULL, 0, 0);
 	  TtaRemoveAttribute (el, attr, doc);
+	  TtaRegisterAttributeDelete (attr, el, doc);
+	  TtaCloseUndoSequence (doc);
 	}
 
       el = TtaSearchTypedElement (elType, SearchForward, el);
@@ -1309,7 +1307,6 @@ ThotBool        addID;
 
   TtaSetDocumentModified (doc);
   TtaSetDisplayMode (doc, dispMode);
-  TtaCloseUndoSequence (doc);
 }
 
 /*----------------------------------------------------------------------
