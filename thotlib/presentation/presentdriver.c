@@ -29,18 +29,18 @@
 /*----------------------------------------------------------------------
  PresentationValueToPRule : set up an internal Presentation Rule accordingly
  to a Presentation Value for a given type of presentation attribute.
- specific is an extra parameter needed when using a Function rule.
+ funcType is an extra parameter needed when using a Function rule.
  ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                PresentationValueToPRule (PresentationValue val, int type, PRule pRule,
-					      int specific, boolean absolute)
+void                PresentationValueToPRule (PresentationValue val, int type, PRule pRule, int funcType, boolean absolute, boolean generic)
 #else
-void                PresentationValueToPRule (val, type, pRule, specific, absolute)
+void                PresentationValueToPRule (val, type, pRule, funcType, absolute, generic)
 PresentationValue   val;
 int                 type;
 PRule               pRule;
-int                 specific;
+int                 funcType;
 boolean             absolute;
+boolean             generic;
 #endif
 {
   TypeUnit            int_unit;
@@ -244,24 +244,101 @@ boolean             absolute;
       break;
     case PtVertRef:
     case PtHorizRef:
-    case PtVertPos:
-    case PtHorizPos:
       rule->PrPresMode = PresImmediate;
       rule->PrPosRule.PoDistUnit = int_unit;
       rule->PrPosRule.PoDistance = value;
       break;
+    case PtVertPos:
+      rule->PrPresMode = PresImmediate;
+      rule->PrPosRule.PoDistUnit = int_unit;
+      rule->PrPosRule.PoDistance = value;
+      if (generic)
+	{
+	  /* generate a complete rule Top=Previous AnyElem.Bottom+value */
+	  rule->PrPosRule.PoPosDef = Top;
+	  rule->PrPosRule.PoPosRef = Bottom;
+	  rule->PrPosRule.PoRelation = RlPrevious;
+	  rule->PrPosRule.PoNotRel = FALSE;
+	  rule->PrPosRule.PoRefKind = RkElType;
+	  rule->PrPosRule.PoUserSpecified = FALSE;
+	  rule->PrPosRule.PoRefIdent = MAX_RULES_SSCHEMA + 1;	  
+	}
+      break;
+    case PtHorizPos:
+      rule->PrPresMode = PresImmediate;
+      rule->PrPosRule.PoDistUnit = int_unit;
+      rule->PrPosRule.PoDistance = value;
+      if (generic)
+	{
+	  /* generate a complete rule Left=Enclosing.left+value */
+	  rule->PrPosRule.PoPosDef = Left;
+	  rule->PrPosRule.PoPosRef = Left;
+	  rule->PrPosRule.PoRelation = RlEnclosing;
+	  rule->PrPosRule.PoNotRel = FALSE;
+	  rule->PrPosRule.PoRefKind = RkElType;
+	  rule->PrPosRule.PoUserSpecified = FALSE;
+	  rule->PrPosRule.PoRefIdent = 0;	  
+	}
+      break;
     case PtHeight:
-    case PtWidth:
+      rule->PrPresMode = PresImmediate;
       rule->PrDimRule.DrUnit = int_unit;
-      rule->PrDimRule.DrValue = value;
+      if (generic)
+	{
+	  /* generate a complete rule Height=Enclosed.Height */
+	  rule->PrDimRule.DrPosition = FALSE;
+	  rule->PrDimRule.DrAbsolute = FALSE;
+	  rule->PrDimRule.DrSameDimens = TRUE;
+	  rule->PrDimRule.DrAttr = FALSE;
+	  rule->PrDimRule.DrRelation = RlEnclosed;
+	  rule->PrDimRule.DrNotRelat = FALSE;
+	  rule->PrDimRule.DrRefKind = RkElType;
+	  rule->PrDimRule.DrUserSpecified = FALSE;
+	  rule->PrDimRule.DrRefIdent = 0;	  
+	}
       if (absolute)
+	{
+	  rule->PrDimRule.DrAbsolute = TRUE;
+	  rule->PrDimRule.DrValue = value;
+	}
+      else
+	rule->PrDimRule.DrValue = 0;
+      break;
+    case PtWidth:
+      rule->PrPresMode = PresImmediate;
+      rule->PrDimRule.DrUnit = int_unit;
+      if (generic)
+	{
+	  /* generate a complete rule Width=Enclosing.Width+value */
+	  rule->PrDimRule.DrPosition = FALSE;
+	  rule->PrDimRule.DrAbsolute = FALSE;
+	  rule->PrDimRule.DrSameDimens = TRUE;
+	  rule->PrDimRule.DrRelation = RlEnclosing;
+	  rule->PrDimRule.DrNotRelat = FALSE;
+	  rule->PrDimRule.DrRefKind = RkElType;
+	  rule->PrDimRule.DrUserSpecified = FALSE;
+	  rule->PrDimRule.DrRefIdent = 0;	  
+	}
+      if (absolute)
+	{
 	rule->PrDimRule.DrAbsolute = TRUE;
+	rule->PrDimRule.DrValue = value;
+	}
+      else if (int_unit == UnPercent)
+	rule->PrDimRule.DrValue = 100 - value;
+      else
+	rule->PrDimRule.DrValue = -value;
       break;
     case PtPictInfo:
       break;
+    case PtVertOverflow:
+    case PtHorizOverflow:
+      rule->PrPresMode = PresImmediate;
+      rule->PrJustify = TRUE;
+      break;
     case PtFunction:
       rule->PrPresMode = PresFunction;
-      switch (specific)
+      switch (funcType)
 	{
 	case FnLine:
 	  if (value == DRIVERP_NOTINLINE)
@@ -276,21 +353,21 @@ boolean             absolute;
 	case FnCreateLast:
 	case FnCreateAfter:
 	case FnCreateEnclosing:
-	  rule->PrPresFunction = (FunctionType) specific;
+	  rule->PrPresFunction = (FunctionType) funcType;
 	  rule->PrNPresBoxes = 0;
 	  rule->PrElement = TRUE;
 	  break;
 	case FnShowBox:
-	  rule->PrPresFunction = (FunctionType) specific;
+	  rule->PrPresFunction = (FunctionType) funcType;
 	  rule->PrNPresBoxes = value;
 	  break;
 	case FnBackgroundPicture:
-	  rule->PrPresFunction = (FunctionType) specific;
+	  rule->PrPresFunction = (FunctionType) funcType;
 	  rule->PrNPresBoxes = 1;
 	  rule->PrPresBox[0] = value;
 	  break;
 	case FnPictureMode:
-	  rule->PrPresFunction = (FunctionType) specific;
+	  rule->PrPresFunction = (FunctionType) funcType;
 	  rule->PrNPresBoxes = 1;
 	  switch (value)
 	    {

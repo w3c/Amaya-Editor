@@ -71,45 +71,35 @@ GenericContextBlock, *GenericContext;
 /* A generic presentation value is made of a value and an unit */
 typedef PresentationValue GenericValue;
 
-#define GENERIC_FONT_STYLE_BOLD		StyleBold
-#define GENERIC_FONT_STYLE_ROMAN	StyleRoman
-#define GENERIC_FONT_STYLE_ITALICS	StyleItalics
-#define GENERIC_FONT_STYLE_BOLD_ITALICS	StyleBoldItalics
-#define GENERIC_FONT_STYLE_OBLIQUE	StyleOblique
-#define GENERIC_FONT_STYLE_BOLD_OBLIQUE	StyleBoldOblique
-
 /* The strategy block for this driver */
 extern PresentationStrategy GenericStrategy;
 
 /* browse functions callbacks */
-typedef void        (*GenericContextApplyHandler)
-                    (GenericTarget target, GenericContext cond, void *param);
+typedef void   (*GenericContextApplyHandler) (GenericTarget target, GenericContext cond, void *param);
+typedef void   (*GenericSettingsApplyHandler) (GenericTarget target, GenericContext cond, PresentationSetting setting, void *param);
 
-typedef void        (*GenericSettingsApplyHandler)
-                    (GenericTarget target, GenericContext cond,
-		     PresentationSetting setting, void *param);
-
-/*
- * allocation functions.
- */
-
+/* allocation functions */
 #ifdef __STDC__
-GenericContext      GetGenericContext (Document doc);
-void                FreeGenericContext (GenericContext ctxt);
-void                ApplyAllGenericContext (Document doc, GenericTarget target,
-			   GenericContextApplyHandler handler, void *param);
-void                ApplyAllGenericSettings (GenericTarget target,
-		   GenericContext cond, GenericSettingsApplyHandler handler,
-					     void *param);
-
+GenericContext GetGenericContext (Document doc);
+void           FreeGenericContext (GenericContext ctxt);
+void           ApplyAllGenericContext (Document doc,
+				       GenericTarget target,
+				       GenericContextApplyHandler handler,
+				       void *param);
+void           ApplyAllGenericSettings (GenericTarget target,
+					GenericContext cond,
+					GenericSettingsApplyHandler handler,
+					void *param);
 #else  /* __STDC__ */
-GenericContext      GetGenericContext ( /* doc */ )
-void                FreeGenericContext ( /* ctxt */ );
-void                ApplyAllGenericContext (	/* Document doc, GenericTarget target,
-						   GenericContextApplyHandler handler, void *param */ );
-void                ApplyAllGenericSettings (	/* GenericTarget target,
-						   GenericContext cond, GenericSettingsApplyHandler handler,
-						   void *param */ );
-
+GenericContext GetGenericContext (/* doc */)
+void           FreeGenericContext (/* ctxt */);
+void           ApplyAllGenericContext (/* Document doc,
+					  GenericTarget target,
+					  GenericContextApplyHandler handler,
+					  void *param */);
+void           ApplyAllGenericSettings (/* GenericTarget target,
+					   GenericContext cond,
+					   GenericSettingsApplyHandler handler,
+					   void *param */);
 #endif /* __STDC__ */
 #endif /* __GENERIC_DRIVER_H__ */

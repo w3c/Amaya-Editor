@@ -703,14 +703,14 @@ int                 nr;
 	return;
      }
    cond->CoCondition = PcWithin;
-   cond->CoTarget = 0;
-   cond->CoNotNegative = 1;
+   cond->CoTarget = FALSE;
+   cond->CoNotNegative = TRUE;
    cond->CoRelation = nr;
    cond->CoTypeAncestor = type;
-   cond->CoImmediate = 0;
+   cond->CoImmediate = FALSE;
    cond->CoAncestorRel = CondGreater;
-   cond->CoAncestorName[0] = 0;
-   cond->CoSSchemaName[0] = 0;
+   cond->CoAncestorName[0] = EOS;
+   cond->CoSSchemaName[0] = EOS;
    AddCond (&rule->PrCond, cond);
 }
 
@@ -735,8 +735,8 @@ int                 type;
 	return;
      }
    cond->CoCondition = PcElemType;
-   cond->CoNotNegative = 1;
-   cond->CoTarget = 0;
+   cond->CoNotNegative = TRUE;
+   cond->CoTarget = FALSE;
    cond->CoTypeElAttr = type;
    AddCond (&rule->PrCond, cond);
 }
@@ -1364,18 +1364,17 @@ PresentationValue   v;
    *									*
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         etoi_convert (PtrPRule rule, GenericValue val1,
-				  GenericContext ctxt, int specific)
+static void         etoi_convert (PtrPRule rule, GenericValue val1, GenericContext ctxt, int funcType, boolean absolute)
 #else  /* !__STDC__ */
-static void         etoi_convert (rule, val1, ctxt, specific)
+static void         etoi_convert (rule, val1, ctxt, funcType, absolute)
 PtrPRule            rule;
 GenericValue        val1;
 GenericContext      ctxt;
-int                 specific;
-
+int                 funcType;
+boolean             absolute;
 #endif /* !__STDC__ */
 {
-   PresentationValueToPRule (val1, rule->PrType, (PRule) rule, specific, FALSE);
+   PresentationValueToPRule (val1, rule->PrType, (PRule) rule, funcType, absolute, TRUE);
    rule->PrViewNum = 1;
    if ((ctxt->box != 0) && (rule->PrPresMode == PresFunction))
      BuildBoxName(ctxt, &rule->PrPresBoxName);
@@ -1714,17 +1713,16 @@ int GenericSet##name(PresentationTarget t, PresentationContext c,	\
 {									\
     GenericTarget  tsch = (GenericTarget) t;				\
     GenericContext cont = (GenericContext) c;				\
-    GenericValue   val = /* (GenericValue) - EGP */ v;			\
-    PtrPRule   rule;							\
+    PtrPRule       rule;       						\
 									\
     if (cont->destroy) {						\
-        PresRuleRemove(tsch, cont,Pt##genre,0);				\
-	return(0);							\
+        PresRuleRemove (tsch, cont, Pt##genre, 0);     			\
+	return (0);							\
     }									\
-    rule = PresRuleInsert(tsch, cont,Pt##genre,0);			\
-    if (rule == NULL) return(-1);					\
-    etoi_convert(rule,val,cont,0);					\
-    return(0);								\
+    rule = PresRuleInsert (tsch, cont, Pt##genre, 0);			\
+    if (rule == NULL) return (-1);					\
+    etoi_convert (rule, v, cont, 0, FALSE);			       	\
+    return (0);								\
 }									\
 									\
 int GenericGet##name(PresentationTarget t, PresentationContext c,	\
@@ -1732,14 +1730,14 @@ int GenericGet##name(PresentationTarget t, PresentationContext c,	\
 {									\
     GenericTarget  tsch = (GenericTarget) t;				\
     GenericContext cont = (GenericContext) c;				\
-    GenericValue   *val = (GenericValue *) v;				\
+    GenericValue   *val = v;						\
     PtrPRule        rule, *chain;      					\
 									\
-    rule = PresRuleSearch(tsch, cont, Pt##genre, 0, &chain);		\
-    if (rule == NULL) return(-1);					\
+    rule = PresRuleSearch (tsch, cont, Pt##genre, 0, &chain);		\
+    if (rule == NULL) return (-1);					\
     val->typed_data.value = rule->PrIntValue;				\
     val->typed_data.unit = DRIVERP_UNIT_REL;				\
-    return(0);								\
+    return (0);								\
 }									\
 
 #define GENERIC_FUNCS2(genre,category,name)				\
@@ -1749,17 +1747,16 @@ int GenericSet##name(PresentationTarget t, PresentationContext c,	\
 {									\
     GenericTarget  tsch = (GenericTarget) t;				\
     GenericContext cont = (GenericContext) c;				\
-    GenericValue   val = /* (GenericValue) - EGP */ v;			\
-    PtrPRule   rule;							\
+    PtrPRule       rule;       						\
 									\
     if (cont->destroy) {						\
-        PresRuleRemove(tsch, cont,Pt##genre,category);			\
-	return(0);							\
+        PresRuleRemove (tsch, cont, Pt##genre, category);		\
+	return (0);							\
     }									\
-    rule = PresRuleInsert(tsch, cont,Pt##genre, category);		\
-    if (rule == NULL) return(-1);					\
-    etoi_convert(rule,val,cont,category);				\
-    return(0);								\
+    rule = PresRuleInsert (tsch, cont,Pt##genre, category);		\
+    if (rule == NULL) return (-1);					\
+    etoi_convert (rule, v, cont, category, FALSE);	       		\
+    return (0);								\
 }									\
 									\
 int GenericGet##name(PresentationTarget t, PresentationContext c,	\
@@ -1767,38 +1764,37 @@ int GenericGet##name(PresentationTarget t, PresentationContext c,	\
 {									\
     GenericTarget  tsch = (GenericTarget) t;				\
     GenericContext cont = (GenericContext) c;				\
-    GenericValue   *val = (GenericValue *) v;				\
-    PtrPRule        rule, *chain;					\
+    GenericValue  *val = v;						\
+    PtrPRule       rule, *chain;					\
 									\
-    rule = PresRuleSearch(tsch, cont, Pt##genre, category, &chain);	\
-    if (rule == NULL) return(-1);					\
+    rule = PresRuleSearch (tsch, cont, Pt##genre, category, &chain);	\
+    if (rule == NULL) return (-1);					\
     val->typed_data.value = rule->PrIntValue;				\
     val->typed_data.unit = DRIVERP_UNIT_REL;				\
-    return(0);								\
+    return (0);								\
 }									\
 
 #else  /* ! __STDC__ i.e. token-pasting is made the old way ! */
 
 #define GENERIC_FUNCS(type,name)					\
 									\
-int GenericSet/**/name(t,c,v)						\
+int GenericSet/**/name(t, c, v)						\
     PresentationTarget t;						\
     PresentationContext c;						\
     PresentationValue v;						\
 {									\
     GenericTarget  tsch = (GenericTarget) t;				\
     GenericContext cont = (GenericContext) c;				\
-    GenericValue   val = (GenericValue) v;				\
     PtrPRule   rule;							\
 									\
     if (cont->destroy) {						\
-        PresRuleRemove(tsch, cont,Pt/**/genre,0);			\
-	return(0);							\
+        PresRuleRemove (tsch, cont, Pt/**/genre, 0);			\
+	return (0);							\
     }									\
-    rule = PresRuleInsert(tsch, cont,Pt/**/genre, 0);			\
-    if (rule == NULL) return(-1);					\
-    etoi_convert(rule,val,cont,0);					\
-    return(0);								\
+    rule = PresRuleInsert (tsch, cont, Pt/**/genre, 0);			\
+    if (rule == NULL) return (-1);					\
+    etoi_convert (rule, v, cont, 0, FALSE);		       		\
+    return (0);								\
 }									\
 									\
 int GenericGet/**/name(t,c,v)						\
@@ -1808,14 +1804,14 @@ int GenericGet/**/name(t,c,v)						\
 {									\
     GenericTarget  tsch = (GenericTarget) t;				\
     GenericContext cont = (GenericContext) c;				\
-    GenericValue   *val = (GenericValue *) v;				\
+    GenericValue   *val = v;						\
     PtrPRule        rule, *chain;					\
 									\
-    rule = PresRuleSearch(tsch, cont, Pt/**/genre, 0, &chain);		\
+    rule = PresRuleSearch (tsch, cont, Pt/**/genre, 0, &chain);		\
     if (rule == NULL) return(-1);					\
     val->typed_data.value = rule->PrIntValue;				\
     val->typed_data.unit = DRIVERP_UNIT_REL;				\
-    return(0);								\
+    return (0);								\
 }									\
 
 #define GENERIC_FUNCS2(type,category,name)				\
@@ -1827,17 +1823,16 @@ int GenericSet/**/name(t,c,v)						\
 {									\
     GenericTarget  tsch = (GenericTarget) t;				\
     GenericContext cont = (GenericContext) c;				\
-    GenericValue   val = (GenericValue) v;				\
     PtrPRule   rule;							\
 									\
     if (cont->destroy) {						\
-        PresRuleRemove(tsch, cont,Pt/**/genre, category);		\
-	return(0);							\
+        PresRuleRemove (tsch, cont, Pt/**/genre, category);		\
+	return (0);							\
     }									\
-    rule = PresRuleInsert(tsch, cont,Pt/**/genre, category);		\
-    if (rule == NULL) return(-1);					\
-    etoi_convert(rule,val,cont,category);				\
-    return(0);								\
+    rule = PresRuleInsert (tsch, cont, Pt/**/genre, category);		\
+    if (rule == NULL) return (-1);					\
+    etoi_convert (rule, v, cont, category, FALSE);	       		\
+    return (0);								\
 }									\
 									\
 int GenericGet/**/name(t,c,v)						\
@@ -1847,14 +1842,14 @@ int GenericGet/**/name(t,c,v)						\
 {									\
     GenericTarget  tsch = (GenericTarget) t;				\
     GenericContext cont = (GenericContext) c;				\
-    GenericValue   *val = (GenericValue *) v;				\
+    GenericValue   *val = v;						\
     PtrPRule        rule, *chain;	       				\
 									\
-    rule = PresRuleSearch(tsch, cont, Pt/**/genre, category, &chain);	\
-    if (rule == NULL) return(-1);					\
+    rule = PresRuleSearch (tsch, cont, Pt/**/genre, category, &chain);	\
+    if (rule == NULL) return (-1);					\
     val->typed_data.value = rule->PrIntValue;				\
     val->typed_data.unit = DRIVERP_UNIT_REL;				\
-    return(0);								\
+    return (0);								\
 }									\
 
 #endif /* __STDC__ */
@@ -1877,10 +1872,12 @@ GENERIC_FUNCS (Underline, TextUnderlining)
 GENERIC_FUNCS (FillPattern, FillPattern)
 GENERIC_FUNCS (Font, FontFamily)
 GENERIC_FUNCS (LineSpacing, LineSpacing)
-GENERIC_FUNCS (Height, Height)
-GENERIC_FUNCS (Width, Width)
-GENERIC_FUNCS (VertPos, VPos)
-GENERIC_FUNCS (HorizPos, HPos)
+GENERIC_FUNCS (VertPos, TMargin)
+GENERIC_FUNCS (HorizPos, LMargin)
+GENERIC_FUNCS (Width, RMargin)
+GENERIC_FUNCS (Height, BMargin)
+GENERIC_FUNCS (HorizOverflow, HOverflow)
+GENERIC_FUNCS (VertOverflow, VOverflow)
 GENERIC_FUNCS2 (Function, FnLine, InLine)
 GENERIC_FUNCS2 (Function, FnShowBox, ShowBox)
 GENERIC_FUNCS2 (Function, FnPictureMode, PictureMode)
@@ -1890,6 +1887,110 @@ GENERIC_FUNCS2 (Function, FnPictureMode, PictureMode)
    *	a few presentations routines still need to be hand-coded	*
    *									*
   ----------------------------------------------------------------------*/
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+int                 GenericSetWidth (PresentationTarget t, PresentationContext c, PresentationValue v)
+#else
+int                 GenericSetWidth (t, c, v)
+PresentationTarget  t;
+PresentationContext c;
+PresentationValue   v;
+
+#endif
+{
+  GenericTarget  tsch = (GenericTarget) t;
+  GenericContext cont = (GenericContext) c;
+  PtrPRule       rule;
+
+  if (cont->destroy)
+    {
+      PresRuleRemove (tsch, cont, PRWidth, 0);
+      return (0);
+    }
+  rule = PresRuleInsert (tsch, cont, PRWidth, 0);
+  if (rule == NULL)
+    return (-1);
+  etoi_convert (rule, v, cont, 0, TRUE);
+  return (0);
+}
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+int                 GenericGetWidth (PresentationTarget t, PresentationContext c, PresentationValue *v)
+#else
+int                 GenerificGetWidth (t, c, v)
+PresentationTarget  t;
+PresentationContext c;
+PresentationValue  *v;
+#endif
+{
+  GenericTarget   tsch = (GenericTarget) t;
+  GenericContext  cont = (GenericContext) c;
+  GenericValue   *val = v;
+  PtrPRule        rule, *chain;
+
+  rule = PresRuleSearch (tsch, cont, PRWidth, 0, &chain);
+  if (rule == NULL)
+    return (-1);
+  val->typed_data.value = rule->PrIntValue;
+  val->typed_data.unit = DRIVERP_UNIT_REL;
+  return (0);
+}
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+int                 GenericSetHeight (PresentationTarget t, PresentationContext c, PresentationValue v)
+#else
+int                 GenericSetHeight (t, c, v)
+PresentationTarget  t;
+PresentationContext c;
+PresentationValue   v;
+
+#endif
+{
+  GenericTarget  tsch = (GenericTarget) t;
+  GenericContext cont = (GenericContext) c;
+  PtrPRule   rule;
+
+  if (cont->destroy)
+    {
+      PresRuleRemove (tsch, cont, PRHeight, 0);
+      return(0);
+    }
+  rule = PresRuleInsert (tsch, cont, PRHeight, 0);
+  if (rule == NULL)
+    return (-1);
+  etoi_convert (rule, v, cont, 0, TRUE);
+  return (0);
+}
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+int                 GenericGetHeight (PresentationTarget t, PresentationContext c, PresentationValue *v)
+#else
+int                 GenerificGetHeight (t, c, v)
+PresentationTarget  t;
+PresentationContext c;
+PresentationValue  *v;
+#endif
+{
+  GenericTarget   tsch = (GenericTarget) t;
+  GenericContext  cont = (GenericContext) c;
+  GenericValue   *val = v;
+  PtrPRule        rule, *chain;
+
+  rule = PresRuleSearch (tsch, cont, PRHeight, 0, &chain);
+  if (rule == NULL)
+    return (-1);
+  val->typed_data.value = rule->PrIntValue;
+  val->typed_data.unit = DRIVERP_UNIT_REL;
+  return (0);
+}
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
@@ -1908,17 +2009,16 @@ PresentationValue   v;
    PtrPRule            rule;
    int                 box;
 
-   if (ctxt->destroy) {
-       return(0);
-   }
+   if (ctxt->destroy)
+     return(0);
    BoxRuleInsert (tsch, ctxt);
    box = ctxt->box;
    ctxt->box = 0;
    rule = PresRuleInsert (tsch, ctxt, PtFunction, FnCreateEnclosing);
    if (rule == NULL)
-      return (-1);
+     return (-1);
    ctxt->box = box;
-   etoi_convert (rule, v, ctxt, FnCreateEnclosing);
+   etoi_convert (rule, v, ctxt, FnCreateEnclosing, FALSE);
    return (0);
 }
 
@@ -1972,7 +2072,7 @@ PresentationValue   v;
       return (-1);
    v.typed_data.unit = DRIVERP_UNIT_REL;
    v.typed_data.value = cst;
-   etoi_convert (rule, v, ctxt, FnBackgroundPicture);
+   etoi_convert (rule, v, ctxt, FnBackgroundPicture, FALSE);
    return (0);
 }
 
@@ -2002,6 +2102,59 @@ PresentationValue  *v;
    cst = val.typed_data.unit;
    v->pointer = &pSchemaPrs->PsConstant[cst-1].PdString[0];
    return (0);
+}
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+int                 GenericSetHidden (PresentationTarget t, PresentationContext c, PresentationValue v)
+#else
+int                 GenericSetHidden (t, c, v)
+PresentationTarget  t;
+PresentationContext c;
+PresentationValue   v;
+
+#endif
+{
+  GenericTarget  tsch = (GenericTarget) t;
+  GenericContext cont = (GenericContext) c;
+  PtrPRule       rule;
+
+  if (cont->destroy)
+    {
+      PresRuleRemove (tsch, cont, PtVisibility, 0);
+      return (0);
+    }
+  rule = PresRuleInsert (tsch, cont, PtVisibility, 0);
+  if (rule == NULL)
+    return (-1);
+  v.typed_data.value = 0;
+  etoi_convert (rule, v, cont, 0, TRUE);
+  return (0);
+}
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+int                 GenericGetHidden (PresentationTarget t, PresentationContext c, PresentationValue *v)
+#else
+int                 GenerificGetHidden (t, c, v)
+PresentationTarget  t;
+PresentationContext c;
+PresentationValue  *v;
+#endif
+{
+  GenericTarget   tsch = (GenericTarget) t;
+  GenericContext  cont = (GenericContext) c;
+  GenericValue   *val = v;
+  PtrPRule        rule, *chain;
+
+  rule = PresRuleSearch (tsch, cont, PtVisibility, 0, &chain);
+  if (rule == NULL)
+    return (-1);
+  val->typed_data.value = rule->PrIntValue;
+  val->typed_data.unit = DRIVERP_UNIT_REL;
+  return (0);
 }
 
 /*----------------------------------------------------------------------
@@ -2048,39 +2201,45 @@ PresentationStrategy GenericStrategy =
    (PresentationGetFunction) GenericGetFillPattern,
    (PresentationSetFunction) GenericSetFillPattern,
 
-   (PresentationGetFunction) GenericGetVPos,
-   (PresentationSetFunction) GenericSetVPos,
+   (PresentationGetFunction) GenericGetTMargin,
+   (PresentationSetFunction) GenericSetTMargin,
 
-   (PresentationGetFunction) GenericGetHPos,
-   (PresentationSetFunction) GenericSetHPos,
+   (PresentationGetFunction) GenericGetLMargin,
+   (PresentationSetFunction) GenericSetLMargin,
 
-   NULL, /* (PresentationGetFunction) GenericGetHeight, */
-   NULL, /* (PresentationSetFunction) GenericSetHeight, */
+   (PresentationGetFunction) GenericGetHeight,
+   (PresentationSetFunction) GenericSetHeight,
 
-   NULL, /* (PresentationGetFunction) GenericGetRelHeight, */
-   NULL, /* (PresentationSetFunction) GenericSetRelHeight, */
+   (PresentationGetFunction) GenericGetWidth,
+   (PresentationSetFunction) GenericSetWidth,
 
-   NULL, /* (PresentationGetFunction) GenericGetWidth, */
-   NULL, /* (PresentationSetFunction) GenericSetWidth, */
+   (PresentationGetFunction) GenericGetBMargin,
+   (PresentationSetFunction) GenericSetBMargin,
 
-   NULL, /* (PresentationGetFunction) GenericGetRelWidth, */
-   NULL, /* (PresentationSetFunction) GenericSetRelWidth, */
+   (PresentationGetFunction) GenericGetRMargin,
+   (PresentationSetFunction) GenericSetRMargin,
 
    (PresentationGetFunction) GenericGetInLine,
    (PresentationSetFunction) GenericSetInLine,
 
-   NULL, /* (PresentationGetFunction) GenericGetShow, */
-   NULL, /* (PresentationSetFunction) GenericSetShow, */
-
    (PresentationGetFunction) GenericGetBox,
    (PresentationSetFunction) GenericSetBox,
-
-   (PresentationGetFunction) GenericGetShowBox,
-   (PresentationSetFunction) GenericSetShowBox,
 
    (PresentationGetFunction) GenericGetBgImage,
    (PresentationSetFunction) GenericSetBgImage,
 
    (PresentationGetFunction) GenericGetPictureMode,
    (PresentationSetFunction) GenericSetPictureMode,
+
+   (PresentationGetFunction) GenericGetShowBox,
+   (PresentationSetFunction) GenericSetShowBox,
+
+   (PresentationGetFunction) GenericGetHidden,
+   (PresentationSetFunction) GenericSetHidden,
+
+   (PresentationGetFunction) GenericGetHOverflow,
+   (PresentationSetFunction) GenericSetHOverflow,
+
+   (PresentationGetFunction) GenericGetVOverflow,
+   (PresentationSetFunction) GenericSetVOverflow,
 };

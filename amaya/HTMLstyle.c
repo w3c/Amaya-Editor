@@ -805,7 +805,8 @@ CSSInfoPtr          css;
 boolean             isHTML;
 #endif
 {
-  return (SkipProperty (cssRule));
+  cssRule = SkipProperty (cssRule);
+  return (cssRule);
 }
 
 /*----------------------------------------------------------------------
@@ -824,7 +825,8 @@ CSSInfoPtr          css;
 boolean             isHTML;
 #endif
 {
-  return (SkipProperty (cssRule));
+  cssRule = SkipProperty (cssRule);
+  return (cssRule);
 }
 
 /*----------------------------------------------------------------------
@@ -843,7 +845,8 @@ CSSInfoPtr          css;
 boolean             isHTML;
 #endif
 {
-  return (SkipProperty (cssRule));
+  cssRule = SkipProperty (cssRule);
+  return (cssRule);
 }
 
 /*----------------------------------------------------------------------
@@ -862,7 +865,8 @@ CSSInfoPtr          css;
 boolean             isHTML;
 #endif
 {
-  return (SkipProperty (cssRule));
+  cssRule = SkipProperty (cssRule);
+  return (cssRule);
 }
 
 /*----------------------------------------------------------------------
@@ -881,7 +885,8 @@ CSSInfoPtr          css;
 boolean             isHTML;
 #endif
 {
-  return (SkipProperty (cssRule));
+  cssRule = SkipProperty (cssRule);
+  return (cssRule);
 }
 
 /*----------------------------------------------------------------------
@@ -900,7 +905,8 @@ CSSInfoPtr          css;
 boolean             isHTML;
 #endif
 {
-  return (SkipProperty (cssRule));
+  cssRule = SkipProperty (cssRule);
+  return (cssRule);
 }
 
 /*----------------------------------------------------------------------
@@ -919,7 +925,8 @@ CSSInfoPtr          css;
 boolean             isHTML;
 #endif
 {
-  return (SkipProperty (cssRule));
+  cssRule = SkipProperty (cssRule);
+  return (cssRule);
 }
 
 /*----------------------------------------------------------------------
@@ -938,7 +945,8 @@ CSSInfoPtr          css;
 boolean             isHTML;
 #endif
 {
-  return (SkipProperty (cssRule));
+  cssRule = SkipProperty (cssRule);
+  return (cssRule);
 }
 
 /*----------------------------------------------------------------------
@@ -957,7 +965,8 @@ CSSInfoPtr          css;
 boolean             isHTML;
 #endif
 {
-  return (SkipProperty (cssRule));
+  cssRule = SkipProperty (cssRule);
+  return (cssRule);
 }
 
 /*----------------------------------------------------------------------
@@ -976,7 +985,8 @@ CSSInfoPtr          css;
 boolean             isHTML;
 #endif
 {
-  return (SkipProperty (cssRule));
+  cssRule = SkipProperty (cssRule);
+  return (cssRule);
 }
 
 /*----------------------------------------------------------------------
@@ -995,7 +1005,8 @@ CSSInfoPtr          css;
 boolean             isHTML;
 #endif
 {
-  return (SkipProperty (cssRule));
+  cssRule = SkipProperty (cssRule);
+  return (cssRule);
 }
 
 /*----------------------------------------------------------------------
@@ -1014,7 +1025,8 @@ CSSInfoPtr          css;
 boolean             isHTML;
 #endif
 {
-  return (SkipProperty (cssRule));
+  cssRule = SkipProperty (cssRule);
+  return (cssRule);
 }
 
 /*----------------------------------------------------------------------
@@ -1032,7 +1044,8 @@ CSSInfoPtr          css;
 boolean             isHTML;
 #endif
 {
-  return (SkipProperty (cssRule));
+  cssRule = SkipProperty (cssRule);
+  return (cssRule);
 }
 
 /*----------------------------------------------------------------------
@@ -1072,8 +1085,8 @@ boolean             isHTML;
    else if (!ustrncasecmp (cssRule, "none", 4))
      {
 	pval.typed_data.value = DRIVERP_HIDE;
-	if (context->drv->SetShow)
-	   context->drv->SetShow (target, context, pval);
+	if (context->drv->SetHidden)
+	   context->drv->SetHidden (target, context, pval);
 	cssRule = SkipWord (cssRule);
      }
    else if (!ustrncasecmp (cssRule, "list-item", 9))
@@ -1098,7 +1111,8 @@ CSSInfoPtr          css;
 boolean             isHTML;
 #endif
 {
-  return (SkipProperty (cssRule));
+  cssRule = SkipProperty (cssRule);
+  return (cssRule);
 }
 
 /*----------------------------------------------------------------------
@@ -1117,7 +1131,8 @@ CSSInfoPtr          css;
 boolean             isHTML;
 #endif
 {
-  return (SkipProperty (cssRule));
+  cssRule = SkipProperty (cssRule);
+  return (cssRule);
 }
 
 /*----------------------------------------------------------------------
@@ -1136,7 +1151,8 @@ CSSInfoPtr          css;
 boolean             isHTML;
 #endif
 {
-  return (SkipProperty (cssRule));
+  cssRule = SkipProperty (cssRule);
+  return (cssRule);
 }
 
 /*----------------------------------------------------------------------
@@ -1155,7 +1171,8 @@ CSSInfoPtr          css;
 boolean             isHTML;
 #endif
 {
-  return (SkipProperty (cssRule));
+  cssRule = SkipProperty (cssRule);
+  return (cssRule);
 }
 
 /*----------------------------------------------------------------------
@@ -1174,7 +1191,8 @@ CSSInfoPtr          css;
 boolean             isHTML;
 #endif
 {
-  return (SkipProperty (cssRule));
+  cssRule = SkipProperty (cssRule);
+  return (cssRule);
 }
 
 /*----------------------------------------------------------------------
@@ -1193,7 +1211,8 @@ CSSInfoPtr          css;
 boolean             isHTML;
 #endif
 {
-  return (SkipProperty (cssRule));
+  cssRule = SkipProperty (cssRule);
+  return (cssRule);
 }
 
 /*----------------------------------------------------------------------
@@ -1311,7 +1330,8 @@ CSSInfoPtr          css;
 boolean             isHTML;
 #endif
 {
-  return (SkipProperty (cssRule));
+  cssRule = SkipProperty (cssRule);
+  return (cssRule);
 }
 
 /*----------------------------------------------------------------------
@@ -1330,7 +1350,8 @@ CSSInfoPtr          css;
 boolean             isHTML;
 #endif
 {
-  return (SkipProperty (cssRule));
+  cssRule = SkipProperty (cssRule);
+  return (cssRule);
 }
 
 /*----------------------------------------------------------------------
@@ -1375,7 +1396,8 @@ CSSInfoPtr          css;
 boolean             isHTML;
 #endif
 {
-  return (SkipProperty (cssRule));
+  cssRule = SkipProperty (cssRule);
+  return (cssRule);
 }
 
 /*----------------------------------------------------------------------
@@ -1543,7 +1565,8 @@ boolean             isHTML;
       if (*cssRule == ',')
 	{
 	cssRule++;
-        return (ParseCSSFontFamily (target, context, cssRule, css, isHTML));
+	cssRule = ParseCSSFontFamily (target, context, cssRule, css, isHTML);
+        return (cssRule);
 	}
     }
 
@@ -2226,15 +2249,18 @@ CSSInfoPtr          css;
 boolean             isHTML;
 #endif
 {
-  /* return (SkipProperty (cssRule));*/
-   PresentationValue   margin;
-
-   cssRule = TtaSkipBlanks (cssRule);
-   /* first parse the attribute string */
-   cssRule = ParseCSSUnit (cssRule, &margin);
-   if (margin.typed_data.unit != DRIVERP_UNIT_INVALID && context->drv->SetVPos)
-       context->drv->SetVPos (target, context, margin);
-   return (cssRule);
+  PresentationValue   margin;
+  
+  cssRule = TtaSkipBlanks (cssRule);
+  /* first parse the attribute string */
+  cssRule = ParseCSSUnit (cssRule, &margin);
+  if (margin.typed_data.unit != DRIVERP_UNIT_INVALID && context->drv->SetTMargin)
+    {
+      context->drv->SetTMargin (target, context, margin);
+      if (margin.typed_data.value < 0 && context->drv->SetVOverflow)
+	context->drv->SetVOverflow (target, context, margin);
+    }
+  return (cssRule);
 }
 
 /*----------------------------------------------------------------------
@@ -2253,17 +2279,15 @@ CSSInfoPtr          css;
 boolean             isHTML;
 #endif
 {
-  return (SkipProperty (cssRule));
-#ifdef IV
-   PresentationValue   margin;
-
-   cssRule = TtaSkipBlanks (cssRule);
-   /* first parse the attribute string */
-   cssRule = ParseCSSUnit (cssRule, &margin);
-   if (margin.typed_data.unit != DRIVERP_UNIT_INVALID && context->drv->SetVPos)
-     context->drv->SetVPos (target, context, margin);
-   return (cssRule);
-#endif
+  PresentationValue   margin;
+  
+  cssRule = TtaSkipBlanks (cssRule);
+  /* first parse the attribute string */
+  cssRule = ParseCSSUnit (cssRule, &margin);
+  margin.typed_data.value = - margin.typed_data.value;
+  if (margin.typed_data.unit != DRIVERP_UNIT_INVALID && context->drv->SetBMargin)
+    context->drv->SetBMargin (target, context, margin);
+  return (cssRule);
 }
 
 /*----------------------------------------------------------------------
@@ -2282,20 +2306,20 @@ CSSInfoPtr          css;
 boolean             isHTML;
 #endif
 {
-  /*return (SkipProperty (cssRule));*/
-   PresentationValue   margin;
-
-   cssRule = TtaSkipBlanks (cssRule);
-   /* first parse the attribute string */
-   cssRule = ParseCSSUnit (cssRule, &margin);
-   if (margin.typed_data.unit != DRIVERP_UNIT_INVALID && context->drv->SetHPos)
-     {
-       context->drv->SetHPos (target, context, margin);
-       margin.typed_data.value = - margin.typed_data.value;
-       if (context->drv->SetWidth)
-	 context->drv->SetWidth (target, context, margin);
-     }
-   return (cssRule);
+  PresentationValue   margin;
+  
+  cssRule = TtaSkipBlanks (cssRule);
+  /* first parse the attribute string */
+  cssRule = ParseCSSUnit (cssRule, &margin);
+  if (margin.typed_data.unit != DRIVERP_UNIT_INVALID && context->drv->SetLMargin)
+    {
+      context->drv->SetLMargin (target, context, margin);
+      if (margin.typed_data.value < 0 && context->drv->SetHOverflow)
+	context->drv->SetHOverflow (target, context, margin);
+      if (context->drv->SetRMargin)
+	context->drv->SetRMargin (target, context, margin);
+    }
+  return (cssRule);
 }
 
 /*----------------------------------------------------------------------
@@ -2314,7 +2338,14 @@ CSSInfoPtr          css;
 boolean             isHTML;
 #endif
 {
-  return (SkipProperty (cssRule));
+  PresentationValue   margin;
+  
+  cssRule = TtaSkipBlanks (cssRule);
+  /* first parse the attribute string */
+  cssRule = ParseCSSUnit (cssRule, &margin);
+  if (margin.typed_data.unit != DRIVERP_UNIT_INVALID && context->drv->SetRMargin)
+    context->drv->SetRMargin (target, context, margin);
+  return (cssRule);
 }
 
 /*----------------------------------------------------------------------
@@ -2332,7 +2363,8 @@ CSSInfoPtr          css;
 boolean             isHTML;
 #endif
 {
-  return (SkipProperty (cssRule));
+  cssRule = SkipProperty (cssRule);
+  return (cssRule);
 }
 
 /*----------------------------------------------------------------------
@@ -2351,7 +2383,8 @@ CSSInfoPtr          css;
 boolean             isHTML;
 #endif
 {
-  return (SkipProperty (cssRule));
+  cssRule = SkipProperty (cssRule);
+  return (cssRule);
 }
 
 /*----------------------------------------------------------------------
@@ -2370,7 +2403,8 @@ CSSInfoPtr          css;
 boolean             isHTML;
 #endif
 {
-  return (SkipProperty (cssRule));
+  cssRule = SkipProperty (cssRule);
+  return (cssRule);
 }
 
 
@@ -2390,7 +2424,8 @@ CSSInfoPtr          css;
 boolean             isHTML;
 #endif
 {
-  return (SkipProperty (cssRule));
+  cssRule = SkipProperty (cssRule);
+  return (cssRule);
 }
 
 /*----------------------------------------------------------------------
@@ -2409,7 +2444,8 @@ CSSInfoPtr          css;
 boolean             isHTML;
 #endif
 {
-  return (SkipProperty (cssRule));
+  cssRule = SkipProperty (cssRule);
+  return (cssRule);
 }
 
 /*----------------------------------------------------------------------
@@ -2427,7 +2463,8 @@ CSSInfoPtr          css;
 boolean             isHTML;
 #endif
 {
-  return (SkipProperty (cssRule));
+  cssRule = SkipProperty (cssRule);
+  return (cssRule);
 }
 
 /*----------------------------------------------------------------------

@@ -229,7 +229,6 @@ typedef struct _PresentationSetting
  *      handler is called on for all presentation contexts found
  *      on the target. Param is passed to the handler.
  */
-
 typedef void        (*PresentationContextApplyHandler)
                     (PresentationTarget target, PresentationContext cond, void *param);
 
@@ -242,7 +241,6 @@ extern void         ApplyAllPresentationContext (PresentationTarget target,
  *      handler is called on for all presentation settings found
  *      on the target, within the given presentation context.
  */
-
 typedef void        (*PresentationSettingsApplyHandler)
                     (PresentationTarget target, PresentationContext cond,
 		     PresentationSetting setting, void *param);
@@ -255,7 +253,6 @@ extern void         ApplyAllPresentationSettings (PresentationTarget target,
  * PresentationSetFunction : routine used to modify one kind of
  *           presentation attribute, eg foreground color.
  */
-
 typedef int         (*PresentationSetFunction) (PresentationTarget target,
 			   PresentationContext cond, PresentationValue val);
 
@@ -267,7 +264,6 @@ typedef int         (*PresentationSet2Function) (PresentationTarget target,
  * PresentationGetFunction : routine used to read one kind of
  *           presentation attribute, eg foreground color.
  */
-
 typedef int         (*PresentationGetFunction) (PresentationTarget target,
 			 PresentationContext cond, PresentationValue * val);
 
@@ -276,38 +272,10 @@ typedef int         (*PresentationGet2Function) (PresentationTarget target,
 			PresentationValue * val1, PresentationValue * val2);
 
 /*
- * Functions used to convert between external and internal presentation
- * representation, i.e PresentationValue's and PRule's .
- */
-
-#ifdef __STDC__
-void                PresentationValueToPRule (PresentationValue val,
-                                              int type, PRule pRule,
-					      int specific,
-					      boolean absolute);
-PresentationValue   PRuleToPresentationValue (PRule pRule);
-void                PRuleToPresentationSetting (PRule pRule,
-                                                PresentationSetting setting,
-						int extra);
-
-#else
-void                PresentationValueToPRule (	/* PresentationValue val,
-                                                   int type, PRule pRule,
-						   int specific,
-					           boolean absolute */ );
-PresentationValue   PRuleToPresentationValue ( /* PRule pRule */ );
-void                PRuleToPresentationSetting ( /* PRule pRule,
-                                                    PresentationSetting setting,
-						    int extra */ );
-
-#endif
-
-/*
  * PresentationStrategy : set of routines offered in standard
  *          by a presentation driver. This is a list of reading and
  *          modifying routines for each kind of attributes.
  */
-
 typedef struct struct_PresentationStrategy
   {
      PresentationSetFunction CleanPresentation;
@@ -349,41 +317,47 @@ typedef struct struct_PresentationStrategy
      PresentationGetFunction GetFillPattern;
      PresentationSetFunction SetFillPattern;
 
-     PresentationGetFunction GetVPos;
-     PresentationSetFunction SetVPos;
+     PresentationGetFunction GetTMargin;
+     PresentationSetFunction SetTMargin;
 
-     PresentationGetFunction GetHPos;
-     PresentationSetFunction SetHPos;
+     PresentationGetFunction GetLMargin;
+     PresentationSetFunction SetLMargin;
 
      PresentationGetFunction GetHeight;
      PresentationSetFunction SetHeight;
 
-     PresentationGetFunction GetRelHeight;
-     PresentationSetFunction SetRelHeight;
-
      PresentationGetFunction GetWidth;
      PresentationSetFunction SetWidth;
 
-     PresentationGetFunction GetRelWidth;
-     PresentationSetFunction SetRelWidth;
+     PresentationGetFunction GetBMargin;
+     PresentationSetFunction SetBMargin;
+
+     PresentationGetFunction GetRMargin;
+     PresentationSetFunction SetRMargin;
 
      PresentationGetFunction GetInLine;
      PresentationSetFunction SetInLine;
 
-     PresentationGetFunction GetShow;
-     PresentationSetFunction SetShow;
-
      PresentationGetFunction GetBox;
      PresentationSetFunction SetBox;
-
-     PresentationGetFunction GetShowBox;
-     PresentationSetFunction SetShowBox;
 
      PresentationGetFunction GetBgImage;
      PresentationSetFunction SetBgImage;
 
      PresentationGetFunction GetPictureMode;
      PresentationSetFunction SetPictureMode;
+
+     PresentationGetFunction GetShowBox;
+     PresentationSetFunction SetShowBox;
+
+     PresentationGetFunction GetHidden;
+     PresentationSetFunction SetHidden;
+
+     PresentationGetFunction GetHOverflow;
+     PresentationSetFunction SetHOverflow;
+
+     PresentationGetFunction GetVOverflow;
+     PresentationSetFunction SetVOverflow;
   }
 PresentationStrategy;
 

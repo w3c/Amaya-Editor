@@ -25,7 +25,7 @@ extern STRING UpdateCSSBackgroundImage ( STRING oldpath,
                                          STRING imgpath,
                                          STRING styleString );
 extern STRING GetCSSBackgroundURL ( STRING styleString );
-extern void ParseHTMLSpecificStyle ( Element elem,
+extern void ParseHTMLSpecificStyle ( Element el,
                                      STRING cssRule,
                                      Document doc,
                                      boolean destroy );
@@ -94,7 +94,7 @@ extern STRING UpdateCSSBackgroundImage (/* STRING oldpath,
                                            STRING imgpath,
                                            STRING styleString */);
 extern STRING GetCSSBackgroundURL (/* STRING styleString */);
-extern void ParseHTMLSpecificStyle (/* Element elem,
+extern void ParseHTMLSpecificStyle (/* Element el,
                                        STRING cssRule,
                                        Document doc,
                                        boolean destroy */);

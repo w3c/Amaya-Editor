@@ -49,42 +49,38 @@ SpecificContextBlock, *SpecificContext;
 /* A specific presentation value is made of a value and an unit */
 typedef PresentationValue SpecificValue;
 
-#define SPECIFIC_FONT_STYLE_BOLD		StyleBold
-#define SPECIFIC_FONT_STYLE_ROMAN		StyleRoman
-#define SPECIFIC_FONT_STYLE_ITALICS		StyleItalics
-#define SPECIFIC_FONT_STYLE_BOLD_ITALICS	StyleBoldItalics
-#define SPECIFIC_FONT_STYLE_OBLIQUE		StyleOblique
-#define SPECIFIC_FONT_STYLE_BOLD_OBLIQUE	StyleBoldOblique
-
 /* The strategy block for this driver */
 extern PresentationStrategy SpecificStrategy;
 
 /* browse functions callbacks */
-typedef void        (*SpecificContextApplyHandler)
-                    (SpecificTarget target, SpecificContext cond, void *param);
+typedef void    (*SpecificContextApplyHandler) (SpecificTarget target, SpecificContext cond, void *param);
 
-typedef void        (*SpecificSettingsApplyHandler)
-                    (SpecificTarget target, SpecificContext cond,
-		     PresentationSetting setting, void *param);
+typedef void    (*SpecificSettingsApplyHandler) (SpecificTarget target, SpecificContext cond, PresentationSetting setting, void *param);
 
 /* functions definitions */
 #ifdef __STDC__
-SpecificContext     GetSpecificContext (Document doc);
-void                FreeSpecificContext (SpecificContext ctxt);
-void                ApplyAllSpecificContext (Document doc, SpecificTarget target,
-			  SpecificContextApplyHandler handler, void *param);
-void                ApplyAllSpecificSettings (SpecificTarget target,
-		 SpecificContext cond, SpecificSettingsApplyHandler handler,
-					      void *param);
+SpecificContext GetSpecificContext (Document doc);
+void            FreeSpecificContext (SpecificContext ctxt);
+void            ApplyAllSpecificContext (Document doc,
+					 SpecificTarget target,
+					 SpecificContextApplyHandler handler,
+					 void *param);
+void            ApplyAllSpecificSettings (SpecificTarget target,
+					  SpecificContext cond,
+					  SpecificSettingsApplyHandler handler,
+					  void *param);
 
 #else  /* __STDC__ */
-SpecificContext     GetSpecificContext ( /* doc */ )
-void                FreeSpecificContext ( /* ctxt */ );
-void                ApplyAllSpecificContext (	/* Document doc, SpecificTarget target,
-						   SpecificContextApplyHandler handler, void *param */ );
-void                ApplyAllSpecificSettings (	/* SpecificTarget target,
-						   SpecificContext cond, SpecificSettingsApplyHandler handler,
-						   void *param */ );
+SpecificContext GetSpecificContext (/* doc */)
+void            FreeSpecificContext (/* ctxt */);
+void            ApplyAllSpecificContext (/* Document doc,
+					    SpecificTarget target,
+					    SpecificContextApplyHandler handler,
+					    void *param */);
+void            ApplyAllSpecificSettings (/* SpecificTarget target,
+					     SpecificContext cond,
+					     SpecificSettingsApplyHandler handler,
+					     void *param */);
 
 #endif /* __STDC__ */
 #endif /* __SPECIFIC_DRIVER_H__ */
