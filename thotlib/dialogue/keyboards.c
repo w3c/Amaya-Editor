@@ -1,6 +1,3 @@
-
-/* -- Copyright (c) 1990 - 1994 Inria/CNRS  All rights reserved. -- */
-/* I. Vatton    Septembre 1994 */
 /* Module de visualisation des claviers. */
 
 
@@ -43,7 +40,7 @@ static int          KbX = 800;
 static int          KbY = 100;
 static ThotGC       GCkey;
 
-/* Data pour les claviers */
+/* data for the keyboards */
 /*iso */
 static ITEM         Items_Grec[] =
 {
@@ -405,15 +402,15 @@ ThotGC              GClocal;
 
 #endif /* __STDC__ */
 {
-   int                 longueur;
+   int                 length;
 
-   longueur = 1;
+   length = 1;
 #ifdef NEW_WILLOWS
    /* DrawTextEx or some such thing - @@@ */
 #else
    XSetFont (TtDisplay, GClocal, ((XFontStruct *) font)->fid);
    FontOrig (font, ch, &x, &y);
-   XDrawString (TtDisplay, w, GClocal, x, y, &ch, longueur);
+   XDrawString (TtDisplay, w, GClocal, x, y, &ch, length);
 #endif
 }
 
@@ -512,12 +509,12 @@ XmDrawnButtonCallbackStruct *infos;
 /* |    CreateKeyboard cree un clavier.                                 | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-static void         CreateKeyboard (int number, char *title, ptrfont font, int col, int x, int y, ITEM * items, int nbitem)
+static void         CreateKeyboard (int number, char *title, ptrfont pFont, int col, int x, int y, ITEM * items, int nbitem)
 #else  /* __STDC__ */
 static void         CreateKeyboard (number, title, font, col, x, y, items, nbitem)
 int                 number;
 char               *title;
-ptrfont             font;
+ptrfont             pFont;
 int                 col;
 int                 x;
 int                 y;
@@ -534,12 +531,12 @@ int                 nbitem;
    Arg                 args[MAX_ARGS];
    XmString            title_string;
    XmFontList          xfont;
-   char                chaine[10];
+   char                string[10];
    int                 param;
    XGCValues           GCmodel;
 
    n = 0;
-   sprintf (chaine, "+%d+%d", x, y);
+   sprintf (string, "+%d+%d", x, y);
    XtSetArg (args[n], XmNx, (Position) x);
    n++;
    XtSetArg (args[n], XmNy, (Position) y);
@@ -672,14 +669,14 @@ int                 nbitem;
 	n++;
 	XtSetArg (args[n], XmNmarginHeight, 4);
 	n++;
-	xfont = XmFontListCreate ((XFontStruct *) font, XmSTRING_DEFAULT_CHARSET);
+	xfont = XmFontListCreate ((XFontStruct *) pFont, XmSTRING_DEFAULT_CHARSET);
 	XtSetArg (args[n], XmNfontList, xfont);
 	n++;
 	for (i = 0; i < nbitem; i++, it++)
 	  {
-	     chaine[0] = it->name;
-	     chaine[1] = '\0';
-	     w = XmCreatePushButton (row, chaine, args, n);
+	     string[0] = it->name;
+	     string[1] = '\0';
+	     w = XmCreatePushButton (row, string, args, n);
 	     XtManageChild (w);
 	     XtAddCallback (w, XmNactivateCallback, (XtCallbackProc) RetourKbd, (XtPointer) (param + (int) (it->value)));
 	  }			/*for */
@@ -694,13 +691,13 @@ int                 nbitem;
 	n++;
 	XtSetArg (args[n], XmNwidth, (Dimension) CarWidth (87, FontDialogue) * 3);
 	n++;
-	XtSetArg (args[n], XmNheight, (Dimension) FontHeight (font) + FontHeight (FontDialogue) + 4);
+	XtSetArg (args[n], XmNheight, (Dimension) FontHeight (pFont) + FontHeight (FontDialogue) + 4);
 	n++;
 
 	for (i = 0; i < nbitem; i++, it++)
 	  {
-	     chaine[0] = it->name;
-	     chaine[1] = '\n';
+	     string[0] = it->name;
+	     string[1] = '\n';
 	     w = XmCreateDrawnButton (row, "", args, n);
 	     XtManageChild (w);
 	     XtAddCallback (w, XmNactivateCallback, (XtCallbackProc) RetourKbd, (XtPointer) (param + (int) (it->value)));
@@ -724,8 +721,8 @@ int                 number;
 #endif /* __STDC__ */
 
 {
-   ptrfont             FonteAc;
-   ptrfont             FontIg;
+   ptrfont             pFontAc;
+   ptrfont             pFontIg;
 
    switch (number)
 	 {
@@ -740,21 +737,21 @@ int                 number;
 	       KbX, KbY, Items_Graph, sizeof (Items_Graph) / sizeof (ITEM));
 	       break;
 	    case 2:		/* ISO latin 1 */
-	       FonteAc = ReadFont ('L', 'T', 0, 14, UnPoint);
-	       if (!FonteAc)
-		  FonteAc = FontDialogue;
-	       KbFonts[number] = FonteAc;	/* Latin */
-	       if (FonteAc != NULL)
-		  CreateKeyboard (number, TtaGetMessage (LIB, LATIN_ALPHABET), FonteAc, 13,
+	       pFontAc = ReadFont ('L', 'T', 0, 14, UnPoint);
+	       if (!pFontAc)
+		  pFontAc = FontDialogue;
+	       KbFonts[number] = pFontAc;	/* Latin */
+	       if (pFontAc != NULL)
+		  CreateKeyboard (number, TtaGetMessage (LIB, LATIN_ALPHABET), pFontAc, 13,
 		  KbX, KbY, Items_Isol, sizeof (Items_Isol) / sizeof (ITEM));
 	       break;
 	    case 3:		/* Grec */
-	       FontIg = ReadFont ('G', 'T', 0, 14, UnPoint);
-	       if (!FontIg)
-		  FontIg = FontDialogue;
-	       if (FontIg != NULL)
-		  KbFonts[number] = FontIg;	/* Grec */
-	       CreateKeyboard (number, TtaGetMessage (LIB, GREEK_ALPHABET), FontIg, 16,
+	       pFontIg = ReadFont ('G', 'T', 0, 14, UnPoint);
+	       if (!pFontIg)
+		  pFontIg = FontDialogue;
+	       if (pFontIg != NULL)
+		  KbFonts[number] = pFontIg;	/* Grec */
+	       CreateKeyboard (number, TtaGetMessage (LIB, GREEK_ALPHABET), pFontIg, 16,
 		 KbX, KbY, Items_Grec, sizeof (Items_Grec) / sizeof (ITEM));
 	       break;
 	 }
