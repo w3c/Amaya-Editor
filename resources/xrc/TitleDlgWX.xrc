@@ -10,7 +10,9 @@
         <object class="wxBoxSizer">
           <orient>wxHORIZONTAL</orient>
           <object class="sizeritem">
-            <object class="wxTextCtrl" name="wxID_TITLE"/>
+            <object class="wxTextCtrl" name="wxID_TITLE">
+              <style>wxTE_PROCESS_ENTER</style>
+            </object>
             <option>1</option>
             <flag>wxEXPAND</flag>
           </object>

@@ -14,9 +14,9 @@
 // Event table: connect the events to the handler functions to process them
 //-----------------------------------------------------------------------------
 BEGIN_EVENT_TABLE(TitleDlgWX, wxDialog)
-  EVT_BUTTON( XRCID("wxID_CONFIRMBUTTON"), TitleDlgWX::OnConfirmButton )
-  EVT_BUTTON( XRCID("wxID_CANCELBUTTON"), TitleDlgWX::OnCancelButton )
-  EVT_TEXT_ENTER( XRCID("wxID_TITLE"), TitleDlgWX::OnConfirmButton )
+  EVT_BUTTON(     XRCID("wxID_CONFIRMBUTTON"), TitleDlgWX::OnConfirmButton )
+  EVT_BUTTON(     XRCID("wxID_CANCELBUTTON"),  TitleDlgWX::OnCancelButton )
+  EVT_TEXT_ENTER( XRCID("wxID_TITLE"),         TitleDlgWX::OnConfirmButton )
 END_EVENT_TABLE()
 
 /*----------------------------------------------------------------------
@@ -42,7 +42,6 @@ TitleDlgWX::TitleDlgWX( wxWindow* parent,
   XRCCTRL(*this, "wxID_CANCELBUTTON", wxButton)->SetLabel(wxString(TtaGetMessage (LIB, TMSG_CANCEL), AmayaApp::conv_ascii));
   XRCCTRL(*this, "wxID_CONFIRMBUTTON", wxButton)->SetLabel(wxString(TtaGetMessage (LIB, TMSG_LIB_CONFIRM), AmayaApp::conv_ascii));
   XRCCTRL(*this, "wxID_TITLE", wxTextCtrl)->SetValue(doc_title);
-
 
   Layout();
   
