@@ -995,11 +995,14 @@ BOXES
 
  IMG_ALT: BEGIN
 	Visibility: 0;
-	Content: (Text ' ' ALT);
+	Content: (ALT);
 {****	IN Links_view
 		Visibility: 7; ****}
-	IN Alternate_view
+	IN Alternate_view BEGIN
+		MarginLeft: 1 px;
+		MarginRight: 1 px;
 		Visibility: 7;
+		END;
 	END;
 
  SPACE: BEGIN
