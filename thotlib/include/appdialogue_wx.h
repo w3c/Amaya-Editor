@@ -5,7 +5,12 @@
 
 #include "constmenu.h"
 
+/* amaya need to know this function in order to launch callbacks */
 extern void          ThotCallback ( int ref, int typedata, char *data );
+/* amaya need to know thotlib color list in order to setup the dialogs */
+extern int           NumberOfColors ( void );
+extern char *        ColorName ( int num );
+
 extern int           TtaGetWindowNumber( );
 extern AmayaWindow * TtaGetWindowFromId( int window_id );
 extern void          TtaCloseWindow( int window_id );

@@ -59,6 +59,8 @@ private:
   void SetupDialog_Color( const Prop_Color & prop );
   Prop_Color GetValueDialog_Color();
   void OnColorPalette( wxCommandEvent& event );
+  void OnColorChanged( wxCommandEvent& event );
+  void OnColorTextChanged( wxCommandEvent& event );
 
   int GetPagePosFromXMLID( const wxString & xml_id );
 

@@ -35,7 +35,15 @@ BEGIN_EVENT_TABLE(PreferenceDlgWX, AmayaDialog)
   EVT_BUTTON(     XRCID("wxID_BUTTON_BACKCOLOR"),    PreferenceDlgWX::OnColorPalette )
   EVT_BUTTON(     XRCID("wxID_BUTTON_SELCOLOR"),     PreferenceDlgWX::OnColorPalette )
   EVT_BUTTON(     XRCID("wxID_BUTTON_SELBACKCOLOR"), PreferenceDlgWX::OnColorPalette )
-
+  EVT_COMBOBOX( XRCID("wxID_COMBO_SELBACKCOLOR"),    PreferenceDlgWX::OnColorChanged )
+  EVT_COMBOBOX( XRCID("wxID_COMBO_SELCOLOR"),        PreferenceDlgWX::OnColorChanged )
+  EVT_COMBOBOX( XRCID("wxID_COMBO_BACKCOLOR"),       PreferenceDlgWX::OnColorChanged )
+  EVT_COMBOBOX( XRCID("wxID_COMBO_TEXTCOLOR"),       PreferenceDlgWX::OnColorChanged )
+  EVT_TEXT( XRCID("wxID_COMBO_SELBACKCOLOR"),    PreferenceDlgWX::OnColorTextChanged )
+  EVT_TEXT( XRCID("wxID_COMBO_SELCOLOR"),        PreferenceDlgWX::OnColorTextChanged )
+  EVT_TEXT( XRCID("wxID_COMBO_BACKCOLOR"),       PreferenceDlgWX::OnColorTextChanged )
+  EVT_TEXT( XRCID("wxID_COMBO_TEXTCOLOR"),       PreferenceDlgWX::OnColorTextChanged )
+  
 END_EVENT_TABLE()
 
 /*----------------------------------------------------------------------
@@ -579,6 +587,20 @@ void PreferenceDlgWX::SetupLabelDialog_Color()
   XRCCTRL(*this, "wxID_LABEL_SELBACKCOLOR", wxStaticText)->SetLabel( TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_BG_SEL_COLOR)) );
 
   XRCCTRL(*this, "wxID_LABEL_COLORGEOCHG", wxStaticText)->SetLabel( TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_GEOMETRY_CHANGE)) );
+
+  // setup combobox choices
+  int    id_color   = 0;
+  char * color_name = NULL;
+  while (id_color < NumberOfColors())
+    {
+      color_name = ColorName(id_color);
+      XRCCTRL(*this, "wxID_COMBO_SELBACKCOLOR",  wxComboBox)->Append( TtaConvMessageToWX(color_name) );
+      XRCCTRL(*this, "wxID_COMBO_SELCOLOR",      wxComboBox)->Append( TtaConvMessageToWX(color_name) );
+      XRCCTRL(*this, "wxID_COMBO_BACKCOLOR",     wxComboBox)->Append( TtaConvMessageToWX(color_name) );
+      XRCCTRL(*this, "wxID_COMBO_TEXTCOLOR",     wxComboBox)->Append( TtaConvMessageToWX(color_name) );
+      id_color++;
+    }
+
 }
 
 /*----------------------------------------------------------------------
@@ -601,7 +623,6 @@ void PreferenceDlgWX::SetupDialog_Color( const Prop_Color & prop )
   unsigned short      green;
   unsigned short      blue;
   TtaGiveRGB ((char *)prop.BgSelColor, &red, &green, &blue);
-  // Color tab callbacks
   XRCCTRL(*this, "wxID_BUTTON_SELBACKCOLOR",  wxBitmapButton)->SetBackgroundColour( wxColour(red, green, blue) );
   TtaGiveRGB ((char *)prop.FgSelColor, &red, &green, &blue);
   XRCCTRL(*this, "wxID_BUTTON_SELCOLOR",      wxBitmapButton)->SetBackgroundColour( wxColour(red, green, blue) );
@@ -682,33 +703,74 @@ void PreferenceDlgWX::OnColorPalette( wxCommandEvent& event )
     wxComboBox *     p_combo  = NULL;
     wxBitmapButton * p_button = NULL;
     if (event.GetId() == textcolor_id)
-      {
 	p_combo = XRCCTRL(*this, "wxID_COMBO_TEXTCOLOR", wxComboBox);
-	p_button = XRCCTRL(*this, "wxID_BUTTON_TEXTCOLOR", wxBitmapButton);
-      }
     else if (event.GetId() == backcolor_id)
-      {
 	p_combo = XRCCTRL(*this, "wxID_COMBO_BACKCOLOR", wxComboBox);
-	p_button = XRCCTRL(*this, "wxID_BUTTON_BACKCOLOR", wxBitmapButton);
-      }
     else if (event.GetId() == selcolor_id)
-      {
 	p_combo = XRCCTRL(*this, "wxID_COMBO_SELCOLOR", wxComboBox);
-	p_button = XRCCTRL(*this, "wxID_BUTTON_SELCOLOR", wxBitmapButton);
-      }
     else if (event.GetId() == selbackcolor_id)
-      {
-	p_combo = XRCCTRL(*this, "wxID_COMBO_SELBACKCOLOR", wxComboBox);
-	p_button = XRCCTRL(*this, "wxID_BUTTON_SELBACKCOLOR", wxBitmapButton);
-      }
-    
+	p_combo = XRCCTRL(*this, "wxID_COMBO_SELBACKCOLOR", wxComboBox);    
     if (p_combo)
       p_combo->SetValue( TtaConvMessageToWX(color_string) );
-    if (p_button)
-      p_button->SetBackgroundColour( col );
   }
 }
 
+/*----------------------------------------------------------------------
+  OnColorChanged is called when the used select something is the popup list
+  (not used)
+  params:
+  returns:
+  ----------------------------------------------------------------------*/
+void PreferenceDlgWX::OnColorChanged( wxCommandEvent& event )
+{
+  wxLogDebug( _T("PreferenceDlgWX::OnColorChanged") );
+  event.Skip();
+}
+
+/*----------------------------------------------------------------------
+  OnColorTextChanged is called when a new color is selected
+  then the background color of wxBitmapButton is updated to the right color
+  params:
+  returns:
+  ----------------------------------------------------------------------*/
+void PreferenceDlgWX::OnColorTextChanged( wxCommandEvent& event )
+{
+  wxLogDebug( _T("PreferenceDlgWX::OnColorTextChanged") );
+
+  // get the combobox values and convert the string to a wxColour object
+  wxString value1;
+  wxString value2;
+  wxString value3;
+  wxString value4;
+  unsigned short      red;
+  unsigned short      green;
+  unsigned short      blue;
+  char buffer[512];
+  value1 = XRCCTRL(*this, "wxID_COMBO_TEXTCOLOR", wxComboBox)->GetValue();
+  value2 = XRCCTRL(*this, "wxID_COMBO_BACKCOLOR", wxComboBox)->GetValue();
+  value3 = XRCCTRL(*this, "wxID_COMBO_SELCOLOR", wxComboBox)->GetValue();
+  value4 = XRCCTRL(*this, "wxID_COMBO_SELBACKCOLOR", wxComboBox)->GetValue();
+  strcpy(buffer, (const char*)value1.mb_str(wxConvUTF8) );
+  TtaGiveRGB (buffer, &red, &green, &blue);
+  wxColour col1( red, green, blue );
+  strcpy(buffer, (const char*)value2.mb_str(wxConvUTF8) );
+  TtaGiveRGB (buffer, &red, &green, &blue);
+  wxColour col2( red, green, blue );
+  strcpy(buffer, (const char*)value3.mb_str(wxConvUTF8) );
+  TtaGiveRGB (buffer, &red, &green, &blue);
+  wxColour col3( red, green, blue );
+  strcpy(buffer, (const char*)value4.mb_str(wxConvUTF8) );
+  TtaGiveRGB (buffer, &red, &green, &blue);
+  wxColour col4( red, green, blue );
+
+  // setup background colours
+  XRCCTRL(*this, "wxID_BUTTON_SELBACKCOLOR",  wxBitmapButton)->SetBackgroundColour( col4 );
+  XRCCTRL(*this, "wxID_BUTTON_SELCOLOR",      wxBitmapButton)->SetBackgroundColour( col3 );
+  XRCCTRL(*this, "wxID_BUTTON_BACKCOLOR",     wxBitmapButton)->SetBackgroundColour( col2 );
+  XRCCTRL(*this, "wxID_BUTTON_TEXTCOLOR",     wxBitmapButton)->SetBackgroundColour( col1 );
+
+  event.Skip();
+}
 
 /*----------------------------------------------------------------------
   OnOk called when the user validates his selection
