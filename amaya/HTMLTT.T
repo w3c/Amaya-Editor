@@ -21,7 +21,7 @@ CONST
   DashLine = '--------------------------------------------------------------';
 VAR
   OUT_AnchorCounter : '[' Value(AnchorCounter) ']';
-  TmpFile : '/tmp/amaya.tmp';
+  TmpFile : 'amaya_XX.tmp';
 
 RULES
 
@@ -89,7 +89,7 @@ RULES
 	Create (DashLine) After;
 	Create '\12' After;
 	Create 'List of References\12\12' After;
-	Include '/tmp/amaya.tmp' After;
+	Include 'amaya_XX.tmp' After;
 	RemoveFile TmpFile After;
 	END;
 

@@ -4617,6 +4617,7 @@ RULES
 		Font: COMMENT_Font;
 		Style: COMMENT_Style; Weight: COMMENT_Weight;
 		Width: Enclosing . Width;
+		VertPos: Top = Previous . Bottom;
 		END;
 	END;
 

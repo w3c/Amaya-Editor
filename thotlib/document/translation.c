@@ -107,45 +107,46 @@ void TtaSetEntityFunction (Proc procedure)
   ----------------------------------------------------------------------*/
 static int GetSecondaryFile (char *fName, PtrDocument pDoc, ThotBool open)
 {
-   int                 i;
+  char                buff[MAX_BUFFER_LEN];
+  int                 i;
 
-   /* on cherche d'abord si ce nom de fichier est dans la table des */
-   /* fichiers secondaires ouverts */
-   /* on saute les deux premiers fichiers, qui sont stdout et le fichier de */
-   /* sortie principal */
-   for (i = 2;
-	i < NOutFiles && strcmp (fName, OutFile[i].OfFileName) != 0;
-	i++) ;
-   if (i < NOutFiles &&
-       strcmp (fName, OutFile[i].OfFileName) == 0)
-     /* le fichier est dans la table, on retourne son rang */
-     return i;
-   else if (!open)
-     return 0;
-   else if (NOutFiles >= MAX_OUTPUT_FILES)
-     /* table saturee */
-     return -1;
-   else
-     {
-     OutFile[NOutFiles].OfFileDesc = fopen (fName, "w");
-     if (OutFile[NOutFiles].OfFileDesc == NULL)
-       {
-       if (!OutFile[NOutFiles].OfCannotOpen)
-	 OutFile[NOutFiles].OfCannotOpen = TRUE;
-       }
-     else
-       /* fichier ouvert */
-       OutFile[NOutFiles].OfCannotOpen = FALSE;
-     strcpy (OutFile[NOutFiles].OfFileName, fName);
-     OutFile[NOutFiles].OfBufferLen = 0;
-     OutFile[NOutFiles].OfLineLen = 0;
-     OutFile[NOutFiles].OfIndent = 0;
-     OutFile[NOutFiles].OfPreviousIndent = 0;
-     OutFile[NOutFiles].OfLineNumber = 0;
-     OutFile[NOutFiles].OfStartOfLine = TRUE;
-     NOutFiles++;
-     return (NOutFiles - 1);
-     }
+  /* on cherche d'abord si ce nom de fichier est dans la table des */
+  /* fichiers secondaires ouverts */
+  /* on saute les deux premiers fichiers, qui sont stdout et le fichier de */
+  /* sortie principal */
+  for (i = 2;
+       i < NOutFiles && strcmp (fName, OutFile[i].OfFileName);
+       i++);
+  if (i < NOutFiles && !strcmp (fName, OutFile[i].OfFileName))
+    /* le fichier est dans la table, on retourne son rang */
+    return i;
+  else if (!open)
+    return 0;
+  else if (NOutFiles >= MAX_OUTPUT_FILES)
+    /* table saturee */
+    return -1;
+  else
+    {
+      sprintf (buff, "%s%c%s", fileDirectory, DIR_SEP, fName);
+      OutFile[NOutFiles].OfFileDesc = fopen (buff, "w");
+      if (OutFile[NOutFiles].OfFileDesc == NULL)
+	{
+	  if (!OutFile[NOutFiles].OfCannotOpen)
+	    OutFile[NOutFiles].OfCannotOpen = TRUE;
+	}
+      else
+	/* fichier ouvert */
+	OutFile[NOutFiles].OfCannotOpen = FALSE;
+      strcpy (OutFile[NOutFiles].OfFileName, fName);
+      OutFile[NOutFiles].OfBufferLen = 0;
+      OutFile[NOutFiles].OfLineLen = 0;
+      OutFile[NOutFiles].OfIndent = 0;
+      OutFile[NOutFiles].OfPreviousIndent = 0;
+      OutFile[NOutFiles].OfLineNumber = 0;
+      OutFile[NOutFiles].OfStartOfLine = TRUE;
+      NOutFiles++;
+      return (NOutFiles - 1);
+    }
 }
 
 
