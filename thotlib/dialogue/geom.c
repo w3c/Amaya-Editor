@@ -1499,7 +1499,7 @@ void PolyLineModification (int frame, int *xOrg, int *yOrg, PtrBox pBox,
 
   /* get the current point */
   RedrawPolyLine (frame, *xOrg, *yOrg, Bbuffer, nbpoints, point, close,
-		  &x1, &y1, &lastx, &lasty, &x3, &y3);
+  &x1, &y1, &lastx, &lasty, &x3, &y3);
   MoveApoint (pBox, frame, *xOrg, *yOrg, x1, y1, x3, y3, lastx, lasty, point, x, y, width, height, Pbuffer, Bbuffer, 0);
 
 #if defined(_WINDOWS) && !defined(_GL)
@@ -2647,7 +2647,6 @@ void GeometryResize (int frame, int x, int y, int *width, int *height,
     ThotGrab (w, HCurs, e, 0);
   else
     ThotGrab (w, HVCurs, e, 0);
-
   Resizing (frame, &x, &y, width, height, box, xmin, xmax, ymin, ymax, xm, ym,
 	  percentW, percentH);
   /* restore the previous state of the Thot Library */

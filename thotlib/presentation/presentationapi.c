@@ -1690,14 +1690,23 @@ void TtaSetPRuleValue (Element element, PRule pRule, int value, Document documen
 
 	 case PtWidth:
 	 case PtHeight:
-	   ((PtrPRule) pRule)->PrDimRule.DrPosition = FALSE;
-	   ((PtrPRule) pRule)->PrDimRule.DrAbsolute = TRUE;
-	   ((PtrPRule) pRule)->PrDimRule.DrSameDimens = FALSE;
-	   ((PtrPRule) pRule)->PrDimRule.DrUnit = UnPoint;
-	   ((PtrPRule) pRule)->PrDimRule.DrAttr = FALSE;
-	   ((PtrPRule) pRule)->PrDimRule.DrMin = 0;
-	   ((PtrPRule) pRule)->PrDimRule.DrUserSpecified = FALSE;
-	   ((PtrPRule) pRule)->PrDimRule.DrValue = value;
+	   if (((PtrPRule) pRule)->PrDimRule.DrPosition)
+	     {
+	       ((PtrPRule) pRule)->PrDimRule.DrPosRule.PoDistUnit = UnPixel;
+	       ((PtrPRule) pRule)->PrDimRule.DrPosRule.PoDistAttr = FALSE;
+	       ((PtrPRule) pRule)->PrDimRule.DrPosRule.PoDistance = value;
+	     }
+	   else
+	     {
+	       ((PtrPRule) pRule)->PrDimRule.DrPosition = FALSE;
+	       ((PtrPRule) pRule)->PrDimRule.DrAbsolute = TRUE;
+	       ((PtrPRule) pRule)->PrDimRule.DrSameDimens = FALSE;
+	       ((PtrPRule) pRule)->PrDimRule.DrUnit = UnPoint;
+	       ((PtrPRule) pRule)->PrDimRule.DrAttr = FALSE;
+	       ((PtrPRule) pRule)->PrDimRule.DrMin = 0;
+	       ((PtrPRule) pRule)->PrDimRule.DrUserSpecified = FALSE;
+	       ((PtrPRule) pRule)->PrDimRule.DrValue = value;
+	     }
 	   break;
 
 	 case PtHyphenate:
