@@ -81,12 +81,12 @@ extern void         TtaRegisterElementDelete (Document document, Element element
 extern void        TtaRegisterElementReplace (Document document, Element element);
 
 /* ----------------------------------------------------------------------
-   TtaClearHistory
+   TtaClearUndoHistory
 
-   Clears the previous registered sequence of editing operarations
-
+   Clears the last sequence of editing operarations registered in the
+   editing history of document.
   ----------------------------------------------------------------------*/
-extern void         TtaClearHistory (Document document);
+extern void         TtaClearUndoHistory (Document document);
 
 #else  /* __STDC__ */
 extern void          TtaOpenUndoSequence (/* Document document, Element firstSel,Element lastSel, int firstSelChar, int lastSelChar */);
@@ -94,7 +94,7 @@ extern void          TtaCloseUndoSequence (/* Document document */);
 extern void         TtaRegisterElementCreate (/* Document document, Element element */);
 extern void         TtaRegisterElementDelete (/* Document document, Element element */);
 extern void         TtaRegisterElementReplace (/* Document document, Element element */);
-extern void         TtaClearHistory (/* Document document */);
+extern void         TtaClearUndoHistory (/* Document document */);
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */
 

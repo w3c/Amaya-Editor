@@ -1124,7 +1124,7 @@ STRING              text;
 
 /*----------------------------------------------------------------------
    TextTitle
-   The Tile text field in a document window has been modified by the user
+   The Title text field in a document window has been modified by the user
    Update the TITLE element for the corresponding document.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -1150,6 +1150,8 @@ STRING              text;
      UpdateTitle (el, document);
    else
      {
+       TtaOpenUndoSequence (document, NULL, NULL, 0, 0);
+       TtaRegisterElementReplace (document, el);
        child = TtaGetFirstChild (el);
        if (child == NULL)
 	 {
@@ -1159,6 +1161,7 @@ STRING              text;
 	   TtaInsertFirstChild  (&child, el, document);
 	 }
        TtaSetTextContent (child, text, TtaGetDefaultLanguage (), document);
+       TtaCloseUndoSequence (document);
        TtaSetDocumentModified (document);
      }
 }

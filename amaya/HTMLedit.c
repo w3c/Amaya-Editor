@@ -786,7 +786,7 @@ NotifyElement      *event;
 
 #endif /* __STDC__ */
 {
-   CheckPseudoParagraph (event->element, event->document);
+  CheckPseudoParagraph (event->element, event->document);
 }
 
 /*----------------------------------------------------------------------
@@ -843,6 +843,8 @@ void ElementDeleted(event)
    Check Pseudo paragraphs.
    If the pasted element has a NAME attribute, change its value if this
    NAME is already used in the document.
+   If it's within the TITLE element, update the corresponding field in
+   the Formatted window.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                ElementPasted (NotifyElement * event)
@@ -854,7 +856,7 @@ NotifyElement      *event;
 {
   Document            originDocument, doc;
   Element             el, anchor, next, child, previous, nextchild, parent;
-  ElementType         elType;
+  ElementType         elType, parentType;
   AttributeType       attrType;
   Attribute           attr;
   SSchema             HTMLschema;
@@ -872,7 +874,17 @@ NotifyElement      *event;
   elType = TtaGetElementType (el);
   anchor = NULL;
   if (elType.ElSSchema == HTMLschema && elType.ElTypeNum == HTML_EL_Anchor)
-    anchor = el;
+      anchor = el;
+  else if (elType.ElTypeNum == HTML_EL_TEXT_UNIT)
+    {  
+      parent = TtaGetParent (event->element);
+      parentType = TtaGetElementType (parent);
+      if (TtaSameSSchemas (parentType.ElSSchema, HTMLschema) &&
+          parentType.ElTypeNum == HTML_EL_TITLE)
+         /* the parent of the pasted text is a TITLE */
+         /* That's probably the result of undoing a change in the TITLE */
+         UpdateTitle (parent, doc);
+    }
   else if (elType.ElTypeNum == HTML_EL_PICTURE_UNIT)
     {
       originDocument = (Document) event->position;

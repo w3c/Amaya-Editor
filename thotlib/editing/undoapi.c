@@ -33,18 +33,18 @@
 
    Parameters:
 
-   document:the concerned document
+   document: the concerned document
    firstSel: indicate the selection that must be set when the operation 
-   will be undone. If null, the current selction is recorded.
-   lastSel:indicate the selection that must be set when the operation 
+   will be undone. If null, the current selection is recorded.
+   lastSel: indicate the selection that must be set when the operation 
    will be undone.
-   firstSelChar:indicate the selection that must be set when the operation 
+   firstSelChar: indicate the selection that must be set when the operation 
    will be undone.
    lastSelChar: indicate the selection that must be set when the operation 
    will be undone.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void          TtaOpenUndoSequence (Document document, Element firstSel,Element lastSel, int firstSelChar, int lastSelChar)
+void          TtaOpenUndoSequence (Document document, Element firstSel, Element lastSel, int firstSelChar, int lastSelChar)
 #else  /* __STDC__ */
 void          TtaOpenUndoSequence (document, firstSel, lastSel, firstSelChar, lastSelChar)
 Document document;
@@ -54,9 +54,7 @@ int firstSelChar;
 int lastSelChar;
 #endif /* __STDC__ */
 {
-  int fc;
-  int lc;
-  Element nextSel;
+  int i;
 
   if (document < 1 || document > MAX_DOCUMENTS)
     {
@@ -67,26 +65,16 @@ int lastSelChar;
       if (firstSel == NULL)
 	{
 	  /* gets the current selection */
-	  /* gets the first selected */
-	  TtaGiveFirstSelectedElement (document, &firstSel, 
-				       &fc, &lc);
-	  nextSel = firstSel;
-	  firstSelChar = fc;
-	  /* lookup the last selected */
-	  while (nextSel != NULL)
-	    {
-	      lastSel = nextSel;
-	      TtaGiveFirstSelectedElement (document, &nextSel, 
-					   &fc, &lc);
-	      lastSelChar = lc;
-	    }
+	  /* gets the first selected element */
+	  TtaGiveFirstSelectedElement (document, &firstSel, &firstSelChar, &i);
+	  /* gets the last selected element */
+	  TtaGiveLastSelectedElement (document, &lastSel, &i, &lastSelChar);
 	}
 
       /* inits the history sequence */
-      if (firstSel != NULL)
-	OpenHistorySequence (LoadedDocument [document - 1], 
-			     (PtrElement)firstSel, (PtrElement)lastSel, 
-			     firstSelChar, lastSelChar);	     
+      OpenHistorySequence (LoadedDocument [document - 1], 
+			   (PtrElement)firstSel, (PtrElement)lastSel, 
+			   firstSelChar, lastSelChar);	     
     }
 }
 
@@ -192,15 +180,15 @@ Element element;
 }
 
 /* ----------------------------------------------------------------------
-   TtaClearHistory
+   TtaClearUndoHistory
 
-   Clears the previous registered sequence of editing operarations
-
+   Clears the last sequence of editing operarations registered in the
+   editing history of document.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void         TtaClearHistory (Document document)
+void         TtaClearUndoHistory (Document document)
 #else /* __STDC__ */
-void         TtaClearHistory (document)
+void         TtaClearUndoHistory (document)
 Document document;
 #endif /* __STDC__ */
 {
