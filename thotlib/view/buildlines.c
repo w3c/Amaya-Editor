@@ -3637,6 +3637,12 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
 		  else
 		    pNextBox = GetNextBox (pLine->LiLastBox->BxAbstractBox, frame);
 		}
+	      if (pBox->BxMaxWidth < pLine->LiRealLength)
+		pBox->BxMaxWidth = pLine->LiRealLength;
+	      pLine->LiRealLength = 0;
+	      if (pLine->LiHeight > *height)
+		*height += pLine->LiHeight;
+	      Align (pBox, pLine, frame, FALSE, xAbs, yAbs);
 	      if (full)
 		{
 		  /* the last box has been broken */
@@ -3644,12 +3650,6 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
 		  still = FALSE;
 		  RemoveBreaks (pLine->LiLastBox, frame, FALSE, &full, &still);
 		}
-	      if (pBox->BxMaxWidth < pLine->LiRealLength)
-		pBox->BxMaxWidth = pLine->LiRealLength;
-	      pLine->LiRealLength = 0;
-	      if (pLine->LiHeight > *height)
-		*height += pLine->LiHeight;
-	      Align (pBox, pLine, frame, FALSE, xAbs, yAbs);
 	    }
 	  while (breakLine && pNextBox);
 
