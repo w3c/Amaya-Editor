@@ -81,6 +81,7 @@ static SchemaMenu_Ctl *SchemasMenuList;
 #include "context_f.h"
 #include "dictionary_f.h"
 #include "viewapi_f.h"
+#include "sortmenu_f.h"
 
 /*----------------------------------------------------------------------
    TteConnectAction rend accessible une action locale (Callback).     

@@ -1,4 +1,4 @@
-
+/*
  * jpegtran.c
  *
  * Copyright (C) 1995, Thomas G. Lane.

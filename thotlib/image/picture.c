@@ -842,6 +842,23 @@ int                 frame;
 #endif /* _WINDOWS */
 }
 
+#ifdef AMAYA_PLUGIN 
+/*----------------------------------------------------------------------
+  For plugins   
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void UnmapImage (PictInfo* imageDesc)
+
+#else /* __STDC__ */
+void UnmapImage (imageDesc)
+PictInfo* imageDesc;
+#endif /* __STDC__ */
+{
+#ifndef NEW_WILLOWS
+#endif /* NEW_WILLOWS */
+}/*UnmapImage*/
+
+#endif /* AMAYA_PLUGIN */
 
 /*----------------------------------------------------------------------
    Requests the picture handlers to get the corresponding pixmaps    

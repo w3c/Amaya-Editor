@@ -9,10 +9,18 @@
 #include "attribute.h"
 #include "reference.h"
 #include "selection.h"
+#include "conststr.h"
+#include "constprs.h"
+#include "constint.h"
+#include "constmedia.h"
+#include "typeint.h"
+#include "typemedia.h"
 #include "tree.h"
 
 static Element      CurrentPastedRow = NULL;
 static Element      CurrentCreatedRow = NULL;
+
+#include "memory_f.h"
 
 /*----------------------------------------------------------------------
    GetCellFromColumnHead
