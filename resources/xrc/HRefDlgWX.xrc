@@ -29,7 +29,7 @@
       </object>
       <object class="sizeritem">
         <option>0</option>
-        <flag>wxALL|wxEXPAND</flag>
+        <flag>wxALL|wxALIGN_RIGHT|wxADJUST_MINSIZE</flag>
         <border>5</border>
         <object class="wxBoxSizer">
           <orient>wxHORIZONTAL</orient>
