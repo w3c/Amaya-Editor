@@ -18,6 +18,7 @@
 #include "css.h"
 #include "SVG.h"
 #include "HTML.h"
+#include "XLink.h"
 #include "parser.h"
 #include "style.h"
 
@@ -507,6 +508,48 @@ void  CopyUseContent (Element el, Document doc, char *href)
 }
 
 /*----------------------------------------------------------------------
+   CheckHrefAttr
+   If element el has a href attribute from the XLink namespace, replace
+   that attribute by a href attribute in the SVG namespace with the
+   same value.
+  ----------------------------------------------------------------------*/
+static void CheckHrefAttr (Element el, Document doc)
+{
+  SSchema     XLinkSSchema;
+  AttributeType        attrType;
+  Attribute            attr;
+  int                  length;
+  char                 *href;
+
+  XLinkSSchema = GetXLinkSSchema (doc);
+  if (XLinkSSchema)
+    /* the XLink namespace is used in that document */
+    {
+      attrType.AttrSSchema = XLinkSSchema;
+      attrType.AttrTypeNum = XLink_ATTR_href_;
+      attr = TtaGetAttribute (el, attrType);
+      if (attr)
+	/* it has an XLink href attribute */
+	{
+	  /* get its value */
+	  length = TtaGetTextAttributeLength (attr);
+	  href = TtaGetMemory (length + 1);
+	  TtaGiveTextAttributeValue (attr, href, &length);
+	  /* delete the XLink href attribute */
+	  TtaRemoveAttribute (el, attr, doc);
+	  /* create a new href attribute in the SVG namespace */
+	  attrType.AttrSSchema = TtaGetElementType(el).ElSSchema;
+	  attrType.AttrTypeNum = SVG_ATTR_xlink_href;
+	  attr = TtaNewAttribute (attrType);
+	  TtaAttachAttribute (el, attr, doc);
+	  /* copy the value */
+	  TtaSetAttributeText (attr, href, el, doc);
+	  TtaFreeMemory (href);
+	}
+    }
+}
+
+/*----------------------------------------------------------------------
    SVGElementComplete
    Check the Thot structure of the SVG element el.
   ----------------------------------------------------------------------*/
@@ -567,17 +610,24 @@ void SVGElementComplete (Element el, Document doc, int *error)
      switch (elType.ElTypeNum)
        {
        case SVG_EL_image:
-	 /* it's an image element, create a PICTURE_UNIT child */
-	 /* create the graphical element */
+	 /* it's an image element */
+	 /* create a PICTURE_UNIT child */
 	 newType.ElSSchema = elType.ElSSchema;
 	 newType.ElTypeNum = SVG_EL_PICTURE_UNIT;
 	 leaf = TtaNewElement (doc, newType);
 	 TtaInsertFirstChild (&leaf, el, doc);
+	 /* if it has a href attribute from the XLink namespace, replace
+	    that attribute by a href attribute from the SVG namespace */
+	 CheckHrefAttr (el, doc);
 	 break;
 
        case SVG_EL_use_:
-	 /* it's a use element, make a transclusion of the element addressed
-	    by its xlink_href attribute after the last child */
+	 /* it's a use element */
+	 /* if it has a href attribute from the XLink namespace, replace
+	    that attribute by a href attribute from the SVG namespace */
+	 CheckHrefAttr (el, doc);
+	 /* make a transclusion of the element addressed by its xlink_href
+	    attribute after the last child */
          /* first, get the xlink:href attribute */
 	 attrType.AttrSSchema = elType.ElSSchema;
 	 attrType.AttrTypeNum = SVG_ATTR_xlink_href;
@@ -592,6 +642,13 @@ void SVGElementComplete (Element el, Document doc, int *error)
 	     CopyUseContent (el, doc, href);
 	     TtaFreeMemory (href);
 	   }
+	 break;
+
+       case SVG_EL_a:
+	 /* it's an anchor element */
+	 /* if it has a href attribute from the XLink namespace, replace
+	    that attribute by a href attribute from the SVG namespace */
+	 CheckHrefAttr (el, doc);
 	 break;
 
        case SVG_EL_style__:
