@@ -95,15 +95,7 @@ static CHAR_T         fileExtension[MAX_PATH];
    If open is True, the file is opened if it not open yet.
    Otherwise, the function returns 0 when the file is not open.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static int          GetSecondaryFile (STRING fName, PtrDocument pDoc, ThotBool open)
-
-#else  /* __STDC__ */
-static int          GetSecondaryFile (fName, pDoc, open)
-STRING              fName;
-PtrDocument         pDoc;
-ThotBool	    open;
-#endif /* __STDC__ */
+static int GetSecondaryFile (STRING fName, PtrDocument pDoc, ThotBool open)
 {
    int                 i;
 
@@ -160,18 +152,8 @@ ThotBool	    open;
   If the parameter translate is FALSE the charter is written as it is.
   In other case it will be translated according to the document encoding.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void    PutChar (wchar_t c, int fileNum, STRING outBuffer,
-			PtrDocument pDoc, ThotBool lineBreak, ThotBool translate)
-#else  /* __STDC__ */
-static void    PutChar (c, fileNum, outBuffer, pDoc, lineBreak, translate)
-wchar_t        c;
-int            fileNum;
-STRING         outBuffer;
-PtrDocument    pDoc;
-ThotBool       lineBreak;
-ThotBool       translate;
-#endif /* __STDC__ */
+static void PutChar (wchar_t c, int fileNum, STRING outBuffer,
+		     PtrDocument pDoc, ThotBool lineBreak, ThotBool translate)
 {
   PtrTSchema          pTSch;
   FILE               *fileDesc;
@@ -344,80 +326,61 @@ ThotBool       translate;
    PutColor        sort dans fichier le nom de la couleur qui se	
    trouve au rang n dans la table des couleurs.                   
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void PutColor (int n, int fileNum, PtrDocument pDoc, ThotBool lineBreak)
-#else  /* __STDC__ */
-static void         PutColor (n, fileNum, pDoc, lineBreak)
-int                 n;
-int                 fileNum;
-PtrDocument         pDoc;
-ThotBool            lineBreak;
-#endif /* __STDC__ */
 {
-   int                 i;
-   CHAR_T*             ptr;
+  CHAR_T             *ptr;
+  CHAR_T              c;
+  int                 i;
 
-   if (n < NColors && n >= 0)
-     {
-     ptr = Color_Table[n];
-     i = 0;
-     while (ptr[i] != EOS)
-       PutChar ((wchar_t) ptr[i++], fileNum, NULL, pDoc, lineBreak, FALSE);
-     }
+  if (n < NColors && n >= 0)
+    {
+      ptr = Color_Table[n];
+      i = 0;
+      while (ptr[i] != EOS)
+	{
+	  c = ptr[i++];
+	  PutChar ((wchar_t) c, fileNum, NULL, pDoc, lineBreak, FALSE);
+	}
+    }
 }
 
 /*----------------------------------------------------------------------
    PutPattern  sort dans fichier le nom du motif qui se trouve au	
    rang n dans la table des motifs.				
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void PutPattern (int n, int fileNum, PtrDocument pDoc, ThotBool lineBreak)
-#else  /* __STDC__ */
-static void         PutPattern (n, fileNum, pDoc, lineBreak)
-int                 n;
-int                 fileNum;
-PtrDocument         pDoc;
-ThotBool            lineBreak;
-#endif /* __STDC__ */
 {
-   int                 i;
-   CHAR_T*             ptr;
+  CHAR_T             *ptr;
+  CHAR_T              c;
+  int                 i;
 
-   if (n < NbPatterns && n >= 0)
-     {
-     ptr = Patterns[n];
-     i = 0;
-     while (ptr[i] != EOS)
-       PutChar ((wchar_t) ptr[i++], fileNum, NULL, pDoc, lineBreak, FALSE);
-     }
+  if (n < NbPatterns && n >= 0)
+    {
+      ptr = Patterns[n];
+      i = 0;
+      while (ptr[i] != EOS)
+	{
+	  c = ptr[i++];
+	  PutChar ((wchar_t) c, fileNum, NULL, pDoc, lineBreak, FALSE);
+	}
+    }
 }
 
 /*----------------------------------------------------------------------
    PutInt convertit le nombre n sous la forme d'une chaine de         
    caracteres et sort cette chaine de caracteres dans fichier      
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void PutInt (int n, int fileNum, STRING outBuffer, PtrDocument pDoc,
 		    ThotBool lineBreak)
-#else  /* __STDC__ */
-static void PutInt (n, fileNum, outBuffer, pDoc, lineBreak)
-int                 n;
-int                 fileNum;
-STRING              outBuffer;
-PtrDocument         pDoc;
-ThotBool            lineBreak;
-
-#endif /* __STDC__ */
-
 {
-   UCHAR_T             buffer[20];
-   int                 i;
+  CHAR_T              buffer[20];
+  int                 i;
 
-   usprintf (buffer, TEXT("%d"), n);
-   i = 0;
-   while (buffer[i] != EOS)
-      PutChar ((wchar_t) buffer[i++], fileNum, outBuffer, pDoc, lineBreak,
-	       FALSE);
+  usprintf (buffer, TEXT("%d"), n);
+  i = 0;
+  while (buffer[i] != EOS)
+    PutChar ((wchar_t) buffer[i++], fileNum, outBuffer, pDoc, lineBreak,
+	     FALSE);
 }
 
 /*----------------------------------------------------------------------
@@ -426,16 +389,8 @@ ThotBool            lineBreak;
    traduction qui contienne des regles de traduction de contenu pour les
    feuilles de type leafType.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static PtrTSchema   GetTransSchForContent (PtrElement pEl, LeafType leafType,
-					   AlphabetTransl **pTransAlph)
-
-#else  /* __STDC__ */
-static PtrTSchema   GetTransSchForContent (pEl, leafType, pTransAlph)
-PtrElement          pEl;
-LeafType            leafType;
-AlphabetTransl    **pTransAlph;
-#endif /* __STDC__ */
+static PtrTSchema GetTransSchForContent (PtrElement pEl, LeafType leafType,
+					 AlphabetTransl **pTransAlph)
 {
    PtrTSchema   pTSch;
    PtrSSchema   pSS;
@@ -504,168 +459,161 @@ AlphabetTransl    **pTransAlph;
    TranslateText
    effectue les traductions de caracteres selon la table
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void TranslateText (PtrTextBuffer pBufT, PtrTSchema pTSch,
 			   AlphabetTransl *pTransAlph, ThotBool lineBreak,
 			   int fileNum, PtrDocument pDoc)
-#else  /* __STDC__ */
-static void TranslateText (pBufT, pTSch, *pTransAlph, lineBreak, fileNum, pDoc)
-PtrTextBuffer   pBufT;
-PtrTSchema      pTSch;
-AlphabetTransl  *pTransAlph;
-ThotBool        lineBreak;
-int             fileNum;
-PtrDocument     pDoc;
-#endif /* __STDC__ */
 {
-   PtrTextBuffer        pNextBufT, pPrevBufT;
-   int                  i, j, k, b, ft, lt;
-   UCHAR_T              c, cs;
-   ThotBool             continu, equal, stop;
-   int                  textTransBegin, textTransEnd;
-   StringTransl         *pTrans;   
+  PtrTextBuffer        pNextBufT, pPrevBufT;
+  CHAR_T               c, cs;
+  StringTransl        *pTrans;   
+  int                  textTransBegin, textTransEnd;
+  int                  i, j, k, b, ft, lt;
+  ThotBool             continu, equal, stop;
 
-   if (!pBufT)
-     return;
-   textTransBegin = pTransAlph->AlBegin;
-   textTransEnd = pTransAlph->AlEnd;
-   b = 0;       /* indice dans la chaine source de la regle de traduction */
-   i = 1;       /* indice dans le buffer du caractere a traduire */
-   ft = textTransBegin;/* indice de la 1ere regle de traduction a appliquer */
-   lt = textTransEnd; /*indice de la derniere regle de traduction a appliquer*/
-   pPrevBufT = NULL;  /* buffer source precedent */
-   c = pBufT->BuContent[0];     /* 1er caractere a traduire */
+  if (!pBufT)
+    return;
+  textTransBegin = pTransAlph->AlBegin;
+  textTransEnd = pTransAlph->AlEnd;
+  b = 0;       /* indice dans la chaine source de la regle de traduction */
+  i = 1;       /* indice dans le buffer du caractere a traduire */
+  ft = textTransBegin;/* indice de la 1ere regle de traduction a appliquer */
+  lt = textTransEnd; /*indice de la derniere regle de traduction a appliquer*/
+  pPrevBufT = NULL;  /* buffer source precedent */
+  c = pBufT->BuContent[0];     /* 1er caractere a traduire */
    
-   /* traduit la suite des buffers source */
-   do
-      /* Dans la table de traduction, les chaines sources sont */
-      /* rangees par ordre alphabetique. On cherche une chaine */
-      /* source qui commence par le caractere a traduire. */
-      {
+  /* traduit la suite des buffers source */
+  do
+    /* Dans la table de traduction, les chaines sources sont */
+    /* rangees par ordre alphabetique. On cherche une chaine */
+    /* source qui commence par le caractere a traduire. */
+    {
       while (c > pTSch->TsCharTransl[ft - 1].StSource[b] && ft < lt)
-	 ft++;
+	ft++;
       pTrans = &pTSch->TsCharTransl[ft - 1];
       if (c == pTrans->StSource[b])
-	 /* le caractere correspond au caractere courant de la */
-	 /* chaine source de la regle ft */
-	 if (pTrans->StSource[b + 1] == EOS)
+	{
+	  /* le caractere correspond au caractere courant de la */
+	  /* chaine source de la regle ft */
+	  if (pTrans->StSource[b + 1] == EOS)
 	    /* chaine complete */
 	    /* cette regle de traduction s'applique, on traduit */
 	    /* cherche si les regles suivantes ne peuvent pas egalement */
-            /* s'appliquer: on recherche la plus longue chaine a traduire */
-	   {
-	   continu = ft < textTransEnd;
-	   while (continu)
-	     {
-	     j = 0;
-	     equal = TRUE;
-	     /* compare la regle ft avec la suivante */
-	     do
-	       if (pTSch->TsCharTransl[ft - 1].StSource[j] ==
-		   pTSch->TsCharTransl[ft].StSource[j])
-		 j++;
-	       else
-		 equal = FALSE;
-	     while (equal && j <= b);
-	     if (!equal)
-	       /* le debut de la regle suivante est different */
-	       /* de la regle courante */
-	       continu = FALSE;
-	     else
-	       /* la fin de la regle suivante est-il identique */
-	       /* a la suite du texte a traduire ? */
-	       {
-	       k = i;
-	       cs = c;
-	       pNextBufT = pBufT;
-	       /* cherche le caractere suivant du texte */
-	       stop = FALSE;
-	       do
-		 {
-		 if (cs != EOS)
-		   cs = pNextBufT->BuContent[k++];
-		 if (cs == EOS)
-		   /* passe au buffer suivant du meme texte */
-		   if (pNextBufT->BuNext != NULL)
-		     {
-		     pNextBufT = pNextBufT->BuNext;
-		     k = 1;
-		     cs = pNextBufT->BuContent[0];
-		     }
-		 if (cs == EOS)
-		   continu = FALSE;	/* fin du texte */
-		 else
-		   {
-		   continu = FALSE;
-		   if (cs == pTSch->TsCharTransl[ft].StSource[j])
-		     {
-		     stop = FALSE;
-		     continu = TRUE;
-		     j++;
-		     }
-		   if (pTSch->TsCharTransl[ft].StSource[j] == EOS)
-		     {
-		     ft++;
-		     b = j - 1;
-		     i = k;
-		     c = cs;
-		     pBufT = pNextBufT;
-		     continu = ft < textTransEnd;
-		     stop = TRUE;
-		     }
-		   }
-		 }
-	       while (!stop && continu);
-	       }
-	     }
-	   /* on applique la regle de traduction ft */
-	   j = 0;
-	   while (pTSch->TsCharTransl[ft - 1].StTarget[j] != EOS)
-	     {
-	     PutChar ((wchar_t) (pTSch->TsCharTransl[ft - 1].StTarget[j]), fileNum, NULL,
-		      pDoc, lineBreak, TRUE);
-	     j++;
-	     }
-	   /* prepare la prochaine recherche dans la table */
-	   b = 0;
-	   ft = textTransBegin;
-	   lt = textTransEnd;
-	   }
-	 else
-	   /* ce n'est pas le dernier caractere de la chaine */
-	   /* csource de la table de traduction, on restreint la */
-	   /* partie de la table de traduction dans laquelle on */
-	   /* cherchera les caracteres suivants */
-	   {
-	   j = ft;
-	   /* cherche parmi les regles suivantes la derniere */
-	   /* qui contienne ce caractere a cette position dans */
-	   /* la chaine source. On ne cherchera pas au-dela de */
-	   /* cette regle. */
-	   while (c == pTSch->TsCharTransl[j - 1].StSource[b] && j < lt)
-	     j++;
-	   if (c != pTSch->TsCharTransl[j - 1].StSource[b])
-	     lt = j - 1;
-	   /* passe au caractere suivant de la chaine source */
-	   /* de la table de traduction */
-	   b++;
-	   }
-      else
-	/* le caractere ne correspond pas */
-	if (b == 0)
-	  /* le caractere ne se trouve au debut d'aucune chaine source de la */
-	  /* table de traduction, on ne le traduit donc pas */
-	  {
+	    /* s'appliquer: recherche la plus longue chaine a traduire */
+	    {
+	      continu = ft < textTransEnd;
+	      while (continu)
+		{
+		  j = 0;
+		  equal = TRUE;
+		  /* compare la regle ft avec la suivante */
+		  do
+		    if (pTSch->TsCharTransl[ft - 1].StSource[j] ==
+			pTSch->TsCharTransl[ft].StSource[j])
+		      j++;
+		    else
+		      equal = FALSE;
+		  while (equal && j <= b);
+
+		  if (!equal)
+		    /* le debut de la regle suivante est different */
+		    /* de la regle courante */
+		    continu = FALSE;
+		  else
+		    /* la fin de la regle suivante est-il identique */
+		    /* a la suite du texte a traduire ? */
+		    {
+		      k = i;
+		      cs = c;
+		      pNextBufT = pBufT;
+		      /* cherche le caractere suivant du texte */
+		      stop = FALSE;
+		      do
+			{
+			  if (cs != EOS)
+			    cs = pNextBufT->BuContent[k++];
+			  if (cs == EOS)
+			    /* passe au buffer suivant du meme texte */
+			    if (pNextBufT->BuNext != NULL)
+			      {
+				pNextBufT = pNextBufT->BuNext;
+				k = 1;
+				cs = pNextBufT->BuContent[0];
+			      }
+			  if (cs == EOS)
+			    continu = FALSE;	/* fin du texte */
+			  else
+			    {
+			      continu = FALSE;
+			      if (cs == pTSch->TsCharTransl[ft].StSource[j])
+				{
+				  stop = FALSE;
+				  continu = TRUE;
+				  j++;
+				}
+			      if (pTSch->TsCharTransl[ft].StSource[j] == EOS)
+				{
+				  ft++;
+				  b = j - 1;
+				  i = k;
+				  c = cs;
+				  pBufT = pNextBufT;
+				  continu = ft < textTransEnd;
+				  stop = TRUE;
+				}
+			    }
+			}
+		      while (!stop && continu);
+		    }
+		}
+
+	      /* on applique la regle de traduction ft */
+	      j = 0;
+	      while (pTSch->TsCharTransl[ft - 1].StTarget[j] != EOS)
+		{
+		  cs = pTSch->TsCharTransl[ft - 1].StTarget[j];
+		  PutChar ((wchar_t) cs, fileNum, NULL, pDoc, lineBreak,
+			   TRUE);
+		  j++;
+		}
+	      /* prepare la prochaine recherche dans la table */
+	      b = 0;
+	      ft = textTransBegin;
+	      lt = textTransEnd;
+	    }
+	  else
+	    /* ce n'est pas le dernier caractere de la chaine */
+	    /* source de la table de traduction, on restreint la */
+	    /* partie de la table de traduction dans laquelle on */
+	    /* cherchera les caracteres suivants */
+	    {
+	      j = ft;
+	      /* cherche parmi les regles suivantes la derniere */
+	      /* qui contienne ce caractere a cette position dans */
+	      /* la chaine source. On ne cherchera pas au-dela de */
+	      /* cette regle. */
+	      while (c == pTSch->TsCharTransl[j - 1].StSource[b] && j < lt)
+		j++;
+	      if (c != pTSch->TsCharTransl[j - 1].StSource[b])
+		lt = j - 1;
+	      /* passe au caractere suivant de la chaine source */
+	      /* de la table de traduction */
+	      b++;
+	    }
+	}
+      else if (b == 0)
+	/* le caractere ne se trouve au debut d'aucune chaine source de */
+	/* la table de traduction, on ne le traduit donc pas */
+	{
 	  ft = textTransBegin;
 	  if (c != WC_EOS)
 	    PutChar ((wchar_t) c, fileNum, NULL, pDoc, lineBreak, TRUE);
-	  }
-	else
-	  /* on avait commence' a analyser une sequence de caracteres. */
-	  /* Cette sequence ne se traduit pas, on sort le premier caractere */
-	  /* de la sequence et on cherche une sequence traduisible a partir */
-	  /* du caractere suivant. */
-	  {
+	}
+      else
+	/* on avait commence' a analyser une sequence de caracteres. */
+	/* Cette sequence ne se traduit pas, on sort le premier */
+	/* caractere de la sequence et on cherche une sequence */
+	/* traduisible a partir du caractere suivant. */
+	{
 	  if (i - b >= 1)
 	    /* le premier caractere de la sequence est dans */
 	    /* le buffer courant */
@@ -674,35 +622,40 @@ PtrDocument     pDoc;
 	    /* le premier caractere de la sequence est dans */
 	    /* le buffer precedent */
 	    {
-	    pBufT = pPrevBufT;
-	    i = pBufT->BuLength + i - b;
+	      pBufT = pPrevBufT;
+	      i = pBufT->BuLength + i - b;
 	    }
 	  if (c != WC_EOS)
-	    PutChar ((wchar_t) (pBufT->BuContent[i - 1]), fileNum, NULL, pDoc, lineBreak, TRUE);
+	    {
+	      cs = pBufT->BuContent[i - 1];
+	      PutChar ((wchar_t) cs, fileNum, NULL, pDoc, lineBreak, TRUE);
+	    }
 	  b = 0;
 	  ft = textTransBegin;
 	  lt = textTransEnd;
-	  }
+	}
+
       /* cherche le caractere suivant a traiter */
       if (c != EOS)
 	c = pBufT->BuContent[i++];
-      if (c == EOS)
-	/* passe au buffer suivant du meme element de texte */
-	if (pBufT->BuNext != NULL)
-	  {
+      if (c == EOS && pBufT->BuNext != NULL)
+	{
+	  /* passe au buffer suivant du meme element de texte */
 	  pPrevBufT = pBufT;
 	  pBufT = pBufT->BuNext;
 	  i = 1;
 	  c = pBufT->BuContent[0];
-	  }
-      }
-   while (c != EOS);
-   /* fin de la feuille de texte */
-   /* Si on a commence' a analyser une sequence de caracteres, */
-   /* on sort le debut de la sequence. */
+	}
+    }
+  while (c != EOS);
+  /* fin de la feuille de texte */
+  /* Si on a commence' a analyser une sequence de caracteres, */
+  /* on sort le debut de la sequence. */
    for (i = 0; i <= b - 1; i++)
-     PutChar ((wchar_t) (pTSch->TsCharTransl[ft - 1].StSource[i]), fileNum, NULL,
-	      pDoc, lineBreak, TRUE);
+     {
+       c = pTSch->TsCharTransl[ft - 1].StSource[i];
+       PutChar ((wchar_t) c, fileNum, NULL, pDoc, lineBreak, TRUE);
+     }
 }
 
 /*----------------------------------------------------------------------
@@ -710,214 +663,193 @@ PtrDocument     pDoc;
    traduisant son contenu si transChar est vrai. Produit le	
    contenu dans le fichier de sortie fileNum.			
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         TranslateLeaf (PtrElement pEl, ThotBool transChar,
-				   ThotBool lineBreak, int fileNum, PtrDocument pDoc)
-
-#else  /* __STDC__ */
-static void         TranslateLeaf (pEl, transChar, lineBreak, fileNum, pDoc)
-PtrElement          pEl;
-ThotBool            transChar;
-ThotBool            lineBreak;
-int                 fileNum;
-PtrDocument         pDoc;
-#endif /* __STDC__ */
+static void TranslateLeaf (PtrElement pEl, ThotBool transChar,
+			   ThotBool lineBreak, int fileNum, PtrDocument pDoc)
 {
-   PtrTSchema          pTSch;
-   PtrTextBuffer       pBufT;
-   UCHAR_T             c;
-   int                 i, j, b, ft, lt;
-   AlphabetTransl     *pTransAlph;
-   StringTransl       *pTrans;
+  PtrTSchema          pTSch;
+  PtrTextBuffer       pBufT;
+  AlphabetTransl     *pTransAlph;
+  StringTransl       *pTrans;
+  CHAR_T              c;
+  int                 i, j, b, ft, lt;
 
-   pTransAlph = NULL;
-   lt = 0;
-   if (!(pEl->ElLeafType == LtText || pEl->ElLeafType == LtSymbol ||
-	 pEl->ElLeafType == LtGraphics || pEl->ElLeafType == LtPolyLine) ||
-       !transChar)
-     pTSch = GetTranslationSchema (pEl->ElStructSchema);
-   else
-     /* En examinant les elements englobants, on cherche un schema de */
-     /* traduction qui contienne des regles pour ce type de feuille */
-     pTSch = GetTransSchForContent (pEl, pEl->ElLeafType, &pTransAlph);
-   switch (pEl->ElLeafType)
-     {
-     case LtText /* traitement d'une feuille de texte */ :
-       if (pEl->ElTextLength > 0)
-	 /* la feuille n'est pas vide */
-	 {
-	 pBufT = pEl->ElText;	/* 1er buffer a traiter */
-	 if (!pTransAlph || !transChar)
-	   /* on ne traduit pas quand la table de traduction est vide */
-	   /* parcourt les buffers de l'element */
-	   while (pBufT != NULL)
-	     {
-	     i = 0;
-	     while (pBufT->BuContent[i] != EOS)
-	       PutChar ((wchar_t) (pBufT->BuContent[i++]), fileNum, NULL,
-			pDoc, lineBreak, TRUE);
-	     pBufT = pBufT->BuNext;
-	     }
-	 else if (pTSch != NULL)
-	   /* effectue les traductions de caracteres selon la table */
-	   TranslateText (pBufT, pTSch, pTransAlph, lineBreak, fileNum, pDoc);
-	 }
-       break;
+  pTransAlph = NULL;
+  lt = 0;
+  if (!(pEl->ElLeafType == LtText || pEl->ElLeafType == LtSymbol ||
+	pEl->ElLeafType == LtGraphics || pEl->ElLeafType == LtPolyLine) ||
+      !transChar)
+    pTSch = GetTranslationSchema (pEl->ElStructSchema);
+  else
+    /* En examinant les elements englobants, on cherche un schema de */
+    /* traduction qui contienne des regles pour ce type de feuille */
+    pTSch = GetTransSchForContent (pEl, pEl->ElLeafType, &pTransAlph);
+  switch (pEl->ElLeafType)
+    {
+    case LtText /* traitement d'une feuille de texte */ :
+      if (pEl->ElTextLength > 0)
+	/* la feuille n'est pas vide */
+	{
+	  pBufT = pEl->ElText;	/* 1er buffer a traiter */
+	  if (!pTransAlph || !transChar)
+	    /* on ne traduit pas quand la table de traduction est vide */
+	    /* parcourt les buffers de l'element */
+	    while (pBufT != NULL)
+	      {
+		i = 0;
+		while (pBufT->BuContent[i] != EOS)
+		  PutChar ((wchar_t) (pBufT->BuContent[i++]), fileNum, NULL,
+			   pDoc, lineBreak, TRUE);
+		pBufT = pBufT->BuNext;
+	      }
+	  else if (pTSch != NULL)
+	    /* effectue les traductions de caracteres selon la table */
+	    TranslateText (pBufT, pTSch, pTransAlph, lineBreak, fileNum, pDoc);
+	}
+      break;
 
-     case LtSymbol:
-     case LtGraphics:
-     case LtPolyLine:
-       /* if it's an Unicode character, output its code */
-       if (pEl->ElLeafType == LtSymbol && pEl->ElGraph == '?')
-	 {
-	   if (pDoc->DocCharset == UTF_8)
-	     /* translate into UTF_8 the unicode value */
-	     PutChar ((wchar_t) pEl->ElWideChar, fileNum, NULL, pDoc,
-		      lineBreak, TRUE);
-	   else
-	     {
-	       /* write a numeric entity */
-	       PutChar ((wchar_t) TEXT('&'), fileNum, NULL, pDoc, lineBreak,
-			FALSE);
-	       PutChar ((wchar_t) TEXT('#'), fileNum, NULL, pDoc, lineBreak,
-			FALSE);
-	       PutInt (pEl->ElWideChar, fileNum, NULL, pDoc, lineBreak);
-	       PutChar ((wchar_t) TEXT(';'), fileNum, NULL, pDoc, lineBreak,
-			FALSE);
-	     }
-	 }
-       else if (pTSch != NULL)
-	 {
-	 if (!transChar)
-	   ft = 0;
-	 else
-	   /* cherche la premiere et la derniere regle de traduction */
-	   /* a appliquer a l'element */
-	   if (pEl->ElLeafType == LtSymbol)
-	     {
-	     ft = pTSch->TsSymbolFirst;
-	     lt = pTSch->TsSymbolLast;
-	     }
-	   else
-	     {
-	     ft = pTSch->TsGraphicsFirst;
-	     lt = pTSch->TsGraphicsLast;
-	     }
-	 /* prend dans c le caractere qui represente la forme graphique */
-	 if (pEl->ElLeafType == LtPolyLine)
-	   c = pEl->ElPolyLineType;
-	 else
-	   c = pEl->ElGraph;
-	 if (ft == 0)
-	   /* pas de traduction */
-	   {
-	   if (c != WC_EOS)
-	     PutChar ((wchar_t) c, fileNum, NULL, pDoc, lineBreak, TRUE);
-	   }
-	 else
-	   /* on traduit l'element */
-	   /* cherche le symbole dans les chaines sources de la */
-	   /* table de traduction */
-	   {
-	   while (pTSch->TsCharTransl[ft - 1].StSource[0] < c && ft < lt)
-	     ft++;
-	   if (pTSch->TsCharTransl[ft - 1].StSource[0] == c)
-	     /* il y a une regle de traduction pour ce symbole */
-	     {
-	     b = 0;
-	     pTrans = &pTSch->TsCharTransl[ft - 1];
-	     while (pTrans->StTarget[b] != EOS)
-	       {
-	       PutChar ((wchar_t) (pTrans->StTarget[b]), fileNum, NULL, pDoc,
-			lineBreak, TRUE);
-	       b++;
-	       }
-	     }
-	   else
-	     /* ce symbole ne se traduit pas */
-	     if (c != WC_EOS)
-	       PutChar ((wchar_t) c, fileNum, NULL, pDoc, lineBreak, TRUE);
-	   }
-	 if (pEl->ElLeafType == LtPolyLine)
-	   if (pEl->ElNPoints > 0)
-	     /* la ligne a au moins un point de controle */
-	     /* on ecrit les coordonnees des points de controle */
-	     {
-	     pBufT = pEl->ElPolyLineBuffer;	/* 1er buffer a traiter */
-	     /* parcourt les buffers de l'element */
-	     while (pBufT != NULL)
-	       {
-	       for (i = 0; i < pBufT->BuLength; i++)
-		 {
-		 PutChar ((wchar_t) TEXT(' '), fileNum, NULL, pDoc, lineBreak,
-			  FALSE);
-		 PutInt (pBufT->BuPoints[i].XCoord, fileNum, NULL, pDoc,
-			 lineBreak);
-		 PutChar ((wchar_t) TEXT(','), fileNum, NULL, pDoc, lineBreak,
-			  FALSE);
-		 PutInt (pBufT->BuPoints[i].YCoord, fileNum, NULL, pDoc,
-			 lineBreak);
-		 }
-	       pBufT = pBufT->BuNext;
-	       }
-	     }
-	 }
-       break;
+    case LtSymbol:
+    case LtGraphics:
+    case LtPolyLine:
+      /* if it's an Unicode character, output its code */
+      if (pEl->ElLeafType == LtSymbol && pEl->ElGraph == '?')
+	{
+	  if (pDoc->DocCharset == UTF_8)
+	    /* translate into UTF_8 the unicode value */
+	    PutChar ((wchar_t) pEl->ElWideChar, fileNum, NULL, pDoc,
+		     lineBreak, TRUE);
+	  else
+	    {
+	      /* write a numeric entity */
+	      PutChar ((wchar_t) TEXT('&'), fileNum, NULL, pDoc, lineBreak,
+		       FALSE);
+	      PutChar ((wchar_t) TEXT('#'), fileNum, NULL, pDoc, lineBreak,
+		       FALSE);
+	      PutInt (pEl->ElWideChar, fileNum, NULL, pDoc, lineBreak);
+	      PutChar ((wchar_t) TEXT(';'), fileNum, NULL, pDoc, lineBreak,
+		       FALSE);
+	    }
+	}
+      else if (pTSch != NULL)
+	{
+	  if (!transChar)
+	    ft = 0;
+	  else if (pEl->ElLeafType == LtSymbol)
+	    /* cherche la premiere et la derniere regle de traduction */
+	    /* a appliquer a l'element */
+	    {
+	      ft = pTSch->TsSymbolFirst;
+	      lt = pTSch->TsSymbolLast;
+	    }
+	  else
+	    {
+	      ft = pTSch->TsGraphicsFirst;
+	      lt = pTSch->TsGraphicsLast;
+	    }
+	  /* prend dans c le caractere qui represente la forme graphique */
+	  if (pEl->ElLeafType == LtPolyLine)
+	    c = pEl->ElPolyLineType;
+	  else
+	    c = pEl->ElGraph;
+	  if (ft == 0)
+	    /* pas de traduction */
+	    {
+	      if (c != WC_EOS)
+		PutChar ((wchar_t) c, fileNum, NULL, pDoc, lineBreak, TRUE);
+	    }
+	  else
+	    /* on traduit l'element */
+	    /* cherche le symbole dans les chaines sources de la */
+	    /* table de traduction */
+	    {
+	      while (pTSch->TsCharTransl[ft - 1].StSource[0] < c && ft < lt)
+		ft++;
+	      if (pTSch->TsCharTransl[ft - 1].StSource[0] == c)
+		/* il y a une regle de traduction pour ce symbole */
+		{
+		  b = 0;
+		  pTrans = &pTSch->TsCharTransl[ft - 1];
+		  while (pTrans->StTarget[b] != EOS)
+		    {
+		      c = pTrans->StTarget[b];
+		      PutChar ((wchar_t) c, fileNum, NULL, pDoc,
+			       lineBreak, TRUE);
+		      b++;
+		    }
+		}
+	      else
+		/* ce symbole ne se traduit pas */
+		if (c != WC_EOS)
+		  PutChar ((wchar_t) c, fileNum, NULL, pDoc, lineBreak, TRUE);
+	    }
+	  if (pEl->ElLeafType == LtPolyLine && pEl->ElNPoints > 0)
+	    /* la ligne a au moins un point de controle */
+	    /* on ecrit les coordonnees des points de controle */
+	    {
+	      pBufT = pEl->ElPolyLineBuffer;	/* 1er buffer a traiter */
+	      /* parcourt les buffers de l'element */
+	      while (pBufT != NULL)
+		{
+		  for (i = 0; i < pBufT->BuLength; i++)
+		    {
+		      PutChar ((wchar_t) TEXT(' '), fileNum, NULL, pDoc, lineBreak,
+			       FALSE);
+		      PutInt (pBufT->BuPoints[i].XCoord, fileNum, NULL, pDoc,
+			      lineBreak);
+		      PutChar ((wchar_t) TEXT(','), fileNum, NULL, pDoc, lineBreak,
+			       FALSE);
+		      PutInt (pBufT->BuPoints[i].YCoord, fileNum, NULL, pDoc,
+			      lineBreak);
+		    }
+		  pBufT = pBufT->BuNext;
+		}
+	    }
+	}
+      break;
 
-     case LtPicture:
-       /* Si le schema de traduction comporte un buffer */
-       /* pour les images, le nom du fichier contenant l'image */
-       /* est range' dans ce buffer */
-       if (pTSch != NULL)
-	 if (pTSch->TsPictureBuffer > 0)
-	   {
-	   b = pTSch->TsPictureBuffer;
-	   pTSch->TsBuffer[b - 1][0] = EOS;	/* raz du buffer */
-	   if (pEl->ElTextLength > 0)
-	     /* la feuille n'est pas vide */
-	     {
-	     j = 0;
-	     pBufT = pEl->ElText;	/* 1er buffer a traiter */
-	     /* parcourt les buffers de l'element */
-	     while (pBufT != NULL)
-	       {
-	       i = 0;
-	       do
-		 pTSch->TsBuffer[b - 1][j++] = pBufT->BuContent[i++];
-	       while (pBufT->BuContent[i - 1] != EOS &&
-		      b < MAX_TRANSL_BUFFER_LEN);
-	       pBufT = pBufT->BuNext;
-	       }
-	     if (j > 0)
-	       pTSch->TsBuffer[b - 1][j - 1] = EOS;
-	     }
-	   }
-       break;
+    case LtPicture:
+      /* Si le schema de traduction comporte un buffer */
+      /* pour les images, le nom du fichier contenant l'image */
+      /* est range' dans ce buffer */
+      if (pTSch != NULL && pTSch->TsPictureBuffer > 0)
+	{
+	  b = pTSch->TsPictureBuffer;
+	  pTSch->TsBuffer[b - 1][0] = EOS;	/* raz du buffer */
+	  if (pEl->ElTextLength > 0)
+	    /* la feuille n'est pas vide */
+	    {
+	      j = 0;
+	      pBufT = pEl->ElText;	/* 1er buffer a traiter */
+	      /* parcourt les buffers de l'element */
+	      while (pBufT != NULL)
+		{
+		  i = 0;
+		  do
+		    pTSch->TsBuffer[b - 1][j++] = pBufT->BuContent[i++];
+		  while (pBufT->BuContent[i - 1] != EOS &&
+			 b < MAX_TRANSL_BUFFER_LEN);
+		  pBufT = pBufT->BuNext;
+		}
+	      if (j > 0)
+		pTSch->TsBuffer[b - 1][j - 1] = EOS;
+	    }
+	}
+      break;
 
-     case LtPath:
-       break;		/* On ne fait rien */
+    case LtPath:
+    case LtPageColBreak:
+    case LtReference:
+      break;		/* On ne fait rien */
 
-     case LtPageColBreak:
-       break;		/* On ne fait rien */
-
-     case LtReference:
-       break;		/* On ne fait rien */
-
-     default:
-       break;
-     }
+    default:
+      break;
+    }
 }
 
 /*----------------------------------------------------------------------
    PresRuleValue      retourne le code caractere de la valeur de la   
    regle de presentation specifique pointee par pPRule.            
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static UCHAR_T      PresRuleValue (PtrPRule pPRule)
-#else  /* __STDC__ */
-static UCHAR_T      PresRuleValue (pPRule)
-PtrPRule            pPRule;
-#endif /* __STDC__ */
 {
    UCHAR_T                val;
 
@@ -970,16 +902,7 @@ PtrPRule            pPRule;
    EmptyElement       retourne TRUE si l'element pEl est vide ou n'a  
    que des descendants vides.                                      
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 static ThotBool     EmptyElement (PtrElement pEl)
-
-#else  /* __STDC__ */
-static ThotBool     EmptyElement (pEl)
-PtrElement          pEl;
-
-#endif /* __STDC__ */
-
 {
    PtrElement          pChild;
    ThotBool            empty;
@@ -1039,16 +962,8 @@ PtrElement          pEl;
    pAttr s'il est different de NULL. Retourne vrai si la condition est
    satisfaite, faux sinon.                                         
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static ThotBool     ConditionIsTrue (PtrTRuleBlock pBlock, PtrElement pEl,
 				     PtrAttribute pAttr, PtrDocument pDoc)
-#else  /* __STDC__ */
-static ThotBool     ConditionIsTrue (pBlock, pEl, pAttr, pDoc)
-PtrTRuleBlock       pBlock;
-PtrElement          pEl;
-PtrAttribute        pAttr;
-PtrDocument         pDoc;
-#endif /* __STDC__ */
 {
    PtrAttribute        pAttrEl;
    PtrSSchema          pSS, pRefSS;
@@ -1525,15 +1440,8 @@ PtrDocument         pDoc;
    s'applique au schema de structure pointe' par pSS) pour         
    l'element pointe' par pElNum.                                   
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static int          CounterVal (int countNum, PtrTSchema pTSch, PtrSSchema pSS, PtrElement pElNum)
-#else  /* __STDC__ */
-static int          CounterVal (countNum, pTSch, pSS, pElNum)
-int                 countNum;
-PtrTSchema          pTSch;
-PtrSSchema          pSS;
-PtrElement          pElNum;
-#endif /* __STDC__ */
+static int CounterVal (int countNum, PtrTSchema pTSch, PtrSSchema pSS,
+		       PtrElement pElNum)
 {
    PtrElement          pEl;
    PtrSSchema          pSSch;
@@ -1722,16 +1630,8 @@ PtrElement          pElNum;
    structure pointe' par pSS, ou si pSS est nul dans le schema de  
    nom schemaName.                                                 
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void SearchDescent (PtrElement * pEl, int typeNum, PtrSSchema pSS,
 			   Name schemaName)
-#else  /* __STDC__ */
-static void SearchDescent (pEl, typeNum, pSS, schemaName)
-PtrElement         *pEl;
-int                 typeNum;
-PtrSSchema          pSS;
-Name                schemaName;
-#endif /* __STDC__ */
 {
    PtrElement          pChild;
    PtrSSchema          pSSchema;
@@ -1782,21 +1682,9 @@ Name                schemaName;
    La traduction du contenu des feuilles a lieu seulement si       
    transChar est vrai.                                             
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-static void         PutContent (PtrElement pEl, ThotBool transChar,
-				ThotBool lineBreak,
-				int fileNum, PtrDocument pDoc)
-
-#else  /* __STDC__ */
-static void         PutContent (pEl, transChar, lineBreak, fileNum, pDoc)
-PtrElement          pEl;
-ThotBool            transChar;
-ThotBool            lineBreak;
-int                 fileNum;
-PtrDocument         pDoc;
-
-#endif /* __STDC__ */
+static void PutContent (PtrElement pEl, ThotBool transChar,
+			ThotBool lineBreak,
+			int fileNum, PtrDocument pDoc)
 {
    PtrElement          pChild;
 
@@ -1816,45 +1704,23 @@ PtrDocument         pDoc;
      TranslateLeaf (pEl, transChar, lineBreak, fileNum, pDoc);
 }
 
-#ifdef __STDC__
 static void ApplyTRule (PtrTRule pTRule, PtrTSchema pTSch,
-			PtrSSchema pSSch, PtrElement pEl, ThotBool * transChar,
-			ThotBool * lineBreak, ThotBool * removeEl,
-			ThotBool * ignoreEl,
+			PtrSSchema pSSch, PtrElement pEl, ThotBool *transChar,
+			ThotBool *lineBreak, ThotBool *removeEl,
+			ThotBool *ignoreEl,
 			PtrPRule pRPres, PtrAttribute pAttr,
 			PtrDocument pDoc, ThotBool recordLineNb);
-
-#else  /* __STDC__ */
-static void ApplyTRule ( /* pTRule, pTSch, pSSch, pEl, transChar,
-			    lineBreak, removeEl, ignoreEl, pRPres, pAttr, pDoc,
-			    recordLineNb */ );
-
-#endif /* __STDC__ */
 
 
 /*----------------------------------------------------------------------
    ApplyAttrRulesToElem    applique a l'element pEl les regles de	
    traduction associees a l'attribut pAttr.			
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void ApplyAttrRulesToElem (TOrder position, PtrElement pEl,
-				  PtrAttribute pAttr, ThotBool * removeEl,
-				  ThotBool * ignoreEl,
-				  ThotBool * transChar, ThotBool * lineBreak,
+				  PtrAttribute pAttr, ThotBool *removeEl,
+				  ThotBool *ignoreEl,
+				  ThotBool *transChar, ThotBool *lineBreak,
 				  PtrDocument pDoc, ThotBool recordLineNb)
-#else  /* __STDC__ */
-static void ApplyAttrRulesToElem (position, pEl, pAttr, removeEl, ignoreEl,
-				  transChar, lineBreak, pDoc, recordLineNb)
-TOrder              position;
-PtrElement          pEl;
-PtrAttribute        pAttr;
-ThotBool           *removeEl;
-ThotBool           *ignoreEl;
-ThotBool           *transChar;
-ThotBool           *lineBreak;
-PtrDocument         pDoc;
-ThotBool            recordLineNb;
-#endif /* __STDC__ */
 {
    PtrTRuleBlock       pBlock;
    PtrTRule            pTRule;
@@ -1964,24 +1830,11 @@ ThotBool            recordLineNb;
 /*----------------------------------------------------------------------
    ApplyAttrRules                                                        
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void ApplyAttrRules (TOrder position, PtrElement pEl,
-			    ThotBool * removeEl, ThotBool * ignoreEl,
-			    ThotBool * transChar,
-			    ThotBool * lineBreak, PtrDocument pDoc,
+			    ThotBool *removeEl, ThotBool *ignoreEl,
+			    ThotBool *transChar,
+			    ThotBool *lineBreak, PtrDocument pDoc,
 			    ThotBool recordLineNb)
-#else  /* __STDC__ */
-static void ApplyAttrRules (position, pEl, removeEl, ignoreEl, transChar,
-			    lineBreak, pDoc, recordLineNb)
-TOrder              position;
-PtrElement          pEl;
-ThotBool           *removeEl;
-ThotBool           *ignoreEl;
-ThotBool           *transChar;
-ThotBool           *lineBreak;
-PtrDocument         pDoc;
-ThotBool            recordLineNb;
-#endif /* __STDC__ */
 {
    PtrElement          pAsc;
    PtrAttribute        pAttr, nextAttr;
@@ -2084,25 +1937,11 @@ ThotBool            recordLineNb;
    ApplyPresTRules applique a l'element pointe' par pEl les regles de	
    traduction associees aux presentations portees par l'element.   
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void ApplyPresTRules (TOrder position, PtrElement pEl,
-			     ThotBool * removeEl, ThotBool * ignoreEl,
-			     ThotBool * transChar,
-			     ThotBool * lineBreak, PtrAttribute pAttr,
+			     ThotBool *removeEl, ThotBool *ignoreEl,
+			     ThotBool *transChar,
+			     ThotBool *lineBreak, PtrAttribute pAttr,
 			     PtrDocument pDoc, ThotBool recordLineNb)
-#else  /* __STDC__ */
-static void ApplyPresTRules (position, pEl, removeEl, ignoreEl, transChar,
-			     lineBreak, pAttr, pDoc, recordLineNb)
-TOrder              position;
-PtrElement          pEl;
-ThotBool           *removeEl;
-ThotBool           *ignoreEl;
-ThotBool           *transChar;
-ThotBool           *lineBreak;
-PtrAttribute        pAttr;
-PtrDocument         pDoc;
-ThotBool            recordLineNb;
-#endif /* __STDC__ */
 {
    PtrPRule            pPRule;
    PtrTSchema          pTSch;
@@ -2251,74 +2090,58 @@ ThotBool            recordLineNb;
 /*----------------------------------------------------------------------
    PutVariable                               				
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void PutVariable (PtrElement pEl, PtrAttribute pAttr,
 			 PtrTSchema pTSch, PtrSSchema pSS, int varNum,
 			 ThotBool ref, STRING outBuffer, int fileNum,
 			 PtrDocument pDoc, ThotBool lineBreak)
-#else  /* __STDC__ */
-
-static void         PutVariable (pEl, pAttr, pTSch, pSS, varNum, ref,
-				 outBuffer, fileNum, pDoc, lineBreak)
-PtrElement          pEl;
-PtrAttribute        pAttr;
-PtrTSchema          pTSch;
-PtrSSchema          pSS;
-int                 varNum;
-ThotBool            ref;
-STRING              outBuffer;
-int                 fileNum;
-PtrDocument         pDoc;
-ThotBool            lineBreak;
-#endif /* __STDC__ */
 {
-   TranslVariable     *varTrans;
-   TranslVarItem      *varItem;
-   PtrElement          pRefEl, pAncest;
-   PtrReference        pRef;
-   TtAttribute        *attrTrans;
-   PtrAttribute        pA;
-   DocumentIdentifier  docIdent;
-   PtrDocument         pExtDoc;
-   PtrTextBuffer       pBuf;
-   int                 item, i, j, k;
-   ThotBool            found;
-   CHAR_T              number[20];
+  TranslVariable     *varTrans;
+  TranslVarItem      *varItem;
+  PtrElement          pRefEl, pAncest;
+  PtrReference        pRef;
+  TtAttribute        *attrTrans;
+  PtrAttribute        pA;
+  DocumentIdentifier  docIdent;
+  PtrDocument         pExtDoc;
+  PtrTextBuffer       pBuf;
+  CHAR_T              number[20], c;
+  int                 item, i, j, k;
+  ThotBool            found;
 
-   pA = NULL;
-   if (outBuffer != NULL)
-      /* on vide le buffer avant de commencer a le remplir */
-      outBuffer[0] = EOS;
-   varTrans = &pTSch->TsVariable[varNum - 1];
-   /* parcourt les items qui constituent la variable */
-   for (item = 0; item < varTrans->TrvNItems; item++)
-     {
-     varItem = &varTrans->TrvItem[item];
-     /* traite selon le type de l'element de variable */
-     switch (varItem->TvType)
-       {
-
-       case VtText:
-	 /* une constante de texte */
-	 i = pTSch->TsConstBegin[varItem->TvItem - 1];
-	 while (pTSch->TsConstant[i - 1] != EOS)
-	   {
-	   PutChar ((wchar_t) (pTSch->TsConstant[i - 1]), fileNum, outBuffer, pDoc,
-		    lineBreak, TRUE);
-	   i++;
-	   }
-	 break;
-
-       case VtCounter:
-	 /* valeur d'un compteur */
-	 /* si la regle porte sur une reference, on prend la valeur du compteur
-	    pour l'element designe'par la reference si TrReferredObj est vrai*/
-	 pRef = NULL;
+  pA = NULL;
+  if (outBuffer != NULL)
+    /* on vide le buffer avant de commencer a le remplir */
+    outBuffer[0] = EOS;
+  varTrans = &pTSch->TsVariable[varNum - 1];
+  /* parcourt les items qui constituent la variable */
+  for (item = 0; item < varTrans->TrvNItems; item++)
+    {
+      varItem = &varTrans->TrvItem[item];
+      /* traite selon le type de l'element de variable */
+      switch (varItem->TvType)
+	{
+	case VtText:
+	  /* une constante de texte */
+	  i = pTSch->TsConstBegin[varItem->TvItem - 1];
+	  while (pTSch->TsConstant[i - 1] != EOS)
+	    {
+	      c = pTSch->TsConstant[i - 1];
+	      PutChar ((wchar_t) c, fileNum, outBuffer, pDoc,
+		       lineBreak, TRUE);
+	      i++;
+	    }
+	  break;
+	  
+	case VtCounter:
+	  /* valeur d'un compteur: si la regle porte sur une reference, */
+	  /* on prend la valeur du compteur pour l'element designepar */
+	  /* la reference si TrReferredObj est vrai*/
+	  pRef = NULL;
 	 if (ref)
 	   {
 	   if (pAttr != NULL &&
 	       pAttr->AeAttrSSchema->SsAttribute[pAttr->AeAttrNum - 1].
-	                                         AttrType == AtReferenceAttr)
+	       AttrType == AtReferenceAttr)
 	     /* c'est un attribut reference */
 	     pRef = pAttr->AeAttrReference;
 	   else
@@ -2331,14 +2154,14 @@ ThotBool            lineBreak;
 	   }
 	 if (pRef != NULL)
 	   {
-	   pRefEl = ReferredElement (pRef, &docIdent, &pExtDoc);
-	   if (pRefEl == NULL)
-	     /* la reference ne designe rien */
-	     i = 0;
-	   else
-	     /* valeur du compteur pour l'element */
-	     /* designe' par la reference */
-	     i = CounterVal (varItem->TvItem, pTSch, pSS, pRefEl);
+	     pRefEl = ReferredElement (pRef, &docIdent, &pExtDoc);
+	     if (pRefEl == NULL)
+	       /* la reference ne designe rien */
+	       i = 0;
+	     else
+	       /* valeur du compteur pour l'element */
+	       /* designe' par la reference */
+	       i = CounterVal (varItem->TvItem, pTSch, pSS, pRefEl);
 	   }
 	 else
 	   /* ce n'est pas une reference */
@@ -2347,127 +2170,131 @@ ThotBool            lineBreak;
 	 /* produit quelques 0 si c'est demande' */
 	 if (varItem->TvCounterStyle == CntArabic && varItem->TvLength > 0)
 	   {
-	   j = 1;
-	   for (k = 0; k < varItem->TvLength - 1; k++)
-	     {
-	     j = j * 10;
-	     if (j > i)
-	       PutChar ((wchar_t) TEXT('0'), fileNum, outBuffer, pDoc, lineBreak, FALSE);
-	     }
+	     j = 1;
+	     for (k = 0; k < varItem->TvLength - 1; k++)
+	       {
+		 j = j * 10;
+		 if (j > i)
+		   PutChar ((wchar_t) TEXT('0'), fileNum, outBuffer,
+			    pDoc, lineBreak, FALSE);
+	       }
 	   }
 	 /* convertit la valeur du compteur dans le style demande' */
 	 GetCounterValue (i, varItem->TvCounterStyle, number, &j);
 	 /* sort la valeur du compteur */
 	 for (k = 0; k < j; k++)
-	   PutChar ((wchar_t) (number[k]), fileNum, outBuffer, pDoc, lineBreak, TRUE);
-	 break;
-
-       case VtBuffer:
-	 /* le contenu d'un buffer */
-	 i = 0;
-	 while (pTSch->TsBuffer[varItem->TvItem - 1][i] != EOS)
-	   {
-	   PutChar ((wchar_t) (pTSch->TsBuffer[varItem->TvItem - 1][i]), fileNum,
-		    outBuffer, pDoc, lineBreak, TRUE);
-	   i++;
-	   }
-	 break;
-
-       case VtAttrVal:	/* la valeur d'un attribut */
-	 /* cherche si l'element traduit ou l'un de ses ascendants possede
-	    cet attribut */
-	 found = FALSE;
-	 pAncest = pEl;
-	 while (!found && pAncest != NULL)
-	   {
-	   pA = pAncest->ElFirstAttr;	/* premier attribut */
-	   while (!found && pA != NULL)
-	     if (pA->AeAttrNum == varItem->TvItem &&
-		 !ustrcmp (pA->AeAttrSSchema->SsName, pSS->SsName))
-	       found = TRUE;
-	     else
-	       pA = pA->AeNext;
-	   if (!found)
-	     pAncest = pAncest->ElParent;
-	   }
-	 if (found)
-	   /* l'element possede l'attribut */
-	   {
-	   switch (pA->AeAttrType)
-	     {
-	     case AtNumAttr:
-	       PutInt (pA->AeAttrValue, fileNum, outBuffer, pDoc, lineBreak);
-	       break;
-	     case AtTextAttr:
-	       pBuf = pA->AeAttrText;
-	       while (pBuf != NULL)
-		 {
-		 i = 0;
-		 while (i < pBuf->BuLength)
-		   PutChar ((wchar_t) (pBuf->BuContent[i++]), fileNum, outBuffer, pDoc, FALSE, TRUE);
-		 pBuf = pBuf->BuNext;
-		 }
-	       break;
-	     case AtReferenceAttr:
-	       PutChar ((wchar_t) TEXT('R'), fileNum, outBuffer, pDoc, lineBreak, FALSE);
-	       PutChar ((wchar_t) TEXT('E'), fileNum, outBuffer, pDoc, lineBreak, FALSE);
-	       PutChar ((wchar_t) TEXT('F'), fileNum, outBuffer, pDoc, lineBreak, FALSE);
-	       break;
-	     case AtEnumAttr:
-	       i = 0;
-	       attrTrans = &pA->AeAttrSSchema->SsAttribute[varItem->TvItem-1];
-	       while (attrTrans->AttrEnumValue[pA->AeAttrValue - 1][i] != EOS)
-		 PutChar ((wchar_t) (attrTrans->AttrEnumValue[pA->AeAttrValue - 1][i++]),
-			  fileNum, outBuffer, pDoc, lineBreak, TRUE);
-	       break;
-	     }
-	   }
+	   PutChar ((wchar_t) (number[k]), fileNum, outBuffer, pDoc,
+		    lineBreak, TRUE);
 	 break;
 	 
-       case VtFileDir:	/* le nom du directory de sortie */
-	 i = 0;
-	 while (fileDirectory[i] != WC_EOS)
-	   PutChar ((wchar_t) fileDirectory[i++], fileNum, outBuffer, pDoc, lineBreak, TRUE);
-	 break;
+	case VtBuffer:
+	  /* le contenu d'un buffer */
+	  i = 0;
+	  while (pTSch->TsBuffer[varItem->TvItem - 1][i] != EOS)
+	    {
+	      c = pTSch->TsBuffer[varItem->TvItem - 1][i];
+	      PutChar ((wchar_t) c, fileNum, outBuffer, pDoc,
+		       lineBreak, TRUE);
+	      i++;
+	    }
+	  break;
 
-       case VtFileName:	/* le nom du fichier de sortie */
-	 i = 0;
-	 while (fileName[i] != WC_EOS)
-	   PutChar ((wchar_t) fileName[i++], fileNum, outBuffer, pDoc, lineBreak, TRUE);
-	 break;
+	case VtAttrVal:	/* la valeur d'un attribut */
+	  /* cherche si l'element traduit ou l'un de ses ascendants possede
+	     cet attribut */
+	  found = FALSE;
+	  pAncest = pEl;
+	  while (!found && pAncest != NULL)
+	    {
+	      pA = pAncest->ElFirstAttr;	/* premier attribut */
+	      while (!found && pA != NULL)
+		if (pA->AeAttrNum == varItem->TvItem &&
+		    !ustrcmp (pA->AeAttrSSchema->SsName, pSS->SsName))
+		  found = TRUE;
+		else
+		  pA = pA->AeNext;
+	      if (!found)
+		pAncest = pAncest->ElParent;
+	    }
+	  if (found)
+	    /* l'element possede l'attribut */
+	    {
+	      switch (pA->AeAttrType)
+		{
+		case AtNumAttr:
+		  PutInt (pA->AeAttrValue, fileNum, outBuffer, pDoc, lineBreak);
+		  break;
+		case AtTextAttr:
+		  pBuf = pA->AeAttrText;
+		  while (pBuf != NULL)
+		    {
+		      i = 0;
+		      while (i < pBuf->BuLength)
+			{
+			  c = pBuf->BuContent[i++];
+			PutChar ((wchar_t) c, fileNum, outBuffer, pDoc, FALSE, TRUE);
+			}
+		      pBuf = pBuf->BuNext;
+		    }
+		  break;
+		case AtReferenceAttr:
+		  PutChar ((wchar_t) TEXT('R'), fileNum, outBuffer, pDoc, lineBreak, FALSE);
+		  PutChar ((wchar_t) TEXT('E'), fileNum, outBuffer, pDoc, lineBreak, FALSE);
+		  PutChar ((wchar_t) TEXT('F'), fileNum, outBuffer, pDoc, lineBreak, FALSE);
+		  break;
+		case AtEnumAttr:
+		  i = 0;
+		  attrTrans = &pA->AeAttrSSchema->SsAttribute[varItem->TvItem-1];
+		  while (attrTrans->AttrEnumValue[pA->AeAttrValue - 1][i] != EOS)
+		    {
+		      c = attrTrans->AttrEnumValue[pA->AeAttrValue - 1][i++];
+		    PutChar ((wchar_t) c, fileNum, outBuffer, pDoc,
+			     lineBreak, TRUE);
+		    }
+		  break;
+		}
+	    }
+	  break;
+	  
+	case VtFileDir:	/* le nom du directory de sortie */
+	  i = 0;
+	  while (fileDirectory[i] != WC_EOS)
+	    PutChar ((wchar_t) fileDirectory[i++], fileNum, outBuffer, pDoc, lineBreak, TRUE);
+	  break;
+	  
+	case VtFileName:	/* le nom du fichier de sortie */
+	  i = 0;
+	  while (fileName[i] != WC_EOS)
+	    PutChar ((wchar_t) fileName[i++], fileNum, outBuffer, pDoc, lineBreak, TRUE);
+	  break;
 	 
-       case VtExtension:	/* le nom de l'extension de fichier */
-	 i = 0;
-	 while (fileExtension[i] != WC_EOS)
-	   PutChar ((wchar_t) fileExtension[i++], fileNum, outBuffer, pDoc, lineBreak, TRUE);
-	 break;
+	case VtExtension:	/* le nom de l'extension de fichier */
+	  i = 0;
+	  while (fileExtension[i] != WC_EOS)
+	    PutChar ((wchar_t) fileExtension[i++], fileNum, outBuffer, pDoc, lineBreak, TRUE);
+	  break;
 
-       case VtDocumentName:	/* le nom du document */
-	 i = 0;
-	 while (pDoc->DocDName[i] != WC_EOS)
-	   PutChar ((wchar_t) pDoc->DocDName[i++], fileNum, outBuffer, pDoc, lineBreak, TRUE);
-	 break;
+	case VtDocumentName:	/* le nom du document */
+	  i = 0;
+	  while (pDoc->DocDName[i] != WC_EOS)
+	    PutChar ((wchar_t) pDoc->DocDName[i++], fileNum, outBuffer, pDoc, lineBreak, TRUE);
+	  break;
 
-       case VtDocumentDir:	/* le repertoire du document */
-	 i = 0;
-	 while (pDoc->DocDirectory[i] != WC_EOS)
-	   PutChar ((wchar_t) pDoc->DocDirectory[i++], fileNum, outBuffer, pDoc, lineBreak, TRUE);
-	 break;
-
-       default:
-	 break;
-       }
-     }
+	case VtDocumentDir:	/* le repertoire du document */
+	  i = 0;
+	  while (pDoc->DocDirectory[i] != WC_EOS)
+	    PutChar ((wchar_t) pDoc->DocDirectory[i++], fileNum, outBuffer, pDoc, lineBreak, TRUE);
+	  break;
+	  
+	default:
+	  break;
+	}
+    }
 }
 
-#ifdef __STDC__
-static void         TranslateTree (PtrElement pEl, PtrDocument pDoc,
-				   ThotBool transChar, ThotBool lineBreak,
-				   ThotBool enforce, ThotBool recordLineNb);
-#else  /* __STDC__ */
-static void         TranslateTree ( /* pEl, pDoc, transChar, lineBreak,
-				       enforce, recordLineNb */ );
-#endif /* __STDC__ */
+static void TranslateTree (PtrElement pEl, PtrDocument pDoc,
+			   ThotBool transChar, ThotBool lineBreak,
+			   ThotBool enforce, ThotBool recordLineNb);
 
 /*----------------------------------------------------------------------
    ApplyTRule   applique la regle de traduction pTRule du schema de	
@@ -2479,31 +2306,12 @@ static void         TranslateTree ( /* pEl, pDoc, transChar, lineBreak,
    S'il s'agit de la traduction des regles d'un attribut,          
    pAttr pointe sur l'attribut que l'on traduit.			
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 static void ApplyTRule (PtrTRule pTRule, PtrTSchema pTSch, PtrSSchema pSSch,
-			PtrElement pEl, ThotBool * transChar,
-			ThotBool * lineBreak, ThotBool * removeEl,
-			ThotBool * ignoreEl,
+			PtrElement pEl, ThotBool *transChar,
+			ThotBool *lineBreak, ThotBool *removeEl,
+			ThotBool *ignoreEl,
 			PtrPRule pRPres, PtrAttribute pAttr,
 			PtrDocument pDoc, ThotBool recordLineNb)
-#else  /* __STDC__ */
-static void ApplyTRule (pTRule, pTSch, pSSch, pEl, transChar, lineBreak,
-			removeEl, ignoreEl, pRPres, pAttr, pDoc, recordLineNb)
-PtrTRule            pTRule;
-PtrTSchema          pTSch;
-PtrSSchema          pSSch;
-PtrElement          pEl;
-ThotBool           *transChar;
-ThotBool           *lineBreak;
-ThotBool           *removeEl;
-ThotBool           *ignoreEl;
-PtrPRule            pRPres;
-PtrAttribute        pAttr;
-PtrDocument         pDoc;
-ThotBool            recordLineNb;
-#endif /* __STDC__ */
-
 {
   PtrElement          pElGet, pRefEl;
   PtrDocument         pDocGet;
@@ -3289,31 +3097,12 @@ ThotBool            recordLineNb;
    de traduction qui correspondent a son type et qui doivent       
    s'appliquer a la position position.                             
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void ApplyElTypeRules (TOrder position, ThotBool * transChar,
-			      ThotBool * lineBreak, ThotBool * removeEl,
-			      ThotBool * ignoreEl,
+static void ApplyElTypeRules (TOrder position, ThotBool *transChar,
+			      ThotBool *lineBreak, ThotBool *removeEl,
+			      ThotBool *ignoreEl,
 			      PtrElement pEl, int TypeEl, PtrTSchema pTSch,
 			      PtrSSchema pSS, PtrDocument pDoc,
 			      ThotBool recordLineNb)
-#else  /* __STDC__ */
-static void  ApplyElTypeRules (position, transChar, lineBreak, removeEl,
-			       ignoreEl, pEl, TypeEl, pTSch, pSS, pDoc,
-			       recordLineNb)
-TOrder              position;
-ThotBool           *transChar;
-ThotBool           *lineBreak;
-ThotBool           *removeEl;
-ThotBool           *ignoreEl;
-PtrElement          pEl;
-int                 TypeEl;
-PtrTSchema          pTSch;
-PtrSSchema          pSS;
-PtrDocument         pDoc;
-ThotBool            recordLineNb
-
-#endif /* __STDC__ */
-
 {
    PtrTRuleBlock       pBlock;
    PtrTRule            pTRule;
@@ -3363,21 +3152,9 @@ ThotBool            recordLineNb
    et applique les regles de traduction des feuilles si transChar  
    est vrai.                                                       
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         TranslateTree (PtrElement pEl, PtrDocument pDoc,
-				   ThotBool transChar, ThotBool lineBreak,
-				   ThotBool enforce, ThotBool recordLineNb)
-#else  /* __STDC__ */
-static void         TranslateTree (pEl, pDoc, transChar, lineBreak, enforce,
-				   recordLineNb)
-PtrElement          pEl;
-PtrDocument         pDoc;
-ThotBool            transChar;
-ThotBool            lineBreak;
-ThotBool            enforce;
-ThotBool            recordLineNb;
-#endif /* __STDC__ */
-
+static void TranslateTree (PtrElement pEl, PtrDocument pDoc,
+			   ThotBool transChar, ThotBool lineBreak,
+			   ThotBool enforce, ThotBool recordLineNb)
 {
    PtrElement          pChild;
    PtrTSchema          pTSch, pTS;
@@ -3551,12 +3328,7 @@ ThotBool            recordLineNb;
    ResetTranslTags   remet a zero tous les indicateurs "deja traduit" 
    de l'arbre de racine pEl.                                       
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         ResetTranslTags (PtrElement pEl)
-#else  /* __STDC__ */
-static void         ResetTranslTags (pEl)
-PtrElement          pEl;
-#endif /* __STDC__ */
 {
    PtrElement          pChild;
 
@@ -3580,13 +3352,7 @@ PtrElement          pEl;
 /*----------------------------------------------------------------------
    InitOutputFiles initialise les fichiers de sortie.              
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         InitOutputFiles (FILE * mainFile, PtrDocument pDoc)
-#else  /* __STDC__ */
-static void         InitOutputFiles (mainFile, pDoc)
-FILE               *mainFile;
-PtrDocument         pDoc;
-#endif /* _STDC__ */
+static void         InitOutputFiles (FILE *mainFile, PtrDocument pDoc)
 {
    /* Entree 0 : standard output */
    OutputFile[0].OfFileName[0] = EOS;
@@ -3614,12 +3380,7 @@ PtrDocument         pDoc;
    FlushOutputFiles vide les buffers dans les fichiers de sortie      
    correspondants.                                                 
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         FlushOutputFiles (PtrDocument pDoc)
-#else  /* __STDC__ */
-static void         FlushOutputFiles (pDoc)
-PtrDocument         pDoc;
-#endif /* __STDC__ */
 {
    int                 i, fich;
 
@@ -3639,16 +3400,8 @@ PtrDocument         pDoc;
    dans le fichier de nom fName.
    Retourne TRUE si export reussi.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 ThotBool      ExportDocument (PtrDocument pDoc, STRING fName,
 			      STRING TSchemaName, ThotBool recordLineNb)
-#else  /* __STDC__ */
-ThotBool      ExportDocument (pDoc, fName, TSchemaName, recordLineNb)
-PtrDocument         pDoc;
-STRING              fName;
-STRING              TSchemaName;
-ThotBool            recordLineNb;
-#endif /* __STDC__ */
 {
    FILE               *outputFile; /* fichier de sortie principal */
    int                 i;
@@ -3727,23 +3480,12 @@ ThotBool            recordLineNb;
 }
 
 /*----------------------------------------------------------------------
-   ExportTree   exporte le sous arbre pointe par pEl du document 
-   pointe' par pDoc, selon le schema de traduction de nom TSchemaName 
-   et produit le resultat dans le fichier de nom fName ou dans le buffer.					
+  ExportTree   exporte le sous arbre pointe par pEl du document
+  pointe' par pDoc, selon le schema de traduction de nom TSchemaName 
+  et produit le resultat dans le fichier de nom fName ou dans le buffer.
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-void                ExportTree (PtrElement pEl, PtrDocument pDoc, STRING fName,
-				STRING TSchemaName)
-
-#else  /* __STDC__ */
-void                ExportTree (pEl, pDoc, fName, TSchemaName)
-PtrElement	    pEl;
-PtrDocument         pDoc;
-STRING              fName;
-STRING              TSchemaName;
-#endif /* __STDC__ */
-
+void ExportTree (PtrElement pEl, PtrDocument pDoc, STRING fName,
+		 STRING TSchemaName)
 {
   int                 i;
 

@@ -78,30 +78,16 @@ static CHAR_T         nameBuffer[MAX_NAME_LENGTH];
 
    Opens the main view of a document. This document must have a PSchema
    (see TtaSetPSchema).
-
    Parameters:
    document: the document for which a window must be open.
    x, y: coordinate (in millimeters) of the upper left corner of the
    window that will display the view.
    w, h: width and height (in millimeters) of the upper left corner of the
    window that will display the view.
-
    Return value:
    the view opened or 0 if the view cannot be opened.
-
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-View                TtaOpenMainView (Document document, int x, int y, int w, int h)
-
-#else  /* __STDC__ */
-View                TtaOpenMainView (document, x, y, w, h)
-Document            document;
-int                 x;
-int                 y;
-int                 w;
-int                 h;
-#endif /* __STDC__ */
+View TtaOpenMainView (Document document, int x, int y, int w, int h)
 {
   PtrDocument         pDoc;
   int                 nView;
@@ -142,7 +128,6 @@ int                 h;
    OpenView
 
    Opens a view for a document.
-
    Parameters:
    document: the document.
    viewName: name of the view to be opened.
@@ -150,22 +135,11 @@ int                 h;
    window that will display the view.
    w, h: width and height (in millimeters) of the upper left corner of the
    window that will display the view.
-
    Return value:
    the view opened or 0 if the view cannot be opened.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static View         OpenView (Document document, STRING viewName, int x, int y, int w, int h, Element subtree)
-#else  /* __STDC__ */
-static View         OpenView (document, viewName, x, y, w, h, subtree)
-Document            document;
-STRING              viewName;
-int                 x;
-int                 y;
-int                 w;
-int                 h;
-Element             subtree;
-#endif /* __STDC__ */
+static View OpenView (Document document, STRING viewName, int x, int y,
+		      int w, int h, Element subtree)
 {
   int                 nView;
   int                 nbViews;
@@ -259,7 +233,6 @@ Element             subtree;
 
    Opens a view for a document. This document must have a PSchema
    (see TtaSetPSchema).
-
    Parameters:
    document: the document.
    viewName: name of the view to be opened.
@@ -267,24 +240,10 @@ Element             subtree;
    window that will display the view.
    w, h: width and height (in millimeters) of the upper left corner of the
    window that will display the view.
-
    Return value:
    the view opened or 0 if the view cannot be opened.
-
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-View                TtaOpenView (Document document, STRING viewName, int x, int y, int w, int h)
-#else  /* __STDC__ */
-View                TtaOpenView (document, viewName, x, y, w, h)
-Document            document;
-STRING              viewName;
-int                 x;
-int                 y;
-int                 w;
-int                 h;
-#endif /* __STDC__ */
-
+View TtaOpenView (Document document, STRING viewName, int x, int y, int w, int h)
 {
    return OpenView (document, viewName, x, y, w, h, NULL);
 }
@@ -292,9 +251,8 @@ int                 h;
 /*----------------------------------------------------------------------
    TtaOpenSubView
 
-   Opens a view that shows only a subtree. This document must have a PSchema
-   (see TtaSetPSchema).
-
+   Opens a view that shows only a subtree. This document must have a
+   PSchema (see TtaSetPSchema).
    Parameters:
    document: the document.
    viewName: name of the view to be opened.
@@ -303,25 +261,11 @@ int                 h;
    w, h: width and height (in millimeters) of the upper left corner of the
    window that will display the view.
    subtree: root element of the subtree to be shown in the view.
-
    Return value:
    the view opened or 0 if the view cannot be opened.
-
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-View                TtaOpenSubView (Document document, STRING viewName, int x, int y, int w, int h, Element subtree)
-#else  /* __STDC__ */
-View                TtaOpenSubView (document, viewName, x, y, w, h, subtree)
-Document            document;
-STRING              viewName;
-int                 x;
-int                 y;
-int                 w;
-int                 h;
-Element             subtree;
-#endif /* __STDC__ */
-
+View TtaOpenSubView (Document document, STRING viewName, int x, int y,
+		     int w, int h, Element subtree)
 {
    return OpenView (document, viewName, x, y, w, h, subtree);
 }
@@ -330,19 +274,11 @@ Element             subtree;
    TtaCloseView
 
    Closes a view.
-
    Parameters:
    document: the document for which a view must be closed.
    view: the view to be closed.
-
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                TtaCloseView (Document document, View view)
-#else  /* __STDC__ */
-void                TtaCloseView (document, view)
-Document            document;
-View                view;
-#endif /* __STDC__ */
 {
    PtrDocument         pDoc;
    int                 numAssoc;
@@ -385,22 +321,12 @@ View                view;
    TtaChangeViewTitle
 
    Changes the title of a view.
-
    Parameters:
    document: the document.
    view: the view.
    title: the new title.
-
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-void                TtaChangeViewTitle (Document document, View view, STRING title)
-#else  /* __STDC__ */
-void                TtaChangeViewTitle (document, view, title)
-Document            document;
-View                view;
-STRING              title;
-#endif /* __STDC__ */
+void TtaChangeViewTitle (Document document, View view, STRING title)
 {
    PtrDocument         pDoc;
    int                 numAssoc;
@@ -439,22 +365,12 @@ STRING              title;
 
    Changes the current sensibility used to display a given view of a
    given document.
-
    Parameters:
    document: the document. Cannot be 0.
    view: the view.
    value: new value of the sensibility.
-
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-void                TtaSetSensibility (Document document, View view, int value)
-#else  /* __STDC__ */
-void                TtaSetSensibility (document, view, value)
-Document            document;
-View                view;
-int                 value;
-#endif /* __STDC__ */
+void TtaSetSensibility (Document document, View view, int value)
 {
    int                 frame;
    int                 valvisib, valzoom;
@@ -482,21 +398,12 @@ int                 value;
 
    Changes the current zoom used to display a given
    view of a given document.
-
    Parameters:
    document: the document. Cannot be 0.
    view: the view.
    value: new value of the zoom.
-
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                TtaSetZoom (Document document, View view, int value)
-#else  /* __STDC__ */
-void                TtaSetZoom (document, view, value)
-Document            document;
-View                view;
-int                 value;
-#endif /* __STDC__ */
+void TtaSetZoom (Document document, View view, int value)
 {
   int                 frame;
   int                 valvisib, valzoom;
@@ -521,12 +428,10 @@ int                 value;
 /*----------------------------------------------------------------------
    TtaGetFirstElementShown
    Returns the first element in a given view of a given document.
-
    Parameters:
    document: the document to which the element to be shown belongs.
    Cannot be 0.
    view: the view where the element must be shown.
-
    Returns:
    element: the first shown element.
    position: position of the top of the element in the window.
@@ -535,14 +440,7 @@ int                 value;
    whatever the actual height of the window), position is the
    desired y coordinate of the top of the element.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-Element             TtaGetFirstElementShown (Document document, View view, int *position)
-#else  /* __STDC__ */
-Element             TtaGetFirstElementShown (document, view, position)
-Document            document;
-View                view;
-int                *position;
-#endif /* __STDC__ */
+Element TtaGetFirstElementShown (Document document, View view, int *position)
 {
   ViewFrame          *pFrame;
   PtrElement          pEl;
@@ -591,7 +489,6 @@ int                *position;
 /*----------------------------------------------------------------------
    TtaShowElement
    Shows a given element in a given view of a given document.
-
    Parameters:
    document: the document to which the element to be shown belongs.
    Cannot be 0.
@@ -603,15 +500,7 @@ int                *position;
    whatever the actual height of the window), position is the
    desired y coordinate of the top of the element.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                TtaShowElement (Document document, View view, Element element, int position)
-#else  /* __STDC__ */
-void                TtaShowElement (document, view, element, position)
-Document            document;
-View                view;
-Element             element;
-int                 position;
-#endif /* __STDC__ */
+void TtaShowElement (Document document, View view, Element element, int position)
 {
   PtrElement          pEl;
   int                 frame;
@@ -651,21 +540,13 @@ int                 position;
    TtaGetSensibility
    Reads the current sensibility used to display
    a given view of a given document.
-
    Parameters:
    document: the document. Cannot be 0.
    view: the view.
-
    Return value:
    current value of the sensibility.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 int                 TtaGetSensibility (Document document, View view)
-#else  /* __STDC__ */
-int                 TtaGetSensibility (document, view)
-Document            document;
-View                view;
-#endif /* __STDC__ */
 {
    int                 frame;
    int                 valzoom;
@@ -685,23 +566,13 @@ View                view;
 
    Reads the current zoom used to display a given view
    of a given document.
-
    Parameters:
    document: the document. Cannot be 0.
    view: the view.
-
    Return value:
    current value of the zoom.
-
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 int                 TtaGetZoom (Document document, View view)
-#else  /* __STDC__ */
-int                 TtaGetZoom (document, view)
-Document            document;
-View                view;
-#endif /* __STDC__ */
 {
    int                 frame;
    int                 valvisib;
@@ -722,22 +593,13 @@ View                view;
    Checks if a presentation schema can be applied to a document of a given
    class. No document is needed and the schemas are not loaded by this
    function.
-
    Parameters:
    structureName: Name of the document class.
    presentationName: Name of the presentation schema to be checked.
-
    Return value:
    1 if the presentation schema can be applied, 0 if it can not.
-
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-int                 TtaIsPSchemaValid (STRING structureName, STRING presentationName)
-#else  /* __STDC__ */
-int                 TtaIsPSchemaValid (structureName, presentationName)
-STRING              structureName;
-STRING              presentationName;
-#endif /* __STDC__ */
+int TtaIsPSchemaValid (STRING structureName, STRING presentationName)
 {
    PathBuffer          DirBuffer;
    BinFile             file;
@@ -773,26 +635,16 @@ STRING              presentationName;
    TtaGiveViewsToOpen
 
    Returns the names of the views that can be opened for a document.
-
    Parameters:
    document: the document.
    buffer: a buffer that will contain the result.
-
    Return parameters:
    buffer: list of view names. Each name is a character string with
    a final EOS. Names of views that are already open have a '*'
    at the       end.
    nbViews: number of names in the list, 0 if not any view can be open.
-
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                TtaGiveViewsToOpen (Document document, STRING buffer, int *nbViews)
-#else  /* __STDC__ */
-void                TtaGiveViewsToOpen (document, buffer, nbViews)
-Document            document;
-STRING              buffer;
-int                *nbViews;
-#endif /* __STDC__ */
+void TtaGiveViewsToOpen (Document document, STRING buffer, int *nbViews)
 {
 
    UserErrorCode = 0;
@@ -811,22 +663,13 @@ int                *nbViews;
    TtaGetViewName
 
    Returns the name of an open view.
-
    Parameters:
    document: the document to which the view belongs.
    view: the view.
-
    Return value:
    Name of the view. The buffer must be provided by the caller.
-
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 STRING              TtaGetViewName (Document document, View view)
-#else  /* __STDC__ */
-STRING              TtaGetViewName (document, view)
-Document            document;
-View                view;
-#endif /* __STDC__ */
 {
   PtrDocument         pDoc;
   PtrElement          pEl;
@@ -876,22 +719,13 @@ View                view;
    TtaIsViewOpen
 
    Returns TRUE for a open view.
-
    Parameters:
    document: the document to which the view belongs.
    view: the view.
-
    Return value:
    TRUE or FALSE.
-
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 ThotBool            TtaIsViewOpen (Document document, View view)
-#else  /* __STDC__ */
-ThotBool            TtaIsViewOpen (document, view)
-Document            document;
-View                view;
-#endif /* __STDC__ */
 {
    PtrDocument         pDoc;
    PtrElement          pEl;
@@ -941,22 +775,13 @@ View                view;
    TtaGetViewFromName
 
    Returns the identifier of a view of a given document from its name.
-
    Parameters:
    document: the document to which the view belongs.
    viewName: the name of the view.
-
    Return value:
    the view. 0 if no view of that name is currently open for the document.
-
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-View                TtaGetViewFromName (Document document, char* viewName)
-#else  /* __STDC__ */
-View                TtaGetViewFromName (document, viewName)
-Document            document;
-char*               viewName;
-#endif /* __STDC__ */
+View TtaGetViewFromName (Document document, char* viewName)
 {
    View                view;
    PtrDocument         pDoc;
@@ -1005,21 +830,13 @@ char*               viewName;
    Returns the active view and the document to which that view belongs.
    The active view is the one that receives the characters typed by
    the user.
-
    Parameter:
    No parameter.
-
    Return values:
    document: the active document.
    view: the active view.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                TtaGiveActiveView (Document * document, View * view)
-#else  /* __STDC__ */
-void                TtaGiveActiveView (document, view)
-Document           *document;
-View               *view;
-#endif /* __STDC__ */
+void TtaGiveActiveView (Document * document, View * view)
 {
    PtrDocument         pDoc;
    int                 aView;
@@ -1046,13 +863,7 @@ View               *view;
 /*----------------------------------------------------------------------
    DisplayHolophrasted reaffiche un element sous forme holphrastee 
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                DisplayHolophrasted (PtrElement pEl, Document document)
-#else  /* __STDC__ */
-void                DisplayHolophrasted (pEl, document)
-PtrElement          pEl;
-Document            document;
-#endif /* __STDC__ */
+void DisplayHolophrasted (PtrElement pEl, Document document)
 {
    PtrDocument         pDoc;
 
@@ -1082,13 +893,7 @@ Document            document;
    RedisplayReference reaffiche une reference qui vient d'etre        
    modifiee.                                                       
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                RedisplayReference (PtrElement element, Document document)
-#else  /* __STDC__ */
-void                RedisplayReference (element, document)
-PtrElement          element;
-Document            document;
-#endif /* __STDC__ */
+void RedisplayReference (PtrElement element, Document document)
 {
    PtrDocument         pDoc;
 
@@ -1116,14 +921,7 @@ Document            document;
 /*----------------------------------------------------------------------
    RedisplayLeaf reaffiche le contenu d'une feuille.                  
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                RedisplayLeaf (PtrElement element, Document document, int delta)
-#else  /* __STDC__ */
-void                RedisplayLeaf (element, document, delta)
-PtrElement          element;
-Document            document;
-int                 delta;
-#endif /* __STDC__ */
+void RedisplayLeaf (PtrElement element, Document document, int delta)
 {
    PtrDocument         pDoc;
    int                 view, frame, h;
@@ -1243,17 +1041,9 @@ int                 delta;
 /*----------------------------------------------------------------------
    RedisplaySplittedText reaffiche le contenu d'un texte divise'.     
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-void                RedisplaySplittedText (PtrElement element, int position, PtrElement pNewEl, PtrElement  pNextEl, Document document)
-#else  /* __STDC__ */
-void                RedisplaySplittedText (element, position, pNewEl, pNextEl, document)
-PtrElement          element;
-int                 position;
-PtrElement	    pNewEl;
-PtrElement	    pNextEl;
-Document            document;
-#endif /* __STDC__ */
+void RedisplaySplittedText (PtrElement element, int position,
+			    PtrElement pNewEl, PtrElement  pNextEl,
+			    Document document)
 {
    PtrElement          pEl;
    PtrDocument         pDoc;
@@ -1293,14 +1083,7 @@ Document            document;
 /*----------------------------------------------------------------------
    RedisplayMergedText reaffiche le contenu d'un texte fusionne'.     
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-void                RedisplayMergedText (PtrElement element, Document document)
-#else  /* __STDC__ */
-void                RedisplayMergedText (element, document)
-PtrElement          element;
-Document            document;
-#endif /* __STDC__ */
+void RedisplayMergedText (PtrElement element, Document document)
 {
    PtrElement          pEl, pENeighbour;
    ThotBool            stop;
@@ -1371,20 +1154,12 @@ Document            document;
 }
 
 /*----------------------------------------------------------------------
-   UndisplayInheritedAttributes      supprime sur l'element pEl et son       
-   sous-arbre la presentation liee a l'attribut decrit par pAttr   
-   ou a l'heritage d'un tel attribut.                              
+   UndisplayInheritedAttributes supprime sur l'element pEl et son
+   sous-arbre la presentation liee a l'attribut decrit par pAttr
+   ou a l'heritage d'un tel attribut.    
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-void                UndisplayInheritedAttributes (PtrElement pEl, PtrAttribute pAttr, Document document, ThotBool suppression)
-#else  /* __STDC__ */
-void                UndisplayInheritedAttributes (pEl, pAttr, document, suppression)
-PtrElement          pEl;
-PtrAttribute        pAttr;
-Document            document;
-ThotBool            suppression;
-#endif /* __STDC__ */
+void UndisplayInheritedAttributes (PtrElement pEl, PtrAttribute pAttr,
+				   Document document, ThotBool suppression)
 {
    ThotBool            inheritance, comparaison;
    PtrAttribute        pAttrAsc;
@@ -1460,13 +1235,7 @@ ThotBool            suppression;
    UndisplayElement "desaffiche" un element qui va etre retire'    
    de son arbre abstrait.                                          
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                UndisplayElement (PtrElement pEl, Document document)
-#else  /* __STDC__ */
-void                UndisplayElement (pEl, document)
-PtrElement          pEl;
-Document            document;
-#endif /* __STDC__ */
+void UndisplayElement (PtrElement pEl, Document document)
 {
    PtrElement          pNext, pPrevious, pFather, pNeighbour, pE, pSS;
    ThotBool            stop;
@@ -1625,14 +1394,7 @@ Document            document;
 /*----------------------------------------------------------------------
    RedispNewGeometry                                               
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-void                RedispNewGeometry (Document document, PtrElement pEl)
-#else  /* __STDC__ */
-void                RedispNewGeometry (document, pEl)
-Document            document;
-PtrElement          pEl;
-#endif /* __STDC__ */
+void RedispNewGeometry (Document document, PtrElement pEl)
 {
    if (LoadedDocument[document - 1] == NULL)
       return;
