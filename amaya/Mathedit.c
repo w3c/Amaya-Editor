@@ -1159,13 +1159,14 @@ static void         CreateMathConstruct (int construct)
 	  TtaShowDialogue (BaseDialog + TableForm, FALSE);
 	  /* wait for an answer */
 	  TtaWaitShowDialogue ();
+#endif /* !_WINDOWS */
 	  if (!UserAnswer || NumberRows == 0 || NumberCols == 0)
 	    /* the user decided to abort the command */
 	    {
+		  TtaSetDisplayMode (doc, dispMode);
 	      TtaCloseUndoSequence (doc);
 	      return;
 	    }
-#endif /* !_WINDOWS */
 	}
       else
 	{

@@ -703,7 +703,7 @@ LRESULT CALLBACK TableDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
   int      val;
 
   switch (msg)
-    {
+  {
     case WM_INITDIALOG:
       SetWindowText (hwnDlg, TtaGetMessage (1, BTable));
       SetWindowText (GetDlgItem (hwnDlg, IDC_NUMCOL),
@@ -754,8 +754,8 @@ LRESULT CALLBACK TableDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
 	  EndDialog (hwnDlg, ID_CONFIRM);
 	  break;
 	case IDCANCEL:
-	  EndDialog (hwnDlg, IDCANCEL);
 	  ThotCallback (BaseDialog + TableForm, INTEGER_DATA, (char*) 0);
+      EndDialog (hwnDlg, ID_CONFIRM);
 	  break;
 	}
       break;
