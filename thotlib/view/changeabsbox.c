@@ -3366,6 +3366,31 @@ ThotBool ElemWithinImage (PtrElement pEl, int view, PtrAbstractBox pAbbRoot,
 }
 
 /*----------------------------------------------------------------------
+  RuleHasCondAttr returns TRUE if presentation rule pR has a condition
+  based on attribute pAttr.
+  ----------------------------------------------------------------------*/
+static ThotBool RuleHasCondAttr (PtrPRule pR, PtrAttribute pAttr)
+{
+  ThotBool             found;
+  PtrCondition         pCond;
+
+  found = FALSE;
+  pCond = pR->PrCond;
+  while (pCond && !found)
+    {
+      if ((pCond->CoCondition == PcAttribute ||
+	   pCond->CoCondition == PcInheritAttribute) &&
+	  pCond->CoNotNegative &&
+	  !pCond->CoTarget &&
+	  pCond->CoTypeAttr == pAttr->AeAttrNum)
+	found = TRUE;
+      else
+	pCond = pCond->CoNextCondition;
+    }
+  return found;
+}
+
+/*----------------------------------------------------------------------
   UpdatePresAttr applies or remove presentation rules attached to the
   attribute pAttr to the current element pEl.
   This change is also performed on enclosed elements if prsentations
@@ -3683,34 +3708,44 @@ void                UpdatePresAttr (PtrElement pEl, PtrAttribute pAttr,
 			}
 		      if (pAb != NULL)
 			do
-			  if (pAb->AbElement->ElTypeNumber == PageBreak + 1)
-			    {
-			    /* c'est un pave marque de page, on passe au pave
-			       voisin */
-			    if (func == FnCreateBefore || func == FnCreateLast)
-			      pAb = pAb->AbPrevious;
+			  {
+			    if (!pAb->AbPresentationBox ||
+				pAb->AbElement != pEl)
+			      /* ce n'est pas un pave de presentation ou ce */
+			      /* pave n'appartient pas a l'element. stop. */
+			      pAb = NULL;
 			    else
-			      pAb = pAb->AbNext;
-			    }
-			  else if (!pAb->AbPresentationBox ||
-				   pAb->AbElement != pEl)
-			    /* ce n'est pas un pave' marque de saut de page */
-			    /* ce n'est pas un pave de presentation ou ce */
-			    /* pave n'appartient pas a l'element */
-			    pAb = NULL;
-			  else if (pAb->AbTypeNum == pR->PrPresBox[0] &&
-				   pAb->AbPSchema == pSchP &&
-				   pAb->AbCreatorAttr == pAttr)
-			    /* c'est un pave de presentation de l'element */
-			    /* ce pave a la type cherche', et il est cre'e' */
-			    /* par l'attribut. On a trouve' */
-			    found = TRUE;
-			  else if (func == FnCreateBefore ||
-				   func == FnCreateLast)
-			    /* passe au pave voisin */
-			    pAb = pAb->AbPrevious;
-			  else
-			    pAb = pAb->AbNext;
+			      /* si c'est un pave  marque de page, on saute */
+			      if (pAb->AbElement->ElTypeNumber != PageBreak+1)
+				{
+				  if (pAb->AbTypeNum == pR->PrPresBox[0] &&
+				      pAb->AbPSchema == pSchP)
+				    /* ce pave a la type cherche' */
+				    {
+				      if (pAb->AbCreatorAttr == pAttr)
+					/* il est cre'e' par l'attribut */
+					found = TRUE;
+				      else if (pR->PrDuplicate)
+					/* la regle est dupliquee. Le pave a
+					   sans doute ete cree' par la regle
+					   originale. On le prend */
+					found = TRUE;
+				      else if (RuleHasCondAttr (pR, pAb->AbCreatorAttr))
+					/* la regle de creation a une condition
+					   sur l'attribut. On prend le pave */
+					found = TRUE;
+				    }
+				}
+			    if (pAb && !found)
+			      /* passe au pave voisin */
+			      {
+				if (func == FnCreateBefore ||
+				    func == FnCreateLast)
+				  pAb = pAb->AbPrevious;
+				else
+				  pAb = pAb->AbNext;
+			      }
+			  }
 			while (pAb != NULL && !found);
 
 		      if (found)
