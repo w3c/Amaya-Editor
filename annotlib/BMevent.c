@@ -180,9 +180,13 @@ void BM_Init (void)
 
   BookmarksEnabled = TRUE;
 
+#ifdef _WINDOWS
+  test_result = TRUE;
+#else
   /* The user may disable bookmarks from the registry */
   TtaGetEnvBoolean ("DISABLE_BOOKMARKS", &test_result);
-  
+#endif /* _WINDOWS */
+
   if (test_result)
     BookmarksEnabled = FALSE;
   else
