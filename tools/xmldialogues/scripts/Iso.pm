@@ -172,7 +172,7 @@ sub return_code_in_ISO_639 {
 	my $lang;
 	my $redo = 0;
 	do {	
-		print "\tWhat language do you want to treat?"
+		print "\tWhat language do you want to treat?\n"
 				."\t(answer in two letters like the standard ISO-639 i.e.: en or fr)\n"
 				."\tYour answer? (if you want a listing type 0 ):\t";
 			$lang = <STDIN>;
@@ -180,22 +180,26 @@ sub return_code_in_ISO_639 {
 			if ($lang eq "") {
 				$redo = 1;
 			}
-			elsif ($lang eq "0" ) {
-				print "This is the semantic of the standard ISO-639 \n";
-				foreach (keys (%iso_639)) {
-					print "\tFor  " . $iso_639 {$_} ."\ttype\t$_\n";
-				}
-				$redo = 1;
-			}
 			else {
-				if ( belongs_to_list ($lang) ) {
-					$redo = 0;
+				if ($lang eq "0" ) {
+					print "This is the semantic of the standard ISO-639 \n";
+					foreach (keys (%iso_639)) {
+						print "\tFor  " . $iso_639 {$_} ."\ttype\t$_\n";
+					}
+					print "\n";
+					$redo = 1;
 				}
 				else {
-					$redo = 1; 
+					if ( belongs_to_list ($lang) == 1) {
+						$redo = 0;
+					}
+					else {
+						$redo = 1; 
+					}
 				}
 			}			
-	} while ($redo);
+	} while ($redo == 1);
+	
 	return $lang;
 }
 #----------------------------------------------------------------------------

@@ -13,6 +13,7 @@ BEGIN {
 # Do not simply export all your public functions/methods/constants.
 	@EXPORT = 	qw(
 						&init_text
+						&ask_for_encoding;
 						)			
 }
 

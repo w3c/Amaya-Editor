@@ -18,8 +18,8 @@ BEGIN {
 }
 
 ############################# globals variables 
-my $rep_amaya = undef; #Parameter wanted
-my $rep_obj_amaya = undef; #Parameter wanted
+my $dir_amaya = undef; #Parameter wanted
+my $dir_obj_amaya = undef; #Parameter wanted
 
 my $found = 0; #to indicate that all is OK when $found == number of parameters wanted (currently = 2)
 
@@ -30,8 +30,8 @@ sub load_parameters {
 my $config_file = shift ;
 
 	#to avoid problem
-	$rep_amaya = undef;
-	$rep_obj_amaya = undef;
+	$dir_amaya = undef;
+	$dir_obj_amaya = undef;
 
 
 # declaration of the parser
@@ -55,8 +55,8 @@ my $config_file = shift ;
 		# to control :
 		close ( IN ) || warn "can't close $config_file because: $! \n";
 		
-		$rep_amaya = ask_for_amaya ($rep_amaya);		
-		$rep_obj_amaya = ask_for_obj ($rep_obj_amaya);		
+		$dir_amaya = ask_for_amaya ($dir_amaya);		
+		$dir_obj_amaya = ask_for_obj ($dir_obj_amaya);		
 		unless ($found == 2) {
 			open ( OUT, ">$config_file") || die "can't modify $config_file because: $! \n";	
 			printer ();
@@ -65,8 +65,8 @@ my $config_file = shift ;
 	}
 	else { ######### first use
 		print "\tFile $config_file not found or unexistant\n";
-		$rep_amaya = ask_for_amaya ($rep_amaya);		
-		$rep_obj_amaya = ask_for_obj ($rep_obj_amaya);
+		$dir_amaya = ask_for_amaya ($dir_amaya);		
+		$dir_obj_amaya = ask_for_obj ($dir_obj_amaya);
 		
 		open ( OUT, ">$config_file") || die "can't create $config_file because: $! \n";
 		printer ();
@@ -74,7 +74,7 @@ my $config_file = shift ;
 	}
 
 
-	return ($rep_amaya ,$rep_obj_amaya );
+	return ($dir_amaya ,$dir_obj_amaya );
 } #end main
 
 #_____________________________________________________.......................
@@ -82,73 +82,81 @@ sub printer {
 
 	print OUT 	"<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"yes\" ?>\n"
 				. "<configuration>\n"
-				. "<rep_amaya name=\"$rep_amaya\"/>\n"
-				. "<rep_obj name=\"$rep_obj_amaya\"/>\n"
+				. "<dir_amaya name=\"$dir_amaya\"/>\n"
+				. "<dir_obj name=\"$dir_obj_amaya\"/>\n"
 				. "</configuration>";
 
 }
 
 #_____________________________________________________.......................
 sub ask_for_amaya {
-	my $text = 	"What the name of the repertory where the source codes for Amaya are\n"
+	my $text = 	"What is the path of the parent directory of the main directory  Amaya? \n"
 					
-					."($home is already known) : ";
-	my $repertory = shift;
+					. "[by default $home ]: ";
+	my $directory = shift;
 	
-	if (defined ($repertory)) {
-		if (-d "$home$repertory/") {
+	if (defined ($directory)) {
+		if (-d "$directory") {
 			$found += 1 ;
 		}
 		else {
 			do {
 				print $text . "\n";
 				print "Answer :\t";
-				$repertory = <STDIN>;
-				chomp $repertory ;		
-			} while ($repertory eq "" || !(-d "$home$repertory/" ));
+				$directory = <STDIN>;
+				chomp $directory ;	
+				if ($directory eq "") {
+					$directory = $home;
+				}
+			} while ($directory eq "" || !(-d "$directory" ));
 		}
 	}
 	else {
 		do {
 			print $text . "\n";
 			print "Answer :\t";
-			$repertory = <STDIN>;
-			chomp $repertory ;		
-		} while ($repertory eq "" || !(-d "$home$repertory/" ));	
+			$directory = <STDIN>;
+			chomp $directory ;
+			if ($directory eq "") {
+					$directory = $home;
+			}		
+		} while ($directory eq "" || !(-d "$directory" ));	
 	}
-
-return $repertory
+	
+	
+	
+return $directory
 } 
 ######################
 sub ask_for_obj {
-	my $text = 	"What the name of your object repertory for amaya\n"
+	my $text = 	"What is the name of your object dirertory for amaya\n"
 					."Ex : LINUX-ELF  "
-					."($home$rep_amaya/Amaya is already known) : ";
-	my $repertory = shift;
+					."($dir_amaya/Amaya is already known) : ";
+	my $directory = shift;
 	
-	if (defined ($repertory)) {
-		if (-d "$home$rep_amaya/Amaya/$repertory") {
+	if (defined ($directory)) {
+		if (-d "$dir_amaya/Amaya/$directory") {
 			$found += 1 ;
 		}
 		else {
 			do {
 				print $text . "\n";
 				print "Answer :\t";
-				$repertory = <STDIN>;
-				chomp $repertory ;		
-			} while ($repertory eq "" || !(-d "$home$rep_amaya/Amaya/$repertory" ));
+				$directory = <STDIN>;
+				chomp $directory ;		
+			} while ($directory eq "" || !(-d "$dir_amaya/Amaya/$directory" ));
 		}
 	}
 	else {
 		do {
 			print $text . "\n";
 			print "Answer :\t";
-			$repertory = <STDIN>;
-			chomp $repertory ;		
-		} while ($repertory eq "" || !(-d "$home$rep_amaya/Amaya/$repertory" ));	
+			$directory = <STDIN>;
+			chomp $directory ;		
+		} while ($directory eq "" || !(-d "$dir_amaya/Amaya/$directory" ));	
 	}
 
-return $repertory
+return $directory
 } 
 
 
@@ -163,14 +171,14 @@ sub start_ {
 		if ($element eq "configuration"){
 			#do nothing
 		}
-		elsif ($element eq "rep_amaya") {
+		elsif ($element eq "dir_amaya") {
 			if (defined ( $param{"name"}) ) {
-				$rep_amaya = $param{"name"};
+				$dir_amaya = $param{"name"};
 			}		
 		}
-		elsif ($element eq "rep_obj") {
+		elsif ($element eq "dir_obj") {
 			if (defined ( $param{"name"}) ) {
-				$rep_obj_amaya = $param{"name"};
+				$dir_obj_amaya = $param{"name"};
 			}		
 		}
 	}

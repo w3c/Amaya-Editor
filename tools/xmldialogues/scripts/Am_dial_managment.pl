@@ -7,17 +7,19 @@ use strict ;
 # some environement variables for portability  
 my $home = $ENV{"HOME"} . "/";
 my $config_file = "$home.amaya/am_dialogues.conf.xml";
-my $rep_amaya = ""; # way between $home and the Repertory Amaya and libwww
-my $rep_obj = ""; #name of the object direcitriy for Amaya
-	( $rep_amaya,$rep_obj) = load_parameters($home, $config_file);
-	
+my $path_amaya = ""; # way between $home and the Repertory Amaya and libwww
+my $dir_obj = ""; #name of the object direcitriy for Amaya
+	( $path_amaya,$dir_obj) = load_parameters($home, $config_file);
+
 
 #### 	for all the bases
 # directory for bases 
-my $BASE_directory = "$home$rep_amaya/Amaya/tools/xmldialogues/bases/";
+my $BASE_directory = "$home$path_amaya/Amaya/tools/xmldialogues/bases/";
 # directory  translated NEW  files
-my $OUT_MSG_directory = "$home$rep_amaya/Amaya/config/";
+my $OUT_MSG_directory = "$home$path_amaya/Amaya/config/";
 
+
+my $directory_for_file_to_translate = "$home$path_amaya/Amaya/tools/xmldialogues/docs/";
 #	sufix for the generated file created into /docs to help translation
 my $specific_sufix = ".amaya.trans"; #used to indicate those specific files
 # commentary for begining of the ".h" file
@@ -54,21 +56,21 @@ my %ending_label = qw (	dia MAX_EDITOR_LABEL
 								corrd MSG_MAX_CHECK);
 
 #### 	for Amaya dialogue => dia or $index {1}
-  $head_dir{'dia'} = "$home$rep_amaya/Amaya/$rep_obj/amaya/";# idem $head_dir{$index{"1"}} = ...
+  $head_dir{'dia'} = "$home$path_amaya/Amaya/$dir_obj/amaya/";# idem $head_dir{$index{"1"}} = ...
   $head_name {'dia'}= 'EDITOR.h';
   $lang_dir{'dia'} = $OUT_MSG_directory;
   $lang_sufix {'dia'} = '-amayadialogue';
   $base_name {'dia'} = 'base_am_dia.xml';
 
 ####	for Amayamsg => msg or $index {2}
- $head_dir {'msg'} = "$home$rep_amaya/Amaya/amaya/";
+ $head_dir {'msg'} = "$home$path_amaya/Amaya/amaya/";
  $head_name {'msg'} = 'amayamsg.h' ;
  $lang_dir {'msg'} = $OUT_MSG_directory;
  $lang_sufix {'msg'} = '-amayamsg' ;
  $base_name {'msg'} = 'base_am_msg.xml';
 
 ####	for libdialogue => lib or $index {3}
- $head_dir {'lib'} = "$home$rep_amaya/Amaya/thotlib/include/" ;
+ $head_dir {'lib'} = "$home$path_amaya/Amaya/thotlib/include/" ;
  $head_name {'lib'} = 'libmsg.h' ;
  $lang_dir {'lib'} = $OUT_MSG_directory;
  $lang_sufix {'lib'} = '-libdialogue' ;
@@ -76,7 +78,7 @@ my %ending_label = qw (	dia MAX_EDITOR_LABEL
 
 
 ####	for corrdialogue => corrd or $index {4}
- $head_dir {'corrd'} = "$home$rep_amaya/Amaya/thotlib/internals/h/" ;
+ $head_dir {'corrd'} = "$home$path_amaya/Amaya/thotlib/internals/h/" ;
  $head_name {'corrd'} = 'corrmsg.h' ;
  $lang_dir {'corrd'} = $OUT_MSG_directory;
  $lang_sufix {'corrd'} = '-corrdialogue' ;
@@ -88,7 +90,7 @@ my %ending_label = qw (	dia MAX_EDITOR_LABEL
 ################################################################################
 #################################MAIN###########################################
 {
-#load the different modules needed
+#									load the different modules needed
 use Initialisation qw(	&create_base );
 use Import_am_msg qw( 	&import_a_language
 								$in_labelfile
@@ -103,25 +105,27 @@ use Forcer 			qw ( 	&forcer );
 
 use Configfile qw ( &load_parameters );
 use Iso qw ( &return_code_in_ISO_639);
+use Edition qw( &product_translate );
 
-#launch		
+######################launch		
 
 	menu () ;
 
 }
 #############################END MAIN###########################################
+
 sub menu {
 	my @list = ( 	"Quit",																	#0
 						"Amaya dialogues (menus with xx-amayadialogue files)",	#1	
 						"Amaya general messages ( with xx-amayamsg files)",		#2
 						"Thot library dialogues ( with xx-libdialogue files)",	#3
 						"Spell checker dialogues ( with xx-corrdialogue files)",	#4
-						"Or just product the preformated file for a translation"	#5
+						"Or product the preformated file for translating"	#5
 					);
 	my $count = 0;
 	my $choice = 0;
 
-	`clear`; # ne veux pas marcher
+	#`clear`; # ne veux pas marcher
 	print "=======================================================================\n",
 			"\t\tAmaya Dialogues Manager\n";
 	do {
@@ -145,7 +149,17 @@ sub menu {
 		}
 		elsif ($choice == 5) {
 			my $lang = Iso::return_code_in_ISO_639 ();
-			
+			foreach (values (%index)) {
+				Edition::product_translate (
+					$BASE_directory . $base_name {$_},
+					$head_name {$_} ,
+					$directory_for_file_to_translate,
+					$lang_sufix {$_},
+					$specific_sufix,
+					$comment_for_begining_of_h_file,
+					$lang
+				);
+			}
 		}
 		
 	}
@@ -233,9 +247,9 @@ do { # to continue to treat the same type of dialogue
 			}
 		else #if (/1/)
 			{
-		$Import_am_msg::in_labelfile = "$home$rep_amaya/Amaya/tools/xmldialogues/in/" . $head_name{ $of_what};
+		$Import_am_msg::in_labelfile = "$home$path_amaya/Amaya/tools/xmldialogues/in/" . $head_name{ $of_what};
 		$Import_am_msg::basefile = $BASE_directory  . $base_name { $of_what};
-		$Import_am_msg::in_textdirectory = "$home$rep_amaya/Amaya/tools/xmldialogues/in/";
+		$Import_am_msg::in_textdirectory = "$home$path_amaya/Amaya/tools/xmldialogues/in/";
 		$Import_am_msg::in_textsufix = $lang_sufix { $of_what};				
 			}
 		Import_am_msg::import_a_language ($lang, $ending_label{ $of_what} ) ;		
@@ -279,16 +293,18 @@ do { # to continue to treat the same type of dialogue
 		}
 		$choice = -1; #to avoid problem		
 	}	
+	$_ = $choice;
 } while ( $choice != 0 ); 
 
 #to do the update automaticaly
+	if ($_ != 3) {
 		Export_am_msg::export (	$BASE_directory . $base_name{ $of_what},
 										$OUT_MSG_directory,
 										$lang_sufix { $of_what},
 										$head_dir{ $of_what} . $head_name{ $of_what},
 										$ending_label { $of_what}
 										);
-
+	}
 }
 
 #-------------------------------------------------------------------------------
