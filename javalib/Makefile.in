@@ -89,6 +89,8 @@ dirs : $(THOTDIR)/classes/w3c/thotlib $(THOTDIR)/classes/w3c/amaya
 
 THOT_JAVA_OBJ = \
 	kaffeine.o \
+	JavaX11Interf.o \
+	events.o \
 	JavaTypes.o \
 	JavaDialog.o \
 	w3c_thotlib_APIExtra_stubs.o \

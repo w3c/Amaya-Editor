@@ -7,7 +7,7 @@
 #ifdef __STDC__
 
 extern void InitJavaSelect ( void );
-extern int JavaSelect ( int n,
+extern int JavaSelect ( int nb,
                         fd_set *readfds,
                         fd_set *writefds,
                         fd_set *exceptfds,
@@ -19,24 +19,14 @@ extern void JavaXWindowSocketRelease ( void );
 extern void DNSserverLock ( void );
 extern void DNSserverRelease ( void );
 extern struct hostent *gethostbyname ( const char *name );
-extern void JavaHandleOneEvent ( ThotEvent *ev );
-extern int JavaFetchEvent ( ThotEvent *ev );
-extern int OldJavaFetchEvent ( ThotEvent *ev );
-extern boolean JavaFetchAvailableEvent ( ThotEvent *ev );
-extern void JavaHandleAvailableEvents ( void );
 extern void InitJava ( void );
 extern void CloseJava ( void );
-extern void InitJavaEventLoop ( ThotAppContext app_ctx );
-extern int JavaStopPoll ( void );
-extern int JavaPollLoop ( void );
-extern void JavaEventLoop ( void );
-extern void JavaLoadResources ( void );
 extern void throwOutOfMemory ( void );
 
 #else /* __STDC__ */
 
 extern void InitJavaSelect (/* void */);
-extern int JavaSelect (/* int n,
+extern int JavaSelect (/* int nb,
                           fd_set *readfds,
                           fd_set *writefds,
                           fd_set *exceptfds,
@@ -48,18 +38,8 @@ extern void JavaXWindowSocketRelease (/* void */);
 extern void DNSserverLock (/* void */);
 extern void DNSserverRelease (/* void */);
 extern struct hostent *gethostbyname (/* const char *name */);
-extern void JavaHandleOneEvent (/* ThotEvent *ev */);
-extern int JavaFetchEvent (/* ThotEvent *ev */);
-extern int OldJavaFetchEvent (/* ThotEvent *ev */);
-extern boolean JavaFetchAvailableEvent (/* ThotEvent *ev */);
-extern void JavaHandleAvailableEvents (/* void */);
 extern void InitJava (/* void */);
 extern void CloseJava (/* void */);
-extern void InitJavaEventLoop (/* ThotAppContext app_ctx */);
-extern int JavaStopPoll (/* void */);
-extern int JavaPollLoop (/* void */);
-extern void JavaEventLoop (/* void */);
-extern void JavaLoadResources (/* void */);
 extern void throwOutOfMemory (/* void */);
 
 #endif /* __STDC__ */

@@ -16,6 +16,8 @@ AMAYA_JAVA_LIBS= ../javalib/libThotJava.a ../javalib/libAmayaJava.a \
     ../libkaffe_vm.a ../libkaffe_bissawt.a ../libkaffe_agent.a \
     ../libkaffe_net.a ../libkaffe_native.a
 
+AMAYA_JAVA_EXTRA_LIBS=
+
 AMAYA_JAVA_SRC= java_stubs
 
 java_force :

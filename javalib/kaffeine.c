@@ -1,5 +1,5 @@
 /*
- * Interface for the Kaffe Java interpreter.
+ * kaffeine.c : Interface for the Kaffe Java interpreter.
  *
  * Daniel Veillard 1997
  */
@@ -9,8 +9,10 @@
 #include <sys/time.h>
 #include <sys/types.h>
 #include <unistd.h>
-#include "JavaTypes.h"
+#include "kaffeine.h"
 #include "registry.h"
+#include "events.h"
+#include "JavaX11Interf.h"
 
 #include "w3c_thotlib_APIApplication_stubs.h"
 #include "w3c_thotlib_APIDocument_stubs.h"
@@ -118,51 +120,6 @@ static char *GetJavaTimer(void)
  *									*
  ************************************************************************/
 
-#define CLEAR_FD(nb,to) {					\
-    register int i, n = (nb) / sizeof(int);			\
-    register int *t = (int *) (to);				\
-    if (t != NULL) for (i = 0;i <= n; i++) *t++ = 0; }
-
-#define COPY_FD(nb,from,to) {					\
-    register int i, n = (nb) / sizeof(int);			\
-    register int *f = (int *) (from);				\
-    register int *t = (int *) (to);				\
-    if ((t != NULL) && (f != NULL))				\
-        for (i = 0;i <= n; i++) *t++ = *f++; }
-
-#define OR_FD(nb,from,to) {					\
-    register int i, n = (nb) / sizeof(int);			\
-    register int *f = (int *) (from);				\
-    register int *t = (int *) (to);				\
-    if ((t != NULL) && (f != NULL))				\
-        for (i = 0;i <= n; i++) *t++ |= *f++; }
-
-#define AND_FD(nb,from,to) {					\
-    register int i, n = (nb) / sizeof(int);			\
-    register int *f = (int *) (from);				\
-    register int *t = (int *) (to);				\
-    if ((t != NULL) && (f != NULL))				\
-        for (i = 0;i <= n; i++) *t++ &= *f++; }
-
-#define EVENT_READ	1
-#define EVENT_WRITE	2
-#define EVENT_EXCEPT	4
-
-typedef void (* SelectCallback) (int fd, int event);
-
-static int JavaEventLoopInitialized =0;
-static int x_window_socket;
-
-/*
- * If DoJavaSelectPoll is selected, any JavaSelectCall on the
- * x-window socket will fail with value -1 if BreakJavaSelectPoll
- * is non zero. This is needed to do multi filedescriptor polling
- * without breaking the Kaffe threading model.
- */
-
-static int DoJavaSelectPoll = 0;
-static int BreakJavaSelectPoll = 0;
-
 /*----------------------------------------------------------------------
   InitJavaSelect
 
@@ -197,11 +154,11 @@ void               InitJavaSelect()
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-int                JavaSelect (int  n,  fd_set  *readfds,  fd_set  *writefds,
+int                JavaSelect (int  nb,  fd_set  *readfds,  fd_set  *writefds,
        fd_set *exceptfds, struct timeval *timeout)
 #else
-int                JavaSelect (n, readfds, writefds, exceptfds, timeout)
-int  n;
+int                JavaSelect (nb, readfds, writefds, exceptfds, timeout)
+int  nb;
 fd_set  *readfds;
 fd_set  *writefds;
 fd_set *exceptfds;
@@ -216,13 +173,11 @@ ThotEvent *ev;
     int fd;
 #endif
     static int check_for_xt_events = 0;
+    int use_extra_timer = 0;
+    struct timeval *extra_timer;
+    int n;
 
     if (!JavaSelectInitialized) InitJavaSelect();
-
-    if (check_for_xt_events) {
-        check_for_xt_events = 0;
-	JavaHandleAvailableEvents();
-    }
 
     /*
      * Check for reentrancy, would be a Very Bad Thing (c)
@@ -253,6 +208,14 @@ ThotEvent *ev;
 	return(1);
     }
 
+rerun_select:
+    n = nb;
+
+    if (check_for_xt_events) {
+        check_for_xt_events = 0;
+	JavaHandleAvailableEvents();
+    }
+
 #ifdef DEBUG_SELECT
     fprintf(stderr,"\n");
     TIMER
@@ -260,17 +223,74 @@ ThotEvent *ev;
 
     /*
      * Do not block if there is a Poll Break requested.
-     * Otherwise do not block for more that 1/30 th of second
-     * without checking for XtEvents.
+     * Otherwise check for Kaffe and User timers.
      */
     if ((DoJavaSelectPoll) && (BreakJavaSelectPoll)) {
-       tm.tv_usec = 0;
-       tm.tv_sec = 0;
-    } else if (timeout != NULL) {
-       if (timeout->tv_usec < 30000) tm.tv_usec = timeout->tv_usec;
-       else tm.tv_usec = 30000;
-       tm.tv_sec = 0;
+        tm.tv_usec = 0;
+        tm.tv_sec = 0;
+	use_extra_timer = 0;
+    } else {
+        /*
+	 * Check for any extra timer defined .
+	 */
+	extra_timer = nextTimer();
+	
+        if (timeout == NULL) {
+	    /*
+	     * Kaffe didn't provide a time-out.
+	     */
+	    if (extra_timer != NULL) {
+		/* User's delay ... */
+		tm.tv_usec = extra_timer->tv_usec;
+		tm.tv_sec = extra_timer->tv_sec;
+		use_extra_timer = 1;
+	    } else {
+	        /*
+		 * No time-out at all enforce 1 sec...
+		 */
+		tm.tv_sec = 1;
+		tm.tv_usec = 0;
+		use_extra_timer = 0;
+	    }
+	} else {
+	    /* normalize the timeout (we never know ...) */
+	    timeout->tv_sec += timeout->tv_usec / 1000000;
+	    timeout->tv_usec %= 1000000;
+
+	    if (extra_timer == NULL) {
+	        /*
+		 * Kaffe provided a time limit, use it !
+		 */
+		tm.tv_usec = timeout->tv_usec;
+		tm.tv_sec = timeout->tv_sec;
+		use_extra_timer = 0;
+	    } else {
+	        /*
+		 * Both Kaffe and User provided time limits, use the
+		 * shortest delay.
+		 */
+		if ((extra_timer->tv_sec > timeout->tv_sec) ||
+		    ((extra_timer->tv_sec == timeout->tv_sec) &&
+		     (extra_timer->tv_usec > timeout->tv_usec)))  {
+		    /* Kaffe delay ... */
+		    tm.tv_usec = timeout->tv_usec;
+		    tm.tv_sec = timeout->tv_sec;
+		    use_extra_timer = 0;
+		} else {
+		    /* User's delay ... */
+		    tm.tv_usec = extra_timer->tv_usec;
+		    tm.tv_sec = extra_timer->tv_sec;
+		    use_extra_timer = 1;
+		}
+	    }
+	}
     }
+
+    /*
+     * Merge the file descriptors with clients one, if any.
+     */
+    createChannelMasks(&n, readfds, writefds);
+
 
 #ifdef DEBUG_SELECT_CHANNELS
     /*
@@ -290,7 +310,7 @@ ThotEvent *ev;
 #endif
 
     /*
-     * Do the select on the merged channels descriptors.
+     * Do the select on the merged channels descriptors and timeouts.
      */
     NbJavaSelect++;
     if (((DoJavaSelectPoll) && (BreakJavaSelectPoll)) ||
@@ -299,6 +319,10 @@ ThotEvent *ev;
     else {
        res = select(n, readfds, writefds, exceptfds, NULL);
     }
+
+    /*
+     * Update the timeout return, if any ...
+     */
     if (timeout != NULL)
 	memcpy(timeout, &tm, sizeof(tm));
 
@@ -333,16 +357,31 @@ ThotEvent *ev;
     }
 
     /*
-     * Timeout, give control back to Kaffe.
+     * Timeout, depending on wether it's a user-timeout or
+     * Kaffe one, give control back to Kaffe or run the
+     * user's timeout checks.
      */
     if (res == 0) {
-	InJavaSelect = 0;
-	check_for_xt_events = 1;
+        if (use_extra_timer) {
+	    checkTimers();
+	    /* Decrement any Kaffe timer if any !!! */
+	    goto rerun_select;
+	} else {
+	    InJavaSelect = 0;
+	    check_for_xt_events = 1;
 #ifdef DEBUG_SELECT
-        fprintf(stderr,">\n");
+	    fprintf(stderr,">\n");
 #endif
-        return(0);
+	    return(0);
+	}
     }
+
+    /*
+     * Handle User I/O for registered channels.
+     * If there is no I/O left for Kaffe threads, redo the select.
+     */
+    checkChannelMasks(n, readfds, writefds, &res);
+    if (res <= 0) goto rerun_select;
 
     /*
      * If there was a Poll in progress register that we need to interrupt.
@@ -371,9 +410,10 @@ ThotEvent *ev;
  *									*
  ************************************************************************/
 
-static int ThotlibLockValue = 0;
-static int XWindowSocketLockValue = 0;
-static int XWindowSocketWaitValue = 0;
+int ThotlibLockValue = 0;
+int XWindowSocketLockValue = 0;
+int XWindowSocketWaitValue = 0;
+
 #ifndef SYNC_DNS
 static int DNSLockValue = 0;
 #endif
@@ -701,180 +741,6 @@ io_failed:
 
 #endif /* !SYNC_DNS */
 
-/************************************************************************
- *									*
- *	Event Handling : Loops for events, fetching and handling	*
- *									*
- ************************************************************************/
-
-ThotAppContext CurrentAppContext = NULL;
-
-/*----------------------------------------------------------------------
-  JavaHandleOneEvent
-
-  This routine handle one event fetched from the X-Window socket.
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                JavaHandleOneEvent (ThotEvent *ev)
-#else
-void                JavaHandleOneEvent (ev)
-ThotEvent *ev;
-#endif
-{
-    TtaHandleOneEvent(ev);
-}
-
-/*----------------------------------------------------------------------
-  JavaFetchEvent
-
-  This routine poll both the socket used by the Network interface and
-  the X-Windows event queue. As long as no X-Window event is available,
-  it has to handle network traffic. If an X-Window event is available,
-  the routine should fetch it from the queue in the ev argument and return.
-  ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-int                 JavaFetchEvent (ThotEvent *ev)
-#else
-int                 JavaFetchEvent (ev)
-ThotEvent *ev;
-#endif
-{
-  int status;
-
-  JavaThotlibRelease();
-  JavaXWindowSocketLock();
-
-#ifdef _WINDOWS
-#else  /* !_WINDOWS */
-  /*
-   * Need to check whether something else has to be scheduled.
-   */
-  status = XtAppPending (CurrentAppContext);
-  if (!status) {
-     XFlush(TtaGetCurrentDisplay());
-
-     do {
-	 status = blockOnFile(x_window_socket, 0);
-     } while (status < 0);
-  }
-  XtAppNextEvent (CurrentAppContext, ev);
-#endif /* _WINDOWS */
-
-  JavaXWindowSocketRelease();
-  JavaThotlibLock();
-  return(0);
-}
-
-#ifdef __STDC__
-int                 OldJavaFetchEvent (ThotEvent *ev)
-#else
-int                 OldJavaFetchEvent (ev)
-ThotEvent *ev;
-#endif
-{
-  int status;
-
-  JavaThotlibRelease();
-  JavaXWindowSocketLock();
-
-#ifdef _WINDOWS
-#else  /* !_WINDOWS */
-  /*
-   * Need to check whether something else has to be scheduled.
-   */
-  status = XtAppPending (CurrentAppContext);
-  if (!status) {
-     XFlush(TtaGetCurrentDisplay());
-     status = blockOnFile(x_window_socket, 0);
-
-     if ((DoJavaSelectPoll) && (BreakJavaSelectPoll)) {
-	 JavaXWindowSocketRelease();
-	 JavaThotlibLock();
-         return(-1);
-     }
-  }
-  XtAppNextEvent (CurrentAppContext, ev);
-#endif /* _WINDOWS */
-
-  JavaXWindowSocketRelease();
-  JavaThotlibLock();
-  return(0);
-}
-
-/*----------------------------------------------------------------------
-  JavaFetchAvailableEvent
-
-  This routine look at the socket used by the Network interface and
-  the X-Windows event queue. It first handle changes in the network
-  socket status, and handle them (atomic operations). Once done,
-  if an X-Window event is available, the routine should fetch it from
-  the queue in the ev argument and return TRUE, it returns FALSE otherwise.
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-boolean             JavaFetchAvailableEvent (ThotEvent *ev)
-#else
-boolean             JavaFetchAvailableEvent (ev)
-ThotEvent *ev;
-#endif
-{
-  int status;
-
-#ifdef _WINDOWS
-#else  /* !_WINDOWS */
-  status = XtAppPending (CurrentAppContext);
-  if (status) {
-     XtAppNextEvent (CurrentAppContext, ev);
-     return(TRUE);
-  }
-  return(FALSE);
-#endif /* _WINDOWS */
-}
-
-/*----------------------------------------------------------------------
-  JavaHandleAvailableEvents
-
-  This routine check wether some XtEvent are to be fetched.
-  If yes, get it and handle it, and return once all have been consumed.
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void             JavaHandleAvailableEvents (void)
-#else
-void             JavaHandleAvailableEvents ()
-#endif
-{
-  ThotEvent ev;
-  int status;
-
-  if (ThotlibLockValue != 0) {
-#ifdef DEBUG_SELECT
-      fprintf(stderr,
-         "JavaHandleAvailableEvents called while ThotlibLockValue != 0\n");
-#endif
-      return;
-  }
-  if (XWindowSocketLockValue != 0) {
-#ifdef DEBUG_SELECT
-      fprintf(stderr,
-         "JavaHandleAvailableEvents called while XWindowSocketLockValue != 0\n");
-#endif
-      return;
-  }
-
-#ifdef _WINDOWS
-#else  /* !_WINDOWS */
-  do {
-      status = XtAppPending (CurrentAppContext);
-      if (status) {
-	 XtAppNextEvent (CurrentAppContext, &ev);
-	 JavaThotlibLock();
-	 JavaHandleOneEvent (&ev);
-	 JavaThotlibRelease();
-      }
-  } while (status);
-#endif /* _WINDOWS */
-}
-
 /*----------------------------------------------------------------------
    InitJava
 
@@ -947,268 +813,6 @@ void                CloseJava ()
     /* lauch the stop class for the application */
     do_execute_java_class_method(initClass, "Stop", "()V");
 
-}
-
-/*----------------------------------------------------------------------
-  InitJavaEventLoop
-
-  Initialize the JavaEventLoop environment, including the network
-  interface, Java, etc...
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                InitJavaEventLoop (ThotAppContext app_ctx)
-#else
-void                InitJavaEventLoop (app_ctx)
-ThotAppContext app_ctx;
-#endif
-{
-    char *env_value;
-    char  new_env[1024];
-
-    CurrentAppContext = app_ctx;
-    if (JavaEventLoopInitialized) return;
-
-    /*
-     * Everything is initialized BEFORE starting the
-     * Java Runtime ...
-     */
-    JavaEventLoopInitialized = 1;
-
-    /*
-     * set up the environment
-     */
-    strcpy(new_env,"CLASSPATH=");
-    env_value  = TtaGetEnvString("CLASSPATH");
-    if (env_value)
-       strcat(new_env, env_value);
-    env_value = getenv("CLASSPATH");
-    if (env_value) {
-       strcat(new_env,":");
-       strcat(new_env,env_value);
-    }
-    putenv(TtaStrdup(new_env));
-    strcpy(new_env,"KAFFEHOME=");
-    env_value  = TtaGetEnvString("KAFFEHOME");
-    if (env_value)
-       strcat(new_env, env_value);
-    putenv(TtaStrdup(new_env));
-
-    /*
-     * Register the X-Window socket as an input channel
-     */
-    x_window_socket = ConnectionNumber(TtaGetCurrentDisplay());
-    threadedFileDescriptor(x_window_socket);
-
-    /*
-     * set up our own select call.
-     */
-    select_call = JavaSelect;
-
-    /*
-     * Startup the Java environment. We should never return
-     * from this call, but InitJava will call TtaMainLoop again
-     * on the Application thread.
-     */
-    InitJava();
-
-}
-
-/*----------------------------------------------------------------------
-  JavaStopPoll
-
-  Stop the poll loop (below).
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-int                 JavaStopPoll ()
-#else
-int                 JavaStopPoll ()
-#endif
-{
-   if (DoJavaSelectPoll)
-       BreakJavaSelectPoll++;
-   return(0);
-}
-
-/*----------------------------------------------------------------------
-  JavaPollLoop
-
-  This is the equivalent of the basic event loop except that it will
-  return after any interraction on the extra file descriptors.
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-int                 JavaPollLoop ()
-#else
-int                 JavaPollLoop ()
-#endif
-{
-   int status;
-#ifndef _WINDOWS
-   ThotEvent           ev;
-#endif /* _WINDOWS */
-#ifdef _WINDOWS
-   MSG                 msg;
-#endif
-
-   /*
-    * initialize the whole context if needed.
-    */
-   if (!JavaEventLoopInitialized) 
-      return(-1);
-
-   /*
-    * We want to jump off the loop if transfers did occurs
-    * on the extra descriptors.
-    */
-   DoJavaSelectPoll = 1;
-   BreakJavaSelectPoll = 0;
-
-#ifdef DEBUG_SELECT
-   TIMER
-   fprintf(stderr,"JavaPollLoop entered\n");
-#endif
-
-   /*
-    * Release the ThotLib lock...
-    */
-   JavaThotlibRelease();
-
-   /* Loop waiting for the events */
-   while (1)
-     {
-#ifdef _WINDOWS
-#else /* ! _WINDOWS */
-        /*
-	 * Block looking for events available on the X-Window socket.
-	 * The select will return an exception condition if someting
-	 * occured on the other file descriptors.
-	 */
-        status = blockOnFile(x_window_socket, 0);
-
-        if (status < 0) {
-	    JavaThotlibLock();
-	    DoJavaSelectPoll = 0;
-	    BreakJavaSelectPoll = 0;
-#ifdef DEBUG_SELECT
-	    TIMER
-	    fprintf(stderr,"JavaPollLoop stopped\n");
-#endif
-	    return(-1);
-	}
-
-	/*
-	 * If there is another thread waiting for the X-Windows socket
-	 * reads, sleep to let it fetch the event ...
-	 */
-        if ((XWindowSocketWaitValue > 0) || (XWindowSocketLockValue > 0)) {
-            sleepThread(5);
-	    if (BreakJavaSelectPoll) {
-		JavaThotlibLock();
-		DoJavaSelectPoll = 0;
-		BreakJavaSelectPoll = 0;
-#ifdef DEBUG_SELECT
-		TIMER
-		fprintf(stderr,"JavaPollLoop stopped\n");
-#endif
-		return(-1);
-	    }
-	    continue;
-	}
-
-	/*
-	 * Noone is waiting for this event, take back the ThotLib lock
-	 * and handle this event.
-	 */
-	JavaThotlibLock();
-	if (OldJavaFetchEvent(&ev) < 0) {
-	    DoJavaSelectPoll = 0;
-	    BreakJavaSelectPoll = 0;
-#ifdef DEBUG_SELECT
-	    TIMER
-	    fprintf(stderr,"JavaPollLoop stopped\n");
-#endif
-	    return(-1);
-	}
-        JavaHandleOneEvent (&ev);
-	JavaThotlibRelease();
-#endif /* _WINDOWS */
-     }
-   /*ENOTREACHED*/
-   JavaThotlibLock();
-   return(0);
-}
-
-/*----------------------------------------------------------------------
-  JavaEventLoop
-
-  The point where events arriving from the X-Windows socket as well as
-  the network sockets are fetched and dispatched to the correct handlers.
-
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                JavaEventLoop ()
-#else
-void                JavaEventLoop ()
-#endif
-{
-   int status;
-#ifndef _WINDOWS
-   ThotEvent           ev;
-#endif /* _WINDOWS */
-#ifdef _WINDOWS
-   MSG                 msg;
-#endif
-
-   /*
-    * initialize the whole context if needed.
-    */
-   if (!JavaEventLoopInitialized) 
-      return;
-
-   /*
-    * We don't want to jump off the loop if transfers did occurs
-    * on the extra descriptors.
-    */
-   DoJavaSelectPoll = 0;
-   BreakJavaSelectPoll = 0;
-   JavaThotlibRelease();
-
-   /* Loop waiting for the events */
-   while (1)
-     {
-        while (XWindowSocketWaitValue > 0) {
-	    /*
-	     * Don't block appplication thread reading events.
-	     */
-            sleepThread(30);
-	    continue;
-	}
-        status = blockOnFile(x_window_socket, 0);
-	do {
-	    status = blockOnFile(x_window_socket, 0);
-	} while (status < 0);
-        status = XtAppPending (CurrentAppContext);
-        if (!status) {
-	    XFlush(TtaGetCurrentDisplay());
-	    continue;
-        }
-	JavaXWindowSocketLock();
-        XtAppNextEvent (CurrentAppContext, &ev);
-	JavaXWindowSocketRelease();
-	JavaThotlibLock();
-        JavaHandleOneEvent (&ev);
-        JavaThotlibRelease();
-     }
-}
-
-/*----------------------------------------------------------------------
-   JavaLoadResources 
-
-   link in the Java stuff and initialize it.
-  ----------------------------------------------------------------------*/
-void                JavaLoadResources ()
-{
-   TtaSetMainLoop (InitJavaEventLoop, JavaEventLoop,
-		   JavaFetchEvent, JavaFetchAvailableEvent);
 }
 
 /*
