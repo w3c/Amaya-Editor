@@ -996,9 +996,9 @@ View                view;
 	  return t->type;
       }
   }
-
-  return NULL;
 #endif /* _WINDOWS */
+  return NULL;
+
 }
 
 /*----------------------------------------------------------------------
@@ -1039,7 +1039,7 @@ View                view;
 
 	  entry = nb_entries - ReturnOptionMenu - 1;
 	  for (item = typesList; item && (entry > 0); item=item->next, entry);
-	  if (item->object)
+	  if (item && item->object)
 	    result = ((TypeSelector *) item->object)->type;
 	}
     }
