@@ -1666,6 +1666,7 @@ static char *ParseCSSFontSize (Element element, PSchema tsch,
 			       PresentationContext context, char *cssRule,
 			       CSSInfoPtr css, ThotBool isHTML)
 {
+   ElementType         elType;
    PresentationValue   pval;
    char               *ptr = NULL, *ptr1 = NULL;
    ThotBool	       real;
@@ -1726,6 +1727,8 @@ static char *ParseCSSFontSize (Element element, PSchema tsch,
 	pval.typed_data.value = 7;
 	cssRule = SkipWord (cssRule);
      }
+   else if (!isdigit (*cssRule) && *cssRule != '.')
+     return (cssRule);
    else
      {
        /* look for a '/' within the current cssRule */
@@ -1739,7 +1742,17 @@ static char *ParseCSSFontSize (Element element, PSchema tsch,
 	 }
        else
 	 ptr = NULL;
+       
        cssRule = ParseCSSUnit (cssRule, &pval);
+
+       if (pval.typed_data.unit == STYLE_UNIT_BOX)
+	 /* no unit specified */
+	 {
+	   elType = TtaGetElementType(element);
+	   if (!strcmp(TtaGetSSchemaName (elType.ElSSchema), "SVG"))
+	     /* we are working for an SVG element. No unit means pixels */
+	     pval.typed_data.unit = STYLE_UNIT_PX;
+	 }
        if (pval.typed_data.value != 0 &&
 	   (pval.typed_data.unit == STYLE_UNIT_INVALID ||
 	    pval.typed_data.unit == STYLE_UNIT_BOX ||
