@@ -15,18 +15,18 @@ typedef struct Classthotlib_APIAttribute {
 } Classthotlib_APIAttribute;
 HandleTo(thotlib_APIAttribute);
 
-extern jint thotlib_APIAttribute_TtaNewAttribute(struct Hthotlib_APIAttribute*, jlong);
-extern void thotlib_APIAttribute_TtaAttachAttribute(struct Hthotlib_APIAttribute*, jint, jint, jint);
-extern void thotlib_APIAttribute_TtaRemoveAttribute(struct Hthotlib_APIAttribute*, jint, jint, jint);
-extern void thotlib_APIAttribute_TtaSetAttributeValue(struct Hthotlib_APIAttribute*, jint, jint, jint, jint);
-extern void thotlib_APIAttribute_TtaSetAttributeText(struct Hthotlib_APIAttribute*, jint, struct Hjava_lang_String*, jint, jint);
-extern void thotlib_APIAttribute_TtaNextAttribute(struct Hthotlib_APIAttribute*, jint, struct Hthotlib_Attribute*);
-extern jint thotlib_APIAttribute_TtaGetAttribute(struct Hthotlib_APIAttribute*, jint, jlong);
+extern jlong thotlib_APIAttribute_TtaNewAttribute(struct Hthotlib_APIAttribute*, jlong);
+extern void thotlib_APIAttribute_TtaAttachAttribute(struct Hthotlib_APIAttribute*, jlong, jlong, jint);
+extern void thotlib_APIAttribute_TtaRemoveAttribute(struct Hthotlib_APIAttribute*, jlong, jlong, jint);
+extern void thotlib_APIAttribute_TtaSetAttributeValue(struct Hthotlib_APIAttribute*, jlong, jint, jlong, jint);
+extern void thotlib_APIAttribute_TtaSetAttributeText(struct Hthotlib_APIAttribute*, jlong, struct Hjava_lang_String*, jlong, jint);
+extern void thotlib_APIAttribute_TtaNextAttribute(struct Hthotlib_APIAttribute*, jlong, struct Hthotlib_Attribute*);
+extern jlong thotlib_APIAttribute_TtaGetAttribute(struct Hthotlib_APIAttribute*, jlong, jlong);
 extern struct Hjava_lang_String* thotlib_APIAttribute_TtaGetAttributeName(struct Hthotlib_APIAttribute*, jlong);
 extern jint thotlib_APIAttribute_TtaSameAttributeTypes(struct Hthotlib_APIAttribute*, jlong, jlong);
-extern jint thotlib_APIAttribute_TtaGetAttributeValue(struct Hthotlib_APIAttribute*, jint);
-extern jint thotlib_APIAttribute_TtaGetTextAttributeLength(struct Hthotlib_APIAttribute*, jint);
-extern void thotlib_APIAttribute_TtaSearchAttribute(struct Hthotlib_APIAttribute*, jlong, jint, jint, struct Hthotlib_Element*, struct Hthotlib_Attribute*);
+extern jint thotlib_APIAttribute_TtaGetAttributeValue(struct Hthotlib_APIAttribute*, jlong);
+extern jint thotlib_APIAttribute_TtaGetTextAttributeLength(struct Hthotlib_APIAttribute*, jlong);
+extern void thotlib_APIAttribute_TtaSearchAttribute(struct Hthotlib_APIAttribute*, jlong, jint, jlong, struct Hthotlib_Element*, struct Hthotlib_Attribute*);
 
 #ifdef __cplusplus
 }

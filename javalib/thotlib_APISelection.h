@@ -16,9 +16,9 @@ typedef struct Classthotlib_APISelection {
 HandleTo(thotlib_APISelection);
 
 extern jint /* bool */ thotlib_APISelection_TtaIsDocumentSelected(struct Hthotlib_APISelection*, jint);
-extern void thotlib_APISelection_TtaSelectElement(struct Hthotlib_APISelection*, jint, jint);
-extern void thotlib_APISelection_TtaSelectString(struct Hthotlib_APISelection*, jint, jint, jint, jint);
-extern void thotlib_APISelection_TtaExtendSelection(struct Hthotlib_APISelection*, jint, jint, jint);
+extern void thotlib_APISelection_TtaSelectElement(struct Hthotlib_APISelection*, jint, jlong);
+extern void thotlib_APISelection_TtaSelectString(struct Hthotlib_APISelection*, jint, jlong, jint, jint);
+extern void thotlib_APISelection_TtaExtendSelection(struct Hthotlib_APISelection*, jint, jlong, jint);
 extern void thotlib_APISelection_TtaSelectInterval(struct Hthotlib_APISelection*);
 extern void thotlib_APISelection_TtaUnselect(struct Hthotlib_APISelection*, jint);
 extern void thotlib_APISelection_TtaSetSelectionMode(struct Hthotlib_APISelection*, jint /* bool */);

@@ -12,12 +12,12 @@
        0       DisplayMode   int        jint
        0       TypeUnit      int        jint
 #  These are pointer disguised in ints
-       0       SSchema       int        jint
-       0       Element       int        jint 
-       0       Attribute     int        jint 
-       0       PRule         int        jint
-       0       ThotWidget    int        jint
-       0       Pixmap        int        jint
+       0       SSchema       long       jlong    yes
+       0       Element       long       jlong    yes
+       0       Attribute     long       jlong    yes
+       0       PRule         long       jlong    yes
+       0       ThotWidget    long       jlong    yes
+       0       Pixmap        long       jlong    yes
 #  These are true ints
        0       Document      int        jint
        0       View          int        jint

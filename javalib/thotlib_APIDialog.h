@@ -19,10 +19,10 @@ typedef struct Classthotlib_APIDialog {
 } Classthotlib_APIDialog;
 HandleTo(thotlib_APIDialog);
 
-extern void thotlib_APIDialog_TtaNewPulldown(struct Hthotlib_APIDialog*, jint, jint, struct Hjava_lang_String*, jint, struct Hjava_lang_String*, struct Hjava_lang_String*);
-extern void thotlib_APIDialog_TtaSetPulldownOff(struct Hthotlib_APIDialog*, jint, jint);
-extern void thotlib_APIDialog_TtaSetPulldownOn(struct Hthotlib_APIDialog*, jint, jint);
-extern void thotlib_APIDialog_TtaNewPopup(struct Hthotlib_APIDialog*, jint, jint, struct Hjava_lang_String*, jint, struct Hjava_lang_String*, struct Hjava_lang_String*, jint /* char */);
+extern void thotlib_APIDialog_TtaNewPulldown(struct Hthotlib_APIDialog*, jint, jlong, struct Hjava_lang_String*, jint, struct Hjava_lang_String*, struct Hjava_lang_String*);
+extern void thotlib_APIDialog_TtaSetPulldownOff(struct Hthotlib_APIDialog*, jint, jlong);
+extern void thotlib_APIDialog_TtaSetPulldownOn(struct Hthotlib_APIDialog*, jint, jlong);
+extern void thotlib_APIDialog_TtaNewPopup(struct Hthotlib_APIDialog*, jint, jlong, struct Hjava_lang_String*, jint, struct Hjava_lang_String*, struct Hjava_lang_String*, jint /* char */);
 extern void thotlib_APIDialog_TtaNewSubmenu(struct Hthotlib_APIDialog*, jint, jint, jint, struct Hjava_lang_String*, jint, struct Hjava_lang_String*, struct Hjava_lang_String*, jint /* bool */);
 extern void thotlib_APIDialog_TtaSetMenuForm(struct Hthotlib_APIDialog*, jint, jint);
 extern void thotlib_APIDialog_TtaNewToggleMenu(struct Hthotlib_APIDialog*, jint, jint, struct Hjava_lang_String*, jint, struct Hjava_lang_String*, struct Hjava_lang_String*, jint /* bool */);
@@ -30,9 +30,9 @@ extern void thotlib_APIDialog_TtaSetToggleMenu(struct Hthotlib_APIDialog*, jint,
 extern void thotlib_APIDialog_TtaChangeMenuEntry(struct Hthotlib_APIDialog*, jint, jint, struct Hjava_lang_String*);
 extern void thotlib_APIDialog_TtaRedrawMenuEntry(struct Hthotlib_APIDialog*, jint, jint, struct Hjava_lang_String*, jint, jint);
 extern void thotlib_APIDialog_TtaDestroyDialogue(struct Hthotlib_APIDialog*, jint);
-extern void thotlib_APIDialog_TtaNewForm(struct Hthotlib_APIDialog*, jint, jint, struct Hjava_lang_String*, jint /* bool */, jint, jint /* char */, jint);
-extern void thotlib_APIDialog_TtaNewSheet(struct Hthotlib_APIDialog*, jint, jint, struct Hjava_lang_String*, jint, struct Hjava_lang_String*, jint /* bool */, jint, jint /* char */, jint);
-extern void thotlib_APIDialog_TtaNewDialogSheet(struct Hthotlib_APIDialog*, jint, jint, struct Hjava_lang_String*, jint, struct Hjava_lang_String*, jint /* bool */, jint, jint /* char */);
+extern void thotlib_APIDialog_TtaNewForm(struct Hthotlib_APIDialog*, jint, jlong, struct Hjava_lang_String*, jint /* bool */, jint, jint /* char */, jint);
+extern void thotlib_APIDialog_TtaNewSheet(struct Hthotlib_APIDialog*, jint, jlong, struct Hjava_lang_String*, jint, struct Hjava_lang_String*, jint /* bool */, jint, jint /* char */, jint);
+extern void thotlib_APIDialog_TtaNewDialogSheet(struct Hthotlib_APIDialog*, jint, jlong, struct Hjava_lang_String*, jint, struct Hjava_lang_String*, jint /* bool */, jint, jint /* char */);
 extern void thotlib_APIDialog_TtaChangeFormTitle(struct Hthotlib_APIDialog*, jint, struct Hjava_lang_String*);
 extern void thotlib_APIDialog_TtaAttachForm(struct Hthotlib_APIDialog*, jint);
 extern void thotlib_APIDialog_TtaDetachForm(struct Hthotlib_APIDialog*, jint);

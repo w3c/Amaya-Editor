@@ -205,16 +205,14 @@ ThotEvent *ev;
 
     /*
      * Check for reentrancy, would be a Very Bad Thing (c)
-     */
     if ((InJavaSelect) &&
         ((timeout == NULL) || (timeout->tv_usec != 0) ||
 	 (timeout->tv_sec != 0))){
-        /* char *p = NULL; */
 	TIMER
         fprintf(stderr, "JavaSelect reentrancy !\n");
-	/* call debugger or dump core
-	*p = 0; ! */
     }
+     */
+
     InJavaSelect = 1;
 
     if ((DoJavaSelectPoll) && (BreakJavaSelectPoll) &&

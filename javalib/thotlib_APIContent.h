@@ -22,24 +22,24 @@ typedef struct Classthotlib_APIContent {
 } Classthotlib_APIContent;
 HandleTo(thotlib_APIContent);
 
-extern void thotlib_APIContent_TtaSetTextContent(struct Hthotlib_APIContent*, jint, struct Hjava_lang_String*, jint /* char */, jint);
-extern void thotlib_APIContent_TtaAppendTextContent(struct Hthotlib_APIContent*, jint, struct Hjava_lang_String*, jint);
-extern void thotlib_APIContent_TtaInsertTextContent(struct Hthotlib_APIContent*, jint, jint, struct Hjava_lang_String*, jint);
-extern void thotlib_APIContent_TtaDeleteTextContent(struct Hthotlib_APIContent*, jint, jint, jint, jint);
-extern void thotlib_APIContent_TtaSplitText(struct Hthotlib_APIContent*, jint, jint, jint);
-extern jint /* bool */ thotlib_APIContent_TtaMergeText(struct Hthotlib_APIContent*, jint, jint);
-extern void thotlib_APIContent_TtaSetGraphicsShape(struct Hthotlib_APIContent*, jint, jint /* char */, jint);
-extern void thotlib_APIContent_TtaAddPointInPolyline(struct Hthotlib_APIContent*, jint, jint, jint, jint, jint, jint);
-extern void thotlib_APIContent_TtaDeletePointInPolyline(struct Hthotlib_APIContent*, jint, jint, jint);
-extern void thotlib_APIContent_TtaModifyPointInPolyline(struct Hthotlib_APIContent*, jint, jint, jint, jint, jint, jint);
-extern void thotlib_APIContent_TtaChangeLimitOfPolyline(struct Hthotlib_APIContent*, jint, jint, jint, jint, jint);
-extern void thotlib_APIContent_TtaCopyPage(struct Hthotlib_APIContent*, jint, jint);
-extern jint thotlib_APIContent_TtaGetTextLength(struct Hthotlib_APIContent*, jint);
-extern void thotlib_APIContent_TtaGiveSubString(struct Hthotlib_APIContent*, jint, struct Hjava_lang_String*, jint, jint);
-extern jint /* char */ thotlib_APIContent_TtaGetGraphicsShape(struct Hthotlib_APIContent*, jint);
-extern jint thotlib_APIContent_TtaGetPolylineLength(struct Hthotlib_APIContent*, jint);
-extern jint thotlib_APIContent_TtaGetPageNumber(struct Hthotlib_APIContent*, jint);
-extern jint thotlib_APIContent_TtaGetPageView(struct Hthotlib_APIContent*, jint);
+extern void thotlib_APIContent_TtaSetTextContent(struct Hthotlib_APIContent*, jlong, struct Hjava_lang_String*, jint /* char */, jint);
+extern void thotlib_APIContent_TtaAppendTextContent(struct Hthotlib_APIContent*, jlong, struct Hjava_lang_String*, jint);
+extern void thotlib_APIContent_TtaInsertTextContent(struct Hthotlib_APIContent*, jlong, jint, struct Hjava_lang_String*, jint);
+extern void thotlib_APIContent_TtaDeleteTextContent(struct Hthotlib_APIContent*, jlong, jint, jint, jint);
+extern void thotlib_APIContent_TtaSplitText(struct Hthotlib_APIContent*, jlong, jint, jint);
+extern jint /* bool */ thotlib_APIContent_TtaMergeText(struct Hthotlib_APIContent*, jlong, jint);
+extern void thotlib_APIContent_TtaSetGraphicsShape(struct Hthotlib_APIContent*, jlong, jint /* char */, jint);
+extern void thotlib_APIContent_TtaAddPointInPolyline(struct Hthotlib_APIContent*, jlong, jint, jint, jint, jint, jint);
+extern void thotlib_APIContent_TtaDeletePointInPolyline(struct Hthotlib_APIContent*, jlong, jint, jint);
+extern void thotlib_APIContent_TtaModifyPointInPolyline(struct Hthotlib_APIContent*, jlong, jint, jint, jint, jint, jint);
+extern void thotlib_APIContent_TtaChangeLimitOfPolyline(struct Hthotlib_APIContent*, jlong, jint, jint, jint, jint);
+extern void thotlib_APIContent_TtaCopyPage(struct Hthotlib_APIContent*, jlong, jlong);
+extern jint thotlib_APIContent_TtaGetTextLength(struct Hthotlib_APIContent*, jlong);
+extern void thotlib_APIContent_TtaGiveSubString(struct Hthotlib_APIContent*, jlong, struct Hjava_lang_String*, jint, jint);
+extern jint /* char */ thotlib_APIContent_TtaGetGraphicsShape(struct Hthotlib_APIContent*, jlong);
+extern jint thotlib_APIContent_TtaGetPolylineLength(struct Hthotlib_APIContent*, jlong);
+extern jint thotlib_APIContent_TtaGetPageNumber(struct Hthotlib_APIContent*, jlong);
+extern jint thotlib_APIContent_TtaGetPageView(struct Hthotlib_APIContent*, jlong);
 
 #ifdef __cplusplus
 }

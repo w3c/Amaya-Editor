@@ -1185,8 +1185,15 @@ char               *appArgv0;
 
  load_system_settings:
 
+#ifdef MACHINE
    /*
-    * load the system settings, stored in THOTDIR/bin.
+    * if MACHINE is set up, add it to the registry
+    */
+   AddRegisterEntry ("System", "MACHINE", MACHINE, REGISTRY_INSTALL, TRUE);
+#endif
+
+   /*
+    * load the system settings, stored in THOTDIR/config/thot.ini .
     */
    strcpy (filename, execname);
    strcat (filename, DIR_STR);

@@ -20,13 +20,13 @@ HandleTo(thotlib_APIView);
 
 extern jint thotlib_APIView_TtaOpenMainView(struct Hthotlib_APIView*, jint, jint, jint, jint, jint);
 extern jint thotlib_APIView_TtaOpenView(struct Hthotlib_APIView*, jint, struct Hjava_lang_String*, jint, jint, jint, jint);
-extern jint thotlib_APIView_TtaOpenSubView(struct Hthotlib_APIView*, jint, struct Hjava_lang_String*, jint, jint, jint, jint, jint);
+extern jint thotlib_APIView_TtaOpenSubView(struct Hthotlib_APIView*, jint, struct Hjava_lang_String*, jint, jint, jint, jint, jlong);
 extern void thotlib_APIView_TtaChangeViewTitle(struct Hthotlib_APIView*, jint, jint, struct Hjava_lang_String*);
 extern void thotlib_APIView_TtaCloseView(struct Hthotlib_APIView*, jint, jint);
 extern void thotlib_APIView_TtaFreeView(struct Hthotlib_APIView*, jint, jint);
 extern void thotlib_APIView_TtaSetSensibility(struct Hthotlib_APIView*, jint, jint, jint);
 extern void thotlib_APIView_TtaSetZoom(struct Hthotlib_APIView*, jint, jint, jint);
-extern void thotlib_APIView_TtaShowElement(struct Hthotlib_APIView*, jint, jint, jint, jint);
+extern void thotlib_APIView_TtaShowElement(struct Hthotlib_APIView*, jint, jint, jlong, jint);
 extern jint thotlib_APIView_TtaGetSensibility(struct Hthotlib_APIView*, jint, jint);
 extern jint thotlib_APIView_TtaGetZoom(struct Hthotlib_APIView*, jint, jint);
 extern jint thotlib_APIView_TtaIsPSchemaValid(struct Hthotlib_APIView*, struct Hjava_lang_String*, struct Hjava_lang_String*);

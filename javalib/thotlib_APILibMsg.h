@@ -11,6 +11,7 @@ extern "C" {
 /* Header for class thotlib_APILibMsg */
 
 typedef struct Classthotlib_APILibMsg {
+#define thotlib_APILibMsg_TMSG_LIB_X11_ERR 0
 #define thotlib_APILibMsg_TMSG_MISSING_VIEW 1
 #define thotlib_APILibMsg_TMSG_ERR_LOADING_DICO 2
 #define thotlib_APILibMsg_TMSG_LIB_MISSING_FILE 3
@@ -32,29 +33,34 @@ typedef struct Classthotlib_APILibMsg {
 #define thotlib_APILibMsg_TMSG_NO_PLACE_FOR_FONT 19
 #define thotlib_APILibMsg_TMSG_INCORRECT_DOC_STRUCTURE 20
 #define thotlib_APILibMsg_TMSG_LOCKED_DOC 21
-#define thotlib_APILibMsg_TMSG_INCORRECT_HORIZ_POS 27
-#define thotlib_APILibMsg_TMSG_INCORRECT_VERT_POS 28
-#define thotlib_APILibMsg_TMSG_LIB_RULES_TABLE_FULL 29
-#define thotlib_APILibMsg_TMSG_STR_SCH_CHANGED 30
-#define thotlib_APILibMsg_TMSG_INCORRECT_STR_FILE 31
-#define thotlib_APILibMsg_TMSG_INCORRECT_PRS_FILE 32
-#define thotlib_APILibMsg_TMSG_MISSING_DIR 33
-#define thotlib_APILibMsg_TMSG_PRINT_IMP 34
-#define thotlib_APILibMsg_TMSG_CHANGE_PRES_IMP 35
-#define thotlib_APILibMsg_TMSG_SAVE_IN_PS_IMP 36
-#define thotlib_APILibMsg_TMSG_IMPORT_FILE_IMP 37
-#define thotlib_APILibMsg_TMSG_EMPTY_VIEW 38
-#define thotlib_APILibMsg_TMSG_RO_EL_FORBIDDEN 39
-#define thotlib_APILibMsg_TMSG_DON_T_COPY_PAIRED_EL 40
-#define thotlib_APILibMsg_TMSG_INCORRECT_HORIZ_SIZING 41
-#define thotlib_APILibMsg_TMSG_INCORRECT_VERT_SIZING 42
-#define thotlib_APILibMsg_TMSG_NEW_DICO 43
-#define thotlib_APILibMsg_TMSG_HORIZ_BOX_OVERFLOW 44
-#define thotlib_APILibMsg_TMSG_VERT_BOX_OVERFLOW 45
-#define thotlib_APILibMsg_TMSG_BAD_HORIZ_POS_SEE_PRS_SCH 46
-#define thotlib_APILibMsg_TMSG_BAD_VERT_POS_SEE_PRS_SCH 47
-#define thotlib_APILibMsg_TMSG_BAD_HORIZ_SIZING_SEE_PRS_SCH 48
-#define thotlib_APILibMsg_TMSG_BAD_VERT_SIZING_SEE_PRS_SCH 49
+#define thotlib_APILibMsg_TMSG_LIB_RULES_TABLE_FULL 22
+#define thotlib_APILibMsg_TMSG_STR_SCH_CHANGED 23
+#define thotlib_APILibMsg_TMSG_INCORRECT_STR_FILE 24
+#define thotlib_APILibMsg_TMSG_INCORRECT_PRS_FILE 25
+#define thotlib_APILibMsg_TMSG_MISSING_DIR 26
+#define thotlib_APILibMsg_TMSG_PRINT_IMP 27
+#define thotlib_APILibMsg_TMSG_CHANGE_PRES_IMP 28
+#define thotlib_APILibMsg_TMSG_SAVE_IN_PS_IMP 29
+#define thotlib_APILibMsg_TMSG_IMPORT_FILE_IMP 30
+#define thotlib_APILibMsg_TMSG_EMPTY_VIEW 31
+#define thotlib_APILibMsg_TMSG_RO_EL_FORBIDDEN 32
+#define thotlib_APILibMsg_TMSG_DON_T_COPY_PAIRED_EL 33
+#define thotlib_APILibMsg_TMSG_NEW_DICO 34
+#define thotlib_APILibMsg_TMSG_PICT_TYPE 35
+#define thotlib_APILibMsg_TMSG_PICT_PRES 36
+#define thotlib_APILibMsg_TMSG_PICT_FILE 37
+#define thotlib_APILibMsg_TMSG_DOC_PRINTED 38
+#define thotlib_APILibMsg_TMSG_FIRST_PAGE 39
+#define thotlib_APILibMsg_TMSG_LAST_PAGE 40
+#define thotlib_APILibMsg_TMSG_NB_COPIES 41
+#define thotlib_APILibMsg_TMSG_REDUCTION 42
+#define thotlib_APILibMsg_TMSG_1_PAGE_SHEET 43
+#define thotlib_APILibMsg_TMSG_2_PAGE_SHEET 44
+#define thotlib_APILibMsg_TMSG_4_PAGE_SHEET 45
+#define thotlib_APILibMsg_TMSG_NB_PAGE_SHEET 46
+#define thotlib_APILibMsg_TMSG_PAGINATE 47
+#define thotlib_APILibMsg_TMSG_VIEWS_TO_PRINT 48
+#define thotlib_APILibMsg_TMSG_CHANGE_PSCH 49
 #define thotlib_APILibMsg_TMSG_A_COPY 50
 #define thotlib_APILibMsg_TMSG_LIB_NO_LOAD 51
 #define thotlib_APILibMsg_TMSG_MISSING_DICOPAR 52
@@ -110,11 +116,11 @@ typedef struct Classthotlib_APILibMsg {
 #define thotlib_APILibMsg_TMSG_OPENING_NEW_FRAME_IMP 102
 #define thotlib_APILibMsg_TMSG_DEBUG_ERROR 103
 #define thotlib_APILibMsg_TMSG_DEBUG_SAV_FILES 104
-#define thotlib_APILibMsg_TMSG_LIB_X11_ERR 105
-#define thotlib_APILibMsg_TMSG_DEBUG_NO_SEL 106
-#define thotlib_APILibMsg_TMSG_DEBUG_LINK_NEW_EL 107
-#define thotlib_APILibMsg_TMSG_DEBUG_SUPPREF 108
-#define thotlib_APILibMsg_TMSG_DEBUG_DUP_LABEL 109
+#define thotlib_APILibMsg_TMSG_REALSIZE 105
+#define thotlib_APILibMsg_TMSG_RESCALE 106
+#define thotlib_APILibMsg_TMSG_FILLFRAME 107
+#define thotlib_APILibMsg_TMSG_XREPEAT 108
+#define thotlib_APILibMsg_TMSG_YREPEAT 109
 #define thotlib_APILibMsg_TMSG_PREMAT_EOF 110
 #define thotlib_APILibMsg_TMSG_NO_BOUNDING_BOX_IN_PS 111
 #define thotlib_APILibMsg_TMSG_HYPHEN_FILE_NOT_OPEN 112
@@ -280,19 +286,7 @@ typedef struct Classthotlib_APILibMsg {
 #define thotlib_APILibMsg_TMSG_ERROR_PS_TRANSLATION 273
 #define thotlib_APILibMsg_TMSG_UNKNOWN_PRINTER 274
 #define thotlib_APILibMsg_TMSG_CANNOT_CREATE_PS 275
-#define thotlib_APILibMsg_TMSG_DOC_PRINTED 276
-#define thotlib_APILibMsg_TMSG_FIRST_PAGE 277
-#define thotlib_APILibMsg_TMSG_LAST_PAGE 278
-#define thotlib_APILibMsg_TMSG_NB_COPIES 279
-#define thotlib_APILibMsg_TMSG_REDUCTION 280
-#define thotlib_APILibMsg_TMSG_1_PAGE_SHEET 281
-#define thotlib_APILibMsg_TMSG_2_PAGE_SHEET 282
-#define thotlib_APILibMsg_TMSG_4_PAGE_SHEET 283
-#define thotlib_APILibMsg_TMSG_NB_PAGE_SHEET 284
-#define thotlib_APILibMsg_TMSG_PAGINATE 285
-#define thotlib_APILibMsg_TMSG_VIEWS_TO_PRINT 286
-#define thotlib_APILibMsg_TMSG_CHANGE_PSCH 287
-#define thotlib_APILibMsg_TMSG_LIB_MSG_MAX 288
+#define thotlib_APILibMsg_TMSG_LIB_MSG_MAX 276
 	int __DUMMY__;
 } Classthotlib_APILibMsg;
 HandleTo(thotlib_APILibMsg);

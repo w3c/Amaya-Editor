@@ -92,3 +92,124 @@ void CAttributeTypePtr2JavaAttributeType(AttributeType *in, struct Hthotlib_Attr
 {
 }
 
+/*
+ * C pointer <=> Java long
+ */
+
+void CPixmap2Javalong(Pixmap in, jlong *out)
+{
+    *out = (jlong) in;
+}
+void Javalong2CPixmap(jlong in, Pixmap *out)
+{
+#if SIZEOF_VOIDP == SIZEOF_INT
+    unsigned int temp;
+    temp = (unsigned int) in;
+    *out = (void *) temp;
+#elif SIZEOF_VOIDP == SIZEOF_LONG
+    *out = (void *) (unsigned long) in;
+#elif SIZEOF_VOIDP == SIZEOF_LONG_LONG
+    *out = (void *) (unsigned long long) in;
+#elif SIZEOF_VOIDP == SIZEOF___INT64
+    *out = (void *) (unsigned __int64) in;
+#endif
+}
+
+void CElement2Javalong(Element in, jlong *out)
+{
+    *out = (jlong) in;
+}
+void Javalong2CElement(jlong in, Element *out)
+{
+#if SIZEOF_VOIDP == SIZEOF_INT
+    unsigned int temp;
+    temp = (unsigned int) in;
+    *out = (void *) temp;
+#elif SIZEOF_VOIDP == SIZEOF_LONG
+    *out = (void *) (unsigned long) in;
+#elif SIZEOF_VOIDP == SIZEOF_LONG_LONG
+    *out = (void *) (unsigned long long) in;
+#elif SIZEOF_VOIDP == SIZEOF___INT64
+    *out = (void *) (unsigned __int64) in;
+#endif
+}
+
+void CSSchema2Javalong(SSchema in, jlong *out)
+{
+    *out = (jlong) in;
+}
+void Javalong2CSSchema(jlong in, SSchema *out)
+{
+#if SIZEOF_VOIDP == SIZEOF_INT
+    unsigned int temp;
+    temp = (unsigned int) in;
+    *out = (void *) temp;
+#elif SIZEOF_VOIDP == SIZEOF_LONG
+    *out = (void *) (unsigned long) in;
+#elif SIZEOF_VOIDP == SIZEOF_LONG_LONG
+    *out = (void *) (unsigned long long) in;
+#elif SIZEOF_VOIDP == SIZEOF___INT64
+    *out = (void *) (unsigned __int64) in;
+#endif
+}
+
+
+void CAttribute2Javalong(Attribute in, jlong *out)
+{
+    *out = (jlong) in;
+}
+void Javalong2CAttribute(jlong in, Attribute *out)
+{
+#if SIZEOF_VOIDP == SIZEOF_INT
+    unsigned int temp;
+    temp = (unsigned int) in;
+    *out = (void *) temp;
+#elif SIZEOF_VOIDP == SIZEOF_LONG
+    *out = (void *) (unsigned long) in;
+#elif SIZEOF_VOIDP == SIZEOF_LONG_LONG
+    *out = (void *) (unsigned long long) in;
+#elif SIZEOF_VOIDP == SIZEOF___INT64
+    *out = (void *) (unsigned __int64) in;
+#endif
+}
+
+
+void CPRule2Javalong(PRule in, jlong *out)
+{
+    *out = (jlong) in;
+}
+void Javalong2CPRule(jlong in, PRule *out)
+{
+#if SIZEOF_VOIDP == SIZEOF_INT
+    unsigned int temp;
+    temp = (unsigned int) in;
+    *out = (void *) temp;
+#elif SIZEOF_VOIDP == SIZEOF_LONG
+    *out = (void *) (unsigned long) in;
+#elif SIZEOF_VOIDP == SIZEOF_LONG_LONG
+    *out = (void *) (unsigned long long) in;
+#elif SIZEOF_VOIDP == SIZEOF___INT64
+    *out = (void *) (unsigned __int64) in;
+#endif
+}
+
+
+void CThotWidget2Javalong(ThotWidget in, jlong *out)
+{
+    *out = (jlong) in;
+}
+void Javalong2CThotWidget(jlong in, ThotWidget *out)
+{
+#if SIZEOF_VOIDP == SIZEOF_INT
+    unsigned int temp;
+    temp = (unsigned int) in;
+    *out = (void *) temp;
+#elif SIZEOF_VOIDP == SIZEOF_LONG
+    *out = (void *) (unsigned long) in;
+#elif SIZEOF_VOIDP == SIZEOF_LONG_LONG
+    *out = (void *) (unsigned long long) in;
+#elif SIZEOF_VOIDP == SIZEOF___INT64
+    *out = (void *) (unsigned __int64) in;
+#endif
+}
+
