@@ -1061,6 +1061,7 @@ int Makefile (HWND hwnd, char *fileName)
 }
 
 /*----------------------------------------------------------------------
+ CompilersWndProc
   ----------------------------------------------------------------------*/
 LRESULT CALLBACK CompilersWndProc (HWND hwnd, UINT iMsg, WPARAM wParam, LPARAM lParam)
 {
@@ -1358,6 +1359,7 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance,
   /*** sprintf (WorkPath, "%s\\amaya", BinPath); ***/
   
   ThotPath = TtaGetEnvString ("THOTDIR");
+  /* register window class */
   wndClass.style         = CS_HREDRAW | CS_VREDRAW;
   wndClass.lpfnWndProc   = (WNDPROC) CompilersWndProc;
   wndClass.cbClsExtra    = 0;
@@ -1373,16 +1375,20 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance,
   if (!RegisterClassEx (&wndClass))
     return FALSE;
   
+   /* create window */
   hwnd = CreateWindowEx (0, szAppName, "Thot compilers",
 			 DS_MODALFRAME | WS_POPUP |
-			 WS_OVERLAPPEDWINDOW | WS_VISIBLE | WS_CAPTION | WS_SYSMENU,
+			 WS_OVERLAPPEDWINDOW | WS_VISIBLE |
+			 WS_CAPTION | WS_SYSMENU,
 			 0, 0,
 			 600, 650,
 			 NULL, NULL, hInstance, NULL);
   
+  /* display window */
   ShowWindow (hwnd, SW_SHOWNORMAL);
   UpdateWindow (hwnd);
-  
+
+  /* process messages */
   while (GetMessage (&msg, NULL, 0, 0))
     {
       TranslateMessage (&msg);

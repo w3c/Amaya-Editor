@@ -64,7 +64,7 @@ LIB32=link.exe -lib
 # PROP Intermediate_Dir "Debug"
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /GX /Z7 /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /YX /FD /c
-# ADD CPP /nologo /W3 /GX /Z7 /Od /I "..\..\..\libwww\modules\md5" /I "..\..\..\libwww\modules\expat\xmlparse" /I "..\..\..\libwww\modules\expat\xmltok" /I "..\..\libpng\zlib" /I "..\..\..\libwww\Library\src" /D "_DEBUG" /D "HT_ZLIB" /D "WIN32" /D "_WINDOWS" /D "WWW_WIN_ASYNC" /YX /FD /c
+# ADD CPP /nologo /W3 /GX /Z7 /Od /I "..\..\..\libwww\modules\md5" /I "..\..\..\libwww\modules\expat\xmlparse" /I "..\..\..\libwww\modules\expat\xmltok" /I "..\..\libpng\zlib" /I "..\..\..\libwww\Library\src" /D "HT_ZLIB" /D "WWW_WIN_ASYNC" /D "_DEBUG" /D "WIN32" /D "_WINDOWS" /D "_I18N_" /YX /FD /c
 # ADD BASE RSC /l 0x409
 # ADD RSC /l 0x409
 BSC32=bscmake.exe

@@ -125,7 +125,9 @@ void NewPictInfo (PtrAbstractBox pAb, PathBuffer filename, int imagetype)
       /* use the buffer allocated by the picture content */
 #ifndef _GTK
 #ifdef _WINDOWS
+#ifndef _GL
       imageDesc->PicMask = -1;
+#endif /*_GL*/
 #else /* _WINDOWS */
       FreePixmap (imageDesc->PicMask);
       imageDesc->PicMask = None;
@@ -152,7 +154,9 @@ void CleanPictInfo (PictInfo *imageDesc)
 	 {
 #ifndef _GTK
 #ifdef _WINDOWS
-	   imageDesc->PicMask = -1;
+#ifndef _GL
+      imageDesc->PicMask = -1;
+#endif /*_GL*/
 #else /* _WINDOWS */
 	   FreePixmap (imageDesc->PicMask);
 	   imageDesc->PicMask = None;

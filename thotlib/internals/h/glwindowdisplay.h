@@ -1,6 +1,30 @@
 
-void SetGlPipelineState();
-void GLResize (int width, int height);
+
+#ifdef _WINDOWS
+
+void GL_Win32ContextClose (int frame);
+void GL_Win32ContextInit (HWND hwndClient, int frame);
+
+typedef struct _XSegment {
+	int x1;
+	int y1;
+	int x2;
+	int y2;		
+} XSegment;
+
+typedef struct _XArc {
+	int x;
+	int y;
+	int width;
+	int height;		
+	int angle1;
+	int angle2;
+} XArc;
+
+#endif /*_WINDOWS*/
+
+void SetGlPipelineState ();
+void GLResize (int width, int height, int x, int y);
 void GL_SetForeground (int fg);
 void GL_SetBackground (int bg, int frame);
 void GL_ClearArea (int x, int y, int width, int height);
@@ -34,12 +58,17 @@ int GL_DrawString (char const *str, float x, float y,
 		   void *GL_font, int fg);
 void GL_DrawChar (char const c, float x, float y, void *GL_font, int fg);
 
+int UnicodeFontRender (void *gl_font, wchar_t *string, float x, float y, int size);
+
 
 void GL_ActivateDrawing();
 void GL_DrawAll (ThotWidget widget, int frame);
 
-ThotBool GL_prepare (GtkWidget *widget);
-void GL_realize (GtkWidget *widget);
+
+ThotBool GL_prepare (ThotWidget *widget);
+void GL_realize (ThotWidget *widget);
+
+#ifdef _GTK
 gboolean GL_DrawCallback (ThotWidget widget, 
 			  GdkEventExpose *event, 
 			  gpointer data);
@@ -55,3 +84,4 @@ gboolean GL_FocusOut (ThotWidget widget,
 gboolean  GL_Destroy (ThotWidget widget, 
 		      GdkEventExpose *event, 
 		      gpointer data);
+#endif /*_GTK*/

@@ -10,6 +10,7 @@
  * Authors: I. Vatton (INRIA)
  *          N. Layaida (INRIA) - New picture formats
  *          R. Guetari (W3C/INRIA) - Windows version
+ *			P. Cheyrou-lagreze (INRIA) - Opengl Version
  */
 
 #define PNG_SETJMP_SUPPORTED
@@ -67,13 +68,32 @@
 
 #ifdef _GL
 
+#ifdef _GTK
 #include <gtkgl/gtkglarea.h>
+#endif /*_GTK*/
 #include <GL/gl.h>
+
 
 #ifdef GL_MESA_window_pos
 #define MESA
 #endif
 
+
+/*----------------------------------------------------------------------
+ Free video card memory from this texture.
+  ----------------------------------------------------------------------*/
+void FreeGlTexture (PictInfo *Image)
+{
+  if (Image->TextureBind)
+    {
+      if (glIsTexture (Image->TextureBind))
+	glDeleteTextures (1, &(Image->TextureBind));
+      else
+	Image->TextureBind = 0;
+    }
+}
+
+#ifndef MESA
 
 /*----------------------------------------------------------------------
   p2 :  Lowest power of two bigger than the argument.
@@ -115,112 +135,38 @@ return 1 << (int) ceilf(logf((float) p) / M_LN2);
 } 
 */
 
- /*----------------------------------------------------------------------
-   GL_MakeTexture :
-   Opengl texture have size that is a power of 2
-   So we add black points in the resize process 
-   (but they won't be displayed as we crop the texture to a Quad of the orignal size)
-   TODO : - cut big texture in small ones (Much Faster display...)
-          @See Gliv project
-	  - Png supporting 256 levels of transparency ?
-  ----------------------------------------------------------------------*/
-static unsigned char *GL_MakeTransparentRGB( GdkImlibImage *imageDesc, int w, int h)
-{
-  unsigned char      *data;
-  int                 GL_w, GL_h;
-  int                 x, y;
-  unsigned char      *ptr1, *ptr2;
-  unsigned char      red, blue, green;
-  
-  GL_w = w;
-  GL_h = h;
-  red = imageDesc->shape_color.r;
-  green = imageDesc->shape_color.g;
-  blue =  imageDesc->shape_color.b;
- 
-  /* In this algo, just remember that a 
-     RGB pixel value is a list of 3 value in source data
-     and 4 for destination RGBA texture */
-  data = TtaGetMemory (sizeof (unsigned char) * GL_w * GL_h * 4);
-  ptr1 = imageDesc->rgb_data;
-  ptr2 = data;
-  for (y = 0; y < h; y++)
-    {
-      /* pixel by pixel*/
-      for (x = 0; x < w; x++)
-	{		    
-	  /* copy R,G,B */
-	  memcpy(ptr2, ptr1, 3); 
-	  /* Then compute alpha if RGB = transparent color*/
-	  if (red == *ptr2 && green == *(ptr2+1) && blue ==  *(ptr2+2))
-	    *(ptr2+3) = 0;
-	  else
-	    *(ptr2+3) = 255;
-	  /* next pixel */
-	  ptr2 += 4;
-	  ptr1 += 3; 
-	}	  
-    }	
-  return data; 
-}    
 /*----------------------------------------------------------------------
-   GL_MakeTexture :
-   Opengl texture have size that is a power of 2
-   So we add black points in the resize process 
-   (but they won't be displayed as we crop the texture to a Quad of the orignal size)
-   TODO : - cut big texture in small ones (Much Faster display...)
-          @See Gliv project
-	  - Png supporting 256 levels of transparency ?
+  GL_MakeTextureSize : Texture sizes must be power of two
   ----------------------------------------------------------------------*/
-static unsigned char *GL_MakeTexture( GdkImlibImage *imageDesc, int w, int h)
+static unsigned char *GL_MakeTextureSize(PictInfo *Image, int GL_w, int GL_h)
 {
-  unsigned char      *data;
-  int                 xdiff;
-  int                 GL_w, GL_h;
-  int                 x, y;
-  unsigned char      *ptr1, *ptr2;
-  unsigned char      red, blue, green;
-  
-  GL_w = p2(w);
-  GL_h = p2(h);
-  red = imageDesc->shape_color.r;
-  green = imageDesc->shape_color.g;
-  blue =  imageDesc->shape_color.b;
- 
+  unsigned char      *data, *ptr1, *ptr2;
+  int                 xdiff, x, y, nbpixel;
+
+  nbpixel = (Image->RGBA)?4:3;
   /* In this algo, just remember that a 
      RGB pixel value is a list of 3 value in source data
      and 4 for destination RGBA texture */
-  data = TtaGetMemory (sizeof (unsigned char) * GL_w * GL_h * 4);
-
+  data = TtaGetMemory (sizeof (unsigned char) * GL_w * GL_h * nbpixel);
   /* Black transparent filling */
-  memset (data, 0, sizeof (unsigned char) * GL_w * GL_h * 4);
-  /* For faster black filling we create a black pixel memory block*/
-  /* black[0] = 0;black[1] = 0;black[2] = 0;black[3] = 0; */
-
-  ptr1 = imageDesc->rgb_data;
+  memset (data, 0, sizeof (unsigned char) * GL_w * GL_h * nbpixel);
+  ptr1 = Image->PicPixmap;
   ptr2 = data;
-  xdiff = (GL_w - w) * 4;
-  for (y = 0; y < h; y++)
+  xdiff = (GL_w - Image->PicWidth) * nbpixel;
+  x = nbpixel * Image->PicWidth;
+  for (y = 0; y < Image->PicHeight; y++)
     {
-      /* pixel by pixel*/
-      for (x = 0; x < w; x++)
-	{		    
-	  /* copy R,G,B */
-	  memcpy(ptr2, ptr1, 3); 
-	  /* Then compute alpha if RGB = transparent color*/
-	  if (red == *ptr2 && green == *(ptr2+1) && blue ==  *(ptr2+2))
-	    *(ptr2+3) = 0;
-	  else
-	    *(ptr2+3) = 255;
-	  /* next pixel */
-	  ptr2 += 4;
-	  ptr1 += 3; 
-	}
-      /* jump over the black transparent zone*/
-      ptr2 += xdiff;
+	  /* copy R,G,B,A */
+	  memcpy (ptr2, ptr1, x); 
+	  /* jump over the black transparent zone*/
+	  ptr1 += x;
+	  ptr2 += x + xdiff;
     }	
-  return data; 
+  TtaFreeMemory (Image->PicPixmap);
+  Image->PicPixmap = data; 
 }
+
+#endif /*!MESA*/
 
 /* In case of old opengl version where
  Texture Objects were an extension */
@@ -239,7 +185,7 @@ static unsigned char *GL_MakeTexture( GdkImlibImage *imageDesc, int w, int h)
  Drawpixel Method for software implementation, as it's much faster for those
  Texture Method for hardware implementation as it's faster and better.
   ----------------------------------------------------------------------*/
-static void GL_TextureMap (PictInfo *Image, int xFrame, int yFrame, int w , int h)
+static void GL_TextureMap (PictInfo *Image, int xFrame, int yFrame, int w, int h)
 {  
 #ifdef MESA
   int       p2_w, p2_h, GL_h;
@@ -250,12 +196,11 @@ static void GL_TextureMap (PictInfo *Image, int xFrame, int yFrame, int w , int 
 	   but without texture power...(mippmapping)
 	   Faster on software implementation
 	   (Actually slower on hardware accelerated system) */
-	GL_h = FrameTable[ActiveFrame].WdFrame->allocation.height;
+	GL_h = FrameTable[ActiveFrame].FrHeight;
 	if (xFrame > 0 && yFrame+h < GL_h)
 	  glRasterPos2i (xFrame,  yFrame + h );
 	else
 	  {
-	    GL_h = FrameTable[ActiveFrame].WdFrame->allocation.height;
 	    /* Raster Pos must be inside viewport 
 	       if not, it's not displayed at all*/
 	    p2_w = p2_h =0;
@@ -276,41 +221,22 @@ static void GL_TextureMap (PictInfo *Image, int xFrame, int yFrame, int w , int 
 		     NULL);
 	  }
 	glDrawPixels( w, h, 
-		      GL_RGBA, 
+		      ((Image->RGBA)?GL_RGBA:GL_RGB), 
 		      GL_UNSIGNED_BYTE, 
-		      (GLvoid *)Image->PicPixmap); 
+		      Image->PicPixmap); 
       }
 #else /*!MESA*/
   int       p2_w, p2_h;
-  GLfloat   GL_w, GL_h;
+  GLfloat   GL_w, GL_h;   
+  GLint		Mode;
 
-    /* using Display list is slower than not using it
-     As this isn't normal... 
-     Code will remains here til I found why!
-  (tests no different configurations may help)*/
-
-  /* if (glIsList (Image->DisplayList))  */
-  /*     {   */
-  /*       glPushMatrix ();  */
-  /*       glTranslated ( xFrame - Image->xorig, yFrame - Image->yorig, 0);  */
-  /*       glCallList (Image->DisplayList);   */
-  /*       glPopMatrix ();  */
-  /*     }  */
-  /*   else  */
-    if (Image->PicPixmap)
-      { 	
-	/* Image->DisplayList = glGenLists (1);  */
-	/* 	Image->xorig = xFrame; */
-	/* 	Image->yorig = yFrame;   */
-	/*         glNewList (Image->DisplayList,  GL_COMPILE_AND_EXECUTE); */
-		
 	/* Another way is to split texture in 256x256 
 	   pieces and render them on different quads
 	   Declared to be the faster  */
 	p2_w = p2 (Image->PicWidth);
 	p2_h = p2 (Image->PicHeight);
-	
-	
+
+	GL_MakeTextureSize(Image, p2_w, p2_h);	
 	glEnable (GL_TEXTURE_2D); 
 	/* Put texture in 3d card memory */
 	if (!glIsTexture (Image->TextureBind))
@@ -328,10 +254,19 @@ static void GL_TextureMap (PictInfo *Image, int xFrame, int yFrame, int w , int 
 	    /* does current Color modify texture no = GL_REPLACE, 
 	       else => GL_MODULATE, GL_DECAL, ou GL_BLEND */
 	    glTexEnvi( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
-	    /* We give te texture to opengl Pipeline system */
-	    glTexImage2D (GL_TEXTURE_2D, 0, GL_RGBA, p2_w, p2_h, 0,
-			  GL_RGBA, GL_UNSIGNED_BYTE, (GLvoid *) Image->PicPixmap);
-	     
+	    /* We give te texture to opengl Pipeline system */	    
+	    Mode = (Image->RGBA)?GL_RGBA:GL_RGB;
+		glTexImage2D (GL_TEXTURE_2D, 
+						0, 
+						Mode, 
+						p2_w, 
+						p2_h, 
+						0,
+						Mode, 
+						GL_UNSIGNED_BYTE, 
+						(GLvoid *) Image->PicPixmap);
+	    TtaFreeMemory (Image->PicPixmap);
+	    Image->PicPixmap = None;
 	  }
 	else
 	  {
@@ -341,8 +276,7 @@ static void GL_TextureMap (PictInfo *Image, int xFrame, int yFrame, int w , int 
 	   We don't want to see all the picture, just the w and h 
 	   portion*/
 	GL_w = (GLfloat) Image->PicWidth/p2_w;
-	GL_h = (GLfloat) Image->PicHeight/p2_h;   
-	
+	GL_h = (GLfloat) Image->PicHeight/p2_h;   	
 	/* Not sure of the vertex order 
 	   (not the faster one, I think) */
 	glBegin (GL_QUADS);
@@ -360,19 +294,23 @@ static void GL_TextureMap (PictInfo *Image, int xFrame, int yFrame, int w , int 
 	   /* upper left */
 	glTexCoord2f (0.0,  GL_h); 
 	glVertex2i (xFrame,     yFrame);      
-	glEnd ();
-	
+	glEnd ();	
 	/* State disabling */
 	glDisable (GL_TEXTURE_2D); 
-
-	/*  glEndList ();  */
-       }
 #endif /*MESA*/
 }
 #endif /* _GL */
 
 static char*    PictureMenu;
+#ifdef _GL
+static unsigned char *PictureLogo;
+#else /*_GL*/
+#if !defined (_GTK)
 static Pixmap   PictureLogo;
+#else /*_GTK*/
+static GdkPixmap *PictureLogo;
+#endif /*_GTK*/
+#endif /*_GL*/
 static ThotGC   tiledGC;
 
 char* FileExtension[] = {
@@ -529,19 +467,24 @@ static ThotBool Match_Format (int typeImage, char *fileName)
   ----------------------------------------------------------------------*/
 void FreePixmap (Pixmap pixmap)
 {
-  if (pixmap != None && pixmap != PictureLogo && pixmap != EpsfPictureLogo)
+  if (pixmap != None 
+      && pixmap != PictureLogo 
+      && pixmap != EpsfPictureLogo)
+#ifdef _GL
+    TtaFreeMemory (pixmap);
+#else /*_GL*/
 #ifndef _WINDOWS
 #ifndef _GTK
     XFreePixmap (TtDisplay, pixmap);
 #else /* _GTK */
-  {
-   gdk_imlib_free_pixmap ((GdkPixmap *)pixmap);
-  }
+    if (((GdkPixmap *) pixmap) != PictureLogo)
+      gdk_imlib_free_pixmap ((GdkPixmap *) pixmap);
 #endif /* _GTK */
 #else  /* _WINDOWS */
   if (!DeleteObject ((HBITMAP)pixmap))
     WinErrorBox (WIN_Main_Wd, "FreePixmap");
 #endif /* _WINDOWS */
+#endif /*_GL*/
 }
 
 
@@ -622,6 +565,138 @@ static void SetPictureClipping (int *picWArea, int *picHArea, int wFrame,
      }
 }
 
+#ifdef _GL
+/*----------------------------------------------------------------------
+  LayoutPicture performs the layout of pixmap on the screen described
+  by the drawable.
+  if picXOrg or picYOrg are postive, the copy operation is shifted
+  ----------------------------------------------------------------------*/
+static void LayoutPicture (Pixmap pixmap, Drawable drawable, 
+						   int picXOrg, int picYOrg, int w, int h, 
+						   int xFrame, int yFrame, int frame, 
+						   PictInfo *imageDesc, PtrBox box)
+{
+  ViewFrame*        pFrame;
+  PictureScaling    picPresent;
+  int               x, y, clipWidth, clipHeight;
+  int               delta, i, j, iw, jh;
+
+  if (picXOrg < 0)
+    {
+      xFrame = xFrame - picXOrg;
+      picXOrg = 0;
+    }
+  if (picYOrg < 0)
+    {
+      yFrame = yFrame - picYOrg;
+      picYOrg = 0;
+    }
+  pFrame = &ViewFrameTable[frame - 1];
+  if (pixmap != None)
+    {
+      /* the default presentation depends on the box type */
+      picPresent = imageDesc->PicPresent;
+     if (picPresent == DefaultPres)
+	 {
+	  if (box->BxType == BoPicture)
+	    /* an image is rescaled */
+	    picPresent = ReScale;
+	  else
+	    /* a background image is repeated */
+	    picPresent = FillFrame;
+	 }
+    switch (picPresent)
+	{
+		case ReScale:
+	        GL_TextureMap (imageDesc, xFrame, yFrame, w ,h);
+			break;
+		case RealSize:
+			GL_TextureMap (imageDesc, xFrame, yFrame, w ,h);
+			break;
+		case FillFrame:
+		case XRepeat:
+		case YRepeat:
+		  x          = pFrame->FrClipXBegin;
+          y          = pFrame->FrClipYBegin;
+          clipWidth  = pFrame->FrClipXEnd - x;
+          clipHeight = pFrame->FrClipYEnd - y;
+          x          -= pFrame->FrXOrg;
+          y          -= pFrame->FrYOrg;
+          if (picPresent == FillFrame || picPresent == YRepeat)
+			{
+				/* clipping height is done by the box height */
+				if (y < yFrame)
+				{
+				  /* reduce the height in delta value */
+				 clipHeight = clipHeight + y - yFrame;
+				 y = yFrame;
+				}
+				if (clipHeight > h)
+					clipHeight = h;
+			}
+			else
+			{
+				/* clipping height is done by the image height */
+				delta = yFrame + imageDesc->PicHArea - y;
+				if (delta <= 0)
+					clipHeight = 0;
+				else
+					clipHeight = delta;
+			}
+	  
+          if (picPresent == FillFrame || picPresent == XRepeat)
+			{
+				/* clipping width is done by the box width */
+				if (x < xFrame)
+				{
+				 /* reduce the width in delta value */
+				 clipWidth = clipWidth + x - xFrame;
+				x = xFrame;
+				}
+				if (clipWidth > w)
+					clipWidth = w;
+			}
+		  else
+			{
+			/* clipping width is done by the image width */
+			delta = xFrame + imageDesc->PicWArea - x;
+			if (delta <= 0)
+				clipWidth = 0;
+			else
+				clipWidth = delta;
+			}          
+        j = 0;
+		do
+		 {
+			i = 0;
+			do
+			{
+				/* check if the limits of the copied zone */
+				if (i + imageDesc->PicWArea <= w)
+				    iw = imageDesc->PicWArea;
+				else
+				    iw = w - i;
+				if (j + imageDesc->PicHArea <= h)
+					jh = imageDesc->PicHArea;
+				else
+				    jh = h - j;
+				GL_TextureMap (imageDesc, xFrame, yFrame, iw ,jh);
+				/*BitBlt (hMemDC, i, j, iw, jh, hOrigDC, 0, 0, SRCCOPY);*/
+				i += imageDesc->PicWArea;
+			} 
+			while (i < w);
+			j += imageDesc->PicHArea;
+		} 
+		while (j < h);
+		break;  
+	default: 
+			break;
+	}
+   }
+}
+
+#else /*_GL*/
+
 /*----------------------------------------------------------------------
   LayoutPicture performs the layout of pixmap on the screen described
   by the drawable.
@@ -653,9 +728,7 @@ static void LayoutPicture (Pixmap pixmap, Drawable drawable, int picXOrg,
   XGCValues         values;
   unsigned int      valuemask;
 #else /* _GTK*/
-#ifndef _GL
   GdkImlibImage     *im;
-#endif /* _GL */
 #endif /* _GTK */
 #endif /* _WINDOWS */
 
@@ -709,26 +782,24 @@ static void LayoutPicture (Pixmap pixmap, Drawable drawable, int picXOrg,
 	       XSetClipOrigin (TtDisplay, TtGraphicGC, 0, 0);
 	     }
 #else /* _GTK */ 
-#ifndef _GL
 	   im = gdk_imlib_load_image (imageDesc->PicFileName);
-	   gdk_imlib_render(im, w, h);
-	   if (imageDesc->PicMask)
+	   if (im)
 	     {
-	       gdk_gc_set_clip_origin (TtGraphicGC, xFrame - picXOrg, yFrame - picYOrg);
-	       gdk_gc_set_clip_mask (TtGraphicGC, (GdkPixmap *)gdk_imlib_move_mask (im));
-	     }
-	   gdk_draw_pixmap ((GdkDrawable *)drawable, TtGraphicGC,
-			    (GdkPixmap *) im->pixmap, 
-			    picXOrg, picYOrg, xFrame, yFrame, w ,h);
-	   if (imageDesc->PicMask)
-	     {
-	       gdk_gc_set_clip_mask (TtGraphicGC, (GdkPixmap *)None);
-	       gdk_gc_set_clip_origin (TtGraphicGC, 0, 0);
-	     }		   
-#else /* _GL */
-	   
-	   GL_TextureMap(imageDesc, xFrame, yFrame, w ,h);
-#endif /* _GL */
+	       gdk_imlib_render(im, w, h);
+	       if (imageDesc->PicMask)
+		 {
+		   gdk_gc_set_clip_origin (TtGraphicGC, xFrame - picXOrg, yFrame - picYOrg);
+		   gdk_gc_set_clip_mask (TtGraphicGC, (GdkPixmap *)gdk_imlib_move_mask (im));
+		 }
+	       gdk_draw_pixmap ((GdkDrawable *)drawable, TtGraphicGC,
+				(GdkPixmap *) im->pixmap, 
+				picXOrg, picYOrg, xFrame, yFrame, w ,h);
+	       if (imageDesc->PicMask)
+		 {
+		   gdk_gc_set_clip_mask (TtGraphicGC, (GdkPixmap *)None);
+		   gdk_gc_set_clip_origin (TtGraphicGC, 0, 0);
+		 }
+	     } 
 #endif /* !_GTK */
 #else /* _WINDOWS */
 	case RealSize:
@@ -801,6 +872,7 @@ static void LayoutPicture (Pixmap pixmap, Drawable drawable, int picXOrg,
 	    }
 	  if (rect.width > w)
 	    rect.width = w;
+
 #ifndef _GTK
 	  valuemask = GCTile | GCFillStyle | GCTileStipXOrigin | GCTileStipYOrigin;
 	  values.tile = pixmap;
@@ -845,7 +917,6 @@ static void LayoutPicture (Pixmap pixmap, Drawable drawable, int picXOrg,
 	      XSetClipOrigin (TtDisplay, tiledGC, 0, 0);
 	    }
 #else /* _GTK */
-#ifndef _GL 
 	  gdk_gc_set_fill (tiledGC, GDK_TILED);
 	  gdk_gc_set_ts_origin (tiledGC, xFrame, yFrame);
 	  gdk_gc_set_tile (tiledGC, (GdkPixmap *)pixmap);
@@ -890,7 +961,6 @@ static void LayoutPicture (Pixmap pixmap, Drawable drawable, int picXOrg,
 	      gdk_gc_set_clip_mask (tiledGC, None);
 	      gdk_gc_set_clip_origin (tiledGC, 0, 0);
 	    }
-#endif/*  _GL    */
 #endif /* !_GTK */
 #else  /* _WINDOWS */
           x          = pFrame->FrClipXBegin;
@@ -942,7 +1012,6 @@ static void LayoutPicture (Pixmap pixmap, Drawable drawable, int picXOrg,
 	      else
 		clipWidth = delta;
 	    }
-	  
           hMemDC  = CreateCompatibleDC (TtDisplay);
           bitmapTiled = CreateCompatibleBitmap (TtDisplay, w, h);
           hOrigDC = CreateCompatibleDC (TtDisplay);
@@ -999,7 +1068,7 @@ static void LayoutPicture (Pixmap pixmap, Drawable drawable, int picXOrg,
 	}
     }
 }
-
+#endif /*_GL*/
 
 /*----------------------------------------------------------------------
    GetPictureFormat returns the format of a file picture           
@@ -1063,6 +1132,39 @@ Picture_Report PictureFileOk (char *fileName, int *typeImage)
   return status;
 }
 
+#if defined (_GTK) || defined (_WINDOWS)
+/*----------------------------------------------------------------------
+  Create The logo for lost pictures
+  ----------------------------------------------------------------------*/
+void CreateGifLogo ()
+{
+#if !defined(_GTK) || defined (_GL) 
+  PictInfo            *imageDesc;
+  unsigned long       Bgcolor = 0;
+  int                 xBox = 0;
+  int                 yBox = 0;
+  int                 wBox = 0;
+  int                 hBox = 0;
+  int                 width, height;
+  Drawable            drw;
+  
+  imageDesc = TtaGetMemory (sizeof (PictInfo));
+  drw = (*(PictureHandlerTable[GIF_FORMAT].Produce_Picture)) 
+    (LostPicturePath, imageDesc, &xBox, &yBox, &wBox,
+     &hBox, Bgcolor, &width, &height);
+  TtaFreeMemory (imageDesc);
+  PictureLogo = drw;
+#else /*_WIN && _GL*/
+  GdkImlibImage      *im;
+
+  im = gdk_imlib_load_image (LostPicturePath);
+  gdk_imlib_render (im, 40, 40);
+  PictureLogo = gdk_imlib_copy_image (im);
+  TtaFreeMemory (im);
+#endif /*_WIN && _GL*/
+}
+#endif /*_GTK && _WIN*/
+
 /*----------------------------------------------------------------------
    Private Initializations of picture handlers and the visual type 
   ----------------------------------------------------------------------*/
@@ -1097,8 +1199,6 @@ void InitPictureHandlers (ThotBool printing)
       gdk_rgb_gc_set_background (GCpicture, White_Color);
       gdk_gc_set_exposures (GCpicture,0);
     }
-  /* create a special logo for lost pictures */
-  /* TODO */
   theVisual = (Visual *) gdk_visual_get_system ();
 #else /* _GTK */
    /* initialize Graphic context to display pictures */
@@ -1717,6 +1817,206 @@ unsigned char *ZoomPicture (unsigned char *cpic, int cWIDE, int cHIGH ,
   return (epic);
 }
 
+#ifdef _GL
+/*----------------------------------------------------------------------
+   Requests the picture handlers to get the corresponding RGB or RGBA buffer
+   and make a Texture or it (aka load into video card memory)   
+  ----------------------------------------------------------------------*/
+void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
+{
+  PathBuffer          fileName;
+  PictureScaling      pres;
+  PtrAbstractBox      pAb;
+  Picture_Report      status;
+  unsigned long       Bgcolor;
+  int                 typeImage;
+  int                 xBox = 0;
+  int                 yBox = 0;
+  int                 wBox =0;
+  int                 hBox = 0;
+  int                 w, h;
+  int                 width, height;
+  int                 left, right, top, bottom;
+  unsigned char       *drw = None;
+
+  left = box->BxLMargin + box->BxLBorder + box->BxLPadding;
+  right = box->BxRMargin + box->BxRBorder + box->BxRPadding;
+  top = box->BxTMargin + box->BxTBorder + box->BxTPadding;
+  bottom = box->BxBMargin + box->BxBBorder + box->BxBPadding;
+  pAb = box->BxAbstractBox;
+  if (pAb->AbVisibility < ViewFrameTable[frame - 1].FrVisibility)
+    /* the picture is not visible */
+    return;
+  if (imageDesc->PicFileName == NULL || imageDesc->PicFileName[0] == EOS)
+    return;
+  GetPictureFileName (imageDesc->PicFileName, fileName);
+  typeImage = imageDesc->PicType;
+  status = PictureFileOk (fileName, &typeImage);
+  w = 0;
+  h = 0;
+  Bgcolor = ColorPixel (pAb->AbBackground);
+  /* clean up the current image descriptor */
+  /*CleanPictInfo (imageDesc);*/
+  if (status == Supported_Format)
+    {
+      /* Supported format */
+      imageDesc->PicType = typeImage;
+      pres = imageDesc->PicPresent;
+      if (pres == DefaultPres)
+	{
+	  if (box->BxType == BoPicture)
+	    /* an image is rescaled */
+	    pres = ReScale;
+	  else
+	    /* a background image is repeated */
+	    pres = FillFrame;
+	}
+      if ((typeImage == XBM_FORMAT || typeImage == XPM_FORMAT) && pres == ReScale)
+	pres = imageDesc->PicPresent = RealSize;
+      /* picture dimension */
+      if (pAb->AbLeafType == LtCompound)
+	{
+	  /* a background image, draw over the whole box */
+	  w = box->BxWidth;
+	  h = box->BxHeight;
+	}
+      else
+	{
+	  /* draw within the inside box */
+	  w = box->BxW;
+	  h = box->BxH;
+	}
+      
+      if (PictureHandlerTable[typeImage].Produce_Picture != NULL)
+	{
+	  if (typeImage >= InlineHandlers)
+	    {
+	      /* Plugins are displayed in RealSize */
+	      imageDesc->PicPresent = RealSize;
+	      imageDesc->PicWArea = wBox = w;
+	      imageDesc->PicHArea = hBox = h;
+	      imageDesc->PicPixmap = (*(PictureHandlerTable[typeImage].Produce_Picture)) 
+		(frame, imageDesc, fileName);	      
+	      xBox = imageDesc->PicXArea;
+	      yBox = imageDesc->PicYArea;
+	    }
+	  else
+	    {
+	      /* xBox and yBox get the box size if picture is */
+	      /* rescaled and receives the position of the picture */
+	      if (pres != ReScale || Printing)
+		{
+		  xBox = 0;
+		  yBox = 0;
+		}
+	      else
+		{
+		  if (box->BxW != 0)
+		    xBox = w;
+		  if(box->BxH != 0)
+		    yBox = h;
+		}
+	      
+	      imageDesc->PicPixmap = (*(PictureHandlerTable[typeImage].Produce_Picture))
+		(fileName, imageDesc, &xBox, &yBox, &wBox, &hBox,
+		 Bgcolor, &width, &height,
+		 ViewFrameTable[frame - 1].FrMagnification);
+	    }
+	  /* intrinsic width and height */
+	  imageDesc->PicWidth  = width;
+	  imageDesc->PicHeight = height;
+	}
+    }
+
+  /* Picture didn't load (corrupted, don't exists...)
+     or format isn't supported*/
+  if (imageDesc->PicPixmap == None 
+      && !glIsTexture (imageDesc->TextureBind))
+    {
+      if (PictureLogo == None)
+			/* create a special logo for lost pictures */
+			CreateGifLogo ();
+      imageDesc->PicFileName = TtaGetMemory (strlen (LostPicturePath) + 1);
+      strcpy (imageDesc->PicFileName, LostPicturePath);
+      imageDesc->PicType = 3;
+      imageDesc->PicPresent = pres;
+      imageDesc->PicPixmap = PictureLogo;
+      /* convert logo into a texture map 
+	 0r use a display list !!*/
+      wBox = w = 40;
+      hBox = h = 40;
+    }
+  else if (w == 0 || h == 0)
+    {
+      /* one of box size is unknown, keep the image size */
+      if (w == 0)
+	w = wBox;
+      if (h == 0)
+	h = hBox;
+      /* Do you have to extend the clipping */
+      if (pAb->AbLeafType == LtCompound)
+	DefClip (frame, box->BxXOrg, box->BxYOrg,
+		 box->BxXOrg + w, box->BxYOrg + h);
+      else
+	DefClip (frame, box->BxXOrg - left, box->BxYOrg - top,
+		 box->BxXOrg + right + w, box->BxYOrg + bottom + h);
+      if (pAb->AbLeafType == LtPicture)
+	{
+	  /* transmit picture dimensions */
+	  if (!(pAb->AbWidth.DimIsPosition))
+	    {
+	      if (pAb->AbWidth.DimMinimum)
+		/* the rule min is applied to this box */
+		ChangeDefaultWidth (box, box, w, 0, frame);
+	      else if (pAb->AbEnclosing &&
+		       pAb->AbWidth.DimAbRef == pAb->AbEnclosing &&
+		       pAb->AbNext == NULL && pAb->AbPrevious == NULL)
+		/* the parent box should inherit the picture width */
+		ChangeWidth (pAb->AbEnclosing->AbBox,
+			     pAb->AbEnclosing->AbBox, NULL,
+			     w + left + right, 0, frame);
+	    }
+	  if (!(pAb->AbHeight.DimIsPosition))
+	    {
+	      if (pAb->AbHeight.DimMinimum)
+		/* the rule min is applied to this box */
+		ChangeDefaultHeight (box, box, h, frame);
+	      else if (pAb->AbEnclosing &&
+		       pAb->AbWidth.DimAbRef == pAb->AbEnclosing &&
+		       pAb->AbNext == NULL && pAb->AbPrevious == NULL)
+		/* the parent box should inherit the picture height */
+		ChangeHeight (pAb->AbEnclosing->AbBox,
+			      pAb->AbEnclosing->AbBox, NULL,
+			      h + top + bottom + top + bottom, frame);
+	    }
+	}
+    }  
+  if (pres != ReScale || Printing)
+    {
+      imageDesc->PicXArea = xBox;
+      imageDesc->PicYArea = yBox;
+      imageDesc->PicWArea = wBox;
+      imageDesc->PicHArea = hBox;
+    }
+  else
+    {
+      imageDesc->PicXArea = xBox;
+      imageDesc->PicYArea = yBox;
+      imageDesc->PicWArea = w;
+      imageDesc->PicHArea = h;
+    }
+  /* Gif and Png handles transparency 
+     so picture format is RGBA, 
+     all others are RGB*/
+  if (typeImage != GIF_FORMAT 
+      && typeImage != PNG_FORMAT)
+    imageDesc->RGBA = FALSE;
+  else
+    imageDesc->RGBA = TRUE;	
+}
+
+#else /* _GL */    
+
 /*----------------------------------------------------------------------
    Requests the picture handlers to get the corresponding pixmaps    
   ----------------------------------------------------------------------*/
@@ -1745,7 +2045,7 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
   int                 typeImage;
   int                 xBox = 0;
   int                 yBox = 0;
-  int                 wBox =0;
+  int                 wBox = 0;
   int                 hBox = 0;
   int                 w, h;
   int                 width, height;
@@ -1766,6 +2066,7 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
     return;
 
   GetPictureFileName (imageDesc->PicFileName, fileName);
+
   typeImage = imageDesc->PicType;
   status = PictureFileOk (fileName, &typeImage);
   w = 0;
@@ -1776,6 +2077,11 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
   if (status != Supported_Format)
     {
       pres = RealSize;
+#if defined (_GTK) || defined (_WINDOWS)
+	  if (PictureLogo == None)
+	    /* create a special logo for lost pictures */
+	    CreateGifLogo ();
+#endif 
 #ifdef _WINDOWS
 #ifdef _WIN_PRINT
       if (TtDisplay == NULL)
@@ -1787,22 +2093,18 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
 #else /* _WIN_PRINT */
       imageDesc->PicType = 3;
       imageDesc->PicPresent = pres;
-      drw = (*(PictureHandlerTable[GIF_FORMAT].Produce_Picture)) 
-	(LostPicturePath, imageDesc, &xBox, &yBox, &wBox,
-	 &hBox, Bgcolor, &width, &height);
+      drw = PictureLogo;
 #endif /* _WIN_PRINT */
 #else  /* _WINDOWS */
-#ifdef _GTK
-#ifndef _GL
+#ifdef _GTK 
+      imageDesc->PicType = 3;
+      imageDesc->PicPresent = pres;
       drw = (GdkPixmap *) PictureLogo;
-#else /* _GL*/
-      drw = (unsigned char *) PictureLogo;
-#endif /* _GL*/
-#else /* ! _GTK */
+#else /*_GTK*/
       drw = PictureLogo;
-#endif /* ! _GTK */
-#endif /* _WINDOWS */
       imageDesc->PicType = -1;
+#endif /* ! GTK */
+#endif /* _WINDOWS */
       wBox = w = 40;
       hBox = h = 40;
     }
@@ -1896,9 +2198,17 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
 	      /* opengl texture have size that is a power of 2*/
 #ifndef MESA
 	      /* opengl texture have size that is a power of 2*/
-	      drw = GL_MakeTexture (im, w ,h);
+	      drw = GL_MakeTexture (im->rgb_data, 
+							    im->shape_color.r, 
+							    im->shape_color.g,
+							    im->shape_color.b,
+							    w ,h);
 #else /* MESA*/
-	      drw = GL_MakeTransparentRGB(im, w ,h);
+	      drw = GL_MakeTransparentRGB (im->rgb_data, 
+									  im->shape_color.r, 
+									  im->shape_color.g,
+									  im->shape_color.b,
+									  w ,h);
 #endif/*  MESA */
 #endif /* _GL */
 #else /* _GTK2 */
@@ -1929,9 +2239,10 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
 		(fileName, imageDesc, &xBox, &yBox, &wBox, &hBox,
 		 Bgcolor, &width, &height,
 		 ViewFrameTable[frame - 1].FrMagnification);
+
 #else /* _GTK */
 	      if (typeImage == EPS_FORMAT)
-		drw = (*(PictureHandlerTable[typeImage].Produce_Picture))
+		drw = (GdkPixmap *) (*(PictureHandlerTable[typeImage].Produce_Picture))
 		  (fileName, imageDesc, &xBox, &yBox, &wBox, &hBox,
 		   Bgcolor, &width, &height,
 		   ViewFrameTable[frame - 1].FrMagnification);
@@ -1961,9 +2272,19 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
 		  gdk_imlib_flip_image_vertical (im);
 #ifndef MESA
 		  /* opengl texture have size that is a power of 2*/
-		  drw = GL_MakeTexture (im, (gint)wBox ,(gint)hBox);
+		  drw = GL_MakeTexture (im->rgb_data, 
+					im->shape_color.r, 
+					im->shape_color.g,
+					im->shape_color.b,
+					(gint)wBox ,
+					(gint)hBox);
 #else /* MESA*/
-		  drw = GL_MakeTransparentRGB(im, (gint)wBox, (gint)hBox);
+		  drw = GL_MakeTransparentRGB(im->rgb_data, 
+					      im->shape_color.r, 
+					      im->shape_color.g,
+					      im->shape_color.b,
+					      (gint)wBox, 
+					      (gint)hBox);
 #endif/*  MESA */
 #endif /* _GL */
 		}
@@ -1980,18 +2301,37 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
        
       if (drw == None)
 	{
-#ifdef _GTK
-#ifndef _GL
+#if defined (_GTK) || defined (_WINDOWS)
+	  if (PictureLogo == None)
+	    /* create a special logo for lost pictures */
+	    CreateGifLogo ();
+#endif 
+#ifdef _WINDOWS
+#ifdef _WIN_PRINT
+      if (TtDisplay == NULL)
+	{
+	  /* load the device context into TtDisplay */
+	  WIN_GetDeviceContext (frame);
+	  releaseDC = TRUE;
+	}
+#else /* _WIN_PRINT */
+      imageDesc->PicType = 3;
+      imageDesc->PicPresent = pres;
+      drw = PictureLogo;
+#endif /* _WIN_PRINT */
+#else  /* _WINDOWS */
+#ifdef _GTK 
+      imageDesc->PicType = 3;
+      imageDesc->PicPresent = pres;
+      imageDesc->PicFileName = LostPicturePath;
       drw = (GdkPixmap *) PictureLogo;
-#else /* _GL*/
-      drw = (unsigned char *) PictureLogo;
-#endif /* _GL*/
-#else /* ! _GTK */
-	  drw = PictureLogo;
+#else /*_GTK*/
+      drw = PictureLogo;
+      imageDesc->PicType = -1;
 #endif /* ! GTK */
-	  imageDesc->PicType = -1;
-	  wBox = w = 40;
-	  hBox = h = 40;
+#endif /* _WINDOWS */
+      wBox = w = 40;
+      hBox = h = 40;
 	}
       else if (w == 0 || h == 0)
 	{
@@ -2054,18 +2394,14 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
       imageDesc->PicWArea = w;
       imageDesc->PicHArea = h;
     }
-#ifdef _GTK
-  imageDesc->PicPixmap = (Pixmap) drw;
-#else /* ! _GTK */
   imageDesc->PicPixmap = drw;
-#endif /* ! GTK */ 
-
 #ifdef _WIN_PRINT
   if (releaseDC)
 	  /* release the device context into TtDisplay */
 	  WIN_ReleaseDeviceContext ();
 #endif /* _WIN_PRINT */
 }
+#endif /*_GL*/
 
 
 /*----------------------------------------------------------------------

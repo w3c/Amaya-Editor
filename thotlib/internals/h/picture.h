@@ -51,19 +51,24 @@ typedef struct
   PictureScaling PicPresent;
   int            PicType;
   char          *PicFileName; 
+#ifndef _GL
+#ifdef _GTK
+  GdkPixmap      *PicPixmap;
+  Pixmap         PicAlpha;
+#else /* _GTK*/
   Pixmap         PicPixmap;
   Pixmap         PicAlpha;
-#ifdef _GL
-  unsigned int         TextureBind;
-  int                  DisplayList;
-  int                  xorig;
-  int                  yorig;
-#endif /* _GL */
+#endif /*_GTK*/
 #ifdef _WINDOWS
   int            PicMask;        /* Mask color */
 #else /* _WINDOWS */
   Pixmap         PicMask;        /* Mask bitmap */
 #endif /* _WINDOWS */
+#else /*_GL*/
+  unsigned int         TextureBind;/* integer name of video card memory pointer*/
+  unsigned char        *PicPixmap;
+  ThotBool             RGBA;
+#endif /* _GL */
   ThotBool       mapped;         /* Used for ExtraHandlers */
   ThotBool       created;        /* Used for ExtraHandlers */
   ThotWidget     wid;            /* Used for ExtraHandlers */

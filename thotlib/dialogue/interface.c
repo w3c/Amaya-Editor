@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2002
+ *  (c) COPYRIGHT INRIA, 1996-2001.
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -567,8 +567,7 @@ int TtaXLookupString (ThotKeyEvent *event, char *buffer, int nbytes,
   if (sym != NoSymbol)
     {
 #ifdef DEBUG_MULTIKEY
-      fprintf (stderr, "code %X, state %X : sym %s\n", event->keycode,
-	       event->state, XKeysymToString (sym));
+      fprintf (stderr, "code %X, state %X : sym %s\n", event->keycode, event->state, XKeysymToString (sym));
 #endif
 
       /* we found the corresponding symbol, convert it to a char string */
@@ -1399,6 +1398,7 @@ void TtaMainLoop ()
 {
   NotifyEvent         notifyEvt;
   ThotEvent           ev;
+	static int init;
 
   TtaInstallMultiKey ();
   UserErrorCode = 0;
@@ -1419,18 +1419,21 @@ void TtaMainLoop ()
   /* Loop wainting for the events */
   while (1)
     {
-#ifndef _GL
+
 #ifdef _WINDOWS
       if (GetMessage (&ev, NULL, 0, 0))
 #else  /* !_WINDOWS */
       TtaFetchOneEvent (&ev);
 #endif /* _WINDOWS */
       TtaHandleOneEvent (&ev);
-#else /* _GL */
+#ifdef _GL
+#ifdef _GTK
       Idle_draw_GTK (FrameTable[ActiveFrame].WdFrame);
+#else /*_GTK*/
+      GL_DrawAll (NULL, ActiveFrame);
+#endif /*_GTK*/
 #endif/*  _GL */
     }
-
 #ifdef _GTK
   gtk_exit (0);
 #endif /* _GTK */
@@ -1579,12 +1582,3 @@ ThotBool TtaGetMultikey()
     return Enable_Multikey;
 }
 /* End Of Module */
-
-
-
-
-
-
-
-
-

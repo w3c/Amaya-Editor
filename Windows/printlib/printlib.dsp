@@ -64,7 +64,7 @@ LIB32=link.exe -lib
 # PROP Intermediate_Dir "Debug"
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /GX /Z7 /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /YX /FD /c
-# ADD CPP /nologo /W3 /GX /Z7 /Od /I "..\..\thotlib\include" /I "..\..\thotlib\internals\h" /I "..\..\thotlib\internals\f" /I "..\..\thotlib\internals\var" /I "..\..\libjpeg" /I "..\..\libpng" /I "..\..\libpng\zlib" /D "_DEBUG" /D "_AMAYA_RELEASE_" /D "STDC_HEADERS" /D "WIN32" /D "_WINDOWS" /D "__STDC__" /D "_WIN_PRINT" /YX /FD /c
+# ADD CPP /nologo /W3 /GX /Z7 /Od /I "..\..\thotlib\include" /I "..\..\thotlib\internals\h" /I "..\..\thotlib\internals\f" /I "..\..\thotlib\internals\var" /I "..\..\libjpeg" /I "..\..\libpng" /I "..\..\libpng\zlib" /D "_AMAYA_RELEASE_" /D "STDC_HEADERS" /D "__STDC__" /D "_WIN_PRINT" /D "_DEBUG" /D "WIN32" /D "_WINDOWS" /D "_I18N_" /YX /FD /c
 # ADD BASE RSC /l 0x409
 # ADD RSC /l 0x409
 BSC32=bscmake.exe
@@ -186,11 +186,19 @@ SOURCE=..\..\thotlib\dialogue\font.c
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\thotlib\dialogue\fontserver.c
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\thotlib\view\frame.c
 # End Source File
 # Begin Source File
 
 SOURCE=..\..\thotlib\image\gifhandler.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\thotlib\view\glwindowdisplay.c
 # End Source File
 # Begin Source File
 
@@ -219,6 +227,10 @@ SOURCE=..\..\thotlib\base\memory.c
 # Begin Source File
 
 SOURCE=..\..\thotlib\base\message.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\thotlib\dialogue\openglfont.c
 # End Source File
 # Begin Source File
 

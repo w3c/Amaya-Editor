@@ -97,8 +97,8 @@ static void SetImageRule (PtrElement pEl, int x, int y, int w, int h,
 	  pEl->ElPictInfo = (int *) image;
 	}
       image->PicFileName = NULL;
-      image->PicPixmap = 0;
-#ifndef _WINDOWS
+      image->PicPixmap = None;
+#if !defined(_WINDOWS) && !defined(_GL)
       image->PicMask = 0;
 #endif /* _WINDOWS */
       image->PicType = typeimage;

@@ -12,15 +12,14 @@
  * Based on FTGLIB a very good C++ lib that handles fonts in opengl
  * ( http://homepages.paradise.net.nz/henryj/code/index.html )
  * 
- * Author: P. Cheyrou-lagreze
+ * Author: P. Cheyrou-lagreze (INRIA)
  *
  */
-
+ 
 #ifdef _GL
+ 
 
 #include "openglfonts.h"
-
-
 
 /* Memory state Var needed often*/
 static FT_Library FTlib = NULL;
@@ -35,8 +34,10 @@ static int FTLibraryInit ()
 {
   int err;
   
-  if (!maxTextSize)
+  /*
+    if (!maxTextSize)
     glGetIntegerv (GL_MAX_TEXTURE_SIZE, (GLint*) &maxTextSize);
+  */
   if (!maxTextSize)
     maxTextSize = 256;	
   if( FTlib != 0 )
@@ -186,7 +187,7 @@ static void BitmapFontMakeGlyphList (GL_font *font)
   font->glyphList = (GL_glyph **) malloc ( sizeof(GL_glyph *) * (*(font->face))->num_glyphs );
   for (c = 0; c < (*(font->face))->num_glyphs; c++)
     {
-      if (TRUE)
+      if (FALSE)
 	font->glyphList[c] = MakeBitmapGlyph (font, c);
       else
 	font->glyphList[c] = NULL;
@@ -379,7 +380,11 @@ static int TextureFontCreateTexture (int *textureWidth, int *textureHeight,
 		textMem);  
   free (textMem);
   if (GL_Err()) 
+#ifdef _GTK
       g_print ("Texture binding problem");
+#else 
+	;
+#endif /*_GTK*/
   return textID;
 }
 
@@ -484,7 +489,7 @@ static void FontClose (GL_font *font)
 	  if (font->glyphList[c] != NULL)
 	    {
 	      if (font->glyphList[c]->data != NULL)
-		free (font->glyphList[c]->data);
+				free (font->glyphList[c]->data);
 	      free (font->glyphList[c]);
 	    }
 	}
@@ -781,7 +786,7 @@ void *gl_font_init (const char *font_filename, char alphabet, int size)
 	 ft_encoding_adobe_expert ft_encoding_adobe_custom
 	 ft_encoding_apple_roman 
       */	
-      if (alphabet == 'G')
+      if (alphabet == 'G' && 0)
 	{
 	  err = FontCharMap (gl_font, ft_encoding_symbol, alphabet);
 	}
@@ -809,7 +814,10 @@ void *gl_font_init (const char *font_filename, char alphabet, int size)
 }
   
 
-int UnicodeFontRender (void *gl_font, wchar_t *string )
+#ifndef MESA
+
+
+int UnicodeFontRender (void *gl_font, wchar_t *string, float x, float y, int size)
 {
   FT_Vector pen;
   FT_Vector kernAdvance;
@@ -827,7 +835,7 @@ int UnicodeFontRender (void *gl_font, wchar_t *string )
     {
       right = FT_Get_Char_Index (*(font->face), *(string + 1));
       if(!font->glyphList[right])
-	font->glyphList[right] = MakeGlyph (font, right);
+	     font->glyphList[right] = MakeGlyph (font, right);
       FaceKernAdvance( *(font->face), left, right, &kernAdvance);
       advance = RenderGlyph (font->glyphList[left], pen); 
       kernAdvance.x = advance + kernAdvance.x;
@@ -840,4 +848,104 @@ int UnicodeFontRender (void *gl_font, wchar_t *string )
   return pen.x;
 }
 
+#else /* MESA */
+
+static void BitmapAppend (unsigned char *data, 
+			   unsigned char *append_data,
+			   unsigned int width, register int height,
+			   unsigned int Width)
+{  
+  register int i = 0;
+
+  
+  while (height--)
+    {      
+      while (i < width)
+	{
+	  if (*(append_data + i))
+	    *(data + i) = *(append_data + i);
+	  i++;
+	}
+      i = 0;
+      data += Width;
+      append_data += width;
+    }
+}
+static void BitmapPrepend (unsigned char *data, 
+			   unsigned char *append_data,
+			   unsigned int width, 
+			   register int height,
+			   unsigned int Width)
+{  
+  while (height--)
+    {      
+      memcpy (data, append_data, Width); 
+      data += Width;
+      append_data += width;
+    }
+}
+
+int UnicodeFontRender (void *gl_font, wchar_t *string, float x, float y, int size)
+{
+  GL_font* font;
+  GL_glyph *glyph;
+  FT_Vector pen;
+  FT_Vector kernAdvance;
+  register int left, right;
+  unsigned int Height, Width,  miny, maxy, currenty, finalwidth;
+  unsigned char *data, *data2;
+
+  font = (GL_font *) gl_font;
+  Height = ((*(font->face))->size->metrics.height >> 6);
+  Width = ((*(font->face))->size->metrics.max_advance >> 6) * size;
+  data = (unsigned char *) TtaGetMemory (sizeof (unsigned char)*(Height * 2) * Width);
+  memset (data, 0, sizeof (unsigned char)*(Height * 2) * Width);
+  miny = Height;
+  maxy = 0;
+  pen.x = 0; 
+  pen.y = 0;
+  finalwidth = 0;
+  left = FT_Get_Char_Index (*(font->face), *string);
+  if (!font->glyphList[left])
+      font->glyphList[left] = MakeGlyph (font, left);
+  while (*string)
+    {
+      glyph = font->glyphList[left];
+      currenty = Height - glyph->pos.y;
+      BitmapAppend (data + currenty*Width + pen.x, 
+		   glyph->data,
+		   glyph->dimension.x, 
+		   glyph->dimension.y,
+		   Width);
+      miny = (miny < currenty) ? miny : currenty;
+      currenty = currenty + glyph->dimension.y;
+      maxy = (maxy > currenty) ? maxy : currenty;
+      right = FT_Get_Char_Index (*(font->face), *(string + 1));
+      if(!font->glyphList[right])
+		font->glyphList[right] = MakeGlyph (font, right);
+      FaceKernAdvance( *(font->face), left, right, &kernAdvance);
+      pen.x +=  glyph->advance + kernAdvance.x;
+      finalwidth += glyph->dimension.x;
+      left = right;
+      string++;
+    }
+  finalwidth = (finalwidth > pen.x)? finalwidth: pen.x;
+  currenty = maxy - miny;
+  data2 = (unsigned char *) TtaGetMemory (sizeof (unsigned char)* currenty * finalwidth);
+  BitmapPrepend (data2, 
+		 data + miny*Width,
+		 Width, 
+		 currenty,
+		 finalwidth);
+  glRasterPos2f (x, y + Height - miny);
+  glDrawPixels (finalwidth,
+		currenty,
+		GL_ALPHA,
+		GL_UNSIGNED_BYTE,
+		(const GLubyte *) (data2));  
+  free (data2);
+  free (data);
+  return pen.x;
+}
+#endif /*MESA*/
 #endif /* _GL */

@@ -48,7 +48,7 @@ static int          documentStatus;
 
 #ifdef _WINDOWS 
 extern HWND         FrMainRef [12];
-extern int          currentFrame;
+extern int          ActiveFrame;
 Document            opDoc;
 Element             opOption [200];
 #endif /* _WINDOWS */
@@ -1410,7 +1410,7 @@ void SelectOneOption (Document doc, Element el)
 		 for (i = 0; i < nbitems; i++)
 		   if (selected[i])
 #ifdef _WINDOWS
-		     WIN_TtaSetToggleMenu (BaseDialog + OptionMenu, i, TRUE, FrMainRef [currentFrame]);
+		     WIN_TtaSetToggleMenu (BaseDialog + OptionMenu, i, TRUE, FrMainRef [ActiveFrame]);
 #else  /* !_WINDOWS */
 	             TtaSetToggleMenu (BaseDialog + OptionMenu, i, TRUE);
 #endif /* _WINDOWS */
@@ -1493,7 +1493,7 @@ void SelectOneOption (Document doc, Element el)
 			     for (i = 0; i < nbsubitems; i++)
 			       if (subSelected[nbsubmenus][i])
 #ifdef _WINDOWS
-				 WIN_TtaSetToggleMenu (BaseDialog + OptionMenu + (nbsubmenus * nbOldEntries) + 1, i, TRUE, FrMainRef [currentFrame]);
+				 WIN_TtaSetToggleMenu (BaseDialog + OptionMenu + (nbsubmenus * nbOldEntries) + 1, i, TRUE, FrMainRef [ActiveFrame]);
 #else  /* !_WINDOWS */
 			         TtaSetToggleMenu (BaseDialog+OptionMenu+nbsubmenus+1, i, TRUE);
 #endif /* _WINDOWS */

@@ -57,7 +57,60 @@ static void my_error_exit (j_common_ptr cinfo)
     longjmp (myerr->setjmp_buffer, 1);
 }
 
+#ifdef _GL
+unsigned char *ReadJPEG (FILE* infile, 
+			 unsigned int *width, 
+			 unsigned int *height,
+			 ThotColorStruct colrs[256])
+{
+	struct jpeg_decompress_struct cinfo;
+	struct jpeg_error_mgr jerr;
+	unsigned char *curr_scanline;
+	unsigned char *pixels;
+	unsigned int format;
+	unsigned int line_size;
+	unsigned int channels;
 
+	cinfo.err = jpeg_std_error(&jerr);
+	jpeg_create_decompress(&cinfo);
+	jpeg_stdio_src(&cinfo, infile);
+	jpeg_read_header(&cinfo, TRUE);
+	jpeg_start_decompress(&cinfo);
+
+	channels = cinfo.num_components;
+	*width    = cinfo.output_width;
+	*height   = cinfo.output_height;
+
+	line_size = channels * (*width);
+	format   = line_size * (*height);
+
+	pixels = (unsigned char *) TtaGetMemory (format);
+	curr_scanline = pixels + format;
+
+	while (cinfo.output_scanline < (*height))
+	{
+		curr_scanline -= line_size;
+		jpeg_read_scanlines(&cinfo, &curr_scanline, 1);
+	}
+	/* Grayscale2rgb */
+	if (channels == 1)
+	{
+	    curr_scanline = (unsigned char *) TtaGetMemory (format*3);
+		line_size = 0;
+		while (line_size < format)
+		{
+			*curr_scanline  = *(curr_scanline + 1)  = *(curr_scanline + 2)  = *(pixels + line_size);
+			curr_scanline += 3;
+			line_size++;
+		}
+		TtaFreeMemory (pixels);
+		pixels = curr_scanline - (format*3);
+	}
+	jpeg_finish_decompress(&cinfo);
+	jpeg_destroy_decompress(&cinfo);
+	return pixels;
+}
+#else /*_GL*/
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 static unsigned char *ReadJPEG (FILE* infile, int* width, int* height,
@@ -161,7 +214,7 @@ static unsigned char *ReadJPEG (FILE* infile, int* width, int* height,
   jpeg_destroy_decompress (&cinfo);
   return retBuffer;
 }
-
+#endif /*_GL*/
 /*----------------------------------------------------------------------
    ReadJpegToData  Just open the file and pass it to the ReadJpeg     
   ----------------------------------------------------------------------*/
@@ -203,7 +256,10 @@ Drawable JpegCreate (char *fn, PictInfo *imageDesc, int *xif, int *yif,
   int                 w, h;
   Pixmap              pixmap = (Pixmap) NULL;
   ThotColorStruct     colrs[256];
-  unsigned char      *data = NULL, *data2 = NULL;
+  unsigned char      *data = NULL;
+#ifndef _GL
+  unsigned char      *data2 = NULL;
+#endif /*_GL*/
 
   /* effective load of the Picture from Jpeg Library */
   data = ReadJpegToData (fn, &w, &h, colrs);
@@ -233,6 +289,7 @@ Drawable JpegCreate (char *fn, PictInfo *imageDesc, int *xif, int *yif,
     }
 
 #ifndef _WIN_PRINT
+#ifndef _GL
   if ((*xif != 0 && *yif != 0) && (w != *xif || h != *yif))
     {   
       /* xif and yif contain width and height of the box */
@@ -243,13 +300,20 @@ Drawable JpegCreate (char *fn, PictInfo *imageDesc, int *xif, int *yif,
       w = *xif;
       h = *yif;
     }
+#endif /*_GL*/
 #endif /* _WIN_PRINT */
 
   if (data == NULL)
     return ((Drawable) NULL);
 
+#ifndef _GL
   pixmap = DataToPixmap (data, w, h, 100, colrs, FALSE, FALSE);
   TtaFreeMemory (data);  
+#else /*_GL*/
+  /* GL buffer are display independant, 
+  and already in the good format RGB, or RGBA*/
+  pixmap = (Pixmap) data;
+#endif /*_GL*/
   if (pixmap == None)
     {
 #ifdef _WINDOWS

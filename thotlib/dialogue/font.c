@@ -11,6 +11,7 @@
  * Authors: I. Vatton (INRIA)
  *          R. Guetari (W3C/INRIA) Windows version
  *          D. Veillard (W3C/INRIA): Windows NT/95 routines
+ *			P. Cheyrou-lagreze (INRIA) - Opengl Version
  *
  */
 
@@ -76,7 +77,9 @@ static SpecFont   FirstFontSel = NULL;
 
 #ifdef _GL
 
+#ifdef _GTK
 #include <gtkgl/gtkglarea.h>
+#endif /*_GTK*/
 #include <GL/glu.h>
 /* Texture Font */
 /* ~/Amaya/thotlib/internals/h */
@@ -286,66 +289,69 @@ int CharacterWidth (unsigned char c, PtrFont font)
     return 0;
   else if (c == INVISIBLE_CHAR)
     return 1;
-	i = 0;
+
   if (c == START_ENTITY)
     c = '&';
   else if (c == TAB || c == UNBREAKABLE_SPACE)
     /* we use the SPACE width for the character TAB */
     c = SPACE;
-  else if (c == NEW_LINE || c == BREAK_LINE)
-    /* characters NEW_LINE and BREAK_LINE are equivalent */
-    c = SPACE;
 
-#ifdef _WINDOWS
-  if (c == THIN_SPACE)
-    l = (font->FiWidths[32] + 3) / 4;
-  else if (c == HALF_EM)
-    l = (font->FiWidths[32] + 3) / 2;
+  if (c == NEW_LINE || c == BREAK_LINE)
+    /* characters NEW_LINE and BREAK_LINE are equivalent */
+    l = 1;
   else
-    l = font->FiWidths[c];
+    {
+#ifdef _GL
+    if (c == THIN_SPACE)
+	l = gl_font_char_width ((void *) font, 32) / 4;
+      else if (c == HALF_EM)
+	l = gl_font_char_width ((void *) font, 32) / 2;
+      else
+	l = gl_font_char_width ((void *) font, c);
+#else /*  _GL */
+#ifdef _WINDOWS
+      if (c == THIN_SPACE)
+	l = (font->FiWidths[32] + 3) / 4;
+      else if (c == HALF_EM)
+	l = (font->FiWidths[32] + 3) / 2;
+      else
+	l = font->FiWidths[c];
 #else  /* _WINDOWS */
 #ifdef _GTK
-#ifndef _GL
-  if (c == THIN_SPACE)
-    l = gdk_char_width (font, 32) / 4;
-  else if (c == HALF_EM)
-    l = gdk_char_width (font, 32) / 2;
-  else
-    l = gdk_char_width (font, c);
-#else /*  _GL */
-  if (c == THIN_SPACE)
-    l = gl_font_char_width ((void *) font, 32) / 4;
-  else if (c == HALF_EM)
-    l = gl_font_char_width ((void *) font, 32) / 2;
-  else
-    l = gl_font_char_width ((void *) font, c);
-#endif /*  _GL */
+      if (c == THIN_SPACE)
+	l = gdk_char_width (font, 32) / 4;
+      else if (c == HALF_EM)
+	l = gdk_char_width (font, 32) / 2;
+      else
+	l = gdk_char_width (font, c);
 #else /* _GTK */
-  if (c == THIN_SPACE)
-    l = (xf->per_char[32 - xf->min_char_or_byte2].width + 3) / 4;
-  else if (c == HALF_EM)
-    l = (xf->per_char[32 - xf->min_char_or_byte2].width + 3) / 2;
-  else if (xf->per_char == NULL)
-    return xf->max_bounds.width;
-  else if (c < xf->min_char_or_byte2)
-    return 0;
-  else
-    l = xf->per_char[c - xf->min_char_or_byte2].width;
-#endif  /* _GTK */
-  if (c == 244)
-    {
-      /* a patch due to errors in standard symbol fonts */
-      i = 0;
-      while (i < MAX_FONT && font != TtFonts[i])
-	i++;
-      if (TtPatchedFont[i] == 8 || TtPatchedFont[i] == 10)
-	l = 1;
-      else if (TtPatchedFont[i] == 12 || TtPatchedFont[i] == 14)
-	l = 2;
-      else if (TtPatchedFont[i] == 24)
-	l = 4;
-    }
+      if (c == THIN_SPACE)
+	l = (xf->per_char[32 - xf->min_char_or_byte2].width + 3) / 4;
+      else if (c == HALF_EM)
+	l = (xf->per_char[32 - xf->min_char_or_byte2].width + 3) / 2;
+      else if (xf->per_char == NULL)
+	return xf->max_bounds.width;
+      else if (c < xf->min_char_or_byte2)
+	return 0;
+      else
+	l = xf->per_char[c - xf->min_char_or_byte2].width;
+#endif  /* _GTK */	  
+      if (c == 244)/***************/
+	{
+	  /* a patch due to errors in standard symbol fonts */
+	  i = 0;
+	  while (i < MAX_FONT && font != TtFonts[i])
+	    i++;
+	  if (TtPatchedFont[i] == 8 || TtPatchedFont[i] == 10)
+	    l = 1;
+	  else if (TtPatchedFont[i] == 12 || TtPatchedFont[i] == 14)
+	    l = 2;
+	  else if (TtPatchedFont[i] == 24)
+	    l = 4;
+	}
 #endif /* _WINDOWS */
+#endif /*  _GL */
+    }
   return l;
 }
 
@@ -387,17 +393,18 @@ int CharacterHeight (unsigned char c, PtrFont font)
 
   if (font == NULL)
     return (0);
+
+#ifdef _GL
+  else
+    return gl_font_char_height (font, &c);
+#else /*_GL*/
 #ifdef _WINDOWS
   else
     return (font->FiHeights[c]);
 #else  /* _WINDOWS */
 #ifdef _GTK
   else
-#ifndef _GL
     l = gdk_char_height (font, c);
-#else /* _GL */
-    l =  gl_font_char_height (font, &c);
-#endif /* _GL */
     return (l);
 #else /* _GTK */
   else if (((XFontStruct *) font)->per_char == NULL)
@@ -407,6 +414,7 @@ int CharacterHeight (unsigned char c, PtrFont font)
       + ((XFontStruct *) font)->per_char[c - ((XFontStruct *) font)->min_char_or_byte2].descent;
 #endif /* _GTK */
 #endif /* _WINDOWS */
+#endif /*_GL*/
 }
 
 /*----------------------------------------------------------------------
@@ -414,20 +422,36 @@ int CharacterHeight (unsigned char c, PtrFont font)
   ----------------------------------------------------------------------*/
 int CharacterAscent (unsigned char c, PtrFont font)
 {
+#ifdef _GL
+  int               i;
+  int               ascent;
+#else /*_GL*/
 #ifndef _WINDOWS
 #ifdef _GTK
-#ifndef _GL
   int lbearing, rbearing, width, descent;
-#endif/*  _GL */
 #else /* _GTK */
   XFontStruct      *xf = (XFontStruct *) font;
 #endif /* _GTK */
   int               i;
   int               ascent;
 #endif /* _WINDOWS */
+#endif /*_GL*/
 
   if (font == NULL)
     return (0);
+#ifdef _GL
+else
+   ascent = gl_font_char_ascent (font, &c);
+  /*if (c == 244)
+    {
+      i = 0;
+      while (i < MAX_FONT && font != TtFonts[i])
+	i++;
+      if (TtPatchedFont[i])
+	ascent -= 2;
+    }*/
+  return (ascent);
+#else /*_GL*/
 #ifdef _WINDOWS
   else
     return font->FiAscent;
@@ -435,11 +459,7 @@ int CharacterAscent (unsigned char c, PtrFont font)
   else
     {
 #ifdef _GTK
-#ifndef _GL
       gdk_string_extents (font, &c, &lbearing, &rbearing, &width, &ascent, &descent);
-#else /*  _GL */
-      ascent = gl_font_char_ascent (font, &c);
-#endif /* _GL */ 
 #else /* _GTK */
       /* a patch due to errors in standard symbol fonts */
       if (xf->per_char == NULL)
@@ -458,6 +478,7 @@ int CharacterAscent (unsigned char c, PtrFont font)
     }
   return (ascent);
 #endif /* _WINDOWS */
+#endif /*_GL*/
 }
 
 /*----------------------------------------------------------------------
@@ -467,21 +488,22 @@ int FontAscent (PtrFont font)
 {
   if (font == NULL)
     return (0);
+#ifdef _GL
+  else
+    return (gl_font_ascent(font));
+#else /*_GL*/
 #ifdef _WINDOWS
   else
     return (font->FiAscent);
 #else  /* _WINDOWS */
   else
 #ifdef _GTK
-#ifndef _GL
     return (font->ascent);
-#else /*  _GL */
-    return (gl_font_ascent(font));
-#endif /*  _GL */
 #else /* _GTK */
     return (((XFontStruct *) font)->ascent);
 #endif /* _GTK */
 #endif /* _WINDOWS */
+#endif /*_GL*/
 }
 
 /*----------------------------------------------------------------------
@@ -510,21 +532,21 @@ int FontHeight (PtrFont font)
   if (font == NULL)
     return (0);
   else
+#ifdef _GL
+	return (gl_font_height (font));
+#else /* _GL */
 #ifdef _WINDOWS
      return (font->FiHeight);
 #else  /* _WINDOWS */
 #ifdef _GTK
-#ifndef _GL
     /* in the string below, 'r' represents the greek character rho (lowercase)
        and produces a descender in the string when using the Symbol font */
     return (gdk_string_height (font, "AXpr") + 3); /* need some extra space */
-#else/*  _GL */
-    return (gl_font_height (font));
-#endif /* _GL */
 #else /* _GTK */
      return ((XFontStruct *) font)->max_bounds.ascent + ((XFontStruct *) font)->max_bounds.descent;
 #endif /* _GTK */
 #endif /* !_WINDOWS */
+#endif /*_GL*/
 }
 
 /*----------------------------------------------------------------------
@@ -762,7 +784,7 @@ PtrFont LoadFont (char *name)
   return ((PtrFont) XLoadQueryFont (TtDisplay, name));
 #endif /* _GTK */
 }
-#  endif /* _WINDOWS */
+#endif /* _WINDOWS */
 
 /*----------------------------------------------------------------------
   FontIdentifier computes the name of a Thot font.
@@ -772,7 +794,6 @@ void FontIdentifier (char script, int family, int highlight, int size,
 {
   char        *cfamily = "sthc";
   char        *wght, *slant, *ffamily;
-  char         encoding[3];
 
   /* apply the current font zoom */
   if (unit == UnRelative)
@@ -788,10 +809,6 @@ void FontIdentifier (char script, int family, int highlight, int size,
 
   if (script != 'L' && script != 'G')
     {
-      if (script == 'F')
-	strcpy (encoding, "15");
-      else
-	sprintf (encoding, "%c", script);
       ffamily = "-*-*";
       if (highlight > MAX_HIGHLIGHT)
 	wght = "*";
@@ -805,13 +822,13 @@ void FontIdentifier (char script, int family, int highlight, int size,
 	slant = "o";
       if (size < 0)
 	{
-	  sprintf (r_nameX, "%s-%s-%s-*-*-13-*-*-*-*-*-iso8859-%s",
-		   ffamily, wght, slant, encoding);
+	  sprintf (r_nameX, "%s-%s-%s-*-*-13-*-*-*-*-*-iso8859-%c",
+		   ffamily, wght, slant, script);
 	  size = 12;
 	}
       else
-	sprintf (r_nameX, "%s-%s-%s-*-*-%d-*-*-*-*-*-iso8859-%s",
-		 ffamily, wght, slant, size, encoding);
+	sprintf (r_nameX, "%s-%s-%s-*-*-%d-*-*-*-*-*-iso8859-%c",
+		 ffamily, wght, slant, size, script);
     }
   else if (script == 'G' || family == 0)
     {
@@ -977,7 +994,9 @@ static PtrFont LoadNearestFont (char script, int family, int highlight,
 	{
 	  strcpy (&TtFontName[deb], text);
 	  strcpy (&TtPsFontName[i * 8], PsName);	   
-
+#ifdef _GL
+	  ptfont = GL_LoadFont (script, family, highlight, size, textX);/*alphabet=>script*/
+#else /*_GL*/
 #ifdef _WINDOWS
 	  /* Allocate the font structure */
 	  ptfont = TtaGetMemory (sizeof (FontInfo));
@@ -1035,12 +1054,9 @@ static PtrFont LoadNearestFont (char script, int family, int highlight,
 	      ActiveFont = 0;
 	    }
 #else  /* _WINDOWS */
-#ifndef _GL
 	  ptfont = LoadFont (textX);
-#else /* _GL */
-	  ptfont = GL_LoadFont (script, family, highlight, size, textX);/*alphabet=>script*/
-#endif/*  _GL */
 #endif /* !_WINDOWS */
+#endif/*  _GL */
 	  /* Loading failed try to find a neighbour */
 	  if (ptfont == NULL)
 	    {
@@ -1147,7 +1163,6 @@ unsigned char GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset,
 	}
       else if (c >= 0x370 && c < 0x3FF)
 	{
-	  /* greek characters */
 	  if (fontset->FontIso_7 == NULL)
 	    {
 	      /* load that font */
@@ -1195,7 +1210,6 @@ unsigned char GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset,
 	car =  INVISIBLE_CHAR;
       else if (c > 0x2000 && c < 0x237F && c != 0x20AC /* euro */)
 	{
-	  /* math symbols */
 	  if (fontset->FontSymbol == NULL)
 	    {
 	      /* load the Adobe Symbol font */
@@ -1221,18 +1235,7 @@ unsigned char GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset,
 	}
       else
 	{
-	  if (c == 0x152 /* OE */ || c == 0x153 /* oe */ ||
-	      c == 0x178 /* Y WITH DIAERESIS */ || c == 0x20AC /* euro */)
-	    {
-	      car = 'F'; /* Extended Latin */
-	      pfont = &(fontset->FontIso_15);
-#ifdef _WINDOWS
-	      encoding = WINDOWS_1252;
-#else /* _WINDOWS */
-	      encoding = ISO_8859_15;
-#endif /* _WINDOWS */
-	    }
-	  else if (c < 0x17F)
+	  if (c < 0x17F)
 	    {
 	      car = '2'; /* Central Europe */
 	      pfont = &(fontset->FontIso_2);
@@ -1818,12 +1821,4 @@ void ThotFreeAllFonts (void)
    TtaFreeMemory (IFontDialogue); 
    TtaFreeMemory (LargeFontDialogue);
 }
-
-
-
-
-
-
-
-
 

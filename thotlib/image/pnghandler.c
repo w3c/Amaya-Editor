@@ -126,6 +126,122 @@ static void PWarning (png_struct *png_ptr, char *message)
    fprintf(stderr,"libpng warning: %s\n", message);
 }
 
+#ifdef _GL
+/*----------------------------------------------------------------------
+  ReadPng : reads from a file pointer a png file into a RGBA buffer
+  All png specifications is supported : http://www.w3.org/Graphics/PNG/
+  lib manual http://www.libpng.org/pub/png/libpng-manual.txt
+  ----------------------------------------------------------------------*/
+static unsigned char *ReadPng (FILE *pfFile, unsigned int *width, unsigned int *height, 
+			            int *ncolors, int *cpp, ThotColorStruct **colrs,
+			            int *bg, ThotBool *withAlpha, ThotBool *grayScale)
+{
+  png_structp png_ptr;
+  png_infop info_ptr;
+  png_byte pbSig[8];
+  png_uint_32 ulChannels;
+  png_uint_32 ulRowBytes;
+  png_byte **ppbRowPointers;
+  unsigned char *pixels;
+  unsigned int i, j, passes;
+  int iBitDepth, iColorType;
+  double dGamma;
+
+    /* Checks the eight byte PNG signature*/
+    fread (pbSig, 1, 8, pfFile);
+    if (!png_check_sig (pbSig, 8))
+        return NULL;	
+    /* create the two png(-info) structures*/
+    png_ptr = png_create_read_struct (PNG_LIBPNG_VER_STRING, 
+				      NULL, 
+				      (png_error_ptr) NULL, 
+				      (png_error_ptr) NULL);
+    if (!png_ptr)
+      return NULL;	
+    info_ptr = png_create_info_struct (png_ptr);
+    if (!info_ptr)
+      {
+        png_destroy_read_struct (&png_ptr, NULL, NULL);
+        return NULL;
+      }   
+    if (setjmp (png_ptr->jmpbuf))
+      {
+	/* Free all of the memory associated with the png_ptr and info_ptr */
+	png_destroy_read_struct (&png_ptr, &info_ptr, (png_infopp)NULL);
+	return NULL;
+      }
+    png_init_io (png_ptr, pfFile);
+    png_set_sig_bytes (png_ptr, 8);
+    png_read_info (png_ptr, info_ptr);
+    png_get_IHDR(png_ptr, info_ptr, (unsigned long *) width, 
+		 (unsigned long *) height, 
+		 &iBitDepth,
+		 &iColorType, NULL, NULL, NULL);	
+   /* if less than 8 bits /channels => 8 bits / channels*/
+    if (iBitDepth < 8)
+      png_set_packing (png_ptr);
+    /* 16 bits /channels => 8 bits / channels*/
+    if (iBitDepth == 16)
+      png_set_strip_16 (png_ptr);
+    /* Grayscale =>RGB or RGBA */
+    if (iColorType == PNG_COLOR_TYPE_GRAY || iColorType == PNG_COLOR_TYPE_GRAY_ALPHA)
+      png_set_gray_to_rgb (png_ptr);
+    /* Palette indexed colors to RGB */
+    if (iColorType == PNG_COLOR_TYPE_PALETTE)
+      png_set_palette_to_rgb (png_ptr);
+    /* 8 bits / channel is needed */
+    if (iColorType == PNG_COLOR_TYPE_GRAY && iBitDepth < 8) 
+      png_set_gray_1_2_4_to_8(png_ptr);
+    /* all transparency type : 1 color, indexed => alpha channel*/
+    if (png_get_valid (png_ptr, info_ptr,PNG_INFO_tRNS)) 
+      png_set_tRNS_to_alpha (png_ptr);
+    /* RGB => RGBA*/
+    if (iColorType != PNG_COLOR_TYPE_RGBA)
+      png_set_filler (png_ptr, 0xff, PNG_FILLER_AFTER);
+    /* Gives us the good number of passes to make : 
+       if not interlaced -> 1 passes else often 7 passes*/
+    passes = png_set_interlace_handling (png_ptr);
+    /* Gamma settings 
+       2.2 => A good guess for a  PC monitor in a bright office or a dim room 
+       2.0 => A good guess for a PC monitor in a dark room 
+       1.7 => A good guess for Mac systems    
+    */
+    if (png_get_gAMA (png_ptr, info_ptr, &dGamma))
+      png_set_gamma (png_ptr, (double) 2.2, dGamma);
+    /* Update the png in order to reach ou out pixels sprcification*/
+    png_read_update_info (png_ptr, info_ptr);
+    /* get again width, height and the new bit-depth and color-type*/
+    png_get_IHDR (png_ptr, info_ptr, (unsigned long *) width, 
+		  (unsigned long *) height, 
+		  &iBitDepth, 
+		  &iColorType, 
+		  NULL, NULL, NULL);
+    /* row_bytes is the width x number of channels => the length of a line */
+    ulRowBytes = png_get_rowbytes (png_ptr, info_ptr);
+    ulChannels = png_get_channels (png_ptr, info_ptr);
+    pixels = (png_byte *) TtaGetMemory (ulRowBytes * (*height) * sizeof(png_byte));
+    /* Row pointers give a pointer on each line */
+    ppbRowPointers = (png_bytepp) TtaGetMemory  ((*height) * sizeof(png_bytep));
+    /* Opengl Texture inversion */   
+    for (i = 0; i < (*height); i++)
+      ppbRowPointers[i] = pixels + ((*height) - (i+1)) * ulRowBytes;    
+    png_start_read_image (png_ptr); 
+    /* depending on interlacing, reading the data*/
+    for (i = 0; i < passes; i++)
+      for (j = 0; j < (*height); j++)
+	png_read_row (png_ptr, ppbRowPointers[j], NULL);
+    png_read_end(png_ptr, NULL);
+    TtaFreeMemory (ppbRowPointers);
+    ppbRowPointers = NULL; 
+    /* clean up after the read, and free any memory allocated */
+    png_read_destroy (png_ptr, info_ptr, (png_info*) NULL);
+    /* Free all of the memory associated with the png_ptr and info_ptr */
+    png_destroy_read_struct (&png_ptr, &info_ptr, (png_infopp)NULL);
+    return pixels;
+}
+
+#else /* _GL */
+
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 static unsigned char *ReadPng (FILE *infile, int *width, int *height,
@@ -159,14 +275,17 @@ static unsigned char *ReadPng (FILE *infile, int *width, int *height,
   *grayScale = FALSE;
   *colrs = NULL;
   *ncolors = 0;
+
+  /* Checks the eight byte PNG signature*/
   ret = fread (buf, 1, 8, infile);
   if (ret != 8)
     return NULL;
-  
   ret = png_check_sig (buf, 8);	
   if (!ret)
     return NULL;
   rewind (infile);
+
+  /* create the two png(-info) structures*/
   png_ptr = png_create_read_struct (PNG_LIBPNG_VER_STRING, (png_voidp)PError,
 				    (png_voidp)PError, (png_voidp)PWarning);
   if (png_ptr == NULL)
@@ -250,7 +369,8 @@ static unsigned char *ReadPng (FILE *infile, int *width, int *height,
   for (i = 0; i < *height; i++)
     row_pointers[i] = png_pixels + (bytesPerExpandedLine * i);    
     
-  /*   png_read_image(png_ptr, row_pointers);*/
+
+
   color_type = info_ptr->color_type;
   alpha = color_type & PNG_COLOR_MASK_ALPHA;
   color_type &= ~PNG_COLOR_MASK_ALPHA;
@@ -483,7 +603,7 @@ static unsigned char *ReadPng (FILE *infile, int *width, int *height,
   else
     return (pixels);
 }
-
+#endif /* _GL */
 /*----------------------------------------------------------------------
   InitPngColors
   ----------------------------------------------------------------------*/
@@ -543,12 +663,14 @@ Drawable PngCreate (char *fn, PictInfo *imageDesc, int *xif, int *yif,
 		    int *height, int zoom)
 {
   Pixmap           pixmap = (Pixmap) 0;
-  ThotColorStruct *colrs;
-#ifdef _WINDOWS
+  ThotColorStruct *colrs = NULL;
+#if defined (_WINDOWS) && !defined (_GL)
   unsigned short   red, green, blue;
 #endif /* _WINDOWS */
   unsigned char   *buffer = NULL; 
+#ifndef _GL
   unsigned char   *buffer2 = NULL;
+#endif /*_GL*/
   int              ncolors, cpp, bg = -1;
   int              w, h, bperpix;
   ThotBool         withAlpha, grayScale;
@@ -586,6 +708,7 @@ Drawable PngCreate (char *fn, PictInfo *imageDesc, int *xif, int *yif,
     }
 
 #ifndef _WIN_PRINT
+#ifndef _GL
   if ((*xif != 0 && *yif != 0) && (w != *xif || h != *yif))
     {
       /* xif and yif contain width and height of the box */
@@ -596,6 +719,7 @@ Drawable PngCreate (char *fn, PictInfo *imageDesc, int *xif, int *yif,
       w = *xif;
       h = *yif;
     }
+#endif /*_GL*/
 #endif /* _WINPRINT */
     
   if (buffer == NULL)
@@ -606,6 +730,7 @@ Drawable PngCreate (char *fn, PictInfo *imageDesc, int *xif, int *yif,
       return ((Drawable) NULL);
     }
 
+#ifndef _GL
   if (bg >= 0 && colrs)
     {
 #ifdef _WINDOWS
@@ -628,9 +753,13 @@ Drawable PngCreate (char *fn, PictInfo *imageDesc, int *xif, int *yif,
       imageDesc->PicMask = MakeMask (TtDisplay, buffer, w, h, bg, bperpix);
 #endif /* _WINDOWS */
     }
-
   pixmap = DataToPixmap (buffer, w, h, ncolors, colrs, withAlpha, grayScale);
   TtaFreeMemory (buffer);
+#else /*_GL*/
+  /* GL buffer are display independant, 
+  and already in the good format RGB, or RGBA*/
+  pixmap = buffer;
+#endif /*_GL*/
   /* free the table of colors */
   TtaFreeMemory (colrs);
   if (pixmap == None)

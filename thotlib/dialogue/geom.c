@@ -53,7 +53,9 @@ extern int     Y_Pos;
   ----------------------------------------------------------------------*/
 static void DrawOutline (HWND hwnd, POINT ptBeg, POINT ptEnd)
 {
+#ifndef _GL
   HDC hdc;
+#endif /*_GL*/
   POINT ptTab [2];
 
   ptTab[0].x = ptBeg.x;
@@ -61,12 +63,20 @@ static void DrawOutline (HWND hwnd, POINT ptBeg, POINT ptEnd)
   ptTab[1].x = ptEnd.x;
   ptTab[1].y = ptEnd.y;
 
+#ifdef _GL
+  
+  GL_DrawPolygon (ptTab, 2);
+
+#else /*_GL*/
+
   hdc = GetDC (hwnd);
   SetROP2 (hdc, R2_NOT);
   SelectObject (hdc, GetStockObject (NULL_BRUSH));
   /* SelectObject (hdc, GetStockObject (BLACK_PEN)); */
   Polyline (hdc, ptTab, 2);
   DeleteDC (hdc);
+
+#endif /*_GL*/
 }
 
 /*----------------------------------------------------------------------
@@ -97,6 +107,9 @@ static void VideoInvert (int frame, int width, int height, int x, int y)
   w = FrRef[frame];
   if (w != None)
     {
+#ifdef _GL
+      GL_DrawEmptyRectangle (152, x, y, width, height);
+#else /*_GL*/
 #ifdef _WINDOWS
       PatBlt (Gdc, x, y, width, height, PATINVERT);
 #else /* _WINDOWS */
@@ -106,6 +119,7 @@ static void VideoInvert (int frame, int width, int height, int x, int y)
       XFillRectangle (TtDisplay, w, TtInvertGC, x, y, width, height);
 #endif /* _GTK */
 #endif /* _WINDOWS */
+#endif /*_GL*/
     }
 }
 
@@ -146,6 +160,9 @@ static void InvertEllipse (int frame, int x, int y, int width, int height,
   w = FrRef[frame];
   if (w != None)
     {
+#ifdef _GL
+	  GL_DrawArc (x, y, width, height, 0, 360 * 64, FALSE);
+#else /*_GL*/
 #ifdef _WINDOWS
 	  rgn = CreateEllipticRgn (x, y, x + width, y + height);
 	  if (rgn)
@@ -166,6 +183,7 @@ static void InvertEllipse (int frame, int x, int y, int width, int height,
       XDrawArc (TtDisplay, w, TtInvertGC, x, y, width, height, 0, 360 * 64);
 #endif /* _GTK */
 #endif /* _WINDOWS */
+#endif /*_GL*/
     }
 }
 #endif
@@ -247,25 +265,34 @@ static void RedrawPolyLine (int frame, int x, int y, PtrTextBuffer buffer,
 	 *x3 = points[0].x;
 	 *y3 = points[0].y;
        }
+#ifdef _GL
+	GL_DrawPolygon (points, nb);
+#else /*_GL*/
 #ifdef _WINDOWS
      DrawOutpolygon (w, points, nb);
 #else  /* !_WINDOWS */
 #ifndef _GTK
      XDrawLines (TtDisplay, w, TtInvertGC, points, nb, CoordModeOrigin);
 #else /* _GTK */
-
+	 gdk_draw_polygon (FrRef[frame], TtInvertGC, FALSE, points, nb);
 #endif
 #endif /* _WINDOWS */
+#endif /*_GL*/
     }
   else 
+#ifdef _GL
+	GL_DrawPolygon (points, nb - 1);
+#else /*_GL*/
 #ifdef _WINDOWS 
     DrawOutpolygon (w, points, nb - 1);
 #else  /* _WINDOWS */
 #ifndef _GTK
     XDrawLines (TtDisplay, w, TtInvertGC, points, nb - 1, CoordModeOrigin);
 #else /* _GTK */
+	gdk_draw_polygon (FrRef[frame], TtInvertGC, FALSE, points, nb - 1);
 #endif /* !_GTK */
 #endif /* _WINDOWS */
+#endif /*_GL*/
   /* free the table of points */
   free ((STRING) points);
 }
@@ -773,7 +800,7 @@ static void MoveApoint (int frame, int x, int y, int x1, int y1, int x3,
 	    newy = y;
 	  else if (newy > y + height)
 	    newy = y + height;
-	  SetCursorPos (newx, newy);
+	  //SetCursorPos (newx, newy);
 	}
 	  
       GetMessage (&event, NULL, 0, 0);
@@ -973,7 +1000,7 @@ int PolyLineCreation (int frame, int *xOrg, int *yOrg, PtrBox pBox,
   height = PixelValue (height, UnPixel, NULL,
 		       ViewFrameTable[frame - 1].FrMagnification);
 
-#ifdef _WINDOWS
+#if defined(_WINDOWS) && !defined(_GL)
   Gdc = GetDC (FrRef[frame]);
 #endif /* _WINDOWS */
   nbpoints = 1;
@@ -981,7 +1008,7 @@ int PolyLineCreation (int frame, int *xOrg, int *yOrg, PtrBox pBox,
   lasty = y;
   AddPoints (frame, x, y, -1, -1, -1, -1, lastx, lasty, 1, &nbpoints, maxPoints, width, height,
 	     Pbuffer, Bbuffer);
-#ifdef _WINDOWS
+#if defined(_WINDOWS) && !defined(_GL)
   ReleaseDC (FrRef[frame], Gdc);
 #endif /* _WINDOWS */
   return (nbpoints);
@@ -1025,14 +1052,14 @@ void PolyLineModification (int frame, int *xOrg, int *yOrg, PtrBox pBox,
   height = PixelValue (height, UnPixel, NULL,
 		       ViewFrameTable[frame - 1].FrMagnification);
 
-#ifdef _WINDOWS
+#if defined(_WINDOWS) && !defined(_GL)
   Gdc = GetDC (FrRef[frame]);
 #endif /* _WINDOWS */
   /* get the current point */
   RedrawPolyLine (frame, x, y, Bbuffer, nbpoints, point, close,
 		  &x1, &y1, &lastx, &lasty, &x3, &y3);
   MoveApoint (frame, x, y, x1, y1, x3, y3, lastx, lasty, point, width, height, Pbuffer, Bbuffer);
-#ifdef _WINDOWS
+#if defined(_WINDOWS) && !defined(_GL)
   ReleaseDC (FrRef[frame], Gdc);
 #endif /* _WINDOWS */
   if (pBox->BxPictInfo != NULL)
@@ -1084,7 +1111,7 @@ int PolyLineExtension (int frame, int *xOrg, int *yOrg, PtrBox pBox,
   height = PixelValue (height, UnPixel, NULL,
 		       ViewFrameTable[frame - 1].FrMagnification);
 
-#ifdef _WINDOWS
+#if defined(_WINDOWS) && !defined(_GL)
   Gdc = GetDC (FrRef[frame]);
 #endif /* _WINDOWS */
   RedrawPolyLine (frame, x, y, Bbuffer, nbpoints, point, close,
@@ -1093,7 +1120,7 @@ int PolyLineExtension (int frame, int *xOrg, int *yOrg, PtrBox pBox,
   y1 = lasty;
   AddPoints (frame, x, y, x1, y1, x3, y3, lastx, lasty, point, &nbpoints, 0, width, height,
 	     Pbuffer, Bbuffer);
-#ifdef _WINDOWS
+#if defined(_WINDOWS) && !defined(_GL)
   ReleaseDC (FrRef[frame], Gdc);
 #endif /* _WINDOWS */
   return (nbpoints);
@@ -1141,7 +1168,7 @@ int LineCreation (int frame, PtrBox pBox, int *x1, int *y1, int *x2,
   x = *x1;
   y = *y1;
 
-#ifdef _WINDOWS
+#if defined(_WINDOWS) && !defined(_GL)
   Gdc = GetDC (FrRef[frame]);
 #endif /* _WINDOWS */
   nbpoints = 1;
@@ -1157,7 +1184,7 @@ int LineCreation (int frame, PtrBox pBox, int *x1, int *y1, int *x2,
 		    ViewFrameTable[frame - 1].FrMagnification);
   *y2 = PixelValue (pBuffer->BuPoints[2].YCoord, UnPixel, NULL,
 		    ViewFrameTable[frame - 1].FrMagnification);
-#ifdef _WINDOWS
+#if defined(_WINDOWS) && !defined(_GL)
   ReleaseDC (FrRef[frame], Gdc);
 #endif /* _WINDOWS */
   /* Free the buffer */
@@ -1247,7 +1274,7 @@ void LineModification (int frame, PtrBox pBox, int point, int *xi, int *yi)
   pBuffer->BuPoints[2].YCoord = LogicalValue (y1, UnPixel, NULL,
 					      ViewFrameTable[frame - 1].FrMagnification);
 
-#ifdef _WINDOWS
+#if defined(_WINDOWS) && !defined(_GL)
   Gdc = GetDC (FrRef[frame]);
 #endif /* _WINDOWS */
   /* get the current point */
@@ -1261,7 +1288,7 @@ void LineModification (int frame, PtrBox pBox, int point, int *xi, int *yi)
 		    ViewFrameTable[frame - 1].FrMagnification);
   *yi = PixelValue (pBuffer->BuPoints[1].YCoord, UnPixel, NULL,
 		    ViewFrameTable[frame - 1].FrMagnification);
-#ifdef _WINDOWS
+#if defined(_WINDOWS) && !defined(_GL)
   ReleaseDC (FrRef[frame], Gdc);
 #endif /* _WINDOWS */
   /* Free the buffer */
@@ -1861,7 +1888,9 @@ void GeometryResize (int frame, int x, int y, int *width, int *height,
   /* select the correct cursor */
   w = FrRef[frame];
 #ifdef _WINDOWS
+#ifndef _GL
   Gdc = GetDC (w);
+#endif /*_GL*/
   SetCursor (LoadCursor (NULL, IDC_CROSS));
   GetCursorPos (&cursorPos);
   xm = cursorPos.x;
@@ -1870,7 +1899,9 @@ void GeometryResize (int frame, int x, int y, int *width, int *height,
 	  percentW, percentH);
   /* Erase the box drawing */
   SetCursor (LoadCursor (NULL, IDC_ARROW));
+#ifndef _GL
   ReleaseDC (w, Gdc);
+#endif /*_GL*/
 #else  /* _WINDOWS */
   e = ButtonPressMask | ButtonReleaseMask | ButtonMotionMask;
   if (xmin == xmax)
@@ -1890,6 +1921,7 @@ void GeometryResize (int frame, int x, int y, int *width, int *height,
 #endif /* !_GTK */
 #endif  /* _WINDOWS */
 }
+
 
 /*----------------------------------------------------------------------
   Moving
@@ -1959,6 +1991,10 @@ static void Moving (int frame, int *x, int *y, int width, int height,
   while (ret == 0)
     {
 #ifdef _WINDOWS
+#ifdef _GL
+	  GL_ActivateDrawing();
+	  GL_DrawAll(0, frame);
+#endif /*_GL*/
       GetMessage (&event, NULL, 0, 0);
       switch (event.message)
 	{
@@ -2220,11 +2256,15 @@ void GeometryMove (int frame, int *x, int *y, int width, int height,
   /* Pick the correct cursor */
   w = FrRef[frame];
 #ifdef _WINDOWS
+#ifndef _GL
   Gdc = GetDC (w);
+#endif /*_GL*/
   SetCursor (LoadCursor (NULL, IDC_CROSS));
   Moving (frame, x, y, width, height, box, xmin, xmax, ymin, ymax, xm, ym);
   SetCursor (LoadCursor (NULL, IDC_ARROW));
+#ifndef _GL
   ReleaseDC (w, Gdc);
+#endif _GL
 #else  /* !_WINDOWS */
   e = ButtonPressMask | ButtonReleaseMask | ButtonMotionMask;
   if ((xmin >= *x) && (xmax <= *x + width))
@@ -2343,7 +2383,9 @@ void GeometryCreate (int frame, int *x, int *y, int *width, int *height,
   w = FrRef[frame];
 #ifdef _WINDOWS
   cross = LoadCursor (NULL, IDC_CROSS);
+#ifndef _GL
   Gdc = GetDC (w);
+#endif /*_GL*/
   GetWindowRect (w, &rect);
   SetCursorPos (*x + rect.left, *y + rect.top);
 #else /* !_WINDOWS */
@@ -2524,7 +2566,9 @@ void GeometryCreate (int frame, int *x, int *y, int *width, int *height,
 #endif /* _WINDOWS */
   Resizing (frame, x, y, width, height, box, xmin, xmax, ymin, ymax, xm, ym, percentW, percentH);
 #ifdef _WINDOWS 
+#ifndef _GL
   ReleaseDC (w, Gdc);
+#endif /*_GL*/
   SetCursor (LoadCursor (NULL, IDC_ARROW));
 #else  /* _WINDOWS */
   /* restore state of the Thot Library */

@@ -1,4 +1,8 @@
 
+#ifdef _WINDOWS
+#include <windows.h>
+#endif /*_WINDOWS*/
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -8,10 +12,6 @@
 #ifdef GL_MESA_window_pos
 #define MESA
 #endif
-
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
 
 #include <ft2build.h>
 #include FT_FREETYPE_H
@@ -102,7 +102,6 @@ static int           TextureFontCreateTexture (int *textureWidth, int *textureHe
 				     int numgGlyphs, int remGlyphs);
 static int           TextureGlyphRender (GL_glyph *glyph, FT_Vector pen);
 static void          TextureFontMakeGlyphList (GL_font *font);
-
 
 #define TRUE 1
 #define FALSE 0

@@ -306,7 +306,7 @@ END
 DOCINFOMENU DIALOGEX 100, 100, 232, 116
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Document Information"
-FONT 8, "MS Sans Serif"
+FONT 8, "MS Sans Serif", 0, 0, 0x1
 BEGIN
     PUSHBUTTON      "Done",ID_DONE,87,98,50,14
     LTEXT           "Location:",IDC_DIURL,7,7,60,8
@@ -871,7 +871,7 @@ END
 GRAPHICSDIALOG DIALOGEX 400, 20, 61, 139
 STYLE WS_MINIMIZEBOX | WS_POPUP | WS_CAPTION | WS_SYSMENU | WS_THICKFRAME
 EXSTYLE WS_EX_TOOLWINDOW | WS_EX_CONTEXTHELP
-FONT 8, "MS Sans Serif"
+FONT 8, "MS Sans Serif", 0, 0, 0x1
 BEGIN
     DEFPUSHBUTTON   "",ID_DONE,8,124,44,14
     CONTROL         405,IDC_GELLIPSE,"Static",SS_BITMAP | SS_NOTIFY,2,40,27,
@@ -2240,14 +2240,14 @@ BEGIN
         BEGIN
             VALUE "Comments", "\0"
             VALUE "CompanyName", "W3C INRIA\0"
-            VALUE "FileDescription", "libwww\0"
+            VALUE "FileDescription", "Amaya\0"
             VALUE "FileVersion", "1, 0, 0, 1\0"
-            VALUE "InternalName", "libwww\0"
+            VALUE "InternalName", "Amaya\0"
             VALUE "LegalCopyright", "Copyright © 1999\0"
             VALUE "LegalTrademarks", "\0"
-            VALUE "OriginalFilename", "libwww.lib\0"
+            VALUE "OriginalFilename", "Amaya.exe\0"
             VALUE "PrivateBuild", "\0"
-            VALUE "ProductName", "W3C INRIA""è libwww\0"
+            VALUE "ProductName", "W3C INRIA Amaya\0"
             VALUE "ProductVersion", "1, 0, 0, 1\0"
             VALUE "SpecialBuild", "\0"
         END

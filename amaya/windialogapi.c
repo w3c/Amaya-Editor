@@ -25,7 +25,7 @@
 #include "wininclude.h"
 
 extern ThotWindow  FrRef[MAX_FRAME + 2];
-extern int         currentFrame;
+extern int         ActiveFrame;
 
 #ifndef MAX_PROPOSAL_CHKR
 #define MAX_PROPOSAL_CHKR 10
@@ -609,7 +609,7 @@ LRESULT CALLBACK MathDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
 	  ThotCallback (MathsDialogue + MenuMaths, INTEGER_DATA, (char*)13);
 	  break;
 	}
-      SetFocus (FrRef[currentFrame]);
+      SetFocus (FrRef[ActiveFrame]);
       break;
       
     default:
@@ -1591,7 +1591,7 @@ LRESULT CALLBACK GraphicsDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
       break;
 
     case WM_COMMAND:
-      SetFocus (FrRef[currentFrame]);
+      SetFocus (FrRef[ActiveFrame]);
       switch (LOWORD (wParam))
 	{
 	case ID_DONE:
@@ -3102,7 +3102,7 @@ LRESULT CALLBACK GreekKeyboardDlgProc (ThotWindow hwnDlg, UINT msg,
 	  car = 1010;
 	  break;
 	}
-      SetFocus (FrRef[currentFrame]);
+      SetFocus (FrRef[ActiveFrame]);
       KbdCallbackHandler (hwnDlg, car, "\n");
       break;
     

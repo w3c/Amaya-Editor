@@ -1923,7 +1923,7 @@ static void ShowGraphicsPalette (Document doc, View view)
    if (!TtaGetDocumentAccessMode (doc))
      /* the document is in ReadOnly mode */
      return;
-# ifndef _WINDOWS
+#ifndef _WINDOWS
   if (!PaletteDisplayed)
     {
       PaletteDisplayed = TRUE;
@@ -1953,9 +1953,9 @@ static void ShowGraphicsPalette (Document doc, View view)
 			GTK_SIGNAL_FUNC (CloseSvgPalette), 
 			(gpointer)(GraphDialogue + FormGraph));
 #endif /*_GTK*/
-# else /* _WINDOWS */
+#else /* _WINDOWS */
   CreateGraphicsDlgWindow (TtaGetThotWindow (GetWindowNumber (doc, view)));
-# endif /* _WINDOWS */
+#endif /* _WINDOWS */
 }
 #endif /* _SVG */
 

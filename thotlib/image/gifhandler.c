@@ -164,6 +164,127 @@ static unsigned char *ReadGifImage (FILE *fd, int *w, int *h,
   return (data);
 }
 
+#ifdef _GL
+/*----------------------------------------------------------------------
+  ReadGIF
+  ----------------------------------------------------------------------*/
+unsigned char *ReadGIF (FILE *fd, int *w, int *h, int *ncolors, int *cpp,
+			ThotColorStruct *colrs)
+{
+  unsigned char       buf[16];
+  unsigned char      *data;
+  unsigned char       c;
+  unsigned char       localColorMap[3][MAXCOLORMAPSIZE];
+  int                 useGlobalColormap;
+  int                 bitPixel;
+  int                 imageCount = 0;
+  char                version[4];
+  int                 imageNumber = 1;
+  int                 i;
+
+  *w = 0;
+  *h = 0;
+  data = NULL;
+  if (!ReadOK (fd, buf, 6)) 
+    return (NULL);
+
+  if (strncmp ((char *) buf, "GIF", 3) != 0)
+    return (NULL);
+   strncpy (version, (char *) buf + 3, 3);
+   version[3] = EOS;
+   if ((strcmp (version, "87a") != 0) && (strcmp (version, "89a") != 0))
+     return (NULL);
+   
+   if (!ReadOK (fd, buf, 7))
+     return (NULL);
+
+   GifScreen.Width  = LM_to_uint (buf[0], buf[1]);
+   GifScreen.Height = LM_to_uint (buf[2], buf[3]);
+   GifScreen.BitPixel = 2 << (buf[4] & 0x07);
+   *ncolors = GifScreen.BitPixel;
+   GifScreen.ColorResolution = (((buf[4] & 0x70) >> 3) + 1);
+   GifScreen.Background = buf[5];
+   GifScreen.AspectRatio = buf[6];
+   if (BitSet (buf[4], LOCALCOLORMAP))
+     { /* Global Colormap */
+       if (ReadColorMap (fd, GifScreen.BitPixel, GifScreen.ColorMap))
+	 return (NULL);
+       for (i = 0; i < (int) GifScreen.BitPixel; i++)
+	 {
+	   colrs[i].red   = GifScreen.ColorMap[0][i];
+	   colrs[i].green = GifScreen.ColorMap[1][i];
+	   colrs[i].blue  = GifScreen.ColorMap[2][i];
+	 }
+
+       for (i = GifScreen.BitPixel; i < MAXCOLORMAPSIZE; i++)
+	 {
+	   colrs[i].red = 0;
+	   colrs[i].green = 0;
+	   colrs[i].blue = 0;
+	 }
+     }
+
+   for (;;)
+     {
+       if (!ReadOK (fd, &c, 1))
+	 return (NULL);
+
+       if (c == ';')
+	 { /* GIF terminator */
+	   if (imageCount < imageNumber)
+             return (NULL);
+	   break;
+	 }
+
+       if (c == '!')
+	 { /* Extension */
+	   if (!ReadOK (fd, &c, 1))
+             return (NULL);
+	   DoExtension (fd, c);
+	   continue;
+	 }
+
+       if (c != ',')
+	 continue;
+       ++imageCount;
+       if (!ReadOK (fd, buf, 9))
+	 return (NULL);
+
+       useGlobalColormap = !BitSet (buf[8], LOCALCOLORMAP);
+       bitPixel = 1 << ((buf[8] & 0x07) + 1);
+       *w = LM_to_uint (buf[4], buf[5]);
+       *h = LM_to_uint (buf[6], buf[7]);
+       if (!useGlobalColormap)
+	 {
+	   if (ReadColorMap (fd, bitPixel, localColorMap))
+             return (NULL);
+	   for (i = 0; i < bitPixel; i++)
+	     {
+	       colrs[i].red   = GifScreen.ColorMap[0][i];
+	       colrs[i].green = GifScreen.ColorMap[1][i];
+	       colrs[i].blue  = GifScreen.ColorMap[2][i];
+	     }
+
+	   for (i = bitPixel; i < MAXCOLORMAPSIZE; i++)
+	     {
+	       colrs[i].red   = 0;
+	       colrs[i].green = 0;
+	       colrs[i].blue  = 0;
+	     }
+	   data = ReadGifImage (fd, w, h, localColorMap,
+				BitSet (buf[8], INTERLACE), imageCount != imageNumber);
+	   return (data);	/* anticipating the exit to prevent gif video */
+	 }
+       else
+	 {
+	   data = ReadGifImage (fd, w, h, GifScreen.ColorMap,
+				BitSet (buf[8], INTERLACE), imageCount != imageNumber);
+	   return (data);	/* anticipating the exit to prevent gif video */
+	 }
+     }
+   return (data);
+}
+#else /*_GL*/
 /*----------------------------------------------------------------------
   ReadGIF
   ----------------------------------------------------------------------*/
@@ -315,7 +436,7 @@ unsigned char *ReadGIF (FILE *fd, int *w, int *h, int *ncolors, int *cpp,
      }
    return (data);
 }
-
+#endif /*_GL*/
 /*----------------------------------------------------------------------
   ReadColorMap
   ----------------------------------------------------------------------*/
@@ -1061,6 +1182,7 @@ HBITMAP WIN_MakeImage (HDC hDC, unsigned char *data, int width, int height,
   int                 rshift, gshift, bshift;
   unsigned short      rmask, gmask, bmask;
 
+  bit_data = NULL;
   switch (depth)
     {
     case 1:
@@ -1322,13 +1444,19 @@ Drawable GifCreate (char *fn, PictInfo *imageDesc, int *xif, int *yif,
   Pixmap              pixmap = (Pixmap) 0;
   ThotColorStruct     colrs[256];
 #ifdef _WINDOWS
+#ifndef _GL
   unsigned short      red, green, blue;
+#endif /*_GL*/
 #endif /* _WINDOWS */
   unsigned char      *buffer = NULL;
   unsigned char      *buffer2 = NULL;
   int                 w, h;
   int                 i;
   int                 ncolors, cpp;
+#ifdef _GL
+  unsigned char *ptr;
+  int   x,y;
+#endif /*_GL*/
 
   GifTransparent = -1;
   buffer = ReadGifToData (fn, &w, &h, &ncolors, &cpp, colrs);
@@ -1353,11 +1481,12 @@ Drawable GifCreate (char *fn, PictInfo *imageDesc, int *xif, int *yif,
     {
       if (*xif == 0 && *yif != 0)
 	*xif = PixelValue (w, UnPixel, NULL, zoom);
-      if (*xif != 0 && *yif == 0)
+      if (*xif != 0 && *yif == 0) 
 	*yif = PixelValue (h, UnPixel, NULL, zoom);
     }
 
 #ifndef _WIN_PRINT
+#ifndef _GL
   if ((*xif != 0 && *yif != 0) && (w != *xif || h != *yif))
     {
       /* xif and yif contain width and height of the box */	  
@@ -1374,11 +1503,43 @@ Drawable GifCreate (char *fn, PictInfo *imageDesc, int *xif, int *yif,
       w = *xif;
       h = *yif;
     }
+#endif /*_GL*/
 #endif /* _WIN_PRINT */
   
   if (buffer == NULL)
     return ((Drawable) NULL);	
 
+#ifdef _GL
+  {
+    
+    
+    ptr = TtaGetMemory (w * h * 4);
+    y = h;
+    while (y--)
+      {
+	buffer2 = buffer + y*w;
+	for (x = 0; x < w; x++)
+	  {		
+	    i = *buffer2++;
+	    if (GifTransparent == i)
+	      {
+		ptr += 3;
+		*ptr++ = 0;
+	      }
+	    else
+	      {
+		*ptr++ = colrs[i].red;
+		*ptr++ = colrs[i].green;
+		*ptr++ = colrs[i].blue;	
+		*ptr++ = 255;
+	      }
+	  }
+      }
+    ptr -= w*h*4;
+    TtaFreeMemory (buffer);
+    pixmap = buffer = ptr;
+  }
+#else /* _GL */
   if (GifTransparent >= 0)
     {
 #ifdef _WINDOWS
@@ -1403,6 +1564,8 @@ Drawable GifCreate (char *fn, PictInfo *imageDesc, int *xif, int *yif,
     }
   pixmap = DataToPixmap (buffer, w, h, ncolors, colrs, FALSE, FALSE);
   TtaFreeMemory (buffer);
+#endif /*_GL*/
+  
   if (pixmap == None)
     {
 #ifdef _WINDOWS

@@ -83,8 +83,18 @@ typedef COLORREF       ThotColor;
 typedef COLORREF       Pixel;
 typedef void          *Pixmap;
 typedef HCURSOR        ThotCursor;
+#ifndef _GL
 typedef HWND           Drawable;
 typedef POINT          ThotPoint;
+#else /* _GL */
+typedef unsigned char* Drawable;
+typedef struct GL_point 
+{
+  float x;
+  float y;
+} ThotPoint;
+#endif /*_GL*/
+
 typedef MSG            ThotEvent;
 typedef MSG            ThotKeyEvent;
 typedef UINT           ThotComposeStatus;
@@ -197,7 +207,8 @@ typedef XComposeStatus ThotComposeStatus;
 typedef XtAppContext   ThotAppContext;
 typedef XtTranslations ThotTranslations;
 
-typedef struct {
+typedef struct 
+{
     GdkBitmap          *mask;
     GdkPixmap          *pixmap;
 } _Thot_icon;

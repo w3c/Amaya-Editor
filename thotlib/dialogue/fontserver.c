@@ -1,4 +1,5 @@
 #ifdef _GL
+
 #ifdef _GTK
 
 /* Font Server */
@@ -6,13 +7,16 @@
 #include "X11/Xft/Xft.h"
 #include "X11/Xft/XftFreetype.h"
 
-#endif /* _GTK */
+#else /* _GTK */
+#include <windows.h>
+#include <stdio.h>
+#endif  /* _GTK */
 
 #ifdef _GTK
 
 /* XFT_FAMILY XFT_FOUNDRY XFT_STYLE XFT_ENCODING "iso8859-1" 
    XFT_SLANT  XFT_WEIGHT XFT_SIZE  XFT_DPI */
-int GetFontFilename(char script, int family, 
+int GetFontFilename (char script, int family, 
 		   int highlight, int size, 
 		    int UseLucidaFamily, int UseAdobeFamily,
 		    char *filename)
@@ -171,29 +175,35 @@ int GetFontFilename(char script, int family,
 }
 
 #else /* _GTK */
-int GetFontFilename(const char *xlfd, char *filename)
+
+int GetFontFilename (char script, int family, 
+		   int highlight, int size, 
+		    int UseLucidaFamily, int UseAdobeFamily,
+		    char *filename)
 {
-  char name[1024];
-  int name_ptr;
-  
-  name_ptr = sprintf (&name[0], "c:\\windows\\font\\"); 
-  
+
+  GetWindowsDirectory (filename , 1024);  
+  strcat (filename, "\\fonts\\"); 
+
+  if (script == 'G')
+	family = 0;
+  /*charset ???*/
   switch (family)
      {
-     case 0:   
-       sprintf (&name[name_ptr], "Symbol");
+     case 0:		 
+       strcat (filename, "Symbol");
        break;
      case 1:
-       name_ptr += sprintf (&name[name_ptr], "Times New Roman");
+       strcat (filename, "Times");
        break;
      case 2:       
-       name_ptr += sprintf (&name[name_ptr], "Arial");
+       strcat (filename, "Arial");
        break;
      case 3:
-       name_ptr += sprintf (&name[name_ptr], "Courier New");
+       strcat (filename, "Cour");
        break;
      default:
-       name_ptr += sprintf (&name[name_ptr], "Arial");
+       strcat (filename, "Verdana");
      }
   switch (highlight)
      {
@@ -201,19 +211,18 @@ int GetFontFilename(const char *xlfd, char *filename)
        break;
      case 2:
      case 3:
-       name_ptr += sprintf (&name[name_ptr], "i");
+       strcat (filename, "i");
        break;
      case 1:
      case 4:
      case 5:
-       name_ptr += sprintf (&name[name_ptr], "bd");
+       strcat (filename, "bd");
        break;
      default:
        break;
      }
-  sprintf (&name[name_ptr], ".ttf");
+  strcat (filename, ".ttf");
   return 1;
 }
-
 #endif /* _GTK */
 #endif /* _GL */

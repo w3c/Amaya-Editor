@@ -9,7 +9,7 @@
  * GLwindowdisplay.c : handling of low level drawing routines, 
  *                      for Opengl 
  *
- * Author:  P.Cheyrou (INRIA)
+ * Author:  P. Cheyrou-lagreze (INRIA)
  *
  */
 #ifdef _GL
@@ -94,13 +94,36 @@
 /*for int  => (((int)N)<<1)*/
 #define P2(N) (N*N)
 
+#ifdef _GTK
+
 #include <gtkgl/gtkglarea.h>
+/* Unix timer */
+#include <unistd.h>
+#include <sys/timeb.h>
+
+
+/*#define GLU_CALLBACK_CAST (void (*)())*/
+
+#else /*WINDOWS*/
+
+#include <windows.h>
+
+/*
+#ifndef CALLBACK
+#define CALLBACK
+#endif
+#define GLU_CALLBACK_CAST
+*/
+
+#endif /*_GTK*/
+
+
 #include <GL/gl.h>
 #include <GL/glu.h>
 
-/* timer */
-#include <unistd.h>
-#include <sys/timeb.h>
+#ifndef CALLBACK
+#define CALLBACK
+#endif
 
 #ifdef GL_MESA_window_pos
 #define MESA
@@ -109,6 +132,7 @@
 /* Texture Font */
 /* ~/Amaya/thotlib/internals/h */
 #include "openglfont.h"
+#include "glwindowdisplay.h"
 
 /* Vertex list when tesselation is called 
    This list is filled with all new vertex 
@@ -128,20 +152,148 @@ ThotBool GL_Err()
 
   if((errCode = glGetError()) != GL_NO_ERROR)
     {
-      g_print ("\n%s :", (char*) gluErrorString(errCode));
+      /*g_print ("\n%s :", (char*) gluErrorString(errCode));*/
       return TRUE;
     }
   else 
     return FALSE;
 }
 
-/**********************GL Globals********/
+/*-----------GLOBALS----------*/
+/* Prevents double access */
 ThotBool GL_Drawing = FALSE;
 
+/*--------- STATICS ------*/
+
+/* background color*/
 static int BG_Frame;
+/*Current Thickness*/
 static int S_thick;
 /* if a refresh is needed, it is TRUE*/
 static ThotBool GL_Modif = FALSE;
+
+#ifdef _WINDOWS 
+
+/* Win32 opengl context based on frame number*/
+static HDC   GL_Windows[50];	
+static HGLRC GL_Context[50];
+
+/*----------------------------------------------------------------------
+ GL_SetupPixelFormat : Sets up opengl buffers pixel format.
+ Double Buffer, RGBA (32 bits), 
+ no depth (z-buffer), no stencil (boolean buffer), no alpha (transparency), 
+ no accum (special effect like multisampling, antialiasing), no aux (all purpose buffers),
+ no pbuffers (?) buffers...
+  ----------------------------------------------------------------------*/
+static void GL_SetupPixelFormat (HDC hDC)
+{
+    PIXELFORMATDESCRIPTOR pfd = 
+	{
+        sizeof(PIXELFORMATDESCRIPTOR),  /* size */
+        1,                              /* version */
+        PFD_SUPPORT_OPENGL
+         | PFD_DRAW_TO_WINDOW 
+         | PFD_DOUBLEBUFFER,               /* support double-buffering */
+        PFD_TYPE_RGBA,                  /* color type */
+        32,                             /* prefered color depth */
+        0, 0, 0, 0, 0, 0,               /* color bits (ignored) */
+        0,                              /* no alpha buffer */
+        0,                              /* alpha bits (ignored) */
+        0,                              /* no accumulation buffer */
+        0, 0, 0, 0,                     /* accum bits (ignored) */
+        0,                             /* depth buffer */
+        0,                              /* no stencil buffer */
+        0,                              /* no auxiliary buffers */
+        PFD_MAIN_PLANE,                 /* main layer */
+        0,                              /* reserved */
+        0, 0, 0,                        /* no layer, visible, damage masks */
+    };
+    int pixelFormat;
+
+    pixelFormat = ChoosePixelFormat(hDC, &pfd);
+    if (pixelFormat == 0) 
+	{
+        MessageBox(WindowFromDC(hDC), "ChoosePixelFormat failed.", "Error",
+                MB_ICONERROR | MB_OK);
+        exit(1);
+    }
+
+    if (SetPixelFormat(hDC, pixelFormat, &pfd) != TRUE) 
+	{
+        MessageBox(WindowFromDC(hDC), "SetPixelFormat failed.", "Error",
+                MB_ICONERROR | MB_OK);
+        exit(1);
+    }
+}
+
+/*----------------------------------------------------------------------
+ GL_Win32ContextInit : Turn a win32 windows into an opengl drawing canvas, 
+ setting up pxel format,
+ Creating the frame number if needed.
+  ----------------------------------------------------------------------*/
+void GL_Win32ContextInit (HWND hwndClient, int frame)
+{
+  static ThotBool dialogfont_enabled = FALSE;
+  HGLRC hGLRC;
+  HDC hDC;
+  ThotBool found;
+
+  hDC = GetDC (hwndClient);
+  found = FALSE;       
+  if (frame <= 0)
+    {
+      frame = 1;
+      while (frame <= MAX_FRAME && !found)
+	{
+	  /* Seeks a free frame slot */
+	  found = (FrameTable[frame].FrDoc == 0 && FrameTable[frame].WdFrame != 0);
+	  if (!found)
+	    frame++;
+	}	
+      if (!found)
+	{
+	  frame = 1;
+	  while (frame <= MAX_FRAME && !found)
+	    {
+	      /* Seeks a free frame slot */
+	      found = (FrameTable[frame].WdFrame == 0);
+	      if (!found)
+		frame++;
+	    }
+	}
+      ActiveFrame = frame;
+    }
+  GL_SetupPixelFormat (hDC);
+  hGLRC = wglCreateContext (hDC);
+  if (GL_Context[1]) 
+    wglShareLists (GL_Context[1], hGLRC);
+  if (wglMakeCurrent (hDC, hGLRC))
+    {
+      SetGlPipelineState ();
+      if (!dialogfont_enabled)
+	{
+	  InitDialogueFonts ("");
+	  dialogfont_enabled = TRUE;
+	}
+    }
+  GL_Windows[frame] = hDC;
+  GL_Context[frame] = hGLRC;
+  ActiveFrame = frame;
+}
+
+/*----------------------------------------------------------------------
+ GL_Win32ContextInit : Free opengl contexts
+  ----------------------------------------------------------------------*/
+void GL_Win32ContextClose (int frame)
+{
+  /* make our context 'un-'current */
+  wglMakeCurrent (NULL, NULL);
+  /* delete the rendering context */
+  wglDeleteContext (GL_Context[frame]);
+  GL_Windows[frame] = 0;
+  GL_Context[frame] = 0;
+}
+#endif /*_WINDOWS*/
 
 
 
@@ -359,7 +511,7 @@ void GL_DrawSegments (XSegment *point, int npoints)
   Here we add generated vertex to our list (so we can free it after tesselation)
   and give it to the tesselation engine. (dataout)
   ----------------------------------------------------------------------*/
-static void myCombine (GLdouble coords[3], void *vertex_data[4], 
+static void CALLBACK myCombine (GLdouble coords[3], void *vertex_data[4], 
 	  GLfloat weight[4], void **dataOut)
 {
   ListMem *ptr = &SAddedVertex;
@@ -379,9 +531,13 @@ static void myCombine (GLdouble coords[3], void *vertex_data[4],
  (VERY useful on 50000000000 vertex polygon... 
  see jasc webdraw butterfly sample )
   ----------------------------------------------------------------------*/
-static void my_error (GLenum err)
+static void CALLBACK my_error (GLenum err)
 {
-  g_print ("%s \n", gluErrorString(err));
+#ifdef _GTK
+	g_print ("%s \n", gluErrorString(err));
+#else /*_GTK*/
+	WinErrorBox (NULL, gluErrorString(err));;
+#endif /*_GTK*/
 }
 /* To be malloc'ed !!!!!!!!!! 
    just don't when and how many... */
@@ -429,17 +585,17 @@ static void tesse(ThotPoint *contours, int contour_cnt, ThotBool only_countour)
   if (tobj != NULL) 
     {
       gluTessCallback (tobj, GLU_BEGIN, 
-		      (void (*)())glBegin);
+		     (void (CALLBACK*)()) glBegin);
       gluTessCallback (tobj, GLU_END, 
-		      (void (*)())glEnd);
+		      (void (CALLBACK*)()) glEnd);
       gluTessCallback (tobj, GLU_ERROR, 
-		      (void (*)()) my_error); 
+		      (void (CALLBACK*)()) my_error); 
       gluTessCallback (tobj, GLU_VERTEX, 
-		      (void (*)()) glVertex2fv);
+		      (void (CALLBACK*)()) glVertex2fv);
       SAddedVertex.data = 0;
       SAddedVertex.next = 0;
       gluTessCallback (tobj, GLU_TESS_COMBINE, 
-		      (void (*)()) myCombine);
+		      (void (CALLBACK*)()) myCombine);
       gluTessBeginPolygon( tobj, NULL );
       gluTessBeginContour (tobj);
       for (i = 0; i < contour_cnt; i++) 
@@ -704,14 +860,14 @@ int GL_UnicodeDrawString (int fg,
 #ifdef MESA
   SetPixelTransferBias (fg);
   glRasterPos2f (x, y);
-  width = UnicodeFontRender (GL_font, str);
+  width = UnicodeFontRender (GL_font, str, x, y, end);
   ResetPixelTransferBias();
 #else /* MESA */
   GL_SetForeground (fg);
   glPushMatrix ();
   glTranslatef (x, y, 0.0);
   glEnable (GL_TEXTURE_2D);
-  width = UnicodeFontRender (GL_font, str);
+  width = UnicodeFontRender (GL_font, str, x, y, end);
   glDisable (GL_TEXTURE_2D);  
   glPopMatrix ();
 #endif /* MESA */ 
@@ -769,6 +925,7 @@ int UnicodeCharacterWidth (CHAR_T c, PtrFont font)
 	l = gl_font_char_width ((void *) font, 32) / 2;
       else
 	l = gl_font_char_width ((void *) font, c);
+#ifndef _WINDOWS
       if (c == 244)
 	{
 	  /* a patch due to errors in standard symbol fonts */
@@ -782,6 +939,7 @@ int UnicodeCharacterWidth (CHAR_T c, PtrFont font)
 	  else if (TtPatchedFont[i] == 24)
 	    l = 4;
 	}
+#endif /*_WINDOWS*/
     }
   return l;
 }
@@ -810,7 +968,7 @@ void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
   int                 buffleft;
   int                 indbuff, bl;
   int                 indmax;
-  int                 nbcar, x, y, y1;
+  int                 nbcar, x, y, y1;  /******/
   int                 lgspace, whitespace;
   int                 fg, bg;
   int                 shadow;
@@ -993,7 +1151,7 @@ void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 		      pFrame->FrSelectionEnd.VsXPos != 0)
 		    right = pFrame->FrSelectionEnd.VsXPos;
 		  else
-		    right = pBox->BxW;
+		    right = pBox->BxWidth;
 		  DisplayStringSelection (frame, left, right, pBox);
 		  /* the selection is done now */
 		  left = 0;
@@ -1200,10 +1358,12 @@ void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 		Call the function in any case to let Postscript justify the
 		text of the box.
 	      */
+	      if (nbcar == 0)
+		bl = 0;
 	      y1 = y + BoxFontBase (pBox->BxFont);
 	      x += GL_UnicodeDrawString (fg, bbuffer,
 					  x, REALY(y1), 
-					  hyphen, prevfont, nbcar);	      
+					  hyphen, prevfont, nbcar);
 	      if (pBox->BxUnderline != 0)
 		DisplayUnderline (frame, x, y, nextfont,
 				  pBox->BxUnderline, width, fg);
@@ -1232,7 +1392,7 @@ void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 /*----------------------------------------------------------------------
    GL_prepare: If a modif has been done
   ----------------------------------------------------------------------*/
-ThotBool GL_prepare (GtkWidget *widget)
+ThotBool GL_prepare (ThotWidget *widget)
 {  
   GL_Modif = TRUE; 
   return TRUE;
@@ -1241,21 +1401,27 @@ ThotBool GL_prepare (GtkWidget *widget)
 /*----------------------------------------------------------------------
    GL_realize : can we cancel if no modifs ?
   ----------------------------------------------------------------------*/
-void GL_realize (GtkWidget *widget)
+void GL_realize (ThotWidget *widget)
 {
   return;
 }
 
-
+/*----------------------------------------------------------------------
+   GL_ActivateDrawing : Force Recalculation of the frame and redisplay
+  ----------------------------------------------------------------------*/
 void GL_ActivateDrawing()
 {
   GL_Modif = TRUE;
 }
+
+
+
 /*----------------------------------------------------------------------
  GL_DrawAll : Only function that Really Draw opengl !!
   ----------------------------------------------------------------------*/
 void GL_DrawAll (ThotWidget widget, int frame)
 {  
+#ifdef _GTK
   struct timeb	before;
   struct timeb	after;
   int	dsec, dms; 
@@ -1298,6 +1464,9 @@ void GL_DrawAll (ThotWidget widget, int frame)
 	      times and is asynchronous with Amaya computation*/     
 	   /* glClear(GL_COLOR_BUFFER_BIT); */          
 	   
+	   
+		if (GL_Err())
+	     g_print ("Bad drawing\n"); 
 	   GL_Drawing = FALSE;
 	 }
        
@@ -1313,14 +1482,55 @@ void GL_DrawAll (ThotWidget widget, int frame)
 	   g_print ("=>\t %is %ims / frame\n", dsec, dms);
 	 }
      }
+#else /*_GTK*/
+ if (GL_Modif && !GL_Drawing && !FrameUpdating)	
+     { 
+	   frame = ActiveFrame;
+       if (wglMakeCurrent (GL_Windows[frame], GL_Context[frame]))
+	   { 	  
+	       /* prevent other computation at 
+	      the same time*/
+	      GL_Drawing = TRUE;  
+	   
+	      /* Redraw ALL THE CANVAS (Animation testing)
+	      usually only modified buffer will be copied 
+	      into the frame buffer */      
+	   
+	      /*  DrawGrid (FrameTable[frame].WdFrame->allocation.width,  */
+	      /* 		FrameTable[frame].WdFrame->allocation.height); */
+
+	      DefClip (frame, -1, -1, -1, -1); 
+	      RedrawFrameBottom (frame, 0, NULL);      
+	      /*a resfresh indicator*/
+	      /*  make_carre();	  */  
+	    
+	      /* Double Buffering */
+make_carre();
+		  glFlush ();
+	      SwapBuffers (GL_Windows[frame]);
+	      /* Paints a background color 
+	      Have to discard it if 
+	      background image exist in document
+	      Clear is after buffer swapping as it take 
+	      times and is asynchronous with Amaya computation*/     
+	      /* glClear(GL_COLOR_BUFFER_BIT); */	    
+	   
+		if (GL_Err())
+			WinErrorBox (NULL, "Bad drawing\n");
+	      GL_Drawing = FALSE;
+	   }        
+	   GL_Modif = FALSE;
+	}
+#endif /*_GTK*/
+ 
 }
 
-void SetGlPipelineState()
+void SetGlPipelineState ()
 {
       /* Display Opengl Vendor Name,  Opengl Version, Opengl Renderer*/
-      g_print("%s, %s, %s", (char *)glGetString(GL_VENDOR), 
+      /*g_print("%s, %s, %s", (char *)glGetString(GL_VENDOR), 
 	      (char *)glGetString(GL_VERSION), 
-	      (char *)glGetString(GL_RENDERER));   
+	      (char *)glGetString(GL_RENDERER));   */
       /* g_print("%s\n", (char *)glGetString(GL_EXTENSIONS));  */   
 
 
@@ -1329,8 +1539,8 @@ void SetGlPipelineState()
 	 (color mix and better antialiasing)*/
       glDisable (GL_BLEND);
       /* Fast Transparency*/
-      glAlphaFunc (GL_GREATER, .01);
-      glEnable (GL_ALPHA_TEST); 
+      //glAlphaFunc (GL_LESS, 0.950);
+      glDisable (GL_ALPHA_TEST); 
       /* no fog*/
       glDisable (GL_FOG);
       /* No lights */
@@ -1386,15 +1596,15 @@ void SetGlPipelineState()
       glHint( GL_PERSPECTIVE_CORRECTION_HINT, GL_FASTEST ); 
 #else /*!MESA*/
       /*Hardware opengl may support better rendering*/
-      glEnable (GL_DITHER);
+      glEnable (GL_DITHER);glDisable (GL_DITHER); 
       /*  Antialiasing 
 	  Those Options give better 
 	  quality image upon performance loss
 	  Must be a user Option  */
       glEnable (GL_LINE_SMOOTH); 
       glEnable (GL_POINT_SMOOTH); 
-      glHint(GL_POINT_SMOOTH_HINT, GL_NICEST);
-      glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
+      glHint (GL_POINT_SMOOTH_HINT, GL_NICEST);
+      glHint (GL_LINE_SMOOTH_HINT, GL_NICEST);
 
       /* Not recommended for hardware cards... 
 	 Global Antialiasing is done elsewhere...*/
@@ -1409,8 +1619,14 @@ void SetGlPipelineState()
 #endif /*MESA*/    
       /* Bitmap font Text writing (even in texture font)*/
       glPixelStorei( GL_UNPACK_ALIGNMENT, 1); 
+	  /* Needs to clear buffer after allocating it before drawing*/
+	  glClear(GL_COLOR_BUFFER_BIT);
       if (GL_Err())
-	g_print ("Bad INIT\n"); 
+#ifdef _GTK
+	     g_print ("Bad INIT\n"); 
+#else  /*_GTK*/
+	     WinErrorBox (NULL, "Bad INIT\n");
+#endif  /*_GTK*/
 }
 
 /*---------------------------------------
@@ -1420,7 +1636,8 @@ BackBufferRegionSwapping
 	    => opengl region buffer swapping 
 --------------------------------------------*/
 void GL_BackBufferRegionSwapping (int x, int y, int width, int height, int Totalheight)
-{
+{  
+#ifndef _WINDOWS
   /* copy form bottom to top
    so we must add height and 
   invert y */
@@ -1432,6 +1649,15 @@ void GL_BackBufferRegionSwapping (int x, int y, int width, int height, int Total
   glCopyPixels (x, y, width, height, GL_COLOR);  
   glDrawBuffer (GL_BACK);
   glFlush ();
+#else /* _WINDOWS*/
+  static PFNGLADDSWAPHINTRECTWINPROC p = 0;
+	  
+  if (p == 0)
+	  p = (PFNGLADDSWAPHINTRECTWINPROC) wglGetProcAddress("glAddSwapHintRectWIN");
+
+  (*p) (x, y, x+width, y+height);
+  SwapBuffers (GL_Windows[ActiveFrame]);
+#endif /*_WINDOWS*/
 }
 /*---------------------------------------
   GL_window_copy_area
@@ -1442,9 +1668,13 @@ void GL_BackBufferRegionSwapping (int x, int y, int width, int height, int Total
 void GL_window_copy_area (int xf, int yf, int xd, int yd,
 			  int width, int height)
 {
-  glRasterPos2i (xf, yf);
-  glCopyPixels(xd, yd, width, height, GL_COLOR);
-  glFlush ();
+#if defined (_WINDOWS) || !defined (MESA)
+	GL_DrawAll (0, NULL);
+#else /*_WINDOWS*/
+	glRasterPos2i (xf, yf);
+	glCopyPixels(xd, yd, width, height, GL_COLOR);
+	glFlush ();
+#endif /*_WINDOWS*/
 }
 
 
@@ -1454,7 +1684,7 @@ void GL_window_copy_area (int xf, int yf, int xd, int yd,
  remake the current coordonate system 
  upon resize
 ------------------------------------*/
-void GLResize (int width, int height)
+void GLResize (int width, int height, int x, int y)
 {
   glViewport (0, 0, width, height);
   glMatrixMode (GL_PROJECTION);      
@@ -1463,12 +1693,13 @@ void GLResize (int width, int height)
      to get the same as Thot	  
      (opengl Y origin  is the left up corner
      and the left bottom is negative !!)	*/
-  glOrtho (0,  width, height, 0, -1, 1); 
+  glOrtho (0, width, height, 0, -1, 1); 
   /* Needed for 3d only...*/
   glMatrixMode (GL_MODELVIEW);
   glLoadIdentity (); 
   GL_ClearBackground (width, height);
 }
+
 
 /*****************************************************/
 /* TESTING */
@@ -1515,16 +1746,17 @@ void DrawGrid(int width, int height)
 	      /* Starting at 0 mesh 5 steps (rows). */    
 	      0, 6);  /* Starting at 0 mesh 6 steps (columns). */
 }
-/* 
-   stupid animation render testing
+
+/* stupid animation render testing
    in order to vizualise renderings 
    times */
-void make_carre()
+int make_carre()
 {
   static float k = 0.0;
   static float l = 0.0;
 
-glPushMatrix();
+  /*(glScalef (1-l, 1-l, 1.0);*/
+  glPushMatrix();
          k += 15.0;
          k = k > 500.0 ? 0 : k;
 	 l += 0.05;
@@ -1540,7 +1772,7 @@ glPushMatrix();
 	 glColor4f(0.5, 0.5, 1.0-l, 0.25-l);
 	 glVertex2i(  0, 0);/* bas gauche */
 	 glEnd();
-glPopMatrix(); 
+   glPopMatrix(); 
 }
 
 /*-------------------------------
@@ -1549,7 +1781,7 @@ glPopMatrix();
  mainly for debug purpose, but could be used for a
  C remplacment of Batik 
 --------------------------------*/
-void saveBuffer (int width, int height)
+int saveBuffer (int width, int height)
 {
   static int z = 0;
   FILE *screenFile;
@@ -1561,8 +1793,9 @@ void saveBuffer (int width, int height)
   int i;
 
   z++;
-  if (z != 500)
+  /*if (z != 500)
     return;
+  */
   length = width * height * 4;
   Data = TtaGetMemory (sizeof (unsigned char) * length);
   glReadPixels(0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE, Data);

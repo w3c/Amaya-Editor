@@ -10,7 +10,7 @@
  *
  * Authors: I. Vatton (INRIA)
  *          R. Guetari (W3C/INRIA) - Windows version
- *
+ *tt
  */
 
 #include "thot_gui.h"
@@ -37,7 +37,6 @@
     // Message ID for IntelliMouse wheel
 #endif /*WM_MOUSEWHEEL*/
 #endif /*WM_MOUSELAST*/
-
 
 #else /* _WINDOWS */
 #ifndef _GTK
@@ -139,44 +138,10 @@ int         X_Pos;
 int         Y_Pos;
 int         cyToolBar;
 TBADDBITMAP ThotTBBitmap;
-#endif /* _WINDOWS */
-
-#include "absboxes_f.h"
-#ifdef _GTK
-#include "gtk-functions.h"
-#else /* _GTK */
-#include "appli_f.h"
-#include "input_f.h"
-#endif /* _GTK */
-#include "applicationapi_f.h"
-#include "boxlocate_f.h"
-#include "boxparams_f.h"
-#include "boxselection_f.h"
-#include "buildboxes_f.h"
-#include "callback_f.h"
-#include "context_f.h"
-#include "editcommands_f.h"
-#include "font_f.h"
-#include "frame_f.h"
-#include "interface_f.h"
-#include "keyboards_f.h"
-#include "memory_f.h"
-#include "message_f.h"
-#include "scroll_f.h"
-#include "selectmenu_f.h"
-#include "structcommands_f.h"
-#include "structcreation_f.h"
-#include "structmodif_f.h"
-#include "structselect_f.h"
-#include "textcommands_f.h"
-#include "thotmsg_f.h"
-#include "views_f.h"
-#include "viewapi_f.h"
-#include "xwindowdisplay_f.h"
 
 
-#ifdef _WINDOWS
 #ifndef _WIN_PRINT
+#ifndef _GL
 /*----------------------------------------------------------------------
   Clear clear the area of frame located at (x, y) and of size width x height.
   ----------------------------------------------------------------------*/
@@ -215,6 +180,7 @@ void Scroll (int frame, int width, int height, int xd, int yd, int xf, int yf)
 			NULL, NULL, SW_INVALIDATE);
     }
 }
+#endif /*_GL*/
 #endif /* _WIN_PRINT */
 
 /*----------------------------------------------------------------------
@@ -243,6 +209,40 @@ ThotBool InitToolTip (HWND hwndToolBar)
    return bSuccess;
 }
 #endif /* _WINDOWS */
+
+#include "absboxes_f.h"
+#ifdef _GTK
+#include "gtk-functions.h"
+#else /* _GTK */
+#include "appli_f.h"
+#include "input_f.h"
+#endif /* _GTK */
+
+#include "applicationapi_f.h"
+#include "boxlocate_f.h"
+#include "boxparams_f.h"
+#include "boxselection_f.h"
+#include "buildboxes_f.h"
+#include "callback_f.h"
+#include "context_f.h"
+#include "editcommands_f.h"
+#include "font_f.h"
+#include "frame_f.h"
+#include "interface_f.h"
+#include "keyboards_f.h"
+#include "memory_f.h"
+#include "message_f.h"
+#include "scroll_f.h"
+#include "selectmenu_f.h"
+#include "structcommands_f.h"
+#include "structcreation_f.h"
+#include "structmodif_f.h"
+#include "structselect_f.h"
+#include "textcommands_f.h"
+#include "thotmsg_f.h"
+#include "views_f.h"
+#include "viewapi_f.h"
+#include "xwindowdisplay_f.h"
 
 /*----------------------------------------------------------------------
    FrameToView retourne, sous la forme qui convient a l'API Thot, 
@@ -361,10 +361,15 @@ void WIN_HandleExpose (ThotWindow w, int frame, WPARAM wParam, LPARAM lParam)
 	 pFrame->FrClipXEnd = 0;
 	 pFrame->FrClipYBegin = 0;
 	 pFrame->FrClipYEnd = 0;
+#ifndef _GL
 	 DefRegion (frame, ps.rcPaint.left, ps.rcPaint.top, ps.rcPaint.right,
 		 ps.rcPaint.bottom);
 	 EndPaint (w, &ps);
 	 DisplayFrame (frame);
+#else /*_GL*/
+	GL_ActivateDrawing();
+	GL_DrawAll (NULL, frame);
+#endif /*_GL*/
 	 /* restore the previous clipping */
      pFrame = &ViewFrameTable[frame - 1];
 	 pFrame->FrClipXBegin = xmin;
@@ -390,6 +395,10 @@ void WIN_ChangeViewSize (int frame, int width, int height, int top_delta,
 
    if (documentDisplayMode[FrameTable[frame].FrDoc - 1] == NoComputedDisplay)
       return;
+
+#ifdef _GL
+    GLResize (width, height);
+#endif /*_GL*/
 
    FrameToView (frame, &doc, &view);
    FrameTable[frame].FrTopMargin = top_delta;
@@ -521,7 +530,6 @@ gboolean Idle_draw_GTK (GtkWidget *widget)
   GL_DrawAll (widget, frame);      
   return TRUE;
 }
-
 /*----------------------------------------------------------------------
   GL_FocusIn :
   Manage Drawing Timer upon Frame focus by user
@@ -535,8 +543,7 @@ gboolean GL_FocusIn (ThotWidget widget,
   frame = (int) data;
   /*Start animation*/
   return TRUE;
-}
-
+}  
 /*----------------------------------------------------------------------
   GL_FocusOut :
   Manage Drawing Timer upon Frame focus by user
@@ -568,7 +575,6 @@ gboolean GL_DrawCallback (ThotWidget widget, GdkEventExpose *event, gpointer dat
      GL_DrawAll (widget, nframe); 
   return TRUE;
 }
-
 /*----------------------------------------------------------------------
  GL_Destroy :
  Close Opengl pipeline
@@ -599,18 +605,17 @@ gboolean  GL_Init (ThotWidget widget,
   if (gtk_gl_area_make_current (GTK_GL_AREA(widget)))
     { 
       
-      SetGlPipelineState();
+      SetGlPipelineState ();
       if (!dialogfont_enabled)
-	{
-	  InitDialogueFonts ("");
-	  dialogfont_enabled = TRUE;
-	}
+	  {
+	    InitDialogueFonts ("");
+	    dialogfont_enabled = TRUE;
+	  } 
       return TRUE;
     }
   else
     return FALSE;   
 }
-
 /*----------------------------------------------------------------------
   ExposeCallbackGTK : 
   When a part of the canvas is hidden by a window or menu 
@@ -629,10 +634,15 @@ gboolean ExposeCallbackGTK (ThotWidget widget, GdkEventExpose *event, gpointer d
   y = event->area.y;
   width = event->area.width;
   height = event->area.height;  
+  if ((width <= 0) || (height <= 0))
+    return;
+  if (documentDisplayMode[FrameTable[frame].FrDoc - 1] == NoComputedDisplay)
+    return; 
   if (frame > 0 && frame <= MAX_FRAME 
       /* && event->count == 0 */
       && gtk_gl_area_make_current (GTK_GL_AREA(widget)))
     {
+#ifdef MESA
       if (height < (widget->allocation.height - 50))
 	{
 	  GL_BackBufferRegionSwapping (x, y, 
@@ -644,30 +654,40 @@ gboolean ExposeCallbackGTK (ThotWidget widget, GdkEventExpose *event, gpointer d
 	  GL_ActivateDrawing();
 	  GL_DrawAll (widget, frame);
 	}	
+#else /*MESA*/
+      gtk_gl_area_swapbuffers (GTK_GL_AREA(widget)); 
+#endif /*MESA*/
+
     }
   return FALSE;
 }
-
 /*----------------------------------------------------------------------
    FrameResizedGTK When user resize window
   ----------------------------------------------------------------------*/
-void FrameResizedGTK (GtkWidget *widget, GdkEventConfigure *event, gpointer data)
+void FrameResizedGTK (GtkWidget *widget, 
+		      GdkEventConfigure *event, 
+		      gpointer data)
 {
   int                 frame;
-  Dimension           width, height;
+  Dimension           width, height, x ,y;
 
   frame = (int )data;
   width = event->width;
-  height = event->height; 
+  height = event->height;
+  x = event->x;
+  y = event->y;
+  if ((width <= 0) || (height <= 0))
+    return;
+  if (documentDisplayMode[FrameTable[frame].FrDoc - 1] == NoComputedDisplay)
+    return; 
   if (widget)
     if (gtk_gl_area_make_current (GTK_GL_AREA(widget)))
       {
-	GLResize (width, height);
-	
+	FrameRedraw (frame, width, height);
+	GLResize (width, height, x ,y);
 	GL_DrawAll (widget, frame);
       }
 }
-
 #else /* _GL*/
 /*----------------------------------------------------------------------
    FrameResizedGTK When user resize window
@@ -1394,6 +1414,28 @@ void TtaRaiseView (Document document, View view)
      }
 }
 
+/*----------------------------------------------------------------------
+   DisplaySelMessage affiche la se'lection donne'e en parame`tre (texte) dans 
+   la fenetre active.                                            
+  ----------------------------------------------------------------------*/
+void DisplaySelMessage (char *text, PtrDocument pDoc)
+{
+   int                 doc;
+   int                 view;
+
+
+   if (ActiveFrame != 0 &&
+       (strcmp (OldMsgSelect, text) || pDoc != OldDocMsgSelect))
+     {
+	/* recupere le document concerne */
+	doc = FrameTable[ActiveFrame].FrDoc;
+	for (view = 1; view <= MAX_VIEW_DOC; view++)
+	  TtaSetStatus ((Document) doc, view, text, NULL);
+	/* sel old message */
+	strncpy (OldMsgSelect, text, MAX_TXT_LEN);
+	OldDocMsgSelect = pDoc;
+     }
+}
 
 /*----------------------------------------------------------------------
    TtaSetStatus displays a status message into a document window.
@@ -1474,26 +1516,7 @@ void TtaSetStatus (Document document, View view, char *text, char *name)
      }
 }
 
-/*----------------------------------------------------------------------
-   DisplaySelMessage displays message into the status bar
-  ----------------------------------------------------------------------*/
-void DisplaySelMessage (char *text, PtrDocument pDoc)
-{
-   int                 doc;
-   int                 view;
 
-   if (ActiveFrame != 0 &&
-       (strcmp (OldMsgSelect, text) || pDoc != OldDocMsgSelect))
-     {
-	/* it's a new selection message */
-	doc = FrameTable[ActiveFrame].FrDoc;
-	for (view = 1; view <= MAX_VIEW_DOC; view++)
-	  TtaSetStatus ((Document) doc, view, text, NULL);
-	/* register the current displayed message */
-	strncpy (OldMsgSelect, text, MAX_TXT_LEN);
-	OldDocMsgSelect = pDoc;
-     }
-}
 
 #ifdef _WINDOWS
 
@@ -1523,7 +1546,6 @@ void CheckTtCmap ()
       LocalFree (ptrLogPal);
     }
 }
-
 
 /*----------------------------------------------------------------------
   WndProc:  The main MS-Windows event handler for the Thot Library
@@ -1555,7 +1577,7 @@ LRESULT CALLBACK WndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lParam)
 
   frame = GetMainFrameNumber (hwnd);
   if (frame != -1)
-    currentFrame = frame;
+    ActiveFrame = frame;
   GetWindowRect (hwnd, &rect);
   switch (mMsg)
   {
@@ -1582,11 +1604,17 @@ LRESULT CALLBACK WndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lParam)
     StatusBar = CreateStatusWindow (dwStatusBarStyles, "", hwnd, 2);
     ShowWindow (StatusBar, SW_SHOWNORMAL);
     UpdateWindow (StatusBar);
-    
-    /* Create client window */
-    hwndClient = CreateWindowEx (WS_EX_CLIENTEDGE, "ClientWndProc", NULL,
-				 WS_CHILD | WS_VISIBLE | WS_BORDER, 0, 0, 0, 0,
+ 
+    hwndClient = CreateWindowEx (WS_EX_CLIENTEDGE, 
+								 "ClientWndProc", 
+								NULL,
+								WS_CHILD | WS_VISIBLE | WS_BORDER, 
+								0, 0, 0, 0,
 				 hwnd, (HMENU) 2, hInstance, NULL);
+#ifdef _GL
+        /* initialize OpenGL rendering */
+       GL_Win32ContextInit (hwndClient, frame);
+#endif /*_GL*/
     ShowWindow (hwndClient, SW_SHOWNORMAL);
     UpdateWindow (hwndClient);
     SetWindowText (hwnd, wTitle);
@@ -1594,6 +1622,7 @@ LRESULT CALLBACK WndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lParam)
     return 0L;
 
   case WM_PALETTECHANGED: 
+#ifndef _GL
     if ((HWND) wParam != hwnd)
       {
 	HDC hDC = GetDC (hwnd);
@@ -1603,7 +1632,7 @@ LRESULT CALLBACK WndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lParam)
 	ReleaseDC (hwnd, hDC);
       }
     return 0L;
-
+#endif /*_GL*/
 #ifdef WM_MOUSEWHEEL
   case WM_MOUSEWHEEL:
 	  {
@@ -1625,6 +1654,7 @@ LRESULT CALLBACK WndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lParam)
 
   case WM_ENTER:
     hwndTextEdit = GetFocus ();
+	ActiveFrame = frame;
     APP_TextCallback (hwndTextEdit, frame, NULL);
     if (frame != -1)
       SetFocus (FrRef [frame]);
@@ -1681,9 +1711,15 @@ LRESULT CALLBACK WndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lParam)
     return 0L;
 
   case WM_CLOSE:
+#ifdef _GL
+	  GL_Win32ContextClose (frame);
+#endif /*_GL*/
   case WM_DESTROY:
     if (frame >= 0 && frame <= MAX_FRAME)
       {
+#ifdef _GL
+	  GL_Win32ContextClose (frame);
+#endif /*_GL*/
 	GetDocAndView (frame, &pDoc, &view);
 	if (pDoc && view)
 	  CloseView (pDoc, view);
@@ -1780,7 +1816,6 @@ LRESULT CALLBACK WndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lParam)
   }
 }
 
-
 /* -------------------------------------------------------------------
    ClientWndProc
    ------------------------------------------------------------------- */
@@ -1801,9 +1836,11 @@ LRESULT CALLBACK ClientWndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lPar
   RECT         cRect;
   ThotBool     isSpecial;
 
+
+
   frame = GetFrameNumber (hwnd);
   if (frame != -1) 
-    currentFrame = frame;
+    ActiveFrame = frame;
   
   
   /* do not handle events if the Document is in NoComputedDisplay mode. */
@@ -2642,7 +2679,7 @@ gboolean ButtonReleaseCallbackGTK (GtkWidget *widget,
     return FALSE;
   }
  
-#endif
+#endif /*_GTK*/
 
 
 /*----------------------------------------------------------------------
@@ -2797,12 +2834,12 @@ void TtaSetCursorWatch (Document document, View view)
 void TtaResetCursor (Document document, View view)
 {
    int                 frame;
-#  ifndef _WINDOWS
+#ifndef _WINDOWS
    Drawable            drawable;
 #ifdef _GTK
    ThotWidget          w;
 #endif /* _GTK */
-#  endif /* _WINDOWS */
+#endif /* _WINDOWS */
 
    UserErrorCode = 0;
    /* verifie le parametre document */
@@ -2871,9 +2908,9 @@ void GiveClickedAbsBox (int *frame, PtrAbstractBox *pave)
      }
 
    /* Changement du curseur */
-#  ifdef _WINDOWS
+#ifdef _WINDOWS
    cursor = LoadCursor (hInstance, MAKEINTRESOURCE (Window_Curs));
-#  else  /* _WINDOWS */
+#else  /* _WINDOWS */
    for (i = 1; i <= MAX_FRAME; i++)
      {
        drawable = (Drawable)TtaGetThotWindow (i);
@@ -3077,15 +3114,16 @@ void GetSizesFrame (int frame, int *width, int *height)
 void  DefineClipping (int frame, int orgx, int orgy, int *xd, int *yd, int *xf, int *yf, int raz)
 {
    int              clipx, clipy, clipwidth, clipheight;
+
+#ifndef _GL 
 #ifndef _WINDOWS
 #ifdef _GTK
-#ifndef _GL 
    GdkRectangle      rect;
-#endif /* _GL */
 #else /* _GTK */
    XRectangle        rect;
 #endif /* _GTK */
 #endif /* _WINDOWS */
+#endif /* _GL */
 
    if (*xd < *xf && *yd < *yf && orgx < *xf && orgy < *yf) {
 	/* On calcule le rectangle de clipping su la fenetre */
@@ -3112,28 +3150,20 @@ void  DefineClipping (int frame, int orgx, int orgy, int *xd, int *yd, int *xf, 
 	clipwidth = *xf - *xd;
 	clipheight = *yf - *yd;
 	clipy += FrameTable[frame].FrTopMargin;
+#ifndef _GL
 #ifdef _WINDOWS
     if (!(clipRgn = CreateRectRgn (clipx, clipy, 
                              clipx + clipwidth, clipy + clipheight)))
        WinErrorBox (NULL, "DefineClipping");
 #else  /* _WINDOWS */ 
 #ifdef _GTK 
-#ifndef _GL
 	rect.x = clipx;
 	rect.y = clipy;
 	rect.width = clipwidth;
 	rect.height = clipheight;
-
 	gdk_gc_set_clip_rectangle (TtLineGC, &rect);	
 	gdk_gc_set_clip_rectangle (TtGreyGC, &rect);
 	gdk_gc_set_clip_rectangle (TtGraphicGC, &rect);
-#else /*_GL*/
-	/* defines what part of the buffer is swapped
-	 so here we swap only what we do..*/
-
-
-	
-#endif /*_GL*/
 #else /* _GTK */
 	rect.x = 0;
 	rect.y = 0;
@@ -3146,7 +3176,8 @@ void  DefineClipping (int frame, int orgx, int orgy, int *xd, int *yd, int *xf, 
 	XSetClipRectangles (TtDisplay, TtGraphicGC, clipx,
 		 clipy + FrameTable[frame].FrTopMargin, &rect, 1, Unsorted);
 #endif /* _GTK */
-#endif /* _WINDOWS */
+#endif /* _WINDOWS */	
+#endif /*_GL*/
 	if (raz > 0)
 	   Clear (frame, clipwidth, clipheight, clipx, clipy);
      }
@@ -3157,9 +3188,9 @@ void  DefineClipping (int frame, int orgx, int orgy, int *xd, int *yd, int *xf, 
   ----------------------------------------------------------------------*/
 void RemoveClipping (int frame)
 {
+#ifndef _GL
 #ifndef _WINDOWS
 #ifdef _GTK
-#ifndef _GL
  GdkRectangle         rect;
 
  rect.x = 0;
@@ -3170,12 +3201,8 @@ void RemoveClipping (int frame)
  gdk_gc_set_clip_rectangle (TtLineGC, &rect);
  gdk_gc_set_clip_rectangle (TtGraphicGC, &rect);
  gdk_gc_set_clip_rectangle (TtGreyGC, &rect);
-#else
 
- /* defines what part of the buffer is swapped
-    so here we swap only what we do..*/
 
-#endif /*_GL*/
 #else /* _GTK */
    XRectangle          rect;
 
@@ -3194,6 +3221,7 @@ void RemoveClipping (int frame)
       WinErrorBox (NULL, "RemoveClipping");
    clipRgn = (HRGN) 0;
 #endif /* _WINDOWS */
+#endif /*_GL*/
 }
 
 /*----------------------------------------------------------------------
@@ -3289,5 +3317,3 @@ void UpdateScrollbars (int frame)
      }
 #endif /* _WINDOWS */
 }
-
-
