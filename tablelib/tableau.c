@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996.
+ *  (c) COPYRIGHT INRIA, Grif S.A.  1997.
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
