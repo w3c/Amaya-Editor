@@ -9112,7 +9112,6 @@ ATTRIBUTES
  Align = left_:
 	BEGIN
 	CreateBefore(ALIGN_LEFT);
-	Adjust: Left;
 	HorizPos: Left = Enclosing . Left;
 	In Structure_view
 	   HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
@@ -9122,7 +9121,6 @@ ATTRIBUTES
  Align = center_:
 	BEGIN
 	CreateBefore(ALIGN_CENTER);
-	Adjust: VMiddle;
 	HorizPos: VMiddle = Enclosing . VMiddle;
 	In Structure_view
 	   HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
@@ -9132,7 +9130,6 @@ ATTRIBUTES
  Align = right_:
 	BEGIN
 	CreateBefore(ALIGN_RIGHT);
-	Adjust: Right;
 	HorizPos: Right = Enclosing . Right;
 	In Structure_view
 	   HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
