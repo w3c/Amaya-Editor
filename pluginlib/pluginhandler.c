@@ -167,6 +167,7 @@ char*     fileName;
   XtSetArg (arg[n], XmNmarginWidth, 0); n++;
   XtSetArg (arg[n], XmNmarginHeight, 0); n++;
   canvas = (Widget) XmCreateDrawingArea (FrameTable[frame].WdFrame, "Dummy", arg, n);
+  XtRealizeWidget (canvas);
   imageDesc->wid = canvas;
 
   /*CreateInstance(XtWindow((Widget)canvas), TtDisplay, fileName);*/

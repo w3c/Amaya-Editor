@@ -31,16 +31,16 @@
 typedef struct _PluginInfo {
         char*            pluginDL ;       /* Location of the dynamic library of the plugin */
         char*            pluginMimeType ; /* Mime type of the plugin                       */
-        char*            pluginType ;
         char*            pluginID ;       /* Plugin identifier (if mentionned)             */
         char*            pluginURL ;      /* URL of the plugin                             */
         char*            fileExt ;        /* Suffix of files supported by the plugin       */
-#ifdef WINDOWS
+#ifdef _WINDOWS
         HANDLE           pluginHandle ;
-#else  /* WINDOWS */
+#else  /* _WINDOWS */
         void*            pluginHandle ;
-#endif /* WINDOWS */
+#endif /* _WINDOWS */
         NPPluginFuncs*   pluginFunctionsTable;
+        int              nbInstances;
 } PluginInfo ;
 
 #endif /* PLUGIN_BROWSE_H */

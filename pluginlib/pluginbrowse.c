@@ -23,6 +23,12 @@
 #include "pluginbrowse_f.h"
 #include "pluginapi_f.h"
 
+#ifdef _WINDOWS
+#define PSuffix ".DLL"
+#else  /* _WINDOWS */
+#define PSuffix ".so"
+#endif /* _WINDOWS */
+
 static char  ls_unixFiles[MAX_NAME * NAME_LENGTH];
 static int   ls_fileNbr;
 
@@ -61,13 +67,10 @@ void TtaBrowsePluginDirectory ()
       thotDir.buf = word;
       thotDir.bufLen = sizeof (word);
       thotDir.PicMask = ThotDirBrowse_FILES;
-#ifdef WINDOWS
-      if (ThotDirBrowse_first (&thotDir, amayaPluginDir, "*", ".DLL") == 1) {
-#else  /* WINDOWS */
-      if (ThotDirBrowse_first (&thotDir, amayaPluginDir, "*", ".so") == 1) {
-#endif /* WINDOWS */
+      if (ThotDirBrowse_first (&thotDir, amayaPluginDir, "*", PSuffix) == 1) {
          do {
             pluginTable [pluginCounter] = (PluginInfo*) malloc (sizeof (PluginInfo)) ;
+            pluginTable [pluginCounter]->nbInstances = 0;
             pluginTable [pluginCounter]->pluginDL = (char*) malloc (strlen (thotDir.buf) + 1);
             pluginTable [pluginCounter]->pluginHandle = (void*) NULL;
             pluginTable [pluginCounter]->pluginFunctionsTable = (NPPluginFuncs*) NULL;
