@@ -4224,18 +4224,14 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
 	    {
 	      /* look at the current context to see if the type is already
 		 stored */
-	      j = 0;
+	      j = 1;
 	      while (j < k && ctxt->name[j] != elType.ElTypeNum)
 		j++;
 	      if (j == k)
 		{
 		  ctxt->name[j] = elType.ElTypeNum;
 		  if (j != 0)
-		    {
-		      ctxt->names_nb[j] = 1;
-		      /* skip that position (but k will be incremented later) */
-		      k--;
-		    }
+		    ctxt->names_nb[j] = 1;
 		}
 	      else
 		/* increment the number of ancestor levels */
