@@ -2146,6 +2146,12 @@ void ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
 	      ThotLocalActions[T_resizetable])
 	    (*ThotLocalActions[T_resizetable]) (pCurrentAb, frame);
 	}
+      /* check if the root box width changed */
+      if (pCurrentAb->AbEnclosing == NULL)
+	{
+	  AnyWidthUpdate = TRUE;
+	  CheckScrollingWidth (frame);
+	}
     }
 }
 

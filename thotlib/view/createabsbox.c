@@ -3610,9 +3610,6 @@ static void  ApplyPresRules (PtrElement pEl, PtrDocument pDoc,
 		  do
 		    {
 		      /* first rule for this value of the attribute */
-		      /***if (pAttr->AeAttrNum == 3 && pAttr->AeAttrText && pAttr->AeAttrText->BuLength == 2 &&
-    pEl->ElTypeNumber == 147)
-    printf ("match\n");***/
 		      pR = AttrPresRule (pAttr, pEl, FALSE, NULL, pSchPattr, &valNum);
 		      /* look for all rules associated with this value */
 		      while (pR != NULL)

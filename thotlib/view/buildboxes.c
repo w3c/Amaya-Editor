@@ -3961,7 +3961,7 @@ static ThotBool IsAbstractBoxUpdated (PtrAbstractBox pAb, int frame)
   CheckScrollingWidth computes the maximum between the document width
   and the width needed to display all its contents.
   ----------------------------------------------------------------------*/
-void     CheckScrollingWidth (int frame)
+void CheckScrollingWidth (int frame)
 {
   PtrAbstractBox      pAb;
   PtrBox              pBox;
@@ -4002,6 +4002,7 @@ void     CheckScrollingWidth (int frame)
 	  FrameTable[frame].FrScrollOrg = 0;
 	  FrameTable[frame].FrScrollWidth = w;
 	}
+	FrameTable[frame].FrScrollWidth);
       AnyWidthUpdate = FALSE;
     }
 }
