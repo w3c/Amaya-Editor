@@ -3971,6 +3971,7 @@ void ExportXmlDocument (PtrDocument pDoc, PtrElement pNode,
   PtrSRule            pRe1;
   PtrAttribute        pAttr;
   PtrTtAttribute      pAttr1;
+  PtrTextBuffer       b;
   CHARSET             charset;
   char                *charset_name;
   char                text[100];
@@ -4098,14 +4099,15 @@ void ExportXmlDocument (PtrDocument pDoc, PtrElement pNode,
 		      fprintf (fileDescriptor, "\"%d\"", pAttr->AeAttrValue);
 		      break;
 		    case AtTextAttr:
-		      if (pAttr->AeAttrText != NULL)
+		      if (pAttr->AeAttrText)
 			{
+			  b = pAttr->AeAttrText;
 			  fprintf (fileDescriptor, "\"");
-			  while (pAttr->AeAttrText != NULL)
+			  while (b)
 			    {
-			      CopyBuffer2MBs (pAttr->AeAttrText, 0, text, 99);
+			      CopyBuffer2MBs (b, 0, text, 99);
 			      fprintf (fileDescriptor, "%s", text);
-			      pAttr->AeAttrText = pAttr->AeAttrText->BuNext;
+			      b = b->BuNext;
 			    }
 			  fprintf (fileDescriptor, "\"");
 			}
