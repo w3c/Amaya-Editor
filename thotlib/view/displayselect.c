@@ -454,32 +454,7 @@ void         DrawBoxSelection (int frame, PtrBox pBox)
   if (pBox != NULL)
     {
       pAb = pBox->BxAbstractBox;      
-      /* exception HighlightChildren applies only to the main view defined
-	 in the presentation schema */
-      if (pBox->BxType == BoGhost ||
-	  (pAb != NULL &&
-           FrameTable[frame].FrView == 1 &&
-	   TypeHasException (ExcHighlightChildren,
-			     pAb->AbElement->ElTypeNumber,
-			     pAb->AbElement->ElStructSchema)))
-	{
-	  /* the box is not displayed or has exception HighlightChildren.
-	     Select its children */
-	  if (pAb->AbFirstEnclosed != NULL)
-	    {
-	      pChildBox = pAb->AbFirstEnclosed->AbBox;
-	      while (pChildBox != NULL)
-		{
-		  DrawBoxSelection (frame, pChildBox);
-		  pAb = pChildBox->BxAbstractBox;
-		  if (pAb->AbNext != NULL)
-		    pChildBox = pAb->AbNext->AbBox;
-		  else
-		    pChildBox = NULL;
-		}
-	    }
-	}
-      else if (pBox->BxType == BoSplit)
+      if (pBox->BxType == BoSplit)
 	{
 	  /* display the selection on pieces of the current box */
 	  pChildBox = pBox->BxNexChild;
