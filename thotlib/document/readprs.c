@@ -1573,6 +1573,7 @@ PtrPSchema      ReadPresentationSchema (Name fileName, PtrSSchema pSS)
 			  TtaReadName (file, pAttrP->ApString);
 			  pAttrP->ApTextFirstPRule = ReadPRulePtr (file,
 								  &pNextPRule);
+			  pAttrP->ApMatch = CoMatch;
 			  break;
 			case AtEnumAttr:
 			  for (j = 0; j <= MAX_ATTR_VAL; j++)
