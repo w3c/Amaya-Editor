@@ -661,7 +661,7 @@ void TtaInstallMultiKey ()
    TtaKeyboardMapInstalled = 1;
 #else  /* _WINDOWS */
 #ifdef _GTK
-   /* GTK Multikey ... need to be developped */
+   /* GTK Multikey */
   ptr = TtaGetEnvString ("ENABLE_MULTIKEY");
   if (ptr != NULL && !strcasecmp (ptr, "yes"))
     Enable_Multikey = TRUE;
@@ -1406,7 +1406,6 @@ void TtaMainLoop ()
   ThotEvent           ev;
 #endif /* !_GTK */
   TtaInstallMultiKey ();
-
   UserErrorCode = 0;
   /* Sends the message Init.Pre */
   notifyEvt.event = TteInit;
@@ -1576,14 +1575,11 @@ void TtaSetMultikey (ThotBool value)
    Parameters:
    value :
   ----------------------------------------------------------------------*/
-ThotBool TtaGetMulitkey()
+ThotBool TtaGetMultikey()
 {
     return Enable_Multikey;
 }
 /* End Of Module */
-
-
-
 
 
 

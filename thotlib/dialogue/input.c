@@ -546,11 +546,6 @@ void WIN_CharTranslation (HWND hWnd, int frame, UINT msg, WPARAM wParam,
    handling function.
   ----------------------------------------------------------------------*/
 #ifdef _GTK
-gboolean OneCharTranslationGTK (GtkWidget *w, GdkEventKey* event, gpointer data)
-{
-    return False;
-}
-
 gboolean CharTranslationGTK (GtkWidget *w, GdkEventKey* event, gpointer data)
 {
    int                 status;
@@ -562,11 +557,7 @@ gboolean CharTranslationGTK (GtkWidget *w, GdkEventKey* event, gpointer data)
    GtkWidget          *drawing_area;
    ThotComposeStatus   ComS;
    GtkEntry           *textzone;
-
-   static char *location_multikey;
-   static multikey_used_one_time = FALSE;
-   static focus_on_url = TRUE;
-   static location_length = 0;
+   static gboolean            saved_ic=FALSE;
    
       
    frame = (int) data;
@@ -578,31 +569,21 @@ gboolean CharTranslationGTK (GtkWidget *w, GdkEventKey* event, gpointer data)
       Drawing area and his hiden text catcher (for multikey),
       and the URLtext textzone, 
       so we must now know where is the focus, 
-      to analyse the meaning of the keypress*/
+      to analyse the meaning of the keypress
+      and setting it on one of the  textfields*/
    if (FrameTable[frame].Text_Zone[1])
        {
 	   
 	 if (GTK_WIDGET_HAS_FOCUS (FrameTable[frame].Text_Zone[1]))
 	     {
-		 // W'er in the url zone
+		 /* We're in the url zone*/
 		 return FALSE;
 	     }
 	 
 	 else
 	     {
-		 // We're in the drawing
+		 /* We're in the drawing so get the hidden textfield adress*/
 		 textzone = gtk_object_get_data (GTK_OBJECT (drawing_area), "Text_catcher");
-		 
-		 /* In order to be able to disable/enabe 
-		    manually input context by erasing wrap_text_ic pointer*/
-		 if (TtaGetMulitkey()){
-		     textzone->editable.ic = gtk_object_get_data (GTK_OBJECT (drawing_area), "disabled_ic");
-		 }
-		 else{
-		     gtk_object_set_data (GTK_OBJECT (textzone), 
-			 "disabled_ic", textzone->editable.ic);
-		     textzone->editable.ic = 0;
-		     }
 		 gtk_widget_grab_focus (GTK_WIDGET(textzone));     
 	     }
      }
