@@ -405,7 +405,9 @@ STRUCT
                 MColExt = REFERENCE(MColumn_head);       { for internal use }
                 MRowExt = REFERENCE(TableRow);           { for internal use } 
 	        MLineBelow = solid_, dashed_;            { for internal use }
-	        MLineOnTheRight = solid_, dashed_)       { for internal use }
+	        MLineOnTheRight = solid_, dashed_;       { for internal use } 
+	        MLineBelowExt = solid_, dashed_;         { for internal use }
+	        MLineOnTheRightExt = solid_, dashed_)    { for internal use }
 	  = BEGIN
 	    CellWrapper = LIST OF (Construct);
 	    END + (MALIGNGROUP, MALIGNMARK);

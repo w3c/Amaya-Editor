@@ -443,48 +443,18 @@ BOXES
 		Visibility: 0;
 	END;
 
- SolidColumnLine: BEGIN
-	HorizPos: Left = Creator . Right;
-	VertPos: Top = Enclosing . Top;
-	Height: Enclosing . Height;
-	LineWeight: 1 pt;
-        Width: 1 px;
-	HorizOverflow: yes;
-	VertOverflow: yes;
-	Content: Graphics 'v';	{ vertical bar }
-	LineStyle: Solid;
-	Background: Creator =;
-	Foreground: Creator =;
-	IN Structure_view
-		Visibility: 0;
-	END;
- DashedColumnLine: BEGIN
-	HorizPos: Left = Creator . Right;
-	VertPos: Top = Enclosing . Top;
-	Height: Enclosing . Height;
-	LineWeight: 1 pt;
-        Width: 1 px;
-	HorizOverflow: yes;
-	VertOverflow: yes;
-	Content: Graphics 'v';	{ vertical bar }
-	LineStyle: Dotted;
-	Background: Creator =;
-	Foreground: Creator =;
-	IN Structure_view
-		Visibility: 0;
-	END;
  SolidRowLine: BEGIN
 	HorizPos: Left = Creator . Left;
-        VertPos: Bottom = Enclosing . Bottom;
+	VertPos: Bottom = Enclosing . Bottom;
 	Height: 1 pt;
 	LineWeight: 1 pt;
-        Width: Creator . Width;
+	Width: Creator . Width;
 	HorizOverflow: yes;
 	VertOverflow: yes;
 	Content: Graphics 'h';	{ horizontal bar }
 	LineStyle: Solid;
 	Background: Creator =;
-	Foreground: Creator =;
+	Foreground: Enclosing =;
 	IN Structure_view
 		Visibility: 0;
 	END;
@@ -493,13 +463,103 @@ BOXES
 	VertPos: Bottom = Enclosing . Bottom;
 	Height: 1 pt;
 	LineWeight: 1 pt;
-        Width: Creator . Width;
+	Width: Creator . Width;
 	HorizOverflow: yes;
 	VertOverflow: yes;
 	Content: Graphics 'h';	{ horizontal bar }
 	LineStyle: Dotted;
 	Background: Creator =;
-	Foreground: Creator =;
+	Foreground: Enclosing =;
+	IN Structure_view
+		Visibility: 0;
+	END;
+ SolidColumnLine: BEGIN
+	HorizPos: Left = Creator . Right;
+	VertPos: Top = Enclosing . Top;
+	Height: Enclosing . Height;
+	LineWeight: 1 pt;
+	Width: 1 px;
+	HorizOverflow: yes;
+	VertOverflow: yes;
+	Content: Graphics 'v';	{ vertical bar }
+	LineStyle: Solid;
+	Background: Creator =;
+	Foreground: Enclosing =;
+	IN Structure_view
+		Visibility: 0;
+	END;
+ DashedColumnLine: BEGIN
+	HorizPos: Left = Creator . Right;
+	VertPos: Top = Enclosing . Top;
+	Height: Enclosing . Height;
+	LineWeight: 1 pt;
+	Width: 1 px;
+	HorizOverflow: yes;
+	VertOverflow: yes;
+	Content: Graphics 'v';	{ vertical bar }
+	LineStyle: Dotted;
+	Background: Creator =;
+	Foreground: Enclosing =;
+	IN Structure_view
+		Visibility: 0;
+	END;
+ SolidRowLineExt: BEGIN
+	HorizPos: Left = Creator . Left;
+	VertPos: Bottom = Creator . Bottom;
+	Height: 1 pt;
+	LineWeight: 1 pt;
+	Width: Creator . Width;
+	HorizOverflow: yes;
+	VertOverflow: yes;
+	Content: Graphics 'h';	{ horizontal bar }
+	LineStyle: Solid;
+	Background: Creator =;
+	Foreground: Enclosing =;
+	IN Structure_view
+		Visibility: 0;
+	END;
+ DashedRowLineExt: BEGIN
+	HorizPos: Left = Creator . Left;
+	VertPos: Bottom = Creator . Bottom;
+	Height: 1 pt;
+	LineWeight: 1 pt;
+	Width: Creator . Width;
+	HorizOverflow: yes;
+	VertOverflow: yes;
+	Content: Graphics 'h';	{ horizontal bar }
+	LineStyle: Dotted;
+	Background: Creator =;
+	Foreground: Enclosing =;
+	IN Structure_view
+		Visibility: 0;
+	END;
+ SolidColumnLineExt: BEGIN
+	HorizPos: Left = Creator . Right;
+	VertPos: Top = Enclosing . Top;
+	Height: Creator . Height;
+	LineWeight: 1 pt;
+	Width: 1 px;
+	HorizOverflow: yes;
+	VertOverflow: yes;
+	Content: Graphics 'v';	{ vertical bar }
+	LineStyle: Solid;
+	Background: Creator =;
+	Foreground: Enclosing =;
+	IN Structure_view
+		Visibility: 0;
+	END;
+ DashedColumnLineExt: BEGIN
+	HorizPos: Left = Creator . Right;
+	VertPos: Top = Enclosing . Top;
+	Height: Creator . Height;
+	LineWeight: 1 pt;
+	Width: 1 px;
+	HorizOverflow: yes;
+	VertOverflow: yes;
+	Content: Graphics 'v';	{ vertical bar }
+	LineStyle: Dotted;
+	Background: Creator =;
+	Foreground: Enclosing =;
 	IN Structure_view
 		Visibility: 0;
 	END;
@@ -1316,6 +1376,7 @@ RULES
 	VertPos: Top = Enclosing . Top;
 	HorizPos: VMiddle = Enclosing . VMiddle;
 	IN Structure_view BEGIN
+		HorizPos: Left = Enclosing . Left;
 		Width: Enclosing . Width;
 		END;		
 	END;
@@ -2753,6 +2814,8 @@ ATTRIBUTES
  MRowExt:
 	BEGIN
 	VertOverflow: Yes;
+	VertPos: Top = Enclosing . Top;
+	Height: Bottom = Referred . Bottom;
 	IN Structure_view BEGIN
 		Height: Enclosed . Height;
 		VertOverflow: No;
@@ -2771,5 +2834,13 @@ ATTRIBUTES
  	createafter (SolidColumnLine);
  MLineOnTheRight = dashed_:
  	createafter (DashedColumnLine);
+ MLineBelowExt = solid_:
+        createafter (SolidRowLineExt);
+ MLineBelowExt = dashed_:
+        createafter (DashedRowLineExt);
+ MLineOnTheRightExt = solid_:
+ 	createafter (SolidColumnLineExt);
+ MLineOnTheRightExt = dashed_:
+ 	createafter (DashedColumnLineExt);
 
 END
