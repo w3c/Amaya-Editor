@@ -60,7 +60,7 @@ static ThotBool SetCellWidths (PtrAbstractBox cell, PtrAbstractBox table, int fr
   order:
   The ancestor before its child.
   ----------------------------------------------------------------------*/
-static void  DifferFormatting (PtrAbstractBox table, PtrAbstractBox cell, int frame)
+static void DifferFormatting (PtrAbstractBox table, PtrAbstractBox cell, int frame)
 {
   PtrLockRelations    pLockRel;
   PtrLockRelations    pPreviousLockRel;
@@ -383,8 +383,8 @@ static void BuildColOrRowList (PtrAbstractBox table, BoxType colrow)
   The parameter percent returns the value of the attribute which has
   exception ExcNewPercentWidth or 0
   ----------------------------------------------------------------------*/
-static ThotBool  GiveAttrWidth (PtrAbstractBox pAb, int zoom,
-				int *width, int *percent)
+static ThotBool GiveAttrWidth (PtrAbstractBox pAb, int zoom,
+			       int *width, int *percent)
 {
   PtrSSchema          pSS;
   PtrAttribute        pAttr;
@@ -670,8 +670,8 @@ static void CheckTableWidths (PtrAbstractBox table, int frame, ThotBool freely)
   mbp = 0;
   /* number of unconstrained columns */
   n = 0;
-  /* number of constrained columns by percent */
   nPercent = 0;
+  /* number of constrained columns by percent */
   while (pTabRel)
     {
       for (i = 0; i < MAX_RELAT_DIM &&
@@ -704,8 +704,8 @@ static void CheckTableWidths (PtrAbstractBox table, int frame, ThotBool freely)
 	    {
 	      min += box->BxMinWidth;
 	      max += box->BxMaxWidth;
+	      n++;
 	    }
-	    n++;
 	  cRef++;
 	}
       pTabRel = pTabRel->TaRNext;
