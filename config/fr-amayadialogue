@@ -41,55 +41,55 @@
 40 Transformer...
 41 Ajouter annotation
 42 Charger les annotations
-43 BASE
-44 META
-45 LINK
-46 SCRIPT
-47 STYLE
+43 base
+44 meta
+45 Lien (link)
+46 script
+47 style
 48 Commentaire
-49 Adresse (ADDRESS)
-50 Zone active (AREA)
+49 Adresse (address)
+50 Zone active (area)
 51 Cercle
 52 Polygone
 53 Rectangle
-54 Citation (BLOCKQUOTE)
-55 Bris de ligne (BR)
-56 Division (DIV)
+54 Citation (blockquote)
+55 Saut de ligne (br)
+56 Division (div)
 57 Formulaire
-58 FORM
-59 Bouton (INPUT)
-60 Bouton bascule (INPUT)
-61 Sélecteur fichier (INPUT)
-62 Contrôle caché (INPUT)
-63 Image (INPUT)...
-64 Mot de passe (INPUT)
-65 Bouton radio (INPUT)
-66 Réinitialisation (INPUT)
-67 Soumission (INPUT)
-68 Saisie de texte (INPUT)
-69 Groupe de champs (FIELDSET)
-70 Étiquette (LABEL)
-71 Menu (OPTION)
-72 Sous-menu (OPTGROUP)
-73 Zone de texte (TEXTAREA)
+58 Formulaire (form)
+59 Bouton (input)
+60 Bouton bascule (input)
+61 Sélecteur fichier (input)
+62 Contrôle caché (input)
+63 Image (input)...
+64 Mot de passe (input)
+65 Bouton radio (input)
+66 Réinitialisation (input)
+67 Soumission (input)
+68 Saisie de texte (input)
+69 Groupe de champs (fieldset)
+70 Étiquette (label)
+71 Menu (option)
+72 Sous-menu (optgroup)
+73 Zone de texte (textarea)
 74 En-tête
-75 H1
-76 H2
-77 H3
-78 H4
-79 H5
-80 H6
-81 Trait horizontal (HR)
-82 Cadre en ligne (IFRAME)
-83 Image (IMG)...
+75 Titre niveau 1 (h1)
+76 Titre niveau 2 (h2)
+77 Titre niveau 3 (h3)
+78 Titre niveau 4 (h4)
+79 Titre niveau 5 (h5)
+80 Titre niveau 6 (h6)
+81 Trait horizontal (hr)
+82 Cadre en ligne (iframe)
+83 Image (img)...
 84 Liste
-85 Liste à puces (UL)
-86 Liste numérotée (OL)
-87 Liste de définitions (DL)
-88 Terme (DT)
-89 Définition (DD)
+85 Liste à puces (ul)
+86 Liste numérotée (ol)
+87 Liste de définitions (dl)
+88 Terme (dt)
+89 Définition (dd)
 90 Math
-91 MATH
+91 math
 92 Racine (mroot)
 93 Racine carrée (msqrt)
 94 Fraction (mfrac)
@@ -103,23 +103,23 @@
 102 Multiscripts (mmultiscripts)
 103 Matrice (mtable)
 104 Détruire colonne de matrice
-105 NOSCRIPT
+105 noscript
 106 Objet
-107 OBJECT
-108 Paramètre (PARAM)
-109 Paragraphe (P)
-110 Préformaté (PRE)
+107 Objet (object)
+108 Paramètre (param)
+109 Paragraphe (p)
+110 Préformaté (pre)
 111 Table
-112 TABLE
-113 Légende (CAPTION)
-114 COLGROUP
-115 COL
-116 Têtière (THEAD)
-117 Corps (TBODY)
-118 Pied (TFOOT)
-119 Ligne (TR)
-120 Cellule (TD)
-121 Cellule de tête (TH)
+112 table
+113 Légende (caption)
+114 colgroup
+115 Colonne (col)
+116 Têtière (thead)
+117 Corps (tbody)
+118 Pied (tfoot)
+119 Ligne (tr)
+120 Cellule (td)
+121 Cellule de tête (th)
 122 Détruire colonne de table
 123 Lier la cible créée
 124 Créer/changer lien...
@@ -149,28 +149,28 @@
 148 Réactiver...
 149 Retirer...
 150 Types information
-151 Accent (EM)
-152 Force (STRONG)
-153 Citation (CITE)
-154 Définition (DFN)
-155 Code
-156 Variable (VAR)
-157 Exemple (SAMP)
-158 Clavier (KBD)
-159 Abréviation (ABBR)
-160 Acronyme (ACRONYM)
-161 Insertion
-162 Suppression
+151 Accent (em)
+152 Force (strong)
+153 Citation (cite)
+154 Définition (dfn)
+155 Code (code)
+156 Variable (var)
+157 Exemple (samp)
+158 Clavier (kbd)
+159 Abréviation (abbr)
+160 Acronyme (acronym)
+161 Insertion (ins)
+162 Suppression (del)
 163 Eléments caractères
-164 Italique
-165 Gras
-166 Télétype (TTY)
-167 Gros
-168 Petit
-169 Indice
-170 Exposant
-171 Citation (Q)
-172 BiDi (BDO)
+164 Italique (i)
+165 Gras (b)
+166 Télétype (tt)
+167 Gros (big)
+168 Petit (small)
+169 Indice (sub)
+170 Exposant (sup)
+171 Citation (q)
+172 BiDi (bdo)
 173 Numéroter les sections
 174 Construire un livre
 175 Ouvrir fichier log

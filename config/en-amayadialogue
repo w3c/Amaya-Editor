@@ -41,55 +41,55 @@
 40 Transform...
 41 Annotate
 42 Load annotations
-43 BASE
-44 META
-45 LINK
-46 SCRIPT
-47 STYLE
+43 base
+44 meta
+45 link
+46 script
+47 style
 48 Comment
-49 ADDRESS
-50 AREA
+49 address
+50 area
 51 Circle
 52 Polygon
 53 Rectangle
-54 BLOCKQUOTE
-55 Break (BR)
-56 Division (DIV)
+54 blockquote
+55 Break (br)
+56 Division (div)
 57 Form
-58 FORM
-59 Button (INPUT)
-60 Checkbox (INPUT)
-61 File selector (INPUT)
-62 Hidden (INPUT)
-63 Image (INPUT)...
-64 Password (INPUT)
-65 Radio (INPUT)
-66 Reset (INPUT)
-67 Submit (INPUT)
-68 Text (INPUT)
-69 FIELDSET 
-70 LABEL
-71 Menu (OPTION)
-72 Submenu (OPTGROUP)
-73 TEXTAREA
+58 form
+59 Button (input)
+60 Checkbox (input)
+61 File selector (input)
+62 Hidden (input)
+63 Image (input)...
+64 Password (input)
+65 Radio (input)
+66 Reset (input)
+67 Submit (input)
+68 Text (input)
+69 fieldset
+70 label
+71 Menu (option)
+72 Submenu (optgroup)
+73 textarea
 74 Heading
-75 H1
-76 H2
-77 H3
-78 H4
-79 H5
-80 H6
-81 Horizontal rule (HR)
-82 Inline frame (IFRAME)
-83 Image (IMG)...
+75 h1
+76 h2
+77 h3
+78 h4
+79 h5
+80 h6
+81 Horizontal rule (hr)
+82 Inline frame (iframe)
+83 Image (img)...
 84 List
-85 Bulleted list (UL)
-86 Numbered list (OL)
-87 Definition list (DL)
-88 Term (DT)
-89 Definition (DD)
+85 Bulleted list (ul)
+86 Numbered list (ol)
+87 Definition list (dl)
+88 Term (dt)
+89 Definition (dd)
 90 Math
-91 MATH
+91 Formula (math)
 92 Root (mroot)
 93 Square root (msqrt)
 94 Fraction (mfrac)
@@ -103,23 +103,23 @@
 102 Multiscripts (mmultiscripts)
 103 Matrix (mtable)
 104 Delete matrix column
-105 NOSCRIPT
+105 noscript
 106 Object
-107 OBJECT
-108 Parameter (PARAM)
-109 Paragraph (P)
-110 Preformatted (PRE)
+107 object
+108 Parameter (param)
+109 Paragraph (p)
+110 Preformatted (pre)
 111 Table
-112 TABLE
-113 CAPTION
-114 COLGROUP
-115 COL
-116 THEAD
-117 TBODY
-118 TFOOT
-119 Row (TR)
-120 Data cell (TD)
-121 Heading cell (TH)
+112 table
+113 caption
+114 colgroup
+115 col
+116 thead
+117 tbody
+118 tfoot
+119 Row (tr)
+120 Data cell (td)
+121 Heading cell (th)
 122 Delete table column
 123 Link to previous target
 124 Create or change link...
@@ -149,28 +149,28 @@
 148 Enable...
 149 Remove...
 150 Information type
-151 Emphasis
-152 Strong
-153 Cite
-154 Definition
-155 Code
-156 Variable
-157 Sample
-158 Keyboard
-159 Abbreviation
-160 Acronym
-161 Insertion
-162 Deletion
+151 Emphasis (em)
+152 strong
+153 cite
+154 Definition (dfn)
+155 code
+156 Variable (var)
+157 Sample (samp)
+158 Keyboard (kbd)
+159 Abbreviation (abbr)
+160 acronym
+161 Insertion (ins)
+162 Deletion (del)
 163 Character element
-164 Italic
-165 Bold
-166 Teletype
-167 Big
-168 Small
-169 Subscript
-170 Superscript
-171 Quotation
-172 BiDi override
+164 Italic (i)
+165 Bold (b)
+166 Teletype (tt)
+167 big
+168 small
+169 Subscript (sub)
+170 Superscript (sup)
+171 Quotation (q)
+172 BiDi override (bdo)
 173 Section numbering
 174 Make book
 175 Show log file

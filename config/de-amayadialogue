@@ -41,85 +41,85 @@
 40 Umformatieren...
 41 **Annotate
 42 **Load annotations
-43 Basisadresse für rel. Verknüpfungen (BASE)
-44 Meta-Information (META)
-45 Verweis (LINK)
-46 Javascript (SCRIPT)
-47 Style-Sheet (STYLE)
-48 Kommentar (<>)
-49 Autorenadresse (ADDRESS)
-50 Aktiver Grafikbereich (AREA MAP)
+43 Basisadresse für rel. Verknüpfungen (base)
+44 Meta-Information (meta)
+45 Verweis (link)
+46 Javascript (script)
+47 Style-Sheet (style)
+48 Kommentar (<!--  -->)
+49 Autorenadresse (address)
+50 Aktiver Grafikbereich (area)
 51 Kreis
 52 Polygon
 53 Rechteck
-54 Eingerücktes Zitat (BLOCKQUOTE)
-55 Zeilenumbruch (BR)
-56 logischer Textabschnitt (DIV)
-57 Formular (FORM)
-58 Formular
-59 Druckknopf (BUTTON)
-60 Ankreuzkästchen, mehrere von... (CHECKBOX)
-61 Feld für Dateiname (FILE)
-62 Verborgenes Feld (HIDDEN)
-63 Grafik (INPUT)...
-64 Paßwortfeld (PASSWORD)
-65 Auswahlknopf, einer von... (RADIO)
-66 Knopf zum Zurücksetzen (RESET)
-67 OK-Knopf (SUBMIT)
-68 Eingabezeile (INPUT)
-69 Feldgruppe (FIELDSET)
-70 Feldbeschriftung (LABEL)
-71 Auswahlpunkt (OPTION)
-72 Unter-Auswahlliste (OPTGROUP)
-73 Texteingabe (TEXTAREA)
+54 Eingerücktes Zitat (blockquote)
+55 Zeilenumbruch (br)
+56 logischer Textabschnitt (div)
+57 Formular
+58 Formular (form)
+59 Druckknopf (button)
+60 Ankreuzkästchen, mehrere von... (checkbox)
+61 Feld für Dateiname (file)
+62 Verborgenes Feld (hidden)
+63 Grafik (image)...
+64 Paßwortfeld (password)
+65 Auswahlknopf, einer von... (radio)
+66 Knopf zum Zurücksetzen (reset)
+67 OK-Knopf (submit)
+68 Eingabezeile (input)
+69 Feldgruppe (fieldset)
+70 Feldbeschriftung (label)
+71 Auswahlpunkt (option)
+72 Unter-Auswahlliste (optgroup)
+73 Texteingabe (textarea)
 74 Überschrift
-75 H1 (groß)
-76 H2
-77 H3
-78 H4
-79 H5
-80 H6 (klein)
-81 Waagerechte Linie (HR)
-82 Inline-Frame (IFRAME)
-83 Grafik (IMG)...
+75 h1 (groß)
+76 h2
+77 h3
+78 h4
+79 h5
+80 h6 (klein)
+81 Waagerechte Linie (hr)
+82 Inline-Frame (iframe)
+83 Grafik (img)...
 84 Liste
-85 mit Punkten (LI)
-86 numeriert (OL)
-87 Definitionsliste (DL)
-88 Term (DT)
-89 Definition (DD)
+85 mit Punkten (li)
+86 numeriert (ol)
+87 Definitionsliste (dl)
+88 Term (dt)
+89 Definition (dd)
 90 Formel
-91 Formel
-92 Wurzel (MROOT)
-93 Quadratwurzel (MSQRT)
-94 Quotient (MFRAC)
-95 Term mit Index und Exponent (MSUBSUP)
-96 Term mit Index (MSUB)
-97 Term mit Exponent (MSUP)
-98 Term mit Unter- und Überschrift (MUNDEROVER)
-99 Term mit Unterschrift (MUNDER)
-100 Term mit Überschrift (MOVER)
-101 Term in Klammern (MF)
-102 Term mit Indices links/rechts oben/unten (MMULTISCRIPTS)
-103 Matrix (MTABLE)
+91 Formel (math)
+92 Wurzel (mroot)
+93 Quadratwurzel (msqrt)
+94 Quotient (mfrac)
+95 Term mit Index und Exponent (msubsup)
+96 Term mit Index (msub)
+97 Term mit Exponent (msup)
+98 Term mit Unter- und Überschrift (munderover)
+99 Term mit Unterschrift (munder)
+100 Term mit Überschrift (mover)
+101 Term in Klammern (mf)
+102 Term mit Indices links/rechts oben/unten (mmultiscripts)
+103 Matrix (mtable)
 104 Matrixspalte löschen
-105 Alternative ohne Scripts (NOSCRIPT)
+105 Alternative ohne Scripts (noscript)
 106 Objekt
-107 Objekt
-108 Objekt-Parameter (PARAM)
-109 Absatz (P)
-110 Vorformatierter Text (PRE)
+107 Objekt (object)
+108 Objekt-Parameter (param)
+109 Absatz (p)
+110 Vorformatierter Text (pre)
 111 Tabelle 
-112 Tabelle
-113 Überschrift (CAPTION)
-114 COLGROUP
-115 COL
-116 Tabellenkopf (THEAD)
-117 Tabellenkörper (TBODY)
-118 Fußzeile (TFOOT)
-119 Zeile (TR)
-120 Zelle (TD)
-121 Kopfzelle (TH)
+112 Tabelle (table)
+113 Überschrift (caption)
+114 colgroup
+115 Tabellenspalte (col)
+116 Tabellenkopf (thead)
+117 Tabellenkörper (tbody)
+118 Fußzeile (tfoot)
+119 Zeile (tr)
+120 Zelle (td)
+121 Kopfzelle (th)
 122 Tabellenspalte löschen
 123 **Link to target
 124 Markierung als Verknüfung definieren...
@@ -149,28 +149,28 @@
 148 **Enable...
 149 **Remove...
 150 Logische Formate
-151 Betont (EM)
-152 Hervorgehoben (STRONG)
-153 Zitat (CITE)
-154 Definition (DFN)
-155 Programmtext (CODE)
-156 Variablenwert (VAR)
-157 Beispiel (SAMP)
-158 Tastatureingabe (KBD)
-159 Abkürzung (ABBR)
-160 Akronym (ACRONYM)
-161 Eingefügte Version (INS)
-162 Veraltete Version (DEL)
+151 Betont (em)
+152 Hervorgehoben (strong)
+153 Zitat (cite)
+154 Definition (dfn)
+155 Programmtext (code)
+156 Variablenwert (var)
+157 Beispiel (samp)
+158 Tastatureingabe (kbd)
+159 Abkürzung (abbr)
+160 Akronym (acronym)
+161 Eingefügte Version (ins)
+162 Veraltete Version (del)
 163 Direkte Formate
-164 Kursiv (I)
-165 Fett (B)
-166 Schreibmaschinenschrift (TT)
-167 Größer (BIG)
-168 Kleiner (SMALL)
-169 Tiefgestellt (SUB)
-170 Hochgestellt (SUP)
-171 Zitat im Fließtext (Q)
-172 Textrichtung LTR/RTL (BDO)
+164 Kursiv (i)
+165 Fett (b)
+166 Schreibmaschinenschrift (tt)
+167 Größer (big)
+168 Kleiner (small)
+169 Tiefgestellt (sub)
+170 Hochgestellt (sup)
+171 Zitat im Fließtext (q)
+172 Textrichtung LTR/RTL (bdo)
 173 Abschnittsnummern
 174 Buch zusammenfügen
 175 Logdatei anzeigen

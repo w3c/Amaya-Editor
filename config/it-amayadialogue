@@ -41,55 +41,55 @@
 40 Trasforma...
 41 Annota
 42 Carica annotazioni
-43 BASE
-44 META
-45 LINK
-46 SCRIPT
-47 STYLE
+43 base
+44 meta
+45 link
+46 script
+47 style
 48 Commento
-49 Indirizzo (ADDRESS)
-50 Zona attiva (AREA)
+49 Indirizzo (address)
+50 Zona attiva (area)
 51 Cerchio
 52 Poligono
 53 Rettangolo
-54 BLOCKQUOTE
-55 A capo (BR)
-56 Divisione (DIV)
+54 blockquote
+55 A capo (br)
+56 Divisione (div)
 57 Modulo
-58 FORM
-59 Pulsante (INPUT)
-60 Checkbox (INPUT)
-61 Selettore di file (INPUT)
-62 Controllo nascosto (INPUT)
-63 Image (INPUT)...
-64 Password (INPUT)
-65 Pulsante radio (INPUT)
-66 Reset (INPUT)
-67 Invia (INPUT)
-68 Testo (INPUT)
-69 Gruppo di campi (FIELDSET)
-70 Etichetta (LABEL)
-71 Menu (OPTION)
-72 Sottomenu (OPTGROUP)
-73 Area testo (TEXTAREA)
+58 form
+59 Pulsante (input)
+60 Checkbox (input)
+61 Selettore di file (input)
+62 Controllo nascosto (input)
+63 Image (input)...
+64 Password (input)
+65 Pulsante radio (input)
+66 Reset (input)
+67 Invia (input)
+68 Testo (input)
+69 Gruppo di campi (fieldset)
+70 Etichetta (label)
+71 Menu (option)
+72 Sottomenu (optgroup)
+73 Area testo (textarea)
 74 Intestazione
-75 H1
-76 H2
-77 H3
-78 H4
-79 H5
-80 H6
-81 Riga orizzontale (HR)
-82 Cornice (IFRAME)
-83 Immagine (IMG)...
+75 h1
+76 h2
+77 h3
+78 h4
+79 h5
+80 h6
+81 Riga orizzontale (hr)
+82 Cornice (iframe)
+83 Immagine (img)...
 84 Lista
-85 Lista puntata (UL)
-86 Lista numerata (OL)
-87 Lista di definizioni (DL)
-88 Termine (DT)
-89 Definizione (DD)
+85 Lista puntata (ul)
+86 Lista numerata (ol)
+87 Lista di definizioni (dl)
+88 Termine (dt)
+89 Definizione (dd)
 90 Math
-91 MATH
+91 math
 92 Radice (mroot)
 93 Radice quadrata (msqrt)
 94 Frazione (mfrac)
@@ -103,23 +103,23 @@
 102 Multiscripts (mmultiscripts)
 103 Matrice (mtable)
 104 Cancella colonna della matrice
-105 NOSCRIPT
+105 noscript
 106 Oggetto
-107 OBJECT
-108 Parametro (PARAM)
-109 Paragrafo (P)
-110 Preformattato (PRE)
+107 Oggetto (object)
+108 Parametro (param)
+109 Paragrafo (p)
+110 Preformattato (pre)
 111 Tabella
-112 TABLE
-113 Legenda (CAPTION)
-114 COLGROUP
-115 COL
-116 Intestazione (THEAD)
-117 Corpo (TBODY)
-118 TFOOT
-119 Linea (TR)
-120 Cella dati (TD)
-121 Cella intestazione (TH)
+112 Tabella (table)
+113 Legenda (caption)
+114 colgroup
+115 col
+116 Intestazione (thead)
+117 Corpo (tbody)
+118 tfoot
+119 Linea (tr)
+120 Cella dati (td)
+121 Cella intestazione (th)
 122 Cancella colonna della tabella
 123 Collega al precedente obiettivo
 124 Crea o cambia collegamento...
@@ -149,28 +149,28 @@
 148 Abilita...
 149 Rimuovi...
 150 Tipo di informazione
-151 Enfasi
-152 Forte
-153 Cita
-154 Definizione
-155 Codice
-156 Variabile
-157 Sample
-158 Tastiera
-159 Abbreviazione
-160 Acronimo
-161 Inserzione
-162 Cancellazione
+151 Enfasi (em)
+152 Forte (strong)
+153 Cita (cite)
+154 Definizione (dfn)
+155 Codice (code)
+156 Variabile (var)
+157 Sample (samp)
+158 Tastiera (kbd)
+159 Abbreviazione (abbr)
+160 Acronimo (acronym)
+161 Inserzione (ins)
+162 Cancellazione (del)
 163 Elementi carattere
-164 Italico
-165 Grassetto
-166 Macchina da scrivere
-167 Grande
-168 Piccolo
-169 Pedice
-170 Indice
-171 Citazione
-172 BiDi (BDO)
+164 Italico (i)
+165 Grassetto (b)
+166 Macchina da scrivere (tt)
+167 Grande (big)
+168 Piccolo (small)
+169 Pedice (sub)
+170 Indice (sup)
+171 Citazione (q)
+172 BiDi (bdo)
 173 Numerazione delle sezioni
 174 Crea libro
 175 Mostra il log file
