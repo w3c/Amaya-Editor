@@ -28,207 +28,208 @@
 26 Sauver
 27 Sauver comme...
 28 Synchroniser
-29 Informations sur le document
-30 Paramétrer et imprimer...
-31 Imprimer
-32 Fermer la fenêtre
-33 Quitter Amaya
-34 Fermer la vue
-35 Défaire
-36 Refaire
-37 Couper
-38 Copier
-39 Coller
-40 Détruire
-41 Mode éditeur
-42 Rechercher...
-43 Vérifier orthographe...
-44 Transformer...
-45 base
-46 meta
-47 Lien (link)
-48 script
-49 style
-50 Commentaire
-51 Changer le titre...
-52 Adresse (address)
-53 Zone active (area)
-54 Cercle
-55 Polygone
-56 Rectangle
-57 Citation (blockquote)
-58 Saut de ligne (br)
-59 Division (div)
-60 Formulaire
-61 Formulaire (form)
-62 Bouton (input)
-63 Bouton bascule (input)
-64 Sélecteur fichier (input)
-65 Contrôle caché (input)
-66 Image (input)...
-67 Mot de passe (input)
-68 Bouton radio (input)
-69 Réinitialisation (input)
-70 Soumission (input)
-71 Saisie de texte (input)
-72 Groupe de champs (fieldset)
-73 Étiquette (label)
-74 Menu (option)
-75 Sous-menu (optgroup)
-76 Zone de texte (textarea)
-77 En-tête
-78 Titre niveau 1 (h1)
-79 Titre niveau 2 (h2)
-80 Titre niveau 3 (h3)
-81 Titre niveau 4 (h4)
-82 Titre niveau 5 (h5)
-83 Titre niveau 6 (h6)
-84 Trait horizontal (hr)
-85 Cadre en ligne (iframe)
-86 Image (img)...
-87 Liste
-88 Liste à puces (ul)
-89 Liste numérotée (ol)
-90 Liste de définitions (dl)
-91 Terme (dt)
-92 Définition (dd)
-93 Math
-94 Nouvelle formule (math)
-95 Texte (mtext)
-96 Identificateur (mi)
-97 Nombre (mn)
-98 Opérateur (mo)
-99 Caractère (&xxx;)
-100 InvisibleTimes
-101 ApplyFunction
-102 Racine (mroot)
-103 Racine carrée (msqrt)
-104 Englobe (menclose)
-105 Fraction (mfrac)
-106 Indice et exposant (msubsup)
-107 Indice (msub)
-108 Exposant (msup)
-109 Dessous et dessus (munderover)
-110 Dessous (munder)
-111 Dessus (mover)
-112 Parenthèses (mrow)
-113 Multiscripts (mmultiscripts)
-114 Matrice (mtable)
-115 Détruire une colonne de matrice
-116 noscript
-117 Objet
-118 Objet (object)
-119 Paramètre (param)
-120 Paragraphe (p)
-121 Préformaté (pre)
-122 Table
-123 table
-124 Légende (caption)
-125 colgroup
-126 Colonne (col)
-127 Têtière (thead)
-128 Corps (tbody)
-129 Pied (tfoot)
-130 Ligne (tr)
-131 Cellule (td)
-132 Cellule de tête (th)
-133 Détruire colonne de table
-134 Lier la cible créée
-135 Créer/changer lien...
-136 Créer cible
-137 Détruire ancre
-138 Sauver la séléction comme XPointer
-139 Montrer boutons
-140 Montrer adresse
-141 Montrer les zones actives
-142 Montrer les cibles
-143 Grossir
-144 Réduire
-145 Montrer les erreurs
-146 Montrer la structure
-147 Montrer la vue alternée
-148 Montrer les liens
-149 Montrer la table des matières
-150 Montrer le source
-151 Style de caractères...
-152 Couleurs...
-153 Format...
-154 Image de fond...
-155 Créer une règle...
-156 Appliquer une classe...
-157 Feuilles de style
-158 Ajouter...
-159 Ouvrir...
-160 Désactiver...
-161 Réactiver...
-162 Retirer...
-163 Types information
-164 Accent (em)
-165 Force (strong)
-166 Citation (cite)
-167 Définition (dfn)
-168 Code (code)
-169 Variable (var)
-170 Exemple (samp)
-171 Clavier (kbd)
-172 Abréviation (abbr)
-173 Acronyme (acronym)
-174 Insertion (ins)
-175 Suppression (del)
-176 Éléments caractères
-177 Italique (i)
-178 Gras (b)
-179 Télétype (tt)
-180 Gros (big)
-181 Petit (small)
-182 Indice (sub)
-183 Exposant (sup)
-184 Citation (q)
-185 BiDi (bdo)
-186 Numéroter les sections
-187 Construire un livre
-188 Ajouter/Retirer des attributs ID...
-189 Préférences
-190 Générales...
-191 Publication...
-192 Cache...
-193 Proxy...
-194 Couleurs...
-195 Géométrie...
-196 Négociation de Langues...
-197 Profils...
-198 Modèles de page
-199 Annoter la séléction
-200 Annoter le document
-201 **Reassign annotation (selection)
-202 **Reassign annotation (XPointer)
-203 Enregister une annotation
-204 Détruire l'annotation
-205 Charger les annotations
-206 Customizer la requete...
-207 Filtrer local...
-208 Configuration...
-209 À propos de Amaya
-210 À propos de Amaya au W3C
-211 Navigation
-212 Sélection
-213 Chercher
-214 Vues
-215 Création
-216 Liens
-217 Transformer
-218 Tables
-219 Math
-220 Graphics
-221 Zones actives
-222 Feuilles de style
-223 Attributs
-224 Corriger
-225 Publier
-226 Imprimer
-227 Numéroter
-228 Construire un livre
-229 Annotations
-230 Configurer Amaya
-231 Raccourcis clavier
-232 Accessibilité d'Amaya
+29 **Latin Reading
+30 Informations sur le document
+31 Paramétrer et imprimer...
+32 Imprimer
+33 Fermer la fenêtre
+34 Quitter Amaya
+35 Fermer la vue
+36 Défaire
+37 Refaire
+38 Couper
+39 Copier
+40 Coller
+41 Détruire
+42 Mode éditeur
+43 Rechercher...
+44 Vérifier orthographe...
+45 Transformer...
+46 base
+47 meta
+48 Lien (link)
+49 script
+50 style
+51 Commentaire
+52 Changer le titre...
+53 Adresse (address)
+54 Zone active (area)
+55 Cercle
+56 Polygone
+57 Rectangle
+58 Citation (blockquote)
+59 Saut de ligne (br)
+60 Division (div)
+61 Formulaire
+62 Formulaire (form)
+63 Bouton (input)
+64 Bouton bascule (input)
+65 Sélecteur fichier (input)
+66 Contrôle caché (input)
+67 Image (input)...
+68 Mot de passe (input)
+69 Bouton radio (input)
+70 Réinitialisation (input)
+71 Soumission (input)
+72 Saisie de texte (input)
+73 Groupe de champs (fieldset)
+74 Étiquette (label)
+75 Menu (option)
+76 Sous-menu (optgroup)
+77 Zone de texte (textarea)
+78 En-tête
+79 Titre niveau 1 (h1)
+80 Titre niveau 2 (h2)
+81 Titre niveau 3 (h3)
+82 Titre niveau 4 (h4)
+83 Titre niveau 5 (h5)
+84 Titre niveau 6 (h6)
+85 Trait horizontal (hr)
+86 Cadre en ligne (iframe)
+87 Image (img)...
+88 Liste
+89 Liste à puces (ul)
+90 Liste numérotée (ol)
+91 Liste de définitions (dl)
+92 Terme (dt)
+93 Définition (dd)
+94 Math
+95 Nouvelle formule (math)
+96 Texte (mtext)
+97 Identificateur (mi)
+98 Nombre (mn)
+99 Opérateur (mo)
+100 Caractère (&xxx;)
+101 InvisibleTimes
+102 ApplyFunction
+103 Racine (mroot)
+104 Racine carrée (msqrt)
+105 Englobe (menclose)
+106 Fraction (mfrac)
+107 Indice et exposant (msubsup)
+108 Indice (msub)
+109 Exposant (msup)
+110 Dessous et dessus (munderover)
+111 Dessous (munder)
+112 Dessus (mover)
+113 Parenthèses (mrow)
+114 Multiscripts (mmultiscripts)
+115 Matrice (mtable)
+116 Détruire une colonne de matrice
+117 noscript
+118 Objet
+119 Objet (object)
+120 Paramètre (param)
+121 Paragraphe (p)
+122 Préformaté (pre)
+123 Table
+124 table
+125 Légende (caption)
+126 colgroup
+127 Colonne (col)
+128 Têtière (thead)
+129 Corps (tbody)
+130 Pied (tfoot)
+131 Ligne (tr)
+132 Cellule (td)
+133 Cellule de tête (th)
+134 Détruire colonne de table
+135 Lier la cible créée
+136 Créer/changer lien...
+137 Créer cible
+138 Détruire ancre
+139 Sauver la séléction comme XPointer
+140 Montrer boutons
+141 Montrer adresse
+142 Montrer les zones actives
+143 Montrer les cibles
+144 Grossir
+145 Réduire
+146 Montrer les erreurs
+147 Montrer la structure
+148 Montrer la vue alternée
+149 Montrer les liens
+150 Montrer la table des matières
+151 Montrer le source
+152 Style de caractères...
+153 Couleurs...
+154 Format...
+155 Image de fond...
+156 Créer une règle...
+157 Appliquer une classe...
+158 Feuilles de style
+159 Ajouter...
+160 Ouvrir...
+161 Désactiver...
+162 Réactiver...
+163 Retirer...
+164 Types information
+165 Accent (em)
+166 Force (strong)
+167 Citation (cite)
+168 Définition (dfn)
+169 Code (code)
+170 Variable (var)
+171 Exemple (samp)
+172 Clavier (kbd)
+173 Abréviation (abbr)
+174 Acronyme (acronym)
+175 Insertion (ins)
+176 Suppression (del)
+177 Éléments caractères
+178 Italique (i)
+179 Gras (b)
+180 Télétype (tt)
+181 Gros (big)
+182 Petit (small)
+183 Indice (sub)
+184 Exposant (sup)
+185 Citation (q)
+186 BiDi (bdo)
+187 Numéroter les sections
+188 Construire un livre
+189 Ajouter/Retirer des attributs ID...
+190 Préférences
+191 Générales...
+192 Publication...
+193 Cache...
+194 Proxy...
+195 Couleurs...
+196 Géométrie...
+197 Négociation de Langues...
+198 Profils...
+199 Modèles de page
+200 Annoter la séléction
+201 Annoter le document
+202 **Reassign annotation (selection)
+203 **Reassign annotation (XPointer)
+204 Enregister une annotation
+205 Détruire l'annotation
+206 Charger les annotations
+207 Customizer la requete...
+208 Filtrer local...
+209 Configuration...
+210 À propos de Amaya
+211 À propos de Amaya au W3C
+212 Navigation
+213 Sélection
+214 Chercher
+215 Vues
+216 Création
+217 Liens
+218 Transformer
+219 Tables
+220 Math
+221 Graphics
+222 Zones actives
+223 Feuilles de style
+224 Attributs
+225 Corriger
+226 Publier
+227 Imprimer
+228 Numéroter
+229 Construire un livre
+230 Annotations
+231 Configurer Amaya
+232 Raccourcis clavier
+233 Accessibilité d'Amaya
