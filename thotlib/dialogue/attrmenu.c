@@ -1557,7 +1557,7 @@ void CallbackLanguageMenu (int ref, int val, char *txt)
       TtaNewLabel (NumLabelHeritedLanguage, NumFormLanguage, "");
 #endif /* #if defined(_GTK) || defined(_MOTIF) */
       val = 1;
-      doit = TRUE;
+      /*doit = TRUE;*/
       break;
     case NumFormLanguage:
       /* retour du formulaire lui-meme */
