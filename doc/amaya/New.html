@@ -17,6 +17,127 @@ alt="Doc"></a></p>
 This file indicates the new features you can find in the latest versions of
 Amaya.</p>
 
+<h1>Amaya 1.4</h1>
+<p>
+December 21, 1998</p>
+
+<h2>New Features:</h2>
+<ul>
+<li>
+OPTGROUP elements are accepted within SELECT elements. The corresponding
+cascade menus are built by Amaya and the right string is sent to the server
+when submitting a form that contains OPTGROUPs. An item in the Types/Form menu
+allows the user to create OPTGROUP elements or to wrap OPTION elements into an
+OPTGROUP element.
+</li>
+<li>
+Elements FIELDSET and LEGEND from HTML 4.0 are implemented.
+</li>
+<li>
+Event attributes like onmousedown, onmousemove, etc. are listed in a sub-menu
+of the Attributes menu (Events sub-menu).
+</li>
+<li>
+When creating a Table, Amaya asks the user about the number of rows and
+columns s/he wants. When a new cell is created, the corresponding column is
+generated at the same position.
+</li>
+<li>
+When target icons were introduced, it was no longer possible to click the
+target element (an element with an ID attribute or an anchor with a NAME) to
+set a link. This possibility is available now.
+</li>
+<li>
+When reloading a document, the fresh document is shown in the formatted window
+at the position the previous version was shown.
+</li>
+<li>
+When saving a document in XML, Amaya follows the Voyager guidelines
+(http://www.w3.org/TR/WD-html-in-xml)
+</li>
+<li>
+When printing a document, you can decide whether the document URL is printed
+at the top of each page or not.
+</li>
+<li>
+A new field in the dialogue form used to insert images allows the user to
+enter an ALT attribute. This attribute is mandatory.
+</li>
+<li>
+libwww has been upgraded to version 5.2. This version of libwww supports
+HTTP/1.1, rev. 05
+</li>
+<li>
+A first implementation of the message digest authentication protocol, as
+defined in &lt;draft-ietf-http-authentication-03>. The code is  interoperable
+with the current (which is an old) implementation of this protocol inside
+Apache/1.3.
+</li>
+<li>
+When Amaya detects errors in a loaded document, it generates a log file which
+can be displayed by the entry "Show log file" in the menu "Special".
+</li>
+<li>
+Thot compilers (str, prs, tra and app) are available on Windows platforms, so
+it's now possible to develop Amaya on these platforms.
+</li>
+<li>
+When an URI points at a single image, Amaya can display this image in a
+document window.
+</li>
+<li>
+Each Amaya window can be switched from Read-Only (editor) to Read-Write
+(Browser) mode, and vice versa.
+</li>
+<li>
+A FAQ is available at http://www.w3.org/Amaya/User/FAQ.html
+</li>
+</ul>
+
+<h2>Fixed bugs:</h2>
+<ul>
+<li>
+In the menu associated with a &lt;SELECT multiple> element it's now possible
+to deselect selected OPTIONs
+</li>
+<li>
+Table formatting: - Amaya wasn't able to find the correct cell width when the
+contents of  this cell was centered or when a cell included complex
+structures. - When a table of a given width included constrained and
+unconstrained cells  the result was sometimes incorrect. - When a table with
+vertical spans was resized, row heights were not updated.
+</li>
+<li>
+Amaya constrained the structure and reordered some elements in the HEAD: Meta,
+Script, Link, Style.
+</li>
+<li>
+Command Apply Class did not work always, especially when the current selection
+was crossing elements at different levels.
+</li>
+<li>
+Relative URIs for background images were always interpreted according to the
+document URI, even when it was relative to a stylesheet.
+</li>
+<li>
+A background image in no-repeat mode was sometimes repeated erroneously.
+</li>
+<li>
+Amaya tended to raise windows too often.
+</li>
+<li>
+Moving the cursor accross tables and BR elements didn't work correctly.
+</li>
+<li>
+When a character '&amp;' appeared in an ALT attribute (and in some other
+attributes), it was saved as is in the HTML file. It's now saved as
+'&amp;amp;'
+</li>
+<li>
+The use of autoconf has been improved to make the Amaya building easier.
+</li>
+</ul>
+
 <h1>Amaya 1.3b</h1>
 <p>
 October 14, 1998</p>
@@ -106,12 +227,12 @@ link to a specific element, s/he must click on the corresponding target icon.
 New version of the jpeg library (except for the Windows version).
 </li>
 <li>
-Amaya uses the latest version of libwww.  This version provides Amaya with an
+Amaya uses the latest version of libwww. This version provides Amaya with an
 up-to-date implementation of HTTP/1.1 including pipelining and caching
 </li>
 <li>
 Amaya can save documents in XML. Command Save As proposes 3 output formats:
-HTML, XML, Plain text.  When a document is saved in XML, the usual HTML
+HTML, XML, Plain text. When a document is saved in XML, the usual HTML
 structure is used, but it is written in the XML language.
 </li>
 <li>
@@ -128,7 +249,7 @@ The following HTML 4.0 elements are available: NOSCRIPT, LABEL, BUTTON.
 <li>
 Some support is provided for frames: the parser recognizes tags FRAMESET,
 FRAME, and NOFRAMES as well as their attributes and Amaya displays them as if
-they were links.  You can double click them to fetch the corresponding page.
+they were links. You can double click them to fetch the corresponding page.
 </li>
 <li>
 The following HTML 4.0 attributes are available: onload, onunload, charset,
@@ -261,7 +382,7 @@ Print on Windows is now available.
 Amaya uses the standard clipboard. On Windows versions Copy/Paste takes the
 standard clipboard into account. On Unix versions, Copy form clip board and
 Paste form Clipboard are attached to the usual mouse buttons (Left and
-Middle). Consequently, selection extension is now performed by  the Shift +
+Middle). Consequently, selection extension is now performed by the Shift +
 Left button of the mouse.
 </li>
 <li>
@@ -494,7 +615,7 @@ Matrices and tables (mtable) from MathML are supported.</p>
 </li>
 <li>
 XML links (only simple links) are supported in MathML: any MathML element can
-have the two attributes  xml:link="simple" href="some/URL"
+have the two attributes xml:link="simple" href="some/URL"
 </li>
 <li>
 Elements deprecated in HTML 4.0 can't be created with Amaya.
@@ -503,9 +624,9 @@ Elements deprecated in HTML 4.0 can't be created with Amaya.
 The HTML parser replaces the obsolete elements LISTING, PLAINTEXT, XMP by PRE.
 </li>
 <li><p>
-The following HTML 4.0 elements are available:   ABBR, ACRONYM, BDO, DEL,
-IFRAME, INS, OBJECT, PARAM, Q, SPAN,   TBODY, TFOOT, THEAD   (BDO does not
-change the writing direction on the screen)</p>
+The following HTML 4.0 elements are available: ABBR, ACRONYM, BDO, DEL,
+IFRAME, INS, OBJECT, PARAM, Q, SPAN, TBODY, TFOOT, THEAD (BDO does not change
+the writing direction on the screen)</p>
 </li>
 <li>
 The following HTML 4.0 attributes are available: id, class, style, title,
@@ -537,7 +658,7 @@ spanned rows.
 The install is now minimum: only amaya and print are installed.
 </li>
 <li>
-When accesing a protected site, an authentication dialogue appeared for  each
+When accesing a protected site, an authentication dialogue appeared for each
 URL
 </li>
 <li>
@@ -711,7 +832,7 @@ links management in local files.
 <h3>Global improving (Windows and Unix versions):</h3>
 <ul>
 <li>
-CSS background  rule,
+CSS background rule,
 </li>
 <li>
 saving in ASCII format,
@@ -768,7 +889,7 @@ Functions which create a MAP element generates automatically a NAME with value
 <li>
 When an IMG with a USEMAP attribute is pasted, Amaya remove this attribute,
 and when an IMG with a USEMAP attribute is deleted, it does take care of the
-related MAP element. The document author is supposed to delete this MAP or  to
+related MAP element. The document author is supposed to delete this MAP or to
 link it to another IMG element.
 </li>
 </ul>
@@ -828,7 +949,7 @@ the document C objects.
 </li>
 <li>
 Math: This version of Amaya contains an embryonic MathML editor, that allows
-mathematical expressions to be embedded in HTML pages.  It implements a subset
+mathematical expressions to be embedded in HTML pages. It implements a subset
 of the MathML specification. This feature should be considered as a
 demonstration, as it is very incomplete. More in next releases.
 </li>

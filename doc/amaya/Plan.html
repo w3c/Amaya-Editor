@@ -2,254 +2,382 @@
    "http://www.w3.org/TR/REC-html40/loose.dtd">
 <html>
 <head>
-<title>Amaya Overview</title>
+<title>Amaya Plan</title>
 </head>
-<body style=" color : #000000; background-color : #FFFBF0" text="#000000"
-lang="en" bgcolor="#FFFBF0">
+<body bgcolor="white" text="black" lang="en">
 <p>
-<a href="../"><img border="0" src="../Icons/WWW/w3c_home" alt="W3C"
-width="72"></a> <a href="../UI/"><img border="0" src="../Icons/ui.gif"
-alt="User Interface Domain" width="212" height="48"></a> <img
-src="Icons/amaya.gif" alt="Amaya" border="0"></p>
+<a href="../../"><img border="0" src="../../Icons/WWW/w3c_home" alt="W3C"
+align="middle"></a> <a href="../"><img src="../Icons/amaya.gif" alt="Amaya"
+border="0" align="middle"></a></p>
+<p>
+<a href="../../">W3C</a>  <a href="../../Team/">Team</a>  <a
+href="../../../team/WWW/Team/Areas.html">Areas</a></p>
 
-<h1>Amaya - W3C's Browser/Editor</h1>
+<h1>Amaya Plan</h1>
 <p>
-<strong><font color="#FF0000"><big>Try <a
-href="../TR/REC-MathML/">MathML</a></big></font></strong>. With Amaya you can
-<a href="#math">edit complex mathematical expressions</a> within HTML pages
-through a WYSIWYG interface. See <a href="MathExamples.html">some
-examples</a>.</p>
-
-<h2><img border="0" src="../Icons/WWW/relnotes48x" alt="NEWS">
- &nbsp;<a name="L347"><span style="color : #FF0000">Download
-Amaya</span></a></h2>
-<p>
-<img src="../Icons/WWW/new_red" alt=" New!"> This release includes the support
-of most HTML 4.0 tags and attributes. Tags col, colgroup, fieldset, legend and
-optgroup are not supported yet.  A minimum support is provided for frames.
-This Amaya release also takes advantage of the cache and pipelining features
-from the latest version of libwww.</p>
+The current development phase of <b>Amaya</b> is divided into several
+activities:</p>
 <ul>
 <li>
-<a href="User/BinDist.html">Amaya 1.3b public release</a> (October 14, 1998)
+Unix and Windows usability
 </li>
 <li>
-<a href="User/SourceDist.html">Source code of Amaya 1.3b public release</a>
-(October 14, 1998).
+New functionalities on HTML, XML, CSS and I18N
+</li>
+<li>
+Java-DOM support
 </li>
 </ul>
-<p>
-<strong>Amaya</strong> is covered by the <a
-href="/Consortium/Legal/ipr-notice.html#Copyright"> W3C Copyright
-Statement</a>. Please read it carefully before downloading the software.</p>
+<hr>
 
-<h2>Overview</h2>
+
+<h2>Milestones/Commitments</h2>
 <p>
-Amaya is the name of W3C's own test-bed browser/authoring tool and is used to
-demonstrate and test many of the new developments in Web protocols and data
-formats. Given the very fast moving nature of Web technology, Amaya has a
-central role to play. It is versatile and extensible - new features can be
-easily added - and is available on both Unix and Windows&nbsp;'95/NT
-platforms.</p>
-<p>
-Amaya has a counterpart called <a
-href="http://www.w3.org/pub/WWW/Jigsaw/">Jigsaw</a> which plays a similar role
-on the server side.</p>
-<p>
-Amaya is a complete web browsing and authoring environment and comes equipped
-with a WYSIWYG style of interface, similar to that of the most popular
-commercial browsers. With such an interface, users do not need to know the
-HTML or CSS languages. Features of Amaya include the following:</p>
+Future plans as of 16 October 1998<br>
+(we give an evaluation of the time needed for  each development and not the
+availability date of these developments)</p>
 <ul>
 <li>
-<b>Amaya lets users both browse and author Web pages</b>
-<p>
-Using Amaya you can create Web pages and upload them onto a server. Authors
-can create a document from scratch, they can browse the web and find the
-information they need, copy and paste it to their pages, and create links to
-other Web sites. All this is done in a straightforward and simple manner, and
-actions are performed in a single consistent environment. Editing and browsing
-functions are integrated seamlessly in a single tool.</p>
-<p align="right">
-<img src="Icons/amaya-ui" alt="Screen shot of Amaya's main view" hspace="10" width="303" height="407"></p>
-<p>
-The image above shows the Amaya main view. Along the top are a number of
-buttons associated with editing. At any time, the user can select any part of
-a document and assign to it an HTML type (H1, LI, EM, etc.), by means of the
-Types menu or of the shortcut buttons. Such a command transforms the selected
-part into an element of the chosen type. <br clear="all">
-</p>
+Ramzi:
+<ul>
+<li>
+Thot compilers on Windows (about 1 week)
 </li>
 <li>
-<b>Amaya maintains a consistent internal document model adhering to the
-DTD</b>
-<p>
-Although a WYSIWYG interface is presented to the author, "behind the scenes"
-Amaya always represents the document internally in a structured way consistent
-with the Document Type Definition (DTD). A properly structured document
-enables other tools to further process the data safely.</p>
-<p>
-Amaya allows you to display at the same time as the formatted view the
-document structure, which is portrayed diagrammatically on the screen.</p>
+Log file on document parsing (about 1 week)
 </li>
 <li>
-<b>Amaya is able to work on several documents at a time</b>
-<p>
-Amaya can act as a browser and as an editor simultaneously on several
-documents. Authors can follow, create and modify links. The whole Amaya
-functionality is available at any time for any document.</p>
+Bug fixes (about 1 week)
 </li>
 <li>
-<b>Amaya helps authors create hypertext links</b>
-<p>
-The editor helps you create and text out links to other documents on the Web
-from the document you currently are working on. You can view the links and get
-a feel for how the information is interconnected.</p>
+I18N: a separate module for characters management (about 2 weeks)
 </li>
 <li>
-<b>Amaya is easily extended.</b>
-<p>
-Several APIs and mechanisms are available to change and extend its
-functionality with the least modification to the source code. Amaya thus
-allows for easy customization by providing a means for extensions to access
-Amaya's internal procedures and functions.</p>
+I18N: Unicode on Windows (??)
+</li>
+<li>
+I18N: Unicode on Unix (??)
 </li>
 </ul>
-<p>
-You can find a more detailed description of Amaya and of its features in the
-W3C Note "<a href="../TR/NOTE-amaya-970220.html">An Introduction to
-Amaya</a>."</p>
+</li>
+<li>
+Jos&eacute;:
+<ul>
+<li>
+Authentication(about 1 week)
+</li>
+<li>
+Forms submission (about 1 week)
+</li>
+<li>
+Bug fixes (about 1 week)
+</li>
+<li>
+Configuration menu (about 2 weeks)
+</li>
+</ul>
+</li>
+<li>
+Ir&egrave;ne:
+<ul>
+<li>
+New interface for table editing (about 2 weeks)
+</li>
+<li>
+Bug fixes (about 1 week)
+</li>
+<li>
+CSS: display and editing of CSS files (about 4 weeks)
+</li>
+<li>
+Log file on document parsing (about 1 week)
+</li>
+<li>
+Horizontal scroll (about 1 week)
+</li>
+<li>
+Undo: first step (about 2 weeks)
+</li>
+<li>
+Emacs-like navigation(about 2 weeks)
+</li>
+<li>
+CSS: new properties (about 3 weeks)
+</li>
+<li>
+Copy/paste of attributes (about 1 week)
+</li>
+<li>
+Motif interface improvement (about 2 weeks)
+</li>
+</ul>
+</li>
+<li>
+Vincent::
+<ul>
+<li>
+HTML 4 support: forms and tables (about 2 weeks)
+</li>
+<li>
+Undo: (about 2 weeks)
+</li>
+</ul>
+</li>
+</ul>
 
-<h3>Transport protocols</h3>
+<h2>Achievements</h2>
 <p>
-Amaya accesses remote sites by means of HTTP 1.1. Two different
-implementations of this protocol can be used: <a
-href="http://www.w3.org/Library/">libwww</a> or the Java classes from <a
-href="http://www.w3.org/Jigsaw/">Jigsaw</a>. Amaya takes advantage of the most
-advanced features of HTTP, such as content negotiation to retrieve the most
-appropriate picture format, for instance, or keep alive connections to save
-bandwidth.</p>
-
-<h3>Graphics</h3>
-<p>
-Amaya displays images including those in the <a
-href="../Graphics/PNG/">PNG</a> format, which is a more powerful graphics
-format than GIF and is being increasingly used on the Web.</p>
-<p>
-A CGM plug-in (CGM is commonly used vector graphics format in computer drawing
-packages) developed by Rutherford Appleton Laboratory was demonstrated at
-EITC'97 in Brussells.</p>
-
-<h3>Support for CSS</h3>
-<p>
-Amaya has support for <a href="../Style/">CSS1</a> although this is not yet
-complete. The user interacts on a formatted document and does need to see the
-CSS syntax. The current implementation should be considered as an experiment
-but the plan is to revisit this part of the Amaya code and improve it to
-provide a stronger basis for implementing CSS2.</p>
-
-<h3><a name="math">Demonstration of MathML</a></h3>
-<p>
-Amaya now demonstrates a prototype implementation of <a
-href="../TR/REC-MathML/">MathML</a> which allows users to browse and edit web
-pages containing mathematical expressions.  Like the rest of the document,
-these expressions are manipulated through a WYSIWYG interface.</p>
-<p align="right">
-<img src="Icons/amaya-math" alt="Screen shot of Amaya's Math"
-width="449" height="500" hspace="10"></p>
-<p>
-This screen shot is a demonstration of MathML, an XML application resulting
-from work by the W3C Math working group. MathML allows authors to format
-equations for publishing on the World Wide Web. With Amaya, an author can see
-the formatted view and the structure view at the same time. <br clear="all">
-</p>
-
-<h4>Printing</h4>
-<p>
-Generation of PostScript files. Amaya offers some facilities like printing the
-table of contents of the document.</p>
-
-<h4>API</h4>
-<p>
-The editor offers an API for adding new functions or for modifying existing
-functions.This API is available in two flavors: C and Java.</p>
-
-<h2 align="left"><a href="User/"><img src="../Icons/WWW/doc48x"
-alt="Documentation" border="0">
- </a>&nbsp;<a name="L360">User Documentation and Design Overview</a></h2>
-<p>
-The <a href="User/">documentation</a> provided with this release is not
-complete yet, but it should be enough to understand how to compile, configure,
-and use Amaya. Some documentation is also available for <a
-href="User/Overview.html#L113">developers</a>.</p>
-
-<h2 align="left"><a href="../Mail/Lists.html#subscribe"><img
-src="../Icons/WWW/mail48x" alt="Mail" border="0">
- </a>&nbsp;<a name="L362">Mailing list</a></h2>
-<p>
-<strong>Amaya</strong> has a mailing list that you are more than welcome to
-use! Before you send mail to the list, please check out the <a
-href="http://lists.w3.org/Archives/Public/www-amaya/">archives</a> - they
-often contain good information about how to solve problems. Please do not send
-mail directly to the authors - the mail load is already rather high and you
-will most probably get a better response time by using the following mailing
-list:</p>
+See <a href="../User/New.html">New.html</a> for more details about
+releases.</p>
 <dl>
-<dt><b>www-amaya@w3.org</b></dt>
+<dt>February 21-22, 1996</dt>
 <dd>
-A public mailing list for an open discussion of ideas, diffs, new features,
-bugs, etc. An <a href="http://lists.w3.org/Archives/Public/www-amaya/">
-archive</a> is available at the following URL:
-<p>
-<code>http://lists.w3.org/Archives/Public/www-amaya/</code></p>
-<p>
-</p>
+First meeting on the future of (T)amaya in Sophia.
 </dd>
-<dt>See the <a href="../Mail/Lists.html#subscribe">information on mailing
-lists</a> for details on how to subscribe.</dt>
+<dt>March 14, 1996</dt>
+<dd>
+Specifications of the new user interface by the Sophia group.
+</dd>
+<dt>April 9, 1996</dt>
+<dd>
+First version of <b>Amaya</b> with new window layout<br>
+Mockup of the new user interface in Tk, by the Sophia group.
+</dd>
+<dt>April 29, 1996</dt>
+<dd>
+Alpha version for evaluation within W3T (Linux and Sun, Motif)
+</dd>
+<dt>May 7 1996</dt>
+<dd>
+Demonstration at the WWW5 Conference, Paris (Inria booth)
+</dd>
+<dt>June 10-11, 1996</dt>
+<dd>
+Presentation to the Advisory Committee Meeting (Peabody)
+</dd>
+<dt>July 8, 1996</dt>
+<dd>
+Release of first alpha version in binary form for members (Linux only)
+</dd>
+<dt>August 21, 1996</dt>
+<dd>
+Public release of first alpha version in binary form (Linux only)
+</dd>
+<dt>November 14 1996</dt>
+<dd>
+Release of version 0.9 to members including source code.
+</dd>
+<dt>January 9, 1997</dt>
+<dd>
+Public release of version 0.95.
+</dd>
+<dt>April 3, 1997</dt>
+<dd>
+Member release 1.0. This is the first version of Amaya that runs on Microsoft
+Windows.
+</dd>
+<dt>April 7-11, 1997</dt>
+<dd>
+Presentation of Amaya UI, architecture and Java support at WWW'6 conference
+(Santa Clara)
+</dd>
+<dt>May 7, 1997</dt>
+<dd>
+Public release 1.0a.
+</dd>
+<dt>June 18-19, 1997</dt>
+<dd>
+Presentation at the Advisory Committee Meeting (Tokyo). First demonstration of
+MathML support.
+</dd>
+<dt>July 10, 1997</dt>
+<dd>
+Member release 1.1. This is the first support of the new linking model
+(relative URLs and
+<p>
+support of ID attributes).</p>
+</dd>
+<dt>September 15, 1997</dt>
+<dd>
+Public release 1.1a.
+</dd>
+<dt>November 17, 1997</dt>
+<dd>
+A public release 1.1c fixing a set of Windows bugs.
+</dd>
+<dt>November 24-26, 1997</dt>
+<dd>
+Demonstrations at EITC'97 Conference, Brussels (W3C-LA European Commission
+project).
+</dd>
+<dt>December 2-3, 1997</dt>
+<dd>
+Demonstration at W3C-LA symposium in London.
+</dd>
+<dt>January 8-9, 1998</dt>
+<dd>
+Demonstration at the French chapter of Internet Society, Autrans'98
+</dd>
+<dt>February 4, 1998</dt>
+<dd>
+Public release 1.2. This release provides a new table formatting module.
+</dd>
+<dt>March 20-21, 1998</dt>
+<dd>
+Demonstration at the French ``F&ecirc;te de l'Internet''
+</dd>
+<dt>March 27, 1998</dt>
+<dd>
+Public release 1.2a. This release provides a new install procedure for Windows
+platforms
+</dd>
+<dt>March 19-25, 1998</dt>
+<dd>
+Demonstrations at CeBIT (Germany).
+</dd>
+<dt>March 30-April 2, 1998</dt>
+<dd>
+Demonstrations at W3C-LA Symposium at SICS (Stockholm), GMD (Bonn) and CWI
+(Amsterdam).
+</dd>
+<dt>April 14-18, 1998</dt>
+<dd>
+Presentation at WWW'7. Demonstration of 2D graphics in XML.
+</dd>
+<dt>April 30, 1998</dt>
+<dd>
+<a href="Review/overview.htm">Amaya Review</a>.
+</dd>
+<dt>June 24-25, 1998</dt>
+<dd>
+Demo at the Advisory Committee Meeting, Geneva.
+</dd>
+<dt>July 10, 1998</dt>
+<dd>
+Public release of Amaya 1.3 with a new CSS implementation.
+<p>
+Includes a new versions of the PNG library: libpng-1.0.1.</p>
+</dd>
+<dt>September 25, 1998</dt>
+<dd>
+Public release: 1.3a
+<p>
+Includes more HTML 4.0 features (frames), libwww 5.1 with cache and pipelining
+support. Imporving of CSS and table printing.</p>
+</dd>
+<dt>October 14, 1998</dt>
+<dd>
+Public release: 1.3b
+<p>
+Mainly bug fixes</p>
+</dd>
 </dl>
 
-<h2><img src="../Icons/WWW/people_48x48" alt="People">
- &nbsp;<a name="L363">Authors and Contributors</a></h2>
+<h2>Issues</h2>
+<p>
+List of possible future works (see also <a href="Wishes.html">Wishes List</a>
+from the Team) :</p>
+<p>
+* <a name="I18N">I18N</a>:</p>
 <ul>
 <li>
-<strong>Amaya team:</strong> Ir&egrave;ne Vatton, Ramzi Gu&eacute;tari,
-Jos&eacute; Kahan, Vincent Quint, Daniel Veillard (amaya-java application).
+support of multibyte characters
+</li>
+<li>
+experimentation with Unicode fonts
 </li>
 <li><p>
-<strong>Thot toolkit contributors:</strong> Ir&egrave;ne Vatton, Vincent
-Quint, Nabil Laya&iuml;da, St&eacute;phane Bonhomme, C&eacute;cile Roisin,
-H&eacute;l&egrave;ne Richy, Daniel Veillard, Ramzi Gu&eacute;tari.</p>
+support of different writing directions</p>
 </li>
 </ul>
+<p>
+* CSS:</p>
+<ul>
+<li>
+CSS file editing
+</li>
+<li>
+extending the P language to stick with the CSS model: padding, margins,
+flowing, etc.
+</li>
+</ul>
+<p>
+* HTML4:</p>
+<ul>
+<li>
+forms
+</li>
+<li><p>
+frames(a more complete support)</p>
+</li>
+<li>
+see <a href="#I18N">I18N</a>
+</li>
+</ul>
+<p>
+* DOM:</p>
+<ul>
+<li>
+adding mouse events
+</li>
+<li><p>
+adapting to the DOM API</p>
+</li>
+<li>
+experiments
+</li>
+</ul>
+
+<h2>Staff</h2>
+<dl>
+<dt>Ir&egrave;ne Vatton</dt>
+<dd>
+Lead, User interface, structure manipulations, incremental formatting and
+display.
+</dd>
+<dt>Ramzi Gu&eacute;tari</dt>
+<dd>
+Port to Windows platforms, plug-ins support.
+</dd>
+</dl>
+<dl>
+<dt>Vincent Quint</dt>
+<dd>
+Parsing, structure manipulations.
+</dd>
+</dl>
+<dl>
+<dt>Jos&eacute; Kahan</dt>
+<dd>
+Interface with the W3C Library.
+</dd>
+<dt>Daniel Veillard</dt>
+<dd>
+First CSS implementation and Java support.
+</dd>
+</dl>
+<p>
+The first design of the user interface and its evaluation were done by
+H&aring;kon Lie, Bert Bos and others in Sophia.</p>
+<p>
+An experimental Tk version has been developed by Bruno Vasselle in Sophia.</p>
+<p>
+The first experimental port to Windows has been done by Eric Prud'hommeaux and
+Daniel Veillard.</p>
+<p>
+Graphics drivers (gif, jpeg, png) and the plug-in API has been developped by
+Nabil Laya&iuml;da.</p>
+<p>
+C&eacute;cile Roisin and St&eacute;phane Bonhomme developed the structure
+transformation language.</p>
+<p>
+Arnaud Le Hors is developping the DOM API for Java,</p>
 <p>
 </p>
 <hr>
 
 <address>
-<a href="mailto:irene.vatton@w3.org">Ir&egrave;ne Vatton</a><br>
+<a href="mailto:Irene.Vatton@w3.org">Ir&egrave;ne Vatton</a><br>
 $Date$</address>
-<address>
-<p class="policyfooter">
-<small><a
-href="http://www.w3.org/Consortium/Legal/ipr-notice.html#Copyright">Copyright</a>
-&nbsp;&copy;&nbsp; 1997 <a href="http://www.w3.org/">W3C</a> (<a
-href="http://www.lcs.mit.edu/">MIT</a>, <a
-href="http://www.inria.fr/">INRIA</a>, <a
-href="http://www.keio.ac.jp/">Keio</a> ), All Rights Reserved. W3C <a
-href="http://www.w3.org/Consortium/Legal/ipr-notice.html#Legal
-Disclaimer">liability,</a> <a
-href="http://www.w3.org/Consortium/Legal/ipr-notice.html#W3C
-Trademarks">trademark</a>, <a
-href="http://www.w3.org/Consortium/Legal/copyright-documents.html">document
-use </a>and <a
-href="http://www.w3.org/Consortium/Legal/copyright-software.html">software
-licensing </a>rules apply. Your interactions with this site are in accordance
-with our <a
-href="http://www.w3.org/Consortium/Legal/privacy-statement.html#Public">public</a>
-and <a
-href="http://www.w3.org/Consortium/Legal/privacy-statement.html#Members">Member</a>
-privacy statements.</small></p>
-</address>
 </body>
 </html>

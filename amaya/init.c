@@ -2206,6 +2206,7 @@ View                view;
 	       TtaSetMenuOff (document, mathView, Types);
 	       TtaSetMenuOff (document, mathView, Attributes_);
 	     }
+	   TtaSetMenuOff (document, mathView, StructTypes);
 	 }
      }
 #endif /* MATHML */
@@ -2232,6 +2233,7 @@ View                view;
 	       TtaSetMenuOff (document, graphView, Types);
 	       TtaSetMenuOff (document, graphView, Attributes_);
 	     }
+	   TtaSetMenuOff (document, graphView, StructTypes);
 	 }
      }
 #endif /* GRAPHML */
