@@ -158,6 +158,7 @@ ShowMapAreas
 +head
 +html-style
 +makebook
++makeid
 +maths
 +object-module
 +print
@@ -448,6 +449,9 @@ HelpMakeBook
 HelpNumbering
 &MakeBook
 &SectionNumbering
+
+[makeid]
+&MakeIDMenu
 
 [annot]
 AnnotateDocument
