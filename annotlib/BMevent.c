@@ -782,10 +782,18 @@ ThotBool BM_ItemDelete (NotifyElement *event)
   elType = TtaGetElementType (el);
   attrType.AttrSSchema = elType.ElSSchema;
 
+  if (elType.ElTypeNum == Topics_EL_SeeAlso_content)
+    {
+      el = TtaGetParent (el);
+      elType = TtaGetElementType (el);
+    }
+
   if (elType.ElTypeNum == Topics_EL_Bookmark_item)
     isTopic = FALSE;
-  else
+  else if (elType.ElTypeNum == Topics_EL_Topic_item)
     isTopic = TRUE;
+  else
+    return TRUE;
 
   /* get the target URL */
   attrType.AttrTypeNum = Topics_ATTR_Model_HREF_;

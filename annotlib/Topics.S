@@ -67,7 +67,7 @@ EXCEPT
 
 
 	{ SeeAlso }
-	SeeAlso_item:  Nocut;
+	SeeAlso_item:  Nocut, NoSelect;
 	SeeAlso_title: NoCut, NoSelect, Hidden;
 	SeeAlso_content: NoSelect, Hidden;
 
