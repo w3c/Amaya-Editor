@@ -32,8 +32,8 @@ main(argc, argv)
 	  printf("cannot rename %s into %s.old\n", argv[1], argv[1]);
 	  exit (-1);
 	}
-      file1 = fopen(name, "r"); /* Open the new file */
-      file2 = fopen(argv[1], "w"); /* Open the old file */
+      file1 = fopen(name, "r"); /* Open the old file */
+      file2 = fopen(argv[1], "w"); /* Open the new file */
       if (!file1 || !file2)
 	{
 	  printf("cannot open %s or %s.new\n", argv[1], argv[1]);
