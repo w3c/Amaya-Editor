@@ -6,6 +6,7 @@ DEFPRES TextFileP;
 
 ATTR
    Highlight = Yes_;
+   IsLink = Yes_;
 
 STRUCT
    TextFile (ATTR PrintURL = Yes_; Source = Yes_) =
@@ -23,6 +24,7 @@ EXCEPT
 	BODY:           Hidden, NoCut;
         Language:	Invisible; 
 	Highlight:	Invisible;
+	IsLink:		Invisible;
         PrintURL:       Invisible;
 	Source:	        Invisible;
 END

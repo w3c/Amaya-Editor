@@ -4720,11 +4720,15 @@ static void HTMLparse (FILE * infile, char* HTMLbuf)
 static void ReadTextFile (FILE *infile, char *textbuf, Document doc,
 			  char *pathURL)
 {
-  Element        parent, el, prev;
-  ElementType    elType;
-  unsigned char  charRead;
-  ThotBool       endOfTextFile;
-  Element        elLeaf;
+  Element             parent, el, prev;
+  Element             elLeaf;
+  ElementType         elType;
+  AttributeType       attrType;
+  Attribute	      attr;
+  unsigned char       charRead;
+  char               *ptr;
+  int		      val;
+  ThotBool            endOfTextFile;
 
   InputText = textbuf;
   LgBuffer = 0;
@@ -4813,6 +4817,22 @@ static void ReadTextFile (FILE *infile, char *textbuf, Document doc,
 	{
 	  /* LF = end of line */
 	  inputBuffer[LgBuffer] = EOS;
+	  if (DocumentTypes[doc] == docLog)
+	    {
+	       ptr = inputBuffer;
+	       while (*ptr == SPACE)
+		 ptr++;
+	       if (!strncmp (ptr, "line", 4))
+		 {
+		 attrType.AttrSSchema = TtaGetSSchema ("TextFile",
+						       doc);
+		 attrType.AttrTypeNum = TextFile_ATTR_IsLink;
+		 val = TextFile_ATTR_IsLink_VAL_Yes_;
+		 attr = TtaNewAttribute (attrType);
+		 TtaAttachAttribute (el, attr, doc);
+		 TtaSetAttributeValue (attr, val, el, doc);
+		 }
+	    }
 	  if (LgBuffer != 0)
 	    TtaAppendTextContent (el, inputBuffer, doc);
 	  LgBuffer = 0;

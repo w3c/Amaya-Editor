@@ -1292,17 +1292,6 @@ static char *ParseCSSClear (Element element, PSchema tsch,
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSContent: parse a CSS content value    
-  ----------------------------------------------------------------------*/
-static char *ParseCSSContent (Element element, PSchema tsch,
-			      PresentationContext context, char *cssRule,
-			      CSSInfoPtr css, ThotBool isHTML)
-{
-  cssRule = SkipValue (NULL, cssRule);
-  return (cssRule);
-}
-
-/*----------------------------------------------------------------------
    ParseCSSDisplay: parse a CSS display attribute string        
   ----------------------------------------------------------------------*/
 static char *ParseCSSDisplay (Element element, PSchema tsch,
@@ -3083,61 +3072,112 @@ void ParseCSSBackgroundImageCallback (Document doc, Element element,
 }
 
 /*----------------------------------------------------------------------
-   GetCSSBackgroundURL searches a CSS BackgroundImage url within
-   the styleString.
-   Returns NULL or a new allocated url string.
+  ParseCSSUrl: parse an URL
   ----------------------------------------------------------------------*/
-char *GetCSSBackgroundURL (char *styleString)
+static char *ParseCSSUrl (char *cssRule, char **url)
 {
-  char            *b, *e, *ptr;
-  int              len;
+  char                       saved;
+  char                      *base, *ptr;
 
-  ptr = NULL;
-  b = strstr (styleString, "url");
-  if (b != NULL)
+  cssRule = SkipBlanksAndComments (cssRule);
+  if (*cssRule == '(')
     {
-      b += 3;
-      b = SkipBlanksAndComments (b);
-      if (*b == '(')
+      cssRule++;
+      cssRule = SkipBlanksAndComments (cssRule);
+      /*** Escaped quotes are not handled. See function SkipQuotedString */
+      if (*cssRule == '"')
 	{
-	  b++;
-	  b = SkipBlanksAndComments (b);
-	  /*** Escaped quotes are not handled. See function SkipQuotedString */
-	  if (*b == '"')
+	  cssRule++;
+	  base = cssRule;
+	  while (*cssRule != EOS && *cssRule != '"')
+	    cssRule++;
+	}
+      else if (*cssRule == '\'')
+	{
+	  cssRule++;
+	  base = cssRule;
+	  while (*cssRule != EOS && *cssRule != '\'')
+	    cssRule++;
+	}
+      else
+	{
+	  base = cssRule;
+	  while (*cssRule != EOS && *cssRule != ')')
+	    cssRule++;
+	}
+      /* keep the current position */
+      ptr = cssRule;
+      if (saved == ')')
+	{
+	  /* remove extra spaces */
+	  if (cssRule[-1] == SPACE)
 	    {
-	      b++;
-	      /* search the url end */
-	      e = b;
-	      while (*e != EOS && *e != '"')
-		e++;
-	    }
-	  else if (*b == '\'')
-	    {
-	      b++;
-	      /* search the url end */
-	      e = b;
-	      while (*e != EOS && *e != '\'')
-		e++;
-	    }
-	  else
-	    {
-	      /* search the url end */
-	      e = b;
-	      while (*e != EOS && *e != ')')
-		e++;
-	    }
-	  if (*e != EOS)
-	    {
-	      len = (int)(e - b);
-	      ptr = (char*) TtaGetMemory (len+1);
-	      strncpy (ptr, b, len);
-	      ptr[len] = EOS;
+	      *cssRule = SPACE;
+	      cssRule--;
+	      while (cssRule[-1] == SPACE)
+		cssRule--;
 	    }
 	}
+      saved = *cssRule;
+      *cssRule = EOS;
+      *url = TtaStrdup (base);
+      *cssRule = saved;
+      if (saved == '"' || saved == '\'')
+	/* we need to skip the quote character and possible spaces */
+	{
+	  cssRule++;
+	  cssRule = SkipBlanksAndComments (cssRule);
+	}
+      else
+	cssRule = ptr;
     }
-  return (ptr);
+  cssRule++;
+  return cssRule;
 }
 
+/*----------------------------------------------------------------------
+   GetCSSBackgroundURL searches a CSS BackgroundImage url within
+   the cssRule.
+   Returns NULL or a new allocated url string.
+  ----------------------------------------------------------------------*/
+char *GetCSSBackgroundURL (char *cssRule)
+{
+  char            *b, *url;
+
+  url = NULL;
+  b = strstr (cssRule, "url");
+  if (b)
+    b = ParseCSSUrl (url, &url);
+  return (url);
+}
+
+/*----------------------------------------------------------------------
+   ParseCSSContent: parse a CSS content value    
+  ----------------------------------------------------------------------*/
+static char *ParseCSSContent (Element element, PSchema tsch,
+			      PresentationContext context, char *cssRule,
+			      CSSInfoPtr css, ThotBool isHTML)
+{
+  char      *p, quoteChar, *url;
+
+  cssRule = SkipBlanksAndComments (cssRule);
+  p = cssRule;
+  if (!strncasecmp (cssRule, "url", 3))
+    {  
+      cssRule += 3;
+      cssRule = ParseCSSUrl (cssRule, &url);
+      TtaFreeMemory (url);
+    }
+   else if (*cssRule == '"' || *cssRule == '\'')
+     {
+       quoteChar = *cssRule;
+       cssRule++;
+       cssRule = SkipQuotedString (cssRule, quoteChar);
+     }
+  else
+    cssRule = SkipValue ("Invalid content value", p);
+  return (cssRule);
+}
 
 /*----------------------------------------------------------------------
   ParseCSSBackgroundImage: parse a CSS BackgroundImage attribute string.
@@ -3152,8 +3192,6 @@ static char *ParseCSSBackgroundImage (Element element, PSchema tsch,
   PresentationValue          image, value;
   char                      *url;
   char                      *bg_image;
-  char                       saved;
-  char                      *base;
   char                       tempname[MAX_LENGTH];
   char                       imgname[MAX_LENGTH];
 
@@ -3174,45 +3212,7 @@ static char *ParseCSSBackgroundImage (Element element, PSchema tsch,
   else if (!strncasecmp (cssRule, "url", 3))
     {  
       cssRule += 3;
-      cssRule = SkipBlanksAndComments (cssRule);
-      if (*cssRule == '(')
-	{
-	  cssRule++;
-	  cssRule = SkipBlanksAndComments (cssRule);
-	  /*** Escaped quotes are not handled. See function SkipQuotedString */
-	  if (*cssRule == '"')
-	    {
-	      cssRule++;
-	      base = cssRule;
-	      while (*cssRule != EOS && *cssRule != '"')
-		cssRule++;
-	    }
-	  else if (*cssRule == '\'')
-	    {
-	      cssRule++;
-	      base = cssRule;
-	      while (*cssRule != EOS && *cssRule != '\'')
-		cssRule++;
-	    }
-	  else
-	    {
-	      base = cssRule;
-	      while (*cssRule != EOS && *cssRule != ')')
-		cssRule++;
-	    }
-	  saved = *cssRule;
-	  *cssRule = EOS;
-	  url = TtaStrdup (base);
-	  *cssRule = saved;
-	  if (saved == '"' || saved == '\'')
-	    /* we need to skip the quote character and possinble spaces */
-	    {
-	      cssRule++;	    
-	      cssRule = SkipBlanksAndComments (cssRule);
-	    }
-	}
-      cssRule++;
-
+      cssRule = ParseCSSUrl (cssRule, &url);
       if (ctxt->destroy)
 	{
 	  /* remove the background image PRule */
@@ -3587,7 +3587,7 @@ static char *ParseCSSPageBreakInside (Element element, PSchema tsch,
 
 
 /*----------------------------------------------------------------------
-   ParseSVGStrokeWidth: parse a SVG stroke-width property value.   
+   ParseSVGStrokeWidth: parse a SVG stroke-width property value.
   ----------------------------------------------------------------------*/
 static char *ParseSVGStrokeWidth (Element element, PSchema tsch,
 				  PresentationContext ctxt, char *cssRule,
@@ -3614,6 +3614,238 @@ static char *ParseSVGStrokeWidth (Element element, PSchema tsch,
       width.typed_data.value = 1;
       width.typed_data.unit = UNIT_REL;
     }
+  return (cssRule);
+}
+
+/*----------------------------------------------------------------------
+   ParseCSSPosition: parse a CSS Position attribute string.
+  ----------------------------------------------------------------------*/
+static char *ParseCSSPosition (Element element, PSchema tsch,
+			       PresentationContext ctxt,
+			       char *cssRule, CSSInfoPtr css,
+			       ThotBool isHTML)
+{
+  char     *ptr;
+
+  cssRule = SkipBlanksAndComments (cssRule);
+  ptr = cssRule;
+  if (!strncasecmp (cssRule, "static", 6))
+    cssRule = SkipWord (cssRule);
+  else if (!strncasecmp (cssRule, "relative", 7))
+    cssRule = SkipWord (cssRule);
+  else if (!strncasecmp (cssRule, "absolute", 8))
+    cssRule = SkipWord (cssRule);
+  else if (!strncasecmp (cssRule, "fixed", 5))
+    cssRule = SkipWord (cssRule);
+  else if (!strncasecmp (cssRule, "inherit", 7))
+    cssRule = SkipWord (cssRule);
+  else
+    cssRule = SkipValue ("Invalid Position value", ptr);
+  return (cssRule);
+}
+
+/*----------------------------------------------------------------------
+   ParseCSSTop: parse a CSS Top attribute
+  ----------------------------------------------------------------------*/
+static char *ParseCSSTop (Element element, PSchema tsch,
+			   PresentationContext context, char *cssRule,
+			   CSSInfoPtr css, ThotBool isHTML)
+{
+  PresentationValue   val;
+  char               *ptr;
+
+  cssRule = SkipBlanksAndComments (cssRule);
+  ptr = cssRule;
+  /* first parse the attribute string */
+  if (!strncasecmp (cssRule, "auto", 4) ||
+      !strncasecmp (cssRule, "inherit", 7))
+    {
+      val.typed_data.unit = VALUE_AUTO;
+      val.typed_data.value = 0;
+      val.typed_data.real = FALSE;
+      cssRule = SkipWord (cssRule);
+    }
+  else
+    cssRule = ParseCSSUnit (cssRule, &val);
+  if (val.typed_data.value != 0 &&
+      (val.typed_data.unit == UNIT_INVALID ||
+       val.typed_data.unit == UNIT_BOX))
+    {
+      CSSParseError ("top value", ptr, cssRule);
+      val.typed_data.unit = UNIT_PX;
+    }
+  /***
+  if (DoApply)
+    {
+      if (tsch)
+	cssRule = CheckImportantRule (cssRule, context);
+      TtaSetStylePresentation (PR, element, tsch, context, val);
+    }
+  ***/
+  return (cssRule);
+}
+
+/*----------------------------------------------------------------------
+   ParseCSSRight: parse a CSS Right attribute
+  ----------------------------------------------------------------------*/
+static char *ParseCSSRight (Element element, PSchema tsch,
+			   PresentationContext context, char *cssRule,
+			   CSSInfoPtr css, ThotBool isHTML)
+{
+  PresentationValue   val;
+  char               *ptr;
+
+  cssRule = SkipBlanksAndComments (cssRule);
+  ptr = cssRule;
+  /* first parse the attribute string */
+  if (!strncasecmp (cssRule, "auto", 4) ||
+      !strncasecmp (cssRule, "inherit", 7))
+    {
+      val.typed_data.unit = VALUE_AUTO;
+      val.typed_data.value = 0;
+      val.typed_data.real = FALSE;
+      cssRule = SkipWord (cssRule);
+    }
+  else
+    cssRule = ParseCSSUnit (cssRule, &val);
+  if (val.typed_data.value != 0 &&
+      (val.typed_data.unit == UNIT_INVALID ||
+       val.typed_data.unit == UNIT_BOX))
+    {
+      CSSParseError ("right value", ptr, cssRule);
+      val.typed_data.unit = UNIT_PX;
+    }
+  /***
+  if (DoApply)
+    {
+      if (tsch)
+	cssRule = CheckImportantRule (cssRule, context);
+      TtaSetStylePresentation (PR, element, tsch, context, val);
+    }
+  ***/
+  return (cssRule);
+}
+
+/*----------------------------------------------------------------------
+   ParseCSSBottom: parse a CSS Bottom attribute
+  ----------------------------------------------------------------------*/
+static char *ParseCSSBottom (Element element, PSchema tsch,
+			   PresentationContext context, char *cssRule,
+			   CSSInfoPtr css, ThotBool isHTML)
+{
+  PresentationValue   val;
+  char               *ptr;
+
+  cssRule = SkipBlanksAndComments (cssRule);
+  ptr = cssRule;
+  /* first parse the attribute string */
+  if (!strncasecmp (cssRule, "auto", 4) ||
+      !strncasecmp (cssRule, "inherit", 7))
+    {
+      val.typed_data.unit = VALUE_AUTO;
+      val.typed_data.value = 0;
+      val.typed_data.real = FALSE;
+      cssRule = SkipWord (cssRule);
+    }
+  else
+    cssRule = ParseCSSUnit (cssRule, &val);
+  if (val.typed_data.value != 0 &&
+      (val.typed_data.unit == UNIT_INVALID ||
+       val.typed_data.unit == UNIT_BOX))
+    {
+      CSSParseError ("bottom value", ptr, cssRule);
+      val.typed_data.unit = UNIT_PX;
+    }
+  /***
+  if (DoApply)
+    {
+      if (tsch)
+	cssRule = CheckImportantRule (cssRule, context);
+      TtaSetStylePresentation (PR, element, tsch, context, val);
+    }
+  ***/
+  return (cssRule);
+}
+
+/*----------------------------------------------------------------------
+   ParseCSSLeft: parse a CSS Left attribute
+  ----------------------------------------------------------------------*/
+static char *ParseCSSLeft (Element element, PSchema tsch,
+			   PresentationContext context, char *cssRule,
+			   CSSInfoPtr css, ThotBool isHTML)
+{
+  PresentationValue   val;
+  char               *ptr;
+
+  cssRule = SkipBlanksAndComments (cssRule);
+  ptr = cssRule;
+  /* first parse the attribute string */
+  if (!strncasecmp (cssRule, "auto", 4) ||
+      !strncasecmp (cssRule, "inherit", 7))
+    {
+      val.typed_data.unit = VALUE_AUTO;
+      val.typed_data.value = 0;
+      val.typed_data.real = FALSE;
+      cssRule = SkipWord (cssRule);
+    }
+  else
+    cssRule = ParseCSSUnit (cssRule, &val);
+  if (val.typed_data.value != 0 &&
+      (val.typed_data.unit == UNIT_INVALID ||
+       val.typed_data.unit == UNIT_BOX))
+    {
+      CSSParseError ("left value", ptr, cssRule);
+      val.typed_data.unit = UNIT_PX;
+    }
+  /***
+  if (DoApply)
+    {
+      if (tsch)
+	cssRule = CheckImportantRule (cssRule, context);
+      TtaSetStylePresentation (PR, element, tsch, context, val);
+    }
+  ***/
+  return (cssRule);
+}
+
+/*----------------------------------------------------------------------
+   ParseCSSZIndex: parse a CSS z-index attribute
+  ----------------------------------------------------------------------*/
+static char *ParseCSSZIndex (Element element, PSchema tsch,
+			     PresentationContext context, char *cssRule,
+			     CSSInfoPtr css, ThotBool isHTML)
+{
+  PresentationValue   val;
+  char               *ptr;
+
+  cssRule = SkipBlanksAndComments (cssRule);
+  ptr = cssRule;
+  /* first parse the attribute string */
+  if (!strncasecmp (cssRule, "auto", 4) ||
+      !strncasecmp (cssRule, "inherit", 7))
+    {
+      val.typed_data.unit = VALUE_AUTO;
+      val.typed_data.value = 0;
+      val.typed_data.real = FALSE;
+      cssRule = SkipWord (cssRule);
+    }
+  else
+    {
+      cssRule = ParseCSSUnit (cssRule, &val);
+      if (val.typed_data.unit != UNIT_BOX)
+	{
+	  CSSParseError ("z-index value", ptr, cssRule);
+	  val.typed_data.unit = UNIT_BOX;
+	}
+    }
+  /***
+  if (DoApply)
+    {
+      if (tsch)
+	cssRule = CheckImportantRule (cssRule, context);
+      TtaSetStylePresentation (PR, element, tsch, context, val);
+    }
+  ***/
   return (cssRule);
 }
 
@@ -3696,6 +3928,12 @@ static CSSProperty CSSProperties[] =
 
    {"display", ParseCSSDisplay},
    {"white-space", ParseCSSWhiteSpace},
+   {"position", ParseCSSPosition},
+   {"top", ParseCSSTop},
+   {"right", ParseCSSRight},
+   {"bottom", ParseCSSBottom},
+   {"left", ParseCSSLeft},
+   {"z-index", ParseCSSZIndex},
 
    {"list-style-type", ParseCSSListStyleType},
    {"list-style-image", ParseCSSListStyleImage},
@@ -3829,7 +4067,10 @@ static void  ParseCSSRule (Element element, PSchema tsch,
 		    }
 		}
 	      else
-		cssRule = SkipProperty (cssRule);
+		{
+		  CSSPrintError ("Unknown property", cssRule);
+		  cssRule = SkipProperty (cssRule);
+		}
 	    }
 	}
       /* next property */
@@ -4463,6 +4704,7 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
   int                i, j, k, max;
   int                att, maxAttr, kind;
   int                specificity, xmlType;
+  int                skippedNL;
   ThotBool           isHTML;
   ThotBool           level, quoted;
 
@@ -5072,10 +5314,13 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
   schemaName = TtaGetSSchemaName (ctxt->schema);
   isHTML = (strcmp (schemaName, "HTML") == 0);
   tsch = GetPExtension (doc, ctxt->schema, css, link);
+  skippedNL = NewLineSkipped;
   if (tsch && cssRule)
     ParseCSSRule (NULL, tsch, (PresentationContext) ctxt, cssRule, css, isHTML);
   /* future CSS rules should apply */
   DoApply = TRUE;
+  if (selector)
+    NewLineSkipped = skippedNL;
   return (selector);
 }
 
@@ -5431,6 +5676,7 @@ char ReadCSSRules (Document docRef, CSSInfoPtr css, char *buffer, char *url,
     DocURL = DocumentURLs[docRef];
   LineNumber = numberOfLinesRead + 1;
   NewLineSkipped = 0;
+  newlines = 0;
   while (CSSindex < MAX_CSS_LENGTH && c != EOS && !eof)
     {
       c = buffer[index++];
@@ -5446,8 +5692,8 @@ char ReadCSSRules (Document docRef, CSSInfoPtr css, char *buffer, char *url,
 	      noRule = TRUE;
 	      CSSindex = 0;
 	    }
-	  if (c == EOL)
-	    LineNumber++;
+	  /*if (c == EOL)
+	    LineNumber++;*/
 	  c = CR;
 	}
       else if (CSScomment == MAX_CSS_LENGTH ||
@@ -5495,7 +5741,7 @@ char ReadCSSRules (Document docRef, CSSInfoPtr css, char *buffer, char *url,
 			if ( CSSbuffer[CSSindex] == EOL)
 			  {
 			    LineNumber ++;
-			    newlines --;
+			      newlines --;
 			  }
 		      CSSindex--;
 		      }
@@ -5593,7 +5839,10 @@ char ReadCSSRules (Document docRef, CSSInfoPtr css, char *buffer, char *url,
 	    }
         }
       else if (c == EOL)
-	LineNumber++;
+	{
+	  LineNumber++;
+	  c = CR;
+	}
       if (c != CR)
 	CSSindex++;
 
@@ -5612,11 +5861,11 @@ char ReadCSSRules (Document docRef, CSSInfoPtr css, char *buffer, char *url,
 		{
 		  /* future import rules must be ignored */
 		  ignoreImport = TRUE;
+		  NewLineSkipped = 0;
 		  ParseStyleDeclaration (NULL, CSSbuffer, docRef, refcss,
 					 pInfo->PiLink, FALSE);
 		  LineNumber += newlines;
 		  newlines = 0;
-		  NewLineSkipped = 0;
 		}
               else if (import != MAX_CSS_LENGTH &&
 		       !strncasecmp (&CSSbuffer[import+1], "import", 6))
@@ -5706,6 +5955,7 @@ char ReadCSSRules (Document docRef, CSSInfoPtr css, char *buffer, char *url,
 		  /* restore the number of lines */
 		  LineNumber = newlines;
 		  newlines = 0;
+		  NewLineSkipped = 0;
 		  import = MAX_CSS_LENGTH;
 		}
 		

@@ -259,6 +259,9 @@ ATTRIBUTES
 
   Highlight:
 	CreateFirst (IndexBox);
+
+  IsLink:
+	Foreground: DarkIndigo1;
 #endif
 
 END

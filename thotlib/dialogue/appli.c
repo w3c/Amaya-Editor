@@ -1461,8 +1461,10 @@ void DisplaySelMessage (char *text, PtrDocument pDoc)
   int                 view;
 
 
-  if (ActiveFrame != 0 &&
-      (strcmp (OldMsgSelect, text) || pDoc != OldDocMsgSelect))
+  if (ActiveFrame &&
+      pDoc && pDoc->DocSSchema &&
+      (strcmp (OldMsgSelect, text) || pDoc != OldDocMsgSelect) &&
+      strcmp (pDoc->DocSSchema->SsName, "TextFile"))
     {
       /* recupere le document concerne */
       doc = FrameTable[ActiveFrame].FrDoc;

@@ -2458,6 +2458,7 @@ void SynchronizeSourceView (NotifyElement *event)
   if (firstSel &&
       (DocumentTypes[doc] == docSource ||
        DocumentTypes[doc] == docText ||
+       DocumentTypes[doc] == docCSS ||
        DocumentTypes[doc] == docLog))
     {
       /* display the line position of the selection */
@@ -2477,6 +2478,8 @@ static ThotBool ShowError (Element el, Document doc)
   ElementType         elType;
   Document	      otherDoc;
   Language            lang;
+  CSSInfoPtr          css;
+  PInfoPtr            pInfo;
   char               *buffer, *ptr, message[50];
   int                 len, line = 0, index = 0, i;
 
@@ -2501,6 +2504,14 @@ static ThotBool ShowError (Element el, Document doc)
 		if (DocumentURLs[otherDoc] &&
 		    !strcmp (ptr, DocumentURLs[otherDoc]))
 		  break;
+	      if (otherDoc == MAX_DOCUMENTS)
+		{
+		  /* not found: do we have to open a CSS file */
+		  css = SearchCSS (0, ptr, NULL, &pInfo);
+		  if (css)
+		      otherDoc = GetAmayaDoc (ptr, NULL, 0, 0, CE_CSS,
+					      FALSE, NULL, NULL, UTF_8);
+		}
 	    }
 	}
       TtaFreeMemory (buffer);
@@ -2544,7 +2555,10 @@ static ThotBool ShowError (Element el, Document doc)
 		   child = TtaGetFirstChild (el);
 		   if (child)
 		     {
-		       TtaSelectString (doc, child, index, index);
+		       if (index >= 0)
+			 TtaSelectString (doc, child, index, index);
+		       else
+			 TtaSelectElement (doc, child);
 		       sprintf (message, "line %d char %d", line, index);
 		       TtaSetStatus (doc, 1, message, NULL);
 		     }
