@@ -193,12 +193,6 @@ static ThotBool      IgnoreCommentAndPi = FALSE;;
 static char	     currentElementContent = ' ';
 static char	     currentElementName[40];
 
-/* Global variable to parse an external svg use reference */
-static ThotBool      UseExtRef = FALSE;
-static ThotBool      ElemToBeParsed = FALSE;
-static char         *UseExtRefUri = NULL;
-static char         *UseExtRefId = NULL;
-
 /* Global variable to handle white-space in XML documents */
 static ThotBool      RemoveLineBreak = FALSE;
 static ThotBool      RemoveLeadingSpace = FALSE;   
@@ -1616,61 +1610,6 @@ static void   GetXmlElType (char *ns_uri, char *elementName,
       elType->ElTypeNum = 0;
       elType->ElSSchema = NULL;
     }
-}
-
-/*----------------------------------------------------------------------
-   ElementToBeTreated
-   When We are parsing the refernece uf an external svg use element,
-   we only treat the elements that correspond to the reference ID.
-  ----------------------------------------------------------------------*/
-static ThotBool   ElementToBeTreated (const XML_Char *namename,
-				      const XML_Char **attlist)
-{
-
-   char      *attrName = NULL;
-   char      *attrValue = NULL;
-   ThotBool   treatment = FALSE;
-
-   /* The root of the sub-tree has already been closed */
-   if (XMLrootClosed == TRUE)
-     return FALSE;
-
-   /* We are currently parsing the sub-tree that correspond to the ID */
-   if (stackLevel > 1)
-     return TRUE;
-   
-   /* Test if the element has the corresponding ID attribute */
-   while (*attlist != NULL && !treatment)
-     {
-       attrName = TtaGetMemory ((strlen (*attlist)) + 1);
-       strcpy (attrName, *attlist);
-       attlist++;
-       if (strcmp (attrName, "id") == 0)
-	 {
-	   /* Filling of the attribute value */
-	   if (*attlist != NULL)
-	     {
-	       attrValue = TtaGetMemory ((strlen (*attlist)) + 1);
-	       strcpy (attrValue, *attlist);
-	       if (strcmp (attrValue, UseExtRefId) == 0)
-		 treatment = TRUE;
-	     }
-	 }
-       attlist++;
-       
-       if (attrName != NULL)
-	 {
-	   TtaFreeMemory (attrName);
-	   attrName = NULL;
-	 }
-       if (attrValue != NULL)
-	 {
-	   TtaFreeMemory (attrValue);
-	   attrValue = NULL;
-	 }
-     }
-
-   return (treatment);
 }
 
 /*----------------------------------------------------------------------
@@ -3661,9 +3600,6 @@ static void     Hndl_CdataStart (void *userData)
   printf ("Hndl_CdataStart\n");
 #endif /* EXPAT_PARSER_DEBUG */
   /* The content of the current element has not to be parsed */
-  if (!ElemToBeParsed)
-    return;
-
   ParsingCDATA = TRUE;
   CreateCdataElement ();
 }
@@ -3679,9 +3615,6 @@ static void     Hndl_CdataEnd (void *userData)
   printf ("Hndl_CdataEnd\n");
 #endif /* EXPAT_PARSER_DEBUG */
   /* The content of the current element has not to be parsed */
-  if (!ElemToBeParsed)
-    return;
-
   ParsingCDATA = FALSE;
   XMLcontext.lastElementClosed = TRUE;
 }
@@ -3701,9 +3634,6 @@ static void Hndl_CharacterData (void *userData, const XML_Char *data,
   printf ("Hndl_CharacterData - length = %d - \n", length);
 #endif /* EXPAT_PARSER_DEBUG */
   /* The content of the current element has not to be parsed */
-  if (!ElemToBeParsed)
-    return;
-
   if (ParsingCDATA)
     ParseCdataElement ((char*) data, length);
   else
@@ -3729,9 +3659,6 @@ static void Hndl_Comment (void *userData, const XML_Char *data)
   printf ("Hndl_Comment %s\n", data);
 #endif /* EXPAT_PARSER_DEBUG */
   /* This comment has not to be parsed */
-  if (!ElemToBeParsed)
-    return;
-
   if (WithinDoctype)
     {
       buffer = (unsigned char *) data;
@@ -3763,9 +3690,6 @@ static void Hndl_DefaultExpand (void *userData,
    printf ("'\n");
 #endif /* EXPAT_PARSER_DEBUG */
    /* The content of the current element has not to be parsed */
-   if (!ElemToBeParsed)
-     return;
-   
    ptr = (unsigned char *) data;
    /* Are we parsing the content of the DOCTYPE declaration ? */
    if (WithinDoctype)
@@ -3790,9 +3714,6 @@ static void Hndl_DoctypeStart (void *userData,
    printf ("Hndl_DoctypeStart %s\n", doctypeName);
 #endif /* EXPAT_PARSER_DEBUG */
    /* The content of this doctype has not to be parsed */
-   if (!ElemToBeParsed)
-     return;
-
    if (!VirtualDoctype)
      {
        CreateDoctypeElement ();
@@ -3813,9 +3734,6 @@ static void Hndl_DoctypeEnd (void *userData)
    printf ("Hndl_DoctypeEnd\n");
 #endif /* EXPAT_PARSER_DEBUG */
    /* The content of this doctype has not to be parsed */
-   if (!ElemToBeParsed)
-     return;
-
    if (VirtualDoctype)
      VirtualDoctype = FALSE;
    else
@@ -3855,67 +3773,59 @@ static void Hndl_ElementStart (void *userData,
        /* we are parsing the result of a transformation */
        if (strcmp ((char*) name, SUBTREE_ROOT) != 0)
 	 {
-	   if ((UseExtRef == TRUE) && 
-	       (UseExtRefId != NULL) &&
-	       (ElementToBeTreated (name, attlist) == FALSE))
-	     ElemToBeParsed = FALSE;
-	   else
+	   /* Treatment called at the beginning of a start tag */
+	   StartOfXmlStartElement ((char*) name);
+	   /* We save the current element context */
+	   elementParserCtxt = currentParserCtxt;
+	   
+	   /*-------  Treatment of the attributes -------*/
+	   while (*attlist != NULL)
 	     {
-	       ElemToBeParsed = TRUE;
-	       /* Treatment called at the beginning of a start tag */
-	       StartOfXmlStartElement ((char*) name);
-	       /* We save the current element context */
-	       elementParserCtxt = currentParserCtxt;
+	       /* Create the corresponding Thot attribute */
+	       attrName = TtaGetMemory ((strlen (*attlist)) + 1);
+	       strcpy (attrName, *attlist);
+#ifdef EXPAT_PARSER_DEBUG
+	       printf ("  attr %s :", attrName);
+#endif /* EXPAT_PARSER_DEBUG */
+	       EndOfAttributeName (attrName);
 	       
-	       /*-------  Treatment of the attributes -------*/
-	       while (*attlist != NULL)
+	       /* Restore the element context */
+	       /* It occurs if the attribute name is unknown */
+	       if (currentParserCtxt == NULL)
+		 currentParserCtxt = elementParserCtxt;
+	       
+	       /* Filling of the attribute value */
+	       attlist++;
+	       if (*attlist != NULL)
 		 {
-		   /* Create the corresponding Thot attribute */
-		   attrName = TtaGetMemory ((strlen (*attlist)) + 1);
-		   strcpy (attrName, *attlist);
+		   attrValue = TtaGetMemory ((strlen (*attlist)) + 1);
+		   strcpy (attrValue, *attlist);
 #ifdef EXPAT_PARSER_DEBUG
-		   printf ("  attr %s :", attrName);
+		   printf (" value=\"%s\"\n", attrValue);
 #endif /* EXPAT_PARSER_DEBUG */
-		   EndOfAttributeName (attrName);
-		   
-		   /* Restore the element context */
-		   /* It occurs if the attribute name is unknown */
-		   if (currentParserCtxt == NULL)
-		     currentParserCtxt = elementParserCtxt;
-		   
-		   /* Filling of the attribute value */
-		   attlist++;
-		   if (*attlist != NULL)
-		     {
-		       attrValue = TtaGetMemory ((strlen (*attlist)) + 1);
-		       strcpy (attrValue, *attlist);
-#ifdef EXPAT_PARSER_DEBUG
-		       printf (" value=\"%s\"\n", attrValue);
-#endif /* EXPAT_PARSER_DEBUG */
-		       EndOfAttributeValue (attrValue, attrName);
-		     }
-		   attlist++;
-		   if (attrName != NULL)
-		     TtaFreeMemory (attrName);
-		   if (attrValue != NULL)
-		     TtaFreeMemory (attrValue);
-		   
-		   /* Restore the context (it may have been changed */
-		   /* by the treatment of the attribute) */
-		   currentParserCtxt = elementParserCtxt;
+		   EndOfAttributeValue (attrValue, attrName);
 		 }
+	       attlist++;
+	       if (attrName != NULL)
+		 TtaFreeMemory (attrName);
+	       if (attrValue != NULL)
+		 TtaFreeMemory (attrValue);
 	       
-	       /*----- Treatment called at the end of a start tag -----*/
-	       EndOfXmlStartElement ((char*) name);
-	       
-	       /*----- We are immediately after a start tag -----*/
-	       ImmediatelyAfterTag = TRUE;
-	       
-	       /* Initialize the root element */
-	       if (XMLRootName[0] == EOS)
-		 /* This is the first parsed element */
-		 strcpy (XMLRootName, (char*) name);
+	       /* Restore the context (it may have been changed */
+	       /* by the treatment of the attribute) */
+	       currentParserCtxt = elementParserCtxt;
 	     }
+	   
+	   /*----- Treatment called at the end of a start tag -----*/
+	   EndOfXmlStartElement ((char*) name);
+	   
+	   /*----- We are immediately after a start tag -----*/
+	   ImmediatelyAfterTag = TRUE;
+	   
+	   /* Initialize the root element */
+	   if (XMLRootName[0] == EOS)
+	     /* This is the first parsed element */
+	     strcpy (XMLRootName, (char*) name);
 	 }
      }
 }
@@ -3942,9 +3852,6 @@ static void     Hndl_ElementEnd (void *userData, const XML_Char *name)
        if (!strcmp (XMLRootName, (char*) name) && stackLevel == 1)
 	 {
 	   XMLrootClosed = TRUE;
-	   /* Is it the end tag of a svg use element ? */
-	   if ((UseExtRef == TRUE) && (UseExtRefId != NULL))
-	     ElemToBeParsed = FALSE;
 	 }
      }
 }
@@ -3983,10 +3890,7 @@ static void     Hndl_NameSpaceStart (void *userData,
 #ifdef EXPAT_PARSER_DEBUG
   printf ("Hndl_NameSpaceStart - prefix=\"%s\" uri=\"%s\"\n", ns_prefix, ns_uri);
 #endif /* EXPAT_PARSER_DEBUG */
-  /* This namespace has not to be parsed */
-  if (!ElemToBeParsed)
-    return;
-  
+  /* This namespace has not to be parsed */  
   NsDeclarationStart ((char *) ns_prefix, (char*) ns_uri);
 }
 
@@ -4002,9 +3906,6 @@ static void     Hndl_NameSpaceEnd (void *userData,
   printf ("Hndl_NameSpaceEnd - prefix=\"%s\"\n", ns_prefix);
 #endif /* EXPAT_PARSER_DEBUG */
   /* This namespace has not to be parsed */
-  if (!ElemToBeParsed)
-    return;
-
   NsDeclarationEnd ((char *) ns_prefix);
 }
 
@@ -4066,9 +3967,6 @@ static void     Hndl_PI (void *userData,
   printf ("  pidata : %s\n", pidata);
 #endif /* EXPAT_PARSER_DEBUG */
   /* This PI has not to be parsed */
-  if (!ElemToBeParsed)
-    return;
-
   if (WithinDoctype)
     {
       ParseDoctypeElement ("<?", 2);
@@ -4096,9 +3994,6 @@ static int Hndl_UnknownEncoding (void           *encodingData,
   printf ("Hndl_UnknownEncoding - name : %s\n", name);
 #endif /* EXPAT_PARSER_DEBUG */
   /* This PI has not to be parsed */
-  if (!ElemToBeParsed)
-    return 1;
-
   XMLUnknownEncoding = TRUE;
   XmlParseError (errorEncoding,
 		 TtaGetMessage (AMAYA, AM_UNKNOWN_ENCODING), -1);
@@ -4367,11 +4262,6 @@ static void  InitializeXmlParsingContext (Document doc,
   ParsingCDATA = FALSE;
   VirtualDoctype = FALSE;
   ShowParsingErrors =  TRUE;
-  /* external svg use reference */
-  UseExtRef = FALSE;
-  UseExtRefUri = NULL;
-  UseExtRefId = NULL;
-  ElemToBeParsed = TRUE;
 
   htmlLineRead = 0;
   htmlCharRead = 0;
@@ -4384,9 +4274,9 @@ static void  InitializeXmlParsingContext (Document doc,
 }
 
 /*----------------------------------------------------------------------
-  ReplaceExternAttrType
+  MoveExternalAttribute
   ----------------------------------------------------------------------*/
-static void ReplaceExternAttrType (Element elold, Element elnew, Document doc)
+static void  MoveExternalAttribute (Element elold, Element elnew, Document doc)
 {
   AttributeType   attrType;
   Attribute       attrold, attrnew, nextattr;
@@ -4425,9 +4315,12 @@ static void ReplaceExternAttrType (Element elold, Element elnew, Document doc)
 }
 
 /*----------------------------------------------------------------------
-  ChangeExternalElemType
+  SetExternalElementType
+  Previous treatment relative to the element which is
+  the parent of the new sub-tree
   ----------------------------------------------------------------------*/
-static Element  ChangeExternalElemType (Element el, Document doc, ThotBool *use_ref)
+static Element  SetExternalElementType (Element el, Document doc,
+					ThotBool *use_ref)
 {
   ElementType   elType, parentType;
   Element       parent, elemElement, elemContent;
@@ -4445,18 +4338,20 @@ static Element  ChangeExternalElemType (Element el, Document doc, ThotBool *use_
   if ((strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0) &&
       (elType.ElTypeNum == HTML_EL_PICTURE_UNIT))
     {
+      /* We are parsing an external picture within a HTML document */
+      /* Is there an Embed_Content element? */
       parent = TtaGetParent (el);
       parentType = TtaGetElementType (parent);
       if (parentType.ElTypeNum == HTML_EL_Object)
 	{
-	  /* create a SVG_ImageContent element */
+	  /* Create a SVG_ImageContent element */
 	  elType.ElTypeNum = HTML_EL_SVG_ImageContent;
 	  elemContent = TtaNewElement (doc, elType);
 	  if (elemContent != NULL)
 	    {
 	      TtaInsertSibling (elemContent, el, FALSE, doc);
 	      /* Attach the attributes to that new element */
-	      ReplaceExternAttrType (el, elemContent, doc);
+	       MoveExternalAttribute (el, elemContent, doc);
 	      /* Remove the PICTURE_UNIT element form the tree */
 	      TtaDeleteTree (el, doc);
 	    }
@@ -4470,7 +4365,7 @@ static Element  ChangeExternalElemType (Element el, Document doc, ThotBool *use_
 	    {
 	      TtaInsertSibling (elemElement, el, FALSE, doc);
 	      /* Attach the attributes to that new element */
-	      ReplaceExternAttrType (el, elemElement, doc);
+	       MoveExternalAttribute (el, elemElement, doc);
 	      /* create a SVG_ImageContent element */
 	      elType.ElTypeNum = HTML_EL_SVG_ImageContent;
 	      elemContent = TtaNewElement (doc, elType);
@@ -4484,8 +4379,8 @@ static Element  ChangeExternalElemType (Element el, Document doc, ThotBool *use_
   else if ((strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0) &&
 	   elType.ElTypeNum == HTML_EL_Embed_)
     {
-      /* we are parsing a HTML embed element */
-      /* is there an Embed_Content element? */
+      /* We are parsing an embed element within a HTML document*/
+      /* Is there an Embed_Content element? */
       elType.ElTypeNum = HTML_EL_Embed_Content;
       elemContent = TtaSearchTypedElement (elType, SearchInTree, el);
       if (!elemContent)
@@ -4499,15 +4394,15 @@ static Element  ChangeExternalElemType (Element el, Document doc, ThotBool *use_
   else if ((strcmp (TtaGetSSchemaName (elType.ElSSchema), "SVG") == 0) &&
 	   elType.ElTypeNum == SVG_EL_PICTURE_UNIT)
     {
-      /* we are parsing a SVG image */
-      /* create a SVG_Image element within a SVG element */
+      /* We are parsing a SVG image */
+      /* Create a SVG_Image element within a SVG element */
       elType.ElTypeNum = SVG_EL_SVG_Image;
       elemContent = TtaNewElement (doc, elType);
       if (elemContent != NULL)
 	{
 	  TtaInsertSibling (elemContent, el, FALSE, doc);
 	  /* Attach the attributes to that new element */
-	  ReplaceExternAttrType (el, elemContent, doc);
+	   MoveExternalAttribute (el, elemContent, doc);
 	  /* Remove the PICTURE_UNIT element form the tree */
 	  TtaDeleteTree (el, doc);
 	}
@@ -4515,7 +4410,7 @@ static Element  ChangeExternalElemType (Element el, Document doc, ThotBool *use_
   else if ((strcmp (TtaGetSSchemaName (elType.ElSSchema), "SVG") == 0) &&
 	   elType.ElTypeNum == SVG_EL_use_)
     {
-      /* we are parsing an external SVG use element */
+      /* We are parsing an external SVG use element */
       elemContent = el;
       *use_ref = TRUE;
     }
@@ -4526,48 +4421,46 @@ static Element  ChangeExternalElemType (Element el, Document doc, ThotBool *use_
   return elemContent;
 }
 
+
 /*----------------------------------------------------------------------
-   ParseXmlSubTree
-   Return TRUE if the parsing of the sub-tree has no error.
-   Parse a XML sub-tree and complete the corresponding Thot abstract tree.
-   Xml sub-tree is given in fileName or xmlBuffer, one parameter should be null
-   Return TRUE if the parsing of the XML sub-tree doesn't detect errors.
+  ParseExternalXmlResource
+  Parse an xml resource called from a document and complete the
+  corresponding Thot abstract tree.
+  Return TRUE if the parsing of the external resource doesn't detect errors.
   ----------------------------------------------------------------------*/
-ThotBool       ParseXmlSubTree (char     *xmlBuffer,
-				char     *fileName,
-				Element   el,
-				ThotBool  isclosed,
-				Document  doc,
-				Language  lang,
-			        char     *DTDname)
+ThotBool       ParseExternalXmlResource (char     *fileName,
+					 Element   el,
+					 ThotBool  isclosed,
+					 Document  doc,
+					 Language  lang,
+					 char     *DTDname)
 
 {
-  int          tmpLen = 0;
-  char        *transBuffer = NULL;
-  char        *schemaName = NULL;
-  char        *ptr = NULL;
-  ElementType  elType;
-  Element      parent;
-  CHARSET      charset;
-  Element      extEl = NULL;
-  DisplayMode  dispMode;
+  int           tmpLen = 0;
+  char         *schemaName = NULL;
+  char         *ptr = NULL;
+  ElementType   elType;
+  Element       parent, oldel;
+  CHARSET       charset;
+  DisplayMode   dispMode;
 #define	 COPY_BUFFER_SIZE	1024
-  gzFile       infile;
-  char         bufferRead[COPY_BUFFER_SIZE];
-  int          res, i,  parsingLevel, tmpLineRead = 0;
-  ThotBool     endOfFile = FALSE;
-  ThotBool     xmlDec, docType, isXML, xmlns;
-  ThotBool     use_ref = FALSE;
-  DocumentType thotType;
-  char         charsetname[MAX_LENGTH];
-  
-  if (fileName == NULL && xmlBuffer == NULL)
+  gzFile        infile;
+  char          bufferRead[COPY_BUFFER_SIZE];
+  int           res, i,  parsingLevel, tmpLineRead = 0;
+  ThotBool      endOfFile = FALSE;
+  ThotBool      xmlDec, docType, isXML, xmlns;
+  DocumentType  thotType;
+  ThotBool      use_ref = FALSE;
+  Document      externalDoc = 0;
+  Element       idEl = NULL, extEl = NULL, copyEl = NULL;
+  char          charsetname[MAX_LENGTH];
+  char         *extUseUri = NULL, *extUseId = NULL, *s = NULL;
+  AttributeType extAttrType;
+
+  if (fileName == NULL)
     return FALSE;
 
-  if (fileName != NULL && xmlBuffer != NULL)
-    return FALSE;
-
-  /* avoid too many redisplay */
+  /* Avoid too many redisplay */
   dispMode = TtaGetDisplayMode (doc);
   if (dispMode == DisplayImmediately)
     TtaSetDisplayMode (doc, DeferredDisplay);
@@ -4576,23 +4469,49 @@ ThotBool       ParseXmlSubTree (char     *xmlBuffer,
   if (firstParserCtxt == NULL)
     InitXmlParserContexts ();
  
-  /* general initialization */
+  /* General initialization */
   RootElement = NULL;
-  if (fileName != NULL && DTDname!= NULL &&
+  if (DTDname != NULL &&
       ((strcmp (DTDname, "SVG") == 0) || (strcmp (DTDname, "MathML") == 0)))
     {
-      /* We are parsing an external xml file */
-      extEl = ChangeExternalElemType (el, doc, &use_ref);
+      /* We are parsing an external svg or mathml file */
+      extEl = SetExternalElementType (el, doc, &use_ref);
       if (extEl == NULL)
 	{
 	  FreeXmlParserContexts ();
 	  return FALSE;
 	}
-      InitializeXmlParsingContext (doc, extEl, isclosed, TRUE);
+      if (use_ref)
+	{
+	  /* We are parsing an external reference to a 'use' svg element */
+	  /* Create a new document with no presentation schema */
+	  /* and loads the target document */
+	  externalDoc = TtaNewDocument ("SVG", "tmp");
+	  if (externalDoc == 0)
+	    {
+	      FreeXmlParserContexts ();
+	      return FALSE;
+	    }
+	  else
+	    {
+	      TtaSetPSchema (externalDoc, "SVGP");
+	      RootElement = TtaGetMainRoot (externalDoc);
+	      InitializeXmlParsingContext (externalDoc, RootElement, FALSE, FALSE);
+	      /* Disable structure checking for the external document*/
+	      TtaSetStructureChecking (0, externalDoc);
+	      /* Delete all element except the root element */
+	      parent = TtaGetFirstChild (RootElement);
+	      while (parent != NULL)
+		{
+		  oldel = parent;
+		  TtaNextSibling (&parent);
+		  TtaDeleteTree (oldel, externalDoc);
+		}
+	    }
+	}
+      else
+	InitializeXmlParsingContext (doc, extEl, isclosed, TRUE);
       ChangeXmlParserContextByDTD (DTDname);
-      /* When parsing an external xml file, ignore comments and PIs
-	 (otherwise they are displayed in structure view ) */
-      IgnoreCommentAndPi = TRUE;
     }
   else
     {
@@ -4607,10 +4526,51 @@ ThotBool       ParseXmlSubTree (char     *xmlBuffer,
       InitializeXmlParsingContext (doc, el, isclosed, TRUE);
       ChangeXmlParserContextByDTD (schemaName);
     }
-
+  
   /* specific Initialization */
   XMLcontext.language = lang;
   DocumentSSchema = TtaGetDocumentSSchema (doc);
+
+  /* Set document URL */
+  tmpLen = strlen (fileName);
+  docURL = TtaGetMemory (tmpLen + 1);
+
+  if (use_ref)
+    {
+      /* We are parsing an external reference for a 'use' svg element */
+      extUseUri = TtaGetMemory (strlen (fileName) + 1);
+      strcpy (extUseUri, fileName);
+      /* Is that element refers to an ID ? */
+      if ((ptr = strrchr (extUseUri, '#')) != NULL)
+	{
+	  *ptr = EOS;
+	  ptr++;
+	  extUseId = TtaGetMemory ((strlen (ptr) + 1));
+	  strcpy (extUseId, ptr);
+	}
+      strcpy (docURL, extUseUri);
+      s = TtaStrdup (docURL);
+      if (DocumentURLs[externalDoc] != NULL)
+	{
+	  TtaFreeMemory (DocumentURLs[externalDoc]);
+	  DocumentURLs[externalDoc] = NULL;
+	}
+      DocumentURLs[externalDoc] = s;
+    }
+  else
+    strcpy (docURL, fileName);
+  
+  /* Initialize global counters */
+  extraLineRead = 0;
+  extraOffset = 0;
+  htmlLineRead = 0;
+  htmlCharRead = 0;
+  
+  /* When we parse an external xml file, we ignore comments and PIs */
+  /* (otherwise they are displayed in structure view) */
+  /* and we don't report parsing errors */
+  IgnoreCommentAndPi = TRUE;
+  ShowParsingErrors = FALSE;
 
   /* Expat initialization */
   charset = TtaGetDocumentCharset (doc);
@@ -4619,141 +4579,65 @@ ThotBool       ParseXmlSubTree (char     *xmlBuffer,
     charset = ISO_8859_1;
   InitializeExpatParser (charset);
  
-  if (xmlBuffer != NULL)
+  /* Check if there is an xml declaration with a charset declaration */
+  if (docURL[0] != EOS)
+    CheckDocHeader (docURL, &xmlDec, &docType, &isXML, &xmlns,
+		    &parsingLevel, &charset, charsetname, &thotType);
+  
+  /* Parse the input file and complete the Thot document */
+  infile = gzopen (docURL, "r");
+  if (infile != 0)
     {
-      /* We are parsing the result of a transformation */
-      /* Parse a virtual DOCTYPE */
-      VirtualDoctype = TRUE;
-      if (!XML_Parse (Parser, DECL_DOCTYPE, DECL_DOCTYPE_LEN, 0))
-	XmlParseError (errorNotWellFormed,
-		       (char *) XML_ErrorString (XML_GetErrorCode (Parser)), 0);
-      
-      /* Parse the input XML buffer and complete the Thot document */
-      if (!XMLNotWellFormed)
+      while (!endOfFile && !XMLNotWellFormed)
 	{
-	  /* We create a virtual root for the sub-tree to be parsed */
-	  tmpLen = (strlen (xmlBuffer)) + 1;
-	  tmpLen = tmpLen + (2 * SUBTREE_ROOT_LEN) + 1;
-	  transBuffer = TtaGetMemory (tmpLen);
-	  strcpy (transBuffer, "<SUBTREE_ROOT>");
-	  strcat (transBuffer, xmlBuffer);
-	  strcat (transBuffer, "</SUBTREE_ROOT>");
-	  tmpLen = strlen (transBuffer);
-	  
-	  if (!XML_Parse (Parser, transBuffer, tmpLen, 1))
+	  /* read the XML file */
+	  res = gzread (infile, bufferRead, COPY_BUFFER_SIZE);      
+	  if (res < COPY_BUFFER_SIZE)
+	    endOfFile = TRUE;
+	  i = 0;
+	  if (!docType)
+	    /* There is no DOCTYPE Declaration 
+	       We include a virtual DOCTYPE declaration so that EXPAT parser
+	       doesn't stop processing when it finds an external entity */	  
 	    {
-	      if (!XMLrootClosed)
+	      if (xmlDec)
+		/* There is a XML declaration */
+		/* We look for the first '>' character */
+		{
+		  while ((bufferRead[i] != '>') && i < res)
+		    i++;
+		  if (i < res)
+		    {
+		      i++;
+		      if (!XML_Parse (Parser, bufferRead, i, FALSE))
+			XmlParseError (errorNotWellFormed,
+				       (char *) XML_ErrorString (XML_GetErrorCode (Parser)), 0);
+		      res = res - i;
+		    }
+		}
+	      
+	      /* Virtual DOCTYPE Declaration */
+	      if (!XMLNotWellFormed)
+		{
+		  VirtualDoctype = TRUE;
+		  tmpLineRead = XML_GetCurrentLineNumber (Parser);
+		  if (!XML_Parse (Parser, DECL_DOCTYPE, DECL_DOCTYPE_LEN, 0))
+		    XmlParseError (errorNotWellFormed,
+				   (char *) XML_ErrorString (XML_GetErrorCode (Parser)), 0);
+		  docType = TRUE;
+		  extraLineRead = XML_GetCurrentLineNumber (Parser) - tmpLineRead;
+		}
+	    }
+	  
+	  /* Standard EXPAT processing */
+	  if (!XMLNotWellFormed)
+	    {
+	      if (!XML_Parse (Parser, &bufferRead[i], res, endOfFile))
 		XmlParseError (errorNotWellFormed,
 			       (char *) XML_ErrorString (XML_GetErrorCode (Parser)), 0);
 	    }
-	  if (transBuffer != NULL)   
-	    TtaFreeMemory (transBuffer);   
 	}
-    }
-  else
-    {
-      /* We are parsing the result an external resource */
-      /* Don't report parsing errors */
-      ShowParsingErrors = FALSE;
-      /* Set document URL */
-      tmpLen = strlen (fileName);
-      docURL = TtaGetMemory (tmpLen + 1);
-      if (use_ref)
-	{
-	  UseExtRef = TRUE;
-	  if (UseExtRefUri != NULL)
-	    {
-	      TtaFreeMemory (UseExtRefUri);
-	      UseExtRefUri = NULL;
-	    }
-	  if (UseExtRefId != NULL)
-	    {
-	      TtaFreeMemory (UseExtRefId);
-	      UseExtRefId = NULL;
-	    }
-	  UseExtRefUri = TtaGetMemory (strlen (fileName) + 1);
-	  strcpy (UseExtRefUri, fileName);
-	  /* Is that that element refers to an ID ? */
-	  if ((ptr = strrchr (UseExtRefUri, '#')) != NULL)
-	    {
-	      *ptr = EOS;
-	      ptr++;
-	      UseExtRefId = TtaGetMemory ((strlen (ptr) + 1));
-	      strcpy (UseExtRefId, ptr);
-	      /* the elements before this id has not to be parsed */
-	      ElemToBeParsed = FALSE;
-	    }
-	  strcpy (docURL, UseExtRefUri);
-	}
-      else
-	strcpy (docURL, fileName);
-
-      /* Initialize global counters */
-      extraLineRead = 0;
-      extraOffset = 0;
-      htmlLineRead = 0;
-      htmlCharRead = 0;
-
-      /* check if there is an XML declaration with a charset declaration */
-      if (docURL[0] != EOS)
-	CheckDocHeader (docURL, &xmlDec, &docType, &isXML, &xmlns,
-			&parsingLevel, &charset, charsetname, &thotType);
-
-      /* Parse the input file and complete the Thot document */
-      infile = gzopen (docURL, "r");
-      if (infile != 0)
-	{
-	  while (!endOfFile && !XMLNotWellFormed)
-	    {
-	      /* read the XML file */
-	      res = gzread (infile, bufferRead, COPY_BUFFER_SIZE);      
-	      if (res < COPY_BUFFER_SIZE)
-		endOfFile = TRUE;
-	      i = 0;
-	      if (!docType)
-		/* There is no DOCTYPE Declaration 
-		   We include a virtual DOCTYPE declaration so that EXPAT parser
-		   doesn't stop processing when it finds an external entity */	  
-		{
-		  if (xmlDec)
-		    /* There is a XML declaration */
-		    /* We look for the first '>' character */
-		    {
-		      while ((bufferRead[i] != '>') && i < res)
-			i++;
-		      if (i < res)
-			{
-			  i++;
-			  if (!XML_Parse (Parser, bufferRead, i, FALSE))
-			    XmlParseError (errorNotWellFormed,
-					   (char *) XML_ErrorString (XML_GetErrorCode (Parser)), 0);
-			  res = res - i;
-			}
-		    }
-		  
-		  /* Virtual DOCTYPE Declaration */
-		  if (!XMLNotWellFormed)
-		    {
-		      VirtualDoctype = TRUE;
-		      tmpLineRead = XML_GetCurrentLineNumber (Parser);
-		      if (!XML_Parse (Parser, DECL_DOCTYPE, DECL_DOCTYPE_LEN, 0))
-			XmlParseError (errorNotWellFormed,
-				       (char *) XML_ErrorString (XML_GetErrorCode (Parser)), 0);
-		      docType = TRUE;
-		      extraLineRead = XML_GetCurrentLineNumber (Parser) - tmpLineRead;
-		    }
-		}
-
-	      /* Standard EXPAT processing */
-	      if (!XMLNotWellFormed)
-		{
-		  if (!XML_Parse (Parser, &bufferRead[i], res, endOfFile))
-		    XmlParseError (errorNotWellFormed,
-				   (char *) XML_ErrorString (XML_GetErrorCode (Parser)), 0);
-		}
-	    }
-	} 
-    }
+    } 
 
   /* Free expat parser */ 
   FreeXmlParserContexts ();
@@ -4768,6 +4652,30 @@ ThotBool       ParseXmlSubTree (char     *xmlBuffer,
       TtaSetStructureChecking (1, doc);
     }
 
+  if (use_ref && externalDoc != doc)
+    {
+      /* Copy the target element of the external document */
+      /* as a sub-tree of the element extEl in the source document */
+      /* Search the target element */
+      extAttrType.AttrSSchema = TtaGetSSchema ("SVG", externalDoc);
+      if (extAttrType.AttrSSchema)
+	/* This document uses the SVG DTD */
+	{
+          extAttrType.AttrTypeNum = SVG_ATTR_id;
+	  idEl = GetElemWithAttr (externalDoc, extAttrType, extUseId, NULL);
+	}
+      /* Copy and insert the sub-tree */
+      if (idEl != NULL)
+	{
+	  copyEl = TtaCopyTree (idEl, externalDoc, doc, extEl);
+	  if (copyEl != NULL)
+	    TtaInsertFirstChild (&copyEl, extEl, doc);
+	}
+      /* Delete the external document */
+      FreeDocumentResource (externalDoc);
+      TtaCloseDocument (externalDoc);
+    }
+  
   if (extEl != NULL)
     {
       /* Fetch and display the recursive images */
@@ -4783,15 +4691,116 @@ ThotBool       ParseXmlSubTree (char     *xmlBuffer,
       TtaFreeMemory (docURL);
       docURL = NULL;
     }
-  if (UseExtRefUri != NULL)
+
+  if (extUseUri != NULL)
+      TtaFreeMemory (extUseUri);
+  if (extUseId != NULL)
+      TtaFreeMemory (extUseId);
+      
+  /* Restore the display mode */
+  if (dispMode == DisplayImmediately)
+    TtaSetDisplayMode (doc, dispMode);
+
+  return (!XMLNotWellFormed);
+}
+
+/*----------------------------------------------------------------------
+   ParseXmlBuffer
+   Parse a XML sub-tree given in a buffer and complete the
+   corresponding Thot abstract tree.
+   Return TRUE if the parsing of the buffer has no error.
+  ----------------------------------------------------------------------*/
+ThotBool       ParseXmlBuffer (char     *xmlBuffer,
+			       Element   el,
+			       ThotBool  isclosed,
+			       Document  doc,
+			       Language  lang,
+			       char     *DTDname)
+{
+  int          tmpLen = 0;
+  char        *transBuffer = NULL;
+  char        *schemaName = NULL;
+  ElementType  elType;
+  Element      parent;
+  CHARSET      charset;
+  DisplayMode  dispMode;
+  
+  if (xmlBuffer == NULL)
+    return FALSE;
+
+  /* avoid too many redisplay */
+  dispMode = TtaGetDisplayMode (doc);
+  if (dispMode == DisplayImmediately)
+    TtaSetDisplayMode (doc, DeferredDisplay);
+
+  /* Initialize all parser contexts */
+  if (firstParserCtxt == NULL)
+    InitXmlParserContexts ();
+ 
+  /* general initialization */
+  RootElement = NULL;
+  if (isclosed)
     {
-      TtaFreeMemory (UseExtRefUri);
-      UseExtRefUri = NULL;
+      parent = TtaGetParent (el);
+      elType = TtaGetElementType (parent);
     }
-  if (UseExtRefId != NULL)
+  else
+    elType = TtaGetElementType (el);
+  schemaName = TtaGetSSchemaName(elType.ElSSchema);
+  InitializeXmlParsingContext (doc, el, isclosed, TRUE);
+  ChangeXmlParserContextByDTD (schemaName);
+
+  /* specific Initialization */
+  XMLcontext.language = lang;
+  DocumentSSchema = TtaGetDocumentSSchema (doc);
+
+  /* Expat initialization */
+  charset = TtaGetDocumentCharset (doc);
+  /* For XML documents, the default charset is ISO_8859_1 */
+  if (charset == UNDEFINED_CHARSET && !DocumentMeta[doc]->xmlformat)
+    charset = ISO_8859_1;
+  InitializeExpatParser (charset);
+ 
+  /* We are parsing the result of a transformation */
+  /* Parse a virtual DOCTYPE */
+  VirtualDoctype = TRUE;
+  if (!XML_Parse (Parser, DECL_DOCTYPE, DECL_DOCTYPE_LEN, 0))
+    XmlParseError (errorNotWellFormed,
+		   (char *) XML_ErrorString (XML_GetErrorCode (Parser)), 0);
+  
+  /* Parse the input XML buffer and complete the Thot document */
+  if (!XMLNotWellFormed)
     {
-      TtaFreeMemory (UseExtRefId);
-      UseExtRefId = NULL;
+      /* We create a virtual root for the sub-tree to be parsed */
+      tmpLen = (strlen (xmlBuffer)) + 1;
+      tmpLen = tmpLen + (2 * SUBTREE_ROOT_LEN) + 1;
+      transBuffer = TtaGetMemory (tmpLen);
+      strcpy (transBuffer, "<SUBTREE_ROOT>");
+      strcat (transBuffer, xmlBuffer);
+      strcat (transBuffer, "</SUBTREE_ROOT>");
+      tmpLen = strlen (transBuffer);
+      
+      if (!XML_Parse (Parser, transBuffer, tmpLen, 1))
+	{
+	  if (!XMLrootClosed)
+	    XmlParseError (errorNotWellFormed,
+			   (char *) XML_ErrorString (XML_GetErrorCode (Parser)), 0);
+	}
+      if (transBuffer != NULL)   
+	TtaFreeMemory (transBuffer);   
+    }
+  
+  /* Free expat parser */ 
+  FreeXmlParserContexts ();
+  FreeExpatParser ();
+
+  /* Handle character-level elements which contain block-level elements */
+  if ((schemaName != NULL) &&
+      (strcmp (schemaName, "HTML") == 0))
+    {
+      TtaSetStructureChecking (0, doc);
+      CheckBlocksInCharElem (doc);
+      TtaSetStructureChecking (1, doc);
     }
       
   /* Restore the display mode */

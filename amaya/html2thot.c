@@ -6506,8 +6506,7 @@ void ParseSubTree (char* HTMLbuf, Element lastelem, Language language,
        InputText = HTMLbuf; 
        /* InputText = HTMLbuf; */
        CurrentBufChar = 0;
-       if (!ParseXmlSubTree (InputText, NULL, lastelem, isclosed,
-			     doc, language, NULL))
+       if (!ParseXmlBuffer (InputText, lastelem, isclosed, doc, language, NULL))
 	 StopParsing (doc);
      }
 }

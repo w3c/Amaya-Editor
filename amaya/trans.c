@@ -909,8 +909,7 @@ static ThotBool StartFragmentParser (strMatchChildren * sMatch, Document doc)
 	  language = TtaGetDefaultLanguage();
 	/* Calling of the appropriate parser */
 	if (DocumentMeta[doc]->xmlformat)
-	  ParseXmlSubTree (bufHTML, NULL, myFirstSelect, isClosed,
-			   doc, language, NULL);
+	  ParseXmlBuffer (bufHTML, myFirstSelect, isClosed, doc, language, NULL);
 	else
 	  ParseSubTree (bufHTML, myFirstSelect, language, isClosed, doc);
 

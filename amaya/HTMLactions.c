@@ -400,7 +400,7 @@ static void SetFontOrPhraseOnElement (Document document, Element elem,
    If ignore is not NULL, it is an attribute that should be ignored when
    comparing attributes.
   ----------------------------------------------------------------------*/
-static Element GetElemWithAttr (Document doc, AttributeType attrType,
+Element GetElemWithAttr (Document doc, AttributeType attrType,
 				char *nameVal, Attribute ignore)
 {
    Element             el, elFound;

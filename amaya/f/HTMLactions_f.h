@@ -9,6 +9,10 @@
 extern void ChangeTypeOfElement ( Element elem,
                                   Document doc,
                                   int newTypeNum );
+extern Element GetElemWithAttr ( Document doc,
+                                 AttributeType attrType,
+                                 char *nameVal,
+                                 Attribute ignore );
 extern Element SearchNAMEattribute ( Document doc,
                                      char *nameVal,
                                      Attribute ignore );
@@ -51,6 +55,10 @@ extern void SetCharFontOrPhrase ( int document,
 extern void ChangeTypeOfElement (/* Element elem,
                                     Document doc,
                                     int newTypeNum */);
+extern Element GetElemWithAttr (/* Document doc,
+                                   AttributeType attrType,
+                                   char *nameVal,
+                                   Attribute ignore */);
 extern Element SearchNAMEattribute (/* Document doc,
                                        char *nameVal,
                                        Attribute ignore */);

@@ -578,15 +578,15 @@ void DisplayImage (Document doc, Element el, char *imageName, char *mime_type)
 	  TtaSetPictureType (el,  AM_SVG_MIME_TYPE);
 	  /* parse the SVG file and include the parsed tree at the
 	     position of the image element */
-	  ParseXmlSubTree (NULL, imageName, el, FALSE, doc, 
-			   TtaGetDefaultLanguage(), "SVG");
+	  ParseExternalXmlResource (imageName, el, FALSE, doc, 
+				    TtaGetDefaultLanguage(), "SVG");
 	}
       else if (is_mml)
 	{
 	  /* parse the MathML file and include the parsed tree at the
 	     position of the image element */
-	  ParseXmlSubTree (NULL, imageName, el, FALSE, doc, 
-			   TtaGetDefaultLanguage(), "MathML");
+	  ParseExternalXmlResource (imageName, el, FALSE, doc, 
+				    TtaGetDefaultLanguage(), "MathML");
 	}
       else
 	{
@@ -601,8 +601,8 @@ void DisplayImage (Document doc, Element el, char *imageName, char *mime_type)
     {
       /* parse the SVG file and include the parsed sub-tree at the
 	 position of the use element */
-      ParseXmlSubTree (NULL, imageName, el, FALSE, doc, 
-		       TtaGetDefaultLanguage(), "SVG");
+      ParseExternalXmlResource (imageName, el, FALSE, doc, 
+				TtaGetDefaultLanguage(), "SVG");
     }
   else  
     {

@@ -21,13 +21,18 @@ extern Element XmlLastLeafInElement ( Element el );
 extern void PutInXmlElement ( char *data,
                               int length );
 extern void FreeXmlParserContexts ( void );
-extern ThotBool ParseXmlSubTree ( char *xmlBuffer,
-                                  char *fileName,
-                                  Element el,
-                                  ThotBool isclosed,
-                                  Document doc,
-                                  Language lang,
-                                  char *DTDname );
+extern ThotBool ParseExternalXmlResource ( char *fileName,
+                                           Element el,
+                                           ThotBool isclosed,
+                                           Document doc,
+                                           Language lang,
+                                           char *DTDname );
+extern ThotBool ParseXmlBuffer ( char *xmlBuffer,
+                                 Element el,
+                                 ThotBool isclosed,
+                                 Document doc,
+                                 Language lang,
+                                 char *DTDname );
 extern ThotBool ParseIncludedXml ( FILE *infile,
                                    char *infileBuffer,
                                    int infileBufferLength,
@@ -69,13 +74,18 @@ extern Element XmlLastLeafInElement (/* Element el */);
 extern void PutInXmlElement (/* char *data,
                                 int length */);
 extern void FreeXmlParserContexts (/* void */);
-extern ThotBool ParseXmlSubTree (/* char *xmlBuffer,
-                                    char *fileName,
-                                    Element el,
-                                    ThotBool isclosed,
-                                    Document doc,
-                                    Language lang,
-                                    char *DTDname */);
+extern ThotBool ParseExternalXmlResource (/* char *fileName,
+                                             Element el,
+                                             ThotBool isclosed,
+                                             Document doc,
+                                             Language lang,
+                                             char *DTDname */);
+extern ThotBool ParseXmlBuffer (/* char *xmlBuffer,
+                                   Element el,
+                                   ThotBool isclosed,
+                                   Document doc,
+                                   Language lang,
+                                   char *DTDname */);
 extern ThotBool ParseIncludedXml (/* FILE *infile,
                                      char *infileBuffer,
                                      int infileBufferLength,
