@@ -474,8 +474,8 @@ static Element AddEmptyCellInRow (Element row, Element colhead,
 
 /*----------------------------------------------------------------------
   NewColumnHead creates a new Column_head and returns it.   
-  If generateEmptyCells == TRUE, create an additional empty cell in all rows,
-  except the row indicated.
+  If generateEmptyCells == TRUE, create an additional empty cell in all
+  rows, except the row indicated.
   If last == TRUE when lastcolhead is the last current column.
   The parameter before indicates if the lastcolhead precedes or follows
   the new created Column_head. It should be FALSE when last is TRUE.
@@ -519,8 +519,8 @@ Element NewColumnHead (Element lastcolhead, ThotBool before,
 	      currentrow = GetSiblingRow (row, TRUE, inMath);
 	      if (!last && currentrow == NULL)
 		{
-		  /* when last is TRUE, only cells of previous rows should be
-		     created  */
+		  /* when last is TRUE, only cells of previous rows
+		     should be created  */
 		  currentrow = GetSiblingRow (row, FALSE, inMath);
 		  backward = FALSE;
 		}
@@ -560,6 +560,7 @@ Element NewColumnHead (Element lastcolhead, ThotBool before,
 		      /* add a new cell after */
 		      AddEmptyCellInRow (currentrow, colhead, child, FALSE,
 					 doc, inMath, FALSE, TRUE);
+      TtaChangeInfoLastRegisteredElem (doc, 3);
 		    }
 		}
 	      else
@@ -573,6 +574,7 @@ Element NewColumnHead (Element lastcolhead, ThotBool before,
 		  /* add a cell before */
 		  AddEmptyCellInRow (currentrow, colhead, child, TRUE, doc,
 				     inMath, FALSE, TRUE);
+      TtaChangeInfoLastRegisteredElem (doc, 3);
 		}
 	      if (rowspan == 0)
 		rowspan = THOT_MAXINT;
@@ -1624,7 +1626,7 @@ void CellCreated (NotifyElement * event)
   Document            doc;
 
   if (event->info == 1)
-    /* the delete is already done by undo */
+    /* the creation is already done by undo */
     return;
   cell = event->element;
   doc = event->document;
@@ -1644,6 +1646,11 @@ void CellCreated (NotifyElement * event)
       TtaCancelLastRegisteredOperation (doc);
       NewCell (cell, doc, TRUE, TRUE);
       TtaRegisterElementCreate (cell, doc);
+      /* change the value of "info" in the latest cell
+	 deletion recorded in the Undo queue. The goal is to
+	 allow procedure CellPasted to regenerate only one
+	 column head when undoing the operation */
+      TtaChangeInfoLastRegisteredElem (doc, 3);
       HandleColAndRowAlignAttributes (row, doc);
     }
 }
