@@ -1156,6 +1156,7 @@ CHAR_T*             otherPath;
    if (tempOrgName[0] == WC_EOS)
      {
        newName[0] = WC_EOS;
+       docName[0] = WC_EOS;
        TtaFreeMemory (basename);
        return;
      }
