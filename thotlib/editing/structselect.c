@@ -52,10 +52,13 @@
 #include "tree_f.h"
 #include "views_f.h"
 #include "windowdisplay_f.h"
+#ifdef _GL
+#include "glwindowdisplay.h"
+#endif /* _GL */
 
 #ifdef _GTK
-  #include "gtk-functions.h"
-#endif /*_GTK*/
+#include "gtk-functions.h"
+#endif /* _GTK */
 
 
 static int          NSelectedElements;	/* number of elements in table
