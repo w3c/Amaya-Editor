@@ -1722,33 +1722,6 @@ static void CheckMROW (Element* el, Document doc)
      }
 }
 
-/*----------------------------------------------------------------------
-   ChangeTypeOfElement
-   Change the type of element elem into newTypeNum
- -----------------------------------------------------------------------*/
-void ChangeTypeOfElement (Element elem, Document doc, int newTypeNum)
-{
-  Element    prev, next, parent;
-
-  parent = NULL;
-  prev = elem;
-  TtaPreviousSibling (&prev);
-  if (prev == NULL)
-    {
-      next = elem;
-      TtaNextSibling (&next);
-      if (next == NULL)
-	parent = TtaGetParent (elem);
-    }
-  TtaRemoveTree (elem, doc);
-  TtaChangeElementType (elem, newTypeNum);
-  if (prev != NULL)
-    TtaInsertSibling (elem, prev, FALSE, doc);
-  else if (next != NULL)
-    TtaInsertSibling (elem, next, TRUE, doc);
-  else
-    TtaInsertFirstChild (&elem, parent, doc);
-}
 
 /*----------------------------------------------------------------------
  RoundSelection
@@ -1906,8 +1879,9 @@ static void CreateCharStringElement (int typeNum, Document doc)
 	    /* just change the type of this element */
 	    {
 	    TtaUnselect (doc);
-	    TtaRegisterElementReplace (firstSel, doc);
-	    ChangeTypeOfElement (firstSel, doc, typeNum);
+	    /*TtaRegisterElementReplace (firstSel, doc);*/
+	    TtaChangeTypeOfElement (firstSel, doc, typeNum);
+	    TtaRegisterElementTypeChange (firstSel, elType.ElTypeNum, doc);
             MathSetAttributes (firstSel, doc, NULL);
 	    selEl = firstSel;
 	    done = TRUE;
@@ -3268,8 +3242,9 @@ static void ParseMathString (Element theText, Element theElem, Document doc)
 		MathSetAttributes (newEl, doc, &newSelEl);
 		TtaRegisterElementCreate (newEl, doc);
 		}
-	     TtaRegisterElementReplace (theElem, doc);
-	     ChangeTypeOfElement (theElem, doc, (int)mathType[i-1]);
+	     /*TtaRegisterElementReplace (theElem, doc);*/
+	     TtaChangeTypeOfElement (theElem, doc, (int)mathType[i-1]);
+	     TtaRegisterElementTypeChange (theElem, elType.ElTypeNum, doc);
 	     }
 	  next = theText;
 	  TtaNextSibling (&next);
@@ -4043,8 +4018,9 @@ void MathElementPasted (NotifyElement *event)
 	      TtaAttachAttribute (prev, attr, event->document);
 	      TtaSetAttributeValue (attr, MathML_ATTR_IntPlaceholder_VAL_yes_,
 				    prev, event->document);
-	      TtaRegisterElementReplace (prev, event->document);
-	      ChangeTypeOfElement (prev, event->document, MathML_EL_Construct);
+	      /*TtaRegisterElementReplace (prev, event->document);*/
+	      TtaChangeTypeOfElement (prev, event->document, MathML_EL_Construct);
+	      TtaRegisterElementTypeChange (prev, elType.ElTypeNum, event->document);
 	    }
 	}
     }
@@ -4182,10 +4158,13 @@ void MathElementDeleted (NotifyElement *event)
 				    to operate correctly. */
 				 TtaRemoveAttribute (sibling, attr,
 						     event->document);
-				 TtaRegisterElementReplace (sibling,
-							    event->document);
-				 ChangeTypeOfElement (sibling, event->document,
-						      MathML_EL_Construct1);
+				 /*TtaRegisterElementReplace (sibling,
+				   event->document);*/
+				 TtaChangeTypeOfElement (sibling, event->document,
+							 MathML_EL_Construct1);
+				 TtaRegisterElementTypeChange (sibling, 
+							       elType.ElTypeNum,
+							       event->document);
 			       }
 			   }
 		       }
@@ -4274,8 +4253,10 @@ void MathElementDeleted (NotifyElement *event)
    if (newTypeNum > 0)
      /* transform the parent element */
      {
-       TtaRegisterElementReplace (parent, event->document);
-       ChangeTypeOfElement (parent, event->document, newTypeNum);
+       /*TtaRegisterElementReplace (parent, event->document);*/
+       TtaChangeTypeOfElement (parent, event->document, newTypeNum);
+       TtaRegisterElementTypeChange (parent, parentType.ElTypeNum,
+				     event->document);
      }
    else if (newTypeNum < 0)
       /* put the content of the single sibling of the deleted element
@@ -4891,8 +4872,8 @@ void AttrBevelledChanged (NotifyAttribute *event)
       {
 	/* type should be MFRAC if it's present */
 	if (elType.ElTypeNum != MathML_EL_MFRAC)
-	   ChangeTypeOfElement (event->element, event->document,
-				MathML_EL_MFRAC);
+	   TtaChangeTypeOfElement (event->element, event->document,
+				   MathML_EL_MFRAC);
       }
     else
       /* attribute bevelled has been created or modified */
@@ -4903,15 +4884,15 @@ void AttrBevelledChanged (NotifyAttribute *event)
 	  {
 	    /* element type should be MFRAC */
 	    if (elType.ElTypeNum != MathML_EL_MFRAC)
-	      ChangeTypeOfElement (event->element, event->document,
-				   MathML_EL_MFRAC);
+	      TtaChangeTypeOfElement (event->element, event->document,
+				      MathML_EL_MFRAC);
 	  }
 	else if (val == MathML_ATTR_bevelled_VAL_true)
 	  {
 	    /* element type should be BevelledMFRAC */
 	    if (elType.ElTypeNum != MathML_EL_BevelledMFRAC)
-	      ChangeTypeOfElement (event->element, event->document,
-				   MathML_EL_BevelledMFRAC);
+	      TtaChangeTypeOfElement (event->element, event->document,
+				      MathML_EL_BevelledMFRAC);
 	  }
       }
     }

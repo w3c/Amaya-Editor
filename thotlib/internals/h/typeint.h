@@ -702,7 +702,8 @@ typedef enum
 {
   EtDelimiter,    /* Sequence delimiter */
   EtElement,      /* Operation on elements */
-  EtAttribute     /* operation on an attribute */
+  EtAttribute,    /* Operation on an attribute */
+  EtChangeType    /* Change type of an element */
 } EditOpType;
  
 typedef struct _EditOperation *PtrEditOperation;
@@ -767,6 +768,11 @@ typedef struct _EditOperation
       int           _EoAttrRank_;        /* rank of the attribute in the list
 					     of the element's attributes */
     } s2;
+    struct        /* EoType = EtChangeType */
+    {
+      PtrElement    _EoChangedElement_;  /* element to be changed to undo */
+      int           _EoElementType_;     /* type to be restored to undo */
+    } s3;
   } u;
 } EditOperation;
 
@@ -807,6 +813,8 @@ typedef struct _NsUriDescr
 #define EoCreatedAttribute u.s2._EoCreatedAttribute_
 #define EoSavedAttribute u.s2._EoSavedAttribute_
 #define EoAttrRank u.s2._EoAttrRank_
+#define EoChangedElement u.s3._EoChangedElement_
+#define EoElementType u.s3._EoElementType_
 
 typedef struct _DocumentDescr *PtrDocument;
 

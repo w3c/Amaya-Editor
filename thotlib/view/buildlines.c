@@ -3323,6 +3323,7 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
 		pBox->BxMaxWidth = pLine->LiRealLength;
 	      if (pLine->LiHeight > *height)
 		*height = pLine->LiHeight;
+	      Align (pBox, pLine, frame, TRUE, xAbs, yAbs);
 	    }
 	  while (breakLine && pNextBox);
 

@@ -81,6 +81,19 @@ Construct;
    ---------------------------------------------------------------------- */
 extern void TtaChangeElementType (Element element, int typeNum);
 
+/*----------------------------------------------------------------------
+   TtaChangeTypeOfElement
+   Change the type of element elem into newTypeNum
+   Parameters:
+   element: the changed element
+   document: the document for which the element is changed.
+   newTypeNum: new type for the element
+   Return value:
+   TRUE if the operation is done.
+ -----------------------------------------------------------------------*/
+extern ThotBool TtaChangeTypeOfElement (Element elem, Document doc,
+					int newTypeNum);
+
 /* ----------------------------------------------------------------------
    TtaNewElement
 

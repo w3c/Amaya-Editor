@@ -173,8 +173,7 @@ static void CancelAnEdit (PtrEditOperation editOp, PtrDocument pDoc,
          }
       editOp->EoSavedElement = NULL;
       }
-
-   if (editOp->EoType == EtAttribute)
+   else if (editOp->EoType == EtAttribute)
       {
       pAttr = editOp->EoSavedAttribute;
       if (pAttr)
@@ -182,8 +181,12 @@ static void CancelAnEdit (PtrEditOperation editOp, PtrDocument pDoc,
 	 DeleteAttribute (NULL, pAttr);
       editOp->EoSavedAttribute = NULL;
       }
-
-   if (editOp->EoType == EtDelimiter)
+   else if (editOp->EoType == EtChangeType)
+      {
+      editOp->EoChangedElement = NULL;
+      editOp->EoElementType = 0;
+      }
+   else if (editOp->EoType == EtDelimiter)
       /* update the number of editing sequences remaining in the queue */
      {
       if (undo)
@@ -263,35 +266,41 @@ static void ChangePointersOlderEdits (PtrEditOperation Op, PtrElement pTree)
     {
     if (editOp->EoType == EtElement)
        {
-       if (editOp->EoParent)
-         if (ElemIsWithinSubtree(editOp->EoParent, pTree))
+       if (editOp->EoParent &&
+	   ElemIsWithinSubtree(editOp->EoParent, pTree))
 	   editOp->EoParent = editOp->EoParent->ElCopy;
-       if (editOp->EoPreviousSibling)
-         if (ElemIsWithinSubtree(editOp->EoPreviousSibling, pTree))
+       if (editOp->EoPreviousSibling &&
+	   ElemIsWithinSubtree(editOp->EoPreviousSibling, pTree))
 	   editOp->EoPreviousSibling = editOp->EoPreviousSibling->ElCopy;
-       if (editOp->EoCreatedElement)
-         if (ElemIsWithinSubtree(editOp->EoCreatedElement, pTree))
+       if (editOp->EoCreatedElement &&
+	   ElemIsWithinSubtree(editOp->EoCreatedElement, pTree))
 	   editOp->EoCreatedElement = editOp->EoCreatedElement->ElCopy;
        }
-    if (editOp->EoType == EtDelimiter)
+    else if (editOp->EoType == EtDelimiter)
        {
-       if (editOp->EoFirstSelectedEl)
-         if (ElemIsWithinSubtree(editOp->EoFirstSelectedEl, pTree))
+       if (editOp->EoFirstSelectedEl &&
+	   ElemIsWithinSubtree(editOp->EoFirstSelectedEl, pTree))
 	   editOp->EoFirstSelectedEl = editOp->EoFirstSelectedEl->ElCopy;
-       if (editOp->EoLastSelectedEl)
-         if (ElemIsWithinSubtree(editOp->EoLastSelectedEl, pTree))
+       if (editOp->EoLastSelectedEl &&
+	   ElemIsWithinSubtree(editOp->EoLastSelectedEl, pTree))
 	   editOp->EoLastSelectedEl = editOp->EoLastSelectedEl->ElCopy;
        }
-    if (editOp->EoType == EtAttribute)
+    else if (editOp->EoType == EtAttribute)
        {
-       if (editOp->EoElement)
-	 if (ElemIsWithinSubtree(editOp->EoElement, pTree))
+       if (editOp->EoElement &&
+	   ElemIsWithinSubtree(editOp->EoElement, pTree))
 	   editOp->EoElement = editOp->EoElement->ElCopy;
+       }
+    else if (editOp->EoType == EtChangeType)
+       {
+       if (editOp->EoChangedElement &&
+	   ElemIsWithinSubtree(editOp->EoChangedElement, pTree))
+	   editOp->EoChangedElement = editOp->EoChangedElement->ElCopy;
        }
     editOp = editOp->EoPreviousOp;
     }
 
-  if (Op->EoType == EtElement)
+  if (Op->EoType == EtElement || editOp->EoType == EtChangeType)
     {
     /* if the current selection is in the copied element, set the saved
     selection to the equivalent elements in the copy */
@@ -375,11 +384,47 @@ void AddEditOpInHistory (PtrElement pEl, PtrDocument pDoc, ThotBool save,
 }
 
 /*----------------------------------------------------------------------
+   AddChangeTypeOpInHistory
+   Register a single editing operation in the editing history.
+   pEl: the element that has been changed by the editing operation.
+   pDoc: the document to which this element belongs.
+   elType: the element type to be restored when the operation will be undone.
+  ----------------------------------------------------------------------*/
+void AddChangeTypeOpInHistory (PtrElement pEl, int elType, PtrDocument pDoc)
+{
+   PtrEditOperation	editOp;
+   PtrElement		pCopy;
+
+   if (!pEl)
+      return;
+   if (!pEl->ElStructSchema)
+      return;
+   /* error if no sequence open */
+   if (!pDoc->DocEditSequence)
+     {
+      HistError (2);
+      return;
+     }
+   /* create a new operation descriptor in the history */
+   editOp = (PtrEditOperation) TtaGetMemory (sizeof (EditOperation));
+   /* link the new operation descriptor in the history */
+   editOp->EoPreviousOp = pDoc->DocLastEdit;
+   if (pDoc->DocLastEdit)
+      pDoc->DocLastEdit->EoNextOp = editOp;
+   pDoc->DocLastEdit = editOp;
+   editOp->EoNextOp = NULL;
+   editOp->EoType = EtChangeType;
+   editOp->EoChangedElement = pEl;
+   editOp->EoElementType = elType;
+}
+
+/*----------------------------------------------------------------------
    ChangeAttrPointersOlderEdits
    If Op and older editing operations in the history refer to attribute
    pAttr, change these reference to the corresponding copy pCopyAttr.
   ----------------------------------------------------------------------*/
-static void ChangeAttrPointersOlderEdits (PtrEditOperation Op, PtrAttribute pAttr, PtrAttribute pCopyAttr)
+static void ChangeAttrPointersOlderEdits (PtrEditOperation Op,
+					  PtrAttribute pAttr, PtrAttribute pCopyAttr)
 {
   PtrEditOperation	editOp;
 
@@ -544,7 +589,8 @@ void AddAttrEditOpInHistory (PtrAttribute pAttr, PtrElement pEl,
    of document, only if it's an attribute operation for element oldEl.
    In that case, make it related to element newEl and attribute newAttr.
   ----------------------------------------------------------------------*/
-void ChangeLastRegisteredAttr (PtrElement oldEl, PtrElement newEl, PtrAttribute oldAttr, PtrAttribute newAttr, PtrDocument pDoc)
+void ChangeLastRegisteredAttr (PtrElement oldEl, PtrElement newEl, PtrAttribute oldAttr,
+			       PtrAttribute newAttr, PtrDocument pDoc)
 {
    ThotBool	done;
 
@@ -632,7 +678,8 @@ void CancelLastEditFromHistory (PtrDocument pDoc)
         ChangePointersOlderEdits (pDoc->DocLastEdit,
 				  pDoc->DocLastEdit->EoSavedElement);
      }
-   else if (pDoc->DocLastEdit->EoType != EtAttribute)
+   else if (pDoc->DocLastEdit->EoType != EtAttribute &&
+	    pDoc->DocLastEdit->EoType != EtChangeType)
      /* Not an operation on elements or attributes */
       return;
 
@@ -860,292 +907,295 @@ static void AttachAttr (PtrElement pEl, PtrAttribute pAttr, int rank,
   ----------------------------------------------------------------------*/
 static void UndoOperation (ThotBool undo, Document doc, ThotBool reverse)
 {
-   PtrEditOperation	editOp;
-   PtrElement		pEl, pSibling,
+  PtrEditOperation	editOp;
+  PtrElement		pEl, pSibling,
                         newParent, newPreviousSibling, newCreatedElement,
                         newSavedElement;
-   PtrAttribute         SavedAttribute, CreatedAttribute, pAttr;
-   PtrDocument		pDoc;
-   PtrEditOperation	queue;
-   AttributeType        attrType;
-   NotifyElement	notifyEl;
-   NotifyOnValue        notifyGraph;
-   NotifyAttribute	notifyAttr;
-   int			i, nSiblings;
-   ThotBool             replacePoly;
+  PtrAttribute          SavedAttribute, CreatedAttribute, pAttr;
+  PtrDocument		pDoc;
+  PtrEditOperation	queue;
+  AttributeType         attrType;
+  NotifyElement	        notifyEl;
+  NotifyOnValue         notifyGraph;
+  NotifyAttribute	notifyAttr;
+  int			i, nSiblings, newType;
+  ThotBool              replacePoly;
 
-   newParent = NULL;
-   newPreviousSibling = NULL;
-   newCreatedElement = NULL;
-   newSavedElement = NULL;
-   SavedAttribute = NULL;
-   CreatedAttribute = NULL;
-   pDoc = LoadedDocument [doc - 1];
-   if (undo)
-      editOp = pDoc->DocLastEdit;
-   else
-      editOp = pDoc->DocLastUndone;
+  newParent = NULL;
+  newPreviousSibling = NULL;
+  newCreatedElement = NULL;
+  newSavedElement = NULL;
+  SavedAttribute = NULL;
+  CreatedAttribute = NULL;
+  newType = 0;
+  pDoc = LoadedDocument [doc - 1];
+  if (undo)
+    editOp = pDoc->DocLastEdit;
+  else
+    editOp = pDoc->DocLastUndone;
 
-   if (editOp->EoType == EtDelimiter)
-      /* end of a sequence */
-      {
+  if (editOp->EoType == EtDelimiter)
+    /* end of a sequence */
+    {
       /* enable structure checking */
       TtaSetStructureChecking (TRUE, doc);
       TtaSetDisplayMode (doc, DisplayImmediately);
       /* set the selection that is recorded */
       if (editOp->EoFirstSelectedEl && editOp->EoLastSelectedEl)
         {
-        /* Send events TteElemSelect.Pre */
-        notifyEl.event = TteElemSelect;
-        notifyEl.document = doc;
-        notifyEl.element = (Element) (editOp->EoFirstSelectedEl);
-	notifyEl.info = 1; /* sent by undo */
-        notifyEl.elementType.ElTypeNum =
-			editOp->EoFirstSelectedEl->ElTypeNumber;
-        notifyEl.elementType.ElSSchema =
-			(SSchema) (editOp->EoFirstSelectedEl->ElStructSchema);
-        notifyEl.position = 0;
-        CallEventType ((NotifyEvent *) & notifyEl, TRUE);
-        if (editOp->EoSelectedAttrSch)
-	  {
-	    attrType.AttrSSchema = (SSchema)(editOp->EoSelectedAttrSch);
-	    attrType.AttrTypeNum = editOp->EoSelectedAttr;
-	    pAttr = (PtrAttribute) TtaGetAttribute ((Element)(editOp->EoFirstSelectedEl),
-				     attrType);
-	    HighlightAttrSelection (LoadedDocument[doc - 1],
-				    editOp->EoFirstSelectedEl,
-				    pAttr,
-				    editOp->EoFirstSelectedChar,
-				    editOp->EoLastSelectedChar);
-	  }
-        else if (editOp->EoFirstSelectedChar > 0)
-          {
-          if (editOp->EoFirstSelectedEl == editOp->EoLastSelectedEl)
+	  /* Send events TteElemSelect.Pre */
+	  notifyEl.event = TteElemSelect;
+	  notifyEl.document = doc;
+	  notifyEl.element = (Element) (editOp->EoFirstSelectedEl);
+	  notifyEl.info = 1; /* sent by undo */
+	  notifyEl.elementType.ElTypeNum =
+	    editOp->EoFirstSelectedEl->ElTypeNumber;
+	  notifyEl.elementType.ElSSchema =
+	    (SSchema) (editOp->EoFirstSelectedEl->ElStructSchema);
+	  notifyEl.position = 0;
+	  CallEventType ((NotifyEvent *) & notifyEl, TRUE);
+	  if (editOp->EoSelectedAttrSch)
 	    {
-	      if (editOp->EoFirstSelectedEl->ElTerminal &&
-		  editOp->EoFirstSelectedEl->ElLeafType == LtPicture)
-		i = editOp->EoFirstSelectedChar;
-	      else
-		i = editOp->EoLastSelectedChar;
+	      attrType.AttrSSchema = (SSchema)(editOp->EoSelectedAttrSch);
+	      attrType.AttrTypeNum = editOp->EoSelectedAttr;
+	      pAttr = (PtrAttribute) TtaGetAttribute ((Element)(editOp->EoFirstSelectedEl),
+						      attrType);
+	      HighlightAttrSelection (LoadedDocument[doc - 1],
+				      editOp->EoFirstSelectedEl,
+				      pAttr,
+				      editOp->EoFirstSelectedChar,
+				      editOp->EoLastSelectedChar);
 	    }
-          else
-   	     i = TtaGetElementVolume ((Element)(editOp->EoFirstSelectedEl));
-          TtaSelectString (doc, (Element)(editOp->EoFirstSelectedEl),
-			   editOp->EoFirstSelectedChar, i);
-          }
-        else
-          TtaSelectElement (doc, (Element)(editOp->EoFirstSelectedEl));
-        /* Send events TteElemSelect.Post */
-        notifyEl.event = TteElemSelect;
-        notifyEl.document = doc;
-        notifyEl.element = (Element) (editOp->EoFirstSelectedEl);
-	notifyEl.info = 1; /* sent by undo */
-        notifyEl.elementType.ElTypeNum =
-			editOp->EoFirstSelectedEl->ElTypeNumber;
-        notifyEl.elementType.ElSSchema =
-			(SSchema) (editOp->EoFirstSelectedEl->ElStructSchema);
-        notifyEl.position = 0;
-        CallEventType ((NotifyEvent *) & notifyEl, FALSE);
-        if (editOp->EoFirstSelectedEl != editOp->EoLastSelectedEl)
-          {
-          /* Send event TteElemExtendSelect. Pre */
-          notifyEl.event = TteElemExtendSelect;
-          notifyEl.document = doc;
-          notifyEl.element = (Element)(editOp->EoLastSelectedEl);
+	  else if (editOp->EoFirstSelectedChar > 0)
+	    {
+	      if (editOp->EoFirstSelectedEl == editOp->EoLastSelectedEl)
+		{
+		  if (editOp->EoFirstSelectedEl->ElTerminal &&
+		      editOp->EoFirstSelectedEl->ElLeafType == LtPicture)
+		    i = editOp->EoFirstSelectedChar;
+		  else
+		    i = editOp->EoLastSelectedChar;
+		}
+	      else
+		i = TtaGetElementVolume ((Element)(editOp->EoFirstSelectedEl));
+	      TtaSelectString (doc, (Element)(editOp->EoFirstSelectedEl),
+			       editOp->EoFirstSelectedChar, i);
+	    }
+	  else
+	    TtaSelectElement (doc, (Element)(editOp->EoFirstSelectedEl));
+	  /* Send events TteElemSelect.Post */
+	  notifyEl.event = TteElemSelect;
+	  notifyEl.document = doc;
+	  notifyEl.element = (Element) (editOp->EoFirstSelectedEl);
 	  notifyEl.info = 1; /* sent by undo */
-          notifyEl.elementType.ElTypeNum =
-			editOp->EoLastSelectedEl->ElTypeNumber;
-          notifyEl.elementType.ElSSchema =
-			(SSchema) (editOp->EoLastSelectedEl->ElStructSchema);
-          notifyEl.position = 0;
-          CallEventType ((NotifyEvent *) & notifyEl, TRUE);
-          TtaExtendSelection (doc, (Element)(editOp->EoLastSelectedEl),
-			      editOp->EoLastSelectedChar);
-          /* Send event TteElemExtendSelect. Post */
-          notifyEl.event = TteElemExtendSelect;
-          notifyEl.document = doc;
-	  notifyEl.info = 1; /* sent by undo */
-          notifyEl.element = (Element)(editOp->EoLastSelectedEl);
-          notifyEl.elementType.ElTypeNum =
-			editOp->EoLastSelectedEl->ElTypeNumber;
-          notifyEl.elementType.ElSSchema =
-			(SSchema) (editOp->EoLastSelectedEl->ElStructSchema);
-          notifyEl.position = 0;
-          CallEventType ((NotifyEvent *) & notifyEl, FALSE);
-          }
+	  notifyEl.elementType.ElTypeNum = editOp->EoFirstSelectedEl->ElTypeNumber;
+	  notifyEl.elementType.ElSSchema = (SSchema) (editOp->EoFirstSelectedEl->ElStructSchema);
+	  notifyEl.position = 0;
+	  CallEventType ((NotifyEvent *) & notifyEl, FALSE);
+	  if (editOp->EoFirstSelectedEl != editOp->EoLastSelectedEl)
+	    {
+	      /* Send event TteElemExtendSelect. Pre */
+	      notifyEl.event = TteElemExtendSelect;
+	      notifyEl.document = doc;
+	      notifyEl.element = (Element)(editOp->EoLastSelectedEl);
+	      notifyEl.info = 1; /* sent by undo */
+	      notifyEl.elementType.ElTypeNum = editOp->EoLastSelectedEl->ElTypeNumber;
+	      notifyEl.elementType.ElSSchema = (SSchema) (editOp->EoLastSelectedEl->ElStructSchema);
+	      notifyEl.position = 0;
+	      CallEventType ((NotifyEvent *) & notifyEl, TRUE);
+	      TtaExtendSelection (doc, (Element)(editOp->EoLastSelectedEl),
+				  editOp->EoLastSelectedChar);
+	      /* Send event TteElemExtendSelect. Post */
+	      notifyEl.event = TteElemExtendSelect;
+	      notifyEl.document = doc;
+	      notifyEl.info = 1; /* sent by undo */
+	      notifyEl.element = (Element)(editOp->EoLastSelectedEl);
+	      notifyEl.elementType.ElTypeNum = editOp->EoLastSelectedEl->ElTypeNumber;
+	      notifyEl.elementType.ElSSchema = (SSchema) (editOp->EoLastSelectedEl->ElStructSchema);
+	      notifyEl.position = 0;
+	      CallEventType ((NotifyEvent *) & notifyEl, FALSE);
+	    }
         }
       if (editOp->EoInitialSequence)
 	/* That's the first sequence registered since the document was loaded
 	   The document is no longer modified */
 	SetDocumentModified (LoadedDocument[doc - 1], FALSE, 0);
-      }
-
-   if (editOp->EoType == EtAttribute)
-      {
+    }
+  else if (editOp->EoType == EtAttribute)
+    {
       SavedAttribute = editOp->EoSavedAttribute;
       CreatedAttribute = editOp->EoCreatedAttribute;
       editOp->EoSavedAttribute = NULL;
-
+      
       notifyAttr.document = doc;
       notifyAttr.element = (Element) (editOp->EoElement);
       notifyAttr.info = 1; /* sent by undo */
       /* delete the attribute that has to be removed from the element */
       if (editOp->EoElement && editOp->EoCreatedAttribute)
-         {
-         /* tell the application that an attribute will be removed */
-	 if (SavedAttribute)
+	{
+	  /* tell the application that an attribute will be removed */
+	  if (SavedAttribute)
             notifyAttr.event = TteAttrModify;	    
-	 else
+	  else
             notifyAttr.event = TteAttrDelete;
-         notifyAttr.attribute = (Attribute) (editOp->EoCreatedAttribute);
-         notifyAttr.attributeType.AttrSSchema =
-			(SSchema) (editOp->EoCreatedAttribute->AeAttrSSchema);
-         notifyAttr.attributeType.AttrTypeNum =
-			editOp->EoCreatedAttribute->AeAttrNum;
-         CallEventAttribute (&notifyAttr, TRUE);
-         if (reverse)
+	  notifyAttr.attribute = (Attribute) (editOp->EoCreatedAttribute);
+	  notifyAttr.attributeType.AttrSSchema = (SSchema) (editOp->EoCreatedAttribute->AeAttrSSchema);
+	  notifyAttr.attributeType.AttrTypeNum = editOp->EoCreatedAttribute->AeAttrNum;
+	  CallEventAttribute (&notifyAttr, TRUE);
+	  if (reverse)
 	    {
-            editOp->EoSavedAttribute = AddAttrToElem (NULL,
-					     editOp->EoCreatedAttribute, NULL);
-            /* if older editing operations in the queue refer to the
-	       attribute that has been copied, change these references to the
-	       copy */
-	    if (undo)
+	      editOp->EoSavedAttribute = AddAttrToElem (NULL, editOp->EoCreatedAttribute, NULL);
+	      /* if older editing operations in the queue refer to the
+		 attribute that has been copied, change these references to the
+		 copy */
+	      if (undo)
 	       queue = pDoc->DocLastUndone;
-	    else
+	      else
 	       queue = pDoc->DocLastEdit;
-            ChangeAttrPointersOlderEdits (queue, editOp->EoCreatedAttribute,
-					  editOp->EoSavedAttribute);
+	      ChangeAttrPointersOlderEdits (queue, editOp->EoCreatedAttribute,
+					    editOp->EoSavedAttribute);
 	    }
-         /* remove the attribute */
-         TtaRemoveAttribute ((Element) (editOp->EoElement),
-			     (Attribute)(editOp->EoCreatedAttribute), doc);
-	 if (reverse)
+	  /* remove the attribute */
+	  TtaRemoveAttribute ((Element) (editOp->EoElement),
+			      (Attribute)(editOp->EoCreatedAttribute), doc);
+	  if (reverse)
 	    editOp->EoCreatedAttribute = NULL;
-	 if (!SavedAttribute)
+	  if (!SavedAttribute)
 	    {
-            notifyAttr.attribute = NULL;
-            /* tell the application that an attribute has been removed */
-            CallEventAttribute (&notifyAttr, FALSE);
-	    }	    
-         }
+	      notifyAttr.attribute = NULL;
+	      /* tell the application that an attribute has been removed */
+	      CallEventAttribute (&notifyAttr, FALSE);
+	    }
+	}
       /* put the saved attribute (if any) on the element */
       if (editOp->EoElement && SavedAttribute)
-         {
-	 if (!CreatedAttribute)
+	{
+	  if (!CreatedAttribute)
 	    {
-            /* tell the application that an attribute will be created */
-            notifyAttr.event = TteAttrCreate;
-            notifyAttr.attribute = NULL;
-	    notifyAttr.info = 1; /* sent by undo */
-            notifyAttr.attributeType.AttrSSchema =
-				    (SSchema) (SavedAttribute->AeAttrSSchema);
-            notifyAttr.attributeType.AttrTypeNum = SavedAttribute->AeAttrNum;
-            CallEventAttribute (&notifyAttr, TRUE);
+	      /* tell the application that an attribute will be created */
+	      notifyAttr.event = TteAttrCreate;
+	      notifyAttr.attribute = NULL;
+	      notifyAttr.info = 1; /* sent by undo */
+	      notifyAttr.attributeType.AttrSSchema = (SSchema) (SavedAttribute->AeAttrSSchema);
+	      notifyAttr.attributeType.AttrTypeNum = SavedAttribute->AeAttrNum;
+	      CallEventAttribute (&notifyAttr, TRUE);
 	    }
-         /* put the attribute on the element */
-         AttachAttr (editOp->EoElement, SavedAttribute, editOp->EoAttrRank,
-		     doc);
-	 if (reverse)
+	  /* put the attribute on the element */
+	  AttachAttr (editOp->EoElement, SavedAttribute, editOp->EoAttrRank, doc);
+	  if (reverse)
 	    editOp->EoCreatedAttribute = SavedAttribute;
-         /* tell the application that an attribute has been put */
-         notifyAttr.attribute = (Attribute) (SavedAttribute);
-         CallEventAttribute (&notifyAttr, FALSE);	    
-         }
+	  /* tell the application that an attribute has been put */
+	  notifyAttr.attribute = (Attribute) (SavedAttribute);
+	  CallEventAttribute (&notifyAttr, FALSE);	    
+	}
       /* mark the document as modified */
       TtaSetDocumentModified (doc);
-      }
-
-   if (editOp->EoType == EtElement)
-      {
+    }
+  else if (editOp->EoType == EtElement)
+    {
       /* delete the element that has to be removed from the abstract tree */
       if (reverse)
-	 {
-         newParent = NULL;
-         newPreviousSibling = NULL;
-         newCreatedElement = NULL;
-         newSavedElement = NULL;
-	 }
+	{
+	  newParent = NULL;
+	  newPreviousSibling = NULL;
+	  newCreatedElement = NULL;
+	  newSavedElement = NULL;
+	}
       replacePoly = FALSE;
       if (editOp->EoCreatedElement)
-         {
-         pEl = editOp->EoCreatedElement;
-	 if (editOp->EoSavedElement &&
-	     pEl->ElTerminal && pEl->ElLeafType == LtPolyLine &&
-	     editOp->EoSavedElement->ElTerminal &&
-	     editOp->EoSavedElement->ElLeafType == LtPolyLine)
-	   replacePoly = TRUE;
-         /* tell the application that an element will be removed from the
-            abstract tree */
-         SendEventSubTree (TteElemDelete, pDoc, pEl,
-			   TTE_STANDARD_DELETE_LAST_ITEM);
-         /* prepare event TteElemDelete to be sent to the application */
-         notifyEl.event = TteElemDelete;
-         notifyEl.document = doc;
-         notifyEl.element = (Element) (pEl->ElParent);
-	 notifyEl.info = 1; /* sent by undo */
-         notifyEl.elementType.ElTypeNum = pEl->ElTypeNumber;
-         notifyEl.elementType.ElSSchema = (SSchema) (pEl->ElStructSchema);
-         nSiblings = 0;
-         pSibling = pEl;
-         while (pSibling->ElPrevious != NULL)
+	{
+	  pEl = editOp->EoCreatedElement;
+	  if (editOp->EoSavedElement &&
+	      pEl->ElTerminal && pEl->ElLeafType == LtPolyLine &&
+	      editOp->EoSavedElement->ElTerminal &&
+	      editOp->EoSavedElement->ElLeafType == LtPolyLine)
+	    replacePoly = TRUE;
+	  /* tell the application that an element will be removed from the
+	     abstract tree */
+	  SendEventSubTree (TteElemDelete, pDoc, pEl,
+			    TTE_STANDARD_DELETE_LAST_ITEM);
+	  /* prepare event TteElemDelete to be sent to the application */
+	  notifyEl.event = TteElemDelete;
+	  notifyEl.document = doc;
+	  notifyEl.element = (Element) (pEl->ElParent);
+	  notifyEl.info = 1; /* sent by undo */
+	  notifyEl.elementType.ElTypeNum = pEl->ElTypeNumber;
+	  notifyEl.elementType.ElSSchema = (SSchema) (pEl->ElStructSchema);
+	  nSiblings = 0;
+	  pSibling = pEl;
+	  while (pSibling->ElPrevious != NULL)
             {
-            nSiblings++;
-            pSibling = pSibling->ElPrevious;
+	      nSiblings++;
+	      pSibling = pSibling->ElPrevious;
             }
-         notifyEl.position = nSiblings;
-         /* remove the element */
-	 if (!reverse)
+	  notifyEl.position = nSiblings;
+	  /* remove the element */
+	  if (!reverse)
             TtaDeleteTree ((Element)pEl, doc);
-	 else
+	  else
 	    {
-	    newPreviousSibling = pEl->ElPrevious;
-	    newParent = pEl->ElParent;
-	    newSavedElement = pEl;
-	    TtaRemoveTree ((Element)pEl, doc);
+	      newPreviousSibling = pEl->ElPrevious;
+	      newParent = pEl->ElParent;
+	      newSavedElement = pEl;
+	      TtaRemoveTree ((Element)pEl, doc);
 	    }
-         /* tell the application that an element has been removed */
-         CallEventType ((NotifyEvent *) (&notifyEl), FALSE);
-         editOp->EoCreatedElement = NULL;
-         }
+	  /* tell the application that an element has been removed */
+	  CallEventType ((NotifyEvent *) (&notifyEl), FALSE);
+	  editOp->EoCreatedElement = NULL;
+	}
       /* insert the saved element in the abstract tree */
       if (editOp->EoSavedElement)
-         {
-	 pEl = editOp->EoSavedElement;
-         if (editOp->EoPreviousSibling)
+	{
+	  pEl = editOp->EoSavedElement;
+	  if (editOp->EoPreviousSibling)
             TtaInsertSibling ((Element)(pEl),
 			      (Element)(editOp->EoPreviousSibling),FALSE, doc);
-         else
+	  else
             TtaInsertFirstChild ((Element *)&(pEl),
 				 (Element)(editOp->EoParent), doc);
-         /* send event ElemPaste.Post to the application. -1 means that this
-	    is not really a Paste operation but an Undo operation. */
-         NotifySubTree (TteElemPaste, pDoc, pEl, -editOp->EoInfo);
-/******/
-	 if (replacePoly)
-	   {
-	   notifyGraph.event = TteElemGraphModify;
-	   notifyGraph.document = doc;
-	   notifyGraph.element = (Element)(pEl->ElParent); /***** all ascendants ***/
-	   notifyGraph.target = (Element) pEl;
-	   notifyGraph.value = 0;   /******/
-	   CallEventType ((NotifyEvent *) & notifyGraph, FALSE);
-	   }
-/******/
-	 if (reverse)
+	  /* send event ElemPaste.Post to the application. -1 means that this
+	     is not really a Paste operation but an Undo operation. */
+	  NotifySubTree (TteElemPaste, pDoc, pEl, -editOp->EoInfo);
+	  /******/
+	  if (replacePoly)
+	    {
+	      notifyGraph.event = TteElemGraphModify;
+	      notifyGraph.document = doc;
+	      notifyGraph.element = (Element)(pEl->ElParent); /***** all ascendants ***/
+	      notifyGraph.target = (Element) pEl;
+	      notifyGraph.value = 0;   /******/
+	      CallEventType ((NotifyEvent *) & notifyGraph, FALSE);
+	    }
+	  /******/
+	  if (reverse)
 	    newCreatedElement = pEl;
-         editOp->EoSavedElement = NULL;
-         }
+	  editOp->EoSavedElement = NULL;
+	}
       if (reverse)
-	 {
-         editOp->EoParent = newParent;
-         editOp->EoPreviousSibling = newPreviousSibling;
-         editOp->EoCreatedElement = newCreatedElement;
-         editOp->EoSavedElement = newSavedElement;
-	 }
+	{
+	  editOp->EoParent = newParent;
+	  editOp->EoPreviousSibling = newPreviousSibling;
+	  editOp->EoCreatedElement = newCreatedElement;
+	  editOp->EoSavedElement = newSavedElement;
+	}
       /* mark the document as modified */
       TtaSetDocumentModified (doc);
-      }
+    }
+  else if (editOp->EoType == EtChangeType)
+    {
+      pEl = editOp->EoChangedElement;
+      if (pEl)
+	{
+	  newType = pEl->ElTypeNumber;
+	  TtaChangeTypeOfElement (pEl, doc, editOp->EoElementType);
+	  if (reverse)
+	    editOp->EoElementType = newType;
+	  else
+	    editOp->EoElementType = 0;
+	  /* mark the document as modified */
+	  TtaSetDocumentModified (doc);
+	}
+    }
 }
 
 /*----------------------------------------------------------------------

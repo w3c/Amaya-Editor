@@ -20,6 +20,9 @@ extern void TtaRegisterElementDelete ( Element element,
                                        Document document );
 extern void TtaRegisterElementReplace ( Element element,
                                         Document document );
+extern void TtaRegisterElementTypeChange ( Element element,
+                                           int oldElementType,
+                                           Document document );
 extern void TtaRegisterAttributeCreate ( Attribute attribute,
                                          Element element,
                                          Document document );
@@ -59,6 +62,9 @@ extern void TtaRegisterElementDelete (/* Element element,
                                          Document document */);
 extern void TtaRegisterElementReplace (/* Element element,
                                           Document document */);
+extern void TtaRegisterElementTypeChange (/* Element element,
+                                             int oldElementType,
+                                             Document document */);
 extern void TtaRegisterAttributeCreate (/* Attribute attribute,
                                            Element element,
                                            Document document */);

@@ -2856,6 +2856,8 @@ void BuildSelectionMessage ()
       pDoc = SelectedDocument;
       pEl = FirstSelectedElement;
     }
+  if (pEl == NULL)
+    return;
   /* put the type name of the first selected element */
   strcpy (msgBuf, pEl->ElStructSchema->SsRule->SrElem[pEl->ElTypeNumber - 1]->SrName);
   /* add the types of the ancestors */

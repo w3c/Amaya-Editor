@@ -18,7 +18,6 @@ extern ThotBool TtaPrepareUndo (Document document);
    TtaOpenUndoSequence
 
    Open a sequence of editing operations in the history.
-
    Parameters:
    document: the concerned document
    firstSel: indicate the selection that must be set when the operation 
@@ -44,10 +43,8 @@ extern void TtaExtendUndoSequence (Document document);
    TtaCloseUndoSequence
 
    Close a sequence of editing operations in the history.
-
    Parameters:
    document: the concerned document
- 
    Return value:
        FALSE if the closed sequence is empty, TRUE otherwise
   ----------------------------------------------------------------------*/
@@ -58,7 +55,6 @@ extern ThotBool TtaCloseUndoSequence (Document document);
    
    Register a single element creation in the editing history
    Registration must be performed AFTER the element is inserted
-
    Parameters:
    element: the created element
    document: the concerned document
@@ -71,9 +67,7 @@ extern void TtaRegisterElementCreate (Element element, Document document);
    Register a single element Deletion in the editing history
    Registration must be performed BEFORE the element is actually
    removed from the structure.
-
    Parameters:
-
    element: the element to be deleted
    document: the concerned document
   ----------------------------------------------------------------------*/
@@ -85,7 +79,6 @@ extern void TtaRegisterElementDelete (Element element, Document document);
    Register a single element replacement in the editing history
    Registration must be performed BEFORE the element is actually
    replaced.
-
    Parameters:
    element: the created element
    document: the concerned document
@@ -97,7 +90,6 @@ extern void TtaRegisterElementReplace (Element element, Document document);
  
    Register a single attribute creation in the editing history
    Registration must be performed AFTER the attribute is inserted
- 
    Parameters:
    attribute: the created attribute
    element: the element to which the attribute has been attached
@@ -112,7 +104,6 @@ extern void TtaRegisterAttributeCreate (Attribute attribute,
    Register a single attribute Deletion in the editing history
    Registration must be performed BEFORE the attribute is actually
    removed from the structure.
- 
    Parameters:
    attribute: the attribute to be deleted
    element: the element to which this attribute is attached
@@ -127,7 +118,6 @@ extern void TtaRegisterAttributeDelete (Attribute attribute,
    Register a single attribute replacement in the editing history
    Registration must be performed BEFORE the element is actually
    replaced.
- 
    Parameters:
    attribute: the attribute
    element: the element to which the attribute is attached

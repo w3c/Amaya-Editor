@@ -11,6 +11,9 @@ extern void AddEditOpInHistory ( PtrElement pEl,
                                  PtrDocument pDoc,
                                  ThotBool save,
                                  ThotBool removeWhenUndoing );
+extern void AddChangeTypeOpInHistory ( PtrElement pEl,
+                                       int elType,
+                                       PtrDocument pDoc );
 extern void AddAttrEditOpInHistory ( PtrAttribute pAttr,
                                      PtrElement pEl,
                                      PtrDocument pDoc,
@@ -47,6 +50,9 @@ extern void AddEditOpInHistory (/* PtrElement pEl,
                                    PtrDocument pDoc,
                                    ThotBool save,
                                    ThotBool removeWhenUndoing */);
+extern void AddChangeTypeOpInHistory (/* PtrElement pEl,
+                                         int elType,
+                                         PtrDocument pDoc */);
 extern void AddAttrEditOpInHistory (/* PtrAttribute pAttr,
                                        PtrElement pEl,
                                        PtrDocument pDoc,

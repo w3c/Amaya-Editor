@@ -418,22 +418,19 @@ static void GL_MakeTextureSize(PictInfo *Image,
 #endif /* POWER2TEXSUBIMAGE */
 
 
-
 /*----------------------------------------------------------------------
  GL_TextureBind : Put Texture in video card's Memory at
  a power of 2 size for height and width 
   ----------------------------------------------------------------------*/
 static void GL_TextureBind (PictInfo *Image, ThotBool IsPixmap)
-{  
-
+{
   int           p2_w, p2_h;
   GLfloat       GL_w, GL_h;   
   GLint		Mode;
   
   /* Put texture in 3d card memory */
   if (!glIsTexture (Image->TextureBind) &&
-      Image->PicWidth &&
-      Image->PicHeight &&
+      Image->PicWidth && Image->PicHeight &&
       (Image->PicPixmap || !IsPixmap))
     {
       /* Another way is to split texture in 256x256 
@@ -451,31 +448,19 @@ static void GL_TextureBind (PictInfo *Image, ThotBool IsPixmap)
       glGenTextures (1, &(Image->TextureBind));
       glBindTexture (GL_TEXTURE_2D, Image->TextureBind);
       /*Texture Parameter : Here Faster ones...*/
-      glTexParameteri (GL_TEXTURE_2D,
-		       GL_TEXTURE_MIN_FILTER,
-		       GL_NEAREST);
-      glTexParameteri (GL_TEXTURE_2D,
-		       GL_TEXTURE_MAG_FILTER,
-		       GL_NEAREST);	    
-      glTexParameteri (GL_TEXTURE_2D,
-		       GL_TEXTURE_WRAP_S,
-		       GL_CLAMP);
-      glTexParameteri (GL_TEXTURE_2D,
-		       GL_TEXTURE_WRAP_T,
-		       GL_CLAMP); 
+      glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+      glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);	    
+      glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
+      glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP); 
       /* does current Color modify texture no = GL_REPLACE, 
 	 else => GL_MODULATE, GL_DECAL, ou GL_BLEND */
-      glTexEnvi( GL_TEXTURE_ENV, 
-		 GL_TEXTURE_ENV_MODE, 
-		 GL_MODULATE);
+      glTexEnvi( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
       if (IsPixmap)
 	{
 #ifndef POWER2TEXSUBIMAGE
 	  /* create a texture whose sizes are power of 2*/
-	  glTexImage2D (GL_TEXTURE_2D, 0, Mode, 
-			p2_w, p2_h, 0, Mode, 
-			GL_UNSIGNED_BYTE, 
-			NULL);
+	  glTexImage2D (GL_TEXTURE_2D, 0, Mode, p2_w, p2_h, 0, Mode, 
+			GL_UNSIGNED_BYTE, NULL);
 	  /* Map the texture wich isn't a power of two*/
 	  glTexSubImage2D (GL_TEXTURE_2D, 0, 0, 0, 
 			   Image->PicWidth, Image->PicHeight, 
@@ -495,10 +480,8 @@ static void GL_TextureBind (PictInfo *Image, ThotBool IsPixmap)
       else
 	{
 	  /* create a texture whose sizes are power of 2*/
-	  glTexImage2D (GL_TEXTURE_2D, 0, Mode, 
-			p2_w, p2_h, 0, Mode, 
-			GL_UNSIGNED_BYTE, 
-			NULL);
+	  glTexImage2D (GL_TEXTURE_2D, 0, Mode, p2_w, p2_h, 0, Mode, 
+			GL_UNSIGNED_BYTE, NULL);
 	}
       if (!Printing)
 	Image->PicPixmap = None;
@@ -507,17 +490,17 @@ static void GL_TextureBind (PictInfo *Image, ThotBool IsPixmap)
     }  
 }
 
-static void PrintPoscriptImage (PictInfo *Image, 
-			   int x, int y, 
-			   int w, int h,
-				int frame)
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+static void PrintPoscriptImage (PictInfo *Image, int x, int y, 
+				int w, int h, int frame)
 {
   unsigned char *pixels;  
   GLenum        Mode;
   int           xBox,yBox,wBox,hBox,width, height;
   
   if (Image->PicFileName)
-  {
+    {
     pixels = NULL;
     if (Image->PicPixmap == NULL)
       {
@@ -529,8 +512,7 @@ static void PrintPoscriptImage (PictInfo *Image,
       }
     if (w != Image->PicWidth || h != Image->PicHeight)
       pixels = ZoomPicture (Image->PicPixmap, 
-			    Image->PicWidth, 
-			    Image->PicHeight, 
+			    Image->PicWidth, Image->PicHeight, 
 			    w, h, (Image->RGBA?4:3));
     else
       pixels = Image->PicPixmap;
@@ -538,18 +520,14 @@ static void PrintPoscriptImage (PictInfo *Image,
       {
 
 	Mode = (Image->RGBA)?GL_RGBA:GL_RGB;
-	GLDrawPixelsPoscript (w, h,
-			      x, y,
-			      Mode, Mode, 
-			      pixels, 
-			      0.0f, 
-			      0.0f);
+	GLDrawPixelsPoscript (w, h, x, y, Mode, Mode, pixels, 
+			      0.0f, 0.0f);
 	if (w != Image->PicWidth || h != Image->PicHeight)
 	  TtaFreeMemory (pixels);
 	TtaFreeMemory (Image->PicPixmap);
 	Image->PicPixmap = NULL;
       }
-  }
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -916,17 +894,14 @@ ThotBool DisplayGradient (PtrAbstractBox pAb, PtrBox box,
     return FALSE;
   
   /* orientation*/
-  /*
-gradient->x2 - gradient->x1;
-gradient->y2 - gradient->y1;
-hypot ()
+  /* gradient->x2 - gradient->x1;
+     gradient->y2 - gradient->y1;
+     hypot ()
   */
-  
   x = box->BxXOrg;
   y = box->BxYOrg;
   width = box->BxWidth;
   height = box->BxHeight;
-  
 
   /* if gradient pict not computed*/
   if (box->Pre_computed_Pic == NULL)
@@ -948,8 +923,7 @@ hypot ()
   glStencilFunc (GL_ALWAYS, 1, 1);
   glStencilOp (GL_REPLACE, GL_REPLACE, GL_REPLACE);
 
-  /* draw the geometric shape to get boundings in the 
-     stencil buffer*/
+  /* draw the geometric shape to get boundings in the stencil buffer*/
 
   if (pAb->AbLeafType == LtGraphics)
     /* Graphics */
@@ -973,8 +947,7 @@ hypot ()
   glStencilFunc (GL_NOTEQUAL, 1, 1);
   glStencilOp (GL_KEEP, GL_KEEP, GL_KEEP);
   
-  /*then draw the shape 
-    (again, but really, this time)*/
+  /*then draw the shape (again, but really, this time)*/
   if (pAb->AbLeafType == LtGraphics)
     /* Graphics */
     DisplayGraph (box, frame, selected, t, b, l, r);
@@ -2696,8 +2669,7 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
       /* Gif and Png handles transparency 
 	 so picture format is RGBA, 
 	 all others are RGB*/
-      if (typeImage != GIF_FORMAT 
-	  && typeImage != PNG_FORMAT)
+      if (typeImage != GIF_FORMAT && typeImage != PNG_FORMAT)
 	imageDesc->RGBA = FALSE;
       else
 	imageDesc->RGBA = TRUE;
@@ -2904,6 +2876,8 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
 #endif /* _NOSHARELIST */
 }
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 void *Group_shot (int x, int y, int width, int height, int frame, ThotBool is_rgba)
 {
   PictInfo *imageDesc = NULL;
@@ -2925,25 +2899,16 @@ void *Group_shot (int x, int y, int width, int height, int frame, ThotBool is_rg
       /* glFinish (); */
       glReadBuffer (GL_BACK);   
 
-      if (1 
-	  /* &&  */
-	  /* 	  glhard () */
-	  )
+      if (1  /* && glhard () */)
 	{
 	  GL_TextureBind (imageDesc, FALSE);
-	  glCopyTexSubImage2D (GL_TEXTURE_2D, 0, 0, 0,
-			       x,
-			       y,
-			       width,
-			       height);
+	  glCopyTexSubImage2D (GL_TEXTURE_2D, 0, 0, 0, x, y, width, height);
 	}
       else
 	{
 	  imageDesc->PicPixmap = TtaGetMemory (sizeof (unsigned char) * 
 					       width * height * 4);
-	  glReadPixels (x, y, width, height, 
-			GL_RGBA, 
-			GL_UNSIGNED_BYTE, 
+	  glReadPixels (x, y, width, height, GL_RGBA, GL_UNSIGNED_BYTE, 
 			imageDesc->PicPixmap);
 	  GL_TextureBind (imageDesc, TRUE);
 	}
@@ -2951,7 +2916,6 @@ void *Group_shot (int x, int y, int width, int height, int frame, ThotBool is_rg
     }
   else
     return NULL;
-  
 }
 
 
@@ -3003,7 +2967,6 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
     return;
 
   GetPictureFileName (imageDesc->PicFileName, fileName);
-
   typeImage = imageDesc->PicType;
   status = PictureFileOk (fileName, &typeImage);
   w = 0;
@@ -3015,9 +2978,9 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
     {
       pres = RealSize;
 #if defined (_GTK) || defined (_WINDOWS)
-	  if (PictureLogo == None)
-	    /* create a special logo for lost pictures */
-	    CreateGifLogo ();
+      if (PictureLogo == None)
+	/* create a special logo for lost pictures */
+	CreateGifLogo ();
 #endif 
 #ifdef _WINDOWS
 #ifdef _WIN_PRINT
@@ -3087,16 +3050,13 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
 	  imageDesc->PicHArea = h;
 	  width = imageDesc->PicWidth;
 	  height = imageDesc->PicHeight;
-	  if (Ratio_Calculate (pAb, &w, &h,
-			       width, height))
+	  if (Ratio_Calculate (pAb, &w, &h, width, height))
 	    {
 	      if (imageDesc->PicWArea != w)
-		ChangeWidth (box,
-			     box, NULL,
+		ChangeWidth (box, box, NULL,
 			     (w + left + right) - box->BxW, 0, frame);		  
 	      if (imageDesc->PicHArea != h)
-		ChangeHeight (box,
-			      box, NULL,
+		ChangeHeight (box, box, NULL,
 			      (h + top + bottom + top + bottom) - box->BxH, frame);
 #ifndef _GL
 	      DefClip (frame, box->BxXOrg, box->BxYOrg,

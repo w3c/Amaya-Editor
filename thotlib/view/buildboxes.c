@@ -3301,11 +3301,13 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 	      Propagate = ToChildren;
 	      RecomputeLines (pBlock, NULL, NULL, frame);
 	    }
+	  /***
 	  else if (pBox->BxType == BoCell && ThotLocalActions[T_checkcolumn])
 	    {
 	      Propagate = ToChildren;
 	      (*ThotLocalActions[T_checkcolumn]) (pBox, NULL, frame);
 	    }
+	  ****/
 	  /* check enclosing cell */
 	  pCell = GetParentCell (pBox);
 	  if (pCell && ThotLocalActions[T_checkcolumn])

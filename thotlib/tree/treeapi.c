@@ -44,6 +44,7 @@
 #include "structcreation_f.h"
 #include "structmodif_f.h"
 #include "structschema_f.h"
+#include "structselect_f.h"
 #include "translation_f.h"
 #include "thotmsg_f.h"
 #include "tree_f.h"
@@ -63,13 +64,63 @@ static char        nameBuffer[ELEM_NAME_LENGTH];
    ---------------------------------------------------------------------- */
 void TtaChangeElementType (Element element, int typeNum)
 {
-   UserErrorCode = 0;
-   if (element == NULL)
-      TtaError (ERR_invalid_parameter);
-   else if (typeNum < 1 || typeNum > ((PtrElement)element)->ElStructSchema->SsNRules)
-     TtaError (ERR_invalid_element_type);
-   else
-     ((PtrElement)element)->ElTypeNumber = typeNum;
+  UserErrorCode = 0;
+  if (element == NULL)
+    TtaError (ERR_invalid_parameter);
+  else if (typeNum < 1 ||
+	   typeNum > ((PtrElement)element)->ElStructSchema->SsNRules)
+    TtaError (ERR_invalid_element_type);
+  else
+    ((PtrElement)element)->ElTypeNumber = typeNum;
+}
+
+/*----------------------------------------------------------------------
+   TtaChangeTypeOfElement
+   Change the type of element elem into newTypeNum
+   Parameters:
+   element: the changed element
+   document: the document for which the element is changed.
+   typeNum: new type for the element
+   Return value:
+   TRUE if the operation is done.
+ -----------------------------------------------------------------------*/
+ThotBool TtaChangeTypeOfElement (Element elem, Document doc, int newTypeNum)
+{
+  Element    prev, next, parent;
+
+  UserErrorCode = 0;
+  if (elem == NULL)
+    TtaError (ERR_invalid_parameter);
+  else if (newTypeNum < 1 ||
+	   newTypeNum > ((PtrElement) elem)->ElStructSchema->SsNRules)
+    TtaError (ERR_invalid_element_type);
+  else
+    {
+      parent = NULL;
+      prev = elem;
+      TtaPreviousSibling (&prev);
+      if (prev == NULL)
+	{
+	  next = elem;
+	  TtaNextSibling (&next);
+	  if (next == NULL)
+	    parent = TtaGetParent (elem);
+	} 
+      TtaRemoveTree (elem, doc);
+      TtaChangeElementType (elem, newTypeNum);
+      if (prev != NULL)
+	TtaInsertSibling (elem, prev, FALSE, doc);
+      else if (next != NULL)
+	TtaInsertSibling (elem, next, TRUE, doc);
+      else
+	TtaInsertFirstChild (&elem, parent, doc);
+#ifndef NODISPLAY
+      /* redisplay the selection message */
+      BuildSelectionMessage ();
+#endif
+      return TRUE;
+    }
+  return FALSE;
 }
 
 /* ----------------------------------------------------------------------

@@ -1246,28 +1246,33 @@ void NewCell (Element cell, Document doc, ThotBool generateColumn,
   ----------------------------------------------------------------------*/
 void CellCreated (NotifyElement * event)
 {
-   Element             cell, row;
-   Document            doc;
+  Element             cell, row;
+  Document            doc;
 
-   cell = event->element;
-   doc = event->document;
-   row = TtaGetParent (cell);
-   if (row == CurrentRow)
-     {
-       /* the new cell belongs to the newly created row. Already processed */
-       /* by RowCreated. */
-       if (cell == CurrentCell)
-	 {
-	   CurrentRow = NULL;
-	   CheckTableAfterCellUpdate = TRUE;
-	 }
-     }
-   else
-     /* a new cell in an existing row */
-     {
-     NewCell (cell, doc, TRUE, TRUE);
-     HandleColAndRowAlignAttributes (row, doc);
-     }
+#ifdef IV
+  if (event->info == 1)
+    /* the delete is already done by undo */
+    return;
+#endif
+  cell = event->element;
+  doc = event->document;
+  row = TtaGetParent (cell);
+  if (row == CurrentRow)
+    {
+      /* the new cell belongs to the newly created row. Already processed */
+      /* by RowCreated. */
+      if (cell == CurrentCell)
+	{
+	  CurrentRow = NULL;
+	  CheckTableAfterCellUpdate = TRUE;
+	}
+    }
+  else
+    /* a new cell in an existing row */
+    {
+      NewCell (cell, doc, TRUE, TRUE);
+      HandleColAndRowAlignAttributes (row, doc);
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -1477,9 +1482,11 @@ void CellDeleted (NotifyElement * event)
   ThotBool            inMath;
   ThotBool            before;
 
+#ifdef IV
   if (event->info == 1)
     /* the delete is already done by undo */
     return;
+#endif
   doc = event->document;
   span = CurrentSpan;
   CurrentSpan = 0;

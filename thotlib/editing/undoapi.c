@@ -134,13 +134,11 @@ ThotBool TtaCloseUndoSequence (Document document)
     
    Register a single element creation in the editing history
    Registration must be performed AFTER the element is inserted
-
    Parameters:
-
    element: the created element
    document: the concerned document
   ----------------------------------------------------------------------*/
-void         TtaRegisterElementCreate (Element element, Document document)
+void TtaRegisterElementCreate (Element element, Document document)
 {
   if (document < 1 || document > MAX_DOCUMENTS)
     TtaError (ERR_invalid_document_parameter);
@@ -159,13 +157,11 @@ void         TtaRegisterElementCreate (Element element, Document document)
    Register a single element Deletion in the editing history
    Registration must be performed BEFORE the element is actually
    removed from the structure.
-
    Parameters:
-
    element: the element to be deleted
    document: the concerned document
   ----------------------------------------------------------------------*/
-void         TtaRegisterElementDelete (Element element, Document document)
+void TtaRegisterElementDelete (Element element, Document document)
 {
   if (document < 1 || document > MAX_DOCUMENTS)
     TtaError (ERR_invalid_document_parameter);
@@ -184,12 +180,11 @@ void         TtaRegisterElementDelete (Element element, Document document)
    Register a single element replacement in the editing history
    Registration must be performed BEFORE the element is actually
    replaced.
-   
    Parameters:
    element: the replaced element
    document: the concerned document
   ----------------------------------------------------------------------*/
-void         TtaRegisterElementReplace (Element element, Document document)
+void TtaRegisterElementReplace (Element element, Document document)
 {
   if (document < 1 || document > MAX_DOCUMENTS)
     TtaError (ERR_invalid_document_parameter);
@@ -203,18 +198,38 @@ void         TtaRegisterElementReplace (Element element, Document document)
 }
 
 /* ----------------------------------------------------------------------
+   TtaRegisterElementTypeChange
+    
+   Register a changing of element type in the editing history
+   Parameters:
+   element: the element concerned
+   oldElementType: the element type to be restored when undoing
+   document: the concerned document
+  ----------------------------------------------------------------------*/
+void TtaRegisterElementTypeChange (Element element, int oldElementType,
+				   Document document)
+{
+  if (document < 1 || document > MAX_DOCUMENTS)
+    TtaError (ERR_invalid_document_parameter);
+  else if (LoadedDocument [document - 1] == NULL)
+    TtaError (ERR_invalid_document_parameter);
+  else 
+    AddChangeTypeOpInHistory ((PtrElement)element, oldElementType,
+			      LoadedDocument[document-1]); 
+}
+
+/* ----------------------------------------------------------------------
    TtaRegisterAttributeCreate
     
    Register a single attribute creation in the editing history
    Registration must be performed AFTER the attribute is inserted
-
    Parameters:
    attribute: the created attribute
    element: the element to which the attribute has been attached
    document: the concerned document
   ----------------------------------------------------------------------*/
-void         TtaRegisterAttributeCreate (Attribute attribute, Element element,
-					 Document document)
+void TtaRegisterAttributeCreate (Attribute attribute, Element element,
+				 Document document)
 {
   if (document < 1 || document > MAX_DOCUMENTS)
     TtaError (ERR_invalid_document_parameter);
@@ -234,14 +249,13 @@ void         TtaRegisterAttributeCreate (Attribute attribute, Element element,
    Register a single attribute Deletion in the editing history
    Registration must be performed BEFORE the attribute is actually
    removed from the structure.
-
    Parameters:
    attribute: the attribute to be deleted
    element: the element to which this attribute is attached
    document: the concerned document
   ----------------------------------------------------------------------*/
-void         TtaRegisterAttributeDelete (Attribute attribute, Element element,
-					 Document document)
+void TtaRegisterAttributeDelete (Attribute attribute, Element element,
+				 Document document)
 {
   if (document < 1 || document > MAX_DOCUMENTS)
     TtaError (ERR_invalid_document_parameter);
@@ -261,14 +275,13 @@ void         TtaRegisterAttributeDelete (Attribute attribute, Element element,
    Register a single attribute replacement in the editing history
    Registration must be performed BEFORE the element is actually
    replaced.
-   
    Parameters:
    attribute: the attribute
    element: the element to which the attribute is attached
    document: the concerned document
   ----------------------------------------------------------------------*/
-void         TtaRegisterAttributeReplace (Attribute attribute, Element element,
-					  Document document)
+void TtaRegisterAttributeReplace (Attribute attribute, Element element,
+				  Document document)
 {
   if (document < 1 || document > MAX_DOCUMENTS)
     TtaError (ERR_invalid_document_parameter);
@@ -287,7 +300,7 @@ void         TtaRegisterAttributeReplace (Attribute attribute, Element element,
 
    Clears all editing operations registered in the editing history of document.
   ----------------------------------------------------------------------*/
-void         TtaClearUndoHistory (Document document)
+void TtaClearUndoHistory (Document document)
 {
   if (document < 1 || document > MAX_DOCUMENTS)
     TtaError (ERR_invalid_document_parameter);
@@ -303,7 +316,7 @@ void         TtaClearUndoHistory (Document document)
    Cancel the latest sequence of editing operations registered in the
    editing history of document.
   ----------------------------------------------------------------------*/
-void         TtaCancelLastRegisteredSequence (Document document)
+void TtaCancelLastRegisteredSequence (Document document)
 {
   if (document < 1 || document > MAX_DOCUMENTS)
     TtaError (ERR_invalid_document_parameter);
@@ -320,9 +333,9 @@ void         TtaCancelLastRegisteredSequence (Document document)
    of document, only if it's an attribute operation for element oldEl.
    In that case, make it related to element newEl and attribute newAttr.
   ----------------------------------------------------------------------*/
-void         TtaChangeLastRegisteredAttr (Element oldEl, Element newEl,
-					  Attribute oldAttr, Attribute newAttr,
-					  Document document)
+void TtaChangeLastRegisteredAttr (Element oldEl, Element newEl,
+				  Attribute oldAttr, Attribute newAttr,
+				  Document document)
 {
   if (document < 1 || document > MAX_DOCUMENTS)
     TtaError (ERR_invalid_document_parameter);
@@ -340,7 +353,7 @@ void         TtaChangeLastRegisteredAttr (Element oldEl, Element newEl,
    Replace the latest operation registered in the editing history of document
    from an attribute value modification to an attribute value deletion.
   ----------------------------------------------------------------------*/
-void         TtaReplaceLastRegisteredAttr (Document document)
+void TtaReplaceLastRegisteredAttr (Document document)
 {
   if (document < 1 || document > MAX_DOCUMENTS)
     TtaError (ERR_invalid_document_parameter);

@@ -2237,7 +2237,7 @@ void      CheckFence (Element el, Document doc)
 		TtaDeleteTree (content, doc);
 		/* change the MO element into a MF element */
 		if (elType.ElTypeNum == MathML_EL_MO)
-		   ChangeTypeOfElement (el, doc, MathML_EL_MF);
+		   TtaChangeTypeOfElement (el, doc, MathML_EL_MF);
 		/* is there an attribute stretchy on this mo element? */
 		attrType.AttrSSchema = elType.ElSSchema;
 		attrType.AttrTypeNum = MathML_ATTR_stretchy;
@@ -4133,7 +4133,7 @@ void      MathMLElementComplete (ParserData *context, Element el, int *error)
        case MathML_EL_MI:
 	  if (TtaGetFirstChild (el) == NULL)
 	    /* empty <mi> Replace it by an empty Construct */
-	    ChangeTypeOfElement (el, doc, MathML_EL_Construct);
+	    TtaChangeTypeOfElement (el, doc, MathML_EL_Construct);
 	  else
 	    SetFontstyleAttr (el, doc);
 	  break;
@@ -4676,7 +4676,7 @@ void MathMLAttributeComplete (Attribute attr, Element el, Document doc)
 	 {
 	 elType = TtaGetElementType (el);
 	 if (elType.ElTypeNum == MathML_EL_MFRAC)
-	    ChangeTypeOfElement (el, doc, MathML_EL_BevelledMFRAC);
+	    TtaChangeTypeOfElement (el, doc, MathML_EL_BevelledMFRAC);
 	 }
      }
 

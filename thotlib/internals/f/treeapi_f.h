@@ -8,6 +8,9 @@
 
 extern void TtaChangeElementType ( Element element,
                                    int typeNum );
+extern ThotBool TtaChangeTypeOfElement ( Element elem,
+                                         Document doc,
+                                         int newTypeNum );
 extern Element TtaNewElement ( Document document,
                                ElementType elementType );
 extern Element TtaNewTree ( Document document,
@@ -136,6 +139,9 @@ extern ThotBool TtaHasReturnCreateNLException ( ElementType elType );
 
 extern void TtaChangeElementType (/* Element element,
                                      int typeNum */);
+extern ThotBool TtaChangeTypeOfElement (/* Element elem,
+                                           Document doc,
+                                           int newTypeNum */);
 extern Element TtaNewElement (/* Document document,
                                  ElementType elementType */);
 extern Element TtaNewTree (/* Document document,
