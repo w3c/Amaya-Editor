@@ -292,7 +292,8 @@ static void Build_path_to_image_dir(char* buffer)
 #ifdef _SVGANIM
 static void Build_path_to_help_dir(char* buffer) 
 {
-  sprintf (buffer, "%s%cdoc%c", TtaGetEnvString ("THOTDIR"), DIR_SEP, DIR_SEP);
+  sprintf (buffer, "%s%cdoc%chtml%c", TtaGetEnvString ("THOTDIR"), DIR_SEP,
+	   DIR_SEP, DIR_SEP);
 }
 #endif /* _SVGANIM */
 
