@@ -61,9 +61,6 @@ STRING elementName;
 {
    if (ustrcmp (elementName, TEXT("math")) == 0)
       ustrcpy (DTDname, TEXT("MathML"));
-   else if (ustrcmp (elementName, TEXT("label")) == 0 ||
-	    ustrcmp (elementName, TEXT("text")) == 0)
-      ustrcpy (DTDname, TEXT("HTML"));
    else
       ustrcpy (DTDname, TEXT(""));
 }
@@ -444,26 +441,14 @@ int             *error
      parent = TtaGetParent (el);
      parentType = TtaGetElementType (parent);
      if (parentType.ElSSchema != elType.ElSSchema)
+       {
         if (elType.ElTypeNum != GraphML_EL_GraphML)
 	  {
 	  newType.ElSSchema = GraphMLSSchema;
 	  newType.ElTypeNum = GraphML_EL_GraphML;
 	  CreateEnclosingElement (el, newType, doc);
 	  }
-
-     /* if it's a Label element, create a HTMLfragment to contain
-        the HTML elements */
-     if (elType.ElTypeNum == GraphML_EL_Label)
-	{
-	child = TtaGetFirstChild (el);
-	if (child != NULL)
-	   {
-	   newType.ElSSchema = TtaGetSSchema (TEXT("HTML"), doc);
-	   newType.ElTypeNum = HTML_EL_HTMLfragment;
-	   CreateEnclosingElement (child, newType, doc);
-	   }
-	}
-
+       }
      /* if it's an image element, create a PICTURE_UNIT child */
      else if (elType.ElTypeNum == GraphML_EL_image)
        {
@@ -819,6 +804,79 @@ Document	doc;
 }
 
 /*----------------------------------------------------------------------
+   ParseTransformAttribute
+   Parse the value of a transform attribute
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void      ParseTransformAttribute (Attribute attr, Element el, Document doc, ThotBool delete)
+#else
+void      ParseTransformAttribute (attr, el, doc, delete)
+Attribute	attr;
+Element		el;
+Document	doc;
+ThotBool        delete
+
+#endif
+{
+   int                  length, x, y;
+   STRING               text, ptr;
+   PresentationValue    pval;
+   PresentationContext  ctxt;
+
+   length = TtaGetTextAttributeLength (attr) + 2;
+   text = TtaAllocString (length);
+   if (text)
+      {
+      /* get the content of the translate attribute */
+      TtaGiveTextAttributeValue (attr, text, &length);
+      /* parse the attribute content */
+      /* look only for the "translate" part */
+      ptr = strstr (text, "translate");
+      if (ptr)
+	{
+        x = 0;  y = 0;
+        ptr += 9;
+        ptr = TtaSkipWCBlanks (ptr);
+        if (*ptr == TEXT('('))
+	  {
+          ctxt = TtaGetSpecificStyleContext (doc);
+	  ptr++;
+          ptr = ParseNumber (ptr, &pval);
+	  if (pval.typed_data.unit != STYLE_UNIT_INVALID)
+	    {
+	    pval.typed_data.unit = STYLE_UNIT_PX;
+            ctxt->destroy = delete;
+	    TtaSetStylePresentation (PRHorizPos, el, NULL, ctxt, pval);
+	    }	    
+	  ptr = TtaSkipWCBlanks (ptr);
+          if (*ptr == TEXT(','))
+	    {
+	    ptr++;
+	    ptr = ParseNumber (ptr, &pval);
+	    if (pval.typed_data.unit != STYLE_UNIT_INVALID)
+	      {
+	      pval.typed_data.unit = STYLE_UNIT_PX;
+              ctxt->destroy = delete;
+	      TtaSetStylePresentation (PRVertPos, el, NULL, ctxt, pval);
+	      }
+	    ptr = TtaSkipWCBlanks (ptr);
+	    }
+	  else if (*ptr == TEXT(')'))
+	    {
+	    ptr++;
+	    pval.typed_data.unit = STYLE_UNIT_PX;
+	    pval.typed_data.value = 0;
+	    ctxt->destroy = delete;
+	    TtaSetStylePresentation (PRVertPos, el, NULL, ctxt, pval);
+	    }
+          TtaFreeMemory (ctxt);
+	  }
+	}
+      TtaFreeMemory (text);
+      }
+}
+
+/*----------------------------------------------------------------------
    GraphMLAttributeComplete
    The XML parser has read attribute attr for element el in document doc.
   ----------------------------------------------------------------------*/
@@ -849,6 +907,9 @@ Document	doc;
      case GraphML_ATTR_dx:
      case GraphML_ATTR_dy:
 	ParseCoordAttribute (attr, el, doc);
+	break;
+     case GraphML_ATTR_transform:
+        ParseTransformAttribute (attr, el, doc, FALSE);
 	break;
      case GraphML_ATTR_width_:
      case GraphML_ATTR_height_:

@@ -42,7 +42,10 @@ STRUCT
                       linestyle_ = solid_, dashed_, dotted_;
                       arrowhead = none_, start, end_, both;
                       depth_ = integer)
-                = GRAPHICS;
+                = AGGREGATE
+	          desc; title; metadata;
+	          GRAPHICS;
+		  END;
 	
             Rectangle
                 (ATTR position = text;               { OBSOLETE }
@@ -57,10 +60,10 @@ STRUCT
                       linestyle_;
                                 IntEmptyShape = yes_, no_;
                       depth_)
-                = BEGIN
-                  Label = HTML;
-                  GRAPHICS;
-                  END;
+                = AGGREGATE
+	          desc; title; metadata;
+	          GRAPHICS;
+		  END;
 	
             RoundRect
                 (ATTR position;                      { OBSOLETE }
@@ -71,10 +74,10 @@ STRUCT
                       linestyle_;
                                 IntEmptyShape;
                       depth_)
-                = BEGIN
-                  Label;
-                  GRAPHICS;
-                  END;
+                = AGGREGATE
+	          desc; title; metadata;
+	          GRAPHICS;
+		  END;
 	
             Circle
                 (ATTR position;                      { OBSOLETE }
@@ -83,10 +86,10 @@ STRUCT
                       linestyle_;
                                 IntEmptyShape;
                       depth_)
-                = BEGIN
-                  Label;
-                  GRAPHICS;
-                  END;
+                = AGGREGATE
+	          desc; title; metadata;
+	          GRAPHICS;
+		  END;
 	
             Oval
                 (ATTR position;                      { OBSOLETE }
@@ -96,10 +99,10 @@ STRUCT
                       linestyle_;
                                 IntEmptyShape;
                       depth_)
-                = BEGIN
-                  Label;
-                  GRAPHICS;
-                  END;
+                = AGGREGATE
+	          desc; title; metadata;
+	          GRAPHICS;
+		  END;
 	
             Polyline
                 (ATTR position;
@@ -110,7 +113,10 @@ STRUCT
                       arrowhead;
                       linestyle_;
                       depth_)
-                = GRAPHICS;
+                = AGGREGATE
+	          desc; title; metadata;
+	          GRAPHICS;
+		  END;
 	
             Polygon
                 (ATTR position;
@@ -121,10 +127,10 @@ STRUCT
                       linestyle_;
                                 IntEmptyShape;
                       depth_)
-                = BEGIN
-                  Label;
-                  GRAPHICS;
-                  END;
+                = AGGREGATE
+	          desc; title; metadata;
+	          GRAPHICS;
+		  END;
 	
             Spline
                 (ATTR position;
@@ -146,10 +152,7 @@ STRUCT
                       linestyle_;
                                 IntEmptyShape;
                       depth_)
-                = BEGIN
-                  Label;
-                  GRAPHICS;
-                  END;
+                = GRAPHICS;
 
             text_
                 (ATTR x;
@@ -173,6 +176,7 @@ STRUCT
 	              fill;
 	              stroke;
 	              stroke_width;
+		      transform = TEXT;
                       linestyle_;
                       depth_;
                                 ShowGroup = Yes_)
@@ -184,7 +188,11 @@ STRUCT
 		      y;
 	              width_;
 	              height_)
-	        = PICTURE;
+                = AGGREGATE
+	          desc; title; metadata;
+	          PICTURE;
+		  END;
+
             END;
 	
    TextComponent = CASE OF
@@ -211,7 +219,6 @@ STRUCT
 EXCEPT
 
    GraphML:             IsDraw;
-   Label:               NoMove, NoResize, NoShowBox;
    Line_:               MoveResize, HighlightChildren, NoShowBox;
    Rectangle:           MoveResize, HighlightChildren, NoShowBox;
    RoundRect:           MoveResize, HighlightChildren, NoShowBox;
@@ -231,6 +238,7 @@ EXCEPT
    class:               CssClass;
    Invalid_attribute:   Invisible;
    Ghost_restruct:      Invisible;
+   Namespace:	        Invisible;
    IntPosX:             Invisible, NewHPos; 
    IntPosY:             Invisible, NewVPos;
    IntEmptyShape:       Invisible;

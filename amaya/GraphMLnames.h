@@ -13,7 +13,6 @@ static ElemMapping    GraphMLElemMappingTable[] =
    {TEXT("foreignObject"), SPACE, GraphML_EL_foreignObject, L_Other},
    {TEXT("g"), SPACE, GraphML_EL_g, L_Other},
    {TEXT("image"), SPACE, GraphML_EL_image, L_Other},
-   {TEXT("label"), 'X', GraphML_EL_Label, L_Other}, /* see function GraphMLGetDTDName */
    {TEXT("line"), 'E', GraphML_EL_Line_, L_Other},
    {TEXT("metadata"), SPACE, GraphML_EL_metadata, L_Other},
    {TEXT("oval"), SPACE, GraphML_EL_Oval, L_Other},
@@ -50,6 +49,7 @@ static AttributeMapping GraphMLAttributeMappingTable[] =
    {TEXT("stroke"), TEXT(""), 'A', GraphML_ATTR_stroke, L_Other},
    {TEXT("stroke-width"), TEXT(""), 'A', GraphML_ATTR_stroke_width, L_Other},
    {TEXT("style"), TEXT(""), 'A', GraphML_ATTR_style_, L_Other},
+   {TEXT("transform"), TEXT(""), 'A', GraphML_ATTR_transform, L_Other},
    {TEXT("width"), TEXT(""), 'A', GraphML_ATTR_width_, L_Other},
    {TEXT("x"), TEXT(""), 'A', GraphML_ATTR_x, L_Other},
    {TEXT("xlink:href"), TEXT("image"), 'A', GraphML_ATTR_xlink_href, L_Other},

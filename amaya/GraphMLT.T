@@ -81,8 +81,19 @@ RULES
 	BEGIN
 	create SOT;
 	create 'line';
+	indent +6;
 	create attributes;
-	create CloseEmptyTagNL;
+	if IntEmptyShape
+		create CloseEmptyTagNL;
+	indent -6;
+	if not IntEmptyShape
+		BEGIN
+		create CloseTagNL;
+		indent +2;
+		indent -2 after;
+		create SCT after;
+		create 'line>\12' after;
+		END;
 	END;
 
    Rectangle:
@@ -103,21 +114,6 @@ RULES
 		create 'rect>\12' after;
 		END;
 	END;
-
-   Label:
-	BEGIN
-	create SOT;
-	create 'label';
-	create attributes;
-	create '>';
-	indent +2;
-	indent -2 after;
-	create SCT after;
-	create 'label>\12' after;
-	END;
-
-   MathML:
-	Use MathMLT;
 
    RoundRect:
 	BEGIN
@@ -180,8 +176,19 @@ RULES
 	BEGIN
 	create SOT;
 	create 'polyline';
+	indent +10;
 	create attributes;
-	create CloseEmptyTagNL;
+	if IntEmptyShape
+		create CloseEmptyTagNL;
+	indent -10;
+	if not IntEmptyShape
+		BEGIN
+		create CloseTagNL;
+		indent +2;
+		indent -2 after;
+		create SCT after;
+		create 'polyline>\12' after;
+		END;
 	END;
 
    Polygon:
@@ -207,8 +214,19 @@ RULES
 	BEGIN
 	create SOT;
 	create 'spline';
+	indent +8;
 	create attributes;
-	create CloseEmptyTagNL;
+	if IntEmptyShape
+		create CloseEmptyTagNL;
+	indent -8;
+	if not IntEmptyShape
+		BEGIN
+		create CloseTagNL;
+		indent +2;
+		indent -2 after;
+		create SCT after;
+		create 'spline>\12' after;
+		END;
 	END;
 
    ClosedSpline:
@@ -251,7 +269,7 @@ RULES
 	indent +2;
 	indent -2 after;
 	create SCT after;
-	create 'text>' after;
+	create 'tspan>' after;
 	END;
 
    foreignObject:
@@ -265,6 +283,12 @@ RULES
 	create SCT after;
 	create 'foreignObject>\12' after;
 	END;
+
+   MathML:
+	Use MathMLT;
+
+   HTML:
+	Use HTMLT;
 
    g:
 	BEGIN
@@ -282,12 +306,19 @@ RULES
 	BEGIN
 	create SOT;
 	create 'image';
+	indent +7;
 	create attributes;
-	create CloseTagNL;
-	indent +2;
-	indent -2 after;
-	create SCT after;
-	create 'image>\12' after;
+	if IntEmptyShape
+		create CloseEmptyTagNL;
+	indent -7;
+	if not IntEmptyShape
+		BEGIN
+		create CloseTagNL;
+		indent +2;
+		indent -2 after;
+		create SCT after;
+		create 'image>\12' after;
+		END;
 	END;
 
    PICTURE_UNIT:
@@ -459,6 +490,14 @@ ATTRIBUTES
 	BEGIN
 	create SAN;
 	create 'dy="';
+	create dy;
+	create DoubleQuote;
+	END;
+
+   transform:
+	BEGIN
+	create SAN;
+	create 'transform="';
 	create dy;
 	create DoubleQuote;
 	END;

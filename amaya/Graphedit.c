@@ -65,7 +65,7 @@ static ThotBool PaletteDisplayed = FALSE;
 /*----------------------------------------------------------------------
  SetEmptyShapeAttrSubTree
  A GraphML drawing is about to be saved. Set the EmptyShape attribute
- on all closed geometric shapes that do not contain any Label element.
+ on all geometric shapes that do not contain any other element.
  This attribute is used by the translation schema (GraphMLT.T) to
  generate a closing tag.
  -----------------------------------------------------------------------*/
@@ -77,36 +77,61 @@ Element el;
 Document doc;
 #endif /* __STDC__*/
 {
-  ElementType	elType, labelType;
+  ElementType	elType;
   AttributeType	attrType;
   Attribute	attr;
-  Element	child, labelEl;
+  Element	child, content;
   SSchema	GraphMLSchema;
+  ThotBool      empty;
 
+  /* some initialization */
   elType = TtaGetElementType (el);
   GraphMLSchema = elType.ElSSchema;
   attrType.AttrSSchema = GraphMLSchema;
   attrType.AttrTypeNum = GraphML_ATTR_IntEmptyShape;
-  labelType.ElSSchema = GraphMLSchema;
-  labelType.ElTypeNum = GraphML_EL_Label;
 
+  /* test all descendants of the element that are in the GraphML namespace */
   child = TtaGetFirstChild (el);
   while (child)
      {
      elType = TtaGetElementType (child);
      if (elType.ElSSchema == GraphMLSchema)
+        /* this child is in the GraphML namespace */
 	{
-        if (elType.ElTypeNum == GraphML_EL_Rectangle ||
+        if (elType.ElTypeNum == GraphML_EL_Line_ ||
+	    elType.ElTypeNum == GraphML_EL_Rectangle ||
 	    elType.ElTypeNum == GraphML_EL_RoundRect ||
 	    elType.ElTypeNum == GraphML_EL_Circle ||
 	    elType.ElTypeNum == GraphML_EL_Oval ||
+	    elType.ElTypeNum == GraphML_EL_Polyline ||
 	    elType.ElTypeNum == GraphML_EL_Polygon ||
-	    elType.ElTypeNum == GraphML_EL_ClosedSpline)
+	    elType.ElTypeNum == GraphML_EL_Spline ||
+	    elType.ElTypeNum == GraphML_EL_ClosedSpline ||
+	    elType.ElTypeNum == GraphML_EL_image)
+	   /* this element is concerned by the IntEmptyShape attribute */
 	   {
-	   labelEl = TtaSearchTypedElement (labelType, SearchInTree, child);
+	   /* check its children */
+	   content = TtaGetFirstChild (child);
+	   empty = TRUE;
+	   while (content && empty)
+	     {
+	       elType = TtaGetElementType (content);
+	       if (elType.ElSSchema != GraphMLSchema)
+		 /* this child is not in the GraphML namespace */
+		 empty = FALSE;
+	       else
+		 if (elType.ElTypeNum != GraphML_EL_GRAPHICS_UNIT &&
+		     elType.ElTypeNum != GraphML_EL_XMLcomment)
+		   /* this is not a Thot graphics leaf nor a comment */
+		   empty = FALSE;
+		 else
+		   /* check next child */
+		   TtaNextSibling (&content);
+	     }
+
 	   attr = TtaGetAttribute (child, attrType);
-	   if (!labelEl)
-	      /* child does not contain any Label element */
+	   if (empty)
+	      /* child does not contain any significant element */
 	      {
 	      if (!attr)
 		 /* there is no IntEmptyShape attribute. Create one */
@@ -119,11 +144,12 @@ Document doc;
 		 }
 	      }
 	   else
-	      /* there is a label element */
+	      /* child is not empty */
 	      if (attr)
 		 /* there is an IntEmptyShape attribute. Delete it */
 		 TtaRemoveAttribute (child, attr, doc);
 	   }
+	/* test all descendants of that descendant */
 	SetEmptyShapeAttrSubTree(child, doc);
 	}
      TtaNextSibling (&child);
@@ -150,6 +176,8 @@ ThotBool ExtendSelectGraphMLElement(event)
    if (firstSel == NULL)
       /* the first selected element is not in the same document */
       return TRUE;	/* Don't let Thot perform normal operation */
+   if (firstSel == event->element)
+      return FALSE;     /* Let Thot perform normal operation */
    /* get the common ancestor */
    ancestor = TtaGetCommonAncestor (firstSel, event->element);
    if (ancestor == NULL)
@@ -159,7 +187,7 @@ ThotBool ExtendSelectGraphMLElement(event)
    if (ancestType.ElSSchema != graphSSchema)
       /* common ancestor is not a GraphML element */
       {
-      /* is the common ancestor within a Label ? */
+      /* is the common ancestor within a GraphML element? */
       parent = ancestor;
       do
 	{
@@ -171,7 +199,7 @@ ThotBool ExtendSelectGraphMLElement(event)
       if (parent)
 	 /* the common ancestor is within a GraphML element. Let Thot
 	    perform normal operation: selection is being extended within
-	    a Label */
+	    a foreignObject */
 	 return FALSE;
       else
          return TRUE;	/* abort selection */
@@ -180,7 +208,8 @@ ThotBool ExtendSelectGraphMLElement(event)
    newFirstSel = firstSel;
    elType = TtaGetElementType (firstSel);
    if (elType.ElSSchema != graphSSchema ||
-        (elType.ElTypeNum != GraphML_EL_Rectangle &&
+        (elType.ElTypeNum != GraphML_EL_Line_ &&
+	 elType.ElTypeNum != GraphML_EL_Rectangle &&
 	 elType.ElTypeNum != GraphML_EL_RoundRect &&
 	 elType.ElTypeNum != GraphML_EL_Circle &&
 	 elType.ElTypeNum != GraphML_EL_Oval &&
@@ -200,7 +229,8 @@ ThotBool ExtendSelectGraphMLElement(event)
    selEl = event->element;
    elType = TtaGetElementType (selEl);
    if (elType.ElSSchema != graphSSchema ||
-        (elType.ElTypeNum != GraphML_EL_Rectangle &&
+        (elType.ElTypeNum != GraphML_EL_Line_ &&
+	 elType.ElTypeNum != GraphML_EL_Rectangle &&
 	 elType.ElTypeNum != GraphML_EL_RoundRect &&
 	 elType.ElTypeNum != GraphML_EL_Circle &&
 	 elType.ElTypeNum != GraphML_EL_Oval &&
@@ -235,7 +265,7 @@ ThotBool ExtendSelectGraphMLElement(event)
 /*----------------------------------------------------------------------
  SetEmptyShapeAttribute
  A GraphML drawing is about to be saved. Set the EmptyShape attribute
- on all closed geometric shapes that do not contain any Label element.
+ on all geometric shapes that do not contain any other element.
  This attribute is used by the translation schema (GraphMLT.T) to
  generate a closing tag.
  -----------------------------------------------------------------------*/
@@ -275,6 +305,36 @@ void AttrCoordChanged (event)
 #endif /* __STDC__*/
 {
    ParseCoordAttribute (event->attribute, event->element, event->document);
+}
+
+/*----------------------------------------------------------------------
+ AttrTransformChanged
+ -----------------------------------------------------------------------*/
+#ifdef __STDC__
+void AttrTransformChanged (NotifyAttribute *event)
+#else /* __STDC__*/
+void AttrTransformChanged (event)
+     NotifyAttribute *event;
+#endif /* __STDC__*/
+{
+   ParseTransformAttribute (event->attribute, event->element, event->document,
+			    FALSE);
+}
+
+/*----------------------------------------------------------------------
+   AttrTransformDelete : attribute transform will be
+   deleted. Remove the corresponding style presentation.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+ThotBool            AttrTransformDelete (NotifyAttribute * event)
+#else
+ThotBool            AttrTransformDelete (event)
+NotifyAttribute    *event;
+#endif
+{
+  ParseTransformAttribute (event->attribute, event->element, event->document,
+			  TRUE);
+  return FALSE; /* let Thot perform normal operation */
 }
 
 /*----------------------------------------------------------------------
@@ -808,7 +868,7 @@ void ControlPointChanged(event)
 
 /*----------------------------------------------------------------------
  GraphLeafDeleted
- A GRAPHICS_UNIT element has been deleted. Delete its Label sibling
+ A GRAPHICS_UNIT element has been deleted. Delete its siblings
  and its parent.
  -----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -1000,45 +1060,8 @@ int                 construct;
 	newType.ElTypeNum = GraphML_EL_ClosedSpline;
 	shape = 's';
 	break;
-    case 9:	/* label */
-	/* a label can be inserted only in some types of elements (closed
-	shapes), only when there is no Label in the element and only if a
-        single element is selected */
-        if (first == last)
-	   /* a single element is selected */
-	   {
-	   elType = TtaGetElementType (first);
-	   if (elType.ElTypeNum == GraphML_EL_GRAPHICS_UNIT)
-	      {
-	      parent = TtaGetParent (first);
-	      elType = TtaGetElementType (parent);
-	      }
-	   else
-	      parent = first;
-	   
-	   if (elType.ElTypeNum == GraphML_EL_Rectangle ||
-	       elType.ElTypeNum == GraphML_EL_RoundRect ||
-	       elType.ElTypeNum == GraphML_EL_Circle ||
-	       elType.ElTypeNum == GraphML_EL_Oval ||
-	       elType.ElTypeNum == GraphML_EL_Polygon ||
-	       elType.ElTypeNum == GraphML_EL_ClosedSpline)
-	      {
-	      elem = TtaGetFirstChild (parent);
-	      found = FALSE;
-	      while (!found && elem)
-		{
-		elType = TtaGetElementType (elem);
-		if (elType.ElTypeNum == GraphML_EL_Label &&
-		    elType.ElSSchema == GraphMLSSchema)
-		   found = TRUE;
-		else
-		   TtaNextSibling (&elem);
-		}
-	      if (!found)
-		 newType.ElTypeNum = GraphML_EL_Label;
-	      sibling = NULL;
-	      }
-	   }
+    case 9:	/* foreignObject with some HTML code */
+        newType.ElTypeNum = GraphML_EL_foreignObject;
 	break;
     case 10:	/* text */
 	newType.ElTypeNum = GraphML_EL_text_;
@@ -1083,12 +1106,13 @@ int                 construct;
 	   TtaSetGraphicsShape (child, shape, doc);
 	   selEl = child;
 	 }
-       else if (newType.ElTypeNum == GraphML_EL_Label)
+       else if (newType.ElTypeNum == GraphML_EL_foreignObject)
 	 /* create an HTML DIV element in the new element */
 	 {
 	   /* the document is supposed to be HTML */
-	   childType.ElSSchema = docSchema;
-	   childType.ElTypeNum = HTML_EL_HTMLfragment;
+	   childType.ElSSchema = TtaNewNature (doc, docSchema, TEXT("HTML"),
+					       TEXT("HTMLP"));
+	   childType.ElTypeNum = HTML_EL_Division;
 	   child = TtaNewTree (doc, childType, "");
 	   /* do not check the Thot abstract tree against the structure */
 	   /* schema when inserting this element */

@@ -11,6 +11,8 @@ extern CHAR_T* SkipWCBlanksAndComments ( CHAR_T* ptr );
 extern CHAR_T* SkipProperty ( CHAR_T* ptr );
 extern CHAR_T* ParseCSSUnit ( CHAR_T* cssRule,
                               PresentationValue *pval );
+extern CHAR_T* ParseNumber ( CHAR_T* cssRule,
+			     PresentationValue *pval );
 extern void ParseCSSBackgroundImageCallback ( Document doc,
                                               Element element,
                                               STRING file,
@@ -64,6 +66,8 @@ extern CHAR_T ReadCSSRules ( Document docRef,
 extern char* SkipBlanksAndComments (/* char* ptr */);
 extern CHAR_T* SkipWCBlanksAndComments (/* CHAR_T* ptr */);
 extern CHAR_T* SkipProperty (/* CHAR_T* ptr */);
+extern CHAR_T* ParseNumber (/* CHAR_T* cssRule,
+			       PresentationValue *pval */);
 extern CHAR_T* ParseCSSUnit (/* CHAR_T* cssRule,
                                 PresentationValue *pval */);
 extern void ParseCSSBackgroundImageCallback (/* Document doc,

@@ -79,6 +79,12 @@ ATTRIBUTES
         AttrModify.Post -> AttrIntSizeChanged;
    IntHeight:
         AttrModify.Post -> AttrIntSizeChanged;
+   transform:
+	BEGIN
+	AttrModify.Post -> AttrTransformChanged;
+	AttrCreate.Post -> AttrTransformChanged;
+	AttrDelete.Pre ->  AttrTransformDelete;
+	END;
    fill:
         BEGIN
 	AttrModify.Post -> AttrFillStrokeModified;

@@ -221,14 +221,13 @@ CHAR_T*     ptr;
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSUnit:                                                  
-   parse a CSS Unit substring and returns the corresponding      
-   value and its unit.                                           
+   ParseNumber:                                                  
+   parse a number and returns the corresponding value.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-CHAR_T*       ParseCSSUnit (CHAR_T* cssRule, PresentationValue *pval)
+CHAR_T*       ParseNumber (CHAR_T* cssRule, PresentationValue *pval)
 #else
-CHAR_T*       ParseCSSUnit (cssRule, pval)
+CHAR_T*       ParseNumber (cssRule, pval)
 CHAR_T*            cssRule;
 PresentationValue  *pval;
 #endif
@@ -237,7 +236,6 @@ PresentationValue  *pval;
   int                 minus = 0;
   int                 valid = 0;
   int                 f = 0;
-  unsigned int        uni;
   ThotBool            real = FALSE;
 
   pval->typed_data.unit = STYLE_UNIT_REL;
@@ -294,40 +292,11 @@ PresentationValue  *pval;
 
   if (!valid)
     {
-      cssRule = SkipWord (cssRule);
       pval->typed_data.unit = STYLE_UNIT_INVALID;
       pval->typed_data.value = 0;
     }
   else
     {
-      cssRule = SkipWCBlanksAndComments (cssRule);
-      for (uni = 0; uni < NB_UNITS; uni++)
-	{
-	  if (!ustrncasecmp (CSSUnitNames[uni].sign, cssRule,
-			     ustrlen (CSSUnitNames[uni].sign)))
-	    {
-	      pval->typed_data.unit = CSSUnitNames[uni].unit;
-	      pval->typed_data.real = real;
-	      if (real)
-		{
-		  if (minus)
-		    pval->typed_data.value = -(f * 1000 + val);
-		  else
-		    pval->typed_data.value = f * 1000 + val;
-		}
-	      else
-		{
-		  if (minus)
-		    pval->typed_data.value = -val;
-		  else
-		    pval->typed_data.value = val;
-		}
-	      return (cssRule + ustrlen (CSSUnitNames[uni].sign));
-	    }
-	}
-
-      /* not in the list of predefined units */
-      pval->typed_data.unit = STYLE_UNIT_PX;
       pval->typed_data.real = real;
       if (real)
 	{
@@ -343,6 +312,48 @@ PresentationValue  *pval;
 	  else
 	    pval->typed_data.value = val;
 	}
+    }
+  return (cssRule);
+}
+
+/*----------------------------------------------------------------------
+   ParseCSSUnit:                                                  
+   parse a CSS Unit substring and returns the corresponding      
+   value and its unit.                                           
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+CHAR_T*       ParseCSSUnit (CHAR_T* cssRule, PresentationValue *pval)
+#else
+CHAR_T*       ParseCSSUnit (cssRule, pval)
+CHAR_T*            cssRule;
+PresentationValue  *pval;
+#endif
+{
+  int                 val = 0;
+  int                 minus = 0;
+  int                 valid = 0;
+  int                 f = 0;
+  unsigned int        uni;
+  ThotBool            real = FALSE;
+
+  pval->typed_data.unit = STYLE_UNIT_REL;
+  cssRule = ParseNumber (cssRule, pval);
+  if (pval->typed_data.unit == STYLE_UNIT_INVALID)
+      cssRule = SkipWord (cssRule);
+  else
+    {
+      cssRule = SkipWCBlanksAndComments (cssRule);
+      for (uni = 0; uni < NB_UNITS; uni++)
+	{
+	  if (!ustrncasecmp (CSSUnitNames[uni].sign, cssRule,
+			     ustrlen (CSSUnitNames[uni].sign)))
+	    {
+	      pval->typed_data.unit = CSSUnitNames[uni].unit;
+	      return (cssRule + ustrlen (CSSUnitNames[uni].sign));
+	    }
+	}
+      /* not in the list of predefined units */
+      pval->typed_data.unit = STYLE_UNIT_PX;
     }
   return (cssRule);
 }

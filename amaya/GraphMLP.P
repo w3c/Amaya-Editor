@@ -138,18 +138,6 @@ BOXES
 		END;
 	END;
 
-   LABEL_S:
-	BEGIN
-	Content: Text 'label';
-	Visibility: 0;
-	IN Graph_Structure_view BEGIN
-		Size: TAG_FONTSIZE;
-		Font: TAG_Font;
-		Style: TAG_Style; Weight: TAG_Weight;
-		Visibility: TAG_Visibility;  Foreground: TAG_Color;
-		END;
-	END;
-
    CIRCLE_S:
 	BEGIN
 	Content: Text 'circle';
@@ -685,6 +673,29 @@ BOXES
 		END;
 	END;
 
+   ATTR_transform: BEGIN
+	Content: Text '  transform=';
+	Visibility: 0;
+	IN Graph_Structure_view BEGIN
+		HorizPos: Left = Previous . Right;
+		VertPos: HRef = Previous . HRef;
+		Size: TAG_FONTSIZE;
+		Style: ATTR_Style; Weight: ATTR_Weight;
+		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+		END;
+	END;
+   VALUE_transform: BEGIN
+	Content: (transform);
+	Visibility: 0;
+	IN Graph_Structure_view BEGIN
+		HorizPos: Left = Previous . Right;
+		VertPos: HRef = Previous . HRef;
+		Size: TAG_FONTSIZE;
+		Style: ATTR_Style; Weight: ATTR_Weight;
+		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
+		END;
+	END;
+
    ATTR_xlink_href: BEGIN
 	Content: Text '  xlink:href=';
 	Visibility: 0;
@@ -901,34 +912,6 @@ RULES
 		Size: DOC_FONTSIZE;
 		Width: Enclosing . Width - STRUCT_INDENT;
 		Height: Enclosed . Height;
-		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
-		Font: TAG_Font;
-		END;
-	IN Graph_Alternate_view BEGIN
-		Height: Enclosed . Height;
-		Width: Enclosing . Width;
-		END;
-	END;
-
-   Label:
-	BEGIN
-	CreateBefore (LABEL_S);
-	CreateWith (VerticalLine);
-	Width: Enclosing . Width - 1;
-	HorizPos: Left = Enclosing . Left + 0.5;
-	VertPos: HMiddle = Enclosing . HMiddle;
-	Depth: Enclosing =;
-	MarginTop: 2 px;
-	MarginLeft: 2 px;
-	MarginBottom: 2 px;
-	MarginRight: 2 px;
-	IN Graph_Structure_view BEGIN
-		MarginTop: 0;
-		MarginLeft: 0;
-		MarginBottom: 0;
-		MarginRight: 0;
-		Size: DOC_FONTSIZE;
-		Width: Enclosing . Width - STRUCT_INDENT;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		Font: TAG_Font;
 		END;
@@ -1363,6 +1346,12 @@ ATTRIBUTES
 	BEGIN
 	CreateBefore (ATTR_dy);
 	CreateBefore (VALUE_dy);
+	END;
+
+  transform:
+	BEGIN
+	CreateBefore (ATTR_transform);
+	CreateBefore (VALUE_transform);
 	END;
 
   xlink_href:
