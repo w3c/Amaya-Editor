@@ -95,7 +95,8 @@ void                LocateSelectionInView (int frame, int x, int y, int button)
 	 enclosing box */
       if (button == 0 || button == 1)
 	{
-	  if (IsParentBox (pBox, pFrame->FrSelectionBegin.VsBox))
+	  if (pBox != pFrame->FrSelectionBegin.VsBox &&
+	      IsParentBox (pBox, pFrame->FrSelectionBegin.VsBox))
 	    pBox = GetClickedLeafBox (frame, x, y);
 	}
       if (pBox != NULL)
@@ -112,7 +113,7 @@ void                LocateSelectionInView (int frame, int x, int y, int button)
 	}
       else
 	pAb = NULL;
-       
+
       CloseInsertion ();
       if (pAb != NULL)
 	{
