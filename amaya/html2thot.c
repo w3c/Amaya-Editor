@@ -5696,10 +5696,10 @@ CHARSET        *charset;
 			    }
 			}
 		    }
-		  else if (!strncasecmp (&FileBuffer[i], "<html ", 6))
+		  else if (!strncasecmp (&FileBuffer[i], "<html", 5))
 		    {
 		      /* the html tag is found */
-		      i += 6;
+		      i += 5;
 		      /* it's not necessary to continue */
 		      found = FALSE;
 		      endOfFile = TRUE;
@@ -5717,9 +5717,10 @@ CHARSET        *charset;
 		      if (ptr && ptr < end)
 			*parsingLevel = L_Strict;
 		    }
-		  else if (strncmp (&FileBuffer[i], "<!-- ", 10))
+		  else if (strncmp (&FileBuffer[i], "<!--", 9))
 		    {
 		      /* it's not a comment */
+		      i += 9;
 		      /* it's not necessary to continue */
 		      found = FALSE;
 		      endOfFile = TRUE;

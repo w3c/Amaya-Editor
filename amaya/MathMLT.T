@@ -23,7 +23,7 @@ RULES
 
    MathML:
 	begin
-	Create '<math xmlns="http://www.w3.org/1998/Math/MathML"';
+	Create '\12<math xmlns="http://www.w3.org/1998/Math/MathML"';
 	Create Attributes;
 	Create '>\12';
 	indent +2;
