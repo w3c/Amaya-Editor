@@ -71,7 +71,7 @@ Shift Ctrl <Key>O , Shift Ctrl <Key>E:      TtcInsertChar("&#338;")
 Alt <Key>e:                                 TtcInsertChar("&#8364;")
 
 #File menu 
-Ctrl <Key>o:                       OpenDoc() 
+Ctrl <Key>o , Ctrl <Key>o:         OpenDoc() 
 Shift Ctrl <Key>O:                 OpenDocInNewWindow() 
 Ctrl <Key>n , Ctrl <Key>b:         NewXHTMLBasic() 
 Ctrl <Key>n , Ctrl <Key>t:         NewXHTMLStrict() 
