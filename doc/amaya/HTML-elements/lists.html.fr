@@ -27,24 +27,24 @@
 </table>
 
 <div>
-<h1>Eléments de liste</h1>
+<h1>Eléments d'une  liste</h1>
 
 <p>Il y a trois types de liste dans HTML. Les deux types simples sont: liste
-ordonnée et liste non ordonnée.  Il y a aussi une liste de définition. Les
+ordonnée et liste non ordonnée.  Il y a aussi une liste de définitions. Les
 listes sont des structures de type bloc, mais elles peuvent être créées à
 l'intérieur d'autres listes.</p>
 
 <p>Par exemple:</p>
 <dl>
-  <dt>Liste de définition</dt>
-    <dd>C'est une liste de définition_ elle contient des termes de définition
+  <dt>Liste de définitions</dt>
+    <dd>C'est une liste de définitions_ elle contient des termes de définition
       (<code><a
       href="http://www.w3.org/TR/REC-html40/struct/lists.html#edef-DT">DT</a></code>)
       et des définitions (<code><a
       href="http://www.w3.org/TR/REC-html40/struct/lists.html#edef-DD">DD</a></code>)
-      filles. </dd>
+      filles.</dd>
     <dd>Un terme de définition peut être suivi par un nombre ou par des
-      définitions. </dd>
+      définitions.</dd>
   <dt>Listes ordonnées</dt>
     <dd>Il y a trois types de liste:
       <ol>
@@ -53,37 +53,37 @@ l'intérieur d'autres listes.</p>
         <li>Listes non ordonnées (<code><a
           href="http://www.w3.org/TR/REC-html40/struct/lists.html#edef-UL"
           name="UL" id="UL">UL</a></code>)</li>
-        <li>Listes de défintion (<code><a
+        <li>Listes de définition (<code><a
           href="http://www.w3.org/TR/REC-html40/struct/lists.html#edef-DL">DL</a></code>)</li>
       </ol>
     </dd>
   <dt>Listes non ordonnées</dt>
-    <dd>Listes ordonnées et listes  non ordonnées partagent quelques
-      caractéristiques: 
+    <dd>Les listes ordonnées et les  listes  non ordonnées partagent quelques
+      caractéristiques:
       <ul>
         <li>Listes simples</li>
-        <li>Les deux types de liste ont des enfants qui ont des listes
-          d'articles  (éléments <code><a
+        <li>Les deux types de liste ont des enfants qui sont des listes
+          d'items (éléments <code><a
           href="http://www.w3.org/TR/REC-html40/struct/lists.html#edef-LI">LI</a></code>)</li>
       </ul>
     </dd>
 </dl>
 
 <p>Les trois types de listes peuvent toutes les trois être créées avec la
-barre outil en utilisant les boutons  <img src="../../Icons/OList.gif"
+barre d'outil en utilisant les boutons  <img src="../../Icons/OList.gif"
 alt="Bulleted List" />, <img src="../../Icons/NumList.gif" alt="Numbered List"
 />, <img src="../../Icons/DL.gif" alt="Definition List" />. Tous les types de
 liste peuvent être créés à partir du menu  <strong>Eléments,</strong> ou en
 utilisant les raccourcis clavier. Les raccourcis clavier par défaut  dans les
-systèmes unix sont  <kbd>control-l control-o</kbd> pour une liste ordonnée, ,
+systèmes unix sont <kbd>control-l control-o</kbd> pour une liste ordonnée,
 <kbd>control-l control-u</kbd> pour une liste non ordonnée, et  <kbd>control-l
-control-d</kbd> pour une liste de définition.</p>
+control-d</kbd> pour une liste de définitions.</p>
 
-<p><a href="../StyleSheets.html">Feuilles de style </a> peut être utilisé pour
-changer la présentation des listes. Il est possible de changer le style des
-puces de liste, et de changer le style de texte, par exemple en utilisant un
-réservoir différent pour les termes de définition et pour les définitions
-effectives. </p>
+<p><a href="../StyleSheets.html">Les Feuilles de style </a> peuvent être
+utilisées pour changer la présentation des listes. Il est possible de changer
+le style des puces de liste, et de changer le style du texte, par exemple en
+utilisant une police de caractères différente  pour les termes de définition
+et pour les définitions effectives.</p>
 </div>
 
 <p align="right"><a href="headings.html"><img alt="previous" border="0"
