@@ -17,6 +17,8 @@ extern int JavaPollLoop ( void );
 extern void JavaEventLoop ( int *stop );
 extern void JavaExitEventLoop ( int *stop );
 extern void JavaStartEventLoop ( void );
+extern void JavaLockMainLoop ( void );
+extern void JavaUnlockMainLoop ( void );
 extern void JavaLoadResources ( void );
 
 #else /* __STDC__ */
@@ -32,6 +34,8 @@ extern int JavaPollLoop (/* void */);
 extern void JavaEventLoop (/* int *stop */);
 extern void JavaExitEventLoop (/* int *stop */);
 extern void JavaStartEventLoop (/* void */);
+extern void JavaLockMainLoop (/* void */);
+extern void JavaUnlockMainLoop (/* void */);
 extern void JavaLoadResources (/* void */);
 
 #endif /* __STDC__ */

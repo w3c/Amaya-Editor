@@ -16,12 +16,9 @@ extern void JavaThotlibLock ( void );
 extern void JavaThotlibRelease ( void );
 extern void JavaXWindowSocketLock ( void );
 extern void JavaXWindowSocketRelease ( void );
-extern void DNSserverLock ( void );
-extern void DNSserverRelease ( void );
-extern struct hostent *gethostbyname ( const char *name );
+extern void org_w3c_thotlib_Extra_nativeAppBootstrap ( void );
 extern void InitJava ( void );
 extern void CloseJava ( void );
-extern void throwOutOfMemory ( void );
 
 #else /* __STDC__ */
 
@@ -35,12 +32,9 @@ extern void JavaThotlibLock (/* void */);
 extern void JavaThotlibRelease (/* void */);
 extern void JavaXWindowSocketLock (/* void */);
 extern void JavaXWindowSocketRelease (/* void */);
-extern void DNSserverLock (/* void */);
-extern void DNSserverRelease (/* void */);
-extern struct hostent *gethostbyname (/* const char *name */);
+extern void org_w3c_thotlib_Extra_nativeAppBootstrap (/* void */);
 extern void InitJava (/* void */);
 extern void CloseJava (/* void */);
-extern void throwOutOfMemory (/* void */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

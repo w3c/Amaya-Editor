@@ -7,8 +7,8 @@
 #ifdef __STDC__
 
 extern void org_w3c_amaya_HTTPRequest_Callback ( struct Horg_w3c_amaya_HTTPRequest* request,
-                                             jlong callback_f,
-                                             jlong callback_arg );
+                                                 jlong callback_f,
+                                                 jlong callback_arg );
 extern int GetObjectWWW ( int doc,
                           char *url,
                           char *postString,
@@ -18,7 +18,8 @@ extern int GetObjectWWW ( int doc,
                           void *context,
                           void *terminate,
                           void *tcontext,
-                          boolean error_html );
+                          boolean error_html,
+                          char *content_type );
 extern int PutObjectWWW ( int doc,
                           char *fileName,
                           char *url,
@@ -32,8 +33,8 @@ extern void handleLinkHeaders ( int doc );
 #else /* __STDC__ */
 
 extern void org_w3c_amaya_HTTPRequest_Callback (/* struct Horg_w3c_amaya_HTTPRequest* request,
-                                               jlong callback_f,
-                                               jlong callback_arg */);
+                                                   jlong callback_f,
+                                                   jlong callback_arg */);
 extern int GetObjectWWW (/* int doc,
                             char *url,
                             char *postString,
@@ -43,7 +44,8 @@ extern int GetObjectWWW (/* int doc,
                             void *context,
                             void *terminate,
                             void *tcontext,
-                            boolean error_html */);
+                            boolean error_html,
+                            char *content_type */);
 extern int PutObjectWWW (/* int doc,
                             char *fileName,
                             char *url,

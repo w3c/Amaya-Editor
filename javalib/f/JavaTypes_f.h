@@ -42,7 +42,7 @@ extern void JavaAttributeType2CAttributeTypePtr ( struct Horg_w3c_thotlib_Attrib
 extern void CAttributeTypePtr2JavaAttributeType ( AttributeType *in,
                                                   struct Horg_w3c_thotlib_AttributeType** out );
 extern void CAttributeType2JavaAttributeType ( AttributeType in,
-					       struct Horg_w3c_thotlib_AttributeType* out );
+                                               struct Horg_w3c_thotlib_AttributeType* out );
 extern void JavaIntPtr2CintPtr ( struct Horg_w3c_thotlib_IntPtr* in,
                                  int **out );
 extern void CintPtr2JavaIntPtr ( int *in,
@@ -55,6 +55,10 @@ extern void CPixmap2Javalong ( Pixmap in,
                                jlong *out );
 extern void Javalong2CPixmap ( jlong in,
                                Pixmap *out );
+extern void CThotIcon2Javalong ( ThotIcon in,
+                                 jlong *out );
+extern void Javalong2CThotIcon ( jlong in,
+                                 ThotIcon *out );
 extern void CElement2Javalong ( Element in,
                                 jlong *out );
 extern void Javalong2CElement ( jlong in,
@@ -118,7 +122,7 @@ extern void JavaAttributeType2CAttributeTypePtr (/* struct Horg_w3c_thotlib_Attr
 extern void CAttributeTypePtr2JavaAttributeType (/* AttributeType *in,
                                                     struct Horg_w3c_thotlib_AttributeType** out */);
 extern void CAttributeType2JavaAttributeType (/* AttributeType in,
-						 struct Horg_w3c_thotlib_AttributeType* out */);
+                                                 struct Horg_w3c_thotlib_AttributeType* out */);
 extern void JavaIntPtr2CintPtr (/* struct Horg_w3c_thotlib_IntPtr* in,
                                    int **out */);
 extern void CintPtr2JavaIntPtr (/* int *in,
@@ -131,6 +135,10 @@ extern void CPixmap2Javalong (/* Pixmap in,
                                  jlong *out */);
 extern void Javalong2CPixmap (/* jlong in,
                                  Pixmap *out */);
+extern void CThotIcon2Javalong (/* ThotIcon in,
+                                   jlong *out */);
+extern void Javalong2CThotIcon (/* jlong in,
+                                   ThotIcon *out */);
 extern void CElement2Javalong (/* Element in,
                                   jlong *out */);
 extern void Javalong2CElement (/* jlong in,
