@@ -197,7 +197,7 @@ char               *data;
 
 /*----------------------------------------------------------------------
    TtcCreateDocument
-   starts the changing of createdoc.
+   starts the change of createdoc.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TtcCreateDocument (Document document, View view)
