@@ -3805,7 +3805,6 @@ void AttrBeveledChanged (event)
 {
   int		val;
   ElementType   elType;
-  Attribute     attr;
 
   if (event->element)
     {
