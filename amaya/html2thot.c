@@ -201,7 +201,8 @@ UnicodeFallbackEntry	UnicodeFallbackTable[] =
 /* prop     */ {8733, 181}, /* proportional to, U+221D ISOtech */
 /* infin    */ {8734, 165}, /* infinity, U+221E ISOtech */
 /* ang      */ {8736, 208}, /* angle, U+2220 ISOamso */
-/* VerticalBar*/ {8739, 1124}, /* angle, U+2220 ISOamso */
+/* VerticalBar*/ {8739, 1124}, /*  */
+/* parallel */ {8741, 1124}, /* parallel, U+2225 ISOtech */
 /* and      */ {8743, 217}, /* logical and = wedge, U+2227 ISOtech */
 /* or       */ {8744, 218}, /* logical or = vee, U+2228 ISOtech */
 /* cap      */ {8745, 199}, /* intersection = cap, U+2229 ISOtech */
@@ -3370,6 +3371,8 @@ void         GetFallbackCharacter (int code, STRING fallback, Language* lang)
 	fallback[1] = ',';
       else if (code == 8240)	/* per mille sign */
 	fallback[1] = '\260';
+      else if (code == 8741)	/* parallel sign */
+	fallback[1] = '|';
       fallback[2] = EOS;
       }
 }
