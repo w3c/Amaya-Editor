@@ -2299,6 +2299,103 @@ PtrSSchema          newSSchema;
    return done;
 }
 
+/*----------------------------------------------------------------------
+  CanInsertBySplitting
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static boolean	    CanInsertBySplitting (PtrElement *pEl, int charSplit,
+			boolean *splitElem, PtrElement *pSplitEl,
+			PtrElement *pElSplit, boolean createAfter,
+			int typeNum, PtrSSchema pSS, PtrDocument pDoc)
+#else  /* __STDC__ */
+static boolean	    CanInsertBySplitting (pEl, charSplit, splitElem, pSplitEl,
+			pElSplit, createAfter, typeNum, pSS, pDoc)
+
+PtrElement	 *pEl;
+int		  charSplit;
+boolean		 *splitElem;
+PtrElement	 *pSplitEl;
+PtrElement	 *pElSplit;
+boolean		 createAfter;
+int		 typeNum;
+PtrSSchema	 pSS;
+PtrDocument	 pDoc;
+
+#endif /* __STDC__ */
+
+{
+   PtrElement	pElem, Sibling, pList, pF, pSplit;
+   boolean	ok;
+
+	     *splitElem = FALSE;
+	     *pSplitEl = NULL;
+	     *pElSplit = NULL;
+	     ok = FALSE;
+	     pElem = *pEl;
+	     do
+	       {
+		  /* isolate pElem from its sibling. If pElem is a component */
+		  /* of an aggregate, AllowedSibling would always say no */
+		  if (*splitElem)
+		    if (createAfter)
+		      {
+		      Sibling = pElem->ElNext;
+		      pElem->ElNext = NULL;
+		      }
+		    else
+		      {
+		      Sibling = pElem->ElPrevious;
+		      pElem->ElPrevious = NULL;
+		      }
+		  ok = AllowedSibling (pElem, pDoc, typeNum, pSS,
+				       !createAfter, TRUE, FALSE);
+		  /* restore link with sibling */
+		  if (*splitElem)
+		    if (createAfter)
+		      pElem->ElNext = Sibling;
+		    else
+		      pElem->ElPrevious = Sibling;
+
+		  if (ok)
+		       *pEl = pElem;
+		  else
+		    {
+		       if ((pElem->ElTerminal && pElem->ElLeafType == LtText &&
+			    charSplit > 0) ||
+			   *splitElem ||
+			   (createAfter && pElem->ElNext != NULL) ||
+			   (!createAfter && pElem->ElPrevious != NULL))
+			   {
+			     if (*splitElem && pElem != *pSplitEl)
+			       {
+				if (pElem == *pSplitEl)
+				   pElem = NULL;
+			       }
+			     else
+			       {
+			       if (createAfter && charSplit == 0 && !*splitElem)
+				  pSplit = pElem->ElNext;
+			       else
+				  pSplit = pElem;
+			       if (CanSplitElement(pSplit, charSplit,
+					FALSE, &pList, &pF, pSplitEl))
+				  {
+			          *splitElem = TRUE;
+				  if (*pElSplit == NULL)
+				     *pElSplit = pSplit;
+				  }
+			       else
+				  pElem = NULL;
+			       }
+			   }
+		       if (pElem != NULL)
+		          pElem = pElem->ElParent;
+		    }
+	       }
+	     while (pElem != NULL && !ok);
+	     return ok;
+}
+
 
 /*----------------------------------------------------------------------
    	CreateNewElement						
@@ -2321,14 +2418,16 @@ boolean             Before;
 #endif /* __STDC__ */
 
 {
-   PtrElement          firstSel, lastSel, pNew, pF, pSibling, pEl, pElem;
+   PtrElement          firstSel, lastSel, pNew, pF, pSibling, pEl, pElem,
+		       pElSplit, pSplitEl;
+   ElementType	       elType;
    PtrDocument         pSelDoc;
    ElementType	       selType;
    NotifyElement       notifyEl;
    NotifyOnElementType notifyElType;
    int                 firstChar, lastChar, NSiblings, ancestorRule, rule;
-   boolean             PointInsertion, ok, createAfter, splitElem, elConst,
-                       empty, selEnTete, selEnQueue;
+   boolean             InsertionPoint, ok, createAfter, splitElem, elConst,
+                       empty, selHead, selTail, done;
 
    NSiblings = 0;
    if (!GetCurrentSelection (&pSelDoc, &firstSel, &lastSel, &firstChar,
@@ -2345,29 +2444,29 @@ boolean             Before;
      {
 	elConst = FALSE;
 	empty = FALSE;
-	PointInsertion = (firstSel == lastSel && firstSel->ElTerminal &&
+	InsertionPoint = (firstSel == lastSel && firstSel->ElTerminal &&
 			  firstSel->ElLeafType == LtText &&
 			  firstChar == lastChar && firstChar > 0);
 	/* Peut-on considerer la selection courante comme un simple point */
 	/* d'insertion ? */
-	if (!PointInsertion)
+	if (!InsertionPoint)
 	   if (firstSel == lastSel)
 	      /* un seul element selectionne' */
 	      if (GetElementConstruct (firstSel) == CsConstant)
 		 /* c'est une constante, on va creer le nouvel element devant */
 		{
-		   PointInsertion = TRUE;
+		   InsertionPoint = TRUE;
 		   elConst = TRUE;
 		}
-	if (!PointInsertion)
+	if (!InsertionPoint)
 	   if (firstSel == lastSel)
 	      if (EmptyElement (firstSel))
 		 /* c'est un element vide unique */
 		{
-		   PointInsertion = TRUE;
+		   InsertionPoint = TRUE;
 		   empty = TRUE;
 		}
-	if (!PointInsertion)
+	if (!InsertionPoint)
 	   /* il n'y a pas un simple point d'insertion, mais du texte et/ou */
 	   /* un ou des elements selectionne's */
 	  {
@@ -2381,7 +2480,7 @@ boolean             Before;
 		 lastChar >= lastSel->ElTextLength)
 		lastChar = 0;
 	     if (Before)
-		PointInsertion = TRUE;
+		InsertionPoint = TRUE;
 	     else if (firstChar <= 1 && lastChar == 0)
 		/* le premier et le dernier element selectionnes sont
 		   entierement selectionne's */
@@ -2449,7 +2548,7 @@ boolean             Before;
 		/* on ne fait rien */
 		return;
 	  }
-	if (PointInsertion)
+	if (InsertionPoint)
 	   /* il y a un simple point d'insertion */
 	  {
 	     /* verifie si l'element a creer porte l'exception NoCreate */
@@ -2459,20 +2558,20 @@ boolean             Before;
 
 	     if (elConst || empty)
 	       {
-		  selEnTete = TRUE;
-		  selEnQueue = FALSE;
+		  selHead = TRUE;
+		  selTail = FALSE;
 	       }
 	     else
 	       {
 		  /* la selection commence-t-elle en tete d'un element ? */
-		  selEnTete = (firstSel == lastSel &&
+		  selHead = (firstSel == lastSel &&
 			       firstSel->ElPrevious == NULL &&
 			       lastSel->ElTerminal &&
 			       lastSel->ElLeafType == LtText &&
 			       firstChar <= 1);
 		  /* la selection est-t-elle a la fin de la derniere feuille
 		     de texte d'un element */
-		  selEnQueue = (firstSel == lastSel &&
+		  selTail = (firstSel == lastSel &&
 				lastSel->ElNext == NULL &&
 				lastSel->ElTerminal &&
 				lastSel->ElLeafType == LtText &&
@@ -2480,14 +2579,16 @@ boolean             Before;
 	       }
 
 	     /* verifie si la selection est en fin ou debut de paragraphe */
-	     if (selEnTete)
+	     if (selHead)
 	       {
 		  pEl = firstSel;
+		  firstChar = 0;
 		  createAfter = FALSE;
 	       }
-	     else if (selEnQueue)
+	     else if (selTail)
 	       {
 		  pEl = lastSel;
+		  firstChar = 0;
 		  createAfter = TRUE;
 	       }
 	     else
@@ -2498,42 +2599,16 @@ boolean             Before;
 		      firstChar > 1)
 		     createAfter = TRUE;
 	       }
-	     /* Si la selection ne commence ni en tete ni en queue, on verifie
-	        si on peut couper l'element en deux et creer le nouvel element
-	        entre les deux parties obtenues */
-	     splitElem = FALSE;
-	     ok = FALSE;
-	     pElem = pEl;
-	     do
-	       {
-		  ok = AllowedSibling (pElem, pSelDoc, typeNum, pSS,
-				       !createAfter, TRUE, FALSE);
-		  if (ok)
-		    {
-		       pEl = pElem;
-		       if (empty)
-			  if (!EmptyElement (pElem))
-			     empty = FALSE;
-		    }
-		  else
-		    {
-		       if ((firstSel->ElTerminal &&
-			    firstSel->ElLeafType == LtText &&
-			    firstChar > 1 &&
-			    firstChar <= lastSel->ElTextLength) ||
-			   (createAfter && pElem->ElNext != NULL) ||
-			   (!createAfter && pElem->ElPrevious != NULL))
-			  if (pElem->ElParent != NULL)
-			     if (AllowedSibling (pElem->ElParent, pSelDoc,
-					pElem->ElParent->ElTypeNumber,
-					pElem->ElParent->ElStructSchema,
-					!createAfter, TRUE, FALSE))
-			        splitElem = TRUE;
-		       pElem = pElem->ElParent;
-		    }
-	       }
-	     while (pElem != NULL && !ok);
-
+	     /* on verifie si on peut couper un element ascendant en deux et
+		creer le nouvel element entre les deux parties obtenues */
+	     ok = CanInsertBySplitting (&pEl, firstChar, &splitElem,
+					&pSplitEl, &pElSplit, createAfter,
+					typeNum, pSS, pSelDoc);
+	     if (ok)
+		if (empty)
+		   if (!EmptyElement (pEl))
+		      empty = FALSE;
+	     ancestorRule = 0;
 	     if (!ok)
 		/* si l'element a creer apparait dans le schema de structure
 		   comme un element de liste ou d'agregat, on essaie de creer
@@ -2552,31 +2627,9 @@ boolean             Before;
 			  rule = 0;
 		       else
 			 {
-			    splitElem = FALSE;
-			    pElem = pEl;
-			    do
-			      {
-				 ok = AllowedSibling (pElem, pSelDoc,
-						      ancestorRule, pSS,
-						 !createAfter, TRUE, FALSE);
-				 if (ok)
-				   {
-				      pEl = pElem;
-				      typeNum = ancestorRule;
-				   }
-				 else
-				   {
-				      if ((firstSel->ElTerminal &&
-					   firstSel->ElLeafType == LtText &&
-					   firstChar > 1 &&
-				      firstChar <= lastSel->ElTextLength) ||
-					  (createAfter && pElem->ElNext != NULL) ||
-					  (!createAfter && pElem->ElPrevious != NULL))
-					 splitElem = TRUE;
-				      pElem = pElem->ElParent;
-				   }
-			      }
-			    while (pElem != NULL && !ok);
+			    ok = CanInsertBySplitting (&pEl, firstChar,
+				 &splitElem, &pSplitEl, &pElSplit, createAfter,
+				 ancestorRule, pSS, pSelDoc);
 			    if (!ok && ancestorRule > 0)
 			       rule = ancestorRule;
 			 }
@@ -2605,36 +2658,81 @@ boolean             Before;
 		     /* l'application refuse */
 		     pEl = NULL;
 	       }
+	     pNew = NULL;
 	     if (ok && pEl != NULL)
 	       {
                   ok = !CannotInsertNearElement (pEl,
                                                  FALSE); /* After element */
 		  if (ok)
+		     {
+		     done = FALSE;
 		     if (splitElem)
 			/* coupe l'element en deux */
 		       {
-			  ok = BreakElement (pEl, firstSel, firstChar, FALSE);
+			  ok = BreakElement (pSplitEl, pElSplit, firstChar,
+					     FALSE);
 			  if (ok)
+			     {
 			     createAfter = TRUE;
+			     if (ancestorRule > 0)
+				{
+				pElem = pSplitEl;
+				do
+				   {
+				   ok = AllowedSibling (pElem, pDoc, typeNum,
+					       pSS, !createAfter, TRUE, FALSE);
+				   if (ok)
+				      {
+				      pEl = pElem;
+				      done = TRUE;
+				      }
+				   else
+				      if (pElem->ElTerminal)
+					 pElem = NULL;
+				      else
+					{
+				        pElem = pElem->ElFirstChild;
+					while (pElem != NULL &&
+					       pElem->ElNext != NULL)
+					    pElem = pElem->ElNext;
+					}
+				   }
+				while (!ok && pElem != NULL);
+				}
+			     }
 		       }
+		     if (!done)
+		       if (ancestorRule > 0)
+		          {
+		          pNew = NewSubtree (ancestorRule, pSS, pSelDoc,
+                                   pEl->ElAssocNum, FALSE, TRUE, TRUE, TRUE);
+			  elType.ElTypeNum = typeNum;
+			  elType.ElSSchema = pSS;
+			  TtaCreateDescent (IdentDocument (pSelDoc),
+					    (Element) pNew, elType);
+			  ok = True;
+		          }
+		     }
 		  if (ok)
 		    {
 		       /* annule la selection */
 		       TtaClearViewSelections ();
-		       if (firstSel->ElTerminal &&
-			   firstSel->ElLeafType == LtText &&
-			   firstChar > 1 &&
-			   firstChar <= firstSel->ElTextLength && !splitElem)
-			 {
-			    DestroyAbsBoxes (firstSel, pSelDoc, TRUE);
-			    AbstractImageUpdated (pSelDoc);
-			    SplitTextElement (firstSel, firstChar, pSelDoc, TRUE);
-			    CreateAllAbsBoxesOfEl (firstSel, pSelDoc);
-			    if (firstSel->ElNext != NULL)
-			       CreateAllAbsBoxesOfEl (firstSel->ElNext, pSelDoc);
-			 }
-		       pNew = NewSubtree (typeNum, pSS, pSelDoc,
-				   pEl->ElAssocNum, TRUE, TRUE, TRUE, TRUE);
+		       if (!splitElem)
+		         if (firstSel->ElTerminal &&
+			     firstSel->ElLeafType == LtText &&
+			     firstChar > 1 &&
+			     firstChar <= firstSel->ElTextLength && !splitElem)
+			   {
+			     DestroyAbsBoxes (firstSel, pSelDoc, TRUE);
+			     AbstractImageUpdated (pSelDoc);
+			     SplitTextElement (firstSel, firstChar, pSelDoc, TRUE);
+			     CreateAllAbsBoxesOfEl (firstSel, pSelDoc);
+			     if (firstSel->ElNext != NULL)
+			        CreateAllAbsBoxesOfEl (firstSel->ElNext, pSelDoc);
+			   }
+		       if (pNew == NULL)
+		          pNew = NewSubtree (typeNum, pSS, pSelDoc,
+				     pEl->ElAssocNum, TRUE, TRUE, TRUE, TRUE);
 
 		       /* Insertion du nouvel element */
 		       if (createAfter)

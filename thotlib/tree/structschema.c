@@ -426,15 +426,17 @@ PtrSSchema          pSS;
 
 {
    int                 rule, comp, ret;
-   SRule              *pRegle;
+   SRule              *pRule;
 
    ret = 0;
    for (rule = 0; ret == 0 && rule < pSS->SsNRules; rule++)
      {
-	pRegle = &pSS->SsRule[rule];
-	if (pRegle->SrConstruct == CsAggregate || pRegle->SrConstruct == CsUnorderedAggregate)
-	   for (comp = 0; ret == 0 && comp < pRegle->SrNComponents; comp++)
-	      if (EquivalentSRules (pRegle->SrComponent[comp], pSS, typeNum, pSS, NULL))
+	pRule = &pSS->SsRule[rule];
+	if (pRule->SrConstruct == CsAggregate ||
+	    pRule->SrConstruct == CsUnorderedAggregate)
+	   for (comp = 0; ret == 0 && comp < pRule->SrNComponents; comp++)
+	      if (EquivalentSRules (pRule->SrComponent[comp], pSS, typeNum,
+				    pSS, NULL))
 		 ret = rule + 1;
      }
    return ret;
@@ -2124,52 +2126,59 @@ PtrSSchema          pDescSS;
 		       break;
 		    case CsAggregate:
 		    case CsUnorderedAggregate:
-		       i = 0;
 		       pDesc = NULL;
-		       while (pDesc == NULL && i < pRule1->SrNComponents)
-			 {
-			    /* on ne tente de creer une descendance que pour les */
-			    /* composants obligatoires de l'agregat */
+		       /* le type a creer est-il un des composants de l'agregat? */
+		       for (i = 0; pDesc == NULL && i < pRule1->SrNComponents; i++)
+			  if (SameSRules (pRule1->SrComponent[i], pSS,
+					  descTypeNum, pDescSS))
+			    /* c'est un element du type voulu, on le cree */
+			    {
+			      pDesc = NewSubtree (descTypeNum, pDescSS, pDoc,
+					    assocNum, FALSE, TRUE, TRUE, TRUE);
+			      *pLeaf = pDesc;
+			    }
+		       if (pDesc == NULL)
+			   /* on tente de creer une descendance pour les */
+			   /* seuls composants obligatoires de l'agregat */
+		           for (i = 0; pDesc == NULL && i < pRule1->SrNComponents; i++)
 			    if (!pRule1->SrOptComponent[i])
 			       pDesc = CreateDescendant (pRule1->SrComponent[i], pSS, pDoc,
 				     pLeaf, assocNum, descTypeNum, pDescSS);
-			    i++;
-			 }
 		       if (pDesc == NULL)
 			  /* on n'a rien pu creer en ne prenant que les composants */
 			  /* obligatoires, on essaie maintenant les composants optionnels */
-			 {
-			    i = 0;
-			    while (pDesc == NULL && i < pRule1->SrNComponents)
-			      {
-				 if (pRule1->SrOptComponent[i])
-				    pDesc = CreateDescendant (pRule1->SrComponent[i], pSS, pDoc,
+			  for (i = 0; pDesc == NULL && i < pRule1->SrNComponents; i++)
+			     if (pRule1->SrOptComponent[i])
+			        pDesc = CreateDescendant (pRule1->SrComponent[i], pSS, pDoc,
 				     pLeaf, assocNum, descTypeNum, pDescSS);
-				 i++;
-			      }
-			 }
 		       if (pDesc != NULL)
 			  /* on a pu creer une descendance */
 			 {
-			    if ((pRule1->SrComponent[i - 1] <= MAX_BASIC_TYPE
-				 || pDesc->ElTypeNumber == pRule1->SrComponent[i - 1])
+			    i --;
+			    if ((pRule1->SrComponent[i] <= MAX_BASIC_TYPE
+				 || pDesc->ElTypeNumber == pRule1->SrComponent[i])
 			    && (pDesc->ElStructSchema->SsCode == pSS->SsCode
-				|| pSS->SsRule[pRule1->SrComponent[i - 1] - 1].SrConstruct == CsNatureSchema))
+				|| pSS->SsRule[pRule1->SrComponent[i] - 1].SrConstruct == CsNatureSchema))
 			       pEl1 = pDesc;
 			    else
 			      {
-				 pEl1 = NewSubtree (pRule1->SrComponent[i - 1], pSS, pDoc,
+				 pEl1 = NewSubtree (pRule1->SrComponent[i], pSS, pDoc,
 					 assocNum, FALSE, TRUE, TRUE, TRUE);
 				 if (pEl1 != NULL)
 				    InsertChildFirst (pEl1, pDesc, pLeaf);
 			      }
-			    if (i == 1)
+			    if (i == 0)
 			       pEl = pEl1;
 			    /* cree les autres composants obligatoires de l'agregat */
-			    for (j = 1; j <= pRule1->SrNComponents; j++)
-			       if (j != i && !pRule1->SrOptComponent[j - 1])
+			    for (j = 0; j < pRule1->SrNComponents; j++)
+			       if (j == i)
+				  {
+				  if (pEl == NULL)
+				     pEl = pEl1;
+				  }
+			       else if (!pRule1->SrOptComponent[j])
 				 {
-				    pEl2 = NewSubtree (pRule1->SrComponent[j - 1], pSS, pDoc,
+				    pEl2 = NewSubtree (pRule1->SrComponent[j], pSS, pDoc,
 					  assocNum, TRUE, TRUE, TRUE, TRUE);
 				    if (pEl2 != NULL)
 				      {

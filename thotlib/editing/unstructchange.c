@@ -843,8 +843,31 @@ void                TtcCreateElement (doc, view)
 			    SRuleForSibling (pParent, FALSE, 1, &typeNum, &pSS,
 					     &list, &optional);
 			    if (typeNum == 0)
-				list = TRUE;
-			    if (typeNum > 0 && !list)
+			       {
+			       list = TRUE;
+			       pListEl = NULL;
+			       /* try to split before element pElem */
+			       if (pElem->ElPrevious != NULL &&
+				   pElem->ElNext != NULL)
+			         if (BreakElement (pParent->ElParent, pElem, 0,
+						   FALSE))
+				   {
+				    /* element pParent has been split */
+				    SRuleForSibling (pParent, FALSE, 1,
+					     &typeNum, &pSS, &list, &optional);
+				    if (typeNum > 0)
+				      {
+				      pAggregEl = pParent->ElParent;
+				      ready = TRUE;
+				      pElDelete = pElem;
+				      pElReplicate = pParent;
+				      createAfter = TRUE;
+				      replicate = FALSE;
+				      list = FALSE;
+				      }
+				   }
+			       }
+			    else if (!list)
 			       {
 			       pAggregEl = pParent->ElParent;
 			       ready = TRUE;
