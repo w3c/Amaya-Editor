@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1 plus MathML 2.0 plus SVG 1.1//EN"
       "http://www.w3.org/2002/04/xhtml-math-svg/xhtml-math-svg.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -165,7 +164,7 @@ et éditer des pages Web en même temps. Pour rendre l'édition plus aisée, un
 simple clic dans Amaya change seulement le point d'insertion et permet de
 rentrer le texte; pour suivre un lien, vous devez double-cliquer. Ce
 comportement peut être modifié ainsi que de nombreuses caractéristiques en
-utilisant le menu Spécial/Préférences.</p>
+utilisant le menu Édition/Préférences.</p>
 
 <p>Amaya inclut une application <a
 href="../doc/html/Annotations.html.fr"><img src="annot.gif"
@@ -179,8 +178,7 @@ pas le document lui-même.</p>
 
 <p>Une vue source montre le balisage courant produit par Amaya. En utilisant
 cette vue en parallèle avec la vue principale, vous pouvez travailler sur la
-page présentée et sur le code source. Amaya fournit une commande
-Défaire/Refaire multi-niveaux et multi-documents.</p>
+page présentée et sur le code source.</p>
 </div>
 
 <div>

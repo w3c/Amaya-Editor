@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1 plus MathML 2.0 plus SVG 1.1//EN"
       "http://www.w3.org/2002/04/xhtml-math-svg/xhtml-math-svg.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -138,44 +137,58 @@
 <h3>Amaya</h3>
 
 <p><strong>Amaya</strong> es un cliente Web que actúa como navegador y como
-editor. Ha sido diseñado por el <a href="http://www.w3.org/">World Wide Web
-Consortium (<acronym title="World Wide Web Consortium">W3C</acronym>)</a> con
-el principal objetivo de demostrar nuevas tecnologías Web en un entorno
-<acronym>WYSIWYG</acronym> (What You See Is What You Get = Lo Que Ves Es Lo
-Que Obtienes). La versión actual implementa <acronym>HTML</acronym>
-(Hypertext Markup Language = Lenguaje de Marcas de Hipertexto),
-<acronym>XHTML</acronym> (Extensible Hypertext Markup Language = Lenguaje
-Extensible de Marcas de Hipertexto), <acronym>MathML</acronym> (Mathematical
-Markup Language = Lenguage Matemático de Marcas), <acronym>SVG</acronym>
-(Scalable Vector Graphics = Gráficos Vectoriales Escalables),
-<acronym>CSS</acronym> (Cascading Style Sheets = Hojas de Estilo en Cascada)
-y <acronym title="HyperText Transfer Protocol">HTTP</acronym> (HyperText
-Transfer Protocol = Protocolo de Transferencia de HiperTexto).</p>
+editor. Ha sido diseñado por el <a href="http://www.w3.org/"><acronym
+title="World Wide Web Consortium">W3C</acronym></a> con el principal objetivo
+de demostrar nuevas tecnologías Web en un entorno <acronym
+title="What You See Is What You Get">WYSIWYG</acronym> (What You See Is What
+You Get = Lo Que Ves Es Lo Que Obtienes). La versión actual implementa
+<acronym title="HyperText Markup Language">HTML</acronym> (HyperText Markup
+Language = Lenguaje de Marcas de Hipertexto), <acronym
+title="eXtensible HyperText Markup Language">XHTML</acronym> (eXtensible
+HyperText Markup Language = Lenguaje Extensible de Marcas de Hipertexto),
+<acronym title="Mathematical Markup Language">MathML</acronym> (Mathematical
+Markup Language = Lenguaje Matemático de Marcas), <acronym><span
+title="Scalable Vector Graphics">SVG</span></acronym> (Scalable Vector
+Graphics = Gráficos Vectoriales Escalables), el módulo de animación de
+<acronym title="Synchronized Multimedia Integration Language">SMIL</acronym>
+(Synchronized Multimedia Integration Language = Lenguaje de Integración de
+Multimedia Sincronizada), <acronym
+title="Cascading Style Sheets">CSS</acronym> (Cascading Style Sheets = Hojas
+de Estilo en Cascada) y <acronym
+title="HyperText Transfer Protocol">HTTP</acronym> (HyperText Transfer
+Protocol = Protocolo de Transferencia de HiperTexto).</p>
 </div>
 
 <div>
 <h3>Características principales</h3>
 
 <p>Con Amaya puedes manipular páginas Web complejas, con formularios, tablas
-y las características más avanzadas del <acronym>HTML</acronym>. Puedes crear
-y editar complejas <a href="../doc/html/Math.html.es">expresiones
-matemáticas</a> y <a href="../doc/html/SVG.html.es">gráficos SVG</a> simples
-dentro de las páginas web. Puedes dar estilo a tus documentos mediantes las
-Hojas de Estilo en Cascada (<acronym>CSS</acronym>). Puedes publicar
-documentos <acronym>HTML</acronym>, <acronym>XHTML</acronym>,
-<acronym>MathML</acronym> y <acronym>SVG</acronym> en servidores locales o
-remotos mediante <acronym>HTTP</acronym>. El soporte actual de
-<acronym>XML</acronym> genérico (Extensible Markup Language = Lenguaje
-Extensible de Marcas) te permite mostrar el contenido de cualquier documento
-<acronym>XML</acronym> y asociarle una hoja de estilo
-<acronym>CSS</acronym>.</p>
+y las características más avanzadas del <acronym
+title="HyperText Markup Language">HTML</acronym>. Puedes crear y editar <a
+href="../doc/html/Math.html.es">expresiones matemáticas</a> complejas y <a
+href="../doc/html/SVG.html.es">gráficos <acronym
+title="Scalable Vector Graphics">SVG</acronym></a> simples dentro de las
+páginas web. Puedes dar estilo a tus documentos mediantes las Hojas de Estilo
+en Cascada (<acronym title="Cascading Style Sheets">CSS</acronym>). Puedes
+publicar documentos <acronym
+title="HyperText Markup Language">HTML</acronym>, <acronym
+title="eXtensible HyperText Markup Language">XHTML</acronym>, <acronym
+title="Mathematical Markup Language">MathML</acronym> y <acronym
+title="Scalable Vector Graphics">SVG</acronym> en servidores locales o
+remotos mediante <acronym title="HyperText Transfer Protocol">HTTP</acronym>.
+El soporte actual de <acronym
+title="eXtensible Markup Language">XML</acronym> genérico (eXtensible Markup
+Language = Lenguaje Extensible de Marcas) te permite mostrar el contenido de
+cualquier documento <acronym title="eXtensible Markup Language">XML</acronym>
+y asociarle una hoja de estilo <acronym
+title="Cascading Style Sheets">CSS</acronym>.</p>
 
 <p>La navegación y la edición están integradas en Amaya. Puedes navegar y
 editar páginas web al mismo tiempo. Para facilitar la edición, al hacer clic
 en cualquier lugar del documento el cursor se desplaza a la posición señalada
 y te permite editar el documento; para navegar debes hacer doble clic sobre
 los enlaces. Puedes modificar este comportamiento, así que como muchas otras
-características, mediante el menú Especial / Preferencias.</p>
+características, mediante el menú Editar &gt; Preferencias.</p>
 
 <p>Amaya incluye una herramienta de colaboración para <a
 href="../doc/html/Annotations.html.es"><img src="annot.gif"
@@ -194,8 +207,8 @@ públicos. Al crear una anotación no modificas el documento original.</p>
 <p>Puedes acceder al Manual de Usuario a través del menú Ayuda, que muestra
 cada sección por separado. Si quieres imprimir el manual completo, haz clic
 en este enlace a la <a href="../doc/html/Manual.html.es">página principal del
-Manual</a>. Construye el manual completo con el comando "Hacer libro" del
-menú Especial e imprime el resultado.</p>
+Manual</a>. A continuación, construye el manual completo con el comando
+"Hacer libro" del menú Editar e imprime el resultado.</p>
 </div>
 
 <div>
@@ -203,12 +216,12 @@ menú Especial e imprime el resultado.</p>
 
 <p>Se concede permiso para utilizar, copiar, modificar y distribuir este
 programa y su documentación, para cualquier fin y sin cargas ni regalías,
-siempre que el texto completo de la licencia <a
-href="http://www.w3.org/Consortium/Legal/copyright-software.html"><acronym
-title="Massachusetts Institute of Technology">MIT</acronym> and INRIA</a> se
-incluya en <strong>todas</strong> las copias del programa y de la
-documentación o de porciones de ellos, incluso en las modificaciones que tú
-realices.</p>
+siempre que el texto completo de la <a
+href="http://www.w3.org/Consortium/Legal/copyright-software.html">licencia
+<acronym title="Massachusetts Institute of Technology">MIT</acronym> e
+INRIA</a> se incluya en <strong>todas</strong> las copias del programa y de
+la documentación o de porciones de ellos, incluso en las modificaciones que
+tú hayas realizado.</p>
 </div>
 </body>
 </html>

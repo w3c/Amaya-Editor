@@ -11,7 +11,7 @@
 #ifdef _WX
 #define HTAppVersion  "9.0-pre"
 #else /* _WX */
-#define HTAppVersion  "8.7-pre"
+#define HTAppVersion  "8.7"
 #endif /* _WX */
 #define HTAppDate     __DATE__ 
 
