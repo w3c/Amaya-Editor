@@ -2424,7 +2424,7 @@ ThotBool   link;
 ThotBool   name;
 #endif /* __STDC__ */
 {
-   AttributeType       attrType, attrTypeN;
+   AttributeType       attrType;
    Attribute           attr;
    ElementType         elType;
    Element             elAnchor;
