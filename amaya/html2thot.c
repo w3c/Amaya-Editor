@@ -2295,6 +2295,9 @@ int                 start;
 			    else
 			       i--;
 			 /* complete all closed elements */
+			 if (el != lastElement)
+			   if (!TtaIsAncestor(el, lastElement))
+			     el = NULL;
 			 lastSpacesDeleted = FALSE;
 			 while (el != NULL)
 			   {
