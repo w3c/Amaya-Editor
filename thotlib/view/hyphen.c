@@ -30,7 +30,7 @@ static CHAR_T sepcar[] =
  TEXT('{'), TEXT('}'), TEXT('<'), TEXT('>'), TEXT('/'), TEXT('!'),
  TEXT('?'), TEXT('\n'), TEXT('\240'), TEXT('\241'), TEXT('\277'),
  TEXT('\253'), TEXT('\273'), TEXT('\212'), TEXT('"'), TEXT('\201'),
- TEXT('\202')
+ TEXT('\202'), TEXT('\0')
 };
 
 #include "font_f.h"
