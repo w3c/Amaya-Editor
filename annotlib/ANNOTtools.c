@@ -1191,7 +1191,7 @@ Document doc;
   if (!el)
     return NULL;
   /* find the text content */
-  el = TtaGetFirstChild (el);
+  el = TtaGetLastChild (el);
   /* no content */
   if (!el)
     return NULL;
@@ -1292,7 +1292,7 @@ RDFResourceP type;
 CHAR_T * ANNOT_MakeFileURL (const CHAR_T *path)
 #else
 CHAR_T *ANNOT_MakeFileURL (path)
-CONST CHAR_T *path;
+const CHAR_T *path;
 #endif /* __STDC__ */
 {
   CHAR_T *url;
