@@ -2060,7 +2060,8 @@ Document InitDocAndView (Document doc, char *docname, DocumentType docType,
        /* store the profile of the new document */
        /* and update the menus according to it */
        TtaSetDocumentProfile (doc, profile);
-       TtaUpdateMenus (doc, 1, readOnly);
+       if (profile != 0)
+	 TtaUpdateMenus (doc, 1, readOnly);
 
        /* By default no log file */
        TtaSetItemOff (doc, 1, Views, BShowLogFile);

@@ -562,18 +562,19 @@ ThotBool Prof_BelongTable (char *name)
 
 
 /*----------------------------------------------------------------------
-  Prof_BelongDoctype searchs a function in the function table and returns
-  TRUE if the function is accepted in that document profile.
-  Returns FALSE when the parameter RO is TRUE and the function is declared
-  as an editing function.
+  Prof_BelongDoctype searchs a function in the function table.
+  Returns:
+  -1: the function is unknown
+  0: the function must be hidden
+  1: the function is accepted
   ----------------------------------------------------------------------*/
-ThotBool Prof_BelongDoctype (char *name, int docProfile, ThotBool RO)
+int Prof_BelongDoctype (char *name, int docProfile, ThotBool RO)
 {
   int              left, right, middle, i;
 
   if (NbFunctions == 0 || docProfile == 0)
     /* All functions are allowed */
-    return TRUE;
+    return -1;
 
   /* Dichotomic search */
   left = middle = 0;
@@ -587,28 +588,27 @@ ThotBool Prof_BelongDoctype (char *name, int docProfile, ThotBool RO)
 	{
 	  /* check the profile value */
 	  if (FunctionMask[middle] == 0)
-	    {
-	      if (RO && !FunctionRO[middle])
-		return FALSE;
-	      else
-		return TRUE;
-	    }
+	    /* not defind */
+	    return -1;
 	  else if (FunctionMask[middle] & docProfile)
 	    {
 	      if (RO && !FunctionRO[middle])
-		return FALSE;
+		/* refused */
+		return 0;
 	      else
-		return TRUE;
+		/* acceped */
+		return 1;
 	    }
 	  else
-	    return FALSE;
+	    /* refused */
+	    return 0;
 	}
       else if (i < 0)
 	left = middle + 1;
       else
 	right = middle - 1;
     }
-  return FALSE;
+  return -1;
 }
 
 

@@ -901,7 +901,7 @@ static void BuildSubMenu (Menu_Ctl *ptrmenu, int ref, int entry,
   Item_Ctl           *ptritem;
   char               *ptr;
   char                LastItemType = 'S';
-  int                 i, j;
+  int                 i, j, state;
   int                 lg, sref;
   int                 item, profile;
   int                 action, entries, index;
@@ -953,36 +953,33 @@ static void BuildSubMenu (Menu_Ctl *ptrmenu, int ref, int entry,
 	}
       else if (i + lg < 699)
 	{
-	  if (Prof_BelongDoctype (MenuActionList[action].ActionName,
-				  profile, RO))
+	  if (update)
 	    {
 	      /* this entry can be displayed */
-	      if (update)
+	      state = Prof_BelongDoctype (MenuActionList[action].ActionName,
+					  profile, RO);
+	      if (state == 0)
+		{
+		  /* desactivate the entry */
+		  TtaRedrawMenuEntry (sref, index, NULL, InactiveB_Color, 0);
+		  MenuActionList[action].ActionActive[frame] = FALSE;
+		  /* doesn't count this entry */
+		  hidden = TRUE;
+		  action = -1;
+		}
+	      else if (state == 1)
 		{
 		  /* activate the entry */
 		  TtaRedrawMenuEntry (sref, index, NULL, -1, 1);
 		  MenuActionList[action].ActionActive[frame] = TRUE;
 		}
-	      if (ptritem[item].ItemType == 'D')
-		string[i] = 'B';
-	      else
-		string[i] = ptritem[item].ItemType;
-	      strcpy (&string[i + 1], ptr);
-	      i += lg + 1;
 	    }
+	  if (ptritem[item].ItemType == 'D')
+	    string[i] = 'B';
 	  else
-	    {
-	      /* this entry is hidden */
-	      if (update)
-		{
-		  /* desactivate the entry */
-		  TtaRedrawMenuEntry (sref, index, NULL, InactiveB_Color, 0);
-		  MenuActionList[action].ActionActive[frame] = FALSE;
-		}
-	      /* doesn't count this entry */
-	      hidden = TRUE;
-	      action = -1;
-	    }
+	    string[i] = ptritem[item].ItemType;
+	  strcpy (&string[i + 1], ptr);
+	  i += lg + 1;
 	}
       else
 	{
@@ -1047,7 +1044,7 @@ static void BuildPopdown (Menu_Ctl *ptrmenu, int ref, ThotMenu button,
   int                 i, j;
   int                 lg, profile;
   int                 item, entries;
-  int                 action;
+  int                 action, state;
   ThotBool            withEquiv, emptyMenu;
   ThotBool            removedsep, hidden;
    
@@ -1106,18 +1103,26 @@ static void BuildPopdown (Menu_Ctl *ptrmenu, int ref, ThotMenu button,
 		 }
 	       action = -1;
 	    }
-	  else if (Prof_BelongDoctype (MenuActionList[action].ActionName,
-				       profile, RO))
+	  else
 	    {
-	      /* this entry is shown */
-	      if (update &&
-			  strcmp (MenuActionList[action].ActionName, "TtcPaste") &&
-			  strcmp (MenuActionList[action].ActionName, "TtcUndo") &&
-			  strcmp (MenuActionList[action].ActionName, "TtcRedo"))
-		  {
-		  /* activate the entry */
-		  TtaRedrawMenuEntry (ref, entries, NULL, -1, 1);
-		  MenuActionList[action].ActionActive[frame] = TRUE;
+	      if (update)
+		{
+		  state = Prof_BelongDoctype (MenuActionList[action].ActionName,
+					      profile, RO);
+		  if (state == 0)
+		    {
+		      /* desactivate the entry */
+		      TtaRedrawMenuEntry (ref, entries, NULL, InactiveB_Color, 0);
+		      MenuActionList[action].ActionActive[frame] = FALSE;
+		      hidden = TRUE;
+		      action = -1;
+		    }
+		  else if (state == 1)
+		    {
+		      /* activate the entry */
+		      TtaRedrawMenuEntry (ref, entries, NULL, -1, 1);
+		      MenuActionList[action].ActionActive[frame] = TRUE;
+		    }
 		}
 	      /* generate a button */
 	      if (ptritem[item].ItemType == 'D')
@@ -1126,26 +1131,6 @@ static void BuildPopdown (Menu_Ctl *ptrmenu, int ref, ThotMenu button,
 		string[i] = ptritem[item].ItemType;
 	      strcpy (&string[i + 1], ptr);
 	      i += lg + 1;
-	    }
-	  else
-	    {
-	      /* this entry is hidden */
-	      if (update)
-		{
-		  /* desactivate the entry */
-		  TtaRedrawMenuEntry (ref, entries, NULL, InactiveB_Color, 0);
-		  MenuActionList[action].ActionActive[frame] = FALSE;
-		  /* generate a button */
-		  if (ptritem[item].ItemType == 'D')
-		    string[i] = 'B';
-		  else
-		    string[i] = ptritem[item].ItemType;
-		  strcpy (&string[i + 1], ptr);
-		  i += lg + 1;
-		}
-	      else
-		hidden = TRUE;
-	      action = -1;
 	    }
 	}
       else
@@ -4189,7 +4174,6 @@ void ThotCallback (int ref, int typedata, char *data)
   int                 menu, base;
   int                 menuThot;
   int                 action, i, j;
-  int                 profile;
 
   /* Termine l'insertion courante s'il y en a une */
 #ifdef _WINDOWS
@@ -4387,12 +4371,6 @@ void ThotCallback (int ref, int typedata, char *data)
       /* Call the right action */
       ptrmenu = GetMenu_Ctl (frame, menu);
       action = 0;
-      /*
-	In the previous version hidden entries were removed,
-	now all entries are generated and we just invalid
-	hidden entries.
-      */
-      profile = 0; /* no check */    
       if (ptrmenu)
 	{
 	  if (item != 0)
@@ -4407,9 +4385,7 @@ void ThotCallback (int ref, int typedata, char *data)
 			  ptrmenu->ItemsList[i].SubMenu->ItemsNb == 0)
 			item++;
 		      else if (ptrmenu->ItemsList[i].ItemType != 'M' &&
-			       action > 0 &&
-			       !Prof_BelongDoctype (MenuActionList[action].ActionName,
-						    profile, FALSE))
+			       action > 0)
 			item++;
 		    }
 		  ptrmenu = ptrmenu->ItemsList[item].SubMenu;
@@ -4429,9 +4405,7 @@ void ThotCallback (int ref, int typedata, char *data)
 		      ptrmenu->ItemsList[i].SubMenu->ItemsNb == 0)
 		    item++;
 		  else if (ptrmenu->ItemsList[i].ItemType != 'M' &&
-			   action > 0 &&
-			   !Prof_BelongDoctype (MenuActionList[action].ActionName,
-						profile, FALSE))
+			   action > 0)
 		    item++;
 		}
 	    }
