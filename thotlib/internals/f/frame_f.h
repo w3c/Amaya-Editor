@@ -10,15 +10,19 @@ extern void GetXYOrg ( int frame,
                        int *XOrg,
                        int *YOrg );
 extern void DefClip ( int frame,
-                      int xd,
-                      int yd,
-                      int xf,
-                      int yf );
+                      int xstart,
+                      int ytop,
+                      int xstop,
+                      int ybottom );
 extern void DefRegion ( int frame,
-                        int xd,
-                        int yd,
-                        int xf,
-                        int yf );
+                        int xstart,
+                        int ytop,
+                        int xstop,
+                        int ybottom );
+extern void DefBoxRegion ( int frame,
+                           PtrBox pBox,
+                           int xstart,
+                           int xstop );
 extern void TtaRefresh ( void );
 extern void DrawFilledBox ( PtrBox pBox,
                             PtrAbstractBox pFrom,
@@ -60,15 +64,19 @@ extern void GetXYOrg ( int frame,
                          int *XOrg,
                          int *YOrg );
 extern void DefClip ( int frame,
-                        int xd,
-                        int yd,
-                        int xf,
-                        int yf );
+                        int xstart,
+                        int ytop,
+                        int xstop,
+                        int ybottom );
 extern void DefRegion ( int frame,
-                          int xd,
-                          int yd,
-                          int xf,
-                          int yf );
+                          int xstart,
+                          int ytop,
+                          int xstop,
+                          int ybottom );
+extern void DefBoxRegion ( int frame,
+                             PtrBox pBox,
+                             int xstart,
+                             int xstop );
 extern void TtaRefresh ( void );
 extern void DrawFilledBox ( PtrBox pBox,
                               PtrAbstractBox pFrom,

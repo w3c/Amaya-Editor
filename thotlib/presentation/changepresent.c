@@ -232,6 +232,7 @@ void ApplyInherit (PRuleType ruleType, PtrAbstractBox pAb,
 	  }
 	if (pAbCur)
 	  {
+#ifdef IV
              /* apply delayed rules */
 	     do
 	       {
@@ -241,7 +242,7 @@ void ApplyInherit (PRuleType ruleType, PtrAbstractBox pAb,
 		   ApplyRule (pRule, pSchP, pPRP, pDoc, pAttr);
 	       }
 	     while (pRule);
-
+#endif
 	     /* il y a un element ascendant dont le pave pAbCur pourrait
 		heriter de pAb */
 	     pRule = SearchRulepAb (pDoc, pAbCur, &pSchP, ruleType, FnAny,

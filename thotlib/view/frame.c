@@ -71,7 +71,7 @@ void GetXYOrg (int frame, int *XOrg, int *YOrg)
 /*----------------------------------------------------------------------
    DefClip defines the area of the frame which need to be redrawn.
   ----------------------------------------------------------------------*/
-void DefClip (int frame, int xd, int yd, int xf, int yf)
+void DefClip (int frame, int xstart, int ytop, int xstop, int ybottom)
 {
    ViewFrame          *pFrame;
    int                 width, height;
@@ -79,25 +79,25 @@ void DefClip (int frame, int xd, int yd, int xf, int yf)
    int                 scrollx, scrolly;
 
    /* values can be negative when a scroll back is requested */
-   if ((xd == xf && xd == 0 && (yd != yf || yd != 0)) ||
-       (yd == yf && yd == 0 && (xd != xf || xd != 0)))
+   if ((xstart == xstop && xstart == 0 && (ytop != ybottom || ytop != 0)) ||
+       (ytop == ybottom && ytop == 0 && (xstart != xstop || xstart != 0)))
      return;
    else if (frame == 0 || frame > MAX_FRAME)
      return;
    else
      {
        /* exchange limits for rigth-to-left string */
-       if (xf < xd)
+       if (xstop < xstart)
 	 {
-	   xe = xd;
-	   xd = xf;
-	   xf = xe;
+	   xe = xstart;
+	   xstart = xstop;
+	   xstop = xe;
 	 }
-       if (yf < yd)
+       if (ybottom < ytop)
 	 {
-	   ye = yd;
-	   yd = yf;
-	   yf = ye;
+	   ye = ytop;
+	   ytop = ybottom;
+	   ybottom = ye;
 	 }
      }
 
@@ -108,7 +108,7 @@ void DefClip (int frame, int xd, int yd, int xf, int yf)
    xe = pFrame->FrClipXEnd - scrollx - xb; 
    yb = pFrame->FrClipYBegin - scrolly;
    ye = pFrame->FrClipYEnd - scrolly - yb;	
-   if (xd == xf && xd == -1)
+   if (xstart == xstop && xstart == -1)
      {
        /* repaint the whole frame */
        GetSizesFrame (frame, &width, &height);
@@ -117,7 +117,7 @@ void DefClip (int frame, int xd, int yd, int xf, int yf)
        pFrame->FrClipYBegin = scrolly;
        pFrame->FrClipYEnd = height + scrolly;
      }
-   else if (xd == xf && xd == 0 && yd == yf && yd == 0)
+   else if (xstart == xstop && xstart == 0 && ytop == ybottom && ytop == 0)
      {
        /* clean up */
        pFrame->FrClipXBegin = 0;
@@ -131,36 +131,89 @@ void DefClip (int frame, int xd, int yd, int xf, int yf)
 	    pFrame->FrClipYBegin == 0)
      {
        /* clean up */
-       pFrame->FrClipXBegin = xd;
-       pFrame->FrClipXEnd = xf;
-       pFrame->FrClipYBegin = yd;
-       pFrame->FrClipYEnd = yf;
+       pFrame->FrClipXBegin = xstart;
+       pFrame->FrClipXEnd = xstop;
+       pFrame->FrClipYBegin = ytop;
+       pFrame->FrClipYEnd = ybottom;
      }
    else
      {
        /* Update the coordinates of the area redrawn */
-       if (pFrame->FrClipXBegin > xd)
-	 pFrame->FrClipXBegin = xd;
-       if (pFrame->FrClipXEnd < xf)
-	 pFrame->FrClipXEnd = xf;
+       if (pFrame->FrClipXBegin > xstart)
+	 pFrame->FrClipXBegin = xstart;
+       if (pFrame->FrClipXEnd < xstop)
+	 pFrame->FrClipXEnd = xstop;
        /* update the coordinates of the area redrawn */
-       if (pFrame->FrClipYBegin > yd)
-	 pFrame->FrClipYBegin = yd;
-       if (pFrame->FrClipYEnd < yf)
-	 pFrame->FrClipYEnd = yf;
+       if (pFrame->FrClipYBegin > ytop)
+	 pFrame->FrClipYBegin = ytop;
+       if (pFrame->FrClipYEnd < ybottom)
+	 pFrame->FrClipYEnd = ybottom;
      }
 }
 
 /*----------------------------------------------------------------------
   DefRegion store the area of frame which need to be redrawn.
   ----------------------------------------------------------------------*/
-void DefRegion (int frame, int xd, int yd, int xf, int yf)
+void DefRegion (int frame, int xstart, int ytop, int xstop, int ybottom)
 {
   ViewFrame          *pFrame;
 
   pFrame = &ViewFrameTable[frame - 1];
-  DefClip (frame, xd + pFrame->FrXOrg, yd + pFrame->FrYOrg,
-	   xf + pFrame->FrXOrg, yf + pFrame->FrYOrg);
+  DefClip (frame, xstart + pFrame->FrXOrg, ytop + pFrame->FrYOrg,
+	   xstop + pFrame->FrXOrg, ybottom + pFrame->FrYOrg);
+}
+
+/*----------------------------------------------------------------------
+  DefBoxRegion store the area of a box which needs to be redrawn.
+  When parameters xstart and xstop are equal to -1 the whole box is clipped
+  else only the xstart to xstop region is clipped.
+  ----------------------------------------------------------------------*/
+void DefBoxRegion (int frame, PtrBox pBox, int xstart, int xstop)
+{
+  ViewFrame          *pFrame;
+  int                 x1, x2, y1, y2, k;
+
+  if (pBox)
+    {
+      pFrame = &ViewFrameTable[frame - 1];
+      if (pBox->BxAbstractBox &&
+	  (pBox->BxAbstractBox->AbLeafType == LtGraphics ||
+	   pBox->BxAbstractBox->AbLeafType == LtPolyLine ||
+	   pBox->BxAbstractBox->AbLeafType == LtPath))
+	k = EXTRA_GRAPH;
+      else
+	k = 0;
+#ifdef _GL
+      x1 = pBox->BxClipX + pFrame->FrXOrg;
+      x2 = x1;
+      if (xstart == -1 && xstop == -1)
+	x2 += pBox->BxClipW;
+      else
+	{
+	  x1 += xstart;
+	  x2 += xstop;
+	}
+      y1 = pBox->BxClipY + pFrame->FrYOrg;
+      y2 = y1 + pBox->BxClipH;
+#else /*  _GL */      
+      x1 = pBox->BxXOrg;
+      x2 = x1;
+      if (xstart == -1 && xstop == -1)
+	{
+	  if (pBox->BxLMargin < 0)
+	    x1 += pBox->BxLMargin;
+	  x2 += pBox->BxWidth;
+	}
+      else
+	{
+	  x1 += xstart;
+	  x2 += xstop;
+	}
+      y1 = pBox->BxYOrg;
+      y2 = y1 + pBox->BxHeight;
+#endif /* _GL */
+      DefClip (frame, x1 - k, y1 - k, x2 + k, y2 + k);
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -168,7 +221,7 @@ void DefRegion (int frame, int xd, int yd, int xf, int yf)
   ----------------------------------------------------------------------*/
 void TtaRefresh ()
 {
-  int                 frame;
+  int        frame;
 
   for (frame = 1; frame <= MAX_FRAME; frame++)
     {
@@ -1760,7 +1813,6 @@ void ComputeABoundingBox (PtrAbstractBox pAbSeeked, int frame)
   FrameUpdating = FrameUpdatingStatus;
 
   glLoadIdentity ();
-
 #endif /* _GL */
 }
 

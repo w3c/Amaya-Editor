@@ -2650,22 +2650,9 @@ void BoxUpdate (PtrBox pBox, PtrLine pLine, int charDelta, int spaceDelta,
 	 ChangeDefaultHeight (pBox, pBox, pBox->BxH + hDelta, frame);
      }
    else if (pBox->BxW > 0 && pBox->BxH > 0)
-     {
-     /* Si la largeur de la boite ne depend pas de son contenu  */
-     /* on doit forcer le reaffichage jusqua la fin de la boite */
-#ifndef _GL
-     if (pBox->BxLMargin < 0)
-       DefClip (frame, pBox->BxXOrg + pBox->BxLMargin, pBox->BxYOrg,
-		pBox->BxXOrg + pBox->BxWidth + pBox->BxLMargin,
-		pBox->BxYOrg + pBox->BxHeight);
-     else
-       DefClip (frame, pBox->BxXOrg, pBox->BxYOrg,
-		pBox->BxXOrg + pBox->BxWidth, pBox->BxYOrg + pBox->BxHeight);
-#else /*  _GL */      
-     DefRegion (frame, pBox->BxClipX, pBox->BxClipY,
-	      pBox->BxClipX + pBox->BxClipW, pBox->BxClipY + pBox->BxClipH);
-#endif /* _GL */
-     }
+     /* if the box width doesn't depend on the contents
+	redisplay the whole box */
+     DefBoxRegion (frame, pBox, -1, -1);
    Propagate = savpropage;
 #ifdef _GL
    pBox->VisibleModification = TRUE;
@@ -3085,7 +3072,7 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
   AbPosition         *pPosAb;
   int                 width, height;
   int                 nSpaces, savedW, savedH;
-  int                 i, k, charDelta, adjustDelta;
+  int                 i, charDelta, adjustDelta;
   ThotBool            condition, inLine, inLineFloat;
   ThotBool            result, isCell, uniqueChild;
   ThotBool            orgXComplete, directParent;
@@ -3208,35 +3195,18 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 	  if ((pCurrentBox->BxWidth > 0 && pCurrentBox->BxHeight > 0) ||
 	      pCurrentBox->BxType == BoPicture)
 	    {
-	      if (pCurrentBox->BxAbstractBox->AbElement->ElTerminal)
-		k = EXTRA_GRAPH;
-	      else
-		k = 0;
 	      /* mark the zone to be displayed */
 	      if (TypeHasException (ExcSetWindowBackground, pAb->AbElement->ElTypeNumber,
 				    pAb->AbElement->ElStructSchema))
+		/* the whole windows */
 		DefClip (frame, -1, -1, -1, -1);
 	      else
-#ifndef _GL
-		if (pCurrentBox->BxLMargin < 0)
-		  DefClip (frame, pCurrentBox->BxXOrg + pCurrentBox->BxLMargin,
-			   pCurrentBox->BxYOrg,
-			   pCurrentBox->BxXOrg + pCurrentBox->BxWidth + pCurrentBox->BxLMargin,
-			   pCurrentBox->BxYOrg + pCurrentBox->BxHeight);
-		else
-		  DefClip (frame, pCurrentBox->BxXOrg - k, pCurrentBox->BxYOrg - k,
-			   pCurrentBox->BxXOrg + pCurrentBox->BxWidth + k,
-			   pCurrentBox->BxYOrg + pCurrentBox->BxHeight + k);
-#else /* _GL */  
-
-	      /* Compute Bounding Box*/
-	      ComputeABoundingBox (pCurrentBox->BxAbstractBox, frame);
-
-	      DefRegion (frame, pCurrentBox->BxClipX - k,
-			 pCurrentBox->BxClipY - k,
-			 pCurrentBox->BxClipX + pCurrentBox->BxClipW + k,
-			 pCurrentBox->BxClipY + pCurrentBox->BxClipH + k);
-#endif /* _GL */
+		{
+		  /* Compute Bounding Box*/
+		  ComputeABoundingBox (pCurrentBox->BxAbstractBox, frame);
+		  /* the whole box */
+		  DefBoxRegion (frame, pCurrentBox, -1, -1);
+		}
 	    }
 	}
 #ifdef _GL
@@ -3382,27 +3352,7 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 
 	  /* On prepare le reaffichage */
 	  if (!inLine && !inLineFloat)
-	    {
-#ifndef _GL
-	      if (pBox->BxLMargin < 0)
-		DefClip (frame, pBox->BxXOrg + pBox->BxLMargin, pBox->BxYOrg,
-			 pBox->BxXOrg + pBox->BxWidth + pBox->BxLMargin,
-			 pBox->BxYOrg + pBox->BxHeight);
-	      else
-		DefClip (frame, pBox->BxXOrg, pBox->BxYOrg,
-			 pBox->BxXOrg + pBox->BxWidth,
-			 pBox->BxYOrg + pBox->BxHeight);
-#else /* _GL */
-	      if (pBox->BxLMargin < 0)
-		DefRegion (frame, pBox->BxClipX + pBox->BxLMargin, pBox->BxClipY,
-			   pBox->BxClipX + pBox->BxClipW + pBox->BxLMargin,
-			   pBox->BxClipY + pBox->BxClipH);
-	      else
-		DefRegion (frame, pBox->BxClipX, pBox->BxClipY,
-			   pBox->BxClipX + pBox->BxClipW,
-			   pBox->BxClipY + pBox->BxClipH);
-#endif /* _GL */
-	    }
+	    DefBoxRegion (frame, pBox, -1, -1);
 	  
 	  pAb->AbChange = FALSE;
 	  pAb->AbFloatChange = FALSE;
@@ -3857,6 +3807,8 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 			     adjustDelta, height, frame, FALSE);
 		  if (pAb->AbLeafType == LtPicture)
 		    {
+		      ComputeABoundingBox (pAb, frame);
+		      DefBoxRegion (frame, pBox, -1, -1);
 		      if (pBlock)
 			{
 			  RecomputeLines (pBlock, NULL, NULL, frame);
@@ -4342,20 +4294,20 @@ void RebuildConcreteImage (int frame)
 	     TtaUnlockTableFormatting ();
 	   
 	   /* On elimine le scroll horizontal */
-	   GetSizesFrame (frame, &width, &height);
+	   /*GetSizesFrame (frame, &width, &height);*/
 	   CheckScrollingWidth (frame);
 	   if (pFrame->FrXOrg != FrameTable[frame].FrScrollOrg)
 	     {
 	       pFrame->FrXOrg = FrameTable[frame].FrScrollOrg;
-	       /* Force le reaffichage */
-	       DefClip (frame, pFrame->FrXOrg, 0, width, height);
+	       /* enforce redrawing of the whole frame */
+	       DefClip (frame, -1, -1, -1, -1);
 	     }
 	   /* Si la vue n'est pas coupee en tete on elimine le scroll vertical */
 	   if (!pAb->AbTruncatedHead && pFrame->FrYOrg != 0)
 	     {
 	       pFrame->FrYOrg = 0;
-	       /* Force le reaffichage */
-	       DefClip (frame, 0, 0, width, height);
+	       /* enforce redrawing of the whole frame */
+	       DefClip (frame, -1, -1, -1, -1);
 	     }
 	   /* La frame est affichable */
 	   pFrame->FrReady = status;
@@ -4373,96 +4325,69 @@ void RebuildConcreteImage (int frame)
 	   /* recompute scrolls */
 	   CheckScrollingWidth (frame);
 	   UpdateScrollbars (frame);
-	   /* Restaure la selection */
-	   /*ShowSelection (pAb, FALSE);*/
 	 }
      }
 }
 
 
 /*----------------------------------------------------------------------
-   ClearFlexibility annule l'e'lasticite' de la boite s'il s'agit     
-   d'une boite elastique et les regles de position et de   
-   dimension sont a` reevaluer. Traite recusivement        
-   les paves fils.                                         
+   ClearFlexibility remove the box stretching on the current box and
+   its children.
   ----------------------------------------------------------------------*/
 static void ClearFlexibility (PtrAbstractBox pAb, int frame)
 {
-   PtrAbstractBox      pChildAb;
-   PtrBox              pBox;
+  PtrAbstractBox      pChildAb;
+  PtrBox              pBox;
 
-   if (pAb->AbNew)
-      return;
-   else if (pAb->AbBox != NULL)
-     {
-	pBox = pAb->AbBox;
-	/* Faut-il reevaluer les regles d'une boite elastique */
-	if (pBox->BxHorizFlex && pAb->AbWidthChange)
-	  {
-#ifndef _GL
-	    if (pBox->BxLMargin < 0)
-	     DefClip (frame, pBox->BxXOrg + pBox->BxLMargin, pBox->BxYOrg,
-		      pBox->BxXOrg + pBox->BxWidth + pBox->BxLMargin,
-		      pBox->BxYOrg + pBox->BxHeight);
-	    else
-	     DefClip (frame, pBox->BxXOrg, pBox->BxYOrg,
-		      pBox->BxXOrg + pBox->BxWidth, pBox->BxYOrg + pBox->BxHeight);
-#else  /* _GL */
-	    DefRegion (frame, pBox->BxClipX, pBox->BxClipY,
-		      pBox->BxClipX + pBox->BxClipW, pBox->BxClipY + pBox->BxClipH);
-#endif /*  _GL */
-	     /* Annulation de la position */
-	     if (pAb->AbHorizPosChange)
-	       {
-		  ClearPosRelation (pBox, TRUE);
-		  XMove (pBox, NULL, -pBox->BxXOrg, frame);
-	       }
+  if (pAb->AbNew)
+    return;
+  else if (pAb->AbBox != NULL)
+    {
+      pBox = pAb->AbBox;
+      /* Faut-il reevaluer les regles d'une boite elastique */
+      if (pBox->BxHorizFlex && pAb->AbWidthChange)
+	{
+	  /* redisplay the whole box */
+	  DefBoxRegion (frame, pBox, -1, -1);
+	  /* clear previous position */
+	  if (pAb->AbHorizPosChange)
+	    {
+	      ClearPosRelation (pBox, TRUE);
+	      XMove (pBox, NULL, -pBox->BxXOrg, frame);
+	    }
 
-	     /* Annulation ancienne largeur */
-	     ClearDimRelation (pBox, TRUE, frame);
-	     /* Reinitialisation du trace reel */
-	     MirrorShape (pAb, pBox->BxHorizInverted, pBox->BxVertInverted, FALSE);
-	  }
+	  /* clear previous width */
+	  ClearDimRelation (pBox, TRUE, frame);
+	  /* Reinitialisation of the shape */
+	  MirrorShape (pAb, pBox->BxHorizInverted, pBox->BxVertInverted, FALSE);
+	}
 
-	if (pBox->BxVertFlex && pAb->AbHeightChange)
-	  {
-	     if (!pBox->BxHorizFlex || !pAb->AbWidthChange)
-	       {
-#ifndef _GL
-		 if (pBox->BxLMargin < 0)
-		   DefClip (frame, pBox->BxXOrg + pBox->BxLMargin, pBox->BxYOrg,
-			    pBox->BxXOrg + pBox->BxWidth,
-			    pBox->BxYOrg + pBox->BxHeight);
-		 else
-		   DefClip (frame, pBox->BxXOrg, pBox->BxYOrg,
-			    pBox->BxXOrg + pBox->BxWidth,
-			    pBox->BxYOrg + pBox->BxHeight);
-#else  /* _GL */
-	    DefRegion (frame, pBox->BxClipX, pBox->BxClipY,
-		      pBox->BxClipX + pBox->BxClipW, pBox->BxClipY + pBox->BxClipH);
-#endif /*  _GL */
-	       }
-	     /* Annulation et reevaluation de la position */
-	     if (pAb->AbVertPosChange)
-	       {
-		  ClearPosRelation (pBox, FALSE);
-		  YMove (pBox, NULL, -pBox->BxYOrg, frame);
-	       }
+      if (pBox->BxVertFlex && pAb->AbHeightChange)
+	{
+	  if (!pBox->BxHorizFlex || !pAb->AbWidthChange)
+	    /* redisplay the whole box */
+	    DefBoxRegion (frame, pBox, -1, -1);
+	  /* clear previous position */
+	  if (pAb->AbVertPosChange)
+	    {
+	      ClearPosRelation (pBox, FALSE);
+	      YMove (pBox, NULL, -pBox->BxYOrg, frame);
+	    }
 
-	     /* Annulation ancienne hauteur */
-	     ClearDimRelation (pBox, FALSE, frame);
-	     /* Reinitialisation du trace reel */
-	     MirrorShape (pAb, pBox->BxHorizInverted, pBox->BxVertInverted, FALSE);
-	  }
+	  /* clear previous height */
+	  ClearDimRelation (pBox, FALSE, frame);
+	  /* Reinitialisation of the shape */
+	  MirrorShape (pAb, pBox->BxHorizInverted, pBox->BxVertInverted, FALSE);
+	}
 
-	/* Traitement des paves fils */
-	pChildAb = pAb->AbFirstEnclosed;
-	while (pChildAb != NULL)
-	  {
-	     ClearFlexibility (pChildAb, frame);
-	     pChildAb = pChildAb->AbNext;
-	  }
-     }
+      /* Traitement des paves fils */
+      pChildAb = pAb->AbFirstEnclosed;
+      while (pChildAb != NULL)
+	{
+	  ClearFlexibility (pChildAb, frame);
+	  pChildAb = pChildAb->AbNext;
+	}
+    }
 }
 
 /*----------------------------------------------------------------------
