@@ -380,7 +380,7 @@ static void ModifyGraphics (PtrElement pEl, PtrDocument pDoc,
   ----------------------------------------------------------------------*/
 void ModifyColor (int colorNum, ThotBool Background)
 {
-   PtrDocument         SelDoc;
+   PtrDocument         pSelDoc;
    PtrElement          pElFirstSel, pElLastSel, oldFirstSel, oldLastSel, pEl;
    PtrAbstractBox      pAb;
    int                 firstChar, lastChar, oldFirstChar, oldLastChar;
@@ -390,9 +390,9 @@ void ModifyColor (int colorNum, ThotBool Background)
 
    CloseTextInsertion ();
    /* demande quelle est la selection courante */
-   selok = GetCurrentSelection (&SelDoc, &pElFirstSel, &pElLastSel, 
+   selok = GetCurrentSelection (&pSelDoc, &pElFirstSel, &pElLastSel, 
 				&firstChar, &lastChar);
-   if (selok && SelDoc && !SelDoc->DocReadOnly && SelDoc->DocSSchema != NULL)
+   if (selok && pSelDoc && !pSelDoc->DocReadOnly && pSelDoc->DocSSchema != NULL)
      /* le document selectionne' n'a pas ete ferme' */
      {
 	/* eteint la selection courante */
@@ -415,7 +415,7 @@ void ModifyColor (int colorNum, ThotBool Background)
 	/* Coupe les elements du debut et de la fin de la selection */
 	/* s'ils sont partiellement selectionnes */
 	if (firstChar > 1 || lastChar > 0)
-	   IsolateSelection (SelDoc, &pElFirstSel, &pElLastSel, &firstChar,
+	   IsolateSelection (pSelDoc, &pElFirstSel, &pElLastSel, &firstChar,
 			     &lastChar, TRUE);
 	/* save the current selection */
 	oldFirstSel = pElFirstSel;
@@ -443,7 +443,7 @@ void ModifyColor (int colorNum, ThotBool Background)
 	           }
 	   }
 
-	OpenHistorySequence (SelDoc, pElFirstSel, pElLastSel, NULL, firstChar, lastChar);
+	OpenHistorySequence (pSelDoc, pElFirstSel, pElLastSel, NULL, firstChar, lastChar);
 	/* parcourt les elements selectionnes */
 	pEl = pElFirstSel;
 	while (pEl != NULL)
@@ -481,27 +481,27 @@ void ModifyColor (int colorNum, ThotBool Background)
 		       }
 		     else
 		       RuleSetPut (rulesS, PtForeground);
-		     RemoveSpecPresTree (pEl, SelDoc, rulesS, SelectedView);
+		     RemoveSpecPresTree (pEl, pSelDoc, rulesS, SelectedView);
 		   }
 		 else
-		   ModifyGraphics (pEl, SelDoc, SelectedView, FALSE,
+		   ModifyGraphics (pEl, pSelDoc, SelectedView, FALSE,
 				   SPACE, FALSE, 0, (TypeUnit)FALSE,
 				   modifFillPattern, fillPatternNum,
 				   (ThotBool)Background, colorNum, (ThotBool)(!Background),
 				   colorNum);
 		 /* si on est dans un element copie' par inclusion,   */
 		 /* on met a jour les copies de cet element. */
-		 RedisplayCopies (pEl, SelDoc, TRUE);
+		 RedisplayCopies (pEl, pSelDoc, TRUE);
 	       }
 	     /* cherche l'element a traiter ensuite */
 	     pEl = NextInSelection (pEl, pElLastSel);
 	  }
-	CloseHistorySequence (SelDoc);
+	CloseHistorySequence (pSelDoc);
 	/* try to collapse text elements except in TextFile
 	 where the presentation generates strings */
-	if (SelDoc && SelDoc->DocSSchema &&
-	    strcmp (SelDoc->DocSSchema->SsName, "TextFile"))
-	  SelectRange (SelDoc, oldFirstSel, oldLastSel, oldFirstChar,
+	if (pSelDoc && pSelDoc->DocSSchema &&
+	    strcmp (pSelDoc->DocSSchema->SsName, "TextFile"))
+	  SelectRange (pSelDoc, oldFirstSel, oldLastSel, oldFirstChar,
 		       oldLastChar);
      }
 }

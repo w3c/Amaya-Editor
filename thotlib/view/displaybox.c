@@ -223,14 +223,19 @@ void AnimatedBoxDel (PtrElement element)
 #endif /* _GL */
 }
 /*----------------------------------------------------------------------
-  FreeAnimatedBox : Free Allocated resources
+  FreeAnimatedBoxes : Free all animation allocated resources
   ----------------------------------------------------------------------*/
-void FreeAnimatedBox (Animated_Cell *current)
+void FreeAnimatedBoxes (Animated_Cell *current)
 {
 #ifdef _GL 
-  if (current->Next)
-    FreeAnimatedBox (current->Next);
-  TtaFreeMemory (current);  
+  Animated_Cell *next;
+
+  while (current)
+    {
+      next = current->Next;
+      TtaFreeMemory (current);
+      current = next;
+    }
 #endif /* _GL */
 }
 

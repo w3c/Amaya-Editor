@@ -1017,6 +1017,7 @@ PtrBox SplitForScript (PtrBox box, PtrAbstractBox pAb, char script, int lg,
       else
 	pMainBox->BxNext = ibox1;
       ibox1->BxNext = ibox2;
+      ibox2->BxNexChild = NULL;
       ibox2->BxPrevious = ibox1;
       ibox2->BxNext = pNextBox;
       if (pNextBox != NULL)

@@ -552,7 +552,7 @@ static void CleanImageView (int View, PtrDocument pDoc, ThotBool complete)
    FrameTable[frame].Anim_play = FALSE;
    if (FrameTable[frame].Animated_Boxes)
      {	    
-       FreeAnimatedBox ((Animated_Cell*)FrameTable[frame].Animated_Boxes);
+       FreeAnimatedBoxes ((Animated_Cell*)FrameTable[frame].Animated_Boxes);
        FrameTable[frame].Animated_Boxes = NULL;
      }	
 #endif /* _GL */

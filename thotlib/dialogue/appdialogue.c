@@ -66,6 +66,7 @@
 #include "creationmenu_f.h"
 #include "dialogapi_f.h"
 #include "dictionary_f.h"
+#include "displaybox_f.h"
 #include "displayview_f.h"
 #include "editcommands_f.h"
 #include "font_f.h"
@@ -3388,7 +3389,7 @@ void DestroyFrame (int frame)
   w = FrameTable[frame].WdFrame;
   if (w != 0)
     {
-      /* do not destroy frame menu on WX because menus are specific to the document */
+      /* don't destroy frame menu on WX because menus are specific to the document */
 #ifndef _WX
       Menu_Ctl           *ptrmenu;
       Item_Ctl           *ptr;
@@ -3452,25 +3453,33 @@ void DestroyFrame (int frame)
       FrameTable[frame].WdFrame = 0;
 #endif /* _WX */
     }
-      FrameTable[frame].FrDoc = 0;
+  FrameTable[frame].FrDoc = 0;
+#ifdef _GL
+  /* free animate blocks */
+  if (FrameTable[frame].Animated_Boxes)
+    {
+      FreeAnimatedBoxes ((Animated_Cell *)FrameTable[frame].Animated_Boxes);
+      FrameTable[frame].Animated_Boxes = NULL;
+    }
+#endif /* _GL */
 #ifdef _WINGUI
-      /* clean the whole CatList of the frame */
-      CleanFrameCatList (frame, 0);
-      for (i = 0; i < MAX_BUTTON; i++)
-	{
-	  TtaFreeMemory (FrameTable[frame].Button[i]);
-	  FrameTable[frame].Button[i] = 0;
-	  FrameTable[frame].ButtonId[i] = -1;
-	}
+  /* clean the whole CatList of the frame */
+  CleanFrameCatList (frame, 0);
+  for (i = 0; i < MAX_BUTTON; i++)
+    {
+      TtaFreeMemory (FrameTable[frame].Button[i]);
+      FrameTable[frame].Button[i] = 0;
+      FrameTable[frame].ButtonId[i] = -1;
+    }
   if (FrMainRef[frame])
     DestroyWindow (FrMainRef[frame]);
 #endif /* _WINGUI */
 #if defined(_GTK)
-      for (i = 0; i < MAX_BUTTON; i++)
-	FrameTable[frame].Button[i] = 0;
+  for (i = 0; i < MAX_BUTTON; i++)
+    FrameTable[frame].Button[i] = 0;
 #endif /* #if defined(_GTK) */
 #ifdef _WX
-      TtaHandlePendingEvents();
+  TtaHandlePendingEvents();
 #endif /* _WX */
 }
 

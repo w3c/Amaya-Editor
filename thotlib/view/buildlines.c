@@ -178,8 +178,14 @@ static PtrBox GetPreviousBox (PtrAbstractBox pAb, int frame)
        if (result &&
 	   (result->BxType == BoMulScript || result->BxType == BoSplit))
 	 /* return the last script box */
-	 while (result->BxNexChild)
-	   result = result->BxNexChild;
+	 while (result->BxNexChild &&
+		(result->BxNexChild->BxType == BoScript ||
+		 result->BxNexChild->BxType == BoPiece))
+	   if (result->BxNexChild->BxAbstractBox != pNextAb)
+	     // should not occur
+	     result->BxNexChild = NULL;
+	   else
+	     result = result->BxNexChild;
      }
    return result;
 }
@@ -3054,7 +3060,8 @@ static void RemoveBreaks (PtrBox pBox, int frame, ThotBool removed,
 		  /* Update the chain of leaf boxes */
 		  if (pBox->BxType == BoScript)
 		    {
-		      if (pNextBox && pNextBox->BxType == BoScript)
+		      if (pNextBox && pNextBox->BxType == BoScript &&
+			  pNextBox->BxAbstractBox == pBox->BxAbstractBox)
 			pBox->BxNexChild = pNextBox;
 		      else
 			pBox->BxNexChild = NULL;
@@ -3240,10 +3247,14 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
 	  *height = prevLine->LiYOrg + prevLine->LiHeight - top;
 	  pBoxToBreak = prevLine->LiLastPiece;
 	  pNextBox = prevLine->LiLastBox;
-	  if (pBoxToBreak && pBoxToBreak->BxNexChild)
+	  if (pBoxToBreak && pBoxToBreak->BxNexChild &&
+	      pBoxToBreak->BxNexChild->BxNChars > 0)
 	    pBoxToBreak = pBoxToBreak->BxNexChild;
 	  else
-	    pNextBox = GetNextBox (pChildAb, frame);
+	    {
+	      pNextBox = GetNextBox (pChildAb, frame);
+	      pBoxToBreak = NULL;
+	    }
 	  
 	  if (pNextBox == NULL)
 	    /* nothing else */
@@ -3420,8 +3431,12 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
 	    /* is it empty ? */
 	    if (pBoxToBreak->BxNChars > 0)
 	      pNextBox = pLine->LiLastBox;
-	    else if (pNextBox == NULL)
-	      pNextBox = pLine->LiLastBox;
+	    else
+	      {
+		 if (pNextBox == NULL)
+		   pNextBox = pLine->LiLastBox;
+		pBoxToBreak = NULL;
+	      }
 	    }
 
 	  if (full)
@@ -3825,11 +3840,15 @@ void RemoveLines (PtrBox pBox, int frame, PtrLine pFirstLine,
       (pBox->BxType == BoBlock || pBox->BxType == BoFloatBlock))
     {
       if (pLine->LiFirstPiece &&
-	  pLine->LiFirstBox->BxNexChild != pLine->LiFirstPiece)
+	  (pLine->LiFirstBox->BxType == BoScript ||
+	   pLine->LiFirstBox->BxNexChild != pLine->LiFirstPiece))
 	/* start with a piece of box */
 	box = pLine->LiFirstPiece;
       else
-	box = pLine->LiFirstBox;
+	{
+	  box = pLine->LiFirstBox;
+	  pLine->LiFirstPiece = NULL;
+	}
       RemoveBreaks (box, frame, removed, changeSelectBegin, changeSelectEnd);
       /* update the lines chaining */
       if (pLine->LiPrevious)
