@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2001
+ *  (c) COPYRIGHT INRIA, 1996-2002
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -287,7 +287,7 @@ LRESULT CALLBACK CSSDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
 		  TtaGetMessage (AMAYA, AM_CSS_FILE));
       wndCSSList = CreateWindow ("listbox", NULL,
 				 WS_CHILD | WS_VISIBLE | LBS_STANDARD,
-				 10, 35, 400, 120, hwnDlg, (HMENU) 1, 
+				 5, 10, 300, 120, hwnDlg, (HMENU) 1, 
 				 (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE),
 				 NULL);
 
@@ -317,7 +317,7 @@ LRESULT CALLBACK CSSDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
 	itemIndex = SendMessage (wndCSSList, LB_GETCURSEL, 0, 0);
 	itemIndex = SendMessage (wndCSSList, LB_GETTEXT, itemIndex, (LPARAM) szBuffer);
 	SetDlgItemText (hwnDlg, IDC_CSSEDIT, szBuffer);
-	/* ThotCallback (NumSelectLanguage, STRING_DATA, szBuffer);*/
+	ThotCallback (BaseCSS + CSSSelect, STRING_DATA, szBuffer);
 	}
 
       switch (LOWORD (wParam))
