@@ -65,6 +65,8 @@ AmayaSimpleWindow::AmayaSimpleWindow (  int             window_id
 
   SetAutoLayout(TRUE);
 
+  CenterOnParent();
+
   // NOTICE : the menu bar is created for each AmayaFrame, 
   //          the menu bar is not managed by the window
 }

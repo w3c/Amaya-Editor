@@ -78,7 +78,6 @@ AmayaWindow::AmayaWindow (  int            window_id
 {
   wxLogDebug( _T("AmayaWindow::AmayaWindow: window_id=%d"), m_WindowId );
   SetIcon( AmayaApp::GetAppIcon() );
-  CenterOnParent();
 }
 
 /*

@@ -12,6 +12,10 @@
  *
  */
 
+#ifdef _WX
+  #include "wx/wx.h"
+#endif /* _WX */
+
 #include "thot_gui.h"
 #include "thot_sys.h"
 #include "constmedia.h"
@@ -23,6 +27,11 @@
 #include "appdialogue.h"
 #include "fileaccess.h"
 #include "document.h"
+
+#ifdef _WX
+  #include "appdialogue_wx.h"
+  #include "AmayaWindow.h"
+#endif /* _WX */
 
 #ifdef _WINGUI
   #include "wininclude.h"
@@ -1416,9 +1425,11 @@ void TtaGetViewXYWH (Document doc, int view, int *xmm, int *ymm, int *width,
 
   *width = WindowTable[window_id].FrWidth;
   *height = WindowTable[window_id].FrHeight;
-  *xmm = 0;
-  *ymm = 0;
+
+  AmayaWindow * p_window = TtaGetWindowFromId( window_id );
+  p_window->GetPosition( xmm, ymm );
 #endif /* _WX */
+
 #ifdef _GTK
   int           frame;
   ThotWidget    widget;

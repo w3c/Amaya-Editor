@@ -125,19 +125,21 @@ int TtaMakeWindow( int x, int y, int w, int h, int kind, int parent_window_id )
   else
     window_size = wxSize(800, 600);
 
+  wxPoint window_pos(x, y);
+
   /* Create the window */
   switch ( kind )
     {
     case WXAMAYAWINDOW_NORMAL:
       p_window = new AmayaNormalWindow( window_id,
 					p_parent_window,
-					wxDefaultPosition,
+					window_pos,
 					window_size );
       break;
     case WXAMAYAWINDOW_SIMPLE:
       p_window = new AmayaSimpleWindow( window_id,
 					p_parent_window,
-					wxDefaultPosition,
+				        window_pos,
 					window_size );
       break;
     }
