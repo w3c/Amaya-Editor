@@ -249,11 +249,6 @@ alt="General Preferences Menu" /></p>
       numérotées</a> ou non. Cette option agit immédiatement sur toutes les
       vues formatées de documents. <br />
     </dd>
-  <dt><strong>Exporter CR/LF</strong> (Windows uniquement)</dt>
-    <dd>Indique si les fins de lignes des fichiers produits par Amaya se
-      terminent par CR/LF (format DOS) ou par un simple LF (format standard).
-      <br />
-    </dd>
   <dt><strong>Accès rapides</strong></dt>
     <dd>Spécifie la touche <strong>Alt</strong> ou <strong>Control</strong>
       utilisée pour mettre en oeuvre les <a
@@ -410,6 +405,11 @@ alt="Publish Preferences Menu" /></p>
       Amaya de rétablir chaque document dès qu'il a été publié et le compare
       à la copie stockée dans votre station de travail. Si les documents
       diffèrent, Amaya vous alertera.</dd>
+  <dt><strong>Exporter CR/LF</strong> (Windows uniquement)</dt>
+    <dd>Indique si les fins de lignes des fichiers produits par Amaya se
+      terminent par CR/LF (format DOS) ou par un simple LF (format standard).
+      <br />
+    </dd>
   <dt><strong>Nom par dé</strong><strong>faut pour les URLs finissant par
   '/'</strong></dt>
     <dd>Un serveur HTTP associe habituellement les URLs qui finissent par '/'
