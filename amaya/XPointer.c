@@ -333,17 +333,16 @@ Element start;
 	    }
 	}
       /* add the info we found to the xpath list*/
+      xpath_item = TtaGetMemory (sizeof (XPathItem));
+      xpath_item->elType = elType;
+      xpath_item->index = child_count;
+      xpath_item->id_value = NULL;
+      xpath_item->next = xpath_list;
+      xpath_list = xpath_item;
+      /* climb up one level */
       el = GetParent (el);
-      if (el)
-	{
-	  xpath_item = TtaGetMemory (sizeof (XPathItem));
-	  xpath_item->elType = elType;
-	  xpath_item->index = child_count;
-	  xpath_item->id_value = NULL;
-	  xpath_item->next = xpath_list;
-	  xpath_list = xpath_item;
-	}
     }
+
   if (id_value)
     {
       xpath_item = TtaGetMemory (sizeof (XPathItem));
