@@ -16,7 +16,7 @@ javastub.o : javastub.c
 	$(CC) $(CFLAGS) -c $<
 
 clean :
-	rm -f javastub *.o $(CLASSTEST)*
+	rm -f javastub *.o thotlib_APIInterface* thotlib_APITree*
 
 install : all
 	-@(mkdir ../../`../../batch/MachineType`/bin)
