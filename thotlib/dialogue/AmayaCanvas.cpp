@@ -231,6 +231,197 @@ void AmayaCanvas::OnPaint( wxPaintEvent& event )
   //  event.Skip();
 }
 
+
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaCanvas
+ *      Method:  OnMouseDbClick
+ * Description:  handle mouse dbclick button events
+ *--------------------------------------------------------------------------------------
+ */
+void AmayaCanvas::OnMouseDbClick( wxMouseEvent& event )
+{
+  // Do not treat this event if the canvas is not active (hiden)
+  if (!IsParentFrameActive())
+  {
+    wxLogDebug( _T("AmayaCanvas::OnMouse : frame=%d (skip)"),
+		m_pAmayaFrame->GetFrameId() );
+    event.Skip();
+    return;
+  }
+
+  int frame = m_pAmayaFrame->GetFrameId();
+
+  int thot_mod_mask = THOT_NO_MOD;
+  if (event.ControlDown())
+    thot_mod_mask |= THOT_MOD_CTRL;
+  if (event.AltDown())
+    thot_mod_mask |= THOT_MOD_ALT;
+  if (event.ShiftDown())
+    thot_mod_mask |= THOT_MOD_SHIFT;
+
+  wxLogDebug( _T("AmayaCanvas - wxEVT_LEFT_DCLICK || wxEVT_MIDDLE_DCLICK || wxEVT_RIGHT_DCLICK") );
+  FrameButtonDClickCallback( frame,
+			     event.GetButton(),
+			     thot_mod_mask,
+			     event.GetX(), event.GetY() );
+  event.Skip();
+}
+
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaCanvas
+ *      Method:  OnMouseMove
+ * Description:  handle mouse move events
+ *--------------------------------------------------------------------------------------
+ */
+void AmayaCanvas::OnMouseMove( wxMouseEvent& event )
+{
+  // Do not treat this event if the canvas is not active (hiden)
+  if (!IsParentFrameActive())
+  {
+    wxLogDebug( _T("AmayaCanvas::OnMouse : frame=%d (skip)"),
+		m_pAmayaFrame->GetFrameId() );
+    event.Skip();
+    return;
+  }
+
+  int frame = m_pAmayaFrame->GetFrameId();
+
+  int thot_mod_mask = THOT_NO_MOD;
+  if (event.ControlDown())
+    thot_mod_mask |= THOT_MOD_CTRL;
+  if (event.AltDown())
+    thot_mod_mask |= THOT_MOD_ALT;
+  if (event.ShiftDown())
+    thot_mod_mask |= THOT_MOD_SHIFT;
+
+  FrameMotionCallback( frame,
+		       thot_mod_mask,
+		       event.GetX(), event.GetY() );
+  event.Skip();
+}
+
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaCanvas
+ *      Method:  OnMouseWheel
+ * Description:  handle mouse Wheel events
+ *--------------------------------------------------------------------------------------
+ */
+void AmayaCanvas::OnMouseWheel( wxMouseEvent& event )
+{
+  // Do not treat this event if the canvas is not active (hiden)
+  if (!IsParentFrameActive())
+  {
+    wxLogDebug( _T("AmayaCanvas::OnMouse : frame=%d (skip)"),
+		m_pAmayaFrame->GetFrameId() );
+    event.Skip();
+    return;
+  }
+
+  int frame = m_pAmayaFrame->GetFrameId();
+
+  int thot_mod_mask = THOT_NO_MOD;
+  if (event.ControlDown())
+    thot_mod_mask |= THOT_MOD_CTRL;
+  if (event.AltDown())
+    thot_mod_mask |= THOT_MOD_ALT;
+  if (event.ShiftDown())
+    thot_mod_mask |= THOT_MOD_SHIFT;
+
+  int direction = event.GetWheelRotation();
+  int delta     = event.GetWheelDelta();
+  
+  wxLogDebug( _T("AmayaCanvas - wxEVT_MOUSEWHEEL: frame=%d direction=%s delta=%d"),
+	      m_pAmayaFrame->GetFrameId(),
+	      direction > 0 ? _T("up") : _T("down"),
+	      delta );
+  
+  FrameMouseWheelCallback( frame,
+			   thot_mod_mask,
+			   direction,
+			   delta,
+			   event.GetX(), event.GetY() );
+  event.Skip();
+}
+
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaCanvas
+ *      Method:  OnMouseUp
+ * Description:  handle mouse button up events
+ *--------------------------------------------------------------------------------------
+ */
+void AmayaCanvas::OnMouseUp( wxMouseEvent& event )
+{
+  // Do not treat this event if the canvas is not active (hiden)
+  if (!IsParentFrameActive())
+  {
+    wxLogDebug( _T("AmayaCanvas::OnMouse : frame=%d (skip)"),
+		m_pAmayaFrame->GetFrameId() );
+    event.Skip();
+    return;
+  }
+
+  int frame = m_pAmayaFrame->GetFrameId();
+
+  int thot_mod_mask = THOT_NO_MOD;
+  if (event.ControlDown())
+    thot_mod_mask |= THOT_MOD_CTRL;
+  if (event.AltDown())
+    thot_mod_mask |= THOT_MOD_ALT;
+  if (event.ShiftDown())
+    thot_mod_mask |= THOT_MOD_SHIFT;
+
+  wxLogDebug( _T("AmayaCanvas - wxEVT_LEFT_UP || wxEVT_MIDDLE_UP || wxEVT_RIGHT_UP") );
+  
+  FrameButtonUpCallback( frame,
+			 event.GetButton(),
+			 thot_mod_mask,
+			 event.GetX(), event.GetY() );
+  event.Skip();
+}
+
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaCanvas
+ *      Method:  OnMouseDown
+ * Description:  handle mouse button down events
+ *--------------------------------------------------------------------------------------
+ */
+void AmayaCanvas::OnMouseDown( wxMouseEvent& event )
+{
+  // Do not treat this event if the canvas is not active (hiden)
+  if (!IsParentFrameActive())
+  {
+    wxLogDebug( _T("AmayaCanvas::OnMouse : frame=%d (skip)"),
+		m_pAmayaFrame->GetFrameId() );
+    event.Skip();
+    return;
+  }
+
+  int frame = m_pAmayaFrame->GetFrameId();
+
+  int thot_mod_mask = THOT_NO_MOD;
+  if (event.ControlDown())
+    thot_mod_mask |= THOT_MOD_CTRL;
+  if (event.AltDown())
+    thot_mod_mask |= THOT_MOD_ALT;
+  if (event.ShiftDown())
+    thot_mod_mask |= THOT_MOD_SHIFT;
+
+  m_pAmayaFrame->SetActive( TRUE );
+
+  FrameButtonDownCallback( frame,
+			   event.GetButton(),
+			   thot_mod_mask,
+			   event.GetX(), event.GetY() );
+  event.Skip();
+}
+
+
+#if 0
 /*
  *--------------------------------------------------------------------------------------
  *       Class:  AmayaCanvas
@@ -362,6 +553,7 @@ void AmayaCanvas::OnMouse( wxMouseEvent& event )
   // forward current event to parent widgets
   event.Skip();
 } 
+#endif /* 0 */
 
 /*
  *--------------------------------------------------------------------------------------
@@ -520,20 +712,17 @@ BEGIN_EVENT_TABLE(AmayaCanvas, wxPanel)
   //  EVT_SET_FOCUS(        AmayaCanvas::OnSetFocus )
 
   // what mouse event type is managed ? comment what is not managed
-  EVT_LEFT_DOWN(	AmayaCanvas::OnMouse) // Process a wxEVT_LEFT_DOWN event. 
-  EVT_LEFT_UP(		AmayaCanvas::OnMouse) // Process a wxEVT_LEFT_UP event. 
-  EVT_LEFT_DCLICK(	AmayaCanvas::OnMouse) // Process a wxEVT_LEFT_DCLICK event. 
-  EVT_MIDDLE_DOWN(	AmayaCanvas::OnMouse) // Process a wxEVT_MIDDLE_DOWN event. 
-  EVT_MIDDLE_UP(	AmayaCanvas::OnMouse) // Process a wxEVT_MIDDLE_UP event. 
-  EVT_MIDDLE_DCLICK(	AmayaCanvas::OnMouse) // Process a wxEVT_MIDDLE_DCLICK event. 
-  EVT_RIGHT_DOWN(	AmayaCanvas::OnMouse) // Process a wxEVT_RIGHT_DOWN event. 
-  EVT_RIGHT_UP(		AmayaCanvas::OnMouse) // Process a wxEVT_RIGHT_UP event. 
-  EVT_RIGHT_DCLICK(	AmayaCanvas::OnMouse) // Process a wxEVT_RIGHT_DCLICK event. 
-  EVT_MOTION(		AmayaCanvas::OnMouse) // Process a wxEVT_MOTION event. 
-  EVT_ENTER_WINDOW(	AmayaCanvas::OnMouse) // Process a wxEVT_ENTER_WINDOW event. 
-  EVT_LEAVE_WINDOW(	AmayaCanvas::OnMouse) // Process a wxEVT_LEAVE_WINDOW event. 
-  EVT_MOUSEWHEEL(	AmayaCanvas::OnMouse) // Process a wxEVT_MOUSEWHEEL event. 
-//  EVT_MOUSE_EVENTS(	AmayaCanvas::OnMouse) // Process all mouse events. 
+  EVT_LEFT_DOWN(	AmayaCanvas::OnMouseDown) // Process a wxEVT_LEFT_DOWN event. 
+  EVT_LEFT_UP(		AmayaCanvas::OnMouseUp) // Process a wxEVT_LEFT_UP event. 
+  EVT_LEFT_DCLICK(	AmayaCanvas::OnMouseDbClick) // Process a wxEVT_LEFT_DCLICK event. 
+  EVT_MIDDLE_DOWN(	AmayaCanvas::OnMouseDown) // Process a wxEVT_MIDDLE_DOWN event. 
+  EVT_MIDDLE_UP(	AmayaCanvas::OnMouseUp) // Process a wxEVT_MIDDLE_UP event. 
+  EVT_MIDDLE_DCLICK(	AmayaCanvas::OnMouseDbClick) // Process a wxEVT_MIDDLE_DCLICK event. 
+  EVT_RIGHT_DOWN(	AmayaCanvas::OnMouseDown) // Process a wxEVT_RIGHT_DOWN event. 
+  EVT_RIGHT_UP(		AmayaCanvas::OnMouseUp) // Process a wxEVT_RIGHT_UP event. 
+  EVT_RIGHT_DCLICK(	AmayaCanvas::OnMouseDbClick) // Process a wxEVT_RIGHT_DCLICK event. 
+  EVT_MOTION(		AmayaCanvas::OnMouseMove) // Process a wxEVT_MOTION event. 
+  EVT_MOUSEWHEEL(	AmayaCanvas::OnMouseWheel) // Process a wxEVT_MOUSEWHEEL event. 
 
   EVT_IDLE(             AmayaCanvas::OnIdle) // Process a wxEVT_IDLE event
 

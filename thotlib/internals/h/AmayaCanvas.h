@@ -83,7 +83,11 @@ protected:
   void OnSize( wxSizeEvent& event );
   void OnPaint( wxPaintEvent& event );
   void OnSetFocus( wxFocusEvent & event );
-  void OnMouse( wxMouseEvent& event );
+  void OnMouseMove( wxMouseEvent& event );
+  void OnMouseWheel( wxMouseEvent& event );
+  void OnMouseDbClick( wxMouseEvent& event );
+  void OnMouseUp( wxMouseEvent& event );
+  void OnMouseDown( wxMouseEvent& event );
   void OnIdle( wxIdleEvent& event );
   void OnChar( wxKeyEvent& event );  
   
