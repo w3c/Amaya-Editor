@@ -1076,8 +1076,8 @@ static void DisplayUrlAnchor (Element element, Document document)
 		       attrType.AttrTypeNum = HTML_ATTR_Title;
 		       titleAttr = TtaGetAttribute (ancestor, attrType);
 		     }
-		   ancestor = TtaGetParent (ancestor);
 		 }
+	       ancestor = TtaGetParent (ancestor);
 	     }
 	   while (titleAttr == NULL && ancestor != NULL);
 	   if (titleAttr)
