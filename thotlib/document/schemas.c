@@ -891,9 +891,11 @@ void LoadNatureSchema (PtrSSchema pSS, char *PSchName, int rule, char *schURI,
 		       PtrDocument pDoc)
 {
    char          *schName;
-   PtrSSchema    pNatureSS;
+   PtrSSchema     pNatureSS;
 #ifndef NODISPLAY
-   ThotBool      loaded;
+   ThotBool       loaded;
+   char          *pUriName;
+   int            l;
 #endif
 
    schName = NULL;
@@ -904,44 +906,56 @@ void LoadNatureSchema (PtrSSchema pSS, char *PSchName, int rule, char *schURI,
       /* echec */
       pSS->SsRule->SrElem[rule - 1]->SrSSchemaNat = NULL;
    else
-      /* chargement du schema de structure reussi */
-      {
-      pSS->SsRule->SrElem[rule - 1]->SrSSchemaNat = pNatureSS;
+     /* chargement du schema de structure reussi */
+     {
+       pSS->SsRule->SrElem[rule - 1]->SrSSchemaNat = pNatureSS;
 #ifndef NODISPLAY
-      loaded = FALSE;
-      if (PSchName != NULL && PSchName[0] != EOS)
+       loaded = FALSE;
+       if (PSchName != NULL && PSchName[0] != EOS)
 	 /* l'appelant indique un schema de presentation, on essaie de le
 	    charger */
 	 {
-	 schName = TtaStrdup (PSchName);
-	 loaded = LoadPresentationSchema (PSchName, pNatureSS, pDoc);
+	   if (schURI != NULL && !strcmp (PSchName, "XMLP"))
+	     {
+	       /* load the presentation schema with the right name */
+	       l = strlen (pNatureSS->SsName);
+	       pUriName = (char *) TtaGetMemory (l + 2);
+	       strcpy (pUriName, pNatureSS->SsName);
+	       strcat (pUriName, "P");
+	       loaded = LoadPresentationSchema (pUriName, pNatureSS, pDoc);
+	     }
+	   else
+	     {
+	       schName = TtaStrdup (PSchName);
+	       loaded = LoadPresentationSchema (PSchName, pNatureSS, pDoc);
+	     }
 	 }
-      if (PSchName == NULL || PSchName[0] == EOS || !loaded)
+       if (PSchName == NULL || PSchName[0] == EOS || !loaded)
 	 /* pas de schema de presentation particulier demande' par l'appelant*/
 	 /* ou schema demande' inaccessible */
 	 {
-	 /* on consulte le fichier .conf */
-	 if (!ConfigGetPSchemaNature (pSS, pSS->SsRule->SrElem[rule - 1]->SrOrigNat,
-				      &schName))
-	    /* le fichier .conf ne donne pas de schema de presentation pour */
-	    /* cette nature, on prend le schema par defaut */
-	    schName = TtaStrdup (pNatureSS->SsDefaultPSchema);
-	 /* cree un nouveau schema de presentation et le charge depuis le
-	    fichier */
-	 loaded = LoadPresentationSchema (schName, pNatureSS, pDoc);
+	   /* on consulte le fichier .conf */
+	   if (!ConfigGetPSchemaNature (pSS, pSS->SsRule->SrElem[rule - 1]->SrOrigNat,
+					&schName))
+	     /* le fichier .conf ne donne pas de schema de presentation pour */
+	     /* cette nature, on prend le schema par defaut */
+	     schName = TtaStrdup (pNatureSS->SsDefaultPSchema);
+	   /* cree un nouveau schema de presentation et le charge depuis le
+	      fichier */
+	   loaded = LoadPresentationSchema (schName, pNatureSS, pDoc);
 	 }
-      if (!loaded)
+       if (!loaded)
 	 /* failed loading presentation schema */
 	 {
-	 TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_INCORRECT_PRS_FILE),
-			    schName);
-	 ReleaseStructureSchema (pNatureSS, pDoc);
-	 pSS->SsRule->SrElem[rule - 1]->SrSSchemaNat = NULL;
+	   TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_INCORRECT_PRS_FILE),
+			      schName);
+	   ReleaseStructureSchema (pNatureSS, pDoc);
+	   pSS->SsRule->SrElem[rule - 1]->SrSSchemaNat = NULL;
 	 }
-      else if (ThotLocalActions[T_initevents] != NULL)
+       else if (ThotLocalActions[T_initevents] != NULL)
 	 (*(Proc1)ThotLocalActions[T_initevents]) (pNatureSS);
 #endif /* NODISPLAY */
-      }
+     }
    if (schName)
      TtaFreeMemory (schName);
 }
