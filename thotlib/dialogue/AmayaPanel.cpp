@@ -24,15 +24,18 @@
 #include "frame_tv.h"
 
 #include "message_wx.h"
-#include "paneltypes_wx.h"
 #include "appdialogue_wx.h"
 #include "appdialogue_wx_f.h"
 
 
 #include "AmayaPanel.h"
+#include "AmayaSubPanel.h"
+#include "AmayaSubPanelManager.h"
 #include "AmayaXHTMLPanel.h"
 #include "AmayaAttributePanel.h"
 #include "AmayaColorsPanel.h"
+#include "AmayaCharStylePanel.h"
+#include "AmayaFormatPanel.h"
 #include "AmayaNormalWindow.h"
 
 IMPLEMENT_DYNAMIC_CLASS(AmayaPanel, wxPanel)
@@ -60,21 +63,39 @@ AmayaPanel::AmayaPanel( wxWindow *      p_parent_window
 {
   wxLogDebug( _T("AmayaPanel::AmayaPanel") );
 
+  // init the panel list
+  memset( m_aPanelList, 0, WXAMAYA_PANEL_TYPE_NB * sizeof(AmayaSubPanel *));
+
   // load title area
   m_pTitlePanel = wxXmlResource::Get()->LoadPanel(this, _T("wxID_TITLEPANEL"));
- 
+  m_pScrolledWindow = new wxScrolledWindow( this );
+  m_pScrolledWindow->SetScrollRate( 5, 5 );
+
   // load static sub-panels  
-  m_pPanel_xhtml     = new AmayaXHTMLPanel( this, p_parent_nwindow );
-  m_pPanel_attribute = new AmayaAttributePanel( this, p_parent_nwindow );
-  m_pPanel_colors    = new AmayaColorsPanel( this, p_parent_nwindow );
+  m_pPanel_xhtml     = new AmayaXHTMLPanel(     m_pScrolledWindow, p_parent_nwindow );
+  m_pPanel_attribute = new AmayaAttributePanel( m_pScrolledWindow, p_parent_nwindow );
+  m_pPanel_colors    = new AmayaColorsPanel(    m_pScrolledWindow, p_parent_nwindow );
+  m_pPanel_charstyle = new AmayaCharStylePanel( m_pScrolledWindow, p_parent_nwindow );
+  m_pPanel_format    = new AmayaFormatPanel(    m_pScrolledWindow, p_parent_nwindow );
+  m_aPanelList[WXAMAYA_PANEL_XHTML]     = m_pPanel_xhtml;
+  m_aPanelList[WXAMAYA_PANEL_ATTRIBUTE] = m_pPanel_attribute;
+  m_aPanelList[WXAMAYA_PANEL_COLORS]    = m_pPanel_colors;
+  m_aPanelList[WXAMAYA_PANEL_CHARSTYLE] = m_pPanel_charstyle;
+  m_aPanelList[WXAMAYA_PANEL_FORMAT]    = m_pPanel_format;
 
   // attach subpanels & title to the panel
   wxBoxSizer * p_TopSizer = new wxBoxSizer ( wxVERTICAL );
   SetSizer(p_TopSizer);
-  p_TopSizer->Add( m_pTitlePanel, 0, wxALL | wxEXPAND , 5 );
-  p_TopSizer->Add( m_pPanel_xhtml, 0, wxALL | wxEXPAND , 5 );
-  p_TopSizer->Add( m_pPanel_attribute, 0, wxALL | wxEXPAND , 5 );
-  p_TopSizer->Add( m_pPanel_colors, 0, wxALL | wxEXPAND , 5 );
+  p_TopSizer->Add( m_pTitlePanel,       0, wxALL | wxEXPAND, 5 );
+  p_TopSizer->Add( m_pScrolledWindow,   1, wxALL | wxEXPAND, 5 );
+
+  wxBoxSizer * p_PanelSizer = new wxBoxSizer ( wxVERTICAL );
+  m_pScrolledWindow->SetSizer(p_PanelSizer);
+  p_PanelSizer->Add( m_pPanel_xhtml,      0, wxBOTTOM | wxEXPAND, 5 );
+  p_PanelSizer->Add( m_pPanel_attribute,  0, wxBOTTOM | wxEXPAND, 5 );
+  p_PanelSizer->Add( m_pPanel_colors,     0, wxBOTTOM | wxEXPAND, 5 );
+  p_PanelSizer->Add( m_pPanel_charstyle,  0, wxBOTTOM | wxEXPAND, 5 );
+  p_PanelSizer->Add( m_pPanel_format,     0, wxBOTTOM | wxEXPAND, 5 );
   
   // setup labels
   XRCCTRL(*this, "wxID_LABEL_TOOLS", wxStaticText)->SetLabel(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_TOOLS)));
@@ -170,6 +191,34 @@ AmayaAttributePanel * AmayaPanel::GetAttributePanel() const
 void AmayaPanel::RefreshToolTips()
 {
   m_pPanel_xhtml->RefreshToolTips();
+}
+
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaPanel
+ *      Method:  OpenSubPanel
+ * Description:  expand the subpanel
+ *--------------------------------------------------------------------------------------
+ */
+void AmayaPanel::OpenSubPanel( int panel_type )
+{
+  if (panel_type >= WXAMAYA_PANEL_TYPE_NB || panel_type < 0 || m_aPanelList[panel_type] == NULL )
+    return;  
+  AmayaSubPanelManager::GetInstance()->Expand( m_aPanelList[panel_type] );
+}
+
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaPanel
+ *      Method:  CloseSubPanel
+ * Description:  unexpand the subpanel
+ *--------------------------------------------------------------------------------------
+ */
+void AmayaPanel::CloseSubPanel( int panel_type )
+{
+  if (panel_type >= WXAMAYA_PANEL_TYPE_NB || panel_type < 0 || m_aPanelList[panel_type] == NULL )
+    return;  
+  AmayaSubPanelManager::GetInstance()->UnExpand( m_aPanelList[panel_type] );
 }
 
 /*----------------------------------------------------------------------

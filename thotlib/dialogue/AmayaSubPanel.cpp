@@ -228,6 +228,18 @@ void AmayaSubPanel::SetTopAmayaWindow( AmayaNormalWindow * p_parent_window )
 /*
  *--------------------------------------------------------------------------------------
  *       Class:  AmayaSubPanel
+ *      Method:  GetTopAmayaWindow
+ * Description:  
+ *--------------------------------------------------------------------------------------
+ */
+AmayaNormalWindow * AmayaSubPanel::GetTopAmayaWindow()
+{
+  return m_pParentNWindow;
+}
+
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaSubPanel
  *      Method:  RefreshToolTips
  * Description:  reassign the tooltips values
  *--------------------------------------------------------------------------------------

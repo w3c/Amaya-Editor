@@ -5,10 +5,16 @@
 
 #include "wx/wx.h"
 #include "wx/panel.h"
+#include "wx/scrolwin.h"
 
+#include "paneltypes_wx.h"
+
+class AmayaSubPanel;
 class AmayaXHTMLPanel;
 class AmayaAttributePanel;
 class AmayaColorsPanel;
+class AmayaCharStylePanel;
+class AmayaFormatPanel;
 class AmayaNormalWindow;
 
 /*
@@ -72,6 +78,8 @@ class AmayaPanel : public wxPanel
 
   AmayaXHTMLPanel *     GetXHTMLPanel() const;
   AmayaAttributePanel * GetAttributePanel() const;
+  void OpenSubPanel( int panel_type );
+  void CloseSubPanel( int panel_type );
 
   void RefreshToolTips();
 
@@ -87,8 +95,12 @@ class AmayaPanel : public wxPanel
   AmayaXHTMLPanel *      m_pPanel_xhtml;
   AmayaAttributePanel *  m_pPanel_attribute;
   AmayaColorsPanel *     m_pPanel_colors;
+  AmayaCharStylePanel *  m_pPanel_charstyle;
+  AmayaFormatPanel *     m_pPanel_format;
+  AmayaSubPanel *        m_aPanelList[WXAMAYA_PANEL_TYPE_NB];
 
-  wxPanel *        m_pTitlePanel;
+  wxPanel *          m_pTitlePanel;
+  wxScrolledWindow * m_pScrolledWindow;
 };
 
 #endif // __AMAYAPANEL_H__

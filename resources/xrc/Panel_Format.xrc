@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resource version="2.3.0.1" xmlns="http://www.wxwindows.org/wxxrc">
+  <object class="wxPanel" name="wxID_PANEL_FORMAT">
+    <object class="wxBoxSizer">
+      <orient>wxVERTICAL</orient>
+      <object class="sizeritem">
+        <object class="wxPanel" name="wxID_PANEL_TOP">
+          <object class="wxBoxSizer">
+            <orient>wxVERTICAL</orient>
+            <object class="sizeritem">
+              <object class="wxBoxSizer">
+                <orient>wxVERTICAL</orient>
+                <object class="sizeritem">
+                  <object class="wxPanel" name="wxID_PANEL_TITLE">
+                    <object class="wxBoxSizer">
+                      <orient>wxHORIZONTAL</orient>
+                      <object class="sizeritem">
+                        <object class="wxBitmapButton" name="wxID_BUTTON_EXPAND">
+                          <bitmap>../icons/expand_on.gif</bitmap>
+                          <style>wxNO_BORDER</style>
+                        </object>
+                        <flag>wxALIGN_CENTRE</flag>
+                      </object>
+                      <object class="sizeritem">
+                        <object class="wxStaticText" name="wxID_LABEL_TITLE">
+                          <label>*Format*</label>
+                          <style>wxALIGN_CENTRE</style>
+                        </object>
+                        <option>1</option>
+                        <flag>wxALIGN_CENTRE</flag>
+                      </object>
+                      <object class="sizeritem">
+                        <object class="wxBitmapButton" name="wxID_BUTTON_DETACH">
+                          <bitmap>../icons/detach.gif</bitmap>
+                          <style>wxNO_BORDER</style>
+                        </object>
+                        <flag>wxALIGN_CENTRE</flag>
+                      </object>
+                    </object>
+                    <style>wxTAB_TRAVERSAL|wxSIMPLE_BORDER</style>
+                  </object>
+                  <flag>wxEXPAND</flag>
+                </object>
+                <object class="sizeritem">
+                  <object class="wxBoxSizer">
+                    <orient>wxVERTICAL</orient>
+                    <object class="sizeritem">
+                      <object class="wxPanel" name="wxID_PANEL_CONTENT">
+                        <object class="wxBoxSizer">
+                          <orient>wxVERTICAL</orient>
+                          <object class="spacer">
+                            <size>0,5</size>
+                          </object>
+                          <object class="sizeritem">
+                            <object class="wxPanel" name="wxID_PANEL_CONTENT_DETACH">
+                              <style>wxTAB_TRAVERSAL|wxSIMPLE_BORDER</style>
+                              <object class="wxBoxSizer">
+                                <orient>wxVERTICAL</orient>
+                                <object class="sizeritem">
+                                  <object class="wxBoxSizer">
+                                    <orient>wxVERTICAL</orient>
+                                    <object class="sizeritem">
+                                      <object class="wxBoxSizer">
+                                        <orient>wxHORIZONTAL</orient>
+                                        <object class="sizeritem">
+                                          <object class="wxBitmapButton" name="wxID_BMPBUTTON_FORMATLEFT">
+                                            <bitmap>../icons/format_left.gif</bitmap>
+                                            <tooltip>*LeFt*</tooltip>
+                                          </object>
+                                        </object>
+                                        <object class="sizeritem">
+                                          <object class="wxBitmapButton" name="wxID_BMPBUTTON_FORMATRIGHT">
+                                            <bitmap>../icons/format_right.gif</bitmap>
+                                            <tooltip>*Right*</tooltip>
+                                          </object>
+                                        </object>
+                                        <object class="sizeritem">
+                                          <object class="wxBitmapButton" name="wxID_BMPBUTTON_FORMATCENTER">
+                                            <bitmap>../icons/format_center.gif</bitmap>
+                                            <bg>#FFC0CB</bg>
+                                            <tooltip>*Center*</tooltip>
+                                          </object>
+                                        </object>
+                                        <object class="sizeritem">
+                                          <object class="wxBitmapButton" name="wxID_BMPBUTTON_FORMATJUSTIFY">
+                                            <bitmap>../icons/format_justi../icons/format_justify.gif</bitmap>
+                                            <tooltip>*JustiFy*</tooltip>
+                                          </object>
+                                        </object>
+                                      </object>
+                                    </object>
+                                    <object class="sizeritem">
+                                      <object class="wxBoxSizer">
+                                        <orient>wxVERTICAL</orient>
+                                        <object class="sizeritem">
+                                          <object class="wxStaticText" name="wxID_LABEL_FORMATINDENT">
+                                            <label>*Indentation :*</label>
+                                          </object>
+                                          <flag>wxRIGHT|wxALIGN_CENTRE</flag>
+                                          <border>4</border>
+                                        </object>
+                                        <object class="sizeritem">
+                                          <object class="wxSpinCtrl" name="wxID_SPIN_FORMATINDENT">
+                                            <value>0</value>
+                                            <min>0</min>
+                                          </object>
+                                          <option>1</option>
+                                          <flag>wxEXPAND</flag>
+                                        </object>
+                                      </object>
+                                      <flag>wxTOP|wxEXPAND</flag>
+                                      <border>2</border>
+                                    </object>
+                                    <object class="sizeritem">
+                                      <object class="wxBoxSizer">
+                                        <orient>wxVERTICAL</orient>
+                                        <object class="sizeritem">
+                                          <object class="wxStaticText" name="wxID_LABEL_FORMATLINESPACE">
+                                            <label>*Line spacing :*</label>
+                                          </object>
+                                          <flag>wxRIGHT|wxALIGN_CENTRE</flag>
+                                          <border>4</border>
+                                        </object>
+                                        <object class="sizeritem">
+                                          <object class="wxSpinCtrl" name="wxID_SPIN_FORMATLINESPACE">
+                                            <value>0</value>
+                                            <min>0</min>
+                                          </object>
+                                          <option>1</option>
+                                          <flag>wxEXPAND</flag>
+                                        </object>
+                                      </object>
+                                      <flag>wxTOP|wxEXPAND</flag>
+                                      <border>2</border>
+                                    </object>
+                                  </object>
+                                  <flag>wxALL|wxEXPAND</flag>
+                                  <border>4</border>
+                                </object>
+                                <object class="sizeritem">
+                                  <object class="wxBoxSizer">
+                                    <orient>wxHORIZONTAL</orient>
+                                    <object class="sizeritem">
+                                      <object class="wxBitmapButton">
+                                        <bitmap stock_id="wxART_MISSING_IMAGE"></bitmap>
+                                      </object>
+                                      <flag>wxRIGHT|wxALIGN_CENTRE</flag>
+                                      <border>4</border>
+                                    </object>
+                                    <object class="sizeritem">
+                                      <object class="wxButton" name="wxID_APPLY">
+                                        <label>*Apply*</label>
+                                      </object>
+                                    </object>
+                                  </object>
+                                  <flag>wxALL|wxEXPAND</flag>
+                                  <border>4</border>
+                                </object>
+                              </object>
+                            </object>
+                            <flag>wxEXPAND</flag>
+                          </object>
+                          <object class="spacer">
+                            <size>0,2</size>
+                          </object>
+                        </object>
+                        <style>wxTAB_TRAVERSAL</style>
+                      </object>
+                      <option>1</option>
+                      <flag>wxEXPAND</flag>
+                    </object>
+                  </object>
+                  <option>1</option>
+                  <flag>wxEXPAND</flag>
+                </object>
+              </object>
+              <option>1</option>
+              <flag>wxALL|wxEXPAND</flag>
+            </object>
+          </object>
+          <style>wxTAB_TRAVERSAL</style>
+        </object>
+        <option>1</option>
+        <flag>wxEXPAND</flag>
+      </object>
+    </object>
+    <style>wxTAB_TRAVERSAL</style>
+  </object>
+</resource>

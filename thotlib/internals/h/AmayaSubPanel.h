@@ -52,6 +52,7 @@ class AmayaSubPanel : public wxPanel
   virtual bool IsActive();
 
   void SetTopAmayaWindow( AmayaNormalWindow * p_parent_window );
+  AmayaNormalWindow * GetTopAmayaWindow();
   
   //virtual void RefreshCheckButtonState( bool * p_checked_array );
   virtual void RefreshToolTips();
