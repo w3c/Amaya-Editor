@@ -156,7 +156,7 @@ Clear: clear
 Left_: left
 Right_: right
 All_: all
-None: none
+None_: none
 Font_size: size
 applet_name: name
 Param_name: name
@@ -187,6 +187,7 @@ Area_Size: size
 MaxLength: maxlength
 Border: border
 rules_: rules
+none_: none
 Position: align
 Row_valign: valign
 colspan_: colspan

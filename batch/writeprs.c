@@ -46,8 +46,8 @@ int                 n;
 
 #endif /* __STDC__ */
 {
-   TtaWriteByte (outfile, (CHAR_T) (n / 256));
-   TtaWriteByte (outfile, (CHAR_T) (n % 256));
+   TtaWriteByte (outfile, (char) (n / 256));
+   TtaWriteByte (outfile, (char) (n % 256));
 }
 
 /*----------------------------------------------------------------------
@@ -195,6 +195,66 @@ PRuleType           ruleType;
 	    case PtHorizPos:
 	       TtaWriteByte (outfile, C_PR_HPOS);
 	       break;
+            case PtMarginTop:
+               TtaWriteByte (outfile, C_PR_MARGINTOP);
+               break;
+            case PtMarginRight:
+               TtaWriteByte (outfile, C_PR_MARGINRIGHT);
+               break;
+            case PtMarginBottom:
+               TtaWriteByte (outfile, C_PR_MARGINBOTTOM);
+               break;
+            case PtMarginLeft:
+               TtaWriteByte (outfile, C_PR_MARGINLEFT);
+               break;
+            case PtPaddingTop:
+               TtaWriteByte (outfile, C_PR_PADDINGTOP);
+               break;
+            case PtPaddingRight:
+               TtaWriteByte (outfile, C_PR_PADDINGRIGHT);
+               break;
+            case PtPaddingBottom:
+               TtaWriteByte (outfile, C_PR_PADDINGBOTTOM);
+               break;
+            case PtPaddingLeft:
+               TtaWriteByte (outfile, C_PR_PADDINGLEFT);
+               break;
+            case PtBorderTopWidth:
+               TtaWriteByte (outfile, C_PR_BORDERTOPWIDTH);
+               break;
+            case PtBorderRightWidth:
+               TtaWriteByte (outfile, C_PR_BORDERRIGHTWIDTH);
+               break;
+            case PtBorderBottomWidth:
+               TtaWriteByte (outfile, C_PR_BORDERBOTTOMWIDTH);
+               break;
+            case PtBorderLeftWidth:
+               TtaWriteByte (outfile, C_PR_BORDERLEFTWIDTH);
+               break;
+            case PtBorderTopColor:
+               TtaWriteByte (outfile, C_PR_BORDERTOPCOLOR);
+               break;
+            case PtBorderRightColor:
+               TtaWriteByte (outfile, C_PR_BORDERRIGHTCOLOR);
+               break;
+            case PtBorderBottomColor:
+               TtaWriteByte (outfile, C_PR_BORDERBOTTOMCOLOR);
+               break;
+            case PtBorderLeftColor:
+               TtaWriteByte (outfile, C_PR_BORDERLEFTCOLOR);
+               break;
+            case PtBorderTopStyle:
+               TtaWriteByte (outfile, C_PR_BORDERTOPSTYLE);
+               break;
+            case PtBorderRightStyle:
+               TtaWriteByte (outfile, C_PR_BORDERRIGHTSTYLE);
+               break;
+            case PtBorderBottomStyle:
+               TtaWriteByte (outfile, C_PR_BORDERBOTTOMSTYLE);
+               break;
+            case PtBorderLeftStyle:
+               TtaWriteByte (outfile, C_PR_BORDERLEFTSTYLE);
+               break;
 	    case PtSize:
 	       TtaWriteByte (outfile, C_PR_SIZE);
 	       break;
@@ -1056,12 +1116,16 @@ PtrPRule            pPRule;
 		 case PresImmediate:
 		    switch (currentRule->PrType)
 			  {
+			     case PtFunction:
 			     case PtVisibility:
 			     case PtDepth:
-			     case PtFunction:
 			     case PtFillPattern:
 			     case PtBackground:
 			     case PtForeground:
+                             case PtBorderTopColor:
+                             case PtBorderRightColor:
+                             case PtBorderBottomColor:
+			     case PtBorderLeftColor:
 				WriteBoolean (currentRule->PrAttrValue);
 				WriteSignedShort (currentRule->PrIntValue);
 				break;
@@ -1071,6 +1135,10 @@ PtrPRule            pPRule;
 			     case PtUnderline:
 			     case PtThickness:
 			     case PtLineStyle:
+			     case PtBorderTopStyle:
+			     case PtBorderRightStyle:
+			     case PtBorderBottomStyle:
+			     case PtBorderLeftStyle:
 				TtaWriteByte (outfile, currentRule->PrChrValue);
 				break;
 			     case PtBreak1:
@@ -1079,6 +1147,18 @@ PtrPRule            pPRule;
 			     case PtSize:
 			     case PtLineSpacing:
 			     case PtLineWeight:
+			     case PtMarginTop:
+			     case PtMarginRight:
+			     case PtMarginBottom:
+			     case PtMarginLeft:
+			     case PtPaddingTop:
+			     case PtPaddingRight:
+			     case PtPaddingBottom:
+			     case PtPaddingLeft:
+			     case PtBorderTopWidth:
+			     case PtBorderRightWidth:
+			     case PtBorderBottomWidth:
+			     case PtBorderLeftWidth:
 				WriteUnit (currentRule->PrMinUnit);
 				WriteBoolean (currentRule->PrMinAttr);
 				WriteSignedShort (currentRule->PrMinValue);

@@ -320,7 +320,7 @@ ATTRIBUTES
 	create 'valign="bottom"';
 	END;
 
-   arrowhead = none:
+   arrowhead = none_:
 	BEGIN
 	create SAN;
 	create 'arrowhead="none"';

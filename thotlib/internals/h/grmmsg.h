@@ -11,7 +11,7 @@
 #define NO_SPACE_LEFT_IN_RULES_TABLE	      3
 #define GRM_NO_RECURSION	      4
 #define NO_SPACE_LEFT_IN_STRING_TABLE	      5
-#define NO_SPACE_LEFT_IN_REF_TABLL	      6
+#define NO_SPACE_LEFT_IN_REF_TABLE	      6
 #define UNKNOWN_FILE	      7
 #define CANT_CREATE_HEADER_FILE  8
 #define UNDEFINED_SYMBOL          9

@@ -351,53 +351,50 @@ PtrPRule            pR;
 #endif /* __STDC__ */
 
 {
-   PtrPRule            pRe1;
-
-   pRe1 = pR;
-   if (pRe1->PrPresMode == PresInherit)
+   if (pR->PrPresMode == PresInherit)
      {
-	wrModeHerit (pRe1->PrInheritMode);
-	if (pRe1->PrInhPercent)
+	wrModeHerit (pR->PrInheritMode);
+	if (pR->PrInhPercent)
 	  {
 	  printf (" * ");
-	  if (pRe1->PrInhAttr)
-	     wrnomattr (pRe1->PrInhDelta);
+	  if (pR->PrInhAttr)
+	     wrnomattr (pR->PrInhDelta);
 	  else
-	     wrnb (pRe1->PrInhDelta);
+	     wrnb (pR->PrInhDelta);
 	  printf (" %");
 	  }
 	else
-	   if (pRe1->PrInhDelta == 0)
+	   if (pR->PrInhDelta == 0)
 	      printf (" =");
 	   else
 	      {
-	      if (pRe1->PrInhDelta > 0)
+	      if (pR->PrInhDelta > 0)
 		 printf ("+");
-	      if (pRe1->PrInhAttr)
-		 wrnomattr (pRe1->PrInhDelta);
+	      if (pR->PrInhAttr)
+		 wrnomattr (pR->PrInhDelta);
 	      else
-		 wrnb (pRe1->PrInhDelta);
-	      wrdistunit (pRe1->PrInhUnit);
+		 wrnb (pR->PrInhDelta);
+	      wrdistunit (pR->PrInhUnit);
 	      }
-	if (pRe1->PrInhMinOrMax > 0)
+	if (pR->PrInhMinOrMax > 0)
 	  {
-	     if (pRe1->PrInhDelta >= 0)
+	     if (pR->PrInhDelta >= 0)
 		printf (" max ");
 	     else
 		printf (" min ");
-	     if (pRe1->PrMinMaxAttr)
-		wrnomattr (pRe1->PrInhMinOrMax);
+	     if (pR->PrMinMaxAttr)
+		wrnomattr (pR->PrInhMinOrMax);
 	     else
-		wrnb (pRe1->PrInhMinOrMax);
+		wrnb (pR->PrInhMinOrMax);
 	  }
      }
-   else if (pRe1->PrPresMode == PresImmediate)
+   else if (pR->PrPresMode == PresImmediate)
      {
-	if (pRe1->PrMinAttr)
-	   wrnomattr (pRe1->PrMinValue);
+	if (pR->PrMinAttr)
+	   wrnomattr (pR->PrMinValue);
 	else
-	   wrnb (pRe1->PrMinValue);
-	wrdistunit (pRe1->PrMinUnit);
+	   wrnb (pR->PrMinValue);
+	wrdistunit (pR->PrMinUnit);
      }
    else
       printf ("??????");
@@ -420,21 +417,18 @@ PtrPRule            pR;
 #endif /* __STDC__ */
 
 {
-   PtrPRule            pRe1;
-
-   pRe1 = pR;
-   if (pRe1->PrPresMode == PresInherit)
+   if (pR->PrPresMode == PresInherit)
      {
-	wrModeHerit (pRe1->PrInheritMode);
-	if (pRe1->PrInhDelta == 0 && !pRe1->PrInhPercent)
+	wrModeHerit (pR->PrInheritMode);
+	if (pR->PrInhDelta == 0 && !pR->PrInhPercent)
 	   printf (" =");
 	else
 	   printf ("??????");
      }
-   else if (pRe1->PrPresMode == PresImmediate)
+   else if (pR->PrPresMode == PresImmediate)
      {
-      if (pRe1->PrType == PtFont)
-	 switch (pRe1->PrChrValue)
+      if (pR->PrType == PtFont)
+	 switch (pR->PrChrValue)
 	       {
 		  case 'C':
 		     printf ("Courrier");
@@ -455,11 +449,11 @@ PtrPRule            pR;
 		     printf ("times");
 		     break;
 		  default:
-		     putchar (pRe1->PrChrValue);
+		     putchar (pR->PrChrValue);
 		     break;
 	       }
-      else if (pRe1->PrType == PtStyle)
-	 switch (pRe1->PrChrValue)
+      else if (pR->PrType == PtStyle)
+	 switch (pR->PrChrValue)
 	       {
 		  case 'I':
 		     printf ("Italics");
@@ -471,11 +465,11 @@ PtrPRule            pR;
 		     printf ("Oblique");
 		     break;
 		  default:
-		     putchar (pRe1->PrChrValue);
+		     putchar (pR->PrChrValue);
 		     break;
 	       }
-      else if (pRe1->PrType == PtWeight)
-	 switch (pRe1->PrChrValue)
+      else if (pR->PrType == PtWeight)
+	 switch (pR->PrChrValue)
 	       {
 		  case 'B':
 		     printf ("Bold");
@@ -484,11 +478,11 @@ PtrPRule            pR;
 		     printf ("Normal");
 		     break;
 		  default:
-		     putchar (pRe1->PrChrValue);
+		     putchar (pR->PrChrValue);
 		     break;
 	       }
-      else if (pRe1->PrType == PtUnderline)
-	 switch (pRe1->PrChrValue)
+      else if (pR->PrType == PtUnderline)
+	 switch (pR->PrChrValue)
 	       {
 		  case 'N':
 		     printf ("NoUnderline");
@@ -503,11 +497,11 @@ PtrPRule            pR;
 		     printf ("CrossedOut");
 		     break;
 		  default:
-		     putchar (pRe1->PrChrValue);
+		     putchar (pR->PrChrValue);
 		     break;
 	       }
-      else if (pRe1->PrType == PtThickness)
-	 switch (pRe1->PrChrValue)
+      else if (pR->PrType == PtThickness)
+	 switch (pR->PrChrValue)
 	       {
 		  case 'T':
 		     printf ("Thick");
@@ -516,11 +510,11 @@ PtrPRule            pR;
 		     printf ("Thin");
 		     break;
 		  default:
-		     putchar (pRe1->PrChrValue);
+		     putchar (pR->PrChrValue);
 		     break;
 	       }
-      else if (pRe1->PrType == PtLineStyle)
-	 switch (pRe1->PrChrValue)
+      else if (pR->PrType == PtLineStyle)
+	 switch (pR->PrChrValue)
 	       {
 		  case 'S':
 		     printf ("Solid");
@@ -531,9 +525,52 @@ PtrPRule            pR;
 		  case '.':
 		     printf ("Dotted");
 		     break;
+		  default:
+		     putchar (pR->PrChrValue);
+		     break;
+	       }
+      else if (pR->PrType == PtBorderTopStyle ||
+	       pR->PrType == PtBorderRightStyle ||
+	       pR->PrType == PtBorderBottomStyle ||
+	       pR->PrType == PtBorderLeftStyle)
+	 switch (pR->PrChrValue)
+	       {
+		  case '0':
+		     printf ("None");
+		     break;
+		  case 'H':
+		     printf ("Hidden");
+		     break;
+		  case '.':
+		     printf ("Dotted");
+		     break;
+		  case '-':
+		     printf ("Dashed");
+		     break;
+		  case 'S':
+		     printf ("Solid");
+		     break;
+		  case 'D':
+		     printf ("Double");
+		     break;
+		  case 'G':
+		     printf ("Groove");
+		     break;
+		  case 'R':
+		     printf ("Ridge");
+		     break;
+		  case 'I':
+		     printf ("Inset");
+		     break;
+		  case 'O':
+		     printf ("Outset");
+		     break;
+		  default:
+		     putchar (pR->PrChrValue);
+		     break;
 	       }
       else
-	 putchar (pRe1->PrChrValue);
+	 putchar (pR->PrChrValue);
     }
    else
       printf ("??????");
@@ -556,44 +593,40 @@ PtrPRule            pR;
 #endif /* __STDC__ */
 
 {
-   PtrPRule            pRe1;
-
-
-   pRe1 = pR;
-   if (pRe1->PrPresMode == PresInherit)
-     if (pRe1->PrInhPercent)
+   if (pR->PrPresMode == PresInherit)
+     if (pR->PrInhPercent)
 	printf ("??????");
      else
         {
-	wrModeHerit (pRe1->PrInheritMode);
-	if (pRe1->PrInhDelta == 0)
+	wrModeHerit (pR->PrInheritMode);
+	if (pR->PrInhDelta == 0)
 	   printf (" =");
 	else
 	  {
-	     if (pRe1->PrInhDelta > 0)
+	     if (pR->PrInhDelta > 0)
 		printf ("+");
-	     if (pRe1->PrInhAttr)
-		wrnomattr (pRe1->PrInhDelta);
+	     if (pR->PrInhAttr)
+		wrnomattr (pR->PrInhDelta);
 	     else
-		wrnb (pRe1->PrInhDelta);
+		wrnb (pR->PrInhDelta);
 	  }
-	if (pRe1->PrInhMinOrMax > 0)
+	if (pR->PrInhMinOrMax > 0)
 	  {
-	     if (pRe1->PrInhDelta >= 0)
+	     if (pR->PrInhDelta >= 0)
 		printf (" max ");
 	     else
 		printf (" min ");
-	     if (pRe1->PrMinMaxAttr)
-		wrnomattr (pRe1->PrInhMinOrMax);
+	     if (pR->PrMinMaxAttr)
+		wrnomattr (pR->PrInhMinOrMax);
 	     else
-		wrnb (pRe1->PrInhMinOrMax);
+		wrnb (pR->PrInhMinOrMax);
 	  }
         }
-   else if (pRe1->PrPresMode == PresImmediate)
-      if (pRe1->PrAttrValue)
-	 wrnomattr (pRe1->PrIntValue);
+   else if (pR->PrPresMode == PresImmediate)
+      if (pR->PrAttrValue)
+	 wrnomattr (pR->PrIntValue);
       else
-	 wrnb (pRe1->PrIntValue);
+	 wrnb (pR->PrIntValue);
    else
       printf ("??????");
    printf (";");
@@ -615,20 +648,17 @@ PtrPRule            pR;
 #endif /* __STDC__ */
 
 {
-   PtrPRule            pRe1;
-
-   pRe1 = pR;
-   if (pRe1->PrPresMode == PresInherit)
+   if (pR->PrPresMode == PresInherit)
       wrnbherit (pR);
    else
      {
-	if (pRe1->PrPresMode == PresImmediate)
+	if (pR->PrPresMode == PresImmediate)
 	  {
-	     if (pRe1->PrMinAttr)
-		wrnomattr (pRe1->PrMinValue);
+	     if (pR->PrMinAttr)
+		wrnomattr (pR->PrMinValue);
 	     else
-		wrnb (pRe1->PrMinValue);
-	     wrdistunit (pRe1->PrMinUnit);
+		wrnb (pR->PrMinValue);
+	     wrdistunit (pR->PrMinUnit);
 	  }
 	else
 	   printf ("??????");
@@ -652,44 +682,41 @@ ThotBool             Def;
 #endif /* __STDC__ */
 
 {
-   PosRule            *pRe1;
-
-   pRe1 = &pos;
    if (Def)
-      if (pRe1->PoPosDef == NoEdge)
+      if (pos.PoPosDef == NoEdge)
 	 printf (" NULL");
       else
 	{
-	   wrrepere (pRe1->PoPosDef);
+	   wrrepere (pos.PoPosDef);
 	   printf (" = ");
 	}
-   if (!Def || pRe1->PoPosDef != NoEdge)
+   if (!Def || pos.PoPosDef != NoEdge)
      {
-	wrlevel (pRe1->PoRelation);
-	if (pRe1->PoNotRel)
+	wrlevel (pos.PoRelation);
+	if (pos.PoNotRel)
 	   printf (" NOT");
 	printf (" ");
-	if (pRe1->PoRefKind == RkElType)
-	   wrnomregle (pRe1->PoRefIdent);
-	else if (pRe1->PoRefKind == RkPresBox)
-	   wrnomboite (pRe1->PoRefIdent);
-	else if (pRe1->PoRefKind == RkAttr)
-	   wrnomattr (pRe1->PoRefIdent);
+	if (pos.PoRefKind == RkElType)
+	   wrnomregle (pos.PoRefIdent);
+	else if (pos.PoRefKind == RkPresBox)
+	   wrnomboite (pos.PoRefIdent);
+	else if (pos.PoRefKind == RkAttr)
+	   wrnomattr (pos.PoRefIdent);
 	printf (". ");
-	wrrepere (pRe1->PoPosRef);
-	if (pRe1->PoDistance != 0)
+	wrrepere (pos.PoPosRef);
+	if (pos.PoDistance != 0)
 	  {
-	     if (pRe1->PoDistance > 0)
+	     if (pos.PoDistance > 0)
 		printf ("+");
 	     else
 		printf ("-");
-	     if (pRe1->PoDistAttr)
-		wrnomattr (abs (pRe1->PoDistance));
+	     if (pos.PoDistAttr)
+		wrnomattr (abs (pos.PoDistance));
 	     else
-		wrnb (abs (pRe1->PoDistance));
-	     wrdistunit (pRe1->PoDistUnit);
+		wrnb (abs (pos.PoDistance));
+	     wrdistunit (pos.PoDistUnit);
 	  }
-	if (pRe1->PoUserSpecified)
+	if (pos.PoUserSpecified)
 	   printf (" UserSpecified");
      }
    printf (";");
@@ -711,70 +738,67 @@ ThotBool             Hauteur;
 #endif /* __STDC__ */
 
 {
-   DimensionRule      *pRe1;
-
-   pRe1 = &Dim;
-   if (pRe1->DrPosition)
-      wrpos (pRe1->DrPosRule, True);
+   if (Dim.DrPosition)
+      wrpos (Dim.DrPosRule, True);
    else
      {
-	if (pRe1->DrAbsolute)
+	if (Dim.DrAbsolute)
 	  {
-	     if (pRe1->DrAttr)
-		wrnomattr (pRe1->DrValue);
+	     if (Dim.DrAttr)
+		wrnomattr (Dim.DrValue);
 	     else
-		wrnb (pRe1->DrValue);
-	     if (pRe1->DrValue != 0)
-		wrdistunit (pRe1->DrUnit);
-	     if (pRe1->DrUserSpecified)
+		wrnb (Dim.DrValue);
+	     if (Dim.DrValue != 0)
+		wrdistunit (Dim.DrUnit);
+	     if (Dim.DrUserSpecified)
 		printf (" UserSpecified");
-	     if (pRe1->DrMin)
+	     if (Dim.DrMin)
 		printf (" Min");
 	  }
 	else
 	  {
-	     wrlevel (pRe1->DrRelation);
+	     wrlevel (Dim.DrRelation);
 	     printf (" ");
-	     if (pRe1->DrNotRelat)
+	     if (Dim.DrNotRelat)
 		printf ("not ");
-	     if (pRe1->DrRefKind == RkElType)
-		wrnomregle (pRe1->DrRefIdent);
-	     else if (pRe1->DrRefKind == RkPresBox)
-		wrnomboite (pRe1->DrRefIdent);
-	     else if (pRe1->DrRefKind == RkAttr)
-		wrnomattr (pRe1->DrRefIdent);
+	     if (Dim.DrRefKind == RkElType)
+		wrnomregle (Dim.DrRefIdent);
+	     else if (Dim.DrRefKind == RkPresBox)
+		wrnomboite (Dim.DrRefIdent);
+	     else if (Dim.DrRefKind == RkAttr)
+		wrnomattr (Dim.DrRefIdent);
 	     printf (". ");
-	     if ((pRe1->DrSameDimens && Hauteur) || (!pRe1->DrSameDimens && !Hauteur))
+	     if ((Dim.DrSameDimens && Hauteur) || (!Dim.DrSameDimens && !Hauteur))
 		printf ("Height");
 	     else
 		printf ("Width");
-	     if (pRe1->DrUnit == UnPercent)
+	     if (Dim.DrUnit == UnPercent)
 	       {
 		  printf ("*");
-		  if (pRe1->DrValue < 0)
+		  if (Dim.DrValue < 0)
 		     printf ("-");
-		  if (pRe1->DrAttr)
-		     wrnomattr (abs (pRe1->DrValue));
+		  if (Dim.DrAttr)
+		     wrnomattr (abs (Dim.DrValue));
 		  else
-		     wrnb (abs (pRe1->DrValue));
+		     wrnb (abs (Dim.DrValue));
 		  printf ("%%");
 	       }
 	     else
 	       {
-		  if (pRe1->DrValue < 0)
+		  if (Dim.DrValue < 0)
 		     printf ("-");
-		  if (pRe1->DrValue > 0)
+		  if (Dim.DrValue > 0)
 		     printf ("+");
-		  if (pRe1->DrValue != 0)
+		  if (Dim.DrValue != 0)
 		    {
-		       if (pRe1->DrAttr)
-			  wrnomattr (abs (pRe1->DrValue));
+		       if (Dim.DrAttr)
+			  wrnomattr (abs (Dim.DrValue));
 		       else
-			  wrnb (abs (pRe1->DrValue));
-		       wrdistunit (pRe1->DrUnit);
+			  wrnb (abs (Dim.DrValue));
+		       wrdistunit (Dim.DrUnit);
 		    }
 	       }
-	     if (pRe1->DrMin)
+	     if (Dim.DrMin)
 		printf (" Min");
 	  }
 	printf (";");
@@ -930,10 +954,8 @@ PtrPRule            pR;
 
 {
    int                 i;
-   PtrPRule            pRe1;
 
-   pRe1 = pR;
-   switch (pRe1->PrPresFunction)
+   switch (pR->PrPresFunction)
 	 {
 	    case FnLine:
 	       printf ("Line");
@@ -973,18 +995,18 @@ PtrPRule            pR;
 	       break;
 	    case FnContentRef:
 	       printf ("Content: Cste");
-	       wrnb (pRe1->PrPresBox[0]);
+	       wrnb (pR->PrPresBox[0]);
 	       break;
 	    case FnShowBox:
 	       printf ("ShowBox");
 	       break;
 	    case FnBackgroundPicture:
 	       printf ("BackgroundPicture: Cste");
-	       wrnb (pRe1->PrPresBox[0]);
+	       wrnb (pR->PrPresBox[0]);
 	       break;
 	    case FnPictureMode:
 	       printf ("PictureMode: ");
-	       switch (pRe1->PrPresBox[0])
+	       switch (pR->PrPresBox[0])
 		 {
 		 case RealSize:
 		    printf ("NormalSize");
@@ -1013,29 +1035,29 @@ PtrPRule            pR;
 	       printf ("??????");
 	       break;		    
 	 }
-   if (pRe1->PrPresFunction != FnLine &&
-            pRe1->PrPresFunction != FnContentRef &&
-            pRe1->PrPresFunction != FnShowBox &&
-            pRe1->PrPresFunction != FnBackgroundPicture &&
-            pRe1->PrPresFunction != FnPictureMode &&
-	    pRe1->PrPresFunction != FnNoLine)
+   if (pR->PrPresFunction != FnLine &&
+            pR->PrPresFunction != FnContentRef &&
+            pR->PrPresFunction != FnShowBox &&
+            pR->PrPresFunction != FnBackgroundPicture &&
+            pR->PrPresFunction != FnPictureMode &&
+	    pR->PrPresFunction != FnNoLine)
      {
 	printf ("(");
-	if (pRe1->PrNPresBoxes == 0)
+	if (pR->PrNPresBoxes == 0)
 	  {
-	     wrnom (pRe1->PrPresBoxName);
-	     if (pRe1->PrExternal || !pRe1->PrElement)
+	     wrnom (pR->PrPresBoxName);
+	     if (pR->PrExternal || !pR->PrElement)
 		printf ("(****)");
 	  }
 	else
-	   for (i = 1; i <= pRe1->PrNPresBoxes; i++)
+	   for (i = 1; i <= pR->PrNPresBoxes; i++)
 	     {
 		if (i > 1)
 		   printf (", ");
-		if (pRe1->PrElement)
-		   wrnomregle (pRe1->PrPresBox[i - 1]);
+		if (pR->PrElement)
+		   wrnomregle (pR->PrPresBox[i - 1]);
 		else
-		   wrnomboite (pRe1->PrPresBox[i - 1]);
+		   wrnomboite (pR->PrPresBox[i - 1]);
 	     }
 	printf (")");
      }
@@ -1057,13 +1079,10 @@ PtrPRule            pR;
 #endif /* __STDC__ */
 
 {
-   PtrPRule            pRe1;
-
-   pRe1 = pR;
-   if (pRe1->PrPresMode == PresInherit)
+   if (pR->PrPresMode == PresInherit)
       wrnbherit (pR);
-   if (pRe1->PrPresMode == PresImmediate)
-      switch (pRe1->PrAdjust)
+   if (pR->PrPresMode == PresImmediate)
+      switch (pR->PrAdjust)
 	    {
 	       case AlignLeft:
 		  printf ("Left;");
@@ -1096,13 +1115,10 @@ PtrPRule            pR;
 #endif /* __STDC__ */
 
 {
-   PtrPRule            pRe1;
-
-   pRe1 = pR;
-   if (pRe1->PrPresMode == PresInherit)
+   if (pR->PrPresMode == PresInherit)
       wrnbherit (pR);
-   if (pRe1->PrPresMode == PresImmediate)
-      if (pRe1->PrJustify)
+   if (pR->PrPresMode == PresImmediate)
+      if (pR->PrJustify)
 	 printf ("Yes;");
       else
 	 printf ("No;");
@@ -1159,23 +1175,21 @@ PtrPRule            RP;
 #endif /* __STDC__ */
 
 {
-   PtrPRule            pRe1;
    PtrCondition        pCond;
 
    while (RP != NULL)
       /* ecrit une regle de presentation */
      {
-	pRe1 = RP;
 	printf ("   ");
-	if (pRe1->PrViewNum > 1)
+	if (RP->PrViewNum > 1)
 	  {
 	     printf ("IN ");
-	     wrnom (pSchemaPrs->PsView[pRe1->PrViewNum - 1]);
+	     wrnom (pSchemaPrs->PsView[RP->PrViewNum - 1]);
 	     printf (" ");
 	  }
-	if (pRe1->PrCond != NULL)
+	if (RP->PrCond != NULL)
 	  {
-	     pCond = pRe1->PrCond;
+	     pCond = RP->PrCond;
 	     if (pCond->CoCondition == PcDefaultCond)
 		printf ("OTHERWISE ");
 	     else
@@ -1191,38 +1205,46 @@ PtrPRule            RP;
 		  pCond = pCond->CoNextCondition;
 	       }
 	  }
-	switch (pRe1->PrType)
+	switch (RP->PrType)
 	      {
+		 case PtFunction:
+		    wrFonctPres (RP);
+		    break;
 		 case PtVisibility:
 		    printf ("Visibility: ");
 		    wrnbherit (RP);
 		    break;
-		 case PtFunction:
-		    wrFonctPres (RP);
+		 case PtDepth:
+		    printf ("Depth: ");
+		    wrnbherit (RP);
 		    break;
-		 case PtVertRef:
-		    printf ("VertRef: ");
-		    wrpos (pRe1->PrPosRule, False);
+		 case PtFillPattern:
+		    printf ("FillPattern: ");
+		    wrnbherit (RP);
 		    break;
-		 case PtHorizRef:
-		    printf ("HorizRef: ");
-		    wrpos (pRe1->PrPosRule, False);
+		 case PtBackground:
+		    printf ("Background: ");
+		    wrnbherit (RP);
 		    break;
-		 case PtHeight:
-		    printf ("Height: ");
-		    wrdimens (pRe1->PrDimRule, True);
+		 case PtForeground:
+		    printf ("Foreground: ");
+		    wrnbherit (RP);
 		    break;
-		 case PtWidth:
-		    printf ("Width: ");
-		    wrdimens (pRe1->PrDimRule, False);
+		 case PtBorderTopColor:
+		    printf ("BorderTopColor: ");
+		    wrnbherit (RP);
 		    break;
-		 case PtVertPos:
-		    printf ("VertPos: ");
-		    wrpos (pRe1->PrPosRule, True);
+		 case PtBorderRightColor:
+		    printf ("BorderRightColor: ");
+		    wrnbherit (RP);
 		    break;
-		 case PtHorizPos:
-		    printf ("HorizPos: ");
-		    wrpos (pRe1->PrPosRule, True);
+		 case PtBorderBottomColor:
+		    printf ("BorderBottomColor: ");
+		    wrnbherit (RP);
+		    break;
+		 case PtBorderLeftColor:
+		    printf ("BorderLeftColor: ");
+		    wrnbherit (RP);
 		    break;
 		 case PtFont:
 		    printf ("Font: ");
@@ -1244,13 +1266,25 @@ PtrPRule            RP;
 		    printf ("Thickness: ");
 		    wrfontstyle (RP);
 		    break;
-		 case PtSize:
-		    printf ("Size: ");
-		    wrsize (RP);
+		 case PtLineStyle:
+		    printf ("LineStyle: ");
+		    wrfontstyle (RP);
 		    break;
-		 case PtIndent:
-		    printf ("Indent: ");
-		    wrminind (RP);
+		 case PtBorderTopStyle:
+		    printf ("BorderTopStyle: ");
+		    wrfontstyle (RP);
+		    break;
+		 case PtBorderRightStyle:
+		    printf ("BorderRightStyle: ");
+		    wrfontstyle (RP);
+		    break;
+		 case PtBorderBottomStyle:
+		    printf ("BorderBottomStyle: ");
+		    wrfontstyle (RP);
+		    break;
+		 case PtBorderLeftStyle:
+		    printf ("BorderLeftStyle: ");
+		    wrfontstyle (RP);
 		    break;
 		 case PtBreak1:
 		    printf ("NoBreak1: ");
@@ -1260,13 +1294,93 @@ PtrPRule            RP;
 		    printf ("NoBreak2: ");
 		    wrminind (RP);
 		    break;
+		 case PtIndent:
+		    printf ("Indent: ");
+		    wrminind (RP);
+		    break;
+		 case PtSize:
+		    printf ("Size: ");
+		    wrsize (RP);
+		    break;
 		 case PtLineSpacing:
 		    printf ("LineSpacing: ");
 		    wrminind (RP);
 		    break;
-		 case PtAdjust:
-		    printf ("Adjust: ");
-		    wrajust (RP);
+		 case PtLineWeight:
+		    printf ("LineWeight: ");
+		    wrminind (RP);
+		    break;
+		 case PtMarginTop:
+		    printf ("MarginTop: ");
+		    wrminind (RP);
+		    break;
+		 case PtMarginRight:
+		    printf ("MarginRight: ");
+		    wrminind (RP);
+		    break;
+		 case PtMarginBottom:
+		    printf ("MarginBottom: ");
+		    wrminind (RP);
+		    break;
+		 case PtMarginLeft:
+		    printf ("MarginLeft: ");
+		    wrminind (RP);
+		    break;
+		 case PtPaddingTop:
+		    printf ("PaddingTop: ");
+		    wrminind (RP);
+		    break;
+		 case PtPaddingRight:
+		    printf ("PaddingRight: ");
+		    wrminind (RP);
+		    break;
+		 case PtPaddingBottom:
+		    printf ("PaddingBottom: ");
+		    wrminind (RP);
+		    break;
+		 case PtPaddingLeft:
+		    printf ("PaddingLeft: ");
+		    wrminind (RP);
+		    break;
+		 case PtBorderTopWidth:
+		    printf ("BorderTopWidth: ");
+		    wrminind (RP);
+		    break;
+		 case PtBorderRightWidth:
+		    printf ("BorderRightWidth: ");
+		    wrminind (RP);
+		    break;
+		 case PtBorderBottomWidth:
+		    printf ("BorderBottomWidth: ");
+		    wrminind (RP);
+		    break;
+	         case PtBorderLeftWidth:
+		    printf ("BorderLeftWidth: ");
+		    wrminind (RP);
+		    break;
+		 case PtVertRef:
+		    printf ("VertRef: ");
+		    wrpos (RP->PrPosRule, False);
+		    break;
+		 case PtHorizRef:
+		    printf ("HorizRef: ");
+		    wrpos (RP->PrPosRule, False);
+		    break;
+		 case PtVertPos:
+		    printf ("VertPos: ");
+		    wrpos (RP->PrPosRule, True);
+		    break;
+		 case PtHorizPos:
+		    printf ("HorizPos: ");
+		    wrpos (RP->PrPosRule, True);
+		    break;
+		 case PtHeight:
+		    printf ("Height: ");
+		    wrdimens (RP->PrDimRule, True);
+		    break;
+		 case PtWidth:
+		    printf ("Width: ");
+		    wrdimens (RP->PrDimRule, False);
 		    break;
 		 case PtJustify:
 		    printf ("Justify: ");
@@ -1284,35 +1398,15 @@ PtrPRule            RP;
 		    printf ("HorizOverflow: ");
 		    wrjustif (RP);
 		    break;
-		 case PtDepth:
-		    printf ("Depth: ");
-		    wrnbherit (RP);
-		    break;
-		 case PtLineStyle:
-		    printf ("LineStyle: ");
-		    wrfontstyle (RP);
-		    break;
-		 case PtLineWeight:
-		    printf ("LineWeight: ");
-		    wrminind (RP);
-		    break;
-		 case PtFillPattern:
-		    printf ("FillPattern: ");
-		    wrnbherit (RP);
-		    break;
-		 case PtBackground:
-		    printf ("Background: ");
-		    wrnbherit (RP);
-		    break;
-		 case PtForeground:
-		    printf ("Foreground: ");
-		    wrnbherit (RP);
+		 case PtAdjust:
+		    printf ("Adjust: ");
+		    wrajust (RP);
 		    break;
 		 case PtPictInfo:
 		    break;
 	      }
 	printf ("\n");		/* passe a la regle suivante */
-	RP = pRe1->PrNextPRule;
+	RP = RP->PrNextPRule;
      }
 }
 

@@ -58,7 +58,7 @@ static AttrValueMapping GraphMLAttrValueMappingTable[] =
    {GraphML_ATTR_align, "right", GraphML_ATTR_align_VAL_right_},
    {GraphML_ATTR_arrowhead, "both", GraphML_ATTR_arrowhead_VAL_both},
    {GraphML_ATTR_arrowhead, "end", GraphML_ATTR_arrowhead_VAL_end_},
-   {GraphML_ATTR_arrowhead, "none", GraphML_ATTR_arrowhead_VAL_none},
+   {GraphML_ATTR_arrowhead, "none", GraphML_ATTR_arrowhead_VAL_none_},
    {GraphML_ATTR_arrowhead, "start", GraphML_ATTR_arrowhead_VAL_start},
    {GraphML_ATTR_direction, "down", GraphML_ATTR_direction_VAL_down},
    {GraphML_ATTR_direction, "left", GraphML_ATTR_direction_VAL_left_},
@@ -296,7 +296,7 @@ int		arrowHead;
        case GraphML_EL_Line_:
 	  switch (arrowHead)
 		{
-		case GraphML_ATTR_arrowhead_VAL_none:
+		case GraphML_ATTR_arrowhead_VAL_none_:
 			shape = 'w';
 			break;
 		case GraphML_ATTR_arrowhead_VAL_start:
@@ -333,7 +333,7 @@ int		arrowHead;
        case GraphML_EL_Polyline:
 	  switch (arrowHead)
 		{
-		case GraphML_ATTR_arrowhead_VAL_none:
+		case GraphML_ATTR_arrowhead_VAL_none_:
 			shape = 'S';
 			break;
 		case GraphML_ATTR_arrowhead_VAL_start:
@@ -358,7 +358,7 @@ int		arrowHead;
        case GraphML_EL_Spline:
 	  switch (arrowHead)
 		{
-		case GraphML_ATTR_arrowhead_VAL_none:
+		case GraphML_ATTR_arrowhead_VAL_none_:
 			shape = 'B';
 			break;
 		case GraphML_ATTR_arrowhead_VAL_start:

@@ -903,7 +903,7 @@ ATTRIBUTES
 	create '"';
 	end;
 
-   frame = none:
+   frame = none\240:
 	begin
 	create SAN;
 	create 'frame="none"';

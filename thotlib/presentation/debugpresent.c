@@ -6,15 +6,6 @@
  */
 
 /*
- * Warning:
- * This module is part of the Thot library, which was originally
- * developed in French. That's why some comments are still in
- * French, but their translation is in progress and the full module
- * will be available in English in the next release.
- * 
- */
- 
-/*
    Ce programme effectue le chargement d'un schema de presentation et
    du schema de structure associe' et liste le contenu du schema de
    presentation.        
@@ -543,17 +534,42 @@ PtrPRule            pR;
 		     putchar (pRe1->PrChrValue);
 		     break;
 	       }
-      else if (pRe1->PrType == PtLineStyle)
+      else if (pRe1->PrType == PtLineStyle ||
+	       pRe1->PrType == PtBorderTopStyle ||
+	       pRe1->PrType == PtBorderRightStyle ||
+	       pRe1->PrType == PtBorderBottomStyle ||
+	       pRe1->PrType == PtBorderLeftStyle)
 	 switch (pRe1->PrChrValue)
 	       {
-		  case 'S':
-		     fprintf (output, "Solid");
+		  case '0':
+		     fprintf (output, "None");
+		     break;
+		  case 'H':
+		     fprintf (output, "Hidden");
+		     break;
+		  case '.':
+		     fprintf (output, "Dotted");
 		     break;
 		  case '-':
 		     fprintf (output, "Dashed");
 		     break;
-		  case '.':
-		     fprintf (output, "Dotted");
+		  case 'S':
+		     fprintf (output, "Solid");
+		     break;
+		  case 'D':
+		     fprintf (output, "Double");
+		     break;
+		  case 'G':
+		     fprintf (output, "Groove");
+		     break;
+		  case 'R':
+		     fprintf (output, "Ridge");
+		     break;
+		  case 'I':
+		     fprintf (output, "Inset");
+		     break;
+		  case 'O':
+		     fprintf (output, "Outset");
 		     break;
 	       }
       else
@@ -1247,6 +1263,86 @@ PtrPRule            RP;
 		    fprintf (output, "HorizPos: ");
 		    wrpos (pRe1->PrPosRule, TRUE);
 		    break;
+                 case PtMarginTop:
+                    fprintf (output, "MarginTop: ");
+		    wrminind (RP);
+                    break;
+                 case PtMarginRight:
+                    fprintf (output, "MarginRight: ");
+		    wrminind (RP);
+                    break;
+                 case PtMarginBottom:
+                    fprintf (output, "MarginBottom: ");
+		    wrminind (RP);
+                    break;
+                 case PtMarginLeft:
+                    fprintf (output, "MarginLeft: ");
+		    wrminind (RP);
+                    break;
+                 case PtPaddingTop:
+                    fprintf (output, "PaddingTop: ");
+		    wrminind (RP);
+                    break;
+                 case PtPaddingRight:
+                    fprintf (output, "PaddingRight: ");
+		    wrminind (RP);
+                    break;
+                 case PtPaddingBottom:
+                    fprintf (output, "PaddingBottom: ");
+		    wrminind (RP);
+                    break;
+                 case PtPaddingLeft:
+                    fprintf (output, "PaddingLeft: ");
+		    wrminind (RP);
+                    break;
+                 case PtBorderTopWidth:
+                    fprintf (output, "BorderTopWidth: ");
+		    wrminind (RP);
+                    break;
+                 case PtBorderRightWidth:
+                    fprintf (output, "BorderRightWidth: ");
+		    wrminind (RP);
+                    break;
+                 case PtBorderBottomWidth:
+                    fprintf (output, "BorderBottomWidth: ");
+		    wrminind (RP);
+                    break;
+                 case PtBorderLeftWidth:
+                    fprintf (output, "BorderLeftWidth: ");
+		    wrminind (RP);
+                    break;
+                 case PtBorderTopColor:
+                    fprintf (output, "BorderTopColor: ");
+		    wrnbherit (RP);
+                    break;
+                 case PtBorderRightColor:
+                    fprintf (output, "BorderRightColor: ");
+		    wrnbherit (RP);
+                    break;
+                 case PtBorderBottomColor:
+                    fprintf (output, "BorderBottomColor: ");
+		    wrnbherit (RP);
+                    break;
+                 case PtBorderLeftColor:
+                    fprintf (output, "BorderLeftColor: ");
+		    wrnbherit (RP);
+                    break;
+                 case PtBorderTopStyle:
+                    fprintf (output, "BorderTopStyle: ");
+		    wrfontstyle (RP);
+                    break;
+                 case PtBorderRightStyle:
+                    fprintf (output, "BorderRightStyle: ");
+		    wrfontstyle (RP);
+                    break;
+                 case PtBorderBottomStyle:
+                    fprintf (output, "BorderBottomStyle: ");
+		    wrfontstyle (RP);
+                    break;
+                 case PtBorderLeftStyle:
+                    fprintf (output, "BorderLeftStyle: ");
+		    wrfontstyle (RP);
+                    break;
 		 case PtFont:
 		    fprintf (output, "Font: ");
 		    wrfontstyle (RP);

@@ -1098,7 +1098,7 @@ ATTRIBUTES
 		VertPos: Top = Previous . Bottom;
 	END;
 
-   arrowhead = none:
+   arrowhead = none_:
 	CreateBefore (ATTR_arrowhead_none);
    arrowhead = start:
 	CreateBefore (ATTR_arrowhead_start);

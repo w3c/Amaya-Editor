@@ -32,7 +32,7 @@ STRUCT
 				IntWidth = integer; IntHeight = integer;
 		      linewidth = integer;
 		      linestyle_ = solid_, dashed_, dotted_;
-                      arrowhead = none, start, end_, both;
+                      arrowhead = none_, start, end_, both;
 		      align = left_, center_, right_;
 		      valign = top_, middle, bottom_;
 		      depth_ = integer;

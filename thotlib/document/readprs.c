@@ -84,6 +84,66 @@ BinFile             file;
 	    case C_PR_HPOS:
 	       return PtHorizPos;
 	       break;
+            case C_PR_MARGINTOP:
+	       return PtMarginTop;
+               break;
+            case C_PR_MARGINRIGHT:
+               return PtMarginRight;
+               break;
+            case C_PR_MARGINBOTTOM:
+               return PtMarginBottom;
+               break;
+            case C_PR_MARGINLEFT:
+               return PtMarginLeft;
+               break;
+            case C_PR_PADDINGTOP:
+               return PtPaddingTop;
+               break;
+            case C_PR_PADDINGRIGHT:
+               return PtPaddingRight;
+               break;
+            case C_PR_PADDINGBOTTOM:
+               return PtPaddingBottom;
+               break;
+            case C_PR_PADDINGLEFT:
+               return PtPaddingLeft;
+               break;
+            case C_PR_BORDERTOPWIDTH:
+               return PtBorderTopWidth;
+               break;
+            case C_PR_BORDERRIGHTWIDTH:
+               return PtBorderRightWidth;
+               break;
+            case C_PR_BORDERBOTTOMWIDTH:
+               return PtBorderBottomWidth;
+               break;
+            case C_PR_BORDERLEFTWIDTH:
+               return PtBorderLeftWidth;
+               break;
+            case C_PR_BORDERTOPCOLOR:
+               return PtBorderTopColor;
+               break;
+            case C_PR_BORDERRIGHTCOLOR:
+               return PtBorderRightColor;
+               break;
+            case C_PR_BORDERBOTTOMCOLOR:
+               return PtBorderBottomColor;
+               break;
+            case C_PR_BORDERLEFTCOLOR:
+               return PtBorderLeftColor;
+               break;
+            case C_PR_BORDERTOPSTYLE:
+               return PtBorderTopStyle;
+               break;
+            case C_PR_BORDERRIGHTSTYLE:
+               return PtBorderRightStyle;
+               break;
+            case C_PR_BORDERBOTTOMSTYLE:
+               return PtBorderBottomStyle;
+               break;
+            case C_PR_BORDERLEFTSTYLE:
+               return PtBorderLeftStyle;
+	       break;
 	    case C_PR_SIZE:
 	       return PtSize;
 	       break;
@@ -1198,12 +1258,16 @@ PtrPRule           *pNextPRule;
 			 case PresImmediate:
 			    switch (pPR->PrType)
 				  {
+				     case PtFunction:
 				     case PtVisibility:
 				     case PtDepth:
-				     case PtFunction:
 				     case PtFillPattern:
 				     case PtBackground:
 				     case PtForeground:
+                                     case PtBorderTopColor:
+                                     case PtBorderRightColor:
+                                     case PtBorderBottomColor:
+			             case PtBorderLeftColor:
 					TtaReadBool (file, &pPR->PrAttrValue);
 					TtaReadSignedShort (file, &pPR->PrIntValue);
 					break;
@@ -1213,6 +1277,10 @@ PtrPRule           *pNextPRule;
 				     case PtUnderline:
 				     case PtThickness:
 				     case PtLineStyle:
+				     case PtBorderTopStyle:
+			             case PtBorderRightStyle:
+			             case PtBorderBottomStyle:
+			             case PtBorderLeftStyle:
 					if (!TtaReadByte (file, &pPR->PrChrValue))
 					   error = True;
 					break;
@@ -1222,6 +1290,18 @@ PtrPRule           *pNextPRule;
 				     case PtSize:
 				     case PtLineSpacing:
 				     case PtLineWeight:
+				     case PtMarginTop:
+				     case PtMarginRight:
+				     case PtMarginBottom:
+				     case PtMarginLeft:
+				     case PtPaddingTop:
+				     case PtPaddingRight:
+				     case PtPaddingBottom:
+				     case PtPaddingLeft:
+				     case PtBorderTopWidth:
+				     case PtBorderRightWidth:
+				     case PtBorderBottomWidth:
+				     case PtBorderLeftWidth:
 					pPR->PrMinUnit = rdUnit (file);
 					TtaReadBool (file, &pPR->PrMinAttr);
 					TtaReadSignedShort (file, &pPR->PrMinValue);

@@ -374,6 +374,10 @@ indLine             wi;
 	    case PtFillPattern:
 	    case PtBackground:
 	    case PtForeground:
+	    case PtBorderTopColor:
+	    case PtBorderRightColor:
+	    case PtBorderBottomColor:
+	    case PtBorderLeftColor:
 	       CurRule->PrAttrValue = False;
 	       CurRule->PrIntValue = 0;
 	       break;
@@ -387,12 +391,16 @@ indLine             wi;
 	       CurRule->PrChrValue = 'N';	/* Normal par defaut */
 	       break;
 	    case PtUnderline:
-	       CurRule->PrChrValue = 'N';	/* Pas de souligne par defaut */
+	       CurRule->PrChrValue = 'N';	/* Pas de souligne par defaut*/
 	       break;
 	    case PtThickness:
 	       CurRule->PrChrValue = 'N';	/* souligne mince par defaut */
 	       break;
 	    case PtLineStyle:
+	    case PtBorderTopStyle:
+	    case PtBorderRightStyle:
+	    case PtBorderBottomStyle:
+	    case PtBorderLeftStyle:
 	       CurRule->PrChrValue = 'S';	/* trait continu par defaut */
 	       break;
 	    case PtBreak1:
@@ -401,6 +409,18 @@ indLine             wi;
 	    case PtSize:
 	    case PtLineSpacing:
 	    case PtLineWeight:
+	    case PtMarginTop:
+	    case PtMarginRight:
+	    case PtMarginBottom:
+	    case PtMarginLeft:
+	    case PtPaddingTop:
+	    case PtPaddingRight:
+	    case PtPaddingBottom:
+	    case PtPaddingLeft:
+	    case PtBorderTopWidth:
+	    case PtBorderRightWidth:
+	    case PtBorderBottomWidth:
+	    case PtBorderLeftWidth:
 	       CurRule->PrMinUnit = UnRelative;
 	       CurRule->PrMinAttr = False;
 	       CurRule->PrMinValue = 0;
@@ -796,8 +816,9 @@ static void         EndOfNumber ()
 	LatestNumber = LatestNumber * PrevSign;
 	if (CurRule->PrPresMode == PresInherit)
 	  {
-	     if (CurRule->PrType == PtIndent || CurRule->PrType == PtLineSpacing
-		 || CurRule->PrType == PtLineWeight)
+	     if (CurRule->PrType == PtIndent ||
+		 CurRule->PrType == PtLineSpacing ||
+		 CurRule->PrType == PtLineWeight)
 	       {
 		  CurRule->PrInhDelta = LatestNumber;
 		  CurRule->PrInhAttr = LatestNumberAttr;
@@ -810,8 +831,21 @@ static void         EndOfNumber ()
 		    case PtBreak1:
 		    case PtBreak2:
 		    case PtIndent:
+		    case PtSize:
 		    case PtLineSpacing:
 		    case PtLineWeight:
+		    case PtMarginTop:
+		    case PtMarginRight:
+		    case PtMarginBottom:
+		    case PtMarginLeft:
+		    case PtPaddingTop:
+		    case PtPaddingRight:
+		    case PtPaddingBottom:
+		    case PtPaddingLeft:
+		    case PtBorderTopWidth:
+		    case PtBorderRightWidth:
+		    case PtBorderBottomWidth:
+		    case PtBorderLeftWidth:
 		       CurRule->PrMinUnit = unit;
 		       CurRule->PrMinAttr = LatestNumberAttr;
 		       CurRule->PrMinValue = LatestNumber;
@@ -1100,21 +1134,39 @@ SyntacticCode       gCode;
 {
    PresVariable       *pPresVar;
 
+   /* traitement selon le code du mot-cle court */
    switch (x)
 	 {
-	       /* traitement selon le code du mot-cle court */
 	    case CHR_59:
 	       /*  ;  */
 	       if (gCode == RULE_Rule)
-		  /* fin d'une regle */
+		 /* fin d'une regle */
 		 {
-		    if (CurRule != NULL)
-		       if (CurRule->PrType == PtBreak1 || CurRule->PrType == PtBreak2 ||
-			   CurRule->PrType == PtIndent || CurRule->PrType == PtVertRef || CurRule->
-			   PrType == PtHorizRef || CurRule->PrType == PtVertPos || CurRule->PrType ==
-			   PtHorizPos || CurRule->PrType == PtHeight || CurRule->PrType == PtWidth ||
-			   CurRule->PrType == PtLineSpacing || CurRule->PrType == PtLineWeight)
-			  EndOfNumber ();
+		   if (CurRule != NULL)
+		     if (CurRule->PrType == PtBreak1 ||
+		         CurRule->PrType == PtBreak2 ||
+			 CurRule->PrType == PtIndent ||
+			 CurRule->PrType == PtVertRef ||
+			 CurRule->PrType == PtHorizRef ||
+			 CurRule->PrType == PtVertPos ||
+			 CurRule->PrType == PtHorizPos ||
+			 CurRule->PrType == PtHeight ||
+			 CurRule->PrType == PtWidth ||
+			 CurRule->PrType == PtLineSpacing ||
+			 CurRule->PrType == PtLineWeight ||
+			 CurRule->PrType == PtMarginTop ||
+			 CurRule->PrType == PtMarginRight ||
+			 CurRule->PrType == PtMarginBottom ||
+			 CurRule->PrType == PtMarginLeft ||
+			 CurRule->PrType == PtPaddingTop ||
+			 CurRule->PrType == PtPaddingRight ||
+			 CurRule->PrType == PtPaddingBottom ||
+			 CurRule->PrType == PtPaddingLeft ||
+			 CurRule->PrType == PtBorderTopWidth ||
+			 CurRule->PrType == PtBorderRightWidth ||
+			 CurRule->PrType == PtBorderBottomWidth ||
+			 CurRule->PrType == PtBorderLeftWidth)
+		        EndOfNumber ();
 		    InBreakRule = False;
 		    InPageBreakRule = False;
 		    InLineBreakRule = False;
@@ -1167,8 +1219,9 @@ SyntacticCode       gCode;
 	       break;
 	    case CHR_58:
 	       /*  :  */
-	       if (gCode == RULE_Rule1 || gCode == RULE_Rule2 || gCode == RULE_Rule3 ||
-		   gCode == RULE_Rule4)
+	       if (gCode == RULE_Rule1 || gCode == RULE_Rule2 ||
+		   gCode == RULE_Rule3 || gCode == RULE_Rule4 ||
+		   gCode == RULE_Rule5)
 		  InRule = True;
 	       if (gCode == RULE_Attr && NewAttributeDef)
 		  GenerateRPresAttribut (wi);
@@ -1226,7 +1279,11 @@ SyntacticCode       gCode;
 	       if (gCode == RULE_InheritVal || gCode == RULE_NameInherit ||
 		   gCode == RULE_BoolInherit || gCode == RULE_InheritDist ||
 		   gCode == RULE_InheritSize || gCode == RULE_AdjustInherit ||
-		   gCode == RULE_LineStyleInherit)
+		   gCode == RULE_LineStyleInherit ||
+		   gCode == RULE_StyleInherit ||
+                   gCode == RULE_MarginWidth || gCode == RULE_PaddingWidth ||
+		   gCode == RULE_BorderWidth || gCode == RULE_BorderColor ||
+		   gCode == RULE_BorderStyle)
 		  /* PresInherit */
 		 {
 		    CurRule->PrInhPercent = False;
@@ -1661,6 +1718,214 @@ indLine             wi;
 	CurRule->PrDimRule.DrNotRelat = False;
 	CurRule->PrDimRule.DrRefKind = RkElType;
 	CurRule->PrDimRule.DrRefIdent= 0;
+     }
+   if (GetTypedRule (PtMarginTop, pPSchema->PsFirstDefaultPRule) == NULL)
+      /* pas de regle MarginTop par defaut, on en cree une : */
+      /* MarginTop = 0; */
+     {
+	CreateDefaultRule ();
+	CurRule->PrType = PtMarginTop;
+	CurRule->PrPresMode = PresImmediate;
+	CurRule->PrMinUnit = UnRelative;
+	CurRule->PrMinAttr = FALSE;
+	CurRule->PrMinValue = 0;
+     }
+   if (GetTypedRule (PtMarginRight, pPSchema->PsFirstDefaultPRule) == NULL)
+      /* pas de regle MarginRight par defaut, on en cree une : */
+      /* MarginRight = 0; */
+     {
+	CreateDefaultRule ();
+	CurRule->PrType = PtMarginRight;
+	CurRule->PrPresMode = PresImmediate;
+	CurRule->PrMinUnit = UnRelative;
+	CurRule->PrMinAttr = FALSE;
+	CurRule->PrMinValue = 0;
+     }
+   if (GetTypedRule (PtMarginBottom, pPSchema->PsFirstDefaultPRule) == NULL)
+      /* pas de regle MarginBottom par defaut, on en cree une : */
+      /* MarginBottom = 0; */
+     {
+	CreateDefaultRule ();
+	CurRule->PrType = PtMarginBottom;
+	CurRule->PrPresMode = PresImmediate;
+	CurRule->PrMinUnit = UnRelative;
+	CurRule->PrMinAttr = FALSE;
+	CurRule->PrMinValue = 0;
+     }
+   if (GetTypedRule (PtMarginLeft, pPSchema->PsFirstDefaultPRule) == NULL)
+      /* pas de regle MarginLeft par defaut, on en cree une : */
+      /* MarginLeft = 0; */
+     {
+	CreateDefaultRule ();
+	CurRule->PrType = PtMarginLeft;
+	CurRule->PrPresMode = PresImmediate;
+	CurRule->PrMinUnit = UnRelative;
+	CurRule->PrMinAttr = FALSE;
+	CurRule->PrMinValue = 0;
+     }
+   if (GetTypedRule (PtPaddingTop, pPSchema->PsFirstDefaultPRule) == NULL)
+      /* pas de regle PaddingTop par defaut, on en cree une : */
+      /* PaddingTop = 0; */
+     {
+	CreateDefaultRule ();
+	CurRule->PrType = PtPaddingTop;
+	CurRule->PrPresMode = PresImmediate;
+	CurRule->PrMinUnit = UnRelative;
+	CurRule->PrMinAttr = FALSE;
+	CurRule->PrMinValue = 0;
+     }
+   if (GetTypedRule (PtPaddingRight, pPSchema->PsFirstDefaultPRule) == NULL)
+      /* pas de regle PaddingRight par defaut, on en cree une : */
+      /* PaddingRight = 0; */
+     {
+	CreateDefaultRule ();
+	CurRule->PrType = PtPaddingRight;
+	CurRule->PrPresMode = PresImmediate;
+	CurRule->PrMinUnit = UnRelative;
+	CurRule->PrMinAttr = FALSE;
+	CurRule->PrMinValue = 0;
+     }
+   if (GetTypedRule (PtPaddingBottom, pPSchema->PsFirstDefaultPRule) == NULL)
+      /* pas de regle PaddingBottom par defaut, on en cree une : */
+      /* PaddingBottom = 0; */
+     {
+	CreateDefaultRule ();
+	CurRule->PrType = PtPaddingBottom;
+	CurRule->PrPresMode = PresImmediate;
+	CurRule->PrMinUnit = UnRelative;
+	CurRule->PrMinAttr = FALSE;
+	CurRule->PrMinValue = 0;
+     }
+   if (GetTypedRule (PtPaddingLeft, pPSchema->PsFirstDefaultPRule) == NULL)
+      /* pas de regle PaddingLeft par defaut, on en cree une : */
+      /* PaddingLeft = 0; */
+     {
+	CreateDefaultRule ();
+	CurRule->PrType = PtPaddingLeft;
+	CurRule->PrPresMode = PresImmediate;
+	CurRule->PrMinUnit = UnRelative;
+	CurRule->PrMinAttr = FALSE;
+	CurRule->PrMinValue = 0;
+     }
+   if (GetTypedRule (PtBorderTopWidth, pPSchema->PsFirstDefaultPRule) == NULL)
+      /* pas de regle BorderTopWidth par defaut, on en cree une : */
+      /* BorderTopWidth = 0; */
+     {
+	CreateDefaultRule ();
+	CurRule->PrType = PtBorderTopWidth;
+	CurRule->PrPresMode = PresImmediate;
+	CurRule->PrMinUnit = UnRelative;
+	CurRule->PrMinAttr = FALSE;
+	CurRule->PrMinValue = 0;
+     }
+   if (GetTypedRule (PtBorderRightWidth, pPSchema->PsFirstDefaultPRule) == NULL)
+      /* pas de regle BorderRightWidth par defaut, on en cree une : */
+      /* BorderRightWidth = 0; */
+     {
+	CreateDefaultRule ();
+	CurRule->PrType = PtBorderRightWidth;
+	CurRule->PrPresMode = PresImmediate;
+	CurRule->PrMinUnit = UnRelative;
+	CurRule->PrMinAttr = FALSE;
+	CurRule->PrMinValue = 0;
+     }
+   if (GetTypedRule (PtBorderBottomWidth, pPSchema->PsFirstDefaultPRule) == NULL)
+      /* pas de regle BorderBottomWidth par defaut, on en cree une : */
+      /* BorderBottomWidth = 0; */
+     {
+	CreateDefaultRule ();
+	CurRule->PrType = PtBorderBottomWidth;
+	CurRule->PrPresMode = PresImmediate;
+	CurRule->PrMinUnit = UnRelative;
+	CurRule->PrMinAttr = FALSE;
+	CurRule->PrMinValue = 0;
+     }
+   if (GetTypedRule (PtBorderLeftWidth, pPSchema->PsFirstDefaultPRule) == NULL)
+      /* pas de regle BorderLeftWidth par defaut, on en cree une : */
+      /* BorderLeftWidth = 0; */
+     {
+	CreateDefaultRule ();
+	CurRule->PrType = PtBorderLeftWidth;
+	CurRule->PrPresMode = PresImmediate;
+	CurRule->PrMinUnit = UnRelative;
+	CurRule->PrMinAttr = FALSE;
+	CurRule->PrMinValue = 0;
+     }
+   if (GetTypedRule (PtBorderTopColor, pPSchema->PsFirstDefaultPRule) == NULL)
+      /* pas de regle BorderTopColor par defaut, on en cree une : */
+      /* BorderTopColor: same as foreground; */
+     {
+	CreateDefaultRule ();
+	CurRule->PrType = PtBorderTopColor;
+	CurRule->PrPresMode = PresImmediate;
+	CurRule->PrAttrValue = FALSE;
+        CurRule->PrIntValue = -1;    /* -1 means "same color as Foreground" */
+     }
+   if (GetTypedRule (PtBorderRightColor, pPSchema->PsFirstDefaultPRule) == NULL)
+      /* pas de regle BorderRightColor par defaut, on en cree une : */
+      /* BorderRightColor: same as foreground; */
+     {
+	CreateDefaultRule ();
+	CurRule->PrType = PtBorderRightColor;
+	CurRule->PrPresMode = PresImmediate;
+	CurRule->PrAttrValue = FALSE;
+        CurRule->PrIntValue = -1;    /* -1 means "same color as Foreground" */
+     }
+   if (GetTypedRule (PtBorderBottomColor, pPSchema->PsFirstDefaultPRule) == NULL)
+      /* pas de regle BorderBottomColor par defaut, on en cree une : */
+      /* BorderBottomColor: same as foreground; */
+     {
+	CreateDefaultRule ();
+	CurRule->PrType = PtBorderBottomColor;
+	CurRule->PrPresMode = PresImmediate;
+	CurRule->PrAttrValue = FALSE;
+        CurRule->PrIntValue = -1;    /* -1 means "same color as Foreground" */
+     }
+   if (GetTypedRule (PtBorderLeftColor, pPSchema->PsFirstDefaultPRule) == NULL)
+      /* pas de regle BorderLeftColor par defaut, on en cree une : */
+      /* BorderLeftColor: same as foreground; */
+     {
+	CreateDefaultRule ();
+	CurRule->PrType = PtBorderLeftColor;
+	CurRule->PrPresMode = PresImmediate;
+	CurRule->PrAttrValue = FALSE;
+        CurRule->PrIntValue = -1;    /* -1 means "same color as Foreground" */
+     }
+   if (GetTypedRule (PtBorderTopStyle, pPSchema->PsFirstDefaultPRule) == NULL)
+      /* pas de regle BorderTopStyle par defaut, on en cree une : */
+      /* BorderTopStyle: none; */
+     {
+	CreateDefaultRule ();
+	CurRule->PrType = PtBorderTopStyle;
+	CurRule->PrPresMode = PresImmediate;
+	CurRule->PrChrValue = '0';       /* none */
+     }
+   if (GetTypedRule (PtBorderRightStyle, pPSchema->PsFirstDefaultPRule) == NULL)
+      /* pas de regle BorderRightStyle par defaut, on en cree une : */
+      /* BorderRightStyle: none; */
+     {
+	CreateDefaultRule ();
+	CurRule->PrType = PtBorderRightStyle;
+	CurRule->PrPresMode = PresImmediate;
+	CurRule->PrChrValue = '0';       /* none */
+     }
+   if (GetTypedRule (PtBorderBottomStyle, pPSchema->PsFirstDefaultPRule) == NULL)
+      /* pas de regle BorderBottomStyle par defaut, on en cree une : */
+      /* BorderBottomStyle: none; */
+     {
+	CreateDefaultRule ();
+	CurRule->PrType = PtBorderBottomStyle;
+	CurRule->PrPresMode = PresImmediate;
+	CurRule->PrChrValue = '0';       /* none */
+     }
+   if (GetTypedRule (PtBorderLeftStyle, pPSchema->PsFirstDefaultPRule) == NULL)
+      /* pas de regle BorderLeftStyle par defaut, on en cree une : */
+      /* BorderLeftStyle: none; */
+     {
+	CreateDefaultRule ();
+	CurRule->PrType = PtBorderLeftStyle;
+	CurRule->PrPresMode = PresImmediate;
+	CurRule->PrChrValue = '0';       /* none */
      }
    if (GetTypedRule (PtSize, pPSchema->PsFirstDefaultPRule) == NULL)
       /* pas de regle Size par defaut, on en cree une : */
@@ -2747,14 +3012,6 @@ indLine             wi;
 	       /* epaisseur du soulignement */
 	       CreatePRule (PtThickness, wi);
 	       break;
-	    case KWD_Thin:
-	       /* soulignement fin */
-	       CurRule->PrChrValue = 'N';
-	       break;
-	    case KWD_Thick:
-	       /* soulignement epais */
-	       CurRule->PrChrValue = 'T';
-	       break;
 	    case KWD_Style:
 	       /* Style */
 	       CreatePRule (PtStyle, wi);
@@ -2773,9 +3030,8 @@ indLine             wi;
 	       break;
 	    case KWD_NoBreak1 /* NoBreak1 */ :
 	       if (DefaultRuleDef)
-		  CompilerMessage (wi, PRS, FATAL, FORBIDDEN_IN_DEFAULT_RULES, inputLine, LineNum);	/* pas de regle NoBreak1
-													   * dans les regles par
-													   * defaut */
+	          /* pas de regle NoBreak1 dans les regles par defaut */
+		  CompilerMessage (wi, PRS, FATAL, FORBIDDEN_IN_DEFAULT_RULES, inputLine, LineNum);
 	       else
 		  CreatePRule (PtBreak1, wi);
 	       break;
@@ -2912,6 +3168,136 @@ indLine             wi;
 	       CurRule->PrNPresBoxes = 1;
 	       CurRule->PrPresBox[0] = RealSize;
 	       break;
+	    case KWD_MarginTop:
+	       CreatePRule (PtMarginTop, wi);
+	       break;
+	    case KWD_MarginRight:
+	       CreatePRule (PtMarginRight, wi);
+	       break;
+	    case KWD_MarginBottom:
+	       CreatePRule (PtMarginBottom, wi);
+	       break;
+	    case KWD_MarginLeft:
+	       CreatePRule (PtMarginLeft, wi);
+	       break;
+	    case KWD_PaddingTop:
+	       CreatePRule (PtPaddingTop, wi);
+	       break;
+	    case KWD_PaddingRight:
+	       CreatePRule (PtPaddingRight, wi);
+	       break;
+	    case KWD_PaddingBottom:
+	       CreatePRule (PtPaddingBottom, wi);
+	       break;
+	    case KWD_PaddingLeft:
+	       CreatePRule (PtPaddingLeft, wi);
+	       break;
+	    case KWD_BorderTopWidth:
+	       CreatePRule (PtBorderTopWidth, wi);
+	       break;
+	    case KWD_BorderRightWidth:
+	       CreatePRule (PtBorderRightWidth, wi);
+	       break;
+	    case KWD_BorderBottomWidth:
+	       CreatePRule (PtBorderBottomWidth, wi);
+	       break;
+	    case KWD_BorderLeftWidth:
+	       CreatePRule (PtBorderLeftWidth, wi);
+	       break;
+	    case KWD_BorderTopColor:
+	       CreatePRule (PtBorderTopColor, wi);
+	       break;
+	    case KWD_BorderRightColor:
+	       CreatePRule (PtBorderRightColor, wi);
+	       break;
+	    case KWD_BorderBottomColor:
+	       CreatePRule (PtBorderBottomColor, wi);
+	       break;
+	    case KWD_BorderLeftColor:
+	       CreatePRule (PtBorderLeftColor, wi);
+	       break;
+	    case KWD_BorderTopStyle:
+	       CreatePRule (PtBorderTopStyle, wi);
+	       break;
+	    case KWD_BorderRightStyle:
+	       CreatePRule (PtBorderRightStyle, wi);
+	       break;
+	    case KWD_BorderBottomStyle:
+	       CreatePRule (PtBorderBottomStyle, wi);
+	       break;
+	    case KWD_BorderLeftStyle:
+	       CreatePRule (PtBorderLeftStyle, wi);
+	       break;
+	    case KWD_Thin:
+	       /* underline or border */
+	       if (CurRule->PrType == PtThickness)
+	          CurRule->PrChrValue = 'N';
+	       else
+		  /* border */
+		  {
+		  CurRule->PrMinAttr = FALSE;
+                  CurRule->PrMinUnit = UnPoint;
+                  CurRule->PrMinValue = 1;
+                  }
+	       break;
+	    case KWD_Medium:
+	       /* border */
+	       CurRule->PrMinAttr = FALSE;
+               CurRule->PrMinUnit = UnPoint;
+               CurRule->PrMinValue = 2;
+               break;
+	    case KWD_Thick:
+	       /* underline or border */
+	       if (CurRule->PrType == PtThickness)
+	          CurRule->PrChrValue = 'T';
+	       else
+		  /* border */
+		  {
+		  CurRule->PrMinAttr = FALSE;
+                  CurRule->PrMinUnit = UnPoint;
+                  CurRule->PrMinValue = 3;
+                  }
+	       break;
+	    case KWD_None:
+	       /* border style */
+               CurRule->PrChrValue = '0';
+               break;
+	    case KWD_Hidden:
+	       /* border style */
+               CurRule->PrChrValue = 'H';
+               break;
+	    case KWD_Dotted:
+	       /* border style or line style */
+	       CurRule->PrChrValue = '.';
+	       break;
+	    case KWD_Dashed:
+	       /* border style or line style */
+	       CurRule->PrChrValue = '-';
+	       break;
+	    case KWD_Solid:
+	       /* border style or line style */
+	       CurRule->PrChrValue = 'S';
+	       break;
+	    case KWD_Double:
+	       /* border style */
+               CurRule->PrChrValue = 'D';
+               break;
+	    case KWD_Groove:
+	       /* border style */
+               CurRule->PrChrValue = 'G';
+               break;
+	    case KWD_Ridge:
+	       /* border style */
+               CurRule->PrChrValue = 'R';
+               break;
+	    case KWD_Inset:
+	       /* border style */
+               CurRule->PrChrValue = 'I';
+               break;
+	    case KWD_Outset:
+	       /* border style */
+               CurRule->PrChrValue = 'O';
+               break;
 	    case KWD_NormalSize:
 	       CurRule->PrPresBox[0] = RealSize;
 	       break;
@@ -2926,15 +3312,6 @@ indLine             wi;
 	       break;
 	    case KWD_RepeatY:
 	       CurRule->PrPresBox[0] = YRepeat;
-	       break;
-	    case KWD_Solid:
-	       CurRule->PrChrValue = 'S';
-	       break;
-	    case KWD_Dashed:
-	       CurRule->PrChrValue = '-';
-	       break;
-	    case KWD_Dotted:
-	       CurRule->PrChrValue = '.';
 	       break;
 	    case KWD_nil /* NULL */ :
 	       if (CurRule->PrType == PtHeight || CurRule->PrType == PtWidth)
@@ -3745,6 +4122,33 @@ indLine             wi;
 	       default:
 		  break;
 	    }
+}
+
+/*----------------------------------------------------------------------
+   ColorName
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void     ColorName (indLine wi, indLine wl)
+#else  /* __STDC__ */
+static void     ColorName (wi, wl)
+indLine   wi;
+indLine   wl;
+#endif /* __STDC__ */
+{
+   Name n;
+   int  i;
+
+   i = 0;
+   CopyName (n, wi, wl);
+   while (i < MAX_COLOR && ustrcmp (Name_colors[i], n))
+      i++;
+   if (i == MAX_COLOR)
+      CompilerMessage (wi, PRS, FATAL, MISSING_COLOR, inputLine, LineNum);
+   else
+      {
+      CurRule->PrAttrValue = False;
+      CurRule->PrIntValue = i;
+      }
 }
 
 /*----------------------------------------------------------------------
@@ -4614,6 +5018,11 @@ indLine             wi;
 		    /* le cas AttrName a ete deplace' plus haut (cas 19:) */
 		 }
 	       break;
+
+	    case RULE_ColorName:
+               ColorName (wi, wl);
+	       break;
+
 	    case RULE_FontStyleName:
 	       if (CurRule->PrType == PtFillPattern)
 		 {
@@ -4638,20 +5047,10 @@ indLine             wi;
 			 CurRule->PrIntValue = i;
 		      }
 		 }
-	       else if (CurRule->PrType == PtBackground || CurRule->PrType == PtForeground)
-		 {
-		    i = 0;
-		    CopyName (n, wi, wl);
-		    while (i < MAX_COLOR && ustrcmp (Name_colors[i], n))
-		       i++;
-		    if (i == MAX_COLOR)
-		       CompilerMessage (wi, PRS, FATAL, MISSING_COLOR, inputLine, LineNum);
-		    else
-		      {
-			 CurRule->PrAttrValue = False;
-			 CurRule->PrIntValue = i;
-		      }
-		 }
+	       else if (CurRule->PrType == PtBackground ||
+			CurRule->PrType == PtForeground)
+		  /* color name */
+		  ColorName (wi, wl);
 	       else
 		  /* FontStyleName */
 		  CurRule->PrChrValue = inputLine[wi - 1];

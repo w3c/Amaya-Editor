@@ -644,7 +644,7 @@ static AttrValueMapping HTMLAttrValueMappingTable[] =
    {HTML_ATTR_Clear, TEXT("left"), HTML_ATTR_Clear_VAL_Left_},
    {HTML_ATTR_Clear, TEXT("right"), HTML_ATTR_Clear_VAL_Right_},
    {HTML_ATTR_Clear, TEXT("all"), HTML_ATTR_Clear_VAL_All_},
-   {HTML_ATTR_Clear, TEXT("none"), HTML_ATTR_Clear_VAL_None},
+   {HTML_ATTR_Clear, TEXT("none"), HTML_ATTR_Clear_VAL_None_},
 
    {HTML_ATTR_NumberStyle, TEXT("1"), HTML_ATTR_NumberStyle_VAL_Arabic_},
    {HTML_ATTR_NumberStyle, TEXT("a"), HTML_ATTR_NumberStyle_VAL_LowerAlpha},
@@ -689,7 +689,7 @@ static AttrValueMapping HTMLAttrValueMappingTable[] =
    {HTML_ATTR_scrolling, TEXT("no"), HTML_ATTR_scrolling_VAL_No_},
    {HTML_ATTR_scrolling, TEXT("auto"), HTML_ATTR_scrolling_VAL_auto},
 
-   {HTML_ATTR_rules_, TEXT("none"), HTML_ATTR_rules__VAL_none},
+   {HTML_ATTR_rules_, TEXT("none"), HTML_ATTR_rules__VAL_none_},
    {HTML_ATTR_rules_, TEXT("groups"), HTML_ATTR_rules__VAL_groups},
    {HTML_ATTR_rules_, TEXT("rows"), HTML_ATTR_rules__VAL_rows},
    {HTML_ATTR_rules_, TEXT("cols"), HTML_ATTR_rules__VAL_cols},

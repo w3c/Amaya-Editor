@@ -98,16 +98,16 @@ typedef struct _PresentationSetting
  * attributes, like font families, styles, etc ...
  */
 
+#define STYLE_FONT_TIMES		FontTimes
+#define STYLE_FONT_HELVETICA		FontHelvetica
+#define STYLE_FONT_COURIER		FontCourier
+
 #define STYLE_FONT_ROMAN		StyleRoman
 #define STYLE_FONT_ITALICS		StyleItalics
 #define STYLE_FONT_OBLIQUE		StyleOblique
 
 #define STYLE_WEIGHT_BOLD		WeightBold
 #define STYLE_WEIGHT_NORMAL		WeightNormal
-
-#define STYLE_FONT_TIMES		FontTimes
-#define STYLE_FONT_HELVETICA		FontHelvetica
-#define STYLE_FONT_COURIER		FontCourier
 
 #define STYLE_NOUNDERLINE		1
 #define STYLE_UNDERLINE			2
@@ -117,26 +117,37 @@ typedef struct _PresentationSetting
 #define STYLE_THINUNDERLINE		1
 #define STYLE_THICKUNDERLINE		2
 
+#define STYLE_LINESOLID			1
+#define STYLE_LINEDASHED		2
+#define STYLE_LINEDOTTED		3
+
+#define STYLE_BORDERNONE		1
+#define STYLE_BORDERHIDDEN		2
+#define STYLE_BORDERDOTTED		3
+#define STYLE_BORDERDASHED		4
+#define STYLE_BORDERSOLID		5
+#define STYLE_BORDERDOUBLE		6
+#define STYLE_BORDERGROOVE		7
+#define STYLE_BORDERRIDGE		8
+#define STYLE_BORDERINSET		9
+#define STYLE_BORDEROUTSET		10
+
+#define STYLE_JUSTIFIED			1
+#define STYLE_NOTJUSTIFIED		2
+
+#define STYLE_HYPHENATE			1
+#define STYLE_NOHYPHENATE		2
+
 #define STYLE_ADJUSTLEFT		1
 #define STYLE_ADJUSTRIGHT		2
 #define STYLE_ADJUSTCENTERED		3
 #define STYLE_ADJUSTLEFTWITHDOTS	4
 
-#define STYLE_JUSTIFIED			1
-#define STYLE_NOTJUSTIFIED		2
-
-#define STYLE_LINESOLID			1
-#define STYLE_LINEDASHED		2
-#define STYLE_LINEDOTTED		3
-
-#define STYLE_HYPHENATE			1
-#define STYLE_NOHYPHENATE		2
+#define STYLE_INLINE			1
+#define STYLE_NOTINLINE			2
 
 #define STYLE_HIDE			0
 #define STYLE_DISPLAY			5
-
-#define STYLE_INLINE			1
-#define STYLE_NOTINLINE			2
 
 #define STYLE_REALSIZE			1
 #define STYLE_SCALE			2

@@ -780,214 +780,230 @@ PtrAttribute        pAttr;
 	      if (pAb->AbPrevious->AbElement->ElTypeNumber == PageBreak + 1)
 		 nextToPage = TRUE;
 	switch (pR->PrType)
-	      {
-		 case PtVertRef:
-		 case PtHorizRef:
-		 case PtVertPos:
-		 case PtHorizPos:
-		    pRe1 = &pR->PrPosRule;
-		    if (pRe1->PoRelation == levelPos || pRe1->PoRelation == RlReferred
-			|| (pRe1->PoRelation == RlSameLevel
-			  && (levelPos == RlPrevious || levelPos == RlNext))
-			|| nextToPage
-			|| (pR->PrType == PtVertPos && pAb->AbHeight.DimIsPosition)
-			|| (pR->PrType == PtHorizPos && pAb->AbWidth.DimIsPosition))
-		       switch (pR->PrType)
-			     {
-				case PtVertRef:
-				   abPosit = pAb->AbVertRef;
-				   (void) ApplyRule (pR, pSPR, pAb, pDoc, pAttr);
-				   ret = IsDiffPosition (pAb->AbVertRef, &abPosit, FALSE);
-				   break;
-				case PtHorizRef:
-				   abPosit = pAb->AbHorizRef;
-				   (void) ApplyRule (pR, pSPR, pAb, pDoc, pAttr);
-				   ret = IsDiffPosition (pAb->AbHorizRef, &abPosit, FALSE);
-				   break;
-				case PtVertPos:
-				   if (pAb->AbHeight.DimIsPosition)
-				      /* on reevalue la dimension d'un pave elastique en meme temps */
-				      /* que sa position */
-				     {
-					/* on conserve la position et la dimension d'origine du pave' */
-					abPosit = pAb->AbVertPos;
-					abDimElast = pAb->AbHeight.DimPosition;
-					/* applique la regle de position */
-					(void) ApplyRule (pR, pSPR, pAb, pDoc, pAttr);
-					/* cherche et applique la regle de dimension */
-					pRegleDim = SearchRulepAb (pDoc, pAb, &pSPRDim, PtHeight, FnAny, TRUE, &pAttrDim);
-					(void) ApplyRule (pRegleDim, pSPRDim, pAb, pDoc, pAttrDim);
-					/* compare la position et la dimension d'origine avec celles qui */
-					/* qui viennent d'etre calculees */
-					if (pAb->AbBox != NULL)
-					   if (pAb->AbBox->BxVertInverted)
-					      /* le mediateur avait inverse' position et dimension */
-					     {
-						/* compare avec inversion */
-						if (IsDiffPosition (pAb->AbVertPos, &abPosit, TRUE) ||
-						    IsDiffPosition (pAb->AbHeight.DimPosition, &abDimElast, TRUE))
-						   /* il y a eu au moins un changement */
-						  {
-						     ret = TRUE;
-						     pAb->AbHeightChange = TRUE;
-						     pAb->AbVertPosChange = TRUE;
-						     if (pAb->AbLeafType == LtGraphics)
-							/* retablit le caractere graphique qui a ete inverse' */
-							if (pAb->AbElement->ElTerminal)
-							   if (pAb->AbElement->ElLeafType == LtGraphics)
-							      pAb->AbShape = pAb->AbElement->ElGraph;
-						  }
-						else
-						   /* pas de changement, on retablit position et dimension */
-						   /* d'origine */
-						  {
-						     ret = FALSE;
-						     pAb->AbVertPos = abPosit;
-						     pAb->AbHeight.DimPosition = abDimElast;
-						  }
-					     }
-					   else
-					      /* pas d'inversion position/dimension */
-					     {
-						if (IsDiffPosition (pAb->AbVertPos, &abPosit, FALSE) ||
-						    IsDiffPosition (pAb->AbHeight.DimPosition, &abDimElast, FALSE))
-						   /* il y a eu au moins un changement */
-						  {
-						     ret = TRUE;
-						     pAb->AbHeightChange = TRUE;
-						     pAb->AbVertPosChange = TRUE;
-						  }
-						else
-						   /* pas de changement */
-						   ret = FALSE;
-					     }
-				     }
-				   else
-				     {
-					abPosit = pAb->AbVertPos;
-					(void) ApplyRule (pR, pSPR, pAb, pDoc, pAttr);
-					ret = IsDiffPosition (pAb->AbVertPos, &abPosit, FALSE);
-				     }
-				   break;
-				case PtHorizPos:
-				   if (pAb->AbWidth.DimIsPosition)
-				      /* on reevalue la dimension d'un pave elastique en meme temps */
-				      /* que sa position */
-				     {
-					/* on conserve la position et la dimension d'origine du pave' */
-					abPosit = pAb->AbHorizPos;
-					abDimElast = pAb->AbWidth.DimPosition;
-					/* applique la regle de position */
-					(void) ApplyRule (pR, pSPR, pAb, pDoc, pAttr);
-					/* cherche et applique la regle de dimension */
-					pRegleDim = SearchRulepAb (pDoc, pAb, &pSPRDim, PtWidth, FnAny, TRUE, &pAttrDim);
-					(void) ApplyRule (pRegleDim, pSPRDim, pAb, pDoc, pAttrDim);
-					/* compare la position et la dimension d'origine avec celles qui */
-					/* qui viennent d'etre calculees */
-					if (pAb->AbBox != NULL)
-					   if (pAb->AbBox->BxHorizInverted)
-					      /* le mediateur avait inverse' position et dimension */
-					     {
-						/* compare avec inversion */
-						if (IsDiffPosition (pAb->AbHorizPos, &abPosit, TRUE) ||
-						    IsDiffPosition (pAb->AbWidth.DimPosition, &abDimElast, TRUE))
-						   /* il y a eu au moins un changement */
-						  {
-						     ret = TRUE;
-						     pAb->AbWidthChange = TRUE;
-						     pAb->AbHorizPosChange = TRUE;
-						     if (pAb->AbLeafType == LtGraphics)
-							/* retablit le caractere graphique qui a ete inverse' */
-							if (pAb->AbElement->ElTerminal)
-							   if (pAb->AbElement->ElLeafType == LtGraphics)
-							      pAb->AbShape = pAb->AbElement->ElGraph;
-						  }
-						else
-						   /* pas de changement, on retablit position et dimension */
-						   /* d'origine */
-						  {
-						     ret = FALSE;
-						     pAb->AbHorizPos = abPosit;
-						     pAb->AbWidth.DimPosition = abDimElast;
-						  }
-					     }
-					   else
-					      /* pas d'inversion position/dimension */
-					     {
-						if (IsDiffPosition (pAb->AbHorizPos, &abPosit, FALSE) ||
-						    IsDiffPosition (pAb->AbWidth.DimPosition, &abDimElast, FALSE))
-						   /* il y a eu au moins un changement */
-						  {
-						     ret = TRUE;
-						     pAb->AbWidthChange = TRUE;
-						     pAb->AbHorizPosChange = TRUE;
-						  }
-						else
-						   /* pas de changement */
-						   ret = FALSE;
-					     }
-				     }
-				   else
-				     {
-					abPosit = pAb->AbHorizPos;
-					(void) ApplyRule (pR, pSPR, pAb, pDoc, pAttr);
-					ret = IsDiffPosition (pAb->AbHorizPos, &abPosit, FALSE);
-				     }
-				   break;
-				default:
-				   break;
-			     }
+	  {
+          case PtVertRef:
+          case PtHorizRef:
+          case PtVertPos:
+          case PtHorizPos:
+             pRe1 = &pR->PrPosRule;
+             if (pRe1->PoRelation == levelPos ||
+		 pRe1->PoRelation == RlReferred ||
+                 (pRe1->PoRelation == RlSameLevel &&
+                   (levelPos == RlPrevious || levelPos == RlNext)) ||
+                 nextToPage ||
+                 (pR->PrType == PtVertPos && pAb->AbHeight.DimIsPosition) ||
+                 (pR->PrType == PtHorizPos && pAb->AbWidth.DimIsPosition))
+                switch (pR->PrType)
+                  {
+                  case PtVertRef:
+                     abPosit = pAb->AbVertRef;
+                     (void) ApplyRule (pR, pSPR, pAb, pDoc, pAttr);
+                     ret = IsDiffPosition (pAb->AbVertRef, &abPosit, FALSE);
+                     break;
+                  case PtHorizRef:
+                     abPosit = pAb->AbHorizRef;
+                     (void) ApplyRule (pR, pSPR, pAb, pDoc, pAttr);
+                     ret = IsDiffPosition (pAb->AbHorizRef, &abPosit, FALSE);
+                     break;
+                  case PtVertPos:
+                     if (!pAb->AbHeight.DimIsPosition)
+                        {
+                        abPosit = pAb->AbVertPos;
+                        (void) ApplyRule (pR, pSPR, pAb, pDoc, pAttr);
+                        ret = IsDiffPosition (pAb->AbVertPos, &abPosit, FALSE);
+                        }
+                     else
+		        /* on reevalue la dimension d'un pave elastique en */
+                        /* meme temps que sa position */
+                        {
+                        /* on conserve la position et la dimension d'origine
+			   du pave' */
+                        abPosit = pAb->AbVertPos;
+                        abDimElast = pAb->AbHeight.DimPosition;
+                        /* applique la regle de position */
+                        (void) ApplyRule (pR, pSPR, pAb, pDoc, pAttr);
+                        /* cherche et applique la regle de dimension */
+                        pRegleDim = SearchRulepAb (pDoc, pAb, &pSPRDim,
+					     PtHeight, FnAny, TRUE, &pAttrDim);
+                        (void) ApplyRule (pRegleDim, pSPRDim, pAb, pDoc,
+					  pAttrDim);
+                        /* compare la position et la dimension d'origine avec
+                           celles qui viennent d'etre calculees */
+                        if (pAb->AbBox != NULL)
+                           if (pAb->AbBox->BxVertInverted)
+                              /* le mediateur avait inverse' position et
+				 dimension */
+                              {
+                              /* compare avec inversion */
+                              if (IsDiffPosition (pAb->AbVertPos, &abPosit,
+						  TRUE) ||
+                                  IsDiffPosition (pAb->AbHeight.DimPosition,
+						  &abDimElast, TRUE))
+                                 /* il y a eu au moins un changement */
+                                 {
+                                 ret = TRUE;
+                                 pAb->AbHeightChange = TRUE;
+                                 pAb->AbVertPosChange = TRUE;
+                                 if (pAb->AbLeafType == LtGraphics)
+                                    /* retablit le caractere graphique qui a
+				       ete inverse' */
+                                    if (pAb->AbElement->ElTerminal)
+                                       if (pAb->AbElement->ElLeafType == LtGraphics)
+                                          pAb->AbShape = pAb->AbElement->ElGraph;
+                                  }
+                               else
+                                  /* pas de changement, on retablit position
+				     et dimension d'origine */
+                                  {
+                                  ret = FALSE;
+                                  pAb->AbVertPos = abPosit;
+                                  pAb->AbHeight.DimPosition = abDimElast;
+                                  }
+                              }
+                           else
+                              /* pas d'inversion position/dimension */
+                              if (IsDiffPosition (pAb->AbVertPos, &abPosit,
+						  FALSE) ||
+                                  IsDiffPosition (pAb->AbHeight.DimPosition,
+						  &abDimElast, FALSE))
+                                  /* il y a eu au moins un changement */
+                                 {
+                                 ret = TRUE;
+                                 pAb->AbHeightChange = TRUE;
+                                 pAb->AbVertPosChange = TRUE;
+                                 }
+                              else
+                                 /* pas de changement */
+                                 ret = FALSE;
+                        }
+                     break;
+                  case PtHorizPos:
+                     if (!pAb->AbWidth.DimIsPosition)
+                        {
+                        abPosit = pAb->AbHorizPos;
+                        (void) ApplyRule (pR, pSPR, pAb, pDoc, pAttr);
+                        ret = IsDiffPosition (pAb->AbHorizPos, &abPosit,
+					      FALSE);
+                        }
+                     else
+                        /* on reevalue la dimension d'un pave elastique en
+			   meme temps que sa position */
+                        {
+                        /* on conserve la position et la dimension d'origine
+			   du pave' */
+                        abPosit = pAb->AbHorizPos;
+                        abDimElast = pAb->AbWidth.DimPosition;
+                        /* applique la regle de position */
+                        (void) ApplyRule (pR, pSPR, pAb, pDoc, pAttr);
+                        /* cherche et applique la regle de dimension */
+                        pRegleDim = SearchRulepAb (pDoc, pAb, &pSPRDim,
+					     PtWidth, FnAny, TRUE, &pAttrDim);
+                        (void) ApplyRule (pRegleDim, pSPRDim, pAb, pDoc,
+					  pAttrDim);
+                        /* compare la position et la dimension d'origine avec
+			   celles qui viennent d'etre calculees */
+                        if (pAb->AbBox != NULL)
+                           if (pAb->AbBox->BxHorizInverted)
+                              /* le mediateur avait inverse' position et
+				 dimension */
+                              {
+                              /* compare avec inversion */
+                              if (IsDiffPosition (pAb->AbHorizPos, &abPosit,
+						  TRUE) ||
+                                  IsDiffPosition (pAb->AbWidth.DimPosition,
+						  &abDimElast, TRUE))
+                                 /* il y a eu au moins un changement */
+                                 {
+                                 ret = TRUE;
+                                 pAb->AbWidthChange = TRUE;
+                                 pAb->AbHorizPosChange = TRUE;
+                                 if (pAb->AbLeafType == LtGraphics)
+                                    /* retablit le caractere graphique qui a
+				       ete inverse' */
+                                    if (pAb->AbElement->ElTerminal)
+                                       if (pAb->AbElement->ElLeafType == LtGraphics)
+                                          pAb->AbShape = pAb->AbElement->ElGraph;
+                                 }
+                              else
+                                 /* pas de changement, on retablit position et
+				    dimension d'origine */
+                                 {
+                                 ret = FALSE;
+                                 pAb->AbHorizPos = abPosit;
+                                 pAb->AbWidth.DimPosition = abDimElast;
+                                 }
+                              }
+                           else
+                              /* pas d'inversion position/dimension */
+                              {
+                              if (IsDiffPosition (pAb->AbHorizPos, &abPosit,
+						  FALSE) ||
+                                  IsDiffPosition (pAb->AbWidth.DimPosition,
+						  &abDimElast, FALSE))
+                                 /* il y a eu au moins un changement */
+                                 {
+                                 ret = TRUE;
+                                 pAb->AbWidthChange = TRUE;
+                                 pAb->AbHorizPosChange = TRUE;
+                                 }
+                              else
+                                 /* pas de changement */
+                                 ret = FALSE;
+                              }
+                        }
+                     break;
+                  default:
+                     break;
+               }
+             break;
 
-		    break;
-		 case PtHeight:
-		 case PtWidth:
-		    /* sauve d'abord la dimension du pave' */
-		    if (pR->PrType == PtHeight)
-		       Dimens = pAb->AbHeight;
-		    else
-		       Dimens = pAb->AbWidth;
-		    /* traitement selon la regle de dimension */
-		    pRelD1 = &pR->PrDimRule;
-		    if (pRelD1->DrPosition)
-		      {
-			 /* regle de dimension elastique */
-			 if (!Dimens.DimIsPosition)
-			    /* pave non elastique */
-			    /* on applique la regle */
-			   {
-			      (void) ApplyRule (pR, pSPR, pAb, pDoc, pAttr);
-			      ret = TRUE;
-			   }
-		      }
-		    else
-		       /* regle de dimension non elastique */
-		    if (!Dimens.DimIsPosition)
-		       if (!pRelD1->DrAbsolute)
-			  /* ce n'est pas une dimension absolue */
-			  if (pRelD1->DrRelation == levelPos
-			      || (pRelD1->DrRelation == RlSameLevel
-			  && (levelPos == RlPrevious || levelPos == RlNext)))
-			     if (pR->PrType == PtHeight)
-				/* hauteur */
-			       {
-				  (void) ApplyRule (pR, pSPR, pAb, pDoc, pAttr);
-				  ret = IsDiffDimension (pAb->AbHeight, &Dimens);
-			       }
-			     else
-				/* largeur */
-			       {
-				  (void) ApplyRule (pR, pSPR, pAb, pDoc, pAttr);
-				  ret = IsDiffDimension (pAb->AbWidth, &Dimens);
-			       }
-		    break;
-		 default:
-		    break;
-	      }
-
+          case PtHeight:
+          case PtWidth:
+             /* sauve d'abord la dimension du pave' */
+             if (pR->PrType == PtHeight)
+                Dimens = pAb->AbHeight;
+             else
+                Dimens = pAb->AbWidth;
+             /* traitement selon la regle de dimension */
+             pRelD1 = &pR->PrDimRule;
+             if (pRelD1->DrPosition)
+                {
+                /* regle de dimension elastique */
+                if (!Dimens.DimIsPosition)
+                   /* pave non elastique */
+                   /* on applique la regle */
+                   {
+                   (void) ApplyRule (pR, pSPR, pAb, pDoc, pAttr);
+                   ret = TRUE;
+                   }
+                }
+             else
+                /* regle de dimension non elastique */
+             if (!Dimens.DimIsPosition)
+                if (!pRelD1->DrAbsolute)
+                   /* ce n'est pas une dimension absolue */
+                   if (pRelD1->DrRelation == levelPos ||
+                       (pRelD1->DrRelation == RlSameLevel &&
+			(levelPos == RlPrevious || levelPos == RlNext)))
+                      if (pR->PrType == PtHeight)
+                         /* hauteur */
+                         {
+                         (void) ApplyRule (pR, pSPR, pAb, pDoc, pAttr);
+                         ret = IsDiffDimension (pAb->AbHeight, &Dimens);
+                         }
+                      else
+                         /* largeur */
+                         {
+                         (void) ApplyRule (pR, pSPR, pAb, pDoc, pAttr);
+                         ret = IsDiffDimension (pAb->AbWidth, &Dimens);
+                         }
+             break;
+          default:
+             break;
+       }
      }
    return (ret);
 }
-
 
 
 /*----------------------------------------------------------------------
@@ -4169,7 +4185,6 @@ PtrAttribute        pAttr;
 }
 
 
-
 /*----------------------------------------------------------------------
    ElemWithinImage  checks if abstract boxes of the element pEl 
    Corresponding to view may be displayed within the abstract image
@@ -4355,17 +4370,17 @@ PtrAttribute        pAttrComp;
    pHd = NULL;
    pSchP = pAttr->AeAttrSSchema->SsPSchema;
    while (pSchP != NULL)
-     {
-	/* pR: premiere regle correspondant a l'attribut */
-	pR = AttrPresRule (pAttr, pEl, inherit, pAttrComp, pSchP);
-	firstOfType = pR;
+      {
+      /* pR: premiere regle correspondant a l'attribut */
+      pR = AttrPresRule (pAttr, pEl, inherit, pAttrComp, pSchP);
+      firstOfType = pR;
 
-	/* traite toutes les regles associees a cette valeur d'attribut dans */
-	/* ce schema de presentation */
-	while (firstOfType != NULL)
-	  /* Les regles de chaque type sont traitees dans toutes les vues ou
-	     l'element a un pave */
-	  {
+      /* traite toutes les regles associees a cette valeur d'attribut dans */
+      /* ce schema de presentation */
+      while (firstOfType != NULL)
+	 /* Les regles de chaque type sont traitees dans toutes les vues ou
+	    l'element a un pave */
+	 {
 	     typeRule = pR->PrType;
 	     /* type des regles courantes */
 	     if (typeRule == PtFunction)
@@ -4735,35 +4750,33 @@ PtrAttribute        pAttrComp;
 		     (pR->PrPresFunction == TFonct &&
 		      (pR->PrPresFunction != FnCreateBefore ||
 		       pR->PrPresBox[0] == firstOfType->PrPresBox[0]))))
-	       {
 		 pR = pR->PrNextPRule;
-	       }
 	     firstOfType = pR;
-	  }
-	/* on traite les schemas de presentation de plus forte priorite' */
-	if (pHd)
-	   /* on prend le schema de presentation additionnel de priorite' */
-	   /* superieure */
-	   pHd = pHd->HdNextPSchema;
-	else
-	   /* on cherchait dans le schema de presentation principal */
-           /* on prend le premier schema de presentation additionnel */
-	   {
-	   pHd = pAttr->AeAttrSSchema->SsFirstPSchemaExtens;
-           /* mais si c'est ID ou CLASS, on prend les extensions du schema
-              de presentation associe' au schema de structure du document */
-	   if (AttrHasException (ExcCssClass, pAttr->AeAttrNum,
-				 pAttr->AeAttrSSchema) ||
-	       AttrHasException (ExcCssId, pAttr->AeAttrNum,
+	 }
+      /* on traite les schemas de presentation de plus forte priorite' */
+      if (pHd)
+	 /* on prend le schema de presentation additionnel de priorite' */
+	 /* superieure */
+	 pHd = pHd->HdNextPSchema;
+      else
+	 /* on cherchait dans le schema de presentation principal */
+         /* on prend le premier schema de presentation additionnel */
+	 {
+	 pHd = pAttr->AeAttrSSchema->SsFirstPSchemaExtens;
+         /* mais si c'est ID ou CLASS, on prend les extensions du schema
+            de presentation associe' au schema de structure du document */
+	 if (AttrHasException (ExcCssClass, pAttr->AeAttrNum,
+			       pAttr->AeAttrSSchema) ||
+	     AttrHasException (ExcCssId, pAttr->AeAttrNum,
 				 pAttr->AeAttrSSchema))
-              pHd = pDoc->DocSSchema->SsFirstPSchemaExtens;
-	   }
-	if (pHd)
-	   pSchP = pHd->HdPSchema;
-	else
-	   /* plus de schemas additionnels, on arrete */
-	   pSchP = NULL;
-     }
+            pHd = pDoc->DocSSchema->SsFirstPSchemaExtens;
+	 }
+      if (pHd)
+	 pSchP = pHd->HdPSchema;
+      else
+	 /* plus de schemas additionnels, on arrete */
+	 pSchP = NULL;
+      }
 }
 
 /*----------------------------------------------------------------------

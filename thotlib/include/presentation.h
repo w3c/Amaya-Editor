@@ -55,15 +55,35 @@ typedef int        *PRule;
 #define PRBackgroundPicture 31
 #define PRPictureMode 32
 #define PRTMargin 33
+#define PRMarginTop 33
 #define PRLMargin 34
+#define PRMarginLeft 34
 #define PRBMargin 35
+#define PRMarginBottom 35
 #define PRRMargin 36
+#define PRMarginRight 36
 #define PRCreateEnclosing 37
 #define PRHorizOverflow 38
 #define PRVertOverflow 39
 #define PRLine 40
 #define PRNone 41
 #define PRWeight 42
+#define PRPaddingTop 43
+#define PRPaddingRight 44
+#define PRPaddingBottom 45
+#define PRPaddingLeft 46
+#define PRBorderTopWidth 47
+#define PRBorderRightWidth 48
+#define PRBorderBottomWidth 49
+#define PRBorderLeftWidth 50
+#define PRBorderTopColor 51
+#define PRBorderRightColor 52
+#define PRBorderBottomColor 53
+#define PRBorderLeftColor 54
+#define PRBorderTopStyle 55
+#define PRBorderRightStyle 56
+#define PRBorderBottomStyle 57
+#define PRBorderLeftStyle 58
 
 /* values for rule PRStyle */
 #define StyleRoman 1

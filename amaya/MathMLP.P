@@ -3049,7 +3049,7 @@ ATTRIBUTES
 	CreateBefore(VALUE_columnlines);
 	END;
 
-  frame = none:
+  frame = none\240:
 	CreateBefore(ATTR_frame_none);
   frame = solid\240:
 	CreateBefore(ATTR_frame_solid);

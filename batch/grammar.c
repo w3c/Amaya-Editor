@@ -1,17 +1,8 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, Grif, 1996.
+ *  (c) COPYRIGHT INRIA, 1996.
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
- */
-
-/*
- * Warning:
- * This module is part of the Thot library, which was originally
- * developed in French. That's why some comments are still in
- * French, but their translation is in progress and the full module
- * will be available in English in the next release.
- * 
  */
 
 /*
@@ -57,9 +48,9 @@ typedef CHAR_T        fname[30];	/* nom de fichier */
 #define MAXNRULE 160		/* nombre max de regles de la grammaire */
 #define MAXREF   50		/* nombre max de references a une regle */
 
-#define MAX_STRING_GRM	200	/* nombre max de chaines dans une grammaire */
+#define MAX_STRING_GRM	250	/* nombre max de chaines dans une grammaire */
 #define MAX_RULE_GRM	160	/* nombre max de regles de la grammaire */
-#define MAX_RULE_REF	50	/* nombre max de references a une regle */
+#define MAX_RULE_REF	70	/* nombre max de references a une regle */
 
 typedef struct _RefList
   {
@@ -147,7 +138,7 @@ indLine             wi;
 
 {
    if (ref->NRuleRefs >= MAX_RULE_REF)
-      CompilerMessage (wi, GRM, FATAL, NO_SPACE_LEFT_IN_REF_TABLL, inputLine, LineNum);
+      CompilerMessage (wi, GRM, FATAL, NO_SPACE_LEFT_IN_REF_TABLE, inputLine, LineNum);
    else
       ref->RuleRef[ref->NRuleRefs++] = curRule;
 }
@@ -558,10 +549,10 @@ static void         WriteFiles ()
 	  }
 	fprintf (listFile, "\n\n\n*** TABLE OF RULES AND REFERENCES ***\n\n");
 
-	fprintf (listFile, "The code is the code of the symbol and the code of the rule\n");
-	fprintf (listFile, "where that symbol appears in the left part. For each symbole,\n");
+	fprintf (listFile, "code is the code of the symbol and the code of the rule\n");
+	fprintf (listFile, "where that symbol appears in the left part. For each symbol,\n");
 	fprintf (listFile, "the rule numbers indicate the rules that use that symbol in\n");
-	fprintf (listFile, "right part.\n\n");
+	fprintf (listFile, "their right part.\n\n");
 	fprintf (listFile, " code  symbol        rule numbers\n\n");
 	fprintf (Hfile, "\n/*  RULES  */\n\n");
 

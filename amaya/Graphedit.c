@@ -583,7 +583,7 @@ void AttrArrowHeadModified (event)
   ThotBool	closed;
 
   if (!event->attribute)
-     value = GraphML_ATTR_arrowhead_VAL_none;
+     value = GraphML_ATTR_arrowhead_VAL_none_;
   else
      value = TtaGetAttributeValue (event->attribute);
   (void) CreateGraphicLeaf (event->element, event->document, &closed, value);

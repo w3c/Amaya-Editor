@@ -139,7 +139,7 @@ STRUCT
 		columnspacing = TEXT;
 		rowlines = TEXT; 
 		columnlines = TEXT;
-		frame = none, solid\240, dashed\240;
+		frame = none\240, solid\240, dashed\240;
 		framespacing = TEXT;
 		equalrows = TEXT;
 		equalcolumns = TEXT;
@@ -268,7 +268,7 @@ STRUCT
 		columnspacing = TEXT;
 		rowlines = TEXT	; 
 		columnlines = TEXT; 
-		frame = none, solid\240, dashed\240;
+		frame = none\240, solid\240, dashed\240;
 		framespacing = TEXT;
 		equalrows = TEXT;
 		equalcolumns = TEXT;

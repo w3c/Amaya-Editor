@@ -42,7 +42,7 @@ force :
 
 batch: rebuild force
 	@(if test -d batch ; then cd batch ; \
-	  $(MAKE) CC="$(CC)" CFLAGS="-O" ; fi)
+	  $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" ; fi)
 
 tools: rebuild force
 	@(if test -d tools ; then cd tools ; \

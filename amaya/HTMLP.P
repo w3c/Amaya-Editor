@@ -9025,7 +9025,7 @@ ATTRIBUTES
 	BEGIN
 	CreateBefore(CLEAR_ALL);
 	END;
- Clear = None:
+ Clear = None_:
 	BEGIN
 	CreateBefore(CLEAR_NONE);
 	END;
@@ -9422,7 +9422,7 @@ ATTRIBUTES
  frame = border:
 	CreateBefore(FRAME_BORDER);
 
- rules_ = none:
+ rules_ = none_:
 	CreateBefore(RULES_NONE);
  rules_ = groups:
 	CreateBefore(RULES_GROUPS);

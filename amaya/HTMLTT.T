@@ -739,7 +739,7 @@ ATTRIBUTES
  Clear = All_:
 	BEGIN
 	END;
- Clear = None:
+ Clear = None_:
 	BEGIN
 	END;
 
@@ -1094,7 +1094,7 @@ ATTRIBUTES
  frame = border: BEGIN
 	END;
  
- rules_ = none: BEGIN
+ rules_ = none_: BEGIN
 	END;
  rules_ = groups: BEGIN
 	END;

@@ -125,10 +125,10 @@ code  key-word      numbers of rules using the key-word
 
 *** TABLE OF RULES AND REFERENCES ***
 
-The code is the code of the symbol and the code of the rule
-where that symbol appears in the left part. For each symbole,
+code is the code of the symbol and the code of the rule
+where that symbol appears in the left part. For each symbol,
 the rule numbers indicate the rules that use that symbol in
-right part.
+their right part.
 
  code  symbol        rule numbers
 

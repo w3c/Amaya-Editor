@@ -175,7 +175,8 @@ unsigned int     extra;
      {
        /* shortcut : rules are sorted by type and view number */
        if (cur->PrType > type ||
-	  (cur->PrType == type && type == PtFunction && cur->PrPresFunction > (FunctionType) extra))
+	  (cur->PrType == type && type == PtFunction &&
+	   cur->PrPresFunction > (FunctionType) extra))
 	 cur = NULL;
        else
 	 {
@@ -184,7 +185,8 @@ unsigned int     extra;
 	   if (cur->PrViewNum == 1 && cur->PrType == type &&
 	       (type != PRFunction ||
 	       /* check for extra specification in case of function rule */
-	       (type == PRFunction && cur->PrPresFunction == (FunctionType) extra)))
+	       (type == PRFunction &&
+		cur->PrPresFunction == (FunctionType) extra)))
 	     {
 	       /* this specific rule already exists */
 	       pRule = cur;
@@ -266,7 +268,8 @@ unsigned int        extra;
 	  }
 	
 	/* check for extra specification in case of function rule */
-	if ((type == PRFunction) && (cur->PrPresFunction != (FunctionType) extra))
+	if ((type == PRFunction) &&
+	    (cur->PrPresFunction != (FunctionType) extra))
 	  {
 	    prev = cur;
 	    cur = cur->PrNextPRule;
@@ -602,7 +605,7 @@ AttributePres     **attrblock;
   elementType = ctxt->name[att];
   for (i = 0; i < nbrules && !ppRule && attrs; i++)
     {
-      if ((att > 0 && attrs->ApElemType != ctxt->type) ||
+      if ((att > 0 && attrs->ApElemType != (int)(ctxt->type)) ||
 	  (att == 0 && attrs->ApElemType != 0))
 	{
 	  if (ctxt->type == 0)
@@ -832,7 +835,7 @@ unsigned int    att;
    i = 0;
    while (i < MAX_ANCESTORS && ctxt->name[i] != 0)
      {
-       if (ctxt->names_nb[i] > 0 && i != att)
+       if (ctxt->names_nb[i] > 0 && i != (int)att)
 	 {
 	   cond = firstCond;
 	   while (cond &&
@@ -918,7 +921,8 @@ PtrPRule          **chain;
 	   pRule->PrPresFunction >  (FunctionType) extra))
 	  pRule = NULL;
       else if (pRule->PrType != pres ||
-	       (pres == PtFunction && pRule->PrPresFunction !=  (FunctionType) extra))
+	       (pres == PtFunction &&
+		pRule->PrPresFunction != (FunctionType) extra))
 	/* check for extra specification in case of function rule */
 	{
 	  *chain = &(pRule->PrNextPRule);
@@ -1479,8 +1483,13 @@ PtrPRule                   rule;
     case PtFillPattern:
     case PtBackground:
     case PtForeground:
+    case PtBorderTopColor:
+    case PtBorderRightColor:
+    case PtBorderBottomColor:
+    case PtBorderLeftColor:
       value = rule->PrIntValue;
       break;
+
     case PtFont:
       switch (rule->PrChrValue)
 	{
@@ -1495,6 +1504,7 @@ PtrPRule                   rule;
 	  break;
 	}
       break;
+
     case PtStyle:
       switch (rule->PrChrValue)
 	{
@@ -1512,6 +1522,7 @@ PtrPRule                   rule;
 	  break;
 	}
       break;
+
     case PtWeight:
       switch (rule->PrChrValue)
 	{
@@ -1526,9 +1537,13 @@ PtrPRule                   rule;
 	  break;
 	}
       break;
+
     case PtUnderline:
       switch (rule->PrChrValue)
 	{
+	case 'N':
+	  value = STYLE_NOUNDERLINE;
+	  break;
 	case 'U':
 	  value = STYLE_UNDERLINE;
 	  break;
@@ -1540,17 +1555,94 @@ PtrPRule                   rule;
 	  break;
 	}
       break;
+
     case PtThickness:
-    case PtLineStyle:
+      switch (rule->PrChrValue)
+	{
+	case 'N':
+	  value = STYLE_THINUNDERLINE;
+	  break;
+	case 'T':
+	  value = STYLE_THICKUNDERLINE;
+	  break;
+	}
       break;
+
+    case PtLineStyle:
+      switch (rule->PrChrValue)
+	{
+	case 'S':
+	  value = STYLE_LINESOLID;
+	  break;
+	case '-':
+	  value = STYLE_LINEDASHED;
+	  break;
+	case '.':
+	  value = STYLE_LINEDOTTED;
+	  break;
+	}
+      break;
+
+    case PtBorderTopStyle:
+    case PtBorderRightStyle:
+    case PtBorderBottomStyle:
+    case PtBorderLeftStyle:
+      switch (rule->PrChrValue)
+	{
+	case '0':
+	  value = STYLE_BORDERNONE;
+	  break;
+	case 'H':
+	  value = STYLE_BORDERHIDDEN;
+	  break;
+	case '.':
+	  value = STYLE_BORDERDOTTED;
+	  break;
+	case '-':
+	  value = STYLE_BORDERDASHED;
+	  break;
+	case 'S':
+	  value = STYLE_BORDERSOLID;
+	  break;
+	case 'D':
+	  value = STYLE_BORDERDOUBLE;
+	  break;
+	case 'G':
+	  value = STYLE_BORDERGROOVE;
+	  break;
+	case 'R':
+	  value = STYLE_BORDERRIDGE;
+	  break;
+	case 'I':
+	  value = STYLE_BORDERINSET;
+	  break;
+	case 'O':
+	  value = STYLE_BORDEROUTSET;
+	  break;
+	}
+      break;
+
     case PtBreak1:
     case PtBreak2:
     case PtIndent:
     case PtLineSpacing:
     case PtLineWeight:
+    case PtMarginTop:
+    case PtMarginRight:
+    case PtMarginBottom:
+    case PtMarginLeft:
+    case PtPaddingTop:
+    case PtPaddingRight:
+    case PtPaddingBottom:
+    case PtPaddingLeft:
+    case PtBorderTopWidth:
+    case PtBorderRightWidth:
+    case PtBorderBottomWidth:
+    case PtBorderLeftWidth:
       int_unit = rule->PrMinUnit;
       value = rule->PrMinValue;
       break;
+
     case PtSize:
       if (rule->PrPresMode == PresInherit)
 	{
@@ -1563,12 +1655,43 @@ PtrPRule                   rule;
         value = rule->PrMinValue;
 	}
       break;
+
+    case PtVertRef:
+    case PtHorizRef:
+    case PtVertPos:
+    case PtHorizPos:
+      int_unit = rule->PrPosRule.PoDistUnit;
+      value = rule->PrPosRule.PoDistance;
+      break;
+
+    case PtHeight:
+    case PtWidth:
+      int_unit = rule->PrDimRule.DrUnit;
+      if (int_unit == 0)
+	int_unit = UnPixel;
+
+      value = rule->PrDimRule.DrValue;
+      break;
+
     case PtJustify:
       if (rule->PrJustify)
 	value = STYLE_JUSTIFIED;
       else
 	value = STYLE_NOTJUSTIFIED;
       break;
+
+    case PtHyphenate:
+      if (rule->PrJustify)
+	value = STYLE_HYPHENATE;
+      else
+	value = STYLE_NOHYPHENATE;
+      break;
+
+    case PtPictInfo:
+    case PtVertOverflow:
+    case PtHorizOverflow:
+      break;
+
     case PtAdjust:
       switch (rule->PrAdjust)
 	{
@@ -1589,31 +1712,7 @@ PtrPRule                   rule;
 	  break;
 	}
       break;
-    case PtHyphenate:
-      if (rule->PrJustify)
-	value = STYLE_HYPHENATE;
-      else
-	value = STYLE_NOHYPHENATE;
-      break;
-    case PtVertRef:
-    case PtHorizRef:
-    case PtVertPos:
-    case PtHorizPos:
-      int_unit = rule->PrPosRule.PoDistUnit;
-      value = rule->PrPosRule.PoDistance;
-      break;
-    case PtHeight:
-    case PtWidth:
-      int_unit = rule->PrDimRule.DrUnit;
-      if (int_unit == 0)
-	int_unit = UnPixel;
 
-      value = rule->PrDimRule.DrValue;
-      break;
-    case PtPictInfo:
-    case PtVertOverflow:
-    case PtHorizOverflow:
-      break;
     case PtFunction:
       switch (rule->PrPresFunction)
 	{
@@ -1961,36 +2060,6 @@ int                 extra;
     case PtVisibility:
       setting->type = PRVisibility;
       break;
-    case PtFont:
-      setting->type = PRFont;
-      break;
-    case PtStyle:
-      setting->type = PRStyle;
-      break;
-    case PtWeight:
-      setting->type = PRWeight;
-      break;
-    case PtSize:
-      setting->type = PRSize;
-      break;
-    case PtUnderline:
-      setting->type = PRUnderline;
-      break;
-    case PtIndent:
-      setting->type = PRIndent;
-      break;
-    case PtLineSpacing:
-      setting->type = PRLineSpacing;
-      break;
-    case PtJustify:
-      setting->type = PRJustify;
-      break;
-    case PtAdjust:
-      setting->type = PRAdjust;
-      break;
-    case PtHyphenate:
-      setting->type = PRHyphenate;
-      break;
     case PtFillPattern:
       setting->type = PRFillPattern;
       break;
@@ -2000,10 +2069,31 @@ int                 extra;
     case PtForeground:
       setting->type = PRForeground;
       break;
-    case PtVertPos:
+    case PtFont:
+      setting->type = PRFont;
+      break;
+    case PtStyle:
+      setting->type = PRStyle;
+      break;
+    case PtWeight:
+      setting->type = PRWeight;
+      break;
+    case PtUnderline:
+      setting->type = PRUnderline;
+      break;
+    case PtIndent:
+      setting->type = PRIndent;
+      break;
+    case PtSize:
+      setting->type = PRSize;
+      break;
+    case PtLineSpacing:
+      setting->type = PRLineSpacing;
+      break;
+    case PtMarginTop:
       setting->type = PRTMargin;
       break;
-    case PtHorizPos:
+    case PtMarginLeft:
       setting->type = PRLMargin;
       break;
     case PtHeight:
@@ -2011,6 +2101,15 @@ int                 extra;
       break;
     case PtWidth:
       setting->type = PRWidth;
+      break;
+    case PtJustify:
+      setting->type = PRJustify;
+      break;
+    case PtHyphenate:
+      setting->type = PRHyphenate;
+      break;
+    case PtAdjust:
+      setting->type = PRAdjust;
       break;
     case PtFunction:
       switch (extra)

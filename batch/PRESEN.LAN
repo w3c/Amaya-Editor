@@ -89,7 +89,7 @@ CondRule =	  'IF' SeqCondition RuleList .
 
 RuleList =	  'BEGIN' Rule < Rule > 'END' ';' / Rule .
 
-Rule =		  Rule1 ';' / Rule2 ';' / Rule3 ';' / Rule4 ';' .
+Rule =		  Rule1 ';' / Rule2 ';' / Rule3 ';' / Rule4 ';' / Rule5 ';' .
 Rule1 =	  	  'VertRef' ':' HorizPosition /
 		  'HorizRef' ':' VertPosition /
 		  'Height' ':' Dimension /
@@ -134,6 +134,36 @@ Rule4 =		  'LineStyle' ':' LineStyleInherit /
 		  'ShowBox' /
 		  'BackgroundPicture' ':' FileName /
 		  'PictureMode' ':' PictMode .
+
+Rule5 =           'MarginTop' ':' MarginWidth /
+                  'MarginRight' ':' MarginWidth /
+                  'MarginBottom' ':' MarginWidth /
+                  'MarginLeft' ':' MarginWidth /
+                  'PaddingTop' ':' PaddingWidth /
+                  'PaddingRight' ':' PaddingWidth /
+                  'PaddingBottom' ':' PaddingWidth /
+                  'PaddingLeft' ':' PaddingWidth /
+                  'BorderTopWidth' ':' BorderWidth /
+                  'BorderRightWidth' ':' BorderWidth /
+                  'BorderBottomWidth' ':' BorderWidth /
+                  'BorderLeftWidth' ':' BorderWidth /
+                  'BorderTopColor' ':' BorderColor /
+                  'BorderRightColor' ':' BorderColor /
+                  'BorderBottomColor' ':' BorderColor /
+                  'BorderLeftColor' ':' BorderColor /
+                  'BorderTopStyle' ':' BorderStyle /
+                  'BorderRightStyle' ':' BorderStyle /
+                  'BorderBottomStyle' ':' BorderStyle /
+                  'BorderLeftStyle' ':' BorderStyle .
+
+MarginWidth =     'Enclosing' '=' / Distance .	{ add 'auto' }
+PaddingWidth =    'Enclosing' '=' / Distance .
+BorderWidth =     'Enclosing' '=' / 'Thin' / 'Medium' / 'Thick' / Distance .
+BorderColor =     'Enclosing' '=' / ColorName .	{ add 'Transparent' }
+BorderStyle =     'Enclosing' '=' /
+                  'None' / 'Hidden' / 'Dotted' / 'Dashed' / 'Solid' /
+                  'Double' / 'Groove' / 'Ridge' / 'Inset' / 'Outset' .
+ColorName =       NAME .
 
 FileName =	  STRING .
 PictMode =	  'NormalSize' / 'Scale' / 'RepeatXY' / 'RepeatX' / 'RepeatY' .

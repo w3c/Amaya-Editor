@@ -440,6 +440,66 @@ PRuleType    pRule;
 	    case PtHorizPos:
 	       return PRHorizPos;
 	       break;
+            case PtMarginTop:
+               return PRMarginTop;
+               break;
+            case PtMarginRight:
+               return PRMarginRight;
+               break;
+            case PtMarginBottom:
+               return PRMarginBottom;
+               break;
+            case PtMarginLeft:
+               return PRMarginLeft;
+               break;
+            case PtPaddingTop:
+               return PRPaddingTop;
+               break;
+            case PtPaddingRight:
+               return PRPaddingRight;
+               break;
+            case PtPaddingBottom:
+               return PRPaddingBottom;
+               break;
+            case PtPaddingLeft:
+               return PRPaddingLeft;
+               break;
+            case PtBorderTopWidth:
+               return PRBorderTopWidth;
+               break;
+            case PtBorderRightWidth:
+               return PRBorderRightWidth;
+               break;
+            case PtBorderBottomWidth:
+               return PRBorderBottomWidth;
+               break;
+            case PtBorderLeftWidth:
+               return PRBorderLeftWidth;
+               break;
+            case PtBorderTopColor:
+               return PRBorderTopColor;
+               break;
+            case PtBorderRightColor:
+               return PRBorderRightColor;
+               break;
+            case PtBorderBottomColor:
+               return PRBorderBottomColor;
+               break;
+            case PtBorderLeftColor:
+               return PRBorderLeftColor;
+               break;
+            case PtBorderTopStyle:
+               return PRBorderTopStyle;
+               break;
+            case PtBorderRightStyle:
+               return PRBorderRightStyle;
+               break;
+            case PtBorderBottomStyle:
+               return PRBorderBottomStyle;
+               break;
+	    case PtBorderLeftStyle:
+               return PRBorderLeftStyle;
+               break;
 	    case PtSize:
 	       return PRSize;
 	       break;

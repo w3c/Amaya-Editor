@@ -197,18 +197,26 @@ typedef struct _PresentationBox
 #define PbContRefElem u.s2._PbContRefElem_
 #define PbContFree u.s3._PbContFree_
 
-/* BAlignment of the lines in an abstract box */
+/* Alignment of the lines in an abstract box */
 typedef enum
 {
   AlignLeft, AlignRight, AlignCenter, AlignLeftDots
 } BAlignment;	/* AlignLeftDots = aligned to the left, the last
 		   line is filled with dots */
+
+/* type of a presentation rule */
 typedef enum
 {
   /* the order determines the order of the rules in the presentation schema */
   PtVisibility, PtFunction, PtVertRef, PtHorizRef, PtHeight, PtWidth, 
-  PtVertPos, PtHorizPos, PtSize, PtStyle, PtWeight, PtFont, PtUnderline,
-  PtThickness, PtIndent, PtLineSpacing, PtDepth, PtAdjust, PtJustify,
+  PtVertPos, PtHorizPos,
+  PtMarginTop, PtMarginRight, PtMarginBottom, PtMarginLeft,
+  PtPaddingTop, PtPaddingRight, PtPaddingBottom, PtPaddingLeft,
+  PtBorderTopWidth, PtBorderRightWidth, PtBorderBottomWidth, PtBorderLeftWidth,
+  PtBorderTopColor, PtBorderRightColor, PtBorderBottomColor, PtBorderLeftColor,
+  PtBorderTopStyle, PtBorderRightStyle, PtBorderBottomStyle, PtBorderLeftStyle,
+  PtSize, PtStyle, PtWeight, PtFont, PtUnderline, PtThickness,
+  PtIndent, PtLineSpacing, PtDepth, PtAdjust, PtJustify,
   PtLineStyle, PtLineWeight, PtFillPattern, PtBackground, PtForeground,
   PtHyphenate, PtVertOverflow, PtHorizOverflow,
   /* the three following types must be the last ones */
@@ -221,12 +229,14 @@ typedef enum
   PresImmediate, PresInherit, PresFunction
 } PresMode;
 
+/* inherit mode */
 typedef enum
 {
   InheritParent, InheritPrevious, InheritChild, InheritCreator, 
   InheritGrandFather
 } InheritMode;
 
+/* functions */
 /* the order determines the order of the rules in the presentation schema */
 typedef enum
 {
@@ -236,12 +246,13 @@ typedef enum
   FnNotInLine, FnAny
 } FunctionType;
 
+/* counter styles */
 typedef enum
 {
   CntArabic, CntURoman, CntLRoman, CntUppercase, CntLowercase
 } CounterStyle;
 
-/* types of the presentation variables */
+/* types of a presentation variable */
 typedef enum
 {
   VarText, VarCounter, VarDate, VarFDate, VarDirName, VarDocName, VarElemName,
@@ -391,9 +402,8 @@ typedef struct _PresRule
 				   number of the attribute to which the
 				   rule corresponds, 0 if the rule is not
 				   derived from an attribute rule */
-  PtrSSchema    PrSpecifAttrSSchema;	/* pointer on the structure
-					   schema defining the attribute
-					   PrSpecifAttr */
+  PtrSSchema    PrSpecifAttrSSchema; /* pointer on the structure schema
+                                        defining the attribute PrSpecifAttr */
   PresMode	PrPresMode;	/* computing mode of the value */	
   union
   {
@@ -421,40 +431,47 @@ typedef struct _PresRule
       ThotBool	   _PrExternal_; /* if PrElement is true, PrExternal indicates
 				    that the type of which the name is in
 				    PrPresBoxName is external */
-      ThotBool     _PrElement_;	/* PrPresBox[1] or PrPresBoxName is an
-				   element type number, not a presentation
-				   box number */
+      ThotBool     _PrElement_;	 /* PrPresBox[1] or PrPresBoxName is an
+				    element type number, not a presentation
+				    box number */
       int	   _PrNPresBoxes_;	/* number of presentation boxes (of use
 					   for the column rule only) */
       int          _PrPresBox_[MAX_COLUMN_PAGE]; /* number of the
 					            presentation boxes */
-      NameA         _PrPresBoxName_;	/* Name of the first (or only) presentation
-					   box to which the function applies */
+      NameA         _PrPresBoxName_;/* Name of the first (or only) presentation
+				       box to which the function applies */
     } s1;
     struct			 /* PrPresMode = PresImmediate */
     {
       union
       {
-	struct	/* PRuleType = PtVisibility, PtDepth, PtFillPattern, */
-	        /* PtBackground, PtForeground */
+	struct	/* PRuleType = PtVisibility, PtDepth, PtFillPattern,
+	           PtBackground, PtForeground, PtBorderTopColor,
+                   PtBorderRightColor, BorderBottomColor, BorderLeftColor */
 	{
 	  ThotBool _PrAttrValue_; 	/* PrIntValue is a numerical attribute
 					   or numerical value number */ 
-	  int  _PrIntValue_;
+	  int  _PrIntValue_;   /* -1 means "same color as foreground" */
 	}  s0;
-	struct	/* PRuleType = PtFont, PtStyle, PtWeight, PtUnderline, */
-	        /*	       PtThickness, PtLineStyle */
+	struct	/* PRuleType = PtFont, PtStyle, PtWeight, PtUnderline,
+	        	       PtThickness, PtLineStyle,
+	                       PtBorderTopStyle, PtBorderRightStyle,
+                               PtBorderBottomStyle, PtBorderLeftStyle */
 	{
 	  CHAR_T     _PrChrValue_;
 	}  s1;
-	struct	/* PRuleType = PtBreak1, PtBreak2, */
-		/* PtIndent, PtSize, PtLineSpacing, PtLineWeight */
+	struct	/* PRuleType = PtBreak1, PtBreak2,
+	        PtIndent, PtSize, PtLineSpacing, PtLineWeight,
+		PtMarginTop, PtMarginRight, PtMarginBottom, PtMarginLeft
+	        PtPaddingTop, PtPaddingRight, PtPaddingBottom, PtPaddingLeft,
+                PtBorderTopWidth, PtBorderRightWidth, PtBorderBottomWidth,
+                PtBorderLeftWidth */
 	{
-	  TypeUnit _PrMinUnit_;	/* the min height is expressed in picas,
+	  TypeUnit _PrMinUnit_;	/* the distance is expressed in picas,
 				   1/10 of a character, etc. */
 	  ThotBool _PrMinAttr_;	/* the following field is an attribute number
 				   or a value */
-	  int  _PrMinValue_;    /* value of the minimum height */
+	  int  _PrMinValue_;    /* value of the distance */
 	} s2;
 	struct	/* PRuleType = PtVertRef, PtHorizRef, PtVertPos, PtHorizPos*/
 	{

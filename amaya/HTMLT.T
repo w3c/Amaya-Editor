@@ -1301,7 +1301,7 @@ ATTRIBUTES
 	Create ' clear="right"';
  Clear = All_:
 	Create ' clear="all"';
- Clear = None:
+ Clear = None_:
 	Create ' clear="none"';
 
  Align = left_:
@@ -1872,7 +1872,7 @@ ATTRIBUTES
  frame = border:
 	Create ' frame="border"';
  
- rules_ = none:
+ rules_ = none_:
 	Create ' rules="none"';
  rules_ = groups:
 	Create ' rules="groups"';

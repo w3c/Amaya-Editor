@@ -258,7 +258,7 @@ STRUCT
 	CONSTANT C_Empty;
 
   BR								{ BR }
-     (ATTR Clear = Left_, Right_, All_, None) =
+     (ATTR Clear = Left_, Right_, All_, None_) =
 	 { clear   left   right   all   none }
 	CONSTANT C_BR;
 
@@ -633,8 +633,8 @@ STRUCT
 	 { frame   void  above  below  hsides  lhs  rhs  }
 		   vsides, box, border;
 	 {	   vsides  box  border }
-	   rules_ = none, groups, rows, cols, all;
-	 { rules    none  groups  rows  cols  all }
+	   rules_ = none_, groups, rows, cols, all;
+	 { rules    none   groups  rows  cols  all }
 	   cellspacing = Integer; cellpadding = Integer;
 	 { cellspacing	          cellpadding }
 	   Align; BackgroundColor;

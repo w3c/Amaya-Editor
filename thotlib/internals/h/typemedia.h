@@ -372,26 +372,26 @@ typedef struct _AbstractBox
   int		  AbForeground; /* Drawing color */
 
   int             AbTopBColor;     /* Border Top color */
-  int             AbLeftBColor;    /* Border Left color */
-  int             AbBottomBColor;  /* Border Bottom color */
   int             AbRightBColor;   /* Border Right color */
+  int             AbBottomBColor;  /* Border Bottom color */
+  int             AbLeftBColor;    /* Border Left color */
   int             AbTopStyle;      /* Border Top style */
-  int             AbLeftStyle;     /* Border Left style */
-  int             AbBottomStyle;   /* Border Bottom style */
   int             AbRightStyle;    /* Border Right style */
+  int             AbBottomStyle;   /* Border Bottom style */
+  int             AbLeftStyle;     /* Border Left style */
 
   int             AbTopMargin;     /* Top Margin */
-  int             AbLeftMargin;    /* Left Margin */
-  int             AbBottomMargin;  /* Bottom Margin */
   int             AbRightMargin;   /* Right Margin */
-  int             AbTopBorder;     /* Top Border */
-  int             AbLeftBorder;    /* Left Border */
-  int             AbBottomBorder;  /* Bottom Border */
-  int             AbRightBorder;   /* Right Border */
+  int             AbBottomMargin;  /* Bottom Margin */
+  int             AbLeftMargin;    /* Left Margin */
   int             AbTopPadding;    /* Top Padding */
-  int             AbLeftPadding;   /* Left Padding */
-  int             AbBottomPadding; /* Bottom Padding */
   int             AbRightPadding;  /* Right Padding */
+  int             AbBottomPadding; /* Bottom Padding */
+  int             AbLeftPadding;   /* Left Padding */
+  int             AbTopBorder;     /* Top Border */
+  int             AbRightBorder;   /* Right Border */
+  int             AbBottomBorder;  /* Bottom Border */
+  int             AbLeftBorder;    /* Left Border */
 
   CHAR_T          AbFont;	      /* Characteristics of the font used */
   CHAR_T	  AbLineStyle;        /* Line style */
@@ -402,17 +402,17 @@ typedef struct _AbstractBox
   TypeUnit        AbLineSpacingUnit;  /* Interlining unit */
 
   TypeUnit        AbTopMarginUnit;    /* Top Margin Unit */
-  TypeUnit        AbLeftMarginUnit;   /* Left Margin Unit */
-  TypeUnit        AbBottomMarginUnit; /* Bottom Margin Unit */
   TypeUnit        AbRightMarginUnit;  /* Right Margin Unit */
-  TypeUnit        AbTopBorderUnit;    /* Top Border Unit */
-  TypeUnit        AbLeftBorderUnit;   /* Left Border Unit */
-  TypeUnit        AbBottomBorderUnit; /* Bottom Border Unit */
-  TypeUnit        AbRightBorderUnit;  /* Right Border Unit */
+  TypeUnit        AbBottomMarginUnit; /* Bottom Margin Unit */
+  TypeUnit        AbLeftMarginUnit;   /* Left Margin Unit */
   TypeUnit        AbTopPaddingUnit;   /* Top Padding Unit */
-  TypeUnit        AbLeftPaddingUnit;  /* Left Padding Unit */
-  TypeUnit        AbBottomPaddingUnit;/* Bottom Padding Unit */
   TypeUnit        AbRightPaddingUnit; /* Right Padding Unit */
+  TypeUnit        AbBottomPaddingUnit;/* Bottom Padding Unit */
+  TypeUnit        AbLeftPaddingUnit;  /* Left Padding Unit */
+  TypeUnit        AbTopBorderUnit;    /* Top Border Unit */
+  TypeUnit        AbRightBorderUnit;  /* Right Border Unit */
+  TypeUnit        AbBottomBorderUnit; /* Bottom Border Unit */
+  TypeUnit        AbLeftBorderUnit;   /* Left Border Unit */
 
   ThotBool        AbJustify;	/* Lines are justified */
   ThotBool        AbAcceptLineBreak;    /* Can be split in lines */
