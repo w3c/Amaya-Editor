@@ -22,8 +22,8 @@
 </head>
 
 <body xml:lang="fr" lang="fr">
-<p align="center"><svg xmlns="http://www.w3.org/2000/svg" width="466"
-height="349">
+<p align="center">encoding="" encoding=""<svg
+xmlns="http://www.w3.org/2000/svg" width="466" height="349">
   <image id="backgroundImage" x="0" y="0" width="466" height="349"
          xlink:href="amaya.png">
     <desc>Leading the Web to its full potential</desc>
@@ -93,13 +93,13 @@ height="349">
   <text id="logo" x="304" y="162"
   style="font: 24pt helvetica; font-weight: bold; fill: #488B9B;">AMAYA
   </text>
-  <text id="version" x="360" y="306"
-  style="font: bold 16pt italic; fill: #0192BF;">Release 4.0
+   <text id="version" x="360" y="306"
+  style="font: bold 16pt italic; fill: #0192BF;">Release 4.01
   </text>
-  <g id="polygonMask" style="stroke: none;">
+   <g id="polygonMask" style="stroke: none;">
     <polygon style="fill: #0192BF;" points="30,60  30,230  108,208"/>
     <foreignObject y="156px" x="51px">
-
+      encoding=""  encoding=""
       <math xmlns="http://www.w3.org/1998/Math/MathML" style="color: #FFFFFF">
         <mfrac>
           <mrow>
