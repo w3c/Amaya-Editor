@@ -36,10 +36,10 @@ href="http://www.w3.org/TR/WAI-WEBCONTENT">Web Content Accessibility
 Guidelines</a> du W3C.  Certaines caractéristiques, comme par exemple
 l'obligation d'avoir un attribut "alt" pour les images et les zones actives ,
 ont déjà été incluses _ il est impossible d'ajouter une image tant qu'il n'y a
-pas de texte associé. Amaya produit aussi automatiquement un balisage valide 
+pas de texte associé. Amaya produit aussi automatiquement un balisage valide
 conforme au W3C. D'autres caractéristiques, comme les longues descriptions
-spécifiques et les légendes, doivent être effectuées par l'auteur  à l'aide
-des attributs des  menus ou des menus structure.</p>
+spécifiques et les légendes, doivent être effectuées par l'auteur à l'aide des
+attributs des  menus ou des menus structure.</p>
 
 <p>La documentation d'aide d'Amaya décrit <a
 href="HTML-elements/infoTypes.html">comment utiliser quelques éléments
