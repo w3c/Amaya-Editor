@@ -2275,7 +2275,6 @@ void ANNOT_SetType (Document doc, RDFResourceP type)
   Element          el;
   ElementType      elType;
   char          *url;
-  char          *ptr;
   int              i;
   AnnotMeta       *annot;
   char          *type_name;
@@ -2299,65 +2298,43 @@ void ANNOT_SetType (Document doc, RDFResourceP type)
   TtaSetTextContent (el, type_name,
 		     TtaGetDefaultLanguage (), doc);
 
-  /* update the metadata. We need to find the source document to find
-   the metadata */
-  el = TtaGetRootElement (doc);
-  elType.ElTypeNum = Annot_EL_SourceDoc;
-  el = TtaSearchTypedElement (elType, SearchInTree, el);
-  if (!el)
-    return;
-  url = SearchAttributeInEl (doc, el, Annot_ATTR_HREF_, "Annot");
-  if (!url)
-    return;
-  ptr = strchr (url, '#');
-  if (ptr)
-    *ptr = EOS;
-  if (IsFilePath (url))
-    WWWToLocal (url);
+  /* update the metadata */
+  if (!IsFilePath (DocumentURLs[doc])
+      && !IsW3Path (DocumentURLs[doc]))
+    url = ANNOT_MakeFileURL (DocumentURLs[doc]);
+  else
+    url = DocumentURLs[doc];
+
   for (i = 1; i <= DocumentTableLength; i++)
     {
-      if (DocumentURLs[i] && (!strcmp (url, DocumentURLs[i]) 
-			      || (AnnotMetaData[i].annot_url 
-				  && !strcmp (url, AnnotMetaData[i].annot_url))))
-	{
-	  /* we found the source document, we now search and update
-	     the annotation meta data */
-	  /* @@ this doesn't work yet... we need to make file:/// here
-	   and I need to remove the document modified thingy, as we have
-	  to tell the user that he needs to save the document */
-	  if (!IsW3Path (DocumentURLs[doc]) 
-	      && !IsFilePath (DocumentURLs[doc]))
-	    {
-	      /* @@ add the file:// (why it wasn't there before? */
-	      ptr = ANNOT_MakeFileURL (DocumentURLs[doc]);
-	    }
-	  else
-	    ptr = NULL;
-	  annot = AnnotList_searchAnnot (AnnotMetaData[i].annotations,
-					 (ptr) ? ptr : DocumentURLs[doc],
-					 AM_BODY_URL);
+      /* find the annotation link in the source document that corresponds
+	 to this annotation */
+      annot = AnnotList_searchAnnot (AnnotMetaData[i].annotations,
+				     url, AM_BODY_URL);
 #ifdef ANNOT_ON_ANNOT
-	  if (!annot && AnnotMetaData[i].thread)
-	    {
-	      in_thread = TRUE;
-	      annot = AnnotList_searchAnnot (AnnotMetaData[i].thread->annotations,
-					     (ptr) ? ptr : DocumentURLs[doc],
-					     AM_BODY_URL);
-	    }
-#endif /* ANNOT_ON_ANNOT */
-	  if (ptr)
-	    TtaFreeMemory (ptr);
+      if (!annot && AnnotMetaData[i].thread)
+	{
+	  annot = AnnotList_searchAnnot (AnnotMetaData[i].thread->annotations,
+					 url, AM_BODY_URL);
 	  if (annot)
-	    {
-	      annot->type = type;
-	      if (in_thread)
-		/* update the reply type in the thread */
-		ANNOT_UpdateThreadItem (doc, annot, annot->body_url);
-	    }
-	  break;
+	    in_thread = TRUE;
 	}
+#endif /* ANNOT_ON_ANNOT */
+      if (annot)
+	break;
     }
-  TtaFreeMemory (url);
+
+  if (annot)
+    {
+      annot->type = type;
+#ifdef ANNOT_ON_ANNOT
+      if (in_thread)
+	/* update the reply type in the thread */
+	ANNOT_UpdateThreadItem (doc, annot, annot->body_url);
+#endif /* ANNOT_ON_ANNOT */
+    }
+  if (url != DocumentURLs[doc])
+    TtaFreeMemory (url);
 }
 
 /*-----------------------------------------------------------------------
