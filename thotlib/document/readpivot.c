@@ -1268,14 +1268,15 @@ void ReadPRulePiv (PtrDocument pDoc, BinFile pivFile, PtrElement pEl,
   DimensionRule      *pDimRule;
   TypeUnit            unit;
   BoxEdge             ref, def;
+  RefKind             refKind;
   Level               rel;
   int                 pictureType, val, view, box;
   int                 PicXArea, PicYArea, PicWArea, PicHArea;
-  int                 red, green, blue;
+  int                 red, green, blue, refIdent;
   char                ch;
-  ThotBool            absolute, sign, just, immed;
+  ThotBool            absolute, sign, just, immed, notRel, distAttr;
   ThotBool            dimpos;
-  
+
   pres = (PictureScaling) 0;
   pictureType = 0;
   just = FALSE;
@@ -1482,8 +1483,12 @@ void ReadPRulePiv (PtrDocument pDoc, BinFile pivFile, PtrElement pEl,
 	  {
 	    /* get a complete rule */
 	    TtaReadShort (pivFile, (int *) &def);
-	    TtaReadShort (pivFile, (int *) &ref);	    
+	    TtaReadShort (pivFile, (int *) &ref);
+	    distAttr = ReadBoolean (pivFile);
 	    TtaReadShort (pivFile, (int *) &rel);
+	    notRel = ReadBoolean (pivFile);
+	    TtaReadShort (pivFile, (int *) &refKind);
+	    TtaReadShort (pivFile, &refIdent);
 	  }
 	TtaReadShort (pivFile, &val);
 	unit = ReadUnit (pivFile);
@@ -1644,7 +1649,11 @@ void ReadPRulePiv (PtrDocument pDoc, BinFile pivFile, PtrElement pEl,
 	      {
 		pPosRule->PoPosDef = def;
 		pPosRule->PoPosRef = ref;
+		pPosRule->PoDistAttr = distAttr;
 		pPosRule->PoRelation = rel;
+		pPosRule->PoNotRel = notRel;
+		pPosRule->PoRefKind = refKind;
+		pPosRule->PoRefIdent = refIdent;
 	      }
 	    else
 	      {
@@ -1661,8 +1670,9 @@ void ReadPRulePiv (PtrDocument pDoc, BinFile pivFile, PtrElement pEl,
 		pPRule->PrViewNum = view;
 		pPRule->PrNextPRule = NULL;
 		pPRule->PrCond = NULL;
+		pPosRule->PoDistAttr = FALSE;
 	      }
-	    pPosRule->PoDistAttr = FALSE;
+	    pPosRule->PoUserSpecified = FALSE;
 	    pPosRule->PoDistance = val;
 	    pPosRule->PoDistUnit = unit;
 	    if (!sign)

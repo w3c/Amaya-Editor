@@ -2804,7 +2804,7 @@ void                DirectCreation (PtrBox pBox, int frame)
   ViewFrame          *pFrame;
   PtrAbstractBox      pAb;
   PtrDocument         pDoc;
-  int                 x, y;
+  int                 x, y, xref, yref;
   int                 width, height;
   int                 xmin, xmax;
   int                 Ymin, Ymax;
@@ -2900,11 +2900,44 @@ void                DirectCreation (PtrBox pBox, int frame)
       /* Notification of the new created box */
       x = x + pFrame->FrXOrg;
       y = y + pFrame->FrYOrg;
+
+      /* get the position of reference point */
+      switch (pBox->BxHorizEdge)
+	{
+	case Right:
+	  xref = width;
+	  break;
+	case VertMiddle:
+	  xref = width / 2;
+	  break;
+	case VertRef:
+	  xref = pBox->BxVertRef;
+	  break;
+	default:
+	  xref = 0;
+	  break;
+	}
+      switch (pBox->BxVertEdge)
+	{
+	case Bottom:
+	  yref = height;
+	  break;
+	case HorizMiddle:
+	  yref = height / 2;
+	  break;
+	case HorizRef:
+	  yref = 0;
+	  break;
+	default:
+	  yref = 0;
+	  break;
+	}
+
       pDoc = DocumentOfElement (pAb->AbElement);
       histOpen = pDoc->DocEditSequence;
       if (!histOpen)
 	OpenHistorySequence (pDoc, pAb->AbElement, pAb->AbElement, 0, 0);
-      NewPosition (pAb, x, 0, y, 0, frame, TRUE);
+      NewPosition (pAb, x, xref, y, yref, frame, TRUE);
       if (percentW)
 	NewDimension (pAb, 0, height, frame, TRUE);
       else if (percentH)

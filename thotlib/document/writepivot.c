@@ -656,7 +656,11 @@ static void   PutPresRule (BinFile pivFile, PtrPRule pPRule)
 	case PtHorizPos:
 	  PutShort (pivFile, pPRule->PrPosRule.PoPosDef);
 	  PutShort (pivFile, pPRule->PrPosRule.PoPosRef);
+	  PutBoolean (pivFile, pPRule->PrPosRule.PoDistAttr);
 	  PutShort (pivFile, pPRule->PrPosRule.PoRelation);
+	  PutBoolean (pivFile, pPRule->PrPosRule.PoNotRel);
+	  PutShort (pivFile, pPRule->PrPosRule.PoRefKind);
+	  PutShort (pivFile, pPRule->PrPosRule.PoRefIdent);
 	  PutShort (pivFile, abs (pPRule->PrPosRule.PoDistance));
 	  PutUnit (pivFile, pPRule->PrPosRule.PoDistUnit);
 	  PutSign (pivFile, (ThotBool)(pPRule->PrPosRule.PoDistance >= 0));

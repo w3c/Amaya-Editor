@@ -78,9 +78,9 @@ typedef struct _PosRule
   int		PoDistance;	/* distance between those two sides */
   Level		PoRelation;	/* relative level of the reference element
 				   in the internal representation */
-  ThotBool	PoNotRel;	/* if 'false', PoTypeRefElem or PoRefPresBox
-				   indicates the type of the reference element,
-				   if 'true', the exclusive type. */
+  ThotBool	PoNotRel;	/* if 'false', PoRefIdent indicates the type of
+				   the reference element, if 'true', the
+				   excluded type. */
   ThotBool	PoUserSpecified;/* the distance may be chosen by the user
 				   during the creation */
   RefKind	PoRefKind;	/* the reference is the box of an element,

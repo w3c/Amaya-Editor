@@ -1,6 +1,6 @@
 	{ Thot presentation schema for SVG
 
-	  V. Quint	February 1998-2001	}
+	  V. Quint	February 1998-2002	}
 
 PRESENTATION SVG;
 
@@ -1248,7 +1248,7 @@ ATTRIBUTES
 	CreateBefore (AttrName);
 	CreateBefore (AttrValue);
 	if not text_
-   	   VertPos:  Top = Enclosing not text_ . Top;
+           VertPos:  Top = Enclosing not text_ . Top;
 	if text_
 	   VertPos:  HRef = Enclosing . Top;
    	IN Structure_view
