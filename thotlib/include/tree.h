@@ -105,6 +105,21 @@ extern Element      TtaNewElement (Document document, ElementType elementType);
 extern Element      TtaNewTree (Document document, ElementType elementType, char* label);
 
 /* ----------------------------------------------------------------------
+   TtaNewTranscludedElement
+
+   Creates a new element that is a dynamic copy of another element.
+
+   Parameters:
+   document: the document for which the element is created.
+   orig:     the element that is copied.
+
+   Return value:
+   the created element.
+
+   ---------------------------------------------------------------------- */
+extern Element      TtaNewTranscludedElement (Document document, Element orig);
+
+/* ----------------------------------------------------------------------
    TtaCopyTree
 
    Creates a copy of a tree.
@@ -1227,6 +1242,7 @@ extern ThotBool     TtaHasHiddenException (ElementType elType);
 extern void         ChangeElementType ( /* Element element, int typeNum */ );
 extern Element      TtaNewElement ( /* Document document, ElementType elementType */ );
 extern Element      TtaNewTree ( /* Document document, ElementType elementType, char *label */ );
+extern Element      TtaNewTranscludedElement ( /* Document document, Element orig */ );
 extern Element      TtaCopyTree ( /* Element sourceElement, Document sourceDocument, Document destinationDocument, Element parent */ );
 extern Element      TtaCreateDescent ( /* Document document, Element element, ElementType elementType */ );
 extern Element      TtaCreateDescentWithContent ( /* Document document, Element element, ElementType elementType */ );

@@ -1,5 +1,3 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
-    "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
   <title>The Languages of Thot</title>
@@ -15,7 +13,7 @@
 
 <h4>Translated from French by Ethan Munson</h4>
 
-<h4>Version of November 21, 2000</h4>
+<h4>Version of November 22, 2000</h4>
 
 <p>© 1996-2000 INRIA</p>
 <hr>
@@ -250,6 +248,7 @@
           <li><a href="#sectc5215">The <tt>Copy</tt> rule</a></li>
           <li><a href="#sectc5216">The <tt>Use</tt> rule</a></li>
           <li><a href="#sectc5217">The <tt>Remove</tt> rule</a></li>
+          <li><a href="#sectc5217a">The <code>Ignore</code> rule</a></li>
           <li><a href="#sectc5218">The <tt>NoTranslation</tt> rule</a></li>
           <li><a href="#sectc5219">The <tt>NoLineBreak</tt> rule</a></li>
           <li><a href="#sectc5220">The <tt>ChangeMainFile</tt> rule</a></li>
@@ -1125,7 +1124,7 @@ part,</p>
   <dt>character strings</dt>
     <dd>between apostrophes ' represent terminal symbols, that is, keywords in
       the language defined.  Keywords are written here in upper-case letters,
-      but can be written in any combination of upper and lower-case letters. 
+      but can be written in any combination of upper and lower-case letters.
       For example, the keyword <tt>DEFPRES</tt> of S can also be written as
       <tt>defpres</tt> or <tt>DefPres</tt>.</dd>
   <dt>material between brackets</dt>
@@ -1158,8 +1157,8 @@ integers:</p>
     </dd>
   <dt><tt>STRING</tt></dt>
     <dd>represents a string.  This is a string of characters delimited by
-      apostrophes. If an apostrophe must appear in a string, it is doubled. 
-      As with identifiers, strings can contain characters represented by their
+      apostrophes. If an apostrophe must appear in a string, it is doubled. As
+      with identifiers, strings can contain characters represented by their
       octal code (after a backslash).  As with apostrophes, if a backslash
       must appear in a string, it is doubled.</dd>
   <dt><tt>NUMBER</tt></dt>
@@ -1895,10 +1894,10 @@ skeleton form not load the contents of a particular element type, the keyword
   all of these element types will be loaded except for paragraphs, but only
   the article title will be loaded in its entirety.  For figures, the caption
   will be loaded, while for sections, the title will be loaded, and for
-  bibliographic entries, only the title that they contain will be loaded. 
-  Note that bibliographic elements are defined in another structure schema,
-  RefBib.  To produce this result, the following declarations should be placed
-  in the Article structure schema:</p>
+  bibliographic entries, only the title that they contain will be loaded. Note
+  that bibliographic elements are defined in another structure schema, RefBib.
+   To produce this result, the following declarations should be placed in the
+  Article structure schema:</p>
   <pre>EXPORT
    Article_title,
    Figure With Caption,
@@ -2060,8 +2059,8 @@ exceptions are indicated by a name.  They are separated by semicolons.</p>
   <dt><tt>ImportParagraph</tt></dt>
     <dd>This exception can only be applied to element types.  It indicates
       that elements of this type should receive the content of imported text
-      files.  An element is created for each paragraph of the imported file. 
-      A paragraph is a sequence of lines without any empty line.  A structure
+      files.  An element is created for each paragraph of the imported file. A
+      paragraph is a sequence of lines without any empty line.  A structure
       schema cannot contain several exceptions <tt>ImportParagraph</tt> and,
       if it contains one, it should not contain any exception
       <tt>ImportLine</tt>.</dd>
@@ -2106,7 +2105,7 @@ exceptions are indicated by a name.  They are separated by semicolons.</p>
       type. It indicates that this attribute refers to the column head (see
       exception IsColHead) which the element belongs to.</dd>
   <dt>ColSpan, RowSpan</dt>
-    <dd>These exceptions can only be applied to numeric attributes of cells. 
+    <dd>These exceptions can only be applied to numeric attributes of cells.
       They indicate that attribute values give how many columns or rows the
       element spans.</dd>
   <dt>Shadow</dt>
@@ -5165,7 +5164,7 @@ used.</p>
   <pre>DEFAULT
      IN MathView Visibility:0;</pre>
 
-  <p>which makes all elements invisible in the <tt>MathView</tt> view. 
+  <p>which makes all elements invisible in the <tt>MathView</tt> view.
   However, the <tt>Formula</tt> element also has a <tt>Visibility</tt>
   rule:</p>
   <pre>Formula :
@@ -5760,8 +5759,8 @@ basis.</p>
   sequence of columns, all having the same fixed width, where the columns are
   separated by vertical lines.  There is a line to the left of the first
   column and one to the right of the last.  Each column has a variable number
-  of cells, placed one on top of the other and separated by horizontal lines. 
-  There are no horizontal lines above the first cell or below the last cell. 
+  of cells, placed one on top of the other and separated by horizontal lines.
+  There are no horizontal lines above the first cell or below the last cell.
   The text contained in each cell is  broken into lines and these lines are
   centered horizontally in the cell. The logical structure of this object is
   defined by:</p>
@@ -6429,7 +6428,7 @@ of functions of each type.</p>
   <li>The function formed by the name of a buffer returns the contents of that
     buffer.  If the named buffer is the picture buffer, then the name of the
     last picture encountered is returned.  Otherwise, the buffer is a read
-    buffer and the value returned is text previously read from the terminal. 
+    buffer and the value returned is text previously read from the terminal.
     If the buffer is empty (no picture has been encountered or the
     <tt>Read</tt> rule has not been executed for the buffer), then the empty
     string is returned.</li>
@@ -6910,10 +6909,10 @@ between the keywords <tt>BEGIN</tt> and <tt>END</tt>.</p>
 <p>Fifteen types of translation rules can be associated with element types and
 attribute values.  They are the <tt>Create</tt>, <tt>Write</tt>,
 <tt>Read</tt>, <tt>Include</tt>, <tt>Get</tt>, <tt>Copy</tt>, <tt>Use</tt>,
-<tt>Remove</tt>, <tt>NoTranslation</tt>, <tt>NoLineBreak</tt>,
-<tt>ChangeMainFile</tt>, <tt>RemoveFile</tt>, <tt>Set</tt>, <tt>Add</tt>,
-<tt>Indent</tt>, rules.  Each rule has its own syntax, although they are all
-based on very similar models.</p>
+<tt>Remove</tt>, <tt>Ignore</tt>, <tt>NoTranslation</tt>,
+<tt>NoLineBreak</tt>, <tt>ChangeMainFile</tt>, <tt>RemoveFile</tt>,
+<tt>Set</tt>, <tt>Add</tt>, <tt>Indent</tt>, rules.  Each rule has its own
+syntax, although they are all based on very similar models.</p>
 <pre>     SimpleRule = 'Create' [ 'IN' VarID ] Object
                         [ Position ] ';' /
                   'Write' Object [ Position ] ';' /
@@ -6927,6 +6926,7 @@ based on very similar models.</p>
                         [ Position ] ';' /
                   'Use' TrSchema [ 'For' ElemID ] ';' /
                   'Remove' ';' /
+                  'Ignore' ';' /
                   'NoTranslation' ';' /
                   'NoLineBreak' ';' /
                   'ChangeMainFile' VarID [ Position ] ';' /
@@ -7383,6 +7383,18 @@ keyword. It is terminated, like all rules, by a semicolon.</p>
 </div>
 
 <div class="subsection">
+<h3><a name="sectc5217a">The <tt>Ignore</tt> rule</a></h3>
+
+<p>The <tt>Ignore</tt> rule indicates that nothing should be generated, in the
+translated document, for the element to which the rule applies. The whole
+element is simply ignored by the translator. </p>
+
+<p>The <tt>Ignore</tt> rule is simply written with the <tt>Ignore</tt>
+keyword. It is terminated, like all rules, by a semicolon.</p>
+<pre>               'Ignore' ';'</pre>
+</div>
+
+<div class="subsection">
 <h3><a name="sectc5218">The <tt>NoTranslation</tt> rule</a></h3>
 
 <p>The <tt>NoTranslation</tt> rule indicates to the translator that it must
@@ -7553,8 +7565,8 @@ rules in the order in which they are defined in the translation schema.</p>
 <p>The same procedure is followed with translation rules for specific
 presentations.</p>
 
-<p>Next, the element's content is translated, as long as a <tt>Remove</tt>
-rule does not apply.</p>
+<p>Next, the element's content is translated, as long as a <tt>Remove</tt> or
+<code>Ignore</code> rule does not apply.</p>
 
 <p>In the next step, the translator applies rules for the specific
 presentation of the element that are to be applied after translation of the
@@ -8451,6 +8463,7 @@ SimpleRule    = 'Create' [ 'IN' VarID ] Object
                        [ Position ] ';' /
                 'Use' TrSchema [ 'For' ElemID ] ';' /
                 'Remove' ';' /
+                'Ignore' ';' /
                 'NoTranslation' ';' /
                 'NoLineBreak' ';' /
                 'ChangeMainFile' VarID [ Position ] ';' /

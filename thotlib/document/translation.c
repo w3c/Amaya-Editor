@@ -1842,12 +1842,13 @@ PtrDocument         pDoc;
 static void ApplyTRule (PtrTRule pTRule, PtrTSchema pTSch,
 			PtrSSchema pSSch, PtrElement pEl, ThotBool * transChar,
 			ThotBool * lineBreak, ThotBool * removeEl,
+			ThotBool * ignoreEl,
 			PtrPRule pRPres, PtrAttribute pAttr,
 			PtrDocument pDoc, ThotBool recordLineNb);
 
 #else  /* __STDC__ */
 static void ApplyTRule ( /* pTRule, pTSch, pSSch, pEl, transChar,
-			    lineBreak, removeEl, pRPres, pAttr, pDoc,
+			    lineBreak, removeEl, ignoreEl, pRPres, pAttr, pDoc,
 			    recordLineNb */ );
 
 #endif /* __STDC__ */
@@ -1861,16 +1862,18 @@ static void ApplyTRule ( /* pTRule, pTSch, pSSch, pEl, transChar,
 #ifdef __STDC__
 static void ApplyAttrRulesToElem (TOrder position, PtrElement pEl,
 				  PtrAttribute pAttr, ThotBool * removeEl,
+				  ThotBool * ignoreEl,
 				  ThotBool * transChar, ThotBool * lineBreak,
 				  PtrDocument pDoc, ThotBool recordLineNb)
 
 #else  /* __STDC__ */
-static void ApplyAttrRulesToElem (position, pEl, pAttr, removeEl, transChar,
-				  lineBreak, pDoc, recordLineNb)
+static void ApplyAttrRulesToElem (position, pEl, pAttr, removeEl, ignoreEl,
+				  transChar, lineBreak, pDoc, recordLineNb)
 TOrder              position;
 PtrElement          pEl;
 PtrAttribute        pAttr;
 ThotBool           *removeEl;
+ThotBool           *ignoreEl;
 ThotBool           *transChar;
 ThotBool           *lineBreak;
 PtrDocument         pDoc;
@@ -1887,6 +1890,8 @@ ThotBool            recordLineNb;
    NotifyAttribute     notifyAttr;
    int                 i;
 
+   if (*ignoreEl)
+      return;
    /* prepare et envoie l'evenement AttrExport.Pre s'il est demande' */
    notifyAttr.event = TteAttrExport;
    notifyAttr.document = (Document) IdentDocument (pDoc);
@@ -1938,19 +1943,21 @@ ThotBool            recordLineNb;
        }
      }
    /* parcourt les blocs de regles de la valeur de l'attribut */
-   while (pBlock != NULL)
+   while (pBlock != NULL && !*ignoreEl)
      {
      if (ConditionIsTrue (pBlock, pEl, pAttr, pDoc))
        /* la condition du bloc est verifiee */
        {
        pTRule = pBlock->TbFirstTRule;	/* premiere regle du bloc */
        /* parcourt les regles du bloc */
-       while (pTRule != NULL)
+       while (pTRule != NULL && !*ignoreEl)
 	 {
 	 if (pTRule->TrOrder == position)
 	   /* c'est une regle a appliquer a cette position */
 	   if (pTRule->TrType == TRemove)
 	     *removeEl = TRUE;
+	   else if (pTRule->TrType == TIgnore)
+	     *ignoreEl = TRUE;
 	   else if (pTRule->TrType == TNoTranslation)
 	     *transChar = FALSE;
 	   else if (pTRule->TrType == TNoLineBreak)
@@ -1958,7 +1965,7 @@ ThotBool            recordLineNb;
 	   else
 	     /* on applique la regle */
 	     ApplyTRule (pTRule, pTSchAttr, pAttr->AeAttrSSchema,
-			 pEl, transChar, lineBreak, removeEl, NULL,
+			 pEl, transChar, lineBreak, removeEl, ignoreEl, NULL,
 			 pAttr, pDoc, recordLineNb);
 	 /* passe a la regle suivante */
 	 pTRule = pTRule->TrNextTRule;
@@ -1984,16 +1991,18 @@ ThotBool            recordLineNb;
 
 #ifdef __STDC__
 static void ApplyAttrRules (TOrder position, PtrElement pEl,
-			    ThotBool * removeEl, ThotBool * transChar,
+			    ThotBool * removeEl, ThotBool * ignoreEl,
+			    ThotBool * transChar,
 			    ThotBool * lineBreak, PtrDocument pDoc,
 			    ThotBool recordLineNb)
 
 #else  /* __STDC__ */
-static void ApplyAttrRules (position, pEl, removeEl, transChar, lineBreak,
-			    pDoc, recordLineNb)
+static void ApplyAttrRules (position, pEl, removeEl, ignoreEl, transChar,
+			    lineBreak, pDoc, recordLineNb)
 TOrder              position;
 PtrElement          pEl;
 ThotBool           *removeEl;
+ThotBool           *ignoreEl;
 ThotBool           *transChar;
 ThotBool           *lineBreak;
 PtrDocument         pDoc;
@@ -2006,10 +2015,11 @@ ThotBool            recordLineNb;
    PtrAttribute        pAttr, nextAttr;
    PtrTSchema          pTSch;
    int                 att, nAttr = 0;
-
 #define MAX_ATTR_TABLE 50
    PtrAttribute        AttrTable[MAX_ATTR_TABLE];
 
+   if (*ignoreEl)
+      return;
    pAttr = pEl->ElFirstAttr;	/* 1er attribut de l'element */
    /* Si on applique les regles "After", on commence par le dernier attribut */
    /* et on traitera les attributs dans l'ordre inverse */
@@ -2024,7 +2034,7 @@ ThotBool            recordLineNb;
      }
    
    /* parcourt les attributs de l'element */
-   while (pAttr != NULL)
+   while (pAttr != NULL && !*ignoreEl)
      {
      /* get the next attribute to be processed: an action associated with
 	event AttrExport could remove the current attribute */
@@ -2048,8 +2058,8 @@ ThotBool            recordLineNb;
        if (pTSch->TsAttrTRule[pAttr->AeAttrNum - 1].AtrElemType == 0)
 	 /* les regles de traduction de l'attribut s'appliquent a */
 	 /* n'importe quel type d'element, on les applique */
-	 ApplyAttrRulesToElem (position, pEl, pAttr, removeEl, transChar,
-			       lineBreak, pDoc, recordLineNb);
+	 ApplyAttrRulesToElem (position, pEl, pAttr, removeEl, ignoreEl,
+			       transChar, lineBreak, pDoc, recordLineNb);
      /* next attribute to be processed */
      pAttr = nextAttr;
      }
@@ -2072,7 +2082,7 @@ ThotBool            recordLineNb;
 	     {
 	     /* parcourt les attributs de chaque ascendant */
 	     pAttr = pAsc->ElFirstAttr;
-	     while (pAttr != NULL)
+	     while (pAttr != NULL && !*ignoreEl)
 	       if (pAttr->AeAttrSSchema->SsCode == pEl->ElStructSchema->SsCode
 		   && pAttr->AeAttrNum == att)
 		 /* on a trouve' */
@@ -2080,7 +2090,8 @@ ThotBool            recordLineNb;
 		 /* applique les regles de traduction de l'attribut a
 		    l'element */
 		 ApplyAttrRulesToElem (position, pEl, pAttr, removeEl,
-				     transChar, lineBreak, pDoc, recordLineNb);
+				       ignoreEl, transChar, lineBreak, pDoc,
+				       recordLineNb);
 		 /* inutile de poursuivre la recherche */
 		 pAttr = NULL;
 		 pAsc = NULL;
@@ -2103,16 +2114,18 @@ ThotBool            recordLineNb;
 
 #ifdef __STDC__
 static void ApplyPresTRules (TOrder position, PtrElement pEl,
-			     ThotBool * removeEl, ThotBool * transChar,
+			     ThotBool * removeEl, ThotBool * ignoreEl,
+			     ThotBool * transChar,
 			     ThotBool * lineBreak, PtrAttribute pAttr,
 			     PtrDocument pDoc, ThotBool recordLineNb)
 
 #else  /* __STDC__ */
-static void ApplyPresTRules (position, pEl, removeEl, transChar, lineBreak,
-			     pAttr, pDoc, recordLineNb)
+static void ApplyPresTRules (position, pEl, removeEl, ignoreEl, transChar,
+			     lineBreak, pAttr, pDoc, recordLineNb)
 TOrder              position;
 PtrElement          pEl;
 ThotBool           *removeEl;
+ThotBool           *ignoreEl;
 ThotBool           *transChar;
 ThotBool           *lineBreak;
 PtrAttribute        pAttr;
@@ -2134,6 +2147,8 @@ ThotBool            recordLineNb;
 #define MAX_PRULE_TABLE 50
    PtrPRule            PRuleTable[MAX_PRULE_TABLE];
 
+   if (*ignoreEl)
+      return;
    pTSch = GetTranslationSchema (pEl->ElStructSchema);
    if (pTSch == NULL)
       return;
@@ -2152,7 +2167,7 @@ ThotBool            recordLineNb;
      }
    
    /* parcourt les regles de presentation specifique de l'element */
-   while (pPRule != NULL)
+   while (pPRule != NULL && !*ignoreEl)
      {
      pPRuleTr = &pTSch->TsPresTRule[pPRule->PrType];
      if (pPRuleTr->RtExist)
@@ -2209,19 +2224,21 @@ ThotBool            recordLineNb;
 	     pBlock = pPRuleTr->RtPRuleValueBlock[0];
 	   }
        /* parcourt les blocs de regles de la valeur de la presentation */
-       while (pBlock != NULL)
+       while (pBlock != NULL && !*ignoreEl)
 	 {
 	 if (ConditionIsTrue (pBlock, pEl, NULL, pDoc))
 	   /* la condition du bloc est verifiee */
 	   {
 	   pTRule = pBlock->TbFirstTRule;	/* premiere regle du bloc */
 	   /* parcourt les regles du bloc */
-	   while (pTRule != NULL)
+	   while (pTRule != NULL && !*ignoreEl)
 	     {
 	     if (pTRule->TrOrder == position)
 	       /* c'est une regle a appliquer a cette position */
 	       if (pTRule->TrType == TRemove)
 		 *removeEl = TRUE;
+	       else if (pTRule->TrType == TIgnore)
+		 *ignoreEl = TRUE;
 	       else if (pTRule->TrType == TNoTranslation)
 		 *transChar = FALSE;
 	       else if (pTRule->TrType == TNoLineBreak)
@@ -2229,8 +2246,8 @@ ThotBool            recordLineNb;
 	       else
 		 /* on applique la regle */
 		 ApplyTRule (pTRule, pTSch, pEl->ElStructSchema, pEl,
-			     transChar, lineBreak, removeEl, pPRule, pAttr,
-			     pDoc, recordLineNb);
+			     transChar, lineBreak, removeEl, ignoreEl,
+			     pPRule, pAttr, pDoc, recordLineNb);
 	     /* passe a la regle suivante */
 	     pTRule = pTRule->TrNextTRule;
 	     }
@@ -2496,11 +2513,12 @@ static void         TranslateTree ( /* pEl, pDoc, transChar, lineBreak,
 static void ApplyTRule (PtrTRule pTRule, PtrTSchema pTSch, PtrSSchema pSSch,
 			PtrElement pEl, ThotBool * transChar,
 			ThotBool * lineBreak, ThotBool * removeEl,
+			ThotBool * ignoreEl,
 			PtrPRule pRPres, PtrAttribute pAttr,
 			PtrDocument pDoc, ThotBool recordLineNb)
 #else  /* __STDC__ */
 static void ApplyTRule (pTRule, pTSch, pSSch, pEl, transChar, lineBreak,
-			removeEl, pRPres, pAttr, pDoc, recordLineNb)
+			removeEl, ignoreEl, pRPres, pAttr, pDoc, recordLineNb)
 PtrTRule            pTRule;
 PtrTSchema          pTSch;
 PtrSSchema          pSSch;
@@ -2508,6 +2526,7 @@ PtrElement          pEl;
 ThotBool           *transChar;
 ThotBool           *lineBreak;
 ThotBool           *removeEl;
+ThotBool           *ignoreEl;
 PtrPRule            pRPres;
 PtrAttribute        pAttr;
 PtrDocument         pDoc;
@@ -2548,6 +2567,8 @@ ThotBool            recordLineNb;
    unsigned char       mbc[MAX_BYTES + 1];
 #endif /* _I18N_ */
 
+   if (*ignoreEl)
+      return;
    n[0] = EOS;
    /* on applique la regle selon son type */
    switch (pTRule->TrType)
@@ -2741,7 +2762,7 @@ ThotBool            recordLineNb;
 
 	 case ToAllAttr:
 	   /* produit la traduction de tous les attributs de l'element */
-	   ApplyAttrRules (pTRule->TrOrder, pEl, removeEl, transChar,
+	   ApplyAttrRules (pTRule->TrOrder, pEl, removeEl, ignoreEl, transChar,
 			   lineBreak, pDoc, recordLineNb);
 	   /* les regles des attributs ont ete appliquees */
 	   pEl->ElTransAttr = TRUE;
@@ -2750,8 +2771,8 @@ ThotBool            recordLineNb;
 	 case ToAllPRules:
 	   /* produit la traduction de toutes les regles de presentation */
 	   /* specifique portees par l'element */
-	   ApplyPresTRules (pTRule->TrOrder, pEl, removeEl, transChar,
-			    lineBreak, pAttr, pDoc, recordLineNb);
+	   ApplyPresTRules (pTRule->TrOrder, pEl, removeEl, ignoreEl,
+			    transChar, lineBreak, pAttr, pDoc, recordLineNb);
 	   /* marque dans l'element que sa presentation a ete traduite */
 	   pEl->ElTransPres = TRUE;
 	   break;
@@ -3261,6 +3282,7 @@ ThotBool            recordLineNb;
        /* du chargement du document a traduire. */
        break;
      case TRemove:
+     case TIgnore:
      case TNoTranslation:
      case TNoLineBreak:
        /* On ne fait rien */
@@ -3324,17 +3346,20 @@ ThotBool            recordLineNb;
 #ifdef __STDC__
 static void ApplyElTypeRules (TOrder position, ThotBool * transChar,
 			      ThotBool * lineBreak, ThotBool * removeEl,
+			      ThotBool * ignoreEl,
 			      PtrElement pEl, int TypeEl, PtrTSchema pTSch,
 			      PtrSSchema pSS, PtrDocument pDoc,
 			      ThotBool recordLineNb)
 
 #else  /* __STDC__ */
-static void  ApplyElTypeRules (position, transChar, lineBreak, removeEl, pEl,
-			       TypeEl, pTSch, pSS, pDoc, recordLineNb)
+static void  ApplyElTypeRules (position, transChar, lineBreak, removeEl,
+			       ignoreEl, pEl, TypeEl, pTSch, pSS, pDoc,
+			       recordLineNb)
 TOrder              position;
 ThotBool           *transChar;
 ThotBool           *lineBreak;
 ThotBool           *removeEl;
+ThotBool           *ignoreEl;
 PtrElement          pEl;
 int                 TypeEl;
 PtrTSchema          pTSch;
@@ -3348,23 +3373,26 @@ ThotBool            recordLineNb
    PtrTRuleBlock       pBlock;
    PtrTRule            pTRule;
 
-
+   if (*ignoreEl)
+      return;
    /* premier bloc de regles correspondant au type de l'element */
    pBlock = pTSch->TsElemTRule[TypeEl - 1];
    /* parcourt les blocs de regles du type de l'element */
-   while (pBlock != NULL)
+   while (pBlock != NULL && !*ignoreEl)
      {
      if (ConditionIsTrue (pBlock, pEl, NULL, pDoc))
        /* la condition du bloc est verifiee */
        {
        pTRule = pBlock->TbFirstTRule;	/* premiere regle du bloc */
        /* parcourt les regles du bloc */
-       while (pTRule != NULL)
+       while (pTRule != NULL && !*ignoreEl)
 	 {
 	 if (pTRule->TrOrder == position)
 	   /* c'est une regle a appliquer a cette position */
 	   if (pTRule->TrType == TRemove)
 	     *removeEl = TRUE;
+	   else if (pTRule->TrType == TIgnore)
+	     *ignoreEl = TRUE;
 	   else if (pTRule->TrType == TNoTranslation)
 	     *transChar = FALSE;
 	   else if (pTRule->TrType == TNoLineBreak)
@@ -3372,7 +3400,7 @@ ThotBool            recordLineNb
 	   else
 	     /* on applique la regle */
 	     ApplyTRule (pTRule, pTSch, pSS, pEl, transChar, lineBreak,
-			 removeEl, NULL, NULL, pDoc, recordLineNb);
+			 removeEl, ignoreEl, NULL, NULL, pDoc, recordLineNb);
 	 /* passe a la regle suivante */
 	 pTRule = pTRule->TrNextTRule;
 	 }
@@ -3414,6 +3442,7 @@ ThotBool            recordLineNb;
    int                 elemType, i;
    ThotBool            found;
    ThotBool            removeEl;
+   ThotBool            ignoreEl;
 
    if (!pEl->ElTransContent || enforce)
      {
@@ -3422,6 +3451,7 @@ ThotBool            recordLineNb;
      if (pTSch == NULL)
        return;
      removeEl = FALSE;
+     ignoreEl = FALSE;
      pSS = pEl->ElStructSchema;
      elemType = pEl->ElTypeNumber;
      /* envoie l'evenement ElemExport.Pre a l'application, si elle */
@@ -3486,29 +3516,31 @@ ThotBool            recordLineNb;
        /* Cherche et applique les regles de traduction associees au type */
        /* de l'element et qui doivent s'appliquer avant la traduction du */
        /* contenu de l'element */
-       ApplyElTypeRules (TBefore, &transChar, &lineBreak, &removeEl, pEl,
-			 elemType, pTSch, pSS, pDoc, recordLineNb);
+       ApplyElTypeRules (TBefore, &transChar, &lineBreak, &removeEl, &ignoreEl,
+			 pEl, elemType, pTSch, pSS, pDoc, recordLineNb);
        /* on ne traduit les attributs que si ce n'est pas deja fait par */
-       /* une regle Create Attributes associee au type */
-       if (!pEl->ElTransAttr)
+       /* une regle Create Attributes associee au type et si on n'a pas */
+       /* rencontre' de re`gle Ignore */
+       if (!pEl->ElTransAttr && !ignoreEl)
 	 /* Parcourt les attributs de l'element et applique les regles
 	    des attributs qui doivent ^etre appliquees avant la
 	    traduction du contenu de l'element */
-	 ApplyAttrRules (TBefore, pEl, &removeEl, &transChar, &lineBreak, pDoc,
-			 recordLineNb);
+	 ApplyAttrRules (TBefore, pEl, &removeEl, &ignoreEl, &transChar,
+			 &lineBreak, pDoc, recordLineNb);
 
        /* on ne traduit la presentation que si ce n'est pas deja fait par */
-       /* une regle Create Presentation */
-       if (!pEl->ElTransPres)
+       /* une regle Create Presentation et si on n'a pas rencontre' de */
+       /* regle Ignore */
+       if (!pEl->ElTransPres && !ignoreEl)
 	 /* Parcourt les presentations de l'element et applique les regles
 	    de traduction correspondantes qui doivent ^etre appliquees
 	    avant la traduction du contenu de l'element */
-	 ApplyPresTRules (TBefore, pEl, &removeEl, &transChar, &lineBreak,
-			  NULL, pDoc, recordLineNb);
+	 ApplyPresTRules (TBefore, pEl, &removeEl, &ignoreEl, &transChar,
+			  &lineBreak, NULL, pDoc, recordLineNb);
        /* traduit le contenu de l'element, sauf si on a deja rencontre' */
-       /* une regle Remove pour cet element. */
-       if (!removeEl)
-	 /* pas de regle Remove */
+       /* une regle Remove ou Ignore pour cet element. */
+       if (!removeEl && !ignoreEl)
+	 /* pas de regle Remove ni Ignore */
 	 if (pEl->ElTerminal)
 	   /* c'est une feuille, applique les regles de traduction des */
 	   /* feuilles et sort le contenu dans le fichier principal */
@@ -3531,23 +3563,26 @@ ThotBool            recordLineNb;
        pEl->ElTransAttr = FALSE;    /* les attributs n'ont pas ete traduits */
        pEl->ElTransPres = FALSE;    /* la presentation n'a pas ete traduite */
        /* on ne traduit la presentation que si ce n'est pas deja fait par */
-       /* une regle Create Presentation */
-       if (!pEl->ElTransPres)
+       /* une regle Create Presentation et si on n'a pas rencontre' de */
+       /* regle Ignore */
+       if (!pEl->ElTransPres && !ignoreEl)
 	 /* Parcourt les presentations de l'element et applique les regles
 	    de traduction correspondantes qui doivent ^etre appliquees
 	    apres la traduction du contenu */
-	 ApplyPresTRules (TAfter, pEl, &removeEl, &transChar, &lineBreak, NULL,
-			  pDoc, recordLineNb);
-       if (!pEl->ElTransAttr)
+	 ApplyPresTRules (TAfter, pEl, &removeEl, &ignoreEl, &transChar,
+			  &lineBreak, NULL, pDoc, recordLineNb);
+       if (!pEl->ElTransAttr && !ignoreEl)
 	 /* Parcourt les attributs de l'element et applique les regles des
 	    attributs qui doivent etre appliquees apres la traduction du
 	    contenu */
-	 ApplyAttrRules (TAfter, pEl, &removeEl, &transChar, &lineBreak, pDoc,
-			 recordLineNb);
+	 ApplyAttrRules (TAfter, pEl, &removeEl, &ignoreEl, &transChar,
+			 &lineBreak, pDoc, recordLineNb);
        /* Cherche et applique les regles associees au type de l'element et
 	  qui doivent s'appliquer apres la traduction du contenu */
-       ApplyElTypeRules (TAfter, &transChar, &lineBreak, &removeEl, pEl,
-			 elemType, pTSch, pSS, pDoc, recordLineNb);
+       if (!ignoreEl)
+         ApplyElTypeRules (TAfter, &transChar, &lineBreak, &removeEl,
+			   &ignoreEl, pEl, elemType, pTSch, pSS, pDoc,
+			   recordLineNb);
        if (!enforce)
 	 /* marque que l'element a ete traite' */
 	 pEl->ElTransContent = TRUE;

@@ -248,6 +248,81 @@ char*               label;
    return ((Element) element);
 }
 
+/* ----------------------------------------------------------------------
+   TtaNewTranscludedElement
+
+   Creates a new element that is a dynamic copy of another element.
+
+   Parameters:
+   document: the document for which the element is created.
+   orig:     the element that is copied.
+
+   Return value:
+   the created element.
+
+   ---------------------------------------------------------------------- */
+
+#ifdef __STDC__
+Element             TtaNewTranscludedElement (Document document, Element orig)
+
+#else  /* __STDC__ */
+Element             TtaNewTranscludedElement (document, orig)
+Document            document;
+Element             orig;
+
+#endif /* __STDC__ */
+
+{
+   PtrElement          element;
+   PtrReference        pRef;
+
+   UserErrorCode = 0;
+   element = NULL;
+   if (orig == NULL)
+     {
+	TtaError (ERR_invalid_parameter);
+     }
+   else
+      /* Checks the parameter document */
+   if (document < 1 || document > MAX_DOCUMENTS)
+     {
+	TtaError (ERR_invalid_document_parameter);
+     }
+   else if (LoadedDocument[document - 1] == NULL)
+     {
+	TtaError (ERR_invalid_document_parameter);
+     }
+   else
+      /* Parameter document is ok */
+     {
+	element = NewSubtree (((PtrElement)orig)->ElTypeNumber,
+			      ((PtrElement)orig)->ElStructSchema,
+		  LoadedDocument[document - 1], 0, FALSE, TRUE, TRUE, TRUE);
+	if (element != NULL)
+	  {
+	    GetReference (&pRef);
+	    if (pRef)
+	      {
+		element->ElSource = pRef;
+		pRef->RdElement = element;
+		pRef->RdTypeRef = RefInclusion;
+		if (SetReference (element, NULL, orig,
+			      LoadedDocument[document - 1],
+			      LoadedDocument[document - 1], TRUE, FALSE))
+		   CopyIncludedElem (element, LoadedDocument[document - 1]);
+		else
+		  {
+		    element->ElSource = NULL;
+		    pRef->RdElement = NULL;
+		    FreeReference (pRef);
+		  }
+	      }
+	  }
+     }
+   return ((Element) element);
+}
+
+
 /* ------------------------------------------------------------
    TransRef cherche dans le sous-arbre de racine pElem tous les
    elements reference's et transfert sur eux les references qui    

@@ -2028,6 +2028,11 @@ SyntRuleNum         pr;
 	     CurTRule->TrType = TRemove;
 	     break;
 
+	   case KWD_Ignore:	/* Ignore */
+	     NewTransRule ();
+	     CurTRule->TrType = TIgnore;
+	     break;
+
 	   case KWD_Write:	/* Write */
 	     NewTransRule ();
 	     CurTRule->TrType = TWrite;

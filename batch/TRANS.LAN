@@ -126,6 +126,7 @@ RuleA =          'Create' [ 'IN' VariableIdent ] Token [ Position ] ';' /
 	                [ Position ] ';' /
                  'Use' TrSchema [ 'For' TypeIdent ] ';' /
                  'Remove' ';' /
+                 'Ignore' ';' /
 	         'Write' Token [ Position ] ';' /
                  'Read' BufferIdent [ Position ] ';' /
                  'Include' File [ Position ] ';' /

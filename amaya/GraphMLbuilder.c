@@ -494,13 +494,14 @@ int             *error
 #endif
 {
    ElementType		elType, parentType, newType;
-   Element		child, parent, new, leaf;
+   Element		child, parent, new, leaf, source, curEl, elFound, copy;
    AttributeType        attrType;
    Attribute            attr;
-   int                  length;
+   int                  length, i;
    PRule		fillPatternRule, newPRule;
    SSchema	        GraphMLSSchema;
-   STRING               text;
+   STRING               text, href, id;
+   SearchDomain         direction;
    ThotBool		closedShape, parseCSS;
 
    *error = 0;
@@ -537,10 +538,70 @@ int             *error
 	 break;
 
        case GraphML_EL_use_:
-	 /* it's a use element, copy the element addressed by its xlink_href
-            attribute after the last child */
-	 child = TtaGetLastChild (el);
-         /**** TO DO ****/
+	 /* it's a use element, make a transclusion of the element addressed
+	    by its xlink_href attribute after the last child */
+         /* first, get the xlink:href attribute */
+	 attrType.AttrSSchema = elType.ElSSchema;
+	 attrType.AttrTypeNum = GraphML_ATTR_xlink_href;
+	 attr = TtaGetAttribute (el, attrType);
+	 if (attr)
+	   /* the use element has a xlink:href attribute */
+	   {
+	     /* get its value */
+	     length = TtaGetTextAttributeLength (attr);
+	     href = TtaAllocString (length + 1);
+	     TtaGiveTextAttributeValue (attr, href, &length);
+	     /* look for an element with an id attribute with the same value */
+	     attrType.AttrTypeNum = GraphML_ATTR_id;
+             /* search backwards first */
+             direction = SearchBackward;
+	     source = NULL;
+	     if (href[0] == '#') /* handles only internal links */
+	       for (i = 1; i <= 2 && source == NULL; i++)
+	         {
+		 curEl = el;
+		 do
+		   {
+		     TtaSearchAttribute (attrType, direction, curEl,
+					 &elFound, &attr);
+		     if (attr)
+		       /* an id attribute has been found */
+		       {
+			 /* get its value */
+			 length = TtaGetTextAttributeLength (attr);
+			 id = TtaAllocString (length + 1);
+			 TtaGiveTextAttributeValue (attr, id, &length);
+			 /* compare with the xlink:href attribute of the use
+			    element */
+			 if (!ustrcasecmp (&href[1], id))
+			   /* same  values. we found it */
+			   source = elFound;
+			 TtaFreeMemory (id);
+		       }
+		     curEl = elFound;
+		   }
+		 while (elFound && !source);
+		 /* search forward if not found */
+	         direction = SearchForward;
+	         }
+	     TtaFreeMemory (href);
+	     if (source)
+	       /* the element to be copied in the use element has been found */
+	       {
+		 /* make a copy of it */
+		 copy = TtaNewTranscludedElement (doc, source);
+		 /* remove the id attribute from the copy */
+		 attr = TtaGetAttribute (copy, attrType);
+		 /* insert it as the last child of the use element */
+		 if (attr)
+		   TtaRemoveAttribute (copy, attr, doc);
+		 child = TtaGetLastChild (el);
+		 if (child)
+		   TtaInsertSibling (copy, child, FALSE, doc);
+		 else
+		   TtaInsertFirstChild (&copy, el, doc);
+	       }
+	   }
 	 break;
 
        case GraphML_EL_style__:

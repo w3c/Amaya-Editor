@@ -132,6 +132,7 @@ number
 		                [ Position ] ';' /
 	                 'Use' TrSchema [ 'For' TypeIdent ] ';' /
 	                 'Remove' ';' /
+	                 'Ignore' ';' /
 		         'Write' Token [ Position ] ';' /
 	                 'Read' BufferIdent [ Position ] ';' /
 	                 'Include' File [ Position ] ';' /
@@ -226,7 +227,7 @@ number
 code  character  numbers of rules using the key-word
 
 1001      ;       1   1   1   1  15  18  26  28  36  51  66  66  66  66  66  66
-                 66  66  66  66  67  67  67  67  67  14  77
+                 66  66  66  66  66  67  67  67  67  67  14  77
 1002      =      15  35  54  62  62  62  62  62  62  62  62  62  62  62  62  81
 1003      :      18  28  30  34  45  80
 1004      -      21  35  35  35  35  37  73  77  81  81  81  81  92
@@ -316,63 +317,64 @@ code  key-word      numbers of rules using the key-word
 1167  Use             66
 1168  For             66
 1169  Remove          66
-1170  Write           66
-1171  Read            66
-1172  Include         66
-1173  NoTranslation   66
-1174  NoLineBreak     66
-1175  ChangeMainFile  67
-1176  Indent          67  62
-1177  RemoveFile      67
-1178  Suspend         72
-1179  Resume          72
-1180  Translated      68
-1181  Content         68
-1182  RefId           68  75
-1183  PairId          68
-1184  After           69
-1185  Before          69
-1186  Included        70
-1187  Size            62
-1188  LineSpacing     62
-1189  Adjust          62
-1190  Justify         62
-1191  Hyphenate       62
-1192  Style           62
-1193  Weight          62
-1194  Font            62
-1195  UnderLine       62  87
-1196  Thickness       62
-1197  LineStyle       62
-1198  LineWeight      62
-1199  FillPattern     62
-1200  Background      62
-1201  Foreground      62
-1202  Left            82
-1203  Right           82
-1204  VMiddle         82
-1205  LeftWithDots    82
-1206  Yes             83
-1207  No              83  87
-1208  Roman           84
-1209  Italics         84
-1210  Oblique         84
-1211  Normal          85
-1212  Bold            85
-1213  Times           86
-1214  Helvetica       86
-1215  Courier         86
-1216  NoUnderline     87
-1217  Underlined      87
-1218  Overlined       87
-1219  CrossedOut      87
-1220  OverLine        87
-1221  StrikeOut       87
-1222  Thick           88
-1223  Thin            88
-1224  Solid           89
-1225  Dashed          89
-1226  Dotted          89
+1170  Ignore          66
+1171  Write           66
+1172  Read            66
+1173  Include         66
+1174  NoTranslation   66
+1175  NoLineBreak     66
+1176  ChangeMainFile  67
+1177  Indent          67  62
+1178  RemoveFile      67
+1179  Suspend         72
+1180  Resume          72
+1181  Translated      68
+1182  Content         68
+1183  RefId           68  75
+1184  PairId          68
+1185  After           69
+1186  Before          69
+1187  Included        70
+1188  Size            62
+1189  LineSpacing     62
+1190  Adjust          62
+1191  Justify         62
+1192  Hyphenate       62
+1193  Style           62
+1194  Weight          62
+1195  Font            62
+1196  UnderLine       62  87
+1197  Thickness       62
+1198  LineStyle       62
+1199  LineWeight      62
+1200  FillPattern     62
+1201  Background      62
+1202  Foreground      62
+1203  Left            82
+1204  Right           82
+1205  VMiddle         82
+1206  LeftWithDots    82
+1207  Yes             83
+1208  No              83  87
+1209  Roman           84
+1210  Italics         84
+1211  Oblique         84
+1212  Normal          85
+1213  Bold            85
+1214  Times           86
+1215  Helvetica       86
+1216  Courier         86
+1217  NoUnderline     87
+1218  Underlined      87
+1219  Overlined       87
+1220  CrossedOut      87
+1221  OverLine        87
+1222  StrikeOut       87
+1223  Thick           88
+1224  Thin            88
+1225  Solid           89
+1226  Dashed          89
+1227  Dotted          89
 
 
 

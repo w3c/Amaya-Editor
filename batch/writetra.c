@@ -256,6 +256,9 @@ TRuleType           typ;
 	    case TRemove:
 	       TtaWriteByte (outfile, C_TR_REMOVE);
 	       break;
+	    case TIgnore:
+	       TtaWriteByte (outfile, C_TR_IGNORE);
+	       break;
 	    case TWrite:
 	       TtaWriteByte (outfile, C_TR_WRITE);
 	       break;
@@ -654,6 +657,7 @@ PtrTRule            pTRule;
 		    WriteName (currentRule->TrTranslSchemaName);
 		    break;
 		 case TRemove:
+	         case TIgnore:
 		 case TNoTranslation:
 		 case TNoLineBreak:
 

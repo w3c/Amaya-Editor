@@ -74,7 +74,8 @@ typedef enum
 	TAddCounter,
 	TNoLineBreak,
 	TIndent,
-	TRemoveFile
+	TRemoveFile,
+	TIgnore
 } TRuleType;
 
 /* the position where the translator-produced strings are created */

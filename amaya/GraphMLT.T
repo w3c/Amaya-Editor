@@ -22,6 +22,8 @@ RULES
 
    GraphML:
 	BEGIN
+        if within use_
+	   Ignore;
 	Use HTMLTX for HTML;
         Use MathMLT for MathML;
         Use XLinkT for XLink;
@@ -45,6 +47,8 @@ RULES
 
    g:
 	BEGIN
+	if within use_
+           Ignore;
 	create SOT;
 	create 'g';
 	create attributes;
@@ -248,7 +252,7 @@ RULES
 	create SOT;
 	create 'use';
 	create attributes;
-	create '>';
+	create CloseTagNL;
 	indent +2;
 	indent -2 after;
 	create SCT after;
@@ -276,10 +280,12 @@ RULES
 
    symbol_:
 	BEGIN
+	if within use_
+           Ignore;
 	create SOT;
 	create 'symbol';
 	create attributes;
-	create '>';
+	create CloseTagNL;
 	indent +2;
 	indent -2 after;
 	create SCT after;
