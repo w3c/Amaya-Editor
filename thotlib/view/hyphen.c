@@ -248,18 +248,14 @@ static int WordHyphen (STRING word, int length, Language language,
 }
 
 /*----------------------------------------------------------------------
-   CutLasWord essaie de couper le dernier mot de la ligne dans la  
-   limite de lenght caracte`res et de la longueur width.   
-   Retourne le nombre de caracte`res avant la coupure      
-   ou 0 si le mot ne peut pas e^tre coupe'.                
-   Rend la position a` laquelle le point de coupure peut   
-   e^tre inse're' :                                        
-   - l'adresse du buffer du 1er caracte`re apre`s coupure. 
-   - l'index dans ce buffer du 1er caracte`re.             
-   - la longueur de la premie`re partie  du mot, le tiret  
-   d'hyphe'nation compris.                               
-   - un indicateur qui vaut VRAI s'il faut engendrer un    
-   tiret d'hyphe'nation.                                 
+  HyphenLastWord tries to hyphen the last word of the line within the
+  width limit.
+  Returns the number of characters before the break or 0 if the word cannot
+  be cut.
+  - buffer points to the buffer of the first character after the break.
+  - rank is the rank of this first character within the buffer.
+  - width is the width of the first part of the word including the hyphen.
+  - hyphen is TRUE if an hyphen should be displayed.
   ----------------------------------------------------------------------*/
 int HyphenLastWord (SpecFont font, Language language, PtrTextBuffer *buffer,
 		    int *rank, int *width, ThotBool *hyphen)
@@ -272,12 +268,11 @@ int HyphenLastWord (SpecFont font, Language language, PtrTextBuffer *buffer,
   int                 retLength, rest;
   int                 wordLength;
 
-  /* Si la coupure de words est active */
   retLength = 0;
   *hyphen = FALSE;
   if (*width > 0 && *buffer)
     {
-      /* La position du debut du word */
+      /* locate the first character of the word */
       adbuff = *buffer;
       i = *rank;
       if (i >= adbuff->BuLength)
@@ -291,20 +286,18 @@ int HyphenLastWord (SpecFont font, Language language, PtrTextBuffer *buffer,
 	    return retLength;
 	}
 
-      /* Length et largeur des separateurs avant le word */
+      /* get the next word */
       nbChars = NextWord (font, &adbuff, &i, word, &w);
-      /* Largeur du tiret d'hyphenantion */
+      /* hyphen width */
       lghyphen = BoxCharacterWidth (173, font);
-      /* Espace restant dans la ligne */
+      /* width available for the first part of the word */
       rest = *width - w - lghyphen;
-      /* Nombre de carateres maximum du word pouvant entrer dans la ligne */
       if (word)
-	/* On a isole un word assez long */
-	wordLength = ustrlen (word);	/* nombre de caraceteres du word isole */
+	/* length of the word */
+	wordLength = ustrlen (word);
       if (wordLength > 4 && rest > 0)
 	{
-	  /* Recherche le nombre de caracteres du word qui rentrent */
-	  /* dans la ligne */
+	  /* look for a break */
 	  length = 0;
 	  charWidth = BoxCharacterWidth (word[length], font);
 	  while (rest >= charWidth && length < wordLength)
@@ -316,44 +309,39 @@ int HyphenLastWord (SpecFont font, Language language, PtrTextBuffer *buffer,
 
 	  if (length > 1)
 	    {
-	      /* Recherche un point de coupure pour le word */
+	      /* try to hyphanate the word */
 	      length = WordHyphen (word, length, language, hyphen);
 	      if (length > 0)
 		{
-		  /* On a trouve un point de coupure */
+		  /* found */
 		  if (*hyphen)
-		    *width = w + lghyphen; /* 1ere partie du word */
+		    *width = w + lghyphen;
 		  else
-		    *width = w;	/* 1ere partie du word */
+		    *width = w;
 		  /* number of characters */
 		  retLength = length + nbChars;
 		  while (length > 0)
 		    {
 		      if (i >= adbuff->BuLength)
 			{
-			  /* Il faut changer de buffer */
 			  adbuff = adbuff->BuNext;
 			  i = 0;
 			}
 		      else
 			{
-			  /* comptabilise le caractere */
+			  /* width and length of the first part of the word */
 			  length--;
 			  *width += BoxCharacterWidth (adbuff->BuContent[i++], font);
 			}
 		    }
 		  
-		  /* Indice dans le buffer 2eme partie du word */
+		  /* locate the second part of the word */
 		  if (i >= adbuff->BuLength)
 		    {
-		      /* Il faut changer de buffer */
-		      i++;
-		      /* nouvelle position */
-		      *rank = i - adbuff->BuLength;
+		      i = 0;
 		      adbuff = adbuff->BuNext;
 		    }
-		  else
-		    *rank = i + 1;
+		  *rank = i;
 		  *buffer = adbuff;
 		}
 	    }

@@ -1978,7 +1978,7 @@ void ParsePathDataAttribute (Attribute attr, Element el, Document doc)
    SVGAttributeComplete
    The XML parser has read attribute attr for element el in document doc.
   ----------------------------------------------------------------------*/
-void      SVGAttributeComplete (Attribute attr, Element el, Document doc)
+void SVGAttributeComplete (Attribute attr, Element el, Document doc)
 {
    AttributeType	attrType, attrType1;
    Attribute            intAttr;

@@ -961,9 +961,9 @@ static int SearchBreak (PtrLine pLine, PtrBox pBox, int max, SpecFont font,
 	still = FALSE;
     }
 
-  if (*pNewBuff == NULL && dummySpaces)
+  if (*pNewBuff == NULL && (dummySpaces || spaceCount))
     {
-      /* end of the box */
+      /* the end of the box was reached */
       *pNewBuff = pBuffer;
       *newIndex = charIndex;
     }

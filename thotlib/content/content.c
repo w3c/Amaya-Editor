@@ -689,15 +689,15 @@ void CopyTextToText (PtrTextBuffer pSrceBuf, PtrTextBuffer pCopyBuf, int *len)
   PtrTextBuffer       pTBSrce, pTBDest;
 
   *len = 0;
-  if (pSrceBuf != NULL && pCopyBuf != NULL)
+  if (pSrceBuf && pCopyBuf)
     {
       /* cherche le dernier buffer de la chaine des buffers destination */
       pTBDest = pCopyBuf;
-      while (pTBDest->BuNext != NULL)
+      while (pTBDest->BuNext)
 	pTBDest = pTBDest->BuNext;
       pTBSrce = pSrceBuf;
       /* parcourt la chaine des buffers source */
-      while (pTBSrce != NULL)
+      while (pTBSrce)
 	{
 	  if (pTBSrce->BuLength > 0)
 	    /* ce buffer source n'est pas vide, on le copie */
