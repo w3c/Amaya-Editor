@@ -1139,7 +1139,8 @@ View                view;
   
   /* activate the menu that has just been created */
   ReturnOption = -1;
-  ReturnOptionMenu = -1;
+  /* JK: 04/06/2004: this used to work when initialized to -1 */
+  ReturnOptionMenu = 0;
 #ifndef _WINGUI
   TtaSetDialoguePosition ();
 #endif /* !_WINGUI */
