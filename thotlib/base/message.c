@@ -38,7 +38,7 @@ TabMsg;
 
  /* Identification des messages Thot */
 static PtrTabMsg       FirstTableMsg = NULL;
-static unsigned char   EmptyMsg [1];
+static unsigned char * EmptyMsg = (unsigned char *)"";
 static unsigned char   result[MAX_TXT_LEN];
 
 #include "dialogapi_f.h"
@@ -305,8 +305,6 @@ char *TtaGetMessage (int origin, int num)
 {
    int                 i;
    PtrTabMsg           currenttable;
-
-   EmptyMsg [0] = EOS;
 
    /* recherche la table de messages */
    if (origin == -1)
