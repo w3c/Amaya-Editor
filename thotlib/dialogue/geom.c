@@ -551,7 +551,7 @@ int                 maxPoints;
   while (ret == 0) {
 #     ifdef _WINDOWS
       SetCursor (LoadCursor (NULL, IDC_CROSS));
-      ShowCursor (TRUE);
+      /* ShowCursor (TRUE); */
       GetMessage (&event, NULL, 0, 0);
       if (event.message == WM_MOUSEMOVE) {
          GetCursorPos (&cursorPos);
@@ -811,7 +811,7 @@ int                 maxPoints;
   /* erase box frame */
 # ifdef _WINDOWS
   SetCursor (LoadCursor (NULL, IDC_ARROW));
-  ShowCursor (TRUE);
+  /* ShowCursor (TRUE); */
 #  endif /* *_WINDOWS */
   BoxGeometry (frame, x, y, width, height, x + width - 2, y + height - 2, TRUE);
 
@@ -946,7 +946,7 @@ ThotBool            close;
   ret = 0;
   while (ret == 0) {
       SetCursor (LoadCursor (NULL, IDC_CROSS));
-      ShowCursor (TRUE);
+      /* ShowCursor (TRUE); */
       GetCursorPos (&cursorPos);
       
       /* check the coordinates */
@@ -1041,7 +1041,7 @@ ThotBool            close;
   
   /* erase the box border */
   SetCursor (LoadCursor (NULL, IDC_ARROW));
-  ShowCursor (TRUE);
+  /* ShowCursor (TRUE); */
   BoxGeometry (frame, x, y, width, height, x + width - 2, y + height - 2, TRUE);
 
   /* returns to previous state of the Thot library */
@@ -1571,7 +1571,7 @@ int                 percentH;
     {
 #ifdef _WINDOWS
       SetCursor (LoadCursor (NULL, IDC_CROSS));
-      ShowCursor (TRUE);
+      /* ShowCursor (TRUE); */
       GetMessage (&event, NULL, 0, 0);
       if (event.message == WM_MOUSEMOVE) {
          GetCursorPos (&cursorPos);
@@ -1712,7 +1712,7 @@ int                 percentH;
   while (ret == 0) {
 #ifdef _WINDOWS
     SetCursor (LoadCursor (NULL, IDC_CROSS));
-    ShowCursor (TRUE);
+    /* ShowCursor (TRUE); */
     GetMessage (&event, NULL, 0, 0);
     switch (event.message) {
            case WM_LBUTTONUP:
@@ -1720,7 +1720,7 @@ int                 percentH;
            case WM_RBUTTONUP:
                 GetCursorPos (&cursorPos);
                 SetCursor (LoadCursor (NULL, IDC_ARROW));
-                ShowCursor (TRUE);
+                /* ShowCursor (TRUE); */
                 ret = 1;
                 break;
            case WM_MOUSEMOVE:
@@ -2177,7 +2177,7 @@ int                 ym;
 
                case WM_MOUSEMOVE:
                     SetCursor (LoadCursor (NULL, IDC_CROSS));
-                    ShowCursor (TRUE);
+                    /* ShowCursor (TRUE); */
                     GetCursorPos (&cursorPos);
                     ScreenToClient (w, &cursorPos);
                     /* compute the new box origin */
@@ -2513,7 +2513,7 @@ int                 percentH;
 
                case WM_MOUSEMOVE:
                     SetCursor (LoadCursor (NULL, IDC_CROSS));
-                    ShowCursor (TRUE);
+                    /* ShowCursor (TRUE); */
                     GetCursorPos (&cursorPos);
                     ScreenToClient (w, &cursorPos);
                     dl = cursorPos.x - xm;
@@ -2648,7 +2648,7 @@ int                 percentH;
 
   /* Erase the box drawing */
   SetCursor (LoadCursor (NULL, IDC_ARROW));
-  ShowCursor (TRUE);
+  /* ShowCursor (TRUE); */
   BoxGeometry (frame, x, y, *width, *height, xr, yr, FALSE);
 # else  /* _WINDOWS */
   e = ButtonPressMask | ButtonReleaseMask | ButtonMotionMask;

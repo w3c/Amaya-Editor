@@ -1602,6 +1602,7 @@ LPARAM lParam;
                      wParam != VK_RIGHT  &&
                      wParam != VK_UP     &&
                      wParam != VK_DOWN   &&
+                     wParam != VK_RETURN &&
                      wParam != 0x30      &&
                      wParam != 0x31      &&
                      wParam != 0x32      &&
