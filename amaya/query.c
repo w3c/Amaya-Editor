@@ -3162,12 +3162,35 @@ void               *context_tcbf;
    /* .. and we give the same type to the source anchor */
    /* we go thru setOutputFormat, rather than change the parent's
       anchor, as that's the place that libwww expects it to be */
-
    HTAnchor_setFormat (HTAnchor_parent (me->source),
 		       HTAtom_for (WideChar2ISO (tmp)));
+
    HTRequest_setOutputFormat (me->request,
 			      HTAtom_for (WideChar2ISO (tmp)));
-   /* define other request characteristics */
+
+#if 0 /* JK: code ready, but we're not going to use it yet */
+   /*
+   **  Set the Charset of the file we are uploading 
+   */
+   /* we try to use any charset previosuly associated
+      with the parent. If it doesn't exist, we try to guess it
+      from the metadata */
+   tmp = ISO2WideChar (HTAtom_name (HTAnchor_charset (dest_anc_parent)));
+   if (!tmp)
+     {
+       HTAnchor_setCharset (dest_anc_parent, HTAtom_for ("iso-8859-3"));
+       tmp = ISO2WideChar (HTAtom_name (HTAnchor_charset (dest_anc_parent)));
+     }
+   /* .. and we give the same charset to the source anchor */
+   /* we go thru setCharSet, rather than change the parent's
+      anchor, as that's the place that libwww expects it to be */
+   HTAnchor_setCharset (HTAnchor_parent (me->source),
+			HTAtom_for (WideChar2ISO (tmp)));
+#endif /* CHARSET */
+
+   /*
+   ** define other request characteristics
+   */
 #ifdef _WINDOWS
    HTRequest_setPreemptive (me->request, NO);
 #else
