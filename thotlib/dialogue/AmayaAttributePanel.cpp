@@ -134,22 +134,22 @@ void AmayaAttributePanel::SendDataToPanel( AmayaParams& p )
       break;
     case wxATTR_ACTION_SETUPLANG:
       ShowAttributValue( wxATTR_TYPE_LANG );
-      SetMandatoryState( (bool)p.param2 );
+      SetMandatoryState( p.param2 != NULL );
       SetupLangValue( (const char *)p.param3,(const char *)p.param4, (const char *)p.param5, (int)p.param6, (int)p.param7 );
       break;
     case wxATTR_ACTION_SETUPTEXT:
       ShowAttributValue( wxATTR_TYPE_TEXT );
-      SetMandatoryState( (bool)p.param2 );
+      SetMandatoryState( p.param2 != NULL );
       SetupTextValue( (const char *)p.param3 );
       break;
     case wxATTR_ACTION_SETUPENUM:
       ShowAttributValue( wxATTR_TYPE_ENUM );
-      SetMandatoryState( (bool)p.param2 );
+      SetMandatoryState( p.param2 != NULL );
       SetupEnumValue( (const char *)p.param3, (int)p.param4, (int)p.param5 );
       break;
     case wxATTR_ACTION_SETUPNUM:
       ShowAttributValue( wxATTR_TYPE_NUM );
-      SetMandatoryState( (bool)p.param2 );
+      SetMandatoryState( p.param2 != NULL );
       SetupNumValue( (int)p.param3 );
       break;
     }
