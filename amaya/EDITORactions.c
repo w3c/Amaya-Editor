@@ -537,9 +537,13 @@ static void CreateOrChangeDoctype (Document doc, View view, int profile)
   tempdocument = GetLocalPath (doc, DocumentURLs[doc]);
   TtaExtractName (tempdocument, tempdir, documentname);
   RestartParser (doc, tempdocument, tempdir, documentname);
-
-  UpdateDoctypeMenu (doc);
   TtaSetDocumentModified (doc);
+
+  /* Clear the current selection */
+  TtaClearViewSelections ();
+
+  /* Update the Doctype menu */
+  UpdateDoctypeMenu (doc);
 
   TtaFreeMemory (tempdocument);
 }
