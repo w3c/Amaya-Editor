@@ -3111,14 +3111,14 @@ const XML_Char **attlist;
 #endif  /* __STDC__ */
 
 {
-   int             nbatts;
+   int             nbatts = 0;
    CHAR_T         *buffer = NULL;
    CHAR_T         *bufAttr;
    CHAR_T         *bufName = NULL;
    CHAR_T         *ptr;
    PtrParserCtxt   elementParserCtxt = NULL;
    CHAR_T          msgBuffer[MaxMsgLength];
-   Element         savCurrentElement;
+   Element         savCurrentElement = NULL;
    ThotBool        isRoot = FALSE;
 
 #ifdef EXPAT_PARSER_DEBUG
@@ -3127,9 +3127,12 @@ const XML_Char **attlist;
   
    /* Initialize root element name and parser context if not done yet */
    if (XMLrootName[0] == WC_EOS)
+     /* This is the first parsed element */
      {
        strcpy (XMLrootName, (CHAR_T*) name);
-       isRoot = TRUE;
+       if (rootElement != NULL)
+	 /* This is the root of the Thot abstract tree */
+	 isRoot = TRUE;
      }
 
    /* Treatment for the GI */
@@ -3182,21 +3185,17 @@ const XML_Char **attlist;
 	  StartOfXmlStartElement (bufName);
 	  
 	  /*-------  Treatment of the attributes -------*/
-	  if (isRoot)
+	  nbatts = XML_GetSpecifiedAttributeCount (parser);
+	  if (isRoot && nbatts != 0)
 	    {
 	      savCurrentElement = XMLcontext.lastElement;
 	      XMLcontext.lastElement = rootElement;
 	    }
-
-	  nbatts = XML_GetSpecifiedAttributeCount (parser);
 	  while (*attlist != NULL)
 	    {
 	      /* Create the corresponding Thot attribute */
 	      bufAttr = TtaGetMemory ((strlen (*attlist)) + 1);
 	      strcpy (bufAttr, *attlist);
-#ifdef EXPAT_PARSER_DEBUG
-	      printf ("\n  attr %s :", bufAttr);
-#endif /* EXPAT_PARSER_DEBUG */
 	      EndOfAttributeName (bufAttr);
 	      TtaFreeMemory (bufAttr);
 	      
@@ -3210,9 +3209,6 @@ const XML_Char **attlist;
 		{
 		  bufAttr = TtaGetMemory ((strlen (*attlist)) + 1);
 		  strcpy (bufAttr, *attlist);
-#ifdef EXPAT_PARSER_DEBUG
-		  printf (" value=%s ", bufAttr);
-#endif /* EXPAT_PARSER_DEBUG */
 		  EndOfAttributeValue (bufAttr);
 		  TtaFreeMemory (bufAttr);
 		}
