@@ -80,6 +80,8 @@ ThotBool MakeASpan (Element elem, Element *span, Document doc,
 		{
 	         doit = FALSE;
 		 *span = parent;
+		 if (presRule)
+		   MovePRule (presRule, elem, *span, doc, TRUE);
 		 ret = TRUE;
 		}
 	      }
@@ -384,6 +386,45 @@ void SetStyleAttribute (Document doc, Element elem)
    TtaFreeMemory (style);
 }
 
+/*----------------------------------------------------------------------
+  GetParentDiv get the enclosing div if it's only include this element
+  or generates an enclosing div.
+  ----------------------------------------------------------------------*/
+static Element GetParentDiv (Element el, SSchema HTMLschema, Document doc)
+{
+  Element	 div, prev, next;
+  ElementType    elType;
+
+  /* generate a division around this pseudo paragraph */
+  div = TtaGetParent (el);
+  if (div)
+    {
+      elType = TtaGetElementType (div);
+      prev = next = el;
+      if (elType.ElSSchema == HTMLschema &&
+	  elType.ElTypeNum == HTML_EL_Division)
+	{
+	  TtaPreviousSibling (&prev);
+	  TtaNextSibling (&next);
+	}
+      if (prev || next)
+	/* this div includes more than the pseudo paragraph */
+	div = NULL;
+    }
+  if (div == NULL)
+    {
+      elType.ElSSchema = HTMLschema;
+      elType.ElTypeNum = HTML_EL_Division;
+      div = TtaNewElement (doc, elType);
+      TtaInsertSibling (div, el, TRUE, doc);
+      TtaRegisterElementCreate (div, doc);
+      TtaRegisterElementDelete (el, doc);
+      TtaRemoveTree (el, doc);
+      TtaInsertFirstChild  (&el, div, doc);
+      TtaRegisterElementCreate (el, doc);
+    }
+  return div;
+}
 
 /*----------------------------------------------------------------------
   ChangePRule
@@ -405,9 +446,6 @@ ThotBool ChangePRule (NotifyPresentation *event)
   int                w, h, unit, value, i;
   ThotBool           ret;
 
-  /* Store the new value into the presentation rule */
-  TtaSetPRuleValue (event->element, event->pRule, event->value, event->document);
-
   el = event->element;
   doc = event->document;
   presType = event->pRuleType;
@@ -418,6 +456,16 @@ ThotBool ChangePRule (NotifyPresentation *event)
 
   if (event->event != TtePRuleDelete)
     {
+     /* if a style property is being changed, we have its new value in the
+	PRule to set the corresponding style attribute, but if its a
+	change in the geometry, we have the old value to see the
+	difference */
+      if (presType == PRHeight || presType == PRWidth ||
+	  presType == PRVertPos || presType == PRHorizPos)
+	/* Store the new value into the presentation rule before it is
+	   potentially copied by MovePRule */
+	TtaSetPRuleValue (el, presRule, event->value, doc);
+
     if (elType.ElSSchema != HTMLschema)
       /* it's not an HTML element */
       {
@@ -581,11 +629,13 @@ ThotBool ChangePRule (NotifyPresentation *event)
 	      {
 		do
 		  el = TtaGetParent (el);
-		while (el != NULL && IsCharacterLevelElement (el));
+		while (el && IsCharacterLevelElement (el));
 		/* if the PRule is on a Pseudo-Paragraph, move it to the
 		   enclosing element */
-		if (elType.ElTypeNum == HTML_EL_Pseudo_paragraph)
-		  el = TtaGetParent (el);
+		elType = TtaGetElementType (el);
+		if (elType.ElSSchema == HTMLschema &&
+		    elType.ElTypeNum == HTML_EL_Pseudo_paragraph)
+		  el = GetParentDiv (el, HTMLschema, doc);
 		MovePRule (presRule, event->element, el, doc, TRUE);
 		ret = TRUE; /* don't let Thot perform normal operation */
 	      }	  
@@ -593,7 +643,7 @@ ThotBool ChangePRule (NotifyPresentation *event)
 	      /* if the PRule is on a Pseudo-Paragraph, move it to the
 		 enclosing element */
 	      {
-		el = TtaGetParent (el);
+		el = GetParentDiv (el, HTMLschema, doc);
 		MovePRule (presRule, event->element, el, doc, TRUE);
 		ret = TRUE; /* don't let Thot perform normal operation */
 	      }

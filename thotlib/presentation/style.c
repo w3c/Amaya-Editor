@@ -104,7 +104,7 @@ char *TtaGiveRGB (char *value, unsigned short *red, unsigned short *green,
 
   ptr = value;
   failed = TRUE;
-  *red = -1;
+  *red = 32767;
   *green = 0;
   *blue = 0;
   if (*ptr == '#')

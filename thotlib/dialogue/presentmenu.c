@@ -142,7 +142,7 @@ extern int   WIN_NormalLineSpacing;
    return the first ancestor of element pEl that has a Line presentation
    rule for the active view.
   ----------------------------------------------------------------------*/
-static PtrElement   GetEnclosingBlock (PtrElement pEl, PtrDocument pDoc)
+static PtrElement GetEnclosingBlock (PtrElement pEl, PtrDocument pDoc)
 {
   PtrElement	pBlock;
   int		viewSch;
@@ -153,11 +153,14 @@ static PtrElement   GetEnclosingBlock (PtrElement pEl, PtrDocument pDoc)
 
   pBlock = NULL;
   viewSch = AppliedView (pEl, NULL, pDoc, SelectedView);
-  while (pBlock == NULL && pEl != NULL)
+  while (pBlock == NULL && pEl)
      {
-     pPRule = GlobalSearchRulepEl (pEl, pDoc, &pSPR, &pSSR, 0, NULL, viewSch,
-				   PtFunction, FnLine, FALSE, TRUE, &pAttr);
-     if (pPRule != NULL)
+       if (pEl->ElTerminal)
+	 pPRule = NULL;
+       else
+	 pPRule = GlobalSearchRulepEl (pEl, pDoc, &pSPR, &pSSR, 0, NULL, viewSch,
+				       PtFunction, FnLine, FALSE, TRUE, &pAttr);
+     if (pPRule)
 	pBlock = pEl;
      else
 	pEl = pEl->ElParent;
@@ -197,13 +200,13 @@ static void ModifyGraphics (PtrElement pEl, PtrDocument pDoc,
       /* this rule will be translated into style attribute for the element */
       pPRule->PrSpecificity = 100;
       pPRule->PrPresMode = PresImmediate;
+      pPRule->PrChrValue = LineStyle;
       if (!PRuleMessagePre (pEl, pPRule, LineStyle, pDoc, isNew))
 	{
-	  pPRule->PrChrValue = LineStyle;
-	  SetDocumentModified (pDoc, TRUE, 0);
 	  /* si le pave existe, applique la nouvelle regle au pave */
 	  ApplyNewRule (pDoc, pPRule, pEl);
 	  PRuleMessagePost (pEl, pPRule, pDoc, isNew);
+	  SetDocumentModified (pDoc, TRUE, 0);
 	}
     }
 
@@ -220,14 +223,14 @@ static void ModifyGraphics (PtrElement pEl, PtrDocument pDoc,
       pPRule->PrSpecificity = 100;
       pPRule->PrPresMode = PresImmediate;
       pPRule->PrMinAttr = FALSE;
+      pPRule->PrMinValue = LineWeight;
+      pPRule->PrMinUnit = LineWeightUnit;
       if (!PRuleMessagePre (pEl, pPRule, LineWeight, pDoc, isNew))
 	{
-	  pPRule->PrMinValue = LineWeight;
-	  pPRule->PrMinUnit = LineWeightUnit;
-	  SetDocumentModified (pDoc, TRUE, 0);
 	  /* si le pave existe, applique la nouvelle regle au pave */
 	  ApplyNewRule (pDoc, pPRule, pEl);
 	  PRuleMessagePost (pEl, pPRule, pDoc, isNew);
+	  SetDocumentModified (pDoc, TRUE, 0);
 	}
     }
 
@@ -243,14 +246,14 @@ static void ModifyGraphics (PtrElement pEl, PtrDocument pDoc,
       pPRule->PrSpecificity = 100;
       pPRule->PrPresMode = PresImmediate;
       pPRule->PrAttrValue = FALSE;
+      pPRule->PrIntValue = ColorBackground;
       if (!PRuleMessagePre (pEl, pPRule, ColorBackground, pDoc, isNew))
 	{
-	  pPRule->PrIntValue = ColorBackground;
-	  /* met les choix de l'utilisateur dans cette regle */
-	  SetDocumentModified (pDoc, TRUE, 0);
 	  /* si le pave existe, applique la nouvelle regle au pave */
 	  ApplyNewRule (pDoc, pPRule, pEl);
 	  PRuleMessagePost (pEl, pPRule, pDoc, isNew);
+	  /* met les choix de l'utilisateur dans cette regle */
+	  SetDocumentModified (pDoc, TRUE, 0);
 	  
 	  /* It the element is not a leaf in the abstract tree, create a
 	     ShowBox rule for the element if there is none */
@@ -265,12 +268,13 @@ static void ModifyGraphics (PtrElement pEl, PtrDocument pDoc,
 	      pFunctRule->PrPresFunction = FnShowBox;
 	      pFunctRule->PrPresBoxRepeat = FALSE;
 	      pFunctRule->PrNPresBoxes = 0;
-	      if (isNew)
-		if (!PRuleMessagePre (pEl, pFunctRule, TtaGetPRuleValue ((PRule) pFunctRule), pDoc, isNew))
-		  {
-		    ApplyNewRule (pDoc, pFunctRule, pEl);
-		    PRuleMessagePost (pEl, pFunctRule, pDoc, isNew);
-		  }
+	      if (isNew &&
+		  !PRuleMessagePre (pEl, pFunctRule,
+				    TtaGetPRuleValue ((PRule) pFunctRule), pDoc, isNew))
+		{
+		  ApplyNewRule (pDoc, pFunctRule, pEl);
+		  PRuleMessagePost (pEl, pFunctRule, pDoc, isNew);
+		}
 	    }
 	}
     }
@@ -291,13 +295,13 @@ static void ModifyGraphics (PtrElement pEl, PtrDocument pDoc,
 
       value = pPRule->PrIntValue;
       pPRule->PrIntValue = FillPattern;
+      pPRule->PrIntValue = FillPattern;
       if (!PRuleMessagePre (pEl, pPRule, FillPattern, pDoc, isNew))
 	{
-	  pPRule->PrIntValue = FillPattern;
-	  SetDocumentModified (pDoc, TRUE, 0);
 	  /* si le pave existe, applique la nouvelle regle au pave */
 	  ApplyNewRule (pDoc, pPRule, pEl);
 	  PRuleMessagePost (pEl, pPRule, pDoc, isNew);
+	  SetDocumentModified (pDoc, TRUE, 0);
 	  
 	  /* It the element is not a leaf in the abstract tree, create a
 	     ShowBox rule for the element if there is none */
@@ -335,13 +339,13 @@ static void ModifyGraphics (PtrElement pEl, PtrDocument pDoc,
       pPRule->PrSpecificity = 100;
       pPRule->PrPresMode = PresImmediate;
       pPRule->PrAttrValue = FALSE;
+      pPRule->PrIntValue = LineColor;
       if (!PRuleMessagePre (pEl, pPRule, LineColor, pDoc, isNew))
 	{
-	  pPRule->PrIntValue = LineColor;
-	  SetDocumentModified (pDoc, TRUE, 0);
 	  /* si le pave existe, applique la nouvelle regle au pave */
 	  ApplyNewRule (pDoc, pPRule, pEl);
 	  PRuleMessagePost (pEl, pPRule, pDoc, isNew);
+	  SetDocumentModified (pDoc, TRUE, 0);
 	}
     }
 }
@@ -543,13 +547,13 @@ static void  ModifyChar (PtrElement pEl, PtrDocument pDoc, int viewToApply,
 	   intvalue = FontTimes;
 	   break;
 	 }
+       pPRule->PrChrValue = value;
        if (!PRuleMessagePre (pEl, pPRule, intvalue, pDoc, isNew))
 	 {
-	   pPRule->PrChrValue = value;
-	   SetDocumentModified (pDoc, TRUE, 0);
 	   /* si le pave existe, applique la nouvelle regle au pave */
 	   ApplyNewRule (pDoc, pPRule, pEl);
 	   PRuleMessagePost (pEl, pPRule, pDoc, isNew);
+	   SetDocumentModified (pDoc, TRUE, 0);
 	 }
      }
    /* Style de caracteres */
@@ -584,13 +588,13 @@ static void  ModifyChar (PtrElement pEl, PtrDocument pDoc, int viewToApply,
 	    intvalue = StyleRoman;	    
 	    break;
 	  }
+       pPRule->PrChrValue = value;
        if (!PRuleMessagePre (pEl, pPRule, intvalue, pDoc, isNew))
 	 {
-	   pPRule->PrChrValue = value;
-	   SetDocumentModified (pDoc, TRUE, 0);
 	   /* si le pave existe, applique la nouvelle regle au pave */
 	   ApplyNewRule (pDoc, pPRule, pEl);
 	   PRuleMessagePost (pEl, pPRule, pDoc, isNew);
+	   SetDocumentModified (pDoc, TRUE, 0);
 	 }
      }
    /* Graisse des caracteres */
@@ -620,13 +624,13 @@ static void  ModifyChar (PtrElement pEl, PtrDocument pDoc, int viewToApply,
 	   intvalue = WeightNormal;
 	   break;
 	 }
+       pPRule->PrChrValue = value;
        if (!PRuleMessagePre (pEl, pPRule, intvalue, pDoc, isNew))
 	 {
-	   pPRule->PrChrValue = value;
-	   SetDocumentModified (pDoc, TRUE, 0);
 	   /* si le pave existe, applique la nouvelle regle au pave */
 	   ApplyNewRule (pDoc, pPRule, pEl);
 	   PRuleMessagePost (pEl, pPRule, pDoc, isNew);
+	   SetDocumentModified (pDoc, TRUE, 0);
 	 }
      }
    /* Taille des caracteres */
@@ -643,13 +647,13 @@ static void  ModifyChar (PtrElement pEl, PtrDocument pDoc, int viewToApply,
        pPRule->PrPresMode = PresImmediate;
        pPRule->PrMinUnit = UnPoint;
        pPRule->PrMinAttr = FALSE;
+	   pPRule->PrMinValue = size;
        if (!PRuleMessagePre (pEl, pPRule, size, pDoc, isNew))
 	 {
-	   pPRule->PrMinValue = size;
-	   SetDocumentModified (pDoc, TRUE, 0);
 	   /* si le pave existe, applique la nouvelle regle au pave */
 	   ApplyNewRule (pDoc, pPRule, pEl);
 	   PRuleMessagePost (pEl, pPRule, pDoc, isNew);
+	   SetDocumentModified (pDoc, TRUE, 0);
 	 }
      }
 
@@ -688,13 +692,13 @@ static void  ModifyChar (PtrElement pEl, PtrDocument pDoc, int viewToApply,
 	   intvalue = NoUnderline;
 	   break;
 	 }
+       pPRule->PrChrValue = value;
        if (!PRuleMessagePre (pEl, pPRule, intvalue, pDoc, isNew))
 	 {
-	   pPRule->PrChrValue = value;
-	   SetDocumentModified (pDoc, TRUE, 0);
 	   /* si le pave existe, applique la nouvelle regle au pave */
 	   ApplyNewRule (pDoc, pPRule, pEl);
 	   PRuleMessagePost (pEl, pPRule, pDoc, isNew);
+	   SetDocumentModified (pDoc, TRUE, 0);
 	 }
      }
    /* Epaisseur du souligne */
@@ -724,20 +728,19 @@ static void  ModifyChar (PtrElement pEl, PtrDocument pDoc, int viewToApply,
 	   intvalue = ThinUnderline;
 	   break;
 	 }
+       pPRule->PrChrValue = value;
        if (!PRuleMessagePre (pEl, pPRule, intvalue, pDoc, isNew))
 	 {
-	   pPRule->PrChrValue = value;
-	   SetDocumentModified (pDoc, TRUE, 0);
 	   /* si le pave existe, applique la nouvelle regle au pave */
 	   ApplyNewRule (pDoc, pPRule, pEl);
 	   PRuleMessagePost (pEl, pPRule, pDoc, isNew);
+	   SetDocumentModified (pDoc, TRUE, 0);
 	 }
      }
 }
 
 /*----------------------------------------------------------------------
-   	ModifyLining applique a l'element pEl les modifications		
-   		sur la mise en ligne demandes par l'utilisateur.	
+  ModifyLining applies line modifications to the pEl element.
   ----------------------------------------------------------------------*/
 static void ModifyLining (PtrElement pEl, PtrDocument pDoc,
 			  int viewToApply, ThotBool modifAdjust,
@@ -745,105 +748,110 @@ static void ModifyLining (PtrElement pEl, PtrDocument pDoc,
 			  ThotBool modifLineSpacing, int LineSpacing,
 			  ThotBool modifHyphen, ThotBool Hyphenate)
 {
-   ThotBool            isNew;
-   PtrPRule            pPRule;
-   int                 value;
-   int                 viewSch;
-   viewSch = AppliedView (pEl, NULL, pDoc, viewToApply); /* type de cette vue*/
-   /* applique les choix de l'utilisateur */
-   if (modifAdjust && Adjust > 0)
-     {
-       pPRule = SearchPresRule (pEl, PtAdjust, (FunctionType)0, &isNew, pDoc, viewToApply);
-       pPRule->PrType = PtAdjust;
-       pPRule->PrViewNum = viewSch;
-       /* this rule will be translated into style attribute for the element */
-       pPRule->PrSpecificity = 100;
-       pPRule->PrPresMode = PresImmediate;
-       switch (Adjust)
-	  {
-	  case 1:
-	   value = AlignLeft;
-	    break;
-	  case 2:
-	    value = AlignRight;
-	    break;
-	  case 3:
-	    value = AlignCenter;
-	    break;
-	  case 4:
-	    value = AlignJustify;
-	    break;
-	  case 5:
-	    value = AlignLeftDots;
-	    break;
-	  default:
-	    value = AlignLeft;
-	    break;
-	  }
-       if (!PRuleMessagePre (pEl, pPRule, Adjust, pDoc, isNew))
-	 {
-	   pPRule->PrAdjust = (BAlignment)value;
-	   SetDocumentModified (pDoc, TRUE, 0);
-	   ApplyNewRule (pDoc, pPRule, pEl);
-	   PRuleMessagePost (pEl, pPRule, pDoc, isNew);
-	 }
-     }
-   /* Coupure des mots */
-   if (modifHyphen)
-     {
-       pPRule = SearchPresRule (pEl, PtHyphenate, (FunctionType)0, &isNew, pDoc, viewToApply);
-       pPRule->PrType = PtHyphenate;
-       pPRule->PrViewNum = viewSch;
-       /* this rule will be translated into style attribute for the element */
-       pPRule->PrSpecificity = 100;
-       pPRule->PrPresMode = PresImmediate;
-       if (!PRuleMessagePre (pEl, pPRule, Hyphenate, pDoc, isNew))
-	 {
-	   pPRule->PrBoolValue = Hyphenate;
-	   SetDocumentModified (pDoc, TRUE, 0);
-	   ApplyNewRule (pDoc, pPRule, pEl);
-	   PRuleMessagePost (pEl, pPRule, pDoc, isNew);
-	 }
-     }
-   /* Renfoncement de la 1ere ligne */
-   if (modifIndent)
-     {
-       pPRule = SearchPresRule (pEl, PtIndent, (FunctionType)0, &isNew, pDoc, viewToApply);
-       pPRule->PrType = PtIndent;
-       pPRule->PrViewNum = viewSch;
-       /* this rule will be translated into style attribute for the element */
-       pPRule->PrSpecificity = 100;
-       pPRule->PrPresMode = PresImmediate;
-       pPRule->PrMinUnit = UnPoint;
-       pPRule->PrMinAttr = FALSE;
-       if (!PRuleMessagePre (pEl, pPRule, ValIndent, pDoc, isNew))
-	 {
-	   pPRule->PrMinValue = ValIndent;
-	   SetDocumentModified (pDoc, TRUE, 0);
-	   /* le document est modifie' */
-	   ApplyNewRule (pDoc, pPRule, pEl);
-	   PRuleMessagePost (pEl, pPRule, pDoc, isNew);
-	 }
-     }
-   /* Interligne */
-   if (modifLineSpacing)
-     {
-       pPRule = SearchPresRule (pEl, PtLineSpacing, (FunctionType)0, &isNew, pDoc, viewToApply);
-       pPRule->PrType = PtLineSpacing;
-       pPRule->PrViewNum = viewSch;
-       /* this rule will be translated into style attribute for the element */
-       pPRule->PrSpecificity = 100;
-       pPRule->PrPresMode = PresImmediate;
-       pPRule->PrMinUnit = UnPoint;
-       pPRule->PrMinAttr = FALSE;
-       if (!PRuleMessagePre (pEl, pPRule, LineSpacing, pDoc, isNew))
-	 {
-	   pPRule->PrMinValue = LineSpacing;
-	   SetDocumentModified (pDoc, TRUE, 0);
-	   ApplyNewRule (pDoc, pPRule, pEl);
-	   PRuleMessagePost (pEl, pPRule, pDoc, isNew);
-	 }
-     }
+  PtrPRule            pPRule;
+  int                 value;
+  int                 viewSch;
+  ThotBool            isNew;
+
+  viewSch = AppliedView (pEl, NULL, pDoc, viewToApply); /* view type*/
+  /* apply changes */
+  if (modifAdjust && Adjust > 0)
+    {
+      pPRule = SearchPresRule (pEl, PtAdjust, (FunctionType)0, &isNew,
+			       pDoc, viewToApply);
+      pPRule->PrType = PtAdjust;
+      pPRule->PrViewNum = viewSch;
+      /* this rule will be translated into style attribute for the element */
+      pPRule->PrSpecificity = 100;
+      pPRule->PrPresMode = PresImmediate;
+      switch (Adjust)
+	{
+	case 1:
+	  value = AlignLeft;
+	  break;
+	case 2:
+	  value = AlignRight;
+	  break;
+	case 3:
+	  value = AlignCenter;
+	  break;
+	case 4:
+	  value = AlignJustify;
+	  break;
+	case 5:
+	  value = AlignLeftDots;
+	  break;
+	default:
+	  value = AlignLeft;
+	  break;
+	}
+      pPRule->PrAdjust = (BAlignment)value;
+      if (!PRuleMessagePre (pEl, pPRule, Adjust, pDoc, isNew))
+	{
+	  ApplyNewRule (pDoc, pPRule, pEl);
+	  PRuleMessagePost (pEl, pPRule, pDoc, isNew);
+	  SetDocumentModified (pDoc, TRUE, 0);
+	}
+    }
+
+  if (modifHyphen)
+    {
+      pPRule = SearchPresRule (pEl, PtHyphenate, (FunctionType)0, &isNew,
+			       pDoc, viewToApply);
+      pPRule->PrType = PtHyphenate;
+      pPRule->PrViewNum = viewSch;
+      /* this rule will be translated into style attribute for the element */
+      pPRule->PrSpecificity = 100;
+      pPRule->PrPresMode = PresImmediate;
+      pPRule->PrBoolValue = Hyphenate;
+      if (!PRuleMessagePre (pEl, pPRule, Hyphenate, pDoc, isNew))
+	{
+	  ApplyNewRule (pDoc, pPRule, pEl);
+	  PRuleMessagePost (pEl, pPRule, pDoc, isNew);
+	  SetDocumentModified (pDoc, TRUE, 0);
+	}
+    }
+
+  if (modifIndent)
+    {
+      pPRule = SearchPresRule (pEl, PtIndent, (FunctionType)0, &isNew,
+			       pDoc, viewToApply);
+      pPRule->PrType = PtIndent;
+      pPRule->PrViewNum = viewSch;
+      /* this rule will be translated into style attribute for the element */
+      pPRule->PrSpecificity = 100;
+      pPRule->PrPresMode = PresImmediate;
+      pPRule->PrMinUnit = UnPoint;
+      pPRule->PrMinAttr = FALSE;
+      pPRule->PrMinValue = ValIndent;
+      if (!PRuleMessagePre (pEl, pPRule, ValIndent, pDoc, isNew))
+	{
+	  /* le document est modifie' */
+	  ApplyNewRule (pDoc, pPRule, pEl);
+	  PRuleMessagePost (pEl, pPRule, pDoc, isNew);
+	  SetDocumentModified (pDoc, TRUE, 0);
+	}
+    }
+
+  if (modifLineSpacing)
+    {
+      pPRule = SearchPresRule (pEl, PtLineSpacing, (FunctionType)0, &isNew,
+			       pDoc, viewToApply);
+      pPRule->PrType = PtLineSpacing;
+      pPRule->PrViewNum = viewSch;
+      /* this rule will be translated into style attribute for the element */
+      pPRule->PrSpecificity = 100;
+      pPRule->PrPresMode = PresImmediate;
+      pPRule->PrMinUnit = UnPoint;
+      pPRule->PrMinAttr = FALSE;
+      pPRule->PrMinValue = LineSpacing;
+      if (!PRuleMessagePre (pEl, pPRule, LineSpacing, pDoc, isNew))
+	{
+	  ApplyNewRule (pDoc, pPRule, pEl);
+	  PRuleMessagePost (pEl, pPRule, pDoc, isNew);
+	  SetDocumentModified (pDoc, TRUE, 0);
+	}
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -977,7 +985,8 @@ static void         ApplyPresentMod (int applyDomain)
 			 && (applyDomain == Apply_LineSp
 			     || applyDomain == Apply_AllFormat
 			     || applyDomain == Apply_All));
-	chngFormat = (locChngAlign || locChngHyphen || locChngIndent || locChngLineSp);
+	chngFormat = (locChngAlign || locChngHyphen ||
+		      locChngIndent || locChngLineSp);
 
 	/* Set chngGraphics indicator */
 	locChngLineStyle = ((StdLineStyle || ChngLineStyle)
@@ -1250,8 +1259,8 @@ static void         ApplyPresentMod (int applyDomain)
 	      }
 	  }
 
-	if (chngChars || chngFormat || chngGraphics
-	     || ChngStandardColor || ChngStandardGeom)
+	if (chngChars || chngFormat || chngGraphics ||
+	    ChngStandardColor || ChngStandardGeom)
 	   /* il y a quelque chose a changer, on parcourt la selection */
 	   /* courante et on change ce qu'a demande' l'utilisateur */
 	  {
@@ -1278,15 +1287,23 @@ static void         ApplyPresentMod (int applyDomain)
 		     pBlock = NULL;
 		  else
 		     {
-		     pBlock = GetEnclosingBlock (pEl, pSelDoc);
-		     if (pBlock == NULL)
-		        if (!pEl->ElTerminal)
-			   pBlock = pEl;
+		       pBlock = GetEnclosingBlock (pEl, pSelDoc);
+		       if (pBlock == NULL && !pEl->ElTerminal)
+			 pBlock = pEl;
 		     }
-		  if (pBlock != NULL)
+		  if (pBlock)
 		     {
-		     pPrevBlock = pBlock;
-		     pElem = pBlock;
+		       pPrevBlock = pBlock;
+		       if (pBlock->ElParent &&
+			   pBlock->ElPrevious == NULL &&
+			   pBlock->ElNext == NULL &&
+			   TypeHasException (ExcHidden,
+					     pBlock->ElTypeNumber,
+					     pBlock->ElStructSchema))
+			 /* specific rules are linked to the parent element */
+			 pElem = pBlock->ElParent;
+		       else
+			 pElem = pBlock;
 		     }
 		  }
 
@@ -1317,13 +1334,22 @@ static void         ApplyPresentMod (int applyDomain)
 				  FALSE, 0);
 
 		/* Format properties */
-		if (chngFormat)
-		  if (pBlock != NULL)
-		     ModifyLining (pBlock, pSelDoc, SelectedView,
-				   locChngAlign, Align,
-				   locChngIndent, IndentValue * IndentSign,
-				   locChngLineSp, OldLineSp,
-				   locChngHyphen, Hyphenate);
+		if (pBlock && chngFormat &&
+		    /* don't apply to a pseudo paragraph */
+		    !TypeHasException (ExcHidden,
+				       pBlock->ElTypeNumber,
+				       pBlock->ElStructSchema))
+		  ModifyLining (pBlock, pSelDoc, SelectedView,
+				locChngAlign, Align,
+				locChngIndent, IndentValue * IndentSign,
+				locChngLineSp, OldLineSp,
+				locChngHyphen, Hyphenate);
+		else if (chngFormat)
+		  ModifyLining (pEl, pSelDoc, SelectedView,
+				locChngAlign, Align,
+				locChngIndent, IndentValue * IndentSign,
+				locChngLineSp, OldLineSp,
+				locChngHyphen, Hyphenate);
 		/* Standard geometry */
 		if (ChngStandardGeom)
 		  {

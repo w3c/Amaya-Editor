@@ -168,18 +168,15 @@ PtrElement GetOtherPairedElement (PtrElement pEl)
   ----------------------------------------------------------------------*/
 ThotBool ElementIsHidden (PtrElement pEl)
 {
-register Proc2 HiFunction;
+  ThotBool isHI;
 
-   if ((HiFunction = (Proc2)ThotLocalActions[T_checkHiddenElement]) == NULL)
-     return FALSE; /* No function => Element not hidden! */
-   else
-     {
-ThotBool isHI;
-
-       (*HiFunction) (pEl, &isHI);
-       return isHI;
-     }
-
+  if (ThotLocalActions[T_checkHiddenElement] != NULL)
+    {
+      (*(Proc2)ThotLocalActions[T_checkHiddenElement]) (pEl, &isHI);
+      return isHI;
+    }
+  else
+    return FALSE; /* No function => Element not hidden! */
 }
 
 /*----------------------------------------------------------------------

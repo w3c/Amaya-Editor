@@ -227,7 +227,8 @@ l'activer.</p>
 <p>Par défaut, l'utilisateur voit la vue formatée du document. C'est l'aspect
 final du document tel qu'il est vu par un navigateur Web</p>
 
-<p><img alt="Vue formattée" src="../images/View.png" /></p>
+<div style="text-align: center">
+<img alt="Vue formattée" src="../images/View.png" /></div>
 
 <p>La barre de menu :</p>
 <ul>
@@ -481,7 +482,8 @@ sauver le document courant à une adresse différente (sur un serveur Web ou
 sur le disque local) ou de changer certains paramètres, comme le format du
 document et l'encodage.</p>
 
-<p><img src="../images/SaveAs-fr.gif" alt="SaveAs" /></p>
+<p style="text-align: center; text-indent: 15pt"><img
+src="../images/SaveAs-fr.gif" alt="SaveAs" /></p>
 
 <h2 id="L662">5. Création du contenu (paragraphes, en-têtes de sections,
 divisions)</h2>
@@ -516,7 +518,7 @@ sélection courante.</p>
 <h3>Préformaté</h3>
 
 <p>L'élément préformaté est un paragraphe particulier qui permet de préserver
-tous les caractères&nbsp;: espace, fin de ligne. </p>
+tous les caractères&nbsp;: espace, fin de ligne.</p>
 
 <p>Pour transformer un paragraphe en préformaté, on sélectionne le paragraphe
 en entier et on active l'entrée de menu <strong>XHTML/Préformaté</strong> (ou
@@ -804,7 +806,7 @@ la vue des liens (entrée <strong>Montrer les liens</strong> du menu
 place la sélection dans l'ancre et on procède comme pour la création de lien
 (bouton <img alt="Link " src="../images/Link.gif" /> ou l'entrée
 <strong>Créer/changer Lien</strong> du menu <strong>Liens</strong>). On peut
-alors désigner la nouvelle cible ou éditer l'URI. </p>
+alors désigner la nouvelle cible ou éditer l'URI.</p>
 
 <p>Pour changer la cible d'un lien, on peut également éditer l'attribut
 <code>href</code> dans la vue structure.</p>
@@ -1074,13 +1076,13 @@ pendant qu'un composant de la table est sélectionné.</p>
 <h3>Création d'un paragraphe après une table</h3>
 
 <p>Quand la sélection se trouve dans une table, la touche <code>Enter</code>
-crée un nouveau paragraphe dans la table. </p>
+crée un nouveau paragraphe dans la table.</p>
 
 <p>Pour créer un paragraphe après la table, il faut sélectionner la table
 entière en utilisant la touche <code>Esc</code> (Unix) ou <code>F2</code>
 (Windows) puis <code>Enter</code>.</p>
 
-<p> Ce nouveau paragraphe peut être modifié si besoin est.</p>
+<p>Ce nouveau paragraphe peut être modifié si besoin est.</p>
 
 <p></p>
 
@@ -1269,12 +1271,12 @@ difficile de comprendre pourquoi un élément est visualisé avec cette couleur
 ou ces marges, etc. Pour aider l'utilisateur, Amaya fournit une commande
 <strong>Montrer le style appliqué</strong> qui visualise dans une fenêtre
 externe les propriétés CSS appliquées au premier élément de la sélection
-courante. </p>
+courante.</p>
 
 <p>L'utilisateur peut afficher le source CSS qui engendre chaque propriété en
 double (ou simple) cliquant sur la propriété. Aussi longtemps que la fenêtre
 est ouverte, Amaya met à jour le contenu de la fenêtre quand la sélection
-change. </p>
+change.</p>
 
 <p>En appuyant sur la touche <code>F2</code> (ou <code>Esc</code> sur les
 plates-formes Linux), l'utilisateur peut voir les propriétés CSS appliquées
@@ -1388,7 +1390,7 @@ le document comme un document HTML au lieu de XHTML et donc éviter de bloquer
 sur le parseur XML.</p>
 </div>
 <address>
-  <p>Irène Vatton $date: Wednesday 14 January 2004 - 17:45:16$</p>
+  <p>Irène Vatton $date: Monday 16 February 2004 - 13:07:47$</p>
 
 </address>
 

@@ -3327,6 +3327,8 @@ static char *ParseCSSContent (Element element, PSchema tsch,
        quoteChar = *cssRule;
        cssRule++;
        cssRule = SkipQuotedString (cssRule, quoteChar);
+       if (*cssRule != EOS && *cssRule !=';')
+	 cssRule = SkipValue ("Invalid content value", cssRule);
      }
   else
     cssRule = SkipValue ("Invalid content value", p);

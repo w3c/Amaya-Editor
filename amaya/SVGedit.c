@@ -1259,16 +1259,10 @@ ThotBool GraphicsPRuleChange (NotifyPresentation *event)
      return (TRUE);   /* don't let Thot do it */
 
   presRule = event->pRule;
-  /* if a style property is being changed, we need its new value in the
+  /* if a style property is being changed, we have its new value in the
      PRule to set the corresponding SVG style attribute, but if its a
-     change in the geometry, we need to keep the old value to see the
+     change in the geometry, we have the old value to see the
      difference */
-  if (presType != PRHeight      &&  presType != PRWidth      &&
-      presType != PRVertPos     &&  presType != PRHorizPos)
-      /* Store the new value into the presentation rule before it is
-         potentially copied by MovePRule */
-      TtaSetPRuleValue (el, presRule, event->value, doc);
-
   if (TtaGetConstruct (el) == ConstructBasicType)
     /* it's a basic type. Move the PRule to the parent element if it is
        the only child of its parent. Otherwise, create a tspan element */
