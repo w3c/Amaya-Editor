@@ -999,12 +999,13 @@ static int CopyXClipboard (unsigned char **buffer, View view)
 	firstChar = 1;
 
       /* Calcule la longueur du buffer a produire */
-      if (pFirstEl == pLastEl)
+      if (pFirstEl == pLastEl && pFirstEl->ElTerminal)
 	/* only one element */
 	maxLength = lastChar - firstChar;
       else
 	{
-	  maxLength = pFirstEl->ElVolume - firstChar;    /* volume 1er element */
+	  if (pFirstEl->ElTerminal)
+	    maxLength = pFirstEl->ElVolume - firstChar;    /* volume 1er element */
 	  pEl = pFirstEl;
 	  while (pEl)
 	    {
@@ -1018,9 +1019,9 @@ static int CopyXClipboard (unsigned char **buffer, View view)
 	      if (pEl != NULL)
 		{
 		  if (pEl == pLastEl)
-		    maxLength += lastChar + 1;
+		    maxLength += lastChar;
 		  else
-		    maxLength += pEl->ElVolume + 1;
+		    maxLength += pEl->ElVolume;
 		  lg += 2;
 		}
 	    }
@@ -1085,15 +1086,16 @@ static int CopyXClipboard (unsigned char **buffer, View view)
 	      /* Recopie le texte de l'element */
 	      pOldBlock = pBlock;
 	      clipboard = pEl->ElText;
-	      ind = 0;
 	      while (clipboard && i < max && maxLength)
 		{
-		  lg = clipboard->BuLength - ind;
+		  lg = clipboard->BuLength;
 		  if (lg > maxLength)
 		    lg = maxLength;
-		  ustrncpy (&text[i], &clipboard->BuContent[ind], lg);
+		  /* check the validity of lg */
+		  if (lg + i > max - 1)
+		    lg = max - i - 1;
+		  ustrncpy (&text[i], clipboard->BuContent, lg);
 		  i += lg;
-		  ind = 0;
 		  maxLength -= lg;
 		  clipboard = clipboard->BuNext;
 		}
@@ -1130,7 +1132,6 @@ void TtcCopyToClipboard (Document doc, View view)
       if (Xbuffer)
 	free (Xbuffer);
       Xbuffer = buffer;
-printf ("TtcCopyToClipboard lg=%d\n", len);
     }
   else if (Xbuffer)
     {
