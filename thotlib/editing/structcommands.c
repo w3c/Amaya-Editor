@@ -1079,7 +1079,7 @@ void CutCommand (ThotBool save)
   int                 firstChar, lastChar, nextChar, NSiblings, last, i,
                       firstCharInit, lastCharInit, prevDepth, nextDepth;
   ThotBool            oneAtLeast, cutPage, stop, pageSelected, cutAll;
-  ThotBool            canCut, recorded, lock;
+  ThotBool            recorded, lock;
 
   pPrevPage = NULL;
   last = 0;

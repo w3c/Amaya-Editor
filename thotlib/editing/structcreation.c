@@ -2487,7 +2487,7 @@ PtrElement CreateOrPasteInText (ThotBool create, ThotBool paste,
    ThotBool            isList, optional;
    PtrElement          firstSel, lastSel, pNew, pNextEl, pFollow;
    PtrDocument         pDoc;
-   int                 firstChar, lastChar, typeNum, char1;
+   int                 firstChar, lastChar, typeNum;
    PtrSSchema          pSS;
 
    if (paste && FirstSavedElement == NULL)
