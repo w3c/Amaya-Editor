@@ -1470,7 +1470,7 @@ int                 lastChar;
 #endif /* __STDC__ */
 
 {
-   PtrElement          SelectedEl[MAX_SEL_ELEM];
+   PtrElement          pEl, SelectedEl[MAX_SEL_ELEM];
    /* pointeurs sur les elements selectionnes si SelContinue est faux */
    int                 NSelectedEls, index, prevLen;
    ThotBool            discreteSelection;
@@ -1492,6 +1492,25 @@ int                 lastChar;
      }
 
    discreteSelection = !SelContinue;
+   NSelectedEls = 0;
+   pEl = firstSel;
+   while (pEl != NULL)
+     {
+	if (pEl->ElStructSchema == NULL)
+	  /* element pEl has been freed by application during merging */
+	    pEl = NULL;
+	else
+	  {
+	    
+	    if (discreteSelection)
+	      /* la selection est discontinue, on met a jour la liste des */
+	      /* elements a re-selectionner */
+	      SelectedEl[NSelectedEls++] = pEl;
+	    /* cherche l'element a traiter ensuite */
+	    pEl = NextInSelection (pEl, lastSel);
+	  }
+     }
+
 
    /* reaffiche toutes les vues */
    AbstractImageUpdated (pDoc);
