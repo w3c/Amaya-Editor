@@ -3997,7 +3997,9 @@ void      ThotCallback (int ref, int typedata, char *data)
       case NumMenuAlphaLanguage:
 	(*ThotLocalActions[T_rattrlang]) (ref, (int) data, NULL);
 	break;
-	
+      case NumFormClose:
+	(*ThotLocalActions[T_rconfirmclose]) (ref, typedata, data);
+	break;
       case NumMenuViewsToOpen:
 	(*ThotLocalActions[T_openview]) (ref, typedata, data);
 	break;

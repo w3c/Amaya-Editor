@@ -198,6 +198,10 @@ Remove Paragraph level: li{p{(cont:*)+},?(next:*)+};
      	cont > *;
      	next > *;
      	}
+Remove Underline: (u{*+})+;
+        {
+        * > :*;
+        }
 
 Split Items: (li{a:*,(b:*)+})+;
 	{
