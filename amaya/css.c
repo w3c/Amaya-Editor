@@ -389,10 +389,19 @@ CSSInfoPtr AddCSS (Document doc, Document docRef, CSSCategory category,
       else if (category == CSS_IMPORT && styleElement)
 	{
 	  prev = CSSList;
-	  while (prev->NextCSS && prev->NextCSS != (CSSInfoPtr) styleElement)
-	    prev = prev->NextCSS;
-	  css->NextCSS = prev->NextCSS;
-	  prev->NextCSS = css;
+	  if (prev == (CSSInfoPtr) styleElement)
+	    {
+	      /* that CSS becomes the first entry */
+	      css->NextCSS = prev;
+	      CSSList = css;
+	    }
+	  else
+	    {
+	      while (prev->NextCSS && prev->NextCSS != (CSSInfoPtr) styleElement)
+		prev = prev->NextCSS;
+	      css->NextCSS = prev->NextCSS;
+	      prev->NextCSS = css;
+	    }
 	}
       else
 	{

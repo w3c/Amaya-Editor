@@ -5189,7 +5189,9 @@ char ReadCSSRules (Document docRef, CSSInfoPtr css, char *buffer, char *url,
 			  while (*cssRule != EOS && *cssRule != ')')
 			    cssRule++;
 			  if (quoted)
-			    cssRule--;
+			    /* isolate the file name */
+			    cssRule[-1] = EOS;
+			  *cssRule = EOS;
 			}
 		    }
 		  else if (*cssRule == '"')
@@ -5204,10 +5206,9 @@ char ReadCSSRules (Document docRef, CSSInfoPtr css, char *buffer, char *url,
 		      base = cssRule;
 		      while (*cssRule != EOS && *cssRule != '"')
 			cssRule++;
+		      /* isolate the file name */
+		      *cssRule = EOS;
 		    }
-		  if (*cssRule != EOS)
-		    /* isolate the file name */
-		    *cssRule = EOS;
 		  /* check if a media is defined */
 		  cssRule++;
 		  cssRule = TtaSkipBlanks (cssRule);

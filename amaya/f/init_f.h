@@ -207,7 +207,7 @@ extern void CloseDocument ( Document doc,
                             View view );
 extern void AmayaClose ( Document document,
                          View view );
-extern void AddURLInCombobox ( char *url,
+extern void AddURLInCombobox ( char *url_utf8,
                                ThotBool keep );
 extern void InitStringForCombobox ( void );
 
@@ -414,7 +414,7 @@ extern void CloseDocument (/* Document doc,
                               View view */);
 extern void AmayaClose (/* Document document,
                            View view */);
-extern void AddURLInCombobox (/* char *url,
+extern void AddURLInCombobox (/* char *url_utf8,
                                  ThotBool keep */);
 extern void InitStringForCombobox (/* void */);
 

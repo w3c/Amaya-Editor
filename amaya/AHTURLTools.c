@@ -603,7 +603,7 @@ ThotBool IsSVGName (const char *path)
    strcpy (temppath, path);
    TtaExtractSuffix (temppath, suffix);
 
-   if (!strcasecmp (suffix, "svg"))
+   if (!strcasecmp (suffix, "svg") || !strcasecmp (suffix, "svgz"))
      return (TRUE);
    else if (!strcmp (suffix, "gz"))
      {

@@ -3391,6 +3391,14 @@ static Document LoadDocument (Document doc, char *pathname,
 		   parsingLevel = L_Other;
 		   unknown = FALSE;
 		 }
+	       else if (!strncasecmp (&content_type[i+1], "octet-stream", 12) &&
+			thotType == docSVG)
+		 {
+		   /* it's a SMIL document. We handle it as an XML one */
+		   isXML = TRUE;
+		   docType = thotType;
+		   unknown = FALSE;
+		 }
 	     }
 	   else if (!strcasecmp (content_type, "image"))
 	     {
