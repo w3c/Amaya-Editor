@@ -3,22 +3,30 @@
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
-  <title></title>
+  <title>Closed bugs in Amaya</title>
   <?xml-stylesheet type="text/css" href="Amaya_bug.css"?>
 </head>
 
 <body>
-<h1>List of fixed bugs in Amaya</h1>
+<h1>Closed bugs in Amaya</h1>
 
 <p></p>
+
+<p><a href="#7.0">Amaya 7.0 - 3 December, 2002</a></p>
 
 <p><a href="#6.4">Amaya 6.4 - 16 September, 2002</a></p>
 
 <p><a href="#6.3">Amaya 6.3 - 9 September, 2002</a></p>
 
-<p>tions</p>
+<p></p>
+<hr />
+
+<h1 id="7.0">Amaya 7.0</h1>
+
+<p class="date">3 December, 2002</p>
 
 <table border="1">
+  <caption>Annotations</caption>
   <tbody>
     <tr class="title">
       <th class="summary">Summary</th>
@@ -35,12 +43,10 @@
       <td>2002-10-25</td>
     </tr>
   </tbody>
-
-  <p></p>
 </table>
 
 <table border="1">
-  <caption><span id="browsing">Browsing</span></caption>
+  <caption>Browsing</caption>
   <tbody>
     <tr class="title">
       <th class="summary">Summary</th>
@@ -49,7 +55,7 @@
       <th>Assigned To</th>
       <th>Fixed</th>
     </tr>
-    <tr class="fixed">
+    <tr>
       <td>Crash on the following page 
 
         <p><a href="location.html">location.html</a></p>
@@ -59,7 +65,7 @@
       <td></td>
       <td></td>
     </tr>
-    <tr class="fixed">
+    <tr>
       <td>In working on the RDF validator, I just bumped into a problem. It
         seems Amaya limits the length of URIs to 500 chars. 
 
@@ -71,7 +77,7 @@
       <td></td>
       <td></td>
     </tr>
-    <tr class="fixed">
+    <tr>
       <td>When reading in an XML (including XHTML, of course) file in UTF-8,
         accept and remove a potential BOM 
 
@@ -90,7 +96,7 @@
 <p></p>
 
 <table border="1">
-  <caption><span id="CSS">CSS</span></caption>
+  <caption>CSS</caption>
   <tbody>
     <tr class="title">
       <th class="summary">Summary</th>
@@ -99,7 +105,7 @@
       <th>Assigned To</th>
       <th>Fixed</th>
     </tr>
-    <tr class="fixed">
+    <tr>
       <td>Command Apply Class should list all class attributes used in the
         document + those used in the CSS style sheets linked to that
       document</td>
@@ -108,14 +114,14 @@
       <td>Irène</td>
       <td>2002-09-28</td>
     </tr>
-    <tr class="fixed">
+    <tr>
       <td>Can't undo removing a stylesheet</td>
       <td></td>
       <td></td>
       <td>Laurent</td>
       <td>2002-09-26</td>
     </tr>
-    <tr class="fixed">
+    <tr>
       <td>When classes are applied, the associated style is not immediately
         rendered</td>
       <td>2002-07-20</td>
@@ -123,7 +129,7 @@
       <td>Irène</td>
       <td>2002-09-16</td>
     </tr>
-    <tr class="fixed">
+    <tr>
       <td>Class properties do not always override basic element rules 
 
         <p><a
@@ -137,7 +143,7 @@
       <td>Irène</td>
       <td>2002-09-16</td>
     </tr>
-    <tr class="fixed">
+    <tr>
       <td>A page with a redundant semicolon in the CSS file is not properly
         displayed in Amaya 6.4 for Windows 98, because sometimes Amaya aplies
         the last rule of the previous selector.</td>
@@ -146,7 +152,7 @@
       <td>Irène</td>
       <td>2002-10-07</td>
     </tr>
-    <tr class="fixed">
+    <tr>
       <td>Amaya 6.4 for Windows applies the selector.class stylesheet rule to
         several classes if the name of the classes are
         "selector.[selector.]class".</td>
@@ -161,7 +167,7 @@
 <p></p>
 
 <table border="1">
-  <caption><span id="editing">Editing</span></caption>
+  <caption>Editing</caption>
   <tbody>
     <tr class="title">
       <th class="summary">Summary</th>
@@ -170,7 +176,7 @@
       <th>Assigned To</th>
       <th>Fixed</th>
     </tr>
-    <tr class="fixed">
+    <tr>
       <td>I'm trying to build a button that contains '&lt;' and '&gt;'
         characters, using something like the following: &lt;button
         type="submit" value="&amp;lt;&amp;lt;" name="Prev"
@@ -188,7 +194,7 @@
       <td>Irène</td>
       <td>2002-09-25</td>
     </tr>
-    <tr class="fixed">
+    <tr>
       <td>Editing in the formatted view while the structure view is opened
         (or vice versa) and click within the another view raises a Windows
         error.</td>
@@ -197,7 +203,7 @@
       <td></td>
       <td></td>
     </tr>
-    <tr class="fixed">
+    <tr>
       <td>If you have an SVG image with references to other documents (such
         as in the Amaya splash page), doing a Save As with the copy image
         function enabled will also copy the documents that are referenced in
@@ -215,7 +221,7 @@
 <p></p>
 
 <table border="1">
-  <caption><span id="formatting">Formatting</span></caption>
+  <caption>Formatting</caption>
   <tbody>
     <tr class="title">
       <th class="summary">Summary</th>
@@ -224,7 +230,7 @@
       <th>Assigned To</th>
       <th>Fixed</th>
     </tr>
-    <tr class="fixed">
+    <tr>
       <td>The font size appears way larger than any other browser on
       Windows.</td>
       <td>2002-07-08</td>
@@ -232,7 +238,7 @@
       <td></td>
       <td></td>
     </tr>
-    <tr class="fixed">
+    <tr>
       <td>Create a new XHTML 1 strict document. Type a single line of text,
         followed by [return] Position at the beginning of the line of text.
         Type SHIFT-[down arrow] ctrl-C (i.e. [copy]) to copy the paragraph
@@ -249,7 +255,7 @@
 <p></p>
 
 <table border="1">
-  <caption><span id="forms">Forms</span></caption>
+  <caption>Forms</caption>
   <tbody>
     <tr class="title">
       <th class="summary">Summary</th>
@@ -258,7 +264,7 @@
       <th>Assigned To</th>
       <th>Fixed</th>
     </tr>
-    <tr class="fixed">
+    <tr>
       <td>Activating a form action from a modified document replaces the
         current document and removes it from the History List (and changes
         are lost). 
@@ -276,7 +282,7 @@
 <p></p>
 
 <table border="1">
-  <caption><span id="xhtml">(X)HTML</span></caption>
+  <caption>(X)HTML</caption>
   <tbody>
     <tr class="title">
       <th class="summary">Summary</th>
@@ -314,7 +320,7 @@
 <p></p>
 
 <table border="1">
-  <caption><span id="networking">Networking</span></caption>
+  <caption>Networking</caption>
   <tbody>
     <tr class="title">
       <th class="summary">Summary</th>
@@ -323,7 +329,7 @@
       <th>Assigned To</th>
       <th>Fixed</th>
     </tr>
-    <tr class="fixed">
+    <tr>
       <td>After a STOP Amaya should display a pop-up and keep the displayed
         page instead of displaying an error page.</td>
       <td></td>
@@ -331,7 +337,7 @@
       <td></td>
       <td></td>
     </tr>
-    <tr class="fixed">
+    <tr>
       <td>Not unique name allocation in the Amaya cache 
 
         <p><a
@@ -342,7 +348,7 @@
       <td>José</td>
       <td></td>
     </tr>
-    <tr class="fixed">
+    <tr>
       <td>According to RFC2616 [1] Section 14.14: 
         <ul>
           <li>A relative link from that page should be resolved as relative
@@ -363,7 +369,7 @@
 <p></p>
 
 <table border="1">
-  <caption><span id="printing">Printing</span></caption>
+  <caption>Printing</caption>
   <tbody>
     <tr class="title">
       <th class="summary">Summary</th>
@@ -372,7 +378,7 @@
       <th>Assigned To</th>
       <th>Fixed</th>
     </tr>
-    <tr class="fixed">
+    <tr>
       <td>After resynchronizing a (x)html document by the source view, Amaya
         no longer printed the uri of the document but the path of the
         temporary document stored in the Amaya cache.</td>
@@ -380,199 +386,6 @@
       <td>Vincent</td>
       <td>Laurent</td>
       <td>2002-10-07</td>
-    </tr>
-  </tbody>
-</table>
-
-<p></p>
-
-<table border="1">
-  <caption><span id="svg">SVG</span></caption>
-  <tbody>
-    <tr class="title">
-      <th class="summary">Summary</th>
-      <th>Submission</th>
-      <th>Submitted By</th>
-      <th>Assigned To</th>
-      <th>Fixed</th>
-    </tr>
-    <tr>
-      <td>The Enter key in the middle of a text element should create a tspan
-        element</td>
-      <td></td>
-      <td></td>
-      <td>Laurent Vincent</td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>Copy an image in a HTML document and paste it within a SVG drawing:
-        the image dialog box pops up.</td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>Copy an image in a SVG drawing and paste it within an HTML page: no
-        SRC attribute!</td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>Inheritage between CSS properties color, fill, stroke</td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>Eyes are not visible, attribute not supported. 
-
-        <p>Problem of positionning.</p>
-
-        <p><a href="esmod.svg">esmod.svg</a></p>
-      </td>
-      <td>2002-05-21</td>
-      <td>Irène</td>
-      <td></td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>Make a line parallel with the axis x with the mouse its impossible,
-        the second point of line is changed when this element is created</td>
-      <td>2002-07-26</td>
-      <td>T. Telecken</td>
-      <td></td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>Its difficult select with the mouse a line parallel with the axis
-        x. Following a code of a element line parallel with the axis x:
-        &lt;line stroke=black y1=400 x1=92 y2=400 y2=400 x2=196&gt;</td>
-      <td>2002-07-26</td>
-      <td>T. Telecken</td>
-      <td></td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>Using Amaya 6.4, running W2K, viewing
-        http://www.w3.org/2001/04/roadmap/all.svg , the arcs (lines) are not
-        refreshed when the window is covered and then uncovered.</td>
-      <td>2002-11-08</td>
-      <td>David Booth</td>
-      <td></td>
-      <td></td>
-    </tr>
-  </tbody>
-</table>
-
-<p></p>
-
-<table border="1">
-  <caption><span id="tables">Tables</span></caption>
-  <tbody>
-    <tr class="title">
-      <th class="summary">Summary</th>
-      <th>Submission</th>
-      <th>Submitted By</th>
-      <th>Assigned To</th>
-      <th>Fixed</th>
-    </tr>
-    <tr>
-      <td>When changing the width of a cell with the mouse (ctrl click) the
-        table is not reformatted</td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>Bug in vertical extension of tables</td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>Default value valign=middle in tables</td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>Putting attribute rowspan on a cell generates a new column, and
-        when deleting a cell formatting is broken 
-
-        <p>It'd be even grander if Amaya enabled you to graphically create
-        rowspans and colspans. For example, you'd highlight a cell, choose a
-        menu command like "Span [or Merge] Cell to left|right|above|below" or
-        "Split Cell into rows|columns", and Amaya would generate the rowspan
-        and colspan attributes and re-render the table. (Tak Ota's
-        table.el[1]-- an ASCII table editor for Emacs -- lets you create
-        spans that way, and then generate HTML, CALS, TEI, and Latex
-        source.)</p>
-
-        <p>Or you'd highlight two cells and then choose a menu command like
-        "Span [or Merge] Cells" to merge the two cells into one.</p>
-      </td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>If a table has no height= attribute, the height is computed by the
-        browser. If a table declares height= then ???? Most browsers will
-        check 'set' value against needed and use the maximum of the two.
-        Amaya uses the height setting to be consistent with the img height
-        attribute which normally scales image to the speced height but this
-        leaves problems if speced is less than needed TEXT. If there is no
-        specification on how to handle this conflict, it would be easy enough
-        to err in favor of the user by: a] setting height to default value b]
-        resetting height if height= attribute used c] computing what is
-        needed to prevent outside of border material (this routine is already
-        there for no height speced) d] comparing needed to height e] using
-        the maximum of the two values NEEDED and HEIGHT This routine would
-        work whether or not height was speced. and would prevent out of box
-        messages in most cases!</td>
-      <td></td>
-      <td>J. Russel</td>
-      <td></td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>Tables become confused if stacked more than two levels down (text
-        printed outside their associated box in the example). 
-
-        <p><a
-        href="http://www.bahnhof.se/~chimbis/tocb/links/">tocb/links</a></p>
-      </td>
-      <td></td>
-      <td>J. Russel</td>
-      <td></td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>Errors in mathematics during table construction that are editor
-        detectable, should be flagged to user.</td>
-      <td></td>
-      <td>J. Russel</td>
-      <td></td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>Amaya has a bug in showing a html-page, when in a nested table you
-        have a comment betwen the &lt;table&gt; and the &lt;tbody&gt; 
-
-        <p><a href="commentandtable.html">commentandtable.html</a></p>
-      </td>
-      <td>2002-01-08</td>
-      <td>Roland Wirth</td>
-      <td>Laurent</td>
-      <td></td>
     </tr>
   </tbody>
 </table>
@@ -590,74 +403,6 @@
       <th>Fixed</th>
     </tr>
     <tr>
-      <td>The shortcut procedure (shift ctrl *) for edit mode toggle does not
-        work. However the menu selection method works fine! 
-
-        <p><a
-        href="http://lists.w3.org/Archives/Public/www-amaya/2001JulSep/0070.html">http://lists.w3.org/Archives/Public/www-amaya/2001JulSep/0070.html</a></p>
-      </td>
-      <td>2001-07-13</td>
-      <td>J. Russel</td>
-      <td></td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>Cut with shift delete ok but shift insert doesnt paste correctly
-        onn Windows</td>
-      <td>2001-08-02</td>
-      <td>J. Russel</td>
-      <td>Irène</td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>Star-O does not enter Oslash as advertised. Perhaps character
-        mapping error! 
-
-        <p><a
-        href="http://lists.w3.org/Archives/Public/www-amaya/2001JulSep/0070.html">http://lists.w3.org/Archives/Public/www-amaya/2001JulSep/0070.html</a></p>
-      </td>
-      <td>2001-07-13</td>
-      <td>J. Russel</td>
-      <td></td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>After scrolling to bottom of document, scrolling up to top
-        overscrolls on many docs. And scrolling down overscrolls on some
-        documents. This is with a jpg image background that doesn't go
-        completely to the top or bottom of screen. 
-
-        <p><a
-        href="http://www.cgocable.net/~jrussel/mathsci.htm">mathsci.htm</a></p>
-
-        <p><a
-        href="http://www.cgocable.net/~jrussel/home.htm">home.htm</a></p>
-      </td>
-      <td></td>
-      <td>J. Russel</td>
-      <td></td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>The scroll bars can't be pulled to the very bottom or right edge.
-        No information is lost but this is untidy (Windows)</td>
-      <td></td>
-      <td>J. Russel</td>
-      <td></td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>If the cursor is inside a word and spell check is done, it includes
-        the fragment. 
-
-        <p>It should say nothing</p>
-      </td>
-      <td>2002-07-28</td>
-      <td>B.L. Gurganus</td>
-      <td></td>
-      <td></td>
-    </tr>
-    <tr class="fixed">
       <td>Spell Check of text includes the file name in the URL bar. This is
         incorrect behavior.</td>
       <td>2002-07-28</td>
@@ -666,57 +411,6 @@
       <td>2002-09-30</td>
     </tr>
     <tr>
-      <td>I open Find... dialog. Write document to Search for... and Web page
-        to Replace by - everything works Then a change the Search for ... to
-        page - it still searchers for documents I close the dialog box and
-        open again - it still searches for documents (Windows 2000)</td>
-      <td>2002-07-31</td>
-      <td>Marja</td>
-      <td>Laurent</td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>Dialog boxes are sometimes not long enough to hold the contained
-        message. This may be specific to 85dpi and other alternative dpi
-        settings (Windows).</td>
-      <td>2002-07-20</td>
-      <td>B.L. Gurganus</td>
-      <td></td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>If I save a file without .html extension with Save command in the
-        name it creates that file. Earlier Amaya knew to add the .html to the
-        file. Save As... adds .html so it works.</td>
-      <td></td>
-      <td>Marja</td>
-      <td></td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>When saving an all.htm file that includes images, Amaya pops up a
-        dialogue box with a warning (which is confusing, as I reported over a
-        year ago. Whether you hit "confirm" or "cancel", you always get back
-        to the dialogue box asking you for a filename 
-
-        <p><a
-        href="http://lists.w3.org/Archives/Team/w3t-dev/2001JanMar/0026.html">http://lists.w3.org/Archives/Team/w3t-dev/2001JanMar/0026.html</a></p>
-      </td>
-      <td></td>
-      <td>P. Hoschka</td>
-      <td></td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>A shortcut key for skipping/replacing+next in the spell checker so
-        I don't have to rely upon the mouse and compex navigation to quickly
-        move through the document.</td>
-      <td>2002-07-17</td>
-      <td>J. Reagle</td>
-      <td></td>
-      <td></td>
-    </tr>
-    <tr class="fixed">
       <td>If I select one of the options in the spell checker replace the
         mispelled text with that option, just don't skip it!</td>
       <td>2002-07-17</td>
@@ -724,7 +418,7 @@
       <td></td>
       <td></td>
     </tr>
-    <tr class="fixed">
+    <tr>
       <td>When the whole document is selected (html element), there is a
         bogus attribute listed called NoImages. This seems to be related to
         the new preference.</td>
@@ -737,36 +431,13 @@
       <td>2002-09-30</td>
     </tr>
     <tr>
-      <td>There seem to be occasions when the vertical scroll bar is drawn in
-        the wrong place. This cannot be recreated consistently, however.</td>
-      <td>2002-09-09 
-
-        <p>Re. 6.3</p>
-      </td>
-      <td>B.L. Gurganus</td>
-      <td></td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>When I size the following window by dragging from bottom right
-        corner the left size of the window is moving too. In IE6 the left
-        side stays in place. Bug?</td>
-      <td>2002-09-10 
-
-        <p>Re. 6.3</p>
-      </td>
-      <td>Marja</td>
-      <td></td>
-      <td></td>
-    </tr>
-    <tr class="fixed">
       <td>The transform command don't work on Windows</td>
       <td>2002-09-21</td>
       <td>Ch. Koenig</td>
       <td>Laurent</td>
       <td>2002-09-23</td>
     </tr>
-    <tr class="fixed">
+    <tr>
       <td>The arrow keys in combination with Shift often do not work (in
         order to select text with the arrow keys): the focus gets stuck at
         the end of the element. For example: 1. Create a new xhtml 1.0 strict
@@ -779,42 +450,10 @@
       <td></td>
     </tr>
     <tr>
-      <td>When inserting an image, and doing "browse", Amaya seems to only
-        look for "gif" files on the local disk. If possible, jpg and png
-        should be added.</td>
-      <td>2002-09-29</td>
-      <td>Philipp Hoschka</td>
-      <td></td>
-      <td></td>
-    </tr>
-    <tr class="fixed">
       <td>Inactive menu entries are not grayed on Windows platforms.</td>
       <td>2002-10-03</td>
       <td>Amy</td>
       <td></td>
-      <td></td>
-    </tr>
-  </tbody>
-</table>
-
-<p></p>
-
-<table border="1">
-  <caption><span id="XML">XML</span></caption>
-  <tbody>
-    <tr class="title">
-      <th class="summary">Summary</th>
-      <th>Submission</th>
-      <th>Submitted By</th>
-      <th>Assigned To</th>
-      <th>Fixed</th>
-    </tr>
-    <tr>
-      <td>The export of the xml:space="preserve" attribute interprets ends of
-        line.</td>
-      <td></td>
-      <td>Laurent</td>
-      <td>Laurent</td>
       <td></td>
     </tr>
   </tbody>
