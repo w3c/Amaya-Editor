@@ -125,22 +125,15 @@ STRING              orig;
   AddElement
   add a string into the query buffer				
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         AddElement (USTRING element)
-#else
-static void         AddElement (element)
-USTRING             element;
-
-#endif
 {
    char                tmp[4];
    char                tmp2[2];
 
+   strcpy (tmp, "%");
+   strcpy (tmp2, "a");
 
-   sprintf (tmp, "%s", "%");
-   sprintf (tmp2, "%s", "a");
-
-   if (buffer == (STRING) NULL)
+   if (buffer == NULL)
      {
 	buffer = TtaGetMemory (PARAM_INCREMENT);
 	lgbuffer = PARAM_INCREMENT;

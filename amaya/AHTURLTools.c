@@ -52,17 +52,19 @@ void         ConvertToLowerCase (char *string)
   EscapeChar
   writes the equivalent escape code of a char in a string
   ----------------------------------------------------------------------*/
-void         EscapeChar (char *string, char c)
+void EscapeChar (char *string, char c)
 {
-   c &= 0xFF;                   /* strange behavior under solaris? */
-   sprintf (string, "%02x", (unsigned int) c);
+  unsigned int i;
+
+   i = (unsigned char) c & 0xFF;
+   sprintf (string, "%02x", i);
 }
 
 /*----------------------------------------------------------------------
   UnEscapeChar
   writes the equivalent hex code to a %xx coded char
   ----------------------------------------------------------------------*/
-static char   UnEscapeChar (char c)
+static char UnEscapeChar (char c)
 {
     return  c >= '0' && c <= '9' ?  c - '0'
             : c >= 'A' && c <= 'F' ? c - 'A' + 10
@@ -301,7 +303,7 @@ void ExtractSuffix (char *aName, char *aSuffix)
   IsHTMLName                                                         
   returns TRUE if path points to an HTML resource.
   ----------------------------------------------------------------------*/
-ThotBool             IsHTMLName (const char *path)
+ThotBool IsHTMLName (const char *path)
 {
   char              temppath[MAX_LENGTH];
   char              suffix[MAX_LENGTH];
