@@ -1677,38 +1677,60 @@ boolean             motif_conversion;
   return N;
 }
 
-#ifndef _WINDOWS 
 /*----------------------------------------------------------------------
    TtaGetViewWH returns the current width and height values associated
    with the frame where a view is displayed
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                TtaGetViewWH (int frame, int *width, int *height)
+void                TtaGetViewWH (Document doc, int view, int *width, int *height)
 #else  /* __STDC__ */
-void                TtaSetViewWH (frame, width, height)
-int                  frame;
+void                TtaSetViewWH (doc, view, width, height)
+Document       doc;
+int            view;
 int           *width;
 int           *height;
 #endif /* __STDC__ */
 {
+#ifndef _WINDOWS
+  int                 frame;
   int                 n;
   ThotWidget          widget;
   Arg                 args[20];
   Dimension           w, h;
 
+  frame =  GetWindowNumber (doc, view);
   widget = (ThotWidget) FrameTable[frame].WdFrame;
   widget = XtParent (XtParent (widget));
-  /* change the X Frame */
+  /* Ask X what's the geometry of the frame */
   n = 0;
   XtSetArg (args[n], XmNwidth, &w);
   n++;
   XtSetArg (args[n], XmNheight, &h);
   n++;
   XtGetValues (widget, args, n);
+  /* convert the result into mm */
   *width = pixeltomm ((int) w, 1, TRUE);
   *height = pixeltomm ((int) h, 0, TRUE);
+#else /* !_WINDOWS */
+  int  frame;
+  HWND hWnd;
+  RECT rect;
+
+  frame =  GetWindowNumber (GeometryDoc, view);
+  hWnd = FrMainRef[frame];
+  /* ask Windows what's the geometry of the frame */
+  if (!GetWindowRect (hWnd, &rect))
+    *width = *height = 0;
+  else 
+    {
+      /* convert the result into mm */
+      *width = (int) (rect.right - rect.left);
+      *height = (int) (rect.bottom - rect.top);
+      *width = pixeltomm (*width, 1, TRUE);
+      *height = pixeltomm (*height, 0, TRUE);
+    }
+#endif /* !_WINDOWS */
 }
-#endif /* !_WINDOWS *
 
 /*----------------------------------------------------------------------
    TtaGetViewGeometryRegistry returns the position (x, y) and sizes        

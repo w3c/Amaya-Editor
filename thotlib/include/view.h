@@ -59,12 +59,13 @@ extern View         TtaOpenMainView (Document document, int x, int y, int w, int
    returns the current width and height values associated
    with the frame where a view is displayed
    Parameters: 
-   frame: frame number
+   doc: document number
+   v: view number
    w: width of the frame
    h: height of the frame
 
   ----------------------------------------------------------------------*/
-extern void         TtaGetViewWH (int frame, /*OUT*/ int *w, 
+extern void         TtaGetViewWH (Document doc, int view, /*OUT*/ int *w, 
 				  /*OUT*/ int *h);
 
 /*----------------------------------------------------------------------
@@ -475,7 +476,7 @@ extern void         TtaClearViewSelections ( void );
 
 #else  /* __STDC__ */
 
-extern void         TtaGetViewWH ( /* int frame, int *w, int *h */ );
+extern void         TtaGetViewWH ( /* Document doc, int view, int *w, int *h */ );
 extern void         TtaGetViewGeometryRegistry ( /* Document document, STRING name, int *x, int *y, int *width, int *height */ );
 extern void         TtaGetViewGeometry ( /* Document document, STRING name, int *x, int *y, int *width, int *height */ );
 extern void         TtaGetViewGeometryMM ( /* Document document, STRING name, int *x, int *y, int *width, int *height */ );
