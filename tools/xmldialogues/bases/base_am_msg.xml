@@ -3562,12 +3562,20 @@
 	<message xml:lang="fr">Toutes les CSS</message>
 </label>
 <label define="AM_STYLE_APPLIED">
-	<message xml:lang="en">Style CSS applied to the &lt;%s> element\n</message>
-	<message xml:lang="fr">Style CSS appliqué �  l'élément &lt;%s> \n</message>
+	<message xml:lang="en">CSS style rules applied to the &lt;%s> element\n</message>
+	<message xml:lang="fr">Règles de style CSS appliqué �  l'élément &lt;%s> \n</message>
 </label>
 <label define="AM_LINK_LINE">
 	<message xml:lang="en">Blue lines are links activated by a double (or a single) click\n</message>
 	<message xml:lang="fr">Les lignes bleues sont des liens activés par un double (ou simple) click</message>
+</label>
+<label define="AM_LOAD_OBJECTS">
+        <message xml:lang="en">Load objects</message>
+        <message xml:lang="fr">Charger les objets</message>
+</label>
+<label define="AM_NO_STYLE_FOR_ELEM">
+        <message xml:lang="en">No style rule for this element</message>
+        <message xml:lang="fr">Pas de règle de style pour cet élément</message>
 </label>
 <label define="AMAYA_MSG_MAX">
 </label>
