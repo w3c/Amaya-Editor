@@ -261,12 +261,18 @@ XtInputId          *id;
   request. Otherwise, it will just mark the request as over.
   -------------------------------------------------------------------*/
 #ifdef __STDC__
-void  ProcessTerminateRequest (AHTReqContext *me)
+void  ProcessTerminateRequest (HTRequest * request, HTResponse * response, void *param, int status)
 #else
-void ProcessTerminateRequest (me)
-AHTReqContext *me;
+void ProcessTerminateRequest (request, response, param, status)
+HTRequest          *request;
+HTResponse         *response;
+void               *param;
+int                 status;
+
 #endif
 {   
+  AHTReqContext      *me = HTRequest_context (request);
+
   /* Second Step: choose a correct treatment in function of the request's
      being associated with an error, with an interruption, or with a
      succesful completion */
@@ -309,6 +315,7 @@ AHTReqContext *me;
   if ((me->mode & AMAYA_ASYNC) ||
       (me->mode & AMAYA_IASYNC)) {
     me->reqStatus = HT_END;
+    AHTLoadTerminate_handler (request, response, param, status);
     AHTReqContext_delete (me);
   }
 #endif /* _WINDOWS */

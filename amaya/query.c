@@ -809,15 +809,15 @@ int                 status;
 #endif /* DEBUG_LIBWWW */
      }
  
-  /* don't remove or Xt will hang up during the PUT */
+   /* don't remove or Xt will hang up during the PUT */
    if (AmayaAlive  && ((me->method == METHOD_POST) ||
-			 (me->method == METHOD_PUT)))
+		       (me->method == METHOD_PUT)))
      {
        PrintTerminateStatus (me, status);
      } 
-
-  ProcessTerminateRequest (me);
-  return HT_OK;
+   
+   ProcessTerminateRequest (request, response, context, status);
+   return HT_OK;
 }
 
 /*----------------------------------------------------------------------
@@ -827,9 +827,9 @@ int                 status;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-static int          AHTLoadTerminate_handler (HTRequest * request, HTResponse * response, void *param, int status)
+int          AHTLoadTerminate_handler (HTRequest * request, HTResponse * response, void *param, int status)
 #else
-static int          AHTLoadTerminate_handler (request, response, param, status)
+int          AHTLoadTerminate_handler (request, response, param, status)
 HTRequest          *request;
 HTResponse         *response;
 void               *param;
@@ -1069,7 +1069,9 @@ static void         AHTNetInit (void)
    HTNet_addAfter (redirection_handler, "http://*", NULL, HT_TEMP_REDIRECT, HT_FILTER_MIDDLE);
    HTNet_addAfter (redirection_handler, "http://*", NULL, HT_PERM_REDIRECT, HT_FILTER_MIDDLE);
    HTNet_addAfter (HTUseProxyFilter, "http://*", NULL, HT_USE_PROXY, HT_FILTER_MIDDLE);
+#ifndef _WINDOWS
    HTNet_addAfter (AHTLoadTerminate_handler, NULL, NULL, HT_ALL, HT_FILTER_LAST);	
+#endif /* !_WINDOWS */
    /* handles all errors */
    HTNet_addAfter (terminate_handler, NULL, NULL, HT_ALL, HT_FILTER_LAST);
 }
@@ -1413,14 +1415,15 @@ void                QueryClose ()
   ---------------------------------------------------------------------*/
 
 #ifdef _STDC
-void      InvokeGetObjectWWW_callback (int docid, char *urlName, char *outputfile, TTcbf *terminate_cbf, void *context_cbf)
+void      InvokeGetObjectWWW_callback (int docid, char *urlName, char *outputfile, TTcbf *terminate_cbf, void *context_cbf, int status)
 #else
-void      InvokeGetObjectWWW_callback (docid, urlName, outputfile, terminate_cbf, context_tcbf)
+void      InvokeGetObjectWWW_callback (docid, urlName, outputfile, terminate_cbf, context_tcbf, status)
 int docid;
 char *urlName;
 char *outputfile;
 TTcbf *terminate_cbf;
 void *context_tcbf;
+int status;
 #endif /* _STDC */
 {
   if (!terminate_cbf)
@@ -1525,7 +1528,7 @@ char 	     *content_type;
 	 /* so we can show the error message */
 	 DocNetworkStatus[docid] |= AMAYA_NET_ERROR;
       InvokeGetObjectWWW_callback (docid, urlName, outputfile, terminate_cbf,
-				   context_tcbf);
+				   context_tcbf, -1);
       return HT_ERROR;
    }
 
@@ -1539,7 +1542,7 @@ char 	     *content_type;
 	 /* so we can show the error message */
 	 DocNetworkStatus[docid] |= AMAYA_NET_ERROR;
       InvokeGetObjectWWW_callback (docid, urlName, outputfile, terminate_cbf,
-				   context_tcbf);
+				   context_tcbf, -1);
       return HT_ERROR;
    }
 
@@ -1560,7 +1563,7 @@ char 	     *content_type;
 	 /* so we can show the error message */
 	 DocNetworkStatus[docid] |= AMAYA_NET_ERROR;
       InvokeGetObjectWWW_callback (docid, urlName, outputfile, terminate_cbf,
-				   context_tcbf);
+				   context_tcbf, -1);
       return HT_ERROR;
    }
    /* verify if that file name existed */
@@ -1574,7 +1577,7 @@ char 	     *content_type;
      /* need an error message here */
      TtaFreeMemory (ref);
      InvokeGetObjectWWW_callback (docid, urlName, outputfile, terminate_cbf,
-				   context_tcbf);
+				   context_tcbf, -1);
      return HT_ERROR;
    }
    
@@ -1666,7 +1669,7 @@ char 	     *content_type;
    if (status == HT_ERROR && me->reqStatus == HT_NEW)
      {
        InvokeGetObjectWWW_callback (docid, urlName, outputfile, terminate_cbf,
-    			            context_tcbf);
+    			            context_tcbf, -1);
      }
 
 #ifndef _WINDOWS
