@@ -89,10 +89,11 @@ ThotBool CreateInitConfirmDlgWX ( int ref,
   else
     /* just 2 buttons */
     wx_extrabutton = TtaConvMessageToWX( "" );
+
   if (confirmbutton && confirmbutton[0] != EOS)
     wx_confirmbutton = TtaConvMessageToWX( confirmbutton );
   else
-    wx_confirmbutton = TtaConvMessageToWX( TtaGetMessage(LIB, TMSG_LIB_CONFIRM) );
+    wx_confirmbutton = TtaConvMessageToWX( "" );
 
   InitConfirmDlgWX * p_dlg = new InitConfirmDlgWX(
       ref, /* thotlib catalog reference */
