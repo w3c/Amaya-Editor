@@ -376,11 +376,11 @@ char               *txt;
 {
    if (pDocPrint != NULL)
       if (pDocPrint->DocSSchema != NULL)
-	 /* le document a imprimer existe toujours */
+	 /* the document to be printed still exists */
 	 switch (ref)
 	       {
 		  case NumMenuSupport:
-		     /* sous-menu imprimer papier / sauver PostScript */
+		     /* paper print/save PostScript submenu */
 		     switch (val)
 			   {
 			      case 0:
@@ -400,7 +400,7 @@ char               *txt;
 			   }
 		     break;
 		  case NumMenuPaperFormat:
-		     /* sous-menu format papier */
+		     /* paper format submenu */
 		     switch (val)
 			   {
 			      case 0:
@@ -412,26 +412,27 @@ char               *txt;
 			   }
 		     break;
 		  case NumMenuOptions:
-		     /* choix multiple Options */
+		     /* multiple Options choix multiple Options */
 		     ManualFeed = !ManualFeed;
 		     break;
 		  case NumZonePrinterName:
 		     if (txt[0] != '\0')
 			if (NewPaperPrint)
-			   /* zone de saisie du nom de l'imprimante */
+			   /* text capture zone for the printer name */
 			   strncpy (pPrinter, txt, MAX_NAME_LENGTH);
 			else
-			   /* zone de saisie du nom du fichier PostScript */
+			   /* text capture zone for the name of the PostScript file */
 			   strncpy (PSdir, txt, MAX_PATH);
 		     break;
 		  case NumFormPrint:
-		     /* formulaire Imprimer */
+		     /* Print form */
 		     TtaDestroyDialogue (NumFormPrint);
 		     switch (val)
 			   {
 			      case 1:
-				 /* confirme l'option Imprimer papier */
-				 /* les autres options ne sont prises en compte que sur confirmation */
+				 /* confirms the paper print option */
+				 /* the other options are not taken into account without this
+				    confirmation */
 				 PaperPrint = NewPaperPrint;
 				 if(ThotLocalActions[T_rextprint]!=NULL)
 				   (*ThotLocalActions[T_rextprint])(ref, val, txt);
@@ -497,7 +498,7 @@ View                view;
    sprintf (&bufMenu[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_PS_FILE));
    TtaNewSubmenu (NumMenuSupport, NumFormPrint, 0,
 		  TtaGetMessage (LIB, TMSG_OUTPUT), 2, bufMenu, NULL, TRUE);
-   /* zone for capturing the name of the printer */
+   /* text capture zone for the printer name */
    TtaNewTextForm (NumZonePrinterName, NumFormPrint, NULL, 30, 1, FALSE);
 
    /* initialization of the PaperPrint selector */
