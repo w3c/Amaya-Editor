@@ -216,7 +216,7 @@ left_: left
 center_: center
 right_: right
 justify_: justify
-NoShade_: noshade
+NoShade_: noshadeAAA
 Top_: top
 Middle_: middle
 Bottom_: bottom
