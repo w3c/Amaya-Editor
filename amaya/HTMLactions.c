@@ -1027,8 +1027,10 @@ static ThotBool ActivateElement (Element element, Document document)
   ----------------------------------------------------------------------*/
 static void DisplayUrlAnchor (Element element, Document document)
 {
-   Attribute           HrefAttr;
-   Element             anchor;
+   Attribute           HrefAttr, titleAttr;
+   Element             anchor, ancestor;
+   ElementType         elType;
+   AttributeType       attrType;
    char                *url, *pathname, *documentname;
    int                 length;
 
@@ -1041,6 +1043,7 @@ static void DisplayUrlAnchor (Element element, Document document)
        /* Get a buffer for the target URL */
        length = TtaGetTextAttributeLength (HrefAttr);
        length++;
+	
        url = TtaGetMemory (length);
        if (url != NULL)
 	 {
@@ -1058,11 +1061,47 @@ static void DisplayUrlAnchor (Element element, Document document)
 	     NormalizeURL (url, document, pathname, documentname, NULL);
 
 	   /* Display the URL in the status line */
+	   /* look for a Title attribute */
+	   titleAttr = NULL;
+	   ancestor = element;
+	   do
+	     {
+	       elType = TtaGetElementType (ancestor);
+	       if (!strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML"))
+		 {
+		   if (elType.ElTypeNum == HTML_EL_LINK ||
+		       elType.ElTypeNum == HTML_EL_Anchor)
+		     {
+		       attrType.AttrSSchema = elType.ElSSchema;
+		       attrType.AttrTypeNum = HTML_ATTR_Title;
+		       titleAttr = TtaGetAttribute (ancestor, attrType);
+		     }
+		   ancestor = TtaGetParent (ancestor);
+		 }
+	     }
+	   while (titleAttr == NULL && ancestor != NULL);
+	   if (titleAttr)
+	     {
+	       if (url)
+		 TtaFreeMemory (url);
+	       length = TtaGetTextAttributeLength (titleAttr);
+	       length ++;
+	       url = TtaGetMemory (length);
+	       if (url != NULL)
+		 {
+		   TtaGiveTextAttributeValue (titleAttr, url, &length);
+		   strcat (pathname, " (");
+		   strcat (pathname, url);
+		   strcat (pathname, ")");
+		 }
+	     }
+       
 	   TtaSetStatus (document, 1, pathname, NULL);
 	   
 	   TtaFreeMemory (pathname);
 	   TtaFreeMemory (documentname);
-	   TtaFreeMemory (url);
+	   if (url)
+	     TtaFreeMemory (url);
 	 }
      }
 }
