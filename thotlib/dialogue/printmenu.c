@@ -512,7 +512,6 @@ static void Print (char *name, char *dir, char *thotSch, char *thotDoc,
 		 /* it's an user stylesheet */
 		 printArgv[printArgc] = TtaStrdup ("-cssu");
 	       printArgc++;
-	       printArgv[printArgc] = TtaGetMemory (50);
 #else  /* _WINDOWS */
 	       j = strlen (cmd);
 	       if (cssToPrint[i] == 'a')
@@ -532,7 +531,6 @@ static void Print (char *name, char *dir, char *thotSch, char *thotDoc,
 	     {
 #ifdef _WINDOWS
 	       printArgv[printArgc] = TtaGetMemory (50);
-	       printArgc++;
 	       j = 0;
 #endif /* _WINDOWS */
 	       while (cssToPrint[i] != SPACE && cssToPrint[i] != EOS)
@@ -548,6 +546,9 @@ static void Print (char *name, char *dir, char *thotSch, char *thotDoc,
 		   /* process next char */
 		   i++;
 		 }
+#ifdef _WINDOWS
+	       printArgc++;
+#endif /* _WINDOWS */
 	     }
 	 }
      }
