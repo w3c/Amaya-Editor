@@ -368,7 +368,7 @@ dnl
 dnl  ***************************************************************
 
 THOT_VER="2.2"
-AMAYA_VER="1.4"
+AMAYA_VER="1.5"
 KAFFE_VER="cvs"
 
 dnl
@@ -394,7 +394,7 @@ dnl
 
 KAFFE_ENGINE=""
 if test "${CC}" = "gcc" ; then
-  CFLAGS="${CFLAGS} -Wall "
+  CFLAGS="${CFLAGS} -W "
   case "${host}" in
       *-*-irix5* | *-*irix6* )
          CFLAGS="${CFLAGS} -fsigned-char"
