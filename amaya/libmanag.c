@@ -2714,8 +2714,11 @@ void AddSVGModelIntoLibrary (Document libraryDoc, ThotBool newLib, char *title)
 	{
 	  /* initialize string buffer */
 	  tmp = GetLibraryPathFromTitle (title);
+	  if (tmp)
+	    {
 	  libraryURL = (char *) TtaGetMemory (MAX_LENGTH);
 	  strcpy (libraryURL, tmp);
+	    }
 	  /* Open it */
 	  tmpDoc = TtaNewDocument ("HTML", "temp_library");
 	  DocumentTypes[tmpDoc] = docLibrary;

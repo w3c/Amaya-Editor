@@ -7336,6 +7336,9 @@ void CheckAmayaClosed ()
   
   if (i == DocumentTableLength)
     {
+#ifdef _SVGLIB
+   SVGLIB_FreeDocumentResource ();
+#endif /* _SVGLIB */
       TtaQuit ();
     }
 }
@@ -7372,6 +7375,9 @@ void AmayaClose (Document document, View view)
 	    /* the close has been aborted */
 	    return;
 	}
+#ifdef _SVGLIB
+   SVGLIB_FreeDocumentResource ();
+#endif /* _SVGLIB */
    TtaQuit ();
 }
 

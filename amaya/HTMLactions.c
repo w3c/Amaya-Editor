@@ -1688,10 +1688,6 @@ void DocumentClosed (NotifyDialog * event)
 #endif /*_SVGANIM*/
 
    FreeDocumentResource (event->document);
-#ifdef _SVGLIB
-   SVGLIB_FreeDocumentResource ();
-#endif /* _SVGLIB */
-   
    CleanUpParsingErrors ();  
 }
 
