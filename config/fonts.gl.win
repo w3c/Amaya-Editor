@@ -1,0 +1,97 @@
+
+#font script 1-17 iso, then unicode,symbol,stix...;
+#1 = serif;normale face;bold face;italic face  
+#2 = sans-serif;normale face;bold face;italic face  
+#3 = monospace;normale face;bold face;italic face  
+#4 = cursive;normale face;bold face;italic face  
+#5 = fantasy;normale face;bold face;italic face  
+
+1;#Latin1 (West European)
+1;1=c:\windows\fonts\times.ttf;2=c:\windows\fonts\timesbd.ttf;3=c:\windows\fonts\timesi.ttf;
+2;1=c:\windows\fonts\arial.ttf;2=c:\windows\fonts\arialbd.ttf;3=c:\windows\fonts\ariali.ttf;
+3;1=c:\windows\fonts\cour.ttf;2=c:\windows\fonts\courbd.ttf;3=c:\windows\fonts\couri.ttf;
+
+2;#Latin2 (East European)
+1;1=c:\windows\fonts\times.ttf;2=c:\windows\fonts\timesbd.ttf;3=c:\windows\fonts\timesi.ttf;
+2;1=c:\windows\fonts\arial.ttf;2=c:\windows\fonts\arialbd.ttf;3=c:\windows\fonts\ariali.ttf;
+3;1=c:\windows\fonts\cour.ttf;2=c:\windows\fonts\courbd.ttf;3=c:\windows\fonts\couri.ttf;
+
+3;#Latin3 (South European)
+1;1=c:\windows\fonts\times.ttf;2=c:\windows\fonts\timesbd.ttf;3=c:\windows\fonts\timesi.ttf;
+2;1=c:\windows\fonts\arial.ttf;2=c:\windows\fonts\arialbd.ttf;3=c:\windows\fonts\ariali.ttf;
+3;1=c:\windows\fonts\cour.ttf;2=c:\windows\fonts\courbd.ttf;3=c:\windows\fonts\couri.ttf;
+
+
+
+4;#Latin4 (North European)
+1;1=c:\windows\fonts\times.ttf;2=c:\windows\fonts\timesbd.ttf;3=c:\windows\fonts\timesi.ttf;
+2;1=c:\windows\fonts\arial.ttf;2=c:\windows\fonts\arialbd.ttf;3=c:\windows\fonts\ariali.ttf;
+3;1=c:\windows\fonts\cour.ttf;2=c:\windows\fonts\courbd.ttf;3=c:\windows\fonts\couri.ttf;
+
+
+
+5;#Cyrillic
+1;1=c:\windows\fonts\times.ttf;2=c:\windows\fonts\timesbd.ttf;3=c:\windows\fonts\timesi.ttf;
+2;1=c:\windows\fonts\arial.ttf;2=c:\windows\fonts\arialbd.ttf;3=c:\windows\fonts\ariali.ttf;
+3;1=c:\windows\fonts\cour.ttf;2=c:\windows\fonts\courbd.ttf;3=c:\windows\fonts\couri.ttf;
+
+
+
+6;#Arabic
+1;1=c:\windows\fonts\times.ttf;2=c:\windows\fonts\timesbd.ttf;3=c:\windows\fonts\timesi.ttf;
+2;1=c:\windows\fonts\arial.ttf;2=c:\windows\fonts\arialbd.ttf;3=c:\windows\fonts\ariali.ttf;
+3;1=c:\windows\fonts\cour.ttf;2=c:\windows\fonts\courbd.ttf;3=c:\windows\fonts\couri.ttf;
+
+
+7;#Greek
+1;1=/usr/X11R6/lib/X11/fonts/drakfont/ttf/times.ttf;2=/usr/X11R6/lib/X11/fonts/drakfont/ttf/timesbd.ttf;3=/usr/X11R6/lib/X11/fonts/drakfont/ttf/timesi.ttf;
+2;1=/usr/X11R6/lib/X11/fonts/drakfont/ttf/times.ttf;2=/usr/X11R6/lib/X11/fonts/drakfont/ttf/timesbd.ttf;3=/usr/X11R6/lib/X11/fonts/drakfont/ttf/timesi.ttf;
+3;1=/usr/X11R6/lib/X11/fonts/drakfont/ttf/times.ttf;2=/usr/X11R6/lib/X11/fonts/drakfont/ttf/timesbd.ttf;3=/usr/X11R6/lib/X11/fonts/drakfont/ttf/timesi.ttf;
+
+
+#7;#esstix (...)
+#1;1=/home/cheyroul/downz/esstix/ESSTIX10.TTF;2=/home/cheyroul/downz/esstix/ESSTIX12.TTF;3=/home/cheyroul/downz/esstix/ESSTIX13.TTF;4=/home/cheyroul/downz/esstix/ESSTIX11.TTF;5=/home/cheyroul/downz/esstix/ESSTIX19.TTF;
+#2;1=/home/cheyroul/downz/esstix/ESSTIX10.TTF;2=/home/cheyroul/downz/esstix/ESSTIX12.TTF;3=/home/cheyroul/downz/esstix/ESSTIX13.TTF;4=/home/cheyroul/downz/esstix/ESSTIX11.TTF;5=/home/cheyroul/downz/esstix/ESSTIX19.TTF;
+#3;1=/home/cheyroul/downz/esstix/ESSTIX10.TTF;2=/home/cheyroul/downz/esstix/ESSTIX12.TTF;3=/home/cheyroul/downz/esstix/ESSTIX13.TTF;4=/home/cheyroul/downz/esstix/ESSTIX11.TTF;5=/home/cheyroul/downz/esstix/ESSTIX19.TTF;
+#4;1=/home/cheyroul/downz/esstix/ESSTIX10.TTF;2=/home/cheyroul/downz/esstix/ESSTIX12.TTF;3=/home/cheyroul/downz/esstix/ESSTIX13.TTF;4=/home/cheyroul/downz/esstix/ESSTIX11.TTF;5=/home/cheyroul/downz/esstix/ESSTIX19.TTF;
+#5;1=/home/cheyroul/downz/esstix/ESSTIX10.TTF;2=/home/cheyroul/downz/esstix/ESSTIX12.TTF;3=/home/cheyroul/downz/esstix/ESSTIX13.TTF;4=/home/cheyroul/downz/esstix/ESSTIX11.TTF;5=/home/cheyroul/downz/esstix/ESSTIX19.TTF;
+
+
+8;#Hebrew
+1;1=c:\windows\fonts\times.ttf;2=c:\windows\fonts\timesbd.ttf;3=c:\windows\fonts\timesi.ttf;
+2;1=c:\windows\fonts\arial.ttf;2=c:\windows\fonts\arialbd.ttf;3=c:\windows\fonts\ariali.ttf;
+3;1=c:\windows\fonts\cour.ttf;2=c:\windows\fonts\courbd.ttf;3=c:\windows\fonts\couri.ttf;
+
+
+
+9;#Latin9 (Turkish)
+1;1=c:\windows\fonts\times.ttf;2=c:\windows\fonts\timesbd.ttf;3=c:\windows\fonts\timesi.ttf;
+2;1=c:\windows\fonts\arial.ttf;2=c:\windows\fonts\arialbd.ttf;3=c:\windows\fonts\ariali.ttf;
+3;1=c:\windows\fonts\cour.ttf;2=c:\windows\fonts\courbd.ttf;3=c:\windows\fonts\couri.ttf;
+
+
+
+10;#Latin6 (Nordic)
+1;1=c:\windows\fonts\times.ttf;2=c:\windows\fonts\timesbd.ttf;3=c:\windows\fonts\timesi.ttf;
+2;1=c:\windows\fonts\arial.ttf;2=c:\windows\fonts\arialbd.ttf;3=c:\windows\fonts\ariali.ttf;
+3;1=c:\windows\fonts\cour.ttf;2=c:\windows\fonts\courbd.ttf;3=c:\windows\fonts\couri.ttf;
+
+
+
+20;#Symbols (...)
+1;1=/usr/X11R6/lib/X11/fonts/Type1/symbol.pfb;2=/usr/X11R6/lib/X11/fonts/Type1/symbol.pfb;
+
+
+21;#esstix (...)
+1;1=/usr/local/share/fonts/esstix/esstix1_.ttf;2=/usr/local/share/fonts/esstix/esstix2_.ttf;3=/usr/local/share/fonts/esstix/esstix3_.ttf;4=/usr/local/share/fonts/esstix/esstix4_.ttf;5=/usr/local/share/fonts/esstix/esstix5_.ttf;
+2;1=/usr/local/share/fonts/esstix/esstix6_.ttf;2=/usr/local/share/fonts/esstix/esstix7_.ttf;3=/usr/local/share/fonts/esstix/esstix8_.ttf;4=/usr/local/share/fonts/esstix/esstix4_.ttf;5=/usr/local/share/fonts/esstix/esstix8_.ttf;
+3;1=/usr/local/share/fonts/esstix/esstix10.ttf;2=/usr/local/share/fonts/esstix/esstix11.ttf;3=/usr/local/share/fonts/esstix/esstix11.ttf;4=/usr/local/share/fonts/esstix/esstix12.ttf;5=/usr/local/share/fonts/esstix/esstix13.ttf;
+4;1=/usr/local/share/fonts/esstix/esstix14.ttf;2=/usr/local/share/fonts/esstix/esstix15.ttf;3=/usr/local/share/fonts/esstix/esstix16.ttf;4=/usr/local/share/fonts/esstix/esstix17.ttf;
+
+
+
+0;#Unicode (.or ... JAPANESe)
+1;1=/usr/local/share/fonts/japanese/msmincho.ttf;2=/usr/local/share/fonts/japanese/msmincho.ttf;3=/usr/local/share/fonts/japanese/msmincho.ttf;
+2;1=/usr/local/share/fonts/japanese/msmincho.ttf;2=/usr/local/share/fonts/japanese/msmincho.ttf;3=/usr/local/share/fonts/japanese/msmincho.ttf;
+3;1=/usr/local/share/fonts/japanese/msmincho.ttf;2=/usr/local/share/fonts/japanese/msmincho.ttf;3=/usr/local/share/fonts/japanese/msmincho.ttf;
+
