@@ -91,7 +91,6 @@ typedef union _PresentationValue
      int               value;         /* the value */
      int               unit;          /* the unit */
      boolean           real;          /* the value is float like 115.5 */
-     boolean           absolute;      /* the value is absolute */
    } typed_data;
    void               *pointer;       /* A pointer */
 }

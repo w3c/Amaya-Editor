@@ -53,3 +53,5 @@ Fixed bugs 1.5:
   code when the document was saved.
 
 * CSS selectors like "PRE SPAN.test" didn't work.
+
+* SMALL elements could be displayed too small.

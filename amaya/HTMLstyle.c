@@ -2513,7 +2513,6 @@ CSSInfoPtr          css;
 boolean             isHTML;
 #endif
 {
-  PresentationTarget    savedtarget;
   PresentationValue     best;
   int                   savedtype = 0;
   boolean               moved;
@@ -2528,15 +2527,12 @@ boolean             isHTML;
 	  context->type = HTML_EL_HTML;
 	}
       else
-	{
-	  savedtarget = target;
-	  target = (PresentationTarget) TtaGetMainRoot (context->doc);
-	}
+	target = (PresentationTarget) TtaGetMainRoot (context->doc);
     }
 
   best.typed_data.unit = DRIVERP_UNIT_INVALID;
   best.typed_data.real = FALSE;
-  if (!ustrncasecmp (cssRule, "transparent", ustrlen("transparent")))
+  if (!ustrncasecmp (cssRule, "transparent", ustrlen ("transparent")))
     {
       best.typed_data.value = DRIVERP_PATTERN_NONE;
       best.typed_data.unit = DRIVERP_UNIT_REL;
@@ -2565,11 +2561,8 @@ boolean             isHTML;
   cssRule = SkipWord (cssRule);
 
   /* restore the refered element */
-  if (moved)
-    if (css)
-      context->type = savedtype;
-    else
-      target = savedtarget;
+  if (moved && css)
+    context->type = savedtype;
   return (cssRule);
 }
 
@@ -2824,15 +2817,13 @@ CSSInfoPtr          css;
 boolean             isHTML;
 #endif
 {
-  Element               el = NULL;
-  ElementType           elType;
+  Element               el;
   GenericContext        gblock;
   SpecificContextBlock *sblock;
   BackgroundImageCallbackPtr callblock;
-  PresentationTarget    savedtarget;
   PresentationValue     image, value;
   STRING                url;
-  STRING                no_bg_image;
+  STRING                bg_image;
   CHAR                  sauve;
   STRING                base;
   CHAR                  tempname[MAX_LENGTH];
@@ -2844,16 +2835,15 @@ boolean             isHTML;
   moved = (context->type == HTML_EL_BODY && isHTML);
   if (moved)
     {
-    if (css)
-      {
-	savedtype = context->type;
-	context->type = HTML_EL_HTML;
-      }
-    else
-      {
-	savedtarget = target;
-	target = (PresentationTarget) TtaGetMainRoot (context->doc);
-      }
+      el = TtaGetMainRoot (context->doc);
+      if (css)
+	{
+	  savedtype = context->type;
+	  context->type = HTML_EL_HTML;
+	}
+      else
+	/* select the element BODY */
+	target = (PresentationTarget)el;
     }
 
   url = NULL;
@@ -2867,8 +2857,8 @@ boolean             isHTML;
 	  cssRule++;
 	  cssRule = TtaSkipBlanks (cssRule);
 	  /*** Caution: Strings can either be written with double quotes or
-	       with single quotes. Only double quotes are handled here.
-	       Escaped quotes are not handled. See function SkipQuotedString */
+	    with single quotes. Only double quotes are handled here.
+	    Escaped quotes are not handled. See function SkipQuotedString */
 	  if (*cssRule == '"')
 	    {
 	      cssRule++;
@@ -2910,14 +2900,9 @@ boolean             isHTML;
 	}
       else if (url)
 	{
-	  no_bg_image = TtaGetEnvString("NO_BG_IMAGES");
-	  if (no_bg_image == NULL ||
-	      (ustrcasecmp(no_bg_image,"yes") && ustrcasecmp(no_bg_image,"true")))
-	    {	       
-	      /*
-	       * if the background is set on the HTML or BODY element,
-	       * set the background color for the full window.
-	       */
+	  bg_image = TtaGetEnvString ("ENABLE_BG_IMAGES");
+	  if (bg_image == NULL || ustrcasecmp (bg_image,"yes"))
+	    {
 	      callblock = (BackgroundImageCallbackPtr) TtaGetMemory(sizeof(BackgroundImageCallbackBlock));
 	      if (callblock != NULL)
 		{
@@ -2926,48 +2911,37 @@ boolean             isHTML;
 		    {
 		      gblock = (GenericContext) context;
 		      memcpy (&callblock->context.generic, gblock,
-			      sizeof(GenericContextBlock));
-		      el = TtaGetMainRoot (context->doc);
+			      sizeof (GenericContextBlock));
 		    }
 		  else if (context->drv == &SpecificStrategy)
 		    {
 		      sblock = (SpecificContextBlock *) context;
 		      memcpy (&callblock->context.specific, sblock,
 			      sizeof(SpecificContextBlock));
-		      el = (SpecificTarget) target;
-		      elType = TtaGetElementType (el);
-		      if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0 &&
-			  (elType.ElTypeNum == HTML_EL_HTML
-			   || elType.ElTypeNum == HTML_EL_BODY
-			   || elType.ElTypeNum == HTML_EL_HEAD))
-			el = TtaGetMainRoot (context->doc);
 		    }
 
 		  /* check if the image url is related to an external CSS */
 		  if (css != NULL && css->category == CSS_EXTERNAL_STYLE)
 		    {
-		    NormalizeURL (url, 0, tempname, imgname, css->url);
-		  /* fetch and display background image of element */
-		  FetchImage (context->doc, el, tempname, 0,
-			      ParseCSSBackgroundImageCallback, callblock);
+		      NormalizeURL (url, 0, tempname, imgname, css->url);
+		      /* fetch and display background image of element */
+		      FetchImage (context->doc, el, tempname, 0,
+				  ParseCSSBackgroundImageCallback, callblock);
 		    }
 		  else
 		    FetchImage (context->doc, el, url, 0,
 				ParseCSSBackgroundImageCallback, callblock);
 		}
 	    }
-		
+
 	  if (url)
 	    TtaFreeMemory (url);
 	}
     }
 
   /* restore the refered element */
-  if (moved)
-    if (css)
-      context->type = savedtype;
-    else
-      target = savedtarget;
+  if (moved && css)
+    context->type = savedtype;
   return (cssRule);
 }
 
@@ -2987,7 +2961,6 @@ CSSInfoPtr          css;
 boolean             isHTML;
 #endif
 {
-  PresentationTarget  savedtarget;
   PresentationValue   repeat;
   int                 savedtype = 0;
   boolean             moved;
@@ -3002,10 +2975,7 @@ boolean             isHTML;
 	  context->type = HTML_EL_HTML;
 	}
       else
-      {
-	savedtarget = target;
 	target = (PresentationTarget) TtaGetMainRoot (context->doc);
-      }
     }
 
   repeat.typed_data.value = 0;
@@ -3015,7 +2985,7 @@ boolean             isHTML;
   if (!ustrncasecmp (cssRule, "no-repeat", 9))
     {
       if (context->drv->GetPictureMode(target, context, &repeat) < 0)
-	repeat.typed_data.value = DRIVERP_SCALE;
+	repeat.typed_data.value = DRIVERP_REALSIZE;
     }
   else if (!ustrncasecmp (cssRule, "repeat-y", 8))
     repeat.typed_data.value = DRIVERP_VREPEAT;
@@ -3032,11 +3002,8 @@ boolean             isHTML;
    cssRule = SkipWord (cssRule);
 
   /* restore the refered element */
-  if (moved)
-    if (css)
-      context->type = savedtype;
-    else
-      target = savedtarget;
+  if (moved && css)
+    context->type = savedtype;
    return (cssRule);
 }
 
@@ -3056,7 +3023,6 @@ CSSInfoPtr          css;
 boolean             isHTML;
 #endif
 {
-  PresentationTarget    savedtarget;
   int                   savedtype = 0;
   boolean               moved;
 
@@ -3070,10 +3036,7 @@ boolean             isHTML;
 	  context->type = HTML_EL_HTML;
 	}
       else
-	{
-	  savedtarget = target;
-	  target = (PresentationTarget) TtaGetMainRoot (context->doc);
-	}
+	target = (PresentationTarget) TtaGetMainRoot (context->doc);
     }
 
    cssRule = TtaSkipBlanks (cssRule);
@@ -3083,11 +3046,8 @@ boolean             isHTML;
      cssRule = SkipWord (cssRule);
 
   /* restore the refered element */
-  if (moved)
-    if (css)
-      context->type = savedtype;
-    else
-      target = savedtarget;
+  if (moved && css)
+    context->type = savedtype;
    return (cssRule);
 }
 
@@ -3107,7 +3067,6 @@ CSSInfoPtr          css;
 boolean             isHTML;
 #endif
 {
-  PresentationTarget    savedtarget;
   PresentationValue     repeat;
   int                   savedtype = 0;
   boolean               moved;
@@ -3123,10 +3082,7 @@ boolean             isHTML;
 	  context->type = HTML_EL_HTML;
 	}
       else
-      {
-	savedtarget = target;
 	target = (PresentationTarget) TtaGetMainRoot (context->doc);
-      }
     }
 
    cssRule = TtaSkipBlanks (cssRule);
@@ -3156,11 +3112,8 @@ boolean             isHTML;
      }
 
   /* restore the refered element */
-  if (moved)
-    if (css)
-      context->type = savedtype;
-    else
-      target = savedtarget;
+  if (moved && css)
+    context->type = savedtype;
    return (cssRule);
 }
 

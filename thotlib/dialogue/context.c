@@ -251,17 +251,7 @@ unsigned short     *blue;
    int                 i, maxcolor;
 #  ifndef _WINDOWS 
    ThotColorStruct     color;
-#  endif /* !_WINDOWS */
 
-   /*
-    * Lookup the color name in the application color name database
-    */
-   maxcolor = NumberOfColors ();
-   for (i = 0; i < maxcolor; i++)
-       if (!ustrcasecmp (ColorName (i), colname))
-	  TtaGiveThotRGB (i, red, green, blue);
-
-#  ifndef _WINDOWS
    /* Lookup the color name in the X color name database */
    if (XParseColor (TtDisplay, TtCmap, colname, &color))
      {
@@ -272,6 +262,16 @@ unsigned short     *blue;
 	*red = color.red;
 	*green = color.green;
 	*blue = color.blue;
+     }
+   else
+     {
+#  endif /* _WINDOWS */
+       /* Lookup the color name in the application color name database */
+       maxcolor = NumberOfColors ();
+       for (i = 0; i < maxcolor; i++)
+	 if (!ustrcasecmp (ColorName (i), colname))
+	   TtaGiveThotRGB (i, red, green, blue);
+#  ifndef _WINDOWS
      }
 #  endif /* _WINDOWS */
 }

@@ -1185,7 +1185,21 @@ FILE               *fileDescriptor;
 			  fprintf (fileDescriptor, "%s\" ", image->PicFileName);
 			else
 			  fprintf (fileDescriptor, "\"");
+			fprintf (fileDescriptor, " Mode:");
+			if (image->PicPresent == ReScale)
+			  fprintf (fileDescriptor, "ReScale");
+			else if (image->PicPresent == FillFrame)
+			  fprintf (fileDescriptor, "FillFrame");
+			else if (image->PicPresent == XRepeat)
+			  fprintf (fileDescriptor, "XRepeat");
+			else if (image->PicPresent == YRepeat)
+			  fprintf (fileDescriptor, "YRepeat");
+			else
+			  fprintf (fileDescriptor, "RealSize");
 		      }
+		    fprintf (fileDescriptor, "\n\n");
+		    for (j = 1; j <= Indent + 6; j++)
+		      fprintf (fileDescriptor, " ");
 		    fprintf (fileDescriptor, "ShowBox:");
 		    if (pPa1->AbFillBox)
 		      fprintf (fileDescriptor, "Y");
@@ -1197,9 +1211,20 @@ FILE               *fileDescriptor;
 		    if (image == NULL)
 		       fprintf (fileDescriptor, "AbPictInfo = NULL");
 		    else
-		       fprintf (fileDescriptor, "Picture: x = %d, y = %d, w = %d, h = %d, name = %s",
+		       fprintf (fileDescriptor, "Picture: x = %d, y = %d, w = %d, h = %d, name =  \"%s \"",
 				image->PicXArea, image->PicYArea, image->PicWArea, image->PicHArea,
 				image->PicFileName);
+		    fprintf (fileDescriptor, " Mode:");
+		    if (image->PicPresent == ReScale)
+		      fprintf (fileDescriptor, "ReScale");
+		    else if (image->PicPresent == FillFrame)
+		      fprintf (fileDescriptor, "FillFrame");
+		    else if (image->PicPresent == XRepeat)
+		      fprintf (fileDescriptor, "XRepeat");
+		    else if (image->PicPresent == YRepeat)
+		      fprintf (fileDescriptor, "YRepeat");
+		    else
+		      fprintf (fileDescriptor, "RealSize");
 		    break;
 		 case LtText:
 		 case LtReference:

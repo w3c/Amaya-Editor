@@ -36,8 +36,8 @@
  *  value of the CoCondition field, and others fields available for rules *
  *  of teh same kind. The function TstRuleContext rely on this order.	  *
  *
- * Author: D. Veillard (INRIA)
-           I. Vatton (INRIA) extensions
+ * Author: I. Vatton
+ *         Previous version by D. Veillard
  *
  */
 
