@@ -35,6 +35,8 @@
 #include "openglfont.h"
 #include "openglfonts.h"
 
+#include "units_tv.h"
+
 #ifdef _SUPERS
 /* 
    Supposed to give 
@@ -265,7 +267,6 @@ Char_Cache_index *Char_index_lookup_cache (GL_font *font, unsigned int idx,
 static int FTLibraryInit ()
 {
   int err;
-  int i;
 
   if (FTlib != 0 )
     return TRUE;
@@ -501,7 +502,7 @@ void *gl_font_init (const char *font_filename, char alphabet, int size)
  	  return NULL; 
  	}
       gl_font->size = 0;
-      err = FontFaceSize (gl_font, (unsigned int)size, 0);
+      err = FontFaceSize (gl_font, (unsigned int)size, DOT_PER_INCH);
       if (err)
 	{
 	  FT_Done_Face (gl_font->face);
@@ -594,7 +595,7 @@ unsigned int GL_Font_Get_Size (void *font)
   ----------------------------------------------------------------------*/
 void GL_Font_Change_Height (void *font, int size)
 {
-  FontFaceSize ((GL_font *) font, (unsigned int) size, 0);
+  FontFaceSize ((GL_font *) font, (unsigned int) size, DOT_PER_INCH);
 }
 
 /*----------------------------------------------------------------------
@@ -624,7 +625,6 @@ int gl_font_char_width (void *gl_void_font, wchar_t c)
 {
   GL_font            *font = (GL_font *) gl_void_font;
   Char_Cache_index   *cache;
-  unsigned int        glyph_index;
   
   cache = Char_index_lookup_cache (font, c, GL_TransText());
   return SUPERSAMPLING (cache->glyph.advance);

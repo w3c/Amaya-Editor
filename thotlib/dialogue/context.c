@@ -317,7 +317,15 @@ void ThotInitDisplay (char* name, int dx, int dy)
    InitPictureHandlers (FALSE);
    WIN_ReleaseDeviceContext ();
 #endif /* _WINGUI */
-   
+
+#ifdef _WX
+   int display_width_px, display_height_px;
+   int display_width_mm, display_height_mm;
+   wxDisplaySize(&display_width_px, &display_height_px);
+   wxDisplaySizeMM(&display_width_mm, &display_height_mm);
+   DOT_PER_INCH = (int)((((float)display_width_px)*25.4) / ((float)display_width_mm));
+#endif /* _WX */
+
 #ifdef _GTK
    
    /* Declaration of a DefaultDrawable useful for the creation of Pixmap and the
