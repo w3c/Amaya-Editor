@@ -408,6 +408,312 @@ static void	NextNotComment (Element* el, Element* prev)
 }
 
 /*----------------------------------------------------------------------
+   SetIntMovelimitsAttr
+   Put a IntMovelimits attribute on element el (which is a munder, mover
+   or munderover) if the current value of IntDisplaystyle is false and
+   if el contains a MO element that allows limits to be moved.
+ -----------------------------------------------------------------------*/
+void SetIntMovelimitsAttr (Element el, Document doc)
+{
+  Element	ancestor, child, base, operator, textEl;
+  int           value, len;
+  ElementType   elType;
+  AttributeType attrType;
+  Attribute     attr;
+  Language      lang;
+  CHAR_T        text[10];
+  char          buffer[20];
+  ThotBool      movable;
+#ifndef _I18N_
+  char          script;
+#endif
+
+  if (el == NULL || doc == 0)
+     return;
+  movable = FALSE;
+
+  /* first look for an IntDisplaystyle attribute on an ancestor */
+  elType = TtaGetElementType (el);
+  attrType.AttrSSchema = elType.ElSSchema;
+  attrType.AttrTypeNum = MathML_ATTR_IntDisplaystyle;
+  ancestor = el;
+  do
+    {
+      attr = TtaGetAttribute (ancestor, attrType);
+      if (!attr)
+        ancestor = TtaGetParent(ancestor);
+    }
+  while (!attr && ancestor);
+  if (attr)
+    /* there is an ancestor with an attribute IntDisplaystyle */
+    {
+      value = TtaGetAttributeValue (attr);
+      if (value == MathML_ATTR_IntDisplaystyle_VAL_false)
+	/* an ancestor has an attribute IntDisplaystyle = false */
+	{
+	  /* Check the operator within the base */
+	  child = TtaGetFirstChild (el);
+	  base = NULL;
+	  do
+	    {
+	      elType = TtaGetElementType (child);
+	      if (elType.ElTypeNum == MathML_EL_UnderOverBase)
+		base = child;
+	      else
+		TtaNextSibling (&child);
+	    }
+	  while (child && !base);
+	  if (base)
+	    {
+	      child = TtaGetFirstChild (base);
+	      operator = NULL;
+	      do
+		{
+		  elType = TtaGetElementType (child);
+		  if (elType.ElTypeNum == MathML_EL_MO)
+		    operator = child;
+		  else
+		    TtaNextSibling (&child);
+		}
+	      while (child && !operator);
+	      if (operator)
+		{
+		  attrType.AttrTypeNum = MathML_ATTR_movablelimits;
+		  attr = TtaGetAttribute (operator, attrType);
+		  if (attr)
+		    /* the operator has an attribute movablelimits */
+		    {
+		      value = TtaGetAttributeValue (attr);
+		      if (value == MathML_ATTR_movablelimits_VAL_true)
+			movable = TRUE;
+		    }
+		  else
+		    /* no attribute movablelimits. Look at the content of the
+		       operator element */
+		    {
+		      textEl = TtaGetFirstChild (operator);
+		      if (textEl)
+			{
+			  elType = TtaGetElementType (textEl);
+			  if (elType.ElTypeNum == MathML_EL_TEXT_UNIT)
+			    {
+			      len = TtaGetElementVolume (textEl);
+			      if (len == 3)
+				{
+				  TtaGiveTextContent (textEl, buffer, &len, &lang);
+#ifndef _I18N_
+				  script = TtaGetScript (lang);
+				  if (script == 'L')
+#endif
+				    {
+				      if (!strcmp (buffer, "lim") ||
+					  !strcmp (buffer, "max") ||
+					  !strcmp (buffer, "min"))
+					movable = TRUE;
+				    }
+				}
+			      else if (len == 1)
+				{
+				  TtaGiveBufferContent (textEl, text, len+1, &lang);
+#ifdef _I18N_
+				  if (text[0] == 0x22C1 /* Vee */ ||
+				      text[0] == 0x2296 /* CircleMinus */ ||
+				      text[0] == 0x2295 /* CirclePlus */ ||
+				      text[0] == 0x2211 /* Sum */ ||
+				      text[0] == 0x22C3 /* Union */ ||
+				      text[0] == 0x228E /* UnionPlus */ ||
+				      text[0] == 0x22C0 /* Wedge */ ||
+				      text[0] == 0x2297 /* CircleTimes */ ||
+				      text[0] == 0x2210 /* Coproduct */ ||
+				      text[0] == 0x220F /* Product */ ||
+				      text[0] == 0x22C2 /* Intersection */ ||
+				      text[0] == 0x2299 /* CircleDot */ )
+				    movable = TRUE;
+#else
+				  script = TtaGetScript (lang);
+				  if (script == 'G')
+				    /* Adobe Symbol character set */
+				    if (text[0] == 197 || text[0] == 229 ||
+					text[0] == 200 || text[0] == 196 ||
+					text[0] == 213 || text[0] == 199)
+				      movable = TRUE;
+#endif
+				}
+			    }
+			}
+		    }
+		}
+	    }
+	}
+    }
+
+  attrType.AttrTypeNum = MathML_ATTR_IntMovelimits;
+  attr = TtaGetAttribute (el, attrType);
+  if (movable)
+    {
+      if (!attr)
+	{
+	  attr = TtaNewAttribute (attrType);
+	  TtaAttachAttribute (el, attr, doc);
+	}
+      TtaSetAttributeValue (attr, MathML_ATTR_IntMovelimits_VAL_yes_, el, doc);
+    }
+  else if (attr)
+    TtaRemoveAttribute (el, attr, doc);
+}
+
+/*----------------------------------------------------------------------
+   CheckLargeOp
+   If el is a MO element,
+   if it's a large operator (&Sum; for instance), put a presentation
+   rule to enlarge the character.
+  ----------------------------------------------------------------------*/
+void      CheckLargeOp (Element el, Document doc)
+{
+   ElementType	       elType, contType;
+   Element	       content, ancestor;
+   AttributeType       attrType;
+   Attribute	       attrLargeop, attr;
+   Language	       lang;
+   PresentationValue   pval;
+   PresentationContext ctxt;
+   CHAR_T              text[2];
+   char	               script;
+   int                 len, val;
+   ThotBool            largeop;
+
+   elType = TtaGetElementType (el);
+   if (elType.ElTypeNum == MathML_EL_MO)
+     /* the element is a MO */
+     {
+     content = TtaGetFirstChild (el);
+     if (content != NULL)
+       {
+       contType = TtaGetElementType (content);
+       if (contType.ElTypeNum == MathML_EL_TEXT_UNIT)
+	 {
+	 len = TtaGetElementVolume (content);
+	 if (len == 1)
+	   /* the MO element contains a single character */
+	   {
+	   TtaGiveBufferContent (content, text, len+1, &lang);
+	   script = TtaGetScript (lang);
+	   largeop = FALSE;
+	   /* is there an attribute largeop on this MO element? */
+	   attrType.AttrSSchema = elType.ElSSchema;
+	   attrType.AttrTypeNum = MathML_ATTR_largeop;
+	   attrLargeop = TtaGetAttribute (el, attrType);
+	   if (attrLargeop)
+	     /* there is an attribute largeop. Just take its value */
+	     largeop = (TtaGetAttributeValue (attrLargeop) == MathML_ATTR_largeop_VAL_true);
+	   else
+	     /* no attribute largeop */
+	     {
+	       /* first look for an IntDisplaystyle attribute on an ancestor */
+	       attrType.AttrSSchema = elType.ElSSchema;
+	       attrType.AttrTypeNum = MathML_ATTR_IntDisplaystyle;
+	       ancestor = el;
+	       do
+		 {
+		   attr = TtaGetAttribute (ancestor, attrType);
+		   if (!attr)
+		     ancestor = TtaGetParent(ancestor);
+		 }
+	       while (!attr && ancestor);
+	       if (attr)
+		 /* there is an ancestor with an attribute IntDisplaystyle */
+		 {
+		   val = TtaGetAttributeValue (attr);
+		   if (val == MathML_ATTR_IntDisplaystyle_VAL_true)
+		     /* an ancestor has an attribute IntDisplaystyle = true */
+		     /* Look at the symbol */
+		     largeop = IsLargeOp (text[0], script);
+		 }
+	     }
+	   ctxt = TtaGetSpecificStyleContext (doc);
+	   if (largeop)
+	     /* it's a large operator. Make it larger */
+	     {
+	     ctxt->destroy = FALSE;
+	     /* the specific presentation to be created is not a CSS rule */
+	     ctxt->cssSpecificity = 0;
+	     pval.typed_data.unit = UNIT_PERCENT;
+	     pval.typed_data.real = FALSE;
+	     pval.typed_data.value = 180;
+	     }
+	   else
+	     /* it's not a large operator, remove the Size presentation rule
+		if it's present */
+	     {
+	     ctxt->destroy = TRUE;
+             pval.typed_data.value = 0;
+	     }
+	   TtaSetStylePresentation (PRSize, content, NULL, ctxt, pval);
+	   }
+	 }
+       }
+     }
+}
+
+/*----------------------------------------------------------------------
+   ApplyDisplaystyle
+   An IntDisplaystyle attribute has been associated with (or removed from)
+   element el.
+   Handle all large operators in the sub tree.
+   Update attribute IntMovelimits for all munder, mover or munderover
+   elements in the subtree
+  ----------------------------------------------------------------------*/
+static void   ApplyDisplaystyle (Element el, Document doc)
+{
+  ElementType  elType;
+  Element      child;
+
+  if (el)
+    {
+      elType = TtaGetElementType (el);
+      if (!strcmp (TtaGetSSchemaName (elType.ElSSchema), "MathML"))
+	{
+	  if (elType.ElTypeNum == MathML_EL_MO)
+	    CheckLargeOp (el, doc);
+	  else if (elType.ElTypeNum == MathML_EL_MUNDER ||
+		   elType.ElTypeNum == MathML_EL_MOVER ||
+		   elType.ElTypeNum == MathML_EL_MUNDEROVER)
+	    SetIntMovelimitsAttr (el, doc);
+	}
+      child = TtaGetFirstChild (el);
+      while (child)
+	{
+	  ApplyDisplaystyle (child, doc);
+	  TtaNextSibling (&child);
+	}
+    }
+}
+
+/*----------------------------------------------------------------------
+  CheckIntDisplaystyle
+  Internal element el has just been created by function
+  CheckMathSubExpressions. If this new element has an implicit (see MathML.S)
+  attribute IntDisplaystyle=false, set the size of large operators and
+  update attribute IntMovelimit in the whole subtree.
+  ----------------------------------------------------------------------*/
+static void  CheckIntDisplaystyle (Element el, Document doc)
+{
+  ElementType  elType;
+
+  elType = TtaGetElementType (el);
+  if (elType.ElTypeNum == MathML_EL_Index ||
+      elType.ElTypeNum == MathML_EL_Subscript ||
+      elType.ElTypeNum == MathML_EL_Superscript ||
+      elType.ElTypeNum == MathML_EL_Underscript ||
+      elType.ElTypeNum == MathML_EL_Overscript ||
+      elType.ElTypeNum == MathML_EL_PostscriptPairs ||
+      elType.ElTypeNum == MathML_EL_PrescriptPairs)
+    {
+      ApplyDisplaystyle (el, doc);
+    }
+}
+
+/*----------------------------------------------------------------------
   CheckMathSubExpressions
   Children of element el should be of type type1, type2, and type3.
   If they are not, wrap them in elements of these types.
@@ -460,6 +766,7 @@ static ThotBool CheckMathSubExpressions (Element el, int type1, int type2, int t
 	  TtaInsertFirstChild (&child, new, doc);
 	  CreatePlaceholders (child, doc);
 	  child = new;
+	  CheckIntDisplaystyle (new, doc);
 	}
       prev = child;
       TtaNextSibling (&child);
@@ -497,6 +804,7 @@ static ThotBool CheckMathSubExpressions (Element el, int type1, int type2, int t
 		  TtaInsertFirstChild (&child, new, doc);
 		  CreatePlaceholders (child, doc);
 		  child = new;
+		  CheckIntDisplaystyle (new, doc);
 		}
 	      prev = child;
 	      TtaNextSibling (&child);
@@ -534,6 +842,7 @@ static ThotBool CheckMathSubExpressions (Element el, int type1, int type2, int t
 			  TtaInsertFirstChild (&child, new, doc);
 			  CreatePlaceholders (child, doc);
 			  child = new;
+			  CheckIntDisplaystyle (new, doc);
 			}
 		    }
 		  prev = child;
@@ -1089,161 +1398,6 @@ void SetIntVertStretchAttr (Element el, Document doc, int base, Element* selEl)
 	    }
 	}
     }
-}
-
-/*----------------------------------------------------------------------
-   SetIntMovelimitsAttr
-   Put a IntMovelimits attribute on element el (which is a munder, mover
-   or munderover) if the current value of IntDisplaystyle is false and
-   if el contains a MO element that allows limits to be moved.
- -----------------------------------------------------------------------*/
-void SetIntMovelimitsAttr (Element el, Document doc)
-{
-  Element	ancestor, child, base, operator, textEl;
-  int           value, len;
-  ElementType   elType;
-  AttributeType attrType;
-  Attribute     attr;
-  Language      lang;
-  CHAR_T        text[10];
-  char          buffer[20];
-  ThotBool      movable;
-#ifndef _I18N_
-  char          script;
-#endif
-
-  if (el == NULL || doc == 0)
-     return;
-  movable = FALSE;
-
-  /* first look for an IntDisplaystyle attribute on an ancestor */
-  elType = TtaGetElementType (el);
-  attrType.AttrSSchema = elType.ElSSchema;
-  attrType.AttrTypeNum = MathML_ATTR_IntDisplaystyle;
-  ancestor = el;
-  do
-    {
-      attr = TtaGetAttribute (ancestor, attrType);
-      if (!attr)
-        ancestor = TtaGetParent(ancestor);
-    }
-  while (!attr && ancestor);
-  if (attr)
-    /* there is an ancestor with an attribute IntDisplaystyle */
-    {
-      value = TtaGetAttributeValue (attr);
-      if (value == MathML_ATTR_IntDisplaystyle_VAL_false)
-	/* an ancestor has an attribute IntDisplaystyle = false */
-	{
-	  /* Check the operator within the base */
-	  child = TtaGetFirstChild (el);
-	  base = NULL;
-	  do
-	    {
-	      elType = TtaGetElementType (child);
-	      if (elType.ElTypeNum == MathML_EL_UnderOverBase)
-		base = child;
-	      else
-		TtaNextSibling (&child);
-	    }
-	  while (child && !base);
-	  if (base)
-	    {
-	      child = TtaGetFirstChild (base);
-	      operator = NULL;
-	      do
-		{
-		  elType = TtaGetElementType (child);
-		  if (elType.ElTypeNum == MathML_EL_MO)
-		    operator = child;
-		  else
-		    TtaNextSibling (&child);
-		}
-	      while (child && !operator);
-	      if (operator)
-		{
-		  attrType.AttrTypeNum = MathML_ATTR_movablelimits;
-		  attr = TtaGetAttribute (operator, attrType);
-		  if (attr)
-		    /* the operator has an attribute movablelimits */
-		    {
-		      value = TtaGetAttributeValue (attr);
-		      if (value == MathML_ATTR_movablelimits_VAL_true)
-			movable = TRUE;
-		    }
-		  else
-		    /* no attribute movablelimits. Look at the content of the
-		       operator element */
-		    {
-		      textEl = TtaGetFirstChild (operator);
-		      if (textEl)
-			{
-			  elType = TtaGetElementType (textEl);
-			  if (elType.ElTypeNum == MathML_EL_TEXT_UNIT)
-			    {
-			      len = TtaGetElementVolume (textEl);
-			      if (len == 3)
-				{
-				  TtaGiveTextContent (textEl, buffer, &len, &lang);
-#ifndef _I18N_
-				  script = TtaGetScript (lang);
-				  if (script == 'L')
-#endif
-				    {
-				      if (!strcmp (buffer, "lim") ||
-					  !strcmp (buffer, "max") ||
-					  !strcmp (buffer, "min"))
-					movable = TRUE;
-				    }
-				}
-			      else if (len == 1)
-				{
-				  TtaGiveBufferContent (textEl, text, len+1, &lang);
-#ifdef _I18N_
-				  if (text[0] == 0x22C1 /* Vee */ ||
-				      text[0] == 0x2296 /* CircleMinus */ ||
-				      text[0] == 0x2295 /* CirclePlus */ ||
-				      text[0] == 0x2211 /* Sum */ ||
-				      text[0] == 0x22C3 /* Union */ ||
-				      text[0] == 0x228E /* UnionPlus */ ||
-				      text[0] == 0x22C0 /* Wedge */ ||
-				      text[0] == 0x2297 /* CircleTimes */ ||
-				      text[0] == 0x2210 /* Coproduct */ ||
-				      text[0] == 0x220F /* Product */ ||
-				      text[0] == 0x22C2 /* Intersection */ ||
-				      text[0] == 0x2299 /* CircleDot */ )
-				    movable = TRUE;
-#else
-				  script = TtaGetScript (lang);
-				  if (script == 'G')
-				    /* Adobe Symbol character set */
-				    if (text[0] == 197 || text[0] == 229 ||
-					text[0] == 200 || text[0] == 196 ||
-					text[0] == 213 || text[0] == 199)
-				      movable = TRUE;
-#endif
-				}
-			    }
-			}
-		    }
-		}
-	    }
-	}
-    }
-
-  attrType.AttrTypeNum = MathML_ATTR_IntMovelimits;
-  attr = TtaGetAttribute (el, attrType);
-  if (movable)
-    {
-      if (!attr)
-	{
-	  attr = TtaNewAttribute (attrType);
-	  TtaAttachAttribute (el, attr, doc);
-	}
-      TtaSetAttributeValue (attr, MathML_ATTR_IntMovelimits_VAL_yes_, el, doc);
-    }
-  else if (attr)
-    TtaRemoveAttribute (el, attr, doc);
 }
 
 /*----------------------------------------------------------------------
@@ -2032,99 +2186,6 @@ ThotBool      ChildOfMRowOrInferred (Element el)
                 elType.ElTypeNum == MathML_EL_FencedExpression);
       }
    return result;   
-}
-
-/*----------------------------------------------------------------------
-   CheckLargeOp
-   If el is a MO element,
-   if it's a large operator (&Sum; for instance), put a presentation
-   rule to enlarge the character.
-  ----------------------------------------------------------------------*/
-void      CheckLargeOp (Element el, Document doc)
-{
-   ElementType	       elType, contType;
-   Element	       content, ancestor;
-   AttributeType       attrType;
-   Attribute	       attrLargeop, attr;
-   Language	       lang;
-   PresentationValue   pval;
-   PresentationContext ctxt;
-   CHAR_T              text[2];
-   char	               script;
-   int                 len, val;
-   ThotBool            largeop;
-
-   elType = TtaGetElementType (el);
-   if (elType.ElTypeNum == MathML_EL_MO)
-     /* the element is a MO */
-     {
-     content = TtaGetFirstChild (el);
-     if (content != NULL)
-       {
-       contType = TtaGetElementType (content);
-       if (contType.ElTypeNum == MathML_EL_TEXT_UNIT)
-	 {
-	 len = TtaGetElementVolume (content);
-	 if (len == 1)
-	   /* the MO element contains a single character */
-	   {
-	   TtaGiveBufferContent (content, text, len+1, &lang);
-	   script = TtaGetScript (lang);
-	   largeop = FALSE;
-	   /* is there an attribute largeop on this MO element? */
-	   attrType.AttrSSchema = elType.ElSSchema;
-	   attrType.AttrTypeNum = MathML_ATTR_largeop;
-	   attrLargeop = TtaGetAttribute (el, attrType);
-	   if (attrLargeop)
-	     /* there is an attribute largeop. Just take its value */
-	     largeop = (TtaGetAttributeValue (attrLargeop) == MathML_ATTR_largeop_VAL_true);
-	   else
-	     /* no attribute largeop */
-	     {
-	       /* first look for an IntDisplaystyle attribute on an ancestor */
-	       attrType.AttrSSchema = elType.ElSSchema;
-	       attrType.AttrTypeNum = MathML_ATTR_IntDisplaystyle;
-	       ancestor = el;
-	       do
-		 {
-		   attr = TtaGetAttribute (ancestor, attrType);
-		   if (!attr)
-		     ancestor = TtaGetParent(ancestor);
-		 }
-	       while (!attr && ancestor);
-	       if (attr)
-		 /* there is an ancestor with an attribute IntDisplaystyle */
-		 {
-		   val = TtaGetAttributeValue (attr);
-		   if (val == MathML_ATTR_IntDisplaystyle_VAL_true)
-		     /* an ancestor has an attribute IntDisplaystyle = true */
-		     /* Look at the symbol */
-		     largeop = IsLargeOp (text[0], script);
-		 }
-	     }
-	   ctxt = TtaGetSpecificStyleContext (doc);
-	   if (largeop)
-	     /* it's a large operator. Make it larger */
-	     {
-	     ctxt->destroy = FALSE;
-	     /* the specific presentation to be created is not a CSS rule */
-	     ctxt->cssSpecificity = 0;
-	     pval.typed_data.unit = UNIT_PERCENT;
-	     pval.typed_data.real = FALSE;
-	     pval.typed_data.value = 180;
-	     }
-	   else
-	     /* it's not a large operator, remove the Size presentation rule
-		if it's present */
-	     {
-	     ctxt->destroy = TRUE;
-             pval.typed_data.value = 0;
-	     }
-	   TtaSetStylePresentation (PRSize, content, NULL, ctxt, pval);
-	   }
-	 }
-       }
-     }
 }
 
 /*----------------------------------------------------------------------
@@ -3872,37 +3933,6 @@ void HandleFramespacingAttribute (Attribute attr, Element el, Document doc,
 
   if (value)
     TtaFreeMemory (value);
-}
-
-/*----------------------------------------------------------------------
-   ApplyDisplaystyle
-   An IntDisplaystyle attribute has been associated with (or removed from)
-   element el.
-   Handle all large operators in the sub tree.
-   Update attribute IntMovelimits for all munder, mover or munderover
-   elements in the subtree
-  ----------------------------------------------------------------------*/
-static void   ApplyDisplaystyle (Element el, Document doc)
-{
-  ElementType  elType;
-  Element      child;
-
-  elType = TtaGetElementType (el);
-  if (!strcmp (TtaGetSSchemaName (elType.ElSSchema), "MathML"))
-    {
-      if (elType.ElTypeNum == MathML_EL_MO)
-	CheckLargeOp (el, doc);
-      else if (elType.ElTypeNum == MathML_EL_MUNDER ||
-	       elType.ElTypeNum == MathML_EL_MOVER ||
-	       elType.ElTypeNum == MathML_EL_MUNDEROVER)
-	SetIntMovelimitsAttr (el, doc);
-    }
-  child = TtaGetFirstChild (el);
-  while (child)
-    {
-      ApplyDisplaystyle (child, doc);
-      TtaNextSibling (&child);
-    }
 }
 
 /*----------------------------------------------------------------------

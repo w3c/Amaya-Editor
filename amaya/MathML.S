@@ -136,9 +136,9 @@ STRUCT
 		denomalign = left\240, center\240, right\240;
 		bevelled = true, false)
 	  = BEGIN
-	    Numerator = LIST OF (Construct) with IntDisplaystyle = false;
-	    Denominator = LIST OF (Construct) with IntDisplaystyle = false;
-	    END	;
+	    Numerator = LIST OF (Construct);
+	    Denominator = LIST OF (Construct);
+	    END with IntDisplaystyle = false; 
 
       BevelledMFRAC
 	  (ATTR linethickness; numalign; denomalign; bevelled)
