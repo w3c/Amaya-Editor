@@ -53,6 +53,16 @@ typedef struct _REMOTELOAD_context {
   char *localfile;
 } REMOTELOAD_context;
 
+/* the structure used for storing the context of the 
+   RemoteLoad_callback function */
+typedef struct _DELETE_context {
+  Document source_doc;
+  Document annot_doc;
+  CHAR_T *annot_url;
+  Element annotEl;
+  ThotBool annot_is_remote;
+} DELETE_context;
+
 /*-----------------------------------------------------------------------
    GetAnnotCustomQuery
   -----------------------------------------------------------------------*/
@@ -781,7 +791,7 @@ View                view;
     {
       /* save the file */
       /* we skip the file: prefix if it's present */
-      filename = TtaGetMemory (ustrlen (DocumentURLs[doc_annot])+1);
+      filename = TtaGetMemory (ustrlen (DocumentURLs[doc_annot]) + 1);
       NormalizeFile (DocumentURLs[doc_annot], filename, AM_CONV_ALL);
       if (ANNOT_LocalSave (doc_annot, filename))
 	TtaSetDocumentUnmodified (doc_annot);
@@ -987,6 +997,79 @@ NotifyElement *event;
   return (TRUE);
 }
 
+/*-----------------------------------------------------------------------
+  ANNOT_Delete_callback
+  -----------------------------------------------------------------------
+  -----------------------------------------------------------------------*/
+#ifdef __STDC__
+void               ANNOT_Delete_callback (int doc, int status, 
+					 CHAR_T *urlName,
+					 CHAR_T *outputfile, 
+					 AHTHeaders *http_headers,
+					 void * context)
+#else  /* __STDC__ */
+void               ANNOT_Delete_callback (doc, status, urlName,
+					  outputfile, http_headers,
+					  context)
+int doc;
+int status;
+CHAR_T *urlName;
+CHAR_T *outputfile;
+AHTHeaders *http_headers;
+void *context;
+
+#endif
+{
+   DELETE_context *ctx;
+   Document source_doc;
+   Document annot_doc;
+   CHAR_T  *annot_url;
+   Element  annotEl;
+   ThotBool annot_is_remote;
+
+   /* restore REMOTELOAD contextext's */  
+   ctx = (DELETE_context *) context;
+
+   if (!ctx)
+     return;
+   
+   source_doc = ctx->source_doc;
+   annot_doc = ctx->annot_doc;
+   annot_url = ctx->annot_url;
+   annotEl = ctx->annotEl;
+   annot_is_remote = ctx->annot_is_remote;
+
+   if (status == HT_OK)
+     {
+       /* remove the annotation link in the source document */
+       LINK_RemoveLinkFromSource (source_doc, annotEl);
+       /* remove the annotation from the list and update it */
+       AnnotList_delAnnot (&(AnnotMetaData[source_doc].annotations),
+			   annot_url, FALSE);
+
+       /* update the annotation index or delete it if it's empty */
+       if (AnnotMetaData[source_doc].annotations)
+	 LINK_SaveLink (source_doc);
+       else
+	 LINK_DeleteLink (source_doc);
+
+       /* close the annotation window if it was open */
+       /* @@ JK: check if the user didn't close it in the meantime */
+       if (annot_doc)
+	 {
+	   TtaSetDocumentUnmodified (annot_doc);
+	   /* we should add all the views */
+	   TtaCloseDocument (annot_doc);
+	 }
+     }
+   
+   TtaFreeMemory (annot_url);
+   TtaFreeMemory (ctx);
+   /* clear the status line if there was no error*/
+   if (status == HT_OK && doc == source_doc)
+     TtaSetStatus (doc, 1,  TEXT("Annotation deleted!"), NULL);
+}
+
 /*----------------------------------------------------------------------
   ANNOT_Delete 
   Erases one annotation
@@ -1008,13 +1091,19 @@ void ANNOT_Delete (document, view)
   CHAR_T          *annot_url;
   int              i;
   AnnotMeta       *annot;
+  ThotBool         annot_is_remote;
+  DELETE_context *ctx;
 
   /* maybe detect if the user just clicked on the annotation */
   /* e.g, if the annot_doc is not open */
-  /* get the annotation URL */
 
+  /* 
+  **  get the annotation URL, source_doc, and annot_doc
+  */
   if (DocumentTypes[doc] == docAnnot)
     {
+      /* delete from an annotation document */
+
       /* clear the status */
       last_selected_annotation =  NULL;
       annot_doc = doc;
@@ -1024,6 +1113,7 @@ void ANNOT_Delete (document, view)
       if (IsW3Path (DocumentURLs[doc]))
 	{
 	  /* it's a remote annotation */
+	  annot_is_remote = TRUE;
 	  if (DocumentMeta[doc]->form_data)
 	    {
 	      annot_url = TtaGetMemory (ustrlen (DocumentURLs[doc])
@@ -1039,11 +1129,13 @@ void ANNOT_Delete (document, view)
       else 
 	{
 	  /* it's a local annotation */
+	  annot_is_remote = FALSE;
 	  annot_url = TtaGetMemory (ustrlen (DocumentURLs[doc])
 				    + sizeof (TEXT("file://"))
 				    + 1);
 	  usprintf (annot_url, "file://%s", DocumentURLs[doc]);
 	}
+
       /* find the annotation link in the source document that corresponds
 	 to this annotation */
       annot = AnnotList_searchAnnot (AnnotMetaData[source_doc].annotations,
@@ -1058,6 +1150,8 @@ void ANNOT_Delete (document, view)
     }
   else
     {
+      /* delete from the source doc */
+
       source_doc = doc;
 
       /* verify if the user has selected an annotation link */
@@ -1093,43 +1187,36 @@ void ANNOT_Delete (document, view)
 	{
 	  CHAR_T *norm_url;
 
+	  annot_is_remote = FALSE;
 	  norm_url = TtaGetMemory (ustrlen (annot_url));
 	  NormalizeFile (annot_url, norm_url, AM_CONV_NONE);
 	  annot_doc = IsDocumentLoaded (norm_url, NULL);
 	  TtaFreeMemory (norm_url);
 	}
       else
-	annot_doc = IsDocumentLoaded (annot_url, NULL);
+	{
+	  annot_is_remote = TRUE;
+	  annot_doc = IsDocumentLoaded (annot_url, NULL);
+	}
     }
 
-  /* remove the annotation link in the source document */
-  LINK_RemoveLinkFromSource (source_doc, annotEl);
-  /* remove the annotation from the list and update it */
-  AnnotList_delAnnot (&(AnnotMetaData[source_doc].annotations),
-				 annot_url, FALSE);
+  ctx = (DELETE_context *) TtaGetMemory (sizeof (DELETE_context));
+  ctx->source_doc = source_doc;
+  ctx->annot_doc = annot_doc;
+  ctx->annot_url = annot_url;
+  ctx->annotEl = annotEl;
+  ctx->annot_is_remote = annot_is_remote;
 
-  /* update the annotation index or delete it if it's empty */
-  if (AnnotMetaData[source_doc].annotations)
-    LINK_SaveLink (source_doc);
-  else
-    LINK_DeleteLink (source_doc);
-
-  /* close the annotation window if it was open */
-  if (annot_doc)
+  if (annot_is_remote)
     {
-      TtaSetDocumentUnmodified (annot_doc);
-      /* we should add all the views */
-      TtaCloseDocument (annot_doc);
+      /* do the post call */
     }
-  TtaFreeMemory (annot_url);
-
+  else
+    {
+      /* invoke the callback */
+      ANNOT_Delete_callback (doc, HT_OK, NULL, NULL, NULL, (void *) ctx);
+    }
   /* @@ JK: Todo rename the function to LINK_SaveIndex, as that's what it's
      doing */
 }
-
-
-
-
-
-
 

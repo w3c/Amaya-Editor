@@ -357,6 +357,7 @@ void LINK_DeleteLink (source_doc)
   CHAR_T *main_index_file_old;
   CHAR_T *main_index_file_new;
   int len;
+  int error;
   FILE *fp_old;
   FILE *fp_new;
   
@@ -366,6 +367,7 @@ void LINK_DeleteLink (source_doc)
   if (!doc_index)
     return;
 
+  error = 0;
   annot_dir = GetAnnotDir ();
   main_index = GetAnnotMainIndex ();
   main_index_file_old = TtaGetMemory (ustrlen (annot_dir) 
@@ -388,28 +390,32 @@ void LINK_DeleteLink (source_doc)
 	    main_index);
 
   if (!(fp_new = fopen (main_index_file_new, "w")))
-    return;
+    error++;
 
-  if (!(fp_old = fopen (main_index_file_old, "r")))
+  if (!error && !(fp_old = fopen (main_index_file_old, "r")))
     {
       fclose (fp_new);
-      return;
+      error++;
     }
 
-  len = ustrlen (doc_index);
-  while (fgets (buffer, sizeof (buffer), fp_old))
+  if (!error)
     {
-      if (ustrncmp (doc_index, buffer, len))
-	fputs (buffer, fp_new);
+      /* search and remove the index entry */
+      len = ustrlen (DocumentURLs[source_doc]);
+      while (fgets (buffer, sizeof (buffer), fp_old))
+	{
+	  if (ustrncmp (DocumentURLs[source_doc], buffer, len))
+	    fputs (buffer, fp_new);
+	}
+      fclose (fp_new);
+      fclose (fp_old);
+      
+      /* rename the main index file */
+      TtaFileUnlink (main_index_file_old);
+      rename (main_index_file_new, main_index_file_old);
+      /* remove the index file */
+      TtaFileUnlink (doc_index);
     }
-  fclose (fp_new);
-  fclose (fp_old);
-
-  /* rename the main index file */
-  TtaFileUnlink (main_index_file_old);
-  rename (main_index_file_new, main_index_file_old);
-  /* remove the index file */
-  TtaFileUnlink (doc_index);
 
   TtaFreeMemory (main_index_file_old);
   TtaFreeMemory (main_index_file_new);
