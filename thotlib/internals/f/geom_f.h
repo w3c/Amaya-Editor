@@ -10,7 +10,8 @@ extern int PolyLineCreation ( int frame,
                               int x,
                               int y,
                               PtrTextBuffer Pbuffer,
-                              PtrTextBuffer Bbuffer );
+                              PtrTextBuffer Bbuffer,
+			      int maxPoints );
 extern void PolyLineModification ( int frame,
                                    int x,
                                    int y,
@@ -41,7 +42,9 @@ extern void UserGeometryCreate ( int frame,
                                  int PosX,
                                  int PosY,
                                  int DimX,
-                                 int DimY );
+                                 int DimY,
+				 int percentW,
+				 int percentH );
 extern void UserGeometryMove ( int frame,
                                int *x,
                                int *y,
@@ -67,7 +70,9 @@ extern void UserGeometryResize ( int frame,
                                  int ymin,
                                  int ymax,
                                  int xm,
-                                 int ym );
+                                 int ym,
+				 int percentW,
+				 int percentH );
 
 #else /* __STDC__ */
 
@@ -75,7 +80,8 @@ extern int PolyLineCreation (/* int frame,
                                 int x,
                                 int y,
                                 PtrTextBuffer Pbuffer,
-                                PtrTextBuffer Bbuffer */);
+                                PtrTextBuffer Bbuffer,
+				int maxPoints */);
 extern void PolyLineModification (/* int frame,
                                      int x,
                                      int y,
@@ -106,7 +112,9 @@ extern void UserGeometryCreate (/* int frame,
                                    int PosX,
                                    int PosY,
                                    int DimX,
-                                   int DimY */);
+                                   int DimY,
+				   int percentW,
+				   int percentH */);
 extern void UserGeometryMove (/* int frame,
                                  int *x,
                                  int *y,
@@ -132,7 +140,9 @@ extern void UserGeometryResize (/* int frame,
                                    int ymin,
                                    int ymax,
                                    int xm,
-                                   int ym */);
+                                   int ym,
+				   int percentW,
+				   int percentH */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

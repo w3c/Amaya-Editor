@@ -1730,7 +1730,7 @@ char               *shape;
      {
 	elType.ElTypeNum = HTML_EL_AREA;
 	/* Is it necessary to ask user coordinates */
-	if (shape[0] == 'R' || shape[0] == 'c')
+	if (shape[0] == 'R' || shape[0] == 'a')
 	   TtaAskFirstCreation ();
 
 	el = TtaNewTree (doc, elType, "");
@@ -1756,7 +1756,7 @@ char               *shape;
 
 	if (shape[0] == 'R')
 	   TtaSetAttributeValue (attrShape, HTML_ATTR_shape_VAL_rectangle, el, doc);
-	else if (shape[0] == 'c')
+	else if (shape[0] == 'a')
 	   TtaSetAttributeValue (attrShape, HTML_ATTR_shape_VAL_circle, el, doc);
 	else if (shape[0] == 'p')
 	  {
@@ -1806,7 +1806,7 @@ View                view;
 
 #endif /* __STDC__ */
 {
-   CreateAreaMap (doc, view, "c");
+   CreateAreaMap (doc, view, "a");
 }
 
 /*----------------------------------------------------------------------

@@ -3955,7 +3955,7 @@ char                c;
 			      shape = 'R';
 			      break;
 			   case HTML_ATTR_shape_VAL_circle:
-			      shape = 'c';
+			      shape = 'a';
 			      break;
 			   case HTML_ATTR_shape_VAL_polygon:
 			      shape = 'p';

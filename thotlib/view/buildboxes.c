@@ -532,6 +532,7 @@ int                *height;
 	       *height = hfont;
 	       break;
 	    case 'C':
+	    case 'a':
 	    case 'c':
 	    case 'L':
 	    case '/':

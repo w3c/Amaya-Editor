@@ -874,27 +874,20 @@ Document            document;
    TtaSetGraphicsShape
 
    Changes the shape of a Graphics or Symbol basic element.
-
    Parameters:
    element: the element to be changed. This element must
    be a basic element of type Graphics or Symbol.
    shape: new shape for that element.
    document: the document containing that element.
-
   ----------------------------------------------------------------------*/
-
-
 #ifdef __STDC__
 void                TtaSetGraphicsShape (Element element, char shape, Document document)
-
 #else  /* __STDC__ */
 void                TtaSetGraphicsShape (element, shape, document)
 Element             element;
 char                shape;
 Document            document;
-
 #endif /* __STDC__ */
-
 {
    int                 delta;
    boolean             polyline;
@@ -902,30 +895,20 @@ Document            document;
 
    UserErrorCode = 0;
    if (element == NULL)
-     {
-	TtaError (ERR_invalid_parameter);
-     }
+     TtaError (ERR_invalid_parameter);
    else if (!((PtrElement) element)->ElTerminal)
-     {
-	TtaError (ERR_invalid_element_type);
-     }
+     TtaError (ERR_invalid_element_type);
    else if (((PtrElement) element)->ElLeafType != LtSymbol &&
 	    ((PtrElement) element)->ElLeafType != LtGraphics &&
 	    ((PtrElement) element)->ElLeafType != LtPolyLine)
-     {
-	TtaError (ERR_invalid_element_type);
-     }
+     TtaError (ERR_invalid_element_type);
    else
      {
 	/* verifies the parameter document */
 	if (document < 1 || document > MAX_DOCUMENTS)
-	  {
-	     TtaError (ERR_invalid_document_parameter);
-	  }
+	  TtaError (ERR_invalid_document_parameter);
 	else if (LoadedDocument[document - 1] == NULL)
-	  {
-	     TtaError (ERR_invalid_document_parameter);
-	  }
+	  TtaError (ERR_invalid_document_parameter);
 	else
 	   /* parameter document is correct */
 	  {
@@ -934,17 +917,18 @@ Document            document;
 	       {
 		  if (((PtrElement) element)->ElGraph == EOS &&
 		      shape != EOS)
-		     delta = 1;
+		    delta = 1;
 		  else if (((PtrElement) element)->ElGraph != EOS &&
 			   shape == EOS)
-		     delta = -1;
+		    delta = -1;
 	       }
 	     else
 	       {
 		  polyline = (shape == 'S' || shape == 'U' || shape == 'N' ||
 			      shape == 'M' || shape == 'B' || shape == 'A' ||
 			      shape == 'F' || shape == 'D' || shape == 'p' ||
-			      shape == 's');
+			      shape == 's' || shape == 'w' || shape == 'x' ||
+			      shape == 'y' || shape == 'z');
 		  if (polyline && ((PtrElement) element)->ElLeafType == LtGraphics)
 		     /* changing simple graphic --> polyline */
 		    {
@@ -995,16 +979,15 @@ Document            document;
 }
 
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static boolean      PolylineOK (Element element, Document document)
-
 #else  /* __STDC__ */
 static boolean      PolylineOK (element, document)
 Element             element;
 Document            document;
-
 #endif /* __STDC__ */
-
 {
    boolean             ok;
 
@@ -1599,15 +1582,12 @@ int                 length;
    Return value:
    a single character representing the shape of the graphics element or
    symbol contained in the element.
-
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 char                TtaGetGraphicsShape (Element element)
-
 #else  /* __STDC__ */
 char                TtaGetGraphicsShape (element)
 Element             element;
-
 #endif /* __STDC__ */
 {
    char                content;
@@ -1615,23 +1595,17 @@ Element             element;
    UserErrorCode = 0;
    content = EOS;
    if (element == NULL)
-     {
-	TtaError (ERR_invalid_parameter);
-     }
+     TtaError (ERR_invalid_parameter);
    else if (!((PtrElement) element)->ElTerminal)
-     {
-	TtaError (ERR_invalid_element_type);
-     }
+     TtaError (ERR_invalid_element_type);
    else if (((PtrElement) element)->ElLeafType != LtSymbol &&
 	    ((PtrElement) element)->ElLeafType != LtGraphics &&
 	    ((PtrElement) element)->ElLeafType != LtPolyLine)
-     {
-	TtaError (ERR_invalid_element_type);
-     }
+     TtaError (ERR_invalid_element_type);
    else if (((PtrElement) element)->ElLeafType == LtPolyLine)
-      content = ((PtrElement) element)->ElPolyLineType;
+     content = ((PtrElement) element)->ElPolyLineType;
    else
-      content = ((PtrElement) element)->ElGraph;
+     content = ((PtrElement) element)->ElGraph;
    return content;
 }
 
@@ -1643,18 +1617,13 @@ Element             element;
    Parameter:
    element: the Polyline element. This element must
    be a basic element of type Polyline.
-
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 int                 TtaGetPolylineLength (Element element)
-
 #else  /* __STDC__ */
 int                 TtaGetPolylineLength (element)
 Element             element;
-
 #endif /* __STDC__ */
-
 {
    UserErrorCode = 0;
    if (element == NULL)
@@ -1696,7 +1665,6 @@ int                 rank;
 TypeUnit            unit;
 int                *x;
 int                *y;
-
 #endif /* __STDC__ */
 {
    PtrTextBuffer       pBuff;
@@ -1750,37 +1718,26 @@ int                *y;
 
    Return value:
    page number of that page element.
-
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 int                 TtaGetPageNumber (Element pageElement)
-
 #else  /* __STDC__ */
 int                 TtaGetPageNumber (pageElement)
 Element             pageElement;
-
 #endif /* __STDC__ */
-
 {
    int                 pageNumber;
 
    UserErrorCode = 0;
    pageNumber = 0;
    if (pageElement == NULL)
-     {
-	TtaError (ERR_invalid_parameter);
-     }
+     TtaError (ERR_invalid_parameter);
    else if (!((PtrElement) pageElement)->ElTerminal)
-     {
-	TtaError (ERR_invalid_element_type);
-     }
+     TtaError (ERR_invalid_element_type);
    else if (((PtrElement) pageElement)->ElLeafType != LtPageColBreak)
-     {
-	TtaError (ERR_invalid_element_type);
-     }
+     TtaError (ERR_invalid_element_type);
    else
-      pageNumber = ((PtrElement) pageElement)->ElPageNumber;
+     pageNumber = ((PtrElement) pageElement)->ElPageNumber;
    return pageNumber;
 }
 
@@ -1796,14 +1753,11 @@ Element             pageElement;
    view of that page.
 
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 int                 TtaGetPageView (Element pageElement)
-
 #else  /* __STDC__ */
 int                 TtaGetPageView (pageElement)
 Element             pageElement;
-
 #endif /* __STDC__ */
 
 {
@@ -1812,17 +1766,11 @@ Element             pageElement;
    UserErrorCode = 0;
    pageView = 0;
    if (pageElement == NULL)
-     {
 	TtaError (ERR_invalid_parameter);
-     }
    else if (!((PtrElement) pageElement)->ElTerminal)
-     {
 	TtaError (ERR_invalid_element_type);
-     }
    else if (((PtrElement) pageElement)->ElLeafType != LtPageColBreak)
-     {
 	TtaError (ERR_invalid_element_type);
-     }
    else
       pageView = ((PtrElement) pageElement)->ElViewPSchema;
    return pageView;

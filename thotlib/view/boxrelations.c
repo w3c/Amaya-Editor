@@ -224,7 +224,8 @@ BoxEdge             targetEdge;
 /*----------------------------------------------------------------------
    InsertDimRelation etablit le lien entre les dimensions             
    horizontales ou verticales des deux boites (pOrginBox vers 
-   pTargetBox).                                               
+   pTargetBox).
+   Si sameDimension est Faux, il faut inverser horizRef.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         InsertDimRelation (PtrBox pOrginBox, PtrBox pTargetBox, boolean sameDimension, boolean horizRef)
@@ -241,6 +242,9 @@ boolean             horizRef;
   int                 i;
   boolean             loop;
   boolean             empty;
+
+  if (!sameDimension)
+    horizRef = !horizRef;
 
   i = 0;
   /* On determine la dimension affectee */
@@ -1335,6 +1339,28 @@ boolean             horizRef;
 		  pDimAb->DimAbRef = NULL;
 		  pDimAb->DimValue = 0;
 	       }
+	     else if (pDimAb->DimAbRef == pAb && !pDimAb->DimSameDimension)
+	       {
+		 if (horizRef && pAb->AbHeight.DimUnit == UnPoint)
+		   pDimAb->DimUnit = UnPoint;
+		 else if (!horizRef && pAb->AbWidth.DimUnit == UnPoint)
+		   pDimAb->DimUnit = UnPoint;
+	       }
+	     else if (!horizRef &&
+		      pAb->AbLeafType == LtGraphics &&
+		      pAb->AbShape == 'a' &&
+		      pDimAb->DimAbRef == NULL)
+	       {
+		 /* force the circle height to be equal to its width */
+		 pDimAb->DimAbRef = pAb;
+		 pDimAb->DimSameDimension = FALSE;
+		 pDimAb->DimValue = 0;
+		 pDimAb->DimUserSpecified = FALSE;
+		 if (pAb->AbWidth.DimUnit == UnPoint)
+		   pDimAb->DimUnit = UnPoint;
+		 else
+		   pDimAb->DimUnit = UnPixel;
+	       }
 
 	     /* Est-ce la boite racine ? */
 	     if (pParentAb == NULL)
@@ -1380,11 +1406,11 @@ boolean             horizRef;
 		  /* La largeur est contrainte (par heritage ou imposee) ? */
 		  if (horizRef)
 		     /* PcFirst cas de coherence */
-		     /* Le texte mis en ligne DOIT prendre sa taille */
 		     if (inLine && pAb->AbLeafType == LtText)
-			defaultDim = TRUE;
-		  /* Dimension fixee */
+		       /* Le texte mis en ligne DOIT prendre sa taille */
+		       defaultDim = TRUE;
 		     else if (pAb->AbWidth.DimAbRef == NULL)
+		       /* Dimension fixee */
 			if (pAb->AbWidth.DimValue <= 0)
 			   defaultDim = TRUE;	/* A calculer */
 			else
@@ -1399,9 +1425,9 @@ boolean             horizRef;
 				delta = PixelValue (pDimAb->DimValue, pDimAb->DimUnit, pAb);
 			     ResizeWidth (pBox, pBox, NULL, delta - pBox->BxWidth, 0, frame);
 			  }
-		  /* Deuxieme cas de coherence */
-		  /* La boite ne peut pas prendre la taille de son englobante si : */
-		  /* -> L'englobante prend la taille de son contenu */
+		     /* Deuxieme cas de coherence */
+		     /* La boite ne peut pas prendre la taille de son englobante si : */
+		     /* -> L'englobante prend la taille de son contenu */
 		     else
 		       {
 			  pPosAb = &pAb->AbHorizPos;

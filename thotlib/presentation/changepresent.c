@@ -1250,7 +1250,7 @@ boolean             display;
 	     }
 	   else
 	     /* calcule la nouvelle largeur en unite logique */
-	     x = LogicalValue (width, pRStd->PrDimRule.DrUnit, pAb);
+	     x = LogicalValue (width, pAb->AbWidth.DimUnit, pAb);
 	   
 	   /* cherche si la largeur de l'element est determinee par un */
 	   /* attribut auquel est associee l'exception NewWidth */
@@ -1420,7 +1420,7 @@ boolean             display;
 	     }
 	   else
 	     /* calcule la nouvelle largeur en unite logique */
-	     y = LogicalValue (height, pRStd->PrDimRule.DrUnit, pAb);
+	     y = LogicalValue (height, pAb->AbHeight.DimUnit, pAb);
 	   
 	   /* cherche si la hauteur de l'element est determinee par un */
 	   /* attribut auquel est associee l'exception NewHeight */

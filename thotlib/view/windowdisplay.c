@@ -1422,9 +1422,7 @@ int                 pattern;
 #endif /* __STDC__ */
 
 {
-   /*int eps2; */
    Pixmap              pat;
-
 #  ifdef _WINDOWS
    HBRUSH              hBrush;
    HBRUSH              hOldBrush;
@@ -2281,10 +2279,10 @@ int                 pattern;
 
 /*----------------------------------------------------------------------
   DrawEllips draw an ellips (or a circle).
-  RO indicates whether it's a read-only box
-  active indicates if the box is active
-  Parameters fg, bg, and pattern are for drawing
-  color, background color and fill pattern.
+  RO indicates whether it's a read-only box active indicates if the box
+  is active.
+  Parameters fg, bg, and pattern are for drawing color, background color
+  and fill pattern.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                DrawEllips (int frame, int thick, int style, int x, int y, int width, int height, int RO, int active, int fg, int bg, int pattern)
@@ -2303,12 +2301,9 @@ int                 active;
 int                 fg;
 int                 bg;
 int                 pattern;
-
 #endif /* __STDC__ */
-
 {
    Pixmap              pat;
-
 #  ifdef _WINDOWS
    HPEN hPen;
    HPEN hOldPen;
@@ -2962,13 +2957,13 @@ int                 y;
 
    if (w != None)
      {
-#       ifndef _WINDOWS
+#ifndef _WINDOWS
 	XFillRectangle (TtDisplay, w, TtInvertGC, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, width, height);
-#       else /* _WINDOWS */
+#else /* _WINDOWS */
 	WIN_GetDeviceContext (frame);
 	PatBlt (TtDisplay, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, width, height, PATINVERT);
     WIN_ReleaseDeviceContext ();
-#       endif /* _WINDOWS */
+#endif /* _WINDOWS */
      }
 }
 

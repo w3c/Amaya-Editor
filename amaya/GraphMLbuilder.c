@@ -109,7 +109,7 @@ static AttrValueMapping GraphMLAttrValueMappingTable[] =
 };
 
 #define MaxMsgLength 200
-static SSchema	GraphMLSSchema = NULL;
+SSchema	GraphMLSSchema = NULL;
 
 /*----------------------------------------------------------------------
    InitGraphMLBuilder
@@ -408,19 +408,19 @@ int		arrowHead;
 	  switch (arrowHead)
 		{
 		case GraphML_ATTR_arrowhead_VAL_none:
-			shape = 'S';
+			shape = 'w';
 			break;
 		case GraphML_ATTR_arrowhead_VAL_start:
-			shape = 'N';
+			shape = 'x';
 			break;
 		case GraphML_ATTR_arrowhead_VAL_end_:
-			shape = 'U';
+			shape = 'y';
 			break;
 		case GraphML_ATTR_arrowhead_VAL_both:
-			shape = 'M';
+			shape = 'z';
 			break;
 		default:
-			shape = 'S';
+			shape = 'w';
 			break;
 		}
 	  leaf = CreateGraphicalLeaf (shape, el, doc, arrowHead != 0);
@@ -434,6 +434,9 @@ int		arrowHead;
 	  *closed = TRUE;
 	  break;
        case GraphML_EL_Circle:
+	  leaf = CreateGraphicalLeaf ('a', el, doc, FALSE);
+	  *closed = TRUE;
+	  break;
        case GraphML_EL_Oval:
 	  leaf = CreateGraphicalLeaf ('c', el, doc, FALSE);
 	  *closed = TRUE;

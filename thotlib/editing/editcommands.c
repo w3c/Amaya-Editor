@@ -1399,110 +1399,121 @@ int                 frame;
 
 #endif /* __STDC__ */
 {
-   int                 xDelta, yDelta;
-   PtrTextBuffer       pBuffer;
-   int                 width, height;
+  int                 xDelta, yDelta;
+  PtrTextBuffer       pBuffer;
+  int                 width, height;
 
-   if (!APPgraphicModify (pBox->BxAbstractBox->AbElement, (int) c, frame, TRUE))
-     {
-	SwitchSelection (frame, FALSE);		/* fface la selection precedente */
-	switch (c)
-	      {
-		 case 'S':	/* Segments */
-		 case 'U':	/* Segments vers avant */
-		 case 'N':	/* Segments fleches vers arriere */
-		 case 'M':	/* Segments fleches dans les deux sens */
-		 case 'B':	/* Beziers (ouvertes) */
-		 case 'A':	/* Beziers (ouvertes) flechees vers avant */
-		 case 'F':	/* Beziers (ouvertes) flechees vers arriere */
-		 case 'D':	/* Beziers (ouvertes) flechees dns les deux sens */
-		 case 'p':	/* polygone */
-		 case 's':	/* spline fermee */
-		    pAb->AbPolyLineShape = c;
-		    width = pBox->BxWidth;
-		    height = pBox->BxHeight;
-		    if (pBox->BxBuffer == NULL)
-		      {
-			 /* Changement de graphique simple a polyline */
-			 pAb->AbLeafType = LtPolyLine;
-			 pAb->AbElement->ElLeafType = LtPolyLine;
-			 /* creation du buffer initial pour ranger les points de la polyline */
-			 GetTextBuffer (&(pAb->AbPolyLineBuffer));
-			 pAb->AbPolyLineBuffer->BuLength = 1;
-			 pAb->AbPolyLineBuffer->BuPoints[0].XCoord = PixelToPoint (width * 1000);
-			 pAb->AbPolyLineBuffer->BuPoints[0].YCoord = PixelToPoint (height * 1000);
-			 GetTextBuffer (&(pBox->BxBuffer));
-			 /* initialise la dimension de la boite polyline */
-			 pBox->BxBuffer->BuLength = 1;
-			 pBox->BxBuffer->BuPoints[0].XCoord = PixelToPoint (width * 1000);
-			 pBox->BxBuffer->BuPoints[0].YCoord = PixelToPoint (height * 1000);
-			 pBox->BxNChars = 1;
-		      }
-
-		    if (pBox->BxNChars == 1)
-		      {
-			 /* il faut saisir les points de la polyline */
-			 pAb->AbVolume = PolyLineCreation (frame,
-							   pBox->BxXOrg - ViewFrameTable[frame - 1].FrXOrg, pBox->BxYOrg - ViewFrameTable[frame - 1].FrYOrg,
-				     pAb->AbPolyLineBuffer, pBox->BxBuffer);
-			 pBox->BxNChars = pAb->AbVolume;
+  if (!APPgraphicModify (pBox->BxAbstractBox->AbElement, (int) c, frame, TRUE))
+    {
+      SwitchSelection (frame, FALSE);		/* fface la selection precedente */
+      switch (c)
+	{
+	case 'S':	/* Segments */
+	case 'U':	/* Segments vers avant */
+	case 'N':	/* Segments fleches vers arriere */
+	case 'M':	/* Segments fleches dans les deux sens */
+	case 'w':	/* Segments (2 points) */
+	case 'x':	/* Segments (2 points) forward arrow */
+	case 'y':	/* Segments (2 points) backward arrow */
+	case 'z':	/* Segments (2 points) arrows on both directions */
+	case 'B':	/* Beziers (ouvertes) */
+	case 'A':	/* Beziers (ouvertes) flechees vers avant */
+	case 'F':	/* Beziers (ouvertes) flechees vers arriere */
+	case 'D':	/* Beziers (ouvertes) flechees dns les deux sens */
+	case 'p':	/* polygone */
+	case 's':	/* spline fermee */
+	  pAb->AbPolyLineShape = c;
+	  width = pBox->BxWidth;
+	  height = pBox->BxHeight;
+	  if (pBox->BxBuffer == NULL)
+	    {
+	      /* Changement de graphique simple a polyline */
+	      pAb->AbLeafType = LtPolyLine;
+	      pAb->AbElement->ElLeafType = LtPolyLine;
+	      /* creation du buffer initial pour ranger les points de la polyline */
+	      GetTextBuffer (&(pAb->AbPolyLineBuffer));
+	      pAb->AbPolyLineBuffer->BuLength = 1;
+	      pAb->AbPolyLineBuffer->BuPoints[0].XCoord = PixelToPoint (width * 1000);
+	      pAb->AbPolyLineBuffer->BuPoints[0].YCoord = PixelToPoint (height * 1000);
+	      GetTextBuffer (&(pBox->BxBuffer));
+	      /* initialise la dimension de la boite polyline */
+	      pBox->BxBuffer->BuLength = 1;
+	      pBox->BxBuffer->BuPoints[0].XCoord = PixelToPoint (width * 1000);
+	      pBox->BxBuffer->BuPoints[0].YCoord = PixelToPoint (height * 1000);
+	      pBox->BxNChars = 1;
+	    }
+	  
+	  if (pBox->BxNChars == 1)
+	    {
+	      /* il faut saisir les points de la polyline */
+	      if (c == 'w' || c == 'x' || c == 'y' || c == 'z')
+		pAb->AbVolume = PolyLineCreation (frame,
+						  pBox->BxXOrg - ViewFrameTable[frame - 1].FrXOrg, pBox->BxYOrg - ViewFrameTable[frame - 1].FrYOrg,
+						  pAb->AbPolyLineBuffer, pBox->BxBuffer,
+						  2);
+	      else
+		pAb->AbVolume = PolyLineCreation (frame,
+						  pBox->BxXOrg - ViewFrameTable[frame - 1].FrXOrg, pBox->BxYOrg - ViewFrameTable[frame - 1].FrYOrg,
+						  pAb->AbPolyLineBuffer, pBox->BxBuffer,
+						  0);
+	      pBox->BxNChars = pAb->AbVolume;
 #ifndef _WINDOWS
-			 pBox->BxXRatio = 1;
-			 pBox->BxYRatio = 1;
+	      pBox->BxXRatio = 1;
+	      pBox->BxYRatio = 1;
 #endif /* _WINDOWS */
-		      }
+	    }
 
-		    /* on force le reaffichage de la boite (+ les points de selection) */
-		    DefClip (frame, pBox->BxXOrg - EXTRA_GRAPH, pBox->BxYOrg - EXTRA_GRAPH, pBox->BxXOrg + width + EXTRA_GRAPH, pBox->BxYOrg + height + EXTRA_GRAPH);
-		    break;
+	  /* on force le reaffichage de la boite (+ les points de selection) */
+	  DefClip (frame, pBox->BxXOrg - EXTRA_GRAPH, pBox->BxYOrg - EXTRA_GRAPH, pBox->BxXOrg + width + EXTRA_GRAPH, pBox->BxYOrg + height + EXTRA_GRAPH);
+	  break;
+	  
+	default:	/* un graphique simple */
+	  if (pBox->BxBuffer != NULL)
+	    {
+	      /* Transformation polyline en graphique simple */
+	      pAb->AbLeafType = LtGraphics;
+	      /* libere les points de controle */
+	      if (pBox->BxPictInfo != NULL)
+		{
+		  free ((char *) pBox->BxPictInfo);
+		  pBox->BxPictInfo = NULL;
+		}
+	      /* il faut liberer les buffers */
+	      pBox->BxNChars = 1;
+	      pBuffer = pBox->BxBuffer;
+	      while (pBuffer != NULL)
+		{
+		  pBox->BxBuffer = pBuffer->BuNext;
+		  FreeTextBuffer (pBuffer);
+		  pBuffer = pBox->BxBuffer;
+		}
+	      pBuffer = pAb->AbPolyLineBuffer;
+	      while (pBuffer != NULL)
+		{
+		  pAb->AbPolyLineBuffer = pBuffer->BuNext;
+		  FreeTextBuffer (pBuffer);
+		  pBuffer = pAb->AbPolyLineBuffer;
+		}
+	    }
 
-		 default:	/* un graphique simple */
-		    if (pBox->BxBuffer != NULL)
-		      {
-			 /* Transformation polyline en graphique simple */
-			 pAb->AbLeafType = LtGraphics;
-			 /* libere les points de controle */
-			 if (pBox->BxPictInfo != NULL)
-			   {
-			      free ((char *) pBox->BxPictInfo);
-			      pBox->BxPictInfo = NULL;
-			   }
-			 /* il faut liberer les buffers */
-			 pBox->BxNChars = 1;
-			 pBuffer = pBox->BxBuffer;
-			 while (pBuffer != NULL)
-			   {
-			      pBox->BxBuffer = pBuffer->BuNext;
-			      FreeTextBuffer (pBuffer);
-			      pBuffer = pBox->BxBuffer;
-			   }
-			 pBuffer = pAb->AbPolyLineBuffer;
-			 while (pBuffer != NULL)
-			   {
-			      pAb->AbPolyLineBuffer = pBuffer->BuNext;
-			      FreeTextBuffer (pBuffer);
-			      pBuffer = pAb->AbPolyLineBuffer;
-			   }
-		      }
-
-		    pAb->AbShape = c;
-		    pAb->AbVolume = 1;
-		    /* Dimensions du symbole */
-		    GiveGraphicSize (pAb, &xDelta, &yDelta);
-		    /* met a jour la boite */
-		    if (defaultWidth)
-		       xDelta -= pBox->BxWidth;
-		    else
-		       xDelta = 0;
-		    if (defaultHeight)
-		       yDelta -= pBox->BxHeight;
-		    else
-		       yDelta = 0;
-		    BoxUpdate (pBox, pLine, 0, 0, xDelta, 0, yDelta, frame, FALSE);
-	      }
-	SwitchSelection (frame, FALSE);		/* Reaffiche la selection */
-	APPgraphicModify (pBox->BxAbstractBox->AbElement, (int) c, frame, FALSE);
-     }
+	  pAb->AbShape = c;
+	  pAb->AbVolume = 1;
+	  /* Dimensions du symbole */
+	  GiveGraphicSize (pAb, &xDelta, &yDelta);
+	  /* met a jour la boite */
+	  if (defaultWidth)
+	    xDelta -= pBox->BxWidth;
+	  else
+	    xDelta = 0;
+	  if (defaultHeight)
+	    yDelta -= pBox->BxHeight;
+	  else
+	    yDelta = 0;
+	  BoxUpdate (pBox, pLine, 0, 0, xDelta, 0, yDelta, frame, FALSE);
+	}
+      SwitchSelection (frame, FALSE);		/* Reaffiche la selection */
+      APPgraphicModify (pBox->BxAbstractBox->AbElement, (int) c, frame, FALSE);
+    }
 }
 
 

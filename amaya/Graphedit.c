@@ -48,7 +48,7 @@ static Pixmap   iconGraphics;
 static Pixmap   mIcons[12];
 static int      GraphDialogue;
 static boolean  PaletteDisplayed = FALSE;
-
+extern SSchema	GraphMLSSchema;
 #define BUFFER_LENGTH 100
 
 /*----------------------------------------------------------------------
@@ -627,7 +627,7 @@ int                 construct;
    ElementType	elType, wrapperType, newType, childType;
    AttributeType	attrType;
    int		c1, c2, i, j, w, h, minX, minY, maxX, maxY;
-   SSchema	docSchema, graphSchema;
+   SSchema	docSchema;
    char		shape;
    DisplayMode	dispMode;
    boolean	found, automaticPlacement;
@@ -643,10 +643,11 @@ int                 construct;
    TtaGiveFirstSelectedElement (doc, &first, &c1, &i);
    /* Are we in a drawing? */
    docSchema = TtaGetDocumentSSchema (doc);
-   graphSchema = TtaNewNature (docSchema, "GraphML", "GraphMLP");
+   if (GraphMLSSchema == NULL)
+     GraphMLSSchema = TtaNewNature(TtaGetDocumentSSchema(doc), "GraphML", "GraphMLP");
    elType.ElTypeNum = GraphML_EL_GraphML;
-   elType.ElSSchema = graphSchema;
-   attrType.AttrSSchema = graphSchema;
+   elType.ElSSchema = GraphMLSSchema;
+   attrType.AttrSSchema = GraphMLSSchema;
    graphRoot = TtaGetTypedAncestor (first, elType);
    if (graphRoot == NULL)
       /* the current selection is not in a GraphML element, create one */
@@ -672,7 +673,7 @@ int                 construct;
 	 if (parent)
 	    {
 	    elType = TtaGetElementType (parent);
-	    if (elType.ElSSchema == graphSchema &&
+	    if (elType.ElSSchema == GraphMLSSchema &&
 		(elType.ElTypeNum == GraphML_EL_Group ||
 		 elType.ElTypeNum == GraphML_EL_GraphML))
 		found = TRUE;
@@ -697,7 +698,7 @@ int                 construct;
 	 automaticPlacement = TRUE;
       }
 
-   newType.ElSSchema = graphSchema;
+   newType.ElSSchema = GraphMLSSchema;
    newType.ElTypeNum = 0;
    shape = EOS;
 
@@ -705,7 +706,7 @@ int                 construct;
     {
     case 0:	/* line */
 	newType.ElTypeNum = GraphML_EL_Line_;
-	shape = 'S';
+	shape = 'w';
 	break;
     case 1:	/* rectangle */
 	newType.ElTypeNum = GraphML_EL_Rectangle;
@@ -717,7 +718,7 @@ int                 construct;
 	break;
     case 3:	/* circle */
 	newType.ElTypeNum = GraphML_EL_Circle;
-	shape = 'c';
+	shape = 'a';
 	break;
     case 4:	/* oval */
 	newType.ElTypeNum = GraphML_EL_Oval;
@@ -760,7 +761,7 @@ int                 construct;
 		{
 		elType = TtaGetElementType (elem);
 		if (elType.ElTypeNum == GraphML_EL_Label &&
-		    elType.ElSSchema == graphSchema)
+		    elType.ElSSchema == GraphMLSSchema)
 		   found = TRUE;
 		else
 		   TtaNextSibling (&elem);
@@ -809,7 +810,7 @@ int                 construct;
       if (shape != EOS)
          /* create a graphic leaf according to the element's type */
 	 {
-	 childType.ElSSchema = graphSchema;
+	 childType.ElSSchema = GraphMLSSchema;
 	 childType.ElTypeNum = GraphML_EL_GRAPHICS_UNIT;
 	 child = TtaNewElement (doc, childType);
 	 TtaInsertFirstChild (&child, newEl, doc);
@@ -837,7 +838,7 @@ int                 construct;
       /* select the right element */
       TtaSelectElement (doc, child);
 
-   if (shape == 'S' || shape == 'p' || shape == 'B' || shape == 's')
+   if (shape == 'S' || shape == 'w' || shape == 'p' || shape == 'B' || shape == 's')
       /* multipoints element. Let the user enter the points */
       {
       TtaGiveBoxSize (parent, doc, 1, UnPoint, &w, &h);
@@ -861,7 +862,6 @@ int                 construct;
 static void         CreateGroup ()
 #else
 static void         CreateGroup ()
- 
 #endif
 {
    Document	doc;

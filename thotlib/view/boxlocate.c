@@ -462,95 +462,96 @@ int                 y;
 
 #endif /* __STDC__ */
 {
-   int                 point[8][2];
-   int                 cross;
-   int                 i, max;
-   int                 prevX, prevY;
-   int                 nextX, nextY;
-   int                 arc;
-   float               value1, value2;
-   PtrBox              box;
-   boolean             OK;
+  int                 point[8][2];
+  int                 cross;
+  int                 i, max;
+  int                 prevX, prevY;
+  int                 nextX, nextY;
+  int                 arc;
+  float               value1, value2;
+  PtrBox              box;
+  boolean             OK;
 
-   box = pAb->AbBox;
-   x -= box->BxXOrg;
-   y -= box->BxYOrg;
-   max = 0;
+  box = pAb->AbBox;
+  x -= box->BxXOrg;
+  y -= box->BxYOrg;
+  max = 0;
 
-   /* Est-ce un point caracteristique specifique du graphique ? */
-   switch (pAb->AbRealShape)
-	 {
-	    case ' ':
-	    case 'R':
-	    case '0':
-	    case '1':
-	    case '2':
-	    case '3':
-	    case '4':
-	    case '5':
-	    case '6':
-	    case '7':
-	    case '8':		/* rectangles */
-	       point[0][0] = 0;
-	       point[0][1] = 0;
-	       point[1][0] = 0;
-	       point[1][1] = box->BxHeight;
-	       point[2][0] = box->BxWidth;
-	       point[2][1] = box->BxHeight;
-	       point[3][0] = box->BxWidth;
-	       point[3][1] = 0;
-	       max = 3;
-	       break;
-	    case 'C':
-	    case 'P':		/* rectangles aux bords arrondis */
-	       arc = (int) ((3 * DOT_PER_INCHE) / 25.4 + 0.5);
-	       point[0][0] = 0;
-	       point[0][1] = arc;
-	       point[1][0] = 0;
-	       point[1][1] = box->BxHeight - arc;
-	       point[2][0] = arc;
-	       point[2][1] = box->BxHeight;
-	       point[3][0] = box->BxWidth - arc;
-	       point[3][1] = box->BxHeight;
-	       point[4][0] = box->BxWidth;
-	       point[4][1] = box->BxHeight - arc;
-	       point[5][0] = box->BxWidth;
-	       point[5][1] = arc;
-	       point[6][0] = box->BxWidth - arc;
-	       point[6][1] = 0;
-	       point[7][0] = arc;
-	       point[7][1] = 0;
-	       max = 7;
-	       break;
-	    case 'L':		/* losange */
-	       point[0][0] = 0;
-	       point[0][1] = box->BxHeight / 2;
-	       point[1][0] = box->BxWidth / 2;
-	       point[1][1] = box->BxHeight;
-	       point[2][0] = box->BxWidth;
-	       point[2][1] = box->BxHeight / 2;
-	       point[3][0] = box->BxWidth / 2;
-	       point[3][1] = 0;
-	       max = 3;
-	       break;
-	    case 'c':
-	    case 'Q':		/* ellipses */
-	       value1 = x - ((float) box->BxWidth / 2);
-	       value2 = (y - ((float) box->BxHeight / 2)) * ((float) box->BxWidth / (float) box->BxHeight);
-	       value1 = value1 * value1 + value2 * value2;
-	       value2 = (float) box->BxWidth / 2;
-	       value2 = value2 * value2;
-	       if (value1 <= value2)
-		  return (TRUE);	/* le point est dans le cercle */
-	       else
-		  return (FALSE);	/* le point est hors du cercle */
-	       break;
-	    default:
-	       break;
-	 }
-   if (max < 2)
-      /* il n'y a pas de surface */
-      return (FALSE);
+  /* Est-ce un point caracteristique specifique du graphique ? */
+  switch (pAb->AbRealShape)
+    {
+    case ' ':
+    case 'R':
+    case '0':
+    case '1':
+    case '2':
+    case '3':
+    case '4':
+    case '5':
+    case '6':
+    case '7':
+    case '8':		/* rectangles */
+      point[0][0] = 0;
+      point[0][1] = 0;
+      point[1][0] = 0;
+      point[1][1] = box->BxHeight;
+      point[2][0] = box->BxWidth;
+      point[2][1] = box->BxHeight;
+      point[3][0] = box->BxWidth;
+      point[3][1] = 0;
+      max = 3;
+      break;
+    case 'C':
+    case 'P':		/* rectangles aux bords arrondis */
+      arc = (int) ((3 * DOT_PER_INCHE) / 25.4 + 0.5);
+      point[0][0] = 0;
+      point[0][1] = arc;
+      point[1][0] = 0;
+      point[1][1] = box->BxHeight - arc;
+      point[2][0] = arc;
+      point[2][1] = box->BxHeight;
+      point[3][0] = box->BxWidth - arc;
+      point[3][1] = box->BxHeight;
+      point[4][0] = box->BxWidth;
+      point[4][1] = box->BxHeight - arc;
+      point[5][0] = box->BxWidth;
+      point[5][1] = arc;
+      point[6][0] = box->BxWidth - arc;
+      point[6][1] = 0;
+      point[7][0] = arc;
+      point[7][1] = 0;
+      max = 7;
+      break;
+    case 'L':		/* losange */
+      point[0][0] = 0;
+      point[0][1] = box->BxHeight / 2;
+      point[1][0] = box->BxWidth / 2;
+      point[1][1] = box->BxHeight;
+      point[2][0] = box->BxWidth;
+      point[2][1] = box->BxHeight / 2;
+      point[3][0] = box->BxWidth / 2;
+      point[3][1] = 0;
+      max = 3;
+      break;
+    case 'a':		/* circles */
+    case 'c':		/* ovals */
+    case 'Q':		/* ellipses */
+      value1 = x - ((float) box->BxWidth / 2);
+      value2 = (y - ((float) box->BxHeight / 2)) * ((float) box->BxWidth / (float) box->BxHeight);
+      value1 = value1 * value1 + value2 * value2;
+      value2 = (float) box->BxWidth / 2;
+      value2 = value2 * value2;
+      if (value1 <= value2)
+	return (TRUE);	/* le point est dans le cercle */
+      else
+	return (FALSE);	/* le point est hors du cercle */
+      break;
+    default:
+      break;
+    }
+  if (max < 2)
+    /* il n'y a pas de surface */
+    return (FALSE);
 
    /* premier et dernier point de la polyline */
    i = 0;
@@ -583,13 +584,21 @@ int                 y;
 	nextY = point[i][1];
 	if (prevY >= y)
 	  {
-	     while ((i < max) && (nextY >= y))
+	     while (i <= max && nextY >= y)
 	       {
 		  i++;		/* changement de point */
 		  prevY = nextY;
 		  prevX = nextX;
-		  nextX = point[i][0];
-		  nextY = point[i][1];
+		  if (i == max)
+		    {
+		      nextX = 0;
+		      nextY = 0;
+		    }
+		  else
+		    {
+		      nextX = point[i][0];
+		      nextY = point[i][1];
+		    }
 	       }
 
 	     if (i > max)
@@ -605,13 +614,21 @@ int                 y;
 	  }
 	else
 	  {
-	     while ((i < max) && (nextY < y))
+	     while (i <= max && nextY < y)
 	       {
 		  i++;		/* changement de point */
 		  prevY = nextY;
 		  prevX = nextX;
-		  nextX = point[i][0];
-		  nextY = point[i][1];
+		  if (i == max)
+		    {
+		      nextX = 0;
+		      nextY = 0;
+		    }
+		  else
+		    {
+		      nextX = point[i][0];
+		      nextY = point[i][1];
+		    }
 	       }
 
 	     if (i > max)
@@ -632,10 +649,9 @@ int                 y;
 
 
 /*----------------------------------------------------------------------
-   IsOnShape teste si le point x,y appartient au pave'        
-   graphique pAb.                                                  
-   Si oui, retourne l'adresse de la boi^te correspondante          
-   sinon, la valeur NULL.                                          
+  IsOnShape teste si le point x,y appartient au pave' graphique pAb.
+  Si oui, retourne l'adresse de la boite correspondante sinon, la valeur
+  NULL.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static PtrBox       IsOnShape (PtrAbstractBox pAb, int x, int y)
@@ -644,175 +660,175 @@ static PtrBox       IsOnShape (pAb, x, y)
 PtrAbstractBox      pAb;
 int                 x;
 int                 y;
-
 #endif /* __STDC__ */
 {
-   PtrBox              pBox;
-   int                 controlPoint;
-   int                 arc;
+  PtrBox              pBox;
+  int                 controlPoint;
+  int                 arc;
 
-   /* coordonnees relatives a la boite (calculs plus simples) */
-   pBox = pAb->AbBox;
-   x -= pBox->BxXOrg;
-   y -= pBox->BxYOrg;
+  /* coordonnees relatives a la boite (calculs plus simples) */
+  pBox = pAb->AbBox;
+  x -= pBox->BxXOrg;
+  y -= pBox->BxYOrg;
 
-   /* On note eventuellement le point caracteristique selectionne */
-   /*            1-------------2-------------3                  */
-   /*            |                           |                  */
-   /*            |                           |                  */
-   /*            8                           4                  */
-   /*            |                           |                  */
-   /*            |                           |                  */
-   /*            7-------------6-------------5                  */
+  /* On note eventuellement le point caracteristique selectionne */
+  /*            1-------------2-------------3                  */
+  /*            |                           |                  */
+  /*            |                           |                  */
+  /*            8                           4                  */
+  /*            |                           |                  */
+  /*            |                           |                  */
+  /*            7-------------6-------------5                  */
 
-   if (x < DELTA_SEL)
-      if (y < DELTA_SEL)
-	 controlPoint = 1;
-      else if (y > pBox->BxHeight / 2 - DELTA_SEL &&
-	       y < pBox->BxHeight / 2 + DELTA_SEL)
-	 controlPoint = 8;
-      else if (y > pBox->BxHeight - 10)
-	 controlPoint = 7;
-      else
-	 controlPoint = 0;
-   else if (x > pBox->BxWidth / 2 - DELTA_SEL &&
-	    x < pBox->BxWidth / 2 + DELTA_SEL)
-      if (y < DELTA_SEL)
-	 controlPoint = 2;
-      else if (y > pBox->BxHeight - DELTA_SEL)
-	 controlPoint = 6;
-      else
-	 controlPoint = 0;
-   else if (x > pBox->BxWidth - DELTA_SEL)
-      if (y < DELTA_SEL)
-	 controlPoint = 3;
-      else if (y > pBox->BxHeight / 2 - DELTA_SEL &&
-	       y < pBox->BxHeight / 2 + DELTA_SEL)
-	 controlPoint = 4;
-      else if (y > pBox->BxHeight - 10)
-	 controlPoint = 5;
-      else
-	 controlPoint = 0;
-   else
+  if (x < DELTA_SEL)
+    if (y < DELTA_SEL)
+      controlPoint = 1;
+    else if (y > pBox->BxHeight / 2 - DELTA_SEL &&
+	     y < pBox->BxHeight / 2 + DELTA_SEL)
+      controlPoint = 8;
+    else if (y > pBox->BxHeight - 10)
+      controlPoint = 7;
+    else
       controlPoint = 0;
+  else if (x > pBox->BxWidth / 2 - DELTA_SEL &&
+	   x < pBox->BxWidth / 2 + DELTA_SEL)
+    if (y < DELTA_SEL)
+      controlPoint = 2;
+    else if (y > pBox->BxHeight - DELTA_SEL)
+      controlPoint = 6;
+    else
+      controlPoint = 0;
+  else if (x > pBox->BxWidth - DELTA_SEL)
+    if (y < DELTA_SEL)
+      controlPoint = 3;
+    else if (y > pBox->BxHeight / 2 - DELTA_SEL &&
+	     y < pBox->BxHeight / 2 + DELTA_SEL)
+      controlPoint = 4;
+    else if (y > pBox->BxHeight - 10)
+      controlPoint = 5;
+    else
+      controlPoint = 0;
+  else
+    controlPoint = 0;
 
-   /* Est-ce un point caracteristique specifique du graphique ? */
-   switch (pAb->AbRealShape)
-	 {
-	    case ' ':
-	    case 'R':
-	    case '0':
-	    case '1':
-	    case '2':
-	    case '3':
-	    case '4':
-	    case '5':
-	    case '6':
-	    case '7':
-	    case '8':
-	       if (IsOnPolyline (x, y, 0, 0, pBox->BxWidth, 0) ||
-		   IsOnPolyline (x, y, 0, pBox->BxHeight, pBox->BxWidth, pBox->BxHeight) ||
-		   IsOnPolyline (x, y, 0, 0, 0, pBox->BxHeight) ||
-		   IsOnPolyline (x, y, pBox->BxWidth, 0, pBox->BxWidth, pBox->BxHeight))
-		  return (pBox);
-	       break;
-	    case 'L':
-	       if (IsOnPolyline (x, y, 0, pBox->BxHeight / 2, pBox->BxWidth / 2, 0) ||
-		   IsOnPolyline (x, y, 0, pBox->BxHeight / 2, pBox->BxWidth / 2, pBox->BxHeight) ||
-		   IsOnPolyline (x, y, pBox->BxWidth, pBox->BxHeight / 2, pBox->BxWidth / 2, 0) ||
-		   IsOnPolyline (x, y, pBox->BxWidth, pBox->BxHeight / 2, pBox->BxWidth / 2, pBox->BxHeight))
-		  return (pBox);
-	       break;
-	    case 'C':
-	    case 'P':
-	       arc = (int) ((3 * DOT_PER_INCHE) / 25.4 + 0.5);
-	       if (IsOnPolyline (x, y, arc, 0, pBox->BxWidth - arc, 0) ||
-		   IsOnPolyline (x, y, 0, arc, 0, pBox->BxHeight - arc) ||
-		   IsOnPolyline (x, y, arc, pBox->BxHeight, pBox->BxWidth - arc, pBox->BxHeight) ||
-		   IsOnPolyline (x, y, pBox->BxWidth, arc, pBox->BxWidth, pBox->BxHeight - arc))
-		  return (pBox);
-	       break;
-	    case 'c':
-	    case 'Q':
-	       if (controlPoint == 2 || controlPoint == 4 || controlPoint == 6 || controlPoint == 8)
-		  return (pBox);
-	       break;
-	    case 'W':
-	       if (controlPoint == 1 || controlPoint == 3 || controlPoint == 5 ||
-		   IsOnPolyline (x, y, 0, 0, pBox->BxWidth, 0) ||
-		   IsOnPolyline (x, y, pBox->BxWidth, 0, pBox->BxWidth, pBox->BxHeight))
-		  return (pBox);
-	       break;
-	    case 'X':
-	       if (controlPoint == 3 || controlPoint == 5 || controlPoint == 7 ||
-		   IsOnPolyline (x, y, pBox->BxWidth, 0, pBox->BxWidth, pBox->BxHeight) ||
-		   IsOnPolyline (x, y, pBox->BxWidth, pBox->BxHeight, 0, pBox->BxHeight))
-		  return (pBox);
-	       break;
-	    case 'Y':
-	       if (controlPoint == 1 || controlPoint == 5 || controlPoint == 7 ||
-		   IsOnPolyline (x, y, pBox->BxWidth, pBox->BxHeight, 0, pBox->BxHeight) ||
-		   IsOnPolyline (x, y, 0, pBox->BxHeight, 0, 0))
-		  return (pBox);
-	       break;
-	    case 'Z':
-	       if (controlPoint == 1 || controlPoint == 3 || controlPoint == 7 ||
-		   IsOnPolyline (x, y, 0, pBox->BxHeight, 0, 0) ||
-		   IsOnPolyline (x, y, 0, 0, pBox->BxWidth, 0))
-		  return (pBox);
-	       break;
-	    case 'h':
-	    case '<':
-	    case '>':
-	       if (controlPoint == 4 || controlPoint == 8 ||
-		   IsOnPolyline (x, y, 0, pBox->BxHeight / 2, pBox->BxWidth, pBox->BxHeight / 2))
-		  return (pBox);
-	       break;
-	    case 't':
-	       if (controlPoint == 1 || controlPoint == 2 || controlPoint == 3 ||
-		   IsOnPolyline (x, y, 0, 0, pBox->BxWidth, 0))
-		  return (pBox);
-	       break;
-	    case 'b':
-	       if (controlPoint == 5 || controlPoint == 6 || controlPoint == 7 ||
-		   IsOnPolyline (x, y, pBox->BxWidth, pBox->BxHeight, 0, pBox->BxHeight))
-		  return (pBox);
-	       break;
-	    case 'v':
-	    case '^':
-	    case 'V':
-	       if (controlPoint == 2 || controlPoint == 6 ||
-		   IsOnPolyline (x, y, pBox->BxWidth / 2, 0, pBox->BxWidth / 2, pBox->BxHeight))
-		  return (pBox);
-	       break;
-	    case 'l':
-	       if (controlPoint == 1 || controlPoint == 7 || controlPoint == 8 ||
-		   IsOnPolyline (x, y, 0, pBox->BxHeight, 0, 0))
-		  return (pBox);
-	       break;
-	    case 'r':
-	       if (controlPoint == 3 || controlPoint == 4 || controlPoint == 5 ||
-		   IsOnPolyline (x, y, pBox->BxWidth, 0, pBox->BxWidth, pBox->BxHeight))
-		  return (pBox);
-	       break;
-	    case '\\':
-	    case 'O':
-	    case 'e':
-	       if (controlPoint == 1 || controlPoint == 5 ||
-		   IsOnPolyline (x, y, 0, 0, pBox->BxWidth, pBox->BxHeight))
-		  return (pBox);
-	       break;
-	    case '/':
-	    case 'o':
-	    case 'E':
-	       if (controlPoint == 3 || controlPoint == 7 ||
-		   IsOnPolyline (x, y, 0, pBox->BxHeight, pBox->BxWidth, 0))
-		  return (pBox);
-	       break;
-	    default:
-	       break;
-	 }
-   return (NULL);
+  /* Est-ce un point caracteristique specifique du graphique ? */
+  switch (pAb->AbRealShape)
+    {
+    case ' ':
+    case 'R':
+    case '0':
+    case '1':
+    case '2':
+    case '3':
+    case '4':
+    case '5':
+    case '6':
+    case '7':
+    case '8':
+      if (IsOnPolyline (x, y, 0, 0, pBox->BxWidth, 0) ||
+	  IsOnPolyline (x, y, 0, pBox->BxHeight, pBox->BxWidth, pBox->BxHeight) ||
+	  IsOnPolyline (x, y, 0, 0, 0, pBox->BxHeight) ||
+	  IsOnPolyline (x, y, pBox->BxWidth, 0, pBox->BxWidth, pBox->BxHeight))
+	return (pBox);
+      break;
+    case 'L':
+      if (IsOnPolyline (x, y, 0, pBox->BxHeight / 2, pBox->BxWidth / 2, 0) ||
+	  IsOnPolyline (x, y, 0, pBox->BxHeight / 2, pBox->BxWidth / 2, pBox->BxHeight) ||
+	  IsOnPolyline (x, y, pBox->BxWidth, pBox->BxHeight / 2, pBox->BxWidth / 2, 0) ||
+	  IsOnPolyline (x, y, pBox->BxWidth, pBox->BxHeight / 2, pBox->BxWidth / 2, pBox->BxHeight))
+	return (pBox);
+      break;
+    case 'C':
+    case 'P':
+      arc = (int) ((3 * DOT_PER_INCHE) / 25.4 + 0.5);
+      if (IsOnPolyline (x, y, arc, 0, pBox->BxWidth - arc, 0) ||
+	  IsOnPolyline (x, y, 0, arc, 0, pBox->BxHeight - arc) ||
+	  IsOnPolyline (x, y, arc, pBox->BxHeight, pBox->BxWidth - arc, pBox->BxHeight) ||
+	  IsOnPolyline (x, y, pBox->BxWidth, arc, pBox->BxWidth, pBox->BxHeight - arc))
+	return (pBox);
+      break;
+    case 'a':
+    case 'c':
+    case 'Q':
+      if (controlPoint == 2 || controlPoint == 4 || controlPoint == 6 || controlPoint == 8)
+	return (pBox);
+      break;
+    case 'W':
+      if (controlPoint == 1 || controlPoint == 3 || controlPoint == 5 ||
+	  IsOnPolyline (x, y, 0, 0, pBox->BxWidth, 0) ||
+	  IsOnPolyline (x, y, pBox->BxWidth, 0, pBox->BxWidth, pBox->BxHeight))
+	return (pBox);
+      break;
+    case 'X':
+      if (controlPoint == 3 || controlPoint == 5 || controlPoint == 7 ||
+	  IsOnPolyline (x, y, pBox->BxWidth, 0, pBox->BxWidth, pBox->BxHeight) ||
+	  IsOnPolyline (x, y, pBox->BxWidth, pBox->BxHeight, 0, pBox->BxHeight))
+	return (pBox);
+      break;
+    case 'Y':
+      if (controlPoint == 1 || controlPoint == 5 || controlPoint == 7 ||
+	  IsOnPolyline (x, y, pBox->BxWidth, pBox->BxHeight, 0, pBox->BxHeight) ||
+	  IsOnPolyline (x, y, 0, pBox->BxHeight, 0, 0))
+	return (pBox);
+      break;
+    case 'Z':
+      if (controlPoint == 1 || controlPoint == 3 || controlPoint == 7 ||
+	  IsOnPolyline (x, y, 0, pBox->BxHeight, 0, 0) ||
+	  IsOnPolyline (x, y, 0, 0, pBox->BxWidth, 0))
+	return (pBox);
+      break;
+    case 'h':
+    case '<':
+    case '>':
+      if (controlPoint == 4 || controlPoint == 8 ||
+	  IsOnPolyline (x, y, 0, pBox->BxHeight / 2, pBox->BxWidth, pBox->BxHeight / 2))
+	return (pBox);
+      break;
+    case 't':
+      if (controlPoint == 1 || controlPoint == 2 || controlPoint == 3 ||
+	  IsOnPolyline (x, y, 0, 0, pBox->BxWidth, 0))
+	return (pBox);
+      break;
+    case 'b':
+      if (controlPoint == 5 || controlPoint == 6 || controlPoint == 7 ||
+	  IsOnPolyline (x, y, pBox->BxWidth, pBox->BxHeight, 0, pBox->BxHeight))
+	return (pBox);
+      break;
+    case 'v':
+    case '^':
+    case 'V':
+      if (controlPoint == 2 || controlPoint == 6 ||
+	  IsOnPolyline (x, y, pBox->BxWidth / 2, 0, pBox->BxWidth / 2, pBox->BxHeight))
+	return (pBox);
+      break;
+    case 'l':
+      if (controlPoint == 1 || controlPoint == 7 || controlPoint == 8 ||
+	  IsOnPolyline (x, y, 0, pBox->BxHeight, 0, 0))
+	return (pBox);
+      break;
+    case 'r':
+      if (controlPoint == 3 || controlPoint == 4 || controlPoint == 5 ||
+	  IsOnPolyline (x, y, pBox->BxWidth, 0, pBox->BxWidth, pBox->BxHeight))
+	return (pBox);
+      break;
+    case '\\':
+    case 'O':
+    case 'e':
+      if (controlPoint == 1 || controlPoint == 5 ||
+	  IsOnPolyline (x, y, 0, 0, pBox->BxWidth, pBox->BxHeight))
+	return (pBox);
+      break;
+    case '/':
+    case 'o':
+    case 'E':
+      if (controlPoint == 3 || controlPoint == 7 ||
+	  IsOnPolyline (x, y, 0, pBox->BxHeight, pBox->BxWidth, 0))
+	return (pBox);
+      break;
+    default:
+      break;
+    }
+  return (NULL);
 }
 
 
@@ -1888,21 +1904,20 @@ void                ApplyDirectResize (frame, xm, ym)
 int                 frame;
 int                 xm;
 int                 ym;
-
 #endif /* __STDC__ */
 {
    PtrBox              pBox;
    PtrAbstractBox      pAb;
-   boolean             still, okH, okV;
+   ViewFrame          *pFrame;
    int                 x, width;
    int                 y, height;
    int                 xr, xmin;
    int                 yr, xmax;
    int                 ymin;
    int                 ymax;
-   ViewFrame          *pFrame;
-
+   int                 percentW, percentH;
    int                 pointselect;
+   boolean             still, okH, okV;
 
    okH = FALSE;
    okV = FALSE;
@@ -2016,10 +2031,40 @@ int                 ym;
 	     else
 		ymax = ymin;
 	     /* On initialise la boite fantome */
-	     UserGeometryResize (frame, x, y, &width, &height, xr, yr, xmin, xmax, ymin, ymax, xm, ym);
+	     percentW = 0;
+	     percentH = 0;
+	     pAb = pBox->BxAbstractBox;
+	     if (!pAb->AbWidth.DimUserSpecified &&
+		 !pAb->AbWidth.DimIsPosition &&
+		 !pAb->AbWidth.DimSameDimension &&
+		 pAb->AbWidth.DimAbRef == pAb)
+	       {
+		 if (pAb->AbWidth.DimUnit == UnPercent)
+		   percentW = pAb->AbWidth.DimValue;
+		 else if (pAb->AbWidth.DimValue == 0)
+		   percentW = 100;
+	       }
+	     else if (!pAb->AbHeight.DimUserSpecified &&
+		      !pAb->AbHeight.DimIsPosition &&
+		      !pAb->AbHeight.DimSameDimension &&
+		      pAb->AbHeight.DimAbRef == pAb)
+	       {
+		 if (pAb->AbHeight.DimUnit == UnPercent)
+		   percentH = pAb->AbHeight.DimValue;
+		 else if (pAb->AbHeight.DimValue == 0)
+		   percentH = 100;
+	       }
+	     UserGeometryResize (frame, x, y, &width, &height, xr, yr,
+				 xmin, xmax, ymin, ymax, xm, ym,
+				 percentW, percentH);
 
 	     /* On transmet la modification a l'editeur */
-	     NewDimension (pBox->BxAbstractBox, width, height, frame, TRUE);
+	     if (percentW)
+	       NewDimension (pAb, 0, height, frame, TRUE);
+	     else if (percentH)
+	       NewDimension (pAb, width, 0, frame, TRUE);
+	     else
+	       NewDimension (pAb, width, height, frame, TRUE);
 	  }
 	else
 	   /* On n'a pas trouve de boite modifiable */
@@ -2041,13 +2086,14 @@ int                 frame;
 
 #endif /* __STDC__ */
 {
+   ViewFrame          *pFrame;
+   PtrAbstractBox      pAb;
    int                 x, y;
    int                 width, height;
    int                 xr, yr;
    int                 xmin, xmax;
    int                 Ymin, Ymax;
-   ViewFrame          *pFrame;
-   PtrAbstractBox      pAb;
+   int                 percentW, percentH;
    boolean             modPosition, modDimension;
 
    /* Il ne faut realiser qu'une seule creation interactive a la fois */
@@ -2141,12 +2187,41 @@ int                 frame;
 	xmax -= pFrame->FrXOrg;
 	Ymin -= pFrame->FrYOrg;
 	Ymax -= pFrame->FrYOrg;
+	/*
+	  calcule les rapports largeur sur hauteur et hauteur sur
+	  largeur si une des deux dimensions depend de l'autre
+	  percentW = 0 si la largeur ne depend pas de la hauteur
+	  percentH = 0 si la hauteur ne depend pas de la largeur
+	  */
+	percentW = 0;
+	percentH = 0;
+	if (!pAb->AbWidth.DimUserSpecified &&
+	    !pAb->AbWidth.DimIsPosition &&
+	    !pAb->AbWidth.DimSameDimension &&
+	    pAb->AbWidth.DimAbRef == pAb)
+	  {
+	    if (pAb->AbWidth.DimUnit == UnPercent)
+	      percentW = pAb->AbWidth.DimValue;
+	    else if (pAb->AbWidth.DimValue == 0)
+	      percentW = 100;
+	  }
+	else if (!pAb->AbHeight.DimUserSpecified &&
+	    !pAb->AbHeight.DimIsPosition &&
+	    !pAb->AbHeight.DimSameDimension &&
+	    pAb->AbHeight.DimAbRef == pAb)
+	  {
+	    if (pAb->AbHeight.DimUnit == UnPercent)
+	      percentH = pAb->AbHeight.DimValue;
+	    else if (pAb->AbHeight.DimValue == 0)
+	      percentH = 100;
+	  }
 	UserGeometryCreate (frame, &x, &y, xr, yr, &width, &height,
 			    xmin, xmax, Ymin, Ymax,
 			    pAb->AbHorizPos.PosUserSpecified,
 			    pAb->AbVertPos.PosUserSpecified,
 			    pAb->AbWidth.DimUserSpecified,
-			    pAb->AbHeight.DimUserSpecified);
+			    pAb->AbHeight.DimUserSpecified,
+			    percentW, percentH);
 
 	/* Notification de la boite saisie */
 	pAb->AbHorizPos.PosUserSpecified = FALSE;
@@ -2156,7 +2231,12 @@ int                 frame;
 	x = x + pFrame->FrXOrg - pBox->BxXOrg;
 	y = y + pFrame->FrYOrg - pBox->BxYOrg;
 	NewPosition (pAb, x, y, frame, TRUE);
-	NewDimension (pAb, width, height, frame, TRUE);
+	if (percentW)
+	  NewDimension (pAb, 0, height, frame, TRUE);
+	else if (percentH)
+	  NewDimension (pAb, width, 0, frame, TRUE);
+	else
+	  NewDimension (pAb, width, height, frame, TRUE);
      }
 
    /* Traitement de la creation interactive termine */
