@@ -916,7 +916,8 @@ void DisplayAttribute (PtrElement pEl, PtrAttribute pAttr, Document document)
 {
    PtrElement          pElChild;
    PtrPSchema          pPS;
-   ThotBool            inheritance, comparaison, reDisp;
+   PtrHandlePSchema    pHd;   
+   ThotBool            inheritance, comparison, reDisp;
 
    if (LoadedDocument[document - 1] == NULL || DocumentOfElement (pEl) == NULL)
      return;
@@ -934,8 +935,30 @@ void DisplayAttribute (PtrElement pEl, PtrAttribute pAttr, Document document)
    if (pPS == NULL)
      return;
    /* doit-on se preoccuper des heritages et comparaisons d'attributs? */
-   inheritance = (pPS->PsNHeirElems->Num[pAttr->AeAttrNum - 1] > 0);
-   comparaison = (pPS->PsNComparAttrs->Num[pAttr->AeAttrNum - 1] > 0);
+   inheritance = FALSE;
+   comparison = FALSE;
+   pHd = NULL;
+   while (pPS)
+     {
+       inheritance = inheritance ||
+                     (pPS->PsNHeirElems->Num[pAttr->AeAttrNum - 1] > 0);
+       comparison = comparison ||
+                     (pPS->PsNComparAttrs->Num[pAttr->AeAttrNum - 1] > 0);
+      /* next P schema */
+      if (pHd == NULL)
+	/* extension schemas have not been checked yet */
+	/* get the first extension schema */
+	pHd = FirstPSchemaExtension (pAttr->AeAttrSSchema,
+				     LoadedDocument[document - 1], pEl);
+      else
+	/* get the next extension schema */
+	pHd = pHd->HdNextPSchema;
+      if (pHd == NULL)
+	/* no more extension schemas. Stop */
+	pPS = NULL;
+      else
+	pPS = pHd->HdPSchema;
+     }
    reDisp = (documentDisplayMode[document - 1] == DisplayImmediately);
    /* d'abord on applique les regles de presentation liees */
    /* a l'attribut sur l'element lui-meme */
@@ -948,7 +971,7 @@ void DisplayAttribute (PtrElement pEl, PtrAttribute pAttr, Document document)
    /* puis on applique sur les elements du sous arbre pEl */
    /* les regles de presentation liees a la comparaison d'un attribut */
    /* du sous-arbre avec cetype d'attribut */
-   if (!pEl->ElTerminal && comparaison)
+   if (!pEl->ElTerminal && comparison)
       for (pElChild = pEl->ElFirstChild; pElChild != NULL; pElChild = pElChild->ElNext)
 	 ApplyAttrPRules (pElChild, LoadedDocument[document - 1], pAttr);
    if (pAttr->AeAttrType == AtNumAttr)

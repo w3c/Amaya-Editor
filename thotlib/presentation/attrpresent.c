@@ -28,16 +28,16 @@
 /*----------------------------------------------------------------------
    CreateInheritedAttrTable
 
-   Allocate and initialize an InheritAttrTable for element pEl in presentation
-   schema pSP.
+   Allocate and initialize an InheritAttrTable for elements of type
+   (typeNum, pSS) in presentation schema pSP.
    This table indicates attributes that transmit presentation rules
-   to element pEl.
+   to elements of that type.
    table[attr] != '\0' if the presentation schema contains in its
    ATTRIBUTES section a rule of the form
 
       AttrName(ElType): ...
   ----------------------------------------------------------------------*/
-void  CreateInheritedAttrTable (PtrElement pEl, PtrPSchema pPS,
+void  CreateInheritedAttrTable (int typeNum, PtrSSchema pSS, PtrPSchema pPS,
 				PtrDocument pDoc)
 {
   int                 attr;
@@ -45,16 +45,16 @@ void  CreateInheritedAttrTable (PtrElement pEl, PtrPSchema pPS,
   AttributePres      *pAttrPR;
   InheritAttrTable   *table;
 
-  if (pPS != NULL &&
-      pPS->PsInheritedAttr->ElInherit[pEl->ElTypeNumber - 1] == NULL)
+  if (pSS != NULL && pPS != NULL &&
+      pPS->PsInheritedAttr->ElInherit[typeNum - 1] == NULL)
     {
       /* table allocation and initialization */
-      if ((table = (InheritAttrTable*) TtaGetMemory (pEl->ElStructSchema->SsNAttributes * sizeof (char))) == NULL)
+      if ((table = (InheritAttrTable*) TtaGetMemory (pSS->SsNAttributes * sizeof (char))) == NULL)
         /* memory exhausted */
         return;
-      pPS->PsInheritedAttr->ElInherit[pEl->ElTypeNumber - 1] = table;
+      pPS->PsInheritedAttr->ElInherit[typeNum - 1] = table;
       /* for all attributes defined in the structure schema */
-      for (attr = 0; attr < pEl->ElStructSchema->SsNAttributes; attr++)
+      for (attr = 0; attr < pSS->SsNAttributes; attr++)
 	{
 	  (*table)[attr] = '\0';  /* no inheritance by default */
 	  pAttrPR = pPS->PsAttrPRule->AttrPres[attr];
@@ -62,7 +62,7 @@ void  CreateInheritedAttrTable (PtrElement pEl, PtrPSchema pPS,
 	    /* check all presentation rules associated with that attr */
 	    for (rule = 0; rule < pPS->PsNAttrPRule->Num[attr]; rule++)
 	      {
-		if (pAttrPR->ApElemType == pEl->ElTypeNumber)
+		if (pAttrPR->ApElemType == typeNum)
 		  {
 		    if (pAttrPR->ApElemInherits)
 		      /* the element inherits some presentation properties
@@ -70,7 +70,7 @@ void  CreateInheritedAttrTable (PtrElement pEl, PtrPSchema pPS,
 		      (*table)[attr] = 'S';
 		    else
 		      /* the element inherits some presentation properties
-			 from its ancestors */
+			 from its ancestors, but not itself */
 		      (*table)[attr] = 'H';
 		  }
 		pAttrPR = pAttrPR->ApNextAttrPres;

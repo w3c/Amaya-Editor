@@ -1075,7 +1075,8 @@ void RedisplayMergedText (PtrElement element, Document document)
 void UndisplayInheritedAttributes (PtrElement pEl, PtrAttribute pAttr,
 				   Document document, ThotBool suppression)
 {
-   ThotBool            inheritance, comparaison;
+   ThotBool            inheritance, comparison;
+   PtrHandlePSchema    pHd;   
    PtrAttribute        pAttrAsc;
    PtrAttribute        pOldAttr;
    PtrElement          pElChild, pElAttr;
@@ -1102,9 +1103,31 @@ void UndisplayInheritedAttributes (PtrElement pEl, PtrAttribute pAttr,
    if (pPS == NULL)
      return;
    /* doit-on se preoccuper des heritages et comparaisons d'attributs? */
-   inheritance = (pPS->PsNHeirElems->Num[pAttr->AeAttrNum - 1] > 0);
-   comparaison = (pPS->PsNComparAttrs->Num[pAttr->AeAttrNum - 1] > 0);
-   if (inheritance || comparaison)
+   inheritance = FALSE;
+   comparison = FALSE;
+   pHd = NULL;
+   while (pPS)
+     {
+       inheritance = inheritance ||
+	             (pPS->PsNHeirElems->Num[pAttr->AeAttrNum - 1] > 0);
+       comparison = comparison ||
+	            (pPS->PsNComparAttrs->Num[pAttr->AeAttrNum - 1] > 0);
+       /* next P schema */
+       if (pHd == NULL)
+	 /* extension schemas have not been checked yet */
+	 /* get the first extension schema */
+	 pHd = FirstPSchemaExtension (pAttr->AeAttrSSchema, pDoc, pEl);
+       else
+	 /* get the next extension schema */
+	 pHd = pHd->HdNextPSchema;
+       if (pHd == NULL)
+	 /* no more extension schemas. Stop */
+	 pPS = NULL;
+       else
+	 pPS = pHd->HdPSchema;
+     }
+
+   if (inheritance || comparison)
       /* cherche le premier attribut de meme type pose' sur un ascendant */
       /* de pEl */
       pAttrAsc = GetTypedAttrAncestor (pEl, pAttr->AeAttrNum,
@@ -1127,7 +1150,7 @@ void UndisplayInheritedAttributes (PtrElement pEl, PtrAttribute pAttr,
 	/* puis on supprime sur les elements du sous-arbre pEl */
 	/* les regles de presentation liees a la comparaison d'un attribut */
 	/* du sous-arbre avec ce type d'attribut */
-	if (!pEl->ElTerminal && comparaison)
+	if (!pEl->ElTerminal && comparison)
 	   for (pElChild = pEl->ElFirstChild; pElChild != NULL;
 		pElChild = pElChild->ElNext)
 	      RemoveComparAttrPresent (pElChild, LoadedDocument[document - 1],
@@ -1146,7 +1169,7 @@ void UndisplayInheritedAttributes (PtrElement pEl, PtrAttribute pAttr,
 	/* puis on supprime sur le sous-arbre pEl les regles de */
 	/* presentation liees a la comparaison d'un attribut */
 	/* du sous-arbre avec ce type d'attribut */
-	if (comparaison)
+	if (comparison)
 	   RemoveComparAttrPresent (pEl, LoadedDocument[document-1], pAttrAsc);
      }
 }

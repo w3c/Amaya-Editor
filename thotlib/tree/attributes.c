@@ -499,8 +499,28 @@ void ApplyAttrPRulesToSubtree (PtrElement pEl, PtrDocument pDoc,
 	      if ((inheritedAttr = pPS->PsInheritedAttr->ElInherit[pEl->ElTypeNumber - 1]) == NULL)
 		{
 		  /* la table d'heritage n'existe pas. On la cree */
-		  CreateInheritedAttrTable (pEl, pPS, pDoc);
+		  CreateInheritedAttrTable (pEl->ElTypeNumber,
+					    pEl->ElStructSchema, pPS, pDoc);
 		  inheritedAttr = pPS->PsInheritedAttr->ElInherit[pEl->ElTypeNumber - 1];
+		}
+	      if ((*inheritedAttr)[pAttr->AeAttrNum - 1])
+		{
+		  /* pEl herite de l'attribut pAttr */
+		  /* on lui applique la presentation correspondante */
+		  ApplyAttrPRulesToElem (pEl, pDoc, pAttr, pElAttr, TRUE);
+		}
+	    }
+	  if  (pEl->ElTypeNumber > MAX_BASIC_TYPE &&
+	       pPS->PsNInheritedAttrs->Num[AnyType])
+	    {
+	      /* at least one attribute is inherited by any element type
+	       (basic types are excluded). */
+	      if ((inheritedAttr = pPS->PsInheritedAttr->ElInherit[AnyType]) == NULL)
+		{
+		  /* la table d'heritage n'existe pas. On la cree */
+		  CreateInheritedAttrTable (AnyType+1, pEl->ElStructSchema,
+					    pPS, pDoc);
+		  inheritedAttr = pPS->PsInheritedAttr->ElInherit[AnyType];
 		}
 	      if ((*inheritedAttr)[pAttr->AeAttrNum - 1])
 		{
@@ -754,8 +774,24 @@ void RemoveInheritedAttrPresent (PtrElement pEl, PtrDocument pDoc,
 	      if ((inheritedAttr = pPS->PsInheritedAttr->ElInherit[pEl->ElTypeNumber - 1]) == NULL)
 		{
 		  /* la table d'heritage n'existe pas. On la cree */
-		  CreateInheritedAttrTable (pEl, pPS, pDoc);
+		  CreateInheritedAttrTable (pEl->ElTypeNumber,
+					    pEl->ElStructSchema, pPS, pDoc);
 		  inheritedAttr = pPS->PsInheritedAttr->ElInherit[pEl->ElTypeNumber - 1];
+		}
+	      if ((*inheritedAttr)[pAttr->AeAttrNum - 1])
+		RemoveAttrPresentation (pEl, pDoc, pAttr, pElAttr, TRUE, NULL);
+	    }
+	  if (pEl->ElTypeNumber > MAX_BASIC_TYPE &&
+	      pPS->PsNInheritedAttrs->Num[AnyType])
+	    {
+	      /* pEl can inherit presentation rules from some attributes
+	         (basic types are excluded) */
+	      if ((inheritedAttr = pPS->PsInheritedAttr->ElInherit[AnyType]) == NULL)
+		{
+		  /* la table d'heritage n'existe pas. On la cree */
+		  CreateInheritedAttrTable (AnyType+1, pEl->ElStructSchema,
+					    pPS, pDoc);
+		  inheritedAttr = pPS->PsInheritedAttr->ElInherit[AnyType];
 		}
 	      if ((*inheritedAttr)[pAttr->AeAttrNum - 1])
 		RemoveAttrPresentation (pEl, pDoc, pAttr, pElAttr, TRUE, NULL);
@@ -914,6 +950,7 @@ void AttachAttrWithValue (PtrElement pEl, PtrDocument pDoc,
   PtrAttribute        pAttr, pAttrAsc, pAttrNext;
   PtrElement          pChild, pElAttr;
   PtrPSchema          pPS;
+  PtrHandlePSchema    pHd;
   ThotBool            suppress, compare, inherit, mandatory, create, allowed;
   NotifyAttribute     notifyAttr;
 
@@ -998,10 +1035,27 @@ void AttachAttrWithValue (PtrElement pEl, PtrDocument pDoc,
   inherit = FALSE;
   compare = FALSE;
   pPS = PresentationSchema (pNewAttr->AeAttrSSchema, pDoc);
-  if (pPS != NULL)
+  pHd = NULL;
+  while (pPS)
     {
-      inherit = (pPS->PsNHeirElems->Num[pNewAttr->AeAttrNum - 1] != 0);
-      compare = (pPS->PsNComparAttrs->Num[pNewAttr->AeAttrNum - 1] != 0);
+      inherit = inherit ||
+	        (pPS->PsNHeirElems->Num[pNewAttr->AeAttrNum - 1] != 0);
+      compare = compare ||
+                (pPS->PsNComparAttrs->Num[pNewAttr->AeAttrNum - 1] != 0);
+      
+      /* next P schema */
+      if (pHd == NULL)
+	/* extension schemas have not been checked yet */
+	/* get the first extension schema */
+	pHd = FirstPSchemaExtension (pNewAttr->AeAttrSSchema, pDoc, pEl);
+      else
+	/* get the next extension schema */
+	pHd = pHd->HdNextPSchema;
+      if (pHd == NULL)
+	/* no more extension schemas. Stop */
+	pPS = NULL;
+      else
+	pPS = pHd->HdPSchema;	
     }
   if (inherit || compare)
     /* cherche le premier attribut de meme type sur un ascendant de pEl */

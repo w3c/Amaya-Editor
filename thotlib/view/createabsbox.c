@@ -2783,7 +2783,8 @@ PtrPRule AttrPresRule (PtrAttribute pAttr, PtrElement pEl,
   for (i = pSchP->PsNAttrPRule->Num[pAttr->AeAttrNum - 1]; i-- > 0;
        pAPRule = pAPRule->ApNextAttrPres)
     {
-      if (pAPRule->ApElemType == 0 || pAPRule->ApElemType == pEl->ElTypeNumber)
+      if (pAPRule->ApElemType == 0 || pAPRule->ApElemType == AnyType +1 ||
+	  pAPRule->ApElemType == pEl->ElTypeNumber)
 	{
 	  if (pAttr->AeAttrType == AtTextAttr && pAPRule->ApString)
 	    {
@@ -3247,8 +3248,49 @@ PtrAbstractBox TruncateOrCompleteAbsBox (PtrAbstractBox pAb, ThotBool truncate,
 		     if (!inheritTable)
 		       {
 			 /* cette table n'existe pas on la genere */
-			 CreateInheritedAttrTable (pEl, pSchP, pDoc);
+			 CreateInheritedAttrTable (pEl->ElTypeNumber,
+					    pEl->ElStructSchema, pSchP, pDoc);
 			 inheritTable = pSchP->PsInheritedAttr->ElInherit[pEl->ElTypeNumber - 1];
+		       }
+		     for (l = 1; l <= pEl->ElStructSchema->SsNAttributes; l++)
+		       if ((*inheritTable)[l - 1])
+			 /* pEl inherits attribute l */
+			 {
+			 /* is this attribute present on an ancestor? */
+			 if ((*inheritTable)[l - 1] == 'S')
+			   pFirstAncest = pEl;
+			 else
+			   pFirstAncest = pEl->ElParent;
+			 if ((pAttr = GetTypedAttrAncestor (pFirstAncest, l,
+			               pEl->ElStructSchema, &pElAttr)) != NULL)
+			   {
+			     /* process all values of the attribute, in case of
+				a text attribute with multiple values */
+			     valNum = 1;
+			     do
+			       {
+				 pRule = AttrPresRule (pAttr, pEl, TRUE, NULL,
+						   pSchP, &valNum, &attrBlock);
+				 if (pRule && !pRule->PrDuplicate)
+				   ApplCrPresRule (pAttr->AeAttrSSchema, pSchP,
+						   &pAbbCreated, pAttr, pDoc,
+						   pAb, head, pRule);
+			       }
+			     while (valNum > 0);
+			   }
+			 }
+		   }
+		 if (pEl->ElTypeNumber > MAX_BASIC_TYPE &&
+		     pSchP->PsNInheritedAttrs->Num[AnyType])
+		   /* il y a heritage possible */
+		   {
+		     inheritTable = pSchP->PsInheritedAttr->ElInherit[AnyType];
+		     if (!inheritTable)
+		       {
+			 /* cette table n'existe pas on la genere */
+			 CreateInheritedAttrTable (AnyType+1,
+					    pEl->ElStructSchema, pSchP, pDoc);
+			 inheritTable = pSchP->PsInheritedAttr->ElInherit[AnyType];
 		       }
 		     for (l = 1; l <= pEl->ElStructSchema->SsNAttributes; l++)
 		       if ((*inheritTable)[l - 1])
@@ -3896,7 +3938,8 @@ static void ComputeVisib (PtrElement pEl, PtrDocument pDoc,
 	   if ((inheritTable = pSP->PsInheritedAttr->ElInherit[pEl->ElTypeNumber - 1]) == NULL)
 	     {
 	       /* cette table n'existe pas on la genere */
-	       CreateInheritedAttrTable (pEl, pSP, pDoc);
+	       CreateInheritedAttrTable (pEl->ElTypeNumber,
+					 pEl->ElStructSchema, pSP, pDoc);
 	       inheritTable = pSP->PsInheritedAttr->ElInherit[pEl->ElTypeNumber - 1];
 	     }
 	   for (l = 1; l <= pEl->ElStructSchema->SsNAttributes; l++)
@@ -3915,6 +3958,34 @@ static void ComputeVisib (PtrElement pEl, PtrDocument pDoc,
 				       &ok, TRUE);
 	       }
 	 }
+       if (pEl->ElTypeNumber > MAX_BASIC_TYPE &&
+	   pSP->PsNInheritedAttrs->Num[AnyType])
+	 {
+	   /* il y a heritage possible */
+	   if ((inheritTable = pSP->PsInheritedAttr->ElInherit[AnyType]) == NULL)
+	     {
+	       /* cette table n'existe pas on la genere */
+	       CreateInheritedAttrTable (AnyType+1, pEl->ElStructSchema,
+					 pSP, pDoc);
+	       inheritTable = pSP->PsInheritedAttr->ElInherit[AnyType];
+	     }
+	   for (l = 1; l <= pEl->ElStructSchema->SsNAttributes; l++)
+	     if ((*inheritTable)[l - 1])
+	       /* pEl inherits attribute l */
+	       {
+		 if ((*inheritTable)[l - 1] == 'S')
+		   pFirstAncest = pEl;
+		 else
+		   pFirstAncest = pEl->ElParent;	       
+		 if ((pAttr = GetTypedAttrAncestor (pFirstAncest, l,
+						    pEl->ElStructSchema,
+						    &pElAttr)) != NULL)
+		   /* cherche si l existe au dessus */
+		   ApplyVisibRuleAttr (pEl, pAttr, pElAttr, pDoc, vis, viewNb,
+				       &ok, TRUE);
+	       }
+	 }
+
        /* next P schema */
        if (pHd == NULL)
 	 /* extension schemas have not been checked yet */
@@ -4158,6 +4229,123 @@ ThotBool RuleHasHigherPriority (PtrPRule pRule1, PtrPSchema pPS1,
 }
 
 /*----------------------------------------------------------------------
+  GetRulesFromInheritedAttributes
+  get all presentation rules that element El inherits from attribute l
+  belonging to ist ancestors, startin at element pFirstAncest
+  ----------------------------------------------------------------------*/
+static void GetRulesFromInheritedAttributes (PtrElement pEl,
+                       PtrElement pFirstAncest, int l, DocViewNumber viewNb,
+		       int viewSch, PtrDocument pDoc, PtrPSchema pSchPres, ThotBool extens,
+                       PtrPRule selectedRule[PtPictInfo],
+                       PtrPSchema schemaOfSelectedRule[PtPictInfo],
+                       PtrAttribute attrOfSelectedRule[PtPictInfo],
+		       PtrAttributePres attrBlockOfSelectedRule[PtPictInfo],
+		       PtrAbstractBox *pAbbReturn, ThotBool forward,
+		       int *lqueue, PtrPRule queuePR[MAX_QUEUE_LEN],
+		       PtrAbstractBox queuePP[MAX_QUEUE_LEN],
+		       PtrPSchema queuePS[MAX_QUEUE_LEN],
+		       PtrAttribute queuePA[MAX_QUEUE_LEN],
+		       PtrAbstractBox pNewAbbox, FILE *fileDescriptor)
+{
+  PtrAttribute       pAttr;
+  PtrElement         pElAttr;
+  PtrSSchema	     pSSattr;
+  PtrAttributePres   attrBlock;
+  PtrPRule           pRule, pR;
+  int                view, valNum;
+
+  do
+    {
+      if ((pAttr = GetTypedAttrAncestor (pFirstAncest, l, pEl->ElStructSchema,
+					 &pElAttr)) != NULL)
+	{
+	  pFirstAncest = pElAttr->ElParent;
+	  view = AppliedView (pEl, pAttr, pDoc, viewNb);
+	  pSSattr = pAttr->AeAttrSSchema;
+	  if (pDoc->DocView[viewNb-1].DvPSchemaView == 1 && extens &&
+	      /* it's a P schema extension */
+	      /* if it's an ID ou class attribute, take P schema
+		 extensions associated with the document S schema*/
+	      (AttrHasException (ExcCssClass, pAttr->AeAttrNum,
+				 pAttr->AeAttrSSchema) ||
+	       AttrHasException (ExcCssId, pAttr->AeAttrNum,
+				 pAttr->AeAttrSSchema) ||
+	       AttrHasException (ExcCssPseudoClass, pAttr->AeAttrNum,
+				 pAttr->AeAttrSSchema)))
+	    pSSattr = pDoc->DocSSchema;
+	  /* process all values of the attribute, in case of a
+	     text attribute with a list of values */
+	  valNum = 1;
+	  do
+	    {
+	      /* first rule for this value of the attribute */
+	      pR = AttrPresRule (pAttr, pEl, TRUE, NULL, pSchPres, &valNum,
+				 &attrBlock);
+	      /* look at all rules associated with this value */
+	      while (pR != NULL)
+		{
+		  pRule = NULL;
+		  if (!pR->PrDuplicate &&
+		      /* if it's a creation rule, apply it now */
+		      !ApplCrRule (pR, pSSattr, pSchPres, pAttr, pAbbReturn,
+				   viewNb, pDoc, pEl, forward, lqueue, queuePR,
+				   queuePP, queuePS, queuePA, pNewAbbox,
+				   fileDescriptor))
+		    /* not a creation rule, get the right rule*/
+		    pRule = GetNextAttrPresRule (&pR, pAttr->AeAttrSSchema,
+						 pAttr, pElAttr, pDoc, pEl,
+						 view);
+		  if (pRule && DoesViewExist (pEl, pDoc, viewNb))
+		    /* this rule applies to the element */
+		    {
+		      if (viewSch == 1 &&
+			  (pRule->PrType != PtFunction ||
+			   (pRule->PrType == PtFunction &&
+			    pRule->PrPresFunction == FnBackgroundPicture)))
+			/* main view. Record the rule for cascade but apply
+			   presentation function immediately */
+			{
+			  if (RuleHasHigherPriority (pRule, pSchPres,attrBlock,
+				       selectedRule[pRule->PrType],
+				       schemaOfSelectedRule[pRule->PrType],
+				       attrBlockOfSelectedRule[pRule->PrType]))
+			    {
+			      selectedRule[pRule->PrType] = pRule;
+			      schemaOfSelectedRule[pRule->PrType] = pSchPres;
+			      attrOfSelectedRule[pRule->PrType] = pAttr;
+			      attrBlockOfSelectedRule[pRule->PrType] = attrBlock;
+			    }
+			}
+		      else if (fileDescriptor)
+			DisplayPRule (pRule, fileDescriptor, pEl, pSchPres);
+		      else if (!ApplyRule (pRule, pSchPres, pNewAbbox, pDoc,
+					   pAttr))
+			/* not the main view, apply the rule now */
+			WaitingRule (pRule, pNewAbbox, pSchPres, pAttr,
+				   queuePA, queuePS, queuePP, queuePR, lqueue);
+		    }
+		  /* next rule associated with this value of the attribute */
+		  pR = pR->PrNextPRule;
+		}
+	    }
+	  while (valNum > 0);
+
+	  /* look for more ancestors having this attribute only if it's a
+	     P schema extension and if the attribute is id or class */
+	  if (pDoc->DocView[viewNb-1].DvPSchemaView != 1 || !extens ||
+	      !(AttrHasException (ExcCssClass, pAttr->AeAttrNum,
+				  pAttr->AeAttrSSchema) ||
+		AttrHasException (ExcCssId, pAttr->AeAttrNum,
+				  pAttr->AeAttrSSchema) ||
+		AttrHasException (ExcCssPseudoClass, pAttr->AeAttrNum,
+				  pAttr->AeAttrSSchema)))
+	    pAttr = NULL;
+	}
+    }
+  while (pAttr);
+}
+
+/*----------------------------------------------------------------------
   ApplyPresRules applies all presentation rules to a new abstract box
   if fileDescriptor is NULL or displays the origin of presentation rules.
   ----------------------------------------------------------------------*/
@@ -4184,7 +4372,7 @@ void ApplyPresRules (PtrElement pEl, PtrDocument pDoc,
   PtrHandlePSchema   pHd;
   PtrPSchema         pSchPres, pSchPattr;
   PtrAttribute       pAttr;
-  PtrElement         pElAttr, pFirstAncest;
+  PtrElement         pFirstAncest;
   PtrSSchema	     pSSattr;
   PtrAttributePres   attrBlock;
   InheritAttrTable   *inheritTable;
@@ -4375,7 +4563,8 @@ void ApplyPresRules (PtrElement pEl, PtrDocument pDoc,
 	      if (!inheritTable)
 		/* inheritance table does not exist. Create it */
 		{
-		  CreateInheritedAttrTable (pEl, pSchPres, pDoc);
+		  CreateInheritedAttrTable (pEl->ElTypeNumber,
+					 pEl->ElStructSchema, pSchPres, pDoc);
 		  inheritTable = pSchPres->PsInheritedAttr->ElInherit[pEl->ElTypeNumber-1];
 		}
 	      for (l = 1; l <= pEl->ElStructSchema->SsNAttributes; l++)
@@ -4388,105 +4577,33 @@ void ApplyPresRules (PtrElement pEl, PtrDocument pDoc,
 		  else
 		    pFirstAncest = pEl->ElParent;
 		  /* look for all ancestors having this attribute */
-		  do
-		    {
-		    if ((pAttr = GetTypedAttrAncestor (pFirstAncest, l,
-						       pEl->ElStructSchema,
-						       &pElAttr)) != NULL)
-		      {
-		      pFirstAncest = pElAttr->ElParent;
-		      apply = TRUE;
-		      if (apply)
-		        {
-			view = AppliedView (pEl, pAttr, pDoc, viewNb);
-			pSSattr = pAttr->AeAttrSSchema;
-			if (pDoc->DocView[viewNb-1].DvPSchemaView == 1 && pHd &&
-			    /* it's a P schema extension */
-			    /* if it's an ID ou class attribute, take P schema
-			       extensions associated with the document S schema*/
-			    (AttrHasException (ExcCssClass, pAttr->AeAttrNum,
-					       pAttr->AeAttrSSchema) ||
-			     AttrHasException (ExcCssId, pAttr->AeAttrNum,
-					       pAttr->AeAttrSSchema) ||
-			     AttrHasException (ExcCssPseudoClass, pAttr->AeAttrNum,
-					       pAttr->AeAttrSSchema)))
-			  pSSattr = pDoc->DocSSchema;
-			/* process all values of the attribute, in case of a
-			   text attribute with a list of values */
-			valNum = 1;
-			do
-			  {
-			    /* first rule for this value of the attribute */
-			    pR = AttrPresRule (pAttr, pEl, TRUE, NULL,
-					       pSchPres, &valNum, &attrBlock);
-			    /* look at all rules associated with this value */
-			    while (pR != NULL)
-			      {
-				pRule = NULL;
-				if (!pR->PrDuplicate &&
-				    /* if it's a creation rule, apply it now */
-				    !ApplCrRule (pR, pSSattr, pSchPres, pAttr,
-						 pAbbReturn, viewNb, pDoc, pEl,
-						 forward, lqueue, queuePR, queuePP,
-						 queuePS, queuePA, pNewAbbox, fileDescriptor))
-				  /* not a creation rule, get the right rule*/
-				  pRule = GetNextAttrPresRule (&pR,
-							 pAttr->AeAttrSSchema, pAttr,
-						         pElAttr, pDoc, pEl, view);
-				if (pRule &&
-				    DoesViewExist (pEl, pDoc, viewNb))
-				  /* this rule applies to the element */
-				  {
-				    if (viewSch == 1 &&
-					(pRule->PrType != PtFunction ||
-					 (pRule->PrType == PtFunction &&
-					  pRule->PrPresFunction == FnBackgroundPicture)))
-				      /* main view. Record the rule for cascade */
-				      /* but apply presentation function */
-				      /* immediately */
-				      {
-					if (RuleHasHigherPriority (pRule,
-					     pSchPres, attrBlock,
-					     selectedRule[pRule->PrType],
-					     schemaOfSelectedRule[pRule->PrType],
-					     attrBlockOfSelectedRule[pRule->PrType]))
-					  {
-					    selectedRule[pRule->PrType] = pRule;
-					    schemaOfSelectedRule[pRule->PrType] = pSchPres;
-					    attrOfSelectedRule[pRule->PrType] = pAttr;
-					    attrBlockOfSelectedRule[pRule->PrType] = attrBlock;
-					  }
-				      }
-				    else if (fileDescriptor)
-				      DisplayPRule (pRule, fileDescriptor, pEl, pSchPres);
-				    else if (!ApplyRule (pRule, pSchPres,
-							 pNewAbbox, pDoc, pAttr))
-				      /* not the main view, apply the rule now */
-				      WaitingRule (pRule, pNewAbbox, pSchPres,
-						   pAttr, queuePA, queuePS, queuePP,
-						   queuePR, lqueue);
-				  }
-				/* next rule associated with this value of the
-				   attribute */
-				pR = pR->PrNextPRule;
-			      }
-			  }
-			while (valNum > 0);
-			}
-		      /* look for more ancestors having this attribute only if
-			 it's a P schema extension and if the attribute is
-			 id or class */
-		      if (pDoc->DocView[viewNb-1].DvPSchemaView != 1 || !pHd ||
-			  !(AttrHasException (ExcCssClass, pAttr->AeAttrNum,
-					      pAttr->AeAttrSSchema) ||
-			    AttrHasException (ExcCssId, pAttr->AeAttrNum,
-					      pAttr->AeAttrSSchema) ||
-			    AttrHasException (ExcCssPseudoClass, pAttr->AeAttrNum,
-					      pAttr->AeAttrSSchema)))
-			pAttr = NULL;
-		      }
-		    }
-		  while (pAttr);
+		  GetRulesFromInheritedAttributes (pEl, pFirstAncest, l, viewNb, viewSch, pDoc, pSchPres, (pHd != NULL), selectedRule, schemaOfSelectedRule, attrOfSelectedRule, attrBlockOfSelectedRule, pAbbReturn, forward, lqueue, queuePR, queuePP, queuePS, queuePA, pNewAbbox, fileDescriptor);
+		  }
+	    }
+
+	  if (pEl->ElTypeNumber > MAX_BASIC_TYPE &&
+	      pSchPres->PsNInheritedAttrs->Num[AnyType])
+	    /* some attributes are inherited by all element types */
+	    {
+	      inheritTable = pSchPres->PsInheritedAttr->ElInherit[AnyType];
+	      if (!inheritTable)
+		/* inheritance table does not exist. Create it */
+		{
+		  CreateInheritedAttrTable (AnyType+1, pEl->ElStructSchema,
+					    pSchPres, pDoc);
+		  inheritTable = pSchPres->PsInheritedAttr->ElInherit[AnyType];
+		}
+	      for (l = 1; l <= pEl->ElStructSchema->SsNAttributes; l++)
+		if ((*inheritTable)[l - 1])
+		  /* pEl inherits attribute l */
+		  {
+		  /* is this attribute present on an ancestor? */
+		  if ((*inheritTable)[l - 1] == 'S')
+		    pFirstAncest = pEl;
+		  else
+		    pFirstAncest = pEl->ElParent;
+		  /* look for all ancestors having this attribute */
+		  GetRulesFromInheritedAttributes (pEl, pFirstAncest, l, viewNb, viewSch, pDoc, pSchPres, (pHd != NULL), selectedRule, schemaOfSelectedRule, attrOfSelectedRule, attrBlockOfSelectedRule, pAbbReturn, forward, lqueue, queuePR, queuePP, queuePS, queuePA, pNewAbbox, fileDescriptor);
 		  }
 	    }
 
