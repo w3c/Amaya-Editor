@@ -2254,6 +2254,14 @@ static void ContentEditing (int editType)
 		    /* il n'est pas modifiable */
 		    pAb = NULL;
 		}
+	      else if ((editType == TEXT_CUT || editType == TEXT_DEL) &&
+		       pAb->AbLeafType == LtText &&
+		       pAb->AbVolume == 1 &&
+		       strcmp (pAb->AbPSchema->PsStructName, "TextFile") == 0)
+		/* we are deleting the last character of a text leaf in a
+		   text file. Do not leave an empty text leaf, but remove it
+		   all together */
+		pAb = NULL;
 	    }
 	}
 
@@ -3840,14 +3848,15 @@ void TtcDeletePreviousChar (Document doc, View view)
 	  else
 	    /* use the right frame */
 	    ActiveFrame = frame;
-	  /* work in the right document
+	  /**** work in the right document
 	     frame = ActiveFrame;
-	     doc =  FrameTable[ActiveFrame].FrDoc;*/
+	     doc =  FrameTable[ActiveFrame].FrDoc; ****/
 	}
-      delPrev = (StructSelectionMode || ViewFrameTable[frame - 1].FrSelectOnePosition);
+      delPrev = (StructSelectionMode ||
+		 ViewFrameTable[frame - 1].FrSelectOnePosition);
+      GetCurrentSelection (&pDoc, &firstEl, &lastEl, &firstChar,&lastChar);
       if (!delPrev)
 	{
-	  GetCurrentSelection (&pDoc, &firstEl, &lastEl, &firstChar,&lastChar);
           if (firstEl == lastEl &&
 	      TypeHasException (ExcIsBreak, firstEl->ElTypeNumber,
 				firstEl->ElStructSchema))
@@ -3857,14 +3866,17 @@ void TtcDeletePreviousChar (Document doc, View view)
 	}
       pViewSel = &ViewFrameTable[frame - 1].FrSelectionBegin;
       if (delPrev)
-	/* remove the current empty element even if there is an insert point */
-	delPrev = (pViewSel->VsBox != NULL && pViewSel->VsBox->BxAbstractBox->AbVolume != 0);
+	/* remove the current empty element even if there is an insertion
+	   point */
+	delPrev = (pViewSel->VsBox &&
+		   pViewSel->VsBox->BxAbstractBox->AbVolume != 0);
       else
-	/* remove the previous char if the selection is at the end of the text */
-	delPrev = (pViewSel->VsBox != NULL &&
+	/* remove the previous char if the selection is at the end of the
+	   text */
+	delPrev = (pViewSel->VsBox &&
 		   pViewSel->VsBox->BxAbstractBox->AbLeafType == LtText &&
 		   pViewSel->VsIndBox >= pViewSel->VsBox->BxNChars);
-      
+
       /* avoid to redisplay step by step */
       dispMode = TtaGetDisplayMode (doc);
       if (dispMode == DisplayImmediately)
@@ -3880,14 +3892,13 @@ void TtcDeletePreviousChar (Document doc, View view)
       
       if (delPrev)
 	{
-	  pViewSel = &ViewFrameTable[frame - 1].FrSelectionBegin;
 	  if (pViewSel->VsBox &&
 	      pViewSel->VsBox->BxAbstractBox &&
 	      (!pViewSel->VsBox->BxAbstractBox->AbReadOnly ||
 	       pViewSel->VsBox->BxFirstChar + pViewSel->VsIndBox == 1))
 	    if (!pViewSel->VsBox->BxAbstractBox->AbPresentationBox ||
 		pViewSel->VsBox->BxFirstChar + pViewSel->VsIndBox > 1)
-	    InsertChar (frame, 127, -1);
+	      InsertChar (frame, 127, -1);
 	}
       else
 	{
@@ -3917,7 +3928,6 @@ void TtcDeletePreviousChar (Document doc, View view)
 	TtaSetDisplayMode (doc, dispMode);
     }
 }
-
 
 /*----------------------------------------------------------------------
    TtcDeleteSelection                                                 
