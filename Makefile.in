@@ -215,10 +215,12 @@ kaffe_config :
 	@(localdir=`pwd` ; kaffedir="$(THOTDIR)/$(KAFFE)" ; cd $(KAFFE) ; \
 	  unset LANG; if [ -x $$kaffedir/configure ] ; then \
 	      $$kaffedir/configure --prefix=$$localdir --libdir=$$localdir \
-	      --bindir=$$localdir/bin  --enable-staticlib --with-x ; \
+	      --bindir=$$localdir/bin --enable-staticlib --with-x \
+	      @KAFFE_ENGINE@ ; \
 	  else \
 	      ../$$kaffedir/configure --prefix=$$localdir --libdir=$$localdir \
-	      --bindir=$$localdir/bin  --enable-staticlib --with-x ; \
+	      --bindir=$$localdir/bin --enable-staticlib --with-x \
+	      @KAFFE_ENGINE@ ; \
 	  fi)
 
 kaffe_make :

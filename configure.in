@@ -323,15 +323,19 @@ if test "$with_insure" = "yes" ; then
 fi
 
 dnl
-dnl Adjust the CFLAGS depending on the host and compiler
-dnl Thot NEED unsigned chars !!!
+dnl Adjust the some variables depending on the host and compiler
+dnl Thot NEED signed chars !!!
 dnl
 
+KAFFE_ENGINE=""
 if test "${CC}" = "gcc" ; then
   CFLAGS="${CFLAGS} -Wall "
   case "${host}" in
       *-*-irix5* | *-*irix6* )
          CFLAGS="${CFLAGS} -fsigned-char"
+      ;;
+      *solaris* )
+	 KAFFE_ENGINE="--with-engine=intrp"
       ;;
   esac
 fi
@@ -399,8 +403,31 @@ dnl use AC_CONFIG_SUBDIRS to launch configure in the subdir
 dnl
 
 AC_ARG_ENABLE(java, [  --enable-java           Add Kaffe Java virtual machine])
+AC_ARG_ENABLE(intr, [  --enable-intr           Use Kaffe Java Interpreter])
+AC_ARG_ENABLE(jit, [  --enable-jit            Use Kaffe Java JIT Compiler])
 AC_ARG_ENABLE(plugin, [  --enable-plugin         Add Netscape Plug-Ins support])
 AC_ARG_ENABLE(xml, [  --enable-xml            Add XML support ])
+
+dnl
+dnl Check for the Kaffe engine to use : interpreter of JIT
+dnl
+if test "$enable_intr" = "yes" ; then
+    with_java="yes"
+    KAFFE_ENGINE="--with-engine=intrp"
+fi
+if test "$enable_intr" = "no" ; then
+    with_java="yes"
+    KAFFE_ENGINE="--with-engine=jit"
+fi
+if test "$enable_jit" = "yes" ; then
+    with_java="yes"
+    KAFFE_ENGINE="--with-engine=jit"
+fi
+if test "$enable_jit" = "no" ; then
+    with_java="yes"
+    KAFFE_ENGINE="--with-engine=intr"
+fi
+
 
 dnl
 dnl java is enable by default
@@ -508,6 +535,8 @@ AC_SUBST(LIBWWW_VER)
 AC_SUBST(KAFFE_VER)
 AC_SUBST(CEXTRACT_VER)
 AC_SUBST(CEXTRACT_FLAGS)
+
+AC_SUBST(KAFFE_ENGINE)
 
 AC_SUBST(THOTINCLUDES)
 AC_SUBST(APIINCLUDES)
@@ -682,7 +711,15 @@ if test "$build_amaya" = "yes" ; then
         AC_MSG_WARN(Beware this combination doesn't work well)
     else
 	if test "$with_java" = "yes" ; then
-	    echo Amaya configured with Java support
+	    if test "$KAFFE_ENGINE" = "--with-engine=jit" ;  then
+	       echo Amaya configured with Java JIT support
+	    else
+	        if test "$KAFFE_ENGINE" = "--with-engine=intr" ;  then
+		    echo Amaya configured with Java interpreter support
+	        else
+		    echo Amaya configured with Java support
+		fi
+            fi
 	else
 	    echo Amaya configured with libWWW
 	fi
