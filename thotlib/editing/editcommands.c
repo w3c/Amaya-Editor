@@ -2280,7 +2280,7 @@ int                 editType;
 		  pViewSel->VsIndBox = charsDelta;
 		  pViewSel->VsXPos = 0;
 		  pViewSel->VsNSpaces = 0;
-	       }		/*if */
+	       }
 
 	     pLine = pFrame->FrSelectionBegin.VsLine;
 
@@ -2351,6 +2351,7 @@ int                 editType;
 			  TtaDisplaySimpleMessage (INFO, LIB, TMSG_NOTHING_TO_DEL);
 			  /* Pas de reaffichage */
 			  DefClip (frame, 0, 0, 0, 0);
+			  pFrame->FrReady = TRUE;
 		       }
 		     /* Il n'est pas necessaire de mettre a jour la selection */
 		     pAb = NULL;
