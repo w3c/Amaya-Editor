@@ -585,7 +585,7 @@ int                 reason;
 int                 value;
 #endif /* __STDC__ */
 {
-   int        delta = 0, width = 1076, height;
+   int        delta = 0, width = 1076, Xpos, Ypos, height;
    int        sPos, nbPages, remaining;
 
    /* do not redraw it if in NoComputedDisplay mode */
@@ -611,21 +611,20 @@ int                 value;
 
           case SB_THUMBPOSITION:
           case SB_THUMBTRACK:
-               GetSizesFrame (frame, &width, &height);
+               ComputeDisplayedChars (frame, &Xpos, &Ypos, &width, &height);
                sPos = GetScrollPos (FrameTable[frame].WdScrollH, SB_CTL);
                delta = value - sPos;
                nbPages = abs (delta) / width;
-               remaining = ((abs (delta) - (width * nbPages)) * FrameTable[frame].FrWidth) / width;
+			   remaining = abs (delta) - (width * nbPages);
                if (nbPages <= 3)
                  {
                   if (delta > 0)
-                    delta = nbPages * FrameTable[frame].FrWidth + remaining;
+                     delta = nbPages * FrameTable[frame].FrWidth + (int) ((remaining * FrameTable[frame].FrWidth) / width);
                   else 
-                    delta = -nbPages * FrameTable[frame].FrWidth - remaining;
+                      delta = -(nbPages * FrameTable[frame].FrWidth + (int) ((remaining * FrameTable[frame].FrWidth) / width));
 	         }
                else
                   delta = (int) (((float)value / (float)FrameTable[frame].FrWidth) * 100);
-	       delta = FrameTable[frame].FrScrollOrg + delta - ViewFrameTable[frame - 1].FrXOrg;
                break;
    }
 

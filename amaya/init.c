@@ -3537,10 +3537,6 @@ void               *ctx_cbf;
        TtaFreeMemory (documentname);
        TtaFreeMemory (tempdocument);
      }
-#  ifdef _WINDOWS
-   if (ok)
-      SetWindowText (FrMainRef[currentFrame], wTitle);
-#  endif /* _WINDOWS */
 
    TtaFreeMemory (parameters);
    TtaFreeMemory (tempfile);
