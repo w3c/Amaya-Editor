@@ -944,6 +944,17 @@
 	<message xml:lang="fi">Muunna...</message>
 	<message xml:lang="ru">Преобразоват&amp;ь...</message>
 </label>
+<label define="BConfigure">
+	<message xml:lang="en">&amp;Preferences</message>
+	<message xml:lang="fr">&amp;Préférences</message>
+	<message xml:lang="de">Einstellungen</message>
+	<message xml:lang="it">Preferenze</message>
+	<message xml:lang="es">&amp;Preferencias</message>
+	<message xml:lang="pt">Preferências</message>
+	<message xml:lang="fi">Asetukset</message>
+	<message xml:lang="tr">Tercih</message>
+	<message xml:lang="ru">Настройки</message>
+</label>
 <label define="Coptions">
 	<message xml:lang="en">&amp;Preferences</message>
 	<message xml:lang="fr">&amp;Préférences</message>

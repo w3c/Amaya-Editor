@@ -243,7 +243,7 @@
 241 Try the 'File/Force a Character Coding' entry
 242 Invalid characters
 243 Document profile:
-244 Some elements/attributes are ignored - see Views/Show parsing errors
+244 Some elements/attributes are ignored - see File/Show parsing errors
 245 The encoding of this document is not supported by Amaya
 246 Editing and saving this document will change its type
 247 Not available

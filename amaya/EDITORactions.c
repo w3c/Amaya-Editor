@@ -3815,6 +3815,15 @@ void FlushCache (Document doc, View view)
 }
 
 /*----------------------------------------------------------------------
+  ConfigAmaya
+  A frontend to all Amaya configurations
+  ----------------------------------------------------------------------*/
+void ConfigAmaya (Document doc, View view)
+{
+   GeneralConfMenu (doc, view);
+}
+
+/*----------------------------------------------------------------------
   ConfigColor
   A frontend to the Color configuration menu
   ----------------------------------------------------------------------*/

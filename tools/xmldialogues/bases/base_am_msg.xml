@@ -2666,11 +2666,11 @@
 	<message xml:lang="ru">Профиль документа:</message>
 </label>
 <label define="AM_XML_WARNING">
-	<message xml:lang="en">Some elements/attributes are ignored - see Views/Show parsing errors</message>
-	<message xml:lang="fr">Certains éléments ou attributs sont ignorés - voir Vues/Montrer les erreurs</message>
-	<message xml:lang="it">I tag/attributi sono ignorati - vedi Viste/Mostra le errore</message>
-	<message xml:lang="de">Einige Tags/Attribute wurden ignoriert - siehe Ansicht/Parserfehler anzeigen</message>
-	<message xml:lang="es">Se ignoran Tags/atributos - vea Ver / Ver errores sintácticos</message>
+	<message xml:lang="en">Some elements/attributes are ignored - see File/Show parsing errors</message>
+	<message xml:lang="fr">Certains éléments ou attributs sont ignorés - voir Fichier/Montrer les erreurs</message>
+	<message xml:lang="it">I tag/attributi sono ignorati - vedi File/Mostra le errore</message>
+	<message xml:lang="de">Einige Tags/Attribute wurden ignoriert - siehe Datei/Parserfehler anzeigen</message>
+	<message xml:lang="es">Se ignoran Tags/atributos - vea Archivo / Ver errores sintácticos</message>
 	<message xml:lang="pt">Algumas marcas(tags)/atributos são ignorados - veja Vistas/Exibir erros de gramática (parsing)</message>
 	<message xml:lang="fi">Jotkut tagit/määrittelyt ohitettiin - katso Näytä/Näytä käännösvirheet</message>
 	<message xml:lang="tr">Işaretler ve tarz tanımları bilinmiyor - Görünümler/Hataları göster bakın</message>

@@ -208,13 +208,16 @@ MoveItem
 # shorter list of functions
 ################# AMAYA FUNCTIONS
 [amayabase]
-ConfigProfile
++config
+#+templates
 ShowButtons
 ShowAddress
 ZoomIn
 ZoomOut
 
 [amayabase_WX]
++config_WX
+#+templates
 ZoomIn
 ZoomOut
 
@@ -344,7 +347,6 @@ TtcSearchText
 [edit]
 +basic-style
 +clientside-module
-+config
 +css-style
 +davbase
 +edit-bookmarks
@@ -367,7 +369,6 @@ TtcSearchText
 +spell
 +svg
 +tables
-+templates
 &CreateMath
 &CreateXMLElementMenu
 HelpDocument
@@ -655,6 +656,11 @@ ConfigProxy
 ConfigColor
 ConfigGeometry
 ConfigLanNeg
+HelpConfigure
+HelpShortCuts
+
+[config_WX]
+ConfigAmaya
 HelpConfigure
 HelpShortCuts
 
