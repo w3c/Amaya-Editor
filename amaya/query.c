@@ -6,7 +6,7 @@
  */
 
 /*
- * query.c : contains all the functions for requesting iand publishing
+ * query.c : contains all the functions for requesting and publishing
  * URLs via libwww. It handles any eventual HTTP error code
  * (redirection, authentication needed, not found, etc.)
  *
@@ -442,6 +442,53 @@ static void         Thread_deleteAll ()
 	  
 	}			/* if */
     }
+}
+
+/*----------------------------------------------------------------------
+  AHTOpen_file
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+int                 AHTOpen_file (HTRequest * request, void * param, int mode)
+#else
+int                 AHTOpen_file (request, param, mode)
+HTRequest           *request;
+void                *param;
+int                  mode;
+
+#endif /* __STDC__ */
+{
+  AHTReqContext      *me;      /* current request */
+
+  me = HTRequest_context (request);
+
+#ifdef DEBUG_LIBWWW
+  fprintf(stderr, "AHTOpen_file\n");
+#endif /* DEBUG_LIBWWW */
+
+  if (!(me->output) && 
+      (me->output != stdout) && 
+#ifndef _WINDOWS
+      (me->output = fopen (me->outputfile, "w")) == NULL)
+    {
+#else
+    (me->output = fopen (me->outputfile, "wb")) == NULL) 
+    {
+#endif /* !_WINDOWS */
+
+      me->outputfile[0] = '\0';	/* file could not be opened */
+      TtaSetStatus (me->docid, 1, 
+		    TtaGetMessage (AMAYA, AM_CANNOT_CREATE_FILE),
+		    me->outputfile);
+      me->reqStatus = HT_ERR;
+      return (HT_ERROR);
+    }
+	  
+  HTRequest_setOutputStream (me->request,
+			     AHTFWriter_new (me->request, 
+					     me->output, YES));
+  me->reqStatus = HT_WAITING;
+  
+  return HT_OK;
 }
 
 /*----------------------------------------------------------------------
@@ -906,6 +953,7 @@ static void         AHTNetInit (void)
 
   HTNet_addBefore (HTCredentialsFilter, "http://*", NULL, 6);
   HTNet_addBefore (HTProxyFilter, NULL, NULL, 10);
+  HTNet_addBefore (AHTOpen_file, NULL, NULL, 11);
 
 /*      register AFTER filters
 **      The AFTER filters handle error messages, logging, redirection,
@@ -935,7 +983,7 @@ static void         AHTAlertInit ()
 {
    HTAlert_add (AHTProgress, HT_A_PROGRESS);
 #  ifndef _WINDOWS
-   HTAlert_add ((HTAlertCallback *) Add_NewSocket_to_Loop, HT_PROG_CONNECT);
+   /*   HTAlert_add ((HTAlertCallback *) Add_NewSocket_to_Loop, HT_PROG_CONNECT); */
 #  else  /* _WINDOWS */
    HTAlert_add ((HTAlertCallback *) WIN_Activate_Request, HT_PROG_CONNECT);
 #  endif /* _WINDOWS */

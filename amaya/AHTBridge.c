@@ -120,6 +120,11 @@ XtInputId          *id;
 #     endif
        
        /* if it's a persistent socket, remove it from the table */
+
+       if (cbf)
+	 (*cbf) (socket, 0, FD_CLOSE);
+       
+#if 0
        v = HASH (socket);
        if (persSockets[v]) 
 	 {
@@ -127,6 +132,9 @@ XtInputId          *id;
 	   if (cbf)
 	     (*cbf) (socket, 0, FD_CLOSE);
 	 }
+
+#endif /* 0 */
+
        return (0);
      }
    
@@ -158,7 +166,7 @@ XtInputId          *id;
    /* first we change the status of the request, to say it
       has entered a critical section */
    
-   /* JK: Clean this up */
+   /* JK: An early warning of problems */
    if ((HTRequest_outputStream(me->request) == (HTStream *) NULL))
       fprintf(stderr,"\n **ERROR** opening %s\n\n", me->urlName);
 
@@ -225,15 +233,13 @@ XtInputId          *id;
 	   /* free the memory allocated for async requests */
 	   AHTReqContext_delete (me);
 	 } 
-#if 0
-       /* remove this stuff? */
+
        else if (me->reqStatus == HT_END &&
 		HTError_hasSeverity (HTRequest_error (me->request),
 				     ERR_NON_FATAL))
 
 	 /* did the SYNC request end because of an error? If yes, report it back to the caller */
 	 me->reqStatus = HT_ERR;
-#endif
        return (0);
    }
 
@@ -424,22 +430,27 @@ HTAlertPar         *reply;
 	 DocNetworkStatus[me->docid] |= AMAYA_NET_ERROR; 
      }
 
-#ifdef DEBUG_LIBWWW
-     fprintf (stderr, "ADDNEWSOCK: associated %s to FD %p\n", 
-	      me->urlName, me->output); 
-#endif
      if (me->output) {
-       if (THD_TRACE)
-	 fprintf (stderr, "Add_NewSocket_to_Loop: Activating "
-		  "pending %s . Open fd %d\n", 
-		  me->urlName, (int) me->output);
        
        HTRequest_setOutputStream (me->request,
 				  AHTFWriter_new (me->request, 
 						  me->output, 
 						  YES));
        me->reqStatus = HT_WAITING;
+#ifdef DEBUG_LIBWWW
+	 fprintf (stderr, "Add_NewSocket_to_Loop: Activating "
+		  "pending %s . Open fd %p, stream %p\n", 
+		  me->urlName, (int) me->output, HTRequest_outputStream(me->request));
+#endif
+
      }
+#ifdef DEBUG_LIBWWW
+     else {
+	 fprintf (stderr, "Add_NewSocket_to_Loop: Error, me->output == NULL\n"
+		  "for URL %s . Open fd %p, stream %p\n", 
+		  me->urlName, (int) me->output, HTRequest_outputStream(me->request));
+     }
+#endif
 
    
      return (status);
@@ -472,36 +483,58 @@ HTPriority          p;
   int                 v;
 #endif /* _WINDOWS */
 
+#ifdef DEBUG_LIBWWW
+	  fprintf(stderr, "HTEvent_register\n");
+#endif /* DEBUG_LIBWWW */
   if (sock == INVSOC)
     return (0);
+
 
   /* get the request associated to the socket number */
 
   if (rqp == NULL) 
     {
+
+
+
 #ifndef _WINDOWS 
       if (ops == FD_CLOSE)
 	{
 #ifdef DEBUG_LIBWWW
 	  fprintf(stderr, "HTEvent_register: ***** RQP is NULL @@@@@\n");
 #endif /* DEBUG_LIBWWW */
+
+#if 0
 	  v = HASH (sock);
 	  if (persSockets[v] != 0) 
 	    {
 	      XtRemoveInput (persSockets[v]);
 	    }
-	 
+
 	  persSockets[v] = XtAppAddInput (app_cont, 
 					  sock,
 					  (XtPointer) XtInputReadMask,
 					  (XtInputCallbackProc) AHTCallback_bridge,
 					  (XtPointer) XtInputReadMask);
+#endif /* 0 */
+
+	  XtAppAddInput (app_cont, 
+			 sock,
+			 (XtPointer) XtInputReadMask,
+			 (XtInputCallbackProc) AHTCallback_bridge,
+			 (XtPointer) XtInputReadMask);
 	} /* *fd_close */
+
+
+
 #endif /* !_WINDOWS */
     }
   else /* rqp */
     {
       me = HTRequest_context (rqp);
+
+#if 0
+
        
 #ifndef _WINDOWS
       v = HASH (sock);
@@ -509,45 +542,13 @@ HTPriority          p;
 	XtRemoveInput (persSockets[v]);
 	persSockets[v] = 0;
       }	  
+
+#endif /* 0 */
+
 #endif /* _WINDOWS */
-      /* verify if we need to open the output file */ 
-      if (me->reqStatus == HT_NEW)
-	{
-#ifdef _WINDOWS
 	  /* Erase any trailing events */
-	  HTEventrg_unregister (sock, FD_ALL);
-#endif
-	  /* we are opening a pending request */
-#ifndef _WINDOWS
-	  if (!(me->output) && 
-	      (me->output != stdout) && 
-	      (me->output = fopen (me->outputfile, "w")) == NULL)
-#else
-	    if (!(me->output) &&
-		(me->output != stdout) && 
-		(me->output = fopen (me->outputfile, "wb")) == NULL)
-#endif /* !_WINDOWS */
-	      {
-		me->outputfile[0] = '\0';	/* file could not be opened */
-		TtaSetStatus (me->docid, 1, 
-			      TtaGetMessage (AMAYA, AM_CANNOT_CREATE_FILE),
-			      me->outputfile);
-		me->reqStatus = HT_ERR;
-		return (HT_ERROR);
-	      }
-#ifdef DEBUG_LIBWWW
-	  fprintf (stderr, "ADDNEWSOCK: associated %s to FILE %p\n",
-		   me->urlName, me->output); 
-#endif /* DEBUG_LIBWWW */
-	  HTRequest_setOutputStream (me->request,
-				      AHTFWriter_new (me->request, me->output, YES));
-	   me->reqStatus = HT_WAITING;
-	}
-       
-       if (THD_TRACE)
-	 fprintf (stderr, "AHTEvent_register: URL %s, SOCK %d, ops %lu \n",
-		  me->urlName, sock, ops);
-       
+      /*	  HTEventrg_unregister (sock, FD_ALL); */
+
 #ifndef _WINDOWS
        if (ops & ReadBits)
 	 {
@@ -568,6 +569,11 @@ HTPriority          p;
 	 }
 #endif	 /* !_WINDOWS */
        
+#ifdef DEBUG_LIBWWW
+       fprintf (stderr, "AHTEvent_register: URL %s, SOCK %d, 
+                ops %lu, fd %p \n",
+		me->urlName, sock, ops, me->output);
+#endif /* DEBUG_LIBWWW */       
      } /* if *rqp */
    
    status = HTEventrg_register (sock, rqp, ops,
@@ -614,11 +620,15 @@ SockOps             ops;
    fprintf (stderr, "AHTEventUnregister: cbf = %d, sock = %d, rqp = %d, ops= %x", cbf, sock, rqp, ops);
 #endif /* DEBUG_LIBWWW */
 
+#if 0
+
    v = HASH (sock);
    if (persSockets[v] != 0) {
      XtRemoveInput (persSockets[v]);
      persSockets[v] = 0;
    }
+
+#endif /* 0 */
 
    if (cbf)
      {
@@ -824,14 +834,4 @@ AHTReqContext      *me;
 #endif /* !_WINDOWS */
 
 #endif /* !AMAYA_JAVA */
-
-
-
-
-
-
-
-
-
-
 
