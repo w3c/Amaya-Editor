@@ -107,8 +107,8 @@
       <th>Assigned To</th>
       <th>Fixed</th>
     </tr>
-    <tr>
-      <td>Amaya and (short) hr element 
+    <tr class="fixed">
+      <td>Amaya and (short) hr element
 
         <p><a
         href="http://lists.w3.org/Archives/Public/www-amaya/2003JulSep/0168.html">http://lists.w3.org/Archives/Public/www-amaya/2003JulSep/0168.html</a></p>
@@ -202,24 +202,6 @@
       <td></td>
     </tr>
     <tr>
-      <td>Inserting an attribute class on the selection "bla bla
-        &lt;em&gt;bla bla&lt;/em&gt; bla bla" generates
-
-        <p>&lt;span class="foo"&gt;bla bla &lt;/span&gt;&lt;em
-        class="foo"&gt;bla bla&lt;/em&gt; &lt;span class="foo"&gt; bla
-        bla&lt;/span&gt;</p>
-
-        <p>instead of</p>
-
-        <p>&lt;span class="foo"&gt;bla bla &lt;em&gt;bla bla&lt;/em&gt; bla
-        bla&lt;/span&gt;</p>
-      </td>
-      <td>2001-08-21</td>
-      <td>J. Quint</td>
-      <td></td>
-      <td></td>
-    </tr>
-    <tr>
       <td>Windows platform: I pasted about 1500 lines of source code from one
         document into another and when I synchronised Amaya crashed. When I
         started it again it knew that I had unsaved documents before the
@@ -245,7 +227,7 @@
       <td></td>
       <td></td>
     </tr>
-    <tr>
+    <tr class="fixed">
       <td>Amaya generated an invalid XHTML 1.1 document head
 
         <p>(attribue 'content' removed, weird xmlns declaration)</p>
@@ -281,7 +263,7 @@
       <th>Assigned To</th>
       <th>Fixed</th>
     </tr>
-    <tr>
+    <tr class="fixed">
       <td>When several span elements use padding in a paragraph, the first
         one does not show any padding. Also, the last one does not receive
         any padding on the right. And if one of these span elements crosses a
@@ -374,7 +356,7 @@
       <td></td>
       <td></td>
     </tr>
-    <tr>
+    <tr class="fixed">
       <td>Avoid to generate a parent form element when creating an input
         element.</td>
       <td>2003-04</td>
@@ -437,6 +419,24 @@
       <td>Attribute ALT should be mandatory when creating an AREA</td>
       <td></td>
       <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>Inserting an attribute class on the selection "bla bla
+        &lt;em&gt;bla bla&lt;/em&gt; bla bla" generates
+
+        <p>&lt;span class="foo"&gt;bla bla &lt;/span&gt;&lt;em
+        class="foo"&gt;bla bla&lt;/em&gt; &lt;span class="foo"&gt; bla
+        bla&lt;/span&gt;</p>
+
+        <p>instead of</p>
+
+        <p>&lt;span class="foo"&gt;bla bla &lt;em&gt;bla bla&lt;/em&gt; bla
+        bla&lt;/span&gt;</p>
+      </td>
+      <td>2001-08-21</td>
+      <td>J. Quint</td>
       <td></td>
       <td></td>
     </tr>
@@ -576,7 +576,7 @@
       <td></td>
       <td></td>
     </tr>
-    <tr>
+    <tr class="fixed">
       <td>The glyphs for &amp;phiv; and&amp;phi; have been interchanged.
 
         <p>&amp;thetav; becomes "&amp;thetasym; when the file is saved.</p>
@@ -649,7 +649,15 @@
         <p>(tested with the w3c home page)</p>
       </td>
       <td>2003-07-25</td>
-      <td>R.Swick</td>
+      <td>R. Swick</td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>Text displayed in red (or any other specific color) are displayed
+        in white by the OpenGL version of print.</td>
+      <td>2003-09</td>
+      <td>I. Vatton</td>
       <td></td>
       <td></td>
     </tr>
@@ -823,7 +831,7 @@
       <td></td>
       <td></td>
     </tr>
-    <tr>
+    <tr class="fixed">
       <td>There is a small inconsistency. In the main window, as in the
         structuTest case: open any HTML file with Amaya using the Windows
         explorer for example. The URI is selected. Hit ctrol-x to cut it: it
@@ -914,8 +922,8 @@
       <td></td>
       <td></td>
     </tr>
-    <tr>
-      <td>GTK errors while running AMaya remotely</td>
+    <tr class="fixed">
+      <td>GTK errors while running Amaya remotely</td>
       <td>2003-07-25</td>
       <td>S. Torres</td>
       <td></td>
