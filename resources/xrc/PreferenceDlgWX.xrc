@@ -401,6 +401,136 @@
               </object>
             </object>
           </object>
+          <object class="notebookpage">
+            <label>CACHE</label>
+            <object class="wxPanel" name="wxID_PAGE_CACHE">
+              <object class="wxBoxSizer">
+                <orient>wxVERTICAL</orient>
+                <object class="sizeritem">
+                  <object class="wxBoxSizer">
+                    <orient>wxVERTICAL</orient>
+                    <object class="sizeritem">
+                      <object class="wxCheckBox" name="wxID_CHECK_ENABLECACHE">
+                        <label>Activer le cache</label>
+                      </object>
+                    </object>
+                    <object class="sizeritem">
+                      <object class="wxCheckBox" name="wxID_CHECK_PROTECTEDDOC">
+                        <label>Stocker dans le cache les documents proteges</label>
+                      </object>
+                    </object>
+                    <object class="sizeritem">
+                      <object class="wxCheckBox" name="wxID_CHECK_DISCO">
+                        <label>Mode deconnecte</label>
+                      </object>
+                    </object>
+                    <object class="sizeritem">
+                      <object class="wxCheckBox" name="wxID_CHECK_EXPIGNORE">
+                        <label>Ignorer l en tete Expires:</label>
+                      </object>
+                    </object>
+                  </object>
+                  <option>0</option>
+                  <flag>wxALL|wxEXPAND</flag>
+                  <border>5</border>
+                </object>
+                <object class="sizeritem">
+                  <object class="wxBoxSizer">
+                    <orient>wxVERTICAL</orient>
+                    <object class="sizeritem">
+                      <object class="wxStaticText" name="wxID_LABEL_CACHEDIR">
+                        <label>Repertoire du cache</label>
+                      </object>
+                      <option>0</option>
+                      <flag>wxALL|wxEXPAND</flag>
+                    </object>
+                    <object class="sizeritem">
+                      <object class="wxTextCtrl" name="wxID_VALUE_CACHEDIR"/>
+                      <option>0</option>
+                      <flag>wxALL|wxEXPAND</flag>
+                    </object>
+                  </object>
+                  <option>0</option>
+                  <flag>wxALL|wxEXPAND</flag>
+                  <border>5</border>
+                </object>
+                <object class="sizeritem">
+                  <object class="wxBoxSizer">
+                    <orient>wxHORIZONTAL</orient>
+                    <object class="sizeritem">
+                      <object class="wxBoxSizer">
+                        <orient>wxVERTICAL</orient>
+                        <object class="sizeritem">
+                          <object class="wxStaticText" name="wxID_LABEL_CACHESIZE">
+                            <label>Taille du cache (Mo)</label>
+                          </object>
+                        </object>
+                        <object class="sizeritem">
+                          <object class="wxBoxSizer">
+                            <orient>wxHORIZONTAL</orient>
+                            <object class="sizeritem">
+                              <object class="wxSlider" name="wxID_CACHESIZE_VALUE">
+                                <value>10</value>
+                                <min>1</min>
+                                <max>100</max>
+                                <style>wxSL_LABELS</style>
+                              </object>
+                              <option>1</option>
+                              <flag>wxALL|wxEXPAND</flag>
+                            </object>
+                          </object>
+                          <option>1</option>
+                          <flag>wxALL|wxEXPAND</flag>
+                        </object>
+                      </object>
+                      <option>1</option>
+                    </object>
+                    <object class="spacer">
+                      <size>10,0</size>
+                    </object>
+                    <object class="sizeritem">
+                      <object class="wxBoxSizer">
+                        <orient>wxVERTICAL</orient>
+                        <object class="sizeritem">
+                          <object class="wxStaticText" name="wxID_LABEL_MAXSIZEITEM">
+                            <label>Taille maximale des entrees du cache (Mo)</label>
+                          </object>
+                        </object>
+                        <object class="sizeritem">
+                          <object class="wxBoxSizer">
+                            <orient>wxHORIZONTAL</orient>
+                            <object class="sizeritem">
+                              <object class="wxSlider" name="wxID_MAXSIZEITEM_VALUE">
+                                <value>3</value>
+                                <min>1</min>
+                                <max>5</max>
+                                <style>wxSL_LABELS</style>
+                              </object>
+                              <option>1</option>
+                              <flag>wxALL|wxEXPAND</flag>
+                            </object>
+                          </object>
+                          <option>1</option>
+                          <flag>wxALL|wxEXPAND</flag>
+                        </object>
+                      </object>
+                      <option>1</option>
+                    </object>
+                  </object>
+                  <option>0</option>
+                  <flag>wxALL|wxEXPAND</flag>
+                  <border>5</border>
+                </object>
+                <object class="sizeritem">
+                  <object class="wxButton" name="wxID_BUTTON_EMPTYCACHE">
+                    <label>Vider le cache</label>
+                  </object>
+                  <flag>wxALL</flag>
+                  <border>5</border>
+                </object>
+              </object>
+            </object>
+          </object>
         </object>
         <option>1</option>
         <flag>wxALL|wxEXPAND</flag>
