@@ -839,6 +839,7 @@ char               *appArgv0;
    char               *appName;
 #  ifndef _WINDOWS
    char               *thot_dir_env;
+   int                 len;
 #  endif /* _WINDOWS */
    char                URL_DIR_SEP;
 
