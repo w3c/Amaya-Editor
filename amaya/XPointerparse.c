@@ -30,9 +30,7 @@
 
 
 /* #define XPTR_PARSE_DEBUG */
-#ifdef ANNOTATIONS
-#define XPTR_ACTION_DEBUG
-#endif
+#undef XPTR_ACTION_DEBUG
 
 #define BSIZE 128       /* size of the lexical analyzer temporary buffer */
 
@@ -156,15 +154,19 @@ static void GotoChild (XPointerContextPtr ctx)
       return;
     }
 
-#ifdef XPTR_ACTION_DEBUG
   if (curNode->node[0])
-    printf ("Going to child: %s, index %d\n", curNode->node, curNode->index);
+    {
+#ifdef XPTR_ACTION_DEBUG
+      printf ("Going to child: %s, index %d\n", curNode->node, curNode->index);
+#endif /* XPTR_ACTION_DEBUG */
+    }
   else
     {
+#ifdef XPTR_ACTION_DEBUG
       printf ("First node, nothing in stack yet, ignoring it\n");
+#endif /* XPTR_ACTION_DEBUG */
       return;
     }
-#endif
 
   /* thot search for element with this nameid */
   if (!curNode->el)
@@ -547,7 +549,11 @@ static void Factor (XPointerContextPtr ctx)
 		  Match (ctx, ID);
 		}
 	      else
+		{
+#ifdef XPTR_PARSE_DEBUG
 		  printf ("string is empty\n");
+#endif
+		}
 	      Match (ctx, '"');
 	    }
 	  /* starting char (arg3) */
