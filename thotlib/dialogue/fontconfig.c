@@ -454,7 +454,8 @@ static FontScript **FontConfigLoad ()
   ----------------------------------------------------------------------*/
 char *FontLoadFromConfig (char script, int face, int style)
 {
-  int intscript = 1;
+  char s[2];
+  int  intscript = 1;
 
   if (Fonttab == NULL)
     Fonttab = FontConfigLoad ();
@@ -566,7 +567,9 @@ char *FontLoadFromConfig (char script, int face, int style)
       style = 1;
       break;
     default:
-      intscript = atoi (&script);
+      s[0] = script;
+      s[1] = EOS;
+      intscript = atoi (s);
       if (intscript < 0 || intscript > 9)
 	intscript = 1;
       break;
