@@ -222,6 +222,13 @@ int TtaGetMessageTable (CONST char *msgName, int msgNumber)
 #else /* _WINDOWS */
 	DialogCharset = ISO_8859_9;
 #endif /* _WINDOWS */
+      else if (!strcmp (lan, "ru"))
+	/* Russian */
+#ifdef _WINDOWS
+	DialogCharset = WINDOWS_1251;
+#else /* _WINDOWS */
+	DialogCharset = ISO_8859_5;
+#endif /* _WINDOWS */
       else
 	/* Latin 1 */
 #ifdef _WINDOWS
