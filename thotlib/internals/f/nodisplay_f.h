@@ -35,8 +35,6 @@ extern ThotBool BothHaveNoSpecRules ( PtrElement pEl1,
                                       PtrElement pEl2 );
 extern void AddSchemaGuestViews ( PtrDocument pDoc,
                                   PtrSSchema pSS );
-extern void *TtaCopyTransform ( void *void_pPa );
-extern void *TtaCopyAnim ( void *void_src );
 
 #else /* __STDC__ */
 
@@ -69,8 +67,6 @@ extern ThotBool BothHaveNoSpecRules (/* PtrElement pEl1,
                                         PtrElement pEl2 */);
 extern void AddSchemaGuestViews (/* PtrDocument pDoc,
                                     PtrSSchema pSS */);
-extern void *TtaCopyTransform (/* void *void_pPa */);
-extern void *TtaCopyAnim (/* void *void_src */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

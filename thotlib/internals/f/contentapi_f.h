@@ -145,7 +145,6 @@ extern void TtaSetStopColorGradient ( unsigned short red,
                                       Element el );
 extern void TtaSetStopOffsetColorGradient ( float offset,
                                             Element el );
-extern void *TtaCopyTransform ( void *void_pPa );
 extern void TtaAppendTransform ( Element element,
                                  void *transform,
                                  Document document );
@@ -161,8 +160,6 @@ extern void TtaInsertTransform ( Element element,
 extern void TtaSetElCoordinateSystem ( Element element );
 extern void TtaAppendAnim ( Element element,
                             void *anim );
-extern void *TtaCopyPath ( void *void_src );
-extern void *TtaCopyAnim ( void *void_src );
 extern void *TtaNewAnimPath ( Document doc );
 extern void TtaAppendPathSegToAnim ( void *anim,
                                      PathSegment segment,
@@ -366,7 +363,6 @@ extern void TtaSetStopColorGradient (/* unsigned short red,
                                         Element el */);
 extern void TtaSetStopOffsetColorGradient (/* float offset,
                                               Element el */);
-extern void *TtaCopyTransform (/* void *void_pPa */);
 extern void TtaAppendTransform (/* Element element,
                                    void *transform,
                                    Document document */);
@@ -382,8 +378,6 @@ extern void TtaInsertTransform (/* Element element,
 extern void TtaSetElCoordinateSystem (/* Element element */);
 extern void TtaAppendAnim (/* Element element,
                               void *anim */);
-extern void *TtaCopyPath (/* void *void_src */);
-extern void *TtaCopyAnim (/* void *void_src */);
 extern void *TtaNewAnimPath (/* Document doc */);
 extern void TtaAppendPathSegToAnim (/* void *anim,
                                        PathSegment segment,

@@ -57,6 +57,9 @@ extern void TtaGiveTextContent ( Element element,
                                  unsigned char *buffer,
                                  int *length,
                                  Language *language );
+extern void *TtaCopyPath ( void *void_src );
+extern void *TtaCopyAnim ( void *void_src );
+extern void *TtaCopyTransform ( void *void_pPa );
 
 #else /* __STDC__ */
 
@@ -111,6 +114,9 @@ extern void TtaGiveTextContent (/* Element element,
                                    unsigned char *buffer,
                                    int *length,
                                    Language *language */);
+extern void *TtaCopyPath (/* void *void_src */);
+extern void *TtaCopyAnim (/* void *void_src */);
+extern void *TtaCopyTransform (/* void *void_pPa */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

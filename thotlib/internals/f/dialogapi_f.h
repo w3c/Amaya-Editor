@@ -7,6 +7,7 @@
 #ifdef __STDC__
 
 extern ThotWidget CatWidget ( int ref );
+extern ThotWidget TtaCatWidget ( int ref );
 extern void MyWarningHandler ( void );
 extern void ThotXmColorProc ( ThotColorStruct *bg,
                               ThotColorStruct *fg,
@@ -165,7 +166,8 @@ extern void TtaNewNumberForm ( int ref,
                                ThotBool react );
 extern void TtaSetNumberForm ( int ref,
                                int val );
-extern ThotWidget TtaAddSubTree ( ThotWidget parent );
+extern ThotWidget TtaClearTree ( ThotWidget tree );
+extern ThotWidget TtaAddSubTree ( ThotWidget tree_item );
 extern ThotWidget TtaAddTreeItem ( ThotWidget parent,
                                    char *item_label,
                                    ThotBool selected,
@@ -188,6 +190,7 @@ extern void TtaFreeAllCatalogs ( void );
 #else /* __STDC__ */
 
 extern ThotWidget CatWidget (/* int ref */);
+extern ThotWidget TtaCatWidget (/* int ref */);
 extern void MyWarningHandler (/* void */);
 extern void ThotXmColorProc (/* ThotColorStruct *bg,
                                 ThotColorStruct *fg,
@@ -346,7 +349,8 @@ extern void TtaNewNumberForm (/* int ref,
                                  ThotBool react */);
 extern void TtaSetNumberForm (/* int ref,
                                  int val */);
-extern ThotWidget TtaAddSubTree (/* ThotWidget parent */);
+extern ThotWidget TtaClearTree (/* ThotWidget tree */);
+extern ThotWidget TtaAddSubTree (/* ThotWidget tree_item */);
 extern ThotWidget TtaAddTreeItem (/* ThotWidget parent,
                                      char *item_label,
                                      ThotBool selected,
