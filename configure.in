@@ -771,6 +771,7 @@ AC_SUBST(PRINTIFNOTGL)
 AC_ARG_ENABLE(svg,           [  --disable-svg           remove SVG support ])
 AC_ARG_ENABLE(annot,         [  --disable-annot         remove Annotations support ])
 AC_ARG_ENABLE(raptor,        [  --disable-raptor        disable the raptor RDF parser ])
+AC_ARG_ENABLE(redland,       [  --disable-redland       disable the redland RDF library ])
 AC_ARG_ENABLE(bookmarks,     [  --enable-bookmarks      enables experimental bookmark support ])
 AC_ARG_ENABLE(generic-xml,   [  --disable-generic-xml   remove Generic XML support ])
 
@@ -822,6 +823,19 @@ if test "$with_raptor" = "" ; then
     fi
 else
     with_raptor="yes"
+fi
+
+dnl
+dnl The redlandr library is disabled by default
+dnl
+if test "$with_redland" = "" ; then
+    if test "$enable_redland" = "yes" ; then
+	with_redland="yes"
+    else
+	with_redland="no"
+    fi
+else
+    with_redland="no"
 fi
 
 dnl
@@ -911,6 +925,12 @@ if test "$build_amaya" = "yes" ; then
 	fi
     fi
 
+    if test "$with_raptor" = "yes" -a "$with_redland" = "yes" ; then
+       AC_MSG_WARN(Disabling raptor build as redland is enabled !)
+       MAKERAPTOR=['#']
+       with_raptor="no"
+    fi
+
     if test "$with_raptor" = "yes" -a "$with_annot" = "no" ; then
        AC_MSG_WARN(Disabling raptor build as annotations are disabled !)
        MAKERAPTOR=['#']
@@ -922,11 +942,33 @@ if test "$build_amaya" = "yes" ; then
        AC_MSG_WARN(Disabling raptor build !)
        MAKERAPTOR=['#']
        with_raptor="no"
-    else
+    fi
+
+    if test "$with_raptor" = "yes" ; then
        AMAYA_ANNOT_OPTIONS="$AMAYA_ANNOT_OPTIONS -DRAPTOR_RDF_PARSER -I\$(THOTDIR)/libraptor"
        AMAYA_RAPTOR_LIBS="../libraptor/.libs/libraptor.a"
        AMAYA_RAPTOR_SRC="amaya_comp_libraptor"
        AMAYA_RAPTOR_INCLUDES="-I\$(THOTDIR)/libraptor"
+    fi
+
+    if test "$with_redland" = "yes" -a "$with_annot" = "no" ; then
+       AC_MSG_WARN(Disabling redland build as annotations are disabled !)
+       MAKEREDLAND=['#']
+       with_redland="no"
+    fi
+
+    if test "$with_redland" = "yes" -a ! -d "$srcdir/redland" ; then
+       AC_MSG_WARN(Redland source dir not found !!)
+       AC_MSG_WARN(Disabling redland build !)
+       MAKEREDLAND=['#']
+       with_redland="no"
+    fi
+
+    if test "$with_redland" = "yes" ; then
+       AMAYA_RAPTOR_SRC="amaya_comp_redland"
+       AMAYA_ANNOT_OPTIONS="$AMAYA_ANNOT_OPTIONS -DLIBRDF_INTERNAL=1 -DRAPTOR_RDF_PARSER -I\$(THOTDIR)/redland/librdf -I\$(THOTDIR)/redland/raptor"
+       AMAYA_RAPTOR_LIBS="../redland/librdf/.libs/librdf.a ../redland/raptor/.libs/libraptor.a -lexpat"
+       AMAYA_RAPTOR_INCLUDES="-I\$(THOTDIR)/redland/librdf -I\$(THOTDIR)/redland/raptor"
     fi
 
     dnl control whether we should build the bookmarks support
@@ -934,8 +976,8 @@ if test "$build_amaya" = "yes" ; then
        AC_MSG_WARN(Disabling bookmarks build as annotations are disabled !)
        with_bookmarks="no"
     fi
-    if test "$with_bookmarks" = "yes" -a "$with_raptor" = "no" ; then
-       AC_MSG_WARN(Disabling bookmarks build as raptor is disabled !)
+    if test "$with_bookmarks" = "yes" -a "$with_redland" = "no" ; then
+       AC_MSG_WARN(Disabling bookmarks build as redland is disabled !)
        with_bookmarks="no"
     fi
     if test "$with_bookmarks" = "yes" ; then
@@ -946,7 +988,7 @@ if test "$build_amaya" = "yes" ; then
     fi
 
     dnl control whether we should use libwww's rdf parser
-    if test "$with_raptor" = "yes" ; then
+    if test "$with_raptor" = "yes" -o "$with_redland" = "yes"; then
        dnl not all the function calls have been cleared as of today, 
        dnl we still need libwww's rdf parser 
        MAKE_LIBWWW_RDF_PARSER=
@@ -1036,9 +1078,10 @@ AC_SUBST(WITHDAV)
 AC_SUBST(WWWDAV)
 
 AC_SUBST(MAKERAPTOR)
+AC_SUBST(MAKEREDLAND)
 AC_SUBST(ANNOTLIB_COMPILE_BM)
-AC_SUBST(AMAYA_RAPTOR_LIBS)
 AC_SUBST(AMAYA_RAPTOR_SRC)
+AC_SUBST(AMAYA_RAPTOR_LIBS)
 AC_SUBST(AMAYA_RAPTOR_INCLUDES)
 AC_SUBST(MAKE_LIBWWW_RDF_PARSER)
 AC_SUBST(LIBWWW_RDF_PARSER)
@@ -1167,6 +1210,9 @@ if test "$build_amaya" = "yes" ; then
     fi
     if test "$with_raptor" = "yes" ; then
 	echo Amaya configured with the Raptor RDF parser
+    fi
+    if test "$with_redland" = "yes" ; then
+	echo Amaya configured with the Redland RDF library
     fi
     if test "$with_bookmarks" = "yes" ; then
 	echo Amaya configured with bookmarks support \(experimental\)

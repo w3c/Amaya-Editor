@@ -13,12 +13,13 @@ include Options
 
 LIBWWW	   = libwww
 LIBRAPTOR  = libraptor
+REDLAND    = redland
 LIBJPEG	   = libjpeg
 LIBPNG	   = libpng
 
 #MKP: adding davlib
 SUBDIRS	= @SUBDIRS@ tools thotlib tablelib batch drawlib indexlib annotlib amaya thot @DAVDIR@
-EXTRA_SUBDIRS= misc pluginlib $(LIBRAPTOR) $(LIBWWW)
+EXTRA_SUBDIRS= misc pluginlib $(LIBRAPTOR) $(REDLAND) $(LIBWWW)
 
 prefix = @prefix@
 exec_prefix = @exec_prefix@
@@ -303,6 +304,44 @@ libraptor_make: @MAKERAPTOR@ force
 
 libraptor: @MAKERAPTOR@ libraptor_config libraptor_make
 	@($(ECHO) "libraptor is installed")
+
+#
+# Rules to build the redland RDF library
+#
+
+redland_config: @MAKEREDLAND@ force
+	@(if test ! -e "$(THOTDIR)/$(REDLAND)"  ; then \
+	      $(ECHO) "Error redland dir not found at $(THOTDIR)/$(REDLAND)" ; \
+	  fi)
+	@(if test ! -e "$(THOTDIR)/$(REDLAND)/expat"  ; then \
+	      libwwwdir="$(THOTDIR)/../$(LIBWWW)" ; \
+	      echo $$libwwwdir ; \
+	      $(LN_S) "$$libwwwdir/modules/expat" "$(THOTDIR)/$(REDLAND)/expat" ; \
+	  fi)
+	 @(if test ! -d "$(REDLAND)"  ; then \
+		$(MKDIR) $(REDLAND) ; \
+          fi)
+	 @(localdir=`pwd` ; redlanddir="$$localdir/../$(REDLAND)" ; \
+	  cd $(REDLAND) ; unset LANG; \
+	  if test ! -f Makefile -o ! -f  redland-src-config ; then \
+			$$redlanddir/configure \
+			--disable-shared \
+			--without-bdb \
+	 		--enable-parsers=raptor \
+			--with-xml-parser=expat \
+		        --cache-file=$$localdir/config.cache; \
+		$(ECHO) "redland is configured" ; \
+	  fi)
+
+
+# the -DLIBRDF_INTERNAL=1 is needed if we're going to pass our own CFLAGS.
+redland_make: @MAKEREDLAND@ force
+	@(cd $(REDLAND) ; \
+	  $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS) -DLIBRDF_INTERNAL=1"; \
+	)
+
+redland: @MAKEREDLAND@ redland_config redland_make
+	@($(ECHO) "redland is installed")
 
 #
 # Rules to rebuild the libjpeg package
