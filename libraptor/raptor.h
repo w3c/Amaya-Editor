@@ -30,11 +30,15 @@ extern "C" {
 #endif
 
 #ifdef WIN32
+#ifdef _USRDLL
   #ifdef RAPTOR_INTERNAL
     #define RAPTOR_API _declspec(dllexport)
   #else
     #define RAPTOR_API _declspec(dllimport)
   #endif
+#else
+  #define RAPTOR_API
+#endif
 #else
   #define RAPTOR_API
 #endif
