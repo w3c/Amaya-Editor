@@ -3406,9 +3406,9 @@ RULES
 	CreateLast(HR_Print);
 #else
 	CreateLast(HR_Alt);
-	CreateLast(HR_Graph1);
 	if not within Preformatted
 	   CreateLast(HR_Graph2);
+	CreateLast(HR_Graph1);
 #endif
 	Width: Enclosing . Width;
 	Height: 2 px;
