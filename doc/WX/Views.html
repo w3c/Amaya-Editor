@@ -6,7 +6,7 @@
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
   <meta name="GENERATOR" content="amaya 9.0.1, see http://www.w3.org/Amaya/"
   />
-  <title>Viewing Documents Amaya</title>
+  <title>Document's views</title>
   <style type="text/css">
   </style>
   <link href="style.css" rel="stylesheet" type="text/css" />
@@ -31,191 +31,163 @@
 </table>
 
 <div id="page_body">
-<h2>Viewing Documents in Amaya</h2>
+<h2>Document's views</h2>
 
-<p>Amaya can present different views of a document simultaneously. Each view
-is displayed in a different window so you can clearly see what is happening
-when you edit complex documents.</p>
+<p>Amaya can present different views of a document simultaneously. Each tab
+corresponds to a document and the document's views can be shown by splitting
+the page so you can clearly see what is happening when you edit complex
+documents.</p>
 
-<p>The multiple windows can also help you move quickly through a document.
-For example, if you click a heading in the Table of Contents view, the
-Formatted view will display the document section you selected.</p>
+<p>The multiple views can also help you move quickly through a document. For
+example, if you click a heading in the Table of Contents view, the Formatted
+view will display the document section you selected.</p>
 
 <p>Six views are available from the Views menu.</p>
+<dl>
+  <dt>Formatted view (default)</dt>
+    <dd>This view is similar to that provided in other graphical browsers. It
+      is a dynamic, direct-manipulation view. At all times it displays the
+      changes you make to the document, in contrast to editors that only
+      provide a series of static snapshots of the document.
+      <p>This view is allways visible in the first part of your page.</p>
+    </dd>
+  <dt>Structure view (Views &gt; Show structure)</dt>
+    <dd><p>This view shows the actual structure of the document. Each element
+      is represented by its tag name, followed by its attributes on the same
+      line. The elements it contains are represented underneath, next to a
+      blue vertical line that shows the extent of the element.</p>
+      <p>You can directly edit any text displayed in black by clicking and
+      typing. You must use the editing commands to change text displayed in
+      blue.</p>
+      <p>The structure view shows all the elements of the document even those
+      that are not displayed in the formatted view like comments, doctype,
+      processing instructions or the elements of the head section.</p>
+      <p>This view also shows the uri of the namespace used by the author
+      when an element belongs to a namespace that is different from it's
+      parent one's.</p>
+    </dd>
+  <dt>Alternate view (Views &gt; Show alternate)</dt>
+    <dd>This view shows how the document looks when displayed by a text-only
+      browser. It is useful for checking the accessibility of your
+    documents.</dd>
+  <dt>Links view (Views &gt; Show links)</dt>
+    <dd>This view shows a list of all anchors in the document and the
+      elements each anchor contains. You can focus on it when working on
+      hypertext links.</dd>
+  <dt>Table of Contents view (Views &gt; Show table of contents)</dt>
+    <dd><p>This view shows a list of all headings (H<i>n</i> elements) in the
+      document. If the document is well structured, it displays an overview
+      of the document.</p>
+    </dd>
+  <dt>Source view (Views &gt; Show source)</dt>
+    <dd>This view shows the actual source code of the document. You can use
+      it to edit the syntax of your document. (it's the default open view
+      when you click on the red button in bottom of your document)</dd>
+</dl>
 
-<table border="0" cellspacing="8">
+<p>You can open and close any view at any time.</p>
+
+<h3>Opening a View</h3>
+
+<p>To open a view, select the appropriate Show menu item from the
+<strong>Views</strong> menu:</p>
+
+<table border="0" cellspacing="0" cellpadding="0" style="margin-left:.5in">
   <tbody>
     <tr>
-      <td><img width="109" height="122" src="../images/formattedview.jpg"
-        alt="formatted view" /></td>
-      <td><strong>Formatted view</strong> (default)
-
-        <p>This view is similar to that provided in other graphical browsers.
-        It is a dynamic, direct-manipulation view. At all times it displays
-        the changes you make to the document, in contrast to editors that
-        only provide a series of static snapshots of the document.</p>
+      <td
+      style="border-top:solid 1.5pt; border-left:none;border-bottom:solid 1.5pt;border-right:none; padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableTitle"><strong>Entrée du menu</strong></p>
+      </td>
+      <td
+      style="border-top:solid 1.5pt; border-left:none;border-bottom:solid 1.5pt;border-right:none; padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableTitle"><strong>Raccourci clavier</strong></p>
       </td>
     </tr>
     <tr>
-      <td><img width="108" height="98" alt="structure view"
-        src="../images/structureview.jpg" /></td>
-      <td><strong>Structure view</strong> (Views &gt; Show structure)
-
-        <p>This view shows the actual structure of the document. Each element
-        is represented by its tag name, followed by its attributes on the
-        same line. The elements it contains are represented underneath, next
-        to a blue vertical line that shows the extent of the element.</p>
-
-        <p>You can directly edit any text displayed in black by clicking and
-        typing. You must use the editing commands to change text displayed in
-        blue.</p>
-
-        <p>The structure view shows all the elements of the document even
-        those that are not displayed in the formatted view like comments,
-        doctype, processing instructions or the elements of the head
-        section.</p>
-
-        <p>This view also shows the uri of the namespace used by the author
-        when an element belongs to a namespace that is different from it's
-        parent one's.</p>
+      <td
+      style="border-top:none; border-left:none; border-bottom:solid .5pt; border-right: none; padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">Show formatted view</p>
+      </td>
+      <td
+      style="border:none; border-bottom:solid .5pt; padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText"><code>Ctrl v Ctrl f</code></p>
       </td>
     </tr>
     <tr>
-      <td><img width="108" height="102" alt="alternate view"
-        src="../images/alternateview.jpg" /></td>
-      <td><strong>Alternate view</strong> (Views &gt; Show alternate)
-
-        <p>This view shows how the document looks when displayed by a
-        text-only browser. It is useful for checking the accessibility of
-        your documents.</p>
+      <td
+      style="border-top:none; border-left:none; border-bottom:solid .5pt; border-right: none; padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">Show structure</p>
+      </td>
+      <td
+      style="border:none; border-bottom:solid .5pt; padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText"><code>Ctrl v Ctrl s</code></p>
       </td>
     </tr>
     <tr>
-      <td><img width="109" height="122" alt="links view"
-        src="../images/linksview.jpg" /></td>
-      <td><strong>Links view</strong> (Views &gt; Show links)
-
-        <p>This view shows a list of all anchors in the document and the
-        elements each anchor contains. You can focus on it when working on
-        hypertext links.</p>
+      <td
+      style="border-top:none; border-left:none; border-bottom:solid .5pt; border-right: none; padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">Show alternate</p>
+      </td>
+      <td
+      style="border:none; border-bottom:solid .5pt; padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText"><code>Ctrl v Ctrl i</code></p>
       </td>
     </tr>
     <tr>
-      <td><img width="111" height="168" alt="table of contents view"
-        src="../images/tocview.jpg" /></td>
-      <td><strong>Table of Contents view</strong> (Views &gt; Show table of
-        contents)
-
-        <p>This view shows a list of all headings (H<i>n</i> elements) in the
-        document. If the document is well structured, it displays an overview
-        of the document.</p>
+      <td
+      style="border-top:none; border-left:none; border-bottom:solid .5pt;border-right:none;padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">Show links</p>
+      </td>
+      <td
+      style="border:none; border-bottom:solid .5pt; padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText"><code>Ctrl v Ctrl l</code></p>
       </td>
     </tr>
     <tr>
-      <td><img width="109" height="115" alt="source view"
-        src="../images/sourceview.jpg" /></td>
-      <td><strong>Source view</strong> (Views &gt; Show source)
-
-        <p>This view shows the actual source code of the document. You can
-        use it to edit the syntax of your document.</p>
+      <td
+      style="border-top:none; border-left:none; border-bottom:solid .5pt;border-right:none; padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">Show table of contents</p>
+      </td>
+      <td
+      style="border:none; border-bottom:solid .5pt; padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText"><code>Ctrl v Ctrl c</code></p>
+      </td>
+    </tr>
+    <tr>
+      <td
+      style="border-top:none; border-left:none; border-bottom:solid 1.5pt; border-right: none; padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText">Show source</p>
+      </td>
+      <td
+      style="border:none; border-bottom:solid 1.5pt; padding:0in 5.4pt 0in 5.4pt"><p
+        class="TableText"><code>Ctrl v Ctrl h</code></p>
       </td>
     </tr>
   </tbody>
 </table>
 
-<p>You can open and close any view at any time. However, if you have multiple
-views open and close the Formatted view, all other views will close
-automatically.</p>
+<p><strong>Note:</strong> <code>Ctrl v</code> is replaced by <code>Ctrl
+u</code> on Windows platforms because <code>Ctrl v</code> is used by the
+<strong>Paste</strong> command.</p>
 
-<h3>Opening a View</h3>
+<p><strong>Tip 1</strong>: You can quickly open the source view by clicking
+on the red button in bottom of the your document.</p>
 
-<p>Amaya can present different views of a document simultaneously. Each view
-is displayed in a different window. This allows you to clearly see what is
-happening when you edit complex documents. It is also an aid for moving
-across a document.</p>
+<p><strong>Tip 2</strong>: You can also use <strong>Show commands</strong> on
+the <strong>Views</strong> menu to give keyboard focus to a view.</p>
 
-<p class="ProcedureNote"><strong>Note:</strong> View options are only
-available from the normal browser view (formatted view).</p>
+<h3>Closing a view</h3>
 
-<p class="ProcedureCaption">To open a view:</p>
-<ul>
-  <li>Select the appropriate Show menu item from the <strong>Views</strong>
-    menu:
-    <p></p>
+<p>To close a view, select the <strong>Split view</strong> command from the
+<strong>Views</strong> menu. Another way to close a view is clicking on the
+red button in bottom of your document.</p>
 
-    <table border="0" cellspacing="0" cellpadding="0"
-    style="margin-left:.5in">
-      <tbody>
-        <tr>
-          <td
-          style="border-top:solid 1.5pt; border-left:none;border-bottom:solid 1.5pt;border-right:none; padding:0in 5.4pt 0in 5.4pt"><p
-            class="TableTitle"><strong>Show Menu Item</strong></p>
-          </td>
-          <td
-          style="border-top:solid 1.5pt; border-left:none;border-bottom:solid 1.5pt;border-right:none; padding:0in 5.4pt 0in 5.4pt"><p
-            class="TableTitle"><strong>Keyboard Shortcut</strong></p>
-          </td>
-        </tr>
-        <tr>
-          <td
-          style="border-top:none; border-left:none; border-bottom:solid .5pt; border-right: none; padding:0in 5.4pt 0in 5.4pt"><p
-            class="TableText">View Structure</p>
-          </td>
-          <td
-          style="border:none; border-bottom:solid .5pt; padding:0in 5.4pt 0in 5.4pt"><p
-            class="TableText"><code>Ctrl v Ctrl s</code></p>
-          </td>
-        </tr>
-        <tr>
-          <td
-          style="border-top:none; border-left:none; border-bottom:solid .5pt; border-right: none; padding:0in 5.4pt 0in 5.4pt"><p
-            class="TableText">View Alternate</p>
-          </td>
-          <td
-          style="border:none; border-bottom:solid .5pt; padding:0in 5.4pt 0in 5.4pt"><p
-            class="TableText"><code>Ctrl v Ctrl i</code></p>
-          </td>
-        </tr>
-        <tr>
-          <td
-          style="border-top:none; border-left:none; border-bottom:solid .5pt;border-right:none;padding:0in 5.4pt 0in 5.4pt"><p
-            class="TableText">View Links</p>
-          </td>
-          <td
-          style="border:none; border-bottom:solid .5pt; padding:0in 5.4pt 0in 5.4pt"><p
-            class="TableText"><code>Ctrl v Ctrl l</code></p>
-          </td>
-        </tr>
-        <tr>
-          <td
-          style="border-top:none; border-left:none; border-bottom:solid .5pt;border-right:none; padding:0in 5.4pt 0in 5.4pt"><p
-            class="TableText">View Table of Contents</p>
-          </td>
-          <td
-          style="border:none; border-bottom:solid .5pt; padding:0in 5.4pt 0in 5.4pt"><p
-            class="TableText"><code>Ctrl v Ctrl c</code></p>
-          </td>
-        </tr>
-        <tr>
-          <td
-          style="border-top:none; border-left:none; border-bottom:solid 1.5pt; border-right: none; padding:0in 5.4pt 0in 5.4pt"><p
-            class="TableText">View Source</p>
-          </td>
-          <td
-          style="border:none; border-bottom:solid 1.5pt; padding:0in 5.4pt 0in 5.4pt"><p
-            class="TableText"><code>Ctrl v Ctrl h</code></p>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-    <p><strong>Note:</strong> <code>Ctrl v</code> is replaced by <code>Ctrl
-    u</code> on Windows platforms because <code>Ctrl v</code> is used by the
-    <strong>Paste</strong> command.</p>
-    <p> <strong>Note</strong>: You can also use <strong>Show
-    commands</strong> on the <strong>Views</strong> menu to bring the
-    corresponding window forward when it is in the background.</p>
-  </li>
-</ul>
+<p>You can also close the tab (right click on the tab or open
+<strong>File</strong> menu) if you want to close your document and all its
+views.</p>
+
+<p></p>
 </div>
 </body>
 </html>
