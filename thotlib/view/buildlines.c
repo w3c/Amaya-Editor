@@ -1488,11 +1488,11 @@ static void InitLine (PtrLine pLine, PtrBox pBlock, int indent,
   else
     pAb = NULL;
   breakable = (pBox && pAb &&
-	       pAb->AbLeafType == LtText ||
-	       pAb->AbFloat == 'N' && pAb->AbLeafType == LtCompound &&
-	       pAb->AbWidth.DimAbRef &&
-	       (pAb->AbWidth.DimAbRef == pBlock->BxAbstractBox ||
-		pAb->AbWidth.DimAbRef->AbBox->BxType == BoGhost));
+	       (pAb->AbLeafType == LtText ||
+		(pAb->AbFloat == 'N' && pAb->AbLeafType == LtCompound &&
+		 pAb->AbWidth.DimAbRef &&
+		 (pAb->AbWidth.DimAbRef == pBlock->BxAbstractBox ||
+		  pAb->AbWidth.DimAbRef->AbBox->BxType == BoGhost))));
   left = pBlock->BxLMargin + pBlock->BxLBorder + pBlock->BxLPadding;
   if (floatL)
     {
@@ -1510,13 +1510,17 @@ static void InitLine (PtrLine pLine, PtrBox pBlock, int indent,
   do
     {
       /* compute the line position and width */
-      if (floatL && pLine->LiYOrg <= floatL->BxYOrg + floatL->BxHeight)
+      if (floatL &&
+	  pLine->LiYOrg >= floatL->BxYOrg &&
+	  pLine->LiYOrg < floatL->BxYOrg + floatL->BxHeight)
 	{
 	  /* update the line position */
 	  pLine->LiXOrg = floatL->BxXOrg + floatL->BxWidth + indent;
 	  bottomL = floatL->BxYOrg + floatL->BxHeight;
 	}
-      else if (floatL && pLine->LiYOrg >= floatL->BxYOrg + floatL->BxHeight)
+      else if (floatL &&
+	       pLine->LiYOrg < floatL->BxYOrg &&
+	       pLine->LiYOrg >= floatL->BxYOrg + floatL->BxHeight)
 	{
 	  /* look at all previous floating boxes */
 	  y = floatL->BxYOrg + floatL->BxHeight;
@@ -1538,13 +1542,17 @@ static void InitLine (PtrLine pLine, PtrBox pBlock, int indent,
 	  bottomL = pBlock->BxTMargin + pBlock->BxTBorder + pBlock->BxTPadding;
 	}
 
-      if (floatR && pLine->LiYOrg <= floatR->BxYOrg + floatR->BxHeight)
+      if (floatR &&
+	  pLine->LiYOrg >= floatR->BxYOrg &&
+	  pLine->LiYOrg < floatR->BxYOrg + floatR->BxHeight)
 	{
 	  /* update the line width */
 	  pLine->LiXMax = floatR->BxXOrg - pLine->LiXOrg;
 	  bottomR = floatR->BxYOrg + floatR->BxHeight;
 	}
-      else if (floatR && pLine->LiYOrg >= floatR->BxYOrg + floatR->BxHeight)
+      else if (floatR &&
+	       pLine->LiYOrg < floatR->BxYOrg &&
+	       pLine->LiYOrg >= floatR->BxYOrg + floatR->BxHeight)
 	{
 	  /* update the line width */
 	  y = floatR->BxYOrg + floatR->BxHeight;
