@@ -440,7 +440,7 @@ if test "$with_wx" = "yes" ; then
   #   --disable-ftp
   #   --disable-http
   #   --disable-sound
-  WXCONFIGURE_TUNNING_OPTION="--disable-printarch --disable-htmlhelp --disable-html --disable-docview --disable-mdi --disable-mdidoc --disable-ftp --disable-sound"
+  WXCONFIGURE_TUNNING_OPTION="--disable-printarch --disable-htmlhelp --disable-html --disable-docview --disable-mdi --disable-mdidoc --disable-sound"
   
   if test "$OS_OPTIONS" = "-D_UNIX" ; then
     # LINUX
