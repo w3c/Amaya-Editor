@@ -562,7 +562,7 @@ PtrDocument         pDoc;
 			    found = TRUE;
 		   }
 		 /* pagine la vue */
-		 PaginateView (pDoc, docView + 1, viewList[i].VdAssoc);
+		 PaginateView (pDoc, docView , viewList[i].VdAssoc);
 	      }
 }
 
