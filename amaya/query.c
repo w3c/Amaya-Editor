@@ -2226,7 +2226,9 @@ static void AHTProfile_newAmaya (char *AppName, char *AppVersion)
    HTTransferEncoderInit (transfer_encodings);
    HTFormat_setTransferCoding (transfer_encodings);
    /* Register the default set of content encoders and decoders */
-   HTContentEncoderInit (content_encodings);
+   /* commented because we don't know yet how to handle deflate in the content enconding */
+   /* HTContentEncoderInit (content_encodings); */
+   HTCoding_add (content_encodings, "gzip", NULL, HTIdentityCoding, 1.0);
    /* ignore all other encoding formats (or libwww will send them 
       thru a blackhole otherwise */
    HTCoding_add (content_encodings, "*", NULL, HTIdentityCoding, 1.0);
