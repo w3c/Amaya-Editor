@@ -18,14 +18,14 @@ extern void InsertChar ( int frame,
                          int keyboard );
 extern void PasteXClipboard ( USTRING Xbuffer,
                               int nbytes );
-extern void TtcInsertChar ( Document document,
+extern void TtcInsertChar ( Document doc,
                             View view,
                             CHAR_T c );
-extern void TtcCutSelection ( Document document,
+extern void TtcCutSelection ( Document doc,
                               View view );
-extern void TtcDeletePreviousChar ( Document document,
+extern void TtcDeletePreviousChar ( Document doc,
                                     View view );
-extern void TtcDeleteSelection ( Document document,
+extern void TtcDeleteSelection ( Document doc,
                                  View view );
 extern void TtcInclude ( Document document,
                          View view );
@@ -53,14 +53,14 @@ extern void InsertChar (/* int frame,
                            int keyboard */);
 extern void PasteXClipboard (/* USTRING Xbuffer,
                                 int nbytes */);
-extern void TtcInsertChar (/* Document document,
+extern void TtcInsertChar (/* Document doc,
                               View view,
                               CHAR_T c */);
-extern void TtcCutSelection (/* Document document,
+extern void TtcCutSelection (/* Document doc,
                                 View view */);
-extern void TtcDeletePreviousChar (/* Document document,
+extern void TtcDeletePreviousChar (/* Document doc,
                                       View view */);
-extern void TtcDeleteSelection (/* Document document,
+extern void TtcDeleteSelection (/* Document doc,
                                    View view */);
 extern void TtcInclude (/* Document document,
                            View view */);

@@ -80,51 +80,30 @@ static int          defNbCopies;
 static int          defReduction;
 static int          defPagesPerSheet;
 static int          defPaginate;
-static int          defPageSize;
 static Name         PresSchema;
 
 
 /*----------------------------------------------------------------------
   Print: interface to the Print program.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         Print (STRING name, STRING dir, STRING thotSch, STRING thotDoc, STRING realName, STRING output, int firstPage, int lastPage, int nCopies, int hShift, int vShift, int userOrientation, int reduction, int nbPagesPerSheet, int suppFrame, int manualFeed, int blackAndWhite, int repaginate, STRING viewsToPrint, STRING cssToPrint, Document document)
-#else  /* __STDC__ */
-static void         Print (name, dir, thotSch, thotDoc, realName, output, firstPage, lastPage, nCopies, hShift, vShift, userOrientation, reduction, nbPagesPerSheet, suppFrame, manualFeed, blackAndWhite, repaginate, viewsToPrint, cssToPrint, document)
-STRING              name;
-STRING              dir;
-STRING              thotSch;
-STRING              thotDoc;
-STRING              realName;
-STRING              output;
-int                 firstPage;
-int                 lastPage;
-int                 nCopies;
-int                 hShift;
-int                 vShift;
-int                 userOrientation;
-int                 reduction;
-int                 nbPagesPerSheet;
-int                 suppFrame;
-int                 manualFeed;
-int                 blackAndWhite;
-int                 repaginate;
-STRING              viewsToPrint;
-STRING              cssToPrint;
-Document            document;
-#endif /* __STDC__ */
+static void Print (STRING name, STRING dir, STRING thotSch, STRING thotDoc,
+		   STRING realName, STRING output, int firstPage, int lastPage,
+		   int nCopies, int hShift, int vShift, int userOrientation,
+		   int reduction, int nbPagesPerSheet, int suppFrame,
+		   int manualFeed, int blackAndWhite, int repaginate,
+		   STRING viewsToPrint, STRING cssToPrint, Document document)
 { 
    CHAR_T*                 ptr;
-#  ifdef _WINDOWS
+#ifdef _WINDOWS
    static LPPRINTER_INFO_5 pInfo5;
    CHAR_T*                 printArgv [100];
    HINSTANCE               hLib;
    FARPROC                 ptrMainProc;
    int                     printArgc = 0;
-#  else  /* !_WINDOWS */
+#else  /* !_WINDOWS */
    char                    cmd[1024];
    int                     res;
-#  endif /* _WINDOWS */
+#endif /* _WINDOWS */
    int                     i, j = 0;
    int                     frame;
 
@@ -623,12 +602,7 @@ Document            document;
    InitPrintParameters
    initializes the printing parameters.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void        InitPrintParameters (Document document)
-#else  /* __STDC__ */
-void        InitPrintParameters (document)
-Document document;
-#endif /* __STDC__ */
 {
    PtrDocument pDoc;
    CHAR_T*     ptr;
@@ -658,7 +632,11 @@ Document document;
        defNbCopies = 1;
        defReduction = 100;
        defPagesPerSheet = 1;
-       defPageSize= PP_A4;
+       ptr = TtaGetEnvString ("PAPER");
+       if (ptr == NULL)
+          ustrcpy(PageSize, TEXT("A4"));
+       else
+           ustrcpy(PageSize, ptr);
        defPaginate = TRUE;
        PresSchema[0] = EOS;
      }
@@ -675,10 +653,6 @@ Document document;
        Reduction = defReduction;
        PagesPerSheet = defPagesPerSheet;
        Paginate = defPaginate;
-       if (defPageSize == PP_A4)
-          ustrcpy(PageSize, TEXT("A4"));
-       else
-           ustrcpy(PageSize, TEXT("US"));
        if (pDoc != NULL)
 	 {
 	   if (pDoc->DocDirectory[0] == DIR_SEP)
@@ -701,11 +675,11 @@ Document document;
 		 }
 	       else
 		 {
-#                  ifdef _WINDOWS
+#ifdef _WINDOWS
 		   ustrcpy (PSdir, TEXT("C:\\TEMP"));
-#                  else  /* !_WINDOWS */
+#else  /* !_WINDOWS */
 		   ustrcpy (PSdir,"/tmp");
-#                  endif /* !_WINDOWS */
+#endif /* !_WINDOWS */
 		   lg = ustrlen (PSdir);
 		 }
 	       usprintf (&PSdir[lg], TEXT("/%s.ps"), pDoc->DocDName);
@@ -718,14 +692,7 @@ Document document;
    TtcPrint standard handler for the Print action.  
    Calls TtaPrint to print the current view.
    ----------------------------------------------------------------------*/  
-#ifdef __STDC__
 void                TtcPrint (Document document, View view)
-#else  /* __STDC__ */
-void                TtcPrint (document, view)
-Document            document;
-View                view;
-
-#endif /* __STDC__ */
 {
    PathBuffer          viewsToPrint;
 
@@ -739,13 +706,7 @@ View                view;
    temporary files neede to start a print process.
    The function creates the directory if it doesn't already exist.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void             TtaGetPrintNames (STRING *printDocName, STRING *printDirName)
-#else  /* __STDC__ */
-void             TtaGetPrintNames (printDocName, printDirName)
-STRING          *printDocName;
-STRING          *printDirName;
-#endif /* __STDC__ */
 {
    ThotPid             pid = ThotPid_get ();
    CHAR_T*             dirString;
@@ -788,14 +749,7 @@ STRING          *printDirName;
    Returns the orientation (0 = portrait, 1 = landscape),and the paper format
    (0 = A4, 1 = US). 
   ------------------------------------------------------------------------ */
-#ifdef __STDC__
 ThotBool      TtaGetPrinterDC (ThotBool reuse, int *orientation, int *paper)
-#else  /* __STDC__ */
-ThotBool      TtaGetPrinterDC (reuse, orientation, paper)
-     ThotBool      reuse;
-int          *orientation;
-int          *paper;
-#endif /* __STDC__ */
 {
   LPDEVNAMES  lpDevNames;
   LPDEVMODE   lpDevMode;
@@ -876,14 +830,7 @@ int          *paper;
    TtaPrint
    interface to the multiview print command.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                TtaPrint (Document document, STRING viewNames, STRING cssNames)
-#else  /* __STDC__ */
-void                TtaPrint (document, viewNames, cssNames)
-Document            document;
-STRING              viewNames;
-STRING              cssNames;
-#endif /* __STDC__ */
+void TtaPrint (Document document, STRING viewNames, STRING cssNames)
 {
    PtrDocument         pDoc;
    PathBuffer          dirName;
@@ -899,7 +846,7 @@ STRING              cssNames;
    /* prepares the execution of the print command */
    ustrcpy (savePres, pDoc->DocSSchema->SsDefaultPSchema);
    if (PresSchema[0] != EOS)
-      ustrcpy (newPres, PresSchema);
+     ustrcpy (newPres, PresSchema);
    else
      ConfigGetPSchemaForPageSize (pDoc->DocSSchema, PageSize, newPres);
      
@@ -937,16 +884,10 @@ STRING              cssNames;
      }
 
    /* searches the paper orientation for the presentation scheme */
-   orientation = 0;
-   ConfigGetPresentationOption(pDoc->DocSSchema, TEXT("orientation"), value);
-   if (value[0] != WC_EOS)
-     if (!ustrcmp (Orientation, value))
-       {
-        if (!ustrcmp (Orientation, TEXT("Landscape")))
-	  orientation = 1;
-        else
-	  orientation = 0;
-       }
+   if (!ustrcmp (Orientation, TEXT("Landscape")))
+     orientation = 1;
+   else
+     orientation = 0;
 
    /* restores the presentation scheme */
    ustrcpy (pDoc->DocSSchema->SsDefaultPSchema, savePres);
@@ -990,12 +931,7 @@ STRING              cssNames;
 /*----------------------------------------------------------------------
   TtaSetPrintExportFunc: Sets a non-standard document export function for printing
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void TtaSetPrintExportFunc (Func exportFunc)
-#else /* __STDC__ */
-void TtaSetPrintExportFunc (exportFunc)
-Func exportFunc;
-#endif /*__STDC__ */
 {
   pFuncExportPrintDoc = exportFunc;
 }
@@ -1003,13 +939,7 @@ Func exportFunc;
 /*----------------------------------------------------------------------
   TtaSetPrintParameter: Sets a print parameter
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void TtaSetPrintParameter (PrintParameter parameter, int value)
-#else /* __STDC__ */
-void TtaSetPrintParameter (parameter, value)
-PrintParameter parameter;
-int value;
-#endif /*__STDC__ */
 {
   if (ThotLocalActions[T_rprint] == NULL)
     /* force the initialization of printing parameters */
@@ -1071,9 +1001,23 @@ int value;
       break;
     case PP_PaperSize:
       if (value == PP_A4)
-	ustrcpy (PageSize, TEXT("A4"));
+	{
+	  if (strcmp (PageSize, "A4"))
+	    {
+	      strcpy (PageSize, "A4");
+	      TtaSetEnvString ("PAPER", PageSize, TRUE);
+	      TtaSaveAppRegistry ();
+	    }
+	}
       else if (value == PP_US)
-	ustrcpy (PageSize, TEXT("US"));
+	{
+	  if (strcmp (PageSize, "US"))
+	    {
+	      strcpy (PageSize, "US");
+	      TtaSetEnvString ("PAPER", PageSize, TRUE);
+	      TtaSaveAppRegistry ();
+	    }
+	}
       else
 	TtaError(ERR_invalid_parameter);
       break;
@@ -1094,14 +1038,10 @@ int value;
 /*----------------------------------------------------------------------
   TtaGetPrintParameter: returns a print parameter
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 int TtaGetPrintParameter (PrintParameter parameter)
-#else /* __STDC__ */
-int TtaGetPrintParameter (parameter)
-PrintParameter parameter;
-int value;
-#endif /*__STDC__ */
 {
+  char    *ptr;
+
   switch (parameter)
     {
     case PP_Orientation:
@@ -1138,10 +1078,17 @@ int value;
       return (PagesPerSheet);
       break;
     case PP_PaperSize:
-      if (!ustrcmp (PageSize, TEXT("A4")))
-	return (PP_A4);
+      ptr = TtaGetEnvString ("PAPER");
+      if (ptr && ustrcmp (ptr, TEXT("A4")))
+	{
+	  strcpy (PageSize, ptr);
+	  return (PP_US);
+	}
       else
-	return (PP_US);
+	{
+	  strcpy (PageSize, "A4");
+	  return (PP_A4);
+	}
       break;
     case PP_Destination:
       if (PaperPrint)
@@ -1159,12 +1106,7 @@ int value;
 /*----------------------------------------------------------------------
   TtaSetPrintCommand sets the print command.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                TtaSetPrintCommand (STRING command)
-#else  /* __STDC__ */
-void                TtaSetPrintCommand (command)
-STRING command;
-#endif /* __STDC__ */
 {
   ustrcpy (pPrinter, command);
 }
@@ -1173,12 +1115,7 @@ STRING command;
 /*----------------------------------------------------------------------
   TtaGetPrintCommand returns the print command.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                TtaGetPrintCommand (STRING command)
-#else  /* __STDC__ */
-void                TtaGetPrintCommand (command)
-STRING command;
-#endif /* __STDC__ */
 {
   if (command == NULL)
     TtaError(ERR_invalid_parameter);
@@ -1190,12 +1127,7 @@ STRING command;
 /*----------------------------------------------------------------------
   TtaSetPrintSchema fixes the printing schema.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                TtaSetPrintSchema (CHAR_T* name)
-#else  /* __STDC__ */
-void                TtaSetPrintSchema (name)
-CHAR_T*             name;
-#endif /* __STDC__ */
 {
   if (ustrlen(name) >= MAX_NAME_LENGTH)
     TtaError(ERR_invalid_parameter);
@@ -1207,12 +1139,7 @@ CHAR_T*             name;
 /*----------------------------------------------------------------------
   TtaSetPrintCommand sets the path of ps file.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                TtaSetPsFile (STRING path)
-#else  /* __STDC__ */
-void                TtaSetPsFile (path)
-STRING command;
-#endif /* __STDC__ */
 {
   ustrcpy (PSdir, path);
 }
@@ -1221,12 +1148,7 @@ STRING command;
 /*----------------------------------------------------------------------
   TtaGetPsFile returns the path of ps file.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                TtaGetPsFile (STRING path)
-#else  /* __STDC__ */
-void                TtaGetPsFile (/*char *path*/)
-STRING path;
-#endif /* __STDC__ */
 {
   if (path == NULL)
     TtaError(ERR_invalid_parameter);
@@ -1239,15 +1161,7 @@ STRING path;
   CallbackPrintmenu
   callback associated to the PrintSetup form 
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                CallbackPrintmenu (int ref, int val, STRING txt)
-#else  /* __STDC__ */
-void                CallbackPrintmenu (ref, val, txt)
-int                 ref;
-int                 val;
-STRING              txt;
-
-#endif /* __STDC__ */
 {
   PtrDocument         pDoc;
 
@@ -1267,18 +1181,18 @@ STRING              txt;
 	      if (!NewPaperPrint)
 		{
 		  NewPaperPrint = TRUE;
-#         ifndef _WINDOWS
+#ifndef _WINDOWS
 		  TtaSetTextForm (NumZonePrinterName, pPrinter);
-#         endif /* !_WINDOWS */
+#endif /* !_WINDOWS */
 		}
 	      break;
 	    case 1:
 	      if (NewPaperPrint)
 		{
 		  NewPaperPrint = FALSE;
-#         ifndef _WINDOWS
+#ifndef _WINDOWS
 		  TtaSetTextForm (NumZonePrinterName, PSdir);
-#         endif /* !_WINDOWS */
+#endif /* !_WINDOWS */
 		}
 	      break;
 	    }
@@ -1349,14 +1263,7 @@ STRING              txt;
    standard handler for a PrintSetup action.
    Prepares and displays a form.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                TtcPrintSetup (Document document, View view)
-#else  /* __STDC__ */
-void                TtcPrintSetup (document, view)
-Document            document;
-View                view;
-
-#endif /* __STDC__ */
 {
    int              i;
    CHAR_T             bufMenu[MAX_TXT_LEN];

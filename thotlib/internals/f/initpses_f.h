@@ -8,6 +8,7 @@
 
 extern void InitDocColors ( CHAR_T* name );
 extern void FreeDocColors ( void );
+extern char *ColorName ( int num );
 extern unsigned long ColorPixel ( int num );
 extern void TtaFreeThotColor ( int num );
 extern int TtaGetThotColor ( unsigned short red,
@@ -26,6 +27,7 @@ extern unsigned long CreatePattern ( int disp,
 
 extern void InitDocColors (/* CHAR_T* name */);
 extern void FreeDocColors (/* void */);
+extern char *ColorName (/* int num */);
 extern unsigned long ColorPixel (/* int num */);
 extern void TtaFreeThotColor (/* int num */);
 extern int TtaGetThotColor (/* unsigned short red,

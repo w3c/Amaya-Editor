@@ -315,6 +315,17 @@ void         FreeDocColors ()
 
 
 /*----------------------------------------------------------------------
+   ColorName       returns the name of a color in Thot color table.
+  ----------------------------------------------------------------------*/
+char     *ColorName (int num)
+{
+   if (num < NColors && num >= 0)
+      return Color_Table[num];
+   else
+      return NULL;
+}
+
+/*----------------------------------------------------------------------
    ColorPixel      returns the value of a color in Thot color table.
   ----------------------------------------------------------------------*/
 unsigned long       ColorPixel (int num)
@@ -333,7 +344,7 @@ void             TtaFreeThotColor (int num)
   TtaGetThotColor returns the Thot Color.
   red, green, blue express the color RGB in 8 bits values
  ----------------------------------------------------------------------*/
-int                 TtaGetThotColor (unsigned short red, unsigned short green, unsigned short blue)
+int TtaGetThotColor (unsigned short red, unsigned short green, unsigned short blue)
 {
    int                 i;
 
@@ -368,7 +379,7 @@ int                 TtaGetThotColor (unsigned short red, unsigned short green, u
    If the color doesn't exist the function returns the values
    for the default color.
   ----------------------------------------------------------------------*/
-void                TtaGiveThotRGB (int num, unsigned short *red, unsigned short *green, unsigned short *blue)
+void TtaGiveThotRGB (int num, unsigned short *red, unsigned short *green, unsigned short *blue)
 {
   if (num < NColors && num >= 0)
     {

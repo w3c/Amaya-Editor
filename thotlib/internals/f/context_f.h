@@ -6,10 +6,6 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern ThotBool ThotGiveRGB ( CHAR_T *colname,
-                              unsigned short *red,
-                              unsigned short *green,
-                              unsigned short *blue );
 extern void TtaUpdateEditorColors ( void );
 extern void ThotInitDisplay ( CHAR_T* name,
                               int dx,
@@ -19,10 +15,6 @@ extern void SelectionEvents ( void *ev );
 
 #else /* __STDC__ */
 
-extern ThotBool ThotGiveRGB (/* CHAR_T *colname,
-                                unsigned short *red,
-                                unsigned short *green,
-                                unsigned short *blue */);
 extern void TtaUpdateEditorColors (/* void */);
 extern void ThotInitDisplay (/* CHAR_T* name,
                                 int dx,

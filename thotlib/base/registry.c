@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996.
+ *  (c) COPYRIGHT INRIA, 1996-2001.
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -40,7 +40,6 @@
 #include "ustring_f.h"
 #include "uconvert_f.h"
 /* #define DEBUG_REGISTRY enable the Registry debug messages */
-
 
 /* for Marc.Baudoin@hsc.fr (Marc Baudoin) */
 #ifdef _WINDOWS
@@ -109,36 +108,9 @@ PathBuffer path;
 int errno;
 #endif
 
-#ifdef __STDC__
-CHAR_T* WGetEnv (char* name)
-#else  /* __STDC__ */
-CHAR_T* WGetEnv (name)
-char*   name;
-#endif /* __STDC__ */
-{
-#ifdef _I18N_
-#ifdef _WINDOWS
-       CHAR_T w_name[MAX_TXT_LEN];
-       iso2wc_strcpy (w_name, name);
-       return _wgetenv (w_name);
-#else  /* _WINDOWS */
-       char* val = getenv (name);
-       mbstowcs (EnvString, val, MAX_TXT_LEN);
-       return EnvString;
-#endif /* _WINDOWS */
-#else  /* _I18N_ */
-       return getenv (name);
-#endif /* _I18N_ */
-}
-
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static char*       SkipToEqual (char* ptr)
-#else
-static char*       SkipToEqual (ptr)
-char* ptr;
-#endif
 {
   while (*ptr != EOS && *ptr != '=' && *ptr != EOL && *ptr != __CR__)
     ptr++;
@@ -149,12 +121,7 @@ char* ptr;
    TtaSkipBlanks skips all spaces, tabs, linefeeds and newlines at the
    beginning of the string and returns the pointer to the new position. 
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 char* TtaSkipBlanks (char* ptr)
-#else
-char* TtaSkipBlanks (ptr)
-char* ptr;
-#endif
 {
   while (*ptr == SPACE || *ptr == BSPACE || *ptr == EOL ||
 	  *ptr == TAB || *ptr == __CR__)
@@ -166,12 +133,7 @@ char* ptr;
    TtaSkipWCBlanks skips all spaces, tabs, linefeeds and newlines at the
    beginning of the string and returns the pointer to the new position. 
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 CHAR_T* TtaSkipWCBlanks (CHAR_T* ptr)
-#else
-CHAR_T* TtaSkipWCBlanks (ptr)
-CHAR_T* ptr;
-#endif
 {
   while (*ptr == WC_SPACE || *ptr == WC_BSPACE || *ptr == WC_EOL || *ptr == WC_TAB || *ptr == WC_CR)
     ptr++;
@@ -182,12 +144,7 @@ CHAR_T* ptr;
    TtaIsBlank returns True if the first character is a space, a tab, a
    linefeed or a newline.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 ThotBool            TtaIsBlank (char* ptr)
-#else
-ThotBool            TtaIsBlank (ptr)
-char*               ptr;
-#endif
 {
   if (*ptr == SPACE || *ptr == BSPACE || *ptr == EOL ||
       *ptr == TAB || *ptr == __CR__)
@@ -200,12 +157,7 @@ char*               ptr;
    TtaIsWCBlank returns True if the first character (CHAR_T) is a space, 
    a tab, a linefeed or a newline.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 ThotBool            TtaIsWCBlank (CHAR_T* ptr)
-#else
-ThotBool            TtaIsWCBlank (ptr)
-CHAR_T  *           ptr;
-#endif
 {
   if (*ptr == WC_SPACE || *ptr == WC_BSPACE || *ptr == WC_EOL ||
       *ptr == WC_TAB || *ptr == WC_CR)
@@ -219,15 +171,7 @@ CHAR_T  *           ptr;
     string of all $(xxx) references by the values of xxx.
    and return a modified output string.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         DoVariableSubstitution (CHAR_T* input, int i_len, CHAR_T* output, int o_len)
-#else  /* __STDC__ */
-static void         DoVariableSubstitution (input, i_len, output, o_len)
-CHAR_T*             input;
-int                 i_len;
-CHAR_T*             output;
-int                 o_len;
-#endif
+static void DoVariableSubstitution (CHAR_T* input, int i_len, CHAR_T* output, int o_len)
 {
   CHAR_T* cour = input;
   CHAR_T* base = input;
@@ -315,17 +259,8 @@ int                 o_len;
 /*----------------------------------------------------------------------
  NewRegisterEntry : add a fresh new entry in the Register.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static int          NewRegisterEntry (CHAR_T* appli, char* name, CHAR_T* value,
-				      RegistryLevel level)
-#else  /* __STDC__ */
-static int          NewRegisterEntry (appli, name, value, level)
-CHAR_T*             appli;
-char*               name;
-CHAR_T*             value;
-RegistryLevel       level;
-
-#endif
+static int NewRegisterEntry (CHAR_T* appli, char* name, CHAR_T* value,
+			     RegistryLevel level)
 {
    CHAR_T        resu[2000];
    RegistryEntry cour, ptr, previous;
@@ -417,17 +352,8 @@ RegistryLevel       level;
  AddRegisterEntry : add an entry in the Register, we first check
  that it doesn't already exist especially if the value is empty.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static int    AddRegisterEntry (CHAR_T* appli, char *name, CHAR_T* value,
-				      RegistryLevel level, int overwrite)
-#else  /* __STDC__ */
-static int    AddRegisterEntry (appli, name, value, level, overwrite)
-CHAR_T*       appli;
-char*         name;
-CHAR_T*       value;
-RegistryLevel level;
-int           overwrite;
-#endif
+static int AddRegisterEntry (CHAR_T* appli, char *name, CHAR_T* value,
+			     RegistryLevel level, int overwrite)
 {
   CHAR_T        resu[2000];
   RegistryEntry cour;
@@ -498,12 +424,7 @@ int           overwrite;
 /*----------------------------------------------------------------------
  PrintEnv : print the Registry to an open File.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         PrintEnv (FILE * output)
-#else  /* __STDC__ */
-static void         PrintEnv (output)
-FILE               *output;
-#endif
 {
   RegistryEntry       cour, next;
   
@@ -548,11 +469,7 @@ FILE               *output;
 /*----------------------------------------------------------------------
  SortEnv : sort the Registry by application and name entries.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         SortEnv (void)
-#else  /* __STDC__ */
-static void         SortEnv ()
-#endif
 {
   RegistryEntry       prev, cour, tmp;
   RegistryEntry      *start;
@@ -602,13 +519,7 @@ static void         SortEnv ()
   environment string.
   Returns TRUE if the env variables exists or FALSE if it isn't the case.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 ThotBool TtaGetEnvInt (char* name, int *value)
-#else
-ThotBool TtaGetEnvInt (name, value)
-char*  name;
-int *value;
-#endif /* __STDC__ */
 {
   CHAR_T* strptr;
 
@@ -636,13 +547,7 @@ int *value;
   environment string.
   Returns TRUE if the env variables exists or FALSE if it isn't the case.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 ThotBool TtaGetEnvBoolean (char* name, ThotBool *value)
-#else
-ThotBool TtaGetEnvBoolean (name, value)
-char* name;
-ThotBool *value;
-#endif /* __STDC__ */
 {
  CHAR_T* strptr;
 
@@ -675,18 +580,13 @@ ThotBool *value;
   TtaGetEnvString : read the value associated to an environment string
   if not present return NULL.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 CHAR_T* TtaGetEnvString (char* name)
-#else  /* __STDC__ */
-CHAR_T* TtaGetEnvString (name)
-char*   name;
-#endif
 {
    RegistryEntry cour;
    char*         value;
 
    if (AppRegistryInitialized == 0)
-         return WGetEnv (name);
+         return getenv (name);
 
       /* appname allows to get the application name */
    if (!strcasecmp ("appname", name))
@@ -794,14 +694,7 @@ char*   name;
  TtaClearEnvString : clears the value associated with an environment
                      string, in the user registry.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                TtaClearEnvString (char *name)
-#else  /* __STDC__ */
-void                TtaClearEnvString (name)
-CONST char         *name;
-CONST STRING        value;
-int                 overwrite;
-#endif
+void TtaClearEnvString (char *name)
 {
    AddRegisterEntry (AppRegistryEntryAppli, name, TEXT(""), REGISTRY_USER, TRUE);
 }
@@ -810,14 +703,7 @@ int                 overwrite;
  TtaSetEnvInt : set the value associated to an environment string,
                 for the current application.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                TtaSetEnvInt (char *name, int value, int overwrite)
-#else  /* __STDC__ */
-void                TtaSetEnvInt (name, value, overwrite)
-CONST char         *name;
-CONST int           value;
-int                 overwrite;
-#endif
+void TtaSetEnvInt (char *name, int value, int overwrite)
 {
    /* hardcoded so that the biggest integer value has 5 digits: 65535 */
    CHAR_T ptr[6];
@@ -832,14 +718,7 @@ int                 overwrite;
  TtaSetEnvBoolean : set the value associated to an environment string,
                     for the current application.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                TtaSetEnvBoolean (char *name, ThotBool value, int overwrite)
-#else  /* __STDC__ */
-void                TtaSetEnvBoolean (name, value, overwrite)
-CONST char         *name;
-CONST ThotBool      value;
-int                 overwrite;
-#endif
+void TtaSetEnvBoolean (char *name, ThotBool value, int overwrite)
 {
    CHAR_T* ptr;
 
@@ -854,14 +733,7 @@ int                 overwrite;
  TtaSetEnvString : set the value associated to an environment string,
                    for the current application.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                TtaSetEnvString (char *name, CHAR_T* value, int overwrite)
-#else  /* __STDC__ */
-void                TtaSetEnvString (name, value, overwrite)
-CONST char*         name;
-CONST CHAR_T*       value;
-int                 overwrite;
-#endif
+void TtaSetEnvString (char *name, CHAR_T* value, int overwrite)
 {
    CHAR_T* tmp = value;
   
@@ -874,14 +746,7 @@ int                 overwrite;
  TtaSetDefEnvString : set the defaul value associated to an environment
                       string, for the current application.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                TtaSetDefEnvString (char *name, CHAR_T* value, int overwrite)
-#else  /* __STDC__ */
-void                TtaSetDefEnvString (name, value, overwrite)
-CONST char*         name;
-CONST CHAR_T*       value;
-int                 overwrite;
-#endif
+void TtaSetDefEnvString (char *name, CHAR_T* value, int overwrite)
 {
   CHAR_T* tmp = value; /* ??? */
                          /* ??? */
@@ -896,13 +761,7 @@ int                 overwrite;
   environment string.
   Returns TRUE if the env variables exists or FALSE if it isn't the case.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 ThotBool TtaGetDefEnvInt (char* name, int *value)
-#else
-ThotBool TtaGetDefEnvInt (name, value)
-STRING name;
-int *value;
-#endif /* __STDC__ */
 {
  CHAR_T* strptr;
 
@@ -932,13 +791,7 @@ int *value;
   environment string.
   Returns TRUE if the env variables exists or FALSE if it isn't the case.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 ThotBool TtaGetDefEnvBoolean (char* name, ThotBool *value)
-#else
-ThotBool TtaGetDefEnvBoolean (name, value)
-char*     name;
-ThotBool* value;
-#endif /* __STDC__ */
 {
  CHAR_T* strptr;
 
@@ -970,12 +823,7 @@ ThotBool* value;
   TtaGetDefEnvString : read the default value associated to an 
   environment string. If not present, returns NULL.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 CHAR_T* TtaGetDefEnvString (char* name)
-#else  /* __STDC__ */
-CHAR_T* TtaGetDefEnvString (name)
-char*   name;
-#endif
 {
   RegistryEntry cour;
   CHAR_T*       value;
@@ -985,7 +833,7 @@ char*   name;
 #endif /* _I18N_ */
 
   if (AppRegistryInitialized == 0)
-     return WGetEnv (name);
+     return getenv (name);
 
   /* appname allows to get the application name */
   if (!strcasecmp ("appname", name))
@@ -1080,12 +928,7 @@ char*   name;
          The heuristic is to find a subdir named "config" and containing 
          the registry file.                                              
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static int          IsThotDir (CONST CHAR_T* path)
-#else  /* __STDC__ */
-static int          IsThotDir (path)
-CONST CHAR_T*       path;
-#endif				/* __STDC__ */
 {
    CHAR_T           filename[MAX_PATH];
 
@@ -1238,14 +1081,7 @@ void                TtaSaveAppRegistry ()
 /*----------------------------------------------------------------------
   ImportRegistryFile : import a registry file.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void   ImportRegistryFile (CHAR_T* filename, RegistryLevel level)
-#else  /* __STDC__ */
-static void   ImportRegistryFile (filename, level)
-CHAR_T*       filename;
-RegistryLevel level;
-
-#endif
 {
    FILE*     input;
    char*     str; 
@@ -1326,11 +1162,7 @@ RegistryLevel level;
   InitEnviron : initialize the standard environment (i.e global	
   variables) with values stored in the registry.			
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         InitEnviron ()
-#else  /* __STDC__ */
-static void         InitEnviron ()
-#endif /* __STDC__ */
 {
    CHAR_T* pT;
    CHAR_T* Thot_Sys_Sch;
@@ -1432,12 +1264,7 @@ static void         InitEnviron ()
   We load the ressources file from the installation directory and
   the specific user values from the user HOME dir.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                TtaInitializeAppRegistry (CHAR_T* appArgv0)
-#else  /* __STDC__ */
-void                TtaInitializeAppRegistry (appArgv0)
-CHAR_T*             appArgv0;
-#endif
+void TtaInitializeAppRegistry (CHAR_T* appArgv0)
 {
   CHAR_T      app_home[MAX_PATH];
   CHAR_T      filename[MAX_PATH];
@@ -1512,7 +1339,7 @@ CHAR_T*             appArgv0;
        * Last case, we were just given the application name.
        * Use the PATH environment variable to search the exact binary location.
        */
-      my_path = WGetEnv("PATH");
+      my_path = getenv("PATH");
       if (my_path == NULL)
 	{
 	  fprintf (stderr, "TtaInitializeAppRegistry cannot found PATH environment\n");
@@ -1799,11 +1626,7 @@ CHAR_T*             appArgv0;
   TtaFreeAppRegistry : frees the memory associated with the
   registry
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                TtaFreeAppRegistry (void)
-#else  /* __STDC__ */
-void                TtaFreeAppRegistry ()
-#endif
 {
   RegistryEntry cour, next;
 
@@ -1840,14 +1663,7 @@ void                TtaFreeAppRegistry ()
    - 2 : ThotDir/bin                                       
    - 3 : ThotDir/compil                                    
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 int                 SearchFile (CHAR_T* fileName, int dir, CHAR_T* fullName)
-#else  /* __STDC__ */
-int                 SearchFile (fileName, dir, fullName)
-CHAR_T*             fileName;
-int                 dir;
-CHAR_T*             fullName;
-#endif /* __STDC__ */
 {
    CHAR_T  tmpbuf[200];
    CHAR_T* imagepath;

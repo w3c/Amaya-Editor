@@ -28,11 +28,13 @@
 #undef THOT_EXPORT
 #define THOT_EXPORT extern
 #include "edit_tv.h"
+#include "thotcolor_tv.h"
 
 #include "changeabsbox_f.h"
 #include "changepresent_f.h"
 #include "context_f.h"
 #include "exceptions_f.h"
+#include "inites_f.h"
 #include "memory_f.h"
 #include "style_f.h"
 #include "uaccess_f.h"
@@ -40,12 +42,7 @@
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 unsigned int TtaHexaVal (CHAR_T c)
-#else
-unsigned int TtaHexaVal (c)
-CHAR_T       c;
-#endif
 {
    if (c >= TEXT('0') && c <= TEXT('9'))
       return (c - TEXT('0'));
@@ -56,20 +53,35 @@ CHAR_T       c;
    return (0);
 }
 
+
+/*----------------------------------------------------------------------
+  Getan Amaya color
+ ----------------------------------------------------------------------*/
+static ThotBool ThotGiveRGB (char *colname, unsigned short *red,
+			     unsigned short *green, unsigned short *blue)
+{
+  int                  i;
+  ThotBool             failed = TRUE;
+
+  /* Lookup the color name in the application color name database */
+  for (i = 0; i < NColors && failed; i++)
+    if (!strcasecmp (ColorName (i), colname))
+      {
+	failed = FALSE;
+	*red   = RGB_Table[i].red;
+	*green = RGB_Table[i].green;
+	*blue  = RGB_Table[i].blue;
+      }
+  return (failed);
+}
+
 /*----------------------------------------------------------------------
   TtaGiveRGB
   Returns the RGB of the color and the pointer to the following text in
   value if the parsing was finished.
  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-CHAR_T            *TtaGiveRGB (CHAR_T *value, unsigned short *red, unsigned short *green, unsigned short *blue)
-#else  /* __STDC__ */
-  CHAR_T          *TtaGiveRGB (value, red, green, blue)
-CHAR_T            *value;
-unsigned short    *red;
-unsigned short    *green;
-unsigned short    *blue;
-#endif /* __STDC__ */
+CHAR_T *TtaGiveRGB (CHAR_T *value, unsigned short *red, unsigned short *green,
+		    unsigned short *blue)
 {
   CHAR_T              colname[100];
   CHAR_T             *ptr;
@@ -190,13 +202,7 @@ unsigned short    *blue;
   BuildBoxName : generate an unique name encoding for the given context.
   Assume the ancestor list has been sorted.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         BuildBoxName (GenericContext ctxt, Name *boxname)
-#else  /* __STDC__ */
-static void         BuildBoxName (ctxt, boxname)
-GenericContext      ctxt;
-Name               *boxname;
-#endif /* !__STDC__ */
 {
   int                 i;
   int                 len;
@@ -226,13 +232,7 @@ Name               *boxname;
  BoxRuleSearch : look in the array of boxes for an entry
         corresponding to the current context.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static PtrPRule     BoxRuleSearch (PtrPSchema tsch, GenericContext ctxt)
-#else  /* __STDC__ */
-static PtrPRule     BoxRuleSearch (tsch, ctxt)
-PtrPSchema          tsch;
-GenericContext      ctxt;
-#endif /* !__STDC__ */
 {
   int                 i;
   Name                boxname;
@@ -257,15 +257,7 @@ GenericContext      ctxt;
    Function used to to search all specific presentation rules
    for a given type of rule associated to an element.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static PtrPRule SearchElementPRule (PtrElement el, PRuleType type, unsigned int extra)
-#else
-static PtrPRule SearchElementPRule (el, type, extra)
-PtrElement      el;
-PRuleType       type;
-unsigned int    extra;
-
-#endif
 {
   PtrPRule      cur;
   ThotBool      found;
@@ -303,15 +295,7 @@ unsigned int    extra;
    for a given type of rule associated to an element.
    The parameter isCSS is 1 when the specific rule translates a CSS rule.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static PtrPRule  InsertElementPRule (PtrElement el, PRuleType type, unsigned int extra, int isCSS)
-#else
-static PtrPRule  InsertElementPRule (el, type, extra, isCSS)
-PtrElement       el;
-PRuleType        type;
-unsigned int     extra;
-int              isCSS;
-#endif
 {
    PtrPSchema          pSPR;
    PtrSSchema          pSSR;
@@ -392,15 +376,7 @@ int              isCSS;
    Function used to to remove a specific presentation rule
    for a given type of rule associated to an element.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void  RemoveElementPRule (PtrElement el, PRuleType type, unsigned int extra)
-#else
-static void  RemoveElementPRule (el, type, extra)
-PtrElement          el;
-PRuleType           type;
-unsigned int        extra;
-
-#endif
 {
     PtrPRule cur, prev;
     Document doc;
@@ -460,13 +436,7 @@ unsigned int        extra;
   BoxRuleInsert looks in the array of boxes for an entry corresponding
   to the current context. If not found we add a new one to the array.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static PtrPRule    *BoxRuleInsert (PtrPSchema tsch, GenericContext ctxt)
-#else  /* __STDC__ */
-static PtrPRule    *BoxRuleInsert (tsch, ctxt)
-PtrPSchema          tsch;
-GenericContext      ctxt;
-#endif /* !__STDC__ */
 {
   PresentationBox    *box;
   int                 i;
@@ -517,13 +487,7 @@ GenericContext      ctxt;
   PresConstInsert : add a constant to the constant array of a
   Presentation Schema and returns the associated index.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static int          PresConstInsert (PSchema tcsh, STRING value)
-#else  /* __STDC__ */
-static int          PresConstInsert (doc, value)
-PSchema             tcsh;
-STRING              value;
-#endif /* !__STDC__ */
 {
   PtrPSchema pSchemaPrs = (PtrPSchema) tcsh;
   int i;
@@ -553,13 +517,7 @@ STRING              value;
 /*----------------------------------------------------------------------
   CompareCond : defines an absolute order on conditions.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static int          CompareCond (PtrCondition c1, PtrCondition c2)
-#else  /* __STDC__ */
-static int          CompareCond (c1, c2)
-PtrCondition        c1;
-PtrCondition        c2;
-#endif /* !__STDC__ */
 {
   if (c1 == c2)
     return (0);
@@ -622,13 +580,7 @@ PtrCondition        c2;
   AddCond : add a new condition in a presentation rule, respecting
   the order of the list.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         AddCond (PtrCondition * base, PtrCondition cond)
-#else  /* __STDC__ */
-static void         AddCond (base, cond)
-PtrCondition       *base;
-PtrCondition        cond;
-#endif /* !__STDC__ */
 {
    PtrCondition        cour = *base;
    PtrCondition        next;
@@ -666,14 +618,7 @@ PtrCondition        cond;
 /*----------------------------------------------------------------------
   PresRuleAddAncestorCond : add an ancestor condition to a presentation rule.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         PresRuleAddAncestorCond (PtrPRule rule, int type, int nr)
-#else  /* __STDC__ */
-static void         PresRuleAddAncestorCond (rule, type, nr)
-PtrPRule            rule;
-int                 type;
-int                 nr;
-#endif /* !__STDC__ */
+static void PresRuleAddAncestorCond (PtrPRule rule, int type, int nr)
 {
    PtrCondition        cond = NULL;
 
@@ -700,13 +645,7 @@ int                 nr;
 /*----------------------------------------------------------------------
   PresRuleAddAttrCond : add a Attr condition to a presentation rule.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         PresRuleAddAttrCond (PtrPRule rule, int type)
-#else  /* __STDC__ */
-static void         PresRuleAddAttrCond (rule, type)
-PtrPRule            rule;
-int                 type;
-#endif /* !__STDC__ */
 {
    PtrCondition        cond = NULL;
 
@@ -729,16 +668,9 @@ int                 type;
   blocks, for a block and a rule corresponding to the current context.
   When the rule is not found, attrblock points to the last block.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static PtrPRule    *FirstPresAttrRuleSearch (PtrPSchema tsch, int attrType, GenericContext ctxt, int att, AttributePres **attrblock)
-#else  /* __STDC__ */
-static PtrPRule    *FirstPresAttrRuleSearch (tsch, attrType, ctxt, att, attrblock)
-PtrPSchema          tsch;
-int                 attrType;
-GenericContext      ctxt;
-int                 att;
-AttributePres     **attrblock;
-#endif /* !__STDC__ */
+static PtrPRule *FirstPresAttrRuleSearch (PtrPSchema tsch, int attrType,
+					  GenericContext ctxt, int att,
+					  AttributePres **attrblock)
 {
   PtrPRule           *ppRule;
   PtrSSchema          pSS;
@@ -826,15 +758,8 @@ AttributePres     **attrblock;
   blocks, for a block corresponding to the current context.
   if not found we add a new one to the array.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static PtrPRule    *PresAttrChainInsert (PtrPSchema tsch, int attrType, GenericContext ctxt, int att)
-#else  /* __STDC__ */
-static PtrPRule    *PresAttrChainInsert (tsch, attrType, ctxt, att)
-PtrPSchema          tsch;
-int                 attrType;
-GenericContext      ctxt;
-int                 att;
-#endif /* !__STDC__ */
+static PtrPRule *PresAttrChainInsert (PtrPSchema tsch, int attrType,
+				      GenericContext ctxt, int att)
 {
   AttributePres      *attrs, *new;
   PtrSSchema          pSS;
@@ -941,15 +866,8 @@ int                 att;
   * -1 if the rule has less conditions than neeeded
   * 1 if the rule has more conditions than neeeded
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static int      TstRuleContext (PtrPRule rule, GenericContext ctxt, PRuleType pres, unsigned int att)
-#else  /* __STDC__ */
-static int      TstRuleContext (rule, ctxt, pres, att)
-PtrPRule        rule;
-GenericContext  ctxt;
-PRuleType       pres;
-unsigned int    att;
-#endif /* !__STDC__ */
+static int TstRuleContext (PtrPRule rule, GenericContext ctxt, PRuleType pres,
+			   unsigned int att)
 {
   PtrCondition        firstCond, cond;
   int                 i, nbcond;
@@ -1015,16 +933,9 @@ unsigned int    att;
   PresRuleSearch : search a presentation rule for a given view
   in an attribute chain or an element chain.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static PtrPRule     PresRuleSearch (PtrPSchema tsch, GenericContext ctxt, PRuleType pres, unsigned int extra, PtrPRule **chain)
-#else  /* __STDC__ */
-static PtrPRule     PresRuleSearch (tsch, ctxt, pres, extra, chain)
-PtrPSchema          tsch;
-GenericContext      ctxt;
-PRuleType           pres;
-unsigned int        extra;
-PtrPRule          **chain;
-#endif /* !__STDC__ */
+static PtrPRule PresRuleSearch (PtrPSchema tsch, GenericContext ctxt,
+				PRuleType pres, unsigned int extra,
+				PtrPRule **chain)
 {
   PtrPRule            pRule;
   unsigned int        attrType, att;
@@ -1110,15 +1021,8 @@ PtrPRule          **chain;
   in a chain. If it already exists, return the current block.
   In a chain all the rules are sorted by type and also by view.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static PtrPRule     PresRuleInsert (PtrPSchema tsch, GenericContext ctxt, PRuleType pres, unsigned int extra)
-#else  /* __STDC__ */
-static PtrPRule     PresRuleInsert (tsch, ctxt, pres, extra)
-PtrPSchema          tsch;
-GenericContext      ctxt;
-PRuleType           pres;
-unsigned int        extra;
-#endif /* !__STDC__ */
+static PtrPRule PresRuleInsert (PtrPSchema tsch, GenericContext ctxt,
+				PRuleType pres, unsigned int extra)
 {
   PtrPRule           *chain;
   PtrPRule            cur, pRule = NULL;
@@ -1149,14 +1053,14 @@ unsigned int        extra;
 	  att = 0;
 	  while (att < MAX_ANCESTORS && ctxt->attrType[att] == 0)
 	    att++;
-	  if (att == 0 && ctxt->type)
+	  if (att < MAX_ANCESTORS && ctxt->type)
 	    /* the attribute should be attached to that element */
 	    PresRuleAddAttrCond (pRule, ctxt->type);
 	  /* add other conditions ... */
-	  i = 0;
+	  i = 1;
 	  while (i < MAX_ANCESTORS)
 	    {
-	      if (ctxt->name[i] && ctxt->names_nb[i] > 0 && i != att)
+	      if (ctxt->name[i] && ctxt->names_nb[i] > 0)
 		PresRuleAddAncestorCond (pRule, ctxt->name[i], ctxt->names_nb[i]);
 	      if (ctxt->attrType[i]  && i != att)
 		/* the attribute should be attached to that element */
@@ -1180,15 +1084,8 @@ unsigned int        extra;
   PresRuleRemove : remove an existing presentation rule for a given type
   in a chain if it exists.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void     PresRuleRemove (PtrPSchema tsch, GenericContext ctxt, PRuleType pres, unsigned int extra)
-#else  /* __STDC__ */
-static void     PresRuleRemove (tsch, ctxt, pres, extra)
-PtrPSchema          tsch;
-GenericContext      ctxt;
-PRuleType           pres;
-unsigned int        extra;
-#endif /* !__STDC__ */
+static void PresRuleRemove (PtrPSchema tsch, GenericContext ctxt,
+			    PRuleType pres, unsigned int extra)
 {
   PtrPRule         *chain;
   PtrPRule          cur;
@@ -1225,17 +1122,9 @@ unsigned int        extra;
  to a Presentation Value for a given type of presentation attribute.
  funcType is an extra parameter needed when using a Function rule.
  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         PresentationValueToPRule (PresentationValue val, int type, PtrPRule rule, int funcType, ThotBool absolute, ThotBool generic)
-#else
-static void         PresentationValueToPRule (val, type, rule, funcType, absolute, generic)
-PresentationValue   val;
-int                 type;
-PtrPRule            rule;
-int                 funcType;
-ThotBool            absolute;
-ThotBool            generic;
-#endif
+static void PresentationValueToPRule (PresentationValue val, int type,
+				      PtrPRule rule, int funcType,
+				      ThotBool absolute, ThotBool generic)
 {
   TypeUnit            int_unit;
   int                 value;
@@ -1713,12 +1602,7 @@ ThotBool            generic;
   PRuleToPresentationValue : return the PresentationValue corresponding to
   a given rule.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static PresentationValue   PRuleToPresentationValue (PtrPRule rule)
-#else
-static PresentationValue   PRuleToPresentationValue (rule)
-PtrPRule                   rule;
-#endif
 {
   PresentationValue   val;
   TypeUnit            int_unit = -1;
@@ -2073,15 +1957,8 @@ PtrPRule                   rule;
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         TypeToPresentation (unsigned int type, PRuleType *intRule, unsigned int *func, ThotBool *absolute)
-#else
-static void         TypeToPresentation (type, intRule, func, absolute)
-unsiged int         type;
-PRuleType          *intRule;
-unsiged int        *func;
-ThotBool           *absolute;
-#endif
+static void TypeToPresentation (unsigned int type, PRuleType *intRule,
+				unsigned int *func, ThotBool *absolute)
 {
   *func = 0;
   *absolute = FALSE;
@@ -2253,16 +2130,8 @@ ThotBool           *absolute;
   TtaSetStylePresentation attachs a style rule to an element or to an
   extended presentation schema.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-int                 TtaSetStylePresentation (unsigned int type, Element el, PSchema tsch, PresentationContext c, PresentationValue v)
-#else
-int                 TtaSetStylePresentation (type, el, tsch, c, v)
-unsiged int         type;
-Element             el;
-PSchema             tsch;
-PresentationContext c;
-PresentationValue   v;
-#endif
+int TtaSetStylePresentation (unsigned int type, Element el, PSchema tsch,
+			     PresentationContext c, PresentationValue v)
 {
   GenericContext    ctxt = (GenericContext) c;
   PtrPRule          pRule;

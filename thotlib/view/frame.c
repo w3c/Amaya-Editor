@@ -228,11 +228,31 @@ static void   DrawFilledBox (PtrAbstractBox pAb, int frame, int xmin, int xmax, 
   y = pFrame->FrYOrg;
   if (pBox == NULL)
     return;
-  xd = pBox->BxXOrg + pBox->BxLMargin;
-  yd = pBox->BxYOrg + pBox->BxTMargin;
-  /* GetSizesFrame (frame, &width, &height); */
-  width = pBox->BxWidth - pBox->BxLMargin - pBox->BxRMargin;
-  height = pBox->BxHeight - pBox->BxTMargin - pBox->BxBMargin;
+  if (pAb == pFrame->FrAbstractBox)
+    {
+      if (pBox->BxFill && Printing)
+	{
+	  /* draw the box background */
+	  xd = xmin - pFrame->FrXOrg;
+	  yd = ymin - pFrame->FrYOrg;
+	  GetSizesFrame (frame, &width, &height);
+	  DrawRectangle (frame, 0, 0, xd, yd, width, height,
+			 pAb->AbForeground, pAb->AbBackground,
+			 pAb->AbFillPattern);
+	}
+      xd = pBox->BxXOrg;
+      yd = pBox->BxYOrg;
+      width = pBox->BxWidth;
+      height = pBox->BxHeight;
+    }
+  else
+    {
+      xd = pBox->BxXOrg + pBox->BxLMargin;
+      yd = pBox->BxYOrg + pBox->BxTMargin;
+      /* GetSizesFrame (frame, &width, &height); */
+      width = pBox->BxWidth - pBox->BxLMargin - pBox->BxRMargin;
+      height = pBox->BxHeight - pBox->BxTMargin - pBox->BxBMargin;
+    }
   /* clipping on the origin */
   if (xd < x)
     {
@@ -288,10 +308,11 @@ static void   DrawFilledBox (PtrAbstractBox pAb, int frame, int xmin, int xmax, 
 	}
       else
 	{
-	  if (pBox->BxFill)
+	  if (pAb != pFrame->FrAbstractBox && pBox->BxFill)
 	    /* draw the box background */
 	    DrawRectangle (frame, 0, 0, xd - x, yd - y, width, height,
-			   pAb->AbForeground, pAb->AbBackground, pAb->AbFillPattern);
+			   pAb->AbForeground, pAb->AbBackground,
+			   pAb->AbFillPattern);
 	  if (imageDesc)
 	    {
 	      /* draw the background image the default presentation is repeat */

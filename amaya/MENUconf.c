@@ -395,8 +395,6 @@ void InitAmayaDefEnv (void)
   
 #ifndef _WINDOWS
   TtaSetDefEnvString ("THOTPRINT", "lpr", FALSE);
-  /* A4 size */
-  TtaSetDefEnvString ("PAPERSIZE", "0", FALSE);
 #endif
   /* network configuration */
   TtaSetDefEnvString ("SAFE_PUT_REDIRECT", "", FALSE);

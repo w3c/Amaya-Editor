@@ -46,7 +46,7 @@ static int             have_colors = 0;
    FindOutColor finds the closest color by allocating it, or picking
    an already allocated color.
   ----------------------------------------------------------------------*/
-static void       FindOutColor (Display* dsp, Colormap colormap, ThotColorStruct* colr)
+static void FindOutColor (Display* dsp, Colormap colormap, ThotColorStruct* colr)
 {
    int                 i, match;
 #ifdef MORE_ACCURATE
@@ -369,7 +369,7 @@ int                 NumberOfColors ()
 /*----------------------------------------------------------------------
    ColorName       returns the name of a color in Thot color table.
   ----------------------------------------------------------------------*/
-CHAR_T*          ColorName (int num)
+char     *ColorName (int num)
 {
    if (num < NColors && num >= 0)
       return Color_Table[num];
@@ -432,7 +432,7 @@ void             TtaFreeThotColor (int num)
   TtaGetThotColor returns the Thot Color.
   red, green, blue express the color RGB in 8 bits values
  ----------------------------------------------------------------------*/
-int                 TtaGetThotColor (unsigned short red, unsigned short green, unsigned short blue)
+int TtaGetThotColor (unsigned short red, unsigned short green, unsigned short blue)
 {
    short               delred, delgreen, delblue;
    int                 best;
@@ -542,7 +542,7 @@ int                 TtaGetThotColor (unsigned short red, unsigned short green, u
    If the color doesn't exist the function returns the values
    for the default color.
   ----------------------------------------------------------------------*/
-void                TtaGiveThotRGB (int num, unsigned short *red, unsigned short *green, unsigned short *blue)
+void TtaGiveThotRGB (int num, unsigned short *red, unsigned short *green, unsigned short *blue)
 {
   if (num < NColors && num >= 0)
     {

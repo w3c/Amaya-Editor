@@ -6,7 +6,6 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern CHAR_T* WGetEnv ( char* name );
 extern char* TtaSkipBlanks ( char* ptr );
 extern CHAR_T* TtaSkipWCBlanks ( CHAR_T* ptr );
 extern ThotBool TtaIsBlank ( char* ptr );
@@ -43,7 +42,6 @@ extern int SearchFile ( CHAR_T* fileName,
 
 #else /* __STDC__ */
 
-extern CHAR_T* WGetEnv (/* char* name */);
 extern char* TtaSkipBlanks (/* char* ptr */);
 extern CHAR_T* TtaSkipWCBlanks (/* CHAR_T* ptr */);
 extern ThotBool TtaIsBlank (/* char* ptr */);

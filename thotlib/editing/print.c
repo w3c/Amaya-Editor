@@ -547,11 +547,11 @@ static void         FirstFrame (STRING server)
 #endif /* _WINDOWS */
 }
 
-/*----------------------------------------------------------------------------*/
-/* DefineClipping  limite la zone de reaffichage sur la fenetre frame et      */
-/*                 recalcule ses limites sur l'image concrete.                */
-/*                 Dans le cas du print, c'est exactement la hauteur de page. */
-/*  --------------------------------------------------------------------------*/
+/*----------------------------------------------------------------------
+  DefineClipping  limite la zone de reaffichage sur la fenetre frame et
+  recalcule ses limites sur l'image concrete.
+  Dans le cas du print, c'est exactement la hauteur de page.
+  ----------------------------------------------------------------------*/
 void DefineClipping (int frame, int orgx, int orgy, int *xd, int *yd, int *xf, int *yf, int raz)
 {
    FrameTable[frame].FrHeight = *yf;
@@ -1404,27 +1404,27 @@ static void         ClosePSFile (int frame)
    GivePageHeight force la limite d'affichage dans la fenetre frame a`   
    la hauteur d'une page de texte.                         
   ----------------------------------------------------------------------*/
-static void         GivePageHeight (int frame, int org, int height)
+static void  GivePageHeight (int frame, int org, int width, int height)
 {
-   int                 y, h, framexmin, framexmax;
-   ViewFrame          *pFrame;
+  int                 y, h, framexmin, framexmax;
+  ViewFrame          *pFrame;
 
-   if (height != 0)
-     {
-	pFrame = &ViewFrameTable[frame - 1];
-	/* On convertit suivant l'unite donnee */
-	/* y = PixelValue (org, UnPoint, pFrame->FrAbstractBox, 0);
-	h = PixelValue (height, UnPoint, pFrame->FrAbstractBox, 0); */
-	y = org;
-	h = y + height;
-	pFrame->FrClipXBegin = 0;
-	pFrame->FrClipXEnd = 32000;
-	pFrame->FrClipYBegin = y;
-	pFrame->FrYOrg = y;
-	pFrame->FrClipYEnd = h;
-    /* set the clipping to the frame size before generating postscript (RedrawFrameBottom) */
-	DefineClipping (frame, pFrame->FrXOrg, pFrame->FrYOrg, &framexmin, &y, &framexmax, &h, 1);
-     }
+  if (height != 0)
+    {
+      pFrame = &ViewFrameTable[frame - 1];
+      /* On convertit suivant l'unite donnee */
+      /* y = PixelValue (org, UnPoint, pFrame->FrAbstractBox, 0);
+	 h = PixelValue (height, UnPoint, pFrame->FrAbstractBox, 0); */
+      y = org;
+      h = y + height;
+      pFrame->FrClipXBegin = 0;
+      pFrame->FrClipXEnd = width;
+      pFrame->FrClipYBegin = y;
+      pFrame->FrYOrg = y;
+      pFrame->FrClipYEnd = h;
+      /* set the clipping to the frame size before generating postscript (RedrawFrameBottom) */
+      DefineClipping (frame, pFrame->FrXOrg, pFrame->FrYOrg, &framexmin, &y, &framexmax, &h, 1);
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -2003,12 +2003,13 @@ static int         PrintDocument (PtrDocument pDoc, int viewsCounter)
   ----------------------------------------------------------------------*/
 void  PrintOnePage (PtrDocument pDoc, PtrAbstractBox pPageAb, PtrAbstractBox pNextPageAb, PtrAbstractBox rootAbsBox, int clipOrg)
 {
-  ThotBool            stop, emptyImage;
   PtrAbstractBox      pAb, pSpaceAb;
-  int                 pageHeight, nextPageBreak, nChars;
-  int                 h;
+  PtrBox              box;
   AbPosition         *pPos;
   FILE               *PSfile;
+  int                 pageHeight, nextPageBreak, nChars;
+  int                 h;
+  ThotBool            stop, emptyImage;
 
 #ifdef PRINT_DEBUG
 FILE     *list;
@@ -2129,9 +2130,14 @@ static int       n = 1;
 	       Image and box positions in the paper page and the height of
 	       the page body to avoid text overlaping the page footer */
 	    if (pNextPageAb)
-	      GivePageHeight (CurrentFrame, clipOrg, pNextPageAb->AbBox->BxYOrg - pPageAb->AbBox->BxYOrg - pPageAb->AbBox->BxHeight);
+	      {
+		box = pNextPageAb->AbBox;
+	      GivePageHeight (CurrentFrame, clipOrg,
+			      box->BxWidth,
+			      box->BxYOrg - pPageAb->AbBox->BxYOrg - pPageAb->AbBox->BxHeight);
+	      }
 	    else
-	      GivePageHeight (CurrentFrame, clipOrg, PageHeight);
+	      GivePageHeight (CurrentFrame, clipOrg, 32000, PageHeight);
 	    DisplayFrame (CurrentFrame);
 	    if (pNextPageAb)
 	      PrintPageFooter (PSfile, CurrentFrame, pNextPageAb);

@@ -9,7 +9,7 @@
 extern void FreeDocColors ( void );
 extern void InitDocColors ( CHAR_T* name );
 extern int NumberOfColors ( void );
-extern CHAR_T* ColorName ( int num );
+extern char *ColorName ( int num );
 extern ThotColor ColorPixel ( int num );
 extern void TtaFreeThotColor ( int num );
 extern int TtaGetThotColor ( unsigned short red,
@@ -33,7 +33,7 @@ extern Pixmap CreatePattern ( int disp,
 extern void FreeDocColors (/* void */);
 extern void InitDocColors (/* CHAR_T* name */);
 extern int NumberOfColors (/* void */);
-extern CHAR_T* ColorName (/* int num */);
+extern char *ColorName (/* int num */);
 extern ThotColor ColorPixel (/* int num */);
 extern void TtaFreeThotColor (/* int num */);
 extern int TtaGetThotColor (/* unsigned short red,

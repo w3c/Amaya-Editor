@@ -44,7 +44,7 @@ static ColornameElem ColornameTable[] =
    {TEXT("magenta"), /* #ff00ff, */ 255, 0, 255},
    {TEXT("pink"), /* #ffc0cb, */ 255, 192, 203},
    {TEXT("brown"), /* #a52a2a, */ 165, 42, 42},
-   {TEXT("gray"), /* #bebebe, */ 190, 190, 190},
+   {TEXT("grey"), /* #bebebe, */ 190, 190, 190},
    {TEXT("orange"), /* #ffa500, */ 255, 165, 0},
    {TEXT("purple"), /* #a020f0, */ 160, 32, 240},
    {TEXT("turquoise"), /* #40e0d0, */ 64, 224, 208},

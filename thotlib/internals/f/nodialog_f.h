@@ -113,10 +113,6 @@ extern ThotBool IsAbstractBoxDisplayed ( PtrAbstractBox pav,
                                          int frame );
 extern void SetMainWindowBackgroundColor ( int frame,
                                            int color );
-extern ThotBool ThotGiveRGB ( CHAR_T *colname,
-                              unsigned short *red,
-                              unsigned short *green,
-                              unsigned short *blue );
 extern void Clear ( int frame,
                     int larg,
                     int haut,
@@ -240,10 +236,6 @@ extern ThotBool IsAbstractBoxDisplayed (/* PtrAbstractBox pav,
                                            int frame */);
 extern void SetMainWindowBackgroundColor (/* int frame,
                                              int color */);
-extern ThotBool ThotGiveRGB (/* CHAR_T *colname,
-                                unsigned short *red,
-                                unsigned short *green,
-                                unsigned short *blue */);
 extern void Clear (/* int frame,
                       int larg,
                       int haut,

@@ -45,8 +45,9 @@ ThotBool	 WithToC;
 ThotBool         IgnoreCSS;
 
 static struct _SubDoc  *SubDocs;
-static CHAR_T           PSdir[MAX_PATH];
+static CHAR_T           PSfile[MAX_PATH];
 static CHAR_T           PPrinter[MAX_PATH];
+static STRING           DocPrintURL;
 static Document		DocPrint;
 static int              PaperPrint;
 static int              ManualFeed = PP_OFF;
@@ -347,42 +348,33 @@ void             SetInternalLinks (Document document)
   ----------------------------------------------------------------------*/
 static void         CheckPrintingDocument (Document document)
 {
-   CHAR_T         docName[MAX_LENGTH];
-   CHAR_T*        ptr; 
-   CHAR_T         suffix[MAX_LENGTH];
-   int              lg;
+  CHAR_T         docName[MAX_LENGTH];
+  CHAR_T        *ptr; 
+  CHAR_T         suffix[MAX_LENGTH];
+  int            lg;
 
-   if (DocPrint != document)
-     {
-       /* initialize print parameters */
-       DocPrint = document;
-
-       /* define the new default PS file */
-       ptr = TtaGetEnvString ("APP_TMPDIR");
-       if (ptr != NULL && TtaCheckDirectory (ptr))
-	     ustrcpy (PSdir, ptr);
-       else
-	     ustrcpy (PSdir, TtaGetDefEnvString ("APP_TMPDIR"));
-	   lg = ustrlen (PSdir);
-	   if (PSdir[lg - 1] == WC_DIR_SEP)
-	     PSdir[--lg] = WC_EOS;
-
-       ustrcpy (docName, TtaGetDocumentName (document));
-       ExtractSuffix (docName, suffix);
-       usprintf (&PSdir[lg], TEXT("%c%s.ps"), WC_DIR_SEP, docName);
-       TtaSetPsFile (PSdir);
-       /* define the new default PrintSchema */
-       NumberLinks = FALSE;
-       WithToC = FALSE;
-       IgnoreCSS = FALSE;
-       PrintURL = TRUE;
-       TtaSetPrintSchema (TEXT(""));
-       /* no manual feed */
-       ManualFeed = PP_OFF;
-       TtaSetPrintParameter (PP_ManualFeed, ManualFeed);
-       PagePerSheet = 1;
-       TtaSetPrintParameter (PP_PagesPerSheet, PagePerSheet);
-     }
+  if (DocPrint != document || DocPrintURL == NULL ||
+      ustrcmp(DocPrintURL, DocumentURLs[document]))
+    {
+      /* initialize print parameters */
+      TtaFreeMemory (DocPrintURL);
+      DocPrint = document;
+      DocPrintURL = TtaStrdup (DocumentURLs[document]);
+      
+      /* define the new default PS file */
+      ptr = TtaGetEnvString ("APP_TMPDIR");
+      if (ptr != NULL && TtaCheckDirectory (ptr))
+	ustrcpy (PSfile, ptr);
+      else
+	ustrcpy (PSfile, TtaGetDefEnvString ("APP_TMPDIR"));
+      lg = ustrlen (PSfile);
+      if (PSfile[lg - 1] == WC_DIR_SEP)
+	PSfile[--lg] = WC_EOS;
+      ustrcpy (docName, TtaGetDocumentName (document));
+      ExtractSuffix (docName, suffix);
+      usprintf (&PSfile[lg], TEXT("%c%s.ps"), WC_DIR_SEP, docName);
+      TtaSetPsFile (PSfile);
+    }
 }
 
 
@@ -402,6 +394,7 @@ static void         PrintDocument (Document doc, View view)
               DocumentTypes[doc] == docSource ||
 	      DocumentTypes[doc] == docCSS);
 
+  /* initialize printing information */
   CheckPrintingDocument (doc);
   ustrcpy (viewsToPrint, TEXT("Formatted_view "));
   if (DocumentTypes[doc] == docHTML && WithToC)
@@ -523,7 +516,7 @@ void                PrintAs (Document doc, View view)
 /*----------------------------------------------------------------------
    CallbackImage manage returns of Picture form.                   
   ----------------------------------------------------------------------*/
-void                CallbackPrint (int ref, int typedata, STRING data)
+void CallbackPrint (int ref, int typedata, STRING data)
 {
   int                 val;
 
@@ -535,27 +528,11 @@ void                CallbackPrint (int ref, int typedata, STRING data)
       switch (val)
 	{
 	case 1:
-	  /* confirms the paper print option */
-	  /* the other options are not taken into account without this
-	     confirmation */
-	  TtaSetPrintParameter (PP_Destination, PaperPrint);
-	  TtaSetPrintParameter (PP_ManualFeed, ManualFeed);
-	  TtaSetPrintParameter (PP_PagesPerSheet, PagePerSheet);
-	  TtaSetPrintParameter (PP_Orientation, Orientation);
-	  TtaSetPrintParameter (PP_PaperSize, PageSize);
 	  TtaSetPrintCommand (PPrinter);
-	  TtaSetPsFile (PSdir);
+	  TtaSetPsFile (PSfile);
 	  /* update the environment variable */
 	  TtaSetEnvString ("THOTPRINT", PPrinter, TRUE);
-	  TtaSetEnvInt ("PAPERSIZE", PageSize, TRUE);
 	  PrintDocument (DocPrint, 1);
-	  break;
-	case 0:
-	  PaperPrint = (TtaGetPrintParameter (PP_Destination)) ? PP_PRINTER : PP_PS;
-	  ManualFeed = TtaGetPrintParameter (PP_ManualFeed);
-	  PageSize = TtaGetPrintParameter (PP_PaperSize);	  
-	  TtaGetPrintCommand (PPrinter);
-	  TtaGetPsFile (PSdir);
 	  break;
 	default:
 	  break;
@@ -570,6 +547,7 @@ void                CallbackPrint (int ref, int typedata, STRING data)
 	    ManualFeed = PP_OFF;
 	  else
 	    ManualFeed = PP_ON;
+	  TtaSetPrintParameter (PP_ManualFeed, ManualFeed);
 	  break;
 	case 1:
 	  /* Toc option */
@@ -599,10 +577,12 @@ void                CallbackPrint (int ref, int typedata, STRING data)
 	  PageSize = PP_US;
 	  break;
 	}
+      TtaSetPrintParameter (PP_PaperSize, PageSize);
       break;
     case PaperOrientation:
       /* orientation submenu */
       Orientation = val;
+      TtaSetPrintParameter (PP_Orientation, Orientation);
       break;
     case PPagesPerSheet:
       /* pages per sheet submenu */
@@ -618,6 +598,7 @@ void                CallbackPrint (int ref, int typedata, STRING data)
 	  PagePerSheet = 4;
 	  break;
 	}
+      TtaSetPrintParameter (PP_PagesPerSheet, PagePerSheet);
       break;
     case PrintSupport:
       /* paper print/save PostScript submenu */
@@ -630,6 +611,7 @@ void                CallbackPrint (int ref, int typedata, STRING data)
 #ifndef _WINDOWS
 	      TtaSetTextForm (BasePrint + PPrinterName, PPrinter);
 #endif /* !_WINDOWS */
+	      TtaSetPrintParameter (PP_Destination, PaperPrint);
 	    }
 	  break;
 	case 1:
@@ -637,8 +619,9 @@ void                CallbackPrint (int ref, int typedata, STRING data)
 	    {
 	      PaperPrint = PP_PS;
 #ifndef _WINDOWS
-	      TtaSetTextForm (BasePrint + PPrinterName, PSdir);
+	      TtaSetTextForm (BasePrint + PPrinterName, PSfile);
 #endif /* !_WINDOWS */
+	      TtaSetPrintParameter (PP_Destination, PaperPrint);
 	    }
 	  break;
 	}
@@ -651,7 +634,7 @@ void                CallbackPrint (int ref, int typedata, STRING data)
 	    ustrncpy (PPrinter, data, MAX_PATH);
 	else
 	  /* text capture zone for the name of the PostScript file */
-	  ustrncpy (PSdir, data, MAX_PATH);
+	  ustrncpy (PSfile, data, MAX_PATH);
 	}
       break;
     }
@@ -665,21 +648,30 @@ void                InitPrint (void)
 
    BasePrint = TtaSetCallback (CallbackPrint, PRINT_MAX_REF);
    DocPrint = 0;
+   DocPrintURL = NULL;
 
-   /* init printer variables */
    /* read default printer variable */
    ptr = TtaGetEnvString ("THOTPRINT");
    if (ptr == NULL)
      ustrcpy (PPrinter, TEXT(""));
    else
      ustrcpy (PPrinter, ptr);
-   TtaGetEnvInt ("PAPERSIZE", &PageSize);
-   PaperPrint = PP_PRINTER;
-   PrintURL = TRUE;
-   IgnoreCSS = FALSE;
-   TtaSetPrintParameter (PP_Destination, PaperPrint);
-   TtaSetPrintParameter (PP_PaperSize, PageSize);
    TtaSetPrintCommand (PPrinter);
+   PaperPrint = PP_PRINTER;
+   TtaSetPrintParameter (PP_Destination, PaperPrint);
+
+   /* define the new default PrintSchema */
+   NumberLinks = FALSE;
+   WithToC = FALSE;
+   IgnoreCSS = FALSE;
+   PrintURL = TRUE;
+   PageSize = TtaGetPrintParameter (PP_PaperSize);	  
+   TtaSetPrintSchema (TEXT(""));
+   /* no manual feed */
+   ManualFeed = PP_OFF;
+   TtaSetPrintParameter (PP_ManualFeed, ManualFeed);
+   PagePerSheet = 1;
+   TtaSetPrintParameter (PP_PagesPerSheet, PagePerSheet);
 }
 
 /*----------------------------------------------------------------------
@@ -688,121 +680,112 @@ void                InitPrint (void)
 void                SetupAndPrint (Document doc, View view)
 {
 #ifndef _WINDOWS
-   CHAR_T           bufMenu[MAX_LENGTH];
-   int              i;
+  CHAR_T           bufMenu[MAX_LENGTH];
+  int              i;
 #endif /* !_WINDOWS */
-   ThotBool           textFile;
+  ThotBool           textFile;
 
-   textFile = (DocumentTypes[doc] == docText ||
-	       DocumentTypes[doc] == docCSS);
-
-   /* Print form */
-   CheckPrintingDocument (doc);
-
-   /* read the values that the user may have changed thru
-      the configuration menu */
-   TtaGetPrintCommand (PPrinter);
-   PageSize = TtaGetPrintParameter (PP_PaperSize);	  
+  textFile = (DocumentTypes[doc] == docText || DocumentTypes[doc] == docCSS);
+  /* Print form */
+  CheckPrintingDocument (doc);
 
 #ifndef _WINDOWS
-   TtaNewSheet (BasePrint + FormPrint, TtaGetViewFrame (doc, view), 
-		TtaGetMessage (LIB, TMSG_LIB_PRINT),
-	   1, TtaGetMessage (AMAYA, AM_BUTTON_PRINT), FALSE, 3, 'L', D_CANCEL);
+  TtaNewSheet (BasePrint + FormPrint, TtaGetViewFrame (doc, view), 
+	       TtaGetMessage (LIB, TMSG_LIB_PRINT), 1,
+	       TtaGetMessage (AMAYA, AM_BUTTON_PRINT), FALSE, 3, 'L', D_CANCEL);
 
-   /* Paper format submenu */
-   i = 0;
-   sprintf (&bufMenu[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_A4));
-   i += ustrlen (&bufMenu[i]) + 1;
-   sprintf (&bufMenu[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_US));
-   TtaNewSubmenu (BasePrint + PaperFormat, BasePrint + FormPrint, 0,
-	     TtaGetMessage (LIB, TMSG_PAPER_SIZE), 2, bufMenu, NULL, FALSE);
-   if (PageSize == PP_US)
-      TtaSetMenuForm (BasePrint + PaperFormat, 1);
-   else
-      TtaSetMenuForm (BasePrint + PaperFormat, 0);
-
-   /* Orientation submenu */
-   i = 0;
-   sprintf (&bufMenu[i], "%s%s", "B", TtaGetMessage (AMAYA, AM_PORTRAIT));
-   i += ustrlen (&bufMenu[i]) + 1;
-   sprintf (&bufMenu[i], "%s%s", "B", TtaGetMessage (AMAYA, AM_LANDSCAPE));
-   TtaNewSubmenu (BasePrint + PaperOrientation, BasePrint + FormPrint, 0,
-                  TtaGetMessage (AMAYA, AM_ORIENTATION), 2, bufMenu, NULL, TRUE);
-   if (Orientation == PP_Landscape)
-       TtaSetMenuForm (BasePrint + PaperOrientation, 1);
-   else
-      TtaSetMenuForm (BasePrint + PaperOrientation, 0);
-
-
-   /* Pages per sheet submenu */
-   i = 0;
-   sprintf (&bufMenu[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_1_PAGE_SHEET));
-   i += ustrlen (&bufMenu[i]) + 1;
-   sprintf (&bufMenu[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_2_PAGE_SHEET));
-   i += ustrlen (&bufMenu[i]) + 1;
-   sprintf (&bufMenu[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_4_PAGE_SHEET));
-   TtaNewSubmenu (BasePrint + PPagesPerSheet, BasePrint + FormPrint, 0,
-                  TtaGetMessage (LIB, TMSG_REDUCTION), 3, bufMenu, NULL, TRUE);
-   if (PagePerSheet == 1)
-       TtaSetMenuForm (BasePrint + PPagesPerSheet, 0);
-   else if (PagePerSheet == 2)
-      TtaSetMenuForm (BasePrint + PPagesPerSheet, 1);
-   else
-      TtaSetMenuForm (BasePrint + PPagesPerSheet, 2);
+  /* Paper format submenu */
+  i = 0;
+  sprintf (&bufMenu[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_A4));
+  i += ustrlen (&bufMenu[i]) + 1;
+  sprintf (&bufMenu[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_US));
+  TtaNewSubmenu (BasePrint + PaperFormat, BasePrint + FormPrint, 0,
+		 TtaGetMessage (LIB, TMSG_PAPER_SIZE), 2, bufMenu, NULL, TRUE);
+  if (PageSize == PP_US)
+    TtaSetMenuForm (BasePrint + PaperFormat, 1);
+  else
+    TtaSetMenuForm (BasePrint + PaperFormat, 0);
+  
+  /* Orientation submenu */
+  i = 0;
+  sprintf (&bufMenu[i], "%s%s", "B", TtaGetMessage (AMAYA, AM_PORTRAIT));
+  i += ustrlen (&bufMenu[i]) + 1;
+  sprintf (&bufMenu[i], "%s%s", "B", TtaGetMessage (AMAYA, AM_LANDSCAPE));
+  TtaNewSubmenu (BasePrint + PaperOrientation, BasePrint + FormPrint, 0,
+		 TtaGetMessage (AMAYA, AM_ORIENTATION), 2, bufMenu, NULL, TRUE);
+  if (Orientation == PP_Landscape)
+    TtaSetMenuForm (BasePrint + PaperOrientation, 1);
+  else
+    TtaSetMenuForm (BasePrint + PaperOrientation, 0);
+  /* Pages per sheet submenu */
+  i = 0;
+  sprintf (&bufMenu[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_1_PAGE_SHEET));
+  i += ustrlen (&bufMenu[i]) + 1;
+  sprintf (&bufMenu[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_2_PAGE_SHEET));
+  i += ustrlen (&bufMenu[i]) + 1;
+  sprintf (&bufMenu[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_4_PAGE_SHEET));
+  TtaNewSubmenu (BasePrint + PPagesPerSheet, BasePrint + FormPrint, 0,
+		 TtaGetMessage (LIB, TMSG_REDUCTION), 3, bufMenu, NULL, TRUE);
+  if (PagePerSheet == 1)
+    TtaSetMenuForm (BasePrint + PPagesPerSheet, 0);
+  else if (PagePerSheet == 2)
+    TtaSetMenuForm (BasePrint + PPagesPerSheet, 1);
+  else
+    TtaSetMenuForm (BasePrint + PPagesPerSheet, 2);
     
-   /* Print to paper/ Print to file submenu */
-   i = 0;
-   sprintf (&bufMenu[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_PRINTER));
-   i += ustrlen (&bufMenu[i]) + 1;
-   sprintf (&bufMenu[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_PS_FILE));
-   TtaNewSubmenu (BasePrint + PrintSupport, BasePrint + FormPrint, 0,
-                  TtaGetMessage (LIB, TMSG_OUTPUT), 2, bufMenu, NULL, TRUE);
+  /* Print to paper/ Print to file submenu */
+  i = 0;
+  sprintf (&bufMenu[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_PRINTER));
+  i += ustrlen (&bufMenu[i]) + 1;
+  sprintf (&bufMenu[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_PS_FILE));
+  TtaNewSubmenu (BasePrint + PrintSupport, BasePrint + FormPrint, 0,
+		 TtaGetMessage (LIB, TMSG_OUTPUT), 2, bufMenu, NULL, TRUE);
 
-   /* PaperPrint selector */
-   TtaNewTextForm (BasePrint + PPrinterName, BasePrint + FormPrint, NULL, 30, 1, FALSE);
-   if (PaperPrint == PP_PRINTER)
-     {
-	TtaSetMenuForm (BasePrint + PrintSupport, 0);
-	TtaSetTextForm (BasePrint + PPrinterName, PPrinter);
-     }
-   else
-     {
-	TtaSetMenuForm (BasePrint + PrintSupport, 1);
-	TtaSetTextForm (BasePrint + PPrinterName, PSdir);
-     }
+  /* PaperPrint selector */
+  TtaNewTextForm (BasePrint + PPrinterName, BasePrint + FormPrint, NULL, 30, 1, TRUE);
+  if (PaperPrint == PP_PRINTER)
+    {
+      TtaSetMenuForm (BasePrint + PrintSupport, 0);
+      TtaSetTextForm (BasePrint + PPrinterName, PPrinter);
+    }
+  else
+    {
+      TtaSetMenuForm (BasePrint + PrintSupport, 1);
+      TtaSetTextForm (BasePrint + PPrinterName, PSfile);
+    }
 
-   /* The toggle */
-   i = 0;
-   sprintf (&bufMenu[i], "%s%s", "T", TtaGetMessage (LIB, TMSG_MANUAL_FEED));
-   i += ustrlen (&bufMenu[i]) + 1;
-   sprintf (&bufMenu[i], "%s%s", "T", TtaGetMessage (AMAYA, AM_PRINT_TOC));
-   i += ustrlen (&bufMenu[i]) + 1;
-   sprintf (&bufMenu[i], "%s%s", "T", TtaGetMessage (AMAYA, AM_NUMBERED_LINKS));
-   i += ustrlen (&bufMenu[i]) + 1;
-   sprintf (&bufMenu[i], "%s%s", "T", TtaGetMessage (AMAYA, AM_PRINT_URL));
-   i += ustrlen (&bufMenu[i]) + 1;
-   sprintf (&bufMenu[i], "%s%s", "T", TtaGetMessage (AMAYA, AM_WITH_CSS));
-   TtaNewToggleMenu (BasePrint + PrintOptions, BasePrint + FormPrint,
-		TtaGetMessage (LIB, TMSG_OPTIONS), 5, bufMenu, NULL, FALSE);
-   if (ManualFeed == PP_ON)
-     TtaSetToggleMenu (BasePrint + PrintOptions, 0, TRUE);
-   else
-     TtaSetToggleMenu (BasePrint + PrintOptions, 0, FALSE);
-   TtaSetToggleMenu (BasePrint + PrintOptions, 1, WithToC);
-   TtaSetToggleMenu (BasePrint + PrintOptions, 2, NumberLinks);
-   TtaSetToggleMenu (BasePrint + PrintOptions, 3, PrintURL);
-   TtaSetToggleMenu (BasePrint + PrintOptions, 4, IgnoreCSS);
-
-   /* activates the Print form */
-    TtaShowDialogue (BasePrint+FormPrint, FALSE);
-    if (textFile)
-      {
-	/* invalid dialogue entries */
-	TtaRedrawMenuEntry (BasePrint + PrintOptions, 1, NULL, -1, FALSE);
-	TtaRedrawMenuEntry (BasePrint + PrintOptions, 2, NULL, -1, FALSE);
-      }
+  /* The toggle */
+  i = 0;
+  sprintf (&bufMenu[i], "%s%s", "T", TtaGetMessage (LIB, TMSG_MANUAL_FEED));
+  i += ustrlen (&bufMenu[i]) + 1;
+  sprintf (&bufMenu[i], "%s%s", "T", TtaGetMessage (AMAYA, AM_PRINT_TOC));
+  i += ustrlen (&bufMenu[i]) + 1;
+  sprintf (&bufMenu[i], "%s%s", "T", TtaGetMessage (AMAYA, AM_NUMBERED_LINKS));
+  i += ustrlen (&bufMenu[i]) + 1;
+  sprintf (&bufMenu[i], "%s%s", "T", TtaGetMessage (AMAYA, AM_PRINT_URL));
+  i += ustrlen (&bufMenu[i]) + 1;
+  sprintf (&bufMenu[i], "%s%s", "T", TtaGetMessage (AMAYA, AM_WITH_CSS));
+  TtaNewToggleMenu (BasePrint + PrintOptions, BasePrint + FormPrint,
+		    TtaGetMessage (LIB, TMSG_OPTIONS), 5, bufMenu, NULL, FALSE);
+  if (ManualFeed == PP_ON)
+    TtaSetToggleMenu (BasePrint + PrintOptions, 0, TRUE);
+  else
+    TtaSetToggleMenu (BasePrint + PrintOptions, 0, FALSE);
+  TtaSetToggleMenu (BasePrint + PrintOptions, 1, WithToC);
+  TtaSetToggleMenu (BasePrint + PrintOptions, 2, NumberLinks);
+  TtaSetToggleMenu (BasePrint + PrintOptions, 3, PrintURL);
+  TtaSetToggleMenu (BasePrint + PrintOptions, 4, IgnoreCSS);
+  
+  /* activates the Print form */
+  TtaShowDialogue (BasePrint+FormPrint, FALSE);
+  if (textFile)
+    {
+      /* invalid dialogue entries */
+      TtaRedrawMenuEntry (BasePrint + PrintOptions, 1, NULL, -1, FALSE);
+      TtaRedrawMenuEntry (BasePrint + PrintOptions, 2, NULL, -1, FALSE);
+    }
 #else  /* _WINDOWS */
-    CreatePrintDlgWindow (TtaGetViewFrame (doc, view), PSdir);
+  CreatePrintDlgWindow (TtaGetViewFrame (doc, view), PSfile);
 #endif /* _WINDOWS */
 }
 

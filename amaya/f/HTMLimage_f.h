@@ -22,17 +22,6 @@ extern void UpdateImageMap ( Element image,
 extern void DisplayImage ( Document doc,
                            Element el,
                            STRING imageName );
-extern void HandleImageLoaded ( int doc,
-                                int status,
-                                STRING urlName,
-                                STRING outputfile,
-                                void * context );
-extern void libWWWImageLoaded ( int doc,
-                                int status,
-                                STRING urlName,
-                                STRING outputfile,
-                                AHTHeaders *http_headers,
-                                void * context );
 extern STRING GetActiveImageInfo ( Document document,
                                    Element element );
 extern void FetchImage ( Document doc,
@@ -62,17 +51,6 @@ extern void UpdateImageMap (/* Element image,
 extern void DisplayImage (/* Document doc,
                              Element el,
                              STRING imageName */);
-extern void HandleImageLoaded (/* int doc,
-                                  int status,
-                                  STRING urlName,
-                                  STRING outputfile,
-                                  void * context */);
-extern void libWWWImageLoaded (/* int doc,
-                                  int status,
-                                  STRING urlName,
-                                  STRING outputfile,
-                                  AHTHeaders *http_headers,
-                                  void * context */);
 extern STRING GetActiveImageInfo (/* Document document,
                                      Element element */);
 extern void FetchImage (/* Document doc,

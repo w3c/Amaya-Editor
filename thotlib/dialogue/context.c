@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996.
+ *  (c) COPYRIGHT INRIA, 1996-2001.
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -59,11 +59,7 @@ int              nbSysColors;
  *      WinCreateGC is an emulation of the XWindows XCreateGC under
  *         MS-Windows.
  ----------------------------------------------------------------------*/
-#ifdef __STDC__
 ThotGC              WinCreateGC (void)
-#else  /* __STDC__ */
-ThotGC              WinCreateGC (void)
-#endif				/* __STDC__ */
 {
    ThotGC gc = (ThotGC) TtaGetMemory (sizeof (WIN_GC_BLK));
    return (gc);
@@ -73,11 +69,7 @@ ThotGC              WinCreateGC (void)
  *      WinInitColors initialize the color table depending on the
  *         device capabilities under MS-Windows.
  ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void WinInitColors (void)
-#else /* __STDC__ */
-void WinInitColors ()
-#endif /* __STDC__ */
 {
    int        i;
 
@@ -106,14 +98,7 @@ void WinInitColors ()
 /*----------------------------------------------------------------------
  * XWindowError is the X-Windows non-fatal errors handler.
  ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static int          XWindowError (Display * dpy, XErrorEvent * err)
-#else  /* __STDC__ */
-static int          XWindowError (dpy, err)
-Display            *dpy;
-XErrorEvent        *err;
-
-#endif /* __STDC__ */
 {
    CHAR_T                msg[200];
 
@@ -124,12 +109,7 @@ XErrorEvent        *err;
 /*----------------------------------------------------------------------
  * XWindowFatalError is the X-Windows fatal errors handler.
  ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static int          XWindowFatalError (Display * dpy)
-#else  /* __STDC__ */
-static int          XWindowFatalError (dpy)
-Display            *dpy;
-#endif /* __STDC__ */
 {
    extern int          errno;
 
@@ -145,80 +125,12 @@ Display            *dpy;
 #endif /* _WINDOWS */
 
 
-
-/*----------------------------------------------------------------------
-  ThotGiveRGB
-  Returns the RGB of the color and the pointer to the following text in
-  value if the parsing was finished.
- ----------------------------------------------------------------------*/
-#ifdef __STDC__
-ThotBool           ThotGiveRGB (CHAR_T *colname, unsigned short *red, unsigned short *green, unsigned short *blue)
-#else  /* __STDC__ */
-ThotBool           ThotGiveRGB (colname, red, green, blue)
-CHAR_T            *colname;
-unsigned short    *red;
-unsigned short    *green;
-unsigned short    *blue;
-#endif /* __STDC__ */
-{
-#ifndef _WINDOWS 
-   ThotColorStruct     color;
-#endif /* _WINDOWS */
-  ThotBool             failed = TRUE;
-  int                  i;
-
-#ifndef _WINDOWS
-  if (failed)
-    {
-      /* Lookup the color name in the X color name database */
-#ifdef _GTK
-      if (gdk_color_parse (colname, &color))
-#else /* _GTK */
-	if (XParseColor (TtDisplay, TtCmap, colname, &color))
-#endif /* _GTK */
-	  {
-	    failed = FALSE;
-	    /* normalize RGB color values to 8 bits values */
-	    color.red >>= 8;
-	    color.green >>= 8;
-	    color.blue >>= 8;
-	    *red = color.red;
-	    *green = color.green;
-	    *blue = color.blue;
-	  }
-    }
-#endif /* _WINDOWS */
-  if (failed)
-    {
-      /* Lookup the color name in the application color name database */
-      for (i = 0; i < NColors && failed; i++)
-	if (!ustrcasecmp (ColorName (i), colname))
-	  {
-	    failed = FALSE;
-	    *red   = RGB_Table[i].red;
-	    *green = RGB_Table[i].green;
-	    *blue  = RGB_Table[i].blue;
-	  }
-    }
-  return (failed);
-}
-
-
 /*----------------------------------------------------------------------
  * FindColor looks for the named color ressource.
  * The result is the closest color found the Thot color table.
  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static ThotBool     FindColor (int disp, CHAR_T* name, char* colorplace, CHAR_T* defaultcolor, ThotColor *colorpixel)
-#else  /* __STDC__ */
-static ThotBool     FindColor (disp, name, colorplace, defaultcolor, colorpixel)
-int         disp;
-CHAR_T*     name;
-char*       colorplace;
-CHAR_T*     defaultcolor;
-ThotColor*  colorpixel;
-
-#endif /* __STDC__ */
+static ThotBool FindColor (int disp, CHAR_T *name, char *colorplace,
+			   CHAR_T *defaultcolor, ThotColor *colorpixel)
 {
    int                 col;
    CHAR_T*             value;
@@ -273,11 +185,7 @@ static void         InitCurs ()
  *      TtaUpdateEditorColors Updates the X-Window colors according to
  *      the current chosen user values
  ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void TtaUpdateEditorColors (void)
-#else
-void TtaUpdateEditorColors ()
-#endif /* __STDC__ */
 {
   CHAR_T   *name;
   ThotBool  found;
@@ -310,13 +218,7 @@ void TtaUpdateEditorColors ()
 /*----------------------------------------------------------------------
  *      InitColors initializes the Thot predefined X-Window colors.
  ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         InitColors (CHAR_T* name)
-#else  /* __STDC__ */
-static void         InitColors (name)
-CHAR_T*             name;
-
-#endif /* __STDC__ */
 {
    ThotBool            found;
 #ifndef _WINDOWS
@@ -422,11 +324,7 @@ CHAR_T*             name;
  *      InitGraphicContexts initialize the X-Windows graphic contexts and their Windows
  *	counterpart in Microsoft environment.
  ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void InitGraphicContexts (void)
-#else /* __STDC__ */
-static void InitGraphicContexts ()
-#endif /* __STDC__ */
 {
 #ifndef _GTK
   unsigned long       valuemask;
@@ -552,15 +450,7 @@ static void InitGraphicContexts ()
 /*----------------------------------------------------------------------
  *      ThotInitDisplay initialize all the output settings.
  ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                ThotInitDisplay (CHAR_T* name, int dx, int dy)
-#else  /* __STDC__ */
-void                ThotInitDisplay (name, dx, dy)
-CHAR_T*             name;
-int                 dx;
-int                 dy;
-
-#endif /* __STDC__ */
 {
 #ifdef _WINDOWS
    WIN_GetDeviceContext (-1);
@@ -649,12 +539,7 @@ void InitDocContexts ()
 /*----------------------------------------------------------------------
  *      SelectionEvents handle the X-Windows selection events.
  ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                SelectionEvents (void *ev)
-#else  /* __STDC__ */
-void                SelectionEvents (ev)
-void               *ev;
-#endif /* __STDC__ */
 {
 #ifndef _GTK
    XSelectionRequestEvent *request;
