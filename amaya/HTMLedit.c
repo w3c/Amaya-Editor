@@ -846,98 +846,25 @@ NotifyElement      *event;
 #endif /* __STDC__ */
 {
   Document            originDocument, doc;
-  Element             el;
+  Element             el, anchor, next, child, previous, nextchild, parent;
+  ElementType         elType, parentType;
   AttributeType       attrType;
   Attribute           attr;
-  ElementType         elType;
   SSchema             HTMLschema;
-  int                 length, i, iName;
   char               *value, *base;
-  char*               documentURL = (char*) TtaGetMemory (sizeof (char) * MAX_LENGTH);
-  char*               tempURL     = (char*) TtaGetMemory (sizeof (char) * MAX_LENGTH);
-  char*               path        = (char*) TtaGetMemory (sizeof (char) * MAX_LENGTH);
+  char               *documentURL;
+  char               *tempURL;
+  char               *path;
+  int                 length, i, iName;
 
   el = event->element;
   doc = event->document;
   HTMLschema = TtaGetSSchema ("HTML", doc);
   CheckPseudoParagraph (el, doc);
   elType = TtaGetElementType (el);
-  if (HTMLschema == elType.ElSSchema && elType.ElTypeNum == HTML_EL_Anchor)
-    {
-      /* Check attribute NAME in order to make sure that its value unique */
-      /* in the document */
-      MakeUniqueName (el, doc);
-      /* Change attributes HREF if the element comes from another */
-      /* document */
-	originDocument = (Document) event->position;
-	if (originDocument != 0)
-	  if (originDocument != doc)
-	    {
-	      /* the anchor has moved from one document to another */
-	      /* get the HREF attribute of element Anchor */
-	      attrType.AttrSSchema = elType.ElSSchema;
-	      attrType.AttrTypeNum = HTML_ATTR_HREF_;
-	      attr = TtaGetAttribute (el, attrType);
-	      if (attr != NULL)
-		{
-		  /* get a buffer for the URL */
-		  length = TtaGetTextAttributeLength (attr) + 1;
-		  value = TtaGetMemory (length);
-		  if (value != NULL)
-		    {
-		      /* get the URL itself */
-		      TtaGiveTextAttributeValue (attr, value, &length);
-		      if (value[0] == '#')
-			{
-			  /* the target element is local in the document origin */
-			  /* convert internal link into external link */
-			  strcpy (tempURL, DocumentURLs[originDocument]);
-			  iName = 0;
-			}
-		      else
-			{
-			  /* the target element is in another document */
-			  strcpy (documentURL, value);
-			  /* looks for a '#' in the value */
-			  i = length;
-			  while (value[i] != '#' && i > 0)
-			    i--;
-			  if (i == 0)
-			    {
-			      /* there is no '#' in the URL */
-			      value[0] = EOS;
-			      iName = 0;
-			    }
-			  else
-			    {
-			      /* there is a '#' character in the URL */
-			      /* separate document name and element name */
-			      documentURL[i] = EOS;
-			      iName = i;
-			    }
-			  /* get the complete URL of the referred document */
-			  /* Add the  base content if necessary */
-			  NormalizeURL (documentURL, originDocument, tempURL, path, NULL);
-			}
-		      if (value[iName] == '#')
-			{
-			  if (!strcmp (tempURL, DocumentURLs[doc]))
-			    /* convert external link into internal link */
-			    strcpy (tempURL, &value[iName]);
-			  else
-			    strcat (tempURL, &value[iName]);
-			}
-		      TtaFreeMemory (value);
-		      /* set the relative value or URL in attribute HREF */
-		      base = GetBaseURL (doc);
-		      value = MakeRelativeURL (tempURL, base);
-		      TtaSetAttributeText (attr, value, el, doc);
-		      TtaFreeMemory (base);
-		      TtaFreeMemory (value);
-		    }
-		}
-	    }
-    }
+  anchor = NULL;
+  if (elType.ElSSchema == HTMLschema && elType.ElTypeNum == HTML_EL_Anchor)
+    anchor = el;
   else if (elType.ElTypeNum == HTML_EL_PICTURE_UNIT)
     {
       originDocument = (Document) event->position;
@@ -978,12 +905,132 @@ NotifyElement      *event;
 	  }
      }
   else
-    /* Check attribute NAME or ID in order to make sure that its value */
-    /* unique in the document */
-    MakeUniqueName (el, doc);
-  TtaFreeMemory (documentURL);
-  TtaFreeMemory (tempURL);
-  TtaFreeMemory (path);
+    {
+      /* Check attribute NAME or ID in order to make sure that its value */
+      /* unique in the document */
+      MakeUniqueName (el, doc);
+      elType.ElSSchema = HTMLschema;
+      elType.ElTypeNum = HTML_EL_Anchor;
+      anchor = TtaSearchTypedElement (elType, SearchInTree, el);
+    }
+
+  if (anchor != NULL)
+    {
+      tempURL = (char*) TtaGetMemory (sizeof (char) * MAX_LENGTH);
+      documentURL = (char*) TtaGetMemory (sizeof (char) * MAX_LENGTH);
+      path = (char*) TtaGetMemory (sizeof (char) * MAX_LENGTH);
+      TtaSetDisplayMode (doc, DeferredDisplay);
+      TtaSetStructureChecking (0, doc);
+      /* Is there a parent anchor */
+      parent = TtaGetTypedAncestor (el, elType);
+      while (anchor != NULL)
+	{
+	  /* look for the next pasted anchor */
+	  if (anchor != el)
+	    next = TtaSearchTypedElementInTree (elType, SearchForward, el, anchor);
+	  else
+	    next = NULL;
+	  
+	  if (parent != NULL)
+	    {
+	      /* Move anchor children and delete the anchor element */
+	      child = TtaGetFirstChild (anchor);
+	      previous = child;
+	      TtaPreviousSibling (&previous);
+	      
+	      while (child != NULL)
+		{
+		  nextchild = child;
+		  TtaNextSibling (&nextchild);
+		  TtaRemoveTree (child, doc);
+		  TtaInsertSibling (child, anchor, TRUE, doc);
+		  child = nextchild;
+		}
+	      TtaDeleteTree (anchor, doc);
+	    }
+	  else
+	    {
+	      /* Check attribute NAME in order to make sure its value unique */
+	      /* in the document */
+	      MakeUniqueName (anchor, doc);
+	      /* Change attributes HREF if the element comes from another */
+	      /* document */
+	      originDocument = (Document) event->position;
+	      if (originDocument != 0 && originDocument != doc)
+		{
+		  /* the anchor has moved from one document to another */
+		  /* get the HREF attribute of element Anchor */
+		  attrType.AttrSSchema = elType.ElSSchema;
+		  attrType.AttrTypeNum = HTML_ATTR_HREF_;
+		  attr = TtaGetAttribute (anchor, attrType);
+		  if (attr != NULL)
+		    {
+		      /* get a buffer for the URL */
+		      length = TtaGetTextAttributeLength (attr) + 1;
+		      value = TtaGetMemory (length);
+		      if (value != NULL)
+			{
+			  /* get the URL itself */
+			  TtaGiveTextAttributeValue (attr, value, &length);
+			  if (value[0] == '#')
+			    {
+			      /* the target element is local in the document */
+			      /* origin convert internal link into external link */
+			      strcpy (tempURL, DocumentURLs[originDocument]);
+			      iName = 0;
+			    }
+			  else
+			    {
+			      /* the target element is in another document */
+			      strcpy (documentURL, value);
+			      /* looks for a '#' in the value */
+			      i = length;
+			      while (value[i] != '#' && i > 0)
+				i--;
+			      if (i == 0)
+				{
+				  /* there is no '#' in the URL */
+				  value[0] = EOS;
+				  iName = 0;
+				}
+			      else
+				{
+				  /* there is a '#' character in the URL */
+				  /* separate document name and element name */
+				  documentURL[i] = EOS;
+				  iName = i;
+				}
+			      /* get the complete URL of the referred document */
+			      /* Add the  base content if necessary */
+			      NormalizeURL (documentURL, originDocument, tempURL, path, NULL);
+			    }
+			  if (value[iName] == '#')
+			    {
+			      if (!strcmp (tempURL, DocumentURLs[doc]))
+				/* convert external link into internal link */
+				strcpy (tempURL, &value[iName]);
+			      else
+				strcat (tempURL, &value[iName]);
+			    }
+			  TtaFreeMemory (value);
+			  /* set the relative value or URL in attribute HREF */
+			  base = GetBaseURL (doc);
+			  value = MakeRelativeURL (tempURL, base);
+			  TtaSetAttributeText (attr, value, anchor, doc);
+			  TtaFreeMemory (base);
+			  TtaFreeMemory (value);
+			}
+		    }
+		}
+	    }
+	  anchor = next;
+	}
+      TtaFreeMemory (path);
+      TtaFreeMemory (documentURL);
+      TtaFreeMemory (tempURL);
+      TtaSetStructureChecking (1, doc);
+      TtaSetDisplayMode (doc, DisplayImmediately);
+    }
 }
 
 

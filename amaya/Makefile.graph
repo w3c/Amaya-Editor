@@ -62,8 +62,7 @@ $(AMAYA)/GraphMLT.TRA : $(AMAYA)/GraphMLT.T ../bin/tra
 # Interface schemas compilation
 #
 GraphML.h GraphMLAPP.c : $(AMAYA)/GraphML.STR $(AMAYA)/GraphML.A ../bin/app
-	(if test "$(AMAYA)" != "" -a "$(AMAYA)" != "." -a \
-	         "$(AMAYA)" != "../amaya" ; then \
+	(if test "$(AMAYA)" != "" -a "$(AMAYA)" != "." ; then \
 	    $(CP) $(AMAYA)/GraphML.A .  ; \
 	    $(CP) $(AMAYA)/GraphML.STR .  ; \
 	fi)

@@ -61,8 +61,7 @@ $(AMAYA)/MathMLT.TRA : $(AMAYA)/MathMLT.T ../bin/tra
 # Interface schemas compilation
 #
 MathML.h MathMLAPP.c: $(AMAYA)/MathML.STR $(AMAYA)/MathML.A ../bin/app
-	(if test "$(AMAYA)" != "" -a "$(AMAYA)" != "." -a \
-	         "$(AMAYA)" != "../amaya" ; then \
+	(if test "$(AMAYA)" != "" -a "$(AMAYA)" != "." ; then \
 	    $(CP) $(AMAYA)/MathML.A .  ; \
 	    $(CP) $(AMAYA)/MathML.STR .  ; \
 	fi)

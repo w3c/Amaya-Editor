@@ -254,8 +254,7 @@ HTMLAPP.o : HTMLAPP.c
 	$(CC) $(CFLAGS) $(ALL_AMAYA_OPTIONS) $(INCLUDES) -c HTMLAPP.c -o $@
 
 HTML.h HTMLAPP.c : @srcdir@/HTML.STR @srcdir@/HTML.A
-	(if test "@srcdir@" != "" -a "@srcdir@" != "." -a \
-	         "@srcdir@" != "../amaya"; then \
+	(if test "@srcdir@" != "" -a "@srcdir@" != "." ; then \
 	    $(CP) @srcdir@/HTML.A .  ; \
 	    $(CP) @srcdir@/HTML.STR .  ; \
 	fi)
