@@ -49,8 +49,9 @@ static PtrDocument  DocumentToSave;
 
 
 /*----------------------------------------------------------------------
-   UnsetEntryMenu visualise comme non active l'entree ent du menu    
-   dont la re'fe'rence est passe'e en parame`tre.                     
+   UnsetEntryMenu
+   displays as non active the "ent" entry of the menu referenced by
+   "ref".
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                UnsetEntryMenu (int ref, int ent)
@@ -74,7 +75,8 @@ int                 ent;
 }				/*UnsetEntryMenu */
 
 /*----------------------------------------------------------------------
-   BuildSaveDocMenu traite la Sauvegarde du Fichier                     
+   BuildSaveDocMenu
+   does the File Save.
   ----------------------------------------------------------------------*/
 void                BuildSaveDocMenu ()
 
@@ -119,7 +121,8 @@ void                BuildSaveDocMenu ()
 }
 
 /*----------------------------------------------------------------------
-   CallbackSaveDocMenu traite les retours du menu Sauver Fichier          
+   CallbackSaveDocMenu
+   callback handler for the Save File menu.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                CallbackSaveDocMenu (int ref, int typedata, char *txt)
@@ -295,8 +298,9 @@ char               *txt;
 }
 
 /*----------------------------------------------------------------------
-   SaveDocAs   cree, initialise et active le formulaire "Sauver comme"
-   pour le document pDoc.                                   
+   SaveDocAs
+   creates, initializes and activates the "Save As" form for document
+   pDoc.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         SaveDocAs (PtrDocument pDoc)
@@ -399,6 +403,8 @@ PtrDocument         pDoc;
 }
 
 /*----------------------------------------------------------------------
+  TtcSaveDocumentAs
+  standard handler for a SaveDocumentAs action.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TtcSaveDocumentAs (Document document, View view)
@@ -435,6 +441,8 @@ View                view;
 
 
 /*----------------------------------------------------------------------
+  TtcSaveDocument
+  standard handler for a SaveDocument action.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TtcSaveDocument (Document document, View view)
@@ -461,3 +469,13 @@ View                view;
 	  }
      }
 }
+
+
+
+
+
+
+
+
+
+

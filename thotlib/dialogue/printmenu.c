@@ -263,10 +263,10 @@ void ConnectPrint ()
 }
 
 /*----------------------------------------------------------------------
-   TtcPrint
-   standard action for the Print menu. Calls TtaPrint to print the
-   current view.
-  ----------------------------------------------------------------------*/
+   TtcPrint standard handler for the Print action.  
+   Calls TtaPrint to print the current view.
+   ----------------------------------------------------------------------*/
+   
 #ifdef __STDC__
 void                TtcPrint (Document document, View view)
 #else  /* __STDC__ */
@@ -453,8 +453,8 @@ char               *txt;
 
 /*----------------------------------------------------------------------
    TtcPrintSetup
-   default action for the PrintSetup menu. Prepares and displays
-   a form.
+   standard handler for a PrintSetup action.
+   Prepares and displays a form.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TtcPrintSetup (Document document, View view)

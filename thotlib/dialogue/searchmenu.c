@@ -6,7 +6,7 @@
  */
  
 /*
-   cherche.c : gestion de la commande de recherche.
+   searchmenu.c : functions for the search command
 
  */
 
@@ -51,15 +51,14 @@
 #include "searchref_f.h"
 #include "docs_f.h"
 
-static boolean      CaseDistinction;	/* dans la recherche de texte, on */
+static boolean      CaseDistinction;	/* character Upper/lower case distinction */
 
-					/* confond majuscules et minuscules */
-static boolean      WithReplace;	/* il faut remplacer les chaines trouvees */
+static boolean      WithReplace;	/* find and replace strings */
 
-/* pointeur sur le domaine de recherche concernant la commande en cours */
+/* pointer to the search domain for the the current command */
 static PtrSearchContext searchDomain = NULL;
 
-/* entree desactivee dans le sous-menu "Ou chercher" */
+/* inhabilited entry in the submenu "Where to Search" */
 static PtrDocument  SearchedPageDoc;	/* le document ou on cherche une page */
 static PtrElement   SearchedPageRoot;	/* racine de l'arbre ou on cherche */
 
