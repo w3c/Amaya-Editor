@@ -3070,11 +3070,6 @@ char              **argv;
   TtWDepth         = depth;
   TtWPrinterDepth  = GetDeviceCaps (TtPrinterDC, PLANES);
   hCurrentInstance = hInst;
-  WIN_GetDeviceContext (-1);
-  ScreenDPI        = GetDeviceCaps (TtDisplay, LOGPIXELSY);
-  WIN_ReleaseDeviceContext ();
-  PrinterDPI       = GetDeviceCaps (TtPrinterDC, LOGPIXELSY);
-  currentWindow    = hWnd;
 # endif /* _WINDOWS */
 
   removeDirectory = FALSE;
@@ -3311,6 +3306,14 @@ char              **argv;
        Repaginate = 0;
    NPrintViews = viewsCounter;
    /* Imprime le document */
+#  ifdef _WINDOWS
+   WIN_GetDeviceContext (-1);
+   ScreenDPI        = GetDeviceCaps (TtDisplay, LOGPIXELSY);
+   DOT_PER_INCHE    = ScreenDPI;
+   WIN_ReleaseDeviceContext ();
+   PrinterDPI       = GetDeviceCaps (TtPrinterDC, LOGPIXELSY);
+   currentWindow    = hWnd;
+#  endif /* _WINDOWS */
    if (MainDocument != NULL)
      if (PrintDocument (MainDocument) == 0)
        {
