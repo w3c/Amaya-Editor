@@ -902,7 +902,7 @@
 </label>
 <label define="BInsertAfter">
 	<message xml:lang="en">&amp;Append</message>
-	<message xml:lang="fr">&amp;Ajoutér</message>
+	<message xml:lang="fr">&amp;Ajouter</message>
 	<message xml:lang="es">&amp;Añadir</message>
 	<message xml:lang="it">&amp;Aggiungi</message>
 	<message xml:lang="de">&amp;Inzufügen (danach)</message>
