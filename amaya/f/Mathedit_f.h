@@ -47,6 +47,8 @@ extern void CreateMN ( Document document,
                        View view );
 extern void CreateMO ( Document document,
                        View view );
+extern void CreateMSPACE ( Document document,
+                           View view );
 extern void MathSelectionChanged ( NotifyElement * event );
 extern ThotBool GlobalMathAttrInMenu ( NotifyAttribute * event );
 extern void InitMathML ( void );
@@ -156,6 +158,8 @@ extern void CreateMN (/* Document document,
                          View view */);
 extern void CreateMO (/* Document document,
                          View view */);
+extern void CreateMSPACE (/* Document document,
+                             View view */);
 extern void MathSelectionChanged (/* NotifyElement * event */);
 extern ThotBool GlobalMathAttrInMenu (/* NotifyAttribute * event */);
 extern void InitMathML (/* void */);

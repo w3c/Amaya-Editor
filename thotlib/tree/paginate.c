@@ -1617,8 +1617,9 @@ void PaginateView (PtrDocument pDoc, int view)
 		  PageHeaderFooter (pPage, pDoc, schView, &b, &pSchPage);
 		 }
 	      /* print the new page */
-	      PrintOnePage (pDoc, previousPageAbBox, pPage->ElAbstractBox[iview],
-			    rootAbsBox, clipOrg);
+	      if (!PrintOnePage (pDoc, previousPageAbBox, pPage->ElAbstractBox[iview],
+				 rootAbsBox, clipOrg))
+		return;
 #endif /* PAGINEETIMPRIME */
 	      /* kill previous abstract boxes before the page break */
 	      shorter = KillAbsBoxBeforePage (pPage->ElAbstractBox[iview],

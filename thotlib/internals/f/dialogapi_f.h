@@ -7,6 +7,7 @@
 #ifdef __STDC__
 
 extern int GetFrameNumber ( ThotWindow win );
+extern ThotWidget CatWidget ( int ref );
 extern void MyWarningHandler ( void );
 extern void ThotXmColorProc ( ThotColorStruct *bg,
                               ThotColorStruct *fg,
@@ -175,6 +176,7 @@ extern void TtaFreeAllCatalogs ( void );
 #else /* __STDC__ */
 
 extern int GetFrameNumber (/* ThotWindow win */);
+extern ThotWidget CatWidget (/* int ref */);
 extern void MyWarningHandler (/* void */);
 extern void ThotXmColorProc (/* ThotColorStruct *bg,
                                 ThotColorStruct *fg,

@@ -35,11 +35,11 @@ extern ThotWindow TtaGetThotWindow ( int frame );
 extern void GetDocAndView ( int frame,
                             PtrDocument *pDoc,
                             int *view );
-extern void PrintOnePage ( PtrDocument pDoc,
-                           PtrAbstractBox pPageAb,
-                           PtrAbstractBox pNextPageAb,
-                           PtrAbstractBox rootAbsBox,
-                           int clipOrg );
+extern ThotBool PrintOnePage ( PtrDocument pDoc,
+                               PtrAbstractBox pPageAb,
+                               PtrAbstractBox pNextPageAb,
+                               PtrAbstractBox rootAbsBox,
+                               int clipOrg );
 extern void DisplayConfirmMessage ( char *text );
 extern void DisplayMessage ( char *text,
                              int msgType );
@@ -78,11 +78,11 @@ extern ThotWindow TtaGetThotWindow (/* int frame */);
 extern void GetDocAndView (/* int frame,
                               PtrDocument *pDoc,
                               int *view */);
-extern void PrintOnePage (/* PtrDocument pDoc,
-                             PtrAbstractBox pPageAb,
-                             PtrAbstractBox pNextPageAb,
-                             PtrAbstractBox rootAbsBox,
-                             int clipOrg */);
+extern ThotBool PrintOnePage (/* PtrDocument pDoc,
+                                 PtrAbstractBox pPageAb,
+                                 PtrAbstractBox pNextPageAb,
+                                 PtrAbstractBox rootAbsBox,
+                                 int clipOrg */);
 extern void DisplayConfirmMessage (/* char *text */);
 extern void DisplayMessage (/* char *text,
                                int msgType */);

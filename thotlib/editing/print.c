@@ -1736,9 +1736,11 @@ static void PrintView (PtrDocument pDoc)
 
 	   /* Clean up the top of each page */
 	   CleanTopOfPageElement = TRUE;
-	   PrintOnePage (pDoc, pPageAb, pNextPageAb, rootAbsBox, clipOrg);
-	   /* la nouvelle marque de page devient la page courante */
-	   pPageAb = pNextPageAb;
+	   if (PrintOnePage (pDoc, pPageAb, pNextPageAb, rootAbsBox, clipOrg))
+	     /* la nouvelle marque de page devient la page courante */
+	     pPageAb = pNextPageAb;
+	   else
+	     pPageAb = NULL;
 	 }
        while (pPageAb != NULL);
      }
@@ -1926,9 +1928,9 @@ static int PrintDocument (PtrDocument pDoc, int viewsCounter)
   l'image avant pPageAb sauf dans si pPageAb se trouve dans un element
   BoTable.
   ----------------------------------------------------------------------*/
-void  PrintOnePage (PtrDocument pDoc, PtrAbstractBox pPageAb,
-		    PtrAbstractBox pNextPageAb, PtrAbstractBox rootAbsBox,
-		    int clipOrg)
+ThotBool PrintOnePage (PtrDocument pDoc, PtrAbstractBox pPageAb,
+		       PtrAbstractBox pNextPageAb, PtrAbstractBox rootAbsBox,
+		       int clipOrg)
 {
   PtrAbstractBox      pAb, pSpaceAb;
   PtrBox              box;
@@ -1956,7 +1958,7 @@ static int       n = 1;
 
 #ifdef _GTK
    if (gabort)
-    return;
+    return (FALSE);
    pg_counter++;
    sprintf(title_label, "%s [ %i ]", TtaGetMessage(LIB, TMSG_LIB_PRINT), pg_counter);
    gtk_window_set_title (GTK_WINDOW (window),title_label);			 
@@ -1967,7 +1969,7 @@ static int       n = 1;
 #ifdef _WINDOWS
   /* control the Abort printing button */
   if (gbAbort)
-    return;
+    return (FALSE);
   if (TtPrinterDC)
     {
       if ((StartPage (TtPrinterDC)) <= 0)
@@ -1975,7 +1977,7 @@ static int       n = 1;
       /* control the Abort printing button */
 	  AbortProc (TtPrinterDC, 0);
       if (gbAbort)
-        return;
+        return (FALSE);
 	  /***/
 	  /* update and display the number of pages we have printed */
 	  {
@@ -2123,6 +2125,7 @@ static int       n = 1;
 	  ChangeConcreteImage (CurrentFrame, &h, rootAbsBox);
 	}
     }
+  return (TRUE);
 }
 
 /*----------------------------------------------------------------------
