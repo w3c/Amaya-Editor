@@ -79,6 +79,10 @@ extern void TtaSetPulldownOn (int ref, ThotWidget parent);
   ----------------------------------------------------------------------*/
 extern void TtaNewPopup (int ref, ThotWidget parent, char *title, int number,
 			 char *text, char *equiv, char button);
+extern void TtaNewScrollPopup (int ref, ThotWidget parent, char *title, int number,
+                         char *text, char *equiv, char button);
+extern void TtaNewScrollPopup2 (int ref, ThotWidget parent, char *title, int number,
+                         char *text, char *equiv, ThotBool mulitpleOptions, char button);
 
 /*----------------------------------------------------------------------
    TtaNewSubmenu cre'e un sous-menu :                                 

@@ -42,6 +42,8 @@
 static char        *buffer;    /* temporary buffer used to build the query
 				  string */
 static int          lgbuffer;  /* size of the temporary buffer */
+static int          last_buffer_char; /* gives the index of the last char + 1 added to
+					 the buffer (only used in AddBufferWithEos) */
 static int          documentStatus;
 
 #ifdef _WINDOWS 
@@ -100,6 +102,42 @@ static void AddToBuffer (char *orig)
      }
    else
       strcat (buffer, orig);
+}
+
+/*----------------------------------------------------------------------
+  AddToBufferWithEos
+  reallocates memory and concatenates a string into buffer. Skips the
+  last EOS char.
+  ----------------------------------------------------------------------*/
+static void AddToBufferWithEOS (char *orig)
+{
+   void               *status;
+   int                 lg;
+   int                 i;
+
+   lg = strlen (orig) + 2;
+   if ((int)(&buffer[last_buffer_char] - buffer) + lg > lgbuffer)
+     {
+	/* it is necessary to extend the buffer */
+	if (lg < PARAM_INCREMENT)
+	   i = PARAM_INCREMENT;
+	else i = lg;
+
+	status = TtaRealloc (buffer, sizeof (char) * (lgbuffer + i));
+
+	if (status != NULL)
+	  {
+	     buffer = status;
+	     lgbuffer += i;
+	     strcpy (&buffer[last_buffer_char], orig);
+	     last_buffer_char = last_buffer_char + lg - 1;
+	  }
+     }
+   else
+     {
+       strcpy (&buffer[last_buffer_char], orig);
+       last_buffer_char = last_buffer_char + lg - 1;
+     }
 }
 
 
@@ -1225,7 +1263,7 @@ void SelectOneOption (Document doc, Element el)
 #ifdef _WINDOWS
   int                 nbOldEntries = 20;
 #endif /* _WINDOWS */
-#define MAX_OPTIONS 100
+#define MAX_OPTIONS 500
 #define MAX_SUBOPTIONS 20
 #define MAX_LABEL_LENGTH 50
   ElementType         elType, childType;
@@ -1237,8 +1275,8 @@ void SelectOneOption (Document doc, Element el)
   AttributeType       attrType;
   Attribute	      attr;
   SSchema	      htmlSch;
-  char              text[MAX_LABEL_LENGTH];
-  char              buffmenu[MAX_LENGTH];
+  char                text[MAX_LABEL_LENGTH + 1];
+  char                buffmenu[MAX_LENGTH];
   Language            lang;
   int                 length, nbitems, lgmenu, i, nbsubmenus, nbsubitems;
   int                 modified;
@@ -1264,7 +1302,6 @@ void SelectOneOption (Document doc, Element el)
    if (elType.ElTypeNum == HTML_EL_Option && elType.ElSSchema == htmlSch)
      {
        /* create the option menu */
-       lgmenu = 0;
        nbitems = 0;
        nbsubmenus = 0;
        elType.ElTypeNum = HTML_EL_Option_Menu;
@@ -1282,7 +1319,14 @@ void SelectOneOption (Document doc, Element el)
 	   
 	   attrType.AttrTypeNum = HTML_ATTR_Selected;
 	   el = TtaGetFirstChild (menuEl);
-	   while (nbitems < MAX_OPTIONS && el)
+
+	   /* use the global allocation buffer to store the entries */
+	   buffer = TtaGetMemory (PARAM_INCREMENT);
+	   lgbuffer = PARAM_INCREMENT;
+	   buffer[0] = EOS;
+	   last_buffer_char = 0;
+
+	   while (el && nbitems < MAX_OPTIONS)
 	     {
 	       elType = TtaGetElementType (el);
 	       if (elType.ElTypeNum == HTML_EL_OptGroup &&
@@ -1314,44 +1358,54 @@ void SelectOneOption (Document doc, Element el)
 		   attr = TtaGetAttribute (el, attrType);
 		   length = MAX_LABEL_LENGTH;
 		   if (attr)
-		     TtaGiveTextAttributeValue (attr, text, &length);
+		     TtaGiveTextAttributeValue (attr, text + 1, &length);
 		   else if (elType.ElTypeNum == HTML_EL_Option)
 		     /* there is no label attribute, but it's an Option
 			Take its content as the item label */
 		     {
 		       elText = TtaGetFirstChild (el);
 		       if (elText)
-			 TtaGiveTextContent (elText, text, &length, &lang);
+			 TtaGiveTextContent (elText, text + 1, &length, &lang);
 		       else
 			 length = 0;
 		     }
 		   else
 		     length = 0;
 		   /* count the EOS character */
-		   text[length] = EOS;
-		   length++;
+		   text[length + 1] = EOS;
+		   /* add an item */
 		   /* we have to add the 'B', 'T' or 'M' character */
-		   length++;
-		   if (lgmenu + length < MAX_LENGTH)
-		     /* add an item */
-		     {
-		       if (elType.ElTypeNum == HTML_EL_OptGroup)
-			 sprintf (&buffmenu[lgmenu], "M%s", text);
-		       else if (multipleOptions)
-			 sprintf (&buffmenu[lgmenu], "T%s", text);
-		       else
-			 sprintf (&buffmenu[lgmenu], "B%s", text);
-		       nbitems++;
-		     }
-		   lgmenu += length;
+		   if (elType.ElTypeNum == HTML_EL_OptGroup)
+		     text[0] = 'M';
+		   else if (multipleOptions)
+		     text[0] = 'T';
+		   else
+		     text[0] = 'B';
+		   AddToBufferWithEOS (text);
+		   nbitems++;
 		 }
 	       TtaNextSibling (&el);
 	     }
-	   if (nbitems > 0)
+
+	   if (nbitems == 0)
+	     {
+	       TtaFreeMemory (buffer);
+	     } 
+	   else
 	     {
 	       /* create the main menu */
-	       TtaNewPopup (BaseDialog + OptionMenu, TtaGetViewFrame (doc, 1),
-			    NULL, nbitems, buffmenu, NULL, 'L');
+
+#ifdef _GTK
+	       if (nbsubmenus == 0)
+		 TtaNewScrollPopup2 (BaseDialog + OptionMenu, TtaGetViewFrame (doc, 1),
+				     NULL, nbitems, buffer, NULL, multipleOptions, 'L');
+	       else
+#endif /* _GTK */
+		 TtaNewPopup (BaseDialog + OptionMenu, TtaGetViewFrame (doc, 1),
+			      NULL, nbitems, buffer, NULL, 'L');
+
+	       TtaFreeMemory (buffer);
+
 	       if (multipleOptions)
 		 for (i = 0; i < nbitems; i++)
 		   if (selected[i])
@@ -1360,6 +1414,7 @@ void SelectOneOption (Document doc, Element el)
 #else  /* !_WINDOWS */
 	             TtaSetToggleMenu (BaseDialog + OptionMenu, i, TRUE);
 #endif /* _WINDOWS */
+		     
 	       if (nbsubmenus > 0)
 		 {
 		   /* There ia at least 1 OPTGROUP. Create submenus corresponding to OPTGROUPs */
