@@ -227,7 +227,7 @@ void              FreeAllMessages ()
        FirstTableMsg = FirstTableMsg->TabNext;
        for (i = 0; i < currenttable->TabLength; i++)
 	 TtaFreeMemory (currenttable->TabMessages[i]);
-       TtaFreeMemory (FirstTableMsg);
+       TtaFreeMemory (currenttable);
      }
 }
 
