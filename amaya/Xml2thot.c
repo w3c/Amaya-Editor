@@ -5419,15 +5419,7 @@ static void   XmlParse (FILE     *infile, CHARSET charset,
 
        if (beginning)
 	 {
-	   /* Don't interpret the UTF8 BOM character */
-	   if (((unsigned char) bufferRead[0] == 0xEF) &&
-	       ((unsigned char) bufferRead[1] == 0xBB) &&
-	       ((unsigned char) bufferRead[2] == 0xBF))
-	     {
-	       i = 3;
-	       res = res - 3;
-	     }
-	   else if ((unsigned char) bufferRead[0] == EOL)
+	   if ((unsigned char) bufferRead[0] == EOL)
 	     {
 	       /* accept a newline before the XML declaration */
 	       i = 1;
@@ -5454,7 +5446,7 @@ static void   XmlParse (FILE     *infile, CHARSET charset,
 		   if (!XML_Parse (Parser, &bufferRead[j], (i-j), FALSE))
 		     XmlParseError (errorNotWellFormed,
 				    (char *) XML_ErrorString (XML_GetErrorCode (Parser)), 0);
-		   res = res - i;
+		   res = res - (i-j);
 		 }
 	     }
 
