@@ -819,7 +819,7 @@ void                TtaAttachNewTree (Element tree, Document document)
 	       if (pDoc->DocDocElement != NULL)
 		 UndisplayElement (pRoot, document);
 #endif
-	       DeleteElement (pRoot, pDoc);
+	       DeleteElement (&pRoot, pDoc);
 	       InsertFirstChild (pDoc->DocDocElement, pRoot);
 	       numAssocLibre = 0;
 	       ok = TRUE;
