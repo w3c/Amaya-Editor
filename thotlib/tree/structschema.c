@@ -727,23 +727,27 @@ PtrElement          pEl;
    RConstruct          constr;
 
    stop = FALSE;
-   do
-      if (pEl == NULL)
-	 stop = TRUE;
-      else
-	{
-	   constr = GetElementConstruct (pEl);
-	   if (constr == CsAggregate || constr == CsUnorderedAggregate)
-	     {
-		pEl = NULL;
-		stop = TRUE;
-	     }
-	   else if (constr == CsList)
-	      stop = TRUE;
-	   else
-	      pEl = pEl->ElParent;
-	}
-   while (!stop);
+   if (pEl != NULL)
+      {
+      pEl = pEl->ElParent;
+      do
+         if (pEl == NULL)
+	    stop = TRUE;
+         else
+	   {
+	     constr = GetElementConstruct (pEl);
+	     if (constr == CsAggregate || constr == CsUnorderedAggregate)
+	       {
+		  pEl = NULL;
+		  stop = TRUE;
+	       }
+	     else if (constr == CsList)
+	        stop = TRUE;
+	     else
+	        pEl = pEl->ElParent;
+	   }
+      while (!stop);
+      }
    return pEl;
 }
 
@@ -1187,6 +1191,7 @@ PtrElement          pElCut;
       if (TypeHasException (ExcNoCut, pEl->ElTypeNumber, pEl->ElStructSchema))
 	 /* l'exception NoCut est associee au type de l'element */
 	{
+	   ret = FALSE;
 	   if (ThotLocalActions[T_singlecell] != NULL)
 	     {
 		(*ThotLocalActions[T_singlecell]) (pEl, pElCut, &InCutBuffer);
@@ -1194,8 +1199,6 @@ PtrElement          pElCut;
 		   /* C'est une cellule de tableau orpheline, sa colonne de
 		      reference a deja ete coupee */
 		   ret = TRUE;
-		else
-		   ret = FALSE;
 	     }
 	}
       else if (FullStructureChecking)
@@ -2524,22 +2527,22 @@ PtrElement         *pSplitEl;
 			         possede une exception ParagraphBreak */
 			      pE = firstEl->ElParent;
 			      while (pE != NULL && *pList == NULL)
-				{
-				   if (TypeHasException (ExcParagraphBreak, pE->ElTypeNumber,
-							 pE->ElStructSchema))
-				      *pList = AncestorList (pE->ElParent);
-				   pE = pE->ElParent;
-				}
+				 if (TypeHasException (ExcParagraphBreak,
+					 pE->ElTypeNumber, pE->ElStructSchema))
+				    *pList = AncestorList (pE);
+				 else
+				    pE = pE->ElParent;
 			      if (*pList == NULL)
 				 if (GetElementConstruct (firstEl->ElParent) == CsList)
-				    *pList = AncestorList (firstEl->ElParent->ElParent);
+				    *pList = AncestorList (firstEl->ElParent);
 				 else
 				   {
-				      pE = firstEl->ElParent;
-				      if (GetElementConstruct (pE) == CsChoice)
-					 if (pE->ElParent != NULL)
-					    if (GetElementConstruct (pE->ElParent) == CsList)
-					       pE = pE->ElParent->ElParent;
+				      pE = firstEl;
+				      if (GetElementConstruct (firstEl->ElParent) ==
+								      CsChoice)
+					 if (firstEl->ElParent->ElParent != NULL)
+					    if (GetElementConstruct (firstEl->ElParent->ElParent) == CsList)
+					       pE = firstEl->ElParent->ElParent;
 				      *pList = AncestorList (pE);
 				   }
 			   }
