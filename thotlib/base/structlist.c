@@ -220,10 +220,10 @@ static void WrPRuleType (PtrPRule pRule, FILE * fileDescriptor)
       fprintf (fileDescriptor, "Font");
       break;
     case PtUnderline:
-      fprintf (fileDescriptor, "Souligne");
+      fprintf (fileDescriptor, "Underline");
       break;
     case PtThickness:
-      fprintf (fileDescriptor, "Epaisseur");
+      fprintf (fileDescriptor, "Thickness");
       break;
     case PtIndent:
       fprintf (fileDescriptor, "Indent");
@@ -1254,6 +1254,26 @@ void ListAbsBoxes (PtrAbstractBox pAb, int Indent, FILE *fileDescriptor)
 	fprintf (fileDescriptor, " Weight:%d", pAb->AbFontWeight);
 	fprintf (fileDescriptor, " Size:%d", pAb->AbSize);
 	wrTypeUnit (pAb->AbSizeUnit, fileDescriptor);
+	fprintf (fileDescriptor, " Underline:");
+	switch (pAb->AbUnderline)
+	  {
+	  case 0:
+	    fprintf (fileDescriptor, "NoUnderline");
+	    break;
+	  case 1:
+	    fprintf (fileDescriptor, "Underlined");
+	    break;
+	  case 2:
+	    fprintf (fileDescriptor, "Overlined");
+	    break;
+	  case 3:
+	    fprintf (fileDescriptor, "CrossedOut");
+	    fprintf (fileDescriptor, "ltr");
+	    break;
+	  default:
+	    fprintf (fileDescriptor, "%c", pAb->AbUnderline);
+	    break;
+	  }
 	if (!pAb->AbHorizEnclosing || !pAb->AbVertEnclosing ||
 	    pAb->AbNotInLine)
 	  {
@@ -1851,6 +1871,29 @@ static void ListBoxTree (PtrAbstractBox pAb, int Indent, FILE *fileDescriptor)
 	     wrnumber (pBox->BxBPadding, fileDescriptor);
 	     fprintf (fileDescriptor, " Right:");
 	     wrnumber (pBox->BxRPadding, fileDescriptor);
+	     fprintf (fileDescriptor, "\n");
+	     for (j = 1; j <= Indent + 4; j++)
+		fprintf (fileDescriptor, " ");
+	     fprintf (fileDescriptor, " Underline:");
+	     switch (pBox->BxUnderline)
+	       {
+	       case 0:
+		 fprintf (fileDescriptor, "NoUnderline");
+		 break;
+	       case 1:
+		 fprintf (fileDescriptor, "Underlined");
+		 break;
+	       case 2:
+		 fprintf (fileDescriptor, "Overlined");
+		 break;
+	       case 3:
+		 fprintf (fileDescriptor, "CrossedOut");
+		 fprintf (fileDescriptor, "ltr");
+		 break;
+	       default:
+		 fprintf (fileDescriptor, "%c", pBox->BxUnderline);
+		 break;
+	       }
 
 	     fprintf (fileDescriptor, "\n");
 	     for (j = 1; j <= Indent + 4; j++)

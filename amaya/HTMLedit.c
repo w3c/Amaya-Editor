@@ -1649,7 +1649,8 @@ static Element SearchTypedElementForward (ElementType elType_search,
   If an element already has an ID attribute, a new one won't be created.
   TO DO: Use the thotmsg functions for the dialogs.
   ----------------------------------------------------------------------*/
-void         CreateRemoveIDAttribute (char *elName, Document doc, ThotBool createID, ThotBool inSelection)
+void CreateRemoveIDAttribute (char *elName, Document doc, ThotBool createID,
+			      ThotBool inSelection)
 {
   Element             el, lastEl;
   ElementType         elType;

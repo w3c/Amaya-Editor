@@ -758,12 +758,11 @@ Element         PutInContent (char *ChrString, ParserData *context)
 }
 
 /*----------------------------------------------------------------------
-   UnknownXhtmlNameSpace
-   The element doesn't belong to a supported namespace
+  UnknownXhtmlNameSpace
+  The element doesn't belong to a supported namespace
   ----------------------------------------------------------------------*/
-void               UnknownXhtmlNameSpace (ParserData *context,
-					  Element *unknownEl,
-					  char* content)
+void UnknownXhtmlNameSpace (ParserData *context, Element *unknownEl,
+			    char* content)
 {
    ElementType     elType;
    Element         elText;
@@ -790,14 +789,13 @@ void               UnknownXhtmlNameSpace (ParserData *context,
    CreateHTMLAttribute
    create an attribute of type attrType for the element el.
   ----------------------------------------------------------------------*/
-void           CreateHTMLAttribute (Element       el,
-				    AttributeType attrType,
-				    char*         text,
-				    ThotBool      isInvalid,
-				    Document      doc,
-				    Attribute    *lastAttribute,
-				    Element      *lastAttrElement)
-     
+void CreateHTMLAttribute (Element       el,
+			  AttributeType attrType,
+			  char*         text,
+			  ThotBool      isInvalid,
+			  Document      doc,
+			  Attribute    *lastAttribute,
+			  Element      *lastAttrElement)
 {
    int         attrKind;
    int         length;

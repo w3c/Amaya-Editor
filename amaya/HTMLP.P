@@ -643,32 +643,28 @@ BOXES
  VALUE_Invalid_attribute: BEGIN
 	Content: (Invalid_attribute);
 	Visibility: 0;
+	Underline: CrossedOut;
+	Foreground: INVALID_Color;
 	HorizPos: Left = Previous . Right;
 	VertPos: HRef = Previous . HRef;
 	IN Structure_view BEGIN
+		Visibility: 5;
 		Size: TAG_FONTSIZE;
 		Style: INVALID_Style;
-#ifdef BLACK_WHITE
-		Underline: CrossedOut;
-#else
-		Foreground: INVALID_Color;
-#endif
-		END;	
+		END;
 	END;
 
  VALUE_Unknown_attribute: BEGIN
 	Content: (Unknown_attribute);
 	Visibility: 0;
+	Underline: Creator =;
+	Foreground: UNKNOWNTAG_Color;
 	HorizPos: Left = Previous . Right;
 	VertPos: HRef = Previous . HRef;
 	IN Structure_view BEGIN
+		Visibility: 5;
 		Size: TAG_FONTSIZE;
 		Style: INVALID_Style;
-#ifdef BLACK_WHITE
-		Underline: CrossedOut;
-#else
-		Foreground: INVALID_Color;
-#endif
 		END;	
 	END;
 
@@ -854,22 +850,6 @@ BOXES
 		Size: TAG_FONTSIZE;
 		Weight: TAG_Weight;
 		Visibility: TAG_Visibility;  Foreground: TAG_Color;
-		END;
-	END;
-
- INVALID_E: BEGIN
-	Content: Text '>';
-	Visibility: 0;
-	IN Structure_view BEGIN
-		HorizPos: Left = Previous . Right;
-		VertPos: HRef = Previous . HRef;
-		Size: TAG_FONTSIZE;
-		Style: INVALID_Style;
-#ifdef BLACK_WHITE
-		Underline: CrossedOut;
-#else
-		Foreground: Creator =;
-#endif
 		END;
 	END;
 
@@ -4695,16 +4675,14 @@ RULES
   Invalid_element:
 	BEGIN
 	Visibility: 0;
-	if not AnyAttributes
-	  CreateAfter(INVALID_E);
+	Underline: CrossedOut;
+#ifndef BLACK_WHITE
+	Foreground: INVALID_Color;
+#endif
 	IN Structure_view BEGIN
+		Visibility: 5;
 		Size: TAG_FONTSIZE;
 		Style: INVALID_Style; Weight: INVALID_Weight;
-#ifdef BLACK_WHITE
-		Underline: CrossedOut;
-#else
-		Foreground: INVALID_Color;
-#endif
 		Font: INVALID_Font;
 		END;
 	END;
@@ -4712,16 +4690,16 @@ RULES
   Unknown_namespace:
 	BEGIN
 	Visibility: 0;
-	if not AnyAttributes
-	  CreateAfter(INVALID_E);
+#ifdef BLACK_WHITE
+	Underline: Underlined;
+#else
+	Underline: NoUnderline;
+	Foreground: INVALID_Color;
+#endif
 	IN Structure_view BEGIN
+		Visibility: 5;
 		Size: TAG_FONTSIZE;
 		Style: INVALID_Style; Weight: INVALID_Weight;
-#ifdef BLACK_WHITE
-		Underline: CrossedOut;
-#else
-		Foreground: INVALID_Color;
-#endif
 		Font: INVALID_Font;
 		END;
 	END;
@@ -4889,9 +4867,10 @@ RULES
   IFRAME: BEGIN
 	CreateBefore(ElementName);
 	CreateWith(VerticalLine);
-	HorizPos: Left = Previous . Right;
-	VertPos: HRef = Previous . HRef;
-	Width: 3 cm;
+	HorizPos: Left = Previous . Left;
+	VertPos: Top = Previous . Bottom;
+	Width: Enclosing . Width;
+	Line;
 	LineBreak: No;
 	IN Structure_view BEGIN
 		Width: Enclosing . Width - STRUCT_INDENT;
@@ -7663,8 +7642,6 @@ ATTRIBUTES
 	   CreateBefore(VALUE_Invalid_attribute);
 	if Invalid_element
 	   CreateAfter(VALUE_Invalid_attribute);
-	if Invalid_element and LastAttr
-	   CreateAfter(INVALID_E);
 	if Unknown_namespace
 	   CreateAfter(VALUE_Invalid_attribute);
 	if Anchor
@@ -7681,12 +7658,8 @@ ATTRIBUTES
 	   CreateBefore(VALUE_Unknown_attribute);
 	if Invalid_element
 	   CreateAfter(VALUE_Unknown_attribute);
-	if Invalid_element and LastAttr
-	   CreateAfter(INVALID_E);
 	if Unknown_namespace
 	   CreateAfter(VALUE_Unknown_attribute);
-	if Unknown_namespace and LastAttr
-	   CreateAfter(INVALID_E);
 	if Anchor
 	   CreateBefore(VALUE_Unknown_attribute);
 	if not TEXT_UNIT and not PICTURE_UNIT and not Invalid_element  and not Unknown_namespace and not Anchor
@@ -7714,26 +7687,5 @@ ATTRIBUTES
 	   CreateLast (IndexBox);
 	END;
 #endif
-
-  Error_type = UnknownTag:
-	BEGIN
-#ifdef BLACK_WHITE
-	Underline: CrossedOut;
-#else
-	Foreground: UNKNOWNTAG_Color;
-#endif
-	if LastAttr
-	   CreateAfter(INVALID_E);
-	END;
-
-  Error_type = BadPosition:
-	if LastAttr
-	   CreateAfter(INVALID_E);
-
-  is_css:
-	BEGIN
-		Visibility: 0;
-	END;
-
 
 END

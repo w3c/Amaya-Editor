@@ -1198,30 +1198,13 @@ RULES
 
  Invalid_element:
 	BEGIN
-#ifdef XML
 	Remove;
-#else
-	if Error_type = BadPosition
-	   Remove;
-	if not Error_type = BadPosition
-           BEGIN
-	   NoTranslation;
-	   Create Content;
-	   Remove;
-	   Create Attributes;
-	   Create '>';
-	   END;
 #endif
 	END;
 
  Unknown_namespace:
 	BEGIN
 	   NoTranslation;
-	   Create '\12';
-	   Create Content;
-	   Remove;
-	   Create Attributes;
-	   Create '>';
 	END;
 
  Comment\240: BEGIN
@@ -2790,7 +2773,7 @@ ATTRIBUTES
  Invalid_attribute:
 	BEGIN
 #ifndef XML
-	Create Invalid_attribute;
+	{Create Invalid_attribute;}
 #endif
 	END;
 

@@ -994,19 +994,19 @@ static void CloseBuffer ()
 /*----------------------------------------------------------------------
    InitBuffer      initialize the input buffer.
   ----------------------------------------------------------------------*/
-static void         InitBuffer ()
+static void InitBuffer ()
 {
    LgBuffer = 0;
 }
 
-static ThotBool     InsertElement (Element * el);
+static ThotBool InsertElement (Element * el);
 
 /*----------------------------------------------------------------------
    InsertSibling   return TRUE if the new element must be inserted
    in the Thot document as a sibling of lastElement;
    return FALSE it it must be inserted as a child.
   ----------------------------------------------------------------------*/
-static ThotBool     InsertSibling ()
+static ThotBool InsertSibling ()
 {
    if (StackLevel == 0)
       return FALSE;
@@ -1222,7 +1222,7 @@ static void         TextToDocument ()
    StartOfTag      Beginning of a HTML tag (start or end tag).
    Put the preceding text into the Thot document.
   ----------------------------------------------------------------------*/
-static void         StartOfTag (char c)
+static void StartOfTag (char c)
 {
    if (LgBuffer > 0)
       TextToDocument ();
@@ -1339,6 +1339,7 @@ static ThotBool     CheckSurrounding (Element * el, Element parent)
    elType = TtaGetElementType (*el);
    if (elType.ElTypeNum == HTML_EL_TEXT_UNIT || elType.ElTypeNum == HTML_EL_BR
        || elType.ElTypeNum == HTML_EL_PICTURE_UNIT
+       || elType.ElTypeNum == HTML_EL_IFRAME
        || elType.ElTypeNum == HTML_EL_Input
        || elType.ElTypeNum == HTML_EL_Text_Area)
      {
@@ -2138,7 +2139,7 @@ void                   SetAttrIntItemStyle (Element el, Document doc)
    StopParsing 
    Stops the document parsing when an unrecoverable error is found
   ----------------------------------------------------------------------*/
-static void         StopParsing (Document doc)
+static void StopParsing (Document doc)
 {
   NormalTransition = FALSE;
   HTMLrootClosed = TRUE;
@@ -2149,16 +2150,29 @@ static void         StopParsing (Document doc)
    EndOfStartTag   a ">" has been read. It indicates the end
    of a start tag.
   ----------------------------------------------------------------------*/
-static void           EndOfStartTag (char c)
+static void EndOfStartTag (char c)
 {
+  Element             elText;
   ElementType         elType;
   AttributeType       attrType;
   Attribute           attr;
   char               *text;
   int                 length, error;
 
+  if (UnknownTag)
+    {
+      if (HTMLcontext.lastElement)
+	{
+	  CloseBuffer ();
+	  elText = TtaGetLastChild (HTMLcontext.lastElement);
+	  if (LgBuffer > 0)
+	    TtaAppendTextContent (elText, inputBuffer, HTMLcontext.doc);
+	  TtaAppendTextContent (elText, ">", HTMLcontext.doc);
+	  InitBuffer ();
+	}
+    }
   UnknownTag = FALSE;
-  if ((HTMLcontext.lastElement != NULL) && (lastElemEntry != -1))
+  if (HTMLcontext.lastElement && lastElemEntry != -1)
     {
       if (!strcmp (pHTMLGIMapping[lastElemEntry].XMLname, "pre") ||
 	  !strcmp (pHTMLGIMapping[lastElemEntry].XMLname, "style") ||
@@ -2337,23 +2351,24 @@ static void         SpecialImplicitEnd (int entry)
 
 /*----------------------------------------------------------------------
    InsertInvalidEl
-   create an element Invalid_element with the indicated content.
-   position indicate whether the element type is unknown (FALSE) or the
+   create an Invalid_element element or a Unknown element.
+   badposition indicate whether the element type is unknown (FALSE) or the
    tag position is incorrect (TRUE).
   ----------------------------------------------------------------------*/
-static void InsertInvalidEl (char* content, ThotBool position)
+static void InsertInvalidEl (char* content, ThotBool badposition)
 {
    ElementType       elType;
-   AttributeType     attrType;
    Element           elInv, elText;
-   Attribute	     attr;
 
    elType.ElSSchema = DocumentSSchema;
-   elType.ElTypeNum = HTML_EL_Invalid_element;
+   if (badposition)
+     elType.ElTypeNum = HTML_EL_Invalid_element;
+   else
+     elType.ElTypeNum = HTML_EL_Unknown_namespace;
    elInv = TtaNewElement (HTMLcontext.doc, elType);
    TtaSetElementLineNumber (elInv, NumberOfLinesRead);
    InsertElement (&elInv);
-   if (elInv != NULL)
+   if (elInv)
      {
 	HTMLcontext.lastElementClosed = TRUE;
 	elType.ElTypeNum = HTML_EL_TEXT_UNIT;
@@ -2361,17 +2376,12 @@ static void InsertInvalidEl (char* content, ThotBool position)
 	TtaSetElementLineNumber (elText, NumberOfLinesRead);
 	TtaInsertFirstChild (&elText, elInv, HTMLcontext.doc);
 	TtaSetTextContent (elText, content, HTMLcontext.language, HTMLcontext.doc);
-	TtaSetAccessRight (elText, ReadOnly, HTMLcontext.doc);
-	attrType.AttrSSchema = DocumentSSchema;
-	attrType.AttrTypeNum = HTML_ATTR_Error_type;
-	attr = TtaNewAttribute (attrType);
-	TtaAttachAttribute (elInv, attr, HTMLcontext.doc);
-	if (position)
-	   TtaSetAttributeValue (attr, HTML_ATTR_Error_type_VAL_BadPosition,
-				 elInv, HTMLcontext.doc);
-	else
-	   TtaSetAttributeValue (attr, HTML_ATTR_Error_type_VAL_UnknownTag,
-				 elInv, HTMLcontext.doc);
+	InitBuffer ();
+	if (!UnknownTag)
+	  /* close the end tag */
+	  TtaAppendTextContent (elText, ">", HTMLcontext.doc);
+	if (badposition)
+	  TtaSetAccessRight (elInv, ReadOnly, HTMLcontext.doc);
      }
 }
 
@@ -2387,7 +2397,7 @@ static void ProcessStartGI (char* GIname)
   int                 entry, i;
   char              msgBuffer[MaxMsgLength];
   PtrClosedElement    pClose;
-  ThotBool            sameLevel;
+  ThotBool            sameLevel, removed;
   SSchema	      schema;
 
   /* ignore tag <P> within PRE */
@@ -2418,14 +2428,25 @@ static void ProcessStartGI (char* GIname)
       else
 	/* unknown tag */
 	{
+	  UnknownTag = TRUE;
 	  if (strlen (GIname) > MaxMsgLength - 20)
 	    GIname[MaxMsgLength - 20] = EOS;
-	  sprintf (msgBuffer, "warning - unknown tag <%s>", GIname);
-	  HTMLParseError (HTMLcontext.doc, msgBuffer);
-	  UnknownTag = TRUE;
+	  if (DocumentMeta[HTMLcontext.doc] &&
+	      DocumentMeta[HTMLcontext.doc]->xmlformat)
+	    {
+	      sprintf (msgBuffer, "Invalid tag <%s> (removed if saving)", GIname);
+	      HTMLParseError (HTMLcontext.doc, msgBuffer);
+	      removed = TRUE;
+	    }
+	  else
+	    {
+	      sprintf (msgBuffer, "Warning - unknown tag <%s>", GIname);
+	      HTMLParseError (HTMLcontext.doc, msgBuffer);
+	      removed = FALSE;
+	    }
 	  /* create an Invalid_element */
 	  sprintf (msgBuffer, "<%s", GIname);
-	  InsertInvalidEl (msgBuffer, FALSE);
+	  InsertInvalidEl (msgBuffer, removed);
 	}
     }
 
@@ -2452,7 +2473,7 @@ static void ProcessStartGI (char* GIname)
 	       (!strcmp (pHTMLGIMapping[entry].XMLname, "td") ||
 		!strcmp (pHTMLGIMapping[entry].XMLname, "th")))
 	    {
-	      sprintf (msgBuffer, "Tags <table>, <tbody> and <tr> added", GIname);
+	      sprintf (msgBuffer, "Tags <table>, <tbody> and <tr> added");
 	      HTMLParseError (HTMLcontext.doc, msgBuffer);
 	      /* generate mandatory parent elements */ 
 	      ProcessStartGI ("table");
@@ -2463,7 +2484,7 @@ static void ProcessStartGI (char* GIname)
 		   !strcmp (pHTMLGIMapping[entry].XMLname, "tr"))
 	    {
 	      /* generate mandatory parent elements */ 
-	      sprintf (msgBuffer, "Tags <table> and <tbody> added", GIname);
+	      sprintf (msgBuffer, "Tags <table> and <tbody> added");
 	      HTMLParseError (HTMLcontext.doc, msgBuffer);
 	      ProcessStartGI ("table");
 	    }
@@ -2479,7 +2500,7 @@ static void ProcessStartGI (char* GIname)
 	  if (!ContextOK (entry))
 	    /* element not allowed in the current structural context */
 	    {
-	      sprintf (msgBuffer, "Tag <%s> is not allowed here", GIname);
+	      sprintf (msgBuffer, "Tag <%s> is not allowed here (removed if saving)", GIname);
 	      HTMLParseError (HTMLcontext.doc, msgBuffer);
 	      UnknownTag = TRUE;
 	      /* create an Invalid_element */
@@ -2576,7 +2597,7 @@ static void     EndOfStartGI (char c)
 
       InitBuffer ();
       if (HTMLcontext.lastElementClosed &&
-	  (HTMLcontext.lastElement == rootElement))
+	  HTMLcontext.lastElement == rootElement)
          /* an element after the tag </html>, ignore it */
          {
          HTMLParseError (HTMLcontext.doc, "Element after tag </html>. Ignored");
@@ -2649,7 +2670,7 @@ static void        EndOfEndTag (char c)
    char            msgBuffer[MaxMsgLength];
    int             entry;
    int             i;
-   ThotBool        ok;
+   ThotBool        ok, removed;
 
    CloseBuffer ();
 
@@ -2699,18 +2720,29 @@ static void        EndOfEndTag (char c)
       entry = MapGI (inputBuffer, &schema, HTMLcontext.doc);
       if (entry < 0)
         {
-        if (strlen (inputBuffer) > MaxMsgLength - 20)
-	   inputBuffer[MaxMsgLength - 20] = EOS;
-	sprintf (msgBuffer, "warning - unknown tag </%s>", inputBuffer);
-	HTMLParseError (HTMLcontext.doc, msgBuffer);
-	/* create an Invalid_element */
-	sprintf (msgBuffer, "</%s", inputBuffer);
-	InsertInvalidEl (msgBuffer, FALSE);
+	  if (strlen (inputBuffer) > MaxMsgLength - 20)
+	    inputBuffer[MaxMsgLength - 20] = EOS;
+	  if (DocumentMeta[HTMLcontext.doc] &&
+	      DocumentMeta[HTMLcontext.doc]->xmlformat)
+	    {
+	      sprintf (msgBuffer, "Invalid tag <%s> (removed if saving)", inputBuffer);
+	      HTMLParseError (HTMLcontext.doc, msgBuffer);
+	      removed = TRUE;
+	    }
+	  else
+	    {
+	      sprintf (msgBuffer, "Warning - unknown tag </%s>", inputBuffer);
+	      HTMLParseError (HTMLcontext.doc, msgBuffer);
+	      removed = FALSE;
+	    }
+	  /* create an Invalid_element */
+	  sprintf (msgBuffer, "</%s", inputBuffer);
+	  InsertInvalidEl (msgBuffer, removed);
         }
       else if (entry >= 0 &&
 	       TtaGetDocumentProfile(HTMLcontext.doc) != L_Other &&
 	       !(pHTMLGIMapping[entry].Level &
-		 TtaGetDocumentProfile(HTMLcontext.doc))) 
+		 TtaGetDocumentProfile (HTMLcontext.doc))) 
 	{
 	  /* Invalid element for the document profile */
 	  if (strlen (inputBuffer) > MaxMsgLength - 20)
@@ -2724,53 +2756,66 @@ static void        EndOfEndTag (char c)
       else if (!CloseElement (entry, -1, FALSE))
         /* the end tag does not close any current element */
         {
-	/* print an error message... */
-	sprintf (msgBuffer, "Unexpected end tag </%s>", inputBuffer);
-	HTMLParseError (HTMLcontext.doc, msgBuffer);
-	/* ... and try to recover */
-	if ((inputBuffer[0] == 'H' || inputBuffer[0] == 'h') &&
-	    inputBuffer[1] >= '1' && inputBuffer[1] <= '6' &&
-	    inputBuffer[2] == EOS)
-	   /* the end tag is </Hn>. Consider all Hn as equivalent. */
-	   /* </H3> is considered as an end tag for <H2>, for instance */
-	  {
-	     strcpy (msgBuffer, inputBuffer);
-	     msgBuffer[1] = '1';
-	     i = 1;
-	     do
-	       {
+	  if (DocumentMeta[HTMLcontext.doc] &&
+	      DocumentMeta[HTMLcontext.doc]->xmlformat)
+	    {
+	      sprintf (msgBuffer, "Invalid end tag <%s>", inputBuffer);
+	      HTMLParseError (HTMLcontext.doc, msgBuffer);
+	    }
+	  else
+	    {
+	      /* try to recover */
+	      if ((inputBuffer[0] == 'H' || inputBuffer[0] == 'h') &&
+		  inputBuffer[1] >= '1' && inputBuffer[1] <= '6' &&
+		  inputBuffer[2] == EOS)
+		/* the end tag is </Hn>. Consider all Hn as equivalent. */
+		/* </H3> is considered as an end tag for <H2>, for instance */
+		{
+		  strcpy (msgBuffer, inputBuffer);
+		  msgBuffer[1] = '1';
+		  i = 1;
+		  do
+		    {
+		      schema = DocumentSSchema;
+		      entry = MapGI (msgBuffer, &schema, HTMLcontext.doc);
+		      ok = CloseElement (entry, -1, FALSE);
+		      msgBuffer[1]++;
+		      i++;
+		    }
+		  while (i <= 6 && !ok);
+		}
+	      if (!ok &&
+		  (!strcasecmp (inputBuffer, "ol")   ||
+		   !strcasecmp (inputBuffer, "ul")   ||
+		   !strcasecmp (inputBuffer, "menu") ||
+		   !strcasecmp (inputBuffer, "dir")))
+		/* the end tag is supposed to close a list */
+		/* try to close another type of list */
+		{
+		  ok = TRUE;
 		  schema = DocumentSSchema;
-		  entry = MapGI (msgBuffer, &schema, HTMLcontext.doc);
-		  ok = CloseElement (entry, -1, FALSE);
-		  msgBuffer[1]++;
-		  i++;
-	       }
-	     while (i <= 6 && !ok);
-	  }
-	if (!ok &&
-	    (!strcasecmp (inputBuffer, "ol")   ||
-	     !strcasecmp (inputBuffer, "ul")   ||
-	     !strcasecmp (inputBuffer, "menu") ||
-	     !strcasecmp (inputBuffer, "dir")))
-	  /* the end tag is supposed to close a list */
-	  /* try to close another type of list */
-	  {
-	    ok = TRUE;
-	    schema = DocumentSSchema;
-	    if (!CloseElement (MapGI ("ol", &schema, HTMLcontext.doc), -1, FALSE) &&
-            !CloseElement (MapGI ("ul", &schema, HTMLcontext.doc), -1, FALSE) &&
-            !CloseElement (MapGI ("menu", &schema, HTMLcontext.doc), -1, FALSE) &&
-            !CloseElement (MapGI ("dir", &schema, HTMLcontext.doc), -1, FALSE))
-	      ok = FALSE;
-	  }
-	if (!ok)
-	  /* unrecoverable error. Create an Invalid_element */
-	  {
-            if (strlen (inputBuffer) > MaxMsgLength - 10)
-	       inputBuffer[MaxMsgLength - 10] = EOS;
-	    sprintf (msgBuffer, "</%s", inputBuffer);
-	    InsertInvalidEl (msgBuffer, TRUE);
-	  }
+		  if (!CloseElement (MapGI ("ol", &schema, HTMLcontext.doc), -1, FALSE) &&
+		      !CloseElement (MapGI ("ul", &schema, HTMLcontext.doc), -1, FALSE) &&
+		      !CloseElement (MapGI ("menu", &schema, HTMLcontext.doc), -1, FALSE) &&
+		      !CloseElement (MapGI ("dir", &schema, HTMLcontext.doc), -1, FALSE))
+		    ok = FALSE;
+		}
+	      if (!ok)
+		/* unrecoverable error. Create an Invalid_element */
+		{
+		  if (strlen (inputBuffer) > MaxMsgLength - 10)
+		    inputBuffer[MaxMsgLength - 10] = EOS;
+		  sprintf (msgBuffer, "</%s", inputBuffer);
+		  InsertInvalidEl (msgBuffer, TRUE);
+		  /* print an error message... */
+		  sprintf (msgBuffer, "Invalid end tag </%s> (removed if saving)",
+			   inputBuffer);
+		}
+	      else
+		/* print an error message... */
+		sprintf (msgBuffer, "Warning - unexpected end tag </%s>", inputBuffer);
+	      HTMLParseError (HTMLcontext.doc, msgBuffer);
+	    }
         }
       }
    InitBuffer ();
@@ -2780,10 +2825,11 @@ static void        EndOfEndTag (char c)
    EndOfAttrName   A HTML attribute has been read. Create the
    corresponding Thot attribute.
   ----------------------------------------------------------------------*/
-static void            EndOfAttrName (char c)
+static void EndOfAttrName (char c)
 {
    AttributeMapping*   tableEntry;
    AttributeType       attrType;
+   Element             elText;
    ElementType         elType;
    Attribute           attr;
    SSchema             schema;
@@ -2792,6 +2838,16 @@ static void            EndOfAttrName (char c)
    ThotBool            highEnoughLevel;
 
    CloseBuffer ();
+   if (UnknownTag && HTMLcontext.lastElement)
+     {
+       elText = TtaGetLastChild (HTMLcontext.lastElement);
+       TtaAppendTextContent (elText, " ", HTMLcontext.doc);
+       TtaAppendTextContent (elText, inputBuffer, HTMLcontext.doc);
+       InitBuffer ();
+       lastAttrEntry = NULL;
+       return;
+     }
+
    /* if a single '/' or '?' has been read instead of an attribute name, ignore
       that character.  This is to accept the XML syntax for empty elements or
       processing instructions, such as <img src="SomeUrl" /> or
@@ -2799,8 +2855,8 @@ static void            EndOfAttrName (char c)
    if (LgBuffer == 1 &&
        (inputBuffer[0] == '/' || inputBuffer[0] == '?'))
       {
-      InitBuffer ();
-      return;
+	InitBuffer ();
+	return;
       }
 
    highEnoughLevel = TRUE;
@@ -2953,7 +3009,7 @@ static void         EndOfAttrNameAndTag (char c)
    StartOfQuotedAttrValue
    A quote (or double quote) starting an attribute value has been read.
   ----------------------------------------------------------------------*/
-static void         StartOfQuotedAttrValue (char c)
+static void StartOfQuotedAttrValue (char c)
 {
    ReadingAnAttrValue = TRUE;
    if (UnknownAttr)
@@ -2981,8 +3037,9 @@ static ThotBool   isAttrValueTruncated;
   ----------------------------------------------------------------------*/
 static void         EndOfAttrValue (char c)
 {
-  char             *newBufferAttrValue;
-  int               lg;
+  Element             elText;
+  char               *newBufferAttrValue;
+  int                 lg;
 
   if (TruncatedAttrValue)
     {
@@ -3016,6 +3073,15 @@ static void         EndOfAttrValue (char c)
       CloseBuffer ();
       /* inputBuffer contains the attribute value */
       
+      if (UnknownTag && HTMLcontext.lastElement)
+	{
+	  elText = TtaGetLastChild (HTMLcontext.lastElement);
+	  TtaAppendTextContent (elText, "=", HTMLcontext.doc);
+	  TtaAppendTextContent (elText, inputBuffer, HTMLcontext.doc);
+	  InitBuffer ();
+	  lastAttrEntry = NULL;
+	  return;
+     }
       if (lastAttrEntry == NULL)
 	{
 	  InitBuffer ();
@@ -3926,7 +3992,6 @@ typedef struct _sourceTransition
 sourceTransition;
 
 /* the automaton in "source" form */
-
 static sourceTransition sourceAutomaton[] =
 {
 /*

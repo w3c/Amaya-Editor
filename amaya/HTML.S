@@ -64,7 +64,7 @@ STRUCT
          { vlink                    alink }
 	LIST OF (Element) + (INS, DEL);
 
-  Invalid_element (ATTR Error_type = UnknownTag, BadPosition) = TEXT;
+  Invalid_element = TEXT;
 
   Unknown_namespace = TEXT;
 

@@ -562,8 +562,7 @@ RULES
 	   Remove;
 
  Invalid_element:
-	If Error_type = BadPosition
-	   Remove;
+	Remove;
 
  Comment\240:
 	Remove;
