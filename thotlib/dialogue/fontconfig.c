@@ -194,6 +194,8 @@ static int getWord (int indline, unsigned char *line, char *word)
        line[0] = EOS;
        return 0;
      }
+   /*place ourself next to a word*/
+   indline = AdvanceNextWord (line, indline);
    return (indline);
 }
 
@@ -206,8 +208,6 @@ static int getFontFace (int indline, unsigned char *line, char *word)
 
    indword = 0;
    word[0] = EOS;  
-   /*place ourself next to a word*/
-   indline = AdvanceNextWord (line, indline); 
    /* skip all char if there are */
    while (indline < MAX_TXT_LEN &&
 	  line[indline] != EOS &&

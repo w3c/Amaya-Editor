@@ -673,10 +673,9 @@ static void MakeBitmapGlyph (GL_font *font,
 		  w = (short unsigned int) source->width;     
 		  h = (short unsigned int) source->rows;
 		  p = w*h;
-		  if (source->pitch*(h-1) > p)
-		    //p = source->pitch*h;
+		  /*if (source->pitch*(h-1) > p)
 		    source->pitch = w;
-		  
+		  */
 		  data = TtaGetMemory ((int) p * sizeof (unsigned char));
 		  if (data)
 		    {
