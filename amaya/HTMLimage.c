@@ -118,7 +118,6 @@ ThotBool AddLoadedImage (char *name, char *pathname,
      }
 }
 
-
 /*----------------------------------------------------------------------
    SearchLoadedImage searches the image descriptor of a loaded image using
    its local name.
@@ -145,6 +144,31 @@ LoadedImageDesc    *SearchLoadedImage (char *localpath, Document doc)
 	}
     }
   return (NULL);
+}
+
+/*----------------------------------------------------------------------
+   SearchLoadedDocImage searches the image descriptor of a loaded image 
+   using the docImage document id and the URL (there's only one such image
+   per document).
+   The function returns the descriptor entry or NULL.
+  ----------------------------------------------------------------------*/
+LoadedImageDesc    *SearchLoadedDocImage (Document doc, char *url)
+{
+  LoadedImageDesc    *pImage;
+  char               *ptr;
+
+  pImage = ImageURLs;
+  while (pImage != NULL)
+    {
+      if (pImage->document == doc)
+	{
+	  ptr = pImage->originalName + sizeof ("internal:") - 1;
+	  if (!strcmp (ptr, url))
+	    break;
+	}
+      pImage = pImage->nextImage;
+    }
+  return (pImage);
 }
 
 

@@ -8,7 +8,7 @@
 /*
  * Amaya saving functions.
  *
- * Authors: I. Vatton, D. Veillard
+ * Authors: I. Vatton, D. Veillard, J. Kahan
  *
  */
 
@@ -1196,7 +1196,8 @@ static ThotBool SaveDocumentLocally (Document doc, char *directoryName,
   char             *ptr;
   char              tempname[MAX_LENGTH];
   char              docname[100];
-  ThotBool            ok;
+  ThotBool          ok;
+  LoadedImageDesc  *pImage;
 
 #ifdef AMAYA_DEBUG
   fprintf(stderr, "SaveDocumentLocally :  %s / %s\n", directoryName, documentName);
@@ -1223,18 +1224,55 @@ static ThotBool SaveDocumentLocally (Document doc, char *directoryName,
 	DocumentMeta[doc]->xmlformat = SaveAsXML;
       SetNamespacesAndDTD (doc);
       if (DocumentTypes[doc] == docHTML)
-        if (SaveAsXML)
-	  ok = TtaExportDocumentWithNewLineNumbers (doc, tempname,
-						    "HTMLTX");
-        else
-	  ok = TtaExportDocumentWithNewLineNumbers (doc, tempname,
-						    "HTMLT");
+	{
+	  if (SaveAsXML)
+	    ok = TtaExportDocumentWithNewLineNumbers (doc, tempname,
+						      "HTMLTX");
+	  else
+	    ok = TtaExportDocumentWithNewLineNumbers (doc, tempname,
+						      "HTMLT");
+	}
       else if (DocumentTypes[doc] == docSVG)
 	ok = TtaExportDocumentWithNewLineNumbers (doc, tempname,
 						  "GraphMLT");
       else if (DocumentTypes[doc] == docMath)
 	ok = TtaExportDocumentWithNewLineNumbers (doc, tempname,
 						  "MathMLT");
+      else if (DocumentTypes[doc] == docImage)
+	{
+	  /* copy the image file to the new destination */
+	  if (!IsW3Path (DocumentURLs[doc]))
+	    {
+	      /* local to local */
+	      TtaFileCopy (DocumentURLs[doc], tempname);
+	      ok = TRUE;
+	    }
+	  else
+	    /* remote to local */
+	    {
+	      /* copy the copy from the cache to its new destination and
+		 updated the pImage description (or maybe just erase it? */
+	      pImage = SearchLoadedDocImage (doc, DocumentURLs[doc]);
+	      if (pImage)
+		{
+		  /* copy the file */
+		  TtaFileCopy (pImage->localName, tempname);
+		  /* remove the old file (note that it's the local name that
+		   we have to free, because we're using an HTML container
+		   to show the image */
+		  TtaFileUnlink (pImage->localName);
+		  TtaFreeMemory (pImage->localName);
+		  TtaFreeMemory (pImage->originalName);
+		  /* save the new location */
+		  pImage->originalName = TtaGetMemory (sizeof ("internal:")
+						       + strlen (tempname)
+						       + 1);
+		  sprintf (pImage->originalName, "internal:%s", tempname);
+		  pImage->localName = GetLocalPath (doc, tempname);
+		  ok = TRUE;
+		}
+	    }
+	}
       if (ok)
 	{
 	  TtaSetDocumentDirectory (doc, directoryName);
@@ -1246,7 +1284,12 @@ static ThotBool SaveDocumentLocally (Document doc, char *directoryName,
 	     SetWindowTitle (doc, DocumentSource[doc], 0);
 	  /* save a local copy of the current document */
 	  ptr = GetLocalPath (doc, tempname);
-	  TtaFileCopy (tempname, ptr);
+	  if (DocumentTypes[doc] == docImage)
+	    /* export the new container (but to the temporary file name */
+	    ok = TtaExportDocumentWithNewLineNumbers (doc, ptr,
+						      "HTMLTX");
+	  else
+	    TtaFileCopy (tempname, ptr);
 	  TtaFreeMemory (ptr);
 	}
     }
@@ -1497,7 +1540,14 @@ static ThotBool SaveDocumentThroughNet (Document doc, View view, char *url,
       TtaExportDocumentWithNewLineNumbers (doc, tempname, "GraphMLT");
   else if (DocumentTypes[doc] == docMath)
       TtaExportDocumentWithNewLineNumbers (doc, tempname, "MathMLT");
-
+  else if (DocumentTypes[doc] == docImage)
+    {
+      /* export the new container using the image file name */
+      TtaExportDocumentWithNewLineNumbers (doc, tempname, "HTMLTX");
+      TtaFreeMemory (tempname);
+      pImage = SearchLoadedDocImage (doc, url);
+      tempname = TtaStrdup (pImage->localName);
+    }
   res = 0;
   if (confirm && with_images)
     {
@@ -1568,6 +1618,8 @@ static ThotBool SaveDocumentThroughNet (Document doc, View view, char *url,
 
       if (DocumentMeta[doc])
 	content_type = DocumentMeta[doc]->content_type;
+      else
+	content_type = NULL;
       res = SafeSaveFileThroughNet (doc, tempname, url, content_type, use_preconditions);
       if (res != 0)
 	{
@@ -1915,20 +1967,20 @@ void SaveDocument (Document doc, View view)
       /* it's a complete name: save it */
       if (ok)
 	{
-	if (TextFormat)
-	  {
-	  ok = SaveObjectThroughNet (doc, view, DocumentURLs[doc],
-				     FALSE, TRUE);
-	  if (DocumentTypes[doc] == docSource)
-	     /* it's a source file. lines have been renumbered */
-	     newLineNumbers = TRUE;
-	  }
-	else
-	  {
-	  ok = SaveDocumentThroughNet (doc, view, DocumentURLs[doc],
-				       FALSE, TRUE, TRUE);
-	  newLineNumbers = TRUE;
-	  }
+	  if (TextFormat)
+	    {
+	      ok = SaveObjectThroughNet (doc, view, DocumentURLs[doc],
+					 FALSE, TRUE);
+	      if (DocumentTypes[doc] == docSource)
+		/* it's a source file. lines have been renumbered */
+		newLineNumbers = TRUE;
+	    }
+	  else
+	    {
+	      ok = SaveDocumentThroughNet (doc, view, DocumentURLs[doc],
+					   FALSE, TRUE, TRUE);
+	      newLineNumbers = TRUE;
+	    }
 	}
     }
   else
@@ -2086,6 +2138,143 @@ ThotBool DocumentToSave (NotifyDialog *event)
    return TRUE;	/* prevent Thot from performing normal save operation */
 }
 
+/*----------------------------------------------------------------------
+  DeleteDocImageContext
+  Deletes all the context related to docImage document doc and URL url.
+  ----------------------------------------------------------------------*/
+static void DeleteDocImageContext (Document doc, char *url)
+{
+  LoadedImageDesc    *pImage;
+  
+  /* we should remove this line if when we change the code
+     to use an ImageDesc for local images too */
+  if (!IsHTTPPath (url))
+    return;
+
+  pImage = SearchLoadedDocImage (doc, url);
+  if (!pImage)
+    /* nothing to be deleted */
+    return;
+
+  /* remove it from the list */
+  if (ImageURLs == pImage)
+    ImageURLs = pImage->nextImage;
+  else
+    pImage->prevImage->nextImage = pImage->nextImage;
+
+  /* delete the local copy of the image */
+  TtaFileUnlink (pImage->localName);
+
+  /* free all associated memory */
+  TtaFreeMemory (pImage->originalName);
+  TtaFreeMemory (pImage->localName);
+  TtaFreeMemory (pImage);
+}
+
+/*----------------------------------------------------------------------
+  UpdateDocImage
+  Changes the HTML container to point to the new URL of the image.
+  If pictures are saved locally, make the copy.
+  The parameter imgbase gives the relative path of the new image directory.
+  The parameter newURL gives the new document URL (or local file).
+  ----------------------------------------------------------------------*/
+static ThotBool UpdateDocImage (Document doc, ThotBool src_is_local,
+				ThotBool dst_is_local, char *newURL)
+{
+  Element       el;
+  Attribute     attr;
+  AttributeType attrType;
+  char          *ptr;
+  char          *localName;
+  char          *internalURL;
+  LoadedImageDesc    *pImage;
+
+
+  /* get the URL of the image and the element */
+  if (! ImageElement (doc, NULL, &el))
+    return FALSE;
+
+  /* change the value of the src attribute */
+  attrType.AttrSSchema = TtaGetSSchema ("HTML", doc);
+  attrType.AttrTypeNum = HTML_ATTR_SRC;
+
+  attr = TtaGetAttribute (el, attrType);
+  TtaRegisterAttributeReplace (attr, el, doc);
+  TtaSetAttributeText (attr, newURL, el, doc);
+
+  /* copy the file to the amaya cache if it's a remote save */
+  if (!dst_is_local)
+    {
+      /* make the special internal URL (used to display the image from
+	 the container */
+      internalURL = TtaGetMemory (sizeof ("internal:")
+				  + strlen (newURL)
+				  + 1);
+      sprintf (internalURL, "internal:%s", newURL);
+      
+      /* make the local name (we switch the extension to .html) */
+      localName = TtaGetMemory (strlen (newURL)
+			       + sizeof (".html"));
+      strcpy (localName, newURL);
+      ptr = strrchr (localName, '.');
+      if (ptr)
+	strcpy (ptr, ".html");
+      else
+	strcat (localName, ".html");
+      ptr = GetLocalPath (doc, localName);
+      TtaFreeMemory (localName);
+      localName = ptr;
+
+      /* create the pImage descriptor if it doesn't exist
+       and copy the file */
+
+      pImage = SearchLoadedDocImage (doc, newURL);
+      if (pImage)
+	{
+	  /* copy the old file to the new location */
+	  TtaFileCopy (pImage->localName, localName);
+	  if (pImage->originalName != NULL)
+	    TtaFreeMemory (pImage->originalName);
+	  pImage->originalName = internalURL;
+	  if (pImage->localName)
+	    TtaFreeMemory (pImage->localName);
+	  pImage->localName = localName;
+	  pImage->status = IMAGE_LOADED;
+	}
+      else
+	{
+	  if (IsHTTPPath (DocumentURLs[doc]))
+	    {
+	      /* remote to remote copy */
+	      pImage = SearchLoadedDocImage (doc, DocumentURLs[doc]);
+	      TtaFileCopy (pImage->localName, localName);
+	    }
+	  else
+	    /* local to remote copy */
+	    TtaFileCopy (DocumentURLs[doc], localName);
+
+	  pImage = (LoadedImageDesc *) TtaGetMemory (sizeof (LoadedImageDesc));
+	  memset ((void *) pImage, 0, sizeof (LoadedImageDesc));
+	  pImage->originalName = internalURL;
+	  pImage->localName = localName;
+	  pImage->prevImage = NULL;
+	  if (ImageURLs)
+	    {
+	      ImageURLs->prevImage = pImage;
+	      pImage->nextImage = ImageURLs;
+	    }
+	  else
+	    pImage->nextImage = NULL;
+	  ImageURLs = pImage;
+	  pImage->document = doc;
+	  pImage->elImage = NULL;
+	  /* @@ JK: initialize the image type here */
+	  pImage->imageType = TtaGetPictureType (el);
+	}
+	  pImage->status = IMAGE_LOADED;
+    }
+  return TRUE;
+}
 
 /*----------------------------------------------------------------------
   UpdateImages
@@ -2410,8 +2599,8 @@ static void UpdateImages (Document doc, ThotBool src_is_local,
 		       fprintf(stderr, "     SRC from %s to %s\n", buf, url);
 #endif
 		       if ((src_is_local) && (!dst_is_local))
-			 /* add the localfile to the images list */
-			 AddLocalImage (buf, imgname, tempname, doc, &pImage);
+			   /* add the localfile to the images list */
+			   AddLocalImage (buf, imgname, tempname, doc, &pImage);
 		       
 		       /* mark the image descriptor or copy the file */
 		       if (dst_is_local)
@@ -2465,8 +2654,8 @@ static void UpdateImages (Document doc, ThotBool src_is_local,
 				 }
 			     }
 			   else
-			     /* add the localfile to the images list */
-			     AddLocalImage (tempfile, imgname, tempname, doc, &pImage);
+			       /* add the localfile to the images list */
+			       AddLocalImage (tempfile, imgname, tempname, doc, &pImage);
 			 }
 		     }
 		   TtaFreeMemory (buf);
@@ -2509,6 +2698,7 @@ void DoSaveAs (char *user_charset, char *user_mimetype)
   ThotBool            old_put_def_name;
   char               *old_charset = NULL;
   char               *old_mimetype = NULL;
+  char               *ptr;
   CHARSET             charset;
 
   if (SavingDocument == 0)
@@ -2757,8 +2947,10 @@ void DoSaveAs (char *user_charset, char *user_mimetype)
 	   * picture SRC attribute. If pictures are saved locally, make the
 	   * copy else add them to the list of remote images to be copied.
 	   */
-	  if (DocumentTypes[doc] != docMath)
-	  UpdateImages (doc, src_is_local, dst_is_local, imgbase, documentFile);
+	  if (DocumentTypes[doc] == docImage)
+	    UpdateDocImage (doc, src_is_local, dst_is_local, documentFile);
+	  else if (DocumentTypes[doc] != docMath)
+	    UpdateImages (doc, src_is_local, dst_is_local, imgbase, documentFile);
 	  toUndo = TtaCloseUndoSequence (doc);
 	  if (dst_is_local)
 	    {
@@ -2787,6 +2979,9 @@ void DoSaveAs (char *user_charset, char *user_mimetype)
 	{
 	  if (toUndo)
 	    TtaCancelLastRegisteredSequence (doc);
+	  /* remove the previous docImage context */
+	  if (DocumentTypes[doc] == docImage)
+	    DeleteDocImageContext (doc, DocumentURLs[doc]);
 	  /* add to the history the data of the previous document */
 	  if (DocumentTypes[doc] == docSource)
 	    {
@@ -2861,6 +3056,14 @@ void DoSaveAs (char *user_charset, char *user_mimetype)
 	    TtaUndoNoRedo (doc);
 	  TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_CANNOT_SAVE), documentFile);
 	  /* restore the previous status of the document */
+	  if (DocumentTypes[doc] == docImage)
+	    {
+	      DeleteDocImageContext (doc, documentFile);
+	      /* free the previous temporary file */
+	      ptr = GetLocalPath (doc, documentFile);
+	      TtaFileUnlink (ptr);
+	      TtaFreeMemory (ptr);
+	    }
 	  if (!docModified)
 	    {
 	      TtaSetDocumentUnmodified (doc);

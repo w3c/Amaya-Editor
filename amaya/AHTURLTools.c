@@ -306,7 +306,8 @@ char *PicTypeToMIME (PicType contentType)
    ImageElement
    Returns the element (image parameter) and URL (url parameter) of an
    image in a docImage document. The user must free the memory associated
-   with the url parameter if the function is succesful.
+   with the url parameter if the function is succesful. 
+   If the url parameter is NULL, we won't initialize it.
    Returns TRUE if succesful, FALSE otherwise.
   ----------------------------------------------------------------------*/
 ThotBool ImageElement (Document doc, char **url, Element *image)
@@ -328,15 +329,16 @@ ThotBool ImageElement (Document doc, char **url, Element *image)
 
   if (!imgEl)
     return FALSE;
-
-  attr = TtaGetAttribute (imgEl, attrType);
-  length = TtaGetTextAttributeLength (srcAttr) + 1;
-  value = TtaGetMemory (length);
-  TtaGiveTextAttributeValue (srcAttr, value, &length);
-  
-  *url = value;
   *image = imgEl;
 
+  if (url)
+    {
+      attr = TtaGetAttribute (imgEl, attrType);
+      length = TtaGetTextAttributeLength (srcAttr) + 1;
+      value = TtaGetMemory (length);
+      TtaGiveTextAttributeValue (srcAttr, value, &length);
+      *url = value;
+    }
   return TRUE;
 }
 
@@ -359,9 +361,8 @@ char *DocImageMimeType (Document doc)
   if (!IsHTTPPath (DocumentURLs[doc]))
     {
       /* it is a local image */
-      if (ImageElement (doc, &url, &image))
+      if (ImageElement (doc, NULL, &image))
 	{
-	  TtaFreeMemory (url);
 	  type = TtaGetPictureType (image);
 	  mime_type = PicTypeToMIME (type);
 	}

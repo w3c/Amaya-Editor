@@ -12,6 +12,8 @@ extern ThotBool AddLoadedImage ( char *name,
                                  LoadedImageDesc ** desc );
 extern LoadedImageDesc *SearchLoadedImage ( char *localpath,
                                             Document doc );
+extern LoadedImageDesc *SearchLoadedDocImage ( Document doc,
+                                               char *url );
 extern void SetAreaCoords ( Document document,
                             Element element,
                             int attrNum );
@@ -43,6 +45,8 @@ extern ThotBool AddLoadedImage (/* char *name,
                                    LoadedImageDesc ** desc */);
 extern LoadedImageDesc *SearchLoadedImage (/* char *localpath,
                                               Document doc */);
+extern LoadedImageDesc *SearchLoadedDocImage (/* Document doc,
+                                                 char *url */);
 extern void SetAreaCoords (/* Document document,
                               Element element,
                               int attrNum */);
