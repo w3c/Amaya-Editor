@@ -15,6 +15,7 @@ extern void SwitchIconGraph ( Document doc,
                               View view,
                               ThotBool state );
 extern void SVGCreated ( NotifyElement * event );
+extern ThotBool SVGWillBeDeleted ( NotifyElement * event );
 extern void TspanCreated ( NotifyElement * event );
 extern void UsePasted ( NotifyElement * event );
 extern void AttrXlinkHrefChanged ( NotifyAttribute *event );
@@ -33,6 +34,7 @@ extern void SwitchIconGraph (/* Document doc,
                                 View view,
                                 ThotBool state */);
 extern void SVGCreated (/* NotifyElement * event */);
+extern ThotBool SVGWillBeDeleted (/* NotifyElement * event */);
 extern void TspanCreated (/* NotifyElement * event */);
 extern void UsePasted (/* NotifyElement * event */);
 extern void AttrXlinkHrefChanged (/* NotifyAttribute *event */);

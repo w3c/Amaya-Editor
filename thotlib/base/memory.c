@@ -939,15 +939,17 @@ void FreeAbstractBox (PtrAbstractBox pAb)
   ----------------------------------------------------------------------*/
 void FreeElemNamespaceDeclarations (PtrDocument pDoc, PtrElement pEl)
 {
-  PtrNsUriDescr      uriDecl;
+  PtrNsUriDescr      uriDecl, prevUriDecl, nextUriDecl;
   PtrNsPrefixDescr   prefixDecl, nextPrefixDecl, prevPrefixDecl;
   
   if (pDoc->DocNsUriDecl == NULL)
     return;
   
   uriDecl = pDoc->DocNsUriDecl;
+  prevUriDecl = uriDecl;
   while (uriDecl != NULL)
     {
+      nextUriDecl = uriDecl->NsNextUriDecl;
       prefixDecl = uriDecl->NsPtrPrefix;
       prevPrefixDecl = NULL;
       while (prefixDecl != NULL)
@@ -970,7 +972,21 @@ void FreeElemNamespaceDeclarations (PtrDocument pDoc, PtrElement pEl)
 	    prevPrefixDecl = prefixDecl;
 	  prefixDecl = nextPrefixDecl;
 	}
-      uriDecl = uriDecl->NsNextUriDecl;
+      if (uriDecl->NsPtrPrefix == NULL)
+	{
+	  /* This declaration is no longer used within this document */
+	  if (uriDecl->NsUriName != NULL)
+	    {
+	      TtaFreeMemory (uriDecl->NsUriName);
+	      uriDecl->NsUriName = NULL;
+	    }
+	  TtaFreeMemory (uriDecl);
+	  prevUriDecl->NsNextUriDecl = nextUriDecl;
+	}
+      else
+	prevUriDecl = uriDecl;
+      /* Nest declaration */
+      uriDecl = nextUriDecl;
     } 
 }
 

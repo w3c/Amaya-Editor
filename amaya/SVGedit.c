@@ -2209,6 +2209,17 @@ void SVGCreated (NotifyElement * event)
 }
 
 /*----------------------------------------------------------------------
+   SVGWillBeDeleted
+   An svg element will be deleted.
+   Update the namespace declarations linked to that element
+  ----------------------------------------------------------------------*/
+ThotBool SVGWillBeDeleted (NotifyElement * event)
+{
+  TtaFreeElemNamespaceDeclarations (event->document, event->element);
+  return FALSE; /* let Thot perform normal operation */
+}
+ 
+/*----------------------------------------------------------------------
    TspanCreated
    A tspan element has been created by the user hitting a Enter key
    within a text element. Create attributes x and dy.

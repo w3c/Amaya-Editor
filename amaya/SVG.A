@@ -20,6 +20,7 @@ ELEMENTS
 	BEGIN
 	ElemNew.Post ->         SVGCreated;
 	ElemExport.Pre ->       SetEmptyShapeAttribute;
+	ElemDelete.Pre ->       SVGWillBeDeleted;
 	END;
 {*** Only for SVG "animation" demo. See end of file SVGedit.c ***
    g:
