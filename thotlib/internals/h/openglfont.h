@@ -6,7 +6,7 @@ int   gl_font_char_ascent (void *gl_void_font, wchar_t *c);
 int   UnicodeFontRender (void *gl_font, wchar_t *string, float x, float y,  int size, int TotalHeight);
 int   UnicodeFontRenderCharSize (void *gl_font, wchar_t c, float x, float y, int size,
 		       int TotalHeight);
-void  StixFontRenderCharSize (PtrFont font, CHAR_T symb, 
+void  StixFontRenderCharSize (void *font, wchar_t symb, 
 			      int x, int y, 
 			      int size, int l, int h,  
 			      int TotalHeight);
