@@ -135,14 +135,14 @@ Paragraphs:
 ! Preformatted to/from paragraphs
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-Preformatted: p+;
+Preformatted: (p{*+})+;
 	{
-	p > :pre;
+	* > pre:*;
 	}
 
-Paragraph: pre+;
+Paragraph: (pre{*+})+;
 	{
-	pre > :p;
+	*   > p:*;
 	}
 
 

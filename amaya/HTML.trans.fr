@@ -135,16 +135,15 @@ Paragraphes:
 ! Preformatted to/from paragraphs
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-Preformaté: p+;
+Preformaté: (p{*+})+;
 	{
-	p > :pre;
+	* > pre:*;
 	}
 
-Paragraphe: pre+;
+Paragraphe: (pre{*+})+;
 	{
-	pre > :p;
+	*   > p:*;
 	}
-
 
 !Tables to/from lists
 !!!!!!!!!!!!!!!!!!!!
