@@ -360,9 +360,13 @@ DEP_CPP_WINTH=\
 	"..\..\thotlib\include\fileaccess.h"\
 	"..\..\thotlib\include\libmsg.h"\
 	"..\..\thotlib\include\message.h"\
+	"..\..\thotlib\include\registry.h"\
 	"..\..\thotlib\include\sysdep.h"\
 	"..\..\thotlib\include\thot_sys.h"\
 	"..\..\thotlib\include\typebase.h"\
+	"..\..\thotlib\include\uconvert.h"\
+	"..\..\thotlib\include\uio.h"\
+	"..\..\thotlib\include\ustring.h"\
 	
 
 "$(INTDIR)\winthotcompilers.obj" : $(SOURCE) $(DEP_CPP_WINTH) "$(INTDIR)"

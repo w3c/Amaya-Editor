@@ -43,12 +43,12 @@ ALL : "$(OUTDIR)\app.dll"
 
 !ELSE 
 
-ALL : "LibThotKernel - Win32 Release" "$(OUTDIR)\app.dll"
+ALL : "cpp - Win32 Release" "LibThotKernel - Win32 Release" "$(OUTDIR)\app.dll"
 
 !ENDIF 
 
 !IF "$(RECURSE)" == "1" 
-CLEAN :"LibThotKernel - Win32 ReleaseCLEAN" 
+CLEAN :"LibThotKernel - Win32 ReleaseCLEAN" "cpp - Win32 ReleaseCLEAN" 
 !ELSE 
 CLEAN :
 !ENDIF 
@@ -92,6 +92,7 @@ LINK32_OBJS= \
 	"$(INTDIR)\compilmsg.obj" \
 	"$(INTDIR)\parser.obj" \
 	"$(INTDIR)\writeapp.obj" \
+	"$(OUTDIR)\cpp.lib" \
 	"..\LibThotKernel.lib"
 
 "$(OUTDIR)\app.dll" : "$(OUTDIR)" $(DEF_FILE) $(LINK32_OBJS)
@@ -113,12 +114,12 @@ ALL : "$(OUTDIR)\app.dll"
 
 !ELSE 
 
-ALL : "LibThotKernel - Win32 Debug" "$(OUTDIR)\app.dll"
+ALL : "cpp - Win32 Debug" "LibThotKernel - Win32 Debug" "$(OUTDIR)\app.dll"
 
 !ENDIF 
 
 !IF "$(RECURSE)" == "1" 
-CLEAN :"LibThotKernel - Win32 DebugCLEAN" 
+CLEAN :"LibThotKernel - Win32 DebugCLEAN" "cpp - Win32 DebugCLEAN" 
 !ELSE 
 CLEAN :
 !ENDIF 
@@ -165,6 +166,7 @@ LINK32_OBJS= \
 	"$(INTDIR)\compilmsg.obj" \
 	"$(INTDIR)\parser.obj" \
 	"$(INTDIR)\writeapp.obj" \
+	"$(OUTDIR)\cpp.lib" \
 	"..\LibThotKernel.lib"
 
 "$(OUTDIR)\app.dll" : "$(OUTDIR)" $(DEF_FILE) $(LINK32_OBJS)
@@ -233,6 +235,33 @@ LINK32_OBJS= \
    cd "..\LibThotKernel"
    $(MAKE) /$(MAKEFLAGS) CLEAN /F .\LibThotKernel.mak\
  CFG="LibThotKernel - Win32 Debug" RECURSE=1 
+   cd "..\app"
+
+!ENDIF 
+
+!IF  "$(CFG)" == "app - Win32 Release"
+
+"cpp - Win32 Release" : 
+   cd "..\cpp"
+   $(MAKE) /$(MAKEFLAGS) /F .\cpp.mak CFG="cpp - Win32 Release" 
+   cd "..\app"
+
+"cpp - Win32 ReleaseCLEAN" : 
+   cd "..\cpp"
+   $(MAKE) /$(MAKEFLAGS) CLEAN /F .\cpp.mak CFG="cpp - Win32 Release" RECURSE=1\
+ 
+   cd "..\app"
+
+!ELSEIF  "$(CFG)" == "app - Win32 Debug"
+
+"cpp - Win32 Debug" : 
+   cd "..\cpp"
+   $(MAKE) /$(MAKEFLAGS) /F .\cpp.mak CFG="cpp - Win32 Debug" 
+   cd "..\app"
+
+"cpp - Win32 DebugCLEAN" : 
+   cd "..\cpp"
+   $(MAKE) /$(MAKEFLAGS) CLEAN /F .\cpp.mak CFG="cpp - Win32 Debug" RECURSE=1 
    cd "..\app"
 
 !ENDIF 
@@ -325,6 +354,8 @@ DEP_CPP_APP_C=\
 	"..\..\thotlib\include\thot_sys.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
+	"..\..\thotlib\include\uconvert.h"\
+	"..\..\thotlib\include\uio.h"\
 	"..\..\thotlib\include\ustring.h"\
 	"..\..\thotlib\include\view.h"\
 	"..\..\thotlib\internals\f\callbackinit_f.h"\
@@ -427,6 +458,8 @@ DEP_CPP_CALLB=\
 	"..\..\thotlib\include\thot_sys.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
+	"..\..\thotlib\include\uconvert.h"\
+	"..\..\thotlib\include\uio.h"\
 	"..\..\thotlib\include\ustring.h"\
 	"..\..\thotlib\include\view.h"\
 	"..\..\thotlib\internals\f\memory_f.h"\
@@ -517,6 +550,8 @@ DEP_CPP_COMPI=\
 	"..\..\thotlib\include\thot_sys.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
+	"..\..\thotlib\include\uconvert.h"\
+	"..\..\thotlib\include\uio.h"\
 	"..\..\thotlib\include\ustring.h"\
 	"..\..\thotlib\include\view.h"\
 	"..\..\thotlib\internals\h\compilmsg.h"\
@@ -617,6 +652,8 @@ DEP_CPP_PARSE=\
 	"..\..\thotlib\include\thot_sys.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
+	"..\..\thotlib\include\uconvert.h"\
+	"..\..\thotlib\include\uio.h"\
 	"..\..\thotlib\include\ustring.h"\
 	"..\..\thotlib\include\view.h"\
 	"..\..\thotlib\internals\f\compilmsg_f.h"\
@@ -714,6 +751,8 @@ DEP_CPP_WRITE=\
 	"..\..\thotlib\include\thot_sys.h"\
 	"..\..\thotlib\include\tree.h"\
 	"..\..\thotlib\include\typebase.h"\
+	"..\..\thotlib\include\uconvert.h"\
+	"..\..\thotlib\include\uio.h"\
 	"..\..\thotlib\include\ustring.h"\
 	"..\..\thotlib\include\view.h"\
 	"..\..\thotlib\internals\f\memory_f.h"\
