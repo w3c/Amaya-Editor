@@ -362,7 +362,7 @@ static AttrValueMapping MathMLAttrValueMappingTable[] =
    attribute of name Attr and returns the corresponding Thot attribute type.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void          MapMathMLAttribute (CHAR_T* attrName, AttributeType *attrType, STRING elementName, Document doc)
+void          MapMathMLAttribute (CHAR_T *attrName, AttributeType *attrType, STRING elementName, Document doc)
 #else
 void          MapMathMLAttribute (attrName, attrType, elementName, doc)
 STRING              attrName;

@@ -2494,15 +2494,19 @@ ThotBool            history;
       if (DocumentMeta[newdoc]->method == CE_INIT)
 	DocumentMeta[newdoc]->method = CE_ABSOLUTE;
 
+      /* check the current profile */
       profile = TtaGetEnvString ("Profile");
-      if (!ustrncmp (profile, TEXT("basic"), 5))
-	ParsingLevel[newdoc] = L_Basic;
-      else if (!ustrncmp (profile, TEXT("strict"), 6))
-	ParsingLevel[newdoc] = L_Strict;
+      if (!ustrncmp (profile, TEXT("XHTML-basic"), 10))
+	{
+	  ParsingLevel[newdoc] = L_Basic;
+	  if (!plainText)
+	    DocumentMeta[newdoc]->xmlformat = TRUE;
+	}
       else
 	ParsingLevel[newdoc] = L_Transitional;
+
 #ifdef EXPAT_PARSER
-      if (XHTMLdoc || (!plainText && ParsingLevel[newdoc] != L_Transitional))
+      if (DocumentMeta[newdoc]->xmlformat)
 	StartXmlParser (newdoc,
 			tempdocument,
 			documentname,
