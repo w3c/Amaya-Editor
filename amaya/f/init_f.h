@@ -76,6 +76,7 @@ extern void OpenNew ( Document document,
                       int docProfile );
 extern void GoToHome ( Document doc,
                        View view );
+extern void UpdateDoctypeMenu ( Document doc );
 extern Document InitDocAndView ( Document doc,
                                  char *docname,
                                  DocumentType docType,
@@ -266,6 +267,7 @@ extern void OpenNew (/* Document document,
                         int docProfile */);
 extern void GoToHome (/* Document doc,
                          View view */);
+extern void UpdateDoctypeMenu (/* Document doc */);
 extern Document InitDocAndView (/* Document doc,
                                    char *docname,
                                    DocumentType docType,

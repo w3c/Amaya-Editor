@@ -286,13 +286,50 @@
 	<message xml:lang="es">Sinchronizar</message>
 	<message xml:lang="pt">Sincronizar</message>
 </label>
-<label define="BLatinReading">
-	<message xml:lang="en">Reparse in HTML</message>
-	<message xml:lang="fr">Reparser en HTML</message>
-	<message xml:lang="de">Dokument mit HTML neu parsen</message>
-	<message xml:lang="it">Riapri in HTML</message>
-	<message xml:lang="es">Recargar como HTML</message>
-	<message xml:lang="pt">Reabrir em HTML</message>
+<label define="Doctype1">
+	<message xml:lang="en">Doctype</message>
+	<message xml:lang="fr">Doctype</message>
+	<message xml:lang="de">Doctype</message>
+	<message xml:lang="it">Doctype</message>
+	<message xml:lang="tr">Doctype</message>
+	<message xml:lang="es">Doctype</message>
+	<message xml:lang="pt">Doctype</message>
+</label>
+<label define="BRemoveDoctype">
+	<message xml:lang="en">Remove doctype</message>
+	<message xml:lang="fr">Supprime le doctype</message>
+</label>
+<label define="BDoctypeXhtml11">
+	<message xml:lang="en">Change/Create doctype XHTML 1.1</message>
+	<message xml:lang="fr">Change/Créé doctype XHTML 1.1</message>
+</label>
+<label define="BBDoctypeXhtmlTransitional">
+	<message xml:lang="en">Change/Create doctype XHTML 1.0 Transitional</message>
+	<message xml:lang="fr">Change/Créé doctype XHTML 1.0 Transitional</message>
+</label>
+<label define="BDoctypeXhtmlStrict">
+	<message xml:lang="en">Change/Create doctype XHTML 1.0 Strict</message>
+	<message xml:lang="fr">Change/Créé doctype XHTML 1.0 Strict</message>
+</label>
+<label define="BDoctypeXhtmlBasic">
+	<message xml:lang="en">Change/Create doctype XHTML 1.0 Basic</message>
+	<message xml:lang="fr">Change/Créé doctype XHTML 1.0 Basic</message>
+</label>
+<label define="BBDoctypeHtmlTransitional">
+	<message xml:lang="en">Change/Create doctype HTML Transitional</message>
+	<message xml:lang="fr">Change/Créé doctype HTML Transitional</message>
+</label>
+<label define="BDoctypeHtmlStrict">
+	<message xml:lang="en">Change/Create doctype HTML Strict</message>
+	<message xml:lang="fr">Change/Créé doctype HTML Strict</message>
+</label>
+<label define="BDoctypeMathML">
+	<message xml:lang="en">Change/Create doctype MathML</message>
+	<message xml:lang="fr">Change/Créé doctype MathML</message>
+</label>
+<label define="BDoctypeSVG">
+	<message xml:lang="en">Change/Create doctype SVG</message>
+	<message xml:lang="fr">Change/Créé doctype SVG</message>
 </label>
 <label define="BDocInfo">
 	<message xml:lang="en">Document Information</message>

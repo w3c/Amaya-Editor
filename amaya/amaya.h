@@ -34,6 +34,7 @@
 #include "MathML.h"
 #include "SVG.h"
 #include "TextFile.h"
+#include "XML.h"
 #include "amayamsg.h"
 #include "parser.h"
 

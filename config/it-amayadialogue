@@ -31,212 +31,221 @@
 29 Salva
 30 Salva con nome...
 31 Sincronizza
-32 Riapri in HTML
-33 Informazioni sul documento
-34 Imposta e stampa...
-35 Stampa
-36 Chiudi
-37 Esci
-38 Chiudi vista
-39 Ritratta
-40 Rifai
-41 Taglia
-42 Copia
-43 Incolla
-44 Cancella
-45 Modo Editor
-46 Trova...
-47 Controllo ortografico...
-48 Trasforma...
-49 base
-50 meta
-51 link
-52 script
-53 style
-54 Commento
-55 Cambia Titolo...
-56 Indirizzo (address)
-57 Zona attiva (area)
-58 Cerchio
-59 Poligono
-60 Rettangolo
-61 blockquote
-62 A capo (br)
-63 Divisione (div)
-64 Modulo
-65 form
-66 Pulsante (input)
-67 Checkbox (input)
-68 Selettore di file (input)
-69 Controllo nascosto (input)
-70 Immagine (input)...
-71 Password (input)
-72 Pulsante radio (input)
-73 Reset (input)
-74 Invia (input)
-75 Testo (input)
-76 Gruppo di campi (fieldset)
-77 Etichetta (label)
-78 Menu (option)
-79 Sottomenu (optgroup)
-80 Area testo (textarea)
-81 Intestazione
-82 h1
-83 h2
-84 h3
-85 h4
-86 h5
-87 h6
-88 Riga orizzontale (hr)
-89 Cornice (iframe)
-90 Immagine (img)...
-91 Lista
-92 Lista puntata (ul)
-93 Lista numerata (ol)
-94 Lista di definizioni (dl)
-95 Termine (dt)
-96 Definizione (dd)
-97 Math
-98 Nuova formula (math)
-99 Testo (mtext)
-100 Identificatore (mi)
-101 Numero (mn)
-102 Operatore (mo)
-103 Spazio (mspace)
-104 Carattere (&xxx;)
-105 InvisibleTimes
-106 ApplyFunction
-107 Radice (mroot)
-108 Radice quadrata (msqrt)
-109 Ingloba (menclose)
-110 Frazione (mfrac)
-111 Pedice e indice (msubsup)
-112 Pedice (msub)
-113 Indice (msup)
-114 Sotto e sopra (munderover)
-115 Sotto (munder)
-116 Sopra (mover)
-117 Parentesi (mrow)
-118 Multiscript (mmultiscripts)
-119 Matrice (mtable)
-120 Cancella colonna della matrice
-121 noscript
-122 Oggetto
-123 Oggetto (object)
-124 Parametro (param)
-125 Paragrafo (p)
-126 Preformattato (pre)
-127 ruby
-128 Tabella
-129 Tabella (table)
-130 Legenda (caption)
-131 colgroup
-132 col
-133 Intestazione (thead)
-134 Corpo (tbody)
-135 Piede (tfoot)
-136 Linea (tr)
-137 Cella dati (td)
-138 Cella intestazione (th)
-139 Cancella colonna della tabella
-140 Collega al precedente obiettivo
-141 Crea o cambia collegamento...
-142 Crea obiettivo
-143 Cancella ancora
-144 Salva la selezione come XPointer
-145 Mostra barra dei pulsanti
-146 Mostra indirizzo
-147 Mostra le zone attive
-148 Mostra obiettivi
-149 Ingrandisci
-150 Rimpicciolisci
-151 Mostra le errore
-152 Mostra struttura
-153 Mostra la vista alternativa
-154 Mostra collegamenti
-155 Mostra sommario
-156 Mostra sorgente
-157 Stile dei caratteri...
-158 Colori...
-159 Formattazione...
-160 Immagine di sfondo...
-161 Crea una regola...
-162 Applica una classe...
-163 Fogli di stile
-164 Collegamento...
-165 Apri...
-166 Disabilita...
-167 Abilita...
-168 Rimuovi...
-169 Tipo di informazione
-170 Enfasi (em)
-171 Forte (strong)
-172 Cita (cite)
-173 Definizione (dfn)
-174 Codice (code)
-175 Variabile (var)
-176 Sample (samp)
-177 Tastiera (kbd)
-178 Abbreviazione (abbr)
-179 Acronimo (acronym)
-180 Inserzione (ins)
-181 Cancellazione (del)
-182 Elementi carattere
-183 Italico (i)
-184 Grassetto (b)
-185 Macchina da scrivere (tt)
-186 Grande (big)
-187 Piccolo (small)
-188 Pedice (sub)
-189 Indice (sup)
-190 Citazione (q)
-191 BiDi (bdo)
-192 Numerazione delle sezioni
-193 Crea libro
-194 Aggiungi/Togli ID...
-195 Preferenze
-196 Generali...
-197 Pubblicazione...
-198 Cache...
-199 Proxy...
-200 Colori...
-201 Dimensioni della finestra...
-202 Negoziazione della lingua...
-203 Profili...
-204 Modelli...
-205 Annota la selezione
-206 Annota il documento
-207 Muovi sulla selezione
-208 Muovi sull'Xpointer memorizzato
-209 Rispondi all'annotazione
-210 Registra
-211 Elimina
-212 Carica
-213 Personalizza la richiesta
-214 Filtro locale...
-215 Configurazione...
-216 Informazioni su Amaya
-217 Informazioni su Amaya al W3C
-218 Indice
-219 Navigazione
-220 Selezione
-221 Ricerca
-222 Viste
-223 Creazione elementi
-224 Collegamenti
-225 Ristrutturazione
-226 Tabelle
-227 Matematica
-228 Graphics
-229 Zone attive
-230 Fogli di stile
-231 Attributi
-232 Controllo ortografico
-233 Pubblicazione
-234 Stampa
-235 Numerazione
-236 Creare un libro
-237 Annotazioni
-238 Configurazione di Amaya
-239 Scelte rapide
-240 Accessibilità in Amaya
+32 Doctype
+33 **Remove doctype
+34 **Change/Create doctype XHTML 1.1
+35 **Change/Create doctype XHTML 1.0 Transitional
+36 **Change/Create doctype XHTML 1.0 Strict
+37 **Change/Create doctype XHTML 1.0 Basic
+38 **Change/Create doctype HTML Transitional
+39 **Change/Create doctype HTML Strict
+40 **Change/Create doctype MathML
+41 **Change/Create doctype SVG
+42 Informazioni sul documento
+43 Imposta e stampa...
+44 Stampa
+45 Chiudi
+46 Esci
+47 Chiudi vista
+48 Ritratta
+49 Rifai
+50 Taglia
+51 Copia
+52 Incolla
+53 Cancella
+54 Modo Editor
+55 Trova...
+56 Controllo ortografico...
+57 Trasforma...
+58 base
+59 meta
+60 link
+61 script
+62 style
+63 Commento
+64 Cambia Titolo...
+65 Indirizzo (address)
+66 Zona attiva (area)
+67 Cerchio
+68 Poligono
+69 Rettangolo
+70 blockquote
+71 A capo (br)
+72 Divisione (div)
+73 Modulo
+74 form
+75 Pulsante (input)
+76 Checkbox (input)
+77 Selettore di file (input)
+78 Controllo nascosto (input)
+79 Immagine (input)...
+80 Password (input)
+81 Pulsante radio (input)
+82 Reset (input)
+83 Invia (input)
+84 Testo (input)
+85 Gruppo di campi (fieldset)
+86 Etichetta (label)
+87 Menu (option)
+88 Sottomenu (optgroup)
+89 Area testo (textarea)
+90 Intestazione
+91 h1
+92 h2
+93 h3
+94 h4
+95 h5
+96 h6
+97 Riga orizzontale (hr)
+98 Cornice (iframe)
+99 Immagine (img)...
+100 Lista
+101 Lista puntata (ul)
+102 Lista numerata (ol)
+103 Lista di definizioni (dl)
+104 Termine (dt)
+105 Definizione (dd)
+106 Math
+107 Nuova formula (math)
+108 Testo (mtext)
+109 Identificatore (mi)
+110 Numero (mn)
+111 Operatore (mo)
+112 Spazio (mspace)
+113 Carattere (&xxx;)
+114 InvisibleTimes
+115 ApplyFunction
+116 Radice (mroot)
+117 Radice quadrata (msqrt)
+118 Ingloba (menclose)
+119 Frazione (mfrac)
+120 Pedice e indice (msubsup)
+121 Pedice (msub)
+122 Indice (msup)
+123 Sotto e sopra (munderover)
+124 Sotto (munder)
+125 Sopra (mover)
+126 Parentesi (mrow)
+127 Multiscript (mmultiscripts)
+128 Matrice (mtable)
+129 Cancella colonna della matrice
+130 noscript
+131 Oggetto
+132 Oggetto (object)
+133 Parametro (param)
+134 Paragrafo (p)
+135 Preformattato (pre)
+136 ruby
+137 Tabella
+138 Tabella (table)
+139 Legenda (caption)
+140 colgroup
+141 col
+142 Intestazione (thead)
+143 Corpo (tbody)
+144 Piede (tfoot)
+145 Linea (tr)
+146 Cella dati (td)
+147 Cella intestazione (th)
+148 Cancella colonna della tabella
+149 Collega al precedente obiettivo
+150 Crea o cambia collegamento...
+151 Crea obiettivo
+152 Cancella ancora
+153 Salva la selezione come XPointer
+154 Mostra barra dei pulsanti
+155 Mostra indirizzo
+156 Mostra le zone attive
+157 Mostra obiettivi
+158 Ingrandisci
+159 Rimpicciolisci
+160 Mostra le errore
+161 Mostra struttura
+162 Mostra la vista alternativa
+163 Mostra collegamenti
+164 Mostra sommario
+165 Mostra sorgente
+166 Stile dei caratteri...
+167 Colori...
+168 Formattazione...
+169 Immagine di sfondo...
+170 Crea una regola...
+171 Applica una classe...
+172 Fogli di stile
+173 Collegamento...
+174 Apri...
+175 Disabilita...
+176 Abilita...
+177 Rimuovi...
+178 Tipo di informazione
+179 Enfasi (em)
+180 Forte (strong)
+181 Cita (cite)
+182 Definizione (dfn)
+183 Codice (code)
+184 Variabile (var)
+185 Sample (samp)
+186 Tastiera (kbd)
+187 Abbreviazione (abbr)
+188 Acronimo (acronym)
+189 Inserzione (ins)
+190 Cancellazione (del)
+191 Elementi carattere
+192 Italico (i)
+193 Grassetto (b)
+194 Macchina da scrivere (tt)
+195 Grande (big)
+196 Piccolo (small)
+197 Pedice (sub)
+198 Indice (sup)
+199 Citazione (q)
+200 BiDi (bdo)
+201 Numerazione delle sezioni
+202 Crea libro
+203 Aggiungi/Togli ID...
+204 Preferenze
+205 Generali...
+206 Pubblicazione...
+207 Cache...
+208 Proxy...
+209 Colori...
+210 Dimensioni della finestra...
+211 Negoziazione della lingua...
+212 Profili...
+213 Modelli...
+214 Annota la selezione
+215 Annota il documento
+216 Muovi sulla selezione
+217 Muovi sull'Xpointer memorizzato
+218 Rispondi all'annotazione
+219 Registra
+220 Elimina
+221 Carica
+222 Personalizza la richiesta
+223 Filtro locale...
+224 Configurazione...
+225 Informazioni su Amaya
+226 Informazioni su Amaya al W3C
+227 Indice
+228 Navigazione
+229 Selezione
+230 Ricerca
+231 Viste
+232 Creazione elementi
+233 Collegamenti
+234 Ristrutturazione
+235 Tabelle
+236 Matematica
+237 Graphics
+238 Zone attive
+239 Fogli di stile
+240 Attributi
+241 Controllo ortografico
+242 Pubblicazione
+243 Stampa
+244 Numerazione
+245 Creare un libro
+246 Annotazioni
+247 Configurazione di Amaya
+248 Scelte rapide
+249 Accessibilità in Amaya

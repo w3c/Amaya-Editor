@@ -38,6 +38,7 @@
 #include "HTMLactions_f.h"
 #include "HTMLedit_f.h"
 #include "HTMLhistory_f.h"
+#include "HTMLsave_f.h"
 #include "HTMLtable_f.h"
 #include "MENUconf_f.h"
 #include "styleparser_f.h"
@@ -100,6 +101,104 @@ void NewCss (Document document, View view)
   OpenNew (document, view, docCSS, L_Other);
 }
 
+/*--------------------------------------------------------------------------
+  CreateDoctype
+  Create a doctype declaration
+  --------------------------------------------------------------------------*/
+static void CreateDoctype (Document doc, int profile)
+{
+  ElementType     elType, lineType;
+  Element         docEl, doctype, doctypeLine, text, child;
+  Language        language;
+
+  /* Check the Thot abstract tree against the structure schema. */
+  TtaSetStructureChecking (0, doc);
+
+  language = TtaGetDefaultLanguage ();
+  docEl = TtaGetMainRoot (doc);
+  elType = TtaGetElementType (docEl);
+
+  /* Add the new doctype */
+  if ((profile == L_Basic) || (profile == L_Strict) ||
+      (profile == L_Xhtml11) || (profile == L_Transitional))
+    {
+      elType.ElTypeNum = HTML_EL_DOCTYPE;
+      lineType.ElTypeNum = HTML_EL_DOCTYPE_line;
+    }
+  else if (profile == L_SVG) 
+    {
+      elType.ElTypeNum = SVG_EL_DOCTYPE;
+      lineType.ElTypeNum = SVG_EL_DOCTYPE_line;
+    }
+  else if (profile == L_MathML) 
+    {
+      elType.ElTypeNum = MathML_EL_DOCTYPE;
+      lineType.ElTypeNum = MathML_EL_DOCTYPE_line;
+    }
+
+  doctype = TtaNewElement (doc, elType);
+  TtaInsertFirstChild (&doctype, docEl, doc);
+  /* Make the DOCTYPE element read-only */
+  TtaSetAccessRight (doctype, ReadOnly, doc);
+  /* Create the first DOCTYPE_line element */
+  elType.ElTypeNum = lineType.ElTypeNum;
+  doctypeLine = TtaNewElement (doc, elType);
+  TtaInsertFirstChild (&doctypeLine, doctype, doc);
+  elType.ElTypeNum = 1;
+  text = TtaNewElement (doc, elType);
+  if (text != NULL)
+    {
+      TtaInsertFirstChild (&text, doctypeLine, doc);
+      if (profile == L_Basic)
+	TtaSetTextContent (text, "html PUBLIC \"-//W3C//DTD XHTML Basic 1.0//EN\"", language, doc);
+      else if (profile == L_Strict && DocumentMeta[doc]->xmlformat)
+	TtaSetTextContent (text, "html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\"", language, doc);
+      else if (profile == L_Strict && !DocumentMeta[doc]->xmlformat)
+	TtaSetTextContent (text, "html PUBLIC \"-//W3C//DTD HTML 4.01//EN\"", language, doc);
+      else if (profile == L_Xhtml11)
+	TtaSetTextContent (text, "html PUBLIC \"-//W3C//DTD XHTML 1.1//EN\"", language, doc);
+      else if (profile == L_Transitional && DocumentMeta[doc]->xmlformat)
+	TtaSetTextContent (text, "html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\"", language, doc);
+      else if (profile == L_Transitional && !DocumentMeta[doc]->xmlformat)
+	TtaSetTextContent (text, "html PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\"", language, doc);
+      else if (profile == L_MathML)
+	TtaSetTextContent (text, "math PUBLIC \"-//W3C//DTD MathML 2.0//EN\"", language, doc);
+      else if (profile == L_SVG)
+	TtaSetTextContent (text, "svg PUBLIC \"-//W3C//DTD SVG 20001102//EN\"", language, doc);
+    }
+
+  /* Create the second DOCTYPE_line element */
+  elType.ElTypeNum = lineType.ElTypeNum;
+  doctypeLine = TtaNewElement (doc, elType);
+  child = TtaGetLastChild (doctype);
+  TtaInsertSibling (doctypeLine, child, FALSE, doc);
+  elType.ElTypeNum = 1;
+  text = TtaNewElement (doc, elType);
+  if (text != NULL)
+    {
+      TtaInsertFirstChild (&text, doctypeLine, doc);
+      if (profile == L_Basic)
+	TtaSetTextContent (text, "\"http://www.w3.org/TR/xhtml-basic/xhtml-basic10.dtd\"", language, doc);
+      else if (profile == L_Strict && DocumentMeta[doc]->xmlformat)
+	TtaSetTextContent (text, "\"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\"", language, doc);
+      else if (profile == L_Strict && !DocumentMeta[doc]->xmlformat)
+	TtaSetTextContent (text, "\"http://www.w3.org/TR/html4/strict.dtd\"", language, doc);
+      else if (profile == L_Xhtml11)
+	TtaSetTextContent (text, "\"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd\"", language, doc);
+      else if (profile == L_Transitional && DocumentMeta[doc]->xmlformat)
+	TtaSetTextContent (text, "\"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\"", language, doc);
+      else if (profile == L_Transitional && !DocumentMeta[doc]->xmlformat)
+	TtaSetTextContent (text, "\"http://www.w3.org/TR/html4/loose.dtd\"", language, doc);
+      else if (profile == L_MathML)
+	TtaSetTextContent (text, "\"http://www.w3.org/TR/MathML2/dtd/mathml2.dtd\"", language, doc);
+      else if (profile == L_SVG)
+	TtaSetTextContent (text, "\"http://www.w3.org/TR/2000/CR-SVG-20001102/DTD/svg-20001102.dtd\"", language, doc);
+    }
+  TtaSetStructureChecking (1, doc);
+
+  return;
+}
+
 /*----------------------------------------------------------------------
   InitializeNewDoc builds the initial contents of a new document
   When the parameter doc is 0 the function creates a new document window.
@@ -108,7 +207,7 @@ void InitializeNewDoc (char *url, int docType, Document doc, int profile)
 {
   ElementType          elType;
   Element              docEl, root, title, text, el, head, child, meta, body;
-  Element              doctype, doctypeLine;
+  Element              doctype;
   AttributeType        attrType;
   Attribute            attr;
   Language             language;
@@ -170,62 +269,15 @@ void InitializeNewDoc (char *url, int docType, Document doc, int profile)
       /* force the XML parsing */
       DocumentMeta[doc]->xmlformat = TRUE;
 
-      /* create the DOCTYPE element that corresponds to the profile of the document */
+      /* create the DOCTYPE element corresponding to the document's profile */
       elType.ElTypeNum = HTML_EL_DOCTYPE;
       doctype = TtaSearchTypedElement (elType, SearchInTree, docEl);
       if (doctype != NULL)
 	TtaDeleteTree (doctype, doc);
-      else
-	{
-	  if (profile != L_Other)
-	    {
-	      /* Check the Thot abstract tree against the structure schema. */
-	      TtaSetStructureChecking (0, doc);
-	      doctype = TtaNewElement (doc, elType);
-	      TtaInsertFirstChild (&doctype, docEl, doc);
-	      /* Make the DOCTYPE element read-only */
-	      TtaSetAccessRight (doctype, ReadOnly, doc);
-	      /* create the first DOCTYPE_line element */
-	      elType.ElTypeNum = HTML_EL_DOCTYPE_line;
-	      doctypeLine = TtaNewElement (doc, elType);
-	      TtaInsertFirstChild (&doctypeLine, doctype, doc);
-	      elType.ElTypeNum = 1;
-	      text = TtaNewElement (doc, elType);
-	      if (text != NULL)
-		{
-		  TtaInsertFirstChild (&text, doctypeLine, doc);
-		  if (profile == L_Basic)
-		    TtaSetTextContent (text, "html PUBLIC \"-//W3C//DTD XHTML Basic 1.0//EN\"", language, doc);
-		  else if (profile == L_Strict)
-		    TtaSetTextContent (text, "html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\"", language, doc);
-		  else if (profile == L_Xhtml11)
-		    TtaSetTextContent (text, "html PUBLIC \"-//W3C//DTD XHTML 1.1//EN\"", language, doc);
-		  else
-		    TtaSetTextContent (text, "html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\"", language, doc);
-		}
-	      /* create the second DOCTYPE_line element */
-	      elType.ElTypeNum = HTML_EL_DOCTYPE_line;
-	      doctypeLine = TtaNewElement (doc, elType);
-	      child = TtaGetLastChild (doctype);
-	      TtaInsertSibling (doctypeLine, child, FALSE, doc);
-	      elType.ElTypeNum = 1;
-	      text = TtaNewElement (doc, elType);
-	      if (text != NULL)
-		{
-		  TtaInsertFirstChild (&text, doctypeLine, doc);
-		  if (profile == L_Basic)
-		    TtaSetTextContent (text, "\"http://www.w3.org/TR/xhtml-basic/xhtml-basic10.dtd\"", language, doc);
-		  else if (profile == L_Strict)
-		    TtaSetTextContent (text, "\"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\"", language, doc);
-		  else if (profile == L_Xhtml11)
-		    TtaSetTextContent (text, "\"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd\"", language, doc);
-		  else
-		    TtaSetTextContent (text, "\"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\"", language, doc);
-		}
-	      TtaSetStructureChecking (1, doc);
-	    }
-	}
+      if (profile != L_Other)
+	CreateDoctype (doc, profile);
       
+      /* Load user's style sheet */
       LoadUserStyleSheet (doc);
 
       /* attach an attribute PrintURL to the root element */
@@ -315,6 +367,13 @@ void InitializeNewDoc (char *url, int docType, Document doc, int profile)
   else if (docType == docMath)
     {
       /*-------------  New MathML document ------------*/
+      /* create the MathML DOCTYPE element */
+      elType.ElTypeNum = MathML_EL_DOCTYPE;
+      doctype = TtaSearchTypedElement (elType, SearchInTree, docEl);
+      if (doctype != NULL)
+	TtaDeleteTree (doctype, doc);
+      CreateDoctype (doc, L_MathML);
+
       /* force the XML parsing */
       DocumentMeta[doc]->xmlformat = TRUE;
       /* Search the first Construct to set the initial selection */
@@ -330,6 +389,13 @@ void InitializeNewDoc (char *url, int docType, Document doc, int profile)
   else if (docType == docSVG)
     {
       /*-------------  New SVG document ------------*/
+      /* create the SVG DOCTYPE element */
+      elType.ElTypeNum = SVG_EL_DOCTYPE;
+      doctype = TtaSearchTypedElement (elType, SearchInTree, docEl);
+      if (doctype != NULL)
+	TtaDeleteTree (doctype, doc);
+      CreateDoctype (doc, L_SVG);
+
       /* force the XML parsing */
       DocumentMeta[doc]->xmlformat = TRUE;
       /* Search the last element to set the initial selection */
@@ -376,6 +442,160 @@ void InitializeNewDoc (char *url, int docType, Document doc, int profile)
     }
   /* the document should be saved */
   TtaSetDocumentModified (doc);
+}
+
+/*--------------------------------------------------------------------------
+  RemoveDoctype
+  Remove the doctype declaration
+  --------------------------------------------------------------------------*/
+void RemoveDoctype (Document document, View view)
+{
+
+  ElementType     elType;
+  Element         docEl, doctype;
+  char           *s;
+
+  docEl = TtaGetMainRoot (document);
+  elType = TtaGetElementType (docEl);
+
+  /* Search the doctype declaration according to the main schema */
+  s = TtaGetSSchemaName (elType.ElSSchema);
+  if (strcmp (s, "HTML") == 0)
+    elType.ElTypeNum = HTML_EL_DOCTYPE;
+  else if (strcmp (s, "SVG") == 0)
+    elType.ElTypeNum = SVG_EL_DOCTYPE;
+  else if (strcmp (s, "MathML") == 0)
+    elType.ElTypeNum = MathML_EL_DOCTYPE;
+  else
+    elType.ElTypeNum = XML_EL_DOCTYPE;
+  doctype = TtaSearchTypedElement (elType, SearchInTree, docEl);
+
+  /* remove the existing doctype */
+  if (doctype != NULL)
+    {
+      TtaDeleteTree (doctype, document);
+      TtaSetDocumentProfile (document, L_Other);
+      UpdateDoctypeMenu (document);
+      TtaSetDocumentModified (document);
+    }
+}
+
+/*--------------------------------------------------------------------------
+  CreateOrChangeDoctype
+  Create or change the doctype of a document
+  --------------------------------------------------------------------------*/
+static void CreateOrChangeDoctype (Document doc, View view, int profile)
+{
+  ElementType     elType;
+  Element         docEl, doctype;
+  char           *tempdocument = NULL;
+  char            documentname[MAX_LENGTH];
+  char            tempdir[MAX_LENGTH];
+
+  docEl = TtaGetMainRoot (doc);
+  elType = TtaGetElementType (docEl);
+
+  /* Search the doctype declaration according to the main schema */
+  if ((profile == L_Basic) || (profile == L_Strict) ||
+      (profile == L_Xhtml11) || (profile == L_Transitional))
+    elType.ElTypeNum = HTML_EL_DOCTYPE;
+  else if (profile == L_MathML) 
+    elType.ElTypeNum = MathML_EL_DOCTYPE;
+  else if (profile == L_SVG) 
+    elType.ElTypeNum = SVG_EL_DOCTYPE;
+  doctype = TtaSearchTypedElement (elType, SearchInTree, docEl);
+
+  /* Remove the previous doctype */
+  if (doctype != NULL)
+    TtaDeleteTree (doctype, doc);
+
+  /* Add the new doctype */
+  CreateDoctype (doc, profile);
+
+  /* Store the document's profile */
+  TtaSetDocumentProfile (doc, profile);
+
+  /* The document has to be reparsed */
+  /* Save the current state of the document into the temporary file */
+  tempdocument = GetLocalPath (doc, DocumentURLs[doc]);
+  SetNamespacesAndDTD (doc);
+  if (DocumentTypes[doc] == docHTML)
+    {
+      if (TtaGetDocumentProfile(doc) == L_Xhtml11)
+	TtaExportDocumentWithNewLineNumbers (doc, tempdocument, "HTMLT11");
+      else if (DocumentMeta[doc]->xmlformat)
+	TtaExportDocumentWithNewLineNumbers (doc, tempdocument, "HTMLTX");
+      else
+	TtaExportDocumentWithNewLineNumbers (doc, tempdocument, "HTMLT");
+    }
+  else if (DocumentTypes[doc] == docSVG)
+    TtaExportDocumentWithNewLineNumbers (doc, tempdocument, "SVGT");
+  else if (DocumentTypes[doc] == docMath)
+    TtaExportDocumentWithNewLineNumbers (doc, tempdocument, "MathMLT");
+  RedisplaySourceFile (doc);
+
+  tempdocument = GetLocalPath (doc, DocumentURLs[doc]);
+  TtaExtractName (tempdocument, tempdir, documentname);
+  RestartParser (doc, tempdocument, tempdir, documentname);
+
+  UpdateDoctypeMenu (doc);
+  TtaSetDocumentModified (doc);
+
+  TtaFreeMemory (tempdocument);
+}
+
+/*--------------------------------------------------------------------------
+  CreateDoctypeHtml11
+  Create or change the doctype for a XHTML 1.1 document
+  --------------------------------------------------------------------------*/
+void CreateDoctypeHtml11 (Document document, View view)
+{
+  CreateOrChangeDoctype (document, view, L_Xhtml11);
+}
+
+/*--------------------------------------------------------------------------
+  CreateDoctypeHtmlTransitional
+  Create or change the doctype for a (X)HTML Transitional document
+  --------------------------------------------------------------------------*/
+void CreateDoctypeHtmlTransitional (Document document, View view)
+{
+  CreateOrChangeDoctype (document, view, L_Transitional);
+}
+
+/*--------------------------------------------------------------------------
+  CreateDoctypeHtmlStrict
+  Create or change the doctype for a (X)HTML 1.0 Strict document
+  --------------------------------------------------------------------------*/
+void CreateDoctypeHtmlStrict (Document document, View view)
+{
+  CreateOrChangeDoctype (document, view, L_Strict);
+}
+
+/*--------------------------------------------------------------------------
+  CreateDoctypeHtmlBasic
+  Create or change the doctype for a XHTML 1.0 Basic document
+  --------------------------------------------------------------------------*/
+void CreateDoctypeHtmlBasic (Document document, View view)
+{
+  CreateOrChangeDoctype (document, view, L_Basic);
+}
+
+/*--------------------------------------------------------------------------
+  CreateDoctypeMathML
+  Create or change the doctype for a MathML document
+  --------------------------------------------------------------------------*/
+void CreateDoctypeMathML (Document document, View view)
+{
+  CreateOrChangeDoctype (document, view, L_MathML);
+}
+
+/*--------------------------------------------------------------------------
+  CreateDoctypeSVG
+  Create or change the doctype for a SVG Basic document
+  --------------------------------------------------------------------------*/
+void CreateDoctypeSVG (Document document, View view)
+{
+  CreateOrChangeDoctype (document, view, L_SVG);
 }
 
 /*----------------------------------------------------------------------

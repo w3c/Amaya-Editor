@@ -1270,8 +1270,6 @@ void CheckParsingErrors (Document doc)
 	  else
 	    {
 	      ChangeToBrowserMode (doc);
-	      /* disable the "Read as HTML command */
-	      TtaSetItemOn (doc, 1, File, BParseAsHTML);
 	      if (ShowErrors || UserAnswer)
 		{
 		  ShowLogFile (doc, 1);
@@ -1989,6 +1987,97 @@ void GoToHome (Document doc, View view)
     }
 }
 
+/*----------------------------------------------------------------------
+  UpdateDoctypeMenu
+  ----------------------------------------------------------------------*/
+void UpdateDoctypeMenu (Document doc)
+{
+  DocumentType  docType;
+  
+  docType = DocumentTypes[doc];
+
+  if (docType == docText || docType == docCSS ||
+      docType == docSource || docType == docLog)
+    {
+      /* Don't change the doctype for a text document */
+      TtaSetItemOff (doc, 1, File, Doctype1);
+      return;
+    }
+
+  TtaSetItemOn  (doc, 1, File, Doctype1);
+  TtaSetItemOn  (doc, 1, File, BRemoveDoctype);
+  TtaSetItemOff (doc, 1, File, BDoctypeXhtml11);
+  TtaSetItemOff (doc, 1, File, BDoctypeXhtmlTransitional);
+  TtaSetItemOff (doc, 1, File, BDoctypeXhtmlStrict);
+  TtaSetItemOff (doc, 1, File, BDoctypeXhtmlBasic);
+  TtaSetItemOff (doc, 1, File, BDoctypeHtmlTransitional);
+  TtaSetItemOff (doc, 1, File, BDoctypeHtmlStrict);
+  TtaSetItemOff (doc, 1, File, BDoctypeMathML);
+  TtaSetItemOff (doc, 1, File, BDoctypeSVG);
+
+  /* Is it a compound document ? */
+
+  switch (TtaGetDocumentProfile (doc))
+    {
+    case L_Other:
+      if (docType == docHTML)
+	{
+	   if (DocumentMeta[doc]->xmlformat)
+	     {
+	       TtaSetItemOn (doc, 1, File, BDoctypeXhtml11);
+	       TtaSetItemOn (doc, 1, File, BDoctypeXhtmlTransitional);
+	       TtaSetItemOn (doc, 1, File, BDoctypeXhtmlStrict);
+	       TtaSetItemOn (doc, 1, File, BDoctypeXhtmlBasic);
+	     }
+	   else
+	     {
+	       TtaSetItemOn (doc, 1, File, BDoctypeHtmlTransitional);
+	       TtaSetItemOn (doc, 1, File, BDoctypeHtmlStrict);
+	     }
+	}
+      else if (docType == docMath)
+	TtaSetItemOn (doc, 1, File, BDoctypeMathML);
+      else if (docType == docSVG)
+	TtaSetItemOn (doc, 1, File, BDoctypeSVG);
+      break;
+    case L_Xhtml11:
+      TtaSetItemOn (doc, 1, File, BDoctypeXhtmlTransitional);
+      TtaSetItemOn (doc, 1, File, BDoctypeXhtmlStrict);
+      TtaSetItemOn (doc, 1, File, BDoctypeXhtmlBasic);
+      break;
+    case L_Basic:
+      TtaSetItemOn (doc, 1, File, BDoctypeXhtml11);
+      TtaSetItemOn (doc, 1, File, BDoctypeXhtmlTransitional);
+      TtaSetItemOn (doc, 1, File, BDoctypeXhtmlStrict);
+      break;
+    case L_Strict:
+      if (DocumentMeta[doc]->xmlformat)
+	{
+	  TtaSetItemOn (doc, 1, File, BDoctypeXhtmlTransitional);
+	  TtaSetItemOn (doc, 1, File, BDoctypeXhtml11);
+	  TtaSetItemOn (doc, 1, File, BDoctypeXhtmlBasic);
+	}
+      else
+	TtaSetItemOn (doc, 1, File, BDoctypeHtmlTransitional);
+      break;
+    case L_Transitional:
+      if (DocumentMeta[doc]->xmlformat)
+	{
+	  TtaSetItemOn (doc, 1, File, BDoctypeXhtmlStrict);
+	  TtaSetItemOn (doc, 1, File, BDoctypeXhtml11);
+	  TtaSetItemOn (doc, 1, File, BDoctypeXhtmlBasic);
+	}
+      else
+	TtaSetItemOn (doc, 1, File, BDoctypeHtmlStrict);
+      break;
+    case L_MathML:
+      TtaSetItemOn (doc, 1, File, BDoctypeMathML);
+      break;
+    case L_SVG:
+      TtaSetItemOn (doc, 1, File, BDoctypeSVG);
+      break;
+    }
+}
 
 /*----------------------------------------------------------------------
    InitDocAndView prepares the main view of a new document.
@@ -2190,7 +2279,7 @@ Document InitDocAndView (Document doc, char *docname, DocumentType docType,
        TtaSetDocumentProfile (doc, profile);
        if (profile != 0)
 	 TtaUpdateMenus (doc, 1, readOnly);
-
+     
        /* By default no log file */
        TtaSetItemOff (doc, 1, Views, BShowLogFile);
        if (docType == docLog)
@@ -2210,7 +2299,6 @@ Document InitDocAndView (Document doc, char *docname, DocumentType docType,
 	   TtaSetItemOff (doc, 1, File, BForward);
 	   TtaSetItemOff (doc, 1, File, BSave);
 	   TtaSetItemOff (doc, 1, File, BSynchro);
-	   TtaSetItemOff (doc, 1, File, BParseAsHTML);
 	   TtaSetItemOff (doc, 1, File, BExit);
 	   TtaSetMenuOff (doc, 1, Edit_);
 	   TtaSetMenuOff (doc, 1, Types);
@@ -2368,7 +2456,6 @@ Document InitDocAndView (Document doc, char *docname, DocumentType docType,
 	   TtaSetItemOff (doc, 1, File, BForward);
 	   TtaSetItemOff (doc, 1, File, BSave);
 	   TtaSetItemOff (doc, 1, File, BSynchro);
-	   TtaSetItemOff (doc, 1, File, BParseAsHTML);
 	   TtaSetToggleItem (doc, 1, Views, TShowButtonbar, TRUE);
 	   TtaSetToggleItem (doc, 1, Views, TShowTextZone, TRUE);
 	   TtaSetToggleItem (doc, 1, Views, TShowMapAreas, MapAreas[doc]);
@@ -2416,13 +2503,13 @@ Document InitDocAndView (Document doc, char *docname, DocumentType docType,
 
    /* store the new document type */
    DocumentTypes[doc] = docType;
+
    /* set the document in Read-Only mode */
    if (readOnly)
      ReadOnlyDocument[doc] = TRUE;
    
    if (reinitialized || !isOpen)
      {
-     TtaSetItemOff (doc, 1, File, BParseAsHTML);
      /* now update menus and buttons according to the document status */
      if ((DocumentTypes[doc] == docText || DocumentTypes[doc] == docCSS ||
 	  DocumentTypes[doc] == docMath || DocumentTypes[doc] == docSource) ||
@@ -2476,6 +2563,7 @@ Document InitDocAndView (Document doc, char *docname, DocumentType docType,
 	     TtaSetItemOff (doc, 1, Special, TSectionNumber);
 	     TtaSetItemOff (doc, 1, Special, BMakeID);
 	     TtaChangeButton (doc, 1, iEditor, iconBrowser, TRUE);
+	     TtaSetMenuOff (doc, 1, Doctype1);
 	   }
 	 else
 	   TtaSetToggleItem (doc, 1, Edit_, TEditMode, TRUE);
@@ -2496,6 +2584,7 @@ Document InitDocAndView (Document doc, char *docname, DocumentType docType,
 	     TtaSetItemOff (doc, 1, Views, BShowLinks);
 	     TtaSetItemOff (doc, 1, Views, BShowToC);
 	     TtaSetItemOff (doc, 1, Views, BShowSource);
+	     TtaSetMenuOff (doc, 1, Doctype1);
 	   }
        }
      else if (DocumentTypes[doc] == docHTML ||
@@ -2512,6 +2601,7 @@ Document InitDocAndView (Document doc, char *docname, DocumentType docType,
 	   UpdateEditorMenus (doc);
        }
      }
+   
    return (doc);
 }
 
@@ -2664,9 +2754,6 @@ void ParseAsHTML (Document document, View view)
 
    /* Consider the document as modified */
    TtaSetDocumentModified (document);
-
-   /* disable the "Read as ISO Latin1" command */
-   TtaSetItemOff (document, 1, File, BParseAsHTML);
 
    TtaFreeMemory (tempdocument);
 }
@@ -2990,7 +3077,7 @@ static Document LoadDocument (Document doc, char *pathname,
 	     }
 	 }
      }
-
+  
   if (unknown && tempfile[0] != EOS)
     {
       /* The document is not an HTML file and cannot be parsed */
@@ -3241,6 +3328,9 @@ static Document LoadDocument (Document doc, char *pathname,
 	  TtaSetTextZone (newdoc, 1, 1, s);
 	  TtaFreeMemory (s);
 	}
+   
+      /* Update the Doctype menu */
+      UpdateDoctypeMenu (newdoc);
 
       tempdir = TtaGetMemory (MAX_LENGTH);
       TtaExtractName (tempdocument, tempdir, documentname);

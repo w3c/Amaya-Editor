@@ -21,6 +21,11 @@ extern void DoSaveObjectAs ( void );
 extern void SaveDocumentAs ( Document doc,
                              View view );
 extern void SetNamespacesAndDTD ( Document doc );
+extern void RestartParser ( Document doc,
+                            char *localFile,
+                            char *tempdir,
+                            char *documentname );
+extern void RedisplaySourceFile ( Document doc );
 extern Document GetDocFromSource ( Document sourceDoc );
 extern void Synchronize ( Document document,
                           View view );
@@ -48,6 +53,11 @@ extern void DoSaveObjectAs (/* void */);
 extern void SaveDocumentAs (/* Document doc,
                                View view */);
 extern void SetNamespacesAndDTD (/* Document doc */);
+extern void RestartParser (/* Document doc,
+                              char *localFile,
+                              char *tempdir,
+                              char *documentname */);
+extern void RedisplaySourceFile (/* Document doc */);
 extern Document GetDocFromSource (/* Document sourceDoc */);
 extern void Synchronize (/* Document document,
                             View view */);

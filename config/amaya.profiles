@@ -229,6 +229,13 @@ HelpAccess
 &NewXHTMLBasic
 &NewMathML
 &NewSVG
+&RemoveDoctype
+&CreateDoctypeHtml11
+&CreateDoctypeHtmlTransitional
+&CreateDoctypeHtmlStrict
+&CreateDoctypeHtmlBasic
+&CreateDoctypeMathML
+&CreateDoctypeSVG
 &SaveDocument
 SetBrowserEditor
 &TransformType

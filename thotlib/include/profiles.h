@@ -18,6 +18,7 @@
 #define L_Xhtml11           0x04 /* accept Strict, Basic and Ruby values */
 #define L_Transitional      0x08 /* accept all values except Ruby */
 #define L_MathML            0x10 /* accept only MathML values */
+#define L_SVG               0x20 /* accept only SVG values */
 
 /* Values for the profiles */
 #define L_BasicValue        0x0F /* allowed in all XHTML profiles */

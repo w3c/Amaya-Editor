@@ -24,6 +24,20 @@ extern void InitializeNewDoc ( char *url,
                                int docType,
                                Document doc,
                                int profile );
+extern void RemoveDoctype ( Document document,
+                            View view );
+extern void CreateDoctypeHtml11 ( Document document,
+                                  View view );
+extern void CreateDoctypeHtmlTransitional ( Document document,
+                                            View view );
+extern void CreateDoctypeHtmlStrict ( Document document,
+                                      View view );
+extern void CreateDoctypeHtmlBasic ( Document document,
+                                     View view );
+extern void CreateDoctypeMathML ( Document document,
+                                  View view );
+extern void CreateDoctypeSVG ( Document document,
+                               View view );
 extern void SpellCheck ( Document document,
                          View view );
 extern void CreateBreak ( Document document,
@@ -212,6 +226,20 @@ extern void InitializeNewDoc (/* char *url,
                                  int docType,
                                  Document doc,
                                  int profile */);
+extern void RemoveDoctype (/* Document document,
+                              View view */);
+extern void CreateDoctypeHtml11 (/* Document document,
+                                    View view */);
+extern void CreateDoctypeHtmlTransitional (/* Document document,
+                                              View view */);
+extern void CreateDoctypeHtmlStrict (/* Document document,
+                                        View view */);
+extern void CreateDoctypeHtmlBasic (/* Document document,
+                                       View view */);
+extern void CreateDoctypeMathML (/* Document document,
+                                    View view */);
+extern void CreateDoctypeSVG (/* Document document,
+                                 View view */);
 extern void SpellCheck (/* Document document,
                            View view */);
 extern void CreateBreak (/* Document document,

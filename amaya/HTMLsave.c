@@ -843,7 +843,6 @@ void SaveDocumentAs (Document doc, View view)
    (on the root element) according to the encoding used in the document.
    For (X)HTML documents, set the content of the Namespaces attribute
    (on the root element) according to the SSchemas used in the document;
-   set the HtmlDTD attribute to Frameset if the document uses Frames;
    create a META element to specify Content-Type and Charset.
   ----------------------------------------------------------------------*/
 void SetNamespacesAndDTD (Document doc)
@@ -1064,7 +1063,10 @@ void SetNamespacesAndDTD (Document doc)
 	 elType.ElTypeNum = XML_EL_DOCTYPE;
        doctype = TtaSearchTypedElement (elType, SearchInTree, docEl);
        if (doctype != NULL)
-	 TtaDeleteTree (doctype, doc);
+	 {
+	   TtaDeleteTree (doctype, doc);
+	   TtaSetDocumentProfile (doc, L_Other);
+	 }
      }
    
    if (DocumentTypes[doc] == docHTML || DocumentTypes[doc] == docAnnot)
@@ -1221,7 +1223,7 @@ void SetNamespacesAndDTD (Document doc)
 /*----------------------------------------------------------------------
    RestartParser
   ----------------------------------------------------------------------*/
-static void RestartParser (Document doc, char *localFile,
+void RestartParser (Document doc, char *localFile,
 			   char *tempdir, char *documentname)
 {
   CHARSET       charset;
@@ -1304,7 +1306,7 @@ static void RestartParser (Document doc, char *localFile,
    If doc is a HTML document and the source view is open, redisplay the
    source.
   ----------------------------------------------------------------------*/
-static void RedisplaySourceFile (Document doc)
+void RedisplaySourceFile (Document doc)
 {
   char             *localFile;
   char	      documentname[MAX_LENGTH];
@@ -1891,12 +1893,12 @@ Document       GetDocFromSource (Document sourceDoc)
   ----------------------------------------------------------------------*/
 void Synchronize (Document document, View view)
 {
-   NotifyElement       event;
+   NotifyElement     event;
    char*             tempdocument = NULL;
    char              documentname[MAX_LENGTH];
    char              tempdir[MAX_LENGTH];
-   DisplayMode         dispMode;
-   Document            xmlDoc, otherDoc;
+   DisplayMode       dispMode;
+   Document          xmlDoc, otherDoc;
 
    if (!DocumentURLs[document])
      /* the document is not loaded yet */
