@@ -241,8 +241,10 @@ static void InitFormLanguage (Document doc, View view,
 /*----------------------------------------------------------------------
  InitFormDialogWndProc
   ----------------------------------------------------------------------*/
-LRESULT CALLBACK InitFormDialogWndProc (ThotWindow hwnd, UINT iMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CALLBACK InitFormDialogWndProc (ThotWindow hwnd, UINT iMsg,
+					WPARAM wParam, LPARAM lParam)
 {
+  HFONT               newFont;
   ThotWindow          hwnTitle;
   ThotWindow          confirmButton;
   ThotWindow          doneButton;
@@ -252,19 +254,27 @@ LRESULT CALLBACK InitFormDialogWndProc (ThotWindow hwnd, UINT iMsg, WPARAM wPara
   switch (iMsg)
     {
     case WM_CREATE:
+      /* get the default GUI font */
+      newFont = GetStockObject (DEFAULT_GUI_FONT); 
       /* Create static window for the title */
       hwnTitle = CreateWindow ("STATIC", WIN_pAttr1->AttrName, 
 			       WS_CHILD | WS_VISIBLE | SS_LEFT,
 			       10, 5, 100, 15, hwnd, (HMENU) 99, 
 			       ((LPCREATESTRUCT) lParam)->hInstance, NULL); 
-      
+      /* set the font of the window */
+      if(newFont)
+         SendMessage (hwnTitle, WM_SETFONT, (WPARAM) newFont, MAKELPARAM(FALSE, 0));
+       
       /* Create Edit Window autoscrolled */
       hwnEdit = CreateWindow ("EDIT", TextAttrValue, 
 			      WS_CHILD | WS_VISIBLE | WS_BORDER | ES_LEFT |
 			         ES_AUTOHSCROLL,
 			      10, 25, 320, 20, hwnd, (HMENU) 1,
 			      ((LPCREATESTRUCT) lParam)->hInstance, NULL);
-
+      /* set the font of the window */
+      if(newFont)
+         SendMessage (hwnEdit, WM_SETFONT, (WPARAM) newFont, MAKELPARAM(FALSE, 0));
+ 
       if (lpfnTextZoneWndProc == (WNDPROC) 0)
 	lpfnTextZoneWndProc = (WNDPROC) SetWindowLong (hwnEdit, GWL_WNDPROC,
 						       (DWORD) TextZoneProc);
@@ -277,7 +287,10 @@ LRESULT CALLBACK InitFormDialogWndProc (ThotWindow hwnd, UINT iMsg, WPARAM wPara
 				    WS_CHILD | BS_DEFPUSHBUTTON | WS_VISIBLE,
 				    65, 50, 100, 20, hwnd, 
 				    (HMENU) ID_CONFIRM,
-				    ((LPCREATESTRUCT)lParam)->hInstance, NULL);
+ 				    ((LPCREATESTRUCT)lParam)->hInstance, NULL);
+      /* set the font of the window */
+      if(newFont)
+         SendMessage (confirmButton, WM_SETFONT, (WPARAM) newFont, MAKELPARAM(FALSE, 0));
       
       /* Create Done Button */
       doneButton = CreateWindow ("BUTTON", TtaGetMessage(LIB, TMSG_DONE),
@@ -285,7 +298,10 @@ LRESULT CALLBACK InitFormDialogWndProc (ThotWindow hwnd, UINT iMsg, WPARAM wPara
 				 185, 50, 100, 20, hwnd, 
 				 (HMENU) ID_DONE,
 				 ((LPCREATESTRUCT) lParam)->hInstance, NULL);
-      
+      /* set the font of the window */
+      if(newFont)
+         SendMessage (doneButton, WM_SETFONT, (WPARAM) newFont, MAKELPARAM(FALSE, 0));
+       
       SetFocus (hwnEdit);
       break;
       
@@ -342,75 +358,88 @@ LRESULT CALLBACK InitFormDialogWndProc (ThotWindow hwnd, UINT iMsg, WPARAM wPara
   ----------------------------------------------------------------------*/
 static ThotBool WIN_InitFormDialog (ThotWindow parent, char *title)
 {
-   WNDCLASS    wndFormClass;
-   char       *szAppName; 
-   ThotWindow  hwnFromDialog;
-   MSG         msg;
-   int         frame;
+  HFONT           newFont;
+  WNDCLASS        wndFormClass;
+  char           *szAppName; 
+  ThotWindow      hwnFromDialog;
+  MSG             msg;
+  int             frame;
 
-   szAppName = "FormClass";
-   if (!wndRegistered)
-     {
-       wndRegistered = TRUE;
-       wndFormClass.style         = CS_HREDRAW | CS_VREDRAW;
-       wndFormClass.lpfnWndProc   = InitFormDialogWndProc;
-       wndFormClass.cbClsExtra    = 0;
-       wndFormClass.cbWndExtra    = 0;
-       wndFormClass.hInstance     = hInstance;
-       wndFormClass.hIcon         = LoadIcon (NULL, IDI_APPLICATION);
-       wndFormClass.hCursor       = LoadCursor (NULL, IDC_ARROW);
-       wndFormClass.hbrBackground = (HBRUSH) GetStockObject (LTGRAY_BRUSH);
-       wndFormClass.lpszClassName = szAppName;
-       wndFormClass.lpszMenuName  = NULL;
-       
-       if (IS_WIN95)
-	 {
-	   if (!RegisterWin95 (&wndFormClass))
-	     return (FALSE);
-	 }
-       else if (!RegisterClass (&wndFormClass))
-	 return (FALSE);
-     }
-
-   hwnFromDialog = CreateWindow (szAppName, title,
-                                 DS_MODALFRAME | WS_POPUP | 
-                                 WS_VISIBLE | WS_CAPTION | WS_SYSMENU,
-                                 ClickX, ClickY,
-                                 340, 100,
-                                 parent, NULL, hInstance, NULL);
-
-   ShowWindow (hwnFromDialog, SW_SHOWNORMAL);
-   UpdateWindow (hwnFromDialog);
-
-   while (GetMessage (&msg, NULL, 0, 0))
-     {
-       frame = GetFrameNumber (msg.hwnd);
-       TranslateMessage (&msg);
-       DispatchMessage (&msg);
-     }
-   return TRUE;
+  szAppName = "FormClass";
+  if (!wndRegistered)
+    {
+      wndRegistered = TRUE;
+      wndFormClass.style         = CS_HREDRAW | CS_VREDRAW;
+      wndFormClass.lpfnWndProc   = InitFormDialogWndProc;
+      wndFormClass.cbClsExtra    = 0;
+      wndFormClass.cbWndExtra    = 0;
+      wndFormClass.hInstance     = hInstance;
+      wndFormClass.hIcon         = LoadIcon (NULL, IDI_APPLICATION);
+      wndFormClass.hCursor       = LoadCursor (NULL, IDC_ARROW);
+      wndFormClass.hbrBackground = (HBRUSH) GetStockObject (LTGRAY_BRUSH);
+      wndFormClass.lpszClassName = szAppName;
+      wndFormClass.lpszMenuName  = NULL;
+      
+      if (IS_WIN95)
+	{
+	  if (!RegisterWin95 (&wndFormClass))
+	    return (FALSE);
+	}
+      else if (!RegisterClass (&wndFormClass))
+	return (FALSE);
+    }
+  
+  /* get the default GUI font */
+  newFont = GetStockObject (DEFAULT_GUI_FONT); 
+  hwnFromDialog = CreateWindow (szAppName, title,
+				DS_MODALFRAME | WS_POPUP | 
+				WS_VISIBLE | WS_CAPTION | WS_SYSMENU,
+				ClickX, ClickY,
+				340, 100,
+				parent, NULL, hInstance, NULL);
+  /* set the font of the window */
+  if(newFont)
+    SendMessage (hwnFromDialog, WM_SETFONT, (WPARAM) newFont, MAKELPARAM(FALSE, 0));
+  
+  ShowWindow (hwnFromDialog, SW_SHOWNORMAL);
+  UpdateWindow (hwnFromDialog);
+  
+  while (GetMessage (&msg, NULL, 0, 0))
+    {
+      frame = GetFrameNumber (msg.hwnd);
+      TranslateMessage (&msg);
+      DispatchMessage (&msg);
+    }
+  return TRUE;
 }
 
 /*----------------------------------------------------------------------
   InitSheetDialogWndProc
   ----------------------------------------------------------------------*/
-LRESULT CALLBACK InitSheetDialogWndProc (ThotWindow hwnd, UINT iMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CALLBACK InitSheetDialogWndProc (ThotWindow hwnd, UINT iMsg,
+					 WPARAM wParam, LPARAM lParam)
 {
-  ThotWindow          hwnTitle;
-  ThotWindow          applyButton;
-  ThotWindow          deleteButton;
-  ThotWindow          doneButton;
-  int                 i;
-  int                 txtLength;
+  HFONT           newFont;
+  ThotWindow      hwnTitle;
+  ThotWindow      applyButton;
+  ThotWindow      deleteButton;
+  ThotWindow      doneButton;
+  int             i;
+  int             txtLength;
 
   switch (iMsg)
     {
     case WM_CREATE:
+      /* get the default GUI font */
+      newFont = GetStockObject (DEFAULT_GUI_FONT); 
      /* Create static window for the title */
       hwnTitle = CreateWindow ("STATIC", WIN_pAttr1->AttrName, 
 			       WS_CHILD | WS_VISIBLE | SS_LEFT,
 			       10, 5, 100, 15, hwnd, (HMENU) 99, 
 			       ((LPCREATESTRUCT) lParam)->hInstance, NULL); 
+      /* set the font of the window */
+      if(newFont)
+         SendMessage (hwnTitle, WM_SETFONT, (WPARAM) newFont, MAKELPARAM(FALSE, 0));
       
       /* Create Edit Window autoscrolled */
       hwnEdit = CreateWindow ("EDIT", TextAttrValue, 
@@ -418,6 +447,9 @@ LRESULT CALLBACK InitSheetDialogWndProc (ThotWindow hwnd, UINT iMsg, WPARAM wPar
 			        ES_AUTOHSCROLL | WS_TABSTOP,
 			      10, 25, 310, 20, hwnd, (HMENU) 1,
 			      ((LPCREATESTRUCT) lParam)->hInstance, NULL);
+      /* set the font of the window */
+      if(newFont)
+         SendMessage (hwnEdit, WM_SETFONT, (WPARAM) newFont, MAKELPARAM(FALSE, 0));
 				
       if (lpfnTextZoneWndProc == (WNDPROC) 0)
 	lpfnTextZoneWndProc = (WNDPROC) SetWindowLong (hwnEdit, GWL_WNDPROC,
@@ -431,6 +463,9 @@ LRESULT CALLBACK InitSheetDialogWndProc (ThotWindow hwnd, UINT iMsg, WPARAM wPar
 				  WS_CHILD | BS_DEFPUSHBUTTON | WS_VISIBLE,
 				  10, 50, 80, 20, hwnd, (HMENU) ID_APPLY,
 				  ((LPCREATESTRUCT) lParam)->hInstance, NULL);
+      /* set the font of the window */
+      if(newFont)
+         SendMessage (applyButton, WM_SETFONT, (WPARAM) newFont, MAKELPARAM(FALSE, 0));
       
       /* Create Delete Button */
       deleteButton = CreateWindow ("BUTTON",
@@ -438,6 +473,9 @@ LRESULT CALLBACK InitSheetDialogWndProc (ThotWindow hwnd, UINT iMsg, WPARAM wPar
 				   WS_CHILD | BS_PUSHBUTTON | WS_VISIBLE,
 				   100, 50, 120, 20, hwnd, (HMENU) ID_DELETE,
 				   ((LPCREATESTRUCT) lParam)->hInstance, NULL);
+      /* set the font of the window */
+      if(newFont)
+         SendMessage (deleteButton, WM_SETFONT, (WPARAM) newFont, MAKELPARAM(FALSE, 0));
       
       /* Create Done Button */
       doneButton = CreateWindow ("BUTTON",
@@ -445,6 +483,9 @@ LRESULT CALLBACK InitSheetDialogWndProc (ThotWindow hwnd, UINT iMsg, WPARAM wPar
 				 WS_CHILD | BS_PUSHBUTTON | WS_VISIBLE,
 				 230, 50, 80, 20, hwnd, (HMENU) ID_DONE,
 				 ((LPCREATESTRUCT) lParam)->hInstance, NULL);
+      /* set the font of the window */
+      if(newFont)
+         SendMessage (doneButton, WM_SETFONT, (WPARAM) newFont, MAKELPARAM(FALSE, 0));
       SetFocus (hwnEdit);
       break;
 
@@ -505,50 +546,53 @@ LRESULT CALLBACK InitSheetDialogWndProc (ThotWindow hwnd, UINT iMsg, WPARAM wPar
   ----------------------------------------------------------------------*/
 static ThotBool WIN_InitSheetDialog (ThotWindow parent)
 {
-   WNDCLASSEX    wndSheetClass;
-   char         *szAppName;
-   ThotWindow    hwnSheetDialog;
-   MSG           msg;
-   int           frame;
+  HFONT         newFont;
+  WNDCLASSEX    wndSheetClass;
+  char         *szAppName;
+  ThotWindow    hwnSheetDialog;
+  MSG           msg;
+  int           frame;
 
-   szAppName = "SheetClass";
-   if (!wndSheetRegistered)
-     {
-       wndSheetRegistered = TRUE;
-       wndSheetClass.style         = CS_HREDRAW | CS_VREDRAW;
-       wndSheetClass.lpfnWndProc   = InitSheetDialogWndProc;
-       wndSheetClass.cbClsExtra    = 0;
-       wndSheetClass.cbWndExtra    = 0;
-       wndSheetClass.hInstance     = hInstance;
-       wndSheetClass.hIcon         = LoadIcon (NULL, IDI_APPLICATION);
-       wndSheetClass.hCursor       = LoadCursor (NULL, IDC_ARROW);
-       wndSheetClass.hbrBackground = (HBRUSH) GetStockObject (LTGRAY_BRUSH);
-       wndSheetClass.lpszMenuName  = NULL;
-       wndSheetClass.lpszClassName = szAppName;
-       wndSheetClass.cbSize        = sizeof(WNDCLASSEX);
-       wndSheetClass.hIconSm       = LoadIcon (hInstance, iconID);
-       
-       if (!RegisterClassEx (&wndSheetClass))
-         return (FALSE);
-     }
+  szAppName = "SheetClass";
+  if (!wndSheetRegistered)
+    {
+      wndSheetRegistered = TRUE;
+      wndSheetClass.style         = CS_HREDRAW | CS_VREDRAW;
+      wndSheetClass.lpfnWndProc   = InitSheetDialogWndProc;
+      wndSheetClass.cbClsExtra    = 0;
+      wndSheetClass.cbWndExtra    = 0;
+      wndSheetClass.hInstance     = hInstance;
+      wndSheetClass.hIcon         = LoadIcon (NULL, IDI_APPLICATION);
+      wndSheetClass.hCursor       = LoadCursor (NULL, IDC_ARROW);
+      wndSheetClass.hbrBackground = (HBRUSH) GetStockObject (LTGRAY_BRUSH);
+      wndSheetClass.lpszMenuName  = NULL;
+      wndSheetClass.lpszClassName = szAppName;
+      wndSheetClass.cbSize        = sizeof(WNDCLASSEX);
+      wndSheetClass.hIconSm       = LoadIcon (hInstance, iconID);
+      if (!RegisterClassEx (&wndSheetClass))
+	return (FALSE);
+    }
    
-   hwnSheetDialog = CreateWindow (szAppName, TtaGetMessage (LIB, TMSG_ATTR),
-				  DS_MODALFRAME | WS_POPUP | WS_VISIBLE |
-				      WS_CAPTION | WS_SYSMENU | WS_TABSTOP,
-				  ClickX, ClickY,
-				  340, 100,
-				  parent, NULL, hInstance, NULL);
-   
-   ShowWindow (hwnSheetDialog, SW_SHOWNORMAL);
-   UpdateWindow (hwnSheetDialog);
-   
-   while (GetMessage (&msg, NULL, 0, 0))
-     {
-       frame = GetFrameNumber (msg.hwnd);
-       TranslateMessage (&msg);
-       DispatchMessage (&msg);
-     }
-   return TRUE;
+  /* get the default GUI font */
+  newFont = GetStockObject (DEFAULT_GUI_FONT); 
+  hwnSheetDialog = CreateWindow (szAppName, TtaGetMessage (LIB, TMSG_ATTR),
+				 DS_MODALFRAME | WS_POPUP | WS_VISIBLE |
+				 WS_CAPTION | WS_SYSMENU | WS_TABSTOP,
+				 ClickX, ClickY,
+				 340, 100,
+				 parent, NULL, hInstance, NULL);
+  /* set the font of the window */
+  if(newFont)
+    SendMessage (hwnSheetDialog, WM_SETFONT, (WPARAM) newFont, MAKELPARAM(FALSE, 0));
+  ShowWindow (hwnSheetDialog, SW_SHOWNORMAL);
+  UpdateWindow (hwnSheetDialog);
+  while (GetMessage (&msg, NULL, 0, 0))
+    {
+      frame = GetFrameNumber (msg.hwnd);
+      TranslateMessage (&msg);
+      DispatchMessage (&msg);
+    }
+  return TRUE;
 }
 
 /*----------------------------------------------------------------------
@@ -556,21 +600,27 @@ static ThotBool WIN_InitSheetDialog (ThotWindow parent)
   ----------------------------------------------------------------------*/
 LRESULT CALLBACK InitNumAttrDialogWndProc (ThotWindow hwnd, UINT iMsg, WPARAM wParam, LPARAM lParam)
 {
-  ThotWindow        hwnTitle;
-  ThotWindow        applyButton;
-  ThotWindow        deleteButton;
-  ThotWindow        doneButton;
-  ThotBool    ok;
-  int         val;
+  HFONT           newFont;
+  ThotWindow      hwnTitle;
+  ThotWindow      applyButton;
+  ThotWindow      deleteButton;
+  ThotWindow      doneButton;
+  ThotBool        ok;
+  int             val;
 
   switch (iMsg)
     {
     case WM_CREATE:
+      /* get the default GUI font */
+      newFont = GetStockObject (DEFAULT_GUI_FONT); 
       /* Create static window for the title */
       hwnTitle = CreateWindow ("STATIC", WIN_pAttr1->AttrName, 
 			       WS_CHILD | WS_VISIBLE | SS_LEFT,
 			       10, 10, 160, 240, hwnd, (HMENU) 1,
 			       ((LPCREATESTRUCT) lParam)->hInstance, NULL); 
+      /* set the font of the window */
+      if(newFont)
+         SendMessage (hwnTitle, WM_SETFONT, (WPARAM) newFont, MAKELPARAM(FALSE, 0));
       
       /* Create Edit Window autoscrolled */
       hwnEdit = CreateWindow ("EDIT", NULL, 
@@ -578,6 +628,9 @@ LRESULT CALLBACK InitNumAttrDialogWndProc (ThotWindow hwnd, UINT iMsg, WPARAM wP
 			         ES_AUTOHSCROLL,
 			      10, 30, 120, 20, hwnd, (HMENU) ID_EDITVALUE,
 			      ((LPCREATESTRUCT) lParam)->hInstance, NULL);
+      /* set the font of the window */
+      if(newFont)
+         SendMessage (hwnEdit, WM_SETFONT, (WPARAM) newFont, MAKELPARAM(FALSE, 0));
       SetDlgItemInt (hwnd, ID_EDITVALUE, formValue, TRUE);
       if (lpfnTextZoneWndProc == (WNDPROC) 0)
 	lpfnTextZoneWndProc = (WNDPROC) SetWindowLong (hwnEdit, GWL_WNDPROC,
@@ -591,6 +644,9 @@ LRESULT CALLBACK InitNumAttrDialogWndProc (ThotWindow hwnd, UINT iMsg, WPARAM wP
 				  WS_CHILD | BS_DEFPUSHBUTTON | WS_VISIBLE,
 				  10, 55, 65, 25, hwnd, (HMENU) ID_APPLY,
 				  ((LPCREATESTRUCT) lParam)->hInstance, NULL);
+      /* set the font of the window */
+      if(newFont)
+         SendMessage (applyButton, WM_SETFONT, (WPARAM) newFont, MAKELPARAM(FALSE, 0));
       
       /* Create Delete Button */
       deleteButton = CreateWindow ("BUTTON",
@@ -598,6 +654,9 @@ LRESULT CALLBACK InitNumAttrDialogWndProc (ThotWindow hwnd, UINT iMsg, WPARAM wP
 				   WS_CHILD | BS_PUSHBUTTON | WS_VISIBLE,
 				   80, 55, 120, 25, hwnd, (HMENU) ID_DELETE,
 				   ((LPCREATESTRUCT) lParam)->hInstance, NULL);
+      /* set the font of the window */
+      if(newFont)
+         SendMessage (deleteButton, WM_SETFONT, (WPARAM) newFont, MAKELPARAM(FALSE, 0));
       
       /* Create Done Button */
       doneButton = CreateWindow ("BUTTON",
@@ -605,6 +664,9 @@ LRESULT CALLBACK InitNumAttrDialogWndProc (ThotWindow hwnd, UINT iMsg, WPARAM wP
 				 WS_CHILD | BS_PUSHBUTTON | WS_VISIBLE,
 				 205, 55, 65, 25, hwnd, (HMENU) ID_DONE,
 				 ((LPCREATESTRUCT) lParam)->hInstance, NULL);
+      /* set the font of the window */
+      if(newFont)
+         SendMessage (doneButton, WM_SETFONT, (WPARAM) newFont, MAKELPARAM(FALSE, 0));
       SetFocus (hwnEdit);
       break;
       
@@ -658,49 +720,52 @@ LRESULT CALLBACK InitNumAttrDialogWndProc (ThotWindow hwnd, UINT iMsg, WPARAM wP
   ----------------------------------------------------------------------*/
 static ThotBool WIN_InitNumAttrDialog (ThotWindow parent)
 {
-   WNDCLASSEX    wndNumAttrClass;
-   ThotWindow    hwnNumAttrDialog;
-   MSG           msg;
-   int           frame;
+  HFONT         newFont;
+  WNDCLASSEX    wndNumAttrClass;
+  ThotWindow    hwnNumAttrDialog;
+  MSG           msg;
+  int           frame;
 
-   szAppName = "NumAttrClass";
-   if (!wndNumAttrRegistered)
-     {
-       wndNumAttrRegistered = TRUE;
-       wndNumAttrClass.style         = CS_HREDRAW | CS_VREDRAW;
-       wndNumAttrClass.lpfnWndProc   = InitNumAttrDialogWndProc;
-       wndNumAttrClass.cbClsExtra    = 0;
-       wndNumAttrClass.cbWndExtra    = 0;
-       wndNumAttrClass.hInstance     = hInstance;
-       wndNumAttrClass.hIcon         = LoadIcon (NULL, IDI_APPLICATION);
-       wndNumAttrClass.hCursor       = LoadCursor (NULL, IDC_ARROW);
-       wndNumAttrClass.hbrBackground = (HBRUSH) GetStockObject (LTGRAY_BRUSH);
-       wndNumAttrClass.lpszMenuName  = NULL;
-       wndNumAttrClass.lpszClassName = szAppName;
-       wndNumAttrClass.cbSize        = sizeof(WNDCLASSEX);
-       wndNumAttrClass.hIconSm       = LoadIcon (hInstance, iconID);
-       
-       if (!RegisterClassEx (&wndNumAttrClass))
-         return (FALSE);
-     }
+  szAppName = "NumAttrClass";
+  if (!wndNumAttrRegistered)
+    {
+      wndNumAttrRegistered = TRUE;
+      wndNumAttrClass.style         = CS_HREDRAW | CS_VREDRAW;
+      wndNumAttrClass.lpfnWndProc   = InitNumAttrDialogWndProc;
+      wndNumAttrClass.cbClsExtra    = 0;
+      wndNumAttrClass.cbWndExtra    = 0;
+      wndNumAttrClass.hInstance     = hInstance;
+      wndNumAttrClass.hIcon         = LoadIcon (NULL, IDI_APPLICATION);
+      wndNumAttrClass.hCursor       = LoadCursor (NULL, IDC_ARROW);
+      wndNumAttrClass.hbrBackground = (HBRUSH) GetStockObject (LTGRAY_BRUSH);
+      wndNumAttrClass.lpszMenuName  = NULL;
+      wndNumAttrClass.lpszClassName = szAppName;
+      wndNumAttrClass.cbSize        = sizeof(WNDCLASSEX);
+      wndNumAttrClass.hIconSm       = LoadIcon (hInstance, iconID);
+      if (!RegisterClassEx (&wndNumAttrClass))
+	return (FALSE);
+    }
    
-   hwnNumAttrDialog = CreateWindow (szAppName, TtaGetMessage (LIB, TMSG_ATTR),
-                                    DS_MODALFRAME | WS_POPUP | 
-                                    WS_VISIBLE | WS_CAPTION | WS_SYSMENU,
-                                    ClickX, ClickY,
-                                    285, 110,
-                                    parent, NULL, hInstance, NULL);
-   
-   ShowWindow (hwnNumAttrDialog, SW_SHOWNORMAL);
-   UpdateWindow (hwnNumAttrDialog);
-   
-   while (GetMessage (&msg, NULL, 0, 0))
-     {
-       frame = GetFrameNumber (msg.hwnd);
-       TranslateMessage (&msg);
-       DispatchMessage (&msg);
-     }
-   return TRUE;
+  /* get the default GUI font */
+  newFont = GetStockObject (DEFAULT_GUI_FONT); 
+  hwnNumAttrDialog = CreateWindow (szAppName, TtaGetMessage (LIB, TMSG_ATTR),
+				   DS_MODALFRAME | WS_POPUP | 
+				   WS_VISIBLE | WS_CAPTION | WS_SYSMENU,
+				   ClickX, ClickY,
+				   285, 110,
+				   parent, NULL, hInstance, NULL);
+  /* set the font of the window */
+  if(newFont)
+    SendMessage (hwnNumAttrDialog, WM_SETFONT, (WPARAM) newFont, MAKELPARAM(FALSE, 0));
+  ShowWindow (hwnNumAttrDialog, SW_SHOWNORMAL);
+  UpdateWindow (hwnNumAttrDialog);
+  while (GetMessage (&msg, NULL, 0, 0))
+    {
+      frame = GetFrameNumber (msg.hwnd);
+      TranslateMessage (&msg);
+      DispatchMessage (&msg);
+    }
+  return TRUE;
 }
 #endif /* _WINDOWS */
 
