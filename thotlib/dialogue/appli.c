@@ -3081,92 +3081,91 @@ void TtaResetCursor (Document document, View view)
 }
 
 /*----------------------------------------------------------------------
-   GiveClickedAbsBox retourne l'identification de la fenetre et du pave 
-   designe.                                                
+  GiveClickedAbsBox returns the window and the abstract box selected.
   ----------------------------------------------------------------------*/
-void GiveClickedAbsBox (int *frame, PtrAbstractBox *pave)
+void GiveClickedAbsBox (int *frame, PtrAbstractBox *pAb)
 {
 #ifndef _WINDOWS
-   ThotEvent           event;
-   Drawable            drawable;
+  ThotEvent           event;
+  Drawable            drawable;
 #else  /* _WINDOWS */
-   MSG                 event;
-   HCURSOR             cursor;          
-   int                 curFrame;
+  MSG                 event;
+  HCURSOR             cursor;          
+  int                 curFrame;
 #endif /* _WINDOWS */
-   int                 i;
+  int                 i;
 #ifdef _GTK   
-   ThotWidget          w;
+  ThotWidget          w;
 #endif /* _GTK */
 
-   if (ClickIsDone == 1)
-     {
-       *frame = 0;
-       *pave = NULL;
-     }
+  if (ClickIsDone == 1)
+    {
+      *frame = 0;
+      *pAb = NULL;
+    }
 
-   /* Changement du curseur */
+  /* Change the cursor */
 #ifdef _WINDOWS
-   cursor = LoadCursor (hInstance, MAKEINTRESOURCE (Window_Curs));
+  cursor = LoadCursor (hInstance, MAKEINTRESOURCE (Window_Curs));
 #else  /* _WINDOWS */
-   for (i = 1; i <= MAX_FRAME; i++)
-     {
-       drawable = (Drawable)TtaGetThotWindow (i);
-       if (drawable != 0)
+  for (i = 1; i <= MAX_FRAME; i++)
+    {
+      drawable = (Drawable)TtaGetThotWindow (i);
+      if (drawable)
 #ifndef _GTK
-	   XDefineCursor (TtDisplay, drawable, WindowCurs);
+	XDefineCursor (TtDisplay, drawable, WindowCurs);
 #else /* _GTK */   
-	   {
-	     w = FrameTable[i].WdFrame;
-	     if (w && w->window)
-	       gdk_window_set_cursor(GTK_WIDGET(w)->window, WindowCurs);
-	   }
+      {
+	w = FrameTable[i].WdFrame;
+	if (w && w->window)
+	  gdk_window_set_cursor(GTK_WIDGET(w)->window, WindowCurs);
+      }
 #endif /* _GTK */
-     }
+    }
 #endif /* _WINDOWS */
 
-   /* Boucle d'attente de designation */
-   ClickIsDone = 1;
-   ClickFrame = 0;
-   ClickX = 0;
-   ClickY = 0;
-   while (ClickIsDone == 1)
-     {
+  /* wait the click on the target */
+  ClickIsDone = 1;
+  ClickFrame = 0;
+  ClickX = 0;
+  ClickY = 0;
+  while (ClickIsDone == 1)
+    {
 #ifndef _WINDOWS 
-       TtaFetchOneEvent (&event);
-       TtaHandleOneEvent (&event);
+      TtaFetchOneEvent (&event);
+      TtaHandleOneEvent (&event);
 #else /* _WINDOWS */
-       GetMessage (&event, NULL, 0, 0);
-       curFrame = GetFrameNumber (event.hwnd);
-       TtaHandleOneEvent (&event);
-       SetCursor (cursor);
+      GetMessage (&event, NULL, 0, 0);
+      curFrame = GetFrameNumber (event.hwnd);
+      TtaHandleOneEvent (&event);
+      SetCursor (cursor);
 #endif /* _WINDOWS */
-     }
+    }
 
-   /* Restauration du curseur */
-   for (i = 1; i <= MAX_FRAME; i++)
-     {
 #ifndef _WINDOWS
-       drawable = (Drawable)TtaGetThotWindow (i);
-       if (drawable != 0)
+  /* Restore the cursor */
+  for (i = 1; i <= MAX_FRAME; i++)
+    {
+      drawable = (Drawable)TtaGetThotWindow (i);
+      if (drawable)
 #ifndef _GTK
-	 XUndefineCursor (TtDisplay, drawable);
+	XUndefineCursor (TtDisplay, drawable);
 #else /* _GTK */
-	   {
-	       w = FrameTable[i].WdFrame;  
-	       if (w != NULL)
-		   if (w->window != NULL)
-		       gdk_window_set_cursor(GTK_WIDGET(w)->window, ArrowCurs);
-	   }
+      {
+	w = FrameTable[i].WdFrame;  
+	if (w != NULL)
+	  if (w->window != NULL)
+	    gdk_window_set_cursor(GTK_WIDGET(w)->window, ArrowCurs);
+      }
 #endif /* _GTK */
+    }
 #endif /* _WINDOWS */
-     }
 
-   *frame = ClickFrame;
-   if (ClickFrame > 0 && ClickFrame <= MAX_FRAME)
-     *pave = GetClickedAbsBox (ClickFrame, ClickX, ClickY);
-   else
-     *pave = NULL;
+  *frame = ClickFrame;
+  if (ClickFrame > 0 && ClickFrame <= MAX_FRAME)
+    *pAb = GetClickedAbsBox (ClickFrame, ClickX, ClickY);
+  else
+    *pAb = NULL;
 }
 
 /*----------------------------------------------------------------------
