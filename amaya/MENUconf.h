@@ -67,8 +67,9 @@
 #define mProfiles_File        2
 #define mProfileEmpty1        3
 #define mProfileEmpty2        4
-#define mRadioProfile         5
+#define mProfileSelector      5
 #define MAX_PROFILEMENU_DLG   6
+static void BuildProfileSelector();
 
 #define TemplatesMenu           1
 #define mTemplates              2

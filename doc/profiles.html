@@ -3,7 +3,7 @@
 <html>
 <head>
   <meta name="RCS-Id" content="$Id: NOTE-SYMM-modules-19990223.html,v 1.2     
-             1999/02/23 19:58:44 renaudb Exp $">
+                 1999/02/23 19:58:44 renaudb Exp $">
   <meta content="text/xhtml; charset=iso-8859-1" http-equiv="Content-Type">
   <title>Profiles in Amaya</title>
   <link href="http://cgi.w3.org/templates/black.css" rel="stylesheet"
@@ -33,7 +33,7 @@ src="http://www.w3.org/w3c_home.gif" alt="W3C">
       <td>12/08/1999</td>
     </tr>
     <tr valign="baseline">
-      <td>Editors:</td>
+      <td>Editor:</td>
       <td><span class="author"><span class="name">Luc Bonameau</span>
         <i>(Luc.Bonameau@inrialpes.fr)</i></span><br>
         <br>
@@ -78,10 +78,14 @@ licensing</a> rules apply.</p>
 
 <p></p>
 
-<p>The profile feature allows the user to change the Amaya interface.</p>
+<p>The profile feature allows the user to change the Amaya interface according
+to his needs.</p>
 
-<p>The user can select the functions he wishes to have in the menus ane
-toolbar buttons and build his own profile.</p>
+<p>The user can select the functions he wishes to be proposed in the menus and
+in the toolbar of the   interface.</p>
+
+<p>The selection of these functions is done by editing a single file
+describing as much profiles as wanted.</p>
 
 <p></p>
 
@@ -97,23 +101,26 @@ toolbar buttons and build his own profile.</p>
     directory (~/.amaya under UNIX) and get it ready for edition**.</li>
   <li>Open the file Amaya/config/ProfileDefs. This file defines all the
     functions available in Amaya. These functions are spread into modules
-    (look at the <a href="#Issues">file structure below</a>). This file is
-    useful to know which modules and functions are available.</li>
+    (look at the <a href="#Issues">file structure below</a>) and modules are
+    sorted by themes (print, edition, elements, etc). Modules have been
+    created in order to avoid the user to choose functions one by one.</li>
   <li>Give the profile you're working on a title : Type this title between
-    brackets.</li>
-  <li>Under that title, you can add as much modules or functions as you wish
-    (look at <a href="#Profiles">An example of profile configuration
-    file</a>). <a href="#Profiles"></a></li>
-  <li>You can add as much profiles as you want in the same profile file but
-    remember you'll be only proposed the 6 first profiles in the Amaya profile
-    selection..</li>
+    brackets.
+    <p>i.e : [profile 1]</p>
+  </li>
+  <li>Under that title, all the modules and functions that will be added
+    belong to the profile. Add modules and functions under the title (look at
+    <a href="#Profiles">An example of profile configuration file</a>). You can
+    add as many modules or functions as you want <a href="#Profiles"></a></li>
+  <li>You can add as many profiles as you want in the same profile
+    configuration file.</li>
 </ul>
 
 <p></p>
 
-<p>Note : **All these operations can be done with Amaya. You can open, edit
-and save your profile configuration even if the extension of the file isn't
-html.</p>
+<p>Note : **All these operations can be achieved with Amaya. You can open,
+edit and save your profile configuration even if the extension of the file
+isn't html.</p>
 
 <p></p>
 
@@ -128,41 +135,40 @@ selection.</p>
     <p>Special -> Preferences -> Profile...</p>
   </li>
   <li>Fill in the field "Location of profiles definition file" with the path
-    of the created profile file. This choice allows you to have severals
-    profile definition file.</li>
-  <li>Restart Amaya</li>
-  <li>Reopen the profile dialog box</li>
-  <li>If everything' ok, you are proposed one or several profile**. Check the
-    radio box matching the profile you want to use and click the Apply
-  button.</li>
+    of the file you've been creating.
+    <p>The text entry is dynamic. This mean that you will get instantaneously
+    the profiles (in the selector menu) matching the entered file.</p>
+  </li>
+  <li>If the file you entered exists and if it contains some profiles data
+    (minimum 1), you'll be proposed one or several profile in the selector of
+    the menu. Select the entry matching the profile you want to use and click
+    the Apply button.</li>
   <li>Restart Amaya for the changes to take effect.</li>
 </ul>
 
-<p>Note : ** The profiles choice is limited to 6 profiles. So, if you defined
-10 profiles in the same file, don't be surprised if only the six first
-profiles are proposed.</p>
+<p></p>
 
 <h2><a name="Profiles">3. An example of profile configuration file</a></h2>
 
 <p></p>
 
-<p>This example shows two profiles definitions (Amaya4Kids and Editor_Novice
-between brackets).</p>
+<p>This example belows shows two profiles definitions : Amaya4Kids and
+Editor_Novice (between brackets).</p>
 
-<p>All strings preceded by a # are modules (defined in ProfileDefs) and others
-are functions. Modules are units of functions.</p>
+<p>All strings preceded by a hash (#) are modules (defined in ProfileDefs) and
+others are functions.</p>
 
 <p></p>
 
-<p>[Amaya4Kids]</p>
+<p>[Amaya4Kids]             &lt;--- Profile title</p>
 
-<p>#editbase</p>
+<p>#editbase                        &lt;-- module</p>
 
-<p>#browse</p>
+<p>#browse                         </p>
 
 <p>#templates</p>
 
-<p>CreateHeading1</p>
+<p>CreateHeading1             &lt;-- function</p>
 
 <p>CreateList</p>
 
@@ -170,7 +176,7 @@ are functions. Modules are units of functions.</p>
 
 <p></p>
 
-<p>[Editor_Novice]</p>
+<p>[Editor_Novice]        &lt;--- Profile title</p>
 
 <p>#editbase</p>
 
@@ -189,26 +195,35 @@ are functions. Modules are units of functions.</p>
 <p></p>
 
 <p>The ProfileDefs file contain units of modules definition separated by
-comments lines beginning with several # (like ####VIEWS). These comments are
-there to help you searching your module (or function).</p>
+comments lines beginning with several hashes '#' (like ####VIEWS). These
+comments are there to help you searching your module (or function).</p>
 
-<p>Beginning of module definition is represented by a the name of module
-between brackets (like [views] or [zoom])</p>
+<p>Beginning of module definition is set by a name between brackets (like
+[views] or [zoom])</p>
 
 <p>All the modules or functions under this starting module element belong to
-the module as long as another starting module element starts.</p>
+the module as long as another starting module element starts. To insert a
+module into a module, preceed the name of the module by a hash ('#').</p>
+
+<p> The structure is recursive (modules contains functions and modules that
+can contain other functions and modules ...)</p>
+
+<p>WARNING : Marks '&amp;' before a function's name are marks used by internal
+profile function. You don' have to bither with it (they are used to determine
+which functions are edition function). <span style="color: #FF6969">DO NOT
+INCLUDE THIS SYMBOL IN YOUR PROFILE CONFIGURATION FILE</span>.</p>
 
 <p></p>
 
-<p>######### VIEWS</p>
+<p>######### VIEWS<span style="color: #FF0000"></span></p>
 
-<p>[views]</p>
+<p>[views]                                &lt;-- Module  (definition)</p>
 
-<p>#zoom</p>
+<p>#zoom                                     &lt;-- Module (insertion)</p>
 
 <p>#docviews</p>
 
-<p>TtcSwitchButtonBar</p>
+<p>TtcSwitchButtonBar              &lt;-- Function</p>
 
 <p>TtcSwitchCommands</p>
 
@@ -239,6 +254,18 @@ the module as long as another starting module element starts.</p>
 <p>ZoomIn</p>
 
 <p>ZoomOut</p>
+
+<p></p>
+
+<p>[objects]</p>
+
+<p><span style="color: #FF6969">&amp;</span>CreateObject</p>
+
+<p><span style="color: #FF6969">&amp;</span>CreateParameter     &lt;-- Edition
+function (do not include the '&amp;' symbol in your profiles definition
+file)</p>
+
+<p></p>
 
 <p></p>
 <hr>

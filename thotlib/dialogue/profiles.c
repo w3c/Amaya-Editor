@@ -22,43 +22,31 @@
 #include "appdialogue.h"
 #include "application.h"
 #include "registry.h"
+#include "profiles.h"
 
-/* Definitions */
-#define THOT_EXPORT extern
-#define MAX_FUNCTIONS    1000    /* Maximum of functions defined in Amaya software */       
-#define MAX_DEF          1000      /* Maximun of lines for the module definition file */
-#define MAX_PRO          6         /* Maximun of profile displayed in the interface */
-#define MAX_LENGTH       50       /* Maximum length of a string */
-#define DEF_FILE         "/config/ProfileDefs"
-#define PROFILE_START    '['
-#define MODULE_START     '['
-#define PROFILE_END    ']'
-#define MODULE_END     ']'
-#define MODULE_REF     '#'
 
 /*-----------------------
   Functions prototypes
 -----------------------*/
+
+
 static void ProcessElements(char element[]);
 static void InsertTable(STRING string, STRING Table[], int * nbelem);
 static void FileToTable(FILE * File, STRING Table[],int * nbelem, int maxelem);
 static void SortTable (STRING Table[], int nbelem);
 static void DeleteTable(STRING Table[], int  *nbelem);
-static int  SearchInTable(char * StringToFind, STRING Table[],
-			  int nbelem, ThotBool sort);
-
+static int  SearchInTable(char * StringToFind, STRING Table[], int nbelem, ThotBool sort);
 static void SkipNewLineSymbol(char  Astring[]);
 static void SkipAllBlanks (char Astring[]);
 static char * AddHooks (char * Astring);
 static void RemoveHooks (char  Astring[]);
 
 
-
 /*--------------------------
-  Static variables
+  Static vars
 ---------------------------*/
 
-/* determine either a profile is defined or not */
+/* Determine either a profile is defined or not */
 static ThotBool             defined_profile = FALSE;
 
 /* Definition table : correspondence between Modules and functions */
@@ -73,14 +61,86 @@ static int                  Fun_nbelem = 0;
 static STRING               Pro_Table[MAX_PRO];
 static int                  Pro_nbelem = 0;
 
+/* Edition table : contains the name of all the functions used for edition */
+static STRING               Edition_Table[MAX_EDITION_FUNCTIONS];
+static int                  Edition_nbelem = 0;
+
 /* Current profile : the current selected profile*/
-static char                 CurrentProfile[MAX_LENGTH];
+static char                 CurrentProfile[MAX_PRO_LENGTH];
 
 /* User Profile */  
-static char                 UserProfile[MAX_LENGTH];
+static char                 UserProfile[MAX_PRO_LENGTH];
 
-static char                 TempString[MAX_LENGTH];
+static char                 TempString[MAX_PRO_LENGTH];
 
+static ThotBool             Prof_ReadOnly = TRUE;
+
+
+/*-----------------------------------------------------------------------
+   Prof_InitTable: Seek the current profile and init the function table
+  ----------------------------------------------------------------------*/
+void Prof_InitTable()
+{
+  FILE *              Def_FILE;
+  FILE *              Prof_FILE; 
+  char *              Prof_File;
+  char                Def_File [MAX_PRO_LENGTH];
+  char                thotdir  [MAX_PRO_LENGTH];
+  char                TempString [MAX_PRO_LENGTH];
+  int                 i = 0;
+
+  Prof_File = TtaGetEnvString("Profiles_File");
+  if (TtaGetEnvString ("Profile"))
+    strcpy (UserProfile, AddHooks ( TtaGetEnvString ("Profile") ) );
+  
+  strcpy (thotdir,  TtaGetEnvString("THOTDIR"));
+  strcpy (Def_File, strcat(thotdir, DEF_FILE));
+
+
+  Def_FILE = fopen(Def_File,"r");
+  Prof_FILE = fopen(Prof_File,"r");
+
+  if ((Def_FILE != NULL) && (Prof_FILE != NULL) && UserProfile)
+     {    
+       
+       /* Fill a table for modules definition */
+       FileToTable (Def_FILE, Def_Table, &Def_nbelem, MAX_DEF);
+
+       /* Generate a functions table*/
+       while (fgets(TempString, sizeof(TempString), Prof_FILE))
+         {		
+	   SkipAllBlanks(TempString);
+  	   ProcessElements(TempString);
+	 } 
+       
+       /* Sort the functions and edition table */
+       SortTable(Fun_Table, Fun_nbelem);
+       SortTable (Edition_Table, Edition_nbelem);
+       /* delete the modules definition table */
+       DeleteTable (Def_Table, &Def_nbelem);
+
+       /* Check if the profile correspond to a read only profile */
+       while (( i<Fun_nbelem) && (Prof_ReadOnly))
+	 {
+	   if (SearchInTable (Fun_Table[i], Edition_Table, Edition_nbelem, TRUE))
+	     Prof_ReadOnly = FALSE;
+	 }
+
+     }       
+  else
+    {
+      /* can NOT open profile files or no profile defined */
+    }
+  if (Fun_nbelem > 0)
+    defined_profile = TRUE;
+
+  /* Close the open files */
+  if (Def_FILE != NULL) 
+      fclose(Def_FILE);
+
+  if (Prof_FILE != NULL)
+      fclose(Prof_FILE);
+}
 
 /*--------------------------------------------------------
    Prof_RebuildProTable : Rebuild the Profiles Table
@@ -124,128 +184,100 @@ int  Prof_RebuildProTable(STRING Prof_file)
      }
 }
 
-
-/*---------------------------------------------------------------
-   Prof_GetProfilesItems :  Get the text for the profile menu items.
-   Returns the number of items
-------------------------------------------------------------------*/
-
-#ifdef __STDC__
-int  Prof_GetProfilesItems(CHAR_T MenuText[])
-#else  /* !__STDC__ */
-int  Prof_GetProfilesItems(MenuText[])
-CHAR_T MenuText[];
-#endif /* !__STDC__ */
-
-{
-  int                   i = 0;
-  int                   j;
-
-  for (j=0 ; j < Pro_nbelem ; j++)
-    {
-       usprintf (&MenuText[i], TEXT("%s%s"), "B", Pro_Table[j]);
-       i += ustrlen (&MenuText[i]) + 1;
-    }
-  return j;
-}
-
-
-
-/*-----------------------------------------------------------------------------
-  Prof_ItemNumber2Profile : Conversion between item number in the profile menu
-  and the profile name
-------------------------------------------------------------------------------*/
-
-#ifdef __STDC__
-STRING Prof_ItemNumber2Profile(int ItemNumber)
-#else  /* !__STDC__ */
-STRING Prof_ItemNumber2Profile(ItemNumber)
-int ItemNumber;
-#endif /* !__STDC__ */
-{
-//  if (Pro_nbelem)
-    return Pro_Table[ItemNumber];
-//  else
- //   return NULL;
-}
-
-
-/*-----------------------------------------------------------------------
-  Prof_Profile2ItemNumber : Conversion between profile name and item 
-  number in the menu
+/*----------------------------------------------------------------------
+  ProcessElements : Recursive function that helps
+  building the profile table
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-int Prof_Profile2ItemNumber(STRING Profile)
+static   void ProcessElements(char element[])
 #else  /* !__STDC__ */
-int Prof_Profile2ItemNumber(Profile)
-STRING Profile;
-#endif /* !__STDC__ */
+static   void ProcessElements(element[])
+char     element[];
+#endif /* !__STDC__ */ 
 {
-  if (Profile)
-    {
-     
-      return (SearchInTable(Profile, Pro_Table, Pro_nbelem, FALSE));
-    }
-  else 
-    return -1;
-}
-
-/*-----------------------------------------------------------------------
-   Prof_InitTable: Seek the current profile and init the function table
-  ----------------------------------------------------------------------*/
-void Prof_InitTable()
-{
-  FILE *              Def_FILE;
-  FILE *              Prof_FILE; 
-  char *              Prof_File;
-  char                Def_File [MAX_LENGTH];
-  char                thotdir  [MAX_LENGTH];
-  char                TempString [MAX_LENGTH];
-
-  Prof_File = TtaGetEnvString("Profiles_File");
-  if (TtaGetEnvString ("Profile"))
-    strcpy (UserProfile, AddHooks ( TtaGetEnvString ("Profile") ) );
+  ThotBool            EOM = FALSE;
+  int                 i;
+  int                 j = 0;
+ 
   
-  strcpy (thotdir,  TtaGetEnvString("THOTDIR"));
-  strcpy (Def_File, strcat(thotdir, DEF_FILE));
+  if ( element[0] == PROFILE_START )
+    {
+     /* Case 1 : the element is a profile start tag. Insert it in the Profile table */
+      strcpy(CurrentProfile, element);
+      if (Pro_nbelem < MAX_PRO)
+	{
+	  RemoveHooks(element);
+	  InsertTable(element, Pro_Table, &Pro_nbelem);
+	}
+    }
+  else if (element[0] == MODULE_REF)
+    {
+      /* Case 2 : the element is a module. Process the element inside the module
+	 with a recursive call */
+      if (strcmp(CurrentProfile, UserProfile) == 0)
+	{
 
-
-  Def_FILE = fopen(Def_File,"r");
-  Prof_FILE = fopen(Prof_File,"r");
-
-  if ((Def_FILE != NULL) && (Prof_FILE != NULL) && UserProfile)
-     {    
-       
-       /* Fill a table for modules definition */
-       FileToTable (Def_FILE, Def_Table, &Def_nbelem, MAX_DEF);
-
-       /* Generate a functions table*/
-       while (fgets(TempString, sizeof(TempString), Prof_FILE))
-         {		
-	   SkipAllBlanks(TempString);
-  	   ProcessElements(TempString);
-	 } 
-       
-       /* Sort the functions table */
-       SortTable(Fun_Table, Fun_nbelem);
-
-       /* delete the modules definition table */
-       DeleteTable (Def_Table, &Def_nbelem);
-
-     }       
+	  /* Remove the module start tag */
+	  while (element[j+1] != EOS)
+	    {
+	      element[j] = element[j+1];
+	      j++;
+	    }
+	  element[j]=EOS;
+	  
+	 
+	  i = SearchInTable(AddHooks(element), Def_Table, Def_nbelem, FALSE);
+	  if (i>=0)
+	    {
+	      i++;
+	      /* process the elements inside the module */
+	      while (!EOM && (i<=Def_nbelem-1))
+		{
+		  ustrcpy(ISO2WideChar(element), Def_Table[i]);
+		  EOM = (element[0] == MODULE_START);
+		  
+		  if (!EOM)
+		    ProcessElements(element);
+		  i++;
+		}
+	      EOM = FALSE;
+	    }
+	  else
+	    {
+	      /* Module not defined - Skip it */
+	    }
+	}
+    }
   else
     {
-      /* can NOT open profile files or no profile defined */
+      /* Last case : the element is a function. */
+
+      /* if the function is an edition function, insert in the edition table */
+       if (element[0] == EDITION_REF)
+	 {
+	   /* remove edition tag */
+	   while (element[j+1] != EOS)
+	     {
+	      element[j] = element[j+1];
+	      j++;
+	    }
+	   element[j]=EOS;
+
+	   /* insertion */
+	   if (Edition_nbelem < MAX_EDITION_FUNCTIONS)
+	     InsertTable(element, Edition_Table, &Edition_nbelem);
+	   
+	 }
+     
+       if ((strcmp(CurrentProfile, UserProfile) == 0) && (strlen(element) > 0))
+	 {
+	   
+	   /* Insert the element in the table of functions */
+	     
+	     if (Fun_nbelem < MAX_FUNCTIONS)
+	       InsertTable(element, Fun_Table, &Fun_nbelem);
+	 }
     }
-  if (Fun_nbelem > 0)
-    defined_profile = TRUE;
-
-  /* Close the open files */
-  if (Def_FILE != NULL) 
-      fclose(Def_FILE);
-
-  if (Prof_FILE != NULL)
-      fclose(Prof_FILE);
 }
 
 
@@ -295,6 +327,70 @@ STRING   FunctionName;
 #endif /* __STDC__ */
 {
   return (Prof_BelongTable(FunctionName));
+}
+
+
+/*---------------------------------------------------------------
+   Prof_GetProfilesItems :  Get the text for the profile menu items.
+   Returns the number of items
+------------------------------------------------------------------*/
+
+#ifdef __STDC__
+int  Prof_GetProfilesItems(STRING MenuText[])
+#else  /* !__STDC__ */
+int  Prof_GetProfilesItems(MenuText[])
+STRING MenuText[];
+#endif /* !__STDC__ */
+
+{
+  int                   nbelem = 0;
+  int                   j;
+
+  for (j=0 ; j < Pro_nbelem ; j++)
+    {
+      InsertTable( Pro_Table[j], MenuText, & nbelem);
+    }
+  return nbelem;
+}
+
+
+/*-----------------------------------------------------------------------------
+  Prof_ItemNumber2Profile : Conversion between item number in the profile menu
+  and the profile name
+------------------------------------------------------------------------------*/
+
+#ifdef __STDC__
+STRING Prof_ItemNumber2Profile(int ItemNumber)
+#else  /* !__STDC__ */
+STRING Prof_ItemNumber2Profile(ItemNumber)
+int ItemNumber;
+#endif /* !__STDC__ */
+{
+  if (Pro_nbelem)
+    return Pro_Table[ItemNumber];
+  else
+    return NULL;
+}
+
+
+/*-----------------------------------------------------------------------
+  Prof_Profile2ItemNumber : Conversion between profile name and item 
+  number in the menu
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+int Prof_Profile2ItemNumber(STRING Profile)
+#else  /* !__STDC__ */
+int Prof_Profile2ItemNumber(Profile)
+STRING Profile;
+#endif /* !__STDC__ */
+{
+  if (Profile)
+    {
+     
+      return (SearchInTable(Profile, Pro_Table, Pro_nbelem, FALSE));
+    }
+  else 
+    return -1;
 }
 
 
@@ -381,81 +477,6 @@ Menu_Ctl  *ptrmenu;
   return TRUE;
 }
 
-/*----------------------------------------------------------------------
-  ProcessElements : Recursive function that helps
-  building the profile table
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static   void ProcessElements(char element[])
-#else  /* !__STDC__ */
-static   void ProcessElements(element)
-char     element[];
-#endif /* !__STDC__ */ 
-{
-  ThotBool            EOM = FALSE;
-  int                 i;
-  int                 j = 0;
- 
-  
-  if ( element[0] == PROFILE_START )
-    {
-     /* Case 1 : the element is a profile start tag. Insert it in the Profile table */
-      strcpy(CurrentProfile, element);
-      if (Pro_nbelem < MAX_PRO)
-	{
-	  RemoveHooks(element);
-	  InsertTable(element, Pro_Table, &Pro_nbelem);
-	}
-    }
-  else if (element[0] == MODULE_REF)
-    {
-      /* Case 2 : the element is a module. Process the element inside the module
-	 with a recursive call */
-      if (strcmp(CurrentProfile, UserProfile) == 0)
-	{
-
-	  /* Remove the module start tag */
-	  while (element[j+1] != EOS)
-	    {
-	      element[j] = element[j+1];
-	      j++;
-	    }
-	  element[j]=EOS;
-	  
-	 
-	  i = SearchInTable(AddHooks(element), Def_Table, Def_nbelem, FALSE);
-	  if (i>=0)
-	    {
-	      i++;
-	      /* process the elements inside the module */
-	      while (!EOM && (i<=Def_nbelem-1))
-		{
-		  ustrcpy(ISO2WideChar(element), Def_Table[i]);
-		  EOM = (element[0] == MODULE_START);
-		  
-		  if (!EOM)
-		    ProcessElements(element);
-		  i++;
-		}
-	      EOM = FALSE;
-	    }
-	  else
-	    {
-	      /* Module not defined - Skip it */
-	    }
-	}
-    }
-  else
-    {
-      /* Last case : the element is a function. Insert it in the functions table */
-      if ((strcmp(CurrentProfile, UserProfile) == 0) && (strlen(element) > 0))
-	{
-	  /* Insert the element in the table of functions */
-	  if (Fun_nbelem < MAX_FUNCTIONS)
-	    InsertTable(element, Fun_Table, &Fun_nbelem);
-	}
-    }
-}
 
 
 /*------------------------------------------------------------------
@@ -544,7 +565,7 @@ ThotBool sort;
   int              j = 0;
   ThotBool         found = FALSE;
   int              left, right, middle;
-  char             temp [MAX_LENGTH];
+  char             temp [MAX_PRO_LENGTH];
 
   if (sort)
     {
@@ -688,7 +709,7 @@ static void RemoveHooks (string)
 char string[];
 #endif /* !__STDC__ */
 {
-  char         new[MAX_LENGTH];
+  char         new[MAX_PRO_LENGTH];
   int          k = 0;
 
   while (string [k+1] != MODULE_END)

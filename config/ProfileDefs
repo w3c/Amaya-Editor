@@ -3,9 +3,6 @@
 [set]
 SetBrowserEditor
 
-[?]
-ShowLogFile
-
 [amayabase]
 HelpAmaya
 ConfigProfile
@@ -108,7 +105,7 @@ GotoNextHTML
 
 [editbase]
 #amayabase
-New
+&New
 OpenDoc
 SaveDocument
 
@@ -122,13 +119,13 @@ SaveDocument
 ###### ATTRIBUTES
 
 [attributes]
-MenuAttribute
+&MenuAttribute
 HelpAttributes
 
 ###### TEMPLATES
 
 [templates]
-NewTemplate
+&NewTemplate
 ConfigTemplates
 
 ###### NEW-OPEN-SAVE
@@ -140,7 +137,7 @@ ConfigTemplates
 TtcCloseDocument
 
 [new]
-New
+&New
 
 [open]
 OpenDoc
@@ -155,14 +152,14 @@ SaveDocumentAs
 ###### EDITION TOOLS
 
 [undoredo]
-TtcUndo
-TtcRedo
+&TtcUndo
+&TtcRedo
 
 [ccpd]
-TtcCutSelection
-TtcCopySelection
-TtcPaste
-TtcDeleteSelection
+&TtcCutSelection
+&TtcCopySelection
+&TtcPaste
+&TtcDeleteSelection
 
 [search]
 TtcSearchText
@@ -173,17 +170,17 @@ SpellCheck
 HelpSpellChecking
 
 [transform]
-TransformType
+&TransformType
 HelpChanging
 
 [create]
-CreateBase
-CreateMeta
-CreateLinkInHead
-CreateScript
-CreateStyle
-CreateComment
-CreateAddress
+&CreateBase
+&CreateMeta
+&CreateLinkInHead
+&CreateScript
+&CreateStyle
+&CreateComment
+&CreateAddress
 
 ###### ELEMENTS
 
@@ -194,32 +191,32 @@ CreateAddress
 #deflists
 #objects
 #math
-CreateHorizontalRule
-CreateIFrame
-CreateImage
-CreatePreformatted
-CreateBlockQuote
-CreateBreak
-CreateDivision
+&CreateHorizontalRule
+&CreateIFrame
+&CreateImage
+&CreatePreformatted
+&CreateBlockQuote
+&CreateBreak
+&CreateDivision
 
 [basicelements]
 #lists
-CreateHeading1
-CreateHeading2
-CreateHeading3
-CreateParagraph
+&CreateHeading1
+&CreateHeading2
+&CreateHeading3
+&CreateParagraph
 
 ### LISTS
 
 [lists]
-CreateList
-CreateNumberedList
+&CreateList
+&CreateNumberedList
 #deflists
 
 [deflists]
-CreateDefinitionList
-CreateDefinitionTerm
-CreateDefinitionDef
+&CreateDefinitionList
+&CreateDefinitionTerm
+&CreateDefinitionDef
 
 ### AERAS
 
@@ -232,21 +229,21 @@ ShowMapAreas
 ### FORMS
 
 [forms]
-CreateForm
-CreatePushButton
-CreateToggle
-CreateFileInput
-CreateHiddenInput
-CreatePasswordInput
-CreateRadio
-CreateReset
-CreateSubmit
-CreateTextInput
-CreateFieldset
-CreateLabel
-CreateOption
-CreateOptGroup
-CreateTextArea
+&CreateForm
+&CreatePushButton
+&CreateToggle
+&CreateFileInput
+&CreateHiddenInput
+&CreatePasswordInput
+&CreateRadio
+&CreateReset
+&CreateSubmit
+&CreateTextInput
+&CreateFieldset
+&CreateLabel
+&CreateOption
+&CreateOptGroup
+&CreateTextArea
 
 ### HEADINGS
 
@@ -261,43 +258,43 @@ CreateHeading6
 ### MATH
 
 [math]
-CreateMath
-CreateMROOT
-CreateMSQRT
-CreateMFRAC
-CreateMSUBSUP
-CreateMSUB
-CreateMSUP
-CreateMUNDEROVER
-CreateMUNDER
-CreateMOVER
-CreateMROW
-CreateMMULTISCRIPTS
-CreateMTABLE
-DeleteMColumn
-CreateNOSCRIPT
+&CreateMath
+&CreateMROOT
+&CreateMSQRT
+&CreateMFRAC
+&CreateMSUBSUP
+&CreateMSUB
+&CreateMSUP
+&CreateMUNDEROVER
+&CreateMUNDER
+&CreateMOVER
+&CreateMROW
+&CreateMMULTISCRIPTS
+&CreateMTABLE
+&DeleteMColumn
+&CreateNOSCRIPT
 HelpMath
 
 ### OBJECTS
 
 [objects]
-CreateObject
-CreateParameter
+&CreateObject
+&CreateParameter
 
 ### TABLES
 
 [tables]
-CreateTable
-CreateCaption
-CreateColgroup
-CreateCol
-CreateTHead
-CreateTBody
-CreateTFoot
-CreateRow
-CreateDataCell
-CreateHeadingCell
-DeleteColumn
+&CreateTable
+&CreateCaption
+&CreateColgroup
+&CreateCol
+&CreateTHead
+&CreateTBody
+&CreateTFoot
+&CreateRow
+&CreateDataCell
+&CreateHeadingCell
+&DeleteColumn
 HelpTables
 
 
@@ -305,65 +302,67 @@ HelpTables
 
 
 [links]
-CreateOrChangeLink
-CreateTarget
-DeleteAnchor
+&CreateOrChangeLink
+&CreateTarget
+&DeleteAnchor
 HelpLinks
 ShowTargets
 
 ###  STYLE
 
 [css]
-NewCss
-CreateClass
-ApplyClass
-LinkCSS
+&NewCss
+&CreateClass
+&ApplyClass
+&LinkCSS
 OpenCSS
-DisableCSS
-EnableCSS
-RemoveCSS
+&DisableCSS
+&EnableCSS
+&RemoveCSS
 HelpStyleSheets
 
 [style]
 #char
-TtcChangeCharacters
-TtcChangeColors
-TtcChangeFormat
-ChangeBackgroundImage
-CreateElemEmphasis
-CreateElemStrong
-CreateElemCite
-CreateElemDefinition
-CreateElemCode
-CreateElemVariable
-CreateElemSample
-CreateElemKeyboard
-CreateElemAbbr
-CreateElemAcronym
-CreateElemINS
-CreateElemDEL
-CreateElemItalic
-CreateElemBold
-CreateElemTeletype
-CreateElemBig
-CreateElemSmall
-CreateSub
-CreateSup
-CreateQuotation
-CreateBDO
+&TtcChangeCharacters
+&TtcChangeColors
+&TtcChangeFormat
+&ChangeBackgroundImage
+&CreateElemEmphasis
+&CreateElemStrong
+&CreateElemCite
+&CreateElemDefinition
+&CreateElemCode
+&CreateElemVariable
+&CreateElemSample
+&CreateElemKeyboard
+&CreateElemAbbr
+&CreateElemAcronym
+&CreateElemINS
+&CreateElemDEL
+&CreateElemItalic
+&CreateElemBold
+&CreateElemTeletype
+&CreateElemBig
+&CreateElemSmall
+&CreateSub
+&CreateSup
+&CreateQuotation
+&CreateBDO
 
 [char]
-SetCharEmphasis
-SetCharStrong
-SetCharCode
+&SetCharEmphasis
+&SetCharStrong
+&SetCharCode
 
 ############ ADVANDCED FEATURES
 
 [numbering]
-SectionNumbering
+&SectionNumbering
 HelpNumbering
 
 [makebook]
-MakeBook
+&MakeBook
 HelpMakeBook
 
+[log]
+ShowLogFile

@@ -190,8 +190,7 @@ int                 AMAYA;
 #define AM_BUTTON_HOME                178
 #define AM_LANG_NEGOTIATION           179
 #define AM_PROFILES_FILE              180
-#define AM_PROFILE_CHANGE             181
-#define AM_NO_PROFILE                 182
+#define AM_PROFILE_SELECT             181
+#define AM_PROFILE_CHANGE             182
 #define AM_TEMPLATES                  183
-#define AM_TEMPLATES_INFO             184
-#define AMAYA_MSG_MAX                 185
+#define AMAYA_MSG_MAX                 184

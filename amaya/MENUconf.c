@@ -37,6 +37,7 @@
 /* Included headerfiles */
 #define THOT_EXPORT extern
 
+#include "profiles.h"
 #include "amaya.h"
 #include "MENUconf.h"
 #include "print.h"
@@ -143,7 +144,7 @@ static HWND ProfileHwnd = NULL;
 static int ProfileBase;
 static CHAR_T Profile [MAX_LENGTH+1];
 static CHAR_T Profiles_File [MAX_LENGTH+1];
-
+static STRING MenuText[MAX_PRO];
 
 /* Templates menu option */
 #ifdef _WINDOWS
@@ -3335,13 +3336,8 @@ STRING              data;
 #endif
 {
   int val;
-  STRING pro;
-  int nbprofiles;
-  CHAR_T                string[200];
-
-
-  pro = TtaGetMemory ((sizeof(char) * 200));
-
+ 
+ 
   if (ref == -1)
     {
       /* removes the Profile conf menu */
@@ -3372,62 +3368,89 @@ STRING              data;
 	    }
 	  break;
 
-	case mRadioProfile:
+	case mProfileSelector:
 	  
 	  /* Get the desired profile from the item number */
-       
-	  ustrcpy (pro, (STRING) Prof_ItemNumber2Profile (val)); 
-    
-	  if (pro)
+	  if (data)
 	    {
-	      ustrcpy (Profile, ISO2WideChar(pro));
+	      ustrcpy (Profile, data);
 	      RefreshProfileMenu();
 	    }
 	  else
 	    Profile [0] = EOS;
+
 	  break;
 
 	case mProfiles_File:
-
-	  
-
 	  if (data)
 	    { 
-	      ustrcpy (Profiles_File, data);
-/*	      if (ustrcmp(data, Profiles_File) !=0 ) 
+	   
+	      if (ustrcmp(data, Profiles_File) !=0 ) 
 		{
 		  ustrcpy (Profiles_File, data);
-		  TtaDestroyDialogue (ProfileBase + mRadioProfile);
 		  Prof_RebuildProTable(Profiles_File);
-		  nbprofiles = Prof_GetProfilesItems(string);
-		    
-		      if (nbprofiles)
-			{
-			  TtaNewSubmenu (ProfileBase + mRadioProfile, ProfileBase + ProfileMenu, 0,
-					 TtaGetMessage (LIB, TMSG_PROFILE), nbprofiles, string, NULL, FALSE);
-			  TtaSetMenuForm (ProfileBase + mRadioProfile, 0);
-			  
-			}
-		      else 
-			{
-			  
-			  TtaNewLabel (ProfileBase + mProfileEmpty1, ProfileBase + ProfileMenu, TtaGetMessage (AMAYA, AM_NO_PROFILE)); 
-			}
-		      
-		      RefreshProfileMenu ();		  
-		}*/
+
+		  BuildProfileSelector ();
+		  RefreshProfileMenu();
+		}
 
 	    }
 	  else
 	    Profiles_File [0] = EOS;
-	  break;
  
+	  break;
+
 	default:
 	  break;
 	}
     }
 }
 #endif /* !_WINDOWS */
+
+/*---------------------------------------------------
+  BuildProfileSelector : Builds the selector allowing 
+  to select a profile
+-----------------------------------------------------*/
+
+static void BuildProfileSelector()
+{
+  int                   i,j;
+  int                   nbprofiles = 0;
+  int                   indx, length;
+  STRING                entry;
+  CHAR_T                BufMenu[MAX_PRO * MAX_PRO_LENGTH];  
+
+  /* Get the propositions of the selector */ 
+   nbprofiles = Prof_GetProfilesItems (MenuText);
+    
+   /* recopy the propositions  */
+   indx = 0;
+   for (i = 0; i < nbprofiles; i++)
+     {
+       entry =  MenuText[i];
+       length = ustrlen (entry) + 1;
+       if (length + indx < MAX_PRO * MAX_PRO_LENGTH)  
+	 {
+	   ustrcpy ((BufMenu) + indx, entry);
+	   indx += length;
+	 }
+     }
+
+   /* no entry */
+   entry = NULL;
+
+   /* Fill in the profile form  */
+   TtaNewSelector (ProfileBase + mProfileSelector, ProfileBase + ProfileMenu,
+		   NULL, nbprofiles,
+		   ((i < 2) ? "" : BufMenu), 4, entry, TRUE, FALSE);
+   
+/* preselect the profile matching the user current profile in use if present  */
+
+   if (nbprofiles)
+     TtaSetSelector (ProfileBase + mProfileSelector, -1, MenuText[Prof_Profile2ItemNumber(Profile)]);
+   else
+     TtaSetSelector (ProfileBase + mProfileSelector, -1, "");
+}
 
 
 
@@ -3448,9 +3471,8 @@ STRING              pathname;
 
 #ifndef _WINDOWS
 
-   int              i;   
-   CHAR_T                string[200];
-   int                   nbprofiles = 0;
+   int                   i;
+   
   
    /* Create the dialogue form */
    i = 0;
@@ -3461,30 +3483,17 @@ STRING              pathname;
    TtaNewSheet (ProfileBase + ProfileMenu, TtaGetViewFrame (document, view),
 		TtaGetMessage (1, BConfigProfile), 2, s, TRUE, 1, 'L', D_DONE);
 
-   /* Text Form : Location of the profiles configuration file */
+  
    TtaNewTextForm (ProfileBase + mProfiles_File, ProfileBase + ProfileMenu,
 		   TtaGetMessage (AMAYA, AM_PROFILES_FILE),
 		   40, 1, TRUE);
 
+   TtaNewLabel (ProfileBase + mProfileEmpty1, ProfileBase + ProfileMenu,
+		TtaGetMessage (AMAYA, AM_PROFILE_SELECT));     
+     
+   BuildProfileSelector();
   
-   /* submenu for profile choice with radio boxes */
-
-       /* get the entries of the menu */
-   nbprofiles = Prof_GetProfilesItems (string);
-
-   if (nbprofiles)
-     {
-       TtaNewSubmenu (ProfileBase + mRadioProfile, ProfileBase + ProfileMenu, 0,
-		      TtaGetMessage (LIB, TMSG_PROFILE), nbprofiles, string, NULL, FALSE);
-       TtaSetMenuForm (ProfileBase + mRadioProfile, 0);
-     }
-   else 
-     {
-       /* if no profile, info message */
-       TtaNewLabel (ProfileBase + mProfileEmpty1, ProfileBase + ProfileMenu, TtaGetMessage (AMAYA, AM_NO_PROFILE));
-     }
- 
-
+  
    /* message "changes will take effect after Amaya restarts" */
    TtaNewLabel (ProfileBase + mProfileEmpty2, ProfileBase + ProfileMenu,
 		TtaGetMessage (AMAYA, AM_PROFILE_CHANGE));     
@@ -3551,11 +3560,13 @@ HWND hwnDlg;
 static void RefreshProfileMenu ()
 #else
 static void RefreshProfileMenu ()
+
 #endif /* __STDC__ */
 {
-  TtaShowDialogue (ProfileBase + mRadioProfile, TRUE);
+
   TtaSetTextForm (ProfileBase + mProfiles_File, Profiles_File);
-  TtaSetMenuForm (ProfileBase + mRadioProfile, Prof_Profile2ItemNumber(Profile));
+  TtaSetSelector (ProfileBase + mProfileSelector, -1, MenuText[Prof_Profile2ItemNumber(Profile)]);
+
 }
 #endif /* !_WINDOWS */
 
@@ -3727,9 +3738,6 @@ STRING              pathname;
    TtaNewTextForm (TemplatesBase + mTemplates, TemplatesBase + TemplatesMenu,
 		   TtaGetMessage (AMAYA, AM_TEMPLATES),
 		   20, 1, FALSE);
-
-   TtaNewLabel (TemplatesBase + mTemplatesEmpty1, TemplatesBase+ TemplatesMenu,
-	       TtaGetMessage (AMAYA, AM_TEMPLATES_INFO));
   
 #endif   /* !_WINDOWS */
  
@@ -3834,7 +3842,7 @@ static void SetTemplatesConf (void)
 static void SetTemplatesConf ()
 #endif /* __STDC__ */
 {
-  TtaSetEnvString (TEXT("ACCEPT_LANGUAGES"), Templates, TRUE);
+  TtaSetEnvString (TEXT("URL_TEMPLATE"), Templates, TRUE);
   TtaSaveAppRegistry ();
 
   /* change the current settings */

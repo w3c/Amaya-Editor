@@ -178,8 +178,8 @@
 177 **Couldn't start the cache. You may have specified an invalid cache directory or another Amaya is using the cache.
 178 **Home
 179 **List of preferred languages like "de, en":
-180 **Location of profiles definition file
-181 **The changes will be effective the next time Amaya is started
-182 **The file above is unreachable or contains no profile data
+180 **Location of profiles definition file 
+181 **Profile Selection
+182 **These changes won't be effective until Amaya is retarted
 183 **Enter the URL of the script called for templates feature
-184 **This URL looks like "http://cgi.w3.org/cgi-bin/createform.pl"
+
