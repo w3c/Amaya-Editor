@@ -1,0 +1,133 @@
+#!/bin/sh
+#
+# This script builds the Source tar files for Thot
+#
+#       thoteditor-src-$THOTVERSION.tar.gz
+#
+#
+THOTVERSION=2.2
+THOTDIR=/home/stephane/src/Amaya
+DEST=/tmp
+
+TAR="tar cvbfh 200"
+COMPRESS="gzip -9"
+
+cd $THOTDIR
+
+$TAR - \
+INSTALL \
+thot/COPYRIGHT \
+thot/COPYRIGHT.html \
+thot/NEWS.Thoteditor.2.0b \
+thot/NEWS.Thoteditor.2.1 \
+thot/NEWS.Thoteditor.2.2 \
+thot/README.thoteditor \
+thot/INSTALL \
+thot/Makefile.in \
+thot/ArrierePlan.xpm \
+thot/Bdown.xpm \
+thot/Presentation.xpm \
+thot/copy.xpm \
+thot/print.xpm \
+thot/Priority.xpm \
+thot/cut.xpm \
+thot/right.xpm \
+thot/Bup.xpm \
+thot/Rapprocher.xpm \
+thot/font.xpm \
+thot/save.xpm \
+thot/Caractere.xpm \
+thot/Traits.xpm \
+thot/italics.xpm \
+thot/search.xpm \
+thot/Couleur.xpm \
+thot/bold.xpm \
+thot/left.xpm \
+thot/spell.xpm \
+thot/Eloigner.xpm \
+thot/center.xpm \
+thot/open.xpm \
+thot/PremierPlan.xpm \
+thot/color.xpm \
+thot/paste.xpm \
+thot/EDITOR.A \
+thot/EDITORactions.c \
+thot/EDITORactions.h \
+thot/Trans.c \
+thot/TransParser.c \
+thot/TransPmatch.c \
+thot/trans.h \
+thot/f/*.h \
+drawlib/COPYRIGHT \
+drawlib/COPYRIGHT.html \
+drawlib/Draw3.A \
+drawlib/Draw3actions.c \
+drawlib/Draw3actions.h \
+drawlib/Icons/* \
+drawlib/Makefile.in \
+drawlib/Palette.A \
+drawlib/Palette.h \
+drawlib/Paletteactions.c \
+drawlib/Paletteactions.h \
+drawlib/boutons.c \
+drawlib/boutons.h \
+drawlib/drawmsg.h \
+drawlib/edition.c \
+drawlib/edition.h \
+drawlib/f/*.h \
+drawlib/initdraw.c \
+drawlib/initdraw.h \
+drawlib/liens.c \
+drawlib/liens.h \
+drawlib/menus.c \
+drawlib/menus.h \
+drawlib/objets.c \
+drawlib/objets.h \
+drawlib/paloutils.c \
+drawlib/paloutils.h \
+drawlib/utilitaires.c \
+drawlib/utilitaires.h \
+indexlib/COPYRIGHT \
+indexlib/COPYRIGHT.html \
+indexlib/CVS \
+indexlib/Makefile.in \
+indexlib/constind.h \
+indexlib/f/*.h \
+indexlib/indcharge.c \
+indexlib/indcree.c \
+indexlib/index_tv.h \
+indexlib/indmenu.c \
+indexlib/indmsg.h \
+indexlib/indpres.c \
+indexlib/indtable.c \
+indexlib/indtri.c \
+indexlib/typeind.h \
+doceditor/*.PIV \
+doceditor/*.gif \
+doceditor/*.eps \
+doceditor/*.xpm \
+schemas/*.S \
+schemas/*.P \
+schemas/*.T \
+schemas/*.X \
+schemas/*.trans \
+schemas/*.inc \
+schemas/exc_*.h \
+schemas/*.en \
+schemas/*.fr \
+schemas/*.conf \
+schemas/*.xbm \
+schemas/*.xpm \
+schemas/*.gif \
+schemas/*.rtf \
+schemas/Makefile \
+config/*-inddialogue \
+config/*-thotdialogue \
+config/*-printdialogue \
+config/*-grmdialogue \
+config/*-thotmessage \
+config/*-drawdialogue \
+config/unix-thot.rc \
+config/unix-thot.rc \
+config/thot.* \
+ | $COMPRESS  > $DEST/thoteditor-src-$THOTVERSION.tar.gz
