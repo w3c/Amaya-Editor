@@ -2416,7 +2416,7 @@ static Document  LoadDocument (Document doc, char *pathname,
 	      ActiveTransfer (newdoc);
 	    }
 #ifdef ANNOTATIONS
-	  else if (method & CE_ANNOT && docType == docHTML)
+	  else if (method == CE_ANNOT && docType == docHTML)
 	    {
 	      docType = docAnnot;
 	      method = CE_RELATIVE;
@@ -2815,9 +2815,11 @@ void                Reload (Document doc, View view)
      form_data = TtaStrdup (DocumentMeta[doc]->form_data);
    else
      form_data = NULL;
-   method = DocumentMeta[doc]->method;
+
    if (DocumentTypes[doc] == docAnnot)
-     method = method | CE_ANNOT;
+     method = CE_ANNOT;
+   else
+     method = DocumentMeta[doc]->method;
 
    /* get the current position in the document */
    position = RelativePosition (doc, &distance);
