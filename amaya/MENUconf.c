@@ -2511,13 +2511,6 @@ LRESULT CALLBACK WIN_PublishDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
 	case IDC_CRLF:
 	  ExportCRLF = !ExportCRLF;
 	  break;
-	  /*
-	case IDC_CHARSET_LIST:
-	  CurrentCharset = SendMessage (CharsetList, LB_GETCURSEL, 0, 0);
-	  CurrentCharset = SendMessage (CharsetList, LB_GETTEXT, CurrentCharset,
-				   (LPARAM) NewCharset);
-	  break;
-	  */
 	  /* action buttons */
 	case ID_APPLY:
 	  if (strcmp (CharsetType, NewCharset))

@@ -1245,7 +1245,7 @@ void CallbackValAttrMenu (int ref, int valmenu, char *valtext)
   int                 act;
   ThotBool            lock = TRUE;
 
-  act = 1; /* apply by default */
+  act = 0; /* apply by default */
   switch (ref)
     {
     case NumMenuAttrNumber:

@@ -117,6 +117,7 @@ static int          dirSelect;
 static int          currAttrVal;
 static int          Num_zoneRecess;
 static int          Num_zoneLineSpacing;
+static int          Num_lang;
 static int          Align_num;
 static int          Indent_value;
 static int          Indent_num;
@@ -128,12 +129,13 @@ static int          numRows;
 static int          tBorder;
 static int          formAlt;
 static int          iLocation;
-static int          cxChar;
-static int          cyChar;
 static int          iMode;
 static int          indexImgFilter = 1;
 static int          indexLinkFilter = 1;
 static int          indexFilter = 1;
+static UINT         itemIndex;
+static UINT         nbClass;
+static UINT         NbItem;
 
 static ThotBool	    saveBeforeClose;
 static ThotBool     closeDontSave;
@@ -146,7 +148,6 @@ static ThotBool     ReleaseFocus;
 
 static OPENFILENAME OpenFileName;
 static char        *SzFilter;
-static char         SzBuffer[MAX_BUFF];
 static ThotWindow   wndCSSList;
 static ThotWindow   wndLangList;
 static ThotWindow   wndListRule;
@@ -166,9 +167,6 @@ static ThotWindow   AttrForm = NULL;
 static ThotWindow   SaveAsForm = NULL;
 static ThotWindow   MimeTypeDlg = NULL;
 static ThotWindow   DocInfo[DocumentTableLength];
-static UINT         itemIndex;
-static UINT         nbClass;
-static UINT         NbItem;
 
 #include "init_f.h"
 /*----------------------------------------------------------------------
@@ -752,6 +750,8 @@ LRESULT CALLBACK AttrItemsDlgProc (ThotWindow hwnDlg, UINT msg,
 {
   int        ndx = 0;
   int        i   = 0;
+  int        cxChar;
+  int        cyChar;
   HDC        hDC;
   RECT       rect;
   ThotWindow radio1;
@@ -1778,7 +1778,7 @@ LRESULT CALLBACK LanguageDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
 								  LPARAM lParam)
 {
   int             index = 0;
-  UINT            i = 0; 
+  UINT            i = 0;
 
   switch (msg)
     {
@@ -1798,12 +1798,21 @@ LRESULT CALLBACK LanguageDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
       /* set the font of the window */
       WIN_SetDialogfont (wndLangList);
       SendMessage (wndLangList, LB_RESETCONTENT, 0, 0);
-      while (i < NbItem && ItemList[index] != '\0')
+    while (i < NbItem && ItemList[index] != EOS)
 	{
+      /* keep in mind the current selected entry */
+      if (*WinCurLang && !strcmp (WinCurLang, &ItemList[index]))
+	    Num_lang = index;
 	  SendMessage (wndLangList, LB_INSERTSTRING, i, (LPARAM) &ItemList[index]); 
 	  index += strlen (&ItemList[index]) + 1;/* Longueur de l'intitule */
 	  i++;
       }
+      if (Num_lang != -1)
+	  {
+        SendMessage (wndLangList, LB_SETCURSEL, (WPARAM)Num_lang, (LPARAM)0);
+	      Num_lang = SendMessage (wndLangList, LB_GETTEXT, Num_lang,
+			  (LPARAM) WinCurLang);
+	  }
       SetWindowText (GetDlgItem (hwnDlg, IDC_LNGEDIT), WinCurLang);
       break;
 
@@ -1818,19 +1827,20 @@ LRESULT CALLBACK LanguageDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
 	{
 	  if (HIWORD (wParam) == LBN_SELCHANGE)
 	    {
-	      itemIndex = SendMessage (wndLangList, LB_GETCURSEL, 0, 0);
-	      itemIndex = SendMessage (wndLangList, LB_GETTEXT, itemIndex,
-			  (LPARAM) SzBuffer);
+	      Num_lang = SendMessage (wndLangList, LB_GETCURSEL, 0, 0);
+	      Num_lang = SendMessage (wndLangList, LB_GETTEXT, Num_lang,
+			  (LPARAM) WinCurLang);
+          SetWindowText (GetDlgItem (hwnDlg, IDC_LNGEDIT), WinCurLang);
 	    }
 	  else if (HIWORD (wParam) == LBN_DBLCLK)
 	    {
-	      if (LB_ERR == (itemIndex = SendMessage (wndLangList, LB_GETCURSEL, 0, 0L)))
+	      if (LB_ERR == (Num_lang = SendMessage (wndLangList, LB_GETCURSEL, 0, 0L)))
 		break;
-	      itemIndex = SendMessage (wndLangList, LB_GETTEXT, itemIndex,
-			  (LPARAM) SzBuffer);
+	      Num_lang = SendMessage (wndLangList, LB_GETTEXT, Num_lang,
+			  (LPARAM) WinCurLang);
 	    }
-	  SetDlgItemText (hwnDlg, IDC_LANGEDIT, SzBuffer);
-	  ThotCallback (NumSelectLanguage, STRING_DATA, SzBuffer);
+	  SetDlgItemText (hwnDlg, IDC_LANGEDIT, WinCurLang);
+	  ThotCallback (NumSelectLanguage, STRING_DATA, WinCurLang);
 	  if (HIWORD (wParam) == LBN_DBLCLK)
 	    {
 	      ThotCallback (NumFormLanguage, INTEGER_DATA, (char*) 1);
@@ -1848,6 +1858,7 @@ LRESULT CALLBACK LanguageDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
 	  
 	case ID_DELETE:
 	  ThotCallback (NumFormLanguage, INTEGER_DATA, (char*) 2);
+	  EndDialog (hwnDlg, ID_DONE);
 	  break;
 	  
 	case ID_DONE:
@@ -3790,6 +3801,7 @@ void CreateLanguageDlgWindow (ThotWindow parent, char *title, char *msg1,
    strcpy (WndTitle, title);
    strcpy (Message, msg1);
    strcpy (Message2, msg2);
+   Num_lang = lang_value;
    if (lang_value >= 0)
 	   /* there is a selected language */
 	   strcpy (WinCurLang, TtaGetLanguageName (lang_value));
