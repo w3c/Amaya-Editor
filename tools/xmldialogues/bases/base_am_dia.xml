@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-<base last_update="Fri Jan 24 12:48:50 CET 2003" version="51">
+<base last_update="Mon Jan 27 10:49:51 CET 2003" version="52">
 <control>
 	<language encoding="latin1">en</language>
 	<language encoding="latin1">fr</language>
@@ -1728,7 +1728,7 @@
 	<message xml:lang="fr">Ajouter la sélection dans une librairie</message>
 	<message xml:lang="it">Aggiunga la selezione nella librería SVG</message>
 	<message xml:lang="es">Añadir la selección a la librería SVG</message>
-	<message xml:lang="de">Markierung in SVG-Bibliothek einf|gen</message>
+	<message xml:lang="de">Markierung in SVG-Bibliothek einfügen</message>
 </label>
 <label define="BXMLElement">
 	<message xml:lang="en">XML elements...</message>
