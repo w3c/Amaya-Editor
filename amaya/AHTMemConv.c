@@ -177,7 +177,8 @@ HTStream           *me;
 {
    if (WWWTRACE)
       HTTrace ("AHTMemConv_free\n");
-   TtaFreeMemory (me);
+	  /* Yet another Jose's @!!$^^#é&è.   Ramzi. */
+   HT_FREE (me);
    return HT_OK;
 }
 

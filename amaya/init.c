@@ -1788,11 +1788,11 @@ DoubleClickEvent    DC_event;
 
 		  else
 		    {
-		      if (!strcmp (documentname, "noname.html"))
+ 		      if (!strcmp (documentname, "noname.html"))
 			{
 			  slash = strlen (pathname);
-			  if (slash && pathname[slash - 1] != DIR_SEP)
-			    strcat (pathname, DIR_STR);
+			  if (slash && pathname[slash - 1] != '/')
+			    strcat (pathname, "/");
 
 			  toparse = GetObjectWWW (newdoc, pathname, NULL, tempfile, AMAYA_SYNC, NULL, NULL, NULL, NULL, YES);
 

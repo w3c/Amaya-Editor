@@ -182,7 +182,7 @@ HTStream           *me;
 	   (*me->callback) (me->request, me->filename);
 	TtaFreeMemory (me->end_command);
 	TtaFreeMemory (me->filename);
-	TtaFreeMemory ((void*) me);
+	HT_FREE(me);
      }
    return HT_OK;
 }

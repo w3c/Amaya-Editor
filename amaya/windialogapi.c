@@ -202,7 +202,7 @@ LPARAM lParam;
 	       case WM_INITDIALOG:
 			    SetWindowText (hwnDlg, wndTitle);
 				messageWnd = CreateWindow ("STATIC", message, WS_CHILD | WS_VISIBLE | SS_LEFT,
-					                       15, 15, 200, 15, hwnDlg, (HMENU) 99, hInstance, NULL);
+					                       15, 15, 400, 60, hwnDlg, (HMENU) 99, hInstance, NULL);
 				break;
 		   case WM_COMMAND:
 			    switch (LOWORD (wParam)) {

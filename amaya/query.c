@@ -1104,10 +1104,14 @@ static void         AHTProfile_delete ()
    HTList_delete (Amaya->docid_status);
    HTList_delete (Amaya->reqlist);
    TtaFreeMemory (Amaya);
-  
+  		      {
+
   if (HTLib_isInitialized ())
-    {
-      
+
+#  ifdef _WINDOWS
+      HTEventTerminate ();
+#  endif _WINDOWS;		
+
       /* Clean up the persistent cache (if any) */
       HTCacheTerminate ();
 
@@ -1139,6 +1143,7 @@ void                QueryInit ()
    HTEvent_setUnregisterCallback (AHTEvent_unregister);
    
 #  ifdef _WINDOWS
+   HTEventInit ();
    WIN_InitializeSockets ();
 #  endif _WINDOWS;
 
@@ -1493,10 +1498,9 @@ boolean error_html;
    me->output = tmp_fp;
 
    HTRequest_setOutputStream (me->request, AHTFWriter_new (me->request, me->output, YES));
-   /*
+/*
    HTRequest_setOutputStream (me->request, HTFWriter_new (me->request, me->output, YES));
-   */
-
+*/
    /*for the async. request modes, we need to have our
       own copy of outputfile and urlname
     */
@@ -1513,23 +1517,36 @@ boolean error_html;
         strncpy (tmp, urlName, MAX_LENGTH);
         tmp[MAX_LENGTH] = EOS;
 	me->urlName = tmp;
+#ifdef _WINDOWS
+    HTRequest_setPreemptive (me->request, NO);
+   }
+   else		 
+     {
+	me->outputfile = outputfile;
+	me->urlName = urlName;
      }
+
+    HTRequest_setPreemptive (me->request, YES);
+#else /* _WINDOWS */
+
+   }
    else
      {
 	me->outputfile = outputfile;
 	me->urlName = urlName;
      }
-   
-   /* prepare the URLname that will be displayed in teh status bar */
-   ChopURL (me->status_urlName, me->urlName);
-
-   /***
+      /***
      Change for taking into account the stop button:
      The requests will be always asynchronous, however, if mode=AMAYA_SYNC,
      we will loop until the document has been received or a stop signal
      generated
      ****/
-   HTRequest_setPreemptive (me->request, NO);
+    HTRequest_setPreemptive (me->request, NO);
+#endif /* _WINDOWS */
+
+   /* prepare the URLname that will be displayed in teh status bar */
+   ChopURL (me->status_urlName, me->urlName);
+
    TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_FETCHING), me->status_urlName);
 
    me->anchor = (HTParentAnchor *) HTAnchor_findAddress (ref);
