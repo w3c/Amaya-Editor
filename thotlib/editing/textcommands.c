@@ -613,10 +613,10 @@ static void MovingCommands (int code, Document doc, View view,
 		  else if (pBox->BxNext)
 		    {
 		      /* a new box after will be selected */
-		      ibox = pBox->BxPrevious;
+		      ibox = pBox->BxNext;
 		      while (ibox &&
 			     ibox->BxAbstractBox->AbPresentationBox)
-			ibox = ibox->BxPrevious;
+			ibox = ibox->BxNext;
 		      if (ibox)
 			{
 			  /* check if the box is within a line */
