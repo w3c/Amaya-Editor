@@ -5,7 +5,7 @@
  *
  */
 
-#ifndef AMAYA_H
+#ifndef AMAYA_H 
 #define AMAYA_H
 
 /* Thot interface */

@@ -136,21 +136,22 @@ static Pixmap       iconJava;
 #define inconI         7
 #define inconB         8
 #define iconT          9
-#define inconImage    10
-#define iconH1        11
-#define iconH2        12
-#define iconH3        13
-#define iconBullet    14
-#define iconNum       15
-#define	iconDL        16
-#define iconLink      17
-#define iconTable     18
+#define iconCSS       10
+#define inconImage    11
+#define iconH1        12
+#define iconH2        13
+#define iconH3        14
+#define iconBullet    15
+#define iconNum       16
+#define	iconDL        17
+#define iconLink      18
+#define iconTable     19
 #ifdef AMAYA_PLUGIN
-#define iconPlugin    19
+#define iconPlugin    20
 #endif AMAYA_PLUGIN
-#define stopN         20
-#define iconBackNo    21
-#define iconForwardNo 22
+#define stopN         21
+#define iconBackNo    22
+#define iconForwardNo 23
 
 static BOOL itemChecked = FALSE;
 extern int  currentFrame;

@@ -43,6 +43,7 @@
 #define IDC_EDITRULE      20001
 #define IDC_LANGEDIT      20002
 #define ICD_SPELLWORDEDIT 20003
+#define IDC_CSSEDIT       20004
 
 #define REPEAT                0
 #define REPEAT_X              1
@@ -118,6 +119,8 @@ static int          dirSelect;
 static int          currAttrVal;
 static int          menuAlphaLanguage; 
 static int          LangValue;
+static int          cssSelect;
+static int          formCss;
 static BOOL         manualFeed      = FALSE;
 static BOOL         tableOfContents = FALSE;
 static BOOL         numberedLinks   = FALSE;
@@ -128,6 +131,7 @@ static BOOL	        toPostscript    = FALSE;
 static char*        classList;
 static char*        langList;
 static char*        saveList;
+static char*        cssList;
 static HDC          hDC;
 static HDC          hMemDC;
 static HFONT        hFont;
@@ -150,6 +154,7 @@ char currentWord [MAX_WORD_LEN];
 BOOL gbAbort;
 
 #ifdef __STDC__
+LRESULT CALLBACK CSSDlgProc (HWND, UINT, WPARAM, LPARAM);
 LRESULT CALLBACK LinkDlgProc (HWND, UINT, WPARAM, LPARAM);
 LRESULT CALLBACK HelpDlgProc (HWND, UINT, WPARAM, LPARAM);
 LRESULT CALLBACK MathDlgProc (HWND, UINT, WPARAM, LPARAM);
@@ -173,6 +178,7 @@ LRESULT CALLBACK GreekKeyboardDlgProc (HWND, UINT, WPARAM, LPARAM);
 LRESULT CALLBACK AuthenticationDlgProc (HWND, UINT, WPARAM, LPARAM);
 LRESULT CALLBACK BackgroundImageDlgProc (HWND, UINT, WPARAM, LPARAM);
 #else  /* !__STDC__ */
+LRESULT CALLBACK CSSDlgProc ();
 LRESULT CALLBACK LinkDlgProc ();
 LRESULT CALLBACK HelpDlgProc ();
 LRESULT CALLBACK MathDlgProc ();
@@ -250,6 +256,31 @@ void WinInitPrinterColors ()
        TtIsPrinterTrueColor = FALSE ;
    initialized = TRUE;
  }
+
+/*-----------------------------------------------------------------------
+ CreateCSSDlgWindow
+ ------------------------------------------------------------------------*/
+#ifdef __STDC__
+void CreateCSSDlgWindow (int base_dlg, int css_select, int form_css, char* msg, int nb_item, char* buffer)
+#else  /* __STDC__ */
+void CreateCSSDlgWindow (base_dlg, css_select, form_css, msg, nb_item, buffer)
+int   base_dlg; 
+int   css_select; 
+int   from_css; 
+char* msg; 
+int   nb; 
+char* buffer;
+#endif /* __STDC__ */
+{
+    nbItem    = nb_item;
+    baseDlg   = base_dlg;
+    cssSelect = css_select;
+	formCss   = form_css;
+	cssList   = buffer;
+	sprintf (message, "%s", msg);
+
+    DialogBox (hInstance, MAKEINTRESOURCE (CSSDIALOG), NULL, (DLGPROC) CSSDlgProc);
+}
 
 /*-----------------------------------------------------------------------
  CreateLinkDlgWindow
@@ -719,6 +750,76 @@ char* image_location;
          *                                                       *
          *********************************************************/
 
+
+/*-----------------------------------------------------------------------
+ CSSDlgProc
+ ------------------------------------------------------------------------*/
+#ifdef __STDC__
+LRESULT CALLBACK CSSDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam, LPARAM lParam)
+#else  /* !__STDC__ */
+LRESULT CALLBACK CSSDlgProc (hwnDlg, msg, wParam, lParam)
+HWND   hwndParent; 
+UINT   msg; 
+WPARAM wParam; 
+LPARAM lParam;
+#endif /* __STDC__ */
+{
+	int  index = 0;
+	UINT  i = 0;
+
+	HWND wndCSSEdit;
+	HWND wndMessage;
+
+	static HWND wndCSSList;
+	static int itemIndex; 
+	static char szBuffer [MAX_BUFF];
+
+    switch (msg) {
+	       case WM_INITDIALOG:
+                wndMessage = CreateWindow ("STATIC", message, WS_CHILD | WS_VISIBLE | SS_LEFT,
+                                           10, 10, 200, 20, hwnDlg, (HMENU) 99, 
+                                           (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
+
+				wndCSSList = CreateWindow ("listbox", NULL, WS_CHILD | WS_VISIBLE | LBS_STANDARD,
+					                         10, 35, 400, 105, hwnDlg, (HMENU) 1, 
+											 (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
+
+	            SendMessage (wndCSSList, LB_RESETCONTENT, 0, 0);
+	            while (i < nbItem && cssList[index] != '\0') {
+	                  SendMessage (wndCSSList, LB_INSERTSTRING, i, (LPARAM) &cssList[index]);  
+	                  index += strlen (&cssList[index]) + 1;	/* Longueur de l'intitule */
+					  i++;
+				}
+
+				wndCSSEdit = CreateWindow ("EDIT", NULL, WS_CHILD | WS_VISIBLE | ES_LEFT | WS_BORDER,
+					                         10, 150, 400, 30, hwnDlg, (HMENU) IDC_CSSEDIT, 
+											 (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
+				break;
+
+		   case WM_COMMAND:
+				if (LOWORD (wParam) == 1 && HIWORD (wParam) == LBN_SELCHANGE) {
+				   itemIndex = SendMessage (wndCSSList, LB_GETCURSEL, 0, 0);
+				   itemIndex = SendMessage (wndCSSList, LB_GETTEXT, itemIndex, (LPARAM) szBuffer);
+			       SetDlgItemText (hwnDlg, IDC_CSSEDIT, szBuffer);
+                   /* ThotCallback (NumSelectLanguage, STRING_DATA, szBuffer); */
+				}
+
+			    switch (LOWORD (wParam)) {
+				       case ID_CONFIRM:
+							/* ThotCallback (NumFormLanguage, INTEGER_DATA, (char*) 2); */
+					        EndDialog (hwnDlg, ID_CONFIRM);
+							break;
+
+				       case ID_DONE:
+							/* ThotCallback (NumFormLanguage, INTEGER_DATA, (char*) 0); */
+					        EndDialog (hwnDlg, ID_DONE);
+							break;
+				}
+				break;
+				default: return FALSE;
+	}
+	return TRUE ;
+}
 
 /*-----------------------------------------------------------------------
  LinkDlgProc

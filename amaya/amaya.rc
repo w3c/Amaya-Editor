@@ -388,6 +388,15 @@ BEGIN
     LTEXT           "Printing in progress ...",IDC_STATIC,29,14,72,9
 END
 
+CSSDIALOG DIALOG DISCARDABLE  100, 100, 281, 138
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "CSS"
+FONT 8, "MS Sans Serif"
+BEGIN
+    DEFPUSHBUTTON   "Confirm",ID_CONFIRM,85,117,50,14
+    PUSHBUTTON      "Done",ID_DONE,145,117,50,14
+END
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -510,6 +519,14 @@ BEGIN
         TOPMARGIN, 7
         BOTTOMMARGIN, 56
     END
+
+    CSSDIALOG, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 274
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 131
+    END
 END
 #endif    // APSTUDIO_INVOKED
 
@@ -589,7 +606,6 @@ BEGIN
     BUTTON      ID_BUTTON40041
     BUTTON      ID_BUTTON40042
 END
-
 
 #endif    // English (U.S.) resources
 /////////////////////////////////////////////////////////////////////////////

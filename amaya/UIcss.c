@@ -23,6 +23,10 @@
 #include "p2css_f.h"
 #include "AHTURLTools_f.h"
 #include "UIcss_f.h"
+
+#ifdef _WINDOWS
+#include "win_f.h"
+#endif /* _WINDOWS */
  
 /*----------------------------------------------------------------------
    InitCSSDialog list downloaded CSS files
@@ -76,7 +80,9 @@ View                view;
   /* display the form */
   if (nb > 0)
     {
-#  ifndef _WINDOWS
+#  ifdef _WINDOWS
+	  CreateCSSDlgWindow (BaseDialog, CSSSelect, FromCSS, TtaGetMessage (AMAYA, AM_CSS_FILE), nb, buf);
+#  else  /* !_WINDOWS */
       TtaNewSelector (BaseDialog + CSSSelect, BaseDialog + FromCSS,
 		      TtaGetMessage (AMAYA, AM_CSS_FILE),
 		      nb, buf, 5, NULL, TRUE, FALSE);
