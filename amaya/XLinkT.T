@@ -21,10 +21,8 @@ ATTRIBUTES
         if XLink begin
 	   remove;
 	   end;
-	if NOT XLink begin
-           create nsdcl;
+	if NOT XLink
 	   create ' xlink:type="simple"';
-	   end;
         end;
 
    type = extended:
@@ -32,10 +30,8 @@ ATTRIBUTES
         if XLink begin
            remove;
            end;
-        if NOT XLink begin
-           create nsdcl;
+        if NOT XLink
 	   create ' xlink:type="extended"';
-           end;
 	end;
 
    type = locator:
@@ -43,10 +39,8 @@ ATTRIBUTES
         if XLink begin
            remove;
            end;
-        if NOT XLink begin
-           create nsdcl;
+        if NOT XLink
 	   create ' xlink:type="locator"';
-           end;
 	end;
 
    type = arc:
@@ -54,10 +48,8 @@ ATTRIBUTES
         if XLink begin
            remove;
            end;
-        if NOT XLink begin
-           create nsdcl;
+        if NOT XLink
 	   create ' xlink:type="arc"';
-           end;
 	end;
 
    type = resource:
@@ -65,10 +57,8 @@ ATTRIBUTES
         if XLink begin
            remove;
            end;
-        if NOT XLink begin
-           create nsdcl;
+        if NOT XLink
 	   create ' xlink:type="resource"';
-           end;
 	end;
 
    type = title_:
@@ -76,10 +66,8 @@ ATTRIBUTES
         if XLink begin
            remove;
            end;
-        if NOT XLink begin
-           create nsdcl;
+        if NOT XLink
 	   create ' xlink:type="title"';
-           end;
 	end;
 
    type = none_:
@@ -87,10 +75,8 @@ ATTRIBUTES
         if XLink begin
            remove;
            end;
-        if NOT XLink begin
-           create nsdcl;
+        if NOT XLink
 	   create ' xlink:type="none"';
-	   end;
 	end;
 
    href_:
@@ -99,6 +85,7 @@ ATTRIBUTES
            remove;
            end;
         if NOT XLink begin
+           create nsdcl;
 	   create ' xlink:href="';
 	   create href_;
 	   create '"';
@@ -131,7 +118,6 @@ ATTRIBUTES
            remove;
            end;
         if NOT XLink begin
-           create nsdcl;
 	   create ' xlink:';
 	   create Unknown_attribute;
 	   end;

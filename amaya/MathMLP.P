@@ -426,7 +426,9 @@ RULES
 	HorizPos: Left = Enclosing . Left;
 	MarginLeft: 3 em;
 	VertPos: Top = Enclosing . Top + 0.5 cm;
+	Font: Times;
 	IN Structure_view BEGIN
+	        Font: Helvetica;
 		Width: Enclosing . Width;
 		HorizPos: Left = Enclosing . Left;
 		MarginLeft: 0.5;
