@@ -65,4 +65,4 @@ amaya_full              -a opera
 #
 
 amaya                   -a amaya_base amaya_thotlib amaya_java \
-                           amaya_java amaya_ilu amaya_amaya amaya_plugins
+                           amaya_java amaya_amaya amaya_plugins
