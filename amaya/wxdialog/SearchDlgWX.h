@@ -15,7 +15,6 @@
 
 class SearchDlgWX : public wxDialog
 {
-
 public: 
     
   // Constructor.
@@ -30,11 +29,17 @@ private:
   void OnConfirmButton( wxCommandEvent& event );
   void OnCancelButton( wxCommandEvent& event );
   void OnNoReplaceButton( wxCommandEvent& event );
+  void OnReplaceBox( wxCommandEvent& event );
+  void OnSearchAreaBox( wxCommandEvent& event );
+  void OnCheckCaseBox( wxCommandEvent& event );
 
   // Any class wishing to process wxWindows events must use this macro
   DECLARE_EVENT_TABLE()
     
 private:
+  int   m_iarea;
+  int   m_ireplace;
+  bool  m_case;
 };
 
 #endif  //__SEARCHDLGWX_H__

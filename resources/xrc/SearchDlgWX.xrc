@@ -17,7 +17,9 @@
             <border>5</border>
           </object>
           <object class="sizeritem">
-            <object class="wxTextCtrl" name="wx_ID_SEAR_FOR_TXT"/>
+            <object class="wxTextCtrl" name="wxID_SEARCH_FOR_TXT">
+              <style>wxTE_PROCESS_ENTER</style>
+            </object>
             <flag>wxEXPAND</flag>
             <border>5</border>
           </object>
@@ -46,38 +48,30 @@
             <border>5</border>
           </object>
           <object class="sizeritem">
-            <object class="wxBoxSizer">
-              <orient>wxVERTICAL</orient>
+            <object class="wxGridSizer">
+              <cols>2</cols>
+              <rows>1</rows>
               <object class="sizeritem">
                 <object class="wxRadioBox" name="wxID_REPLACE_BOX">
                   <label></label>
                   <content>
-                    <item></item>
-                    <item></item>
-                    <item></item>
-                  </content>
+                    <item/>
+                    <item/>
+                    <item/></content>
                   <selection>0</selection>
                   <style>wxRA_SPECIFY_COLS</style>
                 </object>
                 <flag>wxALL|wxEXPAND</flag>
                 <border>5</border>
               </object>
-            </object>
-            <flag>wxALL|wxGROW</flag>
-            <border>5</border>
-          </object>
-          <object class="sizeritem">
-            <object class="wxBoxSizer">
-              <orient>wxVERTICAL</orient>
               <object class="sizeritem">
                 <object class="wxRadioBox" name="wxID_SEARCH_AREA_BOX">
                   <label></label>
                   <content>
-                    <item></item>
-                    <item></item>
-                    <item></item>
-                    <item></item>
-                  </content>
+                    <item/>
+                    <item/>
+                    <item/>
+                    <item/></content>
                   <selection>0</selection>
                   <style>wxRA_SPECIFY_COLS</style>
                 </object>
