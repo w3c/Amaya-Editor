@@ -1068,7 +1068,7 @@ PtrSSchema          pSS;
 	     return NULL;
 	  }
 	else
-	  memeset (pNextBlock, 0, sizeof (TRuleBlock));
+	  memset (pNextBlock, 0, sizeof (TRuleBlock));
 
 	/* lit la partie fixe du schema de traduction */
 	TtaReadName (file, (char *) &pTSch->TsStructName);
