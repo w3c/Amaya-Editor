@@ -401,6 +401,8 @@ ThotBool ChangePRule (NotifyPresentation *event)
 	  /* it's a basic type. Move the PRule to the parent element */
 	  {
 	    el = TtaGetParent (el);
+	    /* Store the new value into the presentation rule */
+	    TtaSetPRuleValue (el, presRule, event->value, doc);
 	    MovePRule (presRule, event->element, el, doc, FALSE);
 	    ret = TRUE; /* don't let Thot perform normal operation */
 	  }
@@ -415,6 +417,8 @@ ThotBool ChangePRule (NotifyPresentation *event)
 	    root = TtaGetParent (el);
 	    if (presType == PRBackground)
 	      {
+		/* Store the new value into the presentation rule */
+		TtaSetPRuleValue (el, presRule, event->value, doc);
 		MovePRule (presRule, el, root, doc, TRUE);
 		ret = TRUE; /* don't let Thot perform normal operation */  
 	      }   
@@ -426,6 +430,8 @@ ThotBool ChangePRule (NotifyPresentation *event)
 	    if (presType != PRFillPattern && presType != PRBackground
 		&& presType != PRShowBox)
 	      {
+		/* Store the new value into the presentation rule */
+		TtaSetPRuleValue (el, presRule, event->value, doc);
 		MovePRule (presRule, el, body, doc, TRUE);
 		ret = TRUE; /* don't let Thot perform normal operation */
 	      }      
@@ -566,6 +572,8 @@ ThotBool ChangePRule (NotifyPresentation *event)
 		   enclosing element */
 		if (elType.ElTypeNum == HTML_EL_Pseudo_paragraph)
 		  el = TtaGetParent (el);
+		/* Store the new value into the presentation rule */
+		TtaSetPRuleValue (el, presRule, event->value, doc);
 		MovePRule (presRule, event->element, el, doc, TRUE);
 		ret = TRUE; /* don't let Thot perform normal operation */
 	      }	  
@@ -574,6 +582,8 @@ ThotBool ChangePRule (NotifyPresentation *event)
 		 enclosing element */
 	      {
 		el = TtaGetParent (el);
+		/* Store the new value into the presentation rule */
+		TtaSetPRuleValue (el, presRule, event->value, doc);
 		MovePRule (presRule, event->element, el, doc, TRUE);
 		ret = TRUE; /* don't let Thot perform normal operation */
 	      }
@@ -582,6 +592,8 @@ ThotBool ChangePRule (NotifyPresentation *event)
 		 that encloses this text string and move the PRule to that
 		 SPAN element */
 	      {
+		/* Store the new value into the presentation rule */
+		TtaSetPRuleValue (el, presRule, event->value, doc);
 		MovePRule (presRule, el, span, doc, TRUE);
 		el = span;
 		ret = TRUE; /* don't let Thot perform normal operation */
