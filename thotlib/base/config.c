@@ -68,18 +68,18 @@ void                ConfigInit ()
 /* |    getFirstWord                                                    | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-static void         getFirstWord (unsigned char *line, unsigned char *mot)
+static void         getFirstWord (unsigned char *line, unsigned char *word)
 #else  /* __STDC__ */
-static void         getFirstWord (line, mot)
+static void         getFirstWord (line, word)
 unsigned char      *line;
-unsigned char      *mot;
+unsigned char      *word;
 
 #endif /* __STDC__ */
 {
-   int                 indmot, indline;
+   int                 indword, indline;
 
    indline = 0;
-   mot[0] = '\0';
+   word[0] = '\0';
    /* saute les espaces de debut de ligne */
    while (line[indline] <= ' ' && line[indline] != '\0')
       indline++;
@@ -88,12 +88,12 @@ unsigned char      *mot;
       return;
    /* copie tous les caracteres jusqu'a rencontrer le 1er espace ou ":" */
    /* ou la fin de ligne */
-   indmot = 0;
+   indword = 0;
    while (line[indline] > ' ' && line[indline] != ':' &&
 	  line[indline] != '\0')
-      mot[indmot++] = line[indline++];
+      word[indword++] = line[indline++];
    /* marque la fin du mot trouve' */
-   mot[indmot] = '\0';
+   word[indword] = '\0';
 }
 
 
@@ -101,18 +101,18 @@ unsigned char      *mot;
 /* |    getSecondWord                                                   | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-static void         getSecondWord (unsigned char *line, unsigned char *mot)
+static void         getSecondWord (unsigned char *line, unsigned char *word)
 #else  /* __STDC__ */
-static void         getSecondWord (line, mot)
+static void         getSecondWord (line, word)
 unsigned char      *line;
-unsigned char      *mot;
+unsigned char      *word;
 
 #endif /* __STDC__ */
 {
-   int                 indmot, indline;
+   int                 indword, indline;
 
    indline = 0;
-   mot[0] = '\0';
+   word[0] = '\0';
    /* saute les espaces de debut de ligne */
    while (line[indline] <= ' ' && line[indline] != '\0')
       indline++;
@@ -131,11 +131,11 @@ unsigned char      *mot;
       return;
    /* copie tous les caracteres du 2eme mot jusqu'a rencontrer le 1er */
    /* espace ou la fin de ligne */
-   indmot = 0;
+   indword = 0;
    while (line[indline] > ' ' && line[indline] != '\0')
-      mot[indmot++] = line[indline++];
+      word[indword++] = line[indline++];
    /* marque la fin du mot trouve' */
-   mot[indmot] = '\0';
+   word[indword] = '\0';
 }
 
 /* ---------------------------------------------------------------------- */
@@ -177,18 +177,18 @@ unsigned char      *line;
 /* |    getStringAfterColon                                             | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-static void         getStringAfterColon (unsigned char *line, unsigned char *texte)
+static void         getStringAfterColon (unsigned char *line, unsigned char *text)
 #else  /* __STDC__ */
-static void         getStringAfterColon (line, texte)
+static void         getStringAfterColon (line, text)
 unsigned char      *line;
-unsigned char      *texte;
+unsigned char      *text;
 
 #endif /* __STDC__ */
 {
    int                 indline, indtext;
 
    indline = 0;
-   texte[0] = '\0';
+   text[0] = '\0';
    while (line[indline] != ':' && line[indline] != '\0')
       indline++;
    if (line[indline] == ':')
@@ -200,14 +200,14 @@ unsigned char      *texte;
 	   return;
 	indtext = 0;
 	while (line[indline] != '#' && line[indline] != '\0')
-	   texte[indtext++] = line[indline++];
+	   text[indtext++] = line[indline++];
 	/* elimine les blancs de fin de ligne */
 	indtext--;
-	while (texte[indtext] <= ' ' && indtext >= 0)
+	while (text[indtext] <= ' ' && indtext >= 0)
 	   indtext--;
 	indtext++;
 	/* termine la chaine */
-	texte[indtext] = '\0';
+	text[indtext] = '\0';
      }
 }
 
@@ -234,7 +234,7 @@ char               *word2;
    boolean             stop;
    int                 ret;
    char                line[MAX_TXT_LEN];
-   char                mot[MAX_TXT_LEN];
+   char                word[MAX_TXT_LEN];
 
    stop = FALSE;
    ret = 0;
@@ -244,14 +244,14 @@ char               *word2;
 	 stop = TRUE;
       else
 	{
-	   getFirstWord (line, mot);
+	   getFirstWord (line, word);
 	   if (singleWord (line))
 	     {
 		if (*word1 != '\0')
-		   if (strcmp (mot, word1) == 0)
+		   if (strcmp (word, word1) == 0)
 		      ret = 1;
 		if (*word2 != '\0')
-		   if (strcmp (mot, word2) == 0)
+		   if (strcmp (word, word2) == 0)
 		      ret = 2;
 	     }
 	}
@@ -277,8 +277,8 @@ boolean            *import;
    int                 i, l, point, res;
    FILE               *file;
    char                line[MAX_TXT_LEN];
-   char                texte[MAX_TXT_LEN];
-   char                mot[MAX_TXT_LEN];
+   char                text[MAX_TXT_LEN];
+   char                word[MAX_TXT_LEN];
    boolean             stop;
 
    *doctypeOrig = NULL;
@@ -299,8 +299,8 @@ boolean            *import;
 	 stop = TRUE;
       else
 	{
-	   getFirstWord (line, mot);
-	   if (mot[0] != '\0')
+	   getFirstWord (line, word);
+	   if (word[0] != '\0')
 	      stop = TRUE;
 	}
    while (!stop);
@@ -308,18 +308,18 @@ boolean            *import;
       /* le premier mot n'est pas seul dans la ligne, erreur */
       return;
 
-   if (strcmp (mot, "document") == 0)
+   if (strcmp (word, "document") == 0)
       *typ = 1;
-   else if (strcmp (mot, "nature") == 0)
+   else if (strcmp (word, "nature") == 0)
       *typ = 2;
-   else if (strcmp (mot, "extension") == 0)
+   else if (strcmp (word, "extension") == 0)
       *typ = 3;
-   else if (strcmp (mot, "document-nature") == 0)
+   else if (strcmp (word, "document-nature") == 0)
       *typ = 4;
    else
       /* le premier mot du fichier est invalide */
      {
-	fprintf (stderr, "file %s: invalid first word %s\n", fname, mot);
+	fprintf (stderr, "file %s: invalid first word %s\n", fname, word);
 	return;
      }
 
@@ -372,26 +372,26 @@ boolean            *import;
 	   if (fgets (line, MAX_TXT_LEN - 1, file) == NULL)
 	     {
 		stop = TRUE;
-		mot[0] = '\0';
+		word[0] = '\0';
 	     }
 	   else
 	     {
-		getFirstWord (line, mot);
-		if (strcmp (mot, *doctypeOrig) == 0)
+		getFirstWord (line, word);
+		if (strcmp (word, *doctypeOrig) == 0)
 		   stop = TRUE;
 	     }
 	while (!stop);
 
-	if (strcmp (mot, *doctypeOrig) == 0)
+	if (strcmp (word, *doctypeOrig) == 0)
 	   /* on a trouve' la ligne voulue */
 	  {
-	     getStringAfterColon (line, texte);
-	     if (texte[0] == '\0')
+	     getStringAfterColon (line, text);
+	     if (text[0] == '\0')
 		fprintf (stderr, "invalid line in file %s\n   %s\n", fname, line);
 	     else
 	       {
-		  *doctypeTrans = TtaGetMemory (strlen (texte) + 1);
-		  strcpy (*doctypeTrans, AsciiTranslate (texte));
+		  *doctypeTrans = TtaGetMemory (strlen (text) + 1);
+		  strcpy (*doctypeTrans, AsciiTranslate (text));
 	       }
 	  }
      }
@@ -416,7 +416,7 @@ void                ConfigReadConfigFiles ()
 
 {
    int                 nbitemdoc, nbitemnat, nbitemext;
-   int                 debut, i;
+   int                 beginning, i;
    int                 typ;
    boolean             import;
    char               *Dir;
@@ -428,8 +428,8 @@ void                ConfigReadConfigFiles ()
 #define SELECTOR_NB_ITEMS 5
    char                fname[4 * NAME_LENGTH];
    char               *suffix;
-   char               *nomOrig;
-   char               *nomTrans;
+   char               *nameOrig;
+   char               *nameTrans;
    boolean             stop;
 
    suffix = TtaGetVarLANG ();
@@ -470,7 +470,7 @@ void                ConfigReadConfigFiles ()
 	     ext_items_menu[i] = NULL;
 	  }
      }
-   debut = 0;
+   beginning = 0;
    i = 0;
    nbitemdoc = 0;
    nbitemnat = 0;
@@ -490,7 +490,7 @@ void                ConfigReadConfigFiles ()
 	if (DirBuffer[i] == '\0')
 	   /* un directory de schema a ete isole' */
 	  {
-	     Dir = &DirBuffer[debut];
+	     Dir = &DirBuffer[beginning];
 	     if (TtaCheckDirectory (Dir))
 		/* c'est bien un directory */
 	       {
@@ -501,27 +501,27 @@ void                ConfigReadConfigFiles ()
 		  if (ThotDirBrowse_first (&thotDir, Dir, "*.", suffix) == 1)
 		     do
 		       {
-			  namesOfDocType (fname, &nomOrig, &nomTrans, &typ, &import);
-			  if (nomOrig != NULL)
+			  namesOfDocType (fname, &nameOrig, &nameTrans, &typ, &import);
+			  if (nameOrig != NULL)
 			    {
 			       if (typ == 1 || typ == 4)
 				 {
-				    doc_items[nbitemdoc] = nomOrig;
-				    doc_items_menu[nbitemdoc] = nomTrans;
+				    doc_items[nbitemdoc] = nameOrig;
+				    doc_items_menu[nbitemdoc] = nameTrans;
 				    if (import)
 				       doc_import[nbitemdoc] = TRUE;
 				    nbitemdoc++;
 				 }
 			       if (typ == 2 || typ == 4)
 				 {
-				    nat_items[nbitemnat] = nomOrig;
-				    nat_items_menu[nbitemnat] = nomTrans;
+				    nat_items[nbitemnat] = nameOrig;
+				    nat_items_menu[nbitemnat] = nameTrans;
 				    nbitemnat++;
 				 }
 			       if (typ == 3)
 				 {
-				    ext_items[nbitemext] = nomOrig;
-				    ext_items_menu[nbitemext] = nomTrans;
+				    ext_items[nbitemext] = nameOrig;
+				    ext_items_menu[nbitemext] = nameTrans;
 				    nbitemext++;
 				 }
 			    }
@@ -531,7 +531,7 @@ void                ConfigReadConfigFiles ()
 	       }
 	     /* continue a chercher les directories dans le path des schemas */
 	     i++;
-	     debut = i;
+	     beginning = i;
 	  }
      }
 }
@@ -608,40 +608,40 @@ boolean             doc;
 
 
 /* ---------------------------------------------------------------------- */
-/* |    ConfigSSchemaExternalName retourne dans NomUtilisateur le nom     | */
+/* |    ConfigSSchemaExternalName retourne dans nameUser le nom     | */
 /* |    externe, dans la langue de l'utilisateur, du schema de          | */
-/* |    structure dont le nom interne est NomSchema.                    | */
+/* |    structure dont le nom interne est nameSchema.                    | */
 /* |    Typ indique s'il s'agit d'un schema de document (1), de         | */
 /* |    nature (2) ou d'extension (3).                                  | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                ConfigSSchemaExternalName (char *NomUtilisateur, char *NomSchema, int Typ)
+void                ConfigSSchemaExternalName (char *nameUser, char *nameSchema, int Typ)
 
 #else  /* __STDC__ */
-void                ConfigSSchemaExternalName (NomUtilisateur, NomSchema, Typ)
-char               *NomUtilisateur;
-char               *NomSchema;
+void                ConfigSSchemaExternalName (nameUser, nameSchema, Typ)
+char               *nameUser;
+char               *nameSchema;
 int                 Typ;
 
 #endif /* __STDC__ */
 
 {
    int                 i;
-   boolean             trouve;
+   boolean             found;
 
    i = 0;
-   trouve = FALSE;
-   NomUtilisateur[0] = '\0';
+   found = FALSE;
+   nameUser[0] = '\0';
    switch (Typ)
 	 {
 	    case 1:
-	       while (i < MAX_ITEM_CONF && !trouve && doc_items[i] != NULL)
+	       while (i < MAX_ITEM_CONF && !found && doc_items[i] != NULL)
 		 {
-		    if (strcmp (NomSchema, doc_items[i]) == 0)
+		    if (strcmp (nameSchema, doc_items[i]) == 0)
 		      {
 			 if (doc_items_menu[i] != NULL)
-			    strcpy (NomUtilisateur, doc_items_menu[i]);
-			 trouve = TRUE;
+			    strcpy (nameUser, doc_items_menu[i]);
+			 found = TRUE;
 		      }
 		    else
 		       i++;
@@ -649,13 +649,13 @@ int                 Typ;
 	       break;
 
 	    case 2:
-	       while (i < MAX_ITEM_CONF && !trouve && nat_items[i] != NULL)
+	       while (i < MAX_ITEM_CONF && !found && nat_items[i] != NULL)
 		 {
-		    if (strcmp (NomSchema, nat_items[i]) == 0)
+		    if (strcmp (nameSchema, nat_items[i]) == 0)
 		      {
 			 if (nat_items_menu[i] != NULL)
-			    strcpy (NomUtilisateur, nat_items_menu[i]);
-			 trouve = TRUE;
+			    strcpy (nameUser, nat_items_menu[i]);
+			 found = TRUE;
 		      }
 		    else
 		       i++;
@@ -663,13 +663,13 @@ int                 Typ;
 	       break;
 
 	    case 3:
-	       while (i < MAX_ITEM_CONF && !trouve && ext_items[i] != NULL)
+	       while (i < MAX_ITEM_CONF && !found && ext_items[i] != NULL)
 		 {
-		    if (strcmp (NomSchema, ext_items[i]) == 0)
+		    if (strcmp (nameSchema, ext_items[i]) == 0)
 		      {
 			 if (ext_items_menu[i] != NULL)
-			    strcpy (NomUtilisateur, ext_items_menu[i]);
-			 trouve = TRUE;
+			    strcpy (nameUser, ext_items_menu[i]);
+			 found = TRUE;
 		      }
 		    else
 		       i++;
@@ -687,43 +687,43 @@ int                 Typ;
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-void                ConfigSSchemaInternalName (char *NomUtilisateur, char *NomSchema, boolean Doc)
+void                ConfigSSchemaInternalName (char *nameUser, char *nameSchema, boolean Doc)
 
 #else  /* __STDC__ */
-void                ConfigSSchemaInternalName (NomUtilisateur, NomSchema, Doc)
-char               *NomUtilisateur;
-char               *NomSchema;
+void                ConfigSSchemaInternalName (nameUser, nameSchema, Doc)
+char               *nameUser;
+char               *nameSchema;
 boolean             Doc;
 
 #endif /* __STDC__ */
 
 {
    int                 i;
-   boolean             trouve;
+   boolean             found;
 
    i = 0;
-   trouve = FALSE;
-   NomSchema[0] = '\0';
+   found = FALSE;
+   nameSchema[0] = '\0';
    if (Doc)
-      while (i < MAX_ITEM_CONF && !trouve && doc_items_menu[i] != NULL)
+      while (i < MAX_ITEM_CONF && !found && doc_items_menu[i] != NULL)
 	{
-	   if (strcmp (NomUtilisateur, doc_items_menu[i]) == 0)
+	   if (strcmp (nameUser, doc_items_menu[i]) == 0)
 	     {
 		if (doc_items[i] != NULL)
-		   strcpy (NomSchema, doc_items[i]);
-		trouve = TRUE;
+		   strcpy (nameSchema, doc_items[i]);
+		found = TRUE;
 	     }
 	   else
 	      i++;
 	}
    else
-      while (i < MAX_ITEM_CONF && !trouve && nat_items_menu[i] != NULL)
+      while (i < MAX_ITEM_CONF && !found && nat_items_menu[i] != NULL)
 	{
-	   if (strcmp (NomUtilisateur, nat_items_menu[i]) == 0)
+	   if (strcmp (nameUser, nat_items_menu[i]) == 0)
 	     {
 		if (nat_items[i] != NULL)
-		   strcpy (NomSchema, nat_items[i]);
-		trouve = TRUE;
+		   strcpy (nameSchema, nat_items[i]);
+		found = TRUE;
 	     }
 	   else
 	      i++;
@@ -789,9 +789,9 @@ char               *BufMenu;
    FILE               *file;
    boolean             stop;
    char                line[MAX_TXT_LEN];
-   char                texte[MAX_TXT_LEN];
-   char                texteISO[MAX_TXT_LEN];
-   char                mot[MAX_TXT_LEN];
+   char                text[MAX_TXT_LEN];
+   char                textISO[MAX_TXT_LEN];
+   char                word[MAX_TXT_LEN];
 
    nbitem = 0;
    indmenu = 0;
@@ -808,39 +808,39 @@ char               *BufMenu;
 	      stop = TRUE;
 	   else
 	     {
-		getFirstWord (line, mot);
-		if (mot[0] != '\0')
+		getFirstWord (line, word);
+		if (word[0] != '\0')
 		   /* la ligne n'est pas vide */
 		  {
 		     /* si la ligne contient un mot cle marquant le debut d'une autre */
 		     /* section, on a fini */
 		     if (singleWord (line))
-			if (strcmp (mot, "export") == 0)
+			if (strcmp (word, "export") == 0)
 			   stop = TRUE;
-			else if (strcmp (mot, "import") == 0)
+			else if (strcmp (word, "import") == 0)
 			   stop = TRUE;
-			else if (strcmp (mot, "translation") == 0)
+			else if (strcmp (word, "translation") == 0)
 			   stop = TRUE;
 		     if (!stop)
 		       {
-			  getStringAfterColon (line, texte);
-			  if (texte[0] == '\0')
+			  getStringAfterColon (line, text);
+			  if (text[0] == '\0')
 			     fprintf (stderr, "invalid line in file %s\n   %s\n", schema, line);
 			  else
 			    {
-			       strcpy (texteISO, AsciiTranslate (texte));
+			       strcpy (textISO, AsciiTranslate (text));
 			       if (pres_items[nbitem] != NULL)
 				  TtaFreeMemory (pres_items[nbitem]);
-			       pres_items[nbitem] = TtaGetMemory (strlen (mot) + 1);
-			       strcpy (pres_items[nbitem], mot);
+			       pres_items[nbitem] = TtaGetMemory (strlen (word) + 1);
+			       strcpy (pres_items[nbitem], word);
 			       if (pres_items_menu[nbitem] != NULL)
 				  TtaFreeMemory (pres_items_menu[nbitem]);
-			       len = strlen (texteISO) + 1;
+			       len = strlen (textISO) + 1;
 			       pres_items_menu[nbitem] = TtaGetMemory (len);
-			       strcpy (pres_items_menu[nbitem], texteISO);
+			       strcpy (pres_items_menu[nbitem], textISO);
 			       if (BufMenu != NULL)
 				 {
-				    strcpy (&BufMenu[indmenu], texteISO);
+				    strcpy (&BufMenu[indmenu], textISO);
 				    indmenu += len;
 				 }
 			       nbitem++;
@@ -942,9 +942,9 @@ char               *BufMenu;
    FILE               *file;
    boolean             stop;
    char                line[MAX_TXT_LEN];
-   char                texte[MAX_TXT_LEN];
-   char                texteISO[MAX_TXT_LEN];
-   char                mot[MAX_TXT_LEN];
+   char                text[MAX_TXT_LEN];
+   char                textISO[MAX_TXT_LEN];
+   char                word[MAX_TXT_LEN];
 
    nbitem = 0;
    indmenu = 0;
@@ -961,39 +961,39 @@ char               *BufMenu;
 	      stop = TRUE;
 	   else
 	     {
-		getFirstWord (line, mot);
-		if (mot[0] != '\0')
+		getFirstWord (line, word);
+		if (word[0] != '\0')
 		   /* la ligne n'est pas vide */
 		  {
 		     /* si la ligne contient un mot cle marquant le debut d'une autre */
 		     /* section, on a fini */
 		     if (singleWord (line))
-			if (strcmp (mot, "presentation") == 0)
+			if (strcmp (word, "presentation") == 0)
 			   stop = TRUE;
-			else if (strcmp (mot, "import") == 0)
+			else if (strcmp (word, "import") == 0)
 			   stop = TRUE;
-			else if (strcmp (mot, "translation") == 0)
+			else if (strcmp (word, "translation") == 0)
 			   stop = TRUE;
 		     if (!stop)
 		       {
-			  getStringAfterColon (line, texte);
-			  if (texte[0] == '\0')
+			  getStringAfterColon (line, text);
+			  if (text[0] == '\0')
 			     fprintf (stderr, "invalid line in file %s\n   %s\n", schema, line);
 			  else
 			    {
-			       strcpy (texteISO, AsciiTranslate (texte));
+			       strcpy (textISO, AsciiTranslate (text));
 			       if (export_items[nbitem] != NULL)
 				  TtaFreeMemory (export_items[nbitem]);
-			       export_items[nbitem] = TtaGetMemory (strlen (mot) + 1);
-			       strcpy (export_items[nbitem], mot);
+			       export_items[nbitem] = TtaGetMemory (strlen (word) + 1);
+			       strcpy (export_items[nbitem], word);
 			       if (export_items_menu[nbitem] != NULL)
 				  TtaFreeMemory (export_items_menu[nbitem]);
-			       len = strlen (texteISO) + 1;
+			       len = strlen (textISO) + 1;
 			       export_items_menu[nbitem] = TtaGetMemory (len);
-			       strcpy (export_items_menu[nbitem], texteISO);
+			       strcpy (export_items_menu[nbitem], textISO);
 			       if (BufMenu != NULL)
 				 {
-				    strcpy (&BufMenu[indmenu], texteISO);
+				    strcpy (&BufMenu[indmenu], textISO);
 				    indmenu += len;
 				 }
 			       nbitem++;
@@ -1032,12 +1032,12 @@ char               *schtrad;
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-static boolean      Translate (PtrSSchema pSS, char *mot, char *trans)
+static boolean      Translate (PtrSSchema pSS, char *word, char *trans)
 
 #else  /* __STDC__ */
-static boolean      Translate (pSS, mot, trans)
+static boolean      Translate (pSS, word, trans)
 PtrSSchema        pSS;
-char               *mot;
+char               *word;
 char               *trans;
 
 #endif /* __STDC__ */
@@ -1049,7 +1049,7 @@ char               *trans;
    char               *terme;
 
    found = FALSE;
-   terme = AsciiTranslate (mot);
+   terme = AsciiTranslate (word);
    /* cherche le mot a traduire d'abord parmi les noms d'elements */
    for (i = 0; i < pSS->SsNRules && !found; i++)
       if (strcmp (terme, pSS->SsRule[i].SrName) == 0)
@@ -1106,8 +1106,8 @@ PtrSSchema        pSS;
    FILE               *file;
    boolean             stop, error;
    char                line[MAX_TXT_LEN];
-   char                texte[MAX_TXT_LEN];
-   char                mot[MAX_TXT_LEN];
+   char                text[MAX_TXT_LEN];
+   char                word[MAX_TXT_LEN];
 
    if (pSS == NULL)
       return;
@@ -1131,18 +1131,18 @@ PtrSSchema        pSS;
 	   else
 	     {
 		/* prend le premier mot de la ligne */
-		getFirstWord (line, mot);
-		if (mot[0] != '\0')
+		getFirstWord (line, word);
+		if (word[0] != '\0')
 		   /* la ligne n'est pas vide */
 		  {
 		     /* si la ligne contient un mot cle marquant le debut d'une autre */
 		     /* section, on a fini */
 		     if (singleWord (line))
-			if (strcmp (mot, "presentation") == 0)
+			if (strcmp (word, "presentation") == 0)
 			   stop = TRUE;
-			else if (strcmp (mot, "export") == 0)
+			else if (strcmp (word, "export") == 0)
 			   stop = TRUE;
-			else if (strcmp (mot, "import") == 0)
+			else if (strcmp (word, "import") == 0)
 			   stop = TRUE;
 			else
 			  {
@@ -1152,10 +1152,10 @@ PtrSSchema        pSS;
 		     if (!stop && !error)
 		       {
 			  /* cherche la chaine de caracteres qui suit ':' */
-			  getStringAfterColon (line, texte);
-			  if (texte[0] == '\0')
+			  getStringAfterColon (line, text);
+			  if (text[0] == '\0')
 			     fprintf (stderr, "invalid line in file %s\n   %s\n", pSS->SsName, line);
-			  else if (!Translate (pSS, mot, texte))
+			  else if (!Translate (pSS, word, text))
 			     fprintf (stderr, "invalid line in file %s\n   %s\n", pSS->SsName, line);
 		       }
 		  }
@@ -1185,7 +1185,7 @@ char               *schpres;
    boolean             ok, stop;
    FILE               *file;
    char                line[MAX_TXT_LEN];
-   char                mot[MAX_TXT_LEN];
+   char                word[MAX_TXT_LEN];
 
    ok = FALSE;
    /* ouvre le fichier .conf associe' au schema de structure */
@@ -1203,16 +1203,16 @@ char               *schpres;
 	   else
 	     {
 		/* prend le premier mot de la ligne */
-		getFirstWord (line, mot);
-		if (strcmp (mot, "style") == 0)
+		getFirstWord (line, word);
+		if (strcmp (word, "style") == 0)
 		  {
 		     /* le 1er mot est "style". Cherche le mot qui suit : c'est le */
 		     /* nom du schema de presentation cherche' */
-		     getSecondWord (line, mot);
-		     if (mot[0] != '\0')
+		     getSecondWord (line, word);
+		     if (word[0] != '\0')
 			/* il y a bien un 2eme mot : succes */
 		       {
-			  strcpy (schpres, mot);
+			  strcpy (schpres, word);
 			  ok = TRUE;
 		       }
 		     stop = TRUE;
@@ -1228,22 +1228,22 @@ char               *schpres;
 /* ---------------------------------------------------------------------- */
 /* |    readUntilStyle  lit le fichier file (qui doit etre ouvert)      | */
 /* |            jusqu'a trouver une ligne qui contienne le mot "style"  | */
-/* |            suivi du nom nomPSchema.                                | */
+/* |            suivi du nom namePSchema.                                | */
 /* |            Retourne TRUE si trouve, FALSE sinon.                   | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-static boolean      readUntilStyle (FILE * file, char *nomPSchema)
+static boolean      readUntilStyle (FILE * file, char *namePSchema)
 #else  /* __STDC__ */
-static boolean      readUntilStyle (file, nomPSchema)
+static boolean      readUntilStyle (file, namePSchema)
 FILE               *file;
-char               *nomPSchema;
+char               *namePSchema;
 
 #endif /* __STDC__ */
 {
    boolean             stop;
    boolean             ok;
    char                line[MAX_TXT_LEN];
-   char                mot[MAX_TXT_LEN];
+   char                word[MAX_TXT_LEN];
 
    stop = FALSE;
    ok = FALSE;
@@ -1253,11 +1253,11 @@ char               *nomPSchema;
 	 stop = TRUE;
       else
 	{
-	   getFirstWord (line, mot);
-	   if (strcmp (mot, "style") == 0)
+	   getFirstWord (line, word);
+	   if (strcmp (word, "style") == 0)
 	     {
-		getSecondWord (line, mot);
-		if (strcmp (mot, nomPSchema) == 0)
+		getSecondWord (line, word);
+		if (strcmp (word, namePSchema) == 0)
 		   ok = TRUE;
 	     }
 	}
@@ -1327,8 +1327,8 @@ char               *line;
 
 {
    boolean             ok, stop;
-   char                mot1[MAX_TXT_LEN];
-   char                mot2[MAX_TXT_LEN];
+   char                word1[MAX_TXT_LEN];
+   char                word2[MAX_TXT_LEN];
 
    ok = FALSE;
    stop = FALSE;
@@ -1340,8 +1340,8 @@ char               *line;
       else
 	{
 	   /* prend le permier mot de la ligne lue */
-	   getFirstWord (line, mot1);
-	   if (mot1[0] != '\0')
+	   getFirstWord (line, word1);
+	   if (word1[0] != '\0')
 	      /* la ligne n'est pas vide */
 	     {
 		/* si la ligne contient un mot cle marquant le debut d'une autre */
@@ -1349,13 +1349,13 @@ char               *line;
 		if (singleWord (line))
 		   /* la ligne contient un seul mot */
 		  {
-		     if (strcmp (mot1, "open") == 0)
+		     if (strcmp (word1, "open") == 0)
 			stop = TRUE;
-		     else if (strcmp (mot1, "geometry") == 0)
+		     else if (strcmp (word1, "geometry") == 0)
 			stop = TRUE;
-		     else if (strcmp (mot1, "presentation") == 0)
+		     else if (strcmp (word1, "presentation") == 0)
 			stop = TRUE;
-		     else if (strcmp (mot1, "options") == 0)
+		     else if (strcmp (word1, "options") == 0)
 			stop = TRUE;
 		     else
 			/* ligne contenant un seul mot. on considere que c'est OK... */
@@ -1363,10 +1363,10 @@ char               *line;
 		  }
 		else
 		   /* la ligne contient plus d'un mot */
-		if (strcmp (mot1, "style") == 0)
+		if (strcmp (word1, "style") == 0)
 		  {
-		     getSecondWord (line, mot2);
-		     if (mot2[0] != ':')
+		     getSecondWord (line, word2);
+		     if (word2[0] != ':')
 			/* la ligne est du type "style xxxx". C'est une fin de section */
 			stop = TRUE;
 		     else
@@ -1401,21 +1401,21 @@ int                *height;
 
 #endif /* __STDC__ */
 {
-   char                suiteligne[MAX_TXT_LEN];
-   int                 nbentiers;
+   char                seqLine[MAX_TXT_LEN];
+   int                 nbIntegers;
    boolean             result;
 
    result = FALSE;
    /* extrait la partie de la ligne qui suit les deux-points */
-   getStringAfterColon (line, suiteligne);
-   if (suiteligne[0] == '\0')
+   getStringAfterColon (line, seqLine);
+   if (seqLine[0] == '\0')
       fprintf (stderr, "invalid line in file %s.conf\n   %s\n",
 	       pDoc->DocSSchema->SsName, line);
    else
      {
 	/* extrait les 4 entiers */
-	nbentiers = sscanf (suiteligne, "%d %d %d %d", x, y, width, height);
-	if (nbentiers != 4)
+	nbIntegers = sscanf (seqLine, "%d %d %d %d", x, y, width, height);
+	if (nbIntegers != 4)
 	   fprintf (stderr, "invalid line in file %s.conf\n   %s\n",
 		    pDoc->DocSSchema->SsName, line);
 	else
@@ -1450,7 +1450,7 @@ PtrDocument         pDoc;
    FILE               *file;
    int                 x, y, width, height;
    char                line[MAX_TXT_LEN];
-   char                nomvue[MAX_TXT_LEN];
+   char                nameview[MAX_TXT_LEN];
 
    /* ouvre le fichier .conf du document et avance jusqu'a la section "open" */
    file = openConfFileAndReadUntil (pDoc->DocSSchema, "open");
@@ -1461,12 +1461,12 @@ PtrDocument         pDoc;
 	while (getNextLineInSection (file, line))
 	  {
 	     /* le 1er mot de la ligne est le nom d'une vue a ouvrir */
-	     getFirstWord (line, nomvue);
+	     getFirstWord (line, nameview);
 	     /* lit les coordonnees (x, y) et dimensions (width, height) de la */
 	     /* frame ou doit s'afficher la vue */
 	     if (getXYWidthHeight (line, pDoc, &x, &y, &width, &height))
 		/* lecture reussie, on ouvre la vue */
-		OpenViewByName (pDoc, nomvue, x, y, width, height);
+		OpenViewByName (pDoc, nameview, x, y, width, height);
 	  }
 	fclose (file);
      }
@@ -1476,14 +1476,14 @@ PtrDocument         pDoc;
 /* ---------------------------------------------------------------------- */
 /* |    ConfigGetViewGeometry retourne la position (x, y) et les        | */
 /* |            dimensions (width, height) de la fenetre ou doit        | */
-/* |            s'afficher la vue de non vue pour le document pDoc.     | */
+/* |            s'afficher la vue de non view pour le document pDoc.     | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                ConfigGetViewGeometry (PtrDocument pDoc, char *vue, int *x, int *y, int *width, int *height)
+void                ConfigGetViewGeometry (PtrDocument pDoc, char *view, int *x, int *y, int *width, int *height)
 #else  /* __STDC__ */
-void                ConfigGetViewGeometry (pDoc, vue, x, y, width, height)
+void                ConfigGetViewGeometry (pDoc, view, x, y, width, height)
 PtrDocument         pDoc;
-char               *vue;
+char               *view;
 int                *x;
 int                *y;
 int                *width;
@@ -1493,8 +1493,8 @@ int                *height;
 {
    FILE               *file;
    char                line[MAX_TXT_LEN];
-   char                nomvue[MAX_TXT_LEN];
-   boolean             trouve;
+   char                nameview[MAX_TXT_LEN];
+   boolean             found;
 
    *x = 0;
    *y = 0;
@@ -1505,31 +1505,31 @@ int                *height;
    if (file != NULL)
      {
 	/* on a trouve' le debut de la section open. On lit le fichier .conf */
-	/* ligne par ligne, jusqu'a la ligne qui commence par le nom de la vue */
-	trouve = FALSE;
-	while (!trouve && getNextLineInSection (file, line))
+	/* ligne par ligne, jusqu'a la ligne qui commence par le name de la vue */
+	found = FALSE;
+	while (!found && getNextLineInSection (file, line))
 	  {
 	     /* le 1er mot de la ligne est le nom d'une vue */
-	     getFirstWord (line, nomvue);
+	     getFirstWord (line, nameview);
 	     /* est-ce le nom de la vue cherchee ? */
-	     trouve = (strcmp (nomvue, vue) == 0);
+	     found = (strcmp (nameview, view) == 0);
 	  }
-	if (!trouve)
+	if (!found)
 	   /* on n'a pas trouve' dans la section "open". On cherche dans la */
 	   /* section "geometry" */
 	  {
 	     fclose (file);
 	     file = openConfFileAndReadUntil (pDoc->DocSSchema, "geometry");
 	     if (file != NULL)
-		while (!trouve && getNextLineInSection (file, line))
+		while (!found && getNextLineInSection (file, line))
 		  {
 		     /* le 1er mot de la ligne est le nom d'une vue */
-		     getFirstWord (line, nomvue);
+		     getFirstWord (line, nameview);
 		     /* est-ce le nom de la vue cherchee ? */
-		     trouve = (strcmp (nomvue, vue) == 0);
+		     found = (strcmp (nameview, view) == 0);
 		  }
 	  }
-	if (trouve)
+	if (found)
 	   getXYWidthHeight (line, pDoc, x, y, width, height);
 
 	if (file != NULL)
@@ -1569,23 +1569,23 @@ int                *height;
 /* ---------------------------------------------------------------------- */
 /* |    ConfigGetPSchemaNature retourne dans presNature le nom du       | */
 /* |            schema de presentation a appliquer a la nature de nom   | */
-/* |            nomNature dans le contexte du schema de structure pSS   | */
+/* |            nameNature dans le contexte du schema de structure pSS   | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-boolean             ConfigGetPSchemaNature (PtrSSchema pSS, char *nomNature, char *presNature)
+boolean             ConfigGetPSchemaNature (PtrSSchema pSS, char *nameNature, char *presNature)
 #else  /* __STDC__ */
-boolean             ConfigGetPSchemaNature (pSS, nomNature, presNature)
+boolean             ConfigGetPSchemaNature (pSS, nameNature, presNature)
 PtrSSchema        pSS;
-char               *nomNature;
+char               *nameNature;
 char               *presNature;
 
 #endif /* __STDC__ */
 {
    FILE               *file;
    char                line[MAX_TXT_LEN];
-   char                suiteligne[MAX_TXT_LEN];
-   char                nom[MAX_TXT_LEN];
-   boolean             trouve;
+   char                seqLine[MAX_TXT_LEN];
+   char                name[MAX_TXT_LEN];
+   boolean             found;
    boolean             ok;
 
    presNature[0] = '\0';
@@ -1596,26 +1596,26 @@ char               *presNature;
      {
 	/* on a trouve' le debut de la section presentation. On lit le fichier */
 	/* ligne par ligne jusqu'a la ligne qui commence par le nom de la nature */
-	trouve = FALSE;
-	while (!trouve && getNextLineInSection (file, line))
+	found = FALSE;
+	while (!found && getNextLineInSection (file, line))
 	  {
 	     /* le 1er mot de la ligne est le nom d'une nature */
-	     getFirstWord (line, nom);
+	     getFirstWord (line, name);
 	     /* est-ce le nom de la nature cherchee ? */
-	     trouve = (strcmp (nom, nomNature) == 0);
+	     found = (strcmp (name, nameNature) == 0);
 	  }
-	if (trouve)
+	if (found)
 	   /* on a trouve' la ligne de la section presentation qui commence par */
 	   /* le nom de la nature voulue */
 	  {
 	     /* le nom de nature est suivi, apres ":", du nom du schema de */
 	     /* presentation a appliquer */
-	     getStringAfterColon (line, suiteligne);
-	     if (suiteligne[0] == '\0')
+	     getStringAfterColon (line, seqLine);
+	     if (seqLine[0] == '\0')
 		fprintf (stderr, "invalid line in file %s.conf\n   %s\n", pSS->SsName, line);
 	     else
 	       {
-		  strncpy (presNature, suiteligne, MAX_NAME_LENGTH - 1);
+		  strncpy (presNature, seqLine, MAX_NAME_LENGTH - 1);
 		  ok = TRUE;
 	       }
 	  }
@@ -1647,9 +1647,9 @@ char               *optionValue;
 {
    FILE               *file;
    char                line[MAX_TXT_LEN];
-   char                suiteligne[MAX_TXT_LEN];
-   char                nom[MAX_TXT_LEN];
-   boolean             trouve;
+   char                seqLine[MAX_TXT_LEN];
+   char                name[MAX_TXT_LEN];
+   boolean             found;
 
    optionValue[0] = '\0';
    /* ouvre le fichier .conf du document et avance jusqu'a la section "options" */
@@ -1659,24 +1659,24 @@ char               *optionValue;
 	/* on a trouve' le debut de la section options. On lit le fichier */
 	/* ligne par ligne jusqu'a la ligne qui commence par le nom de l'option */
 	/* chercheee */
-	trouve = FALSE;
-	while (!trouve && getNextLineInSection (file, line))
+	found = FALSE;
+	while (!found && getNextLineInSection (file, line))
 	  {
 	     /* le 1er mot de la ligne est le nom d'une option */
-	     getFirstWord (line, nom);
+	     getFirstWord (line, name);
 	     /* est-ce le nom de l'option cherchee ? */
-	     trouve = (strcmp (nom, optionName) == 0);
+	     found = (strcmp (name, optionName) == 0);
 	  }
-	if (trouve)
+	if (found)
 	   /* on a trouve' la ligne de la section options qui commence par */
 	   /* le nom de l'option voulue */
 	  {
 	     /* le nom de l'option est suivi, apres ":", de la valeur de l'option */
-	     getStringAfterColon (line, suiteligne);
-	     if (suiteligne[0] == '\0')
+	     getStringAfterColon (line, seqLine);
+	     if (seqLine[0] == '\0')
 		fprintf (stderr, "invalid line in file %s.conf\n   %s\n", pSS->SsName, line);
 	     else
-		strncpy (optionValue, suiteligne, MAX_NAME_LENGTH - 1);
+		strncpy (optionValue, seqLine, MAX_NAME_LENGTH - 1);
 	  }
 	fclose (file);
      }
@@ -1706,8 +1706,8 @@ char               *schemaName;
 {
    FILE               *file;
    char                line[MAX_TXT_LEN];
-   char                mot[MAX_TXT_LEN];
-   char                suiteligne[MAX_TXT_LEN];
+   char                word[MAX_TXT_LEN];
+   char                seqLine[MAX_TXT_LEN];
    char                lastStyle[MAX_TXT_LEN];
    boolean             stop;
 
@@ -1729,19 +1729,19 @@ char               *schemaName;
 	   else
 	     {
 		/* prend le 1er mot de la ligne lue */
-		getFirstWord (line, mot);
-		if (strcmp (mot, "style") == 0)
+		getFirstWord (line, word);
+		if (strcmp (word, "style") == 0)
 		   /* c'est une ligne "style". On conserve le nom du schema de */
 		   /* presentation qui suit le mot-cle "style" */
 		   getSecondWord (line, lastStyle);
-		else if (strcmp (mot, "pagesize") == 0)
+		else if (strcmp (word, "pagesize") == 0)
 		   /* c'est une ligne "pagesize", on la traite */
 		  {
-		     getStringAfterColon (line, suiteligne);
-		     if (suiteligne[0] == '\0')
+		     getStringAfterColon (line, seqLine);
+		     if (seqLine[0] == '\0')
 			fprintf (stderr, "invalid line in file %s.conf\n   %s\n",
 				 pSS->SsName, line);
-		     else if (strcmp (suiteligne, pageSize) == 0)
+		     else if (strcmp (seqLine, pageSize) == 0)
 			/* c'est le format de page cherche'. On a fini */
 		       {
 			  strcpy (schemaName, lastStyle);
@@ -1876,27 +1876,27 @@ int                 LgMax;
 /* ---------------------------------------------------------------------- */
 /* |    ConfigDefaultTypoSchema retourne dans schtypo le nom du         | */
 /* |    schema de typographie a appliquer a la nature de nom            | */
-/* |    nomNature dans le contexte du schema de structure pSS           | */
+/* |    nameNature dans le contexte du schema de structure pSS           | */
 /* |    Retourne FALSE si pas trouve', TRUE si OK.                      | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
 boolean             ConfigDefaultTypoSchema (PtrSSchema pSS,
-					     char *nomNature,
+					     char *nameNature,
 					     char *schtypo)
 #else  /* __STDC__ */
-boolean             ConfigDefaultTypoSchema (pSS, nomNature, schtypo)
+boolean             ConfigDefaultTypoSchema (pSS, nameNature, schtypo)
 PtrSSchema        pSS;
-char               *nomNature;
+char               *nameNature;
 char               *schtypo;
 
 #endif /* __STDC__ */
 
 {
-   boolean             ok, trouve;
+   boolean             ok, found;
    FILE               *file;
    char                line[MAX_TXT_LEN];
-   char                suiteligne[MAX_TXT_LEN];
-   char                nom[MAX_TXT_LEN];
+   char                seqLine[MAX_TXT_LEN];
+   char                name[MAX_TXT_LEN];
 
    /* ouvre le fichier .conf du document */
    /* et avance jusqu'a la section "typography" */
@@ -1907,26 +1907,26 @@ char               *schtypo;
 	/* on a trouve' le debut de la section typography. On lit le fichier */
 	/* .conf ligne par ligne jusqu'a la ligne qui commence */
 	/* par le nom de la nature */
-	trouve = FALSE;
-	while (!trouve && getNextLineInSection (file, line))
+	found = FALSE;
+	while (!found && getNextLineInSection (file, line))
 	  {
 	     /* le 1er mot de la ligne est le nom d'une nature */
-	     getFirstWord (line, nom);
+	     getFirstWord (line, name);
 	     /* est-ce le nom de la nature cherchee ? */
-	     trouve = (strcmp (nom, nomNature) == 0);
+	     found = (strcmp (name, nameNature) == 0);
 	  }
-	if (trouve)
+	if (found)
 	   /* on a trouve' la ligne de la section typography qui commence par */
 	   /* le nom de la nature voulue */
 	  {
 	     /* le nom de nature est suivi, apres ":", du nom du schema de */
 	     /* typographie a appliquer */
-	     getStringAfterColon (line, suiteligne);
-	     if (suiteligne[0] == '\0')
+	     getStringAfterColon (line, seqLine);
+	     if (seqLine[0] == '\0')
 		fprintf (stderr, "invalid line in file %s.conf\n   %s\n", pSS->SsName, line);
 	     else
 	       {
-		  strncpy (schtypo, suiteligne, MAX_NAME_LENGTH - 1);
+		  strncpy (schtypo, seqLine, MAX_NAME_LENGTH - 1);
 		  ok = TRUE;
 	       }
 	  }
