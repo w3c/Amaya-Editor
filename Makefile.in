@@ -170,7 +170,7 @@ libwww libwww.a :
 	@(if test ! -d $(LIBWWW) ; then $(MKDIR) $(LIBWWW) ;  fi)
 	@(localdir=`pwd` ; libwwwdir="$(THOTDIR)/$(LIBWWW)" ; cd $(LIBWWW) ; \
 	  unset LANG; \
-	  if [ ! Makefile ] ; then \
+	  if [ ! -x Makefile ] ; then \
 	  	../$$libwwwdir/configure --disable-shared \
 			-with-zlib="$$localdir/libz.a"; \
 	  fi)
