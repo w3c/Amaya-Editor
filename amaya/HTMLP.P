@@ -5465,8 +5465,8 @@ BOXES
 
  MAP_dummy: BEGIN
 	Content: Graphics ' ';
-	Width: 1 px;
-	Height: 1 px;
+	Width: 0;
+	Height: 0;
 	VertPos: Top = Previous NOT MAP . Bottom;
 	HorizPos: Left = Enclosing . Left;
 	IN Structure_view
@@ -5887,7 +5887,7 @@ BOXES
 	FillPattern: backgroundcolor;
 	Content: Graphics ' ';
 	Height: 1 cm;
-	Width: 1;
+	Width: 1 px;
 	END;
 #endif
 
@@ -6118,7 +6118,7 @@ RULES
 	CreateBefore(META_S);
 	Visibility: 0;
 	IN Structure_view BEGIN
-		Width: 1 px;
+		Width: 0;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		VertPos: Top = Previous META_S . Top;
 		Foreground: Enclosing =;
@@ -6133,7 +6133,7 @@ RULES
 #endif
 	Visibility: 0;
 	IN Structure_view BEGIN
-		Width: 1 px;
+		Width: 0;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		VertPos: Top = Previous LINK_S . Top;
 		Foreground: Enclosing =;
@@ -6142,8 +6142,8 @@ RULES
 	END;
 
  C_Empty: BEGIN
-	Width: 1 px;
-	Height: 1 px;
+	Width: 0;
+	Height: 0;
 	if NOT within Frame
 	   Visibility: 0;
 	FillPattern: nopattern;
@@ -6151,10 +6151,6 @@ RULES
 	   BEGIN
 	   if within ISINDEX
 		Height: Enclosed . Height;
-	   if within Checkbox_Input
-		Height: 1 px;
-	   if within Radio_Input
-		Height: 1 px;
 	   END;
 	END;
 
@@ -7202,7 +7198,7 @@ RULES
 		VertPos: Top = Previous . Bottom;
 		END;
 	IN Structure_view
-		Height: 1 px;
+		Height: 0;
 	IN Links_view
 		Visibility: 0;
 	END;
@@ -7353,7 +7349,7 @@ RULES
 	NoBreak1 : 2;
 	NoBreak2 : 2;
 #endif
-	Width : Enclosing . Width;
+	Width: Enclosing . Width;
 	IN Structure_view BEGIN
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		Width: Enclosing . Width - STRUCT_INDENT;
@@ -7379,13 +7375,15 @@ RULES
  Frame: BEGIN
 	CreateBefore(Text_Mark);
 	CreateBefore(Text_Frame);
-	Width: 1 px;  Height: 1 px;
+	Width: 1 px;
+	Height: 1 px;
 	Depth: Enclosing =;
 	IN Structure_view
 		Visibility: 0;
 	END;
 
  Checkbox_Input: BEGIN
+	{ attribute Checked generates the right picture }
 	CreateBefore(INPUT_S);
 	CreateBefore(ATTR_Checkbox);
 	MarginTop: 1 px;
@@ -7393,7 +7391,8 @@ RULES
 	MarginBottom: 1 px;
 	MarginRight: 3 px;
 	LineBreak: No;
-	Width: 1 px;  Height: 1 px;
+	Width: 0;
+        Height: 0;
 	In Structure_view BEGIN
 		Visibility: Enclosing =;
 		Height: DOC_FONTSIZE;
@@ -7405,6 +7404,7 @@ RULES
 	END;
 
  Radio_Input: BEGIN
+	{ attribute Checked generates the right picture }
 	CreateBefore(INPUT_S);
 	CreateBefore(ATTR_Radio);
 	MarginTop: 1 px;
@@ -7412,7 +7412,8 @@ RULES
 	MarginBottom: 1 px;
 	MarginRight: 3 px;
 	LineBreak: No;
-	Width: 1 px;  Height: 1 px;
+	Width: 0;
+        Height: 0;
 	In Structure_view BEGIN
 		Visibility: Enclosing =;
 		Height: DOC_FONTSIZE;
@@ -7440,7 +7441,7 @@ RULES
 	Background : LightRed4;
 #endif
 	IN Structure_view BEGIN
-		Width: 1 px;
+		Width: 0;
 		Height: DOC_FONTSIZE;
 		Size: Enclosing =;
 		MarginTop: 0;
@@ -7471,7 +7472,7 @@ RULES
 	Background : LightRed4;
 #endif
 	IN Structure_view BEGIN
-		Width: 1 px;
+		Width: 0;
 		Height: DOC_FONTSIZE;
 		Size: Enclosing =;
 		END;
@@ -7508,7 +7509,7 @@ RULES
 		MarginLeft: 0;
 		MarginBottom: 0;
 		MarginRight: 0;
-		Width: 1 px;
+		Width: 0;
 		Height: DOC_FONTSIZE;
 		Size: Enclosing =;
 		END;
@@ -7535,7 +7536,7 @@ RULES
 	HorizRef: * . HMiddle;
 	IN Structure_view BEGIN
 		Visibility: Enclosing =;
-		Width: 1 px;
+		Width: 0;
 		Height: DOC_FONTSIZE;
 		END;
 	END;
@@ -7555,7 +7556,7 @@ RULES
 	HorizRef: Enclosed . HRef;
 	IN Structure_view BEGIN
 		Visibility: Enclosing =;
-		Width: 1 px;
+		Width: 0;
 		Height: DOC_FONTSIZE;
 		END;
 	END;
@@ -7575,7 +7576,7 @@ RULES
 	HorizRef: * . HMiddle;
 	IN Structure_view BEGIN
 		Visibility: Enclosing =;
-		Width: 1 px;
+		Width: 0;
 		Height: DOC_FONTSIZE;
 		END;
 	END;
@@ -7684,8 +7685,8 @@ RULES
 		END;
 	HorizRef: * . Bottom;
 	IN Structure_view BEGIN
-		Height: 1 px;
-		Width: 1 px;
+		Height: 0;
+		Width: 0;
 		if NOT Immediately within Object
 		   Visibility: 1;
 		if Immediately within Object
@@ -7694,8 +7695,8 @@ RULES
 		HorizPos: Left = Enclosing . Left;
 		END;
 	IN Alternate_view BEGIN
-		Height: 1 px;
-		Width: 1 px;
+		Height: 0;
+		Width: 0;
 		if NOT Immediately within Object
 		   Visibility: 1;
 		if Immediately within Object
@@ -7820,7 +7821,7 @@ RULES
 	FillPattern: nopattern;
 	IN Structure_view BEGIN
 		Font: Enclosing =;
-		Width: 1 px;
+		Width: 0;
 		VertPos: Top = Previous AREA_S . Top;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		END;
@@ -7878,7 +7879,7 @@ RULES
 	CreateWith(VerticalLine);
 	if within Table
 	   BEGIN
-	   Width : Enclosing . Width;
+	   Width: Enclosing . Width;
 	   HorizPos: Left = Enclosing . Left;
 	   VertPos: Bottom = Table_head . Top - cellspacing px;
 	   END;
@@ -7917,7 +7918,7 @@ RULES
 	Visibility: 1;
 	CreateBefore(COL_S);
 	IN Structure_view BEGIN
-		Height: 1 px;
+		Height: 0;
 		Visibility: Enclosing =;
 		END;
 	END;
@@ -7945,7 +7946,7 @@ RULES
 	HorizPos: Left = Previous . Right;
 	VertPos: Top = Enclosing . Top;
 	Width: Enclosed . Width;
-	Height: 1 px;
+	Height: 0;
 	END;
 
  C_Head:
@@ -7953,7 +7954,7 @@ RULES
 	HorizRef: * . Top;
 	VertPos : Top = Enclosing . Top;
 	Width: 20 px;
-	Height: 1 px;
+	Height: 0;
 	FillPattern: nopattern;
 	END;
 
@@ -8138,8 +8139,8 @@ RULES
 		PaddingRight: 0;
 		PaddingBottom: 0;
 		PaddingLeft: 0;
-		Weight : Enclosing =;
-		Adjust : Enclosing =;
+		Weight: Enclosing =;
+		Adjust: Enclosing =;
 		VertPos: Top = Previous . Bottom;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		Width: Enclosing . Width - STRUCT_INDENT;
@@ -8150,7 +8151,7 @@ RULES
 		PaddingRight: 0;
 		PaddingBottom: 0;
 		PaddingLeft: 0;
-		VertPos : Top = Previous . Bottom;
+		VertPos: Top = Previous . Bottom;
 		HorizPos: Left = Previous Table_cell . Left + STRUCT_INDENT;
 		Width: Right = Enclosing . Right;
 		END;
@@ -8169,7 +8170,7 @@ RULES
 
  C_Foot:
 	BEGIN
-	Height: 1 pt;
+	Height: 0;
 	FillPattern: nopattern;
 	END;
 
@@ -8781,7 +8782,7 @@ ATTRIBUTES
 	   If NOT PICTURE_UNIT
 	   	Width: Enclosing . Width;
 	   If PICTURE_UNIT
-		Width: 1 px;
+		Width: 0;
 	   END;
 	IN Alternate_view BEGIN
 	   Width: Enclosing . Width;
@@ -8795,7 +8796,7 @@ ATTRIBUTES
 	   If NOT PICTURE_UNIT
 	   	Width: Enclosing . Width;
 	   If PICTURE_UNIT
-		Width: 1 px;
+		Width: 0;
 	   END;
 	IN Alternate_view BEGIN
 	  If Data_cell  BEGIN
@@ -8825,13 +8826,13 @@ ATTRIBUTES
 	   Height: Height_ px;
 	IN Structure_view BEGIN
 	   If PICTURE_UNIT
-	        Height: 1 px;
+	        Height: 0;
 	   If NOT PICTURE_UNIT
 		Height: Enclosed . Height;
 	   END;
 	IN Alternate_view BEGIN
 	   If PICTURE_UNIT
-	        Height: 1 px;
+	        Height: 0;
 	   If NOT PICTURE_UNIT
 		Height: Enclosed . Height;
 	   END;
@@ -8992,7 +8993,7 @@ ATTRIBUTES
 		LineWeight: 1 pt;
 		END;
 	IN Structure_view
-		Height: 1 pt;
+		Height: 0;
 	END;
 
  Size_ > 1:
@@ -9009,7 +9010,7 @@ ATTRIBUTES
 		LineWeight: 1 pt;
 		END;
 	IN Structure_view
-		Height: 1 pt;
+		Height: 0;
 	END;
 
  NumberStyle = Arabic_ :
@@ -9397,8 +9398,8 @@ ATTRIBUTES
 	CreateBefore(VALUE_AREA_SIZE);
 	Width: Area_Size ex Min;
 	IN Structure_view BEGIN
-		Width: 1 pt;
-		Height: 1 pt;
+		Width: 0;
+		Height: 0;
 		END;
 	END;
 
@@ -9786,11 +9787,11 @@ ATTRIBUTES
 	CreateAfter(CellExtFrame);
 	VertOverflow: Yes;
 	IN Structure_view BEGIN
-		Height : Enclosed . Height;
+		Height: Enclosed . Height;
 		VertOverflow: No;
 		END;	
 	IN Alternate_view BEGIN
-		Height : Enclosed . Height;
+		Height: Enclosed . Height;
 		VertOverflow: No;
 		END;	
 	END;
@@ -10098,7 +10099,7 @@ ATTRIBUTES
 	Width: Refered . Width;
 	Height: Refered . Height;
 	IN Structure_view BEGIN
-		Width: 1 pt;
+		Width: 0;
 		Height: Enclosed . Height;
 		VertPos: Top = Previous AREA_S . Top;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;

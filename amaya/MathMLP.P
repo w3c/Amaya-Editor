@@ -2716,7 +2716,7 @@ BOXES
 	BEGIN
 	LineWeight: Creator =;
 	Height: 0.1;
-        Width: Enclosing . Width ;
+        Width: Enclosing . Width;
 	HorizPos: Left = Enclosing . Left;
 	Content: Graphics 'h';	{ horizontal bar }
 	LineStyle: Solid;
@@ -2934,7 +2934,7 @@ RULES
 		BEGIN
 		Size: Enclosing =;
 		Visibility: Enclosing =;
-		Height: 1 px;	{**** should be 0 ****}
+		Height: 0;
 		END;
 	END;
 
@@ -3553,7 +3553,7 @@ RULES
         HorizRef: * . Top;
         VertPos : Top = Enclosing . Top;
         Width: 2 px;
-        Height: 1 px;   {***** should be 0 }
+        Height: 0;
         FillPattern: nopattern;
         END;
 
@@ -3643,7 +3643,7 @@ RULES
 		Visibility: Enclosing =;
 		Size: DOC_FONTSIZE;
 		VertPos: Top =  Previous . Bottom;
-		Height: 1 pt;   {***** should be 0 }
+		Height: 0;
 		END;		
 	END;
 
@@ -3655,7 +3655,7 @@ RULES
 		Visibility: Enclosing =;
 		Size: DOC_FONTSIZE;
 		VertPos: Top =  Previous . Bottom;
-		Height: 1 pt;   {***** should be 0 }
+		Height: 0;
 		END;		
 	END;
 
@@ -3748,8 +3748,8 @@ RULES
 
    C_Space:
 	BEGIN
-	Width: 1 px;   {***** should be 0 }
-	Height: 1 px;  {***** should be 0 }
+	Width: 0;
+	Height: 0;
 	HorizRef: * . Bottom;
 	IN Structure_view 
 		Visibility: 0;
@@ -3762,7 +3762,7 @@ RULES
 	IN Structure_view BEGIN
 		Size: DOC_FONTSIZE;
 		VertPos: Top =  Previous . Bottom;
-		Height: 1 pt;   {***** should be 0 }
+		Height: 0;
 		END;
 	END;
 
@@ -3839,7 +3839,7 @@ RULES
 	IN Structure_view BEGIN
 		Size: DOC_FONTSIZE;
 		VertPos: Top =  Previous . Top;
-		Height: 1 pt;   {***** should be 0 }
+		Height: 0;
 		END;
 	END;
 
@@ -5091,11 +5091,11 @@ ATTRIBUTES
 	BEGIN
 	VertOverflow: Yes;
 	IN Structure_view BEGIN
-		Height : Enclosed . Height;
+		Height: Enclosed . Height;
 		VertOverflow: No;
 		END;	
 	IN Alternate_view BEGIN
-		Height : Enclosed . Height;
+		Height: Enclosed . Height;
 		VertOverflow: No;
 		END;	
 	END;

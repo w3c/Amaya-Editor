@@ -48,12 +48,14 @@ DEFAULT
 	BEGIN
 	VertPos: Top = Previous . Bottom;
 	Width: Enclosed . Width;
+	HorizRef: Enclosed . HRef;
 	END;
    IN Alternate_view
 	BEGIN
 	VertPos: Top = Previous . Bottom;
 	Width: Enclosing . Width;
 	Height: Enclosed . Height;
+	HorizRef: Enclosed . HRef;
 	END;
    END;
 
