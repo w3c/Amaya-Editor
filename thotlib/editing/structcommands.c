@@ -1241,6 +1241,12 @@ void CutCommand (ThotBool save, ThotBool replace)
   ThotBool            oneAtLeast, cutPage, stop, pageSelected, cutAll;
   ThotBool            recorded, lock, fakeCell, pEfake, ok;
 
+  pPrev = NULL;
+  pNext = NULL;
+  pParent = NULL;
+  pSave = NULL;
+  pLastSave = NULL;
+  nextChar = 0;
   pPrevPage = NULL;
   last = 0;
   lock = TRUE;
