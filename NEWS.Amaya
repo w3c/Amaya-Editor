@@ -42,6 +42,9 @@ Fixed bugs 2.1:
   page to another.
 
 * It was impossible to set font-size to 20 in the preference menu.
+
+* Amaya didn't take care to the Shift in the keyboard configuration file. Now
+  it takes.
   
 =============================================================
 2.0

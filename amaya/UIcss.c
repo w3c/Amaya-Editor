@@ -146,10 +146,11 @@ void                InitCSS ()
    InitCSSDialog list downloaded CSS files
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         InitCSSDialog (Document doc)
+static void         InitCSSDialog (Document doc, STRING s)
 #else
-static void         InitCSSDialog (doc)
+static void         InitCSSDialog (doc, s)
 Document            doc;
+STRING              s;
 #endif
 {
   CSSInfoPtr          css;
@@ -168,7 +169,7 @@ Document            doc;
 #  ifndef _WINDOWS
   /* create the form */
   TtaNewSheet (BaseCSS + CSSForm, TtaGetViewFrame (doc, 1),
-	       TtaGetMessage (AMAYA, AM_CSS), 1,
+	       s, 1,
 	       TtaGetMessage(LIB, TMSG_LIB_CONFIRM), TRUE, 1, 'L', D_DONE);
 #  endif /* !_WINDOWS */
   select = -1;
@@ -260,7 +261,7 @@ View                view;
 #endif
 {
   CSScase = 1;
-  InitCSSDialog (doc);
+  InitCSSDialog (doc, TtaGetMessage (1, BOpenCSS));
 }
 
 /*----------------------------------------------------------------------
@@ -275,7 +276,7 @@ View                view;
 #endif
 {
   CSScase = 2;
-  InitCSSDialog (doc);
+  InitCSSDialog (doc, TtaGetMessage (1, BDisableCSS));
 }
 
 /*----------------------------------------------------------------------
@@ -290,7 +291,7 @@ View                view;
 #endif
 {
   CSScase = 3;
-  InitCSSDialog (doc);
+  InitCSSDialog (doc, TtaGetMessage (1, BEnableCSS));
 }
 
 /*----------------------------------------------------------------------
@@ -305,5 +306,5 @@ View                view;
 #endif
 {
   CSScase = 4;
-  InitCSSDialog (doc);
+  InitCSSDialog (doc, TtaGetMessage (1, BRemoveCSS));
 }
