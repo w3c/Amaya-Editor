@@ -35,10 +35,26 @@ struct _XPathItem {
 
 typedef XPathItem * XPathList;
 
-/*
-** Get selected element, print Xpointer expression for both sides of
-** the selection
- */
+#define THOT_TEXT_UNIT  1  /* the thotlib element type used to identify
+			      a text node */
+
+/*----------------------------------------------------------------------
+  AdjustChIndex
+
+  Makes sure that the index to a text element doesn't point outside
+  of the length of the text.
+  Returns the adjusted index, if any.
+  ----------------------------------------------------------------------*/
+static int AdjustChIndex (Element el, int index)
+{
+  int len;
+
+  len = TtaGetTextLength (el);
+  if (index > len)
+    return (len);
+  else
+    return (index);
+}
 
 /*----------------------------------------------------------------------
   ElIsHidden
@@ -133,7 +149,7 @@ static void PreviousSibling (Element *el)
   the caller to free the returned string.
   Returns NULL in case of error.
   ----------------------------------------------------------------------*/
-static char * XPathList2Str (XPathList *xpath_list)
+static char * XPathList2Str (XPathList *xpath_list, int firstCh, int len)
 {
   XPathItem *xpath_item, *xpath_tmp;
   static char xpath_expr[500];
@@ -145,11 +161,29 @@ static char * XPathList2Str (XPathList *xpath_list)
   while (xpath_item)
     {
       typeName = TtaGetElementTypeName (xpath_item->elType);
-      sprintf (&xpath_expr[index], "/%s[%d]", typeName, xpath_item->index);
+      /** @@ I need to add here the text unit types we know about */
+      if (xpath_item->next 
+	  && xpath_item->next->elType.ElTypeNum == THOT_TEXT_UNIT)
+	{
+	  if (firstCh > 0)
+	    sprintf (&xpath_expr[index], "/string-range(%s[%d],\"\",%d,%d)",
+		     typeName, xpath_item->index, firstCh, len);
+	  else
+	    sprintf (&xpath_expr[index], "/string-range(%s[%d],\"\"",
+		     typeName, xpath_item->index);
+	  xpath_tmp = xpath_item->next->next;
+	  TtaFreeMemory (xpath_item->next);
+	  TtaFreeMemory (xpath_item);
+	  xpath_item = xpath_tmp;
+	}
+      else
+	{
+	  sprintf (&xpath_expr[index], "/%s[%d]", typeName, xpath_item->index);
+	  xpath_tmp = xpath_item->next;
+	  TtaFreeMemory (xpath_item);
+	  xpath_item = xpath_tmp;
+	}
       index = strlen (xpath_expr);
-      xpath_tmp = xpath_item->next;
-      TtaFreeMemory (xpath_item);
-      xpath_item = xpath_tmp;
     }
 
   return (xpath_expr);
@@ -167,7 +201,7 @@ static char * XPathList2Str (XPathList *xpath_list)
   Returns NULL in case of failure.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-char *XPointer_ThotEl2XPath (Element start)
+char *XPointer_ThotEl2XPath (Element start, int firstCh, int len)
 #else
 char *XPointer_ThotEl2XPath (start)
 Element start;
@@ -216,7 +250,7 @@ Element start;
   
   /* find the xpath expression (this function frees the list while building
      the string) */
-  xpath_expr = XPathList2Str (&xpath_list);
+  xpath_expr = XPathList2Str (&xpath_list, firstCh, len);
   return (xpath_expr);
 }
 
@@ -256,9 +290,14 @@ View view;
 {
   Element     firstEl, lastEl;
   int         firstCh, lastCh, i;
+  int         firstLen;
+
   char       *firstXpath;
   char       *lastXpath;
   ElementType elType;
+
+  /* @@ debug */
+  char       xptr[1024];
 
   elType.ElSSchema = TtaGetDocumentSSchema (doc);
   /* only do this operation on XML and HTML documents */
@@ -268,21 +307,49 @@ View view;
       && ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("XML")))
     return NULL;
 
-  TtaGiveFirstSelectedElement (doc, &firstEl, &firstCh, &i);
-  TtaGiveLastSelectedElement (doc, &lastEl, &i, &lastCh);
+  /* is the document selected? */
+  if (!TtaIsDocumentSelected (doc))
+    return NULL;
   
+  /* get the first selected element */
+  TtaGiveFirstSelectedElement (doc, &firstEl, &firstCh, &i);
+  firstCh = AdjustChIndex (firstEl, firstCh);
+
   if (firstEl == NULL)
     return NULL; /* ERROR, there is no selection */
-  
-  firstXpath = XPointer_ThotEl2XPath (firstEl);
+
+  /* is it a caret or an extension selection? */
+  if (TtaIsSelectionEmpty ())
+    lastEl = NULL;
+  else
+    {
+      TtaGiveLastSelectedElement (doc, &lastEl, &i, &lastCh);
+      lastCh = AdjustChIndex (lastEl, lastCh);
+    }
+
+  /* if the selection is in the same element, adjust the first element's
+   length */
+  if (firstEl == lastEl)
+    {
+      firstLen = lastCh - firstCh + 1;
+      lastEl = NULL;
+    }
+  else
+    firstLen = 1;
+
+  firstXpath = XPointer_ThotEl2XPath (firstEl, firstCh, firstLen);
   fprintf (stderr, "\nfirst xpointer is %s", firstXpath);
+  sprintf (xptr, "xptr(%s", firstXpath);
 
   if (lastEl)
     {
-      lastXpath = XPointer_ThotEl2XPath (lastEl);
+      lastXpath = XPointer_ThotEl2XPath (lastEl, lastCh, 1);
       fprintf (stderr, "\nlast xpointer is %s\n", lastXpath);
+      sprintf (&xptr[strlen (xptr)], "/range-to(%s)", lastXpath);
     }
-
+  strcat (xptr, ")");
+  fprintf (stderr, "final expression is: %s\n", xptr);
+  
   return NULL;
 }
 #endif ANNOTATIONS
