@@ -26,7 +26,7 @@ extern void MovePRule ( PRule presRule,
                         ThotBool showBoxAllowed );
 extern void SetStyleAttribute ( Document doc,
                                 Element elem );
-extern ThotBool ChangePRule ( NotifyPresentation * event );
+extern ThotBool ChangePRule ( NotifyPresentation *event );
 extern void PRuleDeleted ( NotifyPresentation * event );
 extern void AttrLangDeleted ( NotifyAttribute *event );
 extern void AttrLangCreated ( NotifyAttribute *event );
@@ -55,7 +55,7 @@ extern void MovePRule (/* PRule presRule,
                           ThotBool showBoxAllowed */);
 extern void SetStyleAttribute (/* Document doc,
                                   Element elem */);
-extern ThotBool ChangePRule (/* NotifyPresentation * event */);
+extern ThotBool ChangePRule (/* NotifyPresentation *event */);
 extern void PRuleDeleted (/* NotifyPresentation * event */);
 extern void AttrLangDeleted (/* NotifyAttribute *event */);
 extern void AttrLangCreated (/* NotifyAttribute *event */);

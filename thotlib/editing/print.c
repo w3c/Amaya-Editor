@@ -2599,8 +2599,8 @@ int main (int argc, char **argv)
 	  /* remove CSS files in the temporary directory */
 	  for (i = 0; i < cssCounter; i++)
 	    if (CSSName[i] && TtaFileExist (CSSName[i]) &&
-		strncmp(CSSName[i], tmpDir, length) == 0);
-	      DeleteFile (CSSName[i]); 
+		strncmp(CSSName[i], tmpDir, length) == 0)
+	      DeleteFile (CSSName[i]);
 	  if (rmdir (tempDir))
 	    WinErrorBox (NULL, "PrintDoc (4)");
       }
