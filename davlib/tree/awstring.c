@@ -12,7 +12,11 @@
  ** $Author$
  ** $Revision$
  ** $Log$
- ** Revision 1.1  2002-05-31 10:48:47  kirschpi
+ ** Revision 1.2  2002-06-12 10:30:06  kirschpi
+ ** - adjusts in code format
+ ** Manuele
+ **
+ ** Revision 1.1  2002/05/31 10:48:47  kirschpi
  ** Added a new module for WebDAV purposes _ davlib.
  ** Some changes have been done to add this module in the following files:
  ** amaya/query.c, amaya/init.c, amaya/answer.c, amaya/libwww.h, amaya/amayamsg.h,
@@ -52,22 +56,23 @@
  * size indicated by the parameter "size".
  *
  * Parameters : 
- * 	int size : string initial size
+ *      int size : string initial size
  * Return :
- * 	AwString : the new string created (or NULL if
- * 	           it's not possible to create it)
- * ---------------------------------------------------- 	           
+ *      AwString : the new string created (or NULL if
+ *                 it's not possible to create it)
+ * ----------------------------------------------------                    
  */
-extern AwString AwString_new (int size) {
+extern AwString AwString_new (int size) 
+{
     AwString nstr=NULL;
 #ifdef DEBUG            
          fprintf (stderr,"DEBUG : alloc size %d x %d ",size,sizeof(AwStringElement));
-#endif      	    
+#endif              
     nstr = (AwString) AWSTRING_CALLOC (size+1,sizeof(AwStringElement));
 
 #ifdef DEBUG            
     fprintf (stderr,"OK\n");
-#endif      	    
+#endif              
     return nstr;
 }
 
@@ -77,14 +82,15 @@ extern AwString AwString_new (int size) {
  * parameter "string".
  *
  * Paramaters :
- * 	AwString string : string to be deleted
+ *      AwString string : string to be deleted
  * Returns :
  *      int : AWSTRING_OK (normally 1), if the operation succeed
  *            AWSTRING_FAILED, if not.
- *    	
+ *      
  * ---------------------------------------------------
  */ 
-extern int AwString_delete (AwString string) {
+extern int AwString_delete (AwString string) 
+{
     if (string == NULL) 
         return AWSTRING_FAILED;
     
@@ -97,36 +103,36 @@ extern int AwString_delete (AwString string) {
  * content of a array of char.
  *
  * Parameters :
- * 	AwString string : string that will be set
- * 	char *text : content for the string 
+ *      AwString string : string that will be set
+ *      char *text : content for the string 
  * Returns :
  *      int : AWSTRING_OK (normally 1), if the operation succeed
  *            AWSTRING_FAILED, if not.
  * Note :
- * 	String should be greater than text (at least, the
- * 	text size + 1)
+ *      String should be greater than text (at least, the
+ *      text size + 1)
  * ------------------------------------------------------
  */ 
-extern int AwString_set (AwString string, char *text) {
-    int size; /* int i;*/
+extern int AwString_set (AwString string, char *text) 
+{
+    int size;
     int ret = AWSTRING_FAILED;
     char *s;
 
-    if (string != NULL && text != NULL) {
+    if (string != NULL && text != NULL) 
+     {
 #ifdef DEBUG            
          fprintf (stderr,"DEBUG : setting string as %s\n",text);
-#endif      	    
+#endif              
         size = strlen (text);
-	if (size>0) {
+        if (size>0) 
+         {
             s = strncpy ((char *) string,text,size); 
-/*	    s = strcpy ( (char *)string, text);	*/
-	    s[size]='\0'; 
-	    if (s == (char *) string)
-		    ret = AWSTRING_OK;
-	}
-	
-	
-    }
+            s[size]='\0'; 
+            if (s == (char *) string)
+                    ret = AWSTRING_OK;
+         }                
+     }
     return ret;
 }
 
@@ -139,25 +145,28 @@ extern int AwString_set (AwString string, char *text) {
  * wih the same char equivalent content).
  * 
  * Parameters :
- * 	AwString : the string to be copied
+ *      AwString : the string to be copied
  * Return :
- * 	char *: pointer to the new char array 
- * 	        (NULL if the operation failed)
- * -------------------------------------------------- 	
+ *      char *: pointer to the new char array 
+ *              (NULL if the operation failed)
+ * --------------------------------------------------   
  */
-extern char * AwString_get ( AwString string ) {
+extern char * AwString_get ( AwString string ) 
+{
     char *narray;
     int size;
 
-    if (string != NULL) {
+    if (string != NULL) 
+     {
         size = AwString_len (string);
         narray = (char *) AWSTRING_CALLOC (size+1,sizeof(char *));
-        if (narray!=NULL) {
-	    strcpy (narray,(char *) string);
-	    narray[size]='\0';
-	    return (narray);
-	}	
-    }
+        if (narray!=NULL) 
+         {
+            strcpy (narray,(char *) string);
+            narray[size]='\0';
+            return (narray);
+         }       
+     }
     return NULL;
 }
 
@@ -173,14 +182,16 @@ extern char * AwString_get ( AwString string ) {
  *            AWSTRING_FAILED, if not.
  * ------------------------------------------------------
  */ 
-extern int AwString_copy (AwString dst, AwString src) {
+extern int AwString_copy (AwString dst, AwString src) 
+{
     char *s;
     
-    if (dst!=NULL && src!=NULL) {
+    if (dst!=NULL && src!=NULL) 
+     {
         s = strcpy ( (char *) dst, (char *)src);
         if (s == (char *) dst )
-	    return AWSTRING_OK;	
-    }
+            return AWSTRING_OK; 
+     }
     return AWSTRING_FAILED;
 }
 
@@ -194,14 +205,16 @@ extern int AwString_copy (AwString dst, AwString src) {
  *            AWSTRING_FAILED, if not.
  * ------------------------------------------------------
  */ 
-extern int AwString_comp (AwString str1, AwString str2) {
+extern int AwString_comp (AwString str1, AwString str2) 
+{
     int match;
     
-    if (str1!=NULL && str2!=NULL) {
+    if (str1!=NULL && str2!=NULL) 
+     {
         match = strcmp ((char *) str1, (char *) str2);
         if (match == 0)
-	    return AWSTRING_OK;	
-    }
+            return AWSTRING_OK; 
+     }
     return AWSTRING_FAILED;
 }
 
@@ -215,14 +228,16 @@ extern int AwString_comp (AwString str1, AwString str2) {
  *            AWSTRING_FAILED, if not.
  * ------------------------------------------------------
  */ 
-extern int AwString_str (AwString str, AwString sub) {
+extern int AwString_str (AwString str, AwString sub) 
+{
     char * match = NULL;
     
-    if (str!=NULL && sub!=NULL) {
+    if (str!=NULL && sub!=NULL) 
+     {
         match = strstr ((char *) str, (char *) sub);
         if (match != NULL)
-	    return AWSTRING_OK;	
-    }
+            return AWSTRING_OK; 
+     }
     return AWSTRING_FAILED;
 }
 
@@ -239,22 +254,26 @@ extern int AwString_str (AwString str, AwString sub) {
  * The strings "str1" and "str2" will not be changed!
  * ------------------------------------------------------
  */ 
-extern AwString AwString_cat (AwString str1, AwString str2) {
+extern AwString AwString_cat (AwString str1, AwString str2) 
+{
     AwString nstr=NULL;
     int size = 0;
 
-    if (str1!=NULL && str2!=NULL) {
+    if (str1!=NULL && str2!=NULL) 
+     {
         size = strlen ((char *) str1);
-        size += strlen ((char *) str2);	
-	if (size > 0) {
+        size += strlen ((char *) str2); 
+        if (size > 0) 
+         {
             nstr = AwString_new (size+1);
-	    if (nstr!=NULL) {
-                strcat ((char *) nstr, (char *) str1);	    
-		strcat ((char *) nstr, (char *) str2);
-		nstr[size]='\0';
-	    }
-	}
-    }
+            if (nstr!=NULL) 
+             {
+                strcat ((char *) nstr, (char *) str1);      
+                strcat ((char *) nstr, (char *) str2);
+                nstr[size]='\0';
+             }
+         }
+     }
     return nstr;
 }
 
@@ -270,10 +289,12 @@ extern AwString AwString_cat (AwString str1, AwString str2) {
  *           ( < 0 if an error is produced )
  * ------------------------------------------------------
  */
-extern int AwString_len (AwString str) {
+extern int AwString_len (AwString str) 
+{
     int size=AWSTRING_FAILED;
 
-    if (str!=NULL) {
+    if (str!=NULL) 
+    {
         size = strlen ((char *) str);
     }
     return size;
@@ -284,12 +305,13 @@ extern int AwString_len (AwString str) {
  * value. 
  * 
  * Parameters :
- * 	AwString : the string to be converted
+ *      AwString : the string to be converted
  * Return :
- * 	int : double value of the string
- * -------------------------------------------------- 	
+ *      int : double value of the string
+ * --------------------------------------------------   
  */
-extern double AwString_tof (AwString string) {
+extern double AwString_tof (AwString string) 
+{
     double d = 0;
     if (string!=NULL) 
         d = atof ((char *) string);

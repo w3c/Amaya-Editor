@@ -13,7 +13,11 @@
  ** $Author$
  ** $Revision$
  ** $Log$
- ** Revision 1.1  2002-05-31 10:48:47  kirschpi
+ ** Revision 1.2  2002-06-12 10:30:06  kirschpi
+ ** - adjusts in code format
+ ** Manuele
+ **
+ ** Revision 1.1  2002/05/31 10:48:47  kirschpi
  ** Added a new module for WebDAV purposes _ davlib.
  ** Some changes have been done to add this module in the following files:
  ** amaya/query.c, amaya/init.c, amaya/answer.c, amaya/libwww.h, amaya/amayamsg.h,
@@ -45,20 +49,22 @@
  *
  * Parameters :
  * Return :
- * 	AwTree * : the created tree
- * 		 (NULL if an error is produced)
+ *      AwTree * : the created tree
+ *               (NULL if an error is produced)
  * --------------------------------------------------------
  */
-extern AwTree * AwTree_new () {
+extern AwTree * AwTree_new () 
+{
     AwTree * tree=NULL;
 
     tree = (AwTree *) AW_CALLOC (1,sizeof(AwTree));
-    if (tree!=NULL) {
+    if (tree!=NULL) 
+     {
         tree->depth = 0;
         tree->maxdepth = 0;
         tree->root = NULL;
         tree->last = NULL;
-    }
+     }
     return tree;
 }
 
@@ -67,20 +73,22 @@ extern AwTree * AwTree_new () {
  * this function removes a tree. 
  *
  * Parameters :
- * 	AwTree *tree : the tree to be removed
+ *      AwTree *tree : the tree to be removed
  * Return :
- * 	int : AW_OK (normally 1) if the operation succeed
- * 		AW_FAILED (normally -1) if not
+ *      int : AW_OK (normally 1) if the operation succeed
+ *              AW_FAILED (normally -1) if not
  * Note :
- * 	This function does NOT remove the nodes in the
- * 	tree (neither the root node).
+ *      This function does NOT remove the nodes in the
+ *      tree (neither the root node).
  * --------------------------------------------------------
  */
-extern int AwTree_delete (AwTree * tree) {
-    if (tree!=NULL) {
+extern int AwTree_delete (AwTree * tree) 
+{
+    if (tree!=NULL) 
+     {
         AW_FREE(tree);
         return AW_OK;
-    }
+     }
     return AW_FAILED;
 }
 
@@ -89,22 +97,24 @@ extern int AwTree_delete (AwTree * tree) {
  * this function sets the root node of the tree. 
  *
  * Parameters :
- * 	AwTree * tree : the tree 
- * 	AwNode * node : the root node
+ *      AwTree * tree : the tree 
+ *      AwNode * node : the root node
  * Return :
- * 	int : AW_OK (normally 1) if the operation succeed
- * 		AW_FAILED (normally -1) if not
+ *      int : AW_OK (normally 1) if the operation succeed
+ *              AW_FAILED (normally -1) if not
  * Note :
- * 	This function does NOT copy the node. It only
- * 	does a reference to the node.
- * 	The root node may be NULL.
+ *      This function does NOT copy the node. It only
+ *      does a reference to the node.
+ *      The root node may be NULL.
  * --------------------------------------------------------
  */
-extern int AwTree_setRoot (AwTree *tree, AwNode * node) {
-    if (tree!=NULL) {
+extern int AwTree_setRoot (AwTree *tree, AwNode * node) 
+{
+    if (tree!=NULL) 
+     {
         tree->root = node;
-        return AW_OK;	
-    }
+        return AW_OK;   
+     }
     return AW_FAILED;
 }
 
@@ -113,17 +123,18 @@ extern int AwTree_setRoot (AwTree *tree, AwNode * node) {
  * this function returns the root node of the tree. 
  *
  * Parameters :
- * 	AwTree * tree : the tree
+ *      AwTree * tree : the tree
  * Return :
- * 	AwNode * : the root node
- * 		
+ *      AwNode * : the root node
+ *              
  * Note :
- * 	This function does NOT copy the node. It only
- * 	does a reference to the node.
- * 	The root node may be NULL.
+ *      This function does NOT copy the node. It only
+ *      does a reference to the node.
+ *      The root node may be NULL.
  * --------------------------------------------------------
  */
-extern AwNode * AwTree_getRoot (AwTree *tree) {
+extern AwNode * AwTree_getRoot (AwTree *tree) 
+{
     AwNode *root = NULL;
     if (tree!=NULL)
         root = tree->root;
@@ -137,22 +148,24 @@ extern AwNode * AwTree_getRoot (AwTree *tree) {
  * is used by the functions putNewNode, up and down.
  * 
  * Parameters :
- * 	AwTree * tree : the tree 
- * 	AwNode * node : the last node
+ *      AwTree * tree : the tree 
+ *      AwNode * node : the last node
  * Return :
- * 	int : AW_OK (normally 1) if the operation succeed
- * 		AW_FAILED (normally -1) if not
+ *      int : AW_OK (normally 1) if the operation succeed
+ *              AW_FAILED (normally -1) if not
  * Note :
- * 	This function does NOT copy the node. It only
- * 	does a reference to the node.
- * 	The last node must NOT be NULL.
+ *      This function does NOT copy the node. It only
+ *      does a reference to the node.
+ *      The last node must NOT be NULL.
  * --------------------------------------------------------
  */
-extern int AwTree_setLast (AwTree *tree, AwNode * node) {
-    if (tree!=NULL && node!=NULL) {
+extern int AwTree_setLast (AwTree *tree, AwNode * node) 
+{
+    if (tree!=NULL && node!=NULL) 
+     {
         tree->last = node;
         return AW_OK;
-    }
+     }
     return AW_FAILED;
 }
 
@@ -161,18 +174,19 @@ extern int AwTree_setLast (AwTree *tree, AwNode * node) {
  * this function returns the last node of the tree. 
  *
  * Parameters :
- * 	AwTree * tree : the tree
+ *      AwTree * tree : the tree
  * Return :
- * 	AwNode * : the last node
- * 		
+ *      AwNode * : the last node
+ *              
  * Note :
- * 	This function does NOT copy the node. It only
- * 	does a reference to the node.
- * 	The root node may be NULL if the tree is a 
- * 	empty tree.
+ *      This function does NOT copy the node. It only
+ *      does a reference to the node.
+ *      The root node may be NULL if the tree is a 
+ *      empty tree.
  * --------------------------------------------------------
  */
-extern AwNode * AwTree_getLast (AwTree *tree) {
+extern AwNode * AwTree_getLast (AwTree *tree) 
+{
     AwNode *last = NULL;
     if (tree!=NULL)
         last = tree->last;
@@ -186,33 +200,37 @@ extern AwNode * AwTree_getLast (AwTree *tree) {
  * node.
  * 
  * Parameters :
- * 	AwTree * tree : the tree 
- * 	AwNode * node : the node to be added
+ *      AwTree * tree : the tree 
+ *      AwNode * node : the node to be added
  * Return :
- * 	int : AW_OK (normally 1) if the operation succeed
- * 		AW_FAILED (normally -1) if not
+ *      int : AW_OK (normally 1) if the operation succeed
+ *              AW_FAILED (normally -1) if not
  * Note :
- * 	This function does NOT copy the node. It only
- * 	does a reference to the node.
- * 	The node must NOT be NULL.
+ *      This function does NOT copy the node. It only
+ *      does a reference to the node.
+ *      The node must NOT be NULL.
  * --------------------------------------------------------
  */
-extern int AwTree_putNewNode (AwTree *tree, AwNode *node) {
-    if (tree!=NULL && node!=NULL) {
-        if (tree->last != NULL) {	/* tree is not empty */
+extern int AwTree_putNewNode (AwTree *tree, AwNode *node) 
+{
+    if (tree!=NULL && node!=NULL) 
+     {
+        if (tree->last != NULL) 
+         {      /* tree is not empty */
             if (AwNode_putChild (tree->last,node) < 0)
                 return AW_FAILED;
 #ifdef DEBUG
-        fprintf (stderr,"new node introduced %s\n",AwNode_getInfo(node));
-#endif	
-        }
+            fprintf (stderr,"new node introduced %s\n",AwNode_getInfo(node));
+#endif  
+         }
 
-        if (tree->root == NULL) {
-#ifdef DEBUG		
+        if (tree->root == NULL) 
+         {
+#ifdef DEBUG            
             fprintf (stderr,"root node setted\n");
-#endif	
+#endif  
             tree->root = node;
-        }    
+         }    
         
         tree->last = node;
         /* tree->depth++; */
@@ -221,9 +239,9 @@ extern int AwTree_putNewNode (AwTree *tree, AwNode *node) {
             tree->maxdepth = tree->depth;
 #ifdef DEBUG
         fprintf (stderr,"Last node setted to %s (depth %d)\n",AwNode_getInfo(tree->last),tree->depth);
-#endif	
+#endif  
         return AW_OK;
-    }
+     }
     return AW_FAILED;
 }
 
@@ -233,25 +251,28 @@ extern int AwTree_putNewNode (AwTree *tree, AwNode *node) {
  * node point to its father.
  * 
  * Parameters :
- * 	AwTree * tree : the tree 
+ *      AwTree * tree : the tree 
  * Return :
- * 	int : AW_OK (normally 1) if the operation succeed
- * 		AW_FAILED (normally -1) if not
+ *      int : AW_OK (normally 1) if the operation succeed
+ *              AW_FAILED (normally -1) if not
  * Note : 
- * 	if the tree is empty or the last node is the 
- * 	root node, then the function will failed.
- * 	If this function failed, the value of last remains
- * 	unchanged.
+ *      if the tree is empty or the last node is the 
+ *      root node, then the function will failed.
+ *      If this function failed, the value of last remains
+ *      unchanged.
  * --------------------------------------------------------
  */
-extern int AwTree_up (AwTree *tree) {
-    if (tree!=NULL) {
-        if (AwNode_getFather(tree->last)!=NULL) {
+extern int AwTree_up (AwTree *tree) 
+{
+    if (tree!=NULL) 
+     {
+        if (AwNode_getFather(tree->last)!=NULL) 
+         {
             tree->last = AwNode_getFather(tree->last);
             tree->depth--;
             return AW_OK;
-        }
-    }
+         }
+     }
     return AW_FAILED;
 }
 
@@ -261,34 +282,37 @@ extern int AwTree_up (AwTree *tree) {
  * node point to its next child.
  * 
  * Parameters :
- * 	AwTree * tree : the tree 
+ *      AwTree * tree : the tree 
  * Return :
- * 	int : AW_OK (normally 1) if the operation succeed
- * 		AW_FAILED (normally -1) if not
+ *      int : AW_OK (normally 1) if the operation succeed
+ *              AW_FAILED (normally -1) if not
  * Note : 
- * 	if the tree is empty or the last node was no more
- * 	children, then the function will failed.
- * 	
- * 	Calls to AwNode_nextChild and AwNode_resetChildren
- * 	in the last node WILL change the behavior of this
- * 	function. Example, if you call AwNode_resetChildren
- * 	in the last node just before to call this function,
- * 	the new last node will be the first node child.
+ *      if the tree is empty or the last node was no more
+ *      children, then the function will failed.
+ *      
+ *      Calls to AwNode_nextChild and AwNode_resetChildren
+ *      in the last node WILL change the behavior of this
+ *      function. Example, if you call AwNode_resetChildren
+ *      in the last node just before to call this function,
+ *      the new last node will be the first node child.
  *
- * 	If this function failed, the value of last remains
- * 	unchanged.
+ *      If this function failed, the value of last remains
+ *      unchanged.
  * --------------------------------------------------------
  */
-extern int AwTree_down (AwTree *tree) {
+extern int AwTree_down (AwTree *tree) 
+{
     AwNode *node=NULL;
-    if (tree!=NULL) {
+    if (tree!=NULL) 
+     {
         node = AwNode_nextChild(tree->last);
-        if (node!=NULL) {
+        if (node!=NULL) 
+         {
             tree->last = node;
             tree->depth++;
             return AW_OK;
-        }
-    }
+         }
+     }
     return AW_FAILED;
 }
 
@@ -297,13 +321,14 @@ extern int AwTree_down (AwTree *tree) {
  * this function returns the last node depth in the tree. 
  * 
  * Parameters :
- * 	AwTree * tree : the tree 
+ *      AwTree * tree : the tree 
  * Return :
- * 	int : last node depth value
- * 		AW_FAILED (normally -1) in case of problems 
+ *      int : last node depth value
+ *              AW_FAILED (normally -1) in case of problems 
  * --------------------------------------------------------
  */
-extern int AwTree_getDepth (AwTree *tree) {
+extern int AwTree_getDepth (AwTree *tree) 
+{
     if (tree!=NULL)
         return tree->depth;
     return AW_FAILED;
@@ -314,13 +339,14 @@ extern int AwTree_getDepth (AwTree *tree) {
  * this function returns the max depth in the tree. 
  * 
  * Parameters :
- * 	AwTree * tree : the tree 
+ *      AwTree * tree : the tree 
  * Return :
- * 	int : max depth value
- * 		AW_FAILED (normally -1) in case of problems 
+ *      int : max depth value
+ *              AW_FAILED (normally -1) in case of problems 
  * --------------------------------------------------------
  */
-extern int AwTree_getMaxDepth (AwTree *tree) {
+extern int AwTree_getMaxDepth (AwTree *tree) 
+{
     if (tree!=NULL)
         return tree->maxdepth;
     return AW_FAILED;
@@ -336,10 +362,12 @@ extern int AwTree_getMaxDepth (AwTree *tree) {
  *            AwString pattern - pattern to be found
  * --------------------------------------------------------        
  */ 
-extern AwNode * AwTree_search (AwNode *inode, AwString pattern) {
+extern AwNode * AwTree_search (AwNode *inode, AwString pattern) 
+{
     AwNode * found = NULL;
 
-    if (inode && pattern) {
+    if (inode && pattern) 
+     {
         /* is inode the right node? */
         AwString info = AwNode_getInfo(inode);   
         if (AwString_str (AwNode_getInfo(inode),pattern)==AWSTRING_OK) 
@@ -347,17 +375,19 @@ extern AwNode * AwTree_search (AwNode *inode, AwString pattern) {
         AwString_delete (info);
         
         /* search inode's children */
-        if (found==NULL) {
+        if (found==NULL) 
+         {
             AwNode *child;
             AwNode_resetChildren (inode);
             child = AwNode_nextChild(inode);
-            while (child!=NULL && found==NULL) {
+            while (child!=NULL && found==NULL) 
+             {
                 found = AwTree_search (child,pattern);
                 child = AwNode_nextChild(inode);
-            }
-	    AwNode_resetChildren (inode);
-        }
-    }
+             }
+            AwNode_resetChildren (inode);
+         }
+     }
     
     return found;
 }
@@ -375,7 +405,8 @@ extern AwNode * AwTree_search (AwNode *inode, AwString pattern) {
  * 
  * --------------------------------------------------------
  */
-extern void AwTree_saveTree (FILE *out, AwNode *n) {
+extern void AwTree_saveTree (FILE *out, AwNode *n) 
+{
     AwNode *child;
     AwPair *atr;
     int i;
@@ -391,29 +422,32 @@ extern void AwTree_saveTree (FILE *out, AwNode *n) {
     /* node's attributes */
     AwNode_resetAttributes(n);
     atr = AwNode_nextAttribute(n);
-    while (atr!=NULL) {
+    while (atr!=NULL) 
+     {
         for (i = 0; i < AwNode_getLevel(n); i++)  
             fprintf (out,"\t");
         fprintf (out,"%s=\'%s\'\n",AwPair_getName(atr),AwPair_getValue(atr));
         atr = AwNode_nextAttribute(n);
-    }
+     }
     
     
     /* node's children */
     fflush (out);
     AwNode_resetChildren (n);
     child = AwNode_nextChild(n);
-    while (child!=NULL) {
+    while (child!=NULL) 
+     {
         AwTree_saveTree(out,child);
         child = AwNode_nextChild(n);
-    }
+     }
 
     /* closing node's element */
-    if (AwNode_howManyChildren(n)>0) {
+    if (AwNode_howManyChildren(n)>0) 
+     {
         for (i = 0; i < AwNode_getLevel(n); i++)  
             fprintf (out,"\t");
         fprintf (out,"- %s\n",AwNode_getInfo(n));
-    }
+     }
         
 }
 

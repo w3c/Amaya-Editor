@@ -13,7 +13,11 @@
  ** $Author$
  ** $Revision$
  ** $Log$
- ** Revision 1.1  2002-05-31 10:48:47  kirschpi
+ ** Revision 1.2  2002-06-12 10:30:06  kirschpi
+ ** - adjusts in code format
+ ** Manuele
+ **
+ ** Revision 1.1  2002/05/31 10:48:47  kirschpi
  ** Added a new module for WebDAV purposes _ davlib.
  ** Some changes have been done to add this module in the following files:
  ** amaya/query.c, amaya/init.c, amaya/answer.c, amaya/libwww.h, amaya/amayamsg.h,
@@ -46,25 +50,28 @@
  * size indicated by the parameters.
  *
  * Parameters :
- * 	int namesize : name's size
- * 	int valuesize : value's size
+ *      int namesize : name's size
+ *      int valuesize : value's size
  * Return :
- * 	AwPair : the created pair
- * 		 (NULL if an error is produced)
+ *      AwPair : the created pair
+ *               (NULL if an error is produced)
  * --------------------------------------------------------
  */
-extern AwPair * AwPair_new (int namesize, int valuesize) {
+extern AwPair * AwPair_new (int namesize, int valuesize) 
+{
     AwPair * pair = NULL;
     
     pair = (AwPair *) AW_CALLOC (1,sizeof(AwPair));
-    if (pair!=NULL) {
+    if (pair!=NULL) 
+     {
         pair->name = AwString_new (namesize);
         pair->value = AwString_new (valuesize);
-	if (pair->name == NULL || pair->value == NULL) {
+        if (pair->name == NULL || pair->value == NULL) 
+         {
             AW_FREE (pair);
-	    pair=NULL;
-	}
-    }
+            pair=NULL;
+         }
+     }
     return pair;
 }
 
@@ -73,22 +80,24 @@ extern AwPair * AwPair_new (int namesize, int valuesize) {
  * this function deletes a pair name/value.
  *
  * Parameter : 
- * 	AwPair pair : pair to be removed
+ *      AwPair pair : pair to be removed
  * Return :
- * 	int : AW_OK (normally 1) if the operation succeed
- * 	      AW_FAILED (normally -1) if not
+ *      int : AW_OK (normally 1) if the operation succeed
+ *            AW_FAILED (normally -1) if not
  * Note :
- * 	this function also deletes the name and value 
- * 	strings used in this pair.
+ *      this function also deletes the name and value 
+ *      strings used in this pair.
  * --------------------------------------------------------
  */
-extern int AwPair_delete (AwPair *pair) {
+extern int AwPair_delete (AwPair *pair) 
+{
     int ret=AW_OK;
-    if (pair!=NULL) {
+    if (pair!=NULL) 
+     {
         ret *= AwString_delete (pair->name);
-	ret *= AwString_delete (pair->value);
+        ret *= AwString_delete (pair->value);
         AW_FREE(pair);
-    } 
+     } 
     else ret = -1;
     return ret;
 }
@@ -98,27 +107,30 @@ extern int AwPair_delete (AwPair *pair) {
  * indicated by the parameter "pair".
  *
  * Parameter : 
- * 	AwPair pair : pair to be removed
- * 	AwString name : pair's name
+ *      AwPair pair : pair to be removed
+ *      AwString name : pair's name
  * Return :
- * 	int : AW_OK (normally 1) if the operation succeed
- * 	      AW_FAILED (normally -1) if not
+ *      int : AW_OK (normally 1) if the operation succeed
+ *            AW_FAILED (normally -1) if not
  * --------------------------------------------------------
  */
-extern int AwPair_setName (AwPair *pair, AwString name) {
+extern int AwPair_setName (AwPair *pair, AwString name) 
+{
     AwString str;
     
-    if (pair!=NULL && name != NULL) {
-        if ( AwString_len(pair->name) < AwString_len (name)) {
+    if (pair!=NULL && name != NULL) 
+     {
+        if ( AwString_len(pair->name) < AwString_len (name)) 
+         {
             str = AwString_new (AwString_len(name));
-	    if (str == NULL)
+            if (str == NULL)
                 return AW_FAILED;
-	    AwString_delete (pair->name);
-	    pair->name = str;
-	} 
-	if (AwString_copy (pair->name,name) > 0)
-		return AW_OK;
-    }
+            AwString_delete (pair->name);
+            pair->name = str;
+         } 
+        if (AwString_copy (pair->name,name) > 0)
+                return AW_OK;
+     }
     return AW_FAILED;
 }
 
@@ -128,19 +140,21 @@ extern int AwPair_setName (AwPair *pair, AwString name) {
  * indicated by the parameter "pair".
  *
  * Parameter : 
- * 	AwPair pair : pair to be removed
+ *      AwPair pair : pair to be removed
  * Return :
- * 	AwString : name attribute for the indicated pair
- * 		   (NULL if some error is produced)
+ *      AwString : name attribute for the indicated pair
+ *                 (NULL if some error is produced)
  * Note :
- * 	It returns a reference to the name - Pay Attention!
+ *      It returns a reference to the name - Pay Attention!
  * --------------------------------------------------------
  */
-extern AwString AwPair_getName (AwPair *pair) {
+extern AwString AwPair_getName (AwPair *pair) 
+{
     AwString str=NULL;    
-    if (pair!=NULL) {
+    if (pair!=NULL) 
+     {
         str = pair->name;
-    }
+     }
     return str;
 }
 
@@ -150,29 +164,33 @@ extern AwString AwPair_getName (AwPair *pair) {
  * indicated by the parameter "pair".
  *
  * Parameter : 
- * 	AwPair pair : pair to be removed
- * 	AwString value : pair's value
+ *      AwPair pair : pair to be removed
+ *      AwString value : pair's value
  * Return :
- * 	int : AW_OK (normally 1) if the operation succeed
- * 	      AW_FAILED (normally -1) if not
+ *      int : AW_OK (normally 1) if the operation succeed
+ *            AW_FAILED (normally -1) if not
  * --------------------------------------------------------
  */
-extern int AwPair_setValue (AwPair *pair, AwString value) {
+extern int AwPair_setValue (AwPair *pair, AwString value) 
+{
     AwString str;
     
-    if (pair!=NULL && value != NULL) {
-        if ( AwString_len(pair->value) < AwString_len (value)) {
+    if (pair!=NULL && value != NULL) 
+     {
+        if ( AwString_len(pair->value) < AwString_len (value)) 
+         {
             str = AwString_new (AwString_len(value));
-	    if (str == NULL)
+            if (str == NULL)
                 return AW_FAILED;
-	    AwString_delete (pair->value);
-	    pair->value = str;
-	} 
-	if (AwString_copy (pair->value,value) > 0)
-		return AW_OK;
-    }
+            AwString_delete (pair->value);
+            pair->value = str;
+         } 
+        if (AwString_copy (pair->value,value) > 0)
+                return AW_OK;
+     }
     return AW_FAILED;
 }
+
 
 
 /* --------------------------------------------------------
@@ -180,19 +198,21 @@ extern int AwPair_setValue (AwPair *pair, AwString value) {
  * indicated by the parameter "pair".
  *
  * Parameter : 
- * 	AwPair pair : pair to be removed
+ *      AwPair pair : pair to be removed
  * Return :
- * 	AwString : the value attribute for the indicated pair
- * 		   (NULL if some error is produced)
+ *      AwString : the value attribute for the indicated pair
+ *                 (NULL if some error is produced)
  * Note :
- * 	It returns a reference to the value - Pay Attention!
+ *      It returns a reference to the value - Pay Attention!
  * --------------------------------------------------------
  */
-extern AwString AwPair_getValue (AwPair *pair) {
+extern AwString AwPair_getValue (AwPair *pair) 
+{
     AwString str=NULL;    
-    if (pair!=NULL) {
+    if (pair!=NULL) 
+     {
         str = pair->value;
-    }
+     }
     return str;
 }
 
