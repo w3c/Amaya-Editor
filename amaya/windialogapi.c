@@ -525,13 +525,12 @@ WPARAM wParam;
 LPARAM lParam;
 #endif /* __STDC__ */
 {
-  switch (msg)
-    {
     case WM_INITDIALOG:
       SetWindowText (hwnDlg, TtaGetMessage (AMAYA, AM_ATTRIBUTE));
       SetWindowText (GetDlgItem (hwnDlg, IDC_URLMESSAGE), TtaGetMessage (AMAYA, AM_LOCATION));
       SetWindowText (GetDlgItem (hwnDlg, ID_CONFIRM), TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
       SetWindowText (GetDlgItem (hwnDlg, IDC_BROWSE), TEXT("Browse"));
+      SetWindowText (GetDlgItem (hwnDlg, IDC_CLEAR), TEXT("Clear"));
       SetWindowText (GetDlgItem (hwnDlg, IDCANCEL), TtaGetMessage (LIB, TMSG_CANCEL));
 
       EditURLWnd = GetDlgItem (hwnDlg, IDC_GETURL);
@@ -556,7 +555,6 @@ LPARAM lParam;
 	ThotCallback (BaseDialog + AttrHREFForm, INTEGER_DATA, (CHAR_T*)1);
 	EndDialog (hwnDlg, ID_CONFIRM);
 	break;
-
       case IDC_BROWSE:
 	OpenFileName.lStructSize       = sizeof (OPENFILENAME);
 	OpenFileName.hwndOwner         = hwnDlg;
@@ -585,6 +583,12 @@ LPARAM lParam;
 	    EndDialog (hwnDlg, ID_CONFIRM);
 	    ThotCallback (BaseDialog + AttrHREFForm, INTEGER_DATA, (CHAR_T*) 1);
 	  }
+	break;
+      
+      case IDC_CLEAR:
+	ThotCallback (BaseDialog + AttrHREFForm, INTEGER_DATA, (CHAR_T*) 3);
+	tmpDocName[0] = 0;
+	SetDlgItemText (hwnDlg, IDC_GETURL, TEXT(""));
 	break;
       
       case IDCANCEL:

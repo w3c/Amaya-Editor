@@ -578,9 +578,11 @@ ThotBool	    withUndo;
 	ustrcpy (&s[i], TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
 	i += ustrlen (&s[i]) + 1;
 	ustrcpy (&s[i], TtaGetMessage (AMAYA, AM_BROWSE));
+	i += ustrlen (&s[i]) + 1;
+	ustrcpy (&s[i], TtaGetMessage (AMAYA, AM_CLEAR));
 	
 	TtaNewSheet (BaseDialog + AttrHREFForm, TtaGetViewFrame (doc, 1),
-		     TtaGetMessage (AMAYA, AM_ATTRIBUTE), 2, s,
+		     TtaGetMessage (AMAYA, AM_ATTRIBUTE), 3, s,
 		     TRUE, 2, 'L', D_CANCEL);
 	TtaNewTextForm (BaseDialog + AttrHREFText, BaseDialog + AttrHREFForm,
 			TtaGetMessage (AMAYA, AM_LOCATION), 50, 1, TRUE);

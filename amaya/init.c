@@ -4405,6 +4405,14 @@ CHAR_T*             data;
            BrowserForm (AttrHREFdocument, 1, &AttrHREFvalue[0]);
 #endif /* !_WINDOWS */
 	 }
+       else if (val == 3)
+	 {
+	   /* Clear button */
+	   AttrHREFvalue[0] = WC_EOS;
+#ifndef _WINDOWS
+	   TtaSetTextForm (BaseDialog + AttrHREFText, AttrHREFvalue);
+#endif /* !_WINDOWS */
+	 }
        else 
 	 /* Cancel button */
 	 if (IsNewAnchor)
