@@ -37,13 +37,14 @@ extern int          TtaUseOwnXLookupString;
 #define Graphic_keyboard		3
 
 #ifdef __STDC__
-typedef void (* ExternalInitMainLoop)(void);
-typedef void (* ExternalMainLoop)(ThotAppContext app_ctxt);
-typedef void (* ExternalFetchEvent)(ThotAppContext app_ctxt, ThotEvent *ev);
-typedef boolean (* ExternalFetchAvailableEvent)(ThotAppContext app_ctxt, ThotEvent *ev);
+typedef void (* ExternalInitMainLoop)(ThotAppContext app_ctxt);
+typedef void (* ExternalMainLoop)(void);
+typedef int (* ExternalFetchEvent)(ThotEvent *ev);
+typedef boolean (* ExternalFetchAvailableEvent)(ThotEvent *ev);
 #else
+typedef void (* ExternalInitMainLoop)();
 typedef void (* ExternalMainLoop)();
-typedef void (* ExternalFetchEvent)();
+typedef int (* ExternalFetchEvent)();
 typedef boolean (* ExternalFetchAvailableEvent)();
 #endif
 

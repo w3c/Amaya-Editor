@@ -261,12 +261,27 @@ ThotEvent *ev;
     if ((InJavaSelect) &&
         ((timeout == NULL) || (timeout->tv_usec != 0) ||
 	 (timeout->tv_sec != 0))){
-        char *p = NULL;
+        /* char *p = NULL; */
         fprintf(stderr, "JavaSelect reentrancy !\n");
 	/* call debugger or dump core
 	*p = 0; ! */
     }
     InJavaSelect = 1;
+
+    if ((DoJavaSelectPoll) && (BreakJavaSelectPoll) &&
+        (n >= x_window_socket) && (FD_ISSET(x_window_socket, &readfds)))  {
+	/*
+	 * We must interrupt the poll on the X-Window socket.
+	 */
+#ifdef DEBUG_SELECT
+	fprintf(stderr,"JavaSelect : Poll break !\n");
+#endif
+	FD_ZERO(&readfds);
+	FD_SET(x_window_socket, &readfds);
+	FD_ZERO(&writefds);
+	FD_ZERO(&exceptfds);
+	return(1);
+    }
 
 #ifdef DEBUG_SELECT
     fprintf(stderr,"<");
@@ -379,13 +394,6 @@ restart_select:
 #ifdef DEBUG_SELECT
         fprintf(stderr,">");
 #endif
-	if ((DoJavaSelectPoll) && (BreakJavaSelectPoll))  {
-#ifdef DEBUG_SELECT
-            fprintf(stderr,"JavaSelect : Poll break !\n");
-#endif
-	    errno = EBADF;
-            return(-1);
-        }
         return(0);
     }
 
@@ -394,18 +402,19 @@ restart_select:
      * decrement res accordingly.
      */
 
+    if (DoJavaSelectPoll) {
+#ifdef DEBUG_SELECT
+        fprintf(stderr,"JavaSelect : Register Poll break\n");
+#endif
+        BreakJavaSelectPoll++;
+    }
+
     for (fd = 0;(fd < nb) && (res > 0); fd++) {
         if (FD_ISSET(fd, &lextra_readfds) && FD_ISSET(fd, &full_readfds)) {
 #ifdef DEBUG_SELECT_CHANNELS
             fprintf(stderr,"reading on channel %d\n", fd);
 #endif
             JavaSelectCallback(fd, EVENT_READ);
-	    if (DoJavaSelectPoll) {
-#ifdef DEBUG_SELECT
-                fprintf(stderr,"JavaSelect : Register Poll break\n");
-#endif
-                BreakJavaSelectPoll++;
-            }
 	    res--;
         }
         if (FD_ISSET(fd, &lextra_writefds) && FD_ISSET(fd, &full_writefds)) {
@@ -413,24 +422,12 @@ restart_select:
             fprintf(stderr,"writing on channel %d\n", fd);
 #endif
             JavaSelectCallback(fd, EVENT_WRITE);
-	    if (DoJavaSelectPoll) {
-#ifdef DEBUG_SELECT
-                fprintf(stderr,"JavaSelect : Register Poll break\n");
-#endif
-                BreakJavaSelectPoll++;
-            }
 	    res--;
         }
         if (FD_ISSET(fd, &lextra_exceptfds) && FD_ISSET(fd, &full_exceptfds)) {
 #ifdef DEBUG_SELECT_CHANNELS
             fprintf(stderr,"exception on channel %d\n", fd);
 #endif
-	    if (DoJavaSelectPoll) {
-#ifdef DEBUG_SELECT
-                fprintf(stderr,"JavaSelect : Register Poll break\n");
-#endif
-                BreakJavaSelectPoll++;
-            }
 	    res--;
         }
     }
@@ -567,6 +564,14 @@ void JavaXWindowSocketRelease()
 #endif
 }
 
+/************************************************************************
+ *									*
+ *	Event Handling : Loops for events, fetching and handling	*
+ *									*
+ ************************************************************************/
+
+ThotAppContext CurrentAppContext = NULL;
+
 /*----------------------------------------------------------------------
   JavaHandleOneEvent
 
@@ -592,10 +597,9 @@ ThotEvent *ev;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-int                 JavaFetchEvent (ThotAppContext app_ctxt, ThotEvent *ev)
+int                 JavaFetchEvent (ThotEvent *ev)
 #else
-int                 JavaFetchEvent (app_ctxt, ev)
-ThotAppContext app_ctxt;
+int                 JavaFetchEvent (ev)
 ThotEvent *ev;
 #endif
 {
@@ -609,16 +613,16 @@ ThotEvent *ev;
   /*
    * Need to check whether something else has to be scheduled.
    */
-  status = XtAppPending (app_ctxt);
+  status = XtAppPending (CurrentAppContext);
   if (!status) {
      status = blockOnFile(x_window_socket, 0);
-     if (status < 0) {
+     if ((DoJavaSelectPoll) && (BreakJavaSelectPoll)) {
 	 JavaXWindowSocketRelease();
 	 JavaThotlibLock();
-         return(status);
+         return(-1);
      }
   }
-  XtAppNextEvent (app_ctxt, ev);
+  XtAppNextEvent (CurrentAppContext, ev);
 #endif /* _WINDOWS */
 
   JavaXWindowSocketRelease();
@@ -636,10 +640,9 @@ ThotEvent *ev;
   the queue in the ev argument and return TRUE, it returns FALSE otherwise.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             JavaFetchAvailableEvent (ThotAppContext app_ctxt, ThotEvent *ev)
+boolean             JavaFetchAvailableEvent (ThotEvent *ev)
 #else
-boolean             JavaFetchAvailableEvent (app_ctxt, ev)
-ThotAppContext app_ctxt;
+boolean             JavaFetchAvailableEvent (ev)
 ThotEvent *ev;
 #endif
 {
@@ -647,9 +650,9 @@ ThotEvent *ev;
 
 #ifdef _WINDOWS
 #else  /* !_WINDOWS */
-  status = XtAppPending (app_ctxt);
+  status = XtAppPending (CurrentAppContext);
   if (status) {
-     XtAppNextEvent (app_ctxt, ev);
+     XtAppNextEvent (CurrentAppContext, ev);
      return(TRUE);
   }
   return(FALSE);
@@ -710,14 +713,16 @@ void                InitJava ()
   interface, Java, etc...
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                InitJavaEventLoop (void)
+void                InitJavaEventLoop (ThotAppContext app_ctx)
 #else
-void                InitJavaEventLoop ()
+void                InitJavaEventLoop (app_ctx)
+ThotAppContext app_ctx;
 #endif
 {
     char *env_value;
     char  new_env[1024];
 
+    CurrentAppContext = app_ctx;
     if (JavaEventLoopInitialized) return;
 
     /*
@@ -772,10 +777,9 @@ void                InitJavaEventLoop ()
   return after any interraction on the extra file descriptors.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-int                 JavaPollLoop (ThotAppContext app_ctxt)
+int                 JavaPollLoop ()
 #else
-int                 JavaPollLoop (app_ctxt)
-ThotAppContext app_ctxt;
+int                 JavaPollLoop ()
 #endif
 {
 #ifndef _WINDOWS
@@ -790,7 +794,7 @@ ThotAppContext app_ctxt;
     * initialize the whole context if needed.
     */
    if (!JavaEventLoopInitialized) 
-      InitJavaEventLoop();
+      return(-1);
 
    /*
     * We want to jump off the loop if transfers did occurs
@@ -822,7 +826,7 @@ ThotAppContext app_ctxt;
 	    }
 	    continue;
 	}
-        while (JavaFetchEvent (app_ctxt, &ev) < 0) {
+        while (JavaFetchEvent (&ev) < 0) {
 	    DoJavaSelectPoll = 0;
 	    BreakJavaSelectPoll = 0;
 #ifdef DEBUG_SELECT
@@ -844,10 +848,9 @@ ThotAppContext app_ctxt;
 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                JavaEventLoop (ThotAppContext app_ctxt)
+void                JavaEventLoop ()
 #else
-void                JavaEventLoop (app_ctxt)
-ThotAppContext app_ctxt;
+void                JavaEventLoop ()
 #endif
 {
 #ifndef _WINDOWS
@@ -861,7 +864,7 @@ ThotAppContext app_ctxt;
     * initialize the whole context if needed.
     */
    if (!JavaEventLoopInitialized) 
-      InitJavaEventLoop();
+      return(-1);
 
    /*
     * We don't want to jump off the loop if transfers did occurs
@@ -882,7 +885,7 @@ ThotAppContext app_ctxt;
 	    JavaThotlibLock();
 	    continue;
 	}
-        while (JavaFetchEvent (app_ctxt, &ev) < 0) {
+        while (JavaFetchEvent (&ev) < 0) {
 	    DoJavaSelectPoll = 0;
 	    BreakJavaSelectPoll = 0;
 	}
@@ -897,15 +900,8 @@ ThotAppContext app_ctxt;
   ----------------------------------------------------------------------*/
 void                JavaLoadResources ()
 {
-   char *enable_java;
-
-   enable_java = TtaGetEnvString("ENABLE_JAVA");
-   if ((enable_java != NULL) &&
-       ((!strcasecmp(enable_java,"yes")) ||
-        (!strcasecmp(enable_java,"true")) ||
-        (!strcasecmp(enable_java,"1"))))
-      TtaSetMainLoop (InitJavaEventLoop, JavaEventLoop,
-		      JavaFetchEvent, JavaFetchAvailableEvent);
+   TtaSetMainLoop (InitJavaEventLoop, JavaEventLoop,
+		   JavaFetchEvent, JavaFetchAvailableEvent);
 }
 
 /*

@@ -9,7 +9,7 @@
 #include "thotlib_Extra.h"
 
 /*
- * Java to C function Ttaxxx stub.
+ * Java to C function TtaRemoveSchemaExtension stub.
  */
 void
 thotlib_Extra_TtaRemoveSchemaExtension(struct Hthotlib_Extra* none, 
@@ -24,7 +24,7 @@ thotlib_Extra_TtaRemoveSchemaExtension(struct Hthotlib_Extra* none,
 }
 
 /*
- * Java to C function Ttaxxx stub.
+ * The C Callback interface.
  */
 void
 thotlib_Extra_Java2CCallback(struct Hthotlib_Extra* none, jlong callback,
@@ -35,6 +35,15 @@ thotlib_Extra_Java2CCallback(struct Hthotlib_Extra* none, jlong callback,
     JavaThotlibLock();
     callback_func((void *) arg);
     JavaThotlibRelease();
+}
+
+/*
+ * Call the poll loop.
+ */
+void
+thotlib_Extra_JavaPollLoop(struct Hthotlib_Extra* none)
+{
+    JavaPollLoop(NULL);
 }
 
 /*
@@ -54,6 +63,8 @@ void register_thotlib_Extra_stubs(void)
 	                thotlib_Extra_TtaRemoveSchemaExtension);
 	addNativeMethod("thotlib_Extra_Java2CCallback",
 	                thotlib_Extra_Java2CCallback);
+	addNativeMethod("thotlib_Extra_JavaPollLoop",
+	                thotlib_Extra_JavaPollLoop);
 /*
 	addNativeMethod("thotlib_Extra_Ttaxxx", thotlib_Extra_Ttaxxx);
  */

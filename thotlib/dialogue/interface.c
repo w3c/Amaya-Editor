@@ -1071,7 +1071,7 @@ ThotEvent             *ev;
 #endif /* __STDC__ */
 {
     if (NewFetchEvent) {
-        NewFetchEvent(app_cont, ev);
+        NewFetchEvent(ev);
 	return;
     }
 #ifndef _WINDOWS
@@ -1098,7 +1098,7 @@ ThotEvent             *ev;
 #endif /* ! _WINDOWS */
 
    if (NewFetchAvailableEvent)
-      return(NewFetchAvailableEvent(app_cont, ev));
+      return(NewFetchAvailableEvent(ev));
 
 #ifndef _WINDOWS
    status = XtAppPending (app_cont);
@@ -1256,7 +1256,7 @@ void                TtaMainLoop ()
    XtInputMask         status;
 #endif /* _WINDOWS */
 
-   if (NewInitMainLoop) NewInitMainLoop();
+   if (NewInitMainLoop) NewInitMainLoop(app_cont);
 
 #ifndef _WINDOWS
    TtaInstallMultiKey ();
@@ -1275,7 +1275,7 @@ void                TtaMainLoop ()
    while (1)
      {
         if (NewMainLoop != NULL) {
-	    NewMainLoop(app_cont);
+	    NewMainLoop();
 	    continue;
 	}
 #ifndef _WINDOWS
