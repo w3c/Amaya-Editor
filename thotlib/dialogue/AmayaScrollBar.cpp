@@ -143,13 +143,13 @@ void AmayaScrollBar::OnLineUp( wxScrollEvent& event )
 {
   wxLogDebug( _T("AmayaScrollBar::OnLineUp") );
 
+  Document doc; 
+  View     view;
+  FrameToView( m_ParentFrameID, &doc, &view );
   if (event.GetOrientation() == wxVERTICAL)
-    {
-      Document doc; 
-      View     view;
-      FrameToView( m_ParentFrameID, &doc, &view );
-      TtcLineUp (doc, view); 
-    }
+    TtcLineUp (doc, view); 
+  else
+    TtcScrollLeft(doc, view);
 
   event.Skip();
 }
@@ -165,13 +165,13 @@ void AmayaScrollBar::OnLineDown( wxScrollEvent& event )
 {
   wxLogDebug( _T("AmayaScrollBar::OnLineDown") );
 
+  Document doc; 
+  View     view;
+  FrameToView( m_ParentFrameID, &doc, &view );
   if (event.GetOrientation() == wxVERTICAL)
-    {
-      Document doc; 
-      View     view;
-      FrameToView( m_ParentFrameID, &doc, &view );
-      TtcLineDown (doc, view); 
-    }
+    TtcLineDown (doc, view); 
+  else
+    TtcScrollRight(doc, view);
 
   event.Skip();
 }
