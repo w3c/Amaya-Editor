@@ -8,6 +8,8 @@
 
 #include <stdio.h>
 #include <string.h>
+#include "thotlib_Interface_stubs.h"
+#include "thotlib_Document_stubs.h"
 #include "StubPreamble.h"
 #include "jtypes.h"
 #include "native.h"
@@ -94,14 +96,12 @@ char *app_name;
                    "([Ljava/lang/String;)V", args);
 }
 
-void thotlib_Document_TtaMainLoop()
-{
-   fprintf(stderr,"thotlib_Document_TtaMainLoop called\n");
-   TtaMainLoop();
-}
-
+/*
+ * Register the thotlib stuff.
+ */
 static void register_stubs(void)
 {
-   addExternalNativeFunc("thotlib_Document_TtaMainLoop", thotlib_Document_TtaMainLoop);
+   register_thotlib_Document_stubs();
+   register_thotlib_Interface_stubs();
 }
 
