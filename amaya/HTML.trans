@@ -38,7 +38,7 @@
 ! identified in the pattern.
 ! Each rule end with a symbol ";"
 !
-| - It could be performed by an action rule. In this case the rule
+! - It could be performed by an action rule. In this case the rule
 !   starts with a "$" followed by the menu action to be called.
 !
 ! - It could be a list of transformation items:

@@ -75,7 +75,7 @@ static ThotBool      isClosed;
 /* and the matching descriptors */
 static strMatch     *menuTrans[20];
 /* did the transformation succed ? */
-static ThotBool      resultTrans;
+static ThotBool      ResultTrans;
 
 /* pointer to the selected elements */
 static int           ffc, flc, lfc, llc;
@@ -1726,9 +1726,11 @@ static void ApplyTransformation (strMatch *sm, Document doc)
       stack->Nbc = 0;
 
       oldDisplayMode = TtaGetDisplayMode (doc);
-      if (oldDisplayMode == DisplayImmediately)
-	/* change the display mode */
-	TtaSetDisplayMode (doc, DeferredDisplay);
+      if (oldDisplayMode != DisplayImmediately)
+	/* force a display mode */
+	TtaSetDisplayMode (doc, DisplayImmediately);
+      /* change the display mode */
+      TtaSetDisplayMode (doc, DeferredDisplay);
       /* remove the selection */
       TtaSelectElement (doc, NULL);
       /* initialize the transformation stack */
@@ -1785,7 +1787,8 @@ static void ApplyTransformation (strMatch *sm, Document doc)
       TtaFreeMemory (stack);
       if (res)
 	{
-	  /* transformation was succesful */ 
+	  /* transformation was succesful */
+	  ResultTrans = TRUE;
 	  sch = TtaGetElementType (myFirstSelect).ElSSchema;
 	  if (strcmp (TtaGetSSchemaName (sch), "MathML") == 0)
 	    {
@@ -1881,7 +1884,7 @@ static void ApplyTransformation (strMatch *sm, Document doc)
 	    TtaExtendSelection (doc, myLastSelect, 0);
 	}
     }
-  TtaSetDisplayMode (doc, oldDisplayMode);
+  TtaSetDisplayMode (doc, DisplayImmediately);
 }
 
 /*----------------------------------------------------------------------
@@ -2361,19 +2364,19 @@ void InitTransform ()
   ----------------------------------------------------------------------*/
 void TransformType (Document doc, View view)
 {
-  Element             elemSelect;
+  Element              elemSelect;
   ElementType	       elType;
-  int                 i, j, k;
+  int                  i, j, k;
   char                *menuBuf, *tag, *nameSet;
   strMatch            *sm;
-  StructureTree       node;
+  StructureTree        node;
   ThotBool	       ok;
   strTransSet*	       transSets [4] = {NULL,NULL,NULL,NULL};
-  SSchema	      transSchema;
+  SSchema	       transSchema;
   
   strMatchEnv.SourceTree = NULL;
   strMatchEnv.ListSubTrees = NULL;
-  resultTrans = FALSE;
+  ResultTrans = FALSE;
   TransDoc = doc;
   nameSet = TtaGetMemory (NAME_LENGTH);
   strcpy (nameSet, "");
@@ -2566,7 +2569,7 @@ ThotBool TransformIntoType (ElementType resultType, Document doc)
 
   strMatchEnv.SourceTree = NULL;
   strMatchEnv.ListSubTrees = NULL;
-  resultTrans = FALSE;
+  ResultTrans = FALSE;
   TransDoc = doc;
   nameSet = TtaGetMemory (NAME_LENGTH);
   strcpy (nameSet, "");
@@ -2729,5 +2732,5 @@ ThotBool TransformIntoType (ElementType resultType, Document doc)
 	}
     }
   TtaFreeMemory (nameSet);  
-  return resultTrans;
+  return ResultTrans;
 }

@@ -2075,7 +2075,7 @@ static void TRANSparse (BinFile infile)
 				}
 			      else
 #ifdef AMAYA_DEBUG
-				fprintf (stderr, "skiParseding transformation\n");
+				fprintf (stderr, "skip transformation\n");
 #endif
 			      if (ParsedChoice != NULL)
 				FreeChoice (ParsedChoice);
