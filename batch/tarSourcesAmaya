@@ -26,6 +26,7 @@ pluginlib/Makefile.in \
 tools/dns_daemon/Makefile.in \
 tools/javastub/Makefile.in \
 amaya/Makefile.libwww \
+amaya/Makefile.math \
 pluginlib/Makefile.plugin \
 javalib/Makefile.java \
 amaya/README.amaya \
