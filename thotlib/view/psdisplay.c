@@ -1262,13 +1262,13 @@ int                 pattern;
    if (y < 0)   
       return;
    fout = (FILE *) FrRef[frame];
+   if (fg < 0)
+     thick = 0;
    /* fill the included polygon */
    DrawPolygon (frame, 0, style, x, y, buffer, nb, RO, active, fg, bg, pattern);
    y += FrameTable[frame].FrTopMargin;
    xp = yp = 0;
    prevx = prevy = 0;
-   if (fg < 0)
-     thick = 0;
    lg = HL + thick;
 
    /* Do we need to change the current color ? */

@@ -1981,6 +1981,8 @@ ThotBool            link;
 	  TtaReadShort (pivFile, &val);
 	else
 	  {
+	    if (pDoc->DocPivotVersion >= 6)
+	      TtaReadShort (pivFile, &val);
 	    TtaReadShort (pivFile, &red);
 	    TtaReadShort (pivFile, &green);
 	    TtaReadShort (pivFile, &blue);
@@ -2185,6 +2187,8 @@ ThotBool            link;
 	      val = newColor[val];
 	    if (pDoc->DocPivotVersion < 5)
 	      pPRule->PrIntValue = val;
+	    else if (pDoc->DocPivotVersion >= 6 && val == 1)
+	      pPRule->PrIntValue = -2;
 	    else
 	      pPRule->PrIntValue = TtaGetThotColor ((unsigned short) red,
 						    (unsigned short) green,

@@ -869,6 +869,12 @@ PtrPRule      pPRule;
         case PtBorderRightColor:
         case PtBorderBottomColor:
         case PtBorderLeftColor:
+	  if (pPRule->PrIntValue >= 0)
+	    /* positive value */
+	    PutShort (pivFile, 0);
+	  else
+	    /* negative value */
+	    PutShort (pivFile, 1);
 	  TtaGiveThotRGB (pPRule->PrIntValue, &red, &green, &blue);
 	  PutShort (pivFile, red);
 	  PutShort (pivFile, green);
