@@ -303,10 +303,10 @@ static void Build_path_to_help_dir(char* buffer)
   Init_tmapping_animations_struct
   ----------------------------------------------------------------------*/
 #ifdef _SVG
-static void Init_tmapping_animations_struct(tmapping_animations m) 
+static void Init_tmapping_animations_struct(tmapping_animations * m) 
 {
-  m.animation_tag = NULL;
-  m.period = NULL;
+  m->animation_tag = NULL;
+  m->period = NULL;
 }
 #endif /* _SVG */
 
@@ -315,13 +315,13 @@ static void Init_tmapping_animations_struct(tmapping_animations m)
   Init_tmapping_animated_struct
   ----------------------------------------------------------------------*/
 #ifdef _SVG
-static void Init_tmapping_animated_struct(tmapping_animated m) 
+static void Init_tmapping_animated_struct(tmapping_animated * m) 
 {
-  m.animated_elem = NULL;
-  m.title_group = NULL;
-  m.exp_group = NULL;
-  m.col_group = NULL;
-  m.nb_periods = 0;
+  m->animated_elem = NULL;
+  m->title_group = NULL;
+  m->exp_group = NULL;
+  m->col_group = NULL;
+  m->nb_periods = 0;
 }
 #endif /* _SVG */
 
@@ -335,51 +335,21 @@ static void Init_timeline_struct(int k)
 {
   int i,j;
 
-  dt[k].timelinedoc = 0;
-  dt[k].helpdoc = 0;
+  // reset all the structure fields
+  memset(&dt[k], 0, sizeof(TTimeline));
+
+  // then only set the none zero fields
+  dt[k].vertical_pos = ct_top_bar;
+
+  // SG : do not loop on this because the fields are allready set to zero
+  /*
   for (j=0; j<MAX_ANIMATED_ELTS; j++) 
     {
-      Init_tmapping_animated_struct (dt[k].mapping_animated[j]);
+      Init_tmapping_animated_struct (&dt[k].mapping_animated[j]);
       for (i=0; i<MAX_ANIMATIONS; i++)
-	Init_tmapping_animations_struct (dt[k].mapping_animated[j].mapping_animations[i]);
+	Init_tmapping_animations_struct (&dt[k].mapping_animated[j].mapping_animations[i]);
     }
-  dt[k].nb_relations_animated = 0;
-	
-  dt[k].current_el = NULL;
-  dt[k].timing_text = NULL;
-  dt[k].vertical_pos = ct_top_bar;
-	
-  dt[k].slider = NULL;
-
-  dt[k].line1 = NULL;
-  dt[k].line2 = NULL;
-  dt[k].line3 = NULL;
-  dt[k].line4 = NULL;
-  dt[k].line5 = NULL;
-
-  dt[k].image_color = NULL;
-  dt[k].image_interp = NULL;
-  dt[k].image_motion = NULL;
-
-  dt[k].motion_animation_creation_enabled = FALSE;
-  dt[k].color_animation_creation_enabled = FALSE;
-
-  dt[k].definition_of_motion_period = FALSE;
-  dt[k].definition_of_color_period = FALSE;
-
-  dt[k].current_edited_mapping = NULL;
-  dt[k].cross = NULL;
-  dt[k].arrow = NULL;
-  dt[k].can_delete_status_text = FALSE;
-
-  dt[k].bgcolor_start = 0;
-  dt[k].fgcolor_start = 0;
-  dt[k].anim_start = 0;
-
-  dt[k].previous_x = 0;
-  dt[k].previous_y = 0;
-  dt[k].x = 0;
-  dt[k].y = 0;
+  */
 }
 #endif /* _SVG */
 
