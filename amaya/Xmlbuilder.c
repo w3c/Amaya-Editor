@@ -113,14 +113,16 @@ void XmlElementComplete (Element el, Document doc, int *error)
 {
   Element lastChild;
 
-  /* get the last child of the closed element */
-  lastChild = TtaGetLastChild (el);
-
-  if (lastChild == NULL)
-    /* This is an empty element */
-    /* Add a specific presentation rule */
-    TtaAddEmptyBox (el, doc);
-
+  if (el && doc)
+    {
+      /* get the last child of the closed element */
+      lastChild = TtaGetLastChild (el);
+      
+      if (lastChild == NULL)
+	/* This is an empty element */
+	/* Add a specific presentation rule */
+	TtaAddEmptyBox (el, doc);
+    }
   return;
 }
 
