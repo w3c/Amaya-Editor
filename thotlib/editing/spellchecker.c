@@ -227,20 +227,19 @@ int WordInDictionary (unsigned char *word, PtrDict dict)
    if (dict == NULL)
      /* dictionnaire n'existe pas */
      return (-2);
-   else if (dict->DictNbWords < 0)
+   else if (dict->DictNbWords <= 0)
      /* dictionnaire vide */
      return (-1);
 
    size = strlen ((char*)word);
    /* premier mot */
    inf = dict->DictLengths[size];
-   if (size >= MAX_WORD_LEN || (dict->DictLengths[size + 1] - 1 > dict->DictNbWords))
+   if (size >= MAX_WORD_LEN ||
+       (dict->DictLengths[size + 1] - 1 > dict->DictNbWords))
      sup = dict->DictNbWords - 1;
    else
-     {
-       /* dernier mot */
-       sup = dict->DictLengths[size + 1] - 1;
-     }
+     /* dernier mot */
+     sup = dict->DictLengths[size + 1] - 1;
 
    while (sup >= inf)
      /* Recherche dichotomique */
@@ -356,7 +355,8 @@ static int Insert (int x, int pWord, PtrDict dict)
   ----------------------------------------------------------------------*/
 static int InsertWord (PtrDict dict, unsigned char *word)
 {
-   int                 size, place, i, k;
+   int          size, place, i, k;
+   int          first, last, index;
 
    place = WordInDictionary (word, dict);
    if (place == -2)
@@ -366,28 +366,26 @@ static int InsertWord (PtrDict dict, unsigned char *word)
    if (place == -1)		/* dictionnaire vide */
       place = 0;		/* indice pour inserer dans ce dictionaire */
    size = strlen ((char*)word) + 1;
-   /* JK: Changed the limit to - 2 instead of -1 because we had a
-      memory overwrite problem otherwise */
-   if ((dict->DictNbWords >= dict->DictMaxWords - 2) || (dict->DictNbChars >= dict->DictMaxChars + size))
+   /* IV: prevents an overwrite problem */
+   if (dict->DictNbWords + 2 >= dict->DictMaxWords ||
+       dict->DictNbChars >= dict->DictMaxChars + size)
       return (-1);
    else
      {
-	for (i = dict->DictNbWords; i >= place; i--)
-	  /* deplacement des mots */
+	for (i = dict->DictNbWords - 1; i >= place; i--)
 	  {
-	     int                 debut, fin, index;
-
-	     debut = dict->DictWords[i];
-	     fin = dict->DictWords[i + 1] - 1;
-	     index = fin + size;
-	     for (k = fin; k >= debut; k--)	/* deplacement d'un mot */
+	    /* move previous words */
+	     first = dict->DictWords[i];
+	     last = dict->DictWords[i + 1] - 1;
+	     index = last + size;
+	     for (k = last; k >= first; k--)	/* deplacement d'un mot */
 		dict->DictString[index--] = dict->DictString[k];
 	  }
-	/* insertion nouveau mot */
+	/* insert the new word */
 	strcpy ((char*)&dict->DictString[dict->DictWords[place]], (char*)word);
-	/* mise a jour des pointeurs sur les mots */
-	for (i = dict->DictNbWords + 1; i >= place; i--)
-	   dict->DictWords[i + 1] = dict->DictWords[i] + size;
+	/* update next entries including the first empty entry */
+	for (i = dict->DictNbWords + 1; i > place; i--)
+	   dict->DictWords[i] = dict->DictWords[i - 1] + size;
 	/* mise a jour des pointeurs sur les longueurs de mots */
 	for (i = size; i < MAX_WORD_LEN; i++)
 	   dict->DictLengths[i]++;
@@ -409,17 +407,17 @@ static void Cmp (unsigned char *wordtest, PtrDict dict)
   unsigned char       currentWord[MAX_WORD_LEN];
   int                 lg, idx, sup, pWord, seuilCourant;
   int                 i, j, k, x, y, z;
-  int                 difference, iteration, size, largeur, word;
+  int                 difference, iteration, size, width, word;
   int                 minimum;
-  int                 deb, fin;
-  int                 derniere_ligne = MAX_WORD_LEN; /* last computed line */
+  int                 first, last;
+  int                 lastline = MAX_WORD_LEN; /* last computed line */
   int                 dist_mini;
   int                 dernier_liste;
   
   x = 0;
   if (dict == NULL)
     return;
-  else if (dict->DictNbWords < 0)
+  else if (dict->DictNbWords <= 0)
     /* empty dictionary */
     return;
   
@@ -435,7 +433,7 @@ static void Cmp (unsigned char *wordtest, PtrDict dict)
   Asci2Code ((char*)wordcmp);
   lg = strlen ((char*)wordcmp);
   seuilCourant = Seuil[lg];
-  largeur = Delta[lg];
+  width = Delta[lg];
   
   /* parcours du dictionnaire
      avec d'abord les mots de meme size,
@@ -443,7 +441,7 @@ static void Cmp (unsigned char *wordtest, PtrDict dict)
      puis EVENTUELLEMENT les mots de +- 2 lettres etc.
      */
   difference = 0;
-  for (iteration = 0; iteration <= 2 * largeur; iteration++)
+  for (iteration = 0; iteration <= 2 * width; iteration++)
     {
       difference = (difference > 0) ? difference - iteration : difference + iteration;
       size = lg - difference;
@@ -463,19 +461,19 @@ static void Cmp (unsigned char *wordtest, PtrDict dict)
 	  word = dict->DictLengths[size];
 	  idx = dict->DictWords[word];
 	  if (dict->DictLengths[size + 1] - 1 > dict->DictNbWords)
-	    sup = dict->DictWords[dict->DictNbWords];
+	    sup = dict->DictWords[dict->DictNbWords] - 1;
 	  else
-	    sup = dict->DictWords[dict->DictLengths[size + 1]];
+	    sup = dict->DictWords[dict->DictLengths[size + 1]] - 1;
 	  
 	  /* initialisation des valeurs en dehors des diagonales de calculs effectifs */
 	  for (j = 1; j <= size; j++)
 	    {
-	      i = j - largeur - 1;
+	      i = j - width - 1;
 	      if (difference > 0)
 		i = i + difference;
 	      if (i > 0)
 		dist[i][j] = seuilCourant + 1;
-	      i = j + largeur + 1;
+	      i = j + width + 1;
 	      if (difference < 0)
 		i = i + difference;
 	      if (i <= lg)
@@ -490,7 +488,7 @@ static void Cmp (unsigned char *wordtest, PtrDict dict)
 	      /* si le calcul du mot precedent a ete stoppe a l'indice derniere_ligne
 		 et que le mot courant possede un nombre de lettres communes superieur
 		 a cette valeur, il est inutile de faire le calcul */
-	      if (k <= derniere_ligne)
+	      if (k <= lastline)
 		{
 		  strcpy ((char*)currentWord, (char*)&dict->DictString[pWord]);
 		  
@@ -498,18 +496,18 @@ static void Cmp (unsigned char *wordtest, PtrDict dict)
 		  for (j = k; j <= size; j++)
 		    {
 		      minimum = dist[0][j];
-		      derniere_ligne = j;
-		      deb = j - largeur;
+		      lastline = j;
+		      first = j - width;
 		      if (difference > 0)
-			deb = deb + difference;
-		      if (deb < 1)
-			deb = 1;
-		      fin = j + largeur;
+			first = first + difference;
+		      if (first < 1)
+			first = 1;
+		      last = j + width;
 		      if (difference < 0)
-			fin = fin + difference;
-		      if (fin > lg)
-			fin = lg;
-		      for (i = deb; i <= fin; i++)
+			last = last + difference;
+		      if (last > lg)
+			last = lg;
+		      for (i = first; i <= last; i++)
 			{
 			  x = dist[i][j - 1] + KI;
 			  y = dist[i - 1][j] + KO;
@@ -577,7 +575,7 @@ static void         LoadSpellChecker ()
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-static void         SaveDictFile (PtrDict docDict)
+static void SaveDictFile (PtrDict docDict)
 {
    FILE               *f;
    int                 i, j;
@@ -585,7 +583,7 @@ static void         SaveDictFile (PtrDict docDict)
    char                word[MAX_WORD_LEN];
 
    FindCompleteName (docDict->DictName, "", docDict->DictDirectory, tempbuffer, &i);
-   if (docDict->DictNbWords >= 0)
+   if (docDict->DictNbWords > 0)
      {
 	f = fopen (tempbuffer, "w");
 	if (f != NULL)
@@ -595,7 +593,7 @@ static void         SaveDictFile (PtrDict docDict)
 	     j = docDict->DictNbChars;
 	     fprintf (f, "%d %d\n", i, j);
 
-	     for (i = 0; i <= docDict->DictNbWords; i++)
+	     for (i = 0; i < docDict->DictNbWords; i++)
 	       {
 		  strcpy (word, &docDict->DictString[docDict->DictWords[i]]);
 		  Code2Asci (word);

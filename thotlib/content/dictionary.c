@@ -83,29 +83,25 @@ static void LoadAlphabet ()
   ----------------------------------------------------------------------*/
 void TreateDictionary (PtrDict dict)
 {
-   int                 word, i;
+   int                 word, i, k;
    char                lastWord[MAX_WORD_LEN];
    char                currentWord[MAX_WORD_LEN];
 
-   /* An empty dictionary is not considered  (DictNbWords = -1) */
-   if (dict->DictNbWords >= 0)
+   /* An empty dictionary is not considered  (DictNbWords = 0) */
+   if (dict->DictNbWords > 0)
      {
 	lastWord[0] = 0;
 	currentWord[0] = 0;
 
 	for (word = 0; word < dict->DictNbWords; word++)
 	  {
-	     int                 k = 0;
-
+	     k = 0;
 	     strcpy (lastWord, currentWord);
 	     strcpy (currentWord, &dict->DictString[dict->DictWords[word]]);
-
 	     if (strlen (lastWord) != strlen (currentWord))
-	       {
-		  /* changing the size of the word */
-		  /* => no calculation for the common letters */
-		  dict->DictCommon[word] = 1;
-	       }
+	       /* changing the size of the word */
+	       /* => no calculation for the common letters */
+	       dict->DictCommon[word] = 1;
 	     else
 	       {
 		  /* looking for common letters for two consecutive words */
@@ -336,7 +332,7 @@ static int LoadDict (FILE *dictFile, PtrDict dict)
      }
 
    /* Adding an empty word at the end of the dictionary */
-   last_word = dict->DictNbWords + 1;
+   last_word = dict->DictNbWords;
    dict->DictWords[last_word] = nbChar;
    /* Updating the pointers */
    for (i = currentLength + 1; i < MAX_WORD_LEN; i++)

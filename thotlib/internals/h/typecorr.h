@@ -37,7 +37,7 @@ typedef struct _WordDict
       PtrWords    DictWords;       /* pointer to the list of pointers */
                                    /*  to the words of the dictionary */
       PtrCommons  DictCommon;      /* pointer to the list of common letters */
-      int         DictLengths[MAX_WORD_LEN]; /* pointer to the words having the same size */
+      int         DictLengths[MAX_WORD_LEN + 1]; /* pointer to the words having the same size */
       int         DictNbWords;     /*number of words in the dictionary */
       int         DictNbChars;     /* real number of characters in string */
 

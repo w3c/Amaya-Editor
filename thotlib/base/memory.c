@@ -2155,19 +2155,22 @@ void FreeStringInDict (PtrDict pDict)
 }
 
 /*----------------------------------------------------------------------
-   GetDictContext effectue un malloc controle.                     
+  GetDictContext allocates memory.
   ----------------------------------------------------------------------*/
 static void *GetDictContext (unsigned int n)
 {
+  char *s = NULL;
    if (n > 0)
-      return (TtaGetMemory ((size_t) n));
-   return (NULL);
+     {
+       s = (char *)TtaGetMemory (n);
+       memset (s, 0, n);
+     }
+   return s;
 }
 
 
 /*----------------------------------------------------------------------
-   GetStringInDict retourne -1 en cas de manque de memoire            
-   retourne  0 si OK.                                      
+  GetStringInDict returns -1 if there is not enough memory, 0 otherwise.
   ----------------------------------------------------------------------*/
 int GetStringInDict (PtrDict * pDict, ThotBool readonly)
 {
@@ -2227,7 +2230,6 @@ void GetDictionary (PtrDict * pDict)
    if (*pDict != NULL)
      {
 	NbUsed_Dict++;
-
 	/* initialise le contexte de dictionnaire */
 	pdict = *pDict;
 	pdict->DictName[0] = EOS;
@@ -2242,11 +2244,11 @@ void GetDictionary (PtrDict * pDict)
 	pdict->DictWords = NULL;
 	pdict->DictCommon = NULL;
 
-	for (i = 0; i < MAX_WORD_LEN; i++)
+	for (i = 0; i <= MAX_WORD_LEN; i++)
 	   pdict->DictLengths[i] = 0;
 	pdict->DictMaxWords = 0;
 	pdict->DictMaxChars = 0;
-	pdict->DictNbWords = -1;
+	pdict->DictNbWords = 0;
 	pdict->DictNbChars = 0;
      }
 }
