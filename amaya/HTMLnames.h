@@ -489,7 +489,7 @@ AttrValueMapping XhtmlAttrValueMappingTable[] =
    {DummyAttribute, "checkbox", HTML_EL_Checkbox_Input},
    {DummyAttribute, "file", HTML_EL_File_Input},
    {DummyAttribute, "hidden", HTML_EL_Hidden_Input},
-   /*{DummyAttribute, "image", HTML_EL_PICTURE_UNIT},*/
+   {DummyAttribute, "image", HTML_EL_PICTURE_UNIT},
    {DummyAttribute, "password", HTML_EL_Password_Input},
    {DummyAttribute, "radio", HTML_EL_Radio_Input},
    {DummyAttribute, "reset", HTML_EL_Reset_Input},
