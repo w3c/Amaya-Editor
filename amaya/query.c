@@ -3183,6 +3183,9 @@ void               *context_tcbf;
    ThotBool            lost_update_check = TRUE;
    char                url_name[MAX_LENGTH];
    char*               tmp2;
+#ifdef _WINDOWS
+   char                file_name[MAX_LENGTH];
+#endif /* _WINDOWS */
 
    /* should we protect the PUT against lost updates? */
    tmp = TtaGetEnvString ("ENABLE_LOST_UPDATE_CHECK");
@@ -3264,7 +3267,6 @@ void               *context_tcbf;
 #ifdef _WINDOWS
    /* libwww's HTParse function doesn't take into account the drive name;
       so we sidestep it */
-   char  file_name[MAX_LENGTH];
 
    fileURL = NULL;
    StrAllocCopy (fileURL, "file:");
