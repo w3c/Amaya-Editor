@@ -4203,7 +4203,7 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
   ElementType        elType;
   PSchema            tsch;
   AttributeType      attrType;
-  char              *deb, *cur, *sel, c;
+  char              *deb, *cur, *sel, *next, c;
   char              *schemaName, *mappedName;
   char              *names[MAX_ANCESTORS];
   char              *ids[MAX_ANCESTORS];
@@ -4247,7 +4247,7 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
   /* localisation of the CSS rule */
   ctxt->cssLine = LineNumber + NewLineSkipped;
   ctxt->cssURL = url;
-  
+
   selector = SkipBlanksAndComments (selector);
   cur = &sel[0];
   max = 0; /* number of loops */
@@ -4266,14 +4266,22 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
       *cur++ = EOS; /* close the first string  in sel[] */
       if (deb[0] != EOS)
 	{
-	  names[0] = deb;
-	  if (!strcmp (names[0], "html"))
-	    /* give a greater priority to the backgoud color of html */
-	    specificity += 3;
+	  if (deb[0] <= 64 && deb[0] != '*')
+	    {
+	      CSSPrintError ("Invalid element", deb);
+	      return NULL;
+	    }
 	  else
-	    /* selector "*" has specificity zero */
-	    if (strcmp (names[0], "*"))
-	      specificity += 1;
+	    {
+	      names[0] = deb;
+	      if (!strcmp (names[0], "html"))
+		/* give a greater priority to the backgoud color of html */
+		specificity += 3;
+	      else
+		/* selector "*" has specificity zero */
+		if (strcmp (names[0], "*"))
+		  specificity += 1;
+	    }
 	}
       else
 	names[0] = NULL;
@@ -4297,7 +4305,16 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
 	    while (*selector != EOS && *selector != ',' &&
 		   *selector != '.' && *selector != ':' &&
 		   !TtaIsBlank (selector))
-	      *cur++ = *selector++;
+	      {
+		if (*selector == '\\')
+		  {
+		    selector++;
+		    if (*selector != EOS)
+		      *cur++ = *selector++;
+		  }
+		else
+		  *cur++ = *selector++;
+	      }
 	    /* close the word */
 	    *cur++ = EOS;
 	    /* point to the class in sel[] if it's valid name */
@@ -4525,6 +4542,13 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
 	{
 	  /* end of the current selector */
 	  selector++;
+	  next = SkipBlanksAndComments (selector);
+	  if (*next == EOS)
+	    /* nothing after the comma. Invalid selector */
+	    {
+	      CSSPrintError ("Syntax error:", selector);
+	      return NULL;
+	    }
 	  break;
 	}
       else
