@@ -4,11 +4,11 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern void generate ( iline wi, iline wl, grmcode c, grmcode r, int nb, rnb pr );
+extern void generate ( indLine wi, indLine wl, SyntacticCode c, SyntacticCode r, int nb, SyntRuleNum pr );
 
 #else /* __STDC__ */
 
-extern void generate (/* iline wi, iline wl, grmcode c, grmcode r, int nb, rnb pr */);
+extern void generate (/* indLine wi, indLine wl, SyntacticCode c, SyntacticCode r, int nb, SyntRuleNum pr */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

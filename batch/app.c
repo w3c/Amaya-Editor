@@ -1,3 +1,8 @@
+/*
+ Compilateur du langage A.
+
+*/
+
 #include "thot_sys.h"
 #include "compilmsg.h"
 #include "appmsg.h"
@@ -29,14 +34,14 @@
 #undef EXPORT
 #define EXPORT extern
 
-EXPORT int         linenb;
+EXPORT int         LineNum;
 EXPORT PtrEventsSet pAppli;
-EXPORT PtrSSchema pSchStr;
+EXPORT PtrSSchema pSSchema;
 extern int          IncNbIdent;
 
-int                 linenb;	/* compteur de lignes dans le fichier source */
-static Name          filename;
-PtrSSchema        pSchStr;
+int                 LineNum;	/* compteur de lignes dans le fichier source */
+static Name          fileName;
+PtrSSchema        pSSchema;
 PtrEventsSet        pAppli;
 
 /* Pointeur sur la liste des schemas d'interfaces utilise's par EDITOR.A */
@@ -53,10 +58,10 @@ PtrAppMenu          MainWindowMenus = NULL;
 PtrAppMenu          DocWindowMenus = NULL;
 /* pointeur sur la chaine des descripteurs des menus de chaque type de document */
 PtrAppDocType       DocTypeMenus = NULL;
-static boolean      PairePremier = False; /* on a rencontre' le mot cle "First"  */
-static boolean      PaireSecond = False;  /* on a rencontre' le mot cle "Second" */
-static int          ruleNb;
-static int          attribNb;
+static boolean      FirstInPair = False; /* on a rencontre' le mot cle "First"  */
+static boolean      SecondInPair = False;  /* on a rencontre' le mot cle "Second" */
+static int          typeNum;
+static int          attrNum;
 static int          curEvent;	/* l'evenement courant               */
 static char        *eventAction;	/* l'action associee a cet evenement */
 static boolean      PreEvent;
@@ -140,7 +145,7 @@ PtrAppMenu          firstMenu;
    PtrAppName          curItem, prevItem;
    PtrAppMenu          menu;
    PtrAppMenuItem      item, menuitem;
-   boolean             trouve;
+   boolean             found;
 
    menu = firstMenu;
    /* parcourt la liste de menus a traiter */
@@ -148,14 +153,14 @@ PtrAppMenu          firstMenu;
      {
 	/* cherche si le nom de ce menu est deja dans la liste MenusUsed */
 	curMenu = MenusUsed;
-	trouve = False;
+	found = False;
 	prevMenu = NULL;
-	while (!trouve && curMenu != NULL)
+	while (!found && curMenu != NULL)
 	  {
 	     if (curMenu->AppNameValue != NULL &&
 		 strcmp (curMenu->AppNameValue, menu->AppMenuName) == 0)
 		/* le nom du menu est dans la liste */
-		trouve = True;
+		found = True;
 	     else
 	       {
 		  prevMenu = curMenu;
@@ -163,7 +168,7 @@ PtrAppMenu          firstMenu;
 		  curMenu = curMenu->AppNextName;
 	       }
 	  }
-	if (!trouve)
+	if (!found)
 	   /* le nom du menu n'est pas dans la liste, on l'y met */
 	  {
 	     curMenu = (PtrAppName) TtaGetMemory (sizeof (AppName));
@@ -188,14 +193,14 @@ PtrAppMenu          firstMenu;
 	       {
 		  /* cherche si le nom l'item est dans la liste des noms d'items */
 		  curItem = ItemsUsed;
-		  trouve = False;
+		  found = False;
 		  prevItem = NULL;
-		  while (!trouve && curItem != NULL)
+		  while (!found && curItem != NULL)
 		    {
 		       if (curItem->AppNameValue != NULL && item->AppItemName != NULL &&
 			   strcmp (curItem->AppNameValue, item->AppItemName) == 0)
 			  /* le nom de l'item est dans la liste */
-			  trouve = True;
+			  found = True;
 		       else
 			 {
 			    prevItem = curItem;
@@ -203,7 +208,7 @@ PtrAppMenu          firstMenu;
 			    curItem = curItem->AppNextName;
 			 }
 		    }
-		  if (!trouve)
+		  if (!found)
 		     /* le nom de l'item n'est pas dans la liste, on l'y met */
 		    {
 		       curItem = (PtrAppName) TtaGetMemory (sizeof (AppName));
@@ -220,14 +225,14 @@ PtrAppMenu          firstMenu;
 	       {
 		  /* cherche si l'action de l'item est dans la liste des actions */
 		  curAction = ActionsUsed;
-		  trouve = False;
+		  found = False;
 		  prevAction = NULL;
-		  while (!trouve && curAction != NULL)
+		  while (!found && curAction != NULL)
 		    {
 		       if (curAction->AppNameValue != NULL &&
 			   strcmp (curAction->AppNameValue, item->AppItemActionName) == 0)
 			  /* l'action de l'item est dans la liste */
-			  trouve = True;
+			  found = True;
 		       else
 			 {
 			    prevAction = curAction;
@@ -235,7 +240,7 @@ PtrAppMenu          firstMenu;
 			    curAction = curAction->AppNextName;
 			 }
 		    }
-		  if (!trouve)
+		  if (!found)
 		     /* l'action de l'item n'est pas dans la liste, on l'y met */
 		    {
 		       curAction = (PtrAppName) TtaGetMemory (sizeof (AppName));
@@ -310,14 +315,14 @@ int                *rank;
 
 #endif /* __STDC__ */
 {
-   int                 evtNb, evt;
+   int                 evtNum, evt;
    boolean             found;
 
    /* cherche le nom de l'evenement dans la table */
-   evtNb = sizeof (RegisteredAppEvents) / sizeof (char *);
+   evtNum = sizeof (RegisteredAppEvents) / sizeof (char *);
 
    found = False;
-   for (evt = 0; evt < evtNb && !found; (evt)++)
+   for (evt = 0; evt < evtNum && !found; (evt)++)
       if (strcmp (eventName, RegisteredAppEvents[evt]) == 0)
 	{
 	   found = True;
@@ -331,21 +336,21 @@ int                *rank;
 /* ---------------------------------------------------------------------- */
 static PtrSSchema ConstructAbstractSchStruct ()
 {
-   PtrSSchema        pSchStr;
+   PtrSSchema        pSS;
 
-   pSchStr = (PtrSSchema) TtaGetMemory (sizeof (StructSchema));
-   pSchStr->SsCode = 0;
+   pSS = (PtrSSchema) TtaGetMemory (sizeof (StructSchema));
+   pSS->SsCode = 0;
 
    /* initialise les types de base */
-   strcpy (pSchStr->SsRule[CharString].SrName, "TEXT_UNIT");
-   strcpy (pSchStr->SsRule[GraphicElem].SrName, "GRAPHICS_UNIT");
-   strcpy (pSchStr->SsRule[Symbol].SrName, "SYMBOL_UNIT");
-   strcpy (pSchStr->SsRule[Picture].SrName, "PICTURE_UNIT");
-   strcpy (pSchStr->SsRule[Refer].SrName, "REFERENCE_UNIT");
-   strcpy (pSchStr->SsRule[PageBreak].SrName, "PAGE_BREAK");
-   pSchStr->SsNRules = MAX_BASIC_TYPE - 1;
-   pSchStr->SsNAttributes = 0;
-   return pSchStr;
+   strcpy (pSS->SsRule[CharString].SrName, "TEXT_UNIT");
+   strcpy (pSS->SsRule[GraphicElem].SrName, "GRAPHICS_UNIT");
+   strcpy (pSS->SsRule[Symbol].SrName, "SYMBOL_UNIT");
+   strcpy (pSS->SsRule[Picture].SrName, "PICTURE_UNIT");
+   strcpy (pSS->SsRule[Refer].SrName, "REFERENCE_UNIT");
+   strcpy (pSS->SsRule[PageBreak].SrName, "PAGE_BREAK");
+   pSS->SsNRules = MAX_BASIC_TYPE - 1;
+   pSS->SsNAttributes = 0;
+   return pSS;
 }
 
 /* ---------------------------------------------------------------------- */
@@ -453,7 +458,7 @@ static void         NewMenuComplete ()
 		 Item = Item->AppNextItem;
 	if (found)
 	   CompilerError (1, APP, FATAL, APP_ITEM_ALREADY_EXISTS, inputLine,
-			  linenb);
+			  LineNum);
 	else
 	   /* cet item n'existe pas, on le met */
 	  {
@@ -505,9 +510,9 @@ static void         NewMenuComplete ()
 
 
 /* ---------------------------------------------------------------------- */
-/* |    initMenu                                                        | */
+/* |    InitMenu                                                        | */
 /* ---------------------------------------------------------------------- */
-static void         initMenu ()
+static void         InitMenu ()
 {
    ViewNumber = 0;
    MenuName[0] = '\0';
@@ -519,42 +524,16 @@ static void         initMenu ()
 
 
 /* ---------------------------------------------------------------------- */
-/* |    CopieNom copie le mot traite dans le nom n.             | */
+/* |    ProcessShortKeyWord traite un mot-cle court.                    | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-static void         CopieNom (Name n, iline wi, iline wl)
+static void         ProcessShortKeyWord (int x, SyntacticCode r, SyntacticCode pr)
 
 #else  /* __STDC__ */
-static void         CopieNom (n, wi, wl)
-Name                 n;
-iline               wi;
-iline               wl;
-
-#endif /* __STDC__ */
-
-{
-
-   if (wl > MAX_NAME_LENGTH - 1)
-      CompilerError (wi, COMPIL, FATAL, COMPIL_WORD_TOO_LONG, inputLine, linenb);
-   else
-     {
-	strncpy (n, &inputLine[wi - 1], wl);
-	n[wl] = '\0';
-     }
-}
-
-
-/* ---------------------------------------------------------------------- */
-/* |    GenShortKW genere un mot-cle court.                             | */
-/* ---------------------------------------------------------------------- */
-#ifdef __STDC__
-static void         GenShortKW (int x, grmcode r, grmcode pr)
-
-#else  /* __STDC__ */
-static void         GenShortKW (x, r, pr)
+static void         ProcessShortKeyWord (x, r, pr)
 int                 x;
-grmcode             r;
-grmcode             pr;
+SyntacticCode             r;
+SyntacticCode             pr;
 
 #endif /* __STDC__ */
 {
@@ -571,9 +550,9 @@ grmcode             pr;
 	   if (DefaultSection)
 	     typeId = 0;
 	   else if (ElementsSection)
-	     typeId = ruleNb;
+	     typeId = typeNum;
 	   else if (AttributesSection)
-	     typeId = attribNb;
+	     typeId = attrNum;
 	   else
 	     typeId = 0;
 	   TteAddActionEvent (pAppli, typeId, curEvent, PreEvent, eventAction);
@@ -583,7 +562,7 @@ grmcode             pr;
 	   break;
 	 case RULE_NewMenu:
 	   NewMenuComplete ();
-	   initMenu ();
+	   InitMenu ();
 	   break;
 	 default:
 	   break;
@@ -600,7 +579,7 @@ grmcode             pr;
      case CHR_58:
        /* :  */
        if (r == RULE_Menus)
-	 initMenu ();
+	 InitMenu ();
        break;
        
      default:
@@ -610,16 +589,16 @@ grmcode             pr;
 
 
 /* ---------------------------------------------------------------------- */
-/* |    GenLongKW genere un mot-cle long.                               | */
+/* |    ProcessLongKeyWord traite un mot-cle long.                      | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-static void         GenLongKW (int x, grmcode r, iline wi)
+static void         ProcessLongKeyWord (int x, SyntacticCode r, indLine wi)
 
 #else  /* __STDC__ */
-static void         GenLongKW (x, r, wi)
+static void         ProcessLongKeyWord (x, r, wi)
 int                 x;
-grmcode             r;
-iline               wi;
+SyntacticCode             r;
+indLine               wi;
 
 #endif /* __STDC__ */
 
@@ -637,10 +616,10 @@ iline               wi;
 
 	    case KWD_USES:
 	       /* le mot-cle' USES */
-	       if (strcmp (filename, "EDITOR") != 0)
+	       if (strcmp (fileName, "EDITOR") != 0)
 		  /* ce n'est pas EDITOR.A qu'on compile, refus */
 		  CompilerError (wi, APP, FATAL, APP_ONLY_IN_EDITOR_I,
-				 inputLine, linenb);
+				 inputLine, LineNum);
 	       else
 		  SchemasUsed = NULL;
 	       break;
@@ -666,15 +645,15 @@ iline               wi;
 	       ElementsSection = False;
 	       AttributesSection = False;
 	       MenusSection = True;
-	       if (strcmp (filename, "EDITOR") != 0)
+	       if (strcmp (fileName, "EDITOR") != 0)
 		  /* ce n'est pas EDITOR.A qu'on compile, refus */
 		  CompilerError (wi, APP, FATAL, APP_ONLY_IN_EDITOR_I,
-				 inputLine, linenb);
+				 inputLine, LineNum);
 	       break;
 
 	    case KWD_BEGIN:
 	       if (r == RULE_MenuList)
-		  initMenu ();
+		  InitMenu ();
 	       break;
 
 	    case KWD_END:
@@ -683,7 +662,7 @@ iline               wi;
 	    case KWD_Post:
 	       if (curEvent == TteAttrMenu)
 		  CompilerError (wi, APP, FATAL, APP_ONLY_PRE_ALLOWED, inputLine,
-				 linenb);
+				 LineNum);
 	       PreEvent = False;
 	       break;
 
@@ -692,11 +671,11 @@ iline               wi;
 	       break;
 
 	    case KWD_First:
-	       PairePremier = True;
+	       FirstInPair = True;
 	       break;
 
 	    case KWD_Second:
-	       PaireSecond = True;
+	       SecondInPair = True;
 	       break;
 
 	    case KWD_Main:
@@ -738,40 +717,45 @@ iline               wi;
 }
 
 /* ---------------------------------------------------------------------- */
-/* |     GenName genere un nom.                                         | */
+/* |     ProcessName trite un nom.                                      | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-static void         GenName (grmcode r, grmcode pr, iline wl, iline wi)
+static void         ProcessName (SyntacticCode r, SyntacticCode pr, indLine wl, indLine wi)
 #else  /* __STDC__ */
-static void         GenName (r, pr, wl, wi)
-grmcode             r;
-grmcode             pr;
-iline               wl;
-iline               wi;
+static void         ProcessName (r, pr, wl, wi)
+SyntacticCode             r;
+SyntacticCode             pr;
+indLine               wl;
+indLine               wi;
 
 #endif /* __STDC__ */
 {
    int                 i;
-   Name                 name;
-   PtrAppDocType       DocType, NewDocType;
-   PtrAppName          SchUsed, NewSchUsed;
+   Name                name;
+   PtrAppDocType       docType, newDocType;
+   PtrAppName          schUsed, newSchUsed;
 
-   CopieNom (name, wi, wl);
-
+   if (wl > MAX_NAME_LENGTH - 1)
+      CompilerError (wi, COMPIL, FATAL, COMPIL_WORD_TOO_LONG, inputLine, LineNum);
+   else
+     {
+	strncpy (name, &inputLine[wi - 1], wl);
+	name[wl] = '\0';
+     }
    switch (r)
 	 {
 	       /* r = numero de la regle ou apparait le nom */
 
 	    case RULE_ElemIdent:
-	       ruleNb = 0;
+	       typeNum = 0;
 	       if (pr == RULE_AppliModel)
 		 {
-		    if (strcmp (filename, "EDITOR") == 0)
+		    if (strcmp (fileName, "EDITOR") == 0)
 		      {
 			 /* construct an abstract schemas structure */
-			 pSchStr = ConstructAbstractSchStruct ();
+			 pSSchema = ConstructAbstractSchStruct ();
 			 /* acquiert un schema */
-			 pAppli = TteNewEventsSet (pSchStr->SsCode, filename);
+			 pAppli = TteNewEventsSet (pSSchema->SsCode, fileName);
 			 /* pointeur sur la chaine des descripteurs des menus des */
 			 /* differents types de document */
 			 DocTypeMenus = NULL;
@@ -780,17 +764,17 @@ iline               wi;
 		      {
 			 /* TypeName est ici le nom de la structure generique */
 			 /* => on lit le schema de structure compile' */
-			 pSchStr = (PtrSSchema) TtaGetMemory (sizeof (StructSchema));
-			 if (!RdSchStruct (name, pSchStr))
+			 pSSchema = (PtrSSchema) TtaGetMemory (sizeof (StructSchema));
+			 if (!RdSchStruct (name, pSSchema))
 			    CompilerError (wi, APP, FATAL, APP_STRUCT_SCHEM_NOT_FOUND,
-					   inputLine, linenb);
-			 else if (strcmp (name, pSchStr->SsName) != 0)
+					   inputLine, LineNum);
+			 else if (strcmp (name, pSSchema->SsName) != 0)
 			    CompilerError (wi, APP, FATAL,
 					APP_THE_STRUCT_SCHEM_DOES_NOT_MATCH,
-					   inputLine, linenb);
+					   inputLine, LineNum);
 			 else
 			    /* acquiert un schema */
-			    pAppli = TteNewEventsSet (pSchStr->SsCode, filename);
+			    pAppli = TteNewEventsSet (pSSchema->SsCode, fileName);
 		      }
 		 }
 	       else
@@ -799,45 +783,45 @@ iline               wi;
 		    if (pr == RULE_ElemActions)
 		      {
 			 i = 0;
-			 while (strcmp (name, pSchStr->SsRule[i].SrName) != 0
-				&& i < pSchStr->SsNRules)
+			 while (strcmp (name, pSSchema->SsRule[i].SrName) != 0
+				&& i < pSSchema->SsNRules)
 			    i++;
-			 if (i < pSchStr->SsNRules)
+			 if (i < pSSchema->SsNRules)
 			   {
-			      if (pSchStr->SsRule[i].SrConstruct == CsPairedElement)
+			      if (pSSchema->SsRule[i].SrConstruct == CsPairedElement)
 				 /* c'est un element CsPairedElement */
-				 if (!PaireSecond && !PairePremier)
+				 if (!SecondInPair && !FirstInPair)
 				    /* le nom du type n'etait pas precede' de First ou Second */
 				    CompilerError (wi, APP, FATAL, APP_MISSING_FIRST_SECOND,
-						   inputLine, linenb);
+						   inputLine, LineNum);
 				 else
 				   {
-				      if (PaireSecond)
+				      if (SecondInPair)
 					 /* il s'agit du type suivant */
 					 i++;
 				   }
 			      else
 				 /* ce n'est pas un element CsPairedElement */
-			      if (PaireSecond || PairePremier)
+			      if (SecondInPair || FirstInPair)
 				 /* le nom du type etait precede' de First ou Second */
 				 CompilerError (wi, APP, FATAL, APP_NOT_IN_PAIR, inputLine,
-						linenb);
-			      ruleNb = i + 1;
+						LineNum);
+			      typeNum = i + 1;
 			   }
 			 else
 			   {
-			      if (strcmp (filename, "EDITOR") == 0)
+			      if (strcmp (fileName, "EDITOR") == 0)
 				{
-				   strcpy (pSchStr->SsRule[i].SrName, name);
-				   pSchStr->SsNRules++;
-				   ruleNb = i + 1;
+				   strcpy (pSSchema->SsRule[i].SrName, name);
+				   pSSchema->SsNRules++;
+				   typeNum = i + 1;
 				}
 			      else
 				 CompilerError (wi, APP, FATAL, APP_UNKNOWN_TYPE,
-						inputLine, linenb);
+						inputLine, LineNum);
 			   }
-			 PairePremier = False;
-			 PaireSecond = False;
+			 FirstInPair = False;
+			 SecondInPair = False;
 		      }
 		 }
 	       break;
@@ -847,21 +831,21 @@ iline               wi;
 		  /* un nom de type de document dans l'instruction USES */
 		 {
 		    /* acquiert un descripteur de schema A utilise' */
-		    NewSchUsed = (PtrAppName) TtaGetMemory (sizeof (AppName));
+		    newSchUsed = (PtrAppName) TtaGetMemory (sizeof (AppName));
 		    /* met le nom du schema A utilise' dans le descripteur */
-		    NewSchUsed->AppNameValue = strdup (name);
-		    NewSchUsed->AppStandardName = False;
+		    newSchUsed->AppNameValue = strdup (name);
+		    newSchUsed->AppStandardName = False;
 		    /* chaine ce nouveau descripteur en fin de liste */
-		    NewSchUsed->AppNextName = NULL;
+		    newSchUsed->AppNextName = NULL;
 		    if (SchemasUsed == NULL)
 		       /* la chaine etait vide */
-		       SchemasUsed = NewSchUsed;
+		       SchemasUsed = newSchUsed;
 		    else
 		      {
-			 SchUsed = SchemasUsed;
-			 while (SchUsed->AppNextName != NULL)
-			    SchUsed = SchUsed->AppNextName;
-			 SchUsed->AppNextName = NewSchUsed;
+			 schUsed = SchemasUsed;
+			 while (schUsed->AppNextName != NULL)
+			    schUsed = schUsed->AppNextName;
+			 schUsed->AppNextName = newSchUsed;
 		      }
 		 }
 	       else if (pr == RULE_Menus)
@@ -870,22 +854,22 @@ iline               wi;
 		 {
 		    /* ajoute un type de document */
 		    /* alloue un descripteur de type de document */
-		    NewDocType = (PtrAppDocType) TtaGetMemory (sizeof (AppDocType));
+		    newDocType = (PtrAppDocType) TtaGetMemory (sizeof (AppDocType));
 		    /* initialise ce descripteur */
-		    NewDocType->AppDocTypeName = strdup (name);
-		    NewDocType->AppDocTypeMenus = NULL;
-		    NewDocType->AppNextDocType = NULL;
+		    newDocType->AppDocTypeName = strdup (name);
+		    newDocType->AppDocTypeMenus = NULL;
+		    newDocType->AppNextDocType = NULL;
 		    if (DocTypeMenus == NULL)
-		       DocTypeMenus = NewDocType;
+		       DocTypeMenus = newDocType;
 		    else
 		      {
-			 DocType = DocTypeMenus;
-			 while (DocType->AppNextDocType != NULL)
-			    DocType = DocType->AppNextDocType;
-			 DocType->AppNextDocType = NewDocType;
+			 docType = DocTypeMenus;
+			 while (docType->AppNextDocType != NULL)
+			    docType = docType->AppNextDocType;
+			 docType->AppNextDocType = newDocType;
 		      }
-		    NewDocType->AppDocTypeMenus = NULL;
-		    MenuList = &(NewDocType->AppDocTypeMenus);
+		    newDocType->AppDocTypeMenus = NULL;
+		    MenuList = &(newDocType->AppDocTypeMenus);
 		 }
 	       break;
 
@@ -895,7 +879,7 @@ iline               wi;
 	       /* cherche si l'evenement est dans la table des evenements definis */
 	       if (!RegisteredEvent (name, &curEvent))
 		  /* il n'y est pas, erreur */
-		  CompilerError (wi, APP, FATAL, APP_UNKNOWN_MESSAGE, inputLine, linenb);
+		  CompilerError (wi, APP, FATAL, APP_UNKNOWN_MESSAGE, inputLine, LineNum);
 	       else if (!DefaultSection)
 		 {
 		    /* on n'est pas dans la section DEFAULT du schema A */
@@ -903,29 +887,29 @@ iline               wi;
 		    /* vues, ni pour l'application */
 		    if (curEvent >= TteDocOpen)
 		       CompilerError (wi, APP, FATAL, APP_NOT_IN_DEFAULT, inputLine,
-				      linenb);
+				      LineNum);
 		 }
 	       else
 		 {
 		    if (curEvent >= TteInit)
 		       /* c'est un evenement pour l'application */
 		      {
-			 if (strcmp (filename, "EDITOR") != 0)
+			 if (strcmp (fileName, "EDITOR") != 0)
 			    /* ce n'est pas EDITOR.A qu'on compile, refus */
 			    CompilerError (wi, APP, FATAL, APP_ONLY_IN_EDITOR_I, inputLine,
-					   linenb);
+					   LineNum);
 		      }
 		    else if (AttributesSection)
 		      {
 			 if (curEvent > TteAttrDelete)
 			    CompilerError (wi, APP, FATAL, APP_INVALID_FOR_AN_ATTR,
-					   inputLine, linenb);
+					   inputLine, LineNum);
 		      }
 		    else if (ElementsSection)
 		      {
 			 if (curEvent <= TteAttrDelete)
 			    CompilerError (wi, APP, FATAL, APP_INVALID_FOR_AN_ELEM,
-					   inputLine, linenb);
+					   inputLine, LineNum);
 		      }
 		 }
 	       break;
@@ -943,31 +927,31 @@ iline               wi;
 	       break;
 
 	    case RULE_AttrIdent:
-	       attribNb = 0;
-	       if (strcmp (filename, "EDITOR") == 0 && pSchStr == NULL)
+	       attrNum = 0;
+	       if (strcmp (fileName, "EDITOR") == 0 && pSSchema == NULL)
 		 {
-		    pSchStr = ConstructAbstractSchStruct ();
-		    pAppli = TteNewEventsSet (pSchStr->SsCode, filename);
+		    pSSchema = ConstructAbstractSchStruct ();
+		    pAppli = TteNewEventsSet (pSSchema->SsCode, fileName);
 		 }
 	       if (pr == RULE_AttrActions)
 		 {
 		    i = 1;
-		    while (strcmp (name, pSchStr->SsAttribute[i - 1].AttrOrigName) != 0
-			   && i <= pSchStr->SsNAttributes)
+		    while (strcmp (name, pSSchema->SsAttribute[i - 1].AttrOrigName) != 0
+			   && i <= pSSchema->SsNAttributes)
 		       i++;
-		    if (i <= pSchStr->SsNAttributes)
-		       attribNb = i;
+		    if (i <= pSSchema->SsNAttributes)
+		       attrNum = i;
 		    else
 		      {
-			 if (strcmp (filename, "EDITOR") == 0)
+			 if (strcmp (fileName, "EDITOR") == 0)
 			   {
 			      /* the file .A is a EDITOR.A */
-			      strcpy (pSchStr->SsAttribute[i - 1].AttrOrigName, name);
-			      pSchStr->SsNAttributes = pSchStr->SsNAttributes + 1;
-			      attribNb = i;
+			      strcpy (pSSchema->SsAttribute[i - 1].AttrOrigName, name);
+			      pSSchema->SsNAttributes = pSSchema->SsNAttributes + 1;
+			      attrNum = i;
 			   }
 			 else
-			    CompilerError (wi, APP, FATAL, APP_UNKNOWN_ATTRIBUTE, inputLine, linenb);
+			    CompilerError (wi, APP, FATAL, APP_UNKNOWN_ATTRIBUTE, inputLine, LineNum);
 		      }
 		 }
 	       break;
@@ -997,15 +981,15 @@ iline               wi;
 }
 
 /* ---------------------------------------------------------------------- */
-/* |     GenNumber genere un nombre.                                    | */
+/* |     ProcessInteger genere un nombre.                                    | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-static void         GenNumber (grmcode r, iline wl, iline wi)
+static void         ProcessInteger (SyntacticCode r, indLine wl, indLine wi)
 #else  /* __STDC__ */
-static void         GenNumber (r, wl, wi)
-grmcode             r;
-iline               wl;
-iline               wi;
+static void         ProcessInteger (r, wl, wi)
+SyntacticCode             r;
+indLine               wl;
+indLine               wi;
 
 #endif /* __STDC__ */
 {
@@ -1014,12 +998,10 @@ iline               wi;
    n = AsciiToInt (wi, wl);
    switch (r)
 	 {
-	       /* r = numero de la regle ou apparait le nombre */
-
+	    /* r = numero de la regle ou apparait le nombre */
 	    case RULE_ViewNum:
 	       ViewNumber = n;
 	       break;
-
 	    default:
 	       break;
 	 }
@@ -1029,21 +1011,19 @@ iline               wi;
 /* ---------------------------------------------------------------------- */
 /* |    ProcessToken traite le mot commencant a` la position wi dans la | */
 /* |            ligne courante, de longueur wl et de code grammatical c.| */
-/* |            Si c'est un identif, nb contient son rang dans la table | */
-/* |            des identificateurs. r est le numero de la regle dans   | */
+/* |            Si c'est un identif. r est le numero de la regle dans   | */
 /* |            laquelle apparait ce mot, pr est le numero de la regle  | */
 /* |            precedente, celle qui a appele la regle r.              | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-static void         ProcessToken (iline wi, iline wl, grmcode c, grmcode r, int nb, grmcode pr)
+static void         ProcessToken (indLine wi, indLine wl, SyntacticCode c, SyntacticCode r, SyntacticCode pr)
 #else  /* __STDC__ */
-static void         ProcessToken (wi, wl, c, r, nb, pr)
-iline               wi;
-iline               wl;
-grmcode             c;
-grmcode             r;
-int                 nb;
-grmcode             pr;
+static void         ProcessToken (wi, wl, c, r, pr)
+indLine               wi;
+indLine               wl;
+SyntacticCode             c;
+SyntacticCode             r;
+SyntacticCode             pr;
 
 #endif /* __STDC__ */
 {
@@ -1051,39 +1031,39 @@ grmcode             pr;
      {
 	/* symbole intermediaire de la grammaire, erreur */
 	CompilerError (wi, APP, FATAL, APP_INTERMEDIATE_SYMBOL, inputLine,
-		       linenb);
+		       LineNum);
      }
    else if (c < 1100)
       /* mot-cle court */
-      GenShortKW (c, r, pr);
+      ProcessShortKeyWord (c, r, pr);
    else if (c < 2000)
       /* mot-cle long */
-      GenLongKW (c, r, wi);
+      ProcessLongKeyWord (c, r, wi);
    else
       /* type de base */
       switch (c)
 	    {
 	       case 3001:
 		  /* un nom */
-		  GenName (r, pr, wl, wi);
+		  ProcessName (r, pr, wl, wi);
 		  break;
 	       case 3002:
 		  /* un nombre */
-		  GenNumber (r, wl, wi);
+		  ProcessInteger (r, wl, wi);
 		  break;
 	    }
 }
 
 
 /* ---------------------------------------------------------------------- */
-/* |    write1char write a single character.                            | */
+/* |    WriteChar write a single character.                            | */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-static void         write1char (FILE * Hfile, unsigned char ch)
+static void         WriteChar (FILE * Hfile, unsigned char ch)
 
 #else  /* __STDC__ */
-static void         write1char (Hfile, ch)
+static void         WriteChar (Hfile, ch)
 FILE               *Hfile;
 unsigned char       ch;
 
@@ -1180,7 +1160,7 @@ Name                 n;
    i = 0;
    while (n[i] != '\0')
      {
-	write1char (Hfile, n[i]);
+	WriteChar (Hfile, n[i]);
 	i++;
      }
 }
@@ -1200,10 +1180,10 @@ int         r;
 #endif /* __STDC__ */
 
 {
-   if (pSchStr->SsRule[r - 1].SrName[0] == '\0')
+   if (pSSchema->SsRule[r - 1].SrName[0] == '\0')
       fprintf (Hfile, "ID%d", r);
    else
-      WriteName (Hfile, pSchStr->SsRule[r - 1].SrName);
+      WriteName (Hfile, pSSchema->SsRule[r - 1].SrName);
 }
 
 /* ---------------------------------------------------------------------- */
@@ -1224,11 +1204,11 @@ int      a;
    int                 j;
    TtAttribute           *pAttr;
 
-   pAttr = &pSchStr->SsAttribute[a];
+   pAttr = &pSSchema->SsAttribute[a];
    if (pAttr->AttrGlobal)
       return;			/* AttrGlobal means "attribute written" */
    fprintf (Hfile, "#define ");
-   WriteName (Hfile, pSchStr->SsName);
+   WriteName (Hfile, pSSchema->SsName);
    fprintf (Hfile, "_ATTR_");
    WriteName (Hfile, pAttr->AttrName);
    fprintf (Hfile, " %d\n", a + 1);
@@ -1236,7 +1216,7 @@ int      a;
       for (j = 0; j < pAttr->AttrNEnumValues; j++)
 	{
 	   fprintf (Hfile, "#define ");
-	   WriteName (Hfile, pSchStr->SsName);
+	   WriteName (Hfile, pSSchema->SsName);
 	   fprintf (Hfile, "_ATTR_");
 	   WriteName (Hfile, pAttr->AttrName);
 	   fprintf (Hfile, "_VAL_");
@@ -1263,35 +1243,35 @@ FILE               *Hfile;
    int                 r;
 
    fprintf (Hfile, "#define ");
-   WriteName (Hfile, pSchStr->SsName);
+   WriteName (Hfile, pSSchema->SsName);
    r = CharString + 1;
    fprintf (Hfile, "_EL_");
    WriteRuleName (Hfile, r);
    fprintf (Hfile, " %d\n", r);
 
    fprintf (Hfile, "#define ");
-   WriteName (Hfile, pSchStr->SsName);
+   WriteName (Hfile, pSSchema->SsName);
    r = GraphicElem + 1;
    fprintf (Hfile, "_EL_");
    WriteRuleName (Hfile, r);
    fprintf (Hfile, " %d\n", r);
 
    fprintf (Hfile, "#define ");
-   WriteName (Hfile, pSchStr->SsName);
+   WriteName (Hfile, pSSchema->SsName);
    r = Symbol + 1;
    fprintf (Hfile, "_EL_");
    WriteRuleName (Hfile, r);
    fprintf (Hfile, " %d\n", r);
 
    fprintf (Hfile, "#define ");
-   WriteName (Hfile, pSchStr->SsName);
+   WriteName (Hfile, pSSchema->SsName);
    r = Picture + 1;
    fprintf (Hfile, "_EL_");
    WriteRuleName (Hfile, r);
    fprintf (Hfile, " %d\n", r);
 
    fprintf (Hfile, "#define ");
-   WriteName (Hfile, pSchStr->SsName);
+   WriteName (Hfile, pSSchema->SsName);
    r = PageBreak + 1;
    fprintf (Hfile, "_EL_");
    WriteRuleName (Hfile, r);
@@ -1300,17 +1280,17 @@ FILE               *Hfile;
 
 /* ---------------------------------------------------------------------- */
 /* |    WriteRule                                                       | */
-/* |    si pRegleExtens est non nul, il s'agit d'une regle d'extension  | */
+/* |    si pExtensRule est non nul, il s'agit d'une regle d'extension  | */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-static void         WriteRule (FILE * Hfile, int r, SRule * pRegleExtens)
+static void         WriteRule (FILE * Hfile, int r, SRule * pExtensRule)
 
 #else  /* __STDC__ */
-static void         WriteRule (Hfile, r, pRegleExtens)
+static void         WriteRule (Hfile, r, pExtensRule)
 FILE               *Hfile;
 int         r;
-SRule              *pRegleExtens;
+SRule              *pExtensRule;
 
 #endif /* __STDC__ */
 
@@ -1318,16 +1298,16 @@ SRule              *pRegleExtens;
    int                 i;
    SRule              *pRule;
 
-   if (pRegleExtens != NULL)
-      pRule = pRegleExtens;
+   if (pExtensRule != NULL)
+      pRule = pExtensRule;
    else
-      pRule = &pSchStr->SsRule[r];
+      pRule = &pSSchema->SsRule[r];
    if (pRule->SrConstruct != CsNatureSchema &&
        !(pRule->SrConstruct == CsPairedElement && !pRule->SrFirstOfPair))
      {
 	fprintf (Hfile, "#define ");
-	WriteName (Hfile, pSchStr->SsName);
-	if (pRegleExtens == NULL)
+	WriteName (Hfile, pSSchema->SsName);
+	if (pExtensRule == NULL)
 	  {
 	     fprintf (Hfile, "_EL_");
 	     WriteRuleName (Hfile, r);
@@ -1361,41 +1341,41 @@ char               *fname;
 #endif /* __STDC__ */
 
 {
-   boolean             FirstLocalAttribute;
-   boolean             First;
-   int         FirstRule;
+   boolean             firstLocalAttribute;
+   boolean             first;
+   int		       firstRule;
    int                 i;
    int                 rule;
    SRule              *pRule;
-   Name                 Hfilename;
+   Name                 HFileName;
    FILE               *Hfile;
 
-   sprintf (Hfilename, "%s.h", fname);
-   Hfile = fopen (Hfilename, "w");
+   sprintf (HFileName, "%s.h", fname);
+   Hfile = fopen (HFileName, "w");
    if (Hfile != NULL)
      {
-	fprintf (Hfile, "/* Types and attributes for the document type %s */\n", pSchStr->SsName);
+	fprintf (Hfile, "/* Types and attributes for the document type %s */\n", pSSchema->SsName);
 	/* write global attributes */
-	if (pSchStr->SsNAttributes > 0 && pSchStr->SsAttribute[0].AttrGlobal)
+	if (pSSchema->SsNAttributes > 0 && pSSchema->SsAttribute[0].AttrGlobal)
 	   fprintf (Hfile, "\n/* Global attributes */\n");
 
-	for (i = 0; i < pSchStr->SsNAttributes; i++)
-	   if (pSchStr->SsAttribute[i].AttrGlobal)
+	for (i = 0; i < pSSchema->SsNAttributes; i++)
+	   if (pSSchema->SsAttribute[i].AttrGlobal)
 	     {
-		pSchStr->SsAttribute[i].AttrGlobal = False;
+		pSSchema->SsAttribute[i].AttrGlobal = False;
 		/* tell WriteAttribute that it should write attribute values */
 		WriteAttribute (Hfile, i);
-		pSchStr->SsAttribute[i].AttrGlobal = True;
+		pSSchema->SsAttribute[i].AttrGlobal = True;
 	     }
 	/* write local attributes */
-	FirstLocalAttribute = True;
-	for (i = 0; i < pSchStr->SsNAttributes; i++)
-	   if (!pSchStr->SsAttribute[i].AttrGlobal)
+	firstLocalAttribute = True;
+	for (i = 0; i < pSSchema->SsNAttributes; i++)
+	   if (!pSSchema->SsAttribute[i].AttrGlobal)
 	     {
-		if (FirstLocalAttribute)
+		if (firstLocalAttribute)
 		  {
 		     fprintf (Hfile, "\n/* Local attributes */\n");
-		     FirstLocalAttribute = False;
+		     firstLocalAttribute = False;
 		  }
 		WriteAttribute (Hfile, i);
 	     }
@@ -1405,31 +1385,31 @@ char               *fname;
 
 	/* write constants */
 	rule = MAX_BASIC_TYPE;
-	if (pSchStr->SsRule[rule].SrConstruct == CsConstant)
+	if (pSSchema->SsRule[rule].SrConstruct == CsConstant)
 	  {
 	     fprintf (Hfile, "\n/* Constants */\n");
-	     while (pSchStr->SsRule[rule].SrConstruct == CsConstant)
+	     while (pSSchema->SsRule[rule].SrConstruct == CsConstant)
 		WriteRule (Hfile, ++rule, NULL);
 	  }
-	FirstRule = rule + 1;
+	firstRule = rule + 1;
 	/* write parameters */
-	First = True;
-	for (rule = FirstRule; rule <= pSchStr->SsNRules; rule++)
-	   if (pSchStr->SsRule[rule].SrParamElem)
+	first = True;
+	for (rule = firstRule; rule <= pSSchema->SsNRules; rule++)
+	   if (pSSchema->SsRule[rule].SrParamElem)
 	     {
-		if (First)
+		if (first)
 		  {
 		     fprintf (Hfile, "\n/* Parameters */\n");
-		     First = False;
+		     first = False;
 		  }
 		WriteRule (Hfile, rule, NULL);
 	     }
 	/* write rules */
-	if (pSchStr->SsNRules >= FirstRule)
+	if (pSSchema->SsNRules >= firstRule)
 	   fprintf (Hfile, "\n/* Elements */\n");
-	for (rule = FirstRule; rule <= pSchStr->SsNRules; rule++)
+	for (rule = firstRule; rule <= pSSchema->SsNRules; rule++)
 	  {
-	     pRule = &pSchStr->SsRule[rule];
+	     pRule = &pSSchema->SsRule[rule];
 	     /* skip parameters, associated elements, */
 	     /* Extern and Included elements and units */
 	     if (!pRule->SrParamElem &&
@@ -1439,67 +1419,67 @@ char               *fname;
 		/* ignore lists added for associated elements */
 		if (pRule->SrConstruct != CsList)
 		   WriteRule (Hfile, rule, NULL);
-		else if (!pSchStr->SsRule[pRule->SrListItem - 1].SrAssocElem)
+		else if (!pSSchema->SsRule[pRule->SrListItem - 1].SrAssocElem)
 		   WriteRule (Hfile, rule, NULL);
 	  }
 	/* write extension rules */
-	if (pSchStr->SsExtension && pSchStr->SsNExtensRules > 0)
+	if (pSSchema->SsExtension && pSSchema->SsNExtensRules > 0)
 	  {
 	     fprintf (Hfile, "\n/* Extension rules */\n");
-	     for (rule = 0; rule < pSchStr->SsNExtensRules; rule++)
+	     for (rule = 0; rule < pSSchema->SsNExtensRules; rule++)
 	       {
-		  pRule = &pSchStr->SsExtensBlock->EbExtensRule[rule];
+		  pRule = &pSSchema->SsExtensBlock->EbExtensRule[rule];
 		  WriteRule (Hfile, rule, pRule);
 	       }
 	  }
 	/* write associated elements */
-	First = True;
-	for (rule = FirstRule; rule <= pSchStr->SsNRules; rule++)
-	   if (pSchStr->SsRule[rule].SrAssocElem)
+	first = True;
+	for (rule = firstRule; rule <= pSSchema->SsNRules; rule++)
+	   if (pSSchema->SsRule[rule].SrAssocElem)
 	     {
-		if (First)
+		if (first)
 		  {
 		     fprintf (Hfile, "\n/* Associated elements */\n");
-		     First = False;
+		     first = False;
 		  }
 		WriteRule (Hfile, rule, NULL);
 	     }
-	if (!First)
+	if (!first)
 	   /* there is at least one associated element. Write LIST rules added */
 	   /* for associated elements */
 	  {
-	     for (rule = FirstRule; rule <= pSchStr->SsNRules; rule++)
+	     for (rule = firstRule; rule <= pSSchema->SsNRules; rule++)
 	       {
-		  pRule = &pSchStr->SsRule[rule];
+		  pRule = &pSSchema->SsRule[rule];
 		  if (pRule->SrConstruct == CsList)
-		     if (pSchStr->SsRule[pRule->SrListItem - 1].SrAssocElem)
+		     if (pSSchema->SsRule[pRule->SrListItem - 1].SrAssocElem)
 			WriteRule (Hfile, rule, NULL);
 	       }
 	  }
 	/* write exported elements */
-	First = True;
-	for (rule = FirstRule; rule <= pSchStr->SsNRules; rule++)
-	   if (pSchStr->SsRule[rule].SrUnitElem)
+	first = True;
+	for (rule = firstRule; rule <= pSSchema->SsNRules; rule++)
+	   if (pSSchema->SsRule[rule].SrUnitElem)
 	     {
-		if (First)
+		if (first)
 		  {
 		     fprintf (Hfile, "\n/* Units */\n");
-		     First = False;
+		     first = False;
 		  }
 		WriteRule (Hfile, rule, NULL);
 	     }
 
-	First = True;
-	for (rule = FirstRule; rule <= pSchStr->SsNRules; rule++)
-	   if (pSchStr->SsRule[rule].SrConstruct == CsNatureSchema)
+	first = True;
+	for (rule = firstRule; rule <= pSSchema->SsNRules; rule++)
+	   if (pSSchema->SsRule[rule].SrConstruct == CsNatureSchema)
 	     {
-		if (First)
+		if (first)
 		  {
 		     fprintf (Hfile, "\n/* Imported natures */\n");
-		     First = False;
+		     first = False;
 		  }
 		fprintf (Hfile, "#define ");
-		WriteName (Hfile, pSchStr->SsName);
+		WriteName (Hfile, pSSchema->SsName);
 		fprintf (Hfile, "_EL_");
 		WriteRuleName (Hfile, rule + 1);
 		fprintf (Hfile, " %d\n", rule + 1);
@@ -1522,16 +1502,16 @@ char              **argv;
 {
    FILE               *filedesc;
    boolean             fileOK;
-   char                cppFileName[200];
-   Name                 pfilename;
+   char                buffer[200];
+   Name                 pFileName;
    int                 i;
    int                 wi;	/* position du debut du mot courant dans la ligne */
    int                 wl;	/* longueur du mot courant */
-   nature              wn;	/* nature du mot courant */
-   rnb                 r;	/* numero de regle */
-   rnb                 pr;	/* numero de la regle precedente */
-   grmcode             c;	/* code grammatical du mot trouve */
-   int                 nb;	/* indice dans identtable du mot trouve, si */
+   SyntacticType              wn;	/* SyntacticType du mot courant */
+   SyntRuleNum                 r;	/* numero de regle */
+   SyntRuleNum                 pr;	/* numero de la regle precedente */
+   SyntacticCode             c;	/* code grammatical du mot trouve */
+   int                 idNum;	/* indice dans identtable du mot trouve, si */
 
    /* identificateur */
 
@@ -1553,23 +1533,23 @@ char              **argv;
 	else
 	  {
 	     /* recupere le nom du schema a compiler */
-	     strncpy (filename, argv[1], MAX_NAME_LENGTH - 1);
-	     strncpy (pfilename, filename, MAX_NAME_LENGTH - 3);
+	     strncpy (fileName, argv[1], MAX_NAME_LENGTH - 1);
+	     strncpy (pFileName, fileName, MAX_NAME_LENGTH - 3);
 	     /* ajoute le suffixe .A */
-	     strcat (pfilename, ".A");
+	     strcat (pFileName, ".A");
 	     /* ouvre le fichier a compiler */
-	     filedesc = fopen (pfilename, "r");
+	     filedesc = fopen (pFileName, "r");
 	     if (filedesc == 0)
-		TtaDisplayMessage (FATAL, TtaGetMessage(APP, APP_NO_SUCH_FILE), pfilename);
+		TtaDisplayMessage (FATAL, TtaGetMessage(APP, APP_NO_SUCH_FILE), pFileName);
 	     else
 	       {
 		  /* le fichier a compiler est ouvert */
-		  strcpy (pfilename, filename);
+		  strcpy (pFileName, fileName);
 		  lgidenttable = 0;
 		  /* table des identificateurs vide */
-		  linenb = 0;
+		  LineNum = 0;
 		  /* encore aucune ligne lue */
-		  pSchStr = NULL;
+		  pSSchema = NULL;
 		  /* pas (encore) de schema de structure */
 		  fileOK = True;
 		  /* lit tout le fichier et fait l'analyse */
@@ -1583,15 +1563,15 @@ char              **argv;
 		       /* marque la fin reelle de la ligne */
 		       inputLine[i - 1] = '\0';
 		       /* incremente le compteur de lignes lues */
-		       linenb++;
+		       LineNum++;
 		       if (i >= linelen)
 			  /* ligne trop longue */
-			  CompilerError (1, APP, FATAL, APP_LINE_TOO_LONG, inputLine, linenb);
+			  CompilerError (1, APP, FATAL, APP_LINE_TOO_LONG, inputLine, LineNum);
 		       else if (inputLine[0] == '#')
 			  /* cette ligne contient une directive du preprocesseur cpp */
 			 {
-			    sscanf (inputLine, "# %d %s", &linenb, cppFileName);
-			    linenb--;
+			    sscanf (inputLine, "# %d %s", &LineNum, buffer);
+			    LineNum--;
 			 }
 		       else
 			  /* traduit tous les caracteres de la ligne */
@@ -1609,10 +1589,10 @@ char              **argv;
 				 if (wi > 0)
 				    /* on a trouve un mot */
 				   {
-				      AnalyzeToken (wi, wl, wn, &c, &r, &nb, &pr);
+				      AnalyzeToken (wi, wl, wn, &c, &r, &idNum, &pr);
 				      /* on analyse le mot */
 				      if (!error)
-					 ProcessToken (wi, wl, c, r, nb, pr);	/* on le traite */
+					 ProcessToken (wi, wl, c, r, pr);	/* on le traite */
 				   }
 			      }
 			    while (!(wi == 0 || error));
@@ -1629,10 +1609,10 @@ char              **argv;
 		       /* ecrit le schema compile' dans le fichier de sortie     */
 		       /* le directory des schemas est le directory courant      */
 		       DirectorySchemas[0] = '\0';
-		       GenerateApplication (pfilename, pAppli, pSchStr);
-		       strcpy (pfilename, filename);
-		       if (strcmp (pfilename, "EDITOR") != 0)
-			  WriteDefineFile (pfilename);
+		       GenerateApplication (pFileName, pAppli);
+		       strcpy (pFileName, fileName);
+		       if (strcmp (pFileName, "EDITOR") != 0)
+			  WriteDefineFile (pFileName);
 		    }
 	       }
 	  }

@@ -1468,13 +1468,13 @@ char              **argv;
 			}
 
 		  printf (" \'");
-		  j = 1;
-		  while (pPr1->PdString[j - 1] != '\0')
+		  j = 0;
+		  while (pPr1->PdString[j] != '\0')
 		    {
-		       if (pPr1->PdString[j - 1] < ' ')
-			  printf ("\\%3d", pPr1->PdString[j - 1]);
+		       if (pPr1->PdString[j] < ' ')
+			  printf ("\\%3d", (int) pPr1->PdString[j]);
 		       else
-			  putchar (pPr1->PdString[j - 1]);
+			  putchar (pPr1->PdString[j]);
 		       j++;
 		    }
 		  printf ("\';\n");

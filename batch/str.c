@@ -44,7 +44,7 @@ ContStrExt;
 #define EXPORT extern
 #include "analsynt.var"
 
-int                 linenb;	/* compteur de lignes du fichier source */
+int                 LineNum;	/* compteur de lignes du fichier source */
 
 static Name          srceFileName; /* nom du fichier a compiler */
 static PtrSSchema pSSchema;	/* pointeur sur le schema de structure en cours
@@ -336,27 +336,27 @@ int                 n;
 #endif /* __STDC__ */
 {
    int                 j;
-   identelem          *pIdent;
+   SrcIdentDesc          *pIdent;
    SRule              *pRule;
 
    pIdent = &identtable[n - 1];
-   TtaDisplayMessage (INFO, TtaGetMessage(STR, STR_EXTERNAL_STRUCT), pIdent->identname);
+   TtaDisplayMessage (INFO, TtaGetMessage(STR, STR_EXTERNAL_STRUCT), pIdent->SrcIdentifier);
    if (pSSchema->SsNRules >= MAX_RULES_SSCHEMA)
       TtaDisplaySimpleMessage (FATAL, STR, STR_TOO_MAN_RULES);
    /* trop de regles */
    else
-      /* ajoute une regle de nature a la fin du schema */
+      /* ajoute une regle de SyntacticType a la fin du schema */
      {
 	pSSchema->SsNRules++;
-	pIdent->identdef = pSSchema->SsNRules;
-	if (pIdent->identlg > MAX_NAME_LENGTH - 1)
+	pIdent->SrcIdentDefRule = pSSchema->SsNRules;
+	if (pIdent->SrcIdentLen > MAX_NAME_LENGTH - 1)
 	   TtaDisplaySimpleMessage (FATAL, STR, STR_WORD_TOO_LONG);
 	else
 	  {
 	     pRule = &pSSchema->SsRule[pSSchema->SsNRules - 1];
-	     for (j = 0; j < pIdent->identlg; j++)
-		pRule->SrName[j] = pIdent->identname[j];
-	     pRule->SrName[pIdent->identlg] = '\0';
+	     for (j = 0; j < pIdent->SrcIdentLen; j++)
+		pRule->SrName[j] = pIdent->SrcIdentifier[j];
+	     pRule->SrName[pIdent->SrcIdentLen] = '\0';
 	     pRule->SrNLocalAttrs = 0;
 	     pRule->SrNInclusions = 0;
 	     pRule->SrNExclusions = 0;
@@ -402,10 +402,10 @@ SRule              *pRule;
      {
 	if (pRule->SrInclusion[j] > MAX_BASIC_TYPE)
 	  {
-	     if (identtable[pRule->SrInclusion[j] - MAX_BASIC_TYPE - 1].identdef == 0)
+	     if (identtable[pRule->SrInclusion[j] - MAX_BASIC_TYPE - 1].SrcIdentDefRule == 0)
 		Undefined (pRule->SrInclusion[j] - MAX_BASIC_TYPE);
 	     pRule->SrInclusion[j] =
-		identtable[pRule->SrInclusion[j] - MAX_BASIC_TYPE - 1].identdef;
+		identtable[pRule->SrInclusion[j] - MAX_BASIC_TYPE - 1].SrcIdentDefRule;
 	  }
 	else if (pRule->SrInclusion[j] < 0)
 	   pRule->SrInclusion[j] = -pRule->SrInclusion[j];
@@ -416,10 +416,10 @@ SRule              *pRule;
      {
 	if (pRule->SrExclusion[j] > MAX_BASIC_TYPE)
 	  {
-	     if (identtable[pRule->SrExclusion[j] - MAX_BASIC_TYPE - 1].identdef == 0)
+	     if (identtable[pRule->SrExclusion[j] - MAX_BASIC_TYPE - 1].SrcIdentDefRule == 0)
 		Undefined (pRule->SrExclusion[j] - MAX_BASIC_TYPE);
 	     pRule->SrExclusion[j] =
-		identtable[pRule->SrExclusion[j] - MAX_BASIC_TYPE - 1].identdef;
+		identtable[pRule->SrExclusion[j] - MAX_BASIC_TYPE - 1].SrcIdentDefRule;
 	  }
 	else if (pRule->SrExclusion[j] < 0)
 	   pRule->SrExclusion[j] = -pRule->SrExclusion[j];
@@ -432,10 +432,10 @@ SRule              *pRule;
 	       if (pRule->SrRefTypeNat[0] == '\0')
 		  if (pRule->SrReferredType > MAX_BASIC_TYPE)
 		    {
-		       if (identtable[pRule->SrReferredType - MAX_BASIC_TYPE - 1].identdef == 0)
+		       if (identtable[pRule->SrReferredType - MAX_BASIC_TYPE - 1].SrcIdentDefRule == 0)
 			  Undefined (pRule->SrReferredType - MAX_BASIC_TYPE);
 		       pRule->SrReferredType = identtable[pRule->SrReferredType - MAX_BASIC_TYPE - 1].
-			  identdef;
+			  SrcIdentDefRule;
 		    }
 		  else if (pRule->SrReferredType < 0)
 		     pRule->SrReferredType = -pRule->SrReferredType;
@@ -443,10 +443,10 @@ SRule              *pRule;
 	    case CsIdentity:
 	       if (pRule->SrIdentRule > MAX_BASIC_TYPE)
 		 {
-		    if (identtable[pRule->SrIdentRule - MAX_BASIC_TYPE - 1].identdef == 0)
+		    if (identtable[pRule->SrIdentRule - MAX_BASIC_TYPE - 1].SrcIdentDefRule == 0)
 		       Undefined (pRule->SrIdentRule - MAX_BASIC_TYPE);
 		    pRule->SrIdentRule = identtable[pRule->SrIdentRule - MAX_BASIC_TYPE - 1].
-		       identdef;
+		       SrcIdentDefRule;
 		 }
 	       else if (pRule->SrIdentRule < 0)
 		  pRule->SrIdentRule = -pRule->SrIdentRule;
@@ -455,10 +455,10 @@ SRule              *pRule;
 	    case CsList:
 	       if (pRule->SrListItem > MAX_BASIC_TYPE)
 		 {
-		    if (identtable[pRule->SrListItem - MAX_BASIC_TYPE - 1].identdef == 0)
+		    if (identtable[pRule->SrListItem - MAX_BASIC_TYPE - 1].SrcIdentDefRule == 0)
 		       Undefined (pRule->SrListItem - MAX_BASIC_TYPE);
 		    pRule->SrListItem = identtable[pRule->SrListItem - MAX_BASIC_TYPE - 1].
-		       identdef;
+		       SrcIdentDefRule;
 		 }
 	       else if (pRule->SrListItem < 0)
 		  pRule->SrListItem = -pRule->SrListItem;
@@ -470,10 +470,10 @@ SRule              *pRule;
 		    {
 		       if (pRule->SrChoice[j] > MAX_BASIC_TYPE)
 			 {
-			    if (identtable[pRule->SrChoice[j] - MAX_BASIC_TYPE - 1].identdef == 0)
+			    if (identtable[pRule->SrChoice[j] - MAX_BASIC_TYPE - 1].SrcIdentDefRule == 0)
 			       Undefined (pRule->SrChoice[j] - MAX_BASIC_TYPE);
 			    pRule->SrChoice[j] =
-			       identtable[pRule->SrChoice[j] - MAX_BASIC_TYPE - 1].identdef;
+			       identtable[pRule->SrChoice[j] - MAX_BASIC_TYPE - 1].SrcIdentDefRule;
 			 }
 		       else if (pRule->SrChoice[j] < 0)
 			  pRule->SrChoice[j] = -pRule->SrChoice[j];
@@ -486,10 +486,10 @@ SRule              *pRule;
 		 {
 		    if (pRule->SrComponent[j] > MAX_BASIC_TYPE)
 		      {
-			 if (identtable[pRule->SrComponent[j] - MAX_BASIC_TYPE - 1].identdef == 0)
+			 if (identtable[pRule->SrComponent[j] - MAX_BASIC_TYPE - 1].SrcIdentDefRule == 0)
 			    Undefined (pRule->SrComponent[j] - MAX_BASIC_TYPE);
 			 pRule->SrComponent[j] =
-			    identtable[pRule->SrComponent[j] - MAX_BASIC_TYPE - 1].identdef;
+			    identtable[pRule->SrComponent[j] - MAX_BASIC_TYPE - 1].SrcIdentDefRule;
 		      }
 		    else if (pRule->SrComponent[j] < 0)
 		       pRule->SrComponent[j] = -pRule->SrComponent[j];
@@ -547,10 +547,10 @@ static void         ChangeRules ()
 	   if (pAttr->AttrTypeRefNature[0] == '\0')
 	      if (pAttr->AttrTypeRef > MAX_BASIC_TYPE)
 		{
-		   if (identtable[pAttr->AttrTypeRef - MAX_BASIC_TYPE - 1].identdef == 0)
+		   if (identtable[pAttr->AttrTypeRef - MAX_BASIC_TYPE - 1].SrcIdentDefRule == 0)
 		      Undefined (pAttr->AttrTypeRef - MAX_BASIC_TYPE);
 		   pAttr->AttrTypeRef =
-		      identtable[pAttr->AttrTypeRef - MAX_BASIC_TYPE - 1].identdef;
+		      identtable[pAttr->AttrTypeRef - MAX_BASIC_TYPE - 1].SrcIdentDefRule;
 		}
 	      else if (pAttr->AttrTypeRef < 0)
 		 pAttr->AttrTypeRef = -pAttr->AttrTypeRef;
@@ -562,19 +562,19 @@ static void         ChangeRules ()
 /* |    CopyWord    copie dans n le mot traite'.                        | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-static void         CopyWord (Name name, iline wi, iline wl)
+static void         CopyWord (Name name, indLine wi, indLine wl)
 
 #else  /* __STDC__ */
 static void         CopyWord (name, wi, wl)
 Name                 name;
-iline               wi;
-iline               wl;
+indLine               wi;
+indLine               wl;
 
 #endif /* __STDC__ */
 
 {
    if (wl > MAX_NAME_LENGTH - 1)
-      CompilerError (wi, STR, FATAL, STR_WORD_TOO_LONG, inputLine, linenb);
+      CompilerError (wi, STR, FATAL, STR_WORD_TOO_LONG, inputLine, LineNum);
    else
      {
 	strncpy (name, &inputLine[wi - 1], wl);
@@ -587,17 +587,17 @@ iline               wl;
 /* |    Push                                                            | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-static void         Push (iline wi)
+static void         Push (indLine wi)
 
 #else  /* __STDC__ */
 static void         Push (wi)
-iline               wi;
+indLine               wi;
 
 #endif /* __STDC__ */
 
 {
    if (RecursLevel >= MAX_SRULE_RECURS)
-      CompilerError (wi, STR, FATAL, STR_RULE_NESTING_TOO_DEEP, inputLine, linenb);
+      CompilerError (wi, STR, FATAL, STR_RULE_NESTING_TOO_DEEP, inputLine, LineNum);
    else
      {
 	RRight[RecursLevel] = False;
@@ -611,12 +611,12 @@ iline               wi;
 /* |    RightIdentifier                                                 | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-static void         RightIdentifier (int n, iline wi)
+static void         RightIdentifier (int n, indLine wi)
 
 #else  /* __STDC__ */
 static void         RightIdentifier (n, wi)
 int                 n;
-iline               wi;
+indLine               wi;
 
 #endif /* __STDC__ */
 
@@ -642,7 +642,7 @@ iline               wi;
 	       break;
 	    case CsChoice:
 	       if (pRule->SrNChoices >= MAX_OPTION_CASE)
-		  CompilerError (wi, STR, FATAL, STR_TOO_MANY_OPTIONS_IN_THE_CASE_STATEMENT, inputLine, linenb);
+		  CompilerError (wi, STR, FATAL, STR_TOO_MANY_OPTIONS_IN_THE_CASE_STATEMENT, inputLine, LineNum);
 	       else
 		 {
 		    pRule->SrNChoices++;
@@ -652,7 +652,7 @@ iline               wi;
 	    case CsUnorderedAggregate:
 	    case CsAggregate:
 	       if (pRule->SrNComponents >= MAX_COMP_AGG)
-		  CompilerError (wi, STR, FATAL, STR_TOO_MANY_COMPONENTS_IN_AGGREGATE, inputLine, linenb);
+		  CompilerError (wi, STR, FATAL, STR_TOO_MANY_COMPONENTS_IN_AGGREGATE, inputLine, LineNum);
 	       else
 		 {
 		    pRule->SrNComponents++;
@@ -674,11 +674,11 @@ iline               wi;
 /* |    NewRule                                                         | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-static void         NewRule (iline wi)
+static void         NewRule (indLine wi)
 
 #else  /* __STDC__ */
 static void         NewRule (wi)
-iline               wi;
+indLine               wi;
 
 #endif /* __STDC__ */
 
@@ -687,13 +687,13 @@ iline               wi;
    SRule              *pRule;
 
    if (pSSchema->SsNRules >= MAX_RULES_SSCHEMA)
-      CompilerError (wi, STR, FATAL, STR_TOO_MAN_RULES, inputLine, linenb);
+      CompilerError (wi, STR, FATAL, STR_TOO_MAN_RULES, inputLine, LineNum);
    else
       pSSchema->SsNRules++;
    if (CurNum > 0)		/* il y a un symbole gauche a cette regle */
-      if (identtable[CurNum - 1].identdef > 0)
+      if (identtable[CurNum - 1].SrcIdentDefRule > 0)
 	 /* double definition */
-	 CompilerError (wi, STR, FATAL, STR_NAME_ALREADY_DECLARED, inputLine, linenb);
+	 CompilerError (wi, STR, FATAL, STR_NAME_ALREADY_DECLARED, inputLine, LineNum);
    if (!error)
      {
 	CurRule[RecursLevel - 1] = pSSchema->SsNRules;
@@ -708,7 +708,7 @@ iline               wi;
 	     RecursLevel++;
 	  }
 	if (CurNum > 0)
-	   identtable[CurNum - 1].identdef = pSSchema->SsNRules;
+	   identtable[CurNum - 1].SrcIdentDefRule = pSSchema->SsNRules;
 	if (Rules)
 	   RRight[RecursLevel - 1] = True;
 	pRule = &pSSchema->SsRule[pSSchema->SsNRules - 1];
@@ -716,7 +716,7 @@ iline               wi;
 	pRule->SrNDefAttrs = 0;
 	if (pRule->SrNLocalAttrs > 0)
 	   /* il y a deja des attributs locaux pour cet element */
-	   CompilerError (wi, STR, FATAL, STR_THIS_ELEM_HAS_LOCAL_ATTRS, inputLine, linenb);
+	   CompilerError (wi, STR, FATAL, STR_THIS_ELEM_HAS_LOCAL_ATTRS, inputLine, LineNum);
 	else
 	   pRule->SrNLocalAttrs = CurNLocAttr;
 	for (i = 0; i < pRule->SrNLocalAttrs; i++)
@@ -736,7 +736,7 @@ iline               wi;
 	pRule->SrNExclusions = 0;
 	pRule->SrRefImportedDoc = False;
 	if (RuleNameExist ())
-	   CompilerError (wi, STR, FATAL, STR_NAME_ALREADY_DECLARED, inputLine, linenb);
+	   CompilerError (wi, STR, FATAL, STR_NAME_ALREADY_DECLARED, inputLine, LineNum);
 	if (RootRule)
 	   /* compare ce nom avec le nom du schema */
 	  {
@@ -744,7 +744,7 @@ iline               wi;
 		/* c'est la racine du schema */
 		pSSchema->SsRootElem = pSSchema->SsNRules;
 	     else if (!pSSchema->SsExtension)
-		CompilerError (wi, STR, FATAL, STR_FIRST_RULE_MUST_BE_THE_ROOT, inputLine, linenb);
+		CompilerError (wi, STR, FATAL, STR_FIRST_RULE_MUST_BE_THE_ROOT, inputLine, LineNum);
 	     RootRule = False;
 	  }
 	CurName[0] = '\0';
@@ -763,12 +763,12 @@ iline               wi;
 /* |    un type d'element deja defini.                                  | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-static int          RuleNumber (iline wl, iline wi)
+static int          RuleNumber (indLine wl, indLine wi)
 
 #else  /* __STDC__ */
 static int          RuleNumber (wl, wi)
-iline              wl;
-iline              wi;
+indLine              wl;
+indLine              wi;
 
 #endif /* __STDC__ */
 
@@ -795,12 +795,12 @@ iline              wi;
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-static int          AttributeNumber (iline wl, iline wi)
+static int          AttributeNumber (indLine wl, indLine wi)
 
 #else  /* __STDC__ */
 static int          AttributeNumber (wl, wi)
-iline               wl;
-iline               wi;
+indLine               wl;
+indLine               wi;
 
 #endif /* __STDC__ */
 
@@ -830,7 +830,7 @@ iline               wi;
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-static void         ExceptionNum (int Num, boolean checkType, boolean checkAttr, boolean CheckIntAttr, iline wi)
+static void         ExceptionNum (int Num, boolean checkType, boolean checkAttr, boolean CheckIntAttr, indLine wi)
 
 #else  /* __STDC__ */
 static void         ExceptionNum (Num, checkType, checkAttr, CheckIntAttr, wi)
@@ -838,7 +838,7 @@ int                 Num;
 boolean             checkType;
 boolean             checkAttr;
 boolean             CheckIntAttr;
-iline               wi;
+indLine               wi;
 
 #endif /* __STDC__ */
 
@@ -847,21 +847,21 @@ iline               wi;
    TtAttribute           *pAttr;
 
    if (checkType && ExceptType == 0)
-      CompilerError (wi, STR, FATAL, STR_ONLY_FOR_ELEMS, inputLine, linenb);
+      CompilerError (wi, STR, FATAL, STR_ONLY_FOR_ELEMS, inputLine, LineNum);
    if (checkAttr && ExceptAttr == 0)
-      CompilerError (wi, STR, FATAL, STR_ONLY_FOR_ATTRS, inputLine, linenb);
+      CompilerError (wi, STR, FATAL, STR_ONLY_FOR_ATTRS, inputLine, LineNum);
    if (ExceptAttr > 0)
      {
 	if (CheckIntAttr && pSSchema->SsAttribute[ExceptAttr - 1].AttrType != AtNumAttr)
-	   CompilerError (wi, STR, FATAL, STR_ONLY_FOR_NUMERICAL_ATTRS, inputLine, linenb);
+	   CompilerError (wi, STR, FATAL, STR_ONLY_FOR_NUMERICAL_ATTRS, inputLine, LineNum);
 	if (Num == ExcActiveRef && pSSchema->SsAttribute[ExceptAttr - 1].AttrType != AtReferenceAttr)
-	   CompilerError (wi, STR, FATAL, STR_ONLY_FOR_REFERENCE_ATTRS, inputLine, linenb);
+	   CompilerError (wi, STR, FATAL, STR_ONLY_FOR_REFERENCE_ATTRS, inputLine, LineNum);
      }
    if (!error)
      {
 	if (pSSchema->SsNExceptions >= MAX_EXCEPT_SSCHEMA)
 	   /* la liste des numeros d'exception est pleine */
-	   CompilerError (wi, STR, FATAL, STR_TOO_MANY_EXCEPTS, inputLine, linenb);
+	   CompilerError (wi, STR, FATAL, STR_TOO_MANY_EXCEPTS, inputLine, LineNum);
 	else
 	   /* range le numero d'exception dans la liste des */
 	   /* numeros d'exception du schema de structure */
@@ -894,13 +894,13 @@ iline               wi;
 /* |    BasicEl                                                       | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-static void         BasicEl (int n, iline wi, rnb pr)
+static void         BasicEl (int n, indLine wi, SyntRuleNum pr)
 
 #else  /* __STDC__ */
 static void         BasicEl (n, wi, pr)
 int                 n;
-iline               wi;
-rnb                 pr;
+indLine               wi;
+SyntRuleNum                 pr;
 
 #endif /* __STDC__ */
 
@@ -916,7 +916,7 @@ rnb                 pr;
    if (pr == RULE_InclElem)
      {
 	if (pRule->SrNInclusions >= MAX_INCL_EXCL_SRULE)
-	   CompilerError (wi, STR, FATAL, STR_TOO_MANY_INCLS_FOR_THAT_ELEM, inputLine, linenb);
+	   CompilerError (wi, STR, FATAL, STR_TOO_MANY_INCLS_FOR_THAT_ELEM, inputLine, LineNum);
 	else
 	  {
 	     pRule->SrNInclusions++;
@@ -926,7 +926,7 @@ rnb                 pr;
    else if (pr == RULE_ExclElem)
      {
 	if (pRule->SrNExclusions >= MAX_INCL_EXCL_SRULE)
-	   CompilerError (wi, STR, FATAL, STR_TOO_MANY_EXCLUSIONS_FOR_THAT_ELEM, inputLine, linenb);
+	   CompilerError (wi, STR, FATAL, STR_TOO_MANY_EXCLUSIONS_FOR_THAT_ELEM, inputLine, LineNum);
 	else
 	  {
 	     pRule->SrNExclusions++;
@@ -938,7 +938,7 @@ rnb                 pr;
      {
 	ExceptType = n;
 	if (pSSchema->SsRule[ExceptType - 1].SrFirstExcept != 0)
-	   CompilerError (wi, STR, FATAL, STR_THIS_TYPE_ALREADY_HAS_EXCEPTS, inputLine, linenb);
+	   CompilerError (wi, STR, FATAL, STR_THIS_TYPE_ALREADY_HAS_EXCEPTS, inputLine, LineNum);
      }
    else
      {
@@ -982,7 +982,7 @@ int                 wl;
 
    pos = TextConstPtr;
    if (TextConstPtr + wl >= MAX_LEN_ALL_CONST)
-      CompilerError (wi, STR, FATAL, STR_CONSTANT_BUFFER_FULL, inputLine, linenb);
+      CompilerError (wi, STR, FATAL, STR_CONSTANT_BUFFER_FULL, inputLine, LineNum);
    else
      {
 	for (i = 0; i <= wl - 2; i++)
@@ -1063,12 +1063,12 @@ static void         DupliqueReglePaire ()
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-static SRule       *GetExtensionRule (iline wi, iline wl)
+static SRule       *GetExtensionRule (indLine wi, indLine wl)
 
 #else  /* __STDC__ */
 static SRule       *GetExtensionRule (wi, wl)
-iline               wi;
-iline               wl;
+indLine               wi;
+indLine               wl;
 
 #endif /* __STDC__ */
 
@@ -1104,12 +1104,12 @@ iline               wl;
 /* |                    d'extension                                     | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-static SRule       *NewExtensionRule (iline wi, iline wl)
+static SRule       *NewExtensionRule (indLine wi, indLine wl)
 
 #else  /* __STDC__ */
 static SRule       *NewExtensionRule (wi, wl)
-iline               wi;
-iline               wl;
+indLine               wi;
+indLine               wl;
 
 #endif /* __STDC__ */
 
@@ -1118,13 +1118,13 @@ iline               wl;
 
    pRule = NULL;
    if (GetExtensionRule (wi, wl) != NULL)
-      CompilerError (wi, STR, FATAL, STR_NAME_ALREADY_DECLARED, inputLine, linenb);
+      CompilerError (wi, STR, FATAL, STR_NAME_ALREADY_DECLARED, inputLine, LineNum);
    if (pSSchema->SsExtensBlock == NULL)
       if ((pSSchema->SsExtensBlock = (PtrExtensBlock) malloc (sizeof (ExtensBlock))) == NULL)
 	 TtaDisplaySimpleMessage (FATAL, STR, STR_NOT_ENOUGH_MEM);
    if (pSSchema->SsExtensBlock != NULL)
       if (pSSchema->SsNExtensRules >= MAX_EXTENS_SSCHEMA)
-	 CompilerError (wi, STR, FATAL, STR_TOO_MAN_RULES, inputLine, linenb);
+	 CompilerError (wi, STR, FATAL, STR_TOO_MAN_RULES, inputLine, LineNum);
       else
 	{
 	   pRule = &pSSchema->SsExtensBlock->EbExtensRule[pSSchema->SsNExtensRules];
@@ -1145,21 +1145,21 @@ iline               wl;
 /* |    apparait ce mot.                                                | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-static void         ProcessToken (iline wi, iline wl, grmcode c, grmcode r, int nb, rnb pr)
+static void         ProcessToken (indLine wi, indLine wl, SyntacticCode c, SyntacticCode r, int nb, SyntRuleNum pr)
 
 #else  /* __STDC__ */
 static void         ProcessToken (wi, wl, c, r, nb, pr)
-iline               wi;
-iline               wl;
-grmcode             c;
-grmcode             r;
+indLine               wi;
+indLine               wl;
+SyntacticCode             c;
+SyntacticCode             r;
 int                 nb;
-rnb                 pr;
+SyntRuleNum                 pr;
 
 #endif /* __STDC__ */
 
 {
-   int                 number, i, j;
+   int                 SynInteger, i, j;
    Name                 N;
    TtAttribute           *pAttr;
    SRule              *pRule;
@@ -1168,7 +1168,7 @@ rnb                 pr;
 
    if (c < 1000)
       /* symbole intermediaire de la grammaire, erreur */
-      CompilerError (wi, STR, FATAL, STR_INTERMEDIATE_SYMBOL, inputLine, linenb);
+      CompilerError (wi, STR, FATAL, STR_INTERMEDIATE_SYMBOL, inputLine, LineNum);
    else if (c < 1100)
       /* mot-cle court */
       switch (c)
@@ -1186,7 +1186,7 @@ rnb                 pr;
 			  pAttr = &pSSchema->SsAttribute[CurLocAttr[CurNLocAttr - 1] - 1];
 		       if (pAttr->AttrType == AtEnumAttr && pAttr->AttrNEnumValues == 0)
 			  /* pas de valeur definie */
-			  CompilerError (wi, STR, FATAL, STR_ATTR_WITHOUT_VALUE, inputLine, linenb);
+			  CompilerError (wi, STR, FATAL, STR_ATTR_WITHOUT_VALUE, inputLine, LineNum);
 		    }
 		  if (!(CompilAttr || CompilLocAttr))
 		     if (r == RULE_RuleList || r == RULE_OptDefList || r == RULE_DefList)
@@ -1216,7 +1216,7 @@ rnb                 pr;
 		    {
 		       /* fin d'un element exporte' */
 		       if (UnknownContent)
-			  CompilerError (BeginReferredTypeName, STR, FATAL, STR_TYPE_UNKNOWN, inputLine, linenb);
+			  CompilerError (BeginReferredTypeName, STR, FATAL, STR_TYPE_UNKNOWN, inputLine, LineNum);
 		       /* contenu invalide */
 		    }
 
@@ -1239,7 +1239,7 @@ rnb                 pr;
 		       if (pAttr->AttrType != AtEnumAttr
 			   || (pAttr->AttrType == AtEnumAttr && pAttr->AttrNEnumValues > 0))
 			  /* attribut deja defini */
-			  CompilerError (wi, STR, FATAL, STR_THAT_ATTR_HAS_ALREADY_VALUES, inputLine, linenb);
+			  CompilerError (wi, STR, FATAL, STR_THAT_ATTR_HAS_ALREADY_VALUES, inputLine, LineNum);
 		    }
 		  break;
 	       case CHR_40:
@@ -1272,14 +1272,14 @@ rnb                 pr;
 			  pAttr = &pSSchema->SsAttribute[CurLocAttr[CurNLocAttr - 1] - 1];
 		       if (pAttr->AttrType == AtEnumAttr && pAttr->AttrNEnumValues == 0)
 			  /* pas de valeur definie */
-			  CompilerError (wi, STR, FATAL, STR_ATTR_WITHOUT_VALUE, inputLine, linenb);
+			  CompilerError (wi, STR, FATAL, STR_ATTR_WITHOUT_VALUE, inputLine, LineNum);
 		       if (CurBasicElem > 0)
 			  /* fin des attributs locaux d'un element de base */
 			 {
 			    pRule = &pSSchema->SsRule[CurBasicElem - 1];
 			    if (pRule->SrNLocalAttrs > 0)
 			       /* il y a deja des attributs locaux pour cet element */
-			       CompilerError (wi, STR, FATAL, STR_THIS_ELEM_HAS_LOCAL_ATTRS, inputLine, linenb);
+			       CompilerError (wi, STR, FATAL, STR_THIS_ELEM_HAS_LOCAL_ATTRS, inputLine, LineNum);
 			    else
 			       pRule->SrNLocalAttrs = CurNLocAttr;
 			    for (i = 0; i < pRule->SrNLocalAttrs; i++)
@@ -1331,10 +1331,10 @@ rnb                 pr;
 			      }
 			    while (!ok && i < pSSchema->SsNRules);
 			    if (!ok)
-			       CompilerError (BeginReferredTypeName, STR, FATAL, STR_TYPE_UNKNOWN, inputLine, linenb);
+			       CompilerError (BeginReferredTypeName, STR, FATAL, STR_TYPE_UNKNOWN, inputLine, LineNum);
 			    else if (pSSchema->SsRule[i - 1].SrConstruct != CsPairedElement)
 			       /* ce n'est pas une paire */
-			       CompilerError (BeginReferredTypeName, STR, FATAL, STR_FIRST_SECOND_FORBIDDEN, inputLine, linenb);
+			       CompilerError (BeginReferredTypeName, STR, FATAL, STR_FIRST_SECOND_FORBIDDEN, inputLine, LineNum);
 			    else if (SecondInPair)
 			      {
 				 if (r == RULE_AttrType)
@@ -1355,7 +1355,7 @@ rnb                 pr;
 		  if (r == RULE_ExpList)
 		     /* fin d'un element exporte' */
 		     if (UnknownContent)
-			CompilerError (BeginReferredTypeName, STR, FATAL, STR_TYPE_UNKNOWN, inputLine, linenb);
+			CompilerError (BeginReferredTypeName, STR, FATAL, STR_TYPE_UNKNOWN, inputLine, LineNum);
 		  /* contenu invalide */
 		  break;
 	       case CHR_91:
@@ -1400,7 +1400,7 @@ rnb                 pr;
 		  /*  +  */
 		  if (r == RULE_DefWith)
 		     if (!RRight[RecursLevel - 1])
-			CompilerError (wi, STR, FATAL, STR_GIVE_A_NAME_TO_THAT_ELEM, inputLine, linenb);
+			CompilerError (wi, STR, FATAL, STR_GIVE_A_NAME_TO_THAT_ELEM, inputLine, LineNum);
 		  break;
 	       case CHR_45:
 		  /*  -  */
@@ -1409,7 +1409,7 @@ rnb                 pr;
 		     Sign = -1;
 		  else if (r == RULE_DefWith)
 		     if (!RRight[RecursLevel - 1])
-			CompilerError (wi, STR, FATAL, STR_GIVE_A_NAME_TO_THAT_ELEM, inputLine, linenb);
+			CompilerError (wi, STR, FATAL, STR_GIVE_A_NAME_TO_THAT_ELEM, inputLine, LineNum);
 		  break;
 		  /* signe negatif pour la valeur d'attribut qui */
 		  /* suit */
@@ -1445,7 +1445,7 @@ rnb                 pr;
 		  break;
 	       case KWD_PARAM:
 		  if (pSSchema->SsExtension)
-		     CompilerError (wi, STR, FATAL, STR_NOT_ALLOWED_IN_AN_EXTENSION, inputLine, linenb);
+		     CompilerError (wi, STR, FATAL, STR_NOT_ALLOWED_IN_AN_EXTENSION, inputLine, LineNum);
 		  else
 		    {
 		       CompilParam = True;
@@ -1463,7 +1463,7 @@ rnb                 pr;
 	       case KWD_EXTENS:
 		  /* verifie qu'on est bien dans une extension de schema */
 		  if (!pSSchema->SsExtension)
-		     CompilerError (wi, STR, FATAL, STR_NOT_AN_EXTENSION, inputLine, linenb);
+		     CompilerError (wi, STR, FATAL, STR_NOT_AN_EXTENSION, inputLine, LineNum);
 		  else
 		    {
 		       CompilParam = False;
@@ -1473,7 +1473,7 @@ rnb                 pr;
 		  break;
 	       case KWD_ASSOC:
 		  if (pSSchema->SsRootElem == 0 && !pSSchema->SsExtension)
-		     CompilerError (wi, STR, FATAL, STR_STRUCT_SECTION_MISSING, inputLine, linenb);
+		     CompilerError (wi, STR, FATAL, STR_STRUCT_SECTION_MISSING, inputLine, LineNum);
 		  else
 		    {
 		       CompilParam = False;
@@ -1484,7 +1484,7 @@ rnb                 pr;
 		  break;
 	       case KWD_UNITS:
 		  if (pSSchema->SsRootElem == 0 && !pSSchema->SsExtension)
-		     CompilerError (wi, STR, FATAL, STR_STRUCT_SECTION_MISSING, inputLine, linenb);
+		     CompilerError (wi, STR, FATAL, STR_STRUCT_SECTION_MISSING, inputLine, LineNum);
 		  else
 		    {
 		       CompilUnits = True;
@@ -1496,9 +1496,9 @@ rnb                 pr;
 		  break;
 	       case KWD_EXPORT:
 		  if (pSSchema->SsRootElem == 0 && !pSSchema->SsExtension)
-		     CompilerError (wi, STR, FATAL, STR_STRUCT_SECTION_MISSING, inputLine, linenb);
+		     CompilerError (wi, STR, FATAL, STR_STRUCT_SECTION_MISSING, inputLine, LineNum);
 		  else if (pSSchema->SsExtension)
-		     CompilerError (wi, STR, FATAL, STR_NOT_ALLOWED_IN_AN_EXTENSION, inputLine, linenb);
+		     CompilerError (wi, STR, FATAL, STR_NOT_ALLOWED_IN_AN_EXTENSION, inputLine, LineNum);
 		  else
 		    {
 		       CompilParam = False;
@@ -1513,7 +1513,7 @@ rnb                 pr;
 		  break;
 	       case KWD_EXCEPT:
 		  if (pSSchema->SsRootElem == 0 && !pSSchema->SsExtension)
-		     CompilerError (wi, STR, FATAL, STR_STRUCT_SECTION_MISSING, inputLine, linenb);
+		     CompilerError (wi, STR, FATAL, STR_STRUCT_SECTION_MISSING, inputLine, LineNum);
 		  else
 		    {
 		       CompilParam = False;
@@ -1543,7 +1543,7 @@ rnb                 pr;
 		    }
 		  else if (r == RULE_StructModel)
 		     if (pSSchema->SsRootElem == 0 && !pSSchema->SsExtension)
-			CompilerError (wi, STR, FATAL, STR_STRUCT_SECTION_MISSING, inputLine, linenb);
+			CompilerError (wi, STR, FATAL, STR_STRUCT_SECTION_MISSING, inputLine, LineNum);
 		  break;
 	       case KWD_INTEGER:
 		  pSSchema->SsAttribute[pSSchema->SsNAttributes - 1].AttrType = AtNumAttr;
@@ -1614,7 +1614,7 @@ rnb                 pr;
 	       case KWD_UNIT:
 	       case KWD_NATURE:
 		  if (pr == RULE_ExclElem || pr == RULE_InclElem)
-		     CompilerError (wi, STR, FATAL, STR_NOT_ALLOWED_HERE, inputLine, linenb);
+		     CompilerError (wi, STR, FATAL, STR_NOT_ALLOWED_HERE, inputLine, LineNum);
 		  else
 		    {
 		       Equal = False;
@@ -1636,7 +1636,7 @@ rnb                 pr;
 		  /* debut des attributs fixes */
 		  if (r == RULE_DefWith)
 		     if (!RRight[RecursLevel - 1])
-			CompilerError (wi, STR, FATAL, STR_GIVE_A_NAME_TO_THAT_ELEM, inputLine, linenb);
+			CompilerError (wi, STR, FATAL, STR_GIVE_A_NAME_TO_THAT_ELEM, inputLine, LineNum);
 
 		  break;
 	       case KWD_EXTERN:
@@ -1645,7 +1645,7 @@ rnb                 pr;
 		  else if (r == RULE_ExtOrDef)
 		     if (NExternalTypes >= MAX_EXTERNAL_TYPES)
 			/* table des types externes saturee */
-			CompilerError (wi, STR, FATAL, STR_TOO_MANY_EXTERNAL_DOCS, inputLine, linenb);
+			CompilerError (wi, STR, FATAL, STR_TOO_MANY_EXTERNAL_DOCS, inputLine, LineNum);
 		     else
 			/* met dans la table le dernier nom de type rencontre' */
 		       {
@@ -1657,7 +1657,7 @@ rnb                 pr;
 			     /* C'est le type de document lui-meme qui est utilise' */
 			     /* comme externe */
 			    {
-			       /* ajoute une regle de nature a la fin du schema */
+			       /* ajoute une regle de SyntacticType a la fin du schema */
 			       pRule = &pSSchema->SsRule[pSSchema->SsNRules++];
 			       strncpy (pRule->SrName, PreviousIdent, MAX_NAME_LENGTH);
 			       pRule->SrNLocalAttrs = 0;
@@ -1679,7 +1679,7 @@ rnb                 pr;
 		  /* included */
 		  if (NExternalTypes >= MAX_EXTERNAL_TYPES)
 		     /* table des types externes saturee */
-		     CompilerError (wi, STR, FATAL, STR_TOO_MANY_EXTERNAL_DOCS, inputLine, linenb);
+		     CompilerError (wi, STR, FATAL, STR_TOO_MANY_EXTERNAL_DOCS, inputLine, LineNum);
 		  else
 		     /* met dans la table le dernier nom de type rencontre' */
 		    {
@@ -1737,7 +1737,7 @@ rnb                 pr;
 		  NewRule (wi);
 		  if (!error)
 		     if (pSSchema->SsRootElem == CurRule[RecursLevel - 1])
-			CompilerError (wi, STR, FATAL, STR_ROOT_CANNOT_BE_A_PAIR, inputLine, linenb);
+			CompilerError (wi, STR, FATAL, STR_ROOT_CANNOT_BE_A_PAIR, inputLine, LineNum);
 		     else
 		       {
 			  pRule = &pSSchema->SsRule[CurRule[RecursLevel - 1] - 1];
@@ -1837,7 +1837,7 @@ rnb                 pr;
 	       case KWD_ImportLine:
 		  if (ImportExcept)
 		     CompilerError (wi, STR, FATAL, STR_ONLY_ONE_IMPORT_EXCEPTION,
-				    inputLine, linenb);
+				    inputLine, LineNum);
 		  else
 		    {
 		       ExceptionNum (ExcImportLine, True, False, False, wi);
@@ -1847,7 +1847,7 @@ rnb                 pr;
 	       case KWD_ImportParagraph:
 		  if (ImportExcept)
 		     CompilerError (wi, STR, FATAL, STR_ONLY_ONE_IMPORT_EXCEPTION,
-				    inputLine, linenb);
+				    inputLine, LineNum);
 		  else
 		    {
 		       ExceptionNum (ExcImportParagraph, True, False, False, wi);
@@ -1889,7 +1889,7 @@ rnb                 pr;
 
 				   if (strcmp (pSSchema->SsName, srceFileName) != 0)
 				      /* noms differents */
-				      CompilerError (wi, STR, FATAL, STR_FILE_NAME_AND_STRUCT_NAME_DIFFERENT, inputLine, linenb);
+				      CompilerError (wi, STR, FATAL, STR_FILE_NAME_AND_STRUCT_NAME_DIFFERENT, inputLine, LineNum);
 				}
 			      if (pr == RULE_Rule)
 				 /* debut d'une regle du premier niveau */
@@ -1958,7 +1958,7 @@ rnb                 pr;
 				   /* recupere le nom du schema externe */
 				   /* lit le schema de structure externe */
 				   if (!RdSchStruct (N, pExternSSchema))
-				      CompilerError (wi, STR, FATAL, STR_CANNOT_READ_STRUCT_SCHEM, inputLine, linenb);
+				      CompilerError (wi, STR, FATAL, STR_CANNOT_READ_STRUCT_SCHEM, inputLine, LineNum);
 				   /* echec lecture du schema */
 				   else
 				      /* le schema de structure a ete charge' */
@@ -1969,7 +1969,7 @@ rnb                 pr;
 					&& i - 1 < pExternSSchema->SsNRules)
 					   i++;
 					if (strcmp (ReferredTypeName, pExternSSchema->SsRule[i].SrName) != 0)
-					   CompilerError (BeginReferredTypeName, STR, FATAL, STR_TYPE_UNKNOWN, inputLine, linenb);
+					   CompilerError (BeginReferredTypeName, STR, FATAL, STR_TYPE_UNKNOWN, inputLine, LineNum);
 					/* type inconnu */
 					else
 					   /* le type reference' existe, il a le numero i+1 */
@@ -2023,7 +2023,7 @@ rnb                 pr;
 				   i = RuleNumber (wl, wi);
 				   if (i == 0)
 				      /* type non declare' */
-				      CompilerError (wi, STR, FATAL, STR_TYPE_UNKNOWN, inputLine, linenb);
+				      CompilerError (wi, STR, FATAL, STR_TYPE_UNKNOWN, inputLine, LineNum);
 				   else
 				     {
 					pRule = &pSSchema->SsRule[i - 1];
@@ -2096,7 +2096,7 @@ rnb                 pr;
 				      /* le contenu est un objet construit selon un */
 				      /* autre schema de structure, on lit ce schema */
 				   if (!RdSchStruct (pSSchema->SsRule[i - 1].SrName, pExternSSchema))
-				      CompilerError (wi, STR, FATAL, STR_CANNOT_READ_STRUCT_SCHEM, inputLine, linenb);
+				      CompilerError (wi, STR, FATAL, STR_CANNOT_READ_STRUCT_SCHEM, inputLine, LineNum);
 				   /* echec lecture du schema */
 				   else
 				      /* le schema de structure a ete charge', le */
@@ -2138,9 +2138,9 @@ rnb                 pr;
 					{
 					   ExceptAttr = AttributeNumber (wl, wi);
 					   if (ExceptAttr == 0)
-					      CompilerError (wi, STR, FATAL, STR_TYPE_OR_ATTR_UNKNOWN, inputLine, linenb);
+					      CompilerError (wi, STR, FATAL, STR_TYPE_OR_ATTR_UNKNOWN, inputLine, LineNum);
 					   else if (pSSchema->SsAttribute[ExceptAttr - 1].AttrFirstExcept != 0)
-					      CompilerError (wi, STR, FATAL, STR_THIS_ATTR_ALREADY_HAS_EXCEPTS, inputLine, linenb);
+					      CompilerError (wi, STR, FATAL, STR_THIS_ATTR_ALREADY_HAS_EXCEPTS, inputLine, LineNum);
 					}
 				      else
 					 /* c'est un type declare' */
@@ -2149,11 +2149,11 @@ rnb                 pr;
 					      /* le nom d'element est precede' du mot-cle First ou Second */
 					      if (pSSchema->SsRule[ExceptType - 1].SrConstruct != CsPairedElement)
 						 /* ce n'est pas une paire */
-						 CompilerError (wi, STR, FATAL, STR_FIRST_SECOND_FORBIDDEN, inputLine, linenb);
+						 CompilerError (wi, STR, FATAL, STR_FIRST_SECOND_FORBIDDEN, inputLine, LineNum);
 					      else if (SecondInPair)
 						 ExceptType++;
 					   if (pSSchema->SsRule[ExceptType - 1].SrFirstExcept != 0)
-					      CompilerError (wi, STR, FATAL, STR_THIS_TYPE_ALREADY_HAS_EXCEPTS, inputLine, linenb);
+					      CompilerError (wi, STR, FATAL, STR_THIS_TYPE_ALREADY_HAS_EXCEPTS, inputLine, LineNum);
 					}
 				      FirstInPair = False;
 				      SecondInPair = False;
@@ -2165,7 +2165,7 @@ rnb                 pr;
 				   else
 				      pRule = &pSSchema->SsRule[CurRule[RecursLevel - 1] - 1];
 				   if (pRule->SrNInclusions >= MAX_INCL_EXCL_SRULE)
-				      CompilerError (wi, STR, FATAL, STR_TOO_MANY_INCLS_FOR_THAT_ELEM, inputLine, linenb);
+				      CompilerError (wi, STR, FATAL, STR_TOO_MANY_INCLS_FOR_THAT_ELEM, inputLine, LineNum);
 				   else
 				     {
 					pRule->SrNInclusions++;
@@ -2179,7 +2179,7 @@ rnb                 pr;
 				   else
 				      pRule = &pSSchema->SsRule[CurRule[RecursLevel - 1] - 1];
 				   if (pRule->SrNExclusions >= MAX_INCL_EXCL_SRULE)
-				      CompilerError (wi, STR, FATAL, STR_TOO_MANY_EXCLUSIONS_FOR_THAT_ELEM, inputLine, linenb);
+				      CompilerError (wi, STR, FATAL, STR_TOO_MANY_EXCLUSIONS_FOR_THAT_ELEM, inputLine, LineNum);
 				   else
 				     {
 					pRule->SrNExclusions++;
@@ -2193,7 +2193,7 @@ rnb                 pr;
 			      break;
 			      case RULE_AttrName
 			   /* AttrName */ :
-			      attrNum = identtable[nb - 1].identdef;
+			      attrNum = identtable[nb - 1].SrcIdentDefRule;
 			      if (attrNum == 0)
 				 /* ce nom n'a pas encore ete rencontre' dans le schema */
 				 if (strncmp (&inputLine[wi - 1], pSSchema->SsAttribute[0].AttrName, wl) == 0)
@@ -2202,7 +2202,7 @@ rnb                 pr;
 			      if (CompilAttr || CompilLocAttr)
 				 /* une declaration d'attribut */
 				 if (CompilAttr && attrNum > 0)
-				    CompilerError (wi, STR, FATAL, STR_ATTR_ALREADY_DECLARED, inputLine, linenb);
+				    CompilerError (wi, STR, FATAL, STR_ATTR_ALREADY_DECLARED, inputLine, LineNum);
 			      /* deja defini */
 				 else
 				   {
@@ -2212,17 +2212,17 @@ rnb                 pr;
 					   if (pSSchema->SsAttribute[attrNum - 1].AttrGlobal)
 					      /* un attribut global ne peut pas etre */
 					      /* utilise' comme attribut local */
-					      CompilerError (wi, STR, FATAL, STR_GLOBAL_ATTR, inputLine, linenb);
+					      CompilerError (wi, STR, FATAL, STR_GLOBAL_ATTR, inputLine, LineNum);
 					}
 				      else
 					 /* nouvel attribut */
 				      if (pSSchema->SsNAttributes >= MAX_ATTR_SSCHEMA)
-					 CompilerError (wi, STR, FATAL, STR_TOO_MANY_ATTRS, inputLine, linenb);
+					 CompilerError (wi, STR, FATAL, STR_TOO_MANY_ATTRS, inputLine, LineNum);
 				      /* table des attributs saturee */
 				      else
 					{
 					   pSSchema->SsNAttributes++;
-					   identtable[nb - 1].identdef = pSSchema->SsNAttributes;
+					   identtable[nb - 1].SrcIdentDefRule = pSSchema->SsNAttributes;
 					   pAttr = &pSSchema->SsAttribute[pSSchema->SsNAttributes - 1];
 					   if (CompilLocAttr)
 					      /* attribut local */
@@ -2234,7 +2234,7 @@ rnb                 pr;
 				      if (CompilLocAttr)	/* un attribut local */
 					 if (CurNLocAttr >= MAX_LOCAL_ATTR)
 					    /* trop d'attributs locaux pour cet element */
-					    CompilerError (wi, STR, FATAL, STR_TOO_MANY_ATTRS, inputLine, linenb);
+					    CompilerError (wi, STR, FATAL, STR_TOO_MANY_ATTRS, inputLine, LineNum);
 					 else if (CompilExtens)
 					    /* dans une regle d'extension */
 					   {
@@ -2247,7 +2247,7 @@ rnb                 pr;
 					    /* dans une regle de structure */
 					   {
 					      CurLocAttr[CurNLocAttr] = identtable[nb - 1].
-						 identdef;
+						 SrcIdentDefRule;
 					      CurReqAttr[CurNLocAttr] = MandatoryAttr;
 					      CurNLocAttr++;
 					      MandatoryAttr = False;
@@ -2265,17 +2265,17 @@ rnb                 pr;
 				     {
 					ExceptType = RuleNumber (wl, wi);
 					if (ExceptType == 0)
-					   CompilerError (wi, STR, FATAL, STR_TYPE_OR_ATTR_UNKNOWN, inputLine, linenb);
+					   CompilerError (wi, STR, FATAL, STR_TYPE_OR_ATTR_UNKNOWN, inputLine, LineNum);
 					else if (pSSchema->SsRule[ExceptType - 1].SrFirstExcept != 0)
-					   CompilerError (wi, STR, FATAL, STR_THIS_TYPE_ALREADY_HAS_EXCEPTS, inputLine, linenb);
+					   CompilerError (wi, STR, FATAL, STR_THIS_TYPE_ALREADY_HAS_EXCEPTS, inputLine, LineNum);
 				     }
 				   else if (pSSchema->SsAttribute[ExceptAttr - 1].AttrFirstExcept != 0)
-				      CompilerError (wi, STR, FATAL, STR_THIS_ATTR_ALREADY_HAS_EXCEPTS, inputLine, linenb);
+				      CompilerError (wi, STR, FATAL, STR_THIS_ATTR_ALREADY_HAS_EXCEPTS, inputLine, LineNum);
 				}
 			      else
 				 /* utilisation d'attribut dans une regle avec WITH */
 			      if (attrNum == 0)
-				 CompilerError (wi, STR, FATAL, STR_ATTR_NOT_DECLARED, inputLine, linenb);
+				 CompilerError (wi, STR, FATAL, STR_ATTR_NOT_DECLARED, inputLine, LineNum);
 			      else
 				{
 				   if (CompilExtens)
@@ -2283,7 +2283,7 @@ rnb                 pr;
 				   else
 				      pRule = &pSSchema->SsRule[CurRule[RecursLevel - 1] - 1];
 				   if (pRule->SrNDefAttrs >= MAX_DEFAULT_ATTR)
-				      CompilerError (wi, STR, FATAL, STR_TOO_MANY_ATTRS, inputLine, linenb);
+				      CompilerError (wi, STR, FATAL, STR_TOO_MANY_ATTRS, inputLine, LineNum);
 				   else
 				     {
 					pRule->SrNDefAttrs++;
@@ -2302,7 +2302,7 @@ rnb                 pr;
 				{
 				   pAttr = &pSSchema->SsAttribute[pSSchema->SsNAttributes - 1];
 				   if (pAttr->AttrNEnumValues >= MAX_ATTR_VAL)
-				      CompilerError (wi, STR, FATAL, STR_TOO_MANY_VALUES, inputLine, linenb);
+				      CompilerError (wi, STR, FATAL, STR_TOO_MANY_VALUES, inputLine, LineNum);
 				   /* la liste des valeurs deborde */
 				   else
 				      /* une valeur de plus pour l'attribut */
@@ -2315,23 +2315,23 @@ rnb                 pr;
 					i = 1;
 					while (i < pAttr->AttrNEnumValues && !error)
 					   if (!strcmp (pAttr->AttrEnumValue[i - 1], pAttr->AttrEnumValue[pAttr->AttrNEnumValues - 1]))
-					      CompilerError (wi, STR, FATAL, STR_VALUE_ALREADY_DECLARED, inputLine, linenb);
+					      CompilerError (wi, STR, FATAL, STR_VALUE_ALREADY_DECLARED, inputLine, LineNum);
 					/* deux fois la meme valeur */
 					   else
 					      i++;
 					if (!error)
 					   /* c'est bien une nouvelle valeur, on l'accepte */
 					  {
-					     identtable[nb - 1].identdef = pAttr->AttrNEnumValues;
-					     identtable[nb - 1].identref = pSSchema->SsNAttributes;
+					     identtable[nb - 1].SrcIdentDefRule = pAttr->AttrNEnumValues;
+					     identtable[nb - 1].SrcIdentRefRule = pSSchema->SsNAttributes;
 					  }
 				     }
 				}
 			      else
 				 /* utilisation dans une regle avec With */
-			      if (identtable[nb - 1].identdef == 0)
+			      if (identtable[nb - 1].SrcIdentDefRule == 0)
 				 CompilerError (wi, STR, FATAL, STR_ATTR_VALUE_NOT_DECLARED,
-						inputLine, linenb);
+						inputLine, LineNum);
 			      else
 				{
 				   if (CompilExtens)
@@ -2341,7 +2341,7 @@ rnb                 pr;
 				   pAttr = &pSSchema->SsAttribute[pRule->SrDefAttr[pRule->SrNDefAttrs - 1] - 1];
 				   if (pAttr->AttrType != AtEnumAttr)
 				      CompilerError (wi, STR, FATAL,
-						     STR_INVALID_VALUE_FOR_THAT_ATTR, inputLine, linenb);
+						     STR_INVALID_VALUE_FOR_THAT_ATTR, inputLine, LineNum);
 				   else
 				     {
 					/* cette valeur est-elle dans la liste des valeurs de */
@@ -2355,7 +2355,7 @@ rnb                 pr;
 					   else
 					      i++;
 					if (!ok)
-					   CompilerError (wi, STR, FATAL, STR_INVALID_VALUE_FOR_THAT_ATTR, inputLine, linenb);
+					   CompilerError (wi, STR, FATAL, STR_INVALID_VALUE_FOR_THAT_ATTR, inputLine, LineNum);
 					else
 					   pRule->SrDefAttrValue[pRule->SrNDefAttrs - 1] = i;
 				     }
@@ -2381,9 +2381,9 @@ rnb                 pr;
 				}
 			      else
 				 /* utilisation d'une constante dans une regle */
-			      if (identtable[nb - 1].identdef == 0)
+			      if (identtable[nb - 1].SrcIdentDefRule == 0)
 				 /* non defini, c'est une erreur */
-				 CompilerError (wi, STR, FATAL, STR_CONSTANT_NOT_DECLARED, inputLine, linenb);
+				 CompilerError (wi, STR, FATAL, STR_CONSTANT_NOT_DECLARED, inputLine, LineNum);
 			      else if (pr == RULE_Constr)
 				 /* dans une regle de structuration */
 				 BasicEl (nb + MAX_BASIC_TYPE, wi, pr);
@@ -2391,7 +2391,7 @@ rnb                 pr;
 				 /* Un nom de constante dans les exceptions */
 				 ExceptType = RuleNumber (wl, wi);
 			      if (pSSchema->SsRule[ExceptType - 1].SrFirstExcept != 0)
-				 CompilerError (wi, STR, FATAL, STR_THIS_TYPE_ALREADY_HAS_EXCEPTS, inputLine, linenb);
+				 CompilerError (wi, STR, FATAL, STR_THIS_TYPE_ALREADY_HAS_EXCEPTS, inputLine, LineNum);
 			      break;
 			   default:
 			      break;
@@ -2399,7 +2399,7 @@ rnb                 pr;
 		  break;
 	       case 3002:
 		  /* un nombre */
-		  number = AsciiToInt (wi, wl);
+		  SynInteger = AsciiToInt (wi, wl);
 		  /* le nombre lu */
 		  if (r == RULE_Integer)
 		     /* nombre d'elements min. ou max. d'une liste */
@@ -2407,13 +2407,13 @@ rnb                 pr;
 		       pRule = &pSSchema->SsRule[CurRule[RecursLevel - 1] - 1];
 		       if (Minimum)
 			  /* min */
-			  pRule->SrMinItems = number;
+			  pRule->SrMinItems = SynInteger;
 		       else if (Maximum)
 			  /* max */
 			 {
-			    pRule->SrMaxItems = number;
+			    pRule->SrMaxItems = SynInteger;
 			    if (pRule->SrMaxItems < pRule->SrMinItems)
-			       CompilerError (wi, STR, FATAL, STR_MAXIMUM_LOWER_THAN_MINIMUM, inputLine, linenb);
+			       CompilerError (wi, STR, FATAL, STR_MAXIMUM_LOWER_THAN_MINIMUM, inputLine, LineNum);
 			 }
 		    }
 		  if (r == RULE_NumValue)
@@ -2424,10 +2424,10 @@ rnb                 pr;
 		       else
 			  pRule = &pSSchema->SsRule[CurRule[RecursLevel - 1] - 1];
 		       if (pSSchema->SsAttribute[pRule->SrDefAttr[pRule->SrNDefAttrs - 1] - 1].AttrType != AtNumAttr)
-			  CompilerError (wi, STR, FATAL, STR_INVALID_VALUE_FOR_THAT_ATTR, inputLine, linenb);
+			  CompilerError (wi, STR, FATAL, STR_INVALID_VALUE_FOR_THAT_ATTR, inputLine, LineNum);
 		       else
 			 {
-			    pRule->SrDefAttrValue[pRule->SrNDefAttrs - 1] = number * Sign;
+			    pRule->SrDefAttrValue[pRule->SrNDefAttrs - 1] = SynInteger * Sign;
 			    /* a priori la prochaine valeur d'attribut sera positive */
 			    Sign = 1;
 			 }
@@ -2435,12 +2435,12 @@ rnb                 pr;
 		  if (r == RULE_ExceptNum)
 		     /* un numero d'exception associe' a un type d'element */
 		     /* ou a un attribut */
-		     if (number <= 100)
+		     if (SynInteger <= 100)
 			/* les valeurs inferieures a 100 sont reservees aux */
 			/* exceptions predefinies */
-			CompilerError (wi, STR, FATAL, STR_THIS_NUMBER_MUST_BE_GREATER_THAN_100, inputLine, linenb);
+			CompilerError (wi, STR, FATAL, STR_THIS_NUMBER_MUST_BE_GREATER_THAN_100, inputLine, LineNum);
 		     else
-			ExceptionNum (number, False, False, False, wi);
+			ExceptionNum (SynInteger, False, False, False, wi);
 		  break;
 	       case 3003:
 		  /* une chaine de caracteres */
@@ -2456,7 +2456,7 @@ rnb                 pr;
 			  pRule = &pSSchema->SsRule[CurRule[RecursLevel - 1] - 1];
 		       if (pSSchema->SsAttribute[pRule->SrDefAttr[
 			 pRule->SrNDefAttrs - 1] - 1].AttrType != AtTextAttr)
-			  CompilerError (wi, STR, FATAL, STR_INVALID_VALUE_FOR_THAT_ATTR, inputLine, linenb);
+			  CompilerError (wi, STR, FATAL, STR_INVALID_VALUE_FOR_THAT_ATTR, inputLine, LineNum);
 		       else
 			  pRule->SrDefAttrValue[pRule->SrNDefAttrs - 1] =
 			     StoreConstText (wi, wl);
@@ -2492,12 +2492,12 @@ static void         ExternalTypes ()
 	/* le type externe est defini par la regle de numero i */
 	pRule = &pSSchema->SsRule[i];
 	if (pRule->SrConstruct != CsNatureSchema)
-	   /* ce n'est pas une nature externe, erreur */
+	   /* ce n'est pas une SyntacticType externe, erreur */
 	  {
 	     if (IncludedExternalType[j])
-		CompilerErrorString (0, STR, INFO, STR_CANNOT_BE_INCLUDED, inputLine, linenb, pRule->SrName);
+		CompilerErrorString (0, STR, INFO, STR_CANNOT_BE_INCLUDED, inputLine, LineNum, pRule->SrName);
 	     else
-		CompilerErrorString (0, STR, INFO, STR_CANNOT_BE_EXTERN, inputLine, linenb, pRule->SrName);
+		CompilerErrorString (0, STR, INFO, STR_CANNOT_BE_EXTERN, inputLine, LineNum, pRule->SrName);
 	  }
 	else
 	   /* transforme la regle CsNatureSchema */
@@ -2505,7 +2505,7 @@ static void         ExternalTypes ()
 	     if (!RdSchStruct (pRule->SrName, pExternSSchema))
 	       {
 		  /* echec lecture du schema externe */
-		  CompilerErrorString (0, STR, INFO, STR_EXTERNAL_STRUCT_NOT_FOUND, inputLine, linenb, pRule->SrName);
+		  CompilerErrorString (0, STR, INFO, STR_EXTERNAL_STRUCT_NOT_FOUND, inputLine, LineNum, pRule->SrName);
 		  /* meme si le schema externe n'existe pas, on transforme la regle */
 		  pRule->SrReferredType = MAX_BASIC_TYPE + 1;
 	       }
@@ -2649,7 +2649,7 @@ static void         ListAssocElem ()
 	if (!pSSchema->SsRule[i].SrRecursDone)
 	  /* l'element associe est utilise dans une autre regle, erreur */
 	  {
-	    CompilerErrorString(0, STR, INFO, STR_THE_ASSOC_ELEM_IS_USED_IN_ANOTHER_RULE, inputLine, linenb, pSSchema->SsRule[i].SrName);
+	    CompilerErrorString(0, STR, INFO, STR_THE_ASSOC_ELEM_IS_USED_IN_ANOTHER_RULE, inputLine, LineNum, pSSchema->SsRule[i].SrName);
 	    error = True;
 	  } 
 	else	
@@ -2878,15 +2878,15 @@ char              **argv;
    FILE                *inputFile;
    boolean             fileOK;
    char                buffer[200];
-   iline               i;	/* position courante dans la ligne en cours */
-   iline               wi;	/* position du debut du mot courant dans la
+   indLine               i;	/* position courante dans la ligne en cours */
+   indLine               wi;	/* position du debut du mot courant dans la
 
 				   ligne en cours */
-   iline               wl;	/* longueur du mot courant */
-   nature              wn;	/* nature du mot courant */
-   rnb                 r;	/* numero de regle */
-   rnb                 pr;	/* numero de la regle precedente */
-   grmcode             c;	/* code grammatical du mot trouve */
+   indLine               wl;	/* longueur du mot courant */
+   SyntacticType              wn;	/* SyntacticType du mot courant */
+   SyntRuleNum                 r;	/* numero de regle */
+   SyntRuleNum                 pr;	/* numero de la regle precedente */
+   SyntacticCode             c;	/* code grammatical du mot trouve */
    int                 nb;	/* indice dans identtable du mot trouve, si
 
 				   c'est un identificateur */
@@ -2927,7 +2927,7 @@ char              **argv;
 		     TtaDisplaySimpleMessage (FATAL, STR, STR_NOT_ENOUGH_MEM);
 
 		  lgidenttable = 0;	/* table des identificateurs vide */
-		  linenb = 0;
+		  LineNum = 0;
 		  Initialize ();	/* prepare la generation */
 		  /* lit tout le fichier et fait l'analyse */
 		  fileOK = True;
@@ -2944,15 +2944,15 @@ char              **argv;
 		       /* marque la fin reelle de la ligne */
 		       inputLine[i - 1] = '\0';
 		       /* incremente le compteur de lignes */
-		       linenb++;
+		       LineNum++;
 		       if (i >= linelen)
 			  CompilerError (1, STR, FATAL, STR_LINE_TOO_LONG,
-					 inputLine, linenb);
+					 inputLine, LineNum);
 		       else if (inputLine[0] == '#')
 			  /* cette ligne contient une directive du preprocesseur */
 			 {
-			    sscanf (inputLine, "# %d %s", &linenb, buffer);
-			    linenb--;
+			    sscanf (inputLine, "# %d %s", &LineNum, buffer);
+			    LineNum--;
 			 }
 		       else
 			  /* traduit les caracteres de la ligne */

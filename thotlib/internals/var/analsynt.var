@@ -7,8 +7,8 @@
 EXPORT int 		lgkwtable;	    /* longueur effective de kwtable */
 EXPORT int 		lastshortkw;	    /* rang du dernier mot-cle court 
 					       dans kwtable */
-EXPORT kwelem  	kwtable[nbkw];	    /* table des mots-cles */
+EXPORT SrcKeywordDesc  	kwtable[nbkw];	    /* table des mots-cles */
 EXPORT int 		lgidenttable;	    /* longueur effective de la table*/
-EXPORT identelem 	identtable[nbident];/* table des identificateurs */
-EXPORT rnb     	lgruletable;	    /*longueur effective de ruletable*/
-EXPORT rule    	ruletable[maxrule]; /* table des regles */
+EXPORT SrcIdentDesc 	identtable[nbident];/* table des identificateurs */
+EXPORT SyntRuleNum     	lgruletable;	    /*longueur effective de ruletable*/
+EXPORT SyntacticRule    	ruletable[maxrule]; /* table des regles */

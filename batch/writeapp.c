@@ -10,7 +10,7 @@
 
 extern PtrAction    externalActions;
 extern PtrEventsSet pAppli;
-extern PtrSSchema pSchStr;
+extern PtrSSchema pSSchema;
 extern char        *RegisteredAppEvents[];
 extern PtrAppName   SchemasUsed;
 extern PtrAppName   MenusUsed;
@@ -791,8 +791,8 @@ FILE               *dialogueFile;
    PtrAppName          name;
 
    fprintf (dotHFile, "/* Basic types */\n");
-   for (i = 0; i < pSchStr->SsNRules; i++)
-      fprintf (dotHFile, "#define %s  %d\n", pSchStr->SsRule[i].SrName, i+1);
+   for (i = 0; i < pSSchema->SsNRules; i++)
+      fprintf (dotHFile, "#define %s  %d\n", pSSchema->SsRule[i].SrName, i+1);
 
    /* liste tous les noms de menus et d'items reellement utilises */
    num = 0;
@@ -826,12 +826,11 @@ FILE               *dialogueFile;
 /* |    GenerateApplication generates the application prototype.	| */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void               GenerateApplication (char *fname, PtrEventsSet pAppli, PtrSSchema pSchStr)
+void               GenerateApplication (char *fname, PtrEventsSet pAppli)
 #else  /* __STDC__ */
-void               GenerateApplication (fname, pAppli, pSchStr)
+void               GenerateApplication (fname, pAppli)
 char               *fname;
 PtrEventsSet        pAppli;
-PtrSSchema        pSchStr;
 #endif /* __STDC__ */
 {
    int                 i;

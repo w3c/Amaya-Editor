@@ -32,10 +32,10 @@ ParserStackItem;
 #include "analsynt.var"
 #include "compilmsg.f"
 
-extern int          linenb;	/* Numero de la ligne courante dans le fichier
+extern int          LineNum;	/* Numero de la ligne courante dans le fichier
 				   en cours de compilation */
 
-static boolean      comment;	/* on est dans un commentaire */
+static boolean      Comment;	/* on est dans un commentaire */
 
 #define STACKSIZE 40		/* taille de la pile */
 static int          level;	/* niveau courant dans la pile */
@@ -56,7 +56,7 @@ void                InitParser ()
 #endif				/* __STDC__ */
 
 {
-   comment = False;		/* pas de commentaire en cours */
+   Comment = False;		/* pas de commentaire en cours */
    level = 0;			/* initialise la pile */
    Stack[0].StRule = 0;
    Stack[0].StRuleInd = 1;	/* au debut de la regle initiale */
@@ -64,19 +64,19 @@ void                InitParser ()
 
 
 /* ---------------------------------------------------------------------- */
-/* |    testshortkw teste si le caractere qui est a` la position index  | */
-/* |            dans la ligne courante est un mot-cle court. Rend dans  | */
-/* |            ret le code de ce mot-cle ou 0 si ce n'est pas un       | */
-/* |            mot-cle court.                                          | */
+/* |    CheckShortKeyword teste si le caractere qui est a` la position  | */
+/* |            index dans la ligne courante est un mot-cle court.	| */
+/* |            Retourne dans ret le code de ce mot-cle ou 0 si ce	| */
+/* |		n'est pas un mot-cle court.				| */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-static void         testshortkw (iline index, grmcode * ret)
+static void         CheckShortKeyword (indLine index, SyntacticCode * ret)
 
 #else  /* __STDC__ */
-static void         testshortkw (index, ret)
-iline               index;
-grmcode            *ret;
+static void         CheckShortKeyword (index, ret)
+indLine               index;
+SyntacticCode            *ret;
 
 #endif /* __STDC__ */
 
@@ -87,8 +87,8 @@ grmcode            *ret;
    i = 0;
    do
      {
-	if (inputLine[index - 1] == kwtable[i].kwname[0])
-	   *ret = kwtable[i].gcode;
+	if (inputLine[index - 1] == kwtable[i].SrcKeyword[0])
+	   *ret = kwtable[i].SrcKeywordCode;
 	i++;
      }
    while (*ret == 0 && i < lastshortkw);
@@ -96,20 +96,20 @@ grmcode            *ret;
 
 
 /* ---------------------------------------------------------------------- */
-/* |    testkeyword teste si le mot de longueur lg qui commence a` la   | */
-/* |            position index dans la ligne courante est un mot-cle'   | */
+/* |    CheckLongKeyword teste si le mot de longueur len qui commence a` | */
+/* |            la position index dans la ligne courante est un mot-cle | */
 /* |            long. Rend dans ret le code de ce mot-cle' ou 0 si ce   | */
 /* |            n'est pas un mot cle long.                              | */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-static void         testkeyword (iline index, iline lg, grmcode * ret)
+static void         CheckLongKeyword (indLine index, indLine len, SyntacticCode * ret)
 
 #else  /* __STDC__ */
-static void         testkeyword (index, lg, ret)
-iline               index;
-iline               lg;
-grmcode            *ret;
+static void         CheckLongKeyword (index, len, ret)
+indLine               index;
+indLine               len;
+SyntacticCode            *ret;
 
 #endif /* __STDC__ */
 
@@ -120,9 +120,9 @@ grmcode            *ret;
    i = lastshortkw;
    do
      {
-	if (kwtable[i].kwlg == lg)
-	   if (strncasecmp (&inputLine[index - 1], kwtable[i].kwname, lg) == 0)
-	      *ret = kwtable[i].gcode;
+	if (kwtable[i].SrcKeywordLen == len)
+	   if (strncasecmp (&inputLine[index - 1], kwtable[i].SrcKeyword, len) == 0)
+	      *ret = kwtable[i].SrcKeywordCode;
 	i++;
      }
    while (*ret == 0 && i < lgkwtable);
@@ -130,23 +130,23 @@ grmcode            *ret;
 
 
 /* ---------------------------------------------------------------------- */
-/* |    testident teste si le mot de longueur lg qui commence a` la     | */
+/* |    CheckIdent teste si le mot de longueur len qui commence a` la   | */
 /* |            position index dans la ligne courante est dans la table | */
 /* |            des identificateurs. Rend dans ret le code du type      | */
 /* |            grammatical de cet identificateur ou 0 s'il n'est       | */
-/* |            pas dans la table. Rend dans nb le rang de              | */
+/* |            pas dans la table. Rend dans rank le rang de              | */
 /* |            l'identificateur dans la table identtable.              | */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-static void         testident (iline index, iline lg, grmcode * ret, int *nb)
+static void         CheckIdent (indLine index, indLine len, SyntacticCode * ret, int *rank)
 
 #else  /* __STDC__ */
-static void         testident (index, lg, ret, nb)
-iline               index;
-iline               lg;
-grmcode            *ret;
-int                *nb;
+static void         CheckIdent (index, len, ret, rank)
+indLine               index;
+indLine               len;
+SyntacticCode            *ret;
+int                *rank;
 
 #endif /* __STDC__ */
 
@@ -154,15 +154,15 @@ int                *nb;
    int                 i;
 
    *ret = 0;
-   *nb = 0;
+   *rank = 0;
    i = 0;
    do
      {
-	if (identtable[i].identlg == lg)
-	   if (strncmp (&inputLine[index - 1], identtable[i].identname, lg) == 0)
+	if (identtable[i].SrcIdentLen == len)
+	   if (strncmp (&inputLine[index - 1], identtable[i].SrcIdentifier, len) == 0)
 	     {
-		*nb = i + 1;
-		*ret = identtable[i].identtype;
+		*rank = i + 1;
+		*ret = identtable[i].SrcIdentCode;
 	     }
 	i++;
      }
@@ -171,77 +171,75 @@ int                *nb;
 
 
 /* ---------------------------------------------------------------------- */
-/* |    addident ajoute a` la table des identificateurs le mot de       | */
-/* |            longueur lg qui commence a` la position index dans la   | */
-/* |            ligne courante et qui est de type grammatical code.     | */
-/* |            Rend dans nb le rang de cet identificateur dans la      | */
+/* |    NewIdent ajoute a` la table des identificateurs le mot de       | */
+/* |            longueur len qui commence a` la position index dans la  | */
+/* |            ligne courante et qui est de type syntaxique code.      | */
+/* |            Rend dans rank le rang de cet identificateur dans la    | */
 /* |            table identtable.                                       | */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-static void         addident (iline index, iline lg, grmcode code, int *nb)
+static void         NewIdent (indLine index, indLine len, SyntacticCode code, int *rank)
 
 #else  /* __STDC__ */
-static void         addident (index, lg, code, nb)
-iline               index;
-iline               lg;
-grmcode             code;
-int                *nb;
+static void         NewIdent (index, len, code, rank)
+indLine               index;
+indLine               len;
+SyntacticCode             code;
+int                *rank;
 
 #endif /* __STDC__ */
 
 {
-   iline               i;
+   indLine               i;
 
-   *nb = 0;
+   *rank = 0;
    if (lgidenttable >= nbident)
       CompilerError (index, COMPIL, FATAL, COMPIL_IDENTIFIER_TABLE_IS_FULL,
-		     inputLine, linenb);
-   else if (lg > identlen)
+		     inputLine, LineNum);
+   else if (len > identlen)
       CompilerError (index, COMPIL, FATAL, COMPIL_WORD_TOO_LONG,
-		     inputLine, linenb);
+		     inputLine, LineNum);
    else
      {
-	identtable[lgidenttable].identlg = lg;
-	identtable[lgidenttable].identdef = 0;
-	identtable[lgidenttable].identref = 0;
-	identtable[lgidenttable].identtype = code;
-	for (i = 0; i < lg; i++)
-	   identtable[lgidenttable].identname[i] = inputLine[index + i - 1];
+	identtable[lgidenttable].SrcIdentLen = len;
+	identtable[lgidenttable].SrcIdentDefRule = 0;
+	identtable[lgidenttable].SrcIdentRefRule = 0;
+	identtable[lgidenttable].SrcIdentCode = code;
+	for (i = 0; i < len; i++)
+	   identtable[lgidenttable].SrcIdentifier[i] = inputLine[index + i - 1];
 	lgidenttable++;
-	*nb = lgidenttable;
+	*rank = lgidenttable;
      }
 }
-
 
 /* ---------------------------------------------------------------------- */
 /* |    AsciiToInt traduit le nombre qui est sous sa forme ASCII a` la  | */
 /* |            position index de la ligne courante et qui est de       | */
-/* |            longueur lg.                                            | */
+/* |            longueur len.                                            | */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-int                 AsciiToInt (iline index, iline lg)
+int                 AsciiToInt (indLine index, indLine len)
 
 #else  /* __STDC__ */
-int                 AsciiToInt (index, lg)
-iline               index;
-iline               lg;
+int                 AsciiToInt (index, len)
+indLine               index;
+indLine               len;
 
 #endif /* __STDC__ */
 
 {
-   int                 nb;
+   int                 num;
 
-   sscanf (&inputLine[index - 1], "%d", &nb);
-   if (nb > 65535)
+   sscanf (&inputLine[index - 1], "%d", &num);
+   if (num > 65535)
      {
-	CompilerError (index, COMPIL, FATAL, COMPIL_NUMBER_TOO_GREAT, inputLine, linenb);
-	nb = 0;
+	CompilerError (index, COMPIL, FATAL, COMPIL_NUMBER_TOO_GREAT, inputLine, LineNum);
+	num = 0;
      }
-   return nb;
+   return num;
 }
-
 
 /* ---------------------------------------------------------------------- */
 /* |    OctalToChar remplace dans le buffer d'entree inputLine les      | */
@@ -257,39 +255,39 @@ void                OctalToChar ()
 #endif				/* __STDC__ */
 
 {
-   int                 i, d, k, n;
+   int                 i, shift, k, n;
 
    i = 0;
    while (inputLine[i] != '\0')
      {
 	if (inputLine[i] == '\\')
 	  {
-	     d = 0;
+	     shift = 0;
 	     if (inputLine[i + 1] == '\\')
-		d = 1;
+		shift = 1;
 	     else if (inputLine[i + 1] >= '0' && inputLine[i + 1] <= '7')
 	       {
 		  /* \ suivi d'un chiffre octal */
 		  k = i + 1;
 		  n = 0;
 		  while (inputLine[k] >= '0' && inputLine[k] <= '7' && k < i + 4)
-		     n = n * 8 + ((int) inputLine[k++]) - '0';
+		     n = n * 8 + ((int) inputLine[k++]) - ((int) '0');
 		  if (n < 1 || n > 255)
 		     CompilerError (i, COMPIL, FATAL, COMPIL_INVALID_CHARACTER,
-				    inputLine, linenb);
+				    inputLine, LineNum);
 		  else
 		    {
 		       inputLine[i] = (unsigned char) n;
-		       d = k - i - 1;
+		       shift = k - i - 1;
 		    }
 	       }
-	     if (d > 0)
-		/* decale la fin de la ligne de d caracteres vers la gauche */
+	     if (shift > 0)
+		/* decale la fin de la ligne de shift caracteres vers la gauche */
 	       {
 		  k = i + 1;
 		  do
 		    {
-		       inputLine[k] = inputLine[k + d];
+		       inputLine[k] = inputLine[k + shift];
 		       k++;
 		    }
 		  while (inputLine[k - 1] != '\0');
@@ -303,48 +301,48 @@ void                OctalToChar ()
 
 
 /* ---------------------------------------------------------------------- */
-/* |    GetNextToken cherche le prochain mot a` partir de la position start  | */
-/* |            dans la ligne courante. Au retour:                      | */
+/* |    GetNextToken cherche le prochain mot a` partir de la position   | */
+/* |            start dans la ligne courante. Au retour:                | */
 /* |            - wi: position dans la ligne du debut du mot trouve, ou | */
 /* |            si pas trouve, 0.                                       | */
-/* |            - wl: longueur du mot trouve, ou 0 si pas trouve. (lg+1 | */
-/* |            si wn=strng).                                           | */
-/* |            - wn: nature du mot trouve, ou err si pas trouve.       | */
+/* |            - wl: longueur du mot trouve, ou 0 si pas trouve. (len+1| */
+/* |            si wn=SynString).                                           | */
+/* |            - wn: SyntacticType du mot trouve, ou SynError si pas trouve.       | */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-void                GetNextToken (iline start, iline * wi, iline * wl, nature * wn)
+void                GetNextToken (indLine start, indLine * wi, indLine * wl, SyntacticType * wn)
 
 #else  /* __STDC__ */
 void                GetNextToken (start, wi, wl, wn)
-iline               start;
-iline              *wi;
-iline              *wl;
-nature             *wn;
+indLine               start;
+indLine              *wi;
+indLine              *wl;
+SyntacticType             *wn;
 
 #endif /* __STDC__ */
 
 {
-   iline               j, k;
+   indLine               j, k;
    boolean             stop;
 
    *wi = 0;
    *wl = 0;
-   *wn = err;
+   *wn = SynError;
    stop = False;
    j = start - 1;
    do
      {
 	/* saute les caracteres vides et commentaires */
 	/* les commentaires sont delimites par des accolades exclusivement */
-	if (comment)
+	if (Comment)
 	   /* cherche la fin du commentaire ou de la ligne */
 	  {
 	     while (inputLine[j] != '}' && inputLine[j] != '\0')
 		j++;
 	     if (inputLine[j] == '}')
 	       {
-		  comment = False;
+		  Comment = False;
 		  j++;
 	       }
 	  }
@@ -354,13 +352,13 @@ nature             *wn;
 	   else if (inputLine[j] == '{')
 	      /* debut de commentaire */
 	     {
-		comment = True;
+		Comment = True;
 		while (inputLine[j] != '}' && inputLine[j] != '\0')
 		   j++;
 		if (inputLine[j] == '\0')
 		   stop = True;
 		else
-		   comment = False;
+		   Comment = False;
 	     }
 	   else
 	     {
@@ -377,21 +375,22 @@ nature             *wn;
 	stop = False;
 	j = *wi - 1;
 	*wl = 1;
-	/* nature du mot trouve, d'apres son premier caractere */
+	/* SyntacticType du mot trouve, d'apres son premier caractere */
 	if (inputLine[j] >= '0' && inputLine[j] <= '9')
-	   *wn = number;
+	   *wn = SynInteger;
 	else if ((inputLine[j] >= 'A' && inputLine[j] <= 'Z')
 		 || inputLine[j] == (unsigned char) '\240' /*nobreakspace */
 		 || (inputLine[j] >= 'a' && inputLine[j] <= 'z')
 
-		 || (inputLine[j] >= 192 && inputLine[j] <= 255))
-	   *wn = name;
+		 || (((int) inputLine[j]) >= 192 &&
+		     ((int) inputLine[j]) <= 255))
+	   *wn = SynIdentifier;
 	else if (inputLine[j] == '\'')
-	   *wn = strng;
+	   *wn = SynString;
 	else
-	   *wn = shortkw;
+	   *wn = SynShortKeyword;
 	j++;
-	if (*wn == number || *wn == name)
+	if (*wn == SynInteger || *wn == SynIdentifier)
 	   /* verifie que le mot est bien forme et cherche la fin */
 	   do
 	     {
@@ -409,28 +408,29 @@ nature             *wn;
 		  {
 		     switch (*wn)
 			   {
-			      case number:
+			      case SynInteger:
 				 if (!(inputLine[j] >= '0' && inputLine[j] <= '9'))
 				   {
 				      CompilerError (j + 1, COMPIL, FATAL, COMPIL_INCOR_NUMBER,
-						     inputLine, linenb);
-				      *wn = err;
+						     inputLine, LineNum);
+				      *wn = SynError;
 				      stop = True;
 				   }
 				 break;
-			      case name:
+			      case SynIdentifier:
 				 if (!((inputLine[j] >= 'A' && inputLine[j] <= 'Z')
 				       || (inputLine[j] == (unsigned char) '\240' /*nobreakspace */ )
 
 				       || (inputLine[j] >= 'a' && inputLine[j] <= 'z')
 				       || (inputLine[j] >= '0' && inputLine[j] <= '9')
-				       || (inputLine[j] >= 192 && inputLine[j] <= 255)
+				       || (((int)inputLine[j]) >= 192 &&
+					   ((int)inputLine[j]) <= 255)
 				 /* lettre accentuee */
 				       || inputLine[j] == '_'))
 				   {
 				      CompilerError (j + 1, COMPIL, FATAL, COMPIL_NCORRECT_WORD,
-						     inputLine, linenb);
-				      *wn = err;
+						     inputLine, LineNum);
+				      *wn = SynError;
 				      stop = True;
 				   }
 				 break;
@@ -442,7 +442,7 @@ nature             *wn;
 		j++;
 	     }
 	   while (!(stop));
-	else if (*wn == strng)
+	else if (*wn == SynString)
 	   /* chaine de caracteres */
 	  {
 	     /* saute le quote initial */
@@ -453,8 +453,8 @@ nature             *wn;
 		  {
 		     CompilerError (*wi,
 		       COMPIL, FATAL, COMPIL_STRINGS_CANNOT_EXCEED_ONE_LINE,
-				    inputLine, linenb);
-		     *wn = err;
+				    inputLine, LineNum);
+		     *wn = SynError;
 		     stop = True;
 		  }
 		else
@@ -486,42 +486,44 @@ nature             *wn;
 
 
 /* ---------------------------------------------------------------------- */
-/* |    wordmatch retourne vrai si dans la ligne courante le mot        | */
-/* |            commencant a` l'index wi de longueur wl et de nature wn | */
+/* |    TokenMatch retourne vrai si dans la ligne courante le mot       | */
+/* |            commencant a` l'index wi de longueur wl et de SyntacticType wn | */
 /* |            correspond a` l'element de code c qui apparait dans la  | */
-/* |            regle r de la grammaire. Rend dans nb le rang du mot    | */
+/* |            regle r de la grammaire. Rend dans rank le rang du mot  | */
 /* |            dans la table identtable si c'est un identificateur.    | */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-static boolean      wordmatch (iline wi, iline wl, nature wn, grmcode c, grmcode r, int *nb)
+static boolean      TokenMatch (indLine wi, indLine wl, SyntacticType wn, SyntacticCode c, SyntacticCode r, int *rank)
 
 #else  /* __STDC__ */
-static boolean      wordmatch (wi, wl, wn, c, r, nb)
-iline               wi;
-iline               wl;
-nature              wn;
-grmcode             c;
-grmcode             r;
-int                *nb;
+static boolean      TokenMatch (wi, wl, wn, c, r, rank)
+indLine               wi;
+indLine               wl;
+SyntacticType              wn;
+SyntacticCode             c;
+SyntacticCode             r;
+int                *rank;
 
 #endif /* __STDC__ */
 
 {
-   grmcode             code;
+   SyntacticCode             code;
    boolean             match;
 
-   match = False;		/* on verra bien... */
+   match = False;
    if (c < 1000)
       /* identificateur attendu */
-      match = True;		/* a priori ca marche */
+      /* a priori ca marche */
+      match = True;
    else if (c >= 1000 && c < 1100)
       /* mot-cle court attendu */
      {
-	if (wl == 1 && wn == shortkw)
+	if (wl == 1 && wn == SynShortKeyword)
 	   /* c'est un mot-cle court */
 	  {
-	     testshortkw (wi, &code);	/* est-il valide ? */
+	     /* est-il valide ? */
+	     CheckShortKeyword (wi, &code);
 	     if (code > 0)
 		/* mot-cle court valide */
 	       {
@@ -531,25 +533,25 @@ int                *nb;
 	       }
 	     else
 		/* mot-cle court invalide */
-		CompilerError (wi, COMPIL, FATAL, COMPIL_INVALID_SYMBOL, inputLine, linenb);
+		CompilerError (wi, COMPIL, FATAL, COMPIL_INVALID_SYMBOL, inputLine, LineNum);
 	  }
      }
    else if (c >= 1100 && c < 2000)
       /* mot-cle long attendu */
      {
-	testkeyword (wi, wl, &code);
+	CheckLongKeyword (wi, wl, &code);
 	/* est-ce un mot-cle long valide ? */
 	if (code == c)
+	   /* c'est le mot-cle long attendu */
 	   match = True;
-	/* c'est le mot-cle long attendu */
      }
    else if (c > 3000)
       /* type de base attendu */
      {
-	if (c == 3001 && wn == name)
+	if (c == 3001 && wn == SynIdentifier)
 	   /* on attend un nom et c'est un nom */
 	  {
-	     testident (wi, wl, &code, nb);
+	     CheckIdent (wi, wl, &code, rank);
 	     /* est-il dans la table ? */
 	     if (code > 0)
 		/* il y est */
@@ -561,21 +563,21 @@ int                *nb;
 	     else
 		/* non, il n'est pas encore connu */
 	       {
-		  testkeyword (wi, wl, &code);
+		  CheckLongKeyword (wi, wl, &code);
 		  /* est-ce un mot-cle long ? */
 		  if (code == 0)
 		     /* ce n'est pas un mot-cle long, c'est */
 		     /* donc un identificateur */
 		    {
-		       addident (wi, wl, r, nb);
+		       NewIdent (wi, wl, r, rank);
 		       /* on l'ajoute dans la table */
 		       match = True;	/* et c'est bon... */
 		    }
 	       }
 	  }
-	if (c == 3002 && wn == number)
+	if (c == 3002 && wn == SynInteger)
 	   match = True;
-	if (c == 3003 && wn == strng)
+	if (c == 3003 && wn == SynString)
 	   match = True;
      }
    return match;
@@ -583,27 +585,27 @@ int                *nb;
 
 
 /* ---------------------------------------------------------------------- */
-/* |    AnalyzeToken procede a` l'analyse du mot commencant a` la postion wi| */
-/* |            de la ligne courante (inputLine), de longueur wl et de  | */
-/* |            nature wn. Rend dans c le code grammatical du mot, dans | */
+/* |    AnalyzeToken procede a` l'analyse du mot commencant a la postion| */
+/* |            wi de la ligne courante (inputLine), de longueur wl et de| */
+/* |            SyntacticType wn. Rend dans c le code grammatical du mot, dans | */
 /* |            r le numero de la derniere regle ou` il a ete trouve et | */
-/* |            dans nb son rang dans identtable, si c'est un           | */
+/* |            dans rank son rang dans identtable, si c'est un         | */
 /* |            identificateur. Dans pr se trouve le numero de l'avant  | */
 /* |            derniere regle appliquee.                               | */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-void                AnalyzeToken (iline wi, iline wl, nature wn, grmcode * c, rnb * r, int *nb, rnb * pr)
+void                AnalyzeToken (indLine wi, indLine wl, SyntacticType wn, SyntacticCode * c, SyntRuleNum * r, int *rank, SyntRuleNum * pr)
 
 #else  /* __STDC__ */
-void                AnalyzeToken (wi, wl, wn, c, r, nb, pr)
-iline               wi;
-iline               wl;
-nature              wn;
-grmcode            *c;
-rnb                *r;
-int                *nb;
-rnb                *pr;
+void                AnalyzeToken (wi, wl, wn, c, r, rank, pr)
+indLine               wi;
+indLine               wl;
+SyntacticType              wn;
+SyntacticCode            *c;
+SyntRuleNum                *r;
+int                *rank;
+SyntRuleNum                *pr;
 
 #endif /* __STDC__ */
 
@@ -616,7 +618,7 @@ rnb                *pr;
 
    if (level < 0)
       CompilerError (wi, COMPIL, FATAL, COMPIL_END_HAS_ALREADY_BEEN_REACHED,
-		     inputLine, linenb);
+		     inputLine, LineNum);
    else
      {
 	ok = False;
@@ -702,13 +704,13 @@ rnb                *pr;
 	     if (level >= 0)
 	       {
 		  *c = ruletable[Stack[level].StRule][Stack[level].StRuleInd];
-		  if (wordmatch (wi, wl, wn, *c, Stack[level].StRule + 1, nb))
+		  if (TokenMatch (wi, wl, wn, *c, Stack[level].StRule + 1, rank))
 		     /* ca correspond */
 		     if (*c < 1000)
 			/* symbole non terminal */
 			if (level >= STACKSIZE)
 			   CompilerError (wi, COMPIL, FATAL, COMPIL_STACK_IS_FULL,
-					  inputLine, linenb);
+					  inputLine, LineNum);
 			else
 			   /* empile la regle definissant ce symbole */
 			  {
@@ -867,7 +869,7 @@ rnb                *pr;
 	  }
 	while (!stop && level >= 0);	/* mot ok ou fin de regle */
 	if (!ok)
-	   CompilerError (wi, COMPIL, FATAL, COMPIL_SYNTAX_ERR, inputLine, linenb);
+	   CompilerError (wi, COMPIL, FATAL, COMPIL_SYNTAX_ERR, inputLine, LineNum);
      }
 }
 
@@ -887,21 +889,21 @@ void                ParserEnd ()
 {
    if (level >= 0)
       /* la pile n'est pas vide */
-      CompilerError (1, COMPIL, FATAL, COMPIL_ABNORMAL_END, inputLine, linenb);
+      CompilerError (1, COMPIL, FATAL, COMPIL_ABNORMAL_END, inputLine, LineNum);
    else
      {
 	/* la pile est vide */
 	if (ruletable[Stack[0].StRule][Stack[0].StRuleInd] != 2000)
 	   /* la regle initiale n'est pas terminee */
-	   CompilerError (1, COMPIL, FATAL, COMPIL_ABNORMAL_END, inputLine, linenb);
+	   CompilerError (1, COMPIL, FATAL, COMPIL_ABNORMAL_END, inputLine, LineNum);
      }
 }
 
 
 /* ---------------------------------------------------------------------- */
-/* |    InitSyntax initialise la table des mots-cles et la table des regles| */
-/* |            a` partir d'un fichier grammaire de type GRM. fn est le | */
-/* |            nom du fichier grammaire, avec le suffixe .GRM.         | */
+/* |    InitSyntax initialise la table des mots-cles et la table des	| */
+/* |    regles a` partir d'un fichier grammaire de type GRM.		| */
+/* |    fileName est le nom du fichier grammaire, avec le suffixe .GRM.	| */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
@@ -914,41 +916,41 @@ void                InitSyntax (fileName)
 #endif /* __STDC__ */
 
 {
-   iline               j, wind, wlen;
-   nature              wnat;
+   indLine               j, wind, wlen;
+   SyntacticType              wnat;
    int                 l;
-   boolean             defkwd;
+   boolean             readingKeywordTable;
    int                 ruleptr;
    int                 currule;
    char                pgrname[200];
    char                pnomcourt[200];
-   kwelem             *pkw1;
-   BinFile             grmfile;
+   SrcKeywordDesc             *pkw1;
+   BinFile             grmFile;
    boolean             fileOK;
 
    strcpy (pnomcourt, fileName);
    /* cherche dans le directory compil si le fichier grammaire existe */
    if (SearchFile (pnomcourt, 3, pgrname) == 0)
       CompilerError (0, COMPIL, FATAL, COMPIL_GRAMMAR_FILE_GRM_NOT_FOUND,
-		     inputLine, linenb);
+		     inputLine, LineNum);
    else
      {
 	/* ouvre le fichier grammaire */
-	grmfile = BIOreadOpen (pgrname);
-	/* le fichier des mots-cles est ouvert */
+	grmFile = BIOreadOpen (pgrname);
 	lgkwtable = 0;
 	lastshortkw = 0;
-	defkwd = True;		/* on commence par les mots-cles */
+	/* on commence par la lecture de la table des mots-cles */
+	readingKeywordTable = True;
 	lgruletable = 0;
 	ruleptr = 0;
 	fileOK = True;
 	while (fileOK)
-	   /* lit une ligne */
 	  {
+	     /* lit une ligne */
 	     j = 0;
 	     do
 	       {
-		  fileOK = BIOreadByte (grmfile, &inputLine[j]);
+		  fileOK = BIOreadByte (grmFile, &inputLine[j]);
 		  j++;
 	       }
 	     while (j < linelen && inputLine[j - 1] != '\n' && fileOK);
@@ -958,20 +960,20 @@ void                InitSyntax (fileName)
 	     j = 1;
 	     do
 	       {
+		  /* accede au mot suivant de la ligne */
 		  GetNextToken (j, &wind, &wlen, &wnat);
-		  /* mot suivant de la ligne */
-		  if (defkwd)
-		     /* definition des mots-cles */
+		  if (readingKeywordTable)
+		     /* lecture de la table des mots-cles */
 		    {
-		       if (wnat == name && lastshortkw == 0)
+		       if (wnat == SynIdentifier && lastshortkw == 0)
 			  lastshortkw = lgkwtable;
 		       /* on passe des courts aux longs */
-		       if (wnat == name || wnat == shortkw)
+		       if (wnat == SynIdentifier || wnat == SynShortKeyword)
 			 {
 			    if (lgkwtable >= nbkw)
 			       /* table saturee */
 			       CompilerError (wind, COMPIL, FATAL, COMPIL_KEYWORD_TABLE_FULL,
-					      inputLine, linenb);
+					      inputLine, LineNum);
 			    else
 			       lgkwtable++;
 			    /* entree suivante de la table */
@@ -981,35 +983,34 @@ void                InitSyntax (fileName)
 			      {
 				 wlen = kwlen;
 				 CompilerError (wind, COMPIL, FATAL, COMPIL_KEYWORD_TOO_LONG,
-						inputLine, linenb);
+						inputLine, LineNum);
 			      }
-			    pkw1->kwlg = wlen;
-			    for (l = 1; l <= wlen; l++)
+			    pkw1->SrcKeywordLen = wlen;
+			    for (l = 0; l < wlen; l++)
 			      {
-				 pkw1->kwname[l - 1] = inputLine[wind + l - 2];
-				 if ((char) (pkw1->kwname[l - 1] - 32) >= 'A'
-				     && (char) (pkw1->kwname[l - 1] - 32) <= 'Z')
-				    pkw1->kwname[l - 1] = (char) (pkw1->kwname[l - 1] - 32);
+				 pkw1->SrcKeyword[l] = inputLine[wind + l - 1];
+				 if ((char) (((int)pkw1->SrcKeyword[l]) - 32) >= 'A'
+				     && (char) (((int)pkw1->SrcKeyword[l]) - 32) <= 'Z')
+				    pkw1->SrcKeyword[l] = (char) (((int)pkw1->SrcKeyword[l]) - 32);
 			      }
-			    /* traduit */
-			    /* le mot-cle en majuscules */
+			    /* traduit le mot-cle en majuscules */
 			    j = wind + wlen;
 			    GetNextToken (j, &wind, &wlen, &wnat);
 			    /* lit le code */
 			    /* grammatical du mot-cle */
-			    if (wnat == number)
-			       pkw1->gcode = AsciiToInt (wind, wlen);
+			    if (wnat == SynInteger)
+			       pkw1->SrcKeywordCode = AsciiToInt (wind, wlen);
 			    else
 			       /* fichier incorrect */
-			       CompilerError (wind, COMPIL, FATAL, COMPIL_INCOR_GRAMMAR_FILE_GRM, inputLine, linenb);
+			       CompilerError (wind, COMPIL, FATAL, COMPIL_INCOR_GRAMMAR_FILE_GRM, inputLine, LineNum);
 			 }
-		       else if (wnat == number)
-			  /* fin de la section mots-cles */
-			  defkwd = False;
+		       else if (wnat == SynInteger)
+			  /* fin de la table mots-cles */
+			  readingKeywordTable = False;
 		    }
-		  if (!defkwd)
-		     /* definition de la table des regles */
-		     if (wnat == number)
+		  if (!readingKeywordTable)
+		     /* lecture de la table des regles */
+		     if (wnat == SynInteger)
 			if (ruleptr == 0)
 			   /* nouvelle regle */
 			  {
@@ -1017,7 +1018,7 @@ void                InitSyntax (fileName)
 			     if (currule > maxrule)
 			       {
 				  /* table des regles saturee */
-				  CompilerError (wind, COMPIL, FATAL, COMPIL_GRAMMAR_TABLE_FULL, inputLine, linenb);
+				  CompilerError (wind, COMPIL, FATAL, COMPIL_GRAMMAR_TABLE_FULL, inputLine, LineNum);
 				  currule = maxrule;
 			       }
 			     ruletable[currule - 1][0] = 0;
@@ -1033,19 +1034,19 @@ void                InitSyntax (fileName)
 				ruleptr = 0;	/* fin regle */
 			     else if (ruleptr >= maxlgrule)
 				/* regle trop longue */
-				CompilerError (wind, COMPIL, FATAL, COMPIL_GRAMMAR_RULE_TOO_LONG, inputLine, linenb);
+				CompilerError (wind, COMPIL, FATAL, COMPIL_GRAMMAR_RULE_TOO_LONG, inputLine, LineNum);
 			     else
 				ruleptr++;
 			  }
 		     else
 			/* ce n'est pas un nombre */
-		     if (wind > 0)
-			/* fichier incorrect */
-			CompilerError (wind, COMPIL, FATAL, COMPIL_INCOR_GRAMMAR_FILE_GRM, inputLine, linenb);
+		        if (wind > 0)
+			  /* fichier incorrect */
+			  CompilerError (wind, COMPIL, FATAL, COMPIL_INCOR_GRAMMAR_FILE_GRM, inputLine, LineNum);
 		  j = wind + wlen;	/* fin du mot */
 	       }
-	     while (!(wind == 0));	/* plus de mot dans la ligne */
+	     while (wind != 0);	/* plus de mot dans la ligne */
 	  }
-	BIOreadClose (grmfile);
+	BIOreadClose (grmFile);
      }
 }

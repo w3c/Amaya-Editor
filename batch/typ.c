@@ -44,16 +44,16 @@
 
 /* Variables locales de TYP */
 static Name          pfilename;	/* pointeur sur le nom du fichier a compiler */
-int                 linenb;	/* compteur de lignes */
-static iline        i;		/* position courante dans la ligne en cours */
-static iline        wi;		/* position du debut du mot courant dans la
+int                 LineNum;	/* compteur de lignes */
+static indLine        i;		/* position courante dans la ligne en cours */
+static indLine        wi;		/* position du debut du mot courant dans la
 
 				 * ligne en cours */
-static iline        wl;		/* longueur du mot courant */
-static nature       wn;		/* nature du mot courant */
-static rnb          r;		/* numero de regle */
-static rnb          pr;		/* numero de la regle precedente */
-static grmcode      c;		/* code grammatical du mot trouve */
+static indLine        wl;		/* longueur du mot courant */
+static SyntacticType       wn;		/* SyntacticType du mot courant */
+static SyntRuleNum          r;		/* numero de regle */
+static SyntRuleNum          pr;		/* numero de la regle precedente */
+static SyntacticCode      c;		/* code grammatical du mot trouve */
 static int          nb;		/* indice dans identtable du mot trouve, si identific */
 static PtrSSchema pSchStr;	/* pointeur sur le schema de structure */
 static PtrSchTypo   pSchTypo;	/* pointeur sur le schema de typographie */
@@ -192,7 +192,7 @@ TypeFunct           TypeF;
    /* acquiert la memoire pour une nouvelle fonction typographique */
    if ((Funct = (PtrTypoFunction) malloc (sizeof (TypoFunction))) == NULL)
       /* memoire insuffisante */
-      CompilerError (0, TYP, FATAL, TYP_NOT_ENOUGH_MEM, inputLine, linenb);
+      CompilerError (0, TYP, FATAL, TYP_NOT_ENOUGH_MEM, inputLine, LineNum);
    else
      {
 	if (PremFonction == NULL)
@@ -259,7 +259,7 @@ Name                 NomModele;
    /* acquiert la memoire pour un nouveau modele */
    if ((pMod = (PtrModeleCompo) malloc (sizeof (ModeleCompo))) == NULL)
       /* memoire insuffisante */
-      CompilerError (0, TYP, FATAL, TYP_NOT_ENOUGH_MEM, inputLine, linenb);
+      CompilerError (0, TYP, FATAL, TYP_NOT_ENOUGH_MEM, inputLine, LineNum);
    else
      {
 	if (PremModele == NULL)
@@ -432,7 +432,7 @@ int                 att;
    /* acquiert la memoire pour une nouvelle fonction typographique */
    if ((TAttr = (PtrRTypoAttribut) malloc (sizeof (RTypoAttribut))) == NULL)
       /* memoire insuffisante */
-      CompilerError (0, TYP, FATAL, TYP_NOT_ENOUGH_MEM, inputLine, linenb);
+      CompilerError (0, TYP, FATAL, TYP_NOT_ENOUGH_MEM, inputLine, LineNum);
    else
      {
 	pSchTypo->STyAttribSem[att - 1] = TAttr;
@@ -538,7 +538,7 @@ PtrRegleTypo        pRegle;
    if (NbCourCond + j >= MaxTyCond)
       /* trop de conditions */
       CompilerError (wi, TYP, FATAL, TYP_TOO_MANY_CONDITIONS,
-		     inputLine, linenb);
+		     inputLine, LineNum);
    else
       for (i = j; (i < NbCourCond + j); i++)
 	{
@@ -639,7 +639,7 @@ Name                 NomF;
       /* verifier s'il y a des conditions sur les deux regles */
       if (!DansCondition || pRe1->RTyNbCond == 0)
 	 /* simple avertissement : deux regles de mm type sur le mm element */
-	 CompilerError (wi, TYP, INFO, TYP_RULE_DEFINED_TWICE, inputLine, linenb);
+	 CompilerError (wi, TYP, INFO, TYP_RULE_DEFINED_TWICE, inputLine, LineNum);
 
    /* creer une nouvelle regle dans le bloc courant */
    nouvregle ();
@@ -694,7 +694,7 @@ PtrRegleTypo        pReg;
 	if (DansCondition && pRe1->RTyNbCond != 0)
 
 /*
-   CompilerError(wi, TYP, FATAL, TYP_RULE_DEFINED_TWICE, inputLine, linenb);
+   CompilerError(wi, TYP, FATAL, TYP_RULE_DEFINED_TWICE, inputLine, LineNum);
  */
 	  {
 	     /* plus tard ???  on pourra envisager de verifier ces conditions */
@@ -745,13 +745,13 @@ PtrModeleCompo      pMod;
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-void                copy_generate (Name n, iline * wi, iline * wl)
+void                copy_generate (Name n, indLine * wi, indLine * wl)
 
 #else  /* __STDC__ */
 void                copy_generate (n, wi, wl)
 Name                 n;
-iline              *wi;
-iline              *wl;
+indLine              *wi;
+indLine              *wl;
 
 #endif /* __STDC__ */
 
@@ -760,7 +760,7 @@ iline              *wl;
 
 
    if (*wl > MAX_NAME_LENGTH - 1)
-      CompilerError (*wi, TYP, FATAL, TYP_NAME_TOO_LONG, inputLine, linenb);
+      CompilerError (*wi, TYP, FATAL, TYP_NAME_TOO_LONG, inputLine, LineNum);
    else
      {
 	for (j = 1; j <= *wl; j++)
@@ -776,12 +776,12 @@ iline              *wl;
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-static int          NumType (iline wi, iline wl)
+static int          NumType (indLine wi, indLine wl)
 
 #else  /* __STDC__ */
 static int          NumType (wi, wl)
-iline               wi;
-iline               wl;
+indLine               wi;
+indLine               wl;
 
 #endif /* __STDC__ */
 
@@ -798,7 +798,7 @@ iline               wl;
    if (strcmp (n, pSchStr->SsRule[i - 1].SrName) != 0)
       /* type inconnu */
      {
-	CompilerError (wi, TYP, FATAL, TYP_UNKNOWN_TYPE, inputLine, linenb);
+	CompilerError (wi, TYP, FATAL, TYP_UNKNOWN_TYPE, inputLine, LineNum);
 	i = 0;
      }
    return i;
@@ -812,16 +812,16 @@ iline               wl;
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-void                ProcessToken (iline wi, iline wl, grmcode c, grmcode r, int nb, rnb pr)
+void                ProcessToken (indLine wi, indLine wl, SyntacticCode c, SyntacticCode r, int nb, SyntRuleNum pr)
 
 #else  /* __STDC__ */
 void                ProcessToken (wi, wl, c, r, nb, pr)
-iline               wi;
-iline               wl;
-grmcode             c;
-grmcode             r;
+indLine               wi;
+indLine               wl;
+SyntacticCode             c;
+SyntacticCode             r;
 int                 nb;
-rnb                 pr;
+SyntRuleNum                 pr;
 
 #endif /* __STDC__ */
 
@@ -837,7 +837,7 @@ rnb                 pr;
 
    if (c < 1000)
       /* symbole intermediaire de la grammaire, erreur */
-      CompilerError (wi, TYP, FATAL, TYP_INTERMEDIATE_SYMBOL, inputLine, linenb);
+      CompilerError (wi, TYP, FATAL, TYP_INTERMEDIATE_SYMBOL, inputLine, LineNum);
    else
      {
 	if (c < 1100)		/* mot-cle court */
@@ -1067,7 +1067,7 @@ rnb                 pr;
 		       if (NbCourCond >= MaxTyCond)
 			  /* trop de conditions */
 			  CompilerError (wi, TYP, FATAL, TYP_TOO_MANY_CONDITIONS,
-					 inputLine, linenb);
+					 inputLine, LineNum);
 		       else
 			 {
 			    NbCourCond++;
@@ -1133,7 +1133,7 @@ rnb                 pr;
 					if (!RdSchStruct (n, pSchStr))
 					   TtaDisplaySimpleMessage (FATAL, TYP, TYP_CANNOT_READ_STRUCT_SCHEM);	/* echec lecture du  schema de structure */
 					else if (strncmp (pSchStr->SsName, n, MAX_NAME_LENGTH) != 0)
-					   CompilerError (wi, TYP, FATAL, TYP_STRUCT_SCHEM_DOES_NOT_MATCH, inputLine, linenb);
+					   CompilerError (wi, TYP, FATAL, TYP_STRUCT_SCHEM_DOES_NOT_MATCH, inputLine, LineNum);
 					else
 					  {
 					     strcpy (pSchTypo->STyNomStruct, n);
@@ -1164,7 +1164,7 @@ rnb                 pr;
 						       if (pSchTypo->STyRegleElem[i - 1] != NULL)
 							  CompilerError (wi, TYP, FATAL,
 									 TYP_ALREADY_DEFINED,
-							  inputLine, linenb);
+							  inputLine, LineNum);
 						       else
 							 {
 							    CourType = i;
@@ -1201,7 +1201,7 @@ rnb                 pr;
 				      i++;
 				   if (strncmp (n, pSchStr->SsAttribute[i - 1].AttrName, MAX_NAME_LENGTH) != 0)
 				      /* attribut inconnu */
-				      CompilerError (wi, TYP, FATAL, TYP_UNKNOWN_ATTR, inputLine, linenb);
+				      CompilerError (wi, TYP, FATAL, TYP_UNKNOWN_ATTR, inputLine, LineNum);
 				   else
 				      /* l'attribut existe, il a le numero i */
 				   if (pr == RULE_TransAttr)
@@ -1220,7 +1220,7 @@ rnb                 pr;
 						 case AtNumAttr:	/* attribut a valeur numerique */
 						    if (pRTy1->RTyANbCas >= MaxCasTyAttrNum)
 						       /* trop de cas pour cet attribut */
-						       CompilerError (wi, TYP, FATAL, TYP_TOO_MANY_CASES_FOR_THAT_ATTR, inputLine, linenb);
+						       CompilerError (wi, TYP, FATAL, TYP_TOO_MANY_CASES_FOR_THAT_ATTR, inputLine, LineNum);
 						    else
 						       pRTy1->RTyANbCas++;
 						    break;
@@ -1228,13 +1228,13 @@ rnb                 pr;
 						 case AtTextAttr /* attribut textuel */ :
 						    if (pRTy1->RTyATxt != NULL)
 						       /* attribut deja rencontre' */
-						       CompilerError (wi, TYP, FATAL, TYP_RULES_ALREADY_EXIST_FOR_THAT_ATTR, inputLine, linenb);
+						       CompilerError (wi, TYP, FATAL, TYP_RULES_ALREADY_EXIST_FOR_THAT_ATTR, inputLine, LineNum);
 						    break;
 
 						 case AtReferenceAttr:
 						    if (pRTy1->RTyARefPremRegle != NULL)
 						       /* attribut deja rencontre' */
-						       CompilerError (wi, TYP, FATAL, TYP_RULES_ALREADY_EXIST_FOR_THAT_ATTR, inputLine, linenb);
+						       CompilerError (wi, TYP, FATAL, TYP_RULES_ALREADY_EXIST_FOR_THAT_ATTR, inputLine, LineNum);
 						    break;
 
 						 case AtEnumAttr:
@@ -1258,7 +1258,7 @@ rnb                 pr;
 					pFunct = ChercheFonction (n);
 					if (pFunct != NULL)
 					   /* cette fonction existe deja */
-					   CompilerError (wi, TYP, FATAL, TYP_DUPLICATE_FUNCTION, inputLine, linenb);
+					   CompilerError (wi, TYP, FATAL, TYP_DUPLICATE_FUNCTION, inputLine, LineNum);
 					else
 					   strncpy (DerFonction->TFIdent, n, MAX_NAME_LENGTH);
 				     }
@@ -1279,7 +1279,7 @@ rnb                 pr;
 					else
 					  {
 					     /* erreur: ce nom de fonction est inconnu */
-					     CompilerError (wi, TYP, FATAL, TYP_UNKNOWN_FUNCT, inputLine, linenb);
+					     CompilerError (wi, TYP, FATAL, TYP_UNKNOWN_FUNCT, inputLine, LineNum);
 					  }
 				     }
 				   break;
@@ -1317,14 +1317,14 @@ rnb                 pr;
 					  }
 					else
 					   /* erreur: ce nom de modele exite deja */
-					   CompilerError (wi, TYP, FATAL, TYP_DUPLICATE_MODEL, inputLine, linenb);
+					   CompilerError (wi, TYP, FATAL, TYP_DUPLICATE_MODEL, inputLine, LineNum);
 				     }
 				   else if (pr == RULE_ParamTypo)
 				      /* un IdentMod dans une regle ParamTypo */
 				     {
 					if (pMod == NULL)
 					   /* erreur: ce nom de modele est inconnu */
-					   CompilerError (wi, TYP, FATAL, TYP_UNKNOWN_MODEL, inputLine, linenb);
+					   CompilerError (wi, TYP, FATAL, TYP_UNKNOWN_MODEL, inputLine, LineNum);
 					else
 					   /* integrer TOUTES les regles du modele */
 					   /* dans le bloc courant */
@@ -1338,7 +1338,7 @@ rnb                 pr;
 				   pAt1 = &pSchStr->SsAttribute[CourAttr - 1];
 				   if (pAt1->AttrType != AtEnumAttr)
 				      /* pas un attribut a valeur enumerees */
-				      CompilerError (wi, TYP, FATAL, TYP_INCOR_ATTR_VALUE, inputLine, linenb);
+				      CompilerError (wi, TYP, FATAL, TYP_INCOR_ATTR_VALUE, inputLine, LineNum);
 				   else
 				     {
 					i = 1;
@@ -1347,14 +1347,14 @@ rnb                 pr;
 					   i++;
 					if (strcmp (n, pAt1->AttrEnumValue[i - 1]) != 0)
 					   /* valeur d'attribut  incorrecte */
-					   CompilerError (wi, TYP, FATAL, TYP_INCOR_ATTR_VALUE, inputLine, linenb);
+					   CompilerError (wi, TYP, FATAL, TYP_INCOR_ATTR_VALUE, inputLine, LineNum);
 					else
 					   /* la valeur est correcte, elle a le numero i */
 					   /* debut des regles de typographie d'un attribut */
 					   if (pSchTypo->STyAttribSem[CourAttr - 1] != NULL
 					       && pSchTypo->STyAttribSem[CourAttr - 1]->RTyAValEnum[i] != NULL)
 					   /* deja des regles pour cette valeur */
-					   CompilerError (wi, TYP, FATAL, TYP_RULES_ALREADY_EXIST_FOR_THAT_VALUE, inputLine, linenb);
+					   CompilerError (wi, TYP, FATAL, TYP_RULES_ALREADY_EXIST_FOR_THAT_VALUE, inputLine, LineNum);
 					else
 					   CourValAttr = i;
 				     }
@@ -1372,7 +1372,7 @@ rnb                 pr;
 				   if (pSchStr->SsAttribute[CourAttr - 1].AttrType != AtNumAttr
 				       || k >= MAX_INT_ATTR_VAL)
 				      /* ce n'est pas un attribut numerique */
-				      CompilerError (wi, TYP, FATAL, TYP_NOT_A_NUMERICAL_ATTR, inputLine, linenb);
+				      CompilerError (wi, TYP, FATAL, TYP_NOT_A_NUMERICAL_ATTR, inputLine, LineNum);
 				   else
 				     {
 					k = k * SigneAttrVal + 1;
@@ -1388,7 +1388,7 @@ rnb                 pr;
 				   if (pSchStr->SsAttribute[CourAttr - 1].AttrType != AtNumAttr
 				       || k >= MAX_INT_ATTR_VAL)
 				      /* ce n'est pas un attribut numerique */
-				      CompilerError (wi, TYP, FATAL, TYP_NOT_A_NUMERICAL_ATTR, inputLine, linenb);
+				      CompilerError (wi, TYP, FATAL, TYP_NOT_A_NUMERICAL_ATTR, inputLine, LineNum);
 				   else
 				     {
 					k = k * SigneAttrVal - 1;
@@ -1404,7 +1404,7 @@ rnb                 pr;
 				   if (pSchStr->SsAttribute[CourAttr - 1].AttrType != AtNumAttr
 				       || k >= MAX_INT_ATTR_VAL)
 				      /* ce n'est pas un attribut numerique */
-				      CompilerError (wi, TYP, FATAL, TYP_NOT_A_NUMERICAL_ATTR, inputLine, linenb);
+				      CompilerError (wi, TYP, FATAL, TYP_NOT_A_NUMERICAL_ATTR, inputLine, LineNum);
 				   else
 				     {
 					k = k * SigneAttrVal;
@@ -1420,7 +1420,7 @@ rnb                 pr;
 				   if (pSchStr->SsAttribute[CourAttr - 1].AttrType != AtNumAttr
 				       || k >= MAX_INT_ATTR_VAL)
 				      /* ce n'est pas un attribut numerique */
-				      CompilerError (wi, TYP, FATAL, TYP_NOT_A_NUMERICAL_ATTR, inputLine, linenb);
+				      CompilerError (wi, TYP, FATAL, TYP_NOT_A_NUMERICAL_ATTR, inputLine, LineNum);
 				   else
 				     {
 					k = k * SigneAttrVal;
@@ -1429,7 +1429,7 @@ rnb                 pr;
 					/* d'attribut numerique sera positive */
 					pRTy1 = pSchTypo->STyAttribSem[CourAttr - 1];
 					if (pRTy1->RTyACas[pRTy1->RTyANbCas - 1].TyANBorneInf > k)
-					   CompilerError (wi, TYP, FATAL, TYP_INCONSISTENT_LIMITS, inputLine, linenb);
+					   CompilerError (wi, TYP, FATAL, TYP_INCONSISTENT_LIMITS, inputLine, LineNum);
 					else
 					   pRTy1->RTyACas[pRTy1->RTyANbCas - 1].TyANBorneSup = k;
 				     }
@@ -1438,7 +1438,7 @@ rnb                 pr;
 				case RULE_ValEqual:	/* ValEqual */
 				   if (pSchStr->SsAttribute[CourAttr - 1].AttrType != AtNumAttr || k >= MAX_INT_ATTR_VAL)
 				      /* ce n'est pas un attribut numerique */
-				      CompilerError (wi, TYP, FATAL, TYP_INCONSISTENT_LIMITS, inputLine, linenb);
+				      CompilerError (wi, TYP, FATAL, TYP_INCONSISTENT_LIMITS, inputLine, LineNum);
 				   else
 				     {
 					k = k * SigneAttrVal;
@@ -1461,10 +1461,10 @@ rnb                 pr;
 		       /* RULE_TextEqual */
 		       if (pSchStr->SsAttribute[CourAttr - 1].AttrType != AtTextAttr)
 			  /* ce n'est pas un attribut textuel */
-			  CompilerError (wi, TYP, FATAL, TYP_NOT_A_TEXTUAL_ATTR, inputLine, linenb);
+			  CompilerError (wi, TYP, FATAL, TYP_NOT_A_TEXTUAL_ATTR, inputLine, LineNum);
 		       else if (wl > MAX_NAME_LENGTH)
 			  /* texte trop long */
-			  CompilerError (wi, TYP, FATAL, TYP_NAME_TOO_LONG, inputLine, linenb);
+			  CompilerError (wi, TYP, FATAL, TYP_NAME_TOO_LONG, inputLine, LineNum);
 		       else
 			 {
 			    pRTy1 = pSchTypo->STyAttribSem[CourAttr - 1];
@@ -1529,7 +1529,7 @@ char              **argv;
 		  pfilename[i] = '\0';
 		  /* acquiert la memoire pour le schema de typographie */
 		  lgidenttable = 0;	/* table des identificateurs vide */
-		  linenb = 0;
+		  LineNum = 0;
 		  initgener ();	/* prepare la generation */
 
 		  /* lit tout le fichier et fait l'analyse */
@@ -1547,15 +1547,15 @@ char              **argv;
 		       /* marque la fin reelle de la ligne */
 		       inputLine[i - 1] = '\0'
 		       /* incremente le compteur de lignes */ ;
-		       linenb++;
+		       LineNum++;
 		       if (i >= linelen)
 			  CompilerError (1, TYP, FATAL, TYP_LINE_TOO_LONG, inputLine,
-					 linenb);
+					 LineNum);
 		       else if (inputLine[0] == '#')
 			  /* cette ligne contient une directive du preprocesseur cpp */
 			 {
-			    sscanf (inputLine, "# %d %s", &linenb, cppFileName);
-			    linenb--;
+			    sscanf (inputLine, "# %d %s", &LineNum, cppFileName);
+			    LineNum--;
 			 }
 		       else
 			  /* traduit les caracteres de la ligne */

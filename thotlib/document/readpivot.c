@@ -101,7 +101,7 @@ BinFile             fich;
 	     if (c < ' ')
 	       {
 		  printf ("^");
-		  c = (char) (c + '@');
+		  c = (char) ((int) c + (int) '@');
 		  i++;
 	       }
 	     printf ("%c", c);
@@ -482,13 +482,13 @@ boolean             oldformat;
 	if (!oldformat)
 	   /* l'octet lu est l'octet de poids fort de la longueur */
 	  {
-	     lg = 256 * c;	/* lit le 2eme octet de la longueur */
+	     lg = 256 * ((int) c);	/* lit le 2eme octet de la longueur */
 	     if (!BIOreadByte (fich, &c))
 	       {
 		  c = '\0';
 		  PivotError (fich);
 	       }
-	     lg += c;
+	     lg += (int) c;
 	  }
 	if (!effectif)
 	  {
@@ -794,13 +794,13 @@ BinFile             fich;
 	     *TR = RefFollow;
 	     *RExt = False;	/* il n'y a qu'un label court, sans marque */
 	     /* l'octet lu est l'octet de poids fort du label */
-	     j = 256 * c;	/* lit le 2eme octet du label */
+	     j = 256 * ((int) c);	/* lit le 2eme octet du label */
 	     if (!BIOreadByte (fich, &c))
 	       {
 		  c = '\0';
 		  PivotError (fich);
 	       }
-	     j += c;
+	     j += (int) c;
 	     /* convertit le label numerique en chaine de caracteres */
 	     LabelIntToString (j, lab);
 	  }
@@ -1998,7 +1998,7 @@ boolean             creedesc;
 		  if (c < ' ')
 		    {
 		       printf ("^");
-		       c = (char) (c + '@');
+		       c = (char) (((int) c) + ((int) '@'));
 		       i++;
 		    }
 		  printf ("%c", c);
@@ -2403,7 +2403,7 @@ boolean             creedesc;
 							     n++;
 							     /* mise a la norme iso des anciens pivots */
 							     if (pDoc->DocPivotVersion < 3)
-								if (ch >= 1 && ch <= 31)
+								if (((int) ch) >= 1 && ch < ' ')
 								   switch (ch)
 									 {
 									    case '\021':
@@ -2419,7 +2419,7 @@ boolean             creedesc;
 									       ch = '\351';
 									       break;	/*eacute */
 									    default:
-									       ch = (char) (ch + 223);
+									       ch = (char) (((int) ch) + 223);
 									 }
 							     /* changement des oe et OE */
 							     if (pDoc->DocPivotVersion < 4)

@@ -1,8 +1,5 @@
-
-/* -- Copyright (c) 1990 - 1994 Inria/CNRS  All rights reserved. -- */
-
 /*
-   affichage des messages d'erreur de different niveau
+   This module handles messages displayed by Thot compilers.
  */
 
 #include "compilmsg.h"
@@ -15,12 +12,13 @@
 
 #define EXPORT extern
 #include "compil.var"
+
 int                 UserErrorCode;
 
-
-/* ---------------------------------------------------------------------- */
-/* |    DisplayConfirmMessage displays the given message (text).        | */
-/* ---------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------
+   DisplayConfirmMessage
+   displays the given message (text).
+   ---------------------------------------------------------------------- */
 #ifdef __STDC__
 void                DisplayConfirmMessage (char *text)
 #else  /* __STDC__ */
@@ -32,8 +30,10 @@ char               *text;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* ---------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------
+   DisplayMessage
+   displays the given message (text).
+   ---------------------------------------------------------------------- */
 #ifdef __STDC__
 void                DisplayMessage (char *text, int msgType)
 #else  /* __STDC__ */
@@ -45,8 +45,10 @@ int                 msgType;
    fprintf (stderr, text);
 }
 
-/* ---------------------------------------------------------------------- */
-/* ---------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------
+   TtaError
+   sets the error code
+   ---------------------------------------------------------------------- */
 #ifdef __STDC__
 void                TtaError (int errorCode)
 #else  /* __STDC__ */
@@ -58,69 +60,81 @@ int                 errorCode;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    CompilerError affiche un message d'erreur venant des            | */
-/* |            compilateurs.                                           | */
-/* |            - index: index du caractere erronne dans la ligne       | */
-/* |            courante.                                               | */
-/* |            - code: code de l'erreur.                               | */
-/* ---------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------
+   CompilerError
+   displays an simple error message for a compiler.
+
+   inputline: the imput line containing the error
+   lineNum: SynInteger of that imput line in the source file.
+   index: rank of first erroneous character in the input line.
+   origin: the compiler that raises the error.
+   level: severity level
+   msgCode: SynInteger of the message to be displayed
+   ---------------------------------------------------------------------- */
+
 #ifdef __STDC__
-void                CompilerError (int index, int origine, int niveau, int numero, char *inputline, int numline)
+void                CompilerError (int index, int origin, int level, int msgCode, char *inputline, int lineNum)
 #else  /* __STDC__ */
-void                CompilerError (index, origine, niveau, numero, inputline, numline)
+void                CompilerError (index, origin, level, msgCode, inputline, lineNum)
 int                 index;
-int                 origine;
-int                 niveau;
-int                 numero;
+int                 origin;
+int                 level;
+int                 msgCode;
 char               *inputline;
-int                 numline;
+int                 lineNum;
 #endif /* __STDC__ */
 {
-   char                linecurseur[linelen];
+   char                buffer[linelen];
    int                 i;
 
-   TtaDisplayMessage (INFO, TtaGetMessage(COMPIL, COMPIL_ERR_LINE), numline);
-
+   TtaDisplayMessage (INFO, TtaGetMessage(COMPIL, COMPIL_ERR_LINE), lineNum);
    if (index != 0)
      {
-	for (i = 0; i < index - 1; linecurseur[i++] = ' ') ;
-	linecurseur[index - 1] = '*';
-	linecurseur[index] = '\0';
-	TtaDisplayMessage (INFO, TtaGetMessage(COMPIL, COMPIL_STRING), inputline, linecurseur);
+	for (i = 0; i < index - 1; buffer[i++] = ' ') ;
+	buffer[index - 1] = '*';
+	buffer[index] = '\0';
+	TtaDisplayMessage (INFO, TtaGetMessage(COMPIL, COMPIL_STRING), inputline, buffer);
      }
-   TtaDisplaySimpleMessage (niveau, origine, numero);
+   TtaDisplaySimpleMessage (level, origin, msgCode);
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    CompilerErrorString                                             | */
-/* ---------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------
+   CompilerErrorString
+   displays an error message with a variable part for a compiler.
+
+   inputline: the imput line containing the error
+   lineNum: SynInteger of that imput line in the source file.
+   index: rank of first erroneous character in the input line.
+   origin: the compiler that raises the error.
+   level: severity level
+   msgCode: SynInteger of the message to be displayed
+   ---------------------------------------------------------------------- */
+
 #ifdef __STDC__
-void                CompilerErrorString (int index, int origine, int niveau, int numero, char *inputline, int numline, char *string)
+void                CompilerErrorString (int index, int origin, int level, int msgCode, char *inputline, int lineNum, char *string)
 #else  /* __STDC__ */
-void                CompilerErrorString (index, origine, niveau, numero, inputline, numline, string)
+void                CompilerErrorString (index, origin, level, msgCode, inputline, lineNum, string)
 int                 index;
-int                 origine;
-int                 niveau;
-int                 numero;
+int                 origin;
+int                 level;
+int                 msgCode;
 char               *inputline;
-int                 numline;
+int                 lineNum;
 char               *string;
 #endif /* __STDC__ */
 
 {
-   char                linecurseur[linelen];
+   char                buffer[linelen];
    int                 i;
 
-   TtaDisplayMessage (INFO, TtaGetMessage(COMPIL, COMPIL_ERR_LINE), numline);
-
+   TtaDisplayMessage (INFO, TtaGetMessage(COMPIL, COMPIL_ERR_LINE), lineNum);
    if (index != 0)
      {
-	for (i = 0; i < index - 1; linecurseur[i++] = ' ') ;
-	linecurseur[index - 1] = '*';
-	linecurseur[index] = '\0';
-	TtaDisplayMessage (INFO, TtaGetMessage(COMPIL, COMPIL_STRING), inputline, linecurseur);
+	for (i = 0; i < index - 1; buffer[i++] = ' ') ;
+	buffer[index - 1] = '*';
+	buffer[index] = '\0';
+	TtaDisplayMessage (INFO, TtaGetMessage(COMPIL, COMPIL_STRING), inputline, buffer);
      }
-   TtaDisplayMessage (niveau, TtaGetMessage(origine, numero), string);
+   TtaDisplayMessage (level, TtaGetMessage(origin, msgCode), string);
 }

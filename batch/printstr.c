@@ -106,7 +106,7 @@ unsigned char                ch;
 	if (ch < ' ' || ch > '~')
 	   /* caractere non imprimable, on le remplace par un caractere imprimable */
 	  {
-	     c = ch;
+	     c = (int) ch;
 	     switch (c)
 		   {
 		      case 0340:

@@ -84,7 +84,7 @@ PtrElement          pEl;
 
 /* ---------------------------------------------------------------------- 
    ProtectElement
-   sets the ElIsCopy flag in the elements of the subtree of pE.
+   sets the ElIsCopy flag in the elements of the subtree of pEl.
    ---------------------------------------------------------------------- */
 
 #ifdef __STDC__

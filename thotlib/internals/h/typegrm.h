@@ -3,46 +3,46 @@
  */
 
 /* a syntactic code (0 - 3003) */
-typedef int	grmcode;
+typedef int	SyntacticCode;
 
 /* syntactic type of a token */
 typedef enum
 {
-	shortkw, 
-	name, 
-	number, 
-	strng, 
-	err
-} nature;
+	SynShortKeyword, 
+	SynIdentifier, 
+	SynInteger, 
+	SynString, 
+	SynError
+} SyntacticType;
 
 /* an input line to be parsed */
 typedef unsigned char lineBuffer[linelen];
 
 /* current position in the input line */
-typedef int	iline;
+typedef int	indLine;
 
 /* a key-word in the source language */
-typedef struct _kwelem
+typedef struct _SrcKeywordDesc
 {
-	char 	kwname[kwlen];	/* the key word */
-	int 	kwlg;		/* its length */
-	grmcode	gcode;		/* its syntactic type */
-} kwelem;
+	char 	SrcKeyword[kwlen];	/* the key word */
+	int 	SrcKeywordLen;		/* its length */
+	SyntacticCode	SrcKeywordCode;	/* its syntactic type */
+} SrcKeywordDesc;
 
 /* an identifier in the source language */
-typedef struct _identelem
+typedef struct _SrcIdentDesc
 {
-	char            identname[identlen];	/* the identifier */
-	int 		identlg;	/* actual length of the identifier */
-	grmcode         identtype;	/* syntactic type of the identifier */
-	int	        identdef;	/* number of the rule which defines
-					   the identifier */
-	int	        identref;	/* number of the rule where the
-					   identifier is referred to */
-} identelem;
+	char            SrcIdentifier[identlen]; /* the identifier */
+	int 		SrcIdentLen;		/* length of the identifier */
+	SyntacticCode         SrcIdentCode;	/* syntactic type of the identifier */
+	int	        SrcIdentDefRule;	/* number of the rule which
+						defines the identifier */
+	int	        SrcIdentRefRule;	/* number of the rule where the
+						identifier is referred to */
+} SrcIdentDesc;
 
 /* a coded syntactical rule */
-typedef grmcode 	rule[maxlgrule + 1];
+typedef SyntacticCode 	SyntacticRule[maxlgrule + 1];
 
 /* the number of a syntactical rule */
-typedef int 		rnb;
+typedef int 		SyntRuleNum;
