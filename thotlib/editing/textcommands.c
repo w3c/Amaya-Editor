@@ -212,7 +212,8 @@ ThotBool            extendSel;
 	       {
 		  x -= pBox->BxXOrg;
 		  LocateClickedChar (pBox, &pBuffer, &x, &index, &nChars, &nbbl);
-		  if (extendSel && RightExtended && nChars == pBox->BxNChars)
+		  if (extendSel && LeftExtended && nChars == pBox->BxNChars)
+		    /* add the last char in the left selection */
 		    nChars = pBox->BxIndChar + nChars;
 		  else
 		    nChars = pBox->BxIndChar + nChars + 1;
@@ -359,10 +360,13 @@ ThotBool            extendSel;
 	     {
 	       if (extendSel && RightExtended)
 		 {
+		   /* move the right extremity */
 		   pBox = pBoxEnd;
 		   x = pViewSelEnd->VsIndBox + pBox->BxIndChar;
+		   xpos = pViewSelEnd->VsXPos;
 		 }
 	       else
+		 /* move the left extremity */
 		 x = indpos + pBox->BxIndChar;
 	       if (x > 0)
 		 {
@@ -403,6 +407,7 @@ ThotBool            extendSel;
 		 }
 	       else
 		 {
+		   /* a new box will be selected */
 		   x = pBox->BxXOrg + xpos;
 		   y = pBox->BxYOrg + (pBox->BxHeight / 2);
 		   xDelta = -2;
@@ -414,12 +419,11 @@ ThotBool            extendSel;
 	   break;
 	   
 	 case 2:	/* Forward one character (^F) */
-	   indpos = pBox->BxAbstractBox->AbBox->BxNChars;
-	   xpos = pBox->BxAbstractBox->AbBox->BxWidth;
 	   if (pBox != NULL)
 	     {
 	       if (!extendSel || !LeftExtended)
 		 {
+		   /* move the right extremity */
 		   pBox = pBoxEnd;
 		   if (!extendSel && pViewSelEnd->VsBox &&
 		       pViewSelEnd->VsBox->BxType == BoGhost)
@@ -428,6 +432,7 @@ ThotBool            extendSel;
 		     x = pViewSelEnd->VsIndBox + pBox->BxIndChar;
 		 }
 	       else
+		 /* move the left extremity */
 		 x = indpos + pBox->BxIndChar;
 	       if (x < pBox->BxAbstractBox->AbBox->BxNChars)
 		 {
