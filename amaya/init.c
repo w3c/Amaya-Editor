@@ -1599,6 +1599,7 @@ View                view;
 #endif
 {
   int               visibility;
+  View		    tocView;
 
   visibility = TtaGetSensibility (document, view);
   if (visibility == 4)
@@ -1611,7 +1612,12 @@ View                view;
       visibility = 4;
       TtaSetToggleItem (document, 1, Views, TShowTargets, TRUE);
     }
+  /* Change visibility threshold in the main view */
   TtaSetSensibility (document, view, visibility);
+  /* Change visibility threshold in the table of content view if it's open */
+  tocView = TtaGetViewFromName (document, "Table_of_contents");
+  if (TtaIsViewOpened (document, tocView))
+     TtaSetSensibility (document, tocView, visibility);
 }
 
 
