@@ -451,7 +451,8 @@ typedef struct _PresRule
 	{
 	  ThotBool _PrAttrValue_; 	/* PrIntValue is a numerical attribute
 					   or numerical value number */ 
-	  int  _PrIntValue_;   /* -1 means "same color as foreground" */
+	  int  _PrIntValue_;   /* Border colors: -2 means Transparent and
+				        -1 means "same color as foreground" */
 	}  s0;
 	struct	/* PRuleType = PtFont, PtStyle, PtWeight, PtUnderline,
 	        	       PtThickness, PtLineStyle,

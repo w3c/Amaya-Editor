@@ -1136,14 +1136,38 @@ FILE               *fileDescriptor;
 	fprintf (fileDescriptor, "\n");
 	for (j = 1; j <= Indent + 6; j++)
 	   fprintf (fileDescriptor, " ");
-	fprintf (fileDescriptor, "Margin Top:%d", pPa1->AbTopMargin);
-	wrTypeUnit (pPa1->AbTopMarginUnit, fileDescriptor);
-	fprintf (fileDescriptor, ", Right:%d", pPa1->AbRightMargin);
-	wrTypeUnit (pPa1->AbRightMarginUnit, fileDescriptor);
-	fprintf (fileDescriptor, ", Bottom:%d", pPa1->AbBottomMargin);
-	wrTypeUnit (pPa1->AbBottomMarginUnit, fileDescriptor);
-	fprintf (fileDescriptor, ", Left:%d", pPa1->AbLeftMargin);
-	wrTypeUnit (pPa1->AbLeftMarginUnit, fileDescriptor);
+	fprintf (fileDescriptor, "Margin Top:");
+	if (pPa1->AbTopMarginUnit == UnAuto)
+	   fprintf (fileDescriptor, "auto");
+	else
+	   {
+	   fprintf (fileDescriptor, "%d", pPa1->AbTopMargin);
+	   wrTypeUnit (pPa1->AbTopMarginUnit, fileDescriptor);
+	   }
+	fprintf (fileDescriptor, ", Right:");
+	if (pPa1->AbRightMarginUnit == UnAuto)
+	   fprintf (fileDescriptor, "auto");
+	else
+	   {
+	   fprintf (fileDescriptor, "%d", pPa1->AbRightMargin);
+	   wrTypeUnit (pPa1->AbRightMarginUnit, fileDescriptor);
+	   }
+	fprintf (fileDescriptor, ", Bottom:");
+	if (pPa1->AbBottomMarginUnit == UnAuto)
+	   fprintf (fileDescriptor, "auto");
+	else
+	   {
+	   fprintf (fileDescriptor, "%d", pPa1->AbBottomMargin);
+	   wrTypeUnit (pPa1->AbBottomMarginUnit, fileDescriptor);
+	   }
+	fprintf (fileDescriptor, ", Left:");
+	if (pPa1->AbLeftMarginUnit == UnAuto)
+	   fprintf (fileDescriptor, "auto");
+	else
+	   {
+	   fprintf (fileDescriptor, "%d", pPa1->AbLeftMargin);
+	   wrTypeUnit (pPa1->AbLeftMarginUnit, fileDescriptor);
+	   }
 
 	fprintf (fileDescriptor, "\n");
 	for (j = 1; j <= Indent + 6; j++)
@@ -1173,9 +1197,17 @@ FILE               *fileDescriptor;
 	for (j = 1; j <= Indent + 6; j++)
 	   fprintf (fileDescriptor, " ");
 	fprintf (fileDescriptor, "BorderColor Top:%d", pPa1->AbTopBColor);
+	if (pPa1->AbTopBColor == -2)
+	   fprintf (fileDescriptor, "(transp.)");
 	fprintf (fileDescriptor, ", Right:%d", pPa1->AbRightBColor);
+	if (pPa1->AbRightBColor == -2)
+	   fprintf (fileDescriptor, "(transp.)");
 	fprintf (fileDescriptor, ", Bottom:%d", pPa1->AbBottomBColor);
+	if (pPa1->AbBottomBColor == -2)
+	   fprintf (fileDescriptor, "(transp.)");
 	fprintf (fileDescriptor, ", Left:%d", pPa1->AbLeftBColor);
+	if (pPa1->AbLeftBColor == -2)
+	   fprintf (fileDescriptor, "(transp.)");
 
 	fprintf (fileDescriptor, "\n");
 	for (j = 1; j <= Indent + 6; j++)

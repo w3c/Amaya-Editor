@@ -1234,7 +1234,7 @@ ATTRIBUTES
  scrolling = No_:
 		BEGIN
 		END;
- scrolling = auto:
+ scrolling = auto_:
 		BEGIN
 		END;
 

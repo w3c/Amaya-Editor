@@ -31,7 +31,8 @@ typedef enum
      UnXHeight,
      UnPoint,
      UnPixel,
-     UnPercent
+     UnPercent,
+     UnAuto
   }
 TypeUnit;
 

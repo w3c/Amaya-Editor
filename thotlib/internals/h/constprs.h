@@ -59,6 +59,7 @@
 #define C_UNIT_POINT          L'P'
 #define C_UNIT_PIXEL          L'p'
 #define C_UNIT_PERCENT        L'C'
+#define C_UNIT_AUTO           L'A'
 
 /* boxes edges and axis */ 
 #define C_AX_TOP              L'T'
@@ -242,6 +243,7 @@
 #define C_UNIT_POINT          'P'
 #define C_UNIT_PIXEL          'p'
 #define C_UNIT_PERCENT        'C'
+#define C_UNIT_AUTO           'A'
 
 /* boxes edges and axis */ 
 #define C_AX_TOP              'T'

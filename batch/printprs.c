@@ -158,6 +158,9 @@ TypeUnit            u;
 	    case UnPercent:
 	       printf (" %%");
 	       break;
+	    case UnAuto:
+	       printf (" auto");
+	       break;
 	 }
 }
 
@@ -634,8 +637,8 @@ PtrPRule            pR;
 
 
 /*----------------------------------------------------------------------
-   wrminind ecrit au terminal la regle 'NoBreak1, NoBreak2 ou      
-   Indent pointee par pR.                                  
+   wrminind ecrit au terminal une regle du type Indent, Size, Margin*, etc.  
+   La regle a ecrire est pointee par pR.                                  
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
@@ -654,11 +657,16 @@ PtrPRule            pR;
      {
 	if (pR->PrPresMode == PresImmediate)
 	  {
-	     if (pR->PrMinAttr)
-		wrnomattr (pR->PrMinValue);
+	     if (pR->PrMinUnit == UnAuto)
+	        printf ("auto");
 	     else
-		wrnb (pR->PrMinValue);
-	     wrdistunit (pR->PrMinUnit);
+	        {
+	        if (pR->PrMinAttr)
+		   wrnomattr (pR->PrMinValue);
+	        else
+		   wrnb (pR->PrMinValue);
+	        wrdistunit (pR->PrMinUnit);
+	        }
 	  }
 	else
 	   printf ("??????");
@@ -1232,19 +1240,35 @@ PtrPRule            RP;
 		    break;
 		 case PtBorderTopColor:
 		    printf ("BorderTopColor: ");
-		    wrnbherit (RP);
+	            if (RP->PrPresMode == PresImmediate &&
+			!RP->PrAttrValue && RP->PrIntValue == -2)
+		       printf ("transparent");
+		    else
+		       wrnbherit (RP);
 		    break;
 		 case PtBorderRightColor:
 		    printf ("BorderRightColor: ");
-		    wrnbherit (RP);
+	            if (RP->PrPresMode == PresImmediate &&
+			!RP->PrAttrValue && RP->PrIntValue == -2)
+		       printf ("transparent");
+		    else
+		       wrnbherit (RP);
 		    break;
 		 case PtBorderBottomColor:
 		    printf ("BorderBottomColor: ");
-		    wrnbherit (RP);
+	            if (RP->PrPresMode == PresImmediate &&
+			!RP->PrAttrValue && RP->PrIntValue == -2)
+		       printf ("transparent");
+		    else
+		       wrnbherit (RP);
 		    break;
 		 case PtBorderLeftColor:
 		    printf ("BorderLeftColor: ");
-		    wrnbherit (RP);
+	            if (RP->PrPresMode == PresImmediate &&
+			!RP->PrAttrValue && RP->PrIntValue == -2)
+		       printf ("transparent");
+		    else
+		       wrnbherit (RP);
 		    break;
 		 case PtFont:
 		    printf ("Font: ");

@@ -246,7 +246,7 @@ int volpixel;
 int                 CharacterWidth (UCHAR_T c, ptrfont font)
 #else  /* __STDC__ */
 int                 CharacterWidth (c, font)
-UCHAR_T       c;
+     UCHAR_T        c;
 ptrfont             font;
 #endif /* __STDC__ */
 {

@@ -2051,7 +2051,7 @@ ATTRIBUTES
 	Create ' scrolling="yes"';
  scrolling = No_:
 	Create ' scrolling="no"';
- scrolling = auto:
+ scrolling = auto_:
 	Create ' scrolling="auto"';
 
  Invalid_attribute:

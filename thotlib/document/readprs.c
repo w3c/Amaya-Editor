@@ -286,6 +286,9 @@ BinFile             file;
 	    case C_UNIT_PERCENT:
 	       return UnPercent;
 	       break;
+	    case C_UNIT_AUTO:
+	       return UnAuto;
+	       break;
 	    default:
 	       error = True;
 	       return UnPoint;

@@ -10070,7 +10070,7 @@ ATTRIBUTES
 	CreateBefore(ATTR_SCROLLING_YES);
   scrolling = No_:
 	CreateBefore(ATTR_SCROLLING_NO);
-  scrolling = auto:
+  scrolling = auto_:
 	CreateBefore(ATTR_SCROLLING_AUTO);
 
   Invalid_attribute:

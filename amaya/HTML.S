@@ -758,7 +758,7 @@ STRUCT
 	 { frameborder   1        0 }
 	   marginwidth = Integer; marginheight = Integer;
 	 { marginwidth            marginheight }
-	   no_resize = Yes_; scrolling = Yes_, No_, auto) =
+	   no_resize = Yes_; scrolling = Yes_, No_, auto_) =
 	 { noresize          scrolling   yes   no   auto }
 	CONSTANT C_Empty;
 

@@ -156,10 +156,10 @@ Rule5 =           'MarginTop' ':' MarginWidth /
                   'BorderBottomStyle' ':' BorderStyle /
                   'BorderLeftStyle' ':' BorderStyle .
 
-MarginWidth =     InheritParent / Distance .	{ add 'auto' }
+MarginWidth =     InheritParent / 'Auto' / Distance .
 PaddingWidth =    InheritParent / Distance .
 BorderWidth =     InheritParent / 'Thin' / 'Medium' / 'Thick' / Distance .
-BorderColor =     InheritParent / ColorName .	{ add 'Transparent' }
+BorderColor =     InheritParent / 'Transparent' / ColorName .
 BorderStyle =     InheritParent /
                   'None' / 'Hidden' / 'Dotted' / 'Dashed' / 'Solid' /
                   'Double' / 'Groove' / 'Ridge' / 'Inset' / 'Outset' .

@@ -3225,6 +3225,11 @@ indLine             wi;
 	    case KWD_BorderLeftStyle:
 	       CreatePRule (PtBorderLeftStyle, wi);
 	       break;
+	    case KWD_Auto:
+	       CurRule->PrMinUnit = UnAuto;
+	       CurRule->PrMinAttr = FALSE;
+	       CurRule->PrMinValue = 0;
+	       break;
 	    case KWD_Thin:
 	       /* underline or border */
 	       if (CurRule->PrType == PtThickness)
@@ -3254,6 +3259,11 @@ indLine             wi;
                   CurRule->PrMinUnit = UnPoint;
                   CurRule->PrMinValue = 3;
                   }
+	       break;
+	    case KWD_Transparent:
+	       CurRule->PrPresMode = PresImmediate;
+	       CurRule->PrAttrValue = False;
+	       CurRule->PrIntValue = -2;   /* -2 means Transparent */
 	       break;
 	    case KWD_None:
 	       /* border style */

@@ -687,7 +687,7 @@ static AttrValueMapping HTMLAttrValueMappingTable[] =
 
    {HTML_ATTR_scrolling, TEXT("yes"), HTML_ATTR_scrolling_VAL_Yes_},
    {HTML_ATTR_scrolling, TEXT("no"), HTML_ATTR_scrolling_VAL_No_},
-   {HTML_ATTR_scrolling, TEXT("auto"), HTML_ATTR_scrolling_VAL_auto},
+   {HTML_ATTR_scrolling, TEXT("auto"), HTML_ATTR_scrolling_VAL_auto_},
 
    {HTML_ATTR_rules_, TEXT("none"), HTML_ATTR_rules__VAL_none_},
    {HTML_ATTR_rules_, TEXT("groups"), HTML_ATTR_rules__VAL_groups},
@@ -703,7 +703,7 @@ static AttrValueMapping HTMLAttrValueMappingTable[] =
 
    {HTML_ATTR_Alignment, TEXT("top"), HTML_ATTR_Alignment_VAL_Top_},
    {HTML_ATTR_Alignment, TEXT("middle"), HTML_ATTR_Alignment_VAL_Middle_},
-   {HTML_ATTR_Alignment, TEXT("botton"), HTML_ATTR_Alignment_VAL_Bottom_},
+   {HTML_ATTR_Alignment, TEXT("bottom"), HTML_ATTR_Alignment_VAL_Bottom_},
    {HTML_ATTR_Alignment, TEXT("left"), HTML_ATTR_Alignment_VAL_Left_},
    {HTML_ATTR_Alignment, TEXT("right"), HTML_ATTR_Alignment_VAL_Right_},
 
@@ -711,18 +711,18 @@ static AttrValueMapping HTMLAttrValueMappingTable[] =
    {HTML_ATTR_METHOD, TEXT("post"), HTML_ATTR_METHOD_VAL_Post_},
 
    {HTML_ATTR_Position, TEXT("top"), HTML_ATTR_Position_VAL_Position_top},
-   {HTML_ATTR_Position, TEXT("botton"), HTML_ATTR_Position_VAL_Position_bottom},
+   {HTML_ATTR_Position, TEXT("bottom"), HTML_ATTR_Position_VAL_Position_bottom},
    {HTML_ATTR_Position, TEXT("left"), HTML_ATTR_Position_VAL_Position_left},
    {HTML_ATTR_Position, TEXT("right"), HTML_ATTR_Position_VAL_Position_right},
 
    {HTML_ATTR_Row_valign, TEXT("top"), HTML_ATTR_Row_valign_VAL_Row_top},
    {HTML_ATTR_Row_valign, TEXT("middle"), HTML_ATTR_Row_valign_VAL_Row_middle},
-   {HTML_ATTR_Row_valign, TEXT("botton"), HTML_ATTR_Row_valign_VAL_Row_bottom},
+   {HTML_ATTR_Row_valign, TEXT("bottom"), HTML_ATTR_Row_valign_VAL_Row_bottom},
    {HTML_ATTR_Row_valign, TEXT("baseline"), HTML_ATTR_Row_valign_VAL_Row_baseline},
 
    {HTML_ATTR_Cell_valign, TEXT("top"), HTML_ATTR_Cell_valign_VAL_Cell_top},
    {HTML_ATTR_Cell_valign, TEXT("middle"), HTML_ATTR_Cell_valign_VAL_Cell_middle},
-   {HTML_ATTR_Cell_valign, TEXT("botton"), HTML_ATTR_Cell_valign_VAL_Cell_bottom},
+   {HTML_ATTR_Cell_valign, TEXT("bottom"), HTML_ATTR_Cell_valign_VAL_Cell_bottom},
    {HTML_ATTR_Cell_valign, TEXT("baseline"), HTML_ATTR_Cell_valign_VAL_Cell_baseline},
 
    {HTML_ATTR_shape, TEXT("rect"), HTML_ATTR_shape_VAL_rectangle},

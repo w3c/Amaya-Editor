@@ -151,6 +151,9 @@ TypeUnit            unit;
 	    case UnPercent:
 	       TtaWriteByte (outfile, C_UNIT_PERCENT);
 	       break;
+	    case UnAuto:
+	       TtaWriteByte (outfile, C_UNIT_AUTO);
+	       break;
 	    default:
 	       fprintf (stderr, "Invalid unit %X\n", (int)unit);
 	       TtaWriteByte (outfile, C_UNIT_REL);
