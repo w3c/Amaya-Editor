@@ -166,18 +166,40 @@ static int GL_Background[50];
 
 #ifndef _WIN_PRINT
 /*----------------------------------------------------------------------
+  ClearAll clear the frame .
+  ----------------------------------------------------------------------*/
+void ClearAll (int frame)
+{
+  if (GL_MakeCurrent(frame))
+    glClear (GL_COLOR_BUFFER_BIT);
+}
+
+/*----------------------------------------------------------------------
    SetMainWindowBackgroundColor :                          
   ----------------------------------------------------------------------*/
 void SetMainWindowBackgroundColor (int frame, int color)
 {
-   GL_Background[frame] = color;
+  unsigned short red, green, blue;
+  
+  if (GL_Background[frame] == color)
+    return;
+  else
+    {
+      TtaGiveThotRGB (color, &red, &green, &blue);
+      glClearColor (red, green, blue, 255);
+      GL_Background[frame] = color;
+      ClearAll (frame);   
+    }
+  
    return;
 }
 
 /*----------------------------------------------------------------------
   Clear clear the area of frame located at (x, y) and of size width x height.
   ----------------------------------------------------------------------*/
-void Clear (int frame, int width, int height, int x, int y)
+void Clear (int frame,
+	    int width, int height,
+	    int x, int y)
 {
   y = y + FrameTable[frame].FrTopMargin;
   GL_SetForeground (GL_Background[frame]); 
@@ -1170,6 +1192,9 @@ void GL_Swap (int frame)
 }
 /*----------------------------------------------------------------------
    GL_MakeCurrent : Point to correct buffer to draw into
+   If it cannot renders, return 1
+   use as
+   if (Makecurrrent) exit()
   ----------------------------------------------------------------------*/
 int GL_MakeCurrent (int frame)
 {
@@ -1329,7 +1354,7 @@ void SetGlPipelineState ()
   g_print ("\nGLU Version : %s", 
 	   (char *)gluGetString (GLU_VERSION));
 #endif /*_PCLDEBUG*/
-      glClearColor (1, 0, 0, 0.5);
+      glClearColor (1, 0, 0, 0);
       /* no fog*/
       glDisable (GL_FOG);
       /* No lights */
@@ -1392,7 +1417,8 @@ void SetGlPipelineState ()
       /* glEnable (GL_CULL_FACE); */
       /* glCullFace (GL_FRONT_AND_BACK.,GL_BACK, GL_FRONT); */
 
-
+      GL_SetOpacity (1000);
+      
       if (GL_Err())
 #ifdef _GTK
 	g_print ("Bad INIT\n"); 
