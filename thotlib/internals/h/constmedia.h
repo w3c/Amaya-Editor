@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996.
+ *  (c) COPYRIGHT INRIA, 1996-2001.
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -36,7 +36,7 @@
 #define EXTRA_GRAPH 10		/* Graphic boxes overflow */
 #define MAX_HIGHLIGHT 8		/* Max. number of highlighting levels */
 #define MAX_LOG_SIZE 30		/* Maximum logical size */
-#define MAX_FRAME 50		/* Maximum number of displayed views */
+#define MAX_FRAME 40		/* Maximum number of displayed views */
 #define MAX_SIZE 65535		/* Maximum size of system structures */
 #define MAX_UNDERLINE 4		/* Max. number of styles of underlining in use*/ 
 #define MAX_UNDER_THICK 2	/* Maximum thickness of underlining */

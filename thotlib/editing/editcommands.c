@@ -1573,8 +1573,10 @@ static void RemoveSelection (int charsDelta, int spacesDelta, int xDelta,
 	/* indice de pSourceBuffer */
 	sourceInd = pFrame->FrSelectionEnd.VsIndBuf;
 	/* nombre de caracteres a copier */
-	i = pSourceBuffer->BuLength - sourceInd;
-	
+	if (pSourceBuffer)
+	  i = pSourceBuffer->BuLength - sourceInd;
+	else
+	  i = 0;
 	/* ==>Nombre de caracteres a copier nul */
 	if (i <= 0)
 	  i = targetInd - 1;
@@ -2078,11 +2080,20 @@ static void         ContentEditing (int editType)
 
       if (pAb != NULL)
 	{
+	  pLastAb = NULL;
 	  /*-- Les commandes sont traitees dans l'application */
 	  /* si la selection ne porte que sur un pave */
 	  pBox = ViewFrameTable[frame - 1].FrSelectionEnd.VsBox;
 	  if (pBox == NULL)
 	    pAb = NULL;
+	  else
+	    {
+	      pLastAb = pBox->BxAbstractBox;
+	      /* saute les paves de presentation selectionnes */
+	      while (pLastAb != pAb && pLastAb->AbPresentationBox)
+		pLastAb = pLastAb->AbPrevious;
+	    }
+	  
 	  /* Recherche le point d'insertion (&i non utilise) */
 	  GiveInsertPoint (pAb, frame, &pBox, &pBuffer, &i, &x, &charsDelta);
 	  if (pBox == NULL)
@@ -2104,10 +2115,10 @@ static void         ContentEditing (int editType)
 	  
 	  if (pAb != NULL)
 	    {
-	      if (FirstSelectedElement != LastSelectedElement)
-		/* more than one element */
+	      if (FirstSelectedElement != LastSelectedElement || pAb != pLastAb)
+		/* more than one element or one abstract box */
 		pAb = NULL;
-	      else if (pAb->AbElement != FirstSelectedElement ||
+	      else if ((pAb->AbElement != FirstSelectedElement && editType == TEXT_COPY) ||
 		       (pAb->AbLeafType == LtText && editType == TEXT_INSERT) ||
 		       pAb->AbLeafType == LtCompound  ||  /* le pave est compose */
 		       pAb->AbLeafType == LtPageColBreak) /* c'est une marque de page */

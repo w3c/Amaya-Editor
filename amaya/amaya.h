@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT MIT and INRIA, 1996.
+ *  (c) COPYRIGHT MIT and INRIA, 1996-2001.
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -40,8 +40,8 @@
 #define NAME_LENGTH     32
 
 #define HTAppName     "amaya"
-#define HTAppVersion  "V4.3.2"
-#define HTAppDate     "23 March 2001"
+#define HTAppVersion  "V4.4"
+#define HTAppDate     "25 April 2001"
 
 #define URL_STR       "/"
 #define URL_SEP       '/'

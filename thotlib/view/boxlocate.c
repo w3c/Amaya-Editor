@@ -111,7 +111,7 @@ void LocateSelectionInView (int frame, int x, int y, int button)
       extend = (button == 0 || button == 1);
       /* get the selected box */
       if (ThotLocalActions[T_selecbox] != NULL)
-	(*ThotLocalActions[T_selecbox]) (&pBox, pAb, frame, x, y,&charsNumber);
+	(*ThotLocalActions[T_selecbox]) (&pBox, pAb, frame, x, y, &charsNumber);
       /* When it's an extended selection, avoid to extend to the
 	 enclosing box */
       if (extend)

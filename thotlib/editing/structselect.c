@@ -1359,7 +1359,8 @@ static void SelectStringInAttr (PtrDocument pDoc, PtrAbstractBox pAb, int firstC
    string indicates if a string is selected (TRUE) or a position between
    two characters.
   ----------------------------------------------------------------------*/
-static void SelectStringOrPosition (PtrDocument pDoc, PtrElement pEl, int firstChar, int lastChar, ThotBool string)
+static void SelectStringOrPosition (PtrDocument pDoc, PtrElement pEl,
+				    int firstChar, int lastChar, ThotBool string)
 {
    int                 i;
    ThotBool            elVisible;
@@ -2462,7 +2463,8 @@ ThotBool ChangeSelection (int frame, PtrAbstractBox pAb, int rank,
 	   /* callback for event Select, it is selected */
 	   if (TypeHasException (ExcNoSelect, pEl->ElTypeNumber, pEl->ElStructSchema) ||
 	       (HiddenType (pEl) && !ElementHasAction(pEl, TteElemSelect, TRUE)) ||
-	       TypeHasException (ExcSelectParent, pEl->ElTypeNumber, pEl->ElStructSchema))
+	       (TypeHasException (ExcSelectParent, pEl->ElTypeNumber, pEl->ElStructSchema) &&
+		(rank == 0 || !graphSel)))
 	     {
 	       /* select element entirely */
 	       rank = 0;

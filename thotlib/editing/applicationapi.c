@@ -292,7 +292,7 @@ void TtaInitialize (char *applicationName)
    int                 i;
 
    UserErrorCode = 0;
-   ustrcpy (DefaultDocumentName, "");
+   strcpy (DefaultDocumentName, "");
    InitEditorMemory ();	      /* Initializes the memory managment of the editor */
    InitNatures ();	      /* Initializes the table of Natures */
 

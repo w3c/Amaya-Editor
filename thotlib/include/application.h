@@ -70,7 +70,7 @@
    from the tool kit.  This name is used for accessing the ressources
    defined in file .Xdefaults.
   ----------------------------------------------------------------------*/
-extern void TtaInitialize (CHAR_T* applicationName);
+extern void TtaInitialize (char *applicationName);
 
 /*----------------------------------------------------------------------
    TtaSetApplicationQuit register the procedure that must be called
@@ -126,7 +126,7 @@ extern int TtaGetErrorCode (void);
    No return value
    See also: TtaGetErrorCode
   ----------------------------------------------------------------------*/
-extern STRING TtaGetStrError (int errorCode);
+extern char *TtaGetStrError (int errorCode);
 
 /*----------------------------------------------------------------------
    TtaExtractName: extracts the directory and the file name.       
@@ -134,7 +134,7 @@ extern STRING TtaGetStrError (int errorCode);
    which sizes are sufficient to contain the path and      
    the file name.                                          
   ----------------------------------------------------------------------*/
-extern void TtaExtractName (CHAR_T* text, /*OUT*/ CHAR_T* aDirectory, /*OUT*/ CHAR_T* aName);
+extern void TtaExtractName (char *text, char *aDirectory, char *aName);
 
 /*----------------------------------------------------------------------
    TtaIsPrinting returns TRUE is the application is printing.    
