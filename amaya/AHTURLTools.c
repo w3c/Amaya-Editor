@@ -181,16 +181,22 @@ char *EscapeXML (const char *string)
             {
              case 0x26: /* &amp */
 	       entity = "&amp;";
-	       new_chars = 5;		  
+	       new_chars = sizeof (entity) - 1;	    
+	       break;
 	       
-	    case '<':  /* lt; */
+	    case '<':  /* &lt; */
 	      entity = "&lt;";
-	      new_chars = 4;
+	      new_chars = sizeof (entity) - 1;	    
 	      break;
 
-	    case '>':  /* gt; */
+	    case '>':  /* &gt; */
 	      entity = "&gt;";
-	      new_chars = 4;
+	      new_chars = sizeof (entity) - 1;	    
+	      break;
+
+	    case '"':  /* &quote; */
+	      entity = "&quote;";
+	      new_chars = sizeof (entity) - 1;	    
 	      break;
 
             default:
