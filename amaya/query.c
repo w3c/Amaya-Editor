@@ -407,7 +407,11 @@ HTStream           *target;
      {
 	if (PROT_TRACE)
 	   HTTrace ("Posting Data Target PAUSED\n");
+
 	return HT_PAUSE;
+	/*
+	return HT_CONTINUE;
+	*/
      }
    else if (status > 0)
      {				/* Stream specific return code */
@@ -1667,10 +1671,10 @@ char 	     *content_type;
      status = HTLoadAnchor ((HTAnchor *) me->anchor, me->request);
    
    if (status == HT_ERROR && me->reqStatus == HT_NEW)
-{
-  InvokeGetObjectWWW_callback (docid, urlName, outputfile, terminate_cbf,
-			       context_tcbf);
-}
+     {
+       InvokeGetObjectWWW_callback (docid, urlName, outputfile, terminate_cbf,
+    			            context_tcbf);
+     }
 
 #ifndef _WINDOWS
    if (status == HT_ERROR ||
@@ -2029,9 +2033,14 @@ int                 docid;
    HTHost             *reqHost;
    HTChannel          *reqChannel;
    int                 reqSock;
-   
+ 
+  
    if (Amaya)
      {
+#ifdef DEBUG_LIBWWW
+       fprintf (stderr, "StopRequest: number of Amaya requests : %d\n", Amaya->open_requests);
+#endif /* DEBUG_LIBWWW */
+
 	docid_status = (AHTDocId_Status *) GetDocIdStatus (docid,
 						       Amaya->docid_status);
 	/* verify if there are any requests at all associated with docid */
@@ -2110,7 +2119,10 @@ int                 docid;
 		   {
 		   case HT_ABORT:
 		     break;
-		     
+		  
+		   case HT_END:
+		     break;
+
 		   case HT_BUSY:
 		     me->reqStatus = HT_ABORT;
 		     break;
@@ -2180,6 +2192,11 @@ int                 docid;
 		   }	/* switch */
 	       }		/* if me docid */
 	  }			/* while */
+
+#ifdef DEBUG_LIBWWW
+	fprintf (stderr, "StopRequest: number of Amaya requests : %d\n", Amaya->open_requests);
+#endif /* DEBUG_LIBWWW */
+
      }				/* if amaya open requests */
    
 } /* StopRequest */
