@@ -600,7 +600,7 @@ void AddDocHistory (Document doc, char *url, char *initial_url,
    /* don't register a new document not saved */
    if (!IsW3Path (url) && !TtaFileExist (url))
      return;
-   else if (method == CE_RELATIVE)
+   else if (method == CE_RELATIVE || method == CE_HELP)
      /* All registered URLs are absolute */
      method = CE_ABSOLUTE;
 
