@@ -508,15 +508,16 @@ char *DocImageMimeType (Document doc)
   ----------------------------------------------------------------------*/
 ThotBool IsHTMLName (const char *path)
 {
-  char      temppath[MAX_LENGTH];
-  char      suffix[MAX_LENGTH];
+  char      *temppath;
+  char      *suffix;
   char      nsuffix[MAX_LENGTH];
   int       i; 
 
   if (!path)
     return (FALSE);
 
-  strcpy (temppath, path);
+  temppath = TtaStrdup ((char *)path);
+  suffix = (char *)TtaGetMemory (strlen (path) + 1);
   TtaExtractSuffix (temppath, suffix);
   i = 0;
   while (suffix[i] != EOS)
@@ -538,7 +539,11 @@ ThotBool IsHTMLName (const char *path)
 	  !strcmp (nsuffix, "xhtm") ||
 	  !strcmp (nsuffix, "lhtml") ||
 	  !strcmp (nsuffix, "xhtml"))
-	return (TRUE);
+	{
+	  TtaFreeMemory (temppath);
+	  TtaFreeMemory (suffix);
+	  return (TRUE);
+	}
       else if (!strcmp (nsuffix, "gz"))
 	{
 	  /* take into account compressed files */
@@ -551,6 +556,8 @@ ThotBool IsHTMLName (const char *path)
 	      i++;
 	    }
 	  nsuffix[i] = EOS;
+	  TtaFreeMemory (temppath);
+	  TtaFreeMemory (suffix);
 	  if (!strcmp (nsuffix, "html") ||
 	      !strcmp (nsuffix, "htm") ||
 	      !strcmp (nsuffix, "shtml") ||
@@ -568,7 +575,9 @@ ThotBool IsHTMLName (const char *path)
 	/* check if there is another suffix */
 	TtaExtractSuffix (temppath, suffix);
     }
-   return (FALSE);
+  TtaFreeMemory (temppath);
+  TtaFreeMemory (suffix);
+  return (FALSE);
 }
 
 /*----------------------------------------------------------------------
@@ -577,28 +586,34 @@ ThotBool IsHTMLName (const char *path)
   ----------------------------------------------------------------------*/
 ThotBool IsMathMLName (const char *path)
 {
-   char        temppath[MAX_LENGTH];
-   char        suffix[MAX_LENGTH];
+   char        *temppath;
+   char        *suffix;
+   ThotBool    ret;
 
    if (!path)
-      return (FALSE);
+     return (FALSE);
 
-   strcpy (temppath, path);
+   temppath = TtaStrdup ((char *)path);
+   suffix = (char *)TtaGetMemory (strlen (path) + 1);
    TtaExtractSuffix (temppath, suffix);
 
    if (!strcasecmp (suffix, "mml"))
-     return (TRUE);
+     ret = TRUE;
    else if (!strcmp (suffix, "gz"))
      {
        /* take into account compressed files */
        TtaExtractSuffix (temppath, suffix);       
        if (!strcasecmp (suffix, "mml"))
-	 return (TRUE);
+	 ret = TRUE;
        else
-	 return (FALSE);
+	 ret = FALSE;
      }
    else
-     return (FALSE);
+     ret = FALSE;
+
+  TtaFreeMemory (temppath);
+  TtaFreeMemory (suffix);
+  return (ret);
 }
 
 /*----------------------------------------------------------------------
@@ -607,28 +622,34 @@ ThotBool IsMathMLName (const char *path)
   ----------------------------------------------------------------------*/
 ThotBool IsSVGName (const char *path)
 {
-   char        temppath[MAX_LENGTH];
-   char        suffix[MAX_LENGTH];
+   char        *temppath;
+   char        *suffix;
+   ThotBool    ret;
 
    if (!path)
       return (FALSE);
 
-   strcpy (temppath, path);
+   temppath = TtaStrdup ((char *)path);
+   suffix = (char *)TtaGetMemory (strlen (path) + 1);
    TtaExtractSuffix (temppath, suffix);
 
    if (!strcasecmp (suffix, "svg") || !strcasecmp (suffix, "svgz"))
-     return (TRUE);
+     ret = TRUE;
    else if (!strcmp (suffix, "gz"))
      {
        /* take into account compressed files */
        TtaExtractSuffix (temppath, suffix);       
        if (!strcasecmp (suffix, "svg"))
-	 return (TRUE);
+	 ret = TRUE;
        else
-	 return (FALSE);
+	 ret = FALSE;
      }
    else
-     return (FALSE);
+     ret = FALSE;
+
+  TtaFreeMemory (temppath);
+  TtaFreeMemory (suffix);
+  return (ret);
 }
 
 /*----------------------------------------------------------------------
@@ -637,13 +658,15 @@ ThotBool IsSVGName (const char *path)
   ----------------------------------------------------------------------*/
 ThotBool IsXMLName (const char *path)
 {
-   char        temppath[MAX_LENGTH];
-   char        suffix[MAX_LENGTH];
+   char        *temppath;
+   char        *suffix;
+   ThotBool    ret;
 
    if (!path)
       return (FALSE);
 
-   strcpy (temppath, path);
+   temppath = TtaStrdup ((char *)path);
+   suffix = (char *)TtaGetMemory (strlen (path) + 1);
    TtaExtractSuffix (temppath, suffix);
 
    if (!strcasecmp (suffix, "xml") ||
@@ -652,7 +675,7 @@ ThotBool IsXMLName (const char *path)
        !strcmp (suffix, "xhtml") ||
        !strcmp (suffix, "smi") ||
        !strcmp (suffix, "zsl"))
-     return (TRUE);
+     ret = TRUE;
    else if (!strcmp (suffix, "gz"))
      {
        /* take into account compressed files */
@@ -663,12 +686,16 @@ ThotBool IsXMLName (const char *path)
 	   !strcmp (suffix, "xhtml") ||
 	   !strcmp (suffix, "smi") |
 	   !strcmp (suffix, "xsl"))
-	 return (TRUE);
+	 ret = TRUE;
        else
-	 return (FALSE);
+	 ret = FALSE;
      }
    else
-     return (FALSE);
+     ret = FALSE;
+
+  TtaFreeMemory (temppath);
+  TtaFreeMemory (suffix);
+  return (ret);
 }
 
 /*----------------------------------------------------------------------
@@ -677,13 +704,15 @@ ThotBool IsXMLName (const char *path)
   ----------------------------------------------------------------------*/
 ThotBool IsUndisplayedName (const char *path)
 {
-   char                temppath[MAX_LENGTH];
-   char                suffix[MAX_LENGTH];
+   char                *temppath;
+   char                *suffix;
+   ThotBool            ret;
 
    if (!path)
       return (FALSE);
 
-   strcpy (temppath, path);
+   temppath = TtaStrdup ((char *)path);
+   suffix = (char *)TtaGetMemory (strlen (path) + 1);
    TtaExtractSuffix (temppath, suffix);
 
    if (!strcasecmp (suffix, "exe") ||
@@ -696,7 +725,7 @@ ThotBool IsUndisplayedName (const char *path)
        !strcasecmp (suffix, "tgz") ||
        !strcasecmp (suffix, "ddl") ||
        !strcasecmp (suffix, "o"))
-     return (TRUE);
+     ret = TRUE;
    else if (!strcmp (suffix, "gz"))
      {
        /* take into account compressed files */
@@ -710,12 +739,16 @@ ThotBool IsUndisplayedName (const char *path)
 	   !strcasecmp (suffix, "tar") ||
 	   !strcasecmp (suffix, "ddl") ||
 	   !strcasecmp (suffix, "o"))
-	 return (TRUE);
+	 ret = TRUE;
        else
-	 return (FALSE);
+	 ret = FALSE;
      }
    else
-     return (FALSE);
+     ret = FALSE;
+
+   TtaFreeMemory (temppath);
+   TtaFreeMemory (suffix);
+   return (ret);
 }
 
 /*----------------------------------------------------------------------
@@ -724,28 +757,34 @@ ThotBool IsUndisplayedName (const char *path)
   ----------------------------------------------------------------------*/
 ThotBool IsCSSName (const char *path)
 {
-   char                temppath[MAX_LENGTH];
-   char                suffix[MAX_LENGTH];
+   char                *temppath;
+   char                *suffix;
+   ThotBool            ret;
 
    if (!path)
-      return (FALSE);
+     return (FALSE);
 
-   strcpy (temppath, path);
+   temppath = TtaStrdup ((char *)path);
+   suffix = (char *)TtaGetMemory (strlen (path) + 1);
    TtaExtractSuffix (temppath, suffix);
 
    if (!strcasecmp (suffix, "css"))
-     return (TRUE);
+     ret = TRUE;
    else if (!strcmp (suffix, "gz"))
      {
        /* take into account compressed files */
        TtaExtractSuffix (temppath, suffix);       
        if (!strcasecmp (suffix, "css"))
-	 return (TRUE);
+	 ret = TRUE;
        else
-	 return (FALSE);
+	 ret = FALSE;
      }
    else
-     return (FALSE);
+     ret = FALSE;
+
+   TtaFreeMemory (temppath);
+   TtaFreeMemory (suffix);
+   return (ret);
 }
 
 /*----------------------------------------------------------------------
@@ -768,32 +807,38 @@ ThotBool MultipleBookmarks (void)
   ----------------------------------------------------------------------*/
 ThotBool IsRDFName (const char *path)
 {
-   char                temppath[MAX_LENGTH];
-   char                suffix[MAX_LENGTH];
+   char                *temppath;
+   char                *suffix;
+   ThotBool            ret;
 
    /* temporarily disabling this function */
    if (!MultipleBookmarks ())
-     return FALSE;
+     return (FALSE);
 
    if (!path)
-      return (FALSE);
+     return (FALSE);
 
-   strcpy (temppath, path);
+   temppath = TtaStrdup ((char *)path);
+   suffix = (char *)TtaGetMemory (strlen (path) + 1);
    TtaExtractSuffix (temppath, suffix);
 
    if (!strcasecmp (suffix, "rdf"))
-     return (TRUE);
+     ret = TRUE;
    else if (!strcmp (suffix, "gz"))
      {
        /* take into account compressed files */
        TtaExtractSuffix (temppath, suffix);       
        if (!strcasecmp (suffix, "rdf"))
-	 return (TRUE);
+	 ret = TRUE;
        else
-	 return (FALSE);
+	 ret = FALSE;
      }
    else
-     return (FALSE);
+     ret = FALSE;
+   
+   TtaFreeMemory (temppath);
+   TtaFreeMemory (suffix);
+   return (ret);
 }
 
 /*----------------------------------------------------------------------
@@ -802,15 +847,17 @@ ThotBool IsRDFName (const char *path)
   ----------------------------------------------------------------------*/
 ThotBool IsImageName (const char *path)
 {
-   char                temppath[MAX_LENGTH];
-   char                suffix[MAX_LENGTH];
+   char                *temppath;
+   char                *suffix;
    char                nsuffix[MAX_LENGTH];
    int                 i;
+   ThotBool            ret;
 
    if (!path)
       return (FALSE);
 
-   strcpy (temppath, path);
+   temppath = TtaStrdup ((char *)path);
+   suffix = (char *)TtaGetMemory (strlen (path) + 1);
    TtaExtractSuffix (temppath, suffix);
 
    /* Normalize the suffix */
@@ -824,8 +871,13 @@ ThotBool IsImageName (const char *path)
    if ((!strcmp (nsuffix, "gif")) || (!strcmp (nsuffix, "xbm")) ||
        (!strcmp (nsuffix, "xpm")) || (!strcmp (nsuffix, "jpg")) ||
        (!strcmp (nsuffix, "png")) || (!strcmp (nsuffix, "au")))
-      return (TRUE);
-   return (FALSE);
+      ret = TRUE;
+   else
+      ret = FALSE;
+
+   TtaFreeMemory (temppath);
+   TtaFreeMemory (suffix);
+   return (ret);
 }
 
 /*----------------------------------------------------------------------
@@ -834,13 +886,14 @@ ThotBool IsImageName (const char *path)
   ----------------------------------------------------------------------*/
 ThotBool IsImageType (const char *type)
 {
-   char                temptype[MAX_LENGTH];
+   char                *temptype;
    int                 i;
+   ThotBool            ret;
 
    if (!type)
       return (FALSE);
 
-   strcpy (temptype, type);
+   temptype = TtaStrdup ((char *)type);
    /* Normalize the type */
    i = 0;
    while (temptype[i] != EOS)
@@ -855,8 +908,11 @@ ThotBool IsImageType (const char *type)
    if (!strcmp (&temptype[i], "gif") || !strcmp (&temptype[i], "x-xbitmap") ||
        !strcmp (&temptype[i], "x-xpixmap") || !strcmp (&temptype[i], "jpeg") ||
        !strcmp (&temptype[i], "png"))
-      return (TRUE);
-   return (FALSE);
+     ret = TRUE;
+   else
+     ret = FALSE;
+   TtaFreeMemory (temptype);
+   return (ret);
 }
 
 /*----------------------------------------------------------------------
@@ -864,15 +920,17 @@ ThotBool IsImageType (const char *type)
   ----------------------------------------------------------------------*/
 ThotBool IsTextName (const char *path)
 {
-   char                temppath[MAX_LENGTH];
-   char                suffix[MAX_LENGTH];
+   char                *temppath;
+   char                *suffix;
    char                nsuffix[MAX_LENGTH];
    int                 i;
+   ThotBool            ret;
 
    if (!path)
      return (FALSE);
 
-   strcpy (temppath, path);
+   temppath = TtaStrdup ((char *)path);
+   suffix = (char *)TtaGetMemory (strlen (path) + 1);
    TtaExtractSuffix (temppath, suffix);
 
    /* Normalize the suffix */
@@ -885,7 +943,7 @@ ThotBool IsTextName (const char *path)
    nsuffix[i] = EOS;
 
    if (!strcmp (nsuffix, "txt") || !strcmp (nsuffix, "dtd"))
-      return (TRUE);
+      ret = TRUE;
    else if (!strcmp (nsuffix, "gz"))
      {
        /* take into account compressed files */
@@ -899,12 +957,16 @@ ThotBool IsTextName (const char *path)
 	 }
        nsuffix[i] = EOS;
        if (!strcmp (nsuffix, "txt") || !strcmp (nsuffix, "dtd"))
-	 return (TRUE);
+	 ret = TRUE;
        else
-	 return (FALSE);
+	 ret = FALSE;
      }
    else
-     return (FALSE);
+     ret = FALSE;
+
+   TtaFreeMemory (temppath);
+   TtaFreeMemory (suffix);
+   return (ret);
 }
 
 /*----------------------------------------------------------------------
