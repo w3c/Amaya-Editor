@@ -209,6 +209,31 @@ AC_TYPE_SIGNAL
 AC_FUNC_VPRINTF
 AC_CHECK_FUNCS(getcwd gethostname gettimeofday getwd mkdir mktime putenv select socket strdup strerror strftime strstr strtod strtol uname lstat strcasecmp strncasecmp strchr memcpy)
 
+#
+# Check for operating system (UNIX / WINDOWS / MACOSX )
+# ---------->
+# canonicalize the target OS : default UNIX
+OS_OPTIONS="-D_UNIX"
+case $target_os in
+  aix*)       OS_OPTIONS="-D_UNIX" ;;
+  cygwin*)    OS_OPTIONS="-D_UNIX" ;;
+  darwin*)    OS_OPTIONS="-D_UNIX -D_MACOS" ;;
+  freebsd2*)  OS_OPTIONS="-D_UNIX" ;;
+  freebsd*)   OS_OPTIONS="-D_UNIX" ;;
+  hpux*)      OS_OPTIONS="-D_UNIX" ;;
+  irix*)      OS_OPTIONS="-D_UNIX" ;;
+  linuxaout*) OS_OPTIONS="-D_UNIX" ;;
+  linux*)     OS_OPTIONS="-D_UNIX" ;;
+  mingw32*)   OS_OPTIONS="-D_UNIX" ;;
+  netbsd*)    OS_OPTIONS="-D_UNIX" ;;
+  openbsd*)   OS_OPTIONS="-D_UNIX" ;;
+  osf[12]*)   OS_OPTIONS="-D_UNIX" ;;
+  osf*)       OS_OPTIONS="-D_UNIX" ;;
+  solaris2*)  OS_OPTIONS="-D_UNIX" ;;
+  sunos4*)    OS_OPTIONS="-D_UNIX" ;;
+  ultrix*)    OS_OPTIONS="-D_UNIX" ;;
+esac
+
 AC_ARG_WITH(GL,              [  --with-gl               enable Opengl canvas (experimental) ])
 dnl
 dnl GL canvas is disabled by default
@@ -353,16 +378,24 @@ if test "$with_wx" = "yes" ; then
 
   WX_LIBRARIES="`wx-config --libs`"
 
-  dnl GL is used ?
+  # GL is used ?
   if test "${with_gl}" = "yes" ; then
     WX_LIBRARIES="${WX_LIBRARIES} `wx-config --gl-libs`"
+
+    # SG: this is a mistery why wx-config doesn't add these needed option on macosx
+    if test "$OS_OPTIONS" = "-D_UNIX -D_MACOS" ; then
+      WX_LIBRARIES="${WX_LIBRARIES} -framework OpenGL -framework AGL"
+    fi
   fi
 
-  dnl xrc ressources are used
+  # xrc ressources are used
   WX_LIBRARIES="${WX_LIBRARIES} -l`wx-config --basename`_xrc-`wx-config --release`"
   
   AC_SUBST(WX_LIBRARIES)
   WX_OPTIONS="-D_WX"
+
+  no_motif=yes
+  no_graphic=yes
 fi
 
 if test "$with_motif" = "yes" ; then
@@ -549,18 +582,15 @@ dnl  ***************************************************************
 
 # We don't use our graphic libraries for the pure GTK version (without GL)
 
-dnl echo "with gtk is ${with_gtk}, with gl is ${with_gl}\n"
-
-if test "${with_gtk}" != "yes" -o "${with_gl}" = "yes" ; then
-  AC_ARG_WITH(graphic-libs, [  --with-graphic-libs     use static libjpeg, libpng.])
-  if test "$withval" = "no" ; then
-    no_graphic=yes
-  fi
-  if test "$withval" = "yes" ; then
-    no_graphic=no
-  fi
+# if configure has option --with-graphiclibs then dont check for system graphic libs
+# force amaya static graphic libs to be used
+AC_ARG_WITH(graphiclibs, [  --with-graphiclibs     use static libjpeg, libpng.])
+if test "$with_graphiclibs" = "yes" -o "enable_graphiclibs" = "yes" ; then
+  no_graphic="no"
+else
+  no_graphic="yes"
 fi
-
+		  
 if test "$no_graphic" = yes; then
 dnl
     AC_MSG_CHECKING([for libjpeg version = 6b])
@@ -645,11 +675,15 @@ CFLAGS="${CFLAGS} -x c"
 CXX_OPTIONS="-D__cplusplus"
 CXXFLAGS="${CXXFLAGS} -W -x c++ ${CXX_OPTIONS}"
 
-dnl
-dnl Check for operating system (UNIX / WINDOWS / MACOSX )
-dnl TODO : how to know the OS ... add some test to detect automaticaly
-dnl
-OS_OPTIONS="-D_UNIX"
+# setup LDFLAGS
+# on macosx, specific flags must be set to avoid conflicts with allready installed libwww
+# for exemple it's possible to install libwww with fink (fink install libwww)
+# to avoid conflicts, we just force the linker to search for specified amaya path first
+if test "$OS_OPTIONS"="-D_UNIX -D_MACOS" ; then
+  LDFLAGS="-Wl,-search_paths_first"
+else
+  LDFLAGS=""
+fi
 
 dnl
 dnl Check for availability of amaya sources
@@ -708,34 +742,45 @@ if test "$with_gl" = "yes" ; then
 		AC_MSG_RESULT([yes])
        	 	break	
     	    fi
-	done	
-  	AC_MSG_CHECKING([GTKGLAREA])	
-	for ac_dir in               		\
-		/usr/include/GL			\
+	done
+
+	# check for gtkglarea.h only if gtk gui is selected
+	if test "$with_gtk" = "yes" ; then
+    	  AC_MSG_CHECKING([GTKGLAREA])	
+	  for ac_dir in               		\
+	  	/usr/include/GL			\
 		/usr/include 			\
 		/usr/X11R6/include/GL   	\
 		/usr/X11R6/include 		\
 		/usr/local/include		\
 		/usr/local/include/GL		\
 		; \
-	do  if test -r "$ac_dir/gtkgl/gtkglarea.h" ; then
-                gtkgl_inc="yes"
-		if test "$ac_dir" != "/usr/include" ; then
-			if test "$ac_dir" != "$GL_INC_II" ; then
-				if test "$ac_dir" != "$GL_INC_I" ; then
-		   			GL_INCLUDES="$GL_INCLUDES -I$ac_dir"
-				fi
-			fi
-		fi
-		AC_MSG_RESULT([yes])
-       	 	break	
-    	    fi
-	done	
+  	  do  if test -r "$ac_dir/gtkgl/gtkglarea.h" ; then
+                  gtkgl_inc="yes"
+	  	  if test "$ac_dir" != "/usr/include" ; then
+			  if test "$ac_dir" != "$GL_INC_II" ; then
+				  if test "$ac_dir" != "$GL_INC_I" ; then
+		   			  GL_INCLUDES="$GL_INCLUDES -I$ac_dir"
+				  fi
+			  fi
+		  fi
+		  AC_MSG_RESULT([yes])
+       	 	  break	
+    	      fi
+	  done
+	  GTKGL_LIBS="-lgtkgl"
+	else
+  	  gtkgl_inc="ignore"
+	  GTKGL_LIBS=""
+	fi
+
   	AC_MSG_CHECKING([freetype])	
 	for ac_dir in               		\
 		/usr/include 			\
 		/usr/X11R6/include 		\
 		/usr/local/include		\
+		/opt/local/include		\
+		/usr/X11R6/include/freetype2	\
 		; \
 	do  if test -r "$ac_dir/ft2build.h" ; then
                 freetype_inc="yes"
@@ -798,6 +843,7 @@ if test "$with_gl" = "yes" ; then
 		GL_LIBRARIES=
 	        exit 1;
 	fi
+
 	if test "$gtkgl_inc" = "" ; then
 	 	AC_MSG_WARN(Gtkglarea headers (gktglarea.h) not found !!)
 	   	AC_MSG_WARN(Disabling opengl build !)
@@ -807,6 +853,7 @@ if test "$with_gl" = "yes" ; then
 		GL_LIBRARIES=
 	        exit 1;
 	fi
+
 	if test "$freetype_inc" = "" ; then
 	 	AC_MSG_WARN(Freetype 2 headers (ft2build.h) not found !!)
 	   	AC_MSG_WARN(Disabling opengl build !)
@@ -827,13 +874,13 @@ if test "$with_gl" = "yes" ; then
 	fi
 	if test "$gl_inc" = "yes" ; then
 		if test "$glu_inc" = "yes" ; then
-			if test "$gtkgl_inc" = "yes" ; then
+			if test "$gtkgl_inc" = "yes" -o "$gtkgl_inc" = "ignore" ; then
 	                    if test "$freetype_inc" = "yes" ; then
 	                    	if test "$xft_inc" = "yes" ; then
 			    		if test "$stdglu_inc" = "yes" ; then
-					   GL_LIBRARIES="-L/usr/lib -L/usr/X11R6/lib  -lXmu -lXft -lfreetype -lGL -lGLU -lgtkgl -lstdc++"
+					   GL_LIBRARIES="-L/usr/lib -L/usr/X11R6/lib  -lXmu -lXft -lfreetype -lGL -lGLU ${GTKGL_LIBS} -lstdc++"
 					else
-					   GL_LIBRARIES="-L/usr/lib -L/usr/X11R6/lib  -lXmu -lXft -lfreetype -lGL -lGLU -lgtkgl"
+					   GL_LIBRARIES="-L/usr/lib -L/usr/X11R6/lib  -lXmu -lXft -lfreetype -lGL -lGLU ${GTKGL_LIBS}"
 					fi				
 					GL_OPTIONS="-D_GL"
 	  				no_motif=yes
@@ -1181,6 +1228,7 @@ AMAYA_OPTIONS="$OS_OPTIONS $MATH_OPTIONS $SVG_OPTIONS $GENERIC_XML_OPTIONS $MOTI
 AMAYA_ANNOT_OPTIONS="$OS_OPTIONS $AMAYA_ANNOT_OPTIONS"
 
 IMGLIBS="-ljpeg -lpng -lz"
+
 EXTRA_LIBS=
 EXTRA_INCLUDES=
 

@@ -236,9 +236,9 @@ static void         Initialize ()
    InitBasicType (pRule, "SYMBOL_UNIT", Symbol);
 
    pRule = (PtrSRule) malloc (sizeof (SRule));
-   pSSchema->SsRule->SrElem[Picture] = pRule;
+   pSSchema->SsRule->SrElem[tt_Picture] = pRule;
    memset (pRule, 0, sizeof (SRule));
-   InitBasicType (pRule, "PICTURE_UNIT", Picture);
+   InitBasicType (pRule, "PICTURE_UNIT", tt_Picture);
 
    pRule = (PtrSRule) malloc (sizeof (SRule));
    pSSchema->SsRule->SrElem[Refer] = pRule;
@@ -1526,7 +1526,7 @@ static void         ProcessToken (indLine wi, indLine wl, SyntacticCode c,
 	 BasicEl (Symbol + 1, wi, pr);
 	 break;
        case KWD_PICTURE:
-	 BasicEl (Picture + 1, wi, pr);
+	 BasicEl (tt_Picture + 1, wi, pr);
 	 break;
        case KWD_UNIT:
        case KWD_NATURE:

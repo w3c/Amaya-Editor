@@ -693,7 +693,7 @@ int IntegerRule (PtrPRule pPRule, PtrElement pEl, DocViewNumber view,
 			if (*unit == UnRelative)
 			  /* convert the relative inherited value into points*/
 			  {
-			  val = (FontPointSize (pAbb->AbSize) * i) / 100;
+			  val = (ThotFontPointSize (pAbb->AbSize) * i) / 100;
 			  *unit = UnPoint;
 			  }
 			else
@@ -706,7 +706,7 @@ int IntegerRule (PtrPRule pPRule, PtrElement pEl, DocViewNumber view,
 		      /* the inherited value is relative, but the delta is
 			 absolute. Convert the inherited value */
 		      {
-			val = FontPointSize (pAbb->AbSize);
+			val = ThotFontPointSize (pAbb->AbSize);
 			if (pPRule->PrInhUnit == UnPoint)
 			  val = val + i;
 			else

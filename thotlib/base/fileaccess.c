@@ -18,7 +18,6 @@
 #include "constmedia.h"
 #include "typemedia.h"
 #include "fileaccess.h"
-#include "fileaccess.h"
 
 #undef THOT_EXPORT
 #define THOT_EXPORT extern

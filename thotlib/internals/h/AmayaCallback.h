@@ -6,9 +6,6 @@
 #include "wx/wx.h"
 #include "wx/hashmap.h"
 
-// a callback prototype
-typedef void        (*Proc) ();
-
 /*
  * =====================================================================================
  *        Class:  AmayaContext
@@ -51,6 +48,11 @@ class AmayaContext : public wxObjectRefData
   void * m_pData;
 };
 
+#if 0
+
+// a callback prototype
+typedef void        (*AProc) ();
+
 /*
  * =====================================================================================
  *        Class:  AmayaCParam
@@ -65,7 +67,7 @@ class AmayaContext : public wxObjectRefData
 class AmayaCParam
 {
   public:
-    AmayaCParam ( Proc p_callback = 0,
+    AmayaCParam ( AProc p_callback = 0,
                   void * p1 = 0,
 		  void * p2 = 0,
 		  void * p3 = 0,
@@ -90,7 +92,7 @@ class AmayaCParam
     }
       
     // the callback
-    Proc pCallback;
+    AProc pCallback;
     
     // the callback params
     void * param1;
@@ -140,6 +142,7 @@ class AmayaCallback
     AmayaCallbackHash       m_map_table;
     AmayaCallbackMultiHash  m_map_multi_table;
 };
+#endif /* 0 */ 
 
 #endif /* #ifndef __AMAYACALLBACK_H__ */
 

@@ -47,6 +47,7 @@ extern char**     appArgv;
 #ifdef _WX
 #include "AmayaFrame.h"
 #include "AmayaWindow.h"
+#include "AmayaCallback.h"
 #endif /* _WX */
 
 #define THOT_EXPORT

@@ -552,7 +552,7 @@ static void         welembase ()
 
    Wdefine ();
    wrnom (pSc1->SsName);
-   r = Picture + 1;
+   r = tt_Picture + 1;
    printf ("_EL_");
    wrnomregle (r);
    printf (" ");

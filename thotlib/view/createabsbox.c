@@ -531,7 +531,7 @@ void ConstantCopy (int NConst, PtrPSchema pSchP, PtrAbstractBox pAb)
       pAb->AbLang = TtaGetDefaultLanguage ();
       pAb->AbVolume = pAb->AbText->BuLength;
       break;
-    case Picture:
+    case tt_Picture:
       NewPictInfo (pAb, pConst->PdString, UNKNOWN_FORMAT);
       pAb->AbLeafType = LtPicture;
       pAb->AbVolume = 100;

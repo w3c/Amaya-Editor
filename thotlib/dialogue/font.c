@@ -1129,9 +1129,9 @@ int FontRelSize (int size)
 }
 
 /*----------------------------------------------------------------------
-  FontPointSize convert a logical size to the point value.
+  ThotFontPointSize convert a logical size to the point value.
   ----------------------------------------------------------------------*/
-int FontPointSize (int size)
+int ThotFontPointSize (int size)
 {
 
    if (size > MaxNumberOfSizes)
@@ -2324,7 +2324,7 @@ SpecFont ThotLoadFont (char script, int family, int highlight, int size,
 	{
 	  if (unit == UnRelative)
 	    {
-	      size = FontPointSize (size);
+	      size = ThotFontPointSize (size);
 	      unit = UnPoint;
 	    }
 	  size = size * FontZoom / 100;
@@ -2334,7 +2334,7 @@ SpecFont ThotLoadFont (char script, int family, int highlight, int size,
 	{
 	  if (unit == UnRelative)
 	    {
-	      size = FontPointSize (size);
+	      size = ThotFontPointSize (size);
 	      unit = UnPoint;
 	    }
 	  size = size + (size * zoom / 10);

@@ -376,7 +376,7 @@ PtrAbstractBox CreateALeaf (PtrAbstractBox pAB, int *frame, LeafType leafType,
 	  lType = Symbol + 1;
 	  break;
 	case LtPicture:
-	  lType = Picture + 1;
+	  lType = tt_Picture + 1;
 	  break;
 	case LtPolyLine:
 	  lType = GraphicElem + 1;
@@ -1333,7 +1333,7 @@ int MenuChoixElem (PtrSSchema pSS, int rule, PtrElement pEl, char *menuBuf,
 			  ChoiceMenuTypeNum[nItems] = typeNum;
 			  nItems++;
 		       }
-		  typeNum = Picture + 1;
+		  typeNum = tt_Picture + 1;
 		  if (!ExcludedType (pEl, typeNum, NULL))
 		     if (TteItemMenuInsert (pSS, typeNum, pEl, pDoc, InsertWithin))
 		       {
@@ -2459,7 +2459,7 @@ static ThotBool CanCreateWithinElement (PtrElement pEl, ThotBool inclusion)
 		    case CsBasicElement:
 		       /* parmi les types de bases, seules les images sont traitees par */
 		       /* CreateWithinElement */
-		       if (pSRule->SrBasicType == Picture)
+		       if (pSRule->SrBasicType == tt_Picture)
 			  result = TRUE;
 		       break;
 		    case CsPairedElement:

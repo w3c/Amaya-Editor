@@ -2340,7 +2340,7 @@ static  LabelString         label;
 	      
 	      if (*tag == C_PIV_BEGIN && !error)
 		{
-		  if (leafType == CharString || leafType == Picture)
+		  if (leafType == CharString || leafType == tt_Picture)
 		    {
 		      if (!TtaReadWideChar (pivFile, &ctext))
 			PivotError (pivFile, "PivotError: Text 1");
@@ -2364,7 +2364,7 @@ static  LabelString         label;
 				{
 				  if (n == THOT_MAX_CHAR - 1)
 				    {
-				      if (leafType == Picture)
+				      if (leafType == tt_Picture)
 					PivotError (pivFile, "PivotError: Picture 2");
 				      pEl->ElTextLength += n;
 				      pBuf->BuLength = n;
@@ -2383,7 +2383,7 @@ static  LabelString         label;
 			      pBuf->BuLength = n;
 			      pBuf->BuContent[n] = EOS;
 			      pEl->ElVolume = pEl->ElTextLength;
-			      if (leafType == Picture)
+			      if (leafType == tt_Picture)
 				{
 				  /* complete the Picture information block */
 				  image = (PictInfo *)pEl->ElPictInfo;

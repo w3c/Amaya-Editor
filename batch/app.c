@@ -381,9 +381,9 @@ static PtrSSchema ConstructAbstractSchStruct ()
    pSS->SsRule->SrElem[Symbol]->SrName = (char *)TtaGetMemory (MAX_NAME_LENGTH);
    strcpy (pSS->SsRule->SrElem[Symbol]->SrName, "SYMBOL_UNIT");
 
-   pSS->SsRule->SrElem[Picture] = (PtrSRule) malloc (sizeof (SRule));
-   pSS->SsRule->SrElem[Picture]->SrName = (char *)TtaGetMemory (MAX_NAME_LENGTH);
-   strcpy (pSS->SsRule->SrElem[Picture]->SrName, "PICTURE_UNIT");
+   pSS->SsRule->SrElem[tt_Picture] = (PtrSRule) malloc (sizeof (SRule));
+   pSS->SsRule->SrElem[tt_Picture]->SrName = (char *)TtaGetMemory (MAX_NAME_LENGTH);
+   strcpy (pSS->SsRule->SrElem[tt_Picture]->SrName, "PICTURE_UNIT");
 
    pSS->SsRule->SrElem[Refer] = (PtrSRule) malloc (sizeof (SRule));
    pSS->SsRule->SrElem[Refer]->SrName = (char *)TtaGetMemory (MAX_NAME_LENGTH);
@@ -1274,7 +1274,7 @@ static void WriteBasicElements (FILE * Hfile)
 
    fprintf (Hfile, "#define ");
    WriteName (Hfile, pSSchema->SsName);
-   r = Picture;
+   r = tt_Picture;
    fprintf (Hfile, "_EL_");
    WriteRuleName (Hfile, r);
    fprintf (Hfile, " %d\n", r+1);

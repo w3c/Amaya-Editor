@@ -125,7 +125,7 @@ typedef struct _Line
   PtrBox          LiLastBox;	/* Index of last contained box */
   PtrBox          LiLastPiece;	/* Index if split box */
   ThotBool        LiNoOverlap;  /* The line cannot overlap */
-} Line;
+} ThotLine;
 
 /* Desription of a list of float */
 typedef struct _BFloat *PtrFloat;

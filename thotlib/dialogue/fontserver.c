@@ -356,7 +356,10 @@ int GetFontFilename (char script, int family, int highlight, int size,
     XftPatternAddDouble (pat, XFT_SIZE, ((double) size) / 10.0);
 
   /* Returns a pattern more precise that let us load fonts*/
-#ifdef _WX
+  /* TODO : pour la version mac, il faut trouver une solution pour utiliser xft sachant que
+   *        la fonction wxGetDisplay() n'existe pas sur mac. Il faudrait donc recuperer le Display* 
+   *        d'une autre facon */
+#if defined _WX && !defined(_MACOS)
   match = XftFontMatch ((Display*)wxGetDisplay(), 0, pat, &result); 
 #endif /* _WX */
 #ifdef _GTK

@@ -6,6 +6,9 @@
 #include "thot_gui.h"
 #include "thot_sys.h"
 #include "constmedia.h"
+
+#include "AmayaCanvas.h"
+
 #include "typemedia.h"
 #include "appdialogue.h"
 #include "dialog.h"
@@ -30,7 +33,7 @@
 
 #include "AmayaWindow.h"
 #include "AmayaFrame.h"
-#include "AmayaCanvas.h"
+//#include "AmayaCanvas.h"
 #include "AmayaNotebook.h"
 #include "AmayaPage.h"
 #include "AmayaCallback.h"

@@ -2864,7 +2864,7 @@ static void ProcessLongKeyWord (int x, SyntacticCode gCode, indLine wi)
 	break;
       case KWD_PICTURE:
 	/* PICTURE */
-	CreateConstant (Picture, wi);
+	CreateConstant (tt_Picture, wi);
 	break;
       case KWD_DATE:
 	pPresVar = &pPSchema->PsVariable[pPSchema->PsNVariables - 1];

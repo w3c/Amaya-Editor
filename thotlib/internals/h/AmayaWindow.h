@@ -13,11 +13,12 @@
 #include "wx/splitter.h"
 
 
-#include "AmayaCallback.h"
+//#include "AmayaCallback.h"
 class AmayaPanel;
 class AmayaPage;
 class AmayaFrame;
 class AmayaNotebook;
+class AmayaCParam;
 
 #define MAX_DOC 50
 
@@ -123,8 +124,8 @@ public:
 
 
  protected:
-    AmayaCallback menuCallback;
-    AmayaCallback toolbarCallback;
+//    AmayaCallback menuCallback;
+//    AmayaCallback toolbarCallback;
 
  protected:
   DECLARE_EVENT_TABLE()

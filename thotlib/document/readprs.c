@@ -770,7 +770,7 @@ static BasicType    ReadBasicType (BinFile file)
 	       basictyp = Symbol;
 	       break;
 	    case C_PICTURE:
-	       basictyp = Picture;
+	       basictyp = tt_Picture;
 	       break;
 	    case C_REFER:
 	       basictyp = Refer;

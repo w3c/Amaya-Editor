@@ -1,5 +1,10 @@
 #undef THOT_EXPORT
-#define THOT_EXPORT /* implementation of every globals */
+#define THOT_EXPORT
+
+/* implementation of every globals
+ * every _tv.h files contains global var implementation
+ * this file implement these variables */
+
 
 #include "thot_gui.h"
 #include "thot_sys.h"
@@ -13,6 +18,7 @@
 #include "picture.h"
 #include "res.h"
 #include "constmot.h"
+
 
 /* var implementation */
 #include "boxes_tv.h"

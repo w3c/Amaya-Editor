@@ -172,7 +172,7 @@ void                WriteBasicType (BasicType typ)
 	    case Symbol:
 	       TtaWriteByte (outfile, C_SYMBOL);
 	       break;
-	    case Picture:
+	    case tt_Picture:
 	       TtaWriteByte (outfile, C_PICTURE);
 	       break;
 	    case Refer:

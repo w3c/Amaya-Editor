@@ -34,6 +34,7 @@
 #include "AmayaNotebook.h"
 #include "AmayaPage.h"
 #include "AmayaFrame.h"
+#include "AmayaCallback.h"
 
 // TODO : a deplacer dans un .h
 #define DEFAULT_TOOGLE_FULLSCREEN    false
@@ -60,8 +61,8 @@ AmayaWindow::AmayaWindow (  int            window_id
 		       ) : 
   wxFrame( wxDynamicCast(p_parent_window, wxWindow),
 	   -1, _T(""), pos, size ),
-  menuCallback(),
-  toolbarCallback(),
+//  menuCallback(),
+//  toolbarCallback(),
   m_WindowId( window_id ),
   m_IsFullScreenEnable( DEFAULT_TOOGLE_FULLSCREEN ),
   m_IsToolTipEnable( DEFAULT_TOOGLE_TOOLTIP ),

@@ -136,7 +136,7 @@ static ThotBool ReadBasicType (BinFile file, BasicType *typ)
 	       *typ = Symbol;
 	       break;
 	    case C_PICTURE:
-	       *typ = Picture;
+	       *typ = tt_Picture;
 	       break;
 	    case C_REFER:
 	       *typ = Refer;

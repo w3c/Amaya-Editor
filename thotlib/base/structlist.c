@@ -3533,7 +3533,7 @@ void TtaListStyleSchemas (Document document, FILE *fileDescriptor)
 			   case Symbol:
 			     fprintf (fileDescriptor, "Symbol ");
 			     break;
-			   case Picture:
+			   case tt_Picture:
 			     fprintf (fileDescriptor, "Picture ");
 			     /* ecrit la valeur de la constante */
 			     break;

@@ -1773,7 +1773,7 @@ void CallbackPresMenu (int ref, int val, char *txt)
 	{
 	  ChngFontSize = TRUE;
 	  StdFontSize = FALSE;
-	  FontSize = FontPointSize (val);
+	  FontSize = ThotFontPointSize (val);
 	}
       else
 	{
@@ -2115,7 +2115,7 @@ void TtcChangeCharacters (Document document, View view)
 	     /* les corps relatifs successivement */
 	     for (bodyRelatSize = 0; bodyRelatSize < max && i < MAX_TXT_LEN - 30; bodyRelatSize++)
 	       {
-		  bodyPointSize = FontPointSize (bodyRelatSize);
+		  bodyPointSize = ThotFontPointSize (bodyRelatSize);
 		  /* ajoute ce nouveau corps dans le buffer du menu */
 		  sprintf (&string[i], "%s%d %s", "B", bodyPointSize, s);
 		  i += strlen (&string[i]) + 1;

@@ -2493,7 +2493,7 @@ PtrElement NewSubtree (int typeNum, PtrSSchema pSS, PtrDocument pDoc,
 		  pEl->ElVolume = 0;
 		  pEl->ElTextLength = 0;
 		  break;
-		case Picture:
+		case tt_Picture:
 		  CreateTextBuffer (pEl);
 		  pEl->ElLeafType = LtPicture;
 		  pEl->ElVolume = 0;

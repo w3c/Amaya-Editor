@@ -31,7 +31,7 @@ extern int LogicalValue ( int val,
 extern int FontBase ( ThotFont font );
 extern int BoxFontBase ( SpecFont specfont );
 extern int FontRelSize ( int size );
-extern int FontPointSize ( int size );
+extern int ThotFontPointSize ( int size );
 extern ThotFont LoadFont ( char *name );
 extern void GetFontIdentifier ( char script,
                                 int family,
@@ -102,7 +102,7 @@ extern int LogicalValue ( int val,
 extern int FontBase ( ThotFont font );
 extern int BoxFontBase ( SpecFont specfont );
 extern int FontRelSize ( int size );
-extern int FontPointSize ( int size );
+extern int ThotFontPointSize ( int size );
 extern ThotFont LoadFont ( char *name );
 extern void GetFontIdentifier ( char script,
                                   int family,

@@ -61,7 +61,7 @@ typedef enum
         CharString,
         GraphicElem,
         Symbol,
-        Picture,
+        tt_Picture,
         Refer,
         PageBreak,
         AnyType

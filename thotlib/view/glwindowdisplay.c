@@ -77,7 +77,6 @@
 
 #ifdef _WX
   #include "AmayaFrame.h"
-  #include "AmayaCanvas.h"
 #endif /* _WX */
 
 #include <GL/gl.h>
@@ -1324,7 +1323,12 @@ AnimTime ComputeThotCurrentTime (int frame)
 #if defined _GTK || defined(_WX)
       /* while (gtk_events_pending ()) */
       /*   gtk_main_iteration (); */
+
+#if !defined(_MACOS)
+      /* TODO: trouver une fonction equivalente sous macosx, ftime n'existe pas sur mac */
       ftime (&after);
+#endif /* _MACOS */
+
       current_time = after.time + (((double)after.millitm)/1000);      
 #endif /* _GTK || defined(_WX) */
       

@@ -2041,7 +2041,7 @@ void GetLine (PtrLine *pLine)
 
    /* Si pas de contexte dans la liste des libres -> acquiert un nouveau */
    if (PtFree_Line == NULL)
-      pNewLine = (PtrLine) TtaGetMemory (sizeof (Line));
+      pNewLine = (PtrLine) TtaGetMemory (sizeof (ThotLine));
    /* Sinon recupere le contexte en tete de la chaine des libres */
    else
      {
@@ -2053,7 +2053,7 @@ void GetLine (PtrLine *pLine)
    *pLine = pNewLine;
    if (pNewLine)
      {
-	memset (pNewLine, 0, sizeof (Line));
+	memset (pNewLine, 0, sizeof (ThotLine));
 	NbUsed_Line++;
      }
 }
