@@ -283,17 +283,23 @@ List *AnnotList_search (List *list, CHAR_T *object)
    AnnotList_searchAnnot
    Returns the annot item that points to the same url
    ------------------------------------------------------------*/
-AnnotMeta *AnnotList_searchAnnot (List *list, CHAR_T *url)
+AnnotMeta *AnnotList_searchAnnot (List *list, CHAR_T *url, ThotBool useAnnotUrl)
 {
   List *item = list;
   AnnotMeta *annot;
   ThotBool found = FALSE;
+  CHAR_T *ptr;
 
   while (item)
     {
       annot = (AnnotMeta *) item->object;
       /* @@ this crashes... why? */
-      if (annot->annot_url && !ustrcasecmp (annot->annot_url, url))
+      if (useAnnotUrl)
+	ptr = annot->annot_url;
+      else
+	ptr = annot->body_url;
+
+      if (ptr && !ustrcasecmp (ptr, url))
 	{
 	  found = TRUE;
 	  break;
@@ -1029,7 +1035,8 @@ CHAR_T *type;
 	  else
 	    ptr = NULL;
 	  annot = AnnotList_searchAnnot (AnnotMetaData[i].annotations,
-					 (ptr) ? ptr : DocumentURLs[doc]);
+					 (ptr) ? ptr : DocumentURLs[doc],
+					 FALSE);
 	  if (ptr)
 	    TtaFreeMemory (ptr);
 	  if (annot)

@@ -27,7 +27,8 @@ extern ThotBool AnnotFilter_showAuthor ( List *list,
 extern List *AnnotList_search ( List *list,
                                 CHAR_T *object );
 extern AnnotMeta *AnnotList_searchAnnot ( List *list,
-                                          CHAR_T *url );
+                                          CHAR_T *url,
+                                          ThotBool useAnnotUrl );
 extern AnnotMeta *AnnotMeta_new ( void );
 extern void AnnotFilter_free ( List *annot_list );
 extern void AnnotList_free ( List *annot_list );
@@ -85,7 +86,8 @@ extern ThotBool AnnotFilter_showAuthor (/* List *list,
 extern List *AnnotList_search (/* List *list,
                                   CHAR_T *object */);
 extern AnnotMeta *AnnotList_searchAnnot (/* List *list,
-                                            CHAR_T *url */);
+                                            CHAR_T *url,
+                                            ThotBool useAnnotUrl */);
 extern AnnotMeta *AnnotMeta_new (/* void */);
 extern void AnnotFilter_free (/* List *annot_list */);
 extern void AnnotList_free (/* List *annot_list */);

@@ -328,7 +328,7 @@ CHAR_T *title;
   el = TtaSearchTypedElement (elType, SearchInTree, root);
   el = TtaGetFirstChild (el);
   /* @@ maybe parse the URL here */
-  tmp = TtaGetMemory (ustrlen (title) + sizeof ("Annotation of ") + 1);
+  tmp = TtaGetMemory (ustrlen (title) + sizeof ("Annotation about ") + 1);
   sprintf (tmp, "Annotation of %s", title);
   TtaSetTextContent (el, tmp,
 		     TtaGetDefaultLanguage (), docAnnot);

@@ -14,6 +14,10 @@
  *                  for the byzance collaborative work application
  */
 
+/**
+w3c_algaeQuery=(ask '((?p ?s ?o)) :collect '(?p ?s ?o))
+
+ **/
 
 #define THOT_EXPORT extern
 #include "HTML.h"
@@ -422,7 +426,7 @@ ThotBool show;
       
       /* now look in the filters to see if we need to hide it or not */
       annot = AnnotList_searchAnnot (AnnotMetaData[doc].annotations, 
-				     annot_url);
+				     annot_url, FALSE);
       TtaFreeMemory (annot_url);
       if (!annot)
 	continue;

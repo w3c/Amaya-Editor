@@ -197,11 +197,19 @@ AnnotMeta *annot;
   /* add the annotation to the filter list */
   AnnotFilter_add (&(AnnotMetaData[source_doc].types), annot->type);
   if (annot->annot_url)
+    tmp = annot->annot_url;
+  else
+    tmp = annot->body_url;
+
+  if (tmp)
     { /* @@ when creating a new annot, we don't yet know the URL;
          perhaps we should use the POST server name here? */
-      GetServerName (annot->annot_url, server);
+      GetServerName (tmp, server);
       AnnotFilter_add (&(AnnotMetaData[source_doc].servers), server);
     }
+  else
+    server[0] = WC_EOS;
+
   tmp = TtaGetMemory (ustrlen (annot->author) + ustrlen (server) + 4);
   usprintf (tmp, "%s@%s", annot->author, server);
   AnnotFilter_add (&(AnnotMetaData[source_doc].authors), tmp);
@@ -403,6 +411,7 @@ void LINK_LoadAnnotationIndex (doc, annotIndex)
   Element el, body;
   List *annot_list, *list_ptr;
   AnnotMeta *annot;
+  AnnotMeta *old_annot;
 
   if (!annotIndex || !(TtaFileExist (annotIndex)))
     /* there are no annotations */
@@ -431,8 +440,17 @@ void LINK_LoadAnnotationIndex (doc, annotIndex)
 	}
       else 
 	{
-	  LINK_AddLinkToSource (doc, annot);
-	  List_add (&AnnotMetaData[doc].annotations, (void*) annot);
+	  /* don't add an annotation if it's already on the list */
+	  /* @@ later, Ralph will add code to delete the old one */
+	  old_annot = AnnotList_searchAnnot (AnnotMetaData[doc].annotations,
+					     annot->annot_url, TRUE);
+	  if (!old_annot)
+	    {
+	      LINK_AddLinkToSource (doc, annot);
+	      List_add (&AnnotMetaData[doc].annotations, (void*) annot);
+	    }
+	  else
+	    Annot_free (annot);
 	}
       List_delFirst (&list_ptr);
     }

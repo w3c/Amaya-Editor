@@ -17,6 +17,7 @@
 
 #include "annotlib.h"
 #include "AHTURLTools_f.h"
+#define DEFAULT_ALGAE_QUERY "w3c_algaeQuery=(ask '((?p ?s ?o)) :collect '(?p ?s ?o))"
 
 /* some state variables */
 static CHAR_T *annotUser; /* user id for saving the annotation */
@@ -322,7 +323,7 @@ void ANNOT_Init ()
 
   /* @@@ temporary custom query, as we could use the configuration menu  ***/
   annotCustomQuery = FALSE;
-  annotAlgaeText = NULL;
+  annotAlgaeText = TtaStrdup (DEFAULT_ALGAE_QUERY);
 
   /* create the directory where we'll store the annotations if it
      doesn't exist ** how to check that with the thotlib? */
@@ -478,15 +479,15 @@ View view;
 	  /* "compute" the url we're looking up in the annotation server */
 	  if (!IsW3Path (DocumentURLs[doc]) &&
 	      !IsFilePath (DocumentURLs[doc]))
-	    proto = "file://";
+	    proto = TEXT("file://");
 	  else
-	    proto = "";
+	    proto = TEXT("");
 	  if (!annotCustomQuery || !annotAlgaeText || 
 	      annotAlgaeText[0] == WC_EOS)
 	    {
 	      annotURL = TtaGetMemory (ustrlen (DocumentURLs[doc])
 				       + ustrlen (proto)
-				       + sizeof (TEXT("w3c_annotate="))
+				       + sizeof (TEXT("w3c_annotates="))
 				       + 50);
 	      sprintf (annotURL, "w3c_annotates=%s%s", proto, 
 		       DocumentURLs[doc]);
@@ -617,7 +618,7 @@ void *context;
        int source_doc = DocumentMeta[doc]->source_doc;
        AnnotMeta *annot = GetMetaData (source_doc, doc);
 
-#if 0 /* RRS - interim idea for updating the annotation.  Doesn't work
+#if 0 /* @@ RRS - interim idea for updating the annotation.  Doesn't work
 	 unless the POST reply returns all the properties */
        if (annot)
 	 {
