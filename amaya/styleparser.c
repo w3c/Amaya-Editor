@@ -2298,8 +2298,21 @@ static char *ParseACSSFontSize (Element element, PSchema tsch,
    else
      ptr = NULL;
    ptr1 = cssRule;
+  /* relative size */
+   if (!strncasecmp (cssRule, "larger", 6))
+     {
+	pval.typed_data.unit = UNIT_PERCENT;
+	pval.typed_data.value = 130;
+	cssRule += 6;
+     }
+   else if (!strncasecmp (cssRule, "smaller", 7))
+     {
+	pval.typed_data.unit = UNIT_PERCENT;
+	pval.typed_data.value = 80;
+	cssRule += 7;
+     }
    /* absolute size */
-   if (!strncasecmp (cssRule, "xx-small", 8))
+   else if (!strncasecmp (cssRule, "xx-small", 8))
      {
 	pval.typed_data.unit = UNIT_PT;
 	pval.typed_data.value = 8;
@@ -2323,7 +2336,7 @@ static char *ParseACSSFontSize (Element element, PSchema tsch,
 	pval.typed_data.value = 12;
 	cssRule += 6;
      }
-   else if (!strncasecmp (cssRule, "large", 5))
+    else if (!strncasecmp (cssRule, "large", 5))
      {
 	pval.typed_data.unit = UNIT_PT;
 	pval.typed_data.value = 13;
@@ -2340,19 +2353,6 @@ static char *ParseACSSFontSize (Element element, PSchema tsch,
 	pval.typed_data.unit = UNIT_PT;
 	pval.typed_data.value = 16;
 	cssRule += 8;
-     }
-   /* relative size */
-   else if (!strncasecmp (cssRule, "larger", 6))
-     {
-	pval.typed_data.unit = UNIT_PERCENT;
-	pval.typed_data.value = 130;
-	cssRule += 6;
-     }
-   else if (!strncasecmp (cssRule, "smaller", 7))
-     {
-	pval.typed_data.unit = UNIT_PERCENT;
-	pval.typed_data.value = 80;
-	cssRule += 7;
      }
    /* inherit */
    else if (!strncasecmp (cssRule, "inherit", 7))
