@@ -282,8 +282,8 @@ STRING              fileName;
     }
   if (*pDoc != NULL)
      {
-       /* Set the pivot version to 5 (xml) */
-       (*pDoc)->DocPivotVersion = 5;
+       /* Set the pivot version to -1 (xml) */
+       (*pDoc)->DocPivotVersion = -1;
        
        /* conserve le path actuel des schemas dans le contexte du document */
        ustrncpy ((*pDoc)->DocSchemasPath, SchemaPath, MAX_PATH);

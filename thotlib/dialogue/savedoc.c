@@ -113,7 +113,7 @@ void                BuildSaveDocMenu ()
        if (ThotLocalActions[T_setwritedirectory] != NULL &&
 	   ThotLocalActions[T_writedocument] != NULL)
 	 {
-	   if (DocumentToSave->DocPivotVersion == 5)
+	   if (DocumentToSave->DocPivotVersion == -1)
 	     {
 	       (*ThotLocalActions [T_setwritedirectory]) (DocumentToSave,
 							  SaveFileName, 
@@ -133,7 +133,7 @@ void                BuildSaveDocMenu ()
      }
    else if (!ustrcmp (TraductionSchemaName, "_ThotOther_"))
      {
-       if (DocumentToSave->DocPivotVersion == 5)
+       if (DocumentToSave->DocPivotVersion == -1)
          {
 	   ustrcat (outputFileName, ".PIV"); 
 	   (void) StoreDocument (DocumentToSave,
@@ -424,7 +424,7 @@ PtrDocument         pDoc;
 		   src += l + 1;
 		}
 	      nbitem++;
-	      if (pDoc->DocPivotVersion == 5)
+	      if (pDoc->DocPivotVersion == -1)
 		{
 		  ustrcpy (dest, "B");
 		  dest++;
@@ -460,7 +460,7 @@ PtrDocument         pDoc;
 	      ustrcpy (BufMenu, SaveDirectoryName);
 	      ustrcat (BufMenu, DIR_STR);
 	      ustrcat (BufMenu, SaveFileName);
-	      if (pDoc->DocPivotVersion == 5)
+	      if (pDoc->DocPivotVersion == -1)
 		ustrcat (BufMenu, ".xml");
 	      else
 		ustrcat (BufMenu, ".PIV");
