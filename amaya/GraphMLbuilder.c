@@ -27,32 +27,31 @@ static AttributeMapping GraphMLAttributeMappingTable[] =
 {
    /* The first entry MUST be unknown_attr */
    /* The rest of this table MUST be in alphabetical order */
-   {TEXT("unknown_attr"), TEXT(""), 'A', GraphML_ATTR_Invalid_attribute},
+   {TEXT("unknown_attr"), TEXT(""), 'A', GraphML_ATTR_Invalid_attribute, L_Undefined},
 
-   {TEXT("align"), TEXT(""), 'A', GraphML_ATTR_align},
-   {TEXT("arrowhead"), TEXT(""), 'A', GraphML_ATTR_arrowhead},
-   {TEXT("class"), TEXT(""), 'A', GraphML_ATTR_class},
-   {TEXT("depth"), TEXT(""), 'A', GraphML_ATTR_depth_},
-   {TEXT("direction"), TEXT(""), 'A', GraphML_ATTR_direction},
-   {TEXT("fill"), TEXT(""), 'A', GraphML_ATTR_fill},
-   {TEXT("height"), TEXT(""), 'A', GraphML_ATTR_height_},
-   {TEXT("hspace"), TEXT(""), 'A', GraphML_ATTR_hspace},
-   {TEXT("id"), TEXT(""), 'A', GraphML_ATTR_id},
-   {TEXT("linestyle"), TEXT(""), 'A', GraphML_ATTR_linestyle_},
-   {TEXT("linewidth"), TEXT(""), 'A', GraphML_ATTR_linewidth},
-   {TEXT("position"), TEXT(""), 'A', GraphML_ATTR_position},
-   {TEXT("points"), TEXT(""), 'A', GraphML_ATTR_points},
-   {TEXT("stroke"), TEXT(""), 'A', GraphML_ATTR_stroke},
-   {TEXT("stroke-width"), TEXT(""), 'A', GraphML_ATTR_stroke_width},
-   {TEXT("style"), TEXT(""), 'A', GraphML_ATTR_style_},
-   {TEXT("valign"), TEXT(""), 'A', GraphML_ATTR_valign},
-   {TEXT("vspace"), TEXT(""), 'A', GraphML_ATTR_vspace},
-   {TEXT("width"), TEXT(""), 'A', GraphML_ATTR_width_},
-   {TEXT("x"), TEXT(""), 'A', GraphML_ATTR_x},
-   {TEXT("y"), TEXT(""), 'A', GraphML_ATTR_y},
-   {TEXT("zzghost"), TEXT(""), 'A', GraphML_ATTR_Ghost_restruct},
-
-   {TEXT(""), TEXT(""), EOS, 0}		/* Last entry. Mandatory */
+   {TEXT("align"), TEXT(""), 'A', GraphML_ATTR_align, L_Undefined},
+   {TEXT("arrowhead"), TEXT(""), 'A', GraphML_ATTR_arrowhead, L_Undefined},
+   {TEXT("class"), TEXT(""), 'A', GraphML_ATTR_class, L_Undefined},
+   {TEXT("depth"), TEXT(""), 'A', GraphML_ATTR_depth_, L_Undefined},
+   {TEXT("direction"), TEXT(""), 'A', GraphML_ATTR_direction, L_Undefined},
+   {TEXT("fill"), TEXT(""), 'A', GraphML_ATTR_fill, L_Undefined},
+   {TEXT("height"), TEXT(""), 'A', GraphML_ATTR_height_, L_Undefined},
+   {TEXT("hspace"), TEXT(""), 'A', GraphML_ATTR_hspace, L_Undefined},
+   {TEXT("id"), TEXT(""), 'A', GraphML_ATTR_id, L_Undefined},
+   {TEXT("linestyle"), TEXT(""), 'A', GraphML_ATTR_linestyle_, L_Undefined},
+   {TEXT("linewidth"), TEXT(""), 'A', GraphML_ATTR_linewidth, L_Undefined},
+   {TEXT("position"), TEXT(""), 'A', GraphML_ATTR_position, L_Undefined},
+   {TEXT("points"), TEXT(""), 'A', GraphML_ATTR_points, L_Undefined},
+   {TEXT("stroke"), TEXT(""), 'A', GraphML_ATTR_stroke, L_Undefined},
+   {TEXT("stroke-width"), TEXT(""), 'A', GraphML_ATTR_stroke_width, L_Undefined},
+   {TEXT("style"), TEXT(""), 'A', GraphML_ATTR_style_, L_Undefined},
+   {TEXT("valign"), TEXT(""), 'A', GraphML_ATTR_valign, L_Undefined},
+   {TEXT("vspace"), TEXT(""), 'A', GraphML_ATTR_vspace, L_Undefined},
+   {TEXT("width"), TEXT(""), 'A', GraphML_ATTR_width_, L_Undefined},
+   {TEXT("x"), TEXT(""), 'A', GraphML_ATTR_x, L_Undefined},
+   {TEXT("y"), TEXT(""), 'A', GraphML_ATTR_y, L_Undefined},
+   {TEXT("zzghost"), TEXT(""), 'A', GraphML_ATTR_Ghost_restruct, L_Undefined},
+   {TEXT(""), TEXT(""), EOS, 0, L_Undefined}		/* Last entry. Mandatory */
 };
 
 /* mapping table of attribute values */

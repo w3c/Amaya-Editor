@@ -331,264 +331,227 @@ XhtmlEntity        XhtmlEntityTable[] =
 static AttributeMapping XhtmlAttributeMappingTable[] =
 {
    /* The first entry MUST be unknown_attr */
-   {TEXT("unknown_attr"), TEXT(""), 'A', HTML_ATTR_Invalid_attribute},
+   {TEXT("unknown_attr"), TEXT(""), 'A', HTML_ATTR_Invalid_attribute, L_Basic},
+   {TEXT("abbr"), TEXT(""), 'A', HTML_ATTR_abbr, L_Basic},
+   {TEXT("accept"), TEXT(""), 'A', HTML_ATTR_accept, L_Basic},
+   {TEXT("accept-charset"), TEXT("form"), 'A', HTML_ATTR_accept_charset, L_Basic},
+   {TEXT("accesskey"), TEXT(""), 'A', HTML_ATTR_accesskey, L_Basic},
+   {TEXT("action"), TEXT(""), 'A', HTML_ATTR_Script_URL, L_Basic},
+   {TEXT("align"), TEXT("applet"), 'A', HTML_ATTR_Alignment, L_Transitional},
+   {TEXT("align"), TEXT("caption"), 'A', HTML_ATTR_Position, L_Transitional},
+   {TEXT("align"), TEXT("col"), 'A', HTML_ATTR_Cell_align, L_Transitional},
+   {TEXT("align"), TEXT("colgroup"), 'A', HTML_ATTR_Cell_align, L_Transitional},
+   {TEXT("align"), TEXT("div"), 'A', HTML_ATTR_TextAlign, L_Transitional},
+   {TEXT("align"), TEXT("h1"), 'A', HTML_ATTR_TextAlign, L_Transitional},
+   {TEXT("align"), TEXT("h2"), 'A', HTML_ATTR_TextAlign, L_Transitional},
+   {TEXT("align"), TEXT("h3"), 'A', HTML_ATTR_TextAlign, L_Transitional},
+   {TEXT("align"), TEXT("h4"), 'A', HTML_ATTR_TextAlign, L_Transitional},
+   {TEXT("align"), TEXT("h5"), 'A', HTML_ATTR_TextAlign, L_Transitional},
+   {TEXT("align"), TEXT("h6"), 'A', HTML_ATTR_TextAlign, L_Transitional},
+   {TEXT("align"), TEXT("hr"), 'A', HTML_ATTR_Align, L_Transitional},
+   {TEXT("align"), TEXT("iframe"), 'A', HTML_ATTR_Alignment, L_Transitional},
+   {TEXT("align"), TEXT("image"), 'A', HTML_ATTR_Alignment, L_Transitional},
+   {TEXT("align"), TEXT("img"), 'A', HTML_ATTR_Alignment, L_Transitional},
+   {TEXT("align"), TEXT("input"), 'A', HTML_ATTR_Alignment, L_Transitional},
+   {TEXT("align"), TEXT("legend"), 'A', HTML_ATTR_LAlign, L_Transitional},
+   {TEXT("align"), TEXT("object"), 'A', HTML_ATTR_Alignment, L_Transitional},
+   {TEXT("align"), TEXT("p"), 'A', HTML_ATTR_TextAlign, L_Transitional},
+   {TEXT("align"), TEXT("table"), 'A', HTML_ATTR_Align, L_Transitional},
+   {TEXT("align"), TEXT("tbody"), 'A', HTML_ATTR_Cell_align, L_Transitional},
+   {TEXT("align"), TEXT("td"), 'A', HTML_ATTR_Cell_align, L_Transitional},
+   {TEXT("align"), TEXT("tfoot"), 'A', HTML_ATTR_Cell_align, L_Transitional},
+   {TEXT("align"), TEXT("th"), 'A', HTML_ATTR_Cell_align, L_Transitional},
+   {TEXT("align"), TEXT("thead"), 'A', HTML_ATTR_Cell_align, L_Transitional},
+   {TEXT("align"), TEXT("tr"), 'A', HTML_ATTR_Cell_align, L_Transitional},
+   {TEXT("alink"), TEXT("body"), 'A', HTML_ATTR_ActiveLinkColor, L_Transitional},
+   {TEXT("alt"), TEXT(""), 'A', HTML_ATTR_ALT, L_Basic},
+   {TEXT("archive"), TEXT(""), 'A', HTML_ATTR_archive, L_Basic},
+   {TEXT("axis"), TEXT(""), 'A', HTML_ATTR_axis, L_Basic},
 
-   {TEXT("abbr"), TEXT(""), 'A', HTML_ATTR_abbr},
-   {TEXT("accept"), TEXT(""), 'A', HTML_ATTR_accept},
-   {TEXT("accept-charset"), TEXT("form"), 'A', HTML_ATTR_accept_charset},
-   {TEXT("accesskey"), TEXT(""), 'A', HTML_ATTR_accesskey},
-   {TEXT("action"), TEXT(""), 'A', HTML_ATTR_Script_URL},
-#ifndef XHTML_BASIC
-   {TEXT("align"), TEXT("applet"), 'A', HTML_ATTR_Alignment},
-   {TEXT("align"), TEXT("caption"), 'A', HTML_ATTR_Position},
-   {TEXT("align"), TEXT("col"), 'A', HTML_ATTR_Cell_align},
-   {TEXT("align"), TEXT("colgroup"), 'A', HTML_ATTR_Cell_align},
-   {TEXT("align"), TEXT("div"), 'A', HTML_ATTR_TextAlign},
-   {TEXT("align"), TEXT("h1"), 'A', HTML_ATTR_TextAlign},
-   {TEXT("align"), TEXT("h2"), 'A', HTML_ATTR_TextAlign},
-   {TEXT("align"), TEXT("h3"), 'A', HTML_ATTR_TextAlign},
-   {TEXT("align"), TEXT("h4"), 'A', HTML_ATTR_TextAlign},
-   {TEXT("align"), TEXT("h5"), 'A', HTML_ATTR_TextAlign},
-   {TEXT("align"), TEXT("h6"), 'A', HTML_ATTR_TextAlign},
-   {TEXT("align"), TEXT("hr"), 'A', HTML_ATTR_Align},
-   {TEXT("align"), TEXT("iframe"), 'A', HTML_ATTR_Alignment},
-   {TEXT("align"), TEXT("image"), 'A', HTML_ATTR_Alignment},
-   {TEXT("align"), TEXT("img"), 'A', HTML_ATTR_Alignment},
-   {TEXT("align"), TEXT("input"), 'A', HTML_ATTR_Alignment},
-   {TEXT("align"), TEXT("legend"), 'A', HTML_ATTR_LAlign},
-   {TEXT("align"), TEXT("object"), 'A', HTML_ATTR_Alignment},
-   {TEXT("align"), TEXT("p"), 'A', HTML_ATTR_TextAlign},
-   {TEXT("align"), TEXT("table"), 'A', HTML_ATTR_Align},
-   {TEXT("align"), TEXT("tbody"), 'A', HTML_ATTR_Cell_align},
-   {TEXT("align"), TEXT("td"), 'A', HTML_ATTR_Cell_align},
-   {TEXT("align"), TEXT("tfoot"), 'A', HTML_ATTR_Cell_align},
-   {TEXT("align"), TEXT("th"), 'A', HTML_ATTR_Cell_align},
-   {TEXT("align"), TEXT("thead"), 'A', HTML_ATTR_Cell_align},
-   {TEXT("align"), TEXT("tr"), 'A', HTML_ATTR_Cell_align},
-   {TEXT("alink"), TEXT("body"), 'A', HTML_ATTR_ActiveLinkColor},
-#endif /* XHTML_BASIC */
-   {TEXT("alt"), TEXT(""), 'A', HTML_ATTR_ALT},
-   {TEXT("archive"), TEXT(""), 'A', HTML_ATTR_archive},
-   {TEXT("axis"), TEXT(""), 'A', HTML_ATTR_axis},
+   {TEXT("background"), TEXT(""), 'A', HTML_ATTR_background_, L_Transitional},
+   {TEXT("bgcolor"), TEXT(""), 'A', HTML_ATTR_BackgroundColor, L_Transitional},
+   {TEXT("border"), TEXT("image"), 'A', HTML_ATTR_Img_border, L_Transitional},
+   {TEXT("border"), TEXT("img"), 'A', HTML_ATTR_Img_border, L_Transitional},
+   {TEXT("border"), TEXT("object"), 'A', HTML_ATTR_Img_border, L_Transitional},
+   {TEXT("border"), TEXT("table"), 'A', HTML_ATTR_Border, L_Transitional},
 
-#ifndef XHTML_BASIC
-   {TEXT("background"), TEXT(""), 'A', HTML_ATTR_background_},
-   {TEXT("bgcolor"), TEXT(""), 'A', HTML_ATTR_BackgroundColor},
-   {TEXT("border"), TEXT("image"), 'A', HTML_ATTR_Img_border},
-   {TEXT("border"), TEXT("img"), 'A', HTML_ATTR_Img_border},
-   {TEXT("border"), TEXT("object"), 'A', HTML_ATTR_Img_border},
-   {TEXT("border"), TEXT("table"), 'A', HTML_ATTR_Border},
+   {TEXT("cellspacing"), TEXT(""), 'A', HTML_ATTR_cellspacing, L_Transitional},
+   {TEXT("cellpadding"), TEXT(""), 'A', HTML_ATTR_cellpadding, L_Transitional},
+   {TEXT("char"), TEXT(""), 'A', HTML_ATTR_char, L_Basic},
+   {TEXT("charoff"), TEXT(""), 'A', HTML_ATTR_charoff, L_Basic},
+   {TEXT("charset"), TEXT(""), 'A', HTML_ATTR_charset, L_Basic},
+   {TEXT("checked"), TEXT(""), 'A', HTML_ATTR_Checked, L_Basic},
+   {TEXT("cite"), TEXT(""), 'A', HTML_ATTR_cite, L_Basic},
+   {TEXT("class"), TEXT(""), 'A', HTML_ATTR_Class, L_Basic},
+   {TEXT("classid"), TEXT(""), 'A', HTML_ATTR_classid, L_Basic},
+   {TEXT("clear"), TEXT("br"), 'A', HTML_ATTR_Clear, L_Transitional},
+   {TEXT("code"), TEXT(""), 'A', HTML_ATTR_code, L_Basic},
+   {TEXT("codebase"), TEXT(""), 'A', HTML_ATTR_codebase, L_Basic},
+   {TEXT("codetype"), TEXT(""), 'A', HTML_ATTR_codetype, L_Basic},
+   {TEXT("color"), TEXT("basefont"), 'A', HTML_ATTR_BaseFontColor, L_Transitional},
+   {TEXT("color"), TEXT(""), 'A', HTML_ATTR_color, L_Transitional},
+   {TEXT("cols"), TEXT("frameset"), 'A', HTML_ATTR_ColWidth, L_Transitional},
+   {TEXT("cols"), TEXT("textarea"), 'A', HTML_ATTR_Columns, L_Basic},
+   {TEXT("colspan"), TEXT(""), 'A', HTML_ATTR_colspan_, L_Basic},
+   {TEXT("compact"), TEXT(""), 'A', HTML_ATTR_COMPACT, L_Transitional},
+   {TEXT("content"), TEXT(""), 'A', HTML_ATTR_meta_content, L_Basic},
+   {TEXT("coords"), TEXT(""), 'A', HTML_ATTR_coords, L_Basic},
 
-   {TEXT("cellspacing"), TEXT(""), 'A', HTML_ATTR_cellspacing},
-   {TEXT("cellpadding"), TEXT(""), 'A', HTML_ATTR_cellpadding},
-#endif /* XHTML_BASIC */
-   {TEXT("char"), TEXT(""), 'A', HTML_ATTR_char},
-   {TEXT("charoff"), TEXT(""), 'A', HTML_ATTR_charoff},
-   {TEXT("charset"), TEXT(""), 'A', HTML_ATTR_charset},
-   {TEXT("checked"), TEXT(""), 'A', HTML_ATTR_Checked},
-   {TEXT("cite"), TEXT(""), 'A', HTML_ATTR_cite},
-   {TEXT("class"), TEXT(""), 'A', HTML_ATTR_Class},
-   {TEXT("classid"), TEXT(""), 'A', HTML_ATTR_classid},
-   {TEXT("clear"), TEXT("br"), 'A', HTML_ATTR_Clear},
-   {TEXT("code"), TEXT(""), 'A', HTML_ATTR_code},
-   {TEXT("codebase"), TEXT(""), 'A', HTML_ATTR_codebase},
-   {TEXT("codetype"), TEXT(""), 'A', HTML_ATTR_codetype},
-   {TEXT("color"), TEXT("basefont"), 'A', HTML_ATTR_BaseFontColor},
-   {TEXT("color"), TEXT(""), 'A', HTML_ATTR_color},
-   {TEXT("cols"), TEXT("frameset"), 'A', HTML_ATTR_ColWidth},
-   {TEXT("cols"), TEXT("textarea"), 'A', HTML_ATTR_Columns},
-   {TEXT("colspan"), TEXT(""), 'A', HTML_ATTR_colspan_},
-#ifndef XHTML_BASIC
-   {TEXT("compact"), TEXT(""), 'A', HTML_ATTR_COMPACT},
-#endif /* XHTML_BASIC */
-   {TEXT("content"), TEXT(""), 'A', HTML_ATTR_meta_content},
-#ifndef XHTML_BASIC
-   {TEXT("coords"), TEXT(""), 'A', HTML_ATTR_coords},
-#endif /* XHTML_BASIC */
+   {TEXT("data"), TEXT(""), 'A', HTML_ATTR_data, L_Basic},
+   {TEXT("datapagesize"), TEXT("table"), 'A', HTML_ATTR_datapagesize, L_Basic},
+   {TEXT("datetime"), TEXT(""), 'A', HTML_ATTR_datetime, L_Basic},
+   {TEXT("declare"), TEXT("object"), 'A', HTML_ATTR_declare, L_Basic},
+   {TEXT("defer"), TEXT("script"), 'A', HTML_ATTR_defer, L_Basic},
+   {TEXT("dir"), TEXT(""), 'A', HTML_ATTR_dir, L_Basic},
+   {TEXT("disabled"), TEXT(""), 'A', HTML_ATTR_disabled, L_Basic},
 
-   {TEXT("data"), TEXT(""), 'A', HTML_ATTR_data},
-   {TEXT("datapagesize"), TEXT("table"), 'A', HTML_ATTR_datapagesize},
-   {TEXT("datetime"), TEXT(""), 'A', HTML_ATTR_datetime},
-   {TEXT("declare"), TEXT("object"), 'A', HTML_ATTR_declare},
-   {TEXT("defer"), TEXT("script"), 'A', HTML_ATTR_defer},
-   {TEXT("dir"), TEXT(""), 'A', HTML_ATTR_dir},
-   {TEXT("disabled"), TEXT(""), 'A', HTML_ATTR_disabled},
+   {TEXT("enctype"), TEXT(""), 'A', HTML_ATTR_ENCTYPE, L_Transitional},
+   {TEXT("event"), TEXT("script"), 'A', HTML_ATTR_event, L_Transitional},
 
-#ifndef XHTML_BASIC
-   {TEXT("enctype"), TEXT(""), 'A', HTML_ATTR_ENCTYPE},
-   {TEXT("event"), TEXT("script"), 'A', HTML_ATTR_event},
+   {TEXT("face"), TEXT("basefont"), 'A', HTML_ATTR_BaseFontFace, L_Transitional},
+   {TEXT("face"), TEXT("font"), 'A', HTML_ATTR_face, L_Transitional},
+   {TEXT("for"), TEXT("label"), 'A', HTML_ATTR_Associated_control, L_Transitional},
+   {TEXT("for"), TEXT("script"), 'A', HTML_ATTR_for_, L_Transitional},
+   {TEXT("frame"), TEXT("table"), 'A', HTML_ATTR_frame, L_Transitional},
+   {TEXT("frameborder"), TEXT(""), 'A', HTML_ATTR_frameborder, L_Transitional},
 
-   {TEXT("face"), TEXT("basefont"), 'A', HTML_ATTR_BaseFontFace},
-   {TEXT("face"), TEXT("font"), 'A', HTML_ATTR_face},
-#endif /* XHTML_BASIC */
-   {TEXT("for"), TEXT("label"), 'A', HTML_ATTR_Associated_control},
-   {TEXT("for"), TEXT("script"), 'A', HTML_ATTR_for_},
-#ifndef XHTML_BASIC
-   {TEXT("frame"), TEXT("table"), 'A', HTML_ATTR_frame},
-   {TEXT("frameborder"), TEXT(""), 'A', HTML_ATTR_frameborder},
+   {TEXT("headers"), TEXT(""), 'A', HTML_ATTR_headers, L_Transitional},
+   {TEXT("height"), TEXT("svg"), 'A', HTML_ATTR_SvgHeight, L_Transitional},
+   {TEXT("height"), TEXT(""), 'A', HTML_ATTR_Height_, L_Basic},
+   {TEXT("href"), TEXT(""), 'A', HTML_ATTR_HREF_, L_Basic},
+   {TEXT("hreflang"), TEXT(""), 'A', HTML_ATTR_hreflang, L_Basic},
+   {TEXT("hspace"), TEXT(""), 'A', HTML_ATTR_hspace, L_Transitional},
+   {TEXT("http-equiv"), TEXT(""), 'A', HTML_ATTR_http_equiv, L_Basic},
 
-   {TEXT("headers"), TEXT(""), 'A', HTML_ATTR_headers},
-#endif /* XHTML_BASIC */
-   {TEXT("height"), TEXT("svg"), 'A', HTML_ATTR_SvgHeight},
-   {TEXT("height"), TEXT(""), 'A', HTML_ATTR_Height_},
-   {TEXT("href"), TEXT(""), 'A', HTML_ATTR_HREF_},
-   {TEXT("hreflang"), TEXT(""), 'A', HTML_ATTR_hreflang},
-#ifndef XHTML_BASIC
-   {TEXT("hspace"), TEXT(""), 'A', HTML_ATTR_hspace},
-#endif /* XHTML_BASIC */
-   {TEXT("http-equiv"), TEXT(""), 'A', HTML_ATTR_http_equiv},
+   {TEXT("id"), TEXT(""), 'A', HTML_ATTR_ID, L_Basic},
+   {TEXT("ismap"), TEXT(""), 'A', HTML_ATTR_ISMAP, L_Transitional},
 
-   {TEXT("id"), TEXT(""), 'A', HTML_ATTR_ID},
-#ifndef XHTML_BASIC
-   {TEXT("ismap"), TEXT(""), 'A', HTML_ATTR_ISMAP},
-#endif /* XHTML_BASIC */
+   {TEXT("label"), TEXT(""), 'A', HTML_ATTR_label, L_Basic},
+   {TEXT("lang"), TEXT(""), 'A', HTML_ATTR_Langue, L_Basic},
+   {TEXT("language"), TEXT("script"), 'A', HTML_ATTR_script_language, L_Basic},
+   {TEXT("link"), TEXT("body"), 'A', HTML_ATTR_LinkColor, L_Basic},
+   {TEXT("longdesc"), TEXT(""), 'A', HTML_ATTR_longdesc, L_Basic},
 
-   {TEXT("label"), TEXT(""), 'A', HTML_ATTR_label},
-   {TEXT("lang"), TEXT(""), 'A', HTML_ATTR_Langue},
-   {TEXT("language"), TEXT("script"), 'A', HTML_ATTR_script_language},
-   {TEXT("link"), TEXT("body"), 'A', HTML_ATTR_LinkColor},
-   {TEXT("longdesc"), TEXT(""), 'A', HTML_ATTR_longdesc},
+   {TEXT("marginheight"), TEXT(""), 'A', HTML_ATTR_marginheight, L_Transitional},
+   {TEXT("marginwidth"), TEXT(""), 'A', HTML_ATTR_marginwidth, L_Transitional},
+   {TEXT("maxlength"), TEXT(""), 'A', HTML_ATTR_MaxLength, L_Basic},
+   {TEXT("media"), TEXT(""), 'A', HTML_ATTR_media, L_Basic},
+   {TEXT("method"), TEXT(""), 'A', HTML_ATTR_METHOD, L_Basic},
+   {TEXT("mode"), TEXT(""), 'A', HTML_ATTR_mode, L_Basic},
+   {TEXT("multiple"), TEXT(""), 'A', HTML_ATTR_Multiple, L_Basic},
 
-#ifndef XHTML_BASIC
-   {TEXT("marginheight"), TEXT(""), 'A', HTML_ATTR_marginheight},
-   {TEXT("marginwidth"), TEXT(""), 'A', HTML_ATTR_marginwidth},
-#endif /* XHTML_BASIC */
-   {TEXT("maxlength"), TEXT(""), 'A', HTML_ATTR_MaxLength},
-   {TEXT("media"), TEXT(""), 'A', HTML_ATTR_media},
-   {TEXT("method"), TEXT(""), 'A', HTML_ATTR_METHOD},
-   {TEXT("mode"), TEXT(""), 'A', HTML_ATTR_mode},
-   {TEXT("multiple"), TEXT(""), 'A', HTML_ATTR_Multiple},
+   {TEXT("N"), TEXT(""), 'C', 0, L_Basic},
+   {TEXT("name"), TEXT("applet"), 'A', HTML_ATTR_applet_name, L_Basic},
+   {TEXT("name"), TEXT("frame"), 'A', HTML_ATTR_FrameName, L_Basic},
+   {TEXT("name"), TEXT("iframe"), 'A', HTML_ATTR_FrameName, L_Basic},
+   {TEXT("name"), TEXT("meta"), 'A', HTML_ATTR_meta_name, L_Basic},
+   {TEXT("name"), TEXT("param"), 'A', HTML_ATTR_Param_name, L_Basic},
+   {TEXT("name"), TEXT(""), 'A', HTML_ATTR_NAME, L_Basic},
+   {TEXT("nohref"), TEXT(""), 'A', HTML_ATTR_nohref, L_Basic},
+   {TEXT("noresize"), TEXT(""), 'A', HTML_ATTR_no_resize, L_Basic},
+   {TEXT("noshade"), TEXT(""), 'A', HTML_ATTR_NoShade, L_Basic},
+   {TEXT("nowrap"), TEXT(""), 'A', HTML_ATTR_No_wrap, L_Basic},
 
-   {TEXT("N"), TEXT(""), 'C', 0},
-   {TEXT("name"), TEXT("applet"), 'A', HTML_ATTR_applet_name},
-   {TEXT("name"), TEXT("frame"), 'A', HTML_ATTR_FrameName},
-   {TEXT("name"), TEXT("iframe"), 'A', HTML_ATTR_FrameName},
-   {TEXT("name"), TEXT("meta"), 'A', HTML_ATTR_meta_name},
-   {TEXT("name"), TEXT("param"), 'A', HTML_ATTR_Param_name},
-   {TEXT("name"), TEXT(""), 'A', HTML_ATTR_NAME},
-   {TEXT("nohref"), TEXT(""), 'A', HTML_ATTR_nohref},
-   {TEXT("noresize"), TEXT(""), 'A', HTML_ATTR_no_resize},
-   {TEXT("noshade"), TEXT(""), 'A', HTML_ATTR_NoShade},
-   {TEXT("nowrap"), TEXT(""), 'A', HTML_ATTR_No_wrap},
+   {TEXT("object"), TEXT("applet"), 'A', HTML_ATTR_object, L_Transitional},
+   {TEXT("onblur"), TEXT(""), 'A', HTML_ATTR_onblur, L_Transitional},
+   {TEXT("onchange"), TEXT(""), 'A', HTML_ATTR_onchange, L_Transitional},
+   {TEXT("onclick"), TEXT(""), 'A', HTML_ATTR_onclick, L_Transitional},
+   {TEXT("ondblclick"), TEXT(""), 'A', HTML_ATTR_ondblclick, L_Transitional},
+   {TEXT("onfocus"), TEXT(""), 'A', HTML_ATTR_onfocus, L_Transitional},
+   {TEXT("onkeydown"), TEXT(""), 'A', HTML_ATTR_onkeydown, L_Transitional},
+   {TEXT("onkeypress"), TEXT(""), 'A', HTML_ATTR_onkeypress, L_Transitional},
+   {TEXT("onkeyup"), TEXT(""), 'A', HTML_ATTR_onkeyup, L_Transitional},
+   {TEXT("onload"), TEXT(""), 'A', HTML_ATTR_onload, L_Transitional},
+   {TEXT("onmousedown"), TEXT(""), 'A', HTML_ATTR_onmousedown, L_Transitional},
+   {TEXT("onmousemove"), TEXT(""), 'A', HTML_ATTR_onmousemove, L_Transitional},
+   {TEXT("onmouseout"), TEXT(""), 'A', HTML_ATTR_onmouseout, L_Transitional},
+   {TEXT("onmouseover"), TEXT(""), 'A', HTML_ATTR_onmouseover, L_Transitional},
+   {TEXT("onmouseup"), TEXT(""), 'A', HTML_ATTR_onmouseup, L_Transitional},
+   {TEXT("onreset"), TEXT("form"), 'A', HTML_ATTR_onreset, L_Transitional},
+   {TEXT("onselect"), TEXT(""), 'A', HTML_ATTR_onselect, L_Transitional},
+   {TEXT("onsubmit"), TEXT("form"), 'A', HTML_ATTR_onsubmit, L_Transitional},
+   {TEXT("onunload"), TEXT(""), 'A', HTML_ATTR_onunload, L_Transitional},
 
-#ifndef XHTML_BASIC
-   {TEXT("object"), TEXT("applet"), 'A', HTML_ATTR_object},
-   {TEXT("onblur"), TEXT(""), 'A', HTML_ATTR_onblur},
-   {TEXT("onchange"), TEXT(""), 'A', HTML_ATTR_onchange},
-   {TEXT("onclick"), TEXT(""), 'A', HTML_ATTR_onclick},
-   {TEXT("ondblclick"), TEXT(""), 'A', HTML_ATTR_ondblclick},
-   {TEXT("onfocus"), TEXT(""), 'A', HTML_ATTR_onfocus},
-   {TEXT("onkeydown"), TEXT(""), 'A', HTML_ATTR_onkeydown},
-   {TEXT("onkeypress"), TEXT(""), 'A', HTML_ATTR_onkeypress},
-   {TEXT("onkeyup"), TEXT(""), 'A', HTML_ATTR_onkeyup},
-   {TEXT("onload"), TEXT(""), 'A', HTML_ATTR_onload},
-   {TEXT("onmousedown"), TEXT(""), 'A', HTML_ATTR_onmousedown},
-   {TEXT("onmousemove"), TEXT(""), 'A', HTML_ATTR_onmousemove},
-   {TEXT("onmouseout"), TEXT(""), 'A', HTML_ATTR_onmouseout},
-   {TEXT("onmouseover"), TEXT(""), 'A', HTML_ATTR_onmouseover},
-   {TEXT("onmouseup"), TEXT(""), 'A', HTML_ATTR_onmouseup},
-   {TEXT("onreset"), TEXT("form"), 'A', HTML_ATTR_onreset},
-   {TEXT("onselect"), TEXT(""), 'A', HTML_ATTR_onselect},
-   {TEXT("onsubmit"), TEXT("form"), 'A', HTML_ATTR_onsubmit},
-   {TEXT("onunload"), TEXT(""), 'A', HTML_ATTR_onunload},
-#endif /* XHTML_BASIC */
+   {TEXT("profile"), TEXT("head"), 'A', HTML_ATTR_profile, L_Basic},
+   {TEXT("prompt"), TEXT(""), 'A', HTML_ATTR_Prompt, L_Transitional},
 
-   {TEXT("profile"), TEXT("head"), 'A', HTML_ATTR_profile},
-#ifndef XHTML_BASIC
-   {TEXT("prompt"), TEXT(""), 'A', HTML_ATTR_Prompt},
-#endif /* XHTML_BASIC */
+   {TEXT("readonly"), TEXT(""), 'A', HTML_ATTR_readonly, L_Basic},
+   {TEXT("rel"), TEXT(""), 'A', HTML_ATTR_REL, L_Basic},
+   {TEXT("rev"), TEXT(""), 'A', HTML_ATTR_REV, L_Basic},
+   {TEXT("rows"), TEXT("frameset"), 'A', HTML_ATTR_RowHeight, L_Transitional},
+   {TEXT("rows"), TEXT("textarea"), 'A', HTML_ATTR_Rows, L_Basic},
+   {TEXT("rowspan"), TEXT(""), 'A', HTML_ATTR_rowspan_, L_Basic},
+   {TEXT("rules"), TEXT("table"), 'A', HTML_ATTR_rules_, L_Basic},
 
-   {TEXT("readonly"), TEXT(""), 'A', HTML_ATTR_readonly},
-   {TEXT("rel"), TEXT(""), 'A', HTML_ATTR_REL},
-   {TEXT("rev"), TEXT(""), 'A', HTML_ATTR_REV},
-#ifndef XHTML_BASIC
-   {TEXT("rows"), TEXT("frameset"), 'A', HTML_ATTR_RowHeight},
-   {TEXT("rows"), TEXT("textarea"), 'A', HTML_ATTR_Rows},
-#endif /* XHTML_BASIC */
-   {TEXT("rowspan"), TEXT(""), 'A', HTML_ATTR_rowspan_},
-   {TEXT("rules"), TEXT("table"), 'A', HTML_ATTR_rules_},
+   {TEXT("scheme"), TEXT("meta"), 'A', HTML_ATTR_scheme, L_Basic},
+   {TEXT("scope"), TEXT(""), 'A', HTML_ATTR_scope, L_Basic},
+   {TEXT("scrolling"), TEXT(""), 'A', HTML_ATTR_scrolling, L_Transitional},
+   {TEXT("selected"), TEXT(""), 'A', HTML_ATTR_Selected, L_Transitional},
+   {TEXT("shape"), TEXT(""), 'A', HTML_ATTR_shape, L_Transitional},
+   {TEXT("size"), TEXT("basefont"), 'A', HTML_ATTR_BaseFontSize, L_Transitional},
+   {TEXT("size"), TEXT("font"), 'A', HTML_ATTR_Font_size, L_Transitional},
+   {TEXT("size"), TEXT("hr"), 'A', HTML_ATTR_Size_, L_Transitional},
+   {TEXT("size"), TEXT("input"), 'A', HTML_ATTR_Area_Size, L_Transitional},
+   {TEXT("size"), TEXT("select"), 'A', HTML_ATTR_MenuSize, L_Transitional},
+   {TEXT("span"), TEXT("col"), 'A', HTML_ATTR_span_, L_Transitional},
+   {TEXT("span"), TEXT("colgroup"), 'A', HTML_ATTR_span_, L_Transitional},
+   {TEXT("src"), TEXT("frame"), 'A', HTML_ATTR_FrameSrc, L_Transitional},
+   {TEXT("src"), TEXT("iframe"), 'A', HTML_ATTR_FrameSrc, L_Transitional},
+   {TEXT("src"), TEXT("script"), 'A', HTML_ATTR_script_src, L_Transitional},
+   {TEXT("src"), TEXT(""), 'A', HTML_ATTR_SRC, L_Basic},
+   {TEXT("standby"), TEXT(""), 'A', HTML_ATTR_standby, L_Basic},
+   {TEXT("start"), TEXT(""), 'A', HTML_ATTR_Start, L_Basic},
+   {TEXT("style"), TEXT(""), 'A', HTML_ATTR_Style_, L_Basic},
+   {TEXT("summary"), TEXT("table"), 'A', HTML_ATTR_summary, L_Basic},
 
-   {TEXT("scheme"), TEXT("meta"), 'A', HTML_ATTR_scheme},
-   {TEXT("scope"), TEXT(""), 'A', HTML_ATTR_scope},
-#ifndef XHTML_BASIC
-   {TEXT("scrolling"), TEXT(""), 'A', HTML_ATTR_scrolling},
-   {TEXT("selected"), TEXT(""), 'A', HTML_ATTR_Selected},
-   {TEXT("shape"), TEXT(""), 'A', HTML_ATTR_shape},
-   {TEXT("size"), TEXT("basefont"), 'A', HTML_ATTR_BaseFontSize},
-   {TEXT("size"), TEXT("font"), 'A', HTML_ATTR_Font_size},
-   {TEXT("size"), TEXT("hr"), 'A', HTML_ATTR_Size_},
-   {TEXT("size"), TEXT("input"), 'A', HTML_ATTR_Area_Size},
-   {TEXT("size"), TEXT("select"), 'A', HTML_ATTR_MenuSize},
-   {TEXT("span"), TEXT("col"), 'A', HTML_ATTR_span_},
-   {TEXT("span"), TEXT("colgroup"), 'A', HTML_ATTR_span_},
-   {TEXT("src"), TEXT("frame"), 'A', HTML_ATTR_FrameSrc},
-   {TEXT("src"), TEXT("iframe"), 'A', HTML_ATTR_FrameSrc},
-   {TEXT("src"), TEXT("script"), 'A', HTML_ATTR_script_src},
-#endif /* XHTML_BASIC */
-   {TEXT("src"), TEXT(""), 'A', HTML_ATTR_SRC},
-   {TEXT("standby"), TEXT(""), 'A', HTML_ATTR_standby},
-   {TEXT("start"), TEXT(""), 'A', HTML_ATTR_Start},
-   {TEXT("style"), TEXT(""), 'A', HTML_ATTR_Style_},
-   {TEXT("summary"), TEXT("table"), 'A', HTML_ATTR_summary},
+   {TEXT("tabindex"), TEXT(""), 'A', HTML_ATTR_tabindex, L_Basic},
+   {TEXT("target"), TEXT(""), 'A', HTML_ATTR_target_, L_Basic},
+   {TEXT("text"), TEXT(""), 'A', HTML_ATTR_TextColor, L_Basic},
+   {TEXT("title"), TEXT(""), 'A', HTML_ATTR_Title, L_Basic},
+   {TEXT("type"), TEXT("button"), 'A', HTML_ATTR_Button_type, L_Transitional},
+   {TEXT("type"), TEXT("li"), 'A', HTML_ATTR_ItemStyle, L_Basic},
+   {TEXT("type"), TEXT("link"), 'A', HTML_ATTR_Link_type, L_Basic},
+   {TEXT("type"), TEXT("a"), 'A', HTML_ATTR_Link_type, L_Basic},
+   {TEXT("type"), TEXT("object"), 'A', HTML_ATTR_Object_type, L_Basic},
+   {TEXT("type"), TEXT("ol"), 'A', HTML_ATTR_NumberStyle, L_Basic},
+   {TEXT("type"), TEXT("param"), 'A', HTML_ATTR_Param_type, L_Basic},
+   {TEXT("type"), TEXT("script"), 'A', HTML_ATTR_content_type, L_Transitional},
+   {TEXT("type"), TEXT("style"), 'A', HTML_ATTR_Notation, L_Transitional},
+   {TEXT("type"), TEXT("ul"), 'A', HTML_ATTR_BulletStyle, L_Basic},
+   {TEXT("type"), TEXT(""), SPACE, DummyAttribute, L_Basic},
 
-   {TEXT("tabindex"), TEXT(""), 'A', HTML_ATTR_tabindex},
-   {TEXT("target"), TEXT(""), 'A', HTML_ATTR_target_},
-   {TEXT("text"), TEXT(""), 'A', HTML_ATTR_TextColor},
-   {TEXT("title"), TEXT(""), 'A', HTML_ATTR_Title},
-#ifndef XHTML_BASIC
-   {TEXT("type"), TEXT("button"), 'A', HTML_ATTR_Button_type},
-#endif /* XHTML_BASIC */
-   {TEXT("type"), TEXT("li"), 'A', HTML_ATTR_ItemStyle},
-   {TEXT("type"), TEXT("link"), 'A', HTML_ATTR_Link_type},
-   {TEXT("type"), TEXT("a"), 'A', HTML_ATTR_Link_type},
-   {TEXT("type"), TEXT("object"), 'A', HTML_ATTR_Object_type},
-   {TEXT("type"), TEXT("ol"), 'A', HTML_ATTR_NumberStyle},
-   {TEXT("type"), TEXT("param"), 'A', HTML_ATTR_Param_type},
-#ifndef XHTML_BASIC
-   {TEXT("type"), TEXT("script"), 'A', HTML_ATTR_content_type},
-   {TEXT("type"), TEXT("style"), 'A', HTML_ATTR_Notation},
-#endif /* XHTML_BASIC */
-   {TEXT("type"), TEXT("ul"), 'A', HTML_ATTR_BulletStyle},
-   {TEXT("type"), TEXT(""), SPACE, DummyAttribute},
+   {TEXT("usemap"), TEXT(""), 'A', HTML_ATTR_USEMAP, L_Basic},
 
-   {TEXT("usemap"), TEXT(""), 'A', HTML_ATTR_USEMAP},
+   {TEXT("valign"), TEXT("tbody"), 'A', HTML_ATTR_Row_valign, L_Basic},
+   {TEXT("valign"), TEXT("td"), 'A', HTML_ATTR_Cell_valign, L_Basic},
+   {TEXT("valign"), TEXT("tfoot"), 'A', HTML_ATTR_Row_valign, L_Basic},
+   {TEXT("valign"), TEXT("th"), 'A', HTML_ATTR_Cell_valign, L_Basic},
+   {TEXT("valign"), TEXT("thead"), 'A', HTML_ATTR_Row_valign, L_Basic},
+   {TEXT("valign"), TEXT("tr"), 'A', HTML_ATTR_Row_valign, L_Basic},
+   {TEXT("value"), TEXT("li"), 'A', HTML_ATTR_ItemValue, L_Basic},
+   {TEXT("value"), TEXT("param"), 'A', HTML_ATTR_Param_value, L_Basic},
+   {TEXT("value"), TEXT(""), 'A', HTML_ATTR_Value_, L_Basic},
+   {TEXT("valuetype"), TEXT("param"), 'A', HTML_ATTR_valuetype, L_Basic},
+   {TEXT("version"), TEXT(""), 'A', 0, L_Basic},
+   {TEXT("vlink"), TEXT("body"), 'A', HTML_ATTR_VisitedLinkColor, L_Transitional},
+   {TEXT("vspace"), TEXT(""), 'A', HTML_ATTR_vspace, L_Transitional},
 
-   {TEXT("valign"), TEXT("tbody"), 'A', HTML_ATTR_Row_valign},
-   {TEXT("valign"), TEXT("td"), 'A', HTML_ATTR_Cell_valign},
-   {TEXT("valign"), TEXT("tfoot"), 'A', HTML_ATTR_Row_valign},
-   {TEXT("valign"), TEXT("th"), 'A', HTML_ATTR_Cell_valign},
-   {TEXT("valign"), TEXT("thead"), 'A', HTML_ATTR_Row_valign},
-   {TEXT("valign"), TEXT("tr"), 'A', HTML_ATTR_Row_valign},
-   {TEXT("value"), TEXT("li"), 'A', HTML_ATTR_ItemValue},
-   {TEXT("value"), TEXT("param"), 'A', HTML_ATTR_Param_value},
-   {TEXT("value"), TEXT(""), 'A', HTML_ATTR_Value_},
-   {TEXT("valuetype"), TEXT("param"), 'A', HTML_ATTR_valuetype},
-   {TEXT("version"), TEXT(""), 'A', 0},
-#ifndef XHTML_BASIC
-   {TEXT("vlink"), TEXT("body"), 'A', HTML_ATTR_VisitedLinkColor},
-   {TEXT("vspace"), TEXT(""), 'A', HTML_ATTR_vspace},
+   {TEXT("width"), TEXT("applet"), 'A', HTML_ATTR_Width__, L_Transitional},
+   {TEXT("width"), TEXT("col"), 'A', HTML_ATTR_Width__, L_Transitional},
+   {TEXT("width"), TEXT("colgroup"), 'A', HTML_ATTR_Width__, L_Transitional},
+   {TEXT("width"), TEXT("hr"), 'A', HTML_ATTR_Width__, L_Transitional},
+   {TEXT("width"), TEXT("iframe"), 'A', HTML_ATTR_Width__, L_Transitional},
+   {TEXT("width"), TEXT("image"), 'A', HTML_ATTR_Width__, L_Transitional},
+   {TEXT("width"), TEXT("img"), 'A', HTML_ATTR_Width__, L_Basic},
+   {TEXT("width"), TEXT("object"), 'A', HTML_ATTR_Width__, L_Basic},
+   {TEXT("width"), TEXT("pre"), 'A', HTML_ATTR_Width__, L_Transitional},
+   {TEXT("width"), TEXT("svg"), 'A', HTML_ATTR_SvgWidth, L_Transitional},
+   {TEXT("width"), TEXT("table"), 'A', HTML_ATTR_Width__, L_Transitional},
+   {TEXT("width"), TEXT("td"), 'A', HTML_ATTR_Width__, L_Transitional},
+   {TEXT("width"), TEXT("th"), 'A', HTML_ATTR_Width__, L_Transitional},
 
-   {TEXT("width"), TEXT("applet"), 'A', HTML_ATTR_Width__},
-   {TEXT("width"), TEXT("col"), 'A', HTML_ATTR_Width__},
-   {TEXT("width"), TEXT("colgroup"), 'A', HTML_ATTR_Width__},
-   {TEXT("width"), TEXT("hr"), 'A', HTML_ATTR_Width__},
-   {TEXT("width"), TEXT("iframe"), 'A', HTML_ATTR_Width__},
-   {TEXT("width"), TEXT("image"), 'A', HTML_ATTR_Width__},
-#endif /* XHTML_BASIC */
-   {TEXT("width"), TEXT("img"), 'A', HTML_ATTR_Width__},
-   {TEXT("width"), TEXT("object"), 'A', HTML_ATTR_Width__},
-#ifndef XHTML_BASIC
-   {TEXT("width"), TEXT("pre"), 'A', HTML_ATTR_Width__},
-#endif /* XHTML_BASIC */
-   {TEXT("width"), TEXT("svg"), 'A', HTML_ATTR_SvgWidth},
-   {TEXT("width"), TEXT("table"), 'A', HTML_ATTR_Width__},
-#ifndef XHTML_BASIC
-   {TEXT("width"), TEXT("td"), 'A', HTML_ATTR_Width__},
-   {TEXT("width"), TEXT("th"), 'A', HTML_ATTR_Width__},
-#endif /* XHTML_BASIC */
-
-   {TEXT("zzghost"), TEXT(""), 'A', HTML_ATTR_Ghost_restruct},
-   {TEXT(""), TEXT(""), EOS, 0}		/* Last entry. Mandatory */
+   {TEXT("zzghost"), TEXT(""), 'A', HTML_ATTR_Ghost_restruct, L_Basic},
+   {TEXT(""), TEXT(""), EOS, 0, L_Basic}		/* Last entry. Mandatory */
 };
 
 
@@ -1307,16 +1270,16 @@ Document        doc;
    ThotAtt and its value AttrVal. Returns the corresponding Thot value.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void        XhtmlMapAttributeValue (CHAR_T* AttrVal,
-				    AttributeType attrType,
-				    int* value)
+void            XhtmlMapAttributeValue (CHAR_T* AttrVal,
+					AttributeType attrType,
+					int* value)
 #else
-void        XhtmlMapAttributeValue (AttrVal,
-				    attrType,
-				    value)
-CHAR_T*             AttrVal;
-AttributeType       attrType;
-int*                value;
+void            XhtmlMapAttributeValue (AttrVal,
+					attrType,
+					value)
+CHAR_T*         AttrVal;
+AttributeType   attrType;
+int*            value;
 #endif
 {
 #ifdef EXPAT_PARSER
@@ -1382,6 +1345,34 @@ STRING    alphabet;
        *alphabet = EOS;
      }
 #endif /* EXPAT_PARSER */
+}
+
+/*----------------------------------------------------------------------
+   XhtmlEntityCreated
+   A XTHML entity has been created by the XML parser.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void      XhtmlEntityCreated (int entityVal, Language lang, STRING entityName, Document doc)
+#else
+void      XhtmlEntityCreated (entityVal, lang, entityName, doc)
+int       entityVal;
+Language  lang;
+STRING    entityName;
+Document  doc;
+#endif
+{ 
+  if (lang < 0)
+      PutInXmlElement (entityName);
+  else
+    {
+#ifdef LC
+      printf (" \n code=%d", entityVal);
+#endif /* LC */
+      if (entityVal < 255)
+	  PutInXmlElement ((STRING) entityVal);
+      else
+	  PutNonISOlatin1Char (entityVal, TEXT(""), entityName, doc);
+    }
 }
 
 /*--------------------  Entities  (end)  ---------------------*/

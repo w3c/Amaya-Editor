@@ -22,6 +22,10 @@ extern void XhtmlMapEntity ( STRING entityName,
                              int *entityValue,
                              int valueLength,
                              STRING alphabet );
+extern void XhtmlEntityCreated ( int entityVal,
+                                 Language lang,
+                                 STRING entityName,
+                                 Document doc );
 
 #else /* __STDC__ */
 
@@ -41,6 +45,10 @@ extern void XhtmlMapEntity (/* STRING entityName,
                                int *entityValue,
                                int valueLength,
                                STRING alphabet */);
+extern void XhtmlEntityCreated (/* int entityVal,
+                                   Language lang,
+                                   STRING entityName,
+                                   Document doc */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

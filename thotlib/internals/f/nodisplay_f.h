@@ -32,6 +32,8 @@ extern PtrPRule GlobalSearchRulepEl ( PtrElement pEl,
 extern ThotBool IsASavedElement ( PtrElement pEl );
 extern ThotBool BothHaveNoSpecRules ( PtrElement pEl1,
                                       PtrElement pEl2 );
+extern void AddSchemaGuestViews ( PtrDocument pDoc,
+                                  PtrSSchema pSS );
 
 #else /* __STDC__ */
 
@@ -61,6 +63,8 @@ extern PtrPRule GlobalSearchRulepEl (/* PtrElement pEl,
 extern ThotBool IsASavedElement (/* PtrElement pEl */);
 extern ThotBool BothHaveNoSpecRules (/* PtrElement pEl1,
                                         PtrElement pEl2 */);
+extern void AddSchemaGuestViews (/* PtrDocument pDoc,
+                                    PtrSSchema pSS */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

@@ -281,77 +281,77 @@ static AttributeMapping MathMLAttributeMappingTable[] =
 {
    /* The first entry MUST be unknown_attr */
    /* The rest of this table MUST be in alphabetical order */
-   {TEXT("unknown_attr"), TEXT(""), 'A', MathML_ATTR_Invalid_attribute},
-   {TEXT("accent"), TEXT(""), 'A', MathML_ATTR_accent},
-   {TEXT("accentunder"), TEXT(""), 'A', MathML_ATTR_accentunder},
-   {TEXT("actiontype"), TEXT(""), 'A', MathML_ATTR_actiontype},
-   {TEXT("align"), TEXT(""), 'A', MathML_ATTR_align},
-   {TEXT("alignmentscope"), TEXT(""), 'A', MathML_ATTR_alignmentscope},
-   {TEXT("alt"), TEXT(""), 'A', MathML_ATTR_alt},
-   {TEXT("background"), TEXT(""), 'A', MathML_ATTR_background_},
-   {TEXT("bevelled"), TEXT(""), 'A', MathML_ATTR_bevelled},
-   {TEXT("class"), TEXT(""), 'A', MathML_ATTR_class},
-   {TEXT("close"), TEXT(""), 'A', MathML_ATTR_close},
-   {TEXT("columnalign"), TEXT(""), 'A', MathML_ATTR_columnalign},
-   {TEXT("columnlines"), TEXT(""), 'A', MathML_ATTR_columnlines},
-   {TEXT("columnspacing"), TEXT(""), 'A', MathML_ATTR_columnspacing},
-   {TEXT("columnspan"), TEXT(""), 'A', MathML_ATTR_columnspan},
-   {TEXT("columnwidth"), TEXT(""), 'A', MathML_ATTR_columnwidth},
-   {TEXT("color"), TEXT(""), 'A', MathML_ATTR_color},
-   {TEXT("denomalign"), TEXT(""), 'A', MathML_ATTR_denomalign},
-   {TEXT("depth"), TEXT(""), 'A', MathML_ATTR_depth_},
-   {TEXT("displaystyle"), TEXT(""), 'A', MathML_ATTR_displaystyle},
-   {TEXT("edge"), TEXT(""), 'A', MathML_ATTR_edge},
-   {TEXT("equalcolumns"), TEXT(""), 'A', MathML_ATTR_equalcolumns},
-   {TEXT("equalrows"), TEXT(""), 'A', MathML_ATTR_equalrows},
-   {TEXT("fence"), TEXT(""), 'A', MathML_ATTR_fence},
-   {TEXT("fontfamily"), TEXT(""), 'A', MathML_ATTR_fontfamily},
-   {TEXT("fontstyle"), TEXT(""), 'A', MathML_ATTR_fontstyle},
-   {TEXT("fontsize"), TEXT(""), 'A', MathML_ATTR_fontsize},
-   {TEXT("fontweight"), TEXT(""), 'A', MathML_ATTR_fontweight},
-   {TEXT("form"), TEXT(""), 'A', MathML_ATTR_form},
-   {TEXT("frame"), TEXT(""), 'A', MathML_ATTR_frame},
-   {TEXT("framespacing"), TEXT(""), 'A', MathML_ATTR_framespacing},
-   {TEXT("groupalign"), TEXT(""), 'A', MathML_ATTR_groupalign},
-   {TEXT("height"), TEXT(""), 'A', MathML_ATTR_height_},
-   {TEXT("id"), TEXT(""), 'A', MathML_ATTR_id},
-   {TEXT("index"), TEXT(""), 'A', MathML_ATTR_index},
-   {TEXT("largeop"), TEXT(""), 'A', MathML_ATTR_largeop},
-   {TEXT("linethickness"), TEXT(""), 'A', MathML_ATTR_linethickness},
-   {TEXT("lquote"), TEXT(""), 'A', MathML_ATTR_lquote},
-   {TEXT("lspace"), TEXT(""), 'A', MathML_ATTR_lspace},
-   {TEXT("maxsize"), TEXT(""), 'A', MathML_ATTR_maxsize},
-   {TEXT("minlabelspacing"), TEXT(""), 'A', MathML_ATTR_minlabelspacing},
-   {TEXT("minsize"), TEXT(""), 'A', MathML_ATTR_minsize},
-   {TEXT("movablelimits"), TEXT(""), 'A', MathML_ATTR_movablelimits},
-   {TEXT("name"), TEXT(""), 'A', MathML_ATTR_name},
-   {TEXT("notation"), TEXT(""), 'A', MathML_ATTR_notation},
-   {TEXT("numalign"), TEXT(""), 'A', MathML_ATTR_numalign},
-   {TEXT("open"), TEXT(""), 'A', MathML_ATTR_open},
-   {TEXT("other"), TEXT(""), 'A', MathML_ATTR_other},
-   {TEXT("rowalign"), TEXT(""), 'A', MathML_ATTR_rowalign},
-   {TEXT("rowlines"), TEXT(""), 'A', MathML_ATTR_rowlines},
-   {TEXT("rowspacing"), TEXT(""), 'A', MathML_ATTR_rowspacing},
-   {TEXT("rowspan"), TEXT(""), 'A', MathML_ATTR_rowspan_},
-   {TEXT("rquote"), TEXT(""), 'A', MathML_ATTR_rquote},
-   {TEXT("rspace"), TEXT(""), 'A', MathML_ATTR_rspace},
-   {TEXT("scriptlevel"), TEXT(""), 'A', MathML_ATTR_scriptlevel},
-   {TEXT("scriptminsize"), TEXT(""), 'A', MathML_ATTR_scriptminsize},
-   {TEXT("scriptsizemultiplier"), TEXT(""), 'A', MathML_ATTR_scriptsizemultiplier},
-   {TEXT("selection"), TEXT(""), 'A', MathML_ATTR_selection},
-   {TEXT("separator"), TEXT(""), 'A', MathML_ATTR_separator},
-   {TEXT("separators"), TEXT(""), 'A', MathML_ATTR_separators},
-   {TEXT("side"), TEXT(""), 'A', MathML_ATTR_side},
-   {TEXT("stretchy"), TEXT(""), 'A', MathML_ATTR_stretchy},
-   {TEXT("style"), TEXT(""), 'A', MathML_ATTR_style_},
-   {TEXT("subscriptshift"), TEXT(""), 'A', MathML_ATTR_subscriptshift},
-   {TEXT("superscriptshift"), TEXT(""), 'A', MathML_ATTR_superscriptshift},
-   {TEXT("symmetric"), TEXT(""), 'A', MathML_ATTR_symmetric},
-   {TEXT("width"), TEXT(""), 'A', MathML_ATTR_width_},
-   {TEXT("xref"), TEXT(""), 'A', MathML_ATTR_xref},
-   {TEXT("zzghost"), TEXT(""), 'A', MathML_ATTR_Ghost_restruct},
+   {TEXT("unknown_attr"), TEXT(""), 'A', MathML_ATTR_Invalid_attribute, L_Undefined},
+   {TEXT("accent"), TEXT(""), 'A', MathML_ATTR_accent, L_Undefined},
+   {TEXT("accentunder"), TEXT(""), 'A', MathML_ATTR_accentunder, L_Undefined},
+   {TEXT("actiontype"), TEXT(""), 'A', MathML_ATTR_actiontype, L_Undefined},
+   {TEXT("align"), TEXT(""), 'A', MathML_ATTR_align, L_Undefined},
+   {TEXT("alignmentscope"), TEXT(""), 'A', MathML_ATTR_alignmentscope, L_Undefined},
+   {TEXT("alt"), TEXT(""), 'A', MathML_ATTR_alt, L_Undefined},
+   {TEXT("background"), TEXT(""), 'A', MathML_ATTR_background_, L_Undefined},
+   {TEXT("bevelled"), TEXT(""), 'A', MathML_ATTR_bevelled, L_Undefined},
+   {TEXT("class"), TEXT(""), 'A', MathML_ATTR_class, L_Undefined},
+   {TEXT("close"), TEXT(""), 'A', MathML_ATTR_close, L_Undefined},
+   {TEXT("columnalign"), TEXT(""), 'A', MathML_ATTR_columnalign, L_Undefined},
+   {TEXT("columnlines"), TEXT(""), 'A', MathML_ATTR_columnlines, L_Undefined},
+   {TEXT("columnspacing"), TEXT(""), 'A', MathML_ATTR_columnspacing, L_Undefined},
+   {TEXT("columnspan"), TEXT(""), 'A', MathML_ATTR_columnspan, L_Undefined},
+   {TEXT("columnwidth"), TEXT(""), 'A', MathML_ATTR_columnwidth, L_Undefined},
+   {TEXT("color"), TEXT(""), 'A', MathML_ATTR_color, L_Undefined},
+   {TEXT("denomalign"), TEXT(""), 'A', MathML_ATTR_denomalign, L_Undefined},
+   {TEXT("depth"), TEXT(""), 'A', MathML_ATTR_depth_, L_Undefined},
+   {TEXT("displaystyle"), TEXT(""), 'A', MathML_ATTR_displaystyle, L_Undefined},
+   {TEXT("edge"), TEXT(""), 'A', MathML_ATTR_edge, L_Undefined},
+   {TEXT("equalcolumns"), TEXT(""), 'A', MathML_ATTR_equalcolumns, L_Undefined},
+   {TEXT("equalrows"), TEXT(""), 'A', MathML_ATTR_equalrows, L_Undefined},
+   {TEXT("fence"), TEXT(""), 'A', MathML_ATTR_fence, L_Undefined},
+   {TEXT("fontfamily"), TEXT(""), 'A', MathML_ATTR_fontfamily, L_Undefined},
+   {TEXT("fontstyle"), TEXT(""), 'A', MathML_ATTR_fontstyle, L_Undefined},
+   {TEXT("fontsize"), TEXT(""), 'A', MathML_ATTR_fontsize, L_Undefined},
+   {TEXT("fontweight"), TEXT(""), 'A', MathML_ATTR_fontweight, L_Undefined},
+   {TEXT("form"), TEXT(""), 'A', MathML_ATTR_form, L_Undefined},
+   {TEXT("frame"), TEXT(""), 'A', MathML_ATTR_frame, L_Undefined},
+   {TEXT("framespacing"), TEXT(""), 'A', MathML_ATTR_framespacing, L_Undefined},
+   {TEXT("groupalign"), TEXT(""), 'A', MathML_ATTR_groupalign, L_Undefined},
+   {TEXT("height"), TEXT(""), 'A', MathML_ATTR_height_, L_Undefined},
+   {TEXT("id"), TEXT(""), 'A', MathML_ATTR_id, L_Undefined},
+   {TEXT("index"), TEXT(""), 'A', MathML_ATTR_index, L_Undefined},
+   {TEXT("largeop"), TEXT(""), 'A', MathML_ATTR_largeop, L_Undefined},
+   {TEXT("linethickness"), TEXT(""), 'A', MathML_ATTR_linethickness, L_Undefined},
+   {TEXT("lquote"), TEXT(""), 'A', MathML_ATTR_lquote, L_Undefined},
+   {TEXT("lspace"), TEXT(""), 'A', MathML_ATTR_lspace, L_Undefined},
+   {TEXT("maxsize"), TEXT(""), 'A', MathML_ATTR_maxsize, L_Undefined},
+   {TEXT("minlabelspacing"), TEXT(""), 'A', MathML_ATTR_minlabelspacing, L_Undefined},
+   {TEXT("minsize"), TEXT(""), 'A', MathML_ATTR_minsize, L_Undefined},
+   {TEXT("movablelimits"), TEXT(""), 'A', MathML_ATTR_movablelimits, L_Undefined},
+   {TEXT("name"), TEXT(""), 'A', MathML_ATTR_name, L_Undefined},
+   {TEXT("notation"), TEXT(""), 'A', MathML_ATTR_notation, L_Undefined},
+   {TEXT("numalign"), TEXT(""), 'A', MathML_ATTR_numalign, L_Undefined},
+   {TEXT("open"), TEXT(""), 'A', MathML_ATTR_open, L_Undefined},
+   {TEXT("other"), TEXT(""), 'A', MathML_ATTR_other, L_Undefined},
+   {TEXT("rowalign"), TEXT(""), 'A', MathML_ATTR_rowalign, L_Undefined},
+   {TEXT("rowlines"), TEXT(""), 'A', MathML_ATTR_rowlines, L_Undefined},
+   {TEXT("rowspacing"), TEXT(""), 'A', MathML_ATTR_rowspacing, L_Undefined},
+   {TEXT("rowspan"), TEXT(""), 'A', MathML_ATTR_rowspan_, L_Undefined},
+   {TEXT("rquote"), TEXT(""), 'A', MathML_ATTR_rquote, L_Undefined},
+   {TEXT("rspace"), TEXT(""), 'A', MathML_ATTR_rspace, L_Undefined},
+   {TEXT("scriptlevel"), TEXT(""), 'A', MathML_ATTR_scriptlevel, L_Undefined},
+   {TEXT("scriptminsize"), TEXT(""), 'A', MathML_ATTR_scriptminsize, L_Undefined},
+   {TEXT("scriptsizemultiplier"), TEXT(""), 'A', MathML_ATTR_scriptsizemultiplier, L_Undefined},
+   {TEXT("selection"), TEXT(""), 'A', MathML_ATTR_selection, L_Undefined},
+   {TEXT("separator"), TEXT(""), 'A', MathML_ATTR_separator, L_Undefined},
+   {TEXT("separators"), TEXT(""), 'A', MathML_ATTR_separators, L_Undefined},
+   {TEXT("side"), TEXT(""), 'A', MathML_ATTR_side, L_Undefined},
+   {TEXT("stretchy"), TEXT(""), 'A', MathML_ATTR_stretchy, L_Undefined},
+   {TEXT("style"), TEXT(""), 'A', MathML_ATTR_style_, L_Undefined},
+   {TEXT("subscriptshift"), TEXT(""), 'A', MathML_ATTR_subscriptshift, L_Undefined},
+   {TEXT("superscriptshift"), TEXT(""), 'A', MathML_ATTR_superscriptshift, L_Undefined},
+   {TEXT("symmetric"), TEXT(""), 'A', MathML_ATTR_symmetric, L_Undefined},
+   {TEXT("width"), TEXT(""), 'A', MathML_ATTR_width_, L_Undefined},
+   {TEXT("xref"), TEXT(""), 'A', MathML_ATTR_xref, L_Undefined},
+   {TEXT("zzghost"), TEXT(""), 'A', MathML_ATTR_Ghost_restruct, L_Undefined},
 
-   {TEXT(""), TEXT(""), EOS, 0}		/* Last entry. Mandatory */
+   {TEXT(""), TEXT(""), EOS, 0, L_Undefined}		/* Last entry. Mandatory */
 };
 
 /* mapping table of attribute values */
@@ -512,13 +512,11 @@ int		   *value;
 void	MapMathMLEntity (STRING entityName, STRING entityValue, int valueLength, STRING alphabet)
 #else
 void	MapMathMLEntity (entityName, entityValue, valueLength, alphabet)
-STRING entityName;
-STRING entityValue;
-int valueLength;
-STRING alphabet;
-
+STRING  entityName;
+STRING  entityValue;
+int     valueLength;
+STRING  alphabet;
 #endif
-
 {
    int	i;
 
@@ -548,11 +546,10 @@ STRING alphabet;
 void        MathMLEntityCreated (USTRING entityValue, Language lang, STRING entityName, Document doc)
 #else
 void        MathMLEntityCreated (entityValue, lang, entityName, doc)
-USTRING entityValue;
-Language lang;
-STRING  entityName;
-Document doc;
-
+USTRING     entityValue;
+Language    lang;
+STRING      entityName;
+Document    doc;
 #endif
 {
    ElementType	 elType;

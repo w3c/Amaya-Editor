@@ -59,7 +59,7 @@ extern void ReferredType ( PtrElement pRefEl,
                            PtrAttribute pRefAttr,
                            PtrSSchema * pSS,
                            int *typeNum,
-			   PtrDocument pDoc );
+                           PtrDocument pDoc );
 extern ThotBool CanCutElement ( PtrElement pEl,
                                 PtrDocument pDoc,
                                 PtrElement pElCut );
@@ -168,7 +168,7 @@ extern void ReferredType (/* PtrElement pRefEl,
                              PtrAttribute pRefAttr,
                              PtrSSchema * pSS,
                              int *typeNum,
-			     PtrDocument pDoc */);
+                             PtrDocument pDoc */);
 extern ThotBool CanCutElement (/* PtrElement pEl,
                                   PtrDocument pDoc,
                                   PtrElement pElCut */);

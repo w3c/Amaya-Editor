@@ -29,9 +29,9 @@ extern ThotBool FreeNature ( PtrSSchema pSS,
                              PtrSSchema pNatureSS );
 extern void FreeDocumentSchemas ( PtrDocument pDoc );
 extern void AddSchemaGuestViews ( PtrDocument pDoc,
-				  PtrSSchema pSS);
+                                  PtrSSchema pSS );
 extern void CreateGuestViewList ( PtrDocument pDoc,
-				  int view );
+                                  int view );
 extern void BuildDocNatureTable ( PtrDocument pDoc );
 
 #else /* __STDC__ */
@@ -59,9 +59,9 @@ extern ThotBool FreeNature (/* PtrSSchema pSS,
                                PtrSSchema pNatureSS */);
 extern void FreeDocumentSchemas (/* PtrDocument pDoc */);
 extern void AddSchemaGuestViews (/* PtrDocument pDoc,
-				    PtrSSchema pSS */);
+                                    PtrSSchema pSS */);
 extern void CreateGuestViewList (/* PtrDocument pDoc,
-				    int view */);
+                                    int view */);
 extern void BuildDocNatureTable (/* PtrDocument pDoc */);
 
 #endif /* __STDC__ */

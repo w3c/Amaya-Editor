@@ -23,18 +23,18 @@ static AttributeMapping XLinkAttributeMappingTable[] =
 {
    /* The first entry MUST be unknown_attr */
    /* The rest of this table MUST be in alphabetical order */
-   {TEXT("unknown_attr"), TEXT(""), 'A', XLink_ATTR_Invalid_attribute},
-   {TEXT("actuate"), TEXT(""), 'A', XLink_ATTR_actuate},
-   {TEXT("from"), TEXT(""), 'A', XLink_ATTR_from},
-   {TEXT("href"), TEXT(""), 'A', XLink_ATTR_href_},
-   {TEXT("role"), TEXT(""), 'A', XLink_ATTR_role},
-   {TEXT("show"), TEXT(""), 'A', XLink_ATTR_show},
-   {TEXT("title"), TEXT(""), 'A', XLink_ATTR_title},
-   {TEXT("to"), TEXT(""), 'A', XLink_ATTR_to},
-   {TEXT("type"), TEXT(""), 'A', XLink_ATTR_type},
-   {TEXT("zzghost"), TEXT(""), 'A', XLink_ATTR_Ghost_restruct},
+   {TEXT("unknown_attr"), TEXT(""), 'A', XLink_ATTR_Invalid_attribute, L_Undefined},
+   {TEXT("actuate"), TEXT(""), 'A', XLink_ATTR_actuate, L_Undefined},
+   {TEXT("from"), TEXT(""), 'A', XLink_ATTR_from, L_Undefined},
+   {TEXT("href"), TEXT(""), 'A', XLink_ATTR_href_, L_Undefined},
+   {TEXT("role"), TEXT(""), 'A', XLink_ATTR_role, L_Undefined},
+   {TEXT("show"), TEXT(""), 'A', XLink_ATTR_show, L_Undefined},
+   {TEXT("title"), TEXT(""), 'A', XLink_ATTR_title, L_Undefined},
+   {TEXT("to"), TEXT(""), 'A', XLink_ATTR_to, L_Undefined},
+   {TEXT("type"), TEXT(""), 'A', XLink_ATTR_type, L_Undefined},
+   {TEXT("zzghost"), TEXT(""), 'A', XLink_ATTR_Ghost_restruct, L_Undefined},
 
-   {TEXT(""), TEXT(""), EOS, 0}		/* Last entry. Mandatory */
+   {TEXT(""), TEXT(""), EOS, 0, L_Undefined}		/* Last entry. Mandatory */
 };
 
 /* mapping table of attribute values */

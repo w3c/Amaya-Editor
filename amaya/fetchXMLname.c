@@ -21,206 +21,156 @@
 static ElemMapping    XHTMLElemMappingTable[] =
 {
    /* This table MUST be in alphabetical order */
-   {TEXT("XMLcomment"), SPACE, HTML_EL_Comment_},
-   {TEXT("XMLcomment_line"), SPACE, HTML_EL_Comment_line},
-   {TEXT("a"), SPACE, HTML_EL_Anchor},
-   {TEXT("abbr"), SPACE, HTML_EL_ABBR},
-   {TEXT("acronym"), SPACE, HTML_EL_ACRONYM},
-   {TEXT("address"), SPACE, HTML_EL_Address},
-#ifndef XHTML_BASIC
-   {TEXT("applet"), SPACE, HTML_EL_Applet},
-   {TEXT("area"), 'E', HTML_EL_AREA},
-   {TEXT("b"), SPACE, HTML_EL_Bold_text},
-#endif /* XHTML_BASIC */
-   {TEXT("base"), 'E', HTML_EL_BASE},
-#ifndef XHTML_BASIC
-   {TEXT("basefont"), 'E', HTML_EL_BaseFont},
-   {TEXT("bdo"), SPACE, HTML_EL_BDO},
-   {TEXT("big"), SPACE, HTML_EL_Big_text},
-#endif /* XHTML_BASIC */
-   {TEXT("blockquote"), SPACE, HTML_EL_Block_Quote},
-   {TEXT("body"), SPACE, HTML_EL_BODY},
-   {TEXT("br"), 'E', HTML_EL_BR},
-#ifndef XHTML_BASIC
-   {TEXT("button"), SPACE, HTML_EL_BUTTON},
-   {TEXT("c"), SPACE, HTML_EL_TEXT_UNIT},
-   {TEXT("caption"), SPACE, HTML_EL_CAPTION},
-   {TEXT("center"), SPACE, HTML_EL_Center},
-#endif /* XHTML_BASIC */
-   {TEXT("cite"), SPACE, HTML_EL_Cite},
-   {TEXT("code"), SPACE, HTML_EL_Code},
-#ifndef XHTML_BASIC
-   {TEXT("colgroup"), SPACE, HTML_EL_COLGROUP},
-   {TEXT("col"), SPACE, HTML_EL_COL},
-#endif /* XHTML_BASIC */
-   {TEXT("dd"), SPACE, HTML_EL_Definition},
-#ifndef XHTML_BASIC
-   {TEXT("del"), SPACE, HTML_EL_DEL},
-#endif /* XHTML_BASIC */
-   {TEXT("dfn"), SPACE, HTML_EL_Def},
-#ifndef XHTML_BASIC
-   {TEXT("dir"), SPACE, HTML_EL_Directory},
-#endif /* XHTML_BASIC */
-   {TEXT("div"), SPACE, HTML_EL_Division},
-   {TEXT("dl"), SPACE, HTML_EL_Definition_List},
-   {TEXT("dt"), SPACE, HTML_EL_Term},
-   {TEXT("em"), SPACE, HTML_EL_Emphasis},
-#ifndef XHTML_BASIC
-   {TEXT("fieldset"), SPACE, HTML_EL_FIELDSET},
-   {TEXT("font"), SPACE, HTML_EL_Font_},
-#endif /* XHTML_BASIC */
-   {TEXT("form"), SPACE, HTML_EL_Form},
-#ifndef XHTML_BASIC
-   {TEXT("frame"), 'E', HTML_EL_FRAME},
-   {TEXT("frameset"), SPACE, HTML_EL_FRAMESET},
-#endif /* XHTML_BASIC */
-   {TEXT("h1"), SPACE, HTML_EL_H1},
-   {TEXT("h2"), SPACE, HTML_EL_H2},
-   {TEXT("h3"), SPACE, HTML_EL_H3},
-   {TEXT("h4"), SPACE, HTML_EL_H4},
-   {TEXT("h5"), SPACE, HTML_EL_H5},
-   {TEXT("h6"), SPACE, HTML_EL_H6},
-   {TEXT("head"), SPACE, HTML_EL_HEAD},
-#ifndef XHTML_BASIC
-   {TEXT("hr"), 'E', HTML_EL_Horizontal_Rule},
-#endif /* XHTML_BASIC */
-   {TEXT("html"), SPACE, HTML_EL_HTML},
-#ifndef XHTML_BASIC
-   {TEXT("i"), SPACE, HTML_EL_Italic_text},
-   {TEXT("iframe"), SPACE, HTML_EL_IFRAME},
-   {TEXT("image"), 'E', HTML_EL_PICTURE_UNIT},
-#endif /* XHTML_BASIC */
-   {TEXT("img"), 'E', HTML_EL_PICTURE_UNIT},
-   {TEXT("input"), 'E', HTML_EL_Input},
-#ifndef XHTML_BASIC
-   {TEXT("ins"), SPACE, HTML_EL_INS},
-   {TEXT("isindex"), 'E', HTML_EL_ISINDEX},
-#endif /* XHTML_BASIC */
-   {TEXT("kbd"), SPACE, HTML_EL_Keyboard},
-   {TEXT("label"), SPACE, HTML_EL_LABEL},
-#ifndef XHTML_BASIC
-   {TEXT("legend"), SPACE, HTML_EL_LEGEND},
-#endif /* XHTML_BASIC */
-   {TEXT("li"), SPACE, HTML_EL_List_Item},
-   {TEXT("link"), 'E', HTML_EL_LINK},
-#ifndef XHTML_BASIC
-   {TEXT("listing"), SPACE, HTML_EL_Preformatted}, /*converted to PRE */
-   {TEXT("map"), SPACE, HTML_EL_MAP},
-#endif /* XHTML_BASIC */
-   {TEXT("math"), SPACE, HTML_EL_Math},
-#ifndef XHTML_BASIC
-   {TEXT("menu"), SPACE, HTML_EL_Menu},
-#endif /* XHTML_BASIC */
-   {TEXT("meta"), 'E', HTML_EL_META},
-#ifndef XHTML_BASIC
-   {TEXT("noframes"), SPACE, HTML_EL_NOFRAMES},
-   {TEXT("noscript"), SPACE, HTML_EL_NOSCRIPT},
-#endif /* XHTML_BASIC */
-   {TEXT("object"), SPACE, HTML_EL_Object},
-   {TEXT("ol"), SPACE, HTML_EL_Numbered_List},
-#ifndef XHTML_BASIC
-   {TEXT("optgroup"), SPACE, HTML_EL_OptGroup},
-#endif /* XHTML_BASIC */
-   {TEXT("option"), SPACE, HTML_EL_Option},
-   {TEXT("p"), SPACE, HTML_EL_Paragraph},
-   {TEXT("p*"), SPACE, HTML_EL_Pseudo_paragraph},
-   {TEXT("param"), 'E', HTML_EL_Parameter},
-#ifndef XHTML_BASIC
-   {TEXT("plaintext"), SPACE, HTML_EL_Preformatted},/* converted to PRE */
-#endif /* XHTML_BASIC */
-   {TEXT("pre"), SPACE, HTML_EL_Preformatted},
-   {TEXT("q"), SPACE, HTML_EL_Quotation},
-#ifndef XHTML_BASIC
-   {TEXT("s"), SPACE, HTML_EL_Struck_text},
-#endif /* XHTML_BASIC */
-   {TEXT("samp"), SPACE, HTML_EL_Sample},
-#ifndef XHTML_BASIC
-   {TEXT("script"), SPACE, HTML_EL_SCRIPT},
-#endif /* XHTML_BASIC */
-   {TEXT("select"), SPACE, HTML_EL_Option_Menu},
-#ifndef XHTML_BASIC
-   {TEXT("small"), SPACE, HTML_EL_Small_text},
-#endif /* XHTML_BASIC */
-   {TEXT("span"), SPACE, HTML_EL_Span},
-#ifndef XHTML_BASIC
-   {TEXT("strike"), SPACE, HTML_EL_Struck_text},
-#endif /* XHTML_BASIC */
-   {TEXT("strong"), SPACE, HTML_EL_Strong},
-#ifndef XHTML_BASIC
-   {TEXT("style"), SPACE, HTML_EL_STYLE_},
-   {TEXT("sub"), SPACE, HTML_EL_Subscript},
-   {TEXT("sup"), SPACE, HTML_EL_Superscript},
-#endif /* XHTML_BASIC */
-   {TEXT("svg"), SPACE, HTML_EL_XMLGraphics},
-   {TEXT("table"), SPACE, HTML_EL_Table},
-   {TEXT("tbody"), SPACE, HTML_EL_tbody},
-   {TEXT("td"), SPACE, HTML_EL_Data_cell},
-   {TEXT("textarea"), SPACE, HTML_EL_Text_Area},
-#ifndef XHTML_BASIC
-   {TEXT("tfoot"), SPACE, HTML_EL_tfoot},
-#endif /* XHTML_BASIC */
-   {TEXT("th"), SPACE, HTML_EL_Heading_cell},
-#ifndef XHTML_BASIC
-   {TEXT("thead"), SPACE, HTML_EL_thead},
-#endif /* XHTML_BASIC */
-   {TEXT("title"), SPACE, HTML_EL_TITLE},
-   {TEXT("tr"), SPACE, HTML_EL_Table_row},
-#ifndef XHTML_BASIC
-   {TEXT("tt"), SPACE, HTML_EL_Teletype_text},
-   {TEXT("u"), SPACE, HTML_EL_Underlined_text},
-#endif /* XHTML_BASIC */
-   {TEXT("ul"), SPACE, HTML_EL_Unnumbered_List},
-   {TEXT("var"), SPACE, HTML_EL_Variable},
-#ifndef XHTML_BASIC
-   {TEXT("xmp"), SPACE, HTML_EL_Preformatted},  /* converted to PRE */
-#endif /* XHTML_BASIC */
-   {TEXT(""), SPACE, 0}	/* Last entry. Mandatory */
+   {TEXT("XMLcomment"), SPACE, HTML_EL_Comment_, L_Undefined},
+   {TEXT("XMLcomment_line"), SPACE, HTML_EL_Comment_line, L_Undefined},
+   {TEXT("a"), SPACE, HTML_EL_Anchor, L_Basic},
+   {TEXT("abbr"), SPACE, HTML_EL_ABBR, L_Basic},
+   {TEXT("acronym"), SPACE, HTML_EL_ACRONYM, L_Basic},
+   {TEXT("address"), SPACE, HTML_EL_Address, L_Basic},
+   {TEXT("applet"), SPACE, HTML_EL_Applet, L_Transitional},
+   {TEXT("area"), 'E', HTML_EL_AREA, L_Transitional},
+   {TEXT("b"), SPACE, HTML_EL_Bold_text, L_Transitional},
+   {TEXT("base"), 'E', HTML_EL_BASE, L_Basic},
+   {TEXT("basefont"), 'E', HTML_EL_BaseFont, L_Transitional},
+   {TEXT("bdo"), SPACE, HTML_EL_BDO, L_Transitional},
+   {TEXT("big"), SPACE, HTML_EL_Big_text, L_Transitional},
+   {TEXT("blockquote"), SPACE, HTML_EL_Block_Quote, L_Basic},
+   {TEXT("body"), SPACE, HTML_EL_BODY, L_Basic},
+   {TEXT("br"), 'E', HTML_EL_BR, L_Basic},
+   {TEXT("button"), SPACE, HTML_EL_BUTTON, L_Transitional},
+   {TEXT("c"), SPACE, HTML_EL_TEXT_UNIT, L_Transitional},
+   {TEXT("caption"), SPACE, HTML_EL_CAPTION, L_Transitional},
+   {TEXT("center"), SPACE, HTML_EL_Center, L_Transitional},
+   {TEXT("cite"), SPACE, HTML_EL_Cite, L_Basic},
+   {TEXT("code"), SPACE, HTML_EL_Code, L_Basic},
+   {TEXT("colgroup"), SPACE, HTML_EL_COLGROUP, L_Transitional},
+   {TEXT("col"), SPACE, HTML_EL_COL, L_Transitional},
+   {TEXT("dd"), SPACE, HTML_EL_Definition, L_Basic},
+   {TEXT("del"), SPACE, HTML_EL_DEL, L_Transitional},
+   {TEXT("dfn"), SPACE, HTML_EL_Def, L_Basic},
+   {TEXT("dir"), SPACE, HTML_EL_Directory, L_Transitional},
+   {TEXT("div"), SPACE, HTML_EL_Division, L_Basic},
+   {TEXT("dl"), SPACE, HTML_EL_Definition_List, L_Basic},
+   {TEXT("dt"), SPACE, HTML_EL_Term, L_Basic},
+   {TEXT("em"), SPACE, HTML_EL_Emphasis, L_Basic},
+   {TEXT("fieldset"), SPACE, HTML_EL_FIELDSET, L_Transitional},
+   {TEXT("font"), SPACE, HTML_EL_Font_, L_Transitional},
+   {TEXT("form"), SPACE, HTML_EL_Form, L_Basic},
+   {TEXT("frame"), 'E', HTML_EL_FRAME, L_Transitional},
+   {TEXT("frameset"), SPACE, HTML_EL_FRAMESET, L_Transitional},
+   {TEXT("h1"), SPACE, HTML_EL_H1, L_Basic},
+   {TEXT("h2"), SPACE, HTML_EL_H2, L_Basic},
+   {TEXT("h3"), SPACE, HTML_EL_H3, L_Basic},
+   {TEXT("h4"), SPACE, HTML_EL_H4, L_Basic},
+   {TEXT("h5"), SPACE, HTML_EL_H5, L_Basic},
+   {TEXT("h6"), SPACE, HTML_EL_H6, L_Basic},
+   {TEXT("head"), SPACE, HTML_EL_HEAD, L_Basic},
+   {TEXT("hr"), 'E', HTML_EL_Horizontal_Rule, L_Transitional},
+   {TEXT("html"), SPACE, HTML_EL_HTML, L_Basic},
+   {TEXT("i"), SPACE, HTML_EL_Italic_text, L_Transitional},
+   {TEXT("iframe"), SPACE, HTML_EL_IFRAME, L_Transitional},
+   {TEXT("image"), 'E', HTML_EL_PICTURE_UNIT, L_Transitional},
+   {TEXT("img"), 'E', HTML_EL_PICTURE_UNIT, L_Basic},
+   {TEXT("input"), 'E', HTML_EL_Input, L_Basic},
+   {TEXT("ins"), SPACE, HTML_EL_INS, L_Transitional},
+   {TEXT("isindex"), 'E', HTML_EL_ISINDEX, L_Transitional},
+   {TEXT("kbd"), SPACE, HTML_EL_Keyboard, L_Basic},
+   {TEXT("label"), SPACE, HTML_EL_LABEL, L_Basic},
+   {TEXT("legend"), SPACE, HTML_EL_LEGEND, L_Transitional},
+   {TEXT("li"), SPACE, HTML_EL_List_Item, L_Basic},
+   {TEXT("link"), 'E', HTML_EL_LINK, L_Basic},
+   {TEXT("listing"), SPACE, HTML_EL_Preformatted, L_Transitional}, /*converted to PRE */
+   {TEXT("map"), SPACE, HTML_EL_MAP, L_Transitional},
+   {TEXT("math"), SPACE, HTML_EL_Math, L_Transitional},
+   {TEXT("menu"), SPACE, HTML_EL_Menu, L_Transitional},
+   {TEXT("meta"), 'E', HTML_EL_META, L_Basic},
+   {TEXT("noframes"), SPACE, HTML_EL_NOFRAMES, L_Transitional},
+   {TEXT("noscript"), SPACE, HTML_EL_NOSCRIPT, L_Transitional},
+   {TEXT("object"), SPACE, HTML_EL_Object, L_Basic},
+   {TEXT("ol"), SPACE, HTML_EL_Numbered_List, L_Basic},
+   {TEXT("optgroup"), SPACE, HTML_EL_OptGroup, L_Transitional},
+   {TEXT("option"), SPACE, HTML_EL_Option, L_Basic},
+   {TEXT("p"), SPACE, HTML_EL_Paragraph, L_Basic},
+   {TEXT("p*"), SPACE, HTML_EL_Pseudo_paragraph, L_Basic},
+   {TEXT("param"), 'E', HTML_EL_Parameter, L_Basic},
+   {TEXT("plaintext"), SPACE, HTML_EL_Preformatted, L_Transitional},/* converted to PRE */
+   {TEXT("pre"), SPACE, HTML_EL_Preformatted, L_Basic},
+   {TEXT("q"), SPACE, HTML_EL_Quotation, L_Basic},
+   {TEXT("s"), SPACE, HTML_EL_Struck_text, L_Transitional},
+   {TEXT("samp"), SPACE, HTML_EL_Sample, L_Basic},
+   {TEXT("script"), SPACE, HTML_EL_SCRIPT, L_Transitional},
+   {TEXT("select"), SPACE, HTML_EL_Option_Menu, L_Basic},
+   {TEXT("small"), SPACE, HTML_EL_Small_text, L_Transitional},
+   {TEXT("span"), SPACE, HTML_EL_Span, L_Basic},
+   {TEXT("strike"), SPACE, HTML_EL_Struck_text, L_Transitional},
+   {TEXT("strong"), SPACE, HTML_EL_Strong, L_Basic},
+   {TEXT("style"), SPACE, HTML_EL_STYLE_, L_Transitional},
+   {TEXT("sub"), SPACE, HTML_EL_Subscript, L_Transitional},
+   {TEXT("sup"), SPACE, HTML_EL_Superscript, L_Transitional},
+   {TEXT("svg"), SPACE, HTML_EL_XMLGraphics, L_Transitional},
+   {TEXT("table"), SPACE, HTML_EL_Table, L_Basic},
+   {TEXT("tbody"), SPACE, HTML_EL_tbody, L_Basic},
+   {TEXT("td"), SPACE, HTML_EL_Data_cell, L_Basic},
+   {TEXT("textarea"), SPACE, HTML_EL_Text_Area, L_Basic},
+   {TEXT("tfoot"), SPACE, HTML_EL_tfoot, L_Transitional},
+   {TEXT("th"), SPACE, HTML_EL_Heading_cell, L_Basic},
+   {TEXT("thead"), SPACE, HTML_EL_thead, L_Transitional},
+   {TEXT("title"), SPACE, HTML_EL_TITLE, L_Basic},
+   {TEXT("tr"), SPACE, HTML_EL_Table_row, L_Basic},
+   {TEXT("tt"), SPACE, HTML_EL_Teletype_text, L_Transitional},
+   {TEXT("u"), SPACE, HTML_EL_Underlined_text, L_Transitional},
+   {TEXT("ul"), SPACE, HTML_EL_Unnumbered_List, L_Basic},
+   {TEXT("var"), SPACE, HTML_EL_Variable, L_Basic},
+   {TEXT("xmp"), SPACE, HTML_EL_Preformatted, L_Transitional},  /* converted to PRE */
+   {TEXT(""), SPACE, 0, L_Basic}	/* Last entry. Mandatory */
 };
- 
+int           HTML_ENTRIES = (sizeof(XHTMLElemMappingTable) / sizeof(ElemMapping));
+ElemMapping  *pHTMLGIMapping = XHTMLElemMappingTable;
+
 /* mapping table of MathML elements */
 #include "MathML.h"
 static ElemMapping    MathMLElemMappingTable[] =
 {
    /* This table MUST be in alphabetical order */
-   {TEXT("XMLcomment"), SPACE, MathML_EL_XMLcomment},
-   {TEXT("XMLcomment_line"), SPACE, MathML_EL_XMLcomment_line},
-   {TEXT("maligngroup"), 'E', MathML_EL_MALIGNGROUP},
-   {TEXT("malignmark"), 'E', MathML_EL_MALIGNMARK},
-   {TEXT("mchar"), 'E', MathML_EL_MCHAR},
-   {TEXT("menclose"), SPACE, MathML_EL_MENCLOSE},
-   {TEXT("merror"), SPACE, MathML_EL_MERROR},
-   {TEXT("mf"), SPACE, MathML_EL_MF},  /* for compatibility with an old version
+   {TEXT("XMLcomment"), SPACE, MathML_EL_XMLcomment, L_Undefined},
+   {TEXT("XMLcomment_line"), SPACE, MathML_EL_XMLcomment_line, L_Undefined},
+   {TEXT("maligngroup"), 'E', MathML_EL_MALIGNGROUP, L_Undefined},
+   {TEXT("malignmark"), 'E', MathML_EL_MALIGNMARK, L_Undefined},
+   {TEXT("mchar"), 'E', MathML_EL_MCHAR, L_Undefined},
+   {TEXT("menclose"), SPACE, MathML_EL_MENCLOSE, L_Undefined},
+   {TEXT("merror"), SPACE, MathML_EL_MERROR, L_Undefined},
+   {TEXT("mf"), SPACE, MathML_EL_MF, L_Undefined},  /* for compatibility with an old version
 					  of MathML: WD-math-970704 */
-   {TEXT("mfenced"), SPACE, MathML_EL_MFENCED},
-   {TEXT("mfrac"), SPACE, MathML_EL_MFRAC},
-   {TEXT("mglyph"), 'E', MathML_EL_MGLYPH},
-   {TEXT("mi"), SPACE, MathML_EL_MI},
-   {TEXT("mlabeledtr"), SPACE, MathML_EL_MLABELEDTR},
-   {TEXT("mmultiscripts"), SPACE, MathML_EL_MMULTISCRIPTS},
-   {TEXT("mn"), SPACE, MathML_EL_MN},
-   {TEXT("mo"), SPACE, MathML_EL_MO},
-   {TEXT("mover"), SPACE, MathML_EL_MOVER},
-   {TEXT("mpadded"), SPACE, MathML_EL_MPADDED},
-   {TEXT("mphantom"), SPACE, MathML_EL_MPHANTOM},
-   {TEXT("mprescripts"), SPACE, MathML_EL_PrescriptPairs},
-   {TEXT("mroot"), SPACE, MathML_EL_MROOT},
-   {TEXT("mrow"), SPACE, MathML_EL_MROW},
-   {TEXT("ms"), SPACE, MathML_EL_MS},
-   {TEXT("mspace"), 'E', MathML_EL_MSPACE},
-   {TEXT("msqrt"), SPACE, MathML_EL_MSQRT},
-   {TEXT("mstyle"), SPACE, MathML_EL_MSTYLE},
-   {TEXT("msub"), SPACE, MathML_EL_MSUB},
-   {TEXT("msubsup"), SPACE, MathML_EL_MSUBSUP},
-   {TEXT("msup"), SPACE, MathML_EL_MSUP},
-   {TEXT("mtable"), SPACE, MathML_EL_MTABLE},
-   {TEXT("mtd"), SPACE, MathML_EL_MTD},
-   {TEXT("mtext"), SPACE, MathML_EL_MTEXT},
-   {TEXT("mtr"), SPACE, MathML_EL_MTR},
-   {TEXT("munder"), SPACE, MathML_EL_MUNDER},
-   {TEXT("munderover"), SPACE, MathML_EL_MUNDEROVER},
-   {TEXT("none"), SPACE, MathML_EL_Construct},
-   {TEXT("sep"), 'E', MathML_EL_SEP},
-   {TEXT(""), SPACE, 0}	/* Last entry. Mandatory */
+   {TEXT("mfenced"), SPACE, MathML_EL_MFENCED, L_Undefined},
+   {TEXT("mfrac"), SPACE, MathML_EL_MFRAC, L_Undefined},
+   {TEXT("mglyph"), 'E', MathML_EL_MGLYPH, L_Undefined},
+   {TEXT("mi"), SPACE, MathML_EL_MI, L_Undefined},
+   {TEXT("mlabeledtr"), SPACE, MathML_EL_MLABELEDTR, L_Undefined},
+   {TEXT("mmultiscripts"), SPACE, MathML_EL_MMULTISCRIPTS, L_Undefined},
+   {TEXT("mn"), SPACE, MathML_EL_MN, L_Undefined},
+   {TEXT("mo"), SPACE, MathML_EL_MO, L_Undefined},
+   {TEXT("mover"), SPACE, MathML_EL_MOVER, L_Undefined},
+   {TEXT("mpadded"), SPACE, MathML_EL_MPADDED, L_Undefined},
+   {TEXT("mphantom"), SPACE, MathML_EL_MPHANTOM, L_Undefined},
+   {TEXT("mprescripts"), SPACE, MathML_EL_PrescriptPairs, L_Undefined},
+   {TEXT("mroot"), SPACE, MathML_EL_MROOT, L_Undefined},
+   {TEXT("mrow"), SPACE, MathML_EL_MROW, L_Undefined},
+   {TEXT("ms"), SPACE, MathML_EL_MS, L_Undefined},
+   {TEXT("mspace"), 'E', MathML_EL_MSPACE, L_Undefined},
+   {TEXT("msqrt"), SPACE, MathML_EL_MSQRT, L_Undefined},
+   {TEXT("mstyle"), SPACE, MathML_EL_MSTYLE, L_Undefined},
+   {TEXT("msub"), SPACE, MathML_EL_MSUB, L_Undefined},
+   {TEXT("msubsup"), SPACE, MathML_EL_MSUBSUP, L_Undefined},
+   {TEXT("msup"), SPACE, MathML_EL_MSUP, L_Undefined},
+   {TEXT("mtable"), SPACE, MathML_EL_MTABLE, L_Undefined},
+   {TEXT("mtd"), SPACE, MathML_EL_MTD, L_Undefined},
+   {TEXT("mtext"), SPACE, MathML_EL_MTEXT, L_Undefined},
+   {TEXT("mtr"), SPACE, MathML_EL_MTR, L_Undefined},
+   {TEXT("munder"), SPACE, MathML_EL_MUNDER, L_Undefined},
+   {TEXT("munderover"), SPACE, MathML_EL_MUNDEROVER, L_Undefined},
+   {TEXT("none"), SPACE, MathML_EL_Construct, L_Undefined},
+   {TEXT("sep"), 'E', MathML_EL_SEP, L_Undefined},
+   {TEXT(""), SPACE, 0, L_Undefined}	/* Last entry. Mandatory */
 };
 
 #ifdef GRAPHML
@@ -229,25 +179,25 @@ static ElemMapping    MathMLElemMappingTable[] =
 static ElemMapping    GraphMLElemMappingTable[] =
 {
    /* This table MUST be in alphabetical order */
-   {TEXT("XMLcomment"), SPACE, GraphML_EL_XMLcomment},
-   {TEXT("XMLcomment_line"), SPACE, GraphML_EL_XMLcomment_line},
-   {TEXT("circle"), SPACE, GraphML_EL_Circle},
-   {TEXT("closedspline"), SPACE, GraphML_EL_ClosedSpline},
-   {TEXT("desc"), SPACE, GraphML_EL_desc},
-   {TEXT("group"), SPACE, GraphML_EL_Group},
-   {TEXT("label"), 'X', GraphML_EL_Label}, /* see function GraphMLGetDTDName */
-   {TEXT("line"), 'E', GraphML_EL_Line_},
-   {TEXT("math"), 'X', GraphML_EL_Math},   /* see function GraphMLGetDTDName */
-   {TEXT("metadata"), SPACE, GraphML_EL_metadata},
-   {TEXT("oval"), SPACE, GraphML_EL_Oval},
-   {TEXT("polygon"), SPACE, GraphML_EL_Polygon},
-   {TEXT("polyline"), 'E', GraphML_EL_Polyline},
-   {TEXT("rect"), SPACE, GraphML_EL_Rectangle},
-   {TEXT("roundrect"), SPACE, GraphML_EL_RoundRect},
-   {TEXT("spline"), 'E', GraphML_EL_Spline},
-   {TEXT("text"), 'X', GraphML_EL_Text_},  /* see function GraphMLGetDTDName */
-   {TEXT("title"), SPACE, GraphML_EL_title},
-   {TEXT(""), SPACE, 0}	/* Last entry. Mandatory */
+   {TEXT("XMLcomment"), SPACE, GraphML_EL_XMLcomment, L_Undefined},
+   {TEXT("XMLcomment_line"), SPACE, GraphML_EL_XMLcomment_line, L_Undefined},
+   {TEXT("circle"), SPACE, GraphML_EL_Circle, L_Undefined},
+   {TEXT("closedspline"), SPACE, GraphML_EL_ClosedSpline, L_Undefined},
+   {TEXT("desc"), SPACE, GraphML_EL_desc, L_Undefined},
+   {TEXT("group"), SPACE, GraphML_EL_Group, L_Undefined},
+   {TEXT("label"), 'X', GraphML_EL_Label, L_Undefined}, /* see function GraphMLGetDTDName */
+   {TEXT("line"), 'E', GraphML_EL_Line_, L_Undefined},
+   {TEXT("math"), 'X', GraphML_EL_Math, L_Undefined},   /* see function GraphMLGetDTDName */
+   {TEXT("metadata"), SPACE, GraphML_EL_metadata, L_Undefined},
+   {TEXT("oval"), SPACE, GraphML_EL_Oval, L_Undefined},
+   {TEXT("polygon"), SPACE, GraphML_EL_Polygon, L_Undefined},
+   {TEXT("polyline"), 'E', GraphML_EL_Polyline, L_Undefined},
+   {TEXT("rect"), SPACE, GraphML_EL_Rectangle, L_Undefined},
+   {TEXT("roundrect"), SPACE, GraphML_EL_RoundRect, L_Undefined},
+   {TEXT("spline"), 'E', GraphML_EL_Spline, L_Undefined},
+   {TEXT("text"), 'X', GraphML_EL_Text_, L_Undefined},  /* see function GraphMLGetDTDName */
+   {TEXT("title"), SPACE, GraphML_EL_title, L_Undefined},
+   {TEXT(""), SPACE, 0, L_Undefined}	/* Last entry. Mandatory */
 };
 #else /* GRAPHML */
 /* there is no mapping table of GraphML elements */

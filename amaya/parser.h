@@ -8,42 +8,48 @@
 #ifndef PARSER_H
 #define PARSER_H
 
-#define MATH_TYPE 1
+#define MATH_TYPE  1
 #define GRAPH_TYPE 2
 #define XLINK_TYPE 3
 #define XHTML_TYPE 4
+
+#define L_Undefined    0
+#define L_Basic        1
+#define L_Strict       2
+#define L_Transitional 3
 
 #define MaxTypeNameLength 16
 typedef CHAR_T typeName[MaxTypeNameLength];
 
 typedef struct _ElemMapping
-  {		/* mapping of a XML element */
-     typeName	XMLname;	/* name of the XML element */
-     char	XMLcontents;	/* info about the contents of the XML element:
+{	       /* mapping of a XML element */
+  typeName   XMLname;	        /* name of the XML element */
+  char       XMLcontents;	/* info about the contents of the XML element:
 				   'E'= empty,  space = some element(s),
 				   'X'= an element from another DTD */
-     int	ThotType;	/* type of the Thot element or attribute */
-  }
+  int	     ThotType;          /* type of the Thot element or attribute */
+  int        Level;             /* XHTML level basic, strict, transitional */
+}
 ElemMapping;
 
 typedef struct _AttributeMapping
-  {		/* mapping of a XML attribute */
-     CHAR_T     XMLattribute[30];	/* name of XML attribute */
-     typeName   XMLelement;      	/* name of XML element type */
-     char       AttrOrContent;   	/* info about the corresponding Thot
-					   thing: 'A'=Attribute, 'C'=Content
-					   SPACE= Nothing */
-     int        ThotAttribute;	        /* Thot attribute */
-  }
+{		/* mapping of a XML attribute */
+  CHAR_T     XMLattribute[30]; /* name of XML attribute */
+  typeName   XMLelement;       /* name of XML element type */
+  char       AttrOrContent;    /* info about the corresponding Thot
+				  thing: 'A'=Attribute, 'C'=Content
+				  SPACE= Nothing */
+  int        ThotAttribute;    /* Thot attribute */
+  int        Level;            /* XHTML level basic, strict, transitional */
+}
 AttributeMapping;
 
 typedef struct _AttrValueMapping
-  {		/* mapping of a XML attribute value */
-     int        ThotAttr;	        /* corresponding Thot attribute */
-     CHAR_T     XMLattrValue[20];	/* XML value */
-     int        ThotAttrValue;		/* corresponding value of the Thot
-					   attribute */
-  }
+{		/* mapping of a XML attribute value */
+  int        ThotAttr;	        /* corresponding Thot attribute */
+  CHAR_T     XMLattrValue[20];	/* XML value */
+  int        ThotAttrValue;	/* corresponding value of the Thot attribute */
+}
 AttrValueMapping;
 
 #endif /* PARSER_H */

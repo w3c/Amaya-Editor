@@ -9,35 +9,19 @@
 #define FETCHHTMLNAME_H
 
 #include "parser.h"
-#define MaxGIlength 14
 #define DummyAttribute 500
-
-/* typedef unsigned char GI[MaxGIlength]; */
-typedef CHAR_T GI[MaxGIlength];
 
 typedef struct _ClosedElement *PtrClosedElement;
 typedef struct _ClosedElement
   {				        /* an element closed by a start tag */
      int                 tagNum;	/* rank (in GIMappingTable) of closed
-					    element */
+					   element */
      PtrClosedElement    nextClosedElem;/* next element closed by the same
-					    start tag */
+					   start tag */
   }
 ClosedElement;
 
-typedef struct _GIMapping
-  {                                     /* mapping of a HTML element */
-     GI                  htmlGI;        /* name of the HTML element */
-     char                htmlContents;  /* info about the contents of the HTML element:
-                                           'E'=empty,  space=some contents */
-     int                 ThotType;      /* type of the Thot element or attribute */
-     PtrClosedElement    firstClosedElem;/* first element closed by the start
-					    tag htmlGI */
-  }
-GIMapping;
-
 /* define a pointer to let parser functions access the HTML tables */
-extern GIMapping        *pHTMLGIMapping;
+extern ElemMapping        *pHTMLGIMapping;
 extern AttributeMapping *pHTMLAttributeMapping;
-
 #endif /* FETCHHTMLNAME_H */

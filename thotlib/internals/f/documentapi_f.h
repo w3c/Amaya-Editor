@@ -28,7 +28,7 @@ extern ThotBool TtaIsInDocumentPath ( CHAR_T* directory );
 extern void TtaAppendDocumentPath ( CHAR_T* directory );
 extern void TtaSetSchemaPath ( STRING path );
 extern SSchema TtaNewNature ( Document document,
-			      SSchema schema,
+                              SSchema schema,
                               CHAR_T* natureName,
                               CHAR_T* presentationName );
 extern SSchema TtaNewSchemaExtension ( Document document,
@@ -105,7 +105,7 @@ extern ThotBool TtaIsInDocumentPath (/* CHAR_T* directory */);
 extern void TtaAppendDocumentPath (/* CHAR_T* directory */);
 extern void TtaSetSchemaPath (/* STRING path */);
 extern SSchema TtaNewNature (/* Document document,
-				SSchema schema,
+                                SSchema schema,
                                 CHAR_T* natureName,
                                 CHAR_T* presentationName */);
 extern SSchema TtaNewSchemaExtension (/* Document document,

@@ -111,7 +111,6 @@ static PtrParserCtxt	xhtmlParserCtxt = NULL;
 /* XLink parser context */
 static PtrParserCtxt    XLinkParserCtxt = NULL;
 
-
 #define MAX_URI_NAME_LENGTH  60
 #define XHTML_URI            TEXT("http://www.w3.org/1999/xhtml")
 #define MathML_URI           TEXT("http://www.w3.org/1998/Math/MathML")
@@ -1276,9 +1275,9 @@ CHAR_T*             GIname;
 {
   ElementType         elType;
   Element             newElement;
-  int                 i;
   CHAR_T              msgBuffer[MaxMsgLength];
-  STRING              mappedName= NULL;
+  STRING              mappedName= NULL, profile;
+  int                 i;
   ThotBool            elInStack = FALSE;
 
   /* ignore tag <P> within PRE */
@@ -1300,15 +1299,14 @@ CHAR_T*             GIname;
       previousElementContent = currentElementContent;
       GetXmlElType (GIname, &elType, &mappedName,
 		    &currentElementContent, currentDocument);
-#ifdef XHTML_BASIC
-      if (mappedName == NULL)
+      profile = TtaGetEnvString ("Profile");
+      if (!ustrcmp (profile, TEXT("basic-editor")) && mappedName == NULL)
 	{
 	  usprintf (msgBuffer, TEXT("Invalid tag \"%s\""), GIname);
 	  XmlParseError (currentDocument, msgBuffer, 0);
 	  /* doesn't process that element */
 	  return;
 	}
-#endif /* XHTML_BASIC */
       if (mappedName != NULL)
 	ustrcpy (currentMappedName, mappedName);
       
@@ -1406,11 +1404,11 @@ CHAR_T     *GIname;
 
 #endif
 {
-   CHAR_T         msgBuffer[MaxMsgLength];
-   STRING         mappedName;
    ElementType    elType;
-   int            i, error;
    PtrParserCtxt  elementParserCtxt;
+   CHAR_T         msgBuffer[MaxMsgLength];
+   STRING         mappedName, profile;
+   int            i, error;
 
 
    if (ParsingTextArea)
@@ -1435,11 +1433,10 @@ CHAR_T     *GIname;
 		 &currentElementContent, currentDocument);
    /* restore Context */
    currentParserCtxt = elementParserCtxt;
-#ifdef XHTML_BASIC
-   if (mappedName == NULL)
+   profile = TtaGetEnvString ("Profile");
+   if (!ustrcmp (profile, TEXT("basic-editor")) && mappedName == NULL)
       /* doesn't process that element */
       return;
-#endif /* XHTML_BASIC */
    
    if (elType.ElTypeNum <= 0)
      /* not found in the corresponding DTD */
@@ -2501,19 +2498,13 @@ Document  doc;
   Put a Unicode character in the input buffer.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void     PutNonISOlatin1Char (int code,
-				     STRING prefix,
-				     STRING entityName,
-				     Document doc)
+void     PutNonISOlatin1Char (int code, STRING prefix, STRING entityName, Document doc)
 #else
-static void     PutNonISOlatin1Char (code,
-				     prefix,
-				     entityName,
-				     doc)
-int          code;
-STRING       prefix;
-STRING       entityName;
-Document     doc;
+void     PutNonISOlatin1Char (code, prefix, entityName, doc)
+int      code;
+STRING   prefix;
+STRING   entityName;
+Document doc;
 #endif
 {
    Language	 lang, l;
@@ -2565,45 +2556,6 @@ Document     doc;
 }
 
 /*----------------------------------------------------------------------
-   XhtmlEntityCreated
-   A XTHML entity has been created by the XML parser.
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void    XhtmlEntityCreated (int entityVal,
-				   Language lang,
-				   STRING entityName,
-				   Document doc)
-#else
-static void    XhtmlEntityCreated (entityVal,
-				   lang,
-				   entityName,
-				   doc)
-int       entityVal;
-Language  lang;
-STRING    entityName;
-Document  doc;
-
-#endif
-{ 
-
-  if (lang < 0)
-      PutInXmlElement (entityName);
-  else
-    {
-#ifdef LC
-      printf (" \n code=%d", entityVal);
-#endif /* LC */
-      if (entityVal < 255)
-	  PutInXmlElement ((STRING) entityVal);
-      else
-	  PutNonISOlatin1Char (entityVal,
-			     TEXT(""),
-			     entityName,
-			     doc);
-    }
-}
-
-/*----------------------------------------------------------------------
    CreateXmlEntity
    End of a XML entity. 
    Search that entity in the corresponding entity table and 
@@ -2613,8 +2565,7 @@ Document  doc;
 static void         CreateXmlEntity (STRING entityName)
 #else
 static void         CreateXmlEntity (entityName)
-STRING       entityName;
-
+STRING              entityName;
 #endif
 {
    CHAR_T         msgBuffer[MaxMsgLength];

@@ -2177,18 +2177,19 @@ ThotBool            history;
   CSSInfoPtr          css;
   Document            newdoc = 0;
   DocumentType        docType;
+  Element             root;
+  Attribute           attr;
+  AttributeType       attrType;
   CHAR_T*             tempdocument;
   CHAR_T*             tempdir;
   CHAR_T*             s;
   CHAR_T*             content_type;
   CHAR_T*             charset;
+  STRING              profile;
   int                 i, j;
   ThotBool            otherFile;
   ThotBool            plainText;
   ThotBool            XHTMLdoc;
-  Element             root;
-  Attribute           attr;
-  AttributeType       attrType;
 
   docType = docHTML;
   otherFile = TRUE;
@@ -2544,22 +2545,15 @@ ThotBool            history;
       if (DocumentMeta[newdoc]->method == CE_INIT)
 	DocumentMeta[newdoc]->method = CE_ABSOLUTE;
 
+      profile = TtaGetEnvString ("Profile");
 #ifdef EXPAT_PARSER
-      if (XHTMLdoc)
+      if (XHTMLdoc || !ustrcmp (profile, TEXT("basic-editor")))
 	StartXmlParser (newdoc,
 			tempdocument,
 			documentname,
 			tempdir,
 			pathname,
 			plainText);
-#ifdef XHTML_BASIC
-      else if (!plainText)
-	{
-	  XmlParseError (newdoc, TEXT("**FATAL** Invalid XML document"), 1);
-	  ShowLogFile (newdoc, 1);
-	  InitInfo (TEXT(""), TtaGetMessage (AMAYA, AM_XML_ERROR));
-	}
-#endif /* XHTML_BASIC */
       else
 	StartParser (newdoc, tempdocument, documentname, tempdir, pathname, plainText);
 #else /* EXPAT_PARSER */

@@ -775,10 +775,13 @@ static AttrValueMapping HTMLAttrValueMappingTable[] =
 
 typedef int         State;	/* a state of the automaton */
 
+extern int               HTML_ENTRIES;
+static PtrClosedElement *FirstClosedElem;
+
 /* ---------------------- static variables ---------------------- */
 /* parser stack */
 #define MaxStack 200		/* maximum stack height */
-static int          GINumberStack[MaxStack]; /* entry of GIMappingTable */
+static int          GINumberStack[MaxStack]; /* entry of pHTMLGIMapping */
 static Element      ElementStack[MaxStack];  /* element in the Thot abstract
 						tree */
 static int          ThotLevel[MaxStack];     /* level of element in the Thot
@@ -830,7 +833,7 @@ static SSchema      DocumentSSchema = NULL;  /* the HTML structure schema */
 static Element      rootElement;	  /* root element of the document */
 static Element      lastElement = NULL;	  /* last element created */
 static ThotBool     lastElementClosed = FALSE;/* last element is complete */
-static int          lastElemEntry = 0;	  /* index in the GIMappingTable of the
+static int          lastElemEntry = 0;	  /* index in the pHTMLGIMapping of the
 					     element being created */
 static Attribute    lastAttribute = NULL; /* last attribute created */
 static Attribute    lastAttrElement = NULL;/* element with which the last
@@ -1181,12 +1184,12 @@ ElementType elType;
 	do
 	  {
 	    if (pHTMLGIMapping[i].ThotType == elType.ElTypeNum &&
-		ustrcmp (pHTMLGIMapping[i].htmlGI, TEXT("listing")))
+		ustrcmp (pHTMLGIMapping[i].XMLname, TEXT("listing")))
 	      /* use PRE */
-	      return  pHTMLGIMapping[i].htmlGI;
+	      return  pHTMLGIMapping[i].XMLname;
 	    i++;
 	  }
-	while (pHTMLGIMapping[i].htmlGI[0] != WC_EOS);
+	while (pHTMLGIMapping[i].XMLname[0] != WC_EOS);
 #ifndef STANDALONE
       else
 	{
@@ -1295,9 +1298,14 @@ void                InitMapping ()
    int                 entry;
    int                 ptr;
    int                 i;
-   GI                  name;
+   typeName            name;
    PtrClosedElement    newCE, lastCE, firstCE, curCE;
    SSchema	       schema;
+
+   /* building the table */
+   FirstClosedElem = TtaGetMemory (HTML_ENTRIES * sizeof(PtrClosedElement));
+   for (entry = 0; entry < HTML_ENTRIES; entry++)
+     FirstClosedElem[entry] = NULL;
 
    /* read table EquivEndingElem */
    line = 0;
@@ -1309,7 +1317,7 @@ void                InitMapping ()
 	firstCE = NULL; 
 	do
 	  {
-	     /* read one GI */
+	     /* read one identifier */
 	     i = 0;
 	     while (EquivEndingElem[line][ptr] != SPACE &&
 		    EquivEndingElem[line][ptr] != EOS)
@@ -1317,7 +1325,7 @@ void                InitMapping ()
 	     name[i] = EOS;
 	     ptr++;
 	     if (i > 0)
-		/* a GI has been read */
+		/* a identifier has been read */
 	       {
 		  schema = DocumentSSchema;
 		  entry = MapGI (name, &schema, theDocument);
@@ -1348,11 +1356,11 @@ void                InitMapping ()
 		newCE = firstCE;
 	     else
 		newCE = copyCEstring (firstCE);
-	     if (pHTMLGIMapping[curCE->tagNum].firstClosedElem == NULL)
-		pHTMLGIMapping[curCE->tagNum].firstClosedElem = newCE;
+	     if (FirstClosedElem[curCE->tagNum] == NULL)
+		FirstClosedElem[curCE->tagNum] = newCE;
 	     else
 	       {
-		  lastCE = pHTMLGIMapping[curCE->tagNum].firstClosedElem;
+		  lastCE = FirstClosedElem[curCE->tagNum];
 		  while (lastCE->nextClosedElem != NULL)
 		     lastCE = lastCE->nextClosedElem;
 		  lastCE->nextClosedElem = newCE;
@@ -1395,7 +1403,7 @@ void                InitMapping ()
 	if (strcmp (name, "closes") != 0)
 	   fprintf (stderr, "error in StartTagEndingElem: \"%s\" instead of \"closes\" in line\n%s\n", name, StartTagEndingElem[line]);
 #endif
-	lastCE = pHTMLGIMapping[entry].firstClosedElem;
+	lastCE = FirstClosedElem[entry];
 	if (lastCE != NULL)
 	   while (lastCE->nextClosedElem != NULL)
 	      lastCE = lastCE->nextClosedElem;
@@ -1418,7 +1426,7 @@ void                InitMapping ()
 		     fprintf (stderr, "error in StartTagEndingElem: tag %s unknown in line\n%s\n", name, StartTagEndingElem[line]);
 #endif
 		  if (lastCE == NULL)
-		     pHTMLGIMapping[entry].firstClosedElem = newCE;
+		     FirstClosedElem[entry] = newCE;
 		  else
 		     lastCE->nextClosedElem = newCE;
 		  lastCE = newCE;
@@ -1551,7 +1559,7 @@ static ThotBool     InsertSibling ()
    else if (lastElementClosed ||
 	    TtaIsLeaf (TtaGetElementType (lastElement)) ||
 	    (GINumberStack[StackLevel - 1] >= 0 &&
-	     pHTMLGIMapping[GINumberStack[StackLevel - 1]].htmlContents == 'E'))
+	     pHTMLGIMapping[GINumberStack[StackLevel - 1]].XMLcontents == 'E'))
       return TRUE;
    else
       return FALSE;
@@ -2873,14 +2881,14 @@ ThotBool            onStartTag;
 	      looks for that element in the stack, but not at
 	      a higher level as a table element */
 	   if (!onStartTag &&
-	       (!ustrcmp (pHTMLGIMapping[entry].htmlGI, TEXT("form")) ||
-            !ustrcmp (pHTMLGIMapping[entry].htmlGI, TEXT("font")) ||
-            !ustrcmp (pHTMLGIMapping[entry].htmlGI, TEXT("center"))))
+	       (!ustrcmp (pHTMLGIMapping[entry].XMLname, TEXT("form")) ||
+            !ustrcmp (pHTMLGIMapping[entry].XMLname, TEXT("font")) ||
+            !ustrcmp (pHTMLGIMapping[entry].XMLname, TEXT("center"))))
 	     while (i > 0 && entry != GINumberStack[i] && !stop)
-	       if (!ustrcmp (pHTMLGIMapping[GINumberStack[i]].htmlGI, TEXT("tbody")) ||
-               !ustrcmp (pHTMLGIMapping[GINumberStack[i]].htmlGI, TEXT("tr"))    ||
-               !ustrcmp (pHTMLGIMapping[GINumberStack[i]].htmlGI, TEXT("th"))    ||
-               !ustrcmp (pHTMLGIMapping[GINumberStack[i]].htmlGI, TEXT("td")))
+	       if (!ustrcmp (pHTMLGIMapping[GINumberStack[i]].XMLname, TEXT("tbody")) ||
+               !ustrcmp (pHTMLGIMapping[GINumberStack[i]].XMLname, TEXT("tr"))    ||
+               !ustrcmp (pHTMLGIMapping[GINumberStack[i]].XMLname, TEXT("th"))    ||
+               !ustrcmp (pHTMLGIMapping[GINumberStack[i]].XMLname, TEXT("td")))
 		 {
 		   /* ignore this end tag */
 		   ret = FALSE;
@@ -2901,33 +2909,33 @@ ThotBool            onStartTag;
 	      equivalent), looks for that element in the
 	      stack, but not at a higher level as the list (or
 	      equivalent) element */
-	   if (!ustrcmp (pHTMLGIMapping[start].htmlGI, TEXT("li")))
+	   if (!ustrcmp (pHTMLGIMapping[start].XMLname, TEXT("li")))
 	     while (i > 0 && entry != GINumberStack[i] && !stop)
-	       if (!ustrcmp (pHTMLGIMapping[GINumberStack[i]].htmlGI, TEXT("ol"))  ||
-               !ustrcmp (pHTMLGIMapping[GINumberStack[i]].htmlGI, TEXT("ul"))  ||
-               !ustrcmp (pHTMLGIMapping[GINumberStack[i]].htmlGI, TEXT("dir")) ||
-               !ustrcmp (pHTMLGIMapping[GINumberStack[i]].htmlGI, TEXT("menu")))
+	       if (!ustrcmp (pHTMLGIMapping[GINumberStack[i]].XMLname, TEXT("ol"))  ||
+               !ustrcmp (pHTMLGIMapping[GINumberStack[i]].XMLname, TEXT("ul"))  ||
+               !ustrcmp (pHTMLGIMapping[GINumberStack[i]].XMLname, TEXT("dir")) ||
+               !ustrcmp (pHTMLGIMapping[GINumberStack[i]].XMLname, TEXT("menu")))
 		 stop = TRUE;
 	       else
 		 i--;
-	   else if (!ustrcmp (pHTMLGIMapping[start].htmlGI, TEXT("option")))
+	   else if (!ustrcmp (pHTMLGIMapping[start].XMLname, TEXT("option")))
 	     while (i > 0 && entry != GINumberStack[i] && !stop)
-	       if (!ustrcmp (pHTMLGIMapping[GINumberStack[i]].htmlGI, TEXT("select")))
+	       if (!ustrcmp (pHTMLGIMapping[GINumberStack[i]].XMLname, TEXT("select")))
 		 stop = TRUE;
 	       else
 		 i--;
-	   else if (!ustrcmp (pHTMLGIMapping[start].htmlGI, TEXT("dd")) ||
-                !ustrcmp (pHTMLGIMapping[start].htmlGI, TEXT("dt")))
+	   else if (!ustrcmp (pHTMLGIMapping[start].XMLname, TEXT("dd")) ||
+                !ustrcmp (pHTMLGIMapping[start].XMLname, TEXT("dt")))
 	     while (i > 0 && entry != GINumberStack[i] && !stop)
-	       if (!ustrcmp (pHTMLGIMapping[GINumberStack[i]].htmlGI, TEXT("dl")))
+	       if (!ustrcmp (pHTMLGIMapping[GINumberStack[i]].XMLname, TEXT("dl")))
 		 stop = TRUE;
 	       else
 		 i--;
-	   else if (!ustrcmp (pHTMLGIMapping[start].htmlGI, TEXT("tr")) ||
-                !ustrcmp (pHTMLGIMapping[start].htmlGI, TEXT("td")) ||
-                !ustrcmp (pHTMLGIMapping[start].htmlGI, TEXT("th")))
+	   else if (!ustrcmp (pHTMLGIMapping[start].XMLname, TEXT("tr")) ||
+                !ustrcmp (pHTMLGIMapping[start].XMLname, TEXT("td")) ||
+                !ustrcmp (pHTMLGIMapping[start].XMLname, TEXT("th")))
 	     while (i > 0 && entry != GINumberStack[i] && !stop)
-	       if (!ustrcmp (pHTMLGIMapping[GINumberStack[i]].htmlGI, TEXT("table")))
+	       if (!ustrcmp (pHTMLGIMapping[GINumberStack[i]].XMLname, TEXT("table")))
 		 stop = TRUE;
 	       else
 		 i--;
@@ -3309,10 +3317,10 @@ CHAR_T                c;
   if ((lastElement != NULL) && (lastElemEntry != -1))
     {
       math = FALSE;
-      if (!ustrcmp (pHTMLGIMapping[lastElemEntry].htmlGI, TEXT("math")))
+      if (!ustrcmp (pHTMLGIMapping[lastElemEntry].XMLname, TEXT("math")))
 	/* a <math> tag has been read */
 	math = TRUE;
-      else if (!ustrcmp (pHTMLGIMapping[lastElemEntry].htmlGI, TEXT("mathdisp")))
+      else if (!ustrcmp (pHTMLGIMapping[lastElemEntry].XMLname, TEXT("mathdisp")))
 	/* a <mathdisp> tag has been read.  add an attribute "mode=display"
 	   (for compatibility with old MathML version WD-math-970704 */
 	{
@@ -3335,7 +3343,7 @@ CHAR_T                c;
 #ifndef STANDALONE
 	  /* Parse the MathML structure */
 	  if (XMLparse (stream, &CurrentBufChar, TEXT("MathML"), theDocument, lastElement, FALSE,
-		    currentLanguage, pHTMLGIMapping[lastElemEntry].htmlGI))
+		    currentLanguage, pHTMLGIMapping[lastElemEntry].XMLname))
 #endif /* STANDALONE */
 	    /* when returning from the XML parser, the end tag has already
 	       been read */
@@ -3345,14 +3353,14 @@ CHAR_T                c;
 	    StopParsing ();
 #endif /* STANDALONE */
 	}
-      else if (!ustrcmp (pHTMLGIMapping[lastElemEntry].htmlGI, TEXT("xmlgraphics")) ||
-               !ustrcmp (pHTMLGIMapping[lastElemEntry].htmlGI, TEXT("svg")))
+      else if (!ustrcmp (pHTMLGIMapping[lastElemEntry].XMLname, TEXT("xmlgraphics")) ||
+               !ustrcmp (pHTMLGIMapping[lastElemEntry].XMLname, TEXT("svg")))
 	/* a tag <xmlgraphics> or <svg> has been read */
         {
 	  /* Parse the GraphML structure */
 #ifndef STANDALONE
 	  if (XMLparse (stream, &CurrentBufChar, TEXT("GraphML"), theDocument, lastElement, FALSE,
-		    currentLanguage, pHTMLGIMapping[lastElemEntry].htmlGI))
+		    currentLanguage, pHTMLGIMapping[lastElemEntry].XMLname))
 #endif /* STANDALONE */
 	    /* when returning from the XML parser, the end tag has already
 	       been read */
@@ -3362,15 +3370,15 @@ CHAR_T                c;
 	    StopParsing ();
 #endif /* STANDALONE */
 	}
-      else if (!ustrcmp (pHTMLGIMapping[lastElemEntry].htmlGI, TEXT("pre"))   ||
-               !ustrcmp (pHTMLGIMapping[lastElemEntry].htmlGI, TEXT("style")) ||
-               !ustrcmp (pHTMLGIMapping[lastElemEntry].htmlGI, TEXT("script")))
+      else if (!ustrcmp (pHTMLGIMapping[lastElemEntry].XMLname, TEXT("pre"))   ||
+               !ustrcmp (pHTMLGIMapping[lastElemEntry].XMLname, TEXT("style")) ||
+               !ustrcmp (pHTMLGIMapping[lastElemEntry].XMLname, TEXT("script")))
 	/* a <PRE>, <STYLE> or <SCRIPT> tag has been read */
 	AfterTagPRE = TRUE;
-      else if (!ustrcmp (pHTMLGIMapping[lastElemEntry].htmlGI, TEXT("table")))
+      else if (!ustrcmp (pHTMLGIMapping[lastElemEntry].XMLname, TEXT("table")))
 	/* <TABLE> has been read */
 	WithinTable++;
-      else if (pHTMLGIMapping[lastElemEntry].htmlContents == 'E')
+      else if (pHTMLGIMapping[lastElemEntry].XMLcontents == 'E')
 	/* this is an empty element. Do not expect an end tag */
 	{
 	  CloseElement (lastElemEntry, -1, TRUE);
@@ -3440,26 +3448,26 @@ int                 entry;
      {
        ok = TRUE;
        /* only TH and TD elements are allowed as children of a TR element */
-       if (!ustrcmp (pHTMLGIMapping[GINumberStack[StackLevel - 1]].htmlGI, TEXT("tr")))
-	 if (ustrcmp (pHTMLGIMapping[entry].htmlGI, TEXT("th")) &&
-	     ustrcmp (pHTMLGIMapping[entry].htmlGI, TEXT("td")))
+       if (!ustrcmp (pHTMLGIMapping[GINumberStack[StackLevel - 1]].XMLname, TEXT("tr")))
+	 if (ustrcmp (pHTMLGIMapping[entry].XMLname, TEXT("th")) &&
+	     ustrcmp (pHTMLGIMapping[entry].XMLname, TEXT("td")))
 	   ok = FALSE;
        if (ok)
 	 /* only CAPTION, THEAD, TFOOT, TBODY, COLGROUP, COL and TR are */
 	 /* allowed as children of a TABLE element */
-	 if (!ustrcmp (pHTMLGIMapping[GINumberStack[StackLevel - 1]].htmlGI, TEXT("table")))
-	   if (ustrcmp (pHTMLGIMapping[entry].htmlGI, TEXT("caption"))  &&
-	       ustrcmp (pHTMLGIMapping[entry].htmlGI, TEXT("thead"))    &&
-	       ustrcmp (pHTMLGIMapping[entry].htmlGI, TEXT("tfoot"))    &&
-	       ustrcmp (pHTMLGIMapping[entry].htmlGI, TEXT("tbody"))    &&
-	       ustrcmp (pHTMLGIMapping[entry].htmlGI, TEXT("colgroup")) &&
-	       ustrcmp (pHTMLGIMapping[entry].htmlGI, TEXT("col"))      &&
-	       ustrcmp (pHTMLGIMapping[entry].htmlGI, TEXT("tr")))
-	     if (!ustrcmp (pHTMLGIMapping[entry].htmlGI, TEXT("td")) ||
-             !ustrcmp (pHTMLGIMapping[entry].htmlGI, TEXT("th")))
+	 if (!ustrcmp (pHTMLGIMapping[GINumberStack[StackLevel - 1]].XMLname, TEXT("table")))
+	   if (ustrcmp (pHTMLGIMapping[entry].XMLname, TEXT("caption"))  &&
+	       ustrcmp (pHTMLGIMapping[entry].XMLname, TEXT("thead"))    &&
+	       ustrcmp (pHTMLGIMapping[entry].XMLname, TEXT("tfoot"))    &&
+	       ustrcmp (pHTMLGIMapping[entry].XMLname, TEXT("tbody"))    &&
+	       ustrcmp (pHTMLGIMapping[entry].XMLname, TEXT("colgroup")) &&
+	       ustrcmp (pHTMLGIMapping[entry].XMLname, TEXT("col"))      &&
+	       ustrcmp (pHTMLGIMapping[entry].XMLname, TEXT("tr")))
+	     if (!ustrcmp (pHTMLGIMapping[entry].XMLname, TEXT("td")) ||
+             !ustrcmp (pHTMLGIMapping[entry].XMLname, TEXT("th")))
 	       /* Table cell within a table, without a tr. Assume tr */
 	       {
-		/* save the last last GI read from the input file */
+		/* save the last last identifier read from the input file */
 		saveLastElemEntry = lastElemEntry;
 		/* simulate a <TR> tag */
 	        ProcessStartGI (TEXT("tr"));
@@ -3471,25 +3479,25 @@ int                 entry;
        if (ok)
 	 /* CAPTION, THEAD, TFOOT, TBODY, COLGROUP are allowed only as
 	    children of a TABLE element */
-	 if (ustrcmp (pHTMLGIMapping[entry].htmlGI, TEXT("caption"))  == 0 ||
-	     ustrcmp (pHTMLGIMapping[entry].htmlGI, TEXT("thead"))    == 0 ||
-	     ustrcmp (pHTMLGIMapping[entry].htmlGI, TEXT("tfoot"))    == 0 ||
-	     ustrcmp (pHTMLGIMapping[entry].htmlGI, TEXT("tbody"))    == 0 ||
-	     ustrcmp (pHTMLGIMapping[entry].htmlGI, TEXT("colgroup")) == 0)
-	   if (ustrcmp (pHTMLGIMapping[GINumberStack[StackLevel - 1]].htmlGI, TEXT("table")) != 0)
+	 if (ustrcmp (pHTMLGIMapping[entry].XMLname, TEXT("caption"))  == 0 ||
+	     ustrcmp (pHTMLGIMapping[entry].XMLname, TEXT("thead"))    == 0 ||
+	     ustrcmp (pHTMLGIMapping[entry].XMLname, TEXT("tfoot"))    == 0 ||
+	     ustrcmp (pHTMLGIMapping[entry].XMLname, TEXT("tbody"))    == 0 ||
+	     ustrcmp (pHTMLGIMapping[entry].XMLname, TEXT("colgroup")) == 0)
+	   if (ustrcmp (pHTMLGIMapping[GINumberStack[StackLevel - 1]].XMLname, TEXT("table")) != 0)
 	      ok = FALSE;
        if (ok)
 	 /* only TR is allowed as a child of a THEAD, TFOOT or TBODY element */
-	 if (!ustrcmp (pHTMLGIMapping[GINumberStack[StackLevel - 1]].htmlGI, TEXT("thead")) ||
-	     !ustrcmp (pHTMLGIMapping[GINumberStack[StackLevel - 1]].htmlGI, TEXT("tfoot")) ||
-	     !ustrcmp (pHTMLGIMapping[GINumberStack[StackLevel - 1]].htmlGI, TEXT("tbody")))
-	   if (ustrcmp (pHTMLGIMapping[entry].htmlGI, TEXT("tr")))
-	     if (!ustrcmp (pHTMLGIMapping[entry].htmlGI, TEXT("td")) ||
-             !ustrcmp (pHTMLGIMapping[entry].htmlGI, TEXT("th")))
+	 if (!ustrcmp (pHTMLGIMapping[GINumberStack[StackLevel - 1]].XMLname, TEXT("thead")) ||
+	     !ustrcmp (pHTMLGIMapping[GINumberStack[StackLevel - 1]].XMLname, TEXT("tfoot")) ||
+	     !ustrcmp (pHTMLGIMapping[GINumberStack[StackLevel - 1]].XMLname, TEXT("tbody")))
+	   if (ustrcmp (pHTMLGIMapping[entry].XMLname, TEXT("tr")))
+	     if (!ustrcmp (pHTMLGIMapping[entry].XMLname, TEXT("td")) ||
+             !ustrcmp (pHTMLGIMapping[entry].XMLname, TEXT("th")))
 	       /* Table cell within a thead, tfoot or tbody without a tr. */
 	       /* Assume tr */
 	       {
-		/* save the last last GI read from the input file */
+		/* save the last last identifier read from the input file */
 		saveLastElemEntry = lastElemEntry;
 		/* simulate a <tr> tag */
 	        ProcessStartGI (TEXT("tr"));
@@ -3500,17 +3508,17 @@ int                 entry;
 	       ok = FALSE;
        if (ok)
 	 /* refuse BODY within BODY */
-	 if (ustrcmp (pHTMLGIMapping[entry].htmlGI, TEXT("body")) == 0)
+	 if (ustrcmp (pHTMLGIMapping[entry].XMLname, TEXT("body")) == 0)
 	   if (Within (HTML_EL_BODY, DocumentSSchema))
 	     ok = FALSE;
        if (ok)
 	 /* refuse HEAD within HEAD */
-	 if (ustrcmp (pHTMLGIMapping[entry].htmlGI, TEXT("head")) == 0)
+	 if (ustrcmp (pHTMLGIMapping[entry].XMLname, TEXT("head")) == 0)
 	   if (Within (HTML_EL_HEAD, DocumentSSchema))
 	     ok = FALSE;
        if (ok)
 	 /* refuse STYLE within STYLE */
-	 if (ustrcmp (pHTMLGIMapping[entry].htmlGI, TEXT("style")) == 0)
+	 if (ustrcmp (pHTMLGIMapping[entry].XMLname, TEXT("style")) == 0)
 	   if (Within (HTML_EL_STYLE_, DocumentSSchema))
 	     ok = FALSE;
        return ok;
@@ -3532,10 +3540,10 @@ int                 entry;
 
    /* if current element is DD, Hn closes that DD only when there is */
    /* no enclosing DL */
-   if (pHTMLGIMapping[entry].htmlGI[0] == TEXT('H') &&
-       pHTMLGIMapping[entry].htmlGI[1] >= TEXT('1') &&
-       pHTMLGIMapping[entry].htmlGI[1] <= TEXT('6') &&
-       pHTMLGIMapping[entry].htmlGI[2] == WC_EOS)
+   if (pHTMLGIMapping[entry].XMLname[0] == TEXT('H') &&
+       pHTMLGIMapping[entry].XMLname[1] >= TEXT('1') &&
+       pHTMLGIMapping[entry].XMLname[1] <= TEXT('6') &&
+       pHTMLGIMapping[entry].XMLname[2] == WC_EOS)
       /* the new element is a Hn */
       if (StackLevel > 1)
 	 if (ElementStack[StackLevel - 1] != NULL)
@@ -3660,7 +3668,7 @@ CHAR_T*             GIname;
   if (entry >= 0)
     {
       /* does this start tag also imply the end tag of some current elements? */
-      pClose = pHTMLGIMapping[entry].firstClosedElem;
+      pClose = FirstClosedElem[entry];
       while (pClose != NULL)
 	{
 	  CloseElement (pClose->tagNum, entry, TRUE);
@@ -3693,7 +3701,7 @@ CHAR_T*             GIname;
 		  {
 		    elType.ElSSchema = DocumentSSchema;
 		    elType.ElTypeNum = pHTMLGIMapping[entry].ThotType;
-		    if (pHTMLGIMapping[entry].htmlContents == 'E')
+		    if (pHTMLGIMapping[entry].XMLcontents == 'E')
 		      /* empty HTML element. Create all children specified */
 		      /* in the Thot structure schema */
 		      el = TtaNewTree (theDocument, elType, "");
@@ -3705,7 +3713,7 @@ CHAR_T*             GIname;
 		    sameLevel = InsertElement (&el);
 		    if (el != NULL)
 		      {
-			if (pHTMLGIMapping[entry].htmlContents == 'E')
+			if (pHTMLGIMapping[entry].XMLcontents == 'E')
 			  lastElementClosed = TRUE;
 			if (elType.ElTypeNum == HTML_EL_TEXT_UNIT)
 			  /* an empty Text element has been created. The */
@@ -3714,7 +3722,7 @@ CHAR_T*             GIname;
 		      }
 		  }
 	      }
-	    if (pHTMLGIMapping[entry].htmlContents != 'E')
+	    if (pHTMLGIMapping[entry].XMLcontents != 'E')
 	      {
 		ElementStack[StackLevel] = el;
 		if (sameLevel)
@@ -5633,9 +5641,9 @@ void                FreeHTMLParser ()
       }
 
    /* free descriptors of elements closed by a start tag */
-   for (entry = 0; pHTMLGIMapping[entry].htmlGI[0] != WC_EOS; entry++)
+   for (entry = 0; pHTMLGIMapping[entry].XMLname[0] != WC_EOS; entry++)
       {
-      pClose = pHTMLGIMapping[entry].firstClosedElem;
+      pClose = FirstClosedElem[entry];
       while (pClose != NULL)
 	 {
 	 nextClose = pClose->nextClosedElem;
@@ -5643,6 +5651,8 @@ void                FreeHTMLParser ()
 	 pClose = nextClose;
 	 }
       }
+   TtaFreeMemory (FirstClosedElem);
+   FirstClosedElem = NULL;
 }
 
 /*----------------------------------------------------------------------

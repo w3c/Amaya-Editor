@@ -27,11 +27,11 @@ extern Element CreateGraphicLeaf ( Element el,
                                    Document doc,
                                    ThotBool *closed,
                                    int arrowHead );
-extern void ParseFillStrokeAttributes (int attrType,
-				       Attribute attr,
-				       Element el,
-				       Document doc,
-				       ThotBool delete );
+extern void ParseFillStrokeAttributes ( int attrType,
+                                        Attribute attr,
+                                        Element el,
+                                        Document doc,
+                                        ThotBool delete );
 extern void ParseDirAndSpaceAttributes ( Element group,
                                          Element el,
                                          Document doc );
@@ -86,10 +86,10 @@ extern Element CreateGraphicLeaf (/* Element el,
                                      ThotBool *closed,
                                      int arrowHead */);
 extern void ParseFillStrokeAttributes (/* int attrType,
-					  Attribute attr,
-					  Element el,
-					  Document doc,
-				          ThotBool delete */);
+                                          Attribute attr,
+                                          Element el,
+                                          Document doc,
+                                          ThotBool delete */);
 extern void ParseDirAndSpaceAttributes (/* Element group,
                                            Element el,
                                            Document doc */);
