@@ -2435,7 +2435,9 @@ int TtaAddTextZone (Document doc, View view, char *label,
 	  if (label)
 	    {
 	      w = gtk_label_new (label);
-	      w->style->font = DefaultFont;
+              if (w->style->font == NULL ||
+		  w->style->font->type != GDK_FONT_FONTSET)
+		w->style->font = DefaultFont;
 	      gtk_misc_set_alignment (GTK_MISC (w), 0.5, 0.5);
 	      gtk_box_pack_start (GTK_BOX (row), w, FALSE, TRUE, 5);
 	    }
@@ -2505,7 +2507,9 @@ int TtaAddTextZone (Document doc, View view, char *label,
 	      else
 		gtk_widget_show_all (row->parent);
 	    }
-	  w->style->font = DefaultFont;
+	  if (w->style->font == NULL ||
+	      w->style->font->type != GDK_FONT_FONTSET)
+	    w->style->font = DefaultFont;
 	  gtk_box_pack_start (GTK_BOX (row), combo, TRUE, TRUE, 20);
 	  FrameTable[frame].Text_Zone = w;
 	  gtk_widget_show (w);
@@ -3096,7 +3100,9 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 	   Main_Wd = gtk_window_new (GTK_WINDOW_TOPLEVEL);
 	   /*	   gtk_widget_show_all (Main_Wd);*/
 	   gtk_quit_add_destroy(1, GTK_OBJECT(Main_Wd));
-	   Main_Wd->style->font = DefaultFont;
+	   if (Main_Wd->style->font == NULL ||
+	       Main_Wd->style->font->type != GDK_FONT_FONTSET)
+	     Main_Wd->style->font = DefaultFont;
 	   gtk_window_set_title (GTK_WINDOW (Main_Wd), name);
 	   gtk_window_set_policy (GTK_WINDOW (Main_Wd), TRUE, TRUE, FALSE);
 	   gtk_widget_set_uposition(GTK_WIDGET(Main_Wd), X, Y);

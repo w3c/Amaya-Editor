@@ -2105,7 +2105,9 @@ void DisplayConfirmMessage (char *text)
    /* Create the window message */
    msgbox = gtk_window_new (GTK_WINDOW_TOPLEVEL);
    gtk_widget_realize (GTK_WIDGET(msgbox));
-   msgbox->style->font = DefaultFont;
+   if (msgbox->style->font == NULL ||
+       msgbox->style->font->type != GDK_FONT_FONTSET)
+     msgbox->style->font = DefaultFont;
    gtk_window_set_title (GTK_WINDOW (msgbox), TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
    gtk_window_set_policy (GTK_WINDOW (msgbox), TRUE, TRUE, FALSE);
    gtk_widget_set_uposition(GTK_WIDGET(msgbox), ShowX, ShowY);
@@ -4043,7 +4045,9 @@ void TtaNewIconMenu (int ref, int ref_parent, int entry, char *title,
 	     w = gtk_label_new (title);
 	     gtk_misc_set_alignment (GTK_MISC (w), 0.0, 0.5);
 	     gtk_widget_show_all (w);
-	     w->style->font = DefaultFont;
+	     if (w->style->font == NULL ||
+		 w->style->font->type != GDK_FONT_FONTSET)
+	       w->style->font = DefaultFont;
 	     /*	     gtk_label_set_justify (GTK_LABEL (w), GTK_JUSTIFY_LEFT);*/
 	     gtk_box_pack_start (GTK_BOX(menu), w, FALSE, FALSE, 0);
 	     adbloc->E_ThotWidget[0] = w;
@@ -4276,7 +4280,9 @@ void TtaNewSubmenu (int ref, int ref_parent, int entry, char *title,
 		  w = gtk_label_new (title);
 		  gtk_misc_set_alignment (GTK_MISC (w), 0.0, 0.5);
 		  gtk_widget_show_all (w);
-		  w->style->font = DefaultFont;
+		  if (w->style->font == NULL ||
+		      w->style->font->type != GDK_FONT_FONTSET)
+		    w->style->font = DefaultFont;
 		  gtk_label_set_justify (GTK_LABEL (w), GTK_JUSTIFY_LEFT);
 		  gtk_widget_set_name (w, "Dialogue");
 		  gtk_box_pack_start (GTK_BOX(menu), w, FALSE, FALSE, 0);
@@ -4415,7 +4421,9 @@ void TtaNewSubmenu (int ref, int ref_parent, int entry, char *title,
 		  gtk_misc_set_alignment (GTK_MISC (tmpw), 0.0, 0.5);
 		  gtk_widget_show_all (tmpw);
 		  current_style = gtk_style_copy(gtk_widget_get_style(tmpw));
-		  current_style->font = DefaultFont;
+		  if (current_style->font == NULL ||
+		      current_style->font->type != GDK_FONT_FONTSET)
+		    current_style->font = DefaultFont;
 		  gtk_widget_set_style(tmpw, current_style);
 		  gtk_label_set_justify (GTK_LABEL (tmpw), GTK_JUSTIFY_LEFT);
 		  gtk_container_add (GTK_CONTAINER(w), tmpw);
@@ -4779,7 +4787,9 @@ void TtaNewSubmenu (int ref, int ref_parent, int entry, char *title,
 		      w = gtk_menu_item_new_with_label (&text[index + 1]);
 		      gtk_widget_show_all (w);
 		      current_style = gtk_style_copy(gtk_widget_get_style(w));
-		      current_style->font = DefaultFont;
+		      if (current_style->font == NULL ||
+			  current_style->font->type != GDK_FONT_FONTSET)
+			current_style->font = DefaultFont;
 		      gtk_widget_set_style(w, current_style);
 
 		      adbloc->E_ThotWidget[ent] = w;
@@ -4799,7 +4809,9 @@ void TtaNewSubmenu (int ref, int ref_parent, int entry, char *title,
 #ifdef _GTK
 		      w =  gtk_menu_item_new ();
 		      current_style = gtk_style_copy(gtk_widget_get_style(w));
-		      current_style->font = DefaultFont;
+		      if (current_style->font == NULL ||
+			  current_style->font->type != GDK_FONT_FONTSET)
+			current_style->font = DefaultFont;
 		      gtk_widget_set_style(w, current_style);
 		      gtk_widget_show_all (w);
 		      gtk_menu_append (GTK_MENU (menu),w);
@@ -7209,7 +7221,9 @@ void TtaNewSizedSelector (int ref, int ref_parent, char *title,
 			       GTK_SIGNAL_FUNC (CallTextEnterGTK),  (gpointer)catalogue);
 	    tmpw = gtk_entry_new ();
 	    gtk_widget_show (tmpw);
-	    tmpw->style->font = DefaultFont;
+	    if (tmpw->style->font == NULL ||
+		tmpw->style->font->type != GDK_FONT_FONTSET)
+	      tmpw->style->font = DefaultFont;
 	    gtk_box_pack_start (GTK_BOX(row), tmpw, FALSE, FALSE, 0);
 	    gtk_object_set_data (GTK_OBJECT(w), "EntryZone", (gpointer)tmpw);
 	    if (react)
@@ -7731,7 +7745,9 @@ void TtaNewTextForm (int ref, int ref_parent, char *title, int width,
 	     /* create the vbox for all the elements */
 	     tmpw = gtk_vbox_new (FALSE, 0);
 	     gtk_widget_show (GTK_WIDGET(tmpw));
-	     tmpw->style->font = DefaultFont;
+	     if (tmpw->style->font == NULL ||
+		 tmpw->style->font->type != GDK_FONT_FONTSET)
+	       tmpw->style->font = DefaultFont;
 	     gtk_box_pack_start (GTK_BOX(row), GTK_WIDGET(tmpw), FALSE, FALSE, 0);
 	     row = tmpw;
 	     /* Create the label title */
@@ -8065,7 +8081,9 @@ void TtaNewNumberForm (int ref, int ref_parent, char *title, int min,
 	     w = gtk_label_new (bounds);
 	     gtk_misc_set_alignment (GTK_MISC (w), 0.0, 0.5);
 	     gtk_widget_show (GTK_WIDGET(w));
-	     w->style->font = DefaultFont;
+	     if (w->style->font == NULL ||
+		 w->style->font->type != GDK_FONT_FONTSET)
+	       w->style->font = DefaultFont;
 	     gtk_label_set_justify (GTK_LABEL (w), GTK_JUSTIFY_LEFT);
 	     gtk_box_pack_start (GTK_BOX(row), w, FALSE, FALSE, 0);
 
