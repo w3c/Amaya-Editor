@@ -7,14 +7,9 @@ About this release
 
 Amaya is intended to be a comprehensive environment for testing and
 evaluating new proposals for Web standards and formats. The first version of
-this testbed has been available in April 1996, but in order to allow
-the Web community to evaluate this software and to send feedback to the
-development team, an early release is provided now.
+this testbed has been available in April 1996.
 
-This should be considered as a snapshot of a work in progress. A large part
-of the intended features of Amaya are implemented, but some of them are not
-complete yet and the software is not supposed to be very robust. The user
-interface may change and can be improved.
+For more information:  http://www.w3.org/Amaya
 
 
 Feedback
@@ -43,8 +38,8 @@ http://lists.w3.org/Archives/Public/www-amaya/
 Copyright
 ---------
 
-Amaya is covered by the MIT and INRIA Copyright Statement. Please read the
-file COPYRIGHT carefully before installing Amaya.
+Amaya is covered by the W3C and INRIA Copyright Statements. Please read the
+COPYRIGHT files in sub-directories.
 
 How to Install Amaya Binary Release
 ===================================
