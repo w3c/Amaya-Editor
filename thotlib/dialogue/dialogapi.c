@@ -4126,8 +4126,6 @@ boolean             react;
 			    ent = 0;
 			 }
 
-		       /* On ne traite que des entrees de type bouton */
-		       adbloc->E_Type[ent] = 'B';
 		       /* E_Free est utilise pour marquer les entrees selectionnes */
 		       /* Intialement les entrees sont non selectionnees */
 		       adbloc->E_Free[ent] = 'N';
@@ -4138,11 +4136,25 @@ boolean             react;
 			    title_string = XmStringCreate (&equiv[eindex], XmSTRING_DEFAULT_CHARSET);
 			    eindex += strlen (&equiv[eindex]) + 1;
 			 }
-		       w = XmCreateToggleButton (row, &text[index + 1], args, n);
-		       XtManageChild (w);
-		       adbloc->E_ThotWidget[ent] = w;
-		       XtAddCallback (w, XmNarmCallback, (XtCallbackProc) CallToggle, catalogue);
-
+		       /* On accepte toggles, boutons et separateurs */
+		       if (text[index] == 'B' || text[index] == 'T')
+			 /*________________________________________ Creation d'un bouton __*/
+			 {
+			   adbloc->E_Type[ent] = 'B';
+			   w = XmCreateToggleButton (row, &text[index + 1], args, n);
+		       
+			   XtManageChild (w);
+			   adbloc->E_ThotWidget[ent] = w;
+			   XtAddCallback (w, XmNarmCallback, (XtCallbackProc) CallToggle, catalogue);
+			 }
+		       else if (text[index] == 'S')
+			 /*_________________________________ Creation d'un separateur __*/
+			 {
+			    XtSetArg (args[n], XmNseparatorType, XmSINGLE_DASHED_LINE);
+			    w = XmCreateSeparator (row, "Dialogue", args, n+1);
+			    XtManageChild (w);
+			    adbloc->E_ThotWidget[ent] = w;
+			 }
 		       /* liberation de la string */
 		       if (equiv != NULL)
 			  XmStringFree (title_string);
