@@ -477,7 +477,7 @@ void FreePixmap (Pixmap pixmap)
       && pixmap != (Pixmap) PictureLogo 
       && pixmap != EpsfPictureLogo)
 #ifdef _GL
-    TtaFreeMemory (pixmap);
+    TtaFreeMemory ((void *)pixmap);
 #else /*_GL*/
 #ifndef _WINDOWS
 #ifndef _GTK
@@ -1159,7 +1159,7 @@ void CreateGifLogo ()
     (LostPicturePath, imageDesc, &xBox, &yBox, &wBox,
      &hBox, Bgcolor, &width, &height);
   TtaFreeMemory (imageDesc);
-  PictureLogo = drw;
+  PictureLogo = (unsigned char *) drw;
 #else /*_WIN && _GL*/
   GdkImlibImage      *im;
 
@@ -1845,7 +1845,9 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
   int                 w, h;
   int                 width, height;
   int                 left, right, top, bottom;
+#ifndef _GL
   unsigned char       *drw = None;
+#endif /*_GL*/
 
   left = box->BxLMargin + box->BxLBorder + box->BxLPadding;
   right = box->BxRMargin + box->BxRBorder + box->BxRPadding;
@@ -1903,8 +1905,14 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
 	      imageDesc->PicPresent = RealSize;
 	      imageDesc->PicWArea = wBox = w;
 	      imageDesc->PicHArea = hBox = h;
+#ifdef _GL
+	      imageDesc->PicPixmap = (unsigned char *) 
+		(*(PictureHandlerTable[typeImage].Produce_Picture)) 
+		(frame, imageDesc, fileName);
+#else /*_GL*/
 	      imageDesc->PicPixmap = (*(PictureHandlerTable[typeImage].Produce_Picture)) 
-		(frame, imageDesc, fileName);	      
+		(frame, imageDesc, fileName);
+#endif /*_GL*/	      
 	      xBox = imageDesc->PicXArea;
 	      yBox = imageDesc->PicYArea;
 	    }
@@ -1924,11 +1932,18 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
 		  if(box->BxH != 0)
 		    yBox = h;
 		}
-	      
+#ifdef _GL
+	      imageDesc->PicPixmap = (unsigned char *) 
+		(*(PictureHandlerTable[typeImage].Produce_Picture))
+		(fileName, imageDesc, &xBox, &yBox, &wBox, &hBox,
+		 Bgcolor, &width, &height,
+		 ViewFrameTable[frame - 1].FrMagnification);
+#else /*_GL*/
 	      imageDesc->PicPixmap = (*(PictureHandlerTable[typeImage].Produce_Picture))
 		(fileName, imageDesc, &xBox, &yBox, &wBox, &hBox,
 		 Bgcolor, &width, &height,
 		 ViewFrameTable[frame - 1].FrMagnification);
+#endif /*_GL*/
 	    }
 	  /* intrinsic width and height */
 	  imageDesc->PicWidth  = width;

@@ -398,7 +398,7 @@ int BoxCharacterWidth (CHAR_T c, SpecFont specfont)
   if (font == NULL)
     return 6;
   else 
-    return UnicodeCharacterWidth (c, font);
+    return CharacterWidth (car, font);
 #endif /*_GL*/
 }
 /*----------------------------------------------------------------------

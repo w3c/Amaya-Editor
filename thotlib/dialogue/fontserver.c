@@ -65,7 +65,8 @@ int GetFontFilename (char script, int family,
       if (highlight == 0)
 	XftPatternAddInteger (pat, XFT_WEIGHT, XFT_WEIGHT_LIGHT);
       else if (highlight == 2 || highlight == 3)
-	XftPatternAddInteger (pat, XFT_WEIGHT, XFT_WEIGHT_MEDIUM);
+	XftPatternAddInteger (pat, XFT_WEIGHT, XFT_WEIGHT_LIGHT);
+	/* XftPatternAddInteger (pat, XFT_WEIGHT, XFT_WEIGHT_MEDIUM); */
       else
 	XftPatternAddInteger (pat, XFT_WEIGHT, XFT_WEIGHT_BOLD);
       if (highlight == 0 || highlight == 1)
@@ -81,13 +82,13 @@ int GetFontFilename (char script, int family,
       XftPatternAddString (pat, XFT_FAMILY, "Symbol");
       XftPatternAddString (pat, XFT_FAMILY, "Standard Symbols L");
       XftPatternAddString (pat, XFT_FOUNDRY, "adobe");
-	  XftPatternAddString (pat, XFT_ENCODING, "fontspecific");
+      XftPatternAddString (pat, XFT_ENCODING, "fontspecific");
       XftPatternAddInteger (pat, XFT_WEIGHT, XFT_WEIGHT_MEDIUM);
       XftPatternAddInteger (pat, XFT_SLANT, XFT_SLANT_ROMAN);
     }
   else
     {
-      XftPatternAddString (pat, XFT_ENCODING, "iso8859-1");
+      /*XftPatternAddString (pat, XFT_ENCODING, "iso8859-1");*/
       XftPatternAddString (pat, XFT_FOUNDRY, "adobe");
       XftPatternAddString (pat, XFT_FOUNDRY, "microsoft");
       if (UseLucidaFamily)
@@ -163,30 +164,30 @@ int GetFontFilename (char script, int family,
 	{
 	case 0:
 	  XftPatternAddInteger (pat, XFT_WEIGHT, XFT_WEIGHT_LIGHT);
+	  /* XftPatternAddInteger (pat, XFT_WEIGHT, XFT_WEIGHT_MEDIUM); */
 	  XftPatternAddInteger (pat, XFT_SLANT, XFT_SLANT_ROMAN);
 	  break;
 	case 1:
-	  XftPatternAddInteger (pat, XFT_WEIGHT, XFT_WEIGHT_BOLD);
 	  if (UseLucidaFamily && family == 1)
 	    XftPatternAddInteger (pat, XFT_WEIGHT, XFT_WEIGHT_DEMIBOLD);
 	  else
-	    XftPatternAddInteger (pat, XFT_WEIGHT, XFT_WEIGHT_MEDIUM);	  
+	    XftPatternAddInteger (pat, XFT_WEIGHT, XFT_WEIGHT_BOLD);	  
 	  XftPatternAddInteger (pat, XFT_SLANT, XFT_SLANT_ROMAN);
 	  break;
 	case 2:
 	case 3:
-	  XftPatternAddInteger (pat, XFT_WEIGHT, XFT_WEIGHT_MEDIUM);
+	  XftPatternAddInteger (pat, XFT_WEIGHT, XFT_WEIGHT_LIGHT);
+	  /* XftPatternAddInteger (pat, XFT_WEIGHT, XFT_WEIGHT_MEDIUM); */
 	  if (family == 2 || family == 3)
 	    XftPatternAddInteger (pat, XFT_SLANT, XFT_SLANT_OBLIQUE);
 	  else
 	    XftPatternAddInteger (pat, XFT_SLANT, XFT_SLANT_ITALIC);
 	  break;
 	case 4:
-	  XftPatternAddInteger (pat, XFT_WEIGHT, XFT_WEIGHT_BOLD);
 	case 5:
 	  if (UseLucidaFamily && family == 1)
 	    {
-	      XftPatternAddInteger (pat, XFT_WEIGHT, XFT_WEIGHT_BOLD);
+	      XftPatternAddInteger (pat, XFT_WEIGHT, XFT_WEIGHT_DEMIBOLD);
 	      XftPatternAddInteger (pat, XFT_SLANT, XFT_SLANT_ITALIC);
 	    }
 	  else if (family == 2 || family == 3)

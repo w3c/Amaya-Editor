@@ -405,8 +405,9 @@ void WIN_ChangeViewSize (int frame, int width, int height, int top_delta,
 #ifdef _GL
     GL_MakeCurrent (frame);	
     GLResize (width, height, 0 ,0);
-	GL_ActivateDrawing ();
-	GL_DrawAll (NULL, frame);
+    Clear (frame, width, height, 0, 0);
+    GL_ActivateDrawing ();
+    GL_DrawAll (NULL, frame);
 #endif/*_GL*/
 }
 #else /* _WINDOWS */
@@ -667,6 +668,7 @@ gboolean FrameResizedGTK (GtkWidget *widget,
     if (gtk_gl_area_make_current (GTK_GL_AREA(widget)))
       {
 	GLResize (width, height, x ,y);
+	Clear (frame, width, height, 0, 0);
 	GL_ActivateDrawing ();
 	FrameRedraw (frame, width, height);
 	GL_DrawAll (widget, frame);

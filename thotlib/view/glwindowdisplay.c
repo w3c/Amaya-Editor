@@ -158,12 +158,42 @@ ThotBool GL_Drawing = FALSE;
 
 /*--------- STATICS ------*/
 
-/* background color*/
-static int BG_Frame;
 /*Current Thickness*/
 static int S_thick;
 /* if a refresh is needed, it is TRUE*/
 static ThotBool GL_Modif = FALSE;
+
+/* background color*/
+static int GL_Background[50];
+
+/*----------------------------------------------------------------------
+   SetMainWindowBackgroundColor :                          
+  ----------------------------------------------------------------------*/
+void SetMainWindowBackgroundColor (int frame, int color)
+{
+   GL_Background[frame] = color;
+   return;
+}
+
+/*----------------------------------------------------------------------
+  Clear clear the area of frame located at (x, y) and of size width x height.
+  ----------------------------------------------------------------------*/
+void Clear (int frame, int width, int height, int x, int y)
+{
+  if (width == 0 || height == 0)
+    {
+      g_print ("\n\nclearerror:");
+      return;
+    }
+  y = y + FrameTable[frame].FrTopMargin;
+  GL_SetForeground (GL_Background[frame]); 
+  glBegin (GL_QUADS); 
+  glVertex2f (x, y); 
+  glVertex2f (x, y + height);
+  glVertex2f (x +  width, y + height);
+  glVertex2f (x + width, y);
+  glEnd ();
+}
 
 #ifdef _WINDOWS 
 
@@ -350,27 +380,6 @@ void InitDrawing (int style, int thick, int fg)
 }
 
 /*----------------------------------------------------------------------
-   GL_DrawEmptyRectangle Outlined rectangle
-  ----------------------------------------------------------------------*/
-void  GL_ClearBackground (int width, int height)
-{
-  GL_SetForeground (BG_Frame);
-  glBegin (GL_QUADS);
-  glVertex2f (  0, 0 );
-  glVertex2f (  0, 0 + height);
-  glVertex2f (  0 +  width, 0 + height);
-  glVertex2f (  0 + width, 0);
-  glEnd ();
-}
-/*----------------------------------------------------------------------
-  GL_SetBackground : Save background color ('cause also used in GL_Clear)
-  ----------------------------------------------------------------------*/
-void GL_SetBackground (int bg, int frame)
-{   
-  BG_Frame = bg;
-  return;
-}
-/*----------------------------------------------------------------------
    GL_VideoInvert : 
    using a transparent yellow instead of inverting... much simpler !   
   ----------------------------------------------------------------------*/
@@ -387,24 +396,6 @@ void GL_VideoInvert (int width, int height, int x, int y)
   glEnd (); 
 }
 
-/*----------------------------------------------------------------------
-   GL_ClearArea
-    Create a plane filled with background color
-    at the size of the clear area
-    (sort of an erase tool, corresponding to a gdk_clear...)
-  ----------------------------------------------------------------------*/
-void GL_ClearArea (int x, int y, int width, int height)
-{
-   if (width == 0 || height == 0)
-    return;
-  GL_SetForeground (BG_Frame); 
-  glBegin (GL_QUADS); 
-  glVertex2f (x, y); 
-  glVertex2f (x, y + height);
-  glVertex2f (x +  width, y + height);
-  glVertex2f (x + width, y);
-  glEnd ();
-}
 /*----------------------------------------------------------------------
    GL_DrawEmptyRectangle Outlined rectangle
   ----------------------------------------------------------------------*/
@@ -851,7 +842,45 @@ void GL_DrawUnicodeChar (CHAR_T const c, float x, float y, void *GL_font, int fg
   ----------------------------------------------------------------------*/
 int CharacterWidth (unsigned char c, PtrFont font)
 {
-	UnicodeCharacterWidth ((CHAR_T) c, font);
+  int                 i, l;
+
+  if (font == NULL)
+    return 0;
+  else if (c == INVISIBLE_CHAR)
+    return 1;
+  if (c == START_ENTITY)
+    c = '&';
+  else if (c == TAB || c == UNBREAKABLE_SPACE)
+    /* we use the SPACE width for the character TAB */
+    c = SPACE;
+  if (c == NEW_LINE || c == BREAK_LINE)
+    /* characters NEW_LINE and BREAK_LINE are equivalent */
+    l = 1;
+  else
+    {
+      if (c == THIN_SPACE)
+	l = gl_font_char_width ((void *) font, 32) / 4;
+      else if (c == HALF_EM)
+	l = gl_font_char_width ((void *) font, 32) / 2;
+      else
+	l = gl_font_char_width ((void *) font, c);
+#ifndef _WINDOWS
+      if (c == 244)
+	{
+	  /* a patch due to errors in standard symbol fonts */
+	  i = 0;
+	  while (i < MAX_FONT && font != TtFonts[i])
+	    i++;
+	  if (TtPatchedFont[i] == 8 || TtPatchedFont[i] == 10)
+	    l = 1;
+	  else if (TtPatchedFont[i] == 12 || TtPatchedFont[i] == 14)
+	    l = 2;
+	  else if (TtPatchedFont[i] == 24)
+	    l = 4;
+	}
+#endif /*_WINDOWS*/
+    }
+  return l;
 }
 
 
@@ -1623,7 +1652,6 @@ void GLResize (int width, int height, int x, int y)
   /* Needed for 3d only...*/
   glMatrixMode (GL_MODELVIEW);
   glLoadIdentity (); 
-  GL_ClearBackground (width, height);
 }
 
 

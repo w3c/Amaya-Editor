@@ -2192,25 +2192,9 @@ void StorePageInfo (int pagenum, int width, int height)
   ----------------------------------------------------------------------*/
 void psBoundingBox (int frame, int width, int height)
 {
-}
-
-/*----------------------------------------------------------------------
-   SetMainWindowBackgroundColor :                          
-  ----------------------------------------------------------------------*/
-void SetMainWindowBackgroundColor (int frame, int color)
-{
-   GL_SetBackground(color, frame);
-}
-
-/*----------------------------------------------------------------------
-  Clear clear the area of frame located at (x, y) and of size width x height.
-  ----------------------------------------------------------------------*/
-void Clear (int frame, int width, int height, int x, int y)
-{
-  
-   GL_ClearArea (x, y + FrameTable[frame].FrTopMargin, width, height);
 
 }
+
 
 /*----------------------------------------------------------------------
   WChaine draw a string in frame, at location (x, y) and using font.
