@@ -4,7 +4,7 @@
 #
 #       amaya-$MACH-$AMAYAVERSION.tgz
 # 
-AMAYAVERSION=3.9
+AMAYAVERSION=4.0
 THOTDIR=$PWD/../..
 DEST=/tahiti/thottape
 PLATFORMS="solaris2 LINUX-ELF"
@@ -76,6 +76,7 @@ echo "Plarform ------->" $MACH
    Amaya/amaya/COPYRIGHT* \
    Amaya/amaya/AmayaPage.html \
    Amaya/amaya/AmayaPage.html.fr \
+   Amaya/amaya/amaya.png \
    Amaya/amaya/*.conf \
    Amaya/amaya/HTML.STR \
    Amaya/amaya/HTML.trans \
