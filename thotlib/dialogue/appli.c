@@ -225,7 +225,7 @@ ThotBool InitToolTip (HWND hwndToolBar)
    les parametres identifiant le document et la vue        
    qui correspondent a une frame donnee.                   
   ----------------------------------------------------------------------*/
-void                FrameToView (int frame, int *doc, int *view)
+void FrameToView (int frame, int *doc, int *view)
 {
    int                 i;
    PtrDocument         pDoc;
@@ -254,7 +254,7 @@ void                FrameToView (int frame, int *doc, int *view)
 /*----------------------------------------------------------------------
    Evenement sur une frame document.                             
   ----------------------------------------------------------------------*/
-void                FrameKilled (int *w, int frame, int *info)
+void FrameKilled (int *w, int frame, int *info)
 {
    /* Enleve la procedure de Callback */
    /* Detruit la fenetre si elle existe encore */
@@ -500,56 +500,58 @@ void WIN_ChangeVScroll (int frame, int reason, int value)
    if (documentDisplayMode[FrameTable[frame].FrDoc - 1] == NoComputedDisplay)
       return;
 
-   switch (reason) {
-          case SB_TOP:
-               JumpIntoView (frame, 0);
-               break;
-
-          case SB_BOTTOM:
-               JumpIntoView (frame, 100);
-               break;
-
-          case SB_LINEUP:
-               delta = -13;
-               VerticalScroll (frame, delta, 1);
-               break;
-
-          case SB_LINEDOWN:
-               delta = 13;
-               VerticalScroll (frame, delta, 1);
-               break;
-
-          case SB_PAGEUP:
-               delta = -FrameTable[frame].FrHeight;
-               VerticalScroll (frame, delta, 1);
-               break;
-
-          case SB_PAGEDOWN:
-               delta = FrameTable[frame].FrHeight;
-               VerticalScroll (frame, delta, 1);
-               break;
-
-          case SB_ENDSCROLL:
-               break;
-
-          case SB_THUMBPOSITION:
-          case SB_THUMBTRACK:
-               ComputeDisplayedChars (frame, &Xpos, &Ypos, &width, &height);
-               sPos = GetScrollPos (FrameTable[frame].WdScrollV, SB_CTL);
-               delta = value - sPos;
-               nbPages = abs (delta) / height;
-               remaining = abs (delta) - (height * nbPages);
-			   if (nbPages <= 3) {
-                  if (delta > 0)
-                      delta = nbPages * FrameTable[frame].FrHeight + (int) ((remaining * FrameTable[frame].FrHeight) / height);
-                  else 
-                      delta = -(nbPages * FrameTable[frame].FrHeight + (int) ((remaining * FrameTable[frame].FrHeight) / height));
-                  VerticalScroll (frame, delta, 1);
-			   } else {
-                     delta = (int) (((float)value / (float)FrameTable[frame].FrHeight) * 100);
-                     JumpIntoView (frame, delta);
-               }
-               break;
+   switch (reason)
+     {
+     case SB_TOP:
+       JumpIntoView (frame, 0);
+       break;
+       
+     case SB_BOTTOM:
+       JumpIntoView (frame, 100);
+       break;
+       
+     case SB_LINEUP:
+       delta = -13;
+       VerticalScroll (frame, delta, 1);
+       break;
+       
+     case SB_LINEDOWN:
+       delta = 13;
+       VerticalScroll (frame, delta, 1);
+       break;
+       
+     case SB_PAGEUP:
+       delta = -FrameTable[frame].FrHeight;
+       VerticalScroll (frame, delta, 1);
+       break;
+       
+     case SB_PAGEDOWN:
+       delta = FrameTable[frame].FrHeight;
+       VerticalScroll (frame, delta, 1);
+       break;
+       
+     case SB_ENDSCROLL:
+       break;
+       
+     case SB_THUMBPOSITION:
+     case SB_THUMBTRACK:
+       ComputeDisplayedChars (frame, &Xpos, &Ypos, &width, &height);
+       sPos = GetScrollPos (FrameTable[frame].WdScrollV, SB_CTL);
+       delta = value - sPos;
+       nbPages = abs (delta) / height;
+       remaining = abs (delta) - (height * nbPages);
+       if (nbPages <= 3)
+	 {
+	   if (delta > 0)
+	     delta = nbPages * FrameTable[frame].FrHeight + (int) ((remaining * FrameTable[frame].FrHeight) / height);
+	   else 
+	     delta = -(nbPages * FrameTable[frame].FrHeight + (int) ((remaining * FrameTable[frame].FrHeight) / height));
+	   VerticalScroll (frame, delta, 1);
+	 } else {
+	   delta = (int) (((float)value / (float)FrameTable[frame].FrHeight) * 100);
+	   JumpIntoView (frame, delta);
+	 }
+       break;
    }
 }
 
@@ -565,41 +567,42 @@ void WIN_ChangeHScroll (int frame, int reason, int value)
    if (documentDisplayMode[FrameTable[frame].FrDoc - 1] == NoComputedDisplay)
       return;
 
-   switch (reason) {
-          case SB_LINERIGHT:
-               delta = 13;
-               break;
-
-          case SB_LINELEFT:
-               delta = -13;
-               break;
-
-          case SB_PAGERIGHT:
-               delta = FrameTable[frame].FrWidth;
-               break;
-
-          case SB_PAGELEFT:
-               delta = -FrameTable[frame].FrWidth;
-               break;
-
-          case SB_THUMBPOSITION:
-          case SB_THUMBTRACK:
-               ComputeDisplayedChars (frame, &Xpos, &Ypos, &width, &height);
-               sPos = GetScrollPos (FrameTable[frame].WdScrollH, SB_CTL);
-               delta = value - sPos;
-               nbPages = abs (delta) / width;
-			   remaining = abs (delta) - (width * nbPages);
-               if (nbPages <= 3)
-                 {
-                  if (delta > 0)
-                     delta = nbPages * FrameTable[frame].FrWidth + (int) ((remaining * FrameTable[frame].FrWidth) / width);
-                  else 
-                      delta = -(nbPages * FrameTable[frame].FrWidth + (int) ((remaining * FrameTable[frame].FrWidth) / width));
-	         }
-               else
-                  delta = (int) (((float)value / (float)FrameTable[frame].FrWidth) * 100);
-               break;
-   }
+   switch (reason)
+     {
+     case SB_LINERIGHT:
+       delta = 13;
+       break;
+       
+     case SB_LINELEFT:
+       delta = -13;
+       break;
+       
+     case SB_PAGERIGHT:
+       delta = FrameTable[frame].FrWidth;
+       break;
+       
+     case SB_PAGELEFT:
+       delta = -FrameTable[frame].FrWidth;
+       break;
+       
+     case SB_THUMBPOSITION:
+     case SB_THUMBTRACK:
+       ComputeDisplayedChars (frame, &Xpos, &Ypos, &width, &height);
+       sPos = GetScrollPos (FrameTable[frame].WdScrollH, SB_CTL);
+       delta = value - sPos;
+       nbPages = abs (delta) / width;
+       remaining = abs (delta) - (width * nbPages);
+       if (nbPages <= 3)
+	 {
+	   if (delta > 0)
+	     delta = nbPages * FrameTable[frame].FrWidth + (int) ((remaining * FrameTable[frame].FrWidth) / width);
+	   else 
+	     delta = -(nbPages * FrameTable[frame].FrWidth + (int) ((remaining * FrameTable[frame].FrWidth) / width));
+	 }
+       else
+	 delta = (int) (((float)value / (float)FrameTable[frame].FrWidth) * 100);
+       break;
+     }
 
    HorizontalScroll (frame, delta, 1);
 }
@@ -912,23 +915,23 @@ void TtcScrollRight (Document document, View view)
 void TtcPageUp (Document document, View view)
 {
    int                 frame;
-#  ifndef _WINDOWS
+#ifndef _WINDOWS
    XmScrollBarCallbackStruct infos;
-#  else   /* _WINDOWS */
+#else   /* _WINDOWS */
    int delta;
-#  endif  /* _WINDOWS */
+#endif  /* _WINDOWS */
 
    if (document != 0)
       frame = GetWindowNumber (document, view);
    else
      frame = 0;
-#  ifndef _WINDOWS
+#ifndef _WINDOWS
    infos.reason = XmCR_PAGE_DECREMENT;
    FrameVScrolled (0, frame, (int *) &infos);
-#  else  /* _WINDOWS */
+#else  /* _WINDOWS */
    delta = -FrameTable[frame].FrHeight;
    VerticalScroll (frame, delta, 1);
-#  endif /* _WINDOWS */
+#endif /* _WINDOWS */
 }
 
 /*----------------------------------------------------------------------
@@ -938,23 +941,23 @@ void TtcPageDown (Document document, View view)
 {
    int                 frame;
 
-#  ifndef _WINDOWS
+#ifndef _WINDOWS
    XmScrollBarCallbackStruct infos;
-#  else   /* _WINDOWS */
+#else   /* _WINDOWS */
    int delta;
-#  endif  /* !_WINDOWS */
+#endif  /* !_WINDOWS */
 
    if (document != 0)
       frame = GetWindowNumber (document, view);
    else
      frame = 0;
-#  ifndef _WINDOWS
+#ifndef _WINDOWS
    infos.reason = XmCR_PAGE_INCREMENT;
    FrameVScrolled (0, frame, (int *) &infos);
-#  else  /* _WINDOWS */
+#else  /* _WINDOWS */
    delta = FrameTable[frame].FrHeight;
    VerticalScroll (frame, delta, 1);
-#  endif /* _WINDOWS */
+#endif /* _WINDOWS */
 }
 
 
@@ -963,7 +966,7 @@ void TtcPageDown (Document document, View view)
   ----------------------------------------------------------------------*/
 void TtcPageTop (Document document, View view)
 {
-#  ifdef _WINDOWS
+#ifdef _WINDOWS
    int                 frame;
 
    if (document != 0)
@@ -971,7 +974,7 @@ void TtcPageTop (Document document, View view)
    else
      frame = 0;
    JumpIntoView (frame, 0);
-#  else  /* !_WINDOWS */
+#else  /* !_WINDOWS */
    XmScrollBarCallbackStruct infos;
    int                 frame;
 
@@ -981,7 +984,7 @@ void TtcPageTop (Document document, View view)
      frame = 0;
    infos.reason = XmCR_TO_TOP;
    FrameVScrolled (0, frame, (int *) &infos);
-#  endif /* _WINDOWS */
+#endif /* _WINDOWS */
 }
 
 /*----------------------------------------------------------------------
@@ -989,7 +992,7 @@ void TtcPageTop (Document document, View view)
   ----------------------------------------------------------------------*/
 void TtcPageEnd (Document document, View view)
 {
-#  ifdef _WINDOWS
+#ifdef _WINDOWS
    int                 frame;
 
    if (document != 0)
@@ -997,7 +1000,7 @@ void TtcPageEnd (Document document, View view)
    else
      frame = 0;
    JumpIntoView (frame, 100);
-#  else  /* !_WINDOWS */
+#else  /* !_WINDOWS */
    XmScrollBarCallbackStruct infos;
    int                 frame;
 
@@ -1007,7 +1010,7 @@ void TtcPageEnd (Document document, View view)
      frame = 0;
    infos.reason = XmCR_TO_BOTTOM;
    FrameVScrolled (0, frame, (int *) &infos);
-#  endif /* _WINDOWS */
+#endif /* _WINDOWS */
 }
 
 
@@ -1032,9 +1035,9 @@ void InitializeOtherThings ()
    ClickX = 0;
    ClickY = 0;
    /* message de selection vide */
-#  ifndef _WINDOWS
+#ifndef _WINDOWS
    null_string = XmStringCreateSimple ("");
-#  endif /* _WINDOWS */
+#endif /* _WINDOWS */
    OldMsgSelect[0] = EOS;
    OldDocMsgSelect = NULL;
 }
@@ -1665,7 +1668,7 @@ LRESULT CALLBACK ClientWndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lPar
 	  /* memorize the click position */
 	}
       else
-	LocateSelectionInView (frame, LOWORD (lParam), HIWORD (lParam), 0);
+	LocateSelectionInView (frame, LOWORD (lParam), HIWORD (lParam), 5);
       return 0;
 
     case WM_RBUTTONDOWN:
@@ -1684,9 +1687,8 @@ LRESULT CALLBACK ClientWndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lPar
 	  ApplyDirectResize (frame, ClickX, ClickY);
 	  /* memorize the click position */
 	}
-      else if (ThotLocalActions[T_editfunc] != NULL)
-	(*ThotLocalActions[T_editfunc]) (TEXT_INSERT);
-      /* selection a l'interieur d'une polyline */
+      else
+	LocateSelectionInView (frame, LOWORD (lParam), HIWORD (lParam), 6);
       return 0;
 
     case WM_MOUSEMOVE:
@@ -1740,15 +1742,11 @@ LRESULT CALLBACK ClientWndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lPar
   ----------------------------------------------------------------------*/
 void FrameCallback (int frame, void *evnt)
 {
-   PtrDocument         docsel;
-   PtrElement          firstSel, lastSel;
    ThotEvent           event;
    ThotEvent          *ev = (ThotEvent *) evnt;
    Document            document;
    View                view;
-   int                 firstCar, lastCar;
    int                 comm, dx, dy, sel, h;
-   ThotBool            ok;
 
    /* ne pas traiter si le document est en mode NoComputedDisplay */
    if (FrameTable[frame].FrDoc == 0 ||
@@ -1780,8 +1778,8 @@ void FrameCallback (int frame, void *evnt)
        /*_____________________________________________________*/
        switch (ev->xbutton.button)
 	 {
-	   /* ==========BOUTON GAUCHE========== */
 	 case Button1:
+	   /* ==========LEFT BUTTON========== */
 	   /* Termine l'insertion courante s'il y en a une */
 	   CloseInsertion ();
 	   
@@ -1877,53 +1875,30 @@ void FrameCallback (int frame, void *evnt)
 		 TtcCopyToClipboard (document, view);
 	     }
 	   break;
-	   
-	   /* ==========BOUTON MILIEU========== */
 	 case Button2:
-	   /* Termine l'insertion courante s'il y en a une */
-	   CloseInsertion ();
-	   
+	   /* ==========MIDDLE BUTTON========== */
 	   /* Est-ce que la touche modifieur de geometrie est active ? */
 	   if ((ev->xbutton.state & THOT_KEY_ControlMask) != 0)
 	     {
-	       /* On modifie les dimensions d'une boite */
+	       /* close the current insertion */
+	       CloseInsertion ();
+	       /* resize a box */
 	       ApplyDirectResize (frame, ev->xbutton.x, ev->xbutton.y);
 	     }
 	   else
-	     {
-	       FrameToView (frame, &document, &view);
-	       if (MenuActionList[CMD_PasteFromClipboard].Call_Action != NULL)
-		 (*MenuActionList[CMD_PasteFromClipboard].Call_Action) (document, view);
-	     }
+	     LocateSelectionInView (frame, ev->xbutton.x, ev->xbutton.y, 5);
 	   break;
-	   
-	   /* ==========BOUTON DROIT========== */
 	 case Button3:
-	   /* Termine l'insertion courante s'il y en a une */
-	   CloseInsertion ();
+	   /* ==========RIGHT BUTTON========== */
 	   if ((ev->xbutton.state & THOT_KEY_ControlMask) != 0)
 	     {
-	       /* On modifie les dimensions d'une boite */
+	       /* close the current insertion */
+	       CloseInsertion ();
+	       /* resize a box */
 	       ApplyDirectResize (frame, ev->xbutton.x, ev->xbutton.y);
 	     }
-	   else if (GetCurrentSelection (&docsel, &firstSel, &lastSel, &firstCar, &lastCar) &&
-		    !docsel->DocReadOnly)
-	     {
-	       if (firstCar != 0 && firstSel->ElTerminal &&
-		   firstSel->ElLeafType == LtPolyLine)
-		 {
-		   /* selection a l'interieur d'une polyline */
-		   if (ThotLocalActions[T_editfunc] != NULL)
-		     (*ThotLocalActions[T_editfunc]) (TEXT_INSERT);
-		 }
-	       else
-		 {
-		   TtaSetDialoguePosition ();
-		   if (ThotLocalActions[T_insertpaste] != NULL)
-		     (*ThotLocalActions[T_insertpaste]) (TRUE, FALSE, 'R', &ok);
-		 }
-	     }
-	   
+	   else
+	     LocateSelectionInView (frame, ev->xbutton.x, ev->xbutton.y, 6);
 	 default:
 	   break;
 	 }

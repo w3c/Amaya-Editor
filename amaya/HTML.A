@@ -4,6 +4,7 @@ DEFAULT
    BEGIN
 	ElemActivate.Pre -> DoubleClick;
 	ElemClick.Pre -> SimpleClick;
+	ElemRClick.Pre -> SimpleRClick;
 	ElemPaste.Post -> ElementPasted;
 	ElemNew.Post -> ElementCreated;
 	ElemDelete.Post -> ElementDeleted;
@@ -93,6 +94,11 @@ ELEMENTS
 	END;
 
    Button_Input:
+	BEGIN
+	ElemTab.Pre -> HandleTab;
+	END;
+
+   BUTTON_:
 	BEGIN
 	ElemTab.Pre -> HandleTab;
 	END;

@@ -238,6 +238,8 @@ ThotBool CallEventType (NotifyEvent * notifyEvent, ThotBool pre)
     case TteElemExport:
     case TteElemSelect:
     case TteElemClick:
+    case TteElemMClick:
+    case TteElemRClick:
     case TteElemActivate:
     case TteElemExtendSelect:
     case TteElemCopy:

@@ -636,7 +636,7 @@ RULES
 	Create '</label>' After;
 	END;
 
- BUTTON: BEGIN
+ BUTTON_: BEGIN
 	Create '<button';
 	Create Attributes;
 	Create '>';

@@ -767,7 +767,7 @@ void SubmitForm (Document doc, Element element)
         elType = TtaGetElementType (element);
 	if (elType.ElTypeNum == HTML_EL_Reset_Input ||
 	    elType.ElTypeNum == HTML_EL_Submit_Input ||
-	    elType.ElTypeNum == HTML_EL_BUTTON ||
+	    elType.ElTypeNum == HTML_EL_BUTTON_ ||
 	    elType.ElTypeNum == HTML_EL_PICTURE_UNIT)
 	   found = TRUE;
 	else
@@ -784,7 +784,7 @@ void SubmitForm (Document doc, Element element)
        button_type = HTML_EL_Reset_Input;
        break;
        
-     case HTML_EL_BUTTON:
+     case HTML_EL_BUTTON_:
        attrType.AttrTypeNum = HTML_ATTR_Button_type;
        attr = TtaGetAttribute (element, attrType);
        if (!attr)
@@ -843,7 +843,7 @@ void SubmitForm (Document doc, Element element)
 	return;
 
    if (elType.ElTypeNum == HTML_EL_Submit_Input ||
-       (elType.ElTypeNum == HTML_EL_BUTTON &&
+       (elType.ElTypeNum == HTML_EL_BUTTON_ &&
 	button_type == HTML_EL_Submit_Input))
 	{
 	    /* get the button's value and name, if they exist */
@@ -974,15 +974,31 @@ ThotBool HandleTab (NotifyOnTarget *event)
     {
       TtaSearchAttribute (attrType, SearchForward, el, &el, &attr);
       found = FALSE;
-      while (!found && el && TtaIsAncestor(el, elForm))
+      while (!found)
 	{
 	  if (el == event->element)
 	    {
 	      /* we made a complete trun and no other element was found */
 	      el = NULL;
 	      attr = NULL;
+	      found = TRUE;
 	    }
-	  if (attr)
+	  else if (el == NULL || !TtaIsAncestor(el, elForm))
+	    {
+	      /* out of the form */
+	      el = NULL;
+	      attr = NULL;
+	      if (!cycle)
+		{
+		  /* restart from the beginning of the form */
+		  cycle = TRUE;
+		  el = elForm;
+		}
+	      else
+		/* stop the search */
+		found = TRUE;
+	    }  
+	  else if (attr)
 	    {
 	      elType = TtaGetElementType (el);
 	      switch (elType.ElTypeNum)
@@ -993,6 +1009,7 @@ ThotBool HandleTab (NotifyOnTarget *event)
 		case HTML_EL_Submit_Input:
 		case HTML_EL_Reset_Input:
 		case HTML_EL_Button_Input:
+		case HTML_EL_BUTTON_:
 		  /* no included text: select the element itself */
 		  TtaSelectElement (event->document, el);
 		  found =TRUE;
@@ -1023,17 +1040,11 @@ ThotBool HandleTab (NotifyOnTarget *event)
 		  break;
 		  
 		default:
-		  TtaSearchAttribute (attrType, SearchForward, el, &el, &attr);
-		  if (el == NULL && !cycle)
-		    {
-		      /* restart from the beginning of the form */
-		      cycle = TRUE;
-		      el = elForm;
-		      TtaSearchAttribute (attrType, SearchForward, el, &el, &attr);
-		    }
 		  break;
 		}
 	    }
+	  if (!found)
+	    TtaSearchAttribute (attrType, SearchForward, el, &el, &attr);
 	}
     }
   return TRUE; /* don't let Thot perform normal operation */

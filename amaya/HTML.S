@@ -581,7 +581,7 @@ STRUCT
 		CONSTANT C_Empty;
 		END;
 
-        BUTTON						{ BUTTON }
+        BUTTON_						{ BUTTON }
 	   (ATTR !NAME; Value_;
 		{ name  value }
 		  Button_type = button, submit, reset;

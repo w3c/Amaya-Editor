@@ -7603,7 +7603,7 @@ RULES
 		Visibility: 0;
 	END;
 
- BUTTON: BEGIN
+ BUTTON_: BEGIN
 	CreateBefore(BUTTON_S);
 	CreateWith(VerticalLine);
 	MarginTop: 1 px;

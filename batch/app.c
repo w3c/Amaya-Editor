@@ -118,6 +118,8 @@ char               *RegisteredAppEvents[] =
    "ElemSelect",
    "ElemExtendSelect",
    "ElemClick",
+   "ElemMClick",
+   "ElemRClick",
    "ElemActivate",
    "ElemSetReference",
    "ElemInclude",

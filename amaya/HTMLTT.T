@@ -393,7 +393,7 @@ RULES
  LABEL: BEGIN
 	END;
 
- BUTTON: BEGIN
+ BUTTON_: BEGIN
 	Create '[' before;
 	Create ']' after;
 	END;

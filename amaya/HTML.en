@@ -110,7 +110,7 @@ Radio_Input: input
 Submit_Input: input
 Reset_Input: input
 Button_Input: input
-BUTTON: button
+BUTTON_: button
 LABEL: label
 Hidden_Input: input
 Text_With_Frame: text

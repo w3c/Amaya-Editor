@@ -784,7 +784,7 @@ static ThotBool ActivateElement (Element element, Document document)
 		elType.ElTypeNum == HTML_EL_Option_Menu ||
 		elType.ElTypeNum == HTML_EL_Submit_Input ||
 		elType.ElTypeNum == HTML_EL_Reset_Input ||
-		elType.ElTypeNum == HTML_EL_BUTTON ||
+		elType.ElTypeNum == HTML_EL_BUTTON_ ||
 		elType.ElTypeNum == HTML_EL_File_Input ||
 		elType.ElTypeNum == HTML_EL_FRAME ||
 		elType.ElTypeNum == HTML_EL_Anchor))
@@ -816,7 +816,7 @@ static ThotBool ActivateElement (Element element, Document document)
 	     StopTransfer (document, 1);	   
 	     SubmitForm (document, element);
 	   }
-	else if (elType1.ElTypeNum == HTML_EL_BUTTON)
+	else if (elType1.ElTypeNum == HTML_EL_BUTTON_)
 	   DblClickOnButton (element, document);
 	return (TRUE);
      }
@@ -827,7 +827,7 @@ static ThotBool ActivateElement (Element element, Document document)
      {
        /* is it a double click in a BUTTON element? */
        elType1.ElSSchema = elType.ElSSchema;
-       elType1.ElTypeNum = HTML_EL_BUTTON;
+       elType1.ElTypeNum = HTML_EL_BUTTON_;
        elFound = TtaGetTypedAncestor (element, elType1);
        if (elFound)
 	 {
@@ -1185,7 +1185,6 @@ ThotBool DoubleClick (NotifyElement *event)
     return FALSE;
 }
 
-
 /*----------------------------------------------------------------------
   SimpleClick     The user has clicked an element.         
   ----------------------------------------------------------------------*/
@@ -1200,8 +1199,22 @@ ThotBool SimpleClick (NotifyElement *event)
       return TRUE;
     }
   else
-    /* don't let Thot perform normal operation */
+    /* don't let Thot perform normal operation if there is an activation */
     return (ActivateElement (event->element, event->document));
+}
+
+/*----------------------------------------------------------------------
+  SimpleClick     The user has clicked an element.         
+  ----------------------------------------------------------------------*/
+ThotBool SimpleRClick (NotifyElement *event)
+{
+  ThotBool done;
+
+  InNewWindow = TRUE;
+  done = ActivateElement (event->element, event->document);
+  InNewWindow = FALSE;
+  /* don't let Thot perform normal operation if there is an activation */
+  return done;
 }
 
 /*----------------------------------------------------------------------

@@ -3435,17 +3435,14 @@ Document GetHTMLDocument (const char *documentPath, char *form_data,
 {
    Document            newdoc;
    CSSInfoPtr          css;
-   char *            tempfile;
-   char *            tempdocument;
-   char *            parameters;
-   char *            target;
-   char *            pathname;
-   char *            documentname;
-   char *            content_type = NULL;
+   char               *tempfile;
+   char               *tempdocument;
+   char               *parameters;
+   char               *target;
+   char               *pathname;
+   char               *documentname;
+   char               *content_type = NULL;
    int                 toparse;
-#if 0
-   int                 slash;
-#endif
    int                 mode;
    int                 docType;
    ThotBool            ok;
@@ -3454,8 +3451,7 @@ Document GetHTMLDocument (const char *documentPath, char *form_data,
    /* Extract parameters if necessary */
    if (strlen (documentPath) > MAX_LENGTH - 1) 
      {
-       TtaSetStatus (baseDoc, 1, TtaGetMessage (AMAYA, AM_TOO_LONG_URL),
-		     "512");
+       TtaSetStatus (baseDoc, 1, TtaGetMessage (AMAYA, AM_TOO_LONG_URL), "512");
        return (0);
      }
    else
@@ -3627,9 +3623,9 @@ Document GetHTMLDocument (const char *documentPath, char *form_data,
 	   content_type = "application/rdf";
 	 }
 #endif /* ANNOTATIONS */
-       else if (doc == 0)
+       else if (doc == 0 || InNewWindow)
 	 /* In case of initial document, open the view before loading */
-	 newdoc = InitDocView (doc, documentname, docType, 0, FALSE);
+	 newdoc = InitDocView (0, documentname, docType, 0, FALSE);
        else
 	 {
 	   newdoc = doc;

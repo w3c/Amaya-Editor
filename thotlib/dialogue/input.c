@@ -919,6 +919,10 @@ void ThotInput (int frame, unsigned char *string, unsigned int nb,
 	      command == CMD_CreateElement)
 	    /* check if the application wants to handle the return */
 	    done = APPKey (TteElemReturn, FirstSelectedElement, document, TRUE);
+	  else if (LoadedDocument[document - 1] == DocSelectedAttr &&
+	      command == CMD_CreateElement)
+	    /* check if the application wants to handle the return */
+	    done = APPKey (TteElemReturn, AbsBoxSelectedAttr->AbElement, document, TRUE);
 	  else
 	    done = FALSE;
 	  /* Call action if it's active */
@@ -933,6 +937,10 @@ void ThotInput (int frame, unsigned char *string, unsigned int nb,
 		  command == CMD_CreateElement)
 		/* post treatment for the application */
 		APPKey (TteElemReturn, FirstSelectedElement, document, FALSE);
+	      else if (LoadedDocument[document - 1] == DocSelectedAttr &&
+		       command == CMD_CreateElement)
+		/* check if the application wants to handle the return */
+		APPKey (TteElemReturn, AbsBoxSelectedAttr->AbElement, document, FALSE);
 	    }
 	}
      else if (nb == 0)
@@ -986,6 +994,10 @@ void ThotInput (int frame, unsigned char *string, unsigned int nb,
 		  value == TAB)
 		/* check if the application wants to handle the Tab */
 		done = APPKey (TteElemTab, FirstSelectedElement, document, TRUE);
+	      else if (LoadedDocument[document - 1] == DocSelectedAttr &&
+		       value == TAB)
+		/* check if the application wants to handle the return */
+		done = APPKey (TteElemTab, AbsBoxSelectedAttr->AbElement, document, TRUE);
 	      else
 		done = FALSE;
 	      /* on insere un caractere valide quelque soit la langue */
@@ -995,6 +1007,10 @@ void ThotInput (int frame, unsigned char *string, unsigned int nb,
 		  value == TAB)
 		/* post treatment for the application */
 		APPKey (TteElemTab, FirstSelectedElement, document, FALSE);
+	      else if (LoadedDocument[document - 1] == DocSelectedAttr &&
+		       value == TAB)
+		/* check if the application wants to handle the return */
+		APPKey (TteElemTab, AbsBoxSelectedAttr->AbElement, document, FALSE);
 	    }
 	}
     }
