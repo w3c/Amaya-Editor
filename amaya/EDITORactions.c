@@ -2307,30 +2307,49 @@ void SelectColumn (Document doc, View view)
   ----------------------------------------------------------------------*/
 static void CreateColumn (Document doc, View view, ThotBool before)
 {
-  Element             el, elNew;
+  Element             cell, elNew, col;
   ElementType         elType;
+  Attribute           attr;
+  AttributeType       attrType;
   DisplayMode         dispMode;
-  int                 firstchar, lastchar;
+  Document            refDoc;
+  char                name[50];
   ThotBool            inMath;
 
-  /* get the first selected element */
-  TtaGiveFirstSelectedElement (doc, &el, &firstchar, &lastchar);
-  if (el)
-    el = TtaGetColumn (el);
-  if (el)
+  /* get the enclosing cell */
+  cell = GetEnclosingCell (doc);
+  if (cell)
     {
-      dispMode = TtaGetDisplayMode (doc);
-      if (dispMode == DisplayImmediately)
-	TtaSetDisplayMode (doc, DeferredDisplay);
-
-      elType = TtaGetElementType (el);
-      inMath = !strcmp (TtaGetSSchemaName (elType.ElSSchema), "MathML");
-      TtaOpenUndoSequence (doc, NULL, NULL, 0, 0);
-      /* Create the column */
-      elNew = NewColumnHead (el, before, FALSE, NULL, doc, inMath, TRUE);
-      TtaCloseUndoSequence (doc);
-      TtaSetDisplayMode (doc, dispMode);
-      TtaSetDocumentModified (doc);
+      elType = TtaGetElementType (cell);
+      inMath = !strcmp (TtaGetSSchemaName (elType.ElSSchema), "MathML");  
+      /* get the colspan value of the element */
+      attrType.AttrSSchema = elType.ElSSchema;
+      col = NULL;
+      if (!before)
+	{
+	  if (inMath)
+	    attrType.AttrTypeNum = MathML_ATTR_MColExt;
+	  else
+	    attrType.AttrTypeNum = HTML_ATTR_ColExt;
+	  attr = TtaGetAttribute (cell, attrType);
+	  if (attr)
+	    TtaGiveReferenceAttributeValue (attr, &col, name, &refDoc);
+	}
+      if (col == NULL)
+	col = TtaGetColumn (cell);
+      if (col)
+	{
+	  dispMode = TtaGetDisplayMode (doc);
+	  if (dispMode == DisplayImmediately)
+	    TtaSetDisplayMode (doc, DeferredDisplay);
+	  
+	  TtaOpenUndoSequence (doc, NULL, NULL, 0, 0);
+	  /* Create the column */
+	  elNew = NewColumnHead (col, before, FALSE, NULL, doc, inMath, TRUE);
+	  TtaCloseUndoSequence (doc);
+	  TtaSetDisplayMode (doc, dispMode);
+	  TtaSetDocumentModified (doc);
+	}
     }
 }
 
