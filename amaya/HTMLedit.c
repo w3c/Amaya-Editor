@@ -1327,20 +1327,12 @@ Element             element;
 
 #endif /* __STDC__ */
 {
-   AttributeType       attrType;
-   Attribute           attr;
    char               *ptr;
    int                 X, Y;
 
    ptr = NULL;
    if (element != NULL)
      {
-	/* does the element have a ISMAP attribute ? */
-	attrType.AttrSSchema = TtaGetDocumentSSchema (document);
-	attrType.AttrTypeNum = HTML_ATTR_ISMAP;
-	attr = TtaGetAttribute (element, attrType);
-	if (attr != NULL)
-	  {
 	     /* initialize X and Y. The user may click in any view. If it's not */
 	     /* the formatted view (view 1), TtaGiveSelectPosition does not */
 	     /* change variables X and Y. */
@@ -1354,7 +1346,6 @@ Element             element;
 	     /* create the search string to be appended to the URL */
 	     ptr = TtaGetMemory (27);
 	     sprintf (ptr, "?%d,%d", X, Y);
-	  }
      }
    return ptr;
 }

@@ -19,6 +19,7 @@
  *
  */
 
+#define DEBUG
 
 /* Included headerfiles */
 #define EXPORT extern
@@ -37,7 +38,8 @@ static char        *buffer;    /* temporary buffer used to build the query
 static int          lgbuffer;  /* size of the temporary buffer */
 static int          documentStatus;
  
- 
+extern char               *GetActiveImageInfo (Document document, Element element);
+
 /*----------------------------------------------------------------------
  -----------------------------------------------------------------------*/ 
 #ifdef __STDC__
@@ -610,8 +612,8 @@ Element             element;
    ElementType         elType;
    Attribute           attr;
    AttributeType       attrType;
-   int                 length, button_type;
-   char               *action, *name, *value;
+   int                 i, length, button_type;
+   char               *action, *name, *value, *info;
    int                 method;
 
    buffer = (char *) NULL;
@@ -628,11 +630,11 @@ Element             element;
 	switch (elType.ElTypeNum)
 	      {
 		 case HTML_EL_Reset_Input:
-		    button_type = elType.ElTypeNum;
+		    button_type = HTML_EL_Reset_Input;
 		    break;
 
 		 case HTML_EL_Submit_Input:
-		    button_type = elType.ElTypeNum;
+		    button_type = HTML_EL_Submit_Input;
 
 		    /* get the button's value and name, if they exist */
 		    attrType.AttrTypeNum = HTML_ATTR_NAME;
@@ -664,6 +666,41 @@ Element             element;
 		    /* not supported for the moment */
 		    button_type = HTML_EL_File_Input;
 		    return;
+
+	      case HTML_EL_PICTURE_UNIT:
+		button_type = HTML_EL_Submit_Input;
+		    /* get the button'spair of name and values, if they
+		       exist */
+		    attrType.AttrTypeNum = HTML_ATTR_NAME;
+		    attr = TtaGetAttribute (elForm, attrType);
+		    if (attr != NULL)
+		      {
+			length = TtaGetTextAttributeLength (attr);
+			name = TtaGetMemory (length + 3);
+			TtaGiveTextAttributeValue (attr, name, &length);
+			strcat (name, ". ");
+			length ++;
+			/* get the x and y coordinates */
+			info = GetActiveImageInfo (doc, element);
+			if (info != NULL) 
+			  {
+			    /* create the x name-value pair */
+			    name [length] = 'x';
+			    for (i = 0; info[i] != ','; i++);
+			    info[i] = EOS;
+			    /* skip the ? char */
+			    value = &info[1];
+			    AddNameValue (name, value);
+			    /* create the y name-value pair */
+			    name [length] = 'y';
+			    value = &info[i+1];
+			    AddNameValue (name, value);
+			    TtaFreeMemory (info);
+			  }
+			if (name)
+			    TtaFreeMemory (name);
+		      }
+		    break;
 		 default:
 		    elForm = TtaGetParent (elForm);
 		    break;

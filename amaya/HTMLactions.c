@@ -128,9 +128,20 @@ NotifyElement      *event;
 	   elType = TtaGetElementType (TtaGetParent (event->element));
 	if (elType.ElTypeNum == HTML_EL_Submit_Input
 	    || elType.ElTypeNum == HTML_EL_Reset_Input)
-	   /* it is a doubble click on submit element */
+	   /* it is a double click on submit element */
 	   SubmitForm (event->document, event->element);
 	return TRUE;
+     }
+   else if (elType.ElTypeNum == HTML_EL_PICTURE_UNIT)
+     {
+       /* it is a double click on graphic submit element? */
+       elFound = TtaGetParent (event->element);
+       elType = TtaGetElementType (elFound);
+       if (elType.ElTypeNum == HTML_EL_Input)
+	 {
+	   SubmitForm (event->document, event->element);
+	   return TRUE;
+	 }
      }
    else if (elType.ElTypeNum == HTML_EL_TEXT_UNIT)
      {
@@ -236,12 +247,19 @@ NotifyElement      *event;
 		    }
 
 		  /* is the source element an image map */
-		  info = GetActiveImageInfo (event->document, event->element);
-		  if (info != NULL)
-		    {
-		       strcat (documentURL, info);
-		       TtaFreeMemory (info);
-		    }
+		  elType = TtaGetElementType (event->element);
+		  attrType.AttrSSchema = elType.ElSSchema;
+		  attrType.AttrTypeNum = HTML_ATTR_ISMAP;
+		  attr = TtaGetAttribute (event->element, attrType);
+		  if (attr != NULL) {
+		    info = GetActiveImageInfo (event->document, event->element);
+		    if (info != NULL)
+		      {
+			strcat (documentURL, info);
+			TtaFreeMemory (info);
+		      }
+		  }
+
 		  /* get the referred document */
 		  targetDocument = GetHTMLDocument (documentURL, NULL, event->document, DC_TRUE);
 	       }
