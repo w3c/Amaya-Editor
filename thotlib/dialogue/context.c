@@ -163,7 +163,7 @@ void TtaUpdateEditorColors (void)
   found = FindColor (0, name, "ForegroundColor", "Black", &Black_Color);
   /* selection colors */
   found = FindColor (0, name, "InserPointColor", "Red", &Select_Color);
-  found = FindColor (0, name, "DocSelectColor", "LightGold3", &Select_Color);
+  found = FindColor (0, name, "DocSelectColor", "LightCoral3", &Select_Color);
   /* The reference color */
   found = FindColor (0, name, "ActiveBoxColor", "Red", &(Box_Color));
   /* color for read-only sections */
