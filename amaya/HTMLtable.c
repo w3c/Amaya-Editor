@@ -204,14 +204,18 @@ void SetColExt (Element cell, int span, Document doc, ThotBool inMath)
 					      &refdoc);
 	      if (colHead)
 		{
-		  if (span == 0)
-		    span = THOT_MAXINT;
 		  nextColHead = colHead;
-		  for (i = 0; i < span && nextColHead; i++)
+		  for (i = 0; (i < span || span == 0) && nextColHead; i++)
 		    {
 		      colHead = nextColHead;
 		      TtaNextSibling (&nextColHead);
 		    }
+		  if (i < span && span != 0)
+		    {
+		      /* the value of span is wrong. It's greater than the
+			 number of columns. Try to fix this bug in the
+			 document? */;  /******/
+		    } 
 		  TtaSetAttributeReference (attr, cell, doc, colHead, doc);
 		}
 	    }
@@ -481,7 +485,7 @@ Element NewColumnHead (Element lastcolhead, ThotBool before,
 		       ThotBool inMath, ThotBool generateEmptyCells)
 {
   Element             colhead, currentrow;
-  Element             group, groupdone;
+  Element             group, groupdone, block;
   Element             prevCol, nextCol;
   Element             table, child;
   ElementType         elType;
@@ -496,31 +500,6 @@ Element NewColumnHead (Element lastcolhead, ThotBool before,
   colhead = TtaNewTree (doc, elType, "");
   if (colhead != NULL)
     {
-      if (row)
-	{
-	  /* process the row group except the given row */
-	  currentrow = GetSiblingRow (row, TRUE, inMath);
-	  if (!last && currentrow == NULL)
-	    {
-	      /* when last is TRUE, only cells of previous rows should be
-		 created  */
-	      currentrow = GetSiblingRow (row, FALSE, inMath);
-	      backward = FALSE;
-	    }
-	  else
-	    backward = TRUE;
-	}
-      else
-	{
-	  elType = TtaGetElementType (lastcolhead);
-	  /* get the first row */
-	  if (inMath)
-	    elType.ElTypeNum = MathML_EL_TableRow;
-	  else
-	    elType.ElTypeNum = HTML_EL_Table_row;
-	  currentrow = TtaSearchTypedElement (elType, SearchForward, lastcolhead);
-	  backward = FALSE;
-	}
       prevCol = nextCol = lastcolhead;
       if (before)
 	TtaPreviousSibling (&prevCol);
@@ -532,6 +511,33 @@ Element NewColumnHead (Element lastcolhead, ThotBool before,
       if (generateEmptyCells)
 	/* add empty cells to all other rows */
 	{
+	  if (row)
+	    {
+	      /* process the row group except the given row */
+	      currentrow = GetSiblingRow (row, TRUE, inMath);
+	      if (!last && currentrow == NULL)
+		{
+		  /* when last is TRUE, only cells of previous rows should be
+		     created  */
+		  currentrow = GetSiblingRow (row, FALSE, inMath);
+		  backward = FALSE;
+		}
+	      else
+		backward = TRUE;
+	    }
+	  else
+	    {
+	      elType = TtaGetElementType (lastcolhead);
+	      /* get the first row */
+	      if (inMath)
+		elType.ElTypeNum = MathML_EL_TableRow;
+	      else
+		elType.ElTypeNum = HTML_EL_Table_row;
+	      currentrow = TtaSearchTypedElement (elType, SearchForward,
+						  lastcolhead);
+	      backward = FALSE;
+	    }
+
 	  while (currentrow)
 	    {
 	      rowspan = 1;
@@ -591,29 +597,36 @@ Element NewColumnHead (Element lastcolhead, ThotBool before,
 	    {
 	      groupdone = TtaGetParent (row);	/* done with this group */
 	      /* process the other row groups */
-	      if (inMath)
-		elType.ElTypeNum = MathML_EL_MTABLE;
-	      else
-		elType.ElTypeNum = HTML_EL_Table;
+	      elType.ElTypeNum = HTML_EL_Table;
 	      table = TtaGetTypedAncestor (groupdone, elType);
 	      /* visit all children of the Table element */
-	      child = TtaGetFirstChild (table);
-	      while (child != NULL)
+	      block = TtaGetFirstChild (table);
+	      while (block)
 		{
-		  elType = TtaGetElementType (child);
-		  if ((!inMath && (elType.ElTypeNum == HTML_EL_thead ||
-				   elType.ElTypeNum == HTML_EL_tfoot)) ||
-		      (inMath && elType.ElTypeNum == MathML_EL_MTable_body))
+		  elType = TtaGetElementType (block);
+		  if (elType.ElTypeNum == HTML_EL_thead ||
+		      elType.ElTypeNum == HTML_EL_tfoot)
 		    {
-		      /* this child is a thead or tfoot element */
-		      group = child;
+		      /* this block is a thead or tfoot element */
+		      group = block;
 		      if (group != groupdone)
 			{
 			  currentrow = TtaGetFirstChild (group);
+			  /* skip the first elements that are now rows */
+			  if (currentrow)
+			    elType = TtaGetElementType (currentrow);
+			  while (currentrow &&
+				 elType.ElTypeNum != HTML_EL_Table_row)
+			    {
+			      TtaNextSibling (&currentrow);
+			      if (currentrow)
+				elType = TtaGetElementType (currentrow);
+			    }
+			  /* process all rows in this group */
 			  while (currentrow)
 			    {
 			      rowspan = 1;
-				/* get the sibling cell */
+			      /* get the sibling cell */
 			      if (last)
 				child = TtaGetLastChild (currentrow);
 			      else
@@ -650,19 +663,30 @@ Element NewColumnHead (Element lastcolhead, ThotBool before,
 			    }
 			}
 		      else if (last)
-			child = NULL;
+			block = NULL;
 		    }
 		  else if (elType.ElTypeNum == HTML_EL_Table_body)
 		    {
 		      /* this child is the Table_body element */
 		      /* get the first tbody element */
-		      group = TtaGetFirstChild (child);
+		      group = TtaGetFirstChild (block);
 		      /* process all tbody elements */
 		      while (group != NULL)
 			{
 			  if (group != groupdone)
 			    {
 			      currentrow = TtaGetFirstChild (group);
+			      /* skip the first elements that are now rows */
+			      if (currentrow)
+				elType = TtaGetElementType (currentrow);
+			      while (currentrow &&
+				     elType.ElTypeNum != HTML_EL_Table_row)
+				{
+				  TtaNextSibling (&currentrow);
+				  if (currentrow)
+				    elType = TtaGetElementType (currentrow);
+				}
+			      /* process all rows in this group */
 			      while (currentrow)
 				{
 				  rowspan = 1;
@@ -698,14 +722,14 @@ Element NewColumnHead (Element lastcolhead, ThotBool before,
 			  if (last)
 			    {
 			      group = NULL;
-			      child = NULL;
+			      block = NULL;
 			    }
 			  else
 			    TtaNextSibling (&group);
 			}
 		    }
-		  if (child != NULL)
-		    TtaNextSibling (&child);
+		  if (block)
+		    TtaNextSibling (&block);
 		}
 	    }
 	}
