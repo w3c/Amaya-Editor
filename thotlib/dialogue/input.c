@@ -86,6 +86,7 @@ KEY;
 #define MY_KEY_Home      8
 #define MY_KEY_End       9
 #define MY_KEY_Return    10
+#define MY_KEY_Insert    11
 static int          SpecialKeys[] = {
   CMD_PreviousLine,
   CMD_PreviousChar,
@@ -97,7 +98,8 @@ static int          SpecialKeys[] = {
   CMD_PageDown,
   CMD_PageTop,
   CMD_PageEnd,
-  CMD_CreateElement
+  CMD_CreateElement,
+  -1
 };
 static int          SpecialShiftKeys[] = {
   CMD_PreviousSelLine,
@@ -110,7 +112,8 @@ static int          SpecialShiftKeys[] = {
   CMD_PageDown,
   CMD_PageTop,
   CMD_PageEnd,
-  CMD_CreateElement
+  CMD_CreateElement,
+  CMD_Paste
 };
 static int          SpecialCtrlKeys[] = {
   CMD_LineUp,
@@ -123,7 +126,8 @@ static int          SpecialCtrlKeys[] = {
   CMD_PageDown,
   CMD_PageTop,
   CMD_PageEnd,
-  CMD_LineBreak
+  CMD_LineBreak,
+  CMD_Copy
 };
 static int          SpecialShiftCtrlKeys[] = {
   CMD_LineUp,
@@ -136,7 +140,8 @@ static int          SpecialShiftCtrlKeys[] = {
   CMD_PageDown,
   CMD_PageTop,
   CMD_PageEnd,
-  CMD_LineBreak
+  CMD_LineBreak,
+  -1
 };
 
 /* the automata */
@@ -1158,6 +1163,9 @@ ThotBool ThotInput (int frame, unsigned int value, int command, int PicMask, int
 	case THOT_KEY_Delete:
 	  index = MY_KEY_Delete;
 	 break;
+	case THOT_KEY_Insert:
+	  index = MY_KEY_Insert;
+	 break;
 	default:
 	  index = -1;
 #ifdef _WINGUI
@@ -1180,6 +1188,9 @@ ThotBool ThotInput (int frame, unsigned int value, int command, int PicMask, int
 	  else
 	    command = SpecialKeys[index];
 	  Automata_current = NULL;
+	  if (command == -1)
+		  /* NOP */
+		  return FALSE;
 	}
     }
 

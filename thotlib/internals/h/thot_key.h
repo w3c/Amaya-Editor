@@ -35,6 +35,7 @@
 #define THOT_KEY_BackSpace	VK_BACK
 #define THOT_KEY_Escape		VK_ESCAPE
 #define THOT_KEY_Delete		VK_DELETE
+#define THOT_KEY_Insert		VK_INSERT
 #define THOT_KEY_Tab            VK_TAB
 #define THOT_KEY_TAB            VK_TAB
 #define THOT_KEY_F1		VK_F1
@@ -77,6 +78,7 @@
 #define THOT_KEY_BackSpace	XK_BackSpace
 #define THOT_KEY_Escape		XK_Escape
 #define THOT_KEY_Delete		XK_Delete
+#define THOT_KEY_Insert		XK_Insert
 #define THOT_KEY_Tab            XK_Tab
 #define THOT_KEY_TAB            XK_ISO_Left_Tab
 #define THOT_KEY_F1		XK_F1
@@ -134,6 +136,7 @@
 #define THOT_KEY_BackSpace	WXK_BACK
 #define THOT_KEY_Escape		WXK_ESCAPE
 #define THOT_KEY_Delete		WXK_DELETE
+#define THOT_KEY_Insert		WXK_Insert
 #define THOT_KEY_Tab            WXK_TAB
 #define THOT_KEY_TAB            WXK_TAB
 #define THOT_KEY_F1		WXK_F1
@@ -221,5 +224,6 @@
 #define THOT_KEY_End		46
 #define THOT_KEY_Prior		47
 #define THOT_KEY_Next		48
+#define THOT_KEY_Insert		49
 
 #endif /* _NOGUI */
