@@ -3045,7 +3045,8 @@ const XML_Char  *prefix;
 const XML_Char  *uri;
 #endif  /* __STDC__ */
 
-{
+{   
+
 #ifdef LC
   printf ("\n Hndl_NameSpaceStart");
   printf ("\n   prefix : %s; uri : %s", prefix, uri);
@@ -3223,45 +3224,93 @@ const XML_Char  *notationName;
 
 /*----------------------------------------------------------------------
    XmlParse
-   Parse either the HTML file infile or the text  buffer HTMLbuf
-   and build the equivalent Thot abstract tree.
-   One parameter should be NULL.
+   Parse either the XML file infile and build the equivalent
+   Thot abstract tree.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void        XmlParse (FILE *infile, char *HTMLbuf)
+static void        XmlParse (FILE *infile,
+			     ThotBool xmlDec,
+			     ThotBool withDoctype)
 #else
-static void        XmlParse (infile, HTMLbuf)
-FILE        *infile;
-char        *HTMLbuf;
+static void        XmlParse (infile,
+			     xmlDec,
+			     withDoctype)
+FILE      *infile;
+ThotBool   xmlDec;
+ThotBool   withDoctype;
 
 #endif
 {
-   UCHAR_T      charRead; 
-   ThotBool     match;
-   ThotBool     endOfFile = FALSE;
+  UCHAR_T      charRead; 
+  ThotBool     endOfFile = FALSE;
+  int          res;
 #define	 COPY_BUFFER_SIZE	1024
-  char          bufferRead[COPY_BUFFER_SIZE];
-  int           res;
+  char         bufferRead[COPY_BUFFER_SIZE];
 
-
+  CHAR_T      *ptr;
+  char         tmpBuffer[COPY_BUFFER_SIZE];
+  char         tmp2Buffer[COPY_BUFFER_SIZE];
+  int          tmplen;
+  
    if (infile != NULL)
        endOfFile = FALSE;
+   else
+       return;
+
    XMLabort = FALSE;
-
-   /* read the XML file */
-
+     
    while (!endOfFile && !XMLrootClosed && !XMLabort)
      {
-       res = gzread (infile, bufferRead, COPY_BUFFER_SIZE);
-       
+       /* read the XML file */
+       res = gzread (infile, bufferRead, COPY_BUFFER_SIZE);      
        if (res < COPY_BUFFER_SIZE)
-	 endOfFile = TRUE;
+	   endOfFile = TRUE;
        
+       if (!withDoctype)
+	 /* There is no DOCTYPE Declaration 
+	    We include a virtual DOCTYPE declaration so that EXPAT parser
+	    doesn't stop processing when it find an external entity */	  
+	 {
+	   if (xmlDec)
+	     /* There is a XML declaration */
+	     /* We look for first '<' character */
+	     {
+	       strcpy (tmpBuffer, bufferRead);
+	       if (ptr = strchr (tmpBuffer, TEXT('>')))
+		 {
+		   *ptr++;
+		   strcpy (tmp2Buffer, ptr);
+		   *ptr = WC_EOS;
+		   tmplen = strlen (tmpBuffer);
+		   if (!XML_Parse (parser, tmpBuffer, tmplen, FALSE))
+		     {
+		       XmlParseError (XMLcontext.doc,
+				      (CHAR_T *) XML_ErrorString (XML_GetErrorCode (parser)), 0);
+		       XMLabort = TRUE;
+		     }
+		   res = res - tmplen;
+		   strcpy (bufferRead, tmp2Buffer);
+		 }
+	     }
+	   /* Virtual DOCTYPE Declaration */
+#define DECL_DOCTYPE "<!DOCTYPE html PUBLIC \"\" \"\">"
+#define DECL_DOCTYPE_LEN 28
+	   if (!XML_Parse (parser, DECL_DOCTYPE,
+			   DECL_DOCTYPE_LEN, 0))
+	     {
+	       XmlParseError (XMLcontext.doc,
+			      (CHAR_T *) XML_ErrorString (XML_GetErrorCode (parser)), 0);
+	       XMLabort = TRUE;
+	     }
+	   withDoctype = TRUE;
+	 }
+       /* End of virtual declaration of DOCTYPE */
+
+       /* 'normal' EXPAT processing */
        if (!XML_Parse (parser, bufferRead, res, endOfFile))
 	 {
 	   XmlParseError (XMLcontext.doc,
-			  XML_ErrorString (XML_GetErrorCode (parser)), 0);
-	   endOfFile = TRUE;
+			  (CHAR_T *) XML_ErrorString (XML_GetErrorCode (parser)), 0);
 	   XMLabort = TRUE;
 	 }
      }
@@ -3314,7 +3363,7 @@ static void         FreeExpatParser ()
 
 /*----------------------------------------------------------------------
    DisableExpatParser
-   Specific initialization for expat
+   Disable all handlers
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void      DisableExpatParser ()
@@ -3434,7 +3483,7 @@ static void         InitializeExpatParser ()
 }
 
 /*----------------------------------------------------------------------
-   InitializeXmlParser
+   InitializeXmlParserContext
    initializes variables and stack for parsing file
    the parser will insert the thot tree after or as a child
    of last elem, in the document doc.
@@ -3442,13 +3491,13 @@ static void         InitializeExpatParser ()
    the stack
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         InitializeXmlParser (Element  lastelem,
-					 ThotBool isclosed,
-					 Document doc)
+static void         InitializeXmlParserContext (Element  lastelem,
+						ThotBool isclosed,
+						Document doc)
 #else  /* __STDC__ */
-static void         InitializeXmlParser (lastelem,
-					 isclosed,
-					 doc)
+static void         InitializeXmlParserContext (lastelem,
+						isclosed,
+						doc)
 Element             lastelem;
 ThotBool            isclosed;
 Document            doc;
@@ -3843,13 +3892,13 @@ ThotBool    withDoctype;
 	ChangeXmlParserContext (TEXT("HTML"));
 	
 	/* initialize parsing environment */
-	InitializeXmlParser (NULL, FALSE, 0);
+	InitializeXmlParserContext (NULL, FALSE, 0);
 	
 	/* Specific initialization for expat */
 	InitializeExpatParser ();
 	
 	/* parse the input file and build the Thot document */
-	XmlParse (stream, NULL);
+	XmlParse (stream, xmlDec, withDoctype);
 	
 	/* completes all unclosed elements */
 	el = XMLcontext.lastElement;
