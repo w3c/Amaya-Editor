@@ -884,7 +884,7 @@ static void         UpdateClass (Document doc)
 {
   Attribute           attr;
   AttributeType       attrType;
-  Element             el, parent, child, title, head, line, prev;
+  Element             el, root, child, title, head, line, prev;
   ElementType         elType, selType;
   char               *stylestring;
   char               *text;
@@ -894,7 +894,6 @@ static void         UpdateClass (Document doc)
   Language            lang;
   ThotBool            found, empty, insertNewLine;
 
-  /* check whether it's an element type or a class name */
   elType = TtaGetElementType (ClassReference);
   GIType (CurrentClass, &selType, doc);
   if (selType.ElTypeNum != elType.ElTypeNum && selType.ElTypeNum != 0)
@@ -904,7 +903,79 @@ static void         UpdateClass (Document doc)
       return;
     }
 
-  /* get the current style attribute*/
+  /* locate the style element in the document head */
+  root = TtaGetMainRoot (doc);
+  elType = TtaGetElementType (root);
+  schName = TtaGetSSchemaName (elType.ElSSchema);
+  head = NULL;
+  if (!strcmp (schName, "HTML"))
+    /* it's a HTML document */
+    {
+      elType.ElTypeNum = HTML_EL_HEAD;
+      head = TtaSearchTypedElement (elType, SearchForward, root);
+      elType.ElTypeNum = HTML_EL_STYLE_;
+      attrType.AttrSSchema = elType.ElSSchema;
+      attrType.AttrTypeNum = HTML_ATTR_Notation;
+    }
+  if (!strcmp (schName, "SVG"))
+    /* it's a SVG document */
+    {
+      elType.ElTypeNum = SVG_EL_SVG;
+      head = TtaSearchTypedElement (elType, SearchForward, root);
+      elType.ElTypeNum = SVG_EL_style__;
+      attrType.AttrSSchema = elType.ElSSchema;
+      attrType.AttrTypeNum = SVG_ATTR_type;
+    }
+  el = head;
+  found = FALSE;
+  while (!found && el)
+    {
+      /* is there any style element? */
+      el = TtaSearchTypedElementInTree (elType, SearchForward, head, el);
+      if (el)
+	{
+	  /* does this style element have an attribute type="text/css" ? */
+	  attr = TtaGetAttribute (el, attrType);
+	  if (attr)
+	    {
+	      len = TtaGetTextAttributeLength (attr);
+	      a_class = TtaGetMemory (len + 1);
+	      TtaGiveTextAttributeValue (attr, a_class, &len);
+	      found = (!strcmp (a_class, "text/css"));
+	      TtaFreeMemory (a_class);
+	    }
+	}
+    }
+  if (!found && head)
+    /* the STYLE element doesn't exist. Create it */
+    {
+      el = TtaNewTree (doc, elType, "");
+      if (strcmp (schName, "HTML"))
+	title = NULL;
+      else
+	{
+	  /* It's a HTML document. Insert the new style element after the
+	     title if it exists */
+	  elType.ElTypeNum = HTML_EL_TITLE;
+	  title = TtaSearchTypedElementInTree (elType, SearchForward, head,
+					       head);
+	}
+      if (title)
+	TtaInsertSibling (el, title, FALSE, doc);
+      else
+	TtaInsertFirstChild (&el, head, doc);
+      attr = TtaNewAttribute (attrType);
+      TtaAttachAttribute (el, attr, doc);
+      TtaSetAttributeText (attr, "text/css", el, doc);
+    }
+
+  if (!el)
+    /* there is no STYLE element and no way to create one */
+    return;
+
+  /* check whether it's an element type or a class name */
+  /* get the current style attribute */
+  elType = TtaGetElementType (ClassReference);
   schName = TtaGetSSchemaName (elType.ElSSchema);
   if (strcmp (schName, "MathML") == 0)
     {
@@ -951,6 +1022,7 @@ static void         UpdateClass (Document doc)
       TtaGiveTextAttributeValue (attr, &stylestring[base], &len);
     }
   strcat (stylestring, "}");
+
   TtaOpenUndoSequence (doc, ClassReference, ClassReference, 0, 0);
 
   /* create the class attribute */
@@ -996,72 +1068,7 @@ static void         UpdateClass (Document doc)
   /* remove the Style attribute */
   RemoveElementStyle (ClassReference, doc, FALSE);
 
-  /* generate or update the style element in the document head */
-  parent = TtaGetMainRoot (doc);
-  elType = TtaGetElementType (parent);
-  schName = TtaGetSSchemaName (elType.ElSSchema);
-  if (!strcmp (schName, "HTML"))
-    /* it's a HTML document */
-    {
-      elType.ElTypeNum = HTML_EL_HEAD;
-      head = TtaSearchTypedElement (elType, SearchForward, parent);
-      elType.ElTypeNum = HTML_EL_STYLE_;
-      attrType.AttrSSchema = elType.ElSSchema;
-      attrType.AttrTypeNum = HTML_ATTR_Notation;
-    }
-  if (!strcmp (schName, "SVG"))
-    /* it's a SVG document */
-    {
-      elType.ElTypeNum = SVG_EL_SVG;
-      head = TtaSearchTypedElement (elType, SearchForward, parent);
-      elType.ElTypeNum = SVG_EL_style__;
-      attrType.AttrSSchema = elType.ElSSchema;
-      attrType.AttrTypeNum = SVG_ATTR_type;
-    }
-  el = head;
-  found = FALSE;
-  while (!found && el)
-    {
-      /* is there any style element? */
-      el = TtaSearchTypedElementInTree (elType, SearchForward, head, el);
-      if (el)
-	{
-	  /* does this style element have an attribute type="text/css" ? */
-	  attr = TtaGetAttribute (el, attrType);
-	  if (attr)
-	    {
-	      len = TtaGetTextAttributeLength (attr);
-	      a_class = TtaGetMemory (len + 1);
-	      TtaGiveTextAttributeValue (attr, a_class, &len);
-	      found = (!strcmp (a_class, "text/css"));
-	      TtaFreeMemory (a_class);
-	    }
-	}
-    }
-
   insertNewLine = FALSE;
-  if (!found && head)
-    {
-      /* the STYLE element doesn't exist we create it now */
-      el = TtaNewTree (doc, elType, "");
-      if (strcmp (schName, "HTML"))
-	title = NULL;
-      else
-	{
-	  /* insert the new style element after the title if it exists */
-	  elType.ElTypeNum = HTML_EL_TITLE;
-	  title = TtaSearchTypedElementInTree (elType, SearchForward, head,
-					       head);
-	}
-      if (title)
-	TtaInsertSibling (el, title, FALSE, doc);
-      else
-	TtaInsertFirstChild (&el, head, doc);
-      attr = TtaNewAttribute (attrType);
-      TtaAttachAttribute (el, attr, doc);
-      TtaSetAttributeText (attr, "text/css", el, doc);
-    }
-
   child = TtaGetLastChild (el);
   if (child == NULL)
     {
@@ -1163,15 +1170,14 @@ static void         UpdateClass (Document doc)
     /* parse and apply this new CSS to the current document */
     ReadCSSRules (doc, NULL, stylestring,  TtaGetElementLineNumber (child), TRUE);
     }
-
-  if (!found)
-    /* Register the created STYLE or child element in the Undo queue */
-    TtaRegisterElementCreate (el, doc);
-  TtaCloseUndoSequence (doc);
-
   /* free the stylestring now */
   TtaFreeMemory (stylestring);
   stylestring = NULL;
+
+  if (!found && el)
+    /* Register the created STYLE or child element in the Undo queue */
+    TtaRegisterElementCreate (el, doc);
+  TtaCloseUndoSequence (doc);
 }
 
 /*----------------------------------------------------------------------
