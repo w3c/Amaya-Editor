@@ -36,6 +36,11 @@ ELEMENTS
 	ElemExport.Pre ->       ExportForeignObject;
    GRAPHICS_UNIT:
 	ElemDelete.Post ->      GraphLeafDeleted;
+   PICTURE_UNIT:
+	BEGIN
+	ElemNew.Post -> UpdateSRCattribute;
+	ElemTextModify.Post -> UpdateSRCattribute;
+	END;
 
 ATTRIBUTES
 

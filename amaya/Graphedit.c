@@ -1266,10 +1266,10 @@ NotifyAttribute *event;
    palette.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         CreateGraphicElement (int entry)
+void         CreateGraphicElement (int entry)
 #else
-static void         CreateGraphicElement (entry)
-int                 construct;
+void         CreateGraphicElement (entry)
+int          construct;
 #endif
 {
   Document	    doc;
@@ -1300,6 +1300,7 @@ int                 construct;
   /* Are we in a drawing? */
   docSchema = TtaGetDocumentSSchema (doc);
   graphSchema = GetGraphMLSSchema (doc);
+  attrType.AttrSSchema = graphSchema;
   elType = TtaGetElementType (selEl);
   if (elType.ElTypeNum == GraphML_EL_GraphML && elType.ElSSchema == graphSchema)
     graphRoot = selEl;
@@ -1307,7 +1308,6 @@ int                 construct;
     {
       elType.ElTypeNum = GraphML_EL_GraphML;
       elType.ElSSchema = graphSchema;
-      attrType.AttrSSchema = graphSchema;
       graphRoot = TtaGetTypedAncestor (first, elType);
       if (graphRoot == NULL)
 	/* the current selection is not in a GraphML element, create one */
@@ -1489,7 +1489,9 @@ int                 construct;
       else if (newType.ElTypeNum == GraphML_EL_foreignObject)
 	/* create an HTML DIV element in the new element */
 	{
-	  /* the document is supposed to be HTML */
+	  attrType.AttrTypeNum = GraphML_ATTR_width_;
+	  UpdateAttrText (newEl, doc, attrType, 100, TRUE);
+	    /* the document is supposed to be HTML */
 	  childType.ElSSchema = TtaNewNature (doc, docSchema, TEXT("HTML"),
 					      TEXT("HTMLP"));
 	  childType.ElTypeNum = HTML_EL_Division;

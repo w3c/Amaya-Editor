@@ -2270,6 +2270,8 @@ int                 frame;
 	  NewDimension (pAb, width, 0, frame, TRUE);
 	else
 	  NewDimension (pAb, width, height, frame, TRUE);
+	DefClip (frame, pBox->BxXOrg, pBox->BxYOrg,
+		 pBox->BxXOrg + width, pBox->BxYOrg + height);
 	pAb->AbHorizPos.PosUserSpecified = FALSE;
 	pAb->AbVertPos.PosUserSpecified = FALSE;
 	pAb->AbWidth.DimUserSpecified = FALSE;

@@ -18,6 +18,9 @@
 #define THOT_EXPORT extern
 #include "amaya.h"
 #include "css.h"
+#ifdef GRAPHML
+#include "GraphML.h"
+#endif /* GRAPHML */
 
 static Document     BgDocument;
 static int          RepeatValue;
@@ -1101,19 +1104,67 @@ NotifyAttribute    *event;
   CreateImage
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                CreateImage (Document document, View view)
+void                CreateImage (Document doc, View view)
 #else  /* __STDC__ */
-void                CreateImage (document, view)
-Document            document;
+void                CreateImage (doc, view)
+Document            doc;
 View                view;
 
 #endif /* __STDC__ */
 {
-   ElementType         elType;
+  Element            sibling, child, graphRoot;
+  ElementType        elType, selType;
+  STRING             name;
+  int                c1, i;
 
-   elType.ElSSchema = TtaGetSSchema (TEXT("HTML"), document);
-   elType.ElTypeNum = HTML_EL_PICTURE_UNIT;
-   TtaCreateElement (elType, document);
+  TtaGiveFirstSelectedElement (doc, &sibling, &c1, &i); 
+  if (sibling)
+    {
+      /* Get the type of the first selected element */
+      elType = TtaGetElementType (sibling);
+      name = TtaGetSSchemaName (elType.ElSSchema);
+      graphRoot = NULL;
+#ifdef GRAPHML
+      if (!ustrcmp (name, TEXT("GraphML")))
+	{
+	  elType.ElTypeNum = GraphML_EL_GraphML;
+	  /* look for the enclosing SVG */
+	  do
+	    {
+	      child = sibling;
+	      sibling = TtaGetParent (child);
+	      if (sibling)
+		selType = TtaGetElementType (sibling);
+	    }
+	  while (sibling && selType.ElTypeNum != elType.ElTypeNum &&
+		 selType.ElSSchema == elType.ElSSchema);
+	  if (sibling)
+	    {
+	      graphRoot = sibling;
+	      sibling = child;
+	    }
+	}
+      if (graphRoot)
+	{
+	  /* selection is within a SVG element */
+	  elType.ElTypeNum = GraphML_EL_image;
+	  /*TtaAskFirstCreation ();*/
+	  child = TtaNewElement (doc, elType);
+	  TtaInsertSibling (child, sibling, FALSE, doc);
+	  sibling = child;
+	  elType.ElTypeNum = GraphML_EL_PICTURE_UNIT;
+	  /*TtaAskFirstCreation ();*/
+	  child = TtaNewElement (doc, elType);	  
+	  TtaInsertFirstChild (&child, sibling, doc);
+	}
+      else
+#endif /* GRAPHML */
+	{
+	  elType.ElSSchema = TtaGetSSchema (TEXT("HTML"), doc);
+	  elType.ElTypeNum = HTML_EL_PICTURE_UNIT;
+	  TtaCreateElement (elType, doc);
+	}
+    }
 }
 
 

@@ -22,7 +22,7 @@
 #include "MathML.h"
 #ifdef GRAPHML
 #include "GraphML.h"
-#endif
+#endif /* GRAPHML */
 
 #ifdef _WINDOWS
 #define iconMath   21 
@@ -56,6 +56,7 @@ static ThotBool	IsLastDeletedElement = FALSE;
 static Element	LastDeletedElement = NULL;
 
 #include "fetchXMLname_f.h"
+#include "GraphMLbuilder_f.h"
 #include "html2thot_f.h"
 #include "HTMLtable_f.h"
 #include "HTMLpresentation_f.h"
@@ -627,512 +628,534 @@ int                 construct;
   ThotBool	     before, ParBlock, emptySel, ok, insertSibling,
 		     selectFirstChild, displayTableForm, registered;
 
-      doc = TtaGetSelectedDocument ();
-      if (!TtaGetDocumentAccessMode (doc))
-	 /* the document is in ReadOnly mode */
-	 return;
+  doc = TtaGetSelectedDocument ();
+  if (!TtaGetDocumentAccessMode (doc))
+    /* the document is in ReadOnly mode */
+    return;
 
-      TtaGiveFirstSelectedElement (doc, &sibling, &c1, &i); 
-      /* Get the type of the first selected element */
-      elType = TtaGetElementType (sibling);
-      docSchema = TtaGetDocumentSSchema (doc);
-      name = TtaGetSSchemaName (elType.ElSSchema);
+  TtaGiveFirstSelectedElement (doc, &sibling, &c1, &i); 
+  /* Get the type of the first selected element */
+  elType = TtaGetElementType (sibling);
+  docSchema = TtaGetDocumentSSchema (doc);
+  name = TtaGetSSchemaName (elType.ElSSchema);
 #ifdef GRAPHML
-      if (construct == 1 && ustrcmp (name, TEXT("GraphML")))
-	/* Math button and selection is not in a SVG element */
-#else
-      if (construct == 1)
-#endif
-	/* Math button */
+  if (construct == 1 && ustrcmp (name, TEXT("GraphML")))
+    /* Math button and selection is not in a SVG element */
+#else /* GRAPHML */
+  if (construct == 1)
+#endif /* GRAPHML */
+    /* Math button */
+    {
+      if (ustrcmp (name, TEXT("MathML")))
+	/* selection is not in a MathML element */
 	{
-	if (ustrcmp (name, TEXT("MathML")))
-	   /* selection is not in a MathML element */
-	   {
-	   /* get the MathML schema for this document or associate it to the
-	      document if it is not associated yet */
-	   mathSchema = TtaNewNature (doc, docSchema, TEXT("MathML"),
-				     TEXT("MathMLP"));
-           newType.ElTypeNum = MathML_EL_MathML;
-           newType.ElSSchema = mathSchema;
-           TtaCreateElement (newType, doc);
-	   }
-	return;
-	}
-
-      emptySel = TtaIsSelectionEmpty ();
-      
-      TtaSetDisplayMode (doc, DeferredDisplay);
-
-      /* By default, the new element will be inserted before the selected
-	 element */
-      before = TRUE;
-
-      TtaOpenUndoSequence (doc, NULL, NULL, 0, 0);
-      registered = FALSE;
-
-      /* Check whether the selected element is a MathML element */
-      if (ustrcmp (TtaGetSSchemaName (elType.ElSSchema), TEXT("MathML")) == 0)
-	{
-	  /* current selection is within a MathML element */
-	  mathSchema = elType.ElSSchema;
-	  if (elType.ElTypeNum == MathML_EL_TEXT_UNIT)
-	    /* the first selected element is a character string */
-	    {
-	      len = TtaGetTextLength (sibling);
-	      if (c1 > len)
-		/* the caret is at the end of that character string */
-		{
-		next = sibling;
-		TtaNextSibling (&next);
-		if (next)
-		  /* there is another character string after that one.
-		     split the enclosing mo, mn, mi or mtext */
-		   sibling = SplitTextInMathML (doc, sibling, c1,&registered);
-		else
-		   /* create the new element after the character string */
-		   before = FALSE;
-		}
-	      else
-		/* split the character string before the first selected char */
-		sibling = SplitTextInMathML (doc, sibling, c1, &registered);
-	    }
-	}
-      else
-	  /* the selection is not in a MathML element */
-	{
-	  ok = FALSE;
 	  /* get the MathML schema for this document or associate it to the
 	     document if it is not associated yet */
 	  mathSchema = TtaNewNature (doc, docSchema, TEXT("MathML"),
 				     TEXT("MathMLP"));
-	  if (elType.ElTypeNum == HTML_EL_TEXT_UNIT && c1 > 1)
+	  newType.ElTypeNum = MathML_EL_MathML;
+	  newType.ElSSchema = mathSchema;
+	  TtaCreateElement (newType, doc);
+	}
+      return;
+    }
+
+  emptySel = TtaIsSelectionEmpty ();
+  TtaSetDisplayMode (doc, DeferredDisplay);
+  
+  /* By default, the new element will be inserted before the selected
+     element */
+  before = TRUE;
+
+  TtaOpenUndoSequence (doc, NULL, NULL, 0, 0);
+  registered = FALSE;
+  
+  /* Check whether the selected element is a MathML element */
+  if (ustrcmp (TtaGetSSchemaName (elType.ElSSchema), TEXT("MathML")) == 0)
+    {
+      /* current selection is within a MathML element */
+      mathSchema = elType.ElSSchema;
+      if (elType.ElTypeNum == MathML_EL_TEXT_UNIT)
+	/* the first selected element is a character string */
+	{
+	  len = TtaGetTextLength (sibling);
+	  if (c1 > len)
+	    /* the caret is at the end of that character string */
 	    {
-	      len = TtaGetTextLength (sibling);
-	      if (c1 > len)
-		/* the caret is at the end of that character string */
-		{
-		  /* the new element has to be created after the character
-		     string */
-		  before = FALSE;
-		  el = sibling;
-		  TtaNextSibling (&el);
-		  if (el == NULL)
-		    /* the character string is the last child of its
-		       parent */
-		    /* create an empty character string after the
-		       Math element to come */
-		    {
-		      el = TtaNewElement (doc, elType);
-		      TtaInsertSibling (el, sibling, FALSE, doc);
-		      TtaRegisterElementCreate (el, doc);
-		    }
-		}
+	      next = sibling;
+	      TtaNextSibling (&next);
+	      if (next)
+		/* there is another character string after that one.
+		   split the enclosing mo, mn, mi or mtext */
+		sibling = SplitTextInMathML (doc, sibling, c1,&registered);
 	      else
-		{
-		  /* split the text to insert the Math element */
-		  TtaRegisterElementReplace (sibling, doc);
-		  TtaSplitText (sibling, c1-1, doc);
-		  /* take the second part of the split text element */
-		  TtaNextSibling (&sibling);
-		  TtaRegisterElementCreate (sibling, doc);
-		}
+		/* create the new element after the character string */
+		before = FALSE;
 	    }
-	  
-	  if (before)
+	  else
+	    /* split the character string before the first selected char */
+	    sibling = SplitTextInMathML (doc, sibling, c1, &registered);
+	}
+    }
+  else
+    /* the selection is not in a MathML element */
+    {
+      ok = FALSE;
+      /* get the MathML schema for this document or associate it to the
+	 document if it is not associated yet */
+      mathSchema = TtaNewNature (doc, docSchema, TEXT("MathML"),
+				 TEXT("MathMLP"));
+      if (elType.ElTypeNum == HTML_EL_TEXT_UNIT && c1 > 1)
+	{
+	  len = TtaGetTextLength (sibling);
+	  if (c1 > len)
+	    /* the caret is at the end of that character string */
 	    {
+	      /* the new element has to be created after the character
+		 string */
+	      before = FALSE;
 	      el = sibling;
-	      TtaPreviousSibling (&el);
-	      if (el != NULL)
+	      TtaNextSibling (&el);
+	      if (el == NULL)
+		/* the character string is the last child of its
+		   parent */
+		/* create an empty character string after the
+		   Math element to come */
 		{
-		  newType = TtaGetElementType (el);
-		  if (newType.ElTypeNum == MathML_EL_MathML &&
-		      newType.ElSSchema == mathSchema)
-		    {
-		      /* insert at the end of the previous MathML element*/
-		      before = FALSE;
-		      sibling = TtaGetLastChild (el);
-		      emptySel = FALSE;
-		      ok = TRUE;
-		    }
+		  el = TtaNewElement (doc, elType);
+		  TtaInsertSibling (el, sibling, FALSE, doc);
+		  TtaRegisterElementCreate (el, doc);
 		}
 	    }
 	  else
 	    {
-	      el = sibling;
-	      TtaNextSibling (&el);
-	      if (el != NULL)
-		{
-		  newType = TtaGetElementType (el);
-		  if (newType.ElTypeNum == MathML_EL_MathML &&
-		      newType.ElSSchema == mathSchema)
-		    {
-		      /* insert at the beginning of the next MathML element */
-		      before = TRUE;
-		      sibling = TtaGetFirstChild (el);
-		      emptySel = FALSE;
-		      ok = TRUE;
-		    }
-		}
-	    }
-	  
-	  if (elType.ElSSchema == mathSchema &&
-	      elType.ElTypeNum == MathML_EL_MathML)
-	    /* the current selection is the MathML root element */
-	    {
-	      /* search the first or last child of the MathML root element */
-	      if (before)
-		el = TtaGetFirstChild (sibling);
-	      else
-		el = TtaGetLastChild (sibling);		
-	      if (el != NULL)
-		sibling = el;
-              ok = TRUE;
-	    }
-
-	  if (!ok)
-	    {
-	      insertSibling = TRUE;
-	      ok = TRUE;
-	      /* try to create a MathML root element at the current position */
-	      elType.ElSSchema = mathSchema;
-	      elType.ElTypeNum = MathML_EL_MathML;
-              if (emptySel && !TtaIsLeaf (TtaGetElementType(sibling)))
-		/* selection is empty and it's not a basic element */
-		{
-		  /* try first to create a new MathML element as a child */
-		  if (TtaCanInsertFirstChild (elType, sibling, doc))
-		    insertSibling = FALSE;
-		  /* if it fails, try to create a new MathML element as a
-		     sibling */
-		  else if (TtaCanInsertSibling (elType, sibling, before, doc))
-		    insertSibling = TRUE;
-		  else
-		    /* complete failure */
-		    ok = FALSE;
-		}
-	      else
-		/* some non empty element is selected */
-		{
-		  /* try first to create a new MathML element as a sibling */
-		  if (TtaCanInsertSibling (elType, sibling, before, doc))
-		    insertSibling = TRUE;
-		  /* if it fails, try to create a new MathML element as a
-		     child*/
-		  else if (TtaCanInsertFirstChild (elType, sibling, doc))
-		    insertSibling = FALSE;
-		  else
-		    /* complete failure */
-		    ok = FALSE;
-		}
-	      emptySel = TRUE;
-	      if (!ok)
-                 /* cannot insert a Math element here */
-		 {
-#ifdef GRAPHML
-		 elType = TtaGetElementType (sibling);
-		 if (ustrcmp (TtaGetSSchemaName (elType.ElSSchema),
-			      TEXT("GraphML")) == 0)
-		    /* selection is within a GraphML element */
-		    {
-		    elType.ElTypeNum = GraphML_EL_foreignObject;
-	            if (TtaCanInsertSibling (elType, sibling, before, doc))
-	               /* insert a foreignObject element as a sibling */
-	               insertSibling = TRUE;
-	            else if (TtaCanInsertFirstChild (elType, sibling,doc))
-	               /* insert a foreignObject element as a child */
-	               insertSibling = FALSE;
-	            else if (TtaCanInsertSibling (elType,
-					  TtaGetParent (sibling), before, doc))
-		        /* insert a foreignObject element as a sibling of the
-			   parent element */
-			{
-			sibling = TtaGetParent (sibling);
-			insertSibling = TRUE;
-			}
-		    else
-			sibling = NULL;
-		    if (sibling)
-		      {
-			/* create a foreigObject element and insert it */
-			el = TtaNewElement (doc, elType);
-			if (insertSibling)
-			  TtaInsertSibling (el, sibling, before, doc);
-			else
-			  TtaInsertFirstChild (&el, sibling, doc);
-			/* register the new element in the Undo queue */
-			TtaRegisterElementCreate (el, doc);
-			registered = TRUE;
-			/* prepare creation of a child Math element */
-			elType.ElSSchema = mathSchema;
-			elType.ElTypeNum = MathML_EL_MathML;
-			sibling = el;
-			insertSibling = FALSE;
-		      }
-		    }
-		 else
-		    /* not within a GraphML element */
-#endif
-		    /* cannot insert any MathML element here */
-                    sibling = NULL;
-		 }
-              if (sibling == NULL)
-		/* cannot insert a math element here */
-                 {
-                 TtaSetDisplayMode (doc, DisplayImmediately);
-                 TtaCloseUndoSequence (doc);
-                 return;
-                 }
-              else
-                 {
-		 /* create a Math element */
-                 el = TtaNewTree (doc, elType, "");
-	         /* do not check the Thot abstract tree against the structure/
-		    schema while inserting the Math element */
-		 oldStructureChecking = TtaGetStructureChecking (doc);
-		 TtaSetStructureChecking (0, doc);
-                 if (insertSibling)
-                    /* insert the new Math element as a sibling element */
-                    TtaInsertSibling (el, sibling, before, doc);
-                 else
-                    /* insert the new Math element as a child element */
-                    TtaInsertFirstChild (&el, sibling, doc);
-		 /* restore structure checking mode */
-		 TtaSetStructureChecking ((ThotBool)oldStructureChecking, doc);
-                 sibling = TtaGetFirstChild (el);
-		 /* register the new Math element in the Undo queue */
-		 if (!registered)
-		    TtaRegisterElementCreate (el, doc);
-		 if (construct == 1)
-		   /* The <math> element requested is created. Return */
-		   {
-		     TtaSetDocumentModified (doc);
-		     TtaSetDisplayMode (doc, DisplayImmediately);
-		     TtaSelectElement (doc, sibling);
-		     TtaCloseUndoSequence (doc);
-		     return;
-		   }
-                 }
+	      /* split the text to insert the Math element */
+	      TtaRegisterElementReplace (sibling, doc);
+	      TtaSplitText (sibling, c1-1, doc);
+	      /* take the second part of the split text element */
+	      TtaNextSibling (&sibling);
+	      TtaRegisterElementCreate (sibling, doc);
 	    }
 	}
-
-      elType = TtaGetElementType (sibling);
-      newType.ElSSchema = mathSchema;
-      selectFirstChild = TRUE;
-      ParBlock = FALSE;
-      switch (construct)
+	  
+      if (before)
 	{
-	case 1:	/* create a Math element */
-	  /* handled above */
-	  break;
-	case 2:
-	  newType.ElTypeNum = MathML_EL_MROOT;
-	  selectFirstChild = FALSE;	/* select the Index component */
-	  break;
-	case 3:
-	  newType.ElTypeNum = MathML_EL_MSQRT;
-	  break;
-	case 4:
-	  newType.ElTypeNum = MathML_EL_MFRAC;
-	  break;
-	case 5:
-	  newType.ElTypeNum = MathML_EL_MSUBSUP;
-	  break;
-	case 6:
-	  newType.ElTypeNum = MathML_EL_MSUB;
-	  break;
-	case 7:
-	  newType.ElTypeNum = MathML_EL_MSUP;
-	  break;
-	case 8:
-	  newType.ElTypeNum = MathML_EL_MUNDEROVER;
-	  break;
-	case 9:
-	  newType.ElTypeNum = MathML_EL_MUNDER;
-	  break;
-	case 10:
-	  newType.ElTypeNum = MathML_EL_MOVER;
-	  break;
-	case 11:
-	  newType.ElTypeNum = MathML_EL_MROW;
-	  ParBlock = TRUE;
-	  selectFirstChild = FALSE;	/* select the second component */
-	  break;
-	case 12:
-	  newType.ElTypeNum = MathML_EL_MMULTISCRIPTS;
-	  break;
-	case 13:     /* MTABLE */
-	  displayTableForm = TtaIsSelectionEmpty ();
-	  if (displayTableForm)
-	    /* ask the user about the number of rows and columns to be created */
+	  el = sibling;
+	  TtaPreviousSibling (&el);
+	  if (el != NULL)
 	    {
-	      NumberRows = 2;
-	      NumberCols = 2;
-#ifdef _WINDOWS
-              CreateMatrixDlgWindow (NumberCols, NumberRows);
-#else  /* !_WINDOWS */
-	      TtaNewForm (BaseDialog + TableForm, TtaGetViewFrame (doc, 1),
-			  TtaGetMessage (1, BMatrix), TRUE, 1, 'L', D_CANCEL);
-	      TtaNewNumberForm (BaseDialog + TableCols, BaseDialog + TableForm,
-				TtaGetMessage (AMAYA, AM_COLS), 1, 50, TRUE);
-	      TtaNewNumberForm (BaseDialog + TableRows, BaseDialog + TableForm,
-				TtaGetMessage (AMAYA, AM_ROWS), 1, 200, TRUE);
-	      TtaSetNumberForm (BaseDialog + TableCols, NumberCols);
-	      TtaSetNumberForm (BaseDialog + TableRows, NumberRows);
-	      TtaSetDialoguePosition ();
-	      TtaShowDialogue (BaseDialog + TableForm, FALSE);
-	      /* wait for an answer */
-	      TtaWaitShowDialogue ();
-	      if (!UserAnswer || NumberRows == 0 || NumberCols == 0)
-		/* the user decided to abort the command */
+	      newType = TtaGetElementType (el);
+	      if (newType.ElTypeNum == MathML_EL_MathML &&
+		  newType.ElSSchema == mathSchema)
 		{
+		  /* insert at the end of the previous MathML element*/
+		  before = FALSE;
+		  sibling = TtaGetLastChild (el);
+		  emptySel = FALSE;
+		  ok = TRUE;
+		}
+	    }
+	}
+      else
+	{
+	  el = sibling;
+	  TtaNextSibling (&el);
+	  if (el != NULL)
+	    {
+	      newType = TtaGetElementType (el);
+	      if (newType.ElTypeNum == MathML_EL_MathML &&
+		  newType.ElSSchema == mathSchema)
+		{
+		  /* insert at the beginning of the next MathML element */
+		  before = TRUE;
+		  sibling = TtaGetFirstChild (el);
+		  emptySel = FALSE;
+		  ok = TRUE;
+		}
+	    }
+	}
+      
+      if (elType.ElSSchema == mathSchema &&
+	  elType.ElTypeNum == MathML_EL_MathML)
+	/* the current selection is the MathML root element */
+	{
+	  /* search the first or last child of the MathML root element */
+	  if (before)
+	    el = TtaGetFirstChild (sibling);
+	  else
+	    el = TtaGetLastChild (sibling);		
+	  if (el != NULL)
+	    sibling = el;
+	  ok = TRUE;
+	}
+
+      if (!ok)
+	{
+	  insertSibling = TRUE;
+	  ok = TRUE;
+	  /* try to create a MathML root element at the current position */
+	  elType.ElSSchema = mathSchema;
+	  elType.ElTypeNum = MathML_EL_MathML;
+	  if (emptySel && !TtaIsLeaf (TtaGetElementType(sibling)))
+	    /* selection is empty and it's not a basic element */
+	    {
+	      /* try first to create a new MathML element as a child */
+	      if (TtaCanInsertFirstChild (elType, sibling, doc))
+		insertSibling = FALSE;
+	      /* if it fails, try to create a new MathML element as a
+		 sibling */
+	      else if (TtaCanInsertSibling (elType, sibling, before, doc))
+		insertSibling = TRUE;
+	      else
+		/* complete failure */
+		ok = FALSE;
+	    }
+	  else
+	    /* some non empty element is selected */
+	    {
+	      /* try first to create a new MathML element as a sibling */
+	      if (TtaCanInsertSibling (elType, sibling, before, doc))
+		insertSibling = TRUE;
+	      /* if it fails, try to create a new MathML element as a
+		 child*/
+	      else if (TtaCanInsertFirstChild (elType, sibling, doc))
+		insertSibling = FALSE;
+	      else
+		/* complete failure */
+		ok = FALSE;
+	    }
+	  emptySel = TRUE;
+	  if (!ok)
+	    /* cannot insert a Math element here */
+	    {
+#ifdef GRAPHML
+	      elType = TtaGetElementType (sibling);
+	      if (ustrcmp (TtaGetSSchemaName (elType.ElSSchema),
+			   TEXT("GraphML")) == 0)
+		/* selection is within a GraphML element */
+		{
+		  elType.ElTypeNum = GraphML_EL_foreignObject;
+		  if (TtaCanInsertSibling (elType, sibling, before, doc))
+		    /* insert a foreignObject element as a sibling */
+		    insertSibling = TRUE;
+		  else if (TtaCanInsertFirstChild (elType, sibling,doc))
+		    /* insert a foreignObject element as a child */
+		    insertSibling = FALSE;
+		  else if (TtaCanInsertSibling (elType,
+						TtaGetParent (sibling), before, doc))
+		    /* insert a foreignObject element as a sibling of the
+		       parent element */
+		    {
+		      sibling = TtaGetParent (sibling);
+		      insertSibling = TRUE;
+		    }
+		  else
+		    sibling = NULL;
+		  if (sibling)
+		    {
+		      /* create a foreigObject element and insert it */
+		      TtaAskFirstCreation ();
+		      el = TtaNewElement (doc, elType);
+		      if (insertSibling)
+			TtaInsertSibling (el, sibling, before, doc);
+		      else
+			TtaInsertFirstChild (&el, sibling, doc);
+		      /* register the new element in the Undo queue */
+		      TtaRegisterElementCreate (el, doc);
+		      registered = TRUE;
+		      /* update depth of SVG elements */
+		      SetGraphicDepths (doc, el);
+		      elType.ElSSchema = mathSchema;
+		      elType.ElTypeNum = MathML_EL_MathML;
+		      sibling = el;
+		      insertSibling = FALSE;
+		    }
+		}
+	      else
+		/* not within a GraphML element */
+#endif /* GRAPHML */
+		/* cannot insert any MathML element here */
+		sibling = NULL;
+	    }
+	  if (sibling == NULL)
+	    /* cannot insert a math element here */
+	    {
+	      TtaSetDisplayMode (doc, DisplayImmediately);
+	      TtaCloseUndoSequence (doc);
+	      return;
+	    }
+	  else
+	    {
+	      /* create a Math element */
+	      el = TtaNewTree (doc, elType, "");
+	      /* do not check the Thot abstract tree against the structure/
+		 schema while inserting the Math element */
+	      oldStructureChecking = TtaGetStructureChecking (doc);
+	      TtaSetStructureChecking (0, doc);
+	      if (insertSibling)
+		/* insert the new Math element as a sibling element */
+		TtaInsertSibling (el, sibling, before, doc);
+	      else
+		/* insert the new Math element as a child element */
+		TtaInsertFirstChild (&el, sibling, doc);
+	      /* restore structure checking mode */
+	      TtaSetStructureChecking ((ThotBool)oldStructureChecking, doc);
+	      sibling = TtaGetFirstChild (el);
+	      /* register the new Math element in the Undo queue */
+	      if (!registered)
+		TtaRegisterElementCreate (el, doc);
+	      if (construct == 1)
+		/* The <math> element requested is created. Return */
+		{
+		  TtaSetDocumentModified (doc);
+		  TtaSetDisplayMode (doc, DisplayImmediately);
+		  TtaSelectElement (doc, sibling);
 		  TtaCloseUndoSequence (doc);
 		  return;
 		}
+	    }
+	}
+    }
+  
+  elType = TtaGetElementType (sibling);
+  newType.ElSSchema = mathSchema;
+  selectFirstChild = TRUE;
+  ParBlock = FALSE;
+  switch (construct)
+    {
+    case 1:	/* create a Math element */
+      /* handled above */
+      break;
+    case 2:
+      newType.ElTypeNum = MathML_EL_MROOT;
+      selectFirstChild = FALSE;	/* select the Index component */
+      break;
+    case 3:
+      newType.ElTypeNum = MathML_EL_MSQRT;
+      break;
+    case 4:
+      newType.ElTypeNum = MathML_EL_MFRAC;
+      break;
+    case 5:
+      newType.ElTypeNum = MathML_EL_MSUBSUP;
+      break;
+    case 6:
+      newType.ElTypeNum = MathML_EL_MSUB;
+      break;
+    case 7:
+      newType.ElTypeNum = MathML_EL_MSUP;
+      break;
+    case 8:
+      newType.ElTypeNum = MathML_EL_MUNDEROVER;
+      break;
+    case 9:
+      newType.ElTypeNum = MathML_EL_MUNDER;
+      break;
+    case 10:
+      newType.ElTypeNum = MathML_EL_MOVER;
+      break;
+    case 11:
+      newType.ElTypeNum = MathML_EL_MROW;
+      ParBlock = TRUE;
+      selectFirstChild = FALSE;	/* select the second component */
+      break;
+    case 12:
+      newType.ElTypeNum = MathML_EL_MMULTISCRIPTS;
+      break;
+    case 13:     /* MTABLE */
+      displayTableForm = TtaIsSelectionEmpty ();
+      if (displayTableForm)
+	/* ask the user about the number of rows and columns to be created */
+	{
+	  NumberRows = 2;
+	  NumberCols = 2;
+#ifdef _WINDOWS
+	  CreateMatrixDlgWindow (NumberCols, NumberRows);
+#else  /* !_WINDOWS */
+	  TtaNewForm (BaseDialog + TableForm, TtaGetViewFrame (doc, 1),
+		      TtaGetMessage (1, BMatrix), TRUE, 1, 'L', D_CANCEL);
+	  TtaNewNumberForm (BaseDialog + TableCols, BaseDialog + TableForm,
+			    TtaGetMessage (AMAYA, AM_COLS), 1, 50, TRUE);
+	  TtaNewNumberForm (BaseDialog + TableRows, BaseDialog + TableForm,
+			    TtaGetMessage (AMAYA, AM_ROWS), 1, 200, TRUE);
+	  TtaSetNumberForm (BaseDialog + TableCols, NumberCols);
+	  TtaSetNumberForm (BaseDialog + TableRows, NumberRows);
+	  TtaSetDialoguePosition ();
+	  TtaShowDialogue (BaseDialog + TableForm, FALSE);
+	  /* wait for an answer */
+	  TtaWaitShowDialogue ();
+	  if (!UserAnswer || NumberRows == 0 || NumberCols == 0)
+	    /* the user decided to abort the command */
+	    {
+	      TtaCloseUndoSequence (doc);
+	      return;
+	    }
 #endif /* !_WINDOWS */
-	    }
-	  else
-	    {
-	      NumberRows = 0;
-	      NumberCols = 0;
-	    }
-
-	  newType.ElTypeNum = MathML_EL_MTABLE;
-	  selectFirstChild = FALSE;	/* select the second component */
-	  break;
-
-	case 14:
-	  newType.ElTypeNum = MathML_EL_MTEXT;
-	  break;
-	case 15:
-	  newType.ElTypeNum = MathML_EL_MI;
-	  break;
-	case 16:
-	  newType.ElTypeNum = MathML_EL_MN;
-	  break;
-	case 17:
-	  newType.ElTypeNum = MathML_EL_MO;
-	  break;
-
-	case 18:
-	  newType.ElTypeNum = MathML_EL_MENCLOSE;
-	  break;
-
-	default:
-	  TtaCloseUndoSequence (doc);
-	  return;
 	}
-
-      if (!emptySel)
-	/* selection is not empty.
-	   Try to transform it into the requested type*/
+      else
 	{
-	if (!TransformIntoType (newType, doc))
-	  /* it failed. Try to insert a new element */
-	   emptySel = TRUE;
-	else
-	  if (ParBlock)
-	    /* the user wants to create a parenthesized block */
-	    /* create two MF elements, as the first and last child of the new
-	       MROW */
-	    {
-	      /* do not check the Thot abstract tree against the structure */
-	      /* schema while changing the structure */
-	      oldStructureChecking = TtaGetStructureChecking (doc);
-	      TtaSetStructureChecking (0, doc);
-	      TtaGiveFirstSelectedElement (doc, &el, &c1, &i);
-	      AddParen (el, doc);
-	      /* check the Thot abstract tree against the structure schema. */
-	      TtaSetStructureChecking ((ThotBool)oldStructureChecking, doc);
-	    }
+	  NumberRows = 0;
+	  NumberCols = 0;
 	}
-
-      if (emptySel)
-	{
-	  TtaUnselect (doc);
-          el = TtaNewTree (doc, newType, "");
-	  /* do not check the Thot abstract tree against the structure */
-	  /* schema while changing the structure */
-	  oldStructureChecking = TtaGetStructureChecking (doc);
-	  TtaSetStructureChecking (0, doc);
-	  
-	  if (elType.ElTypeNum == MathML_EL_MROW ||
-	      elType.ElTypeNum == MathML_EL_MathML)
-	    {
-	      /* the selected element is a MROW or the MathML element */
-	      row = sibling;
-	      if (before)
-		sibling = TtaGetFirstChild (row);
-	      else
-		sibling = TtaGetLastChild (row);
-	      if (sibling == NULL)
-		{
-		  /* replace the empty MROW by the new element*/
-		  TtaInsertSibling (el, row, TRUE, doc);
-		  if (!registered)
-		    {
-		      TtaRegisterElementCreate (el, doc);
-		      TtaRegisterElementDelete (row, doc);
-		    }
-		  TtaRemoveTree (row, doc);
-		}
-	      else
-		{
-		  /* check whether the selected element is a Construct */
-		  elType = TtaGetElementType (sibling);
-		  if (elType.ElTypeNum == MathML_EL_Construct)
-		    {
-		    TtaInsertFirstChild (&el, sibling, doc);
-		    RemoveAttr (el, doc, MathML_ATTR_IntPlaceholder);
-		    }
-		  else
-		    TtaInsertSibling (el, sibling, before, doc);
-		  if (!registered)
-		    TtaRegisterElementCreate (el, doc);
-		}
-	    }
-	  else if (elType.ElTypeNum == MathML_EL_Construct)
-	    {
-	      /* replace the Construct element */
-	      TtaInsertFirstChild (&el, sibling, doc);
-	      RemoveAttr (el, doc, MathML_ATTR_IntPlaceholder);
-	      if (!registered)
-	        TtaRegisterElementCreate (el, doc);
-	    }
-	  else
-	    {
-	      /* the selected element is not a MROW */
-	      if (elType.ElTypeNum == MathML_EL_TEXT_UNIT)
-		/* go up to the MN, MI, MO or M_TEXT element */
-		sibling = TtaGetParent (sibling);
-	      /* insert the new element */
-	      TtaInsertSibling (el, sibling, before, doc);
-	      if (!registered)
-		 TtaRegisterElementCreate (el, doc);
-	    }
-	  
-	  TtaSetDocumentModified (doc);
-
-	  if (ParBlock)
-	    /* the user wants to create a parenthesized block */
-	    /* create two MF elements, as the first and last child of the new
-	       MROW */
+      
+      newType.ElTypeNum = MathML_EL_MTABLE;
+      selectFirstChild = FALSE;	/* select the second component */
+      break;
+      
+    case 14:
+      newType.ElTypeNum = MathML_EL_MTEXT;
+      break;
+    case 15:
+      newType.ElTypeNum = MathML_EL_MI;
+      break;
+    case 16:
+      newType.ElTypeNum = MathML_EL_MN;
+      break;
+    case 17:
+      newType.ElTypeNum = MathML_EL_MO;
+      break;
+      
+    case 18:
+      newType.ElTypeNum = MathML_EL_MENCLOSE;
+      break;
+      
+    default:
+      TtaCloseUndoSequence (doc);
+      return;
+    }
+  
+  if (!emptySel)
+    /* selection is not empty.
+       Try to transform it into the requested type*/
+    {
+      if (!TransformIntoType (newType, doc))
+	/* it failed. Try to insert a new element */
+	emptySel = TRUE;
+      else
+	if (ParBlock)
+	  /* the user wants to create a parenthesized block */
+	  /* create two MF elements, as the first and last child of the new
+	     MROW */
+	  {
+	    /* do not check the Thot abstract tree against the structure */
+	    /* schema while changing the structure */
+	    oldStructureChecking = TtaGetStructureChecking (doc);
+	    TtaSetStructureChecking (0, doc);
+	    TtaGiveFirstSelectedElement (doc, &el, &c1, &i);
 	    AddParen (el, doc);
-	  
-	  CreateParentMROW (el, doc);
+	    /* check the Thot abstract tree against the structure schema. */
+	    TtaSetStructureChecking ((ThotBool)oldStructureChecking, doc);
+	  }
+    }
 
-	  if (newType.ElTypeNum == MathML_EL_MTABLE &&
-	      (NumberRows > 1 || NumberCols >= 1))
+  if (emptySel)
+    {
+      TtaUnselect (doc);
+      el = TtaNewTree (doc, newType, "");
+      /* do not check the Thot abstract tree against the structure */
+      /* schema while changing the structure */
+      oldStructureChecking = TtaGetStructureChecking (doc);
+      TtaSetStructureChecking (0, doc);
+      
+      if (elType.ElTypeNum == MathML_EL_MROW ||
+	  elType.ElTypeNum == MathML_EL_MathML)
+	{
+	  /* the selected element is a MROW or the MathML element */
+	  row = sibling;
+	  if (before)
+	    sibling = TtaGetFirstChild (row);
+	  else
+	    sibling = TtaGetLastChild (row);
+	  if (sibling == NULL)
 	    {
-	      /* create the required number of columns and rows in the table */
-	      if (NumberCols >= 1)
+	      /* replace the empty MROW by the new element*/
+	      TtaInsertSibling (el, row, TRUE, doc);
+	      if (!registered)
 		{
-		  elType.ElTypeNum = MathML_EL_TableRow;
-		  child = TtaSearchTypedElement (elType, SearchInTree, el);
+		  TtaRegisterElementCreate (el, doc);
+		  TtaRegisterElementDelete (row, doc);
+		}
+	      TtaRemoveTree (row, doc);
+	    }
+	  else
+	    {
+	      /* check whether the selected element is a Construct */
+	      elType = TtaGetElementType (sibling);
+	      if (elType.ElTypeNum == MathML_EL_Construct)
+		{
+		  TtaInsertFirstChild (&el, sibling, doc);
+		  RemoveAttr (el, doc, MathML_ATTR_IntPlaceholder);
+		}
+	      else
+		TtaInsertSibling (el, sibling, before, doc);
+	      if (!registered)
+		TtaRegisterElementCreate (el, doc);
+	    }
+	}
+      else if (elType.ElTypeNum == MathML_EL_Construct)
+	{
+	  /* replace the Construct element */
+	  TtaInsertFirstChild (&el, sibling, doc);
+	  RemoveAttr (el, doc, MathML_ATTR_IntPlaceholder);
+	  if (!registered)
+	    TtaRegisterElementCreate (el, doc);
+	}
+      else
+	{
+	  /* the selected element is not a MROW */
+	  if (elType.ElTypeNum == MathML_EL_TEXT_UNIT)
+	    /* go up to the MN, MI, MO or M_TEXT element */
+	    sibling = TtaGetParent (sibling);
+	  /* insert the new element */
+	  TtaInsertSibling (el, sibling, before, doc);
+	  if (!registered)
+	    TtaRegisterElementCreate (el, doc);
+	}
+      
+      TtaSetDocumentModified (doc);
+
+      if (ParBlock)
+	/* the user wants to create a parenthesized block */
+	/* create two MF elements, as the first and last child of the new
+	   MROW */
+	AddParen (el, doc);
+	  
+      CreateParentMROW (el, doc);
+      
+      if (newType.ElTypeNum == MathML_EL_MTABLE &&
+	  (NumberRows > 1 || NumberCols >= 1))
+	{
+	  /* create the required number of columns and rows in the table */
+	  if (NumberCols >= 1)
+	    {
+	      elType.ElTypeNum = MathML_EL_TableRow;
+	      child = TtaSearchTypedElement (elType, SearchInTree, el);
+	      elType.ElTypeNum = MathML_EL_MTR;
+	      new = TtaNewTree (doc, elType, "");
+	      TtaInsertFirstChild (&new, child, doc);
+	      elType.ElTypeNum = MathML_EL_MTD;
+	      child = TtaSearchTypedElement (elType, SearchInTree, el);
+	      col = NumberCols;
+	      while (col > 1)
+		{
+		  new = TtaNewTree (doc, elType, "");
+		  TtaInsertSibling (new, child, FALSE, doc);
+		  col--;
+		}
+	    }
+	  if (NumberRows > 1)
+	    {
+	      elType.ElTypeNum = MathML_EL_MTR;
+	      row = TtaSearchTypedElement (elType, SearchInTree, el);
+	      while (NumberRows > 1)
+		{
 		  elType.ElTypeNum = MathML_EL_MTR;
 		  new = TtaNewTree (doc, elType, "");
-		  TtaInsertFirstChild (&new, child, doc);
+		  TtaInsertSibling (new, row, FALSE, doc);
+		  NumberRows--;
+		  /* create cells within the row */
 		  elType.ElTypeNum = MathML_EL_MTD;
-		  child = TtaSearchTypedElement (elType, SearchInTree, el);
+		  child = TtaSearchTypedElement (elType, SearchInTree,new);
 		  col = NumberCols;
 		  while (col > 1)
 		    {
@@ -1141,64 +1164,43 @@ int                 construct;
 		      col--;
 		    }
 		}
-	      if (NumberRows > 1)
-		{
-		  elType.ElTypeNum = MathML_EL_MTR;
-		  row = TtaSearchTypedElement (elType, SearchInTree, el);
-		  while (NumberRows > 1)
-		    {
-		      elType.ElTypeNum = MathML_EL_MTR;
-		      new = TtaNewTree (doc, elType, "");
-		      TtaInsertSibling (new, row, FALSE, doc);
-		      NumberRows--;
-		      /* create cells within the row */
-		      elType.ElTypeNum = MathML_EL_MTD;
-		      child = TtaSearchTypedElement (elType, SearchInTree,new);
-		      col = NumberCols;
-		      while (col > 1)
-			{
-			  new = TtaNewTree (doc, elType, "");
-			  TtaInsertSibling (new, child, FALSE, doc);
-			  col--;
-			}
-		    }
-		}
-	      CheckAllRows (el, doc, FALSE);
 	    }
-
-	  /* if the new element is a child of a FencedExpression element,
-	     create the associated FencedSeparator elements */
-	  parent = TtaGetParent (el);
-	  elType = TtaGetElementType (parent);
-	  if (elType.ElTypeNum == MathML_EL_FencedExpression)
-	    RegenerateFencedSeparators (parent, doc, TRUE);
-
-	  /* insert placeholders before and/or after the new element if
-	    they are needed */
-	  placeholderEl = InsertPlaceholder (el, TRUE, doc, !registered);
-	  placeholderEl = InsertPlaceholder (el, FALSE, doc, !registered);
-
-	  TtaSetDisplayMode (doc, DisplayImmediately);
-	  /* check the Thot abstract tree against the structure schema. */
-	  TtaSetStructureChecking ((ThotBool)oldStructureChecking, doc);
-	  
-	  /* selected the leaf in the first (or second) child of the new
-	     element */
-	  child = TtaGetFirstChild (el);
-	  if (!selectFirstChild)
-	     /* get the second child */
-	     TtaNextSibling (&child);
-	  leaf = NULL;
-	  while (child != NULL)
-	    {
-	      leaf = child;
-	      child = TtaGetFirstChild (child);
-	    }
-	  if (leaf)
-	    TtaSelectElement (doc, leaf);
+	  CheckAllRows (el, doc, FALSE);
 	}
 
-      TtaCloseUndoSequence (doc);
+      /* if the new element is a child of a FencedExpression element,
+	 create the associated FencedSeparator elements */
+      parent = TtaGetParent (el);
+      elType = TtaGetElementType (parent);
+      if (elType.ElTypeNum == MathML_EL_FencedExpression)
+	RegenerateFencedSeparators (parent, doc, TRUE);
+
+      /* insert placeholders before and/or after the new element if
+	 they are needed */
+      placeholderEl = InsertPlaceholder (el, TRUE, doc, !registered);
+      placeholderEl = InsertPlaceholder (el, FALSE, doc, !registered);
+
+      TtaSetDisplayMode (doc, DisplayImmediately);
+      /* check the Thot abstract tree against the structure schema. */
+      TtaSetStructureChecking ((ThotBool)oldStructureChecking, doc);
+	  
+      /* selected the leaf in the first (or second) child of the new
+	 element */
+      child = TtaGetFirstChild (el);
+      if (!selectFirstChild)
+	/* get the second child */
+	TtaNextSibling (&child);
+      leaf = NULL;
+      while (child != NULL)
+	{
+	  leaf = child;
+	  child = TtaGetFirstChild (child);
+	}
+      if (leaf)
+	TtaSelectElement (doc, leaf);
+    }
+  
+  TtaCloseUndoSequence (doc);
 }
 
 /*----------------------------------------------------------------------
