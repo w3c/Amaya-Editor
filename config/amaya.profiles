@@ -150,6 +150,7 @@ SetupAndPrint
 &CreateAddress
 
 [html]
+&ChangeTitle
 &CreateBlockQuote
 &CreateBreak
 &CreateDefinitionList

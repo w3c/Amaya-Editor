@@ -37,8 +37,8 @@
 #define NAME_LENGTH     32
 
 #define HTAppName     TEXT("amaya")
-#define HTAppVersion  TEXT("V2.5")
-#define HTAppDate     TEXT (" ")
+#define HTAppVersion  TEXT("V3.0")
+#define HTAppDate     TEXT ("29 march 2000")
 
 #define URL_STR       "/"
 #define URL_SEP       '/'
@@ -150,7 +150,9 @@ typedef enum _ClickEvent {
 #define TableBorder     443
 #define MathEntityForm  444
 #define MathEntityText  445
-#define MAX_REF         446
+#define TitleForm       446
+#define TitleText       447
+#define MAX_REF         448
 
 /* The possible GET/POST/PUT request modes */
 

@@ -81,9 +81,9 @@ extern ThotBool     NumberLinks;
 extern ThotBool     PrintURL;
 extern ThotBool     IgnoreCSS;
 
-static CHAR_T       urlToOpen [256];
-static CHAR_T       tmpDocName [256];
-static CHAR_T       altText [256];
+static CHAR_T       urlToOpen [MAX_LENGTH];
+static CHAR_T       tmpDocName [MAX_LENGTH];
+static CHAR_T       altText [MAX_LENGTH];
 static CHAR_T       message [300];
 static CHAR_T       message2 [300];
 static CHAR_T       wndTitle [100];
@@ -118,8 +118,8 @@ static int          nameSave;
 static int          imgSave;
 static int          toggleSave;
 static int          confirmSave;
-static int          attrHRefForm;
-static int          attrHRefTxt;
+static int          RefForm;
+static int          RefTxt;
 static int          numMenuSupport;
 static int          numMenuOptions;
 static int          numMenuPaperFormat;
@@ -205,7 +205,7 @@ ThotBool            gbAbort;
 #ifdef __STDC__
 LRESULT CALLBACK AltDlgProc (HWND, UINT, WPARAM, LPARAM);
 LRESULT CALLBACK CSSDlgProc (HWND, UINT, WPARAM, LPARAM);
-LRESULT CALLBACK LinkDlgProc (HWND, UINT, WPARAM, LPARAM);
+LRESULT CALLBACK TextDlgProc (HWND, UINT, WPARAM, LPARAM);
 LRESULT CALLBACK HelpDlgProc (HWND, UINT, WPARAM, LPARAM);
 LRESULT CALLBACK MathDlgProc (HWND, UINT, WPARAM, LPARAM);
 LRESULT CALLBACK AbortDlgProc (HWND, UINT, WPARAM, LPARAM);
@@ -238,7 +238,7 @@ LRESULT CALLBACK BackgroundImageDlgProc (HWND, UINT, WPARAM, LPARAM);
 #else  /* !__STDC__ */
 LRESULT CALLBACK AltDlgProc ();
 LRESULT CALLBACK CSSDlgProc ();
-LRESULT CALLBACK LinkDlgProc ();
+LRESULT CALLBACK TextDlgProc ();
 LRESULT CALLBACK HelpDlgProc ();
 LRESULT CALLBACK MathDlgProc ();
 LRESULT CALLBACK AbortDlgProc ();
@@ -370,10 +370,10 @@ STRING title;
     nbItem     = (UINT)nb_item;
     baseDlg    = base_dlg;
     cssSelect  = css_select;
-	formCss    = form_css;
-	cssList    = buffer;
-	usprintf (message, TEXT("%s"), msg);
-    usprintf (wndTitle, title);
+    formCss    = form_css;
+    cssList    = buffer;
+    ustrcpy (message, msg);
+    ustrcpy (wndTitle, title);
 
     if (nbItem == 0)
        MessageBox (parent, msg_text, wndTitle, MB_OK | MB_ICONWARNING);
@@ -381,31 +381,32 @@ STRING title;
 		DialogBox (hInstance, MAKEINTRESOURCE (CSSDIALOG), parent, (DLGPROC) CSSDlgProc);
 }
 
+
 /*-----------------------------------------------------------------------
- CreateLinkDlgWindow
+ CreateTextDlgWindow
  ------------------------------------------------------------------------*/
 #ifdef __STDC__
-void CreateLinkDlgWindow (HWND parent, STRING attrHref, int base_dlg, int attr_HREFForm, int attr_HREFText, CHAR_T* title_text, CHAR_T* url_text)
+void CreateTextDlgWindow (HWND parent, STRING attrHref, int base_dlg, int attr_HREFForm, int attr_HREFText, CHAR_T* title_text, CHAR_T* url_text)
 #else  /* !__STDC__ */
-void CreateLinkDlgWindow (parent, attrHref, base_dlg, attr_HREFForm, attr_HREFText, title_text, url_text)
+void CreateTextDlgWindow (parent, attrHref, base_dlg, attr_HREFForm, attr_HREFText, title_text, url_text)
 HWND      parent;
-STRING     attrHref;
+STRING    attrHref;
 int       base_dlg;
 int       attr_HREFForm;
 int       attr_HREFText;
+CHAR_T   *title_text;
+CHAR_T   *url_text;
 #endif /* __STDC__ */
 {  
-    baseDlg      = base_dlg;
-    attrHRefForm = attr_HREFForm;
-    attrHRefTxt  = attr_HREFText;
-	ustrcpy (urlToOpen, attrHref);
-	ustrcpy (wndTitle, title_text);
+    baseDlg = base_dlg;
+    RefForm = attr_HREFForm;
+    RefTxt  = attr_HREFText;
+    ustrcpy (urlToOpen, attrHref);
+    ustrcpy (wndTitle, title_text);
     ustrcpy (message, url_text);
-
     ReleaseFocus = FALSE;
     text[0] = 0;
-
-    DialogBox (hInstance, MAKEINTRESOURCE (LINKDIALOG), parent, (DLGPROC) LinkDlgProc);
+    DialogBox (hInstance, MAKEINTRESOURCE (LINKDIALOG), parent, (DLGPROC) TextDlgProc);
 }
 
 /*-----------------------------------------------------------------------
@@ -421,9 +422,9 @@ STRING     msg1;
 STRING     msg2;
 #endif /* __STDC__ */
 {  
-    usprintf (currentPathName, localname);
-    usprintf (message, msg1);
-    usprintf (message2, msg2);
+    ustrcpy (currentPathName, localname);
+    ustrcpy (message, msg1);
+    ustrcpy (message2, msg2);
 
 	DialogBox (hInstance, MAKEINTRESOURCE (HELPDIALOG), parent, (DLGPROC) HelpDlgProc);
 }
@@ -466,14 +467,14 @@ int       num_form_print;
 #endif /* __STDC__ */
 {  
     gbAbort            = FALSE;
-	baseDlg            = printRef;
-	ghwndMain          = parent;
+    baseDlg            = printRef;
+    ghwndMain          = parent;
     numMenuSupport     = num_menu_support;
     numMenuOptions     = num_menu_options;
     numMenuPaperFormat = num_menu_paper_format;
     numZonePrinterName = num_zone_printer_name;
     numFormPrint       = num_form_print;
-	usprintf (currentFileToPrint, TEXT("%s"), ps_dir);
+   ustrcpy (currentFileToPrint, ps_dir);
 
 	DialogBox (hInstance, MAKEINTRESOURCE (PRINTDIALOG), NULL, (DLGPROC) PrintDlgProc);
 
@@ -574,37 +575,36 @@ int   img_save;
 int   toggle_save;
 #endif /* __STDC__ */
 {  
-	baseDlg          = base_dlg;
-	saveForm         = save_form;
-	dirSave          = dir_save;
-	nameSave         = name_save;
-	imgSave          = img_save;
-	toggleSave       = toggle_save;
-	currentParentRef = baseDlg + saveForm;
-	usprintf (currentPathName, path_name);
+  baseDlg          = base_dlg;
+  saveForm         = save_form;
+  dirSave          = dir_save;
+  nameSave         = name_save;
+  imgSave          = img_save;
+  toggleSave       = toggle_save;
+  currentParentRef = baseDlg + saveForm;
+  ustrcpy (currentPathName, path_name);
 
-	switch (app_lang) {
-           case FR_LANG:
-                DialogBox (hInstance, MAKEINTRESOURCE (FR_SAVEASDIALOG), parent, (DLGPROC) SaveAsDlgProc);
-				break;
-           case DE_LANG:
-                DialogBox (hInstance, MAKEINTRESOURCE (DE_SAVEASDIALOG), parent, (DLGPROC) SaveAsDlgProc);
-				break;
-           default:
-                DialogBox (hInstance, MAKEINTRESOURCE (EN_SAVEASDIALOG), parent, (DLGPROC) SaveAsDlgProc);
-				break;
-	}
+  switch (app_lang) {
+  case FR_LANG:
+    DialogBox (hInstance, MAKEINTRESOURCE (FR_SAVEASDIALOG), parent, (DLGPROC) SaveAsDlgProc);
+    break;
+  case DE_LANG:
+    DialogBox (hInstance, MAKEINTRESOURCE (DE_SAVEASDIALOG), parent, (DLGPROC) SaveAsDlgProc);
+    break;
+  default:
+    DialogBox (hInstance, MAKEINTRESOURCE (EN_SAVEASDIALOG), parent, (DLGPROC) SaveAsDlgProc);
+    break;
+  }
 }
 
 /*-----------------------------------------------------------------------
  CreateOPenDocDlgWindow
  ------------------------------------------------------------------------*/
 #ifdef __STDC__
-void CreateOpenDocDlgWindow (HWND parent, STRING title, STRING docName, STRING doc_to_open, int base_doc, int form_doc, int doc_select, int dir_select, int url_name, int doc_type)
+void   CreateOpenDocDlgWindow (HWND parent, STRING title, STRING docName, int base_doc, int form_doc, int doc_select, int dir_select, int url_name, int doc_type)
 #else  /* !__STDC__ */
-void CreateOpenDocDlgWindow (parent, title, docName, doc_to_open, base_doc, form_doc, doc_select, dir_select, url_name, doc_type)
-HWND  parent;
-STRING doc_to_open;
+void   CreateOpenDocDlgWindow (parent, title, docName, base_doc, form_doc, doc_select, dir_select, url_name, doc_type)
+HWND   parent;
 STRING title;
 STRING docName;
 int    base_doc;
@@ -615,45 +615,45 @@ int    url_name;
 int    doc_type;
 #endif /* __STDC__ */
 {  
-	baseDoc   = base_doc;
-	formDoc   = form_doc;
-	docSelect = doc_select;
-	dirSelect = dir_select;
-	urlName   = url_name;
-    usprintf (wndTitle,  TEXT("%s"), title);
-    usprintf (tmpDocName, TEXT("%s"), docName);
+  baseDoc   = base_doc;
+  formDoc   = form_doc;
+  docSelect = doc_select;
+  dirSelect = dir_select;
+  urlName   = url_name;
+  ustrcpy (wndTitle, title);
+  ustrcpy (tmpDocName, docName);
+  ustrcpy ( urlToOpen, docName);
     
-    if (doc_type == TEXT_FILE)
-       szFilter = APPFILENAMEFILTER;
-	else if (doc_type == IMG_FILE)
-         szFilter = APPIMAGENAMEFILTER;
-    else 
-        szFilter = APPALLFILESFILTER;
+  if (doc_type == TEXT_FILE)
+    szFilter = APPFILENAMEFILTER;
+  else if (doc_type == IMG_FILE)
+    szFilter = APPIMAGENAMEFILTER;
+  else 
+    szFilter = APPALLFILESFILTER;
 
-	switch (app_lang) {
-           case FR_LANG:
-                DialogBox (hInstance, MAKEINTRESOURCE (FR_OPENDOCDIALOG), parent, (DLGPROC) OpenDocDlgProc);
-				break;
-           case DE_LANG:
-                DialogBox (hInstance, MAKEINTRESOURCE (DE_OPENDOCDIALOG), parent, (DLGPROC) OpenDocDlgProc);
-				break;
-           default:
-                DialogBox (hInstance, MAKEINTRESOURCE (EN_OPENDOCDIALOG), parent, (DLGPROC) OpenDocDlgProc);
-				break;
-	}
-
-	ustrcpy (doc_to_open, urlToOpen);
+  switch (app_lang)
+    {
+    case FR_LANG:
+      DialogBox (hInstance, MAKEINTRESOURCE (FR_OPENDOCDIALOG), parent, (DLGPROC) OpenDocDlgProc);
+      break;
+    case DE_LANG:
+      DialogBox (hInstance, MAKEINTRESOURCE (DE_OPENDOCDIALOG), parent, (DLGPROC) OpenDocDlgProc);
+      break;
+    default:
+      DialogBox (hInstance, MAKEINTRESOURCE (EN_OPENDOCDIALOG), parent, (DLGPROC) OpenDocDlgProc);
+      break;
+    }
 }
 
 /*-----------------------------------------------------------------------
  CreateOPenImgDlgWindow
  ------------------------------------------------------------------------*/
 #ifdef __STDC__
-void CreateOpenImgDlgWindow (HWND parent, STRING doc_to_open, int base_doc, int form_doc, int image_alt, int doc_select, int dir_select, int doc_type)
+void CreateOpenImgDlgWindow (HWND parent, STRING imgName, int base_doc, int form_doc, int image_alt, int doc_select, int dir_select, int doc_type)
 #else  /* !__STDC__ */
-void CreateOpenImgDlgWindow (parent, doc_to_open, base_doc, form_doc, image_alt, doc_select, dir_select, doc_type)
+void CreateOpenImgDlgWindow (parent, imgName, base_doc, form_doc, image_alt, doc_select, dir_select, doc_type)
 HWND  parent;
-STRING doc_to_open;
+STRING imgName;
 int   base_doc;
 int   for_doc;
 int   image_alt;
@@ -662,32 +662,32 @@ int   dir_select;
 int   doc_type;
 #endif /* __STDC__ */
 {  
-	baseDoc   = base_doc;
-	formDoc   = form_doc;
-	docSelect = doc_select;
-	dirSelect = dir_select;
-    imageAlt  = image_alt;
+  baseDoc   = base_doc;
+  formDoc   = form_doc;
+  docSelect = doc_select;
+  dirSelect = dir_select;
+  imageAlt  = image_alt;
+  ustrcpy ( urlToOpen, imgName);
     
-    if (doc_type == TEXT_FILE)
-       szFilter = APPFILENAMEFILTER;
-	else if (doc_type == IMG_FILE)
-         szFilter = APPIMAGENAMEFILTER;
-    else 
-        szFilter = APPALLFILESFILTER;
-
-	switch (app_lang) {
-           case FR_LANG:
-                DialogBox (hInstance, MAKEINTRESOURCE (FR_OPENIMAGEDIALOG), parent, (DLGPROC) OpenImgDlgProc);
-				break;
-           case DE_LANG:
-                DialogBox (hInstance, MAKEINTRESOURCE (DE_OPENIMAGEDIALOG), parent, (DLGPROC) OpenImgDlgProc);
-				break;
-           default:
-                DialogBox (hInstance, MAKEINTRESOURCE (EN_OPENIMAGEDIALOG), parent, (DLGPROC) OpenImgDlgProc);
-				break;
-	}
-
-	ustrcpy (doc_to_open, urlToOpen);
+  if (doc_type == TEXT_FILE)
+    szFilter = APPFILENAMEFILTER;
+  else if (doc_type == IMG_FILE)
+    szFilter = APPIMAGENAMEFILTER;
+  else 
+    szFilter = APPALLFILESFILTER;
+  
+  switch (app_lang)
+    {
+    case FR_LANG:
+      DialogBox (hInstance, MAKEINTRESOURCE (FR_OPENIMAGEDIALOG), parent, (DLGPROC) OpenImgDlgProc);
+      break;
+    case DE_LANG:
+      DialogBox (hInstance, MAKEINTRESOURCE (DE_OPENIMAGEDIALOG), parent, (DLGPROC) OpenImgDlgProc);
+      break;
+    default:
+      DialogBox (hInstance, MAKEINTRESOURCE (EN_OPENIMAGEDIALOG), parent, (DLGPROC) OpenImgDlgProc);
+      break;
+    }
 }
 
 /*-----------------------------------------------------------------------
@@ -726,12 +726,12 @@ HWND frame;
 #ifdef __STDC__
 void CreateSaveListDlgWindow (HWND parent, int nb_item, STRING save_list, int base_dialog, int confirm_save)
 #else  /* !__STDC__ */
-void CreateSaveListDlgWindow (parent, nb_item, doc_to_open, base_dialog, confirm_save)
-HWND  parent;
-int   nb_item;
+void CreateSaveListDlgWindow (parent, nb_item, save_list, base_dialog, confirm_save)
+HWND   parent;
+int    nb_item;
 STRING save_list;
-int   base_dialog;
-int   confirm_save;
+int    base_dialog;
+int    confirm_save;
 #endif /* __STDC__ */
 {  
     nbItem      = (UINT)nb_item;
@@ -767,9 +767,9 @@ ThotBool* save_befor;
 ThotBool* close_dont_save;
 #endif /* __STDC__ */
 {  
-	usprintf (message, msg);
-	usprintf (wndTitle, title);
-	numFormClose = num_form_close;
+  ustrcpy (message, msg);
+  ustrcpy (wndTitle, title);
+  numFormClose = num_form_close;
 
 	switch (app_lang) {
            case FR_LANG:
@@ -805,10 +805,10 @@ int   lang_value;
 STRING curLang;
 #endif /* __STDC__ */
 {  
-  usprintf (wndTitle, title);
-  usprintf (message, msg1);
-  usprintf (message2, msg2);
-  usprintf (winCurLang, curLang);
+  ustrcpy (wndTitle, title);
+  ustrcpy (message, msg1);
+  ustrcpy (message2, msg2);
+  ustrcpy (winCurLang, curLang);
   langList                = lang_list;
   nbItem                  = (UINT)nb_item;
   LangValue               = lang_value;
@@ -874,7 +874,7 @@ int   nb_items;
 STRING buffer;
 #endif /* __STDC__ */
 {
-    usprintf (attDlgTitle, title);
+    ustrcpy (attDlgTitle, title);
     currAttrVal = curr_val;
 	attDlgNbItems = nb_items;
 
@@ -956,12 +956,12 @@ STRING entity_name;
     mathForm = math_form;
     mathText = math_txt;
 
-    usprintf (mathEntityName, math_entity_name);
-    usprintf (BM_Entity, bm_entity);
-    usprintf (entityName, entity_name);
+    ustrcpy (mathEntityName, math_entity_name);
+    ustrcpy (BM_Entity, bm_entity);
+    ustrcpy (entityName, entity_name);
 
     DialogBox (hInstance, MAKEINTRESOURCE (MATH_ENTITY_DLG), NULL, (DLGPROC) MathEntityDlgProc);
-    usprintf (math_entity_name, mathEntityName);
+    ustrcpy (math_entity_name, mathEntityName);
 }
 
 /*-----------------------------------------------------------------------
@@ -1055,8 +1055,8 @@ int   chkrSpecial;
 	ChkrMenuIgnore  = chkrMenuIgnore;
 	ChkrCaptureNC   = chkrCaptureNC;
 
-	usprintf (currentLabel, label);
-	usprintf (currentRejectedchars, rejectedChars);
+	ustrcpy (currentLabel, label);
+	ustrcpy (currentRejectedchars, rejectedChars);
 
 	switch (app_lang) {
            case FR_LANG:
@@ -1084,8 +1084,8 @@ STRING title;
 STRING msg;
 #endif /* __STDC__ */
 {  
-	usprintf (message, msg);
-	usprintf (wndTitle, title);
+	ustrcpy (message, msg);
+	ustrcpy (wndTitle, title);
 	currentRef = ref;
 
 	switch (app_lang) {
@@ -1211,14 +1211,14 @@ int   repeat_image;
 STRING image_location;
 #endif /* __STDC__ */
 {
-	baseDlg          = base_image;
-	bgImageForm      = form_background;
-	imageURL         = image_URL;
-	imageSel         = image_sel;
-	szFilter         = APPIMAGENAMEFILTER;
-	repeatImage      = repeat_image;
-	currentParentRef = baseDlg + bgImageForm;
-    usprintf (currentPathName, TEXT("%s"), image_location);
+  baseDlg          = base_image;
+  bgImageForm      = form_background;
+  imageURL         = image_URL;
+  imageSel         = image_sel;
+  szFilter         = APPIMAGENAMEFILTER;
+  repeatImage      = repeat_image;
+  currentParentRef = baseDlg + bgImageForm;
+  ustrcpy (currentPathName, image_location);
 
 	switch (app_lang) {
            case FR_LANG:
@@ -1363,61 +1363,62 @@ LPARAM lParam;
 }
 
 /*-----------------------------------------------------------------------
- LinkDlgProc
+ TextDlgProc
  ------------------------------------------------------------------------*/
 #ifdef __STDC__
-LRESULT CALLBACK LinkDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam, LPARAM lParam)
+LRESULT CALLBACK TextDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam, LPARAM lParam)
 #else  /* !__STDC__ */
-LRESULT CALLBACK LinkDlgProc (hwnDlg, msg, wParam, lParam)
+LRESULT CALLBACK TextDlgProc (hwnDlg, msg, wParam, lParam)
 HWND   hwndParent;
 UINT   msg;
 WPARAM wParam;
 LPARAM lParam;
 #endif /* __STDC__ */
 {
-	HWND urlWnd;
-    switch (msg) {
-           case WM_INITDIALOG:
-			    urlWnd = GetDlgItem (hwnDlg, IDC_URL_TEXT);
-				SetWindowText (hwnDlg, wndTitle);
-				SetWindowText (urlWnd, message);
-				SetWindowText (GetDlgItem (hwnDlg, ID_CONFIRM), TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
-				SetWindowText (GetDlgItem (hwnDlg, ID_DONE), TtaGetMessage (LIB, TMSG_CANCEL));
-                SetDlgItemText (hwnDlg, IDC_URLEDIT, urlToOpen);
+  HWND urlWnd;
 
-                SetFocus (GetDlgItem (hwnDlg, IDC_URLEDIT));
-			    break;
-
-           case WM_COMMAND:
-	            switch (LOWORD (wParam)) {
-				       case ID_CONFIRM:
-						    GetDlgItemText (hwnDlg, IDC_URLEDIT, urlToOpen, sizeof (urlToOpen) - 1);
-							AttrHREFvalue = TtaAllocString (ustrlen (urlToOpen) + 1);
-							ustrcpy (AttrHREFvalue, urlToOpen);
-							ThotCallback (baseDlg + attrHRefTxt, STRING_DATA, urlToOpen);
-							ThotCallback (baseDlg + attrHRefForm, INTEGER_DATA, (CHAR_T*) 1);
-							EndDialog (hwnDlg, ID_CONFIRM);
-					        break;
-
-				       case ID_DONE:
-							ThotCallback (baseDlg + attrHRefForm, INTEGER_DATA, (CHAR_T*) 0);
-					        EndDialog (hwnDlg, ID_DONE);
-					        break;
-
-				       case WM_CLOSE:
-				       case WM_DESTROY:
-					        EndDialog (hwnDlg, ID_DONE);
-					        break;
-				}
-				break;
-
-           default: break;
+  switch (msg) {
+  case WM_INITDIALOG:
+    urlWnd = GetDlgItem (hwnDlg, IDC_URL_TEXT);
+    SetWindowText (hwnDlg, wndTitle);
+    SetWindowText (urlWnd, message);
+    SetWindowText (GetDlgItem (hwnDlg, ID_CONFIRM), TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
+    SetWindowText (GetDlgItem (hwnDlg, ID_DONE), TtaGetMessage (LIB, TMSG_CANCEL));
+    SetDlgItemText (hwnDlg, IDC_URLEDIT, urlToOpen);
+    
+    SetFocus (GetDlgItem (hwnDlg, IDC_URLEDIT));
+    break;
+    
+  case WM_COMMAND:
+    switch (LOWORD (wParam)) {
+    case ID_CONFIRM:
+      GetDlgItemText (hwnDlg, IDC_URLEDIT, urlToOpen, sizeof (urlToOpen) - 1);
+      AttrHREFvalue = TtaAllocString (ustrlen (urlToOpen) + 1);
+      ustrcpy (AttrHREFvalue, urlToOpen);
+      ThotCallback (baseDlg + RefTxt, STRING_DATA, urlToOpen);
+      ThotCallback (baseDlg + RefForm, INTEGER_DATA, (CHAR_T*) 1);
+      EndDialog (hwnDlg, ID_CONFIRM);
+      break;
+      
+    case ID_DONE:
+      ThotCallback (baseDlg + RefForm, INTEGER_DATA, (CHAR_T*) 0);
+      EndDialog (hwnDlg, ID_DONE);
+      break;
+      
+    case WM_CLOSE:
+    case WM_DESTROY:
+      EndDialog (hwnDlg, ID_DONE);
+      break;
     }
-	return FALSE;
+    break;
+    
+  default: break;
+  }
+  return FALSE;
 }
 	
 /*-----------------------------------------------------------------------
- LinkDlgProc
+ HelpDlgProc
  ------------------------------------------------------------------------*/
 #ifdef __STDC__
 LRESULT CALLBACK HelpDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam, LPARAM lParam)

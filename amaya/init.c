@@ -89,7 +89,6 @@ extern int      currentFrame;
 extern CHAR_T   wTitle [MAX_LENGTH];
 int             Window_Curs;
 
-CHAR_T docToOpen [MAX_LENGTH];
 CHAR_T DocToOpen [MAX_LENGTH];
 /* extern bmpID;  */
 #endif /* _WINDOWS */
@@ -1055,9 +1054,9 @@ View                view;
 {
    ElementType         elType;
    Element             el, child;
-   int                 length;
    Language            lang;
    CHAR_T*              text;
+   int                 length;
 
    el = TtaGetMainRoot (sourceDoc);
    elType.ElSSchema = TtaGetDocumentSSchema (sourceDoc);
@@ -1125,7 +1124,8 @@ CHAR_T*              server;
    TtaSetDialoguePosition ();
    TtaShowDialogue (BaseDialog + FormAnswer, FALSE);
    TtaWaitShowDialogue ();
-   if (UserAnswer && (Answer_name[0] == WC_EOS || Answer_password[0] == WC_EOS))
+   if (UserAnswer &&
+       (Answer_name[0] == WC_EOS || Answer_password[0] == WC_EOS))
      {
        /* no login name or password, retry */
        TtaSetTextForm (BaseDialog + NameText, Answer_name);
@@ -1287,7 +1287,7 @@ CHAR_T*             title;
       usprintf (s, TEXT("%s"), LastURLName);
    else
      usprintf (s, TEXT("%s%c%s"), DirectoryName, DIR_SEP, DocumentName);
-     CreateOpenDocDlgWindow (TtaGetViewFrame (document, view), title, s, docToOpen, BaseDialog, OpenForm, DocSelect, DirSelect, URLName, 2);
+   CreateOpenDocDlgWindow (TtaGetViewFrame (document, view), title, s, BaseDialog, OpenForm, DocSelect, DirSelect, URLName, 2);
 #endif /* _WINDOWS */
 }
 
@@ -3815,8 +3815,8 @@ CHAR_T*             data;
 	   {
 	     /* the command is aborted */
 	     CheckAmayaClosed ();
-         NewCSSfile = FALSE;
-         NewHTMLfile = FALSE;
+	     NewCSSfile = FALSE;
+	     NewHTMLfile = FALSE;
 	   }
 	 }
        break;
@@ -4186,6 +4186,19 @@ CHAR_T*             data;
      case AttrHREFText:
        /* save the HREF name */
        NormalizeFile (data, AttrHREFvalue, AM_CONV_NONE);
+       break;
+       
+     case TitleForm:
+       /* ********Change the document title*********** */
+       TtaDestroyDialogue (BaseDialog + TitleForm);
+       if (val == 1)
+	 SetNewTitle (CurrentDocument);
+       break;
+
+     case TitleText:
+       /* new document name */
+       ustrncpy (Answer_text, data, MAX_LENGTH);
+       Answer_text[MAX_LENGTH - 1] = EOS;
        break;
 
      case ClassForm:

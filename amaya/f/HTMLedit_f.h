@@ -17,6 +17,9 @@ extern void SetREFattribute ( Element element,
                               Document doc,
                               STRING targetURL,
                               STRING targetName );
+extern void ChangeTitle ( Document doc,
+                          View view );
+extern void SetNewTitle ( Document doc );
 extern void SelectDestination ( Document doc,
                                 Element el,
                                 ThotBool withUndo );
@@ -117,6 +120,9 @@ extern void SetREFattribute (/* Element element,
                                 Document doc,
                                 STRING targetURL,
                                 STRING targetName */);
+extern void ChangeTitle (/* Document doc,
+                            View view */);
+extern void SetNewTitle (/* Document doc */);
 extern void SelectDestination (/* Document doc,
                                   Element el,
                                   ThotBool withUndo */);

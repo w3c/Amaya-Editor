@@ -413,6 +413,100 @@ STRING              targetName;
    TtaSetStatus (doc, 1, TEXT(" "), NULL);
 }
 
+
+/*----------------------------------------------------------------------
+   ChangeTitle
+   Update the TITLE for the document.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                ChangeTitle (Document doc, View view)
+#else
+void                ChangeTitle (doc, view)
+Document            doc;
+View                view;
+#endif
+{
+   ElementType         elType;
+   Element             el, child;
+   Language            lang;
+   int                 length;
+
+   if (!TtaGetDocumentAccessMode (doc))
+     /* the document is in ReadOnly mode */
+     return;
+
+   /* search the Title element */
+   el = TtaGetMainRoot (doc);
+   elType.ElSSchema = TtaGetDocumentSSchema (doc);
+   if (!ustrcmp (TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")))
+     {
+       elType.ElTypeNum = HTML_EL_TITLE;
+       el = TtaSearchTypedElement (elType, SearchForward, el);
+       child = TtaGetFirstChild (el);
+       if (child == NULL)
+	 {
+	   /* insert the text element */
+	   elType.ElTypeNum = HTML_EL_TEXT_UNIT;
+	   child = TtaNewElement (doc, elType);
+	   TtaInsertFirstChild  (&child, el, doc);
+	 }
+       length = MAX_LENGTH;
+       TtaGiveTextContent (child, Answer_text, &length, &lang);
+       CurrentDocument = doc;
+#ifndef _WINDOWS 
+       TtaNewForm (BaseDialog + TitleForm, TtaGetViewFrame (doc, 1), TtaGetMessage (1, BTitle), TRUE, 2, 'L', D_CANCEL);
+       TtaNewTextForm (BaseDialog + TitleText, BaseDialog + TitleForm, "", 50, 1, FALSE);
+	/* initialise the text field in the dialogue box */
+	TtaSetTextForm (BaseDialog + TitleText, Answer_text);
+	TtaShowDialogue (BaseDialog + TitleForm, FALSE);
+#else /* _WINDOWS */
+	CreateTextDlgWindow (TtaGetViewFrame (doc, view), Answer_text, BaseDialog, TitleForm, TitleText, TtaGetMessage (1, BTitle), TtaGetMessage (AMAYA, AM_TITLE));
+#endif /* _WINDOWS */
+     }
+}
+
+
+/*----------------------------------------------------------------------
+   SetNewTitle
+   Update the TITLE for the document.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                SetNewTitle (Document doc)
+#else
+void                SetNewTitle (doc)
+Document            doc;
+#endif
+{
+   ElementType         elType;
+   Element             el, child;
+   Language            lang;
+
+   if (!TtaGetDocumentAccessMode (doc))
+     /* the document is in ReadOnly mode */
+     return;
+
+   /* search the Title element */
+   el = TtaGetMainRoot (doc);
+   elType.ElSSchema = TtaGetDocumentSSchema (doc);
+   if (!ustrcmp (TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")))
+     {
+       elType.ElTypeNum = HTML_EL_TITLE;
+       el = TtaSearchTypedElement (elType, SearchForward, el);
+       child = TtaGetFirstChild (el);
+       if (child)
+	 {
+	    TtaOpenUndoSequence (doc, NULL, NULL, 0, 0);
+	    TtaRegisterElementReplace (el, doc);
+	    TtaSetTextContent (child, Answer_text, TtaGetDefaultLanguage (), doc);
+	    TtaCloseUndoSequence (doc);
+	    TtaSetDocumentModified (doc);
+	    SetWindowTitle (doc, doc, 0);
+	    if (DocumentSource[doc])
+	      SetWindowTitle (doc, DocumentSource[doc], 0);
+	 }
+     }
+}
+
 /*----------------------------------------------------------------------
    SelectDestination selects the destination of the el Anchor.     
   ----------------------------------------------------------------------*/
@@ -431,7 +525,7 @@ ThotBool		    withUndo;
    Document            targetDoc;
    Attribute           attr;
    AttributeType       attrType;
-   STRING              buffer;
+   STRING              buffer = NULL;
    int                 length;
    ThotBool            isHTML;
 
@@ -475,9 +569,6 @@ ThotBool		    withUndo;
 	TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_INVALID_TARGET), NULL);
 	/* Dialogue form to insert HREF name */
 #ifndef _WINDOWS 
-	TtaNewForm (BaseDialog + AttrHREFForm, TtaGetViewFrame (doc, 1),  TtaGetMessage (AMAYA, AM_ATTRIBUTE), TRUE, 2, 'L', D_CANCEL);
-	TtaNewTextForm (BaseDialog + AttrHREFText, BaseDialog + AttrHREFForm,
-			TtaGetMessage (AMAYA, AM_HREF_VALUE), 50, 1, FALSE);
 #endif /* !__WINDOWS */
 
 	/* If the anchor has an HREF attribute, put its value in the form */
@@ -501,17 +592,18 @@ ThotBool		    withUndo;
 	     /* copy the HREF attribute into the buffer */
 	     TtaGiveTextAttributeValue (attr, buffer, &length);
 	     ustrcpy (AttrHREFvalue, buffer);
-#ifndef _WINDOWS
-	     /* initialise the text field in the dialogue box */
-	     TtaSetTextForm (BaseDialog + AttrHREFText, buffer);
-#endif /* _WINDOWS */
 	     TtaFreeMemory (buffer);
 	  }
 
 #ifndef _WINDOWS
+	TtaNewForm (BaseDialog + AttrHREFForm, TtaGetViewFrame (doc, 1),  TtaGetMessage (AMAYA, AM_ATTRIBUTE), TRUE, 2, 'L', D_CANCEL);
+	TtaNewTextForm (BaseDialog + AttrHREFText, BaseDialog + AttrHREFForm,
+			TtaGetMessage (AMAYA, AM_HREF_VALUE), 50, 1, FALSE);
+	/* initialise the text field in the dialogue box */
+	TtaSetTextForm (BaseDialog + AttrHREFText, AttrHREFvalue);
 	TtaShowDialogue (BaseDialog + AttrHREFForm, FALSE);
 #else  /* _WINDOWS */
-	CreateLinkDlgWindow (currentWindow, AttrHREFvalue, BaseDialog, AttrHREFForm, AttrHREFText, TtaGetMessage (AMAYA, AM_ATTRIBUTE), TtaGetMessage (AMAYA, AM_HREF_VALUE));
+	CreateTextDlgWindow (currentWindow, AttrHREFvalue, BaseDialog, AttrHREFForm, AttrHREFText, TtaGetMessage (AMAYA, AM_ATTRIBUTE), TtaGetMessage (AMAYA, AM_HREF_VALUE));
 #endif  /* _WINDOWS */
      }
 }
