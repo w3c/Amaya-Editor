@@ -91,6 +91,7 @@ protected:
   void OnIdle( wxIdleEvent& event );
   void OnChar( wxKeyEvent& event );  
   void OnTimerMouseMove( wxTimerEvent& event );
+  void OnEraseBackground( wxEraseEvent& WXUNUSED(event) );
 
   AmayaFrame *  m_pAmayaFrame;  // amaya frame reference (parent)
 

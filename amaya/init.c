@@ -3282,6 +3282,12 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
 	     }
 	 }
      }
+
+#ifdef _WX
+   // show the window if it's not allready done
+   TtaShowWindow( window_id, TRUE );
+#endif /* _WX */
+
    return (doc);
 }
 

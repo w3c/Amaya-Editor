@@ -556,6 +556,20 @@ void AmayaCanvas::OnChar(wxKeyEvent& event)
   event.Skip();
 }
 
+
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaCanvas
+ *      Method:  OnEraseBackground
+ * Description:  
+ *--------------------------------------------------------------------------------------
+ */
+void AmayaCanvas::OnEraseBackground(wxEraseEvent& WXUNUSED(event))
+{
+  // Do nothing, to avoid flashing.
+  TTALOGDEBUG_1( TTA_LOG_DRAW, _T("AmayaCanvas::OnEraseBackground frame=%d"), m_pAmayaFrame->GetFrameId() );
+}
+
 /*----------------------------------------------------------------------
  *  this is where the event table is declared
  *  the callbacks are assigned to an event type
@@ -567,6 +581,7 @@ BEGIN_EVENT_TABLE(AmayaCanvas, wxPanel)
 #endif // #ifdef _GL
   EVT_SIZE( 		AmayaCanvas::OnSize )
   EVT_PAINT( 		AmayaCanvas::OnPaint )
+  EVT_ERASE_BACKGROUND( AmayaCanvas::OnEraseBackground)
 
   // what mouse event type is managed ? comment what is not managed
   EVT_LEFT_DOWN(	AmayaCanvas::OnMouseDown) // Process a wxEVT_LEFT_DOWN event. 

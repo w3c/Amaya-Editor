@@ -244,9 +244,6 @@ int TtaMakeWindow( int x, int y, int w, int h, int kind, int parent_window_id )
   if (kind != WXAMAYAWINDOW_SIMPLE)
     TtaMakeWindowMenuBar( window_id );
   
-  // show the window if not already show
-  TtaShowWindow( window_id, TRUE );
-
   return window_id;
 #else
   return 0;

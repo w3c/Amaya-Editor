@@ -216,8 +216,6 @@ AmayaFrame * AmayaPage::AttachFrame( AmayaFrame * p_frame, int position )
       /* hide the split button */
       //      m_pSplitButtonBottom->ShowQuickSplitButton( false );
     }
-
-  p_frame->Show();
   
   // try to avoid refresh because it forces a total canvas redraw (it's not very optimized)
   //p_frame->Refresh();

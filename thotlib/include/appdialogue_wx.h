@@ -35,6 +35,7 @@ extern int TtaMakeFrame( const char * schema_name,
 			 int width,
 			 int height,
 			 int * volume );
+extern void TtaShowWindow( int window_id, ThotBool show );
 extern int TtaGetFreePageId( int window_id );
 extern void TtaSwitchPanelButton( Document doc, View view,
 				  int panel_type,
