@@ -332,6 +332,7 @@ EXCEPT
 
    GraphML:             IsDraw, MoveResize, NoShowBox, NoMove;
    g:                   NoMove, NoResize, NoShowBox, NoCreate;
+   defs:                NoMove, NoResize, NoShowBox, NoCreate;
    Spline:              MoveResize, HighlightChildren, NoShowBox, NoCreate;
    ClosedSpline:        MoveResize, HighlightChildren, NoShowBox, NoCreate;
    rect:                MoveResize, HighlightChildren, NoShowBox, NoCreate;
@@ -340,9 +341,15 @@ EXCEPT
    line_:               MoveResize, HighlightChildren, NoShowBox, NoCreate;
    polyline:            MoveResize, HighlightChildren, NoShowBox, NoCreate;
    polygon:             MoveResize, HighlightChildren, NoShowBox, NoCreate;
-   image:	        MoveResize, HighlightChildren, NoShowBox, NoCreate;
-   text_:               MoveResize, NoResize, NoShowBox, ReturnCreateWithin, NoCreate;
+   text_:               MoveResize, NoResize, NoShowBox, ReturnCreateWithin,
+	                NoCreate;
    tspan:	        NoShowBox; 
+   use_:	        NoMove, NoResize, NoShowBox, NoCreate;
+   image:	        MoveResize, HighlightChildren, NoShowBox, NoCreate;
+   symbol_:	        NoMove, NoResize, NoShowBox, NoCreate;
+   a:	                NoMove, NoResize, NoShowBox, NoCreate;
+   script:	        NoMove, NoResize, NoShowBox, NoCreate;
+   style__:             NoMove, NoResize, NoShowBox, NoCreate;
    foreignObject:       MoveResize, NoCreate;
    PICTURE:             NoMove, NoResize;
    TEXT:                NoMove, NoResize;
