@@ -270,7 +270,7 @@ Document	    doc;
   Attribute           attr;
   AttributeType       attrType;
   int                 length;
-  CHAR_T              value[MAX_LENGTH];
+  CHAR_T             *value;
   Language            lang;
 
   /* check if element is selected */
@@ -284,14 +284,16 @@ Document	    doc;
       if (attr != NULL)
         {
 	/* there's an explicit value */
-	length = MAX_LENGTH - 1;
+	length = TtaGetTextAttributeLength (attr) + 1;
+	value = TtaAllocString (length);
 	TtaGiveTextAttributeValue (attr, value, &length);
         }
       else
         {
 	/* use the attached text as an implicit value */
 	elText = TtaGetFirstChild(option);
-	length = MAX_LENGTH - 1;
+	length = TtaGetTextLength (elText) + 1;
+	value = TtaAllocString (length);
 	TtaGiveTextContent (elText, value, &length, &lang);
         }
       /* remove extra spaces */
@@ -299,6 +301,7 @@ Document	    doc;
       TrimSpaces (value);
       /* save the name/value pair of the element */
       AddNameValue (name, value);
+      TtaFreeMemory (value);
       }
 }
 
@@ -506,7 +509,7 @@ ThotBool            withinForm;
   Element             elForm;
   Attribute           attr, attrS, def;
   AttributeType       attrType, attrTypeS;
-  CHAR_T              name[MAX_LENGTH], value[MAX_LENGTH];
+  CHAR_T              name[MAX_LENGTH], *value = NULL;
   STRING              text;
   Language            lang;
   int                 length;
@@ -518,8 +521,7 @@ ThotBool            withinForm;
 	/* save current status of the document */
 	modified = TtaIsDocumentModified (doc);
       
-      lang = TtaGetDefaultLanguage ();
-      
+      lang = TtaGetDefaultLanguage ();      
       attrType.AttrSSchema = TtaGetDocumentSSchema (doc);
       attrType.AttrTypeNum = HTML_ATTR_NAME;
       attrTypeS.AttrSSchema = attrType.AttrSSchema;
@@ -556,9 +558,12 @@ ThotBool            withinForm;
 			  if (attrS != NULL)
 			    {
 			      /* save the Value attribute of the element el */
-			      length = MAX_LENGTH - 1;
+			      length = TtaGetTextAttributeLength (attrS) + 1;
+			      value = TtaAllocString (length);
 			      TtaGiveTextAttributeValue (attrS, value, &length);
 			      AddNameValue (name, value);
+			      TtaFreeMemory (value);
+			      value = NULL;
 			    }
 			  else
 			    /* give a default checkbox value (On) */
@@ -603,9 +608,12 @@ ThotBool            withinForm;
 			      length = MAX_LENGTH - 1;
 			      TtaGiveTextAttributeValue (attr, name, &length);
 			      /* save the Value attribute of the element el */
-			      length = MAX_LENGTH - 1;
+			      length = TtaGetTextAttributeLength (attrS) + 1;
+			      value = TtaAllocString (length);
 			      TtaGiveTextAttributeValue (attrS, value, &length);
 			      AddNameValue (name, value);
+			      TtaFreeMemory (value);
+			      value = NULL;
 			    }
 			}
 		    }
@@ -662,18 +670,24 @@ ThotBool            withinForm;
 		      def = TtaGetAttribute (el, attrTypeS);
 		      if (def != NULL)
 			{
-			  length = MAX_LENGTH - 1;
+			  length = TtaGetTextAttributeLength (def) + 1;
+			  value = TtaAllocString (length);
 			  TtaGiveTextAttributeValue (def, value, &length);
 			}
 		      else
-			/* there's no default value */
-			value[0] = EOS;
+			{
+			  /* there's no default value */
+			  value = TtaAllocString (1);
+			  value[0] = EOS;
+			}
 		      /* search the value in the Text_With_Frame element */
 		      elType.ElTypeNum = HTML_EL_TEXT_UNIT;
 		      elForm = TtaSearchTypedElement (elType, SearchInTree, el);
 		      /* reset the value of the element */
 		      if (elForm != NULL) 
 			TtaSetTextContent (elForm, value, lang, doc);
+		      TtaFreeMemory (value);
+		      value = NULL;
 		    }
 		  break;
 		  
@@ -690,9 +704,12 @@ ThotBool            withinForm;
 			  length = MAX_LENGTH - 1;
 			  TtaGiveTextAttributeValue (attr, name, &length);
 			  /* save of the element content */
-			  length = MAX_LENGTH - 1;
+			  length = TtaGetTextAttributeLength (def) + 1;
+			  value = TtaAllocString (length);
 			  TtaGiveTextAttributeValue (def, value, &length);
 			  AddNameValue (name, value);
+			  TtaFreeMemory (value);
+			  value = NULL;
 			}
 		    }
 		  break;
@@ -1086,99 +1103,102 @@ Element             el;
 
 #endif
 {
-   ElementType         elType;
-   Element             elForm;
-   Attribute           attr, attrN;
-   AttributeType       attrType, attrTypeN;
-   int                 modified, length;
-   CHAR_T              name[MAX_LENGTH], buffer[MAX_LENGTH];
+  ElementType         elType;
+  Element             elForm;
+  Attribute           attr, attrN;
+  AttributeType       attrType, attrTypeN;
+  int                 modified, length;
+  CHAR_T              name[MAX_LENGTH], *buffer = NULL;
 
-   if (el == NULL)
-      return;
-   elType = TtaGetElementType (el);
+  if (el == NULL)
+    return;
+  elType = TtaGetElementType (el);
 
-   /* extract the NAME attribute */
-   attrType.AttrSSchema = elType.ElSSchema;
-   attrType.AttrTypeNum = HTML_ATTR_Checked;
-   attrTypeN.AttrSSchema = attrType.AttrSSchema;
-   attrTypeN.AttrTypeNum = HTML_ATTR_NAME;
-   attrN = TtaGetAttribute (el, attrTypeN);
-   if (attrN != NULL)
-     {
-	/* save the NAME attribute of the element */
-	length = MAX_LENGTH - 1;
-	TtaGiveTextAttributeValue (attrN, name, &length);
-     }
-   else
-      return;
+  /* extract the NAME attribute */
+  attrType.AttrSSchema = elType.ElSSchema;
+  attrType.AttrTypeNum = HTML_ATTR_Checked;
+  attrTypeN.AttrSSchema = attrType.AttrSSchema;
+  attrTypeN.AttrTypeNum = HTML_ATTR_NAME;
+  attrN = TtaGetAttribute (el, attrTypeN);
+  if (attrN != NULL)
+    {
+      /* save the NAME attribute of the element */
+      length = MAX_LENGTH - 1;
+      TtaGiveTextAttributeValue (attrN, name, &length);
+    }
+  else
+    return;
 
-   if (elType.ElTypeNum == HTML_EL_Radio_Input)
-     {
-	attr = TtaGetAttribute (el, attrType);
-	if (attr != NULL && TtaGetAttributeValue (attr) == HTML_ATTR_Checked_VAL_Yes_)
-	   /* nothing to do */
-	   return;
-	else
-	  {
-	     modified = TtaIsDocumentModified (doc);
-	     /* set the checked attribute of this radio input */
-	     if (attr != NULL)
-		TtaRemoveAttribute (el, attr, doc);
-	     attr = TtaNewAttribute (attrType);
-	     TtaAttachAttribute (el, attr, doc);
-	     TtaSetAttributeValue (attr, HTML_ATTR_Checked_VAL_Yes_, el, doc);
+  if (elType.ElTypeNum == HTML_EL_Radio_Input)
+    {
+      attr = TtaGetAttribute (el, attrType);
+      if (attr != NULL && TtaGetAttributeValue (attr) == HTML_ATTR_Checked_VAL_Yes_)
+	/* nothing to do */
+	return;
+      else
+	{
+	  modified = TtaIsDocumentModified (doc);
+	  /* set the checked attribute of this radio input */
+	  if (attr != NULL)
+	    TtaRemoveAttribute (el, attr, doc);
+	  attr = TtaNewAttribute (attrType);
+	  TtaAttachAttribute (el, attr, doc);
+	  TtaSetAttributeValue (attr, HTML_ATTR_Checked_VAL_Yes_, el, doc);
+	  
+	  /* Remove other checked radio input with the same NAME */
+	  elForm = TtaGetParent (el);
+	  while (elType.ElTypeNum != HTML_EL_BODY && elType.ElTypeNum != HTML_EL_Form
+		 && elForm != NULL)
+	    {
+	      elForm = TtaGetParent (elForm);
+	      elType = TtaGetElementType (elForm);
+	    }
 
-	     /* Remove other checked radio input with the same NAME */
-	     elForm = TtaGetParent (el);
-	     while (elType.ElTypeNum != HTML_EL_BODY && elType.ElTypeNum != HTML_EL_Form
-		    && elForm != NULL)
-	       {
-		  elForm = TtaGetParent (elForm);
-		  elType = TtaGetElementType (elForm);
-	       }
-
-	     if (elForm != NULL)
-	       {
-		  /* search the first radio input */
-		  elType.ElTypeNum = HTML_EL_Radio_Input;
-		  elForm = TtaSearchTypedElement (elType, SearchInTree, elForm);
-		  while (elForm != NULL)
+	  if (elForm != NULL)
+	    {
+	      /* search the first radio input */
+	      elType.ElTypeNum = HTML_EL_Radio_Input;
+	      elForm = TtaSearchTypedElement (elType, SearchInTree, elForm);
+	      while (elForm != NULL)
+		{
+		  if (elForm != el)
 		    {
-		       if (elForm != el)
-			 {
-			    /* compare its NAME attribute */
-			    attrN = TtaGetAttribute (elForm, attrTypeN);
-			    if (attrN != NULL)
-			      {
-				 length = MAX_LENGTH - 1;
-				 TtaGiveTextAttributeValue (attrN, buffer, &length);
-				 if (!ustrcmp (name, buffer))
-				   {
-				      /* same NAME: set the checked attribute to NO */
-				      attr = TtaGetAttribute (elForm, attrType);
-				      if (attr != NULL
-					  && TtaGetAttributeValue (attr) == HTML_ATTR_Checked_VAL_Yes_)
-					{
-					   TtaRemoveAttribute (elForm, attr, doc);
-					   attr = TtaNewAttribute (attrType);
-					   TtaAttachAttribute (elForm, attr, doc);
-					   TtaSetAttributeValue (attr, HTML_ATTR_Checked_VAL_No_, elForm, doc);
-					}
-				   }
-			      }
-			 }
-		       /* search the next radio input */
-		       elForm = TtaSearchTypedElement (elType, SearchForward, elForm);
+		      /* compare its NAME attribute */
+		      attrN = TtaGetAttribute (elForm, attrTypeN);
+		      if (attrN != NULL)
+			{
+			  length = TtaGetTextAttributeLength (attrN) + 1;
+			  buffer = TtaAllocString (length);
+			  TtaGiveTextAttributeValue (attrN, buffer, &length);
+			  if (!ustrcmp (name, buffer))
+			    {
+			      /* same NAME: set the checked attribute to NO */
+			      attr = TtaGetAttribute (elForm, attrType);
+			      if (attr != NULL
+				  && TtaGetAttributeValue (attr) == HTML_ATTR_Checked_VAL_Yes_)
+				{
+				  TtaRemoveAttribute (elForm, attr, doc);
+				  attr = TtaNewAttribute (attrType);
+				  TtaAttachAttribute (elForm, attr, doc);
+				  TtaSetAttributeValue (attr, HTML_ATTR_Checked_VAL_No_, elForm, doc);
+				}
+			    }
+			  TtaFreeMemory (buffer);
+			  buffer = NULL;
+			}
 		    }
-	       }
-	     if (!modified)
-	       {
-		 TtaSetDocumentUnmodified (doc);
-		 /* switch Amaya buttons and menus */
-		 DocStatusUpdate (doc, modified);
-	       }
-	  }
-     }
+		  /* search the next radio input */
+		  elForm = TtaSearchTypedElement (elType, SearchForward, elForm);
+		}
+	    }
+	  if (!modified)
+	    {
+	      TtaSetDocumentUnmodified (doc);
+	      /* switch Amaya buttons and menus */
+	      DocStatusUpdate (doc, modified);
+	    }
+	}
+    }
 }
 
 
