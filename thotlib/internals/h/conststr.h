@@ -60,10 +60,11 @@
 #define ExcImportLine 34
 #define ExcImportParagraph 35
 #define ExcParagraphBreak 36
-#define ExcReturnCreateNL 37
-#define ExcReturnCreateWithin 38
-#define ExcNoBreakByReturn 39
-#define ExcNoReplicate 40
+#define ExcIsBreak 37
+#define ExcReturnCreateNL 38
+#define ExcReturnCreateWithin 39
+#define ExcNoBreakByReturn 40
+#define ExcNoReplicate 41
 
 /* Draw exceptions */
 #define ExcSelectParent 310

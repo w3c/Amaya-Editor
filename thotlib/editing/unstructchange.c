@@ -1458,9 +1458,12 @@ void TtcCreateElement (Document doc, View view)
       if (firstChar > 0 && firstChar == lastChar)
 	lastChar--;
 
-      /* si la selection ne comprend qu'un element vide, on essaie de */
-      /* remplacer cet element vide par un autre au niveau superieur */
-      if (firstSel == lastSel && firstSel->ElVolume == 0)
+      /* si la selection ne comprend qu'un element vide ou un <br/>, on essaie
+	 de remplacer cet element par un autre au niveau superieur */
+      if (firstSel == lastSel && (firstSel->ElVolume == 0 ||
+				  TypeHasException (ExcIsBreak,
+						    firstSel->ElTypeNumber,
+						    firstSel->ElStructSchema)))
 	{
 	  empty = TRUE;
 	  pElem = firstSel;
@@ -1488,7 +1491,8 @@ void TtcCreateElement (Document doc, View view)
 		  }
 		else if (pListEl == NULL)
 		  {
-		    if (GetElementConstruct (pParent->ElParent, &nComp) == CsAggregate)
+		    if (GetElementConstruct (pParent->ElParent, &nComp) ==
+			CsAggregate)
 		      {
 			SRuleForSibling (pDoc, pParent, FALSE, 1, &typeNum,
 					 &pSS, &list, &optional);

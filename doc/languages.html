@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
   <title>The Languages of Thot</title>
 </head>
 
@@ -15,16 +16,16 @@
 
 <h4>Translated from French by Ethan Munson</h4>
 
-<h4>Version of December 4, 2003</h4>
+<h4>Version of February 26, 2004</h4>
 
-<p>© 1996-2003 INRIA</p>
+<p>© 1996-2004 INRIA</p>
 <hr />
 </div>
 
 <div class="tableofcontents">
 <h2><a href="languages.toc.html">Contents</a></h2>
 <ul>
-  <li><big><a href="#sect2">The document model of Thot</a></big> 
+  <li><big><a href="#sect2">The document model of Thot</a></big>
     <ul>
       <li><strong><a href="#sectb21">The logical structure of
         documents</a></strong></li>
@@ -36,13 +37,13 @@
         structures</a></strong></li>
     </ul>
   </li>
-  <li><big><a href="#sect3">The S language</a></big> 
+  <li><big><a href="#sect3">The S language</a></big>
     <ul>
-      <li><strong><a href="#sectb31">Document meta-structure</a></strong> 
+      <li><strong><a href="#sectb31">Document meta-structure</a></strong>
         <ul>
           <li><a href="#sectc311">The basic types</a></li>
           <li><a href="#sectc312">Constructed elements</a></li>
-          <li><a href="#sectc313">Logical structure constructors</a> 
+          <li><a href="#sectc313">Logical structure constructors</a>
             <ul>
               <li><small><a href="#sectd3131">Aggregate and
               List</a></small></li>
@@ -61,7 +62,7 @@
         </ul>
       </li>
       <li><strong><a href="#sectb32">The definition language for generic
-        structures</a></strong> 
+        structures</a></strong>
         <ul>
           <li><a href="#sectc321">Writing Conventions</a></li>
           <li><a href="#sectc322">Extension schemas</a></li>
@@ -70,7 +71,7 @@
           <li><a href="#sectc324">The default presentation</a></li>
           <li><a href="#sectc325">Global Attributes</a></li>
           <li><a href="#sectc327">Structured elements</a></li>
-          <li><a href="#sectc328">Structure definitions</a> 
+          <li><a href="#sectc328">Structure definitions</a>
             <ul>
               <li><small><a href="#sectd3281">List</a></small></li>
               <li><small><a href="#sectd3282">Aggregate</a></small></li>
@@ -86,7 +87,7 @@
           <li><a href="#sectc3214">Exceptions</a></li>
         </ul>
       </li>
-      <li><strong><a href="#sectb33">Some examples</a></strong> 
+      <li><strong><a href="#sectb33">Some examples</a></strong>
         <ul>
           <li><a href="#sectc331">A class of documents: articles</a></li>
           <li><a href="#sectc332">A class of objects: mathematical
@@ -95,9 +96,9 @@
       </li>
     </ul>
   </li>
-  <li><big><a href="#sect4">The P language</a></big> 
+  <li><big><a href="#sect4">The P language</a></big>
     <ul>
-      <li><strong><a href="#sectb41">Document presentation</a></strong> 
+      <li><strong><a href="#sectb41">Document presentation</a></strong>
         <ul>
           <li><a href="#sectc411">Two levels of presentation</a></li>
           <li><a href="#sectc412">Boxes</a></li>
@@ -108,7 +109,7 @@
         </ul>
       </li>
       <li><strong><a href="#sectb42">Presentation description
-        language</a></strong> 
+        language</a></strong>
         <ul>
           <li><a href="#sectc421">The organization of a presentation
             schema</a></li>
@@ -124,7 +125,7 @@
           <li><a href="#sectc4212">Value transmission rules</a></li>
           <li><a href="#sectc4213">Presentation rules</a></li>
           <li><a href="#sectc4214">Conditions applying to presentation
-            rules</a> 
+            rules</a>
             <ul>
               <li><small><a href="#sectd42141">Conditions based on the
                 logical position of the element</a></small></li>
@@ -147,7 +148,7 @@
           <li><a href="#sectc4217">Distance units</a></li>
           <li><a href="#sectc4218">Relative positions</a></li>
           <li><a href="#Floats">Floats</a></li>
-          <li><a href="#sectc4219">Box extents</a> 
+          <li><a href="#sectc4219">Box extents</a>
             <ul>
               <li><small><a href="#sectd42191">Fixed extents</a></small></li>
               <li><small><a href="#sectd42192">Relative
@@ -158,7 +159,7 @@
           </li>
           <li><a href="#sectc4220">Overflow</a></li>
           <li><a href="#sectc4221">Inheritance</a></li>
-          <li><a href="#sectc4222">Line breaking</a> 
+          <li><a href="#sectc4222">Line breaking</a>
             <ul>
               <li><small><a href="#sectd42221">Line spacing</a></small></li>
               <li><small><a href="#sectd42222">First line
@@ -174,7 +175,7 @@
           <li><a href="#sectc4223">Page breaking and line breaking
             conditions</a></li>
           <li><a href="#sectc4224">Visibility</a></li>
-          <li><a href="#sectc4225">Character style properties</a> 
+          <li><a href="#sectc4225">Character style properties</a>
             <ul>
               <li><small><a href="#sectd42251">Character size</a></small></li>
               <li><small><a href="#sectd42252">Font and character
@@ -198,16 +199,16 @@
       </li>
     </ul>
   </li>
-  <li><big><a href="#sect5">The T language</a></big> 
+  <li><big><a href="#sect5">The T language</a></big>
     <ul>
-      <li><strong><a href="#sectb51">Document translation</a></strong> 
+      <li><strong><a href="#sectb51">Document translation</a></strong>
         <ul>
           <li><a href="#sectc511">Translation principles</a></li>
           <li><a href="#sectc512">Translation procedure</a></li>
         </ul>
       </li>
       <li><strong><a href="#sectb52">Translation definition
-        language</a></strong> 
+        language</a></strong>
         <ul>
           <li><a href="#sectc521">Organization of a translation
           schema</a></li>
@@ -217,7 +218,7 @@
           <li><a href="#sectc525">Constants</a></li>
           <li><a href="#sectc526">Variables</a></li>
           <li><a href="#sectc527">Translating structure elements</a></li>
-          <li><a href="#sectc528">Conditional rules</a> 
+          <li><a href="#sectc528">Conditional rules</a>
             <ul>
               <li><small><a href="#sectd5281">Conditions based on the logical
                 position of the element</a></small></li>
@@ -266,7 +267,7 @@
       </li>
     </ul>
   </li>
-  <li><big><a href="#sect6">Language grammars</a></big> 
+  <li><big><a href="#sect6">Language grammars</a></big>
     <ul>
       <li><strong><a href="#sectb61">The M meta-language</a></strong></li>
       <li><strong><a href="#sectb62">The S language</a></strong></li>
@@ -274,7 +275,7 @@
       <li><strong><a href="#sectb64">The T language</a></strong></li>
     </ul>
   </li>
-  <li><big><a href="#sect7">Character coding</a></big> 
+  <li><big><a href="#sect7">Character coding</a></big>
     <ul>
       <li><strong><a href="#sectb71">Characters</a></strong></li>
       <li><strong><a href="#sectb72">Symbols</a></strong></li>
@@ -1116,7 +1117,7 @@ integers:</p>
       `<tt>\nnn</tt>' where the letter <tt>n</tt> represents the ISO Latin-1
       code of the letter in octal. It is thus possible to use accented
       letters in identifiers. The maximum length of identifiers is fixed by
-      the compiler. It is normally 31 characters. 
+      the compiler. It is normally 31 characters.
       <p>Unlike keywords, upper and lower-case letters are distinct in
       identifiers. Thus, <tt>Title</tt>, <tt>TITLE</tt>, and <tt>title</tt>
       are considered different identifiers.</p>
@@ -1884,7 +1885,7 @@ exceptions are indicated by a name. They are separated by semicolons.</p>
                     'ActiveRef' /  'NoSelect' /
                     'HighlightChildren' / 'ExtendedSelection' /
                     'SelectParent' / 'ClickableSurface' /
-                    'ParagraphBreak' /
+                    'ParagraphBreak' / 'IsBreak' /
                     'ReturnCreateNL' / 'ReturnCreateWithin' / 'NoBreakByReturn' /
                     'ImportLine' / 'ImportParagraph' /
                     'GraphCreation' / 'IsDraw' / 'IsGroup' / 'EmptyGraphic' /
@@ -2033,6 +2034,10 @@ exceptions are indicated by a name. They are separated by semicolons.</p>
       is within an element of a type to which this exception is applied, it
       is that element that will be split when the user hits the Return
     key.</dd>
+  <dt><code>IsBreak</code></dt>
+    <dd>This exception can only be applied to element types. When an element
+      with this exception is selected, pressing the Return key breaks the
+      enclosing element (typically a paragraph) into two pieces.</dd>
   <dt><tt>ReturnCreateNL</tt></dt>
     <dd>This exception can only be applied to element types. When the caret
       is within an element of a type to which this exception is applied, the
@@ -2045,11 +2050,10 @@ exceptions are indicated by a name. They are separated by semicolons.</p>
       Return key will create a new element within that element, not a sibling
       after that element.</dd>
   <dt><tt>NoBreakByReturn</tt></dt>
-    <dd>This exception can only be applied to element types. When the
-      caret is in an empty element, child of an element of a type to which
-      this exception is applied, the Return key will not split the element,
-      but will create a new empty element after the current empty
-      element. </dd>
+    <dd>This exception can only be applied to element types. When the caret
+      is in an empty element, child of an element of a type to which this
+      exception is applied, the Return key will not split the element, but
+      will create a new empty element after the current empty element.</dd>
   <dt><tt>ImportLine</tt></dt>
     <dd>This exception can only be applied to element types. It indicates
       that elements of this type should receive the content of imported text
@@ -2069,8 +2073,8 @@ exceptions are indicated by a name. They are separated by semicolons.</p>
     <dd>@@@@</dd>
   <dt><tt>EmptyGraphic</tt></dt>
     <dd>@@@@</dd>
-  <dt><tt>IsDraw</tt>, <tt>IsGroup</tt>, <tt>IsTable</tt>,
-    <tt>IsRow</tt>, <tt>IsColHead</tt>, <tt>IsCell</tt></dt>
+  <dt><tt>IsDraw</tt>, <tt>IsGroup</tt>, <tt>IsTable</tt>, <tt>IsRow</tt>,
+  <tt>IsColHead</tt>, <tt>IsCell</tt></dt>
     <dd>These exceptions can only be applied to element types. Elements of a
       type to which these exceptions are applied are identified as Draws,
       Tables, Colheads, Rows or Cells and specific processing are applied to
@@ -2725,7 +2729,7 @@ the structure schema associated with the presentation schema.</p>
 <p>After this declaration of the name of the structure, the following
 sections appear (in order):</p>
 <ul>
-  <li>Declarations of 
+  <li>Declarations of
     <ul>
       <li>all views,</li>
       <li>printed views,</li>
@@ -3433,7 +3437,7 @@ applied varies according to the type of the attribute:</p>
       rules must apply to a range of values, the attribute name is followed
       by the word '<tt>IN</tt>' and the two bounds of the range, enclosed in
       brackets and separated by two periods ('<tt>..</tt>'). In the case of
-      ranges, the values of the bounds are included in the range. 
+      ranges, the values of the bounds are included in the range.
       <p>The threshold value in the comparisons can be the value of an
       attribute attached to an ancestor element. In this case, the attribute
       name is given instead of a constant value.</p>
@@ -6123,7 +6127,7 @@ order:</p>
   <li>the character delimiting the end of the line,</li>
   <li>the character string which the translator will insert if it must
     line-break the translated text,</li>
-  <li>declarations of 
+  <li>declarations of
     <ul>
       <li>buffers,</li>
       <li>counters,</li>
@@ -6276,7 +6280,7 @@ Three functions are available: <tt>Rank</tt>, <tt>Rlevel</tt>, and
     part of an aggregate or list, in which case the counter's value is the
     element's rank in its list or aggregate. Note that, unlike the
     <tt>Rank</tt> function for presentation schemas, the <tt>Page</tt>
-    keyword cannot be used in place of the <tt>ElemID</tt>. 
+    keyword cannot be used in place of the <tt>ElemID</tt>.
     <p>The type name <tt>ElemID</tt> can be followed by an integer. That
     number represents the relative level, among the ancestors of the
     concerned element, of the element whose rank is asked. If that relative
@@ -6417,7 +6421,7 @@ number of functions of each type.</p>
     and an integer indicating a minimum length (number of characters) for the
     string; if the counter's value is normally expressed with fewer
     characters than the required minimum, zeroes are added to the front of
-    the string to achieve the minimum length. 
+    the string to achieve the minimum length.
     <p>By default, the counter value is written in arabic digits. If another
     representation of that value is needed, the counter name must be followed
     by a comma and one of the following keywords:</p>
@@ -7952,7 +7956,7 @@ ExcValue       = 'NoCut' / 'NoCreate' / 'NoReplicate' /
                  'ActiveRef' /  'NoSelect' /
                  'HighlightChildren' / 'ExtendedSelection' /
                  'SelectParent' / 'ClickableSurface' /
-                 'ParagraphBreak' /
+                 'ParagraphBreak' / 'IsBreak' /
                  'ReturnCreateNL' / 'ReturnCreateWithin' / 'NoBreakByReturn' /
                  'ImportLine' / 'ImportParagraph' /
                  'GraphCreation' / 'IsDraw' / 'IsGroup' / 'EmptyGraphic' /

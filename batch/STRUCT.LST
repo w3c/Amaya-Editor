@@ -128,7 +128,7 @@ number
 			 'ActiveRef' /  'NoSelect' /
 	                 'HighlightChildren' / 'ExtendedSelection' /
 	                 'SelectParent' / 'ClickableSurface' /
-			 'ParagraphBreak' /
+			 'ParagraphBreak' / 'IsBreak' /
 			 'ReturnCreateNL' / 'ReturnCreateWithin' / 'NoBreakByReturn' /
 	                 'ImportLine' / 'ImportParagraph' /
 			 'GraphCreation' / 'IsDraw' / 'IsGroup' / 'EmptyGraphic' /
@@ -239,32 +239,33 @@ code  key-word      numbers of rules using the key-word
 1162  SelectParent         51
 1163  ClickableSurface     51
 1164  ParagraphBreak       51
-1165  ReturnCreateNL       51
-1166  ReturnCreateWithin   51
-1167  NoBreakByReturn      51
-1168  ImportLine           51
-1169  ImportParagraph      51
-1170  GraphCreation        51
-1171  IsDraw               51
-1172  IsGroup              51
-1173  EmptyGraphic         51
-1174  IsTable              51
-1175  IsRow                51
-1176  IsColHead            51
-1177  IsCell               51
-1178  ColRef               51
-1179  ColSpan              51
-1180  RowSpan              51
-1181  CssBackground        51
-1182  CssClass             51
-1183  CssId                51
-1184  CssPseudoClass       51
-1185  NoShowBox            51
-1186  SetWindowBackground  51
-1187  Shadow               51
-1188  EventAttr            51
-1189  SpacePreserve        51
-1190  Root                 54
+1165  IsBreak              51
+1166  ReturnCreateNL       51
+1167  ReturnCreateWithin   51
+1168  NoBreakByReturn      51
+1169  ImportLine           51
+1170  ImportParagraph      51
+1171  GraphCreation        51
+1172  IsDraw               51
+1173  IsGroup              51
+1174  EmptyGraphic         51
+1175  IsTable              51
+1176  IsRow                51
+1177  IsColHead            51
+1178  IsCell               51
+1179  ColRef               51
+1180  ColSpan              51
+1181  RowSpan              51
+1182  CssBackground        51
+1183  CssClass             51
+1184  CssId                51
+1185  CssPseudoClass       51
+1186  NoShowBox            51
+1187  SetWindowBackground  51
+1188  Shadow               51
+1189  EventAttr            51
+1190  SpacePreserve        51
+1191  Root                 54
 
 
 

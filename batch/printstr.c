@@ -362,6 +362,9 @@ static void         wrNumExcept (int Num)
 	    case ExcParagraphBreak:
 	       printf ("ParagraphBreak");
 	       break;
+	    case ExcIsBreak:
+	       printf ("IsBreak");
+	       break;
 	    case ExcHighlightChildren:
 	       printf ("HighlightChildren");
 	       break;

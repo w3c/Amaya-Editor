@@ -1838,6 +1838,9 @@ static void         ProcessToken (indLine wi, indLine wl, SyntacticCode c,
        case KWD_ParagraphBreak:
 	 ExceptionNum (ExcParagraphBreak, True, False, False, wi);
 	 break;
+       case KWD_IsBreak:
+	 ExceptionNum (ExcIsBreak, True, False, False, wi);
+	 break;
        case KWD_CssBackground:
 	 ExceptionNum (ExcCssBackground, True, False, False, wi);
 	 break;

@@ -897,6 +897,7 @@ EXCEPT
 	Invalid_element:NoCreate;
 	Unknown_namespace:NoCreate;
 	XHTML_Unknown_namespace:NoCreate;
+        BR:	        IsBreak;
 	Pseudo_paragraph: ParagraphBreak, Hidden;
 	Basic_Elem:	Hidden;
 	Paragraph:	ParagraphBreak;

@@ -84,6 +84,7 @@ static ThotBool     FromKeyboard;
 #include "displayselect_f.h"
 #include "displayview_f.h"
 #include "editcommands_f.h"
+#include "exceptions_f.h"
 #include "font_f.h"
 #include "frame_f.h"
 #include "geom_f.h"
@@ -3603,10 +3604,11 @@ void TtcInsertChar (Document doc, View view, CHAR_T c)
   PtrElement          firstEl, lastEl;
   int                 firstChar, lastChar;
   int                 frame;
-  ThotBool            lock = TRUE;
+  ThotBool            lock, replace;
 
   if (doc != 0)
     {
+      lock = TRUE;
       /* Check if we are changing the active frame */
       frame = GetWindowNumber (doc, view);
       if (frame != ActiveFrame)
@@ -3664,14 +3666,23 @@ void TtcInsertChar (Document doc, View view, CHAR_T c)
 		/* table formatting is not loked, lock it now */
 		(*ThotLocalActions[T_lock]) ();
 	    }
-      
-	  if (!StructSelectionMode &&
-	      !ViewFrameTable[frame - 1].FrSelectOnePosition &&
-	      !pViewSel->VsBox->BxAbstractBox->AbReadOnly)
+
+          /* in principle, the entered character should replace the current
+	     selection, but... */
+          replace = TRUE;
+          if (firstEl == lastEl &&
+	      TypeHasException (ExcIsBreak, firstEl->ElTypeNumber,
+				firstEl->ElStructSchema))
+	    /* a <br/> element is selected. Don't replace it. Just add the
+	       entered character in front of it */
+	    replace = FALSE;
+	  else  if (!StructSelectionMode &&
+		    !ViewFrameTable[frame - 1].FrSelectOnePosition &&
+		    !pViewSel->VsBox->BxAbstractBox->AbReadOnly)
 	    {
-	      /* Delete the current selection */
 	      CloseTextInsertion ();
 	      if (pViewSel->VsBox)
+		/* Delete the current selection */
 		{
 		  pAb = pViewSel->VsBox->BxAbstractBox;
 		  draw = GetParentDraw (pViewSel->VsBox);
@@ -3727,7 +3738,6 @@ void TtcInsertChar (Document doc, View view, CHAR_T c)
 	}
     }
 }
-
 
 /*----------------------------------------------------------------------
    TtcCutSelection                                                    
@@ -3812,6 +3822,9 @@ void TtcDeletePreviousChar (Document doc, View view)
   ViewSelection      *pViewSel;
   DisplayMode         dispMode;
   int                 frame;
+  PtrDocument         pDoc;
+  PtrElement          firstEl, lastEl;
+  int                 firstChar, lastChar;
   ThotBool            delPrev, moveAfter;
   ThotBool            lock = TRUE;
 
@@ -3832,6 +3845,16 @@ void TtcDeletePreviousChar (Document doc, View view)
 	     doc =  FrameTable[ActiveFrame].FrDoc;*/
 	}
       delPrev = (StructSelectionMode || ViewFrameTable[frame - 1].FrSelectOnePosition);
+      if (!delPrev)
+	{
+	  GetCurrentSelection (&pDoc, &firstEl, &lastEl, &firstChar,&lastChar);
+          if (firstEl == lastEl &&
+	      TypeHasException (ExcIsBreak, firstEl->ElTypeNumber,
+				firstEl->ElStructSchema))
+	    /* a <br/> element is selected. Don't delete it, but delete the
+	       previous character */
+	    delPrev = TRUE;
+	}
       pViewSel = &ViewFrameTable[frame - 1].FrSelectionBegin;
       if (delPrev)
 	/* remove the current empty element even if there is an insert point */

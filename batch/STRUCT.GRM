@@ -77,32 +77,33 @@ ExtendedSelection 1161
 SelectParent 1162
 ClickableSurface 1163
 ParagraphBreak 1164
-ReturnCreateNL 1165
-ReturnCreateWithin 1166
-NoBreakByReturn 1167
-ImportLine 1168
-ImportParagraph 1169
-GraphCreation 1170
-IsDraw 1171
-IsGroup 1172
-EmptyGraphic 1173
-IsTable 1174
-IsRow 1175
-IsColHead 1176
-IsCell 1177
-ColRef 1178
-ColSpan 1179
-RowSpan 1180
-CssBackground 1181
-CssClass 1182
-CssId 1183
-CssPseudoClass 1184
-NoShowBox 1185
-SetWindowBackground 1186
-Shadow 1187
-EventAttr 1188
-SpacePreserve 1189
-Root 1190
+IsBreak 1165
+ReturnCreateNL 1166
+ReturnCreateWithin 1167
+NoBreakByReturn 1168
+ImportLine 1169
+ImportParagraph 1170
+GraphCreation 1171
+IsDraw 1172
+IsGroup 1173
+EmptyGraphic 1174
+IsTable 1175
+IsRow 1176
+IsColHead 1177
+IsCell 1178
+ColRef 1179
+ColSpan 1180
+RowSpan 1181
+CssBackground 1182
+CssClass 1183
+CssId 1184
+CssPseudoClass 1185
+NoShowBox 1186
+SetWindowBackground 1187
+Shadow 1188
+EventAttr 1189
+SpacePreserve 1190
+Root 1191
 
    1 1101 2001 1102 2002    2 1001 1103    3 1001 2001 1104    4 2002 2001 1105 
    5 2002 2001 1106    6 2002 2001 1107    7 2002 2001 1108    6 2002 2001 1109 
@@ -166,8 +167,8 @@ Root 1190
 2003 1166 2003 1167 2003 1168 2003 1169 2003 1170 2003 1171 2003 1172 2003 1173 
 2003 1174 2003 1175 2003 1176 2003 1177 2003 1178 2003 1179 2003 1180 2003 1181 
 2003 1182 2003 1183 2003 1184 2003 1185 2003 1186 2003 1187 2003 1188 2003 1189 
-2003   52 2000 
+2003 1190 2003   52 2000 
   52 3002 2000 
   53   54 2001   23 2002 2001 1007 1003   27 1004 2002 2001 1008 1003   28 1004 
 2002 2001 1123   29 2002 2000 
-  54 1190 2003    2 2000 
+  54 1191 2003    2 2000 
