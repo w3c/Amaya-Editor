@@ -2831,7 +2831,13 @@ static Document LoadDocument (Document doc, char *pathname,
 	}
       else
 	newdoc = doc;
-	
+
+      /* store the document profile */
+      TtaSetDocumentProfile (newdoc, parsingLevel);
+
+      /* update the menus according to the profile of the new document */
+
+     	
       if (docType == docImage)
       /* create an HTML container */
 	{
@@ -3007,36 +3013,15 @@ static Document LoadDocument (Document doc, char *pathname,
       if (DocumentMeta[newdoc]->method == CE_INIT)
 	DocumentMeta[newdoc]->method = CE_ABSOLUTE;
 
-      /* store the document profile */
-#ifndef PROFILE
-      TtaSetDocumentProfile (newdoc, parsingLevel);      
-#else /* PROFILE */
-      /* check the current profile */
-      profile = TtaGetEnvString ("Profile");
-      if (parsingLevel == L_Other)
-	TtaGetDocumentProfile(newdoc) = parsingLevel;
-      else
-	{
-	  if (strncmp (profile, "XHTML Basic", 11) == 0)
-	    TtaGetDocumentProfile[newdoc] = L_Basic;
-	  else if (strncmp (profile, "XHTML 1.0 Strict", 16) == 0)
-	    TtaGetDocumentProfile[newdoc] = L_Strict;
-	  else if (strncmp (profile, "XHTML 1.1", 9) == 0)
-	    TtaGetDocumentProfile[newdoc] = L_Xhtml11;
-	  else
-	    TtaGetDocumentProfile[newdoc] = L_Transitional;
-	}
-#endif /* PROFILE */
-     
-	if (docType == docSVG ||
+      if (docType == docSVG ||
 #ifdef XML_GENERIC
-	    docType == docXml ||
+	  docType == docXml ||
 #endif /* XML_GENERIC */    
-	    docType == docMath)
+	  docType == docMath)
 	plainText = FALSE;
       else
 	plainText = (parsingLevel == L_Other);
-
+      
       /* Calls the corresponding parser */
       if (DocumentMeta[newdoc]->xmlformat && !plainText)
 	StartXmlParser (newdoc,	tempdocument, documentname,

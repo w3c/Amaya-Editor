@@ -891,7 +891,7 @@ void TteAddMenuItem (WindowType windowtype, char *schemaName, int menuID,
    BuildSubmenu construit un sous-menu attache' a l'item item     
    du menu ref.                                            
   ----------------------------------------------------------------------*/
-static void BuildSubMenu (Menu_Ctl *ptrmenu, int ref, int entry, int frame)
+static void BuildSubMenu (Menu_Ctl *ptrmenu, int ref, int entry, int frame, Document doc)
 {
    char                string[700];
    char                equiv[MaxEquivLen];
@@ -955,7 +955,10 @@ static void BuildSubMenu (Menu_Ctl *ptrmenu, int ref, int entry, int frame)
 		   j += lg;
 		 }
 	     }
-	   MenuActionList[action].ActionActive[frame] = TRUE;
+
+	  if (Prof_BelongDoctype (MenuActionList[action].ActionName,
+				  TtaGetDocumentProfile (doc)))
+	    MenuActionList[action].ActionActive[frame] = TRUE;
 	 }
        equiv[j++] = EOS;
        
@@ -1041,8 +1044,10 @@ static void BuildPopdown (Menu_Ctl * ptrmenu, int ref, ThotMenu button,
       /* traite le contenu de l'item de menu */
       if (action != -1)
 	{
-	  if (ptritem[item].ItemType == 'B' ||
-	      ptritem[item].ItemType == 'T')
+	  if ((ptritem[item].ItemType == 'B' ||
+	      ptritem[item].ItemType == 'T') &&
+	      (Prof_BelongDoctype (MenuActionList[action].ActionName,
+				   TtaGetDocumentProfile (doc))))
 	    {
 	      /* Active l'action correspondante pour cette fenetre */
 	      if (MenuActionList[action].ActionEquiv != NULL)
@@ -1109,7 +1114,7 @@ static void BuildPopdown (Menu_Ctl * ptrmenu, int ref, ThotMenu button,
 		  Prof_ShowSubMenu(ptritem[item].SubMenu))
 		{
 		  /* creation du sous-menu */
-		  BuildSubMenu (ptritem[item].SubMenu, ref, entries, frame);
+		  BuildSubMenu (ptritem[item].SubMenu, ref, entries, frame, doc);
 		  entries++;
 		  LastItemType = ptrmenu->ItemsList[item].ItemType;
 		}
