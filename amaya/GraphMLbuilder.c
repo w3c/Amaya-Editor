@@ -13,7 +13,6 @@
  *          I. Vatton
  */
  
-
 #define THOT_EXPORT extern
 #include "amaya.h"
 #include "css.h"
@@ -45,7 +44,6 @@ static AttrValueMapping GraphMLAttrValueMappingTable[] =
 #include "html2thot_f.h"
 #include "styleparser_f.h"
 #include "XMLparser_f.h"
-
 
 /*----------------------------------------------------------------------
    GraphMLGetDTDName
@@ -912,14 +910,20 @@ ThotBool ParseWidthHeightAttribute (Attribute attr, Element el, Document doc,
 
 /*----------------------------------------------------------------------
    GetNumber
-   Parse a coordinate value in a path expression and skip to next token
+   Parse an integer or floating point number and skip to next token
+   return the value of that number in param number and moves ptr
+   to the next token to be parsed.
   ----------------------------------------------------------------------*/
-static char *     GetNumber (char *ptr, int* coord)
+static char *     GetNumber (char *ptr, int* number)
 {
-  int      val;
-  ThotBool negative;
+  int      integer, nbdecimal, exponent, i;
+  char     *decimal;
+  ThotBool negative, negativeExp;
 
-  val = 0;
+  *number = 0;
+  integer = 0;
+  nbdecimal = 0;
+  decimal = NULL;
   negative = FALSE;
   /* read the sign */
   if (*ptr == '+')
@@ -932,21 +936,79 @@ static char *     GetNumber (char *ptr, int* coord)
   /* read the integer part */
   while (*ptr != EOS && *ptr >= '0' && *ptr <= '9')
     {
-      val *= 10;
-      val += *ptr - '0';
+      integer *= 10;
+      integer += *ptr - '0';
       ptr++;
     }
   if (*ptr == '.')
-    /* skip the decimal part */
+    /* there is a decimal part */
     {
       ptr++;
+      decimal = ptr;
       while (*ptr != EOS &&  *ptr >= '0' && *ptr <= '9')
+	{
+	  nbdecimal++;
+	  ptr++;
+	}
+    }
+  if (*ptr != 'e' && *ptr != 'E')
+    /* no exponent */
+    {
+      if (nbdecimal > 0)
+	/* there are some digits after the decimal point */
+	{
+	  if (*decimal >= '5' && *decimal <= '9')
+	    /* the first digit after the point is 5 of greater
+	       round up the value to the next integer */
+	    integer++;
+	}
+    }
+  else
+    /* there is an exponent part, parse it */
+    {
+      ptr++;
+      negativeExp = FALSE;
+      /* read the sign of the exponent */
+      if (*ptr == '+')
 	ptr++;
+      else if (*ptr == '-')
+	{
+	  ptr++;
+	  negativeExp = TRUE;
+	}
+      exponent = 0;
+      while (*ptr != EOS &&  *ptr >= '0' && *ptr <= '9')
+	{
+	  exponent *= 10;
+	  exponent += *ptr - '0';
+	  ptr++;
+	}
+      if (exponent > 0)
+	{
+	  if (negativeExp)
+	    {
+	      for (i = 0; i < exponent; i++)
+		integer /= 10;
+	    }
+	  else
+	    {
+	      for (i = 0; i < exponent; i++)
+		{
+		  integer *= 10;
+		  if (i < nbdecimal)
+		    {
+		      integer += *decimal - '0';
+		      decimal++;
+		    }
+		}
+	    }
+	}
     }
   if (negative)
-    *coord = - val;
+    *number = - integer;
   else
-    *coord = val;
+    *number = integer;
+
   /* skip the following spaces */
   while (*ptr != EOS &&
          (*ptr == ',' || *ptr == SPACE || *ptr == BSPACE ||
@@ -962,10 +1024,11 @@ static char *     GetNumber (char *ptr, int* coord)
 void ParseTransformAttribute (Attribute attr, Element el, Document doc,
 			      ThotBool delete)
 {
-   int                  length, x, y;
+   int                  length, a, b, c, d, e, f, x, y;
    char                *text, *ptr;
    PresentationValue    pval;
    PresentationContext  ctxt;
+   ThotBool             error;
 
    length = TtaGetTextAttributeLength (attr) + 2;
    text = TtaGetMemory (length);
@@ -974,42 +1037,136 @@ void ParseTransformAttribute (Attribute attr, Element el, Document doc,
        /* get the content of the transform attribute */
        TtaGiveTextAttributeValue (attr, text, &length);
        /* parse the attribute content */
-       /* look only for the "translate" part */
-       ptr = strstr (text, "translate");
-       if (ptr)
+       ptr = &text[0];
+       error = FALSE;
+       while (*ptr != EOS && !error)
 	 {
-	   x = 0;  y = 0;
-	   pval.typed_data.value = 0;
-	   pval.typed_data.unit = STYLE_UNIT_PX;
-	   pval.typed_data.real = FALSE;
-	   ptr += 9;
+	   /* skip space characters */
 	   ptr = TtaSkipBlanks (ptr);
-	   if (*ptr == '(')
+	   if (!strncmp (ptr, "matrix", 6))
 	     {
-	       ptr++;
-	       ctxt = TtaGetSpecificStyleContext (doc);
+	       ptr += 6;
 	       ptr = TtaSkipBlanks (ptr);
-	       ptr = GetNumber (ptr, &x);
-	       pval.typed_data.value = x;
-	       /* the specific presentation is not a CSS rule */
-	       ctxt->cssLevel = 0;
-	       ctxt->destroy = delete;
-	       TtaSetStylePresentation (PRHorizPos, el, NULL, ctxt, pval);
-	       ptr = TtaSkipBlanks (ptr);
-	       if (*ptr == ')')
-		 pval.typed_data.value = 0;
+	       if (*ptr != '(')
+		 error = TRUE;
 	       else
 		 {
+		   ptr++;
 		   ptr = TtaSkipBlanks (ptr);
-		   ptr = GetNumber (ptr, &y);
-		   pval.typed_data.value = y;
+		   ptr = GetNumber (ptr, &a);
+		   if (*ptr == ',')
+		     {
+		       ptr++;
+		       ptr = TtaSkipBlanks (ptr);
+		     }
+		   ptr = GetNumber (ptr, &b);
+		   if (*ptr == ',')
+		     {
+		       ptr++;
+		       ptr = TtaSkipBlanks (ptr);
+		     }
+		   ptr = GetNumber (ptr, &c);
+		   if (*ptr == ',')
+		     {
+		       ptr++;
+		       ptr = TtaSkipBlanks (ptr);
+		     }
+		   ptr = GetNumber (ptr, &d);
+		   if (*ptr == ',')
+		     {
+		       ptr++;
+		       ptr = TtaSkipBlanks (ptr);
+		     }
+		   ptr = GetNumber (ptr, &e);
+		   if (*ptr == ',')
+		     {
+		       ptr++;
+		       ptr = TtaSkipBlanks (ptr);
+		     }
+		   ptr = GetNumber (ptr, &f);
+		   if (*ptr != ')')
+		     error = TRUE;
+		   else
+		     {
+		       ptr++;
+		       pval.typed_data.value = 0;
+		       pval.typed_data.unit = STYLE_UNIT_PX;
+		       pval.typed_data.real = FALSE;
+		       ctxt = TtaGetSpecificStyleContext (doc);
+		       ctxt->cssLevel = 0; /* this is not a CSS rule */
+		       ctxt->destroy = delete;
+		       /****** process values a, b, c, d *****/
+		       /* value e specifies an horizontal translation */
+		       if (e != 0)
+			 {
+			   pval.typed_data.value = e;
+			   TtaSetStylePresentation (PRHorizPos, el, NULL,
+						    ctxt, pval);
+			 }
+		       /* value f specifies an vertical translation */
+		       if (f != 0)
+			 {
+			   pval.typed_data.value = f;
+			   TtaSetStylePresentation (PRVertPos, el, NULL,
+						    ctxt, pval);
+			 }
+		       TtaFreeMemory (ctxt);
+		     }
 		 }
-	       TtaSetStylePresentation (PRVertPos, el, NULL, ctxt, pval);
-	       if (*ptr == ')')
-		 ptr++;
-	       TtaFreeMemory (ctxt);
 	     }
-	 }
+	   else if (!strncmp (ptr, "translate", 9))
+	     {
+	       ptr += 9;
+	       ptr = TtaSkipBlanks (ptr);
+	       x = 0;  y = 0;
+	       pval.typed_data.value = 0;
+	       pval.typed_data.unit = STYLE_UNIT_PX;
+	       pval.typed_data.real = FALSE;
+	       if (*ptr != '(')
+		 error = TRUE;
+	       else
+		 {
+		   ptr++;
+		   ptr = TtaSkipBlanks (ptr);
+		   ptr = GetNumber (ptr, &x);
+		   pval.typed_data.value = x;
+		   ctxt = TtaGetSpecificStyleContext (doc);
+		   ctxt->cssLevel = 0;     /* this is not a CSS rule */
+		   ctxt->destroy = delete;
+		   TtaSetStylePresentation (PRHorizPos, el, NULL, ctxt, pval);
+		   if (*ptr == ')')
+		     pval.typed_data.value = 0;
+		   else
+		     {
+		       if (*ptr == ',')
+			 {
+			   ptr++;
+			   ptr = TtaSkipBlanks (ptr);
+			 }
+		       ptr = GetNumber (ptr, &y);
+		       pval.typed_data.value = y;
+		     }
+		   TtaSetStylePresentation (PRVertPos, el, NULL, ctxt, pval);
+		   if (*ptr == ')')
+		     ptr++;
+		   else
+		     error = TRUE;
+		   TtaFreeMemory (ctxt);
+		 }
+	     }
+	   /**** add scale, rotate, skewX, skewY ****/
+	   else
+	     /* unexpected token, ignore the rest */
+	     error = TRUE;
+
+	   if (!error)
+	     {
+	       /* skip spaces and the optional comma */
+	       ptr = TtaSkipBlanks (ptr);
+	       if (*ptr == ',')
+		 ptr++;
+	     }
+         }
        TtaFreeMemory (text);
      }
 }
