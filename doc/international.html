@@ -1,0 +1,77 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<head>
+<title>
+Welcome to Amaya</title>
+<meta name="GENERATOR" content="amaya V1.1a Beta">
+</head>
+<body bgcolor="white">
+
+<h1>Gestion des langues et des jeux de caract&egrave;res dans la Thotlib</h1>
+<p>
+Thot et Amaya supportent maintenant les jeux de caract&egrave;res ISO-Latin-1,
+ISO-Latin-2 et Symbol, la gestion des langues &agrave; &eacute;t&eacute;
+modifi&eacute;e en cons&eacute;quence.</p>
+
+<h3>Utilisation</h3>
+<p>
+Le dialogue de l'attribut langue &agrave; chang&eacute;.</p>
+<ul>
+<li>
+Il est maintenant r&eacute;actif, c'est a dire que la s&eacute;lection d'une
+langue ou d'un jeu de caract&egrave;res est imm&eacute;diatement
+repercut&eacute; sur la selection active.
+<li>
+Les langues et les jeux de caract&egrave;res ont &eacute;t&eacute;
+diff&eacute;renci&eacute;s : la langue est pr&eacute;sent&eacute;e dans un
+s&eacute;cteur, les jeux de caract&egrave;res disponibles sont
+pr&eacute;sent&eacute;s sous forme de buttons radio (Toggles).
+<p>
+Lorsqu'une langue est s&eacute;lectionn&eacute;, l'entr&eacute;e du menu
+correpondant au jeu de caract&egrave;re associ&eacute; (par exemple Latin-1
+pour l'anglais, Latin-2 pour le polonais ou symbol pour le grec) est
+activ&eacute;e. Lorsqu'un jeu de caract&egrave;re est selectionn&eacute;, la
+langue utilis&eacute;e n'est pas d&eacute;termin&eacute;e, et le message
+&laquo; aucun &raquo; s'affiche dans la zone de saisie de la langue.  </p>
+<li>
+Lorsque des caract&egrave;res sont saisis dans les dialogues &laquo; alphabet
+&raquo;, les &eacute;l&eacute;ments texte cr&eacute;es n'ont pas de langue,
+mais sont associ&eacute;s au jeu de caract&egrave;re de la palette.
+</ul>
+<p>
+</p>
+
+<h3>Impl&eacute;mentation</h3>
+<p>
+Les modifications concernent principalement le fichier language.c.</p>
+<p>
+Les premires entr&eacute;es de la table LangTable contient maintenat les
+langues du syst&egrave;me correspondant aux jeux de caract&egrave;res
+utilis&eacute;s. Ces langues sont associ&eacute;es aux atomes de texte saisis
+&agrave; l'aide des palettes de carct&egrave;res et aux &eacute;l&eacute;ments
+auquels on &agrave; explicitement associ&eacute; un jeu de caract&egrave;re
+&agrave; l'aide du menu du formulaire langue.</p>
+<p>
+Les entr&eacute;es suivantes contiennent les langues visibles pour
+l'utilisateur. L'identificateur de la premi&egrave;re langue utilisateur est
+contenue dans la variable FirstUserLang, accessible depuis les autres modules
+par la fonction TtaGetFirstUserLanguage. </p>
+<p>
+Polices de caract&egrave;res : les polices ISO-Latin-2 sont disponible sur :
+http://www.biz.net.pl/iso/x-fonts/index.html (pour les membre du projet
+op&eacute;ra : /opera/fonts-latin-2). Il faut mettre &agrave; jour le champ
+THOTFONT dans la base de registres .thotrc pour acceder au repertoire ou sont
+install&eacute;es les polices.</p>
+
+<h4>Bugs connus et fonctions non (encore) impl&eacute;ment&eacute;es :</h4>
+<p>
+La fen&ecirc;tre de dialogue Langue n'est pas mise a jour si elle est
+affich&eacute;e lors du changement de s&eacute;lection.</p>
+<p>
+Si des caract&egrave;res romains sont m&eacute;l&eacute;s avec des
+caract&egrave;res symbol, l'alignement sur la ligne de base n'est pas
+correct.</p>
+<p>
+</p>
+</body>
+</html>
