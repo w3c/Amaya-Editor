@@ -1641,7 +1641,7 @@ PtrAbstractBox      rootAbsBox;
    NewTopMargin = TopMargin;
    change = FALSE;
    NewLeftMargin = LeftMargin;
-
+   boxNum = 0;
    if (pPageEl == NULL)
       /* pas de page definie, on prend les marges et les dimensions */
       /* par defaut */

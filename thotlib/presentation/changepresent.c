@@ -970,6 +970,7 @@ ThotBool        remove;
 {
   PtrAbstractBox  pAb, pParent;
   PtrPRule	  pCurrentRule, pRP;
+  PtrElement      pPage;
   PtrPSchema	  pSPR;
   PtrAttribute	  pAttr;
   PRuleType	  ruleType;
@@ -1000,22 +1001,39 @@ ThotBool        remove;
 	    if (pCurrentRule->PrViewNum == 1 ||
 		pCurrentRule->PrViewNum == viewSch)
 	       {
-	       /* checks if the abstract box is concerned by the rule */
-	       pRP = SearchRulepAb (pDoc, pAb, &pSPR, ruleType,
-				   pCurrentRule->PrPresFunction, TRUE, &pAttr);
-	       if (pRP == pCurrentRule || remove)
-		  {
-		  done = TRUE;
-	          if (remove && ruleType == PtFunction &&
-		     pAb->AbLeafType == LtCompound)
-	             /* remove a PtFunction rule */
-		     RemoveFunctionPRule (pCurrentRule, pAb, pDoc);
-		  else if (pRP != NULL)
-		     ApplyPRuleAndRedisplay (pAb, pDoc, pAttr, pRP, pSPR);
-		  }
+		 if (ruleType == PtFunction &&
+		     pCurrentRule->PrPresFunction == FnPage)
+		   {
+		     /* generate or remove a page break */
+		     if (remove)
+		       {
+			 pPage = pEl->ElPrevious;
+			 if (pPage && pPage->ElTypeNumber == PageBreak + 1)
+			   DeleteElement (&pPage, pDoc);
+		       }
+		     else
+		       pPage = CreateSibling (pDoc, pEl, TRUE, TRUE, PageBreak + 1, pEl->ElStructSchema, FALSE);
+		     done = TRUE;
+		   }
+		 else
+		   {
+		     /* checks if the abstract box is concerned by the rule */
+		     pRP = SearchRulepAb (pDoc, pAb, &pSPR, ruleType,
+					  pCurrentRule->PrPresFunction, TRUE, &pAttr);
+		     if (pRP == pCurrentRule || remove)
+		       {
+			 done = TRUE;
+			 if (remove && ruleType == PtFunction &&
+			     pAb->AbLeafType == LtCompound)
+			   /* remove a PtFunction rule */
+			   RemoveFunctionPRule (pCurrentRule, pAb, pDoc);
+			 else if (pRP != NULL)
+			   ApplyPRuleAndRedisplay (pAb, pDoc, pAttr, pRP, pSPR);
+		       }
+		   }
 	       }
 	    }
-
+	  
 	  if (done)
 	    {
 	      /* update abstract image and redisplay */

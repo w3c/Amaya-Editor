@@ -668,3 +668,21 @@ int                 y;
 #endif /* __STDC__ */
 {
 }
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+PtrElement          CreateSibling (PtrDocument pDoc, PtrElement pEl, ThotBool before, ThotBool createAbsBox, int typeNum, PtrSSchema pSS, ThotBool inclusion)
+#else  /* __STDC__ */
+PtrElement          CreateSibling (pDoc, pEl, before, createAbsBox, typeNum, pSS, inclusion)
+PtrDocument         pDoc;
+PtrElement          pEl;
+ThotBool            before;
+ThotBool            createAbsBox;
+int                 typeNum;
+PtrSSchema          pSS;
+ThotBool            inclusion;
+#endif /* __STDC__ */
+{
+  return NULL;
+}
