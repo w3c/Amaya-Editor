@@ -2158,13 +2158,6 @@ gboolean APP_TextEnterGTK (GtkWidget *w, int frame)
 GList *InitComboBoxList (char * buffer)
 {
   GList       *list_items = NULL;
-#else /* !_GTK*/
-#ifdef _WINDOWS
-void InitWdComboBoxList (ThotWindow hwnCB, char *buffer)
-{
-  int          cpt = 0;
-#endif /* _WINDOWS */
-#endif /* _GTK */
   char        *ptrStr, *ptrStr1;
   int          end = 0;
 
@@ -2184,41 +2177,58 @@ void InitWdComboBoxList (ThotWindow hwnCB, char *buffer)
 	  if (*ptrStr1 == NEW_LINE)
 	    {
 	      *ptrStr1 = EOS;
-#ifdef _GTK
 	      list_items = g_list_append (list_items, (gpointer) ptrStr);
-#else /* _GTK */
-#ifdef _WINDOWS
-		  SendMessage (hwnCB, CB_INSERTSTRING/*CB_ADDSTRING*/, cpt,
-                             (LPARAM) ptrStr);
-		  cpt++;
-#endif /* _WINDOWS */
-#endif /* _GTK */
 	      ptrStr = ++ptrStr1;
 	    }
 	  else
 	    {
-#ifdef _GTK
 	      list_items = g_list_append (list_items, (gpointer) ptrStr);
-#else /* _GTK */
-#ifdef _WINDOWS
-		  SendMessage (hwnCB, CB_INSERTSTRING, cpt,
-                             (LPARAM) ptrStr);
-		  cpt++;
-#endif /* _WINDOWS */
-#endif /* _GTK */
 	      end = 1;
 	    }
 	}
     }
-#ifdef _GTK
   return list_items;
 }
-#else /* _GTK */
+#endif /* _GTK */
 #ifdef _WINDOWS
+void InitWdComboBoxList (ThotWindow hwnCB, char *buffer)
+{
+  int          cpt = 0;
+  char        *ptrStr, *ptrStr1;
+  int          end = 0;
+
+   ptrStr = buffer;
+  /* 
+   * function with stop condition by  ptrStr1 on EOS
+   */
+  if (buffer)
+    {
+      while (end == 0)
+	{
+	  ptrStr1 = ptrStr;
+	  while ((*ptrStr1 != EOS && *ptrStr1 != NEW_LINE) /*&& stop_boucle == 0*/)
+	    {
+	      ptrStr1++;
+	    }
+	  if (*ptrStr1 == NEW_LINE)
+	    {
+	      *ptrStr1 = EOS;
+		  SendMessage (hwnCB, CB_INSERTSTRING/*CB_ADDSTRING*/, cpt,
+                             (LPARAM) ptrStr);
+		  cpt++;
+	      ptrStr = ++ptrStr1;
+	    }
+	  else
+	    {
+		  SendMessage (hwnCB, CB_INSERTSTRING, cpt,
+                             (LPARAM) ptrStr);
+		  cpt++;
+	      end = 1;
+	    }
+	}
+    }
 }
 #endif /* _WINDOWS */
-#endif /* _GTK */
-
 /*----------------------------------------------------------------------
    TtaAddTextZone
 
