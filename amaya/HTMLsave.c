@@ -63,8 +63,8 @@ static AttSearch    URL_attr_tab[] = {
    {XLink_ATTR_href_, XLINK_TYPE},
    {MathML_ATTR_style_, MATH_TYPE},
 #ifdef _SVG
-   {SVG_ATTR_style_, GRAPH_TYPE},
-   {SVG_ATTR_xlink_href, GRAPH_TYPE}
+   {SVG_ATTR_style_, SVG_TYPE},
+   {SVG_ATTR_xlink_href, SVG_TYPE}
 #endif
 };
 /* list of attributes checked for updating images */
@@ -75,8 +75,8 @@ static AttSearch    SRC_attr_tab[] = {
    {HTML_ATTR_Style_, XHTML_TYPE},
    {MathML_ATTR_style_, MATH_TYPE},
 #ifdef _SVG
-   {SVG_ATTR_style_, GRAPH_TYPE},
-   {SVG_ATTR_xlink_href, GRAPH_TYPE}
+   {SVG_ATTR_style_, SVG_TYPE},
+   {SVG_ATTR_xlink_href, SVG_TYPE}
 #endif
 };
 static char        *QuotedText;
@@ -421,7 +421,7 @@ void SetRelativeURLs (Document doc, char *newpath)
 	case MATH_TYPE:
 	  attrType.AttrSSchema = MathSSchema;
 	  break;
-	case GRAPH_TYPE:
+	case SVG_TYPE:
 	  attrType.AttrSSchema = GraphSSchema;
 	  break;
 	case XLINK_TYPE:
@@ -2575,7 +2575,7 @@ static void UpdateImages (Document doc, ThotBool src_is_local,
 	     case MATH_TYPE:
 	       attrType.AttrSSchema = MathSSchema;
 	       break;
-	     case GRAPH_TYPE:
+	     case SVG_TYPE:
 	       attrType.AttrSSchema = GraphSSchema;
 	       break;
 	     case XLINK_TYPE:

@@ -174,7 +174,7 @@ static void            InitParserContexts (void)
    ctxt->SSchemaName = TtaGetMemory (MAX_SS_NAME_LENGTH);
    strcpy (ctxt->SSchemaName, "SVG");
    ctxt->XMLSSchema = NULL;
-   ctxt->XMLtype = GRAPH_TYPE;
+   ctxt->XMLtype = SVG_TYPE;
    ctxt->MapAttribute = (Proc) MapSVGAttribute;
    ctxt->MapAttributeValue = (Proc) MapSVGAttributeValue;
    ctxt->MapEntity = (Proc) MapSVGEntity;

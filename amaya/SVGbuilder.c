@@ -62,7 +62,7 @@ void   MapSVGAttribute (char *attrName, AttributeType *attrType,
 			    char* elementName, ThotBool *level, Document doc)
 {
   attrType->AttrSSchema = GetSVGSSchema (doc);
-  MapXMLAttribute (GRAPH_TYPE, attrName, elementName, level, doc, &(attrType->AttrTypeNum));
+  MapXMLAttribute (SVG_TYPE, attrName, elementName, level, doc, &(attrType->AttrTypeNum));
 }
 
 /*----------------------------------------------------------------------
@@ -551,7 +551,7 @@ void               UnknownSVGNameSpace (ParserData *context, char* content)
    Attribute       attr;
 
    /* Create a new Invalid_element */
-   elType.ElSSchema = GetXMLSSchema (GRAPH_TYPE, context->doc);
+   elType.ElSSchema = GetXMLSSchema (SVG_TYPE, context->doc);
    elType.ElTypeNum = SVG_EL_Unknown_namespace;
    elInv = TtaNewElement (context->doc, elType);
    if (elInv != NULL)

@@ -359,7 +359,7 @@ static void    InitXmlParserContexts (void)
    ctxt->UriName = TtaGetMemory (MAX_URI_NAME_LENGTH);
    strcpy (ctxt->UriName, SVG_URI);
    ctxt->XMLSSchema = NULL;
-   ctxt->XMLtype = GRAPH_TYPE;
+   ctxt->XMLtype = SVG_TYPE;
    ctxt->MapAttribute = (Proc) MapSVGAttribute;
    ctxt->MapAttributeValue = (Proc) MapSVGAttributeValue;
    ctxt->EntityCreated = (Proc) SVGEntityCreatedWithExpat;

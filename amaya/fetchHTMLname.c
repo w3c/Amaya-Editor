@@ -114,7 +114,7 @@ int MapGI (char *gi, SSchema *schema, Document doc)
 	  if (!ptr || !strcmp (ptr, "MathML"))
 	    MapXMLElementType (MATH_TYPE, gi, &elType, &ptr, &c, &level, doc);
 	  if (elType.ElTypeNum == 0 && (!ptr || !strcmp (ptr, "SVG")))
-	    MapXMLElementType (GRAPH_TYPE, gi, &elType, &ptr, &c, &level, doc);
+	    MapXMLElementType (SVG_TYPE, gi, &elType, &ptr, &c, &level, doc);
 	  if (elType.ElTypeNum == 0)
 	    {
 	      entry = -1;
@@ -177,7 +177,7 @@ void                GIType (char *gi, ElementType *elType, Document doc)
   /* if not found, look at the XML mapping tables */
   MapXMLElementType (MATH_TYPE, gi, elType, &ptr, &c, &level, doc);
   if (elType->ElTypeNum == 0)
-  MapXMLElementType (GRAPH_TYPE, gi, elType, &ptr, &c, &level, doc);
+  MapXMLElementType (SVG_TYPE, gi, elType, &ptr, &c, &level, doc);
 }
 
 /*----------------------------------------------------------------------

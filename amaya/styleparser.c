@@ -3688,7 +3688,7 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
       if (attrs[i])
 	{
 	  if (!strcmp (ptr, "SVG"))
-	    MapXMLAttribute (GRAPH_TYPE, attrs[i], names[i], &level, doc, &att);
+	    MapXMLAttribute (SVG_TYPE, attrs[i], names[i], &level, doc, &att);
 	  else if (!strcmp (ptr, "MathML"))
 	    MapXMLAttribute (MATH_TYPE, attrs[i], names[i], &level, doc, &att);
 	  else

@@ -139,7 +139,7 @@ SSchema GetXMLSSchema (int XMLtype, Document doc)
     return GetXHTMLSSchema (doc);
   else if (XMLtype == MATH_TYPE)
     return GetMathMLSSchema (doc);
-  else if (XMLtype == GRAPH_TYPE)
+  else if (XMLtype == SVG_TYPE)
     return GetSVGSSchema (doc);
   else if (XMLtype == XLINK_TYPE)
     return GetXLinkSSchema (doc);
@@ -187,7 +187,7 @@ void MapXMLElementType (int XMLtype,
        else
 	 ptr = MathMLElemMappingTable;
      }
-   else if (XMLtype == GRAPH_TYPE)
+   else if (XMLtype == SVG_TYPE)
      {
        if (ParsingLevel[doc] == L_Basic && DocumentTypes[doc] == docHTML)
 	 {
@@ -340,7 +340,7 @@ int       MapXMLAttribute (int XMLtype, char *attrName,
     ptr = XHTMLAttributeMappingTable;
   else if (XMLtype == MATH_TYPE)
     ptr = MathMLAttributeMappingTable;
-  else if (XMLtype == GRAPH_TYPE)
+  else if (XMLtype == SVG_TYPE)
     ptr = SVGAttributeMappingTable;
   else if (XMLtype == XLINK_TYPE)
     ptr = XLinkAttributeMappingTable;

@@ -1015,7 +1015,7 @@ int                 MapThotAttr (char* attrName, char *elementName)
   if (i < 0)
     i = MapXMLAttribute (MATH_TYPE, attrName, elementName, &level, TransDoc, &thotAttr);
   if (i < 0)
-    i = MapXMLAttribute (GRAPH_TYPE, attrName, elementName, &level, TransDoc, &thotAttr);
+    i = MapXMLAttribute (SVG_TYPE, attrName, elementName, &level, TransDoc, &thotAttr);
   return thotAttr;
 }
 
