@@ -37,6 +37,9 @@ AmayaURLBar::AmayaURLBar ( wxWindow *     parent
 {
   m_pAmayaWindowParent = amaya_window_parent;
   m_URLLocked = FALSE;
+
+  // setup the machine state to identify when a url is really selected and activated
+  m_NewURLSelectedState = URL_NOT_SELECTED;
 }
 
 /*
@@ -48,7 +51,6 @@ AmayaURLBar::AmayaURLBar ( wxWindow *     parent
  */
 AmayaURLBar::~AmayaURLBar()
 {
-
 }
 
 /*
@@ -71,7 +73,8 @@ void AmayaURLBar::OnURLSelected( wxCommandEvent& event )
   // if a selected event occurs, it's because the mouse is over an item, but the item is not really selected
   // so I setup a flag because the user will select something when he will release the mouse button
   // and I test this flag in the next generated event : OnURLText which is generated everytime an url item has been selected
-  m_NewURLSelected = TRUE;
+  if ( event.IsChecked() )
+      m_NewURLSelectedState = URL_SELECTED;
 
   event.Skip();
 }
@@ -96,26 +99,38 @@ void AmayaURLBar::OnURLText( wxCommandEvent& event )
 	      _T(" GetSelection=%d"),event.GetSelection() );
 
   AmayaFrame * p_frame = m_pAmayaWindowParent->GetActiveFrame();
-  if ( p_frame && event.GetString().Len() > 0 )
-    {     
-      // if this flag (m_NewURLSelected) is true it's because the user want to select an url
-      // so we activate the corresponding callback
-      // a second flag m_URLLocked is used to block possible other events during the callback actiavation
-      if ( m_NewURLSelected && !m_URLLocked )
+  if ( p_frame )
+    {
+      if ( !event.GetString().IsEmpty() )
 	{
-	  m_URLLocked = TRUE;
-	  APP_Callback_URLActivate ( p_frame->GetFrameId(),
-				     event.GetString().mb_str(AmayaWindow::conv_ascii) );
-	  m_URLLocked = FALSE;
-
-	  m_NewURLSelected = FALSE;
+	  // if this flag (m_NewURLSelectedState) is ACTIVATED it's because the user want to activate an url
+	  // so we activate the corresponding callback
+	  // a second flag m_URLLocked is used to block possible other events during the callback activation
+	  if ( m_NewURLSelectedState == URL_ACTIVATED && !m_URLLocked )
+	    {
+	      m_URLLocked = TRUE;
+	      APP_Callback_URLActivate ( p_frame->GetFrameId(),
+					 event.GetString().mb_str(AmayaWindow::conv_ascii) );
+	      m_URLLocked = FALSE;
+	      
+	      // this url is activated, setup the machine state to init
+	      m_NewURLSelectedState = URL_NOT_SELECTED;
+	    }
+	  else
+	    {
+	      // if this is not a new url activation
+	      // it's a simple url edition
+	      // juste need to update the internal url string for the current frame
+	      p_frame->SetFrameURL( event.GetString() );
+	    }
 	}
       else
 	{
-	  // if this is not a new url activation
-	  // it's a simple url edition
-	  // juste need to update the internal url string for the current frame
-	  p_frame->SetFrameURL( event.GetString() );
+	  // this is a empty event which follow a URL_SELECTED event
+	  // this sequence of event gives us the possibility to know if the url is really activated or not
+	  // this is dirty but it works.
+	  if ( m_NewURLSelectedState == URL_SELECTED )
+	    m_NewURLSelectedState = URL_ACTIVATED;
 	}
     }
 

@@ -33,10 +33,18 @@ public:
   void ReSize( int width, int height );
 
  protected:
+  typedef enum
+    {
+      URL_NOT_SELECTED,
+      URL_SELECTED,
+      URL_ACTIVATED
+    } AmayaURLState;
+
+ protected:
   DECLARE_EVENT_TABLE()
   
   AmayaWindow * m_pAmayaWindowParent;
-  bool          m_NewURLSelected;
+  AmayaURLState m_NewURLSelectedState;
   bool          m_URLLocked;
 };
 
