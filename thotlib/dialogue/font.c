@@ -2437,7 +2437,7 @@ static void FreeAFont (int i)
   int                 j;
   ThotBool            found;
 
-  if (TtFonts[i])
+  if ( TtFonts[i] )
     {
       /* the font structure could be used by another entry */
       j = 0;
@@ -2464,9 +2464,11 @@ static void FreeAFont (int i)
 #else  /* _WINDOWS */
 #ifdef _GTK
 #ifndef _GL 
-	gdk_font_unref (TtFonts[i]);
+	if ( TtFonts[i] != DefaultFont )
+	  gdk_font_unref (TtFonts[i]);
 #else /*_GL */
-	gl_font_delete (TtFonts[i]);
+	if ( TtFonts[i] != DefaultGLFont )	
+	  gl_font_delete (TtFonts[i]);
 #endif /*_GL*/
 #else /* _GTK */
 	XFreeFont (TtDisplay, (XFontStruct *) TtFonts[i]);

@@ -294,7 +294,7 @@
 292 Documento %s está travado!
 293 Documento %s foi travado por %s (tempo restante %s)
 294 Sobrepor trava?
-295 Copiar informação da trava? 
+295 Copiar informação da trava?
 296 Tente destravar o documento...
 297 Documento foi destravado com sucesso!
 298 Documento não pode ser destravado com sucesso!
@@ -370,3 +370,4 @@
 368 **All CSS
 369 **Style CSS applied to the <%s> element\n
 370 **Blue lines are links activated by a double (or a single) click\n
+371 **Load objects

@@ -75,6 +75,8 @@
 #include "thotmsg_f.h"
 #include "tree_f.h"
 
+#include "font_tv.h"
+
 static Proc         AppClosingFunction = NULL;
 #define VersionId "V3.1"
 ThotBool            PrintErrorMessages = TRUE;
@@ -383,8 +385,12 @@ void TtaQuit ()
   TtaFreeAllCatalogs ();
   ConfigFree ();
 #ifdef _GL
-  FreeAllPicCache ();  
+  FreeAllPicCache ();
+  if ( DefaultGLFont ) gl_font_delete ( DefaultGLFont );
 #endif /*_GL*/
+#ifdef _GTK
+  if ( DefaultFont ) gdk_font_unref ( DefaultFont );
+#endif /* _GTK */
 #endif /* NODISPLAY */
   FreeAll ();
   TtaFreeAppRegistry ();

@@ -371,4 +371,5 @@
 #define AM_ALL_CSS		368
 #define AM_STYLE_APPLIED		369
 #define AM_LINK_LINE		370
-#define AMAYA_MSG_MAX		371
+#define AM_LOAD_OBJECTS		371
+#define AMAYA_MSG_MAX		372

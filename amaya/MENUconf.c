@@ -174,6 +174,7 @@ static AM_WIN_MenuText WIN_BrowseMenuText[] =
 static int      BrowseBase;
 static int      CurrentScreen;
 static ThotBool LoadImages, InitLoadImages;
+static ThotBool LoadObjects, InitLoadObjects;
 static ThotBool LoadCss, InitLoadCss;
 static ThotBool DoubleClick;
 static ThotBool EnableFTP;
@@ -412,6 +413,7 @@ void InitAmayaDefEnv (void)
   TtaSetDefEnvString ("PASTE_LINE_BY_LINE", "yes", FALSE);
   TtaSetDefEnvString ("ENABLE_BG_IMAGES", "yes", FALSE);
   TtaSetDefEnvString ("LOAD_IMAGES", "yes", FALSE);
+  TtaSetDefEnvString ("LOAD_OBJECTS", "yes", FALSE);
   TtaSetDefEnvString ("LOAD_CSS", "yes", FALSE);
   TtaSetDefEnvString ("VERIFY_PUBLISH", "no", FALSE);
   TtaSetDefEnvString ("ENABLE_LOST_UPDATE_CHECK", "yes", FALSE);
@@ -2606,6 +2608,7 @@ void PublishConfMenu (Document document, View view)
 static void GetBrowseConf (void)
 {
   TtaGetEnvBoolean ("LOAD_IMAGES", &LoadImages);
+  TtaGetEnvBoolean ("LOAD_OBJECTS", &LoadObjects);
   TtaGetEnvBoolean ("LOAD_CSS", &LoadCss);
   TtaGetEnvBoolean ("ENABLE_DOUBLECLICK", &DoubleClick);
   TtaGetEnvBoolean ("ENABLE_FTP", &EnableFTP);
@@ -2621,6 +2624,7 @@ static void GetBrowseConf (void)
 static void SetBrowseConf (void)
 {
   TtaSetEnvBoolean ("LOAD_IMAGES", LoadImages, TRUE);
+  TtaSetEnvBoolean ("LOAD_OBJECTS", LoadObjects, TRUE);
   TtaSetEnvBoolean ("LOAD_CSS", LoadCss, TRUE);
   TtaSetEnvBoolean ("ENABLE_DOUBLECLICK", DoubleClick, TRUE);
   /* @@@ */
@@ -2640,12 +2644,14 @@ static void GetDefaultBrowseConf ()
 {
   GetDefEnvToggle ("LOAD_IMAGES", &LoadImages,
 		   BrowseBase + mToggleBrowse, 0);
-  GetDefEnvToggle ("LOAD_CSS", &LoadCss,
+  GetDefEnvToggle ("LOAD_OBJECTS", &LoadObjects,
 		   BrowseBase + mToggleBrowse, 1);
-  GetDefEnvToggle ("ENABLE_DOUBLECLICK", &DoubleClick,
+  GetDefEnvToggle ("LOAD_CSS", &LoadCss,
 		   BrowseBase + mToggleBrowse, 2);
-  GetDefEnvToggle ("ENABLE_FTP", &EnableFTP,
+  GetDefEnvToggle ("ENABLE_DOUBLECLICK", &DoubleClick,
 		   BrowseBase + mToggleBrowse, 3);
+  GetDefEnvToggle ("ENABLE_FTP", &EnableFTP,
+		   BrowseBase + mToggleBrowse, 4);
   GetDefEnvString ("SCEEN_TYPE", ScreenType);
 }
 
@@ -2742,6 +2748,7 @@ LRESULT CALLBACK WIN_BrowseDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
 	case ID_APPLY:
 	  if (strcmp (ScreenType, NewScreen) ||
 	      InitLoadImages != LoadImages ||
+	      InitLoadObjects != LoadObjects ||	      
 	      InitLoadCss != LoadCss)
 	    {
 	      strcpy (ScreenType, NewScreen);
@@ -2754,6 +2761,7 @@ LRESULT CALLBACK WIN_BrowseDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
 		    Synchronize (doc, 1);
 		}
 	      InitLoadImages = LoadImages;
+	      InitLoadObjects = LoadObjects;	      
 	      InitLoadCss = LoadCss;
 	    }
 	  else
@@ -2824,9 +2832,10 @@ static void BuildScreenSelector (void)
 static void RefreshBrowseMenu ()
 {
   TtaSetToggleMenu (BrowseBase + mToggleBrowse, 0, LoadImages);
-  TtaSetToggleMenu (BrowseBase + mToggleBrowse, 1, LoadCss);
-  TtaSetToggleMenu (BrowseBase + mToggleBrowse, 2, DoubleClick);
-  TtaSetToggleMenu (BrowseBase + mToggleBrowse, 3, EnableFTP);
+  TtaSetToggleMenu (BrowseBase + mToggleBrowse, 1, LoadObjects);
+  TtaSetToggleMenu (BrowseBase + mToggleBrowse, 2, LoadCss);
+  TtaSetToggleMenu (BrowseBase + mToggleBrowse, 3, DoubleClick);
+  TtaSetToggleMenu (BrowseBase + mToggleBrowse, 4, EnableFTP);
   /* preselect the screen matching the user preference */
   TtaSetSelector (BrowseBase + mScreenSelector, CurrentScreen, NULL);
 }
@@ -2856,6 +2865,7 @@ static void BrowseCallbackDialog (int ref, int typedata, char *data)
 	    case 1:
 	      if (strcmp (ScreenType, NewScreen) ||
 		  InitLoadImages != LoadImages ||
+		  InitLoadObjects != LoadObjects ||
 		  InitLoadCss != LoadCss)
 		{
 		  strcpy (ScreenType, NewScreen);
@@ -2868,6 +2878,7 @@ static void BrowseCallbackDialog (int ref, int typedata, char *data)
 			Synchronize (doc, 1);
 		    }
 		  InitLoadImages = LoadImages;
+		  InitLoadObjects = LoadObjects;
 		  InitLoadCss = LoadCss;
 		}
 	      else
@@ -2890,12 +2901,15 @@ static void BrowseCallbackDialog (int ref, int typedata, char *data)
 	      LoadImages = !LoadImages;
 	      break;
 	    case 1:
-	      LoadCss = !LoadCss;
+	      LoadObjects = !LoadObjects;
 	      break;
 	    case 2:
-	      DoubleClick = !DoubleClick;
+	      LoadCss = !LoadCss;
 	      break;
 	    case 3:
+	      DoubleClick = !DoubleClick;
+	      break;
+	    case 4:
 	      EnableFTP = !EnableFTP;
 	      break;
 	    }
@@ -2929,6 +2943,7 @@ void BrowseConfMenu (Document document, View view)
   GetBrowseConf ();
   /* keep initial values to detect an change */
   InitLoadImages = LoadImages;
+  InitLoadObjects = LoadObjects;
   InitLoadCss = LoadCss;
 #ifndef _WINDOWS
   /* Create the dialogue form */
@@ -2941,8 +2956,9 @@ void BrowseConfMenu (Document document, View view)
 	       TtaGetViewFrame (document, view),
 	       TtaGetMessage (AMAYA, AM_BROWSE_MENU),
 	       2, s, FALSE, 11, 'L', D_DONE);
-  sprintf (s, "B%s%cB%s%cB%s%cB%s", 
+  sprintf (s, "B%s%cB%s%cB%s%cB%s%cB%s", 
 	   TtaGetMessage (AMAYA, AM_LOAD_IMAGES), EOS,
+	   TtaGetMessage (AMAYA, AM_LOAD_OBJECTS), EOS,
 	   TtaGetMessage (AMAYA, AM_LOAD_CSS), EOS,
 	   TtaGetMessage (AMAYA, AM_ENABLE_DOUBLECLICK), EOS, 
 	   TtaGetMessage (AMAYA, AM_ENABLE_FTP));

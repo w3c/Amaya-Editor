@@ -6707,6 +6707,7 @@ void InitAmaya (NotifyEvent * event)
    TtaSetEnvBoolean ("SHOW_MAP_AREAS", FALSE, FALSE);
    TtaSetEnvBoolean ("SHOW_TARGET", FALSE, FALSE);
    TtaSetEnvBoolean ("LOAD_IMAGES", TRUE, FALSE);
+   TtaSetEnvBoolean ("LOAD_OBJECTS", TRUE, FALSE);
    TtaSetEnvBoolean ("LOAD_CSS", TRUE, FALSE);
    TtaSetEnvBoolean ("SEND_REFERER", FALSE, FALSE);
    /* get current value */

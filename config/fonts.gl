@@ -8,7 +8,7 @@
 
 
 1;#Latin1 (West European)
-1;1=/usr/local/share/fonts/truetype/times.ttf;2=/usr/local/share/fonts/truetypetimesbd.ttf;3=/usr/local/share/fonts/truetype/timesi.ttf;
+1;1=/usr/local/share/fonts/truetype/times.ttf;2=/usr/local/share/fonts/truetype/timesbd.ttf;3=/usr/local/share/fonts/truetype/timesi.ttf;
 2;1=/usr/local/share/fonts/truetype/arial.ttf;2=/usr/local/share/fonts/truetype/arialbd.ttf;3=/usr/local/share/fonts/truetype/ariali.ttf;
 3;1=/usr/local/share/fonts/truetype/cour.ttf;2=/usr/local/share/fonts/truetype/courbd.ttf;3=/usr/local/share/fonts/truetype/couri.ttf;
 
