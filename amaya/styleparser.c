@@ -3240,7 +3240,12 @@ static char *ParseCSSBackgroundImage (Element element, PSchema tsch,
 		  /* check if the image url is related to an external CSS */
 		  if (css)
 		    {
-		      NormalizeURL (url, 0, tempname, imgname, css->url);
+		      if (css->url)
+			/* the image concerns a CSS file */
+			NormalizeURL (url, 0, tempname, imgname, css->url);
+		      else
+			/* the image concerns a style element */
+			NormalizeURL (url, context->doc, tempname, imgname, NULL);
 		      /* fetch and display background image of element */
 		      FetchImage (0, el, tempname, AMAYA_LOAD_IMAGE,
 				  ParseCSSBackgroundImageCallback, callblock);
