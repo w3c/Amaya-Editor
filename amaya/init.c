@@ -5027,7 +5027,7 @@ Document GetAmayaDoc (char *documentPath, char *form_data,
 		refdoc = doc;
 	      else
 		refdoc = 0;
-	      if (css == NULL)
+	      if ((css == NULL) || (css != NULL && newdoc == doc))
 		toparse =  GetObjectWWW (newdoc, refdoc, pathname, form_data,
 					 tempfile, mode, NULL, NULL,
 					 (void *) GetAmayaDoc_callback,
