@@ -39,7 +39,7 @@
 
 #include <windows.h>
 
-#define strcasecmp(X,Y) strcmpi(X,Y)
+#define strcasecmp(X,Y) _stricmp(X,Y)
 
 /* dll entry point */
 BOOL APIENTRY
