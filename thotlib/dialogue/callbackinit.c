@@ -190,18 +190,17 @@ char               *name;
 
    /* Find it */
    if (strcmp (name, "EDITOR") == 0)
-     {
-	/* it is the global set */
-	return(EditorEvents);
-     }
+     /* it is the global set */
+     return(EditorEvents);
    else
      {
-	pevset = SchemasEvents;
-	while (pevset != NULL) {
+       pevset = SchemasEvents;
+       while (pevset != NULL)
+	 {
 	   if (!strcmp(pevset->EvSName, name))
-	       return(pevset);
+	     return(pevset);
 	   pevset = pevset->EvSNext;
-	}
+	 }
      }
    return NULL;
 }

@@ -231,12 +231,7 @@ char               *data;
 		/* create the new element after the character string */
 		before = FALSE;
 	      else
-		{
-		  /* split the text to insert the XML element */
-		  TtaSplitText (sibling, c1-1, doc);
-		  /* take the second part of the split text element */
-		  TtaNextSibling (&sibling);
-		}
+		sibling = SplitTextInMathML (doc, sibling, c1);
 	    }
 	}
       else
@@ -253,7 +248,12 @@ char               *data;
 		    /* create the new element after the character string */
 		    before = FALSE;
 		  else
-		    sibling = SplitTextInMathML (doc, sibling, c1);
+		    {
+		      /* split the text to insert the XML element */
+		      TtaSplitText (sibling, c1-1, doc);
+		      /* take the second part of the split text element */
+		      TtaNextSibling (&sibling);
+		    }
 		}
 
 	      if (before)
@@ -1726,8 +1726,10 @@ DoubleClickEvent    DC_event;
 		      else 
 			toparse = GetObjectWWW (newdoc, pathname, NULL, tempfile, AMAYA_SYNC, NULL, NULL, NULL, NULL, YES);
 		    }
-		  TtaHandlePendingEvents ();
 	       }
+	     else
+	       TtaSetStatus (newdoc, 1, TtaGetMessage (AMAYA, AM_DOCUMENT_LOADED), NULL);
+	     TtaHandlePendingEvents ();
 
 	     /* memorize the initial newdoc value in doc because LoadHTMLDocument */
 	     /* will opem a new document if newdoc is a modified document */
@@ -2168,7 +2170,7 @@ NotifyEvent        *event;
 #endif
 {
    int                 i;
-   char               *s;
+   char               *s, tempname[MAX_LENGTH];
 
    if (AmayaInitialized)
       return;
@@ -2264,43 +2266,40 @@ NotifyEvent        *event;
    if (s)
       strcpy (TempFileDirectory, s);
    else
+
 #  ifdef _WINDOWS
-#if 0
-     {
-	s = (char *) TtaGetEnvString ("TEMP");
-	if (s)
-	   strcpy (TempFileDirectory, s);
-	else
-	   strcpy (TempFileDirectory, "C:\\TEMP");
-     }
-   strcat (TempFileDirectory, DIR_STR);
-   strcat (TempFileDirectory, ".amaya");
-#endif /* 0 */
-   strcpy (TempFileDirectory, "C:\\TEMP\\AMAYA");
-   i = _mkdir (TempFileDirectory);
-   if (i != 0 && errno != EEXIST)
-     {
-	strcpy (TempFileDirectory, "C:\\TEMP\\AMAYA");
-	i = _mkdir (TempFileDirectory);
-	if (i != 0 && errno != EEXIST)
+     strcpy (TempFileDirectory, "C:\\TEMP\\AMAYA");
 #  else  /* !_WINDOWS */
      strcpy (TempFileDirectory, "/tmp");
-   strcat (TempFileDirectory, DIR_STR);
-   strcat (TempFileDirectory, ".amaya");
+
+   strcat (TempFileDirectory, "/.amaya");
+#  endif /* _WINDOWS */
+
    i = mkdir (TempFileDirectory, S_IRWXU);
    if (i != 0 && errno != EEXIST)
      {
-	strcpy (TempFileDirectory, "/tmp/.amaya");
-	i = mkdir (TempFileDirectory, S_IRWXU);
-	if (i != 0 && errno != EEXIST)
+#  ifndef _WINDOWS
+       strcpy (TempFileDirectory, "/tmp/.amaya");
+       i = mkdir (TempFileDirectory, S_IRWXU);
+       if (i != 0 && errno != EEXIST)
 #  endif /* !_WINDOWS */
-	  {
-	     fprintf (stderr, "cannot create %s\n", TempFileDirectory);
-	     exit (1);
-	  }
+	 {
+	   fprintf (stderr, "cannot create %s\n", TempFileDirectory);
+	   exit (1);
+	 }
      }
    /* add the temporary directory in document path */
    TtaAppendDocumentPath (TempFileDirectory);
+
+   /* Create all temporary sub-directories for documents */
+   for (i = 1; i < DocumentTableLength; i++)
+     {
+       /* initialize document table */
+       DocumentURLs[i] = NULL;
+       sprintf (tempname, "%s%c%d", TempFileDirectory, DIR_SEP, i);
+       if (!TtaCheckDirectory (tempname))
+	 mkdir (tempname, S_IRWXU);
+     }
 
    /* allocate working buffers */
    LastURLName = TtaGetMemory (MAX_LENGTH);
@@ -2349,10 +2348,6 @@ NotifyEvent        *event;
    InitTransform ();
    /* initialize automaton for the HTML parser */
    InitAutomaton ();
-
-   /* initialize document table */
-   for (i = 1; i < DocumentTableLength; i++)
-       DocumentURLs[i] = NULL;
 
    CurrentDocument = 0;
    InNewWindow = FALSE;

@@ -1370,9 +1370,7 @@ boolean error_html;
 #endif
 {
    AHTReqContext      *me;
-
    FILE               *tmp_fp;
-   char               *tmp_dir;
    char               *ref;
    int                 status;
    HTList             *cur, *pending;
@@ -1404,33 +1402,12 @@ boolean error_html;
 	return HT_ERROR;
      }
 
-   /* verify if a docid directory exists */
-   tmp_dir = TtaGetMemory (strlen (TempFileDirectory) + 5 + 1);
-#  ifndef _WINDOWS
-   sprintf (tmp_dir, "%s/%d", TempFileDirectory, docid);
-#  else  /* _WINDOWS */
-   sprintf (tmp_dir, "C:\\TEMP\\AMAYA\\%d", docid);
-#  endif /* _WINDOWS */
-
-   if (!TtaCheckDirectory (tmp_dir))
-     {
-       /*directory did not exist */
-       if (mkdir (tmp_dir, S_IRWXU) == -1)
-	 {
-	   /*error */
-	   outputfile[0] = EOS;
-	   TtaSetStatus (docid, 1, TtaGetMessage (AMAYA, AM_CACHE_ERROR), urlName);
-	   
-	   if (error_html)
-	     /* so we can show the error message */
-	     DocNetworkStatus[docid] |= AMAYA_NET_ERROR;
-	   return HT_ERROR;
-	 }
-     }
-
    /*create a tempfilename */
-   sprintf (outputfile, "%s%c%04dAM", tmp_dir, DIR_SEP,  object_counter);
-   TtaFreeMemory (tmp_dir);
+#  ifdef _WINDOWS
+   sprintf (outputfile, "C:\\TEMP\\AMAYA\\%d\\%04dAM", docid, object_counter);
+#  else  /* _WINDOWS */
+   sprintf (outputfile, "%s/%d/%04dAM", TempFileDirectory, docid, object_counter);
+#  endif /* _WINDOWS */
 
    /* update the object_counter */
    object_counter++;

@@ -899,6 +899,7 @@ char                c;
 #endif /* __STDC__ */
 {
    ViewSelection      *pViewSel;
+   PtrAbstractBox      pAb;
    int                 frame;
 
    if (document != 0)
@@ -910,8 +911,10 @@ char                c;
 	    CloseInsertion ();
 	    pViewSel = &ViewFrameTable[frame - 1].FrSelectionBegin;
 	    if (pViewSel->VsBox != NULL)
-	      if (pViewSel->VsBox->BxAbstractBox->AbLeafType == LtPicture
-		  ||  pViewSel->VsBox->BxAbstractBox->AbLeafType == LtText)
+	      {
+		pAb = pViewSel->VsBox->BxAbstractBox;
+	      if (pAb->AbLeafType == LtPicture
+		  ||  pAb->AbLeafType == LtText)
 		{
 		  if (MenuActionList[CMD_DeleteSelection].User_Action != NULL) {
 		      if (((*MenuActionList[CMD_DeleteSelection].User_Action) (
@@ -922,8 +925,9 @@ char                c;
 		     if (MenuActionList[CMD_DeleteSelection].Call_Action != NULL)
 		        (*MenuActionList[CMD_DeleteSelection].Call_Action) (document, view);
 		}
-	      else
+	      else if (pAb->AbLeafType != LtCompound || pAb->AbVolume != NULL)
 		TtcPreviousChar (document, view);
+	      }
 	  }
 	InsertChar (frame, c, -1);
      }

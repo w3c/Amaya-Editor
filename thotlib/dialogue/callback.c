@@ -77,127 +77,148 @@ PtrSSchema          schStruct;
    /* See all actions linked with this event in different event lists */
    while (schStruct != NULL && procEvent == NULL && funcEvent == NULL)
      {
-	eventsSet = schStruct->SsActionList;
-	if (eventsSet != NULL)
-	  {
-	     /* take the concerned actions list */
-	     pActEvent = eventsSet->EvSList[event];
-	     while (pActEvent != NULL)
-	       {
-		  if (pActEvent->AEvPre == pre && (pActEvent->AEvType == 0 || pActEvent->AEvType == type))
-		    {
-		       if (pre) {
-			  funcEvent = (Func) pActEvent->AEvAction->ActAction;
-			  userFuncEvent = pActEvent->AEvAction->ActUser;
-			  userFuncArg = pActEvent->AEvAction->ActArg;
-		       } else {
-			  procEvent = pActEvent->AEvAction->ActAction;
-			  userProcEvent = pActEvent->AEvAction->ActUser;
-			  userProcArg = pActEvent->AEvAction->ActArg;
-		       }
-		       pActEvent = NULL;	/* end of research */
-		    }
-		  else
-		     pActEvent = pActEvent->AEvNext;	/* continue */
-	       }
-	  }
+       eventsSet = schStruct->SsActionList;
+       if (eventsSet != NULL)
+	 {
+	   /* take the concerned actions list */
+	   pActEvent = eventsSet->EvSList[event];
+	   while (pActEvent != NULL)
+	     {
+	       if (pActEvent->AEvPre == pre && (pActEvent->AEvType == 0 || pActEvent->AEvType == type))
+		 {
+		   if (pre)
+		     {
+		       funcEvent = (Func) pActEvent->AEvAction->ActAction;
+		       userFuncEvent = pActEvent->AEvAction->ActUser;
+		       userFuncArg = pActEvent->AEvAction->ActArg;
+		     }
+		   else
+		     {
+		       procEvent = pActEvent->AEvAction->ActAction;
+		       userProcEvent = pActEvent->AEvAction->ActUser;
+		       userProcArg = pActEvent->AEvAction->ActArg;
+		     }
+		   pActEvent = NULL;	/* end of research */
+		 }
+	       else
+		 pActEvent = pActEvent->AEvNext;	/* continue */
+	     }
+	 }
 
-	/* See in the parent schema */
-	if (procEvent == NULL && funcEvent == NULL)
-	  {
-	     status = TRUE;	/* still in the same schema */
-	     if (element != 0)
-		element = (Element) ((PtrElement) element)->ElParent;
-	     while (status && element != 0)
-	       {
-		  status = (schStruct == ((PtrElement) element)->ElStructSchema);
-		  if (!status)
-		     /* a new schema */
-		     schStruct = ((PtrElement) element)->ElStructSchema;
-		  else
-		     element = (Element) ((PtrElement) element)->ElParent;
+       /* See in the parent schema */
+       if (procEvent == NULL && funcEvent == NULL)
+	 {
+	   status = TRUE;	/* still in the same schema */
+	   if (element != 0)
+	     element = (Element) ((PtrElement) element)->ElParent;
+	   while (status && element != 0)
+	     {
+	       status = (schStruct == ((PtrElement) element)->ElStructSchema);
+	       if (!status)
+		 {
+		   /* a new schema */
+		   schStruct = ((PtrElement) element)->ElStructSchema;
+		   /* do not consider specific types of the previous schema */
+		   if (type >= 8)
+		     type = 0;
+		 }
+	       else
+		 element = (Element) ((PtrElement) element)->ElParent;
 	       }
-
-	     if (element == 0)
-		schStruct = NULL;	/* no more schema */
-	  }
+	   
+	   if (element == 0)
+	     schStruct = NULL;	/* no more schema */
+	 }
      }
 
    /* See all actions linked with this event in EDITOR application */
    if (procEvent == NULL && funcEvent == NULL)
      {
-	eventsSet = EditorEvents;
-	if (eventsSet != NULL)
-	  {
-	     /* take the concerned actions list */
-	     pActEvent = eventsSet->EvSList[event];
-	     while (pActEvent != NULL)
-	       {
-		  if (pActEvent->AEvPre == pre && (pActEvent->AEvType == 0 || pActEvent->AEvType == type))
-		    {
-		       if (pre) {
-			  funcEvent = (Func) pActEvent->AEvAction->ActAction;
-			  userFuncEvent = pActEvent->AEvAction->ActUser;
-			  userFuncArg = pActEvent->AEvAction->ActArg;
-		       } else {
-			  procEvent = pActEvent->AEvAction->ActAction;
-			  userProcEvent = pActEvent->AEvAction->ActUser;
-			  userProcArg = pActEvent->AEvAction->ActArg;
-		       }
-		       pActEvent = NULL;	/* end of research */
-		    }
-		  else
-		     pActEvent = pActEvent->AEvNext;
-	       }
-	  }
+       eventsSet = EditorEvents;
+       if (eventsSet != NULL)
+	 {
+	   /* take the concerned actions list */
+	   pActEvent = eventsSet->EvSList[event];
+	   while (pActEvent != NULL)
+	     {
+	       if (pActEvent->AEvPre == pre && (pActEvent->AEvType == 0 || pActEvent->AEvType == type))
+		 {
+		   if (pre)
+		     {
+		       funcEvent = (Func) pActEvent->AEvAction->ActAction;
+		       userFuncEvent = pActEvent->AEvAction->ActUser;
+		       userFuncArg = pActEvent->AEvAction->ActArg;
+		     }
+		   else
+		     {
+		       procEvent = pActEvent->AEvAction->ActAction;
+		       userProcEvent = pActEvent->AEvAction->ActUser;
+		       userProcArg = pActEvent->AEvAction->ActArg;
+		     }
+		   pActEvent = NULL;	/* end of research */
+		 }
+	       else
+		 pActEvent = pActEvent->AEvNext;
+	     }
+	 }
      }
    else if (userFuncEvent == NULL)
      {
-	eventsSet = EditorEvents;
-	if (eventsSet != NULL)
-	  {
-	     /* take the concerned actions list */
-	     pActEvent = eventsSet->EvSList[event];
-	     while (pActEvent != NULL)
-	       {
-		  if (pActEvent->AEvPre == pre && (pActEvent->AEvType == 0 || pActEvent->AEvType == type))
-		    {
-		       if (pre) {
-			  userFuncEvent = pActEvent->AEvAction->ActUser;
-			  userFuncArg = pActEvent->AEvAction->ActArg;
-		       } else {
-			  userProcEvent = pActEvent->AEvAction->ActUser;
-			  userProcArg = pActEvent->AEvAction->ActArg;
-		       }
-		       pActEvent = NULL;	/* end of research */
-		    }
-		  else
-		     pActEvent = pActEvent->AEvNext;
-	       }
-	  }
+       eventsSet = EditorEvents;
+       if (eventsSet != NULL)
+	 {
+	   /* take the concerned actions list */
+	   pActEvent = eventsSet->EvSList[event];
+	   while (pActEvent != NULL)
+	     {
+	       if (pActEvent->AEvPre == pre && (pActEvent->AEvType == 0 || pActEvent->AEvType == type))
+		 {
+		   if (pre)
+		     {
+		       userFuncEvent = pActEvent->AEvAction->ActUser;
+		       userFuncArg = pActEvent->AEvAction->ActArg;
+		     }
+		   else
+		     {
+		       userProcEvent = pActEvent->AEvAction->ActUser;
+		       userProcArg = pActEvent->AEvAction->ActArg;
+		     }
+		   pActEvent = NULL;	/* end of research */
+		 }
+	       else
+		 pActEvent = pActEvent->AEvNext;
+	     }
+	 }
      }
 
    status = FALSE;
    if ((funcEvent != NULL) || (procEvent != NULL) ||
        (userProcEvent != NULL) || (userFuncEvent != NULL))
      {
-	if ((funcEvent != NULL) || (userFuncEvent != NULL)) {
-	   if (userFuncEvent != NULL) {
+       if ((funcEvent != NULL) || (userFuncEvent != NULL))
+	 {
+	   if (userFuncEvent != NULL)
+	     {
 	       userResult = (*userFuncEvent) (userFuncArg, notifyEvent);
 	       if (userResult == 0) 
-	           status = TRUE;
+		 status = TRUE;
 	       else if (funcEvent != NULL)
-		   status = (*funcEvent) (notifyEvent);
-	   } else
-	       status = (*funcEvent) (notifyEvent);
-	} else {
-	   if (userProcEvent != NULL) {
+		 status = (*funcEvent) (notifyEvent);
+	     }
+	   else
+	     status = (*funcEvent) (notifyEvent);
+	 }
+       else
+	 {
+	   if (userProcEvent != NULL)
+	     {
 	       userResult = (*userProcEvent) (userProcArg, notifyEvent);
 	       if ((userResult != 0) && (procEvent != NULL))
-		   (*procEvent) (notifyEvent);
-	   } else
-	       (*procEvent) (notifyEvent);
-	}
+		 (*procEvent) (notifyEvent);
+	     }
+	   else
+	     (*procEvent) (notifyEvent);
+	 }
      }
    return status;
 }

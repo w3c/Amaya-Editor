@@ -169,4 +169,8 @@ MENUS
 
 	END;
 
+   MathML Windows:
+	BEGIN
+	view:2 File button:BCloseView -> TtcCloseView;
+	END;
 END
