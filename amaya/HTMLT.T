@@ -1674,15 +1674,21 @@ ATTRIBUTES
 	END;
 
  SRC:	BEGIN
-	Create ' src="';
-	Create SRC;
-	Create DoubleQuote;
+	if not Immediately within Object
+	   BEGIN
+	   Create ' src="';
+	   Create SRC;
+	   Create DoubleQuote;
+	   END;
 	END;
 
  ALT:	BEGIN
-	Create ' alt="';
-	Create Translated ALT;
-	Create DoubleQuote;
+	if not Immediately within Object
+	   BEGIN
+	   Create ' alt="';
+	   Create Translated ALT;
+	   Create DoubleQuote;
+	   END;
 	END;
 
  longdesc: BEGIN
