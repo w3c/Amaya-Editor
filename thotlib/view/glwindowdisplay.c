@@ -214,11 +214,11 @@ void ClearAll (int frame)
 }
 
 #ifdef _GTK
-/*--------------------------------------------------------------
+/*----------------------------------------------------------------------
  * Make the window background the same as the OpenGL one.  This
  * is used to avoid flickers when the widget size changes.
  * This is fixed in GTK+-2.0 but doesn't hurt.
- --------------------------------------------------------------*/
+  ----------------------------------------------------------------------*/
 void update_bg_colorGTK (int frame, int color)
 {
   GtkWidget *gl_widget;
@@ -605,12 +605,12 @@ void GL_DrawLines (ThotPoint *point, int npoints)
       /* Joinning if a certain thickness ?*/
       glBegin (GL_POINTS); 
       for (i = 0; i<npoints; i++)
-	glVertex2dv (&point[i]);
+	glVertex2dv ((double *) &point[i]);
       glEnd (); 
     }
   glBegin (GL_LINE_STRIP);
   for (i = 0; i < npoints; i++)
-    glVertex2dv (&point[i]);
+    glVertex2dv ((double *) &point[i]);
   glEnd ();
   
 }
@@ -788,9 +788,10 @@ ThotBool GetBoxTransformed (void *v_trans, int *x, int *y)
   *y = 0;
   return FALSE;
 }
-/*---------------------------------------------------
+
+/*----------------------------------------------------------------------
   IsDeformed : only a translation
-  ----------------------------------------------------*/
+  ----------------------------------------------------------------------*/
 ThotBool IsDeformed (void *v_trans)
 {
   PtrTransform Trans = (PtrTransform) v_trans;
@@ -812,9 +813,10 @@ ThotBool IsDeformed (void *v_trans)
     }
   return FALSE;
 }
-/*---------------------------------------------------
+
+/*----------------------------------------------------------------------
   IsBoxDeformed : only a translation
-  ----------------------------------------------------*/
+  ----------------------------------------------------------------------*/
 ThotBool IsBoxDeformed (PtrBox box)
 {
   PtrAbstractBox pAb;
@@ -830,9 +832,9 @@ ThotBool IsBoxDeformed (PtrBox box)
   return FALSE;
 }
 
-/*---------------------------------------------------
+/*----------------------------------------------------------------------
   IsTransformed :
-  ----------------------------------------------------*/
+  ----------------------------------------------------------------------*/
 ThotBool IsTransformed (void *v_trans)
 {
   PtrTransform Trans = (PtrTransform) v_trans;
@@ -853,9 +855,9 @@ ThotBool IsTransformed (void *v_trans)
   return FALSE;
 }
 
-/*---------------------------------------------------
+/*----------------------------------------------------------------------
   IsBoxTransformed :
-  ----------------------------------------------------*/
+  ----------------------------------------------------------------------*/
 ThotBool IsBoxTransformed (PtrBox box)
 {
   PtrAbstractBox pAb;
@@ -873,9 +875,9 @@ ThotBool IsBoxTransformed (PtrBox box)
 
 
 #ifdef _GL
-/*---------------------------------------------------
+/*----------------------------------------------------------------------
   DisplayBoxTransformation :
-  ----------------------------------------------------*/
+  ----------------------------------------------------------------------*/
 void DisplayBoxTransformation (void *v_trans, int x, int y)
 {
   PtrTransform Trans = (PtrTransform) v_trans;
@@ -897,9 +899,10 @@ void DisplayBoxTransformation (void *v_trans, int x, int y)
     }
   glTranslatef (- ((float) x), - ((float) y), 0);
 }
-/*---------------------------------------------------
+
+/*----------------------------------------------------------------------
   DisplayViewBoxTransformation
-  ----------------------------------------------------*/
+  ----------------------------------------------------------------------*/
 static void DisplayViewBoxTransformation (PtrTransform Trans, int Width, int Height)
 {
   float x_trans, y_trans;
@@ -933,9 +936,9 @@ static void DisplayViewBoxTransformation (PtrTransform Trans, int Width, int Hei
     glTranslatef (-x_trans, -y_trans, (float) 0);
 }
 
-/*---------------------------------------------------
+/*----------------------------------------------------------------------
   ZoomedValue :
-  ----------------------------------------------------*/
+  ----------------------------------------------------------------------*/
 static float ZoomedValue (float val, int zoom)
 {
   float dist;
@@ -953,7 +956,7 @@ if (zoom != 0)
 
 #endif /* _GL */
 
-/*---------------------------------------------------
+/*----------------------------------------------------------------------
   DisplayTransformation :
   Modify the current transformation matrix
   this is a GL Matrix         this is SVG Matrix
@@ -964,7 +967,7 @@ if (zoom != 0)
   |a2  a6  a10  a14|
   |		    |
   |a3  a7  a11  a15|
-  ----------------------------------------------------*/
+  ----------------------------------------------------------------------*/
 void DisplayTransformation (int frame, PtrTransform Trans, int Width, int Height)
 {
 #ifdef _GL
@@ -1078,18 +1081,20 @@ void DisplayTransformation (int frame, PtrTransform Trans, int Width, int Height
     }
 #endif /* _GL */
 }
-/*---------------------------------------------------
+
+/*----------------------------------------------------------------------
   DisplayTransformationExit :
-  ----------------------------------------------------*/
+  ----------------------------------------------------------------------*/
 void DisplayTransformationExit ()
 {
 #ifdef _GL
   glPopMatrix ();
 #endif /* _GL */
 }
-/*-------------------------------
+
+/*----------------------------------------------------------------------
  print2DVertex: Write contents of one vertex to stdout
--------------------------------*/
+  ----------------------------------------------------------------------*/
 void print2DVertex (GLint size,
 		    GLint *count, 
 		    GLfloat *buffer)
@@ -1104,12 +1109,11 @@ void print2DVertex (GLint size,
     }
   printf ("\t");
 }
-/*---------------------------------------
-  printBuffer :
-Write contents of entire buffer.  (Parse tokens!)	
-Bounding box Debugging purpose
-(and print...)
----------------------------------------------*/
+
+/*----------------------------------------------------------------------
+  printBuffer : Write contents of entire buffer.  (Parse tokens!)	
+  Bounding box Debugging purpose (and print...)
+  ----------------------------------------------------------------------*/
 void printBuffer (GLint size, GLfloat *buffer)
 {
   GLint  token, count, vertex_count;
@@ -1167,9 +1171,10 @@ void printBuffer (GLint size, GLfloat *buffer)
 	}
     }
 }
-/*------------------------------------------------------------
+
+/*----------------------------------------------------------------------
  computeisminmax : check if number is a new min or max
-  ------------------------------------------------------------*/
+  ----------------------------------------------------------------------*/
 static void computeisminmax (double number, double *min, double *max)
 {
   if (*min < 0)
@@ -1182,9 +1187,9 @@ static void computeisminmax (double number, double *min, double *max)
     *max = number;
 }
 
-/*------------------------------------------------------------
+/*----------------------------------------------------------------------
  getboundingbox : Get bound values of the box
-  ------------------------------------------------------------*/
+  ----------------------------------------------------------------------*/
 void getboundingbox (GLint size, GLfloat *buffer, int frame,
 			    int *xorig, int *yorig, 
 			    int *worig, int *horig)
