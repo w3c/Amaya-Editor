@@ -4252,7 +4252,22 @@ static char GetNextChar (FILE *infile, char* buffer, int *index,
 		*endOfFile = TRUE;
 	      else
 		{
-		  if (HTMLcontext.encoding != UTF_8)
+		  if (HTMLcontext.encoding == UTF_8)
+		    {
+		      /* Search for an UTF-8 BOM character (EF BB BF) */
+		      /* Laurent Carcone 7/11/2002 */
+		      if (*index == 1 && res > 3 &&
+			  (unsigned char) FileBuffer[0] == 0xEF &&
+			  (unsigned char) FileBuffer[1] == 0xBB &&
+			  (unsigned char) FileBuffer[2] == 0xBF &&
+			  PreviousFileBuffer[0] == EOS)
+			{
+			  charRead = FileBuffer[(*index)++];
+			  charRead = FileBuffer[(*index)++];
+			  charRead = FileBuffer[(*index)++];
+			}
+		    }
+		  else
 		    {
 		      /* translate the ISO-latin-1 character into a UTF-8 string */
 		      ptr = fallback;
@@ -4455,9 +4470,9 @@ char GetNextInputChar (FILE *infile, int *index, ThotBool *endOfFile)
 }
 
 /*----------------------------------------------------------------------
-   HTMLparse       parse either the HTML file infile or the text
-   buffer HTMLbuf and build the equivalent Thot
-   abstract tree.
+   HTMLparse       
+   Parse either the HTML file infile or the text buffer HTMLbuf and
+   build the equivalent Thot abstract tree.
    One parameter should be NULL.
   ----------------------------------------------------------------------*/
 static void HTMLparse (FILE * infile, char* HTMLbuf)
