@@ -74,7 +74,7 @@ AmayaFrame::AmayaFrame(
   m_pHSizer = new wxBoxSizer ( wxHORIZONTAL );
   m_pVSizer = new wxBoxSizer ( wxVERTICAL );
   if (m_pCanvas)
-	m_pHSizer->Add( m_pCanvas, 1, wxEXPAND );
+    m_pHSizer->Add( m_pCanvas, 1, wxEXPAND );
   m_pVSizer->Add( m_pHSizer, 1, wxEXPAND );
   
   // The scrollbars are added when ShowScrollbar is called
@@ -122,7 +122,6 @@ AmayaFrame::~AmayaFrame()
 AmayaCanvas * AmayaFrame::CreateDrawingArea()
 {
   AmayaCanvas * p_canvas = NULL;
-
 #ifdef _GL
 
 #ifndef _NOSHARELIST
@@ -158,7 +157,9 @@ AmayaCanvas * AmayaFrame::CreateDrawingArea()
 
 void AmayaFrame::ReplaceDrawingArea( AmayaCanvas * p_new_canvas )
 {
-  wxASSERT( p_new_canvas );
+  if( !p_new_canvas )
+    return;
+
   // detach scrollbar and canvas (delete canvas)
   m_pCanvas->Hide();
   m_pHSizer->Remove(0);
@@ -411,51 +412,6 @@ void AmayaFrame::OnSize( wxSizeEvent& event )
 	m_pHSizer->GetSize().GetWidth(),
 	m_pHSizer->GetSize().GetHeight() );
  
-  int w;
-  int h;
-  if (m_pScrollBarH && m_pScrollBarH->IsShown())
-    {
-      //       h = event.GetSize().GetHeight() - m_pScrollBarH->GetSize().GetHeight();
-      //      m_pVSizer->SetItemMinSize( m_pScrollBarH, wxSize(10, m_pScrollBarH->GetSize().GetHeight() ) );
-    }
-  else
-    {
-      //      m_pVSizer->SetItemMinSize( m_pScrollBarH, wxSize(0,0) );
-      //      h = event.GetSize().GetHeight();
-    }
-
-  if (m_pScrollBarV && m_pScrollBarV->IsShown())
-    {
-      // w = event.GetSize().GetWidth() - m_pScrollBarV->GetSize().GetWidth();
-    }
-  else
-    {
-      //m_pHSizer->SetItemMinSize( m_pScrollBarV, wxSize(0,0) );
-      // w = event.GetSize().GetWidth();
-    }
-
-  /*  m_pHSizer->SetItemMinSize( m_pCanvas,
-			     wxSize( m_pScrollBarV->IsShown() ? event.GetSize().GetWidth() - m_pScrollBarV->GetSize().GetWidth() : event.GetSize().GetWidth(),
-			     m_pScrollBarH->IsShown() ? event.GetSize().GetHeight() - m_pScrollBarH->GetSize().GetWidth() : event.GetSize().GetHeight() ) );*/
-  //  m_pHSizer->SetMinSize( wxSize(w,h) );
-  //  m_pVSizer->SetMinSize( wxSize(w,h) );
-  //  m_pHSizer->SetDimension(0, 0, 200, 200);
-  /*
-  wxLogDebug(_T("AmayaFrame::OnSize: frame=%d w=%d h=%d wc=%d, hc=%d"),
-        m_FrameId,
-	event.GetSize().GetWidth(),
-	event.GetSize().GetHeight(),
-	m_pHSizer->GetSize().GetWidth(),
-	m_pHSizer->GetSize().GetHeight() );
-  */
-  //  GetSizer()->SetSizeHints(this);
-  //  GetSizer()->Fit(this);
-
-  /*  m_pHSizer->Layout();
-  m_pVSizer->Layout();
-  Layout();
-  */
-
   // forward current event to parent widgets
   event.Skip();
 }
