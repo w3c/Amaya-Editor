@@ -2749,7 +2749,7 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
   if (frame != ActiveFrame)
     GL_prepare (ActiveFrame); 
 #endif /* _NOSHARELIST */
-  if (redo && RedoDone)
+  if (redo && !RedoDone)
     {
       RedoDone = TRUE;
       /* a ratio applied need to regenerate the image */
@@ -3026,7 +3026,7 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
     /* release the device context into TtDisplay */
     WIN_ReleaseDeviceContext ();
 #endif /* _WIN_PRINT */
-  if (redo && RedoDone)
+  if (redo && !RedoDone)
     {
       RedoDone = TRUE;
       /* a ratio applied need to regenerate the image */
