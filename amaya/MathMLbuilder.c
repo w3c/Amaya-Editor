@@ -1998,35 +1998,28 @@ ThotBool      ChildOfMRowOrInferred (Element el)
 }
 
 /*----------------------------------------------------------------------
-   CheckFenceLargeOp
+   CheckLargeOp
    If el is a MO element,
-    - if it's a large operator (&Sum; for instance), put a presentation
-      rule to enlarge the character.
-    - if it's a child of a MROW (or equivalent) element and if it contains
-      a single fence character, transform the MO into a MF and the fence
-      character into a Thot stretchable symbol.
+   if it's a large operator (&Sum; for instance), put a presentation
+   rule to enlarge the character.
   ----------------------------------------------------------------------*/
-void      CheckFenceLargeOp (Element el, Document doc)
+void      CheckLargeOp (Element el, Document doc)
 {
    ElementType	       elType, contType;
    Element	       content, ancestor;
    AttributeType       attrType;
-   Attribute	       attrLargeop, attr, attrStretchy;
+   Attribute	       attrLargeop, attr;
    Language	       lang;
    PresentationValue   pval;
    PresentationContext ctxt;
    CHAR_T              text[2];
    char	               script;
-   unsigned char       c;
-   int                 len, val, oldStructureChecking;
+   int                 len, val;
    ThotBool            largeop;
 
    elType = TtaGetElementType (el);
-   if (elType.ElTypeNum == MathML_EL_MO ||
-       elType.ElTypeNum == MathML_EL_OpeningFence ||
-       elType.ElTypeNum == MathML_EL_ClosingFence ||
-       elType.ElTypeNum == MathML_EL_FencedSeparator)
-     /* the element is a MO or equivalent */
+   if (elType.ElTypeNum == MathML_EL_MO)
+     /* the element is a MO */
      {
      content = TtaGetFirstChild (el);
      if (content != NULL)
@@ -2041,7 +2034,7 @@ void      CheckFenceLargeOp (Element el, Document doc)
 	   TtaGiveBufferContent (content, text, len+1, &lang);
 	   script = TtaGetScript (lang);
 	   largeop = FALSE;
-	   /* is there an attribute largeop on this mo element? */
+	   /* is there an attribute largeop on this MO element? */
 	   attrType.AttrSSchema = elType.ElSSchema;
 	   attrType.AttrTypeNum = MathML_ATTR_largeop;
 	   attrLargeop = TtaGetAttribute (el, attrType);
@@ -2091,12 +2084,55 @@ void      CheckFenceLargeOp (Element el, Document doc)
              pval.typed_data.value = 0;
 	     }
 	   TtaSetStylePresentation (PRSize, content, NULL, ctxt, pval);
+	   }
+	 }
+       }
+     }
+}
 
-	   if (!largeop && ChildOfMRowOrInferred (el))
-	     /* the MO element is a child of a MROW element */
+/*----------------------------------------------------------------------
+   CheckFence
+   If el is a MO element of a fence,
+   if it's a child of a MROW (or equivalent) element and if it contains
+   a single fence character, transform the MO into a MF and the fence
+   character into a Thot stretchable symbol.
+  ----------------------------------------------------------------------*/
+void      CheckFence (Element el, Document doc)
+{
+   ElementType	       elType, contType;
+   Element	       content;
+   AttributeType       attrType;
+   Attribute	       attr, attrStretchy;
+   Language	       lang;
+   CHAR_T              text[2];
+   char	               script;
+   unsigned char       c;
+   int                 len, val, oldStructureChecking;
+
+   elType = TtaGetElementType (el);
+   if (elType.ElTypeNum == MathML_EL_MO ||
+       elType.ElTypeNum == MathML_EL_OpeningFence ||
+       elType.ElTypeNum == MathML_EL_ClosingFence ||
+       elType.ElTypeNum == MathML_EL_FencedSeparator)
+     /* the element is a MO or equivalent */
+     {
+     content = TtaGetFirstChild (el);
+     if (content != NULL)
+       {
+       contType = TtaGetElementType (content);
+       if (contType.ElTypeNum == MathML_EL_TEXT_UNIT)
+	 {
+	 len = TtaGetElementVolume (content);
+	 if (len == 1)
+	   /* the MO or fence element contains a single character */
+	   {
+	   TtaGiveBufferContent (content, text, len+1, &lang);
+	   script = TtaGetScript (lang);
+	   if (ChildOfMRowOrInferred (el))
+	     /* the MO or fence element is a child of a MROW element */
 	     /* Is it a stretchable symbol? */
 	      {
-		if (IsStretchy (text[0], script))
+	      if (IsStretchy (text[0], script))
 		/* it's a stretchable parenthesis or equivalent */
 		{
 		/* remove the content of the MO element */
@@ -2222,7 +2258,7 @@ void CreateFencedSeparators (Element fencedExpression, Document doc, ThotBool re
            TtaSetTextContent (leaf, sepValue, lang, doc);
 	   SetIntAddSpaceAttr (separator, doc);
 	   SetIntVertStretchAttr (separator, doc, 0, NULL);
-	   CheckFenceLargeOp (separator, doc);
+	   CheckFence (separator, doc);
 
 	   /* is there a following non-space character in separators? */
 	   i = sep + 1;
@@ -2289,7 +2325,7 @@ static void  CreateOpeningOrClosingFence (Element fencedExpression,
   TtaSetTextContent (leaf, text, TtaGetLanguageIdFromScript('L'), doc);
   SetIntAddSpaceAttr (fence, doc);
   SetIntVertStretchAttr (fence, doc, 0, NULL);
-  CheckFenceLargeOp (fence, doc);
+  CheckFence (fence, doc);
 }
 
 /*----------------------------------------------------------------------
@@ -3792,6 +3828,37 @@ void HandleFramespacingAttribute (Attribute attr, Element el, Document doc,
 }
 
 /*----------------------------------------------------------------------
+   ApplyDisplaystyle
+   An IntDisplaystyle attribute has been associated with (or removed from)
+   element el.
+   Handle all large operators in the sub tree.
+   Update attribute IntMovelimits for all munder, mover or munderover
+   elements in the subtree
+  ----------------------------------------------------------------------*/
+static void   ApplyDisplaystyle (Element el, Document doc)
+{
+  ElementType  elType;
+  Element      child;
+
+  elType = TtaGetElementType (el);
+  if (!strcmp (TtaGetSSchemaName (elType.ElSSchema), "MathML"))
+    {
+      if (elType.ElTypeNum == MathML_EL_MO)
+	CheckLargeOp (el, doc);
+      else if (elType.ElTypeNum == MathML_EL_MUNDER ||
+	       elType.ElTypeNum == MathML_EL_MOVER ||
+	       elType.ElTypeNum == MathML_EL_MUNDEROVER)
+	SetIntMovelimitsAttr (el, doc);
+    }
+  child = TtaGetFirstChild (el);
+  while (child)
+    {
+      ApplyDisplaystyle (child, doc);
+      TtaNextSibling (&child);
+    }
+}
+
+/*----------------------------------------------------------------------
    SetDisplaystyleMathElement
    Associate a IntDisplaystyle attribute with element el (which is a
    <math> element), and set its value depending on the surrounding context.
@@ -3865,6 +3932,7 @@ void   SetDisplaystyleMathElement (Element el, Document doc)
       TtaAttachAttribute (el, attr, doc);
     }
   TtaSetAttributeValue (attr, display, el, doc);
+  ApplyDisplaystyle (el, doc);
 }
 
 /*----------------------------------------------------------------------
@@ -3920,7 +3988,10 @@ void      MathMLElementComplete (ParserData *context, Element el, int *error)
 	  /* if the MO element is a child of a MROW (or equivalent) and if it
 	     contains a fence character, transform this MO into MF and
 	     transform the fence character into a Thot SYMBOL */
-	  CheckFenceLargeOp (el, doc);
+	  CheckFence (el, doc);
+	  /* if the MO element contains an operator that should be
+	     large (&sum; for instance), enlarge it */
+	  CheckLargeOp (el, doc);
 	  break;
        case MathML_EL_MSPACE:
 	  break;
@@ -4085,7 +4156,8 @@ void      MathMLElementComplete (ParserData *context, Element el, int *error)
        {
 	 parentType = TtaGetElementType (parent);
 	 if (parentType.ElSSchema != elType.ElSSchema)
-	   /* root of a MathML tree, Create a MathML element if there is no */
+	   /* root of a MathML (sub-)tree, Create a MathML element if it is
+	      not present */
 	   if (elType.ElTypeNum != MathML_EL_MathML)
 	     {
 	       elType.ElSSchema = MathMLSSchema;
@@ -4363,45 +4435,10 @@ void MathMLSpacingAttr (Document doc, Element el, char *value, int attr)
 }
 
 /*----------------------------------------------------------------------
-   MathMLSetDisplayAttr
-   The MathML attribute display is associated  with element el (which
-   should be a <math> element).
-   Generate the corresponding internal attribute.
-  ----------------------------------------------------------------------*/
-void MathMLSetDisplayAttr (Element el, Attribute attr, Document doc,
-			   ThotBool delete)
-{
-  int            val, intVal, attrKind;
-  AttributeType  attrType;
-  Attribute      intAttr;
-
-  if (delete)
-    SetDisplaystyleMathElement (el, doc);
-  else
-    {
-      val = TtaGetAttributeValue (attr);
-      if (val == MathML_ATTR_display_VAL_block)
-	intVal = MathML_ATTR_IntDisplaystyle_VAL_true;
-      else
-	intVal = MathML_ATTR_IntDisplaystyle_VAL_false;
-      TtaGiveAttributeType (attr, &attrType, &attrKind);
-      attrType.AttrTypeNum = MathML_ATTR_IntDisplaystyle;
-      intAttr = TtaGetAttribute (el, attrType);
-      /* create the IntDisplaystyle attribute and set its value */
-      if (!intAttr)
-	{
-	  intAttr = TtaNewAttribute (attrType);
-	  TtaAttachAttribute (el, intAttr, doc);
-	}
-      TtaSetAttributeValue (intAttr, intVal, el, doc);
-    }
-}
-
-/*----------------------------------------------------------------------
    MathMLSetDisplaystyleAttr
    The attribute displaystyle is associated  with element el (which
    should be a <mstyle> or a <mtable> element).
-   GenerateSet the corresponding internal attribute accordingly.
+   Generate or set the corresponding internal attribute accordingly.
   ----------------------------------------------------------------------*/
 void MathMLSetDisplaystyleAttr (Element el, Attribute attr, Document doc,
 				ThotBool delete)
@@ -4411,6 +4448,7 @@ void MathMLSetDisplaystyleAttr (Element el, Attribute attr, Document doc,
   AttributeType  attrType;
   Attribute      intAttr;
 
+  intVal = 0;
   /* get the internal attribute */
   elType = TtaGetElementType (el);
   attrType.AttrSSchema = elType.ElSSchema;
@@ -4424,13 +4462,10 @@ void MathMLSetDisplaystyleAttr (Element el, Attribute attr, Document doc,
 	{
 	  if (intAttr)
 	    TtaRemoveAttribute (el, intAttr, doc);
-          return;
 	}
       else if (elType.ElTypeNum == MathML_EL_MTABLE)
 	/* it's a matable element, set the default value (false) */
 	intVal = MathML_ATTR_IntDisplaystyle_VAL_false;
-      else
-	return;
     }
   else
     {
@@ -4441,12 +4476,16 @@ void MathMLSetDisplaystyleAttr (Element el, Attribute attr, Document doc,
 	intVal = MathML_ATTR_IntDisplaystyle_VAL_false;
     }
   /* create the IntDisplaystyle attribute if needed and set its value */
-  if (!intAttr)
+  if (intVal)
     {
-      intAttr = TtaNewAttribute (attrType);
-      TtaAttachAttribute (el, intAttr, doc);
+      if (!intAttr)
+	{
+	  intAttr = TtaNewAttribute (attrType);
+	  TtaAttachAttribute (el, intAttr, doc);
+	}
+      TtaSetAttributeValue (intAttr, intVal, el, doc);
     }
-  TtaSetAttributeValue (intAttr, intVal, el, doc);
+  ApplyDisplaystyle (el, doc);
 }
 
 /*----------------------------------------------------------------------
@@ -4515,8 +4554,9 @@ void MathMLAttributeComplete (Attribute attr, Element el, Document doc)
    */
 
    else if (attrType.AttrTypeNum == MathML_ATTR_display)
-     /* it's a display attribute on element <math> */
-     MathMLSetDisplayAttr (el, attr, doc, FALSE);
+     /* it's a display attribute on element <math>, set the corresponding
+        internal attribute IntDisplaystyle */
+     SetDisplaystyleMathElement (el, doc);
 
    else if (attrType.AttrTypeNum == MathML_ATTR_displaystyle)
      /* it's a displaystyle attribute */

@@ -250,10 +250,10 @@ BOXES
  BevelledBar:	{ fraction bar, bevelled style }
 	BEGIN
 	LineWeight: 1 pt;
-	Height: Enclosing . Height - 0.4;
+	Height: Enclosing . Height - 0.2;
         Width: 0.6 ;
 	HorizPos: Left = Numerator . Right - 0.1;
-	VertPos: Top = Enclosing . Top + 0.2;
+	VertPos: Top = Enclosing . Top + 0.1;
 	Content: Graphics '/';	{ diagonal bar }
 	LineStyle: Solid;
 	Background: Creator =;
@@ -851,10 +851,6 @@ RULES
 	LineWeight: 0.5 pt;
 	HorizRef: Enclosed Bar . Bottom + 0.1;
 	VertPos: HRef = Previous not ElemWithAttr IntVertStretch . HRef;
-        if within MFRAC
-		Size: Enclosing * SCRIPTSIZEMULTIPLIER;
-        if within BevelledMFRAC
-		Size: Enclosing * SCRIPTSIZEMULTIPLIER;
         if within Superscript
 		Size: Enclosing * SMALLER;
         if within Subscript
@@ -877,12 +873,8 @@ RULES
 	CreateBefore(ElementName);
 	CreateWith(VerticalLine);
 	CreateFirst (BevelledBar);
-	HorizRef: Enclosed Numerator . HRef + 0.2;
+	HorizRef: Enclosed Numerator . HRef + 0.4;
 	VertPos: HRef = Previous not ElemWithAttr IntVertStretch . HRef;
-        if within MFRAC
-		Size: Enclosing * SCRIPTSIZEMULTIPLIER;
-        if within BevelledMFRAC
-		Size: Enclosing * SCRIPTSIZEMULTIPLIER;
 	Gather: Yes;
 	IN Structure_view BEGIN
 		Size: DOC_FONTSIZE;
@@ -918,7 +910,7 @@ RULES
 	   BEGIN
 	   HorizRef: Enclosed . HRef;
 	   HorizPos: Left = BevelledBar . Right - 0.1;
-	   VertPos: HRef = Numerator . HRef + 0.4;
+	   VertPos: HRef = Numerator . HRef + 0.8;
 	   END;
         if immediately within MFRAC
 	   BEGIN
@@ -1767,19 +1759,20 @@ ATTRIBUTES
 	HorizPos: VMiddle = Enclosing . VMiddle;
 	END;
 
-  display(MFRAC) = block:
+  IntDisplaystyle(MFRAC) = true:
+	Size: Enclosing =;
+  IntDisplaystyle(MFRAC) = false:
 	BEGIN
-        if within MFRAC
-		Size: Enclosing =;
-        if within BevelledMFRAC
-		Size: Enclosing =;
-	END;
-  display(BevelledMFRAC) = block:
-	BEGIN
-        if within MFRAC
-		Size: Enclosing =;
-        if within BevelledMFRAC
-		Size: Enclosing =;
+	if within MFRAC
+		BEGIN
+		Size: Enclosing * SCRIPTSIZEMULTIPLIER;
+		HorizRef: Enclosed Bar . Bottom + 0.2;
+		END;
+	if within BevelledMFRAC
+		BEGIN
+		Size: Enclosing * SCRIPTSIZEMULTIPLIER;
+		HorizRef: Enclosed Bar . Bottom + 0.2;
+		END;
 	END;
 
   IntMovelimits(UnderOverBase):
@@ -2509,20 +2502,7 @@ ATTRIBUTES
 
   displaystyle:
 	CreateBefore(AttrNameAndValue);
-  displaystyle(MFRAC) = true:
-	BEGIN
-        if within MFRAC
-		Size: Enclosing =;
-        if within BevelledMFRAC
-		Size: Enclosing =;
-	END;
-  displaystyle(BevelledMFRAC) = true:
-	BEGIN
-        if within MFRAC
-		Size: Enclosing =;
-        if within BevelledMFRAC
-		Size: Enclosing =;
-	END;
+	{ style is actually set by attribute IntDisplaystyle }
 
   side:
 	CreateBefore(AttrNameAndValue);

@@ -3277,7 +3277,8 @@ static void ParseMathString (Element theText, Element theElem, Document doc)
 	  {
 	  /* the new element may be a vertically stretchable symbol or a
 	     large operator */
-	  CheckFenceLargeOp (newEl, doc);
+	  CheckFence (newEl, doc);
+	  CheckLargeOp (newEl, doc);
 	  /* if the new element contains a single SYMBOL, placeholders may
 	     be needed before and/or after that operator */
 	  placeholderEl = InsertPlaceholder (newEl, TRUE, doc, TRUE);
@@ -3898,8 +3899,11 @@ void MathElementPasted (NotifyElement *event)
      SetIntMovelimitsAttr (event->element, event->document);
 
    if (elType.ElTypeNum == MathML_EL_MO)
-     /* it's a mo element. It may be a largeop */
-     CheckFenceLargeOp (event->element, event->document);
+     /* it's a mo element. It may be a fence separator or a largeop */
+     {
+       CheckFence (event->element, event->document);
+       CheckLargeOp (event->element, event->document);
+     }
 
    oldStructureChecking = TtaGetStructureChecking (event->document);
    TtaSetStructureChecking (0, event->document);
@@ -4309,8 +4313,7 @@ void MathDisplayAttrCreated (NotifyAttribute *event)
 {
   ParseHTMLSpecificStyle (event->element, "display:block", event->document,
                           0, TRUE);
-  MathMLSetDisplayAttr (event->element, event->attribute, event->document,
-			FALSE);
+  SetDisplaystyleMathElement (event->element, event->document);
 }
 
 /*----------------------------------------------------------------------
@@ -4321,7 +4324,7 @@ void MathDisplayAttrDeleted (NotifyAttribute *event)
 {
   ParseHTMLSpecificStyle (event->element, "display:inline", event->document,
                           0, TRUE);
-  MathMLSetDisplayAttr (event->element, NULL, event->document, TRUE);
+  SetDisplaystyleMathElement (event->element, event->document);
 }
 
 /*----------------------------------------------------------------------
@@ -4676,7 +4679,7 @@ void AttrLargeopChanged (NotifyAttribute *event)
   /* process only element mo. Should also process element mstyle */
   elType = TtaGetElementType (event->element);
   if (elType.ElTypeNum == MathML_EL_MO)
-    CheckFenceLargeOp (event->element, event->document);
+    CheckLargeOp (event->element, event->document);
 }
 
 /*----------------------------------------------------------------------
@@ -4908,7 +4911,7 @@ void FencedSeparatorModified (NotifyOnTarget *event)
      return;
   SetIntAddSpaceAttr (event->element, event->document);
   SetIntVertStretchAttr (event->element, event->document, 0, NULL);
-  /**** CheckFenceLargeOp (event->element, event->document); ******/
+  /**** CheckFence (event->element, event->document); ******/
  
   i = 0;
   child = TtaGetFirstChild (fencedExpEl);

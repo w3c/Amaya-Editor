@@ -36,8 +36,10 @@ extern void SetFontstyleAttr ( Element el,
 extern void SetIntAddSpaceAttr ( Element el,
                                  Document doc );
 extern ThotBool ChildOfMRowOrInferred ( Element el );
-extern void CheckFenceLargeOp ( Element el,
-                                Document doc );
+extern void CheckLargeOp ( Element el,
+                           Document doc );
+extern void CheckFence ( Element el,
+                         Document doc );
 extern void CreateFencedSeparators ( Element fencedExpression,
                                      Document doc,
                                      ThotBool record );
@@ -101,10 +103,6 @@ extern void MathMLSpacingAttr ( Document doc,
                                 Element el,
                                 char *value,
                                 int attr );
-extern void MathMLSetDisplayAttr ( Element el,
-                                   Attribute attr,
-                                   Document doc,
-                                   ThotBool delete );
 extern void MathMLSetDisplaystyleAttr ( Element el,
                                         Attribute attr,
                                         Document doc,
@@ -147,8 +145,10 @@ extern void SetFontstyleAttr (/* Element el,
 extern void SetIntAddSpaceAttr (/* Element el,
                                    Document doc */);
 extern ThotBool ChildOfMRowOrInferred (/* Element el */);
-extern void CheckFenceLargeOp (/* Element el,
-                                  Document doc */);
+extern void CheckLargeOp (/* Element el,
+                             Document doc */);
+extern void CheckFence (/* Element el,
+                           Document doc */);
 extern void CreateFencedSeparators (/* Element fencedExpression,
                                        Document doc,
                                        ThotBool record */);
@@ -212,10 +212,6 @@ extern void MathMLSpacingAttr (/* Document doc,
                                   Element el,
                                   char *value,
                                   int attr */);
-extern void MathMLSetDisplayAttr (/* Element el,
-                                     Attribute attr,
-                                     Document doc,
-                                     ThotBool delete */);
 extern void MathMLSetDisplaystyleAttr (/* Element el,
                                           Attribute attr,
                                           Document doc,
