@@ -19,7 +19,7 @@ extern void PresentationSettingsToCSS ( PresentationSetting settings,
                                         int len );
 extern void UpdateStyleDelete ( NotifyAttribute * event );
 extern void UpdateStylePost ( NotifyAttribute * event );
-extern void GetHTML3StyleString ( Element elem,
+extern void GetHTMLStyleString ( Element elem,
                                   Document doc,
                                   char *buf,
                                   int *len );
@@ -69,7 +69,8 @@ extern int IsImplicitClassName ( char *class,
 extern void RemoveStyleRule ( Element elClass,
                               Document doc );
 extern void RemoveStyle ( Element elem,
-                          Document doc );
+                          Document doc,
+			  boolean removeSpan);
 extern void SetHTMLStyleParserDestructiveMode ( boolean mode );
 extern void HTMLSetBackgroundColor ( Document doc,
                                      Element elem,
@@ -112,7 +113,7 @@ extern void PresentationSettingsToCSS (/* PresentationSetting settings,
                                           int len */);
 extern void UpdateStyleDelete (/* NotifyAttribute * event */);
 extern void UpdateStylePost (/* NotifyAttribute * event */);
-extern void GetHTML3StyleString (/* Element elem,
+extern void GetHTMLStyleString (/* Element elem,
                                     Document doc,
                                     char *buf,
                                     int *len */);
@@ -162,7 +163,8 @@ extern int IsImplicitClassName (/* char *class,
 extern void RemoveStyleRule (/* Element elClass,
                                 Document doc */);
 extern void RemoveStyle (/* Element elem,
-                            Document doc */);
+                            Document doc,
+			    boolean removeSpan*/);
 extern void SetHTMLStyleParserDestructiveMode (/* boolean mode */);
 extern void HTMLSetBackgroundColor (/* Document doc,
                                        Element elem,

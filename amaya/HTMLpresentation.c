@@ -285,7 +285,7 @@ Element             elem;
    styleAttr = TtaGetAttribute (elem, attrType);
    /* keep the new style string */
    len = STYLELEN;
-   GetHTML3StyleString (elem, doc, style, &len);
+   GetHTMLStyleString (elem, doc, style, &len);
    if (len == 0)
      {
 	/* delete the style attribute */

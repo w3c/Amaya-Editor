@@ -7,7 +7,7 @@
 
 /*
  *
- * Author: D. Veillard
+ * Authors: D. Veillard and I. Vatton
  *         R. Guetari (W3C/INRIA) Windows NT/95
  *
  */
@@ -95,7 +95,7 @@ Document            doc;
 	while (cour != NULL)
 	  {
 	     /* remove any style attribute and update the presentation. */
-	     RemoveStyle (cour, doc);
+	     RemoveStyle (cour, doc, FALSE);
 
 	     /* jump on next element until last one is reached. */
 	     if (cour == AClassLastReference)
@@ -112,7 +112,7 @@ Document            doc;
    while (cour != NULL)
      {
 	/* remove any Style attribute left */
-	RemoveStyle (cour, doc);
+	RemoveStyle (cour, doc, FALSE);
 
 	/* set the Class attribute of the element. */
 
@@ -163,11 +163,11 @@ Document            doc;
    base = len = strlen (stylestring);
    len = sizeof (stylestring) - len;
    len -= 4;
-   GetHTML3StyleString (ClassReference, doc, &stylestring[base], &len);
+   GetHTMLStyleString (ClassReference, doc, &stylestring[base], &len);
    strcat (stylestring, "}");
 
    /* change the selected element to be of the new class. */
-   RemoveStyle (ClassReference, doc);
+   RemoveStyle (ClassReference, doc, FALSE);
 
    atType.AttrSSchema = TtaGetDocumentSSchema (doc);
    if (!IsImplicitClassName (CurrentClass, doc))
@@ -291,74 +291,81 @@ View                view;
 
 #endif /* __STDC__ */
 {
-   Attribute           at;
-   AttributeType       atType;
-   int                 firstSelectedChar, lastSelectedChar, i, j;
-   char                a_class[50];
-   int                 len;
-   char               *elHtmlName;
-   Element             last_elem;
+  Attribute           at;
+  AttributeType       atType;
+  Element             last_elem;
+  Element             parent;
+  ElementType         elType;
+  char                a_class[50];
+  char               *elHtmlName;
+  int                 len, i, j;
+  int                 firstSelectedChar, lastSelectedChar;
 
-   DocReference = doc;
-   CurrentClass[0] = 0;
-   ClassReference = NULL;
-   TtaGiveFirstSelectedElement (doc, &ClassReference,
-				&firstSelectedChar, &lastSelectedChar);
-   TtaGiveLastSelectedElement (doc, &last_elem, &i, &j);
-
-   /* one can only define a style from one element at a time. */
-   if (last_elem != ClassReference)
-     {
+  DocReference = doc;
+  CurrentClass[0] = 0;
+  ClassReference = NULL;
+  TtaGiveFirstSelectedElement (doc, &ClassReference,
+			       &firstSelectedChar, &lastSelectedChar);
+  TtaGiveLastSelectedElement (doc, &last_elem, &i, &j);
+  
+  /* one can only define a style from one element at a time. */
+  if (last_elem != ClassReference)
+    {
 #ifdef DEBUG_CLASS_INTERF
-	fprintf (stderr, "first selected != last selected, first char %d, last %d\n",
-		 firstSelectedChar, lastSelectedChar);
+      fprintf (stderr, "first selected != last selected, first char %d, last %d\n",
+	       firstSelectedChar, lastSelectedChar);
 #endif
-	return;
-     }
-   if (ClassReference == NULL)
       return;
-
-   /* updating the class name selector. */
-   elHtmlName = GetHTML3Name (ClassReference, doc);
-
+    }
+  if (ClassReference == NULL)
+    return;
+  
+  /* if a subset of an element is selected, select the parent instead */
+  elType = TtaGetElementType (ClassReference);
+  if (elType.ElTypeNum == HTML_EL_TEXT_UNIT)
+    ClassReference = TtaGetParent (ClassReference);
+  /* updating the class name selector. */
+  elHtmlName = GetHTML3Name (ClassReference, doc);
+  
 #  ifndef _WINDOWS
-   TtaNewForm (BaseDialog + ClassForm, TtaGetViewFrame (doc, 1), 
-	       TtaGetMessage (AMAYA, AM_DEF_CLASS), FALSE, 2, 'L', D_DONE);
+  TtaNewForm (BaseDialog + ClassForm, TtaGetViewFrame (doc, 1), 
+	      
+	      TtaGetMessage (AMAYA, AM_DEF_CLASS), FALSE, 2, 'L', D_DONE);
 #  endif /* !_WINDOWS */
-   NbClass = BuildClassList (doc, ClassList, sizeof (ClassList), elHtmlName);
+  NbClass = BuildClassList (doc, ClassList, sizeof (ClassList), elHtmlName);
 #  ifndef _WINDOWS
-   TtaNewSelector (BaseDialog + ClassSelect, BaseDialog + ClassForm,
-		   TtaGetMessage (AMAYA, AM_SEL_CLASS),
-		   NbClass, ClassList, 5, NULL, TRUE, TRUE);
+  TtaNewSelector (BaseDialog + ClassSelect, BaseDialog + ClassForm,
+		  TtaGetMessage (AMAYA, AM_SEL_CLASS),
+		  NbClass, ClassList, 5, NULL, TRUE, FALSE);
 #  endif /* !_WINDOWS */
-
-   /* preselect the entry corresponding to the class of the element. */
-   atType.AttrSSchema = TtaGetDocumentSSchema (doc);
-   atType.AttrTypeNum = HTML_ATTR_Class;
-
-   at = TtaGetAttribute (ClassReference, atType);
-   if (at)
-     {
-	len = 50;
-	TtaGiveTextAttributeValue (at, a_class, &len);
+  
+  /* preselect the entry corresponding to the class of the element. */
+  atType.AttrSSchema = TtaGetDocumentSSchema (doc);
+  atType.AttrTypeNum = HTML_ATTR_Class;
+  
+  at = TtaGetAttribute (ClassReference, atType);
+  if (at)
+    {
+      len = 50;
+      TtaGiveTextAttributeValue (at, a_class, &len);
 #   ifndef _WINDOWS
-	TtaSetSelector (BaseDialog + ClassSelect, -1, a_class);
+      TtaSetSelector (BaseDialog + ClassSelect, -1, a_class);
 #   endif /* _WINDOWS */
-	strcpy (CurrentClass, a_class);
-     }
-   else
-     {
+      strcpy (CurrentClass, a_class);
+    }
+  else
+    {
 #   ifndef _WINDOWS
-	TtaSetSelector (BaseDialog + ClassSelect, 0, NULL);
+      TtaSetSelector (BaseDialog + ClassSelect, 0, NULL);
 #   endif /* _WINDOWS */
-	strcpy (CurrentClass, elHtmlName);
-     }
-
-   /* pop-up the dialogue box. */
+      strcpy (CurrentClass, elHtmlName);
+    }
+  
+  /* pop-up the dialogue box. */
 #  ifndef _WINDOWS
-   TtaShowDialogue (BaseDialog + ClassForm, TRUE);
+  TtaShowDialogue (BaseDialog + ClassForm, TRUE);
 #  else  /* _WINDOWS */
-   CreateCreateRuleDlgWindow (TtaGetViewFrame (doc, 1), BaseDialog, ClassForm, ClassSelect, NbClass, ClassList);
+  CreateCreateRuleDlgWindow (TtaGetViewFrame (doc, 1), BaseDialog, ClassForm, ClassSelect, NbClass, ClassList);
 #  endif /* _WINDOWS */
 }
 
@@ -375,116 +382,119 @@ View                view;
 
 #endif /* __STDC__ */
 {
-   Attribute           at;
-   AttributeType       atType;
-   int                 firstSelectedChar, lastSelectedChar, i, j;
-   Element             cour, parent;
-   char                a_class[50];
-   int                 len;
+  Attribute           at;
+  AttributeType       atType;
+  Element             cour, parent;
+  ElementType         elType;
+  char                a_class[50];
+  int                 len, i, j;
+  int                 firstSelectedChar, lastSelectedChar;
+  boolean             select_parent;
 
-   ADocReference = doc;
-   CurrentAClass[0] = 0;
-   AClassFirstReference = NULL;
-   AClassLastReference = NULL;
+  ADocReference = doc;
+  CurrentAClass[0] = 0;
+  AClassFirstReference = NULL;
+  AClassLastReference = NULL;
 
-   /* a class can be applied to many elements. */
-   TtaGiveFirstSelectedElement (doc, &AClassFirstReference,
-				&firstSelectedChar, &lastSelectedChar);
+  /* a class can be applied to many elements. */
+  TtaGiveFirstSelectedElement (doc, &AClassFirstReference,
+			       &firstSelectedChar, &lastSelectedChar);
 
-   if (AClassFirstReference == NULL)
-      return;
-   cour = AClassLastReference = AClassFirstReference;
-   do
-     {
-	TtaGiveNextSelectedElement (doc, &cour, &i, &j);
-	if (cour != NULL)
-	   AClassLastReference = cour;
-     }
-   while (cour != NULL);
+  if (AClassFirstReference == NULL)
+    return;
+  cour = AClassLastReference = AClassFirstReference;
+  do
+    {
+      TtaGiveNextSelectedElement (doc, &cour, &i, &j);
+      if (cour != NULL)
+	AClassLastReference = cour;
+    }
+  while (cour != NULL);
+  
+  /* Case of a substring : need to split the original text. */
+  if ((AClassFirstReference == AClassLastReference) &&
+      (firstSelectedChar != 0))
+    {
+      len = TtaGetTextLength (AClassFirstReference);
+      if (len <= 0)
+	return;
+      if (lastSelectedChar < len)
+	TtaSplitText (AClassFirstReference, lastSelectedChar, doc);
+      if (firstSelectedChar > 1)
+	{
+	  firstSelectedChar--;
+	  TtaSplitText (AClassFirstReference, firstSelectedChar, doc);
+	  TtaNextSibling (&AClassFirstReference);
+	  AClassLastReference = AClassFirstReference;
+	}
+    }
 
+  if (AClassFirstReference == NULL)
+    return;
 
-   /* Case of a substring : need to split the original text. */
-   if ((AClassFirstReference == AClassLastReference) &&
-       (firstSelectedChar != 0))
-     {
-	int                 len = TtaGetTextLength (AClassFirstReference);
-
-	if (len <= 0)
-	   return;
-	if (lastSelectedChar < len)
-	   TtaSplitText (AClassFirstReference, lastSelectedChar, doc);
-	if (firstSelectedChar > 1)
-	  {
-	     firstSelectedChar--;
-	     TtaSplitText (AClassFirstReference, firstSelectedChar, doc);
-	     TtaNextSibling (&AClassFirstReference);
-	     AClassLastReference = AClassFirstReference;
-	  }
-     }
-   if (AClassFirstReference == NULL)
-      return;
-
-   /* Case of all child of an element are selected, select the parent instead */
-   parent = TtaGetParent(AClassFirstReference);
-   if ((parent == TtaGetParent(AClassLastReference)) &&
-       (AClassFirstReference == TtaGetFirstChild(parent)) &&
-       (AClassLastReference == TtaGetLastChild(parent))) { 
-       int select_parent = TRUE;
-       ElementType elType;
-       int len;
-
-       elType = TtaGetElementType(AClassFirstReference);
-       if (elType.ElTypeNum == HTML_EL_TEXT_UNIT) {
-          if (firstSelectedChar > 1) select_parent = FALSE;
-       }
-
-       elType = TtaGetElementType(AClassLastReference);
-       if (elType.ElTypeNum == HTML_EL_TEXT_UNIT) {
+  /* if all child of an element are selected, select the parent instead */
+  parent = TtaGetParent (AClassFirstReference);
+  if ((parent == TtaGetParent (AClassLastReference)) &&
+      (AClassFirstReference == TtaGetFirstChild(parent)) &&
+      (AClassLastReference == TtaGetLastChild(parent)))
+    { 
+      select_parent = TRUE;
+      elType = TtaGetElementType(AClassFirstReference);
+      if (elType.ElTypeNum == HTML_EL_TEXT_UNIT)
+	{
+	  if (firstSelectedChar > 1)
+	    select_parent = FALSE;
+	}
+      
+      elType = TtaGetElementType (AClassLastReference);
+      if (elType.ElTypeNum == HTML_EL_TEXT_UNIT)
+	{
 	  len = TtaGetTextLength (AClassLastReference);
-          if (lastSelectedChar < len) select_parent = FALSE;
-       }
+	  if (lastSelectedChar < len)
+	    select_parent = FALSE;
+	}
+      
+      if (select_parent)
+	{
+	  AClassFirstReference = AClassLastReference = parent;
+	  firstSelectedChar = lastSelectedChar = 0;
+	}
+    }
 
-       if (select_parent) {
-           AClassFirstReference = AClassLastReference = parent;
-	   firstSelectedChar = lastSelectedChar = 0;
-       }
-   }
-
-   /* updating the class name selector. */
+  /* updating the class name selector. */
 #  ifndef _WINDOWS
-   TtaNewForm (BaseDialog + AClassForm, TtaGetViewFrame (doc, 1), 
-	       TtaGetMessage (AMAYA, AM_APPLY_CLASS), TRUE, 2, 'L', D_DONE);
+  TtaNewForm (BaseDialog + AClassForm, TtaGetViewFrame (doc, 1), 
+	      TtaGetMessage (AMAYA, AM_APPLY_CLASS), TRUE, 2, 'L', D_DONE);
 #  endif /* !_WINDOWS */
-   NbAClass = BuildClassList (doc, AClassList, sizeof (AClassList), "default");
+  NbAClass = BuildClassList (doc, AClassList, sizeof (AClassList), "default");
 #  ifndef _WINDOWS
-   TtaNewSelector (BaseDialog + AClassSelect, BaseDialog + AClassForm,
-		   TtaGetMessage (AMAYA, AM_SEL_CLASS),
-		   NbAClass, AClassList, 5, NULL, FALSE, TRUE);
+  TtaNewSelector (BaseDialog + AClassSelect, BaseDialog + AClassForm,
+		  TtaGetMessage (AMAYA, AM_SEL_CLASS),
+		  NbAClass, AClassList, 5, NULL, FALSE, FALSE);
 #  endif /* !_WINDOWS */
 
-   /* preselect the entry corresponding to the class of the element. */
-   atType.AttrSSchema = TtaGetDocumentSSchema (doc);
-   atType.AttrTypeNum = HTML_ATTR_Class;
-
-   at = TtaGetAttribute (AClassFirstReference, atType);
-   if (at)
-     {
-	len = 50;
-	TtaGiveTextAttributeValue (at, a_class, &len);
-	TtaSetSelector (BaseDialog + AClassSelect, -1, a_class);
-	strcpy (CurrentAClass, a_class);
-     }
-   else
-     {
-	TtaSetSelector (BaseDialog + AClassSelect, 0, NULL);
-	strcpy (CurrentAClass, "default");
-     }
+  /* preselect the entry corresponding to the class of the element. */
+  atType.AttrSSchema = TtaGetDocumentSSchema (doc);
+  atType.AttrTypeNum = HTML_ATTR_Class;
+  at = TtaGetAttribute (AClassFirstReference, atType);
+  if (at)
+    {
+      len = 50;
+      TtaGiveTextAttributeValue (at, a_class, &len);
+      TtaSetSelector (BaseDialog + AClassSelect, -1, a_class);
+      strcpy (CurrentAClass, a_class);
+    }
+  else
+    {
+      TtaSetSelector (BaseDialog + AClassSelect, 0, NULL);
+      strcpy (CurrentAClass, "default");
+    }
 
    /* pop-up the dialogue box. */
 #  ifndef _WINDOWS
-   TtaShowDialogue (BaseDialog + AClassForm, TRUE);
+  TtaShowDialogue (BaseDialog + AClassForm, TRUE);
 #  else  /* _WINDOWS */
-   CreateApplyClassDlgWindow (TtaGetViewFrame (doc, 1), BaseDialog, AClassForm, AClassSelect, NbAClass, AClassList);
+  CreateApplyClassDlgWindow (TtaGetViewFrame (doc, 1), BaseDialog, AClassForm, AClassSelect, NbAClass, AClassList);
 #  endif /* _WINDOWS */
 }
 

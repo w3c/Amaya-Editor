@@ -798,7 +798,7 @@ NotifyElement      *event;
 {
    if (event->document != SelectionDoc)
      {
-	if (SelectionDoc != 0)
+	if (SelectionDoc != 0 && DocumentURLs[SelectionDoc] != NULL)
 	   /* Reset buttons state in previous selected document */
 	   UpdateContextSensitiveMenus (SelectionDoc);
 	/* change the new selected document */

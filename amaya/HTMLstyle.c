@@ -194,19 +194,19 @@ Document            doc;
 static boolean         HTMLStyleParserDestructiveMode = FALSE;
 
 /*
- * A HTML3StyleValueParser is a function used to parse  the
+ * A HTMLStyleValueParser is a function used to parse  the
  * description substring associated to a given style attribute
  * e.g. : "red" for a color attribute or "12pt bold helvetica"
  * for a font attribute.
  */
 
 #ifdef __STDC__
-typedef char       *(*HTML3StyleValueParser)
+typedef char       *(*HTMLStyleValueParser)
                     (PresentationTarget target,
 		     PresentationContext context, char *attrstr);
 
 #else
-typedef char       *(*HTML3StyleValueParser) ();
+typedef char       *(*HTMLStyleValueParser) ();
 
 #endif
 
@@ -303,19 +303,19 @@ VALUEPARSER(Test)
  * Description of the set of HTML3 Style Attributes supported.
  */
 
-typedef struct HTML3StyleAttribute
+typedef struct HTMLStyleAttribute
   {
      char               *name;
-     HTML3StyleValueParser parsing_function;
+     HTMLStyleValueParser parsing_function;
   }
-HTML3StyleAttribute;
+HTMLStyleAttribute;
 
 /*
  * NOTE : Long attribute name MUST be placed before shortened ones !
  *        e.g. "FONT-SIZE" must be placed before "FONT"
  */
 
-static HTML3StyleAttribute HTML3StyleAttributes[] =
+static HTMLStyleAttribute HTMLStyleAttributes[] =
 {
    {"font-family", ParseCSSFontFamily},
    {"font-style", ParseCSSFontStyle},
@@ -385,8 +385,8 @@ static HTML3StyleAttribute HTML3StyleAttributes[] =
    {"test", ParseCSSTest},
 };
 
-#define NB_HTML3STYLEATTRIBUTE (sizeof(HTML3StyleAttributes) / \
-                                sizeof(HTML3StyleAttributes[0]))
+#define NB_HTML3STYLEATTRIBUTE (sizeof(HTMLStyleAttributes) / \
+                                sizeof(HTMLStyleAttributes[0]))
 
 /*
  * A few macro needed to help building the parser
@@ -681,14 +681,14 @@ char              **url;
 }
 
 /*----------------------------------------------------------------------
-   GetHTML3StyleAttrIndex : returns the index of the current         
-   attribute type in the HTML3StyleAttributes array             
+   GetHTMLStyleAttrIndex : returns the index of the current         
+   attribute type in the HTMLStyleAttributes array             
    return NULL if not found                                     
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static char        *GetHTML3StyleAttrIndex (char *attrstr, int *index)
+static char        *GetHTMLStyleAttrIndex (char *attrstr, int *index)
 #else
-static char        *GetHTML3StyleAttrIndex (attrstr, index)
+static char        *GetHTMLStyleAttrIndex (attrstr, index)
 char               *attrstr;
 int                *index;
 #endif
@@ -698,10 +698,10 @@ int                *index;
    SKIP_BLANK (attrstr);
 
    for (i = 0; i < NB_HTML3STYLEATTRIBUTE; i++)
-      if (IS_WORD (attrstr, HTML3StyleAttributes[i].name))
+      if (IS_WORD (attrstr, HTMLStyleAttributes[i].name))
 	{
 	   *index = i;
-	   return (attrstr + strlen (HTML3StyleAttributes[i].name));
+	   return (attrstr + strlen (HTMLStyleAttributes[i].name));
 	}
    return (NULL);
 }
@@ -1180,16 +1180,16 @@ void               *param;
 }
 
 /*----------------------------------------------------------------------
-   GetHTML3StyleString : return a string corresponding to the CSS    
+   GetHTMLStyleString : return a string corresponding to the CSS    
    description of the presentation attribute applied to a       
    element.
    For stupid reasons, if the target element is HTML or BODY,
    one returns the concatenation of both element style strings.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                GetHTML3StyleString (Element elem, Document doc, char *buf, int *len)
+void                GetHTMLStyleString (Element elem, Document doc, char *buf, int *len)
 #else
-void                GetHTML3StyleString (elem, doc, buf, len)
+void                GetHTMLStyleString (elem, doc, buf, len)
 Element             elem;
 Document            doc;
 char               *buf;
@@ -1272,7 +1272,7 @@ char               *attrstr;
      {
 	SKIP_BLANK (attrstr);
 	/* look for the type of attribute */
-	new = GetHTML3StyleAttrIndex (attrstr, &styleno);
+	new = GetHTMLStyleAttrIndex (attrstr, &styleno);
 	if (!new)
 	  {
 	     attrstr++;
@@ -1293,8 +1293,8 @@ char               *attrstr;
 	/*
 	 * try to parse the attribute associated to this attribute.
 	 */
-	if (HTML3StyleAttributes[styleno].parsing_function != NULL)
-	   new = HTML3StyleAttributes[styleno].
+	if (HTMLStyleAttributes[styleno].parsing_function != NULL)
+	   new = HTMLStyleAttributes[styleno].
 	      parsing_function (target, context, attrstr);
 
 	/*
@@ -4474,30 +4474,29 @@ Document            doc;
 }
 
 /*----------------------------------------------------------------------
-   RemoveStyle : clean all the presentation attributes of          
-   a given element.                                                
+  RemoveStyle : clean all the presentation attributes of a given element.
+  The parameter removeSpan is True when the span has to be removed.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                RemoveStyle (Element elem, Document doc)
+void              RemoveStyle (Element elem, Document doc, boolean removeSpan)
 #else
-void                RemoveStyle (elem, doc)
-Element             elem;
-Document            doc;
+void              RemoveStyle (elem, doc, removeSpan)
+Element           elem;
+Document          doc;
+boolean           removeSpan;
 #endif
 {
-   Attribute           at;
-   AttributeType       atType;
-   PresentationTarget  target;
+   Attribute            at;
+   AttributeType        atType;
+   PresentationTarget   target;
    SpecificContextBlock block;
-   PresentationContext context;
-   PresentationValue   unused;
-
-   unused.data = 0;
+   PresentationContext  context;
+   PresentationValue    unused;
 #ifdef DEBUG_STYLES
-   char               *elHtmlName;
-
+   char                *elHtmlName;
 #endif
 
+   unused.data = 0;
    if (elem == NULL)
       return;
 
@@ -4516,7 +4515,8 @@ Document            doc;
    if (at != NULL)
      {
 	TtaRemoveAttribute (elem, at, doc);
-	DeleteSpanIfNoAttr (elem, doc);
+	if (removeSpan)
+	  DeleteSpanIfNoAttr (elem, doc);
      }
    atType.AttrSSchema = TtaGetDocumentSSchema (doc);
    atType.AttrTypeNum = HTML_ATTR_Style_;
@@ -4525,7 +4525,8 @@ Document            doc;
    if (at != NULL)
      {
 	TtaRemoveAttribute (elem, at, doc);
-	DeleteSpanIfNoAttr (elem, doc);
+	if (removeSpan)
+	  DeleteSpanIfNoAttr (elem, doc);
      }
    /*
     * remove all the presentation specific rules applied to the element.
@@ -4543,10 +4544,10 @@ Document            doc;
    SetHTMLStyleParserDestructiveMode :                             
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                SetHTMLStyleParserDestructiveMode (boolean mode)
+void             SetHTMLStyleParserDestructiveMode (boolean mode)
 #else
-void                SetHTMLStyleParserDestructiveMode (mode)
-boolean                mode;
+void             SetHTMLStyleParserDestructiveMode (mode)
+boolean          mode;
 #endif
 {
 #ifdef DEBUG_CSS
