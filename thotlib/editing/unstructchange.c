@@ -576,6 +576,20 @@ void PasteCommand ()
 	    pEl = firstSel;
 	    within = TRUE;
 	  }
+	else if (firstSel->ElTerminal &&
+		 ((firstSel->ElLeafType == LtPicture &&
+		   firstChar == 1) ||
+		  (firstSel->ElLeafType == LtText &&
+		   firstChar > firstSel->ElTextLength)))
+	  /* the right edge of an image is selected or
+	     the selection starts at the end of a text element.
+	     Paste after the selected element */
+	  {
+	    pEl = firstSel;
+	    within = FALSE;
+	    before = FALSE;
+	    pNextEl = NextElement (pEl);
+	  }
 	else if (firstChar < 2)
 	  /* on veut coller avant l'element firstSel */
 	  {
@@ -585,15 +599,6 @@ void PasteCommand ()
 	    /* l'element qui suivra la partie collee est le 1er element de */
 	    /* la selection courante */
 	    pNextEl = firstSel;
-	  }
-	else if (firstSel->ElTerminal && firstSel->ElLeafType == LtText &&
-		 firstSel->ElTextLength < firstChar)
-	  /* on veut coller apres l'element firstSel */
-	  {
-	    pEl = firstSel;
-	    within = FALSE;
-	    before = FALSE;
-	    pNextEl = NextElement (pEl);
 	  }
 	else
 	  /* on veut coller au milieu d'une feuille de texte */
