@@ -2860,22 +2860,25 @@ int                 frame;
 	   (*ThotLocalActions[T_rsindex]) (frame);
 
 #       ifndef _WINDOWS
-	XFlushOutput (0);
-	/* Detache les procedures de callback */
-	XtRemoveCallback (XtParent (XtParent (w)), XmNdestroyCallback, (XtCallbackProc) FrameKilled, (XtPointer) frame);
+        XFlushOutput (0);
+        /* Detache les procedures de callback */
+        XtRemoveCallback (XtParent (XtParent (w)), XmNdestroyCallback, (XtCallbackProc) FrameKilled, (XtPointer) frame);
 
-	XDestroyWindow (TtDisplay, XtWindowOfObject (XtParent (XtParent (XtParent (w)))));
-#       else  /* _WINDOWS */
-        DestroyWindow (FrMainRef[frame]);
-		CleanFrameCatList (frame);
-#       endif /* _WINDOWS */
+        XDestroyWindow (TtDisplay, XtWindowOfObject (XtParent (XtParent (XtParent (w)))));
 
         for (i = 0; i < MAX_BUTTON; i++)
             FrameTable[frame].Button[i] = 0;
-	FrRef[frame] = 0;
-#       ifdef _WINDOWS
+
+#       else  /* _WINDOWS */
+        DestroyWindow (FrMainRef[frame]);
+		CleanFrameCatList (frame);
+
+        for (i = 0; i < MAX_BUTTON; i++)
+            TtaFreeMemory (FrameTable[frame].Button[i]);
+
         FrMainRef [0] = 0;
 #       endif /* _WINDOWS */
+	FrRef[frame] = 0;
 	FrameTable[frame].WdFrame = 0;
 	FrameTable[frame].FrDoc = 0;
 	/* Elimine les evenements ButtonRelease, DestroyNotify, FocusOut */

@@ -2769,7 +2769,11 @@ int         index;
   if (s != NULL)
     {
       strcat (localname, s);
+#     ifdef _WINDOWS
+      strcat (localname, "\\doc\\amaya\\");
+#     else /* !_WINDOWS */
       strcat (localname, "/doc/amaya/");
+#     endif /* _WINDOWS */
       strcat (localname, Manual[index]);
     }
 
