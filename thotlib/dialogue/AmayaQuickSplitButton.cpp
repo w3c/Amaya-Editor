@@ -85,8 +85,13 @@ void AmayaQuickSplitButton::OnLeaveWindow( wxMouseEvent& event )
 void AmayaQuickSplitButton::OnActivate( wxMouseEvent& event )
 {
   wxLogDebug( _T("AmayaQuickSplitButton::OnActivate") );
-  wxCommandEvent cmd_event( wxEVT_COMMAND_BUTTON_CLICKED, event.GetId() );
-  wxPostEvent( this, cmd_event );
+  
+  // now just simulate a wxButton event : this event will be catch by its parent.
+  wxCommandEvent cmd_event( wxEVT_COMMAND_BUTTON_CLICKED, GetId() );
+  // Do not use  wxPostEvent( this, cmd_event ); because on unix there is a layout bug ... but on windows it works fine
+  ProcessEvent(cmd_event);
+
+  event.Skip();
 }
 
 /*
@@ -115,7 +120,6 @@ void AmayaQuickSplitButton::ShowQuickSplitButton( bool show )
   p_SizerTop->SetItemMinSize( this, new_size );
   p_SizerTop->Layout();
 }
-
 
 
 /*----------------------------------------------------------------------
