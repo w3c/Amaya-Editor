@@ -1026,34 +1026,33 @@ void FetchImage (Document doc, Element el, char *URL, int flags,
 		else
 		  DisplayImage (doc, el, NULL, pathname, NULL);
 		}
+	      else if (desc->tempfile && TtaFileExist (desc->tempfile))
+		{
+		  /* remote image, but already here */
+		  if (callback)
+		    callback (doc, el, desc->tempfile, extra);
+		  else
+		    DisplayImage (doc, el, desc, NULL, desc->content_type);
+		  /* get image type */
+		  desc->imageType = TtaGetPictureType (el);
+		}
 	      else
-		if (desc->tempfile && TtaFileExist (desc->tempfile))
-		  {
-		    /* remote image, but already here */
-		    if (callback)
-		      callback (doc, el, desc->tempfile, extra);
-		    else
-		      DisplayImage (doc, el, desc, NULL, desc->content_type);
-		    /* get image type */
-		    desc->imageType = TtaGetPictureType (el);
-		  }
-		else
-		  {
-		    /* chain this new element as waiting for this image */
-		    ctxEl = desc->elImage;
-		    if (ctxEl != NULL && ctxEl->currentElement != el)
-		      {
-			/* concerned elements are different */
-			while (ctxEl->nextElement != NULL)
-			  ctxEl = ctxEl->nextElement;
-			ctxEl->nextElement = (ElemImage *) TtaGetMemory (sizeof (ElemImage));
+		{
+		  /* chain this new element as waiting for this image */
+		  ctxEl = desc->elImage;
+		  if (ctxEl != NULL && ctxEl->currentElement != el)
+		    {
+		      /* concerned elements are different */
+		      while (ctxEl->nextElement != NULL)
 			ctxEl = ctxEl->nextElement;
-			ctxEl->callback = callback;
-			ctxEl->extra = extra;
-			ctxEl->currentElement = el;
-			ctxEl->nextElement = NULL;
-		      }
-		  }
+		      ctxEl->nextElement = (ElemImage *) TtaGetMemory (sizeof (ElemImage));
+		      ctxEl = ctxEl->nextElement;
+		      ctxEl->callback = callback;
+		      ctxEl->extra = extra;
+		      ctxEl->currentElement = el;
+		      ctxEl->nextElement = NULL;
+		    }
+		}
 	    }
 	}
       

@@ -3231,7 +3231,7 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
 		  else if (pAb->AbLeafType == LtCompound)
 		    {
 		      if (pAb->AbPictBackground == NULL)
-			NewPictInfo (pAb, NULL, UNKNOWN_FORMAT);
+			NewPictInfo (pAb, "", UNKNOWN_FORMAT);
 		      ((PictInfo *) (pAb->AbPictBackground))->PicPresent =
 			(PictureScaling)pPRule->PrPresBox[0];
 		      appl = TRUE;

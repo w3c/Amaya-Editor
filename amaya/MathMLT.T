@@ -38,6 +38,8 @@ RULES
    MathML:
 	begin
 	Use XLinkT for XLink;
+	Use SVGT for SVG;
+	Use HTMLTX for HTML;
 	create SOT;
 	Create 'math';
 	Create Attributes;

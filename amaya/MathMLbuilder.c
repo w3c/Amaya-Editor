@@ -3998,6 +3998,53 @@ void      MathMLElementCreated (Element el, Document doc)
 }
 
 /*----------------------------------------------------------------------
+  EvaluateChildRendering tests what children should be displayed
+  ----------------------------------------------------------------------*/
+void EvaluateChildRendering (Element el, Document doc)
+{
+  ElementType          elType;
+  Element              child, renderedChild;
+  SSchema              MathSSchema;
+  PresentationValue    pval;
+  PresentationContext  ctxt;
+  char                *name;
+
+  ctxt = TtaGetSpecificStyleContext (doc);
+  ctxt->cssSpecificity = 0;   /* the presentation rule to be set is not a CSS rule */
+  pval.typed_data.unit = UNIT_PX;
+  pval.typed_data.value = 0;
+  pval.typed_data.real = FALSE;
+  MathSSchema = TtaGetElementType(el).ElSSchema;
+  /* process all children in order */
+  child = TtaGetFirstChild (el);
+  renderedChild = NULL;
+  while (child)
+    {
+      /* if this child is a comment or a processing instruction, skip it */
+      elType = TtaGetElementType (child);
+      if (elType.ElSSchema != MathSSchema ||
+	  (elType.ElTypeNum != MathML_EL_XMLcomment &&
+	   elType.ElTypeNum != MathML_EL_XMLPI &&
+	   elType.ElTypeNum != MathML_EL_Unknown_namespace))
+	{
+	  name = TtaGetSSchemaName (elType.ElSSchema);
+	  if (!renderedChild &&
+	      (!strcmp (name, "SVG") || !strcmp (name, "MathML")))
+	    {
+	      renderedChild = child;
+	      ctxt->destroy = TRUE;
+	    }
+	  else
+	    ctxt->destroy = FALSE; /* we will most probably create a PRule
+				    Visibility: 0; for this child */
+	  /* set or remove a visibility PRule for this child */
+	  TtaSetStylePresentation (PRVisibility, child, NULL, ctxt, pval);
+	}
+      TtaNextSibling (&child);
+    }
+}
+
+/*----------------------------------------------------------------------
    MathMLElementComplete
    Element el has just been completed by the XML parser.
    Check the Thot structure of the MathML element el.
@@ -4195,6 +4242,11 @@ void      MathMLElementComplete (ParserData *context, Element el, int *error)
 	  /* Create placeholders within the MACTION element */
           CreatePlaceholders (TtaGetFirstChild (el), doc);
 	  break;
+       case MathML_EL_ANNOTATION_XML:
+	 /* it's a ANNOTATION_XML element */
+	 /* Evaluate what direct child element to be rendered */
+	 EvaluateChildRendering (el, doc);
+	 break;
        default:
 	  break;
        }

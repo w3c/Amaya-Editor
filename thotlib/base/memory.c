@@ -22,6 +22,7 @@
 #include "message.h"
 #include "fileaccess.h"
 #include "content.h"
+#include "picture.h"
 /*#define DEBUG_MEMORY*/
 
 #undef  THOT_EXPORT
@@ -915,6 +916,13 @@ void GetAbstractBox (PtrAbstractBox *pAb)
 void FreeAbstractBox (PtrAbstractBox pAb)
 {
 
+  if (pAb->AbLeafType == LtCompound && pAb->AbPictBackground)
+    {
+      TtaFreeMemory (((PictInfo *)pAb->AbPictBackground)->PicFileName);
+      CleanPictInfo ((PictInfo *)pAb->AbPictBackground);
+      TtaFreeMemory (pAb->AbPictBackground);
+      pAb->AbPictBackground = NULL;
+    }
 #ifdef DEBUG_MEMORY
        TtaFreeMemory (pAb);
 #else

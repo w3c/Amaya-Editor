@@ -1633,7 +1633,9 @@ RULES
 	BEGIN
 	CreateBefore(ElementName);
 	CreateWith(VerticalLine);
-	Visibility: 0;
+	Visibility: Enclosing =;
+	Width: Enclosed . Width;
+	Height: Enclosed . Height;
 	IN Structure_view BEGIN
 		Visibility: Enclosing =;
 		Foreground: Enclosing =;
