@@ -635,7 +635,7 @@ static void InitCSSDialog (Document doc, char *s)
 	   (CSScase == 2 && css->enabled[doc] && css->category != CSS_IMPORT) ||
 	   (CSScase == 3 && !css->enabled[doc] && css->category != CSS_IMPORT) ||
 	   /* only en external sheet can be removed */
-	   CSScase == 4 && css->category == CSS_EXTERNAL_STYLE))
+	   (CSScase == 4 && css->category == CSS_EXTERNAL_STYLE)))
 	{
 	  /* filter enabled and disabled entries */
 	  /* build the CSS list:
