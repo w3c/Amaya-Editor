@@ -377,7 +377,6 @@ void *context;
   /* the context gives the link's name and we'll use it to look up the
      document ... */
 
-   char  *remoteAnnotIndex;
    REMOTELOAD_context *ctx;
 
    /* restore REMOTELOAD contextext's */  
@@ -385,14 +384,12 @@ void *context;
 
    if (!ctx)
      return;
-   remoteAnnotIndex = ctx->remoteAnnotIndex;
-   TtaFreeMemory (ctx);
+
 #if 0
    if (status == 0)
-     LINK_LoadAnnotationIndex (doc, remoteAnnotIndex);
+     LINK_LoadAnnotationIndex (doc, ctx->remoteAnnotIndex);
    /* TtaFileUnlink (remoteAnnotIndex);*/
 #endif
-   TtaFreeMemory (remoteAnnotIndex);
 }
 
 /*-----------------------------------------------------------------------
@@ -410,8 +407,6 @@ View view;
 {
   ElementType elType;
   char *annotUrl;
-  /*  char *annotServer = "http://tuvalu.inrialpes.fr:7990"; */
-  char *annotServer = "http://quake.w3.org"; 
 
   REMOTELOAD_context *ctx;
   int res;
@@ -451,14 +446,13 @@ View view;
 		      NULL);
   TtaFreeMemory (annotUrl);
 
-  if (res)
+  if (res)			/* @@ */
     {
-      /* the document wasn't loaded off the web (because of an error),
-	 we clear up the context */
-      TtaFreeMemory (ctx->remoteAnnotIndex);
-      TtaFreeMemory (ctx);
+      fprintf (stderr, "Failed to post the annotation!\n");
     }
 
+  TtaFreeMemory (ctx->remoteAnnotIndex);
+  TtaFreeMemory (ctx);
 }
 
 /***************************************************
