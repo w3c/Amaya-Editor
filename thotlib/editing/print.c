@@ -2797,7 +2797,11 @@ int main (int argc, char **argv)
 /* TODO: ecrire le code d impression avec WX */
 #endif /* _WX */
 #else /* _WINDOWS */
+#ifndef _WX
   DOT_PER_INCH = 90;
+#else /* _WX */
+  DOT_PER_INCH = 72;
+#endif /* _WX */
 #endif /* _WINDOWS */
   
   /* Initialisation des polices de caracteres */

@@ -740,6 +740,8 @@ static void Transcode (FILE *fout, int encoding, unsigned char car)
     }
 }
 
+static  int         SameBox = 0;
+static  int         NbWhiteSp = 0;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 int GLString (unsigned char *buff, int lg, int frame, int x, int y,
@@ -749,9 +751,7 @@ int GLString (unsigned char *buff, int lg, int frame, int x, int y,
   FILE               *fout;
   int                 j, i, encoding, width;
   int                 noJustifiedWhiteSp;
-  int                 NbWhiteSp = 0;
   char                fontname[35];
-  static  int         SameBox = 0;
 
   fout = (FILE *) FILE_STREAM;
   if (!fout)
