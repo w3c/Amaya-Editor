@@ -1037,29 +1037,6 @@ ImageDescriptor    *imageDesc;
 
 
 /* ------------------------------------------------------------------- */
-/* | EditImage  edite une image, avec l'aide des drivers.            | */
-/* ------------------------------------------------------------------- */
-#ifdef __STDC__
-void                EditImage (int frame, PtrBox box, ImageDescriptor * imageDesc)
-#else  /* __STDC__ */
-void                EditImage (frame, box, imageDesc)
-int                 frame;
-PtrBox            box;
-ImageDescriptor    *imageDesc;
-#endif /* __STDC__ */
-{
-   int                 typeImage;
-   char                fileName[1023];
-
-   typeImage = imageDesc->imageType;
-   GetImageFileName (imageDesc->imageFileName, fileName);
-
-   if (typeImage == UNKNOWN_FORMAT)
-      return;
-
-}
-
-/* ------------------------------------------------------------------- */
 /* | On traduit l'image dans un format de sortie                     | */
 /* ------------------------------------------------------------------- */
 #ifdef __STDC__

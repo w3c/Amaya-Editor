@@ -37,7 +37,7 @@ extern char        *SuffixImage[];
 #define EXPORT static
 
 static int          IndexTypeImage, IndexPresImage, BaseDlgImage;
-static boolean      DoEditImage;
+static boolean      redisplayPicture;
 static char         NomImage[100] = "";
 static char         DirectoryImage[MAX_PATH] = "";
 
@@ -270,7 +270,7 @@ char               *txt;
 	    case MyNumFormImage:
 	       if (val == 1)
 		  /* Edition realisee */
-		  DoEditImage = True;
+		  redisplayPicture = True;
 	       TtaDestroyDialogue (BaseDlgImage + MyNumFormImage);
 	       break;
 	    default:
@@ -308,7 +308,7 @@ PtrBox            pBox;
    IndexPresImage = GetImPresIndex (*pres);
    strcpy (NomImage, nom);
    DirectoryImage[0] = '\0';
-   DoEditImage = False;
+   redisplayPicture = False;
 
    TtaNewForm (BaseDlgImage + MyNumFormImage, 0, 0, 0, "Picture", True, 2, 'L', D_DONE);
    InitPathImage ();
@@ -366,9 +366,9 @@ PtrBox            pBox;
    /* attend le retour du formulaire */
    TtaWaitShowDialogue ();
    if (NomImage[0] == '\0')
-      DoEditImage = False;
+      redisplayPicture = False;
 
-   if (DoEditImage)
+   if (redisplayPicture)
      {
 	strcpy (nom, NomImage);
 	*typim = GetImageType (IndexTypeImage);
@@ -377,13 +377,8 @@ PtrBox            pBox;
 	strcpy (image->imageFileName, nom);
 	image->imagePres = *pres;
 	image->imageType = *typim;
-	/* TODO: l'image frame n'est pas encore dispo ! */
-	EditImage (0, pBox, image);
-
-	/*  sprintf (nom, "%s/%s", DirectoryImage, NomImage); */
-	/*       TtaSetTextContent (elem, nom, 1, doc); */
      }
-   *result = DoEditImage;
+   *result = redisplayPicture;
 }
 /* ----------------------------------------------------------------------- */
 void                ImageMenuLoadResources ()

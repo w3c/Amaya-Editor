@@ -1,14 +1,4 @@
 
-/* -- Copyright (c) 1990 - 1994 Inria/CNRS  All rights reserved. -- */
-
-
-/*
-   bitmapdrvr.c : driver bitmap X11.
-   BitmapDrvr.c -- Implementation  X11 Bitmap acces
-   Major changes:
-   pma 12/04/91 remise en forme
- */
-
 #include "thot_sys.h"
 #include "constmedia.h"
 #include "typemedia.h"
@@ -20,38 +10,7 @@
 #include "frame.var"
 
 #include "imagedrvr.f"
-
-#ifdef __STDC__
-extern int          PixelEnPt (int, int);
-
-#else  /* __STDC__ */
-extern int          PixelEnPt ();
-
-#endif /* __STDC__ */
-
-/* ---------------------------------------------------------------------- */
-/* |    NormalizePix transforme un bitmap en pixmap.                    | */
-/* ---------------------------------------------------------------------- */
-#ifdef __STDC__
-static Pixmap       NormalizePix (Pixmap bitmap, int w, int h)
-#else  /* __STDC__ */
-static Pixmap       NormalizePix (bitmap, w, h)
-Pixmap              bitmap;
-int                 w;
-int                 h;
-#endif /* __STDC__ */
-{
-   Pixmap              pix;
-
-#ifdef NEW_WILLOWS
-   return (NULL);
-#else  /* NEW_WILLOWS */
-   pix = XCreatePixmap (GDp (0), GRootW (0), w, h, DefaultDepth (GDp (0), DefaultScreen (GDp (0))));
-   XCopyPlane (GDp (0), bitmap, pix, GCpicture, 0, 0, w, h, 0, 0, 1);
-   XFreePixmap (GDp (0), bitmap);
-   return pix;
-#endif /* !NEW_WILLOWS */
-}
+#include "font.f"
 
 /* ---------------------------------------------------------------------- */
 /* |    BitmapCreateImage lit et retourne le bitmap lu dans le fichier  | */
@@ -59,7 +18,6 @@ int                 h;
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
 Drawable            BitmapCreateImage (char *fn, PictureScaling pres, int *xif, int *yif, int *wif, int *hif, unsigned long BackGroundPixel, Drawable * mask1)
-
 #else  /* __STDC__ */
 Drawable            BitmapCreateImage (fn, pres, xif, yif, wif, hif, BackGroundPixel, mask1)
 char               *fn;
@@ -72,31 +30,35 @@ unsigned long       BackGroundPixel;
 Drawable           *mask1;
 #endif /* __STDC__ */
 {
+  Pixmap              pix;
+
 #ifdef NEW_WILLOWS
-   return (NULL);
+  return (Drawable)None;
 #else  /* NEW_WILLOWS */
-   int                 status;
-   int                 w, h;
-   Pixmap              bitmap;
-   int                 xHot, yHot;
+  int                 status;
+  int                 w, h;
+  Pixmap              bitmap;
+  int                 xHot, yHot;
 
-   *mask1 = None;
+  *mask1 = None;
 
-   status = XReadBitmapFile (GDp (0), GRootW (0), fn, &w, &h, &bitmap, &xHot, &yHot);
-   if (status != BitmapSuccess)
-     {
-	return (Drawable) None;
-     }
-   else
-     {
-	*xif = 0;
-	*yif = 0;
-	*wif = w;
-	*hif = h;
-	return NormalizePix (bitmap, w, h);
-     }
+  status = XReadBitmapFile (GDp (0), GRootW (0), fn, &w, &h, &bitmap, &xHot, &yHot);
+  if (status != BitmapSuccess)
+    return (Drawable)None;
+  else
+    {
+      *xif = 0;
+      *yif = 0;
+      *wif = w;
+      *hif = h;
+      
+      pix = XCreatePixmap (GDp (0), GRootW (0), w, h, DefaultDepth (GDp (0), DefaultScreen (GDp (0))));
+      XCopyPlane (GDp (0), bitmap, pix, GCpicture, 0, 0, w, h, 0, 0, 1);
+      XFreePixmap (GDp (0), bitmap);
+      return pix;
+    }
 #endif /* !NEW_WILLOWS */
-}				/*BitmapCreateImage */
+}
 
 
 /* ---------------------------------------------------------------------- */
@@ -222,7 +184,6 @@ unsigned int        BackGroundPixel;
 	fprintf ((FILE *) fd, "gsave %d -%d translate\n", PixelEnPt (xif, 1), PixelEnPt (yif + hif, 0));
 	fprintf ((FILE *) fd, "%d %d %d %d DumpImage\n", Im->width, Im->height, PixelEnPt (wif, 1), PixelEnPt (hif, 0));
 
-	/* **** ABSOLUMENT NON PORTABLE: generation du bitmap ***** */
 	nbb = (wim + 7) / 8;
 	if (ImageByteOrder (GDp (0)) == LSBFirst)
 	   SwapAllBits ((unsigned char *) Im->data, (long) (Im->bytes_per_line * him));

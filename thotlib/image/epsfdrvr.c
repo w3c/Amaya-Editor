@@ -17,23 +17,14 @@
 
 
 #include "imagedrvr.f"
+#include "font.f"
+#include "memory.f"
 
 #define ABS(x) (x<0?-x:x)
 #define MAX(x,y) (x>y?x:y)
 
 extern Pixmap       ImageEPSFPixmapID;
 
-#ifdef __STDC__
-extern void        *TtaGetMemory (unsigned int);
-extern int          PixelEnPt (int, int);
-extern int          PtEnPixel (int, int);
-
-#else  /* __STDC__ */
-extern void        *TtaGetMemory ();
-extern int          PixelEnPt ();
-extern int          PtEnPixel ();
-
-#endif /* __STDC__ */
 
 
 /* ------------------------------------------------------------------- */
@@ -120,138 +111,6 @@ FILE               *ifd;
      }
 }
 
-#ifdef WWW_XWINDOWS
-/* ------------------------------------------------------------------- */
-/* | On recupere l'image contenue dans le fichier                    | */
-/* ------------------------------------------------------------------- */
-#ifdef __STDC__
-XImage             *GetIncludeImage (char *fn, int *previewW, int *previewH)
-#else  /* __STDC__ */
-XImage             *GetIncludeImage (fn, previewW, previewH)
-char               *fn;
-int                *previewW;
-int                *previewH;
-#endif /* __STDC__ */
-{
-#ifdef NEW_WILLOWS
-   return (NULL);
-#else  /* NEW_WILLOWS */
-
-#define CONTIGUOUS 0
-
-   FILE               *fin;
-   int                 c;	/* modif postscript bea */
-   char               *pt, buff[BUFSIZE];
-   char               *imageMemory, *dest;
-   float               W, H, BPS, L;
-   int                 i, j, wline, nline;
-   register int        val1, val2, nibble;
-   int                 imageSize;
-   XImage             *preview;
-
-   fin = fopen (fn, "r");
-   if (!fin)
-      return None;
-
-/**todo: on va d'abord chercher le numero de version EPSF */
-   pt = buff;
-   for (c = getc (fin); c != EOF; c = getc (fin))
-     {
-	if (pt - buff < BUFSIZE - 2)
-	   *pt++ = c;
-	if (c == '\n')
-	  {
-	     *(--pt) = '\0';
-	     pt = buff;
-	     if ((buff[0] == '%')
-		 && (sscanf (buff, "%%%%BeginPreview: %f %f %f %f", &W, &H, &BPS, &L) == 4))
-	       {
-		  wline = W;
-		  nline = H;
-		  imageSize = (int) (((W + 7) / 8) * H);
-		  imageMemory = (char *) TtaGetMemory (imageSize);
-		  dest = imageMemory;
-		  for (i = 0; i < nline; i++)
-		    {
-		       for (j = 0; j < wline; j += 8)
-			 {
-			    switch ((int) BPS)
-				  {
-				     case 1:
-					val1 = GetHexit (fin) << 4;
-					val1 += GetHexit (fin);
-					*dest++ = val1;
-					break;
-				     case 2:
-					val1 = GetHexit (fin) << 4;
-					val1 += GetHexit (fin);
-					val2 = GetHexit (fin) << 4;
-					val2 += GetHexit (fin);
-					val1 = (val1 & 0xAA);
-					val2 = (val2 & 0xAA);
-					nibble = (val1 & 0x80);
-					nibble = nibble | ((val1 << 1) & 0x40);
-					nibble = nibble | ((val1 << 2) & 0x20);
-					nibble = nibble | ((val1 << 3) & 0x10);
-					nibble = nibble | ((val2 >> 1) & 0x01);
-					nibble = nibble | ((val2 >> 2) & 0x02);
-					nibble = nibble | ((val2 >> 3) & 0x04);
-					nibble = nibble | ((val2 >> 4) & 0x08);
-					*dest++ = nibble;
-					break;
-				     case 4:
-/**todo */
-					val1 = GetHexit (fin) << 4;
-					val1 += GetHexit (fin);
-					val2 = GetHexit (fin) << 4;
-					val2 += GetHexit (fin);
-					val1 = GetHexit (fin) << 4;
-					val1 += GetHexit (fin);
-					val2 = GetHexit (fin) << 4;
-					val2 += GetHexit (fin);
-					break;
-				     case 8:
-/**todo */
-					val1 = GetHexit (fin) << 4;
-					val1 += GetHexit (fin);
-					val2 = GetHexit (fin) << 4;
-					val2 += GetHexit (fin);
-					val1 = GetHexit (fin) << 4;
-					val1 += GetHexit (fin);
-					val2 = GetHexit (fin) << 4;
-					val2 += GetHexit (fin);
-					val1 = GetHexit (fin) << 4;
-					val1 += GetHexit (fin);
-					val2 = GetHexit (fin) << 4;
-					val2 += GetHexit (fin);
-					val1 = GetHexit (fin) << 4;
-					val1 += GetHexit (fin);
-					val2 = GetHexit (fin) << 4;
-					val2 += GetHexit (fin);
-					break;
-				  }
-			 }
-		    }
-		  if (ImageByteOrder (GDp (0)) == LSBFirst)
-		     SwapAllBits ((unsigned char *) imageMemory, imageSize);
-
-#ifndef NEW_WILLOWS
-		  preview = XCreateImage (GDp (0), DefaultVisual (GDp (0), ThotScreen (0)), 1, XYPixmap,
-			       0, imageMemory, wline, nline, 8, CONTIGUOUS);
-#endif	/*  */
-		  *previewW = wline;
-		  *previewH = nline;
-		  fclose (fin);
-		  return preview;
-	       }
-	  }
-     }
-   fclose (fin);
-   return None;
-#endif /* !NEW_WILLOWS */
-}
-#endif /* WWW_XWINDOWS */
-
 
 
 /* ------------------------------------------------------------------- */
@@ -278,7 +137,6 @@ Drawable           *mask;
 #ifndef NEW_WILLOWS
    *mask = None;
 #endif
-/**todo: tenir compte de pres */
 
    if (!GetBoundingBox (fn, xif, yif, wif, hif))
      {
