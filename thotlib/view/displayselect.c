@@ -521,6 +521,13 @@ void DisplayStringSelection (int frame, int leftX, int rightX, PtrBox pBox)
   int                 col, l;
 
   pFrame = &ViewFrameTable[frame - 1];
+  if (leftX > rightX)
+    {
+      /* echange limits */
+      l = leftX;
+      leftX = rightX;
+      rightX = l;
+    }
   if (pBox->BxAbstractBox != NULL)
     {
       /* For holophrasted documents there is no enclosing */

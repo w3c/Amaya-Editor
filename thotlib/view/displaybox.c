@@ -1101,7 +1101,7 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 		  buffleft = indbuff + 1;
 		  if (charleft < buffleft)
 		    {
-		      indmax = indbuff - charleft;
+		      indmax = indbuff - charleft + 1;
 		      buffleft = charleft;		      
 		    }
 		  else
@@ -1321,7 +1321,7 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 		      buffleft = adbuff->BuLength;
 		      if (charleft < buffleft)
 			{
-			  indmax = indbuff - charleft;
+			  indmax = indbuff - charleft + 1;
 			  buffleft = charleft;		      
 			}
 		      else

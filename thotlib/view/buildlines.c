@@ -275,11 +275,13 @@ static void Adjust (PtrBox pParentBox, PtrLine pLine, int frame,
   /* Now handle included boxes */
   for (i = 0; i < max; i++)
     {
-      if (rtl && boxes[i]->BxScript != 'A' && boxes[i]->BxScript != 'H')
+      if (rtl && boxes[i]->BxScript != 'A' && boxes[i]->BxScript != 'H' &&
+	  boxes[i]->BxAbstractBox->AbDirection == 'L')
 	{
 	  /* write following latin boxes left-to-right */
 	  j = i;
-	  while (i < max && boxes[i]->BxScript != 'A' && boxes[i]->BxScript != 'H')
+	  while (i < max && boxes[i]->BxScript != 'A' && boxes[i]->BxScript != 'H' &&
+		 boxes[i]->BxAbstractBox->AbDirection == 'L')
 	    i++;
 	  i--;
 	  for (k = i; k >= j; k--)
@@ -290,11 +292,13 @@ static void Adjust (PtrBox pParentBox, PtrLine pLine, int frame,
 	      YMove (boxes[k], NULL, baseline - boxes[k]->BxHorizRef - boxes[k]->BxYOrg, frame);
 	    }
 	}
-      else if (!rtl && (boxes[i]->BxScript == 'A' || boxes[i]->BxScript == 'H'))
+      else if (!rtl && (boxes[i]->BxScript == 'A' || boxes[i]->BxScript == 'H' ||
+			boxes[i]->BxAbstractBox->AbDirection == 'R'))
 	{
 	  /* write following arabic or hebrew boxes right-to-left */
 	  j = i;
-	  while (i < max && (boxes[i]->BxScript == 'A' || boxes[i]->BxScript == 'H'))
+	  while (i < max && (boxes[i]->BxScript == 'A' || boxes[i]->BxScript == 'H' ||
+			     boxes[i]->BxAbstractBox->AbDirection == 'R'))
 	    i++;
 	  i--;
 	  for (k = i; k >= j; k--)
@@ -395,11 +399,13 @@ void Align (PtrBox pParentBox, PtrLine pLine, int delta, int frame,
   /* Now handle included boxes */
   for (i = 0; i < max; i++)
     {
-      if (rtl && boxes[i]->BxScript != 'A' && boxes[i]->BxScript != 'H')
+      if (rtl && boxes[i]->BxScript != 'A' && boxes[i]->BxScript != 'H' &&
+	  boxes[i]->BxAbstractBox->AbDirection == 'L')
 	{
 	  /* write following latin boxes left-to-right */
 	  j = i;
-	  while (i < max && boxes[i]->BxScript != 'A' && boxes[i]->BxScript != 'H')
+	  while (i < max && boxes[i]->BxScript != 'A' && boxes[i]->BxScript != 'H' &&
+		 boxes[i]->BxAbstractBox->AbDirection == 'L')
 	    i++;
 	  i--;
 	  for (k = i; k >= j; k--)
@@ -410,11 +416,13 @@ void Align (PtrBox pParentBox, PtrLine pLine, int delta, int frame,
 	      YMove (boxes[k], NULL, baseline - boxes[k]->BxHorizRef - boxes[k]->BxYOrg, frame);
 	    }
 	}
-      else if (!rtl && (boxes[i]->BxScript == 'A' || boxes[i]->BxScript == 'H'))
+      else if (!rtl && (boxes[i]->BxScript == 'A' || boxes[i]->BxScript == 'H' ||
+			boxes[i]->BxAbstractBox->AbDirection == 'R'))
 	{
 	  /* write following arabic or hebrew boxes right-to-left */
 	  j = i;
-	  while (i < max && (boxes[i]->BxScript == 'A' || boxes[i]->BxScript == 'H'))
+	  while (i < max && (boxes[i]->BxScript == 'A' || boxes[i]->BxScript == 'H' ||
+			     boxes[i]->BxAbstractBox->AbDirection == 'R'))
 	    i++;
 	  i--;
 	  for (k = i; k >= j; k--)

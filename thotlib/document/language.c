@@ -671,7 +671,7 @@ char TtaGetCharacterScript (wchar_t c)
   else if (c == 0x2F)
     return ' '; /* a slash */
   else if (c >= 0x30 && c <= 0x39)
-    return 'L'; /* a digit */
+    return 'D'; /* a digit */
   else if (c <= 0x32 /* a punctuation */)
     return ' ';
   else if (c >= 0x370 && c < 0x400)

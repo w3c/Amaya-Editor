@@ -366,7 +366,7 @@ char GiveTextParams (PtrTextBuffer *pBuffer, int *ind, int *nChars,
 {
   char                script, embed;
 #ifdef _I18N_
-  char                newscript;
+  char                newscript, prevscript = '*';
   int                 oldind, oldpos, oldspaces, oldwidth;
   PtrTextBuffer       oldbuff = NULL;
 #endif /* _I18N_ */
@@ -407,13 +407,13 @@ char GiveTextParams (PtrTextBuffer *pBuffer, int *ind, int *nChars,
 	{
 	  /* the text must be analysed and may be split */
 	  newscript = TtaGetCharacterScript (car);
-	  if (newscript == ' ' || newscript == '+' ||
-	      newscript == ',' || newscript == '/')
+	  if (newscript == ' ' || newscript == 'D')
 	    {
-	      if (embed != '*')
-		/* neutral gets the embed script */
-		newscript = embed;
-	      else if (oldbuff == NULL)
+	      if (newscript == prevscript && newscript == 'D')
+		/* several digits are considered as Latin string */
+		newscript = 'L';
+	      prevscript = newscript;
+	      if (oldbuff == NULL)
 		{
 		  /* keep in memory a possible splitting position */
 		  oldpos = pos;
@@ -423,8 +423,10 @@ char GiveTextParams (PtrTextBuffer *pBuffer, int *ind, int *nChars,
 		  oldbuff = *pBuffer;
 		}
 	    }
-	  else if (script == '*')
+
+	  if (script == '*' && newscript != ' ' && newscript != 'D')
 	    {
+	      /* no script detected */
 	      if (oldbuff && bidi == 'E')
 		{
 		  /* neutral characters found before and direction requested */
@@ -449,15 +451,19 @@ char GiveTextParams (PtrTextBuffer *pBuffer, int *ind, int *nChars,
 	    }
 	  
 	  if (newscript == script && oldbuff)
-	    /* keep in memory the current position */
-	    oldbuff = NULL;
+	    {
+	      /* keep in memory the current position */
+	      oldbuff = NULL;
+	      /* other scripts are enclosed */
+	      prevscript = newscript;
+	    }
 	  else if (newscript != script &&
 		   (newscript == 'A' || newscript == 'H' || newscript == 'L'))
 	    {
 	      /* the box must be split because the script changes */
 	      if (script == 'A' || script == 'H')
 		{
-		  if (oldbuff)
+		  if (oldbuff && dir == 'L')
 		    {
 		      /* attach neutral to the next substring */
 		      *nChars = max - oldpos;
@@ -472,7 +478,7 @@ char GiveTextParams (PtrTextBuffer *pBuffer, int *ind, int *nChars,
 		}
 	      else if (script != 'A' && script != 'H')
 		{
-		  if (oldbuff)
+		  if (oldbuff && dir == 'R')
 		    {
 		      /* attach neutral to the next substring */
 		      *nChars = max - oldpos;
@@ -488,7 +494,6 @@ char GiveTextParams (PtrTextBuffer *pBuffer, int *ind, int *nChars,
 	      else
 		/* split here */
 		*nChars = max - pos;
-printf ("sub-script=%c pos=%d index=%d \n", script, *nChars, *ind);
 	      return script;
 	    }
 	}
@@ -793,12 +798,7 @@ static void GiveTextSize (PtrAbstractBox pAb, PtrBox pMainBox, int *width,
       pos = 1;
       pPreviousBox = box->BxPrevious;
       pNextBox = box->BxNext;
-      if (pAb->AbUnicodeBidi == 'O' || pAb->AbUnicodeBidi == 'E')
-	dir = pAb->AbDirection;
-      else
-	/* undeterminated */
-	dir = '*';
-
+      dir = pAb->AbDirection;
       while (nChars > 0)
 	{
 	  bwidth = 0;
@@ -806,14 +806,6 @@ static void GiveTextSize (PtrAbstractBox pAb, PtrBox pMainBox, int *width,
 	  lg = nChars;
 	  script = GiveTextParams (&pBuffer, &ind, &nChars, font, &bwidth, &spaces,
 				   dir, pAb->AbUnicodeBidi);
-	  if (pAb->AbUnicodeBidi != 'O' && pAb->AbUnicodeBidi != 'E')
-	    {
-	      /* remember the previous direction */
-	      if (script == 'A' || script == 'H')
-		dir = 'R';
-	      else
-		dir = 'L';
-	    }
 	  box->BxScript = script;
 	  *width += bwidth;
 	  *nSpaces += spaces;
