@@ -1350,6 +1350,9 @@ int TtaAddButton (Document document, View view, ThotIcon picture,
   Arg                 args[MAX_ARGS];
 #else /* _GTK */
   ThotWidget          tmpw;
+  ThotWidget          toolbar;
+  GtkTooltips        *tooltipstmp;
+  GdkColor colortmp;
 #endif /* !_GTK */
   ThotWidget          w, row;
 #else  /* _WINDOWS */
@@ -1381,11 +1384,15 @@ int TtaAddButton (Document document, View view, ThotIcon picture,
 		  /* Insere le nouveau bouton */
 #ifndef _WINDOWS
 #ifdef _GTK
+		  toolbar = GTK_WIDGET (FrameTable[frame].Button[0]);
 		  if (picture == None)
 		    {
-		      gtk_toolbar_append_space (GTK_TOOLBAR (FrameTable[frame].Button[0]));
+		      row = gtk_vseparator_new ();
+		      gtk_widget_show (row);
+		      gtk_box_pack_start (GTK_BOX (toolbar), row, FALSE, TRUE, 4);
+		      /*		      gtk_toolbar_append_space (GTK_TOOLBAR (FrameTable[frame].Button[0]));*/
 		      /*		      gtk_object_set_data (GTK_OBJECT(row), "Icon", (gpointer)NULL);*/
-		      row = NULL;
+		      /*		      row = NULL;*/
 		    }
 		  else
 		    {
@@ -1397,15 +1404,33 @@ int TtaAddButton (Document document, View view, ThotIcon picture,
 		      w = gtk_pixmap_new (picture, NULL);
 		      /* insert the icon */
 		      gtk_container_add (GTK_CONTAINER (row), w);
-		      gtk_toolbar_append_widget (GTK_TOOLBAR (FrameTable[frame].Button[0]), 
-						 row, info ,"private");
+		      
+		      gtk_box_pack_start (GTK_BOX (toolbar), row, FALSE, TRUE, 4);
+
+		      /*		      gtk_toolbar_append_widget (GTK_TOOLBAR (FrameTable[frame].Button[0]), 
+					      row, "" ,"private");*/
+
+		      /* here I try to put the right color to the tooltips */
+		      tooltipstmp = gtk_tooltips_new ();
+		      colortmp.red = 0;
+		      colortmp.green = 0;
+		      colortmp.blue = 0;
+		      if (!gdk_color_alloc (TtCmap, &colortmp))
+			printf("couleur non enregistree :(\n");
+		      gtk_tooltips_set_colors (tooltipstmp,
+					       &colortmp,
+					       &colortmp);
+		      gtk_tooltips_enable (tooltipstmp);
+		      gtk_tooltips_set_tip (tooltipstmp, row, info, "private");
+
+		      
 		      /* Connecte the clicked acton to the button */
 		      ConnectSignalGTK (row,
 					"clicked",
 					GTK_SIGNAL_FUNC(APP_ButtonCallback),
 					(gpointer)frame);
 		      gtk_object_set_data (GTK_OBJECT(row), "Icon", (gpointer)w);
-		      gtk_widget_show (row);
+		      gtk_widget_show_all (row);
 		      FrameTable[frame].Call_Button[i] = (Proc) procedure;
 		    }
                   FrameTable[frame].Button[i] = row;
@@ -2663,6 +2688,7 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 			     (gpointer)frame);
 	   /* Create the vbox which contain all the elements of the view */
 	   vbox1 = gtk_vbox_new (FALSE, 0);
+
 	   gtk_widget_show (vbox1);
 	   gtk_container_add (GTK_CONTAINER (Main_Wd), vbox1);
 
@@ -2767,7 +2793,7 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 			 /*** The menu bar ***/
 #ifdef _GTK
 			 menu_bar = gtk_menu_bar_new ();
-			 gtk_menu_bar_set_shadow_type (menu_bar, GTK_SHADOW_NONE);
+			 /*gtk_menu_bar_set_shadow_type (menu_bar, GTK_SHADOW_NONE);*/
 			 /*GTK_WIDGET_SET_FLAGS (menu_bar, GTK_SENSITIVE);*/
 
 			 /*			 gtk_widget_ref (menu_bar);*/
@@ -2845,10 +2871,13 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 #ifndef _WINDOWS
 #ifdef _GTK
 	   /* Creation of the toolbar */
-	   toolbar = gtk_toolbar_new (GTK_ORIENTATION_HORIZONTAL, GTK_TOOLBAR_ICONS);
+	   /*toolbar = gtk_toolbar_new (GTK_ORIENTATION_HORIZONTAL, GTK_TOOLBAR_ICONS);*/
+	   toolbar = gtk_hbox_new (FALSE, 0);
+	   /*	   gtk_toolbar_set_space_size (GTK_TOOLBAR (toolbar), 2);*/
 	   gtk_widget_show (toolbar);
-	   gtk_widget_set_usize (GTK_WIDGET (toolbar),-1, 20);
-	   gtk_box_pack_start (GTK_BOX (vbox1), toolbar, FALSE, FALSE, 0);
+	
+	   /*  gtk_widget_set_usize (GTK_WIDGET (toolbar),-1, 20);*/
+	   gtk_box_pack_start (GTK_BOX (vbox1), toolbar, FALSE, FALSE, 2);
 
 	   for (i=1; i<MAX_BUTTON ; i++)
 	     FrameTable[frame].Button[i] = NULL;
