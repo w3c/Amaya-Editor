@@ -225,7 +225,7 @@ char               *data;
   ElementType        newType, elType;
   SSchema            docSchema, mathSchema;
   int                val, c1, c2, i, j, len;
-  boolean	     before, ParBlock, surround;
+  boolean	     before, ParBlock, surround, insertSibling;
 
   val = (int) data;
   ParBlock = FALSE;
@@ -246,10 +246,6 @@ char               *data;
       before = TRUE;
       TtaGiveLastSelectedElement (doc, &last, &c2, &j);
       TtaGiveFirstSelectedElement (doc, &sibling, &c1, &i); 
-#ifdef DEBUG
-      printf("first selected %s :%d ,%d  \n",TtaGetElementLabel(sibling),c1,i);
-      printf("last  selected %s :%d ,%d\n\n",TtaGetElementLabel(last),c2,j);
-#endif
     
       /* Check whether the selected element is a text element */
       elType = TtaGetElementType (sibling);
@@ -290,11 +286,25 @@ char               *data;
 		  len = TtaGetTextLength (sibling);
 		  if (c1 > len)
 		      /* the caret is at the end of that character string */
-		      /* create the new element after the character string */
+		      {
+		      /* the new element has to be created after the character
+			 string */
 		      before = FALSE;
+		      el = sibling;
+		      TtaNextSibling (&el);
+		      if (el == NULL)
+			/* the character string is the last child of its
+			   parent */
+			/* create an empty character string after the
+			   Math element to come */
+			{
+		        el = TtaNewTree (doc, elType, "");
+		        TtaInsertSibling (el, sibling, FALSE, doc);
+			}
+		      }
 		  else
 		    {
-		      /* split the text to insert the XML element */
+		      /* split the text to insert the Math element */
 		      TtaSplitText (sibling, c1-1, doc);
 		      /* take the second part of the split text element */
 		      TtaNextSibling (&sibling);
@@ -311,7 +321,7 @@ char               *data;
 		      if (newType.ElTypeNum == HTML_EL_Math ||
 			  newType.ElTypeNum == HTML_EL_MathDisp)
 			{
-			  /* move to the end of the previous MathML element */
+			  /* insert at the end of the previous MathML element */
 			  before = FALSE;
 			  sibling = TtaGetLastChild (el);		      
 			}
@@ -327,7 +337,7 @@ char               *data;
 		      if (newType.ElTypeNum == HTML_EL_Math ||
 			  newType.ElTypeNum == HTML_EL_MathDisp)
 			{
-			  /* move at the end of the previous MathML element */
+			  /* insert at the beginning of the next MathML element */
 			  before = TRUE;
 			  sibling = TtaGetFirstChild (el);		      
 			}
@@ -350,11 +360,47 @@ char               *data;
 	  else
 	    {
 	      surround = FALSE;
-	      /* create the XML element before or after the sibling element */
+	      insertSibling = TRUE;
+	      /* try to create a Math or MathDisp element at the current
+		 position */
 	      elType.ElTypeNum = HTML_EL_Math;
-	      el = TtaNewTree (doc, elType, "");
-	      TtaInsertSibling (el, sibling, before, doc);
-	      sibling = TtaGetFirstChild (el);
+	      if (TtaCanInsertSibling (elType, sibling, before, doc))
+		 /* create a new Math element as a sibling */
+	         insertSibling = TRUE;
+	      else if (TtaCanInsertFirstChild (elType, sibling, doc))
+		 /* create a new Math element as a child */
+	         insertSibling = FALSE;
+	      else
+	         /* cannot insert a Math element here. Try to create a MathDisp
+		    element */
+		 {
+		 elType.ElTypeNum = HTML_EL_MathDisp;
+	         if (TtaCanInsertSibling (elType, sibling, before, doc))
+		    /* insert the new Math element as a sibling element */
+	            insertSibling = TRUE;
+	         else if (TtaCanInsertFirstChild (elType, sibling, doc))
+		    /* insert the new Math element as a child element */
+	            insertSibling = FALSE;
+	         else
+		    /* cannot insert any element here */
+		    sibling = NULL;
+		 }
+	      if (sibling == NULL)
+		 {
+		 TtaSetDisplayMode (doc, DisplayImmediately);
+		 return;
+		 }
+	      else
+		 {
+	         el = TtaNewTree (doc, elType, "");
+	         if (insertSibling)
+		    /* insert the new Math element as a sibling element */
+	            TtaInsertSibling (el, sibling, before, doc);
+	         else
+		    /* insert the new Math element as a child element */
+	            TtaInsertFirstChild (&el, sibling, doc);
+	         sibling = TtaGetFirstChild (el);
+		 }
 	    }
 	}
 
@@ -405,6 +451,8 @@ char               *data;
 	}
       if (!surround || !TransformIntoType (newType, doc))
 	{
+	  TtaUnselect (doc);
+
           el = TtaNewTree (doc, newType, "");
 
 	  /* do not check the Thot abstract tree against the structure */

@@ -207,6 +207,16 @@ RULES
 	Remove;
 	END;
 #endif
+#ifdef MATHML
+ Math:  BEGIN
+        Create '<math>';
+	Remove;
+	END;
+ MathDisp: BEGIN
+        Create '\12<math>\12';
+	Remove;
+	END;
+#endif
  Paragraph:
 	BEGIN
   	Create '\12\12' After;
