@@ -12,7 +12,7 @@
 #
 
 # default parameters
-AMAYAVERSION="8.r62"
+AMAYAVERSION="9.0"
 DEST=$HOME
 
 # Check argument number on the command line
@@ -355,7 +355,6 @@ ${LIBWWWDIR}/wwwconf.h.in \
 ${LIBWWWDIR}/w3c-libwww.spec.in \
 ${LIBWWWDIR}/configure \
 ${LIBWWWDIR}/configure.ac \
-${LIBWWWDIR}/stamp-h.in \
 ${LIBWWWDIR}/wwwconf.h.in \
 ${LIBWWWDIR}/Library/Makefile.am \
 ${LIBWWWDIR}/Library/Makefile.in \
@@ -409,7 +408,24 @@ ${LIBWWWDIR}/config/mkinstalldirs \
 ${LIBWWWDIR}/config/winConfigure.pl \
 ${LIBWWWDIR}/config/depcomp \
 ${REDLANDDIR} \
-${WXWIDGETS} \
+${WXWIDGETS}/art \
+${WXWIDGETS}/build \
+${WXWIDGETS}/debian \
+${WXWIDGETS}/distrib \
+${WXWIDGETS}/include \
+${WXWIDGETS}/lib \
+${WXWIDGETS}/locale \
+${WXWIDGETS}/src \
+${WXWIDGETS}/*.in \
+${WXWIDGETS}/mkinstalldirs \
+${WXWIDGETS}/*.spec \
+${WXWIDGETS}/*.m4 \
+${WXWIDGETS}/*_vms \
+${WXWIDGETS}/*.pl \
+${WXWIDGETS}/install-sh \
+${WXWIDGETS}/config* \
+${WXWIDGETS}/*.txt \
+${WXWIDGETS}/*.sh \
 ${MESA} \
 ${AMAYADIR}/resources/icons/*.png \
 ${AMAYADIR}/resources/xrc/*.xrc \
@@ -540,6 +556,7 @@ ${AMAYADIR}/batch/tarAmaya \
 ${AMAYADIR}/amaya/COPYRIGHT* \
 ${AMAYADIR}/amaya/Makefile.* \
 ${AMAYADIR}/amaya/AmayaPage.html* \
+${AMAYADIR}/amaya/AmayaPage_WX.html* \
 ${AMAYADIR}/amaya/Amaya.svg \
 ${AMAYADIR}/amaya/Text_SGML.inc \
 ${AMAYADIR}/amaya/*.A \
@@ -645,6 +662,8 @@ ${AMAYADIR}/doc/images/w3c_home \
 ${AMAYADIR}/fonts/Families.list \
 ${AMAYADIR}/fonts/fonts.dir \
 ${AMAYADIR}/fonts/icones* \
+${AMAYADIR}/fonts/*.ttf \
+${AMAYADIR}/fonts/*.TTF \
 ${AMAYADIR}/thotlib/Makefile.in \
 ${AMAYADIR}/thotlib/include/Makefile.in \
 ${AMAYADIR}/thotlib/base/*.c \
