@@ -381,6 +381,7 @@ thot/EDITORactions.c \
 thot/EDITORactions.h \
 thot/TransParser.c \
 thot/TransPmatch.c \
+thot/Trans.c \
 thot/trans.h \
 thot/f/EDITORAPP_f.h \
 thot/f/EDITORactions_f.h \

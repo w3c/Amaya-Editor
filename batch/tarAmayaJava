@@ -5,7 +5,7 @@
 #
 #       amaya-java-$MACH-$AMAYAVERSION.tar.gz
 # 
-AMAYAVERSION=1.1
+AMAYAVERSION=1.1a
 THOTDIR=/tahiti/diffusion/opera
 DEST=/tahiti/thottape
 PLATFORMS="solaris2 LINUX-ELF"
