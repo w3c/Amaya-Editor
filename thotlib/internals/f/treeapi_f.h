@@ -74,6 +74,12 @@ extern int TtaGetElementVolume ( Element element );
 extern int TtaIsConstant ( ElementType elementType );
 extern int TtaIsLeaf ( ElementType elementType );
 extern Construct TtaGetConstructOfType ( ElementType elementType );
+extern int TtaGetCardinalOfType ( ElementType elementType );
+extern void TtaGiveConstructorsOfType ( ElementType **typesArray,
+                                        int *size,
+                                        ElementType elementType );
+extern boolean TtaIsOptionalInAggregate ( int rank,
+                                          ElementType elementType );
 extern Construct TtaGetConstruct ( Element element );
 extern AccessRight TtaGetAccessRight ( Element element );
 extern int TtaIsHolophrasted ( Element element );
@@ -176,6 +182,12 @@ extern int TtaGetElementVolume (/* Element element */);
 extern int TtaIsConstant (/* ElementType elementType */);
 extern int TtaIsLeaf (/* ElementType elementType */);
 extern Construct TtaGetConstructOfType (/* ElementType elementType */);
+extern int TtaGetCardinalOfType (/* ElementType elementType */);
+extern void TtaGiveConstructorsOfType (/* ElementType **typesArray,
+                                          int *size,
+                                          ElementType elementType */);
+extern boolean TtaIsOptionalInAggregate (/* int rank,
+                                            ElementType elementType */);
 extern Construct TtaGetConstruct (/* Element element */);
 extern AccessRight TtaGetAccessRight (/* Element element */);
 extern int TtaIsHolophrasted (/* Element element */);
