@@ -1,7 +1,7 @@
 #!/usr/bin/perl -w
 
 use strict ;
- 
+
 
 #############################for parmameters###########################################
 # some environement variables for portability  
@@ -10,6 +10,7 @@ use strict ;
 		Unix\n";
 	}
 my $home = $ENV{"HOME"} . "/";
+
 
 my $config_file = "$home.amaya/am_dialogues.conf.xml";
 
@@ -140,7 +141,7 @@ sub menu {
 						"Amaya general messages ( with xx-amayamsg files)",		#2
 						"Thot library dialogues ( with xx-libdialogue files)",	#3
 						"Spell checker dialogues ( with xx-corrdialogue files)",	#4
-						"Or product the preformated file for translating"	#5
+						"Or product the preformated file for translating"			#5
 					);
 	my $count = 0;
 	my $choice = 0;

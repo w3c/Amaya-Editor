@@ -1,3 +1,6 @@
+Readme for the main program Am_dial_managment.pl
+
+
 WARNING:
 You need to do a "cvs update" before using this program, and of course a "cvs
 commit" after
@@ -10,12 +13,16 @@ It can not function whithout:
 - XML::Parser
 - Unicode::String
 and the specialy created modules already present on Amaya cvs base:
+- Configfile
 - Initialisation
 - Import_am_msg
 - Export_am_msg
 - Dial_tool_box
 - Forcer
 - Edition
+- Read_label
+- Read_text
+
 
 If you don't have perl on you machine, ask for to your computer director or
 download it from a ftp site. you can consult the www.perl.com for more
@@ -52,11 +59,13 @@ You can now run the program with
 
 
 OTHERS things:
-1)an export is done after s sequence of modifications for a dialogue type (when exit) 
+1)an export is done after sequence of modifications for a dialogue type (when exit) 
 2)the repertory IN is at $HOME/.../Amaya/tools/xmldialogues/IN/
 
-
-
+If you can't install the Perl packages under the /usr/lib/CPAN directory, you can do
+so in your home dir, provided that you modify the value of the Perl @INC (include)
+variable.
+ 
 
 
 

@@ -203,7 +203,7 @@ sub return_code_in_ISO_639 {
 	return $lang;
 }
 #----------------------------------------------------------------------------
-sub  belongs_to_list {
+sub  belongs_to_list { ## return true if its a true iso639 code in two letters
 	my $lang = shift;
 	
 	if (defined ( $iso_639 {$lang})) {

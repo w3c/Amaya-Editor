@@ -100,7 +100,8 @@ sub init_label {
 					chomp $choice;				
 				}
 				while (!defined ($choice) || $choice !~ /^y/i );
-				init_label ($in_labelfile, $comment_for_begining_of_h_file) ; ##warning : recursivity, can do some errors
+				init_label ($in_labelfile, $comment_for_begining_of_h_file) ; 
+				##warning : recursivity, can do some errors
 			}
 			else { #continue == 1
 #	reads and adds all the labels

@@ -1,5 +1,5 @@
 #!/usr/bin/perl -w
-package Read_text;
+package Read_text; #written by Emmanuel Huck 
 use strict;
 
 BEGIN {
