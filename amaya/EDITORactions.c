@@ -547,27 +547,6 @@ void InitializeNewDoc (char *url, int docType, Document doc, int profile)
 }
 
 /*--------------------------------------------------------------------------
-  IsDoctypePossible
-  Verify whether the document is valid or not according to the new doctype
-  --------------------------------------------------------------------------*/
-static ThotBool IsDoctypePossible (Document doc, View view, int profile)
-{
-  ElementType    elType;
-  Element        docEl, doctype;
-  char          *tempdocument = NULL;
-  char           documentname[MAX_LENGTH];
-  char           tempdir[MAX_LENGTH];
-  ThotBool       error = FALSE;
-
-
-  
-
-  return error;
-
-}
-
-
-/*--------------------------------------------------------------------------
   CreateOrChangeDoctype
   Create or change the doctype of a document
   --------------------------------------------------------------------------*/
