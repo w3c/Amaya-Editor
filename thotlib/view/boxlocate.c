@@ -734,9 +734,7 @@ void  EllipticSplit2 (int frame, int x, int y,
       Rxcos = xradius * cos (thetabegin + theta);
       Rysin = yradius * sin (thetabegin + theta);
       x3 = Phicos*Rxcos - Phisin*Rysin + cX;
-      y3 = Phisin*Rxcos + Phicos*Rysin + cY;       
-      x3 += x;
-      y3 += y;  
+      y3 = Phisin*Rxcos + Phicos*Rysin + cY; 
       MeshNewPoint ((float) x3, (float) y3, mesh); 
       theta += cprim;
     }  
