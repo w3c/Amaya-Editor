@@ -3450,6 +3450,8 @@ void UpdateScrollbars (int frame)
   ComputeDisplayedChars (frame, &x, &y, &width, &height);
   hscroll = FrameTable[frame].WdScrollH;
   vscroll = FrameTable[frame].WdScrollV;
+  if (hscroll == NULL || vscroll == NULL)
+    return;
 #ifndef _WINDOWS
   l = FrameTable[frame].FrWidth;
   h = FrameTable[frame].FrHeight;
@@ -3522,7 +3524,7 @@ void UpdateScrollbars (int frame)
 	    }
 	}
     }
-  else 
+  else
     /*if ((height + hscroll->allocation.height) > h && y == 0)*/
     {
       if (GTK_WIDGET_VISIBLE(GTK_WIDGET (vscroll)))
