@@ -238,17 +238,28 @@
 236 Ignorar
 237 Elemento de estilo
 238 Não é possível criar um XPointer
-239 Não é possível achar para onde mover a anotação
-240 Não é possível mover a anotação para outro documento
-241 Selecionar um conjunto de caracteres (charset)
-242 Selecionar o tipo MIME
-243 Mudar conjunto de caracteres (Charset)
-244 Mudar o tipo MIME
-245 Modificar
-246 este tipo de documento não suporta conjuntos de caracteres (charsets)
-247 O destino deve ser uma URL HTTP para usar esta opção
-248 Erro: tipo MIME inválido
-249 Desconhecido
-250 Estilos ignorados -veja Vistas/Exibir erros de gramática (parsing)
-251 **This document is already loaded in another Window
-252 **Saving that instance may cause a lost update problem
+239 **Impossible to attach a start XPointer on an internal       added element
+240 **Impossible to attach an end XPointer on an internal       added element
+241 Não é possível achar para onde mover a anotação
+242 Não é possível mover a anotação para outro documento
+243 **You cannot annotate a modified document. Please save it first.
+244 **No annotation user declared. Please open the      	Annotations/Configure menu.
+245 **Unable to build an XPointer for this annotation
+246 **Make a new annotation
+247 **Failed to post the annotation
+248 **Failed to delete the annotation
+249 **Annotation deleted!
+250 **Failed to load the annotation index
+251 Erro
+252 Selecionar um conjunto de caracteres (charset)
+253 Selecionar o tipo MIME
+254 Mudar conjunto de caracteres (Charset)
+255 Mudar o tipo MIME
+256 Modificar
+257 este tipo de documento não suporta conjuntos de caracteres (charsets)
+258 O destino deve ser uma URL HTTP para usar esta opção
+259 Erro: tipo MIME inválido
+260 Desconhecido
+261 Estilos ignorados -veja Vistas/Exibir erros de gramática (parsing)
+262 **This document is already loaded in another Window
+263 **Saving that instance may cause a lost update problem

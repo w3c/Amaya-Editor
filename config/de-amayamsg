@@ -238,17 +238,28 @@
 236 Ignorieren
 237 Stilelement
 238 Kann keinen XPointer erzeugen
-239 Kein Ziel zum Verschieben der Anmerkung [gefunden]
-240 Die Anmerkung kann nicht in ein anderes Dokument verschoben werden
-241 Charset auswählen
-242 MIME type auswählen
-243 Anderen Charset auswählen
-244 Anderen MIME type auswählen
-245 Wechseln
-246 Dieser Dokumenttyp unterstützt keine Charsets
-247 Diese Option kann nur mit einem HTTP URL Ziel verwendet werden
-248 Fehler: ungültiger MIME type
-249 Unbekannt
-250 Stilvorlagen sind unbeachtet geblieben - siehe Ansicht/Logdatei anzeigen
-251 **This document is already loaded in another Window
-252 **Saving that instance may cause a lost update problem
+239 **Impossible to attach a start XPointer on an internal       added element
+240 **Impossible to attach an end XPointer on an internal       added element
+241 Kein Ziel zum Verschieben der Anmerkung [gefunden]
+242 Die Anmerkung kann nicht in ein anderes Dokument verschoben werden
+243 **You cannot annotate a modified document. Please save it first.
+244 **No annotation user declared. Please open the      	Annotations/Configure menu.
+245 **Unable to build an XPointer for this annotation
+246 **Make a new annotation
+247 **Failed to post the annotation
+248 **Failed to delete the annotation
+249 **Annotation deleted!
+250 **Failed to load the annotation index
+251 Fehler
+252 Charset auswählen
+253 MIME type auswählen
+254 Anderen Charset auswählen
+255 Anderen MIME type auswählen
+256 Wechseln
+257 Dieser Dokumenttyp unterstützt keine Charsets
+258 Diese Option kann nur mit einem HTTP URL Ziel verwendet werden
+259 Fehler: ungültiger MIME type
+260 Unbekannt
+261 Stilvorlagen sind unbeachtet geblieben - siehe Ansicht/Logdatei anzeigen
+262 **This document is already loaded in another Window
+263 **Saving that instance may cause a lost update problem

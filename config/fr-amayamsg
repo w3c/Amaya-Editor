@@ -238,17 +238,28 @@
 236 Ignorer
 237 Elément Style
 238 Impossible de créer un XPointer
-239 Je ne peux pas deplacer l'annotation là
-240 Je ne peux pas bouger l'annotation vers un autre document
-241 Sélectionner un Charset
-242 Sélectionner un type MIME
-243 Changer Charset
-244 Changer le type MIME
-245 Changer
-246 Ce type de document n'a pas de charset
-247 L'URL doit être de type HTTP pour utiliser
-248 Erreur: type MIME incorrect
-249 Inconnu
-250 Styles ignorés - voir Vues/Montrer les erreurs
-251 Ce document est déjà affiché dans une autre fenêtre.
-252 Sauver cette instance peut provoquer des problèmes de mise à jour.
+239 **Impossible to attach a start XPointer on an internal       added element
+240 **Impossible to attach an end XPointer on an internal       added element
+241 Je ne peux pas deplacer l'annotation là
+242 Je ne peux pas bouger l'annotation vers un autre document
+243 **You cannot annotate a modified document. Please save it first.
+244 **No annotation user declared. Please open the      	Annotations/Configure menu.
+245 **Unable to build an XPointer for this annotation
+246 **Make a new annotation
+247 **Failed to post the annotation
+248 **Failed to delete the annotation
+249 **Annotation deleted!
+250 **Failed to load the annotation index
+251 Erreur
+252 Sélectionner un Charset
+253 Sélectionner un type MIME
+254 Changer Charset
+255 Changer le type MIME
+256 Changer
+257 Ce type de document n'a pas de charset
+258 L'URL doit être de type HTTP pour utiliser
+259 Erreur: type MIME incorrect
+260 Inconnu
+261 Styles ignorés - voir Vues/Montrer les erreurs
+262 Ce document est déjà affiché dans une autre fenêtre.
+263 Sauver cette instance peut provoquer des problèmes de mise à jour.

@@ -2021,6 +2021,14 @@
 	<message xml:lang="it">No posso create un XPointer</message>
 	<message xml:lang="pt">Não é possível criar um XPointer</message>
 </label>
+<label define="AM_NO_SXPOINTER">
+       <message xml:lang="en">Impossible to attach a start XPointer on an internal
+       added element</message>
+</label>
+<label define="AM_NO_EXPOINTER">
+       <message xml:lang="en">Impossible to attach an end XPointer on an internal
+       added element</message>
+</label>
 <label define="AM_NO_ANNOT_MOVE">
 	<message xml:lang="en">Cannot find where to move the annotation</message>
 	<message xml:lang="fr">Je ne peux pas deplacer l'annotation là</message>
@@ -2036,6 +2044,40 @@
 	<message xml:lang="de">Die Anmerkung kann nicht in ein anderes Dokument verschoben werden</message>
 	<message xml:lang="it">Non posso muovere l'annotazione su un diverso documento</message>
 	<message xml:lang="pt">Não é possível mover a anotação para outro documento</message>
+</label>
+<label define="AM_NO_ANNOT_MOD_DOC">
+      	<message xml:lang="en">You cannot annotate a modified document. Please save it first.</message>
+</label>
+<label define="AM_NO_ANNOT_USER">
+	<message xml:lang="en">No annotation user declared. Please open the
+      	Annotations/Configure menu.</message>
+</label>
+<label define="AM_CANNOT_ANNOTATE">
+	<message xml:lang="en">Unable to build an XPointer for this annotation</message>
+</label>
+<label define="AM_NEW_ANNOTATION">
+	<message xml:lang="en">Make a new annotation</message>
+</label>
+<label define="AM_ANNOT_POST_FAILURE">
+	<message xml:lang="en">Failed to post the annotation</message>
+</label>
+<label define="AM_ANNOT_DELETE_FAILURE">
+	<message xml:lang="en">Failed to delete the annotation</message>
+</label>
+<label define="AM_ANNOT_DELETED">
+	<message xml:lang="en">Annotation deleted!</message>
+</label>
+<label define="AM_ANNOT_INDEX_FAILURE">
+	<message xml:lang="en">Failed to load the annotation index</message>
+</label>
+<label define="AM_ERROR">
+	<message xml:lang="en">Error</message>
+	<message xml:lang="fr">Erreur</message>
+	<message xml:lang="de">Fehler</message>
+	<message xml:lang="it">Errore</message>
+	<message xml:lang="tr">hata</message>
+	<message xml:lang="es">Error</message>
+	<message xml:lang="pt">Erro</message>
 </label>
 <label define="AM_SELECT_CHARSET">
 	<message xml:lang="en">Select a Charset</message>

@@ -238,17 +238,28 @@
 236 Ignore
 237 Style element
 238 Cannot create an XPointer
-239 Cannot find where to move the annotation
-240 Cannot move the annotation to a different document
-241 Select a Charset
-242 Select a MIME type
-243 Change Charset
-244 Change MIME type
-245 Change
-246 This type of document doesn't support charsets
-247 The target must be an HTTP URL to use this option
-248 Error: invalid MIME type
-249 Unknown
-250 Styles are ignored - see Views/Show parsing errors
-251 This document is already loaded in another Window
-252 Saving that instance may cause a lost update problem
+239 Impossible to attach a start XPointer on an internal       added element
+240 Impossible to attach an end XPointer on an internal       added element
+241 Cannot find where to move the annotation
+242 Cannot move the annotation to a different document
+243 You cannot annotate a modified document. Please save it first.
+244 No annotation user declared. Please open the      	Annotations/Configure menu.
+245 Unable to build an XPointer for this annotation
+246 Make a new annotation
+247 Failed to post the annotation
+248 Failed to delete the annotation
+249 Annotation deleted!
+250 Failed to load the annotation index
+251 Error
+252 Select a Charset
+253 Select a MIME type
+254 Change Charset
+255 Change MIME type
+256 Change
+257 This type of document doesn't support charsets
+258 The target must be an HTTP URL to use this option
+259 Error: invalid MIME type
+260 Unknown
+261 Styles are ignored - see Views/Show parsing errors
+262 This document is already loaded in another Window
+263 Saving that instance may cause a lost update problem
