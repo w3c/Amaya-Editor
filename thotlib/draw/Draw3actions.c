@@ -92,11 +92,11 @@ boolean DrawSelectPre (event)
 {
   if (event->document==DocPalette) {
     PalActivate(event);
-    return True;
+    return TRUE;
   } else {
     CurrentDoc = event->document;
     CurrentSelect = event->element;
-    return False;
+    return FALSE;
   }
 }
 
@@ -193,7 +193,7 @@ boolean DeleteAnElement (event)
   TtaDeleteTree (Courant, event->document);
   TtaSetDisplayMode (event->document, DisplayImmediately);
 
-  return True;			/* let Thot perform normal operation */
+  return TRUE;			/* let Thot perform normal operation */
 }
 
 /*!BF
@@ -295,7 +295,7 @@ boolean CreerUneForme (event)
 
   TtaSetDisplayMode (event->document, DisplayImmediately);
 
-  return (False);		/* let Thot perform normal operation */
+  return (FALSE);		/* let Thot perform normal operation */
 }
 
 /*!BF
@@ -322,7 +322,7 @@ boolean GraphModify (event)
 
 {
   /* This function has to be written */
-  return False;			/* let Thot perform normal operation */
+  return FALSE;			/* let Thot perform normal operation */
 }
 
 /*!BF
@@ -456,7 +456,7 @@ boolean DeleteALien (event)
     case Draw3_EL_LienSimple:
       TtaDeleteTree (event->element, event->document);
       TtaSetDisplayMode (event->document, mode);
-      return True;
+      return TRUE;
     case Draw3_EL_PartieOrigineLien:
       AttRef.AttrSSchema = TtaGetSSchema ("Draw3",
 					  event->document);
@@ -469,7 +469,7 @@ boolean DeleteALien (event)
       if (Lien != NULL)
 	TracerLienComposite (Lien, event->document);
       TtaSetDisplayMode (event->document, mode);
-      return True;
+      return TRUE;
     case Draw3_EL_PartieDestinationLien:
       AttRef.AttrSSchema = TtaGetSSchema ("Draw3",
 					  event->document);
@@ -482,9 +482,9 @@ boolean DeleteALien (event)
       if (Lien != NULL)
 	TracerLienComposite (Lien, event->document);
       TtaSetDisplayMode (event->document, mode);
-      return True;
+      return TRUE;
     }
-  return True;
+  return TRUE;
 }
 
 /*!BF
@@ -511,7 +511,7 @@ boolean ModifyAttribute (event)
 #endif /* __STDC__ */
 {
   SauverCoordonnees (event->element, event->document);
-  return False;			/* let Thot perform normal operation */
+  return FALSE;			/* let Thot perform normal operation */
 }
 
 /*!BF

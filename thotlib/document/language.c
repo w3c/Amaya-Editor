@@ -316,12 +316,12 @@ char               *languageName;
    else
      {
 	/* Consulte la table des langues pour voir si la langue existe deja */
-	encore = True;
+	encore = TRUE;
 	while (encore && i < FreeEntry)
 	  {
 	     if (!strcmp (languageName, LangTable[i].LangNom))
 		/* La langue est deja declaree */
-		encore = False;
+		encore = FALSE;
 	     else
 		i++;
 	  }
@@ -333,7 +333,7 @@ char               *languageName;
 	       {
 		  if (!strcmp (languageName, TypoLangTable[i].LangNom))
 		     /* La langue TYPO est deja declaree */
-		     encore = False;
+		     encore = FALSE;
 		  else
 		     i++;
 	       }
@@ -445,12 +445,12 @@ char                languageAlphabet;
    else
      {
 	/* Consulte la table des langues pour voir si la langue existe deja */
-	encore = True;
+	encore = TRUE;
 	while (encore && i < FreeEntry)
 	  {
 	     if (languageAlphabet == LangTable[i].LangAlphabet)
 		/* La langue est deja declaree */
-		encore = False;
+		encore = FALSE;
 	     else
 		i++;
 	  }
@@ -595,7 +595,7 @@ Language            langageId;
      {
 	/* la variable d'environnement DICOPAR n'existe pas */
 	TtaDisplayMessage (INFO, TtaGetMessage(LIB, LIB_NO_DICOPAR), "DICOPAR");
-	return (False);
+	return (FALSE);
      }
 
    strcpy (nom_fichier_pattern, dicopath);
@@ -606,7 +606,7 @@ Language            langageId;
    if ((in = fopen (nom_fichier_pattern, "r")) == NULL)
      {
 	TtaDisplayMessage (INFO, TtaGetMessage(LIB, LIB_HYPHEN_FILE_NOT_OPEN), LangTable[lang].LangPattern);
-	return (False);
+	return (FALSE);
      }
    TtaDisplayMessage (INFO, TtaGetMessage(LIB, LIB_HYPHEN_FILE_OPEN), ptPattern);
    indice_courant = 0;
@@ -629,7 +629,7 @@ Language            langageId;
    LangTable[lang].LangTabPattern.NbPatt = i;
    LangTable[lang].LangTabPattern.Charge = 1;
    fclose (in);
-   return (True);
+   return (TRUE);
 }				/* GetPatternList */
 
 
@@ -780,9 +780,9 @@ Language            languageId;
 
    langue = (int) languageId;
    if (LangTable[langue].LangPattern[0] != '\0')
-      return True;
+      return TRUE;
    else
-      return False;
+      return FALSE;
 }
 
 /* end of module */

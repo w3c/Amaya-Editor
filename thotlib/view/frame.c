@@ -224,7 +224,7 @@ int                 delta;
    PtrBox            pBo2;
 
    /* A priori on n'ajoute pas de nouveaux paves */
-   ajoute = False;
+   ajoute = FALSE;
    pFrame = &FntrTable[frame - 1];
    if (pFrame->FrReady && pFrame->FrAbstractBox != NULL
        && pFrame->FrClipXBegin < pFrame->FrClipXEnd
@@ -248,7 +248,7 @@ int                 delta;
 	     if (pBox == NULL)
 		/* Document vide */
 		pBox = pFrame->FrAbstractBox->AbBox;
-	     audessous = True;
+	     audessous = TRUE;
 	     min = NULL;
 	     max = NULL;
 	     vol = 0;
@@ -258,7 +258,7 @@ int                 delta;
 	       {
 		  pBo1 = pBox;
 		  if (pBo1->BxYOrg < bas)
-		     audessous = False;
+		     audessous = FALSE;
 		  else
 		    {
 		       if (pBo1->BxYOrg > x)
@@ -269,7 +269,7 @@ int                 delta;
 			     /* C'est la 1ere boite de coupure */
 			     vol += pBo1->BxAbstractBox->AbVolume;
 		       if (pBo1->BxPrevious == NULL)
-			  audessous = False;
+			  audessous = FALSE;
 		       pBox = pBo1->BxPrevious;
 		    }
 	       }
@@ -333,7 +333,7 @@ int                 delta;
 	     if (!Complete && !Insert)
 	       {
 		  pBo1 = pBox;
-		  Complete = True;
+		  Complete = TRUE;
 		  /* On est en train de completer l'image */
 		  y = haut - pBo1->BxYOrg;
 		  x = h / 2;
@@ -369,7 +369,7 @@ int                 delta;
 		       /* On libere des paves en bas */
 		       if (vol > 0 && vol < pFrame->FrAbstractBox->AbVolume)
 			 {
-			    VolReduit (False, vol, frame);
+			    VolReduit (FALSE, vol, frame);
 			    DefClip (frame, 0, 0, 0, 0);
 			    /* On complete en haut -> On decale toute l'image concrete */
 			 }
@@ -399,9 +399,9 @@ int                 delta;
 			    /* Ancienne limite de la fenetre */
 			    x = y + pBo2->BxHeight;
 			 }
-		       VolAugmente (True, vol, frame);
+		       VolAugmente (TRUE, vol, frame);
 		       /* On a ajoute des paves */
-		       ajoute = True;
+		       ajoute = TRUE;
 		       /* Il faut repositionner la fenetre dans l'image concrete */
 		       if (min != NULL)
 			 {
@@ -422,7 +422,7 @@ int                 delta;
 			  pFrame->FrYOrg = 0;
 
 		       /* On a fini de completer l'image */
-		       Complete = False;
+		       Complete = FALSE;
 		       audessous = AfDebFenetre (frame, 0);
 		    }
 
@@ -439,10 +439,10 @@ int                 delta;
 		       Clear (frame, l, pFrame->FrYOrg + h - y, 0, y);
 		       /* Il faut eviter de boucler quand le volume n'est pas modifie */
 		       y = pFrame->FrAbstractBox->AbVolume;
-		       VolAugmente (False, vol, frame);
+		       VolAugmente (FALSE, vol, frame);
 		       y -= pFrame->FrAbstractBox->AbVolume;
 		       /* On a fini de completer l'image */
-		       Complete = False;
+		       Complete = FALSE;
 		       if (y == 0)
 			  printf ("ERR: Il n'y a rien a ajouter\n");
 		       else
@@ -454,7 +454,7 @@ int                 delta;
 		  else
 		     pFrame->FrVolume = pFrame->FrAbstractBox->AbVolume;
 		  /* On a fini de completer l'image */
-		  Complete = False;
+		  Complete = FALSE;
 	       }
 	  }
 	else
@@ -570,7 +570,7 @@ int                 delta;
    int                 i;
 
    /* A priori on n'ajoute pas de nouveaux paves */
-   ajoute = False;
+   ajoute = FALSE;
    /* A priori on n'a pas besoin de creer interactivement des boites */
    ACreer = NULL;
 
@@ -594,7 +594,7 @@ int                 delta;
 	if (pBox == NULL)
 	   pBox = pFrame->FrAbstractBox->AbBox;	/* Document vide */
 
-	audessus = True;
+	audessus = TRUE;
 	min = NULL;
 	/*max = NULL; */
 	vol = 0;
@@ -624,7 +624,7 @@ int                 delta;
 			     vol += pBox->BxAbstractBox->AbVolume;
 		       }
 		     else
-			audessus = False;
+			audessus = FALSE;
 
 		  if (pBox->BxAbstractBox != NULL && pBox->BxAbstractBox->AbDepth == plan)
 		    {
@@ -717,7 +717,7 @@ int                 delta;
 		  else
 		     pPa1 = pPa1->AbNext;
 	       }
-	     return (False);
+	     return (FALSE);
 	  }
 
 	/* La zone modifiee est affichee */
@@ -729,12 +729,12 @@ int                 delta;
 	if (!Complete && (!Insert || delta > 0))
 	  {
 	     pBo1 = pBox;
-	     Complete = True;
+	     Complete = TRUE;
 	     /* On est en train de completer l'image */
 	     y = haut - pBo1->BxYOrg;
 
 	     if (pFrame->FrAbstractBox->AbInLine)
-		Complete = False;
+		Complete = FALSE;
 
 	     /* Il manque un morceau d'image concrete en haut de la fenetre */
 	     else if (pFrame->FrAbstractBox->AbTruncatedHead && y < 0)
@@ -750,8 +750,8 @@ int                 delta;
 		       y = pBo2->BxYOrg;	/* ancienne position */
 		       x = y + pBo2->BxHeight;
 		    }
-		  VolAugmente (True, VolumCar (haut), frame);
-		  ajoute = True;
+		  VolAugmente (TRUE, VolumCar (haut), frame);
+		  ajoute = TRUE;
 		  /* On ajoute des paves en tete */
 		  /* Il faut repositionner la fenetre dans l'image concrete */
 		  if (min != NULL)
@@ -804,7 +804,7 @@ int                 delta;
 		    {
 		       if (min != NULL)
 			  y = min->BxYOrg;
-		       VolReduit (True, vol, frame);
+		       VolReduit (TRUE, vol, frame);
 		       DefClip (frame, 0, 0, 0, 0);
 		       /* Il faut repositionner la fenetre dans l'image concrete */
 		       if (min != NULL)
@@ -833,10 +833,10 @@ int                 delta;
 		  Clear (frame, l, pFrame->FrYOrg + h - y, 0, y);
 		  /* Il faut eviter de boucler quand le volume n'est pas modifie */
 		  y = pFrame->FrAbstractBox->AbVolume;
-		  VolAugmente (False, vol, frame);
+		  VolAugmente (FALSE, vol, frame);
 		  y -= pFrame->FrAbstractBox->AbVolume;
 		  /* On a fini de completer l'image */
-		  Complete = False;
+		  Complete = FALSE;
 		  if (y == 0)
 		     printf ("ERR: Il n'y a rien a ajouter\n");
 		  else
@@ -854,7 +854,7 @@ int                 delta;
 	       }
 
 	     /* On a fini de completer l'image */
-	     Complete = False;
+	     Complete = FALSE;
 	  }
 
 
@@ -865,7 +865,7 @@ int                 delta;
 	DefClip (frame, 0, 0, 0, 0);
 	ResetClip (frame);
      }
-   FirstCreation = False;
+   FirstCreation = FALSE;
 
 #ifdef NEW_WILLOWS
    WIN_ReleaseDeviceContext ();
@@ -904,14 +904,14 @@ int                 frame;
 	/* Mise en evidence des boites en erreur */
 	if (Erreur)
 	  {
-	     MajPavSelect (frame, pFrame->FrAbstractBox, True);
+	     MajPavSelect (frame, pFrame->FrAbstractBox, TRUE);
 	     if (HardMsgAff)
 		/* Attend un moment avant d'annuler les mises en evidences */
 	       {
 		  TtaDisplaySimpleMessage (INFO, LIB, LIB_CONFIRM);
 	       }
-	     MajPavSelect (frame, pFrame->FrAbstractBox, False);
-	     Erreur = False;
+	     MajPavSelect (frame, pFrame->FrAbstractBox, FALSE);
+	     Erreur = FALSE;
 	  }
 
 	/* Reevalue les ascenseurs */

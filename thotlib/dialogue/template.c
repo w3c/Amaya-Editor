@@ -58,5 +58,5 @@ View                view;
 	TteConnectAction (G_chXXX, (Proc) retXXX);
      }
 
-   TtaShowDialogue (NumMenuXXX, True);
+   TtaShowDialogue (NumMenuXXX, TRUE);
 }

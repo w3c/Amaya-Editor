@@ -871,10 +871,10 @@ static void         InitEnviron ()
    char               *Thot_Sch;
 
    /* default values for various global variables */
-   FirstCreation = False;
-   EnchaineChoix = True;
+   FirstCreation = FALSE;
+   EnchaineChoix = TRUE;
    CurSaveInterval = DEF_SAVE_INTVL;
-   HardMsgAff = False;
+   HardMsgAff = FALSE;
    NiveauxInsertion = 4;
 
    /* The base of the Thot directory */

@@ -48,7 +48,7 @@ boolean            *addHyphen;
    int                 retour;
    int                *ptcoup;
 
-   *addHyphen = False;
+   *addHyphen = FALSE;
    retour = 0;
 
    ptcoup = TtaGetPatternHyphenList (word, language);
@@ -64,7 +64,7 @@ boolean            *addHyphen;
 	if (k <= length)
 	  {
 	     retour = k;
-	     *addHyphen = True;
+	     *addHyphen = TRUE;
 	  }
 	i++;
 	k = ptcoup[i];
@@ -74,8 +74,8 @@ boolean            *addHyphen;
 
 /* ---------------------------------------------------------------------- */
 /* | SeparateurMot teste si ce caractere est un separateur de mot       | */
-/* |                 retourne True si c'est un separateur               | */
-/* |                          False sinon                               | */
+/* |                 retourne TRUE si c'est un separateur               | */
+/* |                          FALSE sinon                               | */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
@@ -94,9 +94,9 @@ char                car;
    for (i = 0; i < lg; i++)
      {
 	if (car == sepcar[i])
-	   return (True);
+	   return (TRUE);
      }
-   return (False);
+   return (FALSE);
 }				/*SeparateurMot */
 
 
@@ -150,26 +150,26 @@ unsigned char       c;
 	/* lettre non accentuee */
 	if (c == 97 || c == 101 | c == 105
 	    || c == 111 || c == 117 || c == 121)
-	   return True;
+	   return TRUE;
 	else
-	   return False;
+	   return FALSE;
      }
    else if (c <= 229)
-      return True;		/* a majuscule accente' */
+      return TRUE;		/* a majuscule accente' */
    else if (c < 232)
-      return False;
+      return FALSE;
    else if (c < 240)
-      return True;		/* e et i majuscules accente's */
+      return TRUE;		/* e et i majuscules accente's */
    else if (c < 242)
-      return False;
+      return FALSE;
    else if (c < 247)
-      return True;		/* o majuscule accente' */
+      return TRUE;		/* o majuscule accente' */
    else if (c < 249)
-      return False;
+      return FALSE;
    else if (c < 253)
-      return True;		/* u majuscule accente' */
+      return TRUE;		/* u majuscule accente' */
    else
-      return False;
+      return FALSE;
 }
 
 /* ---------------------------------------------------------------------- */
@@ -226,16 +226,16 @@ boolean            *addHyphen;
 
    /* cherche s'il y a dans le mot un caractere de coupure */
    index = 1;
-   stop = False;
+   stop = FALSE;
    do
       if (word[index] == '\0' || index >= length)
 	 /* on a atteint la fin du mot ou la fin de la zone consideree */
 	 /* dans le mot sans rien trouver */
-	 stop = True;
+	 stop = TRUE;
       else if (word[index] == '-' || word[index] == '/')
 	 /* on a trouve' un caractere de coupure */
 	{
-	   *addHyphen = False;
+	   *addHyphen = FALSE;
 	   return (index + 1);
 	}
       else
@@ -251,7 +251,7 @@ boolean            *addHyphen;
    /* on doit laisser au moins 3 lettres apres la coupure */
    if (index > wordlength - 3)
       index = wordlength - 3;
-   found = False;
+   found = FALSE;
    /* on cherche d'abord s'il existe un prefixe dans la partie a couper */
    nbPrefixes = sizeof (tablePrefixes) / sizeof (char *);
 
@@ -266,13 +266,13 @@ boolean            *addHyphen;
 	      /* on ne coupe pas un prefixe */
 	     {
 		index = 0;
-		found = True;
+		found = TRUE;
 	     }
 	   else if (index < lgPrefixe + 3)
 	      /* on coupe juste apres le prefixe */
 	     {
 		index = lgPrefixe;
-		found = True;
+		found = TRUE;
 	     }
      }
 
@@ -289,11 +289,11 @@ boolean            *addHyphen;
 		  if (Voyelle (word[index - 1]))
 		     /* et precedee d'une voyelle, on coupe V-CV */
 		    {
-		       found = True;
+		       found = TRUE;
 		       /* sauf si on est dans le cas "cooCV", comme "cooperer" */
 		       if (index == 3)
 			  if (strncmp (word, "coop", 4) == 0)
-			     found = False;
+			     found = FALSE;
 		    }
 		  else if (Consonne (word[index - 1]) && Voyelle (word[index - 2]))
 		     /* sequence VC-CV */
@@ -303,7 +303,7 @@ boolean            *addHyphen;
 			  if (index > 3)
 			     /* on coupe V-CCV */
 			    {
-			       found = True;
+			       found = TRUE;
 			       index--;
 			    }
 		       }
@@ -314,23 +314,23 @@ boolean            *addHyphen;
 			      || ((word[index] == 'n')
 				  && (word[index - 1] == 'g')))
 			/* on ne coupe pas ch ph th gn */
-			found = False;
+			found = FALSE;
 		     else
 			/* on coupe VC-CV */
-			found = True;
+			found = TRUE;
 	       }
 	     if (!found)
 		if (Consonne (word[index - 1]) && Consonne (word[index - 2]))
 		   /* sequence CC-C */
 		  {
 		     /* a priori, on coupe CC-C */
-		     found = True;
+		     found = TRUE;
 		     if ((word[index] == 'l' || word[index] == 'r') &&
 			 !(word[index - 1] == 'l' || word[index - 1] == 'r'))
 			if (index > 3)
 			   index--;	/* coupe C-CC */
 			else
-			   found = False;
+			   found = FALSE;
 		     if (found)
 			if (((word[index] == 'h')
 			     && (word[index - 1] == 'c'
@@ -339,7 +339,7 @@ boolean            *addHyphen;
 			    || ((word[index] == 'n')
 				&& (word[index - 1] == 'g')))
 			   /* on ne coupe pas ch ph th gn */
-			   found = False;
+			   found = FALSE;
 		  }
 	  }
 	if (!found)
@@ -348,7 +348,7 @@ boolean            *addHyphen;
      }
    if (found && index > 0)
      {
-	*addHyphen = True;	/* il faudra inserer un tiret a la position */
+	*addHyphen = TRUE;	/* il faudra inserer un tiret a la position */
 	/* qu'on a trouvee */
 	/* on coupe avant la lettre pointee par index */
 	return index;
@@ -397,22 +397,22 @@ int                *width;
    lg = 0;
    nbcar = 0;
    j = 0;
-   encore = True;
+   encore = TRUE;
    /* La position du debut du mot */
    adbuff = *buffer;
    i = *rank;
    /* A priori le debut du mot est correctement repere */
-   changedebut = False;
+   changedebut = FALSE;
 
    while (encore)
      {
 	if (j == MAX_CHAR - 1)
 	   /* Le mot est trop long */
-	   encore = False;
+	   encore = FALSE;
 	else if (i >= adbuff->BuLength)
 	   /* Il faut changer de buffer */
 	   if (adbuff->BuNext == NULL)
-	      encore = False;
+	      encore = FALSE;
 	   else
 	     {
 		adbuff = adbuff->BuNext;
@@ -426,7 +426,7 @@ int                *width;
 		/* Cas particulier du cote */
 		if (j <= 1)
 		  {
-		     changedebut = True;
+		     changedebut = TRUE;
 		     lg += CarWidth ((unsigned char) word[j], font);
 		     if (j == 1)
 			/* Il faut comptabiliser le caractere precedent */
@@ -435,19 +435,19 @@ int                *width;
 		     j = 0;
 		  }
 		else
-		   encore = False;
+		   encore = FALSE;
 	     else if (SeparateurMot (word[j]))
 	       {
 		  /* On ne traite pas les separateurs en debut de mot */
 		  if (j != 0)
 		    {
 		       word[j] = '\0';
-		       encore = False;
+		       encore = FALSE;
 		    }
 		  else
 		    {
 		       /* Le debut du mot est deplace */
-		       changedebut = True;
+		       changedebut = TRUE;
 		       lg += CarWidth ((unsigned char) word[j], font);
 		       nbcar++;
 		    }
@@ -458,7 +458,7 @@ int                *width;
 		  if (changedebut)
 		    {
 		       /* Repere le debut du mot */
-		       changedebut = False;
+		       changedebut = FALSE;
 		       *buffer = adbuff;
 		       *rank = i;	/* i pointe deja sur le 1er caractere du mot */
 		    }
@@ -550,7 +550,7 @@ boolean            *hyphen;
 
    /* Si la coupure de mots est active */
    longretour = 0;
-   *hyphen = False;
+   *hyphen = FALSE;
 
    if (*width > 0 && *buffer != NULL)
      {
@@ -662,27 +662,27 @@ PtrBox            pBox;
 	langue = pBox->BxAbstractBox->AbLanguage;
 /*PhL */ if (TtaExistPatternList (langue))
 	   /*PhL *//* il existe une table de pattern */
-/*PhL */ return True;
+/*PhL */ return TRUE;
 /*PhL */ 
 	else
 	  {
 	     /* pas de table de patterns : on cherche a charger un dico */
 	     if (langue == 0)
 		/* On saute la langue ISOlatin-1 */
-		return False;
+		return FALSE;
 	     /*PhL *//*   else if (langue == TtaGetLanguageIdFromName("Fran\347ais")) */
-	     /*PhL *//*      return True; */
+	     /*PhL *//*      return TRUE; */
 	     else if (TtaGetPrincipalDictionary (langue) != NULL)
 		/* Traitement par le dictionnaire de la langue */
-		return True;
+		return TRUE;
 	     else if (TtaGetSecondaryDictionary (langue) != NULL)
 		/* Pas de traitement de coupure possible */
-		return False;
+		return FALSE;
 	     else
-		return False;
+		return FALSE;
 /*PhL */ 
 	  }
      }
    else
-      return False;
+      return FALSE;
 }

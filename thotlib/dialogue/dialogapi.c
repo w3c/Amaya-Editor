@@ -17,7 +17,7 @@
 #include "typemedia.h"
 #include "copyright.xbm"
 #include "dialog.h"
-#include "thotconfig.h"
+
 #include "application.h"
 #include "interface.h"
 #include "appdialogue.h"
@@ -97,7 +97,7 @@ struct Cat_List
 #include "appdialogue.var"
 
 /* Declarations des options de dialogue */
-boolean             WithMessages = True;
+boolean             WithMessages = TRUE;
 
 #ifdef NEW_WILLOWS
 static HFONT        formFONT;
@@ -472,7 +472,7 @@ BOOL                PASCAL
    tszAppName = "amaya";
 
    thotmain (thotargc, thotargv);
-   return (True);
+   return (TRUE);
 }
 
 #endif /* NEW_WILLOWS */
@@ -1578,7 +1578,7 @@ char               *textmenu;
 	     n++;
 	     XtSetArg (args[n], XmNmarginHeight, 0);
 	     n++;
-	     XtSetArg (args[n], XmNadjustLast, True);
+	     XtSetArg (args[n], XmNadjustLast, TRUE);
 	     n++;
 	     row = XmCreateRowColumn (frame, "", args, n);
 	     XtManageChild (row);
@@ -1594,7 +1594,7 @@ char               *textmenu;
 	     n++;
 	     XtSetArg (args[n], XmNorientation, XmVERTICAL);
 	     n++;
-	     /*XtSetArg(args[n], XmNadjustLast, False); n++; */
+	     /*XtSetArg(args[n], XmNadjustLast, FALSE); n++; */
 	     XtSetArg (args[n], XmNentryAlignment, XmALIGNMENT_CENTER);
 	     n++;
 	     row1 = XmCreateRowColumn (row, "", args, n);
@@ -1640,7 +1640,7 @@ char               *textmenu;
 		  n = 0;
 		  XtSetArg (args[n], XmNeditMode, XmMULTI_LINE_EDIT);
 		  n++;
-		  XtSetArg (args[n], XmNeditable, False);
+		  XtSetArg (args[n], XmNeditable, FALSE);
 		  n++;
 		  XtSetArg (args[n], XmNrows, (short) 3);
 		  n++;
@@ -1652,7 +1652,7 @@ char               *textmenu;
 		  n++;
 		  FrameTable[0].WdStatus = XmCreateScrolledText (row, "Thot_MSG", args, n);
 		  XtManageChild (FrameTable[0].WdStatus);
-		  XmTextSetAddMode (FrameTable[0].WdStatus, True);
+		  XmTextSetAddMode (FrameTable[0].WdStatus, TRUE);
 	       }
 	  }
 
@@ -1723,9 +1723,9 @@ char               *text;
   n++;
   XtSetArg (args[n], XmNy, (Position) ShowY);
   n++;
-  XtSetArg (args[n], XmNallowShellResize, True);
+  XtSetArg (args[n], XmNallowShellResize, TRUE);
   n++;
-  XtSetArg (args[n], XmNuseAsyncGeometry, True);
+  XtSetArg (args[n], XmNuseAsyncGeometry, TRUE);
   n++;
   msgbox = XtCreatePopupShell (Confirm_string, applicationShellWidgetClass,
 			       RootShell, args, n);
@@ -1738,7 +1738,7 @@ char               *text;
   n++;
   XtSetArg (args[n], XmNdialogTitle, OK_string);
   n++;
-  XtSetArg (args[n], XmNautoUnmanage, False);
+  XtSetArg (args[n], XmNautoUnmanage, FALSE);
   n++;
   XtSetArg (args[n], XmNmarginWidth, 0);
   n++;
@@ -1755,7 +1755,7 @@ char               *text;
   n++;
   XtSetArg (args[n], XmNborderColor, Button_Color);
   n++;
-  XtSetArg (args[n], XmNadjustLast, False);
+  XtSetArg (args[n], XmNadjustLast, FALSE);
   n++;
   XtSetArg (args[n], XmNmarginWidth, 0);
   n++;
@@ -1767,7 +1767,7 @@ char               *text;
   n++;
   XtSetArg (args[n], XmNorientation, XmVERTICAL);
   n++;
-  XtSetArg (args[n], XmNresizeHeight, True);
+  XtSetArg (args[n], XmNresizeHeight, TRUE);
   n++;
   row = XmCreateRowColumn (w, "Dialogue", args, n);
   XtManageChild (row);
@@ -2207,13 +2207,13 @@ char               *equiv;
    else
      {
 	/* Est-ce que le catalogue existe deja ? */
-	reconstruit = False;
+	reconstruit = FALSE;
 	if (catalogue->Cat_Widget != 0)
 	  {
 	     if (catalogue->Cat_Type == CAT_PULL)
 	       {
 		  DestContenuMenu (catalogue);	/* Modification du catalogue */
-		  reconstruit = True;
+		  reconstruit = TRUE;
 	       }
 	     else
 		TtaDestroyDialogue (ref);
@@ -2403,7 +2403,7 @@ char               *equiv;
 			  AppendMenu (menu, MF_STRING | MF_CHECKED, ref + i, &text[index + 1]);
 			  adbloc->E_ThotWidget[ent] = i;
 #else  /* NEW_WILLOWS */
-			  XtSetArg (args[n], XmNvisibleWhenOff, True);
+			  XtSetArg (args[n], XmNvisibleWhenOff, TRUE);
 			  XtSetArg (args[n + 1], XmNselectColor, White_Color);
 			  w = XmCreateToggleButton (menu, &text[index + 1], args, n + 2);
 			  XtManageChild (w);
@@ -2633,13 +2633,13 @@ char                button;
    else
      {
 	/* Est-ce que le catalogue existe deja ? */
-	reconstruit = False;
+	reconstruit = FALSE;
 	if (catalogue->Cat_Widget != 0)
 	  {
 	     if (catalogue->Cat_Type == CAT_POPUP)
 	       {
 		  DestContenuMenu (catalogue);	/* Modification du catalogue */
-		  reconstruit = True;
+		  reconstruit = TRUE;
 	       }
 	     else
 		TtaDestroyDialogue (ref);
@@ -2652,7 +2652,7 @@ char                button;
 	     menu = parent;
 #else  /* NEW_WILLOWS */
 	     n = 0;
-	     /*XtSetArg(args[n], XmNallowShellResize, True); n++; */
+	     /*XtSetArg(args[n], XmNallowShellResize, TRUE); n++; */
 	     XtSetArg (args[n], XmNheight, (Dimension) 10);
 	     n++;
 	     XtSetArg (args[n], XmNwidth, (Dimension) 10);
@@ -2847,7 +2847,7 @@ char                button;
 			  AppendMenu (menu, MF_STRING | MF_CHECKED, ref + i, &text[index + 1]);
 			  adbloc->E_ThotWidget[ent] = i;
 #else  /* NEW_WILLOWS */
-			  XtSetArg (args[n], XmNvisibleWhenOff, True);
+			  XtSetArg (args[n], XmNvisibleWhenOff, TRUE);
 			  XtSetArg (args[n + 1], XmNselectColor, White_Color);
 			  w = XmCreateToggleButton (menu, &text[index + 1], args, n + 2);
 			  XtManageChild (w);
@@ -2986,7 +2986,7 @@ struct E_List     **adbloc;
 #ifdef NEW_WILLOWS
 #else  /* NEW_WILLOWS */
 	n = 0;
-	XtSetArg (args[n], XmNadjustLast, False);
+	XtSetArg (args[n], XmNadjustLast, FALSE);
 	n++;
 	if (catalogue->Cat_in_lines)
 	   XtSetArg (args[n], XmNorientation, XmHORIZONTAL);
@@ -3072,7 +3072,7 @@ boolean             horizontal;
       TtaError (ERR_invalid_reference);
    else
      {
-	catalogue->Cat_React = True;
+	catalogue->Cat_React = TRUE;
 	title_string = 0;
 	catalpere = CatEntree (ref_parent);
 /*__________________________________ Le catalogue parent n'existe pas __*/
@@ -3293,13 +3293,13 @@ boolean             react;
 	title_string = 0;
 
 	/* Faut-il detruire le catalogue precedent ? */
-	reconstruit = False;
+	reconstruit = FALSE;
 	if (catalogue->Cat_Widget != 0)
 	   if (catalogue->Cat_Type == CAT_MENU
 	       || catalogue->Cat_Type == CAT_FMENU)
 	     {
 		DestContenuMenu (catalogue);	/* Modification du catalogue */
-		reconstruit = True;
+		reconstruit = TRUE;
 	     }
 	   else
 	      /* Modification du catalogue */
@@ -3417,9 +3417,9 @@ boolean             react;
 #else  /* NEW_WILLOWS */
 		  /* Cree un Row-Column de Radio dans le Row-Column du formulaire */
 		  n = 0;
-		  XtSetArg (args[n], XmNradioAlwaysOne, True);
+		  XtSetArg (args[n], XmNradioAlwaysOne, TRUE);
 		  n++;
-		  XtSetArg (args[n], XmNradioBehavior, True);
+		  XtSetArg (args[n], XmNradioBehavior, TRUE);
 		  n++;
 		  XtSetArg (args[n], XmNmarginWidth, 0);
 		  n++;
@@ -3734,7 +3734,7 @@ boolean             react;
 #ifdef NEW_WILLOWS
 #else  /* NEW_WILLOWS */
 			    /* un toggle a faux */
-			    XtSetArg (args[n], XmNvisibleWhenOff, True);
+			    XtSetArg (args[n], XmNvisibleWhenOff, TRUE);
 			    XtSetArg (args[n + 1], XmNselectColor, White_Color);
 			    w = XmCreateToggleButton (menu, &text[index + 1], args, n + 2);
 			    XtManageChild (w);
@@ -3840,10 +3840,10 @@ int                 val;
 	/* Est-ce que le sous-menu est actuellement affiche */
 #ifndef NEW_WILLOWS
 	if (XtIsManaged (catalogue->Cat_Widget))
-	   visible = True;
+	   visible = TRUE;
 	else
 	  {
-	     visible = False;
+	     visible = FALSE;
 	     XtManageChild (catalogue->Cat_Widget);
 	  }
 
@@ -3860,14 +3860,14 @@ int                 val;
 		  else if (ent == val)
 		    {
 		       n = 0;
-		       XtSetArg (args[n], XmNset, True);
+		       XtSetArg (args[n], XmNset, TRUE);
 		       n++;
 		       XtSetValues (adbloc->E_ThotWidget[i], args, n);
 		    }
 		  else
 		    {
 		       n = 0;
-		       XtSetArg (args[n], XmNset, False);
+		       XtSetArg (args[n], XmNset, FALSE);
 		       n++;
 		       XtSetValues (adbloc->E_ThotWidget[i], args, n);
 		    }
@@ -3948,12 +3948,12 @@ boolean             react;
 	title_string = 0;
 
 	/* Faut-il detruire le catalogue precedent ? */
-	reconstruit = False;
+	reconstruit = FALSE;
 	if (catalogue->Cat_Widget != 0)
 	   if (catalogue->Cat_Type == CAT_TMENU)
 	     {
 		DestContenuMenu (catalogue);	/* Modification du catalogue */
-		reconstruit = True;
+		reconstruit = TRUE;
 	     }
 	   else
 	      /* Modification du catalogue */
@@ -4050,7 +4050,7 @@ boolean             react;
 	       {
 		  /* Cree un Row-Column de Toggle dans le Row-Column du formulaire */
 		  n = 0;
-		  XtSetArg (args[n], XmNradioAlwaysOne, False);
+		  XtSetArg (args[n], XmNradioAlwaysOne, FALSE);
 		  n++;
 		  XtSetArg (args[n], XmNmarginWidth, 0);
 		  n++;
@@ -4208,10 +4208,10 @@ boolean             on;
 	/* Est-ce que le sous-menu est actuellement affiche */
 #ifndef NEW_WILLOWS
 	else if (XtIsManaged (catalogue->Cat_Widget))
-	   visible = True;
+	   visible = TRUE;
 	else
 	  {
-	     visible = False;
+	     visible = FALSE;
 	     XtManageChild (catalogue->Cat_Widget);
 	  }
 
@@ -4247,7 +4247,7 @@ boolean             on;
 			       /* Bouton allume */
 			      {
 				 n = 0;
-				 XtSetArg (args[n], XmNset, True);
+				 XtSetArg (args[n], XmNset, TRUE);
 				 n++;
 				 XtSetValues (w, args, n);
 			      }
@@ -4255,7 +4255,7 @@ boolean             on;
 			       /* Etat initial du bouton : eteint */
 			      {
 				 n = 0;
-				 XtSetArg (args[n], XmNset, False);
+				 XtSetArg (args[n], XmNset, FALSE);
 				 n++;
 				 XtSetValues (w, args, n);
 			      }
@@ -4468,12 +4468,12 @@ int                 activate;
 		else
 		   /*CAT_FMENU et CAT_TMENU */ if (activate)
 		  {
-		     XtSetArg (args[n], XmNsensitive, True);
+		     XtSetArg (args[n], XmNsensitive, TRUE);
 		     n++;
 		  }
 		else
 		  {
-		     XtSetArg (args[n], XmNsensitive, False);
+		     XtSetArg (args[n], XmNsensitive, FALSE);
 		     n++;
 		  }
 
@@ -4977,7 +4977,7 @@ int                 cattype;
 #else  /* NEW_WILLOWS */
 	XtSetArg (args[n], XmNfontList, DefaultFont);
 	n++;
-	/*XtSetArg(args[n], XmNallowShellResize, True); n++; */
+	/*XtSetArg(args[n], XmNallowShellResize, TRUE); n++; */
 	form = XtCreateWidget (title, topLevelShellWidgetClass, w, args, n);
 	XtAddCallback (form, XmNdestroyCallback, (XtCallbackProc) formKill, catalogue);
 #endif /* !NEW_WILLOWS */
@@ -4987,9 +4987,9 @@ int                 cattype;
 	title_string = XmStringCreateSimple (title);
 	XtSetArg (args[n], XmNdialogTitle, title_string);
 	n++;
-	XtSetArg (args[n], XmNautoUnmanage, False);
+	XtSetArg (args[n], XmNautoUnmanage, FALSE);
 	n++;
-	XtSetArg (args[n], XmNdefaultPosition, False);
+	XtSetArg (args[n], XmNdefaultPosition, FALSE);
 	n++;
 	XtSetArg (args[n], XmNbackground, BgMenu_Color);
 	n++;
@@ -5014,7 +5014,7 @@ int                 cattype;
 /*** Cree un Row-Column pour mettre les boutons QUIT/... ***/
 /*** en dessous des sous-menus et sous-formulaires.    ***/
 	n = 0;
-	XtSetArg (args[n], XmNadjustLast, False);
+	XtSetArg (args[n], XmNadjustLast, FALSE);
 	n++;
 	XtSetArg (args[n], XmNmarginWidth, 0);
 	n++;
@@ -5032,7 +5032,7 @@ int                 cattype;
 /*** Cree un Row-Column pour contenir les lignes ou colonnes ***/
 /*** de sous-menus et sous-formulaires.                      ***/
 	n = 0;
-	XtSetArg (args[n], XmNadjustLast, False);
+	XtSetArg (args[n], XmNadjustLast, FALSE);
 	n++;
 	XtSetArg (args[n], XmNmarginWidth, 0);
 	n++;
@@ -5054,7 +5054,7 @@ int                 cattype;
 
 /*** Cree un 1er Row-Column pour contenir les sous-menus/formulaires ***/
 	n = 0;
-	XtSetArg (args[n], XmNadjustLast, False);
+	XtSetArg (args[n], XmNadjustLast, FALSE);
 	n++;
 	catalogue->Cat_in_lines = (int) horizontal;
 	if (horizontal)
@@ -5077,7 +5077,7 @@ int                 cattype;
 
 /*** Cree un Row-Column pour contenir les boutons QUIT/... ***/
 	n = 0;
-	XtSetArg (args[n], XmNadjustLast, False);
+	XtSetArg (args[n], XmNadjustLast, FALSE);
 	n++;
 	XtSetArg (args[n], XmNorientation, XmHORIZONTAL);
 	n++;
@@ -5185,7 +5185,7 @@ int                 cattype;
 /* | menu pe`re et entry de'signe l'entre'e correspondante dans le menu | */
 /* | pe`re. Le parame'tre title donne le titre du catalogue.            | */
 /* | Le parame`tre horizontal indique que le formulaire est compose' en | */
-/* | lignes (True) ou en colonnes (False).                              | */
+/* | lignes (TRUE) ou en colonnes (FALSE).                              | */
 /* | Le parame`tre package donne le facteur de blocage du formulaire    | */
 /* | (nombre d'entre'es par ligne ou par colonne).                      | */
 /* | Le parame'tre button indique le bouton de la souris qui active le  | */
@@ -5223,7 +5223,7 @@ int                 dbutton;
 /* | ajoute's au bouton 'QUIT'.                                         | */
 /* | Chaque intitule' se termine par le caracte`re de fin de chai^ne \0.| */
 /* | Le parame`tre horizontal indique que le formulaire est compose' en | */
-/* | lignes (True) ou en colonnes (False).                              | */
+/* | lignes (TRUE) ou en colonnes (FALSE).                              | */
 /* | Le parame`tre package donne le facteur de blocage du formulaire    | */
 /* | (nombre d'entre'es par ligne ou par colonne).                      | */
 /* | Le parame`tre button indique le bouton de la souris qui active le  | */
@@ -5263,7 +5263,7 @@ int                 dbutton;
 /* | ajoute's au bouton 'QUIT'.                                         | */
 /* | Chaque intitule' se termine par le caracte`re de fin de chai^ne \0.| */
 /* | Le parame`tre horizontal indique que le formulaire est compose' en | */
-/* | lignes (True) ou en colonnes (False).                              | */
+/* | lignes (TRUE) ou en colonnes (FALSE).                              | */
 /* | Le parame`tre package donne le facteur de blocage du formulaire    | */
 /* | (nombre d'entre'es par ligne ou par colonne).                      | */
 /* | Le parame`tre button indique le bouton de la souris qui active le  | */
@@ -5506,7 +5506,7 @@ boolean             react;
      }
 
    catalogue = CatEntree (ref);
-   reconstruit = False;
+   reconstruit = FALSE;
    if (catalogue == NULL)
      {
 	TtaError (ERR_invalid_reference);
@@ -5518,7 +5518,7 @@ boolean             react;
      {
 	/* Si c'est une mise a jour du selecteur */
 	if (catalogue->Cat_Type == CAT_SELECT && (withText != catalogue->Cat_SelectList))
-	   reconstruit = True;
+	   reconstruit = TRUE;
 	else
 	   TtaDestroyDialogue (ref);	/* Modification du catalogue */
      }
@@ -5840,7 +5840,7 @@ int                 ref;
 	/* Recupere le widget du selecteur */
 	w = (ThotWidget) catalogue->Cat_Entries;
 #ifndef NEW_WILLOWS
-	XtSetArg (args[0], XmNsensitive, True);
+	XtSetArg (args[0], XmNsensitive, TRUE);
 	XtSetValues (w, args, 1);
 	XtManageChild (w);
 #endif /* NEW_WILLOWS */
@@ -5880,7 +5880,7 @@ int                 ref;
 	/* Recupere le widget du selecteur */
 	w = (ThotWidget) catalogue->Cat_Entries;
 #ifndef NEW_WILLOWS
-	XtSetArg (args[0], XmNsensitive, False);
+	XtSetArg (args[0], XmNsensitive, FALSE);
 	XtSetValues (w, args, 1);
 	XtManageChild (w);
 #endif /* NEW_WILLOWS */
@@ -5944,11 +5944,11 @@ char               *text;
 	  {
 	     /* Initialise l'entree de la liste */
 	     if (catalogue->Cat_SelectList)
-		XmListSelectPos (select, entry + 1, True);
+		XmListSelectPos (select, entry + 1, TRUE);
 	     else
 	       {
 		  w = XmSelectionBoxGetChild (select, XmDIALOG_LIST);
-		  XmListSelectPos (w, entry + 1, True);
+		  XmListSelectPos (w, entry + 1, TRUE);
 	       }
 	  }
 	else if (catalogue->Cat_SelectList)
@@ -6242,7 +6242,7 @@ boolean             react;
 	       {
 		  XtSetArg (args[n], XmNeditMode, XmSINGLE_LINE_EDIT);
 		  n++;
-		  /*XtSetArg(args[n], XmNscrollVertical, False); n++; */
+		  /*XtSetArg(args[n], XmNscrollVertical, FALSE); n++; */
 		  w = XmCreateText (row, "Dialogue", args, n);
 	       }
 	     else
@@ -6406,7 +6406,7 @@ boolean             react;
 	     XtSetArg (args[n], XmNborderColor, Button_Color);
 	     n++;
 	     /*XtSetArg(args[n], XmNpacking, XmPACK_NONE); n++; */
-	     XtSetArg (args[n], XmNadjustLast, False);
+	     XtSetArg (args[n], XmNadjustLast, FALSE);
 	     n++;
 	     XtSetArg (args[n], XmNmarginWidth, 0);
 	     n++;
@@ -6446,7 +6446,7 @@ boolean             react;
 		  n++;
 		  XtSetArg (args[n], XmNborderColor, Button_Color);
 		  n++;
-		  XtSetArg (args[n], XmNadjustLast, False);
+		  XtSetArg (args[n], XmNadjustLast, FALSE);
 		  n++;
 		  w = XmCreateLabel (row, "Dialogue", args, n);
 		  XtManageChild (w);

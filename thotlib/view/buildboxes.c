@@ -29,7 +29,7 @@
 #include "dep.f"
 #include "des.f"
 #include "font.f"
-#include "imagedrvr.f"
+#include "picture.f"
 #include "lig.f"
 #include "memory.f"
 #include "pos.f"
@@ -131,11 +131,11 @@ int                 nb;
 
    adbuff = buffer;
    j = 1;
-   x1 = (float) PtEnPixel (adbuff->BuPoints[j].XCoord / 1000, 0);
-   y1 = (float) PtEnPixel (adbuff->BuPoints[j].YCoord / 1000, 1);
+   x1 = (float) PointToPixel (adbuff->BuPoints[j].XCoord / 1000);
+   y1 = (float) PointToPixel (adbuff->BuPoints[j].YCoord / 1000);
    j++;
-   x2 = (float) PtEnPixel (adbuff->BuPoints[j].XCoord / 1000, 0);
-   y2 = (float) PtEnPixel (adbuff->BuPoints[j].YCoord / 1000, 1);
+   x2 = (float) PointToPixel (adbuff->BuPoints[j].XCoord / 1000);
+   y2 = (float) PointToPixel (adbuff->BuPoints[j].YCoord / 1000);
    if (nb < 3)
      {
 	/* cas particulier des courbes avec 2 points */
@@ -145,8 +145,8 @@ int                 nb;
    else
      {
 	j++;
-	x3 = (float) PtEnPixel (adbuff->BuPoints[j].XCoord / 1000, 0);
-	y3 = (float) PtEnPixel (adbuff->BuPoints[j].YCoord / 1000, 1);
+	x3 = (float) PointToPixel (adbuff->BuPoints[j].XCoord / 1000);
+	y3 = (float) PointToPixel (adbuff->BuPoints[j].YCoord / 1000);
      }
 
    dx = x1 - x2;
@@ -204,8 +204,8 @@ int                 nb;
 		       j = 0;
 		    }
 	       }
-	     x3 = (float) PtEnPixel (adbuff->BuPoints[j].XCoord / 1000, 0);
-	     y3 = (float) PtEnPixel (adbuff->BuPoints[j].YCoord / 1000, 1);
+	     x3 = (float) PointToPixel (adbuff->BuPoints[j].XCoord / 1000);
+	     y3 = (float) PointToPixel (adbuff->BuPoints[j].YCoord / 1000);
 	  }
 	dx = x3 - x2;
 	dy = y2 - y3;
@@ -510,8 +510,8 @@ int                *haut;
 	*haut = adbuff->BuPoints[0].YCoord;
 
 	/* Convertit en pixels */
-	*large = PtEnPixel (*large / 1000, 0);
-	*haut = PtEnPixel (*haut / 1000, 1);
+	*large = PointToPixel (*large / 1000);
+	*haut = PointToPixel (*haut / 1000);
      }
 }				/* EvalPolyLine */
 /*fin */
@@ -591,14 +591,14 @@ int                *haut;
    pBo1 = pAb->AbBox;
    /* PcFirst fils vivant */
    premfils = pAb->AbFirstEnclosed;
-   encore = True;
+   encore = TRUE;
    while (encore)
       if (premfils == NULL)
-	 encore = False;
+	 encore = FALSE;
       else if (premfils->AbDead)
 	 premfils = premfils->AbNext;
       else
-	 encore = False;
+	 encore = FALSE;
 
    /* Il est inutile de calculer les dimensions d'une boite eclatee */
    if (pBo1->BxType == BoGhost)
@@ -631,13 +631,13 @@ int                *haut;
 	if (pBo1->BxContentWidth)
 	  {
 	     /* On recherche la premiere boite a mettre en ligne */
-	     encore = True;
+	     encore = TRUE;
 	     while (encore)
 		/* Est-ce que le pave est mort ? */
 		if (premfils->AbDead)
 		  {
 		     box1 = Suivante (premfils);
-		     encore = False;
+		     encore = FALSE;
 		  }
 		else if (premfils->AbBox->BxType == BoGhost)
 		   /* On descend dans la hierarchie */
@@ -646,7 +646,7 @@ int                *haut;
 		else
 		  {
 		     box1 = premfils->AbBox;
-		     encore = False;
+		     encore = FALSE;
 		  }
 
 	     if (box1 != NULL)
@@ -689,7 +689,7 @@ int                *haut;
 		 && pBo1->BxFirstLine != pBo1->BxLastLine)
 	       {
 		  /* Il faut prendre la largeur du contenu */
-		  pBo1->BxContentWidth = True;
+		  pBo1->BxContentWidth = TRUE;
 		  ReevalBloc (pAb, NULL, NULL, frame);
 	       }
 	     else
@@ -924,7 +924,7 @@ int                *place;
 	pBo1->BxFont = font;
 	pBo1->BxUnderline = pAb->AbUnderline;
 	pBo1->BxThickness = pAb->AbThickness;
-	eclate = False;		/* A priori la boite n'est pas eclatee */
+	eclate = FALSE;		/* A priori la boite n'est pas eclatee */
 
 	/* Dimensionnement de la boite par contraintes */
 	/* Il faut initialiser le trace reel et l'indication */
@@ -934,21 +934,21 @@ int                *place;
 	if (pAb->AbLeafType == LtGraphics)
 	  {
 	     pAb->AbRealShape = pAb->AbShape;
-	     pBo1->BxHorizInverted = False;
-	     pBo1->BxVertInverted = False;
+	     pBo1->BxHorizInverted = FALSE;
+	     pBo1->BxVertInverted = FALSE;
 	  }
 
-	setlarge = Dimensionner (pAb, frame, True);
-	sethaut = Dimensionner (pAb, frame, False);
-	pBo1->BxXToCompute = False;
-	pBo1->BxYToCompute = False;
+	setlarge = Dimensionner (pAb, frame, TRUE);
+	sethaut = Dimensionner (pAb, frame, FALSE);
+	pBo1->BxXToCompute = FALSE;
+	pBo1->BxYToCompute = FALSE;
 
 	/* On construit le chainage des boites terminales pour affichage */
 	/* et on calcule la position des paves dans le document.         */
 	if (pAb->AbFirstEnclosed == NULL)
 	  {
 	     /* On note pour l'affichage que cette boite est nouvelle */
-	     pBo1->BxNew = True;
+	     pBo1->BxNew = TRUE;
 
 	     /* Est-ce un document vide ? */
 	     if (srcbox == NULL)
@@ -1013,8 +1013,8 @@ int                *place;
 		    pBo1->BxBuffer = NULL;
 		    pBo1->BxNChars = pAb->AbVolume;
 		    /* Les reperes de la boite (elastique) ne sont pas inverses */
-		    pBo1->BxHorizInverted = False;
-		    pBo1->BxVertInverted = False;
+		    pBo1->BxHorizInverted = FALSE;
+		    pBo1->BxVertInverted = FALSE;
 		    EvalSymb (pAb, &large, &haut);
 		    break;
 		 case LtGraphics:
@@ -1035,7 +1035,7 @@ int                *place;
 		    /* Si le pave est mis en ligne et secable -> la boite est eclatee */
 		    if (misenligne && pAb->AbAcceptLineBreak && pAb->AbFirstEnclosed != NULL)
 		      {
-			 eclate = True;
+			 eclate = TRUE;
 			 pBo1->BxType = BoGhost;
 		      }
 		    /* Il faut creer les boites des paves inclus */
@@ -1063,29 +1063,29 @@ int                *place;
 	ChangeHtContenu (pBo1, pBo1, haut, frame);
 
 	/* Positionnement des axes de la boite construite */
-	PlacerAxe (pAb->AbVertRef, pBo1, frame, True);
+	PlacerAxe (pAb->AbVertRef, pBo1, frame, TRUE);
 
 	/* On traite differemmment la base d'un bloc de lignes */
 	/* s'il depend de la premiere boite englobee           */
 	if (pAb->AbLeafType != LtCompound
 	    || !pAb->AbInLine
 	    || pAb->AbHorizRef.PosAbRef != pAb->AbFirstEnclosed)
-	   PlacerAxe (pAb->AbHorizRef, pBo1, frame, False);
+	   PlacerAxe (pAb->AbHorizRef, pBo1, frame, FALSE);
 
 	/* Positionnement des origines de la boite construite */
 	if (!misenligne)
 	  {
-	     Positionner (pAb->AbHorizPos, pBo1, frame, True);
-	     Positionner (pAb->AbVertPos, pBo1, frame, False);
+	     Positionner (pAb->AbHorizPos, pBo1, frame, TRUE);
+	     Positionner (pAb->AbVertPos, pBo1, frame, FALSE);
 	  }
 	else
 	  {
 	     if (!pAb->AbHorizEnclosing)
-		Positionner (pAb->AbHorizPos, pBo1, frame, True);
+		Positionner (pAb->AbHorizPos, pBo1, frame, TRUE);
 	     if (!pAb->AbVertEnclosing)
-		Positionner (pAb->AbVertPos, pBo1, frame, False);
+		Positionner (pAb->AbVertPos, pBo1, frame, FALSE);
 	  }
-	pAb->AbNew = False;	/* la regle de creation est interpretee */
+	pAb->AbNew = FALSE;	/* la regle de creation est interpretee */
      }
    return pBo1;
 }				/* CreerBoite */
@@ -1133,19 +1133,19 @@ PtrBox            pBox;
 	else if (pAb->AbBox->BxType == BoGhost)
 	  {
 	     /* Si oui on saute les niveaux des paves eclates */
-	     encore = True;
+	     encore = TRUE;
 	     while (encore)
 	       {
 		  pAb = pAb->AbEnclosing;
 		  if (pAb == NULL)
-		     encore = False;
+		     encore = FALSE;
 		  else if (pAb->AbBox == NULL)
 		    {
 		       pAb = NULL;
-		       encore = False;
+		       encore = FALSE;
 		    }
 		  else if (pAb->AbBox->BxType != BoGhost)
-		     encore = False;
+		     encore = FALSE;
 	       }
 	  }
 	/* Est-ce que la boite est directement incluse dans une ligne */
@@ -1176,7 +1176,7 @@ PtrBox            pBox;
 	  }
 
 	/* On verifie que la ligne contient la boite pBox */
-	encore = True;
+	encore = TRUE;
 	while (encore && adligne != NULL)
 	  {
 	     /* On recherche la boite dans la ligne */
@@ -1195,7 +1195,7 @@ PtrBox            pBox;
 		  if (box1 == pBox)
 		    {
 		       /* On a trouve la ligne */
-		       encore = False;
+		       encore = FALSE;
 		       box1 = adligne->LiLastBox;
 		    }
 		  /* Sinon on passe a la boite suivante */
@@ -1493,7 +1493,7 @@ PtrAbstractBox             pave;
 	   fini = pavefils == NULL;
 	}
       else
-	 fini = True;
+	 fini = TRUE;
 
    return (pavefils == NULL);
 }
@@ -1520,16 +1520,16 @@ PtrAbstractBox             pave;
 
    pavevo = pave->AbPrevious;
    cepave = NULL;
-   encore = True;
+   encore = TRUE;
 
    /* On recherche en arriere un pave vivant */
    while (encore)
       if (pavevo == NULL)
-	 encore = False;
+	 encore = FALSE;
       else if (pavevo->AbBox == NULL)
 	 pavevo = pavevo->AbPrevious;
       else if (pavevo->AbFirstEnclosed == NULL)
-	 encore = False;
+	 encore = FALSE;
       else
 	{
 	   /* On descend la hierarchie pour prendre son dernier fils */
@@ -1553,7 +1553,7 @@ PtrAbstractBox             pave;
 
 	   cepave = pavevo->AbEnclosing;
 	   if (pavevo->AbBox != NULL)
-	      encore = False;	/* On a trouve */
+	      encore = FALSE;	/* On a trouve */
 	   else
 	     {
 		/* Si ce dernier fils est mort -> on prend le dernier */
@@ -1561,11 +1561,11 @@ PtrAbstractBox             pave;
 		while (encore)
 		   if (pavevo->AbPrevious == NULL)
 		     {
-			encore = False;
+			encore = FALSE;
 			pavevo = NULL;	/* C'est l'englobant */
 		     }
 		   else if (pavevo->AbPrevious->AbBox != NULL)
-		      encore = False;
+		      encore = FALSE;
 		   else
 		      pavevo = pavevo->AbPrevious;
 
@@ -1631,8 +1631,8 @@ int                 frame;
 			      && cepave->AbNum == 0)
 			    {
 			       /* Nouvelle position horizontale */
-			       RazPosition (cepave->AbBox, True);
-			       Positionner (cepave->AbHorizPos, cepave->AbBox, frame, True);
+			       RazPosition (cepave->AbBox, TRUE);
+			       Positionner (cepave->AbHorizPos, cepave->AbBox, frame, TRUE);
 			    }	/*if !cepave->AbDead */
 			  cepave = NULL;
 
@@ -1655,8 +1655,8 @@ int                 frame;
 			      && cepave->AbNum == 0)
 			    {
 			       /* Nouvelle position verticale */
-			       RazPosition (cepave->AbBox, False);
-			       Positionner (cepave->AbVertPos, cepave->AbBox, frame, False);
+			       RazPosition (cepave->AbBox, FALSE);
+			       Positionner (cepave->AbVertPos, cepave->AbBox, frame, FALSE);
 			    }	/*if !cepave->AbDead */
 			  cepave = NULL;
 		       }
@@ -1711,7 +1711,7 @@ int                 frame;
    haut = 0;
    srcbox = pFrame->FrAbstractBox->AbBox;	/* boite de la racine */
    pBox = pAb->AbBox;	/* boite du pave */
-   result = False;
+   result = FALSE;
 
    /* On prepare le reaffichage */
    if (!pAb->AbNew
@@ -1762,7 +1762,7 @@ int                 frame;
 	/* Est-ce la boite racine ? */
 	pavevois = pAb->AbEnclosing;
 	if (pavevois == NULL)
-	   condition = False;
+	   condition = FALSE;
 	else
 	  {
 	     /* Est-ce que la boite englobante doit etre eclatee ? */
@@ -1786,12 +1786,12 @@ int                 frame;
 	  }
 
 	/* Faut-il dechainer la boite englobante ? */
-	EvalAffich = False;	/* On arrete l'evaluation du reaffichage */
+	EvalAffich = FALSE;	/* On arrete l'evaluation du reaffichage */
 	savpropage = Propage;
 	Propage = ToSiblings;	/* Limite la propagation sur le descendance */
 	pBox = CreerBoite (pAb, frame, condition, &i);
 
-	EvalAffich = True;	/* On retablit l'evaluation du reaffichage */
+	EvalAffich = TRUE;	/* On retablit l'evaluation du reaffichage */
 
 	/* Mise a jour de la liste des boites terminales */
 	if (srcbox != NULL && nextbox != NULL)
@@ -1821,14 +1821,14 @@ int                 frame;
 		  /* Initialise le placement des boites creees */
 		  MarqueAPlacer (pAb, !absoluEnX, !absoluEnY);
 		  /* La boite racine va etre placee */
-		  pBox->BxXToCompute = False;
-		  pBox->BxYToCompute = False;
+		  pBox->BxXToCompute = FALSE;
+		  pBox->BxYToCompute = FALSE;
 		  Placer (pAb, pFrame->FrVisibility, frame, !absoluEnX, !absoluEnY);
 	       }
 
 	     /* On prepare le reaffichage */
 	     if (pavevois == NULL)
-		condition = True;
+		condition = TRUE;
 	     else
 		condition = !pavevois->AbInLine;
 	     if (condition)
@@ -1839,8 +1839,8 @@ int                 frame;
 
 	     /* On verifie la coherence des positions par defaut */
 /***VerifPos(pAb, frame);***/
-	     pAb->AbChange = False;
-	     result = True;
+	     pAb->AbChange = FALSE;
+	     result = TRUE;
 	  }
      }
    /* AbstractBox MORT */
@@ -1912,9 +1912,9 @@ int                 frame;
 
 	/* Destruction */
 	RazLiens (pBox);
-	RazDim (pBox, True, frame);
-	RazDim (pBox, False, frame);
-	DispBoite (pAb, False, frame);
+	RazDim (pBox, TRUE, frame);
+	RazDim (pBox, FALSE, frame);
+	DispBoite (pAb, FALSE, frame);
 
 	/* Mise a jour de la liste des boites terminales */
 	/* premiere boite de la liste */
@@ -1930,14 +1930,14 @@ int                 frame;
 
 	/* On verifie la coherence des positions par defaut */
 /***VerifPos(pAb, frame);*/
-	result = True;
+	result = TRUE;
      }
    else
      {
 	/* CHANGEMENT GRAPHIQUE */
 	if (pAb->AbAspectChange)
 	  {
-	     pAb->AbAspectChange = False;
+	     pAb->AbAspectChange = FALSE;
 	     if (pAb->AbLeafType == LtPicture
 		 && ((PictInfo *) pBox->BxPictInfo)->PicType == XBM_FORMAT)
 	       {
@@ -1952,13 +1952,13 @@ int                 frame;
 		  /* Si la boite est coupee on etend le clipping jusqu'a */
 		  /* la derniere boite de coupure non vide */
 		  box = pBox;
-		  result = True;
+		  result = TRUE;
 		  while (result)
 		    {
 		       if (box->BxNexChild == NULL)
-			  result = False;
+			  result = FALSE;
 		       else if (box->BxNexChild->BxNChars == 0)
-			  result = False;
+			  result = FALSE;
 		       else
 			  box = box->BxNexChild;
 		    }
@@ -2051,7 +2051,7 @@ int                 frame;
 					box = pavevois->AbBox;
 					if (box->BxHorizFlex || box->BxVertFlex)
 					  {
-					     AjusteTrace (pAb, box->BxHorizInverted, box->BxVertInverted, False);
+					     AjusteTrace (pAb, box->BxHorizInverted, box->BxVertInverted, FALSE);
 					     pavevois = NULL;	/* on arrete */
 					  }
 					else
@@ -2076,7 +2076,7 @@ int                 frame;
 					box = pavevois->AbBox;
 					if (box->BxHorizFlex || box->BxVertFlex)
 					  {
-					     AjusteTrace (pAb, box->BxHorizInverted, box->BxVertInverted, False);
+					     AjusteTrace (pAb, box->BxHorizInverted, box->BxVertInverted, FALSE);
 					     pavevois = NULL;	/* on arrete */
 					  }
 					else
@@ -2105,15 +2105,15 @@ int                 frame;
 		  else
 		     haut -= pBox->BxHeight;	/* ecart de hauteur */
 		  adligne = NULL;
-		  MajBox (pBox, adligne, dcar, nbbl, large, just, haut, frame, False);
-		  result = True;
+		  MajBox (pBox, adligne, dcar, nbbl, large, just, haut, frame, FALSE);
+		  result = TRUE;
 	       }
 
 	     if (pAb->AbChange)
-		pAb->AbChange = False;
+		pAb->AbChange = FALSE;
 	     if (pAb->AbSizeChange)
 	       {
-		  pAb->AbSizeChange = False;
+		  pAb->AbSizeChange = FALSE;
 		  /* Il faut regarder les consequences du changement de taille */
 		  pPavD1 = &pAb->AbWidth;
 		  if (!pPavD1->DimIsPosition)
@@ -2141,9 +2141,9 @@ int                 frame;
 	if (pAb->AbWidthChange)
 	  {
 	     /* Annulation ancienne largeur */
-	     RazDim (pBox, True, frame);
+	     RazDim (pBox, TRUE, frame);
 	     /* Nouvelle largeur */
-	     condition = Dimensionner (pAb, frame, True);
+	     condition = Dimensionner (pAb, frame, TRUE);
 	     if (condition || (!pAb->AbWidth.DimIsPosition && pAb->AbWidth.DimMinimum))
 	       {
 		  switch (pAb->AbLeafType)
@@ -2178,19 +2178,19 @@ int                 frame;
 
 		  /* Mise a jour de la largeur du contenu */
 		  ChangeLgContenu (pBox, NULL, large, 0, frame);
-		  result = True;
+		  result = TRUE;
 	       }
 	     /* La boite ne depend pas de son contenu */
 	     else
-		result = True;
+		result = TRUE;
 	  }
 	/* CHANGEMENT DE HAUTEUR */
 	if (pAb->AbHeightChange)
 	  {
 	     /* Annulation ancienne hauteur */
-	     RazDim (pBox, False, frame);
+	     RazDim (pBox, FALSE, frame);
 	     /* Nouvelle hauteur */
-	     condition = Dimensionner (pAb, frame, False);
+	     condition = Dimensionner (pAb, frame, FALSE);
 	     if (condition || (!pAb->AbHeight.DimIsPosition && pAb->AbHeight.DimMinimum))
 	       {
 		  switch (pAb->AbLeafType)
@@ -2231,11 +2231,11 @@ int                 frame;
 
 		  /* Mise a jour de la hauteur du contenu */
 		  ChangeHtContenu (pBox, NULL, haut, frame);
-		  result = True;
+		  result = TRUE;
 	       }
 	     /* La boite ne depend pas de son contenu */
 	     else
-		result = True;
+		result = TRUE;
 	  }
 	/* CHANGEMENT DE POSITION HORIZONTALE */
 	if (pAb->AbHorizPosChange)
@@ -2252,29 +2252,29 @@ int                 frame;
 		     pAb->AbHorizPos.PosEdge = Right;
 		  else if (pAb->AbWidth.DimPosition.PosEdge == Right)
 		     pAb->AbHorizPos.PosEdge = Left;
-		  pAb->AbHorizPosChange = False;
+		  pAb->AbHorizPosChange = FALSE;
 	       }
 	     else if (pAb->AbEnclosing == NULL)
-		condition = True;
+		condition = TRUE;
 	     /* La regle de position est annulee par la mise en lignes */
 	     else if (pAb->AbEnclosing->AbInLine
 		      || pAb->AbEnclosing->AbBox->BxType == BoGhost)
 		if (!pAb->AbHorizEnclosing)
-		   condition = True;
+		   condition = TRUE;
 		else
-		   condition = False;
+		   condition = FALSE;
 	     else
-		condition = True;
+		condition = TRUE;
 	     if (condition)
 	       {
 		  /* Annulation ancienne position horizontale */
-		  RazPosition (pBox, True);
+		  RazPosition (pBox, TRUE);
 		  /* Nouvelle position horizontale */
-		  Positionner (pAb->AbHorizPos, pBox, frame, True);
-		  result = True;
+		  Positionner (pAb->AbHorizPos, pBox, frame, TRUE);
+		  result = TRUE;
 	       }
 	     else
-		pAb->AbHorizPosChange = False;
+		pAb->AbHorizPosChange = FALSE;
 	  }
 	/* CHANGEMENT DE POSITION VERTICALE */
 	if (pAb->AbVertPosChange)
@@ -2291,10 +2291,10 @@ int                 frame;
 		     pAb->AbVertPos.PosEdge = Bottom;
 		  else if (pAb->AbHeight.DimPosition.PosEdge == Bottom)
 		     pAb->AbVertPos.PosEdge = Top;
-		  pAb->AbVertPosChange = False;
+		  pAb->AbVertPosChange = FALSE;
 	       }
 	     else if (pAb->AbEnclosing == NULL)
-		condition = True;
+		condition = TRUE;
 	     /* La regle de position est annulee par la mise en lignes */
 	     else if (pAb->AbEnclosing->AbInLine
 		      || pAb->AbEnclosing->AbBox->BxType == BoGhost)
@@ -2310,39 +2310,39 @@ int                 frame;
 			    EnglLigne (pBox, frame, pAb->AbEnclosing);
 			 }
 		    }
-		  condition = False;
+		  condition = FALSE;
 	       }
 	     else
-		condition = True;
+		condition = TRUE;
 
 	     if (condition)
 	       {
 		  /* Annulation ancienne position verticale */
-		  RazPosition (pBox, False);
+		  RazPosition (pBox, FALSE);
 		  /* Nouvelle position verticale */
-		  Positionner (pAb->AbVertPos, pBox, frame, False);
-		  result = True;
+		  Positionner (pAb->AbVertPos, pBox, frame, FALSE);
+		  result = TRUE;
 	       }
 	     else
-		pAb->AbVertPosChange = False;
+		pAb->AbVertPosChange = FALSE;
 	  }
 	/* CHANGEMENT D'AXE HORIZONTAL */
 	if (pAb->AbHorizRefChange)
 	  {
 	     /* Annulation ancien axe horizontal */
-	     RazAxe (pBox, False);
+	     RazAxe (pBox, FALSE);
 	     /* Nouvel axe horizontal */
-	     PlacerAxe (pAb->AbHorizRef, pBox, frame, False);
-	     result = True;
+	     PlacerAxe (pAb->AbHorizRef, pBox, frame, FALSE);
+	     result = TRUE;
 	  }
 	/* CHANGEMENT D'AXE VERTICAL */
 	if (pAb->AbVertRefChange)
 	  {
 	     /* Annulation ancien axe verticale */
-	     RazAxe (pBox, True);
+	     RazAxe (pBox, TRUE);
 	     /* Nouvel axe vertical */
-	     PlacerAxe (pAb->AbVertRef, pBox, frame, True);
-	     result = True;
+	     PlacerAxe (pAb->AbVertRef, pBox, frame, TRUE);
+	     result = TRUE;
 	  }
      }
    return result;
@@ -2372,7 +2372,7 @@ boolean             EnX;
    /* On recherche une entree libre */
    cedim = NULL;
    addim = RetardeEngl;
-   acreer = True;
+   acreer = TRUE;
    while (acreer && addim != NULL)
      {
 	i = 0;
@@ -2389,7 +2389,7 @@ boolean             EnX;
 	if (i == MAX_RELAT_DIM)
 	   addim = addim->DimRNext;	/* Bloc suivant */
 	else
-	   acreer = False;
+	   acreer = FALSE;
      }
 
    /* Faut-il creer un nouveau bloc de relations ? */
@@ -2491,13 +2491,13 @@ int                 frame;
 	  {
 	     pBo1 = pPa1->AbBox;
 	     savepret = pFrame->FrReady;
-	     pFrame->FrReady = False;	/* La frame n'est pas affichable */
+	     pFrame->FrReady = FALSE;	/* La frame n'est pas affichable */
 	     /* Faut-il changer les dimensions de la boite document */
 	     if (!pBo1->BxContentWidth
 		 || (!pPa1->AbWidth.DimIsPosition && pPa1->AbWidth.DimMinimum))
 	       {
 		  /* la dimension de la boite depend de la fenetre */
-		  condition = Dimensionner (pPa1, frame, True);
+		  condition = Dimensionner (pPa1, frame, TRUE);
 		  /* S'il y a une regle de minimum il faut la verifier */
 		  if (!condition)
 		    {
@@ -2509,7 +2509,7 @@ int                 frame;
 		 || (!pPa1->AbHeight.DimIsPosition && pPa1->AbHeight.DimMinimum))
 	       {
 		  /* la dimension de la boite depend de la fenetre */
-		  condition = Dimensionner (pPa1, frame, False);
+		  condition = Dimensionner (pPa1, frame, FALSE);
 		  /* S'il y a une regle de minimum il faut la verifier */
 		  if (!condition)
 		    {
@@ -2519,8 +2519,8 @@ int                 frame;
 	       }
 
 	     /* Faut-il deplacer la boite document dans la fenetre? */
-	     Positionner (pPa1->AbHorizPos, pBo1, frame, True);
-	     Positionner (pPa1->AbVertPos, pBo1, frame, False);
+	     Positionner (pPa1->AbHorizPos, pBo1, frame, TRUE);
+	     Positionner (pPa1->AbVertPos, pBo1, frame, FALSE);
 
 	     /* On elimine le scroll horizontal */
 	     DimFenetre (frame, &large, &haut);
@@ -2543,13 +2543,13 @@ int                 frame;
 	     TraiteEnglobement (frame);
 
 	     /* RemoveElement la selection eventuelle */
-	     SetSelect (frame, False);
+	     SetSelect (frame, FALSE);
 	     /* Affichage de toute la fenetre */
 	     AfFinFenetre (frame, 0);
 	     /* Restaure la selection */
-/**MIN*/ VisuSelect (pPa1, False);
+/**MIN*/ VisuSelect (pPa1, FALSE);
 	     /*else
-	        SetSelect(frame, True); */
+	        SetSelect(frame, TRUE); */
 
 	  }
      }
@@ -2576,14 +2576,14 @@ int                 frame;
    pFrame = &FntrTable[frame - 1];
    if (pFrame->FrAbstractBox != NULL)
      {
-	pFrame->FrReady = False;	/* La frame n'est pas affichable */
+	pFrame->FrReady = FALSE;	/* La frame n'est pas affichable */
 	/* Faut-il retirer les marques de selection dans la fenetre */
 	EndInsert ();
 	ResetSelect (frame);
 	/* Liberation de la hierarchie */
-	DispBoite (pFrame->FrAbstractBox, False, frame);
+	DispBoite (pFrame->FrAbstractBox, FALSE, frame);
 	pFrame->FrAbstractBox = NULL;
-	pFrame->FrReady = True;	/* La frame est affichable */
+	pFrame->FrReady = TRUE;	/* La frame est affichable */
 	DefClip (frame, -1, -1, -1, -1);	/* effacer effectivement */
 	pFe2 = &FntrTable[frame - 1];
 	SetClip (frame, pFe2->FrXOrg, pFe2->FrYOrg, &pFe2->FrClipXBegin, &pFe2->FrClipYBegin,
@@ -2621,9 +2621,9 @@ int                 frame;
    Propagation      savpropage;
 
    pPa1 = pAb;
-   change = False;
+   change = FALSE;
    if (pPa1->AbDead && (pPa1->AbNew || pPa1->AbBox == NULL))
-      resultat = False;
+      resultat = FALSE;
    else if (pPa1->AbDead || pPa1->AbNew)
      {
 	resultat = EvalChange (pAb, frame);
@@ -2642,7 +2642,7 @@ int                 frame;
 	/* Traitement des creations */
 	pavefils = pPa1->AbFirstEnclosed;
 	premcree = NULL;
-	mortcree = False;
+	mortcree = FALSE;
 	while (pavefils != NULL)
 	  {
 	     if (pavefils->AbNew)
@@ -2654,7 +2654,7 @@ int                 frame;
 		  /* Une modification a repercurter sur l'englobante */
 		  if (change && !mortcree)
 		    {
-		       mortcree = True;
+		       mortcree = TRUE;
 		       premcree = pavefils;
 		    }
 	       }
@@ -2678,7 +2678,7 @@ int                 frame;
 	     else if (change)
 	       {
 		  /* Une modification a repercuter sur l'englobante */
-		  mortcree = True;
+		  mortcree = TRUE;
 		  if (pavprem == NULL)
 		     pavprem = pavefils;
 	       }
@@ -2711,7 +2711,7 @@ int                 frame;
 	if (mortcree || resultat)
 	  {
 	     pBo1 = pPa1->AbBox;
-	     resultat = True;
+	     resultat = TRUE;
 	     /* Mise a jour d'un bloc de lignes */
 	     if (pBo1->BxType == BoBlock && pavprem != NULL)
 	       {
@@ -2805,14 +2805,14 @@ int                 frame;
 	     /* Annulation de la position */
 	     if (pAb->AbHorizPosChange)
 	       {
-		  RazPosition (pBo1, True);
+		  RazPosition (pBo1, TRUE);
 		  DepOrgX (pBo1, NULL, -pBo1->BxXOrg, frame);
 	       }
 
 	     /* Annulation ancienne largeur */
-	     RazDim (pBo1, True, frame);
+	     RazDim (pBo1, TRUE, frame);
 	     /* Reinitialisation du trace reel */
-/**PL*/ AjusteTrace (pAb, pBo1->BxHorizInverted, pBo1->BxVertInverted, False);
+/**PL*/ AjusteTrace (pAb, pBo1->BxHorizInverted, pBo1->BxVertInverted, FALSE);
 	  }
 
 	if (pBo1->BxVertFlex && pAb->AbHeightChange)
@@ -2823,14 +2823,14 @@ int                 frame;
 	     /* Annulation et reevaluation de la position */
 	     if (pAb->AbVertPosChange)
 	       {
-		  RazPosition (pBo1, False);
+		  RazPosition (pBo1, FALSE);
 		  DepOrgY (pBo1, NULL, -pBo1->BxYOrg, frame);
 	       }
 
 	     /* Annulation ancienne hauteur */
-	     RazDim (pBo1, False, frame);
+	     RazDim (pBo1, FALSE, frame);
 	     /* Reinitialisation du trace reel */
-/**PL*/ AjusteTrace (pAb, pBo1->BxHorizInverted, pBo1->BxVertInverted, False);
+/**PL*/ AjusteTrace (pAb, pBo1->BxHorizInverted, pBo1->BxVertInverted, FALSE);
 	  }
 
 	/* Traitement des paves fils */
@@ -2896,7 +2896,7 @@ PtrAbstractBox             Pv;
   MotifLister(2);
   TtaWaitShowDialogue();
 ***************************************/
-   result = True;
+   result = TRUE;
    adligne = NULL;
    /* Pas de pave en parametre */
    if (Pv == NULL)
@@ -2934,15 +2934,15 @@ PtrAbstractBox             Pv;
 		  pFrame->FrXOrg = 0;
 		  pFrame->FrYOrg = 0;
 		  pFrame->FrAbstractBox = Pv;
-		  pFrame->FrSelectOneBox = False;
+		  pFrame->FrSelectOneBox = FALSE;
 		  pFrame->FrSelectionBegin.VsBox = NULL;
 		  pFrame->FrSelectionEnd.VsBox = NULL;
-		  pFrame->FrReady = True;
-		  pFrame->FrSelectShown = False;
+		  pFrame->FrReady = TRUE;
+		  pFrame->FrSelectShown = FALSE;
 	       }
 
 	     /* On prepare le traitement de l'englobement apres modification */
-	     pFrame->FrReady = False;	/* La frame n'est pas affichable */
+	     pFrame->FrReady = FALSE;	/* La frame n'est pas affichable */
 	     if (*page != 0)
 		/* changement de la signification de la valeur de page */
 		/* si negatif : mode pagination sans evaluation de coupure */
@@ -3074,7 +3074,7 @@ PtrAbstractBox             Pv;
 		  pFrame->FrVisibility = savevisu;
 		  pFrame->FrMagnification = savezoom;
 	       }
-	     pFrame->FrReady = True;	/* La frame est affichable */
+	     pFrame->FrReady = TRUE;	/* La frame est affichable */
 	  }
      }
    return result;

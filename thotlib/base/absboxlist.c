@@ -356,13 +356,13 @@ FILE               *outfile;
 	     while (adpos != NULL)
 	       {
 		  pTa1 = adpos;
-		  boucle = True;
+		  boucle = TRUE;
 		  i = 1;
 		  while (boucle)
 		    {
 		       pRe1 = &pTa1->PosRTable[i - 1];
 		       if (pRe1->ReBox == NULL)
-			  boucle = False;
+			  boucle = FALSE;
 		       else
 			 {
 			    fprintf (outfile, "\n");
@@ -398,7 +398,7 @@ FILE               *outfile;
 			    else
 			       fprintf (outfile, "?");
 			    if (i == MAX_RELAT_POS)
-			       boucle = False;
+			       boucle = FALSE;
 			    else
 			       i++;
 			 }
@@ -412,11 +412,11 @@ FILE               *outfile;
 	     while (addim != NULL)
 	       {
 		  pTabD1 = addim;
-		  boucle = True;
+		  boucle = TRUE;
 		  i = 1;
 		  while (boucle)
 		     if (pTabD1->DimRTable[i - 1] == NULL)
-			boucle = False;
+			boucle = FALSE;
 		     else
 		       {
 			  fprintf (outfile, "\n");
@@ -432,7 +432,7 @@ FILE               *outfile;
 			  else
 			     fprintf (outfile, "?");
 			  if (i == MAX_RELAT_DIM)
-			     boucle = False;
+			     boucle = FALSE;
 			  else
 			     i++;
 		       }
@@ -443,11 +443,11 @@ FILE               *outfile;
 	     while (addim != NULL)
 	       {
 		  pTabD1 = addim;
-		  boucle = True;
+		  boucle = TRUE;
 		  i = 1;
 		  while (boucle)
 		     if (pTabD1->DimRTable[i - 1] == NULL)
-			boucle = False;
+			boucle = FALSE;
 		     else
 		       {
 			  fprintf (outfile, "\n");
@@ -461,7 +461,7 @@ FILE               *outfile;
 			  if (pTabD1->DimRTable[i - 1]->BxAbstractBox != NULL)
 			     wrnumber (pTabD1->DimRTable[i - 1]->BxAbstractBox->AbNum, outfile);
 			  if (i == MAX_RELAT_DIM)
-			     boucle = False;
+			     boucle = FALSE;
 			  else
 			     i++;
 		       }
@@ -558,14 +558,14 @@ L_Relations         TabDimV;
 	while (adpos != NULL)
 	  {
 	     pTa1 = adpos;
-	     boucle = True;
+	     boucle = TRUE;
 	     i = 1;
 	     while (boucle)
 		if (i == MAX_RELAT_POS)
-		   boucle = False;
+		   boucle = FALSE;
 		else if (pTa1->PosRTable[i - 1].ReBox == NULL)
 		  {
-		     boucle = False;
+		     boucle = FALSE;
 		     i--;
 		  }
 		else
@@ -584,14 +584,14 @@ L_Relations         TabDimV;
 	while (addim != NULL)
 	  {
 	     pTabD1 = addim;
-	     boucle = True;
+	     boucle = TRUE;
 	     i = 1;
 	     while (boucle)
 		if (i == MAX_RELAT_DIM)
-		   boucle = False;
+		   boucle = FALSE;
 		else if (pTabD1->DimRTable[i - 1] == NULL)
 		  {
-		     boucle = False;
+		     boucle = FALSE;
 		     i--;
 		  }
 		else
@@ -610,14 +610,14 @@ L_Relations         TabDimV;
 	while (addim != NULL)
 	  {
 	     pTabD1 = addim;
-	     boucle = True;
+	     boucle = TRUE;
 	     i = 1;
 	     while (boucle)
 		if (i == MAX_RELAT_DIM)
-		   boucle = False;
+		   boucle = FALSE;
 		else if (pTabD1->DimRTable[i - 1] == NULL)
 		  {
-		     boucle = False;
+		     boucle = FALSE;
 		     i--;
 		  }
 		else

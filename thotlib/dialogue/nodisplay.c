@@ -26,7 +26,7 @@ boolean             pre;
 
 #endif /* __STDC__ */
 {
-   return False;
+   return FALSE;
 }
 
 #ifdef __STDC__
@@ -38,7 +38,7 @@ boolean             pre;
 
 #endif /* __STDC__ */
 {
-   return False;
+   return FALSE;
 }
 
 #ifdef __STDC__
@@ -133,7 +133,7 @@ boolean             FormeComplete ()
 boolean             FormeComplete ()
 #endif				/* __STDC__ */
 {
-   return True;
+   return TRUE;
 }
 
 #ifdef __STDC__
@@ -176,7 +176,7 @@ PtrElement          pEl;
 
 #endif /* __STDC__ */
 {
-   return False;
+   return FALSE;
 }
 
 #ifdef __STDC__
@@ -189,9 +189,9 @@ PtrElement          pEl2;
 #endif /* __STDC__ */
 {
    if (pEl1->ElFirstPRule == NULL && pEl2->ElFirstPRule == NULL)
-      return True;
+      return TRUE;
    else
-      return False;
+      return FALSE;
 }
 
 

@@ -132,7 +132,7 @@ char                BufMenu[MAX_TXT_LEN];
    /* precedents de SelPremier, et c'est une feuille */
    strcpy (&BufMenu[i], "B^ ");
    MenuSelPageColPere = NULL;
-   stop = False;
+   stop = FALSE;
    pEl = SelPremier;
    while (!stop && pEl != NULL)
       if (pEl->ElPrevious != NULL)
@@ -140,11 +140,11 @@ char                BufMenu[MAX_TXT_LEN];
 	   pEl = pEl->ElPrevious;
 	   if (!ElementIsHidden (pEl))
 	      pEl2 = pEl;
-	   stop1 = False;
+	   stop1 = FALSE;
 	   while (!stop1)
 	      if (pEl2->ElTerminal)
 		{
-		   stop1 = True;
+		   stop1 = TRUE;
 		   /* on determine dans quels cas on sort de la boucle */
 		   /* principale de recherche */
 		   if (pEl2->ElTypeNumber == PageBreak + 1)
@@ -152,7 +152,7 @@ char                BufMenu[MAX_TXT_LEN];
 		      if (SelPremier->ElTypeNumber != PageBreak + 1)
 			 /* le pave de structure physique est le premier trouve */
 			 /* il faudrait tester la vue ! */
-			 stop = True;
+			 stop = TRUE;
 		      else if (SelPremier->ElViewPSchema == pEl2->ElViewPSchema)
 			 /* on est sur une marque de la meme vue */
 			 /* on analyse les englobements possibles */
@@ -164,24 +164,24 @@ char                BufMenu[MAX_TXT_LEN];
 				  case ColComputed:
 				  case ColUser:
 				     if (pEl2->ElPageType == ColGroup)
-					stop = True;
+					stop = TRUE;
 				     break;
 				  case ColGroup:
 				     if (pEl2->ElPageType == PgBegin
 					 || pEl2->ElPageType == PgComputed
 				     || pEl2->ElPageType == PgUser)
-					stop = True;
+					stop = TRUE;
 				     break;
 				  case PgBegin:
 				  case PgComputed:
 				  case PgUser:
-				     stop = True;
+				     stop = TRUE;
 				     pEl = NULL;	/* pas d'englobant possible */
 				     break;
 			       }
 		}
 	      else if (pEl2->ElFirstChild == NULL)
-		 stop1 = True;	/* on a rien trouve sur pEl */
+		 stop1 = TRUE;	/* on a rien trouve sur pEl */
 	   /* et ses descendants */
 	   /* on remonte a la boucle englobante */
 	      else
@@ -194,7 +194,7 @@ char                BufMenu[MAX_TXT_LEN];
 		   if (!ElementIsHidden (pEl2))
 		      pEl = pEl2;	/* on continue avec pEl2 */
 		   else
-		      stop1 = True;	/* on a rien trouve sur pEl */
+		      stop1 = TRUE;	/* on a rien trouve sur pEl */
 		   /* et ses descendants */
 		   /* on remonte a la boucle englobante */
 		}
@@ -217,7 +217,7 @@ char                BufMenu[MAX_TXT_LEN];
    /* precedents de SelPremier, et c'est une feuille */
    strcpy (&BufMenu[i], "< ");
    MenuSelPageColPrec = NULL;
-   stop = False;
+   stop = FALSE;
    pEl = SelPremier;
    while (!stop && pEl != NULL)
       if (pEl->ElPrevious != NULL)
@@ -225,11 +225,11 @@ char                BufMenu[MAX_TXT_LEN];
 	   pEl = pEl->ElPrevious;
 	   if (!ElementIsHidden (pEl))
 	      pEl2 = pEl;
-	   stop1 = False;
+	   stop1 = FALSE;
 	   while (!stop1)
 	      if (pEl2->ElTerminal)
 		{
-		   stop1 = True;
+		   stop1 = TRUE;
 		   /* on determine dans quels cas on sort de la boucle */
 		   /* principale de recherche */
 		   if (pEl2->ElTypeNumber == PageBreak + 1)
@@ -239,7 +239,7 @@ char                BufMenu[MAX_TXT_LEN];
 			 /* marque page ou colonne */
 			{
 			   pEl = NULL;
-			   stop = True;
+			   stop = TRUE;
 			}
 		      else if (SelPremier->ElViewPSchema == pEl2->ElViewPSchema)
 			 /* on est sur une marque de la meme vue */
@@ -254,11 +254,11 @@ char                BufMenu[MAX_TXT_LEN];
 				     if (pEl2->ElPageType == ColBegin
 					 || pEl2->ElPageType == ColComputed
 				      || pEl2->ElPageType == ColUser)
-					stop = True;
+					stop = TRUE;
 				     break;
 				  case ColGroup:
 				     if (pEl2->ElPageType == ColGroup)
-					stop = True;
+					stop = TRUE;
 				     break;
 				  case PgBegin:
 				  case PgComputed:
@@ -266,12 +266,12 @@ char                BufMenu[MAX_TXT_LEN];
 				     if (pEl2->ElPageType == PgBegin
 					 || pEl2->ElPageType == PgComputed
 				     || pEl2->ElPageType == PgUser)
-					stop = True;
+					stop = TRUE;
 				     break;
 			       }
 		}
 	      else if (pEl2->ElFirstChild == NULL)
-		 stop1 = True;	/* on a rien trouve sur pEl */
+		 stop1 = TRUE;	/* on a rien trouve sur pEl */
 	   /* et ses descendants */
 	   /* on remonte a la boucle englobante */
 	      else
@@ -284,7 +284,7 @@ char                BufMenu[MAX_TXT_LEN];
 		   if (!ElementIsHidden (pEl2))
 		      pEl = pEl2;	/* on continue avec pEl2 */
 		   else
-		      stop1 = True;	/* on a rien trouve sur pEl */
+		      stop1 = TRUE;	/* on a rien trouve sur pEl */
 		   /* et ses descendants */
 		   /* on remonte a la boucle englobante */
 		}
@@ -306,7 +306,7 @@ char                BufMenu[MAX_TXT_LEN];
    /* l'element de structure physique precedente est parmi les freres */
    /* suivants de SelPremier, et c'est une feuille */
    strcpy (&BufMenu[i], "> ");
-   stop = False;
+   stop = FALSE;
    MenuSelPageColSuiv = NULL;
    pEl = SelDernier;
    while (!stop && pEl != NULL)
@@ -315,17 +315,17 @@ char                BufMenu[MAX_TXT_LEN];
 	   pEl = pEl->ElNext;
 	   if (!ElementIsHidden (pEl))
 	      pEl2 = pEl;
-	   stop1 = False;
+	   stop1 = FALSE;
 	   while (!stop1)
 	      if (pEl2->ElTerminal)
 		{
-		   stop1 = True;
+		   stop1 = TRUE;
 		   /* on determine dans quels cas on sort de la boucle */
 		   /* principale de recherche */
 		   if (pEl2->ElTypeNumber == PageBreak + 1)
 		      /* TODO plus tard ?    && pEl2->ElViewPSchema == VueSch) */
 		      if (SelDernier->ElTypeNumber != PageBreak + 1)
-			 stop = True;	/* on a trouve la structure suivante */
+			 stop = TRUE;	/* on a trouve la structure suivante */
 		      else if (SelDernier->ElViewPSchema == pEl2->ElViewPSchema)
 			 /* on est sur une marque de la meme vue */
 			 /* on analyse les englobements possibles */
@@ -339,11 +339,11 @@ char                BufMenu[MAX_TXT_LEN];
 				     if (pEl2->ElPageType == ColBegin
 					 || pEl2->ElPageType == ColComputed
 				      || pEl2->ElPageType == ColUser)
-					stop = True;
+					stop = TRUE;
 				     break;
 				  case ColGroup:
 				     if (pEl2->ElPageType == ColGroup)
-					stop = True;
+					stop = TRUE;
 				     break;
 				  case PgBegin:
 				  case PgComputed:
@@ -351,12 +351,12 @@ char                BufMenu[MAX_TXT_LEN];
 				     if (pEl2->ElPageType == PgBegin
 					 || pEl2->ElPageType == PgComputed
 				     || pEl2->ElPageType == PgUser)
-					stop = True;
+					stop = TRUE;
 				     break;
 			       }
 		}
 	      else if (pEl2->ElFirstChild == NULL)
-		 stop1 = True;	/* on a rien trouve sur pEl */
+		 stop1 = TRUE;	/* on a rien trouve sur pEl */
 	   /* et ses descendants */
 	   /* on remonte a la boucle englobante */
 	      else
@@ -367,7 +367,7 @@ char                BufMenu[MAX_TXT_LEN];
 		   if (!ElementIsHidden (pEl2))
 		      pEl = pEl2;	/* on continue avec pEl2 */
 		   else
-		      stop1 = True;	/* on a rien trouve sur pEl */
+		      stop1 = TRUE;	/* on a rien trouve sur pEl */
 		   /* et ses descendants */
 		   /* on remonte a la boucle englobante */
 		}
@@ -390,7 +390,7 @@ char                BufMenu[MAX_TXT_LEN];
    /* l'element de structure physique englobee est parmi les freres */
    /* suivant de SelDernier, et c'est une feuille */
    strcpy (&BufMenu[i], "_ ");
-   stop = False;
+   stop = FALSE;
    pEl = SelDernier;
    MenuSelPageColFils = NULL;
    while (!stop && pEl != NULL)
@@ -399,24 +399,24 @@ char                BufMenu[MAX_TXT_LEN];
 	   pEl = pEl->ElNext;
 	   if (!ElementIsHidden (pEl))
 	      pEl2 = pEl;
-	   stop1 = False;
+	   stop1 = FALSE;
 	   while (!stop1)
 	      if (pEl2->ElTerminal)
 		{
-		   stop1 = True;
+		   stop1 = TRUE;
 		   /* on determine dans quels cas on sort de la boucle */
 		   /* principale de recherche */
 		   if (pEl2->ElTypeNumber == PageBreak + 1)
 		      /* TODO plus tard ?    && pEl2->ElViewPSchema == VueSch) */
 		      if (SelDernier->ElTypeNumber != PageBreak + 1)
 			{
-			   stop = True;		/* pas de structure englobee */
+			   stop = TRUE;		/* pas de structure englobee */
 			   pEl = NULL;
 			}
 		      else if (SelDernier->ElViewPSchema == pEl2->ElViewPSchema)
 			 /* dans tous les cas, on s'arretera */
 			{
-			   stop = True;
+			   stop = TRUE;
 			   /* on est sur une marque de la meme vue */
 			   /* on analyse les englobements possibles */
 			   /* si cela ne correspond pas, on arretera */
@@ -447,7 +447,7 @@ char                BufMenu[MAX_TXT_LEN];
 			}
 		}
 	      else if (pEl2->ElFirstChild == NULL)
-		 stop1 = True;	/* on a rien trouve sur pEl */
+		 stop1 = TRUE;	/* on a rien trouve sur pEl */
 	   /* et ses descendants */
 	   /* on remonte a la boucle englobante */
 	      else
@@ -458,7 +458,7 @@ char                BufMenu[MAX_TXT_LEN];
 		   if (!ElementIsHidden (pEl2))
 		      pEl = pEl2;	/* on continue avec pEl2 */
 		   else
-		      stop1 = True;	/* on a rien trouve sur pEl */
+		      stop1 = TRUE;	/* on a rien trouve sur pEl */
 		   /* et ses descendants */
 		   /* on remonte a la boucle englobante */
 		}

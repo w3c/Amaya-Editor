@@ -86,12 +86,12 @@ static void ApplHerit(TypeR, pAb, pDoc)
 	{
 	  pEl = pEl->ElNext;
 	  pP = pEl->ElAbstractBox[vue - 1];	/* saute les paves de presentation */
-	  stop = False;
+	  stop = FALSE;
 	  do
 	    if (pP == NULL)
-	      stop = True;
+	      stop = TRUE;
 	    else if (!pP->AbPresentationBox)
-	      stop = True;
+	      stop = TRUE;
 	    else
 	      pP = pP->AbNext;
 	  while (!(stop));
@@ -102,7 +102,7 @@ static void ApplHerit(TypeR, pAb, pDoc)
       if (pP != NULL)
 	{
 	  /* il y a un element suivant dont le pave pP pourrait heriter de pAb */
-	  pRegle = LaRegle(pDoc, pP, &pSchP, TypeR, True, &pAttrib);
+	  pRegle = LaRegle(pDoc, pP, &pSchP, TypeR, TRUE, &pAttrib);
 	  if (pRegle != NULL)
 	    {
 	      pRe1 = pRegle;
@@ -117,13 +117,13 @@ static void ApplHerit(TypeR, pAb, pDoc)
 #endif /* __COLPAGE__ */
 		  {
 		    if (TypeR == PtSize)
-		      pP->AbSizeChange = True;
+		      pP->AbSizeChange = TRUE;
 		    else if (TypeR == PtDepth || TypeR == PtLineStyle ||
 			     TypeR == PtLineWeight || TypeR == PtFillPattern ||
 			     TypeR == PtBackground || TypeR == PtForeground)
-		      pP->AbAspectChange = True;
+		      pP->AbAspectChange = TRUE;
 		    else
-		      pP->AbChange = True;
+		      pP->AbChange = TRUE;
 		    ApplHerit(TypeR, pP, pDoc);
 		    PavReaff(pP, pDoc);
 		  }
@@ -144,12 +144,12 @@ static void ApplHerit(TypeR, pAb, pDoc)
 	{
 	  pEl = pEl->ElParent;
 	  pP = pEl->ElAbstractBox[vue - 1];	/* saute les paves de presentation */
-	  stop = False;
+	  stop = FALSE;
 	  do
 	    if (pP == NULL)
-	      stop = True;
+	      stop = TRUE;
 	    else if (!pP->AbPresentationBox)
-	      stop = True;
+	      stop = TRUE;
 	    else
 	      pP = pP->AbNext;
 	  while (!(stop));
@@ -161,7 +161,7 @@ static void ApplHerit(TypeR, pAb, pDoc)
 	{
 	  /* il y a un element ascendant dont le pave pP pourrait heriter */
 	  /* de pAb */
-	  pRegle = LaRegle(pDoc, pP, &pSchP, TypeR, True, &pAttrib);
+	  pRegle = LaRegle(pDoc, pP, &pSchP, TypeR, TRUE, &pAttrib);
 	  pRe1 = pRegle;
 	  if (pRegle != NULL)
 	    if (pRe1->PrPresMode == PresInherit &&
@@ -175,13 +175,13 @@ static void ApplHerit(TypeR, pAb, pDoc)
 #endif /* __COLPAGE__ */
 		{
 		  if (TypeR == PtSize)
-		    pP->AbSizeChange = True;
+		    pP->AbSizeChange = TRUE;
 		  else if (TypeR == PtDepth || TypeR == PtLineStyle ||
 			   TypeR == PtLineWeight || TypeR == PtFillPattern ||
 			   TypeR == PtBackground || TypeR == PtForeground)
-		    pP->AbAspectChange = True;
+		    pP->AbAspectChange = TRUE;
 		  else
-		    pP->AbChange = True;
+		    pP->AbChange = TRUE;
 		  ApplHerit(TypeR, pP, pDoc);
 		  PavReaff(pP, pDoc);
 		}
@@ -201,7 +201,7 @@ static void ApplHerit(TypeR, pAb, pDoc)
 	    pP = NULL;
 	else
 	  {
-	    pRegle = LaRegle(pDoc, pP, &pSchP, TypeR, True, &pAttrib);
+	    pRegle = LaRegle(pDoc, pP, &pSchP, TypeR, TRUE, &pAttrib);
 	    if (pRegle != NULL)
 	      if (pRegle->PrPresMode == PresInherit && pRegle->PrInheritMode == InheritCreator)
 		/* la regle de ce pave herite de son createur, on l'applique */
@@ -212,13 +212,13 @@ static void ApplHerit(TypeR, pAb, pDoc)
 #endif /* __COLPAGE__ */
 		{
 		  if (TypeR == PtSize)
-		    pP->AbSizeChange = True;
+		    pP->AbSizeChange = TRUE;
 		  else if (TypeR == PtDepth || TypeR == PtLineStyle ||
 			   TypeR == PtLineWeight || TypeR == PtFillPattern ||
 			   TypeR == PtBackground || TypeR == PtForeground)
-		    pP->AbAspectChange = True;
+		    pP->AbAspectChange = TRUE;
 		  else
-		    pP->AbChange = True;
+		    pP->AbChange = TRUE;
 		  ApplHerit(TypeR, pP, pDoc);
 		  PavReaff(pP, pDoc);
 		}
@@ -233,7 +233,7 @@ static void ApplHerit(TypeR, pAb, pDoc)
 	    pP = NULL;
 	else
 	  {
-	    pRegle = LaRegle(pDoc, pP, &pSchP, TypeR, True, &pAttrib);
+	    pRegle = LaRegle(pDoc, pP, &pSchP, TypeR, TRUE, &pAttrib);
 	    if (pRegle != NULL)
 	      if (pRegle->PrPresMode == PresInherit && pRegle->PrInheritMode == InheritCreator)
 		/* la regle de ce pave herite de son createur, on l'applique */
@@ -244,13 +244,13 @@ static void ApplHerit(TypeR, pAb, pDoc)
 #endif /* __COLPAGE__ */
 		{
 		  if (TypeR == PtSize)
-		    pP->AbSizeChange = True;
+		    pP->AbSizeChange = TRUE;
 		  else if (TypeR == PtDepth || TypeR == PtLineStyle ||
 			   TypeR == PtLineWeight || TypeR == PtFillPattern ||
 			   TypeR == PtBackground || TypeR == PtForeground)
-		    pP->AbAspectChange = True;
+		    pP->AbAspectChange = TRUE;
 		  else
-		    pP->AbChange = True;
+		    pP->AbChange = TRUE;
 		  ApplHerit(TypeR, pP, pDoc);
 		  PavReaff(pP, pDoc);
 		}
@@ -264,7 +264,7 @@ static void ApplHerit(TypeR, pAb, pDoc)
 	  if (pP->AbPresentationBox && pP->AbElement == pEl)
 	    /* c'est un pave de presentation de l'element, on le traite */
 	    {
-	    pRegle = LaRegle(pDoc, pP, &pSchP, TypeR, True, &pAttrib);
+	    pRegle = LaRegle(pDoc, pP, &pSchP, TypeR, TRUE, &pAttrib);
 	    if (pRegle != NULL)
 	      if (pRegle->PrPresMode == PresInherit && pRegle->PrInheritMode == InheritCreator)
 		/* la regle de ce pave herite de son createur, on l'applique */
@@ -275,13 +275,13 @@ static void ApplHerit(TypeR, pAb, pDoc)
 #endif /* __COLPAGE__ */
 		{
 		  if (TypeR == PtSize)
-		    pP->AbSizeChange = True;
+		    pP->AbSizeChange = TRUE;
 		  else if (TypeR == PtDepth || TypeR == PtLineStyle ||
 			   TypeR == PtLineWeight || TypeR == PtFillPattern ||
 			   TypeR == PtBackground || TypeR == PtForeground)
-		    pP->AbAspectChange = True;
+		    pP->AbAspectChange = TRUE;
 		  else
-		    pP->AbChange = True;
+		    pP->AbChange = TRUE;
 		  ApplHerit(TypeR, pP, pDoc);
 		  PavReaff(pP, pDoc);
 		}
@@ -422,7 +422,7 @@ static boolean PRuleMessagePre(pEl, pRegle, pDoc, nouveau)
 	notifyPres.document = (Document)IdentDocument(pDoc);
 	notifyPres.element = (Element)pEl;
 	notifyPres.pRuleType = NumTypePRuleAPI(pRegle->PrType);
-	dontdoit = ThotSendMessage((NotifyEvent *)&notifyPres, True);
+	dontdoit = ThotSendMessage((NotifyEvent *)&notifyPres, TRUE);
 	if (dontdoit)
 	  /* l'application demande a l'editeur de ne rien faire */
 	  if (nouveau)
@@ -482,7 +482,7 @@ static void PRuleMessagePost(pEl, pRegle, pDoc, nouveau)
 	notifyPres.document = (Document)IdentDocument(pDoc);
 	notifyPres.element = (Element)pEl;
 	notifyPres.pRuleType = NumTypePRuleAPI(pRegle->PrType);
-	ThotSendMessage((NotifyEvent *)&notifyPres, False);
+	ThotSendMessage((NotifyEvent *)&notifyPres, FALSE);
 }
 
 #define SETSIZE 32
@@ -553,10 +553,10 @@ boolean MemesRegleSpecif(pEl1, pEl2)
 {
   boolean         egal;
   
-  egal = False;
+  egal = FALSE;
   /*on peut faire mieux... */
   if (pEl1->ElFirstPRule == NULL && pEl2->ElFirstPRule == NULL)
-    egal = True;
+    egal = TRUE;
   return egal;
 }
 
@@ -584,12 +584,12 @@ PtrAbstractBox PaveDeElem(pEl, Vue)
       /* on prend le pave de la vue choisie par l'utilisateur */
       pAb = pEl->ElAbstractBox[Vue - 1];
   /* saute les paves de presentation */
-  stop = False;
+  stop = FALSE;
   do
     if (pAb == NULL)
-      stop = True;
+      stop = TRUE;
     else if (!pAb->AbPresentationBox)
-      stop = True;
+      stop = TRUE;
     else
       pAb = pAb->AbNext;
   while (!(stop));
@@ -619,17 +619,17 @@ boolean  PavResizable(pAb, Horiz)
   if (pDoc->DocReadOnly)
     {
       TtaDisplaySimpleMessage (INFO, LIB,LIB_NOT_ALLOWED_READ_ONLY_DOC);
-      result = False;
+      result = FALSE;
     }
   else
     if (pEl->ElIsCopy)
-      result = False;
+      result = FALSE;
     else
       if (ElementIsReadOnly(pEl))
-	result = False;
+	result = FALSE;
       else
         if (TypeHasException(ExcNoResize, pEl->ElTypeNumber, pEl->ElSructSchema))
-	  result = False;
+	  result = FALSE;
         else
 	  if (Horiz)
 	    result = 
@@ -662,21 +662,21 @@ boolean PavMovable(pAb, Horiz)
   pEl = pAb->AbElement;
   pDoc = DocumentOfElement(pEl); 
   if (pDoc == NULL)
-     return False;
+     return FALSE;
   if (pDoc->DocReadOnly)
     {
       TtaDisplaySimpleMessage (INFO, LIB, LIB_NOT_ALLOWED_READ_ONLY_DOC);
-      result = False;
+      result = FALSE;
     }
   else
     if (pEl->ElIsCopy)
-      result = False;
+      result = FALSE;
     else
       if (ElementIsReadOnly(pEl))
-	result = False;
+	result = FALSE;
       else
         if (TypeHasException(ExcNoMove, pEl->ElTypeNumber, pEl->ElSructSchema))
-	  result = False;
+	  result = FALSE;
         else
 	  if (Horiz)
 	    result = 
@@ -732,20 +732,20 @@ void NouvPosition(pAb, deltaX, deltaY, frame, Disp)
   /* nettoie la table des frames a reafficher */
   for (vue = 1; vue <= MAX_VIEW_DOC; vue++)
     updateframe[vue - 1] = 0;
-  reaff = False;  		/* rien a reafficher */
+  reaff = FALSE;  		/* rien a reafficher */
   pEl = pAb->AbElement;	/* l'element auquel correspond le pave */
   pDoc = DocumentOfElement(pEl);	/* le document auquel il appartient */ 
   /* numero de cette vue */ 
   VueSch = VueAAppliquer(pEl, NULL, pDoc, pAb->AbDocView);
   /* le pave est-il dans une mise en lignes ? */
-  lignes = False;	/* a priori non */
-  doit = False;
+  lignes = FALSE;	/* a priori non */
+  doit = FALSE;
   pP = pAb->AbEnclosing;
   /* on examine les paves englobants */
   while (!lignes && pP != NULL)
     {
       if (pP->AbLeafType == LtCompound && pP->AbInLine)
-	lignes = True;	/* on est dans un pave mis en lignes */
+	lignes = TRUE;	/* on est dans un pave mis en lignes */
       else if (!pP->AbAcceptLineBreak)
 	pP = NULL;	/* on est dans un pave insecable, inutile */
       /* d'examiner les paves englobants */
@@ -757,7 +757,7 @@ void NouvPosition(pAb, deltaX, deltaY, frame, Disp)
   if (deltaY != 0)
     {
       /* cherche d'abord la regle de position qui s'applique a l'element */
-      pRStd = ReglePEl(pEl, &pSPR, &pSSR, 0, NULL, VueSch, PtVertPos, False, True,
+      pRStd = ReglePEl(pEl, &pSPR, &pSSR, 0, NULL, VueSch, PtVertPos, FALSE, TRUE,
 		       &pAttr);
       /* on ne decale pas les paves qui ont une position flottante ou qui */
       /* sont dans une mise en ligne */
@@ -777,12 +777,12 @@ void NouvPosition(pAb, deltaX, deltaY, frame, Disp)
 	    deltaY = LogicalValue(deltaY, pRStd->PrPosRule.PoDistUnit, pAb);
 	  /* cherche si la position verticale de l'element est determinee */
 	  /* par un attribut auquel est associee l'exception NewVPos */
-	  attr = False;
+	  attr = FALSE;
 	  if (pAttr != NULL)
 	    if (AttrHasException(ExcNewVPos,pAttr->AeAttrNum, pAttr->AeAttrSSchema))
 	      /* la nouvelle position sera rangee dans l'attribut */ 
-	      attr = True;
-	  doit = True;
+	      attr = TRUE;
+	  doit = TRUE;
 	  if (attr)
 	    {
 	    pRegle = pRStd;
@@ -795,8 +795,8 @@ void NouvPosition(pAb, deltaX, deltaY, frame, Disp)
 	      notifyAttr.attribute = (Attribute)pAttr;
 	      notifyAttr.attributeType.AttrSSchema = (SSchema)(pAttr->AeAttrSSchema);
 	      notifyAttr.attributeType.AttrTypeNum = pAttr->AeAttrNum;
-	      if (SendAttributeMessage(&notifyAttr, True))
-		doit = False;
+	      if (SendAttributeMessage(&notifyAttr, TRUE))
+		doit = FALSE;
 	      else
 		{
 		pAttr->AeAttrValue += deltaY;
@@ -806,7 +806,7 @@ void NouvPosition(pAb, deltaX, deltaY, frame, Disp)
 		if (Disp)
 		   /* la nouvelle valeur de l'attribut doit etre prise en */
 		   /* compte dans les copies-inclusions de l'element */
-		   ReaffPaveCopie(pEl, pDoc, True);
+		   ReaffPaveCopie(pEl, pDoc, TRUE);
 		}
 	      }
 	    } 
@@ -843,14 +843,14 @@ void NouvPosition(pAb, deltaX, deltaY, frame, Disp)
 	        if (pRe1->PoDistAttr)
 		  /* la distance est la valeur d'un attribut */
 		  pRe1->PoDistance = AttrValue(pAttr);
-	        pRe1->PoDistAttr = False;
+	        pRe1->PoDistAttr = FALSE;
 	        /* modifie la distance dans la regle specifique */
 	        pRe1->PoDistance += deltaY;
 		}
 	    }
 	  if (doit)
 	    {
-	    pDoc->DocModified = True;
+	    pDoc->DocModified = TRUE;
 	    /* le document est modifie' */
 	    for (vue = 1; vue <= MAX_VIEW_DOC; vue++)
 	      if (pEl->ElAbstractBox[vue -1] != NULL)
@@ -864,13 +864,13 @@ void NouvPosition(pAb, deltaX, deltaY, frame, Disp)
 		  {
 		  pP = pEl->ElAbstractBox[vue -1];
 		  /* saute les paves de presentation */
-		  stop = False;
+		  stop = FALSE;
 		  do
 		    if (pP == NULL)
-		      stop = True;
+		      stop = TRUE;
 		    else
 		      if (!pP->AbPresentationBox)
-			stop = True;
+			stop = TRUE;
 		      else
 			pP = pP->AbNext;
 		  while (!stop);
@@ -882,10 +882,10 @@ void NouvPosition(pAb, deltaX, deltaY, frame, Disp)
 	            Applique(pRegle, pSPR, pP, pDoc, pAttr);
 #endif /* __COLPAGE__ */
 		      {
-			pP->AbVertPosChange = True;
+			pP->AbVertPosChange = TRUE;
 			/* la position vert.du pave a change' */
 			PavReaff(pP, pDoc);
-			reaff = True;	
+			reaff = TRUE;	
 			/* il faut reafficher le pave */
 			if (!VueAssoc(pEl))
 			  updateframe[vue -1] = pDoc->DocViewFrame[vue -1];
@@ -894,7 +894,7 @@ void NouvPosition(pAb, deltaX, deltaY, frame, Disp)
 		      }
 		  }
 	    if (attr)
-	       SendAttributeMessage(&notifyAttr, False);
+	       SendAttributeMessage(&notifyAttr, FALSE);
 	    else
 	       PRuleMessagePost(pEl, pRegle, pDoc, nouveau);
 	    }
@@ -904,7 +904,7 @@ void NouvPosition(pAb, deltaX, deltaY, frame, Disp)
   if (deltaX != 0)
     /* cherche d'abord la regle de position qui s'applique a l'element */
     {
-      pRStd = ReglePEl(pEl, &pSPR, &pSSR, 0, NULL, VueSch, PtHorizPos, False, True, &pAttr);
+      pRStd = ReglePEl(pEl, &pSPR, &pSSR, 0, NULL, VueSch, PtHorizPos, FALSE, TRUE, &pAttr);
       /* on ne decale pas les paves qui ont une position flottante ou qui */
       /* sont mis en lignes */
       if (pRStd->PrPosRule.PoPosDef != NoEdge 
@@ -923,12 +923,12 @@ void NouvPosition(pAb, deltaX, deltaY, frame, Disp)
 	    deltaX = LogicalValue(deltaX, pRStd->PrPosRule.PoDistUnit, pAb); 
 	  /* cherche si la position horizontale de l'element est determinee */
 	  /* par un attribut auquel est associee l'exception NewHPos */
-	  attr = False;
+	  attr = FALSE;
 	  if (pAttr != NULL)
 	    if (AttrHasException(ExcNewHPos, pAttr->AeAttrNum, pAttr->AeAttrSSchema))
 	      /* la nouvelle position sera rangee dans l'attribut */
-	      attr = True;
-	  doit = True;
+	      attr = TRUE;
+	  doit = TRUE;
 	  if (attr)
 	    {
 	      pRegle = pRStd;
@@ -941,8 +941,8 @@ void NouvPosition(pAb, deltaX, deltaY, frame, Disp)
 		notifyAttr.attribute = (Attribute)pAttr;
 		notifyAttr.attributeType.AttrSSchema = (SSchema)(pAttr->AeAttrSSchema);
 		notifyAttr.attributeType.AttrTypeNum = pAttr->AeAttrNum;
-		if (SendAttributeMessage(&notifyAttr, True))
-		  doit = False;
+		if (SendAttributeMessage(&notifyAttr, TRUE))
+		  doit = FALSE;
 		else
 		  {
 		  pAttr->AeAttrValue += deltaX;
@@ -952,7 +952,7 @@ void NouvPosition(pAb, deltaX, deltaY, frame, Disp)
 		  if (Disp)
 		     /* la nouvelle valeur de l'attribut doit etre prise en */
 		     /* compte dans les copies-inclusions de l'element */
-		     ReaffPaveCopie(pEl, pDoc, True);
+		     ReaffPaveCopie(pEl, pDoc, TRUE);
 		  }
 		}
 	    } 
@@ -987,14 +987,14 @@ void NouvPosition(pAb, deltaX, deltaY, frame, Disp)
 	        if (pRe1->PoDistAttr)
 		  /* la distance est la valeur d'un attribut */
 		  pRe1->PoDistance = AttrValue(pAttr);
-	        pRe1->PoDistAttr = False;
+	        pRe1->PoDistAttr = FALSE;
 	        /* change la distance dans la regle specifique */
 	        pRe1->PoDistance += deltaX;
 		}
 	    }
 	  if (doit)
 	    {
-	    pDoc->DocModified = True;	/* le document est modifie' */
+	    pDoc->DocModified = TRUE;	/* le document est modifie' */
 	    for (vue = 1; vue <= MAX_VIEW_DOC; vue++)
 	      if (pEl->ElAbstractBox[vue -1] != NULL)
 	        /* l'element traite' a un pave dans cette vue */
@@ -1007,13 +1007,13 @@ void NouvPosition(pAb, deltaX, deltaY, frame, Disp)
 		  {
 		  pP = pEl->ElAbstractBox[vue -1];
 		  /* saute les paves de presentation */
-		  stop = False;
+		  stop = FALSE;
 		  do
 		    if (pP == NULL)
-		      stop = True;
+		      stop = TRUE;
 		    else
 		      if (!pP->AbPresentationBox)
-			stop = True;
+			stop = TRUE;
 		      else
 			pP = pP->AbNext;
 		  while (!stop);
@@ -1025,9 +1025,9 @@ void NouvPosition(pAb, deltaX, deltaY, frame, Disp)
 	            Applique(pRegle, pSPR, pP, pDoc, pAttr);
 #endif /* __COLPAGE__ */
 		      {
-			pP->AbHorizPosChange = True;
+			pP->AbHorizPosChange = TRUE;
 			PavReaff(pP, pDoc); /* indique le pave a reafficher */
-			reaff = True;	/* il faut reafficher le pave */
+			reaff = TRUE;	/* il faut reafficher le pave */
 			if (!VueAssoc(pEl))
 			  updateframe[vue -1] = pDoc->DocViewFrame[vue -1];
 			else
@@ -1035,7 +1035,7 @@ void NouvPosition(pAb, deltaX, deltaY, frame, Disp)
 		      }
 		  }
 	    if (attr)
-	       SendAttributeMessage(&notifyAttr, False);
+	       SendAttributeMessage(&notifyAttr, FALSE);
 	    else
 	       PRuleMessagePost(pEl, pRegle, pDoc, nouveau);
 	    }
@@ -1048,13 +1048,13 @@ void NouvPosition(pAb, deltaX, deltaY, frame, Disp)
 	for (vue = 1; vue <= MAX_VIEW_DOC; vue++)
 	  if (updateframe[vue -1] > 0)
 	    /* eteint la selection dans la vue traitee */
-	    SetSelect(updateframe[vue -1], False);
+	    SetSelect(updateframe[vue -1], FALSE);
         MajImAbs(pDoc);	/* met a jour l'image abstraite */
         ReaffDoc(pDoc);	/* fait reafficher ce qui doit l'etre */
         for (vue = 1; vue <= MAX_VIEW_DOC; vue++)
 	  if (updateframe[vue -1] > 0)
 	    /* rallume la selection dans la vue traitee */
-	    SetSelect(updateframe[vue -1], True);
+	    SetSelect(updateframe[vue -1], TRUE);
 	}
     }
 }
@@ -1104,34 +1104,34 @@ void NouvDimension(pAb, deltaX, deltaY, frame, Disp)
   /* nettoie la table des frames a reafficher */
   for (vue = 1; vue <= MAX_VIEW_DOC; vue++)
     updateframe[vue - 1] = 0;
-  reaff = False;		/* rien a reafficher */
+  reaff = FALSE;		/* rien a reafficher */
   pEl = pAb->AbElement;	/* l'element auquel correspond le pave */
   pDoc = DocumentOfElement(pEl);	/* le document auquel appartient le pave */ 
   /* numero de cette vue dans le schema de presentation qui la definit */
   VueSch = VueAAppliquer(pEl, NULL, pDoc, pAb->AbDocView);
-  doit = False;
+  doit = FALSE;
 
   /* traite le changement de largeur */
   if (deltaX != 0)
     {
       /* cherche d'abord la regle de dimension qui s'applique a l'element */
-      pRStd = ReglePEl(pEl, &pSPR, &pSSR, 0, NULL, VueSch, PtWidth, False, True, &pAttr);
+      pRStd = ReglePEl(pEl, &pSPR, &pSSR, 0, NULL, VueSch, PtWidth, FALSE, TRUE, &pAttr);
       /* on ne change pas la largeur si c'est celle du contenu ou si */
       /* c'est une boite elastique.  */
-      ok = True;
-      imagetrick = False;
+      ok = TRUE;
+      imagetrick = FALSE;
       if (!pRStd->PrDimRule.DrPosition)
 	{
 	if (pRStd->PrDimRule.DrRelation == RlEnclosed)
 	  /* largeur du contenu */
 	  if (pAb->AbLeafType != LtPicture)
 	    /* sauf si image */
-	    ok = False;
+	    ok = FALSE;
 	  else
-	    imagetrick = True;
+	    imagetrick = TRUE;
 	}
       else
-	ok = False;
+	ok = FALSE;
 
       if (ok)
 	{
@@ -1160,13 +1160,13 @@ void NouvDimension(pAb, deltaX, deltaY, frame, Disp)
 
 	  /* cherche si la largeur de l'element est determinee par un */
 	  /* attribut auquel est associee l'exception NewWidth */
-	  attr = False;
+	  attr = FALSE;
 	  if (pAttr != NULL)
 	      if (AttrHasException(ExcNewWidth, pAttr->AeAttrNum, pAttr->AeAttrSSchema))
 		/* la nouvelle largeur sera rangee dans l'attribut */
-		attr = True;
+		attr = TRUE;
 
-	  doit = True;
+	  doit = TRUE;
 	  if (attr)
 	    {
 	      pRegle = pRStd;
@@ -1179,8 +1179,8 @@ void NouvDimension(pAb, deltaX, deltaY, frame, Disp)
                 notifyAttr.attribute = (Attribute)pAttr;
                 notifyAttr.attributeType.AttrSSchema = (SSchema)(pAttr->AeAttrSSchema);
                 notifyAttr.attributeType.AttrTypeNum = pAttr->AeAttrNum;
-                if (SendAttributeMessage(&notifyAttr, True))
-                  doit = False;
+                if (SendAttributeMessage(&notifyAttr, TRUE))
+                  doit = FALSE;
                 else
                   {
 		    pAttr->AeAttrValue = x;
@@ -1190,7 +1190,7 @@ void NouvDimension(pAb, deltaX, deltaY, frame, Disp)
 		    if (Disp)
 		      /* la nouvelle valeur de l'attribut doit etre prise en */
 		      /* compte dans les copies-inclusions de l'element */
-		      ReaffPaveCopie(pEl, pDoc, True);
+		      ReaffPaveCopie(pEl, pDoc, TRUE);
 		  }
 		}
 	    } 
@@ -1220,7 +1220,7 @@ void NouvDimension(pAb, deltaX, deltaY, frame, Disp)
 			  pRegle->PrSpecifAttrSSchema = pAttr->AeAttrSSchema;
 			}
 		    }
-		  pRegle->PrDimRule.DrAttr = False;
+		  pRegle->PrDimRule.DrAttr = FALSE;
 		  /* change la regle specifique */
 		  pRegle->PrDimRule.DrValue = x;
                 }
@@ -1228,7 +1228,7 @@ void NouvDimension(pAb, deltaX, deltaY, frame, Disp)
 
 	  if (doit)
 	    {
-	      pDoc->DocModified = True;    /* le document est modifie' */
+	      pDoc->DocModified = TRUE;    /* le document est modifie' */
 	      for (vue = 1; vue <= MAX_VIEW_DOC; vue++)
 		if (pEl->ElAbstractBox[vue -1] != NULL)
 		  /* l'element traite' a un pave dans cette vue */
@@ -1239,13 +1239,13 @@ void NouvDimension(pAb, deltaX, deltaY, frame, Disp)
 		    {
 		      pP = pEl->ElAbstractBox[vue -1];
 		      /* saute les paves de presentation */
-		      stop = False;
+		      stop = FALSE;
 		      do
 			if (pP == NULL)
-			  stop = True;
+			  stop = TRUE;
 			else
 			  if (!pP->AbPresentationBox)
-			    stop = True;
+			    stop = TRUE;
 			  else
 			    pP = pP->AbNext;
 		      while (!stop);
@@ -1257,10 +1257,10 @@ void NouvDimension(pAb, deltaX, deltaY, frame, Disp)
 			if (Applique(pRegle, pSPR, pP, pDoc, pAttr))
 #endif /* __COLPAGE__ */
 			  {
-			    pP->AbWidthChange = True;
+			    pP->AbWidthChange = TRUE;
 			    /* la position vert.du pave a change' */
 			    PavReaff(pP, pDoc); /* indique le pave a reafficher */
-			    reaff = True;   /* il faut reafficher le pave */
+			    reaff = TRUE;   /* il faut reafficher le pave */
 			    if (!VueAssoc(pEl))
 			      updateframe[vue -1] = pDoc->DocViewFrame[vue -1];
 			    else
@@ -1268,7 +1268,7 @@ void NouvDimension(pAb, deltaX, deltaY, frame, Disp)
 			  }
 		    }
 	      if (attr)
-		SendAttributeMessage(&notifyAttr, False);
+		SendAttributeMessage(&notifyAttr, FALSE);
 	      else
 		PRuleMessagePost(pEl, pRegle, pDoc, nouveau);
 	    }
@@ -1279,22 +1279,22 @@ void NouvDimension(pAb, deltaX, deltaY, frame, Disp)
   if (deltaY != 0)
     /* cherche d'abord la regle de dimension qui s'applique a l'element */
     {
-      pRStd = ReglePEl(pEl, &pSPR, &pSSR, 0, NULL, VueSch, PtHeight, False, True, &pAttr);
+      pRStd = ReglePEl(pEl, &pSPR, &pSSR, 0, NULL, VueSch, PtHeight, FALSE, TRUE, &pAttr);
       /* on ne change pas la hauteur si c'est celle du contenu ou si c'est */
       /* une boite elastique. */
-      ok = True;
-      imagetrick = False;
+      ok = TRUE;
+      imagetrick = FALSE;
       if (!pRStd->PrDimRule.DrPosition)
 	{
 	if (pRStd->PrDimRule.DrRelation == RlEnclosed)
 	  /* hauteur du contenu */ 
 	  if (pAb->AbLeafType != LtPicture)
-	    ok = False;
+	    ok = FALSE;
 	  else
-	    imagetrick = True;
+	    imagetrick = TRUE;
 	}
       else
-	ok = False;
+	ok = FALSE;
 
       if (ok)
 	{
@@ -1323,12 +1323,12 @@ void NouvDimension(pAb, deltaX, deltaY, frame, Disp)
 
 	  /* cherche si la hauteur de l'element est determinee par un */
 	  /* attribut auquel est associee l'exception NewHeight */
-	  attr = False;
+	  attr = FALSE;
 	  if (pAttr != NULL)
 	    if (AttrHasException(ExcNewHeight, pAttr->AeAttrNum, pAttr->AeAttrSSchema))
 	      /* la nouvelle hauteur sera rangee dans l'attribut */
-	      attr = True;
-	  doit = True;
+	      attr = TRUE;
+	  doit = TRUE;
 	  if (attr)
 	    {
 	      pRegle = pRStd;
@@ -1341,8 +1341,8 @@ void NouvDimension(pAb, deltaX, deltaY, frame, Disp)
                 notifyAttr.attribute = (Attribute)pAttr;
                 notifyAttr.attributeType.AttrSSchema = (SSchema)(pAttr->AeAttrSSchema);
                 notifyAttr.attributeType.AttrTypeNum = pAttr->AeAttrNum;
-                if (SendAttributeMessage(&notifyAttr, True))
-                  doit = False;
+                if (SendAttributeMessage(&notifyAttr, TRUE))
+                  doit = FALSE;
                 else
                   {
 		    pAttr->AeAttrValue = y;
@@ -1352,7 +1352,7 @@ void NouvDimension(pAb, deltaX, deltaY, frame, Disp)
 		    if (Disp)
 		      /* la nouvelle valeur de l'attribut doit etre prise en */
 		      /* compte dans les copies-inclusions de l'element */
-		      ReaffPaveCopie(pEl, pDoc, True);
+		      ReaffPaveCopie(pEl, pDoc, TRUE);
 		  }
 		}
 	    } 
@@ -1383,7 +1383,7 @@ void NouvDimension(pAb, deltaX, deltaY, frame, Disp)
 			  pRegle->PrSpecifAttrSSchema = pAttr->AeAttrSSchema;
 			}
 		    }
-		  pRegle->PrDimRule.DrAttr = False;
+		  pRegle->PrDimRule.DrAttr = FALSE;
 		  /* change la regle specifique */
 		  pRegle->PrDimRule.DrValue = y;
                 }
@@ -1391,7 +1391,7 @@ void NouvDimension(pAb, deltaX, deltaY, frame, Disp)
 
 	  if (doit)
 	    {
-	      pDoc->DocModified = True;    /* le document est modifie' */
+	      pDoc->DocModified = TRUE;    /* le document est modifie' */
 	      for (vue = 1; vue <= MAX_VIEW_DOC; vue++)
 		if (pEl->ElAbstractBox[vue -1] != NULL)
 		  /* l'element traite' a un pave dans cette vue */
@@ -1402,13 +1402,13 @@ void NouvDimension(pAb, deltaX, deltaY, frame, Disp)
 		    {
 		      pP = pEl->ElAbstractBox[vue -1];
 		      /* saute les paves de presentation */
-		      stop = False;
+		      stop = FALSE;
 		      do
 			if (pP == NULL)
-			  stop = True;
+			  stop = TRUE;
 			else
 			  if (!pP->AbPresentationBox)
-			    stop = True;
+			    stop = TRUE;
 			  else
 			    pP = pP->AbNext;
 		      while (!stop);
@@ -1420,9 +1420,9 @@ void NouvDimension(pAb, deltaX, deltaY, frame, Disp)
 			if (Applique(pRegle, pSPR, pP, pDoc, pAttr))
 #endif /* __COLPAGE__ */
 			  {
-			    pP->AbHeightChange = True;
+			    pP->AbHeightChange = TRUE;
 			    PavReaff(pP, pDoc); /* indique le pave a reafficher */
-			    reaff = True;   /* il faut reafficher */
+			    reaff = TRUE;   /* il faut reafficher */
 			    if (!VueAssoc(pEl))
 			      updateframe[vue -1] = pDoc->DocViewFrame[vue -1];
 			    else
@@ -1430,7 +1430,7 @@ void NouvDimension(pAb, deltaX, deltaY, frame, Disp)
 			  }
 		    }
 	      if (attr)
-		SendAttributeMessage(&notifyAttr, False);
+		SendAttributeMessage(&notifyAttr, FALSE);
 	      else
 		PRuleMessagePost(pEl, pRegle, pDoc, nouveau);
 	    }
@@ -1443,13 +1443,13 @@ void NouvDimension(pAb, deltaX, deltaY, frame, Disp)
 	  for (vue = 1; vue <= MAX_VIEW_DOC; vue++)
 	    if (updateframe[vue -1] > 0)
 	      /* eteint la selection dans la vue traitee */
-	      SetSelect(updateframe[vue -1], False);
+	      SetSelect(updateframe[vue -1], FALSE);
 	  MajImAbs(pDoc);     /* mise a jour de l'image abstraite */
 	  ReaffDoc(pDoc);  /* reafficher ce qu'il faut */
 	  for (vue = 1; vue <= MAX_VIEW_DOC; vue++)
 	    if (updateframe[vue -1] > 0)
 	      /* rallume la selection dans la vue traitee */
-	      SetSelect(updateframe[vue -1], True);
+	      SetSelect(updateframe[vue -1], TRUE);
 	}
     }
 }
@@ -1480,9 +1480,9 @@ PtrAbstractBox PaveMisEnLigne(pPav1, pPav2)
   pPavLignes = *pPav1;
   pPa1 = pPavLignes;
   if (pPa1->AbLeafType == LtCompound && pPa1->AbInLine)
-    trouve = True;
+    trouve = TRUE;
   else
-    trouve = False;
+    trouve = FALSE;
   if (!trouve && (*pPav1)->AbEnclosing == (*pPav2)->AbEnclosing)
     {
       /* on considere l'element englobant s'il n'englobe que les elements */
@@ -1490,7 +1490,7 @@ PtrAbstractBox PaveMisEnLigne(pPav1, pPav2)
       pPavLignes = (*pPav1)->AbEnclosing;
       if (pPavLignes != NULL)
 	{
-	  ok = True;
+	  ok = TRUE;
 	  pP = *pPav1;
 	  while (ok && pP->AbPrevious != NULL)
 	    {
@@ -1509,12 +1509,12 @@ PtrAbstractBox PaveMisEnLigne(pPav1, pPav2)
 	      if (pPa1->AbLeafType == LtCompound &&
 		  pPa1->AbInLine)
 		{
-		  trouve = True;
+		  trouve = TRUE;
 		  *pPav1 = pPavLignes;
 		  *pPav2 = pPavLignes;
 		} 
 	      else
-		trouve = False;
+		trouve = FALSE;
 	    }
 	}
     }
@@ -1527,12 +1527,12 @@ PtrAbstractBox PaveMisEnLigne(pPav1, pPav2)
 	{
 	  pPavLignes = pPavLignes->AbFirstEnclosed;
 	  /* saute les paves de presentation */
-	  stop = False;
+	  stop = FALSE;
 	  do
 	    if (pPavLignes == NULL)
-	      stop = True;
+	      stop = TRUE;
 	    else if (!pPavLignes->AbPresentationBox)
-	      stop = True;
+	      stop = TRUE;
 	    else
 	      pPavLignes = pPavLignes->AbNext;
 	  while (!(stop));
@@ -1540,9 +1540,9 @@ PtrAbstractBox PaveMisEnLigne(pPav1, pPav2)
 	    {
 	      pPa1 = pPavLignes;
 	      if (pPa1->AbLeafType == LtCompound && pPa1->AbInLine)
-		trouve = True;
+		trouve = TRUE;
 	      else
-		trouve = False;
+		trouve = FALSE;
 	    }
 	}
     }
@@ -1595,10 +1595,10 @@ static void TraiteSArbre(pE, TypeR, pDoc, pRegle, vue)
 	{
 	  /* il y a un element descendant dont les paves peuvent heriter de pAb. 
 	     On parcourt ses paves dans la vue */
-	  stop = False;
+	  stop = FALSE;
 	  while (!stop)
 	    {
-	      *pRegle = LaRegle(*pDoc, pP, &pSPR, *TypeR, True, &pAttr);
+	      *pRegle = LaRegle(*pDoc, pP, &pSPR, *TypeR, TRUE, &pAttr);
 	      if (*pRegle != NULL)
 		{
 		  pRe1 = *pRegle;
@@ -1613,13 +1613,13 @@ static void TraiteSArbre(pE, TypeR, pDoc, pRegle, vue)
 #endif /* __COLPAGE__ */
 		      {
 			if (*TypeR == PtSize)
-			  pP->AbSizeChange = True;
+			  pP->AbSizeChange = TRUE;
 			else if (*TypeR == PtDepth || *TypeR == PtLineStyle ||
 				 *TypeR == PtLineWeight || *TypeR == PtFillPattern ||
 				 *TypeR == PtBackground || *TypeR == PtForeground)
-			  pP->AbAspectChange = True;
+			  pP->AbAspectChange = TRUE;
 			else
-			  pP->AbChange = True;
+			  pP->AbChange = TRUE;
 			PavReaff(pP, *pDoc);
 			if (!pP->AbPresentationBox)
 			  ApplHerit(*TypeR, pP, *pDoc);
@@ -1634,7 +1634,7 @@ static void TraiteSArbre(pE, TypeR, pDoc, pRegle, vue)
 		    {
 		      if (pPF->AbElement == pE)
 			{
-			  *pRegle = LaRegle(*pDoc, pPF, &pSPR, *TypeR, True, &pAttr);
+			  *pRegle = LaRegle(*pDoc, pPF, &pSPR, *TypeR, TRUE, &pAttr);
 			  if (*pRegle != NULL)
 			    {
 			      pRe1 = *pRegle;
@@ -1647,16 +1647,16 @@ static void TraiteSArbre(pE, TypeR, pDoc, pRegle, vue)
 #endif /* __COLPAGE__ */
 				  {
 				    if (*TypeR == PtSize)
-				      pPF->AbSizeChange = True;
+				      pPF->AbSizeChange = TRUE;
 				    else if (*TypeR == PtDepth ||
 					     *TypeR == PtLineStyle ||
 					     *TypeR == PtLineWeight ||
 					     *TypeR == PtFillPattern ||
 					     *TypeR == PtBackground ||
 					     *TypeR == PtForeground)
-				      pP->AbAspectChange = True;
+				      pP->AbAspectChange = TRUE;
 				    else
-				      pPF->AbChange = True;
+				      pPF->AbChange = TRUE;
 				    PavReaff(pPF, *pDoc);
 				  }
 			    }
@@ -1666,7 +1666,7 @@ static void TraiteSArbre(pE, TypeR, pDoc, pRegle, vue)
 		}
 	      pP = pP->AbNext;	/* passe au pave suivant */
 	      if (pP == NULL)
-		stop = True;	/* pas de pave suivant, on arrete */
+		stop = TRUE;	/* pas de pave suivant, on arrete */
 	      else	
 		/* on arrete si le pave suivant n'appartient pas a */
 		/* l'element */
@@ -1710,13 +1710,13 @@ void ApplNouvRegle(pDoc, pRegle, pEl)
 	    /* traite le pave de l'element dans cette vue */
 	    pAb = pEl->ElAbstractBox[vue - 1];
 	    /* saute les paves de presentation */
-	    stop = False;
+	    stop = FALSE;
 	    do
 	      if (pAb == NULL)
-		stop = True;
+		stop = TRUE;
 	      else
 		if (!pAb->AbPresentationBox)
-		  stop = True;
+		  stop = TRUE;
 		else
 		  pAb = pAb->AbNext;
 	    while (!stop);
@@ -1737,19 +1737,19 @@ void ApplNouvRegle(pDoc, pRegle, pEl)
 		  switch (pRegle->PrType)
 		    {
 		    case PtHeight:
-			 pAb->AbHeightChange = True;
+			 pAb->AbHeightChange = TRUE;
 			 break;
 		    case PtWidth:
-			 pAb->AbWidthChange = True;
+			 pAb->AbWidthChange = TRUE;
 			 break;
 		    case PtVertPos:
-			 pAb->AbVertPosChange = True;
+			 pAb->AbVertPosChange = TRUE;
 			 break;
 		    case PtHorizPos:
-			 pAb->AbHorizPosChange = True;
+			 pAb->AbHorizPosChange = TRUE;
 			 break;
 		    case PtSize:
-			 pAb->AbSizeChange = True;
+			 pAb->AbSizeChange = TRUE;
 			 break;
 		    case PtDepth:
 		    case PtLineStyle:
@@ -1757,10 +1757,10 @@ void ApplNouvRegle(pDoc, pRegle, pEl)
 		    case PtFillPattern:
 		    case PtBackground:
 		    case PtForeground:
-			 pAb->AbAspectChange = True;
+			 pAb->AbAspectChange = TRUE;
 			 break;
 		    default:
-			 pAb->AbChange = True;
+			 pAb->AbChange = TRUE;
 			 break;
 		    }
 		  ApplHerit(pRegle->PrType, pAb, pDoc);
@@ -1819,7 +1819,7 @@ void ModifGraphiques(pEl, pDoc, VueTraitee, ChngStyleTrait, StyleTrait, ChngEpai
         pRegle->PrViewNum = VueSch;
         pRegle->PrPresMode = PresImmediate;
         pRegle->PrChrValue = StyleTrait;
-        pDoc->DocModified = True;	/* le document est modifie' */
+        pDoc->DocModified = TRUE;	/* le document est modifie' */
         /* si le pave existe, applique la nouvelle regle au pave */
         ApplNouvRegle(pDoc, pRegle, pEl);
 	PRuleMessagePost(pEl, pRegle, pDoc, nouveau);
@@ -1838,9 +1838,9 @@ void ModifGraphiques(pEl, pDoc, VueTraitee, ChngStyleTrait, StyleTrait, ChngEpai
         pRegle->PrViewNum = VueSch;
         pRegle->PrPresMode = PresImmediate;
         pRegle->PrMinUnit = EpaisTraitUnit;
-        pRegle->PrMinAttr = False;
+        pRegle->PrMinAttr = FALSE;
         pRegle->PrMinValue = EpaisTrait;
-        pDoc->DocModified = True;	/* le document est modifie' */
+        pDoc->DocModified = TRUE;	/* le document est modifie' */
         /* si le pave existe, applique la nouvelle regle au pave */
         ApplNouvRegle(pDoc, pRegle, pEl);
 	PRuleMessagePost(pEl, pRegle, pDoc, nouveau);
@@ -1859,8 +1859,8 @@ void ModifGraphiques(pEl, pDoc, VueTraitee, ChngStyleTrait, StyleTrait, ChngEpai
         pRegle->PrViewNum = VueSch;
         pRegle->PrPresMode = PresImmediate;
         pRegle->PrIntValue = Trame;
-        pRegle->PrAttrValue = False;
-        pDoc->DocModified = True; /* le document est modifie' */
+        pRegle->PrAttrValue = FALSE;
+        pDoc->DocModified = TRUE; /* le document est modifie' */
         /* si le pave existe, applique la nouvelle regle au pave */
         ApplNouvRegle(pDoc, pRegle, pEl);
 	PRuleMessagePost(pEl, pRegle, pDoc, nouveau);
@@ -1879,8 +1879,8 @@ void ModifGraphiques(pEl, pDoc, VueTraitee, ChngStyleTrait, StyleTrait, ChngEpai
         pRegle->PrViewNum = VueSch;
         pRegle->PrPresMode = PresImmediate;
         pRegle->PrIntValue = CoulFond;
-        pRegle->PrAttrValue = False;
-        pDoc->DocModified = True; /* le document est modifie' */
+        pRegle->PrAttrValue = FALSE;
+        pDoc->DocModified = TRUE; /* le document est modifie' */
         /* si le pave existe, applique la nouvelle regle au pave */
         ApplNouvRegle(pDoc, pRegle, pEl);
 	PRuleMessagePost(pEl, pRegle, pDoc, nouveau);
@@ -1899,8 +1899,8 @@ void ModifGraphiques(pEl, pDoc, VueTraitee, ChngStyleTrait, StyleTrait, ChngEpai
         pRegle->PrViewNum = VueSch;
         pRegle->PrPresMode = PresImmediate;
         pRegle->PrIntValue = CoulTrace;
-        pRegle->PrAttrValue = False;
-        pDoc->DocModified = True; /* le document est modifie' */
+        pRegle->PrAttrValue = FALSE;
+        pDoc->DocModified = TRUE; /* le document est modifie' */
         /* si le pave existe, applique la nouvelle regle au pave */
         ApplNouvRegle(pDoc, pRegle, pEl);
 	PRuleMessagePost(pEl, pRegle, pDoc, nouveau);
@@ -1950,7 +1950,7 @@ static void SupprPres(pEl, pDoc, ERegles, VueTraitee)
 	notifyPres.element = (Element)pEl;
 	notifyPres.pRule = (PRule)pRegle;
 	notifyPres.pRuleType = NumTypePRuleAPI(pRegle->PrType);
-	if (!ThotSendMessage((NotifyEvent *)&notifyPres, True))
+	if (!ThotSendMessage((NotifyEvent *)&notifyPres, TRUE))
 	  {
 	  if (pR == NULL)
 	    pEl->ElFirstPRule = pRS;
@@ -1959,7 +1959,7 @@ static void SupprPres(pEl, pDoc, ERegles, VueTraitee)
 	  TypeRegleP = pRegle->PrType;	
 	  /* libere la regle */
 	  FreeReglePres(pRegle);
-	  pDoc->DocModified = True;	/* le document est modifie' */
+	  pDoc->DocModified = TRUE;	/* le document est modifie' */
 	  /* applique la regle standard de meme type que la regle courante */
 	  /* aux paves de l'element qui existent dans les vues de meme type */
 	  /* que la vue active. */
@@ -1969,7 +1969,7 @@ static void SupprPres(pEl, pDoc, ERegles, VueTraitee)
 	  notifyPres.element = (Element)pEl;
 	  notifyPres.pRule = NULL;
 	  notifyPres.pRuleType = NumTypePRuleAPI(TypeRegleP);
-	  ThotSendMessage((NotifyEvent *)&notifyPres, False);
+	  ThotSendMessage((NotifyEvent *)&notifyPres, FALSE);
 	  }
 	/* passe a la regle suivante */
 	pRegle = pRS;
@@ -2025,7 +2025,7 @@ void ChangeCouleur(numCouleur, Fond)
 	      /* on saute les marques de page */
 	      if (!pEl->ElTerminal || pEl->ElLeafType != LtPageColBreak)
 		{
-		  ChangeTrame = False;
+		  ChangeTrame = FALSE;
 		  numTrame = 0;
 		  if (Fond)
 		    /* on change la couleur de fond avec la souris */
@@ -2036,7 +2036,7 @@ void ChangeCouleur(numCouleur, Fond)
 			  /* on force la trame backgroundcolor si la trame du pave */
 			  /* est nopattern ou foregroundcolor */
 			  {
-			    ChangeTrame = True;
+			    ChangeTrame = TRUE;
 			    numTrame = 2;
 			  }
 		    }
@@ -2054,11 +2054,11 @@ void ChangeCouleur(numCouleur, Fond)
 		      SupprPres(pEl, SelDoc, LesRegles, SelVue);
 		    }
 		  else
-		    ModifGraphiques(pEl, SelDoc, SelVue, False, ' ', False, 0, False,
+		    ModifGraphiques(pEl, SelDoc, SelVue, FALSE, ' ', FALSE, 0, FALSE,
 				  ChangeTrame, numTrame, Fond, numCouleur, !Fond, numCouleur);
 		  /* si on est dans un element copie' par inclusion,   */
 		  /* on met a jour les copies de cet element. */
-		  ReaffPaveCopie(pEl, SelDoc, True);
+		  ReaffPaveCopie(pEl, SelDoc, TRUE);
 		}
 	  /* cherche l'element a traiter ensuite */
 	  pEl = SelSuivant(pEl, DerSel);
@@ -2114,7 +2114,7 @@ void ModifCaracteres(pEl, pDoc, VueTraitee, ChngFamille, Famille, ChngStyle, Sty
         pRegle->PrViewNum = VueSch;
         pRegle->PrPresMode = PresImmediate;
         pRegle->PrChrValue = Famille;
-        pDoc->DocModified = True;	/* le document est modifie' */
+        pDoc->DocModified = TRUE;	/* le document est modifie' */
         /* si le pave existe, applique la nouvelle regle au pave */
         ApplNouvRegle(pDoc, pRegle, pEl);
 	PRuleMessagePost(pEl, pRegle, pDoc, nouveau);
@@ -2156,7 +2156,7 @@ void ModifCaracteres(pEl, pDoc, VueTraitee, ChngFamille, Famille, ChngStyle, Sty
 	  pRegle->PrChrValue = 'R';
 	  break;
 	  }
-        pDoc->DocModified = True;	/* le document est modifie' */
+        pDoc->DocModified = TRUE;	/* le document est modifie' */
         /* si le pave existe, applique la nouvelle regle au pave */
         ApplNouvRegle(pDoc, pRegle, pEl);
 	PRuleMessagePost(pEl, pRegle, pDoc, nouveau);
@@ -2175,9 +2175,9 @@ void ModifCaracteres(pEl, pDoc, VueTraitee, ChngFamille, Famille, ChngStyle, Sty
         pRegle->PrViewNum = VueSch;
         pRegle->PrPresMode = PresImmediate;
         pRegle->PrMinUnit = UnPoint;
-        pRegle->PrMinAttr = False;
+        pRegle->PrMinAttr = FALSE;
         pRegle->PrMinValue = Corps;
-        pDoc->DocModified = True; /* le document est modifie' */
+        pDoc->DocModified = TRUE; /* le document est modifie' */
         /* si le pave existe, applique la nouvelle regle au pave */
         ApplNouvRegle(pDoc, pRegle, pEl);
         PRuleMessagePost(pEl, pRegle, pDoc, nouveau);
@@ -2214,7 +2214,7 @@ void ModifCaracteres(pEl, pDoc, VueTraitee, ChngFamille, Famille, ChngStyle, Sty
 	  pRegle->PrChrValue = 'N';
 	  break;
 	  }
-        pDoc->DocModified = True;	/* le document est modifie' */
+        pDoc->DocModified = TRUE;	/* le document est modifie' */
         /* si le pave existe, applique la nouvelle regle au pave */
         ApplNouvRegle(pDoc, pRegle, pEl);
 	PRuleMessagePost(pEl, pRegle, pDoc, nouveau);
@@ -2244,7 +2244,7 @@ void ModifCaracteres(pEl, pDoc, VueTraitee, ChngFamille, Famille, ChngStyle, Sty
 	  pRegle->PrChrValue = 'N';
 	  break;
 	  }
-        pDoc->DocModified = True;	/* le document est modifie' */
+        pDoc->DocModified = TRUE;	/* le document est modifie' */
         /* si le pave existe, applique la nouvelle regle au pave */
         ApplNouvRegle(pDoc, pRegle, pEl);
 	PRuleMessagePost(pEl, pRegle, pDoc, nouveau);
@@ -2308,7 +2308,7 @@ void ModifLignes(pEl, pDoc, VueTraitee, ChngCadr, Cadr, ChngJustif, Justif, Chng
 	  pRegle->PrAdjust = AlignLeft;
 	  break;
 	  }
-        pDoc->DocModified = True;	 /* le document est modifie' */
+        pDoc->DocModified = TRUE;	 /* le document est modifie' */
         ApplNouvRegle(pDoc, pRegle, pEl);
 	PRuleMessagePost(pEl, pRegle, pDoc, nouveau);
 	}
@@ -2323,7 +2323,7 @@ void ModifLignes(pEl, pDoc, VueTraitee, ChngCadr, Cadr, ChngJustif, Justif, Chng
         pRegle->PrViewNum = VueSch;
         pRegle->PrPresMode = PresImmediate;
         pRegle->PrJustify = Justif;
-        pDoc->DocModified = True;	/* le document est modifie' */
+        pDoc->DocModified = TRUE;	/* le document est modifie' */
         ApplNouvRegle(pDoc, pRegle, pEl);
 	PRuleMessagePost(pEl, pRegle, pDoc, nouveau);
 	}
@@ -2338,7 +2338,7 @@ void ModifLignes(pEl, pDoc, VueTraitee, ChngCadr, Cadr, ChngJustif, Justif, Chng
         pRegle->PrViewNum = VueSch;
         pRegle->PrPresMode = PresImmediate;
         pRegle->PrJustify = Hyphenate;
-        pDoc->DocModified = True;	/* le document est modifie' */
+        pDoc->DocModified = TRUE;	/* le document est modifie' */
         ApplNouvRegle(pDoc, pRegle, pEl);
         PRuleMessagePost(pEl, pRegle, pDoc, nouveau);
         }
@@ -2353,9 +2353,9 @@ void ModifLignes(pEl, pDoc, VueTraitee, ChngCadr, Cadr, ChngJustif, Justif, Chng
         pRegle->PrViewNum = VueSch;
         pRegle->PrPresMode = PresImmediate;
         pRegle->PrMinUnit = UnPoint;
-        pRegle->PrMinAttr = False;
+        pRegle->PrMinAttr = FALSE;
         pRegle->PrMinValue = ValIndent;
-        pDoc->DocModified = True;	
+        pDoc->DocModified = TRUE;	
         /* le document est modifie' */
         ApplNouvRegle(pDoc, pRegle, pEl);
 	PRuleMessagePost(pEl, pRegle, pDoc, nouveau);
@@ -2371,9 +2371,9 @@ void ModifLignes(pEl, pDoc, VueTraitee, ChngCadr, Cadr, ChngJustif, Justif, Chng
         pRegle->PrViewNum = VueSch;
         pRegle->PrPresMode = PresImmediate;
         pRegle->PrMinUnit = UnPoint;
-        pRegle->PrMinAttr = False;
+        pRegle->PrMinAttr = FALSE;
         pRegle->PrMinValue = InterLigne;
-        pDoc->DocModified = True;	/* le document est modifie' */
+        pDoc->DocModified = TRUE;	/* le document est modifie' */
         ApplNouvRegle(pDoc, pRegle, pEl);
 	PRuleMessagePost(pEl, pRegle, pDoc, nouveau);
 	}
@@ -2425,13 +2425,13 @@ void AppliqueRegleStandard(pEl, pDoc, TypeRegleP, VueSch)
 		{
 		  pAb = pEl->ElAbstractBox[vue -1];
 		  /* saute les paves de presentation */
-		  stop = False;
+		  stop = FALSE;
 		  do
 		    if (pAb == NULL)
-		      stop = True;
+		      stop = TRUE;
 		    else
 		      if (!pAb->AbPresentationBox)
-			stop = True;
+			stop = TRUE;
 		      else
 			pAb = pAb->AbNext;
 		  while (!stop);
@@ -2439,7 +2439,7 @@ void AppliqueRegleStandard(pEl, pDoc, TypeRegleP, VueSch)
 		    {
 		      /* cherche la regle standard si on ne l'a pas encore */
 		      if (pRP == NULL)
-			pRP = LaRegle(pDoc, pAb, &pSPR, TypeRegleP, True, &pAttr);
+			pRP = LaRegle(pDoc, pAb, &pSPR, TypeRegleP, TRUE, &pAttr);
 #ifdef __COLPAGE__
 	              Applique(pRP, pSPR, pAb, pDoc, pAttr, &bool);
 #else /* __COLPAGE__ */
@@ -2450,25 +2450,25 @@ void AppliqueRegleStandard(pEl, pDoc, TypeRegleP, VueSch)
 			  switch (TypeRegleP)
 			    {
 		      case PtVertRef:
-			      pPa1->AbVertRefChange = True;
+			      pPa1->AbVertRefChange = TRUE;
 			      break;
 		      case PtHorizRef:
-			      pPa1->AbHorizRefChange = True;
+			      pPa1->AbHorizRefChange = TRUE;
 			      break;
 		      case PtHeight:
-			      pPa1->AbHeightChange = True;
+			      pPa1->AbHeightChange = TRUE;
 			      break;
 		      case PtWidth:
-			      pPa1->AbWidthChange = True;
+			      pPa1->AbWidthChange = TRUE;
 			      break;
 		      case PtVertPos:
-			      pPa1->AbVertPosChange = True;
+			      pPa1->AbVertPosChange = TRUE;
 			      break;
 		      case PtHorizPos:
-			      pPa1->AbHorizPosChange = True;
+			      pPa1->AbHorizPosChange = TRUE;
 			      break;
 		      case PtSize:
-			      pPa1->AbSizeChange = True;
+			      pPa1->AbSizeChange = TRUE;
 			      break;
 		      case PtDepth:
 		      case PtLineStyle:
@@ -2476,10 +2476,10 @@ void AppliqueRegleStandard(pEl, pDoc, TypeRegleP, VueSch)
 		      case PtFillPattern:
 		      case PtBackground:
 		      case PtForeground:
-			      pPa1->AbAspectChange = True;
+			      pPa1->AbAspectChange = TRUE;
 			      break;
 		      default:
-			      pPa1->AbChange = True;
+			      pPa1->AbChange = TRUE;
 			      break;
 			    }
 			  

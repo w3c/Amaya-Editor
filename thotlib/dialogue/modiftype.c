@@ -59,9 +59,9 @@ char               *BufItemSplit;
    /* courante */
    if (SelEditeur (&pDoc, &premEl, &derEl, &premcar, &dercar))
      {
-	if (!CanSplitElement (premEl, premcar, True, &pListe, &pPointDiv,
+	if (!CanSplitElement (premEl, premcar, TRUE, &pListe, &pPointDiv,
 			      &ElemADupliquer))
-	   CanSplitElement (premEl, premcar, False, &pListe, &pPointDiv,
+	   CanSplitElement (premEl, premcar, FALSE, &pListe, &pPointDiv,
 			    &ElemADupliquer);
 	if (ElemADupliquer != NULL && !ElementIsReadOnly (pListe) &&
 	    !ElementIsReadOnly (ElemADupliquer))
@@ -117,10 +117,10 @@ View                view;
 #endif /* __STDC__ */
 {
    /* on essaie d'abord de faire comme la touche Return */
-   if (BreakElement (NULL, NULL, 0, True))
+   if (BreakElement (NULL, NULL, 0, TRUE))
       return;
    /* puisque ca n'a pas marche', on essaie autre chose */
-   BreakElement (NULL, NULL, 0, False);
+   BreakElement (NULL, NULL, 0, FALSE);
 }
 
 

@@ -133,7 +133,7 @@ boolean             withAppEvent;
 
    if (pEl != NULL)
      {
-	dontCut = False;
+	dontCut = FALSE;
 	if (withAppEvent)
 	  {
 	     /* demande a l'application si on peut creer ce type d'element */
@@ -150,9 +150,9 @@ boolean             withAppEvent;
 		  pSibling = pSibling->ElPrevious;
 	       }
 	     notifyEl.position = nSiblings;
-	     if (ThotSendMessage ((NotifyEvent *) & notifyEl, True))
+	     if (ThotSendMessage ((NotifyEvent *) & notifyEl, TRUE))
 		/* l'application refuse */
-		dontCut = True;
+		dontCut = TRUE;
 	     else if (rank <= pEl->ElTextLength)
 		/* on va couper le texte */
 	       {
@@ -165,7 +165,7 @@ boolean             withAppEvent;
 		       notifyTxt.element = (Element) pAsc;
 		       notifyTxt.target = (Element) pEl;
 		       notifyTxt.targetdocument = (Document) IdentDocument (pDoc);
-		       dontCut = dontCut || ThotSendMessage ((NotifyEvent *) & notifyTxt, True);
+		       dontCut = dontCut || ThotSendMessage ((NotifyEvent *) & notifyTxt, TRUE);
 		       pAsc = pAsc->ElParent;
 		    }
 	       }
@@ -249,7 +249,7 @@ boolean             withAppEvent;
 		       notifyTxt.element = (Element) pAsc;
 		       notifyTxt.target = (Element) pEl;
 		       notifyTxt.targetdocument = (Document) IdentDocument (pDoc);
-		       ThotSendMessage ((NotifyEvent *) & notifyTxt, False);
+		       ThotSendMessage ((NotifyEvent *) & notifyTxt, FALSE);
 		       pAsc = pAsc->ElParent;
 		    }
 	       }
@@ -263,7 +263,7 @@ boolean             withAppEvent;
 	     notifyEl.elementType.ElTypeNum = pEl2->ElTypeNumber;
 	     notifyEl.elementType.ElSSchema = (SSchema) (pEl2->ElSructSchema);
 	     notifyEl.position = 0;
-	     ThotSendMessage ((NotifyEvent *) & notifyEl, False);
+	     ThotSendMessage ((NotifyEvent *) & notifyEl, FALSE);
 	  }
      }
 }
@@ -314,7 +314,7 @@ boolean             withAppEvent;
 		    if (pEl1->ElSructSchema->SsRule[pEl1->ElTypeNumber - 1].SrConstruct != CsConstant)
 		       if (pEl2->ElSructSchema->SsRule[pEl2->ElTypeNumber - 1].SrConstruct != CsConstant)
 			 {
-			    merge = True;
+			    merge = TRUE;
 			    if (withAppEvent)
 			      {
 				 /* envoie l'evenement ElemDelete.Pre et demande a */
@@ -325,9 +325,9 @@ boolean             withAppEvent;
 				 notifyEl.elementType.ElTypeNum = pEl2->ElTypeNumber;
 				 notifyEl.elementType.ElSSchema = (SSchema) (pEl2->ElSructSchema);
 				 notifyEl.position = 1;
-				 if (ThotSendMessage ((NotifyEvent *) & notifyEl, True))
+				 if (ThotSendMessage ((NotifyEvent *) & notifyEl, TRUE))
 				    /* l'application refuse la destruction, on ne fait rien */
-				    merge = False;
+				    merge = FALSE;
 				 else
 				   {
 				      /* envoie l'evenement ElemTextModify.Pre a l'element */
@@ -340,7 +340,7 @@ boolean             withAppEvent;
 					   notifyTxt.element = (Element) pAsc;
 					   notifyTxt.target = (Element) pEl1;
 					   notifyTxt.targetdocument = (Document) IdentDocument (pDoc);
-					   merge = !ThotSendMessage ((NotifyEvent *) & notifyTxt, True);
+					   merge = !ThotSendMessage ((NotifyEvent *) & notifyTxt, TRUE);
 					   pAsc = pAsc->ElParent;
 					}
 				   }
@@ -397,7 +397,7 @@ boolean             withAppEvent;
 					   notifyTxt.element = (Element) pAsc;
 					   notifyTxt.target = (Element) pEl1;
 					   notifyTxt.targetdocument = (Document) IdentDocument (pDoc);
-					   ThotSendMessage ((NotifyEvent *) & notifyTxt, False);
+					   ThotSendMessage ((NotifyEvent *) & notifyTxt, FALSE);
 					   pAsc = pAsc->ElParent;
 					}
 				   }
@@ -464,7 +464,7 @@ boolean             withAppEvent;
 				 RemoveElement (pEl2);
 				 if (withAppEvent)
 				    /* envoie l'evenement ElemDelete.Post pour le 2eme elem. */
-				    ThotSendMessage ((NotifyEvent *) & notifyEl, False);
+				    ThotSendMessage ((NotifyEvent *) & notifyEl, FALSE);
 				 /* modifie la selection si l'element retire' constitue l'une */
 				 /* des extremites de cette selection */
 				 if (pEl2 == SelPremier)
@@ -521,7 +521,7 @@ PtrElement          pEl;
 
 /* ---------------------------------------------------------------------- */
 /* |    StringAndTextEqual compare une chaine de caracteres (String) et | */
-/* |    un texte contenu dans une suite de buffers. Retourne True si    | */
+/* |    un texte contenu dans une suite de buffers. Retourne TRUE si    | */
 /* |    les contenus sont egaux.                                        | */
 /* ---------------------------------------------------------------------- */
 
@@ -540,25 +540,25 @@ PtrTextBuffer      pBuf;
    int                 l, lenRest;
    char               *pChar;
 
-   equal = False;
+   equal = FALSE;
    if (pBuf == NULL && String == NULL)
       /* les deux sont vides, egalite' */
-      equal = True;
+      equal = TRUE;
    else if (pBuf != NULL && String != NULL)
       if (String[0] == '\0' && pBuf->BuLength == 0)
-	 equal = True;
+	 equal = TRUE;
       else
 	{
 	   pChar = String;
 	   lenRest = strlen (String);
-	   equal = True;
+	   equal = TRUE;
 	   /* parcourt les buffers de texte successifs */
 	   while (pBuf != NULL && lenRest > 0 && equal)
 	     {
 		if (pBuf->BuLength > 0)
 		  {
 		     if (pBuf->BuLength > lenRest)
-			equal = False;
+			equal = FALSE;
 		     else
 		       {
 			  if (pBuf->BuLength < lenRest)
@@ -573,7 +573,7 @@ PtrTextBuffer      pBuf;
 		pBuf = pBuf->BuNext;
 	     }
 	   if (pBuf != NULL || lenRest > 0)
-	      equal = False;
+	      equal = FALSE;
 	}
    return equal;
 }
@@ -581,7 +581,7 @@ PtrTextBuffer      pBuf;
 
 /* ---------------------------------------------------------------------- */
 /* |    TextsEqual compare deux textes contenus dans des suites de     | */
-/* |    buffers. Retourne True si les deux textes sont egaux.		| */
+/* |    buffers. Retourne TRUE si les deux textes sont egaux.		| */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
@@ -601,9 +601,9 @@ PtrTextBuffer      pBuf2;
    char               *pChar2;
    int                 len, lenRest1, lenRest2;
 
-   equal = False;
+   equal = FALSE;
    if (pBuf1 == NULL && pBuf2 == NULL)
-      equal = True;
+      equal = TRUE;
    else if (pBuf1 != NULL && pBuf2 != NULL)
      {
 	pTB1 = pBuf1;
@@ -612,7 +612,7 @@ PtrTextBuffer      pBuf2;
 	pTB2 = pBuf2;
 	lenRest2 = pTB2->BuLength;
 	pChar2 = &pTB2->BuContent[0];
-	equal = True;
+	equal = TRUE;
 	/* parcourt les deux chaines de buffers */
 	while (pTB1 != NULL && pTB2 != NULL && equal)
 	  {
@@ -648,7 +648,7 @@ PtrTextBuffer      pBuf2;
 	       }
 	  }
 	if (pTB1 != NULL || pTB2 != NULL || lenRest1 > 0 || lenRest2 > 0)
-	   equal = False;
+	   equal = FALSE;
      }
    return equal;
 }
@@ -909,7 +909,7 @@ int                 y;
      {
 	i = rank;
 	pNextBuf = pBuf;
-	stop = False;
+	stop = FALSE;
 	do
 	  {
 	     if (pNextBuf != pBuf)
@@ -933,7 +933,7 @@ int                 y;
 		/* ce buffer n'est pas plein */
 	       {
 		  /* on arrete les decalages */
-		  stop = True;
+		  stop = TRUE;
 		  /* on ajoute en fin le dernier point, qui a ete ecrase' */
 		  /* par le decalage */
 		  if (pNextBuf->BuLength > 0)

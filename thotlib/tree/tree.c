@@ -97,7 +97,7 @@ PtrElement          pEl;
 #endif /* __STDC__ */
 
 {
-   pEl->ElIsCopy = True;
+   pEl->ElIsCopy = TRUE;
    if (!pEl->ElTerminal)
      {
 	pEl = pEl->ElFirstChild;
@@ -149,7 +149,7 @@ PtrElement          pEl;
 	      else
 		 /* pEl has an end mark, so we search the begin mark */
 		 typeNum = pEl->ElTypeNumber - 1;
-	      found = False;
+	      found = FALSE;
 	      pOther = pEl;
 	      /* search loop */
 	      while ((pOther != NULL) && (!found))
@@ -181,7 +181,7 @@ PtrElement          pEl;
 
 /* ---------------------------------------------------------------------- 
    ElementIsReadOnly
-   returns True if the element pointed by pEl is protected against user
+   returns TRUE if the element pointed by pEl is protected against user
    modifications, or if it belongs to a protected tree.
    ---------------------------------------------------------------------- */
 
@@ -199,20 +199,20 @@ PtrElement          pEl;
    boolean             ret;
    boolean             testRO;
 
-   ret = False;
-   testRO = True;
+   ret = FALSE;
+   testRO = TRUE;
    pAsc = pEl;
    while (pAsc != NULL)
       if (pAsc->ElAccess == AccessHidden ||
 	  (testRO && pAsc->ElAccess == AccessReadOnly))
 	{
-	   ret = True;
+	   ret = TRUE;
 	   pAsc = NULL;
 	}
       else
 	{
 	   if (pAsc->ElAccess == AccessReadWrite)
-	      testRO = False;
+	      testRO = FALSE;
 	   pAsc = pAsc->ElParent;
 	}
    return ret;
@@ -220,7 +220,7 @@ PtrElement          pEl;
 
 /* ----------------------------------------------------------------------
    ElementIsHidden
-   returns True if the element pointed by pEl is hidden to the user, or 
+   returns TRUE if the element pointed by pEl is hidden to the user, or 
    if it belongs to a hidden tree.
    ---------------------------------------------------------------------- */
 
@@ -237,11 +237,11 @@ PtrElement          pEl;
    PtrElement          pAsc;
    boolean             ret;
 
-   ret = False;
+   ret = FALSE;
    pAsc = pEl;
    while (pAsc != NULL && !ret)
       if (pAsc->ElAccess == AccessHidden)
-	 ret = True;
+	 ret = TRUE;
       else
 	 pAsc = pAsc->ElParent;
    return ret;
@@ -276,7 +276,7 @@ char               *typeName;
 	pChild = pEl->ElFirstChild;
 	while (pChild != NULL && pRet == NULL)
 	  {
-	     pRet = FwdSearchTypeNameInSubtree (pChild, True, typeName);
+	     pRet = FwdSearchTypeNameInSubtree (pChild, TRUE, typeName);
 	     pChild = pChild->ElNext;
 	  }
      }
@@ -308,7 +308,7 @@ char               *typeName;
    if (pEl != NULL && typeName != NULL)
      {
 	/* searches the subtree of the element */
-	pRet = FwdSearchTypeNameInSubtree (pEl, False, typeName);
+	pRet = FwdSearchTypeNameInSubtree (pEl, FALSE, typeName);
 	if (pRet == NULL)
 	   /* if not found, searches on the subtrees of the next siblings
 	      of the element */
@@ -316,22 +316,22 @@ char               *typeName;
 	     pCur = pEl->ElNext;
 	     while (pCur != NULL && pRet == NULL)
 	       {
-		  pRet = FwdSearchTypeNameInSubtree (pCur, True, typeName);
+		  pRet = FwdSearchTypeNameInSubtree (pCur, TRUE, typeName);
 		  pCur = pCur->ElNext;
 	       }
 	     /* if not found, climbs up a level, then continues the search
 		with the next brother */
 	     if (pRet == NULL)
 	       {
-		  stop = False;
+		  stop = FALSE;
 		  pAsc = pEl;
 		  do
 		    {
 		       pAsc = pAsc->ElParent;
 		       if (pAsc == NULL)
-			  stop = True;
+			  stop = TRUE;
 		       else if (pAsc->ElNext != NULL)
-			  stop = True;
+			  stop = TRUE;
 		    }
 		  while (!(stop));
 		  if (pAsc != NULL)
@@ -498,11 +498,11 @@ PtrSSchema       pSS;
    PtrAttribute         pAttr;
    boolean             ret;
 
-   ret = False;
+   ret = FALSE;
    if (pEl->ElFirstAttr != NULL)	/* l'element a un attribut */
       if (pSS == NULL && attrNum == 0)
 	 /* on cherche un attribut quelconque */
-	 ret = True;		/* found ! */
+	 ret = TRUE;		/* found ! */
       else
 	 /* parcourt les attributs de l'element */
 	{
@@ -514,7 +514,7 @@ PtrSSchema       pSS;
 		   /* c'est l'attribut cherche */
 		   if (val == 0)
 		      /* on cherche une valeur quelconque */
-		      ret = True;	/* found ! */
+		      ret = TRUE;	/* found ! */
 		   else
 		      switch (pAttr->AeAttrType)
 			    {
@@ -523,11 +523,11 @@ PtrSSchema       pSS;
 				  if (pAttr->AeAttrValue == val)
 				     /* valeur cherchee */
 
-				     ret = True;	/* found ! */
+				     ret = TRUE;	/* found ! */
 				  break;
 			       case AtTextAttr:
 				  if (StringAndTextEqual (textVal, pAttr->AeAttrText))
-				     ret = True;
+				     ret = TRUE;
 				  break;
 			       default:
 				  break;
@@ -571,7 +571,7 @@ char               *textVal;
 	   pChild = pEl->ElFirstChild;
 	   while (pChild != NULL && pRet == NULL)
 	     {
-		pRet = FwdSearchAttrInSubtree (pChild, True, pSS, attrNum, val, textVal);
+		pRet = FwdSearchAttrInSubtree (pChild, TRUE, pSS, attrNum, val, textVal);
 		pChild = pChild->ElNext;
 	     }
 	}
@@ -677,14 +677,14 @@ int                 Kind;
 {
    boolean             ret;
 
-   ret = False;
+   ret = FALSE;
    switch (Kind)
 	 {
 	    case 1:		/* element vide ? */
 	       if (!pEl->ElTerminal)
 		 {
 		    if (pEl->ElFirstChild == NULL)
-		       ret = True;
+		       ret = TRUE;
 		 }
 	       else
 		  switch (pEl->ElLeafType)
@@ -692,20 +692,20 @@ int                 Kind;
 			   case LtText:
 			   case LtPicture:
 			      if (pEl->ElTextLength == 0)
-				 ret = True;
+				 ret = TRUE;
 			      break;
 			   case LtPlyLine:
 			      if (pEl->ElNPoints == 0)
-				 ret = True;
+				 ret = TRUE;
 			      break;
 			   case LtSymbol:
 			   case LtGraphics:
 			      if (pEl->ElGraph == '\0')
-				 ret = True;
+				 ret = TRUE;
 			      break;
 			   case LtReference:
 			      if (pEl->ElReference == NULL)
-				 ret = True;
+				 ret = TRUE;
 			      break;
 			   default:
 			      break;
@@ -714,12 +714,12 @@ int                 Kind;
 	    case 2:		/* element reference ? */
 	       if (pEl->ElTerminal)
 		  if (pEl->ElLeafType == LtReference)
-		     ret = True;
+		     ret = TRUE;
 	       break;
 	    case 3:		/* element de paire ? */
 	       if (pEl->ElTerminal)
 		  if (pEl->ElLeafType == LtPairedElem)
-		     ret = True;
+		     ret = TRUE;
 	       break;
 	 }
    return ret;
@@ -753,7 +753,7 @@ int                 Kind;
 	pChild = pEl->ElFirstChild;
 	while (pChild != NULL && pRet == NULL)
 	  {
-	     pRet = FwdSearchEmptyInSubtree (pChild, True, Kind);
+	     pRet = FwdSearchEmptyInSubtree (pChild, TRUE, Kind);
 	     pChild = pChild->ElNext;
 	  }
      }
@@ -787,7 +787,7 @@ int                 Kind;
    if (pEl != NULL)
       /* cherche dans le sous-arbre de l'element */
      {
-	pRet = FwdSearchEmptyInSubtree (pEl, False, Kind);
+	pRet = FwdSearchEmptyInSubtree (pEl, FALSE, Kind);
 	if (pRet == NULL)
 	   /* si echec, cherche dans les sous-arbres des freres suivants */
 	   /* de l'element */
@@ -795,21 +795,21 @@ int                 Kind;
 	     pCur = pEl->ElNext;
 	     while (pCur != NULL && pRet == NULL)
 	       {
-		  pRet = FwdSearchEmptyInSubtree (pCur, True, Kind);
+		  pRet = FwdSearchEmptyInSubtree (pCur, TRUE, Kind);
 		  pCur = pCur->ElNext;
 	       }
 	     /* si echec, cherche le premier ascendant avec un frere suivant */
 	     if (pRet == NULL)
 	       {
-		  stop = False;
+		  stop = FALSE;
 		  pAsc = pEl;
 		  do
 		    {
 		       pAsc = pAsc->ElParent;
 		       if (pAsc == NULL)
-			  stop = True;
+			  stop = TRUE;
 		       else if (pAsc->ElNext != NULL)
-			  stop = True;
+			  stop = TRUE;
 		    }
 		  while (!(stop));
 		  if (pAsc != NULL)
@@ -1077,14 +1077,14 @@ int                 assocNum;
 
    /* Cherche si ce parametre a une valeur pour le document */
    par = 0;
-   found = False;
+   found = FALSE;
    do
      {
 	if (pDoc->DocParameters[par] != NULL)
 	  {
 	     pPar = pDoc->DocParameters[par];
 	     if (pPar->ElTypeNumber == elemType && pPar->ElSructSchema == pSS)
-		found = True;
+		found = TRUE;
 	  }
 	par++;
      }
@@ -1094,7 +1094,7 @@ int                 assocNum;
       /* on copie cet arbre. */
      {
 	pEl = CopyTree (pDoc->DocParameters[par - 1], pDoc, assocNum, pSS, pDoc,
-			  NULL, True, False);
+			  NULL, TRUE, FALSE);
 
 	/* on rend la copie non modifiable */
 	if (pEl != NULL)
@@ -1104,12 +1104,12 @@ int                 assocNum;
       /* le parametre n'a pas de valeur, on cree un element texte contenant */
       /* son nom entre deux caracteres '$' */
      {
-	pEl = NewSubtree (CharString + 1, pSS, pDoc, assocNum, True, True,
-			  True, False);
+	pEl = NewSubtree (CharString + 1, pSS, pDoc, assocNum, TRUE, TRUE,
+			  TRUE, FALSE);
 	if (pEl != NULL)
 	  {
 	     pEl->ElTypeNumber = elemType;	/* change le type: ce n'est pas un texte */
-	     pEl->ElIsCopy = True;	/* l'element est non modifiable */
+	     pEl->ElIsCopy = TRUE;	/* l'element est non modifiable */
 
 	     i = 1;
 	     pR = &pEl->ElSructSchema->SsRule[pEl->ElTypeNumber - 1];
@@ -1194,7 +1194,7 @@ boolean             Check;
 		  do
 
 		     if (pAsc->ElSructSchema == pAttr2->AeAttrSSchema)
-			found = True;
+			found = TRUE;
 		     else
 			pAsc = pAsc->ElParent;
 		  while (!(pAsc == NULL || found));
@@ -1209,7 +1209,7 @@ boolean             Check;
 				      AeAttrSSchema->SsName) == 0)
 			    {
 			       pAttr2->AeAttrSSchema = pAsc->ElSructSchema;
-			       found = True;
+			       found = TRUE;
 			    }
 			  else
 			    {
@@ -1217,7 +1217,7 @@ boolean             Check;
 				  /* l'attribut a copier est defini dans une extension */
 				  if (ValidExtension (pAsc, &pAttr2->AeAttrSSchema))
 				     /* cette extension s'applique au schema de l'ascendant */
-				     found = True;
+				     found = TRUE;
 			       if (!found)
 				  pAsc = pAsc->ElParent;
 			    }
@@ -1339,10 +1339,10 @@ PtrElement          pRoot;
 {
    boolean             within;
 
-   within = False;
+   within = FALSE;
    while (!within && pEl != NULL)
       if (pEl == pRoot)
-	 within = True;
+	 within = TRUE;
       else
 	 pEl = pEl->ElParent;
    return within;
@@ -1372,14 +1372,14 @@ PtrSSchema        pSS;
    int                 i;
    boolean             SSok;
 
-   ok = False;			/* a priori, reponse negative */
+   ok = FALSE;			/* a priori, reponse negative */
    if (pSS == NULL)
-      SSok = True;		/* n'importe quel schema de struct. convient */
+      SSok = TRUE;		/* n'importe quel schema de struct. convient */
    else
       /* compare l'identificateur du schema de structure */
       SSok = pEl->ElSructSchema->SsCode == pSS->SsCode;
    if (SSok && pEl->ElTypeNumber == typeNum)
-      ok = True;
+      ok = TRUE;
    else if (pSS != NULL)
      {
 	pRe1 = &pSS->SsRule[typeNum - 1];
@@ -1418,7 +1418,7 @@ PtrSSchema        pSS;
 	     /* retient les elements racines de cette nature */
 	     if (pEl->ElSructSchema == pRe1->SrSSchemaNat)
 		if (pEl->ElTypeNumber == pRe1->SrSSchemaNat->SsRootElem)
-		   ok = True;
+		   ok = TRUE;
 	  }
      }
    return ok;
@@ -1448,18 +1448,18 @@ PtrElement          pEl2;
    boolean             avant;
 
    if (pEl1 == pEl2)
-      avant = False;
+      avant = FALSE;
    else
      {
 	pEl = pEl2;
-	found = False;
+	found = FALSE;
 	while (pEl != NULL && !found)
 	  {
 	     while (pEl->ElPrevious != NULL)
 	       {
 		  pEl = pEl->ElPrevious;
 		  if (ElemIsWithinSubtree (pEl1, pEl))
-		     found = True;
+		     found = TRUE;
 	       }
 	     pEl = pEl->ElParent;
 	  }
@@ -1489,16 +1489,16 @@ PtrElement          pEl2;
    boolean             englobe;
 
    if (pEl1 == NULL)
-      englobe = False;
+      englobe = FALSE;
    else if (pEl2 == NULL)
-      englobe = True;
+      englobe = TRUE;
    else
      {
-	found = False;
+	found = FALSE;
 	p = pEl2->ElParent;
 	while (!found && p != NULL)
 	   if (p == pEl1)
-	      found = True;
+	      found = TRUE;
 	   else
 	      p = p->ElParent;
 	englobe = found;
@@ -1536,10 +1536,10 @@ PtrElement          pEl2;
    else
      {
 	pAsc = pEl1->ElParent;
-	stop = False;
+	stop = FALSE;
 	while (!stop && pAsc != NULL)
 	   if (ElemIsAnAncestor (pAsc, pEl2))
-	      stop = True;
+	      stop = TRUE;
 	   else
 	      pAsc = pAsc->ElParent;
      }
@@ -1569,7 +1569,7 @@ PtrElement          pEl;
    pE = pEl;
    if (pE != NULL)
      {
-	stop = False;
+	stop = FALSE;
 	do
 	  {
 	     pEl1 = pE;
@@ -1581,12 +1581,12 @@ PtrElement          pEl;
 		   else
 		     {
 			pE = pEl1->ElParent;
-			stop = True;
+			stop = TRUE;
 		     }
 		else
-		   stop = True;
+		   stop = TRUE;
 	     else if (pEl1->ElFirstChild == NULL)
-		stop = True;
+		stop = TRUE;
 	     else
 		pE = pEl1->ElFirstChild;
 	  }
@@ -1650,7 +1650,7 @@ PtrSSchema        pSS;
    PtrElement          pEl1;
    PtrElement          pAsc;
 
-   found = False;
+   found = FALSE;
    if (pEl != NULL && typeNum > 0 && pSS != NULL)
       do
 	{
@@ -1722,7 +1722,7 @@ PtrSSchema        pSS1;
 	pChild = pEl->ElFirstChild;
 	while (pChild != NULL && pRet == NULL)
 	  {
-	     pRet = FwdSearch2TypesInSubtree (pChild, True, typeNum2, typeNum1, pSS2, pSS1);
+	     pRet = FwdSearch2TypesInSubtree (pChild, TRUE, typeNum2, typeNum1, pSS2, pSS1);
 	     pChild = pChild->ElNext;
 	  }
      }
@@ -1761,7 +1761,7 @@ PtrSSchema        pSS2;
    if (pEl != NULL)
       /* cherche dans le sous-arbre de l'element */
      {
-	pRet = FwdSearch2TypesInSubtree (pEl, False, typeNum2, typeNum1, pSS2, pSS1);
+	pRet = FwdSearch2TypesInSubtree (pEl, FALSE, typeNum2, typeNum1, pSS2, pSS1);
 	if (pRet == NULL)
 	   /* si echec, cherche dans les sous-arbres des freres suivants */
 	   /* de l'element */
@@ -1769,21 +1769,21 @@ PtrSSchema        pSS2;
 	     pCur = pEl->ElNext;
 	     while (pCur != NULL && pRet == NULL)
 	       {
-		  pRet = FwdSearch2TypesInSubtree (pCur, True, typeNum2, typeNum1, pSS2, pSS1);
+		  pRet = FwdSearch2TypesInSubtree (pCur, TRUE, typeNum2, typeNum1, pSS2, pSS1);
 		  pCur = pCur->ElNext;
 	       }
 	     /* si echec, cherche le premier ascendant avec un frere suivant */
 	     if (pRet == NULL)
 	       {
-		  stop = False;
+		  stop = FALSE;
 		  pAsc = pEl;
 		  do
 		    {
 		       pAsc = pAsc->ElParent;
 		       if (pAsc == NULL)
-			  stop = True;
+			  stop = TRUE;
 		       else if (pAsc->ElNext != NULL)
-			  stop = True;
+			  stop = TRUE;
 		    }
 		  while (!(stop));
 		  if (pAsc != NULL)
@@ -2014,7 +2014,7 @@ PtrSSchema        pSS;
    if (pEl != NULL)
       /* cherche dans le sous-arbre de l'element */
      {
-	pRet = FwdSearchAttrInSubtree (pEl, False, pSS, attrNum, val, textVal);
+	pRet = FwdSearchAttrInSubtree (pEl, FALSE, pSS, attrNum, val, textVal);
 	if (pRet == NULL)
 	   /* si echec, cherche dans les sous-arbres des freres suivants */
 	   /* de l'element */
@@ -2022,21 +2022,21 @@ PtrSSchema        pSS;
 	     pCur = pEl->ElNext;
 	     while (pCur != NULL && pRet == NULL)
 	       {
-		  pRet = FwdSearchAttrInSubtree (pCur, True, pSS, attrNum, val, textVal);
+		  pRet = FwdSearchAttrInSubtree (pCur, TRUE, pSS, attrNum, val, textVal);
 		  pCur = pCur->ElNext;
 	       }
 	     /* si echec, cherche le premier ascendant avec un frere suivant */
 	     if (pRet == NULL)
 	       {
-		  stop = False;
+		  stop = FALSE;
 		  pAsc = pEl;
 		  do
 		    {
 		       pAsc = pAsc->ElParent;
 		       if (pAsc == NULL)
-			  stop = True;
+			  stop = TRUE;
 		       else if (pAsc->ElNext != NULL)
-			  stop = True;
+			  stop = TRUE;
 		    }
 		  while (!(stop));
 		  if (pAsc != NULL)
@@ -2123,15 +2123,15 @@ PtrElement         *pEl;
 {
    boolean             stop;
 
-   stop = False;
+   stop = FALSE;
    do
      {
 	if (*pEl == NULL)
-	   stop = True;
+	   stop = TRUE;
 	else if (!(*pEl)->ElTerminal)
-	   stop = True;
+	   stop = TRUE;
 	else if ((*pEl)->ElLeafType != LtPageColBreak)
-	   stop = True;
+	   stop = TRUE;
 	if (!stop)
 	   *pEl = (*pEl)->ElNext;
      }
@@ -2160,17 +2160,17 @@ PtrElement         *pEl;
    boolean             stop;
    PtrElement          pPrev;
 
-   stop = False;
+   stop = FALSE;
    pPrev = *pEl;
    do
      {
 	if (*pEl == NULL)
-	   stop = True;
+	   stop = TRUE;
 	else if (!(*pEl)->ElTerminal)
-	   stop = True;
+	   stop = TRUE;
 	else if ((*pEl)->ElLeafType != LtPageColBreak
 		 || (*pEl)->ElPageType != PgBegin)
-	   stop = True;
+	   stop = TRUE;
 	if (!stop)
 	  {
 	     pPrev = *pEl;
@@ -2204,15 +2204,15 @@ PtrElement         *pEl;
 {
    boolean             stop;
 
-   stop = False;
+   stop = FALSE;
    do
      {
 	if (*pEl == NULL)
-	   stop = True;
+	   stop = TRUE;
 	else if (!(*pEl)->ElTerminal)
-	   stop = True;
+	   stop = TRUE;
 	else if ((*pEl)->ElLeafType != LtPageColBreak)
-	   stop = True;
+	   stop = TRUE;
 	if (!stop)
 	   *pEl = (*pEl)->ElPrevious;
      }
@@ -2504,29 +2504,29 @@ boolean             del;
    SRule              *pSRule;
 
    /* le nouvel element remplacera l'element CHOIX */
-   replace = True;
+   replace = TRUE;
    if (pEl->ElParent != NULL)
       /* ...sauf si le choix est un element d'agregat */
 	if (pEl->ElParent->ElSructSchema->SsRule[pEl->ElParent->ElTypeNumber - 1].SrConstruct == CsAggregate ||
 	    pEl->ElParent->ElSructSchema->SsRule[pEl->ElParent->ElTypeNumber - 1].SrConstruct == CsUnorderedAggregate)
-	   replace = False;
+	   replace = FALSE;
    /* sauf si le choix porte des exceptions */
    pSRule = &pEl->ElSructSchema->SsRule[pEl->ElTypeNumber - 1];
    if (pSRule->SrNInclusions > 0 || pSRule->SrNExclusions > 0)
-      replace = False;
+      replace = FALSE;
    /* sauf si c'est la racine du schema de structure */
    if (pEl->ElTypeNumber == pEl->ElSructSchema->SsRootElem)
-      replace = False;
+      replace = FALSE;
    /* sauf si c'est la racine d'un element associe */
    if (pEl->ElSructSchema->SsRule[pEl->ElTypeNumber - 1].SrAssocElem)
-      replace = False;
+      replace = FALSE;
    if (!replace)
       if (pEl->ElTypeNumber == (*pNew)->ElTypeNumber)
 	 if (pEl->ElSructSchema->SsCode == (*pNew)->ElSructSchema->SsCode)
 	    /* les deux elements sont de meme type; l'un remplacera l'autre */
-	    replace = True;
+	    replace = TRUE;
    if (del)
-      replace = True;
+      replace = TRUE;
    if (!replace)
       /* ajoute l'element cree comme fils de l'element choix */
       InsertFirstChild (pEl, *pNew);
@@ -2710,7 +2710,7 @@ PtrDocument         pDoc;
 	pAttr->AeAttrSSchema = pSS;
 	pAttr->AeAttrNum = att;
 	if (!pSRule->SrDefAttrModif[i])	/* attribut a valeur fixe */
-	   pAttr->AeDefAttr = True;
+	   pAttr->AeDefAttr = TRUE;
 	pAttr->AeAttrType = pSS->SsAttribute[att - 1].AttrType;
 	switch (pAttr->AeAttrType)
 	      {
@@ -2789,7 +2789,7 @@ boolean             withLabel;
    if (Root)
       /* regle definissant le type de l'element */
      {
-	error = False;
+	error = FALSE;
 	pSRule = &pSS->SsRule[typeNum - 1];
 	if (pSRule->SrConstruct == CsNatureSchema)
 	   /* C'est une regle de changement de nature, on va creer un */
@@ -2804,7 +2804,7 @@ boolean             withLabel;
 	       }
 	     if (pSRule->SrSSchemaNat == NULL)
 		/* echec chargement schema */
-		error = True;
+		error = TRUE;
 	     else
 		/* le schema de nature est charge' */
 		/* il y a un objet de plus de cette nature */
@@ -2851,7 +2851,7 @@ boolean             withLabel;
 	     switch (pSRule->SrConstruct)
 		   {
 		      case CsReference:
-			 pEl->ElTerminal = True;
+			 pEl->ElTerminal = TRUE;
 			 pEl->ElLeafType = LtReference;
 			 /* acquiert un descripteur de reference */
 			 GetReference (&ref);
@@ -2859,7 +2859,7 @@ boolean             withLabel;
 			 pEl->ElReference->RdElement = pEl;
 			 break;
 		      case CsPairedElement:
-			 pEl->ElTerminal = True;
+			 pEl->ElTerminal = TRUE;
 			 pEl->ElLeafType = LtPairedElem;
 			 if (pSRule->SrFirstOfPair)
 			    pDoc->DocMaxPairIdent++;
@@ -2867,7 +2867,7 @@ boolean             withLabel;
 			 pEl->ElOtherPairedEl = NULL;
 			 break;
 		      case CsBasicElement:
-			 pEl->ElTerminal = True;
+			 pEl->ElTerminal = TRUE;
 			 switch (pSRule->SrBasicType)
 			       {
 				  case CharString:
@@ -2899,8 +2899,8 @@ boolean             withLabel;
 				     pEl->ElPageNumber = 1;
 				     pEl->ElPageNumber = 0;
 				     pEl->ElViewPSchema = 0;
-				     pEl->ElPageModified = False;
-				     pEl->ElAssocHeader = True;
+				     pEl->ElPageModified = FALSE;
+				     pEl->ElAssocHeader = TRUE;
 				     pEl->ElVolume = 10;
 				     break;
 				  case Refer:
@@ -2910,7 +2910,7 @@ boolean             withLabel;
 			       }
 			 break;
 		      case CsConstant:
-			 pEl->ElTerminal = True;
+			 pEl->ElTerminal = TRUE;
 			 CreateTextBuffer (pEl);
 			 /* copie la valeur de la constante */
 			 i = 0;
@@ -2935,18 +2935,18 @@ boolean             withLabel;
    /* evalue s'il faut engendrer la descendance */
    pSRule = &pSS->SsRule[typeNum - 1];
    if (!Desc || pSRule->SrParamElem)
-      gener = False;
+      gener = FALSE;
    else
      {
-	gener = True;
+	gener = TRUE;
 	if (pSRule->SrRecursive)
 	   /* regle recursive */
 	   if (pSRule->SrRecursDone)
 	      /* elle a deja ete appliquee */
-	      gener = False;	/* on n'engendre pas sa descendance */
+	      gener = FALSE;	/* on n'engendre pas sa descendance */
 	   else
 	      /* elle n'a pas encore ete appliquee */
-	      pSRule->SrRecursDone = True;	/* on l'applique et on s'en souvient */
+	      pSRule->SrRecursDone = TRUE;	/* on l'applique et on s'en souvient */
      }
    if (gener)
       /* on engendre la descendance selon le constructeur de la regle */
@@ -2959,14 +2959,14 @@ boolean             withLabel;
 	       case CsIdentity:
 		  /* structure identique a celle definie par une autre regle */
 		  /* du meme schema */
-		  create = False;
+		  create = FALSE;
 		  pSRule2 = &pSS->SsRule[pSRule->SrIdentRule - 1];
 		  if (pSRule2->SrParamElem || pSRule2->SrAssocElem || pSRule2->SrConstruct == CsBasicElement ||
 		      pSRule2->SrNInclusions > 0 || pSRule2->SrNExclusions > 0 ||
 		      pSRule2->SrConstruct == CsConstant || pSRule2->SrConstruct == CsChoice ||
 		      pSRule2->SrConstruct == CsPairedElement ||
 		      pSRule2->SrConstruct == CsReference || pSRule2->SrConstruct == CsNatureSchema)
-		     create = True;
+		     create = TRUE;
 		  t1 = NewSubtree (pSRule->SrIdentRule, pSS, pDoc, assocNum, Desc,
 				 create, withAttr, withLabel);
 		  if (pEl == NULL)
@@ -2982,7 +2982,7 @@ boolean             withLabel;
 		  break;
 	       case CsList:
 		  t1 = NewSubtree (pSRule->SrListItem, pSS, pDoc, assocNum, Desc,
-				 True, withAttr, withLabel);
+				 TRUE, withAttr, withLabel);
 		  if (pEl == NULL)
 		     pEl = t1;
 		  else
@@ -2991,7 +2991,7 @@ boolean             withLabel;
 		     for (i = 2; i <= pSRule->SrMinItems; i++)
 		       {
 			  t2 = NewSubtree (pSRule->SrListItem, pSS, pDoc, assocNum, Desc,
-				 True, withAttr, withLabel);
+				 TRUE, withAttr, withLabel);
 			  if (t2 != NULL)
 			    {
 			       InsertElemAfterLastSibling (t1, t2);
@@ -3006,7 +3006,7 @@ boolean             withLabel;
 		     if (!pSRule->SrOptComponent[i - 1])
 			/* on ne cree pas les composants optionnels */
 		       {
-			  t2 = NewSubtree (pSRule->SrComponent[i - 1], pSS, pDoc, assocNum, Desc, True,
+			  t2 = NewSubtree (pSRule->SrComponent[i - 1], pSS, pDoc, assocNum, Desc, TRUE,
 				       withAttr, withLabel);
 			  if (t2 != NULL)
 			    {
@@ -3025,7 +3025,7 @@ boolean             withLabel;
 	    }
 
    if (pSRule->SrRecursive && pSRule->SrRecursDone && gener)
-      pSRule->SrRecursDone = False;	/* pour une autre fois... */
+      pSRule->SrRecursDone = FALSE;	/* pour une autre fois... */
    return pEl;
 }
 
@@ -3056,7 +3056,7 @@ PtrElement         *pEl;
      {
 	/* teste tous les ascendants de l'element */
 	pAsc = (*pEl)->ElParent;
-	exclus = False;
+	exclus = FALSE;
 	while (pAsc != NULL && !exclus)
 	  {
 	     /* examine toutes les exclusions definies pour ce type d'element */
@@ -3075,12 +3075,12 @@ PtrElement         *pEl;
 			     /* type d'element exclus par l'ascendant */
 			     if ((*pEl)->ElTypeNumber <= MAX_BASIC_TYPE)
 				/* c'est un type de base, il est exclus */
-				exclus = True;
+				exclus = TRUE;
 			     else
 				/* compare les identificateurs des schemas de structure */
 			     if (pSS->SsCode == (*pEl)->ElSructSchema->SsCode)
 				/* memes schemas de structure, type exclus */
-				exclus = True;
+				exclus = TRUE;
 			  if (!exclus)
 			     if ((*pEl)->ElTypeNumber == (*pEl)->ElSructSchema->SsRootElem)
 				/* l'element traite' est l'element racine de son */
@@ -3105,7 +3105,7 @@ PtrElement         *pEl;
 				      /* l'element est un membre de paire */
 				      if (!(*pEl)->ElSructSchema->SsRule[(*pEl)->ElTypeNumber - 1].SrFirstOfPair)
 					 /* c'est le 2eme membre de la paire */
-					 exclus = True;
+					 exclus = TRUE;
 		       }
 		  /* passe au schema d'extension suivant */
 		  if (pExtSSch == NULL)
@@ -3216,17 +3216,17 @@ PtrAttribute         pAttr;
 	   /* l'element */
 	  {
 	     pPrevAttr = pEl->ElFirstAttr;
-	     stop = False;
+	     stop = FALSE;
 	     do
 		if (pPrevAttr == NULL)
 		   /* fin de chaine, on n'a pas trouve' l'attribut. Il a du etre */
 		   /* deja retire' */
-		   stop = True;
+		   stop = TRUE;
 		else if (pPrevAttr->AeNext == pAttr)
 		   /* found', on le dechaine */
 		  {
 		     pPrevAttr->AeNext = pAttr->AeNext;
-		     stop = True;
+		     stop = TRUE;
 		  }
 		else
 		   /* passe au suivant */
@@ -3468,7 +3468,7 @@ PtrElement         *pEl;
 		/* libere la nature */
 	       {
 		  pAsc = pEl1->ElParent;
-		  ok = False;
+		  ok = FALSE;
 		  while ((!ok) && (pAsc != NULL))
 		    {
 		       pSS = pEl1->ElSructSchema;
@@ -3477,7 +3477,7 @@ PtrElement         *pEl;
 			  /* le schema de structure a ete libere'. Il faut le */
 			  /* supprimer de la table des natures du document */
 			 {
-			    stop = False;
+			    stop = FALSE;
 			    for (d = 0; d < MAX_DOCUMENTS && !stop; d++)
 			      {
 				 pDoc = TabDocuments[d];
@@ -3486,7 +3486,7 @@ PtrElement         *pEl;
 				      for (n = 1; n <= pDoc->DocNNatures && !stop; n++)
 					 if (pDoc->DocNatureSSchema[n - 1] == pSS)
 					   {
-					      stop = True;
+					      stop = TRUE;
 					      while (n < pDoc->DocNNatures)
 						{
 						   strcpy (pDoc->DocNatureName[n - 1], pDoc->DocNatureName[n]);
@@ -3505,14 +3505,14 @@ PtrElement         *pEl;
 			  /* structure englobant, ou` cette nature est une unite' */
 			 {
 			    pSS = pAsc->ElSructSchema;
-			    stop = False;
+			    stop = FALSE;
 			    do
 			      {
 				 pAsc = pAsc->ElParent;
 				 if (pAsc == NULL)
-				    stop = True;
+				    stop = TRUE;
 				 else if (pAsc->ElSructSchema != pSS)
-				    stop = True;
+				    stop = TRUE;
 			      }
 			    while (!stop);
 			 }
@@ -3584,18 +3584,18 @@ boolean             shareRef;
    /* pointeur sur l'element qui sera cree' */
    if (pSource != NULL)
      {
-	doCopy = True;
+	doCopy = TRUE;
 	/* on ne copie pas les marques de page */
 	if (pSource->ElTerminal && pSource->ElLeafType == LtPageColBreak)
-	   doCopy = False;
+	   doCopy = FALSE;
 	else if (pSource->ElSource != NULL)
 	   /* cet element est une copie-inclusion */
 	   /* on ne le copie pas s'il a ete engendre' avant ou apres une */
 	   /* marque de page (comme les tetieres de tableau par exemple) */
 	   if (TypeHasException (ExcPageBreakRepBefore, pSource->ElTypeNumber, pSource->ElSructSchema))
-	      doCopy = False;
+	      doCopy = FALSE;
 	   else if (TypeHasException (ExcPageBreakRepetition, pSource->ElTypeNumber, pSource->ElSructSchema))
-	      doCopy = False;
+	      doCopy = FALSE;
 	if (doCopy)
 	  {
 	     copyType = pSource->ElTypeNumber;
@@ -3627,14 +3627,14 @@ boolean             shareRef;
 				  {
 				     /* la copie aura le schema de structure de son doc. */
 				     pSSchema = pAsc->ElSructSchema;
-				     sameSSchema = True;
+				     sameSSchema = TRUE;
 				  }
 				else if (pSource->ElSructSchema->SsExtension)
 				   /* verifie si l'ascendant a cette extension de schema */
 				  {
 				     pSSchema = pSource->ElSructSchema;
 				     if (ValidExtension (pAsc, &pSSchema))
-					sameSSchema = True;
+					sameSSchema = TRUE;
 				  }
 				else if (pAsc->ElSructSchema->SsExtension)
 				   /* l'ascendant est une extension */
@@ -3643,7 +3643,7 @@ boolean             shareRef;
 				     if (ValidExtension (pSource, &pSS))
 				       {
 					  pSSchema = pSource->ElSructSchema;
-					  sameSSchema = True;
+					  sameSSchema = TRUE;
 				       }
 				  }
 				if (!sameSSchema)
@@ -3836,7 +3836,7 @@ PtrSSchema        pSS;
    boolean             stop;
 
    pEl = NULL;
-   stop = False;
+   stop = FALSE;
    a = 0;
    do
      {
@@ -3850,7 +3850,7 @@ PtrSSchema        pSS;
 		       pEl2->ElSructSchema->SsCode == pSS->SsCode)
 		     {
 			pEl = pEl2;
-			stop = True;
+			stop = TRUE;
 		     }
 	     }
 	a++;
@@ -3916,7 +3916,7 @@ PtrDocument         pDoc;
    boolean             done;
 
    /* on n'a pas encore fait la copie */
-   done = False;
+   done = FALSE;
    if (pEl->ElTerminal)
       switch (pEl->ElLeafType)
 	    {
@@ -3955,7 +3955,7 @@ PtrDocument         pDoc;
 		/* on copie son contenu */
 	       {
 		  /* copie les attributs */
-		  CopyAttributes (pSource, pEl, True);
+		  CopyAttributes (pSource, pEl, TRUE);
 		  /* copie les regles de presentation specifique */
 		  CopyPresRules (pSource, pEl);
 		  /* copie le commentaire associe a l'element */
@@ -4027,11 +4027,11 @@ PtrDocument         pDoc;
 			       pSource->ElSructSchema->SsCode))
 		    {
 		       pC1 = CopyTree (pSource, pDocSource, pEl->ElAssocNum, pEl
-				      ->ElSructSchema, pDoc, pEl, True, True);
+				      ->ElSructSchema, pDoc, pEl, TRUE, TRUE);
 		       if (pC1 != NULL)
 			 {
 			    pC1->ElReferredDescr = NULL;
-			    InsertElemInChoice (pEl, &pC1, False);
+			    InsertElemInChoice (pEl, &pC1, FALSE);
 			 }
 		    }
 		  else if (pSource->ElFirstChild == NULL)
@@ -4043,7 +4043,7 @@ PtrDocument         pDoc;
 		       do
 			 {
 			    pC2 = CopyTree (pS2, pDocSource, pEl->ElAssocNum,
-				   pEl->ElSructSchema, pDoc, pEl, True, True);
+				   pEl->ElSructSchema, pDoc, pEl, TRUE, TRUE);
 			    if (pC2 != NULL)
 			      {
 				 if (pC1 == NULL)
@@ -4098,7 +4098,7 @@ PtrDocument         pDoc;
    LabelIntToString (NewLabel (pDoc), pNew->ElLabel);
    /* copie les attributs sans verification puisqu'on reste dans le meme */
    /* schema de structure. */
-   CopyAttributes (pEl, pNew, False);
+   CopyAttributes (pEl, pNew, FALSE);
    /* copie les regles de presentation specifique */
    CopyPresRules (pEl, pNew);
    pNew->ElPrevious = NULL;
@@ -4139,7 +4139,7 @@ PtrSSchema        pSSattr;
    boolean             found;
    PtrAttribute         pAttr;
 
-   found = False;
+   found = FALSE;
    pAttr = pEl->ElFirstAttr;
    /* premier attribut de l'element */
    while (pAttr != NULL && !found)
@@ -4148,10 +4148,10 @@ PtrSSchema        pSSattr;
 	   /* memes numeros d'attribut */
 	   if (attrNum == 1)
 	      /* c'est l'attribut Langue, inutile de comparer les schemas */
-	      found = True;
+	      found = TRUE;
 	   else if (pAttr->AeAttrSSchema->SsCode == pSSattr->SsCode)
 	      /* memes schemas : c'est bien l'attribut cherche' */
-	      found = True;
+	      found = TRUE;
 	if (!found)
 	   /* passe a l'attribut suivant du meme element */
 	   pAttr = pAttr->AeNext;
@@ -4243,7 +4243,7 @@ PtrElement          pEl;
 	   GetAttr (&pAttr);
 	   pAttr->AeAttrSSchema = pDoc->DocSSchema;
 	   pAttr->AeAttrNum = 1;
-	   pAttr->AeDefAttr = False;
+	   pAttr->AeDefAttr = FALSE;
 	   pAttr->AeAttrType = AtTextAttr;
 	   GetBufTexte (&pAttr->AeAttrText);
 	   CopyStringToText (TtaGetLanguageName (lang), pAttr->AeAttrText, &len);

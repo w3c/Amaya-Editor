@@ -4,15 +4,7 @@
 #include "typemedia.h"
 #include "lost.xpm"
 #include "picture.h"
-#include "thotconfig.h"
 #include "frame.h"
-
-#include "pixmapdrvr.h"
-#include "gifdrvr.h"
-#include "jpegdrvr.h"
-#include "pngdrvr.h"
-#include "bitmapdrvr.h"
-#include "epsfdrvr.h"
 #include "epsflogo.h"
 #include "interface.h"
 
@@ -95,24 +87,24 @@ static char         reverseByte[0x100] =
 
 #include "appli.f"
 #include "arbabs.f"
-#include "bitmapdrvr.f"
+#include "xbmhandler.f"
 #include "docvues.f"
 #include "dofile.f"
-#include "epsfdrvr.f"
+#include "epshandler.f"
 #include "filesystem.f"
 #include "font.f"
 #include "fen.f"
-#include "gifdrvr.f"
-#include "jpegdrvr.f"
-#include "imagedrvr.f"
-#include "pixmapdrvr.f"
-#include "pngdrvr.f"
+#include "gifhandler.f"
+#include "jpeghandler.f"
+#include "picture.f"
+#include "xpmhandler.f"
+#include "pnghandler.f"
 #include "pres.f"
 #include "inites.f"
 
 /* ---------------------------------------------------------------------- */
-/* |    IsFormat retourne True si le fichier de nom fileName contient une     | */
-/* |            image de type typeImage. False sinon.                   | */
+/* |    IsFormat retourne TRUE si le fichier de nom fileName contient une     | */
+/* |            image de type typeImage. FALSE sinon.                   | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
 static boolean      IsFormat (int typeImage, char *fileName)
@@ -165,7 +157,7 @@ Pixmap              pix;
        && (pix != ImageLostPixmapID)
        && (pix != ImageBadPixmapID)
        && (pix != ImageEPSFPixmapID))
-      XFreePixmap (GDp (0), pix);
+      XFreePixmap (TtDisplay, pix);
 #endif /* NEW_WILLOWS */
 }
 
@@ -321,7 +313,7 @@ int                 desory;
 
 #ifndef NEW_WILLOWS
    if (SrcPix != None)
-      XCopyArea (GDp (0), SrcPix, Drawab, graphicGC (0), srcorx, srcory, w, h, desorx, desory);
+      XCopyArea (TtDisplay, SrcPix, Drawab, TtGraphicGC, srcorx, srcory, w, h, desorx, desory);
 #endif /* NEW_WILLOWS */
 
 }
@@ -355,14 +347,14 @@ static Pixmap       ImageBadPixmap ()
 
 
 /* ---------------------------------------------------------------------- */
-/* |    PixmapIsOk retourne False si le pixmap contenu dans imageDesc   | */
-/* |            est vide. On retourne True s'il est egal aux images     | */
+/* |    PixmapIsOk retourne FALSE si le pixmap contenu dans imageDesc   | */
+/* |            est vide. On retourne TRUE s'il est egal aux images     | */
 /* |            predefinies LostPixmap et BadPixmap.                    | */
-/* |            - Si on presente RealSize, on retourne True.    | */
-/* |            - Si on presente ReScale, on retourne True si  | */
+/* |            - Si on presente RealSize, on retourne TRUE.    | */
+/* |            - Si on presente ReScale, on retourne TRUE si  | */
 /* |            la boite box possede au moins une dimension egale a`    | */
 /* |            celle du pixmap.                                        | */
-/* |            - Si on presente FillFrame, on retourne True si la     | */
+/* |            - Si on presente FillFrame, on retourne TRUE si la     | */
 /* |            boite box possede la meme taille que le pixmap dans     | */
 /* |            les 2 directions.                                       | */
 /* ---------------------------------------------------------------------- */
@@ -378,25 +370,25 @@ PictInfo    *imageDesc;
    int                 xpix, ypix, wpix, hpix, bdw, dep;
    Drawable            root;
 
-   pixmapok = True;
+   pixmapok = TRUE;
    if ((imageDesc->PicPixmap == ImageLostPixmapID)
        || (imageDesc->PicPixmap == ImageBadPixmapID)
        || (imageDesc->PicPixmap == ImageEPSFPixmapID))
-      return True;
+      return TRUE;
 
    if (imageDesc->PicPixmap == None)
      {
-	return False;
+	return FALSE;
      }
    else
      {
 #ifndef NEW_WILLOWS
-	XGetGeometry (GDp (0), imageDesc->PicPixmap, &root, &xpix, &ypix, &wpix, &hpix, &bdw, &dep);
+	XGetGeometry (TtDisplay, imageDesc->PicPixmap, &root, &xpix, &ypix, &wpix, &hpix, &bdw, &dep);
 #endif /* NEW_WILLOWS */
 	switch (imageDesc->PicPresent)
 	      {
 		 case RealSize:
-		    pixmapok = True;	/* tout au plus un centrage */
+		    pixmapok = TRUE;	/* tout au plus un centrage */
 		    break;
 		 case ReScale:
 		    pixmapok = ((box->BxWidth == wpix) || (box->BxHeight == hpix));
@@ -545,82 +537,82 @@ boolean    printing;
    ReleaseDC (WIN_Main_Wd, hdc);
 #endif /* 0 */
 #else  /* NEW_WILLOWS */
-   graphicGC (0) = XCreateGC (GDp (0), GRootW (0), 0, NULL);
-   XSetForeground (GDp (0), graphicGC (0), Black_Color);
-   XSetBackground (GDp (0), graphicGC (0), White_Color);
-   XSetGraphicsExposures (GDp (0), graphicGC (0), False);
+   TtGraphicGC = XCreateGC (TtDisplay, TtRootWindow, 0, NULL);
+   XSetForeground (TtDisplay, TtGraphicGC, Black_Color);
+   XSetBackground (TtDisplay, TtGraphicGC, White_Color);
+   XSetGraphicsExposures (TtDisplay, TtGraphicGC, FALSE);
 
-   GCpicture = XCreateGC (GDp (0), GRootW (0), 0, NULL);
-   XSetForeground (GDp (0), GCpicture, Black_Color);
-   XSetBackground (GDp (0), GCpicture, White_Color);
-   XSetGraphicsExposures (GDp (0), GCpicture, False);
+   GCpicture = XCreateGC (TtDisplay, TtRootWindow, 0, NULL);
+   XSetForeground (TtDisplay, GCpicture, Black_Color);
+   XSetBackground (TtDisplay, GCpicture, White_Color);
+   XSetGraphicsExposures (TtDisplay, GCpicture, FALSE);
 
    ImageLostPixmapID = TtaCreatePixmapLogo (lost_xpm);
    ImageBadPixmapID = TtaCreatePixmapLogo (lost_xpm);
-   ImageEPSFPixmapID = XCreatePixmapFromBitmapData (GDp (0), GRootW (0),
+   ImageEPSFPixmapID = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow,
 						    epsflogo_bits,
 						    epsflogo_width,
 				  epsflogo_height, Black_Color, White_Color,
-						    Gdepth (0));
-   vinfo.visualid = XVisualIDFromVisual (XDefaultVisual (GDp (0),
-							 ThotScreen (0)));
-   vptr = XGetVisualInfo (GDp (0), VisualIDMask, &vinfo, &i);
+						    TtWDepth);
+   vinfo.visualid = XVisualIDFromVisual (XDefaultVisual (TtDisplay,
+							 TtScreen));
+   vptr = XGetVisualInfo (TtDisplay, VisualIDMask, &vinfo, &i);
    THOT_vInfo.class = vptr->class;
    THOT_vInfo.depth = vptr->depth;
-   theVisual = DefaultVisual (GDp (0), ThotScreen (0));
+   theVisual = DefaultVisual (TtDisplay, TtScreen);
 #endif /* !NEW_WILLOWS */
 
    Printing = printing;
    i = 0;
    strncpy (PictureHandlerTable[i].menuName, BitmapName, MAX_FORMAT_NAMELENGHT);
-   PictureHandlerTable[i].CreateImage = BitmapCreateImage;
-   PictureHandlerTable[i].PrintImage = BitmapPrintImage;
-   PictureHandlerTable[i].IsFormat = BitmapIsFormat;
+   PictureHandlerTable[i].CreateImage = XbmCreate;
+   PictureHandlerTable[i].PrintImage = XbmPrint;
+   PictureHandlerTable[i].IsFormat = IsXbmFormat;
 
    ImageIDType[i] = XBM_FORMAT;
    ImageMenuType[i] = XBM_FORMAT;
    i++;
 
    strncpy (PictureHandlerTable[i].menuName, EPSFName, MAX_FORMAT_NAMELENGHT);
-   PictureHandlerTable[i].CreateImage = EPSFCreateImage;
-   PictureHandlerTable[i].PrintImage = EPSFPrintImage;
-   PictureHandlerTable[i].IsFormat = EPSFIsFormat;
+   PictureHandlerTable[i].CreateImage = EpsCreate;
+   PictureHandlerTable[i].PrintImage = EpsPrint;
+   PictureHandlerTable[i].IsFormat = IsEpsFormat;
 
    ImageIDType[i] = EPS_FORMAT;
    ImageMenuType[i] = EPS_FORMAT;
    i++;
 
    strncpy (PictureHandlerTable[i].menuName, PixmapName, MAX_FORMAT_NAMELENGHT);
-   PictureHandlerTable[i].CreateImage = PixmapCreateImage;
-   PictureHandlerTable[i].PrintImage = PixmapPrintImage;
-   PictureHandlerTable[i].IsFormat = PixmapIsFormat;
+   PictureHandlerTable[i].CreateImage = XpmCreate;
+   PictureHandlerTable[i].PrintImage = XpmPrint;
+   PictureHandlerTable[i].IsFormat = IsXpmFormat;
 
    ImageIDType[i] = XPM_FORMAT;
    ImageMenuType[i] = XPM_FORMAT;
    i++;
 
    strncpy (PictureHandlerTable[i].menuName, GifName, MAX_FORMAT_NAMELENGHT);
-   PictureHandlerTable[i].CreateImage = GifCreateImage;
-   PictureHandlerTable[i].PrintImage = GifPrintImage;
-   PictureHandlerTable[i].IsFormat = GifIsFormat;
+   PictureHandlerTable[i].CreateImage = GifCreate;
+   PictureHandlerTable[i].PrintImage = GifPrint;
+   PictureHandlerTable[i].IsFormat = IsGifFormat;
 
    ImageIDType[i] = GIF_FORMAT;
    ImageMenuType[i] = GIF_FORMAT;
    i++;
 
    strncpy (PictureHandlerTable[i].menuName, JpegName, MAX_FORMAT_NAMELENGHT);
-   PictureHandlerTable[i].CreateImage = JpegCreateImage;
-   PictureHandlerTable[i].PrintImage = JpegPrintImage;
-   PictureHandlerTable[i].IsFormat = JpegIsFormat;
+   PictureHandlerTable[i].CreateImage = JpegCreate;
+   PictureHandlerTable[i].PrintImage = JpegPrint;
+   PictureHandlerTable[i].IsFormat = IsJpegFormat;
 
    ImageIDType[i] = JPEG_FORMAT;
    ImageMenuType[i] = JPEG_FORMAT;
    i++;
 
    strncpy (PictureHandlerTable[i].menuName, PngName, MAX_FORMAT_NAMELENGHT);
-   PictureHandlerTable[i].CreateImage = PngCreateImage;
-   PictureHandlerTable[i].PrintImage = PngPrintImage;
-   PictureHandlerTable[i].IsFormat = PngIsFormat;
+   PictureHandlerTable[i].CreateImage = PngCreate;
+   PictureHandlerTable[i].PrintImage = PngPrint;
+   PictureHandlerTable[i].IsFormat = IsPngFormat;
 
    ImageIDType[i] = PNG_FORMAT;
    ImageMenuType[i] = PNG_FORMAT;
@@ -717,15 +709,15 @@ int                 hlogo;
 	 }
 
 #ifndef NEW_WILLOWS
-   pix = XCreatePixmap (GDp (0), GRootW (0), w, h, Gdepth (0));
-   XFillRectangle (GDp (0), pix, GCblack (0), x, y, w, h);
+   pix = XCreatePixmap (TtDisplay, TtRootWindow, w, h, TtWDepth);
+   XFillRectangle (TtDisplay, pix, TtBlackGC, x, y, w, h);
 
    /* putting the cross */
-   XDrawRectangle (GDp (0), pix, GCdialogue (0), x, y, w - 1, h - 1);
-   XDrawLine (GDp (0), pix, GCdialogue (0), x, y, x + w - 1, y + h - 2);
-   XDrawLine (GDp (0), pix, GCdialogue (0), x + w - 1, y, x, y + h - 2);
-   XDrawLine (GDp (0), pix, GCwhite (0), x, y + 1, x + w - 1, y + h - 1);
-   XDrawLine (GDp (0), pix, GCwhite (0), x + w - 1, y + 1, x, y + h - 1);
+   XDrawRectangle (TtDisplay, pix, TtDialogueGC, x, y, w - 1, h - 1);
+   XDrawLine (TtDisplay, pix, TtDialogueGC, x, y, x + w - 1, y + h - 2);
+   XDrawLine (TtDisplay, pix, TtDialogueGC, x + w - 1, y, x, y + h - 2);
+   XDrawLine (TtDisplay, pix, TtWhiteGC, x, y + 1, x + w - 1, y + h - 1);
+   XDrawLine (TtDisplay, pix, TtWhiteGC, x + w - 1, y + 1, x, y + h - 1);
 #endif /* NEW_WILLOWS */
 
    /* copying the logo */
@@ -754,7 +746,7 @@ int                 hlogo;
 	pyorig = 0;
      }
 #ifndef NEW_WILLOWS
-   XCopyArea (GDp (0), imageDesc->PicPixmap, pix, GCdialogue (0), pxorig, pyorig,
+   XCopyArea (TtDisplay, imageDesc->PicPixmap, pix, TtDialogueGC, pxorig, pyorig,
 	      wif, hif, xif, yif);
 
    /* Affichage dans la boite */
@@ -776,10 +768,10 @@ int                 hlogo;
    y += yif;
 #ifndef NEW_WILLOWS
    CopyOnScreen (pix, drawable, pxorig, pyorig, w, h, x, y);
-   XFreePixmap (GDp (0), pix);
+   XFreePixmap (TtDisplay, pix);
    pix = None;
-   XSetLineAttributes (GDp (0), GCtrait (0), 1, LineSolid, CapButt, JoinMiter);
-   XDrawRectangle (GDp (0), drawable, GCtrait (0), xif, yif, wif - 1, hif - 1);
+   XSetLineAttributes (TtDisplay, TtLineGC, 1, LineSolid, CapButt, JoinMiter);
+   XDrawRectangle (TtDisplay, drawable, TtLineGC, xif, yif, wif - 1, hif - 1);
    /* writing the filename */
    BaseName (imageDesc->PicFileName, filename, 0, 0);
    fileNameWidth = XTextWidth ((XFontStruct *) FontMenu, filename, strlen (filename));
@@ -787,8 +779,8 @@ int                 hlogo;
      {
 	fnposx = (wif - fileNameWidth) / 2 + xif;
 	fnposy = hif - 5 + yif;
-	XSetFont (GDp (0), GCtrait (0), ((XFontStruct *) FontMenu)->fid);
-	XDrawString (GDp (0), drawable, GCtrait (0), fnposx, fnposy, filename, strlen (filename));
+	XSetFont (TtDisplay, TtLineGC, ((XFontStruct *) FontMenu)->fid);
+	XDrawString (TtDisplay, drawable, TtLineGC, fnposx, fnposy, filename, strlen (filename));
      }
 #endif /* NEW_WILLOWS */
 }
@@ -859,8 +851,8 @@ int                 frame;
 
 	      if (imageDesc->PicMask)
 		{
-		  XSetClipOrigin (GDp (0), graphicGC (0), xif - pxorig + xtranslate, yif - pyorig + ytranslate);
-		  XSetClipMask (GDp (0), graphicGC (0), imageDesc->PicMask);
+		  XSetClipOrigin (TtDisplay, TtGraphicGC, xif - pxorig + xtranslate, yif - pyorig + ytranslate);
+		  XSetClipMask (TtDisplay, TtGraphicGC, imageDesc->PicMask);
 		}
 	      if (PicWArea < wif)
 		wif = PicWArea;
@@ -870,8 +862,8 @@ int                 frame;
 			    wif, hif, xif + xtranslate, yif + ytranslate);
 	      if (imageDesc->PicMask)
 		{
-		  XSetClipMask (GDp (0), graphicGC (0), None);
-		  XSetClipOrigin (GDp (0), graphicGC (0), 0, 0);
+		  XSetClipMask (TtDisplay, TtGraphicGC, None);
+		  XSetClipOrigin (TtDisplay, TtGraphicGC, 0, 0);
 		}
 	    }
 	}
@@ -939,26 +931,26 @@ PictInfo    *imageDesc;
 		 {
 		    if (box != NULL)
 		       /* Positionne les couleurs du graphicGC */
-		       if (Gdepth (0) == 1)
+		       if (TtWDepth == 1)
 			 {
 			    /* Ecran Noir et Blanc */
-			    XSetForeground (GDp (0), graphicGC (0), Black_Color);
-			    XSetBackground (GDp (0), graphicGC (0),
+			    XSetForeground (TtDisplay, TtGraphicGC, Black_Color);
+			    XSetBackground (TtDisplay, TtGraphicGC,
 				       ColorPixel (BackgroundColor[frame]));
 			 }
 		       else if (box->BxAbstractBox->AbSensitive && !box->BxAbstractBox->AbPresentationBox)
 			 {
 			    /* Couleur des boites actives */
-			    XSetForeground (GDp (0), graphicGC (0), Box_Color);
-			    XSetForeground (GDp (0), GCpicture, Box_Color);
-			    XSetBackground (GDp (0), graphicGC (0), ColorPixel (box->BxAbstractBox->AbBackground));
+			    XSetForeground (TtDisplay, TtGraphicGC, Box_Color);
+			    XSetForeground (TtDisplay, GCpicture, Box_Color);
+			    XSetBackground (TtDisplay, TtGraphicGC, ColorPixel (box->BxAbstractBox->AbBackground));
 			 }
 		       else
 			 {
 			    /* Couleur de la boite */
-			    XSetForeground (GDp (0), graphicGC (0), ColorPixel (box->BxAbstractBox->AbForeground));
-			    XSetForeground (GDp (0), GCpicture, ColorPixel (box->BxAbstractBox->AbForeground));
-			    XSetBackground (GDp (0), graphicGC (0), ColorPixel (box->BxAbstractBox->AbBackground));
+			    XSetForeground (TtDisplay, TtGraphicGC, ColorPixel (box->BxAbstractBox->AbForeground));
+			    XSetForeground (TtDisplay, GCpicture, ColorPixel (box->BxAbstractBox->AbForeground));
+			    XSetBackground (TtDisplay, TtGraphicGC, ColorPixel (box->BxAbstractBox->AbBackground));
 			 }
 		 }
 
@@ -985,8 +977,8 @@ PictInfo    *imageDesc;
 		      {
 			 if (noCroppingFrame)
 			   {
-			      /*large = PixelEnPt(box->BxWidth, 1); */
-			      /*haut = PixelEnPt(box->BxHeight, 0); */
+			      /*large = PixelToPoint (box->BxWidth); */
+			      /*haut = PixelToPoint (box->BxHeight); */
 			      NouvDimImage (box->BxAbstractBox);
 			   }
 			 w = wif;
@@ -1222,7 +1214,7 @@ char               *imageFile;
   myDrawable = (*(PictureHandlerTable[typeImage].
 		  CreateImage))(fileName, pres, &xif, &yif, &wif, &hif, Bgcolor,
 		                &PicMask );
-  XSetWindowBackgroundPixmap(GDp(0),w,myDrawable);
+  XSetWindowBackgroundPixmap(TtDisplay,w,myDrawable);
   FreePixmap(myDrawable);
   FreePixmap(PicMask);
  ****************************************/

@@ -22,7 +22,7 @@
 #define EXPORT extern
 #include "environ.var"
 
-static boolean      erreurTra = False;
+static boolean      erreurTra = FALSE;
 
 #include "dofile.f"
 #include "rdschtra.f"
@@ -46,7 +46,7 @@ int                 err;
 
 {
    printf ("Error %d in translation schema\n", err);
-   erreurTra = True;
+   erreurTra = TRUE;
 }
 
 
@@ -1116,7 +1116,7 @@ PtrSSchema        SS;
    char                texte[MAX_TXT_LEN];
    int                 NbElemStructInitial;
 
-   erreurTra = False;
+   erreurTra = FALSE;
    pSchT = NULL;
    /* compose le nom du fichier a ouvrir avec le nom du directory */
    /* des schemas... */

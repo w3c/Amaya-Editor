@@ -99,7 +99,7 @@ PtrDocument        *pDoc;
    boolean             modif;
 
    pEl = NULL;
-   modif = False;
+   modif = FALSE;
    NulIdentDoc (docIdent);
    *pDoc = NULL;
    if (pRef != NULL)
@@ -125,13 +125,13 @@ PtrDocument        *pDoc;
 		     /* saute le premier descripteur (bidon) */
 		     if (pRefD != NULL)
 			pRefD = pRefD->ReNext;
-		     found = False;
+		     found = FALSE;
 		     while (pRefD != NULL && !found)
 		       {
 			  if (!pRefD->ReExternalRef)
 			     if (pRefD->ReReferredElem != NULL)
 				if (strcmp (pRefD->ReReferredElem->ElLabel, pRefD1->ReReferredLabel) == 0)
-				   found = True;
+				   found = TRUE;
 			  if (!found)
 			     pRefD = pRefD->ReNext;
 		       }
@@ -170,7 +170,7 @@ PtrDocument        *pDoc;
 			       if (pDocRef != NULL)
 				  modif = pDocRef->DocModified;
 			       if (!SetReference (pElRef, pAttrRef, pE, pDocRef, *pDoc,
-						  True, False))
+						  TRUE, FALSE))
 				  pE = NULL;
 			       else
 				  pEl = pE;
@@ -197,20 +197,20 @@ PtrDocument        *pDoc;
 /* |       cherche la premiere reference qui pointe sur pEl.       	| */
 /* |       - pDocEl est le document auquel appartient pEl.         	| */
 /* |       - processNotLoaded indique si on prend en compte les    	| */
-/* |         documents referencant non charge's (True) ou si au    	| */
-/* |         contraire on les ignore (False).                      	| */
+/* |         documents referencant non charge's (TRUE) ou si au    	| */
+/* |         contraire on les ignore (FALSE).                      	| */
 /* |       - pDocRef contient au retour un pointeur sur le         	| */
 /* |         contexte du document auquel appartient la reference   	| */
 /* |         trouvee. Seulement si la valeur de retour n'est pas   	| */
 /* |         NULL.                                                 	| */
 /* |       - pExtDoc est le document externe precedemment traite' (si	| */
-/* |         nextExtDoc est True) ou celui qu'on veut traiter   	| */
-/* |         (si nextExtDoc est False). pExtDoc doit etre NULL si	| */
-/* |         nextExtDoc est True et qu'on n'a pas encore traite'	| */
+/* |         nextExtDoc est TRUE) ou celui qu'on veut traiter   	| */
+/* |         (si nextExtDoc est FALSE). pExtDoc doit etre NULL si	| */
+/* |         nextExtDoc est TRUE et qu'on n'a pas encore traite'	| */
 /* |         de references externes.                               	| */
 /* |       - nextExtDoc indique si on passe au document         	| */
-/* |         referencant suivant celui decrit par pExtDoc (True) ou si 	| */
-/* |         on traite le document decrit par pExtDoc (False).         	| */
+/* |         referencant suivant celui decrit par pExtDoc (TRUE) ou si 	| */
+/* |         on traite le document decrit par pExtDoc (FALSE).         	| */
 /* |       Retourne un pointeur sur la premiere reference trouvee  	| */
 /* |       dans le document externe et pExtDoc designe alors ce        	| */
 /* |       document externe.                                       	| */
@@ -219,7 +219,7 @@ PtrDocument        *pDoc;
 /* |          si pExtDoc n'est pas NULL : il y a des references a`     	| */
 /* |               l'element pEl dans le document designe' par pExtDoc 	| */
 /* |               mais ce document n'est pas charge' (cela ne se  	| */
-/* |               produit que si processNotLoaded est True).      	| */
+/* |               produit que si processNotLoaded est TRUE).      	| */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
@@ -278,7 +278,7 @@ boolean             nextExtDoc;
 	     else
 		/* On ignore les documents non charge', on cherche le document */
 		/* referencant suivant */
-		pRef = SearchExternalReferenceToElem (pEl, pDocEl, processNotLoaded, pDocRef, pExtDoc, True);
+		pRef = SearchExternalReferenceToElem (pEl, pDocEl, processNotLoaded, pDocRef, pExtDoc, TRUE);
 	  }
 	else
 	   /* Le document referencant est charge'. */
@@ -289,13 +289,13 @@ boolean             nextExtDoc;
 	     /* saute le premier descripteur (bidon) */
 	     if (pRefD != NULL)
 		pRefD = pRefD->ReNext;
-	     found = False;
+	     found = FALSE;
 	     while (pRefD != NULL && !found)
 	       {
 		  if (pRefD->ReExternalRef)
 		     if (strcmp (pRefD->ReReferredLabel, pEl->ElLabel) == 0)
 			if (MemeIdentDoc (pRefD->ReExtDocument, pDocEl->DocIdent))
-			   found = True;
+			   found = TRUE;
 		  if (!found)
 		     pRefD = pRefD->ReNext;
 	       }
@@ -462,7 +462,7 @@ PtrReference        pRef;
    pRef->RdPrevious = NULL;
    pRef->RdNext = NULL;
    pRef->RdReferred = NULL;
-   pRef->RdInternalRef = True;
+   pRef->RdInternalRef = TRUE;
 }
 
 /* ---------------------------------------------------------------------- */
@@ -663,7 +663,7 @@ PtrDocument         pSourceDoc;
 		     /* on lui en affecte un */
 		    {
 		       pTarget->ElReferredDescr = NewReferredElDescr (pDoc);
-		       pTarget->ElReferredDescr->ReExternalRef = False;
+		       pTarget->ElReferredDescr->ReExternalRef = FALSE;
 		       pTarget->ElReferredDescr->ReReferredElem = pTarget;
 		    }
 		  /* lie le descripteur de reference et le descripteur */
@@ -760,13 +760,13 @@ boolean             new;
 			/* saute le premier descripteur (bidon) */
 			if (pRefD != NULL)
 			   pRefD = pRefD->ReNext;
-			found = False;
+			found = FALSE;
 			while (pRefD != NULL && !found)
 			  {
 			     if (!pRefD->ReExternalRef)
 				if (pRefD->ReReferredElem != NULL)
 				   if (strcmp (pRefD->ReReferredElem->ElLabel, pDElemRef->ReReferredLabel) == 0)
-				      found = True;
+				      found = TRUE;
 			     if (!found)
 				pRefD = pRefD->ReNext;
 			  }
@@ -785,13 +785,13 @@ boolean             new;
 	      else
 		 /* destruction, on examine la liste des references creees */
 		 pRefSort = pDoc->DocNewOutRef;
-	      found = False;
+	      found = FALSE;
 	      pRefSortPrec = NULL;
 	      while (pRefSort != NULL && !found)
 		{
 		   if (strcmp (pRefSort->OrLabel, pDElemRef->ReReferredLabel) == 0)
 		      if (MemeIdentDoc (pRefSort->OrDocIdent, pDElemRef->ReExtDocument))
-			 found = True;
+			 found = TRUE;
 		   if (!found)
 		     {
 			pRefSortPrec = pRefSort;
@@ -941,10 +941,10 @@ PtrDocument         pDoc2;
 	       /* la liste des documents externes qui referencent l'element    */
 	      {
 		 pExtDoc = pEl->ElReferredDescr->ReExtDocRef;
-		 found = False;
+		 found = FALSE;
 		 do
 		    if (MemeIdentDoc (pExtDoc->EdDocIdent, docIdent))
-		       found = True;
+		       found = TRUE;
 		    else if (pExtDoc->EdNext != NULL)
 		       pExtDoc = pExtDoc->EdNext;
 		 while (!(found || pExtDoc->EdNext == NULL)) ;
@@ -1001,7 +1001,7 @@ boolean             withAppEvent;
    PtrReferredDescr    pRefD;
    NotifyOnTarget      notifyEl;
 
-   ret = False;
+   ret = FALSE;
    if (pRefEl != NULL)
      {
 	if (pRefEl->ElSructSchema->SsRule[pRefEl->ElTypeNumber - 1].SrRefImportedDoc)
@@ -1061,7 +1061,7 @@ boolean             withAppEvent;
 		notifyEl.element = (Element) pRefEl;
 		notifyEl.target = (Element) pEl;
 		notifyEl.targetdocument = (Document) IdentDocument (pTargetDoc);
-		if (ThotSendMessage ((NotifyEvent *) & notifyEl, True))
+		if (ThotSendMessage ((NotifyEvent *) & notifyEl, TRUE))
 		   pEl = NULL;
 	     }
 	if (pEl != NULL)
@@ -1077,14 +1077,14 @@ boolean             withAppEvent;
 		  if (ancestor)
 		     /* si c'est une reference externe, note cette reference dans */
 		     /* la liste des references sortantes detruites du document */
-		     RegisterAnExternalRef (pRef, pDoc, False);
+		     RegisterAnExternalRef (pRef, pDoc, FALSE);
 		  CancelReference (pRefEl);
 
 	       }
 	     else
 	       {
 		  pRef = pRefAttr->AeAttrReference;
-		  RegisterAnExternalRef (pRef, pDoc, False);
+		  RegisterAnExternalRef (pRef, pDoc, FALSE);
 		  if (pRef != NULL)
 		     DeleteReference (pRef);
 	       }
@@ -1102,7 +1102,7 @@ boolean             withAppEvent;
 		  if (pDoc == pTargetDoc)
 		     /* reference et element reference' dans le meme document */
 		    {
-		       pRef->RdInternalRef = True;
+		       pRef->RdInternalRef = TRUE;
 		       /* on ajoute la nouvelle reference en tete de la chaine des */
 		       /* references a cet element */
 		       pRef->RdNext = pEl->ElReferredDescr->ReFirstReference;
@@ -1115,21 +1115,21 @@ boolean             withAppEvent;
 		     /* reference et element reference' dans des */
 		     /* documents differents */
 		    {
-		       pRef->RdInternalRef = False;
+		       pRef->RdInternalRef = FALSE;
 		       AddDocOfExternalRef (pEl, pDoc->DocIdent, pTargetDoc);
 		       /* cet element reference' est-il deja represente' comme */
 		       /*element reference' externe dans le document qui reference */
 		       pRefD = pDoc->DocReferredEl->ReNext;
-		       stop = False;
+		       stop = FALSE;
 		       do
 			 {
 			    if (pRefD == NULL)
-			       stop = True;
+			       stop = TRUE;
 			    else if (pRefD->ReExternalRef)
 			       if (strcmp (pRefD->ReReferredLabel, pEl->ElLabel) == 0)
 				  if (MemeIdentDoc (pRefD->ReExtDocument,
 						    pTargetDoc->DocIdent))
-				     stop = True;
+				     stop = TRUE;
 			    if (!stop)
 			       pRefD = pRefD->ReNext;
 			 }
@@ -1140,7 +1140,7 @@ boolean             withAppEvent;
 			  /* reference */
 			 {
 			    pRefD = NewReferredElDescr (pDoc);
-			    pRefD->ReExternalRef = True;
+			    pRefD->ReExternalRef = TRUE;
 			    strncpy (pRefD->ReReferredLabel, pEl->ElLabel, MAX_LABEL_LEN);
 			    CopyIdentDoc (&(pRefD->ReExtDocument), pTargetDoc->DocIdent);
 			 }
@@ -1158,16 +1158,16 @@ boolean             withAppEvent;
 			/* c'est un renvoi a un document importe' */
 		       {
 			  pRef->RdTypeRef = RefInclusion;
-			  pRef->RdInternalRef = False;
+			  pRef->RdInternalRef = FALSE;
 		       }
 		  if (pRef != NULL)
 		     if (ancestor)
 			/* si c'est une reference externe, note cette reference */
 			/*dans la liste des references sortantes creees du document */
-			RegisterAnExternalRef (pRef, pDoc, True);
-		  ret = True;
+			RegisterAnExternalRef (pRef, pDoc, TRUE);
+		  ret = TRUE;
 		  /* une reference modifiee vaut 10 caracteres saisis */
-		  pDoc->DocModified = True;
+		  pDoc->DocModified = TRUE;
 		  pDoc->DocNTypedChars += 10;
 		  if (withAppEvent && pRefEl != NULL)
 		     /* on n'envoie un evenement que si ce n'est ni une */
@@ -1179,7 +1179,7 @@ boolean             withAppEvent;
 			  notifyEl.element = (Element) pRefEl;
 			  notifyEl.target = (Element) pEl;
 			  notifyEl.targetdocument = (Document) IdentDocument (pTargetDoc);
-			  ThotSendMessage ((NotifyEvent *) & notifyEl, False);
+			  ThotSendMessage ((NotifyEvent *) & notifyEl, FALSE);
 		       }
 	       }
 	  }

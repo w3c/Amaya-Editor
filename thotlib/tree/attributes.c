@@ -128,14 +128,14 @@ PtrDocument         pDoc;
       /* les extensions de schema du document. */
      {
 	pSS = pDoc->DocSSchema->SsNextExtens;
-	found = False;
+	found = FALSE;
 	/* parcourt tous les schemas d'extension du document */
 	while (pSS != NULL && !found)
 	  {
 	     /* cherche le numero de l'attribut dans cette extension */
 	     attrNum = GetAttrWithException (ExceptNum, pSS);
 	     if (attrNum != 0)
-		found = True;
+		found = TRUE;
 	     else
 		/* passe au schema d'extension suivant */
 		pSS = pSS->SsNextExtens;
@@ -144,13 +144,13 @@ PtrDocument         pDoc;
 
    /* cherche si l'attribut est deja present pour l'element */
    pAttr = pEl->ElFirstAttr;
-   found = False;
+   found = FALSE;
    while (!found && pAttr != NULL)
       if (pAttr->AeAttrNum == attrNum &&
 	  /* attrNum = 1: Langue, quel que soit le schema de structure */
 	  (attrNum == 1 ||
 	   pAttr->AeAttrSSchema->SsCode == pSS->SsCode))
-	 found = True;
+	 found = TRUE;
       else
 	 pAttr = pAttr->AeNext;
    if (found)
@@ -194,7 +194,7 @@ PtrDocument         pDoc;
 	pEl->ElFirstAttr = pAttr;
 	pAttr->AeAttrSSchema = pSS;
 	pAttr->AeAttrNum = attrNum;
-	pAttr->AeDefAttr = False;
+	pAttr->AeDefAttr = FALSE;
 	pAttr->AeAttrType = pAttr->AeAttrSSchema->SsAttribute[pAttr->AeAttrNum - 1].AttrType;
 	if (pAttr->AeAttrType == AtReferenceAttr)
 	  {
@@ -212,7 +212,7 @@ PtrDocument         pDoc;
 	     pRef->RdElement = pEl;
 	     pRef->RdAttribute = pAttr;
 	     pRef->RdTypeRef = RefFollow;
-	     pRef->RdInternalRef = True;
+	     pRef->RdInternalRef = TRUE;
 	     /* fait pointer la reference sur l'element */
 	     SetAttrReference (pAttr, pReferredEl);
 	  }
@@ -254,7 +254,7 @@ PtrAttribute         pAttr;
 
 	      /* la variable de presentation a change' de valeur */
 	     {
-		pAbsBox->AbChange = True;
+		pAbsBox->AbChange = TRUE;
 		if (VueAssoc (pEl))
 		   frame = (pDoc)->DocAssocFrame[(pEl)->ElAssocNum - 1];
 		else
@@ -324,12 +324,12 @@ PtrDocument         pDoc;
       for (varNum = 0; varNum < pPSchema->PsNVariables; varNum++)
 	{
 	   pPresVar = &pPSchema->PsVariable[varNum];
-	   found = False;
+	   found = FALSE;
 	   /* examine les items de la variable */
 	   for (item = 0; item < pPresVar->PvNItems && !found; item++)
 	     if (pPresVar->PvItem[item].ViType == VarAttrValue)
 		if (pPresVar->PvItem[item].ViAttr == pAttr->AeAttrNum)
-		   found = True;
+		   found = TRUE;
 	   if (found)
 	      /* l'attribut est utilise' dans la variable */
 	      /* cherche les boites du schema de presentation qui utilisent */
@@ -434,7 +434,7 @@ boolean             inherit;
    /* on ne traite pas les marques de page */
    if (!pEl->ElTerminal || pEl->ElLeafType != LtPageColBreak)
      {
-	doIt = False;
+	doIt = FALSE;
 
 	/* cherche la valeur de cet attribut pour l'element */
 	pOldAttr = GetAttributeOfElement (pEl, pAttr);
@@ -442,17 +442,17 @@ boolean             inherit;
 	  /* traitement de la presentation par heritage */
 	  {
 	     if (pOldAttr == NULL || pOldAttr == pAttr)
-		doIt = True;
+		doIt = TRUE;
 	  }
 	else
 	  /* presentation directe */
 	  {
 	     if (pOldAttr == NULL)
-		doIt = True;
+		doIt = TRUE;
 	     /* si pour cet element, cet attribut a une valeur imposee par*/
 	     /* le schema de structure, on ne fait rien d'autre */
 	     else if (!pOldAttr->AeDefAttr)
-		doIt = True;
+		doIt = TRUE;
 	     /* s'il s'agit d'une suppression de l'attribut, on ne fait rien */
 	     if (doIt)
 		switch (pAttr->AeAttrType)
@@ -466,10 +466,10 @@ boolean             inherit;
 			    break;
 			 case AtTextAttr:
 			    if (pAttr->AeAttrText == NULL)
-			       doIt = False;
+			       doIt = FALSE;
 			    break;
 			 case AtReferenceAttr:
-			    doIt = True;
+			    doIt = TRUE;
 			    break;
 			 default:
 			    break;
@@ -479,7 +479,7 @@ boolean             inherit;
 	if (doIt)
 	  {
 	     /* applique les regles de presentation de l'attribut */
-	     ChngPresAttr (pEl, pAttr, pDoc, False, inherit, NULL);
+	     ChngPresAttr (pEl, pAttr, pDoc, FALSE, inherit, NULL);
 	     /* reaffiche les variables de presentation qui utilisent */
 	     /* l'attribut */
 	     RedisplayAttribute (pAttr, pEl, pDoc);
@@ -539,7 +539,7 @@ PtrAttribute         pAttr;
 		  {
 		     /* pEl herite de l'attribut pAttr */
 		     /* on lui applique la presentation correspondante */
-		     ApplyAttrPRulesToElem (pEl, pDoc, pAttr, True);
+		     ApplyAttrPRulesToElem (pEl, pDoc, pAttr, TRUE);
 		  }
 	     }
      }
@@ -597,7 +597,7 @@ PtrAttribute         pAttr;
 		   /* l'attribut de rang i se compare a pAttr */
 		   if ((pCompAttr = GetTypedAttrForElem (pEl, i, pAttr->AeAttrSSchema)) != NULL)
 		      /* pEl possede un attribut comme celui de rang i */
-		      ApplyAttrPRulesToElem (pEl, pDoc, pCompAttr, False);
+		      ApplyAttrPRulesToElem (pEl, pDoc, pCompAttr, FALSE);
 	     }
      }
 }
@@ -684,7 +684,7 @@ boolean             force;
 		      /* change la langue du pave */
 		     {
 			pAbsBox->AbLanguage = lang;
-			pAbsBox->AbChange = True;
+			pAbsBox->AbChange = TRUE;
 			/* conserve le pointeur sur le pave a reafficher */
 			if (VueAssoc (pEl))
 			   pDoc->DocAssocModifiedAb[pEl->ElAssocNum - 1] =
@@ -780,7 +780,7 @@ PtrAttribute         pCompAttr;
      {
 	/* supprime la presentation attachee a la valeur de l'attribut, si */
 	/* elle n'est pas nulle */
-	ChngPresAttr (pEl, pAttr, pDoc, True, inherit, pCompAttr);
+	ChngPresAttr (pEl, pAttr, pDoc, TRUE, inherit, pCompAttr);
 
 	/* reaffiche les variables de presentation qui utilisent */
 	/* l'attribut */
@@ -834,7 +834,7 @@ PtrAttribute         pAttr;
 			PsInheritedAttr[pEl->ElTypeNumber - 1];
 		  }
 		if ((*inheritedAttr)[pAttr->AeAttrNum - 1])
-		   RemoveAttrPresentation (pEl, pDoc, pAttr, True, NULL);
+		   RemoveAttrPresentation (pEl, pDoc, pAttr, TRUE, NULL);
 	     }
      }
 }
@@ -894,7 +894,7 @@ PtrAttribute         pAttr;
 		   /* l'attribut de rang i se compare a pAttr */
 		   if ((pCompAttr = GetTypedAttrForElem (pEl, i, pAttr->AeAttrSSchema)) != NULL)
 		      /* pEl possede un attribut comme celui de rang i */
-		      RemoveAttrPresentation (pEl, pDoc, pCompAttr, False, pAttr);
+		      RemoveAttrPresentation (pEl, pDoc, pCompAttr, FALSE, pAttr);
 	     }
      }
 }
@@ -936,7 +936,7 @@ PtrAttribute         pNewAttr;
    pAttr->AeNext = NULL;	/* c'est le dernier attribut */
    pAttr->AeAttrSSchema = pNewAttr->AeAttrSSchema;
    pAttr->AeAttrNum = pNewAttr->AeAttrNum;
-   pAttr->AeDefAttr = False;
+   pAttr->AeDefAttr = FALSE;
    pAttr->AeAttrType = pNewAttr->AeAttrType;
    switch (pAttr->AeAttrType)
 	 {
@@ -1007,29 +1007,29 @@ PtrAttribute         pNewAttr;
       return;
 
    /* est-ce une suppression d'attribut */
-   suppress = True;
+   suppress = TRUE;
    switch (pNewAttr->AeAttrType)
 	 {
 	    case AtEnumAttr:
 	       if (pNewAttr->AeAttrValue != 0)
-		  suppress = False;
+		  suppress = FALSE;
 	       break;
 
 	    case AtNumAttr:
 	       if (pNewAttr->AeAttrValue >= -MAX_INT_ATTR_VAL
 		   && pNewAttr->AeAttrValue <= MAX_INT_ATTR_VAL)
-		  suppress = False;
+		  suppress = FALSE;
 	       break;
 
 	    case AtTextAttr:
 	       if (pNewAttr->AeAttrText != NULL)
-		  suppress = False;
+		  suppress = FALSE;
 	       break;
 
 	    case AtReferenceAttr:
 	       if (pNewAttr->AeAttrReference != NULL)
 		  if (pNewAttr->AeAttrReference->RdReferred != NULL)
-		     suppress = False;
+		     suppress = FALSE;
 	       break;
 
 	    default:
@@ -1044,7 +1044,7 @@ PtrAttribute         pNewAttr;
 	   /* si c'est un attribut Langue sur un element racine, il est obligatoire */
 	   if (pEl->ElParent == NULL)
 	      if (pNewAttr->AeAttrNum == 1)
-		 mandatory = True;
+		 mandatory = TRUE;
 	if (mandatory)
 	  /* suppression d'un attribut obligatoire. Interdit */
 	  {
@@ -1054,8 +1054,8 @@ PtrAttribute         pNewAttr;
      }
 
    /* faut-il traiter des heritages et comparaisons d'attributs */
-   inherit = False;
-   compare = False;
+   inherit = FALSE;
+   compare = FALSE;
    if (pNewAttr->AeAttrSSchema->SsPSchema != NULL)
      {
 	inherit = (pNewAttr->AeAttrSSchema->SsPSchema->
@@ -1081,7 +1081,7 @@ PtrAttribute         pNewAttr;
    notifyAttr.attribute = (Attribute) pAttr;
    notifyAttr.attributeType.AttrSSchema = (SSchema) (pNewAttr->AeAttrSSchema);
    notifyAttr.attributeType.AttrTypeNum = pNewAttr->AeAttrNum;
-   if (!SendAttributeMessage (&notifyAttr, True))
+   if (!SendAttributeMessage (&notifyAttr, TRUE))
      {
 	/* l'application accepte l'operation */
 	/* on supprime sur pEl et son sous arbre les regles de presentation
@@ -1094,11 +1094,11 @@ PtrAttribute         pNewAttr;
 	     /* heritage et comparaison sont lies a un attribut de pEl */
 	     /* On supprime d'abord les regles de presentation liees a
 	        l'attribut sur l'element lui-meme */
-	     RemoveAttrPresentation (pEl, pDoc, pAttr, False, NULL);
+	     RemoveAttrPresentation (pEl, pDoc, pAttr, FALSE, NULL);
 	     /* supprime l'attribut */
 	     DeleteAttribute (pEl, pAttr);
 	     /* indique que le document a ete modifie' */
-	     pDoc->DocModified = True;
+	     pDoc->DocModified = TRUE;
 	     /* un changement d'attribut vaut dix caracteres saisis */
 	     pDoc->DocNTypedChars += 10;
 	     /* On supprime de pEl de son sous-arbre  la presentation venant
@@ -1141,7 +1141,7 @@ PtrAttribute         pNewAttr;
 	  {
 	     pAttr = AddAttrToElem (pEl, pNewAttr);
 	     /* indique que le document a ete modifie' */
-	     pDoc->DocModified = True;
+	     pDoc->DocModified = TRUE;
 	     /* un changement d'attribut vaut dix caracteres saisis */
 	     pDoc->DocNTypedChars += 10;
 	     /* traitement special a l'ajout d'un attribut a un element d'un
@@ -1157,7 +1157,7 @@ PtrAttribute         pNewAttr;
 	     DrawSupprAttr (pNewAttr, pEl);
 	     /* la suppression est maintenant prise en compte dans les
 		copies-inclusions de l'element */
-	     ReaffPaveCopie (pEl, pDoc, True);
+	     ReaffPaveCopie (pEl, pDoc, TRUE);
 	  }
 
 	/* on applique les regles de presentation */
@@ -1166,7 +1166,7 @@ PtrAttribute         pNewAttr;
 	     /* applique les regles du nouvel attribut */
 	     /* applique d'abord les regles de presentation associees a
 		l'attribut sur l'element lui-meme */
-	     ApplyAttrPRulesToElem (pEl, pDoc, pAttr, False);
+	     ApplyAttrPRulesToElem (pEl, pDoc, pAttr, FALSE);
 	     /* applique les regles de presentation venant de l'heritage de
 		cet attribut par le sous-arbre s'il existe des elements qui
 		heritent */
@@ -1185,7 +1185,7 @@ PtrAttribute         pNewAttr;
 
 	     /* le nouvel attribut est pris en compte dans les 
 	        les copies-inclusions de l'element */
-	     ReaffPaveCopie (pEl, pDoc, True);
+	     ReaffPaveCopie (pEl, pDoc, TRUE);
 	  }
 	else if (pAttrAsc != NULL && suppress)
 	  {
@@ -1215,7 +1215,7 @@ PtrAttribute         pNewAttr;
 	  }
 	else
 	   notifyAttr.event = TteAttrModify;
-	SendAttributeMessage (&notifyAttr, False);
+	SendAttributeMessage (&notifyAttr, FALSE);
      }
 }
 
@@ -1271,7 +1271,7 @@ PtrDocument         pDoc;
 			  if (pAttrAsc->AeAttrText != NULL)
 			     lang = TtaGetLanguageIdFromName (pAttrAsc->AeAttrText->BuContent);
 		    }
-		  ChangeLanguage (pDoc, pEl, lang, False);
+		  ChangeLanguage (pDoc, pEl, lang, FALSE);
 	       }
 
 	     /* met la nouvelle valeur de l'attribut dans l'element et */
@@ -1344,12 +1344,12 @@ PtrSSchema        pSS;
 	      att = pSRule->SrLocalAttr[i];
 	      /* cherche si l'element possede cet attribut */
 	      pAttr = pEl->ElFirstAttr;
-	      found = False;
+	      found = FALSE;
 	      while (pAttr != NULL && !found)
 		 if (pAttr->AeAttrNum == att &&
 		     (att == 1 || pAttr->AeAttrSSchema->SsCode == pSS->SsCode))
 		     /* att = 1: Langue, quel que soit le schema de structure */
-		    found = True;
+		    found = TRUE;
 		 else
 		    pAttr = pAttr->AeNext;
 	      if (!found)
@@ -1362,12 +1362,12 @@ PtrSSchema        pSS;
 		   notifyAttr.attribute = NULL;
 		   notifyAttr.attributeType.AttrSSchema = (SSchema) pSS;
 		   notifyAttr.attributeType.AttrTypeNum = att;
-		   SendAttributeMessage (&notifyAttr, True);
+		   SendAttributeMessage (&notifyAttr, TRUE);
 		   /* cree un nouvel attribut pour l'element */
 		   GetAttr (&pAttr);
 		   pAttr->AeAttrSSchema = pSS;
 		   pAttr->AeAttrNum = att;
-		   pAttr->AeDefAttr = False;
+		   pAttr->AeDefAttr = FALSE;
 		   pAttr->AeAttrType = pSS->SsAttribute[att - 1].AttrType;
 		   switch (pAttr->AeAttrType)
 			 {
@@ -1410,11 +1410,11 @@ PtrSSchema        pSS;
 		   notifyAttr.attribute = (Attribute) pAttr;
 		   notifyAttr.attributeType.AttrSSchema = (SSchema) pSS;
 		   notifyAttr.attributeType.AttrTypeNum = att;
-		   if (!SendAttributeMessage (&notifyAttr, True))
+		   if (!SendAttributeMessage (&notifyAttr, TRUE))
 		      /* l'application laisse l'editeur saisir la valeur de */
 		      /* l'attribut requis */
 		     {
-			MandatoryAttrOK = False;
+			MandatoryAttrOK = FALSE;
 			do
 			  {
 			     /* demande a l'utilisateur d'entrer une valeur */
@@ -1447,7 +1447,7 @@ PtrSSchema        pSS;
 					      default:
 						 break;
 					   }
-				  MandatoryAttrOK = True;
+				  MandatoryAttrOK = TRUE;
 			       }
 			  }
 			while (!MandatoryAttrOK && pDoc->DocSSchema != NULL);
@@ -1461,7 +1461,7 @@ PtrSSchema        pSS;
 			     notifyAttr.attribute = (Attribute) pAttr;
 			     notifyAttr.attributeType.AttrSSchema = (SSchema) pSS;
 			     notifyAttr.attributeType.AttrTypeNum = att;
-			     SendAttributeMessage (&notifyAttr, False);
+			     SendAttributeMessage (&notifyAttr, FALSE);
 			  }
 		     }
 		   /* envoie l'evenement AttrCreate.Post */
@@ -1471,7 +1471,7 @@ PtrSSchema        pSS;
 		   notifyAttr.attribute = (Attribute) pAttr;
 		   notifyAttr.attributeType.AttrSSchema = (SSchema) pSS;
 		   notifyAttr.attributeType.AttrTypeNum = att;
-		   SendAttributeMessage (&notifyAttr, False);
+		   SendAttributeMessage (&notifyAttr, FALSE);
 		}
 	   }
 }
@@ -1576,10 +1576,10 @@ int                 ExceptNum;
      {
 	/* on cherche un attribut sur l'element */
 	pAttr = pEl->ElFirstAttr;
-	found = False;
+	found = FALSE;
 	while (pAttr != NULL && !found)
 	     if (pAttr->AeAttrSSchema->SsCode == pSS->SsCode && pAttr->AeAttrNum == attrNum)
-		found = True;
+		found = TRUE;
 	     else
 		pAttr = pAttr->AeNext;
 	return pAttr;
@@ -1615,7 +1615,7 @@ int                 ExceptNum;
      {
        pAttr->AeAttrSSchema = pEl->ElSructSchema;
        pAttr->AeAttrNum = GetAttrWithException (ExceptNum, pEl->ElSructSchema);
-       pAttr->AeDefAttr = False;
+       pAttr->AeDefAttr = FALSE;
        pAttr->AeAttrType = AtEnumAttr;
        pAttr->AeAttrValue = attrVal;
        AttachAttrWithValue (pEl, pDoc, pAttr);

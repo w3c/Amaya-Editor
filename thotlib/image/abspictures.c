@@ -13,7 +13,7 @@
 #include "typemedia.h"
 #include "picture.h"
 
-#include "imagedrvr.f"
+#include "picture.f"
 #include "memory.f"
 
 /* ---------------------------------------------------------------------- */
@@ -32,7 +32,7 @@ PtrElement          pEl;
 {
    PtrPRule        pRegle = NULL;
    PtrPRule        pR = NULL;
-   Bool                new = False;
+   boolean                new = FALSE;
 
    if (pEl->ElFirstPRule == NULL)
      {

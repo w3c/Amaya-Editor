@@ -50,19 +50,19 @@ PtrPSchema         *pSchP;
    ChSchemaPres (pEl, pSchP, &Entree, &pSchS);
    pRegle = (*pSchP)->PsElemPRule[Entree - 1];
    /* 1ere regle de pres. du type */
-   stop = False;
+   stop = FALSE;
    do
       if (pRegle == NULL)
-	 stop = True;
+	 stop = TRUE;
       else if (pRegle->PrType > PtFunction)
-	 stop = True;
+	 stop = TRUE;
       else if (pRegle->PrType == PtFunction &&
 	 /**TODO*//* valeur de Vue si vue d'element associes ?? */
 	       pRegle->PrViewNum == Vue &&
 	       pRegle->PrPresFunction == FnPage)
 	{			/* c'est une regle Page */
 	   pRPage = pRegle;
-	   stop = True;
+	   stop = TRUE;
 	}
       else
 	 pRegle = pRegle->PrNextPRule;
@@ -93,18 +93,18 @@ PtrPSchema          pSchP;
    PtrPRule        pR;
 
    pR = pSchP->PsPresentBox[b - 1].PbFirstPRule;
-   stop = False;
-   existe = False;
+   stop = FALSE;
+   existe = FALSE;
    do
      {
 	if (pR == NULL)
-	   stop = True;
+	   stop = TRUE;
 	else if (pR->PrType > TypeR)
-	   stop = True;
+	   stop = TRUE;
 	else if (pR->PrType == TypeR)
 	  {
-	     stop = True;
-	     existe = True;
+	     stop = TRUE;
+	     existe = TRUE;
 	  }
 	if (!stop)
 	   pR = pR->PrNextPRule;
@@ -252,8 +252,8 @@ PtrAbstractBox             pAb;
 
 
    pPa1 = pAb;
-   pPa1->AbAfterPageBreak = False;
-   pPa1->AbOnPageBreak = False;
+   pPa1->AbAfterPageBreak = FALSE;
+   pPa1->AbOnPageBreak = FALSE;
    pPa1 = pPa1->AbFirstEnclosed;
    while (pPa1 != NULL)
      {
@@ -292,7 +292,7 @@ PtrAbstractBox            *PavReaff;
 	   if (pP->AbElement->ElTypeNumber != PageBreak + 1)
 	      /* demande au Mediateur la position et la hauteur du pave */
 	     {
-		HautCoupure (pP, True, &haut, &y, &NCar);
+		HautCoupure (pP, TRUE, &haut, &y, &NCar);
 		if (y < limite)
 		   /* le haut du pave est au-dessus de la limite */
 		   /* on ne tue pas les paves qui contiennent une marque de page */
@@ -304,7 +304,7 @@ PtrAbstractBox            *PavReaff;
 			   SuppRfPave (pP, PavReaff, pDoc);
 			}
 		      else
-			 DetPavVue (pP->AbElement, pDoc, False, VueNb);
+			 DetPavVue (pP->AbElement, pDoc, FALSE, VueNb);
 		   else
 		      /* le pave est traverse par la limite */
 		      TuePavesAuDessus (pP, limite, VueNb, pDoc, PavReaff);
@@ -344,7 +344,7 @@ int                 VueNb;
    PtrAbstractBox             pAb, PavR, PavRac;
    boolean             ret, det;
 
-   ret = True;			/* initialisation de ret, est-ce bon ? */
+   ret = TRUE;			/* initialisation de ret, est-ce bon ? */
 
    /* on detruit les paves haut, corps, bas de page et filet */
    /* des pages precedentes */
@@ -368,13 +368,13 @@ int                 VueNb;
 	/* que les paves detruits ne soient pas recrees dans l'appel */
 	/* de AfFinFenetre (pour le print) */
 	pAb = pAb->AbPrevious;
-	det = False;		/* a priori pas de paves detruits */
+	det = FALSE;		/* a priori pas de paves detruits */
 	while (pAb != NULL)
 	  {
 	     TuePave (pAb);
 	     SuppRfPave (pAb, &PavReaff, pDoc);
 	     pAb = pAb->AbPrevious;
-	     det = True;	/* des paves ont ete detruits */
+	     det = TRUE;	/* des paves ont ete detruits */
 	  }
 	/* signale les paves morts au Mediateur */
 	/* si pas de destruction, on appelle ModifVue pour positionner ret */
@@ -428,18 +428,18 @@ int                 VueNb;
    /* detruit, dans le pave Marque Page, les boites de bas de page qui */
    /* precedent le filet marquant le saut de page. */
    pAb = pPage->AbFirstEnclosed;
-   stop = False;
+   stop = FALSE;
    do
       if (pAb == NULL)
-	 stop = True;
+	 stop = TRUE;
       else if (!pAb->AbPresentationBox)
 	 /* Note: le filet n'est pas un pave de presentation, alors que */
 	 /* toutes les autres boites de bas de page sont des paves de */
 	 /* presentation */
 	{
-	   stop = True;
+	   stop = TRUE;
 	   /* demande au Mediateur la position verticale du filet */
-	   HautCoupure (pAb, True, &h, &yfilet, &NbCar);
+	   HautCoupure (pAb, TRUE, &h, &yfilet, &NbCar);
 	}
       else
 	{
@@ -464,12 +464,12 @@ int                 VueNb;
 		     SuppRfPave (pAb, &PavReaff, pDoc);
 		  }
 		else
-		   DetPavVue (pPa1->AbElement, pDoc, False, VueNb);
+		   DetPavVue (pPa1->AbElement, pDoc, FALSE, VueNb);
 	  }
 	pAb = pAb->AbEnclosing;
 	/* marque les paves englobant la marque de page */
 	if (pAb != NULL)
-	   pAb->AbOnPageBreak = True;
+	   pAb->AbOnPageBreak = TRUE;
      }
    /* Verifie les paves suivant la marque de page aux niveaux superieurs */
    pAb = pPage;
@@ -481,7 +481,7 @@ int                 VueNb;
 	     if (!pSuiv->AbDead)
 	       {
 		  /* demande au Mediateur la position et la hauteur du pave */
-		  HautCoupure (pSuiv, True, &h, &yhaut, &NbCar);
+		  HautCoupure (pSuiv, TRUE, &h, &yhaut, &NbCar);
 		  if (yhaut < yfilet)
 		     /* le haut du pave est au-dessus du saut de page */
 		     if (yhaut + h <= yfilet && !pSuiv->AbOnPageBreak)
@@ -492,7 +492,7 @@ int                 VueNb;
 			     SuppRfPave (pSuiv, &PavReaff, pDoc);
 			  }
 			else
-			   DetPavVue (pSuiv->AbElement, pDoc, False, VueNb);
+			   DetPavVue (pSuiv->AbElement, pDoc, FALSE, VueNb);
 		     else
 			/* le pave est traverse par le saut de page */
 			TuePavesAuDessus (pSuiv, yfilet, VueNb, pDoc, &PavReaff);

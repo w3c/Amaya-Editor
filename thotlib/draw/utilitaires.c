@@ -558,7 +558,7 @@ AjouterUnNoeud (RlRoot, Doc, ElemCree, TypeNoeud)
   Elem.ElTypeNum = TypeNoeud;
   *ElemCree = TtaNewTree (Doc, Elem, "");
   if (RlRoot != NULL)
-    TtaInsertSibling (*ElemCree, RlRoot, False, Doc);
+    TtaInsertSibling (*ElemCree, RlRoot, FALSE, Doc);
   return;
 }
 
@@ -832,7 +832,7 @@ ChercherContexteInsert (Doc,inside)
    - soit dans le groupe selectionne
    - soit en dernier fils de la racine
  */
-  *inside = False;
+  *inside = FALSE;
   RlRoot = CurrentSelect;
   while ((RlRoot != NULL) &&
 	 (TtaGetElementType (RlRoot).ElTypeNum != Draw3_EL_Groupe) &&
@@ -844,7 +844,7 @@ ChercherContexteInsert (Doc,inside)
       elem = TtaGetLastChild (RlRoot);
       if(elem ==NULL) {
 	elem = RlRoot;
-	*inside = True;
+	*inside = TRUE;
       }
       return (elem);
     }
@@ -860,7 +860,7 @@ ChercherContexteInsert (Doc,inside)
       elem = TtaGetLastChild (RlRoot);
       if(elem ==NULL) {
 	elem = RlRoot;
-	*inside = True;
+	*inside = TRUE;
       }
       return (elem);
     }

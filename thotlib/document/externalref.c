@@ -130,10 +130,10 @@ boolean             LabelSeul;
    boolean             stop;
    boolean             error;
 
-   error = False;
+   error = FALSE;
    /* lit la 1ere marque de label */
    if (!BIOreadByte (fich, &c))
-      error = True;
+      error = TRUE;
    pDRPrec = NULL;
    if (pDocu == NULL)
       *Ancre = NULL;
@@ -166,15 +166,15 @@ boolean             LabelSeul;
 		/* saute le premier descripteur bidon */
 		pDR = pDR->ReNext;
 	     /* parcourt la chaine des descripteurs d'element reference' */
-	     stop = False;
+	     stop = FALSE;
 	     do
 	       {
 		  if (pDR == NULL)
-		     stop = True;	/* dernier descripteur du document */
+		     stop = TRUE;	/* dernier descripteur du document */
 		  else if (!pDR->ReExternalRef)
 		     if (pDR->ReReferredElem != NULL)
 			if (strcmp (pDR->ReReferredElem->ElLabel, lab) == 0)
-			   stop = True;		/* trouve' */
+			   stop = TRUE;		/* trouve' */
 		  if (!stop)
 		     /* passe au descripteur suivant */
 		     pDR = pDR->ReNext;
@@ -189,11 +189,11 @@ boolean             LabelSeul;
 	/* ce label */
 	/* lit la 1ere marque de nom de document */
 	if (!BIOreadByte (fich, &c))
-	   error = True;
+	   error = TRUE;
 	if (c != (char) C_PIV_DOCNAME || error)
 	  {
 	     PivotFormatError ("T");	/* ce n'est pas une marque de nom */
-	     error = True;
+	     error = TRUE;
 	  }
 	while (c == (char) C_PIV_DOCNAME && !error)
 	   /* lit l'identificateur du document referencant */
@@ -218,7 +218,7 @@ boolean             LabelSeul;
 	       }
 	     /* lit l'octet qui suit le nom */
 	     if (!BIOreadByte (fich, &c))
-		error = True;
+		error = TRUE;
 	  }
      }
 }
@@ -245,12 +245,12 @@ PtrChangedReferredEl     *Ancre;
    boolean             error;
    LabelString         lab;
 
-   error = False;
+   error = FALSE;
    *Ancre = NULL;
    ChngPrec = NULL;
    /* lit le premier caractere */
    if (!BIOreadByte (fich, &c))
-      error = True;
+      error = TRUE;
    while (!error)
 
      {
@@ -268,7 +268,7 @@ PtrChangedReferredEl     *Ancre;
 	strncpy (Chng->CrOldLabel, lab, MAX_LABEL_LEN);
 	/* lit le nouveau label */
 	if (!BIOreadByte (fich, &c))
-	   error = True;
+	   error = TRUE;
 	rdLabel (c, lab, fich);
 	if (!error)
 	  {
@@ -276,11 +276,11 @@ PtrChangedReferredEl     *Ancre;
 	     /* lit le nom de l'ancien document */
 	     /* lit la marque de nom de document */
 	     if (!BIOreadByte (fich, &c))
-		error = True;
+		error = TRUE;
 	     if (c != (char) C_PIV_DOCNAME)
 	       {
 		  PivotFormatError ("T");	/* ce n'est pas une marque de nom */
-		  error = True;
+		  error = TRUE;
 	       }
 	     else
 		/* lit le nom */
@@ -290,11 +290,11 @@ PtrChangedReferredEl     *Ancre;
 		  if (!error)
 		     /* lit la marque de nom de document */
 		     if (!BIOreadByte (fich, &c))
-			error = True;
+			error = TRUE;
 		  if (c != (char) C_PIV_DOCNAME)
 		    {
 		       PivotFormatError ("T");	/* ce n'est pas une marque de nom */
-		       error = True;
+		       error = TRUE;
 		    }
 		  else
 		     /* lit le nom */
@@ -303,7 +303,7 @@ PtrChangedReferredEl     *Ancre;
 		       /* lit l'octet qui suit le nom */
 		       if (!error)
 			  if (!BIOreadByte (fich, &c))
-			     error = True;
+			     error = TRUE;
 		    }
 	       }
 	  }
@@ -363,13 +363,13 @@ PtrDocument         pDoc;
 	   /* c'est un element qui a ete detruit ou a change' de document */
 	  {
 	     /* Cherche le representant de l'ancien element */
-	     trouve = False;
+	     trouve = FALSE;
 	     while (pDR != NULL && !trouve)
 	       {
 		  if (pDR->ReExternalRef)
 		     if (strcmp (pDR->ReReferredLabel, Chng->CrOldLabel) == 0)
 			if (MemeIdentDoc (pDR->ReExtDocument, Chng->CrOldDocument))
-			   trouve = True;
+			   trouve = TRUE;
 		  if (!trouve)
 		     pDR = pDR->ReNext;
 	       }
@@ -390,7 +390,7 @@ PtrDocument         pDoc;
 		       while (pRef != NULL)
 			 {
 			    pRefSuiv = pRef->RdNext;
-			    pRef->RdInternalRef = True;
+			    pRef->RdInternalRef = TRUE;
 			    DeleteReference (pRef);
 			    pRef = pRefSuiv;
 			 }

@@ -412,9 +412,9 @@ ThotGC              GClocal;
 #ifdef NEW_WILLOWS
    /* DrawTextEx or some such thing - @@@ */
 #else
-   XSetFont (GDp (disp), GClocal, ((XFontStruct *) font)->fid);
+   XSetFont (TtDisplay, GClocal, ((XFontStruct *) font)->fid);
    FontOrig (font, ch, &x, &y);
-   XDrawString (GDp (disp), w, GClocal, x, y, &ch, longueur);
+   XDrawString (TtDisplay, w, GClocal, x, y, &ch, longueur);
 #endif
 }
 
@@ -545,9 +545,9 @@ int                 nbitem;
    n++;
    XtSetArg (args[n], XmNy, (Position) y);
    n++;
-   XtSetArg (args[n], XmNallowShellResize, True);
+   XtSetArg (args[n], XmNallowShellResize, TRUE);
    n++;
-   XtSetArg (args[n], XmNuseAsyncGeometry, True);
+   XtSetArg (args[n], XmNuseAsyncGeometry, TRUE);
    n++;
 #ifdef OLD
    w = XtCreateWidget (title, topLevelShellWidgetClass, XtParent (FrameTable[0].WdFrame), args, n);
@@ -566,9 +566,9 @@ int                 nbitem;
    title_string = XmStringCreateSimple (title);
    XtSetArg (args[n], XmNdialogTitle, title_string);
    n++;
-   XtSetArg (args[n], XmNautoUnmanage, False);
+   XtSetArg (args[n], XmNautoUnmanage, FALSE);
    n++;
-/**XtSetArg(args[n], XmNdefaultPosition, False); n++;**/
+/**XtSetArg(args[n], XmNdefaultPosition, FALSE); n++;**/
    XtSetArg (args[n], XmNmarginWidth, 0);
    n++;
    XtSetArg (args[n], XmNmarginHeight, 0);
@@ -583,7 +583,7 @@ int                 nbitem;
 /*** Cree un Row-Column pour mettre le bouton Quit ***/
 /*** en dessous des touches du clavier.    ***/
    n = 3;
-   XtSetArg (args[n], XmNadjustLast, False);
+   XtSetArg (args[n], XmNadjustLast, FALSE);
    n++;
    XtSetArg (args[n], XmNmarginWidth, 0);
    n++;
@@ -598,7 +598,7 @@ int                 nbitem;
 
 /*** Cree un Row-Column pour contenir les touches du clavier ***/
    n = 3;
-   XtSetArg (args[n], XmNadjustLast, False);
+   XtSetArg (args[n], XmNadjustLast, FALSE);
    n++;
    XtSetArg (args[n], XmNmarginWidth, 0);
    n++;
@@ -629,7 +629,7 @@ int                 nbitem;
    GCmodel.function = GXcopy;
    GCmodel.foreground = Black_Color;
    GCmodel.background = BgMenu_Color;
-   GCkey = XCreateGC (GDp (0), GRootW (0), GCForeground | GCBackground | GCFunction, &GCmodel);
+   GCkey = XCreateGC (TtDisplay, TtRootWindow, GCForeground | GCBackground | GCFunction, &GCmodel);
 
 /*** Cree le bouton Quit ***/
    n = 0;
@@ -783,13 +783,13 @@ int                 kb;
 #ifdef OLD
 	/* Affiche le clavier si necessaire */
 	if (XtIsManaged (Keyboards[kb]))
-	   XMapRaised (GDp (0), XtWindowOfObject (Keyboards[kb]));
+	   XMapRaised (TtDisplay, XtWindowOfObject (Keyboards[kb]));
 	else
 	   XtManageChild (Keyboards[kb]);
 #else
 	/*    XtPopup(XtParent(Keyboards[kb]), XtGrabNonexclusive); */
 	XtPopup (Keyboards[kb], XtGrabNonexclusive);
-	XMapRaised (GDp (0), XtWindowOfObject (Keyboards[kb]));
+	XMapRaised (TtDisplay, XtWindowOfObject (Keyboards[kb]));
 #endif
      }
 #endif /* NEW_WILLOWS */

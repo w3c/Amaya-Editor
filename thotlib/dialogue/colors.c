@@ -62,7 +62,7 @@ int                 fground;
    int                 wcase, hcase;
    int                 w, h;
 
-   if (Gdepth (0) == 1)
+   if (TtWDepth == 1)
       /* Affiche le nom des couleurs sur un ecran N&B */
       wcase = CarWidth ('m', FontMenu) * 12;
    else
@@ -80,10 +80,10 @@ int                 fground;
 	y -= 2;
 	w = wcase + 2;
 	h = hcase + 2;
-	XFillRectangle (GDp (0), Color_Window, GCinvert (0), x + 2, y, w, 2);
-	XFillRectangle (GDp (0), Color_Window, GCinvert (0), x, y, 2, h);
-	XFillRectangle (GDp (0), Color_Window, GCinvert (0), x, y + h, w, 2);
-	XFillRectangle (GDp (0), Color_Window, GCinvert (0), x + w, y + 2, 2, h);
+	XFillRectangle (TtDisplay, Color_Window, TtInvertGC, x + 2, y, w, 2);
+	XFillRectangle (TtDisplay, Color_Window, TtInvertGC, x, y, 2, h);
+	XFillRectangle (TtDisplay, Color_Window, TtInvertGC, x, y + h, w, 2);
+	XFillRectangle (TtDisplay, Color_Window, TtInvertGC, x + w, y + 2, 2, h);
 #endif /* NEW_WILLOWS */
      }
 
@@ -95,10 +95,10 @@ int                 fground;
 #ifndef NEW_WILLOWS
 	w = wcase - 2;
 	h = hcase - 2;
-	XFillRectangle (GDp (0), Color_Window, GCinvert (0), x + 2, y, w, 2);
-	XFillRectangle (GDp (0), Color_Window, GCinvert (0), x, y, 2, h);
-	XFillRectangle (GDp (0), Color_Window, GCinvert (0), x, y + h, w, 2);
-	XFillRectangle (GDp (0), Color_Window, GCinvert (0), x + w, y + 2, 2, h);
+	XFillRectangle (TtDisplay, Color_Window, TtInvertGC, x + 2, y, w, 2);
+	XFillRectangle (TtDisplay, Color_Window, TtInvertGC, x, y, 2, h);
+	XFillRectangle (TtDisplay, Color_Window, TtInvertGC, x, y + h, w, 2);
+	XFillRectangle (TtDisplay, Color_Window, TtInvertGC, x + w, y + 2, 2, h);
 #endif /* NEW_WILLOWS */
      }
 
@@ -115,10 +115,10 @@ int                 fground;
 	     y -= 2;
 	     w = wcase + 2;
 	     h = hcase + 2;
-	     XFillRectangle (GDp (0), Color_Window, GCinvert (0), x + 2, y, w, 2);
-	     XFillRectangle (GDp (0), Color_Window, GCinvert (0), x, y, 2, h);
-	     XFillRectangle (GDp (0), Color_Window, GCinvert (0), x, y + h, w, 2);
-	     XFillRectangle (GDp (0), Color_Window, GCinvert (0), x + w, y + 2, 2, h);
+	     XFillRectangle (TtDisplay, Color_Window, TtInvertGC, x + 2, y, w, 2);
+	     XFillRectangle (TtDisplay, Color_Window, TtInvertGC, x, y, 2, h);
+	     XFillRectangle (TtDisplay, Color_Window, TtInvertGC, x, y + h, w, 2);
+	     XFillRectangle (TtDisplay, Color_Window, TtInvertGC, x + w, y + 2, 2, h);
 #endif /* NEW_WILLOWS */
 	  }
      }
@@ -134,10 +134,10 @@ int                 fground;
 #ifndef NEW_WILLOWS
 	     w = wcase - 2;
 	     h = hcase - 2;
-	     XFillRectangle (GDp (0), Color_Window, GCinvert (0), x + 2, y, w, 2);
-	     XFillRectangle (GDp (0), Color_Window, GCinvert (0), x, y, 2, h);
-	     XFillRectangle (GDp (0), Color_Window, GCinvert (0), x, y + h, w, 2);
-	     XFillRectangle (GDp (0), Color_Window, GCinvert (0), x + w, y + 2, 2, h);
+	     XFillRectangle (TtDisplay, Color_Window, TtInvertGC, x + 2, y, w, 2);
+	     XFillRectangle (TtDisplay, Color_Window, TtInvertGC, x, y, 2, h);
+	     XFillRectangle (TtDisplay, Color_Window, TtInvertGC, x, y + h, w, 2);
+	     XFillRectangle (TtDisplay, Color_Window, TtInvertGC, x + w, y + 2, 2, h);
 #endif /* NEW_WILLOWS */
 	  }
      }
@@ -194,7 +194,7 @@ static void         ColorsExpose ()
    char               *ptr;
    int                 fground, bground;
 
-   if (Gdepth (0) == 1)
+   if (TtWDepth == 1)
       /* Affiche le nom des couleurs sur un ecran N&B */
       wcase = CarWidth ('m', FontMenu) * 12;
    else
@@ -207,43 +207,43 @@ static void         ColorsExpose ()
    y = hcase;
    h = (max + COLORS_COL - 1) / COLORS_COL * hcase + y;
 #ifndef NEW_WILLOWS
-   XClearWindow (GDp (0), Color_Window);
+   XClearWindow (TtDisplay, Color_Window);
 
    /* entree couleur standard */
    if (FonteLeg == NULL)
       KeyboardsLoadResources ();
-   XSetForeground (GDp (0), GCtrait (0), ColorPixel (0));
-   XFillRectangle (GDp (0), Color_Window, GCtrait (0), 0, 0, w, hcase - 2);
-   XSetForeground (GDp (0), GCtrait (0), ColorPixel (1));
+   XSetForeground (TtDisplay, TtLineGC, ColorPixel (0));
+   XFillRectangle (TtDisplay, Color_Window, TtLineGC, 0, 0, w, hcase - 2);
+   XSetForeground (TtDisplay, TtLineGC, ColorPixel (1));
    ptr = TtaGetMessage (LIB, LIB_STANDARD_COLORS);
    WChaine (Color_Window, ptr,
    (w / 2) - (XTextWidth ((XFontStruct *) FonteLeg, ptr, strlen (ptr)) / 2),
-	    0, FontMenu, GCtrait (0));
+	    0, FontMenu, TtLineGC);
 
    /* grille */
-   XSetLineAttributes (GDp (0), GCtrait (0), 1, LineSolid, CapButt, JoinMiter);
+   XSetLineAttributes (TtDisplay, TtLineGC, 1, LineSolid, CapButt, JoinMiter);
    for (x = wcase; x < w; x += wcase)
-      XDrawLine (GDp (0), Color_Window, GCtrait (0), x, y, x, h);
+      XDrawLine (TtDisplay, Color_Window, TtLineGC, x, y, x, h);
    for (y = hcase; y < h; y += hcase)
-      XDrawLine (GDp (0), Color_Window, GCtrait (0), 0, y, w, y);
+      XDrawLine (TtDisplay, Color_Window, TtLineGC, 0, y, w, y);
 
    /* items */
-   if (Gdepth (0) == 1)
+   if (TtWDepth == 1)
       for (i = 0; i < max; i++)
 	{
 	   x = (i % COLORS_COL) * wcase;
 	   y = ((i / COLORS_COL) + 1) * hcase;
 	   WChaine (Color_Window, ColorName (i),
 		    x + (wcase / 2) - (XTextWidth ((XFontStruct *) FonteLeg, ColorName (i), strlen (ColorName (i))) / 2),
-		    y, FonteLeg, GCtrait (0));
+		    y, FonteLeg, TtLineGC);
 	}
    else
       for (i = 0; i < max; i++)
 	{
 	   x = (i % COLORS_COL) * wcase;
 	   y = ((i / COLORS_COL) + 1) * hcase;
-	   XSetForeground (GDp (0), GCtrait (0), ColorPixel (i));
-	   XFillRectangle (GDp (0), Color_Window, GCtrait (0), x + 1, y + 1, wcase - 2, hcase - 2);
+	   XSetForeground (TtDisplay, TtLineGC, ColorPixel (i));
+	   XFillRectangle (TtDisplay, Color_Window, TtLineGC, x + 1, y + 1, wcase - 2, hcase - 2);
 	}
 
    /* show the current selection */
@@ -272,7 +272,7 @@ int                 y;
    int                 couleur, li, co;
    int                 wcase, hcase;
 
-   if (Gdepth (0) == 1)
+   if (TtWDepth == 1)
       /* Affiche le nom des couleurs sur un ecran N&B */
       wcase = CarWidth ('m', FontMenu) * 12;
    else
@@ -289,13 +289,13 @@ int                 y;
 	if (bouton == Button1)
 	  {
 	     /* couleur de trace' standard */
-	     ChangeCouleur (-1, False);
+	     ChangeCouleur (-1, FALSE);
 	     ThotSelectPalette (lastBg, -1);
 	  }
 	else
 	  {
 	     /* couleur de fond standard */
-	     ChangeCouleur (-1, True);
+	     ChangeCouleur (-1, TRUE);
 	     ThotSelectPalette (-1, lastFg);
 	  }
 	return;
@@ -307,13 +307,13 @@ int                 y;
    if (bouton == Button1)
      {
 	/* selectionne la couleur de trace' */
-	ChangeCouleur (couleur, False);
+	ChangeCouleur (couleur, FALSE);
 	ThotSelectPalette (lastBg, couleur);
      }
    else
      {
 	/* selectionne la couleur de fond */
-	ChangeCouleur (couleur, True);
+	ChangeCouleur (couleur, TRUE);
 	ThotSelectPalette (couleur, lastFg);
      }
 
@@ -377,9 +377,9 @@ int                 y;
    n++;
    XtSetArg (args[n], XmNy, (Position) y);
    n++;
-   XtSetArg (args[n], XmNallowShellResize, True);
+   XtSetArg (args[n], XmNallowShellResize, TRUE);
    n++;
-   XtSetArg (args[n], XmNuseAsyncGeometry, True);
+   XtSetArg (args[n], XmNuseAsyncGeometry, TRUE);
    n++;
    Color_Palette = XtCreatePopupShell (TtaGetMessage (LIB, LIB_COLORS),
 			   applicationShellWidgetClass, RootShell, args, n);
@@ -394,7 +394,7 @@ int                 y;
    title_string = XmStringCreateSimple (TtaGetMessage (LIB, LIB_COLORS));
    XtSetArg (args[n], XmNdialogTitle, title_string);
    n++;
-   XtSetArg (args[n], XmNautoUnmanage, False);
+   XtSetArg (args[n], XmNautoUnmanage, FALSE);
    n++;
    XtSetArg (args[n], XmNmarginWidth, 0);
    n++;
@@ -416,7 +416,7 @@ int                 y;
    n++;
    XtSetArg (args[n], XmNborderColor, Button_Color);
    n++;
-   XtSetArg (args[n], XmNadjustLast, False);
+   XtSetArg (args[n], XmNadjustLast, FALSE);
    n++;
    XtSetArg (args[n], XmNmarginWidth, 0);
    n++;
@@ -428,7 +428,7 @@ int                 y;
    n++;
    XtSetArg (args[n], XmNorientation, XmVERTICAL);
    n++;
-   XtSetArg (args[n], XmNresizeHeight, True);
+   XtSetArg (args[n], XmNresizeHeight, TRUE);
    n++;
    row = XmCreateRowColumn (w, "Dialogue", args, n);
    XtManageChild (row);
@@ -467,7 +467,7 @@ int                 y;
 
    /* Evalue la largeur et la hauteur de la palette */
    n = 0;
-   if (Gdepth (0) == 1)
+   if (TtWDepth == 1)
       /* Affiche le nom des couleurs sur un ecran N&B */
       width = CarWidth ('m', FontMenu) * 12 * COLORS_COL;
    else
@@ -536,7 +536,7 @@ int                 y;
    GCmodel.function = GXcopy;
    GCmodel.foreground = Black_Color;
    GCmodel.background = BgMenu_Color;
-   GCkey = XCreateGC (GDp (0), GRootW (0), GCForeground | GCBackground | GCFunction, &GCmodel);
+   GCkey = XCreateGC (TtDisplay, TtRootWindow, GCForeground | GCBackground | GCFunction, &GCmodel);
 
 /*** Cree le bouton Quit ***/
    n = 0;
@@ -580,7 +580,7 @@ int                 y;
 /* ---------------------------------------------------------------------- */
 /* |    TtcChangeColors L'utilisateur demande a modifier les            | */
 /* |            couleurs (presentation specifique) pour la vue          | */
-/* |            Vue du document pDoc (si Assoc = False) ou les elements | */
+/* |            Vue du document pDoc (si Assoc = FALSE) ou les elements | */
 /* |            associes de numero Vue (si Assoc = Vrai)                | */
 /* |            Initialise et active le formulaire correspondant.       | */
 /* ---------------------------------------------------------------------- */
@@ -616,7 +616,7 @@ View                view;
 	/* par defaut la racine du document */
 	SelDoc = pDoc;
 	PremSel = pDoc->DocRootElement;
-	selok = True;
+	selok = TRUE;
      }
 
    if (selok && SelDoc == pDoc && NumberOfColors () > 0)

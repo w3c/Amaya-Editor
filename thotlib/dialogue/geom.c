@@ -132,8 +132,8 @@ int                *y3;
 		  j = 0;
 	       }
 	  }
-	points[i - 1].x = x + FrameTable[frame].FrLeftMargin + PtEnPixel (adbuff->BuPoints[j].XCoord / 1000, 0);
-	points[i - 1].y = y + FrameTable[frame].FrTopMargin + PtEnPixel (adbuff->BuPoints[j].YCoord / 1000, 1);
+	points[i - 1].x = x + FrameTable[frame].FrLeftMargin + PointToPixel (adbuff->BuPoints[j].XCoord / 1000);
+	points[i - 1].y = y + FrameTable[frame].FrTopMargin + PointToPixel (adbuff->BuPoints[j].YCoord / 1000);
 	/* note les points i-1, i et i+1 */
 	if (i == point - 1)
 	  {
@@ -169,10 +169,10 @@ int                *y3;
 	     *x3 = points[0].x;
 	     *y3 = points[0].y;
 	  }
-	XDrawLines (GDp (0), FrRef[frame], GCinvert (0), points, nb, CoordModeOrigin);
+	XDrawLines (TtDisplay, FrRef[frame], TtInvertGC, points, nb, CoordModeOrigin);
      }
    else
-      XDrawLines (GDp (0), FrRef[frame], GCinvert (0), points, nb - 1, CoordModeOrigin);
+      XDrawLines (TtDisplay, FrRef[frame], TtInvertGC, points, nb - 1, CoordModeOrigin);
 
    /* Libere la table de points */
    free ((char *) points);
@@ -226,15 +226,15 @@ PtrTextBuffer      Bbuffer;
    /* calcule les rapports de deformation entre la boite et le pave */
    rapportX = (float) Pbuffer->BuPoints[0].XCoord / (float) large;
    rapportY = (float) Pbuffer->BuPoints[0].YCoord / (float) haut;
-   large = PtEnPixel (large / 1000, 0);
-   haut = PtEnPixel (haut / 1000, 1);
+   large = PointToPixel (large / 1000);
+   haut = PointToPixel (haut / 1000);
 
    /*Changement de curseur */
    e = ButtonPressMask | ButtonReleaseMask | ButtonMotionMask;
    w = FrRef[frame];
-   XMapRaised (GDp (0), w);
-   XFlush (GDp (0));
-   ThotGrab (w, CursDepHV (0), e, 0);
+   XMapRaised (TtDisplay, w);
+   XFlush (TtDisplay);
+   ThotGrab (w, HVCurs, e, 0);
 
    /* Le pas de la grille commence sur l'origine de l'englobante */
    lastx = x + FrameTable[frame].FrLeftMargin;
@@ -242,22 +242,22 @@ PtrTextBuffer      Bbuffer;
    x1 = -1;
    y1 = -1;
    nbpoints = 1;
-   XWarpPointer (GDp (0), None, w, 0, 0, 0, 0, lastx, lasty);
-   XFlush (GDp (0));
+   XWarpPointer (TtDisplay, None, w, 0, 0, 0, 0, lastx, lasty);
+   XFlush (TtDisplay);
 
    /* affiche la boite contour */
    /*Clear(frame, large, haut, x, y); */
-   GeomBoite (frame, x, y, large, haut, x + large - 2, y + haut - 2, True);
+   GeomBoite (frame, x, y, large, haut, x + large - 2, y + haut - 2, TRUE);
 
    /* BOUCLE d'attente de definition d'un point de controle */
    ret = 0;
    while (ret == 0)
      {
-	if (XPending (GDp (0)) == 0)
+	if (XPending (TtDisplay) == 0)
 	  {
 
 	     /* position actuelle du curseur */
-	     XQueryPointer (GDp (0), w, &wdum, &wdum, &dx, &dy, &newx, &newy, &e);
+	     XQueryPointer (TtDisplay, w, &wdum, &wdum, &dx, &dy, &newx, &newy, &e);
 	     /* Verification des coordonnees */
 	     newx = ALIGNE (newx - FrameTable[frame].FrLeftMargin - x);
 	     newx += x;
@@ -279,7 +279,7 @@ PtrTextBuffer      Bbuffer;
 		     newy = y + haut + FrameTable[frame].FrTopMargin;	/* nouvelle position en Y valide */
 		  else
 		     newy += FrameTable[frame].FrTopMargin;
-		  XWarpPointer (GDp (0), None, w, 0, 0, 0, 0, newx, newy);
+		  XWarpPointer (TtDisplay, None, w, 0, 0, 0, 0, newx, newy);
 	       }
 	     else
 	       {
@@ -290,16 +290,16 @@ PtrTextBuffer      Bbuffer;
 	     /* Affiche le segment en construction */
 	     if (x1 != -1 && (newx != lastx || newy != lasty))
 	       {
-		  XDrawLine (GDp (0), FrRef[frame], GCinvert (0), x1, y1, lastx, lasty);
-		  XDrawLine (GDp (0), FrRef[frame], GCinvert (0), x1, y1, newx, newy);
-		  XFlush (GDp (0));
+		  XDrawLine (TtDisplay, FrRef[frame], TtInvertGC, x1, y1, lastx, lasty);
+		  XDrawLine (TtDisplay, FrRef[frame], TtInvertGC, x1, y1, newx, newy);
+		  XFlush (TtDisplay);
 	       }
 	     lastx = newx;
 	     lasty = newy;
 	  }
 	else
 	  {
-	     XNextEvent (GDp (0), &event);
+	     XNextEvent (TtDisplay, &event);
 	     /* Verification des coordonnees */
 	     newx = x + ALIGNE ((int) event.xmotion.x - FrameTable[frame].FrLeftMargin - x);
 	     newy = y + ALIGNE ((int) event.xmotion.y - FrameTable[frame].FrTopMargin - y);
@@ -323,7 +323,7 @@ PtrTextBuffer      Bbuffer;
 /*-BOUTON ENFONCE-*/
 		      case ButtonPress:
 			 if (newx < x || newx > x + large || newy < y || newy > y + haut)
-			    XWarpPointer (GDp (0), None, w, 0, 0, 0, 0, lastx, lasty);
+			    XWarpPointer (TtDisplay, None, w, 0, 0, 0, 0, lastx, lasty);
 			 break;
 
 /*-BOUTON RELACHE-*/
@@ -337,8 +337,8 @@ PtrTextBuffer      Bbuffer;
 			      nbpoints++;
 
 			      /* Met a jour les buffers de la boite */
-			      newx = PixelEnPt (lastx - FrameTable[frame].FrLeftMargin - x, 0) * 1000;
-			      newy = PixelEnPt (lasty - FrameTable[frame].FrTopMargin - y, 1) * 1000;
+			      newx = PixelToPoint (lastx - FrameTable[frame].FrLeftMargin - x) * 1000;
+			      newy = PixelToPoint (lasty - FrameTable[frame].FrTopMargin - y) * 1000;
 			      AddPointInPolyline (Bbuffer, nbpoints, newx, newy);
 			      /* Met a jour les buffers du pave */
 			      newx = (int) ((float) newx * rapportX);
@@ -367,11 +367,11 @@ PtrTextBuffer      Bbuffer;
      }
 
    /* efface la boite contour */
-   GeomBoite (frame, x, y, large, haut, x + large - 2, y + haut - 2, True);
+   GeomBoite (frame, x, y, large, haut, x + large - 2, y + haut - 2, TRUE);
 
    /* On restaure l'etat anterieur */
    ThotUngrab ();
-   XFlush (GDp (0));
+   XFlush (TtDisplay);
    /* On impose au moins deux points de controle pour un polyline valide */
    if (nbpoints < 3)
      {
@@ -436,31 +436,31 @@ boolean             close;
    /* calcule les rapports de deformation entre la boite et le pave */
    rapportX = (float) Pbuffer->BuPoints[0].XCoord / (float) large;
    rapportY = (float) Pbuffer->BuPoints[0].YCoord / (float) haut;
-   large = PtEnPixel (large / 1000, 0);
-   haut = PtEnPixel (haut / 1000, 1);
+   large = PointToPixel (large / 1000);
+   haut = PointToPixel (haut / 1000);
 
    /*Changement de curseur */
    e = ButtonPressMask | ButtonReleaseMask | ButtonMotionMask;
    w = FrRef[frame];
-   XMapRaised (GDp (0), w);
-   XFlush (GDp (0));
-   wrap = False;
-   ThotGrab (w, CursDepHV (0), e, 0);
+   XMapRaised (TtDisplay, w);
+   XFlush (TtDisplay);
+   wrap = FALSE;
+   ThotGrab (w, HVCurs, e, 0);
 
    /* affiche la boite contour */
    /*Clear(frame, large, haut, x, y); */
-   GeomBoite (frame, x, y, large, haut, x + large - 2, y + haut - 2, True);
+   GeomBoite (frame, x, y, large, haut, x + large - 2, y + haut - 2, TRUE);
    RedrawPolyLine (frame, x, y, Bbuffer, nbpoints, point, close,
 		   &x1, &y1, &lastx, &lasty, &x3, &y3);
    /* Le pas de la grille commence sur l'origine de l'englobante */
-   XWarpPointer (GDp (0), None, w, 0, 0, 0, 0, lastx, lasty);
-   XFlush (GDp (0));
+   XWarpPointer (TtDisplay, None, w, 0, 0, 0, 0, lastx, lasty);
+   XFlush (TtDisplay);
 
    /* BOUCLE d'attente de definition d'un point de controle */
    ret = 0;
    while (ret == 0)
      {
-	XNextEvent (GDp (0), &event);
+	XNextEvent (TtDisplay, &event);
 
 	/* Verification des coordonnees */
 	newx = x + ALIGNE ((int) event.xmotion.x - FrameTable[frame].FrLeftMargin - x);
@@ -469,12 +469,12 @@ boolean             close;
 	if (newx < x)
 	  {
 	     newx = x + FrameTable[frame].FrLeftMargin;		/* nouvelle position en X valide */
-	     wrap = True;
+	     wrap = TRUE;
 	  }
 	else if (newx > x + large)
 	  {
 	     newx = x + large + FrameTable[frame].FrLeftMargin;		/* nouvelle position en X valide */
-	     wrap = True;
+	     wrap = TRUE;
 	  }
 	else
 	   newx += FrameTable[frame].FrLeftMargin;
@@ -482,12 +482,12 @@ boolean             close;
 	if (newy < y)
 	  {
 	     newy = y + FrameTable[frame].FrTopMargin;	/* nouvelle position en Y valide */
-	     wrap = True;
+	     wrap = TRUE;
 	  }
 	else if (newy > y + haut)
 	  {
 	     newy = y + haut + FrameTable[frame].FrTopMargin;	/* nouvelle position en Y valide */
-	     wrap = True;
+	     wrap = TRUE;
 	  }
 	else
 	   newy += FrameTable[frame].FrTopMargin;
@@ -499,8 +499,8 @@ boolean             close;
 		    lastx = newx;
 		    lasty = newy;
 		    /* Met a jour les buffers de la boite */
-		    newx = PixelEnPt (lastx - FrameTable[frame].FrLeftMargin - x, 0) * 1000;
-		    newy = PixelEnPt (lasty - FrameTable[frame].FrTopMargin - y, 1) * 1000;
+		    newx = PixelToPoint (lastx - FrameTable[frame].FrLeftMargin - x) * 1000;
+		    newy = PixelToPoint (lasty - FrameTable[frame].FrTopMargin - y) * 1000;
 		    ModifyPointInPolyline (Bbuffer, point, newx, newy);
 		    /* Met a jour les buffers du pave */
 		    newx = (int) ((float) newx * rapportX);
@@ -515,22 +515,22 @@ boolean             close;
 		      {
 			 if (x1 != -1)
 			   {
-			      XDrawLine (GDp (0), FrRef[frame], GCinvert (0), x1, y1, lastx, lasty);
-			      XDrawLine (GDp (0), FrRef[frame], GCinvert (0), x1, y1, newx, newy);
+			      XDrawLine (TtDisplay, FrRef[frame], TtInvertGC, x1, y1, lastx, lasty);
+			      XDrawLine (TtDisplay, FrRef[frame], TtInvertGC, x1, y1, newx, newy);
 			   }
 			 if (x3 != -1)
 			   {
-			      XDrawLine (GDp (0), FrRef[frame], GCinvert (0), lastx, lasty, x3, y3);
-			      XDrawLine (GDp (0), FrRef[frame], GCinvert (0), newx, newy, x3, y3);
+			      XDrawLine (TtDisplay, FrRef[frame], TtInvertGC, lastx, lasty, x3, y3);
+			      XDrawLine (TtDisplay, FrRef[frame], TtInvertGC, newx, newy, x3, y3);
 			   }
-			 XFlush (GDp (0));
+			 XFlush (TtDisplay);
 		      }
 		    lastx = newx;
 		    lasty = newy;
 		    if (wrap)
 		      {
-			 XWarpPointer (GDp (0), None, w, 0, 0, 0, 0, lastx, lasty);
-			 wrap = False;
+			 XWarpPointer (TtDisplay, None, w, 0, 0, 0, 0, lastx, lasty);
+			 wrap = FALSE;
 		      }
 		    break;
 
@@ -548,11 +548,11 @@ boolean             close;
      }
 
    /* efface la boite contour */
-   GeomBoite (frame, x, y, large, haut, x + large - 2, y + haut - 2, True);
+   GeomBoite (frame, x, y, large, haut, x + large - 2, y + haut - 2, TRUE);
 
    /* On restaure l'etat anterieur */
    ThotUngrab ();
-   XFlush (GDp (0));
+   XFlush (TtDisplay);
 #endif /* NEW_WILLOWS */
 }				/*PolyModification */
 
@@ -612,38 +612,38 @@ boolean             close;
    /* calcule les rapports de deformation entre la boite et le pave */
    rapportX = (float) Pbuffer->BuPoints[0].XCoord / (float) large;
    rapportY = (float) Pbuffer->BuPoints[0].YCoord / (float) haut;
-   large = PtEnPixel (large / 1000, 0);
-   haut = PtEnPixel (haut / 1000, 1);
+   large = PointToPixel (large / 1000);
+   haut = PointToPixel (haut / 1000);
 
    /*Changement de curseur */
    e = ButtonPressMask | ButtonReleaseMask | ButtonMotionMask;
    w = FrRef[frame];
-   wrap = False;
-   XMapRaised (GDp (0), w);
-   XFlush (GDp (0));
-   ThotGrab (w, CursDepHV (0), e, 0);
+   wrap = FALSE;
+   XMapRaised (TtDisplay, w);
+   XFlush (TtDisplay);
+   ThotGrab (w, HVCurs, e, 0);
 
    /* affiche la boite contour */
    /*Clear(frame, large, haut, x, y); */
-   GeomBoite (frame, x, y, large, haut, x + large - 2, y + haut - 2, True);
+   GeomBoite (frame, x, y, large, haut, x + large - 2, y + haut - 2, TRUE);
    RedrawPolyLine (frame, x, y, Bbuffer, nbpoints, point, close,
 		   &x1, &y1, &lastx, &lasty, &x3, &y3);
    /* Le pas de la grille commence sur l'origine de l'englobante */
-   XFlush (GDp (0));
-   XWarpPointer (GDp (0), None, w, 0, 0, 0, 0, lastx, lasty);
+   XFlush (TtDisplay);
+   XWarpPointer (TtDisplay, None, w, 0, 0, 0, 0, lastx, lasty);
    x1 = lastx;
    y1 = lasty;
-   /*ok = False; *//* pas encore de point saisi */
+   /*ok = FALSE; *//* pas encore de point saisi */
 
    /* BOUCLE d'attente de definition d'un point de controle */
    ret = 0;
    while (ret == 0)
      {
-	if (XPending (GDp (0)) == 0)
+	if (XPending (TtDisplay) == 0)
 	  {
 
 	     /* position actuelle du curseur */
-	     XQueryPointer (GDp (0), w, &wdum, &wdum, &dx, &dy, &newx, &newy, &e);
+	     XQueryPointer (TtDisplay, w, &wdum, &wdum, &dx, &dy, &newx, &newy, &e);
 	     /* Verification des coordonnees */
 	     newx = ALIGNE (newx - FrameTable[frame].FrLeftMargin - x);
 	     newx += x;
@@ -665,7 +665,7 @@ boolean             close;
 		     newy = y + haut + FrameTable[frame].FrTopMargin;	/* nouvelle position en Y valide */
 		  else
 		     newy += FrameTable[frame].FrTopMargin;
-		  XWarpPointer (GDp (0), None, w, 0, 0, 0, 0, newx, newy);
+		  XWarpPointer (TtDisplay, None, w, 0, 0, 0, 0, newx, newy);
 	       }
 	     else
 	       {
@@ -678,23 +678,23 @@ boolean             close;
 	       {
 		  if (x1 != -1)
 		    {
-		       XDrawLine (GDp (0), FrRef[frame], GCinvert (0), x1, y1, lastx, lasty);
-		       XDrawLine (GDp (0), FrRef[frame], GCinvert (0), x1, y1, newx, newy);
+		       XDrawLine (TtDisplay, FrRef[frame], TtInvertGC, x1, y1, lastx, lasty);
+		       XDrawLine (TtDisplay, FrRef[frame], TtInvertGC, x1, y1, newx, newy);
 		    }
 		  if (x3 != -1)
 		    {
-		       XDrawLine (GDp (0), FrRef[frame], GCinvert (0), lastx, lasty, x3, y3);
-		       XDrawLine (GDp (0), FrRef[frame], GCinvert (0), newx, newy, x3, y3);
+		       XDrawLine (TtDisplay, FrRef[frame], TtInvertGC, lastx, lasty, x3, y3);
+		       XDrawLine (TtDisplay, FrRef[frame], TtInvertGC, newx, newy, x3, y3);
 		    }
 
-		  XFlush (GDp (0));
+		  XFlush (TtDisplay);
 		  lastx = newx;
 		  lasty = newy;
 	       }
 	  }
 	else
 	  {
-	     XNextEvent (GDp (0), &event);
+	     XNextEvent (TtDisplay, &event);
 
 	     /* Verification des coordonnees */
 	     newx = x + ALIGNE ((int) event.xmotion.x - FrameTable[frame].FrLeftMargin - x);
@@ -703,12 +703,12 @@ boolean             close;
 	     if (newx < x)
 	       {
 		  newx = x + FrameTable[frame].FrLeftMargin;	/* nouvelle position en X valide */
-		  wrap = True;
+		  wrap = TRUE;
 	       }
 	     else if (newx > x + large)
 	       {
 		  newx = x + large + FrameTable[frame].FrLeftMargin;	/* nouvelle position en X valide */
-		  wrap = True;
+		  wrap = TRUE;
 	       }
 	     else
 		newx += FrameTable[frame].FrLeftMargin;
@@ -716,12 +716,12 @@ boolean             close;
 	     if (newy < y)
 	       {
 		  newy = y + FrameTable[frame].FrTopMargin;	/* nouvelle position en Y valide */
-		  wrap = True;
+		  wrap = TRUE;
 	       }
 	     else if (newy > y + haut)
 	       {
 		  newy = y + haut + FrameTable[frame].FrTopMargin;	/* nouvelle position en Y valide */
-		  wrap = True;
+		  wrap = TRUE;
 	       }
 	     else
 		newy += FrameTable[frame].FrTopMargin;
@@ -734,8 +734,8 @@ boolean             close;
 			 lasty = newy;
 			 if (wrap)
 			   {
-			      XWarpPointer (GDp (0), None, w, 0, 0, 0, 0, lastx, lasty);
-			      wrap = False;
+			      XWarpPointer (TtDisplay, None, w, 0, 0, 0, 0, lastx, lasty);
+			      wrap = FALSE;
 			   }
 			 break;
 
@@ -751,10 +751,10 @@ boolean             close;
 			      y1 = lasty;
 			      nbpoints++;
 			      point++;
-			      /*ok = True; */
+			      /*ok = TRUE; */
 			      /* Met a jour les buffers de la boite */
-			      newx = PixelEnPt (lastx - FrameTable[frame].FrLeftMargin - x, 0) * 1000;
-			      newy = PixelEnPt (lasty - FrameTable[frame].FrTopMargin - y, 1) * 1000;
+			      newx = PixelToPoint (lastx - FrameTable[frame].FrLeftMargin - x) * 1000;
+			      newy = PixelToPoint (lasty - FrameTable[frame].FrTopMargin - y) * 1000;
 			      AddPointInPolyline (Bbuffer, point, newx, newy);
 			      /* Met a jour les buffers du pave */
 			      newx = (int) ((float) newx * rapportX);
@@ -782,11 +782,11 @@ boolean             close;
      }
 
    /* efface la boite contour */
-   GeomBoite (frame, x, y, large, haut, x + large - 2, y + haut - 2, True);
+   GeomBoite (frame, x, y, large, haut, x + large - 2, y + haut - 2, TRUE);
 
    /* On restaure l'etat anterieur */
    ThotUngrab ();
-   XFlush (GDp (0));
+   XFlush (TtDisplay);
    /* On impose au moins deux points de controle pour un polyline valide */
    if (nbpoints < 3)
       return 1;
@@ -846,7 +846,7 @@ int                 DimY;
    /*Changement de curseur */
    e = ButtonPressMask | ButtonReleaseMask | ButtonMotionMask;
    w = FrRef[frame];
-   ThotGrab (w, CursDepHV (0), e, 0);
+   ThotGrab (w, HVCurs, e, 0);
 
    /* Position par defaut */
    if (*x < xmin)
@@ -863,46 +863,46 @@ int                 DimY;
    *x = xmin + dx;
    dy = ALIGNE (*y - ymin);
    *y = ymin + dy;
-   XMapRaised (GDp (0), w);
-   XWarpPointer (GDp (0), None, w, 0, 0, 0, 0, *x + FrameTable[frame].FrLeftMargin, *y + FrameTable[frame].FrTopMargin);
-   XFlush (GDp (0));
+   XMapRaised (TtDisplay, w);
+   XWarpPointer (TtDisplay, None, w, 0, 0, 0, 0, *x + FrameTable[frame].FrLeftMargin, *y + FrameTable[frame].FrTopMargin);
+   XFlush (TtDisplay);
 
    /* Affiche la boite elastique initiale */
-   GeomBoite (frame, *x, *y, *large, *haut, *x + xr, *y + yr, False);
+   GeomBoite (frame, *x, *y, *large, *haut, *x + xr, *y + yr, FALSE);
 
    /* BOUCLE d'attente de definition du premier point */
    ret = 0;
    while (ret == 0)
      {
-	if (XPending (GDp (0)) == 0)
+	if (XPending (TtDisplay) == 0)
 	  {
 	     /* Suivi du curseur */
-	     XQueryPointer (GDp (0), w, &wdum, &wdum, &dx, &dy, &nx, &ny, &e);
+	     XQueryPointer (TtDisplay, w, &wdum, &wdum, &dx, &dy, &nx, &ny, &e);
 	     /* Verification des coordonnees */
 	     nx = ALIGNE (nx - FrameTable[frame].FrLeftMargin - xmin);
 	     nx += xmin;
 	     ny = ALIGNE (ny - FrameTable[frame].FrTopMargin - ymin);
 	     ny += ymin;
 	     if (nx < xmin || nx > xmax || ny < ymin || ny > ymax)
-		XWarpPointer (GDp (0), None, w, 0, 0, 0, 0, *x + FrameTable[frame].FrLeftMargin, *y + FrameTable[frame].FrTopMargin);
+		XWarpPointer (TtDisplay, None, w, 0, 0, 0, 0, *x + FrameTable[frame].FrLeftMargin, *y + FrameTable[frame].FrTopMargin);
 	     else if ((nx != *x && PosX) || (ny != *y && PosY))
 	       {
-		  GeomBoite (frame, *x, *y, *large, *haut, *x + xr, *y + yr, False);	/*Ancienne */
+		  GeomBoite (frame, *x, *y, *large, *haut, *x + xr, *y + yr, FALSE);	/*Ancienne */
 		  if (PosX)
 		     *x = nx;
 		  if (PosY)
 		     *y = ny;
-		  GeomBoite (frame, *x, *y, *large, *haut, *x + xr, *y + yr, False);	/*Nouvelle */
-		  XFlush (GDp (0));
+		  GeomBoite (frame, *x, *y, *large, *haut, *x + xr, *y + yr, FALSE);	/*Nouvelle */
+		  XFlush (TtDisplay);
 		  /* Si une position est bloquee */
 		  if (!PosX || !PosY)
-		     XWarpPointer (GDp (0), None, w, 0, 0, 0, 0, *x + FrameTable[frame].FrLeftMargin,
+		     XWarpPointer (TtDisplay, None, w, 0, 0, 0, 0, *x + FrameTable[frame].FrLeftMargin,
 				   *y + FrameTable[frame].FrTopMargin);
 	       }
 	  }
 	else
 	  {
-	     XNextEvent (GDp (0), &event);
+	     XNextEvent (TtDisplay, &event);
 
 	     /* Le seul evenement traite est le bouton enfonce */
 	     switch (event.type)
@@ -926,7 +926,7 @@ int                 DimY;
 			 if (xm < xmin || xm > xmax || !PosX
 			     || ym < ymin || ym > ymax || !PosY)
 			   {
-			      XWarpPointer (GDp (0), None, w, 0, 0, 0, 0, xm + FrameTable[frame].FrLeftMargin,
+			      XWarpPointer (TtDisplay, None, w, 0, 0, 0, 0, xm + FrameTable[frame].FrLeftMargin,
 					ym + FrameTable[frame].FrTopMargin);
 			   }
 			 else
@@ -948,14 +948,14 @@ int                 DimY;
      }
 
    /* Nouvelle reference pour l'affichage de la boite */
-   GeomBoite (frame, *x, *y, *large, *haut, *x + xr, *y + yr, False);	/*Ancienne */
+   GeomBoite (frame, *x, *y, *large, *haut, *x + xr, *y + yr, FALSE);	/*Ancienne */
    *x = xm;
    *y = ym;
    xr = 2;
    yr = 2;
    xm += FrameTable[frame].FrLeftMargin;
    ym += FrameTable[frame].FrTopMargin;
-   GeomBoite (frame, *x, *y, *large, *haut, *x + xr, *y + yr, False);
+   GeomBoite (frame, *x, *y, *large, *haut, *x + xr, *y + yr, FALSE);
    /* On indique que l'on part de la valeur initiale */
    Adroite = 2;
    Enbas = 2;
@@ -964,7 +964,7 @@ int                 DimY;
    ret = 0;
    while (ret == 0)
      {
-	XNextEvent (GDp (0), &event);
+	XNextEvent (TtDisplay, &event);
 	/* On analyse le type de l'evenement */
 	switch (event.type)
 	      {
@@ -1009,12 +1009,12 @@ int                 DimY;
 			   {
 			      Adroite = 1;
 			      Enbas = 1;
-			      GeomBoite (frame, *x, *y, *large, *haut, *x + xr, *y + yr, False);
+			      GeomBoite (frame, *x, *y, *large, *haut, *x + xr, *y + yr, FALSE);
 			      if (DimX)
 				 *large = 0;
 			      if (DimY)
 				 *haut = 0;
-			      GeomBoite (frame, *x, *y, *large, *haut, *x + xr, *y + yr, False);
+			      GeomBoite (frame, *x, *y, *large, *haut, *x + xr, *y + yr, FALSE);
 			   }
 		      }
 		    else
@@ -1152,9 +1152,9 @@ int                 DimY;
 		    /* Faut-il deplacer la boite elastique */
 		    if (nx != *x || ny != *y || dx != *large || dy != *haut)
 		      {
-			 GeomBoite (frame, *x, *y, *large, *haut, *x + xr, *y + yr, False);	/*Ancienne */
-			 GeomBoite (frame, nx, ny, dx, dy, nx + xr, ny + yr, False);	/*Nouvelle */
-			 XFlush (GDp (0));
+			 GeomBoite (frame, *x, *y, *large, *haut, *x + xr, *y + yr, FALSE);	/*Ancienne */
+			 GeomBoite (frame, nx, ny, dx, dy, nx + xr, ny + yr, FALSE);	/*Nouvelle */
+			 XFlush (TtDisplay);
 			 *x = nx;
 			 *y = ny;
 			 *large = dx;
@@ -1168,7 +1168,7 @@ int                 DimY;
 			    xm = warpx + FrameTable[frame].FrLeftMargin;
 			 if (warpy >= 0)
 			    ym = warpy + FrameTable[frame].FrTopMargin;
-			 XWarpPointer (GDp (0), None, w, 0, 0, 0, 0, xm, ym);
+			 XWarpPointer (TtDisplay, None, w, 0, 0, 0, 0, xm, ym);
 		      }
 		    break;
 
@@ -1179,11 +1179,11 @@ int                 DimY;
      }
 
    /* On supprime la boite elastique */
-   GeomBoite (frame, *x, *y, *large, *haut, *x + xr, *y + yr, False);
+   GeomBoite (frame, *x, *y, *large, *haut, *x + xr, *y + yr, FALSE);
 
    /* On restaure l'etat anterieur */
    ThotUngrab ();
-   XFlush (GDp (0));
+   XFlush (TtDisplay);
 #endif /* NEW_WILLOWS */
 }				/*GeomCreation */
 
@@ -1246,23 +1246,23 @@ int                 ym;
    e = ButtonPressMask | ButtonReleaseMask | ButtonMotionMask;
    w = FrRef[frame];
    if ((xmin >= *x) && (xmax <= *x + large))
-      ThotGrab (w, CursDepV (0), e, 0);
+      ThotGrab (w, VCurs, e, 0);
    else
      {
 	if ((ymin >= *y) && (ymax <= *y + haut))
-	   ThotGrab (w, CursDepH (0), e, 0);
+	   ThotGrab (w, HCurs, e, 0);
 	else
-	   ThotGrab (w, CursDepHV (0), e, 0);
+	   ThotGrab (w, HVCurs, e, 0);
      }
 
    /* On affiche la boite elastique initiale */
-   GeomBoite (frame, *x, *y, large, haut, xr, yr, False);
+   GeomBoite (frame, *x, *y, large, haut, xr, yr, FALSE);
 
    /* BOUCLE de traitement des evenements */
    ret = 0;
    while (ret == 0)
      {
-	XNextEvent (GDp (0), &event);
+	XNextEvent (TtDisplay, &event);
 	switch (event.type)	/* On analyse le type de l'evenement */
 	      {
 /*-BOUTON ENFONCE-*/
@@ -1348,11 +1348,11 @@ int                 ym;
 		    /* Faut-il deplacer la boite elastique */
 		    if ((dx != 0) || (dy != 0))
 		      {
-			 GeomBoite (frame, *x, *y, large, haut, xr, yr, False);		/*Ancienne */
+			 GeomBoite (frame, *x, *y, large, haut, xr, yr, FALSE);		/*Ancienne */
 			 xr += dx;
 			 yr += dy;
-			 GeomBoite (frame, nx, ny, large, haut, xr, yr, False);		/*Nouvelle */
-			 XFlush (GDp (0));
+			 GeomBoite (frame, nx, ny, large, haut, xr, yr, FALSE);		/*Nouvelle */
+			 XFlush (TtDisplay);
 			 *x = nx;
 			 *y = ny;
 
@@ -1365,7 +1365,7 @@ int                 ym;
 			    xm = warpx;
 			 if (warpy >= 0)
 			    ym = warpy;
-			 XWarpPointer (GDp (0), None, w, 0, 0, 0, 0, xm, ym);
+			 XWarpPointer (TtDisplay, None, w, 0, 0, 0, 0, xm, ym);
 		      }
 		    break;
 /*-OTHER-*/
@@ -1375,11 +1375,11 @@ int                 ym;
      }
 
    /* On supprime la boite elastique */
-   GeomBoite (frame, *x, *y, large, haut, xr, yr, False);
+   GeomBoite (frame, *x, *y, large, haut, xr, yr, FALSE);
 
    /* On retaure l'etat anterieur */
    ThotUngrab ();
-   XFlush (GDp (0));
+   XFlush (TtDisplay);
 
 #endif /* NEW_WILLOWS */
 }				/*ChPosition */
@@ -1486,17 +1486,17 @@ int                 ym;
    ym += FrameTable[frame].FrTopMargin;
 
    /* On affiche la boite elastique initiale */
-   GeomBoite (frame, x, y, *large, *haut, xr, yr, False);
+   GeomBoite (frame, x, y, *large, *haut, xr, yr, FALSE);
    e = ButtonPressMask | ButtonReleaseMask | ButtonMotionMask;
 
    /* On choisit le bon curseur */
    w = FrRef[frame];
    if (xmin == xmax)
-      ThotGrab (w, CursDepV (0), e, 0);
+      ThotGrab (w, VCurs, e, 0);
    else if (ymin == ymax)
-      ThotGrab (w, CursDepH (0), e, 0);
+      ThotGrab (w, HCurs, e, 0);
    else
-      ThotGrab (w, CursDepHV (0), e, 0);
+      ThotGrab (w, HVCurs, e, 0);
 
    /* BOUCLE de traitement des evenements */
    ret = 0;
@@ -1506,12 +1506,12 @@ int                 ym;
 	/* les evenements de la file, de temps en temps X11R4         */
 	/* retourne un evenement avec une valeur de event.xbutton.y=1 */
 	/* Solution: consommer rapidement uniquement les MotionNotify */
-	XNextEvent (GDp (0), &event);
+	XNextEvent (TtDisplay, &event);
 	if (event.type == MotionNotify)
 
 	   /* On pique le dernier evenement de la file */
-	   while (XPending (GDp (0)))
-	      XNextEvent (GDp (0), &event);
+	   while (XPending (TtDisplay))
+	      XNextEvent (TtDisplay, &event);
 	switch (event.type)	/* On analyse le type de l'evenement */
 	      {
 /*-BOUTON ENFONCE-*/
@@ -1664,12 +1664,12 @@ int                 ym;
 		    /* Faut-il deplacer la boite elastique */
 		    if ((dl != 0) || (dh != 0))
 		      {
-			 GeomBoite (frame, x, y, *large, *haut, xr, yr, False);		/*Ancienne */
+			 GeomBoite (frame, x, y, *large, *haut, xr, yr, FALSE);		/*Ancienne */
 			 *large += dl;
 			 *haut += dh;
 			 x += dx;
 			 y += dy;
-			 GeomBoite (frame, x, y, *large, *haut, xr, yr, False);		/*Nouvelle */
+			 GeomBoite (frame, x, y, *large, *haut, xr, yr, FALSE);		/*Nouvelle */
 		      }
 
 		    /* Faut-il deplacer le curseur */
@@ -1679,7 +1679,7 @@ int                 ym;
 			    xm = warpx;
 			 if (warpy >= 0)
 			    ym = warpy;
-			 XWarpPointer (GDp (0), None, w, 0, 0, 0, 0, xm, ym);
+			 XWarpPointer (TtDisplay, None, w, 0, 0, 0, 0, xm, ym);
 		      }
 		    break;
 /*-OTHER-*/
@@ -1689,11 +1689,11 @@ int                 ym;
      }
 
    /* On supprime la boite elastique */
-   GeomBoite (frame, x, y, *large, *haut, xr, yr, False);
+   GeomBoite (frame, x, y, *large, *haut, xr, yr, FALSE);
 
    /* On restaure l'etat anterieur */
    ThotUngrab ();
-   XFlush (GDp (0));
+   XFlush (TtDisplay);
 #endif /* NEW_WILLOWS */
 
 }				/*ChDimension */

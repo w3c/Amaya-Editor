@@ -7,7 +7,7 @@
 #include "thot_sys.h"
 #include "constmedia.h"
 #include "typemedia.h"
-#include "thotconfig.h"
+
 #include "thotkey.h"
 #include "libmsg.h"
 #include "message.h"

@@ -38,7 +38,7 @@ PtrSSchema        pSS;
    SRule              *pSRule;
    PtrSSchema        pExtSS;
 
-   ret = False;
+   ret = FALSE;
    if (pSS != NULL)
      {
 	pSRule = &pSS->SsRule[typeNum - 1];
@@ -49,7 +49,7 @@ PtrSSchema        pSS;
 	     /* compare les exceptions de ce type d'element avec exceptNum */
 	     do
 		if (pSS->SsException[e - 1] == exceptNum)
-		   ret = True;
+		   ret = TRUE;
 		else
 		   e++;
 	     while (!(ret || e > pSRule->SrLastExcept));
@@ -71,7 +71,7 @@ PtrSSchema        pSS;
 			  e = pSRule->SrFirstExcept;
 			  do
 			     if (pExtSS->SsException[e - 1] == exceptNum)
-				ret = True;
+				ret = TRUE;
 			     else
 				e++;
 			  while (!(ret || e > pSRule->SrLastExcept));
@@ -107,7 +107,7 @@ PtrSSchema        pSS;
    int           e;
    TtAttribute           *pAtt;
 
-   ret = False;
+   ret = FALSE;
    if (pSS != NULL)
      {
 	pAtt = &pSS->SsAttribute[attr - 1];
@@ -118,7 +118,7 @@ PtrSSchema        pSS;
 	     /* compare les exceptions de cet attribut avec exceptNum */
 	     do
 		if (pSS->SsException[e - 1] == exceptNum)
-		   ret = True;	/* trouve' */
+		   ret = TRUE;	/* trouve' */
 		else
 		   e++;
 	     /* exception suivante pour ce type d'element */

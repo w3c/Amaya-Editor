@@ -23,10 +23,10 @@
 void                InitCurs ()
 {
 #ifndef NEW_WILLOWS
-   CursFen (0) = XCreateFontCursor (GDp (0), XC_hand2);
-   CursDepV (0) = XCreateFontCursor (GDp (0), XC_sb_v_double_arrow);
-   CursDepH (0) = XCreateFontCursor (GDp (0), XC_sb_h_double_arrow);
-   CursDepHV (0) = XCreateFontCursor (GDp (0), XC_fleur);
-   CursWait (0) = XCreateFontCursor (GDp (0), XC_watch);
+   WindowCurs = XCreateFontCursor (TtDisplay, XC_hand2);
+   VCurs = XCreateFontCursor (TtDisplay, XC_sb_v_double_arrow);
+   HCurs = XCreateFontCursor (TtDisplay, XC_sb_h_double_arrow);
+   HVCurs = XCreateFontCursor (TtDisplay, XC_fleur);
+   WaitCurs = XCreateFontCursor (TtDisplay, XC_watch);
 #endif /* NEW_WILLOWS */
 }

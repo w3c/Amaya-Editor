@@ -1051,8 +1051,8 @@ struct re_pattern_buffer *bufp;
 
 /* ---------------------------------------------------------------------- */
 /* |    NextStruct: Advances pEl in the next element in any direction.  | */
-/* |            If the next element is a text-struct return True        | */
-/* |            Otherwise return False.                                 | */
+/* |            If the next element is a text-struct return TRUE        | */
+/* |            Otherwise return FALSE.                                 | */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
@@ -1086,7 +1086,7 @@ int                *charNb;
 		  while ((*pEl)->ElPrevious == NULL && (*pEl)->ElParent != NULL)
 		     *pEl = (*pEl)->ElParent;
 		  *pEl = (*pEl)->ElPrevious;
-		  return False;
+		  return FALSE;
 	       }
 	  }
 	else
@@ -1104,7 +1104,7 @@ int                *charNb;
 		     pEl1 = *pEl;
 		  else
 		     /*HR *//*fin */
-		     return False;
+		     return FALSE;
 	       }
 	  }
 
@@ -1121,25 +1121,25 @@ int                *charNb;
 		  /* The leftmost character */
 		  *charNb = pEl1->ElTextLength;
 		  *pEl = pEl1;
-		  return True;
+		  return TRUE;
 	       }
 	     else
 	       {
 		  /* The rightmost character */
 		  *charNb = 1;
 		  *pEl = pEl1;
-		  return True;
+		  return TRUE;
 	       }
 	  }
 	else
 	   /* the next element is not a text-struct */
 	  {
 	     *pEl = pEl1;
-	     return False;
+	     return FALSE;
 	  }
      }
-   else				/* return False if *pEl == NULL */
-      return False;
+   else				/* return FALSE if *pEl == NULL */
+      return FALSE;
 }
 
 
@@ -1209,7 +1209,7 @@ int                *charNb;
 {
    boolean             nextstructure;
 
-   nextstructure = True;
+   nextstructure = TRUE;
    if (*pEl != NULL)
      {
 
@@ -1276,7 +1276,7 @@ int                 pos2;
 
    while (((pEl1 != pEl2) || (pos1 != pos2)) && pEl1 != NULL)
      {
-	NextChar (True, &textchar, &pEl1, &pos1);
+	NextChar (TRUE, &textchar, &pEl1, &pos1);
 	nbmatched += 1;
      }
    return nbmatched;
@@ -1320,7 +1320,7 @@ boolean             forw;
    register unsigned char *pend = p + pbufp->used;
    int                 textchar;
    int                 textchar2;
-   boolean             stopavancer = False;
+   boolean             stopavancer = FALSE;
    PtrElement          pElTmp;
    int                 posTmp;
 
@@ -1478,13 +1478,13 @@ boolean             forw;
 		    if (*pEl2 == pElFin && *pos2 == NumCarFin)
 		      {
 			 textchar = -1;
-			 stopavancer = True;
+			 stopavancer = TRUE;
 		      }
 		    else
 		      {
-			 NextChar (True, &textchar, pEl2, pos2);
+			 NextChar (TRUE, &textchar, pEl2, pos2);
 			 if (textchar == -1)
-			    stopavancer = True;
+			    stopavancer = TRUE;
 		      }
 		    break;
 
@@ -1517,16 +1517,16 @@ boolean             forw;
 			 if (*pEl2 == pElFin && *pos2 == NumCarFin)
 			   {
 			      textchar = -1;
-			      stopavancer = True;
+			      stopavancer = TRUE;
 			   }
 			 else
 			   {
 			      pElBack = *pEl2;
 			      posBack = *pos2;
-			      NextChar (True, &textchar, pEl2, pos2);	/* advance a character */
+			      NextChar (TRUE, &textchar, pEl2, pos2);	/* advance a character */
 			      if (textchar == -1)
 				{
-				   stopavancer = True;
+				   stopavancer = TRUE;
 				   *pEl2 = pElBack;
 				   *pos2 = posBack;
 				}
@@ -1540,10 +1540,10 @@ boolean             forw;
 		       break;
 		    else
 		      {
-			 NextChar (False, &textchar, pEl2, pos2);
+			 NextChar (FALSE, &textchar, pEl2, pos2);
 			 if (textchar == '\n')
 			   {
-			      NextChar (True, &textchar, pEl2, pos2);
+			      NextChar (TRUE, &textchar, pEl2, pos2);
 			      break;
 			   }
 			 else
@@ -1679,11 +1679,11 @@ boolean             forw;
 		    posBack = *pos2;
 		    textcharBack = textchar;
 
-		    NextChar (False, &textchar, pEl2, pos2);
+		    NextChar (FALSE, &textchar, pEl2, pos2);
 		    if (textchar != -1)
 		      {
 			 textchar2 = textchar;
-			 NextChar (True, &textchar, pEl2, pos2);
+			 NextChar (TRUE, &textchar, pEl2, pos2);
 			 if ((SYNTAX (textchar2) == Sword)
 			     != (SYNTAX (textchar) == Sword))
 			    break;
@@ -1703,12 +1703,12 @@ boolean             forw;
 		    posBack = *pos2;
 		    textcharBack = textchar;
 
-		    NextChar (False, &textchar, pEl2, pos2);
+		    NextChar (FALSE, &textchar, pEl2, pos2);
 
 		    if (textchar != -1)
 		      {
 			 textchar2 = textchar;
-			 NextChar (True, &textchar, pEl2, pos2);
+			 NextChar (TRUE, &textchar, pEl2, pos2);
 			 if ((SYNTAX (textchar2) == Sword)
 			     != (SYNTAX (textchar) == Sword))
 			    goto fail;
@@ -1723,11 +1723,11 @@ boolean             forw;
 		    pElBack = *pEl2;
 		    posBack = *pos2;
 		    textcharBack = textchar;
-		    NextChar (False, &textchar, pEl2, pos2);
+		    NextChar (FALSE, &textchar, pEl2, pos2);
 		    if (textchar != -1)
 		      {
 			 textchar2 = textchar;
-			 NextChar (True, &textchar, pEl2, pos2);
+			 NextChar (TRUE, &textchar, pEl2, pos2);
 		      }
 		    else
 		      {
@@ -1748,7 +1748,7 @@ boolean             forw;
 			 pElBack = *pEl2;
 			 posBack = *pos2;
 			 textchar2 = textchar;
-			 NextChar (True, &textchar, pEl2, pos2);
+			 NextChar (TRUE, &textchar, pEl2, pos2);
 			 if (SYNTAX (textchar2) != Sword)
 			    goto fail;
 			 if (textchar == -1 || SYNTAX (textchar) != Sword)
@@ -1793,10 +1793,10 @@ boolean             forw;
 /***HR***/  || (*pEl2 == NULL && *pos2 == -1))
 		      {
 			 textchar = -1;
-			 stopavancer = True;
+			 stopavancer = TRUE;
 		      }
 		    else
-		       NextChar (True, &textchar, pEl2, pos2);	/* advance a character */
+		       NextChar (TRUE, &textchar, pEl2, pos2);	/* advance a character */
 		    break;
 
 		 case notwordchar:
@@ -1817,10 +1817,10 @@ boolean             forw;
 		    if (*pEl2 == pElFin && *pos2 == NumCarFin)
 		      {
 			 textchar = -1;
-			 stopavancer = True;
+			 stopavancer = TRUE;
 		      }
 		    else
-		       NextChar (True, &textchar, pEl2, pos2);	/* advance a character */
+		       NextChar (TRUE, &textchar, pEl2, pos2);	/* advance a character */
 		    break;
 
 
@@ -1841,10 +1841,10 @@ boolean             forw;
 			      if (*pEl2 == pElFin && *pos2 == NumCarFin)
 				{
 				   textchar = -1;
-				   stopavancer = True;
+				   stopavancer = TRUE;
 				}
 			      else
-				 NextChar (True, &textchar, pEl2, pos2);	/* advance a character */
+				 NextChar (TRUE, &textchar, pEl2, pos2);	/* advance a character */
 			   }
 			 while (--mcnt);
 		      }
@@ -1861,10 +1861,10 @@ boolean             forw;
 			      if (*pEl2 == pElFin && *pos2 == NumCarFin)
 				{
 				   textchar = -1;
-				   stopavancer = True;
+				   stopavancer = TRUE;
 				}
 			      else
-				 NextChar (True, &textchar, pEl2, pos2);	/* advance a character */
+				 NextChar (TRUE, &textchar, pEl2, pos2);	/* advance a character */
 			   }
 			 while (--mcnt);
 		      }
@@ -1887,7 +1887,7 @@ boolean             forw;
 	     *pos2 = (*stackp)->index;
 	     *pEl2 = (*stackp)->pEl;
 	     p = (*stackp)->pchar;
-	     stopavancer = False;
+	     stopavancer = FALSE;
 
 	  }
 	else
@@ -1951,8 +1951,8 @@ char               *expression;
    buf.translate = MajEgalMin ? upcase : NULL;
    posTmp2 = 0;
    posTmp1 = 0;
-   stop = False;
-   trouve = False;
+   stop = FALSE;
+   trouve = FALSE;
    pElTmp1 = pElTmp2 = NULL;
 
    ResultCompile = ReCompilePattern (pChaineCherchee, strlen (pChaineCherchee),
@@ -1984,7 +1984,7 @@ char               *expression;
 		    TtaDisplaySimpleMessage (INFO, LIB, LIB_MEMORY_EXHAUSTED);
 		    break;
 	      }
-	return True;
+	return TRUE;
      }
    else
      {
@@ -2036,7 +2036,7 @@ char               *expression;
 						    NULL);
 				      if (pEl1 == NULL)
 					{
-					   stop = True;
+					   stop = TRUE;
 					   break;
 					}
 				      else
@@ -2048,7 +2048,7 @@ char               *expression;
 			      }
 			    else
 			      {
-				 stop = True;
+				 stop = TRUE;
 				 break;
 			      }
 			 }
@@ -2075,7 +2075,7 @@ char               *expression;
 	     if (val == -2)
 	       {
 		  TtaDisplaySimpleMessage (INFO, LIB, LIB_MEMORY_EXHAUSTED);
-		  return (True);
+		  return (TRUE);
 	       }
 	     /*HR *//*fin */
 	     if (val == 1)
@@ -2084,7 +2084,7 @@ char               *expression;
 		     break;
 		  if (EnAvant)
 		    {
-		       trouve = True;	/* une expression a ete trouvee */
+		       trouve = TRUE;	/* une expression a ete trouvee */
 		       break;
 		    }
 		  else
@@ -2149,7 +2149,7 @@ char               *expression;
 	     inx1 = posTmp1;
 	     *pEl2 = pElTmp2;
 	     inx2 = posTmp2;
-	     trouve = True;
+	     trouve = TRUE;
 	  }
 	/*HR *//* debut ajout */
 	if (trouve)
@@ -2166,13 +2166,13 @@ char               *expression;
 			if (inx2 - 1 > *NumCarFin)
 			   /* la chaine trouvee se termine au-dela du caractere ou il */
 			   /* faut s'arreter, on fait comme si on n'avait pas trouve' */
-			   trouve = False;
+			   trouve = FALSE;
 		     }
 		   else
 		     {
 			if (*NumCarFin > 0)
 			   if (inx1 < *NumCarFin)
-			      trouve = False;
+			      trouve = FALSE;
 		     }
 		}
 	      else if (EnAvant)
@@ -2180,10 +2180,10 @@ char               *expression;
 		   if (ElemIsBefore (*pElFin, pEl1))
 		      /* l'element trouve' est apres l'element de fin, on fait */
 		      /* comme si on n'avait pas trouve' */
-		      trouve = False;
+		      trouve = FALSE;
 		}
 	      else if (ElemIsBefore (pEl1, *pElFin))
-		 trouve = False;
+		 trouve = FALSE;
 	/*HR *//* fin ajout */
 	if (trouve)
 	  {

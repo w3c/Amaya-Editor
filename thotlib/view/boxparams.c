@@ -124,7 +124,7 @@ int                 Zoom;
    pFrame = &FntrTable[frame - 1];
    pFrame->FrVisibility = Visibilite;
    pFrame->FrMagnification = Zoom;
-   EvalAffich = False;
+   EvalAffich = FALSE;
    if (pFrame->FrAbstractBox != NULL)
       /* On sauvegarde la selection courante dans la fenetre */
      {
@@ -160,7 +160,7 @@ int                 Zoom;
 	/* On sauvegarde la position de la fenetre dans le document */
 	x = pFrame->FrXOrg;
 	y = pFrame->FrYOrg;
-	DispBoite (pAb, True, frame);
+	DispBoite (pAb, TRUE, frame);
 	LibFont (frame);
 	/* On libere les polices de caracteres utilisees */
 	pFrame->FrAbstractBox = NULL;
@@ -174,18 +174,18 @@ int                 Zoom;
 	AfficherVue (frame);
 	/* On restaure la selection courante dans la fenetre */
 	if (unique)
-	   PoseSelect (frame, pv1, c1, cN, True, True, unique);
+	   PoseSelect (frame, pv1, c1, cN, TRUE, TRUE, unique);
 	/* La selection porte sur plusieurs paves */
 	else
 	  {
 	     if (pv1 != NULL)
-		PoseSelect (frame, pv1, c1, 0, True, False, False);
+		PoseSelect (frame, pv1, c1, 0, TRUE, FALSE, FALSE);
 	     if (pvN != NULL)
-		PoseSelect (frame, pvN, 0, cN, False, True, False);
+		PoseSelect (frame, pvN, 0, cN, FALSE, TRUE, FALSE);
 	     /* On visualise la selection que l'on vient de poser */
 	  }
-	SetSelect (frame, True);
+	SetSelect (frame, TRUE);
      }
-   EvalAffich = True;
+   EvalAffich = TRUE;
 }
 /* End Of Module option */

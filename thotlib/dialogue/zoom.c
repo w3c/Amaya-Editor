@@ -137,7 +137,7 @@ View                view;
    i = strlen (chaine) + 1;
    strcpy (&chaine[i], TtaGetMessage (LIB, LIB_DECREASE));
    TtaNewSheet (NumMenuZoom, 0, 0, 0, TtaGetMessage (LIB, LIB_ZOOM),
-		2, chaine, False, 4, 'L', D_DONE);
+		2, chaine, FALSE, 4, 'L', D_DONE);
 
    /* Affiche le nom du document concerne */
    sprintf (chaine, "%s %s", TtaGetDocumentName (document),
@@ -146,5 +146,5 @@ View                view;
    TtaNewLabel (NumDocZoom, NumMenuZoom, chaine);
    /* Initialisation du formulaire affiche */
    changezoomview (NumMenuZoom, INTEGER_DATA, (char *) 4);
-   TtaShowDialogue (NumMenuZoom, True);
+   TtaShowDialogue (NumMenuZoom, TRUE);
 }

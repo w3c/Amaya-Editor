@@ -13,7 +13,7 @@
 #include "message.h"
 #include "dialog.h"
 
-static boolean      InProcedureQuitThot = False;
+static boolean      InProcedureQuitThot = FALSE;
 
 #include "appdialogue.f"
 #include "appexec.f"
@@ -50,13 +50,13 @@ View                view;
 
    if (InProcedureQuitThot)
       return;
-   InProcedureQuitThot = True;
+   InProcedureQuitThot = TRUE;
    /* envoie le message Exit.Pre */
    notifyEvt.event = TteExit;
-   if (!ThotSendMessage (&notifyEvt, True))
+   if (!ThotSendMessage (&notifyEvt, TRUE))
       /* l'application accepte de quitter l'editeur */
      {
-	ok = True;
+	ok = TRUE;
 	/* parcourt la table des documents, tant que l'utilisateur n'annule */
 	/* pas sa commande et qu'on n'a pas de probleme de sauvegarde */
 	for (doc = 0; doc < MAX_DOCUMENTS && ok; doc++)
@@ -70,10 +70,10 @@ View                view;
 	  {
 	     /* envoie le message Exit.Post */
 	     notifyEvt.event = TteExit;
-	     ThotSendMessage (&notifyEvt, False);
+	     ThotSendMessage (&notifyEvt, FALSE);
 	     /* quitte definitivement Thot */
 	     QuitEditor ();
 	  }
      }
-   InProcedureQuitThot = False;
+   InProcedureQuitThot = FALSE;
 }

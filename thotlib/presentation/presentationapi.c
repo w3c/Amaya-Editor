@@ -349,29 +349,29 @@ Document            document;
       /* parametre document correct */
      {
 #ifndef NODISPLAY
-	ok = True;
+	ok = TRUE;
 #endif
 	if (((PtrElement) element)->ElFirstPRule == NULL)
 	   ((PtrElement) element)->ElFirstPRule = (PtrPRule) pRule;
 	else
 	  {
 	     pPres = ((PtrElement) element)->ElFirstPRule;
-	     stop = False;
+	     stop = FALSE;
 	     do
 		if (pPres->PrType == ((PtrPRule) pRule)->PrType &&
 		    pPres->PrViewNum == ((PtrPRule) pRule)->PrViewNum)
 		  {
 		     TtaError (ERR_duplicate_presentation_rule);
 #ifndef NODISPLAY
-		     ok = False;
+		     ok = FALSE;
 #endif
-		     stop = True;
+		     stop = TRUE;
 		  }
 		else if (pPres->PrNextPRule == NULL)
 		  {
 		     pPres->PrNextPRule = (PtrPRule) pRule;
 		     ((PtrPRule) pRule)->PrNextPRule = NULL;
-		     stop = True;
+		     stop = TRUE;
 		  }
 		else
 		   pPres = pPres->PrNextPRule;
@@ -520,7 +520,7 @@ Document            document;
       /* parametre document correct */
      {
 #ifndef NODISPLAY
-	done = True;
+	done = TRUE;
 #endif
 	switch (((PtrPRule) pRule)->PrType)
 	      {
@@ -528,7 +528,7 @@ Document            document;
 		    /* Body-size in typographic points */
 		    ((PtrPRule) pRule)->PrPresMode = PresImmediate;
 		    ((PtrPRule) pRule)->PrMinUnit = UnPoint;
-		    ((PtrPRule) pRule)->PrMinAttr = False;
+		    ((PtrPRule) pRule)->PrMinAttr = FALSE;
 		    ((PtrPRule) pRule)->PrMinValue = value;
 		    break;
 		 case PtStyle:
@@ -555,7 +555,7 @@ Document            document;
 				break;
 			     default:
 #ifndef NODISPLAY
-				done = False;
+				done = FALSE;
 #endif
 				TtaError (ERR_invalid_parameter);
 				break;
@@ -576,7 +576,7 @@ Document            document;
 				break;
 			     default:
 #ifndef NODISPLAY
-				done = False;
+				done = FALSE;
 #endif
 				TtaError (ERR_invalid_parameter);
 				break;
@@ -600,7 +600,7 @@ Document            document;
 				break;
 			     default:
 #ifndef NODISPLAY
-				done = False;
+				done = FALSE;
 #endif
 				TtaError (ERR_invalid_parameter);
 				break;
@@ -618,7 +618,7 @@ Document            document;
 				break;
 			     default:
 #ifndef NODISPLAY
-				done = False;
+				done = FALSE;
 #endif
 				TtaError (ERR_invalid_parameter);
 				break;
@@ -627,19 +627,19 @@ Document            document;
 		 case PtIndent:
 		    ((PtrPRule) pRule)->PrPresMode = PresImmediate;
 		    ((PtrPRule) pRule)->PrMinUnit = UnPoint;
-		    ((PtrPRule) pRule)->PrMinAttr = False;
+		    ((PtrPRule) pRule)->PrMinAttr = FALSE;
 		    ((PtrPRule) pRule)->PrMinValue = value;
 		    break;
 		 case PtLineSpacing:
 		    ((PtrPRule) pRule)->PrPresMode = PresImmediate;
 		    ((PtrPRule) pRule)->PrMinUnit = UnPoint;
-		    ((PtrPRule) pRule)->PrMinAttr = False;
+		    ((PtrPRule) pRule)->PrMinAttr = FALSE;
 		    ((PtrPRule) pRule)->PrMinValue = value;
 		    break;
 		 case PtDepth:
 		    ((PtrPRule) pRule)->PrPresMode = PresImmediate;
 		    ((PtrPRule) pRule)->PrIntValue = value;
-		    ((PtrPRule) pRule)->PrAttrValue = False;
+		    ((PtrPRule) pRule)->PrAttrValue = FALSE;
 		    break;
 		 case PtAdjust:
 		    ((PtrPRule) pRule)->PrPresMode = PresImmediate;
@@ -659,7 +659,7 @@ Document            document;
 				break;
 			     default:
 #ifndef NODISPLAY
-				done = False;
+				done = FALSE;
 #endif
 				TtaError (ERR_invalid_parameter);
 				break;
@@ -670,14 +670,14 @@ Document            document;
 		    switch (value)
 			  {
 			     case Justified:
-				((PtrPRule) pRule)->PrJustify = True;
+				((PtrPRule) pRule)->PrJustify = TRUE;
 				break;
 			     case NotJustified:
-				((PtrPRule) pRule)->PrJustify = False;
+				((PtrPRule) pRule)->PrJustify = FALSE;
 				break;
 			     default:
 #ifndef NODISPLAY
-				done = False;
+				done = FALSE;
 #endif
 				TtaError (ERR_invalid_parameter);
 				break;
@@ -688,14 +688,14 @@ Document            document;
 		    switch (value)
 			  {
 			     case Hyphenation:
-				((PtrPRule) pRule)->PrJustify = True;
+				((PtrPRule) pRule)->PrJustify = TRUE;
 				break;
 			     case NoHyphenation:
-				((PtrPRule) pRule)->PrJustify = False;
+				((PtrPRule) pRule)->PrJustify = FALSE;
 				break;
 			     default:
 #ifndef NODISPLAY
-				done = False;
+				done = FALSE;
 #endif
 				TtaError (ERR_invalid_parameter);
 				break;
@@ -716,7 +716,7 @@ Document            document;
 				break;
 			     default:
 #ifndef NODISPLAY
-				done = False;
+				done = FALSE;
 #endif
 				TtaError (ERR_invalid_parameter);
 				break;
@@ -726,7 +726,7 @@ Document            document;
 		    /* value = epaisseur du trait en points typo. */
 		    ((PtrPRule) pRule)->PrPresMode = PresImmediate;
 		    ((PtrPRule) pRule)->PrMinUnit = UnPoint;
-		    ((PtrPRule) pRule)->PrMinAttr = False;
+		    ((PtrPRule) pRule)->PrMinAttr = FALSE;
 		    ((PtrPRule) pRule)->PrMinValue = value;
 		    break;
 		 case PtFillPattern:
@@ -736,7 +736,7 @@ Document            document;
 		      {
 			 ((PtrPRule) pRule)->PrPresMode = PresImmediate;
 			 ((PtrPRule) pRule)->PrIntValue = value;
-			 ((PtrPRule) pRule)->PrAttrValue = False;
+			 ((PtrPRule) pRule)->PrAttrValue = FALSE;
 		      }
 		    break;
 		 case PtBackground:
@@ -747,13 +747,13 @@ Document            document;
 		      {
 			 ((PtrPRule) pRule)->PrPresMode = PresImmediate;
 			 ((PtrPRule) pRule)->PrIntValue = value;
-			 ((PtrPRule) pRule)->PrAttrValue = False;
+			 ((PtrPRule) pRule)->PrAttrValue = FALSE;
 		      }
 		    break;
 		 default:
 		    TtaError (ERR_invalid_parameter);
 #ifndef NODISPLAY
-		    done = False;
+		    done = FALSE;
 #endif
 		    break;
 	      }
@@ -840,7 +840,7 @@ Document            document;
 		       deltaX = PixelValue (deltaX, unit, pAb);
 		       deltaY = PixelValue (deltaY, unit, pAb);
 		    }
-		  NouvDimension (pAb, deltaX, deltaY, frame, False);
+		  NouvDimension (pAb, deltaX, deltaY, frame, FALSE);
 		  RedispNewGeometry (document, (PtrElement) element);
 	       }
 	  }
@@ -922,7 +922,7 @@ TypeUnit            unit;
 		       deltaX = PixelValue (deltaX, unit, pAb);
 		       deltaY = PixelValue (deltaY, unit, pAb);
 		    }
-		  NouvPosition (pAb, deltaX, deltaY, frame, False);
+		  NouvPosition (pAb, deltaX, deltaY, frame, FALSE);
 		  RedispNewGeometry (document, (PtrElement) element);
 	       }
 	  }
@@ -1196,12 +1196,12 @@ int                 presentationType;
    else
      {
 	pPres = ((PtrElement) element)->ElFirstPRule;
-	trouve = False;
+	trouve = FALSE;
 	while (pPres != NULL && !trouve)
 	   if (pPres->PrType == presentationType)
 	     {
 		pRule = pPres;
-		trouve = True;
+		trouve = TRUE;
 	     }
 	   else
 	      pPres = pPres->PrNextPRule;

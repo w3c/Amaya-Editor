@@ -176,7 +176,7 @@ int                 number;
 	printf ("*** Fatal Error: X connexion refused\n");
 	exit (1);
      }
-   GDp (0) = Dp;
+   TtDisplay = Dp;
 #endif /* !NEW_WILLOWS */
 
    /* Definition de la procedure de retour des dialogues */
@@ -200,7 +200,7 @@ int                 number;
      {
 	MenuActionList[FreeMenuAction].ActionEquiv = NULL;
 	for (i = 0; i < MAX_FRAME; i++)
-	   MenuActionList[FreeMenuAction].ActionActive[i] = True;
+	   MenuActionList[FreeMenuAction].ActionActive[i] = TRUE;
      }
 
    /* Initialisation des actions internes obligatoires */
@@ -304,7 +304,7 @@ Proc                procedure;
 	MenuActionList[FreeMenuAction].ActionEquiv = NULL;
 	/* Cette nouvelle action n'est active pour aucune frame */
 	for (i = 0; i < MAX_FRAME; i++)
-	   MenuActionList[FreeMenuAction].ActionActive[i] = False;
+	   MenuActionList[FreeMenuAction].ActionActive[i] = FALSE;
 	FreeMenuAction++;
      }
 }
@@ -420,15 +420,15 @@ char               *menuName;
    newmenu->MenuView = view;
    newmenu->ItemsNb = itemsNumber;
    /* Enregistre les menus actifs */
-   newmenu->MenuAttr = False;
-   newmenu->MenuSelect = False;
-   newmenu->MenuHelp = False;
+   newmenu->MenuAttr = FALSE;
+   newmenu->MenuSelect = FALSE;
+   newmenu->MenuHelp = FALSE;
    if (!strcmp (menuName, "MenuAttribute"))
-      newmenu->MenuAttr = True;
+      newmenu->MenuAttr = TRUE;
    else if (!strcmp (menuName, "MenuSelection"))
-      newmenu->MenuSelect = True;
+      newmenu->MenuSelect = TRUE;
    else if (!strcmp (menuName, "MenuHelp"))
-      newmenu->MenuHelp = True;
+      newmenu->MenuHelp = TRUE;
 
    /* creation et initialisation de la table des items */
    ptr = (Item_Ctl *) TtaGetMemory (itemsNumber * sizeof (Item_Ctl));
@@ -582,9 +582,9 @@ int                 itemsNumber;
 	     newmenu->MenuID = 0;
 	     newmenu->MenuView = 0;
 	     newmenu->ItemsNb = itemsNumber;
-	     newmenu->MenuAttr = False;
-	     newmenu->MenuSelect = False;
-	     newmenu->MenuHelp = False;
+	     newmenu->MenuAttr = FALSE;
+	     newmenu->MenuSelect = FALSE;
+	     newmenu->MenuHelp = FALSE;
 
 	     /* creation et initialisation de la table des items */
 	     ptr = (Item_Ctl *) TtaGetMemory (itemsNumber * sizeof (Item_Ctl));
@@ -736,7 +736,7 @@ int                 frame;
    item = 0;
    i = 0;
    j = 0;
-   avec = False;
+   avec = FALSE;
    equiv[0] = '\0';
    ptritem = ptrmenu->ItemsList;
    while (item < ptrmenu->ItemsNb)
@@ -769,7 +769,7 @@ int                 frame;
 	     /* Active l'action correspondante pour cette fenetre */
 	     if (MenuActionList[action].ActionEquiv != NULL)
 	       {
-		  avec = True;
+		  avec = TRUE;
 		  lg = strlen (MenuActionList[action].ActionEquiv);
 		  if (lg + j < 100)
 		    {
@@ -777,7 +777,7 @@ int                 frame;
 		       j += lg;
 		    }
 	       }
-	     MenuActionList[action].ActionActive[frame] = True;
+	     MenuActionList[action].ActionActive[frame] = TRUE;
 	  }
 	equiv[j++] = '\0';
 	item++;
@@ -785,9 +785,9 @@ int                 frame;
    sref = ((entry + 1) * MAX_MENU * MAX_FRAME) + ref;
    /* Creation du Pulldown avec ou sans equiv */
    if (avec)
-      TtaNewSubmenu (sref, ref, entry, NULL, ptrmenu->ItemsNb, chaine, equiv, False);
+      TtaNewSubmenu (sref, ref, entry, NULL, ptrmenu->ItemsNb, chaine, equiv, FALSE);
    else
-      TtaNewSubmenu (sref, ref, entry, NULL, ptrmenu->ItemsNb, chaine, NULL, False);
+      TtaNewSubmenu (sref, ref, entry, NULL, ptrmenu->ItemsNb, chaine, NULL, FALSE);
 }
 
 
@@ -820,7 +820,7 @@ int                 frame;
    item = 0;
    i = 0;
    j = 0;
-   avec = False;
+   avec = FALSE;
    equiv[0] = '\0';
    ptritem = ptrmenu->ItemsList;
    while (item < ptrmenu->ItemsNb)
@@ -855,7 +855,7 @@ int                 frame;
 		  /* Active l'action correspondante pour cette fenetre */
 		  if (MenuActionList[action].ActionEquiv != NULL)
 		    {
-		       avec = True;
+		       avec = TRUE;
 		       lg = strlen (MenuActionList[action].ActionEquiv);
 		       if (lg + j < 100)
 			 {
@@ -863,7 +863,7 @@ int                 frame;
 			    j += lg;
 			 }
 		    }
-		  MenuActionList[action].ActionActive[frame] = True;
+		  MenuActionList[action].ActionActive[frame] = TRUE;
 	       }
 	  }
 	equiv[j++] = '\0';
@@ -929,7 +929,7 @@ Pixmap              icon;
 #endif /* !NEW_WILLOWS */
    TteLoadApplications ();
 #ifndef NEW_WILLOWS
-   if (GDp (0) == 0)
+   if (TtDisplay == 0)
      {
 	/* Connexion au serveur X impossible */
 	TtaError (ERR_cannot_open_main_window);
@@ -970,18 +970,18 @@ Pixmap              icon;
 /**** creation de la fenetre principale ****/
 	if (n == 0)
 	  {
-	     WithMessages = False;
+	     WithMessages = FALSE;
 	     TtaInitDialogueWindow (name, NULL, None, None, 0, NULL);
 	  }
 	else
 	  {
-	     WithMessages = True;
+	     WithMessages = TRUE;
 	     TtaInitDialogueWindow (name, NULL, logo, icon, n, chaine);
 	  }
 
 	/* icone des fenetres de documents */
 #ifndef NEW_WILLOWS
-	wind_pixmap = XCreateBitmapFromData (GDp (0), XDefaultRootWindow (GDp (0)),
+	wind_pixmap = XCreateBitmapFromData (TtDisplay, XDefaultRootWindow (TtDisplay),
 		      logowindow_bits, logowindow_width, logowindow_height);
 #endif
 /**** creation des menus ****/
@@ -992,7 +992,7 @@ Pixmap              icon;
 	while (ptrmenu != NULL)
 	  {
 	     /* Enregistre le widget du menu */
-	     FrameTable[0].ActifMenus[i] = True;
+	     FrameTable[0].ActifMenus[i] = TRUE;
 	     ConstruitPopdown (ptrmenu, ref, FrameTable[0].WdMenus[i], 0);
 	     ptrmenu = ptrmenu->NextMenu;
 	     ref += MAX_FRAME;
@@ -1002,7 +1002,7 @@ Pixmap              icon;
 	/* Les autres entrees de menus sont inactives */
 	while (i < MAX_MENU)
 	  {
-	     FrameTable[0].ActifMenus[i] = False;
+	     FrameTable[0].ActifMenus[i] = FALSE;
 	     i++;
 	  }
      }
@@ -1101,7 +1101,7 @@ void                (*procedure) ();
 		  n++;
 		  XtSetArg (args[n], XmNbackground, BgMenu_Color);
 		  n++;
-		  XtSetArg (args[n], XmNtraversalOn, False);
+		  XtSetArg (args[n], XmNtraversalOn, FALSE);
 		  n++;
 		  if (picture == None)
 		    {
@@ -1505,11 +1505,11 @@ void                (*procedure) ();
 		  n++;
 		  XtSetArg (args[n], XmNeditMode, XmSINGLE_LINE_EDIT);
 		  n++;
-		  XtSetArg (args[n], XmNtraversalOn, True);
+		  XtSetArg (args[n], XmNtraversalOn, TRUE);
 		  n++;
 		  XtSetArg (args[n], XmNkeyboardFocusPolicy, XmEXPLICIT);
 		  n++;
-		  XtSetArg (args[n], XmNsensitive, True);
+		  XtSetArg (args[n], XmNsensitive, TRUE);
 		  n++;
 		  XtSetArg (args[n], XmNeditable, editable);
 		  n++;
@@ -1600,7 +1600,7 @@ char               *text;
 	  }
      }
 #ifndef NEW_WILLOWS
-   XFlush (GDp (0));
+   XFlush (TtDisplay);
 #endif /* NEW_WILLOWS */
 }				/*TtaSetTextZone */
 
@@ -1662,7 +1662,7 @@ View                view;
 		       XtManageChild (row);
 		       XtGetValues (row, args, 1);
 		    }
-		  XFlush (GDp (0));
+		  XFlush (TtDisplay);
 		  /* Il faut forcer la reevaluation de la fenetre */
 		  w = FrameTable[frame].WdFrame;
 		  XtSetArg (args[0], XmNwidth, &y);
@@ -1761,7 +1761,7 @@ int                 doc;
    if (schema != NULL)
      {
 	/* Allocation d'une entree dans la table des fenetres */
-	trouve = False;
+	trouve = FALSE;
 	frame = 1;
 	while (frame <= MAX_FRAME && !trouve)
 	  {
@@ -1966,7 +1966,7 @@ int                 doc;
 			    TtaGetMessage (THOT, ptrmenu->MenuID), args, n);
 #endif /* !NEW_WILLOWS */
 		       FrameTable[frame].WdMenus[i] = w;
-		       FrameTable[frame].ActifMenus[i] = True;
+		       FrameTable[frame].ActifMenus[i] = TRUE;
 		       /* Evite la construction des menus dynamiques */
 		       if (ptrmenu->MenuAttr)
 			  FrameTable[frame].MenuAttr = ptrmenu->MenuID;
@@ -2002,7 +2002,7 @@ int                 doc;
 	     /* Les autres entrees de menus sont inactives */
 	     while (i < MAX_MENU)
 	       {
-		  FrameTable[frame].ActifMenus[i] = False;
+		  FrameTable[frame].ActifMenus[i] = FALSE;
 		  i++;
 	       }
 
@@ -2200,7 +2200,7 @@ int                 doc;
 	     n++;
 	     XtSetArg (args[n], XmNkeyboardFocusPolicy, XmPOINTER);
 	     n++;
-	     XtSetArg (args[n], XmNtraversalOn, True);
+	     XtSetArg (args[n], XmNtraversalOn, TRUE);
 	     n++;
 
 	     w = XmCreateFrame (Main_Wd, "Frame", args, n);
@@ -2370,7 +2370,7 @@ int                 frame;
 		       if (action != -1
 			   && (ptr[item].ItemType == 'B' || ptr[item].ItemType == 'T'))
 			  /* Desactive l'action correspondante pour cette fenetre */
-			  MenuActionList[action].ActionActive[frame] = False;
+			  MenuActionList[action].ActionActive[frame] = FALSE;
 		       item++;
 		    }
 	       }
@@ -2395,7 +2395,7 @@ int                 frame;
 	/* Detache les procedures de callback */
 	XtRemoveCallback (XtParent (XtParent (w)), XmNdestroyCallback, (XtCallbackProc) RetourKill, (XtPointer) frame);
 
-	XDestroyWindow (GDp (0), XtWindowOfObject (XtParent (XtParent (XtParent (w)))));
+	XDestroyWindow (TtDisplay, XtWindowOfObject (XtParent (XtParent (XtParent (w)))));
 #endif /* NEW_WILLOWS */
 	FrRef[frame] = 0;
 	FrameTable[frame].WdFrame = 0;
@@ -2501,7 +2501,7 @@ int                *action;
 	i = 0;
 	sm = 0;
 	ptr = ptrmenu->ItemsList;
-	trouve = False;
+	trouve = FALSE;
 	max = ptrmenu->ItemsNb;
 	ptrsmenu = NULL;
 	while (ptrmenu != NULL && !trouve)
@@ -2523,7 +2523,7 @@ int                *action;
 		  else if (ptr[i].ItemID != itemID)
 		     i++;	/* ce n'est pas l'action */
 		  else
-		     trouve = True;
+		     trouve = TRUE;
 	       }
 
 	     /* faut-il sortir du sous-menu ? */
@@ -2606,14 +2606,14 @@ int                 menuID;
 	     w = FrameTable[frame].WdMenus[menu];
 	     if (w != 0)
 	       {
-		  FrameTable[frame].ActifMenus[menu] = False;
+		  FrameTable[frame].ActifMenus[menu] = FALSE;
 		  ref = (menu * MAX_FRAME) + frame + MAX_LocalMenu;
 		  /* Desactive */
 		  TtaSetPulldownOff (ref, w);
 
 #ifndef NEW_WILLOWS
 		  /* Visualise le bouton inactif */
-		  if (Gdepth (0) > 1)
+		  if (TtWDepth > 1)
 		    {
 		       /* Changement de couleur */
 		       n = 0;
@@ -2686,14 +2686,14 @@ int                 menuID;
 	     w = FrameTable[frame].WdMenus[menu];
 	     if (w != 0)
 	       {
-		  FrameTable[frame].ActifMenus[menu] = True;
+		  FrameTable[frame].ActifMenus[menu] = TRUE;
 		  ref = (menu * MAX_FRAME) + frame + MAX_LocalMenu;
 		  /* Desactive */
 		  TtaSetPulldownOn (ref, w);
 
 #ifndef NEW_WILLOWS
 		  /* Visualise le bouton actif */
-		  if (Gdepth (0) > 1)
+		  if (TtWDepth > 1)
 		    {
 		       /* Changement de couleur */
 		       XtSetArg (args[0], XmNforeground, Black_Color);
@@ -2801,12 +2801,12 @@ int                 itemID;
       if (MenuActionList[action].ActionActive[frame])
 	{
 	   /* desactive l'action pour la fenetre */
-	   MenuActionList[action].ActionActive[frame] = False;
+	   MenuActionList[action].ActionActive[frame] = FALSE;
 	   /* desactive l'entree de menu */
 	   ref = ((menu - 1) * MAX_FRAME) + frame + MAX_LocalMenu;
 	   if (submenu != 0)
 	      ref += submenu * MAX_MENU * MAX_FRAME;
-	   if (Gdepth (0) > 1)
+	   if (TtWDepth > 1)
 	      TtaRedrawMenuEntry (ref, item, NULL, InactiveB_Color, 0);
 	   else
 	     {
@@ -2855,7 +2855,7 @@ int                 itemID;
       if (!MenuActionList[action].ActionActive[frame])
 	{
 	   /* reactive l'action pour la fenetre */
-	   MenuActionList[action].ActionActive[frame] = True;
+	   MenuActionList[action].ActionActive[frame] = TRUE;
 	   /* reactive l'entree de menu */
 	   ref = ((menu - 1) * MAX_FRAME) + frame + MAX_LocalMenu;
 	   if (submenu != 0)
@@ -2978,13 +2978,13 @@ char               *data;
       switch (ref)
 	    {
 	       case NumMenuInsert:
-		  (*ThotLocalActions[T_rcreecolle]) (True, False, (int) data + 1);
+		  (*ThotLocalActions[T_rcreecolle]) (TRUE, FALSE, (int) data + 1);
 		  break;
 	       case NumMenuPaste:
-		  (*ThotLocalActions[T_rcreecolle]) (False, True, (int) data + 1);
+		  (*ThotLocalActions[T_rcreecolle]) (FALSE, TRUE, (int) data + 1);
 		  break;
 	       case NumMenuInclude:
-		  (*ThotLocalActions[T_rcreecolle]) (False, False, (int) data + 1);
+		  (*ThotLocalActions[T_rcreecolle]) (FALSE, FALSE, (int) data + 1);
 		  break;
 	       case NumMenuChoixEl:
 		  (*ThotLocalActions[T_rchoice]) ((int) data + 1, NULL);

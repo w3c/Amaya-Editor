@@ -68,7 +68,7 @@ Proc                doIt;
 	newaction = (PtrAction) TtaGetMemory (sizeof (APP_action));
 	newaction->ActName = actionName;
 	newaction->ActAction = doIt;
-	newaction->ActPre = False;
+	newaction->ActPre = FALSE;
 	newaction->ActEvent = TteNull;
 	newaction->ActNext = NULL;
 	if (paction != NULL)
@@ -155,7 +155,7 @@ char               *actionName;
   newactevent->AEvPre = pre;
   /* Previous event implies function action */
   if (pre)
-    action->ActPre = True;
+    action->ActPre = TRUE;
   action->ActEvent = event;
   newactevent->AEvType = typeId;
   newactevent->AEvNext = pactevent;

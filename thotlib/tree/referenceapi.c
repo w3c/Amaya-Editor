@@ -84,13 +84,13 @@ Document            targetDocument;
 	else
 	   /* parametre document correct */
 	  {
-	     ok = False;
+	     ok = FALSE;
 	     if (target == NULL)
 		/* annulation de la reference */
 	       {
 		  if (((PtrElement) element)->ElReference != NULL)
 		     DeleteReference (((PtrElement) element)->ElReference);
-		  ok = True;
+		  ok = TRUE;
 	       }
 	     else
 		/* verifie le parametre targetDocument */
@@ -124,7 +124,7 @@ Document            targetDocument;
 		  ok = SetReference ((PtrElement) element, NULL,
 				     (PtrElement) target,
 				     TabDocuments[document - 1], pRefDoc,
-				     True, False);
+				     TRUE, FALSE);
 		  /* an API function is not supposed to change */
 		  /* the number of characters typed by the user */
 		  TabDocuments[document - 1]->DocNTypedChars = saveNbCar;
@@ -205,8 +205,8 @@ Document            targetDocument;
      {
 	inclusion = NewSubtree (((PtrElement) target)->ElTypeNumber,
 				((PtrElement) target)->ElSructSchema,
-				TabDocuments[document - 1], 0, False,
-				True, True, True);
+				TabDocuments[document - 1], 0, FALSE,
+				TRUE, TRUE, TRUE);
 	GetReference (&inclusion->ElSource);
 	inclusion->ElSource->RdElement = inclusion;
 	inclusion->ElSource->RdTypeRef = RefInclusion;
@@ -221,7 +221,7 @@ Document            targetDocument;
 	  }
 	saveNbCar = TabDocuments[document - 1]->DocNTypedChars;
 	if (SetReference (inclusion, NULL, (PtrElement) target,
-			  TabDocuments[document - 1], pRefDoc, True, False))
+			  TabDocuments[document - 1], pRefDoc, TRUE, FALSE))
 	   CopyIncludedElem (inclusion, TabDocuments[document - 1]);
 	else
 	  {
@@ -348,11 +348,11 @@ Document            targetDocument;
 	     pDoc = TabDocuments[document - 1];
 	     /* verifie que l'attribut appartient bien a l'element */
 	     pAttr = ((PtrElement) element)->ElFirstAttr;
-	     ok = False;
+	     ok = FALSE;
 	     while (pAttr != NULL)
 		if (pAttr == (PtrAttribute) attribute)
 		  {
-		     ok = True;
+		     ok = TRUE;
 		     pAttr = NULL;
 		  }
 		else
@@ -364,12 +364,12 @@ Document            targetDocument;
 	       {
 		  if (((PtrAttribute) attribute)->AeAttrReference != NULL)
 		     DeleteReference (((PtrAttribute) attribute)->AeAttrReference);
-		  ok = True;
+		  ok = TRUE;
 	       }
 	     else
 	       {
 		  /* verifie le parametre targetDocument */
-		  ok = False;
+		  ok = FALSE;
 		  if (targetDocument < 1 || targetDocument > MAX_DOCUMENTS)
 		    {
 		       TtaError (ERR_invalid_document_parameter);
@@ -384,7 +384,7 @@ Document            targetDocument;
 #ifndef NODISPLAY
 		       UndisplayHeritAttr ((PtrElement) element,
 					   (PtrAttribute) attribute,
-					   document, False);
+					   document, FALSE);
 #endif
 		       pRefDoc = TabDocuments[targetDocument - 1];
 		       /* l'element pointe' par target va etre reference' */
@@ -409,7 +409,7 @@ Document            targetDocument;
 		       saveNbCar = TabDocuments[document - 1]->DocNTypedChars;
 		       ok = SetReference (NULL, (PtrAttribute) attribute,
 					  (PtrElement) target,
-					  pDoc, pRefDoc, True, False);
+					  pDoc, pRefDoc, TRUE, FALSE);
 		       /* an API function is not supposed to change */
 		       /* the number of characters typed by the user */
 		       TabDocuments[document - 1]->DocNTypedChars = saveNbCar;
@@ -902,8 +902,8 @@ Document           *referenceDocument;
 		  {
 		     pDE = NULL;
 		     pRef = SearchExternalReferenceToElem ((PtrElement) target,
-				    TabDocuments[targetDocument - 1], False,
-					 &pDocRef, &pDE, True);
+				    TabDocuments[targetDocument - 1], FALSE,
+					 &pDocRef, &pDE, TRUE);
 		     if (pRef != NULL)
 			/*il y a une reference externe dans un document charge' */
 			*referenceDocument = IdentDocument (pDocRef);
@@ -958,12 +958,12 @@ Document           *referenceDocument;
 				 /* sinon, on cherche le descripteur de document */
 				 /* referencant qui correspond a referenceDocument */
 				 /* et on prend le suivant */
-				 trouve = False;
+				 trouve = FALSE;
 				 while (pDE != NULL && !trouve)
 				   {
 				      if (MemeIdentDoc (pDE->EdDocIdent,
 							TabDocuments[*referenceDocument - 1]->DocIdent))
-					 trouve = True;
+					 trouve = TRUE;
 				      pDE = pDE->EdNext;
 				   }
 			      }
@@ -974,7 +974,7 @@ Document           *referenceDocument;
 			    /* referencant retenu */
 			    pRef = SearchExternalReferenceToElem ((PtrElement) target,
 					   TabDocuments[targetDocument - 1],
-					      False, &pDocRef, &pDE, False);
+					      FALSE, &pDocRef, &pDE, FALSE);
 			    if (pRef != NULL)
 			       /* on a trouve' une reference externe dans un */
 			       /* document charge' */
@@ -1058,16 +1058,16 @@ char               *referringDocumentName;
 	pDE = ((PtrElement) target)->ElReferredDescr->ReExtDocRef;
 	if (referringDocumentName[0] == '\0')
 	   /* premier appel, on traite le premier document referencant */
-	   trouve = True;
+	   trouve = TRUE;
 	else
 	  {
 	     /* on cherche le descripteur de document referencant qui */
 	     /* correspond a referringDocumentName et on prend le suivant */
-	     trouve = False;
+	     trouve = FALSE;
 	     while (pDE != NULL && !trouve)
 	       {
 		  if (strcmp (pDE->EdDocIdent, referringDocumentName) == 0)
-		     trouve = True;
+		     trouve = TRUE;
 		  /* passe au document suivant */
 		  pDE = pDE->EdNext;
 	       }
@@ -1076,7 +1076,7 @@ char               *referringDocumentName;
 	   /* on a trouve' un document referencant, on saute les */
 	   /* documents charge's */
 	  {
-	     charge = True;
+	     charge = TRUE;
 	     while (charge && pDE != NULL)
 	       {
 		  /* verifie si le document est charge' */

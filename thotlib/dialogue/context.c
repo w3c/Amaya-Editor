@@ -18,7 +18,7 @@
 #include "thot_sys.h"
 #include "constmedia.h"
 #include "typemedia.h"
-#include "thotconfig.h"
+
 #include "libmsg.h"
 #include "message.h"
 #include "picture.h"
@@ -40,7 +40,7 @@ static ThotColorStruct cwhite;
 #include "cmdedit.f"
 #include "corrmenu.f"
 #include "font.f"
-#include "imagedrvr.f"
+#include "picture.f"
 #include "indmenu.f"
 #include "initcatal.f"
 #include "inites.f"
@@ -176,14 +176,14 @@ void                WinInitColors (void)
 	ptrLogPal->palPalEntry[1].peBlue = RGB_Table[i].blue;
 	ptrLogPal->palPalEntry[1].peFlags = 0;
      }
-   cmap (0) = CreatePalette (ptrLogPal);
-   if (cmap (0) == NULL)
+   TtCmap = CreatePalette (ptrLogPal);
+   if (TtCmap == NULL)
      {
 	fprintf (stderr, "couldn't CreatePalette\n");
 	WinErrorBox ();
      }
    else
-      SelectPalette (WIN_curHdc, cmap (0), TRUE);
+      SelectPalette (WIN_curHdc, TtCmap, TRUE);
    TtaFreeMemory (ptrLogPal);
 
    /*
@@ -343,7 +343,7 @@ unsigned short     *blue;
    /*
     * Lookup the color name in the X color name database
     */
-   if (XParseColor (GDp (0), cmap (0), colname, &color))
+   if (XParseColor (TtDisplay, TtCmap, colname, &color))
      {
 	/* normalize RGB color values to 8 bits values */
 	color.red >>= 8;
@@ -392,10 +392,10 @@ unsigned long      *colorpixel;
 	if (strcmp (colorplace, "BackgroundColor") == 0)
 	   DefaultBColor = col;
 	*colorpixel = ColorPixel (col);
-	return (True);
+	return (TRUE);
      }
    else
-      return (False);
+      return (FALSE);
 }
 
 
@@ -415,18 +415,18 @@ char               *name;
    boolean             found;
 
    /* L'ordre d'allocation du blanc et du  noir depend de l'ecran */
-   if (XWhitePixel (GDp (0), ThotScreen (0)) == 0)
+   if (XWhitePixel (TtDisplay, TtScreen) == 0)
      {
-	if (!XAllocNamedColor (GDp (0), cmap (0), "White", &cwhite, &col))
+	if (!XAllocNamedColor (TtDisplay, TtCmap, "White", &cwhite, &col))
 	   TtaDisplaySimpleMessage (FATAL, LIB, LIB_ERR_NOT_ENOUGH_MEM);
-	if (!XAllocNamedColor (GDp (0), cmap (0), "Black", &cblack, &col))
+	if (!XAllocNamedColor (TtDisplay, TtCmap, "Black", &cblack, &col))
 	   TtaDisplaySimpleMessage (FATAL, LIB, LIB_ERR_NOT_ENOUGH_MEM);
      }
    else
      {
-	if (!XAllocNamedColor (GDp (0), cmap (0), "Black", &cblack, &col))
+	if (!XAllocNamedColor (TtDisplay, TtCmap, "Black", &cblack, &col))
 	   TtaDisplaySimpleMessage (FATAL, LIB, LIB_ERR_NOT_ENOUGH_MEM);
-	if (!XAllocNamedColor (GDp (0), cmap (0), "White", &cwhite, &col))
+	if (!XAllocNamedColor (TtDisplay, TtCmap, "White", &cwhite, &col))
 	   TtaDisplaySimpleMessage (FATAL, LIB, LIB_ERR_NOT_ENOUGH_MEM);
      }
 
@@ -437,7 +437,7 @@ char               *name;
    Scroll_Color = BgMenu_Color = cwhite.pixel;
 
 
-   if (Gdepth (0) > 1)
+   if (TtWDepth > 1)
      {
 	/* La couleur de fond */
 	found = FindColor (0, name, "BackgroundColor", "gainsboro", &White_Color);
@@ -463,7 +463,7 @@ char               *name;
    if (!found)
       /* La couleur n'est pas definie -> Non utilisee */
       Box_Color = cwhite.pixel;
-   else if (Gdepth (0) == 1)
+   else if (TtWDepth == 1)
       Box_Color = cblack.pixel;
 
    /* La couleur du Read Only */
@@ -471,7 +471,7 @@ char               *name;
    if (!found)
       /* La couleur n'est pas definie -> Non utilisee */
       RO_Color = cwhite.pixel;
-   else if (Gdepth (0) == 1)
+   else if (TtWDepth == 1)
       RO_Color = cblack.pixel;
 #endif /* NEW_WILLOWS */
 }
@@ -485,9 +485,9 @@ boolean             ShowReference ()
 {
 #ifndef NEW_WILLOWS
    if (Box_Color == cwhite.pixel)
-      return (False);
+      return (FALSE);
    else
-      return (True);
+      return (TRUE);
 #endif /* NEW_WILLOWS */
 }
 
@@ -499,9 +499,9 @@ boolean             ShowReadOnly ()
 {
 #ifndef NEW_WILLOWS
    if (RO_Color == cwhite.pixel)
-      return (False);
+      return (FALSE);
    else
-      return (True);
+      return (TRUE);
 #endif /* NEW_WILLOWS */
 }
 /*fin */
@@ -536,10 +536,10 @@ void                InitGC ()
    pix = CreatePattern (0, 0, 0, black, white, 6);	/* !!!! */
    GCmodel.foreground = White_Color;
    GCmodel.background = Black_Color;
-   GCwhite (0) = XCreateGC (GDp (0), GRootW (0), valuemask, &GCmodel);
+   TtWhiteGC = XCreateGC (TtDisplay, TtRootWindow, valuemask, &GCmodel);
 #endif /* NEW_WILLOWS */
 #ifdef NEW_WILLOWS
-   gcModel = GCwhite (0);
+   gcModel = TtWhiteGC;
    gcModel->capabilities = THOT_GC_PEN | THOT_GC_FOREGROUND | THOT_GC_BACKGROUND;
    gcModel->pen = GetStockObject (WHITE_PEN);
    gcModel->background = Black_Color;
@@ -552,10 +552,10 @@ void                InitGC ()
 #ifndef NEW_WILLOWS
    GCmodel.foreground = Button_Color;
    GCmodel.background = White_Color;
-   GCblack (0) = XCreateGC (GDp (0), GRootW (0), valuemask, &GCmodel);
+   TtBlackGC = XCreateGC (TtDisplay, TtRootWindow, valuemask, &GCmodel);
 #endif /* NEW_WILLOWS */
 #ifdef NEW_WILLOWS
-   gcModel = GCblack (0);
+   gcModel = TtBlackGC;
    gcModel->capabilities = THOT_GC_PEN | THOT_GC_FOREGROUND | THOT_GC_BACKGROUND;
    gcModel->pen = GetStockObject (BLACK_PEN);
    gcModel->background = White_Color;
@@ -569,11 +569,11 @@ void                InitGC ()
 #ifndef NEW_WILLOWS
    GCmodel.foreground = Black_Color;
    GCmodel.background = White_Color;
-   GCtrait (0) = XCreateGC (GDp (0), GRootW (0), valuemask, &GCmodel);
-   XSetTile (GDp (0), GCtrait (0), pix);
+   TtLineGC = XCreateGC (TtDisplay, TtRootWindow, valuemask, &GCmodel);
+   XSetTile (TtDisplay, TtLineGC, pix);
 #endif /* NEW_WILLOWS */
 #ifdef NEW_WILLOWS
-   gcModel = GCtrait (0);
+   gcModel = TtLineGC;
    gcModel->capabilities = THOT_GC_FOREGROUND |		/* THOT_GC_BACKGROUND | */
    /* THOT_GC_BRUSH | */ THOT_GC_PEN;
    gcModel->pen = GetStockObject (BLACK_PEN);
@@ -587,10 +587,10 @@ void                InitGC ()
     * Another Graphic Context to write black on white, for dialogs.
     */
 #ifndef NEW_WILLOWS
-   GCdialogue (0) = XCreateGC (GDp (0), GRootW (0), valuemask, &GCmodel);
+   TtDialogueGC = XCreateGC (TtDisplay, TtRootWindow, valuemask, &GCmodel);
 #endif /* NEW_WILLOWS */
 #ifdef NEW_WILLOWS
-   gcModel = GCdialogue (0);
+   gcModel = TtDialogueGC;
    gcModel->capabilities = THOT_GC_FOREGROUND | THOT_GC_BACKGROUND | THOT_GC_PEN;
    gcModel->pen = GetStockObject (BLACK_PEN);
    gcModel->background = White_Color;
@@ -605,19 +605,19 @@ void                InitGC ()
 #ifndef NEW_WILLOWS
    GCmodel.function = GXinvert;
    GCmodel.plane_mask = Select_Color;
-   if (Gdepth (0) > 1)
+   if (TtWDepth > 1)
       GCmodel.foreground = Black_Color;
    else
       GCmodel.foreground = Select_Color;
    GCmodel.background = White_Color;
-   GCinvert (0) = XCreateGC (GDp (0), GRootW (0), valuemask | GCPlaneMask, &GCmodel);
+   TtInvertGC = XCreateGC (TtDisplay, TtRootWindow, valuemask | GCPlaneMask, &GCmodel);
 #endif /* NEW_WILLOWS */
 #ifdef NEW_WILLOWS
-   gcModel = GCdialogue (0);
+   gcModel = TtDialogueGC;
    gcModel->capabilities = THOT_GC_FOREGROUND | THOT_GC_BACKGROUND |
       THOT_GC_FUNCTION;
    gcModel->mode = R2_XORPEN;
-   if (Gdepth (0) > 1)
+   if (TtWDepth > 1)
       gcModel->foreground = Black_Color;
    else
       gcModel->foreground = Select_Color;
@@ -630,16 +630,16 @@ void                InitGC ()
 #ifndef NEW_WILLOWS
    GCmodel.function = GXcopy;
    GCmodel.foreground = Black_Color;
-   GCgrey (0) = XCreateGC (GDp (0), GRootW (0), valuemask, &GCmodel);
-   XSetFillStyle (GDp (0), GCgrey (0), FillTiled);
-   XFreePixmap (GDp (0), pix);
+   TtGreyGC = XCreateGC (TtDisplay, TtRootWindow, valuemask, &GCmodel);
+   XSetFillStyle (TtDisplay, TtGreyGC, FillTiled);
+   XFreePixmap (TtDisplay, pix);
 #endif /* NEW_WILLOWS */
 #ifdef NEW_WILLOWS
-   gcModel = GCgrey (0);
+   gcModel = TtGreyGC;
    gcModel->capabilities = THOT_GC_FOREGROUND | THOT_GC_BACKGROUND |
    /* THOT_GC_BRUSH | */ THOT_GC_PEN |
       THOT_GC_FUNCTION;
-   gcModel = GCblack (0);
+   gcModel = TtBlackGC;
    gcModel->background = White_Color;
    gcModel->foreground = Black_Color;
    gcModel->mode = R2_XORPEN;
@@ -668,9 +668,9 @@ int                 dy;
    HDC                 hdc;
 
    hdc = GetDC (WIN_Main_Wd);
-   Gdepth (0) = GetDeviceCaps (hdc, PLANES);
-   if (Gdepth (0) == 1)
-      Gdepth (0) = GetDeviceCaps (hdc, BITSPIXEL);
+   TtWDepth = GetDeviceCaps (hdc, PLANES);
+   if (TtWDepth == 1)
+      TtWDepth = GetDeviceCaps (hdc, BITSPIXEL);
 
    ReleaseDC (WIN_Main_Wd, hdc);
 #endif /* NEW_WILLOWS */
@@ -679,10 +679,10 @@ int                 dy;
 #ifndef NEW_WILLOWS
    XSetErrorHandler (X_Erreur);
    XSetIOErrorHandler (X_ErreurFatale);
-   ThotScreen (0) = DefaultScreen (GDp (0));
-   Gdepth (0) = DefaultDepth (GDp (0), ThotScreen (0));
-   GRootW (0) = RootWindow (GDp (0), ThotScreen (0));
-   cmap (0) = XDefaultColormap (GDp (0), ThotScreen (0));
+   TtScreen = DefaultScreen (TtDisplay);
+   TtWDepth = DefaultDepth (TtDisplay, TtScreen);
+   TtRootWindow = RootWindow (TtDisplay, TtScreen);
+   TtCmap = XDefaultColormap (TtDisplay, TtScreen);
 #endif
 
    /* Largeur des bandes de scroll */
@@ -693,7 +693,7 @@ int                 dy;
    InitFont (name);		/* polices de caracteres              */
 
    /* Initialisation des Picture Drivers */
-   InitPictureHandlers (False);
+   InitPictureHandlers (FALSE);
 }
 
 /* ---------------------------------------------------------------------- */
@@ -718,7 +718,7 @@ void                InitDocContexts ()
    /* Aucun traitement de l'englobement n'est enregistre */
    RetardeEngl = NULL;
    /* Aucune boite dont l'englobement est differe */
-   EnCreation = False;		/* Pas de creation interactive en cours */
+   EnCreation = FALSE;		/* Pas de creation interactive en cours */
    InitAutreContexts ();
 
 }				/*InitContexts */
@@ -756,7 +756,7 @@ XSelectionEvent    *event;
 		       wind = w;
 		    frame++;
 		 }
-	       if (w == wind && event->display == GDp (0))
+	       if (w == wind && event->display == TtDisplay)
 		 {
 		    if (Xbuffer != NULL)
 		      {
@@ -780,12 +780,12 @@ XSelectionEvent    *event;
 		       wind = w;
 		    frame++;
 		 }
-	       if (w == wind && event->display == GDp (0))
+	       if (w == wind && event->display == TtDisplay)
 		 {
 		    if (event->property == None)
 		      {
 			 /* Pas de selection courante -> on regarde s'il y a un cutbuffer */
-			 buffer = (unsigned char *) XFetchBytes (GDp (0), &r);
+			 buffer = (unsigned char *) XFetchBytes (TtDisplay, &r);
 			 if (buffer != NULL)
 			   {
 			      /* Retourne le cutbuffer */
@@ -797,7 +797,7 @@ XSelectionEvent    *event;
 		      {
 			 /* Recupere les donnees */
 			 r = XGetWindowProperty (event->display, event->requestor,
-			       event->property, (long) 0, (long) 256, False,
+			       event->property, (long) 0, (long) 256, FALSE,
 				  AnyPropertyType, &type, &format, &nbitems,
 						 &bytes_after, &buffer);
 			 if (r == Success && type != None && format == 8)
@@ -822,7 +822,7 @@ XSelectionEvent    *event;
 		       wind = w;
 		    frame++;
 		 }
-	       if (w == wind && event->display == GDp (0))
+	       if (w == wind && event->display == TtDisplay)
 		 {
 		    request = (XSelectionRequestEvent *) event;
 		    /* Construit l'evenement notify */
@@ -838,7 +838,7 @@ XSelectionEvent    *event;
 			 /* La selection est vide -> vide le cutbuffer */
 			 XStoreBuffer (request->display, NULL, 0, 0);
 			 notify.property = None;
-			 XSendEvent (request->display, request->requestor, True, NoEventMask, (XEvent *) & notify);
+			 XSendEvent (request->display, request->requestor, TRUE, NoEventMask, (XEvent *) & notify);
 		      }
 		    else if (request->property == None)
 		      {
@@ -852,7 +852,7 @@ XSelectionEvent    *event;
 			 XA_STRING, 8, PropModeReplace, Xbuffer, LgXbuffer);
 			 /* Signale que la selection est transmise */
 			 notify.property = request->property;
-			 XSendEvent (request->display, request->requestor, True, NoEventMask, (XEvent *) & notify);
+			 XSendEvent (request->display, request->requestor, TRUE, NoEventMask, (XEvent *) & notify);
 		      }
 		 }
 	       break;

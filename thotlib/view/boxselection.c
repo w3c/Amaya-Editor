@@ -65,7 +65,7 @@ PtrAbstractBox             pAb;
    if (pPa1->AbSelected)
      {
 	/* Le pave est selectionne */
-	pPa1->AbSelected = False;
+	pPa1->AbSelected = FALSE;
      }
    else
      {
@@ -97,7 +97,7 @@ int                 frame;
 	pFrame = &FntrTable[frame - 1];
 	if (pFrame->FrAbstractBox != NULL)
 	   RazPavSelect (pFrame->FrAbstractBox);
-	pFrame->FrSelectOneBox = False;
+	pFrame->FrSelectOneBox = FALSE;
 	pFrame->FrSelectionBegin.VsBox = NULL;
 	pFrame->FrSelectionEnd.VsBox = NULL;
      }
@@ -123,9 +123,9 @@ boolean             allume;
      {
 	/* Teste le booleen allume et l'etat de la selection */
 	if (allume && !FntrTable[frame - 1].FrSelectShown)
-	   VisuSel (frame, True);
+	   VisuSel (frame, TRUE);
 	else if (!allume && FntrTable[frame - 1].FrSelectShown)
-	   VisuSel (frame, True);
+	   VisuSel (frame, TRUE);
      }
 }
 
@@ -149,10 +149,10 @@ int                 frame;
 	pFrame = &FntrTable[frame - 1];
 	/* On eteint la selection ssi elle est allumee */
 	if (pFrame->FrSelectShown)
-	   VisuSel (frame, False);
+	   VisuSel (frame, FALSE);
 	else
-	   MajPavSelect (frame, pFrame->FrAbstractBox, False);
-	pFrame->FrSelectOneBox = False;
+	   MajPavSelect (frame, pFrame->FrAbstractBox, FALSE);
+	pFrame->FrSelectOneBox = FALSE;
 	pFrame->FrSelectionBegin.VsBox = NULL;
 	pFrame->FrSelectionEnd.VsBox = NULL;
      }
@@ -317,7 +317,7 @@ ViewSelection            *marque;
 	  }
 	else
 	   i = marque->VsIndBuf - 1;	/* En fin ou en cours de buffer */
-	fin = False;
+	fin = FALSE;
 
 	/* Est-ce une boite coupee ? */
 	if (pBox->BxType == BoSplit)
@@ -343,10 +343,10 @@ ViewSelection            *marque;
 		/* Cas particulier des blancs supprimes en fin de boite */
 		/* Est-ce qu'il y a une boite apres ? */
 		if (pBox->BxNexChild == NULL)
-		   fin = True;
+		   fin = TRUE;
 		/* Il existe une boite apres mais c'est une boite fantome */
 		else if (pBox->BxNexChild->BxNChars == 0 && DesLigne (pBox->BxNexChild) == NULL)
-		   fin = True;
+		   fin = TRUE;
 		else
 		   fin = max - deb + saut > i && adbuff == ibuff;
 
@@ -378,7 +378,7 @@ ViewSelection            *marque;
 			  marque->VsIndBox = 0;
 			  marque->VsXPos = 0;
 			  marque->VsNSpaces = 0;
-			  fin = True;
+			  fin = TRUE;
 		       }
 		  }
 	     }
@@ -442,7 +442,7 @@ int                *index;
 	     {
 		/* On arrive en fin de liste de buffers sans trouver le caractere */
 		*index = pBu1->BuLength + 1;
-		encore = False;
+		encore = FALSE;
 	     }
 	   else
 	      /* On passe au buffer suivant */
@@ -451,7 +451,7 @@ int                *index;
 		*ibuff = pBu1->BuNext;
 	     }
 	else
-	   encore = False;
+	   encore = FALSE;
      }
 }
 
@@ -747,14 +747,14 @@ int                 bouton;
 	if (paved != NULL)
 	   /* Initialisation de la selection */
 	   if (bouton == 3)
-	      SelectCour (frame, paved, nbcar, False, True, True, False);
+	      SelectCour (frame, paved, nbcar, FALSE, TRUE, TRUE, FALSE);
 	   else if (bouton == 2)
-	      SelectCour (frame, paved, nbcar, False, True, False, False);
+	      SelectCour (frame, paved, nbcar, FALSE, TRUE, FALSE, FALSE);
 	/* Extension de la selection */
 	   else if (bouton == 0)
-	      SelectCour (frame, paved, nbcar, True, True, False, False);
+	      SelectCour (frame, paved, nbcar, TRUE, TRUE, FALSE, FALSE);
 	   else if (bouton == 1)
-	      SelectCour (frame, paved, nbcar, True, True, False, True);
+	      SelectCour (frame, paved, nbcar, TRUE, TRUE, FALSE, TRUE);
      }
 }
 
@@ -809,12 +809,12 @@ int                 frame;
    int                 val1, val2;
 
    if (pav == NULL)
-      return False;
+      return FALSE;
    else
       while (pav->AbBox == NULL)
 	 /* On remonte au pave englobant cree */
 	 if (pav->AbEnclosing == NULL)
-	    return False;
+	    return FALSE;
 	 else
 	    pav = pav->AbEnclosing;
 
@@ -824,8 +824,8 @@ int                 frame;
    val2 += val1;
    if (pav->AbBox->BxYOrg + pav->AbBox->BxHeight < val1
        || pav->AbBox->BxYOrg > val2)
-      return False;
+      return FALSE;
    else
-      return True;
+      return TRUE;
 }
 /* End Of Module sel */

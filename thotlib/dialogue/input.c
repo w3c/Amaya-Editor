@@ -315,22 +315,22 @@ int                 commande;
      {
 	/* C'est la premiere touche crtl cree */
 	*addebut = ptr;
-	existe = False;		/* la cle1 n'est pas encore connue */
+	existe = FALSE;		/* la cle1 n'est pas encore connue */
      }
    else
      {
 	/* Regarde si cette touche est deja enregistree */
-	existe = False;
+	existe = FALSE;
 	do
 	  {
 	     /* Est-ce la meme cle d'entree */
 	     if (oldptr->T_Cle == cle1)
-		existe = True;	/* L'entree cle1 existe deja */
+		existe = TRUE;	/* L'entree cle1 existe deja */
 	     else if (oldptr->T_Autre != NULL)
 	       {
 		  oldptr = oldptr->T_Autre;
 		  if (oldptr->T_Cle == cle1)
-		     existe = True;	/* Il faut en plus verifier la derniere entree */
+		     existe = TRUE;	/* Il faut en plus verifier la derniere entree */
 	       }
 	  }
 	while (oldptr->T_Autre != NULL && !existe);
@@ -368,24 +368,24 @@ int                 commande;
 	     ptr->T_Commande = commande;
 	     ptr->T_Valeur = cle;
 	     oldptr->T_Suite = ptr;
-	     existe = True;
+	     existe = TRUE;
 	  }
 	else
 	  {
 	     oldptr = oldptr->T_Suite;
-	     existe = False;
+	     existe = FALSE;
 	     do
 	       {
 		  /* Est-ce la meme cle d'entree */
 		  if (oldptr->T_Cle == cle2)
 		     /* L'entree existe deja */
-		     existe = True;
+		     existe = TRUE;
 		  else if (oldptr->T_Autre != NULL)
 		    {
 		       oldptr = oldptr->T_Autre;
 		       /* Il faut en plus verifier la derniere entree */
 		       if (oldptr->T_Cle == cle2)
-			  existe = True;
+			  existe = TRUE;
 		    }
 	       }
 	     while (oldptr->T_Autre != NULL && !existe);
@@ -554,12 +554,12 @@ int                 key;
       frame = 0;
 
    valeur = chaine[0];
-   trouve = False;
+   trouve = FALSE;
    if (nb == 2)
      {
 	/* C'est l'appel d'une action Thot */
 	commande = (int) chaine[1];
-	trouve = True;
+	trouve = TRUE;
      }
    else
      {
@@ -595,7 +595,7 @@ int                 key;
 	     /* Recherche l'entree de 1er niveau */
 	     while (!trouve && ptr != NULL)
 		if (ptr->T_Cle == key && modtype == (int) ptr->T_Modifieur)
-		   trouve = True;
+		   trouve = TRUE;
 		else
 		   ptr = ptr->T_Autre;
 
@@ -632,7 +632,7 @@ int                 key;
 		if (ptr->T_Cle == key)
 		  {
 		     /* On entre dans un automate */
-		     trouve = True;
+		     trouve = TRUE;
 		     Automate_current = ptr->T_Suite;
 		     if (Automate_current == NULL)
 		       {

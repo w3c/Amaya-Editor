@@ -62,7 +62,7 @@ boolean             *InCutBuffer;
    PtrAttribute         pAttr;
    PtrElement          pCol, pE;
 
-  *InCutBuffer = False;
+  *InCutBuffer = FALSE;
    /* cherche l'attribut La_colonne de la cellule */
    pCol = NULL;
    attr = GetAttrWithException (EXC_ID_Ref_Colonne, pCell->ElSructSchema);
@@ -82,7 +82,7 @@ boolean             *InCutBuffer;
       else			/* passe a l'attribut suivant de la cellule */
 	 pAttr = pAttr->AeNext;
 
-   *InCutBuffer = False;
+   *InCutBuffer = FALSE;
 
    if (pCol != NULL)
      {
@@ -93,7 +93,7 @@ boolean             *InCutBuffer;
 	for (pE = pSauve; pE != NULL; pE = pE->ElNext)
 	   if (ElemIsWithinSubtree (pCol, pE))
 	     {
-		*InCutBuffer = True;
+		*InCutBuffer = TRUE;
 		break;
 	     }
      }
@@ -133,8 +133,8 @@ PtrDocument         SelDoc;
 		     if (pAttr->AeAttrReference != NULL
 			 && pAttr->AeAttrReference->RdReferred != NULL)
 		       {
-			  SelectEl (SelDoc, pAttr->AeAttrReference->RdReferred->ReReferredElem, True, True);
-			  return True;
+			  SelectEl (SelDoc, pAttr->AeAttrReference->RdReferred->ReReferredElem, TRUE, TRUE);
+			  return TRUE;
 		       }
 		  }
 		else
@@ -142,7 +142,7 @@ PtrDocument         SelDoc;
 		   pAttr = pAttr->AeNext;
 	  }
      }
-   return False;
+   return FALSE;
 }
 
 /* DistribAlignHorizVertic      met un attribut Alignement horizontal ou Vertical */
@@ -168,14 +168,14 @@ PtrDocument         SelDoc;
      {
 	/* Les attributs d'alignement vertical et d'extension verticale */
 	/* des cellules sont exclusifs */
-	PasDExtension = True;
+	PasDExtension = TRUE;
 	if (pAttrCell->AeAttrNum == GetAttrWithException (EXC_ID_Align_Vertic, pEl->ElSructSchema))
 	   /* on veut mettre un attribut d'alignement vertical */
 	  {
 	     pAttr = pEl->ElFirstAttr;
 	     while (pAttr != NULL && PasDExtension)
 		if (AttrHasException (EXC_ID_Extens_Vertic, pAttr->AeAttrNum, pAttr->AeAttrSSchema))
-		   PasDExtension = False;
+		   PasDExtension = FALSE;
 		else		/* passe a l'attribut suivant de la cellule */
 		   pAttr = pAttr->AeNext;
 	  }
@@ -219,7 +219,7 @@ PtrDocument         pDoc;
    if (TypeHasException (EXC_ID_Tableau, pEl->ElTypeNumber, pEl->ElSructSchema)
    && pAttr->AeAttrNum == GetAttrWithException (EXC_ID_Type_Tableau, pEl->ElSructSchema))
      {
-	DetrPaves (pEl, pDoc, False);
+	DetrPaves (pEl, pDoc, FALSE);
 	MajImAbs (pDoc);
 	CreeTousPaves (pEl, pDoc);
 	MajImAbs (pDoc);
@@ -277,17 +277,17 @@ PtrSSchema        pSS;
 	        quand l'attribut Type_Tableau vaut Lignes ou Tabulations */
 	     if (eltype == GetElemWithException (EXC_ID_Colonne_Composee, pSS)
 		 && (pAttrTab->AeAttrValue == 2 || pAttrTab->AeAttrValue == 4))
-		return (True);
+		return (TRUE);
 
 	     /* on inhibe le choix ligne composee quand
 	        quand l'attribut Type_Tableau vaut Colonnes ou Tabulations */
 	     else if (eltype == GetElemWithException (EXC_ID_Ligne_Composee, pSS)
 		  && (pAttrTab->AeAttrValue == 3 || pAttrTab->AeAttrValue == 4))
-		return (True);
+		return (TRUE);
 	  }
      }
 
-   return (False);
+   return (FALSE);
 }
 
 /* TbAttributRef        retourne vrai si l'attribut pointe' par pAttr est */
@@ -305,11 +305,11 @@ boolean             *ret;
 
 {
 
-   *ret = False;
+   *ret = FALSE;
    if (AttrHasException (EXC_ID_Ref_Titre, pAttr->AeAttrNum, pAttr->AeAttrSSchema))
-      *ret = True;		/* c'est l'attribut Ref_largeur */
+      *ret = TRUE;		/* c'est l'attribut Ref_largeur */
    else if (AttrHasException (EXC_ID_Ref_Colonne, pAttr->AeAttrNum, pAttr->AeAttrSSchema))
-      *ret = True;		/* c'est l'attribut La_colonne */
+      *ret = TRUE;		/* c'est l'attribut La_colonne */
 }
 
 
@@ -644,7 +644,7 @@ PtrDocument         pDoc;
 		pCell = pLigne->ElFirstChild->ElNext->ElFirstChild;
 		/* on cree une nouvelle cellule */
 		pNCell = NewSubtree (TypeCell, pEl->ElSructSchema, pDoc,
-			 pLigne->ElAssocNum, True, True, True, True);
+			 pLigne->ElAssocNum, TRUE, TRUE, TRUE, TRUE);
 		/* on insere cette nouvelle cellule dans l'arbre */
 		if (pCell == NULL)
 		   /* la ligne n'avait pas encore de cellules */
@@ -664,10 +664,10 @@ PtrDocument         pDoc;
 		       {
 			  /* Cherche d'abord l'attribut La_colonne de la cellule courante */
 			  pAttr = pCell->ElFirstAttr;
-			  attrtrouve = False;
+			  attrtrouve = FALSE;
 			  while (!attrtrouve && pAttr != NULL)
 			     if (pAttr->AeAttrNum == attr && pAttr->AeAttrSSchema == pCell->ElSructSchema)
-				attrtrouve = True;
+				attrtrouve = TRUE;
 			     else
 				pAttr = pAttr->AeNext;
 			  if (attrtrouve)
@@ -770,8 +770,8 @@ PtrDocument         pDoc;
 		  {
 		     /* on cree une nouvelle cellule */
 		     NewSubtree (pCellPrec->ElTypeNumber, pEl->ElSructSchema, pDoc,
-				 pCellPrec->ElAssocNum, True, True,
-				 True, True);
+				 pCellPrec->ElAssocNum, TRUE, TRUE,
+				 TRUE, TRUE);
 		     /* on insere cette nouvelle cellule dans l'arbre */
 		     InsertElementAfter (pCellPrec, pCell);
 		  }
@@ -851,8 +851,8 @@ PtrDocument         pDoc;
 		  do
 		    {
 		       /* transforme la Colonne en Colonne_simple */
-		       pNouv = NewSubtree (NType, pSS, pDoc, pE->ElAssocNum, True, True,
-					   True, True);
+		       pNouv = NewSubtree (NType, pSS, pDoc, pE->ElAssocNum, TRUE, TRUE,
+					   TRUE, TRUE);
 		       ChaineChoix (pE, &pNouv, pDoc);
 		       /* met les attributs a la Colonne_simple */
 		       Tableau_MetAttrColonneSimple (pE, pDoc);
@@ -881,7 +881,7 @@ PtrDocument         pDoc;
 			      {
 				 /* transforme la Line en Ligne_simple */
 				 pNouv = NewSubtree (NType, pSS, pDoc, pE->ElAssocNum,
-					      True, True, True, True);
+					      TRUE, TRUE, TRUE, TRUE);
 				 ChaineChoix (pE, &pNouv, pDoc);
 				 /* traite les attributs requis */
 				 AttachMandatoryAttributes (pE, pDoc);
@@ -928,19 +928,19 @@ PtrDocument         pDoc;
 	      /* cherche l'attribut Filet_Bas de la ligne */
 	      attr = GetAttrWithException (EXC_ID_Filet_Bas_LigSimp, pLigne->ElSructSchema);
 	      pAttr = pLigne->ElFirstAttr;
-	      trouve = False;
+	      trouve = FALSE;
 	      while (pAttr != NULL && !trouve)
 		 if (pAttr->AeAttrSSchema == pLigne->ElSructSchema &&
 		     pAttr->AeAttrNum == attr)
 		    /* C'est l'attribut Filet_Bas */
-		    trouve = True;
+		    trouve = TRUE;
 		 else
 		    /* passe a l'attribut suivant de la ligne */
 		    pAttr = pAttr->AeNext;
 	      if (trouve)
 		 /* applique les regles de presentation de l'attribut pour */
 		 /* faire creer la boite filet. */
-		 ChngPresAttr (pLigne, pAttr, pDoc, False, False, NULL);
+		 ChngPresAttr (pLigne, pAttr, pDoc, FALSE, FALSE, NULL);
 	   }
 }
 
@@ -1005,7 +1005,7 @@ PtrDocument         pDoc;
 		    {
 		       /* transforme la Colonne en Colonne_simple */
 		       pC = NewSubtree (NType, pEl->ElSructSchema, pDoc, pEl->ElAssocNum,
-					True, True, True, True);
+					TRUE, TRUE, TRUE, TRUE);
 		       ChaineChoix (pE, &pC, pDoc);
 		       /* traite les attributs requis */
 		       AttachMandatoryAttributes (pE, pDoc);
@@ -1041,7 +1041,7 @@ PtrDocument         pDoc;
 	       {
 		  /* transforme la Line en Ligne_simple */
 		  pC = NewSubtree (NType, pEl->ElSructSchema, pDoc, pEl->ElAssocNum,
-				   True, True, True, True);
+				   TRUE, TRUE, TRUE, TRUE);
 		  ChaineChoix (pE, &pC, pDoc);
 		  /* traite les attributs requis */
 		  AttachMandatoryAttributes (pE, pDoc);
@@ -1200,7 +1200,7 @@ boolean             *ret;
    PtrElement          pE;
 
    pE = NULL;
-   *ret = True;
+   *ret = TRUE;
    if (Ext)
      {
 	/* c'est une extension de la selection */
@@ -1210,11 +1210,11 @@ boolean             *ret;
 	     pEl = SelPremier;
 	     if (TypeHasException (EXC_TR_Tableau_SELECT, pEl->ElTypeNumber, pEl->ElSructSchema))
 		/* Deja une colonne selectionnee, on refuse l'extension */
-		*ret = False;
+		*ret = FALSE;
 	  }
 	if (TypeHasException (EXC_TR_Tableau_SELECT, pEl->ElTypeNumber, pEl->ElSructSchema))
 	   /* l'element a ajouter dans la selection est une colonne, refus */
-	   *ret = False;
+	   *ret = FALSE;
      }
 
    else
@@ -1341,7 +1341,7 @@ PtrDocument         pDoc;
 		  {
 		     /* on cree une copie de la cellule a coller */
 		     pNCell = CopyTree (*pSvCell, DocDeSauve, pCol->ElAssocNum,
-				pCol->ElSructSchema, pDoc, pPere, True, True);
+				pCol->ElSructSchema, pDoc, pPere, TRUE, TRUE);
 		     NbCellCollees++;
 		     *pSvCell = (*pSvCell)->ElNext;
 		  }
@@ -1350,8 +1350,8 @@ PtrDocument         pDoc;
 		     /* on a deja colle' le nombre de cellules voulu, on cree une
 		        cellule vide pour completer la colonne */
 		     pNCell = NewSubtree (TypeCell, pPere->ElSructSchema, pDoc,
-				 pPere->ElAssocNum, True, True, True,
-					  True);
+				 pPere->ElAssocNum, TRUE, TRUE, TRUE,
+					  TRUE);
 		     /* on met les attributs a la nouvelle cellule */
 		     Tableau_MetAttrCellule (pNCell, pCol, pDoc);
 		  }
@@ -1420,7 +1420,7 @@ PtrDocument         pDoc;
 	     /* cree une cellule */
 	     pEl1 = *pCellPrec;
 	     *pCell = NewSubtree (pEl1->ElTypeNumber, pEl1->ElSructSchema, pDoc,
-			   pEl1->ElAssocNum, True, True, True, True);
+			   pEl1->ElAssocNum, TRUE, TRUE, TRUE, TRUE);
 	     /* insere cette cellule a la suite de la cellule precedente */
 	     InsertElementAfter (*pCellPrec, *pCell);
 	  }
@@ -1687,48 +1687,48 @@ boolean            *DetruirePage;
 	   {
 	      /* les precedents peuvent etre des elements repete's */
 	      Prec = (*PremSel)->ElPrevious;
-	      stop = False;
+	      stop = FALSE;
 	      while (!stop)
 		{
 		   if (Prec == NULL)
-		      stop = True;	/* pas d'autre element precedent */
+		      stop = TRUE;	/* pas d'autre element precedent */
 		   else if (!TypeHasException (ExcPageBreakRepBefore, Prec->ElTypeNumber,
 					     Prec->ElSructSchema))
 		      /* l'element precedent n'est pas une repetition */
-		      stop = True;
+		      stop = TRUE;
 		   else if (Prec->ElSource == NULL)
 		      /* l'element precedent n'est pas une inclusion */
-		      stop = True;
+		      stop = TRUE;
 		   else
 		      /* il faut supprimer cet element precedent */
 		     {
 			*PremSel = Prec;
-			*Sauve = False;
-			*DetruirePage = True;
+			*Sauve = FALSE;
+			*DetruirePage = TRUE;
 			/* passe au precedent */
 			Prec = Prec->ElPrevious;
 		     }
 		}
 	      /* les suivants peuvent etre des elements repetes */
 	      Suiv = (*DerSel)->ElNext;
-	      stop = False;
+	      stop = FALSE;
 	      while (!stop)
 		{
 		   if (Suiv == NULL)
-		      stop = True;	/* pas d'autre element suivant */
+		      stop = TRUE;	/* pas d'autre element suivant */
 		   else if (!TypeHasException (ExcPageBreakRepetition, Suiv->ElTypeNumber,
 					     Suiv->ElSructSchema))
 		      /* l'element suivant n'est pas une repetition */
-		      stop = True;
+		      stop = TRUE;
 		   else if (Suiv->ElSource == NULL)
 		      /* l'element suivant n'est pas une inclusion */
-		      stop = True;
+		      stop = TRUE;
 		   else
 		      /* il faut supprimer cet element suivant */
 		     {
 			*DerSel = Suiv;
-			*Sauve = False;
-			*DetruirePage = True;
+			*Sauve = FALSE;
+			*DetruirePage = TRUE;
 			Suiv = Suiv->ElNext;
 		     }
 		}
@@ -1796,29 +1796,29 @@ boolean             SupprimeAttr;
    PtrDocument         pDoc;
    boolean             erreur, verif, stop;
 
-   erreur = False;
-   verif = False;
+   erreur = FALSE;
+   verif = FALSE;
    /* accede a l'element designe' par l'attribut */
    pElRef = ReferredElement (pAttr->AeAttrReference, &IdentDoc, &pDoc);
    if (pElRef != NULL)
       if (AttrHasException (EXC_ID_Extens_Vertic, pAttr->AeAttrNum, pAttr->AeAttrSSchema))
 	 /* c'est l'attribut Debordement_vert */
-	 verif = True;
+	 verif = TRUE;
       else if (AttrHasException (EXC_ID_Extens_Horiz, pAttr->AeAttrNum, pAttr->AeAttrSSchema))
 	 /* c'est l'attribut Debordement_horiz */
 	 if (PremEl != DerEl)
 	    /* l'attribut doit s'appliquer a plusieurs elements, erreur */
-	    erreur = True;
+	    erreur = TRUE;
 	 else
 	   {
 	      if (PremEl == pElRef)
 		 /* la cellule s'etend sur elle-meme, erreur */
-		 erreur = True;
+		 erreur = TRUE;
 	      else if (PremEl->ElParent != pElRef->ElParent)
 		 /* les deux cellules n'appartiennent pas a la meme ligne */
-		 erreur = True;
+		 erreur = TRUE;
 	      else
-		 verif = True;
+		 verif = TRUE;
 	   }
    if (verif)
       /* verifie que les elements qui doivent porter l'attribut sont */
@@ -1833,10 +1833,10 @@ boolean             SupprimeAttr;
 	  {
 	     if (!TypeHasException (EXC_ID_Cellule, pEl->ElTypeNumber, pEl->ElSructSchema))
 		/* l'element n'est pas une cellule, erreur */
-		erreur = True;
+		erreur = TRUE;
 	     else if (!ElemIsBefore (pEl, pElRef))
 		/* l'element ne precede pas l'element designe', erreur */
-		erreur = True;
+		erreur = TRUE;
 	     if (!erreur)
 		pEl = SelSuivant (pEl, DerEl);	/* element suivant */
 	  }
@@ -1845,19 +1845,19 @@ boolean             SupprimeAttr;
 	  {
 	     pEl = PremEl;
 	     /* remonte a la racine du tableau */
-	     stop = False;
+	     stop = FALSE;
 	     while (!stop && pEl != NULL)
 	       {
 		  if (TypeHasException (EXC_ID_Tableau, pEl->ElTypeNumber, pEl->ElSructSchema))
-		     stop = True;	/* trouve' */
+		     stop = TRUE;	/* trouve' */
 		  else
 		     pEl = pEl->ElParent;
 	       }
 	     if (pEl == NULL)
-		erreur = True;	/* pas d'ascendant de type Table */
+		erreur = TRUE;	/* pas d'ascendant de type Table */
 	     else if (!ElemIsAnAncestor (pEl, pElRef))
 		/* l'element reference' n'est pas dans le meme tableau */
-		erreur = True;
+		erreur = TRUE;
 	  }
      }
    if (erreur)
@@ -1886,26 +1886,26 @@ boolean *ret;
 
 {
 
-   *ret = True;
+   *ret = TRUE;
    /* on n'holophraste pas les entetes de tableau */
    if (TypeHasException (EXC_ID_En_Tetes, pEl->ElTypeNumber, pEl->ElSructSchema))
-      *ret = False;
+      *ret = FALSE;
    /* on n'holophraste pas les colonnes composees */
    else if (TypeHasException (EXC_ID_Colonne_Composee, pEl->ElTypeNumber,
 			    pEl->ElSructSchema))
-      *ret = False;
+      *ret = FALSE;
    /* on n'holophraste pas les colonnes */
    else if (TypeHasException (EXC_ID_Les_Colonnes, pEl->ElTypeNumber,
 			    pEl->ElSructSchema))
-      *ret = False;
+      *ret = FALSE;
    /* on n'holophraste pas les colonnes simples */
    else if (TypeHasException (EXC_ID_Colonne_Simple, pEl->ElTypeNumber,
 			    pEl->ElSructSchema))
-      *ret = False;
+      *ret = FALSE;
    /* on n'holophraste pas les sous-colonnes */
    else if (TypeHasException (EXC_ID_Sous_Colonnes, pEl->ElTypeNumber,
 			    pEl->ElSructSchema))
-      *ret = False;
+      *ret = FALSE;
 }
 /** fin ajout */
 

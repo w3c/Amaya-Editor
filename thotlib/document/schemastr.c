@@ -138,7 +138,7 @@ PtrSSchema        pSS;
 
    /* schema de structure du document */
    /* cherche si le type existe deja dans le schema de structure */
-   found = False;
+   found = FALSE;
    ret = 0;
    do
      {
@@ -146,7 +146,7 @@ PtrSSchema        pSS;
 	pRule = &pSS->SsRule[ret - 1];
 	if (pRule->SrConstruct == CsNatureSchema)
 	   if (strcmp (pRule->SrOrigNat, NomSchStr) == 0)
-	      found = True;
+	      found = TRUE;
      }
    while (!(found || ret >= pSS->SsNRules));
    if (!found)
@@ -177,7 +177,7 @@ PtrSSchema        pSS;
 	     pRule = &pSS->SsRule[ret - 1];
 	     strncpy (pRule->SrOrigNat, NomSchStr, MAX_NAME_LENGTH);
 	     strncpy (pRule->SrName, NomSchStr, MAX_NAME_LENGTH);
-	     pRule->SrAssocElem = False;
+	     pRule->SrAssocElem = FALSE;
 	     pRule->SrNDefAttrs = 0;
 	     pRule->SrConstruct = CsNatureSchema;
 	     pRule->SrSSchemaNat = NULL;
@@ -270,7 +270,7 @@ PtrDocument         pDoc;
    if (pDoc->DocSSchema != NULL)
      {
 	/* charge le schema d'extension demande' */
-	LoadSchemas (NomSchStr, NomSchPrs, &pExtens, NULL, True);
+	LoadSchemas (NomSchStr, NomSchPrs, &pExtens, NULL, TRUE);
 	if (pExtens != NULL)
 	  {
 	     if (NomSchPrs[0] != '\0')
@@ -310,7 +310,7 @@ PtrSSchema        pSS;
    SRule              *pRule;
    boolean             ret;
 
-   ret = False;
+   ret = FALSE;
    if (pSchStr != NULL)
       /* parcourt les regles de ce schemas */
       for (r = 0; r < pSchStr->SsNRules; r++)
@@ -321,7 +321,7 @@ PtrSSchema        pSS;
 	      if (pRule->SrSSchemaNat == pSS)
 		 /* elle fait reference a la nature supprimee */
 		{
-		   ret = True;
+		   ret = TRUE;
 		   pRule->SrSSchemaNat = NULL;
 		}
 	}
@@ -349,11 +349,11 @@ PtrSSchema        pSS;
 {
    boolean             ret;
 
-   ret = False;
+   ret = FALSE;
    /* Cherche tous les schemas de structure qui utilisaient cette nature */
    if (LibRegleNat (pSPere, pSS))
      {
-	ret = True;
+	ret = TRUE;
 	FreeSStruct (pSS);
      }
    return ret;

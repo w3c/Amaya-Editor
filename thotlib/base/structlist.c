@@ -637,7 +637,7 @@ FILE               *fileDescriptor;
 	TtaError (ERR_invalid_parameter);
      }
    else
-      AffArbre ((PtrElement) root, 0, fileDescriptor, False);
+      AffArbre ((PtrElement) root, 0, fileDescriptor, FALSE);
 }
 
 /* ----------------------------------------------------------------------
@@ -1157,17 +1157,17 @@ FILE               *outfile;
 	for (j = 1; j <= Indent + 6; j++)
 	   fprintf (outfile, " ");
 	fprintf (outfile, "VertRef:");
-	wrpos (&pPa1->AbVertRef, False, outfile);
+	wrpos (&pPa1->AbVertRef, FALSE, outfile);
 	fprintf (outfile, "\n");
 	for (j = 1; j <= Indent + 6; j++)
 	   fprintf (outfile, " ");
 	fprintf (outfile, "HorizRef:");
-	wrpos (&pPa1->AbHorizRef, False, outfile);
+	wrpos (&pPa1->AbHorizRef, FALSE, outfile);
 	fprintf (outfile, "\n");
 	if (pPa1->AbEnclosing == NULL)
-	   root = True;
+	   root = TRUE;
 	else
-	   root = False;
+	   root = FALSE;
 	for (j = 1; j <= Indent + 6; j++)
 	   fprintf (outfile, " ");
 	fprintf (outfile, "VertPos:");
@@ -1185,7 +1185,7 @@ FILE               *outfile;
 	if (pPavDim->DimIsPosition)
 	   wrpos (&pPavDim->DimPosition, root, outfile);
 	else
-	   wrdim (pPavDim, root, True, outfile);
+	   wrdim (pPavDim, root, TRUE, outfile);
 	fprintf (outfile, "\n");
 	for (j = 1; j <= Indent + 6; j++)
 	   fprintf (outfile, " ");
@@ -1194,7 +1194,7 @@ FILE               *outfile;
 	if (pPavDim->DimIsPosition)
 	   wrpos (&pPavDim->DimPosition, root, outfile);
 	else
-	   wrdim (pPavDim, root, False, outfile);
+	   wrdim (pPavDim, root, FALSE, outfile);
 	fprintf (outfile, "\n");
 	/* liste les regles de presentation retardees */
 	if (pPa1->AbDelayedPRule != NULL)

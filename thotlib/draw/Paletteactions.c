@@ -76,7 +76,7 @@ boolean PalSelectPre (event)
 #endif /* __STDC__ */
 {
   /* pas de selection dans la palette */
-   return True;
+   return TRUE;
 }
 /*!BF
    ------------------------------------------------------------------------------
@@ -131,7 +131,7 @@ void PalActivate (event)
   TtaAskFirstCreation ();
   NouveauType.ElTypeNum = Draw3_EL_Rectangle;
   Nouveau = TtaNewTree (CurrentDoc, NouveauType, "");
-  TtaInsertSibling (Nouveau, Frere, True, CurrentDoc);
+  TtaInsertSibling (Nouveau, Frere, TRUE, CurrentDoc);
   TtaSetDisplayMode (CurrentDoc, DisplayImmediately);
   AjusterBoite (Nouveau, CurrentDoc);
   TtaGiveBoxSize (Forme, event->document, 1, UnPixel, &AY, &AX);
@@ -141,7 +141,7 @@ void PalActivate (event)
   TtaRemoveTree (Nouveau, CurrentDoc);
 
   /* on insere la copie */
-  TtaInsertSibling (Copy, Frere, True, CurrentDoc);
+  TtaInsertSibling (Copy, Frere, TRUE, CurrentDoc);
   /* et on la met a la position define par l'utilisateur */
   SetAttrPosition (Copy, PX + 1, PY + 3, CurrentDoc);
   TtaSetDisplayMode (CurrentDoc, DisplayImmediately);
@@ -185,7 +185,7 @@ boolean ChargerPalette ()
   
   name = TtaGetEnvString("DrawPalette");
   if (name==NULL)
-    return False;
+    return FALSE;
   strcpy(NomPalette,name);
   name = strrchr(NomPalette,DIR_SEP);
   if (name!=NULL)
@@ -222,7 +222,7 @@ boolean ChargerPalette ()
   XObjetPalette = YObjetPalette = 10;
 
   if (NewDocument)
-    return True;
+    return TRUE;
 
   etat = TtaGetDisplayMode (DocPalette);
   TtaSetDisplayMode (DocPalette, DeferredDisplay);

@@ -4,7 +4,7 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern int GDRGetUnit(SSchema pSchema, Boolean PremiereBorne);
+extern int GDRGetUnit(SSchema pSchema, booleanean PremiereBorne);
 extern void GDRCreeArbreTypes(PtrSchemaResdyn pResdyn, int NumRegle, pTreeSch TyPere);
 extern void GDRImpType(PtrSchemaResdyn pResdyn, pTreeSch pType, int Niv);
 extern PtrSchemaResdyn GDRCalculResdyn ( PtrSchemaResdyn *pAllResdyn, SSchema pSchema);
@@ -12,7 +12,7 @@ extern PtrSchemaResdyn GDRCalculResdyn ( PtrSchemaResdyn *pAllResdyn, SSchema pS
 
 #else /* __STDC__ */
 
-extern int GDRGetUnit(/* SSchema pSchema, Boolean PremiereBorne */);
+extern int GDRGetUnit(/* SSchema pSchema, booleanean PremiereBorne */);
 extern void GDRCreeArbreTypes(/*PtrSchemaResdyn pResdyn, int NumRegle, pTreeSch TyPere */);
 extern void GDRImpType(/* PtrSchemaResdyn pResdyn, pTreeSch pType, int Niv */);
 extern PtrSchemaResdyn GDRCalculResdyn (/* PtrSchemaResdyn *pAllResdyn, SSchema pSchema */);

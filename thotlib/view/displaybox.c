@@ -24,7 +24,7 @@
 #include "es.f"
 #include "font.f"
 #include "aff.f"
-#include "imagedrvr.f"
+#include "picture.f"
 #include "img.f"
 
 
@@ -573,7 +573,7 @@ PtrBox            pBox;
    int                 j, val;
 
    /* calcul du rapport en X */
-   val = PixelEnPt (pBox->BxWidth * 1000, 0);
+   val = PixelToPoint (pBox->BxWidth * 1000);
    if (val != pBox->BxBuffer->BuPoints[0].XCoord
        && pBox->BxBuffer->BuPoints[0].XCoord > 0)
      {
@@ -588,7 +588,7 @@ PtrBox            pBox;
       rapportX = 1;
 
    /* calcul du rapport en Y */
-   val = PixelEnPt (pBox->BxHeight * 1000, 1);
+   val = PixelToPoint (pBox->BxHeight * 1000);
    if (val != pBox->BxBuffer->BuPoints[0].YCoord
        && pBox->BxBuffer->BuPoints[0].YCoord > 0)
      {
@@ -820,24 +820,24 @@ int                 frame;
    /* Est-ce aue la boite est la premiere d'un bloc de ligne */
    /* ou une boite de texte isolee */
    if (mbox == pBox)
-      debutbloc = True;
+      debutbloc = TRUE;
    else if (mbox->BxType != BoBlock)
-      debutbloc = True;
+      debutbloc = TRUE;
    else if (mbox->BxFirstLine == NULL)
-      debutbloc = True;
+      debutbloc = TRUE;
    else if (pBox->BxType == BoComplete && mbox->BxFirstLine->LiFirstBox == pBox)
-      debutbloc = True;
+      debutbloc = TRUE;
    else if ((pBox->BxType == BoPiece || pBox->BxType == BoDotted)
 	    && mbox->BxFirstLine->LiFirstPiece == pBox)
-      debutbloc = True;
+      debutbloc = TRUE;
    else
-      debutbloc = False;
+      debutbloc = FALSE;
 
    /* Faut-il engendrer un trait d'hyphenantion en fin de boite */
    if (pBox->BxType == BoDotted)
-      avectrait = True;
+      avectrait = TRUE;
    else
-      avectrait = False;
+      avectrait = FALSE;
 
    /* Note la couleur de la boite */
    fg = pBox->BxAbstractBox->AbForeground;
@@ -895,9 +895,9 @@ int                 frame;
 	      /* On affiche le texte contenu dans une liste de buffers pointee */
 	      /* par adbuff a partir de l'index indbuff de longueur reste      */
 	      if (adbuff == NULL)
-		 fini = True;
+		 fini = TRUE;
 	      else
-		 fini = False;
+		 fini = FALSE;
 
 	      while (!fini)
 		{
@@ -905,7 +905,7 @@ int                 frame;
 
 		   /* Calcule le nombre de caracteres dans le buffer */
 		   if (reste == 0)
-		      fini = True;
+		      fini = TRUE;
 		   else
 		     {
 			if (indbuff + reste - 1 > pBu1->BuLength)
@@ -913,7 +913,7 @@ int                 frame;
 			else
 			  {
 			     buffrest = reste;
-			     fini = True;
+			     fini = TRUE;
 			  }
 			/* Calcule la largeur restante du texte a imprimer */
 			lg = pBox->BxWidth + pBox->BxXOrg - pFrame->FrXOrg - x;
@@ -923,7 +923,7 @@ int                 frame;
 				 FontHeight (pBox->BxFont), 0, 0, 0, bg, 2);
 			     /* Il ne faut remplir le fond qu'une seule fois */
 			     /* meme s'il y a plusieurs buffers */
-			     avecfond = False;
+			     avecfond = FALSE;
 			  }
 			if (fini)
 			   if (pBox->BxAbstractBox->AbHeight.DimValue != 0 || pBox->BxAbstractBox->AbWidth.DimValue != 0)
@@ -952,7 +952,7 @@ int                 frame;
 			     /* On passe au buffer suivant */
 			     reste -= buffrest;
 			     if (pBu1->BuNext == NULL && reste > 0)
-				fini = True;
+				fini = TRUE;
 			     indbuff = 1;
 			     adbuff = pBu1->BuNext;
 			  }
@@ -1034,22 +1034,22 @@ int                 frame;
    /* Est-ce que la boite est la premiere d'un bloc de ligne */
    /* ou une boite de texte isolee */
    if (mbox == pBox)
-      debutbloc = True;
+      debutbloc = TRUE;
    else if (mbox->BxType != BoBlock || mbox->BxFirstLine == NULL)
-      debutbloc = True;
+      debutbloc = TRUE;
    else if (pBox->BxType == BoComplete && mbox->BxFirstLine->LiFirstBox == pBox)
-      debutbloc = True;
+      debutbloc = TRUE;
    else if ((pBox->BxType == BoPiece || pBox->BxType == BoDotted)
 	    && mbox->BxFirstLine->LiFirstPiece == pBox)
-      debutbloc = True;
+      debutbloc = TRUE;
    else
-      debutbloc = False;
+      debutbloc = FALSE;
 
    /* Faut-il engendrer un trait d'hyphenantion en fin de boite */
    if (pBox->BxType == BoDotted)
-      avectrait = True;
+      avectrait = TRUE;
    else
-      avectrait = False;
+      avectrait = FALSE;
 
    fg = pBox->BxAbstractBox->AbForeground;
    bg = pBox->BxAbstractBox->AbBackground;

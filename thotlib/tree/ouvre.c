@@ -92,7 +92,7 @@ DocumentIdentifier     docIdent;
 /* |            non les documents externes dont des parties sont        | */
 /* |            incluses dans le document a` ouvrir. Retourne faux si   | */
 /* |            le document n'a pas pu etre charge'. Charge le          | */
-/* |            squelette si skeleton est True. Ne pas charger de       | */
+/* |            squelette si skeleton est TRUE. Ne pas charger de       | */
 /* |            schema de structure et utiliser pSS si pSS <> NULL.     | */
 /* ---------------------------------------------------------------------- */
 
@@ -118,7 +118,7 @@ boolean             withAppEvent;
    FILE             *pivotFile;
    char                text[MAX_TXT_LEN];
 
-   ret = False;
+   ret = FALSE;
    if (pDoc != NULL)
      {
 	if (!IdentDocNul (pDoc->DocIdent))
@@ -162,14 +162,14 @@ boolean             withAppEvent;
 		     /* le document lu n'est pas vide */
 		    {
 		       /* le nom de fichier devient le nom du document */
-		       ret = True;
+		       ret = TRUE;
 		       /* lit le fichier des references externes s'il existe */
 		       /* dans le meme directory que le fichier .PIV */
 		       DoFileName (pDoc->DocDName, "EXT", directoryName, text, &i);
 		       pivotFile = BIOreadOpen (text);
 		       if (pivotFile != 0)
 			 {
-			    ChargeExt (pivotFile, pDoc, NULL, False);
+			    ChargeExt (pivotFile, pDoc, NULL, FALSE);
 			    BIOreadClose (pivotFile);
 			 }
 		       /* lit le fichier de mise a jour des references sortantes */

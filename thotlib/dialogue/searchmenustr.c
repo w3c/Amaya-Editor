@@ -159,7 +159,7 @@ PtrDocument         pDoc;
 	  }
 	/* cree le selecteur des attributs a chercher */
 	TtaNewSelector (NumSelAttributAChercher, NumFormChercheTexte,
-			TtaGetMessage (LIB, LIB_ATTRIBUTE_TO_SEARCH), nbitem, ListeAttr, 5, NULL, True, False);
+			TtaGetMessage (LIB, LIB_ATTRIBUTE_TO_SEARCH), nbitem, ListeAttr, 5, NULL, TRUE, FALSE);
 	/* initialise le selecteur (rien n'est selectionne') */
 	TtaSetSelector (NumSelAttributAChercher, -1, "");
      }
@@ -217,10 +217,10 @@ static void         ConstruitSelecteurTypes ()
    /* cree le selecteur des types disponibles */
    if (nbitem == 0)
       TtaNewSelector (NumSelTypeAChercher, NumFormChercheTexte,
-      TtaGetMessage (LIB, LIB_TYPE_TO_SEARCH), 1, " ", 5, NULL, True, False);
+      TtaGetMessage (LIB, LIB_TYPE_TO_SEARCH), 1, " ", 5, NULL, TRUE, FALSE);
    else
       TtaNewSelector (NumSelTypeAChercher, NumFormChercheTexte,
-		      TtaGetMessage (LIB, LIB_TYPE_TO_SEARCH), nbitem, ListeTypes, 5, NULL, True, False);
+		      TtaGetMessage (LIB, LIB_TYPE_TO_SEARCH), nbitem, ListeTypes, 5, NULL, TRUE, FALSE);
    /* initialise le selecteur (rien n'est selectionne') */
    TtaSetSelector (NumSelTypeAChercher, -1, "");
 }
@@ -252,7 +252,7 @@ PtrSSchema        pSS;
    boolean             trouve;
 
    pAttr = NULL;
-   trouve = False;
+   trouve = FALSE;
    if (elCour == NULL)
       /* debut de recherche */
       if (context->SStartToEnd)
@@ -303,7 +303,7 @@ PtrSSchema        pSS;
 				if (!AttrHasException (ExcInvisible, pAttr->AeAttrNum,
 						 pAttr->AeAttrSSchema))
 				   /* l'attribut est montrable a l'utilisateur */
-				   trouve = True;
+				   trouve = TRUE;
 			     if (!trouve)
 				pAttr = pAttr->AeNext;
 			  }
@@ -340,7 +340,7 @@ PtrSSchema        pSS;
 		 pEl = NULL;
 	if (pEl != NULL)
 	   /* on selectionne l'element trouve' */
-	   SelectWithAPP (context->SDocument, pEl, True, False);
+	   SelectWithAPP (context->SDocument, pEl, TRUE, FALSE);
      }
    return (pAttr);
 }
@@ -366,7 +366,7 @@ char               *NomType;
    PtrElement          pAscendant;
    boolean             trouve;
 
-   trouve = False;
+   trouve = FALSE;
    if (elCour == NULL)
       /* debut de recherche */
       if (context->SStartToEnd)
@@ -399,7 +399,7 @@ char               *NomType;
 		/* on n'est pas dans une inclusion */
 		if (!ElementIsHidden (pEl))
 		   /* l'element n'est pas cache' a l'utilisateur */
-		   trouve = True;
+		   trouve = TRUE;
 	  }
      }
    while (pEl != NULL && !trouve);
@@ -455,7 +455,7 @@ PtrDocument         pDoc;
    TableNaturesDoc[0] = pDoc->DocSSchema;
    LgTableNaturesDoc = 1;
    /* cherche tous les schemas de structure utilise's dans le document */
-   ChNatures (pDoc->DocSSchema, TableNaturesDoc, &LgTableNaturesDoc, True);
+   ChNatures (pDoc->DocSSchema, TableNaturesDoc, &LgTableNaturesDoc, TRUE);
    if (LgTableNaturesDoc == 1)
       /* une seule nature dans le document, on ne met pas le menu des */
       /* natures */
@@ -487,14 +487,14 @@ PtrDocument         pDoc;
 	     nbitem++;
 	  }
 	TtaNewToggleMenu (NumMenuChercherNature, NumFormChercheTexte,
-	  TtaGetMessage (LIB, LIB_NATURES), nbitem, ListeTypes, NULL, True);
-	TtaSetToggleMenu (NumMenuChercherNature, 0, True);
+	  TtaGetMessage (LIB, LIB_NATURES), nbitem, ListeTypes, NULL, TRUE);
+	TtaSetToggleMenu (NumMenuChercherNature, 0, TRUE);
 	TtaAttachForm (NumMenuChercherNature);
      }
    /* a priori on recherche la nature racine */
-   TableNaturesCherchees[0] = True;
+   TableNaturesCherchees[0] = TRUE;
    for (nat = 1; nat < LgTableNaturesDoc; nat++)
-      TableNaturesCherchees[nat] = False;
+      TableNaturesCherchees[nat] = FALSE;
 }
 
 /* ---------------------------------------------------------------------- */
@@ -504,19 +504,19 @@ void                ConstStrMenuCherche (pDoc)
    /* NumMenuChercherNature, cree' dynamiquement par cherche.c */
    TtaNewToggleMenu (NumMenuChercherNature, NumFormChercheTexte,
 	  TtaGetMessage (LIB, LIB_NATURES), 1, TtaGetMessage (LIB, LIB_ANY),
-		     NULL, True);
+		     NULL, TRUE);
 
    /* selecteur pour la saisie du type de l'element a chercher */
    /* NumSelTypeAChercher, cree' dynamiquement par cherche.c */
    TtaNewSelector (NumSelTypeAChercher, NumFormChercheTexte,
 		   TtaGetMessage (LIB, LIB_TYPE_TO_SEARCH), 1,
-		   TtaGetMessage (LIB, LIB_ANY), 5, NULL, True, False);
+		   TtaGetMessage (LIB, LIB_ANY), 5, NULL, TRUE, FALSE);
 
    /* selecteur de choix de l'attribut a chercher */
    /* NumSelAttributAChercher, cree' dynamiquement par ChercherAttribut */
    TtaNewSelector (NumSelAttributAChercher, NumFormChercheTexte,
 		   TtaGetMessage (LIB, LIB_ATTRIBUTE_TO_SEARCH), 1,
-		   TtaGetMessage (LIB, LIB_ANY), 5, NULL, True, False);
+		   TtaGetMessage (LIB, LIB_ANY), 5, NULL, TRUE, FALSE);
 
    /* label indiquant la valeur de l'attribut trouve' */
    TtaNewLabel (NumLabelValeurAttribut, NumFormChercheTexte, " ");
@@ -561,40 +561,40 @@ PtrSSchema        pSchAttr;
    PtrAttribute         pA;
    boolean             trouve;
 
-   trouve = False;
+   trouve = FALSE;
    pA = pEl->ElFirstAttr;
    if (pA != NULL)
       /* l'element a au moins un attribut */
       if (pSchAttr == NULL && NumAttr == 0)
 	 /* on cherche un attribut quelconque, on a trouve */
-	 trouve = True;
+	 trouve = TRUE;
       else
 	 /* parcourt les attributs de l'element */
 	 do
 	    if ((pSchAttr == NULL || pA->AeAttrSSchema->SsCode == pSchAttr->SsCode)
 		&& pA->AeAttrNum == NumAttr)
 	       /* c'est l'attribut cherche' */
-	       trouve = True;
+	       trouve = TRUE;
 	    else
 	       pA = pA->AeNext;
 	 while (pA != NULL && !trouve);
    if (trouve && (ValAttrCherche != 0 || ValAttrTxtCherche[0] != '\0'))
       /* on a trouve l'attribut cherche', on verifie sa valeur */
      {
-	trouve = False;
+	trouve = FALSE;
 	switch (pA->AeAttrType)
 	      {
 		 case AtNumAttr:
 		 case AtEnumAttr:
 		    if (pA->AeAttrValue == ValAttrCherche)
-		       trouve = True;
+		       trouve = TRUE;
 		    break;
 		 case AtTextAttr:
 		    if (StringAndTextEqual (ValAttrTxtCherche, pA->AeAttrText))
-		       trouve = True;
+		       trouve = TRUE;
 		    break;
 		 case AtReferenceAttr:
-		    trouve = True;
+		    trouve = TRUE;
 		    break;
 		 default:
 		    break;
@@ -628,7 +628,7 @@ PtrAttribute        *AttrTrouve;
    boolean             trouve;
    PtrAttribute         pAttrTrouve;
 
-   trouve = False;
+   trouve = FALSE;
    pAttrTrouve = NULL;
    pEl = elCour;
    do
@@ -638,7 +638,7 @@ PtrAttribute        *AttrTrouve;
 	   /* on a trouve' un element du type cherche' */
 	   if (!AvecAttribut)
 	      /* on ne cherche que sur le type, on a trouve' */
-	      trouve = True;
+	      trouve = TRUE;
 	   else
 	      /* on cherche egalement un attribut */
 	      /* on verifie que cet element ou un de ses ascendants porte */
@@ -674,7 +674,7 @@ PtrAttribute        *AttrTrouve;
    *AttrTrouve = pAttrTrouve;
    if (pEl != NULL && trouve)
       /* on a trouve' */
-      SelectWithAPP (context->SDocument, pEl, True, False);
+      SelectWithAPP (context->SDocument, pEl, TRUE, FALSE);
    if (!trouve)
       if (context->SWholeDocument)
 	 /* il faut rechercher dans tout le document */
@@ -742,7 +742,7 @@ PtrSearchContext           DomaineCherche;
    /* annule le label donnant la valeur de l'attribut trouve' */
    TtaNewLabel (NumLabelValeurAttribut, NumFormChercheTexte, " ");
    for (i = 1; i <= LgTableNaturesDoc; i++)
-      TableNaturesCherchees[i - 1] = False;
+      TableNaturesCherchees[i - 1] = FALSE;
    /* cherche le nom de type dans le schema de structure */
    NumTypeCherche = 0;
    if (NomTypeAChercher[0] != '\0')
@@ -756,7 +756,7 @@ PtrSearchContext           DomaineCherche;
 			  NumFormChercheTexte,
 			  TtaGetMessage (LIB, LIB_UNKNOWN_TYPE));
 	     NomTypeAChercher[0] = '\0';
-	     *erreur = True;
+	     *erreur = TRUE;
 	  }
      }
 
@@ -768,7 +768,7 @@ PtrSearchContext           DomaineCherche;
       if (strcmp (NomAttrAChercher, TtaGetMessage (LIB, LIB_ANY)) != 0)
 	{
 	   /* cherche le nom de l'attribut dans la table */
-	   trouve = False;
+	   trouve = FALSE;
 	   for (entree = 1; entree <= NbEntreesTableAttr &&
 		(!trouve); entree++)
 	     {
@@ -792,7 +792,7 @@ PtrSearchContext           DomaineCherche;
 			     NumFormChercheTexte,
 			     TtaGetMessage (LIB, LIB_UNKNOWN_ATTRIBUT));
 		NomAttrAChercher[0] = '\0';
-		*erreur = True;
+		*erreur = TRUE;
 	     }
 	}
    *erreur = *erreur || (NomTypeAChercher[0] == '\0' && NomAttrAChercher[0] == '\0');
@@ -823,7 +823,7 @@ PtrSearchContext           DomaineCherche;
 	   pAttrTrouve = ChAttr (elCour, DomaineCherche,
 				 NumAttrCherche, SchAttrCherche);
 	   *trouve = (pAttrTrouve != NULL);
-	   stop = True;
+	   stop = TRUE;
 	   if (!*trouve)
 	      if (DomaineCherche->SWholeDocument)
 		 /* il faut rechercher dans tout le document */
@@ -831,7 +831,7 @@ PtrSearchContext           DomaineCherche;
 		 /* n'a pas trouve' */
 		 if (ArbreSuivant (&elCour, &i, DomaineCherche))
 		    /* relance la recherche dans le nouvel arbre */
-		    stop = False;
+		    stop = FALSE;
 	}
       while (!stop);
    else if (NomTypeAChercher[0] != '\0')
@@ -845,7 +845,7 @@ PtrSearchContext           DomaineCherche;
 			     NumAttrCherche, SchAttrCherche,
 			     &pAttrTrouve);
 	   *trouve = (pEl != NULL);
-	   stop = True;
+	   stop = TRUE;
 	   if (!*trouve)
 	      if (DomaineCherche->SWholeDocument)
 		 /* il faut rechercher dans tout le document */
@@ -853,7 +853,7 @@ PtrSearchContext           DomaineCherche;
 		 /* n'a pas trouve' */
 		 if (ArbreSuivant (&elCour, &i, DomaineCherche))
 		    /* relance la recherche dans le nouvel arbre */
-		    stop = False;
+		    stop = FALSE;
 	}
       while (!stop);
 }
@@ -871,7 +871,7 @@ boolean            *ok;
    PtrElement          pAsc;
    boolean             trouve;
 
-   trouve = True;
+   trouve = TRUE;
    if (NomTypeAChercher[0] != '\0')
       /* on cherche aussi un type d'element */
      {

@@ -713,7 +713,7 @@ boolean             Hauteur;
 
    pRe1 = &Dim;
    if (pRe1->DrPosition)
-      wrpos (pRe1->DrPosRule, True);
+      wrpos (pRe1->DrPosRule, TRUE);
    else
      {
 	if (pRe1->DrAbsolute)
@@ -1157,27 +1157,27 @@ PtrPRule        RP;
 		    break;
 		 case PtVertRef:
 		    fprintf (output, "VertRef: ");
-		    wrpos (pRe1->PrPosRule, False);
+		    wrpos (pRe1->PrPosRule, FALSE);
 		    break;
 		 case PtHorizRef:
 		    fprintf (output, "HorizRef: ");
-		    wrpos (pRe1->PrPosRule, False);
+		    wrpos (pRe1->PrPosRule, FALSE);
 		    break;
 		 case PtHeight:
 		    fprintf (output, "Height: ");
-		    wrdimens (pRe1->PrDimRule, True);
+		    wrdimens (pRe1->PrDimRule, TRUE);
 		    break;
 		 case PtWidth:
 		    fprintf (output, "Width: ");
-		    wrdimens (pRe1->PrDimRule, False);
+		    wrdimens (pRe1->PrDimRule, FALSE);
 		    break;
 		 case PtVertPos:
 		    fprintf (output, "VertPos: ");
-		    wrpos (pRe1->PrPosRule, True);
+		    wrpos (pRe1->PrPosRule, TRUE);
 		    break;
 		 case PtHorizPos:
 		    fprintf (output, "HorizPos: ");
-		    wrpos (pRe1->PrPosRule, True);
+		    wrpos (pRe1->PrPosRule, TRUE);
 		    break;
 		 case PtFont:
 		    fprintf (output, "Font: ");
@@ -1851,7 +1851,7 @@ char               *output_file;
 	  }
 	/* ecrit au terminal les regles de transmission de valeurs aux */
 	/* attributs des documents inclus */
-	Transm = False;
+	Transm = FALSE;
 	/* ecrit d'abord les regles de transmission des compteurs */
 	for (i = 1; i <= pSc1->PsNCounters; i++)
 	  {
@@ -1861,7 +1861,7 @@ char               *output_file;
 		  if (!Transm)
 		    {
 		       fprintf (output, "\nTRANSMIT\n");
-		       Transm = True;
+		       Transm = TRUE;
 		    }
 		  fprintf (output, "   Cpt");
 		  wrnb (i);
@@ -1880,7 +1880,7 @@ char               *output_file;
 		   if (!Transm)
 		     {
 			fprintf (output, "\nTRANSMIT\n");
-			Transm = True;
+			Transm = TRUE;
 		     }
 		   fprintf (output, "   ");
 		   wrnomregle (i);

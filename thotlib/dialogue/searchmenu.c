@@ -96,7 +96,7 @@ boolean             DebutRecherche;
 static boolean      RemplacementFait;
 static boolean      FaireRemplacement;
 
-static boolean      TextOK = False;
+static boolean      TextOK = FALSE;
 static PtrElement   ElemTextOK;
 static int          FirstCharTextOK;
 static int          LastCharTextOK;
@@ -134,7 +134,7 @@ int                 ref;
    sprintf (&chaine[i], "%s%s", "B", TtaGetMessage (LIB, LIB_IN_WHOLE_DOCUMENT));
    /* sous-menu Ou` rechercher element vide */
    TtaNewSubmenu (NumMenuOuChercherTexte, ref, 0,
-	     TtaGetMessage (LIB, LIB_SEARCH_WHERE), 4, chaine, NULL, False);
+	     TtaGetMessage (LIB, LIB_SEARCH_WHERE), 4, chaine, NULL, FALSE);
    TtaSetMenuForm (NumMenuOuChercherTexte, 2);
 }
 
@@ -167,19 +167,19 @@ int                 menu;
 	 {
 	    case 0:
 	       /* ElemIsBefore la selection */
-	       DomaineCherche->SStartToEnd = False;
+	       DomaineCherche->SStartToEnd = FALSE;
 	       break;
 	    case 1:
 	       /* Dans la selection */
-	       DebutRecherche = True;
+	       DebutRecherche = TRUE;
 	       break;
 	    case 2:
 	       /* Apres la selection */
-	       DomaineCherche->SStartToEnd = True;
+	       DomaineCherche->SStartToEnd = TRUE;
 	       break;
 	    case 3:
 	       /* Dans tout le document */
-	       DebutRecherche = True;
+	       DebutRecherche = TRUE;
 	       break;
 	 }
    if (DebutRecherche)
@@ -218,8 +218,8 @@ PtrSearchContext           context;
    boolean             trouve;
    boolean             ok;
 
-   trouve = False;
-   ok = False;
+   trouve = FALSE;
+   ok = FALSE;
    if (elCour == NULL)
       /* debut de recherche */
       if (context->SStartToEnd)
@@ -252,7 +252,7 @@ PtrSearchContext           context;
 		/* on n'est pas dans une inclusion */
 		if (!ElementIsHidden (pEl))
 		   /* l'element n'est pas cache' a l'utilisateur */
-		   trouve = True;
+		   trouve = TRUE;
 	  }
      }
 
@@ -280,7 +280,7 @@ PtrSearchContext           context;
 		 /* fait comme si on n'avait pas trouve' */
 		 pEl = NULL;
 	if (pEl != NULL)
-	   SelectWithAPP (context->SDocument, pEl, True, False);
+	   SelectWithAPP (context->SDocument, pEl, TRUE, FALSE);
      }
    ok = (pEl != NULL);
    if (!trouve)
@@ -318,8 +318,8 @@ PtrSearchContext           context;
    boolean             trouve;
    boolean             ok;
 
-   trouve = False;
-   ok = False;
+   trouve = FALSE;
+   ok = FALSE;
    if (elCour == NULL)
       /* debut de recherche */
       if (context->SStartToEnd)
@@ -354,18 +354,18 @@ PtrSearchContext           context;
 		   /* l'element n'est pas cache' a l'utilisateur */
 		   if (pEl->ElReference == NULL)
 		      /* la reference est vide */
-		      trouve = True;
+		      trouve = TRUE;
 		   else
 		      /* la reference n'est pas vide */
 		   if (pEl->ElReference->RdReferred == NULL)
 		      /* la reference est vide */
-		      trouve = True;
+		      trouve = TRUE;
 		   else if (pEl->ElReference->RdInternalRef)
 		      if (!pEl->ElReference->RdReferred->ReExternalRef)
 			 if (DansTampon (pEl->ElReference->RdReferred->ReReferredElem))
 			    /* l'element reference' est dans le buffer des */
 			    /* elements coupe's */
-			    trouve = True;
+			    trouve = TRUE;
 	  }
      }
    if (pEl != NULL && trouve)
@@ -392,7 +392,7 @@ PtrSearchContext           context;
 		 /* fait comme si on n'avait pas trouve' */
 		 pEl = NULL;
 	if (pEl != NULL)
-	   SelectWithAPP (context->SDocument, pEl, True, False);
+	   SelectWithAPP (context->SDocument, pEl, TRUE, FALSE);
      }
    ok = (pEl != NULL);
    if (!trouve)
@@ -440,7 +440,7 @@ int                 val;
 	      if (DebutRecherche)
 		{
 		   elCour = NULL;
-		   DebutRecherche = False;
+		   DebutRecherche = FALSE;
 		}
 	      else
 		{
@@ -452,7 +452,7 @@ int                 val;
 			TtaNewLabel (NumLabelElemVidePasTrouve,
 				     NumFormChercheElementVide,
 			   TtaGetMessage (LIB, LIB_DO_NOT_CHANGE_DOCUMENT));
-			DebutRecherche = True;
+			DebutRecherche = TRUE;
 			return;
 		     }
 		   else if (DomaineCherche->SStartToEnd)
@@ -464,7 +464,7 @@ int                 val;
 	      if (ok)
 		{
 		   /* on a trouve' et selectionne' */
-		   DebutRecherche = False;
+		   DebutRecherche = FALSE;
 		   /* on reactive les entrees du sous-menu "Ou chercher" */
 		   ActiveMenuOuRechercher ();
 		   /* efface le message "Pas trouve'" dans le formulaire */
@@ -476,7 +476,7 @@ int                 val;
 		   /* message 'Pas trouve' dans le formulaire */
 		   TtaNewLabel (NumLabelElemVidePasTrouve, NumFormChercheElementVide,
 				TtaGetMessage (LIB, LIB_NOT_FOUND));
-		   DebutRecherche = True;
+		   DebutRecherche = TRUE;
 		}
 	   }
 }
@@ -521,14 +521,14 @@ View                view;
    TtaDestroyDialogue (NumFormChercheReferenceVide);
    TtaDestroyDialogue (NumFormChercheTexte);
 
-   DebutRecherche = True;
+   DebutRecherche = TRUE;
    /* feuille de dialogue Rechercher element vide */
    /* compose le titre "Recherche dans le document..." */
    strcpy (buffTitre, TtaGetMessage (LIB, LIB_SEARCH_IN));
    strcat (buffTitre, pDoc->DocDName);
    TtaNewSheet (NumFormChercheElementVide, TtaGetViewFrame (document, view), 0, 0,
 		buffTitre,
-		1, TtaGetMessage (LIB, LIB_CONFIRM), False, 3, 'L', D_DONE);
+		1, TtaGetMessage (LIB, LIB_CONFIRM), FALSE, 3, 'L', D_DONE);
    /* label indiquant la recherche d'elements vides */
    TtaNewLabel (NumLabelDocChercheElVide, NumFormChercheElementVide,
 		TtaGetMessage (LIB, LIB_SEARCH_EMPTY_ELEMENTS));
@@ -537,7 +537,7 @@ View                view;
    /* le message "Pas trouve'" */
    TtaNewLabel (NumLabelElemVidePasTrouve, NumFormChercheElementVide, " ");
    /* active le formulaire */
-   TtaShowDialogue (NumFormChercheElementVide, True);
+   TtaShowDialogue (NumFormChercheElementVide, TRUE);
    if (!ok)
      {
 	InitSearchDomain (3, DomaineCherche);
@@ -580,7 +580,7 @@ int                 val;
 		if (DebutRecherche)
 		  {
 		     elCour = NULL;
-		     DebutRecherche = False;
+		     DebutRecherche = FALSE;
 		  }
 		else
 		  {
@@ -591,7 +591,7 @@ int                 val;
 			  TtaNewLabel (NumLabelReferVidePasTrouve,
 				       NumFormChercheReferenceVide,
 			   TtaGetMessage (LIB, LIB_DO_NOT_CHANGE_DOCUMENT));
-			  DebutRecherche = True;
+			  DebutRecherche = TRUE;
 			  return;
 		       }
 		     else if (DomaineCherche->SStartToEnd)
@@ -602,7 +602,7 @@ int                 val;
 		ok = ChReferVide (elCour, DomaineCherche);
 		if (ok)
 		  {
-		     DebutRecherche = False;
+		     DebutRecherche = FALSE;
 		     /* on a trouve' et selectionne'. On reactive les */
 		     /* entrees du sous-menu "Ou chercher" */
 		     ActiveMenuOuRechercher ();
@@ -616,7 +616,7 @@ int                 val;
 		     /* message 'Pas trouve' dans la feuille de saisie */
 		     TtaNewLabel (NumLabelReferVidePasTrouve, NumFormChercheReferenceVide,
 				  TtaGetMessage (LIB, LIB_NOT_FOUND));
-		     DebutRecherche = True;
+		     DebutRecherche = TRUE;
 		  }
 	     }
 	   else
@@ -665,14 +665,14 @@ View                view;
    TtaDestroyDialogue (NumFormChercheElementVide);
    TtaDestroyDialogue (NumFormChercheTexte);
 
-   DebutRecherche = True;
+   DebutRecherche = TRUE;
    /* compose le titre "Recherche dans le document..." */
    strcpy (buffTitre, TtaGetMessage (LIB, LIB_SEARCH_IN));
    strcat (buffTitre, pDoc->DocDName);
    /* feuille de dialogue Rechercher reference vide */
    TtaNewSheet (NumFormChercheReferenceVide, TtaGetViewFrame (document, view), 0, 0,
 		buffTitre,
-		1, TtaGetMessage (LIB, LIB_CONFIRM), False, 3, 'L', D_DONE);
+		1, TtaGetMessage (LIB, LIB_CONFIRM), FALSE, 3, 'L', D_DONE);
 
    /* label indiquant la recherche de references vides */
    TtaNewLabel (NumLabelDocChercheRefVide, NumFormChercheReferenceVide,
@@ -682,7 +682,7 @@ View                view;
    /* le message "Pas trouve'" */
    TtaNewLabel (NumLabelReferVidePasTrouve, NumFormChercheReferenceVide, " ");
    /* active le formulaire */
-   TtaShowDialogue (NumFormChercheReferenceVide, True);
+   TtaShowDialogue (NumFormChercheReferenceVide, TRUE);
    if (!ok)
      {
 	InitSearchDomain (3, DomaineCherche);
@@ -740,7 +740,7 @@ int                *entreeChoisie;
    TtaNewPopup (NumMenuChoixRefer, 0, TtaGetMessage (LIB, LIB_LINK), nbEntrees,
 		bufMenuB, NULL, 'L');
    TtaSetDialoguePosition ();
-   TtaShowDialogue (NumMenuChoixRefer, False);
+   TtaShowDialogue (NumMenuChoixRefer, FALSE);
    /* attend que l'utilisateur ait repondu au menu et que le */
    /* mediateur ait appele' RetMenuChoixRefer */
    TtaWaitShowDialogue ();
@@ -774,7 +774,7 @@ boolean             DocExtSuiv;
    else
      {
 	/* on n'a trouve' aucune reference */
-	FinRechercheReferences = True;
+	FinRechercheReferences = TRUE;
 	strcpy (msg, TtaGetMessage (LIB, LIB_NOT_FOUND));
      }
    TtaNewLabel (NumLabelReferencePasTrouve, NumFormChercheReference, msg);
@@ -814,7 +814,7 @@ PtrDocument         pDoc;
 	pDocExtCour = NULL;
 	/* cherche le premier ascendant reference' de la selection */
 	pEl = premsel;
-	trouve = False;
+	trouve = FALSE;
 	do
 	  {
 	     if (pEl->ElReferredDescr != NULL)
@@ -822,7 +822,7 @@ PtrDocument         pDoc;
 		if (pEl->ElReferredDescr->ReFirstReference != NULL ||
 		    pEl->ElReferredDescr->ReExtDocRef != NULL)
 		   /* l'element est effectivement reference' */
-		   trouve = True;
+		   trouve = TRUE;
 	     if (!trouve)
 		/* l'element n'est pas reference', on passe au pere */
 		pEl = pEl->ElParent;
@@ -831,7 +831,7 @@ PtrDocument         pDoc;
 	if (trouve)
 	   /* il y a effectivement un ascendant reference' */
 	  {
-	     FinRechercheReferences = False;
+	     FinRechercheReferences = FALSE;
 	     /* initialise le label du formulaire en y mettant le type de */
 	     /* l'element reference' */
 	     strcpy (buftext, TtaGetMessage (LIB, LIB_SEARCH_REFER_TO_ELEM));
@@ -842,7 +842,7 @@ PtrDocument         pDoc;
 	     TtaNewLabel (NumLabelReferencePasTrouve, NumFormChercheReference,
 			  " ");
 	     /* active le formulaire de recherche */
-	     TtaShowDialogue (NumFormChercheReference, False);
+	     TtaShowDialogue (NumFormChercheReference, FALSE);
 	  }
      }
 }
@@ -872,7 +872,7 @@ View                view;
 	i = strlen (TtaGetMessage (LIB, LIB_SEARCH)) + 1;
 	strcpy (BufMenu + i, TtaGetMessage (LIB, LIB_OPEN));
 	TtaNewSheet (NumFormChercheReference, TtaGetViewFrame (document, view), 0, 0,
-		     TtaGetMessage (LIB, LIB_SEARCH_REFERENCE), 2, BufMenu, True, 1, 'L', D_DONE);
+		     TtaGetMessage (LIB, LIB_SEARCH_REFERENCE), 2, BufMenu, TRUE, 1, 'L', D_DONE);
 	/* label indiquant le type d'element dont on cherche les references */
 	TtaNewLabel (NumLabelChercheReference, NumFormChercheReference,
 		     TtaGetMessage (LIB, LIB_SEARCH_REFER_TO_ELEM));
@@ -912,7 +912,7 @@ int                 Data;
 			  ElemRefCour = NULL;
 			  pDocExtCour = NULL;
 		       }
-		  ChercheUneReference (True);
+		  ChercheUneReference (TRUE);
 		  break;
 
 	       case 2:
@@ -933,7 +933,7 @@ int                 Data;
 				    /* efface le label "References dans le document X" */
 				    TtaNewLabel (NumLabelReferencePasTrouve,
 					      NumFormChercheReference, " ");
-				    ChercheUneReference (False);
+				    ChercheUneReference (FALSE);
 				 }
 			    }
 		       }
@@ -973,7 +973,7 @@ View                view;
    ok = SelEditeur (&docsel, &premsel, &dersel, &premcar, &dercar);
    if (ok)
       if (pDoc != docsel)
-	 ok = False;
+	 ok = FALSE;
    if (!ok)
      {
 	docsel = pDoc;
@@ -984,7 +984,7 @@ View                view;
    /* fait disparaitre les autres formulaires de recherche qui sont affiches */
    TtaDestroyDialogue (NumFormChercheElementVide);
    TtaDestroyDialogue (NumFormChercheReferenceVide);
-   DebutRecherche = True;
+   DebutRecherche = TRUE;
 
    /* compose le titre du formulaire "Recherche dans le document..." */
    strcpy (bufTitre, TtaGetMessage (LIB, LIB_SEARCH_IN));
@@ -994,11 +994,11 @@ View                view;
    i = strlen (TtaGetMessage (LIB, LIB_CONFIRM)) + 1;
    strcpy (chaine + i, TtaGetMessage (LIB, LIB_DO_NOT_REPLACE));
    TtaNewSheet (NumFormChercheTexte, TtaGetViewFrame (document, view), 0, 0,
-		bufTitre, 2, chaine, False, 6, 'L', D_DONE);
+		bufTitre, 2, chaine, FALSE, 6, 'L', D_DONE);
 
    /* zone de saisie du texte a` rechercher */
    TtaNewTextForm (NumZoneTexteCherche, NumFormChercheTexte,
-		   TtaGetMessage (LIB, LIB_SEARCH_FOR), 30, 1, False);
+		   TtaGetMessage (LIB, LIB_SEARCH_FOR), 30, 1, FALSE);
    TtaSetTextForm (NumZoneTexteCherche, pChaineCherchee);
 
    /* Toggle button "Expression reguliere" */
@@ -1007,13 +1007,13 @@ View                view;
    i += strlen (&chaine[i]) + 1;
    sprintf (&chaine[i], "%s%s", "B", TtaGetMessage (LIB, LIB_UPPERCASE_EQ_LOWERCASE));
    TtaNewToggleMenu (NumToggleExpressionReguliere, NumFormChercheTexte,
-		     NULL, 2, chaine, NULL, False);
+		     NULL, 2, chaine, NULL, FALSE);
    TtaSetToggleMenu (NumToggleExpressionReguliere, 0, ExpressionReguliere);
    TtaSetToggleMenu (NumToggleExpressionReguliere, 1, MajEgalMin);
 
    /* zone de saisie du texte de remplacement */
    TtaNewTextForm (NumZoneTexteRemplacement, NumFormChercheTexte,
-		   TtaGetMessage (LIB, LIB_REPLACE_BY), 30, 1, True);
+		   TtaGetMessage (LIB, LIB_REPLACE_BY), 30, 1, TRUE);
    TtaSetTextForm (NumZoneTexteRemplacement, pChaineRemplace);
 
    /* sous-menu mode de remplacement */
@@ -1028,7 +1028,7 @@ View                view;
 	i += strlen (&chaine[i]) + 1;
 	sprintf (&chaine[i], "%s%s", "B", TtaGetMessage (LIB, LIB_AUTOMATIC_REPLACE));
 	TtaNewSubmenu (NumMenuModeRemplacement, NumFormChercheTexte, 0,
-		  TtaGetMessage (LIB, LIB_REPLACE), 3, chaine, NULL, False);
+		  TtaGetMessage (LIB, LIB_REPLACE), 3, chaine, NULL, FALSE);
 	if (AvecRemplace)
 	  {
 	     if (RemplacementAutomatique)
@@ -1045,9 +1045,9 @@ View                view;
    /* sous-menu Ou` rechercher */
    InitMenuOuRechercher (NumFormChercheTexte);
 
-   AvecRemplace = False;
-   RemplacementFait = False;
-   RemplacementAutomatique = False;
+   AvecRemplace = FALSE;
+   RemplacementFait = FALSE;
+   RemplacementAutomatique = FALSE;
    strcpy (pChainePreced, "");
 
    /* efface le label "References dans le document X" */
@@ -1059,14 +1059,14 @@ View                view;
       (*ThotLocalActions[T_strsearchconstmenu]) (pDoc);
 
    /* active le formulaire */
-   TtaShowDialogue (NumFormChercheTexte, True);
+   TtaShowDialogue (NumFormChercheTexte, TRUE);
    if (!ok)
      {
 	InitSearchDomain (3, DomaineCherche);
 	TtaSetMenuForm (NumMenuOuChercherTexte, 3);
      }
    DomaineCherche->SDocument = pDoc;
-   TextOK = False;
+   TextOK = FALSE;
 }
 
 
@@ -1098,7 +1098,7 @@ char               *txt;
    boolean             erreur;
 
 
-   erreur = False;
+   erreur = FALSE;
    if (DomaineCherche->SDocument != NULL)
       if (DomaineCherche->SDocument->DocSSchema != NULL)
 	 switch (ref)
@@ -1108,7 +1108,7 @@ char               *txt;
 		     strcpy (pChaineCherchee, txt);
 		     if (strcmp (pChaineCherchee, pChainePreced) != 0)
 		       {
-			  RemplacementFait = False;
+			  RemplacementFait = FALSE;
 			  strcpy (pChainePreced, pChaineCherchee);
 		       }
 		     LgChaineCh = strlen (pChaineCherchee);
@@ -1120,8 +1120,8 @@ char               *txt;
 		     /* bascule automatiquement le remplacement */
 		     if (!AvecRemplace)
 		       {
-			  AvecRemplace = True;
-			  FaireRemplacement = True;
+			  AvecRemplace = TRUE;
+			  FaireRemplacement = TRUE;
 			  TtaSetMenuForm (NumMenuModeRemplacement, 1);
 		       }
 		     break;
@@ -1139,28 +1139,28 @@ char               *txt;
 			   {
 			      case 0:
 				 /* Sans remplacement */
-				 AvecRemplace = False;
-				 RemplacementAutomatique = False;
-				 FaireRemplacement = False;
+				 AvecRemplace = FALSE;
+				 RemplacementAutomatique = FALSE;
+				 FaireRemplacement = FALSE;
 				 break;
 			      case 1:
 				 /* Remplacement a la demande */
-				 AvecRemplace = True;
-				 RemplacementAutomatique = False;
-				 FaireRemplacement = True;
+				 AvecRemplace = TRUE;
+				 RemplacementAutomatique = FALSE;
+				 FaireRemplacement = TRUE;
 				 break;
 			      case 2:
 				 /* Remplacement automatique */
-				 AvecRemplace = True;
-				 RemplacementAutomatique = True;
-				 FaireRemplacement = True;
+				 AvecRemplace = TRUE;
+				 RemplacementAutomatique = TRUE;
+				 FaireRemplacement = TRUE;
 				 break;
 			   }
 		     break;
 		  case NumFormChercheTexte:
 		     /* Boutons de la feuille de dialogue */
 		     if (val == 2 && AvecRemplace && !DebutRecherche)
-			FaireRemplacement = False;
+			FaireRemplacement = FALSE;
 		     else if (val == 0)
 			/* Abandon de la recherhce */
 			return;
@@ -1168,7 +1168,7 @@ char               *txt;
 		     selok = SelEditeur (&docsel, &premsel, &dersel, &premcar, &dercar);
 		     if (selok)
 			if (docsel != DomaineCherche->SDocument)
-			   selok = False;
+			   selok = FALSE;
 		     if (!selok && DebutRecherche)
 		       {
 			  /* Pas de selection -> recherche dans tout le document */
@@ -1198,7 +1198,7 @@ char               *txt;
 			(*ThotLocalActions[T_strsearchgetparams]) (&erreur, DomaineCherche);
 		     if (!erreur || LgChaineCh != 0)
 		       {
-			  trouve = False;
+			  trouve = FALSE;
 			  if (LgChaineCh == 0)
 			    {
 			       if (ThotLocalActions[T_strsearchonly] != NULL)
@@ -1211,7 +1211,7 @@ char               *txt;
 			       premsel = elCour;
 			       do
 				 {
-				    stop = True;
+				    stop = TRUE;
 				    /* on sortira de la boucle si on ne */
 				    /* trouve pas le texte cherche' */
 				    if (AvecRemplace && FaireRemplacement && !DebutRecherche
@@ -1232,7 +1232,7 @@ char               *txt;
 					&& premsel->ElLeafType == LtText)
 					  /* on ne remplace pas dans une copie */
 					 {
-					    trouve = True;
+					    trouve = TRUE;
 					    if (ThotLocalActions[T_strsearcheletattr] != NULL)
 					       (*ThotLocalActions[T_strsearcheletattr]) (premsel, &trouve);
 					    if (trouve)
@@ -1242,8 +1242,8 @@ char               *txt;
 								premsel, premcar, LgChaineCh,
 								pChaineRemplace, LgChaineRempl,
 						  !RemplacementAutomatique);
-						 RemplacementFait = True;
-						 DebutRecherche = False;
+						 RemplacementFait = TRUE;
+						 DebutRecherche = FALSE;
 						 /* met eventuellement a jour la borne de */
 						 /* fin du domaine de recherche */
 						 if (premsel == DomaineCherche->SEndElement)
@@ -1320,7 +1320,7 @@ char               *txt;
 					 if (trouve)
 					    /* on a trouve' la chaine cherchee */
 					   {
-					      stop = False;
+					      stop = FALSE;
 					      if (ThotLocalActions[T_strsearcheletattr] != NULL)
 						 (*ThotLocalActions[T_strsearcheletattr]) (premsel, &trouve);
 					   }
@@ -1337,10 +1337,10 @@ char               *txt;
 					      SelectStringWithAPP (DomaineCherche->SDocument,
 						  premsel, premcar, dercar);
 					      /* arrete la boucle de recherche */
-					      stop = True;
+					      stop = TRUE;
 					      dercar++;
 					   }
-					 TextOK = True;
+					 TextOK = TRUE;
 					 DocTextOK = DomaineCherche->SDocument;
 					 ElemTextOK = premsel;
 					 FirstCharTextOK = premcar;
@@ -1348,27 +1348,27 @@ char               *txt;
 				      }
 				    else
 				      {
-					 TextOK = False;
-					 stop = True;
+					 TextOK = FALSE;
+					 stop = TRUE;
 					 if (DomaineCherche->SWholeDocument)
 					    /* il faut rechercher dans tout le document */
 					    /* cherche l'arbre a traiter apres celui ou` on */
 					    /* n'a pas trouve' */
 					    if (ArbreSuivant (&premsel, &premcar, DomaineCherche))
 					      {
-						 stop = False;
+						 stop = FALSE;
 						 dersel = premsel;
 						 dercar = 0;
 					      }
 				      }
-				    DebutRecherche = False;
+				    DebutRecherche = FALSE;
 				 }
 			       while (!stop);
 			    }
 			  if (trouve)
 			    {
 			       /* on a trouve' et selectionne'. */
-			       DebutRecherche = False;
+			       DebutRecherche = FALSE;
 			       if (ThotLocalActions[T_strsearchshowvalattr] != NULL)
 				  (*ThotLocalActions[T_strsearchshowvalattr]) ();
 			    }
@@ -1385,7 +1385,7 @@ char               *txt;
 				  TtaNewLabel (NumLabelValeurAttribut,
 					       NumFormChercheTexte,
 					TtaGetMessage (LIB, LIB_NOT_FOUND));
-			       DebutRecherche = True;
+			       DebutRecherche = TRUE;
 			    }
 		       }
 		     break;
@@ -1445,13 +1445,13 @@ boolean             Assoc;
    strcat (buffTitre, pDoc->DocDName);
    /* cree formulaire de saisie du numero de la page cherchee */
    TtaNewSheet (NumFormCherchePage, 0, 0, 0,
-      buffTitre, 1, TtaGetMessage (LIB, LIB_CONFIRM), True, 1, 'L', D_DONE);
+      buffTitre, 1, TtaGetMessage (LIB, LIB_CONFIRM), TRUE, 1, 'L', D_DONE);
 
    /* cree zone de saisie du numero de la page cherchee */
    TtaNewNumberForm (NumZoneCherchePage, NumFormCherchePage,
-		     TtaGetMessage (LIB, LIB_GOTO_PAGE), 0, 9999, False);
+		     TtaGetMessage (LIB, LIB_GOTO_PAGE), 0, 9999, FALSE);
    /* affiche le formulaire */
-   TtaShowDialogue (NumFormCherchePage, False);
+   TtaShowDialogue (NumFormCherchePage, FALSE);
 }
 
 #ifdef IV
@@ -1495,20 +1495,20 @@ int                 func;
 		   {
 		      case 1:
 			 /* Premiere page ou debut du document */
-			 PP = CherchePage (premv, VueSch, -999999, True);
+			 PP = CherchePage (premv, VueSch, -999999, TRUE);
 			 break;
 		      case 2:
 			 /* Derniere page ou fin du document */
-			 PP = CherchePage (premv, VueSch, 999999, True);
-			 PP = CherchePage (PP, VueSch, -1, True);
+			 PP = CherchePage (premv, VueSch, 999999, TRUE);
+			 PP = CherchePage (PP, VueSch, -1, TRUE);
 			 break;
 		      case 3:
 			 /* Page Suivante */
-			 PP = CherchePage (premv, VueSch, 1, True);
+			 PP = CherchePage (premv, VueSch, 1, TRUE);
 			 break;
 		      case 4:
 			 /* Page Precedente */
-			 PP = CherchePage (premv, VueSch, -1, True);
+			 PP = CherchePage (premv, VueSch, -1, TRUE);
 			 break;
 		      case 5 /* Page Numero N */ :
 			 MenuAllerPage (docsel, VueDoc, VueSch, assoc);
@@ -1556,7 +1556,7 @@ int                 val;
 		     /* formulaire de saisie du numero de la page cherchee */
 		     /* cherche la page */
 		     pPage = CherchePage (RacinePageCherchee, VueSchPageCherchee,
-					  NumPageCherchee, False);
+					  NumPageCherchee, FALSE);
 		     /* fait afficher la page trouvee en haut de sa frame */
 		     PageHautFenetre (pPage, VueDocPageCherchee, DocPageCherchee);
 		     TtaDestroyDialogue (NumFormCherchePage);
@@ -1590,9 +1590,9 @@ void                SearchLoadResources ()
      }
    pChaineCherchee[0] = '\0';
    LgChaineCh = 0;
-   ExpressionReguliere = False;
-   MajEgalMin = False;
-   AvecRemplace = False;
+   ExpressionReguliere = FALSE;
+   MajEgalMin = FALSE;
+   AvecRemplace = FALSE;
    pChaineRemplace[0] = '\0';
    LgChaineRempl = 0;
 }

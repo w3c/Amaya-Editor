@@ -61,9 +61,9 @@ void                WinLoadFont (HDC hdc, ptrfont font)
    HFONT               hFont;
 
    for (i = 0; i < MAX_FONT; i++)
-      if (font == Police (0, i))
+      if (font == TtFonts[i])
 	{
-	   hFont = Police (0, i);
+	   hFont = TtFonts[i];
 	   if (hFont != 0)
 	      SelectObject (hdc, hFont);
 	   return;
@@ -100,32 +100,26 @@ int                 NumberOfFonts ()
 }
 
 /* ---------------------------------------------------------------------- */
-/* |    PtEnPixel transforme la valeur Point en valeur Pixel sur l'axe  | */
-/* |            des x ou des y suivant la valeur de horiz.              | */
+/* |    PointToPixel convert point value to pixel.              | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-int                 PtEnPixel (int valeur, int horiz)
+int                 PointToPixel (int valeur)
 #else  /* __STDC__ */
-int                 PtEnPixel (valeur, horiz)
+int                 PointToPixel (valeur)
 int                 valeur;
-int                 horiz;
-
 #endif /* __STDC__ */
 {
    return ((valeur * PTS_POUCE) / PTS_POUCE);
 }
 
 /* ---------------------------------------------------------------------- */
-/* |    PixelEnPt transforme la valeur Pixel en valeur Point sur l'axe  | */
-/* |            des x ou des y suivant la valeur de horiz.              | */
+/* |    PixelToPoint convert pixel to point.              | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-int                 PixelEnPt (int valeur, int horiz)
+int                 PixelToPoint (int valeur)
 #else  /* __STDC__ */
-int                 PixelEnPt (valeur, horiz)
+int                 PixelToPoint (valeur)
 int                 valeur;
-int                 horiz;
-
 #endif /* __STDC__ */
 {
    return ((valeur * PTS_POUCE + PTS_POUCE / 2) / PTS_POUCE);
@@ -351,7 +345,7 @@ PtrAbstractBox             pAb;
 		  dist = (val * CarHeight ('X', pAb->AbBox->BxFont)) / 10;
 	       break;
 	    case UnPoint:
-	       dist = PtEnPixel (val, 1);
+	       dist = PointToPixel (val);
 	       break;
 	    case UnPixel:
 	       dist = val;
@@ -398,7 +392,7 @@ PtrAbstractBox             pAb;
 		  dist = val * 10 / CarHeight ('x', pAb->AbBox->BxFont);
 	       break;
 	    case UnPoint:
-	       dist = PixelEnPt (val, 1);
+	       dist = PixelToPoint (val);
 	       break;
 	    case UnPixel:
 	       dist = val;
@@ -499,7 +493,7 @@ char                name[100];
 
    strcpy (tmp, name);
 
-   result = XLoadQueryFont (GDp (0), tmp);
+   result = XLoadQueryFont (TtDisplay, tmp);
    if (result != NULL)
       if (result->per_char != NULL)
 	{
@@ -562,7 +556,7 @@ char                r_nomX[100];
 	   taille = TenPoints[taille];
      }
    else if (unit == UnPixel)
-      taille = PixelEnPt (taille, 0);
+      taille = PixelToPoint (taille);
 
    if (Enlucida)
      {
@@ -680,7 +674,7 @@ TypeUnit            unit;
 
 #ifdef NEW_WILLOWS
 /* ---------------------------------------------------------------------- */
-/* |  WIN_LoadFont :  load a Windows TrueType with a defined set of     | */
+/* |  WIN_LoadFont :  load a Windows TRUEType with a defined set of     | */
 /* |                  characteristics.                                  | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
@@ -820,9 +814,9 @@ boolean             Croissant;
 
    if (EnBitStream && taille == 11)
       /* accepte la police 11 pt dans le cas des polices bitstream */
-      NomFonte (alphabet, police, evidence, taille, True, texte, texteX);
+      NomFonte (alphabet, police, evidence, taille, TRUE, texte, texteX);
    else
-      NomFonte (alphabet, police, evidence, index, False, texte, texteX);
+      NomFonte (alphabet, police, evidence, index, FALSE, texte, texteX);
 
    /* On prepare le nom de la police PostScript associee */
    strcpy (EnPs, texte);
@@ -832,13 +826,13 @@ boolean             Croissant;
    i = 0;
    deb = 0;
    ptfont = NULL;
-   while ((ptfont == NULL) && (i < MAX_FONT) && (Police (0, i) != NULL))
+   while ((ptfont == NULL) && (i < MAX_FONT) && (TtFonts[i] != NULL))
      {
-	j = strcmp (&NomPolice (0, deb), texte);
+	j = strcmp (&TtFontName[deb], texte);
 	if (j == 0)
 	  {
 	     /* Entree trouvee */
-	     ptfont = Police (0, i);
+	     ptfont = TtFonts[i];
 	     /*Fin de la recherche */
 	  }
 	else
@@ -854,8 +848,8 @@ boolean             Croissant;
 	   TtaDisplayMessage (INFO, TtaGetMessage(LIB, LIB_NO_MORE_PLACE_FOR_THE_FONT), texteX);
 	else
 	  {
-	     strcpy (&NomPolice (0, i * MAX_NFONT), texte);
-	     strcpy (&NomPs (0, i * 8), EnPs);
+	     strcpy (&TtFontName[i * MAX_NFONT], texte);
+	     strcpy (&TtPsFontName[i * 8], EnPs);
 
 #ifdef NEW_WILLOWS
 	     ptfont = WIN_LoadFont (alphabet, police, evidence, taille, unit, frame);
@@ -869,7 +863,7 @@ boolean             Croissant;
 		  if (index == NbMaxTaille)
 		    {
 		       /* on ne peut plus augmenter la taille */
-		       Croissant = False;
+		       Croissant = FALSE;
 		       index--;
 		    }
 		  else if (Croissant)
@@ -878,9 +872,9 @@ boolean             Croissant;
 		     index--;
 
 		  if (index < NbMaxTaille && index >= 0)
-		     ptfont = ChargePoliceVoisine (alphabet, police, evidence, index, False, frame, Croissant);
+		     ptfont = ChargePoliceVoisine (alphabet, police, evidence, index, FALSE, frame, Croissant);
 		  else if (index >= NbMaxTaille)
-		     ptfont = ChargePoliceVoisine (alphabet, police, evidence, NbMaxTaille, False, frame, False);
+		     ptfont = ChargePoliceVoisine (alphabet, police, evidence, NbMaxTaille, FALSE, frame, FALSE);
 		  if (ptfont == NULL)
 		     TtaDisplayMessage (INFO, TtaGetMessage(LIB, LIB_MISSING_FILE), texteX);
 	       }
@@ -893,11 +887,11 @@ boolean             Croissant;
 	     j = 0;
 	     while (j < MAX_FONT)
 	       {
-		  if (Police (0, j) == NULL)
+		  if (TtFonts[j] == NULL)
 		     j = MAX_FONT;
-		  else if (NomPolice (0, j * MAX_NFONT) == alphabet)
+		  else if (TtFontName[j * MAX_NFONT] == alphabet)
 		    {
-		       ptfont = Police (0, j);
+		       ptfont = TtFonts[j];
 		       j = MAX_FONT;
 		    }
 		  else
@@ -917,15 +911,15 @@ boolean             Croissant;
 	else
 	  {
 	     /* c'est une nouvelle entree qu'il faut initialiser */
-	     Police (0, i) = ptfont;
-	     PoliceVue (0, i) = 0;
+	     TtFonts[i] = ptfont;
+	     TtFontFrames[i] = 0;
 	  }
      }
 
    /* On calcule le masque de la fenetre */
    masque = 1 << (frame - 1);
    /* On memorise le numero de la fenetre */
-   PoliceVue (0, i) = PoliceVue (0, i) | masque;
+   TtFontFrames[i] = TtFontFrames[i] | masque;
    return (ptfont);
 }
 
@@ -951,7 +945,7 @@ int                 frame;
    /* pas de police inferieure a 6 points */
    if (taille < 6 && unit == UnPoint)
       taille = 6;
-   return ChargePoliceVoisine (alphabet, police, evidence, taille, unit, frame, True);
+   return ChargePoliceVoisine (alphabet, police, evidence, taille, unit, frame, TRUE);
 }
 
 
@@ -990,13 +984,13 @@ char               *name;
 	FontFamily = TtaGetMemory (strlen (value) + 1);
 	strcpy (FontFamily, value);
 	if (!strcmp (FontFamily, "-b&h-lucida"))
-	   Enlucida = True;
+	   Enlucida = TRUE;
 	else
 	  {
-	     Enlucida = False;
+	     Enlucida = FALSE;
 	     if (!strcmp (FontFamily, "gipsi-bitstream"))
 	       {
-		  EnBitStream = True;
+		  EnBitStream = TRUE;
 		  /* Modifie les tailles 30, 40 et 60 en 36, 48 et 72 */
 		  TenPoints[NbMaxTaille] = 72;
 		  TenPoints[NbMaxTaille - 1] = 48;
@@ -1004,7 +998,7 @@ char               *name;
 		  MenuSize = 11;
 	       }
 	     else
-		EnBitStream = False;
+		EnBitStream = FALSE;
 	  }
      }
    PTS_POUCE = 72;		/* Nombre de points typographiques par pouce */
@@ -1027,7 +1021,7 @@ char               *name;
 	strcat (FONT_PATH, "/");
 
 	/* Ajoute le repertoire FONT_PATH dans la liste du serveur */
-	currentlist = XGetFontPath (GDp (0), &ncurrent);
+	currentlist = XGetFontPath (TtDisplay, &ncurrent);
 	ndir = 1;
 	/* 1 repertoire a ajouter */
 	/* Verifie que le repertoire n'est pas deja enregistre */
@@ -1055,7 +1049,7 @@ char               *name;
 
 #endif
 	     dirlist[ncurrent] = FONT_PATH;
-	     XSetFontPath (GDp (0), dirlist, ndir);
+	     XSetFontPath (TtDisplay, dirlist, ndir);
 	     TtaFreeMemory ((char *) dirlist);
 	  }
 	TtaFreeMemory ((char *) currentlist);
@@ -1070,7 +1064,7 @@ char               *name;
 
    /* Initialisation des tables de fontes */
    for (i = 0; i < MAX_FONT; i++)
-      Police (0, i) = NULL;
+      TtFonts[i] = NULL;
 
    /*premiere fonte chargee */
    FontMenu = ChargeFonte ('L', 't', 0, MenuSize, UnPoint, 0);
@@ -1138,10 +1132,10 @@ int                 frame;
 
 	i = FirstRemovableFont;
 	/* On garde les premieres fontes */
-	while (i < MAX_FONT && Police (0, i) != NULL)
+	while (i < MAX_FONT && TtFonts[i] != NULL)
 	  {
 	     /* Est-ce que la police n'est utilisee que par cette frame */
-	     if (PoliceVue (0, i) == masque)
+	     if (TtFontFrames[i] == masque)
 	       {
 		  /* Est-ce que la police de caracteres a une copie */
 		  j = 0;
@@ -1152,7 +1146,7 @@ int                 frame;
 			  flag = 1;
 		       else if (j == i)
 			  j++;
-		       else if (Police (0, j) == Police (0, i))
+		       else if (TtFonts[j] == TtFonts[i])
 			  flag = 1;
 		       else
 			  j++;
@@ -1161,17 +1155,17 @@ int                 frame;
 #ifdef NEW_WILLOWS
 		  if (j == MAX_FONT)
 		    {
-		       DeleteObject (Police (0, i));
+		       DeleteObject (TtFonts[i]);
 		       DebugBreak ();
 		    }
 #else  /* NEW_WILLOWS */
 		  if (j == MAX_FONT)
-		     XFreeFont (GDp (0), (XFontStruct *) Police (0, i));
+		     XFreeFont (TtDisplay, (XFontStruct *) TtFonts[i]);
 #endif /* NEW_WILLOWS */
-		  Police (0, i) = NULL;
+		  TtFonts[i] = NULL;
 	       }
 	     else
-		PoliceVue (0, i) = PoliceVue (0, i) & (~masque);
+		TtFontFrames[i] = TtFontFrames[i] & (~masque);
 	     i++;
 	  }
 
@@ -1180,12 +1174,12 @@ int                 frame;
 	i--;
 	while (j < i)
 	  {
-	     while (Police (0, j) != NULL)
+	     while (TtFonts[j] != NULL)
 	       {
 		  j++;
 		  /* On saute les entrees pleines */
 	       }
-	     while (Police (0, i) == NULL)
+	     while (TtFonts[i] == NULL)
 	       {
 		  i--;
 		  /* On saute les entrees vides */
@@ -1193,10 +1187,10 @@ int                 frame;
 	     if (j < i)
 	       {
 		  /* On remplace l'entree j par l'entree i */
-		  Police (0, j) = Police (0, i);
-		  Police (0, i) = NULL;
-		  PoliceVue (0, j) = PoliceVue (0, i);
-		  strcpy (&NomPolice (0, j * MAX_NFONT), &NomPolice (0, i * MAX_NFONT));
+		  TtFonts[j] = TtFonts[i];
+		  TtFonts[i] = NULL;
+		  TtFontFrames[j] = TtFontFrames[i];
+		  strcpy (&TtFontName[j * MAX_NFONT], &TtFontName[i * MAX_NFONT]);
 		  i--;
 		  j++;
 	       }

@@ -72,7 +72,7 @@ AttributeType       attributeType;
 	pAttr->AeNext = NULL;
 	pAttr->AeAttrSSchema = (PtrSSchema) (attributeType.AttrSSchema);
 	pAttr->AeAttrNum = attributeType.AttrTypeNum;
-	pAttr->AeDefAttr = False;
+	pAttr->AeDefAttr = FALSE;
 	pAttr->AeAttrType = pAttr->AeAttrSSchema->SsAttribute[pAttr->AeAttrNum - 1].AttrType;
 	switch (pAttr->AeAttrType)
 	      {
@@ -151,7 +151,7 @@ Document            document;
    else
      {
 #ifndef NODISPLAY
-	UndisplayHeritAttr ((PtrElement) element, (PtrAttribute) attribute, document, False);
+	UndisplayHeritAttr ((PtrElement) element, (PtrAttribute) attribute, document, FALSE);
 #endif
 	if (((PtrElement) element)->ElFirstAttr == NULL)
 	   ((PtrElement) element)->ElFirstAttr = (PtrAttribute) attribute;
@@ -164,7 +164,7 @@ Document            document;
 	  }
 	pAttr = (PtrAttribute) attribute;
 	pAttr->AeNext = NULL;
-	pAttr->AeDefAttr = False;
+	pAttr->AeDefAttr = FALSE;
 	if (pAttr->AeAttrType == AtReferenceAttr)
 	   if (pAttr->AeAttrReference != NULL)
 	      pAttr->AeAttrReference->RdElement = (PtrElement) element;
@@ -192,15 +192,15 @@ Element             element;
    boolean             ok;
 
    if (element == NULL)
-      ok = True;
+      ok = TRUE;
    else
      {
 	pAttr = ((PtrElement) element)->ElFirstAttr;
-	ok = False;
+	ok = FALSE;
 	while (pAttr != NULL)
 	   if (pAttr == (PtrAttribute) attribute)
 	     {
-		ok = True;
+		ok = TRUE;
 		pAttr = NULL;
 	     }
 	   else
@@ -247,13 +247,13 @@ Document            document;
    else
      {
 	pAttr = ((PtrElement) element)->ElFirstAttr;
-	trouve = False;
+	trouve = FALSE;
 	while (pAttr != NULL && !trouve)
 	  {
 	     if (pAttr->AeAttrSSchema->SsCode ==
 		 ((PtrAttribute) attribute)->AeAttrSSchema->SsCode)
 		if (pAttr->AeAttrNum == ((PtrAttribute) attribute)->AeAttrNum)
-		   trouve = True;
+		   trouve = TRUE;
 	     if (!trouve)
 		pAttr = pAttr->AeNext;
 	  }
@@ -270,7 +270,7 @@ Document            document;
 		/* racine d'un arbre abstrait */
 		if (((PtrElement) element)->ElParent == NULL)
 		   if (pAttr->AeAttrNum == 1)
-		      obligatoire = True;
+		      obligatoire = TRUE;
 	     if (obligatoire)
 		/* l'attribut est obligatoire pour ce type d'element */
 	       {
@@ -280,7 +280,7 @@ Document            document;
 	       {
 		  DeleteAttribute ((PtrElement) element, pAttr);
 #ifndef NODISPLAY
-		  UndisplayHeritAttr ((PtrElement) element, pAttr, document, True);
+		  UndisplayHeritAttr ((PtrElement) element, pAttr, document, TRUE);
 #endif
 		  /* traitement special a la suppression d'un */
 		  /* attribut a un element d'un objet Draw */
@@ -326,7 +326,7 @@ Document            document;
 
    UserErrorCode = 0;
    pAttr = (PtrAttribute) attribute;
-   ok = False;
+   ok = FALSE;
    if (attribute == NULL)
      {
 	TtaError (ERR_invalid_parameter);
@@ -345,7 +345,7 @@ Document            document;
 		TtaError (ERR_invalid_attribute_value);
 	     }
 	   else
-	      ok = True;
+	      ok = TRUE;
 	else if (pAttr->AeAttrSSchema == NULL)
 	  {
 	     TtaError (ERR_invalid_attribute_type);
@@ -360,13 +360,13 @@ Document            document;
 	     TtaError (ERR_invalid_attribute_value);
 	  }
 	else
-	   ok = True;
+	   ok = TRUE;
 	if (ok)
 	  {
 #ifndef NODISPLAY
 	     if (element != NULL)
 		UndisplayHeritAttr ((PtrElement) element, pAttr, document,
-				    False);
+				    FALSE);
 #endif
 	     pAttr->AeAttrValue = value;
 #ifndef NODISPLAY
@@ -419,7 +419,7 @@ Document            document;
      {
 #ifndef NODISPLAY
 	if (element != NULL)
-	   UndisplayHeritAttr ((PtrElement) element, pAttr, document, False);
+	   UndisplayHeritAttr ((PtrElement) element, pAttr, document, FALSE);
 #endif
 	if (pAttr->AeAttrText == NULL)
 	   GetBufTexte (&pAttr->AeAttrText);
@@ -432,7 +432,7 @@ Document            document;
 	     GetAttr (&pAttrNouv);
 	     pAttrNouv->AeAttrSSchema = pAttr->AeAttrSSchema;
 	     pAttrNouv->AeAttrNum = 1;
-	     pAttrNouv->AeDefAttr = False;
+	     pAttrNouv->AeDefAttr = FALSE;
 	     pAttrNouv->AeAttrType = pAttr->AeAttrType;
 	     GetBufTexte (&pAttrNouv->AeAttrText);
 	     CopyStringToText (buffer, pAttrNouv->AeAttrText, &lg);
@@ -524,30 +524,30 @@ AttributeType       attributeType;
       TtaError (ERR_invalid_parameter);
    else
      {
-	erreur = False;
+	erreur = FALSE;
 	/* on ne fait pas d'autre verification si c'est l'attribut "Langue" */
 	if (attributeType.AttrTypeNum != 1)
 	   if (attributeType.AttrTypeNum < 1 ||
 	       attributeType.AttrTypeNum > ((PtrSSchema) (attributeType.AttrSSchema))->SsNAttributes)
-	      erreur = True;
+	      erreur = TRUE;
 	if (erreur)
 	   TtaError (ERR_invalid_attribute_type);
 	else
 	  {
 	     attribute = NULL;
 	     pAttr = ((PtrElement) element)->ElFirstAttr;
-	     trouve = False;
+	     trouve = FALSE;
 	     while (pAttr != NULL && !trouve)
 	       {
 		  if (pAttr->AeAttrNum == attributeType.AttrTypeNum)
 		     /* meme numero d'attribut */
 		     if (attributeType.AttrSSchema == NULL)
 			/* on ne s'interesse pas au schems de structure */
-			trouve = True;
+			trouve = TRUE;
 		     else if (pAttr->AeAttrSSchema->SsCode ==
 			      ((PtrSSchema) (attributeType.AttrSSchema))->SsCode)
 			/* meme schema de structure */
-			trouve = True;
+			trouve = TRUE;
 		  if (trouve)
 		     attribute = pAttr;
 		  else
@@ -661,7 +661,7 @@ int                *attrKind;
       TtaError (ERR_invalid_parameter);
    else
      {
-	trouve = False;
+	trouve = FALSE;
 	nbsch = 0;
 	pEl = (PtrElement) element;
 	/* cherche tous les schemas de structure utilises par les */
@@ -674,10 +674,10 @@ int                *attrKind;
 	     do
 	       {
 		  /* on a deja traite' ce schema de structure ? */
-		  nouveau = True;
+		  nouveau = TRUE;
 		  for (i = 1; i <= nbsch; i++)	/* parcourt la table */
 		     if (pSS == attrStruct[i - 1])	/* deja dans la table */
-			nouveau = False;
+			nouveau = FALSE;
 		  if (nouveau)
 		     /* l'element utilise un schema de structure pas encore */
 		     /* rencontre' */
@@ -696,7 +696,7 @@ int                *attrKind;
 			    /* on saute les attributs locaux */
 			    if (pSS->SsAttribute[att - 1].AttrGlobal)
 			       if (strcmp (name, pSS->SsAttribute[att - 1].AttrName) == 0)
-				  trouve = True;
+				  trouve = TRUE;
 			 }
 		    }
 		  if (!trouve)
@@ -720,7 +720,7 @@ int                *attrKind;
 		       {
 			  att = pRe1->SrLocalAttr[i - 1];
 			  if (strcmp (name, pSS->SsAttribute[att - 1].AttrName) == 0)
-			     trouve = True;
+			     trouve = TRUE;
 		       }
 		  if (!trouve)
 		    {
@@ -1025,13 +1025,13 @@ Attribute          *attributeFound;
    boolean             ok;
 
    UserErrorCode = 0;
-   ok = True;
+   ok = TRUE;
    *elementFound = NULL;
    *attributeFound = NULL;
    if (element == NULL)
      {
 	TtaError (ERR_invalid_parameter);
-	ok = False;
+	ok = FALSE;
      }
    else if (searchedAttribute.AttrSSchema == NULL)
       searchedAttribute.AttrTypeNum = 0;
@@ -1040,7 +1040,7 @@ Attribute          *attributeFound;
 	    ((PtrSSchema) (searchedAttribute.AttrSSchema))->SsNAttributes)
      {
 	TtaError (ERR_invalid_attribute_type);
-	ok = False;
+	ok = FALSE;
      }
    if (ok)
      {

@@ -83,7 +83,7 @@ char               *documentName;
 	/* on acquiert in identificateur pour le document */
 	GetDocIdent (&pDoc->DocIdent, documentName);
 	/* document en lecture-ecriture */
-	pDoc->DocReadOnly = False;
+	pDoc->DocReadOnly = FALSE;
 	doc = IdentDocument (pDoc);
      }
    return doc;
@@ -407,7 +407,7 @@ PRule              *pRule;
    else
       /* parametre document correct */
       rdReglePres (TabDocuments[document - 1], pivotFile,
-		(PtrElement) element, create, (PtrPRule *) pRule, True);
+		(PtrElement) element, create, (PtrPRule *) pRule, TRUE);
 }
 
 /* ----------------------------------------------------------------------
@@ -474,8 +474,8 @@ Element            *elementRead;
 	  }
 	*elementRead = (Element) Internalise (pivotFile, pSS,
 				 TabDocuments[document - 1], byte, NumAssoc,
-			      False, True, &TypeCont, &pSchStrCont, &TypeLu,
-			       &SchStrLu, True, (PtrElement) element, True);
+			      FALSE, TRUE, &TypeCont, &pSchStrCont, &TypeLu,
+			       &SchStrLu, TRUE, (PtrElement) element, TRUE);
      }
 }
 
@@ -530,7 +530,7 @@ Document            document;
 	notifyEl.elementType.ElTypeNum = pEl->ElTypeNumber;
 	notifyEl.elementType.ElSSchema = (SSchema) (pEl->ElSructSchema);
 	notifyEl.position = 0;
-	if (!ThotSendMessage ((NotifyEvent *) & notifyEl, True))
+	if (!ThotSendMessage ((NotifyEvent *) & notifyEl, TRUE))
 	   /* l'application accepte que Thot sauve l'element */
 	  {
 	     /* Ecrit d'abord le numero de la structure generique s'il y */
@@ -538,7 +538,7 @@ Document            document;
 	     if (pEl->ElParent != NULL)
 		if (pEl->ElParent->ElSructSchema != pEl->ElSructSchema)
 		   EcritNat (pEl->ElSructSchema, pivotFile, TabDocuments[document - 1]);
-	     Externalise (pivotFile, &pEl, TabDocuments[document - 1], True);
+	     Externalise (pivotFile, &pEl, TabDocuments[document - 1], TRUE);
 	     /* envoie le message ElemSave.Post a l'application, si */
 	     /* elle le demande */
 	     notifyEl.event = TteElemSave;
@@ -547,7 +547,7 @@ Document            document;
 	     notifyEl.elementType.ElTypeNum = pEl->ElTypeNumber;
 	     notifyEl.elementType.ElSSchema = (SSchema) (pEl->ElSructSchema);
 	     notifyEl.position = 0;
-	     ThotSendMessage ((NotifyEvent *) & notifyEl, False);
+	     ThotSendMessage ((NotifyEvent *) & notifyEl, FALSE);
 	  }
      }
 }
@@ -603,7 +603,7 @@ Document            document;
 	notifyEl.elementType.ElTypeNum = pEl->ElTypeNumber;
 	notifyEl.elementType.ElSSchema = (SSchema) (pEl->ElSructSchema);
 	notifyEl.position = 0;
-	if (!ThotSendMessage ((NotifyEvent *) & notifyEl, True))
+	if (!ThotSendMessage ((NotifyEvent *) & notifyEl, TRUE))
 	   /* l'application accepte que Thot sauve l'element */
 	  {
 	     /* Ecrit d'abord le numero de la structure generique s'il y */
@@ -611,7 +611,7 @@ Document            document;
 	     if (pEl->ElParent != NULL)
 		if (pEl->ElParent->ElSructSchema != pEl->ElSructSchema)
 		   EcritNat (pEl->ElSructSchema, pivotFile, TabDocuments[document - 1]);
-	     Externalise (pivotFile, &pEl, TabDocuments[document - 1], False);
+	     Externalise (pivotFile, &pEl, TabDocuments[document - 1], FALSE);
 	     /* envoie le message ElemSave.Post a l'application, si */
 	     /* elle le demande */
 	     notifyEl.event = TteElemSave;
@@ -620,7 +620,7 @@ Document            document;
 	     notifyEl.elementType.ElTypeNum = pEl->ElTypeNumber;
 	     notifyEl.elementType.ElSSchema = (SSchema) (pEl->ElSructSchema);
 	     notifyEl.position = 0;
-	     ThotSendMessage ((NotifyEvent *) & notifyEl, False);
+	     ThotSendMessage ((NotifyEvent *) & notifyEl, FALSE);
 	  }
      }
 }
@@ -811,7 +811,7 @@ char               *label;
    else
      {
 	element = (Element) NewSubtree (elemType.ElTypeNum, (PtrSSchema) (elemType.ElSSchema),
-		    TabDocuments[document - 1], 0, False, True, True, (*label) == '\0');
+		    TabDocuments[document - 1], 0, FALSE, TRUE, TRUE, (*label) == '\0');
 	if (*label != '\0')
 	   strncpy (((PtrElement) element)->ElLabel, label, MAX_LABEL_LEN);
      }

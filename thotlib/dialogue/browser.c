@@ -32,11 +32,11 @@ char               *word;
    while (((char) ls_car == ' ') || ((char) ls_car == '\t') || ((char) ls_car == '\n'))
       ls_car = fgetc (ls_stream);
 
-   notEof = True;
+   notEof = TRUE;
    while (((char) ls_car != ' ') && ((char) ls_car != '\t') && ((char) ls_car != '\n') && (notEof))
      {
 	if (ls_car == EOF)
-	   notEof = False;
+	   notEof = FALSE;
 	else
 	  {
 	     word[i] = (char) ls_car;
@@ -65,7 +65,7 @@ char               *suffix;
    boolean             ret;
    char                command[200];
 
-   ret = False;
+   ret = FALSE;
    /* S'il s'agit d'un directory accessible */
    if (TtaCheckDirectory (aDirectory))
      {
@@ -87,7 +87,7 @@ char               *suffix;
    if ((findNextHandle = FindFirstFile (command, &findData)) !=
        INVALID_HANDLE_VALUE)
      {
-	ret = True;
+	ret = TRUE;
 	FindClose (findNextHandle);
      }
 #else  /* WWW_WINDOWS */
@@ -98,7 +98,7 @@ char               *suffix;
      {
 	ls_car = fgetc (ls_stream);
 	if (ls_car != EOF)
-	   ret = True;
+	   ret = TRUE;
 	pclose (ls_stream);
      }
 #endif /* !WWW_WINDOWS */
@@ -159,7 +159,7 @@ int                 fileRef;
 	     ls_unixFiles[0] = '\0';
 	     ls_fileNbr = 0;
 	     ls_currentfile = 0;
-	     stop = False;
+	     stop = FALSE;
 	     thotDir.buf = word;
 	     thotDir.bufLen = sizeof (word);
 	     thotDir.PicMask = ThotDirBrowse_DIRECTORIES;
@@ -188,10 +188,10 @@ int                 fileRef;
 	       }
 	     if (strlen (aDirectory) == 0)
 		TtaNewSelector (dirRef, formRef,
-				dirTitle, ls_fileNbr, ls_unixFiles, SELECTOR_NB_ITEMS, "", False, True);
+				dirTitle, ls_fileNbr, ls_unixFiles, SELECTOR_NB_ITEMS, "", FALSE, TRUE);
 	     else
 		TtaNewSelector (dirRef, formRef,
-				dirTitle, ls_fileNbr, ls_unixFiles, SELECTOR_NB_ITEMS, "..", False, True);
+				dirTitle, ls_fileNbr, ls_unixFiles, SELECTOR_NB_ITEMS, "..", FALSE, TRUE);
 	     TtaSetSelector (dirRef, -1, "");
 	  }
 	/* CsList les fichiers du directory */
@@ -207,7 +207,7 @@ int                 fileRef;
 	     ls_unixFiles[0] = '\0';
 	     ls_fileNbr = 0;
 	     ls_currentfile = 0;
-	     stop = False;
+	     stop = FALSE;
 	     /* Commande ls sur le directory */
 	     if (ThotDirBrowse_first (&thotDir, aDirectory, "*", suffix) == 1)
 		do
@@ -233,7 +233,7 @@ int                 fileRef;
 	     ThotDirBrowse_close (&thotDir);
 	     /* initialisation des menus */
 	     TtaNewSelector (fileRef, formRef,
-			     fileTitle, ls_fileNbr, ls_unixFiles, SELECTOR_NB_ITEMS + 1, NULL, False, True);
+			     fileTitle, ls_fileNbr, ls_unixFiles, SELECTOR_NB_ITEMS + 1, NULL, FALSE, TRUE);
 	     TtaSetSelector (fileRef, -1, "");
 	  }
      }
@@ -243,13 +243,13 @@ int                 fileRef;
 	if (dirRef >= 0)
 	  {
 	     TtaNewSelector (dirRef, formRef,
-		     dirTitle, 0, NULL, SELECTOR_NB_ITEMS, "", False, True);
+		     dirTitle, 0, NULL, SELECTOR_NB_ITEMS, "", FALSE, TRUE);
 	     TtaSetSelector (dirRef, -1, "");
 	  }
 	if (fileRef >= 0)
 	  {
 	     TtaNewSelector (fileRef, formRef,
-	      fileTitle, 0, NULL, SELECTOR_NB_ITEMS + 1, NULL, False, True);
+	      fileTitle, 0, NULL, SELECTOR_NB_ITEMS + 1, NULL, FALSE, TRUE);
 	     TtaSetSelector (fileRef, -1, "");
 	  }
      }

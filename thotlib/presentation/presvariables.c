@@ -61,12 +61,12 @@ PtrSSchema        pSchStr;
    strncpy (NewAlias->SrName, "Alias de compteur", 17);
    NewAlias->SrNDefAttrs = 0;
    NewAlias->SrNLocalAttrs = 0;
-   NewAlias->SrAssocElem = False;
-   NewAlias->SrAssocElem = False;
-   NewAlias->SrParamElem = False;
-   NewAlias->SrUnitElem = False;
-   NewAlias->SrRecursive = False;
-   NewAlias->SrExportedElem = False;
+   NewAlias->SrAssocElem = FALSE;
+   NewAlias->SrAssocElem = FALSE;
+   NewAlias->SrParamElem = FALSE;
+   NewAlias->SrUnitElem = FALSE;
+   NewAlias->SrRecursive = FALSE;
+   NewAlias->SrExportedElem = FALSE;
    NewAlias->SrFirstExcept = 0;
    NewAlias->SrLastExcept = 0;
    NewAlias->SrNInclusions = 0;
@@ -144,7 +144,7 @@ PtrSSchema        pSS;
    PtrElement          pEl;
    PtrAttribute         pAttr;
 
-   ret = False;
+   ret = FALSE;
    *valinit = 0;
    if (pCo->CnItem[0].CiInitAttr > 0)
      {
@@ -156,20 +156,20 @@ PtrSSchema        pSS;
 	  {
 	     /* cet attribut est-il present sur l'element courant */
 	     pAttr = pEl->ElFirstAttr;
-	     stop = False;	/* parcourt les attributs de l'element */
+	     stop = FALSE;	/* parcourt les attributs de l'element */
 	     do
 		if (pAttr == NULL)
-		   stop = True;	/* dernier attribut */
+		   stop = TRUE;	/* dernier attribut */
 		else if (pAttr->AeAttrNum == pCo->CnItem[0].CiInitAttr &&
 			 pAttr->AeAttrSSchema->SsCode == pSS->SsCode)
-		   stop = True;	/* c'est l'attribut cherche' */
+		   stop = TRUE;	/* c'est l'attribut cherche' */
 		else
 		   pAttr = pAttr->AeNext;	/* au suivant */
 	     while (!(stop));
 	     if (pAttr != NULL)
 		/* l'element porte l'attribut qui initialise le compteur */
 	       {
-		  ret = True;
+		  ret = TRUE;
 		  *valinit = pAttr->AeAttrValue;	/* on prend la valeur de l'attribut */
 	       }
 	     else
@@ -218,9 +218,9 @@ boolean             Maximum;
 
    valinitattr = 0;
    pCo1 = &pSchP->PsCounter[NCompt - 1];
-   initattr = False;		/* a priori, la valeur initiale du compteur ne
+   initattr = FALSE;		/* a priori, la valeur initiale du compteur ne
 				   depend pas d'un attribut. */
-   pstop = True;
+   pstop = TRUE;
 
    /* Traitement de la partie initialisation du compteur */
    initattr = InitCounterByAttribute (&valinitattr, pCo1, pElNum, pSS);
@@ -254,13 +254,13 @@ boolean             Maximum;
 		  if (pCo1->CnItem[0].CiViewNum == 0 && pElNum->ElAssocNum > 0)
 		     Vue = pElNum->ElViewPSchema;
 		  /* cherche la marque de page qui precede l'element */
-		  stop = False;
+		  stop = FALSE;
 		  do
 		    {
 		       pEl = BackSearchTypedElem (pEl, TypeRank, NULL);
 		       if (pEl == NULL)
 			  /* pas de marque de page precedente */
-			  stop = True;
+			  stop = TRUE;
 		       else
 			 {
 			    if (pElNum->ElSructSchema->SsCode != pSSpr->SsCode)
@@ -285,7 +285,7 @@ boolean             Maximum;
 #else  /* __COLPAGE__ */
 			    if ((pEl->ElViewPSchema == Vue) && (pstop))
 #endif /* __COLPAGE__ */
-			       stop = True;
+			       stop = TRUE;
 			 }
 		    }
 		  while (!(stop));
@@ -472,9 +472,9 @@ int                 Vue;
    PtrElement          PcWithin[MaxAncetre];
 
    pCo1 = &pSchP->PsCounter[NCompt - 1];
-   initattr = False;		/* a priori, la valeur initiale du compteur ne
+   initattr = FALSE;		/* a priori, la valeur initiale du compteur ne
 				   depend pas d'un attribut. */
-   pstop = True;
+   pstop = TRUE;
    /* Traitement de la partie initialisation du compteur */
    initattr = InitCounterByAttribute (&valinitattr, pCo1, pElNum, pSS);
 
@@ -517,13 +517,13 @@ int                 Vue;
 	     if (pCo1->CnItem[0].CiViewNum == 0 && pElNum->ElAssocNum > 0)
 		Vue = pElNum->ElViewPSchema;
 	     /* cherche la marque de page qui precede l'element */
-	     stop = False;
+	     stop = FALSE;
 	     do
 	       {
 		  pEl = BackSearchTypedElem (pEl, TypeRank, NULL);
 		  if (pEl == NULL)
 		     /* pas de marque de page precedente */
-		     stop = True;
+		     stop = TRUE;
 		  else
 		    {
 		       if (pElNum->ElSructSchema->SsCode != pSSpr->SsCode)
@@ -546,7 +546,7 @@ int                 Vue;
 		       /* on ignore les pages qui ne concernent pas la vue */
 		       if ((pEl->ElViewPSchema == Vue) && (pstop))
 #endif /* __COLPAGE__ */
-			  stop = True;
+			  stop = TRUE;
 		    }
 	       }
 	     while (!(stop));
@@ -638,13 +638,13 @@ int                 Vue;
 		       while (pElReinit != NULL && pAttr == NULL)
 			 {
 			    pAttr = pElReinit->ElFirstAttr;
-			    stop = False;	/* parcourt les attributs de l'element */
+			    stop = FALSE;	/* parcourt les attributs de l'element */
 			    do
 			       if (pAttr == NULL)
-				  stop = True;	/* dernier attribut */
+				  stop = TRUE;	/* dernier attribut */
 			       else if (pAttr->AeAttrNum == pCo1->CnItem[0].CiReinitAttr &&
 					pAttr->AeAttrSSchema->SsCode == pSS->SsCode)
-				  stop = True;	/* c'est l'attribut cherche' */
+				  stop = TRUE;	/* c'est l'attribut cherche' */
 			       else
 				  pAttr = pAttr->AeNext;		/* au suivant */
 			    while (!(stop));
@@ -736,7 +736,7 @@ PtrAbstractBox             pAb;
    PresentationBox             *pBo;
    PresVariable            *pPr;
 
-   result = False;
+   result = FALSE;
    if (pAb != NULL)
       if (pAb->AbPresentationBox)
 	 /* c'est un pave de presentation */
@@ -746,7 +746,7 @@ PtrAbstractBox             pAb;
 	   if (pBo->PbContent == ContElement)
 	      /* une boite qui regroupe des elements associes */
 	      /* son contenu est modifiable */
-	      result = True;
+	      result = TRUE;
 	   else if (pBo->PbContent == ContVariable)
 	      /* une boite dont le contenu est une variable de presentation */
 	     {
@@ -760,7 +760,7 @@ PtrAbstractBox             pAb;
 			     pAb->AbCreatorAttr->AeAttrType == AtTextAttr)
 			    /* l'attribut est numerique ou textuel */
 			    /* le contenu du pave est editable */
-			    result = True;
+			    result = TRUE;
 	     }
 	}
    return result;
@@ -840,14 +840,14 @@ PtrDocument         pDoc;
 		    /* cherche si l'element auquel se rapporte le pave (ou l'un de */
 		    /* ses ascendants) possede cet attribut */
 		    pEl = pAb->AbElement;
-		    trouve = False;
+		    trouve = FALSE;
 		    while (!trouve && pEl != NULL)
 		      {
 			 pAttr = pEl->ElFirstAttr;	/* premier attribut */
 			 while (!trouve && pAttr != NULL)
 			    if (pAttr->AeAttrNum == pVa1->ViAttr &&
 				pAttr->AeAttrSSchema->SsCode == pSS->SsCode)
-			       trouve = True;
+			       trouve = TRUE;
 			    else
 			       pAttr = pAttr->AeNext;
 			 if (!trouve)
@@ -896,13 +896,13 @@ PtrDocument         pDoc;
 		    if (pVa1->ViCounterVal == CntMaxVal)
 		       /* on cherche la valeur maximale du compteur */
 		       i = MinMaxComptVal (pVa1->ViCounter, pSS, pSchP, pAb->AbElement,
-			     pDoc->DocView[pAb->AbDocView - 1].DvPSchemaView, True);
+			     pDoc->DocView[pAb->AbDocView - 1].DvPSchemaView, TRUE);
 		    else if (pVa1->ViCounterVal == CntMinVal)
 		       /* on cherche la valeur minimale du compteur */
 		       i = MinMaxComptVal (pVa1->ViCounter, pSS, pSchP,
 					   pAb->AbElement,
 				    pDoc->DocView[pAb->AbDocView - 1].DvPSchemaView,
-					   False);
+					   FALSE);
 		    else
 		       /* valeur courante du compteur */
 		       i = ComptVal (pVa1->ViCounter, pSS, pSchP, pAb->AbElement,
@@ -993,14 +993,14 @@ PtrDocument         pDoc;
 		    /* vue ViView */
 		    /* cherche en arriere la premiere marque de page de cette vue */
 		    pEl = pAb->AbElement;
-		    trouve = False;
+		    trouve = FALSE;
 		    do
 		      {
 			 pEl = BackSearchTypedElem (pEl, PageBreak + 1, NULL);
 			 if (pEl != NULL)
 			    /* on ignore les pages qui ne concernent pas la vue */
 			    if (pEl->ElViewPSchema == pVa1->ViView)
-			       trouve = True;
+			       trouve = TRUE;
 		      }
 		    while ((!trouve) && (pEl != NULL));
 		    if (pEl == NULL)
@@ -1019,10 +1019,10 @@ PtrDocument         pDoc;
      }
    if (PavPresentModifiable (pAb))
       /* le contenu de ce pave de presentation est donc modifiable */
-      pAb->AbCanBeModified = True;
+      pAb->AbCanBeModified = TRUE;
    pAb->AbLeafType = LtText;
    if (Ancien == NULL)
-      egal = False;		/* la variable n'avait pas de valeur */
+      egal = FALSE;		/* la variable n'avait pas de valeur */
    else
      {
 	Nouveau = pAb->AbText;	/* nouveau contenu du pave de presentation */

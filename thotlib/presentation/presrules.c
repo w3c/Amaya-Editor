@@ -12,7 +12,7 @@
  */
 
 #include "thot_sys.h"
-#include "thotconfig.h"
+
 #include "constmedia.h"
 #include "typemedia.h"
 #include "picture.h"
@@ -87,12 +87,12 @@ static void SuivNonPres(pP)
   boolean	stop;
   
   
-  stop = False;
+  stop = FALSE;
   do
     if (*pP == NULL)
-      stop = True;
+      stop = TRUE;
     else if (!(*pP)->AbPresentationBox)
-      stop = True;
+      stop = TRUE;
     else
       *pP = (*pP)->AbNext;
   while (!(stop));
@@ -301,7 +301,7 @@ static char valcarregle(pRegle, pEl, nv, ok)
   PtrAbstractBox         pPa1;
   
   val = ' ';
-  *ok = True;
+  *ok = TRUE;
   if (pRegle != NULL && pEl != NULL)
     {
       pRe1 = pRegle;
@@ -310,7 +310,7 @@ static char valcarregle(pRegle, pEl, nv, ok)
   case PresInherit:
 	  pP = ptrHerit(pRegle, pEl, nv);
 	  if (pP == NULL)
-	    *ok = False;
+	    *ok = FALSE;
 	  else
 	    {
 	      pPa1 = pP;
@@ -395,7 +395,7 @@ static BAlignment valcadregle(pRegle, pEl, nv, ok)
   PtrPRule    pRe1;
   
   val = AlignLeft;
-  *ok = True;
+  *ok = TRUE;
   if (pRegle != NULL && pEl != NULL)
     {
       pRe1 = pRegle;
@@ -404,7 +404,7 @@ static BAlignment valcadregle(pRegle, pEl, nv, ok)
   case PresInherit:
 	  pP = ptrHerit(pRegle, pEl, nv);
 	  if (pP == NULL)
-	    *ok = False;
+	    *ok = FALSE;
 	  else
 	    if (pRe1->PrType == PtAdjust)
 	      val = pP->AbAdjust;
@@ -447,8 +447,8 @@ static boolean valboolregle(pRegle, pEl, nv, ok)
   boolean         val;
   PtrPRule    pRe1;
   
-  val = False;
-  *ok = True;
+  val = FALSE;
+  *ok = TRUE;
   if (pRegle != NULL && pEl != NULL)
     {
       pRe1 = pRegle;
@@ -457,7 +457,7 @@ static boolean valboolregle(pRegle, pEl, nv, ok)
   case PresInherit:
 	  pP = ptrHerit(pRegle, pEl, nv);
 	  if (pP == NULL)
-	    *ok = False;
+	    *ok = FALSE;
 	  else if (pRe1->PrType == PtJustify)
 	    val = pP->AbJustify;
 	  else if (pRe1->PrType == PtHyphenate)
@@ -507,7 +507,7 @@ int valintregle(pRegle, pEl, nv, ok, unit, pAttr)
   PtrElement      pH;
 
   val = 0;
-  *ok = True;
+  *ok = TRUE;
   *unit = UnRelative;
   if (pRegle != NULL && pEl != NULL)
     {
@@ -520,7 +520,7 @@ int valintregle(pRegle, pEl, nv, ok, unit, pAttr)
 	  else
 	    pP = ptrHerit(pRegle, pEl, nv);
 	  if (pP == NULL)
-	    *ok = False;
+	    *ok = FALSE;
 	  else
 	    {
 	      if (pRe1->PrInhAttr)
@@ -689,7 +689,7 @@ int valintregle(pRegle, pEl, nv, ok, unit, pAttr)
 		    {
 		      HeritAsc(pEl, nv, &pP, &pH);
 		      if (pP == NULL)
-			*ok = False;
+			*ok = FALSE;
 		      else
 			{
 			  val = pP->AbSize + i;
@@ -766,18 +766,18 @@ static void testpave(found, pSP, PoRefElem, NumType, NotType, pAb)
 	    if ((NumType == MAX_PRES_VARIABLE + 1) && (pPa1->AbPresentationBox))
 	      /* Cas d'une regle Not AnyElem, on accepte la premiere boite */
 	      /* de presentation trouvee */
-	      *found = True;
+	      *found = TRUE;
 	  }
 	else  /* un pave d'une boite de pres. */
 	  if ((NumType == MAX_PRES_BOX + 1) && (!pPa1->AbPresentationBox))
 	    /* Cas d'une regle Not AnyBox, on accepte le premier element */
 	    /* trouve' */
-	    *found = True;
+	    *found = TRUE;
 	/* on est dans une regle differente de Any... */ 
 	if (pPa1->AbTypeNum != NumType 
 	    || pPa1->AbPresentationBox == PoRefElem 
 	    || pPa1->AbPSchema != pSP)
-	  *found = True;
+	  *found = TRUE;
       }
     else 
       {
@@ -785,19 +785,19 @@ static void testpave(found, pSP, PoRefElem, NumType, NotType, pAb)
 	  {
 	    if ((NumType == MAX_PRES_VARIABLE + 1) && (!pPa1->AbPresentationBox))
 	    /* Cas d'une regle AnyElem, on accepte le premier element trouve */
-	      *found = True;
+	      *found = TRUE;
 	  }
 	else  /* un pave d'une boite de pres. */
 	  if ((NumType == MAX_PRES_BOX + 1) && (pPa1->AbPresentationBox))
 	    /* Cas d'une regle AnyBox, on accepte la premiere boite de */
 	    /* presentation trouvee */
-	    *found = True;
+	    *found = TRUE;
 	/* on est dans une regle differente de Any... */ 
 	if (pPa1->AbTypeNum == NumType 
 	    && pPa1->AbPresentationBox != PoRefElem 
 	    && (pPa1->AbPSchema == pSP 
 		|| pSP == NULL))
-	  *found = True;
+	  *found = TRUE;
       }
 }
 
@@ -822,7 +822,7 @@ static boolean AttributCreeBoite(pAttr, pAb)
     PtrPSchema	     pSchP;
     PtrHandlePSchema pHd;
 
-    ret = False;
+    ret = FALSE;
     if (pAb->AbPresentationBox)
       {
       /* on cherchera d'abord dans le schema de presentation principal de */
@@ -835,32 +835,32 @@ static boolean AttributCreeBoite(pAttr, pAb)
 	  {
 	  /* cherche dans ce schema de presentation le debut de la chaine */
 	  /* des regles de presentation de l'attribut */
-	  pRegle = ReglePresAttr(pAttr, pAb->AbElement, False, NULL, pSchP);
+	  pRegle = ReglePresAttr(pAttr, pAb->AbElement, FALSE, NULL, pSchP);
 	  /* saute les regles precedant les  fonctions */
-	  stop = False;
+	  stop = FALSE;
 	  do
 	    if (pRegle == NULL)
-	      stop = True;
+	      stop = TRUE;
 	    else if (pRegle->PrType > PtFunction)
 	      {
 	      /* pas de fonction de presentation */
-	      stop = True;
+	      stop = TRUE;
 	      pRegle = NULL;
 	      }
 	    else if (pRegle->PrType == PtFunction)
-	      stop = True;
+	      stop = TRUE;
 	    else
 	      pRegle = pRegle->PrNextPRule;
 	  while (!stop);
 	  /* cherche toutes les fonctions de creation */
-	  stop = False;
+	  stop = FALSE;
 	  do
 	    if (pRegle == NULL)
 	      /* fin de la chaine */
-	      stop = True;
+	      stop = TRUE;
 	    else if (pRegle->PrType != PtFunction)
 	      /* fin des fonctions */
-	      stop = True;
+	      stop = TRUE;
 	    else
 	      /* c'est une regle fonction */
 	      {
@@ -878,8 +878,8 @@ static boolean AttributCreeBoite(pAttr, pAb)
 		    pSchP == pAb->AbPSchema)
 		  /* cette regle cree notre pave, on a trouve' */
 		  {
-		  stop = True;
-		  ret = True;
+		  stop = TRUE;
+		  ret = TRUE;
 		  }
 	        }
 	      if (!stop)
@@ -989,7 +989,7 @@ static PtrAbstractBox PaveRef(NotType, NumType, pSP, Niv, PoRefElem, pP, pAttr)
   pAb = pP;
   if (pAb != NULL)
     {
-      found = False;
+      found = FALSE;
       switch (Niv)
 	{
 	case RlEnclosing:
@@ -997,7 +997,7 @@ static PtrAbstractBox PaveRef(NotType, NumType, pSP, Niv, PoRefElem, pP, pAttr)
 	    {
 	      pAb = pAb->AbEnclosing;
 	      if (NumType == 0)
-		found = True;
+		found = TRUE;
 	      else if (pAb != NULL)
 		testpave(&found, pSP, PoRefElem, NumType, NotType, pAb);
 	    }
@@ -1014,7 +1014,7 @@ static PtrAbstractBox PaveRef(NotType, NumType, pSP, Niv, PoRefElem, pP, pAttr)
 	      if (pAb->AbDead)
 		pAb = pAb->AbNext;
 	      else
-		found = True;
+		found = TRUE;
 	    else
 	      {
 		testpave(&found, pSP, PoRefElem, NumType, NotType, pAb);
@@ -1032,7 +1032,7 @@ static PtrAbstractBox PaveRef(NotType, NumType, pSP, Niv, PoRefElem, pP, pAttr)
 		if (pAb->AbDead)
 		  pAb = pAb->AbNext;
 		else
-		  found = True;
+		  found = TRUE;
 	      else
 		{
 		  testpave(&found, pSP, PoRefElem, NumType, NotType, pAb);
@@ -1050,7 +1050,7 @@ static PtrAbstractBox PaveRef(NotType, NumType, pSP, Niv, PoRefElem, pP, pAttr)
 		if (pAb->AbDead)
 		  pAb = pAb->AbPrevious;
 		else
-		  found = True;
+		  found = TRUE;
 	      else
 		{
 		  testpave(&found, pSP, PoRefElem, NumType, NotType, pAb);
@@ -1068,7 +1068,7 @@ static PtrAbstractBox PaveRef(NotType, NumType, pSP, Niv, PoRefElem, pP, pAttr)
 		if (pAb->AbDead)
 		  pAb = pAb->AbNext;
 		else
-		  found = True;
+		  found = TRUE;
 	      else
 		{
 		  testpave(&found, pSP, PoRefElem, NumType, NotType, pAb);
@@ -1095,7 +1095,7 @@ static PtrAbstractBox PaveRef(NotType, NumType, pSP, Niv, PoRefElem, pP, pAttr)
 	    if (pAb->AbEnclosing->AbElement == pAb->AbElement)
 	      if (!pAb->AbEnclosing->AbPresentationBox)
 		{
-		found = True;	/* c'est bien le pere */
+		found = TRUE;	/* c'est bien le pere */
 		pAb = pAb->AbEnclosing;
 		}
 	  if (!found)
@@ -1107,7 +1107,7 @@ static PtrAbstractBox PaveRef(NotType, NumType, pSP, Niv, PoRefElem, pP, pAttr)
 	        pAb = pAb->AbNext;
 	      else
 	        if (pAb->AbElement == pP->AbElement)
-	  	  found = True;
+	  	  found = TRUE;
 	        else
 	  	  pAb = NULL;
 	    while ((!found) && pAb != NULL);
@@ -1120,7 +1120,7 @@ static PtrAbstractBox PaveRef(NotType, NumType, pSP, Niv, PoRefElem, pP, pAttr)
 	          pAb = pAb->AbPrevious;
 	        else
 	          if (pAb->AbElement == pP->AbElement)
-	  	    found = True;
+	  	    found = TRUE;
 	          else
 	  	    pAb = NULL;
 	      while ((!found) && pAb != NULL);
@@ -1137,7 +1137,7 @@ static PtrAbstractBox PaveRef(NotType, NumType, pSP, Niv, PoRefElem, pP, pAttr)
 	    {
 	    /* cherche les attributs references de l'element */
 	    pAttr = pAb->AbElement->ElFirstAttr;
-	    found = False;
+	    found = FALSE;
 	    while (pAttr != NULL && !found)
 	      {
 	      if (pAttr->AeAttrType == AtReferenceAttr)
@@ -1147,7 +1147,7 @@ static PtrAbstractBox PaveRef(NotType, NumType, pSP, Niv, PoRefElem, pP, pAttr)
 		/* cree le pave pour lequel on travaille ? */
 		if (AttributCreeBoite(pAttr, pP))
 		  /* oui, c'est l'attribut cherche' */
-	          found = True;
+	          found = TRUE;
 		}
 	      if (!found)
 		/* passe a l'attribut suivant de l'element */
@@ -1185,7 +1185,7 @@ static PtrAbstractBox PaveRef(NotType, NumType, pSP, Niv, PoRefElem, pP, pAttr)
 		      /* on n'a pas trouve' de pave pour cet element */
 		      pAb = NULL;
 		else
-		  found = True;
+		  found = TRUE;
 	      else
 		{
 		  testpave(&found, pSP, PoRefElem, NumType, NotType, pAb);
@@ -1312,8 +1312,8 @@ static void Contenu(pEl, pAb, pDoc)
     CopyStringToText(">", pBu1, &i);
     lg += i;
     pAb->AbVolume = lg;
-    pAb->AbCanBeModified = False;
-    pAb->AbSensitive = True;
+    pAb->AbCanBeModified = FALSE;
+    pAb->AbSensitive = TRUE;
     /* met a jour le volume libre restant dans la vue */
     MajVolLibre(pAb, pDoc);
     }
@@ -1406,7 +1406,7 @@ static void Contenu(pEl, pAb, pDoc)
 	  /* fin de la chaine de car. */ 
 	  pBu1->BuLength = lg;
 	  pAb->AbVolume = lg;
-	  pAb->AbCanBeModified = False;
+	  pAb->AbCanBeModified = FALSE;
 	  break;
   case LtPairedElem:
 	  pAb->AbLeafType = LtText;
@@ -1427,7 +1427,7 @@ static void Contenu(pEl, pAb, pDoc)
 	  /* fin de la chaine de car. */ 
 	  pBu1->BuLength = 2;
 	  pAb->AbVolume = 2;
-	  pAb->AbCanBeModified = False;
+	  pAb->AbCanBeModified = FALSE;
 	  break;
 	default:
 	  break;	
@@ -1443,9 +1443,9 @@ static void Contenu(pEl, pAb, pDoc)
 /* |	qui commence par pRe et qui appartient au schema de		| */
 /* |	presentation pointe' par pSPR, la regle de creation qui		| */
 /* |	engendre le pave pCree.						| */
-/* |	Si cette regle est trouvee, retourne True et TypeCreation	| */
+/* |	Si cette regle est trouvee, retourne TRUE et TypeCreation	| */
 /* |	contient le type de cette regle,				| */
-/* |	Sinon, retourne False.						| */
+/* |	Sinon, retourne FALSE.						| */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
 static boolean RegleCreation(PtrPRule pRe, PtrPSchema pSPR, PtrAbstractBox pCree, FunctionType *TypeCreation)
@@ -1460,16 +1460,16 @@ static boolean RegleCreation(pRe, pSPR, pCree, TypeCreation)
   boolean	stop;
   boolean	Ret;
   
-  Ret = False;
-  stop = False;
+  Ret = FALSE;
+  stop = FALSE;
   if (pCree != NULL)
   do
     if (pRe == NULL)
       /* il n' y a plus de regles dans la chaine de regles */
-      stop = True;
+      stop = TRUE;
     else if (pRe->PrType > PtFunction)
       /* il n'y a plus de regle fonction de presentation dans la chaine */
-      stop = True;
+      stop = TRUE;
     else if (pRe->PrType < PtFunction)
       /* on n'a pas encore vu les Fonctions */
       pRe = pRe->PrNextPRule;
@@ -1487,8 +1487,8 @@ static boolean RegleCreation(pRe, pSPR, pCree, TypeCreation)
 	  /* c'est une regle de creation et elle cree ce type de */
 	  /* boite */
 	  {
-	    stop = True;
-	    Ret = True;
+	    stop = TRUE;
+	    Ret = TRUE;
 	    *TypeCreation = pRe->PrPresFunction;
 	  } 
 	else
@@ -1527,13 +1527,13 @@ FunctionType RegleCree(pDoc, pCreateur, pCree)
 
   Ret = FnLine;	
   /* cherche les regles de creation en ignorant les attributs */
-  pRCre = LaRegle(pDoc, pCreateur, &pSPR, PtFunction, False, &pAttr);
+  pRCre = LaRegle(pDoc, pCreateur, &pSPR, PtFunction, FALSE, &pAttr);
   if (!RegleCreation(pRCre, pSPR, pCree, &Ret))
     /* on n'a pas trouve la regle qui cree la bonne boite */
     /* on cherche les regles de creation associees aux attributs */
     /* de l'element createur */
     {
-    ok = False;
+    ok = FALSE;
     pA = pCreateur->AbElement->ElFirstAttr;
     while (pA != NULL && !ok)
       {
@@ -1545,7 +1545,7 @@ FunctionType RegleCree(pDoc, pCreateur, pCree)
         {
 	/* cherche la premiere regle de presentation pour cet attribut */
 	/* dans ce schema de presentation */
-	pRCre = ReglePresAttr(pA, pCreateur->AbElement, False, NULL, pSchP);
+	pRCre = ReglePresAttr(pA, pCreateur->AbElement, FALSE, NULL, pSchP);
 	ok = RegleCreation(pRCre, pSchP, pCree, &Ret);
 	if (pHd == NULL)
 	  /* on n'a pas encore traite' les schemas de presentation additionnels
@@ -1599,7 +1599,7 @@ void Chaine(pAb, pEl, nv, VueSch, pDoc, EnAvant)
   pPa1 = pAb;
   pE = pEl;
   pP = NULL;
-  peretrouve = False;
+  peretrouve = FALSE;
   if (EnAvant)
     /* cas simples de chainage si on insere un pave au milieu de l'i.a.  */
     {
@@ -1614,14 +1614,14 @@ void Chaine(pAb, pEl, nv, VueSch, pDoc, EnAvant)
           /* on cherche si pE contient une MP de la vue */
           /* pour cela on recherche le pave marque page precedent et */
           /* on regarde si l'element correspondant a pour ascendant pE */
-          pP = RechPavPage(pE, nv, VueSch, False);
+          pP = RechPavPage(pE, nv, VueSch, FALSE);
           if (pP != NULL) /* document pagine */
             {
               pEl1 = pP->AbElement;
-              trouve = False;
+              trouve = FALSE;
               while (!trouve && pEl1 != NULL)
                 if (pEl1->ElParent == pE)
-                  trouve = True;
+                  trouve = TRUE;
                 else
                   pEl1 = pEl1->ElParent;
               if (!trouve) /* si la derniere MP n'est pas fils de pE */
@@ -1640,7 +1640,7 @@ void Chaine(pAb, pEl, nv, VueSch, pDoc, EnAvant)
                       /* on prend le pere de ce pave : ce sera le pere de */
                       /* de pAb */
                       pP = pP->AbEnclosing;
-                      peretrouve = True;
+                      peretrouve = TRUE;
                     }
                   
                   /* dans tous les autres cas, on revient au cas general */
@@ -1661,7 +1661,7 @@ void Chaine(pAb, pEl, nv, VueSch, pDoc, EnAvant)
               {
               /* on prend le pere de ce pave : ce sera le pere de pAb */
                 pP = pP->AbEnclosing;
-                peretrouve = True;
+                peretrouve = TRUE;
               }
           }
         
@@ -1701,7 +1701,7 @@ void Chaine(pAb, pEl, nv, VueSch, pDoc, EnAvant)
             && (pE == pDoc->DocAssocRoot[pEl->ElAssocNum - 1])))
          /* cas ou le pere est la racine */
          /* recherche du pave page ou le pave pAb doit etre inclus */
-         pPage = RechPavPage(pEl, nv, VueSch, True);
+         pPage = RechPavPage(pEl, nv, VueSch, TRUE);
        if (pPage == NULL) /* le pere n'est pas la racine */
          /* ou le document est sans pagination */
          {
@@ -1721,7 +1721,7 @@ void Chaine(pAb, pEl, nv, VueSch, pDoc, EnAvant)
         {
           /* il faut descendre la hierarchie des pages et colonnes */
           /* pPage est le pave corps de page de plus haut niveau */
-          trouve = False;
+          trouve = FALSE;
           while (!trouve)
             {
               if (pPage->AbFirstEnclosed != NULL
@@ -1729,7 +1729,7 @@ void Chaine(pAb, pEl, nv, VueSch, pDoc, EnAvant)
                               PageBreak+1)
                 pPage = pPage->AbFirstEnclosed; 
               else
-                trouve = True;
+                trouve = TRUE;
               if (!trouve)
                 while (pPage->AbPresentationBox)
                   pPage = pPage->AbNext;
@@ -1766,13 +1766,13 @@ void Chaine(pAb, pEl, nv, VueSch, pDoc, EnAvant)
 	      /* en tenant compte des eventuels paves dupliques de l'element */
 	      {
 		pP = pEl->ElAbstractBox[nv - 1];
-		stop = False;
+		stop = FALSE;
 		do
 	          if (pP->AbNext == NULL && pP->AbNextRepeated == NULL)
-                    stop = True;
+                    stop = TRUE;
 	          else if (pP->AbNext != NULL)
 	            if (pP->AbNext->AbElement != pEl)
-                      stop = True;
+                      stop = TRUE;
                     else
                       pP = pP->AbNext;
 	          else /* pP->AbNext == NULL et pP->AbNextRepeated != NULL*/
@@ -1813,7 +1813,7 @@ void Chaine(pAb, pEl, nv, VueSch, pDoc, EnAvant)
 	            /* on saute les paves de presentation */
 	            while (pP->AbPresentationBox)
 	               pP = pP->AbNext;
-	            trouve = False;
+	            trouve = FALSE;
 	            while (!trouve && pP != NULL)
 	              {
 	              /* boucle de recherche dans les ascendants */
@@ -1827,7 +1827,7 @@ void Chaine(pAb, pEl, nv, VueSch, pDoc, EnAvant)
 	              if (pPEnglobant == NULL)
 	                pP = pP->AbNextRepeated;
  	              else
-	                trouve = True;
+	                trouve = TRUE;
 	              }
 	            if (!trouve)
 		      /* ils n'ont pas le meme pave englobant, on ne */
@@ -1858,27 +1858,27 @@ void Chaine(pAb, pEl, nv, VueSch, pDoc, EnAvant)
 			/* on saute les paves crees par une regle Create de */
                         /* l'englobant (ou de la racine si marque de page) */
 			{
-			stop = False;
+			stop = FALSE;
 			do
 			  if (pP->AbNext == NULL)
-			    stop = True;
+			    stop = TRUE;
                           else
 			    if (pPa1->AbEnclosing->AbElement->ElTypeNumber ==
 				PageBreak + 1)
                               if (pP->AbNext->AbElement !=
                                   pPa1->AbEnclosing->AbEnclosing->AbElement)
-                                stop = True;
+                                stop = TRUE;
                               else
                                 pP = pP->AbNext;
                             else
 			      if (pP->AbNext->AbElement !=
                                   pPa1->AbEnclosing->AbElement)
-			        stop = True;
+			        stop = TRUE;
 			      else
 				if (RegleCree(pDoc, pPa1->AbEnclosing, pP->AbNext) == 
 				    FnCreateLast)
 				  /* le pave suivant doit etre le dernier */
-				  stop = True;
+				  stop = TRUE;
 			        else
 				  pP = pP->AbNext;
 			while (!(stop));
@@ -1902,12 +1902,12 @@ void Chaine(pAb, pEl, nv, VueSch, pDoc, EnAvant)
 	          /* on insere le nouveau pave apres le dernier pave de pP */
 	          /* tout en restant dans le meme sous arbre (meme pere) */
 		  /*	    pP = pE->ElAbstractBox[nv - 1]; */
-		    stop = False;
+		    stop = FALSE;
 		    do
 		      if (pP->AbNext == NULL)
-			stop = True;
+			stop = TRUE;
 		      else if (pP->AbNext->AbElement != pE)
-			stop = True;
+			stop = TRUE;
 		      else
 			pP = pP->AbNext;
 		    while (!(stop));
@@ -1942,9 +1942,9 @@ void Chaine(pAb, pEl, nv, VueSch, pDoc, EnAvant)
     {
       pPa1->AbLeafType = LtCompound;
       pPa1->AbVolume = 0;
-      pPa1->AbInLine = False;
-      pPa1->AbTruncatedHead = True;
-      pPa1->AbTruncatedTail = True;
+      pPa1->AbInLine = FALSE;
+      pPa1->AbTruncatedHead = TRUE;
+      pPa1->AbTruncatedTail = TRUE;
     }
 }
 
@@ -2026,12 +2026,12 @@ void Chaine(pAb, pEl, nv, pDoc)
 	      /* saute les paves de l'element */
 	      {
 		pP = pEl->ElAbstractBox[nv - 1];
-		stop = False;
+		stop = FALSE;
 		do
 		  if (pP->AbNext == NULL)
-		    stop = True;
+		    stop = TRUE;
 		  else if (pP->AbNext->AbElement != pEl)
-		    stop = True;
+		    stop = TRUE;
 		  else
 		    pP = pP->AbNext;
 		while (!(stop));
@@ -2085,10 +2085,10 @@ void Chaine(pAb, pEl, nv, pDoc)
 		    pP = pPa1->AbEnclosing->AbFirstEnclosed;
 		    /* saute les eventuelles marques de page de debut */
 		    /* d'element */
-		    stop = False;
+		    stop = FALSE;
 		    do
 		      if (pP == NULL)
-			stop = True;
+			stop = TRUE;
 		      else
 			{
 			  pEl1 = pP->AbElement;
@@ -2096,7 +2096,7 @@ void Chaine(pAb, pEl, nv, pDoc)
 			      pEl1->ElPageType == PgBegin)
 			    pP = pP->AbNext;
 			  else
-			    stop = True;
+			    stop = TRUE;
 			}
 		    while (!(stop));
 		    if (pP != NULL)
@@ -2112,17 +2112,17 @@ void Chaine(pAb, pEl, nv, pDoc)
 			  /* on saute les paves crees par une regle */
 			  /* CreateFirst de l'englobant */
 			  {
-			    stop = False;
+			    stop = FALSE;
 			    do
 			      if (pP->AbNext == NULL)
-				stop = True;
+				stop = TRUE;
 			      else if (pP->AbNext->AbElement != 
 				       pPa1->AbEnclosing->AbElement)
-				stop = True;
+				stop = TRUE;
 			      else if (RegleCree(pDoc, pPa1->AbEnclosing, pP->AbNext) == 
 				       FnCreateLast)
 				/* le pave suivant doit etre le dernier */
-				stop = True;
+				stop = TRUE;
 			      else
 				pP = pP->AbNext;
 			    while (!(stop));
@@ -2151,12 +2151,12 @@ void Chaine(pAb, pEl, nv, pDoc)
 		    else
 		       {
 		       /* on cherche le dernier pave de l'element precedent */
-		       stop = False;
+		       stop = FALSE;
 		       do
 		         if (pP->AbNext == NULL)
-			   stop = True;
+			   stop = TRUE;
 		         else if (pP->AbNext->AbElement != pE)
-			   stop = True;
+			   stop = TRUE;
 		         else
 			   pP = pP->AbNext;
 		       while (!(stop));
@@ -2192,9 +2192,9 @@ void Chaine(pAb, pEl, nv, pDoc)
     {
       pPa1->AbLeafType = LtCompound;
       pPa1->AbVolume = 0;
-      pPa1->AbInLine = False;
-      pPa1->AbTruncatedHead = True;
-      pPa1->AbTruncatedTail = True;
+      pPa1->AbInLine = FALSE;
+      pPa1->AbTruncatedHead = TRUE;
+      pPa1->AbTruncatedTail = TRUE;
     }
 }
 #endif /* __COLPAGE__ */
@@ -2248,7 +2248,7 @@ void ChSchemaPres(pEl, pSchP, NumEntree, pSchS)
 	  /* structure de l'englobant. */
 	  {
 	  pSc1 = pEl->ElParent->ElSructSchema;
-	  trouve = False;
+	  trouve = FALSE;
 	  i = 0;
 	  do
 	    {
@@ -2256,7 +2256,7 @@ void ChSchemaPres(pEl, pSchP, NumEntree, pSchS)
 	      pRe1 = &pSc1->SsRule[i - 1];
 	      if (pRe1->SrConstruct == CsNatureSchema)
 		if (pRe1->SrSSchemaNat == pEl->ElSructSchema)
-		  trouve = True;
+		  trouve = TRUE;
 	    }
 	  while (!(trouve || i >= pSc1->SsNRules));
 	  if (trouve)
@@ -2321,15 +2321,15 @@ static void applPosRelat(PPos, RP, pRegle, pAttr, pSchP, pPa1, pDoc, appl)
   PtrPSchema 	  pSchPPage;
   int		  b, HauteurHautPage;
   
-  *appl = False;		
+  *appl = FALSE;		
   /* on n'a pas (encore) applique' la regle */
-  SautPage = False;
+  SautPage = FALSE;
   /* le pave est-il une marque de saut de page (le trait horizontal */
   /* qui separe les pages dans les images) ? Dans ce cas, il aura */
   /* une position flottante */
   if (pPa1->AbElement->ElTerminal && pPa1->AbElement->ElLeafType == LtPageColBreak)
     if (pPa1->AbLeafType != LtCompound && !pPa1->AbPresentationBox)
-      SautPage = True;
+      SautPage = TRUE;
   pRe1 = &RP;
   if (pRe1->PoPosDef == NoEdge || SautPage)
     /* position flottante: regle VertPos=NULL ou HorizPos=NULL */
@@ -2339,8 +2339,8 @@ static void applPosRelat(PPos, RP, pRegle, pAttr, pSchP, pPa1, pDoc, appl)
       PPos->PosDistance = 0;
       PPos->PosUnit = UnRelative;
       PPos->PosAbRef = NULL;
-      PPos->PosUserSpecified = False;
-      *appl = True;
+      PPos->PosUserSpecified = FALSE;
+      *appl = TRUE;
     }
   else
     {
@@ -2387,24 +2387,24 @@ static void applPosRelat(PPos, RP, pRegle, pAttr, pSchP, pPa1, pDoc, appl)
 	  if (FirstCreation)
 	    PPos->PosUserSpecified = pRe1->PoUserSpecified;
 	  else
-	    PPos->PosUserSpecified = False;
+	    PPos->PosUserSpecified = FALSE;
 	  if (PPos->PosUserSpecified)
 	     PPos->PosUserSpecified = CheckPPosUser(pPa1, pDoc);
-	  *appl = True;	
+	  *appl = TRUE;	
 	  /* a priori, l'englobement est respecte' */
 	  if (pRegle->PrType == PtHorizPos)
-            pPa1->AbHorizEnclosing = True;
+            pPa1->AbHorizEnclosing = TRUE;
           else if (pRegle->PrType == PtVertPos)
-            pPa1->AbVertEnclosing = True;
+            pPa1->AbVertEnclosing = TRUE;
 	  /* verifie si le pave deroge a la regle d'englobement */
 	  if (pRe1->PoRelation == RlRoot)
 	    if (PPos->PosAbRef != pPa1->AbEnclosing)
 	      /* ce pave deroge a la regle d'englobement */
 	      
 	      if (pRegle->PrType == PtHorizPos)
-		pPa1->AbHorizEnclosing = False;
+		pPa1->AbHorizEnclosing = FALSE;
 	      else if (pRegle->PrType == PtVertPos)
-		pPa1->AbVertEnclosing = False;
+		pPa1->AbVertEnclosing = FALSE;
 	  if (PPos->PosAbRef == pPa1->AbEnclosing)
 	    /* le pave se positionne par rapport a l'englobant */
 	    
@@ -2416,7 +2416,7 @@ static void applPosRelat(PPos, RP, pRegle, pAttr, pSchP, pPa1, pDoc, appl)
 		    Left)
 		  /* le cote gauche du pave est a gauche du */
 		  /* cote gauche de l'englobant: debordement */
-		    pPa1->AbHorizEnclosing = False;
+		    pPa1->AbHorizEnclosing = FALSE;
 		}
 	      else 
 		{
@@ -2425,7 +2425,7 @@ static void applPosRelat(PPos, RP, pRegle, pAttr, pSchP, pPa1, pDoc, appl)
 		    if (PPos->PosEdge == Right && PPos->PosRefEdge == Right)
 		    /* le cote droit du pave est a droite du */
 		    /* cote droit de l'englobant: debordement */
-		      pPa1->AbHorizEnclosing = False;
+		      pPa1->AbHorizEnclosing = FALSE;
 		  }
 	        }
 	    else if (pRegle->PrType == PtVertPos)
@@ -2456,7 +2456,7 @@ static void applPosRelat(PPos, RP, pRegle, pAttr, pSchP, pPa1, pDoc, appl)
 		       if (PPos->PosDistance - HauteurHautPage >= 0)
 		         PPos->PosDistance = PPos->PosDistance - HauteurHautPage;
 		    }
-		  PPos->PosUserSpecified = False;
+		  PPos->PosUserSpecified = FALSE;
 		}
 #endif /* __COLPAGE__ */
 	      if (PPos->PosDistance < 0)
@@ -2464,13 +2464,13 @@ static void applPosRelat(PPos, RP, pRegle, pAttr, pSchP, pPa1, pDoc, appl)
 		  if (PPos->PosEdge == Top && PPos->PosRefEdge == Top)
 		    /* le haut du pave est au-dessus du */
 		    /* haut de l'englobant: debordement */
-		    pPa1->AbVertEnclosing = False;
+		    pPa1->AbVertEnclosing = FALSE;
 		 }
 	      else if (PPos->PosDistance > 0)
 		if (PPos->PosEdge == Bottom && PPos->PosRefEdge == Bottom)
 		  /* le bas du pave est au-dessous du */
 		  /* bas de l'englobant: debordement */
-		  pPa1->AbVertEnclosing = False;
+		  pPa1->AbVertEnclosing = FALSE;
 	      }
 	} 
       else
@@ -2492,7 +2492,7 @@ static void applPosRelat(PPos, RP, pRegle, pAttr, pSchP, pPa1, pDoc, appl)
 	    PPos->PosUserSpecified = pRe1->PoUserSpecified;
 	    if (PPos->PosUserSpecified)
 	       PPos->PosUserSpecified = CheckPPosUser(pPa1, pDoc);
-	    *appl = True;
+	    *appl = TRUE;
 	    
 	  }
 	else if (pPa1->AbEnclosing == NULL && pRe1->PoRelation == RlEnclosing)
@@ -2519,12 +2519,12 @@ static void applPosRelat(PPos, RP, pRegle, pAttr, pSchP, pPa1, pDoc, appl)
 	    if (FirstCreation)
 	      PPos->PosUserSpecified = pRe1->PoUserSpecified;
 	    else
-	      PPos->PosUserSpecified = False;
+	      PPos->PosUserSpecified = FALSE;
 	    if (PPos->PosUserSpecified)
 	      PPos->PosUserSpecified = CheckPPosUser(pPa1, pDoc);
 	    PPos->PosUnit = pRe1->PoDistUnit;
 	    PPos->PosAbRef = NULL;
-	    *appl = True;
+	    *appl = TRUE;
 	  }
 	else
 	  /* on n'a pas trouve' le pave' de reference */
@@ -2563,15 +2563,15 @@ static void applPosRelat(PPos, RP, pRegle, pAttr, pSchP, pPa1, pDoc, appl)
 	       PPos->PosDistance = 0;
 	    /* on pourra reessayer d'appliquer la regle plus tard : */
 	    /* le precedent existera peut etre, alors */
-	    *appl = False;
+	    *appl = FALSE;
 	    PPos->PosUnit = pRe1->PoDistUnit;
 	    if (FirstCreation)
 	      PPos->PosUserSpecified = pRe1->PoUserSpecified;
 	    else
-	      PPos->PosUserSpecified = False;
+	      PPos->PosUserSpecified = FALSE;
 	    if (PPos->PosUserSpecified)
 	       PPos->PosUserSpecified = CheckPPosUser(pPa1, pDoc);
-            pPa1->AbVertEnclosing = True;
+            pPa1->AbVertEnclosing = TRUE;
 	    }
     }
 }
@@ -2603,20 +2603,20 @@ static void appldimension(PDim, pAb, pSchP, pAttr, appl, pRegle, pDoc)
   
   /* on met a priori les valeurs correspondant a une dimension */
   /* egale a celle du contenu. */
-  PDim->DimIsPosition = False;
+  PDim->DimIsPosition = FALSE;
   PDim->DimValue = 0;
   PDim->DimAbRef = NULL;
   PDim->DimUnit = pRegle->PrDimRule.DrUnit;
-  PDim->DimSameDimension = True;
+  PDim->DimSameDimension = TRUE;
   PDim->DimMinimum = pRegle->PrDimRule.DrMin;
   if (FirstCreation)
     PDim->DimUserSpecified = pRegle->PrDimRule.DrUserSpecified;
   else
-    PDim->DimUserSpecified = False;
+    PDim->DimUserSpecified = FALSE;
   if (PDim->DimUserSpecified)
     PDim->DimUserSpecified = CheckPPosUser(pAb, pDoc);
 
-  *appl = False;
+  *appl = FALSE;
   pRe1 = &pRegle->PrDimRule;
   if (pRe1->DrPosition)
     {
@@ -2625,7 +2625,7 @@ static void appldimension(PDim, pAb, pSchP, pAttr, appl, pRegle, pDoc)
       applPosRelat(&PDim->DimPosition, pRe1->DrPosRule, pRegle, pAttr, pSchP, pAb, pDoc, appl);
       /* si la regle a pu etre appliquee, le boite est reellement elastique */
       if (*appl)
-	PDim->DimIsPosition = True;
+	PDim->DimIsPosition = TRUE;
     }
   else if (pRe1->DrAbsolute)
     {
@@ -2646,12 +2646,12 @@ static void appldimension(PDim, pAb, pSchP, pAttr, appl, pRegle, pDoc)
       else		
 	/* c'est la valeur elle meme qui est dans la regle */
 	PDim->DimValue = pRe1->DrValue;
-      *appl = True;
+      *appl = TRUE;
     }
   else if (pRe1->DrRelation == RlEnclosed)
     {
       /* dimension du contenu */
-      *appl = True;	
+      *appl = TRUE;	
       /* les valeurs mises a priori conviennent */
       PDim->DimValue = pRe1->DrValue;	
     } 
@@ -2696,7 +2696,7 @@ static void appldimension(PDim, pAb, pSchP, pAttr, appl, pRegle, pDoc)
 		  /* c'est la valeur elle meme */
 		  PDim->DimValue = pRe1->DrValue;
 	      }
-	    *appl = True;
+	    *appl = TRUE;
 	  }
       if (pP != NULL)
 	{
@@ -2715,13 +2715,13 @@ static void appldimension(PDim, pAb, pSchP, pAttr, appl, pRegle, pDoc)
 		/* cherche si l'elem. possede l'attribut de la regle */
 		{
 		  pA = pAb->AbElement->ElFirstAttr;
-		  stop = False;
+		  stop = FALSE;
 		  do
 		    if (pA == NULL)
-		      stop = True;	/* dernier attribut de l'element */
+		      stop = TRUE;	/* dernier attribut de l'element */
 		    else if (pA->AeAttrNum == AttrRegle
 			     && pA->AeAttrSSchema->SsPSchema == pSchP)
-		      stop = True;	/* c'est l'attribut cherche' */
+		      stop = TRUE;	/* c'est l'attribut cherche' */
 		    else
 		      pA = pA->AeNext;
 		  while (!(stop));
@@ -2739,7 +2739,7 @@ static void appldimension(PDim, pAb, pSchP, pAttr, appl, pRegle, pDoc)
 	    /* c'est la valeur elle-meme */
 	    PDim->DimValue = pRe1->DrValue;
 	  PDim->DimUnit = pRe1->DrUnit;
-	  *appl = True;
+	  *appl = TRUE;
 	}
     }
 }
@@ -2774,15 +2774,15 @@ static boolean applCol(pDoc, pAb, VueSch, pRegle)
     int             frame, h, Vue;
     boolean         bool, pavedetruit, trouve;
     PtrElement   pElGrCols, pElGr1, pSuiv;
-    pavedetruit = False; /* a priori pas de destruction de paves */
+    pavedetruit = FALSE; /* a priori pas de destruction de paves */
     if (pRegle->PrViewNum == VueSch)
 	/* la regle Column concerne la vue du pave traite' */
     {
 	Vue = pAb->AbDocView;
 	pEl = pAb->AbElement;
         pElCol = NULL;
-	colexiste = False;
-	AvantpEl = False; /* il faut recreer l'image si les marques sont creees*/
+	colexiste = FALSE;
+	AvantpEl = FALSE; /* il faut recreer l'image si les marques sont creees*/
 	/* a priori, on n'a pas a creer les paves si la */
 	/* colonne existe deja (sauf si manque colgroupee */
         /* si pEl est une marque page qui n'est pas une page debut */
@@ -2819,7 +2819,7 @@ static boolean applCol(pDoc, pAb, VueSch, pRegle)
 		/* donc on ne cree pas une nouvelle marque */
 		{
 		  pElCol = pEl1;
-		  colexiste = True;
+		  colexiste = TRUE;
 	          /* code temporaire : si pas de ColGroup qui precede */
 		  /* ce ColBegin, on en ajoute un pour etre conforme au */
 		  /* nouveau code */
@@ -2830,7 +2830,7 @@ static boolean applCol(pDoc, pAb, VueSch, pRegle)
 		      /* si l'element ColGroup existe, on ne cree rien */
 		      /* sinon, on cree l'element ColGroup */
 	              pElGrCols = NewSubtree(PageBreak + 1, pEl->ElSructSchema,
-			pDoc, pEl->ElAssocNum, True, True, True,True);
+			pDoc, pEl->ElAssocNum, TRUE, TRUE, TRUE,TRUE);
 	              InsertElementBefore (pElCol, pElGrCols);
 		      pElGrCols->ElPageType = ColGroup;
 		      pElGrCols->ElViewPSchema = VueSch;
@@ -2855,7 +2855,7 @@ static boolean applCol(pDoc, pAb, VueSch, pRegle)
 	    while (!stop)
 		if (pPrec->ElTerminal)
 		{
-		    stop = True;
+		    stop = TRUE;
 		    /* ignore les sauts de page pour les autres vues */
 		    if (pPrec->ElTypeNumber == PageBreak + 1)
 			if (pPrec->ElViewPSchema != VueSch)
@@ -2868,7 +2868,7 @@ static boolean applCol(pDoc, pAb, VueSch, pRegle)
 		{
 		    pPrec = pPrec->ElFirstChild;
 		    if (pPrec == NULL)
-			stop = True;
+			stop = TRUE;
 		    else
 			while (pPrec->ElNext != NULL)
 			    pPrec = pPrec->ElNext;
@@ -2881,7 +2881,7 @@ static boolean applCol(pDoc, pAb, VueSch, pRegle)
 			if (pEl1->ElViewPSchema == VueSch 
 	                           && pEl1->ElPageType == ColBegin)
 			  {
-			    colexiste = True;
+			    colexiste = TRUE;
 			    pElCol = pEl1;
 	                    /* code temporaire : si pas de ColGroup qui precede */
 		            /* ce ColBegin, on en ajoute un pour etre conforme au */
@@ -2893,13 +2893,13 @@ static boolean applCol(pDoc, pAb, VueSch, pRegle)
 		              {
 		                /* on cree l'element ColGroup */
 	                        pElGrCols = NewSubtree(PageBreak + 1, pEl->ElSructSchema,
-			           pDoc, pEl->ElAssocNum, True, True, True, True);
+			           pDoc, pEl->ElAssocNum, TRUE, TRUE, TRUE, TRUE);
 	                        InsertElementBefore (pElCol, pElGrCols);
 		                pElGrCols->ElPageType = ColGroup;
 		                pElGrCols->ElViewPSchema = VueSch;
 		                pElGrCols->ElPageNumber = 0;
 		                /* numero attribue pour les groupes */
-				AvantpEl = True; /* pour recreer l'image */
+				AvantpEl = TRUE; /* pour recreer l'image */
 				/* on detruit le pave de pElCol pour */
 				/* le recreer apres pElGrCols */
 				pP = pElCol->ElAbstractBox[Vue-1];
@@ -2917,7 +2917,7 @@ static boolean applCol(pDoc, pAb, VueSch, pRegle)
 			      || pEl->ElNext->ElTypeNumber != PageBreak+1)
 			      {
 			      pEl1 = NewSubtree(PageBreak + 1, pEl->ElSructSchema, pDoc, 
-				 pEl->ElAssocNum, True, True, True, True);
+				 pEl->ElAssocNum, TRUE, TRUE, TRUE, TRUE);
 		              InsertElementAfter(pEl, pEl1);
 		              pEl1->ElPageType = ColComputed;
 		              pEl1->ElViewPSchema = VueSch;
@@ -2926,7 +2926,7 @@ static boolean applCol(pDoc, pAb, VueSch, pRegle)
 
 		               /* on cree une marque groupe de colonnes */
 		              pElGr1 = NewSubtree(PageBreak + 1, pEl->ElSructSchema, pDoc, 
-			       pEl->ElAssocNum, True, True, True, True);
+			       pEl->ElAssocNum, TRUE, TRUE, TRUE, TRUE);
 		               InsertElementAfter(pEl, pElGr1);
 		               pElGr1->ElPageType = ColGroup;
 		               pElGr1->ElViewPSchema = VueSch;
@@ -2945,9 +2945,9 @@ static boolean applCol(pDoc, pAb, VueSch, pRegle)
 	    /* on cree une marque de colonne */
 	    /* et une marque groupe de colonnes Cols */
 	    pElGrCols = NewSubtree(PageBreak + 1, pEl->ElSructSchema,
-			    pDoc, pEl->ElAssocNum, True, True, True, True);
+			    pDoc, pEl->ElAssocNum, TRUE, TRUE, TRUE, TRUE);
 	    pElCol = NewSubtree(PageBreak + 1, pEl->ElSructSchema, pDoc, 
-				 pEl->ElAssocNum, True, True, True, True);
+				 pEl->ElAssocNum, TRUE, TRUE, TRUE, TRUE);
 	    if (pElCol != NULL)
 		/* on a cree une marque de colonne */
 	      {
@@ -2981,7 +2981,7 @@ static boolean applCol(pDoc, pAb, VueSch, pRegle)
 	          else 
 		    {
 		      /* insersion avant pEl (comme pour une regle Page) */
-		      AvantpEl = True;
+		      AvantpEl = TRUE;
 		      InsertElementBefore(pEl, pElCol);
 	              InsertElementBefore (pElCol, pElGrCols);
 		      /* on cree une marque colonne et une marque groupe */
@@ -2989,7 +2989,7 @@ static boolean applCol(pDoc, pAb, VueSch, pRegle)
 		      /* a l'ancienne regle apres l'element */
 		      /* si l'element a des suivants */
 		      pSuiv = pEl;
-		      trouve = False;
+		      trouve = FALSE;
 		      while (!trouve && pSuiv != NULL)
 			{
 			  trouve = (pSuiv->ElNext != NULL);
@@ -3002,9 +3002,9 @@ static boolean applCol(pDoc, pAb, VueSch, pRegle)
 		      /* de colonnes apres pour revenir */
 		      /* a l'ancienne regle apres l'element */
 		      pEl1 = NewSubtree(PageBreak + 1, pEl->ElSructSchema, pDoc, 
-				 pEl->ElAssocNum, True, True, True, True);
+				 pEl->ElAssocNum, TRUE, TRUE, TRUE, TRUE);
 		      pElGr1 = NewSubtree(PageBreak + 1, pEl->ElSructSchema, pDoc, 
-				 pEl->ElAssocNum, True, True, True, True);
+				 pEl->ElAssocNum, TRUE, TRUE, TRUE, TRUE);
 		      InsertElementAfter(pEl, pElGr1);
 		      InsertElementAfter(pElGr1, pEl1);
 		      pEl1->ElPageType = ColComputed;
@@ -3031,7 +3031,7 @@ static boolean applCol(pDoc, pAb, VueSch, pRegle)
 	   pP = pEl->ElAbstractBox[Vue - 1];
 	   /* destruction des paves de l'element pEl */
            if (pP != NULL)
-	     pavedetruit = True; /* code retour */
+	     pavedetruit = TRUE; /* code retour */
 	   while (pP != NULL && pP->AbElement == pEl)
 	     {
 	       TuePave(pP);
@@ -3060,9 +3060,9 @@ static boolean applCol(pDoc, pAb, VueSch, pRegle)
 	      
             /* cree les paves de la marque de colonne et groupe de colonnes */
             /* correspondant a la regle Column */
-	    pP = CreePaves(pElGrCols, pDoc, Vue, True, True, &complet);
+	    pP = CreePaves(pElGrCols, pDoc, Vue, TRUE, TRUE, &complet);
 	    if (pElGrCols->ElAbstractBox[Vue-1] != NULL)
-	      pP = CreePaves(pElCol, pDoc, Vue, True, True, &complet);
+	      pP = CreePaves(pElCol, pDoc, Vue, TRUE, TRUE, &complet);
 	  } /* fin AvantpEl */
 
         } /* fin pEl marque page non debut */
@@ -3126,7 +3126,7 @@ static void applPage(pDoc, pAb, VueSch, pRegle, TypeMiseEnPage)
 #endif /* __COLPAGE__ */
     
 #ifdef __COLPAGE__
-    pavedetruit = False; /* a priori pas de destruction de paves */
+    pavedetruit = FALSE; /* a priori pas de destruction de paves */
 #endif /* __COLPAGE__ */
     if (pRegle->PrViewNum == VueSch)
 	/* la regle Page concerne la vue du pave traite' */
@@ -3135,22 +3135,22 @@ static void applPage(pDoc, pAb, VueSch, pRegle, TypeMiseEnPage)
 	Vue = pAb->AbDocView;
 #endif /* __COLPAGE__ */
 	pElPage = NULL;
-	pageexiste = False;
+	pageexiste = FALSE;
 	pEl = pAb->AbElement;
 	/* l'element contient-il deja une marque de page de debut */
 	/* d'element pour cette vue ? */
 	if (!pEl->ElTerminal)
 	{
 	    pElFils = pEl->ElFirstChild;
-	    stop = False;
+	    stop = FALSE;
 	    do
 		if (pElFils == NULL)
-		    stop = True;
+		    stop = TRUE;
 		else
 		{
 		    pEl1 = pElFils;
 		    if (pEl1->ElTypeNumber != PageBreak + 1)
-			stop = True;
+			stop = TRUE;
 		    else if (pEl1->ElViewPSchema == VueSch && pEl1->ElPageType == PgBegin)
 #ifdef __COLPAGE__
 		      /* on deplace l'element marque page devant l'element */
@@ -3165,20 +3165,20 @@ static void applPage(pDoc, pAb, VueSch, pRegle, TypeMiseEnPage)
 	                /* construction de l'image */
 	                {
 	                  DeleteElement(&pEl1);
-	                  stop = True;
+	                  stop = TRUE;
 	                }
 	              else
 	                /* pEl est la racine ou la MP a deja des paves */
 	                {
 		          pElPage = pEl1;
-		          pageexiste = True;
-		          stop = True;
+		          pageexiste = TRUE;
+		          stop = TRUE;
 	                }
 #else /* __COLPAGE__ */
 		    {
 			pElPage = pEl1;
-			pageexiste = True;
-			stop = True;
+			pageexiste = TRUE;
+			stop = TRUE;
 		    }
 #endif /* __COLPAGE__ */
 		    else
@@ -3200,7 +3200,7 @@ static void applPage(pDoc, pAb, VueSch, pRegle, TypeMiseEnPage)
 	    while (!stop)
 		if (pPrec->ElTerminal)
 		{
-		    stop = True;
+		    stop = TRUE;
 		    /* ignore les saut de pages pour les autres vues */
 		    if (pPrec->ElTypeNumber == PageBreak + 1)
 #ifdef __COLPAGE__
@@ -3222,7 +3222,7 @@ static void applPage(pDoc, pAb, VueSch, pRegle, TypeMiseEnPage)
 		{
 		    pPrec = pPrec->ElFirstChild;
 		    if (pPrec == NULL)
-			stop = True;
+			stop = TRUE;
 		    else
 			while (pPrec->ElNext != NULL)
 			    pPrec = pPrec->ElNext;
@@ -3234,7 +3234,7 @@ static void applPage(pDoc, pAb, VueSch, pRegle, TypeMiseEnPage)
 		    if (pEl1->ElTypeNumber == PageBreak + 1)
 			if (pEl1->ElViewPSchema == VueSch && pEl1->ElPageType == PgBegin)
 			{
-			    pageexiste = True;
+			    pageexiste = TRUE;
 			    pElPage = pEl1;
 			}
 	    }
@@ -3245,7 +3245,7 @@ static void applPage(pDoc, pAb, VueSch, pRegle, TypeMiseEnPage)
 	{
 	    /* on cree une marque de page */
 	    pElPage = NewSubtree(PageBreak + 1, pEl->ElSructSchema, pDoc, 
-				 pEl->ElAssocNum, True, True, True, True);
+				 pEl->ElAssocNum, TRUE, TRUE, TRUE, TRUE);
 	    if (pElPage != NULL)
 		/* on a cree une marque de page */
 
@@ -3290,7 +3290,7 @@ static void applPage(pDoc, pAb, VueSch, pRegle, TypeMiseEnPage)
 	          /* cf. code de InsereMarque de page.c */
 	          pP = pEl->ElAbstractBox[Vue - 1];
 	          /* destruction des paves de l'element pEl */
-	          pavedetruit = True; /* code retour */
+	          pavedetruit = TRUE; /* code retour */
 	          while (pP != NULL && pP->AbElement == pEl)
 	            {
 	              TuePave(pP);
@@ -3320,15 +3320,15 @@ static void applPage(pDoc, pAb, VueSch, pRegle, TypeMiseEnPage)
 	/* TODO quand on traitera les regles recto verso */
 	/*  on verifie que la cardinalite de la page est en accord avec la
 	   regle appliquee */
-	PagePleine(Vue, pDoc, pElPage, True);
+	PagePleine(Vue, pDoc, pElPage, TRUE);
 	if (pElPage != NULL
 	    && !VuePleine (Vue, pDoc, pElPage))
             /* cree les paves de la marque de page */
             /* correspondant a la regle page */
 	    /* si la vue n'est pas pleine */
-	  pP = CreePaves(pElPage, pDoc, Vue, True, True, &complet);
+	  pP = CreePaves(pElPage, pDoc, Vue, TRUE, TRUE, &complet);
 	/* on met a jour les numeros des pages suivantes */
-        MajNumeros(NextElement(pElPage), pElPage, pDoc, True);
+        MajNumeros(NextElement(pElPage), pElPage, pDoc, TRUE);
        }  /* fin de !pageexiste */
     }
   return pavedetruit;
@@ -3352,7 +3352,7 @@ static void applPage(pDoc, pAb, VueSch, pRegle, TypeMiseEnPage)
 		    /* page non numerotee */
 		    pEl1->ElPageNumber = 1;
 		/* faut-il creer les paves de la marque de page ? */
-		cree = True;	/* a priori, on les cree */
+		cree = TRUE;	/* a priori, on les cree */
 		if (pElPage->ElNext != NULL)
 		    /* la marque de page a un element suivant */
 		{
@@ -3360,7 +3360,7 @@ static void applPage(pDoc, pAb, VueSch, pRegle, TypeMiseEnPage)
 		    if (pP == NULL)
 			/* l'element suivant la marque de page n'a pas de pave */
 			/* dans la vue,on ne cree pas les paves de la marque page */
-			cree = False;
+			cree = FALSE;
 		    else	
 			/* on ne cree les paves de la marque de page que le pave */
 			/* de l'element suivant est complet en tete. */
@@ -3368,9 +3368,9 @@ static void applPage(pDoc, pAb, VueSch, pRegle, TypeMiseEnPage)
 		}
 		if (cree)
 		    /* cree les paves de la marque de page */
-		    pP = CreePaves(pElPage, pDoc, pAb->AbDocView, True, True, &complet);
+		    pP = CreePaves(pElPage, pDoc, pAb->AbDocView, TRUE, TRUE, &complet);
 		/* on met a jour les numeros des pages suivantes */
-		MajNumeros(NextElement(pElPage), pElPage, pDoc, True);
+		MajNumeros(NextElement(pElPage), pElPage, pDoc, TRUE);
 	    }
 	}
 	
@@ -3408,7 +3408,7 @@ static boolean trouvepave(Ntype, pSchP, PNom, P)
   PtrAbstractBox         PtPav;
   PtrAbstractBox         pPa1;
   
-  ret = False;
+  ret = FALSE;
   pPa1 = *P;
   if (pPa1->AbPresentationBox)
    if (pPa1->AbLeafType == LtText)
@@ -3420,7 +3420,7 @@ static boolean trouvepave(Ntype, pSchP, PNom, P)
 		   PNom) == 0;
   if (!ret)
     if ((*P)->AbFirstEnclosed == NULL)
-      ret = False;
+      ret = FALSE;
     else
       {
 	PtPav = (*P)->AbFirstEnclosed;
@@ -3472,17 +3472,17 @@ static boolean ACopier(NType, pSchP, pSchS, PNom, pEl)
   PtrAttribute     pA;
   PtrPRule    pRe1;
   
-  ret = False;		
+  ret = FALSE;		
   /* cherche toutes les regles de  creation de cet element */
-  pRCre = ReglePEl(*pEl, &pSP, &pSS, 0, NULL, 1, PtFunction, False, False, &pA);
-  stop = False;
+  pRCre = ReglePEl(*pEl, &pSP, &pSS, 0, NULL, 1, PtFunction, FALSE, FALSE, &pA);
+  stop = FALSE;
   do
     if (pRCre == NULL)
       /* il n' y a plus de regles */
-      stop = True;
+      stop = TRUE;
     else if (pRCre->PrType != PtFunction)
       /* il n'y a plus de regle fonction de presentation */
-      stop = True;
+      stop = TRUE;
     else
       {
 	/* la regle est une fonction de presentation */
@@ -3672,12 +3672,12 @@ static PtrPRule GetRegleCopy(pRP)
 {
   boolean	found;
 
-  found = False;
+  found = FALSE;
   while (pRP != NULL && !found)
     {
       if (pRP->PrType == PtFunction)
 	if (pRP->PrPresFunction == FnCopy)
-	  found = True;
+	  found = TRUE;
       if (!found)
 	{
 	  pRP = pRP->PrNextPRule;
@@ -3730,11 +3730,11 @@ void applCopie(pDoc, pRegle, pAb, AvecDescCopie)
 
   pEl1 = pAb->AbElement;
   pE = NULL;
-  Ref = False;
+  Ref = FALSE;
   if (pEl1->ElSructSchema->SsRule[pEl1->ElTypeNumber - 1].SrConstruct == CsReference)
     {
       /* la regle Copy s'applique a un pave' d'un element reference */
-      Ref = True;
+      Ref = TRUE;
       /* cherche l'element qui est reference' */
       pE = ReferredElement(pEl1->ElReference, &IDoc, &pDocRef);
     }
@@ -3745,7 +3745,7 @@ void applCopie(pDoc, pRegle, pAb, AvecDescCopie)
           /* la regle Copy s'applique a un pave' de presentation */
           /* cree' par un attribut reference */
           {
-          Ref = True;
+          Ref = TRUE;
           /* cherche l'element qui est reference' par l'attribut */
           pE = ReferredElement(pAb->AbCreatorAttr->AeAttrReference, &IDoc, &pDocRef);
           }
@@ -3778,7 +3778,7 @@ void applCopie(pDoc, pRegle, pAb, AvecDescCopie)
 	    /* cherche dans toutes les vues une boite du type de celle a */
 	    /* copier parmi les paves de cet element et de ses descendants */
 	    vue = 0;
-	    found = False;
+	    found = FALSE;
 	    do
 	      {
 		vue++;	
@@ -3808,7 +3808,7 @@ void applCopie(pDoc, pRegle, pAb, AvecDescCopie)
 		if (pP->AbText != NULL)
 		   *pPa1->AbText = *pP->AbText;
 		pPa1->AbLanguage = pP->AbLanguage;
-		pPa1->AbCanBeModified = False;
+		pPa1->AbCanBeModified = FALSE;
 	      }
 	    else
 	      /* on n'a pas trouve le pave a copier */
@@ -3849,7 +3849,7 @@ void applCopie(pDoc, pRegle, pAb, AvecDescCopie)
 			  {
 			  pElSv = pAb->AbElement;
 			  pAb->AbElement = pE;
-			  applCopie(pDoc, pRP, pAb, True);
+			  applCopie(pDoc, pRP, pAb, TRUE);
 			  pAb->AbElement = pElSv;
 			  pE = NULL;
 			  }
@@ -3915,7 +3915,7 @@ void applCopie(pDoc, pRegle, pAb, AvecDescCopie)
       pPa1 = pAb;
       /* initialise le pave */
       pPa1->AbLeafType = LtText;
-      pPa1->AbCanBeModified = False;
+      pPa1->AbCanBeModified = FALSE;
       pPa1->AbVolume = 0;
       pBuffPrec = NULL;
       /* pas de buffer precedent */
@@ -3931,7 +3931,7 @@ void applCopie(pDoc, pRegle, pAb, AvecDescCopie)
 	pRP = NULL;
 	if (pE->ElSructSchema->SsRule[pE->ElTypeNumber - 1].SrConstruct == CsReference)
 	   {
-	   pRP = ReglePEl(pE, &pSchP, &pSchS, 0, NULL, 1, PtFunction, False, False, &pAttr);
+	   pRP = ReglePEl(pE, &pSchP, &pSchS, 0, NULL, 1, PtFunction, FALSE, FALSE, &pAttr);
 	   pRP = GetRegleCopy(pRP);
 	   }
 	if (pRP == NULL)
@@ -3942,7 +3942,7 @@ void applCopie(pDoc, pRegle, pAb, AvecDescCopie)
 	  {
 	  pElSv = pAb->AbElement;
 	  pAb->AbElement = pE;
-	  applCopie(pDoc, pRP, pAb, False);
+	  applCopie(pDoc, pRP, pAb, FALSE);
 	  pAb->AbElement = pElSv;
 	  }
 	}
@@ -4008,13 +4008,13 @@ boolean Applique(pRegle, pSchP, pAb, pDoc, pAttr)
   PtrAbstractBox         pPa1;
   PictInfo *myImageDescriptor;
 #ifdef __COLPAGE__
-  *pavedetruit = False;
+  *pavedetruit = FALSE;
 #else /* __COLPAGE__ */
   boolean         danspage, apresSautPage;
   AbPosition     *pPavP1;
 #endif /* __COLPAGE__ */
   
-  appl = True;
+  appl = TRUE;
   if (pRegle != NULL && pAb != NULL)
     if (pAb->AbElement != NULL)
     {
@@ -4039,7 +4039,7 @@ boolean Applique(pRegle, pSchP, pAb, pDoc, pAttr)
 	    /* Pas de regle pour la racine, on met la valeur par defaut */
 	    {
 	      pPa1->AbVisibility = 10;
-	      appl = True;
+	      appl = TRUE;
 	    }
 	  break;
 	case PtDepth:
@@ -4049,7 +4049,7 @@ boolean Applique(pRegle, pSchP, pAb, pDoc, pAttr)
 	    /* Pas de regle pour la racine, on met la valeur par defaut */
 	    {
 	      pPa1->AbDepth = 0;
-	      appl = True;
+	      appl = TRUE;
 	    }
 	  break;
 	case PtFillPattern:
@@ -4059,7 +4059,7 @@ boolean Applique(pRegle, pSchP, pAb, pDoc, pAttr)
 	    /* Pas de regle pour la racine, on met la valeur par defaut */
 	    {
 	      pPa1->AbFillPattern = 0;
-	      appl = True;
+	      appl = TRUE;
 	    }
 	  break;
 	case PtBackground:
@@ -4069,7 +4069,7 @@ boolean Applique(pRegle, pSchP, pAb, pDoc, pAttr)
 	    /* Pas de regle pour la racine, on met la valeur par defaut */
 	    {
 	      pPa1->AbBackground = 0;
-	      appl = True;
+	      appl = TRUE;
 	    }
 	  break;
 	case PtForeground:
@@ -4079,7 +4079,7 @@ boolean Applique(pRegle, pSchP, pAb, pDoc, pAttr)
 	    /* Pas de regle pour la racine, on met la valeur par defaut */
 	    {
 	      pPa1->AbForeground = 1;
-	      appl = True;
+	      appl = TRUE;
 	    }
 	  break;
 	case PtLineStyle:
@@ -4088,7 +4088,7 @@ boolean Applique(pRegle, pSchP, pAb, pDoc, pAttr)
 	  if (!appl && pPa1->AbElement->ElParent == NULL)
 	    {
 	      pPa1->AbLineStyle = 'S';
-	      appl = True;
+	      appl = TRUE;
 	    }
 	  break;
 	case PtFont:
@@ -4097,7 +4097,7 @@ boolean Applique(pRegle, pSchP, pAb, pDoc, pAttr)
 	  if (!appl && pPa1->AbElement->ElParent == NULL)
 	    {
 	      pPa1->AbFont = 'T';
-	      appl = True;
+	      appl = TRUE;
 	    }
 	  if (pPa1->AbFont >= 'a' && pPa1->AbFont <= 'z')
 	    /* on n'utilise que des majuscules pour les noms de police */
@@ -4110,7 +4110,7 @@ boolean Applique(pRegle, pSchP, pAb, pDoc, pAttr)
 	    /* Pas de regle pour la racine, on met la valeur par defaut */
 	    {
 	      pPa1->AbAdjust = AlignLeft;
-	      appl = True;
+	      appl = TRUE;
 	    }
 	  break;
 	case PtJustify:
@@ -4119,8 +4119,8 @@ boolean Applique(pRegle, pSchP, pAb, pDoc, pAttr)
 	  if (!appl && pPa1->AbElement->ElParent == NULL)
 	    /* Pas de regle pour la racine, on met la valeur par defaut */
 	    {
-	      pPa1->AbJustify = False;
-	      appl = True;
+	      pPa1->AbJustify = FALSE;
+	      appl = TRUE;
 	    }
 	  break;
 	case PtHyphenate:
@@ -4129,8 +4129,8 @@ boolean Applique(pRegle, pSchP, pAb, pDoc, pAttr)
 	  if (!appl && pPa1->AbElement->ElParent == NULL)
 	    /* Pas de regle pour la racine, on met la valeur par defaut */
 	    {
-	      pPa1->AbHyphenate = False;
-	      appl = True;
+	      pPa1->AbHyphenate = FALSE;
+	      appl = TRUE;
 	    }
 	  break;
 	case PtStyle:
@@ -4139,7 +4139,7 @@ boolean Applique(pRegle, pSchP, pAb, pDoc, pAttr)
 	    /* Pas de regle pour la racine, on met la valeur par defaut */
 	    {
 	      pPa1->AbHighlight = 0;
-	      appl = True;
+	      appl = TRUE;
 	    }
 	  else
 	    switch (c)
@@ -4170,7 +4170,7 @@ boolean Applique(pRegle, pSchP, pAb, pDoc, pAttr)
 	    /* Pas de regle pour la racine, on met la valeur par defaut */
 	    {
 	      pPa1->AbUnderline = 0;
-	      appl = True;
+	      appl = TRUE;
 	    } 
 	  else
 	    switch (c)
@@ -4195,7 +4195,7 @@ boolean Applique(pRegle, pSchP, pAb, pDoc, pAttr)
 	    /* Pas de regle pour la racine, on met la valeur par defaut */
 	    {
 	      pPa1->AbThickness = 0;
-	      appl = True;
+	      appl = TRUE;
 	    } 
 	  else
 	    switch (c)
@@ -4220,7 +4220,7 @@ boolean Applique(pRegle, pSchP, pAb, pDoc, pAttr)
 	      {
 	        pPa1->AbSize = 3;
 	        pPa1->AbSizeUnit = UnRelative;
-		appl = True;
+		appl = TRUE;
 	      }
 	  break;
 	case PtIndent:
@@ -4231,7 +4231,7 @@ boolean Applique(pRegle, pSchP, pAb, pDoc, pAttr)
 	    /* Pas de regle pour la racine, on met la valeur par defaut */
 	    {
 	      pPa1->AbIndent = 0;
-	      appl = True;
+	      appl = TRUE;
 	    }
 	  break;
 	case PtLineSpacing:
@@ -4243,7 +4243,7 @@ boolean Applique(pRegle, pSchP, pAb, pDoc, pAttr)
 	    {
 	      pPa1->AbLineSpacing = 10;
 	      pPa1->AbLineSpacingUnit = UnRelative;
-	      appl = True;
+	      appl = TRUE;
 	    }
 	  break;
 	case PtLineWeight:
@@ -4255,7 +4255,7 @@ boolean Applique(pRegle, pSchP, pAb, pDoc, pAttr)
 	    {
 	      pPa1->AbLineWeight = 1;
 	      pPa1->AbLineWeightUnit = UnPoint;
-	      appl = True;
+	      appl = TRUE;
 	    }
 	  break;
 	case PtVertRef:
@@ -4295,7 +4295,7 @@ boolean Applique(pRegle, pSchP, pAb, pDoc, pAttr)
 	      /* boite de haut ou de bas de page qui doit etre placee par */
 	      /* rapport au filet separateur) ou s'il se positionne par */
 	      /* rapport a un autre element. */
-	      apresSautPage = False;
+	      apresSautPage = FALSE;
 	      if (pPa1->AbPrevious != NULL)
 		/* il y a un pave precedent */ 
 		{
@@ -4305,14 +4305,14 @@ boolean Applique(pRegle, pSchP, pAb, pDoc, pAttr)
 		      && pPa1->AbElement->ElTypeNumber != PageBreak + 1)
 		    if (pRegle->PrPosRule.PoRelation == RlSameLevel 
 		        || pRegle->PrPosRule.PoRelation == RlPrevious)
-		     apresSautPage = True;
+		     apresSautPage = TRUE;
 		    else 
 		      {
 			if (pRegle->PrPosRule.PoRelation == RlEnclosing)
 		          {
 		  	    if (pPa1->AbPrevious->AbElement->
 			        ElPageType != PgBegin)
-		              apresSautPage = True;
+		              apresSautPage = TRUE;
 		          }  
 		      }
 		}
@@ -4326,13 +4326,13 @@ boolean Applique(pRegle, pSchP, pAb, pDoc, pAttr)
 		    /* l'element precedent est une marque de page pour la vue */
 		    if (pRegle->PrPosRule.PoRelation == RlSameLevel 
 			|| pRegle->PrPosRule.PoRelation == RlPrevious )
-		      apresSautPage = True;
+		      apresSautPage = TRUE;
 	      if (apresSautPage)	
 		/* position: en dessous du pave precedent */ 
 		if (pPa1->AbPrevious == NULL)
 		  /* le pave de la marque de page n'est pas encore cree', on */
 		  /* ne peut pas appliquer la regle de positionnement */
-		  appl = False;
+		  appl = FALSE;
 		else
 		  {
 		    pPavP1 = &pPa1->AbVertPos;
@@ -4341,21 +4341,21 @@ boolean Applique(pRegle, pSchP, pAb, pDoc, pAttr)
 		    pPavP1->PosDistance = 0;
 		    pPavP1->PosUnit = UnPoint;
 		    pPavP1->PosAbRef = pPa1->AbPrevious;
-		    pPavP1->PosUserSpecified = False;
+		    pPavP1->PosUserSpecified = FALSE;
 		  }
 	      else	
 		/* s'il s'agit d'une boite page (celle qui englobe le filet */
 		/* et les hauts et pieds de page), et si elle n'est precedee */
 		/* d'aucun element, elle se positionne en haut de l'englobant. */
 		{
-		  danspage = False;
+		  danspage = FALSE;
 		  if (pPa1->AbEnclosing != NULL)
 		    if (pPa1->AbElement->ElTypeNumber == PageBreak + 1 
 			&& pPa1->AbEnclosing->AbElement->
 			ElTypeNumber != PageBreak + 1 
 			&& pPa1->AbElement->ElPrevious == NULL)
 		      if (pPa1->AbPrevious == NULL)
-			danspage = True;
+			danspage = TRUE;
 		  
 		  if (danspage)
 		    {
@@ -4365,7 +4365,7 @@ boolean Applique(pRegle, pSchP, pAb, pDoc, pAttr)
 		      pPavP1->PosRefEdge = Top;
 		      pPavP1->PosDistance = 0;
 		      pPavP1->PosUnit = UnPoint;
-		      pPavP1->PosUserSpecified = False;
+		      pPavP1->PosUserSpecified = FALSE;
 		    } 
 		  else	
 		    /* applique la regle de positionnement de l'element */
@@ -4398,17 +4398,17 @@ boolean Applique(pRegle, pSchP, pAb, pDoc, pAttr)
 		/* sinon, elle ne s'applique qu'a la vue pour laquelle */
 		/* elle est definie */
 		if (pRegle->PrViewNum == 1 || pRegle->PrViewNum == VueSch)
-		  pPa1->AbInLine = True;
+		  pPa1->AbInLine = TRUE;
 	      break;
 	  case FnNoLine:
 	      if (pPa1->AbLeafType == LtCompound)
 		if (pRegle->PrViewNum == VueSch)
-		   pPa1->AbInLine = False;
+		   pPa1->AbInLine = FALSE;
 	      break;
           case FnPage:
 #ifdef __COLPAGE__
 	      if (applPage(pDoc, pAb, VueSch, pRegle, pRegle->PrPresFunction))
-	        *pavedetruit = True;
+	        *pavedetruit = TRUE;
 #else /* __COLPAGE__ */
 #endif /* __COLPAGE__ */
 	      applPage(pDoc, pAb, VueSch, pRegle, pRegle->PrPresFunction);
@@ -4416,7 +4416,7 @@ boolean Applique(pRegle, pSchP, pAb, pDoc, pAttr)
           case FnColumn:
 #ifdef __COLPAGE__
 	      if (applCol(pDoc, pAb, VueSch, pRegle))
-	        *pavedetruit = True;
+	        *pavedetruit = TRUE;
 #endif /* __COLPAGE__ */
 	      break;
 	  case FnSubColumn:
@@ -4425,7 +4425,7 @@ boolean Applique(pRegle, pSchP, pAb, pDoc, pAttr)
           case FnCopy:
 	      if (!pAb->AbElement->ElHolophrast)
 	        /* on n'applique pas la regle copie a un element holophraste'*/
-	        applCopie(pDoc, pRegle, pAb, True);
+	        applCopie(pDoc, pRegle, pAb, TRUE);
 	      break;
 	  case FnContentRef:
 	      CopieConstante(pRegle->PrPresBox[0], pSchP, pAb);
@@ -4475,7 +4475,7 @@ PtrPRule ChReglePres(pEl, TypeR, Nouveau, pDoc, Vue)
   PtrElement      pEl1;
   PtrPRule    pRe1;
   
-  *Nouveau = False;
+  *Nouveau = FALSE;
   pRegle = NULL;
   if (pEl != NULL)
     {
@@ -4486,7 +4486,7 @@ PtrPRule ChReglePres(pEl, TypeR, Nouveau, pDoc, Vue)
 	  /* cet element n'a aucune regle de presentation specifique, on en */
 	  /* cree une et on la chaine a l'element */
 	  GetReglePres(&pRegle);
-	  *Nouveau = True;
+	  *Nouveau = TRUE;
 	  pEl1->ElFirstPRule = pRegle;
 	  pRegle->PrType = TypeR;
 	} 
@@ -4511,7 +4511,7 @@ PtrPRule ChReglePres(pEl, TypeR, Nouveau, pDoc, Vue)
 		  /* On a examine' toutes les regles specifiques de */
 		  /* l'element, ajoute une nouvelle regle en fin de chaine */
 		  GetReglePres(&pRegle);
-		  *Nouveau = True;
+		  *Nouveau = TRUE;
 		  pRe1->PrNextPRule = pRegle;
 		  pRegle->PrType = TypeR;
 		}
@@ -4608,14 +4608,14 @@ void NouvDimImage(pAb)
   /* traite le changement de largeur */
   
   /* cherche d'abord la regle de dimension qui s'applique a l'element */
-  pRStd = ReglePEl(pEl, &pSPR, &pSSR, 0, NULL, VueSch, PtWidth, False, True, &pAttr);
+  pRStd = ReglePEl(pEl, &pSPR, &pSSR, 0, NULL, VueSch, PtWidth, FALSE, TRUE, &pAttr);
   /* on ne s'occupe que du cas ou l'image est dimensionnee par le contenu */
-  ok = False;
+  ok = FALSE;
   if (!pRStd->PrDimRule.DrPosition)
     if (pRStd->PrDimRule.DrRelation == RlEnclosed)
       /* largeur du contenu */
       if (pAb->AbLeafType == LtPicture)
-	ok = True;
+	ok = TRUE;
   
   if (ok)
     {
@@ -4630,11 +4630,11 @@ void NouvDimImage(pAb)
 	  pRegleDimH->PrCond = NULL;
 	  pRegleDimH->PrViewNum = VueSch;
 	}
-      pRegleDimH->PrDimRule.DrAbsolute = True;
-      pRegleDimH->PrDimRule.DrSameDimens = False;
-      pRegleDimH->PrDimRule.DrMin = False;
+      pRegleDimH->PrDimRule.DrAbsolute = TRUE;
+      pRegleDimH->PrDimRule.DrSameDimens = FALSE;
+      pRegleDimH->PrDimRule.DrMin = FALSE;
       pRegleDimH->PrDimRule.DrUnit = UnPoint;
-      pRegleDimH->PrDimRule.DrAttr = False;
+      pRegleDimH->PrDimRule.DrAttr = FALSE;
       
       /* change la longueur dans la regle specifique */
       pRegleDimH->PrDimRule.DrValue = largeur;
@@ -4643,14 +4643,14 @@ void NouvDimImage(pAb)
   /* traite le changement de hauteur de la boite */
   
   /* cherche d'abord la regle de dimension qui s'applique a l'element */
-  pRStd = ReglePEl(pEl, &pSPR, &pSSR, 0, NULL, VueSch, PtHeight, False, True, &pAttr);
+  pRStd = ReglePEl(pEl, &pSPR, &pSSR, 0, NULL, VueSch, PtHeight, FALSE, TRUE, &pAttr);
   /* on ne s'occupe que du cas ou l'image est dimensionnee par le contenu */
-  ok = False;
+  ok = FALSE;
   if (!pRStd->PrDimRule.DrPosition)
     if (pRStd->PrDimRule.DrRelation == RlEnclosed)
       /* largeur du contenu */
       if (pAb->AbLeafType == LtPicture)
-	ok = True;
+	ok = TRUE;
   
   if (ok)
     {
@@ -4665,11 +4665,11 @@ void NouvDimImage(pAb)
 	  pRegleDimV->PrCond = NULL;
 	  pRegleDimV->PrViewNum = VueSch;
 	}
-      pRegleDimV->PrDimRule.DrAbsolute = True;
-      pRegleDimV->PrDimRule.DrSameDimens = False;
-      pRegleDimV->PrDimRule.DrMin = False;
+      pRegleDimV->PrDimRule.DrAbsolute = TRUE;
+      pRegleDimV->PrDimRule.DrSameDimens = FALSE;
+      pRegleDimV->PrDimRule.DrMin = FALSE;
       pRegleDimV->PrDimRule.DrUnit = UnPoint;
-      pRegleDimV->PrDimRule.DrAttr = False;
+      pRegleDimV->PrDimRule.DrAttr = FALSE;
       
       /* change le parametre de la regle */
       pRegleDimV->PrDimRule.DrValue = hauteur;
@@ -4679,7 +4679,7 @@ void NouvDimImage(pAb)
   
   if (pRegleDimV != NULL || pRegleDimH != NULL)
     {
-      pDoc->DocModified = True;    /* le document est modifie' */
+      pDoc->DocModified = TRUE;    /* le document est modifie' */
       for (VueDoc = 1; VueDoc <= MAX_VIEW_DOC; VueDoc++)
 	if (pEl->ElAbstractBox[VueDoc -1] != NULL)
 	  /* l'element traite' a un pave dans cette vue */
@@ -4690,13 +4690,13 @@ void NouvDimImage(pAb)
 	    {
 	      pP = pEl->ElAbstractBox[VueDoc -1];
 	      /* saute les paves de presentation */
-	      stop = False;
+	      stop = FALSE;
 	      do
 		if (pP == NULL)
-		  stop = True;
+		  stop = TRUE;
 		else
 		  if (!pP->AbPresentationBox)
-		    stop = True;
+		    stop = TRUE;
 		  else
 		    pP = pP->AbNext;
 	      while (!stop);
@@ -4710,7 +4710,7 @@ void NouvDimImage(pAb)
 #else /* __COLPAGE__ */
 		    if (Applique(pRegleDimH, pSPR, pP, pDoc, pAttr))
 #endif /* __COLPAGE__ */
-		      pP->AbWidthChange = True;
+		      pP->AbWidthChange = TRUE;
 		  /* applique la nouvelle regle specifique Verticale */
 		  if (pRegleDimV != NULL)
 #ifdef __COLPAGE__
@@ -4718,7 +4718,7 @@ void NouvDimImage(pAb)
 #else /* __COLPAGE__ */
 		    if (Applique(pRegleDimV, pSPR, pP, pDoc, pAttr))
 #endif /* __COLPAGE__ */
-		      pP->AbHeightChange = True;
+		      pP->AbHeightChange = TRUE;
 		  
 		  PavReaff(pP, pDoc); /* indique le pave a reafficherv */
 		  if (!VueAssoc(pEl))

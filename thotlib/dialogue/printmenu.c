@@ -17,7 +17,7 @@
 #include "typemedia.h"
 #include "language.h"
 #include "constmenu.h"
-#include "thotconfig.h"
+
 #include "document.h"
 #include "dialog.h"
 #include "appdialogue.h"
@@ -85,8 +85,8 @@ static void         ConnectPrint ()
 	else
 	   strcpy (ptImprimante, ptr);
 	psdir[0] = '\0';
-	ImprimerPapier = True;
-	AlimentationManuelle = False;
+	ImprimerPapier = TRUE;
+	AlimentationManuelle = FALSE;
 	strcpy (page_size, "A4");
      }
 }
@@ -143,7 +143,7 @@ View                view;
 		     pDocPrint->DocSSchema->SsDefaultPSchema,
 		     docname, dirname, ptImprimante,
 		     1, 999, 1, 0, 0, 0,
-		     100, 1, True,
+		     100, 1, TRUE,
 		     (int) AlimentationManuelle, 0,
 		     1,
 		     vuesaimprimer);
@@ -155,7 +155,7 @@ View                view;
 		     pDocPrint->DocSSchema->SsDefaultPSchema,
 		     docname, dirname, psdir,
 		     1, 999, 1, 0, 0, 0,
-		     100, 1, True,
+		     100, 1, TRUE,
 		     (int) AlimentationManuelle, 0,
 		     1,
 		     vuesaimprimer);
@@ -189,14 +189,14 @@ char               *txt;
 			      case 0:
 				 if (!NewImprimerPapier)
 				   {
-				      NewImprimerPapier = True;
+				      NewImprimerPapier = TRUE;
 				      TtaSetTextForm (NumZoneNomImprimante, ptImprimante);
 				   }
 				 break;
 			      case 1:
 				 if (NewImprimerPapier)
 				   {
-				      NewImprimerPapier = False;
+				      NewImprimerPapier = FALSE;
 				      TtaSetTextForm (NumZoneNomImprimante, psdir);
 				   }
 				 break;
@@ -268,13 +268,13 @@ View                view;
    ConnectPrint ();
    TtaNewSheet (NumFormImprimer, TtaGetViewFrame (document, view), 0, 0,
 		TtaGetMessage (LIB, LIB_PRINT),
-		1, TtaGetMessage (LIB, LIB_CONFIRM), False, 2, 'L', D_DONE);
+		1, TtaGetMessage (LIB, LIB_CONFIRM), FALSE, 2, 'L', D_DONE);
    i = 0;
    sprintf (&BufMenu[i], "%s%s", "B", TtaGetMessage (LIB, LIB_MANUAL_FEED));
    TtaNewToggleMenu (NumMenuOptions, NumFormImprimer,
-		 TtaGetMessage (LIB, LIB_OPTIONS), 1, BufMenu, NULL, False);
+		 TtaGetMessage (LIB, LIB_OPTIONS), 1, BufMenu, NULL, FALSE);
    if (AlimentationManuelle)
-      TtaSetToggleMenu (NumMenuOptions, 0, True);
+      TtaSetToggleMenu (NumMenuOptions, 0, TRUE);
 
    /* sous-menu format papier */
    i = 0;
@@ -282,7 +282,7 @@ View                view;
    i += strlen (&BufMenu[i]) + 1;
    sprintf (&BufMenu[i], "%s%s", "B", TtaGetMessage (LIB, LIB_US));
    TtaNewSubmenu (NumMenuFormatPapier, NumFormImprimer, 0,
-	    TtaGetMessage (LIB, LIB_PAPER_FORMAT), 2, BufMenu, NULL, False);
+	    TtaGetMessage (LIB, LIB_PAPER_FORMAT), 2, BufMenu, NULL, FALSE);
    if (!strcmp (page_size, "US"))
       TtaSetMenuForm (NumMenuFormatPapier, 1);
    else
@@ -294,9 +294,9 @@ View                view;
    i += strlen (&BufMenu[i]) + 1;
    sprintf (&BufMenu[i], "%s%s", "B", TtaGetMessage (LIB, LIB_POSTSCRIPT_FILE));
    TtaNewSubmenu (NumMenuSupport, NumFormImprimer, 0,
-		  TtaGetMessage (LIB, LIB_OUTPUT), 2, BufMenu, NULL, True);
+		  TtaGetMessage (LIB, LIB_OUTPUT), 2, BufMenu, NULL, TRUE);
    /* zone de saisie du nom de l'imprimante */
-   TtaNewTextForm (NumZoneNomImprimante, NumFormImprimer, NULL, 30, 1, False);
+   TtaNewTextForm (NumZoneNomImprimante, NumFormImprimer, NULL, 30, 1, FALSE);
 
    /* initialisation du selecteur ImprimerPapier */
    NewImprimerPapier = ImprimerPapier;
@@ -312,6 +312,6 @@ View                view;
      }
 
    /* active le formulaire "Imprimer" */
-   TtaShowDialogue (NumFormImprimer, False);
+   TtaShowDialogue (NumFormImprimer, FALSE);
 
 }

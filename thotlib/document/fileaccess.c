@@ -26,9 +26,9 @@ char               *bval;
    if (feof (file) || ferror (file))
      {
 	*bval = '\0';
-	return False;
+	return FALSE;
      }
-   return True;
+   return TRUE;
 }
 
 /* ---------------------------------------------------------------------- */
@@ -47,11 +47,11 @@ boolean            *bval;
 
    if (!BIOreadByte (file, &b1))
      {
-	*bval = False;
-	return False;
+	*bval = FALSE;
+	return FALSE;
      }
    *bval = (b1 == 1);
-   return True;
+   return TRUE;
 }
 
 
@@ -72,15 +72,15 @@ int                *sval;
    if (!BIOreadByte (file, &b1))
      {
 	*sval = 0;
-	return False;
+	return FALSE;
      }
    if (!BIOreadByte (file, &b2))
      {
 	*sval = 0;
-	return False;
+	return FALSE;
      }
    *sval = 256 * ((int) b1) + ((int) b2);
-   return True;
+   return TRUE;
 }
 
 
@@ -101,17 +101,17 @@ int                *sval;
    if (!BIOreadByte (file, &b1))
      {
 	*sval = 0;
-	return False;
+	return FALSE;
      }
    if (!BIOreadByte (file, &b2))
      {
 	*sval = 0;
-	return False;
+	return FALSE;
      }
    *sval = 256 * ((int)b1) + ((int) b2);
    if (*sval > 32767)
       *sval = *sval - 65536;
-   return True;
+   return TRUE;
 }
 
 
@@ -132,15 +132,15 @@ int                *sval;
    if (!BIOreadShort (file, &s1))
      {
 	*sval = 0;
-	return False;
+	return FALSE;
      }
    if (!BIOreadShort (file, &s2))
      {
 	*sval = 0;
-	return False;
+	return FALSE;
      }
    *sval = 65536 * s1 + s2;
-   return True;
+   return TRUE;
 }
 
 
@@ -163,7 +163,7 @@ char               *name;
 	if (!BIOreadByte (file, &name[i]))
 	  {
 	     name[i] = '\0';
-	     return False;
+	     return FALSE;
 	  }
 	if (name[i] == '\0')
 	   break;
@@ -171,9 +171,9 @@ char               *name;
    if (i >= MAX_NAME_LENGTH)
      {
 	name[0] = '\0';
-	return False;
+	return FALSE;
      }
-   return True;
+   return TRUE;
 }
 
 
@@ -252,9 +252,9 @@ char                bval;
 #endif /* __STDC__ */
 {
    if (ferror (file))
-      return False;
+      return FALSE;
    putc (bval, file);
-   return True;
+   return TRUE;
 }
 
 

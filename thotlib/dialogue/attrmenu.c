@@ -25,8 +25,8 @@
 #include "appdialogue.var"
 
 /* indicateur d'existence des formulaires TtAttribute */
-static boolean      AttrFormExists = False;
-static boolean      MandatoryAttrFormExists = False;
+static boolean      AttrFormExists = FALSE;
+static boolean      MandatoryAttrFormExists = FALSE;
 
 /* les attributs figurant dans le menu */
 static PtrSSchema AttrStruct[LgMaxMenuAttribut];
@@ -101,7 +101,7 @@ PtrAttribute         AttCour;
    i = strlen (BufMenu) + 1;
    strcpy (&BufMenu[i], TtaGetMessage (LIB, LIB_DELETE));
    TtaNewSheet (NumFormLangue, 0, 0, 0,
-      TtaGetMessage (LIB, LIB_LANGUAGE), 2, BufMenu, False, 2, 'L', D_DONE);
+      TtaGetMessage (LIB, LIB_LANGUAGE), 2, BufMenu, FALSE, 2, 'L', D_DONE);
    /* construit le selecteur des Langues */
    nbitem = 0;
    ptr = &BufMenu[0];
@@ -123,7 +123,7 @@ PtrAttribute         AttCour;
      {
 	/* pas de langue definie, on cree une simple zone de saisie de texte */
 	TtaNewTextForm (NumSelectLangue, NumFormLangue,
-			TtaGetMessage (LIB, LIB_LANGUAGE), 30, 1, False);
+			TtaGetMessage (LIB, LIB_LANGUAGE), 30, 1, FALSE);
 	TtaSetTextForm (NumFormLangue, valLangue);
      }
    else
@@ -135,7 +135,7 @@ PtrAttribute         AttCour;
 	   longueur = nbitem;
 	TtaNewSelector (NumSelectLangue, NumFormLangue,
 	      TtaGetMessage (LIB, LIB_LANGUAGE_OF_ELEMENT), nbitem, BufMenu,
-			longueur, NULL, True, False);
+			longueur, NULL, TRUE, FALSE);
 	/* initialise le selecteur sur sa premiere entree */
 	if (valLangue[0] == '\0')
 	   TtaSetSelector (NumSelectLangue, -1, NULL);
@@ -155,7 +155,7 @@ PtrAttribute         AttCour;
 
    TtaNewLabel (NumLabelLangueHeritee, NumFormLangue, Lab);
    /* affiche le formulaire */
-   TtaShowDialogue (NumFormLangue, True);
+   TtaShowDialogue (NumFormLangue, TRUE);
 }
 
 
@@ -199,8 +199,8 @@ int                 view;
 	     TtaDestroyDialogue (NumMenuAttrRequis);
 	  }
 	TtaNewForm (NumMenuAttrRequis, TtaGetViewFrame (doc, view), 0, 0,
-		 TtaGetMessage (LIB, LIB_ATTRIBUTS), False, 2, 'L', D_DONE);
-	MandatoryAttrFormExists = True;
+		 TtaGetMessage (LIB, LIB_ATTRIBUTS), FALSE, 2, 'L', D_DONE);
+	MandatoryAttrFormExists = TRUE;
      }
    else
      {
@@ -211,8 +211,8 @@ int                 view;
 	     TtaDestroyDialogue (NumMenuAttr);
 	  }
 	TtaNewSheet (NumMenuAttr, TtaGetViewFrame (doc, view), 0, 0,
-		     TtaGetMessage (LIB, LIB_ATTRIBUTS), 2, BufMenu, False, 2, 'L', D_DONE);
-	AttrFormExists = True;
+		     TtaGetMessage (LIB, LIB_ATTRIBUTS), 2, BufMenu, FALSE, 2, 'L', D_DONE);
+	AttrFormExists = TRUE;
      }
 
    strncpy (Titre, pAttr1->AttrName, MAX_NAME_LENGTH);
@@ -221,7 +221,7 @@ int                 view;
 	    case AtNumAttr:
 	       /* attribut a valeur numerique */
 	       subform = form + 1;
-	       TtaNewNumberForm (subform, form, Titre, -MAX_INT_ATTR_VAL, MAX_INT_ATTR_VAL, False);
+	       TtaNewNumberForm (subform, form, Titre, -MAX_INT_ATTR_VAL, MAX_INT_ATTR_VAL, FALSE);
 	       TtaAttachForm (subform);
 	       if (AttCour == NULL)
 		  i = 0;
@@ -233,7 +233,7 @@ int                 view;
 	    case AtTextAttr:
 	       /* attribut a valeur textuelle */
 	       subform = form + 2;
-	       TtaNewTextForm (subform, form, Titre, 40, 3, False);
+	       TtaNewTextForm (subform, form, Titre, 40, 3, FALSE);
 	       TtaAttachForm (subform);
 	       if (AttCour == NULL)
 		  TtaSetTextForm (subform, "");
@@ -262,7 +262,7 @@ int                 view;
 		    lgmenu += i;
 		 }
 	       /* cree le menu des valeurs de l'attribut */
-	       TtaNewSubmenu (subform, form, 0, Titre, val, BufMenu, NULL, False);
+	       TtaNewSubmenu (subform, form, 0, Titre, val, BufMenu, NULL, FALSE);
 	       TtaAttachForm (subform);
 	       /* initialise le menu avec la valeur courante */
 	       val = -1;
@@ -306,7 +306,7 @@ char               *txt;
 	       if (val != 0)
 		 {
 		    TtaDestroyDialogue (NumMenuAttrRequis);
-		    MandatoryAttrFormExists = False;
+		    MandatoryAttrFormExists = FALSE;
 		 }
 	       /* on ne fait rien d'autre : tout a ete fait par les cas */
 	       /* suivants */
@@ -352,8 +352,8 @@ PtrDocument         pDoc;
    PtrAttrRequis = pAttr;
    pRegleAttr = &pAttr->AeAttrSSchema->SsAttribute[pAttr->AeAttrNum - 1];
    /* toujours lie a la vue 1 du document */
-   MenuValeurs (pRegleAttr, True, NULL, pDoc, 1);
-   TtaShowDialogue (NumMenuAttrRequis, False);
+   MenuValeurs (pRegleAttr, TRUE, NULL, pDoc, 1);
+   TtaShowDialogue (NumMenuAttrRequis, FALSE);
    TtaWaitShowDialogue ();
 }
 
@@ -385,7 +385,7 @@ PtrDocument         pDoc;
    notifyAttr.attribute = NULL;
    notifyAttr.attributeType.AttrSSchema = (SSchema) pSS;
    notifyAttr.attributeType.AttrTypeNum = att;
-   OK = !SendAttributeMessage (&notifyAttr, True);
+   OK = !SendAttributeMessage (&notifyAttr, TRUE);
    return OK;
 }
 
@@ -437,10 +437,10 @@ int                 ActiveAttr[];
 	     do
 	       {
 		  /* on a deja traite' ce schema de structure ? */
-		  nouveau = True;
+		  nouveau = TRUE;
 		  for (i = 1; i <= nbentrees; i++)	/* parcourt la table */
 		     if (pSS == AttrStruct[i - 1])	/* deja dans la table */
-			nouveau = False;
+			nouveau = FALSE;
 		  if (nouveau)
 		     /* l'element utilise un schema de structure pas encore */
 		     /* rencontre' */
@@ -464,7 +464,7 @@ int                 ActiveAttr[];
 					  /* d'attribut de cette nouvelle entree du menu */
 					  AttrStruct[nbentrees - 1] = pSS;
 					  AttrNumero[nbentrees - 1] = att;
-					  AttrOblig[nbentrees - 1] = False;
+					  AttrOblig[nbentrees - 1] = FALSE;
 				       }
 			 }
 		    }
@@ -523,7 +523,7 @@ int                 ActiveAttr[];
 
 		  pAttrNouv->AeAttrSSchema = AttrStruct[att];
 		  pAttrNouv->AeAttrNum = AttrNumero[att];
-		  pAttrNouv->AeDefAttr = False;
+		  pAttrNouv->AeDefAttr = FALSE;
 		  if (pAt2->AttrType == AtEnumAttr && pAt2->AttrNEnumValues == 1)
 		     /* attribut enumere' a une seule valeur (attribut booleen) */
 		     sprintf (BufEtoileNom, "T%s", pAt2->AttrName);
@@ -596,7 +596,7 @@ PtrDocument         pDoc;
 		  /* marque les attributs actifs */
 		  for (i = 0; i < NbItemAttr; i++)
 		     if (ActiveAttr[i] == 1)
-			TtaSetToggleMenu (ref, i, True);
+			TtaSetToggleMenu (ref, i, TRUE);
 		  TtaSetMenuOn (document, vue, menuID);
 	       }
 	  }
@@ -624,7 +624,7 @@ PtrDocument         pDoc;
 		  /* marque les attributs actifs */
 		  for (i = 0; i < NbItemAttr; i++)
 		     if (ActiveAttr[i] == 1)
-			TtaSetToggleMenu (ref, i, True);
+			TtaSetToggleMenu (ref, i, TRUE);
 		  TtaSetMenuOn (document, vue, menu);
 	       }
 	  }
@@ -676,7 +676,7 @@ char               *valtexte;
 		 {
 		    /* on detruit la feuille de dialogue */
 		    TtaDestroyDialogue (NumMenuAttr);
-		    AttrFormExists = False;
+		    AttrFormExists = FALSE;
 		 }
 	       else
 		  /* ce n'est pas une simple fermeture de la feuille de dialogue */
@@ -689,7 +689,7 @@ char               *valtexte;
 		      {
 			 pAttrNouv->AeAttrSSchema = SchAttributCourant;
 			 pAttrNouv->AeAttrNum = NumAttributCourant;
-			 pAttrNouv->AeDefAttr = False;
+			 pAttrNouv->AeDefAttr = FALSE;
 			 pAttrNouv->AeAttrType = SchAttributCourant->
 			    SsAttribute[NumAttributCourant - 1].AttrType;
 
@@ -785,7 +785,7 @@ int                 frame;
 	   GetAttr (&pAttrNouv);
 	   pAttrNouv->AeAttrSSchema = AttrStruct[att];
 	   pAttrNouv->AeAttrNum = AttrNumero[att];
-	   pAttrNouv->AeDefAttr = False;
+	   pAttrNouv->AeDefAttr = FALSE;
 	   pAttr = &AttrStruct[att]->SsAttribute[AttrNumero[att] - 1];
 	   pAttrNouv->AeAttrType = pAttr->AttrType;
 	   if (pAttr->AttrType == AtReferenceAttr)
@@ -800,7 +800,7 @@ int                 frame;
 		if (RemplRefer (PremSel, pAttrNouv, SelDoc, &AssocCreated))
 		  if (ThotLocalActions[T_TableauVerifExtension]!=NULL)
 		    (*ThotLocalActions[T_TableauVerifExtension])
-		      (pAttrNouv, PremSel, DerSel, False);
+		      (pAttrNouv, PremSel, DerSel, FALSE);
 		if (AssocCreated != NULL)
 		  {
 		     CreeTousPaves (AssocCreated, SelDoc);
@@ -841,19 +841,19 @@ int                 frame;
 		  {
 		     /* construit le formulaire de saisie de la valeur de */
 		     /* l'attribut */
-		     MenuValeurs (pAttr, False, AttCour, SelDoc, view);
+		     MenuValeurs (pAttr, FALSE, AttCour, SelDoc, view);
 		     /* memorise l'attribut concerne' par le formulaire */
 		     SchAttributCourant = AttrStruct[att];
 		     NumAttributCourant = AttrNumero[att];
 		     /* restaure l'etat courant du toggle */
 		     if (ActiveAttr[att] == 0)
-			TtaSetToggleMenu (refmenu, att, False);
+			TtaSetToggleMenu (refmenu, att, FALSE);
 		     else
-			TtaSetToggleMenu (refmenu, att, True);
+			TtaSetToggleMenu (refmenu, att, TRUE);
 		     /* et memorise l'attribut en cours de traitement */
 		     CurrentAttr = att;
 		     /* affiche le formulaire */
-		     TtaShowDialogue (NumMenuAttr, True);
+		     TtaShowDialogue (NumMenuAttr, TRUE);
 		  }
 		DeleteAttribute (NULL, pAttrNouv);
 	     }

@@ -217,7 +217,7 @@ CreerPaletteFormeRectangle (Menu, Pere, Langue)
   sprintf(&BufMenu[len],"%s",TtaGetMessage(DrawMsgTable,DRW_PREFER));
   TtaNewSheet (FEUILLE_RECTANGLE, Pere, 0, 0, 
 	       TtaGetMessage(DrawMsgTable,DRW_POLY_ATTR),
-	       2, BufMenu, True, 2, 'L',D_DONE);
+	       2, BufMenu, TRUE, 2, 'L',D_DONE);
 
   if (TabEpaisseur[0] == 0)
     TabEpaisseur[0] = TtaCreatePixmapLogo (Trait1_xpm);
@@ -301,10 +301,10 @@ CreerPaletteFormeRectangle (Menu, Pere, Langue)
 				      CurrentDoc);
   TypeTrait = GetPRule (ElemForme, PRLineStyle);
   Bords = TtaGetGraphicsShape (ElemForme);
-  TtaNewIconMenu (RECTANGLE_COULEURO, Menu, 0, NULL, 2, &TabCouleurO[0], True);
+  TtaNewIconMenu (RECTANGLE_COULEURO, Menu, 0, NULL, 2, &TabCouleurO[0], TRUE);
   TtaNewLabel (LABEL_FORME_OMBRE, Menu, TtaGetMessage(DrawMsgTable,DRW_SHAPE_PARAM));
   TtaNewIconMenu (RECTANGLE_STYLE_TRAIT, Menu, 0, NULL, 3, &TabStyleTrait[0],
-		  True);
+		  TRUE);
   switch (TypeTrait)
     {
     case DashedLine:
@@ -320,10 +320,10 @@ CreerPaletteFormeRectangle (Menu, Pere, Langue)
       TtaNewLabel (LABEL_STYLE_TRAIT, Menu, TtaGetMessage(DrawMsgTable,DRW_LINE_PLAIN));
       break;
     }
-  TtaNewIconMenu (RECTANGLE_EPAISSEUR, Menu, 0, NULL, 5, &TabEpaisseur[0], True);
-  TtaNewNumberForm (RECTANGLE_EP_TRAIT, Menu, TtaGetMessage(DrawMsgTable,DRW_LINE_THICKNESS), 0, 72, False);
+  TtaNewIconMenu (RECTANGLE_EPAISSEUR, Menu, 0, NULL, 5, &TabEpaisseur[0], TRUE);
+  TtaNewNumberForm (RECTANGLE_EP_TRAIT, Menu, TtaGetMessage(DrawMsgTable,DRW_LINE_THICKNESS), 0, 72, FALSE);
   TtaSetNumberForm (RECTANGLE_EP_TRAIT, Epaisseur);
-  TtaNewIconMenu (POSITION_LABEL, Menu, 0, NULL, 5, &TabLabel[0], True);
+  TtaNewIconMenu (POSITION_LABEL, Menu, 0, NULL, 5, &TabLabel[0], TRUE);
   switch (PositionLabel)
     {
     case Draw3_ATTR_Position_label_VAL_Haut_gauche:
@@ -380,14 +380,14 @@ CreerPaletteFormeRectangle (Menu, Pere, Langue)
       TtaNewLabel (LABEL_O_VAL, Menu, TtaGetMessage(DrawMsgTable,DRW_WITHOUT));
       break;
     }
-  TtaNewIconMenu (RECTANGLE_OMBRE_1, Menu, 0, NULL, 3, &TabOmbres1[0], True);
-  TtaNewIconMenu (RECTANGLE_COULEUR, Menu, 0, NULL, 2, &TabCouleur[0], True);
-  TtaNewIconMenu (RECTANGLE_OMBRE_2, Menu, 0, NULL, 3, &TabOmbres2[0], True);
-  TtaNewIconMenu (RECTANGLE_ANGLES, Menu, 0, NULL, 2, &TabAngles[0], True);
-  TtaNewIconMenu (RECTANGLE_OMBRE_3, Menu, 0, NULL, 3, &TabOmbres3[0], True);
+  TtaNewIconMenu (RECTANGLE_OMBRE_1, Menu, 0, NULL, 3, &TabOmbres1[0], TRUE);
+  TtaNewIconMenu (RECTANGLE_COULEUR, Menu, 0, NULL, 2, &TabCouleur[0], TRUE);
+  TtaNewIconMenu (RECTANGLE_OMBRE_2, Menu, 0, NULL, 3, &TabOmbres2[0], TRUE);
+  TtaNewIconMenu (RECTANGLE_ANGLES, Menu, 0, NULL, 2, &TabAngles[0], TRUE);
+  TtaNewIconMenu (RECTANGLE_OMBRE_3, Menu, 0, NULL, 3, &TabOmbres3[0], TRUE);
   TtaNewLabel (LABEL_A_VAL, Menu, TtaGetMessage(DrawMsgTable,DRW_RIGHT_ANGLE));
 
-  TtaShowDialogue (Menu, False);
+  TtaShowDialogue (Menu, FALSE);
   return;
 }
 
@@ -447,7 +447,7 @@ CreerPaletteTrait (Menu, Pere, Langue)
   sprintf(&BufMenu[len],"%s",TtaGetMessage(DrawMsgTable,DRW_PREFER));
 
   TtaNewSheet (FEUILLE_TRAIT, Pere, 0, 0, TtaGetMessage(DrawMsgTable,DRW_LINE_ATTR),
-	       2, BufMenu, True, 2, 'L',D_DONE);
+	       2, BufMenu, TRUE, 2, 'L',D_DONE);
 
   if (TabEpaisseur[0] == 0)
     TabEpaisseur[0] = TtaCreatePixmapLogo (Trait1_xpm);
@@ -497,7 +497,7 @@ CreerPaletteTrait (Menu, Pere, Langue)
   TypeTrait = GetPRule (ElemForme, PRLineStyle);
   ShapeTrait = TtaGetGraphicsShape (ElemForme);
   TtaNewIconMenu (RECTANGLE_STYLE_TRAIT, Menu, 0, NULL, 3, &TabStyleTrait[0],
-		  True);
+		  TRUE);
   switch (TypeTrait)
     {
     case DashedLine:
@@ -513,14 +513,14 @@ CreerPaletteTrait (Menu, Pere, Langue)
       TtaNewLabel (LABEL_STYLE_TRAIT, Menu, TtaGetMessage(DrawMsgTable,DRW_LINE_PLAIN));
       break;
     }
-  TtaNewIconMenu (RECTANGLE_EPAISSEUR, Menu, 0, NULL, 5, &TabEpaisseur[0], True);
-  TtaNewNumberForm (RECTANGLE_EP_TRAIT, Menu, TtaGetMessage(DrawMsgTable,DRW_LINE_THICKNESS), 0, 72, False);
+  TtaNewIconMenu (RECTANGLE_EPAISSEUR, Menu, 0, NULL, 5, &TabEpaisseur[0], TRUE);
+  TtaNewNumberForm (RECTANGLE_EP_TRAIT, Menu, TtaGetMessage(DrawMsgTable,DRW_LINE_THICKNESS), 0, 72, FALSE);
   TtaSetNumberForm (RECTANGLE_EP_TRAIT, Epaisseur);
-  TtaNewIconMenu (RECTANGLE_OMBRE_1, Menu, 0, NULL, 4, &TabOmbres1[0], True);
-  TtaNewIconMenu (RECTANGLE_COULEUR, Menu, 0, NULL, 2, &TabCouleur[0], True);
-  TtaNewIconMenu (RECTANGLE_OMBRE_2, Menu, 0, NULL, 4, &TabOmbres2[0], True);
+  TtaNewIconMenu (RECTANGLE_OMBRE_1, Menu, 0, NULL, 4, &TabOmbres1[0], TRUE);
+  TtaNewIconMenu (RECTANGLE_COULEUR, Menu, 0, NULL, 2, &TabCouleur[0], TRUE);
+  TtaNewIconMenu (RECTANGLE_OMBRE_2, Menu, 0, NULL, 4, &TabOmbres2[0], TRUE);
 
-  TtaShowDialogue (Menu, False);
+  TtaShowDialogue (Menu, FALSE);
   return;
 
 }
@@ -598,7 +598,7 @@ CreerPaletteLien (Menu, Pere, Langue)
   {0, 0, 0, 0, 0};
 
   TtaNewSheet (Menu, Pere, 0, 0, TtaGetMessage(DrawMsgTable,DRW_LINK_TYPES),
-	       0, "", False, 1, 'L',D_DONE);
+	       0, "", FALSE, 1, 'L',D_DONE);
   if (TabFormes[0] == 0)
     TabFormes[0] = TtaCreatePixmapLogo (lien1_xpm);
   if (TabFormes[1] == 0)
@@ -609,7 +609,7 @@ CreerPaletteLien (Menu, Pere, Langue)
     TabFormes[3] = TtaCreatePixmapLogo (lien4_xpm);
   if (TabFormes[4] == 0)
     TabFormes[4] = TtaCreatePixmapLogo (lien5_xpm);
-  TtaNewIconMenu (LIEN_PREMIERE_LIGNE, Menu, 0, NULL, 5, &TabFormes[0], True);
+  TtaNewIconMenu (LIEN_PREMIERE_LIGNE, Menu, 0, NULL, 5, &TabFormes[0], TRUE);
 
 }
 
@@ -1097,7 +1097,7 @@ TraiterEvtPaletteLien (ref, typedata, data)
     case 1:
       NouveauType.ElTypeNum = Draw3_EL_FlecheCreuse;
       Nouveau = TtaNewTree (CurrentDoc, NouveauType, "");
-      TtaInsertSibling (Nouveau, Frere, False,
+      TtaInsertSibling (Nouveau, Frere, FALSE,
 			CurrentDoc);
       Event.document = CurrentDoc;
       Event.element = Nouveau;
@@ -1117,7 +1117,7 @@ TraiterEvtPaletteLien (ref, typedata, data)
 
   TtaSetCursorWatch (0, 0);
   Nouveau = TtaNewTree (CurrentDoc, NouveauType, "");
-  TtaInsertSibling (Nouveau, Frere, False, CurrentDoc);
+  TtaInsertSibling (Nouveau, Frere, FALSE, CurrentDoc);
   Event.document = CurrentDoc;
   Event.element = Nouveau;
   CreerUnLien (&Event);

@@ -60,10 +60,10 @@ AttribType       *value;
 	       break;
 	    default:
 	       *value = AtEnumAttr;
-	       return False;
+	       return FALSE;
 	       break;
 	 }
-   return True;
+   return TRUE;
 }
 
 
@@ -123,9 +123,9 @@ RConstruct       *value;
 	       break;
 	    default:
 	       *value = CsIdentity;
-	       return False;
+	       return FALSE;
 	 }
-   return True;
+   return TRUE;
 }
 
 
@@ -173,9 +173,9 @@ BasicType         *value;
 	       break;
 	    default:
 	       *value = CharString;
-	       return False;
+	       return FALSE;
 	 }
-   return True;
+   return TRUE;
 }
 
 
@@ -222,9 +222,9 @@ TtAttribute           *pAttr;
 	      }
      }
    else
-      return False;
+      return FALSE;
 
-   return True;
+   return TRUE;
 }
 
 
@@ -265,7 +265,7 @@ SRule              *pRule;
    BIOreadBool (file, &pRule->SrParamElem);
    BIOreadBool (file, &pRule->SrUnitElem);
    BIOreadBool (file, &pRule->SrRecursive);
-   pRule->SrRecursDone = False;
+   pRule->SrRecursDone = FALSE;
 
    BIOreadBool (file, &pRule->SrExportedElem);
    if (pRule->SrExportedElem)
@@ -286,7 +286,7 @@ SRule              *pRule;
       BIOreadShort (file, &pRule->SrExclusion[j]);
    BIOreadBool (file, &pRule->SrRefImportedDoc);
    if (!rdConstructeur (file, &constr))
-      return False;
+      return FALSE;
 
    pRule->SrConstruct = constr;
    switch (pRule->SrConstruct)
@@ -297,7 +297,7 @@ SRule              *pRule;
 	       break;
 	    case CsBasicElement:
 	       if (!rdTypeBase (file, &pRule->SrBasicType))
-		  return False;
+		  return FALSE;
 	       break;
 	    case CsReference:
 	       BIOreadShort (file, &pRule->SrReferredType);
@@ -334,7 +334,7 @@ SRule              *pRule;
 	    case CsExtensionRule:
 	       break;
 	 }
-   return True;
+   return TRUE;
 }
 
 /* ---------------------------------------------------------------------- */
@@ -369,9 +369,9 @@ PtrSSchema        scheme;
      }
    while (c != '\0' && i < MAX_LEN_ALL_CONST);
    if (i >= MAX_LEN_ALL_CONST)
-      return False;
+      return FALSE;
    else
-      return True;
+      return TRUE;
 }
 
 
@@ -414,7 +414,7 @@ PtrSSchema        scheme;
 	strcat (filename, ".STR");
 	/* message 'Fichier inaccessible' */
 	TtaDisplayMessage (INFO, TtaGetMessage(LIB, LIB_MISSING_FILE), filename);
-	return False;
+	return FALSE;
      }
    else
      {
@@ -441,7 +441,7 @@ PtrSSchema        scheme;
 	  {
 	     /* message 'Fichier .STR incorrect ' */
 	     TtaDisplayMessage (INFO, TtaGetMessage(LIB, LIB_INCOR_STR_FILE), fname);
-	     return False;
+	     return FALSE;
 	  }
 
 	/* il n'y a pas encore de nature chargee dynamiquement */
@@ -453,7 +453,7 @@ PtrSSchema        scheme;
 	     {
 		/* message 'Fichier .STR incorrect ' */
 		TtaDisplayMessage (INFO, TtaGetMessage(LIB, LIB_INCOR_STR_FILE), fname);
-		return False;
+		return FALSE;
 	     }
 
 	/* lit les elements */
@@ -462,7 +462,7 @@ PtrSSchema        scheme;
 	     {
 		/* message 'Fichier .STR incorrect ' */
 		TtaDisplayMessage (INFO, TtaGetMessage(LIB, LIB_INCOR_STR_FILE), fname);
-		return False;
+		return FALSE;
 	     }
 	if (scheme->SsExtension)
 	  {
@@ -478,13 +478,13 @@ PtrSSchema        scheme;
 			     {
 				/* message 'Fichier .STR incorrect ' */
 				TtaDisplayMessage (INFO, TtaGetMessage(LIB, LIB_INCOR_STR_FILE), fname);
-				return False;
+				return FALSE;
 			     }
 		  }
 	  }
 
 	BIOreadClose (strfile);
-	return True;
+	return TRUE;
      }
 }
 

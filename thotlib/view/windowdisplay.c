@@ -107,24 +107,24 @@ int                 fg;
 #endif /* __STDC__ */
 {
 #ifdef NEW_WILLOWS
-   (GCtrait (disp))->capabilities |= THOT_GC_FOREGROUND;
-   (GCtrait (disp))->foreground = Pix_Color[fg];
+   (TtLineGC)->capabilities |= THOT_GC_FOREGROUND;
+   (TtLineGC)->foreground = Pix_Color[fg];
 #else  /* NEW_WILLOWS */
    if (active && ShowReference ())
      {
-	if (Gdepth (disp) == 1)
+	if (TtWDepth == 1)
 	   /* On modifie la trame des caracteres */
-	   XSetFillStyle (GDp (disp), GCtrait (disp), FillTiled);
+	   XSetFillStyle (TtDisplay, TtLineGC, FillTiled);
 	else
 	   /* Couleur des boites actives */
-	   XSetForeground (GDp (disp), GCtrait (disp), Box_Color);
+	   XSetForeground (TtDisplay, TtLineGC, Box_Color);
      }
    else if (RO && ShowReadOnly () && ColorPixel (fg) == cblack.pixel)
       /* Couleur du ReadOnly */
-      XSetForeground (GDp (disp), GCtrait (disp), RO_Color);
+      XSetForeground (TtDisplay, TtLineGC, RO_Color);
    else
       /* Couleur de la boite */
-      XSetForeground (GDp (disp), GCtrait (disp), ColorPixel (fg));
+      XSetForeground (TtDisplay, TtLineGC, ColorPixel (fg));
 #endif /* NEW_WILLOWS */
 }
 
@@ -154,13 +154,13 @@ int                 fg;
 
 #ifndef NEW_WILLOWS
    if (style == 0)
-      XSetLineAttributes (GDp (disp), GCtrait (disp), epais, LineSolid, CapButt, JoinMiter);
+      XSetLineAttributes (TtDisplay, TtLineGC, epais, LineSolid, CapButt, JoinMiter);
    else
      {
 	dash[0] = (char) (style * 4);
 	dash[1] = (char) 4;
-	XSetDashes (GDp (disp), GCtrait (disp), 0, dash, 2);
-	XSetLineAttributes (GDp (disp), GCtrait (disp), epais, LineOnOffDash, CapButt, JoinMiter);
+	XSetDashes (TtDisplay, TtLineGC, 0, dash, 2);
+	XSetLineAttributes (TtDisplay, TtLineGC, epais, LineOnOffDash, CapButt, JoinMiter);
      }
 #endif /* NEW_WILLOWS */
    /* Charge la bonne couleur */
@@ -182,8 +182,8 @@ int                 active;
 #endif /* __STDC__ */
 {
 #ifndef NEW_WILLOWS
-   if (Gdepth (disp) == 1 && (active || RO))
-      XSetFillStyle (GDp (disp), GCtrait (disp), FillSolid);
+   if (TtWDepth == 1 && (active || RO))
+      XSetFillStyle (TtDisplay, TtLineGC, FillSolid);
 #endif /* NEW_WILLOWS */
 }
 
@@ -212,11 +212,11 @@ int                 y2;
    y2 += FrameTable[frame].FrTopMargin;
 #ifdef NEW_WILLOWS
    WIN_GetDeviceContext (frame);
-   WinLoadGC (WIN_curHdc, GCtrait (0));
+   WinLoadGC (WIN_curHdc, TtLineGC);
    MoveToEx (WIN_curHdc, x1, y1, NULL);
    LineTo (WIN_curHdc, x2, y2);
 #else  /* NEW_WILLOWS */
-   XDrawLine (GDp (0), FrRef[frame], GCtrait (0), x1, y1, x2, y2);
+   XDrawLine (TtDisplay, FrRef[frame], TtLineGC, x1, y1, x2, y2);
 #endif /* NEW_WILLOWS */
 }
 
@@ -305,12 +305,12 @@ int                 fg;
 
 #ifdef NEW_WILLOWS
    WIN_GetDeviceContext (frame);
-   WinLoadGC (WIN_curHdc, GCtrait (0));
+   WinLoadGC (WIN_curHdc, TtLineGC);
    WinLoadFont (WIN_curHdc, font);
    TextOut (WIN_curHdc, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, str, 1);
 #else  /* NEW_WILLOWS */
-   XSetFont (GDp (0), GCtrait (0), ((XFontStruct *) font)->fid);
-   XDrawString (GDp (0), w, GCtrait (0), x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin + FontBase (font), &car, 1);
+   XSetFont (TtDisplay, TtLineGC, ((XFontStruct *) font)->fid);
+   XDrawString (TtDisplay, w, TtLineGC, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin + FontBase (font), &car, 1);
 #endif /* NEW_WILLOWS */
 
    finirTrace (0, RO, active);
@@ -379,7 +379,7 @@ int                 fg;
 	GetTextExtentPoint (WIN_curHdc, ptcar, lg, &size);
 	large = size.cx;
 #else  /* NEW_WILLOWS */
-	XSetFont (GDp (0), GCtrait (0), ((XFontStruct *) font)->fid);
+	XSetFont (TtDisplay, TtLineGC, ((XFontStruct *) font)->fid);
 
 	/* On calcule la largeur de la chaine de caractere ecrite */
 	large = 0;
@@ -398,20 +398,20 @@ int                 fg;
 	     ptcar[lg] = '\0';
 	     SpaceToCar (ptcar);	/* remplace les carateres espaces */
 #ifdef NEW_WILLOWS
-	     WinLoadGC (WIN_curHdc, GCtrait (0));
+	     WinLoadGC (WIN_curHdc, TtLineGC);
 	     TextOut (WIN_curHdc, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, ptcar, lg);
 #else  /* NEW_WILLOWS */
-	     XDrawString (GDp (0), w, GCtrait (0), x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin + FontBase (font), ptcar, lg);
+	     XDrawString (TtDisplay, w, TtLineGC, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin + FontBase (font), ptcar, lg);
 #endif /* NEW_WILLOWS */
 	     TtaFreeMemory (ptcar);
 	  }
 	else
 	  {
 #ifdef NEW_WILLOWS
-	     WinLoadGC (WIN_curHdc, GCtrait (0));
+	     WinLoadGC (WIN_curHdc, TtLineGC);
 	     TextOut (WIN_curHdc, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, ptcar, lg);
 #else  /* NEW_WILLOWS */
-	     XDrawString (GDp (0), w, GCtrait (0), x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin + FontBase (font), ptcar, lg);
+	     XDrawString (TtDisplay, w, TtLineGC, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin + FontBase (font), ptcar, lg);
 #endif /* NEW_WILLOWS */
 	  }
 	if (hyphen)
@@ -420,7 +420,7 @@ int                 fg;
 #ifdef NEW_WILLOWS
 	     TextOut (WIN_curHdc, x + large + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, "\255", 1);
 #else  /* NEW_WILLOWS */
-	     XDrawString (GDp (0), w, GCtrait (0), x + large + FrameTable[frame].FrLeftMargin,
+	     XDrawString (TtDisplay, w, TtLineGC, x + large + FrameTable[frame].FrLeftMargin,
 	     y + FrameTable[frame].FrTopMargin + FontBase (font), "\255", 1);
 #endif /* NEW_WILLOWS */
 	  }
@@ -577,7 +577,7 @@ int                 fg;
 	xcour = x + FrameTable[frame].FrLeftMargin + (lgboite % large);
 	y += FrameTable[frame].FrTopMargin - FontBase (font);
 #ifndef NEW_WILLOWS
-	XSetFont (GDp (0), GCtrait (0), ((XFontStruct *) font)->fid);
+	XSetFont (TtDisplay, TtLineGC, ((XFontStruct *) font)->fid);
 #endif /* NEW_WILLOWS */
 	ChargeCouleur (0, RO, active, fg);
 
@@ -586,7 +586,7 @@ int                 fg;
 	while (nb > 0)
 	  {
 #ifndef NEW_WILLOWS
-	     XDrawString (GDp (0), w, GCtrait (0), xcour, y, ptcar, 2);
+	     XDrawString (TtDisplay, w, TtLineGC, xcour, y, ptcar, 2);
 #endif /* NEW_WILLOWS */
 	     xcour += large;
 	     nb--;
@@ -897,7 +897,7 @@ int                 fg;
 
 	/* Partie haute */
 #ifndef NEW_WILLOWS
-	XDrawArc (GDp (0), FrRef[frame], GCtrait (0), x + 1, y + 1, l - 3, arc * 2, 0 * 64, 180 * 64);
+	XDrawArc (TtDisplay, FrRef[frame], TtLineGC, x + 1, y + 1, l - 3, arc * 2, 0 * 64, 180 * 64);
 #endif /* NEW_WILLOWS */
 	finirTrace (0, RO, active);
      }
@@ -950,7 +950,7 @@ int                 fg;
 
 	/* Partie basse */
 #ifndef NEW_WILLOWS
-	XDrawArc (GDp (0), FrRef[frame], GCtrait (0), x + 1, y + h - arc * 2 - 2, l - 3, arc * 2, -0 * 64, -180 * 64);
+	XDrawArc (TtDisplay, FrRef[frame], TtLineGC, x + 1, y + h - arc * 2 - 2, l - 3, arc * 2, -0 * 64, -180 * 64);
 #endif /* NEW_WILLOWS */
 	finirTrace (0, RO, active);
      }
@@ -1008,9 +1008,9 @@ int                 fg;
    modele = CreatePattern (0, RO, active, fg, fg, 1);
    if (modele != 0)
      {
-	XSetTile (GDp (0), GCgrey (0), modele);
-	XFillPolygon (GDp (0), FrRef[frame], GCgrey (0), point, 3, Convex, CoordModeOrigin);
-	XFreePixmap (GDp (0), modele);
+	XSetTile (TtDisplay, TtGreyGC, modele);
+	XFillPolygon (TtDisplay, FrRef[frame], TtGreyGC, point, 3, Convex, CoordModeOrigin);
+	XFreePixmap (TtDisplay, modele);
      }
 #endif /* NEW_WILLOWS */
 }
@@ -1506,14 +1506,14 @@ int                 motif;
    if (modele != 0)
      {
 #ifndef NEW_WILLOWS
-	XSetTile (GDp (0), GCgrey (0), modele);
-	XFillRectangle (GDp (0), FrRef[frame], GCgrey (0),
+	XSetTile (TtDisplay, TtGreyGC, modele);
+	XFillRectangle (TtDisplay, FrRef[frame], TtGreyGC,
 			x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, larg, haut);
-	XFreePixmap (GDp (0), modele);
+	XFreePixmap (TtDisplay, modele);
 #endif /* NEW_WILLOWS */
 #ifdef NEW_WILLOWS
 	WIN_GetDeviceContext (frame);
-	WinLoadGC (WIN_curHdc, GCtrait (0));
+	WinLoadGC (WIN_curHdc, TtLineGC);
 	hBrush = CreateSolidBrush (Pix_Color[bg]);
 	hBrush = SelectObject (WIN_curHdc, hBrush);
 	PatBlt (WIN_curHdc, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, larg, haut, PATCOPY);
@@ -1527,7 +1527,7 @@ int                 motif;
      {
 	preparerTrace (0, style, epais, RO, active, fg);
 #ifndef NEW_WILLOWS
-	XDrawRectangle (GDp (0), FrRef[frame], GCtrait (0),
+	XDrawRectangle (TtDisplay, FrRef[frame], TtLineGC,
 			x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, larg, haut);
 #endif /* NEW_WILLOWS */
 	finirTrace (0, RO, active);
@@ -1590,17 +1590,17 @@ int                 motif;
    modele = CreatePattern (0, RO, active, fg, bg, motif);
    if (modele != 0)
      {
-	XSetTile (GDp (0), GCgrey (0), modele);
-	XFillPolygon (GDp (0), FrRef[frame], GCgrey (0),
+	XSetTile (TtDisplay, TtGreyGC, modele);
+	XFillPolygon (TtDisplay, FrRef[frame], TtGreyGC,
 		      point, 5, Convex, CoordModeOrigin);
-	XFreePixmap (GDp (0), modele);
+	XFreePixmap (TtDisplay, modele);
      }
 
    /* On trace le contour */
    if (epais > 0)
      {
 	preparerTrace (0, style, epais, RO, active, fg);
-	XDrawLines (GDp (0), FrRef[frame], GCtrait (0),
+	XDrawLines (TtDisplay, FrRef[frame], TtLineGC,
 		    point, 5, CoordModeOrigin);
 	finirTrace (0, RO, active);
      }
@@ -1671,8 +1671,8 @@ int                 fleche;
 		  j = 0;
 	       }
 	  }
-	points[i - 1].x = x + FrameTable[frame].FrLeftMargin + PtEnPixel (adbuff->BuPoints[j].XCoord / 1000, 0);
-	points[i - 1].y = y + FrameTable[frame].FrTopMargin + PtEnPixel (adbuff->BuPoints[j].YCoord / 1000, 1);
+	points[i - 1].x = x + FrameTable[frame].FrLeftMargin + PointToPixel (adbuff->BuPoints[j].XCoord / 1000);
+	points[i - 1].y = y + FrameTable[frame].FrTopMargin + PointToPixel (adbuff->BuPoints[j].YCoord / 1000);
 	j++;
      }
 
@@ -1683,7 +1683,7 @@ int                 fleche;
 
    /* On trace le contour */
    preparerTrace (0, style, epais, RO, active, fg);
-   XDrawLines (GDp (0), FrRef[frame], GCtrait (0), points, nb - 1, CoordModeOrigin);
+   XDrawLines (TtDisplay, FrRef[frame], TtLineGC, points, nb - 1, CoordModeOrigin);
    finirTrace (0, RO, active);
 
    /* fleche vers l'avant */
@@ -1753,8 +1753,8 @@ int                 motif;
 		  j = 0;
 	       }
 	  }
-	points[i - 1].x = x + FrameTable[frame].FrLeftMargin + PtEnPixel (adbuff->BuPoints[j].XCoord / 1000, 0);
-	points[i - 1].y = y + FrameTable[frame].FrTopMargin + PtEnPixel (adbuff->BuPoints[j].YCoord / 1000, 1);
+	points[i - 1].x = x + FrameTable[frame].FrLeftMargin + PointToPixel (adbuff->BuPoints[j].XCoord / 1000);
+	points[i - 1].y = y + FrameTable[frame].FrTopMargin + PointToPixel (adbuff->BuPoints[j].YCoord / 1000);
 	j++;
      }
    /* Ferme le polygone */
@@ -1765,16 +1765,16 @@ int                 motif;
    modele = CreatePattern (0, RO, active, fg, bg, motif);
    if (modele != 0)
      {
-	XSetTile (GDp (0), GCgrey (0), modele);
-	XFillPolygon (GDp (0), FrRef[frame], GCgrey (0), points, nb, Complex, CoordModeOrigin);
-	XFreePixmap (GDp (0), modele);
+	XSetTile (TtDisplay, TtGreyGC, modele);
+	XFillPolygon (TtDisplay, FrRef[frame], TtGreyGC, points, nb, Complex, CoordModeOrigin);
+	XFreePixmap (TtDisplay, modele);
      }
 
    /* On trace le contour */
    if (epais > 0)
      {
 	preparerTrace (0, style, epais, RO, active, fg);
-	XDrawLines (GDp (0), FrRef[frame], GCtrait (0), points, nb, CoordModeOrigin);
+	XDrawLines (TtDisplay, FrRef[frame], TtLineGC, points, nb, CoordModeOrigin);
 	finirTrace (0, RO, active);
      }
    /* Libere la table de points */
@@ -1801,7 +1801,7 @@ int                 x, y;
      {
 	taille = MAX_points + ALLOC_POINTS;
 	if ((tmp = (ThotPoint *) realloc (points, taille * sizeof (ThotPoint))) == 0)
-	   return (False);
+	   return (FALSE);
 	else
 	  {
 	     /* la reallocation a reussi */
@@ -1812,13 +1812,13 @@ int                 x, y;
 
    /* ignore identical points */
    if (npoints > 0 && points[npoints - 1].x == x && points[npoints - 1].y == y)
-      return (False);
+      return (FALSE);
 
    points[npoints].x = x;
    points[npoints].y = y;
    npoints++;
 #endif /* NEW_WILLOWS */
-   return (True);
+   return (TRUE);
 }
 
 /* ---------------------------------------------------------------------- */
@@ -1861,7 +1861,7 @@ float              *x1, *y1, *x2, *y2, *x3, *y3, *x4, *y4;
    Pile               *pile_haut;
 
    if (pile_profond == 0)
-      return (False);
+      return (FALSE);
 
    pile_profond--;
    pile_haut = &pile[pile_profond];
@@ -1873,7 +1873,7 @@ float              *x1, *y1, *x2, *y2, *x3, *y3, *x4, *y4;
    *y3 = pile_haut->y3;
    *x4 = pile_haut->x4;
    *y4 = pile_haut->y4;
-   return (True);
+   return (TRUE);
 }
 
 
@@ -1979,13 +1979,13 @@ C_points           *controls;
   y += epais/2 ; ***/
    adbuff = buffer;
    j = 1;
-   x1 = (float) (x + FrameTable[frame].FrLeftMargin + PtEnPixel (adbuff->BuPoints[j].XCoord / 1000, 0));
-   y1 = (float) (y + FrameTable[frame].FrTopMargin + PtEnPixel (adbuff->BuPoints[j].YCoord / 1000, 1));
+   x1 = (float) (x + FrameTable[frame].FrLeftMargin + PointToPixel (adbuff->BuPoints[j].XCoord / 1000));
+   y1 = (float) (y + FrameTable[frame].FrTopMargin + PointToPixel (adbuff->BuPoints[j].YCoord / 1000));
    j++;
    cx1 = (controls[j].lx * 3 + x1 - x - FrameTable[frame].FrLeftMargin) / 4 + x + FrameTable[frame].FrLeftMargin;
    cy1 = (controls[j].ly * 3 + y1 - y - FrameTable[frame].FrTopMargin) / 4 + y + FrameTable[frame].FrTopMargin;
-   x2 = (float) (x + FrameTable[frame].FrLeftMargin + PtEnPixel (adbuff->BuPoints[j].XCoord / 1000, 0));
-   y2 = (float) (y + FrameTable[frame].FrTopMargin + PtEnPixel (adbuff->BuPoints[j].YCoord / 1000, 1));
+   x2 = (float) (x + FrameTable[frame].FrLeftMargin + PointToPixel (adbuff->BuPoints[j].XCoord / 1000));
+   y2 = (float) (y + FrameTable[frame].FrTopMargin + PointToPixel (adbuff->BuPoints[j].YCoord / 1000));
    cx2 = (controls[j].lx * 3 + x2 - x - FrameTable[frame].FrLeftMargin) / 4 + x + FrameTable[frame].FrLeftMargin;
    cy2 = (controls[j].ly * 3 + y2 - y - FrameTable[frame].FrTopMargin) / 4 + y + FrameTable[frame].FrTopMargin;
 
@@ -2015,8 +2015,8 @@ C_points           *controls;
 		       j = 0;
 		    }
 	       }
-	     x2 = (float) (x + FrameTable[frame].FrLeftMargin + PtEnPixel (adbuff->BuPoints[j].XCoord / 1000, 0));
-	     y2 = (float) (y + FrameTable[frame].FrTopMargin + PtEnPixel (adbuff->BuPoints[j].YCoord / 1000, 1));
+	     x2 = (float) (x + FrameTable[frame].FrLeftMargin + PointToPixel (adbuff->BuPoints[j].XCoord / 1000));
+	     y2 = (float) (y + FrameTable[frame].FrTopMargin + PointToPixel (adbuff->BuPoints[j].YCoord / 1000));
 	     if (i == nb - 2)
 	       {
 		  cx1 = (controls[i].rx * 3 + x1 - x - FrameTable[frame].FrLeftMargin) / 4 + x + FrameTable[frame].FrLeftMargin;
@@ -2036,7 +2036,7 @@ C_points           *controls;
    /* On trace le contour */
    preparerTrace (0, style, epais, RO, active, fg);
 #ifndef NEW_WILLOWS
-   XDrawLines (GDp (0), FrRef[frame], GCtrait (0), points, npoints, CoordModeOrigin);
+   XDrawLines (TtDisplay, FrRef[frame], TtLineGC, points, npoints, CoordModeOrigin);
 #endif /* NEW_WILLOWS */
 
    /* fleche vers l'avant */
@@ -2101,13 +2101,13 @@ C_points           *controls;
   y += epais/2;***/
    adbuff = buffer;
    j = 1;
-   x1 = (float) (x + FrameTable[frame].FrLeftMargin + PtEnPixel (adbuff->BuPoints[j].XCoord / 1000, 0));
-   y1 = (float) (y + FrameTable[frame].FrTopMargin + PtEnPixel (adbuff->BuPoints[j].YCoord / 1000, 1));
+   x1 = (float) (x + FrameTable[frame].FrLeftMargin + PointToPixel (adbuff->BuPoints[j].XCoord / 1000));
+   y1 = (float) (y + FrameTable[frame].FrTopMargin + PointToPixel (adbuff->BuPoints[j].YCoord / 1000));
    cx1 = controls[j].rx + x + FrameTable[frame].FrLeftMargin;
    cy1 = controls[j].ry + y + FrameTable[frame].FrTopMargin;
    j++;
-   x2 = (float) (x + FrameTable[frame].FrLeftMargin + PtEnPixel (adbuff->BuPoints[j].XCoord / 1000, 0));
-   y2 = (float) (y + FrameTable[frame].FrTopMargin + PtEnPixel (adbuff->BuPoints[j].YCoord / 1000, 1));
+   x2 = (float) (x + FrameTable[frame].FrLeftMargin + PointToPixel (adbuff->BuPoints[j].XCoord / 1000));
+   y2 = (float) (y + FrameTable[frame].FrTopMargin + PointToPixel (adbuff->BuPoints[j].YCoord / 1000));
    cx2 = controls[j].lx + x + FrameTable[frame].FrLeftMargin;
    cy2 = controls[j].ly + y + FrameTable[frame].FrTopMargin;
 
@@ -2133,16 +2133,16 @@ C_points           *controls;
 		       j = 0;
 		    }
 	       }
-	     x2 = (float) (x + FrameTable[frame].FrLeftMargin + PtEnPixel (adbuff->BuPoints[j].XCoord / 1000, 0));
-	     y2 = (float) (y + FrameTable[frame].FrTopMargin + PtEnPixel (adbuff->BuPoints[j].YCoord / 1000, 1));
+	     x2 = (float) (x + FrameTable[frame].FrLeftMargin + PointToPixel (adbuff->BuPoints[j].XCoord / 1000));
+	     y2 = (float) (y + FrameTable[frame].FrTopMargin + PointToPixel (adbuff->BuPoints[j].YCoord / 1000));
 	     cx2 = controls[i + 1].lx + x + FrameTable[frame].FrLeftMargin;
 	     cy2 = controls[i + 1].ly + y + FrameTable[frame].FrTopMargin;
 	  }
 	else
 	  {
 	     /* boucle sur le point d'origine */
-	     x2 = (float) (x + FrameTable[frame].FrLeftMargin + PtEnPixel (buffer->BuPoints[1].XCoord / 1000, 0));
-	     y2 = (float) (y + FrameTable[frame].FrTopMargin + PtEnPixel (buffer->BuPoints[1].YCoord / 1000, 1));
+	     x2 = (float) (x + FrameTable[frame].FrLeftMargin + PointToPixel (buffer->BuPoints[1].XCoord / 1000));
+	     y2 = (float) (y + FrameTable[frame].FrTopMargin + PointToPixel (buffer->BuPoints[1].YCoord / 1000));
 	     cx2 = controls[1].lx + x + FrameTable[frame].FrLeftMargin;
 	     cy2 = controls[1].ly + y + FrameTable[frame].FrTopMargin;
 	  }
@@ -2157,9 +2157,9 @@ C_points           *controls;
 #ifndef NEW_WILLOWS
    if (modele != 0)
      {
-	XSetTile (GDp (0), GCgrey (0), modele);
-	XFillPolygon (GDp (0), FrRef[frame], GCgrey (0), points, npoints, Complex, CoordModeOrigin);
-	XFreePixmap (GDp (0), modele);
+	XSetTile (TtDisplay, TtGreyGC, modele);
+	XFillPolygon (TtDisplay, FrRef[frame], TtGreyGC, points, npoints, Complex, CoordModeOrigin);
+	XFreePixmap (TtDisplay, modele);
      }
 #endif /* NEW_WILLOWS */
 
@@ -2168,7 +2168,7 @@ C_points           *controls;
      {
 	preparerTrace (0, style, epais, RO, active, fg);
 #ifndef NEW_WILLOWS
-	XDrawLines (GDp (0), FrRef[frame], GCtrait (0), points, npoints, CoordModeOrigin);
+	XDrawLines (TtDisplay, FrRef[frame], TtLineGC, points, npoints, CoordModeOrigin);
 #endif /* NEW_WILLOWS */
 	finirTrace (0, RO, active);
      }
@@ -2319,20 +2319,20 @@ int                 motif;
 	point[12].x = point[0].x;
 	point[12].y = point[0].y;
 
-	XSetTile (GDp (0), GCgrey (0), modele);
-	XFillPolygon (GDp (0), FrRef[frame], GCgrey (0),
+	XSetTile (TtDisplay, TtGreyGC, modele);
+	XFillPolygon (TtDisplay, FrRef[frame], TtGreyGC,
 		      point, 13, Convex, CoordModeOrigin);
 	/* Trace quatre arcs de cercle */
-	XFillArcs (GDp (0), FrRef[frame], GCgrey (0), xarc, 4);
-	XFreePixmap (GDp (0), modele);
+	XFillArcs (TtDisplay, FrRef[frame], TtGreyGC, xarc, 4);
+	XFreePixmap (TtDisplay, modele);
      }
 
    /* On trace le contour */
    if (epais > 0)
      {
 	preparerTrace (0, style, epais, RO, active, fg);
-	XDrawArcs (GDp (0), FrRef[frame], GCtrait (0), xarc, 4);
-	XDrawSegments (GDp (0), FrRef[frame], GCtrait (0), seg, 4);
+	XDrawArcs (TtDisplay, FrRef[frame], TtLineGC, xarc, 4);
+	XDrawSegments (TtDisplay, FrRef[frame], TtLineGC, seg, 4);
 	finirTrace (0, RO, active);
      }
 #endif /* NEW_WILLOWS */
@@ -2382,10 +2382,10 @@ int                 motif;
 #ifndef NEW_WILLOWS
    if (modele != 0)
      {
-	XSetTile (GDp (0), GCgrey (0), modele);
-	XFillArc (GDp (0), FrRef[frame], GCgrey (0),
+	XSetTile (TtDisplay, TtGreyGC, modele);
+	XFillArc (TtDisplay, FrRef[frame], TtGreyGC,
 		  x, y, larg, haut, 0, 360 * 64);
-	XFreePixmap (GDp (0), modele);
+	XFreePixmap (TtDisplay, modele);
      }
 #endif /* NEW_WILLOWS */
 
@@ -2394,7 +2394,7 @@ int                 motif;
      {
 	preparerTrace (0, style, epais, RO, active, fg);
 #ifndef NEW_WILLOWS
-	XDrawArc (GDp (0), FrRef[frame], GCtrait (0), x, y, larg, haut, 0, 360 * 64);
+	XDrawArc (TtDisplay, FrRef[frame], TtLineGC, x, y, larg, haut, 0, 360 * 64);
 #endif /* NEW_WILLOWS */
 	finirTrace (0, RO, active);
      }
@@ -2619,7 +2619,7 @@ int                 fg;
 	       point[2].y = y;
 	       break;
 	 }
-   XDrawLines (GDp (0), FrRef[frame], GCtrait (0),
+   XDrawLines (TtDisplay, FrRef[frame], TtLineGC,
 	       point, 3, CoordModeOrigin);
    finirTrace (0, RO, active);
 #endif /* NEW_WILLOWS */
@@ -2779,12 +2779,12 @@ int                 motif;
 	point[12].x = point[0].x;
 	point[12].y = point[0].y;
 
-	XSetTile (GDp (0), GCgrey (0), modele);
-	XFillPolygon (GDp (0), FrRef[frame], GCgrey (0),
+	XSetTile (TtDisplay, TtGreyGC, modele);
+	XFillPolygon (TtDisplay, FrRef[frame], TtGreyGC,
 		      point, 13, Convex, CoordModeOrigin);
 	/* Trace quatre arcs de cercle */
-	XFillArcs (GDp (0), FrRef[frame], GCgrey (0), xarc, 4);
-	XFreePixmap (GDp (0), modele);
+	XFillArcs (TtDisplay, FrRef[frame], TtGreyGC, xarc, 4);
+	XFreePixmap (TtDisplay, modele);
      }
 
    /* On trace le contour */
@@ -2792,11 +2792,11 @@ int                 motif;
    if (epais > 0)
      {
 	preparerTrace (0, style, epais, RO, active, fg);
-	XDrawArcs (GDp (0), FrRef[frame], GCtrait (0), xarc, 4);
+	XDrawArcs (TtDisplay, FrRef[frame], TtLineGC, xarc, 4);
 	if (arc2 < haut / 2)
-	   XDrawSegments (GDp (0), FrRef[frame], GCtrait (0), seg, 5);
+	   XDrawSegments (TtDisplay, FrRef[frame], TtLineGC, seg, 5);
 	else
-	   XDrawSegments (GDp (0), FrRef[frame], GCtrait (0), seg, 4);
+	   XDrawSegments (TtDisplay, FrRef[frame], TtLineGC, seg, 4);
 	finirTrace (0, RO, active);
      }
 #endif /* NEW_WILLOWS */
@@ -2849,17 +2849,17 @@ int                 motif;
    modele = CreatePattern (0, RO, active, fg, bg, motif);
    if (modele != 0)
      {
-	XSetTile (GDp (0), GCgrey (0), modele);
-	XFillArc (GDp (0), FrRef[frame], GCgrey (0),
+	XSetTile (TtDisplay, TtGreyGC, modele);
+	XFillArc (TtDisplay, FrRef[frame], TtGreyGC,
 		  x, y, larg, haut, 0, 360 * 64);
-	XFreePixmap (GDp (0), modele);
+	XFreePixmap (TtDisplay, modele);
      }
 
    /* On trace le contour */
    if (epais > 0)
      {
 	preparerTrace (0, style, epais, RO, active, fg);
-	XDrawArc (GDp (0), FrRef[frame], GCtrait (0),
+	XDrawArc (TtDisplay, FrRef[frame], TtLineGC,
 		  x, y, larg, haut, 0, 360 * 64);
 
 	px7mm = (7 * PTS_POUCE) / 25.4 + 0.5;
@@ -2868,7 +2868,7 @@ int                 motif;
 	     A = ((double) haut - 2 * px7mm) / haut;
 	     A = 1.0 - sqrt (1 - A * A);
 	     shiftX = larg * A * 0.5 + 0.5;
-	     XDrawLine (GDp (0), FrRef[frame], GCtrait (0),
+	     XDrawLine (TtDisplay, FrRef[frame], TtLineGC,
 			x + shiftX, y + px7mm, x + larg - shiftX, y + px7mm);
 	  }
 	finirTrace (0, RO, active);
@@ -2938,7 +2938,7 @@ int                 y;
    if (w != None)
      {
 #ifndef NEW_WILLOWS
-	XClearArea (GDp (0), w, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, larg, haut, False);
+	XClearArea (TtDisplay, w, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, larg, haut, FALSE);
 #endif /* NEW_WILLOWS */
 #ifdef NEW_WILLOWS
 	WIN_GetDeviceContext (frame);
@@ -2970,9 +2970,9 @@ ThotGC              GClocal;
 #endif /* __STDC__ */
 {
 #ifndef NEW_WILLOWS
-   XSetFont (GDp (0), GClocal, ((XFontStruct *) font)->fid);
+   XSetFont (TtDisplay, GClocal, ((XFontStruct *) font)->fid);
    FontOrig (font, chaine[0], &x, &y);
-   XDrawString (GDp (0), w, GClocal, x, y, chaine, strlen (chaine));
+   XDrawString (TtDisplay, w, GClocal, x, y, chaine, strlen (chaine));
 #endif /* NEW_WILLOWS */
 #ifdef NEW_WILLOWS
    /* GetWinDeviceContext(w);
@@ -3005,7 +3005,7 @@ int                 y;
    if (w != None)
      {				/* blindage necessaire */
 #ifndef NEW_WILLOWS
-	XFillRectangle (GDp (0), w, GCinvert (0), x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, larg, haut);
+	XFillRectangle (TtDisplay, w, TtInvertGC, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, larg, haut);
 #endif /* NEW_WILLOWS */
 #ifdef NEW_WILLOWS
 	WIN_GetDeviceContext (frame);
@@ -3038,7 +3038,7 @@ int                 yf;
    w = FrRef[frame];
    if (w != None)
 #ifndef NEW_WILLOWS
-      XCopyArea (GDp (0), w, w, GCwhite (0), xd + FrameTable[frame].FrLeftMargin, yd + FrameTable[frame].FrTopMargin, larg, haut, xf + FrameTable[frame].FrLeftMargin, yf + FrameTable[frame].FrTopMargin);
+      XCopyArea (TtDisplay, w, w, TtWhiteGC, xd + FrameTable[frame].FrLeftMargin, yd + FrameTable[frame].FrTopMargin, larg, haut, xf + FrameTable[frame].FrLeftMargin, yf + FrameTable[frame].FrTopMargin);
 #endif /* NEW_WILLOWS */
 #ifdef NEW_WILLOWS
    WIN_GetDeviceContext (frame);
@@ -3084,7 +3084,7 @@ int                 frame;
 #endif /* __STDC__ */
 {
 #ifndef NEW_WILLOWS
-   XFlush (GDp (0));
+   XFlush (TtDisplay);
 #endif /* NEW_WILLOWS */
 }
 
@@ -3125,12 +3125,12 @@ int                 motif;
 #ifndef NEW_WILLOWS
    if (modele != 0)
      {
-	XSetTile (GDp (0), GCgrey (0), modele);
+	XSetTile (TtDisplay, TtGreyGC, modele);
 	if (w != 0)
-	   XFillRectangle (GDp (0), w, GCgrey (0), x, y, large, haut);
+	   XFillRectangle (TtDisplay, w, TtGreyGC, x, y, large, haut);
 	else
-	   XFillRectangle (GDp (0), FrRef[frame], GCgrey (0), x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, large, haut);
-	XFreePixmap (GDp (0), modele);
+	   XFillRectangle (TtDisplay, FrRef[frame], TtGreyGC, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, large, haut);
+	XFreePixmap (TtDisplay, modele);
      }
 #endif /* NEW_WILLOWS */
 }

@@ -148,7 +148,7 @@ CreerPaletteOutils ()
 
   TtaNewDialogSheet (PALETTE_OUTILS, 0 /* TtaGetViewFrame(0,0) */, 0, 0,
 		     TtaGetMessage(DrawMsgTable,DRW_TOOLS),
-		     0, "", True, 5, 'L', D_DONE);
+		     0, "", TRUE, 5, 'L', D_DONE);
   if (TabFormes1[0] == 0)
     TabFormes1[0] = TtaCreatePixmapLogo (AligneG_xpm);
   if (TabFormes1[1] == 0)
@@ -194,11 +194,11 @@ CreerPaletteOutils ()
   if (TabFormes5[3] == 0)
     TabFormes5[3] = TtaCreatePixmapLogo (Eloigner_xpm);
 
-  TtaNewIconMenu (TOOLS_PREMIERE_COLONNE, PALETTE_OUTILS, 0, NULL, 4, &TabFormes1[0], False);
-  TtaNewIconMenu (TOOLS_DEUXIEME_COLONNE, PALETTE_OUTILS, 0, NULL, 4, &TabFormes2[0], False);
-  TtaNewIconMenu (TOOLS_TROISIEME_COLONNE, PALETTE_OUTILS, 0, NULL, 4, &TabFormes3[0], False);
-  TtaNewIconMenu (TOOLS_QUATRIEME_COLONNE, PALETTE_OUTILS, 0, NULL, 4, &TabFormes4[0], False);
-  TtaNewIconMenu (TOOLS_CINQUIEME_COLONNE, PALETTE_OUTILS, 0, NULL, 4, &TabFormes5[0], False);
+  TtaNewIconMenu (TOOLS_PREMIERE_COLONNE, PALETTE_OUTILS, 0, NULL, 4, &TabFormes1[0], FALSE);
+  TtaNewIconMenu (TOOLS_DEUXIEME_COLONNE, PALETTE_OUTILS, 0, NULL, 4, &TabFormes2[0], FALSE);
+  TtaNewIconMenu (TOOLS_TROISIEME_COLONNE, PALETTE_OUTILS, 0, NULL, 4, &TabFormes3[0], FALSE);
+  TtaNewIconMenu (TOOLS_QUATRIEME_COLONNE, PALETTE_OUTILS, 0, NULL, 4, &TabFormes4[0], FALSE);
+  TtaNewIconMenu (TOOLS_CINQUIEME_COLONNE, PALETTE_OUTILS, 0, NULL, 4, &TabFormes5[0], FALSE);
 
    return;
 }
@@ -288,7 +288,7 @@ TraiterEvtPaletteOutils (ref, typedata, data)
 	case 1:
 	  /* TtaSetNumberForm (ZOOM, TtaGetZoom (Doc,VuePrincipale)); */
 	  /* PopUpOuvert = FEUILLE_ZOOM; */
-	  /* TtaShowDialogue (FEUILLE_ZOOM, False);*/
+	  /* TtaShowDialogue (FEUILLE_ZOOM, FALSE);*/
 	  TtcSetZoomView(Doc,VuePrincipale);
 	  break;
 	case 2:

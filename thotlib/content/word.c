@@ -130,14 +130,14 @@ int                 dercar;
      {
 	if (dersel->ElTextLength >= dercar)
 	   if (!SeparateurMot (dersel->ElText->BuContent[dercar - 1]))
-	      return (False);
+	      return (FALSE);
 	/* pas de caractere precedant immediatement */
 	/* sauf signe de ponctuation, parenthesage, guillemet */
 	if (premcar > 1)
 	   if (!SeparateurMot (premsel->ElText->BuContent[premcar - 2]))
-	      return (False);
+	      return (FALSE);
      }
-   return (True);
+   return (TRUE);
 }				/*MotOk */
 
 
@@ -166,11 +166,11 @@ PtrSearchContext           context;
    boolean             ok;
 
    if (context == NULL)
-      return (False);
+      return (FALSE);
    else
      {
 	context->STree = 0;
-	context->SWholeDocument = False;
+	context->SWholeDocument = FALSE;
      }
 
    /* Recupere la selection courante */
@@ -181,11 +181,11 @@ PtrSearchContext           context;
      {
 	context->SStartElement = NULL;
 	context->STree = 0;
-	context->SWholeDocument = True;
+	context->SWholeDocument = TRUE;
 	context->SEndElement = NULL;
 	context->SStartChar = 0;
 	context->SEndChar = 0;
-	context->SStartToEnd = True;
+	context->SStartToEnd = TRUE;
      }
    else if (!ok)
       /* Pas de selection courante */
@@ -195,7 +195,7 @@ PtrSearchContext           context;
       context->SDocument = NULL;
    else
      {
-	context->SWholeDocument = False;
+	context->SWholeDocument = FALSE;
 	/* Attention les indices de caracteres sont des indices a */
 	/* la C (0 ... n) et des indices a la Pascal (1 ... n+1)  */
 	if (domain == 0)	/* ElemIsBefore la selection */
@@ -204,7 +204,7 @@ PtrSearchContext           context;
 	     context->SStartChar = 0;
 	     context->SEndElement = ElDebutSelInitial;
 	     context->SEndChar = CarDebutSelInitial;	/*caractere avant */
-	     context->SStartToEnd = False;
+	     context->SStartToEnd = FALSE;
 	  }
 	else if (domain == 1)	/* Dans la selection */
 	  {
@@ -212,7 +212,7 @@ PtrSearchContext           context;
 	     context->SStartChar = CarDebutSelInitial - 1;	/* caractere courant */
 	     context->SEndElement = ElFinSelInitial;
 	     context->SEndChar = CarFinSelInitial - 1;	/* caractere courant */
-	     context->SStartToEnd = True;
+	     context->SStartToEnd = TRUE;
 	  }
 	else if (domain == 2)	/* Apres la selection */
 	  {
@@ -229,7 +229,7 @@ PtrSearchContext           context;
 		     }
 	     context->SEndElement = NULL;
 	     context->SEndChar = 0;
-	     context->SStartToEnd = True;
+	     context->SStartToEnd = TRUE;
 	  }
      }
 
@@ -241,10 +241,10 @@ PtrSearchContext           context;
 	context->SStartChar = 0;
 	context->SEndChar = 0;
 	context->STree = 0;
-	context->SWholeDocument = False;
-	return (False);
+	context->SWholeDocument = FALSE;
+	return (FALSE);
      }
-   return (True);
+   return (TRUE);
 }				/*InitSearchDomain */
 
 
@@ -300,10 +300,10 @@ void                RestoreAfterSearch ()
 		      longprec);
      }
    else
-      SelectEl (DocSelInitial, ElDebutSelInitial, True, True);
+      SelectEl (DocSelInitial, ElDebutSelInitial, TRUE, TRUE);
 
    if (ElFinSelInitial != ElDebutSelInitial && ElFinSelInitial != NULL)
-      SelEtend (ElFinSelInitial, carfin, True, False, False);
+      SelEtend (ElFinSelInitial, carfin, TRUE, FALSE, FALSE);
 }				/*RestoreAfterSearch */
 
 
@@ -313,7 +313,7 @@ void                RestoreAfterSearch ()
 /* |    porte sur tout le document.                                     | */
 /* |    Met a jour le contexte de recherche pour pouvoir relancer la    | */
 /* |    recherche dans le nouvel arbre a traiter.                       | */
-/* |    Retourne True si un arbre suivant a ete trouve' et, dans ce cas,| */
+/* |    Retourne TRUE si un arbre suivant a ete trouve' et, dans ce cas,| */
 /* |    elCourant et carCourant representent la position ou il faut     | */
 /* |    relancer la recherche.                                          | */
 /* ---------------------------------------------------------------------- */
@@ -335,7 +335,7 @@ PtrSearchContext           context;
 
    *elCourant = NULL;
    *carCourant = 0;
-   ret = False;
+   ret = FALSE;
    if (context != NULL)
       if (context->SWholeDocument && context->STree >= 0)
 	{
@@ -493,10 +493,10 @@ PtrSearchContext           context;
      }
 
    if (pEl == NULL)
-      return (False);
+      return (FALSE);
    else if (pEl == Elfin && icar >= carfin)
       /* On est arrive a la fin du domaine de recherche */
-      return (False);
+      return (FALSE);
    else
      {
 
@@ -536,7 +536,7 @@ PtrSearchContext           context;
 	*CarCourant = icar;
 	/* Si on a trouve effectivement un mot */
 	if (lg > 0)
-	   return (True);
+	   return (TRUE);
 	else
 	   /* On peut etre en fin de feuille qui se termine par un espace */
 	   /* On continue la recherche */
@@ -661,10 +661,10 @@ PtrSearchContext           context;
      }
 
    if (pEl == NULL)
-      return (False);
+      return (FALSE);
    else if (pEl == Elfin && icar < carfin)
       /* On est arrive a la fin du domaine de recherche */
-      return (False);
+      return (FALSE);
    else
      {
 	/* Calcule l'index de depart de la recherche */
@@ -711,7 +711,7 @@ PtrSearchContext           context;
 	*CarCourant = icar;
 	/* Si on a trouve effectivement un mot */
 	if (lg > 0)
-	   return (True);
+	   return (TRUE);
 	else
 	   /* On peut etre en fin de feuille qui se termine par un espace */
 	   /* On continue la recherche */

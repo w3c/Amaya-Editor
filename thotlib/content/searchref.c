@@ -58,8 +58,8 @@
 /* |            l'element pEl.                                          | */
 /* |            - pDocEl est le document auquel appartient pEl.         | */
 /* |            - TraiteNonCharge indique si on prend en compte les     | */
-/* |              documents referencant non charge's (True) ou si au    | */
-/* |              contraire on les ignore (False).                      | */
+/* |              documents referencant non charge's (TRUE) ou si au    | */
+/* |              contraire on les ignore (FALSE).                      | */
 /* |            - pRefPrec contient la reference courante a l'appel.    | */
 /* |              Si pRefPrec est NULL et *pDE est NULL, la fonction    | */
 /* |              retourne la premiere reference a` l'element pEl,sinon | */
@@ -70,9 +70,9 @@
 /* |              retournee. Seulement si la valeur de retour n'est pas | */
 /* |              NULL.                                                 | */
 /* |            - pDE est le document externe precedemment traite' (si  | */
-/* |              DocExtSuivant est True) ou celui qu'on veut traiter   | */
-/* |              (si DocExtSuivant est False). pDE doit etre NULL si   | */
-/* |              DocExtSuivant est True et qu'on n'a pas encore traite'| */
+/* |              DocExtSuivant est TRUE) ou celui qu'on veut traiter   | */
+/* |              (si DocExtSuivant est FALSE). pDE doit etre NULL si   | */
+/* |              DocExtSuivant est TRUE et qu'on n'a pas encore traite'| */
 /* |              de references externes.                               | */
 /* |              Au retour, pDE vaut NULL si la reference retournee    | */
 /* |              appartient au meme document que l'element pEl; sinon  | */
@@ -80,15 +80,15 @@
 /* |              reference trouvee. pDE ne doit pas etre modifie'      | */
 /* |              entre les appels successifs de la fonction.           | */
 /* |            - DocExtSuivant indique si on passe au document         | */
-/* |              referencant suivant celui decrit par pDE (True) ou si | */
-/* |              on traite le document decrit par pDE (False).         | */
+/* |              referencant suivant celui decrit par pDE (TRUE) ou si | */
+/* |              on traite le document decrit par pDE (FALSE).         | */
 /* |            Retourne un pointeur sur la premiere reference trouvee. | */
 /* |            Si la valeur de retour est NULL et                      | */
 /* |               si pDE est NULL : on n'a rien trouve'.               | */
 /* |               si pDE n'est pas NULL : il y a des references a`     | */
 /* |                    l'element pEl dans le document designe' par pDE | */
 /* |                    mais ce document n'est pas charge' (cela ne se  | */
-/* |                    produit que si TraiteNonCharge est True).       | */
+/* |                    produit que si TraiteNonCharge est TRUE).       | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
 PtrReference        ReferSuivante (PtrElement pEl, PtrDocument pDocEl, boolean TraiteNonCharge, PtrReference pRefPrec, PtrDocument * pDocRef, PtrExternalDoc * pDE, boolean DocExtSuivant)
@@ -145,7 +145,7 @@ boolean             DocExtSuivant;
 /* |              cherche la premiere reference.                        | */
 /* |            - DocExtSuivant indique si on cherche une reference     | */
 /* |              dans le document externe decrit par pDocExtCour       | */
-/* |              (False) ou dans le document externe suivant.          | */
+/* |              (FALSE) ou dans le document externe suivant.          | */
 /* |       Au retour:                                                   | */
 /* |            - ReferCour: pointeur sur la reference trouvee ou NULL  | */
 /* |              si on n'a pas trouve' de reference.                   | */
@@ -187,10 +187,10 @@ boolean             DocExtSuivant;
    boolean             ok;
    boolean             trouve;
 
-   ok = True;
+   ok = TRUE;
    if (*ReferCour != NULL || *pDocExtCour != NULL)
       /* on a deja une reference courante */
-      *ReferCour = ReferSuivante (*ElemRefCour, *DocDeElemRefCour, True,
+      *ReferCour = ReferSuivante (*ElemRefCour, *DocDeElemRefCour, TRUE,
 		    *ReferCour, DocDeReferCour, pDocExtCour, DocExtSuivant);
    else
       /* pas de reference courante */
@@ -205,7 +205,7 @@ boolean             DocExtSuivant;
 	   /* selection courante */
 	  {
 	     pEl = premsel;
-	     trouve = False;
+	     trouve = FALSE;
 	     do
 	       {
 		  if (pEl->ElReferredDescr != NULL)
@@ -213,7 +213,7 @@ boolean             DocExtSuivant;
 		     if (pEl->ElReferredDescr->ReFirstReference != NULL ||
 			 pEl->ElReferredDescr->ReExtDocRef != NULL)
 			/* l'element est effectivement reference' */
-			trouve = True;
+			trouve = TRUE;
 		  if (!trouve)
 		     /* l'element n'est pas reference', on passe au pere */
 		     pEl = pEl->ElParent;
@@ -227,7 +227,7 @@ boolean             DocExtSuivant;
 		  *ElemRefCour = pEl;
 		  *DocDeElemRefCour = docsel;
 		  /* cherche la premiere reference a cet element */
-		  *ReferCour = ReferSuivante (*ElemRefCour, *DocDeElemRefCour, True,
+		  *ReferCour = ReferSuivante (*ElemRefCour, *DocDeElemRefCour, TRUE,
 		    *ReferCour, DocDeReferCour, pDocExtCour, DocExtSuivant);
 	       }
 	  }
@@ -235,7 +235,7 @@ boolean             DocExtSuivant;
    if (*ReferCour != NULL)
       /* on a trouve' une reference */
      {
-	ok = True;
+	ok = TRUE;
 	/* on ignore les references qui sont a l'interieur d'une inclusion */
 	if ((*ReferCour)->RdElement != NULL)
 	  {
@@ -244,24 +244,24 @@ boolean             DocExtSuivant;
 		pAscendant = pAscendant->ElParent;
 	     if (pAscendant->ElSource != NULL)
 		/* on est dans une inclusion */
-		ok = False;
+		ok = FALSE;
 	  }
 	/* on ignore les references dans les partie cachees */
 	if (ok)
 	   if (ElementIsHidden ((*ReferCour)->RdElement))
 	      /* on est dans une partie cachee */
-	      ok = False;
+	      ok = FALSE;
 	/* on ignore les references qui sont dans le tampon de Copier-Couper */
 	if (ok)
 	   if (DansTampon ((*ReferCour)->RdElement))
-	      ok = False;
+	      ok = FALSE;
 	if (!ok)
 	   /* cherche la reference suivante au meme element */
 	   ChUneRef (ReferCour, DocDeReferCour, ElemRefCour, DocDeElemRefCour,
-		     pDocExtCour, True);
+		     pDocExtCour, TRUE);
 	else
 	   /* selectionne la reference trouvee */
-	   SelectWithAPP (*DocDeReferCour, (*ReferCour)->RdElement, False, False);
+	   SelectWithAPP (*DocDeReferCour, (*ReferCour)->RdElement, FALSE, FALSE);
      }
 }
 
@@ -396,7 +396,7 @@ void                ChElemRefer ()
 	     if (!IdentDocNul (IdentDoc))
 		/* l'element reference' est dans un autre document */
 		docsel = pDocument (IdentDoc);
-	     SelectWithAPP (docsel, pEl, True, True);
+	     SelectWithAPP (docsel, pEl, TRUE, TRUE);
 	     /* dans le cas ou c'est un element d'une paire de marques, on */
 	     /* selectionne l'intervalle compris entre ces marques. */
 	     SelectIntervallePaire ();
@@ -499,7 +499,7 @@ PtrDocument         pDoc;
 
 	/* alloue a l'element un descripteur d'element reference' */
 	pRac->ElReferredDescr = NewReferredElDescr (pDoc);
-	pRac->ElReferredDescr->ReExternalRef = False;
+	pRac->ElReferredDescr->ReExternalRef = FALSE;
 	pRac->ElReferredDescr->ReReferredElem = pRac;
 	if (!ChangerLabel && pSource != NULL && pDoc == DocDeSauve)
 	   /* l'element prend le meme label que l'element original */
@@ -521,14 +521,14 @@ PtrDocument         pDoc;
 	/* on cherche toutes les references a l'element original et on les */
 	/* fait pointer sur l'element colle'. */
 	/* cherche d'abord la premiere reference */
-	pRef = ReferSuivante (pSource, DocDeSauve, False, NULL, &pDocRef, &pDocExt, True);
+	pRef = ReferSuivante (pSource, DocDeSauve, FALSE, NULL, &pDocRef, &pDocExt, TRUE);
 	pDocRefSuiv = pDocRef;	/* a priori la reference suivante sera dans le */
 	/* meme document */
 	while (pRef != NULL)
 	  {
 	     /* cherche la reference suivante a l'original avant de modifier */
 	     /* la reference courante */
-	     pRefSuiv = ReferSuivante (pSource, DocDeSauve, False, pRef, &pDocRefSuiv, &pDocExt, True);
+	     pRefSuiv = ReferSuivante (pSource, DocDeSauve, FALSE, pRef, &pDocRefSuiv, &pDocExt, TRUE);
 	     /* traite la reference courante */
 	     /* si elle est dans le tampon, on n'y touche pas : sa copie dans */
 	     /* le document ou on colle a deja ete traitee ou sera traitee dans */
@@ -542,14 +542,14 @@ PtrDocument         pDoc;
 		     pElemRef = NULL;
 		  else
 		     pElemRef = pRef->RdElement;
-		  SetReference (pElemRef, pRef->RdAttribute, pRac, pDocRef, pDoc, False, False);
+		  SetReference (pElemRef, pRef->RdAttribute, pRac, pDocRef, pDoc, FALSE, FALSE);
 		  /* si c'est une reference par attribut, verifie la */
 		  /* validite de l'attribut dans le cas des extensions de */
 		  /* cellule des tableaux */
 		  if (pRef->RdAttribute != NULL)
 		    if (ThotLocalActions[T_TableauVerifExtension]!=NULL)
 		      (*ThotLocalActions[T_TableauVerifExtension])
-			(pRef->RdAttribute, pRef->RdElement, pRef->RdElement, True);
+			(pRef->RdAttribute, pRef->RdElement, pRef->RdElement, TRUE);
 	       }
 	     pRef = pRefSuiv;	/* passe a la reference suivante */
 	     pDocRef = pDocRefSuiv;
@@ -583,14 +583,14 @@ PtrDocument         pDoc;
 			/* extensions de cellule des tableaux */
 		        if (ThotLocalActions[T_TableauVerifExtension]!=NULL)
 			  (*ThotLocalActions[T_TableauVerifExtension])
-			   (pAttr, pRac, pRac, True);
+			   (pAttr, pRac, pRac, TRUE);
 			if (DocDeSauve != pDoc)
 			   /* reference et objet reference' sont */
 			   /* dans des documents differents, on */
 			   /* supprime l'attribut, sauf dans le */
 			   /* cas particulier des tableaux. */
 			  {
-			    attrref = True;
+			    attrref = TRUE;
 			    if (ThotLocalActions[T_TableauAttributRef]!=NULL)
 			      (*ThotLocalActions[T_TableauAttributRef])
 				(pAttr, &attrref);
@@ -671,11 +671,11 @@ PtrDocument         pDoc;
 			  /* meme temps */
 			  if (!pRef->RdInternalRef)
 			     /* lie la reference a l'element designe' par l'original */
-			     SetReference (pRac, NULL, pElRef, pDoc, pDocRef, False, False);
+			     SetReference (pRac, NULL, pElRef, pDoc, pDocRef, FALSE, FALSE);
 			  else
 			     /* la reference originale etait une reference interne */
 			    {
-			       memedoc = False;
+			       memedoc = FALSE;
 			       if (pElRef != NULL)
 				  if (!DansTampon (pElRef))
 				     /* l'element reference' est aussi colle', on ne fait */
@@ -685,7 +685,7 @@ PtrDocument         pDoc;
 
 				  /* etablit le lien entre la reference copie'e et */
 				  /* l'element reference */
-				  SetReference (pRac, NULL, pElRef, pDoc, pDocRef, False, False);
+				  SetReference (pRac, NULL, pElRef, pDoc, pDocRef, FALSE, FALSE);
 			    }
 		       }
 		  }

@@ -182,27 +182,27 @@ static void         AppliqueModPresent ()
 			  if (ChngFamille)
 			     LocChngFamille = (Famille != pAb->AbFont);
 			  else
-			     LocChngFamille = False;
+			     LocChngFamille = FALSE;
 			  /* style des caracteres */
 			  if (ChngStyle)
 			     LocChngStyle = (Style != pAb->AbHighlight);
 			  else
-			     LocChngStyle = False;
+			     LocChngStyle = FALSE;
 			  /* style du souligne */
 			  if (ChngSouligne)
 			     LocChngSouligne = (SoulStyle != pAb->AbUnderline);
 			  else
-			     LocChngSouligne = False;
+			     LocChngSouligne = FALSE;
 			  /* epaisseur du souligne */
 			  if (ChngEpais)
 			     LocChngEpais = (SoulEpais != pAb->AbThickness);
 			  else
-			     LocChngEpais = False;
+			     LocChngEpais = FALSE;
 			  /* corps en points typo */
 			  if (ChngCorps)
 			     LocChngCorps = (Corps != CorpsCourant);
 			  else
-			     LocChngCorps = False;
+			     LocChngCorps = FALSE;
 			  /* alignement des lignes */
 			  if (ChngCadr)
 			    {
@@ -227,22 +227,22 @@ static void         AppliqueModPresent ()
 			       LocChngCadr = (i != Cadr);
 			    }
 			  else
-			     LocChngCadr = False;
+			     LocChngCadr = FALSE;
 			  /* justification */
 			  if (ChngJustif)
 			     LocChngJustif = (Justif != pAb->AbJustify);
 			  else
-			     LocChngJustif = False;
+			     LocChngJustif = FALSE;
 			  /* coupure des mots */
 			  if (ChngHyphen)
 			     LocChngHyphen = (Hyphenate != pAb->AbHyphenate);
 			  else
-			     LocChngHyphen = False;
+			     LocChngHyphen = FALSE;
 
 			  /* renfoncement de la premiere ligne */
 			  if (ChngIndent)
 			    {
-			       LocChngIndent = True;
+			       LocChngIndent = TRUE;
 			       if (pAb->AbIndent > 0)
 				  Signe = 1;
 			       else if (pAb->AbIndent == 0)
@@ -259,7 +259,7 @@ static void         AppliqueModPresent ()
 				 }
 			       if (Signe == SigneIndent && i == ValIndent)
 				  /* pas de changement */
-				  LocChngIndent = False;
+				  LocChngIndent = FALSE;
 			       else
 				 {
 				    if (SigneIndent != 0 && ValIndent == 0)
@@ -268,12 +268,12 @@ static void         AppliqueModPresent ()
 				 }
 			    }
 			  else
-			     LocChngIndent = False;
+			     LocChngIndent = FALSE;
 
 			  /* interligne */
 			  if (ChngInterL)
 			    {
-			       LocChngInterL = True;
+			       LocChngInterL = TRUE;
 			       i = pAb->AbLineSpacing;
 			       if (pAb->AbLineSpacingUnit == UnRelative)
 				  /* convertit 'interligne en points typographiques */
@@ -283,15 +283,15 @@ static void         AppliqueModPresent ()
 				       i++;
 				 }
 			       if (oldinterligne == i)
-				  LocChngInterL = False;
+				  LocChngInterL = FALSE;
 			    }
 			  else
-			     LocChngInterL = False;
+			     LocChngInterL = FALSE;
 			  /* style des traits graphiques */
 			  if (ChngStyleTrait)
 			     LocChngStyleTrait = (StyleTrait != pAb->AbLineStyle);
 			  else
-			     LocChngStyleTrait = False;
+			     LocChngStyleTrait = FALSE;
 
 			  /* epaisseur des traits graphiques */
 			  LocEpaisTraitUnit = pAb->AbLineWeightUnit;
@@ -313,7 +313,7 @@ static void         AppliqueModPresent ()
 			  if (ChngTrame)
 			     LocChngTrame = (Trame != pAb->AbFillPattern);
 			  else
-			     ChngTrame = False;
+			     ChngTrame = FALSE;
 		       }
 
 		     if (ChngCarStandard || ChngFormStandard
@@ -325,9 +325,9 @@ static void         AppliqueModPresent ()
 			LocChngSouligne, SoulStyle, LocChngEpais, SoulEpais);
 		     if (ChngGraphiques)
 			ModifGraphiques (pEl, SelDoc, SelVue, LocChngStyleTrait,
-			    StyleTrait, LocEpaisTraitUnit, EpaisTrait, True,
-					 LocChngTrame, Trame, False, 0,
-					 False, 0);
+			    StyleTrait, LocEpaisTraitUnit, EpaisTrait, TRUE,
+					 LocChngTrame, Trame, FALSE, 0,
+					 FALSE, 0);
 		     if (ChngFormat)
 			ModifLignes (pEl, SelDoc, SelVue, LocChngCadr, Cadr,
 				     LocChngJustif, Justif, LocChngIndent, ValIndent * SigneIndent,
@@ -336,7 +336,7 @@ static void         AppliqueModPresent ()
 			SupprPresSpec (pEl, SelDoc, ReglesGeom, SelVue);
 		     /* si on est dans un element copie' par inclusion,   */
 		     /* on met a jour les copies de cet element.          */
-		     ReaffPaveCopie (pEl, SelDoc, True);
+		     ReaffPaveCopie (pEl, SelDoc, TRUE);
 		     /* cherche l'element a traiter ensuite */
 		     pEl = SelSuivant (pEl, DerSel);
 		  }
@@ -367,11 +367,11 @@ View                view;
    PtrDocument         pDoc;
 
    pDoc = TabDocuments[document - 1];
-   ChngCarStandard = False;
-   ChngGraphStandard = False;
-   ChngFormStandard = False;
-   ChngCoulStandard = False;
-   ChngGeomStandard = False;
+   ChngCarStandard = FALSE;
+   ChngGraphStandard = FALSE;
+   ChngFormStandard = FALSE;
+   ChngCoulStandard = FALSE;
+   ChngGeomStandard = FALSE;
    RuleSetClr (LesRegles);
    RuleSetClr (ReglesGeom);
    RazRetoursMenus ();
@@ -379,7 +379,7 @@ View                view;
    /* formulaire presentation standard */
    TtaNewSheet (NumFormPresentStandard, TtaGetViewFrame (document, view), 0, 0,
 		TtaGetMessage (LIB, LIB_STANDARD_PRESENTATION),
-		1, TtaGetMessage (LIB, LIB_APPLY), True, 1, 'L', D_DONE);
+		1, TtaGetMessage (LIB, LIB_APPLY), TRUE, 1, 'L', D_DONE);
 
    /* choix multiple presentation standard */
    i = 0;
@@ -393,12 +393,12 @@ View                view;
    i += strlen (&chaine[i]) + 1;
    sprintf (&chaine[i], "%s%s", "B", TtaGetMessage (LIB, LIB_STANDARD_GEOMETRY));
    TtaNewToggleMenu (NumMenuPresentStandard, NumFormPresentStandard,
-    TtaGetMessage (LIB, LIB_STANDARD_PRESENTATION), 5, chaine, NULL, False);
+    TtaGetMessage (LIB, LIB_STANDARD_PRESENTATION), 5, chaine, NULL, FALSE);
    /* annule toutes les options du choix multiple Presentation standard */
-   TtaSetToggleMenu (NumMenuPresentStandard, -1, False);
+   TtaSetToggleMenu (NumMenuPresentStandard, -1, FALSE);
    /* active le formulaire "Presentation standard" */
    DocModPresent = pDoc;
-   TtaShowDialogue (NumFormPresentStandard, True);
+   TtaShowDialogue (NumFormPresentStandard, TRUE);
 }
 
 /* ---------------------------------------------------------------------- */
@@ -422,7 +422,7 @@ int                 val;
 		     {
 			case 0:
 			   /* caracteres standard */
-			   ChngCarStandard = True;
+			   ChngCarStandard = TRUE;
 			   RuleSetPut (LesRegles, PtSize);
 			   RuleSetPut (LesRegles, PtStyle);
 			   RuleSetPut (LesRegles, PtFont);
@@ -431,20 +431,20 @@ int                 val;
 			   break;
 			case 1:
 			   /* graphiques standard */
-			   ChngGraphStandard = True;
+			   ChngGraphStandard = TRUE;
 			   RuleSetPut (LesRegles, PtLineStyle);
 			   RuleSetPut (LesRegles, PtLineWeight);
 			   RuleSetPut (LesRegles, PtFillPattern);
 			   break;
 			case 2:
 			   /* couleurs standard */
-			   ChngCoulStandard = True;
+			   ChngCoulStandard = TRUE;
 			   RuleSetPut (LesRegles, PtBackground);
 			   RuleSetPut (LesRegles, PtForeground);
 			   break;
 			case 3:
 			   /* format standard */
-			   ChngFormStandard = True;
+			   ChngFormStandard = TRUE;
 			   RuleSetPut (LesRegles, PtIndent);
 			   RuleSetPut (LesRegles, PtAdjust);
 			   RuleSetPut (LesRegles, PtLineSpacing);
@@ -454,7 +454,7 @@ int                 val;
 			   break;
 			case 4:
 			   /* geometrie standard */
-			   ChngGeomStandard = True;
+			   ChngGeomStandard = TRUE;
 			   RuleSetPut (ReglesGeom, PtVertPos);
 			   RuleSetPut (ReglesGeom, PtHorizPos);
 			   RuleSetPut (ReglesGeom, PtHeight);
@@ -510,85 +510,85 @@ char               *txt;
 			   break;
 		     }
 	       if (c == '\0')	/* inchange' */
-		  ChngFamille = False;
+		  ChngFamille = FALSE;
 	       else
 		 {
 		    /* changement de famille de caracteres */
-		    ChngFamille = True;
+		    ChngFamille = TRUE;
 		    Famille = c;
 		 }
 	       break;
 	    case NumMenuStyleCaract:	/* style des caracteres */
 	       if (val == 6)	/* entree 6: Inchange' */
-		  ChngStyle = False;
+		  ChngStyle = FALSE;
 	       else
 		 {
-		    ChngStyle = True;
+		    ChngStyle = TRUE;
 		    Style = val;
 		 }
 	       break;
 	    case NumMenuTypeSouligne:	/* style du souligne */
 	       /* l'entree 2 est supprimee dans cette version */
 	       if (val == 3)	/* entree 3: Inchange' */
-		  ChngSouligne = False;
+		  ChngSouligne = FALSE;
 	       else if (val == 2)	/* entree 2->3 */
 		 {
-		    ChngSouligne = True;
+		    ChngSouligne = TRUE;
 		    SoulStyle = val + 1;
 		 }
 	       else
 		 {
-		    ChngSouligne = True;
+		    ChngSouligne = TRUE;
 		    SoulStyle = val;
 		 }
 	       break;
 	    case NumMenuEpaisSouligne:		/* epaisseur du souligne */
 	       if (val == 2)	/* entree 2: Inchange' */
-		  ChngEpais = False;
+		  ChngEpais = FALSE;
 	       else
 		 {
-		    ChngEpais = True;
+		    ChngEpais = TRUE;
 		    SoulEpais = val;
 		 }
 	       break;
 	    case NumMenuCorpsCaract:	/* menu des corps en points typo */
 	       if (val >= 0 && val < NumberOfFonts ())
 		 {
-		    ChngCorps = True;
+		    ChngCorps = TRUE;
 		    Corps = TailleEnPoints (val);
 		 }
 	       else
-		  ChngCorps = False;
+		  ChngCorps = FALSE;
 	       break;
 	    case NumMenuAlignement:	/* alignement des lignes */
 	       if (val == 3)	/* entree 3: Inchange' */
-		  ChngCadr = False;
+		  ChngCadr = FALSE;
 	       else
 		 {
-		    ChngCadr = True;
+		    ChngCadr = TRUE;
 		    Cadr = val + 1;
 		 }
 	       break;
 	    case NumMenuJustification:		/* justification */
 	       if (val == 2)	/* entree 2: Inchange' */
-		  ChngJustif = False;
+		  ChngJustif = FALSE;
 	       else
 		 {
-		    ChngJustif = True;
+		    ChngJustif = TRUE;
 		    Justif = (val == 0);
 		 }
 	       break;
 	    case NumMenuCoupureMots:	/* coupure des mots */
 	       if (val == 2)	/* entree 2: Inchange' */
-		  ChngHyphen = False;
+		  ChngHyphen = FALSE;
 	       else
 		 {
-		    ChngHyphen = True;
+		    ChngHyphen = TRUE;
 		    Hyphenate = (val == 0);
 		 }
 	       break;
 	    case NumZoneRenfoncement:	/* renfoncement de la premiere ligne */
-	       ChngIndent = True;
+	       ChngIndent = TRUE;
 	       ValIndent = val;
 	       if (SigneIndent != 0 && ValIndent == 0)
 		 {
@@ -603,14 +603,14 @@ char               *txt;
 	       break;
 	    case NumMenuSensRenfoncement:	/* sens du renfoncement de la premiere ligne */
 	       if (val == 2)	/* entree 2: Inchange' */
-		  ChngIndent = False;
+		  ChngIndent = FALSE;
 	       else
 		 {
 		    if (val == 0)
 		       SigneIndent = 1;
 		    else
 		       SigneIndent = 0;
-		    ChngIndent = True;
+		    ChngIndent = TRUE;
 		    if (SigneIndent != 0 && ValIndent == 0)
 		      {
 			 ValIndent = 15;
@@ -624,7 +624,7 @@ char               *txt;
 		 }
 	       break;
 	    case NumZoneInterligne:	/* interligne */
-	       ChngInterL = True;
+	       ChngInterL = TRUE;
 	       if (oldinterligne != val)
 		 {
 		    oldinterligne = val;
@@ -639,10 +639,10 @@ char               *txt;
 	       break;
 	    case NumMenuInterligne:	/* saisie de l'interligne par un menu */
 	       if (val == 3)	/* entree 3: Inchange' */
-		  ChngInterL = False;
+		  ChngInterL = FALSE;
 	       else
 		 {
-		    ChngInterL = True;
+		    ChngInterL = TRUE;
 		    /* l'utilisateur demande a changer l'interligne */
 		    oldinterligne = ((val + 2) * INTERLGN_SIMPLE) / 2;
 		    TtaSetNumberForm (NumZoneInterligne, oldinterligne);
@@ -667,31 +667,31 @@ char               *txt;
 			   break;
 		     }
 	       if (c == '\0')	/* inchange' */
-		  ChngStyleTrait = False;
+		  ChngStyleTrait = FALSE;
 	       else
 		 {
 		    /* changement effectif de style de trait */
-		    ChngStyleTrait = True;
+		    ChngStyleTrait = TRUE;
 		    StyleTrait = c;
 		 }
 	       break;
 	    case NumZoneEpaisseurTraits:
-	       ChngEpaisTrait = True;
+	       ChngEpaisTrait = TRUE;
 	       EpaisTrait = val;
 	       break;
 	    case NumToggleEpaisseurInchangee:
-	       ChngEpaisTrait = False;
+	       ChngEpaisTrait = FALSE;
 	       break;
 	    case NumSelectPattern:
 	       i = PatternNumber (txt);
 	       if (i >= 0)
 		 {
-		    ChngTrame = True;
+		    ChngTrame = TRUE;
 		    Trame = i;
 		 }
 	       break;
 	    case NumTogglePatternInchange:
-	       ChngTrame = False;
+	       ChngTrame = FALSE;
 	       break;
 	    case NumFormPresGraphiques:
 	    case NumFormPresCaract:
@@ -711,7 +711,7 @@ char               *txt;
 /* ---------------------------------------------------------------------- */
 /* |    ModPresentCaracteres    L'utilisateur demande a modifier la     | */
 /* |            presentation specifique des caracteres pour la vue      | */
-/* |            Vue du document pDoc (si Assoc = False) ou les elements | */
+/* |            Vue du document pDoc (si Assoc = FALSE) ou les elements | */
 /* |            associes de numero Vue (si Assoc = Vrai)                | */
 /* |            Initialise et active le formulaire correspondant.       | */
 /* ---------------------------------------------------------------------- */
@@ -746,7 +746,7 @@ View                view;
 	SelDoc = pDoc;
 	PremSel = pDoc->DocRootElement;
 	DerSel = PremSel;
-	selok = True;
+	selok = TRUE;
      }
 
    if (selok && SelDoc == pDoc)
@@ -754,10 +754,10 @@ View                view;
      {
 	/* cherche si l'un des elements selectionne's est protege' */
 	pEl = PremSel;
-	selok = True;
+	selok = TRUE;
 	while (selok && pEl != NULL)
 	   if (ElementIsReadOnly (pEl))
-	      selok = False;
+	      selok = FALSE;
 	   else
 	      pEl = SelSuivant (pEl, DerSel);
      }
@@ -778,7 +778,7 @@ View                view;
 	     /* formulaire Presentation Caracteres */
 	     TtaNewSheet (NumFormPresCaract, TtaGetViewFrame (document, view), 0, 0,
 			  TtaGetMessage (LIB, LIB_CHARACTERS),
-		  1, TtaGetMessage (LIB, LIB_APPLY), False, 2, 'L', D_DONE);
+		  1, TtaGetMessage (LIB, LIB_APPLY), FALSE, 2, 'L', D_DONE);
 	     /* sous-menu Famille de caracteres */
 	     i = 0;
 	     sprintf (&chaine[i], "%s", "BTimes");
@@ -789,7 +789,7 @@ View                view;
 	     i += strlen (&chaine[i]) + 1;
 	     sprintf (&chaine[i], "%s%s", "B", TtaGetMessage (LIB, LIB_UNCHANGED));
 	     TtaNewSubmenu (NumMenuFamilleCaract, NumFormPresCaract, 0,
-	      TtaGetMessage (LIB, LIB_FONT_FAMILY), 4, chaine, NULL, False);
+	      TtaGetMessage (LIB, LIB_FONT_FAMILY), 4, chaine, NULL, FALSE);
 
 	     /* sous-menu style de caracteres */
 	     i = 0;
@@ -807,7 +807,7 @@ View                view;
 	     i += strlen (&chaine[i]) + 1;
 	     sprintf (&chaine[i], "%s%s", "B", TtaGetMessage (LIB, LIB_UNCHANGED));
 	     TtaNewSubmenu (NumMenuStyleCaract, NumFormPresCaract, 0,
-		    TtaGetMessage (LIB, LIB_STYLE), 7, chaine, NULL, False);
+		    TtaGetMessage (LIB, LIB_STYLE), 7, chaine, NULL, FALSE);
 
 	     /* sous-menu type de Souligne */
 	     i = 0;
@@ -819,7 +819,7 @@ View                view;
 	     i += strlen (&chaine[i]) + 1;
 	     sprintf (&chaine[i], "%s%s", "B", TtaGetMessage (LIB, LIB_UNCHANGED));
 	     TtaNewSubmenu (NumMenuTypeSouligne, NumFormPresCaract, 0,
-		     TtaGetMessage (LIB, LIB_LINE), 4, chaine, NULL, False);
+		     TtaGetMessage (LIB, LIB_LINE), 4, chaine, NULL, FALSE);
 	     TtaNewLabel (NumMenuEpaisSouligne, NumFormPresCaract, " ");
 	     /* sous-menus des corps disponibles, en points typographiques */
 	     nbitem = 0;
@@ -839,7 +839,7 @@ View                view;
 	     sprintf (&chaine[i], "%s%s", "B", TtaGetMessage (LIB, LIB_UNCHANGED));
 	     nbitem++;
 	     TtaNewSubmenu (NumMenuCorpsCaract, NumFormPresCaract, 0,
-			    TtaGetMessage (LIB, LIB_BODY_SIZE_PTS), nbitem, chaine, NULL, False);
+			    TtaGetMessage (LIB, LIB_BODY_SIZE_PTS), nbitem, chaine, NULL, FALSE);
 	     /* initialise la zone 'Famille de caracteres' */
 	     switch (pAb->AbFont)
 		   {
@@ -874,14 +874,14 @@ View                view;
 	     TtaSetMenuForm (NumMenuCorpsCaract, i);
 	  }
 	DocModPresent = pDoc;
-	TtaShowDialogue (NumFormPresCaract, True);
+	TtaShowDialogue (NumFormPresCaract, TRUE);
      }
 }
 
 /* ---------------------------------------------------------------------- */
 /* |    ModPresentGraphiques    L'utilisateur demande a modifier la     | */
 /* |            presentation specifique des graphiques pour la vue      | */
-/* |            Vue du document pDoc (si Assoc = False) ou les elements | */
+/* |            Vue du document pDoc (si Assoc = FALSE) ou les elements | */
 /* |            associes de numero Vue (si Assoc = Vrai)                | */
 /* |            Initialise et active le formulaire correspondant.       | */
 /* ---------------------------------------------------------------------- */
@@ -913,7 +913,7 @@ View                view;
 	/* par defaut la racine du document */
 	SelDoc = pDoc;
 	PremSel = pDoc->DocRootElement;
-	selok = True;
+	selok = TRUE;
      }
 
    if (selok && SelDoc == pDoc)
@@ -933,7 +933,7 @@ View                view;
 	     /* feuille de dialogue Presentation Graphiques */
 	     TtaNewSheet (NumFormPresGraphiques, TtaGetViewFrame (document, view), 0, 0,
 			  TtaGetMessage (LIB, LIB_GRAPHICS_PRESENTATION),
-		  1, TtaGetMessage (LIB, LIB_APPLY), False, 3, 'L', D_DONE);
+		  1, TtaGetMessage (LIB, LIB_APPLY), FALSE, 3, 'L', D_DONE);
 
 	     /* sous-menu style des traits */
 	     i = 0;
@@ -945,7 +945,7 @@ View                view;
 	     i += strlen (&chaine[i]) + 1;
 	     sprintf (&chaine[i], "%s%s", "B", TtaGetMessage (LIB, LIB_UNCHANGED));
 	     TtaNewSubmenu (NumMenuStyleTraits, NumFormPresGraphiques, 0,
-	       TtaGetMessage (LIB, LIB_LINE_STYLE), 4, chaine, NULL, False);
+	       TtaGetMessage (LIB, LIB_LINE_STYLE), 4, chaine, NULL, FALSE);
 	     /* change la police des 3 premieres entrees du style des traits */
 	     for (i = 0; i < 3; i++)
 		TtaRedrawMenuEntry (NumMenuStyleTraits, i, "icones", ThotColorNone, -1);
@@ -969,12 +969,12 @@ View                view;
 
 	     /* zone de saisie epaisseur des traits */
 	     TtaNewNumberForm (NumZoneEpaisseurTraits, NumFormPresGraphiques,
-			TtaGetMessage (LIB, LIB_LINE_WEIGHT), 0, 72, False);
+			TtaGetMessage (LIB, LIB_LINE_WEIGHT), 0, 72, FALSE);
 	     TtaSetNumberForm (NumZoneEpaisseurTraits, 1);
 	     /* Toggle button Epaisseur des traits inchange'e */
 	     sprintf (chaine, "%s%s", "B", TtaGetMessage (LIB, LIB_UNCHANGED));
 	     TtaNewToggleMenu (NumToggleEpaisseurInchangee, NumFormPresGraphiques,
-			       NULL, 1, chaine, NULL, False);
+			       NULL, 1, chaine, NULL, FALSE);
 	     /* initialise la zone de saisie epaisseur des traits */
 	     if (pAb->AbLineWeightUnit == UnPoint)
 		i = pAb->AbLineWeight;
@@ -1002,7 +1002,7 @@ View                view;
 		     i = nbitem;
 		  TtaNewSelector (NumSelectPattern, NumFormPresGraphiques,
 				  TtaGetMessage (LIB, LIB_FILL_PATTERN),
-				  nbitem, chaine, i, NULL, True, False);
+				  nbitem, chaine, i, NULL, TRUE, FALSE);
 		  /* initialise le selecteur sur sa premiere entree */
 		  TtaSetSelector (NumSelectPattern, pAb->AbFillPattern, "");
 	       }
@@ -1010,9 +1010,9 @@ View                view;
 	     i = 0;
 	     sprintf (&chaine[i], "%s%s", "B", TtaGetMessage (LIB, LIB_UNCHANGED));
 	     TtaNewToggleMenu (NumTogglePatternInchange, NumFormPresGraphiques,
-			       NULL, 1, chaine, NULL, False);
+			       NULL, 1, chaine, NULL, FALSE);
 	     DocModPresent = pDoc;
-	     TtaShowDialogue (NumFormPresGraphiques, True);
+	     TtaShowDialogue (NumFormPresGraphiques, TRUE);
 	  }
      }
 }
@@ -1022,7 +1022,7 @@ View                view;
 /* ---------------------------------------------------------------------- */
 /* |    ModPresentFormat        L'utilisateur demande a modifier la     | */
 /* |            presentation specifique (le format) pour la vue         | */
-/* |            Vue du document pDoc (si Assoc = False) ou les elements | */
+/* |            Vue du document pDoc (si Assoc = FALSE) ou les elements | */
 /* |            associes de numero Vue (si Assoc = Vrai)                | */
 /* |            Initialise et active le formulaire correspondant.       | */
 /* ---------------------------------------------------------------------- */
@@ -1054,7 +1054,7 @@ View                view;
 	/* par defaut la racine du document */
 	SelDoc = pDoc;
 	PremSel = pDoc->DocRootElement;
-	selok = True;
+	selok = TRUE;
      }
 
    if (selok && SelDoc == pDoc)
@@ -1073,7 +1073,7 @@ View                view;
 	     /* formulaire Presentation Format */
 	     TtaNewSheet (NumFormPresFormat, TtaGetViewFrame (document, view), 0, 0,
 			  TtaGetMessage (LIB, LIB_FORMAT),
-		   1, TtaGetMessage (LIB, LIB_APPLY), True, 3, 'L', D_DONE);
+		   1, TtaGetMessage (LIB, LIB_APPLY), TRUE, 3, 'L', D_DONE);
 
 	     /* sous-menu Alignement */
 	     i = 0;
@@ -1085,7 +1085,7 @@ View                view;
 	     i += strlen (&chaine[i]) + 1;
 	     sprintf (&chaine[i], "%s%s", "B", TtaGetMessage (LIB, LIB_UNCHANGED));	/* Inchange */
 	     TtaNewSubmenu (NumMenuAlignement, NumFormPresFormat, 0,
-		    TtaGetMessage (LIB, LIB_ALIGN), 4, chaine, NULL, False);
+		    TtaGetMessage (LIB, LIB_ALIGN), 4, chaine, NULL, FALSE);
 	     /* change la police des 3 premieres entrees */
 	     for (i = 0; i < 3; i++)
 		TtaRedrawMenuEntry (NumMenuAlignement, i, "icones", ThotColorNone, -1);
@@ -1109,7 +1109,7 @@ View                view;
 
 	     /* zone de saisie du renfoncement en points typo */
 	     TtaNewNumberForm (NumZoneRenfoncement, NumFormPresFormat,
-			 TtaGetMessage (LIB, LIB_INDENT_PTS), 0, 300, True);
+			 TtaGetMessage (LIB, LIB_INDENT_PTS), 0, 300, TRUE);
 	     /* initialise la valeur du renfoncement */
 	     if (pAb->AbSizeUnit == UnPoint)
 		CorpsCourant = pAb->AbSize;
@@ -1133,7 +1133,7 @@ View                view;
 	     i += strlen (&chaine[i]) + 1;
 	     sprintf (&chaine[i], "%s%s", "B", TtaGetMessage (LIB, LIB_UNCHANGED));
 	     TtaNewSubmenu (NumMenuSensRenfoncement, NumFormPresFormat, 0,
-		    TtaGetMessage (LIB, LIB_INDENT), 3, chaine, NULL, True);
+		    TtaGetMessage (LIB, LIB_INDENT), 3, chaine, NULL, TRUE);
 	     /* change la police des 3 premieres entrees du sous-menu */
 	     for (i = 0; i < 2; i++)
 		TtaRedrawMenuEntry (NumMenuSensRenfoncement, i, "icones", ThotColorNone, -1);
@@ -1152,7 +1152,7 @@ View                view;
 	     i += strlen (&chaine[i]) + 1;
 	     sprintf (&chaine[i], "%s%s", "B", TtaGetMessage (LIB, LIB_UNCHANGED));
 	     TtaNewSubmenu (NumMenuJustification, NumFormPresFormat, 0,
-	     TtaGetMessage (LIB, LIB_JUSTIFICATION), 3, chaine, NULL, False);
+	     TtaGetMessage (LIB, LIB_JUSTIFICATION), 3, chaine, NULL, FALSE);
 	     /* menu de justification */
 	     if (pAb->AbJustify)
 		i = 1;		/* avec justification */
@@ -1162,7 +1162,7 @@ View                view;
 
 	     /* zone de saisie de l'interligne en points typo */
 	     TtaNewNumberForm (NumZoneInterligne, NumFormPresFormat,
-		   TtaGetMessage (LIB, LIB_LINE_SPACING_PTS), 1, 200, True);
+		   TtaGetMessage (LIB, LIB_LINE_SPACING_PTS), 1, 200, TRUE);
 
 	     /* sous-menu Interligne (Grandeur) */
 	     i = 0;
@@ -1174,7 +1174,7 @@ View                view;
 	     i += strlen (&chaine[i]) + 1;
 	     sprintf (&chaine[i], "%s%s", "B", TtaGetMessage (LIB, LIB_UNCHANGED));
 	     TtaNewSubmenu (NumMenuInterligne, NumFormPresFormat, 0,
-	      TtaGetMessage (LIB, LIB_LINE_SPACING), 4, chaine, NULL, True);
+	      TtaGetMessage (LIB, LIB_LINE_SPACING), 4, chaine, NULL, TRUE);
 	     /* change la police des 3 premieres entrees */
 	     for (i = 0; i < 3; i++)
 		TtaRedrawMenuEntry (NumMenuInterligne, i, "icones", ThotColorNone, -1);
@@ -1203,7 +1203,7 @@ View                view;
 		i = 1;
 	     TtaSetMenuForm (NumMenuInterligne, i);
 	     DocModPresent = pDoc;
-	     TtaShowDialogue (NumFormPresFormat, True);
+	     TtaShowDialogue (NumFormPresFormat, TRUE);
 	  }
      }
 }
@@ -1219,23 +1219,23 @@ static void         RazRetoursMenus ()
 	TteConnectAction (T_presentstd, (Proc) RetMenuPresentStandard);
 	TteConnectAction (T_present, (Proc) RetMenuPresent);
      }
-   ChngCarStandard = False;
-   ChngCoulStandard = False;
-   ChngGraphStandard = False;
-   ChngGeomStandard = False;
-   ChngFormStandard = False;
-   ChngStyleTrait = False;
-   ChngEpaisTrait = False;
-   ChngTrame = False;
-   ChngFamille = False;
-   ChngSouligne = False;
-   ChngEpais = False;
-   ChngStyle = False;
-   ChngCorps = False;
-   ChngCadr = False;
-   ChngJustif = False;
-   ChngHyphen = False;
-   ChngIndent = False;
-   ChngInterL = False;
+   ChngCarStandard = FALSE;
+   ChngCoulStandard = FALSE;
+   ChngGraphStandard = FALSE;
+   ChngGeomStandard = FALSE;
+   ChngFormStandard = FALSE;
+   ChngStyleTrait = FALSE;
+   ChngEpaisTrait = FALSE;
+   ChngTrame = FALSE;
+   ChngFamille = FALSE;
+   ChngSouligne = FALSE;
+   ChngEpais = FALSE;
+   ChngStyle = FALSE;
+   ChngCorps = FALSE;
+   ChngCadr = FALSE;
+   ChngJustif = FALSE;
+   ChngHyphen = FALSE;
+   ChngIndent = FALSE;
+   ChngInterL = FALSE;
 }
 /* End Of Module modpres */

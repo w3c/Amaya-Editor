@@ -292,7 +292,7 @@ int                 y2;
    /* rotation ramenant le 2e point sur l'horizontale */
    R = sqrt ((double) dX * dX + dY * dY);
    if (R == 0.0)
-      return False;
+      return FALSE;
    C = dX / R;
    S = dY / R;
    nX = x * C + y * S;
@@ -335,7 +335,7 @@ int                 y;
    max = box->BxNChars;
    if (max < 4)
       /* il n'y a pas de surface a l'interieur de la polyline */
-      return (False);
+      return (FALSE);
 
    /* premier et dernier point de la polyline */
    maxbuff = buff = box->BxBuffer;
@@ -345,10 +345,10 @@ int                 y;
    max = maxbuff->BuLength - 1;
 
    croise = 0;
-   nextX = PtEnPixel (buff->BuPoints[i].XCoord / 1000, 0);
-   nextY = PtEnPixel (buff->BuPoints[i].YCoord / 1000, 1);
-   prevX = PtEnPixel (maxbuff->BuPoints[max].XCoord / 1000, 0);
-   prevY = PtEnPixel (maxbuff->BuPoints[max].YCoord / 1000, 1);
+   nextX = PointToPixel (buff->BuPoints[i].XCoord / 1000);
+   nextY = PointToPixel (buff->BuPoints[i].YCoord / 1000);
+   prevX = PointToPixel (maxbuff->BuPoints[max].XCoord / 1000);
+   prevY = PointToPixel (maxbuff->BuPoints[max].YCoord / 1000);
    if ((prevY >= y) != (nextY >= y))
      {
 	/* y entre nextY et prevY */
@@ -369,8 +369,8 @@ int                 y;
      {
 	prevX = nextX;
 	prevY = nextY;
-	nextX = PtEnPixel (buff->BuPoints[i].XCoord / 1000, 0);
-	nextY = PtEnPixel (buff->BuPoints[i].YCoord / 1000, 1);
+	nextX = PointToPixel (buff->BuPoints[i].XCoord / 1000);
+	nextY = PointToPixel (buff->BuPoints[i].YCoord / 1000);
 	if (prevY >= y)
 	  {
 	     while ((i <= max || buff != maxbuff) && (nextY >= y))
@@ -383,8 +383,8 @@ int                 y;
 		    }
 		  prevY = nextY;
 		  prevX = nextX;
-		  nextX = PtEnPixel (buff->BuPoints[i].XCoord / 1000, 0);
-		  nextY = PtEnPixel (buff->BuPoints[i].YCoord / 1000, 1);
+		  nextX = PointToPixel (buff->BuPoints[i].XCoord / 1000);
+		  nextY = PointToPixel (buff->BuPoints[i].YCoord / 1000);
 	       }
 
 	     if (i > max && buff == maxbuff)
@@ -410,8 +410,8 @@ int                 y;
 		    }
 		  prevY = nextY;
 		  prevX = nextX;
-		  nextX = PtEnPixel (buff->BuPoints[i].XCoord / 1000, 0);
-		  nextY = PtEnPixel (buff->BuPoints[i].YCoord / 1000, 1);
+		  nextX = PointToPixel (buff->BuPoints[i].XCoord / 1000);
+		  nextY = PointToPixel (buff->BuPoints[i].YCoord / 1000);
 	       }
 
 	     if (i > max && buff == maxbuff)
@@ -484,8 +484,8 @@ int                *pointselect;
 	  }
 
 	/* Teste si le point est sur ce segment */
-	X2 = PtEnPixel (adbuff->BuPoints[j].XCoord / 1000, 0);
-	Y2 = PtEnPixel (adbuff->BuPoints[j].YCoord / 1000, 1);
+	X2 = PointToPixel (adbuff->BuPoints[j].XCoord / 1000);
+	Y2 = PointToPixel (adbuff->BuPoints[j].YCoord / 1000);
 	if (x >= X2 - DELTA_SEL && x <= X2 + DELTA_SEL && y >= Y2 - DELTA_SEL && y <= Y2 + DELTA_SEL)
 	  {
 	     /* La selection porte sur un point de controle particulier */
@@ -493,7 +493,7 @@ int                *pointselect;
 	     return (box);
 	  }
 	else if (X1 == -1)
-	   OK = False;
+	   OK = FALSE;
 	else
 	   OK = pointOnLine (x, y, X1, Y1, X2, Y2);
 
@@ -510,8 +510,8 @@ int                *pointselect;
    /* traite le cas particulier des polylines fermees */
    if (pave->AbPolyLineShape == 'p' || pave->AbPolyLineShape == 's')
      {
-	X2 = PtEnPixel (box->BxBuffer->BuPoints[1].XCoord / 1000, 0);
-	Y2 = PtEnPixel (box->BxBuffer->BuPoints[1].YCoord / 1000, 1);
+	X2 = PointToPixel (box->BxBuffer->BuPoints[1].XCoord / 1000);
+	Y2 = PointToPixel (box->BxBuffer->BuPoints[1].YCoord / 1000);
 	OK = pointOnLine (x, y, X1, Y1, X2, Y2);
 	if (OK)
 	   return (box);
@@ -612,16 +612,16 @@ int                 y;
 	       val2 = (float) box->BxWidth / 2;
 	       val2 = val2 * val2;
 	       if (val1 <= val2)
-		  return (True);	/* le point est dans le cercle */
+		  return (TRUE);	/* le point est dans le cercle */
 	       else
-		  return (False);	/* le point est hors du cercle */
+		  return (FALSE);	/* le point est hors du cercle */
 	       break;
 	    default:
 	       break;
 	 }
    if (max < 2)
       /* il n'y a pas de surface */
-      return (False);
+      return (FALSE);
 
    /* premier et dernier point de la polyline */
    i = 0;
@@ -1255,47 +1255,47 @@ int                *max;
 #ifndef STRUCT_EDIT
    /* For Amaya only !!!!!!!!!!!! */
    if (!TypeHasException (ExcMoveResize, pave->AbElement->ElTypeNumber, pave->AbElement->ElSructSchema))
-      ok = False;
+      ok = FALSE;
    else
 #endif
       /* Box non deplacable */
    if (!PavMovable (pave, EnX))
-      ok = False;
+      ok = FALSE;
    /* Box de presentation */
    else if (pave->AbPresentationBox)
-      ok = False;
+      ok = FALSE;
    /* Box elastique */
    else if (EnX && pave->AbWidth.DimIsPosition)
-      ok = False;
+      ok = FALSE;
    else if (!EnX && pave->AbHeight.DimIsPosition)
-      ok = False;
+      ok = FALSE;
    /* Box flottante */
    else if (EnX && pave->AbHorizPos.PosAbRef == NULL)
-      ok = False;
+      ok = FALSE;
    else if (!EnX && pave->AbVertPos.PosAbRef == NULL)
-      ok = False;
+      ok = FALSE;
    /* Box racine */
    else if (pere == NULL)
-      ok = True;
+      ok = TRUE;
    /* Box mise en lignes */
    else if (pere->AbInLine || pere->AbBox->BxType == BoGhost)
-      ok = False;
+      ok = FALSE;
    else if (EnX
       /* et le pere ne depend pas de son contenu */
 	    && (pere->AbBox->BxContentWidth
 		|| (!pere->AbWidth.DimIsPosition && pere->AbWidth.DimMinimum))
 	    && pave->AbHorizPos.PosAbRef == pere
 	    && pave->AbHorizPos.PosRefEdge != Left)
-      ok = False;
+      ok = FALSE;
    else if (!EnX
       /* et le pere ne depend pas de son contenu */
 	    && (pere->AbBox->BxContentHeight
 		|| (!pere->AbHeight.DimIsPosition && pere->AbHeight.DimMinimum))
 	    && pave->AbVertPos.PosAbRef == pere
 	    && pave->AbVertPos.PosRefEdge != Top)
-      ok = False;
+      ok = FALSE;
    else
-      ok = True;
+      ok = TRUE;
 
    if (EnX)
       if (ok)
@@ -1303,7 +1303,7 @@ int                *max;
 	   DepZone (pave, frame, EnX, min, max);
 	   /* La boite est-elle bloquee dans l'englobante ? */
 	   if (*min == box->BxXOrg && *max == *min + box->BxWidth)
-	      ok = False;
+	      ok = FALSE;
 	}
       else
 	{
@@ -1315,7 +1315,7 @@ int                *max;
 	DepZone (pave, frame, EnX, min, max);
 	/* La boite est-elle bloquee dans l'englobante ? */
 	if (*min == box->BxYOrg && *max == *min + box->BxHeight)
-	   ok = False;
+	   ok = FALSE;
      }
    else
      {
@@ -1352,7 +1352,7 @@ boolean             pre;
    boolean             ok;
 
    DocVueFen (frame, &pDoc, &vue, &assoc);
-   result = False;
+   result = FALSE;
    pAsc = pEl;
    while (pAsc != NULL)
      {
@@ -1416,10 +1416,10 @@ int                 ym;
 	   pAb = pBox->BxAbstractBox;
 
 	if (pointselect != 0)
-	   encore = False;
+	   encore = FALSE;
 	else
 	   /* ctrl click */
-	   encore = True;
+	   encore = TRUE;
 
 	/* On boucle tant que l'on ne trouve pas une boite deplacable */
 	while (encore)
@@ -1429,14 +1429,14 @@ int                 ym;
 	     else
 		pBox = pAb->AbBox;
 	     if (pBox == NULL)
-		encore = False;	/* Il n'y a pas de boite */
+		encore = FALSE;	/* Il n'y a pas de boite */
 	     /* On regarde si le deplacement est autorise */
 	     else
 	       {
-		  okH = PModifiable (pAb, frame, True, &Xmin, &Xmax);
-		  okV = PModifiable (pAb, frame, False, &ymin, &ymax);
+		  okH = PModifiable (pAb, frame, TRUE, &Xmin, &Xmax);
+		  okV = PModifiable (pAb, frame, FALSE, &ymin, &ymax);
 		  if (okH || okV)
-		     encore = False;
+		     encore = FALSE;
 	       }
 
 	     /* Si on n'a pas trouve, il faut remonter */
@@ -1447,7 +1447,7 @@ int                 ym;
 		else
 		  {
 		     pBox = NULL;
-		     encore = False;
+		     encore = FALSE;
 		  }
 	  }
 
@@ -1461,7 +1461,7 @@ int                 ym;
 
 	     if (pointselect != 0)
 	       {
-		  if (!APPgraphicModify (pBox->BxAbstractBox->AbElement, pointselect, frame, True))
+		  if (!APPgraphicModify (pBox->BxAbstractBox->AbElement, pointselect, frame, TRUE))
 		    {
 		       /* Deplacement d'un point de la polyline */
 		       x = pBox->BxXOrg - pFrame->FrXOrg;
@@ -1479,9 +1479,9 @@ int                 ym;
 		       /* on force le reaffichage de la boite */
 		       DefClip (frame, pBox->BxXOrg - EXTRA_GRAPH, pBox->BxYOrg - EXTRA_GRAPH, pBox->BxXOrg + large + EXTRA_GRAPH, pBox->BxYOrg + haut + EXTRA_GRAPH);
 		       AfFinFenetre (frame, 0);
-		       SetSelect (frame, False);	/* Reaffiche la selection */
+		       SetSelect (frame, FALSE);	/* Reaffiche la selection */
 		       NouvContenu (pAb);
-		       APPgraphicModify (pBox->BxAbstractBox->AbElement, pointselect, frame, False);
+		       APPgraphicModify (pBox->BxAbstractBox->AbElement, pointselect, frame, FALSE);
 		    }
 	       }
 	     else
@@ -1538,7 +1538,7 @@ int                 ym;
 		  /* On transmet la modification a l'editeur */
 		  x = x + pFrame->FrXOrg - pBox->BxXOrg;
 		  y = y + pFrame->FrYOrg - pBox->BxYOrg;
-		  NouvPosition (pBox->BxAbstractBox, x, y, frame, True);
+		  NouvPosition (pBox->BxAbstractBox, x, y, frame, TRUE);
 	       }
 	  }
 	else
@@ -1580,44 +1580,44 @@ int                *max;
 #ifndef STRUCT_EDIT
    /* For Amaya only !!!!!!!!!!!! */
    if (!TypeHasException (ExcMoveResize, pave->AbElement->ElTypeNumber, pave->AbElement->ElSructSchema))
-      ok = False;
+      ok = FALSE;
    else
 #endif
       /* Box non retaillable */
    if (!PavResizable (pave, EnX))
-      ok = False;
+      ok = FALSE;
    /* Box de presentation */
    else if (pave->AbPresentationBox)
-      ok = False;
+      ok = FALSE;
    /* Box elastique */
    else if (EnX && pave->AbWidth.DimIsPosition)
-      ok = False;
+      ok = FALSE;
    else if (!EnX && pave->AbHeight.DimIsPosition)
-      ok = False;
+      ok = FALSE;
    /* Box racine */
    else if (pere == NULL)
      {
 	if ((EnX && pave->AbWidth.DimValue == 0)
 	    || (!EnX && pave->AbHeight.DimValue == 0))
-	   ok = False;
+	   ok = FALSE;
 	else
-	   ok = True;
+	   ok = TRUE;
      }
    /* Texte mise en lignes */
    else if (pave->AbLeafType == LtText
 	    && (pere->AbInLine || pere->AbBox->BxType == BoGhost))
-      ok = False;
+      ok = FALSE;
    /* Il est impossible de modifier si la dimension du contenu */
    /* d'une boite construite ou de type texte                  */
    else if (pave->AbLeafType == LtCompound || pave->AbLeafType == LtText)
       if (EnX && (box->BxContentWidth || (!pave->AbWidth.DimIsPosition && pave->AbWidth.DimMinimum)))
-	 ok = False;
+	 ok = FALSE;
       else if (!EnX && (box->BxContentHeight || (!pave->AbHeight.DimIsPosition && pave->AbHeight.DimMinimum)))
-	 ok = False;
+	 ok = FALSE;
       else
-	 ok = True;
+	 ok = TRUE;
    else
-      ok = True;
+      ok = TRUE;
 
    if (EnX)
       if (ok)
@@ -1669,8 +1669,8 @@ int                 ym;
 
    int                 pointselect;
 
-   okH = False;
-   okV = False;
+   okH = FALSE;
+   okV = FALSE;
    pFrame = &FntrTable[frame - 1];
    if (pFrame->FrAbstractBox != NULL)
      {
@@ -1689,7 +1689,7 @@ int                 ym;
 	   pAb = pBox->BxAbstractBox;
 
 	/* ctrlClick */
-	encore = True;
+	encore = TRUE;
 	/* On boucle tant que l'on ne trouve pas une boite modifiable */
 	while (encore)
 	  {
@@ -1699,14 +1699,14 @@ int                 ym;
 		pBox = pAb->AbBox;
 
 	     if (pBox == NULL)
-		encore = False;	/* Il n'y a pas de boite */
+		encore = FALSE;	/* Il n'y a pas de boite */
 	     /* On regarde si les modifications sont autorisees */
 	     else
 	       {
-		  okH = DModifiable (pAb, frame, True, &Xmin, &Xmax);
-		  okV = DModifiable (pAb, frame, False, &ymin, &ymax);
+		  okH = DModifiable (pAb, frame, TRUE, &Xmin, &Xmax);
+		  okV = DModifiable (pAb, frame, FALSE, &ymin, &ymax);
 		  if (okH || okV)
-		     encore = False;
+		     encore = FALSE;
 	       }
 
 	     /* Si on n'a pas trouve, il faut remonter */
@@ -1717,7 +1717,7 @@ int                 ym;
 		else
 		  {
 		     pBox = NULL;
-		     encore = False;
+		     encore = FALSE;
 		  }
 	  }
 
@@ -1786,7 +1786,7 @@ int                 ym;
 	     /* On transmet la modification a l'editeur */
 	     large = large - pBox->BxWidth;
 	     haut = haut - pBox->BxHeight;
-	     NouvDimension (pBox->BxAbstractBox, large, haut, frame, True);
+	     NouvDimension (pBox->BxAbstractBox, large, haut, frame, TRUE);
 	  }
 	else
 	   /* On n'a pas trouve de boite modifiable */
@@ -1821,7 +1821,7 @@ int                 frame;
    if (EnCreation)
       return;
    else
-      EnCreation = True;
+      EnCreation = TRUE;
 
    pFrame = &FntrTable[frame - 1];
 
@@ -1883,25 +1883,25 @@ int                 frame;
 	       break;
 	 }
 
-   modPosition = (PModifiable (pAb, frame, True, &Xmin, &Xmax)
-		  || PModifiable (pAb, frame, False, &Ymin, &Ymax));
+   modPosition = (PModifiable (pAb, frame, TRUE, &Xmin, &Xmax)
+		  || PModifiable (pAb, frame, FALSE, &Ymin, &Ymax));
    if (!modPosition)
      {
-	pAb->AbHorizPos.PosUserSpecified = False;
-	pAb->AbVertPos.PosUserSpecified = False;
+	pAb->AbHorizPos.PosUserSpecified = FALSE;
+	pAb->AbVertPos.PosUserSpecified = FALSE;
      }
-   modDimension = (DModifiable (pAb, frame, True, &Xmin, &Xmax)
-		   || DModifiable (pAb, frame, False, &Ymin, &Ymax));
+   modDimension = (DModifiable (pAb, frame, TRUE, &Xmin, &Xmax)
+		   || DModifiable (pAb, frame, FALSE, &Ymin, &Ymax));
    if (!modDimension)
      {
-	pAb->AbWidth.DimUserSpecified = False;
-	pAb->AbHeight.DimUserSpecified = False;
+	pAb->AbWidth.DimUserSpecified = FALSE;
+	pAb->AbHeight.DimUserSpecified = FALSE;
      }
    if (modPosition || modDimension)
      {
 	/* Determine les limites de deplacement de la boite */
-	DepZone (pAb, frame, True, &Xmin, &Xmax);
-	DepZone (pAb, frame, False, &Ymin, &Ymax);
+	DepZone (pAb, frame, TRUE, &Xmin, &Xmax);
+	DepZone (pAb, frame, FALSE, &Ymin, &Ymax);
 	TtaDisplayMessage (INFO, TtaGetMessage(LIB, LIB_CREATING_THE_BOX), TypePave (pAb));
 	/* On retablit les positions par rapport a la fenetre */
 	Xmin -= pFrame->FrXOrg;
@@ -1916,20 +1916,20 @@ int                 frame;
 		      pAb->AbHeight.DimUserSpecified);
 
 	/* Notification de la boite saisie */
-	pAb->AbHorizPos.PosUserSpecified = False;
-	pAb->AbVertPos.PosUserSpecified = False;
-	pAb->AbWidth.DimUserSpecified = False;
-	pAb->AbHeight.DimUserSpecified = False;
+	pAb->AbHorizPos.PosUserSpecified = FALSE;
+	pAb->AbVertPos.PosUserSpecified = FALSE;
+	pAb->AbWidth.DimUserSpecified = FALSE;
+	pAb->AbHeight.DimUserSpecified = FALSE;
 	x = x + pFrame->FrXOrg - pBox->BxXOrg;
 	y = y + pFrame->FrYOrg - pBox->BxYOrg;
-	NouvPosition (pAb, x, y, frame, True);
+	NouvPosition (pAb, x, y, frame, TRUE);
 	large = large - pBox->BxWidth;
 	haut = haut - pBox->BxHeight;
-	NouvDimension (pAb, large, haut, frame, True);
+	NouvDimension (pAb, large, haut, frame, TRUE);
      }
 
    /* Traitement de la creation interactive termine */
-   EnCreation = False;
+   EnCreation = FALSE;
 }
 
 

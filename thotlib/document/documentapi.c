@@ -134,7 +134,7 @@ char               *documentName;
 	  {
 	     /* charge le schema de structure */
 	     GetSchStruct (&pDoc->DocSSchema);
-	     pDoc->DocSSchema->SsExtension = False;
+	     pDoc->DocSSchema->SsExtension = FALSE;
 	     if (!RdSchStruct (structureSchema, pDoc->DocSSchema) ||
 		 pDoc->DocSSchema->SsExtension)
 		/* echec a la lecture du schema de structure ou chargement */
@@ -156,7 +156,7 @@ char               *documentName;
 #endif
 		  /* on cree la representation interne d'un document vide. */
 		  pDoc->DocRootElement = NewSubtree (pDoc->DocSSchema->SsRootElem,
-		    pDoc->DocSSchema, pDoc, 0, True, True, True, True);
+		    pDoc->DocSSchema, pDoc, 0, TRUE, TRUE, TRUE, TRUE);
 		  /* supprime les elements exclus (au sens SGML) */
 		  RemoveExcludedElem (&pDoc->DocRootElement);
 		  if (pDoc->DocRootElement == NULL)
@@ -191,7 +191,7 @@ char               *documentName;
 			  i++;
 		       pDoc->DocDirectory[i - 1] = '\0';
 		       /* document en lecture-ecriture */
-		       pDoc->DocReadOnly = False;
+		       pDoc->DocReadOnly = FALSE;
 		       document = IdentDocument (pDoc);
 		    }
 	       }
@@ -257,7 +257,7 @@ int                 accessMode;
 		   pDoc->DocDName[lg - 4] = '\0';
 	     GetDocIdent (&pDoc->DocIdent, pDoc->DocDName);
 	     strncpy (pDoc->DocDirectory, DirectoryDoc, MAX_PATH);
-	     ok = OuvreDoc (pDoc->DocDName, pDoc, True, False, NULL, False);
+	     ok = OuvreDoc (pDoc->DocDName, pDoc, TRUE, FALSE, NULL, FALSE);
 	     if (!ok)
 		/* echec d'acces a l'objet pivot */
 	       {
@@ -359,7 +359,7 @@ char               *documentName;
 		       /* l'application veut creer une copie du document. */
 		       /* on fait apparaitre le document copie dans les */
 		       /* fichiers .EXT des documents reference's */
-		       ChangeNomExt (pDoc, documentName, True);
+		       ChangeNomExt (pDoc, documentName, TRUE);
 		       /* met le nouveau nom dans le descripteur du document */
 		       strncpy (pDoc->DocDName, documentName, MAX_NAME_LENGTH);
 		       strncpy (pDoc->DocIdent, documentName, MAX_DOC_IDENT_LEN);
@@ -467,14 +467,14 @@ Document            document;
 	   if (pDoc->DocView[nv - 1].DvPSchemaView != 0)
 	     {
 		DetruitFenetre (pDoc->DocViewFrame[nv - 1]);
-		detruit (pDoc, nv, False, False);
+		detruit (pDoc, nv, FALSE, FALSE);
 	     }
 	/* on ferme ensuite les frames des elements associes */
 	for (numassoc = 1; numassoc <= MAX_ASSOC_DOC; numassoc++)
 	   if (pDoc->DocAssocFrame[numassoc - 1] != 0)
 	     {
 		DetruitFenetre (pDoc->DocAssocFrame[numassoc - 1]);
-		detruit (pDoc, numassoc, True, False);
+		detruit (pDoc, numassoc, TRUE, FALSE);
 	     }
 #endif
 	LibDocument (&TabDocuments[document - 1]);
@@ -530,20 +530,20 @@ Document            document;
 	/* Note d'abord dans le contexte du document tous les liens de */
 	/* reference externe */
 	/* traite l'arbre principal du document */
-	RegisterExternalRef (pDoc->DocRootElement, pDoc, False);
+	RegisterExternalRef (pDoc->DocRootElement, pDoc, FALSE);
 	RegisterDeletedReferredElem (pDoc->DocRootElement, pDoc);
 	/* traite les arbres d'elements associes */
 	for (i = 1; i <= MAX_ASSOC_DOC; i++)
 	   if (pDoc->DocAssocRoot[i - 1] != NULL)
 	     {
-		RegisterExternalRef (pDoc->DocAssocRoot[i - 1], pDoc, False);
+		RegisterExternalRef (pDoc->DocAssocRoot[i - 1], pDoc, FALSE);
 		RegisterDeletedReferredElem (pDoc->DocAssocRoot[i - 1], pDoc);
 	     }
 	/* traite les parametres */
 	for (i = 1; i <= MAX_PARAM_DOC; i++)
 	   if (pDoc->DocParameters[i - 1] != NULL)
 	     {
-		RegisterExternalRef (pDoc->DocParameters[i - 1], pDoc, False);
+		RegisterExternalRef (pDoc->DocParameters[i - 1], pDoc, FALSE);
 		RegisterDeletedReferredElem (pDoc->DocParameters[i - 1], pDoc);
 	     }
 	/* modifie les fichiers .EXT des documents qui etaient */
@@ -571,14 +571,14 @@ Document            document;
 	   if (pDoc->DocView[nv - 1].DvPSchemaView != 0)
 	     {
 		DetruitFenetre (pDoc->DocViewFrame[nv - 1]);
-		detruit (pDoc, nv, False, False);
+		detruit (pDoc, nv, FALSE, FALSE);
 	     }
 	/* on ferme ensuite les frames des elements associes */
 	for (numassoc = 1; numassoc <= MAX_ASSOC_DOC; numassoc++)
 	   if (pDoc->DocAssocFrame[numassoc - 1] != 0)
 	     {
 		DetruitFenetre (pDoc->DocAssocFrame[numassoc - 1]);
-		detruit (pDoc, numassoc, True, False);
+		detruit (pDoc, numassoc, TRUE, FALSE);
 	     }
 #endif
 	LibDocument (&TabDocuments[document - 1]);
@@ -626,7 +626,7 @@ char               *path;
    Parameter:
 	directory: the directory name.
    Return value:
-   	True if the directory is OK, False if not.
+   	TRUE if the directory is OK, FALSE if not.
 	
    ---------------------------------------------------------------------- */
 #ifdef __STDC__
@@ -647,22 +647,22 @@ char               *directory;
       SECURITY_DESCRIPTOR secDesc; */
    attribs = GetFileAttributes (directory);
    if (!(attribs & FILE_ATTRIBUTE_DIRECTORY))
-      return False;
-   return True;
+      return FALSE;
+   return TRUE;
 #else  /* WWW_MSWINDOWS */
    struct stat         fileStat;
  
    /* does the directory exist ? */
    if (strlen (directory) < 1)
-      return (False);
+      return (FALSE);
    else if (access (directory, 0) != 0)
-      return (False);
+      return (FALSE);
    else if (stat (directory, &fileStat) != 0)
-      return (False); 
+      return (FALSE); 
    else if (S_ISDIR (fileStat.st_mode))
-      return (True);
+      return (TRUE);
    else
-      return (False);
+      return (FALSE);
 #endif /* !WWW_MSWINDOWS */
 }
  
@@ -675,7 +675,7 @@ char               *directory;
    path: the path to be checked
 
    Return value:
-   True if all directories are OK, False if at least one cannot be
+   TRUE if all directories are OK, FALSE if at least one cannot be
    accessed.
 
    ---------------------------------------------------------------------- */
@@ -694,7 +694,7 @@ PathBuffer          path;
    boolean             OK;
  
    i = 0;
-   OK = True;
+   OK = TRUE;
    while (OK && path[i] != '\0')
      {
         j = 0;
@@ -720,7 +720,7 @@ PathBuffer          path;
 /* ----------------------------------------------------------------------
    TtaIsInDocumentPath
 
-   returns True if the directory is in the list of document directories.
+   returns TRUE if the directory is in the list of document directories.
 
    Parameter:
 	directory: the new directory name.
@@ -965,7 +965,7 @@ int                *removedAttributes;
 	if ((*pEl)->ElSructSchema == pSSExt)
 	   /* this element belongs to the extension schema to be removed */
 	  {
-	     RegisterExternalRef (*pEl, pDoc, False);
+	     RegisterExternalRef (*pEl, pDoc, FALSE);
 	     RegisterDeletedReferredElem (*pEl, pDoc);
 #ifndef NODISPLAY
 	     UndisplayElement (*pEl, document);
@@ -985,7 +985,7 @@ int                *removedAttributes;
 		    {
 		       TtaRemoveAttribute ((Element) (*pEl), (Attribute) attribute, document);
 #ifndef NODISPLAY
-		       UndisplayHeritAttr (*pEl, attribute, document, True);
+		       UndisplayHeritAttr (*pEl, attribute, document, TRUE);
 #endif
 #ifndef NODISPLAY
 		       UndisplayAttribute (*pEl, attribute, document);
@@ -1064,10 +1064,10 @@ int                *removedAttributes;
 	/* cherche l'extension a retirer */
 	previousSSchema = pDoc->DocSSchema;
 	curExtension = previousSSchema->SsNextExtens;
-	found = False;
+	found = FALSE;
 	while (!found && curExtension != NULL)
 	   if (((PtrSSchema) extension)->SsCode == curExtension->SsCode)
-	      found = True;
+	      found = TRUE;
 	   else
 	     {
 		previousSSchema = curExtension;
@@ -1156,14 +1156,14 @@ char               *presentationName;
 		    MAX_NAME_LENGTH - 1);
 #else
 	/* verifie qu'aucune vue n'est ouverte */
-	ok = True;
+	ok = TRUE;
 	for (Vue = 1; Vue <= MAX_VIEW_DOC && ok; Vue++)
 	   if (pDoc->DocView[Vue - 1].DvPSchemaView != 0)
-	      ok = False;
+	      ok = FALSE;
 	if (ok)
 	   for (Assoc = 1; Assoc <= MAX_ASSOC_DOC && ok; Assoc++)
 	      if (pDoc->DocAssocFrame[Assoc - 1] != 0)
-		 ok = False;
+		 ok = FALSE;
 	if (!ok)
 	  {
 	     TtaError (ERR_there_are_open_views);
@@ -1450,7 +1450,7 @@ Document            document;
      }
    else
       /* parametre document correct */
-      TabDocuments[document - 1]->DocModified = True;
+      TabDocuments[document - 1]->DocModified = TRUE;
 }
 
 /* ----------------------------------------------------------------------
@@ -1488,7 +1488,7 @@ Document            document;
      }
    else
       /* parametre document correct */
-      TabDocuments[document - 1]->DocModified = False;
+      TabDocuments[document - 1]->DocModified = FALSE;
 }
 
 /* ----------------------------------------------------------------------
@@ -1562,12 +1562,12 @@ char               *documentName;
 
    UserErrorCode = 0;
    document = 1;
-   found = False;
+   found = FALSE;
    while (!found && document < MAX_DOCUMENTS)
      {
 	if (TabDocuments[document - 1] != NULL)
 	   if (strcmp (documentName, TabDocuments[document - 1]->DocDName) == 0)
-	      found = True;
+	      found = TRUE;
 	if (!found)
 	   document++;
      }
@@ -1928,20 +1928,20 @@ char               *presentationName;
    else
       /* lit le debut du fichier document */
      {
-	error = False;
+	error = FALSE;
 	/* lit le numero de version s'il est present */
 	if (!BIOreadByte (file, &carlu))
-	   error = True;
+	   error = TRUE;
 	if (carlu == (char) C_PIV_VERSION)
 	  {
 	     if (!BIOreadByte (file, &carlu))
-		error = True;
+		error = TRUE;
 	     if (!BIOreadByte (file, &carlu))
-		error = True;
+		error = TRUE;
 	     else
 		currentVersion = (int) carlu;
 	     if (!BIOreadByte (file, &carlu))
-		error = True;
+		error = TRUE;
 	  }
 	/* lit le label max. du document s'il est present */
 	if (!error && (carlu == (char) C_PIV_SHORT_LABEL || carlu == (char) C_PIV_LONG_LABEL ||
@@ -1949,7 +1949,7 @@ char               *presentationName;
 	  {
 	     rdLabel (carlu, lab, file);
 	     if (!BIOreadByte (file, &carlu))
-		error = True;
+		error = TRUE;
 	  }
 
 	if (currentVersion >= 4)
@@ -1959,14 +1959,14 @@ char               *presentationName;
 	       {
 		  do
 		     if (!BIOreadByte (file, &carlu))
-			error = True;
+			error = TRUE;
 		  while (!(error || carlu == '\0')) ;
 		  if (carlu != '\0')
-		     error = True;
+		     error = TRUE;
 		  else
 		     /* lit l'octet suivant le nom de langue */
 		  if (!BIOreadByte (file, &carlu))
-		     error = True;
+		     error = TRUE;
 	       }
 	  }
 
@@ -1975,34 +1975,34 @@ char               *presentationName;
 	  {
 	     /* lit l'octet suivant le commentaire */
 	     if (!BIOreadByte (file, &carlu))
-		error = True;
+		error = TRUE;
 	  }
 	/* Lit le nom du schema de structure */
 	/* qui est en tete du fichier pivot */
 	if (!error && carlu != (char) C_PIV_NATURE)
-	   error = True;
+	   error = TRUE;
 	if (!error)
 	  {
 	     i = 0;
 	     do
 		if (!BIOreadByte (file, &structureName[i++]))
-		   error = True;
+		   error = TRUE;
 	     while (!(error || structureName[i - 1] == '\0' || i == MAX_NAME_LENGTH)) ;
 	     if (structureName[i - 1] != '\0')
-		error = True;
+		error = TRUE;
 	     else
 	       {
 		  if (currentVersion >= 4)
 		     /* Lit le code du schema de structure */
 		     if (!BIOreadShort (file, &i))
-			error = True;
+			error = TRUE;
 		  if (!error)
 		    {
 		       /* Lit le nom du schema de presentation associe' */
 		       i = 0;
 		       do
 			  if (!BIOreadByte (file, &presentationName[i++]))
-			     error = True;
+			     error = TRUE;
 		       while (!(error || presentationName[i - 1] == '\0' || i == MAX_NAME_LENGTH)) ;
 		    }
 	       }
@@ -2131,11 +2131,11 @@ SSchema            *nature;
 	  {
 	     /* on cherche l'entree courante dans la table */
 	     n = 1;
-	     found = False;
+	     found = FALSE;
 	     while ((n < pDoc->DocNNatures) && !found)
 	       {
 		  if (pDoc->DocNatureSSchema[n] == (PtrSSchema) (*nature))
-		     found = True;
+		     found = TRUE;
 		  n++;
 	       }
 	     if (!found)
@@ -2144,10 +2144,10 @@ SSchema            *nature;
 	if (n > 0)
 	  {
 	     /* on saute les extensions de schemas */
-	     found = False;
+	     found = FALSE;
 	     while ((n < pDoc->DocNNatures) && !found)
 		if (!pDoc->DocNatureSSchema[n]->SsExtension)
-		   found = True;
+		   found = TRUE;
 		else
 		   n++;
 	     if (found)

@@ -20,7 +20,7 @@
 #include "attribut.f"
 #include "commun.f"
 #include "font.f"
-#include "imagedrvr.f"
+#include "picture.f"
 #include "modpres.f"
 #include "modimabs.f"
 #include "memory.f"
@@ -114,7 +114,7 @@ Document            document;
 #ifndef NODISPLAY
 	     /* modifie la selection si l'element en fait partie */
 	     selOk = SelEditeur (&selDoc, &premSel, &derSel, &premCar, &derCar);
-	     changeSelection = False;
+	     changeSelection = FALSE;
 	     if (selOk)
 		if (selDoc == TabDocuments[document - 1])
 		   if ((PtrElement) element == premSel ||
@@ -123,7 +123,7 @@ Document            document;
 		      /* l'element. On annule la selection d'abord */
 		     {
 			TtaSelectElement (document, NULL);
-			changeSelection = True;
+			changeSelection = TRUE;
 			if (derCar > 1)
 			   derCar -= 1;
 			pEl = (PtrElement) element;
@@ -263,7 +263,7 @@ Document            document;
 	  {
 	     /* modifie la selection si l'element en fait partie */
 	     selOk = SelEditeur (&selDoc, &premSel, &derSel, &premCar, &derCar);
-	     changeSelection = False;
+	     changeSelection = FALSE;
 	     if (selOk)
 		if (selDoc == TabDocuments[document - 1])
 		   if (pEl == premSel || pEl == derSel)
@@ -271,7 +271,7 @@ Document            document;
 		      /* l'element. On annule la selection d'abord */
 		     {
 			TtaSelectElement (document, NULL);
-			changeSelection = True;
+			changeSelection = TRUE;
 			if (derCar > 1)
 			   derCar -= 1;
 			if (pEl == premSel)
@@ -543,7 +543,7 @@ Document            document;
 #ifndef NODISPLAY
 	/* modifie la selection si l'element en fait partie */
 	selOk = SelEditeur (&selDoc, &premSel, &derSel, &premCar, &derCar);
-	changeSelection = False;
+	changeSelection = FALSE;
 	if (selOk)
 	   if (selDoc == TabDocuments[document - 1])
 	      if ((PtrElement) element == premSel || (PtrElement) element == derSel)
@@ -551,7 +551,7 @@ Document            document;
 		 /* l'element. On annule la selection d'abord */
 		{
 		   TtaSelectElement (document, NULL);
-		   changeSelection = True;
+		   changeSelection = TRUE;
 		   if (derCar > 1)
 		      derCar -= 1;
 		   if ((PtrElement) element == premSel)
@@ -778,7 +778,7 @@ Document            document;
    else
      {
 	SplitTextElement ((PtrElement) element, position + 1,
-		    TabDocuments[document - 1], False);
+		    TabDocuments[document - 1], FALSE);
 #ifndef NODISPLAY
 	RedispSplittedText ((PtrElement) element, position, document);
 #endif
@@ -797,7 +797,7 @@ Document            document;
    document: the document to which the text element belongs.
 
    Return value:
-   True if merging has been done.
+   TRUE if merging has been done.
 
    ---------------------------------------------------------------------- */
 
@@ -817,7 +817,7 @@ Document            document;
    boolean             ok;
 
    UserErrorCode = 0;
-   ok = False;
+   ok = FALSE;
    if (element == NULL)
      {
 	TtaError (ERR_invalid_parameter);
@@ -855,16 +855,16 @@ Document            document;
 			       {
 #ifndef NODISPLAY
 				  /* detruit les paves du 2eme element de texte */
-				  DetrPaves (pEl2, TabDocuments[document - 1], False);
+				  DetrPaves (pEl2, TabDocuments[document - 1], FALSE);
 #endif
 				  MergeTextElements ((PtrElement) element, &FreeElement,
-					 TabDocuments[document - 1], False);
+					 TabDocuments[document - 1], FALSE);
 #ifndef NODISPLAY
 				  RedispMergedText ((PtrElement) element, document);
 #endif
 				  if (FreeElement != NULL)
 				     DeleteElement (&FreeElement);
-				  ok = True;
+				  ok = TRUE;
 			       }
      }
    return ok;
@@ -1009,7 +1009,7 @@ Document            document;
 {
    boolean             ok;
 
-   ok = False;
+   ok = FALSE;
    UserErrorCode = 0;
    if (element == NULL)
       TtaError (ERR_invalid_parameter);
@@ -1025,7 +1025,7 @@ Document            document;
       TtaError (ERR_invalid_document_parameter);
    else
       /* parametre document correct */
-      ok = True;
+      ok = TRUE;
    return ok;
 }
 
@@ -1077,8 +1077,8 @@ Document            document;
 	   y = y * 1000;
 	   if (unit == UnPixel)
 	     {
-		x = PixelEnPt (x, 0);
-		y = PixelEnPt (y, 0);
+		x = PixelToPoint (x);
+		y = PixelToPoint (y);
 	     }
 
 	   /* ajoute le point a la polyline */
@@ -1192,8 +1192,8 @@ Document            document;
 	   y = y * 1000;
 	   if (unit == UnPixel)
 	     {
-		x = PixelEnPt (x, 0);
-		y = PixelEnPt (y, 0);
+		x = PixelToPoint (x);
+		y = PixelToPoint (y);
 	     }
 	   ModifyPointInPolyline (((PtrElement) element)->ElPolyLineBuffer, rank, x, y);
 #ifndef NODISPLAY
@@ -1248,8 +1248,8 @@ Document            document;
 	   y = y * 1000;
 	   if (unit == UnPixel)
 	     {
-		x = PixelEnPt (x, 0);
-		y = PixelEnPt (y, 0);
+		x = PixelToPoint (x);
+		y = PixelToPoint (y);
 	     }
 	   firstBuffer = ((PtrElement) element)->ElPolyLineBuffer;
 	   /* verifie que les coordonnees du nouveau point limite sont */
@@ -1676,8 +1676,8 @@ int                *y;
 	     /* Convert values to millipoints */
 	     if (unit == UnPixel)
 	       {
-		  *x = PixelEnPt (*x, 0);
-		  *y = PixelEnPt (*y, 0);
+		  *x = PixelToPoint (*x);
+		  *y = PixelToPoint (*y);
 	       }
 	     *x = *x / 1000;
 	     *y = *y / 1000;

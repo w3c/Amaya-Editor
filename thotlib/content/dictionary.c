@@ -50,7 +50,7 @@ boolean             Corr_alphabet ()
 {
    FILE               *falpha;
    Buffer              alphanom;
-   boolean             ret = False;
+   boolean             ret = FALSE;
    unsigned char       x;
    int                 i;
 
@@ -62,7 +62,7 @@ boolean             Corr_alphabet ()
    strcat (alphanom, "/alphabet");	/* alphabet iso */
    if ((falpha = fopen (alphanom, "r")) != NULL)
      {
-	ret = True;
+	ret = TRUE;
 	for (i = 0; i < 256; i++)
 	   Code[i] = (unsigned char) 100;
 	i = 1;
@@ -228,11 +228,11 @@ PtrDocument         document;
       while (d < MaxDicos && TabDicos[d]->DicoDoc == document)
 	d++;
       
-      if (d == MaxDicos || TabDicos[d]->DicoReadOnly == True)
+      if (d == MaxDicos || TabDicos[d]->DicoReadOnly == TRUE)
 	{
 	  /* rechercher un dico FICHIER */
 	  d = 0;
-	  while (d < MaxDicos && TabDicos[d]->DicoReadOnly == True)
+	  while (d < MaxDicos && TabDicos[d]->DicoReadOnly == TRUE)
 	    d++;
 	}
 	/* vider ce dictionnaire FICHIER  */
@@ -273,7 +273,7 @@ char               *dicodir;
    int                 d;
    boolean             trouve;
 
-   trouve = False;
+   trouve = FALSE;
    d = 0;
    while (d < MaxDicos && (TabDicos[d] != NULL) && (!trouve))
      {
@@ -367,7 +367,7 @@ PtrDico             dict;
       BIOreadInteger (fdico, &dict->plgdico[i]);
 
    /* chargement termine */
-   dict->DicoCharge = True;
+   dict->DicoCharge = TRUE;
    return (1);			/* OK */
 }				/* end of creer */
 
@@ -441,7 +441,7 @@ PtrDico             dict;
       dict->plgdico[i] = dermot;
    dict->chaine[nbcar] = '\0';
    dict->nbcars = nbcar;
-   dict->DicoCharge = True;
+   dict->DicoCharge = TRUE;
    return (1);
 }				/*charger */
 
@@ -449,7 +449,7 @@ PtrDico             dict;
 /* ---------------------------------------------------------------------- */
 /* | PrepDictionnaire : cherche a charger le dictionnaire DiNom         | */
 /* |  de langue lang et de type tdico                                   | */
-/* |  Traite le dico si atraiter = True.                                | */
+/* |  Traite le dico si atraiter = TRUE.                                | */
 /* | retourne dans pDico le pointeur sur son descripteur ou NULL        | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
@@ -468,7 +468,7 @@ boolean             atraiter;
 #endif /* __STDC__ */
 {
    char                tempbuffer[MAX_CHAR];
-   boolean             nouveau = False;
+   boolean             nouveau = FALSE;
    boolean             ret;
    FILE               *fichdico;	/* pointeur fichier */
    PtrDico             pdict;
@@ -485,7 +485,7 @@ boolean             atraiter;
 	else
 	   DoFileName (diconame, "LEX", dicodir, tempbuffer, &i);
      }
-   if (readonly == False)
+   if (readonly == FALSE)
      {				/* dictionnaire modifiable */
 	if (FileExist (tempbuffer) != 0)
 	  {
@@ -494,7 +494,7 @@ boolean             atraiter;
 	  }
 	else
 	  {
-	     nouveau = True;
+	     nouveau = TRUE;
 	     fichdico = fopen (tempbuffer, "w+");	/* nouveau dictionnaire */
 	     TtaDisplayMessage (INFO, TtaGetMessage(LIB, LIB_NOUV_DIC), diconame);
 	  }
@@ -502,7 +502,7 @@ boolean             atraiter;
    else
      {
 	/* dictionnaire READONLY (generalement pre-traite) */
-	if (traite == True)
+	if (traite == TRUE)
 	   fichdico = BIOreadOpen (tempbuffer);
 	else
 	   fichdico = fopen (tempbuffer, "r");
@@ -530,12 +530,12 @@ boolean             atraiter;
    pdict->DicoReadOnly = readonly;
 
    /* calculer la place a allouer pour ce dictionnaire */
-   if (nouveau == False)
+   if (nouveau == FALSE)
      {
 	if (traite)		/* dictionnaire deja traite' */
 	  {			/* ces nombres seront utiles pour l'allocation dynamique */
 	     ret = BIOreadInteger (fichdico, &i);
-	     if (ret == False)
+	     if (ret == FALSE)
 	       {
 		  BIOreadClose (fichdico);
 		  return;	/* refus de memoire */
@@ -575,7 +575,7 @@ boolean             atraiter;
 	     else
 	       {
 		  /* seul un dictionnaire FICHIER  peut etre initialement vide */
-		  if (readonly != False)
+		  if (readonly != FALSE)
 		    {
 		       fclose (fichdico);
 		       return;	/* ERREUR LECTURE FICHIER DICTIONNAIRE EMPTY */
@@ -583,7 +583,7 @@ boolean             atraiter;
 
 	       }		/* end of else (scanf) */
 	  }			/* end of else (traite) */
-     }				/* end of if (nouveau == False) */
+     }				/* end of if (nouveau == FALSE) */
    /* allouer l'espace pour chaine, commun et pdico */
    /* prevoir la place de 50 mots et 600 caracteres en plus si non readonly */
    if (GetChaine (pDico, readonly) == -1)
@@ -597,7 +597,7 @@ boolean             atraiter;
 	return;
      }				/* end of if GetChaine == -1 */
 
-   if (traite == True)
+   if (traite == TRUE)
      {				/* lecture d'un fichier pretraite */
 	if (creer (fichdico, pdict) != 1)
 	   *pDico = NULL;	/* incident en cours de lecture du fichier pretraite */
@@ -612,7 +612,7 @@ boolean             atraiter;
 	  }
 	else
 	   *pDico = NULL;	/* le chargement du dictionnaire a echoue */
-     }				/* end of if (traite == True) */
+     }				/* end of if (traite == TRUE) */
    fclose (fichdico);
 }				/*PrepDictionnaire */
 
@@ -623,7 +623,7 @@ boolean             atraiter;
 /* |           0 if the dictionary was already loaded.                  | */
 /* |           1 if the dictionary is loaded.                           | */
 /* |  returns in pdico : a pointer to dictionary                        | */
-/* |   cree le dictionnaire si tocreate = True                          | */
+/* |   cree le dictionnaire si tocreate = TRUE                          | */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
@@ -656,14 +656,14 @@ boolean             tocreate;
 	switch (i)
 	      {
 		 case (-1):
-		    if (readonly == True)
+		    if (readonly == TRUE)
 		      {
 			 /* fichier inaccesible */
 			 *pdico = NULL;
 			 ret = -1;
 			 break;
 		      }
-		    if (tocreate != True)
+		    if (tocreate != TRUE)
 		      {
 			 /* ne pas creer maintenant le dictionnaire non readonly */
 			 *pdico = NULL;
@@ -674,19 +674,19 @@ boolean             tocreate;
 		 case (0):
 		    /* fichier .DIC */
 		    PrepDictionnaire (&pdict, diconame, document,
-				      dicodir, lang, readonly, False, True);
+				      dicodir, lang, readonly, FALSE, TRUE);
 		    ret = (pdict == NULL) ? -1 : 1;
 		    break;
 		 case (1):
 		    /* fichier .dic */
 		    PrepDictionnaire (&pdict, diconame, document,
-				      dicodir, lang, readonly, True, False);
+				      dicodir, lang, readonly, TRUE, FALSE);
 		    ret = (pdict == NULL) ? -1 : 1;
 		    break;
 		 case (2):
 		    /* fichier .LEX */
 		    PrepDictionnaire (&pdict, diconame, document,
-				      dicodir, lang, readonly, False, False);
+				      dicodir, lang, readonly, FALSE, FALSE);
 		    ret = (pdict == NULL) ? -1 : 1;
 		    break;
 	      }			/* end of switch */
@@ -704,7 +704,7 @@ boolean             tocreate;
 
 /* ---------------------------------------------------------------------- */
 /* |    Corr_ReloadDico recharge un dictionnaire                        | */
-/* | retourne True si le dico FICHIER est trouve et bien charge         | */
+/* | retourne TRUE si le dico FICHIER est trouve et bien charge         | */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
@@ -724,7 +724,7 @@ PtrDico            *pDico;
 
    document = NULL;
    if (*pDico == NULL)
-      return (False);
+      return (FALSE);
 
    pdict = *pDico;
    if (pdict != NULL)
@@ -747,11 +747,11 @@ PtrDico            *pDico;
      }
 
    d = LoadDico (pDico, '\0', document, DiNom,
-		 document->DocDirectory, False, True);
+		 document->DocDirectory, FALSE, TRUE);
    if (d == -1)
-      return (False);
+      return (FALSE);
 
-   return (True);
+   return (TRUE);
 }				/*Corr_ReloadDico */
 
 
@@ -774,7 +774,7 @@ void                Dico_Init ()
 	TtaDisplayMessage (INFO, TtaGetMessage(LIB, LIB_NO_DICOPAR), "DICOPAR");
      }
    Alphabet_charge = Corr_alphabet ();
-   if (Alphabet_charge == False)
+   if (Alphabet_charge == FALSE)
       TtaDisplaySimpleMessage (INFO, LIB, LIB_NO_ALPHABET);
 }				/* end proc Dico_Init */
 
@@ -803,9 +803,9 @@ boolean             ToCreate;
    dicodoc = (char *) TtaGetEnvString ("DICODOC");
    if (dicodoc != NULL)
       (void) LoadDico ((PtrDico *) pDico, 0, document, dicodoc,
-                        document->DocDirectory, False, ToCreate);
+                        document->DocDirectory, FALSE, ToCreate);
    else
-      (void) LoadDico ((PtrDico *) pDico, 0, document, document->DocDName, document->DocDirectory, False, ToCreate);
+      (void) LoadDico ((PtrDico *) pDico, 0, document, document->DocDName, document->DocDirectory, FALSE, ToCreate);
    return (*pDico != '\0');
 }				/*TtaLoadDocumentDictionary */
 
@@ -841,7 +841,7 @@ Language            languageId;
 
    /* Si la variable dicopath n'est pas chargee -> ne rien faire */
    if (dicopath == NULL)
-      return False;
+      return FALSE;
 
    ret = 1;
    lang = (int) languageId;
@@ -851,7 +851,7 @@ Language            languageId;
 	/* Chargement du dictionnaire principal */
 	if (LangTable[lang].LangPrincipal[0] != '\0')
 	  {
-	     ret = LoadDico (&ptrdico, lang, NULL, LangTable[lang].LangPrincipal, dicopath, True, False);
+	     ret = LoadDico (&ptrdico, lang, NULL, LangTable[lang].LangPrincipal, dicopath, TRUE, FALSE);
 	     if (ret > 0)
 		LangTable[lang].LangDico[0] = (Dictionary) ptrdico;
 	  }
@@ -863,7 +863,7 @@ Language            languageId;
 	/* Chargement du dictionnaire secondaire */
 	if (LangTable[lang].LangSecondary[0] != '\0')
 	  {
-	     ret = LoadDico (&ptrdico, lang, NULL, LangTable[lang].LangSecondary, dicopath, True, False);
+	     ret = LoadDico (&ptrdico, lang, NULL, LangTable[lang].LangSecondary, dicopath, TRUE, FALSE);
 	     if (ret > 0)
 		LangTable[lang].LangDico[1] = (Dictionary) ptrdico;
 	  }
@@ -902,7 +902,7 @@ Language            languageId;
 
    /* Si la variable dicopath n'est pas chargee -> ne rien faire */
    if (dicopath == NULL)
-      return False;
+      return FALSE;
 
    ret = 1;
    lang = (int) languageId;
@@ -913,7 +913,7 @@ Language            languageId;
 	if (TypoLangTable[lang].LangPrincipal[0] != '\0')
 	  {
 	     ret = LoadDico (&ptrdico, lang, NULL,
-		  TypoLangTable[lang].LangPrincipal, dicopath, True, False);
+		  TypoLangTable[lang].LangPrincipal, dicopath, TRUE, FALSE);
 	     if (ret > 0)
 		TypoLangTable[lang].LangDico[0] = (Dictionary) ptrdico;
 	  }
@@ -926,7 +926,7 @@ Language            languageId;
 	if (TypoLangTable[lang].LangSecondary[0] != '\0')
 	  {
 	     ret = LoadDico (&ptrdico, lang, NULL,
-		  TypoLangTable[lang].LangSecondary, dicopath, True, False);
+		  TypoLangTable[lang].LangSecondary, dicopath, TRUE, FALSE);
 	     if (ret > 0)
 		TypoLangTable[lang].LangDico[1] = (Dictionary) ptrdico;
 	  }

@@ -13,7 +13,7 @@
 #include "thot_sys.h"
 #include "thot_key.h"
 #include "constmedia.h"
-#include "thotconfig.h"
+
 #include "constmenu.h"
 #include "functions.h"
 #include "typemedia.h"
@@ -164,9 +164,9 @@ void                WIN_HandleExpose (ThotWindow w, int frame, WPARAM wParam, LP
 	     WIN_curHdc = BeginPaint (w, &ps);
 	     DefRegion (frame, ps.rcPaint.left, ps.rcPaint.top,
 			ps.rcPaint.right, ps.rcPaint.bottom);
-	     SetSelect (frame, False);
+	     SetSelect (frame, FALSE);
 	     AfFinFenetre (frame, 0);
-	     SetSelect (frame, True);
+	     SetSelect (frame, TRUE);
 	     EndPaint (w, &ps);
 	  }
      }
@@ -204,9 +204,9 @@ XExposeEvent       *event;
 	if (documentDisplayMode[FrameTable[frame].FrDoc - 1] != NoComputedDisplay)
 	  {
 	     DefRegion (frame, x, y, x + l, y + h);
-	     SetSelect (frame, False);
+	     SetSelect (frame, FALSE);
 	     AfFinFenetre (frame, 0);
-	     SetSelect (frame, True);
+	     SetSelect (frame, TRUE);
 	  }
      }
 }
@@ -282,7 +282,7 @@ int                *infos;
 	dy = haut - FrameTable[frame].FrHeight;
 	notifyDoc.verticalValue = dy;
 	notifyDoc.horizontalValue = dx;
-	if (!ThotSendMessage ((NotifyEvent *) & notifyDoc, True))
+	if (!ThotSendMessage ((NotifyEvent *) & notifyDoc, TRUE))
 	  {
 	     FrameTable[frame].FrWidth = (int) larg;
 	     FrameTable[frame].FrHeight = (int) haut;
@@ -297,12 +297,12 @@ int                *infos;
 	     notifyDoc.view = vue;
 	     notifyDoc.verticalValue = dy;
 	     notifyDoc.horizontalValue = dx;
-	     ThotSendMessage ((NotifyEvent *) & notifyDoc, False);
+	     ThotSendMessage ((NotifyEvent *) & notifyDoc, FALSE);
 #ifdef IV
 	     /* Met a jour les widgets de texte */
 	     i = 1;
 	     n = 0;
-	     /*XtSetArg(args[n], XmNeditable, True); n++; */
+	     /*XtSetArg(args[n], XmNeditable, TRUE); n++; */
 	     XtSetArg (args[n], XmNwidth, (Dimension) (larg - 100));
 	     n++;
 	     while (i < MAX_TEXTZONE && FrameTable[frame].Text_Zone[i] != 0)
@@ -366,19 +366,19 @@ int                 value;
 	       break;
 	    case SB_LINEUP:
 	       delta = -13;
-	       DefFenV (frame, delta, True);
+	       DefFenV (frame, delta, TRUE);
 	       break;
 	    case SB_LINEDOWN:
 	       delta = 13;
-	       DefFenV (frame, delta, True);
+	       DefFenV (frame, delta, TRUE);
 	       break;
 	    case SB_PAGEUP:
 	       delta = -FrameTable[frame].FrHeight;
-	       DefFenV (frame, delta, True);
+	       DefFenV (frame, delta, TRUE);
 	       break;
 	    case SB_PAGEDOWN:
 	       delta = FrameTable[frame].FrHeight;
-	       DefFenV (frame, delta, True);
+	       DefFenV (frame, delta, TRUE);
 	       break;
 	/*************************
 	case SB_THUMBPOSITION:
@@ -401,21 +401,21 @@ int                 value;
 	 {
 	    case -1:
 	       /* No abstract Picture, strange */
-	       SetScrollPos (WIN_curHdc, SB_VERT, 0, True);
+	       SetScrollPos (WIN_curHdc, SB_VERT, 0, TRUE);
 	       break;
 	    case 0:
 	       /* Abstract Picture fully shown */
 	    case 1:
 	       /* Abstract Picture at the top */
-	       SetScrollPos (WIN_curHdc, SB_VERT, 0, True);
+	       SetScrollPos (WIN_curHdc, SB_VERT, 0, TRUE);
 	       break;
 	    case 2:
 	       /* Abstract Picture at the end */
-	       SetScrollPos (WIN_curHdc, SB_VERT, 100, True);
+	       SetScrollPos (WIN_curHdc, SB_VERT, 100, TRUE);
 	       break;
 	    case 3:
 	       /* Abstract Picture at the end */
-	       SetScrollPos (WIN_curHdc, SB_VERT, (100 * total) / debut, True);
+	       SetScrollPos (WIN_curHdc, SB_VERT, (100 * total) / debut, TRUE);
 	       break;
 	 }
 }
@@ -468,7 +468,7 @@ int                *param;
    notifyDoc.view = vue;
    notifyDoc.verticalValue = 0;
    notifyDoc.horizontalValue = delta;
-   if (!ThotSendMessage ((NotifyEvent *) & notifyDoc, True))
+   if (!ThotSendMessage ((NotifyEvent *) & notifyDoc, TRUE))
      {
 	if (infos->reason == XmCR_VALUE_CHANGED || infos->reason == XmCR_DRAG)
 	  {
@@ -498,7 +498,7 @@ int                *param;
 	notifyDoc.view = vue;
 	notifyDoc.verticalValue = 0;
 	notifyDoc.horizontalValue = delta;
-	ThotSendMessage ((NotifyEvent *) & notifyDoc, False);
+	ThotSendMessage ((NotifyEvent *) & notifyDoc, FALSE);
      }
 }				/*XChangeHScroll */
 
@@ -553,7 +553,7 @@ int                *param;
    notifyDoc.view = vue;
    notifyDoc.verticalValue = delta;
    notifyDoc.horizontalValue = 0;
-   if (!ThotSendMessage ((NotifyEvent *) & notifyDoc, True))
+   if (!ThotSendMessage ((NotifyEvent *) & notifyDoc, TRUE))
      {
 	if (infos->reason == XmCR_VALUE_CHANGED || infos->reason == XmCR_DRAG)
 	  {
@@ -625,7 +625,7 @@ int                *param;
 	notifyDoc.view = vue;
 	notifyDoc.verticalValue = delta;
 	notifyDoc.horizontalValue = 0;
-	ThotSendMessage ((NotifyEvent *) & notifyDoc, False);
+	ThotSendMessage ((NotifyEvent *) & notifyDoc, FALSE);
      }
 }				/*XChangeVScroll */
 
@@ -778,7 +778,7 @@ View                view;
 	w = FrameTable[idwindow].WdFrame;
 #ifndef NEW_WILLOWS
 	if (w != 0)
-	   XMapRaised (GDp (0), XtWindowOfObject (XtParent (XtParent (XtParent (w)))));
+	   XMapRaised (TtDisplay, XtWindowOfObject (XtParent (XtParent (XtParent (w)))));
 #endif /* NEW_WILLOWS */
      }
 }
@@ -1143,7 +1143,7 @@ XEvent             *ev;
 				DesBPosition (frame, ev->xbutton.x, ev->xbutton.y);
 			     }
 			   /* Est-ce un double clic */
-			   else if (t1 (0) + (Time) 500 > ev->xbutton.time)
+			   else if (t1 + (Time) 500 > ev->xbutton.time)
 			     {
 				TtaAbortShowDialogue ();
 				XtAppNextEvent (app_cont, &event);
@@ -1162,7 +1162,7 @@ XEvent             *ev;
 			   /* Sinon c'est une selection normale */
 			   else
 			     {
-				t1 (0) = ev->xbutton.time;
+				t1 = ev->xbutton.time;
 				DesFen = frame;
 				DesX = ev->xbutton.x;
 				DesY = ev->xbutton.y;
@@ -1226,12 +1226,12 @@ XEvent             *ev;
 			     {
 				/* selection a l'interieur d'une polyline */
 				if (ThotLocalActions[T_editfunc] != NULL)
-				   (*ThotLocalActions[T_editfunc]) (TEXT_INSERT, False);
+				   (*ThotLocalActions[T_editfunc]) (TEXT_INSERT, FALSE);
 			     }
 			   else
 			     {
 				if (ThotLocalActions[T_creecolle] != NULL)
-				   (*ThotLocalActions[T_creecolle]) (True, False, 'R', &ok);
+				   (*ThotLocalActions[T_creecolle]) (TRUE, FALSE, 'R', &ok);
 			     }
 
 			default:
@@ -1267,7 +1267,7 @@ int                 disp;
 #endif /* __STDC__ */
 {
 #ifndef NEW_WILLOWS
-   XGrabPointer (GDp (disp), win, False, events, GrabModeAsync, GrabModeAsync,
+   XGrabPointer (TtDisplay, win, FALSE, events, GrabModeAsync, GrabModeAsync,
 		 win, cursor, CurrentTime);
 #endif /* NEW_WILLOWS */
 }
@@ -1286,8 +1286,8 @@ int                 disp;
 #endif /* __STDC__ */
 {
 #ifndef NEW_WILLOWS
-   XGrabPointer (GDp (disp), GRootW (disp), True, ButtonReleaseMask, GrabModeAsync,
-		 GrabModeAsync, GRootW (disp), cursor, CurrentTime);
+   XGrabPointer (TtDisplay, TtRootWindow, TRUE, ButtonReleaseMask, GrabModeAsync,
+		 GrabModeAsync, TtRootWindow, cursor, CurrentTime);
 #endif /* NEW_WILLOWS */
 }
 
@@ -1298,7 +1298,7 @@ int                 disp;
 void                ThotUngrab ()
 {
 #ifndef NEW_WILLOWS
-   XUngrabPointer (GDp (0), CurrentTime);
+   XUngrabPointer (TtDisplay, CurrentTime);
 #endif /* NEW_WILLOWS */
 }
 
@@ -1347,7 +1347,7 @@ int                 thotThotWindowid;
    Drawable            drawable;
 
    drawable = TtaGetThotWindow (thotThotWindowid);
-   XDefineCursor (GDp (0), drawable, CursWait (0));
+   XDefineCursor (TtDisplay, drawable, WaitCurs);
 #endif /* NEW_WILLOWS */
 }
 
@@ -1367,7 +1367,7 @@ int                 thotThotWindowid;
    Drawable            drawable;
 
    drawable = TtaGetThotWindow (thotThotWindowid);
-   XUndefineCursor (GDp (0), drawable);
+   XUndefineCursor (TtDisplay, drawable);
 #endif /* NEW_WILLOWS */
 }
 
@@ -1395,7 +1395,7 @@ View                view;
 #ifndef NEW_WILLOWS
 	     drawable = TtaGetThotWindow (frame);
 	     if (drawable != 0)
-		XDefineCursor (GDp (0), drawable, CursWait (0));
+		XDefineCursor (TtDisplay, drawable, WaitCurs);
 #endif /* NEW_WILLOWS */
 	  }
      }
@@ -1404,7 +1404,7 @@ View                view;
 	frame = GetWindowNumber (document, view);
 #ifndef NEW_WILLOWS
 	if (frame != 0)
-	   XDefineCursor (GDp (0), TtaGetThotWindow (frame), CursWait (0));
+	   XDefineCursor (TtDisplay, TtaGetThotWindow (frame), WaitCurs);
 #endif /* NEW_WILLOWS */
      }
 }
@@ -1433,7 +1433,7 @@ View                view;
 #ifndef NEW_WILLOWS
 	     drawable = TtaGetThotWindow (frame);
 	     if (drawable != 0)
-		XUndefineCursor (GDp (0), drawable);
+		XUndefineCursor (TtDisplay, drawable);
 #endif /* NEW_WILLOWS */
 	  }
      }
@@ -1442,7 +1442,7 @@ View                view;
 	frame = GetWindowNumber (document, view);
 #ifndef NEW_WILLOWS
 	if (frame != 0)
-	   XUndefineCursor (GDp (0), TtaGetThotWindow (frame));
+	   XUndefineCursor (TtDisplay, TtaGetThotWindow (frame));
 #endif /* NEW_WILLOWS */
      }
 }
@@ -1475,7 +1475,7 @@ int                *pave;
 #ifndef NEW_WILLOWS
 	drawable = TtaGetThotWindow (i);
 	if (drawable != 0)
-	   XDefineCursor (GDp (0), drawable, CursFen (0));
+	   XDefineCursor (TtDisplay, drawable, WindowCurs);
 #endif /* !NEW_WILLOWS */
      }
 
@@ -1498,7 +1498,7 @@ int                *pave;
 #ifndef NEW_WILLOWS
 	drawable = TtaGetThotWindow (i);
 	if (drawable != 0)
-	   XUndefineCursor (GDp (0), drawable);
+	   XUndefineCursor (TtDisplay, drawable);
 #endif /* NEW_WILLOWS */
      }
 
@@ -1564,7 +1564,7 @@ int                 frame;
 	     w = FrameTable[frame].WdFrame;
 #ifndef NEW_WILLOWS
 	     if (w != 0)
-		XMapRaised (GDp (0), XtWindowOfObject (XtParent (XtParent (XtParent (w)))));
+		XMapRaised (TtDisplay, XtWindowOfObject (XtParent (XtParent (XtParent (w)))));
 #endif /* NEW_WILLOWS */
 	  }
      }
@@ -1672,11 +1672,11 @@ int                 raz;
 	rect.y = 0;
 	rect.width = clipwidth;
 	rect.height = clipheight;
-	XSetClipRectangles (GDp (0), GCtrait (0), clipx + FrameTable[frame].FrLeftMargin,
+	XSetClipRectangles (TtDisplay, TtLineGC, clipx + FrameTable[frame].FrLeftMargin,
 		 clipy + FrameTable[frame].FrTopMargin, &rect, 1, Unsorted);
-	XSetClipRectangles (GDp (0), GCgrey (0), clipx + FrameTable[frame].FrLeftMargin,
+	XSetClipRectangles (TtDisplay, TtGreyGC, clipx + FrameTable[frame].FrLeftMargin,
 		 clipy + FrameTable[frame].FrTopMargin, &rect, 1, Unsorted);
-	XSetClipRectangles (GDp (0), graphicGC (0), clipx + FrameTable[frame].FrLeftMargin,
+	XSetClipRectangles (TtDisplay, TtGraphicGC, clipx + FrameTable[frame].FrLeftMargin,
 		 clipy + FrameTable[frame].FrTopMargin, &rect, 1, Unsorted);
 #endif /* NEW_WILLOWS */
 	if (raz > 0)
@@ -1703,9 +1703,9 @@ int                 frame;
    rect.y = 0;
    rect.width = MAX_SIZE;
    rect.height = MAX_SIZE;
-   XSetClipRectangles (GDp (0), GCtrait (0), 0, 0, &rect, 1, Unsorted);
-   XSetClipRectangles (GDp (0), graphicGC (0), 0, 0, &rect, 1, Unsorted);
-   XSetClipRectangles (GDp (0), GCgrey (0), 0, 0, &rect, 1, Unsorted);
+   XSetClipRectangles (TtDisplay, TtLineGC, 0, 0, &rect, 1, Unsorted);
+   XSetClipRectangles (TtDisplay, TtGraphicGC, 0, 0, &rect, 1, Unsorted);
+   XSetClipRectangles (TtDisplay, TtGreyGC, 0, 0, &rect, 1, Unsorted);
    XFlushOutput (frame);
 #endif /* NEW_WILLOWS */
 }

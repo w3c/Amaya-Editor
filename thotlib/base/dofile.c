@@ -46,10 +46,10 @@ char               *fext;
    /* on mesure fname */
    namelong = strlen (fname);
    if (namelong >= MAX_CHAR)
-      res = False;
+      res = FALSE;
    else if (namelong > 0 && extlong > 0)
      {
-	res = True;
+	res = TRUE;
 	j = namelong - 1;
 	for (i = extlong - 1; i >= 0; i--)
 	  {
@@ -59,7 +59,7 @@ char               *fext;
 	res = res && fname[j] == '.';
      }
    else
-      res = False;
+      res = FALSE;
    return res;
 }
 
@@ -100,7 +100,7 @@ int                *lg;
    PathBuffer          first_directory;
    boolean             trouve;
 
-   trouve = False;
+   trouve = FALSE;
    i = 1;
    first_directory[0] = '\0';
    while (directory_list[i - 1] != '\0' && (!trouve))
@@ -125,7 +125,7 @@ int                *lg;
 	DoFileName (fname, fext, single_directory, nomabs, lg);
 	if (FileExist (nomabs))
 	  {
-	     trouve = True;
+	     trouve = TRUE;
 	     strncpy (directory_list, single_directory, MAX_PATH);
 	  }
 	else

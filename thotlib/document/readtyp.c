@@ -31,7 +31,7 @@ int                 err;
 
 #endif /* __STDC__ */
 {
-   erreurSchema = True;
+   erreurSchema = TRUE;
 }
 
 /* ---------------------------------------------------------------------- */
@@ -469,8 +469,8 @@ PtrSSchema        SS;
    PtrRTypoAttribut    nexta;
    int                 NbElemStructInitial;
 
-   ret = True;
-   erreurSchema = False;
+   ret = TRUE;
+   erreurSchema = FALSE;
    pSchT = NULL;
    /* compose le nom du fichier a ouvrir avec le nom du directory */
    /* des schemas... */

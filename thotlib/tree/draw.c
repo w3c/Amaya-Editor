@@ -58,10 +58,10 @@ int                 Val;
 
    /* verifie que l'element ne porte pas deja cet attribut */
    pAttr = pEl1->ElFirstAttr;
-   existe = False;
+   existe = FALSE;
    while (pAttr != NULL && !existe)
       if (pAttr->AeAttrSSchema == pSS && pAttr->AeAttrNum == attr)
-	 existe = True;
+	 existe = TRUE;
       else
 	 pAttr = pAttr->AeNext;
 
@@ -77,7 +77,7 @@ int                 Val;
 	pAt1 = pAttr;
 	pAt1->AeAttrSSchema = pSS;
 	pAt1->AeAttrNum = attr;
-	pAt1->AeDefAttr = False;
+	pAt1->AeDefAttr = FALSE;
 	pAt1->AeAttrType = pSS->SsAttribute[pAt1->AeAttrNum - 1].AttrType;
 	pAt1->AeAttrValue = Val;
      }
@@ -101,14 +101,14 @@ PtrDocument         pDoc;
 {
    boolean             ret;
 
-   ret = False;
+   ret = FALSE;
    if (pEl->ElParent != NULL)
       if (TypeHasException (ExcExtendedSelection, pEl->ElParent->ElTypeNumber, pEl->ElParent->ElSructSchema))
 	 /* l'element est dans un Dessin ou dans un Groupe a l'interieur */
 	 /* d'un dessin */
 	{
-	   SelAjoute (pEl, True);
-	   ret = True;
+	   SelAjoute (pEl, TRUE);
+	   ret = TRUE;
 	}
    return ret;
 }
@@ -135,7 +135,7 @@ PtrAttribute        *pAttr;
 
    /* L'attribut ajoute' est-il associe' a une des exceptions de */
    /* l'ensemble Except ? */
-   trouve = False;
+   trouve = FALSE;
    pAt1 = *pAttr;
    pAttr1 = &pAt1->AeAttrSSchema->SsAttribute[pAt1->AeAttrNum - 1];
    if (pAttr1->AttrFirstExcept != 0)
@@ -146,7 +146,7 @@ PtrAttribute        *pAttr;
 	  {
 	     for (i = 1; i <= 4; i++)
 		if (pAt1->AeAttrSSchema->SsException[e - 1] == Except[i - 1])
-		   trouve = True;
+		   trouve = TRUE;
 	     e++;
 	  }
 	while (!(trouve || e > pAttr1->AttrLastExcept));
@@ -165,7 +165,7 @@ PtrAttribute        *pAttr;
 		/* l'attribut courant est-il exclusif du nouvel attribut ? */
 		/* cherche les exceptions de l'attribut courant */
 	       {
-		  trouve = False;
+		  trouve = FALSE;
 		  pAt1 = pA;
 		  pAttr1 = &pAt1->AeAttrSSchema->SsAttribute[pAt1->AeAttrNum - 1];
 		  if (pAttr1->AttrFirstExcept != 0)
@@ -176,7 +176,7 @@ PtrAttribute        *pAttr;
 			 {
 			    for (i = 1; i <= 4; i++)
 			       if (pAt1->AeAttrSSchema->SsException[e1 - 1] == Except[i - 1])
-				  trouve = True;
+				  trouve = TRUE;
 			    e1++;
 			 }
 		       while (!(trouve || e1 > pAttr1->AttrLastExcept));
@@ -189,11 +189,11 @@ PtrAttribute        *pAttr;
 	     pA = pASuiv;
 	     /* passe a l'attribut suivant de l'element */
 	  }
-	ret = True;
+	ret = TRUE;
      }
    else
       /* Le nouvel attribut ne fait pas partie des attributs consideres */
-      ret = False;
+      ret = FALSE;
    return ret;
 }
 
@@ -256,7 +256,7 @@ PtrElement          pEl;
 		      /* Verifie que la boite elastique ne fait pas reference a */
 		      /* elle-meme */
 		     {
-			ok = True;
+			ok = TRUE;
 			pAt1 = *pAttr;
 			if (pAt1->AeAttrType == AtReferenceAttr)
 			   if (pAt1->AeAttrReference != NULL)
@@ -266,7 +266,7 @@ PtrElement          pEl;
 				       if (pAt1->AeAttrReference->RdReferred->ReReferredElem == pEl)
 					 {
 					    TtaDisplaySimpleMessage (INFO, LIB, LIB_AN_ELEM_CANNOT_REFER_TO_ITSELF);
-					    ok = False;
+					    ok = FALSE;
 					 }
 			/* message 'CsReference a soi-meme' */
 			if (!ok)
@@ -341,10 +341,10 @@ PtrAttribute        *pAttr;
 
    /* L'attribut supprime' est-il associe' a une des exceptions de */
    /* l'ensemble Except ? */
-   trouve = False;
+   trouve = FALSE;
    pAt1 = *pAttr;
    if (pAt1->AeAttrNum < 1)
-      return False;
+      return FALSE;
    pAttr1 = &pAt1->AeAttrSSchema->SsAttribute[pAt1->AeAttrNum - 1];
    if (pAttr1->AttrFirstExcept != 0)
       /* il y a des exceptions pour cet attribut */
@@ -354,7 +354,7 @@ PtrAttribute        *pAttr;
 	  {
 	     for (i = 1; i <= 4; i++)
 		if (pAt1->AeAttrSSchema->SsException[e - 1] == Except[i - 1])
-		   trouve = True;
+		   trouve = TRUE;
 	     e++;
 	  }
 	while (!(trouve || e > pAttr1->AttrLastExcept));
@@ -363,7 +363,7 @@ PtrAttribute        *pAttr;
       /* l'attribut supprime' fait partie des attributs consideres */
       /* parcourt la liste des attributs portes par l'element */
      {
-	trouve = False;
+	trouve = FALSE;
 	pA = (*pEl)->ElFirstAttr;
 	while (pA != NULL && !trouve)
 	   /* l'attribut courant fait-il partie des attributs cherches ? */
@@ -379,7 +379,7 @@ PtrAttribute        *pAttr;
 		    {
 		       for (i = 1; i <= 4; i++)
 			  if (pAt1->AeAttrSSchema->SsException[e1 - 1] == Except[i - 1])
-			     trouve = True;
+			     trouve = TRUE;
 		       e1++;
 		    }
 		  while (!(trouve || e1 > pAttr1->AttrLastExcept));
@@ -393,11 +393,11 @@ PtrAttribute        *pAttr;
 	   /* aucun des attributs cherches n'est porte' par l'element. */
 	   /* On met l'attribut par defaut avec la valeur nulle. */
 	   AjouteAttr (*pEl, Def, (*pAttr)->AeAttrSSchema, 0);
-	ret = True;
+	ret = TRUE;
      }
    else
       /* Le nouvel attribut ne fait pas partie des attributs consideres */
-      ret = False;
+      ret = FALSE;
    return ret;
 }
 

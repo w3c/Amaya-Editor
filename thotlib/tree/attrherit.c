@@ -25,7 +25,7 @@
 /* |    CreateInheritedAttrTable alloue et remplit une table de type          | */
 /* |            InheritAttrTable. Un element de cette table indique pour  | */
 /* |            un element les attributs dont il herite des regles de   | */
-/* |            presentation. table[att] = True si le schema de		| */
+/* |            presentation. table[att] = TRUE si le schema de		| */
 /* |            presentation contient dans la section ATTRIBUTES des	| */
 /* |		regles du type ATTRIBUTES : "att(El) : ...".		| */
 /* ---------------------------------------------------------------------- */
@@ -50,7 +50,7 @@ PtrElement          pEl;
    if ((table = (InheritAttrTable *) TtaGetMemory (sizeof (InheritAttrTable))) == NULL)
 	/* memory exhausted */
 	return;
-   for (attr = 0; attr < MAX_ATTR_SSCHEMA; (*table)[attr++] = False);
+   for (attr = 0; attr < MAX_ATTR_SSCHEMA; (*table)[attr++] = FALSE);
    if (pEl->ElSructSchema->SsPSchema != NULL)
      {
 	pEl->ElSructSchema->SsPSchema->PsInheritedAttr[pEl->ElTypeNumber - 1] = table;
@@ -63,7 +63,7 @@ PtrElement          pEl;
 	      for (rule = 0; rule < pEl->ElSructSchema->SsPSchema->PsNAttrPRule[attr]; rule++)
 		{
 		  if (pAttrPR->ApElemType == pEl->ElTypeNumber)
-		    (*table)[attr] = True;
+		    (*table)[attr] = TRUE;
 		  pAttrPR = pAttrPR->ApNextAttrPres;
 		}
 	   }
@@ -76,7 +76,7 @@ PtrElement          pEl;
 /* |	Un element de cette table indique pour chaque attribut les	| */
 /* |	autres attributs qui se comparent a cet attribut pour		| */
 /* |	l'application des regles de presentation a` cet attribut.	| */
-/* |	table[i] = True si, dans la section ATTRIBUTES, le schema de	| */
+/* |	table[i] = TRUE si, dans la section ATTRIBUTES, le schema de	| */
 /* |	presentation contient des regles du type "GetAttributeOfElement > n : ...".	| */
 /* ---------------------------------------------------------------------- */
 
@@ -105,7 +105,7 @@ PtrAttribute         pAttr;
 	return;
    if (pPS != NULL)
      {
-	for (attr = 0; attr < MAX_ATTR_SSCHEMA; (*table)[attr++] = False) ;
+	for (attr = 0; attr < MAX_ATTR_SSCHEMA; (*table)[attr++] = FALSE) ;
 	attNum = pAttr->AeAttrNum;
 	pPS->PsComparAttr[attNum - 1] = table;
 	/* parcours l'ensemble des attributs */
@@ -127,7 +127,7 @@ PtrAttribute         pAttr;
 					&& (pAttrPR->ApCase[item].CaLowerBound == attNum
 					    || pAttrPR->ApCase[item].CaUpperBound == attNum))
 				      {
-					 (*table)[attr] = True;
+					 (*table)[attr] = TRUE;
 					 break;
 				      }
 				 }
@@ -198,7 +198,7 @@ PtrSSchema        pSS;
 			       /* le document inclus est charge', cherche */
 			       /* l'attribut dans son schema de structure */
 			       att = 0;
-			       found = False;
+			       found = FALSE;
 			       while (att < pIncludedEl->ElSructSchema->SsNAttributes &&
 				      !found)
 				 {
@@ -207,7 +207,7 @@ PtrSSchema        pSS;
 				       /* c'est un attribut textuel */
 				       if (strcmp (AttrDef->AttrOrigName, attrName) == 0)
 					  /* il a le nom cherche' */
-					  found = True;
+					  found = TRUE;
 				 }
 			       if (found)
 				 {
@@ -221,12 +221,12 @@ PtrSSchema        pSS;
 				    /* copie le texte de l'element pEl dans l'attribut */
 				    pChild = pEl;
 				    /* cherche la premiere feuille de texte */
-				    found = False;
+				    found = FALSE;
 				    while (pChild != NULL && !found)
 				       if (pChild->ElTerminal)
 					 {
 					    if (pChild->ElLeafType == LtText)
-					       found = True;
+					       found = TRUE;
 					 }
 				       else
 					  pChild = pChild->ElFirstChild;

@@ -20,7 +20,7 @@
 #include "constmenu.h"
 #include "constmedia.h"
 /* Needed for a glitch with Motif 2.0 see ResizeEvents below ! */
-#include "thotconfig.h"
+
 #include "typemedia.h"
 #include "picture.h"
 #include "libmsg.h"
@@ -527,7 +527,7 @@ int                 keycode;
 #endif /* __STDC__ */
 
 {
-   return (True);
+   return (TRUE);
 }
 
 #ifdef __STDC__
@@ -1209,12 +1209,12 @@ void                TtaMainLoop ()
    UserErrorCode = 0;
    /* envoie le message Init.Pre */
    notifyEvt.event = TteInit;
-   if (ThotSendMessage (&notifyEvt, True))
+   if (ThotSendMessage (&notifyEvt, TRUE))
       /* l'application refuse le lancement de l'editeur, on quitte */
       exit (0);
    /* envoie le message Init.Post */
    notifyEvt.event = TteInit;
-   ThotSendMessage (&notifyEvt, False);
+   ThotSendMessage (&notifyEvt, FALSE);
 
    /* Boucle d'attente des evenements */
    while (1)
@@ -1278,7 +1278,7 @@ Pixel               TtaGetButtonColor ()
 Display            *TtaGetCurrentDisplay ()
 {
    UserErrorCode = 0;
-   return GDp (0);
+   return TtDisplay;
 }
 #endif /* WWW_XWINDOWS */
 
@@ -1292,7 +1292,7 @@ Display            *TtaGetCurrentDisplay ()
 int                 TtaGetScreenDepth ()
 {
    UserErrorCode = 0;
-   return Gdepth (0);
+   return TtWDepth;
 }
 
 /* ----------------------------------------------------------------------

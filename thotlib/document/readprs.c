@@ -46,7 +46,7 @@ int                 Erreur;
 
 #endif /* __STDC__ */
 {
-   erreur = True;
+   erreur = TRUE;
 }
 
 
@@ -297,7 +297,7 @@ boolean            *rep;
    char                c;
    FunctionType           tf;
 
-   *rep = False;
+   *rep = FALSE;
    if (!BIOreadByte (file, &c))
      {
 	c = ' ';
@@ -316,7 +316,7 @@ boolean            *rep;
 	       break;
 	    case C_PF_CR_BEFORE_REP:
 	       tf = FnCreateBefore;
-	       *rep = True;
+	       *rep = TRUE;
 	       break;
 	    case C_PF_CR_WITH:
 	       tf = FnCreateWith;
@@ -326,28 +326,28 @@ boolean            *rep;
 	       break;
 	    case C_PF_CR_FIRST_REP:
 	       tf = FnCreateFirst;
-	       *rep = True;
+	       *rep = TRUE;
 	       break;
 	    case C_PF_CR_LAST:
 	       tf = FnCreateLast;
 	       break;
 	    case C_PF_CR_LAST_REP:
 	       tf = FnCreateLast;
-	       *rep = True;
+	       *rep = TRUE;
 	       break;
 	    case C_PF_CR_AFTER:
 	       tf = FnCreateAfter;
 	       break;
 	    case C_PF_CR_AFTER_REP:
 	       tf = FnCreateAfter;
-	       *rep = True;
+	       *rep = TRUE;
 	       break;
 	    case C_PF_CR_ENCLOSING:
 	       tf = FnCreateEnclosing;
 	       break;
 	    case C_PF_CR_ENCLOSING_REP:
 	       tf = FnCreateEnclosing;
-	       *rep = True;
+	       *rep = TRUE;
 	       break;
 	    case C_PF_COLUMN:
 	       tf = FnColumn;
@@ -1116,7 +1116,7 @@ PtrPRule       *nextr;
 			    pRe1->PrInhUnit = rdUnit (file);
 			    break;
 			 case PresFunction:
-			    pRe1->PrPresBoxRepeat = False;
+			    pRe1->PrPresBoxRepeat = FALSE;
 			    pRe1->PrPresFunction = rdTypeFonct (file, &pRe1->PrPresBoxRepeat);
 			    if (pRe1->PrPresFunction != FnLine
 				&& pRe1->PrPresFunction != FnNoLine)
@@ -1252,7 +1252,7 @@ PtrSSchema        SS;
    char                texte[MAX_TXT_LEN];
    int                 NbElemStructInitial;
 
-   erreur = False;
+   erreur = FALSE;
    pSchP = NULL;
 
    /* compose le nom du fichier a ouvrir avec le nom du directory */
@@ -1489,7 +1489,7 @@ PtrSSchema        SS;
 				    pRP1->ApNextAttrPres = NULL;
 				 }
 			       else	/* l'allocation a echouee */
-				  erreur = True;
+				  erreur = TRUE;
 			    }
 			  else
 			     pSc1->PsAttrPRule[i - 1] = NULL;

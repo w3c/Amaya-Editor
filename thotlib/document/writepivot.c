@@ -72,7 +72,7 @@ PtrElement          pEl2;
 
 #endif /* __STDC__ */
 {
-   boolean             egal = True;
+   boolean             egal = TRUE;
    PtrAttribute         pAttr1, pAttr2;
    int                 NbAttr1, NbAttr2;
    PtrAttribute         pAt1;
@@ -100,7 +100,7 @@ PtrElement          pEl2;
 
    /* compare le nombre d'attributs des deux elements */
    if (NbAttr1 != NbAttr2)
-      egal = False;		/* nombres d'attributs differents, fin */
+      egal = FALSE;		/* nombres d'attributs differents, fin */
    else
       /* meme nombre d'attributs, compare les attributs et leurs valeurs */
      {
@@ -113,23 +113,23 @@ PtrElement          pEl2;
 	     pAttr2 = GetAttributeOfElement (pEl2, pAttr1);
 	     if (pAttr2 == NULL)
 		/* le 2eme element n'a pas cet attribut, fin */
-		egal = False;
+		egal = FALSE;
 	     else
 	       {
 		  pAt1 = pAttr1;
 		  if (pAt1->AeDefAttr != pAttr2->AeDefAttr)
 		     /* valeurs differentes de cet attribut */
-		     egal = False;
+		     egal = FALSE;
 		  else
 		     switch (pAt1->AeAttrType)
 			   {
 			      case AtNumAttr:
 			      case AtEnumAttr:
 				 if (pAt1->AeAttrValue != pAttr2->AeAttrValue)
-				    egal = False;
+				    egal = FALSE;
 				 break;
 			      case AtReferenceAttr:
-				 egal = False;
+				 egal = FALSE;
 				 break;
 			      case AtTextAttr:
 				 egal = TextsEqual (pAttr2->AeAttrText, pAt1->AeAttrText);
@@ -462,16 +462,16 @@ PtrDocument         pDoc;
    BIOwriteByte (fich, (char) C_PIV_NATURE);
    /* cherche le schema de structure */
    n = 1;
-   stop = False;
+   stop = FALSE;
    do
       if (strcmp (pSS->SsName, pDoc->DocNatureName[n - 1]) == 0)
-	 stop = True;
+	 stop = TRUE;
       else if (n < pDoc->DocNNatures)
 	 n++;
       else
 	{
 	   n = 1;
-	   stop = True;
+	   stop = TRUE;
 	}
    while (!(stop));
    PutShort (fich, n - 1);
@@ -515,10 +515,10 @@ int                *imageDesc;
    PictInfo    *imageDescriptor;
 
    imageDescriptor = (PictInfo *) imageDesc;
-   PutShort (fich, PixelEnPt (imageDescriptor->PicXArea, 1));
-   PutShort (fich, PixelEnPt (imageDescriptor->PicYArea, 0));
-   PutShort (fich, PixelEnPt (imageDescriptor->PicWArea, 1));
-   PutShort (fich, PixelEnPt (imageDescriptor->PicHArea, 0));
+   PutShort (fich, PixelToPoint (imageDescriptor->PicXArea));
+   PutShort (fich, PixelToPoint (imageDescriptor->PicYArea));
+   PutShort (fich, PixelToPoint (imageDescriptor->PicWArea));
+   PutShort (fich, PixelToPoint (imageDescriptor->PicHArea));
 }				/*PutCroppingFrame */
 
 /* ---------------------------------------------------------------------- */
@@ -582,7 +582,7 @@ BinFile             fich;
 
    pPR1 = pRef;
    /* ecrit le type de la reference */
-   expansion = False;
+   expansion = FALSE;
    if (pPR1->RdElement != NULL)
       expansion = pPR1->RdElement->ElSource == pRef;
    PutTypeRefer (fich, pPR1->RdTypeRef, expansion);
@@ -644,40 +644,40 @@ PtrDocument         pDoc;
    PtrDocument         pDocRef;
    PtrTextBuffer      pBT;
 
-   attrok = True;
+   attrok = TRUE;
    if (pAttr->AeDefAttr
        && pAttr->AeAttrType != AtReferenceAttr)
       /* on n'ecrit pas les attributs fixes, sauf les references */
-      attrok = False;
+      attrok = FALSE;
    else if (pAttr->AeAttrType == AtReferenceAttr)
       /* c'est un attribut reference, on n'ecrit pas */
       /* les attributs references qui pointent sur rien. */
       if (pAttr->AeAttrReference == NULL)
-	 attrok = False;
+	 attrok = FALSE;
       else if (pAttr->AeAttrReference->RdReferred == NULL)
-	 attrok = False;
+	 attrok = FALSE;
       else
 	{
 	   ElRef = ReferredElement (pAttr->AeAttrReference, &IdentDocRef, &pDocRef);
 	   if (ElRef == NULL)
-	      attrok = False;
+	      attrok = FALSE;
 	   else if (DansTampon (ElRef))
-	      attrok = False;
+	      attrok = FALSE;
 	}
    if (attrok)
       /* cherche le schema de structure ou est defini l'attribut */
      {
 	n = 1;
-	stop = False;
+	stop = FALSE;
 	do
 	   if (strcmp (pAttr->AeAttrSSchema->SsName, pDoc->DocNatureName[n - 1]) == 0)
-	      stop = True;
+	      stop = TRUE;
 	   else if (n < pDoc->DocNNatures)
 	      n++;
 	   else
 	     {
 		n = 1;
-		stop = True;
+		stop = TRUE;
 	     }
 	while (!(stop));
 	BIOwriteByte (fichpiv, (char) C_PIV_ATTR);
@@ -914,7 +914,7 @@ boolean             AvecDescendants;
    NotifyAttribute     notifyAttr;
    boolean             ecrire;
 
-   ecrire = True;		/* on ecrit effectivement la forme pivot de l'element */
+   ecrire = TRUE;		/* on ecrit effectivement la forme pivot de l'element */
    pEl1 = *El;
    if (ecrire)
      {
@@ -956,7 +956,7 @@ boolean             AvecDescendants;
 	     notifyAttr.attribute = (Attribute) pAttr;
 	     notifyAttr.attributeType.AttrTypeNum = pAttr->AeAttrNum;
 	     notifyAttr.attributeType.AttrSSchema = (SSchema) (pAttr->AeAttrSSchema);
-	     if (!SendAttributeMessage (&notifyAttr, True))
+	     if (!SendAttributeMessage (&notifyAttr, TRUE))
 		/* l'application laisse l'editeur ecrire l'attribut */
 	       {
 		  /* ecrit l'attribut */
@@ -968,7 +968,7 @@ boolean             AvecDescendants;
 		  notifyAttr.attribute = (Attribute) pAttr;
 		  notifyAttr.attributeType.AttrTypeNum = pAttr->AeAttrNum;
 		  notifyAttr.attributeType.AttrSSchema = (SSchema) (pAttr->AeAttrSSchema);
-		  SendAttributeMessage (&notifyAttr, False);
+		  SendAttributeMessage (&notifyAttr, FALSE);
 	       }
 	     /* passe a l'attribut suivant de l'element */
 	     pAttr = pAttr->AeNext;
@@ -1041,7 +1041,7 @@ boolean             AvecDescendants;
 					     /* buffer suivant du meme element */
 					  }
 					/* peut-on concatener l'element suivant ? */
-					stop = True;
+					stop = TRUE;
 					if ((*El)->ElLeafType == LtText)
 					   /* c'est du texte */
 					   if ((*El)->ElNext != NULL)
@@ -1064,7 +1064,7 @@ boolean             AvecDescendants;
 									    /* aucun des deux n'a de */
 									    /* commentaires, on concatene */
 									   {
-									      stop = False;
+									      stop = FALSE;
 									      *El = (*El)->ElNext;
 									   }
 				     }
@@ -1144,7 +1144,7 @@ boolean             AvecDescendants;
 		     notifyEl.elementType.ElTypeNum = p->ElTypeNumber;
 		     notifyEl.elementType.ElSSchema = (SSchema) (p->ElSructSchema);
 		     notifyEl.position = 0;
-		     if (!ThotSendMessage ((NotifyEvent *) & notifyEl, True))
+		     if (!ThotSendMessage ((NotifyEvent *) & notifyEl, TRUE))
 			/* l'application accepte que Thot sauve l'element */
 		       {
 			  /* Ecrit d'abord le numero de la structure generique s'il y */
@@ -1161,7 +1161,7 @@ boolean             AvecDescendants;
 			  notifyEl.elementType.ElTypeNum = p->ElTypeNumber;
 			  notifyEl.elementType.ElSSchema = (SSchema) (p->ElSructSchema);
 			  notifyEl.position = 0;
-			  ThotSendMessage ((NotifyEvent *) & notifyEl, False);
+			  ThotSendMessage ((NotifyEvent *) & notifyEl, FALSE);
 		       }
 		     /* passe au fils suivant */
 		     p = p->ElNext;
@@ -1247,11 +1247,11 @@ PtrDocument         pDoc;
 			/* on pourrait ecrire plusieurs fois un nom de nature. */
 			/* On verifie que ce nom n'est pas dans la table       */
 			n = 0;
-			present = False;
+			present = FALSE;
 			while (n < pDoc->DocNNatures && !present)
 			   if (strcmp (pDoc->DocNatureName[n],
 				       pRe1->SrSSchemaNat->SsName) == 0)
-			      present = True;
+			      present = TRUE;
 			   else
 			      n++;
 			if (!present)	/* il n'y est pas */
@@ -1382,10 +1382,10 @@ PtrElement          RlRoot;
 	pEl = FwdSearchTypedElem (pEl, CharString + 1, NULL);
 	if (pEl != NULL)
 	  {
-	     trouve = False;
+	     trouve = FALSE;
 	     for (i = 0; i < pDoc->DocNLanguages && !trouve; i++)
 		if (pEl->ElLanguage == pDoc->DocLanguages[i])
-		   trouve = True;
+		   trouve = TRUE;
 	     if (!trouve)
 		if (pDoc->DocNLanguages < MAX_LANGUAGES_DOC - 1)
 		   pDoc->DocLanguages[pDoc->DocNLanguages++] = pEl->ElLanguage;
@@ -1479,7 +1479,7 @@ PtrDocument         pDoc;
       if (pDoc->DocParameters[i - 1] != NULL)
 	{
 	   p = pDoc->DocParameters[i - 1];
-	   p->ElSructSchema->SsRule[p->ElTypeNumber - 1].SrParamElem = False;
+	   p->ElSructSchema->SsRule[p->ElTypeNumber - 1].SrParamElem = FALSE;
 	   /* envoie le message ElemSave.Pre a l'application, si */
 	   /* elle le demande */
 	   notifyEl.event = TteElemSave;
@@ -1488,12 +1488,12 @@ PtrDocument         pDoc;
 	   notifyEl.elementType.ElTypeNum = p->ElTypeNumber;
 	   notifyEl.elementType.ElSSchema = (SSchema) (p->ElSructSchema);
 	   notifyEl.position = 0;
-	   if (!ThotSendMessage ((NotifyEvent *) & notifyEl, True))
+	   if (!ThotSendMessage ((NotifyEvent *) & notifyEl, TRUE))
 	      /* l'application accepte que Thot sauve l'element */
 	     {
 		BIOwriteByte (fich, (char) C_PIV_PARAM);
 		/* Ecrit l'element */
-		Externalise (fich, &p, pDoc, True);
+		Externalise (fich, &p, pDoc, TRUE);
 		/* envoie le message ElemSave.Post a l'application, si */
 		/* elle le demande */
 		notifyEl.event = TteElemSave;
@@ -1502,9 +1502,9 @@ PtrDocument         pDoc;
 		notifyEl.elementType.ElTypeNum = p->ElTypeNumber;
 		notifyEl.elementType.ElSSchema = (SSchema) (p->ElSructSchema);
 		notifyEl.position = 0;
-		ThotSendMessage ((NotifyEvent *) & notifyEl, False);
+		ThotSendMessage ((NotifyEvent *) & notifyEl, FALSE);
 	     }
-	   p->ElSructSchema->SsRule[p->ElTypeNumber - 1].SrParamElem = True;
+	   p->ElSructSchema->SsRule[p->ElTypeNumber - 1].SrParamElem = TRUE;
 	}
    /* ecrit la representation pivot de tous les arbres d'elements */
    /* associes qui ne sont pas vides */
@@ -1516,14 +1516,14 @@ PtrDocument         pDoc;
 	      /* y a-t-il autre chose que des sauts de page ? */
 	     {
 		s = p;
-		stop = False;
+		stop = FALSE;
 		do
 		   if (s == NULL)
-		      stop = True;
+		      stop = TRUE;
 		   else if (s->ElTypeNumber == PageBreak + 1)
 		      s = s->ElNext;
 		   else
-		      stop = True;
+		      stop = TRUE;
 		while (!(stop));
 		if (s != NULL)
 		   /* il n'y a pas que des sauts de pages */
@@ -1537,7 +1537,7 @@ PtrDocument         pDoc;
 		     notifyEl.elementType.ElTypeNum = p->ElTypeNumber;
 		     notifyEl.elementType.ElSSchema = (SSchema) (p->ElSructSchema);
 		     notifyEl.position = 0;
-		     if (!ThotSendMessage ((NotifyEvent *) & notifyEl, True))
+		     if (!ThotSendMessage ((NotifyEvent *) & notifyEl, TRUE))
 			/* l'application accepte que Thot sauve l'element */
 		       {
 			  /* ecrit une marque d'element associe' */
@@ -1548,7 +1548,7 @@ PtrDocument         pDoc;
 			  if (p->ElSructSchema != pDoc->DocSSchema)
 			     EcritNat (p->ElSructSchema, fich, pDoc);
 			  /*372 *//* Ecrit l'element */
-			  Externalise (fich, &p, pDoc, True);
+			  Externalise (fich, &p, pDoc, TRUE);
 			  /* envoie le message ElemSave.Post a l'application, si */
 			  /* elle le demande */
 			  notifyEl.event = TteElemSave;
@@ -1557,7 +1557,7 @@ PtrDocument         pDoc;
 			  notifyEl.elementType.ElTypeNum = p->ElTypeNumber;
 			  notifyEl.elementType.ElSSchema = (SSchema) (p->ElSructSchema);
 			  notifyEl.position = 0;
-			  ThotSendMessage ((NotifyEvent *) & notifyEl, False);
+			  ThotSendMessage ((NotifyEvent *) & notifyEl, FALSE);
 		       }
 		  }
 	     }
@@ -1574,12 +1574,12 @@ PtrDocument         pDoc;
 	notifyEl.elementType.ElTypeNum = p->ElTypeNumber;
 	notifyEl.elementType.ElSSchema = (SSchema) (p->ElSructSchema);
 	notifyEl.position = 0;
-	if (!ThotSendMessage ((NotifyEvent *) & notifyEl, True))
+	if (!ThotSendMessage ((NotifyEvent *) & notifyEl, TRUE))
 	   /* l'application accepte que Thot sauve l'element */
 	  {
 	     BIOwriteByte (fich, (char) C_PIV_STRUCTURE);
 	     /* ecrit la forme pivot de tout l'arbre */
-	     Externalise (fich, &p, pDoc, True);
+	     Externalise (fich, &p, pDoc, TRUE);
 	     /* envoie le message ElemSave.Post a l'application, si */
 	     /* elle le demande */
 	     notifyEl.event = TteElemSave;
@@ -1588,7 +1588,7 @@ PtrDocument         pDoc;
 	     notifyEl.elementType.ElTypeNum = p->ElTypeNumber;
 	     notifyEl.elementType.ElSSchema = (SSchema) (p->ElSructSchema);
 	     notifyEl.position = 0;
-	     ThotSendMessage ((NotifyEvent *) & notifyEl, False);
+	     ThotSendMessage ((NotifyEvent *) & notifyEl, FALSE);
 	  }
      }
    BIOwriteByte (fich, (char) C_PIV_DOC_END);
@@ -1624,9 +1624,9 @@ PtrDocument         pDoc;
    if (pDR != NULL)
       /* saute le premier descripteur d'element reference' bidon */
       pDR = pDR->ReNext;
-   FichierOuvert = False;
+   FichierOuvert = FALSE;
    /* le fichier n'est pas encore ouvert */
-   PasDeRefSortante = True;
+   PasDeRefSortante = TRUE;
    /* a priori, il n'y a pas de reference sortante */
    /* parcourt la chaine des descripteurs d'elements reference's */
    while (pDR != NULL)
@@ -1642,7 +1642,7 @@ PtrDocument         pDoc;
 	       {
 		  if (!DansTampon (pRef->RdElement))
 		    {
-		       PasDeRefSortante = False;
+		       PasDeRefSortante = FALSE;
 		       /* au moins une reference sortante */
 		       /* ouvre le fichier si ce n'est pas encore fait */
 		       if (!FichierOuvert)
@@ -1650,7 +1650,7 @@ PtrDocument         pDoc;
 			    /* ouvre le fichier */
 			    refext = BIOwriteOpen (NomFich);
 			    if (refext != 0)
-			       FichierOuvert = True;
+			       FichierOuvert = TRUE;
 			    else
 			       /* ouverture fichier impossible */
 			      {
@@ -1752,8 +1752,8 @@ PathBuffer          NomFich;
 
    refext = NULL;
    pDR = PremElemRef;
-   FichierOuvert = False;	/* le fichier n'est pas encore ouvert */
-   PasDeRefExt = True;		/*a priori, il n'y a pas de reference externe */
+   FichierOuvert = FALSE;	/* le fichier n'est pas encore ouvert */
+   PasDeRefExt = TRUE;		/*a priori, il n'y a pas de reference externe */
    /* parcourt la chaine des descripteurs d'elements reference's */
    while (pDR != NULL)
      {
@@ -1761,14 +1761,14 @@ PathBuffer          NomFich;
 	if (pDocExt != NULL)
 	   /* l'element est reference' par au moins un document externe */
 	  {
-	     PasDeRefExt = False;	/* il y a au moins une reference externe */
+	     PasDeRefExt = FALSE;	/* il y a au moins une reference externe */
 	     /* ouvre le fichier si ce n'est pas encore fait */
 	     if (!FichierOuvert)
 	       {
 		  /* ouvre le fichier */
 		  refext = BIOwriteOpen (NomFich);
 		  if (refext != 0)
-		     FichierOuvert = True;
+		     FichierOuvert = TRUE;
 		  else
 		     /* ouverture fichier impossible */
 		    {
@@ -1888,7 +1888,7 @@ PtrDocument         pDoc;
 	     if (refext != 0)
 	       {
 		  /* le fichier .EXT existe, on le charge */
-		  ChargeExt (refext, NULL, &PremElemRef, False);
+		  ChargeExt (refext, NULL, &PremElemRef, FALSE);
 		  BIOreadClose (refext);
 	       }
 	  }
@@ -1921,10 +1921,10 @@ PtrDocument         pDoc;
 		  /* traitee a un descripteur d'element reference' dans le */
 		  /* document externe */
 		  ElemRef = PremElemRef;
-		  trouve = False;
+		  trouve = FALSE;
 		  while (!trouve && ElemRef != NULL)
 		     if (strcmp (RefSort->OrLabel, ElemRef->ReReferredLabel) == 0)
-			trouve = True;
+			trouve = TRUE;
 		     else
 			ElemRef = ElemRef->ReNext;
 		  if (!trouve)
@@ -1959,10 +1959,10 @@ PtrDocument         pDoc;
 		       /* le document est-il dans les documents referencants ? */
 		       DocExt = ElemRef->ReExtDocRef;
 		       DocExtPrec = NULL;
-		       trouve = False;
+		       trouve = FALSE;
 		       while (!trouve && DocExt != NULL)
 			  if (MemeIdentDoc (DocExt->EdDocIdent, pDoc->DocIdent))
-			     trouve = True;
+			     trouve = TRUE;
 			  else
 			    {
 			       DocExtPrec = DocExt;
@@ -2104,7 +2104,7 @@ PtrDocument         pDoc;
 	     if (ext != 0)
 		/* ce fichier existe, on le charge */
 	       {
-		  ChargeExt (ext, NULL, &(DescFichExt->ErFirstReferredEl), False);
+		  ChargeExt (ext, NULL, &(DescFichExt->ErFirstReferredEl), FALSE);
 		  BIOreadClose (ext);
 	       }
 	  }
@@ -2184,11 +2184,11 @@ PtrDocument         pDoc;
 	     while (DocExt != NULL)
 	       {
 		  /* le fichier .REF de ce document est-il deja charge'? */
-		  trouve = False;
+		  trouve = FALSE;
 		  Fich = PremFich;
 		  while (Fich != NULL && !trouve)
 		     if (MemeIdentDoc (DocExt->EdDocIdent, Fich->RcDocIdent))
-			trouve = True;
+			trouve = TRUE;
 		     else
 			Fich = Fich->RcNext;
 		  if (!trouve)
@@ -2223,7 +2223,7 @@ PtrDocument         pDoc;
 		       /* cherche dans le fichier .REF charge', si l'element */
 		       /* change' ne figure pas deja */
 		       ChngLu = Fich->RcFirstChange;
-		       trouve = False;
+		       trouve = FALSE;
 		       while (ChngLu != NULL && !trouve)
 			 {
 			    if (strcmp (ChngLu->CrOldLabel, Chng->CrOldLabel) == 0)
@@ -2232,7 +2232,7 @@ PtrDocument         pDoc;
 				  if (ChngLu->CrNewLabel[0] == '\0')
 				     /* on a lu une destruction */
 				    {
-				       trouve = True;
+				       trouve = TRUE;
 				       if (Chng->CrNewLabel[0] != '\0')
 					  /* c'est un deplacement, on transforme la */
 					  /* destruction en deplacement */
@@ -2250,7 +2250,7 @@ PtrDocument         pDoc;
 					  /* c'est la destruction de l'element, on */
 					  /* l'ignore : le deplacement a priorite' */
 					  /* meme s'il est enregistre' apres */
-					  trouve = True;
+					  trouve = TRUE;
 				    }
 			    if (!trouve)
 			       if (ChngLu->CrNewLabel[0] != '\0' &&
@@ -2261,7 +2261,7 @@ PtrDocument         pDoc;
 					/* deux deplacements successifs du meme element */
 					/* on reduit a un seul deplacement */
 				       {
-					  trouve = True;
+					  trouve = TRUE;
 					  strncpy (ChngLu->CrNewLabel, Chng->CrNewLabel, MAX_LABEL_LEN);
 					  CopyIdentDoc (&ChngLu->CrNewDocument,
 							Chng->CrNewDocument);
@@ -2371,7 +2371,7 @@ boolean             CopieDoc;
 		  if (ElemRefExt != NULL)
 		     /* saute le 1er descripteur, bidon */
 		     ElemRefExt = ElemRefExt->ReNext;
-		  trouve = False;
+		  trouve = FALSE;
 		  while (ElemRefExt != NULL && !trouve)
 		    {
 		       if (!ElemRefExt->ReExternalRef)
@@ -2380,7 +2380,7 @@ boolean             CopieDoc;
 			  if (ElemRefExt->ReReferredElem != NULL)
 			     if (strcmp (ElemRefExt->ReReferredElem->ElLabel, ElemRef->ReReferredLabel) == 0)
 				/* c'est le descripteur de notre element */
-				trouve = True;
+				trouve = TRUE;
 		       if (!trouve)
 			  /* passe au descripteur d'element reference' suivant */
 			  /* dans le document externe */
@@ -2391,13 +2391,13 @@ boolean             CopieDoc;
 		     /* references a l'element et qui represente le document */
 		     /* qui change de nom */
 		    {
-		       trouve = False;
+		       trouve = FALSE;
 		       DocExt = ElemRefExt->ReExtDocRef;
 		       while (DocExt != NULL && !trouve)
 			 {
 			    if (MemeIdentDoc (DocExt->EdDocIdent, pDoc->DocIdent))
 			      {
-				 trouve = True;
+				 trouve = TRUE;
 				 /* met a jour le nom du document dans le */
 				 /* descripteur de document externe */
 				 CopyIdentDoc (&DocExt->EdDocIdent, NouveauNom);
@@ -2409,12 +2409,12 @@ boolean             CopieDoc;
 	       }
 	     /* le fichier .EXT du document contenant cet element est-il */
 	     /* charge' ? */
-	     charge = False;
+	     charge = FALSE;
 	     Ext = PremExt;
 	     /* parcourt la liste des fichiers .EXT charge's */
 	     while (Ext != NULL && !charge)
 		if (MemeIdentDoc (Ext->ErDocIdent, ElemRef->ReExtDocument))
-		   charge = True;
+		   charge = TRUE;
 		else
 		   Ext = Ext->ErNext;
 	     if (!charge)
@@ -2435,7 +2435,7 @@ boolean             CopieDoc;
 		       if (ext != 0)
 			 {
 			    /* ce fichier existe, on le charge */
-			    ChargeExt (ext, NULL, &PremElemRef, False);
+			    ChargeExt (ext, NULL, &PremElemRef, FALSE);
 			    BIOreadClose (ext);
 			 }
 		    }
@@ -2545,11 +2545,11 @@ Name                 NouveauNom;
 	     while (DocExt != NULL)
 	       {
 		  /* ce document referencant a-t-il deja ete rencontre' ? */
-		  trouve = False;
+		  trouve = FALSE;
 		  Fich = PremFichREF;
 		  while (Fich != NULL && !trouve)
 		     if (MemeIdentDoc (DocExt->EdDocIdent, Fich->RcDocIdent))
-			trouve = True;
+			trouve = TRUE;
 		     else
 			Fich = Fich->RcNext;
 		  if (!trouve)

@@ -54,7 +54,7 @@ char               *bits;
 {
 #ifndef NEW_WILLOWS
    if (bits != NULL)
-      return (XCreateBitmapFromData (GDp (0), GRootW (0), bits, width, height));
+      return (XCreateBitmapFromData (TtDisplay, TtRootWindow, bits, width, height));
    else
       return (0);
 #endif /* NEW_WILLOWS */
@@ -99,10 +99,10 @@ char              **d;
 #ifdef WWW_MSWINDOWS
 	/* whatever the windows version is - @@@ */
 #else
-	XpmCreatePixmapFromData (GDp (0), GRootW (0), d, &pixmap, &PicMask, &att);
+	XpmCreatePixmapFromData (TtDisplay, TtRootWindow, d, &pixmap, &PicMask, &att);
 #endif
 	if (PicMask)
-	   XFreePixmap (GDp (0), PicMask);
+	   XFreePixmap (TtDisplay, PicMask);
      }
    return (pixmap);
 #endif /* NEW_WILLOWS */

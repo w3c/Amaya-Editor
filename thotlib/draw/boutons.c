@@ -314,7 +314,7 @@ InitButtons ()
   IRenvoiI = TtaCreatePixmapLogo (inactrenvoi_xpm);
   IAutreI = TtaCreatePixmapLogo (inactautre_xpm);  
   for (i=0; i < DRAW_MAX_DOC;i++) {
-    DrawTabIDoc[i]=False;
+    DrawTabIDoc[i]=FALSE;
     DrawTabIconeDoc[i]=-1;
   }
 }
@@ -343,7 +343,7 @@ static void AttacherIcones (doc, view)
      View view;
 #endif /* __STDC__ */
 {
-  DrawTabIDoc[(int)doc]=True;
+  DrawTabIDoc[(int)doc]=TRUE;
   TtaSetDisplayMode (doc, DeferredDisplay);
   if(DrawTabIconeDoc[(int)doc]==-1)
     {
@@ -358,7 +358,7 @@ static void AttacherIcones (doc, view)
       TtaAddButton (doc, 1, IRenvoi, CreerFormeRenvoi);
       TtaAddButton (doc, 1, IAutre, CreerFormeAutre);
       CreerPaletteOutils();
-      TtaShowDialogue (PALETTE_OUTILS, True);
+      TtaShowDialogue (PALETTE_OUTILS, TRUE);
     }
   else
     {
@@ -399,7 +399,7 @@ static void DetacherIcones (doc, view)
      View view;
 #endif /* __STDC__ */
 {
-  DrawTabIDoc[(int)doc]=False;
+  DrawTabIDoc[(int)doc]=FALSE;
   TtaSetDisplayMode (doc, DeferredDisplay);
   TtaChangeButton (doc, view, DrawTabIconeDoc[(int)doc],IRecI);
   TtaChangeButton (doc, view, DrawTabIconeDoc[(int)doc]+1,IEllI);
@@ -444,7 +444,7 @@ Document document;
     {
       vue = (View)1;
       AttacherIcones(document, vue);
-/*       TtaShowDialogue (PALETTE_OUTILS, True); */
+/*       TtaShowDialogue (PALETTE_OUTILS, TRUE); */
     }
 }
 
@@ -553,7 +553,7 @@ CreerFormeRectangle (doc, view)
   if(inside)
     TtaInsertFirstChild(&Nouveau, Frere, CurrentDoc);
   else
-    TtaInsertSibling (Nouveau, Frere, False, CurrentDoc);
+    TtaInsertSibling (Nouveau, Frere, FALSE, CurrentDoc);
   Event.document = CurrentDoc;
   Event.element = Nouveau;
   TtaSelectElement (CurrentDoc, TtaGetFirstChild (Nouveau));
@@ -613,7 +613,7 @@ CreerFormeEllipse (doc, view)
   if(inside)
     TtaInsertFirstChild(&Nouveau, Frere, CurrentDoc);
   else
-    TtaInsertSibling (Nouveau, Frere, False, CurrentDoc);
+    TtaInsertSibling (Nouveau, Frere, FALSE, CurrentDoc);
   Event.document = CurrentDoc;
   Event.element = Nouveau;
   TtaSelectElement (CurrentDoc, TtaGetFirstChild (Nouveau));
@@ -672,7 +672,7 @@ CreerFormeTrait (doc, view)
   if(inside)
     TtaInsertFirstChild(&Nouveau, Frere, CurrentDoc);
   else
-    TtaInsertSibling (Nouveau, Frere, False, CurrentDoc);
+    TtaInsertSibling (Nouveau, Frere, FALSE, CurrentDoc);
   Event.document = CurrentDoc;
   Event.element = Nouveau;
   TtaSelectElement (CurrentDoc, TtaGetFirstChild (Nouveau));
@@ -730,7 +730,7 @@ CreerFormeFleche (doc, view)
   if(inside)
     TtaInsertFirstChild(&Nouveau, Frere, CurrentDoc);
   else
-    TtaInsertSibling (Nouveau, Frere, False, CurrentDoc);
+    TtaInsertSibling (Nouveau, Frere, FALSE, CurrentDoc);
   Event.document = CurrentDoc;
   Event.element = Nouveau;
   TtaSelectElement (CurrentDoc, TtaGetFirstChild (Nouveau));
@@ -789,7 +789,7 @@ CreerFormeTexte (doc, view)
   if(inside)
     TtaInsertFirstChild(&Nouveau, Frere, CurrentDoc);
   else
-    TtaInsertSibling (Nouveau, Frere, False, CurrentDoc);
+    TtaInsertSibling (Nouveau, Frere, FALSE, CurrentDoc);
 
   Event.document = CurrentDoc;
   Event.element = Nouveau;
@@ -847,7 +847,7 @@ CreerFormeImage (doc, view)
   if(inside)
     TtaInsertFirstChild(&Nouveau, Frere, CurrentDoc);
   else
-    TtaInsertSibling (Nouveau, Frere, False, CurrentDoc);
+    TtaInsertSibling (Nouveau, Frere, FALSE, CurrentDoc);
   TtaSelectElement (CurrentDoc, Nouveau);
   /* ici appeler le formulaire de creation de l'image */
   TtaSetDisplayMode (CurrentDoc, DisplayImmediately);
@@ -899,7 +899,7 @@ CreerFormeRenvoi (doc, view)
   TtaNewPopup (MENU_RENVOI, 0, NULL, 2,
 	       BufMenu,
 	       NULL, 'L');
-  TtaShowDialogue (MENU_RENVOI, False);
+  TtaShowDialogue (MENU_RENVOI, FALSE);
   TtaWaitShowDialogue ();
   return;
 }
@@ -959,7 +959,7 @@ CreerRenvoi (doc, view, TypeRenvoi)
   if(inside)
     TtaInsertFirstChild(&Nouveau, Frere, CurrentDoc);
   else
-    TtaInsertSibling (Nouveau, Frere, False, CurrentDoc);
+    TtaInsertSibling (Nouveau, Frere, FALSE, CurrentDoc);
   TtaSelectElement (CurrentDoc, Nouveau);
   TtaSetDisplayMode (CurrentDoc, DisplayImmediately);
   return;
@@ -1015,7 +1015,7 @@ CreerFormeAutre (doc, view)
   if(inside)
     TtaInsertFirstChild(&Nouveau, Frere, CurrentDoc);
   else
-    TtaInsertSibling (Nouveau, Frere, False, CurrentDoc);
+    TtaInsertSibling (Nouveau, Frere, FALSE, CurrentDoc);
   Event.document = CurrentDoc;
   Event.element = Nouveau;
   TtaSelectElement (CurrentDoc, TtaGetFirstChild (Nouveau));
@@ -1061,7 +1061,7 @@ CreerFormeLien (doc, view)
     return;
   CreerPaletteLien(PALETTE_LIENS,TtaGetViewFrame(doc, view),0);
   TtaSetDialoguePosition ();
-  TtaShowDialogue (PALETTE_LIENS, False);
+  TtaShowDialogue (PALETTE_LIENS, FALSE);
   return;
 }
 
@@ -1115,7 +1115,7 @@ CreerFormePolygone (doc, view)
   if(inside)
     TtaInsertFirstChild(&Nouveau, Frere, CurrentDoc);
   else
-    TtaInsertSibling (Nouveau, Frere, False, CurrentDoc);
+    TtaInsertSibling (Nouveau, Frere, FALSE, CurrentDoc);
   Event.document = CurrentDoc;
   Event.element = Nouveau;
   TtaSelectElement (CurrentDoc, TtaGetFirstChild (Nouveau));

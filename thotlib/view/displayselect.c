@@ -177,8 +177,8 @@ int                 pointselect;
 			 }
 		       if (pointselect == 0 || pointselect == i)
 			  Invideo (frame, HANDLE_WIDTH, HANDLE_WIDTH,
-				   xgauche + PtEnPixel (adbuff->BuPoints[j].XCoord / 1000, 0) - 2,
-				   yhaut + PtEnPixel (adbuff->BuPoints[j].YCoord / 1000, 1) - 2);
+				   xgauche + PointToPixel (adbuff->BuPoints[j].XCoord / 1000) - 2,
+				   yhaut + PointToPixel (adbuff->BuPoints[j].YCoord / 1000) - 2);
 		       j++;
 		    }
 	       }
@@ -465,8 +465,8 @@ boolean             Etat;
 
 	MajPavSelect (frame, pFrame->FrAbstractBox, Etat);
      }
-   else if (Etat == False)
+   else if (Etat == FALSE)
       /* Annule la selection meme s'il n'y a plus de boite selectionnee */
-      pFrame->FrSelectShown = False;
+      pFrame->FrSelectShown = FALSE;
 }
 /* End Of Module visu */

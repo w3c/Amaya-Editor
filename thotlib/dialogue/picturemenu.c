@@ -41,7 +41,7 @@ static boolean      redisplayPicture;
 static char         NomImage[100] = "";
 static char         DirectoryImage[MAX_PATH] = "";
 
-#include "imagedrvr.f"
+#include "picture.f"
 
 #ifdef __STDC__
 extern void         DesactiveEntree (int, int);
@@ -145,7 +145,7 @@ static void         InitPathImage ()
    else
       BufDir[j - 1] = '\0';
    TtaNewSelector (BaseDlgImage + MyNumZoneDirImage, BaseDlgImage + MyNumFormImage, "Dossiers documents",
-		   nb, BufDir, 9, NULL, False, True);
+		   nb, BufDir, 9, NULL, FALSE, TRUE);
 }
 
 
@@ -270,7 +270,7 @@ char               *txt;
 	    case MyNumFormImage:
 	       if (val == 1)
 		  /* Edition realisee */
-		  redisplayPicture = True;
+		  redisplayPicture = TRUE;
 	       TtaDestroyDialogue (BaseDlgImage + MyNumFormImage);
 	       break;
 	    default:
@@ -308,9 +308,9 @@ PtrBox            pBox;
    IndexPresImage = GetImPresIndex (*pres);
    strcpy (NomImage, nom);
    DirectoryImage[0] = '\0';
-   redisplayPicture = False;
+   redisplayPicture = FALSE;
 
-   TtaNewForm (BaseDlgImage + MyNumFormImage, 0, 0, 0, "Picture", True, 2, 'L', D_DONE);
+   TtaNewForm (BaseDlgImage + MyNumFormImage, 0, 0, 0, "Picture", TRUE, 2, 'L', D_DONE);
    InitPathImage ();
 
    /* liste des fichiers existants */
@@ -338,7 +338,7 @@ PtrBox            pBox;
 
 
 
-		  imageTypeCount, BufMenu, NULL, True);
+		  imageTypeCount, BufMenu, NULL, TRUE);
 
    /* sous-menu cadrage du formulaire Picture */
    Indx = 0;
@@ -350,11 +350,11 @@ PtrBox            pBox;
    Indx += strlen (&BufMenu[Indx]) + 1;
 
    TtaNewSubmenu (BaseDlgImage + MyNumMenuCadrageImage, BaseDlgImage + MyNumFormImage, 0,
-		  "Affichage", 3, BufMenu, NULL, False);
+		  "Affichage", 3, BufMenu, NULL, FALSE);
 
    /* zone de saisie du nom du fichier image */
    TtaNewTextForm (BaseDlgImage + MyNumZoneFichierImage, BaseDlgImage + MyNumFormImage,
-		   "Name du fichier", 50, 1, True);
+		   "Name du fichier", 50, 1, TRUE);
 
    TtaSetSelector (BaseDlgImage + MyNumZoneDirImage, -1, "");
    TtaSetTextForm (BaseDlgImage + MyNumZoneFichierImage, nom);
@@ -362,11 +362,11 @@ PtrBox            pBox;
    TtaSetMenuForm (BaseDlgImage + MyNumMenuCadrageImage, IndexPresImage);
    CheckPresImage (IndexTypeImage);
    /* active le formulaire */
-   TtaShowDialogue (BaseDlgImage + MyNumFormImage, False);
+   TtaShowDialogue (BaseDlgImage + MyNumFormImage, FALSE);
    /* attend le retour du formulaire */
    TtaWaitShowDialogue ();
    if (NomImage[0] == '\0')
-      redisplayPicture = False;
+      redisplayPicture = FALSE;
 
    if (redisplayPicture)
      {

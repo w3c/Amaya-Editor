@@ -637,14 +637,14 @@ PtrElement         *pEl;
    pEl1->ElPrevious = NULL;
    pEl1->ElNext = NULL;
    pEl1->ElReferredDescr = NULL;
-   pEl1->ElIsCopy = False;
+   pEl1->ElIsCopy = FALSE;
    pEl1->ElSource = NULL;
-   pEl1->ElHolophrast = False;
+   pEl1->ElHolophrast = FALSE;
    pEl1->ElAccess = AccessInherited;
-   pEl1->ElTransContent = False;
-   pEl1->ElTransAttr = False;
-   pEl1->ElTransPres = False;
-   pEl1->ElTerminal = False;
+   pEl1->ElTransContent = FALSE;
+   pEl1->ElTransAttr = FALSE;
+   pEl1->ElTransPres = FALSE;
+   pEl1->ElTerminal = FALSE;
    pEl1->ElFirstChild = NULL;
 }
 
@@ -702,7 +702,7 @@ PtrAttribute        *pAttr;
    pAt1->AeAttrNum = 0;
    pAt1->AeAttrType = AtEnumAttr;
    pAt1->AeAttrValue = 0;
-   pAt1->AeDefAttr = False;
+   pAt1->AeDefAttr = FALSE;
 }
 
 /* ---------------------------------------------------------------------- */
@@ -759,7 +759,7 @@ PtrReferredDescr   *pDR;
    pDe1->RePrevious = NULL;
    pDe1->ReNext = NULL;
    pDe1->ReReferredLabel[0] = '\0';
-   pDe1->ReExternalRef = False;
+   pDe1->ReExternalRef = FALSE;
    pDe1->ReReferredElem = NULL;
 }
 
@@ -924,7 +924,7 @@ PtrReference       *pRef;
    pPR1->RdElement = NULL;
    pPR1->RdAttribute = NULL;
    pPR1->RdTypeRef = RefFollow;
-   pPR1->RdInternalRef = True;
+   pPR1->RdInternalRef = TRUE;
 }
 
 /* ---------------------------------------------------------------------- */
@@ -1285,7 +1285,7 @@ PtrDocument        *pDoc;
      {
 	pDo1->DocView[i].DvSSchema = NULL;
 	pDo1->DocView[i].DvPSchemaView = 0;
-	pDo1->DocView[i].DvSync = False;
+	pDo1->DocView[i].DvSync = FALSE;
 	pDo1->DocViewRootAb[i] = NULL;
 	pDo1->DocViewSubTree[i] = NULL;
 	pDo1->DocViewFrame[i] = 0;
@@ -1299,11 +1299,11 @@ PtrDocument        *pDoc;
    pDo1->DocDirectory[0] = '\0';
    pDo1->DocSchemasPath[0] = '\0';
    pDo1->DocBackUpInterval = 0;
-   pDo1->DocReadOnly = False;
-   pDo1->DocExportStructure = False;
+   pDo1->DocReadOnly = FALSE;
+   pDo1->DocExportStructure = FALSE;
    pDo1->DocLabelExpMax = 1;
    pDo1->DocMaxPairIdent = 0;
-   pDo1->DocModified = False;
+   pDo1->DocModified = FALSE;
    pDo1->DocNTypedChars = 0;
    pDo1->DocNewOutRef = NULL;
    pDo1->DocDeadOutRef = NULL;
@@ -1312,9 +1312,9 @@ PtrDocument        *pDoc;
    pDo1->DocNNatures = 0;
    pDo1->DocPivotVersion = 0;
    pDo1->DocLabels = NULL;
-   pDo1->DocToBeChecked = False;
-   pDo1->DocPivotError = False;
-   pDo1->DocNotifyAll = False;
+   pDo1->DocToBeChecked = FALSE;
+   pDo1->DocPivotError = FALSE;
+   pDo1->DocNotifyAll = FALSE;
 }
 
 /* ---------------------------------------------------------------------- */
@@ -1371,14 +1371,14 @@ PtrPSchema         *pSP;
    for (i = 0; i < MAX_VIEW; i++)
      {
 	(*pSP)->PsView[i][0] = '\0';
-	(*pSP)->PsPaginatedView[i] = False;
-	(*pSP)->PsColumnView[i] = False;
-	(*pSP)->PsExportView[i] = False;
+	(*pSP)->PsPaginatedView[i] = FALSE;
+	(*pSP)->PsColumnView[i] = FALSE;
+	(*pSP)->PsExportView[i] = FALSE;
      }
    (*pSP)->PsNPrintedViews = 0;
    for (i = 0; i < MAX_PRINT_VIEW; i++)
      {
-	(*pSP)->PsPrintedView[i].VpAssoc = False;
+	(*pSP)->PsPrintedView[i].VpAssoc = FALSE;
 	(*pSP)->PsPrintedView[i].VpNumber = 0;
      }
    (*pSP)->PsNCounters = 0;
@@ -1402,12 +1402,12 @@ PtrPSchema         *pSP;
 	(*pSP)->PsElemPRule[i] = NULL;
 	(*pSP)->PsNInheritedAttrs[i] = 0;
 	(*pSP)->PsInheritedAttr[i] = NULL;
-	(*pSP)->PsAcceptPageBreak[i] = True;
-	(*pSP)->PsAcceptLineBreak[i] = True;
-	(*pSP)->PsBuildAll[i] = False;
-	(*pSP)->PsNotInLine[i] = False;
-	(*pSP)->PsInPageHeaderOrFooter[i] = False;
-	(*pSP)->PsAssocPaginated[i] = False;
+	(*pSP)->PsAcceptPageBreak[i] = TRUE;
+	(*pSP)->PsAcceptLineBreak[i] = TRUE;
+	(*pSP)->PsBuildAll[i] = FALSE;
+	(*pSP)->PsNotInLine[i] = FALSE;
+	(*pSP)->PsInPageHeaderOrFooter[i] = FALSE;
+	(*pSP)->PsAssocPaginated[i] = FALSE;
 	(*pSP)->PsElemTransmit[i] = 0;
      }
 
@@ -1567,7 +1567,7 @@ PtrSSchema       *pSS;
    memset ((*pSS), 0, sizeof (StructSchema));
    (*pSS)->SsNextExtens = NULL;
    (*pSS)->SsPrevExtens = NULL;
-   (*pSS)->SsExtension = False;
+   (*pSS)->SsExtension = FALSE;
    (*pSS)->SsNExtensRules = 0;
    (*pSS)->SsExtensBlock = NULL;
    (*pSS)->SsFirstPSchemaExtens = NULL;
@@ -1681,8 +1681,8 @@ PtrCondition       *pCond;
    NbOccCondReglePres++;
    memset ((*pCond), 0, sizeof (Condition));
    (*pCond)->CoNextCondition = NULL;
-   (*pCond)->CoNotNegative = False;
-   (*pCond)->CoTarget = False;
+   (*pCond)->CoNotNegative = FALSE;
+   (*pCond)->CoTarget = FALSE;
 }
 
 /* ---------------------------------------------------------------------- */
@@ -1798,9 +1798,9 @@ void                MemInit ()
    PtFreeLine = NULL;
    NbLibLine = 0;
    NbOccLine = 0;
-   Complete = False;
-   Erreur = False;
-   Insert = False;
+   Complete = FALSE;
+   Erreur = FALSE;
+   Insert = FALSE;
 
 }
 
@@ -1901,7 +1901,7 @@ PtrDimRelations     *adbloc;
    for (i = 1; i <= MAX_RELAT_DIM; i++)
      {
 	pTa1->DimRTable[i - 1] = NULL;
-	pTa1->DimRSame[i - 1] = True;
+	pTa1->DimRSame[i - 1] = TRUE;
      }
 }
 
@@ -1986,27 +1986,27 @@ PtrAbstractBox             pAb;
 	adboite->BxHeightRelations = NULL;
 	adboite->BxEndOfBloc = 0;
 	/* Il n'y a pas de relations hors-structure */
-	adboite->BxXOutOfStruct = False;
-	adboite->BxYOutOfStruct = False;
-	adboite->BxWOutOfStruct = False;
-	adboite->BxHOutOfStruct = False;
+	adboite->BxXOutOfStruct = FALSE;
+	adboite->BxYOutOfStruct = FALSE;
+	adboite->BxWOutOfStruct = FALSE;
+	adboite->BxHOutOfStruct = FALSE;
 	/* La boite n'est pas elastique */
-	adboite->BxHorizFlex = False;
-	adboite->BxVertFlex = False;
-	adboite->BxHorizInverted = False;
-	adboite->BxVertInverted = False;
-	adboite->BxNew = False;
+	adboite->BxHorizFlex = FALSE;
+	adboite->BxVertFlex = FALSE;
+	adboite->BxHorizInverted = FALSE;
+	adboite->BxVertInverted = FALSE;
+	adboite->BxNew = FALSE;
 	/* Initialisation du traitement des dimensions minimales */
-	adboite->BxContentHeight = False;
-	adboite->BxContentWidth = False;
+	adboite->BxContentHeight = FALSE;
+	adboite->BxContentWidth = FALSE;
 	adboite->BxRuleHeigth = 0;
 	adboite->BxRuleWidth = 0;
 	adboite->BxBuffer = NULL;
 	adboite->BxEndOfBloc = 0;
 	adboite->BxNPixels = 0;
 	adboite->BxFirstChar = 0;
-	adboite->BxXToCompute = False;
-	adboite->BxYToCompute = False;
+	adboite->BxXToCompute = FALSE;
+	adboite->BxYToCompute = FALSE;
      }
    return adboite;
 }
@@ -2176,8 +2176,8 @@ PtrSearchContext          *pSearch;
 	s->SStartChar = 0;
 	s->SEndElement = NULL;
 	s->SEndChar = 0;
-	s->SStartToEnd = True;
-	s->SWholeDocument = False;
+	s->SStartToEnd = TRUE;
+	s->SWholeDocument = FALSE;
      }
 }				/*GetSearchContext */
 
@@ -2269,7 +2269,7 @@ boolean             readonly;
 /*CORR */ unsigned int i;
 
 /*CORR */ pdict = *pDict;
-/*CORR */ pdict->MAXcars += (pdict->DicoReadOnly == False) ? 600 : 2;
+/*CORR */ pdict->MAXcars += (pdict->DicoReadOnly == FALSE) ? 600 : 2;
 /*CORR */ i = pdict->MAXcars;
    /*CORR *//* alloue la chaine necessaire */
 /*CORR */ pdict->chaine = (PtrChaine) DicoAlloc (i);
@@ -2281,7 +2281,7 @@ boolean             readonly;
 /*CORR */ 
      }
 
-/*CORR */ pdict->MAXmots += (pdict->DicoReadOnly == False) ? 50 : 2;
+/*CORR */ pdict->MAXmots += (pdict->DicoReadOnly == FALSE) ? 50 : 2;
 /*CORR */ i = pdict->MAXmots;
 /*CORR */ pdict->commun = (PtrCommuns) DicoAlloc (i);
 /*CORR */ if (pdict->commun == NULL)
@@ -2348,11 +2348,11 @@ PtrDico            *pDico;
 
 /*CORR */ pdict->DicoNom[0] = '\0';
 /*CORR */ pdict->DicoDirectory[0] = '\0';
-						/*CORR */ pdict->DicoReadOnly = True;
+						/*CORR */ pdict->DicoReadOnly = TRUE;
 						/* readonly */
-						/*CORR */ pdict->DicoCharge = False;
+						/*CORR */ pdict->DicoCharge = FALSE;
 						/* contenu non charge' */
-						/*CORR */ pdict->DicoModifie = False;
+						/*CORR */ pdict->DicoModifie = FALSE;
 						/* contenu non modifie' */
 /*CORR */ pdict->chaine = NULL;
 /*CORR */ pdict->pdico = NULL;

@@ -6,8 +6,8 @@
 
 extern int VolumCar ( int volpixel );
 extern int NumberOfFonts ( void );
-extern int PtEnPixel ( int valeur, int horiz );
-extern int PixelEnPt ( int valeur, int horiz );
+extern int PointToPixel ( int valeur);
+extern int PixelToPoint ( int valeur);
 extern int CarWidth ( unsigned char c, ptrfont font );
 extern int CarHeight ( unsigned char c, ptrfont font );
 extern int CarAscent ( unsigned char c, ptrfont font );
@@ -29,8 +29,8 @@ extern void LibFont (int fen);
 
 extern int VolumCar (/* int volpixel */);
 extern int NumberOfFonts (/* void */);
-extern int PtEnPixel (/* int valeur, int horiz */);
-extern int PixelEnPt (/* int valeur, int horiz */);
+extern int PointToPixel (/* int valeur */);
+extern int PixelToPoint (/* int valeur */);
 extern int CarWidth (/* unsigned char c, ptrfont font */);
 extern int CarHeight (/* unsigned char c, ptrfont font */);
 extern int CarAscent (/* unsigned char c, ptrfont font */);

@@ -93,7 +93,7 @@ boolean             Affiche;
    if (pEl->ElTypeNumber != CharString + 1)
       return;
    /* envoie l'evenement ElemTextModify.Pre a qui le demande */
-   DontReplace = False;
+   DontReplace = FALSE;
    pAsc = pEl;
    while (pAsc != NULL)
      {
@@ -102,7 +102,7 @@ boolean             Affiche;
 	notifyEl.element = (Element) pAsc;
 	notifyEl.target = (Element) pEl;
 	notifyEl.targetdocument = (Document) IdentDocument (docsel);
-	DontReplace = DontReplace || ThotSendMessage ((NotifyEvent *) & notifyEl, True);
+	DontReplace = DontReplace || ThotSendMessage ((NotifyEvent *) & notifyEl, TRUE);
 	pAsc = pAsc->ElParent;
      }
    if (DontReplace)
@@ -216,14 +216,14 @@ boolean             Affiche;
 	pAsc = pAsc->ElParent;
      }
    /* change le volume des paves de l'element modifie' */
-   UnPave = False;
+   UnPave = FALSE;
    for (vue = 1; vue <= MAX_VIEW_DOC; vue++)
      {
 	pAb = pEl->ElAbstractBox[vue - 1];
 	if (pAb != NULL)
 	  {
-	     UnPave = True;
-	     pAb->AbChange = True;
+	     UnPave = TRUE;
+	     pAb->AbChange = TRUE;
 	     pDo1 = docsel;
 	     if (!VueAssoc (pEl))
 		pDo1->DocViewModifiedAb[vue - 1] = Englobant (pAb, pDo1->DocViewModifiedAb[vue - 1]);
@@ -254,7 +254,7 @@ boolean             Affiche;
    /* si l'element TEXTE modifie' appartient soit a un element copie' */
    /* dans des paves par une regle Copy, soit a un element inclus */
    /* dans d'autres, il faut reafficher ses copies */
-   ReaffPaveCopie (pEl, docsel, True);
+   ReaffPaveCopie (pEl, docsel, TRUE);
 
    /* selectionne la chaine remplacee */
    if (Affiche)
@@ -266,7 +266,7 @@ boolean             Affiche;
 	SelectStringWithAPP (docsel, pEl, icar, i);
      }
    /* le document a ete modifie' */
-   docsel->DocModified = True;
+   docsel->DocModified = TRUE;
    docsel->DocNTypedChars += LgChaineRempl;
    /* envoie l'evenement ElemTextModify.Post a qui le demande */
    pAsc = pEl;
@@ -277,7 +277,7 @@ boolean             Affiche;
 	notifyEl.element = (Element) pAsc;
 	notifyEl.target = (Element) pEl;
 	notifyEl.targetdocument = (Document) IdentDocument (docsel);
-	ThotSendMessage ((NotifyEvent *) & notifyEl, False);
+	ThotSendMessage ((NotifyEvent *) & notifyEl, FALSE);
 	pAsc = pAsc->ElParent;
      }
 }
@@ -332,9 +332,9 @@ int                 LgChaineCh;
    int                 inx2;
    boolean             egal;
 
-   ret = False;
+   ret = FALSE;
    inx2 = 1;
-   while (True)
+   while (TRUE)
       /* assure que l'on va pouvoir prendre le caractere dans le bloc */
      {
 	while (bloc != NULL)
@@ -386,7 +386,7 @@ int                 LgChaineCh;
    PtrTextBuffer      bloc;
    boolean             ok;
 
-   ok = False;
+   ok = FALSE;
    if (premsel == dersel && premsel != NULL)
       if (premsel->ElTerminal && premsel->ElLeafType == LtText)
 	{
@@ -432,7 +432,7 @@ char                pChaineCherchee[MAX_CHAR];
    PtrTextBuffer      pBx;
    boolean             stop;
 
-   stop = False;
+   stop = FALSE;
    ix = 0;
    ir = 1;
    icx = 0;
@@ -462,7 +462,7 @@ char                pChaineCherchee[MAX_CHAR];
 		  while (!(stop || ic == 1));
 	       }
 	     else
-		stop = True;
+		stop = TRUE;
 	  }
 	if (!stop)
 	   if (caregal (pB->BuContent[ic - 1], pChaineCherchee[ir - 1], MajEgalMin))
@@ -475,8 +475,8 @@ char                pChaineCherchee[MAX_CHAR];
 		  }
 		if (pChaineCherchee[ir] == '\0')
 		  {
-		     *trouve = True;
-		     stop = True;
+		     *trouve = TRUE;
+		     stop = TRUE;
 		  }
 		else
 		  {
@@ -528,7 +528,7 @@ int                 LgChaineCh;
    PtrTextBuffer      pBx;
    boolean             stop;
 
-   stop = False;
+   stop = FALSE;
    ix = 0;
    ir = LgChaineCh;
    icx = 0;
@@ -542,7 +542,7 @@ int                 LgChaineCh;
 	     if (pB != NULL)
 		ic = pB->BuLength;
 	     else
-		stop = True;
+		stop = TRUE;
 	  }
 	if (!stop && ic > 0)
 	   if (caregal (pB->BuContent[ic - 1], pChaineCherchee[ir - 1], MajEgalMin))
@@ -555,8 +555,8 @@ int                 LgChaineCh;
 		  }
 		if (ir == 1)
 		  {
-		     *trouve = True;
-		     stop = True;
+		     *trouve = TRUE;
+		     stop = TRUE;
 		  }
 		else
 		  {
@@ -619,11 +619,11 @@ int                 LgChaineCh;
    boolean             result;
    PtrElement          pAscendant;
 
-   result = False;
+   result = FALSE;
    if (*pElDebut != NULL)
      {
 	/* on n'a pas encore trouve' la chaine cherchee */
-	trouve = False;
+	trouve = FALSE;
 	pEl = *pElDebut;
 	/* on cherche d'abord la chaine */
 	if (EnAvant)
@@ -738,13 +738,13 @@ int                 LgChaineCh;
 			if (icar + LgChaineCh - 1 > *NumCarFin)
 			   /* la chaine trouvee se termine au-dela du caractere ou il */
 			   /* faut s'arreter, on fait comme si on n'avait pas trouve' */
-			   trouve = False;
+			   trouve = FALSE;
 		     }
 		   else
 		     {
 			if (*NumCarFin > 0)
 			   if (icar < *NumCarFin)
-			      trouve = False;
+			      trouve = FALSE;
 		     }
 		}
 	      else if (EnAvant)
@@ -752,10 +752,10 @@ int                 LgChaineCh;
 		   if (ElemIsBefore (*pElFin, pEl))
 		      /* l'element trouve' est apres l'element de fin, on fait */
 		      /* comme si on n'avait pas trouve' */
-		      trouve = False;
+		      trouve = FALSE;
 		}
 	      else if (ElemIsBefore (pEl, *pElFin))
-		 trouve = False;
+		 trouve = FALSE;
 	if (trouve)
 	  {
 	     *pElDebut = pEl;
@@ -764,7 +764,7 @@ int                 LgChaineCh;
 	     /* *NumCarFin est le rang du caractere qui suit le dernier */
 	     /* caractere de la chaine trouvee dans le buffer */
 	     *NumCarFin = icar + LgChaineCh;
-	     result = True;
+	     result = TRUE;
 	  }
      }
    return result;
@@ -795,7 +795,7 @@ boolean             SansDouble;
    int                 n;
    boolean             present;
 
-   present = False;
+   present = FALSE;
    if (SansDouble)
      {
 	/* verifie que ce schema n'est pas deja dans la table */
@@ -804,7 +804,7 @@ boolean             SansDouble;
 	  {
 	     n++;
 	     if (TablePtrNature[n - 1]->SsCode == pSchStr->SsCode)
-		present = True;
+		present = TRUE;
 	  }
      }
    if (!present)
@@ -1061,7 +1061,7 @@ PtrDocument         pDoc;
    /* le code qui suit etait precedemment dans MoveToPage */
    if (PP != NULL)
      {
-	VerifPave (PP, VueDoc, pDoc, True, False);
+	VerifPave (PP, VueDoc, pDoc, TRUE, FALSE);
 	if (PP->ElAbstractBox[VueDoc - 1] == NULL)
 	   /* message 'Panique! * (VerifPave)' */
 	   printf ("Panique VerifPave\n");

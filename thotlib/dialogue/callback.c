@@ -30,8 +30,8 @@ PtrElement          pEl;
 
 /* ---------------------------------------------------------------------- */
 /* |    ExecuteAction looks for the concerned action in schemas.        | */
-/* |            It returns True if the executed action takes            | */
-/* |            place of the editor action else it returns False.       | */
+/* |            It returns TRUE if the executed action takes            | */
+/* |            place of the editor action else it returns FALSE.       | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
 static boolean      ExecuteAction (NotifyEvent * notifyEvent, APPevent event, boolean pre, int type, Element element, PtrSSchema schStruct)
@@ -80,7 +80,7 @@ PtrSSchema        schStruct;
       /* See in the parent schema */
       if (proctodo == NULL && functodo == NULL)
 	{
-	  status = True;	/* still in the same schema */
+	  status = TRUE;	/* still in the same schema */
 	  if (element != 0)
 	    element = (Element) ((PtrElement) element)->ElParent;
 	  while (status && element != 0)
@@ -122,7 +122,7 @@ PtrSSchema        schStruct;
 	}
     }
   
-  status = False;
+  status = FALSE;
   if (functodo != NULL || proctodo != NULL)
     {
       if (functodo != NULL)
@@ -138,8 +138,8 @@ PtrSSchema        schStruct;
 /* |    SendAttributeMessage notifies the possible application that     | */
 /* |            an attribute has been created, deleted, modified, read  | */
 /* |            or saved.                                               | */
-/* |            It returns True if it executed an action,               | */
-/* |            else it returns False.                                  | */
+/* |            It returns TRUE if it executed an action,               | */
+/* |            else it returns FALSE.                                  | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
 boolean             SendAttributeMessage (NotifyAttribute * notifyAttr, boolean pre)
@@ -160,7 +160,7 @@ boolean             pre;
 		 notifyAttr->attributeType.AttrTypeNum, element, schStruct);
      }
    else
-      return False;
+      return FALSE;
 }
 
 
@@ -168,8 +168,8 @@ boolean             pre;
 /* |    ThotSendMessage sends a pointer to a actionstruct               | */
 /* |            and a structure-element and executes the                | */
 /* |            corresponding action (if any). If an action was         | */
-/* |            executed the function returns 'True' else it returns    | */
-/* |            'False'.                                                | */
+/* |            executed the function returns 'TRUE' else it returns    | */
+/* |            'FALSE'.                                                | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
 boolean             ThotSendMessage (NotifyEvent * notifyEvent, boolean pre)
@@ -187,7 +187,7 @@ boolean             pre;
    PtrSSchema        schStruct;
 
    if (notifyEvent == NULL)
-      return False;
+      return FALSE;
 
    elType = 0;
    schStruct = NULL;

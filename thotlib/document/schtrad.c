@@ -112,7 +112,7 @@ PtrSSchema        SS;
    pSchT = NULL;
    /* cherche dans la table si le schema est deja charge */
    i = 0;
-   found = False;
+   found = FALSE;
    do
      {
 	if (TabSchTrad[i].TradPtrSchT != NULL)
@@ -171,7 +171,7 @@ Name                 fname;
    boolean             UseTrouve;
    PtrTRule        pRe1;
 
-   UseTrouve = False;
+   UseTrouve = FALSE;
    if (pBloc != NULL)
       do
 	{
@@ -184,7 +184,7 @@ Name                 fname;
 		      /* c'est une regle USE */
 		      if (strcmp (fname, pRe1->TrNature) == 0)
 			{
-			   UseTrouve = True;
+			   UseTrouve = TRUE;
 			   strncpy (fname, pRe1->TrTranslSchemaName, MAX_NAME_LENGTH);
 			}
 		   pRegle = pRe1->TrNextTRule;
@@ -220,7 +220,7 @@ Name                 fname;
    PtrSSchema        pSc1;
    SRule              *pRe1;
 
-   trouve = False;
+   trouve = FALSE;
    /* cherche d'abord si le schema de traduction du document contient */
    /* une regle USE pour cette nature */
    /* le schema de traduction du document est le premier de la table */
@@ -228,7 +228,7 @@ Name                 fname;
       /* cherche la nature dans le schema de structure du document */
      {
 	i = 0;
-	natureok = False;
+	natureok = FALSE;
 	pSc1 = TabSchTrad[0].TradPtrSchS;
 	do
 	  {
@@ -278,7 +278,7 @@ PtrSSchema        pSS;
    boolean             found;
 
    schema = NULL;
-   found = False;
+   found = FALSE;
    i = 0;
    do
      {

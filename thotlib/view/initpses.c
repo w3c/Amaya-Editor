@@ -137,120 +137,120 @@ int                 motif;
    switch (motif)
 	 {
 	    case 1:
-	       trame = XCreatePixmapFromBitmapData (GDp (disp), GRootW (disp), (char *) gray8_bits, gray8_width,
-			     gray8_height, FgPixel, BgPixel, Gdepth (disp));
+	       trame = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow, (char *) gray8_bits, gray8_width,
+			     gray8_height, FgPixel, BgPixel, TtWDepth);
 	       break;
 	    case 2:
-	       trame = XCreatePixmapFromBitmapData (GDp (disp), GRootW (disp), (char *) gray0_bits, gray0_width,
-			     gray0_height, FgPixel, BgPixel, Gdepth (disp));
+	       trame = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow, (char *) gray0_bits, gray0_width,
+			     gray0_height, FgPixel, BgPixel, TtWDepth);
 	       break;
 	    case 3:
-	       trame = XCreatePixmapFromBitmapData (GDp (disp), GRootW (disp), (char *) gray1_bits, gray1_width,
-			     gray1_height, FgPixel, BgPixel, Gdepth (disp));
+	       trame = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow, (char *) gray1_bits, gray1_width,
+			     gray1_height, FgPixel, BgPixel, TtWDepth);
 	       break;
 	    case 4:
-	       trame = XCreatePixmapFromBitmapData (GDp (disp), GRootW (disp), (char *) gray2_bits, gray2_width,
-			     gray2_height, FgPixel, BgPixel, Gdepth (disp));
+	       trame = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow, (char *) gray2_bits, gray2_width,
+			     gray2_height, FgPixel, BgPixel, TtWDepth);
 	       break;
 	    case 5:
-	       trame = XCreatePixmapFromBitmapData (GDp (disp), GRootW (disp), (char *) gray3_bits, gray3_width,
-			     gray3_height, FgPixel, BgPixel, Gdepth (disp));
+	       trame = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow, (char *) gray3_bits, gray3_width,
+			     gray3_height, FgPixel, BgPixel, TtWDepth);
 	       break;
 	    case 6:
-	       trame = XCreatePixmapFromBitmapData (GDp (disp), GRootW (disp), (char *) gray4_bits, gray4_width,
-			     gray4_height, FgPixel, BgPixel, Gdepth (disp));
+	       trame = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow, (char *) gray4_bits, gray4_width,
+			     gray4_height, FgPixel, BgPixel, TtWDepth);
 	       break;
 	    case 7:
-	       trame = XCreatePixmapFromBitmapData (GDp (disp), GRootW (disp), (char *) gray5_bits, gray5_width,
-			     gray5_height, FgPixel, BgPixel, Gdepth (disp));
+	       trame = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow, (char *) gray5_bits, gray5_width,
+			     gray5_height, FgPixel, BgPixel, TtWDepth);
 	       break;
 	    case 8:
-	       trame = XCreatePixmapFromBitmapData (GDp (disp), GRootW (disp), (char *) gray6_bits, gray6_width,
-			     gray6_height, FgPixel, BgPixel, Gdepth (disp));
+	       trame = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow, (char *) gray6_bits, gray6_width,
+			     gray6_height, FgPixel, BgPixel, TtWDepth);
 	       break;
 	    case 9:
-	       trame = XCreatePixmapFromBitmapData (GDp (disp), GRootW (disp), (char *) gray7_bits, gray7_width,
-			     gray7_height, FgPixel, BgPixel, Gdepth (disp));
+	       trame = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow, (char *) gray7_bits, gray7_width,
+			     gray7_height, FgPixel, BgPixel, TtWDepth);
 	       break;
 	    case 10:
-	       trame = XCreatePixmapFromBitmapData (GDp (disp), GRootW (disp), (char *) horiz1_bits, horiz1_width,
-			    horiz1_height, FgPixel, BgPixel, Gdepth (disp));
+	       trame = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow, (char *) horiz1_bits, horiz1_width,
+			    horiz1_height, FgPixel, BgPixel, TtWDepth);
 	       break;
 	    case 11:
-	       trame = XCreatePixmapFromBitmapData (GDp (disp), GRootW (disp), (char *) horiz2_bits, horiz2_width,
-			    horiz2_height, FgPixel, BgPixel, Gdepth (disp));
+	       trame = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow, (char *) horiz2_bits, horiz2_width,
+			    horiz2_height, FgPixel, BgPixel, TtWDepth);
 	       break;
 	    case 12:
-	       trame = XCreatePixmapFromBitmapData (GDp (disp), GRootW (disp), (char *) horiz3_bits, horiz3_width,
-			    horiz3_height, FgPixel, BgPixel, Gdepth (disp));
+	       trame = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow, (char *) horiz3_bits, horiz3_width,
+			    horiz3_height, FgPixel, BgPixel, TtWDepth);
 	       break;
 	    case 13:
-	       trame = XCreatePixmapFromBitmapData (GDp (disp), GRootW (disp), (char *) vert1_bits, vert1_width,
-			     vert1_height, FgPixel, BgPixel, Gdepth (disp));
+	       trame = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow, (char *) vert1_bits, vert1_width,
+			     vert1_height, FgPixel, BgPixel, TtWDepth);
 	       break;
 	    case 14:
-	       trame = XCreatePixmapFromBitmapData (GDp (disp), GRootW (disp), (char *) vert2_bits, vert2_width,
-			     vert2_height, FgPixel, BgPixel, Gdepth (disp));
+	       trame = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow, (char *) vert2_bits, vert2_width,
+			     vert2_height, FgPixel, BgPixel, TtWDepth);
 	       break;
 	    case 15:
-	       trame = XCreatePixmapFromBitmapData (GDp (disp), GRootW (disp), (char *) vert3_bits, vert3_width,
-			     vert3_height, FgPixel, BgPixel, Gdepth (disp));
+	       trame = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow, (char *) vert3_bits, vert3_width,
+			     vert3_height, FgPixel, BgPixel, TtWDepth);
 	       break;
 	    case 16:
-	       trame = XCreatePixmapFromBitmapData (GDp (disp), GRootW (disp), (char *) left1_bits, left1_width,
-			     left1_height, FgPixel, BgPixel, Gdepth (disp));
+	       trame = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow, (char *) left1_bits, left1_width,
+			     left1_height, FgPixel, BgPixel, TtWDepth);
 	       break;
 	    case 17:
-	       trame = XCreatePixmapFromBitmapData (GDp (disp), GRootW (disp), (char *) left2_bits, left2_width,
-			     left2_height, FgPixel, BgPixel, Gdepth (disp));
+	       trame = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow, (char *) left2_bits, left2_width,
+			     left2_height, FgPixel, BgPixel, TtWDepth);
 	       break;
 	    case 18:
-	       trame = XCreatePixmapFromBitmapData (GDp (disp), GRootW (disp), (char *) left3_bits, left3_width,
-			     left3_height, FgPixel, BgPixel, Gdepth (disp));
+	       trame = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow, (char *) left3_bits, left3_width,
+			     left3_height, FgPixel, BgPixel, TtWDepth);
 	       break;
 	    case 19:
-	       trame = XCreatePixmapFromBitmapData (GDp (disp), GRootW (disp), (char *) right1_bits, right1_width,
-			    right1_height, FgPixel, BgPixel, Gdepth (disp));
+	       trame = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow, (char *) right1_bits, right1_width,
+			    right1_height, FgPixel, BgPixel, TtWDepth);
 	       break;
 	    case 20:
-	       trame = XCreatePixmapFromBitmapData (GDp (disp), GRootW (disp), (char *) right2_bits, right2_width,
-			    right2_height, FgPixel, BgPixel, Gdepth (disp));
+	       trame = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow, (char *) right2_bits, right2_width,
+			    right2_height, FgPixel, BgPixel, TtWDepth);
 	       break;
 	    case 21:
-	       trame = XCreatePixmapFromBitmapData (GDp (disp), GRootW (disp), (char *) right3_bits, right3_width,
-			    right3_height, FgPixel, BgPixel, Gdepth (disp));
+	       trame = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow, (char *) right3_bits, right3_width,
+			    right3_height, FgPixel, BgPixel, TtWDepth);
 	       break;
 	    case 22:
-	       trame = XCreatePixmapFromBitmapData (GDp (disp), GRootW (disp), (char *) square1_bits, square1_width,
-			   square1_height, FgPixel, BgPixel, Gdepth (disp));
+	       trame = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow, (char *) square1_bits, square1_width,
+			   square1_height, FgPixel, BgPixel, TtWDepth);
 	       break;
 	    case 23:
-	       trame = XCreatePixmapFromBitmapData (GDp (disp), GRootW (disp), (char *) square2_bits, square2_width,
-			   square2_height, FgPixel, BgPixel, Gdepth (disp));
+	       trame = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow, (char *) square2_bits, square2_width,
+			   square2_height, FgPixel, BgPixel, TtWDepth);
 	       break;
 	    case 24:
-	       trame = XCreatePixmapFromBitmapData (GDp (disp), GRootW (disp), (char *) square3_bits, square3_width,
-			   square3_height, FgPixel, BgPixel, Gdepth (disp));
+	       trame = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow, (char *) square3_bits, square3_width,
+			   square3_height, FgPixel, BgPixel, TtWDepth);
 	       break;
 	    case 25:
-	       trame = XCreatePixmapFromBitmapData (GDp (disp), GRootW (disp), (char *) lozenge_bits, lozenge_width,
-			   lozenge_height, FgPixel, BgPixel, Gdepth (disp));
+	       trame = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow, (char *) lozenge_bits, lozenge_width,
+			   lozenge_height, FgPixel, BgPixel, TtWDepth);
 	       break;
 	    case 26:
-	       trame = XCreatePixmapFromBitmapData (GDp (disp), GRootW (disp), (char *) brick_bits, brick_width,
-			     brick_height, FgPixel, BgPixel, Gdepth (disp));
+	       trame = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow, (char *) brick_bits, brick_width,
+			     brick_height, FgPixel, BgPixel, TtWDepth);
 	       break;
 	    case 27:
-	       trame = XCreatePixmapFromBitmapData (GDp (disp), GRootW (disp), (char *) tile_bits, tile_width,
-			      tile_height, FgPixel, BgPixel, Gdepth (disp));
+	       trame = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow, (char *) tile_bits, tile_width,
+			      tile_height, FgPixel, BgPixel, TtWDepth);
 	       break;
 	    case 28:
-	       trame = XCreatePixmapFromBitmapData (GDp (disp), GRootW (disp), (char *) sea_bits, sea_width,
-			       sea_height, FgPixel, BgPixel, Gdepth (disp));
+	       trame = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow, (char *) sea_bits, sea_width,
+			       sea_height, FgPixel, BgPixel, TtWDepth);
 	       break;
 	    case 29:
-	       trame = XCreatePixmapFromBitmapData (GDp (disp), GRootW (disp), (char *) basket_bits, basket_width,
-			    basket_height, FgPixel, BgPixel, Gdepth (disp));
+	       trame = XCreatePixmapFromBitmapData (TtDisplay, TtRootWindow, (char *) basket_bits, basket_width,
+			    basket_height, FgPixel, BgPixel, TtWDepth);
 	       break;
 	    default:
 	       trame = None;

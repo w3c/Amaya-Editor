@@ -12,7 +12,7 @@
 
 #include "thot_gui.h"
 #include "thot_sys.h"
-#include "thotconfig.h"
+
 #include "constmenu.h"
 #include "libmsg.h"
 #include "message.h"
@@ -80,7 +80,7 @@ extern void         AfficherVue ();
 #endif /* __STDC__ */
 
 /* ---------------------------------------------------------------------- */
-/* |    docModify positionne le flag modification d'un document a` True.| */
+/* |    docModify positionne le flag modification d'un document a` TRUE.| */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
 void                docModify (PtrDocument doc, PtrElement pEl)
@@ -93,14 +93,14 @@ PtrElement          pEl;
 {
    if (doc != NULL)
      {
-	doc->DocModified = True;
+	doc->DocModified = TRUE;
 	doc->DocNTypedChars += 10;
      }
 }
 
 /* ---------------------------------------------------------------------- */
 /* |    docUnmodify positionne le flag modification d'un document a`    | */
-/* |            False.                                                  | */
+/* |            FALSE.                                                  | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
 static void         docUnmodify (PtrDocument doc)
@@ -112,7 +112,7 @@ PtrDocument         doc;
 {
    if (doc != NULL)
      {
-	doc->DocModified = False;
+	doc->DocModified = FALSE;
 	doc->DocNTypedChars = 0;
      }
 }
@@ -140,7 +140,7 @@ boolean             assoc;
      {
 	ElAssoc = pDoc->DocAssocRoot[vue - 1];
 	if (ElAssoc == NULL)
-	   paginer = False;
+	   paginer = FALSE;
 	else
 	   paginer = ElAssoc->ElSructSchema->SsPSchema->
 	      PsAssocPaginated[ElAssoc->ElTypeNumber - 1];
@@ -150,7 +150,7 @@ boolean             assoc;
 	if (pDoc->DocView[vue - 1].DvSSchema != pDoc->DocSSchema)
 	   /* ce n'est pas une vue definie par le schema du document, */
 	   /* on ne la pagine pas */
-	   paginer = False;
+	   paginer = FALSE;
 	else
 	   paginer = pDoc->DocView[vue - 1].DvSSchema->SsPSchema->
 	      PsPaginatedView[pDoc->DocView[vue - 1].DvPSchemaView - 1];
@@ -181,7 +181,7 @@ boolean            *assoc;
 
    *nv = 0;
    vue = 0;
-   *assoc = False;
+   *assoc = FALSE;
    /* cherche d'abord dans les vues de l'arbre principal */
    do
      {
@@ -201,7 +201,7 @@ boolean            *assoc;
 	     if (pD->DocAssocFrame[vue] == nframe)
 	       {
 		  *nv = vue + 1;
-		  *assoc = True;
+		  *assoc = TRUE;
 	       }
 	     else
 		vue++;
@@ -302,7 +302,7 @@ boolean             Nature;
 		    {
 		       /* met le nom de la vue possible dans le catalogue, s'il n'y est pas deja */
 		       /* on verifie que la vue n'est pas deja dans le catalogue */
-		       dejala = False;
+		       dejala = FALSE;
 		       w = 0;
 		       while (w < *nbvues && !dejala)
 			 {
@@ -318,11 +318,11 @@ boolean             Nature;
 			    LesVues[*nbvues - 1].VdAssocNum = 0;
 			    strncpy (LesVues[*nbvues - 1].VdViewName, pSc1->PsView[v - 1], MAX_NAME_LENGTH);
 			    LesVues[*nbvues - 1].VdSSchema = pS;
-			    LesVues[*nbvues - 1].VdAssoc = False;
-			    LesVues[*nbvues - 1].VdExist = False;
+			    LesVues[*nbvues - 1].VdAssoc = FALSE;
+			    LesVues[*nbvues - 1].VdExist = FALSE;
 			    LesVues[*nbvues - 1].VdNature = Nature;
 			    LesVues[*nbvues - 1].VdPaginated = pSc1->PsPaginatedView[v - 1];
-			    ouverte = False;
+			    ouverte = FALSE;
 			    vuedocu = 1;
 			    while (!ouverte && vuedocu <= MAX_VIEW_DOC)
 			      {
@@ -330,7 +330,7 @@ boolean             Nature;
 				 if (pDe1->DvPSchemaView > 0)
 				    if (pDe1->DvSSchema->SsPSchema == pS->SsPSchema
 					&& pDe1->DvPSchemaView == v)
-				       ouverte = True;	/* vue deja ouverte */
+				       ouverte = TRUE;	/* vue deja ouverte */
 				 vuedocu++;
 			      }
 			    LesVues[*nbvues - 1].VdOpen = ouverte;
@@ -379,7 +379,7 @@ PtrDocument         pDoc;
 		   /* Il existe au moins un objet de cette nature dans le document */
 
 		   /* les vues non principales de cette nature */
-		   LesVuesDunSchStr (pDoc, pRe1->SrSSchemaNat, LesVues, nbvues, True);
+		   LesVuesDunSchStr (pDoc, pRe1->SrSSchemaNat, LesVues, nbvues, TRUE);
 
 		   /* les vues des natures contenues dans cette nature */
 		   LesVuesDesNatures (pRe1->SrSSchemaNat, nbvues, LesVues, pDoc);
@@ -414,12 +414,12 @@ AvailableView           LesVues;
    if (pDoc->DocSSchema != NULL)
      {
 	/* Les vues du schema de presentation de l'arbre principal */
-	LesVuesDunSchStr (pDoc, pDoc->DocSSchema, LesVues, &nbvues, False);
+	LesVuesDunSchStr (pDoc, pDoc->DocSSchema, LesVues, &nbvues, FALSE);
 	/* Les vues definies pour les extension du schema du document */
 	pSc1 = pDoc->DocSSchema->SsNextExtens;
 	while (pSc1 != NULL)
 	  {
-	     LesVuesDunSchStr (pDoc, pSc1, LesVues, &nbvues, False);
+	     LesVuesDunSchStr (pDoc, pSc1, LesVues, &nbvues, FALSE);
 	     pSc1 = pSc1->SsNextExtens;
 	  }
 
@@ -441,7 +441,7 @@ AvailableView           LesVues;
 		      /* il existe au moins */
 		      /* un objet de cette nature dans le document */
 		      LesVuesDunSchStr (pDoc, pRe1->SrSSchemaNat, LesVues,
-					&nbvues, True);
+					&nbvues, TRUE);
 	  }
 
 	/* Les vues des elements associes du document. */
@@ -471,8 +471,8 @@ AvailableView           LesVues;
 			  {
 			     /* cherche s'il existe dans le document des elements */
 			     /* associes de ce type et si leur vue est deja ouverte */
-			     assocexiste = False;
-			     existe = False;
+			     assocexiste = FALSE;
+			     existe = FALSE;
 			     a = 0;
 			     do
 			       {
@@ -482,10 +482,10 @@ AvailableView           LesVues;
 					if (pDoc->DocAssocRoot[a - 1]->ElSructSchema == pSc1)
 					   /* il existe des elements associes de ce type */
 					  {
-					     assocexiste = True;
+					     assocexiste = TRUE;
 					     if (pDoc->DocAssocFrame[a - 1] != 0)
 						/* la vue est ouverte */
-						existe = True;
+						existe = TRUE;
 					  }
 			       }
 			     while (!(assocexiste || a >= MAX_ASSOC_DOC));
@@ -500,9 +500,9 @@ AvailableView           LesVues;
 				   pSc1->SsRule[r - 1].SrName, MAX_NAME_LENGTH);
 			     LesVues[nbvues - 1].VdSSchema = pSc1;
 			     LesVues[nbvues - 1].VdOpen = existe;
-			     LesVues[nbvues - 1].VdAssoc = True;
+			     LesVues[nbvues - 1].VdAssoc = TRUE;
 			     LesVues[nbvues - 1].VdExist = assocexiste;
-			     LesVues[nbvues - 1].VdNature = False;
+			     LesVues[nbvues - 1].VdNature = FALSE;
 			     LesVues[nbvues - 1].VdPaginated =
 				pSc1->SsPSchema->PsAssocPaginated[r - 1];
 			  }
@@ -552,14 +552,14 @@ PtrDocument         pDoc;
 		      /* cherche pour cette vue son */
 		      /* numero (vuedoc) dans le document */
 		      vuedoc = 1;
-		      trouve = False;
+		      trouve = FALSE;
 		      while (!trouve && vuedoc <= MAX_VIEW_DOC)
 			{
 			   if (pDoc->DocView[vuedoc - 1].DvPSchemaView ==
 			       ToutesLesVues[i - 1].VdView
 			       && pDoc->DocView[vuedoc - 1].DvSSchema ==
 			       ToutesLesVues[i - 1].VdSSchema)
-			      trouve = True;
+			      trouve = TRUE;
 			   else
 			      vuedoc++;
 			}
@@ -629,7 +629,7 @@ DocViewNumber           v;
    pDoc->DocViewRootAb[v - 1] = NULL;
    pDoc->DocView[v - 1].DvSSchema = NULL;
    pDoc->DocView[v - 1].DvPSchemaView = 0;
-   pDoc->DocView[v - 1].DvSync = False;
+   pDoc->DocView[v - 1].DvSync = FALSE;
 
    pDoc->DocViewFrame[v - 1] = 0;
    pDoc->DocViewVolume[v - 1] = 0;
@@ -702,14 +702,14 @@ boolean             AvecFermeDoc;
 		notifyDoc.event = TteDocClose;
 		notifyDoc.document = (Document) IdentDocument (pDoc);
 		notifyDoc.view = 0;
-		if (!ThotSendMessage ((NotifyEvent *) & notifyDoc, True))
+		if (!ThotSendMessage ((NotifyEvent *) & notifyDoc, TRUE))
 		  {
 		     if (ThotLocalActions[T_corrector] != NULL)
 			(*ThotLocalActions[T_rscorrector]) (-1, 0, (char *) pDoc);
 		     notifyDoc.event = TteDocClose;
 		     notifyDoc.document = (Document) IdentDocument (pDoc);
 		     notifyDoc.view = 0;
-		     ThotSendMessage ((NotifyEvent *) & notifyDoc, False);
+		     ThotSendMessage ((NotifyEvent *) & notifyDoc, FALSE);
 		     LibDocument (&pDoc);
 		  }
 	     }
@@ -734,10 +734,10 @@ int                 accessMode;
 
    if (accessMode == 0)		/* read only */
      {
-	pAb->AbCanBeModified = False;	/* non modifiable */
-	pAb->AbReadOnly = True;
+	pAb->AbCanBeModified = FALSE;	/* non modifiable */
+	pAb->AbReadOnly = TRUE;
 	/* le pave a change (pour que le mediateur reevalue les regles) */
-	pAb->AbChange = True;
+	pAb->AbChange = TRUE;
      }
    else
       /* read write */
@@ -745,12 +745,12 @@ int                 accessMode;
      {
 	if (!pAb->AbPresentationBox)
 	   /* ce n'est pas un pave de presentation, il est donc modifiable */
-	   pAb->AbCanBeModified = True;
+	   pAb->AbCanBeModified = TRUE;
 	else if (PavPresentModifiable (pAb))
-	   pAb->AbCanBeModified = True;
-	pAb->AbReadOnly = False;
+	   pAb->AbCanBeModified = TRUE;
+	pAb->AbReadOnly = FALSE;
 	/* le pave a change (pour que le mediateur reevalue les regles) */
-	pAb->AbChange = True;
+	pAb->AbChange = TRUE;
      }
    /* on passe aux fils */
    PavFils = pAb->AbFirstEnclosed;
@@ -822,7 +822,7 @@ PtrDocument         pDoc;
       /* vue d'elements associes */
       ACreer[0] = pEl->ElAbstractBox[0] != NULL;
    /* detruit les paves de l'element */
-   DetrPaves (pEl, pDoc, False);
+   DetrPaves (pEl, pDoc, FALSE);
    MajImAbs (pDoc);
    /* supprime l'ancienne copie dans l'arbre abstrait */
    pEl1 = pEl;
@@ -897,7 +897,7 @@ PtrDocument         pDoc;
    MajImAbs (pDoc);
    ReaffDoc (pDoc);
    /* Reaffiche les numeros suivants qui changent */
-   MajNumeros (NextElement (pEl), pEl, pDoc, True);
+   MajNumeros (NextElement (pEl), pEl, pDoc, TRUE);
 }
 
 
@@ -918,7 +918,7 @@ PtrDocument         pDoc;
    PtrExternalDoc       pDE;
    boolean             RestaureSel;
 
-   RestaureSel = False;
+   RestaureSel = FALSE;
    /* parcourt la chaine des descripteurs d'elements reference's */
    pDR = pDoc->DocReferredEl;
    if (pDR != NULL)
@@ -938,7 +938,7 @@ PtrDocument         pDoc;
 	     do
 	       {
 
-		  pRef = ReferSuivante (pDR->ReReferredElem, pDoc, False, pRef, &pDocRef, &pDE, True);
+		  pRef = ReferSuivante (pDR->ReReferredElem, pDoc, FALSE, pRef, &pDocRef, &pDE, TRUE);
 		  if (pRef != NULL)
 		     if (pRef->RdTypeRef == RefInclusion)
 			/* c'est une inclusion */
@@ -954,7 +954,7 @@ PtrDocument         pDoc;
 				   if (!RestaureSel)
 				     {
 					RazSelect ();
-					RestaureSel = True;
+					RestaureSel = TRUE;
 				     }
 				   /* refait la copie de l'element inclus */
 				   MajElInclus (pRef->RdElement, pDocRef);
@@ -968,7 +968,7 @@ PtrDocument         pDoc;
      }
    if (RestaureSel)
       /* rallume la selection */
-      AllumeSelection (False, False);
+      AllumeSelection (FALSE, FALSE);
 }
 
 
@@ -1047,7 +1047,7 @@ boolean             withAPP;
      {
 	fichpivot = BIOwriteOpen (name);
 	if (fichpivot == 0)
-	   return False;
+	   return FALSE;
 	else
 	  {
 	     if (withAPP)
@@ -1056,10 +1056,10 @@ boolean             withAPP;
 		  notifyDoc.event = TteDocSave;
 		  notifyDoc.document = (Document) IdentDocument (pDoc);
 		  notifyDoc.view = 0;
-		  ok = !ThotSendMessage ((NotifyEvent *) & notifyDoc, True);
+		  ok = !ThotSendMessage ((NotifyEvent *) & notifyDoc, TRUE);
 	       }
 	     else
-		ok = True;
+		ok = TRUE;
 	     if (ok)
 		/* l'application laisse Thot effectuer la sauvegarde */
 	       {
@@ -1072,13 +1072,13 @@ boolean             withAPP;
 		       notifyDoc.event = TteDocSave;
 		       notifyDoc.document = (Document) IdentDocument (pDoc);
 		       notifyDoc.view = 0;
-		       ThotSendMessage ((NotifyEvent *) & notifyDoc, False);
+		       ThotSendMessage ((NotifyEvent *) & notifyDoc, FALSE);
 		    }
 	       }
-	     return True;
+	     return TRUE;
 	  }
      }
-   return False;
+   return FALSE;
 }
 
 
@@ -1101,17 +1101,17 @@ char               *extension;
    char                texte[MAX_TXT_LEN];
 
    if (pDoc == NULL)
-      return False;
+      return FALSE;
    DoFileName (pDoc->DocDName, extension, pDoc->DocDirectory, texte, &i);
-   if (simpleSave (pDoc, texte, False))
+   if (simpleSave (pDoc, texte, FALSE))
      {
 	MajInclus (pDoc);
-	return True;
+	return TRUE;
      }
    else
      {
 	TtaDisplayMessage (CONFIRM, TtaGetMessage(LIB, LIB_CANNOT_WRITE), texte);
-	return False;
+	return FALSE;
      }
 }
 
@@ -1144,17 +1144,17 @@ boolean             SauveDocAvecMove;
    notifyDoc.event = TteDocSave;
    notifyDoc.document = (Document) IdentDocument (pDoc);
    notifyDoc.view = 0;
-   if (ThotSendMessage ((NotifyEvent *) & notifyDoc, True))
+   if (ThotSendMessage ((NotifyEvent *) & notifyDoc, TRUE))
       /* l'application a pris la sauvegarde en charge */
-      status = True;
+      status = TRUE;
    else
      {
-	status = True;
-	SauverDansMemeFichier = True;
+	status = TRUE;
+	SauverDansMemeFichier = TRUE;
 	if (strcmp (NomDuDocument, pDoc->DocDName) != 0)
-	   SauverDansMemeFichier = False;
+	   SauverDansMemeFichier = FALSE;
 	if (strcmp (NomDirectory, pDoc->DocDirectory) != 0)
-	   SauverDansMemeFichier = False;
+	   SauverDansMemeFichier = FALSE;
 
 	/* construit le nom complet de l'ancien fichier de sauvegarde */
 	DoFileName (pDoc->DocDName, "BAK", pDoc->DocDirectory, NomAuto, &i);
@@ -1174,7 +1174,7 @@ boolean             SauveDocAvecMove;
 	     if (ok)
 	       {
 		  TtaDisplaySimpleMessage (INFO, LIB, LIB_WRITING);
-		  ok = simpleSave (pDoc, NomTemporaire, False);
+		  ok = simpleSave (pDoc, NomTemporaire, FALSE);
 	       }
 	     if (ok)
 		MajInclus (pDoc);
@@ -1185,7 +1185,7 @@ boolean             SauveDocAvecMove;
 	     DoFileName (NomDuDocument, "PIV", NomDirectory, texte, &i);
 	     TtaDisplayMessage (CONFIRM, TtaGetMessage(LIB, LIB_CANNOT_WRITE),
 					    texte);
-	     status = False;
+	     status = FALSE;
 	  }
 	else
 	  {
@@ -1248,13 +1248,13 @@ boolean             SauveDocAvecMove;
 			       /* l'utilisateur veut creer une copie du document. */
 			       /* on fait apparaitre le document copie dans les */
 			       /* fichiers .EXT des documents reference's */
-			       ChangeNomExt (pDoc, NomDuDocument, True);
+			       ChangeNomExt (pDoc, NomDuDocument, TRUE);
 			    if (SauveDocAvecMove)
 			      {
 				 /* il s'agit d'un changement de nom du document */
 				 /* change le nom du document dans les fichiers */
 				 /* .EXT de tous les documents reference's */
-				 ChangeNomExt (pDoc, NomDuDocument, False);
+				 ChangeNomExt (pDoc, NomDuDocument, FALSE);
 				 /* indique le changement de nom a tous les */
 				 /* documents qui referencent ce document */
 				 ChangeNomRef (pDoc, NomDuDocument);
@@ -1280,7 +1280,7 @@ boolean             SauveDocAvecMove;
 	     notifyDoc.event = TteDocSave;
 	     notifyDoc.document = (Document) IdentDocument (pDoc);
 	     notifyDoc.view = 0;
-	     ThotSendMessage ((NotifyEvent *) & notifyDoc, False);
+	     ThotSendMessage ((NotifyEvent *) & notifyDoc, FALSE);
 	  }
      }
    return status;
@@ -1308,7 +1308,7 @@ boolean             ask;
    Name                 nomdoc;
    char                nomdir[MAX_PATH];
 
-   status = False;
+   status = FALSE;
    if (pDoc->DocReadOnly)
       /* on ne sauve pas les documents qui sont en lecture seule */
       TtaDisplaySimpleMessage (INFO, LIB, LIB_NOT_ALLOWED_READ_ONLY_DOC);
@@ -1322,7 +1322,7 @@ boolean             ask;
 	/* recherche le nom du fichier en proposant le nom courant */
 	ok = !ask;
 	if (ok && !pDoc->DocReadOnly)
-	   status = SauverDoc (pDoc, nomdoc, nomdir, False, False);
+	   status = SauverDoc (pDoc, nomdoc, nomdir, FALSE, FALSE);
      }
    if (status && ask)
       docUnmodify (pDoc);
@@ -1354,13 +1354,13 @@ int                 Mode;
 {
    boolean             ok;
 
-   ok = False;
+   ok = FALSE;
    if (pDoc != NULL)
       if (Mode >= 0 && Mode <= 4)
 	 switch (Mode)
 	       {
 		  case 0:
-		     ok = interactiveSave (pDoc, True);
+		     ok = interactiveSave (pDoc, TRUE);
 		     break;
 		  case 1:
 		     ok = saveWithExtension (pDoc, "BAK");
@@ -1374,7 +1374,7 @@ int                 Mode;
 		     ok = saveWithExtension (pDoc, "SAV");
 		     break;
 		  case 4:
-		     ok = interactiveSave (pDoc, False);
+		     ok = interactiveSave (pDoc, FALSE);
 		     break;
 	       }
    return ok;
@@ -1412,14 +1412,14 @@ int                 nframe;
 	   notifyDoc.view = nv + 100;
 	else
 	   notifyDoc.view = nv;
-	ThotSendMessage ((NotifyEvent *) & notifyDoc, True);
+	ThotSendMessage ((NotifyEvent *) & notifyDoc, TRUE);
 	/* desactive la vue si elle est active */
 	DesactVue (pD, nv, assoc);
 	/* detruit la fenetre */
 	DetruitFenetre (nframe);
-	ThotSendMessage ((NotifyEvent *) & notifyDoc, False);
+	ThotSendMessage ((NotifyEvent *) & notifyDoc, FALSE);
 	/* detruit le contexte de la vue */
-	detruit (pD, nv, assoc, True);
+	detruit (pD, nv, assoc, TRUE);
      }
 }
 
@@ -1467,7 +1467,7 @@ PtrDocument         pDoc;
 		   /* cherche la reference suivant a l'element */
 		  {
 
-		     pRef = ReferSuivante (pEl, pDoc, False, pRef, &pDocRef, &pDE, True);
+		     pRef = ReferSuivante (pEl, pDoc, FALSE, pRef, &pDocRef, &pDE, TRUE);
 		     if (pRef != NULL)
 			/* on a trouve' une reference a cet element */
 			if (pDocRef != pDoc)
@@ -1516,7 +1516,7 @@ PtrDocument         pDoc;
    /* si le document a ete charge' sous le forme de ses seuls */
    /* elements visibles de l'exterieur, on ouvre la vue EXPORT, */
    /* sinon, on ouvre la premiere vue. */
-   skeleton = False;
+   skeleton = FALSE;
    if (pDoc->DocExportStructure)
      {
 	pSchP = pDoc->DocSSchema->SsPSchema;
@@ -1527,7 +1527,7 @@ PtrDocument         pDoc;
 	if (!pSchP->PsExportView[vue - 1])
 	   vue = 1;		/* pas de vue EXPORT, on prend la vue 1 */
 	else
-	   skeleton = True;
+	   skeleton = TRUE;
      }
    else
       vue = 1;
@@ -1537,7 +1537,7 @@ PtrDocument         pDoc;
    notifyDoc.event = TteViewOpen;
    notifyDoc.document = (Document) IdentDocument (pDoc);
    notifyDoc.view = 0;
-   if (!ThotSendMessage ((NotifyEvent *) & notifyDoc, True))
+   if (!ThotSendMessage ((NotifyEvent *) & notifyDoc, TRUE))
      {
 	VueSch = pDoc->DocView[vue - 1].DvPSchemaView;
 	pDoc->DocViewFrame[0] = CrFenTitre (pDoc, VueSch,
@@ -1554,7 +1554,7 @@ PtrDocument         pDoc;
      {
 	pDoc->DocView[0].DvSSchema = pDoc->DocSSchema;
 	pDoc->DocView[0].DvPSchemaView = vue;
-	pDoc->DocView[0].DvSync = True;
+	pDoc->DocView[0].DvSync = TRUE;
 	pDoc->DocViewFreeVolume[0] = pDoc->DocViewVolume[0];
 	/* met a jour les menus variables de la fenetre */
 	if (ThotLocalActions[T_chselect] != NULL)
@@ -1573,7 +1573,7 @@ PtrDocument         pDoc;
 	       }
 #endif /* __COLPAGE__ */
 	     pDoc->DocViewRootAb[0] = CreePaves (pDoc->DocRootElement, pDoc, 1,
-						True, True, &complet);
+						TRUE, TRUE, &complet);
 #ifdef __COLPAGE__
 	     /* sauvegarde de l'image abstraite pour tests */
 	     list = fopen ("/perles/roisin/debug/toto", "w");
@@ -1591,7 +1591,7 @@ PtrDocument         pDoc;
 	     notifyDoc.event = TteViewOpen;
 	     notifyDoc.document = (Document) IdentDocument (pDoc);
 	     notifyDoc.view = 1;
-	     ThotSendMessage ((NotifyEvent *) & notifyDoc, False);
+	     ThotSendMessage ((NotifyEvent *) & notifyDoc, FALSE);
 	     /* Ouvre les vues specifiees dans la section open */
 	     /* du fichier .config, sauf s'il s'agit d'un document */
 	     /* charge' sous forme de squelette. */
@@ -1629,7 +1629,7 @@ char               *nomfichier;
    PtrPSchema          pSchPage;
 
 #endif /* __COLPAGE__ */
-   /* bool = False; */
+   /* bool = FALSE; */
    SaveDirDoc[0] = '\0';
 
    if (nomfichier != NULL)
@@ -1683,7 +1683,7 @@ char               *nomfichier;
 	/* on ouvre le document en chargeant temporairement les documents */
 	/* externes qui contiennent les elements inclus dans notre document */
 	TtaDisplaySimpleMessage (INFO, LIB, LIB_READING_THE_DOC);
-	ok = OuvreDoc (NomDocument, *pDoc, True, False, NULL, True);
+	ok = OuvreDoc (NomDocument, *pDoc, TRUE, FALSE, NULL, TRUE);
 	/* restaure le path des documents s'il a ete ecrase */
 	if (SaveDirDoc[0] != '\0')
 	   strncpy (DirectoryDoc, SaveDirDoc, MAX_PATH);
@@ -1764,7 +1764,7 @@ PathBuffer          nomdir;
 	   pDo1->DocDirectory[i - 1] = '\0';
 	   /* on suppose que le mon de schema est dans la langue de */
 	   /* l'utilisateur: on le traduit en nom interne */
-	   ConfigNomInterneSSchema ((char *) nomschema, NomClasse, True);
+	   ConfigNomInterneSSchema ((char *) nomschema, NomClasse, TRUE);
 	   if (NomClasse[0] == '\0')
 	      /* ce nom n'est pas dans le fichier langue, on le prend */
 	      /* tel quel */
@@ -1787,7 +1787,7 @@ PathBuffer          nomdir;
 		NomSchPrs[0] = '\0';
 		/* pas de preference pour un schema de */
 		/* presentation particulier */
-		LoadSchemas (NomClasse, NomSchPrs, &pDo1->DocSSchema, NULL, False);
+		LoadSchemas (NomClasse, NomSchPrs, &pDo1->DocSSchema, NULL, FALSE);
 		if (nomdoc[0] != '\0')
 		   strncpy (NomDocu, nomdoc, MAX_NAME_LENGTH);
 		else
@@ -1801,11 +1801,11 @@ PathBuffer          nomdir;
 			notifyDoc.event = TteDocCreate;
 			notifyDoc.document = (Document) IdentDocument (pDo1);
 			notifyDoc.view = 0;
-			if (!ThotSendMessage ((NotifyEvent *) & notifyDoc, True))
+			if (!ThotSendMessage ((NotifyEvent *) & notifyDoc, TRUE))
 			  {
 			     /* cree la representation interne d'un document vide */
 			     pDo1->DocRootElement = NewSubtree (pDo1->DocSSchema->SsRootElem,
-								pDo1->DocSSchema, pDo1, 0, True, True, True, True);
+								pDo1->DocSSchema, pDo1, 0, TRUE, TRUE, TRUE, TRUE);
 			     /* supprime les elements exclus (au sens SGML) */
 			     RemoveExcludedElem (&pDo1->DocRootElement);
 			  }
@@ -1831,7 +1831,7 @@ PathBuffer          nomdir;
 		for (vue = 1; vue <= pSchPres->PsNViews; vue++)
 		   if (pSchPres->PsPaginatedView[vue - 1])
 		      /* cette vue est mise en page */
-		      AjoutePageEnFin (pDo1->DocRootElement, vue, pDo1, True);
+		      AjoutePageEnFin (pDo1->DocRootElement, vue, pDo1, TRUE);
 
 #endif /* __COLPAGE__ */
 		/* le document appartient au directory courant */
@@ -1857,7 +1857,7 @@ PathBuffer          nomdir;
 		notifyDoc.event = TteDocCreate;
 		notifyDoc.document = (Document) IdentDocument (pDo1);
 		notifyDoc.view = 0;
-		ThotSendMessage ((NotifyEvent *) & notifyDoc, False);
+		ThotSendMessage ((NotifyEvent *) & notifyDoc, FALSE);
 		/* traitement des attributs requis */
 		AttachMandatoryAttributes (pDo1->DocRootElement, pDo1);
 		if (pDo1->DocSSchema != NULL)
@@ -1872,7 +1872,7 @@ PathBuffer          nomdir;
 		     OuvreVuesInit (pDo1);
 		     /* selectionne la 1ere feuille */
 		     pEl = FirstLeaf (pDo1->DocRootElement);
-		     SelectEl (pDo1, pEl, True, True);
+		     SelectEl (pDo1, pEl, TRUE, TRUE);
 		  }
 	     }
 	}
@@ -1945,16 +1945,16 @@ PtrElement          RacineVue;
    retour = 0;
    vuelibre = 0;
    elass = 0;
-   assocexiste = False;
+   assocexiste = FALSE;
    if (v == 0)
       /* c'est une vue pour des elements associes */
      {
 	if (r == 0)
-	   assocexiste = True;
+	   assocexiste = TRUE;
 	else
 	  {
 	     /* cherche si les elements existent deja */
-	     assocexiste = False;
+	     assocexiste = FALSE;
 	     elass = 0;
 	     do
 	       {
@@ -1989,12 +1989,12 @@ PtrElement          RacineVue;
 	     elass = 1;
 	     /* cherche une entree libre dans la table des */
 	     /* arbres d'elements associes du document */
-	     stop = False;
+	     stop = FALSE;
 	     do
 		if (elass > MAX_ASSOC_DOC)
-		   stop = True;
+		   stop = TRUE;
 		else if (pDoc->DocAssocRoot[elass - 1] == NULL)
-		   stop = True;
+		   stop = TRUE;
 		else
 		   elass++;
 	     while (!(stop));
@@ -2008,10 +2008,10 @@ PtrElement          RacineVue;
 		  notifyEl.elementType.ElTypeNum = r;
 		  notifyEl.elementType.ElSSchema = (SSchema) pSS;
 		  notifyEl.position = 0;
-		  if (!ThotSendMessage ((NotifyEvent *) & notifyEl, True))
+		  if (!ThotSendMessage ((NotifyEvent *) & notifyEl, TRUE))
 		    {
 		       pDoc->DocAssocRoot[elass - 1] =
-			  NewSubtree (r, pSS, pDoc, elass, True, True, True, True);
+			  NewSubtree (r, pSS, pDoc, elass, TRUE, TRUE, TRUE, TRUE);
 		       /* supprime les elements exclus (au sens SGML) */
 		       RemoveExcludedElem (&pDoc->DocAssocRoot[elass - 1]);
 		       if (pDoc->DocAssocRoot[elass - 1] != NULL)
@@ -2032,7 +2032,7 @@ PtrElement          RacineVue;
 			      {
 				 /* Ajoute un saut de page a la fin si necessaire */
 				 AjoutePageEnFin (pDoc->DocAssocRoot[elass - 1],
-						  1, pDoc, True);
+						  1, pDoc, TRUE);
 			      }
 #endif /* __COLPAGE__ */
 			    /* envoie l'evenement ElemNew.Post */
@@ -2063,19 +2063,19 @@ PtrElement          RacineVue;
 		  sel = SelEditeur (&SelDoc, &PremSel, &DerSel, &PremCar, &DerCar);
 		  if (!sel)
 		     /* pas de selection, on construit l'image du debut */
-		     debut = True;
+		     debut = TRUE;
 		  else if (SelDoc != pDoc || PremSel->ElAssocNum != elass)
 		     /* la selection courante n'est pas dans les */
 		     /* elements associes dont on cree l'image */
 		     /* on cree l'image abstraite du debut */
-		     debut = True;
+		     debut = TRUE;
 	       }
 	     if (debut)
-		pAb = CreePaves (pDoc->DocAssocRoot[elass - 1], pDoc, 1, True, True, &complet);
+		pAb = CreePaves (pDoc->DocAssocRoot[elass - 1], pDoc, 1, TRUE, TRUE, &complet);
 	     else
 		/* on cree l'image abstraite autour du premier */
 		/* element selectionne' */
-		VerifPave (PremSel, 1, pDoc, False, False);
+		VerifPave (PremSel, 1, pDoc, FALSE, FALSE);
 	  }
 #ifdef __COLPAGE__
 	/* sauvegarde de l'image abstraite pour tests */
@@ -2095,7 +2095,7 @@ PtrElement          RacineVue;
 	pDoc->DocViewSubTree[vuelibre - 1] = RacineVue;
 	pDoc->DocView[vuelibre - 1].DvSSchema = pSS;
 	pDoc->DocView[vuelibre - 1].DvPSchemaView = v;
-	pDoc->DocView[vuelibre - 1].DvSync = True;
+	pDoc->DocView[vuelibre - 1].DvSync = TRUE;
 
 	pDoc->DocViewVolume[vuelibre - 1] = vol;
 	pDoc->DocViewFreeVolume[vuelibre - 1] = pDoc->DocViewVolume[vuelibre - 1];
@@ -2115,7 +2115,7 @@ PtrElement          RacineVue;
 	   /* le debut du document */
 
 	   pDoc->DocViewRootAb[vuelibre - 1] =
-	      CreePaves (pDoc->DocRootElement, pDoc, vuelibre, True, True, &complet);
+	      CreePaves (pDoc->DocRootElement, pDoc, vuelibre, TRUE, TRUE, &complet);
 
 	else
 	  {
@@ -2124,25 +2124,25 @@ PtrElement          RacineVue;
 	     /* l'utilisateur. */
 	     /* prend la selection courante */
 	     sel = SelEditeur (&SelDoc, &PremSel, &DerSel, &PremCar, &DerCar);
-	     selprinc = False;
+	     selprinc = FALSE;
 	     if (sel)
 		if (SelDoc == pDoc && PremSel->ElAssocNum == 0)
-		   selprinc = True;
+		   selprinc = TRUE;
 	     if (selprinc)
 		/* la selection courante est dans l'une des vues */
 		/* de l'arbre principal du document concerne', */
 		/* on cree l'image abstraite de la vue avec */
 		/* l'element selectionne' au milieu */
-		VerifPave (PremSel, vuelibre, pDoc, False, False);
+		VerifPave (PremSel, vuelibre, pDoc, FALSE, FALSE);
 	     else
 	       {
 		  pAb = pDoc->DocRootElement->ElAbstractBox[vuedesignee - 1];
 		  if (pAb == NULL)
-		     coupetete = False;
+		     coupetete = FALSE;
 		  else if (pAb->AbLeafType != LtCompound)
-		     coupetete = False;
+		     coupetete = FALSE;
 		  else if (pAb->AbInLine)
-		     coupetete = False;
+		     coupetete = FALSE;
 		  else
 		     coupetete = pAb->AbTruncatedHead;
 		  if (!coupetete)
@@ -2151,26 +2151,26 @@ PtrElement          RacineVue;
 		     /* le debut du document */
 
 		     pDoc->DocViewRootAb[vuelibre - 1] = CreePaves (pDoc->DocRootElement,
-				      pDoc, vuelibre, True, True, &complet);
+				      pDoc, vuelibre, TRUE, TRUE, &complet);
 
 		  else
 		    {
 		       /* cherche dans la vue designee le premier pave 
 		          dont le debut n'est pas coupe' */
-		       stop = False;
+		       stop = FALSE;
 		       do
 			  if (pAb == NULL)
-			     stop = True;
+			     stop = TRUE;
 			  else
 			    {
 			       if (pAb->AbLeafType != LtCompound)
-				  coupetete = False;
+				  coupetete = FALSE;
 			       else if (pAb->AbInLine)
-				  coupetete = False;
+				  coupetete = FALSE;
 			       else
 				  coupetete = pAb->AbTruncatedHead;
 			       if (!coupetete)
-				  stop = True;
+				  stop = TRUE;
 			       else
 				  pAb = pAb->AbFirstEnclosed;
 			    }
@@ -2178,9 +2178,9 @@ PtrElement          RacineVue;
 
 		       /* cree la nouvelle vue a partir de cet element */
 		       if (pAb == NULL)
-			  VerifPave (pDoc->DocRootElement, vuelibre, pDoc, True, False);
+			  VerifPave (pDoc->DocRootElement, vuelibre, pDoc, TRUE, FALSE);
 		       else
-			  VerifPave (pAb->AbElement, vuelibre, pDoc, True, False);
+			  VerifPave (pAb->AbElement, vuelibre, pDoc, TRUE, FALSE);
 
 		    }
 	       }
@@ -2258,7 +2258,7 @@ int                 H;
 	     pDoc->DocAssocVolume[vue - 1] = vol;
 	     ModifVue (frame, &h, pDoc->DocAssocRoot[vue - 1]->ElAbstractBox[0]);
 	     AfficherVue (frame);
-	     VisuSelect (pDoc->DocAssocRoot[vue - 1]->ElAbstractBox[0], True);
+	     VisuSelect (pDoc->DocAssocRoot[vue - 1]->ElAbstractBox[0], TRUE);
 	  }
 	else
 	   /* vue de l'arbre principal */
@@ -2267,7 +2267,7 @@ int                 H;
 	     pDoc->DocViewVolume[vue - 1] = vol;
 	     ModifVue (frame, &h, pDoc->DocViewRootAb[vue - 1]);
 	     AfficherVue (frame);
-	     VisuSelect (pDoc->DocViewRootAb[vue - 1], True);
+	     VisuSelect (pDoc->DocViewRootAb[vue - 1], TRUE);
 	  }
 	/* met a jour les menus de la fenetre */
 	if (ThotLocalActions[T_chselect] != NULL)
@@ -2296,10 +2296,10 @@ int                 numvue;
    boolean             existe;
 
    vuededocu = 1;
-   existe = False;
+   existe = FALSE;
    while (vuededocu <= MAX_VIEW_DOC && !existe)
       if (pDoc->DocView[vuededocu - 1].DvPSchemaView == numvue)
-	 existe = True;
+	 existe = TRUE;
       else
 	 vuededocu++;
 
@@ -2329,7 +2329,7 @@ PtrSSchema       *pSS;
    SRule              *pRe1;
    boolean             ret;
 
-   ret = False;
+   ret = FALSE;
    /* vues declarees dans le schema de presentation et non creees */
    pSc1 = pDoc->DocSSchema->SsPSchema;
    for (v = 1; v <= pSc1->PsNViews && !ret; v++)
@@ -2337,9 +2337,9 @@ PtrSSchema       *pSS;
 	 if (strcmp (pSc1->PsView[v - 1], Nomvue) == 0)
 	   {
 	      *Nvue = v;
-	      *Assoc = False;
+	      *Assoc = FALSE;
 	      *pSS = pDoc->DocSSchema;
-	      ret = True;
+	      ret = TRUE;
 	   }
    if (!ret)
      {
@@ -2365,7 +2365,7 @@ PtrSSchema       *pSS;
 			   /* boite de haut ou de bas de page */
 			   /* cherche si la vue existe deja */
 			  {
-			     existe = False;
+			     existe = FALSE;
 			     a = 0;
 			     do
 			       {
@@ -2373,7 +2373,7 @@ PtrSSchema       *pSS;
 				  if (pDoc->DocAssocRoot[a - 1] != NULL)
 				     if (pDoc->DocAssocRoot[a - 1]->ElTypeNumber == r)
 					if (pDoc->DocAssocFrame[a - 1] > 0)
-					   existe = True;
+					   existe = TRUE;
 			       }
 			     while (!(existe || a >= MAX_ASSOC_DOC));
 			     if (!existe)
@@ -2382,9 +2382,9 @@ PtrSSchema       *pSS;
 				  if (strcmp (pRe1->SrName, Nomvue) == 0)
 				    {
 				       *Nvue = r;
-				       *Assoc = True;
+				       *Assoc = TRUE;
 				       *pSS = pSchS1;
-				       ret = True;
+				       ret = TRUE;
 				    }
 			       }
 			  }
@@ -2441,7 +2441,7 @@ int                 H;
 	     notifyDoc.event = TteViewOpen;
 	     notifyDoc.document = (Document) IdentDocument (pDoc);
 	     notifyDoc.view = 0;
-	     if (!ThotSendMessage ((NotifyEvent *) & notifyDoc, True))
+	     if (!ThotSendMessage ((NotifyEvent *) & notifyDoc, TRUE))
 	       {
 		  ret = CreeImageAbstraite (pDoc, numvue, 0, pSS, 1, assoc, NULL);
 		  OuvreVueCreee (pDoc, ret, assoc, X, Y, L, H);
@@ -2451,7 +2451,7 @@ int                 H;
 		     notifyDoc.view = ret + 100;
 		  else
 		     notifyDoc.view = ret;
-		  ThotSendMessage ((NotifyEvent *) & notifyDoc, False);
+		  ThotSendMessage ((NotifyEvent *) & notifyDoc, FALSE);
 	       }
 	  }
      }
@@ -2492,7 +2492,7 @@ DocViewNumber           VueDeReference;
 	notifyDoc.event = TteViewOpen;
 	notifyDoc.document = (Document) IdentDocument (pDoc);
 	notifyDoc.view = 0;
-	if (!ThotSendMessage ((NotifyEvent *) & notifyDoc, True))
+	if (!ThotSendMessage ((NotifyEvent *) & notifyDoc, TRUE))
 	  {
 	     NumeroVueAOuvrir = EntreesMenuVues[VdView];
 
@@ -2505,21 +2505,21 @@ DocViewNumber           VueDeReference;
 	       {
 		  vue = CreeImageAbstraite (pDoc, 0, ToutesLesVuesAOuvrir[NumeroVueAOuvrir - 1].VdAssocNum,
 					    ToutesLesVuesAOuvrir[NumeroVueAOuvrir - 1].VdSSchema, VueDeReference,
-					    True, SousArbreVueAOuvrir);
-		  OuvreVueCreee (pDoc, vue, True, X, Y, W, H);
+					    TRUE, SousArbreVueAOuvrir);
+		  OuvreVueCreee (pDoc, vue, TRUE, X, Y, W, H);
 		  vue += 100;
 	       }
 	     else
 	       {
 		  vue = CreeImageAbstraite (pDoc, ToutesLesVuesAOuvrir[NumeroVueAOuvrir - 1].VdView, 0,
 					    ToutesLesVuesAOuvrir[NumeroVueAOuvrir - 1].VdSSchema, VueDeReference,
-					    False, SousArbreVueAOuvrir);
-		  OuvreVueCreee (pDoc, vue, False, X, Y, W, H);
+					    FALSE, SousArbreVueAOuvrir);
+		  OuvreVueCreee (pDoc, vue, FALSE, X, Y, W, H);
 	       }
 	     notifyDoc.event = TteViewOpen;
 	     notifyDoc.document = (Document) IdentDocument (pDoc);
 	     notifyDoc.view = vue;
-	     ThotSendMessage ((NotifyEvent *) & notifyDoc, False);
+	     ThotSendMessage ((NotifyEvent *) & notifyDoc, FALSE);
 	  }
      }
 }
@@ -2631,7 +2631,7 @@ boolean             assoc;
 	   notifyDoc.view = nv + 100;
 	else
 	   notifyDoc.view = nv;
-	if (!ThotSendMessage ((NotifyEvent *) & notifyDoc, True))
+	if (!ThotSendMessage ((NotifyEvent *) & notifyDoc, TRUE))
 	  {
 	     if (NbVueExiste (pDoc) <= 1)
 	       {
@@ -2639,7 +2639,7 @@ boolean             assoc;
 		  /* l'utilisateur la possibilite de sauver le document */
 		  if (pDoc->DocModified)
 		    {
-		       ok = True;
+		       ok = TRUE;
 		       if (ThotLocalActions[T_confirmclose] != NULL)
 			 {
 			    (*ThotLocalActions[T_confirmclose]) (pDoc, &ok, &Sauver);
@@ -2652,10 +2652,10 @@ boolean             assoc;
 			 }
 		    }
 		  else
-		     ok = True;
+		     ok = TRUE;
 	       }
 	     else
-		ok = True;
+		ok = TRUE;
 	     if (ok)
 	       {
 		  /* desactive la vue si elle est active */
@@ -2671,9 +2671,9 @@ boolean             assoc;
 		     notifyDoc.view = nv + 100;
 		  else
 		     notifyDoc.view = nv;
-		  ThotSendMessage ((NotifyEvent *) & notifyDoc, False);
+		  ThotSendMessage ((NotifyEvent *) & notifyDoc, FALSE);
 		  /* detruit le contexte de la vue */
-		  detruit (pDoc, nv, assoc, True);
+		  detruit (pDoc, nv, assoc, TRUE);
 	       }
 	  }
      }

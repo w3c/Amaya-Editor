@@ -255,7 +255,7 @@ ptrfont             font;
    /* On parcourt la table des polices */
    i = 0;
    retour = 0;			/* BUG */
-   while ((Police (0, i) != font) && (i < MAX_FONT))
+   while ((TtFonts[i] != font) && (i < MAX_FONT))
      {
 	i++;
      }
@@ -265,28 +265,28 @@ ptrfont             font;
    if (font != PolEnPs)
      {
 	PolEnPs = font;
-	if (NomPs (0, i) == 'g')	/* Alphabet Grec */
+	if (TtPsFontName[i] == 'g')	/* Alphabet Grec */
 	  {
-	     c1 = NomPs (0, i);
+	     c1 = TtPsFontName[i];
 	     c2 = 'r';		/* La police Symbol n'existe qu'en un seul style */
 	     retour = 1;
 	  }
 	else
 	  {
 	     /* Alphabet Latin */
-	     c1 = NomPs (0, i + 1);	/* famille Helvetica Times Courrier */
+	     c1 = TtPsFontName[i + 1];	/* famille Helvetica Times Courrier */
 	     /* On convertit les minuscules en majuscules */
-	     c2 = NomPs (0, i + 2);	/* Style normal bold italique */
+	     c2 = TtPsFontName[i + 2];	/* Style normal bold italique */
 	     retour = 0;
 	  }
 
 	/* On note l'echelle courante */
-	Scale = &NomPs (0, i + 3);
-	fprintf (fout, "%c%c%c %s sf\n", NomPs (0, i), c1, c2, Scale);
+	Scale = &TtPsFontName[i + 3];
+	fprintf (fout, "%c%c%c %s sf\n", TtPsFontName[i], c1, c2, Scale);
 	return retour;
      }
    /* Sinon on retourne simplement l'indicateur de famille de caracteres */
-   else if (NomPs (0, i) == 'g')
+   else if (TtPsFontName[i] == 'g')
       return (1);
    else
       return (0);
@@ -380,8 +380,8 @@ int                 fg;
      {
 	/* On debute la boite */
 	MemeBoite = 1;
-	X = PixelEnPt (x, 1);
-	Y = PixelEnPt (y + FontBase (font), 0);
+	X = PixelToPoint (x);
+	Y = PixelToPoint (y + FontBase (font));
 	NbBcour = 0;
 	/* Faut-il ajouter un showpage ? */
 	AfPage (fout);
@@ -430,7 +430,7 @@ int                 fg;
    /* Est-ce la fin de la boite ? */
    if (lgboite != 0)
      {
-	lgboite = PixelEnPt (lgboite, 1);
+	lgboite = PixelToPoint (lgboite);
 	/* Faut-il justifier les blancs ? */
 	if (NbBcour == 0)
 	   fprintf (fout, ") %d %d -%d s\n", lgboite, X, Y);
@@ -502,7 +502,7 @@ int                 fg;
 	milieu = y + height / 2;
 	/*decal = epaisseur; *//* decalage entre les traits */
 	xdebut = X;		/* on recupere le X courant (cf AfChaine) */
-	xfin = X + PixelEnPt (lg, 1);	/* on calcule la position de fin */
+	xfin = X + PixelToPoint (lg);	/* on calcule la position de fin */
 
 	/* Valeur en dur pour ESM */
 	/*         epaisseur = 1; */
@@ -517,17 +517,17 @@ int                 fg;
 
 		 case 1:	/* souligne */
 		    fprintf (fout, "%d -%d %d -%d %d %d %d Seg\n",
-			     xfin, PixelEnPt (bas, 0), xdebut, PixelEnPt (bas, 0), 0, epaisseur, 2);
+			     xfin, PixelToPoint (bas), xdebut, PixelToPoint (bas), 0, epaisseur, 2);
 		    break;
 
 		 case 2:	/* surligne */
 		    fprintf (fout, "%d -%d %d -%d %d %d %d Seg\n",
-			     xfin, PixelEnPt (haut, 0), xdebut, PixelEnPt (haut, 0), 0, epaisseur, 2);
+			     xfin, PixelToPoint (haut), xdebut, PixelToPoint (haut), 0, epaisseur, 2);
 		    break;
 
 		 case 3:	/* biffer */
 		    fprintf (fout, "%d -%d %d -%d %d %d %d Seg\n",
-			     xfin, PixelEnPt (milieu, 0), xdebut, PixelEnPt (milieu, 0), 0, epaisseur, 2);
+			     xfin, PixelToPoint (milieu), xdebut, PixelToPoint (milieu), 0, epaisseur, 2);
 		    break;
 	      }
      }
@@ -574,17 +574,17 @@ int                 fg;
 
    if (h <= (3 * fh))
       fprintf (fout, "%d -%d %d -%d %d -%d %d -%d r\n",
-	       PixelEnPt (x + l, 1), PixelEnPt (y, 0),
-	       PixelEnPt (x + (fh / 2), 1), PixelEnPt (y, 0),
-	       PixelEnPt (x + (fh / 4), 1), PixelEnPt (y + h, 0),
-	       PixelEnPt (x, 1), PixelEnPt (y + (2 * (h / 3)), 0));
+	       PixelToPoint (x + l), PixelToPoint (y),
+	       PixelToPoint (x + (fh / 2)), PixelToPoint (y),
+	       PixelToPoint (x + (fh / 4)), PixelToPoint (y + h),
+	       PixelToPoint (x), PixelToPoint (y + (2 * (h / 3))));
 
    else
       fprintf (fout, "%d -%d %d -%d %d -%d %d -%d r\n",
-	       PixelEnPt (x + l, 1), PixelEnPt (y, 0),
-	       PixelEnPt (x + (fh / 2), 1), PixelEnPt (y, 0),
-	       PixelEnPt (x + (fh / 2), 1), PixelEnPt (y + h, 0),
-	       PixelEnPt (x, 1), PixelEnPt (y + (2 * (h / 3)), 0));
+	       PixelToPoint (x + l), PixelToPoint (y),
+	       PixelToPoint (x + (fh / 2)), PixelToPoint (y),
+	       PixelToPoint (x + (fh / 2)), PixelToPoint (y + h),
+	       PixelToPoint (x), PixelToPoint (y + (2 * (h / 3))));
 
 }				/*AfRadical */
 
@@ -633,11 +633,11 @@ int                 fg;
 
 #ifdef JA
    fprintf (fout, "/Symbol-fly %d ", FontHeight (font));
-   lly = PixelEnPt (y + h, 0);
-   x = PixelEnPt (x, 1);
-   l = PixelEnPt (l, 1);
-   h = PixelEnPt (h, 0);
-   y = PixelEnPt (y, 0);
+   lly = PixelToPoint (y + h);
+   x = PixelToPoint (x);
+   l = PixelToPoint (l);
+   h = PixelToPoint (h);
+   y = PixelToPoint (y);
    fprintf (fout, "(\\362) %d -%d %d %d flyshow\n", x, lly, l, h);
 #else
    /* Faut-il changer de police de caracteres courante */
@@ -648,18 +648,18 @@ int                 fg;
    ey = FontHeight (font);
    h -= ey;
    y += FontBase (font);
-   x = PixelEnPt (x + (l / 2), 1);
-   yf = PixelEnPt (y + h, 0);
-   ym = PixelEnPt (y + (h / 2), 0);
-   y = PixelEnPt (y, 0) + 1;
+   x = PixelToPoint (x + (l / 2));
+   yf = PixelToPoint (y + h);
+   ym = PixelToPoint (y + (h / 2));
+   y = PixelToPoint (y) + 1;
    if (h < ey / 4)
      {
 	/* Sur un seul caractere */
 	if (type == 2)
 	  {
 	     /* Trace une integrale double */
-	     fprintf (fout, "-%d %d (\\362) c\n", ym, x - PixelEnPt (CarWidth ('\362', font) / 4, 1));
-	     fprintf (fout, "-%d %d (\\362) c\n", ym, x + PixelEnPt (CarWidth ('\362', font) / 4, 1));
+	     fprintf (fout, "-%d %d (\\362) c\n", ym, x - PixelToPoint (CarWidth ('\362', font) / 4));
+	     fprintf (fout, "-%d %d (\\362) c\n", ym, x + PixelToPoint (CarWidth ('\362', font) / 4));
 	  }
 	else
 	  {
@@ -676,9 +676,9 @@ int                 fg;
 	  {
 	     /* Trace une integrale double */
 	     fprintf (fout, "%d -%d -%d %s (\\363) (\\364) (\\365) s3\n",
-	      x - PixelEnPt (CarWidth ('\364', font) / 4, 1), yf, y, Scale);
+	      x - PixelToPoint (CarWidth ('\364', font) / 4), yf, y, Scale);
 	     fprintf (fout, "%d -%d -%d %s (\\363) (\\364) (\\365) s3\n",
-	      x + PixelEnPt (CarWidth ('\364', font) / 4, 1), yf, y, Scale);
+	      x + PixelToPoint (CarWidth ('\364', font) / 4), yf, y, Scale);
 	  }
 	else
 	  {
@@ -728,16 +728,16 @@ int                 fg;
    PolEnPs = NULL;
 #ifdef JA
    fprintf (fout, "/Symbol-fly %d ", FontHeight (font));
-   lly = PixelEnPt (y + h, 0);
-   x = PixelEnPt (x, 1);
-   y = PixelEnPt (y, 0);
-   l = PixelEnPt (l, 1);
-   h = PixelEnPt (h, 0);
+   lly = PixelToPoint (y + h);
+   x = PixelToPoint (x);
+   y = PixelToPoint (y);
+   l = PixelToPoint (l);
+   h = PixelToPoint (h);
    fprintf (fout, "(\\345) %d -%d %d %d flyshow\n", x, lly, l, h);
 #else
    fprintf (fout, "(Symbol) %.0f sf\n", FontHeight (font) * 0.9);
-   x = PixelEnPt (x + (l / 2), 1);
-   y = PixelEnPt (y + h - FontHeight (font) + FontBase (font), 0);
+   x = PixelToPoint (x + (l / 2));
+   y = PixelToPoint (y + h - FontHeight (font) + FontBase (font));
    fprintf (fout, "-%d %d (\\345) c\n", y, x);
 #endif
 }				/*AfSigma */
@@ -774,15 +774,15 @@ int                 fg;
    PolEnPs = NULL;
 #ifdef JA
    fprintf (fout, "/Symbol-fly %d ", FontHeight (font));
-   x = PixelEnPt (x, 1);
-   y = PixelEnPt (y + h, 0);
-   l = PixelEnPt (l, 1);
-   h = PixelEnPt (h, 0);
+   x = PixelToPoint (x);
+   y = PixelToPoint (y + h);
+   l = PixelToPoint (l);
+   h = PixelToPoint (h);
    fprintf (fout, "(\\325) %d -%d %d %d flyshow\n", x, y, l, h);
 #else
    fprintf (fout, "(Symbol) %.0f sf\n", FontHeight (font) * 0.9);
-   x = PixelEnPt (x + (l / 2), 1);
-   y = PixelEnPt (y + h - FontHeight (font) + FontBase (font), 0);
+   x = PixelToPoint (x + (l / 2));
+   y = PixelToPoint (y + h - FontHeight (font) + FontBase (font));
    fprintf (fout, "-%d %d (\\325) c\n", y, x);
 #endif
 }				/*AfPi */
@@ -818,15 +818,15 @@ int                 fg;
    PolEnPs = NULL;
 #ifdef JA
    fprintf (fout, "/Symbol-fly %d ", FontHeight (font));
-   x = PixelEnPt (x, 1);
-   y = PixelEnPt (y + h, 0);
-   l = PixelEnPt (l, 1);
-   h = PixelEnPt (h, 0);
+   x = PixelToPoint (x);
+   y = PixelToPoint (y + h);
+   l = PixelToPoint (l);
+   h = PixelToPoint (h);
    fprintf (fout, "(\\325) %d -%d %d %d flyshow\n", x, y, l, h);
 #else
    fprintf (fout, "(Symbol) %.0f sf\n", FontHeight (font) * 0.9);
-   x = PixelEnPt (x + (l / 2), 1);
-   y = PixelEnPt (y + h - FontHeight (font) + FontBase (font), 0);
+   x = PixelToPoint (x + (l / 2));
+   y = PixelToPoint (y + h - FontHeight (font) + FontBase (font));
    fprintf (fout, "-%d %d (\\310) c\n", y, x);
 #endif
 }				/*AfUnion */
@@ -861,8 +861,8 @@ int                 fg;
    /* On modifie la police courante */
    PolEnPs = NULL;
    fprintf (fout, "(Symbol) %.0f sf\n", FontHeight (font) * 0.9);
-   x = PixelEnPt (x + (l / 2), 1);
-   y = PixelEnPt (y + h - FontHeight (font) + FontBase (font), 0);
+   x = PixelToPoint (x + (l / 2));
+   y = PixelToPoint (y + h - FontHeight (font) + FontBase (font));
    fprintf (fout, "-%d %d (\\307) c\n", y, x);
 }				/*AfIntersection */
 
@@ -908,19 +908,19 @@ int                 fg;
 
 #ifdef JA
    fprintf (fout, "/Symbol-fly %d ", epais * 10);
-   l = PixelEnPt (l, 1);
-   h = PixelEnPt (h, 0);
+   l = PixelToPoint (l);
+   h = PixelToPoint (h);
 #else
    l--;
    h--;
-   xm = PixelEnPt (x + l / 2, 1);
-   xf = PixelEnPt (x + l, 1);
-   ym = PixelEnPt (y + h / 2, 0);
-   yf = PixelEnPt (y + h, 0);
+   xm = PixelToPoint (x + l / 2);
+   xf = PixelToPoint (x + l);
+   ym = PixelToPoint (y + h / 2);
+   yf = PixelToPoint (y + h);
    lg = HL + epais;		/* longueur de la tete de fleche */
 #endif
-   x = PixelEnPt (x, 1);
-   y = PixelEnPt (y, 0);
+   x = PixelToPoint (x);
+   y = PixelToPoint (y);
 
    if (orientation == 0)
      {
@@ -1024,10 +1024,10 @@ int                 fg;
 
 #ifdef JA
    fprintf (fout, "/Symbol-fly %d ", FontHeight (font));
-   l = PixelEnPt (l, 1);
-   h = PixelEnPt (h, 0);
-   y = PixelEnPt (y, 0);
-   x = PixelEnPt (x, 1);
+   l = PixelToPoint (l);
+   h = PixelToPoint (h);
+   y = PixelToPoint (y);
+   x = PixelToPoint (x);
    if (sens == 0)
       fprintf (fout, "(\\133) %d -%d %d %d flyshow\n", x, yf, l, h);
    else
@@ -1038,9 +1038,9 @@ int                 fg;
    ey = FontHeight (font);
    h -= ey;
    y += FontBase (font);
-   yf = PixelEnPt (y + h, 0);
-   y = PixelEnPt (y, 0) + 1;
-   x = PixelEnPt (x, 1);
+   yf = PixelToPoint (y + h);
+   y = PixelToPoint (y) + 1;
+   x = PixelToPoint (x);
 
    if (h < ey / 4)
      {
@@ -1101,10 +1101,10 @@ int                 fg;
 
 #ifdef JA
    fprintf (fout, "/Symbol-fly %d ", FontHeight (font));
-   l = PixelEnPt (l, 1);
-   h = PixelEnPt (h, 0);
-   y = PixelEnPt (y, 0);
-   x = PixelEnPt (x, 1);
+   l = PixelToPoint (l);
+   h = PixelToPoint (h);
+   y = PixelToPoint (y);
+   x = PixelToPoint (x);
    if (sens == 0)
       fprintf (fout, "(\\50) %d -%d %d %d flyshow\n", x, yf, l, h);
    else
@@ -1115,9 +1115,9 @@ int                 fg;
    ey = FontHeight (font);
    h -= ey;
    y += FontBase (font);
-   x = PixelEnPt (x, 1);
-   yf = PixelEnPt (y + h, 0);
-   y = PixelEnPt (y, 0) + 1;
+   x = PixelToPoint (x);
+   yf = PixelToPoint (y + h);
+   y = PixelToPoint (y) + 1;
 
    if (h < ey / 4)
      {
@@ -1179,10 +1179,10 @@ int                 fg;
 
 #ifdef JA
    fprintf (fout, "/Symbol-fly %d ", FontHeight (font));
-   l = PixelEnPt (l, 1);
-   h = PixelEnPt (h, 0);
-   y = PixelEnPt (y, 0);
-   x = PixelEnPt (x, 1);
+   l = PixelToPoint (l);
+   h = PixelToPoint (h);
+   y = PixelToPoint (y);
+   x = PixelToPoint (x);
    if (sens == 0)
       fprintf (fout, "(\\173) %d -%d %d %d flyshow\n", x, yf, l, h);
    else
@@ -1193,9 +1193,9 @@ int                 fg;
    ey = FontHeight (font);
    h -= ey;
    y += FontBase (font);
-   x = PixelEnPt (x + (l / 2), 1);
-   yf = PixelEnPt (y + h, 0);
-   y = PixelEnPt (y, 0) + 1;
+   x = PixelToPoint (x + (l / 2));
+   yf = PixelToPoint (y + h);
+   y = PixelToPoint (y) + 1;
 
    if (h < ey - 1)
      {
@@ -1258,10 +1258,10 @@ int                 motif;
    if (epais > 0)
       CouleurCourante (fout, fg);
 
-   xf = PixelEnPt (x + larg, 1);
-   yf = PixelEnPt (y + haut, 0);
-   x = PixelEnPt (x, 1);
-   y = PixelEnPt (y, 0);
+   xf = PixelToPoint (x + larg);
+   yf = PixelToPoint (y + haut);
+   x = PixelToPoint (x);
+   y = PixelToPoint (y);
 
    Remplir (fout, fg, bg, motif);
    fprintf (fout, "%d -%d %d -%d %d -%d  %d -%d %d %d %d Poly\n", x, y, x, yf, xf, yf, xf, y, style, epais, 4);
@@ -1323,8 +1323,8 @@ int                 fleche;
 
    /* Faut-il changer de RGB */
    CouleurCourante (fout, fg);
-   x = PixelEnPt (x, 1);
-   y = PixelEnPt (y, 0);
+   x = PixelToPoint (x);
+   y = PixelToPoint (y);
    adbuff = buffer;
 
    /* fleche vers l'arriere  */
@@ -1415,8 +1415,8 @@ int                 motif;
    /* Faut-il changer de RGB */
    CouleurCourante (fout, fg);
    Remplir (fout, fg, bg, motif);
-   x = PixelEnPt (x, 1);
-   y = PixelEnPt (y, 0);
+   x = PixelToPoint (x);
+   y = PixelToPoint (y);
    adbuff = buffer;
    j = 1;
 
@@ -1498,8 +1498,8 @@ C_points           *controls;
    CouleurCourante (fout, fg);
 
    lg = HL + epais;
-   x = PixelEnPt (x, 1);
-   y = PixelEnPt (y, 0);
+   x = PixelToPoint (x);
+   y = PixelToPoint (y);
    j = 1;
    i = 2;
    adbuff = buffer;
@@ -1511,10 +1511,10 @@ C_points           *controls;
    /* points de repere du premier arc de courbe */
    x1 = (float) lastx / 1000 + x;
    y1 = (float) lasty / 1000 + y;
-   x2 = (float) (PixelEnPt ((int) (controls[i].lx * 3000), 1) + lastx) / 4000 + x;
-   y2 = (float) (PixelEnPt ((int) (controls[i].ly * 3000), 0) + lasty) / 4000 + y;
-   x3 = (float) (PixelEnPt ((int) (controls[i].lx * 3000), 1) + newx) / 4000 + x;
-   y3 = (float) (PixelEnPt ((int) (controls[i].ly * 3000), 0) + newy) / 4000 + y;
+   x2 = (float) (PixelToPoint ((int) (controls[i].lx * 3000)) + lastx) / 4000 + x;
+   y2 = (float) (PixelToPoint ((int) (controls[i].ly * 3000)) + lasty) / 4000 + y;
+   x3 = (float) (PixelToPoint ((int) (controls[i].lx * 3000)) + newx) / 4000 + x;
+   y3 = (float) (PixelToPoint ((int) (controls[i].ly * 3000)) + newy) / 4000 + y;
 
    /* fleche vers l'arriere  */
    if (fleche == 2 || fleche == 3)
@@ -1543,17 +1543,17 @@ C_points           *controls;
 	y1 = (float) lasty / 1000 + y;
 	if (i < nb - 2)
 	  {
-	     x2 = (float) PixelEnPt ((int) (controls[i].rx * 1000), 1) / 1000 + x;
-	     y2 = (float) PixelEnPt ((int) (controls[i].ry * 1000), 0) / 1000 + y;
-	     x3 = (float) PixelEnPt ((int) (controls[i + 1].lx * 1000), 1) / 1000 + x;
-	     y3 = (float) PixelEnPt ((int) (controls[i + 1].ly * 1000), 0) / 1000 + y;
+	     x2 = (float) PixelToPoint ((int) (controls[i].rx * 1000)) / 1000 + x;
+	     y2 = (float) PixelToPoint ((int) (controls[i].ry * 1000)) / 1000 + y;
+	     x3 = (float) PixelToPoint ((int) (controls[i + 1].lx * 1000)) / 1000 + x;
+	     y3 = (float) PixelToPoint ((int) (controls[i + 1].ly * 1000)) / 1000 + y;
 	  }
 	else if (i == nb - 2)
 	  {
-	     x2 = (float) (PixelEnPt ((int) (controls[i].rx * 3000), 1) + lastx) / 4000 + x;
-	     y2 = (float) (PixelEnPt ((int) (controls[i].ry * 3000), 0) + lasty) / 4000 + y;
-	     x3 = (float) (PixelEnPt ((int) (controls[i].rx * 3000), 1) + newx) / 4000 + x;
-	     y3 = (float) (PixelEnPt ((int) (controls[i].ry * 3000), 0) + newy) / 4000 + y;
+	     x2 = (float) (PixelToPoint ((int) (controls[i].rx * 3000)) + lastx) / 4000 + x;
+	     y2 = (float) (PixelToPoint ((int) (controls[i].ry * 3000)) + lasty) / 4000 + y;
+	     x3 = (float) (PixelToPoint ((int) (controls[i].rx * 3000)) + newx) / 4000 + x;
+	     y3 = (float) (PixelToPoint ((int) (controls[i].ry * 3000)) + newy) / 4000 + y;
 	  }
      }
    fprintf (fout, "%f -%f %d %d %d Curv\n", x1, y1, style, epais, nb - 1);
@@ -1613,20 +1613,20 @@ C_points           *controls;
    /* Faut-il changer de RGB */
    CouleurCourante (fout, fg);
    Remplir (fout, fg, bg, motif);
-   x = PixelEnPt (x, 1);
-   y = PixelEnPt (y, 0);
+   x = PixelToPoint (x);
+   y = PixelToPoint (y);
    j = 1;
    i = 1;
    adbuff = buffer;
    x0 = x1 = (float) adbuff->BuPoints[j].XCoord / 1000 + x;
    y0 = y1 = (float) adbuff->BuPoints[j].YCoord / 1000 + y;
-   x2 = (float) PixelEnPt ((int) ((controls[i].rx * 1000)), 1) / 1000 + x;
-   y2 = (float) PixelEnPt ((int) ((controls[i].ry * 1000)), 0) / 1000 + y;
+   x2 = (float) PixelToPoint ((int) ((controls[i].rx * 1000))) / 1000 + x;
+   y2 = (float) PixelToPoint ((int) ((controls[i].ry * 1000))) / 1000 + y;
 
    for (i = 2; i < nb; i++)
      {
-	x3 = (float) PixelEnPt ((int) ((controls[i].lx * 1000)), 1) / 1000 + x;
-	y3 = (float) PixelEnPt ((int) ((controls[i].ly * 1000)), 0) / 1000 + y;
+	x3 = (float) PixelToPoint ((int) ((controls[i].lx * 1000))) / 1000 + x;
+	y3 = (float) PixelToPoint ((int) ((controls[i].ly * 1000))) / 1000 + y;
 	fprintf (fout, "%f -%f %f -%f %f -%f\n", x3, y3, x2, y2, x1, y1);
 	j++;
 	if (j >= adbuff->BuLength)
@@ -1640,13 +1640,13 @@ C_points           *controls;
 	  }
 	x1 = (float) adbuff->BuPoints[j].XCoord / 1000 + x;
 	y1 = (float) adbuff->BuPoints[j].YCoord / 1000 + y;
-	x2 = (float) PixelEnPt ((int) ((controls[i].rx * 1000)), 1) / 1000 + x;
-	y2 = (float) PixelEnPt ((int) ((controls[i].ry * 1000)), 0) / 1000 + y;
+	x2 = (float) PixelToPoint ((int) ((controls[i].rx * 1000))) / 1000 + x;
+	y2 = (float) PixelToPoint ((int) ((controls[i].ry * 1000))) / 1000 + y;
      }
 
    /* Ferme le contour */
-   x3 = (float) PixelEnPt ((int) ((controls[1].lx * 1000)), 1) / 1000 + x;
-   y3 = (float) PixelEnPt ((int) ((controls[1].ly * 1000)), 0) / 1000 + y;
+   x3 = (float) PixelToPoint ((int) ((controls[1].lx * 1000))) / 1000 + x;
+   y3 = (float) PixelToPoint ((int) ((controls[1].ly * 1000))) / 1000 + y;
    fprintf (fout, "%f -%f %f -%f %f -%f\n", x3, y3, x2, y2, x1, y1);
    fprintf (fout, "%f -%f %d %d %d Splin\n", x0, y0, style, epais, nb);
 
@@ -1690,12 +1690,12 @@ int                 motif;
 
    /* Faut-il changer de RGB */
    CouleurCourante (fout, fg);
-   xm = PixelEnPt (x + larg / 2, 1);
-   ym = PixelEnPt (y + haut / 2, 0);
-   xf = PixelEnPt (x + larg, 1);
-   yf = PixelEnPt (y + haut, 0);
-   x = PixelEnPt (x, 1);
-   y = PixelEnPt (y, 0);
+   xm = PixelToPoint (x + larg / 2);
+   ym = PixelToPoint (y + haut / 2);
+   xf = PixelToPoint (x + larg);
+   yf = PixelToPoint (y + haut);
+   x = PixelToPoint (x);
+   y = PixelToPoint (y);
 
    Remplir (fout, fg, bg, motif);
    fprintf (fout, "%d -%d %d -%d %d -%d %d -%d %d %d %d Poly\n", xm, y, x, ym, xm, yf, xf, ym, style, epais, 4);
@@ -1741,10 +1741,10 @@ int                 motif;
       CouleurCourante (fout, fg);
 
    arc = 3 * 72 / 25.4;
-   xf = PixelEnPt (x + larg - 1, 1);
-   yf = PixelEnPt (y + haut - 1, 0);
-   x = PixelEnPt (x, 1);
-   y = PixelEnPt (y, 0);
+   xf = PixelToPoint (x + larg - 1);
+   yf = PixelToPoint (y + haut - 1);
+   x = PixelToPoint (x);
+   y = PixelToPoint (y);
 
    Remplir (fout, fg, bg, motif);
    fprintf (fout, "%d %d %d -%d %d -%d %d -%d %d -%d %d -%d %d -%d %d ov\n",
@@ -1792,10 +1792,10 @@ int                 motif;
       CouleurCourante (fout, fg);
    larg = larg / 2;
    haut = haut / 2;
-   xm = PixelEnPt (x + larg, 1);
-   ym = PixelEnPt (y + haut, 0);
-   larg = PixelEnPt (larg, 1);
-   haut = PixelEnPt (haut, 0);
+   xm = PixelToPoint (x + larg);
+   ym = PixelToPoint (y + haut);
+   larg = PixelToPoint (larg);
+   haut = PixelToPoint (haut);
 
    Remplir (fout, fg, bg, motif);
    if (larg == haut)
@@ -1848,10 +1848,10 @@ int                 fg;
 
    /* Faut-il changer de RGB */
    CouleurCourante (fout, fg);
-   xf = PixelEnPt (x + l, 1);
-   yf = PixelEnPt (y + h, 0);
-   x = PixelEnPt (x, 1);
-   y = PixelEnPt (y, 0);
+   xf = PixelToPoint (x + l);
+   yf = PixelToPoint (y + h);
+   x = PixelToPoint (x);
+   y = PixelToPoint (y);
 
    switch (coin)
 	 {
@@ -1910,10 +1910,10 @@ int                 motif;
       CouleurCourante (fout, fg);
 
    arc = 3 * 72 / 25.4;
-   xf = PixelEnPt (x + larg - 1, 1);
-   yf = PixelEnPt (y + haut - 1, 0);
-   x = PixelEnPt (x, 1);
-   y = PixelEnPt (y, 0);
+   xf = PixelToPoint (x + larg - 1);
+   yf = PixelToPoint (y + haut - 1);
+   x = PixelToPoint (x);
+   y = PixelToPoint (y);
 
    Remplir (fout, fg, bg, motif);
    fprintf (fout, "%d %d %d -%d %d -%d %d -%d %d -%d %d -%d %d -%d %d ov\n",
@@ -1966,10 +1966,10 @@ int                 motif;
 
    larg = larg / 2;
    haut = haut / 2;
-   xm = PixelEnPt (x + larg, 1);
-   ym = PixelEnPt (y + haut, 0);
-   larg = PixelEnPt (larg, 1);
-   haut = PixelEnPt (haut, 0);
+   xm = PixelToPoint (x + larg);
+   ym = PixelToPoint (y + haut);
+   larg = PixelToPoint (larg);
+   haut = PixelToPoint (haut);
 
    Remplir (fout, fg, bg, motif);
    if (larg == haut)
@@ -2034,11 +2034,11 @@ int                 fg;
 
    l--;
    h--;
-   xf = PixelEnPt (x + l, 1);
-   ym = PixelEnPt (y + h / 2, 0);
-   yf = PixelEnPt (y + h, 0);
-   x = PixelEnPt (x, 1);
-   y = PixelEnPt (y, 0);
+   xf = PixelToPoint (x + l);
+   ym = PixelToPoint (y + h / 2);
+   yf = PixelToPoint (y + h);
+   x = PixelToPoint (x);
+   y = PixelToPoint (y);
 
    if (cadrage == 0)
       fprintf (fout, "%d -%d %d -%d %d %d %d Seg\n", xf, y, x, y, style, epais, 2);
@@ -2089,11 +2089,11 @@ int                 fg;
 
    l--;
    h--;
-   xf = PixelEnPt (x + l, 1);
-   xm = PixelEnPt (x + l / 2, 1);
-   yf = PixelEnPt (y + h, 0);
-   x = PixelEnPt (x, 1);
-   y = PixelEnPt (y, 0);
+   xf = PixelToPoint (x + l);
+   xm = PixelToPoint (x + l / 2);
+   yf = PixelToPoint (y + h);
+   x = PixelToPoint (x);
+   y = PixelToPoint (y);
 
    if (cadrage == 0)
       fprintf (fout, "%d -%d %d -%d %d %d %d Seg\n", x, yf, x, y, style, epais, 2);
@@ -2133,10 +2133,10 @@ int                 fg;
 	fout = (FILE *) FrRef[frame];
 	/* On charge la fonte courante */
 	/*codage = FontCourante(fout,font); */
-	xcour = PixelEnPt (x, 1);
-	ycour = PixelEnPt (y, 0);
+	xcour = PixelToPoint (x);
+	ycour = PixelToPoint (y);
 
-	fprintf (fout, "%d -%d %d Pes\n", xcour, ycour, PixelEnPt (lgboite, 1));
+	fprintf (fout, "%d -%d %d Pes\n", xcour, ycour, PixelToPoint (lgboite));
      }
 }				/*AfPoints */
 
@@ -2176,10 +2176,10 @@ int                 fg;
 
    l--;
    h--;
-   xf = PixelEnPt (x + l, 1);
-   yf = PixelEnPt (y + h, 0);
-   x = PixelEnPt (x, 1);
-   y = PixelEnPt (y, 0);
+   xf = PixelToPoint (x + l);
+   yf = PixelToPoint (y + h);
+   x = PixelToPoint (x);
+   y = PixelToPoint (y);
 
    if (sens == 0)
       fprintf (fout, "%d -%d %d -%d %d %d %d Seg\n", x, yf, xf, y, style, epais, 2);
@@ -2229,8 +2229,8 @@ int                 height;
    /* que Thot ajoute une marge de 50 pts en haut et a gauche de   */
    /* l'image produite, la boundingBox est egale a :              */
    fprintf (fout, "%%%%BoundingBox: %d %d %d %d\n",
-	    50, 791 - PixelEnPt (height, 0),
-	    50 + PixelEnPt (width, 1), 791);
+	    50, 791 - PixelToPoint (height),
+	    50 + PixelToPoint (width), 791);
 }
 
 /* ---------------------------------------------------------------------- */
@@ -2290,10 +2290,10 @@ int                 motif;
 
    if (motif >= 0)
      {
-	xf = PixelEnPt (x + large - 1, 1);
-	yf = PixelEnPt (y + haut - 1, 0);
-	x = PixelEnPt (x, 1);
-	y = PixelEnPt (y, 0);
+	xf = PixelToPoint (x + large - 1);
+	yf = PixelToPoint (y + haut - 1);
+	x = PixelToPoint (x);
+	y = PixelToPoint (y);
 	fprintf (fout, "%d %d -%d %d -%d %d -%d %d -%d trm\n", motif, x, yf, xf, yf, xf, y, x, y);
      }
 }				/*Trame */

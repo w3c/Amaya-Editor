@@ -90,12 +90,12 @@ BinFile             fich;
    char                c;
    boolean             stop;
 
-   stop = False;
+   stop = FALSE;
    i = 1;
    while (!stop && i < 200)
      {
 	if (!BIOreadByte (fich, &c))
-	   stop = True;
+	   stop = TRUE;
 	else
 	  {
 	     if (c < ' ')
@@ -109,7 +109,7 @@ BinFile             fich;
 	  }
      }
    printf ("\n");
-   error = True;
+   error = TRUE;
 }
 
 /* ---------------------------------------------------------------------- */
@@ -141,11 +141,11 @@ boolean            *trouve;
 	*oldTypeImage = *name++ - 1;
 	*oldPres = (PictureScaling) (*oldTypeImage / 4);
 	*oldTypeImage = *oldTypeImage % 4;
-	*trouve = True;
+	*trouve = TRUE;
      }
    else
      {
-	*trouve = False;
+	*trouve = FALSE;
 	*oldPres = RealSize;
      }
    *oldTypeImage = UNKNOWN_FORMAT;
@@ -211,9 +211,9 @@ BinFile             fich;
 	PivotError (fich);
      }
    if (c == C_PIV_ABSOLUTE)
-      rdTypeDim = True;
+      rdTypeDim = TRUE;
    else
-      rdTypeDim = False;
+      rdTypeDim = FALSE;
    return rdTypeDim;
 }
 
@@ -272,9 +272,9 @@ BinFile             fich;
 	PivotError (fich);
      }
    if (c == C_PIV_PLUS)
-      rdSigne = True;
+      rdSigne = TRUE;
    else
-      rdSigne = False;
+      rdSigne = FALSE;
    return rdSigne;
 }
 
@@ -301,9 +301,9 @@ BinFile             fich;
 	PivotError (fich);
      }
    if (c == C_PIV_TRUE)
-      rdBooleen = True;
+      rdBooleen = TRUE;
    else
-      rdBooleen = False;
+      rdBooleen = FALSE;
    return rdBooleen;
 }
 
@@ -611,13 +611,13 @@ int                *PicHArea;
    int                 n;
 
    BIOreadShort (fich, &n);
-   *PicXArea = PtEnPixel (n, 1);
+   *PicXArea = PointToPixel (n);
    BIOreadShort (fich, &n);
-   *PicYArea = PtEnPixel (n, 0);
+   *PicYArea = PointToPixel (n);
    BIOreadShort (fich, &n);
-   *PicWArea = PtEnPixel (n, 1);
+   *PicWArea = PointToPixel (n);
    BIOreadShort (fich, &n);
-   *PicHArea = PtEnPixel (n, 0);
+   *PicHArea = PointToPixel (n);
 }
 
 /* ---------------------------------------------------------------------- */
@@ -687,7 +687,7 @@ int                *num;
    boolean             ok;
    char                c;
 
-   ok = False;
+   ok = FALSE;
    *num = 0;
    if (strn[0] == 'L')
      {
@@ -700,10 +700,10 @@ int                *num;
 	     if (c >= '0' && c <= '9')
 	       {
 		  val = (val * 10) + (c - '0');
-		  ok = True;
+		  ok = TRUE;
 	       }
 	     else if (c != '\0')
-		ok = False;
+		ok = FALSE;
 	  }
 	while (ok && c != '\0');
 	if (ok)
@@ -754,7 +754,7 @@ BinFile             fich;
 	  {
 	     PivotError (fich);
 	     TtaDisplaySimpleMessage (INFO, LIB, LIB_OLD_PIV_FORMAT_SAVE_THE_DOC_WITH_THOT);
-	     msgAncienFormat = False;	/* c'est fait */
+	     msgAncienFormat = FALSE;	/* c'est fait */
 	  }
 	if (c == MOldRefInterne || c == MOldRefExterne || c == MOldRefInclusion)
 	   /* ancien format version 2 */
@@ -763,16 +763,16 @@ BinFile             fich;
 	     switch (c)
 		   {
 		      case MOldRefInterne:
-			 *RExt = False;
+			 *RExt = FALSE;
 			 *TR = RefFollow;
 			 break;
 		      case MOldRefExterne:
-			 *RExt = True;
+			 *RExt = TRUE;
 			 *TR = RefFollow;
 			 break;
 		      case MOldRefInclusion:
 			 *TR = RefInclusion;
-			 *RExt = True;
+			 *RExt = TRUE;
 			 break;
 		   }
 	     /* lit le type de label */
@@ -792,7 +792,7 @@ BinFile             fich;
 	   /* c'est une reference renvoi interne */
 	  {
 	     *TR = RefFollow;
-	     *RExt = False;	/* il n'y a qu'un label court, sans marque */
+	     *RExt = FALSE;	/* il n'y a qu'un label court, sans marque */
 	     /* l'octet lu est l'octet de poids fort du label */
 	     j = 256 * ((int) c);	/* lit le 2eme octet du label */
 	     if (!BIOreadByte (fich, &c))
@@ -868,22 +868,22 @@ PtrDocument         pDoc;
    int                 i;
 
    pr = pDoc->DocReferredEl;
-   stop = False;
+   stop = FALSE;
    do
       /* parcourt la chaine des descripteurs de reference du document en   */
       /* cours de lecture. (Le premier descripteur de la chaine est bidon) */
      {
 	pr = pr->ReNext;
 	if (pr == NULL)
-	   stop = True;		/* fin de la chaine */
+	   stop = TRUE;		/* fin de la chaine */
 	else if (strcmp (pr->ReReferredLabel, Lab) == 0)	/* le label correspond */
 	   if (IdentDocNul (IDoc) && !pr->ReExternalRef)
 	      /* on cherche une reference interne et c'en est une */
-	      stop = True;	/* trouve' */
+	      stop = TRUE;	/* trouve' */
 	   else if (!IdentDocNul (IDoc) && pr->ReExternalRef)
 	      /* on cherche une reference externe et c'en est une */
 	      if (MemeIdentDoc (IDoc, pr->ReExtDocument))
-		 stop = True;
+		 stop = TRUE;
      }
    while (!stop);
    if (pr == NULL)
@@ -1010,11 +1010,11 @@ char               *marque;
 	     {
 		/* teste s'il s'agit d'une extension de la structure generique du */
 		/* document */
-		Extension = False;	/* a priori, non */
+		Extension = FALSE;	/* a priori, non */
 		if (pDoc->DocNatureSSchema[nat] != NULL)
 		   if (pDoc->DocNatureSSchema[nat]->SsExtension)
 		     {
-			Extension = True;
+			Extension = TRUE;
 			*pSchStr = pDoc->DocNatureSSchema[nat];
 		     }
 		if (!Extension)
@@ -1080,11 +1080,11 @@ int        *typecontenu;
 
    if (*typecontenu != 0 && *pschcont != NULL)
      {
-	ok = False;
+	ok = FALSE;
 	if ((*pschcont)->SsCode == (*pSchStr)->SsCode)
 	   if (*TypeElement == *typecontenu)
 	      /* meme numero de type */
-	      ok = True;
+	      ok = TRUE;
 	   else
 	     {
 		pRe1 = &(*pschcont)->SsRule[*typecontenu - 1];
@@ -1136,7 +1136,7 @@ int        *typecontenu;
 	     }
 	if (ok)
 	  {
-	     *creetout = True;	/* on cree toute la descendance de l'element */
+	     *creetout = TRUE;	/* on cree toute la descendance de l'element */
 	     *typecontenu = 0;	/* on ne creera plus de contenu pour cet element */
 	  }
      }
@@ -1175,11 +1175,11 @@ PtrSSchema        pSS;
 	att = pRegle->SrLocalAttr[i - 1];
 	/* cherche si l'element possede cet attribut */
 	pAttr = pEl->ElFirstAttr;
-	trouve = False;
+	trouve = FALSE;
 	while (pAttr != NULL && !trouve)
 	  if (pAttr->AeAttrNum == att &&
 	      pAttr->AeAttrSSchema->SsCode == pSS->SsCode)
-	    trouve = True;
+	    trouve = TRUE;
 	  else
 	    pAttr = pAttr->AeNext;
 	if (!trouve)
@@ -1284,7 +1284,7 @@ PtrAttribute        *pAttr;
    *pAttrLu = NULL;
    pSchAttr = NULL;
    pA = NULL;
-   signe = False;
+   signe = FALSE;
    /* lit le numero du schema de structure definissant l'attribut */
    BIOreadShort (fichpiv, &n);
    if (n < 0 || n >= pDoc->DocNNatures)
@@ -1312,7 +1312,7 @@ PtrAttribute        *pAttr;
 		  if (val > pSchAttr->SsAttribute[attr - 1].AttrNEnumValues)
 		    {
 		       printf ("Attribute value error: %s = %d\n", pSchAttr->SsAttribute[attr - 1].AttrOrigName, val);
-		       cree = False;
+		       cree = FALSE;
 		    }
 		  break;
 	       case AtNumAttr:
@@ -1338,7 +1338,7 @@ PtrAttribute        *pAttr;
 		       GetBufTexte (&pPremBuff);
 		       pBT = pPremBuff;
 		       /* lit tout le texte de l'attribut */
-		       stop = False;
+		       stop = FALSE;
 		       do
 			  if (!BIOreadByte (fichpiv, &pBT->BuContent[pBT->BuLength++]))
 			     /* erreur de lecture */
@@ -1350,7 +1350,7 @@ PtrAttribute        *pAttr;
 			     /* on a lu correctement un caractere */
 			  if (pBT->BuContent[pBT->BuLength - 1] == '\0')
 			     /* c'est la fin du texte de l'attribut */
-			     stop = True;
+			     stop = TRUE;
 			  else
 			     /* ce n'est pas la fin du texte de l'attribut */
 			  if (pBT->BuLength >= MAX_CHAR - 1)
@@ -1374,9 +1374,9 @@ PtrAttribute        *pAttr;
 	   /* ExtCorr et ExtMot */
 	   if (pSchAttr->SsExtension)
 	      if (strcmp (pSchAttr->SsName, "ExtCorr") == 0)
-		 cree = False;
+		 cree = FALSE;
 	      else if (strcmp (pSchAttr->SsName, "ExtMot") == 0)
-		 cree = False;
+		 cree = FALSE;
 	if (!cree)
 	   *pAttr = NULL;
 	else
@@ -1384,7 +1384,7 @@ PtrAttribute        *pAttr;
 	     /* Si c'est un attribut impose', a valeur fixe ou modifiable, */
 	     /* il a deja ete cree' par NewSubtree. On cherche si l'element */
 	     /* possede deja cet attribut */
-	     trouve = False;
+	     trouve = FALSE;
 	     if (pEl != NULL)
 	       {
 		  pA = pEl->ElFirstAttr;
@@ -1392,7 +1392,7 @@ PtrAttribute        *pAttr;
 		    {
 		       if (pA->AeAttrSSchema == pSchAttr)
 			  if (pA->AeAttrNum == attr)
-			     trouve = True;
+			     trouve = TRUE;
 		       if (!trouve)
 			  pA = pA->AeNext;
 		    }
@@ -1405,7 +1405,7 @@ PtrAttribute        *pAttr;
 		  pA = *pAttr;
 		  pA->AeAttrSSchema = pSchAttr;
 		  pA->AeAttrNum = attr;
-		  pA->AeDefAttr = False;
+		  pA->AeDefAttr = FALSE;
 		  /* prend le type de l'attribut dans le schema de structure */
 		  pA->AeAttrType = pA->AeAttrSSchema->SsAttribute[pA->AeAttrNum - 1].AttrType;
 	       }
@@ -1548,9 +1548,9 @@ boolean             Attache;
 
    pres = (PictureScaling) 0;
    typeimage = 0;
-   just = False;
-   signe = False;
-   dimabs = False;
+   just = FALSE;
+   signe = FALSE;
+   dimabs = FALSE;
    Cadre = (BAlignment) 0;
    TypeRP = (PRuleType) 0;
    *pRegleLue = NULL;
@@ -1716,7 +1716,7 @@ boolean             Attache;
 		    case PtHeight:
 		    case PtWidth:
 		       pRelD1 = &pRegle->PrDimRule;
-		       pRelD1->DrPosition = False;
+		       pRelD1->DrPosition = FALSE;
 		       pRelD1->DrAbsolute = dimabs;
 		       if (!pRelD1->DrAbsolute)
 			  /* c'est une dimension relative, on prend */
@@ -1725,7 +1725,7 @@ boolean             Attache;
 			  /* ce qui est lu dans le fichier          */
 			 {
 			    pR1 = ReglePEl (pEl, &pSPR, &pSSR, 0, NULL, pRegle->PrViewNum,
-				       pRegle->PrType, False, True, &pAttr);
+				       pRegle->PrType, FALSE, TRUE, &pAttr);
 			    if (pR1 != NULL)
 
 			      {
@@ -1735,12 +1735,12 @@ boolean             Attache;
 				 pRegle->PrCond = NULL;
 			      }
 			 }
-		       pRelD1->DrAttr = False;
+		       pRelD1->DrAttr = FALSE;
 		       pRelD1->DrValue = val;
 		       pRelD1->DrUnit = unit;
 		       if (!signe)
 			  pRelD1->DrValue = -pRelD1->DrValue;
-		       pRelD1->DrMin = False;
+		       pRelD1->DrMin = FALSE;
 		       break;
 		    case PtVertPos:
 		    case PtHorizPos:
@@ -1750,13 +1750,13 @@ boolean             Attache;
 		       /* l'element, puis on la modifie selon   */
 		       /* ce qui est lu dans le fichier         */
 		       pR1 = ReglePEl (pEl, &pSPR, &pSSR, 0, NULL, pRegle->PrViewNum,
-				       pRegle->PrType, False, True, &pAttr);
+				       pRegle->PrType, FALSE, TRUE, &pAttr);
 		       if (pR1 != NULL)
 			  *pRegle = *pR1;
 		       pRegle->PrViewNum = Vue;
 		       pRegle->PrNextPRule = NULL;
 		       pRegle->PrCond = NULL;
-		       pRegleP6->PoDistAttr = False;
+		       pRegleP6->PoDistAttr = FALSE;
 		       pRegleP6->PoDistance = val;
 		       pRegleP6->PoDistUnit = unit;
 		       if (!signe)
@@ -1768,7 +1768,7 @@ boolean             Attache;
 		    case PtSize:
 		    case PtLineSpacing:
 		    case PtLineWeight:
-		       pRegle->PrMinAttr = False;
+		       pRegle->PrMinAttr = FALSE;
 		       pRegle->PrMinValue = val;
 		       pRegle->PrMinUnit = unit;
 		       if (pRegle->PrType == PtIndent)
@@ -1776,12 +1776,12 @@ boolean             Attache;
 			     pRegle->PrMinValue = -pRegle->PrMinValue;
 		       break;
 		    case PtFillPattern:
-		       pRegle->PrAttrValue = False;
+		       pRegle->PrAttrValue = FALSE;
 		       pRegle->PrIntValue = val;
 		       break;
 		    case PtBackground:
 		    case PtForeground:
-		       pRegle->PrAttrValue = False;
+		       pRegle->PrAttrValue = FALSE;
 		       /* convertit les couleurs des anciennes versions */
 		       if (pDoc->DocPivotVersion < 4)
 			  val = newColor[val];
@@ -1866,7 +1866,7 @@ PtrDocument         pDoc;
 	notifyAttr.attribute = NULL;
 	notifyAttr.attributeType.AttrTypeNum = pAttr->AeAttrNum;
 	notifyAttr.attributeType.AttrSSchema = (SSchema) (pAttr->AeAttrSSchema);
-	if (SendAttributeMessage (&notifyAttr, True))
+	if (SendAttributeMessage (&notifyAttr, TRUE))
 	   /* l'application ne veut pas lire l'attribut */
 	   /* on l'avait deja lu, on le retire */
 	   DeleteAttribute (pEl, pAttr);
@@ -1879,7 +1879,7 @@ PtrDocument         pDoc;
 	     notifyAttr.attribute = (Attribute) pAttr;
 	     notifyAttr.attributeType.AttrTypeNum = pAttr->AeAttrNum;
 	     notifyAttr.attributeType.AttrSSchema = (SSchema) (pAttr->AeAttrSSchema);
-	     SendAttributeMessage (&notifyAttr, False);
+	     SendAttributeMessage (&notifyAttr, FALSE);
 	  }
 	/* passe a l'attribut suivant de l'element */
 	pAttr = pAttr->AeNext;
@@ -1983,8 +1983,8 @@ boolean             creedesc;
 
    pRe1 = NULL;
    pEl = NULL;
-   AvecReferences = False;
-   cree = False;
+   AvecReferences = FALSE;
+   cree = FALSE;
    if (*marque != (char) C_PIV_TYPE && *marque != (char) C_PIV_NATURE)
      {
 /*************/
@@ -2025,16 +2025,16 @@ boolean             creedesc;
 		ContenuElExp (&creetout, &TypeElement, &pSchStr, pschcont, typecontenu);
 	     pRe1 = &pSchStr->SsRule[TypeElement - 1];
 	     if (creetout)
-		cree = True;
+		cree = TRUE;
 	     else
 		/* on ne cree que les elements de type exporte' */
 	       {
-		  cree = False;
+		  cree = FALSE;
 		  if (pRe1->SrExportedElem)	/* l'element est d'un type exporte' */
 		     if (pRe1->SrExportContent != 0)
 			/* on veut creer au moins une partie de son contenu */
 		       {
-			  cree = True;	/* on le cree */
+			  cree = TRUE;	/* on le cree */
 			  *typecontenu = pRe1->SrExportContent;
 			  /* il faudra creer son contenu */
 			  /* cherche le schema de structure ou est */
@@ -2067,7 +2067,7 @@ boolean             creedesc;
 		  if (TypeElement == PageBreak + 1)
 		     if (creepage)
 		       {
-			  cree = True;	/* on le cree */
+			  cree = TRUE;	/* on le cree */
 			  *typecontenu = TypeElement;
 			  *pschcont = pSchStr;
 
@@ -2085,11 +2085,11 @@ boolean             creedesc;
 		  notifyEl.elementType.ElTypeNum = *TypeLu;
 		  notifyEl.elementType.ElSSchema = (SSchema) (*SchStrLu);
 		  notifyEl.position = 0;
-		  if (ThotSendMessage ((NotifyEvent *) & notifyEl, True))
+		  if (ThotSendMessage ((NotifyEvent *) & notifyEl, TRUE))
 		     /* l'application ne veut pas lire le sous-arbre */
 		    {
-		       cree = False;
-		       creedesc = False;
+		       cree = FALSE;
+		       creedesc = FALSE;
 		    }
 	       }
 	     /* on cree toujours la racine du document */
@@ -2097,7 +2097,7 @@ boolean             creedesc;
 		if (pSchStr == pDoc->DocSSchema)
 		   if (TypeElement == pSchStr->SsRootElem)
 		      /* c'est la racine, on cree */
-		      cree = True;
+		      cree = TRUE;
 	     if (!cree)
 		pEl = NULL;
 	     else
@@ -2106,34 +2106,34 @@ boolean             creedesc;
 		  if (pSchStr->SsRule[TypeElement - 1].SrParamElem && creepar)
 		     /* simule un element ordinaire, si c'est un parametre a creer */
 		    {
-		       pSchStr->SsRule[TypeElement - 1].SrParamElem = False;
-		       parametre = True;
+		       pSchStr->SsRule[TypeElement - 1].SrParamElem = FALSE;
+		       parametre = TRUE;
 		    }
 		  else
-		     parametre = False;
+		     parametre = FALSE;
 		  /* il ne faut pas que le label max. du document augmente */
-		  pEl = NewSubtree (TypeElement, pSchStr, pDoc, NAssoc, False, True, False, False);
+		  pEl = NewSubtree (TypeElement, pSchStr, pDoc, NAssoc, FALSE, TRUE, FALSE, FALSE);
 		  if (pEl != NULL)
 		     pEl->ElLabel[0] = '\0';
 		  if (parametre)
-		     pSchStr->SsRule[TypeElement - 1].SrParamElem = True;
+		     pSchStr->SsRule[TypeElement - 1].SrParamElem = TRUE;
 	       }
 
 	     if (!BIOreadByte (fichpiv, marque))
 		PivotError (fichpiv);
 	  }
-	Inclusion = False;	/* est-ce une reference a un element inclus? */
+	Inclusion = FALSE;	/* est-ce une reference a un element inclus? */
 	if (!error && *marque == (char) C_PIV_INCLUDED)
 	   /* oui, lit la reference */
 	  {
-	     Inclusion = True;
+	     Inclusion = TRUE;
 	     rdReference (&TRef, lab, &RExt, &I, fichpiv);
 	     if (cree)
 	       {
 		  GetReference (&pEl->ElSource);
 		  pEl->ElSource->RdElement = pEl;
 		  CreeReference (pEl->ElSource, TRef, lab, RExt, I, pDoc);
-		  pEl->ElIsCopy = True;
+		  pEl->ElIsCopy = TRUE;
 
 	       }
 	     if (!BIOreadByte (fichpiv, marque))
@@ -2144,12 +2144,12 @@ boolean             creedesc;
 	if (!error)
 	   if (*marque == (char) C_PIV_REFERRED)
 	     {
-		AvecReferences = True;
+		AvecReferences = TRUE;
 		if (!BIOreadByte (fichpiv, marque))
 		   PivotError (fichpiv);
 	     }
 	   else
-	      AvecReferences = False;
+	      AvecReferences = FALSE;
 	/* traite le label s'il est present */
 	lab[0] = '\0';
 	if (!error)
@@ -2172,7 +2172,7 @@ boolean             creedesc;
 		  pDR = pDoc->DocLabels;
 		  while (pDR != NULL && !AvecReferences)
 		     if (strcmp (pDR->ReReferredLabel, lab) == 0)
-			AvecReferences = True;
+			AvecReferences = TRUE;
 		     else
 			pDR = pDR->ReNext;
 	       }
@@ -2197,11 +2197,11 @@ boolean             creedesc;
 
 	/* lit la marque d'holophraste si elle est presente */
 	if (!error && cree)
-	   pEl->ElHolophrast = False;
+	   pEl->ElHolophrast = FALSE;
 	if (*marque == (char) C_PIV_HOLOPHRAST && !error)
 	  {
 	     if (cree)
-		pEl->ElHolophrast = True;
+		pEl->ElHolophrast = TRUE;
 	     /* lit l'octet qui suit */
 	     if (!BIOreadByte (fichpiv, marque))
 		PivotError (fichpiv);
@@ -2227,7 +2227,7 @@ boolean             creedesc;
 	   pEl->ElParent = Pere;
 	while (*marque == (char) C_PIV_PRESENT && !error)
 	  {
-	     rdReglePres (pDoc, fichpiv, pEl, cree, &pRegle, True);
+	     rdReglePres (pDoc, fichpiv, pEl, cree, &pRegle, TRUE);
 	     if (!error)
 		/* lit l'octet qui suit la regle */
 		if (!BIOreadByte (fichpiv, marque))
@@ -2351,10 +2351,10 @@ boolean             creedesc;
 				       pEl->ElLanguage = TtaGetLanguageIdFromAlphabet (Alphabet);
 				       /* verifie que la langue est dans la table des langues */
 				       /* du document */
-				       trouve = False;
+				       trouve = FALSE;
 				       for (i = 0; i < pDoc->DocNLanguages && !trouve; i++)
 					  if (pDoc->DocLanguages[i] == pEl->ElLanguage)
-					     trouve = True;
+					     trouve = TRUE;
 				       if (!trouve && pDoc->DocNLanguages < MAX_LANGUAGES_DOC)
 					  /* elle n'y est pas, on la met */
 					 {
@@ -2649,7 +2649,7 @@ boolean             creedesc;
 								    /* max. du document augmente */
 								    pElInt = NewSubtree (pEl2->ElSructSchema->SsRootElem,
 											 pEl2->ElSructSchema,
-											 pDoc, NAssoc, False, True, False, False);
+											 pDoc, NAssoc, FALSE, TRUE, FALSE, FALSE);
 
 								    pElInt->ElLabel[0] = '\0';
 								    InsertFirstChild (pElInt, p);
@@ -2694,7 +2694,7 @@ boolean             creedesc;
 	     notifyEl.elementType.ElTypeNum = pEl->ElTypeNumber;
 	     notifyEl.elementType.ElSSchema = (SSchema) (pEl->ElSructSchema);
 	     notifyEl.position = 0;
-	     ThotSendMessage ((NotifyEvent *) & notifyEl, False);
+	     ThotSendMessage ((NotifyEvent *) & notifyEl, FALSE);
 	  }
 	if (pEl != NULL)
 	   pEl->ElParent = NULL;
@@ -2719,15 +2719,15 @@ PtrDocument         pDoc;
   PtrElement          pFils;
   boolean             ok, filsOK;
 
-  ok = True;
+  ok = TRUE;
   if (pEl != NULL)
     {
       if (pEl->ElPrevious != NULL)
 	{
 	  if (!AllowedSibling (pEl->ElPrevious, pDoc, pEl->ElTypeNumber,
-			       pEl->ElSructSchema, False, False, True))
+			       pEl->ElSructSchema, FALSE, FALSE, TRUE))
 	    {
-	      ok = False;
+	      ok = FALSE;
 	      TtaDisplayMessage (INFO,  TtaGetMessage (LIB, LIB_X_INVALID_SIBLING_FOR_Y),
 				 pEl->ElSructSchema->SsRule[pEl->ElTypeNumber - 1].SrName,
 				 pEl->ElPrevious->ElSructSchema->SsRule[pEl->ElPrevious->ElTypeNumber - 1].SrName,
@@ -2737,9 +2737,9 @@ PtrDocument         pDoc;
       else if (pEl->ElParent != NULL)
 	{
 	  if (!AllowedFirstChild (pEl->ElParent, pDoc, pEl->ElTypeNumber,
-				    pEl->ElSructSchema, False, True))
+				    pEl->ElSructSchema, FALSE, TRUE))
 	    {
-	      ok = False;
+	      ok = FALSE;
 	      TtaDisplayMessage (INFO,  TtaGetMessage (LIB, LIB_X_INVALID_CHILD_FOR_Y),
 				 pEl->ElSructSchema->SsRule[pEl->ElTypeNumber - 1].SrName,
 				 pEl->ElParent->ElSructSchema->SsRule[pEl->ElParent->ElTypeNumber - 1].SrName,
@@ -2788,7 +2788,7 @@ PtrElement          pRacine;
 	     {
 		/* on cherche l'element de fin correspondant */
 		pEl2 = pEl1;
-		trouve = False;
+		trouve = FALSE;
 		do
 		  {
 		     pEl2 = FwdSearchTypedElem (pEl2, pEl1->ElTypeNumber + 1, pEl1->ElSructSchema);
@@ -2870,10 +2870,10 @@ int                 rangNature;
       PivotFormatError ("Err nature ???");
    /* on cherche (par son nom) si la nature existe dans la table */
    i = 1;
-   found = False;
+   found = FALSE;
    while (i <= pDoc->DocNNatures && !found)
       if (strncmp (NomSchStr, pDoc->DocNatureName[i - 1], MAX_NAME_LENGTH) == 0)
-	 found = True;
+	 found = TRUE;
       else
 	 i++;
    if (found)
@@ -2969,7 +2969,7 @@ PtrSSchema        pSCharge;
 	NatureDansTable (pDoc, NomSchStr, rangNature);
 	/* charge les schemas de structure et de presentation du document */
 	if (pDoc->DocSSchema == NULL)
-	   LoadSchemas (NomSchStr, NomSchPrs, &pDoc->DocSSchema, pSCharge, False);
+	   LoadSchemas (NomSchStr, NomSchPrs, &pDoc->DocSSchema, pSCharge, FALSE);
 	if (pDoc->DocSSchema == NULL)
 	   PivotError (fich);
 	else if (pDoc->DocPivotVersion >= 4)
@@ -2977,7 +2977,7 @@ PtrSSchema        pSCharge;
 	   /* que celle du document */
 	   if (pDoc->DocSSchema->SsCode != versionSchema)
 	     {
-		pDoc->DocToBeChecked = True;
+		pDoc->DocToBeChecked = TRUE;
 		TtaDisplayMessage (INFO, TtaGetMessage(LIB, LIB_STRUCTURE_SCHEMA_X_CHANGED), pDoc->DocSSchema->SsName);
 	     }
      }
@@ -3055,7 +3055,7 @@ PtrSSchema        pSCharge;
 		/* que celle du document */
 		if (pSS->SsCode != versionSchema)
 		  {
-		     pDoc->DocToBeChecked = True;
+		     pDoc->DocToBeChecked = TRUE;
 		     TtaDisplayMessage (INFO, TtaGetMessage(LIB, LIB_STRUCTURE_SCHEMA_X_CHANGED), pSS->SsName);
 		  }
 	     pDoc->DocNatureSSchema[rangNature - 1] = pSS;
@@ -3259,20 +3259,20 @@ boolean             WithAPPEvent;
    boolean             DocumentCorrect;
    NotifyDialog        notifyDoc;
 
-   pDoc->DocToBeChecked = False;
-   DocumentCorrect = True;
-   ok = False;
-   error = False;
-   msgAncienFormat = True;
+   pDoc->DocToBeChecked = FALSE;
+   DocumentCorrect = TRUE;
+   ok = FALSE;
+   error = FALSE;
+   msgAncienFormat = TRUE;
    pDoc->DocRootElement = NULL;
-   pagesacreer = False;
+   pagesacreer = FALSE;
    pDoc->DocNNatures = 0;
    /* lit l'entete du fichier pivot */
    rdPivotHeader (fich, pDoc, &marque);
    /* lit le commentaire du document s'il est present */
    if (!error && (marque == (char) C_PIV_COMMENT || marque == (char) C_PIV_OLD_COMMENT))
      {
-	pDoc->DocComment = readComment (fich, True, (boolean) (marque == (char) C_PIV_OLD_COMMENT));
+	pDoc->DocComment = readComment (fich, TRUE, (boolean) (marque == (char) C_PIV_OLD_COMMENT));
 	/* lit l'octet suivant le commentaire */
 	if (!BIOreadByte (fich, &marque))
 	   PivotError (fich);
@@ -3292,8 +3292,8 @@ boolean             WithAPPEvent;
 	notifyDoc.event = TteDocOpen;
 	notifyDoc.document = (Document) IdentDocument (pDoc);
 	notifyDoc.view = 0;
-	if (ThotSendMessage ((NotifyEvent *) & notifyDoc, True))
-	   error = True;
+	if (ThotSendMessage ((NotifyEvent *) & notifyDoc, TRUE))
+	   error = TRUE;
      }
    if (pDoc->DocSSchema != NULL && !error)
      {
@@ -3303,8 +3303,8 @@ boolean             WithAPPEvent;
 	   /* forme complete ou les seuls elements exportables, mais       */
 	   /* seulement si le schema de presentation a une vue EXPORT      */
 	  {
-	     pagesacreer = False;
-	     ok = False;
+	     pagesacreer = FALSE;
+	     ok = FALSE;
 	     pSc1 = pDoc->DocSSchema->SsPSchema;
 	     if (pSc1 != NULL)
 		for (i = 1; i <= pSc1->PsNViews; i++)
@@ -3314,11 +3314,11 @@ boolean             WithAPPEvent;
 		  /* une vue EXPORT est prevue */
 		  if (Squelette)
 		    {
-		       pDoc->DocExportStructure = True;
+		       pDoc->DocExportStructure = TRUE;
 		       /* Un document charge' sous sa forme export n'est pas */
 		       /* modifiable */
-		       pDoc->DocReadOnly = True;
-		       pagesacreer = True;
+		       pDoc->DocReadOnly = TRUE;
+		       pagesacreer = TRUE;
 		    }
 	       }
 	  }
@@ -3330,7 +3330,7 @@ boolean             WithAPPEvent;
 	fichext = BIOreadOpen (texte);
 	if (fichext != 0)
 	  {
-	     ChargeExt (fichext, NULL, &pDoc->DocLabels, True);
+	     ChargeExt (fichext, NULL, &pDoc->DocLabels, TRUE);
 	     BIOreadClose (fichext);
 	  }
 	else
@@ -3353,9 +3353,9 @@ boolean             WithAPPEvent;
 		   PivotError (fich);
 		nR = 0;
 		pNat = NULL;
-		p = Internalise (fich, pDoc->DocSSchema, pDoc, &marque, 0, True,
+		p = Internalise (fich, pDoc->DocSSchema, pDoc, &marque, 0, TRUE,
 				 !pDoc->DocExportStructure, &nR, &pNat,
-				 &typelu, &pSS, pagesacreer, NULL, True);
+				 &typelu, &pSS, pagesacreer, NULL, TRUE);
 		if (WithAPPEvent && pDoc->DocSSchema != NULL && !error)
 		   SendEventAttrRead (p, pDoc);
 		if (!error)
@@ -3388,9 +3388,9 @@ boolean             WithAPPEvent;
 	     nR = 0;
 	     pNat = NULL;
 
-	     p = Internalise (fich, pDoc->DocSSchema, pDoc, &marque, assoc, False,
+	     p = Internalise (fich, pDoc->DocSSchema, pDoc, &marque, assoc, FALSE,
 			      !pDoc->DocExportStructure, &nR, &pNat,
-			      &typelu, &pSS, pagesacreer, NULL, True);
+			      &typelu, &pSS, pagesacreer, NULL, TRUE);
 	     if (WithAPPEvent && pDoc->DocSSchema != NULL && !error)
 		SendEventAttrRead (p, pDoc);
 	     pRe1 = &pSS->SsRule[typelu - 1];
@@ -3422,8 +3422,8 @@ boolean             WithAPPEvent;
 			  nR = 0;
 			  pNat = NULL;
 			  s = Internalise (fich, pDoc->DocSSchema, pDoc, &marque, assoc,
-				     False, !pDoc->DocExportStructure, &nR, &pNat,
-				    &typelu, &pSS, pagesacreer, NULL, True);
+				     FALSE, !pDoc->DocExportStructure, &nR, &pNat,
+				    &typelu, &pSS, pagesacreer, NULL, TRUE);
 			  if (WithAPPEvent && pDoc->DocSSchema != NULL && !error)
 			     SendEventAttrRead (s, pDoc);
 			  if (s != NULL)
@@ -3444,13 +3444,13 @@ boolean             WithAPPEvent;
 		       do
 			 {
 			    j = pSchS1->SsNRules;
-			    found = False;
+			    found = FALSE;
 			    do
 			      {
 				 if (pSchS1->SsRule[j - 1].SrConstruct == CsList)
 				    if (EquivalentSRules (pSchS1->SsRule[j - 1].SrListItem,
 						 pSchS1, typelu, pSS, NULL))
-				       found = True;
+				       found = TRUE;
 				 if (!found)
 				    j--;
 			      }
@@ -3470,7 +3470,7 @@ boolean             WithAPPEvent;
 			  /* cree l'element liste pour ce type d'elements associes */
 			 {
 			    pDoc->DocAssocRoot[assoc - 1] = NewSubtree (j, pSchS1,
-			      pDoc, assoc, False, True, False, True);
+			      pDoc, assoc, FALSE, TRUE, FALSE, TRUE);
 			    if (premier != NULL)
 			      {
 				 /* chaine le 1er elem. associe dans cette liste */
@@ -3488,9 +3488,9 @@ boolean             WithAPPEvent;
 		       nR = 0;
 		       pNat = NULL;
 		       s = Internalise (fich, pDoc->DocSSchema, pDoc, &marque, assoc,
-				     False, !pDoc->DocExportStructure, &nR, &pNat,
+				     FALSE, !pDoc->DocExportStructure, &nR, &pNat,
 					&typelu, &pSS, pagesacreer,
-				    pDoc->DocAssocRoot[assoc - 1], True);
+				    pDoc->DocAssocRoot[assoc - 1], TRUE);
 		       if (WithAPPEvent && pDoc->DocSSchema != NULL && !error)
 			  SendEventAttrRead (s, pDoc);
 		       if (s != NULL)
@@ -3538,22 +3538,22 @@ boolean             WithAPPEvent;
 			nR = 0;
 			pNat = NULL;
 			p = Internalise (fich, pDoc->DocSSchema, pDoc, &marque, 0,
-				     False, !pDoc->DocExportStructure, &nR, &pNat,
-				    &typelu, &pSS, pagesacreer, NULL, True);
+				     FALSE, !pDoc->DocExportStructure, &nR, &pNat,
+				    &typelu, &pSS, pagesacreer, NULL, TRUE);
 			if (WithAPPEvent && pDoc->DocSSchema != NULL && !error)
 			   SendEventAttrRead (p, pDoc);
 			/* force la creation d'un element racine */
 			if (p == NULL)
 			   /* rien n'a ete cree */
 			   p = NewSubtree (pDoc->DocSSchema->SsRootElem, pDoc->DocSSchema, pDoc, 0,
-					   False, True, True, True);
+					   FALSE, TRUE, TRUE, TRUE);
 			else if (p->ElSructSchema != pDoc->DocSSchema
 				 || p->ElTypeNumber != pDoc->DocSSchema->SsRootElem)
 			   /* ce n'est pas la racine attendue */
 			  {
 			     s = p;
 			     p = NewSubtree (pDoc->DocSSchema->SsRootElem, pDoc->DocSSchema, pDoc, 0,
-					     False, True, True, True);
+					     FALSE, TRUE, TRUE, TRUE);
 			     InsertFirstChild (p, s);
 			  }
 			/* traite les elements exclus (au sens SGML) */
@@ -3575,7 +3575,7 @@ boolean             WithAPPEvent;
 	     /* on previent l'utilisateur */
 	     TtaDisplayMessage (INFO, TtaGetMessage(LIB, LIB_STRUCTURE_OF_DOCUMENT_X_INVALID), pDoc->DocDName);
 	     /* on met le document en Read-Only */
-	     pDoc->DocReadOnly = True;
+	     pDoc->DocReadOnly = TRUE;
 	     TtaDisplayMessage (INFO, TtaGetMessage(LIB, LIB_DOCUMENT_X_LOCKED), pDoc->DocDName);
 	  }
 	/* libere les labels des elements reference's par d'autres */
@@ -3676,8 +3676,8 @@ boolean             WithAPPEvent;
 						      {
 							 CopyIdentDoc (&TabDocExt[NumDocExt - 1]->DocIdent, IdentDocSource);
 							 ok = OuvreDoc (NULL, TabDocExt[NumDocExt - 1],
-									False, False,
-									NULL, False);
+									FALSE, FALSE,
+									NULL, FALSE);
 						      }
 						    if (TabDocExt[NumDocExt - 1] != NULL)
 						      {
@@ -3752,7 +3752,7 @@ boolean             WithAPPEvent;
 		  notifyDoc.event = TteDocOpen;
 		  notifyDoc.document = (Document) IdentDocument (pDoc);
 		  notifyDoc.view = 0;
-		  ThotSendMessage ((NotifyEvent *) & notifyDoc, False);
+		  ThotSendMessage ((NotifyEvent *) & notifyDoc, FALSE);
 	       }
 	  }
      }

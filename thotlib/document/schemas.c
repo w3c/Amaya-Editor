@@ -134,14 +134,14 @@ PtrSSchema        SS;
    pSchP = NULL;
    /* cherche dans la table si le schema est deja charge */
    i = 0;
-   found = False;
+   found = FALSE;
    do
      {
 	i++;
 	if (TabSchPres[i - 1].ChPtrSchP != NULL)
 	   /* compare les noms fname et PrsNomSchema */
 	   if (strcmp (fname, TabSchPres[i - 1].PrsNomSchema) == 0)
-	      found = True;
+	      found = TRUE;
      }
    while (!(found || i >= MAX_PSCHEMAS));
    if (found)
@@ -227,7 +227,7 @@ PtrSSchema        pSS;
    UnePresent         *pUn1;
    AttributePres      *pRP1;
 
-   supp = True;
+   supp = TRUE;
    /* parcourt la table des schemas de presentation pour trouver ce schema */
    i = 1;
    while (i < MAX_PSCHEMAS && TabSchPres[i - 1].ChPtrSchP != pSch)
@@ -240,7 +240,7 @@ PtrSSchema        pSS;
 	/* une utilisation de moins */
 	if (pUn1->PNbUtil > 0)
 	   /* il y a d'autres utilisations, on ne le supprime pas */
-	   supp = False;
+	   supp = FALSE;
 	else
 	   /* c'etait la derniere utilisation, on le supprime de la table */
 	  {
@@ -431,14 +431,14 @@ PtrSSchema        pSS;
    SRule              *pRule;
 
    /* cherche si le type existe deja dans le schema de structure */
-   found = False;
+   found = FALSE;
    ret = 0;
    do
      {
 	pRule = &pSS->SsRule[ret++];
 	if (pRule->SrConstruct == CsNatureSchema)
 	   if (strcmp (pRule->SrOrigNat, NomSchStr) == 0)
-	      found = True;
+	      found = TRUE;
      }
    while (!(found || ret >= pSS->SsNRules));
    if (!found)
@@ -469,7 +469,7 @@ PtrSSchema        pSS;
 	     pRule = &pSS->SsRule[ret - 1];
 	     strncpy (pRule->SrOrigNat, NomSchStr, MAX_NAME_LENGTH);
 	     strncpy (pRule->SrName, NomSchStr, MAX_NAME_LENGTH);
-	     pRule->SrAssocElem = False;
+	     pRule->SrAssocElem = FALSE;
 	     pRule->SrNDefAttrs = 0;
 	     pRule->SrConstruct = CsNatureSchema;
 	     pRule->SrSSchemaNat = NULL;
@@ -617,11 +617,11 @@ PtrDocument         pDoc;
      {
 	/* cherche si ce schema d'extension existe deja pour le document */
 	pExtens = pDoc->DocSSchema->SsNextExtens;
-	extensionExiste = False;
+	extensionExiste = FALSE;
 	while (pExtens != NULL && !extensionExiste)
 	   if (strcmp (pExtens->SsName, NomSchStr) == 0)
 	      /* le schema d'extension existe deja */
-	      extensionExiste = True;
+	      extensionExiste = TRUE;
 	   else
 	      pExtens = pExtens->SsNextExtens;
 	if (!extensionExiste)
@@ -633,7 +633,7 @@ PtrDocument         pDoc;
 		/* le fichier .conf pour ce type de document */
 		ConfigGetPSchemaNature (pDoc->DocSSchema, NomSchStr, NomSchPrs);
 	     /* charge le schema d'extension demande' */
-	     LoadSchemas (NomSchStr, NomSchPrs, &pExtens, NULL, True);
+	     LoadSchemas (NomSchStr, NomSchPrs, &pExtens, NULL, TRUE);
 	     if (pExtens != NULL)
 	       {
 		  /* cherche le dernier schema d'extension du document */
@@ -673,7 +673,7 @@ PtrSSchema        pSS;
    SRule              *pRule;
    boolean             ret;
 
-   ret = False;
+   ret = FALSE;
    if (pSchStr != NULL)
       /* parcourt les regles de ce schemas */
       for (r = 0; r < pSchStr->SsNRules; r++)
@@ -685,7 +685,7 @@ PtrSSchema        pSS;
 		 /* elle fait reference a la nature supprimee */
 		 /* supprime la reference */
 		{
-		   ret = True;
+		   ret = TRUE;
 		   pRule->SrSSchemaNat = NULL;
 		}
 	      else
@@ -718,11 +718,11 @@ PtrSSchema        pSS;
 {
    boolean             ret;
 
-   ret = False;
+   ret = FALSE;
    /* Cherche tous les schemas de structure qui utilisaient cette nature */
    if (LibRegleNat (pSPere, pSS))
      {
-	ret = True;
+	ret = TRUE;
 	if (pSS->SsPSchema != NULL)
 	   /* libere le schema de presentation associe' */
 	   SupprSchPrs (pSS->SsPSchema, pSS);

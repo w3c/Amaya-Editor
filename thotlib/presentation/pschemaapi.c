@@ -147,7 +147,7 @@ Document            document;
    oldSchema: a presentation schema that is already associated with the
    document. NULL when adding the first additional presentation schema
    for the document.
-   before: if True, the new presentation schema is inserted just before
+   before: if TRUE, the new presentation schema is inserted just before
    oldSchema, else it is inserted just after. Meaningless if
    oldSchema is NULL.
    document: the document to which the presentation schema is added.
@@ -170,12 +170,12 @@ Document            document;
    PtrHandlePSchema    oldHd, newHd;
    boolean             ok;
 
-   ok = False;
+   ok = FALSE;
    if (oldSchema != NULL)
      {
 	oldHd = HandleOfPSchema (oldSchema, document);
 	if (oldHd != NULL)
-	   ok = True;
+	   ok = TRUE;
      }
    else if (document < 1 || document > MAX_DOCUMENTS)
       TtaError (ERR_invalid_document_parameter);
@@ -187,7 +187,7 @@ Document            document;
       TtaError (ERR_invalid_parameter);
    else
      {
-	ok = True;
+	ok = TRUE;
 	oldHd = NULL;
      }
    if (ok)

@@ -136,7 +136,7 @@ View                view;
    i = strlen (chaine) + 1;
    strcpy (&chaine[i], TtaGetMessage (LIB, LIB_DECREASE));
    TtaNewSheet (NumMenuVisibilite, 0, 0, 0, TtaGetMessage (LIB, LIB_VISIBILITY),
-		2, chaine, False, 4, 'L', D_DONE);
+		2, chaine, FALSE, 4, 'L', D_DONE);
 
 
    /* Affiche le nom du document concerne */
@@ -146,5 +146,5 @@ View                view;
    TtaNewLabel (NumDocVisibilite, NumMenuVisibilite, chaine);
    /* Initialisation du reste du formulaire */
    changevisibilityview (NumMenuVisibilite, INTEGER_DATA, (char *) 4);
-   TtaShowDialogue (NumMenuVisibilite, True);
+   TtaShowDialogue (NumMenuVisibilite, TRUE);
 }

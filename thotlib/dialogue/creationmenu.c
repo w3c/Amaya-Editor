@@ -75,7 +75,7 @@ Name                 NomType;
    sprintf (&BufMenu[i], "%s%s", "B", TtaGetMessage (LIB, LIB_SHOW_ELEM_REF));
    TtaNewPopup (NumMenuCreerElemReference, 0,
 		TtaGetMessage (LIB, LIB_MODE_INSERT), 2, BufMenu, NULL, 'L');
-   TtaShowDialogue (NumMenuCreerElemReference, False);
+   TtaShowDialogue (NumMenuCreerElemReference, FALSE);
    /* attend que l'utilisateur aie repondu au menu */
    TtaWaitShowDialogue ();
    *Creer = CreerAskForNew;
@@ -97,13 +97,13 @@ int                 Val;
 {
    if (Val == 0)
      {
-	RetourAskForNew = True;
-	CreerAskForNew = True;
+	RetourAskForNew = TRUE;
+	CreerAskForNew = TRUE;
      }
    if (Val == 1)
      {
-	RetourAskForNew = True;
-	CreerAskForNew = False;
+	RetourAskForNew = TRUE;
+	CreerAskForNew = FALSE;
      }
 }
 
@@ -133,8 +133,8 @@ boolean             ChoixElemNature;
 	/* selecteur de saisie de la nature de l'element a creer (ou zone de saisie */
 	/* s'il n'y a pas de natures definies dans les fichiers de config.). */
 	TtaNewForm (NumFormNature, 0, 0, 0,
-		TtaGetMessage (LIB, LIB_OBJECT_TYPE), True, 1, 'L', D_DONE);
-	nbitem = ConfigMakeDocTypeMenu (BufMenuB, &longueur, False);
+		TtaGetMessage (LIB, LIB_OBJECT_TYPE), TRUE, 1, 'L', D_DONE);
+	nbitem = ConfigMakeDocTypeMenu (BufMenuB, &longueur, FALSE);
 	if (nbitem > 0)
 	   /* le fichier Start Up definit des natures */
 	  {
@@ -145,7 +145,7 @@ boolean             ChoixElemNature;
 		longueur = 5;
 	     /* cree le selecteur */
 	     TtaNewSelector (NumSelectNomNature, NumFormNature,
-			     TtaGetMessage (LIB, LIB_OBJECT_TYPE), nbitem, BufMenuB, longueur, NULL, True, False);
+			     TtaGetMessage (LIB, LIB_OBJECT_TYPE), nbitem, BufMenuB, longueur, NULL, TRUE, FALSE);
 	     /* initialise le selecteur sur sa premiere entree */
 	     TtaSetSelector (NumSelectNomNature, 0, "");
 	  }
@@ -153,7 +153,7 @@ boolean             ChoixElemNature;
 	   /* on n'a pas cree' de selecteur, on cree une zone de saisie */
 	   /* zone de saisie de la nature de l'element a creer */
 	   TtaNewTextForm (NumSelectNomNature, NumFormNature,
-			TtaGetMessage (LIB, LIB_OBJECT_TYPE), 30, 1, False);
+			TtaGetMessage (LIB, LIB_OBJECT_TYPE), 30, 1, FALSE);
      }
    else
      {
@@ -172,7 +172,7 @@ boolean             ChoixElemNature;
 	  }
 	TtaNewPopup (NumMenuChoixEl, 0, TitreMenu, nbentree, BufMenuB, NULL, 'L');
      }
-   TtaShowDialogue (menu, False);
+   TtaShowDialogue (menu, FALSE);
    /* attend que l'utilisateur ait repondu au menu et que le */
    /* mediateur ait appele' RetMenuChoixElem */
    TtaWaitShowDialogue ();
@@ -239,7 +239,7 @@ char                bouton;
 	src += l + 1;
      }
    TtaNewPopup (RefMenu, 0, titre, nbentree, BufMenuB, NULL, bouton);
-   TtaShowDialogue (RefMenu, False);
+   TtaShowDialogue (RefMenu, FALSE);
    /* attend la reponse de l'utilisateur */
    TtaWaitShowDialogue ();
 }

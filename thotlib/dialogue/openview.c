@@ -107,7 +107,7 @@ View                vue;
 	       }
 	     TtaNewPopup (NumMenuVuesAOuvrir, 0, TtaGetMessage (LIB, LIB_VIEWS), nbitem,
 			  BufMenu, NULL, 'L');
-	     TtaShowDialogue (NumMenuVuesAOuvrir, False);
+	     TtaShowDialogue (NumMenuVuesAOuvrir, FALSE);
 	  }
      }
 }

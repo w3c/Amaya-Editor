@@ -120,7 +120,7 @@ PtrElement          pEl;
 
 #endif /* __STDC__ */
 {
-   return False;
+   return FALSE;
 }
 
 #ifdef __STDC__
@@ -136,7 +136,7 @@ Name                 name;
 
 boolean             RemplRefer ()
 {
-   return False;
+   return FALSE;
 }
 
 #ifdef __STDC__
@@ -176,7 +176,7 @@ boolean             Horiz;
 
 #endif /* __STDC__ */
 {
-   return True;
+   return TRUE;
 }
 
 #ifdef __STDC__
@@ -188,7 +188,7 @@ boolean             Horiz;
 
 #endif /* __STDC__ */
 {
-   return True;
+   return TRUE;
 }
 
 #ifdef __STDC__
@@ -200,7 +200,7 @@ PtrElement          pEl2;
 
 #endif /* __STDC__ */
 {
-   return True;
+   return TRUE;
 }
 
 #ifdef __STDC__
@@ -246,7 +246,7 @@ boolean             pre;
 
 #endif /* __STDC__ */
 {
-   return False;
+   return FALSE;
 }
 
 #ifdef __STDC__
@@ -258,7 +258,7 @@ boolean             pre;
 
 #endif /* __STDC__ */
 {
-   return False;
+   return FALSE;
 }
 
 void                EndInsert ()
@@ -564,7 +564,7 @@ int                 frame;
 
 #endif /* __STDC__ */
 {
-   return False;
+   return FALSE;
 }
 
 /* Les fonctions vides pour l'edition de lien   */
@@ -592,7 +592,7 @@ char               *presNature;
 
 #endif /* __STDC__ */
 {
-   return False;
+   return FALSE;
 }
 
 
@@ -606,7 +606,7 @@ char               *schpres;
 
 #endif /* __STDC__ */
 {
-   return False;
+   return FALSE;
 }
 
 /* Les procedures de geom.c */

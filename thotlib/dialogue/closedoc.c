@@ -54,12 +54,12 @@ char               *data;
 	       break;
 	    case 1:
 	       /* sauver avant de fermer */
-	       AbandonFermer = False;
-	       SauverAvantFermer = True;
+	       AbandonFermer = FALSE;
+	       SauverAvantFermer = TRUE;
 	       break;
 	    case 2:
 	       /* fermer sans sauver */
-	       AbandonFermer = False;
+	       AbandonFermer = FALSE;
 	       break;
 	 }
    TtaDestroyDialogue (NumFormFermer);
@@ -89,8 +89,8 @@ boolean            *sauver;
    char                bufbutton[300];
    int                 i;
 
-   AbandonFermer = True;
-   SauverAvantFermer = False;
+   AbandonFermer = TRUE;
+   SauverAvantFermer = FALSE;
    /* le document a ete modifie', on propose de le sauver */
    /* initialise le label du formulaire "Fermer" en y mettant le nom */
    /* du document */
@@ -106,11 +106,11 @@ boolean            *sauver;
    i = strlen (TtaGetMessage (LIB, LIB_SAVE_DOCUMENT)) + 1;
    strcpy (bufbutton + i, TtaGetMessage (LIB, LIB_CLOSE_DON_T_SAVE));
    TtaNewSheet (NumFormFermer, TtaGetViewFrame (document, view), 0, 0,
-		TtaGetMessage (LIB, LIB_CLOSE_A_DOCUMENT), 2, bufbutton, True, 1, 'L', D_CANCEL);
+		TtaGetMessage (LIB, LIB_CLOSE_A_DOCUMENT), 2, bufbutton, TRUE, 1, 'L', D_CANCEL);
    /* label indiquant le nom du document a sauver avant de fermer */
    TtaNewLabel (NumLabelSauverAvantFermer, NumFormFermer, buftext);
    /* active le formulaire "Fermer" */
-   TtaShowDialogue (NumFormFermer, False);
+   TtaShowDialogue (NumFormFermer, FALSE);
    /* attend le retour de ce formulaire (traite' par RetMenuFermer) */
    TtaWaitShowDialogue ();
    *sauver = SauverAvantFermer;
@@ -133,7 +133,7 @@ View                view;
    PtrDocument         pDoc;
    boolean             sauver, ok;
 
-   ok = True;
+   ok = TRUE;
    if (document != 0)
      {
 	pDoc = TabDocuments[document - 1];

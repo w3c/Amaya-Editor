@@ -66,8 +66,8 @@ int                 frame;
 		    && pRe1->ReBox->BxXToCompute)
 		  {
 		     /* La boite distante va etre placee */
-		     pRe1->ReBox->BxXToCompute = False;
-		     Placer (pRe1->ReBox->BxAbstractBox, SeuilVisu, frame, True, False);
+		     pRe1->ReBox->BxXToCompute = FALSE;
+		     Placer (pRe1->ReBox->BxAbstractBox, SeuilVisu, frame, TRUE, FALSE);
 		     VoirXHorsStruct (pRe1->ReBox, SeuilVisu, frame);
 		  }
 	     i++;
@@ -118,8 +118,8 @@ int                 frame;
 		    && pRe1->ReBox->BxYToCompute)
 		  {
 		     /* La boite distante va etre placee */
-		     pRe1->ReBox->BxYToCompute = False;
-		     Placer (pRe1->ReBox->BxAbstractBox, SeuilVisu, frame, False, True);
+		     pRe1->ReBox->BxYToCompute = FALSE;
+		     Placer (pRe1->ReBox->BxAbstractBox, SeuilVisu, frame, FALSE, TRUE);
 		     VoirYHorsStruct (pRe1->ReBox, SeuilVisu, frame);
 		  }
 	     i++;
@@ -183,8 +183,8 @@ boolean             EnY;
    pavefils = pAb->AbFirstEnclosed;
 
    /* Indique s'il faut reevaluer l'englobement du contenu apres mise a jour */
-   reenglobx = False;
-   reengloby = False;
+   reenglobx = FALSE;
+   reengloby = FALSE;
    /* EnX et EnY indiquent que la boite mere (pBox) transmet son decalage */
    /* newX et newY indiquent que la boite fille (pBo1) accepte le decalage */
    /* placeenX et placeenY indiquent que la boite fille transmet son decalage */
@@ -218,20 +218,20 @@ boolean             EnY;
 		     /* S'il s'agit d'un bloc de ligne elastique */
 		     /* il faut reevaluer l'englobement vertical */
 		     if (pBo1->BxType == BoBlock && pBo1->BxHorizFlex)
-			reengloby = True;
+			reengloby = TRUE;
 		     /* Regarde si la boite est positionnee en X dans l'englobante */
 		     box1 = BoiteHInclus (pBo1, NULL);
 		     placeenX = pBo1->BxXToCompute;
 		     if (box1 == NULL)
-			newX = True;
+			newX = TRUE;
 		     else if (pBo1->BxXOutOfStruct)
-			newX = False;
+			newX = FALSE;
 		     else if (box1->BxHorizFlex && box1 != pBo1)
 			/* Le decalage des boites voisines liees a la boite elastique */
 			/* est deja effectue par l'appel de ChngBElast */
-			newX = False;
+			newX = FALSE;
 		     else
-			newX = True;
+			newX = TRUE;
 
 		     /* On regarde si la boite doit etre placee en X absolu */
 		     if (EnX)
@@ -240,28 +240,28 @@ boolean             EnY;
 			    {
 			       /* Si le deplacement est nul on ne peut executer DepOrgX */
 			       if (x == 0)
-				  newX = False;
+				  newX = FALSE;
 			    }
 			  /* Il faut placer les boites positionnees par rapport la racine */
 			  else if (pavefils->AbHorizPos.PosAbRef == FntrTable[frame - 1].FrAbstractBox)
-			     placeenX = True;
+			     placeenX = TRUE;
 		       }
 		     else
-			placeenX = False;
+			placeenX = FALSE;
 
 		     /* On regarde si la boite est positionnee en Y dans l'englobante */
 		     box1 = BoiteVInclus (pBo1, NULL);
 		     placeenY = pBo1->BxYToCompute;
 		     if (box1 == NULL)
-			newY = True;
+			newY = TRUE;
 		     else if (pBo1->BxYOutOfStruct)
-			newY = False;
+			newY = FALSE;
 		     else if (box1->BxVertFlex && box1 != pBo1)
 			/* Le decalage des boites voisines liees a la boite elastique */
 			/* est deja effectue par l'appel de ChngBElast */
-			newY = False;
+			newY = FALSE;
 		     else
-			newY = True;
+			newY = TRUE;
 
 		     /* On regarde si la boite doit etre placee en Y absolu */
 		     if (EnY)
@@ -271,25 +271,25 @@ boolean             EnY;
 			    {
 			       /* Si le deplacement est nul on ne peut executer DepOrgY */
 			       if (y == 0)
-				  newY = False;
+				  newY = FALSE;
 			    }
 			  /* Il faut placer les boites positionnee par rapport la racine */
 			  else if (pavefils->AbVertPos.PosAbRef == FntrTable[frame - 1].FrAbstractBox)
-			     placeenY = True;
+			     placeenY = TRUE;
 		       }
 		     else
-			placeenY = False;
+			placeenY = FALSE;
 
 		     /* Le contenu des boites elastiques et hors-structures est deja place */
 		     if (pBo1->BxHorizFlex || pBo1->BxXOutOfStruct)
 		       {
-			  placeenX = False;
+			  placeenX = FALSE;
 			  /*if (pBo1->BxType == BoBlock) */
 			  /* La reevaluation du bloc de lignes place le contenu en Y */
-			  /*placeenY = False; */
+			  /*placeenY = FALSE; */
 		       }
 		     if (pBo1->BxVertFlex || pBo1->BxYOutOfStruct)
-			placeenY = False;
+			placeenY = FALSE;
 		     /* On detecte les erreurs d'englobement de la boite englobee */
 		     if (!eclate && pBo1->BxType != BoPicture
 		     /* Ne verifie pas les boites placees par relation hors-structure */
@@ -297,10 +297,10 @@ boolean             EnY;
 			if (pavefils->AbHorizEnclosing && placeenX
 			    && (pBo1->BxXOrg < 0 || pBo1->BxXOrg > larg))
 			  {
-			     Erreur = True;
+			     Erreur = TRUE;
 			     if (HardMsgAff)
 			       {
-				  pavefils->AbSelected = True;	/* Mise en evidence de l'erreur, pas une 
+				  pavefils->AbSelected = TRUE;	/* Mise en evidence de l'erreur, pas une 
 								   selection ! */
 				  /* Erreur sur l'inclusion des boites */
 				  TtaDisplayMessage (INFO, TtaGetMessage(LIB, LIB_HORIZ_POS_MISTAKE), TypePave (pavefils));
@@ -310,10 +310,10 @@ boolean             EnY;
 			else if (pavefils->AbVertEnclosing && placeenY
 			       && (pBo1->BxYOrg < 0 || pBo1->BxYOrg > haut))
 			  {
-			     Erreur = True;
+			     Erreur = TRUE;
 			     if (HardMsgAff)
 			       {
-				  pavefils->AbSelected = True;	/* Mise en evidence de l'erreur, pas une 
+				  pavefils->AbSelected = TRUE;	/* Mise en evidence de l'erreur, pas une 
 								   selection ! */
 				  /* Erreur sur l'inclusion des boites */
 				  TtaDisplayMessage (INFO, TtaGetMessage(LIB, LIB_VERTIC_POS_MISTAKE), TypePave (pavefils));
@@ -323,10 +323,10 @@ boolean             EnY;
 			else if (pBo1->BxWidth < 0)
 			  {
 			     pBo1->BxWidth = 1;
-			     Erreur = True;
+			     Erreur = TRUE;
 			     if (HardMsgAff)
 			       {
-				  pavefils->AbSelected = True;
+				  pavefils->AbSelected = TRUE;
 				  /* Mise en evidence de l'erreur, pas une selection ! */
 				  /* ** Erreur sur les dimensions des boites */
 				  TtaDisplayMessage (INFO, TtaGetMessage(LIB, LIB_HORIZ_SIZING_MISTAKE), TypePave (pavefils));
@@ -336,10 +336,10 @@ boolean             EnY;
 			else if (pBo1->BxHeight < 0)
 			  {
 			     pBo1->BxHeight = 1;
-			     Erreur = True;
+			     Erreur = TRUE;
 			     if (HardMsgAff)
 			       {
-				  pavefils->AbSelected = True;
+				  pavefils->AbSelected = TRUE;
 				  /* Mise en evidence de l'erreur, pas une selection ! */
 				  /* ** Erreur sur les dimensions des boites */
 				  TtaDisplayMessage (INFO, TtaGetMessage(LIB, LIB_VERTIC_SIZING_MISTAKE), TypePave (pavefils));
@@ -358,7 +358,7 @@ boolean             EnY;
 			       box1->BxMoved = NULL;
 			       /* Pas de deplacement du contenu des boites qui */
 			       /*  dependent de la boite elastique             */
-			       ChngBElast (pBo1, box1, OpHorizDep, x, frame, True);
+			       ChngBElast (pBo1, box1, OpHorizDep, x, frame, TRUE);
 			    }
 /**BE:AOUT*/ 
 			  else if (!placeenX)
@@ -367,7 +367,7 @@ boolean             EnY;
 			  else
 			     pBo1->BxXOrg += x;
 
-			  pBo1->BxXToCompute = False;	/* La boite est placee */
+			  pBo1->BxXToCompute = FALSE;	/* La boite est placee */
 
 			  /* On detecte les debordements de la boite englobante */
 			  if (pavefils->AbHorizEnclosing
@@ -376,10 +376,10 @@ boolean             EnY;
 			      && !pBo1->BxHorizFlex
 			      && !pBox->BxHorizFlex)
 			    {
-			       Erreur = True;
+			       Erreur = TRUE;
 			       if (HardMsgAff)
 				 {
-				    pavefils->AbSelected = True;
+				    pavefils->AbSelected = TRUE;
 				    /* Mise en evidence de l'erreur, pas une selection ! */
 				    /* Erreur sur l'inclusion des boites */
 				    TtaDisplayMessage (INFO, TtaGetMessage(LIB, LIB_HORIZ_BOX_OVERFLOW), TypePave (pavefils));
@@ -410,18 +410,18 @@ boolean             EnY;
 						&& pRe1->ReBox->BxAbstractBox->AbHorizPos.PosAbRef == pavefils)
 					      {
 						 if (pRe1->ReBox->BxHorizFlex)
-						    ChngBElast (pRe1->ReBox, pBo1, pRe1->ReOp, x, frame, True);
+						    ChngBElast (pRe1->ReBox, pBo1, pRe1->ReOp, x, frame, TRUE);
 						 else
 						    DepOrgX (pRe1->ReBox, pBo1, x, frame);
 						 /* La boite distante est placee */
-						 pRe1->ReBox->BxXToCompute = False;
+						 pRe1->ReBox->BxXToCompute = FALSE;
 					      }
 					    /* Relation sur la largeur elastique de la boite */
 					    else if (pRe1->ReOp == OpWidth)
 					      {
 						 /* Pas de deplacement du contenu des boites qui */
 						 /*  dependent de la boite elastique             */
-						 ChngBElast (pRe1->ReBox, pBo1, pRe1->ReOp, x, frame, True);
+						 ChngBElast (pRe1->ReBox, pBo1, pRe1->ReOp, x, frame, TRUE);
 					      }
 					 }
 				       i++;
@@ -435,14 +435,14 @@ boolean             EnY;
 		     /* l'englobante sans deplacer une englobee peut        */
 		     /* modifier la largeur de la boite englobante.         */
 		     else if (EnX && pBo1->BxXOutOfStruct)
-			reenglobx = True;
+			reenglobx = TRUE;
 		     /* On traite les relations hors-structures des boites non */
 		     /* decalees mais qui doivent etre placees en X absolu     */
 		     if (placeenX && !newX)
 		       {
 			  VoirXHorsStruct (pBo1, SeuilVisu, frame);
 			  /* La boite est placee */
-			  pBo1->BxXToCompute = False;
+			  pBo1->BxXToCompute = FALSE;
 		       }
 		     /* On decale la boite positionnee en Y dans l'englobante */
 		     if (EnY && newY)
@@ -457,7 +457,7 @@ boolean             EnY;
 			       box1->BxMoved = NULL;
 			       /* Pas de deplacement du contenu des boites qui */
 			       /*  dependent de la boite elastique             */
-			       ChngBElast (pBo1, box1, OpVertDep, y, frame, False);
+			       ChngBElast (pBo1, box1, OpVertDep, y, frame, FALSE);
 			    }
 /**BE:AOUT*/ 
 			  else if (!placeenY)
@@ -465,7 +465,7 @@ boolean             EnY;
 /**BE:AOUT*/ DepYContenu (pBo1, y, frame);
 			  else
 			     pBo1->BxYOrg += y;
-			  pBo1->BxYToCompute = False;	/* La boite est placee */
+			  pBo1->BxYToCompute = FALSE;	/* La boite est placee */
 			  /* On detecte les debordements en Y de la boite englobante */
 			  if (pavefils->AbVertEnclosing
 			      && !eclate
@@ -473,10 +473,10 @@ boolean             EnY;
 			      && !pBo1->BxVertFlex
 			      && !pBox->BxVertFlex)
 			    {
-			       Erreur = True;
+			       Erreur = TRUE;
 			       if (HardMsgAff)
 				 {
-				    pavefils->AbSelected = True;
+				    pavefils->AbSelected = TRUE;
 				    /* Mise en evidence de l'erreur, pas une selection ! */
 				    /* Erreur sur l'inclusion des boites */
 				    TtaDisplayMessage (INFO, TtaGetMessage(LIB, LIB_VERTIC_BOX_OVERFLOW), TypePave (pavefils));
@@ -507,18 +507,18 @@ boolean             EnY;
 						&& pRe1->ReBox->BxAbstractBox->AbVertPos.PosAbRef == pavefils)
 					      {
 						 if (pRe1->ReBox->BxVertFlex)
-						    ChngBElast (pRe1->ReBox, pBo1, pRe1->ReOp, y, frame, False);
+						    ChngBElast (pRe1->ReBox, pBo1, pRe1->ReOp, y, frame, FALSE);
 						 else
 						    DepOrgY (pRe1->ReBox, pBo1, y, frame);
 						 /* La boite distante est placee */
-						 pRe1->ReBox->BxYToCompute = False;
+						 pRe1->ReBox->BxYToCompute = FALSE;
 					      }
 					    /* Relation sur la hauteur elastique de la boite */
 					    else if (pRe1->ReOp == OpHeight)
 					      {
 						 /* Pas de deplacement du contenu des boites qui */
 						 /*  dependent de la boite elastique             */
-						 ChngBElast (pRe1->ReBox, pBo1, pRe1->ReOp, y, frame, False);
+						 ChngBElast (pRe1->ReBox, pBo1, pRe1->ReOp, y, frame, FALSE);
 					      }
 					 }
 				       i++;
@@ -532,7 +532,7 @@ boolean             EnY;
 		     /* l'englobante sans deplacer une englobee peut        */
 		     /* modifier la hauteur de la boite englobante.         */
 		     else if (EnY && pBo1->BxYOutOfStruct)
-			reengloby = True;
+			reengloby = TRUE;
 
 		     /* On traite les relations hors-structures des boites non */
 		     /* decalees mais qui doivent etre placees en Y absolu     */
@@ -540,7 +540,7 @@ boolean             EnY;
 		       {
 			  VoirYHorsStruct (pBo1, SeuilVisu, frame);
 			  /* La boite est placee */
-			  pBo1->BxYToCompute = False;
+			  pBo1->BxYToCompute = FALSE;
 		       }
 		     /* On traite les origines des boites de niveau inferieur */
 		     if (placeenX || placeenY)
@@ -553,10 +553,10 @@ boolean             EnY;
    /* boites filles est positionnee par une relation hors-structure */
    /* --> il faut reevaluer la dimension correspondante.            */
    if (reenglobx && pBox->BxContentWidth)
-      DiffereEnglobement (pBox, True);
+      DiffereEnglobement (pBox, TRUE);
 
    if (reengloby && pBox->BxContentHeight)
-      DiffereEnglobement (pBox, False);
+      DiffereEnglobement (pBox, FALSE);
 }				/* Placer */
 
 
@@ -591,12 +591,12 @@ boolean            *modifpage;
 	     /* La boite est sur la limite de page mais non secable */
 	     /* deplace la limite de page sur l'origine de la boite */
 	     *haut = pAb->AbBox->BxYOrg;
-	     *modifpage = True;
+	     *modifpage = TRUE;
 	  }
 	else if (!pAb->AbOnPageBreak)
 	  {
-	     pAb->AbOnPageBreak = True;
-	     pAb->AbAfterPageBreak = False;
+	     pAb->AbOnPageBreak = TRUE;
+	     pAb->AbAfterPageBreak = FALSE;
 	     /* On traite le pave pere */
 	     if (pAb->AbVertEnclosing)
 		SurLaPage (pAb->AbEnclosing, haut, modifpage);
@@ -629,8 +629,8 @@ boolean            *modifpage;
 
    if (pAb != NULL)
      {
-	pAb->AbOnPageBreak = False;
-	pAb->AbAfterPageBreak = True;
+	pAb->AbOnPageBreak = FALSE;
+	pAb->AbAfterPageBreak = TRUE;
 	pavepere = pAb->AbEnclosing;
 	if (pAb->AbVertEnclosing && pavepere != NULL)
 	   /* Le pere est sur la page ou hors de la page */
@@ -685,7 +685,7 @@ boolean            *modifpage;
    boolean             retour;
 
    /* A priori la limite de page n'est pas deplacee */
-   *modifpage = False;
+   *modifpage = FALSE;
    /* et il faut examiner les paves fils */
 
    if (!Pv->AbDead && Pv->AbBox != NULL)
@@ -699,11 +699,11 @@ boolean            *modifpage;
 	  {
 	     prec = box1;
 	     box1 = box1->BxNexChild;
-	     retour = True;
+	     retour = TRUE;
 	     first = box1;	/* memorise la premiere boite */
 	     /* A priori la boite est dans la page */
-	     Pv->AbAfterPageBreak = False;
-	     Pv->AbOnPageBreak = False;
+	     Pv->AbAfterPageBreak = FALSE;
+	     Pv->AbOnPageBreak = FALSE;
 	     /* Ce n'est pas la peine de continuer le calcul */
 	     /* des coupures de boites quand la limite de    */
 	     /* page est deplacee */
@@ -731,20 +731,20 @@ boolean            *modifpage;
 			      {
 				 /* On deplace la limite de page */
 				 *haut = prec->BxYOrg;
-				 *modifpage = True;
+				 *modifpage = TRUE;
 			      }
 			 }
 		       else
 			  /* La boite est sur la limite de page */
 			  SurLaPage (Pv, haut, modifpage);
-		       retour = False;
+		       retour = FALSE;
 		    }
 		  else
 		    {
 		       /* La boite est sur la limite de page */
 		       /* deplace la limite de page sur l'origine de la boite */
 		       *haut = org;
-		       *modifpage = True;
+		       *modifpage = TRUE;
 		    }
 
 		  prec = box1;
@@ -762,8 +762,8 @@ boolean            *modifpage;
 		  if (org + box1->BxHeight <= *haut)
 		    {
 		       /* La boite est dans la page */
-		       Pv->AbAfterPageBreak = False;
-		       Pv->AbOnPageBreak = False;
+		       Pv->AbAfterPageBreak = FALSE;
+		       Pv->AbOnPageBreak = FALSE;
 		    }
 		  else if (org >= *haut)
 		     /* La boite est hors page */
@@ -773,7 +773,7 @@ boolean            *modifpage;
 		       /* La boite est sur la limite de page mais non secable */
 		       /* deplace la limite de page sur l'origine de la boite */
 		       *haut = org;
-		       *modifpage = True;
+		       *modifpage = TRUE;
 		    }
 		  else if (Pv->AbVertEnclosing)
 		    {
@@ -785,14 +785,14 @@ boolean            *modifpage;
 		  else
 		    {
 		       /* La boite est sur la limite de page, secable et non englobee */
-		       Pv->AbOnPageBreak = True;
-		       Pv->AbAfterPageBreak = False;
+		       Pv->AbOnPageBreak = TRUE;
+		       Pv->AbAfterPageBreak = FALSE;
 		    }
 	       }		/*if != BoGhost */
 	     else
 	       {
-		  Pv->AbOnPageBreak = False;
-		  Pv->AbAfterPageBreak = False;
+		  Pv->AbOnPageBreak = FALSE;
+		  Pv->AbAfterPageBreak = FALSE;
 	       }
 
 	     /* On traite les paves fils */
@@ -839,8 +839,8 @@ PtrAbstractBox             pAb;
    PtrAbstractBox             pP;
 
    pP = pAb;
-   pP->AbOnPageBreak = False;
-   pP->AbAfterPageBreak = False;
+   pP->AbOnPageBreak = FALSE;
+   pP->AbAfterPageBreak = FALSE;
    pP = pP->AbFirstEnclosed;
    while (pP != NULL)
      {
@@ -879,7 +879,7 @@ int                *page;
    /* on parcourt l'arbre pour mettre AbOnPageBreak et AbAfterPageBreak a faux */
    RazPage (Pv);
 #endif /* __COLPAGE__ */
-   result = True;
+   result = TRUE;
    /* Tant que la limite de page change on recalcule */
    /* quelles sont les boites coupees */
    while (result)
@@ -965,12 +965,12 @@ int                *nbcar;
 			     /* On recheche en arriere le blanc precedent */
 			     adbuff = box1->BxBuffer;
 			     i = box1->BxFirstChar - 1;
-			     encore = True;
+			     encore = TRUE;
 			     while (encore)
 				if (adbuff->BuContent[i] == ' ')
 				  {
 				     /* On a trouve le blanc */
-				     encore = False;
+				     encore = FALSE;
 				     /* Debute le nouveau mot au caractere suivant */
 				     (*nbcar)++;
 				  }
@@ -985,7 +985,7 @@ int                *nbcar;
 					  }
 					else
 					   /* On arrete */
-					   encore = False;
+					   encore = FALSE;
 				     else
 					i--;
 				  }	/*else */
@@ -1030,8 +1030,8 @@ int                *nbcar;
 	/* On traduit les valeurs pixel dans l'unite demandee */
 	if (EnPt)
 	  {
-	     *pos = PixelEnPt (org, 0);
-	     *ht = PixelEnPt (haut, 0);
+	     *pos = PixelToPoint (org);
+	     *ht = PixelToPoint (haut);
 	  }
 	else
 	  {
@@ -1073,8 +1073,8 @@ int                *yCoord;
 		x -= Pv->AbBox->BxXOrg;
 		y -= Pv->AbBox->BxXOrg;
 	     }
-	   *xCoord = PixelEnPt (x, 0);
-	   *yCoord = PixelEnPt (y, 1);
+	   *xCoord = PixelToPoint (x);
+	   *yCoord = PixelToPoint (y);
 	}
 }
 
@@ -1097,8 +1097,8 @@ int                *largeur;
    if (Pv != NULL)
       if (Pv->AbBox != NULL)
 	{
-	   *hauteur = PixelEnPt (Pv->AbBox->BxHeight, 0);
-	   *largeur = PixelEnPt (Pv->AbBox->BxWidth, 1);
+	   *hauteur = PixelToPoint (Pv->AbBox->BxHeight);
+	   *largeur = PixelToPoint (Pv->AbBox->BxWidth);
 	}
 }
 
@@ -1127,9 +1127,9 @@ boolean             EnY;
    /* Les boites englobees des boites elastiques */
    /* sont toujours placees en absolue           */
    if (pBox->BxHorizFlex || pBox->BxXOutOfStruct)
-      EnX = False;
+      EnX = FALSE;
    if (pBox->BxVertFlex || pBox->BxYOutOfStruct)
-      EnY = False;
+      EnY = FALSE;
 
    if (pBox->BxType != BoSplit)
      {

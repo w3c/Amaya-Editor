@@ -93,14 +93,14 @@ boolean            *assoc;
 #endif /* __STDC__ */
 {
 
-   *assoc = False;
+   *assoc = FALSE;
    *viewnumber = 0;
 
    if (view < 100)
       *viewnumber = (int) view;
    else
      {
-	*assoc = True;
+	*assoc = TRUE;
 	*viewnumber = (int) view - 100;
      }
 }
@@ -207,10 +207,10 @@ int                 h;
 		/* Ajoute le saut de page qui manque eventuellement a la */
 		/* fin du document */
 		if (pDoc->DocSSchema->SsPSchema->PsPaginatedView[0])
-		   AjoutePageEnFin (pDoc->DocRootElement, 1, pDoc, False);
+		   AjoutePageEnFin (pDoc->DocRootElement, 1, pDoc, FALSE);
 #endif /* __COLPAGE__ */
-		nVue = CreeImageAbstraite (pDoc, 1, 0, pDoc->DocSSchema, 1, True, NULL);
-		OuvreVueCreee (pDoc, nVue, False, x, y, w, h);
+		nVue = CreeImageAbstraite (pDoc, 1, 0, pDoc->DocSSchema, 1, TRUE, NULL);
+		OuvreVueCreee (pDoc, nVue, FALSE, x, y, w, h);
 		view = nVue;
 	     }
      }
@@ -273,12 +273,12 @@ Element             subtree;
    else
      {
 	pDoc = TabDocuments[document - 1];
-	assoc = False;
+	assoc = FALSE;
 	nVue = 0;
 	/* etablit la liste de toutes les vues possibles pour ce document */
 	nbvues = LesVuesDunDoc (pDoc, toutesLesVues);
 	/* cherche dans cette liste le nom de la vue a ouvrir */
-	trouve = False;
+	trouve = FALSE;
 	for (i = 0; i < nbvues && !trouve; i++)
 	  {
 	     trouve = strcmp (viewName, toutesLesVues[i].VdViewName) == 0;
@@ -297,22 +297,22 @@ Element             subtree;
 		  /* Ajoute le saut de page qui manque eventuellement a la fin */
 		  if (toutesLesVues[v].VdView > 0)
 		     if (pDoc->DocSSchema->SsPSchema->PsPaginatedView[0])
-			AjoutePageEnFin (pDoc->DocAssocRoot[toutesLesVues[v].VdView - 1], 1, pDoc, False);
+			AjoutePageEnFin (pDoc->DocAssocRoot[toutesLesVues[v].VdView - 1], 1, pDoc, FALSE);
 #endif /* __COLPAGE__ */
 		  nVue = CreeImageAbstraite (pDoc, 0, toutesLesVues[v].VdAssocNum,
-		    toutesLesVues[v].VdSSchema, 1, True, (PtrElement) subtree);
-		  assoc = True;
+		    toutesLesVues[v].VdSSchema, 1, TRUE, (PtrElement) subtree);
+		  assoc = TRUE;
 	       }
 	     else
 	       {
 #ifndef __COLPAGE__
 		  /* Ajoute le saut de page qui manque eventuellement a la fin */
 		  if (pDoc->DocSSchema->SsPSchema->PsPaginatedView[toutesLesVues[v].VdView])
-		     AjoutePageEnFin (pDoc->DocRootElement, toutesLesVues[v].VdView, pDoc, False);
+		     AjoutePageEnFin (pDoc->DocRootElement, toutesLesVues[v].VdView, pDoc, FALSE);
 #endif /* __COLPAGE__ */
 		  nVue = CreeImageAbstraite (pDoc, toutesLesVues[v].VdView, 0,
-		   toutesLesVues[v].VdSSchema, 1, False, (PtrElement) subtree);
-		  assoc = False;
+		   toutesLesVues[v].VdSSchema, 1, FALSE, (PtrElement) subtree);
+		  assoc = FALSE;
 	       }
 	     if (nVue == 0)
 		TtaError (ERR_cannot_open_view);
@@ -445,7 +445,7 @@ View                view;
 	   else
 	     {
 		DetruitFenetre (pDoc->DocViewFrame[view - 1]);
-		detruit (pDoc, view, False, False);
+		detruit (pDoc, view, FALSE, FALSE);
 	     }
 	else
 	   /* vue d'elements associes */
@@ -456,7 +456,7 @@ View                view;
 	     else
 	       {
 		  DetruitFenetre (pDoc->DocAssocFrame[numAssoc - 1]);
-		  detruit (pDoc, numAssoc, True, False);
+		  detruit (pDoc, numAssoc, TRUE, FALSE);
 	       }
 	  }
      }
@@ -467,7 +467,7 @@ View                view;
 /* |     document pDoc. Procedure partiellement reprise de              | */
 /* |     DetrImAbs_Pages du module page.c                               | */
 /* |     Vue = numero de vue ou d'elt assoc si vue associee.            | */
-/* |     complete = True si on libere complement la fenetre             | */
+/* |     complete = TRUE si on libere complement la fenetre             | */
 /* ----------------------------------------------------------------------- */
 #ifdef __STDC__
 static void         DetruitImageVue (int Vue, boolean Assoc, PtrDocument pDoc, boolean complete)
@@ -504,7 +504,7 @@ boolean             complete;
      {
 	TuePave (PavRacine);
 	ModifVue (frame, &h, PavRacine);
-	detruit (pDoc, Vue, Assoc, True);
+	detruit (pDoc, Vue, Assoc, TRUE);
 	FrameTable[frame].FrDoc = 0;
 	/*FntrTable[frame - 1].FrAbstractBox = NULL; */
      }
@@ -536,12 +536,12 @@ boolean             complete;
 	/* creees par lui et qui viennent d'etre detruites. */
 	PavRacine->AbSize = -1;
 #ifdef __COLPAGE__
-	PavRacine->AbTruncatedTail = True;
+	PavRacine->AbTruncatedTail = TRUE;
 #endif /* __COLPAGE__ */
 	/* on marque le pave racine complet en tete pour que CreePaves */
 	/* engendre effectivement les paves de presentation cree's en tete */
 	if (PavRacine->AbLeafType == LtCompound)
-	   PavRacine->AbTruncatedHead = False;
+	   PavRacine->AbTruncatedHead = FALSE;
      }
 }				/* DetruitImageVue */
 
@@ -583,7 +583,7 @@ View                view;
 	   if (view < 1 || view > MAX_VIEW_DOC)
 	      TtaError (ERR_invalid_parameter);
 	   else
-	      DetruitImageVue (view, False, pDoc, True);
+	      DetruitImageVue (view, FALSE, pDoc, TRUE);
 	else
 	   /* vue d'elements associes */
 	  {
@@ -591,7 +591,7 @@ View                view;
 	     if (numAssoc < 1 || numAssoc > MAX_ASSOC_DOC)
 		TtaError (ERR_invalid_parameter);
 	     else
-		DetruitImageVue (numAssoc, True, pDoc, True);
+		DetruitImageVue (numAssoc, TRUE, pDoc, TRUE);
 	  }
      }
 }
@@ -791,8 +791,8 @@ int                 position;
 	      if (pEl->ElAbstractBox[vue - 1]->AbLeafType == LtCompound)
 		 if (pEl->ElAbstractBox[vue - 1]->AbTruncatedHead)
 		    /* on detruit les paves de l'element dans cette vue */
-		    DetPavVue (pEl, TabDocuments[document - 1], False, vue);
-	   VerifPave (pEl, vue, TabDocuments[document - 1], False, False);
+		    DetPavVue (pEl, TabDocuments[document - 1], FALSE, vue);
+	   VerifPave (pEl, vue, TabDocuments[document - 1], FALSE, FALSE);
 	   if (pEl->ElAbstractBox[vue - 1] != NULL)
 	      MontrerBoite (frame, pEl->ElAbstractBox[vue - 1]->AbBox, 0, position);
 	}
@@ -1044,14 +1044,14 @@ View                view;
 /* ----------------------------------------------------------------------
    TtaIsViewOpened
 
-   Returns True for a open view.
+   Returns TRUE for a open view.
 
    Parameters:
    document: the document to which the view belongs.
    view: the view.
 
    Return value:
-   True or False.
+   TRUE or FALSE.
 
    ---------------------------------------------------------------------- */
 #ifdef __STDC__
@@ -1070,7 +1070,7 @@ View                view;
    boolean             opened;
 
    UserErrorCode = 0;
-   opened = False;
+   opened = FALSE;
    /* verifie le parametre document */
    if (document < 1 || document > MAX_DOCUMENTS)
       TtaError (ERR_invalid_document_parameter);
@@ -1088,7 +1088,7 @@ View                view;
 	     {
 		dVue = pDoc->DocView[view - 1];
 		if (dVue.DvSSchema != NULL || dVue.DvPSchemaView != 0)
-		   opened = True;
+		   opened = TRUE;
 	     }
 	else
 	   /* vue d'elements associes */
@@ -1100,7 +1100,7 @@ View                view;
 	       {
 		  pEl = pDoc->DocAssocRoot[numAssoc - 1];
 		  if (pEl != NULL)
-		     opened = True;
+		     opened = TRUE;
 	       }
 	  }
      }
@@ -1247,8 +1247,8 @@ PtrDocument         pDoc;
    PtrElement          pAsc;
    PtrAbstractBox             pAb;
 
-   result = True;
-   fini = False;
+   result = TRUE;
+   fini = FALSE;
    /* on commence par un test simple : l'element voisin a-t-il un pave */
    /* dans la vue? */
    if (pEl->ElPrevious != NULL)
@@ -1258,12 +1258,12 @@ PtrDocument         pDoc;
 	if (pAb != NULL)
 	   /* l'element precedent a un pave dans la vue */
 	  {
-	     fini = True;
+	     fini = TRUE;
 	     /* si le pave de l'element precedent est complet en queue, */
 	     /* l'element aura son pave dans l'image existante */
 	     if (pAb->AbInLine || pAb->AbLeafType != LtCompound)
 		/* les paves mis en lignes ou feuille sont toujours entiers */
-		result = True;
+		result = TRUE;
 	     else
 		result = !pAb->AbTruncatedTail;
 	  }
@@ -1275,12 +1275,12 @@ PtrDocument         pDoc;
 	if (pAb != NULL)
 	   /* l'element suivant a un pave dans la vue */
 	  {
-	     fini = True;
+	     fini = TRUE;
 	     /* si le pave de l'element suivant est complet en tete, */
 	     /* l'element aura son pave dans l'image existante */
 	     if (pAb->AbInLine || pAb->AbLeafType != LtCompound)
 		/* les paves mis en lignes sont toujours entiers */
-		result = True;
+		result = TRUE;
 	     else
 		result = !pAb->AbTruncatedHead;
 	  }
@@ -1290,28 +1290,28 @@ PtrDocument         pDoc;
       /* ait un pave dans la vue */
      {
 	pAsc = pEl->ElParent;
-	trouve = False;
+	trouve = FALSE;
 	while (pAsc != NULL && !trouve)
 	   if (pAsc->ElAbstractBox[vue - 1] == NULL)
 	      pAsc = pAsc->ElParent;
 	   else
-	      trouve = True;
+	      trouve = TRUE;
 	if (trouve)
 	   if (pAsc->ElAbstractBox[vue - 1]->AbInLine ||
 	       ((!pAsc->ElAbstractBox[vue - 1]->AbTruncatedHead) &&
 		(!pAsc->ElAbstractBox[vue - 1]->AbTruncatedTail)))
 	      /* le premier pave englobant est complet */
 	     {
-		result = True;
-		fini = True;
+		result = TRUE;
+		fini = TRUE;
 	     }
      }
    if (!fini && pEl->ElParent == NULL)
       /* c'est un element racine. Il s'agit donc d'une vue qu'on cree */
       /* entierement */
      {
-	result = True;
-	fini = True;
+	result = TRUE;
+	fini = TRUE;
      }
    if (!fini && pavRacine != NULL)
       /* on regarde si notre element est entre l'element qui possede le */
@@ -1326,10 +1326,10 @@ PtrDocument         pDoc;
 	   /* feuille */
 	   if (!pavRacine->AbTruncatedHead)
 	      /* l'image est complete en tete,on creera l'image de l'element */
-	      result = True;
+	      result = TRUE;
 	   else
 	      /* il est hors de l'image */
-	      result = False;
+	      result = FALSE;
 	else
 	   /* notre element se trouve apres l'element qui a la premiere */
 	   /* feuille, comment se situe-t-il par rapport a l'element qui */
@@ -1346,17 +1346,17 @@ PtrDocument         pDoc;
 	     if (ElemIsBefore (pEl, pAb->AbElement))
 		/* notre element se trouve avant l'element qui a la derniere */
 		/* feuille, il est dans l'image */
-		result = True;
+		result = TRUE;
 	     else
 		/* notre element se trouve apres l'element qui a la derniere */
 		/* feuille */
 	     if (!pavRacine->AbTruncatedTail)
 		/* l'image est complete en queue, on creera l'image de */
 		/* l'element */
-		result = True;
+		result = TRUE;
 	     else
 		/* il est hors de l'image */
-		result = False;
+		result = FALSE;
 	  }
      }
    return result;
@@ -1408,10 +1408,10 @@ PtrDocument         pDoc;
 
    for (vue = 1; vue <= MAX_VIEW_DOC; vue++)
       if (pDoc->DocView[vue - 1].DvPSchemaView > 0)
-	 DetruitImageVue (vue, False, pDoc, False);
+	 DetruitImageVue (vue, FALSE, pDoc, FALSE);
    for (assoc = 1; assoc <= MAX_ASSOC_DOC; assoc++)
       if (pDoc->DocAssocFrame[assoc - 1] > 0)
-	 DetruitImageVue (assoc, True, pDoc, False);
+	 DetruitImageVue (assoc, TRUE, pDoc, FALSE);
 }				/* DetruitImage */
 
 
@@ -1448,7 +1448,7 @@ PtrDocument         pDoc;
 	pElRacine = pDoc->DocAssocRoot[Vue - 1];
 	PavRacine = pElRacine->ElAbstractBox[0];
 	frame = pDoc->DocAssocFrame[Vue - 1];
-	CreePaves (pElRacine, pDoc, 1, True, True, &complet);
+	CreePaves (pElRacine, pDoc, 1, TRUE, TRUE, &complet);
 	h = 0;
 	ModifVue (frame, &h, PavRacine);
      }
@@ -1463,7 +1463,7 @@ PtrDocument         pDoc;
 #endif /* __COLPAGE__ */
 	PavRacine = pDoc->DocViewRootAb[Vue - 1];
 	frame = pDoc->DocViewFrame[Vue - 1];
-	CreePaves (pElRacine, pDoc, Vue, True, True, &complet);
+	CreePaves (pElRacine, pDoc, Vue, TRUE, TRUE, &complet);
 	h = 0;
 	ModifVue (frame, &h, PavRacine);
      }
@@ -1486,10 +1486,10 @@ PtrDocument         pDoc;
 
    for (vue = 1; vue <= MAX_VIEW_DOC; vue++)
       if (pDoc->DocView[vue - 1].DvPSchemaView > 0)
-	 RecreeImageVue (vue, False, pDoc);
+	 RecreeImageVue (vue, FALSE, pDoc);
    for (assoc = 1; assoc <= MAX_ASSOC_DOC; assoc++)
       if (pDoc->DocAssocFrame[assoc - 1] > 0)
-	 RecreeImageVue (assoc, True, pDoc);
+	 RecreeImageVue (assoc, TRUE, pDoc);
 
 }				/* RecreeImage */
 
@@ -1528,7 +1528,7 @@ boolean             creation;
       return;
    if (sibling != NULL)
       /* l'element sibling n'est plus le dernier (ou premier) fils de son pere */
-      PlusPremDer (sibling, pDoc, first, True);
+      PlusPremDer (sibling, pDoc, first, TRUE);
    /* on ne cree les paves que s'ils tombent dans la partie de l'image */
    /* du document deja construite */
    if (!VueAssoc (newElement))
@@ -1594,17 +1594,17 @@ boolean             reaffiche;
    pAb = pEl->ElAbstractBox[vue - 1];
    if (pAb != NULL)
      {
-	stop = False;
+	stop = FALSE;
 	while (!stop)
 	   if (pAb->AbElement != pEl)
 	      /* ce n'est pas un pave de l'element, on arrete */
-	      stop = True;
+	      stop = TRUE;
 	   else
 	      /* c'est un pave de l'element, on le traite */
 	     {
 		pAb->AbReadOnly = !newPavModif;
 		if (reaffiche)
-		   pAb->AbAspectChange = True;
+		   pAb->AbAspectChange = TRUE;
 		if (!pAb->AbPresentationBox)
 		   /* c'est le pave principal de l'element */
 		  {
@@ -1620,7 +1620,7 @@ boolean             reaffiche;
 			    {
 			       pPavFils->AbReadOnly = !newPavModif;
 			       if (reaffiche)
-				  pPavFils->AbAspectChange = True;
+				  pPavFils->AbAspectChange = TRUE;
 			    }
 			  pPavFils = pPavFils->AbNext;
 		       }
@@ -1629,7 +1629,7 @@ boolean             reaffiche;
 		   /* passe au pave suivant */
 		   pAb = pAb->AbNext;
 		else
-		   stop = True;
+		   stop = TRUE;
 	     }
      }
 }
@@ -1721,7 +1721,7 @@ int                 lastCharacter;
    documentNewSelection[document - 1].SDElemExt = NULL;
    documentNewSelection[document - 1].SDCarExt = 0;
    /* enregistre cette nouvelle selection */
-   documentNewSelection[document - 1].SDSelActive = True;
+   documentNewSelection[document - 1].SDSelActive = TRUE;
    documentNewSelection[document - 1].SDElemSel = element;
    documentNewSelection[document - 1].SDPremCar = firstCharacter;
    documentNewSelection[document - 1].SDDerCar = lastCharacter;
@@ -1796,7 +1796,7 @@ Document            document;
       if (SelContinue)
 	 /* la selection est continue */
 	{
-	   changeSelection = False;
+	   changeSelection = FALSE;
 	   if (pEl == premSel)
 	      /* l'element est en tete de la selection */
 	      if (pEl == derSel)
@@ -1808,7 +1808,7 @@ Document            document;
 		{
 		   premSel = SelSuivant (premSel, derSel);
 		   premCar = 0;
-		   changeSelection = True;
+		   changeSelection = TRUE;
 		}
 	   else
 	      /* l'element n'est pas en tete de la selection */
@@ -1829,7 +1829,7 @@ Document            document;
 		  {
 		     derSel = selPreced;
 		     derCar = 0;
-		     changeSelection = True;
+		     changeSelection = TRUE;
 		  }
 	     }
 	   else
@@ -1905,7 +1905,7 @@ Document            document;
    if (documentDisplayMode[document - 1] == NoComputedDisplay)
       if (pEl->ElParent == NULL)
 	{
-	   DetrPaves (pEl, pDoc, True);
+	   DetrPaves (pEl, pDoc, TRUE);
 	   RemoveElement (pEl);
 	   if (pEl != pDoc->DocRootElement)
 	     {
@@ -1926,29 +1926,29 @@ Document            document;
    /* cherche l'element qui precede l'element a detruire : pPrec */
    pPrec = pEl->ElPrevious;
    /* saute les marques de page */
-   stop = False;
+   stop = FALSE;
    do
       if (pPrec == NULL)
-	 stop = True;
+	 stop = TRUE;
       else if (!pPrec->ElTerminal || pPrec->ElLeafType != LtPageColBreak)
-	 stop = True;
+	 stop = TRUE;
       else
 	 pPrec = pPrec->ElPrevious;
    while (!(stop));
    /* cherche le premier element apres l'element a detruire : pSuiv */
    pSuiv = NextElement (pEl);
-   stop = False;
+   stop = FALSE;
    do
       if (pSuiv == NULL)
-	 stop = True;
+	 stop = TRUE;
       else if (pSuiv->ElTerminal && pSuiv->ElLeafType == LtPageColBreak)
 	 pSuiv = NextElement (pSuiv);
       else
-	 stop = True;
+	 stop = TRUE;
    while (!(stop));
    if (pSuiv == NULL)
       pSuiv = NextElement (pPrec);
-   DetrPaves (pEl, pDoc, True);
+   DetrPaves (pEl, pDoc, TRUE);
    pPere = pEl->ElParent;
    RemoveElement (pEl);
    /* cherche l'element a partir duquel il faudra transmettre les */
@@ -1987,36 +1987,36 @@ Document            document;
    if (pSuiv != NULL)
      {
 	pVoisin = pSuiv->ElPrevious;
-	stop = False;
+	stop = FALSE;
 	do
 	   if (pVoisin == NULL)
-	      stop = True;
+	      stop = TRUE;
 	   else if (!pVoisin->ElTerminal
 		    || pVoisin->ElLeafType != LtPageColBreak)
-	      stop = True;
+	      stop = TRUE;
 	   else
 	      pVoisin = pVoisin->ElPrevious;
 	while (!(stop));
 	if (pVoisin == NULL)
 	   /* l'element qui suit la partie detruite devient premier */
-	   PlusPremDer (pSuiv, pDoc, True, False);
+	   PlusPremDer (pSuiv, pDoc, TRUE, FALSE);
      }
    if (pPrec != NULL)
      {
 	pVoisin = pPrec->ElNext;
-	stop = False;
+	stop = FALSE;
 	do
 	   if (pVoisin == NULL)
-	      stop = True;
+	      stop = TRUE;
 	   else if (!pVoisin->ElTerminal
 		    || pVoisin->ElLeafType != LtPageColBreak)
-	      stop = True;
+	      stop = TRUE;
 	   else
 	      pVoisin = pVoisin->ElNext;
 	while (!(stop));
 	if (pVoisin == NULL)
 	   /* l'element qui precede la partie detruite devient dernier */
-	   PlusPremDer (pPrec, pDoc, False, False);
+	   PlusPremDer (pPrec, pDoc, FALSE, FALSE);
 	/* traitement particulier aux tableaux */
       if (ThotLocalActions[T_TableauCreeFiletLigne]!=NULL)
         (*ThotLocalActions[T_TableauCreeFiletLigne])(pPrec, pEl, pDoc);
@@ -2067,7 +2067,7 @@ Document            document;
    if (documentDisplayMode[document - 1] == NoComputedDisplay)
       return;
    /* Detruit les paves de l'element */
-   DetrPaves (pEl, pDoc, True);
+   DetrPaves (pEl, pDoc, TRUE);
    /* reevalue l'image de toutes les vues */
    MajImAbs (pDoc);
    /* on ne cree les paves que s'ils tombent dans la partie de l'image */
@@ -2140,14 +2140,14 @@ Document            document;
 	     pFils = pEl->ElFirstChild;
 	     while (pFils != NULL)
 	       {
-		  DetrPaves (pFils, pDoc, True);
+		  DetrPaves (pFils, pDoc, TRUE);
 		  pFils = pFils->ElNext;
 	       }
 	  }
      }
    else
       /* ce n'est pas une racine, on detruit les paves de l'element */
-      DetrPaves (pEl, pDoc, True);
+      DetrPaves (pEl, pDoc, TRUE);
    /* reevalue l'image de toutes les vues */
    MajImAbs (pDoc);
    /* pas d'operation de reaffichage secondaires */
@@ -2180,7 +2180,7 @@ Document            document;
    if (documentDisplayMode[document - 1] == NoComputedDisplay)
       return;
    /* supprime les anciens paves de la reference */
-   DetrPaves (element, pDoc, False);
+   DetrPaves (element, pDoc, FALSE);
    MajImAbs (pDoc);
    ApplyTransmitRules (element, pDoc);
    RepApplyTransmitRules (element, element, pDoc);
@@ -2219,7 +2219,7 @@ int                 delta;
    /* si le document est en mode de non calcul de l'image, on ne fait rien */
    if (documentDisplayMode[document - 1] == NoComputedDisplay)
       return;
-   modif = False;
+   modif = FALSE;
    for (v = 1; v <= MAX_VIEW_DOC; v++)
       if (element->ElAbstractBox[v - 1] != NULL
 	  && !element->ElAbstractBox[v - 1]->AbNew
@@ -2248,7 +2248,7 @@ int                 delta;
 		  pPa1->AbNext != NULL)
 	      pPa1 = pPa1->AbNext;
 	   pPa1->AbVolume += delta;
-	   pPa1->AbChange = True;
+	   pPa1->AbChange = TRUE;
 	   switch (element->ElLeafType)
 		 {
 		    case LtPicture:
@@ -2278,7 +2278,7 @@ int                 delta;
 	      pDoc->DocAssocModifiedAb[element->ElAssocNum - 1] = element->ElAbstractBox[v - 1];
 	   else
 	      pDoc->DocViewModifiedAb[v - 1] = element->ElAbstractBox[v - 1];
-	   modif = True;
+	   modif = TRUE;
 	}
    if (modif)
       /* ajuste le volume dans toutes les vues, ce qui peut modifier */
@@ -2376,7 +2376,7 @@ Document            document;
 	  {
 	     dvol = pEl->ElTextLength - pAb->AbVolume;
 	     pAb->AbVolume += dvol;
-	     pAb->AbChange = True;
+	     pAb->AbChange = TRUE;
 	     if (!VueAssoc (pEl))
 		pDoc->DocViewModifiedAb[vue - 1] =
 		   Englobant (pAb, pDoc->DocViewModifiedAb[vue - 1]);
@@ -2423,16 +2423,16 @@ Document            document;
    /* teste si pEl est le dernier fils de son pere, */
    /* abstraction faite des marques de page */
    pEVoisin = pEl->ElNext;
-   stop = False;
+   stop = FALSE;
    do
       if (pEVoisin == NULL)
 	 /* pEl devient le dernier fils de son pere */
 	{
-	   PlusPremDer (pEl, pDoc, False, False);
-	   stop = True;
+	   PlusPremDer (pEl, pDoc, FALSE, FALSE);
+	   stop = TRUE;
 	}
       else if (!pEVoisin->ElTerminal || pEVoisin->ElLeafType != LtPageColBreak)
-	 stop = True;
+	 stop = TRUE;
       else
 	 pEVoisin = pEVoisin->ElNext;
    while (!(stop));
@@ -2444,7 +2444,7 @@ Document            document;
 	  {
 	     dvol = pEl->ElTextLength - pAb->AbVolume;
 	     pAb->AbVolume += dvol;
-	     pAb->AbChange = True;
+	     pAb->AbChange = TRUE;
 	     if (!VueAssoc (pEl))
 	       {
 		  pDoc->DocViewModifiedAb[vue - 1] =
@@ -2526,7 +2526,7 @@ boolean             suppression;
      {
 	/* on supprime d'abordles regles de presentation liees */
 	/* a l'attribut sur l'element lui-meme */
-	RemoveAttrPresentation (pEl, TabDocuments[document - 1], pOldAttr, False, NULL);
+	RemoveAttrPresentation (pEl, TabDocuments[document - 1], pOldAttr, FALSE, NULL);
 	/* puis on supprime sur pEl et sur les elements du sous arbre pEl */
 	/* les regles de presentation liees a l'heritage de cet attribut */
 	/* par le sous-arbre s'il existe des elements heritants de celui-ci */
@@ -2592,7 +2592,7 @@ Document            document;
 		  PsNComparAttrs[pAttr->AeAttrNum - 1] > 0);
    /* d'abord on applique les regles de presentation liees */
    /* a l'attribut sur l'element lui-meme */
-   ApplyAttrPRulesToElem (pEl, TabDocuments[document - 1], pAttr, False);
+   ApplyAttrPRulesToElem (pEl, TabDocuments[document - 1], pAttr, FALSE);
    /* puis on applique sur pEl et les elements du sous-arbre pEl */
    /* les regles de presentation liees a l'heritage de cet attribut */
    /* par le sous arbre s'il existe des elements heritants de celui-ci */
@@ -2790,11 +2790,11 @@ Document            document;
    if (documentDisplayMode[document - 1] == DisplayImmediately)
      {
 	/* eteint la selection */
-	EteintOuAllumeSelection (TabDocuments[document - 1], False);
+	EteintOuAllumeSelection (TabDocuments[document - 1], FALSE);
 	/* reaffiche ce qui a deja ete prepare' */
 	ReaffDoc (TabDocuments[document - 1]);
 	/* rallume la selection */
-	EteintOuAllumeSelection (TabDocuments[document - 1], True);
+	EteintOuAllumeSelection (TabDocuments[document - 1], TRUE);
      }
 }
 
@@ -2853,7 +2853,7 @@ DisplayMode         newDisplayMode;
 		/* le document passe en mode affichage differe' ou sans calcul d'image */
 	       {
 		  /* eteint la selection */
-		  EteintOuAllumeSelection (TabDocuments[document - 1], False);
+		  EteintOuAllumeSelection (TabDocuments[document - 1], FALSE);
 		  /* si on passe au mode sans calcul d'image il faut detruire l'image */
 		  if (newDisplayMode == NoComputedDisplay)
 		     DetruitImage (TabDocuments[document - 1]);
@@ -2877,7 +2877,7 @@ DisplayMode         newDisplayMode;
 
 		  if (!documentNewSelection[document - 1].SDSelActive)
 		     /* la selection n'a pas change', on la rallume */
-		     EteintOuAllumeSelection (TabDocuments[document - 1], True);
+		     EteintOuAllumeSelection (TabDocuments[document - 1], TRUE);
 		  else
 		     /* la selection a change', on etablit la selection */
 		     /* enregistree */
@@ -2892,7 +2892,7 @@ DisplayMode         newDisplayMode;
 			    documentNewSelection[document - 1].SDDerCar == 0)
 			       /* selection d'un element complet */
 			       SelectEl (TabDocuments[document - 1],
-					 (PtrElement) (documentNewSelection[document - 1].SDElemSel), True, True);
+					 (PtrElement) (documentNewSelection[document - 1].SDElemSel), TRUE, TRUE);
 			    else
 			       /* selection d'une chaine */
 			       SelectString (TabDocuments[document - 1],
@@ -2908,12 +2908,12 @@ DisplayMode         newDisplayMode;
 			 {
 			    SelEtend ((PtrElement) (documentNewSelection[document - 1].SDElemExt),
 				documentNewSelection[document - 1].SDCarExt,
-				      False, False, False);
+				      FALSE, FALSE, FALSE);
 			    /* il n'y a plus d'extension de selection a etablir */
 			    documentNewSelection[document - 1].SDElemExt = NULL;
 			 }
 		       /* plus de selection a faire pour ce document */
-		       documentNewSelection[document - 1].SDSelActive = False;
+		       documentNewSelection[document - 1].SDSelActive = FALSE;
 		    }
 	       }
 	     else if (documentDisplayMode[document - 1] == DeferredDisplay
@@ -2983,7 +2983,7 @@ int                 color;
 
 #ifndef NEW_WILLOWS
    Bgcolor = ColorPixel (color);
-   XSetWindowBackground (GDp (0), FrRef[frame], Bgcolor);
+   XSetWindowBackground (TtDisplay, FrRef[frame], Bgcolor);
 #endif /* NEW_WILLOWS */
 }				/*SetMainWindowBackgroundColor */
 
