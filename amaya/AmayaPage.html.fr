@@ -22,8 +22,8 @@
 </head>
 
 <body xml:lang="fr" lang="fr">
-<p align="center"><svg
-xmlns="http://www.w3.org/2000/svg" width="466" height="349">
+<p align="center"><svg xmlns="http://www.w3.org/2000/svg" width="466"
+height="349">
   <image id="backgroundImage" x="0" y="0" width="466" height="349"
          xlink:href="amaya.png">
     <desc>Leading the Web to its full potential</desc>
@@ -93,26 +93,26 @@ xmlns="http://www.w3.org/2000/svg" width="466" height="349">
   <text id="logo" x="304" y="162"
   style="font: 24pt helvetica; font-weight: bold; fill: #488B9B;">AMAYA
   </text>
-   <text id="version" x="360" y="306"
+  <text id="version" x="344px" y="306"
   style="font: bold 16pt italic; fill: #0192BF;">Release 4.01
   </text>
-   <g id="polygonMask" style="stroke: none;">
+  <g id="polygonMask" style="stroke: none;">
     <polygon style="fill: #0192BF;" points="30,60  30,230  108,208"/>
     <foreignObject y="156px" x="51px">
-      encoding=""  encoding=""
+      encoding="" encoding="" 
       <math xmlns="http://www.w3.org/1998/Math/MathML" style="color: #FFFFFF">
         <mfrac>
-          <mrow>
-            <mi>a</mi>
-            <mo>+</mo>
-            <msqrt>
-              <mi>b</mi>
-            </msqrt>
-          </mrow>
-          <mrow>
-            <mn>2</mn>
-            <mi>n</mi>
-          </mrow>
+          <mn>1</mn>
+          <msqrt>
+            <mrow>
+              <msup>
+                <mi>x</mi>
+                <mn>2</mn>
+              </msup>
+              <mo>+</mo>
+              <mn>1</mn>
+            </mrow>
+          </msqrt>
         </mfrac>
       </math>
     </foreignObject>
@@ -155,14 +155,14 @@ Ce comportement peut être modifié ainsi que de nombreuses caractéristiques en
 utilisant le menu Spécial/Préférences.</p>
 
 <p>Amaya inclut une application <a
-href="../doc/amaya/Annotations.html.fr"><img
-src="/local_home/vatton/Amaya/amaya/annot.gif" alt="Icone d'annotation"
-/>d'annotations collaboratives</a> basée sur les technologies du W3C (RDF,,
-XLink et XPointer). Les annotations sont des commentaires, notes, remarques
-externes qui peuvent être attachées à n'importe quel document Web ou partie
-sélectionnée de ce document. Les annotations sont stockées soit dans la
-machine locale, soit dans des serveurs d'annotation. La création d'annotations
-sur un document ne modifie pas le document lui-même.</p>
+href="../doc/amaya/Annotations.html.fr"><img src="annot.gif"
+alt="Icone d'annotation" />d'annotations collaboratives</a> basée sur les
+technologies du W3C (RDF,, XLink et XPointer). Les annotations sont des
+commentaires, notes, remarques externes qui peuvent être attachées à n'importe
+quel document Web ou partie sélectionnée de ce document. Les annotations sont
+stockées soit dans la machine locale, soit dans des serveurs d'annotation. La
+création d'annotations sur un document ne modifie pas le document
+lui-même.</p>
 
 <p>Une vue source montre le balisage courant produit par Amaya. En utilisant
 cette vue en parallèle avec la vue principale, vous pouvez travailler sur la
