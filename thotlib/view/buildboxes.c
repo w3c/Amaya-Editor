@@ -1118,10 +1118,10 @@ PtrAbstractBox      pRefAb;
 	    pAb = SearchPreviousFilledBox (pAb);
           else if (pAb->AbFillBox)
 	    return (pAb);
-	  else if ((pAb->AbTopStyle > 2 && pAb->AbTopBColor != -2) ||
-		   (pAb->AbLeftStyle > 2 && pAb->AbLeftBColor != -2) ||
-		   (pAb->AbBottomStyle > 2 && pAb->AbBottomBColor != -2) ||
-		   (pAb->AbRightStyle > 2 && pAb->AbRightBColor != -2))
+	  else if ((pAb->AbTopStyle > 2 && pAb->AbTopBColor != -2 && pAb->AbTopBorder > 0) ||
+		   (pAb->AbLeftStyle > 2 && pAb->AbLeftBColor != -2 && pAb->AbLeftBorder > 0) ||
+		   (pAb->AbBottomStyle > 2 && pAb->AbBottomBColor != -2 && pAb->AbBottomBorder > 0) ||
+		   (pAb->AbRightStyle > 2 && pAb->AbRightBColor != -2 && pAb->AbRightBorder > 0))
 	    return (pAb);
 	  else
 	    pAb = SearchPreviousFilledBox (pAb);
