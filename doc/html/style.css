@@ -16,7 +16,7 @@ copy it. */
 	/* begin body type */	/* 1 - humanist sans a */
 
 BODY	{	
-	font-size:	0.8em;
+	font-size:	12 pt;
 	font-weight:	normal;
 	word-spacing:	normal;
 	letter-spacing:	normal;
@@ -783,7 +783,7 @@ PRE	{
 	}	
 		
 LI	{	
-	margin-left:	3.16em;
+	margin-left:	0;
 	margin-right:	0;
 	padding-left:	0;
 	padding-right:	0;

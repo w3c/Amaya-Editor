@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>Naviguer avec Amaya</title>
-  <meta name="GENERATOR" content="amaya 5.1" />
+  <meta name="GENERATOR" content="amaya 5.2, see http://www.w3.org/Amaya/" />
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 </head>
 
@@ -60,12 +60,13 @@ arrive souvent que des auteurs aient créé des documents XML ISO-latin-1 qui
 ne fournissent pas d'information sur l'encodage. Dès qu'un caractère analysé
 par le parseur XML ne correspond pas à un caractère UTF 8 valide (cela doit
 arriver si le document est encodé en ISO-latin-1 mais lu comme un fichier UTF
-8), le document est considéré comme invalide: le parseur s'arrête and un
-message d'erreur est affiché. Dans ce cas, la commande "<strong>Reopen in
-ISO-latin-1</strong>" est activée. Cette commande vous permet de re-ouvrir le
-document avec le "charset" correspondant à l'ISO-latin-1. Le document est
-maintenant considéré comme modifié (un charset a été ajouté) and peut être
-sauvé.</p>
+8), le document est considéré comme incorrect: le parseur s'arrête and un
+message d'erreur est affiché. Ce message propose soit de recharger le
+document comme un document HTML, soit de montrer les erreurs. Dans ce dernier
+cas, la commande "<strong>Reparser en HTML</strong>" est activée. Cette
+commande vous permet de re-ouvrir le document avec le "charset" correspondant
+à l'ISO-latin-1. Le document est maintenant considéré comme modifié (un
+charset a été ajouté) and peut être sauvé.</p>
 
 <p><a name="entite">Amaya interprète les entités caractères</a>. Quand il ne
 dispose pas du caractère correspondant, il affiche un '?' (ou il affiche le
