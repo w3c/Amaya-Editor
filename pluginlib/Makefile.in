@@ -9,7 +9,7 @@ THOTDIR = @top_srcdir@
 
 include ../Options
 
-INCLUDES= -DHAVE_CONFIG_H -I.. -I@srcdir@/f -I@top_srcdir@/amaya \
+INCLUDES= -DHAVE_CONFIG_H -I../amaya -I.. -I@srcdir@/f -I@top_srcdir@/amaya \
           -I@top_srcdir@/amaya/f @THOTINCLUDES@ @X_CFLAGS@
 
 OPTIONS	= @AMAYA_OPTIONS@ @PLUGIN_OPTIONS@ \
@@ -23,7 +23,7 @@ libdir = @libdir@
 # Rule to build objects
 #
 .c.o :
-	$(CC) $(CFLAGS) $(OPTIONS) $(INCLUDES) -c $< -o $@
+	$(CC) $(CFLAGS) $(INCLUDES) $(OPTIONS) -c $< -o $@
 
 all : libThotPlugin.a
 

@@ -23,7 +23,7 @@ libdir = @libdir@
 # Rule to build objects
 #
 .c.o :
-	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
+	$(CC) $(CFLAGS) $(JAVA_OPTIONS) $(INCLUDES) -c $< -o $@
 
 all : libThotJava.a libAmayaJava.a
 
@@ -169,7 +169,7 @@ amaya_itf_up:
 	    echo "Producing stubs and API class for $$classe from $$include" ; \
 	    $(JAVASTUB) -M amaya_API$$classe \
 			-J @top_srcdir@/classes/amaya/API$$classe.java \
-			@top_srcdir@/amaya/$$include 2>> JavaTypes.err ; \
+			../amaya/$$include 2>> JavaTypes.err ; \
 	    echo "Compiling new Java class API$$classe" ; \
 	    (cd @top_srcdir@/classes ; $(JAVAC) amaya/API$$classe.java) ; \
 	    echo "Producing header for class API$$classe" ; \

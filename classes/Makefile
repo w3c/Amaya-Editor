@@ -9,7 +9,11 @@ COMPRESS=zip -9
 
 SUBDIRS=thotlib amaya thot external biss
 
-all : http subdir
+all : debug http subdir
+
+debug :
+	@echo CLASSPATH=$$CLASSPATH
+	@echo PATH=$$PATH
 
 http :
 	@(if [ -d w3c ] ; then cd w3c ; make MAKEDIR=`pwd` ; fi)

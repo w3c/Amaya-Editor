@@ -94,8 +94,7 @@ classes: force
 	@(PWD=`pwd` ; PATH="$$PWD/bin:$$PATH" ; export PATH ; \
 	  if test -d $$PWD/$(THOTDIR) ; then CLASSES=$$PWD/$(THOTDIR)/classes;\
 	  else CLASSES=$(THOTDIR)/classes ; fi ; \
-	  CLASSPATH=".:$$CLASSES:$$CLASSES/classes.zip:$$CLASSES/thotlib.zip:\
-$$CLASSES/jigsaw.zip:$$CLASSES/amaya.zip:$$CLASSES/biss.zip";export CLASSPATH;\
+	  CLASSPATH=".:$$CLASSES:$$CLASSES/classes.zip:$$CLASSES/thotlib.zip:$$CLASSES/jigsaw.zip:$$CLASSES/amaya.zip:$$CLASSES/biss.zip";export CLASSPATH;\
 	  cd $(THOTDIR)/classes ; make)
 
 zips: force

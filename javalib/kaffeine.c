@@ -200,6 +200,9 @@ ThotEvent *ev;
     struct timeval tm;
     int res;
     static int InJavaSelect = 0;
+#ifdef DEBUG_SELECT_CHANNELS
+    int fd;
+#endif
 
     if (!JavaSelectInitialized) InitJavaSelect();
 
@@ -261,11 +264,13 @@ ThotEvent *ev;
      * shows the channel state.
      */
     fprintf(stderr,"res:%d nb:%d rd:",res,n);
-    for (fd = 0;fd < n;fd++)
+    if (readfds != NULL)
+      for (fd = 0;fd < n;fd++)
         if (FD_ISSET(fd, readfds)) fprintf(stderr,"r");
         else fprintf(stderr,"-");
     fprintf(stderr," wr:");
-    for (fd = 0;fd < n;fd++)
+    if (writefds != NULL)
+      for (fd = 0;fd < n;fd++)
         if (FD_ISSET(fd, writefds)) fprintf(stderr,"w");
         else fprintf(stderr,"-");
     fprintf(stderr,"\n");
@@ -460,7 +465,7 @@ void DNSserverLock()
 	}
 #ifdef DEBUG_LOCK
 	TIMER
-        fprintf(stderr,"JavaXWindowSocketLock(%d,%d) : Ok\n",
+        fprintf(stderr,"DNSserverLock(%d) : Ok\n",
                 DNSLockValue);
 #endif
 	break;

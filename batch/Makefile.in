@@ -4,7 +4,7 @@
 # Daniel Veillard, 1997
 #
 
-.SUFFIXES: .c .o
+.SUFFIXES: .LAN .GRM .c .o
 
 @VPATHOPT@= @srcdir@
 THOTDIR = @top_srcdir@
@@ -22,12 +22,29 @@ datadir = @datadir@
 COMPILERS=../bin/grm ../bin/str ../bin/prs ../bin/typ ../bin/tra ../bin/app \
           ../bin/printstr ../bin/printprs ../bin/printtyp
 
+GRMS     = APP.GRM PRESEN.GRM STRUCT.GRM TRANS.GRM TYP.GRM
+
 LANGUAGES=*.GRM *.LAN *.LST
 
 .c.o :
 	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
-all : ../bin $(COMPILERS)
+all : ../bin $(GRMS) $(COMPILERS)
+
+APP.GRM : APP.LAN ../bin/grm
+	(DIR=`pwd` ; cd @srcdir@ ; $$DIR/../bin/grm APP)
+
+PRESEN.GRM : PRESEN.LAN ../bin/grm
+	(DIR=`pwd` ; cd @srcdir@ ; $$DIR/../bin/grm PRESEN)
+
+STRUCT.GRM : STRUCT.LAN ../bin/grm
+	(DIR=`pwd` ; cd @srcdir@ ; $$DIR/../bin/grm STRUCT)
+
+TRANS.GRM : TRANS.LAN ../bin/grm
+	(DIR=`pwd` ; cd @srcdir@ ; $$DIR/../bin/grm TRANS)
+
+TYP.GRM : TYP.LAN ../bin/grm
+	(DIR=`pwd` ; cd @srcdir@ ; $$DIR/../bin/grm TYP)
 
 force :
 
@@ -48,7 +65,7 @@ GRM_OBJ= \
 grm : ../thotlib/libThotKernel.a ../bin ../bin/grm
 	
 
-../bin/grm : $(GRM_OBJ) ../thotlib/libThotKernel.a
+../bin/grm : $(GRM_OBJ) $(LANG) ../thotlib/libThotKernel.a
 	$(CC) $(LDFLAGS) -o $@ $(GRM_OBJ) $(LIBS)
 	@$(ECHO) "====>" grm is done
 
@@ -64,7 +81,7 @@ STR_OBJ = \
 str : ../thotlib/libThotKernel.a ../bin ../bin/str
 	
 
-../bin/str : $(STR_OBJ) ../thotlib/libThotKernel.a
+../bin/str : $(STR_OBJ) $(LANG) ../thotlib/libThotKernel.a
 	$(CC) $(LDFLAGS) -o $@ $(STR_OBJ) $(LIBS)
 	@$(ECHO) "====>" str is done
 
