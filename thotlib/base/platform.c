@@ -36,6 +36,8 @@ int TtaDirExists (CONST char *dirpath)
   else
     status = 0;
 #else /* _WINDOWS */
+  struct stat buf;
+
   status = stat(dirpath, &buf) == 0 && S_ISDIR (buf.st_mode);
 #endif /* _WINDOWS */
   return status;
