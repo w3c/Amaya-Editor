@@ -6450,7 +6450,12 @@ RULES
 	CreateBefore(I_S);
 	CreateWith(VerticalLine);
 	LineBreak: Yes;
-	Style: Italics;
+	if within Bold_text
+	   Style: BoldItalics;
+	if within Strong
+	   Style: BoldItalics;
+	if not within Bold_text and not within Strong
+	   Style: Italics;
 	HorizPos: Left = Previous . Right;
 	VertPos: HRef = Previous . HRef;
 	IN Structure_view BEGIN
@@ -6465,7 +6470,12 @@ RULES
 	CreateBefore(B_S);
 	CreateWith(VerticalLine);
 	LineBreak: Yes;
-	Style: Bold;
+	if within Italic_text
+	   Style: BoldItalics;
+	if within Emphasis
+	   Style: BoldItalics;
+	if not within Italic_text and not within Emphasis
+	   Style: Bold;
 	HorizPos: Left = Previous . Right;
 	VertPos: HRef = Previous . HRef;
 	IN Structure_view BEGIN
@@ -6605,7 +6615,12 @@ RULES
 	CreateBefore(EM_S);
 	CreateWith(VerticalLine);
 	LineBreak: Yes;
-	Style: Italics;
+	if within Bold_text
+	   Style: BoldItalics;
+	if within Strong
+	   Style: BoldItalics;
+	if not within Bold_text and not within Strong
+	   Style: Italics;
 	HorizPos: Left = Previous . Right;
 	VertPos: HRef = Previous . HRef;
 	IN Structure_view BEGIN
@@ -6621,7 +6636,12 @@ RULES
 	CreateBefore(STRONG_S);
 	CreateWith(VerticalLine);
 	LineBreak: Yes;
-	Style: Bold;
+	if within Emphasis
+	   Style: BoldItalics;
+	if within Italic_text
+	   Style: BoldItalics;
+	if not within Emphasis and not within Italic_text
+	   Style: Bold;
 	HorizPos: Left = Previous . Right;
 	VertPos: HRef = Previous . HRef;
 	IN Structure_view BEGIN

@@ -586,7 +586,14 @@ Document            doc;
 		    }
 		}
 	      if (group != NULL)
-		row = TtaGetFirstChild (group);
+		{
+		elType = TtaGetElementType (group);
+		if (elType.ElTypeNum == HTML_EL_Table_foot)
+		   /* don't look for rows in the Table_foot! */
+		   row = NULL;
+		else
+		   row = TtaGetFirstChild (group);
+		}
 	      else
 		row = NULL;
 	    }
