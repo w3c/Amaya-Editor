@@ -1,0 +1,26 @@
+extension
+
+presentation
+
+ XMLP:  Standard presentation
+ XMLPP: With pages
+
+export
+
+ XMLT: XML
+
+translation
+
+TEXT_UNIT: Text
+GRAPHICS_UNIT: Graphics
+SYMBOL_UNIT: Symbol
+PICTURE_UNIT: img
+REFERENCE_UNIT: Reference
+PAGE_BREAK: Page_break
+
+xmlcomment: comment
+xmlcomment_line:
+xmlpi: PI
+xmlpi_line:
+doctype_line:
+cdata_line:
