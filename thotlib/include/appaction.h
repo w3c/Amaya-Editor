@@ -16,12 +16,10 @@
 #include "presentation.h"
 
 /* ********* ATTENTION ********** */
-/* Le tableau RegisteredAppEvents du module appana.c doit etre coherent avec */
-/* le type APPevent. */
-/* La constante NUMBER_OF_APP_EVENTS indique le nombre de valeurs de */
-/* l'enum APPevent */
-
-#define NUMBER_OF_APP_EVENTS 45
+/* The list RegisteredAppEvents within the module app.c have to be conform to
+   this type enum APPevent */
+/* NUMBER_OF_APP_EVENTS gives the number of entries in the list */
+#define NUMBER_OF_APP_EVENTS 46
 typedef enum
   {
      TteAttrMenu,
@@ -50,6 +48,7 @@ typedef enum
      TteElemMove,
      TteElemTextModify,
      TteElemGraphModify,
+     TteElemReturn,
      TteElemMouseOver,
      TteElemMouseOut,
      TtePRuleCreate,

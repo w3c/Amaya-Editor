@@ -102,8 +102,8 @@ static ThotBool CallAction (NotifyEvent * notifyEvent, APPevent event,
        else if (procEvent == NULL && funcEvent == NULL)
 	 {
 	   status = TRUE;	/* still in the same schema */
-	   if (element != 0)
-	     element = (Element) ((PtrElement) element)->ElParent;
+	   /*if (element != 0)
+	     element = (Element) ((PtrElement) element)->ElParent;*/
 	   while (status && element != 0)
 	     {
 	       status = (schStruct == ((PtrElement) element)->ElStructSchema);
@@ -246,6 +246,7 @@ ThotBool CallEventType (NotifyEvent * notifyEvent, ThotBool pre)
 	    case TteElemMove:
 	    case TteElemMouseOver:
 	    case TteElemMouseOut:
+	    case TteElemReturn:
 	       element = ((NotifyElement *) notifyEvent)->element;
 	       elType = ((PtrElement) element)->ElTypeNumber;
 	       schStruct = ((PtrElement) element)->ElStructSchema;

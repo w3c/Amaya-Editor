@@ -59,17 +59,17 @@ KEY;
 #include "frame_tv.h"
 #include "edit_tv.h"
 #include "appdialogue_tv.h"
+#include "select_tv.h"
 
 #ifdef _GTK
 #include "gtk-functions.h"
-#else /* !_GTK */
+#else /* _GTK */
 #include "appli_f.h"
 #include "input_f.h"
-#endif /* !_GTK */
-
-
+#endif /* _GTK */
 /* Actions table */
 #include "applicationapi_f.h"
+#include "callback_f.h"
 #include "context_f.h"
 #include "editcommands_f.h"
 #include "memory_f.h"
@@ -640,6 +640,32 @@ void CharTranslation (ThotKeyEvent *event)
 #endif /* _GTK */
 #endif /* !_WINDOWS */
 
+/*----------------------------------------------------------------------
+   APPtextModify send a message TteElemReturn to the application.   
+  ----------------------------------------------------------------------*/
+static ThotBool APPReturn (PtrElement pEl, Document doc, ThotBool pre)
+{
+   PtrElement          pParentEl;
+   NotifyOnTarget      notifyEl;
+   ThotBool            result;
+   ThotBool            ok;
+
+   result = FALSE;
+   pParentEl = pEl;
+   notifyEl.event = TteElemReturn;
+   notifyEl.document = doc;
+   notifyEl.targetdocument = doc;
+   while (pParentEl != NULL)
+     {
+       notifyEl.element = (Element) pParentEl;
+       notifyEl.target = (Element) pEl;
+       ok = CallEventType ((NotifyEvent *) & notifyEl, pre);
+       result = result || ok;
+       pParentEl = pParentEl->ElParent;
+     }
+   return result;
+}
+
 
 /*----------------------------------------------------------------------
    ThotInput
@@ -655,7 +681,7 @@ void   ThotInput (int frame, USTRING string, unsigned int nb, int PicMask, int k
   int                 command;
   int                 mainframe;
   int                 index;
-  ThotBool            found;
+  ThotBool            found, done;
   
   if (frame > MAX_FRAME)
     frame = 0;
@@ -888,22 +914,32 @@ void   ThotInput (int frame, USTRING string, unsigned int nb, int PicMask, int k
 	  if (command != CMD_DeletePrevChar)
 	    /* It's not a delete, close the current insertion */
 	    CloseInsertion ();
-      
+	  if (LoadedDocument[document - 1] == SelectedDocument &&
+	      command == CMD_CreateElement)
+	    /* check if the application wants to handle the return */
+	    done = APPReturn (FirstSelectedElement, document, TRUE);
+	  else
+	    done = FALSE;
 	  /* Call action if it's active */
-	  if (MenuActionList[command].ActionActive[frame] ||
-	      MenuActionList[command].ActionActive[mainframe])
+	  if (!done &&
+	      (MenuActionList[command].ActionActive[frame] ||
+	       MenuActionList[command].ActionActive[mainframe]))
 	    {
 	      /* available action for this frame or the main frame */
 	      if (MenuActionList[command].Call_Action)
 		(*MenuActionList[command].Call_Action) (document, view);
+	      if (LoadedDocument[document - 1] == SelectedDocument &&
+		  command == CMD_CreateElement)
+		/* post treatment for the application */
+		APPReturn (FirstSelectedElement, document, FALSE);
 	    }
 	}
      else if (nb == 0)
-	  {
-		/* Rien a inserer */ 
-		Automata_current = NULL;
-        return;
-	 }
+       {
+	 /* Rien a inserer */ 
+	 Automata_current = NULL;
+	 return;
+       }
       /* Traitement des caracteres au cas par cas */
       else
 	{

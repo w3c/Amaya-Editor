@@ -40,24 +40,28 @@ ELEMENTS
 	BEGIN
 	ElemTextModify.Pre -> SaveDocumentStatus;
 	ElemTextModify.Post -> RestoreDocumentStatus;
+	ElemReturn.Pre -> HandleReturn;
 	END;
 
    Password_Input:
 	BEGIN
 	ElemTextModify.Pre -> SaveDocumentStatus;
 	ElemTextModify.Post -> RestoreDocumentStatus;
+	ElemReturn.Pre -> HandleReturn;
 	END;
 
    Text_Area:
 	BEGIN
 	ElemTextModify.Pre -> SaveDocumentStatus;
 	ElemTextModify.Post -> RestoreDocumentStatus;
+	ElemReturn.Pre -> HandleReturn;
 	END;
 
    File_Input:
 	BEGIN
 	ElemTextModify.Pre -> SaveDocumentStatus;
 	ElemTextModify.Post -> RestoreDocumentStatus;
+	ElemReturn.Pre -> HandleReturn;
 	END;
 
    Frame:

@@ -128,6 +128,7 @@ char               *RegisteredAppEvents[] =
    "ElemMove",
    "ElemTextModify",
    "ElemGraphModify",
+   "ElemReturn",
    "ElemMouseOver",
    "ElemMouseOut",
    "PRuleCreate",
@@ -150,9 +151,9 @@ char               *RegisteredAppEvents[] =
 
 #ifdef _WINDOWS
 #include "compilers_f.h"
-#      ifndef DLLEXPORT
-#      define DLLEXPORT __declspec (dllexport)
-#      endif  /* DLLEXPORT */ 
+#ifndef DLLEXPORT
+#define DLLEXPORT __declspec (dllexport)
+#endif  /* DLLEXPORT */ 
 #endif /* _WINDOWS */
 
 /*----------------------------------------------------------------------
@@ -162,7 +163,7 @@ char               *RegisteredAppEvents[] =
    In the same way this function adds menu names used in the set into the
    list MenusUsed and item names into the list ItemsUsed.
   ----------------------------------------------------------------------*/
-static void         MenuActionList (PtrAppMenu firstMenu)
+static void MenuActionList (PtrAppMenu firstMenu)
 {
    PtrAppName          curAction, prevAction;
    PtrAppName          curMenu, prevMenu;
@@ -307,7 +308,7 @@ static void         MenuActionList (PtrAppMenu firstMenu)
    les actions effectivement utiles, la liste de tous les noms de  
    menus effectivement utiles et de tous les noms d'item utiles.   
   ----------------------------------------------------------------------*/
-static void         MakeMenusAndActionList ()
+static void MakeMenusAndActionList ()
 {
    PtrAppDocType       menusDoc;
 
@@ -331,7 +332,7 @@ static void         MakeMenusAndActionList ()
    registered events and returns True if yes, and the rank of the  
    event in the list (rank).                                       
   ----------------------------------------------------------------------*/
-static ThotBool      RegisteredEvent (char* eventName, int *rank)
+static ThotBool RegisteredEvent (char* eventName, int *rank)
 {
    int                 evtNum, evt;
    ThotBool             found;
@@ -352,7 +353,7 @@ static ThotBool      RegisteredEvent (char* eventName, int *rank)
 /*----------------------------------------------------------------------
    ConstructAbstractSchStruct                                      
   ----------------------------------------------------------------------*/
-static PtrSSchema   ConstructAbstractSchStruct ()
+static PtrSSchema ConstructAbstractSchStruct ()
 {
    PtrSSchema          pSS;
 
@@ -375,7 +376,7 @@ static PtrSSchema   ConstructAbstractSchStruct ()
 /*----------------------------------------------------------------------
    NewMenuComplete                                                 
   ----------------------------------------------------------------------*/
-static void         NewMenuComplete ()
+static void NewMenuComplete ()
 {
    PtrAppMenu          Menu, NewMenu, CurMenu;
    PtrAppMenuItem      Item, NewItem, SubMenu;
@@ -533,7 +534,7 @@ static void         NewMenuComplete ()
 /*----------------------------------------------------------------------
    InitMenu                                                        
   ----------------------------------------------------------------------*/
-static void         InitMenu ()
+static void InitMenu ()
 {
    ViewNumber = 0;
    MenuName[0] = '\0';
@@ -547,7 +548,7 @@ static void         InitMenu ()
 /*----------------------------------------------------------------------
    ProcessShortKeyWord traite un mot-cle court.                    
   ----------------------------------------------------------------------*/
-static void         ProcessShortKeyWord (int x, SyntacticCode r, SyntacticCode pr)
+static void ProcessShortKeyWord (int x, SyntacticCode r, SyntacticCode pr)
 {
    int                 typeId;
 
@@ -603,7 +604,7 @@ static void         ProcessShortKeyWord (int x, SyntacticCode r, SyntacticCode p
 /*----------------------------------------------------------------------
    ProcessLongKeyWord traite un mot-cle long.                      
   ----------------------------------------------------------------------*/
-static void         ProcessLongKeyWord (int x, SyntacticCode r, indLine wi)
+static void ProcessLongKeyWord (int x, SyntacticCode r, indLine wi)
 {
    switch (x)
 	 {
@@ -733,7 +734,7 @@ static void         ProcessLongKeyWord (int x, SyntacticCode r, indLine wi)
 /*----------------------------------------------------------------------
    ProcessName processes a name.                                      
   ----------------------------------------------------------------------*/
-static void         ProcessName (SyntacticCode r, SyntacticCode pr, indLine wl, indLine wi)
+static void ProcessName (SyntacticCode r, SyntacticCode pr, indLine wl, indLine wi)
 {
    PtrAppName          curAction, prevAction;
    int                 i;
@@ -1023,7 +1024,7 @@ static void         ProcessName (SyntacticCode r, SyntacticCode pr, indLine wl, 
 /*----------------------------------------------------------------------
    ProcessInteger genere un nombre.                                    
   ----------------------------------------------------------------------*/
-static void         ProcessInteger (SyntacticCode r, indLine wl, indLine wi)
+static void ProcessInteger (SyntacticCode r, indLine wl, indLine wi)
 {
    int                 n;
 
@@ -1047,7 +1048,7 @@ static void         ProcessInteger (SyntacticCode r, indLine wl, indLine wi)
    laquelle apparait ce mot, pr est le numero de la regle  
    precedente, celle qui a appele la regle r.              
   ----------------------------------------------------------------------*/
-static void         ProcessToken (indLine wi, indLine wl, SyntacticCode c, SyntacticCode r, SyntacticCode pr)
+static void ProcessToken (indLine wi, indLine wl, SyntacticCode c, SyntacticCode r, SyntacticCode pr)
 {
    if (c < 1000)
      {
@@ -1080,7 +1081,7 @@ static void         ProcessToken (indLine wi, indLine wl, SyntacticCode c, Synta
 /*----------------------------------------------------------------------
    WriteChar write a single character.                            
   ----------------------------------------------------------------------*/
-static void         WriteChar (FILE * Hfile, unsigned char ch)
+static void WriteChar (FILE *Hfile, unsigned char ch)
 {
    int                 code;
 
@@ -1155,7 +1156,7 @@ static void         WriteChar (FILE * Hfile, unsigned char ch)
 /*----------------------------------------------------------------------
    WriteName                                                       
   ----------------------------------------------------------------------*/
-static void         WriteName (FILE * Hfile, Name n)
+static void WriteName (FILE * Hfile, Name n)
 {
    int                 i;
 
@@ -1170,7 +1171,7 @@ static void         WriteName (FILE * Hfile, Name n)
 /*----------------------------------------------------------------------
    WriteRuleName                                                   
   ----------------------------------------------------------------------*/
-static void         WriteRuleName (FILE * Hfile, int r)
+static void WriteRuleName (FILE * Hfile, int r)
 {
    if (pSSchema->SsRule[r].SrName[0] == '\0')
       fprintf (Hfile, "ID%d", r+1);
@@ -1181,7 +1182,7 @@ static void         WriteRuleName (FILE * Hfile, int r)
 /*----------------------------------------------------------------------
    WriteAttribute                                                  
   ----------------------------------------------------------------------*/
-static void         WriteAttribute (FILE * Hfile, int a)
+static void WriteAttribute (FILE * Hfile, int a)
 {
    int                 j;
    TtAttribute        *pAttr;
@@ -1211,7 +1212,7 @@ static void         WriteAttribute (FILE * Hfile, int a)
 /*----------------------------------------------------------------------
    WriteBasicElements                                              
   ----------------------------------------------------------------------*/
-static void         WriteBasicElements (FILE * Hfile)
+static void WriteBasicElements (FILE * Hfile)
 {
    int                 r;
 

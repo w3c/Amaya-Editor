@@ -289,13 +289,11 @@ static PtrElement PasteAnElement (PtrElement pEl, PtrPasteElem pSavedEl,
 			   }
 		       }
 		     }
-		   /* demande a l'application si on peut creer ce type
-		      d'element */
+		   /* check if the application allows the creation of the element */
 		   notifyEl.event = TteElemNew;
 		   notifyEl.document = (Document) IdentDocument (pDoc);
 		   notifyEl.element = (Element) (pParent);
-		   notifyEl.elementType.ElTypeNum =
-		                                pSavedEl->PeAscendTypeNum[asc];
+		   notifyEl.elementType.ElTypeNum = pSavedEl->PeAscendTypeNum[asc];
 		   notifyEl.elementType.ElSSchema = (SSchema) (pSS);
 		   notifyEl.position = NSiblings;
 		   if (CallEventType ((NotifyEvent *) & notifyEl, TRUE))

@@ -686,7 +686,7 @@ static void ParseForm (Document doc, Element ancestor, Element el,
   DoSubmit
   submits a form : builds the query string and sends the request	       
   ----------------------------------------------------------------------*/
-static void         DoSubmit (Document doc, int method, char *action)
+static void DoSubmit (Document doc, int method, char *action)
 {
   int                 buffer_size;
   int                 i;
@@ -748,7 +748,7 @@ static void         DoSubmit (Document doc, int method, char *action)
   ----------------------------------------------------------------------*/
 void SubmitForm (Document doc, Element element)
 {
-   Element             ancestor, elForm;
+   Element             elForm;
    ElementType         elType;
    Attribute           attr;
    AttributeType       attrType;
@@ -888,14 +888,13 @@ void SubmitForm (Document doc, Element element)
 	   return;
 	 }
      }
-   ancestor = elForm;
 
 #ifdef FORM_DEBUG
 {
   /* dump the abstract tree */
  FILE               *fp2;
  fp2 = fopen ("/tmp/FormTree.dbg", "w");
- TtaListAbstractTree(ancestor, fp2);
+ TtaListAbstractTree(elForm, fp2);
    fclose (fp2);
 }
 #endif
@@ -936,19 +935,66 @@ void SubmitForm (Document doc, Element element)
      {
        if (action)
 	 {
-	   ParseForm (doc, ancestor, elForm, button_type, withinForm);   
+	   ParseForm (doc, elForm, elForm, button_type, withinForm);
 	   DoSubmit (doc, method, action);
 	 }
        else
-	 InitConfirm3L (doc, 1, "Impossible to submit the form: missing action", NULL, NULL, NO);
+	 InitConfirm3L (doc, 1, "No action", NULL, NULL, NO);
      }
    else
-     ParseForm (doc, ancestor, elForm, button_type, withinForm);   
+     ParseForm (doc, elForm, elForm, button_type, withinForm);   
    
    if (action)
      TtaFreeMemory (action);
    if (buffer && buffer [0] != 0)
      TtaFreeMemory (buffer);
+}
+
+/*----------------------------------------------------------------------
+  Activate the enclosing form
+ -----------------------------------------------------------------------*/
+ThotBool HandleReturn (NotifyOnTarget *event)
+{
+   Element             elForm;
+   ElementType         elType;
+   Attribute           attr;
+   AttributeType       attrType;
+   char               *action;
+   int                 method, length;
+
+   /* find the parent form node */
+   elType = TtaGetElementType (event->element);
+   elType.ElTypeNum = HTML_EL_Form;
+   attrType.AttrSSchema = elType.ElSSchema;
+   elForm = TtaGetTypedAncestor (event->element, elType);
+   if (elForm)
+     {
+       /* get the  METHOD attribute value */
+       attrType.AttrTypeNum = HTML_ATTR_METHOD;
+       attr = TtaGetAttribute (elForm, attrType);
+       if (attr == NULL)
+	 method = HTML_ATTR_METHOD_VAL_Get_;
+       else
+	 method = TtaGetAttributeValue (attr);
+       /* get the  ACTION attribute value */
+       attrType.AttrTypeNum = HTML_ATTR_Script_URL;
+       attr = TtaGetAttribute (elForm, attrType);
+       if (attr != NULL)
+	 {
+	   length = TtaGetTextAttributeLength (attr);
+	   if (length)
+	     {
+	       action = TtaGetMemory (length + 1);
+	       TtaGiveTextAttributeValue (attr, action, &length);
+	       ParseForm (event->document, elForm, elForm, HTML_EL_Submit_Input, TRUE);
+	       DoSubmit (event->document, method, action);
+	       TtaFreeMemory (action);
+	     }
+	 }
+       else
+	 action = NULL;
+     }
+  return TRUE; /* don't let Thot perform normal operation */
 }
 
 
