@@ -2033,10 +2033,11 @@ Construct TtaGetConstructOfType (ElementType elementType)
       case CsExtensionRule:
 	result = ConstructError;
 	break;
-      case CsDocument:
-	result = ConstructDocument;
       case CsAny:
 	result = ConstructAny;
+	break;
+      case CsDocument:
+	result = ConstructDocument;
       case CsEmpty:
         result = ConstructEmpty;
       default:
