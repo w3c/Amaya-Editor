@@ -2150,7 +2150,7 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
   PtrLine             pLine;
   PtrAbstractBox      pChildAb;
   PtrAbstractBox      pAb, pRootAb;
-  PtrBox              pBoxToBreak, box;
+  PtrBox              pBoxToBreak;
   PtrBox              pNextBox;
   AbPosition         *pPosAb;
   int                 x, lineSpacing, indentLine;
