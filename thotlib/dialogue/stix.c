@@ -36,7 +36,7 @@
 #endif /* #if defined(_GTK) || defined(_WX) */
 
 #include "font_f.h"
-#include "stix.h"
+#include "stix_f.h"
 
 #define THOT_EXPORT extern
 #include "boxes_tv.h"

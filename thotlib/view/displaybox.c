@@ -35,6 +35,7 @@
 #include "memory_f.h"
 #include "picture_f.h"
 #include "registry_f.h"
+#include "stix_f.h"
 #include "units_f.h"
 #include "xwindowdisplay_f.h"
 
@@ -48,7 +49,6 @@
 #include "glprint.h"
 #endif /*_GL*/
 
-#include "stix.h"
 #include "fileaccess.h"
 
 

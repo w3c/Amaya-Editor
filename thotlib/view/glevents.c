@@ -52,8 +52,6 @@
 #include "tesse_f.h"
 
 #include "glwindowdisplay.h"
-#include "stix.h"
-
 
 /*
 One Timer To Rule Them All 

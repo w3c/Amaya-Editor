@@ -67,6 +67,7 @@ static int             BiwIndex = 0;
 #include "memory_f.h"
 #include "picture_f.h"
 #include "scroll_f.h"
+#include "stix_f.h"
 #include "structselect_f.h"
 #include "tableH_f.h"
 #include "textcommands_f.h"
@@ -84,7 +85,6 @@ static int             BiwIndex = 0;
 static ThotBool EmbeddedScript = FALSE;
 
 
-#include "stix.h"
 
 /*----------------------------------------------------------------------
   SearchNextAbsBox returns the first child or the next sibling or the

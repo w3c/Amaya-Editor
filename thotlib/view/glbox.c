@@ -57,6 +57,7 @@
 #include "font_f.h"
 #include "inites_f.h"
 #include "memory_f.h"
+#include "stix_f.h"
 #include "units_f.h"
 #include "xwindowdisplay_f.h"
 #include "displaybox_f.h"
@@ -64,7 +65,6 @@
 #include "tesse_f.h"
 
 #include "glwindowdisplay.h"
-#include "stix.h"
 
 /*
  * Math Macros conversion from

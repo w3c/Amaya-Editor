@@ -24,9 +24,6 @@
 #include "frame.h"
 #include "appdialogue.h"
 #include "application.h"
-#ifdef _GL
-#include "stix.h"
-#endif /* _GL */
 /*  tolower(c) was a macro defined in ctypes.h that returns
    something wrong if c is not an upper case letter. */
 #define TOLOWER(c)	(isupper(c)? tolower(c) : (c))
@@ -70,7 +67,7 @@ static SpecFont   FirstFontSel = NULL;
 #include "memory_f.h"
 #include "platform_f.h"
 #include "registry_f.h"
-#include "stix.h"
+#include "stix_f.h"
 #include "units_f.h"
 #include "windowdisplay_f.h"
 

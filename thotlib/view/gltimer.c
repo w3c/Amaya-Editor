@@ -64,7 +64,6 @@
 #include "tesse_f.h"
 
 #include "glwindowdisplay.h"
-#include "stix.h"
 #include "applicationapi_f.h"
 #include "animbox_f.h"
 #include "frame_f.h"

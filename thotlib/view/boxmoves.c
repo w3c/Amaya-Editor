@@ -18,7 +18,6 @@
 #include "typemedia.h"
 #include "appdialogue.h"
 #include "frame.h"
-#include "stix.h"
 #include "content.h"
 
 #define THOT_EXPORT extern
@@ -41,6 +40,7 @@
 #ifdef _GL
 #include "glwindowdisplay.h"
 #endif /*_GL*/
+#include "stix_f.h"
 #include "tableH_f.h"
 #include "windowdisplay_f.h"
 
