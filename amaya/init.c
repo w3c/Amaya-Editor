@@ -1717,19 +1717,23 @@ void *context;
 
    /* restore GETHTMLDocument's context */  
    ctx = (GETHTMLDocument_context *) context;
-   baseDoc = ctx->baseDoc;
-   doc = ctx->doc;
-   ok = ctx->ok;
-   history = ctx->history;
-   target = ctx->target;
-   documentname = ctx->documentname;
-   tempdocument = ctx->tempdocument;
-   pathname = TtaGetMemory (MAX_LENGTH + 1);
-   strncpy (pathname, urlName, MAX_LENGTH);
-   pathname[MAX_LENGTH] = EOS;
-   tempfile = TtaGetMemory (MAX_LENGTH + 1);
-   strncpy (tempfile, outputfile, MAX_LENGTH);
-   tempfile[MAX_LENGTH] = EOS;
+
+   if (!ctx)
+     return;
+
+     baseDoc = ctx->baseDoc;
+     doc = ctx->doc;
+     ok = ctx->ok;
+     history = ctx->history;
+     target = ctx->target;
+     documentname = ctx->documentname;
+     tempdocument = ctx->tempdocument;
+     pathname = TtaGetMemory (MAX_LENGTH + 1);
+     strncpy (pathname, urlName, MAX_LENGTH);
+     pathname[MAX_LENGTH] = EOS;
+     tempfile = TtaGetMemory (MAX_LENGTH + 1);
+     strncpy (tempfile, outputfile, MAX_LENGTH);
+     tempfile[MAX_LENGTH] = EOS;
    
    if (ok)
      {
@@ -2055,14 +2059,17 @@ boolean		    history;
 	 }
      }
 
-   /* if the document couldn't be opened because of an error, we invoke
-      the callback anyway, to free the allocated memory */
+   /* if the document couldn't be opened because of an error, we free the
+      allocated memory */
+
    if (ok == FALSE)
-     GetHTMLDocument_callback (newdoc, -1,
-			       pathname,
-			       tempfile, 
-			       NULL,
-			       (void *) ctx);
+     {
+       TtaFreeMemory (target);
+       TtaFreeMemory (documentname);
+       TtaFreeMemory (tempdocument);
+       if (ctx)
+	 TtaFreeMemory (ctx);
+     }
    /* so if we got here, we need to free the memory */
 
    TtaFreeMemory (parameters);
