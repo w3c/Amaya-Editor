@@ -160,7 +160,7 @@ Preferences Menu"></p>
 <dl>
   <dt><strong>Amaya user directory</strong> (Windows platforms only, not shown
   in the included figure)</dt>
-    <dd>Specifies the directory where the user preferences are stored.
+    <dd>Specifies the directory where the user preferences are stored.<br>
       <strong>Note:</strong> the user can't change the location of this
       directory.<br>
       <br>
@@ -169,7 +169,7 @@ Preferences Menu"></p>
   shown in the figure)</dt>
     <dd>Specifies the directory where Amaya will store its temporary files,
       for example, while printing a document. If not specified, the default
-      temporary directory will be c:\temp<br>
+      temporary directory will be <code>c:\temp</code>.<br>
       <strong>Note:</strong> changing this directory will not erase the
       previous one. You will have to remove the old directory manually. If the
       <a href="#Cache">cache</a> was located under the previous temporary
@@ -178,8 +178,9 @@ Preferences Menu"></p>
     </dd>
   <dt><strong>Home Page</strong></dt>
     <dd>Specifies the URI that Amaya will load when launched or when the user
-      presses the home page button. An example is http://www.w3.org
-      <strong>Note:</strong> the complete URI must be used.<br>
+      presses the home page button. An example is 
+      <code>http://www.w3.org</code>.<br>
+      <strong>Note:</strong> A complete URI must be used.<br>
       <br>
     </dd>
   <dt><strong>Double click delay</strong> (Unix platforms only)</dt>
@@ -358,6 +359,14 @@ Preferences Menu"></p>
       default name that Amaya should use when publishing such a URL. Please
       consult with your Webmaster to find out what the default name is for
       your server.</dd>
+  <dt><strong>Allow automatic PUT redirections on these domains</strong></dt>
+    <dd>According to theHTTP/1.1 specification, PUT operations should not be
+    automatically redirected unless it can be confirmed by the user, since
+    this might change the conditions under which the request was issued. You
+    can avoid having Amaya prompt you with a PUT redirection warning by 
+    entering the name of the server's domain to which you are publishing.
+    You may specify one or more domains, each separated with a space, e.g.,
+    <code>www.w3.org groucho.marx.edu</code>.</dd>
 </dl>
 </div>
 
