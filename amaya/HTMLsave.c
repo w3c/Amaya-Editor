@@ -183,8 +183,6 @@ DBG(fprintf(stderr, "SetRelativeURLs\n");)
 	  TtaSetTextContent (el, new_url, lang, document);
 	  TtaFreeMemory (new_url);
 	}
-      /* get next StyleRule */
-      TtaNextSibling (&el);
     }
 
   /* manage URLs and SRCs attributes */
@@ -672,7 +670,10 @@ boolean             with_images;
 	{
 	  if (pImage->document == document && pImage->status == IMAGE_MODIFIED)
 	    {
-	      imageType = (int) TtaGetPictureType ((Element) pImage->elImage);
+	      if (pImage->elImage != NULL)
+		imageType = (int) TtaGetPictureType ((Element) pImage->elImage);
+	      else
+		imageType = unknown_type;
 	      res = SafeSaveFileThroughNet(document, pImage->localName,
 					   pImage->originalName, imageType);
 	      if (res)
@@ -889,10 +890,13 @@ char                  *newURL;
    char                tempfile[MAX_LENGTH];
    char                localpath[MAX_LENGTH];
    char                oldpath[MAX_LENGTH];
+   char                oldname[MAX_LENGTH];
    char                tempname[MAX_LENGTH];
    char                imgname[MAX_LENGTH];
    char                url[MAX_LENGTH];
    char               *buf, *ptr;
+   char               *sStyle, *stringStyle;
+   char               *oldStyle;
    char                url_str [2];
    int                 buflen, max, index;
 
@@ -947,109 +951,112 @@ char                  *newURL;
 	   CSSbuffer[MAX_CSS_LENGTH] = EOS;
 	   url[0] = EOS;
 	   tempname[0] = EOS;
-	   ptr = UpdateCSSBackgroundImage (oldpath, newURL, imgbase, CSSbuffer);
-	   if (ptr != NULL)
+	   sStyle = UpdateCSSBackgroundImage (oldpath, newURL, imgbase, CSSbuffer);
+	   if (sStyle != NULL)
 	     {
 	       /* save this new style element string */
-	       TtaSetTextContent (el, ptr, lang, SavingDocument);
-	       strcpy (url, ptr);
-	       TtaFreeMemory (ptr);
+	       TtaSetTextContent (el, sStyle, lang, SavingDocument);
 
-	       /* extract the URL from the new style string */
-	       ptr = GetCSSBackgroundURL (url);
-	       if (ptr != NULL)
+	       /* current point in sStyle */
+	       stringStyle = sStyle;
+	       /* extract the first URL from the new style string */
+	       ptr = GetCSSBackgroundURL (stringStyle);
+	       oldStyle = CSSbuffer;
+	       while (ptr != NULL)
 		 {
+		   /* for next research */
+		   stringStyle = strstr (stringStyle, "url") + 3;
 		   strcpy (url, ptr);
 		   TtaFreeMemory (ptr);
 		   NormalizeURL (url, SavingDocument, tempname, imgname, NULL);
-		 }
 
-	       /* extract the URL from the old style string */
-	       ptr = GetCSSBackgroundURL (CSSbuffer);
-	       if (ptr != NULL)
-		 {
-		   NormalizeURL (ptr, 0, CSSbuffer, imgname, oldpath);
-		   TtaFreeMemory (ptr);
-		 }
-	       else
-		 CSSbuffer[0] = EOS;
-	     }
-
-	   /*
-	     At this point:
-	     - url gives the relative new image name
-	     - tempname gives the new image full name
-	     - CSSbuffer gives the old image full name
-	     - imgname contains the image file name
-	     */
-	   if (url[0] != EOS && CSSbuffer[0] != EOS)
-	     {
-	       if ((src_is_local) && (!dst_is_local))
-		 /* add the existing localfile to images list to be saved */
-		 AddLocalImage (CSSbuffer, imgname, tempname, SavingDocument, &pImage);
-	       
-	       /* mark the image descriptor or copy the file */
-	       if (dst_is_local)
-		 {
-		   /* copy the file to the new location */
-		   if (IsW3Path (CSSbuffer) || IsHTTPPath (oldpath))
+		   /* extract the URL from the old style string */
+		   ptr = GetCSSBackgroundURL (oldStyle);
+		   if (ptr != NULL)
 		     {
+		       /* for next research */
+		       oldStyle = strstr (oldStyle, "url") + 3;
+		       NormalizeURL (ptr, 0, oldname, imgname, oldpath);
+		       TtaFreeMemory (ptr);
+
 		       /*
-			 it was a remote image:
-			 we use the local temporary name to do the copy
+			 At this point:
+			 - url gives the relative new image name
+			 - tempname gives the new image full name
+			 - oldname gives the old image full name
+			 - imgname contains the image file name
 			 */
-		       strcpy (CSSbuffer, localpath);
-		       strcat (CSSbuffer, imgname);
-		     }
-
-		   if (imgbase[0] != EOS)
-		     {
-		       strcpy (tempfile, imgbase);
-		       strcat (tempfile, DIR_STR);
-		       strcat (tempfile, imgname);
-		     }
-		   else
-		     {
-		       strcpy (tempfile, SavePath);
-		       strcat (tempfile, DIR_STR);
-		       strcat (tempfile, imgname);
-		     }
-		   
-		   TtaFileCopy (CSSbuffer, tempfile);
-		 }
-	       else
-		 {
-		   /* save on a remote server */
-		   if (IsW3Path (CSSbuffer) || IsHTTPPath (oldpath))
-		     {
-		       /*
-			 it was a remote image:
-			 get the image descriptor to prepare
-			 the saving process
-			 */
-		       strcpy (tempfile, localpath);
-		       strcat (tempfile, imgname);
-		       pImage = SearchLoadedImage (tempfile, SavingDocument);
-		       /* update the descriptor */
-		       if (pImage)
+		       if (url[0] != EOS && oldname[0] != EOS)
 			 {
-			   /* image was already loaded */
-			   if (pImage->originalName != NULL)
-			     TtaFreeMemory (pImage->originalName);
-			   pImage->originalName = (char *) TtaStrdup (tempname);
-			   if (TtaFileExist(pImage->localName))
-			     pImage->status = IMAGE_MODIFIED;
+			   if ((src_is_local) && (!dst_is_local))
+			     /* add the existing localfile to images list to be saved */
+			     AddLocalImage (oldname, imgname, tempname, SavingDocument, &pImage);
+			   
+			   /* mark the image descriptor or copy the file */
+			   if (dst_is_local)
+			     {
+			       /* copy the file to the new location */
+			       if (IsW3Path (oldname) || IsHTTPPath (oldpath))
+				 {
+				   /*
+				     it was a remote image:
+				     we use the local temporary name to do the copy
+				     */
+				   strcpy (oldname, localpath);
+				   strcat (oldname, imgname);
+				 }
+			       
+			       if (imgbase[0] != EOS)
+				 {
+				   strcpy (tempfile, imgbase);
+				   strcat (tempfile, DIR_STR);
+				   strcat (tempfile, imgname);
+				 }
+			       else
+				 {
+				   strcpy (tempfile, SavePath);
+				   strcat (tempfile, DIR_STR);
+				   strcat (tempfile, imgname);
+				 }
+			       
+			       TtaFileCopy (oldname, tempfile);
+			     }
 			   else
-			     pImage->status = IMAGE_NOT_LOADED;
-			   pImage->elImage = (struct _ElemImage *) el;
+			     {
+			       /* save on a remote server */
+			       if (IsW3Path (oldname) || IsHTTPPath (oldpath))
+				 {
+				   /*
+				     it was a remote image:
+				     get the image descriptor to prepare
+				     the saving process
+				     */
+				   strcpy (tempfile, localpath);
+				   strcat (tempfile, imgname);
+				   pImage = SearchLoadedImage (tempfile, SavingDocument);
+				   /* update the descriptor */
+				   if (pImage)
+				     {
+				       /* image was already loaded */
+				       if (pImage->originalName != NULL)
+					 TtaFreeMemory (pImage->originalName);
+				       pImage->originalName = (char *) TtaStrdup (tempname);
+				       if (TtaFileExist(pImage->localName))
+					 pImage->status = IMAGE_MODIFIED;
+				       else
+					 pImage->status = IMAGE_NOT_LOADED;
+				       pImage->elImage = (struct _ElemImage *) el;
+				     }
+				 }
+			       else
+				 AddLocalImage (oldname, imgname, tempname, SavingDocument, &pImage);
+			     }
 			 }
 		     }
-		   else
-		     AddLocalImage (CSSbuffer, imgname, tempname, SavingDocument, &pImage);
+		   ptr = GetCSSBackgroundURL (stringStyle);
 		 }
+	       TtaFreeMemory (sStyle);
 	     }
-	   /* get next StyleRule */
-	   TtaNextSibling (&el);
 	 }
 
        max = sizeof (SRC_attr_tab) / sizeof (int);
@@ -1062,7 +1069,8 @@ char                  *newURL;
 	     {
 	       elType = TtaGetElementType (el);
 	       if (elType.ElTypeNum == HTML_EL_PICTURE_UNIT ||
-			attrType.AttrTypeNum == HTML_ATTR_Style_)
+		   attrType.AttrTypeNum == HTML_ATTR_Style_ ||
+		   attrType.AttrTypeNum == HTML_ATTR_background_)
 		 {
 		   elType = TtaGetElementType (TtaGetParent(el));
 		   if (elType.ElTypeNum != HTML_EL_Object)
@@ -1225,6 +1233,7 @@ void                DoSaveAs ()
   AttributeType       attrType;
   ElementType         elType;
   Element             el, root;
+  DisplayMode         dispMode;
   char               *documentFile;
   char               *tempname, *localPath;
   char               *imagePath, *base;
@@ -1374,6 +1383,11 @@ DBG(fprintf(stderr, " set SaveName to noname.html\n");)
 
   if (ok)
     {
+      /* avoid flash on screen */
+      dispMode = TtaGetDisplayMode (SavingDocument);
+      if (dispMode == DisplayImmediately)
+	TtaSetDisplayMode (SavingDocument, DeferredDisplay);
+
       /* Transform all URLs to absolute ones */
         if (UpdateURLs)
 	  {
@@ -1399,6 +1413,8 @@ DBG(fprintf(stderr, " set SaveName to noname.html\n");)
 	 */
 	UpdateDocAndImages (src_is_local, dst_is_local, imgbase, documentFile);
 	  
+	/* restore the current mode */
+	TtaSetDisplayMode (SavingDocument, dispMode);
 	/* update informations on the document. */
 	TtaSetTextZone (SavingDocument, 1, 1, DocumentURLs[SavingDocument]);
 	  

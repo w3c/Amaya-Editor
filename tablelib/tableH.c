@@ -250,6 +250,7 @@ BoxType          colrow;
 	      for (i = 0; i < MAX_RELAT_DIM && pTabRel->TaRTable[i] != NULL;  i++)
 		{
 		  pPreviousTabRel = pOldTabRel;
+		  loop = TRUE;
 		  while (pPreviousTabRel != NULL && loop)
 		    {
 		      j = 0;

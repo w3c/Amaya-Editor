@@ -27,20 +27,6 @@
 #include "windialogapi_f.h"
 #endif /* _WINDOWS */
 
-/* CSSLEVEL2 adding new features to the standard */
-/* DEBUG_STYLES verbose output of style actions */
-/* DEBUG_CLASS_INTERF verbose output on class interface actions */
-
-/*
- * specific data :
- *   The Class List contains the list of classe names needed for selection
- *                  by the user.S
- *   NbClass is the corresponding number of elements found.
- *   CurrentClass contains the Class name selected by the user.
- *   ClassReference is the selected element used to update the class properties.
- *   DocReference is the selected document.
- */
-
 static char         ListBuffer[MAX_CSS_LENGTH + 1];
 static int          NbClass = 0;
 static char         CurrentClass[80];
@@ -122,6 +108,9 @@ boolean           removeSpan;
 	if (removeSpan)
 	  DeleteSpanIfNoAttr (el, doc);
      }
+
+   /* remove all the presentation specific rules applied to the element */
+   CleanStylePresentation (el, doc);
 }
 
 /*----------------------------------------------------------------------
@@ -257,8 +246,21 @@ NotifyAttribute    *event;
 		{
 		  while (*ptr2 != '}' && *ptr2 != EOS)
 		    ptr2++;
+		  if (*ptr2 != EOS)
+		    ptr2++;
+		  /* cut here */
 		  c = *ptr2;
+		  *ptr2 = EOS;
 		  ApplyCSSRules (event->element, ptr1, event->document, TRUE);
+		  /**** update image contexts
+		    url1 = GetCSSBackgroundURL (ptr1);
+		    if (url1 != NUL)
+		    {
+		    sprintf (path, "%s%s%d%s", TempFileDirectory, DIR_STR, event->document, DIR_STR, url1);
+		    pImage = SearchLoadedImage (path, event->document);
+		    
+		    }
+		    ***/
 		  *ptr2 = c;
 		  ptr1 = ptr2;
 		}
@@ -271,7 +273,11 @@ NotifyAttribute    *event;
 		{
 		  while (*ptr2 != '}' && *ptr2 != EOS)
 		    ptr2++;
+		  if (*ptr2 != EOS)
+		    ptr2++;
+		  /* cut here */
 		  c = *ptr2;
+		  *ptr2 = EOS;
 		  ApplyCSSRules (event->element, ptr1, event->document, FALSE);
 		  *ptr2 = c;
 		  ptr1 = ptr2;

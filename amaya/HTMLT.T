@@ -64,7 +64,7 @@ RULES
 	   Create Notation;
 	   END;
 	Create Attributes;
-	Create '>\12';
+	Create '>';
 	NoTranslation;
 	Create '</style>\12' After;
 	END;

@@ -2351,7 +2351,7 @@ PresentationValue  *val;
 	  fprintf (stderr, "Invalid color encoding %s\n", cssRule - 1);
 	  failed = TRUE;
 	}
-      else if (!isxdigit (cssRule[3]))
+      else if (cssRule[3] == '\212' || !isxdigit (cssRule[3]))
 	{
 	  /* encoded as on 3 digits #F0F  */
 	  redval = hexa_val (cssRule[0]) * 16 + hexa_val (cssRule[0]);
@@ -2411,7 +2411,7 @@ PresentationValue  *val;
   
   if (failed)
     {
-      val->typed_data.unit = DRIVERP_UNIT_INVALID;
+      val->typed_data.unit = DRIVERP_UNIT_REL;
       val->typed_data.value = 0;
     }
   else
@@ -2706,7 +2706,7 @@ void *extra;
 
 
 /*----------------------------------------------------------------------
-   UpdateCSSBackgroundImage searches a CSS BackgroundImage url within
+   UpdateCSSBackgroundImage searches strings url() or url("") within
    the styleString and make it relative to the newpath.
    oldpath = old document path
    newpath = new document path
@@ -2725,7 +2725,7 @@ char               *imgpath;
 char               *styleString;
 #endif
 {
-  char               *b, *e, *ptr;
+  char               *b, *e, *ptr, *oldptr, *sString;
   char                old_url[MAX_LENGTH];
   char                tempname[MAX_LENGTH];
   char                imgname[MAX_LENGTH];
@@ -2733,46 +2733,80 @@ char               *styleString;
   int                 len;
 
   ptr = NULL;
-  b = strstr (styleString, "background-image");
-  if (b != NULL)
+  sString = styleString;
+  b = strstr (sString, "url");
+  while (b != NULL)
     {
-      b = SkipWord (b);
       /* we need to compare this url with the new doc path */
+      b += 3;
       b = SkipBlanks (b);
-      if (*b != ':')
-	return (ptr);
-      b++;
-      b = SkipBlanks (b);
-      if (strncasecmp (b, "url", 3))
-	return (ptr);
-      b = SkipWord (b);
-      b = SkipBlanks (b);
-      if (*b != '(')
-	return (ptr);
-      b++;
-      /* search the url end */
-      e = b;
-      while (*e != EOS && *e != ')')
-	e++;
-      if (*e == EOS)
-	return (ptr);
-      len = (int)(e - b);
-      strncpy (old_url, b, len);
-      old_url[len] = EOS;
-      /* get the old full image name */
-      NormalizeURL (old_url, 0, tempname, imgname, oldpath);
-      /* build the new full image name */
-      if (imgpath != NULL)
-	NormalizeURL (imgname, 0, tempname, imgname, imgpath);
-      new_url = MakeRelativeURL (tempname, newpath);
-      /* generate the new style string */
-      len = - len + strlen (styleString) + strlen (new_url) + 1;
-      ptr = (char *) TtaGetMemory (len);
-      len = (int)(b - styleString);
-      strncpy (ptr, styleString, len);
-      strcpy (&ptr[len], new_url);
-      strcat (&ptr[len], e);
-      TtaFreeMemory (new_url);
+      if (*b == '(')
+	{
+	  b++;
+	  b = SkipBlanks (b);
+	  if (*b == '"')
+	    {
+	      /* search the url end */
+	      b++;
+	      e = b;
+	      while (*e != EOS && *e != '"')
+		e++;
+	    }
+	  else
+	    {
+	      /* search the url end */
+	      e = b;
+	      while (*e != EOS && *e != ')')
+		e++;
+	    }
+	  if (*e != EOS)
+	    {
+	      len = (int)(e - b);
+	      strncpy (old_url, b, len);
+	      old_url[len] = EOS;
+	      /* get the old full image name */
+	      NormalizeURL (old_url, 0, tempname, imgname, oldpath);
+	      /* build the new full image name */
+	      if (imgpath != NULL)
+		NormalizeURL (imgname, 0, tempname, imgname, imgpath);
+	      new_url = MakeRelativeURL (tempname, newpath);
+	      
+	      /* generate the new style string */
+	      if (ptr != NULL)
+		{
+		  oldptr = ptr;
+		  len = - len + strlen (oldptr) + strlen (new_url) + 1;
+		  ptr = (char *) TtaGetMemory (len);	  
+		  len = (int)(b - oldptr);
+		  strncpy (ptr, oldptr, len);
+		  sString = &ptr[len];
+		  /* new name */
+		  strcpy (sString, new_url);
+		  /* following text */
+		  strcat (sString, e);
+		  TtaFreeMemory (oldptr);
+		}
+	      else
+		{
+		  len = - len + strlen (styleString) + strlen (new_url) + 1;
+		  ptr = (char *) TtaGetMemory (len);
+		  len = (int)(b - styleString);
+		  strncpy (ptr, styleString, len);
+		  sString = &ptr[len];
+		  /* new name */
+		  strcpy (sString, new_url);
+		  /* following text */
+		  strcat (sString, e);
+		}
+	      TtaFreeMemory (new_url);
+	    }
+	  else
+	    sString = b;
+	}
+      else
+	sString = b;
+      /* next background-image */
+      b = strstr (sString, "url");      
     }
   return (ptr);
 }
@@ -2794,33 +2828,38 @@ char               *styleString;
   int                 len;
 
   ptr = NULL;
-  b = strstr (styleString, "background-image");
+  b = strstr (styleString, "url");
   if (b != NULL)
     {
-      b = SkipWord (b);
-      /* we need to compare this url with the new doc path */
+      b += 3;
       b = SkipBlanks (b);
-      if (*b != ':')
-	return (ptr);
-      b++;
-      b = SkipBlanks (b);
-      if (strncasecmp (b, "url", 3))
-	return (ptr);
-      b = SkipWord (b);
-      b = SkipBlanks (b);
-      if (*b != '(')
-	return (ptr);
-      b++;
-      /* search the url end */
-      e = b;
-      while (*e != EOS && *e != ')')
-	e++;
-      if (*e == EOS)
-	return (ptr);
-      len = (int)(e - b);
-      ptr = (char *) TtaGetMemory (len+1);
-      strncpy (ptr, b, len);
-      ptr[len] = EOS;
+      if (*b == '(')
+	{
+	  b++;
+	  b = SkipBlanks (b);
+	  if (*b == '"')
+	    {
+	      b++;
+	      /* search the url end */
+	      e = b;
+	      while (*e != EOS && *e != '"')
+		e++;
+	    }
+	  else
+	    {
+	      /* search the url end */
+	      e = b;
+	      while (*e != EOS && *e != ')')
+		e++;
+	    }
+	  if (*e != EOS)
+	    {
+	      len = (int)(e - b);
+	      ptr = (char *) TtaGetMemory (len+1);
+	      strncpy (ptr, b, len);
+	      ptr[len] = EOS;
+	    }
+	}
     }
   return (ptr);
 }
@@ -2861,10 +2900,19 @@ char               *cssRule;
 	{
 	  cssRule++;
 	  cssRule = SkipBlanks (cssRule);
-	  base = cssRule;
-	  while (*cssRule != EOS && *cssRule != ')')
-	    cssRule++;
-
+	  if (*cssRule == '"')
+	    {
+	      cssRule++;
+	      base = cssRule;
+	      while (*cssRule != EOS && *cssRule != ')')
+		cssRule++;
+	    }
+	  else
+	    {
+	      base = cssRule;
+	      while (*cssRule != EOS && *cssRule != ')')
+		cssRule++;
+	    }
 	  sauve = *cssRule;
 	  *cssRule = EOS;
 	  url = TtaStrdup (base);

@@ -37,7 +37,8 @@ exec_prefix = @exec_prefix@
 libdir = @libdir@
 datadir = @datadir@
 bindir = @bindir@
-
+amaya_math_schema = @amaya_math_schema@
+amaya_graph_schema = @amaya_graph_schema@
 #
 # specific entry point check the dependancies
 #
