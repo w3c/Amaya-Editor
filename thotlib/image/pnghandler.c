@@ -908,7 +908,7 @@ int            zoom;
   /* return image dimensions */
   *width = w;
   *height = h;
-  if (buffer == NULL)
+  if (buffer == NULL) 
      return (ThotBitmapNone);
 
   if (zoom != 0 && *xif == 0 && *yif == 0)
@@ -925,6 +925,7 @@ int            zoom;
 	*yif = PixelValue (h, UnPixel, NULL, zoom);
     }
 
+#ifndef _WIN_PRINT
   if ((*xif != 0 && *yif != 0) && (w != *xif || h != *yif)) {
     /* xif and yif contain width and height of the box */
     buffer2 = ZoomPicture (buffer, w , h, *xif, *yif, 1);
@@ -934,9 +935,11 @@ int            zoom;
     w = *xif;
     h = *yif;
   }
+#endif /* _WINPRINT */
     
   if (buffer == NULL)
     return (ThotBitmapNone);
+
   if (bg >= 0) {
 #   ifndef _WINDOWS
     *mask1 = MakeMask (TtDisplay, buffer, w, h, bg);
@@ -949,7 +952,7 @@ int            zoom;
 
   pixmap = DataToPixmap (buffer, w, h, ncolors,  colrs);
   TtaFreeMemory (buffer);
-  if (pixmap == None)
+  if (pixmap == None) 
     return (ThotBitmapNone); 
   else
     { 

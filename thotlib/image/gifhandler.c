@@ -998,9 +998,9 @@ ThotColorStruct* colrs;
    }
    
    newimage = CreateCompatibleBitmap (hDC, width, height);
-   if (depth == 1)
+   /* if (depth == 1)
       SetBitmapBits (newimage, width * height, bit_data);
-   else 
+   else */
       SetBitmapBits (newimage, width * height * (depth/8), bit_data);
    TtaFreeMemory (bit_data);
    return newimage;

@@ -297,7 +297,7 @@ HBITMAP hBmp;
  
     /* Retrieve the bitmap's color format, width, and height. */ 
  
-    if (!GetObject (hBmp, sizeof(BITMAP), (LPSTR)&bmp)) 
+    if (!GetObject (hBmp, sizeof(BITMAP), (LPSTR)&bmp))
        WinErrorBox (hwnd); 
  
 
@@ -1114,7 +1114,6 @@ char               *fileName;
    i = 0 ;
    l = strlen (fileName);
 
-#  ifdef _WINDOWS
    while (i < HandlersCounter) {
          if (i >= InlineHandlers)
             currentExtraHandler = i - InlineHandlers;
@@ -1122,34 +1121,6 @@ char               *fileName;
             return i ;
          ++i ;
    }
-# else  /* _WINDOWS */
-  if (l > 4)
-    {
-      if (strcmp (fileName + l - 4, ".pic") == 0 || strcmp (fileName + l - 4, ".xbm") == 0)
-	return XBM_FORMAT;
-      if (strcmp (fileName + l - 4, ".eps") == 0 || strcmp (fileName + l - 3, ".ps") == 0)
-	return EPS_FORMAT;
-      if (strcmp (fileName + l - 4, ".xpm") == 0)
-	return XPM_FORMAT;
-      if ((strcmp (fileName + l - 4, ".gif") == 0) || (strcmp (fileName + l - 4, ".GIF") == 0))
-	return GIF_FORMAT;
-      if ((strcmp (fileName + l - 4, ".jpg") == 0) || (strcmp (fileName + l - 5, ".jpeg") == 0))
-	return JPEG_FORMAT;
-      if (strcmp (fileName + l - 4, ".png") == 0)
-	return PNG_FORMAT;
-    }
-
-  i = HandlersCounter - 1;
-
-   while (i > UNKNOWN_FORMAT)
-     {
-         if (i >= InlineHandlers)
-            currentExtraHandler = i - InlineHandlers;
-         if (Match_Format (i, fileName))
-            return i ;
-         --i ;
-     }
-#  endif /* _WINDOWS */
    return UNKNOWN_FORMAT;
 }
 
@@ -1690,17 +1661,18 @@ int                 frame;
 
         LoadPicture2Print (frame, box, imageDesc);
 
-        if ((imageDesc->bgRed == -1 && imageDesc->bgGreen == -1 && imageDesc->bgBlue == -1) || imageDesc->PicType == -1) {
+        /* if ((imageDesc->bgRed == -1 && imageDesc->bgGreen == -1 && imageDesc->bgBlue == -1) || imageDesc->PicType == -1) { */
            lpBmpInfo = CreateBitmapInfoStruct(FrRef [frame], imageDesc->PicPixmap);
 
            lpBits = (LPBYTE) GlobalAlloc (GMEM_FIXED, lpBmpInfo->bmiHeader.biSizeImage);
-           if (!lpBits)
+           /* lpBits = (LPBYTE) GlobalAlloc (GHND, lpBmpInfo->bmiHeader.biSizeImage); */
+           if (!lpBits) 
               WinErrorBox (NULL);
 
-           if (!GetDIBits (TtDisplay, (HBITMAP) imageDesc->PicPixmap, 0, (WORD)lpBmpInfo->bmiHeader.biHeight, lpBits, lpBmpInfo, DIB_RGB_COLORS))
+           if (!GetDIBits (TtDisplay, (HBITMAP) (imageDesc->PicPixmap), 0, (UINT)lpBmpInfo->bmiHeader.biHeight, lpBits, lpBmpInfo, DIB_RGB_COLORS))
               WinErrorBox (NULL);
-		} else 
-             lpBits = GetTransparentDIBits (frame, (HBITMAP) imageDesc->PicPixmap, xFrame, yFrame, imageDesc->PicWidth, imageDesc->PicHeight, imageDesc->bgRed, imageDesc->bgGreen, imageDesc->bgBlue, &lpBmpInfo);
+		/* else 
+             lpBits = GetTransparentDIBits (frame, (HBITMAP) imageDesc->PicPixmap, xFrame, yFrame, imageDesc->PicWidth, imageDesc->PicHeight, imageDesc->bgRed, imageDesc->bgGreen, imageDesc->bgBlue, &lpBmpInfo); */
 
 		/* pBuf = (LPSTR) TtaGetMemory (picWArea * picHArea * 32); */
         /* nbLines = GetDIBits (TtDisplay, imageDesc->PicPixmap, 0, picWArea * picHArea, pBuf, lpBmpInfoHeader, DIB_RGB_COLORS); */
@@ -2092,7 +2064,7 @@ PictInfo           *imageDesc;
    w = 0;
    h = 0;
 
-   if (status != Supported_Format) {
+   if (status != Supported_Format) {  
       if (TtPrinterDC == NULL) {
          imageDesc->PicType = 3;
          pres = RealSize;
@@ -2171,7 +2143,9 @@ PictInfo           *imageDesc;
       FreePixmap (picMask);
       picMask = None;
    }
-   UpdatePictInfo (imageDesc, myDrawable);
+   if (imageDesc->PicPixmap != NULL)
+      DeleteObject (imageDesc->PicPixmap);
+   imageDesc->PicPixmap = myDrawable;
 }
 #endif /* _WIN_PRINT */
 #endif /* _WINDOWS */
