@@ -42,7 +42,7 @@ int get_hash(char *filename)
     return((int) idx);
 }
 
-void init_dep(dep)
+void init_dep()
 {
     int i;
 
@@ -194,9 +194,14 @@ static void handle_local_include(char *name, int len)
 #define current (__buf >> 8*(sizeof(unsigned long)-1))
 #endif
 
+char *mmap_map;
+int mmap_mapsize;
+int filesize;
+
 #define GETNEXT { \
 next_byte(__buf); \
 if (!__nrbuf) { \
+        if (next >= mmap_map + filesize) return; /* For suns ! */ \
 	__buf = *(unsigned long *) next; \
 	__nrbuf = sizeof(unsigned long); \
 	if (!__buf) \
@@ -322,8 +327,6 @@ if_middle:
 
 static void do_depend(void)
 {
-	char *map;
-	int mapsize;
 	int pagesizem1 = getpagesize()-1;
 	int fd = open(filename, O_RDONLY);
 	struct stat st;
@@ -333,17 +336,18 @@ static void do_depend(void)
 		return;
 	}
 	fstat(fd, &st);
-	mapsize = st.st_size + 2*sizeof(unsigned long);
-	mapsize = (mapsize+pagesizem1) & ~pagesizem1;
-	map = mmap(NULL, mapsize, PROT_READ, MAP_PRIVATE, fd, 0);
-	if (-1 == (long)map) {
+	filesize = st.st_size;
+	mmap_mapsize = st.st_size + 2*sizeof(unsigned long);
+	mmap_mapsize = (mmap_mapsize+pagesizem1) & ~pagesizem1;
+	mmap_map = mmap(NULL, mmap_mapsize, PROT_READ, MAP_PRIVATE, fd, 0);
+	if (-1 == (long)mmap_map) {
 		perror("mkdep: mmap");
 		close(fd);
 		return;
 	}
 	close(fd);
-	state_machine(map);
-	munmap(map, mapsize);
+	state_machine(mmap_map);
+	munmap(mmap_map, mmap_mapsize);
 }
 
 int main(int argc, char **argv)
