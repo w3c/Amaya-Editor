@@ -6,11 +6,7 @@
  */
 
 /*
- * Warning:
- * This module is part of the Thot library, which was originally
- * developed in French. That's why some comments are still in
- * French, but their translation is in progress and the full module
- * will be available in English in the next release.
+ * This module is part of the Thot library.
  * 
  */
  
@@ -610,40 +606,47 @@ ThotBool           *ok;
 
 /*----------------------------------------------------------------------
   GetEnclosingAttr
-  return the attribute of type attrNumber associated to element pEl or
-  one of its ancestors. Return NULL is neither pEl nor any of its ancestor
-  have such an attribute.
+  If pAInit is an attribute of type attrNumber, return that attribute,
+  otherwise return the attribute of type attrNumber attached to element
+  pEl or one of its ancestors.
+  Return NULL is neither pEl nor any of its ancestor have such an attribute.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static PtrAttribute GetEnclosingAttr (PtrElement pEl, int attrNumber)
+static PtrAttribute GetEnclosingAttr (PtrElement pEl, int attrNumber, PtrAttribute pAInit)
 #else  /* __STDC__ */
-static PtrAttribute GetEnclosingAttr (pEl, attrNumber)
+static PtrAttribute GetEnclosingAttr (pEl, attrNumber, pAInit)
 PtrElement	pEl;
 int		attrNumber;
-
+PtrAttribute    pAInit;
 #endif /* __STDC__ */
 {
    PtrAttribute        pAttr, pA;
    PtrElement	       pAsc;
 
    pAttr = NULL;
-   pAsc = pEl;
    if (attrNumber < 0)
       attrNumber = -attrNumber;
-   while (pAttr == NULL && pAsc != NULL)
+   if (pAInit != NULL &&
+       pAInit->AeAttrNum == attrNumber &&
+       pAInit->AeAttrSSchema == pEl->ElStructSchema)
+      pAttr = pAInit;
+   else
       {
-      pA = pAsc->ElFirstAttr;
-      while (pAttr == NULL && pA != NULL)
-	 if (pA->AeAttrNum == attrNumber &&
-	     pA->AeAttrSSchema == pEl->ElStructSchema)
-	    pAttr = pA;
-	 else
-	    pA = pA->AeNext;
-      pAsc = pAsc->ElParent;
+      pAsc = pEl;
+      while (pAttr == NULL && pAsc != NULL)
+         {
+         pA = pAsc->ElFirstAttr;
+         while (pAttr == NULL && pA != NULL)
+	    if (pA->AeAttrNum == attrNumber &&
+	        pA->AeAttrSSchema == pEl->ElStructSchema)
+	       pAttr = pA;
+	    else
+	       pA = pA->AeNext;
+         pAsc = pAsc->ElParent;
+         }
       }
    return pAttr;
 }
-
 
 /*----------------------------------------------------------------------
    	IntegerRule evalue une regle de presentation de type entier pour
@@ -656,7 +659,6 @@ int		attrNumber;
    		etc. Si la regle est une regle de presentation		
    		d'attribut, pAttr pointe sur le bloc d'attribut auquel	
    		la regle correspond.					
-   		Fonction utilisee dans crimabs				
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 int                 IntegerRule (PtrPRule pPRule, PtrElement pEl, DocViewNumber view, ThotBool * ok, TypeUnit * unit, PtrAttribute pAttr)
@@ -693,9 +695,8 @@ PtrAttribute        pAttr;
              {
                 if (pPRule->PrInhAttr)
                   {
-                     /* c'est la valeur d'un attribut */
-                     if (pAttr == NULL)
-                        pAttr = GetEnclosingAttr (pEl, pPRule->PrInhDelta);
+		     /* c'est la valeur d'un attribut */
+                     pAttr = GetEnclosingAttr (pEl, pPRule->PrInhDelta, pAttr);
                      if (pPRule->PrInhDelta < 0 && !pPRule->PrInhPercent)
                         /* il faut retrancher cette valeur */
                         i = -AttrValue (pAttr);
@@ -855,8 +856,8 @@ PtrAttribute        pAttr;
                      if (pPRule->PrMinMaxAttr)
                         /* c'est la valeur d'un attribut */
                        {
-                          if (pAttr == NULL)
-                             pAttr = GetEnclosingAttr (pEl, pPRule->PrInhMinOrMax);
+                          pAttr = GetEnclosingAttr (pEl, pPRule->PrInhMinOrMax,
+						    pAttr);
                           if (pPRule->PrInhMinOrMax < 0)
                              /* inverser cette valeur */
                              i = -AttrValue (pAttr);
@@ -920,8 +921,7 @@ PtrAttribute        pAttr;
               if (pPRule->PrAttrValue)
                  /* c'est la valeur d'un attribut */
                  {
-                 if (pAttr == NULL)
-                    pAttr = GetEnclosingAttr (pEl, pPRule->PrIntValue);
+                 pAttr = GetEnclosingAttr (pEl, pPRule->PrIntValue, pAttr);
                  if (pPRule->PrIntValue < 0)
                     /* il faut inverser cette valeur */
                     val = -AttrValue (pAttr);
@@ -954,8 +954,7 @@ PtrAttribute        pAttr;
                 if (pPRule->PrMinAttr)
                    /* c'est la valeur d'un attribut */
                   {
-                     if (pAttr == NULL)
-                        pAttr = GetEnclosingAttr (pEl, pPRule->PrMinValue);
+                     pAttr = GetEnclosingAttr (pEl, pPRule->PrMinValue, pAttr);
                      if (pPRule->PrMinValue < 0)
                         /* il faut inverser cette valeur */
                         val = -AttrValue (pAttr);
@@ -3190,7 +3189,6 @@ ThotBool            withDescCopy;
    		jamais etre appliquee, false si elle n'a pas pu etre	
    		appliquee mais qu'elle pourra etre appliquee quand	
    		d'autres paves seront construits.			
-	   le ThotBool de destroyedAb indique si le pave pAb a ete detruit
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 ThotBool            ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb, PtrDocument pDoc, PtrAttribute pAttr)
