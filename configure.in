@@ -1090,7 +1090,7 @@ if test "$build_amaya" = "yes" ; then
     dnl control whether we should build the bookmarks support
     if test "$with_annot" = "yes" -a "$with_redland" = "no" ; then
        AC_MSG_WARN(Disabling annotations build as redland is disabled !)
-       with_annotations="no"
+       with_annot="no"
     fi
     if test "$with_bookmarks" = "yes" -a "$with_annot" = "no" ; then
        AC_MSG_WARN(Disabling bookmarks build as annotations are disabled !)

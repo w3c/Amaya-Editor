@@ -2144,7 +2144,7 @@ if test "$ac_test_CFLAGS" = set; then
   CFLAGS=$ac_save_CFLAGS
 elif test $ac_cv_prog_cc_g = yes; then
   if test "$GCC" = yes; then
-    CFLAGS="-O2"
+    CFLAGS="--O2"
   else
     CFLAGS="-g"
   fi
@@ -13720,7 +13720,7 @@ echo "$as_me: WARNING: Disabling redland build !" >&2;}
         if test "$with_annot" = "yes" -a "$with_redland" = "no" ; then
        { echo "$as_me:$LINENO: WARNING: Disabling annotations build as redland is disabled !" >&5
 echo "$as_me: WARNING: Disabling annotations build as redland is disabled !" >&2;}
-       with_annotations="no"
+       with_annot="no"
     fi
     if test "$with_bookmarks" = "yes" -a "$with_annot" = "no" ; then
        { echo "$as_me:$LINENO: WARNING: Disabling bookmarks build as annotations are disabled !" >&5
