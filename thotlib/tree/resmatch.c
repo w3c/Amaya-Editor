@@ -17,12 +17,14 @@
   RestCoupler
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean RestCoupler (Restruct restr, int indSrc, int indDst)
+static boolean RestCoupler (Restruct restr, int indSrc, int indDst, int indRecFrom, int indRecTo)
 #else  /* __STDC__ */
-static boolean RestCoupler (restr, indSrc, indDst)
+static boolean RestCoupler (restr, indSrc, indDst, indRecFrom, indRecTo)
 Restruct restr;
 int indSrc;
 int indDst;
+int indRecFrom;
+int indRecTo;
 #endif  /* __STDC__ */
 {
 #ifdef DEBUG
@@ -35,7 +37,18 @@ int indDst;
   if (restr->RSrcPrint->SNodes[indSrc] != NULL && 
       restr->RDestNodes[indDst] != NULL)
     {
-      restr->RCoupledNodes[indSrc] = restr->RDestNodes[indDst];
+      restr->RCoupledNodes[indSrc] = TtaGetMemory (sizeof (StrRestCouple));
+      restr->RCoupledNodes[indSrc]->CDstNode = restr->RDestNodes[indDst];
+      if (indRecFrom == 0 && indRecTo == 0)
+	{
+	  restr->RCoupledNodes[indSrc]->CRecFrom = NULL;
+	  restr->RCoupledNodes[indSrc]->CRecTo = NULL;
+	}
+      else
+	{
+	  restr->RCoupledNodes[indSrc]->CRecFrom = restr->RDestNodes[indRecFrom];
+	  restr->RCoupledNodes[indSrc]->CRecTo = restr->RDestNodes[indRecTo];
+	}
       return TRUE;
     }
   else
@@ -63,6 +76,7 @@ int indSrc;
 #endif
       return FALSE;
     }
+  TtaFreeMemory (resctx->RCoupledNodes[indSrc]);
   resctx->RCoupledNodes[indSrc] = NULL;
   return TRUE;
 }  
@@ -84,7 +98,13 @@ Restruct resctx;
   fprintf (stdout, "      RAZ couples \n");
 #endif
   for (i=0; i<SIZEPRINT; i++)
-    resctx->RCoupledNodes[i] = NULL;
+    {
+      if (resctx->RCoupledNodes[i] != NULL)
+	{
+	  TtaFreeMemory (resctx->RCoupledNodes[i]);
+	  resctx->RCoupledNodes[i] = NULL;
+	}
+    }
   return TRUE;
 } 
 
@@ -115,7 +135,10 @@ int IDst;
      if(TtaSameSSchemas (RContext->CSrcSchema, (resctx->RDestType).ElSSchema) &&
 	resctx->RSrcPrint->SNodes[ISrc] != NULL &&
 	resctx->RDestNodes[IDst] != NULL &&
-	resctx->RSrcPrint->SNodes[ISrc]->TypeNum == resctx->RDestNodes[IDst]->TypeNum )
+	resctx->RSrcPrint->SNodes[ISrc]->TypeNum == resctx->RDestNodes[IDst]->TypeNum && 
+	((PSrc[ISrc] == '{' || PSrc[ISrc] == '(' || PSrc[ISrc] == '[') || 
+	 (PDst[IDst] == '{' || PDst[IDst] == '(' || PDst[IDst] == '['))
+       )
        result = IDENTITE;
      else
        if (PDst[IDst] == '@' && (PSrc[ISrc] != '}' && PSrc[ISrc] != ')' && PSrc[ISrc] != ']'))
@@ -220,7 +243,7 @@ Restruct resctx;
       SubStrBegin = IndSrc - IndDst;
       j = SubStrBegin;
       for (i = 0; i < LgDst; i++, j++)
-	RestCoupler (resctx,i,j);
+	RestCoupler (resctx,i,j, 0, 0);
 #ifdef DEBUG
       fprintf (stdout,"Factor found \n");
 #endif
@@ -262,7 +285,7 @@ Restruct resctx;
    fprintf (stdout,"Equiv found \n");
 #endif
    for (i = 0, j = 0; i < l; i++, j++)
-     RestCoupler (resctx, i, j); 
+     RestCoupler (resctx, i, j, 0, 0); 
 }
 /*----------------------------------------------------------------------  
   RestCalcIndRec
@@ -321,7 +344,7 @@ Restruct resctx;
   boolean             stop;
   int                 level;
   int		      *indrec;
-  
+  int                 RecFirstIndex;
 
   CSrc = resctx->RSrcPrint->SPrint;
   CDst = resctx->RDestPrint;
@@ -344,9 +367,13 @@ Restruct resctx;
 
   i = 1;
   j = 1;
-  while (((i <= LgU) && (j <= LgV)) || (j == LgV+1 && ClusterStack[TopMS].Compteur == 0 && ClusterStack[TopMS].Emp == '@'))
+  while (((i <= LgU) && (j <= LgV)) || 
+	 (j == LgV+1 && 
+	  ClusterStack[TopMS].Compteur == 0 && 
+	  ClusterStack[TopMS].Emp == '@'))
     {
-      if (ClusterStack[TopMS].Compteur == 0 && ClusterStack[TopMS].Emp == '@' &&
+      if (ClusterStack[TopMS].Compteur == 0 && 
+	  ClusterStack[TopMS].Emp == '@' &&
 	  j != indrec[ClusterStack[TopMS].Retour - 1] + 1)
 	{
 #ifdef DEBUG
@@ -360,16 +387,17 @@ Restruct resctx;
 	  rel = RestMatchSymb (resctx, i - 1, j - 1);
 	  if (rel == REC_MASK)
 	    { /* on a rencontre un symbole de recursion dans la cible */
-	      if (ClusterStack[TopMS].Emp != '@')
+	      if (ClusterStack[TopMS].Emp != '@' && i > 1)
 		/* on a pas de symbole de recursion sur le haut de la pile */
 		{ /* on developpe la recursion trans m6 */
 #ifdef DEBUG
-	  printf (" >>>>  %d -> %d \n",j-1,indrec [j - 1] -1);
+		  printf (" >>>>  %d -> %d \n",j-1,indrec [j - 1] -1);
 #endif
 		  TopMS += 1;    
 		  ClusterStack[TopMS].Emp = '@';
 		  ClusterStack[TopMS].Retour = j;
 		  ClusterStack[TopMS].Compteur = 0;
+		  RecFirstIndex = j;
 		  j = indrec [j - 1];
 		}
 	      /* sinon trans m7*/
@@ -379,7 +407,7 @@ Restruct resctx;
 	  else if (rel != NONE && V[j] == ClusterStack[TopMS].Inverse && ClusterStack[TopMS].Emp != '@')
 	    if (ClusterStack[TopMS].Compteur == 0)    /*180794 */
 	      {
-		RestCoupler (resctx, i - 1, j - 1);
+		RestCoupler (resctx, i - 1, j - 1, 0, 0);
 		TopMS -= 1;        /* Depiler */
 		i += 1;
 	      }
@@ -407,7 +435,12 @@ Restruct resctx;
 		} 
 	      ClusterStack[TopMS].Retour = i;
 	      ClusterStack[TopMS].Compteur = 0;
-	      RestCoupler (resctx, i - 1, j - 1);
+	      if (TopMS > 1 && ClusterStack[TopMS-1].Emp == '@')
+		{
+		  RestCoupler (resctx, i - 1, j - 1, RecFirstIndex, ClusterStack[TopMS-1].Retour);
+		}
+	      else
+		RestCoupler (resctx, i - 1, j - 1, 0, 0);
 	      if (rel == IDENTITE)
 		{
 		  if (CSrc[i - 1] != '@')
@@ -466,7 +499,7 @@ Restruct resctx;
 	      
 	  else if (rel != NONE)
 	    { /* on couple les types de base sans empiler*/
-	      RestCoupler (resctx, i - 1, j - 1);
+	      RestCoupler (resctx, i - 1, j - 1, 0, 0);
 	      i += 1;
 	    }
 	      

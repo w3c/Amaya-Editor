@@ -38,6 +38,7 @@ typedef enum {NONE,
 } TyRelation;
 
 #ifndef STANDALONE
+
 /* pre couplages de noeuds */
 typedef struct _TypeAtom
 {
@@ -69,11 +70,22 @@ typedef struct _StrTypeTree
   PreCouple TPreCouple[MAXNODECOUPLE];
 #endif /* STANDALONE */
   boolean TEffective;
+  boolean TDiscard;
   boolean TRecursApplied;
   char TPrintSymb;
   int TDepth;
 } StrTypeTree;
   
+/* structure des couplages */
+typedef struct _RestCouple *RestCouple;
+typedef struct _RestCouple
+{
+  TypeTree CDstNode;
+  TypeTree CRecFrom; 
+  TypeTree CRecTo;
+} StrRestCouple;
+
+/* contexte d'une restructuration */
 typedef struct _StrSourcePrint *SourcePrint;
 typedef struct _StrSourcePrint
 {
@@ -93,12 +105,11 @@ typedef struct _StrRestruct
   TypeTree RDestTree;
   char RDestPrint[SIZEPRINT];
   TypeTree RDestNodes[SIZEPRINT];
-  TypeTree RCoupledNodes[SIZEPRINT];
+  RestCouple RCoupledNodes[SIZEPRINT];
   SourcePrint RSrcPrint;
   TyRelation RRelation;
   Restruct RNext;
 }StrRestruct;
-
 
 
 typedef struct _StrRestContext *RestContext;

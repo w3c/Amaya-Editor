@@ -81,14 +81,34 @@ TypeTree second;
 #endif  /* __STDC__ */
 {
   TypeTree fChild, sChild;
+  int fDepth = 0;
+  int sDepth = 0; 
 
   fChild = RestNextEffNode (first, NULL);
+  if (fChild != NULL)
+    {
+      fDepth = fChild->TDepth;
+      if (fChild->TPrintSymb == '@')
+	{
+	  fChild = fChild->TRecursive;
+	  fDepth = 1000;
+	}
+    }
   sChild = RestNextEffNode (second, NULL);
+  if (sChild != NULL)
+    {
+      sDepth = sChild->TDepth;
+      if (sChild->TPrintSymb == '@')
+	{
+	  sChild = sChild->TRecursive;
+	  sDepth = 1000;
+	}
+    }
   if (fChild != NULL && sChild != NULL)
     {
-      if (fChild->TDepth > sChild->TDepth)
+      if (fDepth > sDepth)
 	return 0;
-      if (fChild->TDepth < sChild->TDepth)
+      if (fDepth < sDepth)
 	return 1;
     }
   while (fChild!=NULL && sChild != NULL && 
@@ -199,6 +219,7 @@ ElementType elemType;
 #endif  /* __STDC__ */
 {
   TypeTree theTree = NULL;
+  int i;
 
   theTree = (TypeTree)TtaGetMemory(sizeof(StrTypeTree));
   theTree->TId = (RContext->CIdCount)++;
@@ -210,9 +231,15 @@ ElementType elemType;
   theTree->TRecursive = NULL;
   theTree->TRecursApplied = FALSE;
   theTree->TEffective = TRUE;
+  theTree->TDiscard = FALSE;
   theTree->TPrintSymb = ' ';
   theTree->TypeNum = elemType.ElTypeNum;
   theTree->TDepth = 0;
+  for (i = 0; i < MAXNODECOUPLE; i++)
+    {
+      theTree->TPreCouple[i].SourceContext = NULL;
+      theTree->TPreCouple[i].DestContext = NULL;
+    }
   return theTree;
 }
 /*----------------------------------------------------------------------
@@ -277,7 +304,7 @@ boolean isSource;
 	    }
 	  else if (strRule->SrConstruct == CsNatureSchema && strRule->SrSSchemaNat != NULL)
 	    { /* schema externe explicite */
-	      childType.ElSSchema = strRule->SrSSchemaNat;
+	      childType.ElSSchema = (SSchema) strRule->SrSSchemaNat;
 	      if (childType.ElSSchema == NULL)
 		{
 #ifdef DEBUG
@@ -422,6 +449,7 @@ static TypeTree GetElemSourceTree()
   theTree->TRecursive = NULL;
   theTree->TRecursApplied = FALSE;
   theTree->TEffective = FALSE;
+  theTree->TDiscard = FALSE;
   theTree->TPrintSymb = '*';
   theTree->TId = (RContext->CIdCount)++;
   theTree->TypeNum = 0;
@@ -450,7 +478,7 @@ static TypeTree GetElemSourceTree()
     }
   else
     return theTree; 
-}
+} 
 
 
 /*----------------------------------------------------------------------  
@@ -605,7 +633,7 @@ PrintMethod method;
 		{ 
 		  child = theTree->TChild;
 		  /* saute les noeuds non effectifs */
-		  /*while (effect && child != NULL && !child->TEffective) 
+		  /* while (effect && child != NULL && !child->TEffective) 
 		    child = child->Next;*/
 		}
 	    }
@@ -753,9 +781,9 @@ TypeTree tree;
   sonts representes dans l'instance elem.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean RecInstanciateType(TypeTree tree, Element elem, PrintMethod method)
+static boolean RecInstanciateType (TypeTree tree, Element elem, PrintMethod method)
 #else  /* __STDC__ */
-static boolean RecInstanciateType(tree, elem, method)
+static boolean RecInstanciateType (tree, elem, method)
 TypeTree tree;
 Element elem;
 PrintMethod method;
@@ -846,6 +874,9 @@ PrintMethod method;
     /* au moins un des fils est completement instancie' */
     /* (existence d'une feuille; on instancie elem */
     tree->TEffective = TRUE;
+  else if (result)
+    tree->TDiscard = TRUE;
+    
   return result;
 }
 
@@ -865,7 +896,10 @@ TypeTree tree;
   if (tree != NULL)
     {
       if (tree->TPrintSymb != '*')
-	tree->TEffective = FALSE;
+	{
+	  tree->TEffective = FALSE;
+	  tree->TDiscard = FALSE;
+	}
       child = tree->TChild;
       while (child != NULL)
 	{
@@ -991,7 +1025,7 @@ ElementType typeDest;
   for (i = 0; i<SIZEPRINT; i++)
     {
       restruct->RDestPrint[i] = EOS;
-      restruct->RDestNodes[i] = 
+      restruct->RDestNodes[i] = NULL;
       restruct->RCoupledNodes[i] = NULL;
     }
   restruct->RDestTree = GetTypeTree (typeDest, FALSE);
@@ -1122,7 +1156,7 @@ int typeNum;
   /* allocation et calcul de l'empreinte destination */
   restCour = RestNewRestruct(elType);
   strcpy (msgbuf,  TtaGetElementTypeName(restCour->RDestType));
-  printf("Destin : %s  -  %s\n",msgbuf,restCour->RDestPrint);  
+  printf("Destin : %s\n  -  %s\n",msgbuf,restCour->RDestPrint);  
   strcpy (msgbuf,  TtaGetElementTypeName(TtaGetElementType(elemFirst)));
   TtaFreeMemory (restCour);
 #endif
@@ -1132,13 +1166,11 @@ int typeNum;
   if (pListRestruct != NULL)
     while (pListRestruct->RNext != NULL)
       pListRestruct = pListRestruct->RNext;
-
-#ifdef DEBUG
-  strcpy (msgbuf,  TtaGetElementTypeName(elType));
-  printf("Source : %s\n", msgbuf);
-#endif
   /* boucle sur les methodes tant qu'on n'a pas trouve de solution */
-  for (i=0; /*restCour->RRelation == NONE &&*/ i < RContext->CNbPrintMethod; i++)
+  for (i = 0; 
+       (restCour == NULL || restCour->RRelation == NONE) && 
+	 i < RContext->CNbPrintMethod; 
+       i++)
     {
       restCour = RestNewRestruct(elType);
       /* instancie et calcule l'empreinte source */
@@ -1147,7 +1179,7 @@ int typeNum;
 	{
 	  restCour->RSrcPrint = sourcePrint;
 #ifdef DEBUG
-	  printf("Source : %s\n",  restCour->RSrcPrint->SPrint);
+	  printf("Src: %s\n",  restCour->RSrcPrint->SPrint);
 #endif
 	  /* compare les empreintes */
 	  RestMatchPrints (restCour);
@@ -1187,6 +1219,7 @@ int typeNum;
 	  printf ("Echec\n");
 #endif
 	  TtaFreeMemory (restCour);
+	  restCour = NULL;
 	}
     }
   return result; 
