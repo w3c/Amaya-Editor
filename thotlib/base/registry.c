@@ -1117,7 +1117,7 @@ static void         InitEnviron ()
    TtaSetDefEnvString ("ForegroundColor", "Black", FALSE);
    TtaSetDefEnvString ("BackgroundColor", "#c0c0c0", FALSE);
    TtaSetDefEnvString ("InserPointColor", "Red", FALSE);
-   TtaSetDefEnvString ("DocSelectColor", "LightGold3", FALSE);
+   TtaSetDefEnvString ("DocSelectColor", "LightCoral3", FALSE);
    TtaSetDefEnvString ("MenuFgColor", "Black", FALSE);
    TtaSetDefEnvString ("MenuBgColor", "Grey", FALSE);
 

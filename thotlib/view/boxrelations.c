@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2001
+ *  (c) COPYRIGHT INRIA, 1996-2002
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -2132,150 +2132,152 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
   ----------------------------------------------------------------------*/
 void ComputeAxisRelation (AbPosition rule, PtrBox pBox, int frame, ThotBool horizRef)
 {
-   int                 x, y, dist;
-   PtrBox              pRefBox;
-   PtrAbstractBox      pRefAb;
-   PtrAbstractBox      pAb;
-   BoxEdge             refEdge, localEdge;
+  PtrBox              pRefBox;
+  PtrAbstractBox      pRefAb;
+  PtrAbstractBox      pAb;
+  BoxEdge             refEdge, localEdge;
+  int                 x, y, dist;
 
-   /* Calcule la position de reference */
-   pRefAb = rule.PosAbRef;
-   pAb = pBox->BxAbstractBox;
-   /* Verifie que la position ne depend pas d'un pave mort */
-   if (pRefAb && IsDead (pRefAb))
-     {
-	fprintf (stderr, "Position refers a dead box");
-	pRefAb = NULL;
-     }
+  /* Calcule la position de reference */
+  pRefAb = rule.PosAbRef;
+  pAb = pBox->BxAbstractBox;
+  /* Verifie que la position ne depend pas d'un pave mort */
+  if (pRefAb && IsDead (pRefAb))
+    pRefAb = NULL;
 
-   if (pRefAb == NULL)
-     {
-       /* default rule */
-	pRefBox = pBox;
-	if (horizRef)
-	  {
-	     refEdge = Left;
-	     localEdge = VertRef;
-	     if (rule.PosUnit == UnPercent)
-		dist = PixelValue (rule.PosDistance, UnPercent, (PtrAbstractBox) pBox->BxW, 0);
-	     else
-		dist = 0;
-	  }
-	else
-	  {
-	     refEdge = Bottom;
-	     localEdge = HorizRef;
-	     if (rule.PosUnit == UnPercent)
-		dist = PixelValue (rule.PosDistance, UnPercent, (PtrAbstractBox) pBox->BxH, 0);
-	     else
-		dist = BoxFontBase (pBox->BxFont) - pBox->BxH;
-	  }
-     }
-   else
-     {
-       /* explicit rule */
-	refEdge = rule.PosRefEdge;
-	localEdge = rule.PosEdge;
-	/* Convert the distance value */
-	if (rule.PosUnit == UnPercent)
-	  {
-	     if (horizRef)
-		dist = PixelValue (rule.PosDistance, UnPercent, (PtrAbstractBox) pAb->AbEnclosing->AbBox->BxW, 0);
-	     else
-		dist = PixelValue (rule.PosDistance, UnPercent, (PtrAbstractBox) pAb->AbEnclosing->AbBox->BxH, 0);
-	  }
-	else
-	   dist = PixelValue (rule.PosDistance, rule.PosUnit, pAb, ViewFrameTable[frame - 1].FrMagnification);
+  if (pRefAb == NULL)
+    {
+      /* default rule */
+      pRefBox = pBox;
+      if (horizRef)
+	{
+	  refEdge = Left;
+	  localEdge = VertRef;
+	  if (rule.PosUnit == UnPercent)
+	    dist = PixelValue (rule.PosDistance, UnPercent,
+			       (PtrAbstractBox) pBox->BxW, 0);
+	  else
+	    dist = 0;
+	}
+      else
+	{
+	  refEdge = HorizRef;
+	  localEdge = HorizRef;
+	  if (rule.PosUnit == UnPercent)
+	    dist = PixelValue (rule.PosDistance, UnPercent,
+			       (PtrAbstractBox) pBox->BxH, 0);
+	  else
+	    dist = BoxFontBase (pBox->BxFont);
+	}
+    }
+  else
+    {
+      /* explicit rule */
+      refEdge = rule.PosRefEdge;
+      localEdge = rule.PosEdge;
+      /* Convert the distance value */
+      if (rule.PosUnit == UnPercent)
+	{
+	  if (horizRef)
+	    dist = PixelValue (rule.PosDistance, UnPercent,
+			       (PtrAbstractBox) pAb->AbEnclosing->AbBox->BxW, 0);
+	  else
+	    dist = PixelValue (rule.PosDistance, UnPercent,
+			       (PtrAbstractBox) pAb->AbEnclosing->AbBox->BxH, 0);
+	}
+      else
+	dist = PixelValue (rule.PosDistance, rule.PosUnit, pAb,
+			   ViewFrameTable[frame - 1].FrMagnification);
+      
+      pRefBox = pRefAb->AbBox;
+      if (pRefBox == NULL)
+	{
+	  /* On doit resoudre une reference en avant */
+	  pRefBox = GetBox (pRefAb);
+	  if (pRefBox)
+	    pRefAb->AbBox = pRefBox;
+	  else
+	    {
+	      if (horizRef)
+		pAb->AbVertRefChange = FALSE;
+	      else
+		pAb->AbHorizRefChange = FALSE;
+	      return;	/* plus de boite libre */
+	    }
+	}
+    }
 
-	pRefBox = pRefAb->AbBox;
-	if (pRefBox == NULL)
-	  {
-	     /* On doit resoudre une reference en avant */
-	     pRefBox = GetBox (pRefAb);
-	     if (pRefBox != NULL)
-		pRefAb->AbBox = pRefBox;
-	     else
-	       {
-		  if (horizRef)
-		     pAb->AbVertRefChange = FALSE;
-		  else
-		     pAb->AbHorizRefChange = FALSE;
-		  return;	/* plus de boite libre */
-	       }
-	  }
-     }
+  /* Deplacement par rapport a la boite distante */
+  /* L'axe est place par rapport a la boite elle-meme */
+  if (pRefBox == pBox
+      || pBox->BxType == BoGhost
+      || (pAb->AbInLine && pAb->AbLeafType == LtCompound))
+    {
+      x = pBox->BxLMargin + pBox->BxLBorder + pBox->BxLPadding;
+      y = pBox->BxTMargin + pBox->BxTBorder + pBox->BxTPadding;
+    }
+  /* L'axe est place par rapport a une incluse */
+  else if (Propagate != ToSiblings)
+    {
+      /* Il faut peut-etre envisager que pRefBox soit une boite coupee */
+      x = pRefBox->BxXOrg - pBox->BxXOrg;
+      y = pRefBox->BxYOrg - pBox->BxYOrg;
+    }
+  else
+    {
+      x = pRefBox->BxXOrg;
+      y = pRefBox->BxYOrg;
+    }
+  
+  switch (refEdge)
+    {
+    case Left:
+    case Top:
+      break;
+    case Bottom:
+      y += pRefBox->BxHeight;
+      break;
+    case Right:
+      x += pRefBox->BxWidth;
+      break;
+    case HorizRef:
+      y += pRefBox->BxHorizRef;
+      break;
+    case VertRef:
+      x += pRefBox->BxVertRef;
+      break;
+    case HorizMiddle:
+      y += pRefBox->BxHeight / 2;
+      break;
+    case VertMiddle:
+      x += pRefBox->BxWidth / 2;
+      break;
+    case NoEdge:
+      break;
+    }
 
-   /* Deplacement par rapport a la boite distante */
-   /* L'axe est place par rapport a la boite elle-meme */
-   if (pRefBox == pBox
-       || pBox->BxType == BoGhost
-       || (pAb->AbInLine && pAb->AbLeafType == LtCompound))
-     {
-	x = pBox->BxLMargin + pBox->BxLBorder + pBox->BxLPadding;
-	y = pBox->BxTMargin + pBox->BxTBorder + pBox->BxTPadding;
-     }
-   /* L'axe est place par rapport a une incluse */
-   else if (Propagate != ToSiblings)
-     {
-	/* Il faut peut-etre envisager que pRefBox soit une boite coupee */
-	x = pRefBox->BxXOrg - pBox->BxXOrg;
-	y = pRefBox->BxYOrg - pBox->BxYOrg;
-     }
-   else
-     {
-	x = pRefBox->BxXOrg;
-	y = pRefBox->BxYOrg;
-     }
-
-   switch (refEdge)
-     {
-     case Left:
-     case Top:
-       break;
-     case Bottom:
-       y += pRefBox->BxHeight;
-       break;
-     case Right:
-       x += pRefBox->BxWidth;
-       break;
-     case HorizRef:
-       y += pRefBox->BxHorizRef;
-       break;
-     case VertRef:
-       x += pRefBox->BxVertRef;
-       break;
-     case HorizMiddle:
-       y += pRefBox->BxHeight / 2;
-       break;
-     case VertMiddle:
-       x += pRefBox->BxWidth / 2;
-       break;
-     case NoEdge:
-       break;
-     }
-
-   /* Met a jour l'axe de la boite */
-   if (horizRef)
-     {
-	x = x + dist + pBox->BxLMargin + pBox->BxLBorder + pBox->BxLPadding - pBox->BxVertRef;
-	MoveVertRef (pBox, NULL, x, frame);
-	/* la regle axe de reference est interpretee */
-	pAb->AbVertRefChange = FALSE;
-	if (pRefBox != NULL)
-	   InsertPosRelation (pBox, pRefBox, OpHorizRef, localEdge, refEdge);
-     }
-   else
-     {
-	y = y + dist + pBox->BxTMargin + pBox->BxTBorder + pBox->BxTPadding - pBox->BxHorizRef;
-	MoveHorizRef (pBox, NULL, y, frame);
-	/* la regle axe de reference est interpretee */
-	pAb->AbHorizRefChange = FALSE;
-	if (pRefBox != NULL)
-	   InsertPosRelation (pBox, pRefBox, OpVertRef, localEdge, refEdge);
-     }
-
-   /* break down the temporary link of moved boxes */
-   ClearBoxMoved (pBox);
+  /* Met a jour l'axe de la boite */
+  if (horizRef)
+    {
+      x = x + dist + pBox->BxLMargin + pBox->BxLBorder + pBox->BxLPadding - pBox->BxVertRef;
+      MoveVertRef (pBox, NULL, x, frame);
+      /* la regle axe de reference est interpretee */
+      pAb->AbVertRefChange = FALSE;
+      if (pRefBox != NULL)
+	InsertPosRelation (pBox, pRefBox, OpHorizRef, localEdge, refEdge);
+    }
+  else
+    {
+      y = y + dist + pBox->BxTMargin + pBox->BxTBorder + pBox->BxTPadding - pBox->BxHorizRef;
+      MoveHorizRef (pBox, NULL, y, frame);
+      /* la regle axe de reference est interpretee */
+      pAb->AbHorizRefChange = FALSE;
+      if (pRefBox != NULL)
+	InsertPosRelation (pBox, pRefBox, OpVertRef, localEdge, refEdge);
+    }
+  
+  /* break down the temporary link of moved boxes */
+  ClearBoxMoved (pBox);
 }
 
 
