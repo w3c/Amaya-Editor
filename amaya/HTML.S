@@ -59,7 +59,11 @@ STRUCT
 	Pseudo_paragraph;
 	Heading;
 	List_;
-	Horizontal_Rule;
+	Horizontal_Rule (ATTR Align = left_, center_, right_;
+			NoShade = NoShade_; Size_ = Integer;
+			Width__ = Text; IntWidthPercent = Integer;
+			IntWidthPxl = Integer) =
+		CONSTANT C_Empty;
 	Block_Quote = LIST OF (Element);
 	Preformatted;
 	Address = LIST OF (AddressContent);
@@ -73,9 +77,9 @@ STRUCT
 	MathDisp (ATTR mode = display, inline_math) = MathML;
 #endif
 #ifdef GRAPHML
-        XMLGraphics (ATTR Height_ = Integer; Width__ = Text;
-			IntWidthPercent = Integer;
-			IntWidthPxl = Integer)
+        XMLGraphics (ATTR Height_ = Integer; Width__;
+			IntWidthPercent;
+			IntWidthPxl)
 	 = GraphML
 	   with Height_ ?= 200, Width__ ?= '100%', IntWidthPercent ?= 100;
 #endif
@@ -89,12 +93,6 @@ STRUCT
 #ifdef GRAPHML
 	HTMLfragment = LIST OF (Element);
 #endif
-
-  Horizontal_Rule (ATTR Align = left_, center_, right_;
-			NoShade = NoShade_; Size_ = Integer;
-			Width__; IntWidthPercent;
-			IntWidthPxl) =
-	CONSTANT C_Empty;
 
   AddressContent = CASE OF
 	Basic_Elem;
@@ -333,7 +331,8 @@ STRUCT
   Column_head (ATTR IntWidthPercent; IntWidthPxl) =
 	CONSTANT C_Head;
   Table_row (ATTR Row_align = Row_left, Row_center, Row_right;
-		  Row_valign = Row_top, Row_middle, Row_bottom, Row_baseline) =
+		  Row_valign = Row_top, Row_middle, Row_bottom, Row_baseline;
+		  height\240 = Integer) =
 	LIST OF (Table_cell);
   Table_cell = CASE OF
 	Data_cell(ATTR Ref_column = REFERENCE(Column_head);
@@ -344,18 +343,18 @@ STRUCT
                  Cell_align = Cell_left, Cell_center, Cell_right;
                  Cell_valign = Cell_top, Cell_middle, Cell_bottom;
 		 Width__; IntWidthPxl; IntWidthPercent;
-		 Cell_height = Integer;
+		 Height_;
                  No_wrap = no_wrap) = LIST OF (Element);
 	Heading_cell(ATTR Ref_column; ColExt; RowExt; colspan_; rowspan_;
 		 Cell_align; Cell_valign; Width__; IntWidthPxl; IntWidthPercent;
-		 Cell_height; No_wrap) = LIST OF (Element);
+		 Height_; No_wrap) = LIST OF (Element);
 	END;
 
   MAP (ATTR NAME; Ref_IMG = REFERENCE(Any)) = LIST OF (AREA);
   AREA (ATTR shape = rectangle, circle, polygon, default_;
 	coords = Text; HREF_; nohref = Yes_; ALT;
 	x_coord = Integer; y_coord = Integer; IntWidthPxl;
-        height\240 = Integer; AreaRef_IMG = REFERENCE(Any)) = GRAPHICS
+        height\240; AreaRef_IMG = REFERENCE(Any)) = GRAPHICS
 	with x_coord ?= 0, y_coord ?= 0, IntWidthPxl ?= 25, height\240 ?= 10;
 
 EXCEPT
