@@ -1143,7 +1143,9 @@ ThotBool Annot_RaiseSourceDoc (NotifyElement *event)
   ThotBool         has_thread = FALSE;
   int              length;
   Document         targetDocument;
-  char          *url = NULL;
+  char            *url = NULL;
+  int              method;
+  int              rel_doc;
   RAISESOURCEDOC_context *ctx;
 
   /* initialize from the context */
@@ -1191,10 +1193,21 @@ ThotBool Annot_RaiseSourceDoc (NotifyElement *event)
   ctx->url = url;
   ctx->doc_annot = doc_annot;
   ctx->has_thread = has_thread;
+
+  if (has_thread)
+    {
+      rel_doc = 0;
+      method = CE_ANNOT;
+    }
+  else
+    {
+      rel_doc = doc_annot;
+      method = CE_ABSOLUTE;
+    }
   targetDocument = GetHTMLDocument (url, NULL,
+				    rel_doc,
 				    doc_annot, 
-				    doc_annot, 
-				    CE_ABSOLUTE, FALSE, 
+				    method, FALSE, 
 				    (void *) Annot_RaiseSourceDoc_callback,
 				    (void *) ctx);
 
