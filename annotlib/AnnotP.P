@@ -213,7 +213,7 @@ RULES
 	BEGIN
 	Width: Enclosing . Width;
 	Height: 1 cm min;
-	HorizPos: Left = Enclosing . Left;
+	HorizPos: Left = Enclosing . Left - MARGIN;
 	VertPos: Top = Previous . Bottom + 0.2;
 	Font: Times;
 	END;
