@@ -377,7 +377,7 @@ static void DisplaySymbol (PtrBox pBox, int frame, ThotBool selected,
 #ifdef _GL
 	  SetTextureScale (IsBoxDeformed(pBox));
 #endif /* _GL */
-	  if (selected)
+	  if (selected && !pFrame->FrSelectOnePosition)
 	    {
 	      fg = FgSelColor;
 	      bg = BgSelColor;

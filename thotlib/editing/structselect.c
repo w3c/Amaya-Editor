@@ -1984,7 +1984,7 @@ void SelectElement (PtrDocument pDoc, PtrElement pEl, ThotBool begin, ThotBool c
       FixedChar = 0;
       /* If the selected element is empty or is a picture, the new */
       /* selection is simply considered as an insertion position */
-      if ((pEl->ElTerminal &&
+      if ((pEl->ElTerminal && pEl->ElLeafType != LtSymbol &&
 	   (pEl->ElVolume == 0 || pEl->ElLeafType == LtPicture)) ||
 	  (!pEl->ElTerminal && pEl->ElFirstChild == NULL))
 	{

@@ -2503,8 +2503,13 @@ void ContentEditing (int editType)
 		LoadPictFile (pLine, defaultHeight, defaultWidth, pBox, pAb,
 			      frame);
 	      else if (pAb->AbLeafType == LtSymbol && NewInsert)
-		LoadSymbol (editType, pLine, defaultHeight,
-			    defaultWidth, pBox, pAb, frame);
+		{
+		  AddEditOpInHistory (pAb->AbElement, pDoc, TRUE, TRUE);
+		  LoadSymbol (editType, pLine, defaultHeight,
+			      defaultWidth, pBox, pAb, frame);
+		  CloseHistorySequence (pDoc);
+		  /*NewContent (pAb);*/
+		}
 	      else if ((pAb->AbLeafType == LtGraphics ||
 			pAb->AbLeafType == LtPolyLine) &&
 		       NewInsert)
