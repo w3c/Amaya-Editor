@@ -47,8 +47,7 @@ Amaya/amaya/COPYRIGHT* \
 Amaya/amaya/Makefile.libwww \
 Amaya/amaya/Makefile.math \
 Amaya/amaya/Makefile.svg \
-Amaya/amaya/AmayaPage.html \
-Amaya/amaya/AmayaPage.html.fr \
+Amaya/amaya/AmayaPage.html* \
 Amaya/amaya/*.c \
 Amaya/amaya/*.h \
 Amaya/amaya/*.conf \
@@ -155,11 +154,12 @@ Amaya/batch/comp_ico.ico \
 Amaya/batch/comp_toolbar.bmp \
 Amaya/batch/*.c \
 Amaya/batch/f/*.h \
-Amaya/doc/html/*.html \
-Amaya/doc/html/*/*.html \
+Amaya/doc/html/*.html* \
+Amaya/doc/html/*/*.html* \
 Amaya/doc/html/*.css \
 Amaya/doc/images/*.gif \
 Amaya/doc/images/*.png \
+Amaya/doc/images/*.jpg \
 Amaya/doc/images/w3c_home \
 Amaya/fonts/Families.list \
 Amaya/fonts/fonts.dir \

@@ -39,11 +39,12 @@ echo "Platform ------->" $MACH
    Amaya/dicopar/*.ptn \
    Amaya/dicopar/alphabet \
    Amaya/dicopar/clavier \
-   Amaya/doc/html/*.html \
-   Amaya/doc/html/*/*.html \
+   Amaya/doc/html/*.html* \
+   Amaya/doc/html/*/*.html* \
    Amaya/doc/html/*.css \
    Amaya/doc/images/*.gif \
    Amaya/doc/images/*.png \
+   Amaya/doc/images/*.jpg \
    Amaya/doc/images/w3c_home \
    Amaya/$MACH/bin/amaya \
    Amaya/$MACH/bin/print \
@@ -52,8 +53,7 @@ echo "Platform ------->" $MACH
    Amaya/annotlib/AnnotP.PRS \
    Amaya/annotlib/AnnotT.TRA \
    Amaya/amaya/COPYRIGHT* \
-   Amaya/amaya/AmayaPage.html \
-   Amaya/amaya/AmayaPage.html.fr \
+   Amaya/amaya/AmayaPage.html* \
    Amaya/amaya/*.png \
    Amaya/amaya/*.conf \
    Amaya/amaya/HTML.STR \
@@ -62,6 +62,7 @@ echo "Platform ------->" $MACH
    Amaya/amaya/HTML*.TRA \
    Amaya/amaya/*.en \
    Amaya/amaya/*.gif \
+   Amaya/amaya/*.png \
    Amaya/amaya/XLink.STR \
    Amaya/amaya/XLink*.PRS \
    Amaya/amaya/XLink*.TRA \
