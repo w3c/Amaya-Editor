@@ -3407,8 +3407,6 @@ void WidthPack (PtrAbstractBox pAb, PtrBox pSourceBox, int frame)
       movingChild = FALSE;
       /* nothing is moved */
       toMove = FALSE;
-if (pAb->AbFloat == 'R')
-  printf ("Pack right float\n");
       /*
        * The left edge of the lefter enclosed box must be stuck
        * to the inside left edge and the inside width is delimited

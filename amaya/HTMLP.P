@@ -3246,6 +3246,7 @@ RULES
 	CreateWith(VerticalLine);
 	Width: auto{Enclosing . Width};
 	{Display: Block;}
+	Clear: both;
 	VertPos: Top = Previous not MAP . Bottom + 0.6;
 	MarginTop: H4Margin;
 	MarginBottom: H4Margin;
