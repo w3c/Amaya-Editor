@@ -735,17 +735,19 @@ int                 status;
 	/* @@@ new libwww doesn't need this free stream while making
 	   a PUT. Is it the case everywhere or just for PUT? */
 	if (me->method != METHOD_PUT 
-	    && me->request->orig_output_stream != NULL) {
-	  AHTFWriter_FREE (me->request->orig_output_stream);
-	  if (me->output != stdout) { /* Are we writing to a file? */
+	    && me->request->orig_output_stream != NULL) 
+	  {
+	    AHTFWriter_FREE (me->request->orig_output_stream);
+	    me->request->orig_output_stream = NULL;
+	    if (me->output != stdout) { /* Are we writing to a file? */
 #ifdef DEBUG_LIBWWW
-	    fprintf (stderr, "redirection_handler: New URL is  %s, closing "
-		     "FILE %p\n", me->urlName, me->output); 
+	      fprintf (stderr, "redirection_handler: New URL is  %s, closing "
+		       "FILE %p\n", me->urlName, me->output); 
 #endif 
-	    fclose (me->output);
-	    me->output = NULL;
+	      fclose (me->output);
+	      me->output = NULL;
+	    }
 	  }
-	}
 
 	/* tell the user what we're doing */
 	TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_RED_FETCHING),
@@ -755,12 +757,13 @@ int                 status;
 	/*
 	** launch the request
 	*/
+	/* add a link relationship? */
 	/* reset the request status */
 	me->reqStatus = HT_NEW; 
 	/* clear the errors */
 	HTError_deleteAll (HTRequest_error (request));
 	HTRequest_setError (request, NULL);
-	/* clear the authentication credentials */
+	/* clear the authentication credentials, as they get regenerated  */
 	HTRequest_deleteCredentialsAll (request);
 	
 	if (me->method == METHOD_POST 
