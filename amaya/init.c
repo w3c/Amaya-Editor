@@ -2818,7 +2818,8 @@ static Document LoadDocument (Document doc, char *pathname,
 		/* replace the current document by a new one */
 		newdoc = InitDocView (doc, documentname, docType, 0, FALSE);
 	    }
-	  else if (method == CE_ABSOLUTE || method == CE_HELP)
+	  else if (method == CE_ABSOLUTE  || method == CE_HELP ||
+		   method == CE_FORM_POST || method == CE_FORM_GET)
 	    /* replace the current document by a new one */
 	    newdoc = InitDocView (doc, documentname, docType, 0, FALSE);
 #ifdef ANNOTATIONS
