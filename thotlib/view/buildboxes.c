@@ -3279,6 +3279,8 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 	      pAb->AbRxUnit == UnPercent)
 	    /* update radius of the rectangle with rounded corners */
 	    ComputeRadius (pAb, frame, TRUE);
+	  /* check auto margins */
+	  CheckMBP (pAb, pCurrentBox, frame, TRUE);
 	  
 	  /* Check table consistency */
 	  if (pCurrentBox->BxType == BoColumn && ThotLocalActions[T_checktable])

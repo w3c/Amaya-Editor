@@ -1494,8 +1494,8 @@ void TtaRaiseView (Document document, View view)
 #endif /* _GTK */
 #else  /* _WINDOWS */
 	{
-		OpenIcon (FrMainRef[idwindow]);
-	SetForegroundWindow (FrMainRef[idwindow]);
+	  OpenIcon (FrMainRef[idwindow]);
+	  SetForegroundWindow (FrMainRef[idwindow]);
 	}
 #endif /* _WINDOWS */
      }

@@ -573,11 +573,10 @@ void ComputeMBP (PtrAbstractBox pAb, int frame, ThotBool horizRef,
 	      else if (pAb->AbRightMarginUnit == UnAuto)
 		pBox->BxRMargin = dim - pBox->BxLMargin;
 	    }
-	  else
-	    {
-	      pBox->BxLMargin = 0;
-	      pBox->BxRMargin = 0;
-	    }
+	  else if (pAb->AbLeftMarginUnit == UnAuto)
+	    pBox->BxLMargin = 0;
+	   else if (pAb->AbRightMarginUnit == UnAuto)
+	     pBox->BxRMargin = 0;
 	}
     }
   else
