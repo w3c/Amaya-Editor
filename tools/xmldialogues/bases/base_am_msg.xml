@@ -1874,13 +1874,13 @@
 	<message xml:lang="tr">Tarayıcı ayarları</message>
 </label>
 <label define="AM_LOAD_IMAGES">
-	<message xml:lang="en">Load images (img, object, embed)</message>
-	<message xml:lang="fr">Charger les images (img, object, embed)</message>
-	<message xml:lang="de">Bilder laden (img, object, embed)</message>
-	<message xml:lang="fi">Lataa kuvat (img, object, embed)</message>
-	<message xml:lang="it">Caricare immagini (img, object, embed)</message>
-	<message xml:lang="es">Cargar imágenes (img, object, embed)</message>
-	<message xml:lang="tr">Görüntüyü yükle (img, object, embed)</message>
+	<message xml:lang="en">Load images (img)</message>
+	<message xml:lang="fr">Charger les images (img)</message>
+	<message xml:lang="de">Bilder laden (img)</message>
+	<message xml:lang="fi">Lataa kuvat (img)</message>
+	<message xml:lang="it">Caricare immagini (img)</message>
+	<message xml:lang="es">Cargar imágenes (img)</message>
+	<message xml:lang="tr">Görüntüyü yükle (img)</message>
 </label>
 <label define="AM_ENABLE_DOUBLECLICK">
 	<message xml:lang="en">Double click activates link</message>
@@ -3570,8 +3570,8 @@
 	<message xml:lang="fr">Les lignes bleues sont des liens activés par un double (ou simple) click</message>
 </label>
 <label define="AM_LOAD_OBJECTS">
-        <message xml:lang="en">Load objects</message>
-        <message xml:lang="fr">Charger les objets</message>
+	<message xml:lang="en">Load objects (object, embed)</message>
+	<message xml:lang="fr">Charger les objets (object, embed)</message>
 </label>
 <label define="AM_NO_STYLE_FOR_ELEM">
         <message xml:lang="en">No style rule for this element</message>
