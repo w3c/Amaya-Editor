@@ -26,14 +26,14 @@ LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 // Dialog
 //
 
-LINKDIALOG DIALOG DISCARDABLE  0, 0, 291, 71
+LINKDIALOG DIALOG DISCARDABLE  0, 0, 291, 65
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Attribute"
 FONT 8, "MS Sans Serif"
 BEGIN
     DEFPUSHBUTTON   "Confirm",ID_CONFIRM,92,44,50,14
     PUSHBUTTON      "Done",ID_DONE,150,44,50,14
-    EDITTEXT        IDC_URLEDIT,17,18,259,20,ES_AUTOHSCROLL
+    EDITTEXT        IDC_URLEDIT,17,18,258,15,ES_AUTOHSCROLL
     LTEXT           "URL",IDC_URL,16,7,19,11
 END
 
@@ -46,17 +46,17 @@ BEGIN
     PUSHBUTTON      "Cancel",IDCANCEL,158,135,50,14
     GROUPBOX        "Options",IDC_OPTIONS,8,7,80,69
     CONTROL         "Manual Feed",IDC_MANUALFEED,"Button",BS_AUTOCHECKBOX | 
-                    WS_TABSTOP,19,17,56,12
+                    WS_TABSTOP,14,17,56,12
     CONTROL         "Table of Contents",IDC_TABOFCONTENTS,"Button",
-                    BS_AUTOCHECKBOX | WS_TABSTOP,19,35,58,14
+                    BS_AUTOCHECKBOX | WS_TABSTOP,14,35,58,14
     CONTROL         "Numbered Links",IDC_LINKS,"Button",BS_AUTOCHECKBOX | 
-                    WS_TABSTOP,19,54,60,15
+                    WS_TABSTOP,14,52,60,15
     GROUPBOX        "Output",IDC_OUTPUT,95,7,199,69
     CONTROL         "Printer",IDC_PRINTER,"Button",BS_AUTORADIOBUTTON,101,20,
                     42,10
     CONTROL         "Postscript",IDC_POSTSCRIPT,"Button",BS_AUTORADIOBUTTON,
                     101,33,47,13
-    EDITTEXT        IDC_PRINTEREDIT,101,49,186,17,ES_AUTOHSCROLL
+    EDITTEXT        IDC_PRINTEREDIT,101,52,186,14,ES_AUTOHSCROLL
     GROUPBOX        "Paper Format",IDC_PAPERFORMAT,9,86,78,42
     CONTROL         "A4",IDC_A4,"Button",BS_AUTORADIOBUTTON,14,97,57,14
     CONTROL         "US",IDC_US,"Button",BS_AUTORADIOBUTTON,14,107,60,19
@@ -71,19 +71,19 @@ BEGIN
     PUSHBUTTON      "Do not replace",ID_NOREPLACE,85,232,55,14
     PUSHBUTTON      "Done",ID_DONE,147,232,41,14
     LTEXT           "Search for",IDC_SEARCHFOR,7,7,40,9
-    EDITTEXT        IDC_SEARCHEDIT,7,18,199,18,ES_AUTOHSCROLL
+    EDITTEXT        IDC_SEARCHEDIT,7,20,199,14,ES_AUTOHSCROLL
     CONTROL         "UPPERCASE = lowercase",IDC_UPPERLOWER,"Button",
                     BS_AUTOCHECKBOX | WS_TABSTOP,7,38,99,12
     LTEXT           "Replaced by",IDC_REPLACEDBY,7,57,48,10
-    EDITTEXT        IDC_REPLACEDIT,7,68,199,18,ES_AUTOHSCROLL
-    GROUPBOX        "Static",IDC_REPLACEGROUP,7,97,199,52
+    EDITTEXT        IDC_REPLACEDIT,7,70,199,14,ES_AUTOHSCROLL
+    GROUPBOX        "&Replace", -1, 7,97,199,52
     CONTROL         "No replace",IDC_NOREPLACE,"Button",BS_AUTORADIOBUTTON,
                     13,108,114,9
     CONTROL         "Replace on request",IDC_ONREQUEST,"Button",
                     BS_AUTORADIOBUTTON,13,121,116,11
     CONTROL         "Automatic replace",IDC_AUTOMATIC,"Button",
                     BS_AUTORADIOBUTTON,13,135,120,10
-    GROUPBOX        "Search where",IDC_SEARCHWHERE,7,159,199,68
+    GROUPBOX        "&Search where",-1,7,159,199,68, WS_GROUP
     CONTROL         "Before selection",IDC_BEFORE,"Button",
                     BS_AUTORADIOBUTTON,14,169,150,10
     CONTROL         "Winthin selection",IDC_WITHIN,"Button",
@@ -104,6 +104,19 @@ BEGIN
     PUSHBUTTON      "Close don't save",IDC_DONTSAVE,121,58,77,14
 END
 
+OPENDOCDIALOG DIALOG DISCARDABLE  0, 0, 297, 74
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Open location"
+FONT 8, "MS Sans Serif"
+BEGIN
+    DEFPUSHBUTTON   "Confirm",ID_CONFIRM,53,53,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,195,53,50,14
+    PUSHBUTTON      "Browse",IDC_BROWSE,117,52,68,15
+    EDITTEXT        IDC_GETURL,7,30,283,16,ES_AUTOHSCROLL
+    LTEXT           "Type the URL of the document to load or push Browse button to load a local file",
+                    IDC_URLMESSAGE,23,14,257,13
+END
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -118,7 +131,7 @@ BEGIN
         LEFTMARGIN, 7
         RIGHTMARGIN, 284
         TOPMARGIN, 7
-        BOTTOMMARGIN, 64
+        BOTTOMMARGIN, 58
     END
 
     PRINTDIALOG, DIALOG
@@ -146,6 +159,14 @@ BEGIN
         RIGHTMARGIN, 291
         TOPMARGIN, 7
         BOTTOMMARGIN, 72
+    END
+
+    OPENDOCDIALOG, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 290
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 67
     END
 END
 #endif    // APSTUDIO_INVOKED

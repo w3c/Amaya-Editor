@@ -1,6 +1,32 @@
+/*
+ *
+ *  (c) COPYRIGHT INRIA, 1996.
+ *  Please first read the full copyright statement in file COPYRIGHT.
+ *
+ */
+
+/*
+ * WIndows Dialogue API routines for Amaya
+ *
+ * Author: R. Guetari (W3C/INRIA): Windows NT/95 routines
+ *
+ */
 #ifdef _WINDOWS
 #include <windows.h>
 #include "resource.h"
+
+#ifdef THOT_EXPORT
+#      undef THOT_EXPORT
+#endif /* THOT_EXPORT */
+
+#define THOT_EXPORT extern
+#include "amaya.h"
+
+#ifdef  APPFILENAMEFILTER
+#       undef  APPFILENAMEFILTER
+#endif  /* APPFILENAMEFILTER */
+
+#define APPFILENAMEFILTER   "HTML Files (*.html)\0*.html\0HTML Files (*.htm)\0*.htm\0All files (*.*)\0*.*\0"
 
 extern HINSTANCE hInstance;
 
@@ -8,20 +34,23 @@ static char   urlToOpen [256];
 static char   message [300];
 static char   wndTitle [100];
 
-static int  currentDoc ;
-static int  currentView ;
-static BOOL	saveBeforeClose ;
-static BOOL closeDontSave ;
+static int          currentDoc ;
+static int          currentView ;
+static BOOL	        saveBeforeClose ;
+static BOOL         closeDontSave ;
+static OPENFILENAME OpenFileName;
 
 #ifdef __STDC__
 LRESULT CALLBACK LinkDlgProc (HWND, UINT, WPARAM, LPARAM);
 LRESULT CALLBACK PrintDlgProc (HWND, UINT, WPARAM, LPARAM);
 LRESULT CALLBACK SearchDlgProc (HWND, UINT, WPARAM, LPARAM);
+LRESULT CALLBACK OpenDocDlgProc (HWND, UINT, WPARAM, LPARAM);
 LRESULT CALLBACK CloseDocDlgProc (HWND, UINT, WPARAM, LPARAM);
 #else  /* !__STDC__ */
 LRESULT CALLBACK LinkDlgProc ();
 LRESULT CALLBACK PrintDlgProc ();
 LRESULT CALLBACK SearchDlgProc ();
+LRESULT CALLBACK OpenDocDlgProc ();
 LRESULT CALLBACK CloseDocDlgProc ();
 #endif /* __STDC__ */
 
@@ -65,6 +94,21 @@ HWND      parent;
 }
 
 /*-----------------------------------------------------------------------
+ CreateOPenDocDlgWindow
+ ------------------------------------------------------------------------*/
+#ifdef __STDC__
+void CreateOPenDocDlgWindow (HWND parent, char* doc_to_open)
+#else  /* !__STDC__ */
+void CreateOPenDocDlgWindow (parent, doc_to_open)
+HWND  parent;
+char* doc_to_open;
+#endif /* __STDC__ */
+{  
+	DialogBox (hInstance, MAKEINTRESOURCE (OPENDOCDIALOG), parent, (DLGPROC) OpenDocDlgProc);
+	strcpy (doc_to_open, urlToOpen);
+}
+
+/*-----------------------------------------------------------------------
  CreateCloseDocDlgWindow
  ------------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -98,6 +142,8 @@ WPARAM wParam;
 LPARAM lParam;
 #endif /* __STDC__ */
 {
+    AttributeType attrType;
+    Attribute     attrHREF;
     switch (msg) {
            case WM_INITDIALOG:
 			    SetDlgItemText (hwnDlg, IDC_URLEDIT, "");
@@ -106,8 +152,17 @@ LPARAM lParam;
 	            switch (LOWORD (wParam)) {
 				       case ID_CONFIRM:
 						    GetDlgItemText (hwnDlg, IDC_URLEDIT, urlToOpen, sizeof (urlToOpen) - 1);
-					        EndDialog (hwnDlg, ID_CONFIRM);
-			                MessageBox (hwnDlg, urlToOpen, "Open URL", MB_OK);
+	                        /* create an attribute HREF for the Link_Anchor */
+	                        attrType.AttrSSchema = TtaGetDocumentSSchema (AttrHREFdocument);
+	                        attrType.AttrTypeNum = HTML_ATTR_HREF_;
+	                        attrHREF = TtaGetAttribute (AttrHREFelement, attrType);
+	                        if (attrHREF == 0) {
+	                           /* create an attribute HREF for the element */
+	                           attrHREF = TtaNewAttribute (attrType);
+	                           TtaAttachAttribute (AttrHREFelement, attrHREF, AttrHREFdocument);
+	                        }
+	                        TtaSetAttributeText (attrHREF, urlToOpen, AttrHREFelement, AttrHREFdocument);
+							EndDialog (hwnDlg, ID_CONFIRM);
 					        break;
 				       case ID_DONE:
 					        EndDialog (hwnDlg, ID_DONE);
@@ -165,10 +220,18 @@ WPARAM wParam;
 LPARAM lParam;
 #endif /* __STDC__ */
 {
+	static int iMode, iLocation;
     switch (msg) {
 	       case WM_INITDIALOG:
 			    SetDlgItemText (hwnDlg, IDC_SEARCHEDIT, "");
 			    SetDlgItemText (hwnDlg, IDC_REPLACEDIT, "");
+
+				iMode     = IDC_NOREPLACE ;
+				iLocation = IDC_WHOLEDOC;
+
+				CheckRadioButton (hwnDlg, IDC_NOREPLACE, IDC_AUTOMATIC, iMode);
+				CheckRadioButton (hwnDlg, IDC_BEFORE, IDC_WHOLEDOC, iLocation);
+
 				break;
 		   case WM_COMMAND:
 			    switch (LOWORD (wParam)) {
@@ -176,6 +239,19 @@ LPARAM lParam;
 				       case ID_NOREPLACE:
 				       case ID_DONE:
 					        EndDialog (hwnDlg, ID_DONE);
+							break;
+					   case IDC_NOREPLACE:
+					   case IDC_ONREQUEST:
+					   case IDC_AUTOMATIC:
+						    iMode = LOWORD (wParam) ;
+							CheckRadioButton (hwnDlg, IDC_NOREPLACE, IDC_AUTOMATIC, LOWORD (wParam));
+							break;
+					   case IDC_BEFORE:
+					   case IDC_WITHIN:
+					   case IDC_AFTER:
+					   case IDC_WHOLEDOC:
+						    iLocation = LOWORD (wParam);
+							CheckRadioButton (hwnDlg, IDC_BEFORE, IDC_WHOLEDOC, LOWORD (wParam));
 							break;
 				}
 				break;
@@ -185,7 +261,46 @@ LPARAM lParam;
 }
 
 /*-----------------------------------------------------------------------
- CallbackCloseDocMenu
+ CloseDocDlgProc
+ ------------------------------------------------------------------------*/
+#ifdef __STDC__
+LRESULT CALLBACK OpenDocDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam, LPARAM lParam)
+#else  /* !__STDC__ */
+LRESULT CALLBACK OpenDocDlgProc (hwnDlg, msg, wParam, lParam)
+HWND   hwndParent; 
+UINT   msg; 
+WPARAM wParam; 
+LPARAM lParam;
+#endif /* __STDC__ */
+{
+    switch (msg) {
+	       case WM_INITDIALOG:
+			    SetDlgItemText (hwnDlg, IDC_GETURL, "");
+				break;
+		   case WM_COMMAND:
+			    switch (LOWORD (wParam)) {
+				       case ID_CONFIRM:
+						    GetDlgItemText (hwnDlg, IDC_GETURL, urlToOpen, sizeof (urlToOpen) - 1);
+					        EndDialog (hwnDlg, ID_CONFIRM);
+							break;
+
+				       case IDC_BROWSE:
+							WIN_ListOpenDirectory (hwnDlg, urlToOpen);
+					        EndDialog (hwnDlg, IDC_BROWSE);
+							break;
+
+				       case IDCANCEL:
+			                closeDontSave = TRUE;
+							break;
+				}
+				break;
+				default: return FALSE;
+	}
+	return TRUE ;
+}
+
+/*-----------------------------------------------------------------------
+ CloseDocDlgProc
  ------------------------------------------------------------------------*/
 #ifdef __STDC__
 LRESULT CALLBACK CloseDocDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam, LPARAM lParam)

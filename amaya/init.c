@@ -971,7 +971,7 @@ View                view;
    TtaSetDialoguePosition ();
    TtaShowDialogue (BaseDialog + OpenForm, FALSE);
 #  else /* _WINDOWS */
-   WIN_ListOpenDirectory (BaseDialog + DirSelect, BaseDialog + OpenForm, DirectoryName, ScanFilter);
+   CreateOPenDocDlgWindow (TtaGetViewFrame (document, view), docToOpen)	;
    if (InNewWindow)
       GetHTMLDocument (docToOpen, NULL, 0, 0, DC_FALSE);
    else 

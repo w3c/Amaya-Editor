@@ -947,7 +947,7 @@ static void         AHTProtocolInit (void)
       Non-preemptive == NO = Non-blocking request
    */
 
-   HTProtocol_add ("http", "buffered_tcp", NO, HTLoadHTTP, NULL);
+   HTProtocol_add ("http", "buffered_tcp", YES, HTLoadHTTP, NULL);
    /*   HTProtocol_add ("http", "tcp", NO, HTLoadHTTP, NULL); */
    HTProtocol_add ("file", "local", NO, HTLoadFile, NULL);
    HTProtocol_add ("cache", "local", NO, HTLoadCache, NULL);
@@ -1518,7 +1518,7 @@ boolean error_html;
         tmp[MAX_LENGTH] = EOS;
 	me->urlName = tmp;
 #ifdef _WINDOWS
-    HTRequest_setPreemptive (me->request, NO);
+    HTRequest_setPreemptive (me->request, YES);
    }
    else		 
      {
