@@ -428,7 +428,7 @@ AHTReqContext      *me;
 	     }
 	 }
        if (me->method != METHOD_PUT && HTRequest_outputStream (me->request))
-	 AHTFWriter_FREE (me->request->output_stream);
+	 AHTFWriter_FREE (HTRequest_outputStream (me->request));
        
        HTRequest_delete (me->request);
        
@@ -728,7 +728,7 @@ int                 status;
 
 	/* Start request with new credentials */
 	if (HTRequest_outputStream (me->request) != NULL) {
-	  AHTFWriter_FREE (request->output_stream);
+	  AHTFWriter_FREE (HTRequest_outputStream (me->request));
 	  if (me->output != stdout) { /* Are we writing to a file? */
 #ifdef DEBUG_LIBWWW
 	    fprintf (stderr, "redirection_handler: New URL is  %s, closing "
@@ -988,7 +988,12 @@ int                 status;
    /* copy the content_type */
    if (!me->content_type)
      {
-       content_type = request->anchor->content_type->name;
+       /* @@ should get this info from response */
+       if (request->anchor && request->anchor->content_type)
+	 content_type = request->anchor->content_type->name;
+       else
+	 content_type = "www/unknown";
+
        if (content_type && content_type [0] != EOS)
 	 {
 	   /* libwww gives www/unknown when it gets an error. As this is 
