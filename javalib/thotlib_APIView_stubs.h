@@ -9,7 +9,7 @@
 
 #ifndef _Included_thotlib_APIView_stub_h
 #define _Included_thotlib_APIView_stub_h
-#include "/users/veillard/opera/thotlib/include/view.h"
+#include "view.h"
 
 
 extern View TtaOpenMainView(Document document, int x, int y, int w, int h);

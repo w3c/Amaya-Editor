@@ -9,7 +9,7 @@
 
 #ifndef _Included_thotlib_APIApplication_stub_h
 #define _Included_thotlib_APIApplication_stub_h
-#include "/users/veillard/opera/thotlib/include/application.h"
+#include "application.h"
 
 
 extern void TtaInitialize(char *applicationName);

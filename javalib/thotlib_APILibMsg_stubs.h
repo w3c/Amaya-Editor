@@ -9,7 +9,7 @@
 
 #ifndef _Included_thotlib_APILibMsg_stub_h
 #define _Included_thotlib_APILibMsg_stub_h
-#include "/users/veillard/opera/thotlib/include/libmsg.h"
+#include "libmsg.h"
 
 
 extern void register_thotlib_APILibMsg_stubs(void);

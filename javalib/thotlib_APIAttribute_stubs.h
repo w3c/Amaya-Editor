@@ -9,7 +9,7 @@
 
 #ifndef _Included_thotlib_APIAttribute_stub_h
 #define _Included_thotlib_APIAttribute_stub_h
-#include "/users/veillard/opera/thotlib/include/attribute.h"
+#include "attribute.h"
 
 
 extern Attribute TtaNewAttribute(AttributeType attributeType);

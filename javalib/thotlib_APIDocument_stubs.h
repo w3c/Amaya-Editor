@@ -9,7 +9,7 @@
 
 #ifndef _Included_thotlib_APIDocument_stub_h
 #define _Included_thotlib_APIDocument_stub_h
-#include "/users/veillard/opera/thotlib/include/document.h"
+#include "document.h"
 
 
 extern Document TtaNewDocument(char *structureSchema, char *documentName);

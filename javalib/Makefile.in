@@ -9,7 +9,8 @@ THOTDIR = @top_srcdir@
 
 include ../Options
 
-INCLUDES= -DHAVE_CONFIG_H -I@srcdir@ -I.. -I. -I@srcdir@/f @THOTINCLUDES@ @X_CFLAGS@
+INCLUDES= -DHAVE_CONFIG_H -I@srcdir@ -I.. -I. -I@srcdir@/f \
+          -I$(THOTDIR)/amaya -I../amaya @THOTINCLUDES@ @X_CFLAGS@
 
 JAVASTUB= ../bin/javastub
 JAVAC	= ../bin/javac

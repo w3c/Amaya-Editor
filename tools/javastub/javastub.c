@@ -890,6 +890,8 @@ void dump_h(FILE *out) {
     Type *t;
     int argc = main_argc;
     char **argv = main_argv;
+    char buffer[256];
+    char *ptr;
 
     fprintf(out,"/*\n");
     dump_cmd(out);
@@ -933,7 +935,13 @@ void dump_h(FILE *out) {
 	   }
 	   continue;
        }
-       fprintf(out,"#include \"%s\"\n", name);
+       ptr = &buffer[0];
+       do {
+           if (*name == '/') ptr = &buffer[0];
+	   else if (*name == '\\') ptr = &buffer[0];
+	   else *ptr++ = *name;
+       } while (*name++ != 0);
+       fprintf(out,"#include \"%s\"\n", &buffer[0]);
     }
     fprintf(out,"\n\n");
     for (i = 0;i < nbFunctions;i++) {

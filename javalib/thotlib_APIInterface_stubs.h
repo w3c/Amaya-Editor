@@ -9,7 +9,7 @@
 
 #ifndef _Included_thotlib_APIInterface_stub_h
 #define _Included_thotlib_APIInterface_stub_h
-#include "/users/veillard/opera/thotlib/include/interface.h"
+#include "interface.h"
 
 
 extern void TtaSwitchButton(Document document, View view, int index);

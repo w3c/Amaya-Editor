@@ -9,7 +9,7 @@
 
 #ifndef _Included_thotlib_APIContent_stub_h
 #define _Included_thotlib_APIContent_stub_h
-#include "/users/veillard/opera/thotlib/include/content.h"
+#include "content.h"
 
 
 extern void TtaSetTextContent(Element element, char *content, Language language, Document document);

@@ -9,7 +9,7 @@
 
 #ifndef _Included_amaya_APIAmayaMsg_stub_h
 #define _Included_amaya_APIAmayaMsg_stub_h
-#include "/users/veillard/opera/amaya/amayamsg.h"
+#include "amayamsg.h"
 
 
 extern void register_amaya_APIAmayaMsg_stubs(void);

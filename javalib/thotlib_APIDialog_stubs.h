@@ -9,7 +9,7 @@
 
 #ifndef _Included_thotlib_APIDialog_stub_h
 #define _Included_thotlib_APIDialog_stub_h
-#include "/users/veillard/opera/thotlib/include/dialog.h"
+#include "dialog.h"
 
 
 extern void TtaNewPulldown(int ref, ThotWidget parent, char *title, int number, char *text, char *equiv);

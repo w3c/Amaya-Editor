@@ -9,7 +9,7 @@
 
 #ifndef _Included_thotlib_APISelection_stub_h
 #define _Included_thotlib_APISelection_stub_h
-#include "/users/veillard/opera/thotlib/include/selection.h"
+#include "selection.h"
 
 
 extern boolean TtaIsDocumentSelected(Document document);

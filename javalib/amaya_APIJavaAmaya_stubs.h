@@ -9,7 +9,7 @@
 
 #ifndef _Included_amaya_APIJavaAmaya_stub_h
 #define _Included_amaya_APIJavaAmaya_stub_h
-#include "/users/veillard/opera/amaya/javaamaya.h"
+#include "javaamaya.h"
 
 
 extern Document IsDocumentLoaded(char *documentURL);

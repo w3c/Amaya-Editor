@@ -9,7 +9,7 @@
 
 #ifndef _Included_thotlib_APITree_stub_h
 #define _Included_thotlib_APITree_stub_h
-#include "/users/veillard/opera/thotlib/include/tree.h"
+#include "tree.h"
 
 
 extern void ChangeElementType(Element element, int typeNum);

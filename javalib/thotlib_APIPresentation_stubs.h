@@ -9,7 +9,7 @@
 
 #ifndef _Included_thotlib_APIPresentation_stub_h
 #define _Included_thotlib_APIPresentation_stub_h
-#include "/users/veillard/opera/thotlib/include/presentation.h"
+#include "presentation.h"
 
 
 extern PRule TtaNewPRule(int presentationType, View view, Document document);

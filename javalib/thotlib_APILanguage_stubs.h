@@ -9,7 +9,7 @@
 
 #ifndef _Included_thotlib_APILanguage_stub_h
 #define _Included_thotlib_APILanguage_stub_h
-#include "/users/veillard/opera/thotlib/include/language.h"
+#include "language.h"
 
 
 extern Language TtaNewLanguage(char *languageName, char languageAlphabet, char *principalDictionary, char *secondDictionary);

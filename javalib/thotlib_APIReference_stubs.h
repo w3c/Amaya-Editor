@@ -9,7 +9,7 @@
 
 #ifndef _Included_thotlib_APIReference_stub_h
 #define _Included_thotlib_APIReference_stub_h
-#include "/users/veillard/opera/thotlib/include/reference.h"
+#include "reference.h"
 
 
 extern void TtaSetReference(Element element, Document document, Element target, Document targetDocument);
