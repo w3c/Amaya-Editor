@@ -14,11 +14,12 @@
  *
  */
 
-/*#define DEBUG_MULTIKEY 1*/
-#define OWN_XLOOKUPSTRING	/* Do NOT remove it, it change thot_gui.h includes */
 
 #include "thot_gui.h"
 #include "thot_sys.h"
+#ifdef _GL
+#include "glwindowdisplay.h"
+#endif /*_GL*/
 
 #include "constmenu.h"
 #include "constmedia.h"
@@ -71,21 +72,14 @@
 #include "views_f.h"
 
 
-static ThotBool      Enable_Multikey;
+#if !defined(_WINDOWS) && !defined(_GTK)
+#include <X11/Xlibint.h>
 static int           mk_state = 0;
 static int           TtaKeyboardMapInstalled = 0;
-
-#ifdef _WINDOWS
-static unsigned char previous_keysym;
-#else  /* !_WINDOWS */
-#ifndef _GTK
 static KeySym        previous_keysym;
-#endif /* !_GTK */
 static KeySym        previous_value = 0;
 static unsigned int  previous_state = 0;
-#endif /* !_WINDOWS */
 
-#ifndef _WINDOWS
 /*----------------------------------------------------------------------
    Handling of Multikey sequences used to produce ISO-Latin-1.
    The corresponding keysyms are installed in the keyboard map
@@ -93,9 +87,6 @@ static unsigned int  previous_state = 0;
    dynamically change the event flow to produce event corresponding
    to the extended character set.
   ----------------------------------------------------------------------*/
-/* #define DEBUG_KEYMAP *//* give debug information when installing keymap */
-/* #define DEBUG_MULTIKEY *//* give debug information when using multikey */
-#ifndef _GTK
 static KeySym       TtaIsoKeySymTab[256] =
 {
    XK_nobreakspace,		/* First keysyms are mapped directly  */
@@ -119,8 +110,7 @@ XK_ocircumflex, XK_otilde, XK_odiaeresis, XK_division, XK_oslash, XK_ugrave,
 XK_uacute, XK_ucircumflex, XK_udiaeresis, XK_yacute, XK_thorn, XK_ydiaeresis,
    NoSymbol			/* Needed, do not remove ! */
 };
-#endif
-#endif /* !_WINDOWS */
+
 /*
  * definition of a multi-key sequence, is made of three KeySyms :
  *      - a character,
@@ -130,20 +120,12 @@ XK_uacute, XK_ucircumflex, XK_udiaeresis, XK_yacute, XK_thorn, XK_ydiaeresis,
 
 typedef struct multi_key
   {
-#ifdef _WINDOWS
-     unsigned char       c;
-     unsigned char       m;
-     int                 r;
-#else  /* !_WINDOWS */
      KeySym              c;
      KeySym              m;
      KeySym              r;
-#endif /* !_WINDOWS */
   }
 Multi_Key;
 
-#ifndef _WINDOWS
-#ifndef _GTK
 /*
  * tab containing the xtended multi-key sequences.
  * It's a one dimentionnal array of multi-key sequences
@@ -372,10 +354,7 @@ static Multi_Key    emk_tab[] =
 };
 
 #define ExtNB_MK (int)((sizeof(emk_tab) / sizeof(Multi_Key)))
-#endif /* !_GTK */
-#endif /* !_WINDOWS */
 
-#ifndef _GTK
 /*
  * tab containing the multi-key sequences.
  * It's a one dimentionnal array of multi-key sequences
@@ -384,62 +363,6 @@ static Multi_Key    emk_tab[] =
  */
 static Multi_Key    mk_tab[] =
 {
-#ifdef _WINDOWS
-   {' ', '\'', 0x27},	/* \' */
-   {'A', '`',  0xC0},	/* Agrave */
-   {'A', '\'', 0xC1},	/* Aacute */
-   {'A', '^',  0xC2},	/* Acircumflex */
-   {'A', '~',  0xC3},	/* Atilde */
-   {'A', '"',  0xC4},	/* Adiaeresis */
-   {'A', '*',  0xC5},	/* Aring */
-   {'a', '`',  0xE0},	/* agrave */
-   {'a', '\'', 0xE1},	/* aacute */
-   {'a', '^',  0xE2},	/* acircumflex */
-   {'a', '~',  0xE3},	/* atilde */
-   {'a', '"',  0xE4},	/* adiaeresis */
-   {'a', '*',  0xE5},	/* aring */
-   {'C', '`',  0xC7},	/* Ccedilla */
-   {'c', '`',  0xE7},	/* ccedilla */
-   {'E', '`',  0xC8},	/* Egrave */
-   {'E', '\'', 0xC9},	/* Eacute */
-   {'E', '^',  0xCA},	/* Ecircumflex */
-   {'E', '"',  0xCB},	/* Ediaeresis */
-   {'e', '`',  0xE8},	/* egrave */
-   {'e', '\'', 0xE9},	/* eacute */
-   {'e', '^',  0xEA},	/* ecircumflex */
-   {'e', '"',  0xEB},	/* ediaeresis */
-   {'I', '`',  0xCC},	/* Igrave */
-   {'I', '\'', 0xCD},	/* Iacute */
-   {'I', '^',  0xCE},	/* Icircumflex */
-   {'I', '"',  0xCF},	/* Idiaeresis */
-   {'i', '`',  0xEC},	/* Igrave */
-   {'i', '\'', 0xED},	/* Iacute */
-   {'i', '^',  0xEE},	/* Icircumflex */
-   {'i', '"',  0xEF},	/* Idiaeresis */
-   {'N', '~',  0xD1},	/* Ntilde */
-   {'n', '~',  0xF1},	/* ntilde */
-   {'O', '`',  0xD2},	/* Ograve */
-   {'O', '\'', 0xD3},	/* Oacute */
-   {'O', '^',  0xD4},	/* Ocircumflex */
-   {'O', '~',  0xD5},	/* Otilde */
-   {'O', '"',  0xD6},	/* Odiaeresis */
-   {'o', '`',  0xF2},	/* Ograve */
-   {'o', '\'', 0xF3},	/* Oacute */
-   {'o', '^',  0xF4},	/* Ocircumflex */
-   {'o', '~',  0xF5},	/* Otilde */
-   {'o', '"',  0xF6},	/* Odiaeresis */
-   {'U', '`',  0xD9},	/* Ugrave */
-   {'U', '\'', 0xDA},	/* Uacute */
-   {'U', '^',  0xDB},	/* Ucircumflex */
-   {'U', '"',  0xDC},	/* Udiaeresis */
-   {'u', '`',  0xF9},	/* Ugrave */
-   {'u', '\'', 0xFA},	/* Uacute */
-   {'u', '^',  0xFB},	/* Ucircumflex */
-   {'u', '"',  0xFC},	/* Udiaeresis */
-   {'Y', '\'', 0xDD},	/* Yacute */
-   {'y', '\'', 0xFD},	/* yacute */
-   {'y', '"',  0xFF},	/* ydiaeresis */
-#else  /* !_WINDOWS */
    {XK_A, XK_grave, XK_Agrave},	/* Agrave */
    {XK_A, XK_acute, XK_Agrave},	/* Aacute */
    {XK_A, XK_apostrophe, XK_Aacute},	/* Aacute */
@@ -510,20 +433,14 @@ static Multi_Key    mk_tab[] =
    {XK_y, XK_acute, XK_yacute},	/* yacute */
    {XK_y, XK_apostrophe, XK_yacute},	/* yacute */
    {XK_y, XK_quotedbl, XK_ydiaeresis},	/* ydiaeresis */
-#endif /* _WINDOWS */
    {0, 0, 0},
 };
 
 #define NB_MK (int)((sizeof(mk_tab) / sizeof(Multi_Key)))
-#endif /* !_GTK */
 
-#ifndef _WINDOWS
-#ifndef _GTK
-static Display     *TtaDisplay = NULL;
 static int          TtaNbIsoKeySym = 0;
 static int          TtaModifierNumber = 0;
 static KeyCode      TtaMode_switchKeyCode = NoSymbol;
-#endif
 static int          TtaNbKeySymPerKeyCode = 0;
 static int          TtaMinKeyCode = 0;
 static int          TtaMaxKeyCode = 0;
@@ -572,10 +489,6 @@ int TtaXLookupString (ThotKeyEvent *event, char *buffer, int nbytes,
   *keysym = sym;
   if (sym != NoSymbol)
     {
-#ifdef DEBUG_MULTIKEY
-      fprintf (stderr, "code %X, state %X : sym %s\n", event->keycode, event->state, XKeysymToString (sym));
-#endif
-
       /* we found the corresponding symbol, convert it to a char string */
       if ((buffer == NULL) || (nbytes < 1))
 	return (0);
@@ -637,7 +550,6 @@ int TtaXLookupString (ThotKeyEvent *event, char *buffer, int nbytes,
     }
   return (0);
 }
-#endif /* _WINDOWS */
 
 
 /*----------------------------------------------------------------------
@@ -662,25 +574,7 @@ void TtaInstallMultiKey ()
 {
   char   *ptr;
 
-#ifdef _WINDOWS 
-  ptr = TtaGetEnvString ("ENABLE_MULTIKEY");
-  if (ptr != NULL && !strcasecmp (ptr, "yes"))
-    Enable_Multikey = TRUE;
-  else
-    Enable_Multikey = FALSE;
-   TtaKeyboardMapInstalled = 1;
-#else  /* _WINDOWS */
-#ifdef _GTK
-   /* GTK Multikey */
-  ptr = TtaGetEnvString ("ENABLE_MULTIKEY");
-  if (ptr != NULL && !strcasecmp (ptr, "yes"))
-    Enable_Multikey = TRUE;
-  else
-      Enable_Multikey = FALSE;
-  TtaKeyboardMapInstalled = 1;
-#else /* !_GTK */
   KeySym             *keymap;
-  Display            *dpy = TtaGetCurrentDisplay ();
   KeyCode             keycode;
   KeySym              keysym;
   int                 keysymperkeycode;
@@ -690,17 +584,10 @@ void TtaInstallMultiKey ()
   int                 codeline;
   int                 index;
 
-  TtaDisplay = dpy;
-  /* check whether multi-key is enabled */
-  ptr = TtaGetEnvString ("ENABLE_MULTIKEY");
-  if (ptr != NULL && !strcasecmp (ptr, "yes"))
-    Enable_Multikey = TRUE;
-  else
-    Enable_Multikey = FALSE;
   setlocale (LC_ALL, "");
   /* load the current keyboard mapping */
-  XDisplayKeycodes (dpy, &TtaMinKeyCode, &TtaMaxKeyCode);
-  keymap = XGetKeyboardMapping (dpy, TtaMinKeyCode,
+  XDisplayKeycodes (TtDisplay, &TtaMinKeyCode, &TtaMaxKeyCode);
+  keymap = XGetKeyboardMapping (TtDisplay, TtaMinKeyCode,
 				TtaMaxKeyCode - TtaMinKeyCode + 1,
 				&keysymperkeycode);
   if ((int) keymap == BadValue)
@@ -759,7 +646,7 @@ void TtaInstallMultiKey ()
     {
       /* look if current keysym is already present */
       keysym = TtaIsoKeySymTab[no];
-      res = XKeysymToKeycode (TtaDisplay, keysym);
+      res = XKeysymToKeycode (TtDisplay, keysym);
       if (res != 0)
 	{
 	  /* the keysym is already installed in the Keyboard map */
@@ -818,12 +705,8 @@ void TtaInstallMultiKey ()
 	TtaKeyboardMap[keycode * TtaNbKeySymPerKeyCode + TtaModifierNumber] = keysym;
      }
    TtaKeyboardMapInstalled = 1;
-#endif /* _GTK */ 
-#endif /* _WINDOWS */
 }
 
-#ifndef _WINDOWS 
-#ifndef _GTK
 /*----------------------------------------------------------------------
    TtaGetIsoKeysym
 
@@ -905,111 +788,6 @@ static int TtaHandleMultiKeyEvent (ThotKeyEvent *event)
    state =  event->state;
    ret = XLookupString (event, buf, 2, &KS, &status);
    /* control, alt and mouse status bits of the state are ignored */
-   if (Enable_Multikey)
-     {
-       if (ret == 0)
-	 return (1);
-
-       if (mk_state == 1)
-	 {
-	   /* we have already read the stressed character */ 
-	   /* We look for the result in the list */
-	   mk_state = 0;
-	   switch (previous_keysym)
-	     {
-	     case XK_dead_grave:
-	       first = XK_grave;
-	       break;
-	     case XK_dead_acute:
-	       first = XK_acute;
-	       break;
-	     case XK_dead_circumflex:
-	       first = XK_asciicircum;
-	       break;
-	     case XK_dead_diaeresis:
-	       first = XK_quotedbl;
-	       break;
-	     case XK_diaeresis:
-	       first = XK_quotedbl;
-	       break;
-	     case XK_dead_tilde:
-	       first = XK_asciitilde;
-	       break;
-	     default:
-	       first = previous_keysym;
-	       break;
-	     }
-
-	   switch (KS)
-	     {
-	     case XK_dead_grave:
-	       last = XK_grave;
-	       break;
-	     case XK_dead_acute:
-	       last = XK_acute;
-	       break;
-	     case XK_dead_circumflex:
-	       last = XK_asciicircum;
-	       break;
-	     case XK_dead_diaeresis:
-	       last = XK_quotedbl;
-	       break;
-	     case XK_diaeresis:
-	       last = XK_quotedbl;
-	       break;
-	     case XK_dead_tilde:
-	       last = XK_asciitilde;
-	       break;
-	     default:
-	       last = KS;
-	       break;
-	     }
-
-	   for (index = 0; index < NB_MK; index++)
-	     if (mk_tab[index].m == first && mk_tab[index].c == last)
-	       {
-		 /*
-		  * The corresponding sequence is found. 
-		  * Generation of the corresponding character
-		  */
-		 
-#ifdef DEBUG_MULTIKEY
-fprintf (stderr, " mapped to %c\n", mk_tab[index].r);
-#endif
-	          TtaGetIsoKeysym (event, mk_tab[index].r);
-		  return (1);
-	       }
-	   /* in other cases keep the first character */
-	   event->keycode = previous_value;
-	   event->state = previous_state;
-	   return (1);
-	 }
-       else if (KS == XK_grave ||
-		KS == XK_acute ||
-		KS == XK_apostrophe ||
-		KS == XK_asciicircum ||
-		KS == XK_asciitilde ||
-		KS == XK_quotedbl ||
-		KS == XK_asterisk ||
-		KS == XK_dead_grave ||
-		KS == XK_dead_acute ||
-		KS == XK_dead_circumflex ||
-		KS == XK_dead_tilde ||
-		KS == XK_dead_diaeresis ||
-		KS == XK_diaeresis)
-	 {
-	   /* start of a compose sequence */
-	   mk_state = 1;
-	   previous_keysym = KS;
-	   previous_value = keycode;
-	   previous_state = state;
-	   return (0);
-	 }
-       else
-	 return (1);
-     }
-   else
-     {
        if (ret == 0)
 	 {
 	   /* try without the shift */
@@ -1023,9 +801,6 @@ fprintf (stderr, " mapped to %c\n", mk_tab[index].r);
 	   /*
 	    * start of a compose sequence using the Compose key.
 	    */
-#ifdef DEBUG_MULTIKEY
-fprintf (stderr, "Start of compose sequence\n");
-#endif
 	   mk_state = 1;
 	   return (0);
 	 }
@@ -1038,9 +813,6 @@ fprintf (stderr, "Start of compose sequence\n");
 	    * The have already read the character modified by compose. 
 	    * We look for the result in the list. 
 	    */
-#ifdef DEBUG_MULTIKEY
-fprintf (stderr, "      Multikey : <Alt>%c %c\n", previous_keysym, KS);
-#endif
             mk_state = 0;
 	   switch (previous_keysym)
 	     {
@@ -1099,9 +871,6 @@ fprintf (stderr, "      Multikey : <Alt>%c %c\n", previous_keysym, KS);
 		   * The corresponding sequence is found. 
 		   * Generation of the corresponding character
 		   */
-#ifdef DEBUG_MULTIKEY
-		  fprintf (stderr, "      mapped to %c\n", emk_tab[index].r);
-#endif
 		  TtaGetIsoKeysym (event, emk_tab[index].r);
 		  return (1);
 		}
@@ -1129,10 +898,15 @@ fprintf (stderr, "      Multikey : <Alt>%c %c\n", previous_keysym, KS);
 	   return (0);
 	 }
        return (1);
-     }
 }
-#endif /* !_GTK */
-#endif /* !_WINDOWS */
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+static void *TimerCallback (XtPointer cdata, XtIntervalId *id)
+{
+  return (0);
+}
+#endif /* !_WINDOWS && !_GTK */
 
 /*----------------------------------------------------------------------
    TtaFetchOneEvent
@@ -1141,26 +915,10 @@ fprintf (stderr, "      Multikey : <Alt>%c %c\n", previous_keysym, KS);
   ----------------------------------------------------------------------*/
 void TtaFetchOneEvent (ThotEvent *ev)
 {
-#ifndef _WINDOWS
-#ifndef _GTK
+#if !defined(_WINDOWS) && !defined(_GTK)
   XtAppNextEvent (app_cont, ev);
-#else /* _GTK */
-  /* do nothing in gtk because we do not need to know event 
-     on the queue */
-#endif /* !_GTK */
-#endif /* ! _WINDOWS */
+#endif /* ! _WINDOWS && !_GTK */
 }
-
-#ifndef _WINDOWS
-#ifndef _GTK
-/*----------------------------------------------------------------------
-  ----------------------------------------------------------------------*/
-static void *TimerCallback (XtPointer cdata, XtIntervalId *id)
-{
-  return (0);
-}
-#endif /* !_GTK */
-#endif /* ! _WINDOWS */
 
 /*----------------------------------------------------------------------
    TtaFetchOneAvailableEvent
@@ -1170,7 +928,7 @@ static void *TimerCallback (XtPointer cdata, XtIntervalId *id)
   ----------------------------------------------------------------------*/
 void TtaFetchOrWaitEvent (ThotEvent *ev)
 {
-#if !defined(_GTK) && !defined(_WINDOWS)
+#if !defined(_WINDOWS) && !defined(_GTK)
    XtInputMask         status;
 
    status = XtAppPending (app_cont);
@@ -1182,7 +940,7 @@ void TtaFetchOrWaitEvent (ThotEvent *ev)
        XtAppAddTimeOut (app_cont, 1000, (XtTimerCallbackProc) TimerCallback, NULL);
        XtAppNextEvent (app_cont, ev);
      }
-#endif /* _GTK _WINDOWS*/
+#endif /* ! _WINDOWS && !_GTK */
 }
 
 /*----------------------------------------------------------------------
@@ -1368,29 +1126,40 @@ void TtaMainLoop ()
   NotifyEvent         notifyEvt;
   ThotEvent           ev;
 
-  TtaInstallMultiKey ();
   UserErrorCode = 0;
-  /* Sends the message Init.Pre */
-  notifyEvt.event = TteInit;
+  /* Sets the current locale according to the program environment */
+#ifndef _WINDOWS
+#ifdef _GTK
+   gtk_set_locale ();
+   /* In order to get a "." even in a localised unix (ie: french becomes ",") */
+   setlocale (LC_NUMERIC, "C");
+#else /* _GTK */
+  TtaInstallMultiKey ();
+#endif /* _GTK */
+#else /* _WINDOWS */
+  setlocale (LC_ALL, ".OCP");
+  /* _setmbcp (_MB_CP_OEM); */
+#endif /* _WINDOWS */
+
+  notifyEvt.event = TteInit; /* Sends the message Init.Pre */
   if (CallEventType (&notifyEvt, TRUE))
     {
+    /* The application is not able to start the editor => quit */
 #ifdef _GTK
       gtk_exit (0);
 #endif /* _GTK */
-    /* The application is not able to start the editor => quit */
       exit (0);
     }
-  /* Sends the message Init.Post */
-  notifyEvt.event = TteInit;
+
+  notifyEvt.event = TteInit; /* Sends the message Init.Post */
   CallEventType (&notifyEvt, FALSE);
-#ifdef _GTK
-#ifdef _GL
+#if defined(_GTK) && defined(_GL)
   /* First Time drawing (if we don't have focus)  */
   while (gtk_events_pending ()) 
     gtk_main_iteration ();
   GL_DrawAll ();
-#endif /*_GL*/
-#endif /*_GTK*/
+#endif /*_GTK && GL*/
+
   /* Loop wainting for the events */
   while (1)
     {
@@ -1410,9 +1179,6 @@ void TtaMainLoop ()
       }
 #endif  /* !_WINDOWS */
     }
-#ifdef _GTK
-  gtk_exit (0);
-#endif /* _GTK */
 }
 
 /*----------------------------------------------------------------------
@@ -1535,31 +1301,5 @@ void TtaGiveSelectPosition (Document document, Element element, View view,
 	       }
 	  }
      }
-}
-
-/*----------------------------------------------------------------------
-   TtaSetMultiKey
-   Enables or disables the multikey support
-   Parameters:
-   value : TRUE/FALSE
-  ----------------------------------------------------------------------*/
-void TtaSetMultikey (ThotBool value)
-{
-  Enable_Multikey = value;
-  mk_state = 0;
-#ifndef _WINDOWS
-  previous_state = 0;
-  previous_value = 0;
-#endif /* _WINDOWS */
-}
-/*----------------------------------------------------------------------
-   TtaSetMultiKey
-   Return the state of the multikey support
-   Parameters:
-   value :
-  ----------------------------------------------------------------------*/
-ThotBool TtaGetMultikey()
-{
-    return Enable_Multikey;
 }
 /* End Of Module */

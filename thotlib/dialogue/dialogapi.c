@@ -27,10 +27,8 @@
 #ifdef _WINDOWS
 #include "winsys.h"
 #include "wininclude.h"
-#define GLOBALS_HERE
 #endif /* _WINDOWS */
 #ifdef _GTK
-#include <locale.h>
 #include <gdk/gdkx.h>
 #endif /* _GTK */
 
@@ -1920,10 +1918,10 @@ void ThotXmColorProc (ThotColorStruct *bg, ThotColorStruct *fg,
   ----------------------------------------------------------------------*/
 void TtaInitDialogue (char *server, ThotAppContext *app_context)
 {
-#if !defined(_WINDOWS) && !defined(_GTK)
+#ifndef _WINDOWS
    int                 n;
    char               *arg;
-#endif /* _WINDOWS && GTK */
+#endif /* _WINDOWS */
 
    CurrentWait = 0;
    ShowReturn = 0;
@@ -1940,24 +1938,41 @@ void TtaInitDialogue (char *server, ThotAppContext *app_context)
    /* Pas encore de reference attribuee */
    FirstFreeRef = 0;
 #ifdef _GTK
-   /* Sets the current locale according to the program environment */
-   /* ptr = TtaGetEnvString ("ENABLE_MULTIKEY");
-      if (ptr && !strcasecmp (ptr, "yes"))*/
-   gtk_set_locale ();
-
-   /* In order to get a "." even in a localised unix
-      (ie : french becomes ",")*/
-   setlocale (LC_NUMERIC, "C");
-
    /* initialize everything needed to operate the toolkit and parses some standard command line options */
-   if (!gtk_init_check (&appArgc, &appArgv))
-       gdk_init (&appArgc, &appArgv);
-   /* initilize the imlib, gtkv2.0 dont use imlib , it uses gdkpixbuf */
+   if (server)
+     {
+       gtk_init (&appArgc, &appArgv);
+       n = 0;
+       arg = NULL;
+       /*
+	 TtDisplay = XOpenDisplay (server);
+       if (TtDisplay == NULL)
+	 {
+	   printf ("cannot open display: %s\n", server);
+	   gtk_exit (0);
+	 }
+       gdk_display = TtDisplay;
+       gdk_screen = DefaultScreen (gdk_display);
+       gdk_root_window = RootWindow (gdk_display, gdk_screen);
+       gdk_leader_window = XCreateSimpleWindow (gdk_display, gdk_root_window,
+                           10, 10, 10, 10, 0, 0 , 0);
+       */
+       printf ("cannot open display: %s\n", server);
+       gtk_exit (0);
+     }
+   else if (!gtk_init_check (&appArgc, &appArgv))
+     {
+       printf ("cannot open display\n");
+       gtk_exit (0);
+     }
+   else
+     {
+       TtDisplay = GDK_DISPLAY ();
+     }
+   DefaultFont = gdk_font_load ("fixed");
 #ifndef _GL
    gdk_imlib_init ();
 #endif /* _GL */
-   DefaultFont = gdk_font_load ("fixed");
-   TtDisplay = GDK_DISPLAY ();
 #else /* _GTK */
 #ifdef _WINDOWS
    FrMainRef[0] = 0;
@@ -1978,13 +1993,8 @@ void TtaInitDialogue (char *server, ThotAppContext *app_context)
    RegisterClassEx (&RootShell);
 
    /*Window canvas  class */
-   RootShell.style = 
-	   /* Handle dblclks*/
-	   CS_DBLCLKS |
-	   /* Force entire window redraw on H or V resize */
-	   /*CS_HREDRAW | CS_VREDRAW | */
-	   /* Faster handling of device context*/
-	   CS_OWNDC;
+   RootShell.style = /* Handle dblclks*/ CS_DBLCLKS |
+	   /* Faster handling of device context*/ CS_OWNDC;
    RootShell.lpfnWndProc = ClientWndProc;
    RootShell.cbClsExtra = 0;
    RootShell.cbWndExtra = 0;

@@ -77,10 +77,9 @@ extern void UpdateScrollbars (int frame);
 
 
 extern ThotBool ThotInput (int frame,
-			   unsigned char *string,
-			   unsigned int nb,
-			   int PicMask,
-			   int key);
+			   unsigned int value,
+			   int command,
+			   int mask, int key);
 extern void FreeTranslations (void);
 extern void InitTranslations (char *appliname);
 

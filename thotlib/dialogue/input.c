@@ -456,14 +456,11 @@ static void MemoKey (int mod1, int key1, ThotBool spec1, int mod2, int key2,
 ThotBool WIN_CharTranslation (HWND hWnd, int frame, UINT msg, WPARAM wParam,
 			      LPARAM lParam, ThotBool isSpecial)
 {
-   char string[2];
    int  keyboard_mask = 0;   
    int  status;
-   int  len;
 
    if (frame < 0)
      return FALSE;
-   len = 1;
    status = GetKeyState (VK_SHIFT);
    if (HIBYTE (status)) 
      /* the Shift key is pressed */
@@ -533,16 +530,17 @@ ThotBool WIN_CharTranslation (HWND hWnd, int frame, UINT msg, WPARAM wParam,
 	}
 #endif /* OLD_VERSION */
 
-   string[0] = (char) wParam;
+#ifdef IV
    if (msg == WM_SYSCHAR || msg == WM_SYSKEYDOWN)
-     len = 0;
+     command = 0;
    else
      {
        if (wParam == 0x0A)
 	 /* Linefeed key */
 	 wParam = 0x0D;
      }
-   return (ThotInput (frame, &string[0], len, keyboard_mask, wParam));
+#endif
+   return (ThotInput (frame, (unsigned int) wParam, 0, keyboard_mask, wParam));
 }
 #else /* _WINDOWS */
 #ifdef _GTK
@@ -554,18 +552,26 @@ ThotBool WIN_CharTranslation (HWND hWnd, int frame, UINT msg, WPARAM wParam,
   ----------------------------------------------------------------------*/
 gboolean CharTranslationGTK (GtkWidget *w, GdkEventKey* event, gpointer data)
 {
+#ifdef _I18N_
+  CHARSET             charset;
+  wchar_t            *str, *p;
+#endif /* _I18N_ */
+  Document            document;
+  View                view;
+  KeySym              key;
+  GtkWidget          *drawing_area;
+  GtkEntry           *textzone;
   int                 status;
   int                 PicMask;
   int                 frame;
+  unsigned int        value;
   unsigned int        state, save;
-  unsigned char       string[2];
-  KeySym              KS;
-  GtkWidget          *drawing_area;
-  GtkEntry           *textzone;
 
   frame = (int) data;
   if (frame > MAX_FRAME)
     frame = 0;
+  FrameToView (frame, &document, &view);
+
   /* the drawing area is the main zone where keypress event must be active */
   drawing_area = FrameTable[frame].WdFrame;
   /* Focus is on all the drawing frame : 
@@ -590,8 +596,7 @@ gboolean CharTranslationGTK (GtkWidget *w, GdkEventKey* event, gpointer data)
   /* control, alt and mouse status bits of the state are ignored */
   state = event->state & (GDK_SHIFT_MASK | GDK_LOCK_MASK | GDK_MOD3_MASK);
 
-  strncpy(string, event->string, 2);
-  KS = event->keyval;
+  key = event->keyval;
   if (event->state != state)
     {
       save = event->state;
@@ -607,14 +612,28 @@ gboolean CharTranslationGTK (GtkWidget *w, GdkEventKey* event, gpointer data)
     PicMask |= THOT_MOD_CTRL;
   if (state & GDK_MOD1_MASK || state & GDK_MOD4_MASK)
     PicMask |= THOT_MOD_ALT;
-  if (event->keyval == GDK_space)
-    event->length = 1;
 #ifdef _I18N_
   if(event->keyval == GDK_VoidSymbol)
-    ThotInput (frame, event->string, event->length, PicMask, KS);
-  else
+    {
+      /******* Not sure this code makes sense */
+      charset = TtaGetCharset (TtaGetEnvString ("Default_Charset"));
+      if (charset != UNDEFINED_CHARSET)
+	{
+	  str = TtaConvertByteToWC (event->string, charset);
+	  p = str;
+	  while (*p)
+	    {
+	      if (MenuActionList[0].Call_Action)
+		(*MenuActionList[0].Call_Action) (document, view, *p);
+	      p++;
+	    }
+	  TtaFreeMemory (str);
+	  return FALSE;
+	}
+    }
 #endif /* _I18N_ */
-    ThotInput (frame, &string[0], event->length, PicMask, KS);
+  value = (unsigned int) event->string[0];
+  ThotInput (frame, value, 0, PicMask, key);
   gtk_signal_emit_stop_by_name (GTK_OBJECT(w), "key_press_event");
   return TRUE;
 }
@@ -754,38 +773,66 @@ gboolean KeyScrolledGTK (GtkWidget *w, GdkEvent* event, gpointer data)
   ----------------------------------------------------------------------*/
 void CharTranslation (ThotKeyEvent *event)
 {
-   KeySym              KS;
-   unsigned char             string[2];
-   ThotComposeStatus   ComS;
-   int                 status;
-   int                 PicMask;
-   int                 frame;
-   unsigned int        state;
-
+#ifdef _I18N_
+  CHARSET             charset;
+  wchar_t            *str, *p;
+#endif /* _I18N_ */
+  Document            document;
+  View                view;
+  KeySym              key;
+  ThotComposeStatus   comp;
+  unsigned char       string[2];
+  int                 status, command;
+  int                 PicMask;
+  int                 frame;
+  unsigned int        state;
  
-   frame = GetWindowFrame (event->window);
-   if (frame > MAX_FRAME)
-      frame = 0;
+  frame = GetWindowFrame (event->window);
+  if (frame > MAX_FRAME)
+    frame = 0;
 
-   status = 0;
-   /* control, alt and mouse status bits of the state are ignored */
-   state = event->state & 127;
-   if (event->state == 127)
-     status = TtaXLookupString (event, string, 2, &KS, &ComS);
-   else
-     status = XLookupString (event, string, 2, &KS, &ComS);
+  FrameToView (frame, &document, &view);
+  status = 0;
+  /* control, alt and mouse status bits of the state are ignored */
+  state = event->state & 127;
+  if (event->state == 127)
+    status = TtaXLookupString (event, string, 2, &key, &comp);
+  else
+    status = XLookupString (event, string, 2, &key, &comp);
 
-   PicMask = 0;
-   if (state & ShiftMask)
-      PicMask |= THOT_MOD_SHIFT;
-   /*if (state & LockMask)
-     PicMask |= THOT_MOD_SHIFT;*/
-   if (state & ControlMask)
-      PicMask |= THOT_MOD_CTRL;
-   if (state & Mod1Mask || state & Mod4Mask)
-      PicMask |= THOT_MOD_ALT;
-
-   ThotInput (frame, &string[0], status, PicMask, KS);
+  PicMask = 0;
+  if (state & ShiftMask)
+    PicMask |= THOT_MOD_SHIFT;
+  /*if (state & LockMask)
+    PicMask |= THOT_MOD_SHIFT;*/
+  if (state & ControlMask)
+    PicMask |= THOT_MOD_CTRL;
+  if (state & Mod1Mask || state & Mod4Mask)
+    PicMask |= THOT_MOD_ALT;
+#ifdef _I18N_
+  if (key == 0)
+    {
+      charset = TtaGetCharset (TtaGetEnvString ("Default_Charset"));
+      if (charset != UNDEFINED_CHARSET)
+	{
+	  str = TtaConvertByteToWC (string, charset);
+	  p = str;
+	  while (*p)
+	    {
+	      if (MenuActionList[0].Call_Action)
+		(*MenuActionList[0].Call_Action) (document, view, *p);
+	      p++;
+	    }
+	  TtaFreeMemory (str);
+	  return FALSE;
+	}
+    }
+#endif /* _I18N_ */
+  if (status == 2)
+    command = (int) string[1];
+  else
+    command = 0;
+  ThotInput (frame, (unsigned int) &string[0], command, PicMask, key);
 }
 #endif /* _MOTIF */
 #endif /* !_WINDOWS */
@@ -818,22 +865,16 @@ static ThotBool APPKey (int msg, PtrElement pEl, Document doc, ThotBool pre)
 
 
 /*----------------------------------------------------------------------
-  ThotInput handles the character encoding.
+  ThotInput handles the unicode character v and the command command.
+  The parameter PicMask gives current modifiers.
   Returns TRUE when an access key is handled.
   ----------------------------------------------------------------------*/
-ThotBool ThotInput (int frame, unsigned char *string, unsigned int nb,
-		    int PicMask, int key)
+ThotBool ThotInput (int frame, unsigned int value, int command, int PicMask, int key)
 {
   KEY                *ptr;
   Document            document;
   View                view;
-#ifdef _I18N_
-  CHARSET             charset;
-  wchar_t            *str, *p;
-#endif /* _I18N_ */
-  int                 value;
   int                 modtype;
-  int                 command;
   int                 mainframe;
   int                 index;
   ThotBool            found, done;
@@ -842,37 +883,10 @@ ThotBool ThotInput (int frame, unsigned char *string, unsigned int nb,
   if (frame > MAX_FRAME)
     frame = 0;
   FrameToView (frame, &document, &view);
-#ifdef _I18N_
-#ifdef _GTK
-  if (key == GDK_VoidSymbol)
-#else  /*_GTK*/
-  if (key == 0)
-#endif /* _GTK*/
-    {
-      charset = TtaGetCharset (TtaGetEnvString ("Default_Charset"));
-      if (charset != UNDEFINED_CHARSET)
-      {
-      str = TtaConvertByteToWC (string, charset);
-      p = str;
-      while (*p)
-	{
-	  if (MenuActionList[0].Call_Action)
-	    (*MenuActionList[0].Call_Action) (document, view, *p);
-	  p++;
-	}
-      TtaFreeMemory(str);
-      return FALSE;
-    }
-  }
-#endif /* _I18N_ */
-  value = string[0];
   found = FALSE;
-  if (nb == 2)
-    {
-      /* It's a Thot action call */
-      command = (int) string[1];
-      found = TRUE;
-    }
+  if (command)
+    /* It's a Thot action call */
+    found = TRUE;
   else
     {
       if (ClickIsDone == 1 &&
@@ -885,7 +899,6 @@ ThotBool ThotInput (int frame, unsigned char *string, unsigned int nb,
 	  ClickY = 0;
 	  return FALSE;
 	}
-
       command = 0;	   
       /* Set the right indicator */
       if (PicMask & THOT_MOD_CTRL)
@@ -1057,7 +1070,12 @@ ThotBool ThotInput (int frame, unsigned char *string, unsigned int nb,
 	default:
 	  index = -1;
 #ifdef _WINDOWS
-	  nb = 0;
+	  if (!found)
+	    {
+	      /* Rien a inserer */ 
+	      Automata_current = NULL;
+	      return FALSE;
+	    }
 #endif /* _WINDOWS */
 	  break;
 	}
@@ -1141,12 +1159,6 @@ ThotBool ThotInput (int frame, unsigned char *string, unsigned int nb,
 			FALSE);
 	    }
 	}
-     else if (nb == 0 && !found)
-       {
-	 /* Rien a inserer */ 
-	 Automata_current = NULL;
-	 return FALSE;
-       }
       /* Traitement des caracteres au cas par cas */
       else
 	{

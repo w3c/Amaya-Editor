@@ -296,25 +296,10 @@ extern Display *TtaGetCurrentDisplay (void);
 extern void TtaGiveSelectPosition (Document document, Element element, View view, /*OUT*/ int *X, /*OUT*/ int *Y);
 
 /*----------------------------------------------------------------------
-   TtaSetMultiKey
-   Enables or disables the multikey support
-   Parameters:
-   value : TRUE/FALSE
-  ----------------------------------------------------------------------*/
-extern void TtaSetMultikey ( ThotBool value );
-/*----------------------------------------------------------------------
-   TtaSetMultiKey
-   Return the state of the multikey support
-   Parameters:
-   value :
-  ----------------------------------------------------------------------*/
-extern ThotBool TtaGetMultikey();
-#endif /* __CEXTRACT__ */
-
-/*----------------------------------------------------------------------
   BuildMenus builds or rebuilds frame menus.
   The parameter RO is TRUE when only ReadOnly functions are accepted
   ----------------------------------------------------------------------*/
 extern void TtaUpdateMenus (Document doc, View view, ThotBool RO);
+#endif /* __CEXTRACT__  */
 
 #endif

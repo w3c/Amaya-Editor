@@ -136,8 +136,7 @@ static int IsXLFDPatterneAFont (char *pattern)
   ----------------------------------------------------------------------*/
 int isnum (char c)
 {
-  return ((c >= '0') && 
-	  (c <= '9'));
+  return (c >= '0' && c <= '9');
 }
 
 /*----------------------------------------------------------------------
@@ -148,8 +147,7 @@ static int PassOnComments (unsigned char *line, int indline)
   while (indline < MAX_TXT_LEN && 
 	 line[indline] == '#')
     {
-      while (indline < MAX_TXT_LEN &&
-	     line[indline] != EOS && 
+      while (indline < MAX_TXT_LEN && line[indline] != EOS &&
 	     line[indline] != EOL)
 	indline++; 
     }
@@ -163,8 +161,7 @@ static int PassOnComments (unsigned char *line, int indline)
 static int AdvanceNextWord (unsigned char *line, int indline)
 {
   
-  while (indline < MAX_TXT_LEN &&
-	 line[indline] != EOS &&
+  while (indline < MAX_TXT_LEN && line[indline] != EOS &&
 	 !isnum (line[indline]))
     {
       indline = PassOnComments (line, indline);
@@ -178,27 +175,26 @@ static int AdvanceNextWord (unsigned char *line, int indline)
   ----------------------------------------------------------------------*/
 static int getWord (int indline, unsigned char *line, char *word)
 {
-   int             indword;
+  int             indword;
 
-   /*place ourself next to a word*/
-   indline = AdvanceNextWord (line, indline);
-   /* copy the word from the line*/
-   indword = 0;
-   word[0] = EOS;
-   while (indline < MAX_TXT_LEN &&
-	  line[indline] != EOS &&
-	  line[indline] != ';')
-     word[indword++] = line[indline++];
-   /* marque la fin du mot trouve' */
-   word[indword] = EOS;
-   if (indword == 0)
-     {
-       line[0] = EOS;
-       return 0;
-     }
-   /*place ourself next to a word*/
-   indline = AdvanceNextWord (line, indline);
-   return (indline);
+  /*place ourself next to a word*/
+  indline = AdvanceNextWord (line, indline);
+  /* copy the word from the line*/
+  indword = 0;
+  word[0] = EOS;
+  while (indline < MAX_TXT_LEN && line[indline] != EOS &&
+	 line[indline] != ';')
+    word[indword++] = line[indline++];
+  /* marque la fin du mot trouve' */
+  word[indword] = EOS;
+  if (indword == 0)
+    {
+      line[0] = EOS;
+      return 0;
+    }
+  /*place ourself next to a word*/
+  indline = AdvanceNextWord (line, indline);
+  return (indline);
 }
 
 /*----------------------------------------------------------------------
@@ -206,29 +202,26 @@ static int getWord (int indline, unsigned char *line, char *word)
   ----------------------------------------------------------------------*/
 static int getFontFace (int indline, unsigned char *line, char *word)
 {
-   int             indword;
+  int             indword;
 
-   indword = 0;
-   word[0] = EOS;  
-   /* skip all char if there are */
-   while (indline < MAX_TXT_LEN &&
-	  line[indline] != EOS &&
-	  line[indline] != EOL)
+  indword = 0;
+  word[0] = EOS;  
+  /* skip all char if there are */
+  while (indline < MAX_TXT_LEN &&
+	 line[indline] != EOS && line[indline] != EOL)
      {
        if (line[indline] == '=')
 	 {
 	   /* get the font-face highlight number*/
-	   word[indword++] = line[indline -1 ];
+	   word[indword++] = line[indline-1];
 	   word[indword++] = EOS;
 	   indline++;
 	   /*we return to the '1=' */
-	   while (indline < MAX_TXT_LEN &&
-		  line[indline] != EOS &&
-		  line[indline] >= SPACE && 
-		  line[indline] != ';')
+	   while (indline < MAX_TXT_LEN && line[indline] != EOS &&
+		  line[indline] >= SPACE && line[indline] != ';')
 	     word[indword++] = line[indline++];
-	   indline++;	   
-	   /* marque la fin du mot trouve' */
+	   indline++;
+	   /* mark the end of the word */
 	   word[indword] = EOS;
 	   return indline;
 	 }
@@ -242,31 +235,27 @@ static int getFontFace (int indline, unsigned char *line, char *word)
   ----------------------------------------------------------------------*/
 static int getFontFamily (int indline, unsigned char *line, char *word)
 {
-   int             indword;
+  int             indword;
 
-   /* copy the word from the line*/
-   indword = 0;
-   word[0] = EOS;
+  /* copy the word from the line*/
+  indword = 0;
+  word[0] = EOS;
 #ifdef _WINDOWS
-   while (line[indline] != EOS &&
-	  indline < MAX_TXT_LEN &&
-	  !(line[indline-4] == EOL &&
-	    line[indline-2] == EOL &&
-	    line[indline] == EOL))
+   while (indline < MAX_TXT_LEN && line[indline] != EOS &&
+	  (line[indline-4] != EOL ||
+	   line[indline-2] != EOL ||
+	   line[indline] != EOL))
 #else     
-     while (line[indline] != EOS &&
-	    indline < MAX_TXT_LEN &&
-	    !(line[indline-2] == EOL &&
-	      line[indline-1] == EOL &&
-	      line[indline] == EOL))
+     while (indline < MAX_TXT_LEN && line[indline] != EOS &&
+	    (line[indline-2] != EOL ||
+	     line[indline-1] != EOL ||
+	     line[indline] != EOL))
 #endif
      {
        if (isnum (line[indline]))
 	 {
-	   while (indline < MAX_TXT_LEN &&
-		  line[indline] != EOS &&
-		  line[indline] > SPACE && 
-		  line[indline] != ';')
+	   while (indline < MAX_TXT_LEN && line[indline] != EOS &&
+		  line[indline] > SPACE && line[indline] != ';')
 	     word[indword++] = line[indline++];
 	   /* marque la fin du mot trouve' */
 	   word[indword] = EOS;
@@ -312,109 +301,98 @@ static FontScript **FontConfigLoad ()
   if (!SearchFile (fname, 0, name))
     SearchFile (word, 2, name);
   /* open the fonts definition file */
-   file = TtaReadOpen (name);
-   if (file == NULL)
-     {
-	fprintf (stderr, "cannot open font definition file %s\n", fname);
-	return NULL;
-     }
+  file = TtaReadOpen (name);
+  if (file == NULL)
+    {
+      fprintf (stderr, "cannot open font definition file %s\n", fname);
+      return NULL;
+    }
 
-   /*Big Alloc*/
-   fontsscript_tab = TtaGetMemory (31 * sizeof (FontScript *));
-   for (script = 0; script < 30; script++)
-     fontsscript_tab[script] = NULL;
-   memset (line, 0, MAX_TXT_LEN - 1);
-   line[0] = EOS;
-   while ((endfile = fread (line, 1, MAX_TXT_LEN - 1, file)))
-       {
-	 line[endfile] = '\0';	 
-	 indline = 0;
-	 while (indline < MAX_TXT_LEN && 
-		line[indline] != EOS)
-	   {
-	     /*reads the script*/
-	     indline = getWord (indline, line, word);
-	     if (indline < MAX_TXT_LEN && indline && word[0] != EOS)
-	       {
-		 script = atoi (word);
-		 if (script >= 0 && 
-		     script < 30 )
-		   if ( fontsscript_tab[script] == NULL)
-		   {
-		     fontsscript_tab[script] = TtaGetMemory (sizeof (FontScript));
-		     for (font_face_index = 0; font_face_index < MAX_FONT_FACE; font_face_index++)
-		      fontsscript_tab[script]->family[font_face_index] = NULL;
-		     font_face_index = 0;
-		     /*reads all family for a script*/
-		     while (indline != 0 &&
-			    indline < MAX_TXT_LEN)
-		       {
-			 indline = getFontFamily (indline, line, word);
-			 if (word[0] == EOS)
-			   break;
-			 font_face_index = atoi (word);	
-			 if (font_face_index < MAX_FONT_FACE && 
-			     font_face_index >= 0)
-			   if (fontsscript_tab[script]->family[font_face_index] == NULL)
-			   {
-			     fontsscript_tab[script]->family[font_face_index] = 
-			       TtaGetMemory (sizeof (FontFamilyConfig));
-			     /*reads all highlights*/
-			     for (font_style = 0; font_style < MAX_FONT_STYLE; font_style++)
-			       {
-				 fontsscript_tab[script]->family[font_face_index]->highlight[font_style] = NULL;
-				 fontsscript_tab[script]->family[font_face_index]->is_xlfd_checked[font_style] = FALSE;
-				 fontsscript_tab[script]->family[font_face_index]->is_xlfd[font_style] = FALSE;
-			       }
-			     
-			     font_style = 0;
-			     while (indline != 0 &&
-				    indline < MAX_TXT_LEN)
-			       {			 
-				 indline = getFontFace (indline, line, word);  
-				 if (word[0] == EOS)
-				   break;
-				 font_style = atoi (word);
-				 if (font_style < MAX_FONT_STYLE && 
-				     font_style >= 0)
-				   if (fontsscript_tab[script]->family[font_face_index]->highlight[font_style] == NULL)
-				   {
-				     /*Get the font-face in 
-				       1=font-face 
-				       string (so +1-1)*/
-				     fontface = TtaGetMemory (sizeof (char) 
-							      * (strlen (&word[2]) + 1));
-				     strcpy (fontface, &word[2]);
-				     fontsscript_tab[script]->family[font_face_index]->highlight[font_style]
-				       = fontface;
-				   }
-			       }
-			   }
-		       }
-		   }
-	       }
-	     else
-	       break;	     
-	   }
-       }
-   TtaReadClose (file);
-   return fontsscript_tab;
+  /*Big Alloc*/
+  fontsscript_tab = TtaGetMemory (31 * sizeof (FontScript *));
+  for (script = 0; script < 30; script++)
+    fontsscript_tab[script] = NULL;
+  memset (line, 0, MAX_TXT_LEN - 1);
+  line[0] = EOS;
+  while ((endfile = fread (line, 1, MAX_TXT_LEN - 1, file)))
+    {
+      line[endfile] = '\0';	 
+      indline = 0;
+      while (indline < MAX_TXT_LEN && line[indline] != EOS)
+	{
+	  /*reads the script*/
+	  indline = getWord (indline, line, word);
+	  if (indline < MAX_TXT_LEN && indline && word[0] != EOS)
+	    {
+	      script = atoi (word);
+	      if (script >= 0 && script < 30 &&
+		  fontsscript_tab[script] == NULL)
+		{
+		  fontsscript_tab[script] = TtaGetMemory (sizeof (FontScript));
+		  for (font_face_index = 0; font_face_index < MAX_FONT_FACE; font_face_index++)
+		    fontsscript_tab[script]->family[font_face_index] = NULL;
+		  font_face_index = 0;
+		  /*reads all family for a script*/
+		  while (indline != 0 && indline < MAX_TXT_LEN)
+		    {
+		      indline = getFontFamily (indline, line, word);
+		      if (word[0] == EOS)
+			break;
+		      font_face_index = atoi (word);	
+		      if (font_face_index < MAX_FONT_FACE && 
+			  font_face_index >= 0 &&
+			  fontsscript_tab[script]->family[font_face_index] == NULL)
+			{
+			  fontsscript_tab[script]->family[font_face_index] = 
+			    TtaGetMemory (sizeof (FontFamilyConfig));
+			  /*reads all highlights*/
+			  for (font_style = 0; font_style < MAX_FONT_STYLE; font_style++)
+			    {
+			      fontsscript_tab[script]->family[font_face_index]->highlight[font_style] = NULL;
+			      fontsscript_tab[script]->family[font_face_index]->is_xlfd_checked[font_style] = FALSE;
+			      fontsscript_tab[script]->family[font_face_index]->is_xlfd[font_style] = FALSE;
+			    }
+			  
+			  font_style = 0;
+			  while (indline != 0 && indline < MAX_TXT_LEN)
+			    {			 
+			      indline = getFontFace (indline, line, word);  
+			      if (word[0] == EOS)
+				break;
+			      font_style = atoi (word);
+			      if (font_style < MAX_FONT_STYLE &&
+				  font_style >= 0 &&
+				  fontsscript_tab[script]->family[font_face_index]->highlight[font_style] == NULL)
+				{
+				  /*Get the font-face in 1=font-face 
+				    string (so +1-1)*/
+				  fontface = TtaStrdup (&word[2]);
+				  fontsscript_tab[script]->family[font_face_index]->highlight[font_style] = fontface;
+				}
+			    }
+			}
+		    }
+		}
+	    }
+	  else
+	    break;	     
+	}
+    }
+  TtaReadClose (file);
+  return fontsscript_tab;
 }
 
 /*----------------------------------------------------------------------
    FontLoadFromConfig : GEt a font dame upon its characteristics
   ----------------------------------------------------------------------*/
-char *FontLoadFromConfig (char script, 
-			  int font_face_index, 
-			  int font_style)
+char *FontLoadFromConfig (char script, int font_face_index, int font_style)
 {
   int intscript = 1;
 
   if (Fonttab == NULL)
     Fonttab = FontConfigLoad ();
-  
   if (Fonttab == NULL)
-	  return NULL;
+    return NULL;
 
   switch (script) 
     {
@@ -426,26 +404,26 @@ char *FontLoadFromConfig (char script,
       break;
     case 'E':
       /* ESSTIX FONTS ???*/
-	intscript = 21;
-	switch (font_face_index)
+      intscript = 21;
+      switch (font_face_index)
 	{
 	case 6:
-	    font_face_index = 2;
-	    font_style = 1;
-	    break;
+	  font_face_index = 2;
+	  font_style = 1;
+	  break;
 	case 7:
-	    font_face_index = 2;
-	    font_style = 2;
-	    break;	  
+	  font_face_index = 2;
+	  font_style = 2;
+	  break;	  
 	case 10:
-	    font_face_index = 3;
-	    font_style = 1;
-	    break;
+	  font_face_index = 3;
+	  font_style = 1;
+	  break;
 	default:
-	    intscript = 20;
-	    font_face_index = 1;
-	    font_style = 1;
-	    break;
+	  intscript = 20;
+	  font_face_index = 1;
+	  font_style = 1;
+	  break;
 	}
       break;
     case 'G':
@@ -475,16 +453,16 @@ char *FontLoadFromConfig (char script,
     {
       switch (font_style)
 	{
-	 case 1:
+	case 1:
 	  font_style = 2;
 	  break;
-	 case 0:
+	case 0:
 	  font_style = 1;
 	  break;
-	 case 2:
+	case 2:
 	  font_style = 3;
 	  break;
-     case 5:
+	case 5:
 	  font_style = 2;
 	  break;
 	default:
@@ -492,14 +470,13 @@ char *FontLoadFromConfig (char script,
 	}
     }
   
-    if (font_face_index < 0 || font_face_index >= MAX_FONT_FACE)
+  if (font_face_index < 0 || font_face_index >= MAX_FONT_FACE)
     font_face_index = 1;
 
   if (Fonttab[intscript] &&
       Fonttab[intscript]->family[font_face_index] &&
       Fonttab[intscript]->family[font_face_index]->highlight[font_style])
     {
-      
 #ifdef _PCLFONTDEBUG
       g_print ("\n%s",
 	       Fonttab[intscript]->family[font_face_index]->highlight[font_style]);

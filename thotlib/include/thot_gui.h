@@ -156,19 +156,6 @@ typedef XColor    ThotColorStruct;
 #include <Xm/Xm.h>
 #include <Xm/PushBG.h>
 #endif /* !_GTK && !NODISPLAY */
-/*
- * OWN_XLOOKUPSTRING means we redefine XLookupString function
- * (in api/interface.c) and we need internal informations on
- * some X11 specific structures.
- */
-
-
-
-#ifdef OWN_XLOOKUPSTRING
-#define X_USEBFUNCS
-#include <X11/Xlibint.h>
-#endif /* OWN_XLOOKUPSTRING */
-
 
 #ifdef _GTK
 #include <gtk/gtk.h>
@@ -181,6 +168,7 @@ typedef XColor    ThotColorStruct;
 #include <gdk/gdkpixbuf.h>  /* for load image (jpg, gif, tiff...) */
 #endif /* !_GTK2 */
 #endif /* _GL */
+
 typedef GtkWidget     *ThotWidget;
 typedef GdkWindow     *ThotWindow;
 typedef ThotWidget     ThotButton;

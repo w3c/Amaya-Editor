@@ -8,8 +8,8 @@
 
 extern void CharTranslation ( ThotKeyEvent *event );
 extern ThotBool ThotInput ( int frame,
-                            unsigned char *string,
-                            unsigned int nb,
+                            unsigned int value,
+                            int command,
                             int PicMask,
                             int key );
 extern void FreeTranslations ( void );
@@ -26,8 +26,8 @@ extern void InitTranslations ( char *appliname );
 
 extern void CharTranslation (/* ThotKeyEvent *event */);
 extern ThotBool ThotInput (/* int frame,
-                              unsigned char *string,
-                              unsigned int nb,
+                              unsigned int value,
+                              int command,
                               int PicMask,
                               int key */);
 extern void FreeTranslations (/* void */);
