@@ -603,7 +603,7 @@ Document         doc;
    AttributeType          attrType;
    Attribute              HrefAttr, PseudoAttr, attr;
 #ifdef ANNOTATIONS
-   Attribute              isAnnotLink;
+   ThotBool               isAnnotLink;
 #endif /* ANNOTATIONS */
    ElementType            elType;
    Document               targetDocument;
@@ -617,7 +617,7 @@ Document         doc;
    info = NULL;
    HrefAttr = NULL;
 #ifdef ANNOTATIONS
-   isAnnotLink = NULL;
+   isAnnotLink = FALSE;
 #endif /* ANNOTATIONS */
    HTMLSSchema = TtaGetSSchema (TEXT("HTML"), doc);
 
@@ -642,6 +642,12 @@ Document         doc;
 	     {
 	        attrType.AttrSSchema = TtaGetSSchema (TEXT("XLink"), doc);
 		attrType.AttrTypeNum = XLink_ATTR_href_;
+#ifdef ANNOTATIONS
+		/* is it an annotation link? */
+		if (elType.ElSSchema == attrType.AttrSSchema
+		    && elType.ElTypeNum == XLink_EL_XLink)
+		  isAnnotLink = TRUE;
+#endif /* ANNOTATIONS */
 	     }
 
 	HrefAttr = TtaGetAttribute (anchor, attrType);
@@ -672,12 +678,6 @@ Document         doc;
 		     TtaAttachAttribute (anchor, PseudoAttr, doc);
 		   }
 		 TtaSetAttributeText (PseudoAttr, TEXT("active"), anchor, doc);
-
-#ifdef ANNOTATIONS
-		 /* see if it's a link to an annotation */
-		 attrType.AttrTypeNum = HTML_ATTR_IsAnnotation;
-		 isAnnotLink = TtaGetAttribute (anchor, attrType);
-#endif /* ANNOTATIONS */
 	       }
 	     /* get the URL itself */
 	     TtaGiveTextAttributeValue (HrefAttr, url, &length);
@@ -814,11 +814,14 @@ Document            document;
    Element             anchor, elFound, ancestor;
    ElementType         elType, elType1;
    SSchema             HTMLschema, XLinkSchema;
-   ThotBool	       ok, isHTML;
+   ThotBool	       ok, isHTML, isXLink;
 
    elType = TtaGetElementType (element);
    HTMLschema = TtaGetSSchema (TEXT("HTML"), document);
    isHTML = TtaSameSSchemas (elType.ElSSchema, HTMLschema);
+   if (!isHTML)
+       isXLink = TtaSameSSchemas (elType.ElSSchema, 
+				  TtaGetSSchema (TEXT("XLink"), document));
 
    /* Check if the current element is interested in double clicks */
    ok = FALSE;
@@ -828,24 +831,26 @@ Document            document;
        elType.ElTypeNum == HTML_EL_SYMBOL_UNIT)
      /* it's a basic element. It is interested whatever its namespace */
      ok = TRUE;
-   else
-     if (isHTML)
-	if (elType.ElTypeNum == HTML_EL_LINK ||
-	    elType.ElTypeNum == HTML_EL_C_Empty ||
-	    elType.ElTypeNum == HTML_EL_Radio_Input ||
-	    elType.ElTypeNum == HTML_EL_Checkbox_Input ||
-	    elType.ElTypeNum == HTML_EL_Frame ||
-	    elType.ElTypeNum == HTML_EL_Option_Menu ||
-	    elType.ElTypeNum == HTML_EL_Submit_Input ||
-	    elType.ElTypeNum == HTML_EL_Reset_Input ||
-	    elType.ElTypeNum == HTML_EL_BUTTON ||
-	    elType.ElTypeNum == HTML_EL_File_Input ||
-	    elType.ElTypeNum == HTML_EL_FRAME ||
-	    elType.ElTypeNum == HTML_EL_Anchor)
-	   ok = TRUE;
+   else if (isHTML
+	    && (elType.ElTypeNum == HTML_EL_LINK ||
+		elType.ElTypeNum == HTML_EL_C_Empty ||
+		elType.ElTypeNum == HTML_EL_Radio_Input ||
+		elType.ElTypeNum == HTML_EL_Checkbox_Input ||
+		elType.ElTypeNum == HTML_EL_Frame ||
+		elType.ElTypeNum == HTML_EL_Option_Menu ||
+		elType.ElTypeNum == HTML_EL_Submit_Input ||
+		elType.ElTypeNum == HTML_EL_Reset_Input ||
+		elType.ElTypeNum == HTML_EL_BUTTON ||
+		elType.ElTypeNum == HTML_EL_File_Input ||
+		elType.ElTypeNum == HTML_EL_FRAME ||
+		elType.ElTypeNum == HTML_EL_Anchor))
+     ok = TRUE;
+   else if (isXLink)
+     ok = TRUE;
+
    if (!ok)
-      /* DoubleClick is disabled for this element type */
-      return (FALSE);
+     /* DoubleClick is disabled for this element type */
+     return (FALSE);
 
    if (isHTML && (elType.ElTypeNum == HTML_EL_Frame ||
 		  elType.ElTypeNum == HTML_EL_Submit_Input ||
@@ -943,15 +948,17 @@ Document            document;
    /* Search the anchor or LINK element */
    anchor = SearchAnchor (document, element, TRUE, FALSE);
    if (anchor == NULL)
-      if (isHTML && (elType.ElTypeNum == HTML_EL_LINK ||
-		     elType.ElTypeNum == HTML_EL_FRAME))
-	   anchor = element;
-      else
-	{
+     {
+       if (isHTML && (elType.ElTypeNum == HTML_EL_LINK ||
+		      elType.ElTypeNum == HTML_EL_FRAME))
+	 anchor = element;
+       else
+	 {
 	   elType1.ElTypeNum = HTML_EL_LINK;
 	   elType1.ElSSchema = HTMLschema;
 	   anchor = TtaGetTypedAncestor (element, elType1);
-	}
+	 }
+     }
    /* if not found, search a cite or href attribute (from HTML or XLink
       namespaces) on an ancestor */
    if (anchor == NULL)
