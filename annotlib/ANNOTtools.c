@@ -69,7 +69,7 @@ void List_delFirst (List **me)
 }
 
 /* ------------------------------------------------------------
-   list_delAll
+   List_delAll
    Deletes all the elements in a list and the list structure
    ------------------------------------------------------------*/
 void List_delAll (List **me)
