@@ -366,7 +366,7 @@ void DrawRadical (int frame, int thick, int x, int y, int l, int h,
    xm = x + (fh / 2);
    xp = x + (fh / 4);
    y += FrameTable[frame].FrTopMargin;
-   InitDrawing (5, 0, fg);
+   InitDrawing (5, 1, fg);
    /* vertical part */
    DoDrawOneLine (frame, x, y + (2 * (h / 3)), xp - (thick / 2), y + h);
 
@@ -384,23 +384,18 @@ void DrawRadical (int frame, int thick, int x, int y, int l, int h,
   - double if type = 2.
   parameter fg indicates the drawing color
   ----------------------------------------------------------------------*/
-#include "openglfonts.h"
-
 void DrawIntegral (int frame, int thick, int x, int y, int l, int h,
 		   int type, PtrFont font, int fg)
 {
    int                 yf;
    int                 yend, delta;
    int                 wd, asc, hd;
-
-   GL_font *glfont;
-
-   glfont = (GL_font *) font;
+  
    if (FontHeight (font) *1.2 >= h)
      /* display a single glyph */
      {
        yf = y + ((h - CharacterHeight (242, font)) / 2) + CharacterAscent (242, font);
-       DrawChar ('\362', frame, x, yf, font, fg);
+       DrawChar ('\362', frame, x, yf, font, fg);       
      }
    else
      {
@@ -414,7 +409,7 @@ void DrawIntegral (int frame, int thick, int x, int y, int l, int h,
        delta = yend - yf - asc;
        yf += asc;
        wd = (UnicodeCharacterWidth (243, font) - UnicodeCharacterWidth (244, font)) / 2;
-       if (delta > 0)
+       if (delta > 0 && hd > 0)
 	 {
 	   while (yf < yend)
 	     {
@@ -460,7 +455,7 @@ void DrawSigma (int frame, int x, int y, int l, int h, PtrFont font, int fg)
    if (fg < 0)
      return;
    fh = FontHeight (font);
-   if (h < fh * 2 && l <= UnicodeCharacterWidth (229, font))
+   if (0 && h < fh * 2 && l <= UnicodeCharacterWidth (229, font))
      {
 	/* Only one glyph needed */
 	DrawMonoSymb ('\345', frame, x, y, l, h, font, fg);
@@ -470,7 +465,7 @@ void DrawSigma (int frame, int x, int y, int l, int h, PtrFont font, int fg)
         y += FrameTable[frame].FrTopMargin;
 	xm = x + (l / 3);
 	ym = y + (h / 2) - 1;
-	InitDrawing (5, 0, fg);
+	InitDrawing (5, 1, fg);
 	/* Center */
 	DoDrawOneLine (frame, x, y + 1, xm, ym);
 	DoDrawOneLine (frame, x, y + h - 2, xm, ym);
@@ -493,7 +488,7 @@ void DrawPi (int frame, int x, int y, int l, int h, PtrFont font, int fg)
    if (fg < 0)
      return;
    fh = FontHeight (font);
-   if (h < fh * 2 && l <= UnicodeCharacterWidth (213, font))
+   if (0 && h < fh * 2 && l <= UnicodeCharacterWidth (213, font))
      {
 	/* Only one glyph needed */
 	DrawMonoSymb ('\325', frame, x, y, l, h, font, fg);
@@ -524,7 +519,7 @@ void DrawIntersection (int frame, int x, int y, int l, int h, PtrFont font,
    if (fg < 0)
      return;
    fh = FontHeight (font);
-   if (h < fh * 2 && l <= UnicodeCharacterWidth (199, font))
+   if (0 && h < fh * 2 && l <= UnicodeCharacterWidth (199, font))
      {
 	/* Only one glyph needed */
 	DrawMonoSymb ('\307', frame, x, y, l, h, font, fg);
@@ -555,7 +550,7 @@ void DrawUnion (int frame, int x, int y, int l, int h, PtrFont font, int fg)
    if (fg < 0)
      return;
    fh = FontHeight (font);
-   if (h < fh * 2 && l <= UnicodeCharacterWidth (200, font))
+   if (0 && h < fh * 2 && l <= UnicodeCharacterWidth (200, font))
      {
 	/* Only one glyph needed */
 	DrawMonoSymb ('\310', frame, x, y, l, h, font, fg);
@@ -730,10 +725,11 @@ void DrawBracket (int frame, int thick, int x, int y, int l, int h,
 	   DrawChar ('\351', frame, xm, yf, font, fg);
 	   yend = y + h - CharacterHeight (235, font) + CharacterAscent (235, font);
 	   DrawChar ('\353', frame, xm, yend, font, fg);
-	   for (yf = yf + CharacterHeight (233, font) + CharacterAscent (234, font);
-		yf < yend;
-		yf += CharacterHeight (234, font))
-	     DrawChar ('\352', frame, xm, yf, font, fg);
+	   if (CharacterHeight (234, font) > 0)
+	     for (yf = yf + CharacterHeight (233, font) + CharacterAscent (234, font);
+		  yf < yend;
+		  yf += CharacterHeight (234, font))
+	       DrawChar ('\352', frame, xm, yf, font, fg);
 	 }
        else
 	 {
@@ -743,10 +739,11 @@ void DrawBracket (int frame, int thick, int x, int y, int l, int h,
 	   DrawChar ('\371', frame, xm, yf, font, fg);
 	   yend = y + h - CharacterHeight (251, font) + CharacterAscent (251, font);
 	   DrawChar ('\373', frame, xm, yend, font, fg);
-	   for (yf = yf + CharacterHeight (249, font) + CharacterAscent (250, font);
-		yf < yend;
-		yf += CharacterHeight (250, font))
-	     DrawChar ('\372', frame, xm, yf, font, fg);
+	   if (CharacterHeight (250, font) > 0)
+	     for (yf = yf + CharacterHeight (249, font) + CharacterAscent (250, font);
+		  yf < yend;
+		  yf += CharacterHeight (250, font))
+	       DrawChar ('\372', frame, xm, yf, font, fg);
 	 }
      }
 }
@@ -763,7 +760,7 @@ void DrawPointyBracket (int frame, int thick, int x, int y, int l, int h,
 
   if (fg < 0)
     return;
-  if (FontHeight (font) >= h)
+  if (0 && FontHeight (font) >= h)
     {
       /* With only one glyph */
       if (direction == 0)
@@ -785,7 +782,7 @@ void DrawPointyBracket (int frame, int thick, int x, int y, int l, int h,
     {
       /* Need more than one glyph */
       y += FrameTable[frame].FrTopMargin;
-      InitDrawing (5, 0, fg);
+      InitDrawing (5, 4, fg);
       if (direction == 0)
 	{
 	  /* Draw a opening bracket */
@@ -843,7 +840,7 @@ void DrawParenthesis (int frame, int thick, int x, int y, int l, int h,
 	  hd = CharacterHeight (231, font);
 	  delta = yend - yf- hd;
 	  yf += asc;
-	  if (delta > 0)
+	  if (delta > 0 && hd > 0)
 	    {
 	      while (yf < yend)
 		{
@@ -865,7 +862,7 @@ void DrawParenthesis (int frame, int thick, int x, int y, int l, int h,
 	  hd = CharacterHeight (247, font);
 	  delta = yend - yf - hd;
 	  yf += asc;
-	  if (delta > 0)
+	  if (delta > 0 && hd > 0)
 	    {
 	      while (yf < yend)
 		{
@@ -924,7 +921,7 @@ void DrawBrace (int frame, int thick, int x, int y, int l, int h,
 	  hd = CharacterHeight (239, font);
 	  delta = ym - yf - hd;
 	  yf += asc;
-	  if (delta > 0)
+	  if (delta > 0 && hd > 0)
 	    {
 	      while (yf < yend)
 		{
@@ -936,7 +933,7 @@ void DrawBrace (int frame, int thick, int x, int y, int l, int h,
 	  yf = ym + CharacterHeight ('\355', font);
 	  delta = yend - yf - hd;
 	  yf += asc;
-	  if (delta > 0)
+	  if (delta > 0 && hd > 0)
 	    {
 	      while (yf < yend)
 		{
@@ -962,7 +959,7 @@ void DrawBrace (int frame, int thick, int x, int y, int l, int h,
 	  hd = CharacterHeight (239, font);
 	  delta = ym - yf - hd;
 	  yf += asc;
-	  if (delta > 0)
+	  if (delta > 0 && hd > 0)
 	    {
 	      while (yf < yend)
 		{
@@ -974,7 +971,7 @@ void DrawBrace (int frame, int thick, int x, int y, int l, int h,
 	  yf = ym + CharacterHeight ('\375', font);
 	  delta = yend - yf - hd;
 	  yf += asc;
-	  if (delta > 0)
+	  if (delta > 0 && hd > 0)
 	    {
 	      while (yf < yend)
 		{

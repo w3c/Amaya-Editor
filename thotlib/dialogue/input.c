@@ -658,7 +658,7 @@ gboolean KeyScrolledGTK (GtkWidget *w, GdkEvent* event, gpointer data)
   GdkEventButton      *eventmouse;
   Document            doc; 
   int                 view;
-  int                 x,y;
+  int                 y;
   int                 height;
   static int          timer = None; 
   int                 firstycheck = 0;

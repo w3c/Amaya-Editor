@@ -43,6 +43,7 @@ static int           FontFaceSize (GL_font *font, const unsigned int size, const
 static int           FontCharMap (GL_font *font, FT_Encoding encoding, char alphabet);
 static void          FontBBox (GL_font *font,
 			       wchar_t* string,
+			       int length,
 			       float *llx, float *lly, 
 			       float *llz, float *urx, 
 			       float  *ury, float *urz);
@@ -60,7 +61,7 @@ void                 FTLibraryFree ();
 static float          FaceKernAdvance (FT_Face face, 
 				       unsigned int index1, 
 				       unsigned int index2);
-static GL_glyph      *MakeBitmapGlyph(GL_font *font, unsigned int g);
+static GL_glyph      *MakeBitmapGlyph (GL_font *font, unsigned int g);
 
 
 #define PADDING 1

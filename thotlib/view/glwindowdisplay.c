@@ -344,8 +344,8 @@ void InitDrawing (int style, int thick, int fg)
 	}
        else
 	 {
-	   glLineWidth ((GLfloat) 0.1); 
-	   glPointSize ((GLfloat) 0.1); 
+	   glLineWidth ((GLfloat) 0.5); 
+	   glPointSize ((GLfloat) 0.5); 
 	 }
     }
   else
@@ -365,8 +365,8 @@ void InitDrawing (int style, int thick, int fg)
 	}
       else
 	{
-	  glLineWidth ((GLfloat) 0.1); 
-	  glPointSize ((GLfloat) 0.1); 
+	  glLineWidth ((GLfloat) 0.5); 
+	  glPointSize ((GLfloat) 0.5); 
 	}
      glEnable (GL_LINE_STIPPLE);
      glLineStipple (2, *((int *) (&dash[0]))); 
@@ -1621,8 +1621,7 @@ void GL_BackBufferRegionSwapping (int x, int y,
 void GL_window_copy_area (int frame, int xf, int yf, int xd, int yd,
 			  int width, int height)
 {
-   
-  if (!Software_Mode)
+  if (!Software_Mode || yf == yd)
     DefRegion (frame, 
 	       xd, yd+FrameTable[frame].FrTopMargin, 
 	       width+xd, yd+height+FrameTable[frame].FrTopMargin);
@@ -1630,10 +1629,8 @@ void GL_window_copy_area (int frame, int xf, int yf, int xd, int yd,
     {
       if (GL_MakeCurrent (frame))
       	return;
-      if ((yf + height + FrameTable[frame].FrTopMargin) > FrameTable[frame].FrHeight) 
+      if ((yf + height + FrameTable[frame].FrTopMargin) > (FrameTable[frame].FrHeight)) 
  	height += (yf + height + FrameTable[frame].FrTopMargin) - FrameTable[frame].FrHeight;
-      if (xd + width > FrameTable[frame].FrWidth) 
- 	width -= (xd + width) - FrameTable[frame].FrWidth;
       if (xf < 0)
 	{
 	  width -= xf;
@@ -1644,31 +1641,19 @@ void GL_window_copy_area (int frame, int xf, int yf, int xd, int yd,
 	  width -= xd;
 	  xd = 0;	
 	}
+      if (xd + width > FrameTable[frame].FrWidth) 
+ 	width -= (xd + width) - FrameTable[frame].FrWidth;
       if (width > 0 &&  height  > 0)
 	{
 	  /* Copy from backbuffer to backbuffer */
 	  glFinish ();
 	  glRasterPos2i (xf, yf + height);
 	  glCopyPixels (xd,   
-			FrameTable[frame].FrHeight   
-			- (yd + height + FrameTable[frame].FrTopMargin), 
+			(FrameTable[frame].FrHeight)   
+			- (yd + height + FrameTable[frame].FrTopMargin),
 			width, height, GL_COLOR); 
 	  /*copy from back to front */
-	  GL_Swap (frame);
 	  glFinish ();
-	  
-	  /* glRasterPos2i (xf, yf + height); */
-	  /*       glCopyPixels (xd,   */
-	  /* 		    FrameTable[frame].FrHeight + FrameTable[frame].FrTopMargin  */
-	  /* 		    - (yd + height),  */
-	  /* 		    width, height, GL_COLOR); */
-	  /*       glDrawBuffer (GL_FRONT); */
-	  /*       glCopyPixels (xd,  */
-	  /* 		    FrameTable[frame].FrHeight + FrameTable[frame].FrTopMargin  */
-	  /* 		    - (yd + height),  */
-	  /* 		    width, height,  */
-	  /* 		    GL_COLOR); */
-	  /*       glDrawBuffer (GL_BACK); */
 	}
     }
 }

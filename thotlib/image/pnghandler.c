@@ -758,7 +758,7 @@ Drawable PngCreate (char *fn, PictInfo *imageDesc, int *xif, int *yif,
 #else /*_GL*/
   /* GL buffer are display independant, 
   and already in the good format RGB, or RGBA*/
-  pixmap = buffer;
+  pixmap = (Pixmap) buffer;
 #endif /*_GL*/
   /* free the table of colors */
   TtaFreeMemory (colrs);
