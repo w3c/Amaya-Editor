@@ -54,6 +54,7 @@ static const char * HTTP_CONTENT_LENGTH = "ContentLength";
 static const char * HTTP_CONTENT_TYPE   = "ContentType";
 
 #ifdef ANNOT_ON_ANNOT
+static const char * THREAD_REPLY   = "Reply";
 static const char * THREAD_ROOT   = "root";
 static const char * THREAD_INREPLYTO = "inReplyTo";
 #endif /* ANNOT_ON_ANNOT */
@@ -160,6 +161,151 @@ static ThotBool contains(char *input, const char *s1, const char * s2)
 }
 
 /* ------------------------------------------------------------
+   FillAnnotField
+
+   internal routine to store a known field of an annotation structure.
+   ------------------------------------------------------------ */
+static ThotBool FillAnnotField( AnnotMeta* annot,
+				List **rdf_model,
+				char* predicate,
+				char* object )
+{
+  ThotBool found = TRUE;
+
+  if (contains(predicate, ANNOT_NS, ANNOT_ANNOTATES))
+    {
+      if (!IsW3Path ((char *) object))
+	{
+	  /* we normalize the URL to take into account
+	     the early / and \ problem */
+	  annot->source_url = FixFileURL ((char *) object);
+	}
+      else
+	annot->source_url = TtaStrdup ((char *) object);
+    }
+  else if (contains (predicate, DC_NS, DC_CREATOR))
+    {
+      /* @@ RRS: hack, hack; we should _not_ be inferring URIs.
+	 Libwww should distinguish between literal and resource. */
+      if (IsW3Path (object) || IsFilePath (object))
+	  annot->creator = ANNOT_FindRDFResource (rdf_model, object, TRUE);
+      else
+	{
+	  if (annot->author)
+	    TtaFreeMemory (annot->author);
+#ifdef _I18N_
+	  annot->author = TtaStrdup ((char *) object);
+#else
+	  /* convert it to ISO Latin-1 (will surely change in the
+	     I18N amaya version */
+	  annot->author = TtaConverMbsToIso ((char *) object, ISO_8859_1);
+#endif /* _I18N_ */
+	}
+    }
+  else if (contains (predicate, ANNOT_NS, ANNOT_CREATED))
+      annot->cdate = TtaStrdup ((char *) object);
+  else if (contains (predicate, DC_NS, DC_DATE))
+      annot->mdate = TtaStrdup ((char *) object);
+  else if (contains (predicate, DC_NS, DC_TITLE))
+    {
+#ifdef _I18N_
+      annot->title = TtaStrdup ((char *) object);
+#else
+      /* convert it to ISO Latin-1 (will surely change in the
+	 I18N amaya version */
+      annot->title = TtaConverMbsToIso ((char *) object, ISO_8859_1);
+#endif /* _I18N_ */
+    }
+  else if (contains (predicate, RDFMS_NS, RDFMS_TYPE)) 
+    {
+      if (contains (object, ANNOT_NS, ANNOT_ANNOTATION) && annot->type)
+	{
+	  /* this is the default [annotation type], and
+	     we already have a type, so we don't save it */
+	} 
+	else 
+	  {
+	    annot->type = ANNOT_FindRDFResource (&annot_schema_list,
+						 object,
+						 TRUE);
+	  }
+    }
+  else if (contains (predicate, ANNOT_NS, ANNOT_CONTEXT))
+    {
+      /* @@@ JK This test can be removed when we decide we don't
+	 need the amaya label backward compatibilty. Xptr should
+	 be the only mechanism we use */
+      if (!strncmp (object, "#id(", 4))
+	ParseIdFragment (annot, object);
+      else
+	ParseXptrFragment (annot, object);
+    }
+  else if (contains (predicate, HTTP_NS, HTTP_CONTENT_TYPE))
+      annot->content_type = TtaStrdup ((char *) object);
+  else if (contains (predicate, HTTP_NS, HTTP_CONTENT_LENGTH))
+      annot->content_length = TtaStrdup ((char *) object);
+  else if (contains (predicate, ANNOT_NS, ANNOT_BODY))
+    {
+      if (!IsW3Path ((char *) object))
+	{
+	  /* we normalize the URL to take into account
+	     the early / and \ problem */
+	  annot->body_url = FixFileURL ((char *) object);
+	}
+      else
+	annot->body_url = TtaStrdup ((char *) object);
+    }
+  else if (contains (predicate, HTTP_NS, HTTP_BODY))
+      annot->body = TtaStrdup ((char *) object);
+#ifdef ANNOT_ON_ANNOT
+  else if (contains (predicate, THREAD_NS, THREAD_ROOT))
+      annot->rootOfThread = TtaStrdup ((char *) object);
+  else if (contains (predicate, THREAD_NS, THREAD_INREPLYTO))
+    {
+      annot->inReplyTo = TtaStrdup ((char *) object);
+      /* JK: a patch, because we need this property for
+	 annotlib to work correctly */
+#if 0  /* @@ JK: I had to remove this for Ralph */
+      if (annot->source_url)
+	TtaFreeMemory (annot->source_url);
+      annot->source_url = TtaStrdup ((char *) object);
+#endif
+    }
+#endif /* ANNOT_ON_ANNOT */
+  else
+    found = FALSE;
+
+  return found;
+}
+
+/* ------------------------------------------------------------
+   FillInKnownProperties
+
+   internal routine to extract properties from an RDF model and
+   store into an annotation structure.
+   ------------------------------------------------------------ */
+static void FillInKnownProperties( AnnotMeta* annot,
+				   List** rdf_model,
+				   char* annot_url )
+{
+   RDFResourceP subjectP = ANNOT_FindRDFResource (rdf_model, annot_url, FALSE);
+   if (subjectP)
+     {
+       List *list;
+       for (list = subjectP->statements; list; list = list->next) {
+	 RDFStatementP s = (RDFStatementP)list->object;
+
+	 if (s->predicate->name && s->object->name)
+	   (void)FillAnnotField (annot,
+				 rdf_model,
+				 s->predicate->name,
+				 s->object->name);
+       }
+     }
+}
+
+
+/* ------------------------------------------------------------
    FindAnnot
 
    internal routine to optimize searching for an annotation
@@ -172,7 +318,12 @@ static AnnotMeta* FindAnnot( List** listP, char* annot_url, ThotBool create )
   char *ptr_annot_url;
 
   if (!IsW3Path (annot_url))
-    ptr_annot_url = FixFileURL (annot_url);
+    {
+      ptr_annot_url = FixFileURL (annot_url);
+      if (!ptr_annot_url)
+	/* ignoring weird URLs @@ RRS: this was a temporary bug */
+	return NULL;
+    }
   else
     ptr_annot_url = annot_url;
 
@@ -181,11 +332,16 @@ static AnnotMeta* FindAnnot( List** listP, char* annot_url, ThotBool create )
   if (!find_last_annotURL || strcmp(find_last_annotURL, ptr_annot_url)) {
     /* search for annotation in list */
     annot = AnnotList_searchAnnot (*listP, ptr_annot_url, AM_ANNOT_URL);
-    if (!annot && create)
+    if (!annot)
       {
-	annot = AnnotMeta_new ();
-	annot->annot_url = TtaStrdup (ptr_annot_url);
-	List_add (listP, (void*) annot);
+	if (create)
+	  {
+	    annot = AnnotMeta_new ();
+	    annot->annot_url = TtaStrdup (ptr_annot_url);
+	    List_add (listP, (void*) annot);
+	  }
+	else
+	  return NULL;		/* if lookup fails, allow create next time */
       }
     url_length = strlen(ptr_annot_url) + 1;
     if (find_last_length < url_length)
@@ -259,98 +415,30 @@ static void triple_handler (HTRDF * rdfp, HTTriple * triple, void * context)
       fprintf (stdout, "OBJ = %s\n", object);
 #endif
 
-      annot = FindAnnot (listP, subject, TRUE);
+      /* Optimize for the case that most Subjects are Annotations */
+      annot = FindAnnot (listP, subject, FALSE);
 
-      if (contains(predicate, ANNOT_NS, ANNOT_ANNOTATES))
+      if (!annot)
 	{
-	  if (!IsW3Path ((char *) object))
-	    {
-	      /* we normalize the URL to take into account
-		 the early / and \ problem */
-	      annot->source_url = FixFileURL ((char *) object);
-	    }
-	  else
-	    annot->source_url = TtaStrdup ((char *) object);
-	}
-      else if (contains (predicate, DC_NS, DC_CREATOR))
-	{
-	  /* @@ RRS: hack, hack; we should _not_ be inferring URIs.
-	     Libwww should distinguish between literal and resource. */
-	  if (IsW3Path (object) || IsFilePath (object))
-	      annot->creator = ANNOT_FindRDFResource (rdf_model, object, TRUE);
-	  else
-	    {
-#ifdef _I18N_
-	      annot->author = TtaStrdup ((char *) object);
-#else
-	      /* convert it to ISO Latin-1 (will surely change in the
-		 I18N amaya version */
-	      annot->author = TtaConverMbsToIso ((char *) object, ISO_8859_1);
-#endif /* _I18N_ */
-	    }
-	}
-      else if (contains (predicate, ANNOT_NS, ANNOT_CREATED))
-          annot->cdate = TtaStrdup ((char *) object);
-      else if (contains (predicate, DC_NS, DC_DATE))
-          annot->mdate = TtaStrdup ((char *) object);
-      else if (contains (predicate, DC_NS, DC_TITLE))
-	{
-#ifdef _I18N_
-	  annot->title = TtaStrdup ((char *) object);
-#else
-	  /* convert it to ISO Latin-1 (will surely change in the
-	     I18N amaya version */
-	  annot->title = TtaConverMbsToIso ((char *) object, ISO_8859_1);
-#endif /* _I18N_ */
-	}
-      else if (contains (predicate, RDFMS_NS, RDFMS_TYPE)) 
-        {
-          if (contains (object, ANNOT_NS, ANNOT_ANNOTATION) && annot->type)
-	    {
-	      /* this is the default [annotation type], and
-		 we already have a type, so we don't save it */
-            } 
-            else 
-              {
-		annot->type = ANNOT_FindRDFResource (&annot_schema_list,
-						     object,
-						     TRUE);
-              }
-        }
-      else if (contains (predicate, ANNOT_NS, ANNOT_CONTEXT))
-	{
-	  /* @@@ JK This test can be removed when we decide we don't
-	     need the amaya label backward compatibilty. Xptr should
-	     be the only mechanism we use */
-	  if (!strncmp (object, "#id(", 4))
-	    ParseIdFragment (annot, object);
-	  else
-	    ParseXptrFragment (annot, object);
-	}
-      else if (contains (predicate, HTTP_NS, HTTP_CONTENT_TYPE))
-          annot->content_type = TtaStrdup ((char *) object);
-      else if (contains (predicate, HTTP_NS, HTTP_CONTENT_LENGTH))
-          annot->content_length = TtaStrdup ((char *) object);
-      else if (contains (predicate, ANNOT_NS, ANNOT_BODY))
-	{
-	  if (!IsW3Path ((char *) object))
-	    {
-	      /* we normalize the URL to take into account
-		 the early / and \ problem */
-	      annot->body_url = FixFileURL ((char *) object);
-	    }
-	  else
-	    annot->body_url = TtaStrdup ((char *) object);
-	}
-      else if (contains (predicate, HTTP_NS, HTTP_BODY))
-          annot->body = TtaStrdup ((char *) object);
-#ifdef ANNOT_ON_ANNOT
-      else if (contains (predicate, THREAD_NS, THREAD_ROOT))
-          annot->rootOfThread = TtaStrdup ((char *) object);
-      else if (contains (predicate, THREAD_NS, THREAD_INREPLYTO))
-          annot->inReplyTo = TtaStrdup ((char *) object);
+	  /* We haven't seen this Annotation yet, or the object
+	     might not be an Annotation */
+	  
+	  if ((contains (predicate, RDFMS_NS, RDFMS_TYPE) &&
+	       contains (object, ANNOT_NS, ANNOT_ANNOTATION))
+#ifdef ANNOT_ON_ANNOT	      
+	      || (contains (predicate, RDFMS_NS, RDFMS_TYPE) &&
+		  contains (object, THREAD_NS, THREAD_REPLY))
 #endif /* ANNOT_ON_ANNOT */
-      else
+	      )
+	    {
+	      /* OK, we're really describing an Annotation now */
+	      annot = FindAnnot (listP, subject, TRUE);
+	      if (annot)	/* @@ should never be null */
+		FillInKnownProperties (annot, rdf_model, subject);
+	    }
+	}
+
+      if (!annot || !FillAnnotField (annot, rdf_model, predicate, object))
 	/* it's some other RDF statement; store it in the
 	   document-specific model.  Note that subjects and
 	   objects are stored in the document-specific model
