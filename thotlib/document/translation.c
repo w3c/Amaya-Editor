@@ -539,9 +539,9 @@ static ThotBool CheckDate (unsigned char c, int fnum, char *outBuf,
 	      /* following characters will be skipped until the $ or EOL or EOS */
 	      StartDate = TRUE;
 	      ExportChar ((wchar_t) c, fnum, outBuf, pDoc,
-			    FALSE, FALSE, FALSE);
+			  FALSE, FALSE, FALSE);
 	      ExportChar ((wchar_t) SPACE, fnum, outBuf, pDoc,
-			    FALSE, FALSE, FALSE);
+			  FALSE, FALSE, FALSE);
 	      /* generate the current date */
 	      GetTime (tm, pDoc);
 	      for (index = 0; tm[index] != EOS; index++)
@@ -549,6 +549,9 @@ static ThotBool CheckDate (unsigned char c, int fnum, char *outBuf,
 			    FALSE, FALSE, FALSE);
 	      DateIndex = 0;
 	    }
+	  else
+	    ExportChar ((wchar_t) c, fnum, outBuf, pDoc,
+			FALSE, FALSE, FALSE);
 	  return TRUE;
 	}
       else if (c == EOS || c == EOL || DateIndex == 10)
