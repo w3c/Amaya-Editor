@@ -59,6 +59,7 @@
 #include "tesse_f.h"
 #include "applicationapi_f.h"
 #include "registry_f.h"
+#include "dialogapi_f.h"
 
 #include "glprint.h"
 
@@ -192,17 +193,15 @@ ThotBool GL_Err()
   GLenum errCode = GL_NO_ERROR;
   if((errCode = glGetError ()) != GL_NO_ERROR)
     {
-#ifdef _PCLDEBUG
 #ifdef _GTK
       g_print ("\n%s :", (char*) gluErrorString (errCode));
 #endif /*_GTK*/
 #ifdef _WX
-      wxPrintf( _T("\n%s :"), (char*) gluErrorString (errCode) );
+      DisplayConfirmMessage ((char*) gluErrorString (errCode));
 #endif /*_WX*/
 #ifdef _WINGUI
       WinErrorBox (NULL, (char*) gluErrorString (errCode));
 #endif /*_WINGUI*/
-#endif /*_PCLDEBUG*/
       return TRUE;
     }
   else 
@@ -1344,10 +1343,12 @@ void SetGlPipelineState ()
 #ifdef _WINGUI
       WinErrorBox (NULL,  GLU_ERROR_MSG);
 #endif /*  _WINGUI */
-
-#if defined(_GTK) || defined(_WX)
+#ifdef _GTK
       fprintf( stderr, GLU_ERROR_MSG);
-#endif /* #if defined(_GTK)  || defined(_WX) */
+#endif /* #if defined(_GTK) */
+#ifdef _WX
+	  DisplayConfirmMessage ( GLU_ERROR_MSG );
+#endif /* _WX */
       exit (1);
     }
   
