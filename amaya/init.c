@@ -3473,7 +3473,7 @@ static Document LoadDocument (Document doc, char *pathname,
       else if (IsXMLName (pathname))
 	{
 	  docType = docXml;
-	  docProfile = L_XML;
+	  docProfile = L_Other;
 	  isXML = TRUE;
 	  unknown = FALSE;
 	}

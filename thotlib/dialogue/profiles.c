@@ -717,8 +717,6 @@ void Prof_InitTable (char *profile)
 		FunctionMask[i] = (FunctionMask[i] | L_Annot);
 	      else if (strstr (DoctypeTable->ProEntries[j].ProName, "Bookmarks"))
 		FunctionMask[i] = (FunctionMask[i] | L_Bookmarks);
-	      else if (strstr (DoctypeTable->ProEntries[j].ProName, "XML"))
-		FunctionMask[i] = (FunctionMask[i] | L_XML);
 	      else if (strstr (DoctypeTable->ProEntries[j].ProName, "CSS"))
 		FunctionMask[i] = (FunctionMask[i] | L_CSS);
 	    }

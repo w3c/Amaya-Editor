@@ -21,7 +21,6 @@
 #define L_SVG               0x20 /* accept only SVG values */
 #define L_Annot             0x40 /* accept only Annot values */
 #define L_Bookmarks         0x80 /* accept only Bookmarks values */
-#define L_XML               0x100 /* accept only XML values */
 #define L_CSS               0x200 /* accept only CSS values */
 
 /* Values for the profiles */
