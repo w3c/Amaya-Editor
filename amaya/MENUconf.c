@@ -173,6 +173,7 @@ static HWND     PublishHwnd =  NULL;
 static AM_WIN_MenuText WIN_PublishMenuText[] = 
 {
 	{AM_INIT_ALL, AM_PUBLISH_MENU},
+	{IDC_USEXHTMLMIMETYPE, AM_USE_XHTML_MIMETYPE},
 	{IDC_LOSTUPDATECHECK, AM_USE_ETAGS},
 	{IDC_VERIFYPUBLISH, AM_VERIFY_PUT},
 	{IDC_TDEFAULTNAME, AM_DEFAULT_NAME},
@@ -181,6 +182,7 @@ static AM_WIN_MenuText WIN_PublishMenuText[] =
 };
 #endif /* _WINDOWS */
 static int      PublishBase;
+static ThotBool UseXHTMLMimeType;
 static ThotBool LostUpdateCheck;
 static ThotBool VerifyPublish;
 static char     SafePutRedirect [MAX_LENGTH];
@@ -396,11 +398,11 @@ void InitAmayaDefEnv (void)
   TtaGetEnvBoolean ("ENABLE_DOUBLECLICK", &DoubleClick);
   /* @@@ */
   TtaSetDefEnvString ("ENABLE_FTP", "no", FALSE);
-  
 #ifndef _WINDOWS
   TtaSetDefEnvString ("THOTPRINT", "lpr", FALSE);
 #endif
   /* network configuration */
+  TtaSetDefEnvString ("ENABLE_XHTML_MIMETYPE", "no", FALSE);
   TtaSetDefEnvString ("SAFE_PUT_REDIRECT", "", FALSE);
   TtaSetDefEnvString ("ENABLE_LOST_UPDATE_CHECK", "yes", FALSE);
   TtaSetDefEnvString ("ENABLE_PIPELINING", "yes", FALSE);
@@ -2229,6 +2231,7 @@ void GeneralConfMenu (Document document, View view)
   ----------------------------------------------------------------------*/
 static void GetPublishConf (void)
 {
+  TtaGetEnvBoolean ("ENABLE_XHTML_MIMETYPE", &UseXHTMLMimeType);
   TtaGetEnvBoolean ("ENABLE_LOST_UPDATE_CHECK", &LostUpdateCheck);
   TtaGetEnvBoolean ("VERIFY_PUBLISH", &VerifyPublish);
   GetEnvString ("DEFAULTNAME", DefaultName);
@@ -2242,6 +2245,7 @@ static void GetPublishConf (void)
   ----------------------------------------------------------------------*/
 static void SetPublishConf (void)
 {
+  TtaSetEnvBoolean ("ENABLE_XHTML_MIMETYPE", UseXHTMLMimeType, TRUE);
   TtaSetEnvBoolean ("ENABLE_LOST_UPDATE_CHECK", LostUpdateCheck, TRUE);
   TtaSetEnvBoolean ("VERIFY_PUBLISH", VerifyPublish, TRUE);
   TtaSetEnvString ("DEFAULTNAME", DefaultName, TRUE);
@@ -2256,10 +2260,12 @@ static void SetPublishConf (void)
   ----------------------------------------------------------------------*/
 static void GetDefaultPublishConf ()
 {
+  GetDefEnvToggle ("ENABLE_XHTML_MIMETYPE", &UseXHTMLMimeType, 
+		   PublishBase + mTogglePublish, 0);
   GetDefEnvToggle ("ENABLE_LOST_UPDATE_CHECK", &LostUpdateCheck, 
-		    PublishBase + mTogglePublish, 0);
-  GetDefEnvToggle ("VERIFY_PUBLISH", &VerifyPublish,
 		    PublishBase + mTogglePublish, 1);
+  GetDefEnvToggle ("VERIFY_PUBLISH", &VerifyPublish,
+		    PublishBase + mTogglePublish, 2);
   GetDefEnvString ("DEFAULTNAME", DefaultName);
   GetDefEnvString ("SAFE_PUT_REDIRECT", SafePutRedirect);
 }
@@ -2275,6 +2281,8 @@ void WIN_RefreshPublishMenu (HWND hwnDlg)
 		  ? BST_CHECKED : BST_UNCHECKED);
   CheckDlgButton (hwnDlg, IDC_VERIFYPUBLISH, (VerifyPublish)
 		  ? BST_CHECKED : BST_UNCHECKED);
+  CheckDlgButton (hwnDlg, IDC_USEXHTMLMIMETYPE, (UseXHTMLMimeType)
+		  ? BST_CHECKED : BST_UNCHECKED);
   SetDlgItemText (hwnDlg, IDC_DEFAULTNAME, DefaultName);
   SetDlgItemText (hwnDlg, IDC_SAFEPUTREDIRECT, SafePutRedirect);
 }
@@ -2285,8 +2293,9 @@ void WIN_RefreshPublishMenu (HWND hwnDlg)
   ----------------------------------------------------------------------*/
 static void RefreshPublishMenu ()
 {
-  TtaSetToggleMenu (PublishBase + mTogglePublish, 0, LostUpdateCheck);
-  TtaSetToggleMenu (PublishBase + mTogglePublish, 1, VerifyPublish);
+  TtaSetToggleMenu (PublishBase + mTogglePublish, 0, UseXHTMLMimeType);
+  TtaSetToggleMenu (PublishBase + mTogglePublish, 1, LostUpdateCheck);
+  TtaSetToggleMenu (PublishBase + mTogglePublish, 2, VerifyPublish);
   TtaSetTextForm (PublishBase + mDefaultName, DefaultName);
   TtaSetTextForm (PublishBase + mSafePutRedirect, SafePutRedirect);
 }
@@ -2336,6 +2345,9 @@ LRESULT CALLBACK WIN_PublishDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
 	}
       switch (LOWORD (wParam))
 	{
+	case IDC_USEXHTMLMIMETYPE:
+	  UseXHTMLMimeType = !UseXHTMLMimeType;
+	  break;
 	case IDC_LOSTUPDATECHECK:
 	  LostUpdateCheck = !LostUpdateCheck;
 	  break;
@@ -2416,9 +2428,12 @@ static void PublishCallbackDialog (int ref, int typedata, char *data)
 	  switch (val) 
 	    {
 	    case 0:
-	      LostUpdateCheck = !LostUpdateCheck;
+	      UseXHTMLMimeType = !UseXHTMLMimeType;
 	      break;
 	    case 1:
+	      LostUpdateCheck = !LostUpdateCheck;
+	      break;
+	    case 2:
 	      VerifyPublish = !VerifyPublish;
 	      break;
 	    }
@@ -2466,13 +2481,14 @@ void         PublishConfMenu (Document document, View view)
 		TtaGetViewFrame (document, view),
 	       TtaGetMessage (AMAYA, AM_PUBLISH_MENU),
 		2, s, FALSE, 11, 'L', D_DONE);
-   sprintf (s, "B%s%cB%s", 
+   sprintf (s, "B%s%cB%s%cB%s", 
+	    TtaGetMessage (AMAYA, AM_USE_XHTML_MIMETYPE), EOS,
 	    TtaGetMessage (AMAYA, AM_USE_ETAGS), EOS, 
 	    TtaGetMessage (AMAYA, AM_VERIFY_PUT));
    TtaNewToggleMenu (PublishBase + mTogglePublish,
 		     PublishBase + PublishMenu,
 		     NULL,
-		     2,
+		     3,
 		     s,
 		     NULL,
 		     FALSE);

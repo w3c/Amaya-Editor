@@ -265,3 +265,4 @@
 263 Este documento ya está cargado en otra ventana
 264 Guardar la copia puede originar un problema de pérdida de actualización
 265 Crear o cambiar el tipo de documento provoca que el documento sea reanalizado. No se desharán las modificaciones pendientes.
+266 **Use the application/xthml+xml MIME type for XHTML documents

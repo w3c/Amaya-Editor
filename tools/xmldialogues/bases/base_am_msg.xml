@@ -2259,6 +2259,10 @@
 	<message xml:lang="de">Beim Einfügen oder Ändern des Dokumenttyps wird das Dokument neu geparst. Nicht gespeicherte Änderungen bleiben dabei erhalten.</message>
 	<message xml:lang="es">Crear o cambiar el tipo de documento provoca que el documento sea reanalizado. No se desharán las modificaciones pendientes.</message>
 </label>
+<label define="AM_USE_XHTML_MIMETYPE">
+	<message xml:lang="en">Use the application/xthml+xml MIME type for XHTML documents</message>
+	<message xml:lang="fr">Utiliser le type MIME application/xthml+xml pour	les documents XHTML</message>
+</label>
 <label define="AMAYA_MSG_MAX">
 </label>
 </messages>

@@ -265,3 +265,4 @@
 263 Este documento já está carregado em outra Janela
 264 Salvar esta instância pode causar um problema de perda de atualização
 265 **Creating or Changing the doctype causes the document to be reparsed. Pending modifications won't be undone.
+266 **Use the application/xthml+xml MIME type for XHTML documents
