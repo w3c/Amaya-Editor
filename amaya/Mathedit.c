@@ -40,7 +40,12 @@
 #define MenuMaths 1
 #define MAX_MATHS  2
 
+#ifndef _WINDOWS
 static Pixmap       iconMath;
+#else   /* _WINDOWS */
+#define iconMath    21
+#endif /* _WINDOWS */
+
 static Pixmap       mIcons[14];
 static int          MathsDialogue;
 static boolean      InitMaths;
@@ -518,7 +523,11 @@ Document            doc;
 View                view;
 #endif
 {
+# ifndef _WINDOWS 
   TtaAddButton (doc, 1, iconMath, CreateMaths, TtaGetMessage (AMAYA, AM_BUTTON_MATH));
+# else  /* _WINDOWS */
+  TtaAddButton (doc, 1, iconMath, CreateMaths, TtaGetMessage (AMAYA, AM_BUTTON_MATH));
+# endif /* _WINDOWS */
   MathsDialogue = TtaSetCallback (CallbackMaths, MAX_MATHS);
 }
 
@@ -528,6 +537,7 @@ View                view;
   ----------------------------------------------------------------------*/
 void                InitMathML ()
 {
+#  ifndef _WINDOWS
    iconMath = TtaCreatePixmapLogo (Math_xpm);
    TtaRegisterPixmap("Math", iconMath);
    mIcons[0] = TtaCreatePixmapLogo (root_xpm);
@@ -544,8 +554,145 @@ void                InitMathML ()
    mIcons[11] = TtaCreatePixmapLogo (o_xpm);
    mIcons[12] = TtaCreatePixmapLogo (id_xpm);
    mIcons[13] = TtaCreatePixmapLogo (txt_xpm);
+#  endif /* _WINDOWS */
 }
 
+/*----------------------------------------------------------------------
+   SetFontslantAttr
+   The content of a MI element has been created or modified.
+   Create or change attribute fontslant for that element accordingly.
+ -----------------------------------------------------------------------*/
+#ifdef __STDC__
+void SetFontslantAttr (Element el, Document doc)
+#else /* __STDC__*/
+void SetFontslantAttr (el, doc)
+  Element	el;
+  Document	doc;
+#endif /* __STDC__*/
+{
+  Element	textEl;
+  ElementType	elType;
+  AttributeType	attrType;
+  Attribute	attr;
+  int		len;
+
+  textEl = TtaGetFirstChild (el);
+  if (textEl != NULL)
+     {
+     /* search the fontslant attribute */
+     elType = TtaGetElementType (el);
+     attrType.AttrSSchema = elType.ElSSchema;
+     attrType.AttrTypeNum = MathML_ATTR_fontslant;
+     attr = TtaGetAttribute (el, attrType);
+     /* get content length */
+     len = TtaGetTextLength (textEl);
+     if (len > 1)
+        /* put an attribute fontslant = plain */
+	{
+	if (attr == NULL)
+	   {
+	   attr = TtaNewAttribute (attrType);
+	   TtaAttachAttribute (el, attr, doc);
+	   }
+	TtaSetAttributeValue (attr, MathML_ATTR_fontslant_VAL_plain, el, doc);
+	}
+     else
+	/* remove attribute fontslant if it exists */
+	{
+	if (attr != NULL)
+	   TtaRemoveAttribute (el, attr, doc);
+	}
+     }
+}
+
+/*----------------------------------------------------------------------
+   SetAddspaceAttr
+   The content of a MO element has been created or modified.
+   Create or change attribute addspace for that element accordingly.
+ -----------------------------------------------------------------------*/
+#ifdef __STDC__
+void SetAddspaceAttr (Element el, Document doc)
+#else /* __STDC__*/
+void SetAddspaceAttr (el, doc)
+  Element	el;
+  Document	doc;
+#endif /* __STDC__*/
+{
+  Element	textEl, previous;
+  ElementType	elType;
+  AttributeType	attrType;
+  Attribute	attr;
+  int		len, val;
+#define BUFLEN 10
+  unsigned char	text[BUFLEN];
+  Language	lang;
+  char		alphabet;
+
+  textEl = TtaGetFirstChild (el);
+  if (textEl != NULL)
+     {
+     /* search the addspace attribute */
+     elType = TtaGetElementType (el);
+     attrType.AttrSSchema = elType.ElSSchema;
+     attrType.AttrTypeNum = MathML_ATTR_addspace;
+     attr = TtaGetAttribute (el, attrType);
+     if (attr == NULL)
+	{
+	attr = TtaNewAttribute (attrType);
+	TtaAttachAttribute (el, attr, doc);
+	}
+     val = MathML_ATTR_addspace_VAL_nospace;
+     len = TtaGetTextLength (textEl);
+     if (len > 0 && len < BUFLEN)
+	{
+	len = BUFLEN;
+	TtaGiveTextContent (textEl, text, &len, &lang);
+	alphabet = TtaGetAlphabet (lang);
+	if (len == 1)
+	   if (alphabet == 'L')
+	     /* ISO-Latin 1 character */
+	     {
+	     if (text[0] == '-')
+		/* unary or binary operator? */
+		{
+		previous = el;
+		TtaPreviousSibling (&previous);
+		if (previous == NULL)
+		   /* no previous sibling => unary operator */
+		   val = MathML_ATTR_addspace_VAL_nospace;
+		else
+		   {
+		   elType = TtaGetElementType (previous);
+		   if (elType.ElTypeNum == MathML_EL_MO)
+		      /* after an operator => unary operator */
+		      val = MathML_ATTR_addspace_VAL_nospace;
+		   else
+		      /* binary operator */
+		      val = MathML_ATTR_addspace_VAL_both;
+		   }
+		}
+	     else if (text[0] == '+' ||
+	         text[0] == '&' ||
+	         text[0] == '*' ||
+	         text[0] == '<' ||
+	         text[0] == '=' ||
+	         text[0] == '>' ||
+	         text[0] == '^')
+		 /* binary operator */
+	         val = MathML_ATTR_addspace_VAL_both;
+	     else if (text[0] == ',' ||
+		      text[0] == ';')
+	         val = MathML_ATTR_addspace_VAL_spaceafter;
+	     }
+	   else if (alphabet == 'G')
+	     /* Symbol character set */
+	     if ((int)text[0] == 177)	/* PlusMinus */
+		val = MathML_ATTR_addspace_VAL_both;
+	/**** to be completed *****/
+	}
+     TtaSetAttributeValue (attr, val, el, doc);
+     }
+}
 
 /*----------------------------------------------------------------------
    GetCharType

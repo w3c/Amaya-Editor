@@ -73,9 +73,16 @@ static int          imgSave;
 static int          toggleSave;
 static char*        classList;
 static char*        langList;
+static HDC          hDC;
+static HDC          hMemDC;
+static HFONT        hFont;
+static HFONT        hOldFont;
 static BOOL	        saveBeforeClose ;
 static BOOL         closeDontSave ;
 static OPENFILENAME OpenFileName;
+static TCHAR        szFilter[] = APPFILENAMEFILTER;
+static TCHAR        szFileName[256];
+
 
 HWND wordButton;
 HWND hwnListWords;
@@ -128,6 +135,7 @@ int       ref;
 #endif /* __STDC__ */
 {  
 	currentRef = ref;
+
 	DialogBox (hInstance, MAKEINTRESOURCE (LINKDIALOG), parent, (DLGPROC) LinkDlgProc);
 }
 
@@ -208,6 +216,7 @@ int   toggle_save;
 	toggleSave       = toggle_save;
 	currentParentRef = baseDlg + saveForm;
 	sprintf (currentPathName, path_name);
+
 	DialogBox (hInstance, MAKEINTRESOURCE (SAVEASDIALOG), parent, (DLGPROC) SaveAsDlgProc);
 }
 
@@ -242,6 +251,7 @@ BOOL* close_dont_save;
 {  
 	sprintf (message, msg);
 	sprintf (wndTitle, title);
+
 	DialogBox (hInstance, MAKEINTRESOURCE (CLOSEDOCDIALOG), parent, (DLGPROC) CloseDocDlgProc);
 	*save_befor = saveBeforeClose;
 	*close_dont_save = closeDontSave;
@@ -372,6 +382,7 @@ char* msg;
 	sprintf (message, msg);
 	sprintf (wndTitle, title);
 	currentRef = ref;
+
 	DialogBox (hInstance, MAKEINTRESOURCE (INITCONFIRMDIALOG), parent, (DLGPROC) InitConfirmDlgProc);
 }
 
@@ -810,7 +821,28 @@ LPARAM lParam;
 							break;
 
 				       case IDC_BROWSE:
-							WIN_ListOpenDirectory (hwnDlg, urlToOpen);
+							/* WIN_ListOpenDirectory (hwnDlg, urlToOpen); */
+                            OpenFileName.lStructSize       = sizeof (OPENFILENAME); 
+                            OpenFileName.hwndOwner         = hwnDlg; 
+                            OpenFileName.hInstance         = hInstance ; 
+                            OpenFileName.lpstrFilter       = (LPSTR) szFilter; 
+                            OpenFileName.lpstrCustomFilter = (LPTSTR) NULL; 
+                            OpenFileName.nMaxCustFilter    = 0L; 
+                            OpenFileName.nFilterIndex      = 1L; 
+                            OpenFileName.lpstrFile         = (LPSTR) szFileName; 
+                            OpenFileName.nMaxFile          = 256; 
+                            OpenFileName.lpstrInitialDir   = NULL; 
+                            OpenFileName.lpstrTitle        = TEXT ("Open a File"); 
+                            OpenFileName.nFileOffset       = 0; 
+                            OpenFileName.nFileExtension    = 0; 
+                            OpenFileName.lpstrDefExt       = TEXT ("*.html"); 
+                            OpenFileName.lCustData         = 0; 
+                            OpenFileName.Flags             = OFN_SHOWHELP | OFN_HIDEREADONLY; 
+ 
+                            if (GetOpenFileName (&OpenFileName)) {
+	                           strcpy (urlToOpen, OpenFileName.lpstrFile);
+	                        }
+
 					        EndDialog (hwnDlg, IDC_BROWSE);
 							break;
 
