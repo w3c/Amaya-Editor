@@ -3770,7 +3770,7 @@ void  TtaListStyleSchemas (Document document, FILE *fileDescriptor)
 				   }
 				 break;
 			       case AtEnumAttr:
-				 for (val = 0; val < pAt1->AttrNEnumValues; val++)
+				 for (val = 0; val <= pAt1->AttrNEnumValues; val++)
 				   if (pRP1->ApEnumFirstPRule[val] != NULL)
 				     {
 				       wrtext (pAt1->AttrName, fileDescriptor);
@@ -3780,10 +3780,10 @@ void  TtaListStyleSchemas (Document document, FILE *fileDescriptor)
 					   wrnomregle (pRP1->ApElemType, fileDescriptor);
 					   fprintf (fileDescriptor, ")");
 					 }
-				       if (pAt1->AttrEnumValue[val])
+				       if (val > 0 && pAt1->AttrEnumValue[val-1])
 					 {
 					   fprintf (fileDescriptor, "=");
-					   wrtext (pAt1->AttrEnumValue[val], fileDescriptor);
+					   wrtext (pAt1->AttrEnumValue[val-1], fileDescriptor);
 					 }
 				       fprintf (fileDescriptor, ":\n");
 				       if (pRP1->ApEnumFirstPRule[val]->PrNextPRule)
