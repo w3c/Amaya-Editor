@@ -35,6 +35,66 @@
 #include "SVGedit_f.h"
 #include "anim_f.h"
 
+static Pixmap   iconAnim;
+static Pixmap   iconAnimNo;
+static int      AnimButton;
+
+
+
+#ifndef _WINDOWS
+#include "xpm/animplay.xpm"
+#include "xpm/animstop.xpm"
+#endif /* _WINDOWS */
+
+#ifdef _WINDOWS
+#include "wininclude.h"
+#define iconAnim 29
+#define iconAnimNo 29
+#endif /*_WINDOWS*/
+
+/*----------------------------------------------------------------------
+  SwitchIconAnimPlay
+  ----------------------------------------------------------------------*/
+void SwitchIconAnimPlay (Document doc, View view, ThotBool state)
+{
+#ifdef _GLANIM
+  if (state)
+    TtaChangeButton (doc, view, AnimButton, (ThotIcon)iconAnim, state);
+  else
+    TtaChangeButton (doc, view, AnimButton, (ThotIcon)iconAnimNo, state);
+#endif /* _GLANIM */
+}
+
+#ifdef _GLANIM
+/*-----------------------------------------------
+  AnimPlay : Launch the timer needed to change time.
+  -----------------------------------------------*/
+void Anim_Play (Document document, View view)
+{
+ TtaPlay (document, view);
+}
+#endif /*_GLANIM*/
+
+/*-----------------------------------------------
+  AddAnimPlayButton : Add a play button
+  -----------------------------------------------*/
+void AddAnimPlayButton (Document doc, View view)
+{
+#ifdef _GLANIM
+#ifndef _WINDOWS
+  iconAnim = TtaCreatePixmapLogo (animplay_xpm);
+  iconAnimNo = TtaCreatePixmapLogo (animstop_xpm);
+#endif /* _WINDOWS */
+  AnimButton = TtaAddButton (doc,
+ 			     1,  
+			     (ThotIcon)iconAnim,
+			     Anim_Play,
+			     "Anim_Play",
+			     TtaGetMessage (AMAYA, AM_BUTTON_ANIM),
+			     TBSTYLE_BUTTON, TRUE);
+#endif /*_GLANIM*/
+}
+
 /*-----------------------------------------------
 get_int_attribute_from_el : Get a int value from an xml attribute
   -----------------------------------------------*/
@@ -113,55 +173,6 @@ char *get_char_attribute_from_el (Element el, int Attribut_Type)
 #endif /* _SVGANIM */
 }
 
-
-#ifdef _SVGANIM
-
-#ifdef _GLANIM
-
-#ifndef _WINDOWS
-#include "xpm/animplay.xpm"
-#include "xpm/animstop.xpm"
-#endif /* _WINDOWS */
-
-/*-----------------------------------------------
-  AnimPlay : Launch the timer needed to change time.
-  -----------------------------------------------*/
-void Anim_Play (Document document, View view)
-{
- TtaPlay (document, view);
-}
-
-static Pixmap   iconAnim;
-static Pixmap   iconAnimNo;
-static int      AnimButton;
-
-#endif /*_GLANIM*/
-
-#endif /*_SVGANIM*/
-
-/*-----------------------------------------------
-  AddAnimPlayButton : Add a play button
-  -----------------------------------------------*/
-void AddAnimPlayButton (Document doc, View view)
-{
-#ifdef _GLANIM
-#ifdef _SVGANIM
-
-#ifndef _WINDOWS
-  iconAnim = TtaCreatePixmapLogo (animplay_xpm);
-  iconAnimNo = TtaCreatePixmapLogo (animstop_xpm);
-#endif /* _WINDOWS */
-
-  AnimButton = TtaAddButton (doc,
- 			     1,  
-			     (ThotIcon)iconAnim,
-			     Anim_Play,
-			     "Anim_Play",
-			     TtaGetMessage (AMAYA, AM_BUTTON_ANIM),
-			     TBSTYLE_BUTTON, TRUE);
-#endif /*_SVGANIM*/
-#endif /*_GLANIM*/
-}
 
 /*-----------------------------------------------
 register_animated_element : store animation linked list in an element 

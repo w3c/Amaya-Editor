@@ -972,6 +972,9 @@ static void UpdateBrowserMenus (Document doc)
 #endif /* _SVGLIB */
 #ifdef _SVGANIM
       SwitchIconAnim (doc, 1, FALSE);
+#ifdef _GLANIM
+      SwitchIconAnim (doc, 1, FALSE);
+#endif /*_GLANIM*/
 #endif /* _SVGANIM */
 #endif /* _SVG */
       
@@ -1099,6 +1102,9 @@ static void UpdateEditorMenus (Document doc)
 #endif /* _SVGLIB */
 #ifdef _SVGANIM
 	 SwitchIconAnim (doc, 1, TRUE);
+#ifdef _GLANIM
+      SwitchIconAnim (doc, 1, TRUE);
+#endif /*_GLANIM*/
 #endif /* _SVGANIM */
 #endif /* _SVG */
 	}
@@ -2726,7 +2732,9 @@ Document InitDocAndView (Document doc, char *docname, DocumentType docType,
 #endif /* _SVGLIB */
 #ifdef _SVGANIM
 	   AddAnimButton (doc, 1);
+#ifdef _GLANIM
 	   AddAnimPlayButton (doc, 1);
+#endif /*_GLANIM*/
 #endif /* _SVGANIM */
 #endif /* _SVG */
 	   if (docType == docAnnot)
@@ -2862,6 +2870,9 @@ Document InitDocAndView (Document doc, char *docname, DocumentType docType,
 #endif /* _SVGLIB */
 #ifdef _SVGANIM
 	     SwitchIconAnim (doc, 1, FALSE);
+#ifdef _GLANIM
+      SwitchIconAnim (doc, 1, FALSE);
+#endif /*_GLANIM*/
 #endif /* _SVGANIM */
 #endif /* _SVG */
 	   }

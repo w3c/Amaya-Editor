@@ -557,6 +557,15 @@ void GL_Win32ContextClose (int frame, HWND hwndClient)
   GL_Context[frame] = 0;
   GL_KillFrame (frame);
 }
+
+/*----------------------------------------------------------------------
+  MyTimerProc : Call drawing upon timer calls
+  ----------------------------------------------------------------------*/
+VOID CALLBACK MyTimerProc (HWND hwnd, UINT message, UINT idTimer, DWORD dwTime)     
+{ 
+ GL_DrawAll ();   
+} 
+
 #endif /*_WINDOWS*/
 
 static int Opacity = 1000;
@@ -1800,6 +1809,8 @@ void GL_ActivateDrawing(int frame)
 #define FPS_INTERVAL 0.030 /* FPS_INTERVAL*/
 #define FRAME_TIME 25 /* milliseconds */
 
+#define IDT_ANIMATION 1
+
 /*----------------------------------------------------------------------
   TtaPlay : Activate Animation
   ----------------------------------------------------------------------*/
@@ -1828,9 +1839,57 @@ void TtaPlay (Document doc, View view)
 	     gtk_timeout_remove (FrameTable[frame].Timer);
 	     FrameTable[frame].Timer = 0;
 	   }	
+#else /*_GTK*/
+#ifdef _WINDOWS
+       if (FrameTable[frame].Anim_play)
+	 {
+		 SetTimer(FrMainRef[frame],                
+					IDT_ANIMATION,               
+					FRAME_TIME,                     
+					(TIMERPROC) MyTimerProc); 
+
+	   FrameTable[frame].Timer = IDT_ANIMATION; 	      
+	   FrameTable[frame].BeginTime = 0;
+	   FrameTable[frame].LastTime = 0;
+	 }
+       else
+	 if (FrameTable[frame].Timer)
+	   {
+	     KillTimer(FrMainRef[frame], IDT_ANIMATION); 
+	     FrameTable[frame].Timer = 0;
+	   }
+#endif /*_WINDOWS*/
 #endif /*_GTK*/
      }  
 }
+
+#ifdef NOtENOUGHTIMEPRECIsION
+/*if get tick count gets is more than 50 ms precise...*/
+			  {
+			    LARGE_INTEGER ticksPerSecond;
+ 				LARGE_INTEGER tick;   // A point in time
+ 				LARGE_INTEGER time;   // For converting tick into real time
+
+  // get the high resolution counter's accuracy
+  QueryPerformanceFrequency(&ticksPerSecond);
+  // what time is it?
+  QueryPerformanceCounter(&tick);
+  // convert the tick number into the number of seconds
+  // since the system was started...
+  time.QuadPart = tick.QuadPart/ticksPerSecond.QuadPart;
+
+  //get the number of hours
+  int hours = time.QuadPart/3600;
+
+  //get the number of minutes
+  time.QuadPart = time.QuadPart - (hours * 3600);
+
+  int minutes = time.QuadPart/60;
+
+  //get the number of seconds
+  int seconds = time.QuadPart - (minutes * 60);
+		  }
+#endif /*NOtENOUGHTIMEPRECIsION*/
 
 
 /*----------------------------------------------------------------------
@@ -1844,8 +1903,8 @@ ThotBool GL_DrawAll ()
   /* draw and calculate draw time 
      bench that helps finding bottlenecks...*/
   struct timeb	after;
-  AnimTime current_time; 
 #endif /*_GTK*/
+  AnimTime current_time; 
 #endif /* _GLANIM */
   static ThotBool frame_animating = FALSE;  
   
@@ -1877,12 +1936,22 @@ ThotBool GL_DrawAll ()
 		      if (FrameTable[frame].BeginTime == 0)
 			FrameTable[frame].BeginTime = current_time;
 		      current_time -= FrameTable[frame].BeginTime;   
+#else
+#ifdef _WINDOWS
+			  current_time = ((double) GetTickCount ()) / 1000; 
+		      /*current_time = after.time + (((double)after.millitm)/1000);*/
+		      
+		      if (FrameTable[frame].BeginTime == 0)
+			      FrameTable[frame].BeginTime = current_time;
+		      current_time -= FrameTable[frame].BeginTime;   
+
+#endif /*_WINDOWS*/
 #endif /*_GTK*/
-		      if ((FrameTable[frame].LastTime - current_time) < FPS_INTERVAL)
+		    if ((FrameTable[frame].LastTime - current_time) < FPS_INTERVAL)
 			{		  		   
 			  Animate_boxes (frame, current_time);
 			  FrameTable[frame].LastTime = current_time;
-			}		      
+			}	
 		    }
 #endif /* _GLANIM */		    
 		  if (FrameTable[frame].DblBuffNeedSwap)

@@ -199,28 +199,21 @@ typedef struct _Box
 #ifndef _GL
   int             BxXOrg;	/* X origin from the root */
   int             BxYOrg;	/* Y origin from the root */
-
   int             BxHeight;	        /* Box height including margins */
   int             BxWidth;	        /* Box width including margins */
-
   int             BxH;	        	/* Inner height */
   int             BxW;	        	/* Inner Width including spaces */
 #else /*_GL*/
-
-  float             BxXOrg;	/* X origin from the root */
-  float             BxYOrg;	/* Y origin from the root */
-
+  float           BxXOrg;	        /* X origin from the root */
+  float           BxYOrg;	        /* Y origin from the root */
   int             BxClipX; 
   int             BxClipY; 
-
   int             BxClipW;
   int             BxClipH;
-
-  float             BxHeight;	        /* Box height including margins */
-  float             BxWidth;	        /* Box width including margins */
-
-  float             BxH;	        	/* Inner height */
-  float             BxW;	        	/* Inner Width including spaces */
+  float           BxHeight;	        /* Box height including margins */
+  float           BxWidth;	        /* Box width including margins */
+  float           BxH;	        	/* Inner height */
+  float           BxW;	        	/* Inner Width including spaces */
 #endif /* _GL */
 
   int             BxTMargin;	        /* Top Margin */
