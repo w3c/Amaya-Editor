@@ -2034,8 +2034,11 @@ void SVGCreated (NotifyElement * event)
 void TspanCreated (NotifyElement * event)
 {
   ElementType	elType;
+  Element       ancestor;
   AttributeType	attrType;
   Attribute	attr;
+  int           x, y;
+  char          buffer[50];
 
   elType = TtaGetElementType (event->element);
   attrType.AttrSSchema = elType.ElSSchema;
@@ -2047,7 +2050,25 @@ void TspanCreated (NotifyElement * event)
       attr = TtaNewAttribute (attrType);
       TtaAttachAttribute (event->element, attr, event->document);
     }
-  TtaSetAttributeText (attr, "0", event->element, event->document);
+  x = 0;
+  /* look for the enclosing text element */
+  ancestor = TtaGetParent (event->element);
+  while (ancestor)
+    {
+      elType = TtaGetElementType (ancestor);
+      if (elType.ElTypeNum == SVG_EL_text_ &&
+	  !strcmp (TtaGetSSchemaName (elType.ElSSchema), "SVG"))
+	/* it's a text element. Get its position */
+	{
+	  TtaGiveBoxPosition (ancestor, event->document, 1, UnPixel, &x, &y);
+	  ancestor = NULL;
+	}
+      else
+	/* not a text. look for the next ancestor */
+	ancestor = TtaGetParent (ancestor);
+    }
+  sprintf (buffer, "%dpx", x);
+  TtaSetAttributeText (attr, buffer, event->element, event->document);
   ParseCoordAttribute (attr, event->element, event->document);
 
   attrType.AttrTypeNum = SVG_ATTR_dy;

@@ -1236,7 +1236,7 @@ ATTRIBUTES
 	BEGIN
 	CreateBefore (AttrName);
 	CreateBefore (AttrValue);
-   	HorizPos: Left = Enclosing . Left;
+   	HorizPos: Left = Enclosing not text_ . Left;
 	IN Structure_view
 	   HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 	IN Links_view
@@ -1248,7 +1248,7 @@ ATTRIBUTES
 	CreateBefore (AttrName);
 	CreateBefore (AttrValue);
 	if not text_
-   	   VertPos:  Top = Enclosing . Top;
+   	   VertPos:  Top = Enclosing not text_ . Top;
 	if text_
 	   VertPos:  HRef = Enclosing . Top;
    	IN Structure_view
