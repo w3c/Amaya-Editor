@@ -771,7 +771,10 @@ static void MoveApoint (PtrBox box, int frame, int firstx, int firsty,
   /* take into account release button events that follow a press button event */
   input = FALSE;
   wrap = FALSE;
+#ifndef _WX
+  // TODO: gerer les thotgrab/ungrab etc ...
   while (ret == 0)
+#endif /* _WX */
     {
 #ifdef _WINGUI
       /* current pointer position */
