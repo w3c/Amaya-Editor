@@ -78,11 +78,11 @@
 77 Math
 78 MATH
 79 Root (mroot)
-80 sQuare root (msqrt)
+80 Square root (msqrt)
 81 Fraction (mfrac)
 82 Subscript and superscript (msubsup)
 83 Subscript (msub)
-84 suPerscript (msup)
+84 Superscript (msup)
 85 Under and over (munderover)
 86 Under (munder)
 87 Over (mover)
