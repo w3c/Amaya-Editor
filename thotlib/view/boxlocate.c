@@ -120,6 +120,17 @@ static void SelectCurrentWord (int frame, PtrBox pBox, int pos,
     }
 }
 
+/*----------------------------------------------------------------------
+  TtaSelectWord selects the word around the current point in an element
+  ----------------------------------------------------------------------*/
+void TtaSelectWord (Element element, int char, Document doc, View view)
+{
+  PtrElement    pEl = (PtrElement)element;
+
+  if (pEl->ElTypeNumber == 1)
+    {
+    }
+}
 
 /*----------------------------------------------------------------------
   LocateSelectionInView finds out the selected Abstract Box and if it's
@@ -144,6 +155,7 @@ void LocateSelectionInView (int frame, int x, int y, int button)
   int                 spacesNumber;
   int                 index, pos;
   int                 xOrg, yOrg;
+  ThotBool            extend;
 
   if (frame >= 1)
     {
@@ -153,12 +165,13 @@ void LocateSelectionInView (int frame, int x, int y, int button)
       y += pFrame->FrYOrg;
       pAb = pFrame->FrAbstractBox;
       charsNumber = 0;
+      extend = (button == 0 || button == 1);
       /* get the selected box */
       if (ThotLocalActions[T_selecbox] != NULL)
 	(*ThotLocalActions[T_selecbox]) (&pBox, pAb, frame, x, y, &charsNumber);
       /* When it's an extended selection, avoid to extend to the
 	 enclosing box */
-      if (button == 0 || button == 1)
+      if (extend)
 	{
 	  if (pBox != pFrame->FrSelectionBegin.VsBox &&
 	      IsParentBox (pBox, pFrame->FrSelectionBegin.VsBox))
@@ -171,7 +184,7 @@ void LocateSelectionInView (int frame, int x, int y, int button)
 	      (!pAb->AbPresentationBox || pAb->AbCanBeModified))
 	    {
 	      pos = x - pBox->BxXOrg - pBox->BxLMargin - pBox->BxLBorder - pBox->BxLPadding;
-	      LocateClickedChar (pBox, &pBuffer, &pos, &index, &charsNumber,
+	      LocateClickedChar (pBox, extend, &pBuffer, &pos, &index, &charsNumber,
 				 &spacesNumber);
 	      charsNumber = pBox->BxIndChar + charsNumber + 1;
 	    }
@@ -2203,70 +2216,77 @@ void                DirectCreation (PtrBox pBox, int frame)
 }
 
 /*----------------------------------------------------------------------
-   LocateClickedChar cherche le caractere affiche dans la boite pBox 
-   avec un decalage x. Rend le pointeur sur le buffer qui  
-   contient le caractere designe', l'index du caractere    
-   dans le buffer, l'index du caractere dans la boite et   
-   le nombre de blancs qui le precedent dans la boite.     
-   Met a jour la valeur x.                                 
+  LocateClickedChar looks for the character of the box displayed at the
+  position x.
+  The parameter extend is TRUE when the function looks for an extension
+  of the current selection.
+  Returns:
+  - the buffer where the character is located,
+  - the index in the buffer,
+  - the index in the box,
+  - an the number of white spaces before.
+  The position x is updated too.
   ----------------------------------------------------------------------*/
-void LocateClickedChar (PtrBox pBox, PtrTextBuffer *pBuffer, int *x,
+void LocateClickedChar (PtrBox pBox, ThotBool extend, PtrTextBuffer *pBuffer, int *x,
 			int *index, int *charsNumber, int *spacesNumber)
 {
-   int                 dx;
-   int                 length;
-   int                 extraSpace;
-   int                 spaceWidth;
-   int                 charWidth;
-   int                 newIndex;
-   ptrfont             font;
-   UCHAR_T       c;
-   ThotBool            notfound;
+  int                 dx;
+  int                 length;
+  int                 extraSpace;
+  int                 spaceWidth;
+  int                 charWidth;
+  int                 newIndex;
+  ptrfont             font;
+  UCHAR_T       c;
+  ThotBool            notfound;
 
-   /* Nombre de caracteres qui precedent */
-   *charsNumber = 0;
-   *spacesNumber = 0;
-   c = EOS;
-   charWidth = 0;
-   if (pBox->BxNChars == 0 || *x <= 0)
-     {
-	*x = 0;
-	*pBuffer = pBox->BxBuffer;
-	*index = pBox->BxFirstChar;
-     }
-   else
-     {
-	font = pBox->BxFont;
-	dx = 0;
-	newIndex = pBox->BxFirstChar;
-	*index = newIndex;
-	*pBuffer = pBox->BxBuffer;
-	length = pBox->BxNChars;
-	/* Calcule la largeur des blancs */
-	if (pBox->BxSpaceWidth == 0)
-	  {
-	     spaceWidth = CharacterWidth (SPACE, font);
-	     extraSpace = 0;
-	  }
-	else
-	  {
-	     spaceWidth = pBox->BxSpaceWidth;
-	     extraSpace = pBox->BxNPixels;
-	  }
-
-	/* Recherche le caractere designe dans la boite */
+  /* Nombre de caracteres qui precedent */
+  *charsNumber = 0;
+  *spacesNumber = 0;
+  c = EOS;
+  charWidth = 0;
+  if (pBox->BxNChars == 0 || *x <= 0)
+    {
+      *x = 0;
+      *pBuffer = pBox->BxBuffer;
+      *index = pBox->BxFirstChar;
+    }
+  else
+    {
+      font = pBox->BxFont;
+      dx = 0;
+      newIndex = pBox->BxFirstChar;
+      *index = newIndex;
+      *pBuffer = pBox->BxBuffer;
+      length = pBox->BxNChars;
+      /* Calcule la largeur des blancs */
+      if (pBox->BxSpaceWidth == 0)
+	{
+	  spaceWidth = CharacterWidth (SPACE, font);
+	  extraSpace = 0;
+	}
+      else
+	{
+	  spaceWidth = pBox->BxSpaceWidth;
+	  extraSpace = pBox->BxNPixels;
+	}
+      
+      /* Recherche le caractere designe dans la boite */
 #ifdef STRUCT_EDIT
-	notfound = (dx < *x);
+      notfound = (dx < *x);
 #else
-	/* largeur du caractere suivant */
-	c = (UCHAR_T) ((*pBuffer)->BuContent[newIndex - 1]);
-	if (c == 0)
-	   charWidth = 0;
-	else if (c == SPACE)
-	   charWidth = spaceWidth;
-	else
-	   charWidth = CharacterWidth (c, font);
-	notfound = (dx + charWidth / 2 < *x);
+      /* largeur du caractere suivant */
+      c = (UCHAR_T) ((*pBuffer)->BuContent[newIndex - 1]);
+      if (c == 0)
+	charWidth = 0;
+      else if (c == SPACE)
+	charWidth = spaceWidth;
+      else
+	charWidth = CharacterWidth (c, font);
+      if (extend)
+	notfound = (dx + charWidth < *x);
+      else
+	notfound = (dx + (charWidth / 2) < *x);
 #endif
 	while (notfound && length > 0)
 	  {
@@ -2283,12 +2303,12 @@ void LocateClickedChar (PtrBox pBox, PtrTextBuffer *pBuffer, int *x,
 
 	     if (c == SPACE)
 	       {
-		  (*spacesNumber)++;
-		  if (extraSpace > 0)
-		    {
-		       dx++;
-		       extraSpace--;
-		    }
+		 (*spacesNumber)++;
+		 if (extraSpace > 0)
+		   {
+		     dx++;
+		     extraSpace--;
+		   }
 	       }
 
 	     dx += charWidth;
@@ -2320,6 +2340,9 @@ void LocateClickedChar (PtrBox pBox, PtrTextBuffer *pBuffer, int *x,
 		charWidth = spaceWidth;
 	     else
 		charWidth = CharacterWidth (c, font);
+	     if (extend)
+	       notfound = (dx + charWidth < *x);
+	     else
 	     notfound = (dx + charWidth / 2 < *x);
 #endif
 	  }

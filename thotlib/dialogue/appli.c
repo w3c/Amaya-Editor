@@ -1267,25 +1267,25 @@ LRESULT CALLBACK WndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lParam)
   case WM_CLOSE:
   case WM_DESTROY:
     if (frame >= 0 && frame <= MAX_FRAME)
-	{
-      GetDocAndView (frame, &pDoc, &view, &assoc);
-      if (pDoc && view)
-        CloseView (pDoc, view, assoc);
-      if (FrameTable[frame].FrDoc == 0)
-        FrMainRef[frame] = 0;
+      {
+	GetDocAndView (frame, &pDoc, &view, &assoc);
+	if (pDoc && view)
+	  CloseView (pDoc, view, assoc);
+	if (FrameTable[frame].FrDoc == 0)
+	  FrMainRef[frame] = 0;
  
-      if (mMsg == WM_DESTROY)
+	if (mMsg == WM_DESTROY)
 	  {
-        for (frameNDX = 0; frameNDX <= MAX_FRAME; frameNDX++)
-          if (FrMainRef[frameNDX] != 0)
-		  {
-          /* there is still an active frame */
-          FrMainRef[frame] = 0;
-          return 0L;
-		  }
-        TtaQuit();
+	    for (frameNDX = 0; frameNDX <= MAX_FRAME; frameNDX++)
+	      if (FrMainRef[frameNDX] != 0)
+		{
+		  /* there is still an active frame */
+		  FrMainRef[frame] = 0;
+		  return 0L;
+		}
+	    TtaQuit();
 	  }
-	}
+      }
     if (mMsg == WM_DESTROY)
       PostQuitMessage (0);
     return 0L;
@@ -1364,308 +1364,296 @@ LRESULT CALLBACK WndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lParam)
   }
 }
 
+
+static BOOL  fBlocking;
+static BOOL  moved = FALSE;
+static BOOL  firstTime = TRUE;
+static HWND  winCapture = (HWND) -1;
 /* -------------------------------------------------------------------
    ClientWndProc
    ------------------------------------------------------------------- */
 LRESULT CALLBACK ClientWndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lParam)
 {
-     int          frame;
-     int          status;
-	 int          delta;
-	 int          key;
-	 RECT         rect;
-     RECT         cRect;
+  CHAR_T       DroppedFileName [MAX_PATH + 1];
+  POINT        ptCursor;
+  int          cx;
+  int          cy;
+  int          frame;
+  int          status;
+  int          delta;
+  int          key;
+  int          document, view;
+  UINT         i, nNumFiles;
+  RECT         rect;
+  RECT         cRect;
 
-	 static POINT ptBegin;
-	 static POINT ptEnd;
-	 static POINT ptCursor;
-	 static BOOL  fBlocking;
-	 static BOOL  moved = FALSE;
-     static BOOL  firstTime = TRUE;
-     static HWND  winCapture = (HWND) -1;
+  frame = GetFrameNumber (hwnd);
+  if (frame != -1) 
+    currentFrame = frame;
+  
+  GetWindowRect (hwnd, &rect);
+  GetClientRect (hwnd, &cRect);
+  
+  /* do not handle events if the Document is in NoComputedDisplay mode. */
+  if (frame != -1)
+    {
+      if (documentDisplayMode[FrameTable[frame].FrDoc - 1] == NoComputedDisplay)
+	return (DefWindowProc (hwnd, mMsg, wParam, lParam));
+      
+      /*
+       * If are waiting for the user to explicitely point to a document,
+       * store the location and return.
+       */
+      if (ClickIsDone == 1 &&
+	  (mMsg == WM_LBUTTONDOWN || mMsg == WM_RBUTTONDOWN ||
+	   mMsg == WM_SYSKEYDOWN || mMsg == WM_KEYDOWN))
+	{
+	  ClickIsDone = 0;
+	  ClickFrame = frame;
+	  ClickX = LOWORD (lParam);
+	  ClickY = HIWORD (lParam);
+	  return (DefWindowProc (hwnd, mMsg, wParam, lParam));
+	}
+    } 
 
-     frame = GetFrameNumber (hwnd);
-
-     if (frame != -1) 
-        currentFrame = frame;
-
-	 GetWindowRect (hwnd, &rect);
-     GetClientRect (hwnd, &cRect);
-
-     /* do not handle events if the Document is in NoComputedDisplay mode. */
-
-     if (frame != -1) {
-        if (documentDisplayMode[FrameTable[frame].FrDoc - 1] == NoComputedDisplay)
-           return (DefWindowProc (hwnd, mMsg, wParam, lParam));
-
-        /*
-         * If are waiting for the user to explicitely point to a document,
-         * store the location and return.
-         */
-		
-        if (ClickIsDone == 1 &&
-	    (mMsg == WM_LBUTTONDOWN || mMsg == WM_RBUTTONDOWN ||
-	     mMsg == WM_SYSKEYDOWN || mMsg == WM_KEYDOWN))
-	  {
-	    ClickIsDone = 0;
-	    ClickFrame = frame;
-	    ClickX = LOWORD (lParam);
-	    ClickY = HIWORD (lParam);
-	    return (DefWindowProc (hwnd, mMsg, wParam, lParam));
-	  }
-     } 
-
-     /* if (frame != -1 && winCapture != hwnd && fBlocking) { */
-     if (wParam & MK_LBUTTON && frame != -1 && winCapture != (HWND) -1) {
-        if (winCapture != hwnd) {
-           GetCursorPos (&ptCursor);
-           if (ptCursor.y > rect.bottom || ptCursor.y < rect.top) {
-              if (ptCursor.y > rect.bottom) {
-                  delta = 13;
-                  Y_Pos = cRect.bottom;
-			  }
-              if (ptCursor.y < rect.top) {
-                 delta = -13;
-                 Y_Pos = 0;
-			  }
-
-              if (ptCursor.x > rect.right)
-                 X_Pos = cRect.right;
-
-              VerticalScroll (frame, delta, 1);
-              LocateSelectionInView (frame, X_Pos, Y_Pos, 0);
-              /* if (wParam & MK_LBUTTON) */
-                 SendMessage (hwnd, WM_MOUSEMOVE, 0, 0L);
-		   }
+  /* if (frame != -1 && winCapture != hwnd && fBlocking) { */
+  if (wParam & MK_LBUTTON && frame != -1 && winCapture != (HWND) -1)
+    {
+      if (winCapture != hwnd)
+	{
+	  GetCursorPos (&ptCursor);
+	  if (ptCursor.y > rect.bottom || ptCursor.y < rect.top)
+	    {
+	      if (ptCursor.y > rect.bottom)
+		{
+		  delta = 13;
+		  Y_Pos = cRect.bottom;
 		}
-	 }
+	      if (ptCursor.y < rect.top)
+		{
+		  delta = -13;
+		  Y_Pos = 0;
+		}
+	      
+	      if (ptCursor.x > rect.right)
+		X_Pos = cRect.right;
+	      VerticalScroll (frame, delta, 1);
+	      LocateSelectionInView (frame, X_Pos, Y_Pos, 0);
+	      /* if (wParam & MK_LBUTTON) */
+	      SendMessage (hwnd, WM_MOUSEMOVE, 0, 0L);
+	    }
+	}
+    }
 
-     switch (mMsg) {
-            case WM_CREATE:
-                 DragAcceptFiles (hwnd, TRUE);
-                 return 0;
+  switch (mMsg)
+    {
+    case WM_CREATE:
+      DragAcceptFiles (hwnd, TRUE);
+      return 0;
 
-            case WM_PAINT: 
-	             /* Some part of the Client Area has to be repaint. */
-                 WIN_HandleExpose (hwnd, frame, wParam, lParam);
-				 if (TtDisplay)
-                    WIN_ReleaseDeviceContext ();
-                 return 0;
+    case WM_PAINT: 
+      /* Some part of the Client Area has to be repaint. */
+      WIN_HandleExpose (hwnd, frame, wParam, lParam);
+      if (TtDisplay)
+	WIN_ReleaseDeviceContext ();
+      return 0;
 
-            case WM_SIZE: {
-                 HWND hwndNotify = GetWindow (hwnd, GW_CHILD);
-                 int  cx         = LOWORD (lParam);
-                 int  cy         = HIWORD (lParam);
+    case WM_SIZE:
+      cx         = LOWORD (lParam);
+      cy         = HIWORD (lParam);
+      WIN_ChangeViewSize (frame, cx, cy, 0, 0);
+      return 0;
 
-                 WIN_ChangeViewSize (frame, cx, cy, 0, 0);
-                 return 0;
-            }
+    case WM_DROPFILES:
+      nNumFiles = DragQueryFile ((HDROP)wParam, 0xFFFFFFFF, NULL, 0);
+      FrameToView (frame, &document, &view);
+      if (FrameTable[frame].Call_Text[0] != NULL)
+	for (i = 0; i < nNumFiles; i++)
+	  {
+	    DragQueryFile ((HDROP)wParam, i, DroppedFileName, MAX_PATH + 1);
+	    /* call the first text-zone entry with the current text */
+	    (*FrameTable[frame].Call_Text[0]) (document, view, DroppedFileName);
+	  }
+      DragFinish ((HDROP)wParam);
+      return 0;
 
-            case WM_DROPFILES: {
-                 CHAR_T DroppedFileName [MAX_PATH + 1];
-                 UINT i, nNumFiles = DragQueryFile ((HDROP)wParam, 0xFFFFFFFF, NULL, 0);
-                 int document, view;
-                 FrameToView (frame, &document, &view);
-                 if (FrameTable[frame].Call_Text[0] != NULL)
-                   for (i = 0; i < nNumFiles; i++) {
-                     DragQueryFile ((HDROP)wParam, i, DroppedFileName, MAX_PATH + 1);
-		     /* call the first text-zone entry with the current text */
-                     (*FrameTable[frame].Call_Text[0]) (document, view, DroppedFileName);
-				 }
-				 DragFinish ((HDROP)wParam);
-                 return 0;
-			}
+    case WM_SYSKEYDOWN:
+    case WM_KEYDOWN:
+      if (wParam == VK_F2     ||
+	  wParam == VK_F3     ||
+	  wParam == VK_F4     ||
+	  wParam == VK_F5     ||
+	  wParam == VK_F6     ||
+	  wParam == VK_F7     ||
+	  wParam == VK_F8     ||
+	  wParam == VK_F9     ||
+	  wParam == VK_F10    ||
+	  wParam == VK_F11    ||
+	  wParam == VK_F12    ||
+	  wParam == VK_F13    ||
+	  wParam == VK_F14    ||
+	  wParam == VK_F15    ||
+	  wParam == VK_F16    ||
+	  wParam == VK_INSERT ||
+	  wParam == VK_DELETE ||
+	  wParam == VK_HOME   ||
+	  wParam == VK_END    ||
+	  wParam == VK_PRIOR  ||
+	  wParam == VK_NEXT   ||
+	  wParam == VK_LEFT   ||
+	  wParam == VK_RIGHT  ||
+	  wParam == VK_UP     ||
+	  wParam == VK_DOWN)
+	{
+	  key = (int) wParam;
+	  if (WIN_TtaHandleMultiKeyEvent (mMsg, wParam, lParam, (CHAR_T *)&key))
+	    WIN_CharTranslation (FrRef[frame], frame, mMsg, (WPARAM) key, lParam, TRUE);
+	  if (wParam != VK_MENU)
+	    return 0;
+	}
+      break;
 
-            case WM_SYSKEYDOWN:
-            case WM_KEYDOWN:
-                 if (wParam == VK_F2     ||
-                     wParam == VK_F3     ||
-                     wParam == VK_F4     ||
-                     wParam == VK_F5     ||
-                     wParam == VK_F6     ||
-                     wParam == VK_F7     ||
-                     wParam == VK_F8     ||
-                     wParam == VK_F9     ||
-                     wParam == VK_F10    ||
-                     wParam == VK_F11    ||
-                     wParam == VK_F12    ||
-                     wParam == VK_F13    ||
-                     wParam == VK_F14    ||
-                     wParam == VK_F15    ||
-                     wParam == VK_F16    ||
-                     wParam == VK_INSERT ||
-                     wParam == VK_DELETE ||
-                     wParam == VK_HOME   ||
-                     wParam == VK_END    ||
-                     wParam == VK_PRIOR  ||
-                     wParam == VK_NEXT   ||
-                     wParam == VK_LEFT   ||
-                     wParam == VK_RIGHT  ||
-                     wParam == VK_UP     ||
-                     wParam == VK_DOWN   /*||
-                     wParam == VK_RETURN ||
-                     wParam == 0x30      ||
-                     wParam == 0x31      ||
-                     wParam == 0x32      ||
-                     wParam == 0x33      ||
-                     wParam == 0x34      ||
-                     wParam == 0x35      ||
-                     wParam == 0x36      ||
-                     wParam == 0x37      ||
-                     wParam == 0x38      ||
-					 wParam == 0x39*/)
-				 {
- 		         key = (int) wParam;
-                 if (WIN_TtaHandleMultiKeyEvent (mMsg, wParam, lParam, (CHAR_T *)&key))
-                   WIN_CharTranslation (FrRef[frame], frame, mMsg, (WPARAM) key, lParam, TRUE);
-                 if (wParam != VK_MENU)
-                   return 0;
-				 }
-                    break;
+    case WM_SYSCHAR:
+    case WM_CHAR:
+      key = (int) wParam;
+      if (WIN_TtaHandleMultiKeyEvent (mMsg, wParam, lParam, (CHAR_T *)&key))
+	WIN_CharTranslation (FrRef[frame], frame, mMsg, (WPARAM) key, lParam, FALSE);
+      if (wParam != VK_MENU)
+	return 0;
+      break;
 
-            case WM_SYSCHAR:
-            case WM_CHAR:
- 		         key = (int) wParam;
-                 if (WIN_TtaHandleMultiKeyEvent (mMsg, wParam, lParam, (CHAR_T *)&key))
-                   WIN_CharTranslation (FrRef[frame], frame, mMsg, (WPARAM) key, lParam, FALSE);
-                 if (wParam != VK_MENU)
-                   return 0;
-                 break;
+    case WM_LBUTTONDOWN:
+      /* Activate the client window */
+      SetFocus (FrRef[frame]);
+      ClickFrame = frame;
+      oldXPos = ClickX = LOWORD (lParam);
+      oldYPos = ClickY = HIWORD (lParam);
+      /* stop any current insertion of text */
+      CloseInsertion ();
+      status = GetKeyState (VK_SHIFT);
+      if (HIBYTE (status))
+	LocateSelectionInView (frame, ClickX, ClickY, 0);
+      else
+	{
+	  status = GetKeyState (VK_CONTROL);
+	  if (HIBYTE (status))
+	    /* changes the box position */
+	    ApplyDirectTranslate (frame, LOWORD (lParam), HIWORD (lParam));
+	  /* This is the beginning of a selection */
+	  else
+	    LocateSelectionInView (frame, LOWORD (lParam), HIWORD (lParam), 2);
+	  fBlocking = TRUE;
+	  moved = FALSE;
+	}
+      return 0;
 
-            case WM_LBUTTONDOWN:
-                 /* Activate the client window */
-                 SetFocus (FrRef[frame]);
-                 ClickFrame = frame;
-                 oldXPos = ClickX = LOWORD (lParam);
-                 oldYPos = ClickY = HIWORD (lParam);
-                 /* stop any current insertion of text */
-                 CloseInsertion ();
+    case WM_LBUTTONUP:
+      X_Pos = LOWORD (lParam);
+      Y_Pos = HIWORD (lParam);
+      ReleaseCapture ();
+      winCapture = (HWND) -1;
+      firstTime = TRUE;
+      if (fBlocking)
+	fBlocking = FALSE;
+      /* is it a single click */
+      fBlocking = TRUE;
+      if (!moved)	  
+	LocateSelectionInView (frame, ClickX, ClickY, 4);
+      if (autoScroll)
+	autoScroll = FALSE;
+      return 0;
 
-                 status = GetKeyState (VK_SHIFT);
-                 if (HIBYTE (status))
-                    LocateSelectionInView (frame, ClickX, ClickY, 0);
-				 else
-				 {
-                   status = GetKeyState (VK_CONTROL);
-                   if (HIBYTE (status))
-                     /* changes the box position */
-                     ApplyDirectTranslate (frame, LOWORD (lParam), HIWORD (lParam));
-                     /* This is the beginning of a selection */
-				   else
-                     LocateSelectionInView (frame, LOWORD (lParam), HIWORD (lParam), 2);
-                   fBlocking = TRUE;
-				   moved = FALSE;
-				 }
-                 return 0;
+    case WM_LBUTTONDBLCLK:/* left double click handling */
+      ReturnOption = -1;
+      /* memorise la position de la souris */
+      ClickFrame = frame;
+      ClickX     = LOWORD (lParam);
+      ClickY     = HIWORD (lParam);
+      LocateSelectionInView (frame, ClickX, ClickY, 3);
+      return 0;
+      
+    case WM_MBUTTONDOWN:
+      ClickFrame = frame;
+      ClickX = LOWORD (lParam);
+      ClickY = HIWORD (lParam);
+      /* stop any current insertion of text */
+      CloseInsertion ();
+      
+      /* if the CTRL key is pressed this is a size change */
+      status = GetKeyState (VK_CONTROL);
+      if (HIBYTE (status))
+	{
+	  /* changes the box size */
+	  /* ApplyDirectResize (frame, LOWORD (lParam), HIWORD (lParam)); */
+	  ApplyDirectResize (frame, ClickX, ClickY);
+	  /* memorize the click position */
+	}
+      else
+	LocateSelectionInView (frame, LOWORD (lParam), HIWORD (lParam), 0);
+      return 0;
 
-            case WM_LBUTTONUP:
-                 X_Pos = LOWORD (lParam);
-                 Y_Pos = HIWORD (lParam);
-                 ReleaseCapture ();
-                 winCapture = (HWND) -1;
-                 firstTime = TRUE;
-                 if (fBlocking)
-                    fBlocking = FALSE;
-				 /* is it a single click */
-                   fBlocking = TRUE;
-                 if (!moved)	  
-                   LocateSelectionInView (frame, ClickX, ClickY, 4);
-                 if (autoScroll)
-                    autoScroll = FALSE;
-                 return 0;
-
-            case WM_LBUTTONDBLCLK:/* left double click handling */
-				 ReturnOption = -1;
-                 /* TtaAbortShowDialogue (); */
-	  
-                 /* memorise la position de la souris */
-                 ClickFrame = frame;
-                 ClickX     = LOWORD (lParam);
-                 ClickY     = HIWORD (lParam);
-                 LocateSelectionInView (frame, ClickX, ClickY, 3);
-                 return 0;
-
-            case WM_MBUTTONDOWN:
-                 ClickFrame = frame;
-                 ClickX = LOWORD (lParam);
-                 ClickY = HIWORD (lParam);
-                 /* stop any current insertion of text */
-                 CloseInsertion ();
+    case WM_RBUTTONDOWN:
+      ClickFrame = frame;
+      ClickX = LOWORD (lParam);
+      ClickY = HIWORD (lParam);
+      /* stop any current insertion of text */
+      CloseInsertion ();
 		    
-                 /* if the CTRL key is pressed this is a size change */
-                 status = GetKeyState (VK_CONTROL);
-                 if (HIBYTE (status)) {
-                    /* changes the box size */
-                    /* ApplyDirectResize (frame, LOWORD (lParam), HIWORD (lParam)); */
-                    ApplyDirectResize (frame, ClickX, ClickY);
-                    /* memorize the click position */
-                 } else {
-                      /* TtaAbortShowDialogue (); */
-                      LocateSelectionInView (frame, LOWORD (lParam), HIWORD (lParam), 0);
-                 }
-                 return 0;
+      /* if the CTRL key is pressed this is a size change */
+      status = GetKeyState (VK_CONTROL);
+      if (HIBYTE (status))
+	{
+	  /* changes the box size */
+	  /* ApplyDirectResize (frame, LOWORD (lParam), HIWORD (lParam)); */
+	  ApplyDirectResize (frame, ClickX, ClickY);
+	  /* memorize the click position */
+	}
+      else if (ThotLocalActions[T_editfunc] != NULL)
+	(*ThotLocalActions[T_editfunc]) (TEXT_INSERT);
+      /* selection a l'interieur d'une polyline */
+      return 0;
 
-            case WM_RBUTTONDOWN:
-                 ClickFrame = frame;
-                 ClickX = LOWORD (lParam);
-                 ClickY = HIWORD (lParam);
-                 /* stop any current insertion of text */
-                 CloseInsertion ();
-		    
-                 /* if the CTRL key is pressed this is a size change */
-                 status = GetKeyState (VK_CONTROL);
-                 if (HIBYTE (status)) {
-                    /* changes the box size */
-                    /* ApplyDirectResize (frame, LOWORD (lParam), HIWORD (lParam)); */
-                    ApplyDirectResize (frame, ClickX, ClickY);
-                    /* memorize the click position */
-                 } else if (ThotLocalActions[T_editfunc] != NULL)
-                        (*ThotLocalActions[T_editfunc]) (TEXT_INSERT);
-                        /* selection a l'interieur d'une polyline */
-				 return 0;
+    case WM_MOUSEMOVE:
+      /* SetActiveWindow (FrMainRef[frame]); 
+	 SetFocus (hwnd); */
+      X_Pos = LOWORD (lParam);
+      Y_Pos = HIWORD (lParam);
+      if (wParam & MK_LBUTTON)
+	{
+	  if (((oldXPos <= X_Pos - 1) || (oldXPos >= X_Pos + 1)) ||  
+	      ((oldYPos <= Y_Pos - 1) || (oldYPos >= Y_Pos + 1)))
+	    {
+	      LocateSelectionInView (frame, X_Pos, Y_Pos, 0);
+	      moved = TRUE;
+	    }
+	}
+      else
+	fBlocking = FALSE;
+      oldXPos = X_Pos;
+      oldYPos = Y_Pos;
+      return 0;
 
-            case WM_MOUSEMOVE:
-                 /* SetActiveWindow (FrMainRef[frame]); 
-                 SetFocus (hwnd); */
-                 X_Pos = LOWORD (lParam);
-                 Y_Pos = HIWORD (lParam);
-                 /* if (fBlocking) { */
-                 if (wParam & MK_LBUTTON)
-				 {
-                    if (((oldXPos <= X_Pos - 1) || (oldXPos >= X_Pos + 1)) ||  
-                        ((oldYPos <= Y_Pos - 1) || (oldYPos >= Y_Pos + 1)))
-					{
-                       LocateSelectionInView (frame, X_Pos, Y_Pos, 0);
-					   moved = TRUE;
-					}
-                 }
-				 else
-                   fBlocking = FALSE;
-				 oldXPos = X_Pos;
-				 oldYPos = Y_Pos;
-                 return 0;
+    case WM_NCMOUSEMOVE:
+      if (firstTime && fBlocking)
+	{
+	  winCapture = GetCapture ();
+	  autoScroll = TRUE;
+	  firstTime = FALSE;
+	  SetCapture (hwnd);
+	}
+      return 0;
 
-            case WM_NCMOUSEMOVE:
-                 if (firstTime && fBlocking)
-				 {
-                   winCapture = GetCapture ();
-                   autoScroll = TRUE;
-                   firstTime = FALSE;
-                   SetCapture (hwnd);
-				 }
-                 return 0;
-
-            case WM_DESTROY: 
-                 WIN_ReleaseDeviceContext ();
-				 if (frame != -1)
-                   FrRef[frame] = 0;
-                 PostQuitMessage (0);
-                 return 0;
+    case WM_DESTROY: 
+      WIN_ReleaseDeviceContext ();
+      if (frame > 0 && frame <= MAX_FRAME)
+	FrRef[frame] = 0;
+      PostQuitMessage (0);
+      return 0;
 	       
-          default:
-               break;
-     }
-     return (DefWindowProc (hwnd, mMsg, wParam, lParam));
+    default:
+      break;
+    }
+  return (DefWindowProc (hwnd, mMsg, wParam, lParam));
 }
 #endif /* _WINDOWS */
 
@@ -1785,7 +1773,7 @@ void                FrameCallback (int frame, void *evnt)
 		     {
 		       dx = event.xmotion.x - ClickX;
 		       dy = event.xmotion.y - ClickY;
-		       if (dx > 2 || dx < -2 || dy > 2 || dy < -2 ||
+		       if (dx > 1 || dx < -1 || dy > 1 || dy < -1 ||
 			   event.xmotion.y > h || event.xmotion.y < 0)
 			 {
 			   LocateSelectionInView (frame, event.xbutton.x, event.xbutton.y, 1);

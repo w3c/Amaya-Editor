@@ -1803,6 +1803,7 @@ void  ExtendSelection (PtrElement pEl, int rank, ThotBool fixed, ThotBool begin,
 		LastSelectedChar = rank;
 	      FixedChar = LastSelectedChar;
 	    }
+
 	  if (pEl == FixedElement)
 	    /* extension within fixed element */
 	    {
@@ -1815,7 +1816,7 @@ void  ExtendSelection (PtrElement pEl, int rank, ThotBool fixed, ThotBool begin,
 		  if (rank < FixedChar)
 		    {
 		      FirstSelectedChar = rank;
-		      LastSelectedChar = FixedChar;
+		      LastSelectedChar = FixedChar - 1;
 		    }
 		  else
 		    {
@@ -1841,7 +1842,7 @@ void  ExtendSelection (PtrElement pEl, int rank, ThotBool fixed, ThotBool begin,
 	      FirstSelectedElement = pEl;
 	      FirstSelectedChar = rank;
 	      LastSelectedElement = FixedElement;
-	      LastSelectedChar = FixedChar;
+	      LastSelectedChar = FixedChar - 1;
 	    }
 	  else
 	    /* pEl is after the fixed point */
@@ -1936,8 +1937,7 @@ void  ExtendSelection (PtrElement pEl, int rank, ThotBool fixed, ThotBool begin,
 	    }
 	  
 	  SelPosition = FALSE;
-	  if (!change && drag &&
-	      FirstSelectedElement == LastSelectedElement &&
+	  if (!change && drag && FirstSelectedElement == LastSelectedElement &&
 	      FirstSelectedElement->ElVolume == 0)
 	    SelPosition = TRUE;
 	  

@@ -71,6 +71,7 @@ static Func     MathMoveBackwardCursorFunction = NULL;
 #include "viewapi_f.h"
 #include "views_f.h"
 #include "windowdisplay_f.h"
+#include "word_f.h"
 
 
 /*----------------------------------------------------------------------
@@ -226,7 +227,7 @@ static void LocateLeafBox (int frame, View view, int x, int y, int xDelta,
 	     if (IsTextLeaf (pAb))
 	       {
 		  x -= pBox->BxXOrg;
-		  LocateClickedChar (pBox, &pBuffer, &x, &index, &nChars, &nbbl);
+		  LocateClickedChar (pBox, extendSel, &pBuffer, &x, &index, &nChars, &nbbl);
 		  if (extendSel && LeftExtended && nChars == pBox->BxNChars)
 		    /* add the last char in the left selection */
 		    nChars = pBox->BxIndChar + nChars;
@@ -400,7 +401,7 @@ static void MovingCommands (int code, Document doc, View view, ThotBool extendSe
        /* doesn't change the current Shrink value in other cases */
        switch (code)
 	 {
-	 case 1:	/* Backward one character (^B) */
+	 case 1:	/* Backward one character (<-) */
 	   if (pBox != NULL)
 	     {
 	     done = FALSE;
@@ -428,7 +429,7 @@ static void MovingCommands (int code, Document doc, View view, ThotBool extendSe
 			   FirstSelectedElement == LastSelectedElement)
 			 {
 			   /* a single insert point */
-			   ChangeSelection (frame, pBox->BxAbstractBox, x, FALSE, TRUE, FALSE, FALSE);
+			   ChangeSelection (frame, pBox->BxAbstractBox, FixedChar, FALSE, TRUE, FALSE, FALSE);
 			   RightExtended = FALSE;
 			 }
 		       else if (SelPosition &&
@@ -480,7 +481,7 @@ static void MovingCommands (int code, Document doc, View view, ThotBool extendSe
 	   ClickX = pBoxBegin->BxXOrg + pViewSel->VsXPos - pFrame->FrXOrg;
 	   break;
 	   
-	 case 2:	/* Forward one character (^F) */
+	 case 2:	/* Forward one character (->) */
 	   if (pBox != NULL)
 	     {
 	     done = FALSE;
@@ -511,7 +512,7 @@ static void MovingCommands (int code, Document doc, View view, ThotBool extendSe
 			   FirstSelectedElement == LastSelectedElement)
 			 {
 			   /* a single insert point */
-			   ChangeSelection (frame, pBox->BxAbstractBox, x + 1, FALSE, TRUE, FALSE, FALSE);
+			   ChangeSelection (frame, pBox->BxAbstractBox, FixedChar, FALSE, TRUE, FALSE, FALSE);
 			   LeftExtended = FALSE;
 			 }
 		       else if (SelPosition &&
@@ -656,49 +657,53 @@ static void MovingCommands (int code, Document doc, View view, ThotBool extendSe
 	 case 9:	/* Previous word (^<-) */
 	   WordSearchContext.SDocument = LoadedDocument[doc - 1];
 	   WordSearchContext.SStartToEnd = FALSE;
-	   pEl = FirstSelectedElement;
-	   first = FirstSelectedChar - 1;
+	   if (RightExtended)
+	     {
+	       /* shrink the current selection */
+	       first = LastSelectedChar - 1;
+	       pEl = LastSelectedElement;
+	     }
+	   else
+	     {
+	       /* extend the current selection */
+	       first = FirstSelectedChar - 1;
+	       pEl = FirstSelectedElement;
+	     }
 	   done = SearchPreviousWord (&pEl, &first, &last, word, &WordSearchContext);
-	   if (last == FirstSelectedChar)
+	   if ((RightExtended && last == LastSelectedChar - 1) ||
+	       (LeftExtended && last == FirstSelectedChar - 1))
 	     /* It was not the beginning of the next word */
 	     done = SearchNextWord (&pEl, &first, &last, word, &WordSearchContext);
-	   SelectString (LoadedDocument[doc - 1], pEl, first + 1, first);
+	   if (extendSel)
+	     ChangeSelection (frame, pEl->ElAbstractBox[view - 1], last, TRUE, TRUE, FALSE, FALSE);
+	   else
+	     SelectString (LoadedDocument[doc - 1], pEl, first + 1, first);
 	   break;
 	   
 	 case 10:	/* Next word (^->) */
 	   WordSearchContext.SDocument =  LoadedDocument[doc - 1];
 	   WordSearchContext.SStartToEnd = TRUE;
-	   pEl = FirstSelectedElement;
-	   last = LastSelectedChar;
+	   if (RightExtended)
+	     {
+	       /* extend the current selection */
+	       last = LastSelectedChar;
+	       pEl = LastSelectedElement;
+	     }
+	   else
+	     {
+	       /* shrink the current selection */
+	       last = FirstSelectedChar;
+	       pEl = FirstSelectedElement;
+	     }
 	   done = SearchNextWord (&pEl, &first, &last, word, &WordSearchContext);
-	   if (first == LastSelectedChar)
+	   if ((RightExtended && first == LastSelectedChar) ||
+	       (LeftExtended && first == FirstSelectedChar))
 	     /* It was not the beginning of the next word */
 	     done = SearchNextWord (&pEl, &first, &last, word, &WordSearchContext);
-	   SelectString (LoadedDocument[doc - 1], pEl, first + 1, first);
-	   break;
-	   
-	 case 11:	/* Extend to previous word (Shift ^<-) */
-	   WordSearchContext.SDocument =  LoadedDocument[doc - 1];
-	   WordSearchContext.SStartToEnd = FALSE;
-	   pEl = FirstSelectedElement;
-	   first = FirstSelectedChar;
-	   done = SearchPreviousWord (&pEl, &first, &last, word, &WordSearchContext);
-	   if (last == FirstSelectedChar)
-	     /* It was not the beginning of the next word */
-	     done = SearchNextWord (&pEl, &first, &last, word, &WordSearchContext);
-	   SelectString (LoadedDocument[doc - 1], pEl, first + 1, first);
-	   break;
-	   
-	 case 12:	/* Extent to next word (Shift ^->) */
-	   WordSearchContext.SDocument =  LoadedDocument[doc - 1];
-	   WordSearchContext.SStartToEnd = TRUE;
-	   pEl = FirstSelectedElement;
-	   last = LastSelectedChar;
-	   done = SearchNextWord (&pEl, &first, &last, word, &WordSearchContext);
-	   if (first == LastSelectedChar)
-	     /* It was not the beginning of the next word */
-	     done = SearchNextWord (&pEl, &first, &last, word, &WordSearchContext);
-	   SelectString (LoadedDocument[doc - 1], pEl, first + 1, first);
+	   if (extendSel)
+	     ChangeSelection (frame, pEl->ElAbstractBox[view - 1], last, TRUE, TRUE, FALSE, FALSE);
+	   else
+	     SelectString (LoadedDocument[doc - 1], pEl, first + 1, first);
 	   break;
 	 }
        Moving = FALSE;
@@ -779,28 +784,28 @@ void                TtcNextSelLine (Document document, View view)
   ----------------------------------------------------------------------*/
 void                TtcPreviousWord (Document document, View view)
 {
-   MovingCommands (9, document, view, TRUE);
+   MovingCommands (9, document, view, FALSE);
 }
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 void                TtcNextWord (Document document, View view)
 {
-   MovingCommands (10, document, view, TRUE);
+   MovingCommands (10, document, view, FALSE);
 }
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 void                TtcPreviousSelWord (Document document, View view)
 {
-   MovingCommands (11, document, view, TRUE);
+   MovingCommands (9, document, view, TRUE);
 }
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 void                TtcNextSelWord (Document document, View view)
 {
-   MovingCommands (12, document, view, TRUE);
+   MovingCommands (10, document, view, TRUE);
 }
 
 /*----------------------------------------------------------------------
