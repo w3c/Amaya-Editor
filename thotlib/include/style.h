@@ -19,7 +19,7 @@
 
 #ifndef __STYLE_H__
 #define __STYLE_H__
-#define MAX_ANCESTORS 5
+#define MAX_ANCESTORS 10
 
 struct unit_def
 {
@@ -65,8 +65,8 @@ typedef struct struct_GenericContext
     int           attrLevel[MAX_ANCESTORS]; /* level of the attribute  */
     char         *attrText[MAX_ANCESTORS];  /* attr. or box name       */
     AttrMatch     attrMatch[MAX_ANCESTORS]; /* how attr. values match  */
-    char          sel[MAX_ANCESTORS * 50];  /* include selected values */
     ElemRel       rel[MAX_ANCESTORS];       /* element relation        */
+    char          sel[MAX_ANCESTORS * 50];  /* include selected values */
   }
 GenericContextBlock, *GenericContext;
 

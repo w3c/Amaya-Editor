@@ -4343,7 +4343,7 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
   AttrMatch          attrmatch[MAX_ANCESTORS];
   ElemRel            rel[MAX_ANCESTORS];
   int                i, j, k, max;
-  int                att, maxAttr, kind;
+  int                att, kind;
   int                specificity, xmlType;
   int                skippedNL;
   ThotBool           isHTML;
@@ -4719,7 +4719,6 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
   i = 0;
   k = 0;
   j = 0;
-  maxAttr = 0;
   /* default schema name */
   ctxt->schema = NULL;
   elType.ElSSchema = NULL;
@@ -4736,7 +4735,7 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
     xmlType = ANNOT_TYPE;
   else
     xmlType = XML_TYPE;
-  while (i <= max)
+  while (i <= max && j < MAX_ANCESTORS)
     {
       if (names[i])
 	{
@@ -4917,7 +4916,6 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
 #endif /* XML_GENERIC */
 	  ctxt->attrMatch[j] = attrmatch[i];
 	  /* add a new entry */
-	  maxAttr = i + 1;
 	  /* update attrLevel */
 	  ctxt->attrLevel[j] = i;
 	  j++;
@@ -4939,7 +4937,6 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
 #endif /* XML_GENERIC */
 	  ctxt->attrMatch[j] = attrmatch[i];
 	  /* add a new entry */
-	  maxAttr = i + 1;
 	  /* update attrLevel */
 	  ctxt->attrLevel[j] = i;
 	  j++;
@@ -4961,7 +4958,6 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
 #endif /* XML_GENERIC */
 	  ctxt->attrMatch[j] = attrmatch[i];
 	  /* add a new entry */
-	  maxAttr = i + 1;
 	  /* update attrLevel */
 	  ctxt->attrLevel[j] = i;
 	  j++;
@@ -5039,7 +5035,6 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
 	    }
 	  else
 	    ctxt->attrText[j] = attrvals[i];
-	  maxAttr = i + 1;
 	  /* update attrLevel */
 	  ctxt->attrLevel[j] = i;
 	  j++;
