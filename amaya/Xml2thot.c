@@ -2467,6 +2467,7 @@ static void      UnknownXmlAttribute (char *xmlAttr)
 	       TtaSetAttributeText (attr, buffer,
 				    XMLcontext.lastElement,
 				    XMLcontext.doc);
+	       TtaFreeMemory (buffer);
 	     }
 	   else
 	     {
