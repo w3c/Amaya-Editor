@@ -32,7 +32,7 @@
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-static void         ClearBoxMoved (PtrBox pBox)
+static void ClearBoxMoved (PtrBox pBox)
 {
   PtrBox           pNextBox;
   while (pBox != NULL)
@@ -315,7 +315,8 @@ static PtrAbstractBox NextAbToCheck (PtrAbstractBox pAb, PtrAbstractBox pRefAb)
 /*----------------------------------------------------------------------
    PropagateXOutOfStruct propage l'indicateur hors-structure.        
   ----------------------------------------------------------------------*/
-static void  PropagateXOutOfStruct (PtrAbstractBox pCurrentAb, ThotBool status, ThotBool enclosed)
+static void PropagateXOutOfStruct (PtrAbstractBox pCurrentAb,
+				   ThotBool status, ThotBool enclosed)
 {
    PtrAbstractBox      pAb;
    PtrBox              pBox;
@@ -329,7 +330,7 @@ static void  PropagateXOutOfStruct (PtrAbstractBox pCurrentAb, ThotBool status, 
    while (pAb != NULL)
      {
 	pBox = pAb->AbBox;
-	if (pAb == pCurrentAb || pBox == NULL || pAb->AbDead)
+	if (pAb == pCurrentAb || pBox == NULL || IsDead (pAb))
 	   ;			/* inutile de traiter ce pave */
 	else if (pBox->BxXOutOfStruct == status)
 	   ;			/* inutile de traiter ce pave */
@@ -344,8 +345,9 @@ static void  PropagateXOutOfStruct (PtrAbstractBox pCurrentAb, ThotBool status, 
 		pAb->AbHorizEnclosing = enclosed;
 	     PropagateXOutOfStruct (pAb, status, pAb->AbHorizEnclosing);
 	  }
-	else if (pAb->AbWidth.DimIsPosition
-		 && pAb->AbWidth.DimPosition.PosAbRef == pCurrentAb && !pAb->AbWidthChange)
+	else if (pAb->AbWidth.DimIsPosition &&
+		 pAb->AbWidth.DimPosition.PosAbRef == pCurrentAb &&
+		 !pAb->AbWidthChange)
 	   /* Dependance de dimension */
 	   pBox->BxWOutOfStruct = status;
 
@@ -358,7 +360,8 @@ static void  PropagateXOutOfStruct (PtrAbstractBox pCurrentAb, ThotBool status, 
 /*----------------------------------------------------------------------
    PropagateYOutOfStruct propage l'indicateur hors-structure.         
   ----------------------------------------------------------------------*/
-static void PropagateYOutOfStruct (PtrAbstractBox pCurrentAb, ThotBool status, ThotBool enclosed)
+static void PropagateYOutOfStruct (PtrAbstractBox pCurrentAb,
+				   ThotBool status, ThotBool enclosed)
 {
    PtrAbstractBox      pAb;
    PtrBox              pBox;
@@ -372,7 +375,7 @@ static void PropagateYOutOfStruct (PtrAbstractBox pCurrentAb, ThotBool status, T
    while (pAb != NULL)
      {
 	pBox = pAb->AbBox;
-	if (pAb == pCurrentAb || pBox == NULL || pAb->AbDead)
+	if (pAb == pCurrentAb || pBox == NULL || IsDead (pAb))
 	   ;			/* inutile de traiter ce pave */
 	else if (pBox->BxYOutOfStruct == status)
 	   ;			/* inutile de traiter ce pave */
@@ -641,7 +644,7 @@ void  ComputePosRelation (AbPosition rule, PtrBox pBox, int frame, ThotBool hori
   pRefBox = NULL;
   pRefAb = rule.PosAbRef;
   pAb = pBox->BxAbstractBox;
-  if (pRefAb != NULL && pRefAb->AbDead)
+  if (pRefAb && IsDead (pRefAb))
     {
       fprintf (stderr, "Position refers a dead box");
       pRefAb = NULL;
@@ -1428,7 +1431,7 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
 	      pAb->AbWidth.DimUserSpecified = FALSE;
 	    }
 	  /* verifie que la dimension ne depend pas d'un pave mort */
-	  else if (pAb->AbHorizPos.PosAbRef->AbDead)
+	  else if (IsDead (pAb->AbHorizPos.PosAbRef))
 	    {
 	      fprintf (stderr, "Dimension refers a dead box");
 	      pAb->AbWidth.DimIsPosition = FALSE;
@@ -1477,7 +1480,7 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
 	      pAb->AbHeight.DimUserSpecified = FALSE;
 	    }
 	  /* verifie que la dimension ne depend pas d'un pave mort */
-	  else if (pAb->AbVertPos.PosAbRef->AbDead)
+	  else if (IsDead (pAb->AbVertPos.PosAbRef))
 	    {
 	      fprintf (stderr, "Dimension refers a dead box");
 	      pAb->AbHeight.DimIsPosition = FALSE;
@@ -1504,7 +1507,7 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
 	    }
 
 	  /* check if the relative box is not already dead */
-	  if (pDimAb->DimAbRef != NULL && pDimAb->DimAbRef->AbDead)
+	  if (pDimAb->DimAbRef && IsDead (pDimAb->DimAbRef))
 	    {
 	      fprintf (stderr, "Dimension refers a dead box");
 	      pDimAb->DimAbRef = NULL;
@@ -1925,7 +1928,7 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
 	  if (pRefBox == NULL)
 	    {
 	      /* On doit resoudre une reference en avant */
-	      if (!pPosAb->PosAbRef->AbDead)
+	      if (!IsDead (pPosAb->PosAbRef))
 		pRefBox = GetBox (pPosAb->PosAbRef);
 	      if (pRefBox != NULL)
 		pPosAb->PosAbRef->AbBox = pRefBox;
@@ -2121,7 +2124,7 @@ void ComputeAxisRelation (AbPosition rule, PtrBox pBox, int frame, ThotBool hori
    pRefAb = rule.PosAbRef;
    pAb = pBox->BxAbstractBox;
    /* Verifie que la position ne depend pas d'un pave mort */
-   if (pRefAb != NULL && pRefAb->AbDead)
+   if (pRefAb && IsDead (pRefAb))
      {
 	fprintf (stderr, "Position refers a dead box");
 	pRefAb = NULL;
@@ -2631,7 +2634,7 @@ void ClearPosRelation (PtrBox pBox, ThotBool horizRef)
   if ((horizRef && pBox->BxXOutOfStruct) || (!horizRef && pBox->BxYOutOfStruct))
     {
       /* ClearOutOfStructRelation removes out of structure relations */
-      if (!pRefAb->AbDead)
+      if (!IsDead (pRefAb))
 	{
 	  /* On remonte a la racine depuis le pave pere */
 	  pCurrentAb = pRefAb;
@@ -2859,7 +2862,7 @@ void    ClearDimRelation (PtrBox pBox, ThotBool horizRef, int frame)
     {
       /* Si la boite est detruite la procedure ClearOutOfStructRelation
 	 detruit automatiquement cette relation */
-      if (!pRefAb->AbDead)
+      if (!IsDead (pRefAb))
 	{
 	  /* On remonte a la racine depuis le pave pere */
 	  if (pAb != NULL)

@@ -36,7 +36,7 @@
    InitializeFrameParams initialise le seuil de visibilite et le facteur de     
    zoom de la fenetre frame.                                       
   ----------------------------------------------------------------------*/
-void     InitializeFrameParams (int frame, int Visibilite, int Zoom)
+void InitializeFrameParams (int frame, int Visibilite, int Zoom)
 {
    ViewFrame          *pFrame;
 
@@ -53,7 +53,7 @@ void     InitializeFrameParams (int frame, int Visibilite, int Zoom)
    GetFrameParams retourne les valeurs courantes du seuil de visibilite et
    du facteur de zoom de la fenetre.                       
   ----------------------------------------------------------------------*/
-void       GetFrameParams (int frame, int *Visibilite, int *Zoom)
+void GetFrameParams (int frame, int *Visibilite, int *Zoom)
 {
    ViewFrame          *pFrame;
 
@@ -70,7 +70,7 @@ void       GetFrameParams (int frame, int *Visibilite, int *Zoom)
    SetFrameParams reevalue la vue designee apres decalage des tailles     
    ou/et modification du seuil de visibilite des boites.   
   ----------------------------------------------------------------------*/
-void              SetFrameParams (int frame, int Visibilite, int Zoom)
+void SetFrameParams (int frame, int Visibilite, int Zoom)
 {
    PtrAbstractBox      pAb;
    PtrAbstractBox      pv1;
@@ -130,11 +130,13 @@ void              SetFrameParams (int frame, int Visibilite, int Zoom)
 	   /* On sauvegarde la position de la fenetre dans le document */
 	   x = pFrame->FrXOrg;
 	   y = pFrame->FrYOrg;
+	   pAb->AbDead = TRUE;
 	   RemoveBoxes (pAb, TRUE, frame);
 	   ThotFreeFont (frame);
 	   /* On libere les polices de caracteres utilisees */
 	   pFrame->FrAbstractBox = NULL;
 	   /* Recreation de la vue */
+	   pAb->AbDead = FALSE;
 	   h = 0;
 	   (void) ChangeConcreteImage (frame, &h, pAb);
 	   /* On restaure la position de la fenetre dans le document */

@@ -40,7 +40,7 @@
    GetNextBox rend l'adresse de la boite associee au pave vivant qui  
    suit pAb.                                               
   ----------------------------------------------------------------------*/
-PtrBox              GetNextBox (PtrAbstractBox pAb)
+PtrBox GetNextBox (PtrAbstractBox pAb)
 {
    PtrAbstractBox      pNextAb;
    ThotBool            loop;
@@ -99,7 +99,7 @@ PtrBox              GetNextBox (PtrAbstractBox pAb)
    GetPreviousBox rend l'adresse de la boite associee au pave vivant 
    qui precede pAb.                                        
   ----------------------------------------------------------------------*/
-static PtrBox       GetPreviousBox (PtrAbstractBox pAb)
+static PtrBox GetPreviousBox (PtrAbstractBox pAb)
 {
    PtrAbstractBox      pNextAb;
    ThotBool            loop;

@@ -227,7 +227,7 @@ static void       GetTaRBlock (PtrTabRelations *pBlock)
 /*----------------------------------------------------------------------
    FreeTaRBlock frees table relations
   ----------------------------------------------------------------------*/
-static void       FreeTaRBlock (PtrTabRelations pBlock)
+static void FreeTaRBlock (PtrTabRelations pBlock)
 {
   if (pBlock != NULL)
     {
@@ -240,7 +240,7 @@ static void       FreeTaRBlock (PtrTabRelations pBlock)
   BuildColOrRowList builds the list of columns or rows included within
   a table
   ----------------------------------------------------------------------*/
-static void      BuildColOrRowList (PtrAbstractBox table, BoxType colrow)
+static void BuildColOrRowList (PtrAbstractBox table, BoxType colrow)
 {
   PtrTabRelations     pTabRel, pOldTabRel;
   PtrTabRelations     pPreviousTabRel;
@@ -267,21 +267,21 @@ static void      BuildColOrRowList (PtrAbstractBox table, BoxType colrow)
 
   /* search each column or row box within the table */
   pAb = table;
-  while (pAb != NULL)
+  while (pAb)
     {
-      if (pAb->AbBox != NULL &&
+      if (pAb->AbBox && !pAb->AbDead &&
 	  (pAb->AbBox->BxType == BoRow || pAb->AbBox->BxType == BoColumn))
 	/* skip over the element contents */
 	pAb = NextSiblingAbsBox (pAb, table);
       else
 	pAb = SearchNextAbsBox (pAb, table);
 
-      if (pAb != NULL && !pAb->AbDead && pAb->AbBox != NULL &&
+      if (pAb && pAb->AbBox &&
 	  pAb->AbBox->BxType == BoTable && !pAb->AbPresentationBox)
 	/* it's an included table, skip over this table */
 	pAb = NextSiblingAbsBox (pAb, table);
 
-      if (pAb != NULL && pAb->AbBox != NULL)
+      if (pAb && pAb->AbBox)
 	{
 	  if (pAb->AbBox->BxType == BoRow && colrow == BoColumn)
 	    /* stop the process */
@@ -900,6 +900,10 @@ printf(">>>>>>>>>>>>>>>>>%d\n", table->AbBox->BxWidth);
   ----------------------------------------------------------------------*/
 static void ChangeTableWidth (PtrAbstractBox table, int frame)
 {
+  /* table formatting in the main view only */
+  if (FrameTable[frame].FrView != 1)
+    return;
+
   if (Lock)
     /* the table formatting is locked */
     DifferFormatting (table, NULL, frame);
@@ -946,8 +950,8 @@ static void GiveCellWidths (PtrAbstractBox cell, int frame, int *min, int *max,
 	}
       else
 	pAb = SearchNextAbsBox (pAb, cell);
-      if (pAb != NULL && !pAb->AbDead &&
-	  pAb->AbBox != NULL && !pAb->AbPresentationBox)
+      if (pAb && !pAb->AbDead &&
+	  pAb->AbBox && !pAb->AbPresentationBox)
 	{
 	  /* diff between cell's and box's position */
 	  if (pAb->AbBox->BxHorizEdge == Left ||
@@ -1451,6 +1455,10 @@ static void UpdateCellHeight (PtrAbstractBox cell, int frame)
   PtrAbstractBox      table;
   PtrAbstractBox      row;
 
+  /* table formatting in the main view only */
+  if (FrameTable[frame].FrView != 1)
+    return;
+
   if (!Lock)
     {
       /* get row and table elements */
@@ -1474,6 +1482,10 @@ static void UpdateColumnWidth (PtrAbstractBox cell, PtrAbstractBox col, int fram
 {
   PtrAbstractBox      table;
   PtrAbstractBox      row;
+
+  /* table formatting in the main view only */
+  if (FrameTable[frame].FrView != 1)
+    return;
 
   /* look for the table */
   table = NULL;
@@ -1528,6 +1540,10 @@ static void UpdateTable (PtrAbstractBox table, PtrAbstractBox col,
 {
   PtrAbstractBox      pAb;
 
+  /* table formatting in the main view only */
+  if (FrameTable[frame].FrView != 1)
+    return;
+
   if (table == NULL)
     {
       /* look for the table */
@@ -1554,7 +1570,7 @@ static void UpdateTable (PtrAbstractBox table, PtrAbstractBox col,
   else
     pAb = table;
 
-  if (pAb && pAb->AbBox && !pAb->AbNew && !pAb->AbDead)
+  if (pAb && pAb->AbBox && !pAb->AbNew && !IsDead (pAb))
     {
       /* the table box has been created */
       if (table || col)
@@ -1587,32 +1603,37 @@ static void UpdateTable (PtrAbstractBox table, PtrAbstractBox col,
 /*----------------------------------------------------------------------
    ClearTable removes table information
   ----------------------------------------------------------------------*/
-static void      ClearTable (PtrAbstractBox table)
+static void ClearTable (PtrAbstractBox table)
 {
   PtrTabSpan          pTabSpan;
   PtrBox              pBox;
 
   /* free specific blocks */
   pBox = table->AbBox;
-  FreeTaRBlock (pBox->BxColumns);
-  pBox->BxColumns = NULL;
-  FreeTaRBlock (pBox->BxRows);
-  pBox->BxRows = NULL;
-  /* remove the list of vertical spanned cells */
-  pTabSpan = pBox->BxSpans;
-  while (pTabSpan != NULL)
+  if (pBox)
     {
-      pBox->BxSpans = pTabSpan->TaSpanNext;
-      TtaFreeMemory (pTabSpan);
+      FreeTaRBlock (pBox->BxColumns);
+      pBox->BxColumns = NULL;
+      FreeTaRBlock (pBox->BxRows);
+      pBox->BxRows = NULL;
+      /* remove the list of vertical spanned cells */
       pTabSpan = pBox->BxSpans;
+      while (pTabSpan)
+	{
+	  pBox->BxSpans = pTabSpan->TaSpanNext;
+	  TtaFreeMemory (pTabSpan);
+	  pTabSpan = pBox->BxSpans;
+	}
     }
 }
 
 
 /*----------------------------------------------------------------------
-   ClearTable removes table information
+   IsFirstColumn returns result = TRUE if cel is within the first
+   column of the table.
   ----------------------------------------------------------------------*/
-static void IsFirstColumn (PtrAbstractBox cell, PtrAbstractBox table, ThotBool *result)
+static void IsFirstColumn (PtrAbstractBox cell, PtrAbstractBox table,
+			   ThotBool *result)
 {
   PtrAbstractBox      col, firstcol;
   PtrAttribute        pAttr;
@@ -1699,6 +1720,9 @@ static void    UnlockTableFormatting ()
 	      if (table && table->AbElement)
 		{
 		  cell = pLockRel->LockRCell[i];
+		  if (IsDead (table))
+		    /* nothing to do more on this table */
+		    pLockRel->LockRTable[i] = NULL;
 		  if (cell && cell->AbBox)
 		    {
 		      /* there is a change within a specific cell */
@@ -1707,10 +1731,8 @@ static void    UnlockTableFormatting ()
 			pLockRel->LockRTable[i] = NULL;
 		    }
 		  else
-		    {
-		      /* there is a change within a specific cell */
-		      SetTableWidths (table, pLockRel->LockRFrame[i]);
-		    }
+		    /* there is a change within a specific cell */
+		    SetTableWidths (table, pLockRel->LockRFrame[i]);
 		}
 	      /* next entry */
 	      i--;

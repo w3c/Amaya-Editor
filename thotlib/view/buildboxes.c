@@ -1841,7 +1841,7 @@ void BoxUpdate (PtrBox pBox, PtrLine pLine, int charDelta, int spaceDelta,
 
 
 /*----------------------------------------------------------------------
-   RemoveBoxes removes the cureent box and all included boxes.
+   RemoveBoxes removes the current box and all included boxes.
    The parameter toRemake is TRUE when the box will be recreated
    immediatly.
   ----------------------------------------------------------------------*/
@@ -1869,10 +1869,7 @@ void RemoveBoxes (PtrAbstractBox pAb, ThotBool rebuild, int frame)
 	  if (pBox->BxType == BoBlock)
 	    RemoveLines (pBox, frame, pBox->BxFirstLine, &changeSelectBegin, &changeSelectEnd);
 	  else if (pBox->BxType == BoTable && ThotLocalActions[T_cleartable])
-	    {
-	      (*ThotLocalActions[T_cleartable]) (pAb);
-	      pAb->AbDead = TRUE;
-	    }
+	    (*ThotLocalActions[T_cleartable]) (pAb);
 	  else if (pBox->BxType == BoColumn && ThotLocalActions[T_checktable])
 	    (*ThotLocalActions[T_checktable]) (NULL, pAb, NULL, frame);
 	  else if (pBox->BxType == BoRow && ThotLocalActions[T_checktable])
@@ -1905,7 +1902,6 @@ void RemoveBoxes (PtrAbstractBox pAb, ThotBool rebuild, int frame)
 	      
 	      if (pBox->BxVertFlex && pBox->BxVertInverted)
 		YEdgesExchange (pBox, OpVertDep);
-	      pAb->AbDead = FALSE;
 	    }
 
 	  /* Liberation des boites des paves inclus */
@@ -1936,61 +1932,60 @@ void RemoveBoxes (PtrAbstractBox pAb, ThotBool rebuild, int frame)
   ----------------------------------------------------------------------*/
 static void CheckDefaultPositions (PtrAbstractBox pAb, int frame)
 {
-   PtrAbstractBox      pNextAb;
+  PtrAbstractBox      pNextAb;
 
-   /* Est-ce que la boite avait une regle par defaut ? */
-   if (pAb->AbEnclosing != NULL)
-      if (!pAb->AbEnclosing->AbInLine
-	  && !(pAb->AbEnclosing->AbBox->BxType == BoGhost))
+  /* Est-ce que la boite avait une regle par defaut ? */
+  if (pAb->AbEnclosing != NULL &&!pAb->AbEnclosing->AbInLine &&
+      !(pAb->AbEnclosing->AbBox->BxType == BoGhost))
+    {
+      if (pAb->AbHorizPos.PosAbRef == NULL)
 	{
-	   if (pAb->AbHorizPos.PosAbRef == NULL)
-	     {
-		/* On recherche le pave suivant ayant la meme regle par defaut */
-		pNextAb = pAb->AbNext;
-		while (pNextAb != NULL)
-		  {
-		     if (pNextAb->AbHorizPos.PosAbRef == NULL)
-		       {
-			  /* Reevalue la regle du premier pave suivant non mort */
-			  if (!pNextAb->AbDead && pNextAb->AbBox != NULL
-			  /* si ce pave ne vient pas d'etre cree                */
-			      && pNextAb->AbNum == 0)
-			    {
-			       /* Nouvelle position horizontale */
-			       ClearPosRelation (pNextAb->AbBox, TRUE);
-			       ComputePosRelation (pNextAb->AbHorizPos, pNextAb->AbBox, frame, TRUE);
-			    }	/*if !pNextAb->AbDead */
-			  pNextAb = NULL;
-
-		       }
-		     else
-			pNextAb = pNextAb->AbNext;
-		  }
-	     }
-	   if (pAb->AbVertPos.PosAbRef == NULL)
-	     {
-		/* On recherche le pave suivant ayant la meme regle par defaut */
-		pNextAb = pAb->AbNext;
-		while (pNextAb != NULL)
-		  {
-		     if (pNextAb->AbVertPos.PosAbRef == NULL)
-		       {
-			  /* Reevalue la regle du premier pave suivant non mort */
-			  if (!pNextAb->AbDead && pNextAb->AbBox != NULL
-			  /* si ce pave ne vient pas d'etre cree                */
-			      && pNextAb->AbNum == 0)
-			    {
-			       /* Nouvelle position verticale */
-			       ClearPosRelation (pNextAb->AbBox, FALSE);
-			       ComputePosRelation (pNextAb->AbVertPos, pNextAb->AbBox, frame, FALSE);
-			    }	/*if !pNextAb->AbDead */
-			  pNextAb = NULL;
-		       }
-		     else
-			pNextAb = pNextAb->AbNext;
-		  }
-	     }
+	  /* On recherche le pave suivant ayant la meme regle par defaut */
+	  pNextAb = pAb->AbNext;
+	  while (pNextAb != NULL)
+	    {
+	      if (pNextAb->AbHorizPos.PosAbRef == NULL)
+		{
+		  /* Reevalue la regle du premier pave suivant non mort */
+		  if (!pNextAb->AbDead && pNextAb->AbBox != NULL
+		      /* si ce pave ne vient pas d'etre cree                */
+		      && pNextAb->AbNum == 0)
+		    {
+		      /* Nouvelle position horizontale */
+		      ClearPosRelation (pNextAb->AbBox, TRUE);
+		      ComputePosRelation (pNextAb->AbHorizPos, pNextAb->AbBox, frame, TRUE);
+		    }
+		  pNextAb = NULL;
+		  
+		}
+	      else
+		pNextAb = pNextAb->AbNext;
+	    }
 	}
+      if (pAb->AbVertPos.PosAbRef == NULL)
+	{
+	  /* On recherche le pave suivant ayant la meme regle par defaut */
+	  pNextAb = pAb->AbNext;
+	  while (pNextAb != NULL)
+	    {
+	      if (pNextAb->AbVertPos.PosAbRef == NULL)
+		{
+		  /* Reevalue la regle du premier pave suivant non mort */
+		  if (!pNextAb->AbDead && pNextAb->AbBox != NULL
+		      /* si ce pave ne vient pas d'etre cree                */
+		      && pNextAb->AbNum == 0)
+		    {
+		      /* Nouvelle position verticale */
+		      ClearPosRelation (pNextAb->AbBox, FALSE);
+		      ComputePosRelation (pNextAb->AbVertPos, pNextAb->AbBox, frame, FALSE);
+		    }
+		  pNextAb = NULL;
+		}
+	      else
+		pNextAb = pNextAb->AbNext;
+	    }
+	}
+    }
 }
 
 
@@ -2408,8 +2403,9 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 	(*ThotLocalActions[T_checkcolumn]) (pAb, NULL, frame);
       /* check enclosing cell */
       else if (pCell != NULL && ThotLocalActions[T_checkcolumn] &&
-	       !pAb->AbEnclosing->AbDead &&
-	       (pAb->AbNext == NULL || (!pAb->AbNext->AbDead && !pAb->AbNext->AbNew)))
+	       !IsDead (pAb) &&
+	       (pAb->AbNext == NULL ||
+		(!pAb->AbNext->AbDead && !pAb->AbNext->AbNew)))
 	(*ThotLocalActions[T_checkcolumn]) (pCell, NULL, frame);
       result = TRUE;
     }
@@ -3296,27 +3292,43 @@ static void ClearFlexibility (PtrAbstractBox pAb, int frame)
 }
 
 /*----------------------------------------------------------------------
-   ClearConcreteImage libere toutes les boites de la vue dont on donne         
-   le pave racine.                                         
+   IsDead returns TRUE is the abstract box or a parent abstract box
+   has AbDead = TRUE.
   ----------------------------------------------------------------------*/
-void                ClearConcreteImage (int frame)
+ThotBool IsDead (PtrAbstractBox pAb)
 {
-   ViewFrame          *pFrame;
+  while (pAb)
+    {
+      if (pAb->AbDead)
+	return TRUE;
+      else
+	pAb = pAb->AbEnclosing;
+    }
+  return FALSE;
+}
 
-   pFrame = &ViewFrameTable[frame - 1];
-   if (pFrame->FrAbstractBox != NULL)
-     {
-	pFrame->FrReady = FALSE;	/* La frame n'est pas affichable */
-	/* Faut-il retirer les marques de selection dans la fenetre */
-	CloseInsertion ();
-	/*ClearViewSelection (frame);*/
-	/* Liberation de la hierarchie */
-	RemoveBoxes (pFrame->FrAbstractBox, FALSE, frame);
-	pFrame->FrAbstractBox = NULL;
-	pFrame->FrReady = TRUE;	/* La frame est affichable */
-	DefClip (frame, -1, -1, -1, -1);	/* effacer effectivement */
-	DefineClipping (frame, pFrame->FrXOrg, pFrame->FrYOrg, &pFrame->FrClipXBegin, &pFrame->FrClipYBegin,
-			&pFrame->FrClipXEnd, &pFrame->FrClipYEnd, 1);
+/*----------------------------------------------------------------------
+   ClearConcreteImage removes all concrete boxes in the view.
+  ----------------------------------------------------------------------*/
+void ClearConcreteImage (int frame)
+{
+  ViewFrame          *pFrame;
+
+  pFrame = &ViewFrameTable[frame - 1];
+  if (pFrame->FrAbstractBox != NULL)
+    {
+      pFrame->FrReady = FALSE;	/* La frame n'est pas affichable */
+      /* Faut-il retirer les marques de selection dans la fenetre */
+      CloseInsertion ();
+      /*ClearViewSelection (frame);*/
+      /* Liberation de la hierarchie */
+      RemoveBoxes (pFrame->FrAbstractBox, FALSE, frame);
+      pFrame->FrAbstractBox = NULL;
+      pFrame->FrReady = TRUE;	/* La frame est affichable */
+      DefClip (frame, -1, -1, -1, -1);	/* effacer effectivement */
+      DefineClipping (frame, pFrame->FrXOrg, pFrame->FrYOrg,
+		      &pFrame->FrClipXBegin, &pFrame->FrClipYBegin,
+		      &pFrame->FrClipXEnd, &pFrame->FrClipYEnd, 1);
      }
 }
 
@@ -3325,7 +3337,7 @@ void                ClearConcreteImage (int frame)
    IsAbstractBoxUpdated rend la valeur Vrai si les changements ont 
    une re'percution sur le pave englobant.                 
   ----------------------------------------------------------------------*/
-static ThotBool     IsAbstractBoxUpdated (PtrAbstractBox pAb, int frame)
+static ThotBool IsAbstractBoxUpdated (PtrAbstractBox pAb, int frame)
 {
    PtrAbstractBox      pChildAb;
    PtrAbstractBox      pFirstAb;
