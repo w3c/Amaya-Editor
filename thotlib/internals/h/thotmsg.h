@@ -46,7 +46,11 @@ int indexTable ;
 #define ABOUT6                  25
 #define ABOUT7                  26
 #define ABOUT8                  27
+#define ITALICS 		28
+#define BOLD 			29
+#define LEFT_ALIGN 		30
+#define RIGHT_ALIGN  		31
+#define CENTER_ALIGN		32
 
-
-#define THOT_MAX_MSG			28
+#define THOT_MAX_MSG		33
 #endif
