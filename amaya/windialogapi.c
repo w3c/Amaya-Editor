@@ -171,6 +171,7 @@ static ThotWindow   XMLForm = NULL;
 static ThotWindow   AttrForm = NULL;
 static ThotWindow   SaveAsForm = NULL;
 static ThotWindow   MimeTypeDlg = NULL;
+static ThotWindow   InitConfirmForm = NULL;
 static ThotWindow   DocInfo[DocumentTableLength];
 
 #include "init_f.h"
@@ -2436,6 +2437,7 @@ LRESULT CALLBACK InitConfirmDlgProc (ThotWindow hwnDlg, UINT msg,
   switch (msg)
     {
     case WM_INITDIALOG:
+	  InitConfirmForm = hwnDlg;
       /* get the default GUI font */
       SetWindowText (hwnDlg, Message);
       ptr = TtaGetMessage (LIB, TMSG_LIB_CONFIRM);
@@ -2457,14 +2459,17 @@ LRESULT CALLBACK InitConfirmDlgProc (ThotWindow hwnDlg, UINT msg,
       switch (LOWORD (wParam))
 	{
 	case ID_CONFIRM:
-	  EndDialog (hwnDlg, ID_CONFIRM);
+      InitConfirmForm = NULL;
+      EndDialog (hwnDlg, ID_CONFIRM);
 	  ThotCallback (BaseDialog + ConfirmForm, INTEGER_DATA, (char*) 1);
 	  break;
 	case ID_MIDDLE:
+      InitConfirmForm = NULL;
 	  EndDialog (hwnDlg, ID_CONFIRM);
 	  ThotCallback (BaseDialog + ConfirmForm, INTEGER_DATA, (char*) 2);
 	  break;
 	case IDCANCEL:
+      InitConfirmForm = NULL;
 	  EndDialog (hwnDlg, IDCANCEL);
 	  ThotCallback (BaseDialog + ConfirmForm, INTEGER_DATA, (char*) 0);
 	  break;
@@ -4095,6 +4100,11 @@ void CreateInitConfirmDlgWindow (ThotWindow parent, char *extrabutton,
 								 char *confirmbutton, char *label)
 {
   strcpy (Message, label);
+
+  if (InitConfirmForm)
+    SetFocus (InitConfirmForm);
+  else
+  {
   if (extrabutton && extrabutton[0] != EOS)
   {
 	/* a meesage with 3 buttons */
@@ -4112,6 +4122,7 @@ void CreateInitConfirmDlgWindow (ThotWindow parent, char *extrabutton,
     strcpy (Message2, TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
     DialogBox (hInstance, MAKEINTRESOURCE (INITCONFIRMDIALOG), parent,
                (DLGPROC) InitConfirmDlgProc);
+  }
   }
 }
 

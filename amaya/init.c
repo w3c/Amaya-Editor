@@ -1212,9 +1212,6 @@ void ShowLogFile (Document doc, View view)
   char     fileName [100];
   int      newdoc;
 
-  /* Close the logs file */
-  CloseLogs (doc);
-
   sprintf (fileName, "%s%c%d%cPARSING.ERR",
 	   TempFileDirectory, DIR_SEP, doc, DIR_SEP);
   newdoc = GetAmayaDoc (fileName, NULL, 0, doc, (ClickEvent)CE_LOG, FALSE,
@@ -1287,13 +1284,12 @@ void CleanUpParsingErrors ()
 void CheckParsingErrors (Document doc)
 {
   char      *ptr, *reload;
+  ThotBool   closeLog = FALSE;
 #ifndef _PARSING
   char       profile [200];
   int        prof;
 #endif /*_PARSING*/
 
-  /* Close the Log file */
-  CloseLogs (doc);
   
   if (BADMimeType)
     {
@@ -1341,6 +1337,9 @@ void CheckParsingErrors (Document doc)
 	    {
 	      if (ExtraChoice || UserAnswer)
 		{
+         /* Close the Log file */
+          CloseLogs (doc);
+		  closeLog = TRUE;
 		  ShowLogFile (doc, 1);
 		  ShowSource (doc, 1);
 		}
@@ -1379,8 +1378,10 @@ void CheckParsingErrors (Document doc)
 	  CleanUpParsingErrors ();
 	  if (UserAnswer)
 	    {
-	      ShowLogFile (doc, 1);
-	      ShowSource (doc, 1);
+          CloseLogs (doc);
+		  closeLog = TRUE;
+		  ShowLogFile (doc, 1);
+		  ShowSource (doc, 1);
 	    }
 	}
       else if (XMLErrorsFound)
@@ -1391,15 +1392,27 @@ void CheckParsingErrors (Document doc)
 	  CleanUpParsingErrors ();
 	  if (UserAnswer)
 	    {
-	      ShowLogFile (doc, 1);
-	      ShowSource (doc, 1);
+          CloseLogs (doc);
+		  closeLog = TRUE;
+		  ShowLogFile (doc, 1);
+		  ShowSource (doc, 1);
 	    }
 	}
 #endif /*_PARSING*/
       CleanUpParsingErrors ();
+   if (!closeLog)
+   {
+	  CloseLogs (doc);
+       TtaSetItemOn (doc, 1, File, BShowLogFile);
+   }
+ 
     }
   else
-      TtaSetItemOff (doc, 1, File, BShowLogFile);
+  {
+  CloseLogs (doc);
+   TtaSetItemOff (doc, 1, File, BShowLogFile);
+  }
+
 }
 
 
