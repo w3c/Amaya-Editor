@@ -2374,7 +2374,7 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
 	      /* Positionnement de la ligne en respectant l'interligne */
 	      if (toLineSpace)
 		org -= pLine->LiHorizRef;
-#ifdef IV
+#ifndef IV
 	      /* verifie que les lignes ne se chevauchent pas */
 	      if (org < *height + top)
 		org = *height + top;
@@ -3326,7 +3326,7 @@ void EncloseInLine (PtrBox pBox, int frame, PtrAbstractBox pAb)
 		     ibox1 != pLine->LiLastPiece);
 	      if (pLine->LiPrevious)
 		{
-#ifdef IV
+#ifndef IV
 		  /* new position of the current line */
 		  if (linespacing < pLine->LiPrevious->LiHorizRef + ascent)
 		    /* we refuse to overlaps 2 lines */
