@@ -1,0 +1,105 @@
+# Microsoft Developer Studio Generated Dependency File, included by zlib.mak
+
+..\..\..\libpng\zlib\adler32.c : \
+	"..\..\..\libpng\zlib\zconf.h"\
+	"..\..\..\libpng\zlib\zlib.h"\
+	
+
+..\..\..\libpng\zlib\compress.c : \
+	"..\..\..\libpng\zlib\zconf.h"\
+	"..\..\..\libpng\zlib\zlib.h"\
+	
+
+..\..\..\libpng\zlib\crc32.c : \
+	"..\..\..\libpng\zlib\zconf.h"\
+	"..\..\..\libpng\zlib\zlib.h"\
+	
+
+..\..\..\libpng\zlib\deflate.c : \
+	"..\..\..\libpng\zlib\deflate.h"\
+	"..\..\..\libpng\zlib\zconf.h"\
+	"..\..\..\libpng\zlib\zlib.h"\
+	"..\..\..\libpng\zlib\zutil.h"\
+	
+
+..\..\..\libpng\zlib\gzio.c : \
+	"..\..\..\libpng\zlib\zconf.h"\
+	"..\..\..\libpng\zlib\zlib.h"\
+	"..\..\..\libpng\zlib\zutil.h"\
+	
+
+..\..\..\libpng\zlib\infblock.c : \
+	"..\..\..\libpng\zlib\infblock.h"\
+	"..\..\..\libpng\zlib\infcodes.h"\
+	"..\..\..\libpng\zlib\inftrees.h"\
+	"..\..\..\libpng\zlib\infutil.h"\
+	"..\..\..\libpng\zlib\zconf.h"\
+	"..\..\..\libpng\zlib\zlib.h"\
+	"..\..\..\libpng\zlib\zutil.h"\
+	
+
+..\..\..\libpng\zlib\infcodes.c : \
+	"..\..\..\libpng\zlib\infblock.h"\
+	"..\..\..\libpng\zlib\infcodes.h"\
+	"..\..\..\libpng\zlib\inffast.h"\
+	"..\..\..\libpng\zlib\inftrees.h"\
+	"..\..\..\libpng\zlib\infutil.h"\
+	"..\..\..\libpng\zlib\zconf.h"\
+	"..\..\..\libpng\zlib\zlib.h"\
+	"..\..\..\libpng\zlib\zutil.h"\
+	
+
+..\..\..\libpng\zlib\inffast.c : \
+	"..\..\..\libpng\zlib\infblock.h"\
+	"..\..\..\libpng\zlib\infcodes.h"\
+	"..\..\..\libpng\zlib\inffast.h"\
+	"..\..\..\libpng\zlib\inftrees.h"\
+	"..\..\..\libpng\zlib\infutil.h"\
+	"..\..\..\libpng\zlib\zconf.h"\
+	"..\..\..\libpng\zlib\zlib.h"\
+	"..\..\..\libpng\zlib\zutil.h"\
+	
+
+..\..\..\libpng\zlib\inflate.c : \
+	"..\..\..\libpng\zlib\infblock.h"\
+	"..\..\..\libpng\zlib\zconf.h"\
+	"..\..\..\libpng\zlib\zlib.h"\
+	"..\..\..\libpng\zlib\zutil.h"\
+	
+
+..\..\..\libpng\zlib\inftrees.c : \
+	"..\..\..\libpng\zlib\inffixed.h"\
+	"..\..\..\libpng\zlib\inftrees.h"\
+	"..\..\..\libpng\zlib\zconf.h"\
+	"..\..\..\libpng\zlib\zlib.h"\
+	"..\..\..\libpng\zlib\zutil.h"\
+	
+
+..\..\..\libpng\zlib\infutil.c : \
+	"..\..\..\libpng\zlib\infblock.h"\
+	"..\..\..\libpng\zlib\infcodes.h"\
+	"..\..\..\libpng\zlib\inftrees.h"\
+	"..\..\..\libpng\zlib\infutil.h"\
+	"..\..\..\libpng\zlib\zconf.h"\
+	"..\..\..\libpng\zlib\zlib.h"\
+	"..\..\..\libpng\zlib\zutil.h"\
+	
+
+..\..\..\libpng\zlib\trees.c : \
+	"..\..\..\libpng\zlib\deflate.h"\
+	"..\..\..\libpng\zlib\trees.h"\
+	"..\..\..\libpng\zlib\zconf.h"\
+	"..\..\..\libpng\zlib\zlib.h"\
+	"..\..\..\libpng\zlib\zutil.h"\
+	
+
+..\..\..\libpng\zlib\uncompr.c : \
+	"..\..\..\libpng\zlib\zconf.h"\
+	"..\..\..\libpng\zlib\zlib.h"\
+	
+
+..\..\..\libpng\zlib\zutil.c : \
+	"..\..\..\libpng\zlib\zconf.h"\
+	"..\..\..\libpng\zlib\zlib.h"\
+	"..\..\..\libpng\zlib\zutil.h"\
+	
