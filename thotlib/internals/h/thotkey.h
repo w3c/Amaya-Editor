@@ -10,6 +10,7 @@
 
 #define BREAK_LINE 138
 #define SHOWN_BREAK_LINE 182 /* BREAK_LINE display value */
+#define NEW_LINE 10
 #define THIN_SPACE 129
 #define SHOWN_THIN_SPACE 96 /* THIN-SPACE display value */
 #define HALF_EM 130

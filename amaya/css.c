@@ -146,6 +146,7 @@ boolean         removeFile;
 	  if (prev != NULL)
 	    prev->NextCSS = css->NextCSS;
 	}
+      TtaFreeMemory (css);
     }
 }
 
@@ -317,6 +318,7 @@ CSSInfoPtr          css;
 	}
       else
 	{
+	  oldcss = SearchCSS (0, tempURL);
 	  local = TRUE;
 	  strcpy (tempfile, tempURL);
 	}

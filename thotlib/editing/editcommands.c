@@ -1109,7 +1109,7 @@ int                 charWidth;
      {
 	c = pBuffer->BuContent[i];
 	/* Est-ce un caractere de coupure forcee ? */
-	if (c == BREAK_LINE)
+	if (c == BREAK_LINE || c == NEW_LINE)
 	   return (TRUE);
 	/* Est-ce qu'il faut passer au buffer suivant ? */
 	else if (i == nChars && pBuffer->BuNext != NULL)
@@ -2960,7 +2960,9 @@ int                 keyboard;
 				toSplit = TRUE;
 				
 				/* Est-ce un boite qui ne contenait qu'un Ctrl Return ? */
-				if (c == (unsigned char) BREAK_LINE && pAb->AbBox->BxNChars == 1)
+				if ((c == (unsigned char) BREAK_LINE ||
+				     c == (unsigned char) NEW_LINE) &&
+				    pAb->AbBox->BxNChars == 1)
 				  {
 				    /* La boite entiere devient vide */
 				    xDelta = CharacterWidth ('m', font);
@@ -3120,7 +3122,8 @@ int                 keyboard;
 				  }
 			      
 			      /* Le caractere insere' est un Ctrl Return ? */
-			      if (c == (unsigned char) BREAK_LINE)
+			      if (c == (unsigned char) BREAK_LINE ||
+				  c == (unsigned char) NEW_LINE)
 				{
 				  /* il faut reevaluer la mise en ligne */
 				  toSplit = TRUE;
@@ -3171,7 +3174,9 @@ int                 keyboard;
 				    if (pSelBox->BxNPixels > pViewSel->VsNSpaces)
 				      pix = 1;
 				}
-			      else if (c == (unsigned char) BREAK_LINE)	/* Ctrl Return */
+			      else if (c == (unsigned char) BREAK_LINE ||
+				       c == (unsigned char) NEW_LINE)
+				/* Ctrl Return */
 				{
 				  /* il faut reevaluer la mise en ligne */
 				  toSplit = TRUE;

@@ -222,6 +222,8 @@ void                FreeAll ()
       ptr = (void *)PtFree_Element;
       PtFree_Element = PtFree_Element->ElNext;
       TtaFreeMemory (ptr);
+      if (PtFree_Element == -1)
+	PtFree_Element = NULL;
     }
   NbFree_Element = 0;
 

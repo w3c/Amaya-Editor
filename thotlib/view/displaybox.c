@@ -1036,7 +1036,9 @@ int                 frame;
 			   DisplayUnderline (frame, x, y, pBox->BxFont, pBox->BxUnderline,
 			        pBox->BxThickness, pBox->BxWidth, RO, op, fg);
 			/* Next char lookup */
-			if ((unsigned char) adbuff->BuContent[indbuff - 1] == BREAK_LINE && !ShowSpace)
+			if (((unsigned char) adbuff->BuContent[indbuff - 1] == BREAK_LINE ||
+			     (unsigned char) adbuff->BuContent[indbuff - 1] == NEW_LINE)
+			    && !ShowSpace)
 			   DrawChar (SHOWN_BREAK_LINE, frame, x, y, pBox->BxFont, RO, op, fg);
 		     }
 		   else

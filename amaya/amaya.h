@@ -252,13 +252,14 @@ ElemImage;
 
 typedef struct _LoadedImageDesc
   {
-     char               *originalName;	/* complete URL of the image             */
+     char               *originalName;	/* complete URL of the image                */
      char               *localName;	/* local name (without path) of the image   */
-     struct _LoadedImageDesc *prevImage;/* double linked list */
-     struct _LoadedImageDesc *nextImage;/* easier to unchain */
-     Document            document;	/* document concerned                        */
-     struct _ElemImage  *elImage;	/* first element using this image          */
-     int                 status;	/* the status of the Image loading */
+     struct _LoadedImageDesc *prevImage;/* double linked list                       */
+     struct _LoadedImageDesc *nextImage;/* easier to unchain                        */
+     Document            document;	/* document concerned                       */
+     struct _ElemImage  *elImage;	/* first element using this image           */
+     int                 imageType;     /* the type of the image                    */
+     int                 status;	/* the status of the image loading          */
   }
 LoadedImageDesc;
 

@@ -37,8 +37,8 @@ exec_prefix = @exec_prefix@
 libdir = @libdir@
 datadir = @datadir@
 bindir = @bindir@
-amaya_math_schema = @amaya_math_schema@
-amaya_graph_schema = @amaya_graph_schema@
+math_schema: $(amaya_math_schema)
+graph_schema: $(amaya_graph_schema)
 #
 # specific entry point check the dependancies
 #
@@ -162,7 +162,7 @@ AMAYA_LIBS= ../thotlib/libThotEditor.a ../tablelib/libThotTable.a \
 
 HTML2THOT_LIBS= ../thotlib/libThotKernel.a
 
-amaya_schemas : compHTML compHTMLP compHTMLT amaya_math_schema amaya_graph_schema
+amaya_schemas : compHTML compHTMLP compHTMLT math_schema graph_schema
 
 amaya_src : $(AMAYA_SRC) 
 

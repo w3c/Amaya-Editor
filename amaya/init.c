@@ -2144,6 +2144,7 @@ void               *ctx_cbf;
 		 {
 		   /* help document has to be in read-only mode */
 		   TtcSwitchCommands (newdoc, 1);
+		   TtcSwitchButtonBar (newdoc, 1);
 		   DocumentTypes[newdoc] = docHelp;
 		   TtaSetItemOff (newdoc, 1, Edit_, BCut);
 		   TtaSetItemOff (newdoc, 1, Edit_, BPaste);

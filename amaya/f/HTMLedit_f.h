@@ -63,13 +63,13 @@ extern void CreateElemSample ( Document document,
 extern void CreateElemKeyboard ( Document document,
                                  View view );
 extern void CreateElemAbbr ( Document document,
-                                 View view );
+                             View view );
 extern void CreateElemAcronym ( Document document,
-                                 View view );
+                                View view );
 extern void CreateElemINS ( Document document,
-                                 View view );
+                            View view );
 extern void CreateElemDEL ( Document document,
-                                 View view );
+                            View view );
 extern void CreateElemItalic ( Document document,
                                View view );
 extern void CreateElemBold ( Document document,
@@ -85,7 +85,7 @@ extern void CreateSub ( Document document,
 extern void CreateSup ( Document document,
                         View view );
 extern void CreateQuotation ( Document document,
-                        View view );
+                              View view );
 extern void CreateBDO ( Document document,
                         View view );
 extern Element SearchAnchor ( Document doc,
@@ -157,13 +157,13 @@ extern void CreateElemSample (/* Document document,
 extern void CreateElemKeyboard (/* Document document,
                                    View view */);
 extern void CreateElemAbbr (/* Document document,
-                                   View view */);
+                               View view */);
 extern void CreateElemAcronym (/* Document document,
-                                   View view */);
+                                  View view */);
 extern void CreateElemINS (/* Document document,
-                                   View view */);
+                              View view */);
 extern void CreateElemDEL (/* Document document,
-                                   View view */);
+                              View view */);
 extern void CreateElemItalic (/* Document document,
                                  View view */);
 extern void CreateElemBold (/* Document document,
@@ -179,7 +179,7 @@ extern void CreateSub (/* Document document,
 extern void CreateSup (/* Document document,
                           View view */);
 extern void CreateQuotation (/* Document document,
-                          View view */);
+                                View view */);
 extern void CreateBDO (/* Document document,
                           View view */);
 extern Element SearchAnchor (/* Document doc,

@@ -346,17 +346,16 @@ AHTReqContext      *me;
 	       TtaFreeMemory (me->urlName);
             if (me->outputfile)
 	       TtaFreeMemory (me->outputfile);
-	    if (me->content_type)
-	      TtaFreeMemory (me->content_type);
 	  }
+
+	if (me->content_type)
+	  TtaFreeMemory (me->content_type);
    
 	if (me->mode & AMAYA_FORM_POST)
 	  TtaFreeMemory (me->mem_ptr);
 
 	TtaFreeMemory ((void *) me);
-
 	Amaya->open_requests--;
-
 	return TRUE;
 
      }

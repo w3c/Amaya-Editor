@@ -8,13 +8,11 @@
 
 extern void InitCSSDialog ( Document doc,
                             View view );
-extern void ApplyExtraPresentation ( Document doc );
 
 #else /* __STDC__ */
 
 extern void InitCSSDialog (/* Document doc,
                               View view */);
-extern void ApplyExtraPresentation (/* Document doc */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

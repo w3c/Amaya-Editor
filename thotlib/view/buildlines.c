@@ -1170,7 +1170,7 @@ int                *wordWidth;
      {
 	character = (unsigned char) (pBuffer->BuContent[i - 1]);
 	/* Est-ce un caractere de coupure forcee ? */
-	if (character == BREAK_LINE)
+	if (character == BREAK_LINE || character ==  NEW_LINE)
 	  {
 	     found = TRUE;
 	     *breakWidth = CharacterWidth (character, font);

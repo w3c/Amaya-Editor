@@ -885,6 +885,80 @@ int                 key;
 
 
 /*----------------------------------------------------------------------
+   FreeTranslations remove all translation structures.
+  ----------------------------------------------------------------------*/
+void FreeTranslations ()
+{
+   KEY                *ptr, *subkey;
+
+   while (Automata_current != NULL)
+     {
+       ptr = Automata_current;
+       while (ptr->K_Next != NULL)
+	 {
+	   subkey = ptr->K_Next;
+	   ptr->K_Next = subkey->K_Other;
+	   TtaFreeMemory (subkey);
+	 }
+       Automata_current = ptr->K_Other;
+       TtaFreeMemory (ptr);
+     }
+
+   while (Automata_ctrl != NULL)
+     {
+       ptr = Automata_ctrl;
+       while (ptr->K_Next != NULL)
+	 {
+	   subkey = ptr->K_Next;
+	   ptr->K_Next = subkey->K_Other;
+	   TtaFreeMemory (subkey);
+	 }
+       Automata_ctrl = ptr->K_Other;
+       TtaFreeMemory (ptr);
+     }
+
+   while (Automata_alt != NULL)
+     {
+       ptr = Automata_alt;
+       while (ptr->K_Next != NULL)
+	 {
+	   subkey = ptr->K_Next;
+	   ptr->K_Next = subkey->K_Other;
+	   TtaFreeMemory (subkey);
+	 }
+       Automata_alt = ptr->K_Other;
+       TtaFreeMemory (ptr);
+     }
+
+   while (Automata_CTRL != NULL)
+     {
+       ptr = Automata_CTRL;
+       while (ptr->K_Next != NULL)
+	 {
+	   subkey = ptr->K_Next;
+	   ptr->K_Next = subkey->K_Other;
+	   TtaFreeMemory (subkey);
+	 }
+       Automata_CTRL = ptr->K_Other;
+       TtaFreeMemory (ptr);
+     }
+
+   while (Automata_ALT != NULL)
+     {
+       ptr = Automata_ALT;
+       while (ptr->K_Next != NULL)
+	 {
+	   subkey = ptr->K_Next;
+	   ptr->K_Next = subkey->K_Other;
+	   TtaFreeMemory (subkey);
+	 }
+       Automata_ALT = ptr->K_Other;
+       TtaFreeMemory (ptr);
+     }
+}
+
+
+/*----------------------------------------------------------------------
    InitTranslations
    intializes the keybord encoding.
   ----------------------------------------------------------------------*/
@@ -896,13 +970,13 @@ char               *appliname;
 
 #endif /* __STDC__ */
 {
-   char               *text;	                          /* fichier de translation transmis a motif */
-   char                line[200];	                  /* ligne en construction pour motif */
+   char               *text;	   /* fichier de translation transmis a motif */
+   char                line[200];  /* ligne en construction pour motif */
    char                home[200], name[80], ch[80], *adr;
-   char                equiv[MAX_EQUIV];	          /* chaine des equivalents caracteres pour motif */
-   unsigned int        key1, key2;	                  /* 1ere et 2 eme cles sous forme de keysym X */
+   char                equiv[MAX_EQUIV]; /* equivalents caracteres pour motif */
+   unsigned int        key1, key2; /* 1ere & 2eme cles sous forme de keysym X */
    int                 e, i;
-   int                 mod1, mod2;	                  /* 1er et 2eme modifieurs : voir definitions THOT_MOD_xx */
+   int                 mod1, mod2; /* 1er/ 2eme modifieurs : voir THOT_MOD_xx */
    int                 len, max;
    FILE               *file;
    ThotTranslations      table;

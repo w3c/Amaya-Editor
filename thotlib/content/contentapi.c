@@ -1386,7 +1386,8 @@ Element             element;
    Returns the type of Picture element.
 
    Parameter:
-   element: the element of interest. This element must be a Picture.
+   element: the element of interest. This element must be a Picture or have
+   a bacground image.
 
    Return value:
    PicType: type of the element.
@@ -1398,17 +1399,49 @@ PicType             TtaGetPictureType (element)
 Element             element;
 #endif /* __STDC__ */
 {
+   PtrAbstractBox   pAb;
    PicType          pictType;
    PictInfo        *imageDesc;
    int              typeImage;
+   int              view;
+   boolean          found;
 
    UserErrorCode = 0;
    pictType = unknown_type;
    if (element == NULL)
      TtaError (ERR_invalid_parameter);
    else if (!((PtrElement) element)->ElTerminal)
-     TtaError (ERR_invalid_element_type);
-   else if (((PtrElement) element)->ElLeafType != LtPicture)
+     {
+       view = 0;
+       pAb = NULL;
+       found = FALSE;
+       do
+	 {
+	   pAb = ((PtrElement) element)->ElAbstractBox[view];
+	   if (pAb != NULL)
+	     {
+	       while (pAb->AbPresentationBox)
+		 pAb = pAb->AbNext;
+	       /* the background exist or will exist soon */
+	       found = (pAb->AbPictBackground != NULL || pAb->AbAspectChange);
+	     }
+	   view++;
+	 }
+       while (!found && view < MAX_VIEW_DOC);
+
+       if (!found)
+	 TtaError (ERR_invalid_element_type);
+       else
+	 {
+	   imageDesc = (PictInfo *) pAb->AbPictBackground;
+	   if (imageDesc != NULL)
+	     typeImage = imageDesc->PicType;
+	   else
+	     typeImage = UNKNOWN_FORMAT;
+	 }
+     }
+   else if (((PtrElement) element)->ElTerminal &&
+	    ((PtrElement) element)->ElLeafType != LtPicture)
      TtaError (ERR_invalid_element_type);
    else
      {

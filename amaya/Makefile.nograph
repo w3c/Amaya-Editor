@@ -1,9 +1,0 @@
-#
-# Makefile.graph
-# Autoconf Fragment when not using Graph
-# Daniel Veillard 1998
-#
-
-amaya_graph_schema : 
-
-

@@ -2372,9 +2372,9 @@ PresentationValue  *val;
     {
       /* we expect a color name like "red", store it in colname */
       len = sizeof (colname) - 1;
-      for (i = 0; i < len; i++)
+      for (i = 0; i < len && cssRule[i] != EOS; i++)
 	{
-	  if (!isalnum (cssRule[i]))
+	  if (!isalnum (cssRule[i]) && cssRule[i] != EOS)
 	    {
 	      cssRule += i;
 	      break;
@@ -3935,10 +3935,10 @@ char               *buffer;
 	      noRule = TRUE;
 	    }
 	  break;
-	case '\n':
-	  /*  LF = end of input line */
-	  CSSbuffer[CSSindex] = (unsigned char) 138; /* Thot new line */
-	  break;
+        case '\212':
+          /*  Thot new line */
+          CSSbuffer[CSSindex] = (unsigned char) 10; /* LF = end of input line */
+          break;
 	case '*':
 	  if (CSSindex > 0 && CSSbuffer[CSSindex - 1] == '/')
 	    /* start a comment */
@@ -3959,7 +3959,13 @@ char               *buffer;
 	    }	    
 	  break;
 	case '<':
-	  c = GetNextInputChar (&eof);
+	  if (buffer != NULL)
+	    {
+	      c = buffer[index++];
+	      eof = (c == EOS);
+	    }
+	  else
+	    c = GetNextInputChar (&eof);
 	  if (c == '!')
 	    {
 	      /* CSS within an HTML comment */
@@ -3967,7 +3973,7 @@ char               *buffer;
 	      CSSindex++;
 	      CSSbuffer[CSSindex] = c;
 	    }
-	  else if (c == '/')
+	  else if (c == '/' && CSScomment == MAX_CSS_LENGTH)
 	    {
 	      CSSindex--;
 	      /* Ok we consider this as a closing tag ! */
@@ -4046,7 +4052,7 @@ char               *buffer;
 			  while (*cssRule != EOS && *cssRule != ')')
 			    cssRule++;
 			  *cssRule = EOS;
-			  LoadHTMLStyleSheet (base, doc, css);
+			  LoadHTMLStyleSheet (base, docRef, css);
 			}
 		    }
 		  else if (*cssRule == '"')
@@ -4056,7 +4062,7 @@ char               *buffer;
 		      while (*cssRule != EOS && *cssRule != '"')
 			cssRule++;
 		      *cssRule = EOS;
-		      LoadHTMLStyleSheet (base, doc, css);
+		      LoadHTMLStyleSheet (base, docRef, css);
 		    }
 		  import = MAX_CSS_LENGTH;
 		}

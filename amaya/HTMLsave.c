@@ -480,7 +480,7 @@ DBG(fprintf(stderr, "SafeSaveFileThroughNet :  %s to %s type %d\n", localfile, r
   /* Refetch */
 DBG(fprintf(stderr, "SafeSaveFileThroughNet :  refetch %s \n", remotefile);)
 
-  TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_VERIFYING), "");
+  TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_VERIFYING), NULL);
   strcpy (tempURL, remotefile);
 #ifdef AMAYA_JAVA
   res = GetObjectWWW (doc, tempURL, NULL, tempfile, AMAYA_SYNC | AMAYA_NOCACHE,
@@ -671,10 +671,7 @@ boolean             with_images;
 	{
 	  if (pImage->document == document && pImage->status == IMAGE_MODIFIED)
 	    {
-	      if (pImage->elImage != NULL)
-		imageType = (int) TtaGetPictureType ((Element) pImage->elImage);
-	      else
-		imageType = unknown_type;
+	      imageType = pImage->imageType;
 	      res = SafeSaveFileThroughNet(document, pImage->localName,
 					   pImage->originalName, imageType);
 	      if (res)

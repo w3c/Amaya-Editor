@@ -104,6 +104,7 @@ LoadedImageDesc   **desc;
    pImage->nextImage = NULL;
    pImage->document = doc;
    pImage->elImage = NULL;
+   pImage->imageType = unknown_type;
    *desc = pImage;
    TtaFreeMemory (localname);
    if (sameImage != NULL)
@@ -402,9 +403,12 @@ void *context;
 	      DisplayImage (doc, ctxEl->currentElement, tempfile);
 	    else if (ctxEl->callback != NULL)
 	      ctxEl->callback(doc, ctxEl->currentElement, tempfile, ctxEl->extra);
-	     ctxPrev = ctxEl;
-	     ctxEl = ctxEl->nextElement;
-	     TtaFreeMemory ( ctxPrev);
+	    /* get image type */
+	    if (desc->imageType == unknown_type)
+	      desc->imageType = TtaGetPictureType (ctxEl->currentElement);
+	    ctxPrev = ctxEl;
+	    ctxEl = ctxEl->nextElement;
+	    TtaFreeMemory ( ctxPrev);
 	  }
      }
    TtaFreeMemory (tempfile);
@@ -444,8 +448,7 @@ void *context;
 	return;
 
       /* rename the local file of the image */
-      HandleImageLoaded (doc, status, urlName,
-			 outputfile, context);
+      HandleImageLoaded (doc, status, urlName, outputfile, context);
      }
 }
 
@@ -607,6 +610,8 @@ void               *extra;
 		      callback(doc, el, desc->localName, extra);
 		    else
 		      DisplayImage (doc, el, desc->localName);
+		    /* get image type */
+		    desc->imageType = TtaGetPictureType (el);
 		  }
 		else
 		  {

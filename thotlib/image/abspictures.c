@@ -51,7 +51,7 @@ int                 imagetype;
   PtrTextBuffer       pBuffer;
   PictInfo           *image = NULL;
   char               *ptr = NULL;
-  int                 picPresent;
+  int                 picPresent, len;
 
   if (imagetype == XBM_FORMAT || imagetype == XPM_FORMAT)
     picPresent = RealSize;
@@ -124,8 +124,12 @@ int                 imagetype;
 	}
       else
 	{
-	  if (ptr == NULL)
-	    ptr = TtaGetMemory (strlen (filename) + 1);
+	  len = strlen (filename) + 1;
+	  if (ptr == NULL || len > strlen (ptr) + 1)
+	    {
+	      TtaFreeMemory (ptr);
+	      ptr = TtaGetMemory (len);
+	    }
 	  strcpy (ptr, filename);
 	}
      }

@@ -12,6 +12,7 @@ extern void ThotInput ( int frame,
                         unsigned int nb,
                         int PicMask,
                         int key );
+extern void FreeTranslations ( void );
 extern ThotTranslations InitTranslations ( char *appliname );
 
 #else /* __STDC__ */
@@ -22,6 +23,7 @@ extern void ThotInput (/* int frame,
                           unsigned int nb,
                           int PicMask,
                           int key */);
+extern void FreeTranslations (/* void */);
 extern ThotTranslations InitTranslations (/* char *appliname */);
 
 #endif /* __STDC__ */

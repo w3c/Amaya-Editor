@@ -834,7 +834,7 @@ Document            document;
 		       deltaX = PixelValue (deltaX, UnPercent, (PtrAbstractBox) x, 0);
 		       deltaY = PixelValue (deltaY, UnPercent, (PtrAbstractBox) y, 0);
 		    }
-		  else if (unit != UnPixel)
+		  else
 		    {
 		       deltaX = PixelValue (deltaX, unit, pAb, ViewFrameTable[frame - 1].FrMagnification);
 		       deltaY = PixelValue (deltaY, unit, pAb, ViewFrameTable[frame - 1].FrMagnification);
@@ -916,7 +916,7 @@ TypeUnit            unit;
 		       deltaX = PixelValue (deltaX, UnPercent, (PtrAbstractBox) x, 0);
 		       deltaY = PixelValue (deltaY, UnPercent, (PtrAbstractBox) y, 0);
 		    }
-		  else if (unit != UnPixel)
+		  else
 		    {
 		       deltaX = PixelValue (deltaX, unit, pAb, ViewFrameTable[frame - 1].FrMagnification);
 		       deltaY = PixelValue (deltaY, unit, pAb, ViewFrameTable[frame - 1].FrMagnification);
@@ -1005,7 +1005,7 @@ int                *height;
 		       *width = PixelValue (*width, UnPercent, (PtrAbstractBox) x, 0);
 		       *height = PixelValue (*height, UnPercent, (PtrAbstractBox) y, 0);
 		    }
-		  else if (unit != UnPixel)
+		  else
 		    {
 		       *width = PixelValue (*width, unit, pAb, ViewFrameTable[frame - 1].FrMagnification);
 		       *height = PixelValue (*height, unit, pAb, ViewFrameTable[frame - 1].FrMagnification);
@@ -1103,7 +1103,7 @@ int                *yCoord;
 		  *xCoord = PixelValue (*xCoord, UnPercent, (PtrAbstractBox) x, 0);
 		  *yCoord = PixelValue (*yCoord, UnPercent, (PtrAbstractBox) y, 0);
 		}
-	      else if (unit != UnPixel)
+	      else
 		{
 		  *xCoord = PixelValue (*xCoord, unit, pAb, ViewFrameTable[frame - 1].FrMagnification);
 		  *yCoord = PixelValue (*yCoord, unit, pAb, ViewFrameTable[frame - 1].FrMagnification);

@@ -25,7 +25,7 @@ AMAYA_GRAPH_INCLUDES=
 
 AMAYA_GRAPH_SCHEMAS= $(AMAYA)/GraphML.S $(AMAYA)/GraphMLP.P $(AMAYA)/GraphMLT.T
 
-amaya_graph_schema : compGRAPH compGRAPHP compGRAPHT
+amaya_graph_schema= compGRAPH compGRAPHP compGRAPHT
 
 #
 # Structure schema compilation.

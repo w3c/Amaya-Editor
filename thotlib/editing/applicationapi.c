@@ -284,6 +284,7 @@ void                TtaQuit ()
    FreeAllMessages ();
 #  endif /* NODISPLAY */
    FreeAll ();
+   FreeTranslations ();
    exit (0);
 }
 

@@ -754,7 +754,7 @@ if test "$with_graph" = "yes" ; then
     graph_frag=$srcdir/amaya/Makefile.graph
 else
     AC_SUBST_FILE(graph_frag)
-    graph_frag=$srcdir/amaya/Makefile.nograph
+    graph_frag=/dev/null
 fi
 
 if test "$with_ilu" = "yes" ; then
