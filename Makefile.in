@@ -29,12 +29,20 @@ srcdir	= $(THOTDIR)
 
 @SET_MAKE@
 
-default : amaya thot
+default : tools thotlib amaya thot
 
 Options:
 	@CP@ Options.orig Options
 
 force :
+
+tools: rebuild force
+	@(if test -d tools ; then cd tools ; \
+	  $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" all ; fi)
+
+thotlib: rebuild force
+	@(if test -d thotlib ; then cd thotlib ; \
+	  $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" all ; fi)
 
 thot: rebuild force
 	@(if test -d thot ; then cd thot ; \

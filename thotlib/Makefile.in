@@ -19,6 +19,7 @@ prefix = @prefix@
 exec_prefix = @exec_prefix@
 libdir = @libdir@
 bindir = @bindir@
+MACHINE= @target@
 
 SUBDIRS = include
 OBJDIRS = base content dialogue document editing image presentation tree view
@@ -267,7 +268,8 @@ DIALOGUE_OBJ = \
 
 base/registry.o : @srcdir@/base/registry.c
 	$(CC) $(CFLAGS) $(INCLUDES) -DCOMPILED_IN_THOTDIR=\"@top_srcdir@\" \
-	   -DCOMPILED_IN_THOTDIR2=\"@datadir@/thot\" -c @srcdir@/base/registry.c -o $@
+	   -DCOMPILED_IN_THOTDIR2=\"@datadir@/thot\" \
+	   -DMACHINE=\"$(MACHINE)\" -c @srcdir@/base/registry.c -o $@
 
 libThotKernel : directories libThotKernel.a
 
