@@ -1436,7 +1436,7 @@ void               *event;
    ThotEvent           event;
    ThotEvent          *ev = (ThotEvent *) evnt;
    int                 firstCar, lastCar;
-   int                 comm, dx, dy;
+   int                 comm, dx, dy, sel;
    boolean             ok;
 
    /* ne pas traiter si le document est en mode NoComputedDisplay */
@@ -1490,10 +1490,17 @@ void               *event;
 		 }
 
 	       /* memorise la position de la souris */
+	       if (ClickFrame == frame
+		   && (ClickX - ev->xbutton.x < 3 || ClickX - ev->xbutton.x > 3)
+		   && (ClickY - ev->xbutton.y < 3 || ClickY - ev->xbutton.y > 3))
+		 /* it's really a double click */
+		 sel = 3;
+	       else
+		 sel = 2;
 	       ClickFrame = frame;
 	       ClickX = ev->xbutton.x;
 	       ClickY = ev->xbutton.y;
-	       LocateSelectionInView (frame, ClickX, ClickY, 3);
+	       LocateSelectionInView (frame, ClickX, ClickY, sel);
 	     }
 	   /* Sinon c'est une selection normale */
 	   else
@@ -1582,14 +1589,17 @@ void               *event;
        break;
 
      case KeyPress:
+       t1 = 0;
        TtaAbortShowDialogue ();
        XCharTranslation (ev);
        break;
 
      case EnterNotify:
+       t1 = 0;
        break;
 
      case LeaveNotify:
+       t1 = 0;
        break;
 
      default:
