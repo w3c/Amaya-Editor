@@ -1295,7 +1295,7 @@ int                *carIndex;
 	  }
 	else
 	  {
-	     if (!pAb->AbHorizEnclosing)
+	     if (!pAb->AbHorizEnclosing || pAb->AbNotInLine)
 	       /* the inline rule doesn't act on this box */
 		ComputePosRelation (pAb->AbHorizPos, pCurrentBox, frame, TRUE);
 	     else
@@ -1304,6 +1304,9 @@ int                *carIndex;
 	     if (!pAb->AbVertEnclosing)
 	       /* the inline rule doesn't act on this box */
 		ComputePosRelation (pAb->AbHorizRef, pCurrentBox, frame, FALSE);
+	     else if (pAb->AbNotInLine)
+	       /* the inline rule doesn't act on this box */
+		ComputePosRelation (pAb->AbVertPos, pCurrentBox, frame, FALSE);
 	     else
 	       /* the real position of the box depends of its horizontal reference axis */
 	       SetPositionConstraint (HorizRef, pCurrentBox, &i);
@@ -1341,6 +1344,8 @@ PtrBox              pBox;
      {
 	if (pBox->BxAbstractBox != NULL)
 	   pAb = pBox->BxAbstractBox->AbEnclosing;
+	if (pAb->AbNotInLine)
+	  pAb = NULL;
      }
 
    /* On regarde si la boite appartient a un bloc de lignes */

@@ -145,6 +145,7 @@ AMAYA_OBJ = \
 	HTMLAPP.o \
 	EDITORAPP.o \
 	init.o \
+	Mathedit.o \
 	EDITORactions.o \
 	HTMLactions.o \
 	HTMLbook.o \

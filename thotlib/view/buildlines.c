@@ -202,13 +202,17 @@ boolean             orgYComplete;
 	   pBox = pBoxInLine->BxNexChild;
 	else
 	   pBox = pBoxInLine;
-	if (pBox->BxAbstractBox->AbLeafType == LtText)
-	  {
-	     pBox->BxWidth -= pBox->BxNSpaces * CharacterWidth (_SPACE_, pBox->BxFont);
-	     nSpaces += pBox->BxNSpaces;
-	  }
 
-	length += pBox->BxWidth;
+	if (!pBoxInLine->BxAbstractBox->AbNotInLine)
+	  {
+	    if (pBox->BxAbstractBox->AbLeafType == LtText)
+	      {
+		pBox->BxWidth -= pBox->BxNSpaces * CharacterWidth (_SPACE_, pBox->BxFont);
+		nSpaces += pBox->BxNSpaces;
+	      }
+
+	    length += pBox->BxWidth;
+	  }
 	/* passe a la boite suivante */
 	pBoxInLine = GetNextBox (pBox->BxAbstractBox);
      }
@@ -256,22 +260,26 @@ boolean             orgYComplete;
 	   pBox = pBoxInLine->BxNexChild;
 	else
 	   pBox = pBoxInLine;
-	XMove (pBox, NULL, length - pBox->BxXOrg, frame);
-	YMove (pBox, NULL, baseline - pBox->BxHorizRef - pBox->BxYOrg, frame);
-	/* Repartition des pixels */
-	if (pBox->BxAbstractBox->AbLeafType == LtText)
+
+	if (!pBoxInLine->BxAbstractBox->AbNotInLine)
 	  {
-	     if (nSpaces > pBox->BxNSpaces)
-		pBox->BxNPixels = pBox->BxNSpaces;
-	     else
-		pBox->BxNPixels = nSpaces;
+	    XMove (pBox, NULL, length - pBox->BxXOrg, frame);
+	    YMove (pBox, NULL, baseline - pBox->BxHorizRef - pBox->BxYOrg, frame);
+	    /* Repartition des pixels */
+	    if (pBox->BxAbstractBox->AbLeafType == LtText)
+	      {
+		if (nSpaces > pBox->BxNSpaces)
+		  pBox->BxNPixels = pBox->BxNSpaces;
+		else
+		  pBox->BxNPixels = nSpaces;
+		
+		nSpaces -= pBox->BxNPixels;
+		pBox->BxSpaceWidth = pLine->LiSpaceWidth;
+		pBox->BxWidth = pBox->BxWidth + pBox->BxNSpaces * pLine->LiSpaceWidth + pBox->BxNPixels;
+	      }
 
-	     nSpaces -= pBox->BxNPixels;
-	     pBox->BxSpaceWidth = pLine->LiSpaceWidth;
-	     pBox->BxWidth = pBox->BxWidth + pBox->BxNSpaces * pLine->LiSpaceWidth + pBox->BxNPixels;
+	    length += pBox->BxWidth;
 	  }
-
-	length += pBox->BxWidth;
 	/* passe a la boite suivante */
 	pBoxInLine = GetNextBox (pBox->BxAbstractBox);
      }
@@ -343,10 +351,14 @@ boolean             orgYComplete;
 	   pBox = pBoxInLine->BxNexChild;
 	else
 	   pBox = pBoxInLine;
-	XMove (pBox, NULL, x - pBox->BxXOrg, frame);
-	YMove (pBox, NULL, baseline - pBox->BxHorizRef - pBox->BxYOrg, frame);
-	x += pBox->BxWidth;
-	pBoxInLine->BxSpaceWidth = 0;
+
+	if (!pBoxInLine->BxAbstractBox->AbNotInLine)
+	  {
+	    XMove (pBox, NULL, x - pBox->BxXOrg, frame);
+	    YMove (pBox, NULL, baseline - pBox->BxHorizRef - pBox->BxYOrg, frame);
+	    x += pBox->BxWidth;
+	    pBoxInLine->BxSpaceWidth = 0;
+	  }
 	/* passe a la boite suivante */
 	pBoxInLine = GetNextBox (pBox->BxAbstractBox);
      }
@@ -1462,6 +1474,16 @@ boolean            *breakLine
 	   else if (pBox->BxType == BoPiece || pBox->BxType == BoDotted)
 	      pLine->LiLastPiece = pLine->LiFirstPiece;
 	}
+      else if (pNextBox->BxAbstractBox->AbNotInLine)
+	{
+	  /* skip over the box */
+	  pNextBox = GetNextBox (pNextBox->BxAbstractBox);
+	  if (pNextBox == NULL)
+	    {
+	      *full = FALSE;
+	      still = FALSE;
+	    }
+	}
       else
 	{
 	   /* Recherche si on doit forcer un return dans la boite */
@@ -1572,11 +1594,13 @@ boolean            *breakLine
 		       if (pLine->LiFirstPiece != NULL)
 			  pNextBox = pLine->LiFirstPiece;
 		    }
+
 		  if (pNextBox->BxAbstractBox->AbLeafType == LtText
-		  /* Si c'est une boite de texte secable */
+		      && !pNextBox->BxAbstractBox->AbNotInLine
+		      /* Si c'est une boite de texte secable */
 		      && pNextBox->BxWidth != 0		/* visible */
 		      && pNextBox->BxAbstractBox->AbAcceptLineBreak
-		  /* avec au moins un blanc si on est en insertion */
+		      /* avec au moins un blanc si on est en insertion */
 		      && pNextBox->BxNSpaces != 0)
 
 		     /* coupe sur le dernier blanc de la boite */
@@ -1634,7 +1658,8 @@ boolean            *breakLine
      {
 	if (pNextBox->BxType == BoSplit)
 	   pNextBox = pNextBox->BxNexChild;
-	AddBoxInLine (pNextBox, &descent, &ascent, pLine);
+	if (!pNextBox->BxAbstractBox->AbNotInLine)
+	  AddBoxInLine (pNextBox, &descent, &ascent, pLine);
 	if (pNextBox == pBox)
 	   still = FALSE;
 	else
@@ -1650,7 +1675,7 @@ boolean            *breakLine
    else
       pLine->LiLastBox = pBox;
 
-   /* teste s'il lostPixels des boites a mettre en ligne */
+   /* teste s'il reste des boites a mettre en ligne */
    if (pBox->BxNexChild == NULL && GetNextBox (pBox->BxAbstractBox) == NULL)
       *full = FALSE;
 
@@ -1795,12 +1820,21 @@ int                *height;
 		     pNextBox = GetNextBox (pChildAb);
 		     still = FALSE;
 		  }
-	     /* Est-ce que le pave est eclate ? */
+	        /* Est-ce que le pave est eclate ? */
 		else if (pChildAb->AbBox->BxType == BoGhost)
 		  {
 		     /* descend la hierarchie */
 		     pChildAb = pChildAb->AbFirstEnclosed;
 		     still = pChildAb != NULL;
+		  }
+		else if (pChildAb->AbNotInLine)
+		  {
+		     /* skip over the box */
+		     while (still && pChildAb->AbNotInLine)
+		       {
+			 pChildAb = pChildAb->AbNext;
+			 still = (pChildAb != NULL);
+		       }
 		  }
 	     /* Sinon c'est la boite du pave */
 		else
@@ -1835,7 +1869,7 @@ int                *height;
 	     /* hauteur boite bloc de lignes */
 	     *height = pPreviousLine->LiYOrg + pPreviousLine->LiHeight;
 	     /* Origine de la future ligne */
-	     if (pChildAb->AbHorizEnclosing)
+	     if (pChildAb->AbHorizEnclosing && !pChildAb->AbNotInLine)
 	       {
 		  /* C'est une boite englobee */
 		  org = pPreviousLine->LiYOrg + pPreviousLine->LiHorizRef + lineSpacing;
@@ -1869,7 +1903,8 @@ int                *height;
 		  GetLine (&pLine);
 		  pPreviousLine->LiNext = pLine;
 		  /* Si la 1ere boite nouvellement mise en lignes n'est pas englobee */
-		  if (!pNextBox->BxAbstractBox->AbHorizEnclosing)
+		  if (!pNextBox->BxAbstractBox->AbHorizEnclosing
+		      && !pNextBox->BxAbstractBox->AbNotInLine)
 		    {
 		       org = *height;
 		       /* colle la nouvelle ligne en dessous */
@@ -1909,7 +1944,7 @@ int                *height;
 		  org = *height;
 		  toLineSpace = FALSE;
 	       }
-	     else
+	     else if (!pNextBox->BxAbstractBox->AbNotInLine)
 	       {
 		  /* Indentation des lignes */
 		  if (pPreviousLine != NULL || pAb->AbTruncatedHead)
@@ -1954,8 +1989,15 @@ int                *height;
 		       Align (pBox, pLine, x, frame, orgXComplete, orgYComplete);
 		    }
 	       }
-
-	     pNextBox = GetNextBox (pLine->LiLastBox->BxAbstractBox);
+	     if (pLine->LiLastBox != NULL)
+	       {
+		 pNextBox = pLine->LiLastBox;
+		 do
+		   pNextBox = GetNextBox (pNextBox->BxAbstractBox);
+		 while (pNextBox != NULL && pNextBox->BxAbstractBox->AbNotInLine);
+	       }
+	     else
+	       pNextBox = NULL;
 	     /* is there a breaked box */
 	     if (pLine->LiLastPiece == NULL)
 	       pBoxToBreak = NULL;
@@ -1983,7 +2025,7 @@ int                *height;
 	       }
 	     else if (pBoxToBreak != NULL)
 	       {
-		 /* take in account undisplayed spaces */
+		 /* take undisplayed spaces into account */
 		 lostPixels = pBoxToBreak->BxIndChar - pLine->LiLastPiece->BxNChars - pLine->LiLastPiece->BxIndChar;
 		 lostPixels = lostPixels * CharacterWidth (_SPACE_, pBoxToBreak->BxFont);
 	       }
@@ -2151,7 +2193,8 @@ int                 frame;
 	pBox = GetNextBox (pBox->BxAbstractBox);
 	if (pBox != NULL && pBox->BxNexChild != NULL && pBox->BxType == BoSplit)
 	   pBox = pBox->BxNexChild;
-	XMove (pBox, NULL, x, frame);
+	if (!pBox->BxAbstractBox->AbNotInLine)
+	  XMove (pBox, NULL, x, frame);
      }
    DefClip (frame, xd, yd, xf, yf);
    ReadyToDisplay = TRUE;
@@ -2223,53 +2266,57 @@ int                 spaceDelta;
 	else
 	   pFirstBox = pBox;
 
-	XMove (pFirstBox, NULL, length - pFirstBox->BxXOrg, frame);
-	if (pFirstBox->BxAbstractBox->AbLeafType == LtText && pFirstBox->BxNChars != 0)
+	if (!pBox->BxAbstractBox->AbNotInLine)
 	  {
-	     pFirstBox->BxWidth -= pFirstBox->BxNSpaces * spaceValue;
-	     pFirstBox->BxSpaceWidth = pLine->LiSpaceWidth;
+	    XMove (pFirstBox, NULL, length - pFirstBox->BxXOrg, frame);
+	    if (pFirstBox->BxAbstractBox->AbLeafType == LtText && pFirstBox->BxNChars != 0)
+	      {
+		pFirstBox->BxWidth -= pFirstBox->BxNSpaces * spaceValue;
+		pFirstBox->BxSpaceWidth = pLine->LiSpaceWidth;
+		
+		/* Repartition des pixels */
+		opixel = pFirstBox->BxNPixels;
+		if (remainder > pFirstBox->BxNSpaces)
+		  pFirstBox->BxNPixels = pFirstBox->BxNSpaces;
+		else
+		  pFirstBox->BxNPixels = remainder;
+		pFirstBox->BxWidth = pFirstBox->BxWidth - opixel + pFirstBox->BxNPixels;
+		remainder -= pFirstBox->BxNPixels;
+		
+		/* Faut-il mettre a jour les marques de selection ? */
+		pViewSel = &ViewFrameTable[frame - 1].FrSelectionBegin;
+		if (pViewSel->VsBox == pFirstBox)
+		  {
+		    pViewSel->VsXPos -= pViewSel->VsNSpaces * spaceValue;
+		    if (opixel < pViewSel->VsNSpaces)
+		      pViewSel->VsXPos -= opixel;
+		    else
+		      pViewSel->VsXPos -= pViewSel->VsNSpaces;
+		    if (pFirstBox->BxNPixels < pViewSel->VsNSpaces)
+		      pViewSel->VsXPos += pFirstBox->BxNPixels;
+		    else
+		      pViewSel->VsXPos += pViewSel->VsNSpaces;
+		  }
 
-	     /* Repartition des pixels */
-	     opixel = pFirstBox->BxNPixels;
-	     if (remainder > pFirstBox->BxNSpaces)
-		pFirstBox->BxNPixels = pFirstBox->BxNSpaces;
-	     else
-		pFirstBox->BxNPixels = remainder;
-	     pFirstBox->BxWidth = pFirstBox->BxWidth - opixel + pFirstBox->BxNPixels;
-	     remainder -= pFirstBox->BxNPixels;
-
-	     /* Faut-il mettre a jour les marques de selection ? */
-	     pViewSel = &ViewFrameTable[frame - 1].FrSelectionBegin;
-	     if (pViewSel->VsBox == pFirstBox)
-	       {
-		  pViewSel->VsXPos -= pViewSel->VsNSpaces * spaceValue;
-		  if (opixel < pViewSel->VsNSpaces)
-		     pViewSel->VsXPos -= opixel;
-		  else
-		     pViewSel->VsXPos -= pViewSel->VsNSpaces;
-		  if (pFirstBox->BxNPixels < pViewSel->VsNSpaces)
-		     pViewSel->VsXPos += pFirstBox->BxNPixels;
-		  else
-		     pViewSel->VsXPos += pViewSel->VsNSpaces;
-	       }
-	     pViewSel = &ViewFrameTable[frame - 1].FrSelectionEnd;
-	     if (pViewSel->VsBox == pFirstBox)
-	       {
-		  pViewSel->VsXPos -= pViewSel->VsNSpaces * spaceValue;
-		  if (opixel < pViewSel->VsNSpaces)
-		     pViewSel->VsXPos -= opixel;
-		  else
-		     pViewSel->VsXPos -= pViewSel->VsNSpaces;
-		  if (pFirstBox->BxNPixels < pViewSel->VsNSpaces)
-		     pViewSel->VsXPos += pFirstBox->BxNPixels;
-		  else
-		     pViewSel->VsXPos += pViewSel->VsNSpaces;
-		  if (pViewSel->VsIndBox < pFirstBox->BxNChars
-		      && pViewSel->VsBuffer->BuContent[pViewSel->VsIndBuf - 1] == ' ')
-		     pViewSel->VsXPos -= spaceValue;
-	       }
+		pViewSel = &ViewFrameTable[frame - 1].FrSelectionEnd;
+		if (pViewSel->VsBox == pFirstBox)
+		  {
+		    pViewSel->VsXPos -= pViewSel->VsNSpaces * spaceValue;
+		    if (opixel < pViewSel->VsNSpaces)
+		      pViewSel->VsXPos -= opixel;
+		    else
+		      pViewSel->VsXPos -= pViewSel->VsNSpaces;
+		    if (pFirstBox->BxNPixels < pViewSel->VsNSpaces)
+		      pViewSel->VsXPos += pFirstBox->BxNPixels;
+		    else
+		      pViewSel->VsXPos += pViewSel->VsNSpaces;
+		    if (pViewSel->VsIndBox < pFirstBox->BxNChars
+			&& pViewSel->VsBuffer->BuContent[pViewSel->VsIndBuf - 1] == ' ')
+		      pViewSel->VsXPos -= spaceValue;
+		  }
+	      }
+	    length += pFirstBox->BxWidth;
 	  }
-	length += pFirstBox->BxWidth;
 	pBox = GetNextBox (pFirstBox->BxAbstractBox);
      }
    while (pFirstBox != pLine->LiLastBox && pFirstBox != pLine->LiLastPiece);
@@ -2606,7 +2653,7 @@ int                 frame;
 
 	/* Si l'origne de la reevaluation du bloc de ligne vient d'une boite */
 	/* de coupure, il faut deplacer cette origne sur la boite coupee     */
-	/* parce que RemoveLines va liberer toutes les boites de coupure.       */
+	/* parce que RemoveLines va liberer toutes les boites de coupure.    */
 	if (pFirstBox != NULL)
 	   if (pFirstBox->BxType == BoPiece || pFirstBox->BxType == BoDotted)
 	      pFirstBox = pFirstBox->BxAbstractBox->AbBox;

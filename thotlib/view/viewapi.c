@@ -301,12 +301,8 @@ Element             subtree;
 	     if (found)
 		v = i;
 	  }
-	if (!found)
-	   TtaError (ERR_invalid_parameter);
-	else
-	   /* View found */
+	if (found)
 	  {
-
           viewHasBeenOpen = TRUE;
 
 	     /* Open the view */

@@ -1258,13 +1258,14 @@ void               *event;
 #endif /* __STDC__ */
 
 {
-   int                 comm, dx, dy;
    PtrDocument         docsel;
-   ThotEvent              event;
    PtrElement          firstSel, lastSel;
+   ThotEvent           event;
+   ThotEvent          *ev = (ThotEvent *) evnt;
    int                 firstCar, lastCar;
+   int                 comm, dx, dy;
+   int                 e;
    boolean             ok;
-   ThotEvent             *ev = (ThotEvent *) evnt;
 
    /* ne pas traiter si le document est en mode NoComputedDisplay */
    if (documentDisplayMode[FrameTable[frame].FrDoc - 1] == NoComputedDisplay)
@@ -1414,6 +1415,8 @@ void               *event;
        break;
 
      case EnterNotify:
+       break;
+
      case LeaveNotify:
        break;
 

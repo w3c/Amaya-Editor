@@ -899,19 +899,19 @@ FILE               *fileDescriptor;
 	    case UnRelative:
 	       break;
 	    case UnXHeight:
-	       fprintf (fileDescriptor, " ex");
+	       fprintf (fileDescriptor, "ex");
 	       break;
 	    case UnPoint:
-	       fprintf (fileDescriptor, " pt");
+	       fprintf (fileDescriptor, "pt");
 	       break;
 	    case UnPixel:
-	       fprintf (fileDescriptor, " px");
+	       fprintf (fileDescriptor, "px");
 	       break;
 	    case UnPercent:
-	       fprintf (fileDescriptor, " %%");
+	       fprintf (fileDescriptor, "%%");
 	       break;
 	    default:
-	       fprintf (fileDescriptor, " ???");
+	       fprintf (fileDescriptor, "???");
 	       break;
 	 }
 }
@@ -1064,14 +1064,8 @@ FILE               *fileDescriptor;
 	wrboolean (pPa1->AbReadOnly, fileDescriptor);
 	fprintf (fileDescriptor, " Modif:");
 	wrboolean (pPa1->AbCanBeModified, fileDescriptor);
-	fprintf (fileDescriptor, " AbstractBox Pres:");
+	fprintf (fileDescriptor, " PresBox:");
 	wrboolean (pPa1->AbPresentationBox, fileDescriptor);
-	if (!pPa1->AbHorizEnclosing)
-	   fprintf (fileDescriptor, " HorizEncl:N");
-	if (!pPa1->AbVertEnclosing)
-	   fprintf (fileDescriptor, " VertEncl:N");
-	if (pPa1->AbNotInLine)
-	   fprintf (fileDescriptor, " NotInLine");
 
 	fprintf (fileDescriptor, "\n");
 	for (j = 1; j <= Indent + 6; j++)
@@ -1082,10 +1076,7 @@ FILE               *fileDescriptor;
 	fprintf (fileDescriptor, " LineStyle:%c", pPa1->AbLineStyle);
 	fprintf (fileDescriptor, " LineWeight:%d", pPa1->AbLineWeight);
 	wrTypeUnit (pPa1->AbLineWeightUnit, fileDescriptor);
-	fprintf (fileDescriptor, " PageBreak:");
-	wrboolean (pPa1->AbAcceptPageBreak, fileDescriptor);
-	fprintf (fileDescriptor, " LineBreak:");
-	wrboolean (pPa1->AbAcceptLineBreak, fileDescriptor);
+	fprintf (fileDescriptor, " Depth:%d", pPa1->AbDepth);
 
 	fprintf (fileDescriptor, "\n");
 	for (j = 1; j <= Indent + 6; j++)
@@ -1094,9 +1085,25 @@ FILE               *fileDescriptor;
 	fprintf (fileDescriptor, " HighL:%d", pPa1->AbHighlight);
 	fprintf (fileDescriptor, " Size:%d", pPa1->AbSize);
 	wrTypeUnit (pPa1->AbSizeUnit, fileDescriptor);
+	fprintf (fileDescriptor, "\n");
+	for (j = 1; j <= Indent + 6; j++)
+	   fprintf (fileDescriptor, " ");
+	if (!pPa1->AbHorizEnclosing)
+	   fprintf (fileDescriptor, " HorizEncl:N");
+	if (!pPa1->AbVertEnclosing)
+	   fprintf (fileDescriptor, " VertEncl:N");
+	if (pPa1->AbNotInLine)
+	   fprintf (fileDescriptor, " NotInLine");
+	fprintf (fileDescriptor, " PageBreak:");
+	wrboolean (pPa1->AbAcceptPageBreak, fileDescriptor);
+	fprintf (fileDescriptor, " LineBreak:");
+	wrboolean (pPa1->AbAcceptLineBreak, fileDescriptor);
+
+	fprintf (fileDescriptor, "\n");
+	for (j = 1; j <= Indent + 6; j++)
+	   fprintf (fileDescriptor, " ");
 	fprintf (fileDescriptor, " Indent:%d", pPa1->AbIndent);
 	wrTypeUnit (pPa1->AbIndentUnit, fileDescriptor);
-	fprintf (fileDescriptor, " Depth:%d", pPa1->AbDepth);
 	fprintf (fileDescriptor, " align:");
 	switch (pPa1->AbAdjust)
 	      {

@@ -707,9 +707,9 @@ NotifyElement      *event;
   char                tempURL[MAX_LENGTH];
   char                path[MAX_LENGTH];
 
-  docSchema = TtaGetDocumentSSchema (doc);
   el = event->element;
   doc = event->document;
+  docSchema = TtaGetDocumentSSchema (doc);
   CheckPseudoParagraph (el, doc);
   elType = TtaGetElementType (el);
   if (docSchema == elType.ElSSchema && elType.ElTypeNum == HTML_EL_Anchor)

@@ -935,7 +935,6 @@ BOXES
 		END;
 	END;
 
-{ ******
  Image_Frame: BEGIN
 	Content: Graphics 'R';
 	VertPos: Top = Creator . Top - 2 pt;
@@ -951,7 +950,6 @@ BOXES
 	IN Alternate_view
 		Visibility: 0;
 	END;
-**** }
 
  FORM_S: BEGIN
 	Content: Text 'FORM';
@@ -6048,15 +6046,11 @@ ATTRIBUTES
 	END;
 
 #endif
-{***** supprime : a cause de la mise en ligne, les images avec cadre qui sont
-dans des paragraphes s affichent a cote de leur cadre...
- Img_border > 0:
-	CreateAfter(Image_Frame);
-******}
  Img_border:
 	BEGIN
 	CreateBefore(ATTR_BORDER);
 	CreateBefore(VALUE_IMG_BORDER);
+	CreateAfter(Image_Frame);
 	END;
 
  NoShade:
@@ -6197,14 +6191,14 @@ dans des paragraphes s affichent a cote de leur cadre...
  Alignment = Left_:
 	BEGIN
 	CreateBefore(ALIGN_LEFT);
-	InLine: No;
 	HorizPos: Left = Enclosing . Left;
+	Adjust: Left;
 	END;
  Alignment = Right_:
 	BEGIN
 	CreateBefore(ALIGN_RIGHT);
-	InLine: No;
 	HorizPos: Right = Enclosing . Right;
+	Adjust: Left;
 	END;
 
  Align = left_:

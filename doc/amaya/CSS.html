@@ -1,49 +1,61 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
-<HTML>
-<HEAD>
-<STYLE>
+<html>
+<head>
+<style>
 BODY { background : #FFFFFF }
 ADDRESS { text-align : center }
 H1 { color : #00647F }
 H3 { color : #0050B2 }
 LI P { text-indent : 0pt; text-align: justify }
-P { text-indent : 15pt; text-align: justify }
 DD P { text-indent : 0pt; line-height : 16pt; text-align: justify }
 UL P { text-indent : 0pt; line-height : 16pt; text-align: justify }
-BLOCKQUOTE P { text-indent : 0pt; line-height : 16pt; text-align: justify }
-</STYLE>
-<TITLE>CSS support in Amaya</TITLE>
+BLOCKQUOTE P { text-align: justify; line-height : 16pt; text-indent : 0pt }
+P { text-indent : 15pt; text-align: justify }
+</style>
+<title>
+CSS support in Amaya</title>
 <!-- Changed by: Jose Kahan,  8-Jul-1996 -->
-</HEAD>
-<BODY style="background : #FFFFFF">
-<P><A href="../../"><IMG BORDER="0" alt="W3C" src="../../Icons/WWW/w3c_home" WIDTH="72"></A><A
-href="../"><IMG BORDER="0" src="amaya.gif" alt="Amaya"></A>
-<A href="./"><IMG BORDER="0" SRC="../../Icons/WWW/guide48x" ALT="Using"></A> </P>
-<H1 style="text-align : center">Cascading Style Sheet support in Amaya</H1>
-<H3 style="align : center">1<SUP>st</SUP> July 1996</H3>
-<P>This document describes the current state of the <A
-href="../../Style">Cascading Style Sheet</A> support in
-Amaya. The implementation is based on the latest (18 Apr 96) <A
-href="../../TR/WD-css1.html">CSS1 proposal</A> by
-H&aring;kon W. Lie and Bert Bos from the <A
-href="../..">W3 Consortium</A>. We focussed on providing
-as many features as possible and offering an easy to use and learn interface.
+</head>
+<body style="background : #FFFFFF">
+<p>
+<a href="../../"><img border="0" alt="W3C" src="../../Icons/WWW/w3c_home"
+width="72"></a><a href="../"><img border="0" src="amaya.gif" alt="Amaya"></a>
+<a href="./"><img border="0" src="../../Icons/WWW/guide48x"
+alt="Using"></a></p>
+
+<h1 style="text-align : center">Cascading Style Sheet support in Amaya</h1>
+
+<h3 style="align : center">1<sup>st</sup> July 1996</h3>
+<p>
+This document describes the current state of the <a
+href="../../Style">Cascading Style Sheet</a> support in Amaya. The
+implementation is based on the latest (18 Apr 96) <a
+href="../../TR/WD-css1.html">CSS1 proposal</a> by H&aring;kon W. Lie and Bert
+Bos from the <a href="../..">W3 Consortium</a>. We focussed on providing as
+many features as possible and offering an easy to use and learn interface.
 Considering the second point we choosed a "learn by example" approach suitable
-for users not experienced with style sheets.</P>
-<P>This document contains the following sections:</P>
-<OL>
-<LI>Section "<A href="#L392">Presentation</A>" gives a short overview of the
-CSS.
-<LI>Section  "<A href="#L393">Interface</A>" details the CSS specific areas of
-the Amaya interface.
-<LI>Section "<A href="#L394">Current State</A>" presents the CSS
-functionnalities that are currently implemented.
-<LI>Section "<A href="#L395">What's lacking</A>" explains the main points to
-be improved or added.
-<LI>Section "<A href="#L397">What's next</A>" is for future plans.
-</OL>
-<H3><A name="L392">Presentation</A></H3>
-<P>CSS defines a syntax to describe presentation associated with elements as a
+for users not experienced with style sheets.</p>
+<p>
+This document contains the following sections:</p>
+<ol>
+<li>
+Section "<a href="#L392">Presentation</a>" gives a short overview of the CSS. 
+<li>
+Section  "<a href="#L393">Interface</a>" details the CSS specific areas of the
+Amaya interface. 
+<li>
+Section "<a href="#L394">Current State</a>" presents the CSS functionnalities
+that are currently implemented. 
+<li>
+Section "<a href="#L395">What's lacking</a>" explains the main points to be
+improved or added. 
+<li>
+Section "<a href="#L397">What's next</a>" is for future plans. 
+</ol>
+
+<h3><a name="L392">Presentation</a></h3>
+<p>
+CSS defines a syntax to describe presentation associated with elements as a
 set of properties (like colors, fonts, etc.). Associated to properties, a
 selector restrict the application of these rules to a set of element depending
 on their type (like H1, or LI), their context (like an EM in a H3) or classes
@@ -52,14 +64,16 @@ applied when more than one selector match a given element. While this is
 relatively simple for someone used to handle structured documents, the
 experience has shown that a new user may have difficulties to modelize a
 document as a structured entity. This might be a problem when trying to
-introduce the CSS to a large audience.</P>
-<P>Thus, the challenge is to build a tool simple enough so that inexperienced
+introduce the CSS to a large audience.</p>
+<p>
+Thus, the challenge is to build a tool simple enough so that inexperienced
 people can use styles when creating HTML pages with Amaya, while retaining all
 the possibilities of CSS. The interface was also designed to not hide the
 underlying complexity of the document structure (Structure View) and of the
 CSS language (CSS rules may be shown), in order to shorten the learning curve
-to structured presentation design.</P>
-<P>One of the strongest features of CSS is the cascading model. Presentation
+to structured presentation design.</p>
+<p>
+One of the strongest features of CSS is the cascading model. Presentation
 rules can be fetched from different remote files, tied to the document or
 associated to one specific element in a page. This allows sharing and reuse of
 sets of rules whilst allowing specific presentation. It allows also the use of
@@ -70,174 +84,244 @@ dialog box) and all the set of rules associated to the external files
 referenced by the document. It is possible to manipulate rules in one file but
 also to move them from one file to another, allowing a user to take
 presentation rules from a remote server and apply them selectively to his own
-pages, in the purpose of building a pool of presentation rules.</P>
-<H3><A name="L393">User interface</A></H3>
-<P>We first present the Style interface as provided by the current version of
-Amaya:</P>
-<P>The Amaya menu bar contains a <STRONG>Style</STRONG> menu containing all
-the actions related to presentation and style manipulation. Entries in that
-menu are ordered from the most specific to the most generic operations, except
-the two last ones, which are not related to CSS, but to HTML
-(<STRONG>Information type</STRONG> and <STRONG>Character
-element</STRONG>).</P>
-<UL>
-<LI>Three entries call dialog boxes that associate presentation with the
-currently selected elements:
-<UL>
-<LI><STRONG>Character style</STRONG> allows to select font attributes (size,
-style, family and underline)
-<LI><STRONG>Colors</STRONG> allows to choose the  foreground and background
-colors from a palette.
-<LI><STRONG>Format</STRONG> allows to set  alignment, indentation,
-justification and linespacing.
-</UL>
-<P>All modifications made with these dialog boxes can be viewed immediately in
-the WYSIWYG view and the Structure view.</P>
-<LI>Two entries are related to classes:
-<UL>
-<LI><STRONG>Create class</STRONG> uses the style of the selected element to
-define a new class with the same. A list of the existing classes is proposed,
-the type of the current element being the default. This is the first step
-toward defining CSS rules. Presentation is moved from the selected element to
-the document header, defining a new CSS rule. All elements of the new class
-take the new style.
-<LI><STRONG>Apply class</STRONG> uses one of the existing classes and applies
-it to the selected elements. These elements are then displayed with the style
-associated with class chosen.
-</UL>
-<LI>The <STRONG>Style sheet</STRONG> item gives access to the CSS dialog box:
-<P><IMG src="css.gif"></P>
-<P></P>
-<UL>
-<LI>The two CSS selectors allow to select CSS files from which rules can be
-manipulated. In each, the currently selected file is highlighted.
-<LI>The two rule selectors show the rules extracted from the selected CSS
-files. Only one rule can be selected for both selector, which is the current
-rule. All rules are grouped by their selector and only the list of selectors
-is shown here.
-<LI>The text area at the bottom shows the CSS syntax of the current rule (the
-one selected from the above selectors), allowing the user to see the CSS
-syntax. This is an editable field allowing the user to modify the current
-rule.
-<LI>Between the two Rule Selectors there is a column of 5 buttons.
-<UL>
-<LI>pushing the <IMG BORDER="0" src="lcopy.gif"> button merges the current rule (as shown
-in the text area) to the second file. Changes are immediately reflected in the
-WYSIWYG View.
-<LI>pushing the <IMG BORDER="0" src="lmerge.gif"> button copies the current rule to the
-second file.The difference with the previous button is that all rules using
-the same selector initially present in the file are first removed.
-<LI>pushing the <IMG BORDER="0" src="destroy.gif"> button deletes the current rule.
-<LI>the buttons <IMG BORDER="0" src="rcopy.gif"> and <IMG src="rmerge.gif"> have the same
-effect as the first two buttons but they act on the first file.
-</UL>
-<LI>The five buttons at the bottom are used for operations at the CSS file
-level.
-<UL>
-<LI><STRONG>Save</STRONG> initiates the operation of saving all modified CSS
-files.
-<LI><STRONG>Save as</STRONG> saves one of the CSS to a local file.
-<LI><STRONG>Reload</STRONG> is a coarse grained Undo. It reloads all the
-modified CSS files referenced by the document.
-<LI><STRONG>New</STRONG> adds an external CSS file to the list of the external
+pages, in the purpose of building a pool of presentation rules.</p>
+
+<h3><a name="L393">User interface</a></h3>
+<p>
+We first present the Style interface as provided by the current version of
+Amaya:</p>
+<p>
+The Amaya menu bar contains a <strong>Style</strong> menu containing all the
+actions related to presentation and style manipulation. Entries in that menu
+are ordered from the most specific to the most generic operations, except the
+two last ones, which are not related to CSS, but to HTML (<strong>Information
+type</strong> and <strong>Character element</strong>).</p>
+<ul>
+<li>
+Three entries call dialog boxes that associate presentation with the currently
+selected elements: 
+<ul>
+<li>
+<strong>Character Style</strong> allows one to select font attributes (size,
+style, family and underline) 
+<li>
+<strong>Colors</strong> allows one to choose the  foreground and background
+colors from a palette. 
+<li>
+<strong>Format</strong> allows one to set  alignment, indentation,
+justification and linespacing. 
+<li>
+<strong>Background Image</strong> allows one to insert a background image and
+to select the repeat mode.
+</ul>
+<p>
+All modifications made with these dialog boxes can be viewed immediately in
+the WYSIWYG view and the Structure view.</p>
+<li>
+Two entries are related to classes: 
+<ul>
+<li>
+<strong>Create Rule</strong> uses the style of the selected element to define
+a new class with the same. A list of the existing classes is proposed, the
+type of the current element being the default. This is the first step toward
+defining CSS rules. Presentation is moved from the selected element to the
+document header, defining a new CSS rule. All elements of the new class take
+the new style. 
+<li>
+<strong>Apply class</strong> uses one of the existing classes and applies it
+to the selected elements. These elements are then displayed with the style
+associated with class chosen. 
+</ul>
+<li>
+The <strong>Style sheet</strong> item gives access to the CSS dialog box: 
+<p>
+<img src="css.gif"></p>
+<p>
+</p>
+<ul>
+<li>
+The two CSS selectors allow to select CSS files from which rules can be
+manipulated. In each, the currently selected file is highlighted. 
+<li>
+The two rule selectors show the rules extracted from the selected CSS files.
+Only one rule can be selected for both selector, which is the current rule.
+All rules are grouped by their selector and only the list of selectors is
+shown here. 
+<li>
+The text area at the bottom shows the CSS syntax of the current rule (the one
+selected from the above selectors), allowing the user to see the CSS syntax.
+This is an editable field allowing the user to modify the current rule. 
+<li>
+Between the two Rule Selectors there is a column of 5 buttons. 
+<ul>
+<li>
+pushing the <img border="0" src="lcopy.gif">
+ button merges the current rule (as shown in the text area) to the second
+file. Changes are immediately reflected in the WYSIWYG View. 
+<li>
+pushing the <img border="0" src="lmerge.gif">
+ button copies the current rule to the second file.The difference with the
+previous button is that all rules using the same selector initially present in
+the file are first removed. 
+<li>
+pushing the <img border="0" src="destroy.gif">
+ button deletes the current rule. 
+<li>
+the buttons <img border="0" src="rcopy.gif">
+ and <img src="rmerge.gif">
+ have the same effect as the first two buttons but they act on the first file.
+
+</ul>
+<li>
+The five buttons at the bottom are used for operations at the CSS file level. 
+<ul>
+<li>
+<strong>Save</strong> initiates the operation of saving all modified CSS
+files. 
+<li>
+<strong>Save as</strong> saves one of the CSS to a local file. 
+<li>
+<strong>Reload</strong> is a coarse grained Undo. It reloads all the modified
+CSS files referenced by the document. 
+<li>
+<strong>New</strong> adds an external CSS file to the list of the external
 style sheet referenced by the document. It is also possible to browse the
 content of a file without attaching it to the document. Amaya keeps an history
 of the CSS files encountered. This history is saved from session to  session,
 and allows to grab quickly one of the CSS lastly referenced, to browse its
-rules or to attach it to the current document.
-<LI><STRONG>Remove</STRONG> supresses a reference to an external CSS file.
-<LI><STRONG>Cancel</STRONG> closes the CSS dialog box.
-</UL>
-</UL>
-<P>There are some additionnal dialogs needed for saving CSS files or selecting
-them from the history.</P>
-</UL>
-<H3><A name="L394">Current State</A></H3>
-<P>Here, we focus on what is currently supported from the CSS1 proposal:</P>
-<UL>
-<LI>Parsing:
-<UL>
-<LI>all the basic:
-<UL>
-<LI>grouping selectors in one rule
-<LI>grouping properties in one rule
-<LI>comments (in external CSS files only)
-</UL>
-<LI>classes and pseudoclasses
-<LI>context sensitive selector
-<LI>standard units
-</UL>
-<LI>Cascading order should be fine.
-<LI>CSS properties: Everything should be parsed correctly, but the back-end
-may lack support for some attributes
-<UL>
-<LI>Font: all should be supported to some extend, except the generic "font"
-used to group properties.
-<LI>Color: a list of approximately 500 predefined color names is here. Parsing
-of #RGB is available too. But the set of colors available is limited. The
-notation rgb(r,g,b) is not yet supported.
-<LI>Text: text-align, text-decoration and text-indent.
-<LI>Fonts: Times, Helvetica and Courrier are available, with various character
-style and a set of prefefined size (from 6 to 60 points).
-<LI>Box Properties: not supported in this version. However, a bit of support
-is provided for margin-xxxx properties but not well tested.
-<LI>Magnification is here, perfect for "Users Preference" style.
-</UL>
-</UL>
-<P>There is support for users preferences which can be provided at a site
-level in <CODE>Amaya/bin/amaya.css</CODE>, or specified by the user in
-<TT>$(HOME)/.amaya.css</TT> . Here is an example of an <CODE><A
-href="amaya.css">amaya.css</A></CODE> file.</P>
-<P>The CSS history is stored in <CODE>$(HOME)/.amaya/history.css</CODE> and
-contains the 50 last CSS files loaded by Amaya.</P>
-<H3><A name="L395">What's lacking</A></H3>
-<P>First, considering the current draft compliance, the main issues for full
-CSS1 support are:</P>
-<UL>
-<LI>The <STRONG>Print</STRONG> command does not currently render presentation
-defined in style sheets. This problem will be fixed in the next release.
-<LI>The CSS1 formatting model for border, margins and padding is not yet
-implemented.
-<LI>A few differences with the CSS1 specification may appear in the cascading
-order.
-<LI>Pseudo elements are difficult to handle, since these are not elements and
+rules or to attach it to the current document. 
+<li>
+<strong>Remove</strong> supresses a reference to an external CSS file. 
+<li>
+<strong>Cancel</strong> closes the CSS dialog box. 
+</ul>
+</ul>
+<p>
+There are some additionnal dialogs needed for saving CSS files or selecting
+them from the history.</p>
+</ul>
+
+<h3><a name="L394">Current State</a></h3>
+<p>
+Here, we focus on what is currently supported from the CSS1 proposal:</p>
+<ul>
+<li>
+Parsing: 
+<ul>
+<li>
+all the basic: 
+<ul>
+<li>
+grouping selectors in one rule 
+<li>
+grouping properties in one rule 
+<li>
+comments (in external CSS files only) 
+</ul>
+<li>
+classes and pseudoclasses 
+<li>
+context sensitive selector 
+<li>
+standard units 
+</ul>
+<li>
+Cascading order should be fine. 
+<li>
+CSS properties: Everything should be parsed correctly, but the back-end may
+lack support for some attributes 
+<ul>
+<li>
+Font: all should be supported to some extend, except the generic "font" used
+to group properties. 
+<li>
+Color: a list of approximately 500 predefined color names is here. Parsing of
+#RGB is available too. But the set of colors available is limited. The
+notation rgb(r,g,b) is not yet supported. 
+<li>
+Text: text-align, text-decoration and text-indent. 
+<li>
+Fonts: Times, Helvetica and Courrier are available, with various character
+style and a set of prefefined size (from 6 to 60 points). 
+<li>
+Box Properties: not supported in this version. However, a bit of support is
+provided for margin-xxxx properties but not well tested. 
+<li>
+Magnification is here, perfect for "Users Preference" style. 
+</ul>
+</ul>
+<p>
+There is support for users preferences which can be provided at a site level
+in <code>Thot/$PLATFORM/amaya.css</code>, or specified by the user in
+<tt>$(HOME)/.amaya.css</tt> . Here is an example of an <code><a
+href="amaya.css">amaya.css</a></code> file.</p>
+<p>
+The CSS history is stored in <code>$(HOME)/.amaya/history.css</code> and
+contains the 50 last CSS files loaded by Amaya.</p>
+
+<h3><a name="L395">What's lacking</a></h3>
+<p>
+First, considering the current draft compliance, the main issues for full CSS1
+support are:</p>
+<ul>
+<li>
+The <strong>Print</strong> command does not currently render presentation
+defined in style sheets. This problem will be fixed in the next release. 
+<li>
+The CSS1 formatting model for border, margins and padding is not yet
+implemented. 
+<li>
+A few differences with the CSS1 specification may appear in the cascading
+order. 
+<li>
+Pseudo elements are difficult to handle, since these are not elements and
 cannot be added at parsing time, first lines for example are computed lately,
-and hence could not be easily added as attributes on the structure.
-<LI>The current implementation is a bit restrictive on colors and fonts:
-<UL>
-<LI>Amaya should support the full RGB color spectrum instead of using a set of
-pre-allocated colors.
-<LI>more fonts, small-caps, cursive, fantasy ... are needed.
-</UL>
-<P>The CSS rules produced by Amaya are re-generated from the internal
+and hence could not be easily added as attributes on the structure. 
+<li>
+The current implementation is a bit restrictive on colors and fonts: 
+<ul>
+<li>
+Amaya should support the full RGB color spectrum instead of using a set of
+pre-allocated colors. 
+<li>
+more fonts, small-caps, cursive, fantasy ... are needed. 
+</ul>
+<p>
+The CSS rules produced by Amaya are re-generated from the internal
 presentation layer, thus when approximations are made at parsing, the HTML
-output is degraded.</P>
-</UL>
-<P>Considering the user interface, one of the main problems style sheet
-writers will be faced to is the reverse problem induced by the inheritance
-complexity:</P>
-<P>Beginner's question: How do I produce xxx kind of input ?</P>
-<P>CSS Writer's question: Why did it produce xxx kind of input ?</P>
-<P>Suppose that a part of a document doesn't have the expected look, why ?
+output is degraded.</p>
+</ul>
+<p>
+Considering the user interface, one of the main problems style sheet writers
+will be faced to is the reverse problem induced by the inheritance
+complexity:</p>
+<p>
+Beginner's question: How do I produce xxx kind of input ?</p>
+<p>
+CSS Writer's question: Why did it produce xxx kind of input ?</p>
+<p>
+Suppose that a part of a document doesn't have the expected look, why ?
 Considering the underneath complexity of the cascading order, when referencing
 multiples external CSS, one can easily understand that debugging CSS in
 real-use might be difficult. One nice feature would be to show graphically all
 the rules applying to an element or a zone, where they came from, and which
-rules they superceded.</P>
-<H3><A name="L397">What's Next</A></H3>
-<P>Here is a short list of future actions for CSS in Amaya:</P>
-<UL>
-<LI>Full CSS1 compliance.
-<LI>Improving the interface.
-</UL>
-<P></P>
+rules they superceded.</p>
 
-<HR>
-<ADDRESS>
-<A name="L511" href="mailto:veillard@w3.org">D. Veillard</A><BR>
-<A HREF="../../Help/Webmaster">Webmaster</A><BR>
-  $Date$
-</ADDRESS>
-</BODY>
-</HTML>
-
+<h3><a name="L397">What's Next</a></h3>
+<p>
+Here is a short list of future actions for CSS in Amaya:</p>
+<ul>
+<li>
+Full CSS1 compliance. 
+<li>
+Improving the interface. 
+</ul>
+<p>
+</p>
+<hr>
+<address>
+<a name="L511" href="mailto:veillard@w3.org">D. Veillard</a><br>
+<a href="../../Help/Webmaster">Webmaster</a><br>
+$Date$ </address>
+</body>
+</html>
