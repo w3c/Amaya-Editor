@@ -55,13 +55,15 @@ extern CHARSET CharEncoding;
   ----------------------------------------------------------------------*/
 ThotBool TtaReadByte (BinFile file, char* bval)
 {
-   unsigned char v;
-   if (fread (&v, sizeof (unsigned char), 1, file) == 0) {
+  unsigned char v;
+
+  if (fread (&v, sizeof (unsigned char), 1, file) == 0)
+    {
       *bval = (char) 0;
       return (FALSE);
-   } 
-   *bval = (char) v;
-   return (TRUE);
+    } 
+  *bval = (char) v;
+  return (TRUE);
 }
 
 /*----------------------------------------------------------------------
@@ -70,138 +72,140 @@ ThotBool TtaReadByte (BinFile file, char* bval)
 ThotBool TtaReadWideChar (BinFile file, CHAR_T* bval, CHARSET encoding)
 {
 #ifdef _I18N_
-    int           nbBytesToRead;
-    unsigned char car;
-    CHAR_T        res;
+  int           nbBytesToRead;
+  unsigned char car;
+  CHAR_T        res;
 
-    if (TtaReadByte (file, &car) == 0) {
-       *bval = (CHAR_T) 0;
-       return (FALSE);
+  if (TtaReadByte (file, &car) == 0)
+    {
+      *bval = (CHAR_T) 0;
+      return (FALSE);
     } 
 
-    switch (encoding) {
-           case ISO_8859_1: 
-                *bval = (CHAR_T)car;
-                break;
+  switch (encoding)
+    {
+    case ISO_8859_1: 
+      *bval = (CHAR_T)car;
+      break;
 
-           case ISO_8859_2:
-                *bval = TtaGetUnicodeValueFrom_ISO_8859_2_Code (car);
-                break;
+    case ISO_8859_2:
+      *bval = TtaGetUnicodeValueFrom_ISO_8859_2_Code (car);
+      break;
 
-           case ISO_8859_3:
-                *bval = TtaGetUnicodeValueFrom_ISO_8859_3_Code (car);
-                break;
+    case ISO_8859_3:
+      *bval = TtaGetUnicodeValueFrom_ISO_8859_3_Code (car);
+      break;
 
-           case ISO_8859_4:
-                *bval = TtaGetUnicodeValueFrom_ISO_8859_4_Code (car);
-                break;
+    case ISO_8859_4:
+      *bval = TtaGetUnicodeValueFrom_ISO_8859_4_Code (car);
+      break;
 
-           case ISO_8859_5:
-                *bval = TtaGetUnicodeValueFrom_ISO_8859_5_Code (car);
-                break;
+    case ISO_8859_5:
+      *bval = TtaGetUnicodeValueFrom_ISO_8859_5_Code (car);
+      break;
 
-           case ISO_8859_6:
-                *bval = TtaGetUnicodeValueFrom_ISO_8859_6_Code (car);
-                break;
+    case ISO_8859_6:
+      *bval = TtaGetUnicodeValueFrom_ISO_8859_6_Code (car);
+      break;
 
-           case ISO_8859_7:
-                *bval = TtaGetUnicodeValueFrom_ISO_8859_7_Code (car);
-                break;
+    case ISO_8859_7:
+      *bval = TtaGetUnicodeValueFrom_ISO_8859_7_Code (car);
+      break;
 
-           case ISO_8859_8:
-                *bval = TtaGetUnicodeValueFrom_ISO_8859_8_Code (car);
-                break;
+    case ISO_8859_8:
+      *bval = TtaGetUnicodeValueFrom_ISO_8859_8_Code (car);
+      break;
 
-           case ISO_8859_9:
-                *bval = TtaGetUnicodeValueFrom_ISO_8859_9_Code (car);
-                break;
+    case ISO_8859_9:
+      *bval = TtaGetUnicodeValueFrom_ISO_8859_9_Code (car);
+      break;
 
-           case WINDOWS_1250:
-                *bval = TtaGetUnicodeValueFromWindows1250CP (car);
-                break;
+    case WINDOWS_1250:
+      *bval = TtaGetUnicodeValueFromWindows1250CP (car);
+      break;
 
-           case WINDOWS_1251:
-                *bval = TtaGetUnicodeValueFromWindows1251CP (car);
-                break;
+    case WINDOWS_1251:
+      *bval = TtaGetUnicodeValueFromWindows1251CP (car);
+      break;
 
-           case WINDOWS_1252:
-                *bval = TtaGetUnicodeValueFromWindows1252CP (car);
-                break;
+    case WINDOWS_1252:
+      *bval = TtaGetUnicodeValueFromWindows1252CP (car);
+      break;
 
-           case WINDOWS_1253:
-                *bval = TtaGetUnicodeValueFromWindows1253CP (car);
-                break;
+    case WINDOWS_1253:
+      *bval = TtaGetUnicodeValueFromWindows1253CP (car);
+      break;
 
-           case WINDOWS_1254:
-                *bval = TtaGetUnicodeValueFromWindows1254CP (car);
-                break;
+    case WINDOWS_1254:
+      *bval = TtaGetUnicodeValueFromWindows1254CP (car);
+      break;
 
-           case WINDOWS_1255:
-                *bval = TtaGetUnicodeValueFromWindows1255CP (car);
-                break;
+    case WINDOWS_1255:
+      *bval = TtaGetUnicodeValueFromWindows1255CP (car);
+      break;
 
-           case WINDOWS_1256:
-                *bval = TtaGetUnicodeValueFromWindows1256CP (car);
-                break;
+    case WINDOWS_1256:
+      *bval = TtaGetUnicodeValueFromWindows1256CP (car);
+      break;
 
-           case WINDOWS_1257:
-                *bval = TtaGetUnicodeValueFromWindows1257CP (car);
-                break;
+    case WINDOWS_1257:
+      *bval = TtaGetUnicodeValueFromWindows1257CP (car);
+      break;
 
-           case UTF_8:
-                if (car < 0xC0)
-                   nbBytesToRead = 1;
-                else if (car < 0xE0)
-                     nbBytesToRead = 2;
-                else if (car < 0xF0)
-                     nbBytesToRead = 3;
-                else if (car < 0xF8)
-                     nbBytesToRead = 4;
-                else if (car < 0xFC)
-                     nbBytesToRead = 5;
-                else if (car <= 0xFF)
-                     nbBytesToRead = 6;
-            
-                res = 0;
+    case UTF_8:
+      if (car < 0xC0)
+	nbBytesToRead = 1;
+      else if (car < 0xE0)
+	nbBytesToRead = 2;
+      else if (car < 0xF0)
+	nbBytesToRead = 3;
+      else if (car < 0xF8)
+	nbBytesToRead = 4;
+      else if (car < 0xFC)
+	nbBytesToRead = 5;
+      else if (car <= 0xFF)
+	nbBytesToRead = 6;
 
-                /* See how many bytes to read to build a wide character */
-                switch (nbBytesToRead) {        /** WEARNING: There is not break statement between cases */
-                       case 6: res += car;
-                               res <<= 6;
-                               TtaReadByte (file, &car);
+      res = 0;
 
-                       case 5: res += car;
-                               res <<= 6;
-                               TtaReadByte (file, &car);
-            
-                       case 4: res += car;
-                               res <<= 6;
-                               TtaReadByte (file, &car);
+      /* See how many bytes to read to build a wide character */
+      switch (nbBytesToRead)
+	{        /** WARNING: There is not break statement between cases */
+	case 6: res += car;
+	  res <<= 6;
+	  TtaReadByte (file, &car);
 
-                       case 3: res += car;
-                               res <<= 6;
-                               TtaReadByte (file, &car);
+	case 5: res += car;
+	  res <<= 6;
+	  TtaReadByte (file, &car);
 
-                       case 2: res += car;
-                               res <<= 6;
-                               TtaReadByte (file, &car);
-            
-                       case 1: res += car;
-				}
-                res -= offset[nbBytesToRead - 1];
+	case 4: res += car;
+	  res <<= 6;
+	  TtaReadByte (file, &car);
 
-                if (res <= 0xFFFF)
-                   *bval = res;
-                else 
-                    *bval = TEXT('?');    
-                break;
+	case 3: res += car;
+	  res <<= 6;
+	  TtaReadByte (file, &car);
+
+	case 2: res += car;
+	  res <<= 6;
+	  TtaReadByte (file, &car);
+  
+	case 1: res += car;
 	}
-    return (TRUE);
+      res -= offset[nbBytesToRead - 1];
+
+      if (res <= 0xFFFF)
+	*bval = res;
+      else 
+	*bval = TEXT('?');    
+      break;
+    }
+  return (TRUE);
 #else  /* !_I18N_ */
-    return TtaReadByte (file, bval);
+  return TtaReadByte (file, bval);
 #endif /* !_I18N_ */ 
 }
-
 
 /*----------------------------------------------------------------------
    TtaReadBool reads a ThotBool value.
@@ -212,8 +216,8 @@ ThotBool TtaReadBool (BinFile file, ThotBool * bval)
 
    if (!TtaReadByte (file, &b1))
      {
-	*bval = FALSE;
-	return (FALSE);
+       *bval = FALSE;
+       return (FALSE);
      }
    else
      {
@@ -269,8 +273,8 @@ ThotBool TtaReadSignedShort (BinFile file, int *sval)
     return (FALSE);
   else
     {
-      if (((int) car) < 0 || ((int) car) > 127 )
-	*sval = SIGNED_SHORT_MASK;
+      /**      if (((int) car) < 0 || ((int) car) > 127 )
+       *sval = SIGNED_SHORT_MASK; **/
       *sval |= ((((int) car) & LMASK) << DECAL_1);
       if (!TtaReadByte (file, &car))
 	{

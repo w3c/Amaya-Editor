@@ -847,7 +847,7 @@ void                AddPointInPolyline (PtrTextBuffer firstBuffer, int rank, int
       /* on va ajouter le nouveau point en derniere position */
      {
 	rank = pBuf->BuLength + 1;
-	if (rank > MAX_POINT_POLY)
+	if (rank > (int)MAX_POINT_POLY)
 	   /* le dernier buffer est plein, on en ajoute un */
 	  {
 	     pBuf = NewTextBuffer (pBuf);
@@ -881,7 +881,7 @@ void                AddPointInPolyline (PtrTextBuffer firstBuffer, int rank, int
 		/* on met en tete du buffer le point qui debordait du */
 		/* buffer precedent */
 		pNextBuf->BuPoints[0] = oldSavePoint;
-	     if (pNextBuf->BuLength < MAX_POINT_POLY)
+	     if (pNextBuf->BuLength < (int)MAX_POINT_POLY)
 		/* ce buffer n'est pas plein */
 	       {
 		  /* on arrete les decalages */
@@ -1059,7 +1059,7 @@ void                TtaGiveTextContent (Element element, STRING buffer, int *len
 	len = 0;
 	pBuf = ((PtrElement) element)->ElText;
 	ptr = buffer;
-	if (length > 0)
+	if (*length > 0)
 	  while (pBuf != NULL && len < (*length) - 1)
 	    {
 	      if ((*length) < len + pBuf->BuLength + 1)

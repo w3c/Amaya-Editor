@@ -2725,7 +2725,7 @@ static  LabelString         label;
 				  j = 0;
 				  for (i = 0; i < n; i++)
 				    {
-				      if (j >= MAX_POINT_POLY)
+				      if (j >= (int)MAX_POINT_POLY)
 					/* buffer courant plein */
 					{
 					  pBuf = NewTextBuffer (pBuf);
@@ -3206,9 +3206,6 @@ int                 rank;
    Name                N1, N2;
    PtrSSchema          pSS;
 
-   if (rank > pDoc->DocNNatures + 1)
-      /* le rang voulu pour la nature est invraissemblable */
-      /*uprintf (TEXT("Err nature ???"))*/;
    /* on cherche (par son nom) si la nature existe dans la table */
    i = 1;
    found = FALSE;
