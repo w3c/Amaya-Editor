@@ -1705,7 +1705,8 @@ static void       StartOfXmlStartElement (char *name)
 	    /* TODO compare with its parent namespace */
 	    {
 	      if (Ns_Prefix[nslevel] != NULL)
-		sprintf (msgBuffer, "<%s xmlns:%s=\"%s\"", elementName,
+		sprintf (msgBuffer, "<%s:%s xmlns:%s=\"%s\"",
+			 Ns_Prefix[nslevel], elementName,
 			 Ns_Prefix[nslevel], Ns_Uri[nslevel]);
 	      else
 		sprintf (msgBuffer, "<%s xmlns=\"%s\"",
@@ -1914,6 +1915,9 @@ static void       EndOfXmlElement (char *name)
    char          *s;
 #endif /* XML_GENERIC */
 
+   UnknownNS = FALSE;
+   UnknownElement = FALSE;
+   
    /* Look for the context associated with that element */
    savParserCtxt = currentParserCtxt;
    buffer = TtaGetMemory ((strlen (name) + 1));
@@ -1989,7 +1993,10 @@ static void       EndOfXmlElement (char *name)
       if (UnknownNS)
 	{
 	  /* create an Unknown_namespace element */
-	  sprintf (msgBuffer, "</%s", elementName);
+	  if (Ns_Prefix[nslevel] != NULL)
+	    sprintf (msgBuffer, "</%s:%s", Ns_Prefix[nslevel], elementName);
+	  else
+	    sprintf (msgBuffer, "</%s", elementName);
 	  (*(currentParserCtxt->UnknownNameSpace))(&XMLcontext, msgBuffer);
 	}
       else
@@ -3082,7 +3089,7 @@ static void       CreateDoctypeElement ()
       doctypeEl = TtaNewElement (XMLcontext.doc, elType);
       XmlSetElemLineNumber (doctypeEl);
       InsertXmlElement (&doctypeEl);
-      /* Make the doctype element read-only */
+      /* Make the DOCTYPE element read-only */
       TtaSetAccessRight (doctypeEl, ReadOnly, XMLcontext.doc);
       /* Create a DOCTYPE_line element as first child */
       elType.ElSSchema = NULL;
@@ -4091,9 +4098,6 @@ static void  InitializeExpatParser (CHARSET charset)
   /* Enable parsing of parameter entities */
   paramEntityParsing = XML_PARAM_ENTITY_PARSING_UNLESS_STANDALONE;
 
-  /* Disable "Read as Iso-Latin1" entry */
-  TtaSetItemOff (XMLcontext.doc, 1, File, BParseAsHTML);
-
   /* Construct a new parser with namespace processing */
   /* accordingly to the document encoding */
   /* If that encoding is unknown, we don''t parse the document */
@@ -4105,8 +4109,6 @@ static void  InitializeExpatParser (CHARSET charset)
       sprintf (msgBuffer,
 	       "Warning: no encoding specified, assuming UTF-8");
       XmlParseError (undefinedEncoding, msgBuffer, 0);
-      /* Enable "Read as Iso-Latin1 entry" */
-      TtaSetItemOn (XMLcontext.doc, 1, File, BParseAsHTML);
       /* TtaSetDocumentCharset (XMLcontext.doc, UTF_8); */
     }
   else if (charset == UTF_8 || charset == UTF_16)
@@ -4250,6 +4252,7 @@ static void  InitializeXmlParsingContext (Document doc,
   htmlCharRead = 0;
   
   /* initialize the stack of opened elements */
+  PreviousNsLevel = MAX_NS_TABLE;
   stackLevel = 1;
   Ns_Level = 0;
   CurNs_Level = 0;
